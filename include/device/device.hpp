@@ -24,6 +24,7 @@
 #define __DEVICE_HPP__
 
 #include <cstddef>   // for size_t
+#include <exception>
 #include <string>
 #include <vector>
 
@@ -54,6 +55,7 @@ namespace device
         deviceProp_t   _deviceProp;
         deviceStream_t _dataStream;
         deviceStream_t _computeStream;
+        int            _uncaughtExceptions = std::uncaught_exceptions();
 
         std::vector<std::string> _errorMsgs;
 
@@ -62,7 +64,11 @@ namespace device
        public:
         explicit Device(const bool useDevice);
         explicit Device(const int deviceID);
+        Device(const Device& other)     = default;   // copy constructor
+        Device(Device&& other) noexcept = default;   // move constructor
         ~Device();
+        Device& operator=(Device&& other) noexcept;         // move assignment
+        Device& operator=(const Device& other) = default;   // copy assignment
 
         [[nodiscard]] bool isDeviceUsed() const;
 
@@ -104,6 +110,6 @@ namespace device
 
 }   // namespace device
 
-#include "device.tpp.hpp"   // DO NOT MOVE THIS LINE!!!
+#include "device.tpp.hpp"   // IWYU pragma: keep DO NOT MOVE THIS LINE!!!
 
 #endif   // __DEVICE_HPP__

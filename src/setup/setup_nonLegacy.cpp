@@ -22,13 +22,9 @@
 
 #include <cassert>
 
-#include "coulombPotential.hpp"
 #include "engine.hpp"
-#include "forceFieldNonCoulomb.hpp"
 #include "forceFieldSettings.hpp"
 #include "lennardJones.hpp"
-#include "lennardJonesPair.hpp"
-#include "nonCoulombPotential.hpp"
 #include "potential.hpp"
 #include "potentialSettings.hpp"
 #include "setup.hpp"
@@ -48,14 +44,6 @@ void setup::setupFlattenedData(Engine &engine)
     // TODO: clean the following lines up!
 
     auto &simBox = engine.getSimulationBox();
-    simBox.flattenPositions();
-    simBox.flattenVelocities();
-    simBox.flattenForces();
-    simBox.flattenShiftForces();
-    simBox.flattenCharges();
-
-    simBox.initAtomsPerMolecule();
-    simBox.initMoleculeIndices();
 
     simBox.flattenAtomTypes();
     simBox.flattenMolTypes();
@@ -110,29 +98,13 @@ void setup::setupFlattenedData(Engine &engine)
  * @brief Initialize device memory for simulation box
  *
  */
-void setup::initDeviceMemory(engine::Engine &engine)
+void setup::initDeviceMemory(engine::Engine &engine)   // TODO: rename this part
 {
     auto &simBox = engine.getSimulationBox();
     auto &device = engine.getDevice();
 
-    simBox.initDeviceMemory(device);
-
-    simBox.copyPosTo(device);
-    simBox.copyVelTo(device);
-    simBox.copyForcesTo(device);
-    simBox.copyShiftForcesTo(device);
-
-    simBox.copyMassesTo(device);
-    simBox.copyChargesTo(device);
-
-    simBox.copyAtomsPerMoleculeTo(device);
-    simBox.copyMoleculeIndicesTo(device);
     simBox.copyAtomTypesTo(device);
     simBox.copyMolTypesTo(device);
     simBox.copyInternalGlobalVDWTypesTo(device);
-
-    simBox.copyOldPosTo(device);
-    simBox.copyOldVelTo(device);
-    simBox.copyOldForcesTo(device);
 }
 #endif

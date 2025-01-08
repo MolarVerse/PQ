@@ -59,11 +59,18 @@ void LangevinThermostat::applyLangevin(SimulationBox& simBox)
     const auto factor1 = 0.5 * timeStep * _FS_TO_S_ * _friction;
     const auto factor2 = 0.5 * timeStep * _FS_TO_S_ * _sigma;
 
+    const auto nAtoms = simBox.getNumberOfAtoms();
+
     // clang-format off
-    #pragma omp target teams distribute parallel for \
-                is_device_ptr(massPtr, velPtr)
+#ifdef __PQ_GPU__
+    // #pragma omp target teams distribute parallel for \
+    //             is_device_ptr(massPtr, velPtr)
+#else
+    #pragma omp parallel for
+#endif
     //clang-format on
-    for(size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
+    //TODO: make this work on device with device random number generator
+    for(size_t i = 0; i < nAtoms; ++i)
     {
         const auto mass = massPtr[i];
         const auto propagationFactor = factor2 / std::sqrt(mass);

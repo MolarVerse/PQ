@@ -28,6 +28,7 @@
 
 #include "deviceAPI.hpp"
 #include "deviceConfig.hpp"
+#include "exceptions.hpp"
 
 namespace device
 {
@@ -53,11 +54,11 @@ namespace device
 
         if (error != __deviceSuccess__)
         {
-            throw DeviceException(std::format(
+            throw customException::DeviceException(std::format(
                 "Error occurred during the device memory deallocation in: "
                 "{}\n{}",
                 msg,
-                deviceGetErrorString(error)
+                __deviceGetErrorString(error)
             ));
         }
 

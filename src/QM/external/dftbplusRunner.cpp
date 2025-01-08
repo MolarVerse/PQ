@@ -22,23 +22,21 @@
 
 #include "dftbplusRunner.hpp"
 
-#include <cstddef>      // for size_t
-#include <cstdlib>      // for system
-#include <format>       // for format
-#include <fstream>      // for ofstream
-#include <functional>   // for identity
-#include <ranges>       // for borrowed_iterator_t, __distance_fn
-#include <string>       // for string
-#include <vector>       // for vector
+#include <cstddef>   // for size_t
+#include <cstdlib>   // for system
+#include <format>    // for format
+#include <fstream>   // for ofstream
+#include <string>    // for string
+#include <vector>    // for vector
 
-#include "atom.hpp"              // for Atom
+#include "atom.hpp"        // for Atom
+#include "constants.hpp"   // for _HARTREE_PER_BOHR3_TO_KCAL_PER_MOL_PER_ANGSTROM3_
 #include "exceptions.hpp"        // for InputFileException
 #include "physicalData.hpp"      // for PhysicalData
 #include "qmSettings.hpp"        // for QMSettings
 #include "settings.hpp"          // for Settings
 #include "simulationBox.hpp"     // for SimulationBox
 #include "stringUtilities.hpp"   // for fileExists
-#include "vector3d.hpp"          // for Vec3D
 
 using QM::DFTBPlusRunner;
 

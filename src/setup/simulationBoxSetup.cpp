@@ -84,7 +84,7 @@ void setup::simulationBox::setupSimulationBox(Engine &engine)
  *
  * @param engine
  */
-SimulationBoxSetup::SimulationBoxSetup(Engine &engine) : _engine(engine) {};
+SimulationBoxSetup::SimulationBoxSetup(Engine &engine) : _engine(engine){};
 
 /**
  * @brief setup simulation box
@@ -92,6 +92,40 @@ SimulationBoxSetup::SimulationBoxSetup(Engine &engine) : _engine(engine) {};
  */
 void SimulationBoxSetup::setup()
 {
+    auto &simBox = _engine.getSimulationBox();
+
+#ifndef __PQ_LEGACY__
+    // set number of atoms
+    simBox.setNumberOfAtoms(simBox.getAtoms().size());
+
+    // flatten already present data
+    simBox.flattenPositions();
+    simBox.flattenVelocities();
+    simBox.flattenForces();
+    simBox.flattenShiftForces();
+
+    simBox.initAtomsPerMolecule();
+    simBox.initMoleculeIndices();
+#endif
+
+#ifdef __PQ_GPU__
+    auto &device = _engine.getDevice();
+
+    simBox.initDeviceMemory(device);
+
+    simBox.copyPosTo(device);
+    simBox.copyVelTo(device);
+    simBox.copyForcesTo(device);
+    simBox.copyShiftForcesTo(device);
+
+    simBox.copyOldPosTo(device);
+    simBox.copyOldVelTo(device);
+    simBox.copyOldForcesTo(device);
+
+    simBox.copyAtomsPerMoleculeTo(device);
+    simBox.copyMoleculeIndicesTo(device);
+#endif
+
     setAtomNames();
     setAtomTypes();
     if (ForceFieldSettings::isActive())
@@ -101,14 +135,18 @@ void SimulationBoxSetup::setup()
     setAtomMasses();
     setAtomicNumbers();
     calculateMolMasses();
-    calculateTotalCharge();
-
-    auto &simBox = _engine.getSimulationBox();
 
 #ifndef __PQ_LEGACY__
+    simBox.flattenCharges();
     simBox.flattenMasses();
 #endif
 
+#ifdef __PQ_GPU__
+    simBox.copyMassesTo(device);
+    simBox.copyChargesTo(device);
+#endif
+
+    calculateTotalCharge();
     simBox.calculateTotalMass();
 
     checkBoxSettings();

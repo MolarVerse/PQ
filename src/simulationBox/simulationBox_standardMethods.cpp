@@ -112,7 +112,7 @@ size_t SimulationBox::getDegreesOfFreedom() const { return _degreesOfFreedom; }
  *
  * @return size_t
  */
-size_t SimulationBox::getNumberOfAtoms() const { return _atoms.size(); }
+size_t SimulationBox::getNumberOfAtoms() const { return _nAtoms; }
 
 /**
  * @brief Get the number of QM atoms
@@ -391,6 +391,13 @@ void SimulationBox::setDegreesOfFreedom(const size_t degreesOfFreedom)
 {
     _degreesOfFreedom = degreesOfFreedom;
 }
+
+/**
+ * @brief set number of atoms
+ *
+ * @param nAtoms
+ */
+void SimulationBox::setNumberOfAtoms(const size_t nAtoms) { _nAtoms = nAtoms; }
 
 /**********************************************
  *                                            *

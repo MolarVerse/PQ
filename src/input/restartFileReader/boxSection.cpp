@@ -24,7 +24,6 @@
 
 #include <algorithm>     // for __any_of_fn, any_of
 #include <format>        // for format
-#include <functional>    // for identity
 #include <string>        // for stod, string
 #include <string_view>   // for string_view
 #include <vector>        // for vector
@@ -33,9 +32,8 @@
 #include "exceptions.hpp"              // for RstFileException
 #include "mathUtilities.hpp"           // for compare
 #include "settings.hpp"                // for Settings
-#include "simulationBox.hpp"           // for SimulationBox
 #include "simulationBoxSettings.hpp"   // for SimulationBoxSettings
-#include "vector3d.hpp"                // for Vec3D
+#include "triclinicBox.hpp"            // for TriclinicBox
 
 using namespace input::restartFile;
 using namespace customException;
@@ -63,10 +61,7 @@ using namespace engine;
  * @throws RstFileException if the box angles are not positive
  * or larger than 90°
  */
-void BoxSection::process(
-    std::vector<std::string> &lineElements,
-    Engine           &engine
-)
+void BoxSection::process(std::vector<std::string> &lineElements, Engine &engine)
 {
     if ((lineElements.size() != 4) && (lineElements.size() != 7))
         throw RstFileException(std::format(

@@ -22,12 +22,9 @@
 
 #include "setup.hpp"
 
-#include <iostream>   // for operator<<, basic_ostream, cout
-
 #include "celllistSetup.hpp"          // for setupCellList
 #include "constraintsSetup.hpp"       // for setupConstraints
 #include "engine.hpp"                 // for Engine
-#include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
 #include "forceFieldSettings.hpp"     // for ForceFieldSettings
 #include "forceFieldSetup.hpp"        // for setupForceField
 #include "guffDatReader.hpp"          // for readGuffDat, readInput
@@ -35,19 +32,15 @@
 #include "inputFileReader.hpp"        // for readInputFile
 #include "intraNonBondedReader.hpp"   // for readIntraNonBondedFile
 #include "intraNonBondedSetup.hpp"    // for setupIntraNonBonded
-#include "kokkosSetup.hpp"            // for setupKokkos
 #include "manostatSetup.hpp"          // for setupManostat
 #include "moldescriptorReader.hpp"    // for readMolDescriptor
 #include "optimizerSetup.hpp"         // for setupOptimizer
 #include "outputFilesSetup.hpp"       // for setupOutputFiles
 #include "parameterFileReader.hpp"    // for readParameterFile
-#include "potentialSettings.hpp"      // for PotentialSettings
 #include "potentialSetup.hpp"         // for setupPotential
 #include "qmSetup.hpp"                // for setupQM
-#include "qmmdEngine.hpp"             // for QMMDEngine
 #include "resetKineticsSetup.hpp"     // for setupResetKinetics
 #include "restartFileReader.hpp"      // for readRestartFile
-#include "ringPolymerEngine.hpp"      // for RingPolymerEngine
 #include "ringPolymerSetup.hpp"       // for setupRingPolymer
 #include "settings.hpp"               // for Settings
 #include "simulationBoxSetup.hpp"     // for setupSimulationBox

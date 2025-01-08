@@ -24,7 +24,6 @@
 
 #define _SIMULATION_BOX_HPP_
 
-#include <cstdint>    // for size_t
 #include <map>        // for map
 #include <optional>   // for optional
 #include <string>     // for string
@@ -32,12 +31,10 @@
 
 #include "atom.hpp"              // for Atom
 #include "box.hpp"               // for Box
-#include "defaults.hpp"          // for _COULOMB_CUT_OFF_DEFAULT_
 #include "exceptions.hpp"        // for ExceptionType
 #include "molecule.hpp"          // for Molecule
 #include "moleculeType.hpp"      // for MoleculeType
 #include "orthorhombicBox.hpp"   // for OrthorhombicBox
-#include "triclinicBox.hpp"      // for TriclinicBox
 #include "typeAliases.hpp"       // for pq::Vec3D
 
 #ifdef __PQ_GPU__
@@ -96,6 +93,8 @@ namespace simulationBox
         std::vector<size_t>      _externalGlobalVdwTypes;
         std::map<size_t, size_t> _externalToInternalGlobalVDWTypes;
 
+        size_t _nAtoms = 0;
+
 #ifndef __PQ_LEGACY__
 
         std::vector<Real> _pos;
@@ -148,6 +147,7 @@ namespace simulationBox
 
         void calculateDegreesOfFreedom();
         void calculateTotalMass();
+        void calculateTotalCharge();
         void calculateCenterOfMassMolecules();
         void calculateDensity();
 
@@ -360,6 +360,7 @@ namespace simulationBox
         void setTotalCharge(const double totalCharge);
         void setDensity(const double density);
         void setDegreesOfFreedom(const size_t degreesOfFreedom);
+        void setNumberOfAtoms(const size_t nAtoms);
 
         template <typename T>
         void setBox(const T& box);
@@ -387,6 +388,6 @@ namespace simulationBox
 
 }   // namespace simulationBox
 
-#include "simulationBox.tpp.hpp"   // DO NOT MOVE THIS LINE
+#include "simulationBox.tpp.hpp"   // IWYU pragma: keep DO NOT MOVE THIS LINE!!!
 
 #endif   // _SIMULATION_BOX_HPP_

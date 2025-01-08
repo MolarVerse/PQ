@@ -51,15 +51,20 @@ void VelocityVerlet::firstStep(SimulationBox& simBox)
     auto* const       posPtr    = simBox.getPosPtr();
     auto* const       forcesPtr = simBox.getForcesPtr();
     const auto* const massesPtr = simBox.getMassesPtr();
+    const auto        nAtoms    = simBox.getNumberOfAtoms();
 
     const auto massFactor = dt * _V_VERLET_VELOCITY_FACTOR_;
     const auto posFactor  = dt * _FS_TO_S_;
 
     // clang-format off
+#ifdef __PQ_GPU__
     #pragma omp target teams distribute parallel for                \
                 is_device_ptr(velPtr, posPtr, massesPtr, forcesPtr)
+#else
+    #pragma omp parallel for
+#endif
     // clang-format on
-    for (size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
+    for (size_t i = 0; i < nAtoms; ++i)
     {
         const auto massDt = massesPtr[i] / massFactor;
 
@@ -102,14 +107,19 @@ void VelocityVerlet::secondStep(SimulationBox& simBox)
     auto* const       velPtr    = simBox.getVelPtr();
     const auto* const massesPtr = simBox.getMassesPtr();
     const auto* const forcesPtr = simBox.getForcesPtr();
+    const auto        nAtoms    = simBox.getNumberOfAtoms();
 
     const auto factor = dt * _V_VERLET_VELOCITY_FACTOR_;
 
     // clang-format off
+#ifdef __PQ_GPU__
     #pragma omp target teams distribute parallel for                \
                 is_device_ptr(velPtr, massesPtr, forcesPtr)
+#else
+    #pragma omp parallel for
+#endif
     // clang-format on
-    for (size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
+    for (size_t i = 0; i < nAtoms; ++i)
     {
         const auto massDt = massesPtr[i] / factor;
 

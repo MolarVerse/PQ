@@ -24,6 +24,6 @@
 
 #define _VECTOR3D_INTERFACE_HPP_
 
-#include "vector3d/vector3d.hpp"
+#include "vector3d/vector3d.hpp"   // IWYU pragma: export
 
-#endif  // _VECTOR3D_INTERFACE_HPP_
+#endif   // _VECTOR3D_INTERFACE_HPP_

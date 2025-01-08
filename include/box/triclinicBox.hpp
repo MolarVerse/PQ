@@ -39,7 +39,6 @@
  */
 
 #include "box.hpp"           // for Box
-#include "constants.hpp"     // for _DEG_TO_RAD_
 #include "typeAliases.hpp"   // for tensor3D, Vec3D
 
 namespace simulationBox
@@ -106,7 +105,7 @@ namespace simulationBox
 }   // namespace simulationBox
 
 #ifndef __PQ_LEGACY__
-#include "triclinicBox.inl"
+#include "triclinicBox.inl"   // IWYU pragma: keep
 #endif
 
 #endif   // _TRICLINIC_BOX_HPP_

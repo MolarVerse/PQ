@@ -749,10 +749,6 @@ void GuffDatReader::checkNecessaryGuffPairs()
     auto      &simBox                 = _engine.getSimulationBox();
     const auto necessaryMoleculeTypes = simBox.findNecessaryMoleculeTypes();
 
-    std::cout << necessaryMoleculeTypes.size() << std::endl;
-    for (const auto &moleculeType : necessaryMoleculeTypes)
-        std::cout << moleculeType.getMoltype() << std::endl;
-
     for (const auto &moleculeType1 : necessaryMoleculeTypes)
         for (const auto &moleculeType2 : necessaryMoleculeTypes)
         {

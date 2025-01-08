@@ -46,6 +46,20 @@ void SimulationBox::calculateTotalMass()
 }
 
 /**
+ * @brief calculate total charge of simulationBox
+ *
+ */
+void SimulationBox::calculateTotalCharge()
+{
+    _totalCharge = 0.0;
+
+    auto accumulateCharge = [this](const auto& atom)
+    { _totalCharge += atom->getPartialCharge(); };
+
+    std::ranges::for_each(_atoms, accumulateCharge);
+}
+
+/**
  * @brief calculate total force of simulationBox
  *
  * @return double

@@ -71,20 +71,29 @@ void ResetKinetics::resetAngularMomentum(SimulationBox &simBox)
     const auto *const massPtr = simBox.getMassesPtr();
     auto *const       velPtr  = simBox.getVelPtr();
 
+    const auto nAtoms = simBox.getNumberOfAtoms();
     // TODO: think of a nice way to use here tensorProduct
 
     // clang-format off
+#ifdef __PQ_GPU__
     #pragma omp target teams distribute parallel for        \
                 is_device_ptr(posPtr, velPtr, massPtr)      \
                 map(centerOfMass)                           \
                 reduction(+:helperMatrixXX, helperMatrixXY, \
                             helperMatrixXZ, helperMatrixYY, \
                             helperMatrixYZ, helperMatrixZZ)
-    for (size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
+#else
+    #pragma omp parallel for                                \
+                reduction(+:helperMatrixXX, helperMatrixXY, \
+                            helperMatrixXZ, helperMatrixYY, \
+                            helperMatrixYZ, helperMatrixZZ)
+#endif
+    // clang-format on
+    for (size_t i = 0; i < nAtoms; ++i)
     {
-        const auto relPosX = posPtr[i*3] - centerOfMass[0];
-        const auto relPosY = posPtr[i*3 + 1] - centerOfMass[1];
-        const auto relPosZ = posPtr[i*3 + 2] - centerOfMass[2];
+        const auto relPosX = posPtr[i * 3] - centerOfMass[0];
+        const auto relPosY = posPtr[i * 3 + 1] - centerOfMass[1];
+        const auto relPosZ = posPtr[i * 3 + 2] - centerOfMass[2];
 
         const auto mass = massPtr[i];
 
@@ -95,8 +104,6 @@ void ResetKinetics::resetAngularMomentum(SimulationBox &simBox)
         helperMatrixYZ += mass * relPosY * relPosZ;
         helperMatrixZZ += mass * relPosZ * relPosZ;
     }
-
-    // clang-format on
 
     helperMatrix[0][0] = helperMatrixXX;
     helperMatrix[0][1] = helperMatrixXY;
@@ -113,24 +120,28 @@ void ResetKinetics::resetAngularMomentum(SimulationBox &simBox)
     const auto angularVelocity = inverseInertia * _angularMomentum;
 
     // clang-format off
+#ifdef __PQ_GPU__
     #pragma omp target teams distribute parallel for \
                 is_device_ptr(velPtr, massPtr)       \
                 map(angularVelocity, centerOfMass)
-    for (size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
+#else
+    #pragma omp parallel for
+#endif
+    // clang-format on
+    for (size_t i = 0; i < nAtoms; ++i)
     {
-        const auto relPosX = posPtr[i*3] - centerOfMass[0];
-        const auto relPosY = posPtr[i*3 + 1] - centerOfMass[1];
-        const auto relPosZ = posPtr[i*3 + 2] - centerOfMass[2];
+        const auto relPosX = posPtr[i * 3] - centerOfMass[0];
+        const auto relPosY = posPtr[i * 3 + 1] - centerOfMass[1];
+        const auto relPosZ = posPtr[i * 3 + 2] - centerOfMass[2];
 
         const auto relativePosition = Vec3D{relPosX, relPosY, relPosZ};
 
         const auto correction = cross(angularVelocity, relativePosition);
 
-        velPtr[i*3]     -= correction[0];
-        velPtr[i*3 + 1] -= correction[1];
-        velPtr[i*3 + 2] -= correction[2];
+        velPtr[i * 3]     -= correction[0];
+        velPtr[i * 3 + 1] -= correction[1];
+        velPtr[i * 3 + 2] -= correction[2];
     }
-    // clang-format on
 
     simBox.deFlattenVelocities();
 

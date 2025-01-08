@@ -25,7 +25,6 @@
 #include <format>
 #include <iostream>
 
-#include "deviceAPI.hpp"
 #include "deviceConfig.hpp"
 #include "exceptions.hpp"
 
@@ -111,11 +110,22 @@ Device::Device(const int deviceID)
  */
 Device::~Device()
 {
-    deviceError_t error = __deviceStreamDestroy(_dataStream);
-    addDeviceError(error, "Destroying the data stream");
+    if (_dataStream != nullptr)
+    {
+        const auto error = __deviceStreamDestroy(_dataStream);
+        addDeviceError(error, "Destroying the data stream");
+    }
 
-    error = __deviceStreamDestroy(_computeStream);
-    addDeviceError(error, "Destroying the compute stream");
+    if (_computeStream != nullptr)
+    {
+        const auto error = __deviceStreamDestroy(_computeStream);
+        addDeviceError(error, "Destroying the compute stream");
+    }
+
+    // to avoid destroying thrown exceptions in the destructor during stack
+    // unwinding
+    if (_uncaughtExceptions != std::uncaught_exceptions())
+        return;
 
     // To not throw an uncaught exception in the destructor
     try
@@ -126,6 +136,37 @@ Device::~Device()
     {
         std::cerr << e.what() << std::endl;
     }
+}
+
+/**
+ * @brief Move assignment operator
+ *
+ * @details This move assignment operator is used to move the device object. The
+ * move assignment operator will move the device object to the new device
+ * object.
+ *
+ * @param other the device object that should be moved
+ *
+ * @return Device& the moved device object
+ */
+Device& Device::operator=(Device&& other) noexcept
+{
+    if (this != &other)
+    {
+        _useDevice     = other._useDevice;
+        _deviceID      = other._deviceID;
+        _deviceCount   = other._deviceCount;
+        _deviceProp    = other._deviceProp;
+        _dataStream    = other._dataStream;
+        _computeStream = other._computeStream;
+        _errorMsgs     = std::move(other._errorMsgs);
+
+        // to avoid destroying the streams in the destructor
+        other._dataStream    = nullptr;
+        other._computeStream = nullptr;
+    }
+
+    return *this;
 }
 
 /**

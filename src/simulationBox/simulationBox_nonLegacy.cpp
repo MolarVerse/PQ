@@ -36,20 +36,50 @@ using namespace linearAlgebra;
  */
 void SimulationBox::calculateTotalMass()
 {
-    _totalMass = 0.0;
+    Real totalMass = 0.0;
 
     const auto *const massPtr = getMassesPtr();
 
     // clang-format off
-
+#ifdef __PQ_GPU__
     #pragma omp target teams distribute parallel for \
                 is_device_ptr(massPtr)               \
-                map(_totalMass)                      \
-                reduction(+:_totalMass)
-    for (size_t i = 0; i < getNumberOfAtoms(); ++i)
-        _totalMass += massPtr[i];
-
+                map(totalMass)                       \
+                reduction(+:totalMass)
+#else
+    #pragma omp parallel for                         \
+                reduction(+:totalMass)
+#endif
     // clang-format on
+    for (size_t i = 0; i < _nAtoms; ++i) totalMass += massPtr[i];
+
+    _totalMass = totalMass;
+}
+
+/**
+ * @brief calculate total charge of simulationBox
+ *
+ */
+void SimulationBox::calculateTotalCharge()
+{
+    Real totalCharge = 0.0;
+
+    const auto *const chargePtr = getChargesPtr();
+
+    // clang-format off
+#ifdef __PQ_GPU__
+    #pragma omp target teams distribute parallel for \
+                is_device_ptr(chargePtr)             \
+                map(totalCharge)                     \
+                reduction(+:totalCharge)
+#else
+    #pragma omp parallel for                         \
+                reduction(+:totalCharge)
+#endif
+    // clang-format on
+    for (size_t i = 0; i < _nAtoms; ++i) totalCharge += chargePtr[i];
+
+    _totalCharge = totalCharge;
 }
 
 /**
@@ -68,17 +98,22 @@ double SimulationBox::calculateTotalForce()
     const auto *const forcesPtr = getForcesPtr();
 
     // clang-format off
-    #pragma omp target teams distribute parallel for \
-                is_device_ptr(forcesPtr)              \
+#ifdef __PQ_GPU__
+    #pragma omp target teams distribute parallel for  \
                 map(fx, fy, fz)                       \
+                is_device_ptr(forcesPtr)              \
                 reduction(+:fx, fy, fz)
-    for (size_t i = 0; i < getNumberOfAtoms(); ++i)
+#else
+    #pragma omp parallel for                          \
+                reduction(+:fx, fy, fz)
+#endif
+    // clang-format on
+    for (size_t i = 0; i < _nAtoms; ++i)
     {
         fx += forcesPtr[i * 3];
         fy += forcesPtr[i * 3 + 1];
         fz += forcesPtr[i * 3 + 2];
     }
-    // clang-format on
 
     const auto totalForce = Vec3D{fx, fy, fz};
 
@@ -440,14 +475,13 @@ std::vector<Real> SimulationBox::flattenForces()
 
     // clang-format off
     #pragma omp parallel for
+    // clang-format on
     for (size_t i = 0; i < _atoms.size(); ++i)
     {
         const auto atom = _atoms[i];
 
-        for (size_t j = 0; j < 3; ++j)
-            forces[i * 3 + j] = atom->getForce()[j];
+        for (size_t j = 0; j < 3; ++j) forces[i * 3 + j] = atom->getForce()[j];
     }
-    // clang-format on
 
     return _forces;
 }
@@ -466,6 +500,7 @@ void SimulationBox::flattenShiftForces()
 
     // clang-format off
     #pragma omp parallel for
+    // clang-format on
     for (size_t i = 0; i < _atoms.size(); ++i)
     {
         const auto atom = _atoms[i];
@@ -473,7 +508,6 @@ void SimulationBox::flattenShiftForces()
         for (size_t j = 0; j < 3; ++j)
             shiftForces[i * 3 + j] = atom->getShiftForce()[j];
     }
-    // clang-format on
 }
 
 /**
@@ -489,6 +523,7 @@ void SimulationBox::flattenOldPositions()
 
     // clang-format off
     #pragma omp parallel for
+    // clang-format on
     for (size_t i = 0; i < _atoms.size(); ++i)
     {
         const auto atom = _atoms[i];
@@ -496,7 +531,6 @@ void SimulationBox::flattenOldPositions()
         for (size_t j = 0; j < 3; ++j)
             oldPositions[i * 3 + j] = atom->getPositionOld()[j];
     }
-    // clang-format on
 }
 
 /**
@@ -512,6 +546,7 @@ void SimulationBox::flattenOldVelocities()
 
     // clang-format off
     #pragma omp parallel for
+    // clang-format on
     for (size_t i = 0; i < _atoms.size(); ++i)
     {
         const auto atom = _atoms[i];
@@ -519,7 +554,6 @@ void SimulationBox::flattenOldVelocities()
         for (size_t j = 0; j < 3; ++j)
             oldVelocities[i * 3 + j] = atom->getVelocityOld()[j];
     }
-    // clang-format on
 }
 
 /**
@@ -535,6 +569,7 @@ void SimulationBox::flattenOldForces()
 
     // clang-format off
     #pragma omp parallel for
+    // clang-format on
     for (size_t i = 0; i < _atoms.size(); ++i)
     {
         const auto atom = _atoms[i];
@@ -542,7 +577,6 @@ void SimulationBox::flattenOldForces()
         for (size_t j = 0; j < 3; ++j)
             oldForces[i * 3 + j] = atom->getForceOld()[j];
     }
-    // clang-format on
 }
 
 /**
@@ -557,9 +591,8 @@ void SimulationBox::flattenMasses()
 
     // clang-format off
     #pragma omp parallel for
-    for (size_t i = 0; i < _atoms.size(); ++i)
-        masses[i] = _atoms[i]->getMass();
     // clang-format on
+    for (size_t i = 0; i < _atoms.size(); ++i) masses[i] = _atoms[i]->getMass();
 }
 
 /**
@@ -575,9 +608,9 @@ void SimulationBox::flattenCharges()
 
     // clang-format off
     #pragma omp parallel for
+    // clang-format on
     for (size_t i = 0; i < _atoms.size(); ++i)
         charges[i] = _atoms[i]->getPartialCharge();
-    // clang-format on
 }
 
 /**
@@ -598,9 +631,9 @@ void SimulationBox::flattenAtomTypes()
 
     // clang-format off
     #pragma omp parallel for
+    // clang-format on
     for (size_t i = 0; i < _atoms.size(); ++i)
         atomTypes[i] = _atoms[i]->getAtomType();
-    // clang-format on
 }
 
 /**
@@ -621,9 +654,9 @@ void SimulationBox::flattenMolTypes()
 
     // clang-format off
     #pragma omp parallel for
+    // clang-format on
     for (size_t i = 0; i < _molecules.size(); ++i)
         molTypes[i] = _molecules[i].getMoltype();
-    // clang-format on
 }
 
 /**
@@ -644,9 +677,9 @@ void SimulationBox::flattenInternalGlobalVDWTypes()
 
     // clang-format off
     #pragma omp parallel for
+    // clang-format on
     for (size_t i = 0; i < _atoms.size(); ++i)
         internalGlobalVDWTypes[i] = _atoms[i]->getInternalGlobalVDWType();
-    // clang-format on
 }
 
 /**
@@ -659,14 +692,13 @@ void SimulationBox::deFlattenPositions()
 {
     // clang-format off
     #pragma omp parallel for
+    // clang-format on
     for (size_t i = 0; i < _atoms.size(); ++i)
     {
         const auto atom = _atoms[i];
 
-        for (size_t j = 0; j < 3; ++j)
-            atom->setPosition(_pos[i * 3 + j], j);
+        for (size_t j = 0; j < 3; ++j) atom->setPosition(_pos[i * 3 + j], j);
     }
-    // clang-format on
 }
 
 /**
@@ -679,14 +711,13 @@ void SimulationBox::deFlattenVelocities()
 {
     // clang-format off
     #pragma omp parallel for
+    // clang-format on
     for (size_t i = 0; i < _atoms.size(); ++i)
     {
         const auto atom = _atoms[i];
 
-        for (size_t j = 0; j < 3; ++j)
-            atom->setVelocity(_vel[i * 3 + j], j);
+        for (size_t j = 0; j < 3; ++j) atom->setVelocity(_vel[i * 3 + j], j);
     }
-    // clang-format on
 }
 
 /**
@@ -699,14 +730,13 @@ void SimulationBox::deFlattenForces()
 {
     // clang-format off
     #pragma omp parallel for
+    // clang-format on
     for (size_t i = 0; i < _atoms.size(); ++i)
     {
         const auto atom = _atoms[i];
 
-        for (size_t j = 0; j < 3; ++j)
-            atom->setForce(_forces[i * 3 + j], j);
+        for (size_t j = 0; j < 3; ++j) atom->setForce(_forces[i * 3 + j], j);
     }
-    // clang-format on
 }
 
 /**
@@ -718,6 +748,7 @@ void SimulationBox::deFlattenShiftForces()
 {
     // clang-format off
     #pragma omp parallel for
+    // clang-format on
     for (size_t i = 0; i < _atoms.size(); ++i)
     {
         const auto atom = _atoms[i];
@@ -725,7 +756,6 @@ void SimulationBox::deFlattenShiftForces()
         for (size_t j = 0; j < 3; ++j)
             atom->setShiftForce(_shiftForces[i * 3 + j], j);
     }
-    // clang-format on
 }
 
 /**
@@ -737,6 +767,7 @@ void SimulationBox::deFlattenOldPositions()
 {
     // clang-format off
     #pragma omp parallel for
+    // clang-format on
     for (size_t i = 0; i < _atoms.size(); ++i)
     {
         const auto atom = _atoms[i];
@@ -744,7 +775,6 @@ void SimulationBox::deFlattenOldPositions()
         for (size_t j = 0; j < 3; ++j)
             atom->setPositionOld(_oldPos[i * 3 + j], j);
     }
-    // clang-format on
 }
 
 /**
@@ -756,6 +786,7 @@ void SimulationBox::deFlattenOldVelocities()
 {
     // clang-format off
     #pragma omp parallel for
+    // clang-format on
     for (size_t i = 0; i < _atoms.size(); ++i)
     {
         const auto atom = _atoms[i];
@@ -763,7 +794,6 @@ void SimulationBox::deFlattenOldVelocities()
         for (size_t j = 0; j < 3; ++j)
             atom->setVelocityOld(_oldVel[i * 3 + j], j);
     }
-    // clang-format on
 }
 
 /**
@@ -775,6 +805,7 @@ void SimulationBox::deFlattenOldForces()
 {
     // clang-format off
     #pragma omp parallel for
+    // clang-format on
     for (size_t i = 0; i < _atoms.size(); ++i)
     {
         const auto atom = _atoms[i];
@@ -782,7 +813,6 @@ void SimulationBox::deFlattenOldForces()
         for (size_t j = 0; j < 3; ++j)
             atom->setForceOld(_oldForces[i * 3 + j], j);
     }
-    // clang-format on
 }
 
 /**
@@ -796,13 +826,15 @@ void SimulationBox::resetForces()
     auto *const _forcesPtr = getForcesPtr();
 
     // clang-format off
-
-    #pragma omp target teams distribute parallel for is_device_ptr(_forcesPtr)
-    for (size_t i = 0; i < getNumberOfAtoms(); ++i)
-        for (size_t j = 0; j < 3; ++j)
-            _forcesPtr[i * 3 + j] = 0.0;
-
+#ifdef __PQ_GPU__
+    #pragma omp target teams distribute parallel for \
+                is_device_ptr(_forcesPtr)
+#else
+    #pragma omp parallel for
+#endif
     // clang-format on
+    for (size_t i = 0; i < _nAtoms; ++i)
+        for (size_t j = 0; j < 3; ++j) _forcesPtr[i * 3 + j] = 0.0;
 
     deFlattenForces();
 }
@@ -824,12 +856,17 @@ Vec3D SimulationBox::calculateCenterOfMass()
     const auto *const massesPtr = getMassesPtr();
 
     // clang-format off
+#ifdef __PQ_GPU__
     #pragma omp target teams distribute parallel for \
                 is_device_ptr(posPtr, massesPtr)     \
                 map(comX, comY, comZ)                \
                 reduction(+:comX, comY, comZ)
+#else
+    #pragma omp parallel for                         \
+                reduction(+:comX, comY, comZ)
+#endif
     // clang-format on
-    for (size_t i = 0; i < getNumberOfAtoms(); ++i)
+    for (size_t i = 0; i < _nAtoms; ++i)
     {
         comX += massesPtr[i] * posPtr[i * 3];
         comY += massesPtr[i] * posPtr[i * 3 + 1];
@@ -855,12 +892,18 @@ double SimulationBox::calculateTemperature()
     const auto *const massPtr = getMassesPtr();
 
     // clang-format off
+#ifdef __PQ_GPU__
     #pragma omp target teams distribute parallel for \
                 collapse(2)                          \
                 is_device_ptr(velPtr,massPtr)        \
                 reduction(+:temperature)
+#else
+    #pragma omp parallel for                         \
+                collapse(2)                          \
+                reduction(+:temperature)
+#endif
     // clang-format on 
-    for (size_t i = 0; i < getNumberOfAtoms(); ++i)
+    for (size_t i = 0; i < _nAtoms; ++i)
         for (size_t j = 0; j < 3; ++j)
             temperature += massPtr[i] * velPtr[i * 3 + j] * velPtr[i * 3 + j];
 
@@ -886,12 +929,17 @@ Vec3D SimulationBox::calculateMomentum()
     const auto *const massesPtr = getMassesPtr();
 
     // clang-format off
+#ifdef __PQ_GPU__
     #pragma omp target teams distribute parallel for         \
                 is_device_ptr(velPtr, massesPtr)             \
                 map(momentumX, momentumY, momentumZ)         \
                 reduction(+:momentumX, momentumY, momentumZ)
+#else
+    #pragma omp parallel for                                 \
+                reduction(+:momentumX, momentumY, momentumZ)
+#endif
     // clang-format on
-    for (size_t i = 0; i < getNumberOfAtoms(); ++i)
+    for (size_t i = 0; i < _nAtoms; ++i)
     {
         momentumX += massesPtr[i] * velPtr[i * 3];
         momentumY += massesPtr[i] * velPtr[i * 3 + 1];
@@ -919,12 +967,17 @@ Vec3D SimulationBox::calculateAngularMomentum(const Vec3D &momentum)
     const auto *const velPtr    = getVelPtr();
 
     // clang-format off
+#ifdef __PQ_GPU__
     #pragma omp target teams distribute parallel for                \
                 is_device_ptr(massesPtr, posPtr, velPtr)            \
                 map(angularMomX, angularMomY, angularMomZ)          \
                 reduction(+:angularMomX, angularMomY, angularMomZ)
+#else
+    #pragma omp parallel for                                        \
+                reduction(+:angularMomX, angularMomY, angularMomZ)
+#endif
     // clang-format on
-    for (size_t i = 0; i < getNumberOfAtoms(); ++i)
+    for (size_t i = 0; i < _nAtoms; ++i)
     {
         const auto mass = massesPtr[i];
         const auto pos =
@@ -957,11 +1010,16 @@ void SimulationBox::scaleVelocities(const Real lambda)
     Real *const _velPtr = getVelPtr();
 
     // clang-format off
+#ifdef __PQ_GPU__
     #pragma omp target teams distribute parallel for \
                 collapse(2)                          \
                 is_device_ptr(_velPtr)
+#else
+    #pragma omp parallel for                        \
+                collapse(2)
+#endif
     // clang-format on
-    for (size_t i = 0; i < getNumberOfAtoms(); ++i)
+    for (size_t i = 0; i < _nAtoms; ++i)
         for (size_t j = 0; j < 3; ++j) _velPtr[i * 3 + j] *= lambda;
 
     deFlattenVelocities();
@@ -979,12 +1037,16 @@ void SimulationBox::addToVelocities(const Vec3D &velocity)
     Real *const _velPtr = getVelPtr();
 
     // clang-format off
-
+#ifdef __PQ_GPU__
     #pragma omp target teams distribute parallel for \
                 collapse(2)                          \
                 is_device_ptr(_velPtr)               \
                 map(velocity)
-    for (size_t i = 0; i < getNumberOfAtoms(); ++i)
+#else
+    #pragma omp parallel for                        \
+                collapse(2)
+#endif
+    for (size_t i = 0; i < _nAtoms; ++i)
         for (size_t j = 0; j < 3; ++j)
             _velPtr[i * 3 + j] += velocity[j];
 
@@ -1004,18 +1066,20 @@ std::vector<Real> SimulationBox::getAtomicScalarForces()
 
     const auto *const forcesPtr = getForcesPtr();
 
-    const auto nAtoms = getNumberOfAtoms();
-
     std::vector<Real> atomicScalarForces;
-    atomicScalarForces.reserve(nAtoms);
+    atomicScalarForces.reserve(_nAtoms);
 
     auto *const scalarForces = atomicScalarForces.data();
 
     // clang-format off
+#ifdef __PQ_GPU__
     #pragma omp target teams distribute parallel for \
                 is_device_ptr(forcesPtr)             \
                 map(scalarForces)
-    for (size_t i = 0; i < nAtoms; ++i)
+#else
+    #pragma omp parallel for
+#endif
+    for (size_t i = 0; i < _nAtoms; ++i)
         scalarForces[i] = ::sqrt(forcesPtr[i * 3]     * forcesPtr[i * 3]     +
                                  forcesPtr[i * 3 + 1] * forcesPtr[i * 3 + 1] +
                                  forcesPtr[i * 3 + 2] * forcesPtr[i * 3 + 2]);
@@ -1035,22 +1099,26 @@ std::vector<Real> SimulationBox::getAtomicScalarForcesOld()
 
     const auto *const forcesPtr = getOldForcesPtr();
 
-    const auto nAtoms = getNumberOfAtoms();
-
     std::vector<Real> atomicScalarForces;
-    atomicScalarForces.reserve(nAtoms);
+    atomicScalarForces.reserve(_nAtoms);
 
     auto *const scalarForces = atomicScalarForces.data();
 
     // clang-format off
+#ifdef __PQ_GPU__
     #pragma omp target teams distribute parallel for \
                 is_device_ptr(forcesPtr)             \
                 map(scalarForces)
-    for (size_t i = 0; i < nAtoms; ++i)
-        scalarForces[i] = ::sqrt(forcesPtr[i * 3]     * forcesPtr[i * 3]     +
-                                 forcesPtr[i * 3 + 1] * forcesPtr[i * 3 + 1] +
-                                 forcesPtr[i * 3 + 2] * forcesPtr[i * 3 + 2]);
+#else
+    #pragma omp parallel for
+#endif
     // clang-format on
+    for (size_t i = 0; i < _nAtoms; ++i)
+        scalarForces[i] = ::sqrt(
+            forcesPtr[i * 3] * forcesPtr[i * 3] +
+            forcesPtr[i * 3 + 1] * forcesPtr[i * 3 + 1] +
+            forcesPtr[i * 3 + 2] * forcesPtr[i * 3 + 2]
+        );
 
     return atomicScalarForces;
 }
@@ -1067,12 +1135,15 @@ void SimulationBox::updateOldPositions()
     auto *const       oldPosPtr = getOldPosPtr();
 
     // clang-format off
+#ifdef __PQ_GPU__
     #pragma omp target teams distribute parallel for \
                 is_device_ptr(posPtr, oldPosPtr)
-    for (size_t i = 0; i < getNumberOfAtoms(); ++i)
-        for (size_t j = 0; j < 3; ++j)
-            oldPosPtr[i * 3 + j] = posPtr[i * 3 + j];
+#else
+    #pragma omp parallel for
+#endif
     // clang-format on
+    for (size_t i = 0; i < _nAtoms; ++i)
+        for (size_t j = 0; j < 3; ++j) oldPosPtr[i * 3 + j] = posPtr[i * 3 + j];
 
     deFlattenOldPositions();
 }
@@ -1089,12 +1160,15 @@ void SimulationBox::updateOldVelocities()
     auto *const       oldVelPtr = getOldVelPtr();
 
     // clang-format off
+#ifdef __PQ_GPU__
     #pragma omp target teams distribute parallel for \
                 is_device_ptr(velPtr, oldVelPtr)
-    for (size_t i = 0; i < getNumberOfAtoms(); ++i)
-        for (size_t j = 0; j < 3; ++j)
-            oldVelPtr[i * 3 + j] = velPtr[i * 3 + j];
+#else
+    #pragma omp parallel for
+#endif
     // clang-format on
+    for (size_t i = 0; i < _nAtoms; ++i)
+        for (size_t j = 0; j < 3; ++j) oldVelPtr[i * 3 + j] = velPtr[i * 3 + j];
 
     deFlattenOldVelocities();
 }
@@ -1111,12 +1185,16 @@ void SimulationBox::updateOldForces()
     auto *const       oldForcesPtr = getOldForcesPtr();
 
     // clang-format off
+#ifdef __PQ_GPU__
     #pragma omp target teams distribute parallel for \
-                is_device_ptr(forcesPtr, oldForcesPtr)
-    for (size_t i = 0; i < getNumberOfAtoms(); ++i)
+                map(to:forcesPtr, oldForcesPtr)
+#else
+    #pragma omp parallel for
+#endif
+    // clang-format on
+    for (size_t i = 0; i < _nAtoms; ++i)
         for (size_t j = 0; j < 3; ++j)
             oldForcesPtr[i * 3 + j] = forcesPtr[i * 3 + j];
-    // clang-format on
 
     deFlattenOldForces();
 }

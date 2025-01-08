@@ -24,8 +24,9 @@
 
 #include <thread>
 
+#include "constants.hpp"
 #include "physicalData.hpp"
-#include "pybind11/embed.h"
+#include "pybind11/embed.h"   // IWYU pragma: keep
 #include "simulationBox.hpp"
 
 using QM::ASEQMRunner;

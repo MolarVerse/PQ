@@ -67,12 +67,16 @@ void NoseHooverThermostat::applyThermostatOnForces(SimulationBox &simBox)
     auto *const       forcePtr = simBox.getForcesPtr();
     const auto *const velPtr   = simBox.getVelPtr();
     const auto *const massPtr  = simBox.getMassesPtr();
+    const auto        nAtoms   = simBox.getNumberOfAtoms();
 
     // clang-format off
-
+#ifdef __PQ_GPU__
     #pragma omp target teams distribute parallel for collapse(2) \
                 is_device_ptr(forcePtr, velPtr, massPtr)
-    for (size_t i = 0; i < simBox.getNumberOfAtoms(); ++i)
+#else
+    #pragma omp parallel for collapse(2)
+#endif
+    for (size_t i = 0; i < nAtoms; ++i)
         for (size_t j = 0; j < 3; ++j)
             forcePtr[3 * i + j] -= factor * velPtr[3 * i + j] * massPtr[i];
 

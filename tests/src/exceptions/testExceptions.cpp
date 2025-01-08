@@ -22,7 +22,6 @@
 
 #include <gtest/gtest.h>   // for Test, TestInfo (ptr only), TEST, InitGoogleTest, RUN_ALL_TESTS
 
-#include <memory>        // for allocator
 #include <string_view>   // for string_view
 
 #include "exceptions.hpp"         // for GuffDatException, InputFileException
