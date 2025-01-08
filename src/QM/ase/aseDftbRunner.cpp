@@ -59,8 +59,8 @@ AseDftbRunner::AseDftbRunner(
             setHubbDerivDict(constants::hubbardDerivMap3ob);
             calculatorArgs["Hamiltonian_ThirdOrderFull"] = "Yes";
             calculatorArgs["Hamiltonian_hubbardderivs_"] = "";
-            const auto slakosDict                        = getHubbDerivDict();
-            for (const auto &[key, value] : slakosDict)
+            const auto hubbDerivDict                        = getHubbDerivDict();
+            for (const auto &[key, value] : hubbDerivDict)
             {
                 auto _key = "Hamiltonian_hubbardderivs_" + key;
                 calculatorArgs[_key.c_str()] = value;
@@ -88,7 +88,7 @@ AseDftbRunner::AseDftbRunner(
  *
  * @return std::unordered_map<std::string, float>
  */
-const std::unordered_map<std::string, double> AseDftbRunner::getHubbDerivDict() const { return _slakosDict; }
+const std::unordered_map<std::string, double> AseDftbRunner::getHubbDerivDict() const { return _hubbardDerivDict; }
 
 /***************************
  *                         *
@@ -103,5 +103,5 @@ void AseDftbRunner::setHubbDerivDict(
     const std::unordered_map<std::string, double> slakosDict
 )
 {
-    _slakosDict = slakosDict;
+    _hubbardDerivDict = slakosDict;
 }

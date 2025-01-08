@@ -59,7 +59,7 @@ namespace QM
 
 
        private:
-        std::unordered_map<std::string, double> _slakosDict;
+        std::unordered_map<std::string, double> _hubbardDerivDict;
     };
 }   // namespace QM
 
