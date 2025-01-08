@@ -52,7 +52,7 @@ AseDftbRunner::AseDftbRunner(
             calculatorArgs["slako_dir"] = slakosDir.c_str();
         }
         else
-            calculatorArgs["slako_dir"] = slakosType.c_str();
+            calculatorArgs["slako_dir"] = slakosPath.c_str();
 
         if (slakosType == "3ob")
         {
