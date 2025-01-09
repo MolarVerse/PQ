@@ -103,6 +103,7 @@ namespace settings
         static inline std::string _slakosPath       = "";
 
         static inline bool _useDispersionCorrection = false;
+        static inline bool _useThirdOrderDftb       = false;
 
         // clang-format off
         static inline double _qmLoopTimeLimit = defaults::_QM_LOOP_TIME_LIMIT_DEFAULT_;
@@ -132,6 +133,7 @@ namespace settings
         static void setSlakosPath(const std::string_view &path);
 
         static void setUseDispersionCorrection(const bool use);
+        static void setUseThirdOrderDftb(const bool use);
 
         static void setQMLoopTimeLimit(const double time);
 
@@ -151,6 +153,7 @@ namespace settings
         [[nodiscard]] static std::string getSlakosPath();
 
         [[nodiscard]] static bool useDispersionCorr();
+        [[nodiscard]] static bool useThirdOrderDftb();
 
         [[nodiscard]] static double getQMLoopTimeLimit();
     };

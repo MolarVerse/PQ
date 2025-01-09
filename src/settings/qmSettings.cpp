@@ -149,7 +149,8 @@ bool QMSettings::isExternalQMRunner()
 void QMSettings::setQMMethod(const std::string_view &method)
 {
     using enum QMMethod;
-    const auto methodToLowerAndReplaceDashes = toLowerAndReplaceDashesCopy(method);
+    const auto methodToLowerAndReplaceDashes =
+        toLowerAndReplaceDashesCopy(method);
 
     if ("dftbplus" == methodToLowerAndReplaceDashes)
         _qmMethod = DFTBPLUS;
@@ -287,17 +288,16 @@ void QMSettings::setSlakosType(const std::string_view &slakos)
     const auto slakosType = toLowerAndReplaceDashesCopy(slakos);
 
     if ("3ob" == slakosType)
-        _slakosType = THREEOB;
-
+        _slakosType        = THREEOB;
+        
     else if ("matsci" == slakosType)
-        _slakosType = MATSCI;
+        _slakosType        = MATSCI;
 
     else if ("custom" == slakosType)
         _slakosType = CUSTOM;
 
     else
-        throw UserInputException(
-            std::format("Slakos {} not recognized", slakos)
+        throw UserInputException(std::format("Slakos {} not recognized", slakos)
         );
 }
 
@@ -319,6 +319,15 @@ void QMSettings::setSlakosType(const SlakosType slakos)
 void QMSettings::setSlakosPath(const std::string_view &path)
 {
     _slakosPath = path;
+}
+
+/**
+ * @brief sets if third order DFTB should be used
+ *
+ */
+void QMSettings::setUseThirdOrderDftb(const bool useThirdOrderDftb)
+{
+    _useThirdOrderDftb = useThirdOrderDftb;
 }
 
 /**
@@ -396,6 +405,13 @@ SlakosType QMSettings::getSlakosType() { return _slakosType; }
  * @return std::string
  */
 std::string QMSettings::getSlakosPath() { return _slakosPath; }
+
+/**
+ * @brief returns if third order DFTB should be used
+ *
+ * @return bool
+ */
+bool QMSettings::useThirdOrderDftb() { return _useThirdOrderDftb; }
 
 /**
  * @brief returns if the dispersion correction should be used

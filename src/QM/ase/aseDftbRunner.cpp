@@ -21,10 +21,12 @@
 ******************************************************************************/
 
 #include "aseDftbRunner.hpp"
+
 #include "hubbardDerivMap.hpp"
 #include "pybind11/embed.h"
 
 using QM::AseDftbRunner;
+using namespace constants;
 
 /**
  * @brief Construct a new AseDftbRunner::AseDftbRunner object
@@ -35,7 +37,8 @@ using QM::AseDftbRunner;
  */
 AseDftbRunner::AseDftbRunner(
     const std::string &slakosType,
-    const std::string &slakosPath
+    const std::string &slakosPath,
+    const bool         thirdOrder
 )
     : ASEQMRunner()
 {
@@ -55,11 +58,13 @@ AseDftbRunner::AseDftbRunner(
             calculatorArgs["slako_dir"] = slakosPath.c_str();
 
         if (slakosType == "3ob")
+            setHubbDerivDict(hubbardDerivMap3ob);
+
+        if (thirdOrder)
         {
-            setHubbDerivDict(constants::hubbardDerivMap3ob);
             calculatorArgs["Hamiltonian_ThirdOrderFull"] = "Yes";
             calculatorArgs["Hamiltonian_hubbardderivs_"] = "";
-            const auto hubbDerivDict                        = getHubbDerivDict();
+            const auto hubbDerivDict                     = getHubbDerivDict();
             for (const auto &[key, value] : hubbDerivDict)
             {
                 auto _key = "Hamiltonian_hubbardderivs_" + key;
@@ -88,7 +93,11 @@ AseDftbRunner::AseDftbRunner(
  *
  * @return std::unordered_map<std::string, float>
  */
-const std::unordered_map<std::string, double> AseDftbRunner::getHubbDerivDict() const { return _hubbardDerivDict; }
+const std::unordered_map<std::string, double> AseDftbRunner::getHubbDerivDict(
+) const
+{
+    return _hubbardDerivDict;
+}
 
 /***************************
  *                         *

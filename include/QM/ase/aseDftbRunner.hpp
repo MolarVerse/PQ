@@ -42,7 +42,8 @@ namespace QM
 
         explicit AseDftbRunner(
             const std::string &slakosType,
-            const std::string &slakosPath
+            const std::string &slakosPath,
+            const bool         thirdOrder
         );
 
 

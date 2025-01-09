@@ -96,6 +96,12 @@ QMInputParser::QMInputParser(Engine &engine) : InputFileParser(engine)
         bind_front(&QMInputParser::parseSlakosPath, this),
         false
     );
+
+    addKeyword(
+        std::string("third_order"),
+        bind_front(&QMInputParser::parseThirdOrder, this),
+        false
+    );
 }
 
 /**
@@ -325,11 +331,17 @@ void QMInputParser::parseSlakosType(
     const auto slakos = toLowerCopy(lineElements[2]);
 
     if ("3ob" == slakos)
+    {
         QMSettings::setSlakosType(THREEOB);
+        QMSettings::setUseThirdOrderDftb(true);
+    }
 
     else if ("matsci" == slakos)
+    {
         QMSettings::setSlakosType(MATSCI);
-
+        QMSettings::setUseThirdOrderDftb(false);
+    }
+    
     else if ("custom" == slakos)
         QMSettings::setSlakosType(CUSTOM);
 
@@ -354,4 +366,34 @@ void QMInputParser::parseSlakosPath(
 {
     checkCommand(lineElements, lineNumber);
     QMSettings::setSlakosPath(lineElements[2]);
+}
+
+/**
+ * @brief parse if third order DFTB is used
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
+void QMInputParser::parseThirdOrder(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+
+    const auto third_order = toLowerCopy(lineElements[2]);
+
+    if ("on" == third_order || "yes" == third_order || "true" == third_order)
+        QMSettings::setUseThirdOrderDftb(true);
+
+    else if ("off" == third_order || "no" == third_order ||
+             "false" == third_order)
+        QMSettings::setUseThirdOrderDftb(false);
+
+    else
+        throw InputFileException(std::format(
+            "Invalid DFTB third_order request \"{}\" in input file.\n"
+            "Possible values are: on, yes, true, off, no, false",
+            lineElements[2]
+        ));
 }
