@@ -289,7 +289,7 @@ void QMSettings::setSlakosType(const std::string_view &slakos)
 
     if ("3ob" == slakosType)
         _slakosType        = THREEOB;
-        
+
     else if ("matsci" == slakosType)
         _slakosType        = MATSCI;
 
@@ -328,6 +328,15 @@ void QMSettings::setSlakosPath(const std::string_view &path)
 void QMSettings::setUseThirdOrderDftb(const bool useThirdOrderDftb)
 {
     _useThirdOrderDftb = useThirdOrderDftb;
+}
+
+/**
+ * @brief sets the custom Hubbard Derivative dictionary
+ *
+ */
+void QMSettings::setHubbardDerivs(std::unordered_map<std::string, double> hubbardDerivs)
+{
+    _hubbardDerivs = hubbardDerivs;
 }
 
 /**
@@ -412,6 +421,13 @@ std::string QMSettings::getSlakosPath() { return _slakosPath; }
  * @return bool
  */
 bool QMSettings::useThirdOrderDftb() { return _useThirdOrderDftb; }
+
+/**
+ * @brief returns the custom Hubbard Derivative dictionary
+ *
+ * @return bool
+ */
+std::unordered_map<std::string, double> QMSettings::getHubbardDerivs() { return _hubbardDerivs; }
 
 /**
  * @brief returns if the dispersion correction should be used

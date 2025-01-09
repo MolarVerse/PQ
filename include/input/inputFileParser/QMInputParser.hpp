@@ -57,6 +57,7 @@ namespace input
         void parseSlakosType(const pq::strings &, const size_t);
         void parseSlakosPath(const pq::strings &, const size_t);
         void parseThirdOrder(const pq::strings &, const size_t);
+        void parseHubbardDerivs(const pq::strings &, const size_t);
     };
 
 }   // namespace input

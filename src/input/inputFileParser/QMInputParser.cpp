@@ -24,12 +24,17 @@
 
 #include <format>       // for format
 #include <functional>   // for _Bind_front_t, bind_front
+#include <unordered_map> // for unordered_map
+#include <sstream>      // for stringstream
+#include <algorithm>    // for remove
 
 #include "exceptions.hpp"         // for InputFileException, customException
 #include "qmSettings.hpp"         // for Settings
 #include "references.hpp"         // for ReferencesOutput
 #include "referencesOutput.hpp"   // for ReferencesOutput
 #include "stringUtilities.hpp"    // for toLowerCopy
+#include "aseDftbRunner.hpp"      // for AseDftbRunner
+#include "hubbardDerivMap.hpp"    // for hubbardDerivMap3ob
 
 using namespace input;
 using namespace utilities;
@@ -37,7 +42,7 @@ using namespace settings;
 using namespace customException;
 using namespace engine;
 using namespace references;
-
+using namespace constants;
 /**
  * @brief Construct a new QMInputParser:: QMInputParser object
  *
@@ -100,6 +105,12 @@ QMInputParser::QMInputParser(Engine &engine) : InputFileParser(engine)
     addKeyword(
         std::string("third_order"),
         bind_front(&QMInputParser::parseThirdOrder, this),
+        false
+    );
+
+    addKeyword(
+        std::string("hubbard_derivs"),
+        bind_front(&QMInputParser::parseHubbardDerivs, this),
         false
     );
 }
@@ -334,6 +345,7 @@ void QMInputParser::parseSlakosType(
     {
         QMSettings::setSlakosType(THREEOB);
         QMSettings::setUseThirdOrderDftb(true);
+        QMSettings::setHubbardDerivs(hubbardDerivMap3ob);
     }
 
     else if ("matsci" == slakos)
@@ -341,7 +353,7 @@ void QMInputParser::parseSlakosType(
         QMSettings::setSlakosType(MATSCI);
         QMSettings::setUseThirdOrderDftb(false);
     }
-    
+
     else if ("custom" == slakos)
         QMSettings::setSlakosType(CUSTOM);
 
@@ -396,4 +408,44 @@ void QMInputParser::parseThirdOrder(
             "Possible values are: on, yes, true, off, no, false",
             lineElements[2]
         ));
+}
+
+/**
+ * @brief parse custom Hubbard Derivative dictionary
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
+void QMInputParser::parseHubbardDerivs(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommandArray(lineElements, lineNumber);
+
+    std::unordered_map<std::string, double> hubbardDerivs;
+    std::string derivs = lineElements[2];
+    derivs.erase(std::remove(derivs.begin(), derivs.end(), ';'), derivs.end());
+
+    std::stringstream ss(derivs);
+    std::string item;
+    while (std::getline(ss, item, ','))
+    {
+        std::stringstream pairStream(item);
+        std::string element;
+        double value;
+        if (std::getline(pairStream, element, ':') && pairStream >> value)
+        {
+            hubbardDerivs[element] = value;
+        }
+        else
+        {
+            throw InputFileException(std::format(
+                "Invalid hubbard_derivs format \"{}\" in input file.",
+                lineElements[2]
+            ));
+        }
+    }
+
+    QMSettings::setHubbardDerivs(hubbardDerivs);
 }

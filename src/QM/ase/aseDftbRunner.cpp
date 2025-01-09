@@ -36,9 +36,10 @@ using namespace constants;
  * @throw py::error_already_set if the import of the mace module fails
  */
 AseDftbRunner::AseDftbRunner(
-    const std::string &slakosType,
-    const std::string &slakosPath,
-    const bool         thirdOrder
+    const std::string                             &slakosType,
+    const std::string                             &slakosPath,
+    const bool                                     thirdOrder,
+    const std::unordered_map<std::string, double> &hubbardDerivs
 )
     : ASEQMRunner()
 {
@@ -57,11 +58,9 @@ AseDftbRunner::AseDftbRunner(
         else
             calculatorArgs["slako_dir"] = slakosPath.c_str();
 
-        if (slakosType == "3ob")
-            setHubbDerivDict(hubbardDerivMap3ob);
-
         if (thirdOrder)
         {
+            setHubbDerivDict(hubbardDerivs);
             calculatorArgs["Hamiltonian_ThirdOrderFull"] = "Yes";
             calculatorArgs["Hamiltonian_hubbardderivs_"] = "";
             const auto hubbDerivDict                     = getHubbDerivDict();

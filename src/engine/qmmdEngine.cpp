@@ -127,8 +127,9 @@ void QMMDEngine::setAseDftbRunner()
     const auto slakosType    = string(QMSettings::getSlakosType());
     const auto slakosPath    = QMSettings::getSlakosPath();
     const auto useThirdOrder = QMSettings::useThirdOrderDftb();
+    const auto hubbardDerivs = QMSettings::getHubbardDerivs();
 
-    _qmRunner = make_shared<AseDftbRunner>(slakosType, slakosPath, useThirdOrder);
+    _qmRunner = make_shared<AseDftbRunner>(slakosType, slakosPath, useThirdOrder, hubbardDerivs);
 #else
     throw CompileTimeException(
         "The ASE DFTB+ qm method was requested but ASE was not enabled at "
