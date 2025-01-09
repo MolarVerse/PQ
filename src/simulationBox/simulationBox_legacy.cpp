@@ -21,7 +21,6 @@
 ******************************************************************************/
 
 #include <algorithm>
-#include <ranges>
 
 #include "constants.hpp"
 #include "simulationBox.hpp"

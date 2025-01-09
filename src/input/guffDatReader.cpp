@@ -22,33 +22,29 @@
 
 #include "guffDatReader.hpp"
 
-#include <algorithm>    // for __for_each_fn, for_each
-#include <cmath>        // for sqrt
-#include <exception>    // for exception
-#include <format>       // for format
-#include <fstream>      // for basic_istream, std::ifstream, std
-#include <functional>   // for idestd::ntity
-#include <memory>       // for make_shared
-#include <ranges>       // for views::drop, for_each, ranges
+#include <algorithm>   // for __for_each_fn, for_each
+#include <cmath>       // for sqrt
+#include <exception>   // for exception
+#include <format>      // for format
+#include <fstream>     // for basic_istream, std::ifstream, std
+#include <memory>      // for make_shared
+#include <ranges>      // for views::drop, for_each, ranges
 
-#include "buckinghamPair.hpp"        // for BuckinghamPair
-#include "constants.hpp"             // for _COULOMB_PREFACTOR_
-#include "defaults.hpp"              // for _NUMBER_OF_GUFF_ENTRIES_
-#include "engine.hpp"                // for Engine
-#include "exceptions.hpp"            // for GuffDatException, InputFileException
-#include "fileSettings.hpp"          // for FileSettings
-#include "forceFieldClass.hpp"       // for ForceField
-#include "guffNonCoulomb.hpp"        // for GuffNonCoulomb
-#include "guffPair.hpp"              // for GuffPair
-#include "lennardJonesPair.hpp"      // for LennardJonesPair
-#include "mathUtilities.hpp"         // for sign, utilities
-#include "molecule.hpp"              // for Molecule
-#include "morsePair.hpp"             // for MorsePair
-#include "nonCoulombPotential.hpp"   // for NonCoulombPotential
-#include "potential.hpp"             // for Potential
-#include "potentialSettings.hpp"     // for PotentialSettings
-#include "settings.hpp"              // for settings
-#include "simulationBox.hpp"         // for SimulationBox
+#include "buckinghamPair.hpp"      // for BuckinghamPair
+#include "constants.hpp"           // for _COULOMB_PREFACTOR_
+#include "defaults.hpp"            // for _NUMBER_OF_GUFF_ENTRIES_
+#include "engine.hpp"              // for Engine
+#include "exceptions.hpp"          // for GuffDatException, InputFileException
+#include "fileSettings.hpp"        // for FileSettings
+#include "guffNonCoulomb.hpp"      // for GuffNonCoulomb
+#include "guffPair.hpp"            // for GuffPair
+#include "lennardJonesPair.hpp"    // for LennardJonesPair
+#include "mathUtilities.hpp"       // for sign, utilities
+#include "molecule.hpp"            // for Molecule
+#include "morsePair.hpp"           // for MorsePair
+#include "potentialSettings.hpp"   // for PotentialSettings
+#include "settings.hpp"            // for settings
+#include "simulationBox.hpp"       // for SimulationBox
 #include "stringUtilities.hpp"   // for fileExists, getLineCommands, removeComments, splitString
 
 using namespace input::guffdat;
@@ -637,8 +633,8 @@ void GuffDatReader::calculatePartialCharges()
 
     for (size_t i = 0; i < nMolTypes; ++i)
     {
-        auto      *moleculeType = &(simBox.findMoleculeType(i + 1));
-        const auto nAtoms       = moleculeType->getNumberOfAtoms();
+        auto *const moleculeType = &(simBox.findMoleculeType(i + 1));
+        const auto  nAtoms       = moleculeType->getNumberOfAtoms();
 
         for (size_t j = 0; j < nAtoms; ++j)
         {

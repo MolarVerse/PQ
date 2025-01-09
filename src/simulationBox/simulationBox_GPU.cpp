@@ -118,6 +118,7 @@ void SimulationBox::initDeviceMemory(device::Device& device)
     device.deviceMalloc(&_atomTypesDevice, nAtoms);
     device.deviceMalloc(&_molTypesDevice, nMolecules);
     device.deviceMalloc(&_internalGlobalVDWTypesDevice, nAtoms);
+    device.deviceMalloc(&_moleculeIndicesDevice, nAtoms);
 
     device.checkErrors("SimulationBox device memory allocation");
 }

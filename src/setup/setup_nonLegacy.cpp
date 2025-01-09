@@ -91,6 +91,11 @@ void setup::setupFlattenedData(Engine &engine)
     const auto isOrthoRhombic = box->isOrthoRhombic();
 
     pot->setFunctionPointers(isOrthoRhombic);
+
+    pot->initDeviceMemory(engine.getDevice());
+    pot->copyNonCoulParamsTo(engine.getDevice());
+    pot->copyNonCoulCutOffsTo(engine.getDevice());
+    pot->copyCoulParamsTo(engine.getDevice());
 }
 
 #ifdef __PQ_GPU__

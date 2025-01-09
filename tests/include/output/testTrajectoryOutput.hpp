@@ -24,15 +24,16 @@
 
 #define _TEST_TRAJECTORY_FILE_OUTPUT_HPP_
 
+#include <gtest/gtest.h>   // for Test
+#include <stdio.h>         // for remove
+
+#include <memory>   // for __shared_ptr_access, shared_ptr, make_shared
+
 #include "atom.hpp"               // for Atom
 #include "molecule.hpp"           // for Molecule
 #include "simulationBox.hpp"      // for SimulationBox
 #include "trajectoryOutput.hpp"   // for TrajectoryOutput
 #include "vector3d.hpp"           // for Vec3D
-
-#include <gtest/gtest.h>   // for Test
-#include <memory>          // for __shared_ptr_access, shared_ptr, make_shared
-#include <stdio.h>         // for remove
 
 /**
  * @class TestTrajectoryOutput
@@ -42,7 +43,7 @@
  */
 class TestTrajectoryOutput : public ::testing::Test
 {
-  protected:
+   protected:
     void SetUp() override
     {
         _trajectoryOutput = new output::TrajectoryOutput("default.xyz");
@@ -90,6 +91,8 @@ class TestTrajectoryOutput : public ::testing::Test
         _simulationBox->addAtom(atom1);
         _simulationBox->addAtom(atom2);
         _simulationBox->addAtom(atom3);
+
+        _simulationBox->setNumberOfAtoms(3);
     }
 
     void TearDown() override

@@ -33,7 +33,6 @@
 #include <vector>        // for vector
 
 #include "atom.hpp"            // for Atom, simulationBox
-#include "atomMassMap.hpp"     // for atomMassMap
 #include "atomNumberMap.hpp"   // for atomNumberMap
 #include "constants/conversionFactors.hpp"   // for _AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_
 #include "engine.hpp"                        // for Engine
@@ -44,17 +43,10 @@
 #include "maxwellBoltzmann.hpp"        // for MaxwellBoltzmann
 #include "molecule.hpp"                // for Molecule
 #include "outputMessages.hpp"          // for _ANGSTROM_
-#include "physicalData.hpp"            // for PhysicalData
 #include "potentialSettings.hpp"       // for PotentialSettings
-#include "settings.hpp"                // for Settings
 #include "simulationBox.hpp"           // for SimulationBox
 #include "simulationBoxSettings.hpp"   // for SimulationBoxSettings
-#include "stdoutOutput.hpp"            // for StdoutOutput
 #include "stringUtilities.hpp"   // for toLowerCopy, firstLetterToUpperCaseCopy
-
-#ifdef __PQ_GPU__
-#include "device.hpp"
-#endif
 
 using setup::simulationBox::SimulationBoxSetup;
 using namespace engine;
@@ -94,10 +86,9 @@ void SimulationBoxSetup::setup()
 {
     auto &simBox = _engine.getSimulationBox();
 
-#ifndef __PQ_LEGACY__
-    // set number of atoms
     simBox.setNumberOfAtoms(simBox.getAtoms().size());
 
+#ifndef __PQ_LEGACY__
     // flatten already present data
     simBox.flattenPositions();
     simBox.flattenVelocities();
@@ -112,6 +103,7 @@ void SimulationBoxSetup::setup()
     auto &device = _engine.getDevice();
 
     simBox.initDeviceMemory(device);
+    simBox.getBox().initDeviceMemory(device);
 
     simBox.copyPosTo(device);
     simBox.copyVelTo(device);
@@ -124,6 +116,9 @@ void SimulationBoxSetup::setup()
 
     simBox.copyAtomsPerMoleculeTo(device);
     simBox.copyMoleculeIndicesTo(device);
+
+    simBox.getBox().updateBoxParams();
+    simBox.getBox().copyBoxParamsTo(device);
 #endif
 
     setAtomNames();
@@ -168,7 +163,7 @@ void SimulationBoxSetup::setAtomNames()
 {
     auto &simBox = _engine.getSimulationBox();
 
-    auto setAtomNamesOfMolecule = [this, &simBox](auto &molecule)
+    auto setAtomNamesOfMolecule = [&simBox](auto &molecule)
     {
         const auto &molType = molecule.getMoltype();
         if (molType == 0)
@@ -199,7 +194,7 @@ void SimulationBoxSetup::setAtomTypes()
 {
     auto &simBox = _engine.getSimulationBox();
 
-    auto setAtomTypesOfMolecule = [this, &simBox](auto &molecule)
+    auto setAtomTypesOfMolecule = [&simBox](auto &molecule)
     {
         const auto &molType = molecule.getMoltype();
 
@@ -228,7 +223,7 @@ void SimulationBoxSetup::setExternalVDWTypes()
 {
     auto &simBox = _engine.getSimulationBox();
 
-    auto setExternalVDWTypesOfMolecule = [this, &simBox](auto &molecule)
+    auto setExternalVDWTypesOfMolecule = [&simBox](auto &molecule)
     {
         const auto &molType = molecule.getMoltype();
 
@@ -256,7 +251,7 @@ void SimulationBoxSetup::setPartialCharges()
 {
     auto &simBox = _engine.getSimulationBox();
 
-    auto setPartialChargesOfMolecule = [this, &simBox](auto &molecule)
+    auto setPartialChargesOfMolecule = [&simBox](auto &molecule)
     {
         const auto &molType = molecule.getMoltype();
 
