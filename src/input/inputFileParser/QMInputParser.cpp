@@ -22,19 +22,18 @@
 
 #include "QMInputParser.hpp"
 
-#include <format>       // for format
-#include <functional>   // for _Bind_front_t, bind_front
-#include <unordered_map> // for unordered_map
-#include <sstream>      // for stringstream
-#include <algorithm>    // for remove
+#include <algorithm>       // for remove
+#include <format>          // for format
+#include <functional>      // for _Bind_front_t, bind_front
+#include <sstream>         // for stringstream
+#include <unordered_map>   // for unordered_map
 
 #include "exceptions.hpp"         // for InputFileException, customException
+#include "hubbardDerivMap.hpp"    // for hubbardDerivMap3ob
 #include "qmSettings.hpp"         // for Settings
 #include "references.hpp"         // for ReferencesOutput
 #include "referencesOutput.hpp"   // for ReferencesOutput
 #include "stringUtilities.hpp"    // for toLowerCopy
-#include "aseDftbRunner.hpp"      // for AseDftbRunner
-#include "hubbardDerivMap.hpp"    // for hubbardDerivMap3ob
 
 using namespace input;
 using namespace utilities;
@@ -424,16 +423,22 @@ void QMInputParser::parseHubbardDerivs(
     checkCommandArray(lineElements, lineNumber);
 
     std::unordered_map<std::string, double> hubbardDerivs;
-    std::string derivs = lineElements[2];
+    std::string                             derivs;
+
+    for (size_t i = 2; i < lineElements.size(); ++i)
+    {
+        derivs += lineElements[i];
+    }
+
     derivs.erase(std::remove(derivs.begin(), derivs.end(), ';'), derivs.end());
 
     std::stringstream ss(derivs);
-    std::string item;
+    std::string       item;
     while (std::getline(ss, item, ','))
     {
         std::stringstream pairStream(item);
-        std::string element;
-        double value;
+        std::string       element;
+        double            value;
         if (std::getline(pairStream, element, ':') && pairStream >> value)
         {
             hubbardDerivs[element] = value;
@@ -442,7 +447,7 @@ void QMInputParser::parseHubbardDerivs(
         {
             throw InputFileException(std::format(
                 "Invalid hubbard_derivs format \"{}\" in input file.",
-                lineElements[2]
+                derivs
             ));
         }
     }
