@@ -217,6 +217,11 @@ namespace input
     }
 }   // namespace input
 
+namespace device
+{
+    class Device;   // forward declaration
+}   // namespace device
+
 namespace pq
 {
     using Time = std::chrono::time_point<std::chrono::high_resolution_clock>;
@@ -435,6 +440,12 @@ namespace pq
     using UniqueRPMDRstFileOutput = std::unique_ptr<RPMDRstFileOutput>;
     using UniqueRPMDTrajOutput    = std::unique_ptr<RPMDTrajOutput>;
     using UniqueRPMDEnergyOutput  = std::unique_ptr<RPMDEnergyOutput>;
+
+    /********************
+     * device namespace *
+     ********************/
+
+    using Device = device::Device;
 
 }   // namespace pq
 
