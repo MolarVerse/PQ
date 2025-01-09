@@ -36,9 +36,14 @@
 
 #include "settings.hpp"
 
+#ifdef __PQ_GPU__
+#include "device.hpp"
+#endif
+
 using namespace linearAlgebra;
 using namespace simulationBox;
 using namespace settings;
+using namespace device;
 
 /******************************************************
  *                                                    *
@@ -163,7 +168,31 @@ Real *Box::getBoxParamsPtr()
 #endif
         return _boxParams.data();
 }
+#endif
 
+#ifdef __PQ_GPU__
+/**
+ * @brief copy the box params to the device
+ *
+ * @param device
+ * @return Real*
+ */
+void Box::copyBoxParamsTo(Device &device)
+{
+    device.deviceMemcpyToAsync(_boxParamsDevice, _boxParams);
+    device.checkErrors("Box copy box params to device");
+}
+
+/**
+ * @brief initialize the device memory
+ *
+ * @param device
+ */
+void Box::initDeviceMemory(Device &device)
+{
+    device.deviceMalloc(&_boxParamsDevice, 18);
+    device.checkErrors("Box device memory allocation");
+}
 #endif
 
 /********************

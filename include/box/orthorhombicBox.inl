@@ -65,17 +65,6 @@ namespace simulationBox
         Real&             tz
     )
     {
-#ifdef __PQ_DEBUG__
-        if (config::Debug::useDebug(config::DebugLevel::BOX_DEBUG))
-        {
-            std::cout << std::format(
-                "Orthorhombic box: x = {}, y = {}, z = {}\n",
-                boxDimensions[0],
-                boxDimensions[1],
-                boxDimensions[2]
-            );
-        }
-#endif
         const auto boxX = boxDimensions[0];
         const auto boxY = boxDimensions[1];
         const auto boxZ = boxDimensions[2];

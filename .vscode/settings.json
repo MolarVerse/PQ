@@ -248,5 +248,5 @@
         "**/.vscode": true,
         "**/.git": true
     },
-    "sonarlint.pathToCompileCommands": "${workspaceFolder}/.build/compile_commands.json",
+    "sonarlint.pathToCompileCommands": "${workspaceFolder}/compile_commands.json",
 }

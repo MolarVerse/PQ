@@ -65,7 +65,7 @@ namespace simulationBox
 
 #endif
        public:
-        virtual ~Box() = default;
+        virtual ~Box() = default;   // change this to free the box params
 
         virtual void      applyPBC(pq::Vec3D &position) const          = 0;
         virtual void      scaleBox(const pq::tensor3D &scalingFactors) = 0;
@@ -76,6 +76,11 @@ namespace simulationBox
 
 #ifndef __PQ_LEGACY__
         virtual void updateBoxParams() = 0;
+#endif
+
+#ifdef __PQ_GPU__
+        void initDeviceMemory(device::Device &device);
+        void copyBoxParamsTo(pq::Device &device);
 #endif
 
         /*****************************************************

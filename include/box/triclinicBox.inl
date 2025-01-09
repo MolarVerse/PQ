@@ -65,11 +65,6 @@ namespace simulationBox
         Real&             tz
     )
     {
-#ifdef __PQ_DEBUG__
-        if (config::Debug::useDebug(config::DebugLevel::BOX_DEBUG))
-        {
-        }
-#endif
         const auto unitBoxX =
             ::round(boxParams[9] * x + boxParams[10] * y + boxParams[11] * z);
         const auto unitBoxY =
