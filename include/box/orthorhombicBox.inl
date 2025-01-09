@@ -35,11 +35,7 @@
  * @see box.hpp
  */
 
-#include "orthorhombicBox.hpp"
-
-#ifdef __PQ_DEBUG__
-#include "debug.hpp"
-#endif
+#include "orthorhombicBox.hpp"   // IWYU pragma: keep
 
 namespace simulationBox
 {
