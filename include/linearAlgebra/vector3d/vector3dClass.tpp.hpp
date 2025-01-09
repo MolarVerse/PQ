@@ -82,7 +82,7 @@ namespace linearAlgebra
      */
     template <class T>
     void Vector3D<T>::operator+=(const Vector3D<T> &rhs)
-    requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>
+    requires(pq::ArithmeticVector3D<T> || pq::Arithmetic<T>)
     {
         _x += rhs._x;
         _y += rhs._y;
@@ -117,7 +117,7 @@ namespace linearAlgebra
      */
     template <class T>
     Vector3D<T> &Vector3D<T>::operator-=(const Vector3D<T> &rhs)
-    requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>
+    requires(pq::ArithmeticVector3D<T> || pq::Arithmetic<T>)
     {
         _x -= rhs._x;
         _y -= rhs._y;
@@ -154,7 +154,7 @@ namespace linearAlgebra
      */
     template <class T>
     Vector3D<T> &Vector3D<T>::operator*=(const Vector3D<T> &rhs)
-    requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>
+    requires(pq::ArithmeticVector3D<T> || pq::Arithmetic<T>)
     {
         _x *= rhs._x;
         _y *= rhs._y;
@@ -192,7 +192,7 @@ namespace linearAlgebra
      */
     template <class T>
     Vector3D<T> &Vector3D<T>::operator/=(const Vector3D<T> &rhs)
-    requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>
+    requires(pq::ArithmeticVector3D<T> || pq::Arithmetic<T>)
     {
         _x /= rhs._x;
         _y /= rhs._y;
