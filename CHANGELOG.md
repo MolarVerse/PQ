@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## Next Release
 
+### Enhancements
+
+- ASE interface for DFTB+ calculations added
+
 <!-- insertion marker -->
 ## [v0.5.2](https://github.com/MolarVerse/PQ/releases/tag/v0.5.2) - 2025-01-05
 
