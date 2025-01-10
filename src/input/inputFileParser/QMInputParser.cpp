@@ -430,7 +430,7 @@ void QMInputParser::parseHubbardDerivs(
         derivs += lineElements[i];
     }
 
-    derivs.erase(std::remove(derivs.begin(), derivs.end(), ';'), derivs.end());
+    derivs.erase(std::remove(derivs.begin(), derivs.end(), ' '), derivs.end());
 
     std::stringstream ss(derivs);
     std::string       item;
