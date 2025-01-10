@@ -71,9 +71,11 @@ AseDftbRunner::AseDftbRunner(
             }
         }
         // default would be 1, which is incompatible with DFTB3
-        calculatorArgs["ParserOptions_ParserVersion"] = "12";
-        // mandatory for SCC cycles to be performed
+        calculatorArgs["ParserOptions_ParserVersion"] = "14";
+        // SCC = "Yes" is mandatory for SCC cycles to be performed
         calculatorArgs["Hamiltonian_SCC"] = "Yes";
+        calculatorArgs["Hamiltonian_SCCTolerance"] = "1e-6";
+        calculatorArgs["Hamiltonian_MaxSCCIterations"] = "250";
         calculatorArgs["kpts"]            = py::make_tuple(1, 1, 1);
         _calculator = calculator.attr("Dftb")(**calculatorArgs);
     }
