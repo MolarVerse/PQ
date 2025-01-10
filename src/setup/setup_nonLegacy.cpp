@@ -106,10 +106,9 @@ void setup::setupFlattenedData(Engine &engine)
 void setup::initDeviceMemory(engine::Engine &engine)   // TODO: rename this part
 {
     auto &simBox = engine.getSimulationBox();
-    auto &device = engine.getDevice();
 
-    simBox.copyAtomTypesTo(device);
-    simBox.copyMolTypesTo(device);
-    simBox.copyInternalGlobalVDWTypesTo(device);
+    simBox.copyAtomTypesTo();
+    simBox.copyMolTypesTo();
+    simBox.copyInternalGlobalVDWTypesTo();
 }
 #endif

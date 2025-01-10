@@ -24,7 +24,8 @@
 
 #define _SIMULATION_BOX_HPP_
 
-#include <map>        // for map
+#include <map>   // for map
+#include <memory>
 #include <optional>   // for optional
 #include <string>     // for string
 #include <vector>     // for vector
@@ -117,6 +118,9 @@ namespace simulationBox
 #endif
 
 #ifdef __PQ_GPU__
+
+        std::shared_ptr<pq::Device> _device = nullptr;
+
         Real* _posDevice;
         Real* _velDevice;
         Real* _forcesDevice;
@@ -241,27 +245,27 @@ namespace simulationBox
 
         void initDeviceMemory(device::Device& device);
 
-        void copyPosTo(device::Device& device);
-        void copyVelTo(device::Device& device);
-        void copyForcesTo(device::Device& device);
-        void copyShiftForcesTo(device::Device& device);
-        void copyOldPosTo(device::Device& device);
-        void copyOldVelTo(device::Device& device);
-        void copyOldForcesTo(device::Device& device);
-        void copyMassesTo(device::Device& device);
-        void copyChargesTo(device::Device& device);
-        void copyAtomsPerMoleculeTo(device::Device& device);
-        void copyMoleculeIndicesTo(device::Device& device);
-        void copyAtomTypesTo(device::Device& device);
-        void copyMolTypesTo(device::Device& device);
-        void copyInternalGlobalVDWTypesTo(device::Device& device);
+        void copyPosTo();
+        void copyVelTo();
+        void copyForcesTo();
+        void copyShiftForcesTo();
+        void copyOldPosTo();
+        void copyOldVelTo();
+        void copyOldForcesTo();
+        void copyMassesTo();
+        void copyChargesTo();
+        void copyAtomsPerMoleculeTo();
+        void copyMoleculeIndicesTo();
+        void copyAtomTypesTo();
+        void copyMolTypesTo();
+        void copyInternalGlobalVDWTypesTo();
 
-        void copyPosFrom(device::Device& device);
-        void copyVelFrom(device::Device& device);
-        void copyForcesFrom(device::Device& device);
-        void copyOldPosFrom(device::Device& device);
-        void copyOldVelFrom(device::Device& device);
-        void copyOldForcesFrom(device::Device& device);
+        void copyPosFrom();
+        void copyVelFrom();
+        void copyForcesFrom();
+        void copyOldPosFrom();
+        void copyOldVelFrom();
+        void copyOldForcesFrom();
 #endif
 
         /************************

@@ -25,7 +25,6 @@
 #include <algorithm>     // for __for_each_fn, for_each
 #include <cstddef>       // for size_t
 #include <format>        // for format
-#include <functional>    // for identity
 #include <map>           // for map
 #include <numeric>       // for accumulate
 #include <string>        // for string, allocator, operator+
@@ -105,17 +104,17 @@ void SimulationBoxSetup::setup()
     simBox.initDeviceMemory(device);
     simBox.getBox().initDeviceMemory(device);
 
-    simBox.copyPosTo(device);
-    simBox.copyVelTo(device);
-    simBox.copyForcesTo(device);
-    simBox.copyShiftForcesTo(device);
+    simBox.copyPosTo();
+    simBox.copyVelTo();
+    simBox.copyForcesTo();
+    simBox.copyShiftForcesTo();
 
-    simBox.copyOldPosTo(device);
-    simBox.copyOldVelTo(device);
-    simBox.copyOldForcesTo(device);
+    simBox.copyOldPosTo();
+    simBox.copyOldVelTo();
+    simBox.copyOldForcesTo();
 
-    simBox.copyAtomsPerMoleculeTo(device);
-    simBox.copyMoleculeIndicesTo(device);
+    simBox.copyAtomsPerMoleculeTo();
+    simBox.copyMoleculeIndicesTo();
 
     simBox.getBox().updateBoxParams();
     simBox.getBox().copyBoxParamsTo(device);
@@ -137,8 +136,8 @@ void SimulationBoxSetup::setup()
 #endif
 
 #ifdef __PQ_GPU__
-    simBox.copyMassesTo(device);
-    simBox.copyChargesTo(device);
+    simBox.copyMassesTo();
+    simBox.copyChargesTo();
 #endif
 
     calculateTotalCharge();
