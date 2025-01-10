@@ -199,7 +199,7 @@ void QMSettings::setMaceModelSize(const std::string_view &model)
 
     else
         throw UserInputException(
-            std::format("Mace {} model not recognized", model)
+            std::format("Mace model size {} not recognized", model)
         );
 }
 

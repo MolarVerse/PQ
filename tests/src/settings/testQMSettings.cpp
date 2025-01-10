@@ -24,17 +24,84 @@
 
 #include <memory>   // for allocator
 
-#include "gtest/gtest.h"    // for Message, TestPartResult
-#include "qmSettings.hpp"   // for QMSettings, QMMethod
+#include "exceptions.hpp"         // for UserInputException
+#include "gtest/gtest.h"          // for Message, TestPartResult
+#include "qmSettings.hpp"         // for QMSettings, QMMethod
+#include "throwWithMessage.hpp"   // for ASSERT_THROW_MSG
+
+using namespace settings;
 
 TEST(QMSettingsTest, SetQMMethodTest)
 {
-    settings::QMSettings::setQMMethod("dftbplus");
-    EXPECT_EQ(
-        settings::QMSettings::getQMMethod(),
-        settings::QMMethod::DFTBPLUS
-    );
+    QMSettings::setQMMethod("dftbplus");
+    EXPECT_EQ(QMSettings::getQMMethod(), QMMethod::DFTBPLUS);
 
-    settings::QMSettings::setQMMethod("none");
-    EXPECT_EQ(settings::QMSettings::getQMMethod(), settings::QMMethod::NONE);
+    QMSettings::setQMMethod("pyscf");
+    EXPECT_EQ(QMSettings::getQMMethod(), QMMethod::PYSCF);
+
+    QMSettings::setQMMethod("turbomole");
+    EXPECT_EQ(QMSettings::getQMMethod(), QMMethod::TURBOMOLE);
+
+    QMSettings::setQMMethod("mace");
+    EXPECT_EQ(QMSettings::getQMMethod(), QMMethod::MACE);
+
+    QMSettings::setQMMethod("ase_dftbplus");
+    EXPECT_EQ(QMSettings::getQMMethod(), QMMethod::ASEDFTBPLUS);
+
+    QMSettings::setQMMethod("none");
+    EXPECT_EQ(QMSettings::getQMMethod(), QMMethod::NONE);
+}
+
+TEST(QMSettingsTest, SetMaceModelSizeTest)
+{
+    QMSettings::setMaceModelSize("large");
+    EXPECT_EQ(QMSettings::getMaceModelSize(), MaceModelSize::LARGE);
+
+    QMSettings::setMaceModelSize("medium");
+    EXPECT_EQ(QMSettings::getMaceModelSize(), MaceModelSize::MEDIUM);
+
+    QMSettings::setMaceModelSize("small");
+    EXPECT_EQ(QMSettings::getMaceModelSize(), MaceModelSize::SMALL);
+
+    ASSERT_THROW_MSG(
+        QMSettings::setMaceModelSize("notAMaceModelSize"),
+        std::exception,
+        "Mace model size notAMaceModelSize not recognized"
+    );
+}
+
+TEST(QMSettingsTest, SetMaceModelTypeTest)
+{
+    QMSettings::setMaceModelType("mace_mp");
+    EXPECT_EQ(QMSettings::getMaceModelType(), MaceModelType::MACE_MP);
+
+    QMSettings::setMaceModelType("mace_off");
+    EXPECT_EQ(QMSettings::getMaceModelType(), MaceModelType::MACE_OFF);
+
+    QMSettings::setMaceModelType("mace_anicc");
+    EXPECT_EQ(QMSettings::getMaceModelType(), MaceModelType::MACE_ANICC);
+
+    ASSERT_THROW_MSG(
+        QMSettings::setMaceModelType("notAMaceModelType"),
+        std::exception,
+        "Mace notAMaceModelType model not recognized"
+    )
+}
+
+TEST(QMSettingsTest, SetSlakosTypeTest)
+{
+    QMSettings::setSlakosType("3ob");
+    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::THREEOB);
+
+    QMSettings::setSlakosType("matsci");
+    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::MATSCI);
+
+    QMSettings::setSlakosType("custom");
+    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::CUSTOM);
+
+    ASSERT_THROW_MSG(
+        QMSettings::setSlakosType("notASlakosType"),
+        std::exception,
+        "Slakos notASlakosType not recognized"
+    );
 }
