@@ -105,3 +105,21 @@ TEST(QMSettingsTest, SetSlakosTypeTest)
         "Slakos notASlakosType not recognized"
     );
 }
+
+TEST(QMSettingsTest, ReturnQMMethodTest)
+{
+    EXPECT_EQ(string(QMMethod::DFTBPLUS), "DFTBPLUS");
+    EXPECT_EQ(string(QMMethod::ASEDFTBPLUS), "ASEDFTBPLUS");
+    EXPECT_EQ(string(QMMethod::PYSCF), "PYSCF");
+    EXPECT_EQ(string(QMMethod::TURBOMOLE), "TURBOMOLE");
+    EXPECT_EQ(string(QMMethod::MACE), "MACE");
+    EXPECT_EQ(string(QMMethod::NONE), "NONE");
+}
+
+TEST(QMSettingsTest, ReturnSlakosTypeTest)
+{
+    EXPECT_EQ(string(SlakosType::THREEOB), "3ob");
+    EXPECT_EQ(string(SlakosType::MATSCI), "matsci");
+    EXPECT_EQ(string(SlakosType::CUSTOM), "custom");
+    EXPECT_EQ(string(SlakosType::NONE), "none");
+}
