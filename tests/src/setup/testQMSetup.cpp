@@ -20,19 +20,22 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#include <gtest/gtest.h>   // for Test, TestInfo (ptr only), InitGoogleTest, RUN_ALL_TESTS
+
+#include <string>   // for allocator, basic_string
+
 #include "dftbplusRunner.hpp"     // for DFTBPlusRunner
 #include "exceptions.hpp"         // for InputFileException
+#include "gtest/gtest.h"          // for Message, TestPartResult
+#include "pyscfRunner.hpp"        // for PySCFRunner
 #include "qmRunner.hpp"           // for QMRunner
 #include "qmSettings.hpp"         // for QMMethod, QMSettings
 #include "qmSetup.hpp"            // for QMSetup, setupQM
 #include "qmmdEngine.hpp"         // for QMMDEngine
 #include "throwWithMessage.hpp"   // for ASSERT_THROW_MSG
+#include "turbomoleRunner.hpp"    // for TurbomoleRunner
 
-#include "gtest/gtest.h"   // for Message, TestPartResult
-#include <gtest/gtest.h>   // for Test, TestInfo (ptr only), InitGoogleTest, RUN_ALL_TESTS
-#include <string>          // for allocator, basic_string
-
-TEST(TestQMSetup, setup)
+TEST(TestQMSetup, setupDftbplus)
 {
     engine::QMMDEngine engine;
     auto               setupQM = setup::QMSetup(engine);
@@ -41,13 +44,67 @@ TEST(TestQMSetup, setup)
     settings::QMSettings::setQMScript("test");
     setupQM.setup();
 
-    EXPECT_EQ(typeid(dynamic_cast<QM::DFTBPlusRunner &>(*engine.getQMRunner())), typeid(QM::DFTBPlusRunner));
+    EXPECT_EQ(
+        typeid(dynamic_cast<QM::DFTBPlusRunner &>(*engine.getQMRunner())),
+        typeid(QM::DFTBPlusRunner)
+    );
 
     settings::QMSettings::setQMMethod(settings::QMMethod::NONE);
 
-    ASSERT_THROW_MSG(setupQM.setup(),
-                     customException::InputFileException,
-                     "A qm based jobtype was requested but no external program via \"qm_prog\" provided");
+    ASSERT_THROW_MSG(
+        setupQM.setup(),
+        customException::InputFileException,
+        "A qm based jobtype was requested but no external program via "
+        "\"qm_prog\" provided"
+    );
+}
+
+TEST(TestQMSetup, setupPySCF)
+{
+    engine::QMMDEngine engine;
+    auto               setupQM = setup::QMSetup(engine);
+
+    settings::QMSettings::setQMMethod(settings::QMMethod::PYSCF);
+    settings::QMSettings::setQMScript("test");
+    setupQM.setup();
+
+    EXPECT_EQ(
+        typeid(dynamic_cast<QM::PySCFRunner &>(*engine.getQMRunner())),
+        typeid(QM::PySCFRunner)
+    );
+
+    settings::QMSettings::setQMMethod(settings::QMMethod::NONE);
+
+    ASSERT_THROW_MSG(
+        setupQM.setup(),
+        customException::InputFileException,
+        "A qm based jobtype was requested but no external program via "
+        "\"qm_prog\" provided"
+    );
+}
+
+TEST(TestQMSetup, setupTurbomoleRunner)
+{
+    engine::QMMDEngine engine;
+    auto               setupQM = setup::QMSetup(engine);
+
+    settings::QMSettings::setQMMethod(settings::QMMethod::TURBOMOLE);
+    settings::QMSettings::setQMScript("test");
+    setupQM.setup();
+
+    EXPECT_EQ(
+        typeid(dynamic_cast<QM::TurbomoleRunner &>(*engine.getQMRunner())),
+        typeid(QM::TurbomoleRunner)
+    );
+
+    settings::QMSettings::setQMMethod(settings::QMMethod::NONE);
+
+    ASSERT_THROW_MSG(
+        setupQM.setup(),
+        customException::InputFileException,
+        "A qm based jobtype was requested but no external program via "
+        "\"qm_prog\" provided"
+    );
 }
 
 TEST(TestQMSetup, setupQMFull)
