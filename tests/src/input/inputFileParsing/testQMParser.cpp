@@ -64,70 +64,7 @@ TEST_F(TestInputFileReader, parseQMMethod)
         InputFileException,
         "Invalid qm_prog \"notAMethod\" in input file.\n"
         "Possible values are: dftbplus, ase_dftbplus, pyscf, turbomole, mace, "
-        "mace_mp, "
-        "mace_off"
-    )
-}
-
-TEST_F(TestInputFileReader, parseMaceQMMethod)
-{
-    using enum QMMethod;
-    using enum MaceModelType;
-
-    auto parser = QMInputParser(*_engine);
-
-    parser.parseMaceQMMethod("mace");
-    EXPECT_EQ(QMSettings::getQMMethod(), MACE);
-    EXPECT_EQ(QMSettings::getMaceModelType(), MACE_MP);
-
-    parser.parseMaceQMMethod("mace_mp");
-    EXPECT_EQ(QMSettings::getQMMethod(), MACE);
-    EXPECT_EQ(QMSettings::getMaceModelType(), MACE_MP);
-
-    parser.parseMaceQMMethod("mace_off");
-    EXPECT_EQ(QMSettings::getQMMethod(), MACE);
-    EXPECT_EQ(QMSettings::getMaceModelType(), MACE_OFF);
-
-    ASSERT_THROW_MSG(
-        parser.parseMaceQMMethod("mace_ani"),
-        InputFileException,
-        "The mace ani model is not supported in this version of PQ.\n"
-    )
-
-    ASSERT_THROW_MSG(
-        parser.parseMaceQMMethod("mace_anicc"),
-        InputFileException,
-        "The mace ani model is not supported in this version of PQ.\n"
-    )
-
-    ASSERT_THROW_MSG(
-        parser.parseMaceQMMethod("notAMaceModel"),
-        InputFileException,
-        "Invalid mace type qm_method \"notAMaceModel\" in input file.\n"
-        "Possible values are: mace (mace_mp), mace_off"
-    )
-}
-
-TEST_F(TestInputFileReader, parseSlakosType)
-{
-    using enum QMMethod;
-
-    auto parser = QMInputParser(*_engine);
-
-    parser.parseSlakosType({"slakos", "=", "3ob"}, 0);
-    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::THREEOB);
-
-    parser.parseSlakosType({"slakos", "=", "matsci"}, 0);
-    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::MATSCI);
-
-    parser.parseSlakosType({"slakos", "=", "custom"}, 0);
-    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::CUSTOM);
-
-    ASSERT_THROW_MSG(
-        parser.parseSlakosType({"slakos", "=", "notASlakosType"}, 0),
-        InputFileException,
-        "Invalid slakos type \"notASlakosType\" in input file.\n"
-        "Possible values are: 3ob, matsci, custom"
+        "mace_mp, mace_off"
     )
 }
 
@@ -183,6 +120,45 @@ TEST_F(TestInputFileReader, parseDispersion)
     )
 }
 
+TEST_F(TestInputFileReader, parseMaceQMMethod)
+{
+    using enum QMMethod;
+    using enum MaceModelType;
+
+    auto parser = QMInputParser(*_engine);
+
+    parser.parseMaceQMMethod("mace");
+    EXPECT_EQ(QMSettings::getQMMethod(), MACE);
+    EXPECT_EQ(QMSettings::getMaceModelType(), MACE_MP);
+
+    parser.parseMaceQMMethod("mace_mp");
+    EXPECT_EQ(QMSettings::getQMMethod(), MACE);
+    EXPECT_EQ(QMSettings::getMaceModelType(), MACE_MP);
+
+    parser.parseMaceQMMethod("mace_off");
+    EXPECT_EQ(QMSettings::getQMMethod(), MACE);
+    EXPECT_EQ(QMSettings::getMaceModelType(), MACE_OFF);
+
+    ASSERT_THROW_MSG(
+        parser.parseMaceQMMethod("mace_ani"),
+        InputFileException,
+        "The mace ani model is not supported in this version of PQ.\n"
+    )
+
+    ASSERT_THROW_MSG(
+        parser.parseMaceQMMethod("mace_anicc"),
+        InputFileException,
+        "The mace ani model is not supported in this version of PQ.\n"
+    )
+
+    ASSERT_THROW_MSG(
+        parser.parseMaceQMMethod("notAMaceModel"),
+        InputFileException,
+        "Invalid mace type qm_method \"notAMaceModel\" in input file.\n"
+        "Possible values are: mace (mace_mp), mace_off"
+    )
+}
+
 TEST_F(TestInputFileReader, parseMaceModelSize)
 {
     using enum MaceModelSize;
@@ -202,5 +178,90 @@ TEST_F(TestInputFileReader, parseMaceModelSize)
         InputFileException,
         "Invalid mace_model_size \"notASize\" in input file.\n"
         "Possible values are: small, medium, large"
+    )
+}
+
+TEST_F(TestInputFileReader, parseSlakosType)
+{
+    using enum QMMethod;
+
+    auto parser = QMInputParser(*_engine);
+
+    parser.parseSlakosType({"slakos", "=", "3ob"}, 0);
+    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::THREEOB);
+
+    parser.parseSlakosType({"slakos", "=", "matsci"}, 0);
+    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::MATSCI);
+
+    parser.parseSlakosType({"slakos", "=", "custom"}, 0);
+    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::CUSTOM);
+
+    ASSERT_THROW_MSG(
+        parser.parseSlakosType({"slakos", "=", "notASlakosType"}, 0),
+        InputFileException,
+        "Invalid slakos type \"notASlakosType\" in input file.\n"
+        "Possible values are: 3ob, matsci, custom"
+    )
+}
+
+TEST_F(TestInputFileReader, parseSlakosPath)
+{
+    using enum QMMethod;
+
+    auto parser = QMInputParser(*_engine);
+
+    parser.parseSlakosPath({"slakos_path", "=", "/path/to/slakos"}, 0);
+    EXPECT_EQ(QMSettings::getSlakosPath(), "/path/to/slakos");
+}
+
+TEST_F(TestInputFileReader, parseThirdOrder)
+{
+    EXPECT_FALSE(QMSettings::useThirdOrderDftb());
+
+    auto parser = QMInputParser(*_engine);
+    parser.parseThirdOrder({"third_order", "=", "on"}, 0);
+    EXPECT_TRUE(QMSettings::useThirdOrderDftb());
+
+    parser.parseThirdOrder({"third_order", "=", "off"}, 0);
+    EXPECT_FALSE(QMSettings::useThirdOrderDftb());
+
+    parser.parseThirdOrder({"third_order", "=", "true"}, 0);
+    EXPECT_TRUE(QMSettings::useThirdOrderDftb());
+
+    parser.parseThirdOrder({"third_order", "=", "false"}, 0);
+    EXPECT_FALSE(QMSettings::useThirdOrderDftb());
+
+    parser.parseThirdOrder({"third_order", "=", "yes"}, 0);
+    EXPECT_TRUE(QMSettings::useThirdOrderDftb());
+
+    parser.parseThirdOrder({"third_order", "=", "no"}, 0);
+    EXPECT_FALSE(QMSettings::useThirdOrderDftb());
+
+    ASSERT_THROW_MSG(
+        parser.parseThirdOrder({"third_order", "=", "notABool"}, 0),
+        InputFileException,
+        "Invalid DFTB third_order request \"notABool\" in input file.\n"
+        "Possible values are: on, yes, true, off, no, false"
+    )
+}
+
+TEST_F(TestInputFileReader, parseHubbardDerivs)
+{
+    auto parser = QMInputParser(*_engine);
+
+    parser.parseHubbardDerivs(
+        {"hubbard_derivs", "=", "H:1.0,He:2.0"},
+        0
+    );
+
+    const auto hubbardDerivs = QMSettings::getHubbardDerivs();
+    EXPECT_EQ(hubbardDerivs.size(), 2);
+    EXPECT_EQ(hubbardDerivs.at("H"), 1.0);
+    EXPECT_EQ(hubbardDerivs.at("He"), 2.0);
+
+    ASSERT_THROW_MSG(
+        parser.parseHubbardDerivs({"hubbard_derivs", "=", "H:1.0,He"}, 0),
+        InputFileException,
+        "Invalid hubbard_derivs format \"H:1.0,He\" in input file."
     )
 }
