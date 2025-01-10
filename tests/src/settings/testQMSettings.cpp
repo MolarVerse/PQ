@@ -113,7 +113,7 @@ TEST(QMSettingsTest, ReturnQMMethodTest)
     EXPECT_EQ(string(QMMethod::PYSCF), "PYSCF");
     EXPECT_EQ(string(QMMethod::TURBOMOLE), "TURBOMOLE");
     EXPECT_EQ(string(QMMethod::MACE), "MACE");
-    EXPECT_EQ(string(QMMethod::NONE), "NONE");
+    EXPECT_EQ(string(QMMethod::NONE), "none");
 }
 
 TEST(QMSettingsTest, ReturnSlakosTypeTest)
