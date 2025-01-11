@@ -52,7 +52,7 @@ AseDftbRunner::AseDftbRunner(
 
         if (slakosType == "3ob" || slakosType == "matsci")
         {
-            const std::string slakosDir = SLAKOS_DIR + slakosType + "/skfiles/";
+            const std::string slakosDir = __SLAKOS_DIR__ + slakosType + "/skfiles/";
             calculatorArgs["slako_dir"] = slakosDir.c_str();
         }
         else
