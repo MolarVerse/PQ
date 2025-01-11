@@ -30,6 +30,7 @@
 #include "throwWithMessage.hpp"   // for ASSERT_THROW_MSG
 
 using namespace settings;
+using namespace customException;
 
 TEST(QMSettingsTest, SetQMMethodTest)
 {
@@ -65,7 +66,7 @@ TEST(QMSettingsTest, SetMaceModelSizeTest)
 
     ASSERT_THROW_MSG(
         QMSettings::setMaceModelSize("notAMaceModelSize"),
-        std::exception,
+        UserInputException,
         "Mace model size notAMaceModelSize not recognized"
     );
 }
@@ -83,7 +84,7 @@ TEST(QMSettingsTest, SetMaceModelTypeTest)
 
     ASSERT_THROW_MSG(
         QMSettings::setMaceModelType("notAMaceModelType"),
-        std::exception,
+        UserInputException,
         "Mace notAMaceModelType model not recognized"
     )
 }
@@ -101,7 +102,7 @@ TEST(QMSettingsTest, SetSlakosTypeTest)
 
     ASSERT_THROW_MSG(
         QMSettings::setSlakosType("notASlakosType"),
-        std::exception,
+        UserInputException,
         "Slakos notASlakosType not recognized"
     );
 }
