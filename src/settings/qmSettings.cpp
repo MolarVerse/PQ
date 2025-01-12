@@ -118,6 +118,27 @@ std::string settings::string(const SlakosType slakos)
 }
 
 /**
+ * @brief returns an unordered map as string
+ *
+ * @param unordered_map
+ * @return std::string
+ */
+std::string settings::string(
+    const std::unordered_map<std::string, double> unordered_map
+)
+{
+    std::string unorderedMapStr;
+    for (const auto &pair : unordered_map)
+    {
+        if (!unorderedMapStr.empty())
+            unorderedMapStr += ", ";
+        unorderedMapStr += std::format("{}: {}", pair.first, pair.second);
+    }
+
+    return unorderedMapStr;
+}
+
+/**
  * @brief returns if the external qm runner is activated
  *
  * @return bool
@@ -463,9 +484,9 @@ bool QMSettings::useThirdOrderDftb() { return _useThirdOrderDftb; }
 bool QMSettings::isThirdOrderDftbSet() { return _isThirdOrderDftbSet; }
 
 /**
- * @brief returns the custom Hubbard Derivative dictionary
+ * @brief returns the Hubbard Derivative dictionary
  *
- * @return bool
+ * @return std::unordered_map<std::string, double>
  */
 std::unordered_map<std::string, double> QMSettings::getHubbardDerivs()
 {

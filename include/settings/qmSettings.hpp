@@ -83,6 +83,9 @@ namespace settings
     std::string string(const MaceModelSize model);
     std::string string(const MaceModelType model);
     std::string string(const SlakosType slakos);
+    std::string string(
+        const std::unordered_map<std::string, double> unordered_map
+    );
 
     /**
      * @class QMSettings
