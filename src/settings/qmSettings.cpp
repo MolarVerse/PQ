@@ -394,6 +394,12 @@ void QMSettings::setHubbardDerivs(
 }
 
 /**
+ * @brief sets if the Hubbard Derivative dictionary is set by the user
+ *
+ */
+void QMSettings::setIsHubbardDerivsSet() { _isHubbardDerivsSet = true; }
+
+/**
  * @brief sets if the dispersion correction should be used
  *
  */
@@ -482,6 +488,13 @@ bool QMSettings::useThirdOrderDftb() { return _useThirdOrderDftb; }
  * @return bool
  */
 bool QMSettings::isThirdOrderDftbSet() { return _isThirdOrderDftbSet; }
+
+/**
+ * @brief returns if the Hubbard derivatives are set by the user
+ *
+ * @return bool
+ */
+bool QMSettings::isHubbardDerivsSet() { return _isHubbardDerivsSet; }
 
 /**
  * @brief returns the Hubbard Derivative dictionary

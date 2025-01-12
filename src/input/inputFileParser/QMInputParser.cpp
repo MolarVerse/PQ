@@ -451,4 +451,5 @@ void QMInputParser::parseHubbardDerivs(
     }
 
     QMSettings::setHubbardDerivs(hubbardDerivs);
+    QMSettings::setIsHubbardDerivsSet();
 }

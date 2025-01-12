@@ -241,27 +241,38 @@ void QMSetup::setupWriteInfo() const
 
     if (qmMethod == ASEDFTBPLUS)
     {
-        const auto slakosType    = QMSettings::getSlakosType();
-        const auto slakosPath    = QMSettings::getSlakosPath();
-        const auto thirdOrder    = QMSettings::useThirdOrderDftb();
-        const auto hubbardDerivs = QMSettings::getHubbardDerivs();
+        const auto slakosType         = QMSettings::getSlakosType();
+        const auto slakosPath         = QMSettings::getSlakosPath();
+        const auto thirdOrder         = QMSettings::useThirdOrderDftb();
+        const auto hubbardDerivs      = QMSettings::getHubbardDerivs();
+        const auto ishubbardDerivsSet = QMSettings::isHubbardDerivsSet();
 
         // clang-format off
-        const auto slakosTypeMsg        = std::format("DFTB approach:       {}", string(slakosType));
-        const auto slakosPathMsg        = std::format("sk file path:        {}", slakosPath);
-        const auto thirdOrderMsg        = std::format("3rd order is turned: {}", thirdOrder ? "on" : "off");
-        const auto threeOBThirdOrderMsg = std::format("3ob approach has been chosen while disabling 3rd order DFTB. This setup is not recommended.");
-        const auto hubbardDerivsMsg     = std::format("Hubbard derivatives: {}", string(hubbardDerivs));
+        const auto slakosTypeMsg           = std::format("DFTB approach:       {}", string(slakosType));
+        const auto slakosPathMsg           = std::format("sk file path:        {}", slakosPath);
+        const auto thirdOrderMsg           = std::format("3rd order is turned: {}", thirdOrder ? "on" : "off");
+        const auto threeOBThirdOrderMsg    = std::format("3ob approach has been chosen while disabling 3rd order DFTB. This setup is not recommended.");
+        const auto hubbardDerivsMsg        = std::format("Hubbard derivatives: {}", string(hubbardDerivs));
+        const auto threeOBHubbardDerivsMsg = std::format("3ob approach has been chosen while setting custom Hubbard derivatives. This setup is not recommended.");
         // clang-format on
 
         logOutput.writeSetupInfo(slakosTypeMsg);
         logOutput.writeSetupInfo(slakosPathMsg);
         logOutput.writeSetupInfo(thirdOrderMsg);
-        logOutput.writeSetupInfo(hubbardDerivsMsg);
+        if (ishubbardDerivsSet)
+            logOutput.writeSetupInfo(hubbardDerivsMsg);
+
+        // Warnings for non-recommended setups
         if (slakosType == SlakosType::THREEOB && !thirdOrder)
         {
             logOutput.writeEmptyLine();
             logOutput.writeSetupWarning(threeOBThirdOrderMsg);
+        }
+
+        if (slakosType == SlakosType::THREEOB && ishubbardDerivsSet)
+        {
+            logOutput.writeEmptyLine();
+            logOutput.writeSetupWarning(threeOBHubbardDerivsMsg);
         }
     }
 

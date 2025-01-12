@@ -109,6 +109,7 @@ namespace settings
         static inline bool _useDispersionCorrection = false;
         static inline bool _useThirdOrderDftb       = false;
         static inline bool _isThirdOrderDftbSet     = false;
+        static inline bool _isHubbardDerivsSet      = false;
 
         static inline std::unordered_map<std::string, double> _hubbardDerivs;
 
@@ -145,6 +146,7 @@ namespace settings
         static void setHubbardDerivs(
             const std::unordered_map<std::string, double> hubbardDerivs
         );
+        static void setIsHubbardDerivsSet();
 
         static void setQMLoopTimeLimit(const double time);
 
@@ -168,6 +170,7 @@ namespace settings
         [[nodiscard]] static bool isThirdOrderDftbSet();
         [[nodiscard]] static std::unordered_map<std::string, double> getHubbardDerivs(
         );
+        [[nodiscard]] static bool isHubbardDerivsSet();
 
         [[nodiscard]] static double getQMLoopTimeLimit();
     };
