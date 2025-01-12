@@ -52,7 +52,8 @@ AseDftbRunner::AseDftbRunner(
 
         if (slakosType == "3ob" || slakosType == "matsci")
         {
-            const std::string slakosDir = __SLAKOS_DIR__ + slakosType + "/skfiles/";
+            const std::string slakosDir =
+                __SLAKOS_DIR__ + slakosType + "/skfiles/";
             calculatorArgs["slako_dir"] = slakosDir.c_str();
         }
         else
@@ -71,13 +72,13 @@ AseDftbRunner::AseDftbRunner(
             }
         }
         // default would be 1, which is incompatible with DFTB3
-        calculatorArgs["ParserOptions_ParserVersion"] = "14";
+        calculatorArgs["ParserOptions_ParserVersion"] = "12";
         // SCC = "Yes" is mandatory for SCC cycles to be performed
-        calculatorArgs["Hamiltonian_SCC"] = "Yes";
-        calculatorArgs["Hamiltonian_SCCTolerance"] = "1e-6";
+        calculatorArgs["Hamiltonian_SCC"]              = "Yes";
+        calculatorArgs["Hamiltonian_SCCTolerance"]     = "1e-6";
         calculatorArgs["Hamiltonian_MaxSCCIterations"] = "250";
-        calculatorArgs["kpts"]            = py::make_tuple(1, 1, 1);
-        _calculator = calculator.attr("Dftb")(**calculatorArgs);
+        calculatorArgs["kpts"] = py::make_tuple(1, 1, 1);
+        _calculator            = calculator.attr("Dftb")(**calculatorArgs);
     }
     catch (const py::error_already_set &)
     {
