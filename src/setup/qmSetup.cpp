@@ -63,7 +63,7 @@ void setup::setupQM(Engine &engine)
  *
  * @param engine
  */
-QMSetup::QMSetup(QMMDEngine &engine) : _engine(engine){};
+QMSetup::QMSetup(QMMDEngine &engine) : _engine(engine) {};
 
 /**
  * @brief setup QM-MD for all subtypes
@@ -237,6 +237,29 @@ void QMSetup::setupWriteInfo() const
         logOutput.writeSetupInfo(modelSizeMsg);
         logOutput.writeSetupInfo(fpMsg);
         logOutput.writeSetupInfo(dispCorrMsg);
+    }
+
+    if (qmMethod == ASEDFTBPLUS)
+    {
+        const auto slakosType = QMSettings::getSlakosType();
+        const auto slakosPath = QMSettings::getSlakosPath();
+        const auto thirdOrder = QMSettings::useThirdOrderDftb();
+
+        // clang-format off
+        const auto slakosTypeMsg        = std::format("DFTB approach:       {}", string(slakosType));
+        const auto slakosPathMsg        = std::format("sk file path:        {}", slakosPath);
+        const auto thirdOrderMsg        = std::format("3rd order is turned: {}", thirdOrder ? "on" : "off");
+        const auto threeOBThirdOrderMsg = std::format("3ob approach has been chosen while disabling 3rd order DFTB. This setup is not recommended.");
+        // clang-format on
+
+        logOutput.writeSetupInfo(slakosTypeMsg);
+        logOutput.writeSetupInfo(slakosPathMsg);
+        logOutput.writeSetupInfo(thirdOrderMsg);
+        if (slakosType == SlakosType::THREEOB && !thirdOrder)
+        {
+            logOutput.writeEmptyLine();
+            logOutput.writeSetupWarning(threeOBThirdOrderMsg);
+        }
     }
 
     logOutput.writeEmptyLine();

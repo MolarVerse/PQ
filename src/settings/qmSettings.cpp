@@ -288,10 +288,21 @@ void QMSettings::setSlakosType(const std::string_view &slakos)
     const auto slakosType = toLowerAndReplaceDashesCopy(slakos);
 
     if ("3ob" == slakosType)
+    {
         _slakosType = THREEOB;
+        _slakosPath = __SLAKOS_DIR__ + string(_slakosType) + "/skfiles/";
+
+        if (_isThirdOrderDftbSet == true && _useThirdOrderDftb == false)
+            _useThirdOrderDftb = false;
+        else
+            _useThirdOrderDftb = true;
+    }
 
     else if ("matsci" == slakosType)
+    {
         _slakosType = MATSCI;
+        _slakosPath = __SLAKOS_DIR__ + string(_slakosType) + "/skfiles/";
+    }
 
     else if ("custom" == slakosType)
         _slakosType = CUSTOM;
@@ -308,7 +319,7 @@ void QMSettings::setSlakosType(const std::string_view &slakos)
  */
 void QMSettings::setSlakosType(const SlakosType slakos)
 {
-    _slakosType = slakos;
+    setSlakosType(string(slakos));
 }
 
 /**
@@ -318,7 +329,21 @@ void QMSettings::setSlakosType(const SlakosType slakos)
  */
 void QMSettings::setSlakosPath(const std::string_view &path)
 {
-    _slakosPath = path;
+    if (_slakosType == SlakosType::CUSTOM)
+        _slakosPath = path;
+
+    else if (_slakosType == SlakosType::NONE)
+        throw UserInputException(
+            "Slakos path cannot be set without a slakos type"
+        );
+
+    else
+    {
+        throw UserInputException(std::format(
+            "Slakos path cannot be set for slakos type: {}",
+            string(_slakosType)
+        ));
+    }
 }
 
 /**

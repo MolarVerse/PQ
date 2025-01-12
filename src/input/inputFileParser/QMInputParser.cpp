@@ -343,15 +343,12 @@ void QMInputParser::parseSlakosType(
     if ("3ob" == slakos)
     {
         QMSettings::setSlakosType(THREEOB);
-        if (!QMSettings::isThirdOrderDftbSet())
-            QMSettings::setUseThirdOrderDftb(true);
         QMSettings::setHubbardDerivs(hubbardDerivMap3ob);
     }
 
     else if ("matsci" == slakos)
     {
         QMSettings::setSlakosType(MATSCI);
-        QMSettings::setUseThirdOrderDftb(false);
     }
 
     else if ("custom" == slakos)

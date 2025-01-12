@@ -50,14 +50,7 @@ AseDftbRunner::AseDftbRunner(
 
         const py::dict calculatorArgs;
 
-        if (slakosType == "3ob" || slakosType == "matsci")
-        {
-            const std::string slakosDir =
-                __SLAKOS_DIR__ + slakosType + "/skfiles/";
-            calculatorArgs["slako_dir"] = slakosDir.c_str();
-        }
-        else
-            calculatorArgs["slako_dir"] = slakosPath.c_str();
+        calculatorArgs["slako_dir"] = slakosPath.c_str();
 
         if (thirdOrder)
         {
