@@ -24,10 +24,10 @@
 
 #define _QM_SETTINGS_HPP_
 
-#include <cstddef>       // for size_t
-#include <string>        // for string
-#include <string_view>   // for string_view
-#include <unordered_map> // for unordered_map
+#include <cstddef>         // for size_t
+#include <string>          // for string
+#include <string_view>     // for string_view
+#include <unordered_map>   // for unordered_map
 
 #include "defaults.hpp"   // for _QM_LOOP_TIME_LIMIT_DEFAULT_
 
@@ -105,6 +105,7 @@ namespace settings
 
         static inline bool _useDispersionCorrection = false;
         static inline bool _useThirdOrderDftb       = false;
+        static inline bool _isThirdOrderDftbSet     = false;
 
         static inline std::unordered_map<std::string, double> _hubbardDerivs;
 
@@ -137,7 +138,10 @@ namespace settings
 
         static void setUseDispersionCorrection(const bool use);
         static void setUseThirdOrderDftb(const bool use);
-        static void setHubbardDerivs(const std::unordered_map<std::string, double> hubbardDerivs);
+        static void setIsThirdOrderDftbSet();
+        static void setHubbardDerivs(
+            const std::unordered_map<std::string, double> hubbardDerivs
+        );
 
         static void setQMLoopTimeLimit(const double time);
 
@@ -158,7 +162,9 @@ namespace settings
 
         [[nodiscard]] static bool useDispersionCorr();
         [[nodiscard]] static bool useThirdOrderDftb();
-        [[nodiscard]] static std::unordered_map<std::string, double> getHubbardDerivs();
+        [[nodiscard]] static bool isThirdOrderDftbSet();
+        [[nodiscard]] static std::unordered_map<std::string, double> getHubbardDerivs(
+        );
 
         [[nodiscard]] static double getQMLoopTimeLimit();
     };

@@ -288,10 +288,10 @@ void QMSettings::setSlakosType(const std::string_view &slakos)
     const auto slakosType = toLowerAndReplaceDashesCopy(slakos);
 
     if ("3ob" == slakosType)
-        _slakosType        = THREEOB;
+        _slakosType = THREEOB;
 
     else if ("matsci" == slakosType)
-        _slakosType        = MATSCI;
+        _slakosType = MATSCI;
 
     else if ("custom" == slakosType)
         _slakosType = CUSTOM;
@@ -331,10 +331,18 @@ void QMSettings::setUseThirdOrderDftb(const bool useThirdOrderDftb)
 }
 
 /**
+ * @brief sets if the third order is set
+ *
+ */
+void QMSettings::setIsThirdOrderDftbSet() { _isThirdOrderDftbSet = true; }
+
+/**
  * @brief sets the custom Hubbard Derivative dictionary
  *
  */
-void QMSettings::setHubbardDerivs(std::unordered_map<std::string, double> hubbardDerivs)
+void QMSettings::setHubbardDerivs(
+    std::unordered_map<std::string, double> hubbardDerivs
+)
 {
     _hubbardDerivs = hubbardDerivs;
 }
@@ -423,11 +431,21 @@ std::string QMSettings::getSlakosPath() { return _slakosPath; }
 bool QMSettings::useThirdOrderDftb() { return _useThirdOrderDftb; }
 
 /**
+ * @brief returns if the third order is set
+ *
+ * @return bool
+ */
+bool QMSettings::isThirdOrderDftbSet() { return _isThirdOrderDftbSet; }
+
+/**
  * @brief returns the custom Hubbard Derivative dictionary
  *
  * @return bool
  */
-std::unordered_map<std::string, double> QMSettings::getHubbardDerivs() { return _hubbardDerivs; }
+std::unordered_map<std::string, double> QMSettings::getHubbardDerivs()
+{
+    return _hubbardDerivs;
+}
 
 /**
  * @brief returns if the dispersion correction should be used

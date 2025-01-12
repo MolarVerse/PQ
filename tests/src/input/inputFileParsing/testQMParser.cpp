@@ -204,6 +204,24 @@ TEST_F(TestInputFileReader, parseSlakosType)
     )
 }
 
+TEST_F(TestInputFileReader, parseSlakosTypeThirdOrder)
+{
+    using enum QMMethod;
+
+    auto parser1 = QMInputParser(*_engine);
+
+    parser1.parseThirdOrder({"third_order", "=", "off"}, 0);
+    parser1.parseSlakosType({"slakos", "=", "3ob"}, 0);
+    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::THREEOB);
+    EXPECT_FALSE(QMSettings::useThirdOrderDftb());
+
+    auto parser2 = QMInputParser(*_engine);
+    parser2.parseSlakosType({"slakos", "=", "3ob"}, 0);
+    parser2.parseThirdOrder({"third_order", "=", "off"}, 0);
+    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::THREEOB);
+    EXPECT_FALSE(QMSettings::useThirdOrderDftb());
+}
+
 TEST_F(TestInputFileReader, parseSlakosPath)
 {
     using enum QMMethod;
@@ -236,6 +254,7 @@ TEST_F(TestInputFileReader, parseThirdOrder)
 
     parser.parseThirdOrder({"third_order", "=", "no"}, 0);
     EXPECT_FALSE(QMSettings::useThirdOrderDftb());
+    EXPECT_TRUE(QMSettings::isThirdOrderDftbSet());
 
     ASSERT_THROW_MSG(
         parser.parseThirdOrder({"third_order", "=", "notABool"}, 0),
