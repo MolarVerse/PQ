@@ -41,7 +41,6 @@ namespace QM
         ~AseDftbRunner() override = default;
 
         explicit AseDftbRunner(
-            const std::string                             &slakosType,
             const std::string                             &slakosPath,
             const bool                                     thirdOrder,
             const std::unordered_map<std::string, double> &hubbardDerivs

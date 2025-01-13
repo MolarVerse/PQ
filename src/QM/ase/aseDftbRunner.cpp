@@ -36,7 +36,6 @@ using namespace constants;
  * @throw py::error_already_set if the import of the mace module fails
  */
 AseDftbRunner::AseDftbRunner(
-    const std::string                             &slakosType,
     const std::string                             &slakosPath,
     const bool                                     thirdOrder,
     const std::unordered_map<std::string, double> &hubbardDerivs
