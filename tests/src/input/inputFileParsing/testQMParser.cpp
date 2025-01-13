@@ -227,7 +227,7 @@ TEST_F(TestInputFileReader, parseSlakosPath)
     using enum QMMethod;
 
     auto parser = QMInputParser(*_engine);
-
+    parser.parseSlakosType({"slakos", "=", "custom"}, 0);
     parser.parseSlakosPath({"slakos_path", "=", "/path/to/slakos"}, 0);
     EXPECT_EQ(QMSettings::getSlakosPath(), "/path/to/slakos");
 }
