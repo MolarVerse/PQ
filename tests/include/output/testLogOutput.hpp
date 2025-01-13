@@ -39,12 +39,12 @@
 class TestLogOutput : public ::testing::Test
 {
   protected:
-    void SetUp() override { _logOutput = new output::LogOutput("default.out"); }
+    void SetUp() override { _logOutput = new output::LogOutput("default.log"); }
 
     void TearDown() override
     {
         delete _logOutput;
-        ::remove("default.out");
+        ::remove("default.log");
     }
 
     output::LogOutput *_logOutput;
