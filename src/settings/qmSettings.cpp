@@ -328,6 +328,9 @@ void QMSettings::setSlakosType(const std::string_view &slakos)
     else if ("custom" == slakosType)
         _slakosType = CUSTOM;
 
+    else if ("none" == slakosType)
+        _slakosType = NONE;
+
     else
         throw UserInputException(std::format("Slakos {} not recognized", slakos)
         );

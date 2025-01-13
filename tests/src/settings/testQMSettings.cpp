@@ -100,10 +100,53 @@ TEST(QMSettingsTest, SetSlakosTypeTest)
     QMSettings::setSlakosType("custom");
     EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::CUSTOM);
 
+    QMSettings::setSlakosType("none");
+    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::NONE);
+
+    QMSettings::setSlakosType(SlakosType::THREEOB);
+    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::THREEOB);
+
+    QMSettings::setSlakosType(SlakosType::MATSCI);
+    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::MATSCI);
+
+    QMSettings::setSlakosType(SlakosType::CUSTOM);
+    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::CUSTOM);
+
+    QMSettings::setSlakosType(SlakosType::NONE);
+    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::NONE);
+
     ASSERT_THROW_MSG(
         QMSettings::setSlakosType("notASlakosType"),
         UserInputException,
         "Slakos notASlakosType not recognized"
+    );
+}
+
+TEST(QMSettingsTest, SetSlakosPathTest)
+{
+    QMSettings::setSlakosType("none");
+    ASSERT_THROW_MSG(
+        QMSettings::setSlakosPath("/path/to/slakos"),
+        UserInputException,
+        "Slakos path cannot be set without a slakos type"
+    );
+
+    QMSettings::setSlakosType("custom");
+    QMSettings::setSlakosPath("/path/to/slakos");
+    EXPECT_EQ(QMSettings::getSlakosPath(), "/path/to/slakos");
+
+    QMSettings::setSlakosType("3ob");
+    ASSERT_THROW_MSG(
+        QMSettings::setSlakosPath("/path/to/slakos"),
+        UserInputException,
+        "Slakos path cannot be set for slakos type: 3ob"
+    );
+
+    QMSettings::setSlakosType("matsci");
+    ASSERT_THROW_MSG(
+        QMSettings::setSlakosPath("/path/to/slakos"),
+        UserInputException,
+        "Slakos path cannot be set for slakos type: matsci"
     );
 }
 
