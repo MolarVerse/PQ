@@ -120,7 +120,7 @@ mace_model_size             false
 slakos                      false
 slakos_path                 false
 third_order                 false
-hubbasrd_derivs             false
+hubbard_derivs              false
 
 rpmd_n_replica              false
 
