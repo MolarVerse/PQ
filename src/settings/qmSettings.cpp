@@ -381,7 +381,10 @@ void QMSettings::setUseThirdOrderDftb(const bool useThirdOrderDftb)
  * @brief sets if the third order is set
  *
  */
-void QMSettings::setIsThirdOrderDftbSet() { _isThirdOrderDftbSet = true; }
+void QMSettings::setIsThirdOrderDftbSet(const bool isThirdOrderDftbSet)
+{
+    _isThirdOrderDftbSet = isThirdOrderDftbSet;
+}
 
 /**
  * @brief sets the custom Hubbard Derivative dictionary
@@ -398,7 +401,10 @@ void QMSettings::setHubbardDerivs(
  * @brief sets if the Hubbard Derivative dictionary is set by the user
  *
  */
-void QMSettings::setIsHubbardDerivsSet() { _isHubbardDerivsSet = true; }
+void QMSettings::setIsHubbardDerivsSet(const bool isHubbardDerivsSet)
+{
+    _isHubbardDerivsSet = isHubbardDerivsSet;
+}
 
 /**
  * @brief sets if the dispersion correction should be used

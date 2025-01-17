@@ -142,11 +142,11 @@ namespace settings
 
         static void setUseDispersionCorrection(const bool use);
         static void setUseThirdOrderDftb(const bool use);
-        static void setIsThirdOrderDftbSet();
+        static void setIsThirdOrderDftbSet(const bool isThirdOrderDftbSet);
         static void setHubbardDerivs(
             const std::unordered_map<std::string, double> hubbardDerivs
         );
-        static void setIsHubbardDerivsSet();
+        static void setIsHubbardDerivsSet(const bool isHubbardDerivsSet);
 
         static void setQMLoopTimeLimit(const double time);
 

@@ -406,7 +406,7 @@ void QMInputParser::parseThirdOrder(
             lineElements[2]
         ));
 
-    QMSettings::setIsThirdOrderDftbSet();
+    QMSettings::setIsThirdOrderDftbSet(true);
 }
 
 /**
@@ -451,5 +451,5 @@ void QMInputParser::parseHubbardDerivs(
     }
 
     QMSettings::setHubbardDerivs(hubbardDerivs);
-    QMSettings::setIsHubbardDerivsSet();
+    QMSettings::setIsHubbardDerivsSet(true);
 }
