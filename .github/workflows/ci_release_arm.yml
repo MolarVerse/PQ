@@ -11,6 +11,7 @@ on:
       - 'src/**'
       - 'integration_tests/**'
       - 'tests/**'
+      - 'CMakeLists.txt'
   workflow_dispatch:
 
 jobs:
