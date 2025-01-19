@@ -24,6 +24,7 @@
 
 #include "celllist.hpp"
 #include "constraints.hpp"
+#include "exceptions.hpp"
 #include "forceFieldClass.hpp"
 #include "intraNonBonded.hpp"
 #include "potential.hpp"
@@ -56,7 +57,13 @@ void MMEvaluator::evaluate()
 
     _cellList->updateCellList(*_simulationBox);
 
+#ifdef __PQ_LEGACY__
     _potential->calculateForces(*_simulationBox, *_physicalData, *_cellList);
+#else
+    throw customException::DeviceException(
+        "The non-legacy code path is not implemented yet."
+    );
+#endif
 
     _intraNonBonded->calculate(*_simulationBox, *_physicalData);
 

@@ -30,6 +30,8 @@
 
 #include "typeAliases.hpp"
 
+// TODO: place this in linearAlgebra.hpp
+
 namespace utilities
 {
     /**

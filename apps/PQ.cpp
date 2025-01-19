@@ -35,13 +35,13 @@
 #include "setup.hpp"             // for setupSimulation
 
 #ifdef WITH_MPI
-#include <mpi.h>   // for MPI_Abort, MPI_COMM_WORLD, MPI_Finalize
+    #include <mpi.h>   // for MPI_Abort, MPI_COMM_WORLD, MPI_Finalize
 
-#include "mpi.hpp"   // for MPI
+    #include "mpi.hpp"   // for MPI
 #endif
 
 #ifdef WITH_PYBIND11
-#include <pybind11/embed.h>   // for scoped_interpreter
+    #include <pybind11/embed.h>   // for scoped_interpreter
 #endif
 
 static int PQ(const int argc, const std::vector<std::string> &arguments)
@@ -79,10 +79,6 @@ int main(int argc, char *argv[])
     mpi::MPI::init(&argc, &argv);
 #endif
 
-#ifdef WITH_KOKKOS
-    Kokkos::initialize(argc, argv);
-#endif
-
 #ifdef WITH_PYBIND11
     pybind11::scoped_interpreter guard{};
 #endif
@@ -100,10 +96,6 @@ int main(int argc, char *argv[])
         ::MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
 #endif
     }
-
-#ifdef WITH_KOKKOS
-    Kokkos::finalize();
-#endif
 
 #ifdef WITH_MPI
     mpi::MPI::finalize();

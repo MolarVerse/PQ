@@ -77,9 +77,16 @@ class TestThermostat : public ::testing::Test
         _simulationBox->addAtom(atom3);
 
         _simulationBox->calculateDegreesOfFreedom();
-#ifndef __PQ_LEGACY__
+
+        _simulationBox->setNumberOfAtoms(3);
+        _simulationBox->setNumberOfMolecules(2);
+        _simulationBox->resizeHostVectors(
+            _simulationBox->getNumberOfAtoms(),
+            _simulationBox->getNumberOfMolecules()
+        );
         _simulationBox->flattenMasses();
-#endif
+        _simulationBox->flattenVelocities();
+        _simulationBox->flattenForces();
     }
 
     void TearDown() override

@@ -37,10 +37,12 @@
 #include "orthorhombicBox.hpp"
 
 #include "constants.hpp"   // for _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_
+#include "settings.hpp"    // for Settings
 
 using simulationBox::OrthorhombicBox;
 using namespace linearAlgebra;
 using namespace constants;
+using namespace settings;
 
 /**
  * @brief Calculate the volume of the box
@@ -109,17 +111,37 @@ void OrthorhombicBox::scaleBox(const tensor3D& scalingTensor)
     _volume = calculateVolume();
 }
 
-#ifndef __PQ_LEGACY__
-
 /**
  * @brief update box parameters
  *
  * @TODO: remove this later on should not be necessary
  *
  */
-void OrthorhombicBox::updateBoxParams()
+void OrthorhombicBox::flattenBoxParams()
 {
     _boxParams = {_boxDimensions[0], _boxDimensions[1], _boxDimensions[2]};
+
+#ifdef __PQ_GPU__
+    if (Settings::useDevice())
+    {
+        copyBoxParamsTo();
+    }
+#endif
 }
 
+/**
+ * @brief de-flatten box parameters
+ *
+ *
+ */
+void OrthorhombicBox::deFlattenBoxParams()
+{
+#ifdef __PQ_GPU__
+    if (Settings::useDevice())
+    {
+        copyBoxParamsFrom();
+    }
 #endif
+
+    _boxDimensions = {_boxParams[0], _boxParams[1], _boxParams[2]};
+}

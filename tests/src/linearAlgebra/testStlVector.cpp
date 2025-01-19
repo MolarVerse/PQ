@@ -22,11 +22,12 @@
 
 #include <gtest/gtest.h>   // for Test, TestInfo (ptr only), EXPECT_EQ, InitGoogleTest, RUN_ALL_TESTS
 
-#include <algorithm>   // for copy
-#include <vector>      // for allocator, vector
+#include <vector>   // for allocator, vector
 
-#include "gtest/gtest.h"   // for Message, TestPartResult
-#include "stlVector.hpp"   // for max, mean, sum
+#include "gtest/gtest.h"       // for Message, TestPartResult
+#include "linearAlgebra.hpp"   // for sum, mean, max
+
+using namespace linearAlgebra;
 
 TEST(TestStlVector, sum)
 {

@@ -57,18 +57,20 @@ void Constraints::initMShake() { _mShake.initMShake(); }
 /**
  * @brief calculates the reference bond data of all bond constraints
  *
- * @param simulationBox
+ * @param simBox
  *
  */
-void Constraints::calculateConstraintBondRefs(const SimulationBox &simulationBox
-)
+void Constraints::calculateConstraintBondRefs(SimulationBox &simBox)
 {
     startTimingsSection("Reference Bond Data");
 
+    // TODO: implement this for device
+    simBox.deFlattenPositions();
+
     std::ranges::for_each(
         _bondConstraints,
-        [&simulationBox](auto &bondConstraint)
-        { bondConstraint.calculateConstraintBondRef(simulationBox); }
+        [&simBox](auto &bondConstraint)
+        { bondConstraint.calculateConstraintBondRef(simBox); }
     );
 
     stopTimingsSection("Reference Bond Data");
@@ -77,18 +79,22 @@ void Constraints::calculateConstraintBondRefs(const SimulationBox &simulationBox
 /**
  * @brief applies both shake and mShake algorithm to all bond constraints
  *
- * @param simulationBox
+ * @param simBox
  */
-void Constraints::applyShake(SimulationBox &simulationBox)
+void Constraints::applyShake(SimulationBox &simBox)
 {
     if (!_shakeActivated && !_mShakeActivated)
         return;
 
+    // TODO: implement this for device
     if (_shakeActivated)
-        _applyShake(simulationBox);
+        _applyShake(simBox);
 
     if (_mShakeActivated)
-        _applyMShake(simulationBox);
+        _applyMShake(simBox);
+
+    simBox.flattenPositions();
+    simBox.flattenVelocities();
 }
 
 /**
@@ -167,6 +173,8 @@ void Constraints::applyRattle(SimulationBox &simBox)
 
     if (_mShakeActivated)
         _applyMRattle(simBox);
+
+    simBox.flattenVelocities();
 }
 
 /**
@@ -234,7 +242,7 @@ void Constraints::_applyMRattle(SimulationBox &simulationBox)
  *
  */
 void Constraints::applyDistanceConstraints(
-    const SimulationBox        &simulationBox,
+    SimulationBox              &simBox,
     physicalData::PhysicalData &data,
     const double                time
 )
@@ -242,18 +250,15 @@ void Constraints::applyDistanceConstraints(
     if (!_distanceConstActivated)
         return;
 
+    // TODO: implement this for device
     auto effective_time = time - _startTime;
 
     effective_time = effective_time > 0.0 ? effective_time : -1.0;
 
     std::ranges::for_each(
         _distanceConstraints,
-        [&simulationBox, effective_time](auto &distanceConstraint) {
-            distanceConstraint.applyDistanceConstraint(
-                simulationBox,
-                effective_time
-            );
-        }
+        [&simBox, effective_time](auto &distanceConstraint)
+        { distanceConstraint.applyDistanceConstraint(simBox, effective_time); }
     );
 
     auto lowerEnergy = 0.0;

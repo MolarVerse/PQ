@@ -91,6 +91,9 @@ inline void PotentialBruteForce::
     physicalData.setCoulombEnergy(totalCoulombEnergy);
     physicalData.setNonCoulombEnergy(totalNonCoulombEnergy);
 
+    simBox.flattenForces();
+    simBox.flattenShiftForces();
+
     stopTimingsSection("InterNonBonded");
 }
 

@@ -45,6 +45,7 @@
 #include "potentialSettings.hpp"       // for PotentialSettings
 #include "simulationBox.hpp"           // for SimulationBox
 #include "simulationBoxSettings.hpp"   // for SimulationBoxSettings
+#include "simulationBox_API.hpp"   // for calculateTotalCharge, calculateTotalMass
 #include "stringUtilities.hpp"   // for toLowerCopy, firstLetterToUpperCaseCopy
 
 using setup::simulationBox::SimulationBoxSetup;
@@ -85,39 +86,35 @@ void SimulationBoxSetup::setup()
 {
     auto &simBox = _engine.getSimulationBox();
 
-    simBox.setNumberOfAtoms(simBox.getAtoms().size());
+    const auto nAtoms     = simBox.getAtoms().size();
+    const auto nMolecules = simBox.getMolecules().size();
 
-#ifndef __PQ_LEGACY__
-    // flatten already present data
+    simBox.setNumberOfAtoms(nAtoms);
+    simBox.setNumberOfMolecules(nMolecules);
+
+    simBox.resizeHostVectors(nAtoms, nMolecules);
+
+#ifdef __PQ_GPU__
+    auto &device = _engine.getDevice();
+    simBox.initDeviceMemory(device);
+    simBox.getBox().initDeviceMemory(device);
+#endif
+
     simBox.flattenPositions();
     simBox.flattenVelocities();
     simBox.flattenForces();
     simBox.flattenShiftForces();
 
+    simBox.getBox().flattenBoxParams();
+
     simBox.initAtomsPerMolecule();
     simBox.initMoleculeIndices();
-#endif
+    simBox.initMoleculeOffsets();
 
 #ifdef __PQ_GPU__
-    auto &device = _engine.getDevice();
-
-    simBox.initDeviceMemory(device);
-    simBox.getBox().initDeviceMemory(device);
-
-    simBox.copyPosTo();
-    simBox.copyVelTo();
-    simBox.copyForcesTo();
-    simBox.copyShiftForcesTo();
-
     simBox.copyOldPosTo();
     simBox.copyOldVelTo();
     simBox.copyOldForcesTo();
-
-    simBox.copyAtomsPerMoleculeTo();
-    simBox.copyMoleculeIndicesTo();
-
-    simBox.getBox().updateBoxParams();
-    simBox.getBox().copyBoxParamsTo(device);
 #endif
 
     setAtomNames();
@@ -126,28 +123,24 @@ void SimulationBoxSetup::setup()
         setExternalVDWTypes();
     setPartialCharges();
 
-    setAtomMasses();
     setAtomicNumbers();
-    calculateMolMasses();
+    setAtomMasses();
+    calculateMolMasses();   // avoid using calculateMolMasses() of setup using
+                            // the one from simulationBox_API
 
-#ifndef __PQ_LEGACY__
     simBox.flattenCharges();
     simBox.flattenMasses();
-#endif
+    simBox.flattenMolMasses();
+    simBox.flattenComMolecules();
 
-#ifdef __PQ_GPU__
-    simBox.copyMassesTo();
-    simBox.copyChargesTo();
-#endif
-
-    calculateTotalCharge();
-    simBox.calculateTotalMass();
+    calculateTotalCharge(simBox);
+    calculateTotalMass(simBox);
+    calculateCenterOfMassMolecules(simBox);
 
     checkBoxSettings();
     checkRcCutoff();
 
     simBox.calculateDegreesOfFreedom();
-    simBox.calculateCenterOfMassMolecules();
 
     initVelocities();
 
@@ -279,7 +272,8 @@ void SimulationBoxSetup::setAtomMasses()
 {
     auto setAtomMasses = [](::simulationBox::Molecule &molecule)
     {
-        for (auto &atom : molecule.getAtoms()) atom->initMass();
+        for (const auto &atom : molecule.getAtoms())
+            atom->initMass();
     };
 
     auto &molecules = _engine.getSimulationBox().getMolecules();
@@ -327,25 +321,6 @@ void SimulationBoxSetup::calculateMolMasses()
 
     auto &molecules = _engine.getSimulationBox().getMolecules();
     std::ranges::for_each(molecules, calculateMolMasses);
-}
-
-/**
- * @brief Calculates the total charge of the simulation box
- */
-void SimulationBoxSetup::calculateTotalCharge()
-{
-    double totalCharge = 0.0;
-
-    auto calcMolCharge = [&totalCharge](const ::simulationBox::Molecule &mol)
-    {
-        const auto &charges = mol.getPartialCharges();
-        totalCharge += std::accumulate(charges.begin(), charges.end(), 0.0);
-    };
-
-    auto &molecules = _engine.getSimulationBox().getMolecules();
-    std::ranges::for_each(molecules, calcMolCharge);
-
-    _engine.getSimulationBox().setTotalCharge(totalCharge);
 }
 
 /**
@@ -464,7 +439,7 @@ void SimulationBoxSetup::writeSetupInfo() const
     const auto volumeStr = std::format("{:14.5f} {}³", volume, _ANGSTROM_);
 
     log.writeSetupInfo(std::format("density:         {:14.5f} kg/L", density));
-    log.writeSetupInfo(std::format("volume:          ", volumeStr));
+    log.writeSetupInfo(std::format("volume:          {}", volumeStr));
     log.writeEmptyLine();
 
     const auto boxA = simBox.getBoxDimensions()[0];

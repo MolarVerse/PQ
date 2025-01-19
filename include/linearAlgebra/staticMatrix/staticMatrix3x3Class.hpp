@@ -52,6 +52,7 @@ namespace linearAlgebra
         explicit StaticMatrix3x3(const Vector3D<Vector3D<T>> &data);
         explicit StaticMatrix3x3(const Vector3D<Vector3D<T>> &&data);
         explicit StaticMatrix3x3(const Vector3D<T> &, const Vector3D<T> &, const Vector3D<T> &);
+        explicit StaticMatrix3x3(const T *const data);
 
         StaticMatrix3x3(const T t);
         StaticMatrix3x3(const std::vector<T> &vector);

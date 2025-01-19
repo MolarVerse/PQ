@@ -55,7 +55,6 @@ namespace setup::simulationBox
         void setAtomicNumbers();
 
         void calculateMolMasses();
-        void calculateTotalCharge();
 
         void checkBoxSettings();
         void checkRcCutoff();

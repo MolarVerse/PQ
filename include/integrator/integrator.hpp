@@ -51,9 +51,6 @@ namespace integrator
         virtual void firstStep(pq::SimBox &)  = 0;
         virtual void secondStep(pq::SimBox &) = 0;
 
-        void integrateVelocities(pq::Atom *) const;
-        void integratePositions(pq::Atom *, const pq::SimBox &) const;
-
         /********************************
          * standard getters and setters *
          ********************************/

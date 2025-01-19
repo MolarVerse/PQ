@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef __DEVICE_TPP_HPP__
-#define __DEVICE_TPP_HPP__
+#ifndef __DEVICE_INL__
+#define __DEVICE_INL__
 
 #include "device.hpp"
 #include "deviceAPI.hpp"
@@ -299,4 +299,4 @@ namespace device
 
 }   // namespace device
 
-#endif   // __DEVICE_TPP_HPP__
+#endif   // __DEVICE_INL__

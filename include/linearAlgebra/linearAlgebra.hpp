@@ -20,32 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _KOKKOS_SETUP_HPP_
+#ifndef __LINEAR_ALGEBRA_HPP__
+#define __LINEAR_ALGEBRA_HPP__
 
-#define _KOKKOS_SETUP_HPP_
+#include "math.hpp"           // IWYU pragma: export
+#include "matrix.hpp"         // IWYU pragma: export
+#include "staticMatrix.hpp"   // IWYU pragma: export
+#include "stlVector.hpp"      // IWYU pragma: export
+#include "vector3d.hpp"       // IWYU pragma: export
 
-#include "typeAliases.hpp"
-
-namespace setup
-{
-    void setupKokkos(pq::Engine &);
-
-    /**
-     * @class KokkosSetup
-     *
-     * @brief setup Kokkos
-     */
-    class KokkosSetup
-    {
-       private:
-        pq::Engine &_engine;
-
-       public:
-        explicit KokkosSetup(pq::Engine &engine);
-
-        void setup();
-    };
-
-}   // namespace setup
-
-#endif   // _KOKKOS_SETUP_HPP_
+#endif   // __LINEAR_ALGEBRA_HPP__

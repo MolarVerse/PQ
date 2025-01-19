@@ -23,9 +23,8 @@
 #ifndef __DEBUG_INL__
 #define __DEBUG_INL__
 
-#include <stdlib.h>   // for getenv
-
 #include <bitset>     // for bitset
+#include <cstdlib>    // for getenv
 #include <format>     // for format
 #include <iostream>   // for operator<<, basic_ostream, ostream, cout
 #include <string>     // for string
@@ -46,7 +45,7 @@ namespace config
         {
             try
             {
-                const auto debugLevel = std::atoi(debugEnv);
+                const auto debugLevel = std::strtol(debugEnv, nullptr, 10);
 
                 if (debugLevel < 0)
                 {
@@ -92,6 +91,32 @@ namespace config
     }
 
     /**
+     * @brief print min, max, sum and mean of a tuple
+     *
+     * @tparam std::tuple<T, T, T, T>
+     * @param msg
+     * @param minMaxSumMean
+     * @param level
+     */
+    template <typename T>
+    void inline Debug::debugMinMaxSumMean(
+        const std::tuple<T, T, T, T> minMaxSumMean,
+        const std::string&           msg,
+        const DebugLevel             level
+    )
+    {
+        if (useDebug(level))
+        {
+            std::cout << msg;
+            std::cout << " min: " << std::get<0>(minMaxSumMean);
+            std::cout << " max: " << std::get<1>(minMaxSumMean);
+            std::cout << " sum: " << std::get<2>(minMaxSumMean);
+            std::cout << " mean: " << std::get<3>(minMaxSumMean);
+            std::cout << std::endl;
+        }
+    }
+
+    /**
      * @brief set if debug is enabled
      *
      * @param debug
@@ -133,6 +158,54 @@ namespace config
     }
 
     /**
+     * @brief get the file string
+     *
+     * @return std::string
+     */
+    [[nodiscard]] inline std::string Debug::getFile() { return _file; }
+
+    /**
+     * @brief get the function string
+     *
+     * @return std::string
+     */
+    [[nodiscard]] inline std::string Debug::getFunc() { return _func; }
+
+    /**
+     * @brief get the debug info string
+     *
+     * @return std::string
+     */
+    [[nodiscard]] inline std::string Debug::getDebugInfo()
+    {
+        return _debugInfo;
+    }
+
+    /**
+     * @brief get the debug pos string
+     *
+     * @return std::string
+     */
+    [[nodiscard]] inline std::string Debug::getDebugPos() { return _debugPos; }
+
+    /**
+     * @brief get the debug vel string
+     *
+     * @return std::string
+     */
+    [[nodiscard]] inline std::string Debug::getDebugVel() { return _debugVel; }
+
+    /**
+     * @brief get the debug force string
+     *
+     * @return std::string
+     */
+    [[nodiscard]] inline std::string Debug::getDebugForce()
+    {
+        return _debugForce;
+    }
+
+    /**
      * @brief check if the debug level is set
      *
      * @param level
@@ -144,6 +217,23 @@ namespace config
             return false;
 
         if (std::bitset<8>(_debugLevel)[static_cast<size_t>(level)] == 1)
+            return true;
+
+        return false;
+    }
+
+    /**
+     * @brief check if the debug level is not set
+     *
+     * @param level
+     * @return bool
+     */
+    [[nodiscard]] bool inline Debug::useAnyDebug()
+    {
+        if (!_debug)
+            return false;
+
+        if (_debugLevel != 0)
             return true;
 
         return false;

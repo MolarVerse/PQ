@@ -74,6 +74,30 @@ namespace simulationBox
         z += tz;
     }
 
+    /**
+     * @brief image orthorhombic
+     *
+     * @param boxDimensions
+     * @param x
+     * @param y
+     * @param z
+     */
+    static inline void imageOrthoRhombic(
+        const Real* const boxDimensions,
+        Real&             x,
+        Real&             y,
+        Real&             z
+    )
+    {
+        const auto boxX = boxDimensions[0];
+        const auto boxY = boxDimensions[1];
+        const auto boxZ = boxDimensions[2];
+
+        x -= boxX * ::round(x / boxX);
+        y -= boxY * ::round(y / boxY);
+        z -= boxZ * ::round(z / boxZ);
+    }
+
 }   // namespace simulationBox
 
 #endif   // __ORTHORHOMBIC_BOX_INL__

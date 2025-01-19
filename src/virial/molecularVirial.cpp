@@ -22,8 +22,11 @@
 
 #include "molecularVirial.hpp"
 
+#include "linearAlgebra.hpp"
+#include "orthorhombicBox.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
+#include "triclinicBox.hpp"
 
 using namespace virial;
 using namespace simulationBox;
@@ -81,26 +84,64 @@ void MolecularVirial::intraMolecularVirialCorrection(
 {
     startTimingsSection("IntraMolecular Correction");
 
-    _virial = {0.0};
+    Real virial[9] = {0.0};
 
-    for (const auto &molecule : simBox.getMolecules())
+    const auto        nMolecules     = simBox.getNumberOfMolecules();
+    const auto *const comMolecules   = simBox.getComMoleculesPtr();
+    const auto *const atomsPerMolPtr = simBox.getAtomsPerMoleculePtr();
+    const auto *const molOffsetPtr   = simBox.getMoleculeOffsetsPtr();
+    const auto *const forcesPtr      = simBox.getForcesPtr();
+    const auto *const posPtr         = simBox.getPosPtr();
+    const auto *const boxParams      = simBox.getBox().getBoxParamsPtr();
+    const auto        isOrthorhombic = simBox.getBox().isOrthoRhombic();
+
+#ifdef __PQ_GPU__
+    // clang-format off
+    #pragma omp target teams distribute parallel for \
+                is_device_ptr(comMolecules, atomsPerMolPtr, \
+                              molOffsetPtr, forcesPtr, posPtr, \
+                              boxParams)                      \
+                map(virial)
+#else
+    #pragma omp parallel for
+    // clang-format on
+#endif
+    for (size_t i = 0; i < nMolecules; ++i)
     {
-        const auto   centerOfMass  = molecule.getCenterOfMass();
-        const size_t numberOfAtoms = molecule.getNumberOfAtoms();
+        const auto nAtoms    = atomsPerMolPtr[i];
+        const auto comX      = comMolecules[i * 3];
+        const auto comY      = comMolecules[i * 3 + 1];
+        const auto comZ      = comMolecules[i * 3 + 2];
+        const auto molOffset = molOffsetPtr[i];
 
-        for (size_t i = 0; i < numberOfAtoms; ++i)
+        for (size_t j = 0; j < nAtoms; ++j)
         {
-            const auto forcexyz = molecule.getAtomForce(i);
-            const auto xyz      = molecule.getAtomPosition(i);
+            const auto atomIndex = molOffset + j;
+            const auto posX      = posPtr[atomIndex * 3];
+            const auto posY      = posPtr[atomIndex * 3 + 1];
+            const auto posZ      = posPtr[atomIndex * 3 + 2];
+            const auto forceX    = forcesPtr[atomIndex * 3];
+            const auto forceY    = forcesPtr[atomIndex * 3 + 1];
+            const auto forceZ    = forcesPtr[atomIndex * 3 + 2];
 
-            auto dxyz = xyz - centerOfMass;
+            auto dx = posX - comX;
+            auto dy = posY - comY;
+            auto dz = posZ - comZ;
 
-            simBox.applyPBC(dxyz);
+            if (isOrthorhombic)
+                imageOrthoRhombic(boxParams, dx, dy, dz);
+            else
+                imageTriclinic(boxParams, dx, dy, dz);
 
-            _virial -= tensorProduct(dxyz, forcexyz);
+            Real help[9] = {0.0};
+            tensorProduct(help, dx, dy, dz, forceX, forceY, forceZ);
+
+            for (size_t k = 0; k < 9; ++k)
+                atomicSubtract(&virial[k], help[k]);
         }
     }
 
+    _virial = tensor3D{virial};
     data.addVirial(_virial);
 
     stopTimingsSection("IntraMolecular Correction");

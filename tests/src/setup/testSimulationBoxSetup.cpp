@@ -33,14 +33,15 @@
 #include "exceptions.hpp"   // for MolDescriptorException, InputFileException
 #include "forceFieldSettings.hpp"      // for ForceFieldSettings
 #include "gtest/gtest.h"               // for Message, TestPartResult
+#include "linearAlgebra.hpp"           // for Vec3D
 #include "molecule.hpp"                // for Molecule
 #include "moleculeType.hpp"            // for MoleculeType
 #include "potentialSettings.hpp"       // for PotentialSettings
 #include "simulationBox.hpp"           // for SimulationBox
 #include "simulationBoxSettings.hpp"   // for SimulationBoxSettings
 #include "simulationBoxSetup.hpp"   // for SimulationBoxSetup, setupSimulationBox
+#include "simulationBox_API.hpp"    // for calculateTotalCharge
 #include "testSetup.hpp"            // for TestSetup
-#include "vector3d.hpp"             // for Vec3D
 
 using setup::simulationBox::SimulationBoxSetup;
 
@@ -381,29 +382,6 @@ TEST_F(TestSetup, testSetMolMass)
     );
 }
 
-TEST_F(TestSetup, testSetTotalCharge)
-{
-    ::simulationBox::Molecule molecule(1);
-    molecule.setNumberOfAtoms(3);
-    const auto atom1 = std::make_shared<::simulationBox::Atom>();
-    const auto atom2 = std::make_shared<::simulationBox::Atom>();
-    const auto atom3 = std::make_shared<::simulationBox::Atom>();
-    atom1->setName("C");
-    atom2->setName("H");
-    atom3->setName("O");
-    molecule.addAtom(atom1);
-    molecule.addAtom(atom2);
-    molecule.addAtom(atom3);
-
-    molecule.setPartialCharges({0.1, 0.2, -0.4});
-
-    _engine->getSimulationBox().getMolecules().push_back(molecule);
-    SimulationBoxSetup simulationBoxSetup(*_engine);
-    simulationBoxSetup.calculateTotalCharge();
-
-    EXPECT_DOUBLE_EQ(_engine->getSimulationBox().getTotalCharge(), -0.1);
-}
-
 TEST_F(TestSetup, noDensityNoBox)
 {
     settings::SimulationBoxSettings::setDensitySet(false);
@@ -518,8 +496,13 @@ TEST_F(TestSetup, testFullSetup)
 
     molecule2.setPartialCharges({0.1, 0.2});
 
-    _engine->getSimulationBox().getMolecules().push_back(molecule1);
-    _engine->getSimulationBox().getMolecules().push_back(molecule2);
+    _engine->getSimulationBox().addMolecule(molecule1);
+    _engine->getSimulationBox().addMolecule(molecule2);
+    _engine->getSimulationBox().addAtom(atom1);
+    _engine->getSimulationBox().addAtom(atom2);
+    _engine->getSimulationBox().addAtom(atom3);
+    _engine->getSimulationBox().addAtom(atom4);
+    _engine->getSimulationBox().addAtom(atom5);
 
     auto moleculeType1 = ::simulationBox::MoleculeType(1);
     auto moleculeType2 = ::simulationBox::MoleculeType(2);

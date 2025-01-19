@@ -129,6 +129,7 @@
         "${workspaceFolder}/.build"
     ],
     "cSpell.words": [
+        "AGPU",
         "Allman",
         "ANICC",
         "aniso",
@@ -251,4 +252,12 @@
         "**/.git": true
     },
     "sonarlint.pathToCompileCommands": "${workspaceFolder}/compile_commands.json",
+    "doxdocgen.file.fileOrder": [
+        "file",
+        "author",
+        "brief",
+        "date",
+        "empty",
+        "empty",
+    ],
 }

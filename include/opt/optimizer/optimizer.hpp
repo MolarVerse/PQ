@@ -96,8 +96,8 @@ namespace opt
         [[nodiscard]] double getMaxForce() const;
         [[nodiscard]] double getMaxForce(const int) const;
 
-        [[nodiscard]] pq::Vec3DVec getForces() const;
-        [[nodiscard]] pq::Vec3DVec getForces(const int) const;
+        [[nodiscard]] pq::Vec3DVec getForcesVec3D() const;
+        [[nodiscard]] pq::Vec3DVec getForce(const int) const;
 
         [[nodiscard]] pq::Vec3DVec getPositions() const;
         [[nodiscard]] pq::Vec3DVec getPositions(const int) const;

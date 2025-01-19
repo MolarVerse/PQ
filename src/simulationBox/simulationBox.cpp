@@ -26,14 +26,14 @@
 #include <format>      // for format
 #include <numeric>     // for accumulate
 #include <random>      // for random_device, mt19937
+#include <vector>
 
 #include "constants.hpp"           // for _TEMPERATURE_FACTOR_
 #include "exceptions.hpp"          // for RstFileException, UserInputException
+#include "linearAlgebra.hpp"       // for Vec3D
 #include "potentialSettings.hpp"   // for PotentialSettings
 #include "settings.hpp"            // for Settings
-#include "stlVector.hpp"           // for rms
 
-using simulationBox::SimulationBox;
 using namespace linearAlgebra;
 using namespace simulationBox;
 using namespace customException;
@@ -71,7 +71,10 @@ void SimulationBox::copy(const SimulationBox& toCopy)
         molecule.getAtoms().clear();
 
         for (size_t i = 0; i < numberOfAtoms; ++i)
-            molecule.addAtom(this->_atoms[runningIndex++]);
+        {
+            molecule.addAtom(this->_atoms[runningIndex]);
+            ++runningIndex;
+        }
 
         return runningIndex;
     };
@@ -92,6 +95,20 @@ void SimulationBox::copy(const SimulationBox& toCopy)
 std::shared_ptr<SimulationBox> SimulationBox::clone() const
 {
     return std::make_shared<SimulationBox>(*this);
+}
+
+/**
+ * @brief resize host vectors
+ * @param nAtoms
+ * @param nMolecules
+ */
+void SimulationBox::resizeHostVectors(
+    const size_t nAtoms,
+    const size_t nMolecules
+)
+{
+    _Coordinates::resizeHostVectors(nAtoms, nMolecules);
+    _SimulationBoxSoA::resizeHostVectors(nAtoms, nMolecules);
 }
 
 /**
@@ -418,29 +435,6 @@ void SimulationBox::setupExternalToInternalGlobalVdwTypesMap()
 }
 
 /**
- * @brief calculate degrees of freedom
- *
- */
-void SimulationBox::calculateDegreesOfFreedom()
-{
-    const auto nAtoms = getNumberOfAtoms();
-
-    _degreesOfFreedom = 3 * nAtoms - Settings::getDimensionality();
-}
-
-/**
- * @brief calculate center of mass of all molecules
- *
- */
-void SimulationBox::calculateCenterOfMassMolecules()
-{
-    auto calcCenterOfMassMolecule = [this](Molecule& molecule)
-    { molecule.calculateCenterOfMass(*_box); };
-
-    std::ranges::for_each(_molecules, calcCenterOfMassMolecule);
-}
-
-/**
  * @brief calculate RMS force of simulationBox
  *
  * @return double
@@ -593,4 +587,476 @@ void SimulationBox::initPositions(const double displacement)
     };
 
     std::ranges::for_each(_atoms, displacePositions);
+}
+
+/**
+ * @brief flattens positions of each atom into a single vector of doubles
+ *
+ */
+void SimulationBox::flattenPositions()
+{
+    if (_pos.size() != _atoms.size() * 3)
+    {
+        _pos.resize(_atoms.size() * 3);
+    }
+
+    // clang-format off
+    #pragma omp parallel for
+    // clang-format on
+    for (size_t i = 0; i < _atoms.size(); ++i)
+    {
+        const auto atom = _atoms[i];
+
+        for (size_t j = 0; j < 3; ++j)
+            _pos[i * 3 + j] = atom->getPosition()[j];
+    }
+
+#ifdef __PQ_GPU__
+    if (Settings::useDevice())
+        copyPosTo();
+#endif
+}
+
+/**
+ * @brief de-flattens positions of each atom from a single vector of doubles
+ * into the atom objects
+ *
+ * @param positions
+ */
+void SimulationBox::deFlattenPositions()
+{
+#ifdef __PQ_GPU__
+    if (Settings::useDevice())
+    {
+        copyPosFrom();
+    }
+#endif
+
+    // clang-format off
+    #pragma omp parallel for
+    // clang-format on
+    for (size_t i = 0; i < _atoms.size(); ++i)
+    {
+        const auto atom = _atoms[i];
+
+        for (size_t j = 0; j < 3; ++j)
+            atom->setPosition(_pos[i * 3 + j], j);
+    }
+}
+
+/**
+ * @brief flattens velocities of each atom into a single vector of doubles
+ *
+ */
+void SimulationBox::flattenVelocities()
+{
+    if (_vel.size() != _atoms.size() * 3)
+    {
+        _vel.resize(_atoms.size() * 3);
+    }
+
+    // clang-format off
+    #pragma omp parallel for
+    // clang-format on
+    for (size_t i = 0; i < _atoms.size(); ++i)
+    {
+        const auto atom = _atoms[i];
+
+        for (size_t j = 0; j < 3; ++j)
+            _vel[i * 3 + j] = atom->getVelocity()[j];
+    }
+
+#ifdef __PQ_GPU__
+    if (Settings::useDevice())
+        copyVelTo();
+#endif
+}
+
+/**
+ * @brief de-flattens velocities of each atom from a single vector of doubles
+ * into the atom objects
+ *
+ * @param velocities
+ */
+void SimulationBox::deFlattenVelocities()
+{
+#ifdef __PQ_GPU__
+    if (Settings::useDevice())
+    {
+        copyVelFrom();
+    }
+#endif
+
+    // clang-format off
+    #pragma omp parallel for
+    // clang-format on
+    for (size_t i = 0; i < _atoms.size(); ++i)
+    {
+        const auto atom = _atoms[i];
+
+        for (size_t j = 0; j < 3; ++j)
+            atom->setVelocity(_vel[i * 3 + j], j);
+    }
+}
+
+/**
+ * @brief flattens forces of each atom into a single vector of doubles
+ *
+ */
+void SimulationBox::flattenForces()
+{
+    if (_forces.size() != _atoms.size() * 3)
+    {
+        _forces.resize(_atoms.size() * 3);
+    }
+
+    // clang-format off
+    #pragma omp parallel for
+    // clang-format on
+    for (size_t i = 0; i < _atoms.size(); ++i)
+    {
+        const auto atom = _atoms[i];
+
+        for (size_t j = 0; j < 3; ++j)
+            _forces[i * 3 + j] = atom->getForce()[j];
+    }
+
+#ifdef __PQ_GPU__
+    if (Settings::useDevice())
+        copyForcesTo();
+#endif
+}
+
+/**
+ * @brief de-flattens forces of each atom from a single vector of doubles into
+ * the atom objects
+ *
+ * @param forces
+ */
+void SimulationBox::deFlattenForces()
+{
+#ifdef __PQ_GPU__
+    if (Settings::useDevice())
+    {
+        copyForcesFrom();
+    }
+#endif
+
+    // clang-format off
+    #pragma omp parallel for
+    // clang-format on
+    for (size_t i = 0; i < _atoms.size(); ++i)
+    {
+        const auto atom = _atoms[i];
+
+        for (size_t j = 0; j < 3; ++j)
+            atom->setForce(_forces[i * 3 + j], j);
+    }
+}
+
+/**
+ * @brief flattens masses of each atom into a single vector of Real
+ */
+void SimulationBox::flattenMasses()
+{
+    if (_masses.size() != _atoms.size())
+        _masses.resize(_atoms.size());
+
+        // clang-format off
+    #pragma omp parallel for
+    // clang-format on
+    for (size_t i = 0; i < _atoms.size(); ++i)
+        _masses[i] = _atoms[i]->getMass();
+
+#ifdef __PQ_GPU__
+    if (Settings::useDevice())
+        copyMassesTo();
+#endif
+}
+
+/**
+ * @brief flattens mol masses of each molecule into a single vector of Real
+ *
+ */
+void SimulationBox::flattenMolMasses()
+{
+    if (_molMasses.size() != _molecules.size())
+        _molMasses.resize(_molecules.size());
+
+    const auto nMolecules = _molecules.size();
+
+    // clang-format off
+    #pragma omp parallel for
+    // clang-format on
+    for (size_t i = 0; i < nMolecules; ++i)
+        _molMasses[i] = _molecules[i].getMolMass();
+
+#ifdef __PQ_GPU__
+    if (Settings::useDevice())
+        copyMolMassesTo();
+#endif
+}
+
+/**
+ * @brief flattens charges of each atom into a single vector of Real
+ *
+ */
+void SimulationBox::flattenCharges()
+{
+    if (_charges.size() != _atoms.size())
+        _charges.resize(_atoms.size());
+
+        // clang-format off
+    #pragma omp parallel for
+    // clang-format on
+    for (size_t i = 0; i < _atoms.size(); ++i)
+        _charges[i] = _atoms[i]->getPartialCharge();
+
+#ifdef __PQ_GPU__
+    if (Settings::useDevice())
+        copyChargesTo();
+#endif
+}
+
+/**
+ * @brief flattens center of mass of molecules of each molecule into a single
+ * vector of Vec3D
+ *
+ */
+void SimulationBox::flattenComMolecules()
+{
+    if (_comMolecules.size() != _molecules.size())
+        _comMolecules.resize(_molecules.size() * 3);
+
+        // clang-format off
+    #pragma omp parallel for
+    // clang-format on
+    for (size_t i = 0; i < _molecules.size(); ++i)
+    {
+        const auto com                   = _molecules[i].getCenterOfMass();
+        const auto moleculeIndex         = i * 3;
+        _comMolecules[moleculeIndex]     = com[0];
+        _comMolecules[moleculeIndex + 1] = com[1];
+        _comMolecules[moleculeIndex + 2] = com[2];
+    }
+
+#ifdef __PQ_GPU__
+    if (Settings::useDevice())
+        copyComMoleculesTo();
+#endif
+}
+
+/**
+ * @brief de-flattens center of mass of molecules of each molecule from a single
+ * vector of Vec3D into the molecule objects
+ *
+ * @param comMolecules
+ */
+void SimulationBox::deFlattenComMolecules()
+{
+#ifdef __PQ_GPU__
+    if (Settings::useDevice())
+    {
+        copyComMoleculesFrom();
+    }
+#endif
+
+    // clang-format off
+    #pragma omp parallel for
+    // clang-format on
+    for (size_t i = 0; i < _molecules.size(); ++i)
+    {
+        auto&      molecule      = _molecules[i];
+        const auto moleculeIndex = i * 3;
+
+        molecule.setCenterOfMass(Vec3D(
+            _comMolecules[moleculeIndex],
+            _comMolecules[moleculeIndex + 1],
+            _comMolecules[moleculeIndex + 2]
+        ));
+    }
+}
+
+/**
+ * @brief initializes a vector that is n molecules long and each element
+ * contains the number of atoms in the molecule
+ *
+ */
+void SimulationBox::initAtomsPerMolecule()
+{
+    if (_atomsPerMolecule.size() != _molecules.size())
+        _atomsPerMolecule.resize(_molecules.size());
+
+        // clang-format off
+    #pragma omp parallel for
+    // clang-format on
+    for (size_t i = 0; i < _molecules.size(); ++i)
+        _atomsPerMolecule[i] = _molecules[i].getNumberOfAtoms();
+
+#ifdef __PQ_GPU__
+    if (Settings::useDevice())
+        copyAtomsPerMoleculeTo();
+#endif
+}
+
+/**
+ * @brief initializes a vector that is n atoms long and each element contains
+ * the index of the molecule to which the atom belongs
+ */
+void SimulationBox::initMoleculeIndices()
+{
+    if (_moleculeIndices.size() != _atoms.size())
+        _moleculeIndices.resize(_atoms.size());
+
+    size_t     atomIndex  = 0;
+    const auto nMolecules = _molecules.size();
+
+    for (size_t i = 0; i < nMolecules; ++i)
+    {
+        const auto nAtoms = _molecules[i].getNumberOfAtoms();
+
+        for (size_t j = 0; j < nAtoms; ++j)
+        {
+            _moleculeIndices[atomIndex] = i;
+            ++atomIndex;
+        }
+    }
+
+#ifdef __PQ_GPU__
+    if (Settings::useDevice())
+        copyMoleculeIndicesTo();
+#endif
+}
+
+/**
+ * @brief initializes a vector that is n molecules long and each element
+ * contains the offset of the molecule in the atom vector
+ *
+ */
+
+void SimulationBox::initMoleculeOffsets()
+{
+    if (_moleculeOffsets.size() != _molecules.size())
+        _moleculeOffsets.resize(_molecules.size());
+
+    size_t offset = 0;
+
+    for (size_t i = 0; i < _molecules.size(); ++i)
+    {
+        _moleculeOffsets[i]  = offset;
+        offset              += _molecules[i].getNumberOfAtoms();
+    }
+
+#ifdef __PQ_GPU__
+    if (Settings::useDevice())
+        copyMoleculeOffsetsTo();
+#endif
+}
+
+/**
+ * @brief scale all velocities by a factor
+ *
+ * @param lambda
+ */
+void SimulationBox::scaleVelocities(const Real lambda)
+{
+    Real* const _velPtr = getVelPtr();
+
+    // clang-format off
+#ifdef __PQ_GPU__
+    #pragma omp target teams distribute parallel for \
+                collapse(2)                          \
+                is_device_ptr(_velPtr)
+#else
+    #pragma omp parallel for                        \
+                collapse(2)
+#endif
+    // clang-format on
+    for (size_t i = 0; i < _nAtoms * 3; ++i)
+        _velPtr[i] *= lambda;
+
+#ifdef __PQ_LEGACY__
+    deFlattenVelocities();
+#endif
+}
+
+/**
+ * @brief add to all velocities a vector
+ *
+ * @param velocity
+ */
+void SimulationBox::addToVelocities(const Vec3D& toAdd)
+{
+    Real* const velPtr      = getVelPtr();
+    const Real  toAddPtr[3] = {toAdd[0], toAdd[1], toAdd[2]};
+
+    // clang-format off
+#ifdef __PQ_GPU__
+    #pragma omp target teams distribute parallel for \
+                collapse(2)                          \
+                is_device_ptr(velPtr)                \
+                map(toAddPtr)
+#else
+    #pragma omp parallel for                         \
+                collapse(2)
+#endif
+    // clang-format on
+    for (size_t i = 0; i < _nAtoms; ++i)
+        for (size_t j = 0; j < 3; ++j)
+            velPtr[i * 3 + j] += toAddPtr[j];
+
+#ifdef __PQ_LEGACY__
+    deFlattenVelocities();
+#endif
+}
+
+/**
+ * @brief flattens shift forces of each atom into a single vector of doubles
+ *
+ * @return std::vector<double>
+ */
+void SimulationBox::flattenShiftForces()
+{
+    if (_shiftForces.size() != _atoms.size() * 3)
+        _shiftForces.resize(_atoms.size() * 3);
+
+    Real* const shiftForces = _shiftForces.data();
+
+    // clang-format off
+    #pragma omp parallel for
+    // clang-format on
+    for (size_t i = 0; i < _atoms.size(); ++i)
+    {
+        const auto atom = _atoms[i];
+
+        for (size_t j = 0; j < 3; ++j)
+            shiftForces[i * 3 + j] = atom->getShiftForce()[j];
+    }
+}
+
+/**
+ * @brief de-flattens shift forces of each atom from a single vector of doubles
+ * into the atom objects
+ *
+ * @param shiftForces
+ */
+void SimulationBox::deFlattenShiftForces()
+{
+    Real* const shiftForces = _shiftForces.data();
+
+    // clang-format off
+    #pragma omp parallel for
+    // clang-format on
+    for (size_t i = 0; i < _atoms.size(); ++i)
+    {
+        const auto atom = _atoms[i];
+
+        for (size_t j = 0; j < 3; ++j)
+            atom->setShiftForce(shiftForces[i * 3 + j], j);
+    }
+
+#ifdef __PQ_GPU__
+    if (Settings::useDevice())
+        copyShiftForcesTo();
+#endif
 }

@@ -28,6 +28,8 @@
 #include "constants/conversionFactors.hpp"           // for _FS_TO_S_
 #include "constants/internalConversionFactors.hpp"   // for _KINETIC_ENERGY_FACTOR_
 #include "simulationBox.hpp"                         // for SimulationBox
+#include "simulationBox_API.hpp"                     // for calculateTemperature
+#include "staticMatrix/staticMatrix3x3.hpp"
 
 using namespace physicalData;
 using namespace simulationBox;
@@ -37,48 +39,92 @@ using namespace constants;
 /**
  * @brief Calculates kinetic energy and momentum of the system
  *
- * @TODO: implement this for not legacy code
- *
  * @param simulationBox
  */
-void PhysicalData::calculateKinetics(SimulationBox &simulationBox)
+void PhysicalData::calculateKinetics(SimulationBox &simBox)
 {
     startTimingsSection("Calc Kinetics");
 
-    _momentum                  = Vec3D();
-    _kineticEnergyAtomicTensor = tensor3D();
-    _kinEnergyMolTensor        = tensor3D();
+    auto momX = 0.0;
+    auto momY = 0.0;
+    auto momZ = 0.0;
 
-#ifndef __PQ_LEGACY__
-    simulationBox.deFlattenVelocities();
+    Real kinEnergyAtomicTensor[9] = {0.0};
+    Real kinEnergyMolTensor[9]    = {0.0};
+
+    const auto        nMolecules     = simBox.getNumberOfMolecules();
+    const auto *const velPtr         = simBox.getVelPtr();
+    const auto *const massPtr        = simBox.getMassesPtr();
+    const auto *const atomsPerMolPtr = simBox.getAtomsPerMoleculePtr();
+    const auto *const molOffsetPtr   = simBox.getMoleculeOffsetsPtr();
+    const auto *const molMassesPtr   = simBox.getMolMassesPtr();
+
+#ifdef __PQ_GPU__
+    // clang-format off
+    #pragma omp target teams distribute parallel for        \
+            is_device_ptr(velPtr, massPtr, atomsPerMolPtr,  \
+                          molOffsetPtr, molMassesPtr) \
+            reduction(+:momX, momY, momZ)                   \
+            map(momX, momY, momZ, kinEnergyAtomicTensor,    \
+                kinEnergyMolTensor)
+#else
+    #pragma omp parallel for reduction(+:momX, momY, momZ)
+    // clang-format on
 #endif
-
-    auto kinEnergyAndMomOfMol = [this](auto &molecule)
+    for (size_t i = 0; i < nMolecules; ++i)
     {
-        const auto numberOfAtoms   = molecule.getNumberOfAtoms();
-        auto       momentumSquared = tensor3D();
+        const auto nAtoms              = atomsPerMolPtr[i];
+        const auto molOffset           = molOffsetPtr[i];
+        Real       momSquaredTensor[9] = {0.0};
 
-        for (size_t i = 0; i < numberOfAtoms; ++i)
+        for (size_t j = 0; j < nAtoms; ++j)
         {
-            const auto velocities = molecule.getAtomVelocity(i);
+            const auto atomIndex = molOffset + j;
+            const auto velX      = velPtr[3 * atomIndex];
+            const auto velY      = velPtr[3 * atomIndex + 1];
+            const auto velZ      = velPtr[3 * atomIndex + 2];
 
-            const auto momentum = velocities * molecule.getAtomMass(i);
+            const auto mass  = massPtr[atomIndex];
+            const auto _momX = mass * velX;
+            const auto _momY = mass * velY;
+            const auto _momZ = mass * velZ;
 
-            _momentum                  += momentum;
-            _kineticEnergyAtomicTensor += tensorProduct(momentum, velocities);
-            momentumSquared            += tensorProduct(momentum, momentum);
+            momX += _momX;
+            momY += _momY;
+            momZ += _momZ;
+
+            Real help[9] = {0.0};
+
+            tensorProduct(help, _momX, _momY, _momZ, velX, velY, velZ);
+
+            for (size_t k = 0; k < 9; ++k)
+                linearAlgebra::atomicAdd(&kinEnergyAtomicTensor[k], help[k]);
+
+            tensorProduct(help, _momX, _momY, _momZ, _momX, _momY, _momZ);
+
+            // attention works only if no collapse applied
+            for (size_t k = 0; k < 9; ++k)
+                momSquaredTensor[k] += help[k];
         }
 
-        _kinEnergyMolTensor += momentumSquared / molecule.getMolMass();
-    };
+        const auto molMass = molMassesPtr[i];
 
-    std::ranges::for_each(simulationBox.getMolecules(), kinEnergyAndMomOfMol);
+        for (size_t j = 0; j < 9; ++j)
+            linearAlgebra::atomicAdd(
+                &kinEnergyMolTensor[j],
+                momSquaredTensor[j] / molMass
+            );
+    }
+
+    _kineticEnergyAtomicTensor = tensor3D{kinEnergyAtomicTensor};
+    _kinEnergyMolTensor        = tensor3D{kinEnergyMolTensor};
+    _momentum                  = {momX, momY, momZ};
 
     _kineticEnergyAtomicTensor *= _KINETIC_ENERGY_FACTOR_;
     _kinEnergyMolTensor        *= _KINETIC_ENERGY_FACTOR_;
     _kineticEnergy              = trace(_kineticEnergyAtomicTensor);
 
-    _angularMomentum  = simulationBox.calculateAngularMomentum(_momentum);
+    _angularMomentum  = calculateAngularMomentum(simBox, _momentum);
     _angularMomentum *= _FS_TO_S_;
 
     _momentum *= _FS_TO_S_;
@@ -237,7 +283,8 @@ void PhysicalData::reset()
  */
 double PhysicalData::calculateTemperature(SimulationBox &simulationBox)
 {
-    _temperature = simulationBox.calculateTemperature();
+    _temperature = simulationBox::calculateTemperature(simulationBox);
+
     return _temperature;
 }
 

@@ -121,6 +121,12 @@
  ************************************/
 
 #if defined(__PQ_HIP__)
+    #define __deviceSynchronize() hipDeviceSynchronize()
+#elif defined(__PQ_CUDA__)
+    #define __deviceSynchronize() cudaDeviceSynchronize()
+#endif
+
+#if defined(__PQ_HIP__)
     #define __deviceStreamSynchronize(x) hipStreamSynchronize(x)
 #elif defined(__PQ_CUDA__)
     #define __deviceStreamSynchronize(x) cudaStreamSynchronize(x)

@@ -126,8 +126,8 @@ void ConstraintsSetup::setupMaxIterations()
  */
 void ConstraintsSetup::setupRefBondLengths()
 {
-    auto       &constraints = _engine.getConstraints();
-    const auto &simBox      = _engine.getSimulationBox();
+    auto &constraints = _engine.getConstraints();
+    auto &simBox      = _engine.getSimulationBox();
 
     constraints.calculateConstraintBondRefs(simBox);
 }

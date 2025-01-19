@@ -24,13 +24,11 @@
 
 #include <format>   // for std::format
 
-#include "constants.hpp"         // for constants
 #include "distanceKernels.hpp"   // for distVecAndDist2
+#include "linearAlgebra.hpp"
 #include "mShakeReference.hpp"   // for MShakeReference
 #include "mathUtilities.hpp"     // for dot
-#include "matrix.hpp"            // for Matrix
 #include "simulationBox.hpp"     // for SimulationBox
-#include "stlVector.hpp"         // for dot
 #include "timingsSettings.hpp"   // for settings
 
 using namespace constraints;

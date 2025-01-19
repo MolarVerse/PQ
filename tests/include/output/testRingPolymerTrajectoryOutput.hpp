@@ -135,11 +135,11 @@ class TestRingPolymerTrajectoryOutput : public ::testing::Test
         _simulationBox2->addAtom(atom2_2);
         _simulationBox2->addAtom(atom3_2);
 
-        _beads.push_back(*_simulationBox1);
-        _beads.push_back(*_simulationBox2);
-
         _simulationBox1->setNumberOfAtoms(3);
         _simulationBox2->setNumberOfAtoms(3);
+
+        _beads.push_back(*_simulationBox1);
+        _beads.push_back(*_simulationBox2);
     }
 
     void TearDown() override

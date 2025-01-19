@@ -22,14 +22,12 @@
 
 #include "molecule.hpp"
 
-#include <algorithm>    // for std::ranges::for_each
-#include <functional>   // for identity, equal_to
-#include <iterator>     // for _Size, size
-#include <ranges>       // for subrange
+#include <algorithm>   // for std::ranges::for_each
+#include <iterator>    // for _Size, size
+#include <ranges>      // for subrange
 
 #include "box.hpp"                // for Box
 #include "manostatSettings.hpp"   // for ManostatSettings
-#include "vector3d.hpp"           // for Vec3D
 
 using namespace simulationBox;
 using namespace linearAlgebra;
@@ -330,7 +328,8 @@ Vec3D Molecule::getAtomPosition(const size_t index) const
 std::vector<Vec3D> Molecule::getAtomPositions() const
 {
     std::vector<Vec3D> positions;
-    for (const auto &atom : _atoms) positions.push_back(atom->getPosition());
+    for (const auto &atom : _atoms)
+        positions.push_back(atom->getPosition());
 
     return positions;
 }

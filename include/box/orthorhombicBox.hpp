@@ -68,14 +68,13 @@ namespace simulationBox
             const double density
         );
 
-#ifndef __PQ_LEGACY__
-        void updateBoxParams() override;
-#endif
+        void flattenBoxParams() override;
+        void deFlattenBoxParams() override;
     };
 }   // namespace simulationBox
 
-#if !defined(__PQ_LEGACY__) && !defined(__ORTHORHOMBIC_BOX_INL__)
-#include "orthorhombicBox.inl"   // IWYU pragma: keep
+#ifndef __ORTHORHOMBIC_BOX_INL__
+    #include "orthorhombicBox.inl"   // IWYU pragma: keep
 #endif
 
 #endif   // _ORTHORHOMBIC_BOX_HPP_

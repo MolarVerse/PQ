@@ -251,7 +251,7 @@ void ASEQMRunner::buildAseAtoms(SimulationBox &simBox)
 py::array ASEQMRunner::asePositions(SimulationBox &simBox) const
 {
     const auto nAtoms = simBox.getNumberOfAtoms();
-    const auto pos    = simBox.flattenPositions();
+    const auto pos    = simBox.getPos();
 
     const auto shape      = std::vector<size_t>{nAtoms, 3};
     const auto sizeDouble = sizeof(double);

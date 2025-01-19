@@ -30,7 +30,7 @@
 namespace linearAlgebra
 {
     /**
-     * @brief Construct a new Static Matrix 3x 3< T>:: Static Matrix 3x 3 object
+     * @brief Construct a new Static Matrix 3x3<T>:: Static Matrix 3x3 object
      *
      * @tparam T
      * @param data
@@ -42,7 +42,7 @@ namespace linearAlgebra
     }
 
     /**
-     * @brief Construct a new Static Matrix 3x 3< T>:: Static Matrix 3x 3 object
+     * @brief Construct a new Static Matrix 3x3<T>:: Static Matrix 3x3 object
      *
      * @tparam T
      * @param data
@@ -54,7 +54,7 @@ namespace linearAlgebra
     }
 
     /**
-     * @brief Construct a new Static Matrix 3x 3< T>:: Static Matrix 3x 3 object
+     * @brief Construct a new Static Matrix 3x3<T>:: Static Matrix 3x3 object
      *
      * @tparam T
      * @param row1
@@ -70,7 +70,21 @@ namespace linearAlgebra
         : _data(row1, row2, row3){};
 
     /**
-     * @brief Construct a new Static Matrix 3x 3< T>:: Static Matrix 3x 3 object
+     * @brief Construct a new Static Matrix 3x3<T>:: Static Matrix 3x3 object
+     *
+     * @tparam T
+     * @param data
+     */
+    template <typename T>
+    StaticMatrix3x3<T>::StaticMatrix3x3(const T *const data)
+    {
+        _data[0] = Vector3D<T>({data[0], data[1], data[2]});
+        _data[1] = Vector3D<T>({data[3], data[4], data[5]});
+        _data[2] = Vector3D<T>({data[6], data[7], data[8]});
+    }
+
+    /**
+     * @brief Construct a new Static Matrix 3x3<T>:: Static Matrix 3x3 object
      *
      * @tparam T
      * @param t
@@ -84,7 +98,7 @@ namespace linearAlgebra
     }
 
     /**
-     * @brief Construct a new Static Matrix 3x 3< T>:: Static Matrix 3x 3 object
+     * @brief Construct a new Static Matrix 3x3<T>:: Static Matrix 3x3 object
      *
      * @tparam T
      * @param vector

@@ -24,9 +24,7 @@
 
 #define _NON_COULOMB_POTENTIAL_HPP_
 
-#include <any>       // for any
 #include <cstddef>   // for size_t
-#include <memory>    // for shared_ptr
 #include <vector>    // for vector
 
 #include "typeAliases.hpp"

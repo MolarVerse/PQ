@@ -28,13 +28,14 @@
 
 #include <memory>   // for __shared_ptr_access, shared_ptr, make_shared
 
-#include "atom.hpp"              // for Atom
-#include "integrator.hpp"        // for Integrator, VelocityVerlet
-#include "molecule.hpp"          // for Molecule
-#include "simulationBox.hpp"     // for SimulationBox
-#include "timingsSettings.hpp"   // for TimingsSettings
-#include "vector3d.hpp"          // for Vec3D
-#include "velocityVerlet.hpp"    // for VelocityVerlet
+#include "atom.hpp"                // for Atom
+#include "integrator.hpp"          // for Integrator, VelocityVerlet
+#include "molecule.hpp"            // for Molecule
+#include "simulationBox.hpp"       // for SimulationBox
+#include "simulationBox_API.hpp"   // for calculateTotalMass
+#include "timingsSettings.hpp"     // for TimingsSettings
+#include "vector3d.hpp"            // for Vec3D
+#include "velocityVerlet.hpp"      // for VelocityVerlet
 
 /**
  * class TestIntegrator
@@ -80,9 +81,18 @@ class TestIntegrator : public ::testing::Test
         _box->addAtom(atom1);
         _box->addAtom(atom2);
 
-#ifndef __PQ_LEGACY__
+        _box->setNumberOfAtoms(2);
+        _box->setNumberOfMolecules(1);
+        _box->flattenPositions();
+        _box->flattenVelocities();
+        _box->flattenForces();
         _box->flattenMasses();
-#endif
+        _box->initAtomsPerMolecule();
+        _box->initMoleculeIndices();
+        _box->getBox().flattenBoxParams();
+        _box->flattenMolMasses();
+        calculateMolMasses(*_box);
+        calculateTotalMass(*_box);
     }
 
     virtual void TearDown()

@@ -72,8 +72,6 @@ namespace settings
         static inline JobType _jobtype;
         static inline FPType  _floatingPointType = FPType::DOUBLE;
 
-        static inline bool _useKokkos = false;
-
         static inline bool _isRingPolymerMDActivated = false;
 
         // clang-format off
@@ -118,7 +116,6 @@ namespace settings
          * standard is-active methods *
          ******************************/
 
-        static void activateKokkos();
         static void activateRingPolymerMD();
         static void deactivateRingPolymerMD();
 
@@ -131,7 +128,6 @@ namespace settings
         [[nodiscard]] static bool isRingPolymerMDActivated();
         [[nodiscard]] static bool isMDJobType();
         [[nodiscard]] static bool isOptJobType();
-        [[nodiscard]] static bool useKokkos();
         [[nodiscard]] static bool useDevice();
     };
 

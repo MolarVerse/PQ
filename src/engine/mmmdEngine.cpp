@@ -37,10 +37,6 @@
 #include "thermostat.hpp"        // for Thermostat
 #include "virial.hpp"            // for Virial
 
-#ifdef WITH_KOKKOS
-#include "potential_kokkos.hpp"   // for KokkosPotential
-#endif
-
 using namespace engine;
 
 /**
@@ -51,21 +47,26 @@ void MMMDEngine::calculateForces()
 {
     _cellList->updateCellList(*_simulationBox);
 
-#ifdef WITH_KOKKOS
-    _kokkosPotential.calculateForces(
-        *_simulationBox,
-        _kokkosSimulationBox,
-        *_physicalData,
-        _kokkosLennardJones,
-        _kokkosCoulombWolf
-    );
+#ifdef __PQ_GPU__
+    _potential
+        ->calculateForces(*_simulationBox, *_physicalData, *_cellList, _device);
 #else
     _potential->calculateForces(*_simulationBox, *_physicalData, *_cellList);
+#endif
+
+#ifndef __PQ_LEGACY__
+    _simulationBox->deFlattenForces();
+    _simulationBox->deFlattenShiftForces();
 #endif
 
     _intraNonBonded->calculate(*_simulationBox, *_physicalData);
 
     _virial->calculateVirial(*_simulationBox, *_physicalData);
+
+#ifndef __PQ_LEGACY__
+    _simulationBox->deFlattenForces();
+    _simulationBox->deFlattenShiftForces();
+#endif
 
     _forceField->calculateBondedInteractions(*_simulationBox, *_physicalData);
 }

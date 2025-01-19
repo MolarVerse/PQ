@@ -50,6 +50,11 @@
 #include "potentialSettings.hpp"         // for PotentialSettings
 #include "settings.hpp"                  // for Settings
 #include "simulationBox.hpp"             // for SimulationBox
+#include "typeAliases.hpp"
+
+#ifdef __PQ_GPU__
+    #include "device.hpp"   // for Device
+#endif
 
 using namespace potential;
 using namespace simulationBox;
@@ -67,8 +72,14 @@ void Potential::calculateForces(
     pq::SimBox&       simBox,
     pq::PhysicalData& data,
     pq::CellList&     cellList
+#ifdef __PQ_GPU__
+    ,
+    pq::Device& device
+#endif
 )
 {
+    __DEBUG_INFO__("Calculating Inter Non bonded forces");
+
     startTimingsSection("InterNonBonded");
 
     const auto rcCutOff = CoulombPotential::getCoulombRadiusCutOff();
@@ -76,6 +87,11 @@ void Potential::calculateForces(
     simBox.flattenForces();
     simBox.flattenShiftForces();
     simBox.flattenPositions();
+#ifdef __PQ_GPU__
+    simBox.copyForcesTo();
+    simBox.copyShiftForcesTo();
+    simBox.copyPosTo();
+#endif
 
     const size_t* atomtypes = nullptr;
     const size_t* molTypes  = nullptr;
@@ -94,38 +110,85 @@ void Potential::calculateForces(
     auto* const       force         = simBox.getForcesPtr();
     auto* const       shiftForce    = simBox.getShiftForcesPtr();
 
-    simBox.getBox().updateBoxParams();   // TODO: remove this line later on
     const auto* const boxParams = simBox.getBox().getBoxParamsPtr();
 
     Real totalCoulombEnergy    = 0.0;
     Real totalNonCoulombEnergy = 0.0;
+
+#ifdef __PQ_GPU__
+    Real* totalCoulombEnergyPtr;
+    Real* totalNonCoulombEnergyPtr;
+
+    device.deviceMalloc(&totalCoulombEnergyPtr, sizeof(Real));
+    device.deviceMalloc(&totalNonCoulombEnergyPtr, sizeof(Real));
+    device.deviceMemcpyTo(
+        totalCoulombEnergyPtr,
+        &totalCoulombEnergy,
+        sizeof(Real)
+    );
+    device.deviceMemcpyTo(
+        totalNonCoulombEnergyPtr,
+        &totalNonCoulombEnergy,
+        sizeof(Real)
+    );
+#endif
 
     if (cellList.isActive())
         throw customException::NotImplementedException(
             "The cell list is not implemented yet"
         );
     else
-        _bruteForcePtr(
-            pos,
-            force,
-            shiftForce,
-            charge,
-            getCoulParamsPtr(),
-            getNonCoulParamsPtr(),
-            getNonCoulCutOffsPtr(),
-            boxParams,
-            moleculeIndex,
-            molTypes,
-            atomtypes,
-            totalCoulombEnergy,
-            totalNonCoulombEnergy,
-            rcCutOff,
-            simBox.getNumberOfAtoms(),
-            _nonCoulNumberOfTypes,
-            _nonCoulParamsOffset,
-            _maxNumAtomTypes,
-            _numMolTypes
-        );
+    {
+#ifdef __PQ_GPU__
+        if (Settings::useDevice())
+        {
+            _bruteForcePtr<<<128, 32>>>(
+                pos,
+                force,
+                shiftForce,
+                charge,
+                getCoulParamsPtr(),
+                getNonCoulParamsPtr(),
+                getNonCoulCutOffsPtr(),
+                boxParams,
+                moleculeIndex,
+                molTypes,
+                atomtypes,
+                totalCoulombEnergyPtr,
+                totalNonCoulombEnergyPtr,
+                rcCutOff,
+                simBox.getNumberOfAtoms(),
+                _nonCoulNumberOfTypes,
+                _nonCoulParamsOffset,
+                _maxNumAtomTypes,
+                _numMolTypes
+            );
+            __deviceSynchronize();
+        }
+        else
+#endif
+            _bruteForcePtr(
+                pos,
+                force,
+                shiftForce,
+                charge,
+                getCoulParamsPtr(),
+                getNonCoulParamsPtr(),
+                getNonCoulCutOffsPtr(),
+                boxParams,
+                moleculeIndex,
+                molTypes,
+                atomtypes,
+                &totalCoulombEnergy,
+                &totalNonCoulombEnergy,
+                rcCutOff,
+                simBox.getNumberOfAtoms(),
+                _nonCoulNumberOfTypes,
+                _nonCoulParamsOffset,
+                _maxNumAtomTypes,
+                _numMolTypes
+            );
+    }
 
 #ifdef __PQ_DEBUG__
     // TODO: check why this always prints 0 for both energies
@@ -139,11 +202,37 @@ void Potential::calculateForces(
     }
 #endif
 
+#ifdef __PQ_GPU__
+    std::cout << "Copying energies from device\n";
+    device.deviceMemcpyFrom(
+        &totalCoulombEnergy,
+        totalCoulombEnergyPtr,
+        sizeof(Real)
+    );
+    std::cout << std::format("Coulomb energy: {}\n", totalCoulombEnergy);
+    device.deviceMemcpyFrom(
+        &totalNonCoulombEnergy,
+        totalNonCoulombEnergyPtr,
+        sizeof(Real)
+    );
+    std::cout << std::format("Non-coulomb energy: {}\n", totalNonCoulombEnergy);
+    // TODO: check via interface via device class does not work
+    __deviceFree(totalCoulombEnergyPtr);
+    std::cout << "Freed totalCoulombEnergyPtr\n";
+    // TODO: check via interface via device class does not work
+    __deviceFree(totalNonCoulombEnergyPtr);
+    std::cout << "Freed totalNonCoulombEnergyPtr\n";
+#endif
+
     data.setCoulombEnergy(totalCoulombEnergy);
     data.setNonCoulombEnergy(totalNonCoulombEnergy);
 
     simBox.deFlattenForces();
     simBox.deFlattenShiftForces();
+#ifdef __PQ_GPU__
+    simBox.copyForcesFrom();
+    simBox.copyShiftForcesFrom();
+#endif
 
     stopTimingsSection("InterNonBonded");
 }
@@ -234,6 +323,54 @@ void Potential::setFunctionPointers(const bool isBoxOrthogonal)
             "potential is not implemented yet"
         );
 }
+
+#ifdef __PQ_GPU__
+/**
+ * @brief initialize the device memory for the potential
+ *
+ * @param device
+ */
+void Potential::initDeviceMemory(pq::Device& device)
+{
+    device.deviceMalloc(&_nonCoulParamsDevice, _nonCoulParams.size());
+    device.deviceMalloc(&_nonCoulCutOffsDevice, _nonCoulCutOffs.size());
+    device.deviceMalloc(&_coulParamsDevice, _coulParams.size());
+    device.checkErrors("Potential device memory allocation");
+}
+
+/**
+ * @brief copy the non-coulomb parameters to the device
+ *
+ * @param device
+ */
+void Potential::copyNonCoulParamsTo(pq::Device& device)
+{
+    device.deviceMemcpyToAsync(_nonCoulParamsDevice, _nonCoulParams);
+    device.checkErrors("Potential copy non-coulomb parameters to device");
+}
+
+/**
+ * @brief copy the non-coulomb cutoffs to the device
+ *
+ * @param device
+ */
+void Potential::copyNonCoulCutOffsTo(pq::Device& device)
+{
+    device.deviceMemcpyToAsync(_nonCoulCutOffsDevice, _nonCoulCutOffs);
+    device.checkErrors("Potential copy non-coulomb cutoffs to device");
+}
+
+/**
+ * @brief copy the coulomb parameters to the device
+ *
+ * @param device
+ */
+void Potential::copyCoulParamsTo(pq::Device& device)
+{
+    device.deviceMemcpyToAsync(_coulParamsDevice, _coulParams);
+    device.checkErrors("Potential copy coulomb parameters to device");
+}
+#endif
 
 /***************************
  *                         *

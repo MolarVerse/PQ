@@ -334,14 +334,6 @@ bool Settings::isMMOnlyActivated()
  */
 bool Settings::isRingPolymerMDActivated() { return _isRingPolymerMDActivated; }
 
-/**
- * @brief Returns true if Kokkos is activated
- *
- * @return true/false
- *
- */
-bool Settings::useKokkos() { return _useKokkos; }
-
 #ifdef __PQ_GPU__
 /**
  * @brief Returns true if the device is used
@@ -363,12 +355,6 @@ bool Settings::useDevice() { return _useDevice; }
  *
  */
 void Settings::activateRingPolymerMD() { _isRingPolymerMDActivated = true; }
-
-/**
- * @brief activate Kokkos
- *
- */
-void Settings::activateKokkos() { _useKokkos = true; }
 
 /**
  * @brief deactivate ring polymer MD simulations

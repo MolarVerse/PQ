@@ -41,11 +41,6 @@ option(BUILD_WITH_OPENMP "Build with OpenMP" ON)
 option(BUILD_WITH_GPU "Build with GPU" OFF)
 
 # *****************
-# BUILD WITH KOKKOS
-# *****************
-option(BUILD_WITH_KOKKOS "Build with Kokkos" OFF)
-
-# *****************
 # BUILD WITH TESTS
 # *****************
 option(BUILD_WITH_TESTS "Build tests" ON)

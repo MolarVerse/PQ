@@ -65,8 +65,8 @@ namespace potential
         const size_t *const moleculeIndex,
         const size_t *const molTypes,
         const size_t *const atomTypes,
-        Real               &totalCoulombEnergy,
-        Real               &totalNonCoulombEnergy,
+        Real               *totalCoulombEnergy,
+        Real               *totalNonCoulombEnergy,
         const Real          coulCutOff,
         const size_t        nAtoms,
         const size_t        nAtomTypes,
@@ -107,7 +107,11 @@ namespace potential
        public:
         virtual ~Potential() = default;
 
+#ifdef __PQ_GPU__
+        void calculateForces(pq::SimBox &, pq::PhysicalData &, pq::CellList &, pq::Device &);
+#else
         void calculateForces(pq::SimBox &, pq::PhysicalData &, pq::CellList &);
+#endif
 
         calcForcesPtr _cellListPtr;
         calcForcesPtr _bruteForcePtr;
@@ -119,6 +123,13 @@ namespace potential
 
         template <typename T>
         void makeNonCoulombPotential(T p);
+
+#ifdef __PQ_GPU__
+        void initDeviceMemory(pq::Device &device);
+        void copyNonCoulParamsTo(pq::Device &device);
+        void copyNonCoulCutOffsTo(pq::Device &device);
+        void copyCoulParamsTo(pq::Device &device);
+#endif
 
         /***************************
          * standard setter methods *
@@ -163,8 +174,8 @@ namespace potential
         const size_t *const moleculeIndex,
         const size_t *const molTypes,
         const size_t *const atomTypes,
-        Real               &totalCoulombEnergy,
-        Real               &totalNonCoulombEnergy,
+        Real               *totalCoulombEnergy,
+        Real               *totalNonCoulombEnergy,
         const Real          coulCutOff,
         const size_t        nAtoms,
         const size_t        nAtomTypes,
@@ -186,8 +197,8 @@ namespace potential
         const size_t *const moleculeIndex,
         const size_t *const molTypes,
         const size_t *const atomTypes,
-        Real               &totalCoulombEnergy,
-        Real               &totalNonCoulombEnergy,
+        Real               *totalCoulombEnergy,
+        Real               *totalNonCoulombEnergy,
         const Real          coulCutOff,
         const size_t        nAtoms,
         const size_t        nAtomTypes,
@@ -232,7 +243,12 @@ namespace potential
 // clang-format off
 #include "potentialHandleTypes.inl"      // DO NOT MOVE THIS LINE
 #include "potential.inl"             // DO NOT MOVE THIS LINE
-#include "potentialBruteForce.inl"   // DO NOT MOVE THIS LINE
+
+#ifdef __PQ_GPU__
+    #include "potentialBruteForce_cuda.inl"   // DO NOT MOVE THIS LINE
+#else
+    #include "potentialBruteForce.inl"   // DO NOT MOVE THIS LINE
+#endif
 // clang-format on
 
 #endif   // _POTENTIAL_HPP      _

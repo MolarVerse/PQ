@@ -44,11 +44,6 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
         message(FATAL_ERROR "Insufficient gcc version (need >= 13.0)")
     endif()
 
-    # add flags dependent on build type
-    if(NOT BUILD_WITH_KOKKOS)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -flto")
-    endif()
-
     if(NOT(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease"))
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -coverage -fprofile-arcs -ftest-coverage")
     endif()
@@ -79,10 +74,6 @@ endif()
 if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease")
     message("\n   Release build   \n")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Ofast -ffast-math -march=native -mtune=native -g")
-
-    if(NOT BUILD_WITH_KOKKOS)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -flto")
-    endif()
 
     set(BUILD_WITH_DEBUG OFF)
 elseif(CMAKE_BUILD_TYPE MATCHES "^[Dd]ebug")
@@ -145,14 +136,6 @@ include(eigen)
 
 if(BUILD_WITH_MPI)
     include(mpi)
-endif()
-
-if(BUILD_WITH_KOKKOS)
-    if(NOT BUILD_LEGACY)
-        message(FATAL_ERROR "Kokkos is only supported in legacy mode")
-    endif()
-
-    include(kokkos)
 endif()
 
 if(BUILD_WITH_PYTHON_BINDINGS)

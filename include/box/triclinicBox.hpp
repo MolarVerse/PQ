@@ -97,15 +97,14 @@ namespace simulationBox
         [[nodiscard]] pq::tensor3D getBoxMatrix() const override;
         [[nodiscard]] pq::tensor3D getTransformationMatrix() const;
 
-#ifndef __PQ_LEGACY__
-        void updateBoxParams() override;
-#endif
+        void flattenBoxParams() override;
+        void deFlattenBoxParams() override;
     };
 
 }   // namespace simulationBox
 
-#ifndef __PQ_LEGACY__
-#include "triclinicBox.inl"   // IWYU pragma: keep
+#ifndef __TRICLINIC_BOX_INL__
+    #include "triclinicBox.inl"   // IWYU pragma: keep
 #endif
 
 #endif   // _TRICLINIC_BOX_HPP_

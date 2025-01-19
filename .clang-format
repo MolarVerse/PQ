@@ -13,6 +13,7 @@ AllowShortFunctionsOnASingleLine: All
 AllowShortBlocksOnASingleLine: Empty
 AllowShortCaseLabelsOnASingleLine: true
 AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
 AllowAllParametersOfDeclarationOnNextLine: false
 AllowAllArgumentsOnNextLine: false
 
@@ -29,6 +30,7 @@ BreakBeforeBraces: Allman
 BreakBeforeConceptDeclarations: Always
 AlwaysBreakTemplateDeclarations: Yes  
 IndentRequiresClause: false
+IndentPPDirectives: BeforeHash
 
 BinPackArguments: false
 BinPackParameters: false

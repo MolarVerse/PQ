@@ -110,17 +110,19 @@ Device::Device(const int deviceID)
  */
 Device::~Device()
 {
-    if (_dataStream != nullptr)
-    {
-        const auto error = __deviceStreamDestroy(_dataStream);
-        addDeviceError(error, "Destroying the data stream");
-    }
+    // TODO: check why this gives segfault
 
-    if (_computeStream != nullptr)
-    {
-        const auto error = __deviceStreamDestroy(_computeStream);
-        addDeviceError(error, "Destroying the compute stream");
-    }
+    // if (_dataStream != nullptr)
+    // {
+    //     const auto error = __deviceStreamDestroy(_dataStream);
+    //     addDeviceError(error, "Destroying the data stream");
+    // }
+
+    // if (_computeStream != nullptr)
+    // {
+    //     const auto error = __deviceStreamDestroy(_computeStream);
+    //     addDeviceError(error, "Destroying the compute stream");
+    // }
 
     // to avoid destroying thrown exceptions in the destructor during stack
     // unwinding
@@ -222,7 +224,8 @@ void Device::checkErrors(const std::string& msg)
     {
         std::string errorMsg = "Error in " + msg + ":\n\n";
 
-        for (const auto& e : _errorMsgs) errorMsg = errorMsg + e + "\n";
+        for (const auto& e : _errorMsgs)
+            errorMsg = errorMsg + e + "\n";
 
         throw customException::DeviceException(errorMsg);
     }

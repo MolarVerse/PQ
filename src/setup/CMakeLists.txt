@@ -17,13 +17,6 @@ set(setup_source_files
     optimizerSetup.cpp
 )
 
-if(BUILD_WITH_KOKKOS)
-    set(setup_source_files
-        ${setup_source_files}
-        kokkosSetup.cpp
-    )
-endif()
-
 if(NOT BUILD_LEGACY)
     set(setup_source_files
         ${setup_source_files}

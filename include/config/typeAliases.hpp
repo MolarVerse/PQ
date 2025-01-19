@@ -21,12 +21,11 @@
 ******************************************************************************/
 
 #ifndef _TYPE_ALIASES_HPP_
-
 #define _TYPE_ALIASES_HPP_
 
 #include <chrono>       // for std::chrono
 #include <cstddef>      // for size_t
-#include <deque>        // for std::queue
+#include <deque>        // IWYU pragma: keep
 #include <functional>   // for std::function
 #include <memory>       // for std::shared_ptr
 #include <optional>     // for std::optional
@@ -34,9 +33,7 @@
 #include <string>       // for std::string
 #include <vector>       // for std::vector
 
-#include "matrix.hpp"
-#include "staticMatrix.hpp"
-#include "vector3d.hpp"
+#include "linearAlgebra.hpp"   // IWYU pragma: keep
 
 #if defined(__SINGLE_PRECISION__)
 using Real  = float;
@@ -53,13 +50,12 @@ using cul = const size_t;
 
 namespace simulationBox
 {
-    class Molecule;              // forward declaration
-    class MoleculeType;          // forward declaration
-    class Atom;                  // forward declaration
-    class CellList;              // forward declaration
-    class Box;                   // forward declaration
-    class SimulationBox;         // forward declaration
-    class KokkosSimulationBox;   // forward declaration
+    class Molecule;        // forward declaration
+    class MoleculeType;    // forward declaration
+    class Atom;            // forward declaration
+    class CellList;        // forward declaration
+    class Box;             // forward declaration
+    class SimulationBox;   // forward declaration
 
 }   // namespace simulationBox
 
@@ -77,10 +73,6 @@ namespace potential
     class NonCoulombPair;         // forward declaration
     class NonCoulombPotential;    // forward declaration
     class ForceFieldNonCoulomb;   // forward declaration
-
-    class KokkosLennardJones;   // forward declaration
-    class KokkosCoulombWolf;    // forward declaration
-    class KokkosPotential;      // forward declaration
 
 }   // namespace potential
 
@@ -338,10 +330,6 @@ namespace pq
     using FFNonCoulomb  = potential::ForceFieldNonCoulomb;
     using NonCoulPair   = potential::NonCoulombPair;
 
-    using KokkosLJ        = potential::KokkosLennardJones;
-    using KokkosWolf      = potential::KokkosCoulombWolf;
-    using KokkosPotential = potential::KokkosPotential;
-
     using SharedPotential     = std::shared_ptr<potential::Potential>;
     using SharedNonCoulPair   = std::shared_ptr<potential::NonCoulombPair>;
     using SharedCoulombPot    = std::shared_ptr<potential::CoulombPotential>;
@@ -375,7 +363,6 @@ namespace pq
      ***************************/
 
     using SimBox       = simulationBox::SimulationBox;
-    using KokkosSimBox = simulationBox::KokkosSimulationBox;
     using CellList     = simulationBox::CellList;
     using Molecule     = simulationBox::Molecule;
     using MoleculeType = simulationBox::MoleculeType;

@@ -70,7 +70,7 @@ namespace constraints
        public:
         std::shared_ptr<Constraints> clone() const;
 
-        void calculateConstraintBondRefs(const pq::SimBox &simulationBox);
+        void calculateConstraintBondRefs(pq::SimBox &simulationBox);
 
         void initMShake();
 
@@ -83,7 +83,7 @@ namespace constraints
         void _applyMRattle(pq::SimBox &simulationBox);
 
         void applyDistanceConstraints(
-            const pq::SimBox &,
+            pq::SimBox &,
             pq::PhysicalData &,
             const double
         );

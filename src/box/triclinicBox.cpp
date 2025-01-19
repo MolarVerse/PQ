@@ -41,6 +41,8 @@
 
 #include "constants.hpp"          // for constants
 #include "manostatSettings.hpp"   // for ManostatSettings
+#include "settings.hpp"           // for Settings
+#include "staticMatrix/staticMatrix3x3.hpp"
 
 using simulationBox::TriclinicBox;
 
@@ -369,15 +371,13 @@ tensor3D TriclinicBox::getTransformationMatrix() const
     return _transformationMatrix;
 }
 
-#ifndef __PQ_LEGACY__
-
 /**
  * @brief update box parameters
  *
  * @TODO: remove this later on should not be necessary
  *
  */
-void TriclinicBox::updateBoxParams()
+void TriclinicBox::flattenBoxParams()
 {
     auto invMatrix = inverse(_boxMatrix);
 
@@ -401,6 +401,33 @@ void TriclinicBox::updateBoxParams()
         invMatrix[2][1],
         invMatrix[2][2]
     };
+
+#ifdef __PQ_GPU__
+    if (Settings::useDevice())
+        copyBoxParamsTo();
+#endif
 }
 
+/**
+ * @brief de-flatten box parameters
+ *
+ *
+ */
+void TriclinicBox::deFlattenBoxParams()
+{
+#ifdef __PQ_GPU__
+    if (Settings::useDevice())
+        copyBoxParamsFrom();
 #endif
+
+    const auto boxMatrix = StaticMatrix3x3<Real>{
+        {_boxParams[0], _boxParams[1], _boxParams[2]},
+        {_boxParams[3], _boxParams[4], _boxParams[5]},
+        {_boxParams[6], _boxParams[7], _boxParams[8]}
+    };
+
+    const auto boxDimAndAngles = calcBoxDimAndAnglesFromBoxMatrix(boxMatrix);
+
+    setBoxDimensions(boxDimAndAngles.first);
+    setBoxAngles(boxDimAndAngles.second);
+}

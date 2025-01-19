@@ -44,13 +44,6 @@
 #include "potentialBruteForce.hpp"
 #endif
 
-#ifdef WITH_KOKKOS
-#include "coulombWolf_kokkos.hpp"
-#include "lennardJones_kokkos.hpp"
-#include "potential_kokkos.hpp"
-#include "simulationBox_kokkos.hpp"
-#endif
-
 #ifdef __PQ_GPU__
 #include "device.hpp"
 #endif
@@ -90,13 +83,6 @@ namespace engine
         pq::SharedForceField   _forceField     = std::make_shared<pq::ForceField>();
         pq::SharedConstraints  _constraints    = std::make_shared<pq::Constraints>();
         // clang-format on
-
-#ifdef WITH_KOKKOS
-        pq::KokkosSimBox    _kokkosSimulationBox;
-        pq::KokkosLJ        _kokkosLennardJones;
-        pq::KokkosWolf      _kokkosCoulombWolf;
-        pq::KokkosPotential _kokkosPotential;
-#endif
 
 #ifdef __PQ_GPU__
         device::Device _device = device::Device(false);
@@ -204,23 +190,6 @@ namespace engine
 
         void setTimer(const timings::GlobalTimer &timer) { _timer = timer; }
 
-#ifdef WITH_KOKKOS
-        [[nodiscard]] pq::KokkosSimBox    &getKokkosSimulationBox();
-        [[nodiscard]] pq::KokkosLJ        &getKokkosLennardJones();
-        [[nodiscard]] pq::KokkosWolf      &getKokkosCoulombWolf();
-        [[nodiscard]] pq::KokkosPotential &getKokkosPotential();
-        void initKokkosSimulationBox(const size_t numAtoms);
-        void initKokkosLennardJones(const size_t numAtomTypes);
-        void initKokkosCoulombWolf(
-            const double coulombRadiusCutOff,
-            const double kappa,
-            const double wolfParameter1,
-            const double wolfParameter2,
-            const double wolfParameter3,
-            const double prefactor
-        );
-        void initKokkosPotential();
-#endif
     };
 }   // namespace engine
 

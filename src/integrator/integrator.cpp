@@ -22,20 +22,7 @@
 
 #include "integrator.hpp"
 
-#include <algorithm>    // for __for_each_fn, for_each
-#include <functional>   // for identity
-
-#include "atom.hpp"                                  // for Atom
-#include "constants/conversionFactors.hpp"           // for _FS_TO_S_
-#include "constants/internalConversionFactors.hpp"   // for _V_VERLET_VELOCITY_FACTOR_
-#include "simulationBox.hpp"                         // for SimulationBox
-#include "timingsSettings.hpp"                       // for TimingsSettings
-#include "vector3d.hpp"                              // for operator*, Vector3D
-
 using namespace integrator;
-using namespace simulationBox;
-using namespace settings;
-using namespace constants;
 
 /**
  * @brief Construct a new Integrator:: Integrator object
@@ -44,44 +31,6 @@ using namespace constants;
  */
 Integrator::Integrator(const std::string_view integratorType)
     : _integratorType(integratorType){};
-
-/**
- * @brief integrates the velocities of a single atom
- *
- * @param molecule
- * @param index
- */
-void Integrator::integrateVelocities(Atom *atom) const
-{
-    auto       velocity = atom->getVelocity();
-    const auto force    = atom->getForce();
-    const auto mass     = atom->getMass();
-    const auto dt       = TimingsSettings::getTimeStep();
-
-    velocity += dt * force / mass * _V_VERLET_VELOCITY_FACTOR_;
-
-    atom->setVelocity(velocity);
-}
-
-/**
- * @brief integrates the positions of a single atom
- *
- * @param molecule
- * @param index
- * @param simBox
- */
-void Integrator::integratePositions(Atom *atom, const SimulationBox &simBox)
-    const
-{
-    auto       position = atom->getPosition();
-    const auto velocity = atom->getVelocity();
-
-    position += TimingsSettings::getTimeStep() * velocity * _FS_TO_S_;
-
-    simBox.applyPBC(position);
-
-    atom->setPosition(position);
-}
 
 /********************************
  * standard getters and setters *

@@ -28,7 +28,9 @@
 #include <ranges>       // for find_if, std::ranges::find_if
 #include <string>       // for string
 
+#include "debug.hpp"
 #include "exceptions.hpp"
+#include "simulationBox.hpp"
 
 using namespace forceField;
 using namespace customException;
@@ -177,14 +179,19 @@ const JCouplingType &ForceField::findJCouplingTypeById(const size_t id) const
  * @param physicalData
  */
 void ForceField::calculateBondedInteractions(
-    const SimulationBox &box,
-    PhysicalData        &physicalData
+    SimulationBox &box,
+    PhysicalData  &physicalData
 )
 {
+    __DEBUG_INFO__("Calculating bonded interactions");
+
     calculateBondInteractions(box, physicalData);
     calculateAngleInteractions(box, physicalData);
     calculateDihedralInteractions(box, physicalData);
     calculateImproperDihedralInteractions(box, physicalData);
+
+    box.flattenForces();
+    box.flattenShiftForces();
 }
 
 /**
@@ -198,6 +205,8 @@ void ForceField::calculateBondInteractions(
     PhysicalData        &physicalData
 )
 {
+    __DEBUG_INFO__("Calculating Bonds");
+
     auto calculateBondInteraction = [&box, &physicalData, this](auto &bond)
     {
         bond.calculateEnergyAndForces(
@@ -222,6 +231,8 @@ void ForceField::calculateAngleInteractions(
     PhysicalData        &physicalData
 )
 {
+    __DEBUG_INFO__("Calculating Angles");
+
     auto calculateAngleInteraction = [&box, &physicalData, this](auto &angle)
     {
         angle.calculateEnergyAndForces(
@@ -248,6 +259,8 @@ void ForceField::calculateDihedralInteractions(
     PhysicalData        &physicalData
 )
 {
+    __DEBUG_INFO__("Calculating Dihedrals");
+
     auto calculateDihedralInteraction =
         [&box, &physicalData, this](auto &dihedral)
     {
@@ -276,6 +289,8 @@ void ForceField::calculateImproperDihedralInteractions(
     PhysicalData        &physicalData
 )
 {
+    __DEBUG_INFO__("Calculating Improper Dihedrals");
+
     auto calculateImproperDihedralInteraction =
         [&box, &physicalData, this](auto &dihedral)
     {
@@ -305,6 +320,8 @@ void ForceField::calculateJCouplingInteractions(
     PhysicalData        &physicalData
 )
 {
+    __DEBUG_INFO__("Calculating J-Couplings");
+
     if (!_jCouplings.empty())
         throw UserInputException(
             "JCoupling interactions are not implemented yet."

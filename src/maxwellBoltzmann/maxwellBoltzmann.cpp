@@ -22,21 +22,21 @@
 
 #include "maxwellBoltzmann.hpp"
 
-#include <algorithm>    // for __for_each_fn
-#include <cmath>        // for sqrt
-#include <functional>   // for identity
+#include <algorithm>   // for __for_each_fn
+#include <cmath>       // for sqrt
 
 #include "constants/conversionFactors.hpp"           // for _AMU_TO_KG_
 #include "constants/internalConversionFactors.hpp"   // for _VELOCITY_UNIT_TO_SI_
 #include "constants/natureConstants.hpp"             // for _BOLTZMANN_CONSTANT_
 #include "resetKinetics.hpp"                         // for ResetKinetics
 #include "simulationBox.hpp"                         // for SimulationBox
-#include "thermostatSettings.hpp"                    // for ThermostatSettings
+#include "simulationBox_API.hpp"
+#include "thermostatSettings.hpp"   // for ThermostatSettings
 
 #ifdef WITH_MPI
-#include <mpi.h>   // for MPI_Bcast, MPI_DOUBLE, MPI_COMM_WORLD
+    #include <mpi.h>   // for MPI_Bcast, MPI_DOUBLE, MPI_COMM_WORLD
 
-#include "mpi.hpp"   // for MPI
+    #include "mpi.hpp"   // for MPI
 #endif
 
 using maxwellBoltzmann::MaxwellBoltzmann;
@@ -79,7 +79,11 @@ void MaxwellBoltzmann::initializeVelocities(SimulationBox &simBox)
     if (mpi::MPI::isRoot())
         std::ranges::for_each(simBox.getAtoms(), generateVelocities);
 
-    auto velocities = simBox.flattenVelocities();
+    #ifdef __PQ_LEGACY__
+    simBox.flattenVelocities();
+    #endif
+
+    auto velocities = simBox.getVel();
 
     ::MPI_Bcast(
         velocities.data(),
@@ -95,7 +99,7 @@ void MaxwellBoltzmann::initializeVelocities(SimulationBox &simBox)
 #endif
 
     auto resetKinetics = ResetKinetics();
-    resetKinetics.setMomentum(simBox.calculateMomentum());
+    resetKinetics.setMomentum(calculateMomentum(simBox));
     resetKinetics.resetMomentum(simBox);
     resetKinetics.resetAngularMomentum(simBox);
     resetKinetics.resetTemperature(simBox);

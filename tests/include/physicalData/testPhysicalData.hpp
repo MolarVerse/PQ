@@ -24,14 +24,15 @@
 
 #define _TEST_PHYSICAL_DATA_HPP_
 
+#include <gtest/gtest.h>   // for Test
+
+#include <memory>   // for make_shared, __shared_ptr_access, shared_ptr
+
 #include "atom.hpp"            // for Atom
 #include "molecule.hpp"        // for Molecule
 #include "physicalData.hpp"    // for PhysicalData
 #include "simulationBox.hpp"   // for SimulationBox
 #include "vector3d.hpp"        // for Vec3D
-
-#include <gtest/gtest.h>   // for Test
-#include <memory>          // for make_shared, __shared_ptr_access, shared_ptr
 
 /**
  * @class TestPhysicalData
@@ -41,7 +42,7 @@
  */
 class TestPhysicalData : public ::testing::Test
 {
-  protected:
+   protected:
     void SetUp() override
     {
         _physicalData = new physicalData::PhysicalData();
@@ -85,6 +86,15 @@ class TestPhysicalData : public ::testing::Test
         _simulationBox->addMolecule(molecule2);
 
         _simulationBox->calculateDegreesOfFreedom();
+
+        _simulationBox->setNumberOfAtoms(3);
+        _simulationBox->setNumberOfMolecules(2);
+        _simulationBox->resizeHostVectors(
+            _simulationBox->getNumberOfAtoms(),
+            _simulationBox->getNumberOfMolecules()
+        );
+        _simulationBox->flattenMasses();
+        _simulationBox->flattenVelocities();
     }
     void TearDown() override { delete _physicalData; }
 

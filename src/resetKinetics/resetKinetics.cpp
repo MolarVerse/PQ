@@ -22,17 +22,15 @@
 
 #include "resetKinetics.hpp"
 
-#include <algorithm>    // for __for_each_fn, for_each
-#include <cmath>        // for sqrt
-#include <cstddef>      // for size_t
-#include <functional>   // for identity
+#include <cmath>     // for sqrt
+#include <cstddef>   // for size_t
 
 #include "constants/conversionFactors.hpp"   // for _FS_TO_S_, _S_TO_FS_
-#include "physicalData.hpp"                  // for PhysicalData
-#include "simulationBox.hpp"                 // for SimulationBox
-#include "staticMatrix.hpp"                  // for operator*, operator+=
-#include "thermostatSettings.hpp"            // for ThermostatSettings
-#include "vector3d.hpp"                      // for Vec3D, Vector3D, cross
+#include "linearAlgebra.hpp"
+#include "physicalData.hpp"    // for PhysicalData
+#include "simulationBox.hpp"   // for SimulationBox
+#include "simulationBox_API.hpp"
+#include "thermostatSettings.hpp"   // for ThermostatSettings
 
 using namespace resetKinetics;
 using namespace linearAlgebra;
@@ -132,9 +130,9 @@ void ResetKinetics::resetTemperature(SimulationBox &simBox)
 
     simBox.scaleVelocities(lambda);
 
-    _temperature     = simBox.calculateTemperature();
-    _momentum        = simBox.calculateMomentum();
-    _angularMomentum = simBox.calculateAngularMomentum(_momentum);
+    _temperature     = calculateTemperature(simBox);
+    _momentum        = calculateMomentum(simBox);
+    _angularMomentum = calculateAngularMomentum(simBox, _momentum);
 }
 
 /**
@@ -153,9 +151,116 @@ void ResetKinetics::resetMomentum(SimulationBox &simBox)
 
     simBox.addToVelocities(-momentumCorrection);
 
-    _temperature     = simBox.calculateTemperature();
-    _momentum        = simBox.calculateMomentum();
-    _angularMomentum = simBox.calculateAngularMomentum(_momentum);
+    _temperature     = calculateTemperature(simBox);
+    _momentum        = calculateMomentum(simBox);
+    _angularMomentum = calculateAngularMomentum(simBox, _momentum);
+}
+
+/**
+ * @brief reset the angular momentum of the system
+ *
+ * @details subtract angular momentum correction from all velocities -
+ * correction is the total angular momentum divided by the total mass
+ *
+ * @param physicalData
+ * @param simBox
+ */
+void ResetKinetics::resetAngularMomentum(SimulationBox &simBox)
+{
+    const auto centerOfMass = calculateCenterOfMass(simBox);
+
+    _angularMomentum = calculateAngularMomentum(simBox, _momentum);
+
+    Real       helperMatrix[9] = {0.0};
+    const Real com[3] = {centerOfMass[0], centerOfMass[1], centerOfMass[2]};
+
+    const auto *const posPtr  = simBox.getPosPtr();
+    const auto *const massPtr = simBox.getMassesPtr();
+    auto *const       velPtr  = simBox.getVelPtr();
+
+    const auto nAtoms = simBox.getNumberOfAtoms();
+    // TODO: think of a nice way to use here tensorProduct
+
+    // clang-format off
+#ifdef __PQ_GPU__
+    #pragma omp target teams distribute parallel for        \
+                is_device_ptr(posPtr, velPtr, massPtr)      \
+                map(com,helperMatrix)                       \
+                
+#else
+    #pragma omp parallel for
+#endif
+    // clang-format on
+    for (size_t i = 0; i < nAtoms; ++i)
+    {
+        const auto relPosX = posPtr[i * 3] - com[0];
+        const auto relPosY = posPtr[i * 3 + 1] - com[1];
+        const auto relPosZ = posPtr[i * 3 + 2] - com[2];
+
+        const auto mass = massPtr[i];
+
+        Real help[9] = {0.0};
+
+        tensorProduct(
+            help,
+            relPosX,
+            relPosY,
+            relPosZ,
+            relPosX,
+            relPosY,
+            relPosZ
+        );
+
+        for (size_t j = 0; j < 9; ++j)
+            linearAlgebra::atomicAdd(&helperMatrix[j], help[j] * mass);
+    }
+
+    auto helperMatrix2 = tensor3D{
+        {helperMatrix[0], helperMatrix[1], helperMatrix[2]},
+        {helperMatrix[3], helperMatrix[4], helperMatrix[5]},
+        {helperMatrix[6], helperMatrix[7], helperMatrix[8]}
+    };
+
+    const auto inertia = -helperMatrix2 + diagonalMatrix(trace(helperMatrix2));
+    const auto inverseInertia  = inverse(inertia);
+    const auto angularVelocity = inverseInertia * _angularMomentum;
+
+    const Real angVel[3] = {
+        angularVelocity[0],
+        angularVelocity[1],
+        angularVelocity[2]
+    };
+
+    // clang-format off
+#ifdef __PQ_GPU__
+    #pragma omp target teams distribute parallel for \
+                is_device_ptr(velPtr, massPtr)       \
+                map(angVel, com)
+#else
+    #pragma omp parallel for
+#endif
+    // clang-format on
+    for (size_t i = 0; i < nAtoms; ++i)
+    {
+        const auto relPosX = posPtr[i * 3] - com[0];
+        const auto relPosY = posPtr[i * 3 + 1] - com[1];
+        const auto relPosZ = posPtr[i * 3 + 2] - com[2];
+
+        Real correction[3] = {0.0, 0.0, 0.0};
+        cross(correction, angVel, relPosX, relPosY, relPosZ);
+
+        velPtr[i * 3]     -= correction[0];
+        velPtr[i * 3 + 1] -= correction[1];
+        velPtr[i * 3 + 2] -= correction[2];
+    }
+
+#ifdef __PQ_LEGACY__
+    simBox.deFlattenVelocities();
+#endif
+
+    _temperature     = calculateTemperature(simBox);
+    _momentum        = calculateMomentum(simBox);
+    _angularMomentum = calculateAngularMomentum(simBox, _momentum);
 }
 
 /********************

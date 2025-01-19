@@ -24,18 +24,19 @@
 
 #define _TEST_SIMULATION_BOX_HPP_
 
+#include <gtest/gtest.h>   // for Test
+
+#include <memory>   // for make_shared, __shared_ptr_access, share...
+
 #include "atom.hpp"            // for Atom
 #include "molecule.hpp"        // for Molecule
 #include "moleculeType.hpp"    // for MoleculeType
 #include "simulationBox.hpp"   // for SimulationBox
 #include "vector3d.hpp"        // for Vec3D
 
-#include <gtest/gtest.h>   // for Test
-#include <memory>          // for make_shared, __shared_ptr_access, share...
-
 class TestSimulationBox : public ::testing::Test
 {
-  protected:
+   protected:
     virtual void SetUp()
     {
         _simulationBox = new simulationBox::SimulationBox();
@@ -91,6 +92,11 @@ class TestSimulationBox : public ::testing::Test
         _simulationBox->addAtom(atom5);
 
         _simulationBox->setBoxDimensions({10.0, 10.0, 10.0});
+        _simulationBox->setNumberOfAtoms(5);
+        _simulationBox->setNumberOfMolecules(2);
+
+        _simulationBox->flattenMasses();
+        _simulationBox->flattenComMolecules();
     }
 
     virtual void TearDown() { delete _simulationBox; }

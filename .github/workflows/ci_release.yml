@@ -1,4 +1,4 @@
-name: KOKKOS BUILD
+name: Release CI
 
 on:
   push:

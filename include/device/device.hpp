@@ -110,6 +110,8 @@ namespace device
 
 }   // namespace device
 
-#include "device.tpp.hpp"   // IWYU pragma: keep DO NOT MOVE THIS LINE!!!
+#ifndef __DEVICE_INL__
+    #include "device.inl"   // IWYU pragma: keep DO NOT MOVE THIS LINE!!!
+#endif
 
 #endif   // __DEVICE_HPP__

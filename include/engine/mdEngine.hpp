@@ -32,10 +32,6 @@
 #include "typeAliases.hpp"
 #include "velocityVerlet.hpp"   // for VelocityVerlet
 
-#ifdef WITH_KOKKOS
-#include "integrator_kokkos.hpp"
-#endif
-
 namespace engine
 {
     /**

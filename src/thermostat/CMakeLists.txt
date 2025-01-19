@@ -10,13 +10,11 @@ if(BUILD_LEGACY)
     set(thermostat_source_files
         ${thermostat_source_files}
         langevin_legacy.cpp
-        noseHoover_legacy.cpp
     )
 else()
     set(thermostat_source_files
         ${thermostat_source_files}
         langevin_nonLegacy.cpp
-        noseHoover_nonLegacy.cpp
     )
 endif()
 

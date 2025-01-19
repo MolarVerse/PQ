@@ -97,10 +97,6 @@ void setup::setupRequestedJob(const std::string &inputFileName, Engine &engine)
     // needs setup of engine before reading guff.dat
     readGuffDat(engine);
 
-#ifdef WITH_KOKKOS
-    setupKokkos(engine);
-#endif
-
 #ifndef __PQ_LEGACY__
     setupFlattenedData(engine);
 #endif

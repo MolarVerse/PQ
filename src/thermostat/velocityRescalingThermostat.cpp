@@ -22,13 +22,11 @@
 
 #include "velocityRescalingThermostat.hpp"
 
-#include <cmath>    // for sqrt
-#include <memory>   // for __shared_ptr_access, shared_ptr
-#include <vector>   // for vector
+#include <cmath>   // for sqrt
 
-#include "atom.hpp"                 // for Atom
 #include "physicalData.hpp"         // for PhysicalData
 #include "simulationBox.hpp"        // for SimulationBox
+#include "simulationBox_API.hpp"    // for calculateTemperature
 #include "thermostatSettings.hpp"   // for ThermostatType
 #include "timingsSettings.hpp"      // for TimingsSettings
 
@@ -67,7 +65,7 @@ void VelocityRescalingThermostat::applyThermostat(
 {
     startTimingsSection("Velocity Rescaling");
 
-    _temperature = simulationBox.calculateTemperature();
+    _temperature = calculateTemperature(simulationBox);
 
     const auto timeStep  = TimingsSettings::getTimeStep();
     const auto tempRatio = _targetTemperature / _temperature;
@@ -100,7 +98,7 @@ void VelocityRescalingThermostat::applyThermostat(
 VelocityRescalingThermostat::VelocityRescalingThermostat(
     const VelocityRescalingThermostat &other
 )
-    : Thermostat(other), _tau(other._tau) {};
+    : Thermostat(other), _tau(other._tau){};
 
 /**
  * @brief Get the tau (relaxation time) of the Velocity Rescaling thermostat

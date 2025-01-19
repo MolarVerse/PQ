@@ -903,12 +903,12 @@ namespace linearAlgebra
     template <pq::ArithmeticVector3D U>
     auto max(const std::vector<U> &v) -> decltype(maximum(v[0]))
     {
-        std::vector<decltype(maximum(v[0]))> maxs;
-        maxs.reserve(v.size());
+        std::vector<decltype(maximum(v[0]))> maxima;
+        maxima.reserve(v.size());
 
-        for (const auto &vec : v) maxs.push_back(maximum(vec));
+        for (const auto &vec : v) maxima.push_back(maximum(vec));
 
-        return *std::ranges::max_element(maxs.begin(), maxs.end());
+        return *std::ranges::max_element(maxima);
     }
 
     /**
@@ -926,7 +926,7 @@ namespace linearAlgebra
 
         for (const auto &vec : v) norms.push_back(norm(vec));
 
-        return *std::ranges::max_element(norms.begin(), norms.end());
+        return *std::ranges::max_element(norms);
     }
 
     /******************
@@ -1197,6 +1197,27 @@ namespace linearAlgebra
     std::ostream &operator<<(std::ostream &os, const U &v)
     {
         return os << v[0] << " " << v[1] << " " << v[2];
+    }
+
+    /**************
+     *            *
+     * flatten()  *
+     *            *
+     **************/
+    template <typename T>
+    auto flatten(const std::vector<Vector3D<T>> &v)
+    {
+        std::vector<T> flattened;
+        flattened.reserve(v.size() * 3);
+
+        for (const auto &vec : v)
+        {
+            flattened.push_back(vec[0]);
+            flattened.push_back(vec[1]);
+            flattened.push_back(vec[2]);
+        }
+
+        return flattened;
     }
 
 }   // namespace linearAlgebra

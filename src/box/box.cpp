@@ -34,10 +34,12 @@
 
 #include "box.hpp"
 
+#include <memory>
+
 #include "settings.hpp"
 
 #ifdef __PQ_GPU__
-#include "device.hpp"
+    #include "device.hpp"
 #endif
 
 using namespace linearAlgebra;
@@ -145,8 +147,6 @@ double Box::getMinimalBoxDimension() const { return minimum(_boxDimensions); }
  */
 linearAlgebra::Vec3D Box::getBoxDimensions() const { return _boxDimensions; }
 
-#ifndef __PQ_LEGACY__
-
 /**
  * @brief get the box params
  *
@@ -168,7 +168,6 @@ Real *Box::getBoxParamsPtr()
 #endif
         return _boxParams.data();
 }
-#endif
 
 #ifdef __PQ_GPU__
 /**
@@ -177,10 +176,22 @@ Real *Box::getBoxParamsPtr()
  * @param device
  * @return Real*
  */
-void Box::copyBoxParamsTo(Device &device)
+void Box::copyBoxParamsTo()
 {
-    device.deviceMemcpyToAsync(_boxParamsDevice, _boxParams);
-    device.checkErrors("Box copy box params to device");
+    _device->deviceMemcpyToAsync(_boxParamsDevice, _boxParams);
+    _device->checkErrors("Box copy box params to device");
+}
+
+/**
+ * @brief copy the box params from the device
+ *
+ * @param device
+ * @return Real*
+ */
+void Box::copyBoxParamsFrom()
+{
+    _device->deviceMemcpyFromAsync(_boxParams, _boxParamsDevice);
+    _device->checkErrors("Box copy box params from device");
 }
 
 /**
@@ -190,9 +201,12 @@ void Box::copyBoxParamsTo(Device &device)
  */
 void Box::initDeviceMemory(Device &device)
 {
+    _device = std::make_shared<Device>(device);
+
     device.deviceMalloc(&_boxParamsDevice, 18);
     device.checkErrors("Box device memory allocation");
 }
+
 #endif
 
 /********************

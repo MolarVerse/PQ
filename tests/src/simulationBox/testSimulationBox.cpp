@@ -22,16 +22,16 @@
 
 #include "testSimulationBox.hpp"
 
-#include <algorithm>   // for copy
-#include <cstddef>     // for size_t, std
-#include <map>         // for map
-#include <optional>    // for optional
-#include <string>      // for string
-#include <vector>      // for vector
+#include <cstddef>    // for size_t, std
+#include <map>        // for map
+#include <optional>   // for optional
+#include <string>     // for string
+#include <vector>     // for vector
 
 #include "exceptions.hpp"   // for ManostatException, RstFileException
 #include "gtest/gtest.h"    // for Message, TestPartResult, AssertionRe...
 #include "potentialSettings.hpp"   // for PotentialSettings
+#include "simulationBox_API.hpp"   // for calculateCenterOfMassMolecules
 #include "throwWithMessage.hpp"    // for throwWithMessage
 
 /**
@@ -59,7 +59,7 @@ TEST_F(TestSimulationBox, calculateDegreesOfFreedom)
  */
 TEST_F(TestSimulationBox, centerOfMassOfMolecules)
 {
-    _simulationBox->calculateCenterOfMassMolecules();
+    calculateCenterOfMassMolecules(*_simulationBox);
 
     auto molecules = _simulationBox->getMolecules();
 

@@ -22,10 +22,11 @@
 
 #include "berendsenThermostat.hpp"
 
+#include "physicalData.hpp"         // for PhysicalData
+#include "simulationBox.hpp"        // for SimulationBox
+#include "simulationBox_API.hpp"    // for calculateTemperature
 #include "thermostatSettings.hpp"   // for ThermostatType
 #include "timingsSettings.hpp"      // for TimingsSettings
-#include "simulationBox.hpp"        // for SimulationBox
-#include "physicalData.hpp"         // for PhysicalData
 
 using thermostat::BerendsenThermostat;
 using namespace simulationBox;
@@ -61,7 +62,7 @@ void BerendsenThermostat::applyThermostat(
 {
     startTimingsSection("Berendsen");
 
-    _temperature = simulationBox.calculateTemperature();
+    _temperature = calculateTemperature(simulationBox);
 
     const auto dt        = TimingsSettings::getTimeStep();
     const auto tempRatio = _targetTemperature / _temperature;

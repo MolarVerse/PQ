@@ -92,10 +92,12 @@ void setup::setupFlattenedData(Engine &engine)
 
     pot->setFunctionPointers(isOrthoRhombic);
 
+#ifdef __PQ_GPU__
     pot->initDeviceMemory(engine.getDevice());
     pot->copyNonCoulParamsTo(engine.getDevice());
     pot->copyNonCoulCutOffsTo(engine.getDevice());
     pot->copyCoulParamsTo(engine.getDevice());
+#endif
 }
 
 #ifdef __PQ_GPU__

@@ -22,23 +22,17 @@
 
 #include "ringPolymerqmmdEngine.hpp"
 
-#include <algorithm>    // for __for_each_fn, for_each
-#include <functional>   // for identity
-#include <memory>       // for unique_ptr
+#include <algorithm>   // for __for_each_fn, for_each
+#include <memory>      // for unique_ptr
 
-#include "integrator.hpp"      // for Integrator
-#include "manostat.hpp"        // for Manostat
-#include "physicalData.hpp"    // for PhysicalData
-#include "qmRunner.hpp"        // for QMRunner
-#include "resetKinetics.hpp"   // for ResetKinetics
-#include "staticMatrix.hpp"    // for StaticMatrix3x3
-#include "thermostat.hpp"      // for Thermostat
-#include "vector3d.hpp"        // for Vec3D
+#include "integrator.hpp"   // for Integrator
+#include "manostat.hpp"     // for Manostat
+#include "thermostat.hpp"   // for Thermostat
 
 #ifdef WITH_MPI
-#include <mpi.h>   // for MPI_Bcast, MPI_DOUBLE, MPI_COMM_WORLD
+    #include <mpi.h>   // for MPI_Bcast, MPI_DOUBLE, MPI_COMM_WORLD
 
-#include "mpi.hpp"   // for MPI
+    #include "mpi.hpp"   // for MPI
 #endif
 
 using engine::RingPolymerQMMDEngine;
@@ -138,7 +132,7 @@ void RingPolymerQMMDEngine::qmCalculation()
 
     for (size_t i = 0; i < _ringPolymerBeads.size(); ++i)
     {
-        auto forces   = _ringPolymerBeads[i].flattenForces();
+        auto forces   = _ringPolymerBeads[i].getForces();
         auto qmEnergy = _ringPolymerBeadsPhysicalData[i].getQMEnergy();
 
         auto &virialMatrix = _ringPolymerBeadsPhysicalData[i].getVirial();
@@ -207,7 +201,10 @@ void RingPolymerQMMDEngine::applyThermostatHalfStep()
 
     for (size_t i = 0; i < _ringPolymerBeads.size(); ++i)
     {
-        auto velocities = _ringPolymerBeads[i].flattenVelocities();
+    #ifdef __PQ_LEGACY__
+        _ringPolymerBeads[i].flattenVelocities();
+    #endif
+        auto velocities = _ringPolymerBeads[i].getVel();
 
         ::MPI_Bcast(
             velocities.data(),
@@ -260,7 +257,10 @@ void RingPolymerQMMDEngine::applyThermostat()
     {
         auto &data = _ringPolymerBeadsPhysicalData[i];
 
-        auto velocities  = _ringPolymerBeads[i].flattenVelocities();
+    #ifdef __PQ_LEGACY__
+        _ringPolymerBeads[i].flattenVelocities();
+    #endif
+        auto velocities  = _ringPolymerBeads[i].getVel();
         auto temperature = data.getTemperature();
 
         auto noseHooverMomentumEnergy = data.getNoseHooverMomentumEnergy();
@@ -339,8 +339,12 @@ void RingPolymerQMMDEngine::applyManostat()
 
     for (size_t i = 0; i < _ringPolymerBeads.size(); ++i)
     {
-        auto positions  = _ringPolymerBeads[i].flattenPositions();
-        auto velocities = _ringPolymerBeads[i].flattenVelocities();
+        auto positions = _ringPolymerBeads[i].getPos();
+
+    #ifdef __PQ_LEGACY__
+        _ringPolymerBeads[i].flattenVelocities();
+    #endif
+        auto velocities = _ringPolymerBeads[i].getVel();
 
         auto &box = _ringPolymerBeads[i].getBox();
 

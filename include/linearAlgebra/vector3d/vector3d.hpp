@@ -320,8 +320,16 @@ namespace linearAlgebra
     template <pq::ArithmeticVector3D U>
     std::ostream &operator<<(std::ostream &os, const U &v);
 
+    /***********************************
+     * flatten std::vector of Vector3D *
+     ***********************************/
+    template <typename T>
+    auto flatten(const std::vector<Vector3D<T>> &v);
+
 }   // namespace linearAlgebra
 
-#include "vector3d.tpp.hpp"   // DO NOT MOVE THIS LINE
+#ifndef _VECTOR3D_TPP_
+    #include "vector3d.tpp.hpp"   // IWYU pragma: keep DO NOT MOVE THIS LINE!!!
+#endif
 
 #endif   // _VECTOR3d_HPP_

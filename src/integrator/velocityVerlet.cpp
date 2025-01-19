@@ -20,17 +20,19 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#include "velocityVerlet.hpp"
+
 #include "constants.hpp"
 #include "simulationBox.hpp"
+#include "simulationBox_API.hpp"
 #include "timingsSettings.hpp"
-#include "velocityVerlet.hpp"
 
 using namespace integrator;
 using namespace simulationBox;
 using namespace settings;
 using namespace constants;
 
-VelocityVerlet::VelocityVerlet() : Integrator("VelocityVerlet") {};
+VelocityVerlet::VelocityVerlet() : Integrator("VelocityVerlet"){};
 
 /**
  * @brief applies first half step of velocity verlet algorithm
@@ -41,11 +43,14 @@ void VelocityVerlet::firstStep(SimulationBox& simBox)
 {
     startTimingsSection("Velocity Verlet - First Step");
 
-    const auto dt = TimingsSettings::getTimeStep();
+    __DEBUG_INFO__("\n");
+    __DEBUG_INFO__("Entering Velocity Verlet - First Step");
+    __DEBUG_INFO__("\n");
+    __POS_MIN_MAX_SUM_MEAN__(simBox);
+    __VEL_MIN_MAX_SUM_MEAN__(simBox);
+    __FORCE_MIN_MAX_SUM_MEAN__(simBox);
 
-    simBox.flattenVelocities();
-    simBox.flattenPositions();
-    simBox.flattenForces();
+    const auto dt = TimingsSettings::getTimeStep();
 
     auto* const       velPtr    = simBox.getVelPtr();
     auto* const       posPtr    = simBox.getPosPtr();
@@ -64,28 +69,30 @@ void VelocityVerlet::firstStep(SimulationBox& simBox)
     #pragma omp parallel for
 #endif
     // clang-format on
-    for (size_t i = 0; i < nAtoms; ++i)
+    for (size_t i = 0; i < nAtoms * 3; ++i)
     {
-        const auto massDt = massesPtr[i] / massFactor;
+        const size_t atomIndex = i / 3;
 
-        for (size_t j = 0; j < 3; ++j)
-        {
-            velPtr[3 * i + j]    += forcesPtr[3 * i + j] / massDt;
-            posPtr[3 * i + j]    += velPtr[3 * i + j] * posFactor;
-            forcesPtr[3 * i + j]  = 0.0;
-        }
+        velPtr[i]    += forcesPtr[i] / massesPtr[atomIndex] * massFactor;
+        posPtr[i]    += velPtr[i] * posFactor;
+        forcesPtr[i]  = 0.0;
     }
 
+#ifdef __PQ_LEGACY__
     simBox.deFlattenVelocities();
     simBox.deFlattenPositions();
     simBox.deFlattenForces();
+#endif
 
-    const auto box = simBox.getBoxPtr();
+    calculateCenterOfMass(simBox);
+    calculateCenterOfMassMolecules(simBox);
 
-    auto calculateCOM = [&box](auto& molecule)
-    { molecule.calculateCenterOfMass(*box); };
-
-    std::ranges::for_each(simBox.getMolecules(), calculateCOM);
+    __DEBUG_INFO__("\n");
+    __DEBUG_INFO__("Exiting Velocity Verlet - First Step");
+    __DEBUG_INFO__("\n");
+    __POS_MIN_MAX_SUM_MEAN__(simBox);
+    __VEL_MIN_MAX_SUM_MEAN__(simBox);
+    __FORCE_MIN_MAX_SUM_MEAN__(simBox);
 
     stopTimingsSection("Velocity Verlet - First Step");
 }
@@ -98,11 +105,13 @@ void VelocityVerlet::firstStep(SimulationBox& simBox)
 void VelocityVerlet::secondStep(SimulationBox& simBox)
 {
     startTimingsSection("Velocity Verlet - Second Step");
+    __DEBUG_INFO__("\n");
+    __DEBUG_INFO__("Entering Velocity Verlet - Second Step");
+    __DEBUG_INFO__("\n");
+    __VEL_MIN_MAX_SUM_MEAN__(simBox);
+    __FORCE_MIN_MAX_SUM_MEAN__(simBox);
 
     const auto dt = TimingsSettings::getTimeStep();
-
-    simBox.flattenVelocities();
-    simBox.flattenForces();
 
     auto* const       velPtr    = simBox.getVelPtr();
     const auto* const massesPtr = simBox.getMassesPtr();
@@ -119,15 +128,21 @@ void VelocityVerlet::secondStep(SimulationBox& simBox)
     #pragma omp parallel for
 #endif
     // clang-format on
-    for (size_t i = 0; i < nAtoms; ++i)
+    for (size_t i = 0; i < nAtoms * 3; ++i)
     {
-        const auto massDt = massesPtr[i] / factor;
+        const size_t atomIndex = i / 3;
 
-        for (size_t j = 0; j < 3; ++j)
-            velPtr[3 * i + j] += forcesPtr[3 * i + j] / massDt;
+        velPtr[i] += forcesPtr[i] / massesPtr[atomIndex] * factor;
     }
 
+#ifdef __PQ_LEGACY__
     simBox.deFlattenVelocities();
+#endif
+
+    __DEBUG_INFO__("\n");
+    __DEBUG_INFO__("Exiting Velocity Verlet - Second Step");
+    __VEL_MIN_MAX_SUM_MEAN__(simBox);
+    __DEBUG_INFO__("\n");
 
     stopTimingsSection("Velocity Verlet - Second Step");
 }

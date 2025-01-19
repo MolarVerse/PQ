@@ -36,9 +36,9 @@
  *
  */
 
-#include "staticMatrix.hpp"   // for StaticMatrix3x3
-#include "typeAliases.hpp"    // for diagonalMatrix
-#include "vector3d.hpp"       // for Vec3D
+#include <memory>
+
+#include "typeAliases.hpp"   // for diagonalMatrix
 
 namespace simulationBox
 {
@@ -51,18 +51,16 @@ namespace simulationBox
     class Box
     {
        protected:
+        std::shared_ptr<device::Device> _device;
+
         pq::Vec3D _boxDimensions;
 
         bool   _boxSizeHasChanged = false;
         double _volume;
 
-#ifndef __PQ_LEGACY__
         std::vector<Real> _boxParams;
-
 #ifdef __PQ_GPU__
         Real *_boxParamsDevice;
-#endif
-
 #endif
        public:
         virtual ~Box() = default;   // change this to free the box params
@@ -73,14 +71,13 @@ namespace simulationBox
         virtual pq::Vec3D calcShiftVector(const pq::Vec3D &) const     = 0;
 
         virtual bool isOrthoRhombic() const = 0;
-
-#ifndef __PQ_LEGACY__
-        virtual void updateBoxParams() = 0;
-#endif
+        virtual void flattenBoxParams()     = 0;
+        virtual void deFlattenBoxParams()   = 0;
 
 #ifdef __PQ_GPU__
         void initDeviceMemory(device::Device &device);
-        void copyBoxParamsTo(pq::Device &device);
+        void copyBoxParamsTo();
+        void copyBoxParamsFrom();
 #endif
 
         /*****************************************************
@@ -110,9 +107,7 @@ namespace simulationBox
         [[nodiscard]] double    getVolume() const;
         [[nodiscard]] pq::Vec3D getBoxDimensions() const;
 
-#ifndef __PQ_LEGACY__
         [[nodiscard]] Real *getBoxParamsPtr();
-#endif
 
         /********************
          * standard setters *

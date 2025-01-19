@@ -35,14 +35,12 @@
  * @see box.hpp
  */
 
-#include "triclinicBox.hpp"
-
-#ifdef __PQ_DEBUG__
-#include "debug.hpp"
-#endif
+#include "typeAliases.hpp"
 
 namespace simulationBox
 {
+
+    // TODO: this is not correct yet see - applyPBC of triclinicBox.cpp
 
     /**
      * @brief image triclinic
@@ -82,6 +80,36 @@ namespace simulationBox
         x += tx;
         y += ty;
         z += tz;
+    }
+
+    /**
+     * @brief image triclinic
+     *
+     * @param boxParams
+     * @param x
+     * @param y
+     * @param z
+     */
+    static inline void imageTriclinic(
+        const Real* const boxParams,
+        Real&             x,
+        Real&             y,
+        Real&             z
+    )
+    {
+        const auto unitBoxX =
+            ::round(boxParams[9] * x + boxParams[10] * y + boxParams[11] * z);
+        const auto unitBoxY =
+            ::round(boxParams[12] * x + boxParams[13] * y + boxParams[14] * z);
+        const auto unitBoxZ =
+            ::round(boxParams[15] * x + boxParams[16] * y + boxParams[17] * z);
+
+        x -= boxParams[0] * unitBoxX + boxParams[1] * unitBoxY +
+             boxParams[2] * unitBoxZ;
+        y -= boxParams[3] * unitBoxX + boxParams[4] * unitBoxY +
+             boxParams[5] * unitBoxZ;
+        z -= boxParams[6] * unitBoxX + boxParams[7] * unitBoxY +
+             boxParams[8] * unitBoxZ;
     }
 
 }   // namespace simulationBox

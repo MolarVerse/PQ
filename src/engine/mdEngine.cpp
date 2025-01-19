@@ -54,13 +54,15 @@ void MDEngine::run()
 
     _nSteps = TimingsSettings::getNumberOfSteps();
 
+#ifndef __PQ_DEBUG__
     progressbar bar(static_cast<int>(_nSteps), true, std::cout);
-
-    __DEBUG_LOCATION__();
+#endif
 
     for (; _step <= _nSteps; ++_step)
     {
+#ifndef __PQ_DEBUG__
         bar.update();
+#endif
 
         takeStep();
 
@@ -114,11 +116,6 @@ void MDEngine::run()
         );
     }
 
-#ifdef WITH_KOKKOS
-    _kokkosPotential.setTimerName("Kokkos Potential");
-    _timer.addTimer(_kokkosPotential.getTimer());
-#endif
-
     references::ReferencesOutput::writeReferencesFile();
 
     _engineOutput.writeTimingsFile(_timer);
@@ -136,6 +133,11 @@ void MDEngine::takeStepBeforeForces()
     _thermostat->applyThermostatHalfStep(*_simulationBox, *_physicalData);
 
     _integrator->firstStep(*_simulationBox);
+
+#ifndef __PQ_LEGACY__
+    _simulationBox->deFlattenPositions();
+    _simulationBox->deFlattenVelocities();
+#endif
 
     _constraints->applyShake(*_simulationBox);
 }
@@ -159,6 +161,10 @@ void MDEngine::takeStepAfterForces()
     _thermostat->applyThermostatOnForces(*_simulationBox);
 
     _integrator->secondStep(*_simulationBox);
+
+#ifndef __PQ_LEGACY__
+    _simulationBox->deFlattenVelocities();
+#endif
 
     _constraints->applyRattle(*_simulationBox);
 

@@ -20,13 +20,18 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, EXPECT_EQ, TestInfo (pt...
+#ifndef __MATH_HPP__
+#define __MATH_HPP__
 
-#include <memory>   // for allocator
+#include <cmath>
 
-#include "gtest/gtest.h"   // for Message, TestPartResult
-#include "potential.hpp"   // for Potential
+#include "math/atomicOperations.inl"   // IWYU pragma: export
+#include "math/cross.inl"              // IWYU pragma: export
+#include "math/max.inl"                // IWYU pragma: export
+#include "math/mean.inl"               // IWYU pragma: export
+#include "math/min.inl"                // IWYU pragma: export
+#include "math/minMaxSumMean.inl"      // IWYU pragma: export
+#include "math/sum.inl"                // IWYU pragma: export
+#include "math/tensorProduct.inl"      // IWYU pragma: export
 
-using namespace potential;
-
-TEST(TestPotentialKokkos, placeholder) { EXPECT_TRUE(true); }
+#endif   // __MATH_HPP__

@@ -52,11 +52,11 @@ Optimizer::Optimizer(const size_t nEpochs) : _nEpochs(nEpochs) {}
 void Optimizer::updateHistory()
 {
     _energyHistory.push_back(_physicalData->getTotalEnergy());
-    _forceHistory.push_back(_simulationBox->getForces());
-    _positionHistory.push_back(_simulationBox->getPositions());
+    _forceHistory.push_back(_simulationBox->getForcesVec3D());
+    _positionHistory.push_back(_simulationBox->getPositionsVec3D());
 
-    const auto rmsForce = rms(_simulationBox->getForces());
-    const auto maxForce = max(_simulationBox->getForces());
+    const auto rmsForce = rms(_simulationBox->getForcesVec3D());
+    const auto maxForce = max(_simulationBox->getForcesVec3D());
 
     _rmsForceHistory.push_back(rmsForce);
     _maxForceHistory.push_back(maxForce);
@@ -237,7 +237,7 @@ double Optimizer::getMaxForce(const int offset) const
  *
  * @return std::vector<pq::Vec3D>
  */
-std::vector<linearAlgebra::Vec3D> Optimizer::getForces() const
+std::vector<linearAlgebra::Vec3D> Optimizer::getForcesVec3D() const
 {
     return _forceHistory.back();
 }
@@ -248,7 +248,7 @@ std::vector<linearAlgebra::Vec3D> Optimizer::getForces() const
  * @param offset
  *
  */
-std::vector<linearAlgebra::Vec3D> Optimizer::getForces(const int offset) const
+std::vector<linearAlgebra::Vec3D> Optimizer::getForce(const int offset) const
 {
     const auto index = getHistoryIndex(offset);
 

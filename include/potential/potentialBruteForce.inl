@@ -98,8 +98,8 @@ namespace potential
         const size_t* const moleculeIndex,
         const size_t* const molTypes,
         const size_t* const atomTypes,
-        Real&               totalCoulombEnergy,
-        Real&               totalNonCoulombEnergy,
+        Real*               totalCoulombEnergy,
+        Real*               totalNonCoulombEnergy,
         const Real          coulCutOff,
         const size_t        nAtoms,
         const size_t        nAtomTypes,
@@ -171,7 +171,7 @@ namespace potential
                         );
 
                         #pragma omp atomic
-                        totalCoulombEnergy    += coulombEnergy;
+                        *totalCoulombEnergy    += coulombEnergy;
 
                         auto combinedCutoffIndex = -1;
                         auto combinedIndex      = -1;
@@ -217,7 +217,7 @@ namespace potential
                             );
 
                             #pragma omp atomic
-                            totalNonCoulombEnergy += nonCoulombEnergy;
+                            *totalNonCoulombEnergy += nonCoulombEnergy;
                         }
 
                         localForce /= distance;
