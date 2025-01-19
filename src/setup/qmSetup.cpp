@@ -87,7 +87,7 @@ void QMSetup::setup()
  */
 void QMSetup::setupQMMethod()
 {
-    if (QMSettings::isThirdOrderDftbSet() == false &&
+    if (!QMSettings::isThirdOrderDftbSet() &&
         QMSettings::getQMMethod() == QMMethod::ASEDFTBPLUS)
         QMSettings::setUseThirdOrderDftb(true);
 
