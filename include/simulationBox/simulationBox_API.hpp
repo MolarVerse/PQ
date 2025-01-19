@@ -52,21 +52,21 @@ namespace simulationBox
     #define __POS_MIN_MAX_SUM_MEAN__(simBox)   \
         config::Debug::debugMinMaxSumMean(     \
             posMinMaxSumMean(simBox),          \
-            config::Debug::getDebugPos(),      \
+            "Pos:",                            \
             config::DebugLevel::POSITION_DEBUG \
         );
 
     #define __VEL_MIN_MAX_SUM_MEAN__(simBox)   \
         config::Debug::debugMinMaxSumMean(     \
             velMinMaxSumMean(simBox),          \
-            config::Debug::getDebugVel(),      \
+            "Vel:",                            \
             config::DebugLevel::VELOCITY_DEBUG \
         );
 
     #define __FORCE_MIN_MAX_SUM_MEAN__(simBox) \
         config::Debug::debugMinMaxSumMean(     \
             forcesMinMaxSumMean(simBox),       \
-            config::Debug::getDebugForce(),    \
+            "Frc:",                            \
             config::DebugLevel::FORCE_DEBUG    \
         );
 

@@ -37,22 +37,10 @@ namespace config
      */
     enum class DebugLevel
     {
-        LOCATION_DEBUG = 0,
         ENERGY_DEBUG,
         FORCE_DEBUG,
         POSITION_DEBUG,
         VELOCITY_DEBUG,
-        BOX_DEBUG,
-
-    };
-
-    class NullBuf : public std::streambuf
-    {
-       public:
-        [[nodiscard]] int_type overflow(const int_type c) override
-        {
-            return traits_type::not_eof(c);
-        }
     };
 
     class Debug
@@ -60,15 +48,16 @@ namespace config
        private:
         static bool inline _debug        = false;
         static size_t inline _debugLevel = 0;
-        static NullBuf inline _nullBuf;
-        static std::ostream inline _nullStream = std::ostream(&_nullBuf);
 
-        static std::string inline _file       = "FILE:        ";
-        static std::string inline _func       = "FUNCTION:    ";
-        static std::string inline _debugInfo  = "DEBUG INFO:  ";
-        static std::string inline _debugPos   = "DEBUG POS:   ";
-        static std::string inline _debugVel   = "DEBUG VEL:   ";
-        static std::string inline _debugForce = "DEBUG FORCE: ";
+        static size_t inline _functionLevel = 0;
+        static int parseDebugBase(const char* debugEnvBase);
+        static int parseDebugLevel(const char* debugEnv, const int debugBase);
+
+        [[nodiscard]] static std::string getLeadingSpaces();
+        [[nodiscard]] static std::string beautifyMsg(
+            const std::string& msg,
+            const char         beautifyChar
+        );
 
        public:
         static void initDebug();
@@ -80,21 +69,19 @@ namespace config
             const DebugLevel       level
         );
 
+        [[nodiscard]] static bool useDebug(const DebugLevel level);
+        [[nodiscard]] static bool useAnyDebug();
+
+        static void enterFunction(const std::string& func);
+        static void exitFunction(const std::string& func);
+        static void debugInfo(const std::string& msg);
+
         static void setDebug(const bool debug);
         static void setDebugLevel(const size_t debugLevel);
 
-        [[nodiscard]] static bool          getDebug();
-        [[nodiscard]] static int           getDebugLevel();
-        [[nodiscard]] static std::ostream& getNullStream();
-        [[nodiscard]] static std::string   getFile();
-        [[nodiscard]] static std::string   getFunc();
-        [[nodiscard]] static std::string   getDebugInfo();
-        [[nodiscard]] static std::string   getDebugPos();
-        [[nodiscard]] static std::string   getDebugVel();
-        [[nodiscard]] static std::string   getDebugForce();
-
-        [[nodiscard]] static bool useDebug(const DebugLevel level);
-        [[nodiscard]] static bool useAnyDebug();
+        [[nodiscard]] static bool   getDebug();
+        [[nodiscard]] static int    getDebugLevel();
+        [[nodiscard]] static size_t getFunctionLevel();
     };
 
 }   // namespace config
@@ -104,20 +91,6 @@ namespace config
 #endif
 
 #ifdef __PQ_DEBUG__
-
-    #define __DEBUG_LOCATION__()                                             \
-        do                                                                   \
-        {                                                                    \
-            if (config::Debug::useDebug(config::DebugLevel::LOCATION_DEBUG)) \
-            {                                                                \
-                std::cout << std::endl;                                      \
-                std::cout << config::Debug::getFile() << __FILE__            \
-                          << std::endl;                                      \
-                std::cout << config::Debug::getFunc() << __FUNCTION__        \
-                          << std::endl;                                      \
-                std::cout << std::endl;                                      \
-            }                                                                \
-        } while (0)
 
     #define __DEBUG_ENABLE__(call)         \
         do                                 \
@@ -137,22 +110,40 @@ namespace config
             }                               \
         } while (0)
 
-    #define __DEBUG_INFO__(msg)                                              \
-        do                                                                   \
-        {                                                                    \
-            if (config::Debug::useDebug(config::DebugLevel::LOCATION_DEBUG)) \
-            {                                                                \
-                std::cout << config::Debug::getDebugInfo() << (msg)          \
-                          << std::endl;                                      \
-            }                                                                \
+    #define __DEBUG_ENTER_FUNCTION__(func)          \
+        do                                          \
+        {                                           \
+            if (config::Debug::useAnyDebug())       \
+            {                                       \
+                config::Debug::enterFunction(func); \
+            }                                       \
+        } while (0)
+
+    #define __DEBUG_EXIT_FUNCTION__(func)          \
+        do                                         \
+        {                                          \
+            if (config::Debug::useAnyDebug())      \
+            {                                      \
+                config::Debug::exitFunction(func); \
+            }                                      \
+        } while (0)
+
+    #define __DEBUG_INFO__(msg)                \
+        do                                     \
+        {                                      \
+            if (config::Debug::useAnyDebug())  \
+            {                                  \
+                config::Debug::debugInfo(msg); \
+            }                                  \
         } while (0)
 
 #else
 
-    #define __DEBUG_LOCATION__()      // Do nothing
-    #define __DEBUG_ENABLE__(call)    // Do nothing
-    #define __DEBUG_DISABLE__(call)   // Do nothing
-    #define __DEBUG_INFO__(msg)       // Do nothing
+    #define __DEBUG_ENABLE__(call)           // Do nothing
+    #define __DEBUG_DISABLE__(call)          // Do nothing
+    #define __DEBUG_ENTER_FUNCTION__(func)   // Do nothing
+    #define __DEBUG_EXIT_FUNCTION__(func)    // Do nothing
+    #define __DEBUG_INFO__(msg)              // Do nothing
 
 #endif
 

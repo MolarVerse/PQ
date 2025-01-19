@@ -39,55 +39,112 @@ namespace config
      */
     void inline Debug::initDebug()
     {
-        const char* debugEnv = std::getenv("PQ_DEBUG");
+        const char* debugEnvBase = std::getenv("PQ_DEBUG_BASE");
+        const auto  debugBase    = parseDebugBase(debugEnvBase);
 
-        if (debugEnv != nullptr)
+        const auto debugEnv = std::getenv("PQ_DEBUG");
+        _debugLevel         = parseDebugLevel(debugEnv, debugBase);
+        _debug              = _debugLevel > 0;
+    }
+
+    /**
+     * @brief parse the debug base
+     *
+     * @param debugEnvBase
+     * @return int
+     */
+    inline int Debug::parseDebugBase(const char* debugEnvBase)
+    {
+        auto debugBase = 10;
+
+        if (debugEnvBase != nullptr)
         {
+            const auto invalidBaseLambda = [&debugBase](const auto corruptBase)
+            {
+                const auto msg = std::format(
+                    "Invalid debug base \"{}\". Using default "
+                    "debug base \"{}\".",
+                    corruptBase,
+                    debugBase
+                );
+
+                std::cout << msg << std::endl;
+            };
+
             try
             {
-                const auto debugLevel = std::strtol(debugEnv, nullptr, 10);
+                const auto base = std::strtol(debugEnvBase, nullptr, 10);
 
-                if (debugLevel < 0)
-                {
-                    const auto msg = std::format(
-                        "Invalid debug level {}. Using default debug level 0.",
-                        debugLevel
-                    );
-                    std::cout
-                        << "Invalid debug level . Using default debug level 0."
-                        << std::endl;
-                    _debug      = false;
-                    _debugLevel = 0;
-                }
+                if (base != 10 && base != 2)
+                    invalidBaseLambda(debugEnvBase);
                 else
-                {
-                    _debug      = debugLevel > 0;
-                    _debugLevel = static_cast<size_t>(debugLevel);
-
-                    const auto msg = std::format(
-                        "Debugging is activated with debug level {}.",
-                        debugLevel
-                    );
-
-                    std::cout << msg << std::endl;
-                }
+                    debugBase = base;
             }
             catch (const std::exception& e)
             {
-                const auto msg = std::format(
-                    "Invalid debug level {}. Using default debug level 0.",
-                    debugEnv
-                );
-                std::cout << msg << std::endl;
-                _debug      = false;
-                _debugLevel = 0;
+                invalidBaseLambda(debugEnvBase);
             }
         }
-        else
+
+        const auto msg = std::format(
+            "Debugging is activated with debug base {}.",
+            debugBase
+        );
+
+        std::cout << msg << std::endl;
+
+        return debugBase;
+    }
+
+    /**
+     * @brief parse the debug level
+     *
+     * @param debugEnv
+     * @param debugBase
+     * @return int
+     */
+    inline int Debug::parseDebugLevel(const char* debugEnv, const int debugBase)
+    {
+        auto debugLevel = 0;
+
+        if (debugEnv != nullptr)
         {
-            _debug      = false;
-            _debugLevel = 0;
+            const auto invalidLevelLambda =
+                [&debugLevel](const auto corruptLevel)
+            {
+                const auto msg = std::format(
+                    "Invalid debug level \"{}\". Using default debug "
+                    "level \"{}\".",
+                    corruptLevel,
+                    debugLevel
+                );
+
+                std::cout << msg << std::endl;
+            };
+
+            try
+            {
+                const auto level = std::strtol(debugEnv, nullptr, debugBase);
+
+                if (level < 0)
+                    invalidLevelLambda(level);
+                else
+                    debugLevel = level;
+            }
+            catch (const std::exception& e)
+            {
+                invalidLevelLambda(debugEnv);
+            }
         }
+
+        const auto msg = std::format(
+            "Debugging is activated with debug level {}.",
+            debugLevel
+        );
+
+        std::cout << msg << std::endl;
+
+        return debugLevel;
     }
 
     /**
@@ -107,13 +164,110 @@ namespace config
     {
         if (useDebug(level))
         {
-            std::cout << msg;
-            std::cout << " min: " << std::get<0>(minMaxSumMean);
-            std::cout << " max: " << std::get<1>(minMaxSumMean);
-            std::cout << " sum: " << std::get<2>(minMaxSumMean);
-            std::cout << " mean: " << std::get<3>(minMaxSumMean);
+            const auto min  = std::get<0>(minMaxSumMean);
+            const auto max  = std::get<1>(minMaxSumMean);
+            const auto sum  = std::get<2>(minMaxSumMean);
+            const auto mean = std::get<3>(minMaxSumMean);
+
+            const auto minString  = std::format("min:  {:6.5e}\n", min);
+            const auto maxString  = std::format("max:  {:6.5e}\n", max);
+            const auto sumString  = std::format("sum:  {:6.5e}\n", sum);
+            const auto meanString = std::format("mean: {:6.5e}\n", mean);
+
+            std::cout << getLeadingSpaces() << msg << std::endl;
+            std::cout << getLeadingSpaces() << minString;
+            std::cout << getLeadingSpaces() << maxString;
+            std::cout << getLeadingSpaces() << sumString;
+            std::cout << getLeadingSpaces() << meanString;
             std::cout << std::endl;
         }
+    }
+
+    /**
+     * @brief check if the debug level is set
+     *
+     * @param level
+     * @return bool
+     */
+    bool inline Debug::useDebug(const DebugLevel level)
+    {
+        if (!_debug)
+            return false;
+
+        if (std::bitset<8>(_debugLevel)[static_cast<size_t>(level)] == 1)
+            return true;
+
+        return false;
+    }
+
+    /**
+     * @brief check if the debug level is not set
+     *
+     * @param level
+     * @return bool
+     */
+    bool inline Debug::useAnyDebug()
+    {
+        if (!_debug)
+            return false;
+
+        if (_debugLevel != 0)
+            return true;
+
+        return false;
+    }
+
+    /**
+     * @brief enter a function
+     *
+     * @param func
+     */
+    void inline Debug::enterFunction(const std::string& func)
+    {
+        std::cout << beautifyMsg(">>  " + func, '>') << std::endl;
+        _functionLevel++;
+    }
+
+    /**
+     * @brief exit a function
+     *
+     * @param func
+     */
+    void inline Debug::exitFunction(const std::string& func)
+    {
+        _functionLevel--;
+        std::cout << beautifyMsg("<<  " + func, '<') << std::endl;
+    }
+
+    /**
+     * @brief print debug info
+     *
+     * @param msg
+     */
+    void inline Debug::debugInfo(const std::string& msg)
+    {
+        std::cout << beautifyMsg(msg, '*') << std::endl;
+    }
+
+    /**
+     * @brief beautify the message
+     *
+     * @param msg
+     * @return std::string
+     */
+    std::string inline Debug::beautifyMsg(
+        const std::string& msg,
+        const char         beautifyChar
+    )
+    {
+        const auto msgLen     = msg.length();
+        const auto beautifier = std::string(msgLen, beautifyChar);
+
+        auto beautifiedMsg  = getLeadingSpaces() + beautifier + "\n";
+        beautifiedMsg      += getLeadingSpaces() + msg + "\n";
+        beautifiedMsg      += getLeadingSpaces() + beautifier + "\n";
+
+        return beautifiedMsg;
     }
 
     /**
@@ -134,110 +288,39 @@ namespace config
     }
 
     /**
+     * @brief get the leading spaces
+     *
+     */
+    std::string inline Debug::getLeadingSpaces()
+    {
+        std::string leadingSpaces = "";
+
+        for (size_t i = 0; i < _functionLevel; ++i)
+            leadingSpaces += "    ";
+
+        return leadingSpaces;
+    }
+
+    /**
      * @brief get if debug is enabled
      *
      * @return bool
      */
-    [[nodiscard]] bool inline Debug::getDebug() { return _debug; }
+    bool inline Debug::getDebug() { return _debug; }
 
     /**
      * @brief get the debug level
      *
      * @return int
      */
-    [[nodiscard]] int inline Debug::getDebugLevel() { return _debugLevel; }
+    int inline Debug::getDebugLevel() { return _debugLevel; }
 
     /**
-     * @brief get the null stream
+     * @brief get the function level
      *
-     * @return std::ostream&
+     * @return int
      */
-    [[nodiscard]] inline std::ostream& Debug::getNullStream()
-    {
-        return _nullStream;
-    }
-
-    /**
-     * @brief get the file string
-     *
-     * @return std::string
-     */
-    [[nodiscard]] inline std::string Debug::getFile() { return _file; }
-
-    /**
-     * @brief get the function string
-     *
-     * @return std::string
-     */
-    [[nodiscard]] inline std::string Debug::getFunc() { return _func; }
-
-    /**
-     * @brief get the debug info string
-     *
-     * @return std::string
-     */
-    [[nodiscard]] inline std::string Debug::getDebugInfo()
-    {
-        return _debugInfo;
-    }
-
-    /**
-     * @brief get the debug pos string
-     *
-     * @return std::string
-     */
-    [[nodiscard]] inline std::string Debug::getDebugPos() { return _debugPos; }
-
-    /**
-     * @brief get the debug vel string
-     *
-     * @return std::string
-     */
-    [[nodiscard]] inline std::string Debug::getDebugVel() { return _debugVel; }
-
-    /**
-     * @brief get the debug force string
-     *
-     * @return std::string
-     */
-    [[nodiscard]] inline std::string Debug::getDebugForce()
-    {
-        return _debugForce;
-    }
-
-    /**
-     * @brief check if the debug level is set
-     *
-     * @param level
-     * @return bool
-     */
-    [[nodiscard]] bool inline Debug::useDebug(const DebugLevel level)
-    {
-        if (!_debug)
-            return false;
-
-        if (std::bitset<8>(_debugLevel)[static_cast<size_t>(level)] == 1)
-            return true;
-
-        return false;
-    }
-
-    /**
-     * @brief check if the debug level is not set
-     *
-     * @param level
-     * @return bool
-     */
-    [[nodiscard]] bool inline Debug::useAnyDebug()
-    {
-        if (!_debug)
-            return false;
-
-        if (_debugLevel != 0)
-            return true;
-
-        return false;
-    }
+    inline size_t Debug::getFunctionLevel() { return _functionLevel; }
 
 }   // namespace config
 

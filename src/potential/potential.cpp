@@ -78,8 +78,6 @@ void Potential::calculateForces(
 #endif
 )
 {
-    __DEBUG_INFO__("Calculating Inter Non bonded forces");
-
     startTimingsSection("InterNonBonded");
 
     const auto rcCutOff = CoulombPotential::getCoulombRadiusCutOff();

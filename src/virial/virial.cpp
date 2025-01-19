@@ -46,9 +46,9 @@ using namespace linearAlgebra;
  */
 void Virial::calculateVirial(SimulationBox &simBox, PhysicalData &data)
 {
-    __DEBUG_INFO__("Calculating virial");
-
     startTimingsSection("Virial");
+
+    __DEBUG_ENTER_FUNCTION__("Virial");
 
     Real virial[9] = {0.0};
 
@@ -104,6 +104,8 @@ void Virial::calculateVirial(SimulationBox &simBox, PhysicalData &data)
 #ifdef __PQ_LEGACY__
     simBox.deFlattenShiftForces();
 #endif
+
+    __DEBUG_EXIT_FUNCTION__("Virial");
 
     stopTimingsSection("Virial");
 }

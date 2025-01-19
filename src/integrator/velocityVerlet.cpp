@@ -41,14 +41,7 @@ VelocityVerlet::VelocityVerlet() : Integrator("VelocityVerlet"){};
  */
 void VelocityVerlet::firstStep(SimulationBox& simBox)
 {
-    startTimingsSection("Velocity Verlet - First Step");
-
-    __DEBUG_INFO__("\n");
-    __DEBUG_INFO__("Entering Velocity Verlet - First Step");
-    __DEBUG_INFO__("\n");
-    __POS_MIN_MAX_SUM_MEAN__(simBox);
-    __VEL_MIN_MAX_SUM_MEAN__(simBox);
-    __FORCE_MIN_MAX_SUM_MEAN__(simBox);
+    initFirstStep(simBox);
 
     const auto dt = TimingsSettings::getTimeStep();
 
@@ -78,23 +71,48 @@ void VelocityVerlet::firstStep(SimulationBox& simBox)
         forcesPtr[i]  = 0.0;
     }
 
+    calculateCenterOfMass(simBox);
+    calculateCenterOfMassMolecules(simBox);
+
+    finalizeFirstStep(simBox);
+}
+
+/**
+ * @brief initializes first step of velocity verlet algorithm
+ *
+ * @param simBox
+ */
+void VelocityVerlet::initFirstStep(SimulationBox& simBox)
+{
+    startTimingsSection(vvFirstStepMsg);
+
+    __DEBUG_ENTER_FUNCTION__(vvFirstStepMsg);
+    __POS_MIN_MAX_SUM_MEAN__(simBox);
+    __VEL_MIN_MAX_SUM_MEAN__(simBox);
+    __FORCE_MIN_MAX_SUM_MEAN__(simBox);
+
+    __DEBUG_INFO__(std::format("Performing {}", vvFirstStepMsg));
+}
+
+/**
+ * @brief finalizes first step of velocity verlet algorithm
+ *
+ * @param simBox
+ */
+void VelocityVerlet::finalizeFirstStep(SimulationBox& simBox)
+{
 #ifdef __PQ_LEGACY__
     simBox.deFlattenVelocities();
     simBox.deFlattenPositions();
     simBox.deFlattenForces();
 #endif
 
-    calculateCenterOfMass(simBox);
-    calculateCenterOfMassMolecules(simBox);
-
-    __DEBUG_INFO__("\n");
-    __DEBUG_INFO__("Exiting Velocity Verlet - First Step");
-    __DEBUG_INFO__("\n");
     __POS_MIN_MAX_SUM_MEAN__(simBox);
     __VEL_MIN_MAX_SUM_MEAN__(simBox);
     __FORCE_MIN_MAX_SUM_MEAN__(simBox);
+    __DEBUG_EXIT_FUNCTION__(vvFirstStepMsg);
 
-    stopTimingsSection("Velocity Verlet - First Step");
+    stopTimingsSection(vvFirstStepMsg);
 }
 
 /**
@@ -104,12 +122,7 @@ void VelocityVerlet::firstStep(SimulationBox& simBox)
  */
 void VelocityVerlet::secondStep(SimulationBox& simBox)
 {
-    startTimingsSection("Velocity Verlet - Second Step");
-    __DEBUG_INFO__("\n");
-    __DEBUG_INFO__("Entering Velocity Verlet - Second Step");
-    __DEBUG_INFO__("\n");
-    __VEL_MIN_MAX_SUM_MEAN__(simBox);
-    __FORCE_MIN_MAX_SUM_MEAN__(simBox);
+    initSecondStep(simBox);
 
     const auto dt = TimingsSettings::getTimeStep();
 
@@ -135,14 +148,39 @@ void VelocityVerlet::secondStep(SimulationBox& simBox)
         velPtr[i] += forcesPtr[i] / massesPtr[atomIndex] * factor;
     }
 
+    finalizeSecondStep(simBox);
+}
+
+/**
+ * @brief initializes second step of velocity verlet algorithm
+ *
+ * @param simBox
+ */
+void VelocityVerlet::initSecondStep(SimulationBox& simBox)
+{
+    startTimingsSection(vvSecondStepMsg);
+
+    __DEBUG_ENTER_FUNCTION__(vvSecondStepMsg);
+    __VEL_MIN_MAX_SUM_MEAN__(simBox);
+    __FORCE_MIN_MAX_SUM_MEAN__(simBox);
+
+    __DEBUG_INFO__(std::format("Performing {}", vvSecondStepMsg));
+}
+
+/**
+ * @brief finalizes second step of velocity verlet algorithm
+ *
+ * @param simBox
+ */
+void VelocityVerlet::finalizeSecondStep(SimulationBox& simBox)
+{
 #ifdef __PQ_LEGACY__
     simBox.deFlattenVelocities();
 #endif
 
-    __DEBUG_INFO__("\n");
-    __DEBUG_INFO__("Exiting Velocity Verlet - Second Step");
     __VEL_MIN_MAX_SUM_MEAN__(simBox);
-    __DEBUG_INFO__("\n");
+    __FORCE_MIN_MAX_SUM_MEAN__(simBox);
+    __DEBUG_EXIT_FUNCTION__(vvSecondStepMsg);
 
-    stopTimingsSection("Velocity Verlet - Second Step");
+    stopTimingsSection(vvSecondStepMsg);
 }

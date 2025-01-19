@@ -183,7 +183,7 @@ void ForceField::calculateBondedInteractions(
     PhysicalData  &physicalData
 )
 {
-    __DEBUG_INFO__("Calculating bonded interactions");
+    __DEBUG_ENTER_FUNCTION__("Bonded interactions");
 
     calculateBondInteractions(box, physicalData);
     calculateAngleInteractions(box, physicalData);
@@ -192,6 +192,8 @@ void ForceField::calculateBondedInteractions(
 
     box.flattenForces();
     box.flattenShiftForces();
+
+    __DEBUG_EXIT_FUNCTION__("Bonded interactions");
 }
 
 /**
@@ -205,7 +207,7 @@ void ForceField::calculateBondInteractions(
     PhysicalData        &physicalData
 )
 {
-    __DEBUG_INFO__("Calculating Bonds");
+    __DEBUG_ENTER_FUNCTION__("Bonds");
 
     auto calculateBondInteraction = [&box, &physicalData, this](auto &bond)
     {
@@ -218,6 +220,8 @@ void ForceField::calculateBondInteractions(
     };
 
     std::ranges::for_each(_bonds, calculateBondInteraction);
+
+    __DEBUG_EXIT_FUNCTION__("Bonds");
 }
 
 /**
@@ -231,7 +235,7 @@ void ForceField::calculateAngleInteractions(
     PhysicalData        &physicalData
 )
 {
-    __DEBUG_INFO__("Calculating Angles");
+    __DEBUG_ENTER_FUNCTION__("Angles");
 
     auto calculateAngleInteraction = [&box, &physicalData, this](auto &angle)
     {
@@ -244,6 +248,8 @@ void ForceField::calculateAngleInteractions(
     };
 
     std::ranges::for_each(_angles, calculateAngleInteraction);
+
+    __DEBUG_EXIT_FUNCTION__("Angles");
 }
 
 /**
@@ -259,7 +265,7 @@ void ForceField::calculateDihedralInteractions(
     PhysicalData        &physicalData
 )
 {
-    __DEBUG_INFO__("Calculating Dihedrals");
+    __DEBUG_ENTER_FUNCTION__("Dihedrals");
 
     auto calculateDihedralInteraction =
         [&box, &physicalData, this](auto &dihedral)
@@ -274,6 +280,8 @@ void ForceField::calculateDihedralInteractions(
     };
 
     std::ranges::for_each(_dihedrals, calculateDihedralInteraction);
+
+    __DEBUG_EXIT_FUNCTION__("Dihedrals");
 }
 
 /**
@@ -289,7 +297,7 @@ void ForceField::calculateImproperDihedralInteractions(
     PhysicalData        &physicalData
 )
 {
-    __DEBUG_INFO__("Calculating Improper Dihedrals");
+    __DEBUG_ENTER_FUNCTION__("Improper Dihedrals");
 
     auto calculateImproperDihedralInteraction =
         [&box, &physicalData, this](auto &dihedral)
@@ -307,6 +315,8 @@ void ForceField::calculateImproperDihedralInteractions(
         _improperDihedrals,
         calculateImproperDihedralInteraction
     );
+
+    __DEBUG_EXIT_FUNCTION__("Improper Dihedrals");
 }
 
 /**
@@ -320,7 +330,7 @@ void ForceField::calculateJCouplingInteractions(
     PhysicalData        &physicalData
 )
 {
-    __DEBUG_INFO__("Calculating J-Couplings");
+    __DEBUG_ENTER_FUNCTION__("J-Couplings");
 
     if (!_jCouplings.empty())
         throw UserInputException(
@@ -339,6 +349,8 @@ void ForceField::calculateJCouplingInteractions(
     // };
 
     // std::ranges::for_each(_jCouplings, calculateJCouplingInteraction);
+
+    __DEBUG_EXIT_FUNCTION__("J-Couplings");
 }
 
 /*****************************

@@ -29,6 +29,9 @@
 
 namespace integrator
 {
+    constexpr auto vvFirstStepMsg  = "Velocity Verlet - First Step";
+    constexpr auto vvSecondStepMsg = "Velocity Verlet - Second Step";
+
     /**
      * @class VelocityVerlet inherits Integrator
      *
@@ -41,7 +44,12 @@ namespace integrator
         explicit VelocityVerlet();
 
         void firstStep(pq::SimBox &) override;
+        void initFirstStep(pq::SimBox &);
+        void finalizeFirstStep(pq::SimBox &);
+
         void secondStep(pq::SimBox &) override;
+        void initSecondStep(pq::SimBox &);
+        void finalizeSecondStep(pq::SimBox &);
     };
 
 }   // namespace integrator

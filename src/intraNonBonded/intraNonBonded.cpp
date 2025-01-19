@@ -104,9 +104,9 @@ void IntraNonBonded::fillIntraNonBondedMaps(SimulationBox &box)
  */
 void IntraNonBonded::calculate(SimulationBox &box, PhysicalData &physicalData)
 {
-    __DEBUG_INFO__("Calculating Inter Non bonded forces");
-
     startTimingsSection("IntraNonBonded");
+
+    __DEBUG_ENTER_FUNCTION__("IntraNonBonded");
 
     // TODO: implement this for device
     auto calculateSingleContr = [this, &box, &physicalData](auto &intraMap)
@@ -123,6 +123,8 @@ void IntraNonBonded::calculate(SimulationBox &box, PhysicalData &physicalData)
     box.flattenShiftForces();
 
     std::ranges::for_each(_intraNonBondedMaps, calculateSingleContr);
+
+    __DEBUG_EXIT_FUNCTION__("IntraNonBonded");
 
     stopTimingsSection("IntraNonBonded");
 }

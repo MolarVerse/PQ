@@ -965,11 +965,9 @@ void SimulationBox::scaleVelocities(const Real lambda)
     // clang-format off
 #ifdef __PQ_GPU__
     #pragma omp target teams distribute parallel for \
-                collapse(2)                          \
                 is_device_ptr(_velPtr)
 #else
-    #pragma omp parallel for                        \
-                collapse(2)
+    #pragma omp parallel for
 #endif
     // clang-format on
     for (size_t i = 0; i < _nAtoms * 3; ++i)

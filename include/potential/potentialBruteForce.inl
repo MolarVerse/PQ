@@ -108,8 +108,6 @@ namespace potential
         const size_t        numMolTypes
     )
     {
-        __DEBUG_LOCATION__();
-
         const auto coulCutOffSquared = coulCutOff * coulCutOff;
         const auto indexHelper1 = numMolTypes * numMolTypes * maxNumAtomTypes;
         const auto indexHelper2 = numMolTypes * maxNumAtomTypes;
