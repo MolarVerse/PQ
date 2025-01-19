@@ -154,12 +154,14 @@ namespace config
      * @param msg
      * @param minMaxSumMean
      * @param level
+     * @param unit
      */
     template <typename T>
     void inline Debug::debugMinMaxSumMean(
         const std::tuple<T, T, T, T> minMaxSumMean,
         const std::string&           msg,
-        const DebugLevel             level
+        const DebugLevel             level,
+        const std::string&           unit
     )
     {
         if (useDebug(level))
@@ -169,16 +171,146 @@ namespace config
             const auto sum  = std::get<2>(minMaxSumMean);
             const auto mean = std::get<3>(minMaxSumMean);
 
-            const auto minString  = std::format("min:  {:6.5e}\n", min);
-            const auto maxString  = std::format("max:  {:6.5e}\n", max);
-            const auto sumString  = std::format("sum:  {:6.5e}\n", sum);
-            const auto meanString = std::format("mean: {:6.5e}\n", mean);
+            const auto minStr  = std::format("min:  {:+7.5e} {}", min, unit);
+            const auto maxStr  = std::format("max:  {:+7.5e} {}", max, unit);
+            const auto sumStr  = std::format("sum:  {:+7.5e} {}", sum, unit);
+            const auto meanStr = std::format("mean: {:+7.5e} {}", mean, unit);
+
+            const auto msgLength = minStr.length();
+            const auto delimiter = std::string(msgLength, '-');
 
             std::cout << getLeadingSpaces() << msg << std::endl;
-            std::cout << getLeadingSpaces() << minString;
-            std::cout << getLeadingSpaces() << maxString;
-            std::cout << getLeadingSpaces() << sumString;
-            std::cout << getLeadingSpaces() << meanString;
+            std::cout << getLeadingSpaces() << delimiter << std::endl;
+            std::cout << getLeadingSpaces() << minStr << std::endl;
+            std::cout << getLeadingSpaces() << maxStr << std::endl;
+            std::cout << getLeadingSpaces() << sumStr << std::endl;
+            std::cout << getLeadingSpaces() << meanStr << std::endl;
+            std::cout << std::endl;
+        }
+    }
+
+    /**
+     * @brief print a value
+     *
+     * @tparam T
+     * @param value
+     * @param msg
+     * @param level
+     * @param unit
+     */
+    template <typename T>
+    void inline Debug::debugValue(
+        const T&           value,
+        const std::string& msg,
+        const DebugLevel   level,
+        const std::string& unit
+    )
+    {
+        if (useDebug(level))
+        {
+            const auto msgStr = std::format("{} {:+7.5e} {}", msg, value, unit);
+
+            const auto msgLength = msgStr.length();
+            const auto delimiter = std::string(msgLength, '-');
+
+            std::cout << getLeadingSpaces() << msgStr << std::endl;
+            std::cout << getLeadingSpaces() << delimiter << std::endl;
+            std::cout << std::endl;
+        }
+    }
+
+    /**
+     * @brief print a 3D value
+     *
+     * @tparam T
+     * @param value
+     * @param msg
+     * @param level
+     * @param unit
+     */
+    template <typename T>
+    void inline Debug::debugValue3D(
+        const linearAlgebra::Vector3D<T>& value,
+        const std::string&                msg,
+        const DebugLevel                  level,
+        const std::string&                unit
+    )
+    {
+        if (useDebug(level))
+        {
+            const auto _norm = linearAlgebra::norm(value);
+
+            const auto x = std::format("x:    {:+7.5e} {}", value[0], unit);
+            const auto y = std::format("y:    {:+7.5e} {}", value[1], unit);
+            const auto z = std::format("z:    {:+7.5e} {}", value[2], unit);
+
+            const auto componentLength = x.length();
+            const auto delimiter       = std::string(componentLength, '-');
+
+            const auto norm = std::format("norm: {:+7.5e} {}", _norm, unit);
+
+            std::cout << getLeadingSpaces() << msg << std::endl;
+            std::cout << getLeadingSpaces() << delimiter << std::endl;
+            std::cout << getLeadingSpaces() << x << std::endl;
+            std::cout << getLeadingSpaces() << y << std::endl;
+            std::cout << getLeadingSpaces() << z << std::endl;
+            std::cout << getLeadingSpaces() << delimiter << std::endl;
+            std::cout << getLeadingSpaces() << norm << std::endl;
+            std::cout << std::endl;
+        }
+    }
+
+    /**
+     * @brief print a 3D tensor
+     *
+     * @param tensor
+     * @param msg
+     * @param level
+     * @param unit
+     */
+    void inline Debug::debugTensor3D(
+        const linearAlgebra::tensor3D& tensor,
+        const std::string&             msg,
+        const DebugLevel               level,
+        const std::string&             unit
+    )
+    {
+        if (useDebug(level))
+        {
+            std::cout << getLeadingSpaces() << msg << " in " << unit
+                      << std::endl;
+
+            const auto line1 = std::format(
+                "| {:+7.5e} | {:+7.5e} | {:+7.5e} |",
+                tensor[0][0],
+                tensor[0][1],
+                tensor[0][2]
+            );
+
+            const auto line2 = std::format(
+                "| {:+7.5e} | {:+7.5e} | {:+7.5e} |",
+                tensor[1][0],
+                tensor[1][1],
+                tensor[1][2]
+            );
+
+            const auto line3 = std::format(
+                "| {:+7.5e} | {:+7.5e} | {:+7.5e} |",
+                tensor[2][0],
+                tensor[2][1],
+                tensor[2][2]
+            );
+
+            const auto lineLength = line1.length();
+            const auto delimiter  = std::string(lineLength, '-');
+
+            std::cout << getLeadingSpaces() << delimiter << std::endl;
+            std::cout << getLeadingSpaces() << line1 << std::endl;
+            std::cout << getLeadingSpaces() << delimiter << std::endl;
+            std::cout << getLeadingSpaces() << line2 << std::endl;
+            std::cout << getLeadingSpaces() << delimiter << std::endl;
+            std::cout << getLeadingSpaces() << line3 << std::endl;
+            std::cout << getLeadingSpaces() << delimiter << std::endl;
             std::cout << std::endl;
         }
     }

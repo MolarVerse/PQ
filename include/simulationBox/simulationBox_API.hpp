@@ -49,25 +49,28 @@ namespace simulationBox
 
 #ifdef __PQ_DEBUG__
 
-    #define __POS_MIN_MAX_SUM_MEAN__(simBox)   \
-        config::Debug::debugMinMaxSumMean(     \
-            posMinMaxSumMean(simBox),          \
-            "Pos:",                            \
-            config::DebugLevel::POSITION_DEBUG \
+    #define __POS_MIN_MAX_SUM_MEAN__(simBox)    \
+        config::Debug::debugMinMaxSumMean(      \
+            posMinMaxSumMean(simBox),           \
+            "Pos:",                             \
+            config::DebugLevel::POSITION_DEBUG, \
+            "Angstrom"                          \
         );
 
-    #define __VEL_MIN_MAX_SUM_MEAN__(simBox)   \
-        config::Debug::debugMinMaxSumMean(     \
-            velMinMaxSumMean(simBox),          \
-            "Vel:",                            \
-            config::DebugLevel::VELOCITY_DEBUG \
+    #define __VEL_MIN_MAX_SUM_MEAN__(simBox)    \
+        config::Debug::debugMinMaxSumMean(      \
+            velMinMaxSumMean(simBox),           \
+            "Vel:",                             \
+            config::DebugLevel::VELOCITY_DEBUG, \
+            "Angstrom/s"                        \
         );
 
     #define __FORCE_MIN_MAX_SUM_MEAN__(simBox) \
         config::Debug::debugMinMaxSumMean(     \
             forcesMinMaxSumMean(simBox),       \
             "Frc:",                            \
-            config::DebugLevel::FORCE_DEBUG    \
+            config::DebugLevel::FORCE_DEBUG,   \
+            "kcal/mol/Angstrom"                \
         );
 
 #else

@@ -23,8 +23,10 @@
 #ifndef __DEBUG_HPP__
 #define __DEBUG_HPP__
 
-#include <cstdlib>    // for size_t
-#include <iostream>   // for operator<<, basic_ostream, ostream, cout
+#include <cstdlib>   // for size_t
+#include <string>    // for string
+
+#include "linearAlgebra.hpp"   // for Vector3D
 
 namespace config
 {
@@ -41,6 +43,9 @@ namespace config
         FORCE_DEBUG,
         POSITION_DEBUG,
         VELOCITY_DEBUG,
+        TEMPERATURE_DEBUG,
+        MOMENTUM_DEBUG,
+        PRESSURE_DEBUG,
     };
 
     class Debug
@@ -66,7 +71,31 @@ namespace config
         static void debugMinMaxSumMean(
             std::tuple<T, T, T, T> minMaxSumMean,
             const std::string&     msg,
-            const DebugLevel       level
+            const DebugLevel       level,
+            const std::string&     unit = ""
+        );
+
+        template <typename T>
+        static void debugValue(
+            const T&           value,
+            const std::string& msg,
+            const DebugLevel   level,
+            const std::string& unit = ""
+        );
+
+        template <typename T>
+        static void debugValue3D(
+            const linearAlgebra::Vector3D<T>& value,
+            const std::string&                msg,
+            const DebugLevel                  level,
+            const std::string&                unit = ""
+        );
+
+        static void debugTensor3D(
+            const linearAlgebra::tensor3D& tensor,
+            const std::string&             msg,
+            const DebugLevel               level,
+            const std::string&             unit = ""
         );
 
         [[nodiscard]] static bool useDebug(const DebugLevel level);
@@ -144,6 +173,66 @@ namespace config
     #define __DEBUG_ENTER_FUNCTION__(func)   // Do nothing
     #define __DEBUG_EXIT_FUNCTION__(func)    // Do nothing
     #define __DEBUG_INFO__(msg)              // Do nothing
+
+#endif
+
+#ifdef __PQ_DEBUG__
+    #define __DEBUG_TEMPERATURE__(temp)            \
+        config::Debug::debugValue(                 \
+            temp,                                  \
+            "Temperature:",                        \
+            config::DebugLevel::TEMPERATURE_DEBUG, \
+            "K"                                    \
+        );
+
+    #define __DEBUG_MOMENTUM__(mom)             \
+        config::Debug::debugValue3D(            \
+            mom,                                \
+            "Momentum:",                        \
+            config::DebugLevel::MOMENTUM_DEBUG, \
+            "amu*Angstrom/fs"                   \
+        );
+
+    #define __DEBUG_ANGULAR_MOMENTUM__(angMom)  \
+        config::Debug::debugValue3D(            \
+            angMom,                             \
+            "Angular momentum:",                \
+            config::DebugLevel::MOMENTUM_DEBUG, \
+            "amu*Angstrom^2/fs"                 \
+        );
+
+    #define __DEBUG_ATOMIC_KINETIC_ENERGY__(kinEnergy) \
+        config::Debug::debugTensor3D(                  \
+            kinEnergy,                                 \
+            "Atomic kinetic energy tensor:",           \
+            config::DebugLevel::ENERGY_DEBUG,          \
+            "kcal/mol"                                 \
+        );
+
+    #define __DEBUG_MOLECULAR_KINETIC_ENERGY__(kinEnergy) \
+        config::Debug::debugTensor3D(                     \
+            kinEnergy,                                    \
+            "Molecular kinetic energy tensor:",           \
+            config::DebugLevel::ENERGY_DEBUG,             \
+            "kcal/mol"                                    \
+        );
+
+    #define __DEBUG_KINETIC_ENERGY__(kinEnergy) \
+        config::Debug::debugValue(              \
+            kinEnergy,                          \
+            "Kinetic energy:",                  \
+            config::DebugLevel::ENERGY_DEBUG,   \
+            "kcal/mol"                          \
+        );
+
+#else
+
+    #define __DEBUG_TEMPERATURE__(temp)                     // Do nothing
+    #define __DEBUG_MOMENTUM__(mom)                         // Do nothing
+    #define __DEBUG_ANGULAR_MOMENTUM__(angMom)              // Do nothing
+    #define __DEBUG_ATOMIC_KINETIC_ENERGY__(kinEnergy)      // Do nothing
+    #define __DEBUG_MOLECULAR_KINETIC_ENERGY__(kinEnergy)   // Do nothing
+    #define __DEBUG_KINETIC_ENERGY__(kinEnergy)             // Do nothing
 
 #endif
 

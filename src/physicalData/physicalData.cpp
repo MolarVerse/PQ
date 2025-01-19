@@ -45,6 +45,8 @@ void PhysicalData::calculateKinetics(SimulationBox &simBox)
 {
     startTimingsSection("Calc Kinetics");
 
+    __DEBUG_ENTER_FUNCTION__("Kinetics calculation");
+
     auto momX = 0.0;
     auto momY = 0.0;
     auto momZ = 0.0;
@@ -128,6 +130,12 @@ void PhysicalData::calculateKinetics(SimulationBox &simBox)
     _angularMomentum *= _FS_TO_S_;
 
     _momentum *= _FS_TO_S_;
+
+    __DEBUG_KINETIC_ENERGY__(_kineticEnergy);
+    __DEBUG_ATOMIC_KINETIC_ENERGY__(_kineticEnergyAtomicTensor);
+    __DEBUG_MOLECULAR_KINETIC_ENERGY__(_kinEnergyMolTensor);
+    __DEBUG_MOMENTUM__(_momentum);
+    __DEBUG_EXIT_FUNCTION__("Kinetics calculation");
 
     stopTimingsSection("Calc Kinetics");
 }

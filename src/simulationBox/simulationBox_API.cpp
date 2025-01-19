@@ -119,6 +119,8 @@ std::tuple<Real, Real, Real, Real> simulationBox::forcesMinMaxSumMean(
  */
 double simulationBox::calculateTemperature(pq::SimBox& simBox)
 {
+    __DEBUG_ENTER_FUNCTION__("Temperature calculation");
+
     auto temperature = 0.0;
 
     const auto* const velPtr  = simBox.getVelPtr();
@@ -145,6 +147,9 @@ double simulationBox::calculateTemperature(pq::SimBox& simBox)
 
     temperature *= _TEMPERATURE_FACTOR_ / double(dof);
 
+    __DEBUG_TEMPERATURE__(temperature);
+    __DEBUG_EXIT_FUNCTION__("Temperature calculation");
+
     return temperature;
 }
 
@@ -155,6 +160,8 @@ double simulationBox::calculateTemperature(pq::SimBox& simBox)
  */
 Vec3D simulationBox::calculateMomentum(pq::SimBox& simBox)
 {
+    __DEBUG_ENTER_FUNCTION__("Momentum calculation");
+
     auto momentumX = 0.0;
     auto momentumY = 0.0;
     auto momentumZ = 0.0;
@@ -185,7 +192,12 @@ Vec3D simulationBox::calculateMomentum(pq::SimBox& simBox)
         momentumZ += massesPtr[i] * velPtr[i * 3 + 2];
     }
 
-    return Vec3D{momentumX, momentumY, momentumZ};
+    const auto momentum = Vec3D{momentumX, momentumY, momentumZ};
+
+    __DEBUG_MOMENTUM__(momentum);
+    __DEBUG_EXIT_FUNCTION__("Momentum calculation");
+
+    return momentum;
 }
 
 /**
@@ -197,15 +209,11 @@ Vec3D simulationBox::calculateAngularMomentum(
     const Vec3D&   momentum
 )
 {
+    __DEBUG_ENTER_FUNCTION__("Angular momentum calculation");
+
     Real angularMomX = 0.0;
     Real angularMomY = 0.0;
     Real angularMomZ = 0.0;
-
-#ifdef __PQ_LEGACY__
-    simBox.flattenPositions();
-    simBox.flattenVelocities();
-    simBox.flattenMasses();
-#endif
 
     const auto* const massesPtr = simBox.getMassesPtr();
     const auto* const posPtr    = simBox.getPosPtr();
@@ -246,6 +254,9 @@ Vec3D simulationBox::calculateAngularMomentum(
     angularMom[0] -= correction[0];
     angularMom[1] -= correction[1];
     angularMom[2] -= correction[2];
+
+    __DEBUG_ANGULAR_MOMENTUM__(angularMom);
+    __DEBUG_EXIT_FUNCTION__("Angular momentum calculation");
 
     return angularMom;
 }
