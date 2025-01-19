@@ -1,7 +1,7 @@
 # *********************
 # minimum cmake version
 # *********************
-cmake_minimum_required(VERSION 3.11...3.32)
+cmake_minimum_required(VERSION 3.7...3.26)
 
 # # ****************
 # # set cmake policy
