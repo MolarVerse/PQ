@@ -312,9 +312,6 @@ void QMSettings::setSlakosType(const std::string_view &slakos)
     {
         _slakosType = THREEOB;
         _slakosPath = __SLAKOS_DIR__ + string(_slakosType) + "/skfiles/";
-
-        if (_isThirdOrderDftbSet == false)
-            _useThirdOrderDftb = true;
     }
 
     else if ("matsci" == slakosType)

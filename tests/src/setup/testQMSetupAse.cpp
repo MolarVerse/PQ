@@ -45,6 +45,7 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OB)
     engine.getEngineOutput().getLogOutput().setFilename("default.log");
     QMSettings::setQMMethod(QMMethod::ASEDFTBPLUS);
     QMSettings::setSlakosType("3ob");
+    QMSettings::setUseThirdOrderDftb(true);
     setupQM.setupWriteInfo();
 
     std::ifstream file("default.log");
@@ -112,6 +113,7 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OBCustomHubbardDerivs)
     engine.getEngineOutput().getLogOutput().setFilename("default.log");
     QMSettings::setQMMethod(QMMethod::ASEDFTBPLUS);
     QMSettings::setSlakosType("3ob");
+    QMSettings::setUseThirdOrderDftb(true);
     QMSettings::setHubbardDerivs({{"H", -0.3}});
     QMSettings::setIsHubbardDerivsSet(true);
     setupQM.setupWriteInfo();
@@ -138,6 +140,10 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OBCustomHubbardDerivs)
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
-    EXPECT_EQ(line, "WARNING: 3ob approach has been chosen while setting custom Hubbard derivatives. This setup is not recommended.");
+    EXPECT_EQ(
+        line,
+        "WARNING: 3ob approach has been chosen while setting custom Hubbard "
+        "derivatives. This setup is not recommended."
+    );
     getline(file, line);
 }
