@@ -46,12 +46,8 @@ std::tuple<Real, Real, Real, Real> simulationBox::posMinMaxSumMean(
 )
 {
     bool useDevice = false;
-#ifndef __PQ_LEGACY__
-    #ifdef __PQ_GPU__
+#ifdef __PQ_GPU__
     useDevice = Settings::useDevice();
-    #endif
-#else
-    simBox.flattenPositions();
 #endif
 
     auto* const pos    = simBox.getPosPtr();
@@ -72,13 +68,8 @@ std::tuple<Real, Real, Real, Real> simulationBox::velMinMaxSumMean(
 )
 {
     bool useDevice = false;
-#ifndef __PQ_LEGACY__
-
-    #ifdef __PQ_GPU__
+#ifdef __PQ_GPU__
     useDevice = Settings::useDevice();
-    #endif
-#else
-    simBox.flattenVelocities();
 #endif
 
     auto* const vel    = simBox.getVelPtr();
@@ -99,18 +90,81 @@ std::tuple<Real, Real, Real, Real> simulationBox::forcesMinMaxSumMean(
 )
 {
     bool useDevice = false;
-#ifndef __PQ_LEGACY__
-    #ifdef __PQ_GPU__
+#ifdef __PQ_GPU__
     useDevice = Settings::useDevice();
-    #endif
-#else
-    simBox.flattenForces();
 #endif
 
     auto* const forces = simBox.getForcesPtr();
     const auto  nAtoms = simBox.getNumberOfAtoms();
 
     return minMaxSumMean(forces, nAtoms * 3, useDevice);
+}
+
+/**
+ * @brief Get the minimum, maximum, sum and mean of the shift forces
+ *
+ * @param simBox
+ *
+ * @return std::tuple<Real, Real, Real, Real>
+ */
+std::tuple<Real, Real, Real, Real> simulationBox::shiftForcesMinMaxSumMean(
+    pq::SimBox& simBox
+)
+{
+    bool useDevice = false;
+#ifdef __PQ_GPU__
+    useDevice = Settings::useDevice();
+#endif
+
+    auto* const shiftForces = simBox.getShiftForcesPtr();
+    const auto  nAtoms      = simBox.getNumberOfAtoms();
+
+    return minMaxSumMean(shiftForces, nAtoms * 3, useDevice);
+}
+
+/**
+ * @brief Get the minimum, maximum, sum and mean of the center of mass of the
+ * molecules
+ *
+ * @param simBox
+ *
+ * @return std::tuple<Real, Real, Real, Real>
+ */
+std::tuple<Real, Real, Real, Real> simulationBox::comMoleculesMinMaxSumMean(
+    pq::SimBox& simBox
+)
+{
+    bool useDevice = false;
+#ifdef __PQ_GPU__
+    useDevice = Settings::useDevice();
+#endif
+
+    auto* const comMolecules = simBox.getComMoleculesPtr();
+    const auto  nMolecules   = simBox.getNumberOfMolecules();
+
+    return minMaxSumMean(comMolecules, nMolecules * 3, useDevice);
+}
+
+/**
+ * @brief Get the minimum, maximum, sum and mean of the molecular masses
+ *
+ * @param simBox
+ *
+ * @return std::tuple<Real, Real, Real, Real>
+ */
+std::tuple<Real, Real, Real, Real> simulationBox::molMassesMinMaxSumMean(
+    pq::SimBox& simBox
+)
+{
+    bool useDevice = false;
+#ifdef __PQ_GPU__
+    useDevice = Settings::useDevice();
+#endif
+
+    auto* const molMasses  = simBox.getMolMassesPtr();
+    const auto  nMolecules = simBox.getNumberOfMolecules();
+
+    return minMaxSumMean(molMasses, nMolecules, useDevice);
 }
 
 /**
@@ -126,7 +180,6 @@ double simulationBox::calculateTemperature(pq::SimBox& simBox)
     const auto* const velPtr  = simBox.getVelPtr();
     const auto* const massPtr = simBox.getMassesPtr();
     const auto        nAtoms  = simBox.getNumberOfAtoms();
-    const auto        dof     = simBox.getDegreesOfFreedom();
 
     // clang-format off
 #ifdef __PQ_GPU__
@@ -145,7 +198,8 @@ double simulationBox::calculateTemperature(pq::SimBox& simBox)
         for (size_t j = 0; j < 3; ++j)
             temperature += massPtr[i] * velPtr[i * 3 + j] * velPtr[i * 3 + j];
 
-    temperature *= _TEMPERATURE_FACTOR_ / double(dof);
+    const auto dof  = simBox.getDegreesOfFreedom();
+    temperature    *= _TEMPERATURE_FACTOR_ / double(dof);
 
     __DEBUG_TEMPERATURE__(temperature);
     __DEBUG_EXIT_FUNCTION__("Temperature calculation");
@@ -165,10 +219,6 @@ Vec3D simulationBox::calculateMomentum(pq::SimBox& simBox)
     auto momentumX = 0.0;
     auto momentumY = 0.0;
     auto momentumZ = 0.0;
-
-#ifdef __PQ_LEGACY__
-    simBox.flattenVelocities();
-#endif
 
     const auto* const velPtr    = simBox.getVelPtr();
     const auto* const massesPtr = simBox.getMassesPtr();
@@ -368,11 +418,6 @@ Vec3D simulationBox::calculateCenterOfMass(
     auto comY = 0.0;
     auto comZ = 0.0;
 
-#ifdef __PQ_LEGACY__
-    simBox.flattenPositions();
-    simBox.flattenMasses();
-#endif
-
     const auto* const posPtr    = simBox.getPosPtr();
     const auto* const massesPtr = simBox.getMassesPtr();
     const auto        nAtoms    = simBox.getNumberOfAtoms();
@@ -423,10 +468,12 @@ Vec3D simulationBox::calculateCenterOfMass(SimulationBox& simBox)
  */
 void simulationBox::calculateCenterOfMassMolecules(SimulationBox& simBox)
 {
+    __DEBUG_ENTER_FUNCTION__("COM of molecules calculation");
+
     const auto nMolecules = simBox.getNumberOfMolecules();
 
     const auto* const posPtr         = simBox.getPosPtr();
-    const auto* const massesPtr      = simBox.getMolMassesPtr();
+    const auto* const massesPtr      = simBox.getMassesPtr();
     const auto* const molMassesPtr   = simBox.getMolMassesPtr();
     const auto* const atomsPerMolPtr = simBox.getAtomsPerMoleculePtr();
     const auto* const boxParams      = simBox.getBox().getBoxParamsPtr();
@@ -453,12 +500,11 @@ void simulationBox::calculateCenterOfMassMolecules(SimulationBox& simBox)
         auto comY = 0.0;
         auto comZ = 0.0;
 
-        const auto molMass   = molMassesPtr[i];
         const auto nAtoms    = atomsPerMolPtr[i];
         const auto molOffset = molOffsetPtr[i];
-        const auto posAtom1  = posPtr[molOffset * 3];
-        const auto posAtom2  = posPtr[molOffset * 3 + 1];
-        const auto posAtom3  = posPtr[molOffset * 3 + 2];
+        const auto posAtomX  = posPtr[molOffset * 3];
+        const auto posAtomY  = posPtr[molOffset * 3 + 1];
+        const auto posAtomZ  = posPtr[molOffset * 3 + 2];
 
         for (size_t j = 0; j < nAtoms; ++j)
         {
@@ -468,9 +514,9 @@ void simulationBox::calculateCenterOfMassMolecules(SimulationBox& simBox)
             const auto posY      = posPtr[atomIndex * 3 + 1];
             const auto posZ      = posPtr[atomIndex * 3 + 2];
 
-            auto dx = posX - posAtom1;
-            auto dy = posY - posAtom2;
-            auto dz = posZ - posAtom3;
+            auto dx = posX - posAtomX;
+            auto dy = posY - posAtomY;
+            auto dz = posZ - posAtomZ;
 
             auto tx = 0.0;
             auto ty = 0.0;
@@ -485,6 +531,8 @@ void simulationBox::calculateCenterOfMassMolecules(SimulationBox& simBox)
             comY += mass * (posY + ty);
             comZ += mass * (posZ + tz);
         }
+
+        const auto molMass = molMassesPtr[i];
 
         comX /= molMass;
         comY /= molMass;
@@ -503,6 +551,10 @@ void simulationBox::calculateCenterOfMassMolecules(SimulationBox& simBox)
 #ifdef __PQ_LEGACY__
     simBox.deFlattenComMolecules();
 #endif
+
+    __MOL_MASSES_MIN_MAX_SUM_MEAN__(simBox);
+    __COM_MIN_MAX_SUM_MEAN__(simBox);
+    __DEBUG_EXIT_FUNCTION__("COM of molecules calculation");
 }
 
 /**

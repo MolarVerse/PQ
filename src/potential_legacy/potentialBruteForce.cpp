@@ -27,6 +27,7 @@
 #include "molecule.hpp"        // for Molecule
 #include "physicalData.hpp"    // for PhysicalData
 #include "simulationBox.hpp"   // for SimulationBox
+#include "simulationBox_API.hpp"
 
 using namespace potential;
 using namespace simulationBox;
@@ -49,6 +50,11 @@ inline void PotentialBruteForce::
     calculateForces(SimulationBox &simBox, PhysicalData &physicalData, CellList &)
 {
     startTimingsSection("InterNonBonded");
+
+    __DEBUG_ENTER_FUNCTION__("InterNonBonded");
+    __FORCE_MIN_MAX_SUM_MEAN__(simBox);
+    __SHIFT_FORCE_MIN_MAX_SUM_MEAN__(simBox);
+    __DEBUG_INFO__("Performing Brute Force Inter Non-Bonded Calculation");
 
     const auto box = simBox.getBoxPtr();
 
@@ -93,6 +99,12 @@ inline void PotentialBruteForce::
 
     simBox.flattenForces();
     simBox.flattenShiftForces();
+
+    __DEBUG_COULOMB_ENERGY__(totalCoulombEnergy);
+    __DEBUG_NON_COULOMB_ENERGY__(totalNonCoulombEnergy);
+    __FORCE_MIN_MAX_SUM_MEAN__(simBox);
+    __SHIFT_FORCE_MIN_MAX_SUM_MEAN__(simBox);
+    __DEBUG_EXIT_FUNCTION__("InterNonBonded");
 
     stopTimingsSection("InterNonBonded");
 }

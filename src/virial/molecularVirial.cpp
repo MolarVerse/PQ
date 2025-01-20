@@ -22,6 +22,7 @@
 
 #include "molecularVirial.hpp"
 
+#include "debug.hpp"
 #include "linearAlgebra.hpp"
 #include "orthorhombicBox.hpp"
 #include "physicalData.hpp"
@@ -84,6 +85,8 @@ void MolecularVirial::intraMolecularVirialCorrection(
 {
     startTimingsSection("IntraMolecular Correction");
 
+    __DEBUG_ENTER_FUNCTION__("IntraMolecular Correction");
+
     Real virial[9] = {0.0};
 
     const auto        nMolecules     = simBox.getNumberOfMolecules();
@@ -143,6 +146,9 @@ void MolecularVirial::intraMolecularVirialCorrection(
 
     _virial = tensor3D{virial};
     data.addVirial(_virial);
+
+    __DEBUG_VIRIAL__(data.getVirial());
+    __DEBUG_EXIT_FUNCTION__("IntraMolecular Correction");
 
     stopTimingsSection("IntraMolecular Correction");
 }

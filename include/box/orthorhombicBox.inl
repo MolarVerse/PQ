@@ -23,6 +23,8 @@
 #ifndef __ORTHORHOMBIC_BOX_INL__
 #define __ORTHORHOMBIC_BOX_INL__
 
+#include "debug.hpp"
+
 /**
  * @file orthorhombicBox.inl
  * @author Jakob Gamper (97gamjak@gmail.com)

@@ -119,10 +119,10 @@ void IntraNonBonded::calculate(SimulationBox &box, PhysicalData &physicalData)
         );
     };
 
+    std::ranges::for_each(_intraNonBondedMaps, calculateSingleContr);
+
     box.flattenForces();
     box.flattenShiftForces();
-
-    std::ranges::for_each(_intraNonBondedMaps, calculateSingleContr);
 
     __DEBUG_EXIT_FUNCTION__("IntraNonBonded");
 

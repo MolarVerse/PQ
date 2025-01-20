@@ -38,8 +38,6 @@ double SimulationBox::calculateTotalForce()
     auto fy = 0.0;
     auto fz = 0.0;
 
-    flattenForces();
-
     const auto *const forcesPtr = getForcesPtr();
 
     // clang-format off

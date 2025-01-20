@@ -191,7 +191,6 @@ void ForceField::calculateBondedInteractions(
     calculateImproperDihedralInteractions(box, physicalData);
 
     box.flattenForces();
-    box.flattenShiftForces();
 
     __DEBUG_EXIT_FUNCTION__("Bonded interactions");
 }

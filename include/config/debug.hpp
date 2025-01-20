@@ -46,6 +46,8 @@ namespace config
         TEMPERATURE_DEBUG,
         MOMENTUM_DEBUG,
         PRESSURE_DEBUG,
+        VIRIAL_DEBUG,
+        MASS_DEBUG,
     };
 
     class Debug
@@ -225,14 +227,59 @@ namespace config
             "kcal/mol"                          \
         );
 
+    #define __DEBUG_VIRIAL__(virial)          \
+        config::Debug::debugTensor3D(         \
+            virial,                           \
+            "Virial tensor:",                 \
+            config::DebugLevel::VIRIAL_DEBUG, \
+            "kcal/mol"                        \
+        );
+
+    #define __DEBUG_PRESSURE__(pressure)        \
+        config::Debug::debugValue(              \
+            pressure,                           \
+            "Pressure:",                        \
+            config::DebugLevel::PRESSURE_DEBUG, \
+            "bar"                               \
+        );
+
+    #define __DEBUG_PRESSURE_TENSOR__(pressureTensor) \
+        config::Debug::debugTensor3D(                 \
+            pressureTensor,                           \
+            "Pressure tensor:",                       \
+            config::DebugLevel::PRESSURE_DEBUG,       \
+            "bar"                                     \
+        );
+
+    #define __DEBUG_COULOMB_ENERGY__(coulombEnergy) \
+        config::Debug::debugValue(                  \
+            coulombEnergy,                          \
+            "Coulomb energy:",                      \
+            config::DebugLevel::ENERGY_DEBUG,       \
+            "kcal/mol"                              \
+        );
+
+    #define __DEBUG_NON_COULOMB_ENERGY__(nonCoulombEnergy) \
+        config::Debug::debugValue(                         \
+            nonCoulombEnergy,                              \
+            "Non-Coulomb energy:",                         \
+            config::DebugLevel::ENERGY_DEBUG,              \
+            "kcal/mol"                                     \
+        );
+
 #else
 
-    #define __DEBUG_TEMPERATURE__(temp)                     // Do nothing
-    #define __DEBUG_MOMENTUM__(mom)                         // Do nothing
-    #define __DEBUG_ANGULAR_MOMENTUM__(angMom)              // Do nothing
-    #define __DEBUG_ATOMIC_KINETIC_ENERGY__(kinEnergy)      // Do nothing
-    #define __DEBUG_MOLECULAR_KINETIC_ENERGY__(kinEnergy)   // Do nothing
-    #define __DEBUG_KINETIC_ENERGY__(kinEnergy)             // Do nothing
+    #define __DEBUG_TEMPERATURE__(temp)                      // Do nothing
+    #define __DEBUG_MOMENTUM__(mom)                          // Do nothing
+    #define __DEBUG_ANGULAR_MOMENTUM__(angMom)               // Do nothing
+    #define __DEBUG_ATOMIC_KINETIC_ENERGY__(kinEnergy)       // Do nothing
+    #define __DEBUG_MOLECULAR_KINETIC_ENERGY__(kinEnergy)    // Do nothing
+    #define __DEBUG_KINETIC_ENERGY__(kinEnergy)              // Do nothing
+    #define __DEBUG_VIRIAL__(virial)                         // Do nothing
+    #define __DEBUG_PRESSURE__(pressure)                     // Do nothing
+    #define __DEBUG_PRESSURE_TENSOR__(pressureTensor)        // Do nothing
+    #define __DEBUG_COULOMB_ENERGY__(coulombEnergy)          // Do nothing
+    #define __DEBUG_NON_COULOMB_ENERGY__(nonCoulombEnergy)   // Do nothing
 
 #endif
 

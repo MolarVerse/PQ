@@ -50,11 +50,6 @@ using namespace linearAlgebra;
  */
 void LangevinThermostat::applyLangevin(SimulationBox& simBox)
 {
-    simBox.flattenVelocities();
-#ifdef __PQ_GPU__
-    simBox.copyVelTo();
-#endif
-
     const auto        timeStep = TimingsSettings::getTimeStep();
     const auto* const massPtr  = simBox.getMassesPtr();
     auto* const       velPtr   = simBox.getVelPtr();
@@ -88,7 +83,4 @@ void LangevinThermostat::applyLangevin(SimulationBox& simBox)
     }
 
     simBox.deFlattenVelocities();
-#ifdef __PQ_GPU__
-    simBox.copyVelFrom();
-#endif
-}
+} // TODO:!!!!!!!!!

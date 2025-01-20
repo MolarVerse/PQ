@@ -42,14 +42,13 @@
 #include "debug.hpp"                     // for debug
 #include "forceFieldSettings.hpp"        // for ForceFieldSettings
 #include "lennardJones.hpp"              // for LennardJones
-#include "molecule.hpp"                  // for Molecule
-#include "nonCoulombPair.hpp"            // for NonCoulombPair
 #include "nonCoulombPotential.hpp"       // for NonCoulombPotential
 #include "orthorhombicBox.hpp"           // for OrthorhombicBox
 #include "physicalData.hpp"              // for PhysicalData
 #include "potentialSettings.hpp"         // for PotentialSettings
 #include "settings.hpp"                  // for Settings
 #include "simulationBox.hpp"             // for SimulationBox
+#include "simulationBox_API.hpp"
 #include "typeAliases.hpp"
 
 #ifdef __PQ_GPU__
@@ -80,16 +79,12 @@ void Potential::calculateForces(
 {
     startTimingsSection("InterNonBonded");
 
-    const auto rcCutOff = CoulombPotential::getCoulombRadiusCutOff();
+    __DEBUG_ENTER_FUNCTION__("InterNonBonded");
+    __FORCE_MIN_MAX_SUM_MEAN__(simBox);
+    __SHIFT_FORCE_MIN_MAX_SUM_MEAN__(simBox);
+    __DEBUG_INFO__("Performing Brute Force Inter Non-Bonded Calculation");
 
-    simBox.flattenForces();
-    simBox.flattenShiftForces();
-    simBox.flattenPositions();
-#ifdef __PQ_GPU__
-    simBox.copyForcesTo();
-    simBox.copyShiftForcesTo();
-    simBox.copyPosTo();
-#endif
+    const auto rcCutOff = CoulombPotential::getCoulombRadiusCutOff();
 
     const size_t* atomtypes = nullptr;
     const size_t* molTypes  = nullptr;
@@ -140,7 +135,7 @@ void Potential::calculateForces(
 #ifdef __PQ_GPU__
         if (Settings::useDevice())
         {
-            _bruteForcePtr<<<128, 32>>>(
+            _bruteForcePtr<<<1024, 4 * 32>>>(
                 pos,
                 force,
                 shiftForce,
@@ -188,18 +183,6 @@ void Potential::calculateForces(
             );
     }
 
-#ifdef __PQ_DEBUG__
-    // TODO: check why this always prints 0 for both energies
-    if (config::Debug::useDebug(config::DebugLevel::ENERGY_DEBUG))
-    {
-        std::cout << std::format("Coulomb energy: {}\n", totalCoulombEnergy);
-        std::cout << std::format(
-            "Non-coulomb energy: {}\n",
-            totalNonCoulombEnergy
-        );
-    }
-#endif
-
 #ifdef __PQ_GPU__
     std::cout << "Copying energies from device\n";
     device.deviceMemcpyFrom(
@@ -225,12 +208,11 @@ void Potential::calculateForces(
     data.setCoulombEnergy(totalCoulombEnergy);
     data.setNonCoulombEnergy(totalNonCoulombEnergy);
 
-    simBox.deFlattenForces();
-    simBox.deFlattenShiftForces();
-#ifdef __PQ_GPU__
-    simBox.copyForcesFrom();
-    simBox.copyShiftForcesFrom();
-#endif
+    __DEBUG_COULOMB_ENERGY__(totalCoulombEnergy);
+    __DEBUG_NON_COULOMB_ENERGY__(totalNonCoulombEnergy);
+    __FORCE_MIN_MAX_SUM_MEAN__(simBox);
+    __SHIFT_FORCE_MIN_MAX_SUM_MEAN__(simBox);
+    __DEBUG_EXIT_FUNCTION__("InterNonBonded");
 
     stopTimingsSection("InterNonBonded");
 }

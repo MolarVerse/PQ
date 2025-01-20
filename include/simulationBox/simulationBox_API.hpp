@@ -28,9 +28,12 @@
 
 namespace simulationBox
 {
-    std::tuple<Real, Real, Real, Real> posMinMaxSumMean(pq::SimBox& simBox);
-    std::tuple<Real, Real, Real, Real> velMinMaxSumMean(pq::SimBox& simBox);
-    std::tuple<Real, Real, Real, Real> forcesMinMaxSumMean(pq::SimBox& simBox);
+    pq::tupleReal4 posMinMaxSumMean(pq::SimBox& simBox);
+    pq::tupleReal4 velMinMaxSumMean(pq::SimBox& simBox);
+    pq::tupleReal4 forcesMinMaxSumMean(pq::SimBox& simBox);
+    pq::tupleReal4 shiftForcesMinMaxSumMean(pq::SimBox& simBox);
+    pq::tupleReal4 comMoleculesMinMaxSumMean(pq::SimBox& simBox);
+    pq::tupleReal4 molMassesMinMaxSumMean(pq::SimBox& simBox);
 
     Real      calculateTemperature(pq::SimBox& simBox);
     pq::Vec3D calculateMomentum(pq::SimBox& simBox);
@@ -73,11 +76,38 @@ namespace simulationBox
             "kcal/mol/Angstrom"                \
         );
 
+    #define __SHIFT_FORCE_MIN_MAX_SUM_MEAN__(simBox) \
+        config::Debug::debugMinMaxSumMean(           \
+            shiftForcesMinMaxSumMean(simBox),        \
+            "ShiftFrc:",                             \
+            config::DebugLevel::FORCE_DEBUG,         \
+            "kcal/mol/Angstrom"                      \
+        );
+
+    #define __COM_MIN_MAX_SUM_MEAN__(simBox)    \
+        config::Debug::debugMinMaxSumMean(      \
+            comMoleculesMinMaxSumMean(simBox),  \
+            "COM MOLECULES:",                   \
+            config::DebugLevel::POSITION_DEBUG, \
+            "Angstrom"                          \
+        );
+
+    #define __MOL_MASSES_MIN_MAX_SUM_MEAN__(simBox) \
+        config::Debug::debugMinMaxSumMean(          \
+            molMassesMinMaxSumMean(simBox),         \
+            "Mol masses:",                          \
+            config::DebugLevel::MASS_DEBUG,         \
+            "amu"                                   \
+        );
+
 #else
 
-    #define __POS_MIN_MAX_SUM_MEAN__(simBox)     // do nothing
-    #define __VEL_MIN_MAX_SUM_MEAN__(simBox)     // do nothing
-    #define __FORCE_MIN_MAX_SUM_MEAN__(simBox)   // do nothing
+    #define __POS_MIN_MAX_SUM_MEAN__(simBox)           // do nothing
+    #define __VEL_MIN_MAX_SUM_MEAN__(simBox)           // do nothing
+    #define __FORCE_MIN_MAX_SUM_MEAN__(simBox)         // do nothing
+    #define __SHIFT_FORCE_MIN_MAX_SUM_MEAN__(simBox)   // do nothing
+    #define __COM_MIN_MAX_SUM_MEAN__(simBox)           // do nothing
+    #define __MOL_MASSES_MIN_MAX_SUM_MEAN__(simBox)    // do nothing
 
 #endif
 

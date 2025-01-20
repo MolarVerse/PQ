@@ -49,6 +49,9 @@ class TestSetup : public ::testing::Test
 
     void TearDown() override
     {
+        delete _engine;
+        delete _mdEngine;
+
         settings::ThermostatSettings::setEndTemperatureSet(false);
         settings::ThermostatSettings::setStartTemperatureSet(false);
         settings::ThermostatSettings::setTemperatureSet(false);

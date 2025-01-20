@@ -755,6 +755,62 @@ void SimulationBox::deFlattenForces()
 }
 
 /**
+ * @brief flattens shift forces of each atom into a single vector of doubles
+ *
+ * @return std::vector<double>
+ */
+void SimulationBox::flattenShiftForces()
+{
+    if (_shiftForces.size() != _atoms.size() * 3)
+        _shiftForces.resize(_atoms.size() * 3);
+
+    Real* const shiftForces = _shiftForces.data();
+
+    // clang-format off
+    #pragma omp parallel for
+    // clang-format on
+    for (size_t i = 0; i < _atoms.size(); ++i)
+    {
+        const auto atom = _atoms[i];
+
+        for (size_t j = 0; j < 3; ++j)
+            shiftForces[i * 3 + j] = atom->getShiftForce()[j];
+    }
+
+#ifdef __PQ_GPU__
+    if (Settings::useDevice())
+        copyShiftForcesTo();
+#endif
+}
+
+/**
+ * @brief de-flattens shift forces of each atom from a single vector of doubles
+ * into the atom objects
+ *
+ * @param shiftForces
+ */
+void SimulationBox::deFlattenShiftForces()
+{
+#ifdef __PQ_GPU__
+    if (Settings::useDevice())
+        copyShiftForcesFrom();
+#endif
+
+    Real* const shiftForces = _shiftForces.data();
+
+    // clang-format off
+    #pragma omp parallel for
+    // clang-format on
+    for (size_t i = 0; i < _atoms.size(); ++i)
+    {
+        const auto atom = _atoms[i];
+
+        for (size_t j = 0; j < 3; ++j)
+            atom->setShiftForce(shiftForces[i * 3 + j], j);
+    }
+}
+
+/**
  * @brief flattens masses of each atom into a single vector of Real
  */
 void SimulationBox::flattenMasses()
@@ -825,7 +881,7 @@ void SimulationBox::flattenCharges()
  */
 void SimulationBox::flattenComMolecules()
 {
-    if (_comMolecules.size() != _molecules.size())
+    if (_comMolecules.size() != _molecules.size() * 3)
         _comMolecules.resize(_molecules.size() * 3);
 
         // clang-format off
@@ -1005,56 +1061,5 @@ void SimulationBox::addToVelocities(const Vec3D& toAdd)
 
 #ifdef __PQ_LEGACY__
     deFlattenVelocities();
-#endif
-}
-
-/**
- * @brief flattens shift forces of each atom into a single vector of doubles
- *
- * @return std::vector<double>
- */
-void SimulationBox::flattenShiftForces()
-{
-    if (_shiftForces.size() != _atoms.size() * 3)
-        _shiftForces.resize(_atoms.size() * 3);
-
-    Real* const shiftForces = _shiftForces.data();
-
-    // clang-format off
-    #pragma omp parallel for
-    // clang-format on
-    for (size_t i = 0; i < _atoms.size(); ++i)
-    {
-        const auto atom = _atoms[i];
-
-        for (size_t j = 0; j < 3; ++j)
-            shiftForces[i * 3 + j] = atom->getShiftForce()[j];
-    }
-}
-
-/**
- * @brief de-flattens shift forces of each atom from a single vector of doubles
- * into the atom objects
- *
- * @param shiftForces
- */
-void SimulationBox::deFlattenShiftForces()
-{
-    Real* const shiftForces = _shiftForces.data();
-
-    // clang-format off
-    #pragma omp parallel for
-    // clang-format on
-    for (size_t i = 0; i < _atoms.size(); ++i)
-    {
-        const auto atom = _atoms[i];
-
-        for (size_t j = 0; j < 3; ++j)
-            atom->setShiftForce(shiftForces[i * 3 + j], j);
-    }
-
-#ifdef __PQ_GPU__
-    if (Settings::useDevice())
-        copyShiftForcesTo();
 #endif
 }

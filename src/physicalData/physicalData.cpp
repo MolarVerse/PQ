@@ -65,7 +65,7 @@ void PhysicalData::calculateKinetics(SimulationBox &simBox)
     // clang-format off
     #pragma omp target teams distribute parallel for        \
             is_device_ptr(velPtr, massPtr, atomsPerMolPtr,  \
-                          molOffsetPtr, molMassesPtr) \
+                          molOffsetPtr, molMassesPtr)       \
             reduction(+:momX, momY, momZ)                   \
             map(momX, momY, momZ, kinEnergyAtomicTensor,    \
                 kinEnergyMolTensor)

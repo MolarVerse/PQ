@@ -63,10 +63,5 @@ void MMMDEngine::calculateForces()
 
     _virial->calculateVirial(*_simulationBox, *_physicalData);
 
-#ifndef __PQ_LEGACY__
-    _simulationBox->deFlattenForces();
-    _simulationBox->deFlattenShiftForces();
-#endif
-
     _forceField->calculateBondedInteractions(*_simulationBox, *_physicalData);
 }

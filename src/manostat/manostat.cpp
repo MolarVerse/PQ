@@ -25,6 +25,7 @@
 #include <functional>   // for function
 
 #include "constants/internalConversionFactors.hpp"   // for _PRESSURE_FACTOR_
+#include "debug.hpp"                                 // for debugging
 #include "physicalData.hpp"                          // for PhysicalData
 #include "simulationBox.hpp"                         // for SimulationBox
 
@@ -51,6 +52,8 @@ Manostat::Manostat(const double targetPressure)
  */
 void Manostat::calculatePressure(const SimulationBox &box, PhysicalData &data)
 {
+    __DEBUG_ENTER_FUNCTION__("Pressure Calculation");
+
     auto       ekinVirial  = data.getKinEnergyVirialTensor();
     auto       forceVirial = data.getVirial();
     const auto volume      = box.getVolume();
@@ -64,6 +67,10 @@ void Manostat::calculatePressure(const SimulationBox &box, PhysicalData &data)
     _pressure = trace(_pressureTensor) / 3.0;
 
     data.setPressure(_pressure);
+
+    __DEBUG_PRESSURE__(_pressure);
+    __DEBUG_PRESSURE_TENSOR__(_pressureTensor);
+    __DEBUG_EXIT_FUNCTION__("Pressure Calculation");
 }
 
 /**

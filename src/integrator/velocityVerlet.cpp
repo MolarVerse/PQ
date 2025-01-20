@@ -23,9 +23,11 @@
 #include "velocityVerlet.hpp"
 
 #include "constants.hpp"
+#include "orthorhombicBox.inl"
 #include "simulationBox.hpp"
 #include "simulationBox_API.hpp"
 #include "timingsSettings.hpp"
+#include "triclinicBox.inl"
 
 using namespace integrator;
 using namespace simulationBox;
@@ -43,16 +45,18 @@ void VelocityVerlet::firstStep(SimulationBox& simBox)
 {
     initFirstStep(simBox);
 
-    const auto dt = TimingsSettings::getTimeStep();
-
-    auto* const       velPtr    = simBox.getVelPtr();
-    auto* const       posPtr    = simBox.getPosPtr();
-    auto* const       forcesPtr = simBox.getForcesPtr();
     const auto* const massesPtr = simBox.getMassesPtr();
-    const auto        nAtoms    = simBox.getNumberOfAtoms();
+    const auto* const boxParams = simBox.getBox().getBoxParamsPtr();
 
-    const auto massFactor = dt * _V_VERLET_VELOCITY_FACTOR_;
-    const auto posFactor  = dt * _FS_TO_S_;
+    auto* const velPtr    = simBox.getVelPtr();
+    auto* const posPtr    = simBox.getPosPtr();
+    auto* const forcesPtr = simBox.getForcesPtr();
+
+    const auto nAtoms         = simBox.getNumberOfAtoms();
+    const auto isOrthoRhombic = simBox.getBox().isOrthoRhombic();
+    const auto dt             = TimingsSettings::getTimeStep();
+    const auto massFactor     = dt * _V_VERLET_VELOCITY_FACTOR_;
+    const auto posFactor      = dt * _FS_TO_S_;
 
     // clang-format off
 #ifdef __PQ_GPU__
@@ -62,13 +66,32 @@ void VelocityVerlet::firstStep(SimulationBox& simBox)
     #pragma omp parallel for
 #endif
     // clang-format on
-    for (size_t i = 0; i < nAtoms * 3; ++i)
+    for (size_t i = 0; i < nAtoms; ++i)
     {
-        const size_t atomIndex = i / 3;
+        for (int j = 0; j < 3; ++j)
+        {
+            const size_t index  = i * 3 + j;
+            velPtr[index]      += forcesPtr[index] / massesPtr[i] * massFactor;
+            posPtr[index]      += velPtr[index] * posFactor;
 
-        velPtr[i]    += forcesPtr[i] / massesPtr[atomIndex] * massFactor;
-        posPtr[i]    += velPtr[i] * posFactor;
-        forcesPtr[i]  = 0.0;
+            forcesPtr[index] = 0.0;
+        }
+
+        // TODO: make this more efficient
+        if (isOrthoRhombic)
+            imageOrthoRhombic(
+                boxParams,
+                posPtr[i * 3],
+                posPtr[i * 3 + 1],
+                posPtr[i * 3 + 2]
+            );
+        else
+            imageTriclinic(
+                boxParams,
+                posPtr[i * 3],
+                posPtr[i * 3 + 1],
+                posPtr[i * 3 + 2]
+            );
     }
 
     calculateCenterOfMass(simBox);

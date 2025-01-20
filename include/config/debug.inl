@@ -138,8 +138,9 @@ namespace config
         }
 
         const auto msg = std::format(
-            "Debugging is activated with debug level {}.",
-            debugLevel
+            "Debugging is activated with debug level {} or {}b.",
+            debugLevel,
+            std::bitset<16>(debugLevel).to_string()
         );
 
         std::cout << msg << std::endl;
@@ -326,7 +327,7 @@ namespace config
         if (!_debug)
             return false;
 
-        if (std::bitset<8>(_debugLevel)[static_cast<size_t>(level)] == 1)
+        if (std::bitset<16>(_debugLevel)[static_cast<size_t>(level)] == 1)
             return true;
 
         return false;

@@ -219,6 +219,8 @@ namespace pq
     using Time = std::chrono::time_point<std::chrono::high_resolution_clock>;
     using Duration = std::chrono::duration<double>;
 
+    using tupleReal4 = std::tuple<Real, Real, Real, Real>;
+
     using strings   = std::vector<std::string>;
     using stringSet = std::set<std::string>;
 

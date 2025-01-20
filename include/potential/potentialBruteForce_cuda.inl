@@ -119,11 +119,11 @@ namespace potential
         {
             for (size_t atomIndex_j = 0; atomIndex_j < nAtoms; ++atomIndex_j)
             {
-                if (atomIndex_i < atomIndex_j)
-                {
-                    const auto mol_i = moleculeIndex[atomIndex_i];
-                    const auto mol_j = moleculeIndex[atomIndex_j];
+                const auto mol_i = moleculeIndex[atomIndex_i];
+                const auto mol_j = moleculeIndex[atomIndex_j];
 
+                if (mol_i < mol_j)
+                {
                     const auto xi = pos[atomIndex_i * 3];
                     const auto yi = pos[atomIndex_i * 3 + 1];
                     const auto zi = pos[atomIndex_i * 3 + 2];
@@ -211,7 +211,8 @@ namespace potential
                         }
                         else
                             throw customException::NotImplementedException(
-                                "The nonCoulomb potential is not implemented "
+                                "The nonCoulomb potential is not "
+                                "implemented "
                                 "yet"
                             );
 
