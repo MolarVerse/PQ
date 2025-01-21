@@ -73,6 +73,8 @@ void QMSetup::setup()
 {
     setupQMMethod();
 
+    setupQMMethodAseDftbPlus();
+
     if (QMSettings::isExternalQMRunner())
         setupQMScript();
 
@@ -87,11 +89,17 @@ void QMSetup::setup()
  */
 void QMSetup::setupQMMethod()
 {
-    if (!QMSettings::isThirdOrderDftbSet() &&
-        QMSettings::getQMMethod() == QMMethod::ASEDFTBPLUS)
-        QMSettings::setUseThirdOrderDftb(true);
-
     _engine.setQMRunner(QMSettings::getQMMethod());
+}
+
+void QMSetup::setupQMMethodAseDftbPlus()
+{
+    if (!(QMSettings::getQMMethod() == QMMethod::ASEDFTBPLUS))
+        return;
+
+    if (QMSettings::getSlakosType() == SlakosType::THREEOB &&
+        !QMSettings::isThirdOrderDftbSet())
+        QMSettings::setUseThirdOrderDftb(true);
 }
 
 /**
