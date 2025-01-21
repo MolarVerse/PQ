@@ -92,6 +92,10 @@ void QMSetup::setupQMMethod()
     _engine.setQMRunner(QMSettings::getQMMethod());
 }
 
+/**
+ * @brief setup the ASE DFTB+ method of the system
+ *
+ */
 void QMSetup::setupQMMethodAseDftbPlus()
 {
     if (!(QMSettings::getQMMethod() == QMMethod::ASEDFTBPLUS))
