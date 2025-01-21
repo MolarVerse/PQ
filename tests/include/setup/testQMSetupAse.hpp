@@ -51,6 +51,7 @@ class TestQMSetupAse : public ::testing::Test
         _engine  = new engine::QMMDEngine();
         _qmSetup = new QMSetup(*_engine);
         _engine->getEngineOutput().getLogOutput().setFilename("default.log");
+        QMSettings::setQMMethod(QMMethod::ASEDFTBPLUS);
     }
 
     void TearDown() override
@@ -58,6 +59,12 @@ class TestQMSetupAse : public ::testing::Test
         delete _engine;
         delete _qmSetup;
         ::remove("default.log");
+        QMSettings::setQMMethod(QMMethod::NONE);
+        QMSettings::setSlakosType("none");
+        QMSettings::setUseThirdOrderDftb(false);
+        QMSettings::setIsThirdOrderDftbSet(false);
+        QMSettings::setHubbardDerivs({});
+        QMSettings::setIsHubbardDerivsSet(false);
     }
 
     engine::QMMDEngine *_engine;

@@ -33,7 +33,6 @@
 
 TEST_F(TestQMSetupAse, setupAseDftbplus3OB)
 {
-    QMSettings::setQMMethod(QMMethod::ASEDFTBPLUS);
     QMSettings::setSlakosType("3ob");
     QMSettings::setUseThirdOrderDftb(true);
     _qmSetup->setupWriteInfo();
@@ -48,7 +47,7 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OB)
     EXPECT_EQ(line, "         DFTB approach:       3ob");
     getline(file, line);
     // clang-format off
-    std::string skPath {__SLAKOS_DIR__ + string(SlakosType::THREEOB) + "/skfiles/"};
+    std::string skPath {__SLAKOS_DIR__ + string(QMSettings::getSlakosType()) + "/skfiles/"};
     EXPECT_EQ(line, "         sk file path:        " + skPath);
     // clang-format on
     getline(file, line);
@@ -57,7 +56,6 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OB)
 
 TEST_F(TestQMSetupAse, setupAseDftbplus3OBno3rdOrder)
 {
-    QMSettings::setQMMethod(QMMethod::ASEDFTBPLUS);
     QMSettings::setUseThirdOrderDftb(false);
     QMSettings::setIsThirdOrderDftbSet(true);
     QMSettings::setSlakosType("3ob");
@@ -73,7 +71,7 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OBno3rdOrder)
     EXPECT_EQ(line, "         DFTB approach:       3ob");
     getline(file, line);
     // clang-format off
-    std::string skPath {__SLAKOS_DIR__ + string(SlakosType::THREEOB) + "/skfiles/"};
+    std::string skPath {__SLAKOS_DIR__ + string(QMSettings::getSlakosType()) + "/skfiles/"};
     EXPECT_EQ(line, "         sk file path:        " + skPath);
     // clang-format on
     getline(file, line);
@@ -88,7 +86,6 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OBno3rdOrder)
 
 TEST_F(TestQMSetupAse, setupAseDftbplus3OBCustomHubbardDerivs)
 {
-    QMSettings::setQMMethod(QMMethod::ASEDFTBPLUS);
     QMSettings::setSlakosType("3ob");
     QMSettings::setUseThirdOrderDftb(true);
     QMSettings::setHubbardDerivs({{"H", -0.3}});
@@ -105,7 +102,7 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OBCustomHubbardDerivs)
     EXPECT_EQ(line, "         DFTB approach:       3ob");
     getline(file, line);
     // clang-format off
-    std::string skPath {__SLAKOS_DIR__ + string(SlakosType::THREEOB) + "/skfiles/"};
+    std::string skPath {__SLAKOS_DIR__ + string(QMSettings::getSlakosType()) + "/skfiles/"};
     EXPECT_EQ(line, "         sk file path:        " + skPath);
     // clang-format on
     getline(file, line);
@@ -120,4 +117,72 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OBCustomHubbardDerivs)
     // clang-format off
     EXPECT_EQ(line, "WARNING: 3ob approach has been chosen while setting custom Hubbard derivatives. This setup is not recommended.");
     // clang-format on
+}
+
+TEST_F(TestQMSetupAse, setupAseDftbplusMatsci)
+{
+    QMSettings::setSlakosType("matsci");
+    _qmSetup->setupWriteInfo();
+
+    std::ifstream file("default.log");
+    std::string   line;
+    getline(file, line);
+    EXPECT_EQ(line, "         QM runner: ASEDFTBPLUS");
+    getline(file, line);
+    EXPECT_EQ(line, "");
+    getline(file, line);
+    EXPECT_EQ(line, "         DFTB approach:       matsci");
+    getline(file, line);
+    // clang-format off
+    std::string skPath {__SLAKOS_DIR__ + string(QMSettings::getSlakosType()) + "/skfiles/"};
+    EXPECT_EQ(line, "         sk file path:        " + skPath);
+    // clang-format on
+    getline(file, line);
+    EXPECT_EQ(line, "         3rd order is turned: off");
+}
+
+TEST_F(TestQMSetupAse, setupAseDftbplusCustom)
+{
+    QMSettings::setSlakosType("custom");
+    QMSettings::setSlakosPath("custom/path/");
+    _qmSetup->setupWriteInfo();
+
+    std::ifstream file("default.log");
+    std::string   line;
+    getline(file, line);
+    EXPECT_EQ(line, "         QM runner: ASEDFTBPLUS");
+    getline(file, line);
+    EXPECT_EQ(line, "");
+    getline(file, line);
+    EXPECT_EQ(line, "         DFTB approach:       custom");
+    getline(file, line);
+    EXPECT_EQ(line, "         sk file path:        custom/path/");
+    getline(file, line);
+    EXPECT_EQ(line, "         3rd order is turned: off");
+}
+
+TEST_F(TestQMSetupAse, setupAseDftbplusCustom3rdOrder)
+{
+    QMSettings::setSlakosType("custom");
+    QMSettings::setSlakosPath("custom/path/");
+    QMSettings::setUseThirdOrderDftb(true);
+    QMSettings::setIsThirdOrderDftbSet(true);
+    QMSettings::setHubbardDerivs({{"H", -0.3}});
+    QMSettings::setIsHubbardDerivsSet(true);
+    _qmSetup->setupWriteInfo();
+
+    std::ifstream file("default.log");
+    std::string   line;
+    getline(file, line);
+    EXPECT_EQ(line, "         QM runner: ASEDFTBPLUS");
+    getline(file, line);
+    EXPECT_EQ(line, "");
+    getline(file, line);
+    EXPECT_EQ(line, "         DFTB approach:       custom");
+    getline(file, line);
+    EXPECT_EQ(line, "         sk file path:        custom/path/");
+    getline(file, line);
+    EXPECT_EQ(line, "         3rd order is turned: on");
+    getline(file, line);
+    EXPECT_EQ(line, "         Hubbard derivatives: H: -0.3");
 }
