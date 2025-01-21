@@ -29,24 +29,14 @@
 #include "exceptions.hpp"         // for InputFileException
 #include "gtest/gtest.h"          // for Message, TestPartResult
 #include "qmRunner.hpp"           // for QMRunner
-#include "qmSettings.hpp"         // for QMMethod, QMSettings
-#include "qmSetup.hpp"            // for QMSetup, setupQM
-#include "qmmdEngine.hpp"         // for QMMDEngine
 #include "throwWithMessage.hpp"   // for ASSERT_THROW_MSG
-
-using setup::QMSetup;
-using namespace settings;
 
 TEST_F(TestQMSetupAse, setupAseDftbplus3OB)
 {
-    engine::QMMDEngine engine;
-    QMSetup            setupQM = QMSetup(engine);
-
-    engine.getEngineOutput().getLogOutput().setFilename("default.log");
     QMSettings::setQMMethod(QMMethod::ASEDFTBPLUS);
     QMSettings::setSlakosType("3ob");
     QMSettings::setUseThirdOrderDftb(true);
-    setupQM.setupWriteInfo();
+    _qmSetup->setupWriteInfo();
 
     std::ifstream file("default.log");
     std::string   line;
@@ -63,21 +53,15 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OB)
     // clang-format on
     getline(file, line);
     EXPECT_EQ(line, "         3rd order is turned: on");
-
-    QMSettings::setSlakosType("none");
 }
 
 TEST_F(TestQMSetupAse, setupAseDftbplus3OBno3rdOrder)
 {
-    engine::QMMDEngine engine;
-    QMSetup            setupQM = QMSetup(engine);
-
-    engine.getEngineOutput().getLogOutput().setFilename("default.log");
     QMSettings::setQMMethod(QMMethod::ASEDFTBPLUS);
     QMSettings::setUseThirdOrderDftb(false);
     QMSettings::setIsThirdOrderDftbSet(true);
     QMSettings::setSlakosType("3ob");
-    setupQM.setupWriteInfo();
+    _qmSetup->setupWriteInfo();
 
     std::ifstream file("default.log");
     std::string   line;
@@ -100,23 +84,16 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OBno3rdOrder)
     // clang-format off
     EXPECT_EQ(line, "WARNING: 3ob approach has been chosen while disabling 3rd order DFTB. This setup is not recommended.");
     // clang-format on
-
-    QMSettings::setSlakosType("none");
-    QMSettings::setIsThirdOrderDftbSet(false);
 }
 
 TEST_F(TestQMSetupAse, setupAseDftbplus3OBCustomHubbardDerivs)
 {
-    engine::QMMDEngine engine;
-    QMSetup            setupQM = QMSetup(engine);
-
-    engine.getEngineOutput().getLogOutput().setFilename("default.log");
     QMSettings::setQMMethod(QMMethod::ASEDFTBPLUS);
     QMSettings::setSlakosType("3ob");
     QMSettings::setUseThirdOrderDftb(true);
     QMSettings::setHubbardDerivs({{"H", -0.3}});
     QMSettings::setIsHubbardDerivsSet(true);
-    setupQM.setupWriteInfo();
+    _qmSetup->setupWriteInfo();
 
     std::ifstream file("default.log");
     std::string   line;
@@ -140,10 +117,7 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OBCustomHubbardDerivs)
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
-    EXPECT_EQ(
-        line,
-        "WARNING: 3ob approach has been chosen while setting custom Hubbard "
-        "derivatives. This setup is not recommended."
-    );
-    getline(file, line);
+    // clang-format off
+    EXPECT_EQ(line, "WARNING: 3ob approach has been chosen while setting custom Hubbard derivatives. This setup is not recommended.");
+    // clang-format on
 }

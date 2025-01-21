@@ -24,11 +24,18 @@
 
 #define _TEST_QMSETUP_ASE_HPP_
 
-#include "logOutput.hpp"   // for LogOutput
-
 #include <gtest/gtest.h>   // for Test
-#include <memory>          // for allocator
 #include <stdio.h>         // for remove
+
+#include <memory>   // for allocator
+
+#include "logOutput.hpp"    // for LogOutput
+#include "qmSettings.hpp"   // for QMMethod, QMSettings
+#include "qmSetup.hpp"      // for QMSetup, setupQM
+#include "qmmdEngine.hpp"   // for QMMDEngine
+
+using setup::QMSetup;
+using namespace settings;
 
 /**
  * @class TestQMSetupAse
@@ -38,16 +45,23 @@
  */
 class TestQMSetupAse : public ::testing::Test
 {
-  protected:
-    void SetUp() override { _logOutput = new output::LogOutput("default.log"); }
+   protected:
+    void SetUp() override
+    {
+        _engine  = new engine::QMMDEngine();
+        _qmSetup = new QMSetup(*_engine);
+        _engine->getEngineOutput().getLogOutput().setFilename("default.log");
+    }
 
     void TearDown() override
     {
-        delete _logOutput;
+        delete _engine;
+        delete _qmSetup;
         ::remove("default.log");
     }
 
-    output::LogOutput *_logOutput;
+    engine::QMMDEngine *_engine;
+    QMSetup            *_qmSetup;
 };
 
 #endif   // _TEST_QMSETUP_ASE_HPP_
