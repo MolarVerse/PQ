@@ -31,9 +31,13 @@
 #include "qmRunner.hpp"           // for QMRunner
 #include "qmSettings.hpp"         // for QMMethod, QMSettings
 #include "qmSetup.hpp"            // for QMSetup, setupQM
+#include "qmSetup.hpp"            // for QMSetup
 #include "qmmdEngine.hpp"         // for QMMDEngine
 #include "throwWithMessage.hpp"   // for ASSERT_THROW_MSG
 #include "turbomoleRunner.hpp"    // for TurbomoleRunner
+
+using setup::QMSetup;
+using namespace settings;
 
 TEST(TestQMSetup, setupDftbplus)
 {
@@ -114,4 +118,73 @@ TEST(TestQMSetup, setupQMFull)
 
     engine::QMMDEngine engine;
     EXPECT_NO_THROW(setup::setupQM(engine));
+}
+
+TEST(TestQMSetup, setupQMMethodAseDftbPlus3ob3rdOrderNotSet)
+{
+    engine::QMMDEngine engine;
+    QMSetup            qmSetup{QMSetup(engine)};
+
+    QMSettings::setQMMethod(QMMethod::ASEDFTBPLUS);
+    QMSettings::setSlakosType("3ob");
+    QMSettings::setIsThirdOrderDftbSet(false);
+
+    qmSetup.setupQMMethodAseDftbPlus();
+    EXPECT_EQ(QMSettings::useThirdOrderDftb(), true);
+}
+
+TEST(TestQMSetup, setupQMMethodAseDftbPlus3ob3rdOrderSetTrue)
+{
+    engine::QMMDEngine engine;
+    QMSetup            qmSetup{QMSetup(engine)};
+
+    QMSettings::setQMMethod(QMMethod::ASEDFTBPLUS);
+    QMSettings::setSlakosType("3ob");
+    QMSettings::setIsThirdOrderDftbSet(true);
+    QMSettings::setUseThirdOrderDftb(true);
+
+    qmSetup.setupQMMethodAseDftbPlus();
+    EXPECT_EQ(QMSettings::useThirdOrderDftb(), true);
+}
+
+TEST(TestQMSetup, setupQMMethodAseDftbPlus3ob3rdOrderSetFalse)
+{
+    engine::QMMDEngine engine;
+    QMSetup            qmSetup{QMSetup(engine)};
+
+    QMSettings::setQMMethod(QMMethod::ASEDFTBPLUS);
+    QMSettings::setSlakosType("3ob");
+    QMSettings::setIsThirdOrderDftbSet(true);
+    QMSettings::setUseThirdOrderDftb(false);
+
+    qmSetup.setupQMMethodAseDftbPlus();
+    EXPECT_EQ(QMSettings::useThirdOrderDftb(), false);
+}
+
+TEST(TestQMSetup, setupQMMethodAseDftbPlusMatsci)
+{
+    engine::QMMDEngine engine;
+    QMSetup            qmSetup{QMSetup(engine)};
+
+    QMSettings::setQMMethod(QMMethod::ASEDFTBPLUS);
+    QMSettings::setSlakosType("matsci");
+    QMSettings::setIsThirdOrderDftbSet(false);
+    QMSettings::setUseThirdOrderDftb(false);
+
+    qmSetup.setupQMMethodAseDftbPlus();
+    EXPECT_EQ(QMSettings::useThirdOrderDftb(), false);
+}
+
+TEST(TestQMSetup, setupQMMethodAseDftbPlusCustom)
+{
+    engine::QMMDEngine engine;
+    QMSetup            qmSetup{QMSetup(engine)};
+
+    QMSettings::setQMMethod(QMMethod::ASEDFTBPLUS);
+    QMSettings::setSlakosType("custom");
+    QMSettings::setIsThirdOrderDftbSet(false);
+    QMSettings::setUseThirdOrderDftb(false);
+
+    qmSetup.setupQMMethodAseDftbPlus();
+    EXPECT_EQ(QMSettings::useThirdOrderDftb(), false);
 }
