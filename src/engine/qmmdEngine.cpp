@@ -34,8 +34,9 @@
 #include "turbomoleRunner.hpp"   // for TurbomoleRunner
 
 #ifdef WITH_ASE
-#include "aseDftbRunner.hpp"   // for aseDftbRunner
-#include "maceRunner.hpp"      // for MaceRunner
+#include "aseDftbRunner.hpp"    // for aseDftbRunner
+#include "fairchemRunner.hpp"   // for FairchemRunner
+#include "maceRunner.hpp"       // for MaceRunner
 #endif
 
 using engine::QMMDEngine;
@@ -77,6 +78,9 @@ void QMMDEngine::setQMRunner(const QMMethod method)
     else if (method == MACE)
         setMaceQMRunner();
 
+    else if (method == FAIRCHEM)
+        setFairchemRunner();
+
     else
         throw InputFileException(
             "A qm based jobtype was requested but no external "
@@ -113,7 +117,37 @@ void QMMDEngine::setMaceQMRunner()
     );
 #endif
 }
+/**
+ * @brief sets the QMRunner object for FAIR-Chem type qm methods.
+ *
+ * @throws py::error_already_set if the import of the FAIR-Chem module fails
+ */
+void QMMDEngine::setFairchemRunner()
+{
+#ifdef WITH_ASE
+    const auto configYml      = QMSettings::getFairchemConfigYml();
+    const auto checkpointPath = QMSettings::getFairchemCheckpointPath();
+    const auto modelName      = QMSettings::getFairchemModelName();
+    const auto localCache     = QMSettings::getFairchemLocalCache();
+    const auto trainer        = QMSettings::getFairchemTrainer();
+    const auto useCpu         = QMSettings::useCPU();
 
+    _qmRunner = make_shared<FairchemRunner>(
+        configYml,
+        checkpointPath,
+        modelName,
+        localCache,
+        trainer,
+        useCpu
+    );
+#else
+    throw CompileTimeException(
+        "The FAIR-Chem qm method was requested but ASE was not enabled at "
+        "compile time. Please recompile with ASE enabled to use mace type "
+        "qm methods using: -DBUILD_WITH_ASE=ON"
+    );
+#endif
+}
 /**
  * @brief sets the QMRunner object for ase dftbplus type qm methods.
  *
