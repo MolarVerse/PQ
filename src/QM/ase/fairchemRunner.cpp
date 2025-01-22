@@ -42,7 +42,12 @@ FairchemRunner::FairchemRunner(const std::string &modelType) : ASEQMRunner()
 
         const py::dict calculatorArgs;
 
-        calculatorArgs["model_name"] = modelType.c_str();
+        if (modelType == "odac23")
+            calculatorArgs["model_name"] = "odac23";
+        else
+            throw customException::UserInputException(
+                std::format("Fairchem {} model not recognized", modelType)
+            );
 
         calculatorArgs["local_cache"] = "/tmp/fairchem_checkpoints/";
 

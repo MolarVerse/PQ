@@ -161,14 +161,14 @@ void QMInputParser::parseQMMethod(
 
     else if (method.starts_with("fairchem"))
         parseFairchemQMMethod(method);
-}
 
-else throw InputFileException(std::format(
-    "Invalid qm_prog \"{}\" in input file.\n"
-    "Possible values are: dftbplus, ase_dftbplus, pyscf, turbomole, "
-    "mace, mace_mp, mace_off, fairchem_odac23",
-    lineElements[2]
-));
+    else
+        throw InputFileException(std::format(
+            "Invalid qm_prog \"{}\" in input file.\n"
+            "Possible values are: dftbplus, ase_dftbplus, pyscf, turbomole, "
+            "mace, mace_mp, mace_off, fairchem, fairchem_odac23",
+            lineElements[2]
+        ));
 }
 
 /**
@@ -332,14 +332,14 @@ void QMInputParser::parseMaceQMMethod(const std::string_view &model)
  * @param lineNumber
  */
 
-void QMInputParser::parseFairChemQMMethod(const std::string_view &model)
+void QMInputParser::parseFairchemQMMethod(const std::string_view &model)
 {
     using enum FairchemModelType;
 
     if ("fairchem" == model || "fairchem_odac23" == model)
     {
         QMSettings::setFairchemModelType(ODAC23);
-        ReferencesOutput::addReferenceFile(_FAIRCHEM_FILE_);
+        ReferencesOutput::addReferenceFile(_ODAC23_FILE_);
     }
 
     else

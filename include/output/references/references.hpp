@@ -47,6 +47,7 @@ namespace references
     static constexpr char _MACEMP_FILE_[]    = "macemp.ref";
     static constexpr char _MACEOFF_FILE_[]   = "maceoff.ref";
     static constexpr char _FAIRCHEM_FILE_[]   = "fairchem.ref";
+    static constexpr char _ODAC23_FILE_[]    = "odac23.ref";
 
     // Constraint Dynamics
     static constexpr char _RATTLE_FILE_[] = "rattle.ref";

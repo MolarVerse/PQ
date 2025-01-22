@@ -27,6 +27,7 @@
 #include "exceptions.hpp"        // for customException
 #include "stringUtilities.hpp"   // for toLowerCopy
 
+using settings::FairchemModelType;
 using settings::MaceModelSize;
 using settings::MaceModelType;
 using settings::QMMethod;
@@ -308,7 +309,7 @@ void QMSettings::setFairchemModelType(const std::string_view &model)
     using enum FairchemModelType;
     const auto modelToLower = toLowerAndReplaceDashesCopy(model);
 
-    if ("odac23" == modelToLower)
+    if ("fairchem_odac23" == modelToLower)
         _fairchemModelType = ODAC23;
 
     else

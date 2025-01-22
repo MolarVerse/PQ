@@ -54,6 +54,9 @@ TEST_F(TestInputFileReader, parseQMMethod)
     parser.parseQMMethod({"qm_prog", "=", "mace"}, 0);
     EXPECT_EQ(QMSettings::getQMMethod(), MACE);
 
+    parser.parseQMMethod({"qm_prog", "=", "fairchem"}, 0);
+    EXPECT_EQ(QMSettings::getQMMethod(), FAIRCHEM);
+
     parser.parseQMMethod({"qm_prog", "=", "ase_dftbplus"}, 0);
     EXPECT_EQ(QMSettings::getQMMethod(), ASEDFTBPLUS);
 
@@ -187,6 +190,24 @@ TEST_F(TestInputFileReader, parseMaceModelSize)
     )
 }
 
+TEST_F(TestInputFileReader, parseFairChemQMMethod)
+{
+    using enum QMMethod;
+    using enum FairchemModelType;
+
+    auto parser = QMInputParser(*_engine);
+
+    parser.parseFairchemQMMethod("fairchem");
+    EXPECT_EQ(QMSettings::getQMMethod(), FAIRCHEM);
+    EXPECT_EQ(QMSettings::getFairchemModelType(), ODAC23);
+
+    ASSERT_THROW_MSG(
+        parser.parseFairchemQMMethod("notAFairchemModel"),
+        InputFileException,
+        "Invalid fairchem type qm_method \"notAFairchemModel\" in input file.\n"
+        "Possible values are: fairchem"
+    )
+}
 TEST_F(TestInputFileReader, parseSlakosType)
 {
     using enum QMMethod;

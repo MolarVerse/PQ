@@ -46,6 +46,9 @@ TEST(QMSettingsTest, SetQMMethodTest)
     QMSettings::setQMMethod("mace");
     EXPECT_EQ(QMSettings::getQMMethod(), QMMethod::MACE);
 
+    QMSettings::setQMMethod("fairchem");
+    EXPECT_EQ(QMSettings::getQMMethod(), QMMethod::FAIRCHEM);
+
     QMSettings::setQMMethod("ase_dftbplus");
     EXPECT_EQ(QMSettings::getQMMethod(), QMMethod::ASEDFTBPLUS);
 
@@ -86,6 +89,18 @@ TEST(QMSettingsTest, SetMaceModelTypeTest)
         QMSettings::setMaceModelType("notAMaceModelType"),
         UserInputException,
         "Mace notAMaceModelType model not recognized"
+    )
+}
+
+TEST(QMSettingsTest, SetFairchemModelTypeTest)
+{
+    QMSettings::setFairchemModelType("odac23");
+    EXPECT_EQ(QMSettings::getFairchemModelType(), FairchemModelType::ODAC23);
+
+    ASSERT_THROW_MSG(
+        QMSettings::setFairchemModelType("notAFairchemModelType"),
+        UserInputException,
+        "Fairchem notAFairchemModelType model not recognized"
     )
 }
 
@@ -157,6 +172,7 @@ TEST(QMSettingsTest, ReturnQMMethodTest)
     EXPECT_EQ(string(QMMethod::PYSCF), "PYSCF");
     EXPECT_EQ(string(QMMethod::TURBOMOLE), "TURBOMOLE");
     EXPECT_EQ(string(QMMethod::MACE), "MACE");
+    EXPECT_EQ(string(QMMethod::FAIRCHEM), "FAIRCHEM");
     EXPECT_EQ(string(QMMethod::NONE), "none");
 }
 
