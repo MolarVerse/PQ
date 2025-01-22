@@ -10,6 +10,7 @@ set(source_files
     testForceFieldSetup.cpp
     testIntraNonBondedSetup.cpp
     testQMSetup.cpp
+    testQMSetupAse.cpp
 )
 
 foreach(source_file ${source_files})
@@ -19,6 +20,7 @@ foreach(source_file ${source_files})
         PRIVATE
         ${PROJECT_SOURCE_DIR}/tests/include/setup
         ${PROJECT_SOURCE_DIR}/tests/include/macros
+        ${PROJECT_SOURCE_DIR}/tests/include/output
     )
     target_link_libraries(${test_name}
         PRIVATE

@@ -31,6 +31,7 @@
 #include "qmSettings.hpp"          // for QMMethod, QMSettings
 #include "qmmdEngine.hpp"          // for QMMDEngine
 #include "settings.hpp"            // for Settings
+#include "stdoutOutput.hpp"        // for StdoutOutput
 #include "stringUtilities.hpp"     // for toLowerCopy
 #include "turbomoleRunner.hpp"     // for TurbomoleRunner
 
@@ -63,7 +64,7 @@ void setup::setupQM(Engine &engine)
  *
  * @param engine
  */
-QMSetup::QMSetup(QMMDEngine &engine) : _engine(engine){};
+QMSetup::QMSetup(QMMDEngine &engine) : _engine(engine) {};
 
 /**
  * @brief setup QM-MD for all subtypes
@@ -72,6 +73,8 @@ QMSetup::QMSetup(QMMDEngine &engine) : _engine(engine){};
 void QMSetup::setup()
 {
     setupQMMethod();
+
+    setupQMMethodAseDftbPlus();
 
     if (QMSettings::isExternalQMRunner())
         setupQMScript();
@@ -88,6 +91,27 @@ void QMSetup::setup()
 void QMSetup::setupQMMethod()
 {
     _engine.setQMRunner(QMSettings::getQMMethod());
+}
+
+/**
+ * @brief setup the ASE DFTB+ method of the system
+ *
+ */
+void QMSetup::setupQMMethodAseDftbPlus()
+{
+    if (!(QMSettings::getQMMethod() == QMMethod::ASEDFTBPLUS))
+        return;
+
+    if (QMSettings::getSlakosType() == SlakosType::THREEOB &&
+        !QMSettings::isThirdOrderDftbSet())
+        QMSettings::setUseThirdOrderDftb(true);
+
+    if (!QMSettings::useThirdOrderDftb() && QMSettings::isHubbardDerivsSet())
+        throw InputFileException(
+            "You have set custom Hubbard derivatives but disabled 3rd order "
+            "DFTB. "
+            "This setup is invalid."
+        );
 }
 
 /**
@@ -204,6 +228,7 @@ void QMSetup::setupWriteInfo() const
     using enum QMMethod;
 
     auto &logOutput = _engine.getLogOutput();
+    auto &stdOut    = _engine.getStdoutOutput();
 
     const auto qmMethod        = QMSettings::getQMMethod();
     const auto qmRunnerMessage = std::format("QM runner: {}", string(qmMethod));
@@ -237,6 +262,48 @@ void QMSetup::setupWriteInfo() const
         logOutput.writeSetupInfo(modelSizeMsg);
         logOutput.writeSetupInfo(fpMsg);
         logOutput.writeSetupInfo(dispCorrMsg);
+    }
+
+    if (qmMethod == ASEDFTBPLUS)
+    {
+        const auto slakosType         = QMSettings::getSlakosType();
+        const auto slakosPath         = QMSettings::getSlakosPath();
+        const auto thirdOrder         = QMSettings::useThirdOrderDftb();
+        const auto hubbardDerivs      = QMSettings::getHubbardDerivs();
+        const auto ishubbardDerivsSet = QMSettings::isHubbardDerivsSet();
+        const auto dispersion         = QMSettings::useDispersionCorr();
+
+        // clang-format off
+        const auto slakosTypeMsg           = std::format("DFTB approach:        {}", string(slakosType));
+        const auto slakosPathMsg           = std::format("sk file path:         {}", slakosPath);
+        const auto dispersionMsg           = std::format("Dispersion is turned: {}", dispersion ? "on" : "off");
+        const auto thirdOrderMsg           = std::format("3rd order is turned:  {}", thirdOrder ? "on" : "off");
+        const auto threeOBThirdOrderMsg    = std::format("3ob approach has been chosen while disabling 3rd order DFTB. This setup is not recommended.");
+        const auto hubbardDerivsMsg        = std::format("Hubbard derivatives:  {}", string(hubbardDerivs));
+        const auto threeOBHubbardDerivsMsg = std::format("3ob approach has been chosen while setting custom Hubbard derivatives. This setup is not recommended.");
+        // clang-format on
+
+        logOutput.writeSetupInfo(slakosTypeMsg);
+        logOutput.writeSetupInfo(slakosPathMsg);
+        logOutput.writeSetupInfo(dispersionMsg);
+        logOutput.writeSetupInfo(thirdOrderMsg);
+        if (ishubbardDerivsSet)
+            logOutput.writeSetupInfo(hubbardDerivsMsg);
+
+        // Warnings for non-recommended setups
+        if (slakosType == SlakosType::THREEOB && !thirdOrder)
+        {
+            logOutput.writeEmptyLine();
+            logOutput.writeSetupWarning(threeOBThirdOrderMsg);
+            stdOut.writeSetupWarning(threeOBThirdOrderMsg);
+        }
+
+        if (slakosType == SlakosType::THREEOB && ishubbardDerivsSet)
+        {
+            logOutput.writeEmptyLine();
+            logOutput.writeSetupWarning(threeOBHubbardDerivsMsg);
+            stdOut.writeSetupWarning(threeOBHubbardDerivsMsg);
+        }
     }
 
     logOutput.writeEmptyLine();

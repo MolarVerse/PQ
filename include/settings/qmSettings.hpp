@@ -24,9 +24,10 @@
 
 #define _QM_SETTINGS_HPP_
 
-#include <cstddef>       // for size_t
-#include <string>        // for string
-#include <string_view>   // for string_view
+#include <cstddef>         // for size_t
+#include <string>          // for string
+#include <string_view>     // for string_view
+#include <unordered_map>   // for unordered_map
 
 #include "defaults.hpp"   // for _QM_LOOP_TIME_LIMIT_DEFAULT_
 
@@ -40,6 +41,7 @@ namespace settings
     {
         NONE,
         DFTBPLUS,
+        ASEDFTBPLUS,
         PYSCF,
         TURBOMOLE,
         MACE
@@ -66,9 +68,24 @@ namespace settings
         MACE_ANICC
     };
 
+    /**
+     * @class enum Slakos
+     */
+    enum class SlakosType : size_t
+    {
+        NONE,
+        THREEOB,
+        MATSCI,
+        CUSTOM
+    };
+
     std::string string(const QMMethod method);
     std::string string(const MaceModelSize model);
     std::string string(const MaceModelType model);
+    std::string string(const SlakosType slakos);
+    std::string string(
+        const std::unordered_map<std::string, double> unordered_map
+    );
 
     /**
      * @class QMSettings
@@ -82,12 +99,19 @@ namespace settings
         static inline QMMethod      _qmMethod      = QMMethod::NONE;
         static inline MaceModelSize _maceModelSize = MaceModelSize::MEDIUM;
         static inline MaceModelType _maceModelType = MaceModelType::MACE_MP;
+        static inline SlakosType    _slakosType    = SlakosType::NONE;
 
         static inline std::string _qmScript         = "";
         static inline std::string _qmScriptFullPath = "";
         static inline std::string _maceModelPath    = "";
+        static inline std::string _slakosPath       = "";
 
         static inline bool _useDispersionCorrection = false;
+        static inline bool _useThirdOrderDftb       = false;
+        static inline bool _isThirdOrderDftbSet     = false;
+        static inline bool _isHubbardDerivsSet      = false;
+
+        static inline std::unordered_map<std::string, double> _hubbardDerivs;
 
         // clang-format off
         static inline double _qmLoopTimeLimit = defaults::_QM_LOOP_TIME_LIMIT_DEFAULT_;
@@ -112,7 +136,17 @@ namespace settings
         static void setQMScript(const std::string_view &script);
         static void setQMScriptFullPath(const std::string_view &script);
 
+        static void setSlakosType(const std::string_view &slakos);
+        static void setSlakosType(const SlakosType slakos);
+        static void setSlakosPath(const std::string_view &path);
+
         static void setUseDispersionCorrection(const bool use);
+        static void setUseThirdOrderDftb(const bool use);
+        static void setIsThirdOrderDftbSet(const bool isThirdOrderDftbSet);
+        static void setHubbardDerivs(
+            const std::unordered_map<std::string, double> hubbardDerivs
+        );
+        static void setIsHubbardDerivsSet(const bool isHubbardDerivsSet);
 
         static void setQMLoopTimeLimit(const double time);
 
@@ -128,7 +162,15 @@ namespace settings
         [[nodiscard]] static std::string getQMScript();
         [[nodiscard]] static std::string getQMScriptFullPath();
 
+        [[nodiscard]] static SlakosType  getSlakosType();
+        [[nodiscard]] static std::string getSlakosPath();
+
         [[nodiscard]] static bool useDispersionCorr();
+        [[nodiscard]] static bool useThirdOrderDftb();
+        [[nodiscard]] static bool isThirdOrderDftbSet();
+        [[nodiscard]] static std::unordered_map<std::string, double> getHubbardDerivs(
+        );
+        [[nodiscard]] static bool isHubbardDerivsSet();
 
         [[nodiscard]] static double getQMLoopTimeLimit();
     };

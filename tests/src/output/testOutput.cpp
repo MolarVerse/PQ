@@ -34,7 +34,7 @@
  */
 TEST(TestOutput, testSpecialSetFilename)
 {
-    auto output = output::Output("default.out");
+    auto output = output::Output("default.log");
     EXPECT_THROW_MSG(
         output.setFilename(""),
         customException::InputFileException,

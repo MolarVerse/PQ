@@ -31,6 +31,7 @@ using settings::MaceModelSize;
 using settings::MaceModelType;
 using settings::QMMethod;
 using settings::QMSettings;
+using settings::SlakosType;
 using namespace customException;
 using namespace utilities;
 
@@ -47,6 +48,7 @@ std::string settings::string(const QMMethod method)
         using enum QMMethod;
 
         case DFTBPLUS: return "DFTBPLUS";
+        case ASEDFTBPLUS: return "ASEDFTBPLUS";
         case PYSCF: return "PYSCF";
         case TURBOMOLE: return "TURBOMOLE";
         case MACE: return "MACE";
@@ -96,6 +98,47 @@ std::string settings::string(const MaceModelType model)
 }
 
 /**
+ * @brief returns the Slakos Type as string
+ *
+ * @param slakos
+ * @return std::string
+ */
+std::string settings::string(const SlakosType slakos)
+{
+    switch (slakos)
+    {
+        using enum SlakosType;
+
+        case THREEOB: return "3ob";
+        case MATSCI: return "matsci";
+        case CUSTOM: return "custom";
+
+        default: return "none";
+    }
+}
+
+/**
+ * @brief returns an unordered map as string
+ *
+ * @param unordered_map
+ * @return std::string
+ */
+std::string settings::string(
+    const std::unordered_map<std::string, double> unordered_map
+)
+{
+    std::string unorderedMapStr;
+    for (const auto &pair : unordered_map)
+    {
+        if (!unorderedMapStr.empty())
+            unorderedMapStr += ", ";
+        unorderedMapStr += std::format("{}: {}", pair.first, pair.second);
+    }
+
+    return unorderedMapStr;
+}
+
+/**
  * @brief returns if the external qm runner is activated
  *
  * @return bool
@@ -127,19 +170,23 @@ bool QMSettings::isExternalQMRunner()
 void QMSettings::setQMMethod(const std::string_view &method)
 {
     using enum QMMethod;
-    const auto methodToLower = toLowerCopy(method);
+    const auto methodToLowerAndReplaceDashes =
+        toLowerAndReplaceDashesCopy(method);
 
-    if ("dftbplus" == methodToLower)
+    if ("dftbplus" == methodToLowerAndReplaceDashes)
         _qmMethod = DFTBPLUS;
 
-    else if ("pyscf" == methodToLower)
+    else if ("pyscf" == methodToLowerAndReplaceDashes)
         _qmMethod = PYSCF;
 
-    else if ("turbomole" == methodToLower)
+    else if ("turbomole" == methodToLowerAndReplaceDashes)
         _qmMethod = TURBOMOLE;
 
-    else if ("mace" == methodToLower)
+    else if ("mace" == methodToLowerAndReplaceDashes)
         _qmMethod = MACE;
+
+    else if ("ase_dftbplus" == methodToLowerAndReplaceDashes)
+        _qmMethod = ASEDFTBPLUS;
 
     else
         _qmMethod = NONE;
@@ -173,7 +220,7 @@ void QMSettings::setMaceModelSize(const std::string_view &model)
 
     else
         throw UserInputException(
-            std::format("Mace {} model not recognized", model)
+            std::format("Mace model size {} not recognized", model)
         );
 }
 
@@ -252,6 +299,114 @@ void QMSettings::setQMScriptFullPath(const std::string_view &script)
 }
 
 /**
+ * @brief sets the slakosType to enum in settings
+ *
+ * @param slakos
+ */
+void QMSettings::setSlakosType(const std::string_view &slakos)
+{
+    using enum SlakosType;
+    const auto slakosType = toLowerAndReplaceDashesCopy(slakos);
+
+    if ("3ob" == slakosType)
+    {
+        _slakosType = THREEOB;
+        _slakosPath = __SLAKOS_DIR__ + string(_slakosType) + "/skfiles/";
+    }
+
+    else if ("matsci" == slakosType)
+    {
+        _slakosType = MATSCI;
+        _slakosPath = __SLAKOS_DIR__ + string(_slakosType) + "/skfiles/";
+    }
+
+    else if ("custom" == slakosType)
+        _slakosType = CUSTOM;
+
+    else if ("none" == slakosType)
+    {
+        _slakosType = NONE;
+        _slakosPath = "";
+    }
+
+    else
+        throw UserInputException(std::format("Slakos {} not recognized", slakos)
+        );
+}
+
+/**
+ * @brief sets the slakosType to enum in settings
+ *
+ * @param model
+ */
+void QMSettings::setSlakosType(const SlakosType slakos)
+{
+    setSlakosType(string(slakos));
+}
+
+/**
+ * @brief sets the slakosPath in settings
+ *
+ * @param path
+ */
+void QMSettings::setSlakosPath(const std::string_view &path)
+{
+    if (_slakosType == SlakosType::CUSTOM)
+        _slakosPath = path;
+
+    else if (_slakosType == SlakosType::NONE)
+        throw UserInputException(
+            "Slakos path cannot be set without a slakos type"
+        );
+
+    else
+    {
+        throw UserInputException(std::format(
+            "Slakos path cannot be set for slakos type: {}",
+            string(_slakosType)
+        ));
+    }
+}
+
+/**
+ * @brief sets if third order DFTB should be used
+ *
+ */
+void QMSettings::setUseThirdOrderDftb(const bool useThirdOrderDftb)
+{
+    _useThirdOrderDftb = useThirdOrderDftb;
+}
+
+/**
+ * @brief sets if the third order is set
+ *
+ */
+void QMSettings::setIsThirdOrderDftbSet(const bool isThirdOrderDftbSet)
+{
+    _isThirdOrderDftbSet = isThirdOrderDftbSet;
+}
+
+/**
+ * @brief sets the custom Hubbard Derivative dictionary
+ *
+ */
+void QMSettings::setHubbardDerivs(
+    std::unordered_map<std::string, double> hubbardDerivs
+)
+{
+    _hubbardDerivs = hubbardDerivs;
+}
+
+/**
+ * @brief sets if the Hubbard Derivative dictionary is set by the user
+ *
+ */
+void QMSettings::setIsHubbardDerivsSet(const bool isHubbardDerivsSet)
+{
+    _isHubbardDerivsSet = isHubbardDerivsSet;
+}
+
+/**
  * @brief sets if the dispersion correction should be used
  *
  */
@@ -312,6 +467,51 @@ std::string QMSettings::getQMScript() { return _qmScript; }
  * @return std::string
  */
 std::string QMSettings::getQMScriptFullPath() { return _qmScriptFullPath; }
+
+/**
+ * @brief returns the slakosType
+ *
+ * @return SlakosType
+ */
+SlakosType QMSettings::getSlakosType() { return _slakosType; }
+
+/**
+ * @brief returns the slakosPath
+ *
+ * @return std::string
+ */
+std::string QMSettings::getSlakosPath() { return _slakosPath; }
+
+/**
+ * @brief returns if third order DFTB should be used
+ *
+ * @return bool
+ */
+bool QMSettings::useThirdOrderDftb() { return _useThirdOrderDftb; }
+
+/**
+ * @brief returns if the third order is set
+ *
+ * @return bool
+ */
+bool QMSettings::isThirdOrderDftbSet() { return _isThirdOrderDftbSet; }
+
+/**
+ * @brief returns if the Hubbard derivatives are set by the user
+ *
+ * @return bool
+ */
+bool QMSettings::isHubbardDerivsSet() { return _isHubbardDerivsSet; }
+
+/**
+ * @brief returns the Hubbard Derivative dictionary
+ *
+ * @return std::unordered_map<std::string, double>
+ */
+std::unordered_map<std::string, double> QMSettings::getHubbardDerivs()
+{
+    return _hubbardDerivs;
+}
 
 /**
  * @brief returns if the dispersion correction should be used

@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ### Enhancements
 
+- ASE interface for DFTB+ calculations added
+
+### CI
+
 - Updated CMakeLists.txt to support macOS arm64 architecture.
 - Added CI workflow for macOS arm64 architecture.
 

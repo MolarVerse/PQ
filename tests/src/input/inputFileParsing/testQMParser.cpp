@@ -54,14 +54,75 @@ TEST_F(TestInputFileReader, parseQMMethod)
     parser.parseQMMethod({"qm_prog", "=", "mace"}, 0);
     EXPECT_EQ(QMSettings::getQMMethod(), MACE);
 
+    parser.parseQMMethod({"qm_prog", "=", "ase_dftbplus"}, 0);
+    EXPECT_EQ(QMSettings::getQMMethod(), ASEDFTBPLUS);
+
     // the more detailed mace parser is tested in TestMaceParser
 
     ASSERT_THROW_MSG(
         parser.parseQMMethod({"qm_prog", "=", "notAMethod"}, 0),
         InputFileException,
         "Invalid qm_prog \"notAMethod\" in input file.\n"
-        "Possible values are: dftbplus, pyscf, turbomole, mace, mace_mp, "
-        "mace_off"
+        "Possible values are: dftbplus, ase_dftbplus, pyscf, turbomole, mace, "
+        "mace_mp, mace_off"
+    )
+}
+
+TEST_F(TestInputFileReader, parseQMScript)
+{
+    auto parser = QMInputParser(*_engine);
+    parser.parseQMScript({"qm_script", "=", "script.sh"}, 0);
+    EXPECT_EQ(QMSettings::getQMScript(), "script.sh");
+}
+
+TEST_F(TestInputFileReader, parseQMScriptFullPath)
+{
+    auto parser = QMInputParser(*_engine);
+    parser.parseQMScriptFullPath(
+        {"qm_script_full_path", "=", "/path/to/script.sh"},
+        0
+    );
+    EXPECT_EQ(QMSettings::getQMScriptFullPath(), "/path/to/script.sh");
+}
+
+TEST_F(TestInputFileReader, parseQMLoopTimeLimit)
+{
+    auto parser = QMInputParser(*_engine);
+    parser.parseQMLoopTimeLimit({"qm_loop_time_limit", "=", "10"}, 0);
+    EXPECT_EQ(QMSettings::getQMLoopTimeLimit(), 10);
+
+    parser.parseQMLoopTimeLimit({"qm_loop_time_limit", "=", "-1"}, 0);
+    EXPECT_EQ(QMSettings::getQMLoopTimeLimit(), -1);
+}
+
+TEST_F(TestInputFileReader, parseDispersion)
+{
+    EXPECT_FALSE(QMSettings::useDispersionCorr());
+
+    auto parser = QMInputParser(*_engine);
+    parser.parseDispersion({"dispersion", "=", "true"}, 0);
+    EXPECT_TRUE(QMSettings::useDispersionCorr());
+
+    parser.parseDispersion({"dispersion", "=", "yes"}, 0);
+    EXPECT_TRUE(QMSettings::useDispersionCorr());
+
+    parser.parseDispersion({"dispersion", "=", "on"}, 0);
+    EXPECT_TRUE(QMSettings::useDispersionCorr());
+
+    parser.parseDispersion({"dispersion", "=", "false"}, 0);
+    EXPECT_FALSE(QMSettings::useDispersionCorr());
+
+    parser.parseDispersion({"dispersion", "=", "no"}, 0);
+    EXPECT_FALSE(QMSettings::useDispersionCorr());
+
+    parser.parseDispersion({"dispersion", "=", "off"}, 0);
+    EXPECT_FALSE(QMSettings::useDispersionCorr());
+
+    ASSERT_THROW_MSG(
+        parser.parseDispersion({"dispersion", "=", "notABool"}, 0),
+        InputFileException,
+        "Invalid dispersion \"notABool\" in input file.\n"
+        "Possible values are: true, yes, on, false, no, off"
     )
 }
 
@@ -104,58 +165,6 @@ TEST_F(TestInputFileReader, parseMaceQMMethod)
     )
 }
 
-TEST_F(TestInputFileReader, parseQMScript)
-{
-    auto parser = QMInputParser(*_engine);
-    parser.parseQMScript({"qm_script", "=", "script.sh"}, 0);
-    EXPECT_EQ(QMSettings::getQMScript(), "script.sh");
-}
-
-TEST_F(TestInputFileReader, parseQMScriptFullPath)
-{
-    auto parser = QMInputParser(*_engine);
-    parser.parseQMScriptFullPath(
-        {"qm_script_full_path", "=", "/path/to/script.sh"},
-        0
-    );
-    EXPECT_EQ(QMSettings::getQMScriptFullPath(), "/path/to/script.sh");
-}
-
-TEST_F(TestInputFileReader, parseQMLoopTimeLimit)
-{
-    auto parser = QMInputParser(*_engine);
-    parser.parseQMLoopTimeLimit({"qm_loop_time_limit", "=", "10"}, 0);
-    EXPECT_EQ(QMSettings::getQMLoopTimeLimit(), 10);
-
-    parser.parseQMLoopTimeLimit({"qm_loop_time_limit", "=", "-1"}, 0);
-    EXPECT_EQ(QMSettings::getQMLoopTimeLimit(), -1);
-}
-
-TEST_F(TestInputFileReader, parseDispersion)
-{
-    EXPECT_FALSE(QMSettings::useDispersionCorr());
-
-    auto parser = QMInputParser(*_engine);
-    parser.parseDispersion({"dispersion", "=", "on"}, 0);
-    EXPECT_TRUE(QMSettings::useDispersionCorr());
-
-    parser.parseDispersion({"dispersion", "=", "off"}, 0);
-    EXPECT_FALSE(QMSettings::useDispersionCorr());
-
-    parser.parseDispersion({"dispersion", "=", "true"}, 0);
-    EXPECT_TRUE(QMSettings::useDispersionCorr());
-
-    parser.parseDispersion({"dispersion", "=", "false"}, 0);
-    EXPECT_FALSE(QMSettings::useDispersionCorr());
-
-    ASSERT_THROW_MSG(
-        parser.parseDispersion({"dispersion", "=", "notABool"}, 0),
-        InputFileException,
-        "Invalid dispersion \"notABool\" in input file.\n"
-        "Possible values are: true, false, on, off"
-    )
-}
-
 TEST_F(TestInputFileReader, parseMaceModelSize)
 {
     using enum MaceModelSize;
@@ -175,5 +184,106 @@ TEST_F(TestInputFileReader, parseMaceModelSize)
         InputFileException,
         "Invalid mace_model_size \"notASize\" in input file.\n"
         "Possible values are: small, medium, large"
+    )
+}
+
+TEST_F(TestInputFileReader, parseSlakosType)
+{
+    using enum QMMethod;
+
+    auto parser = QMInputParser(*_engine);
+
+    parser.parseSlakosType({"slakos", "=", "3ob"}, 0);
+    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::THREEOB);
+
+    parser.parseSlakosType({"slakos", "=", "matsci"}, 0);
+    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::MATSCI);
+
+    parser.parseSlakosType({"slakos", "=", "custom"}, 0);
+    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::CUSTOM);
+
+    ASSERT_THROW_MSG(
+        parser.parseSlakosType({"slakos", "=", "notASlakosType"}, 0),
+        InputFileException,
+        "Invalid slakos type \"notASlakosType\" in input file.\n"
+        "Possible values are: 3ob, matsci, custom"
+    )
+}
+
+TEST_F(TestInputFileReader, parseSlakosTypeThirdOrder)
+{
+    using enum QMMethod;
+
+    auto parser1 = QMInputParser(*_engine);
+
+    parser1.parseThirdOrder({"third_order", "=", "off"}, 0);
+    parser1.parseSlakosType({"slakos", "=", "3ob"}, 0);
+    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::THREEOB);
+    EXPECT_FALSE(QMSettings::useThirdOrderDftb());
+
+    auto parser2 = QMInputParser(*_engine);
+    parser2.parseSlakosType({"slakos", "=", "3ob"}, 0);
+    parser2.parseThirdOrder({"third_order", "=", "off"}, 0);
+    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::THREEOB);
+    EXPECT_FALSE(QMSettings::useThirdOrderDftb());
+}
+
+TEST_F(TestInputFileReader, parseSlakosPath)
+{
+    using enum QMMethod;
+
+    auto parser = QMInputParser(*_engine);
+    parser.parseSlakosType({"slakos", "=", "custom"}, 0);
+    parser.parseSlakosPath({"slakos_path", "=", "/path/to/slakos"}, 0);
+    EXPECT_EQ(QMSettings::getSlakosPath(), "/path/to/slakos");
+}
+
+TEST_F(TestInputFileReader, parseThirdOrder)
+{
+    EXPECT_FALSE(QMSettings::useThirdOrderDftb());
+
+    auto parser = QMInputParser(*_engine);
+    parser.parseThirdOrder({"third_order", "=", "on"}, 0);
+    EXPECT_TRUE(QMSettings::useThirdOrderDftb());
+
+    parser.parseThirdOrder({"third_order", "=", "off"}, 0);
+    EXPECT_FALSE(QMSettings::useThirdOrderDftb());
+
+    parser.parseThirdOrder({"third_order", "=", "true"}, 0);
+    EXPECT_TRUE(QMSettings::useThirdOrderDftb());
+
+    parser.parseThirdOrder({"third_order", "=", "false"}, 0);
+    EXPECT_FALSE(QMSettings::useThirdOrderDftb());
+
+    parser.parseThirdOrder({"third_order", "=", "yes"}, 0);
+    EXPECT_TRUE(QMSettings::useThirdOrderDftb());
+
+    parser.parseThirdOrder({"third_order", "=", "no"}, 0);
+    EXPECT_FALSE(QMSettings::useThirdOrderDftb());
+    EXPECT_TRUE(QMSettings::isThirdOrderDftbSet());
+
+    ASSERT_THROW_MSG(
+        parser.parseThirdOrder({"third_order", "=", "notABool"}, 0),
+        InputFileException,
+        "Invalid DFTB third_order request \"notABool\" in input file.\n"
+        "Possible values are: on, yes, true, off, no, false"
+    )
+}
+
+TEST_F(TestInputFileReader, parseHubbardDerivs)
+{
+    auto parser = QMInputParser(*_engine);
+
+    parser.parseHubbardDerivs({"hubbard_derivs", "=", "H:1.0,He:2.0"}, 0);
+
+    const auto hubbardDerivs = QMSettings::getHubbardDerivs();
+    EXPECT_EQ(hubbardDerivs.size(), 2);
+    EXPECT_EQ(hubbardDerivs.at("H"), 1.0);
+    EXPECT_EQ(hubbardDerivs.at("He"), 2.0);
+
+    ASSERT_THROW_MSG(
+        parser.parseHubbardDerivs({"hubbard_derivs", "=", "H:1.0,He"}, 0),
+        InputFileException,
+        "Invalid hubbard_derivs format \"H:1.0,He\" in input file."
     )
 }

@@ -20,38 +20,36 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _QM_SETUP_HPP_
+#ifndef _HUBBARD_DERIV_MAP_HPP_
 
-#define _QM_SETUP_HPP_
+#define _HUBBARD_DERIV_MAP_HPP_
 
-#include "typeAliases.hpp"
+#include <string>
+#include <unordered_map>   // for unordered_map
 
-namespace setup
+namespace constants
 {
-    void setupQM(pq::Engine &);
-
     /**
-     * @class QMSetup
-     *
-     * @brief Setup QM
-     *
+     * @brief Map of Hubbard Derivatives for the 3OB Parameter Set
      */
-    class QMSetup
-    {
-       private:
-        pq::QMMDEngine &_engine;
-
-       public:
-        explicit QMSetup(pq::QMMDEngine &engine);
-
-        void setup();
-        void setupQMMethod();
-        void setupQMMethodAseDftbPlus();
-        void setupQMScript() const;
-        void setupCoulombRadiusCutOff() const;
-        void setupWriteInfo() const;
+    const std::unordered_map<std::string, double> hubbardDerivMap3ob = {
+        {"H", -0.1857},
+        {"C", -0.1492},
+        {"N", -0.1535},
+        {"O", -0.1575},
+        {"S", -0.11},
+        {"P", -0.14},
+        {"Zn", -0.03},
+        {"Mg", -0.02},
+        {"F", -0.1623},
+        {"Cl", -0.0697},
+        {"Br", -0.0573},
+        {"I", -0.0433},
+        {"Na", -0.0454},
+        {"K", -0.0339},
+        {"Ca", -0.0340},
     };
 
-}   // namespace setup
+}   // namespace constants
 
-#endif   // _QM_SETUP_HPP_
+#endif   // _HUBBARD_DERIV_MAP_HPP_

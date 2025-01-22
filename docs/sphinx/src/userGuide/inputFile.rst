@@ -94,7 +94,7 @@ Possible options are:
 
    2. **qm-md** - Represents a full quantum mechanics molecular dynamics simulation. For more information see the :ref:`qmKeys` section.
 
-   3. **qm-rpmd** - Represents a full quantum mechanics ring polymer molecular dynamics simulation. For more information see the :ref:`ringPolymerMDKeys` section
+   3. **qm-rpmd** - Represents a full quantum mechanics ring polymer molecular dynamics simulation. For more information see the :ref:`_ringpolymermdKeys` section
 
    4. **qmmm-md** - Represents a hybrid quantum mechanics - molecular mechanics molecular dynamics simulation. (Not implemented yet)
 
@@ -359,7 +359,7 @@ The ``momentum_file`` keyword sets the name for the :ref:`momentumFile`, which s
 .. _referencefilekey:
 
 Reference File
-=============
+===============
 
 .. admonition:: Key
    :class: tip
@@ -1270,6 +1270,8 @@ Possible options are:
    4. **mace**  - `MACE-MP <https://arxiv.org/abs/2401.00096>`_ same as using **mace_mp**
 
    5. **mace_off** - `MACE-OFF23 <https://arxiv.org/abs/2312.15211>`_
+
+   6. **ase-dftbplus** - `DFTB+ <https://wiki.fysik.dtu.dk/ase/ase/calculators/dftb.html#module-ase.calculators.dftb>`_ called by `ASE <https://wiki.fysik.dtu.dk/ase/>`_ 
    
 .. _qmscriptKey:
 
@@ -1322,7 +1324,7 @@ Dispersion Correction
 
 With the ``dispersion`` keyword the user can activate the dispersion correction for the QM calculations - at the moment only enabled for ASE based QM engines.
 
-.. _ringPolymerMDKeys:
+.. _maceModelSizeKey:
 
 MACE Model Size
 ===============
@@ -1341,6 +1343,71 @@ Possible options are:
    2. **medium** (default) - medium MACE model
 
    3. **large** - large MACE model
+
+
+.. _slakosTypeKey:
+
+ASE-DFTB+ Approach
+=============
+
+.. admonition:: Key
+    :class: tip
+
+    slakos = {string}
+
+With the ``slakos`` keyword the user can specify the type of the ``ase-dftbplus`` approach for DFTB+ calculations.
+
+Possible options are:
+
+    1. **3ob** - 3ob parameters
+
+    2. **matsci** - matsci parameters
+
+    3. **custom** - custom parameters (see :ref:`slakosPathKey`)
+
+.. _slakosPathKey:
+
+Slater-Koster Path
+==================
+
+.. admonition:: Key
+    :class: tip
+
+    slakos_path = {pathFile}
+
+With the ``slakos_path`` keyword the user can specify the path to the Slater-Koster files for ASE DFTB+ calculations. Is only compatible, but mandatory if the ``slakos`` keyword is set to **custom**.
+
+.. _thirdOrderKey:
+
+Third-Order
+===========
+
+.. admonition:: Key
+    :class: tip
+
+    third_order = {bool} -> false
+
+With the ``third_order`` keyword the user can activate the 3rd order DFTB expansion according to `Grimme et al. <https://pubs.acs.org/doi/10.1021/ct100684s>`_ for ASE DFTB+ calculations. Is automatically set to ``true`` if the ``slakos`` keyword is set to **3ob**.
+
+.. _hubbardDerivKey:
+
+Hubbard Derivatives
+===================
+
+.. admonition:: Key
+    :class: tip
+
+    hubbard_derivs = {dict}
+
+If the Slater-Koster parameters are of DFTB3 type, the Hubbard derivatives can be set with the ``hubbard_derivs`` keyword. The Hubbard derivatives are given as a dictionary with the chemical element as key and the Hubbard derivative as value. Standard Hubbard derivatives for ``slakos`` **3ob** are preset according to `dftb.org <https://github.com/dftbparams/3ob>`_ and can be overwritten by the user.
+
+.. admonition:: Example
+    :class: code
+
+    hubbard_derivs = C: 0.1, H: 0.2, O: 0.3;
+
+
+
 
 .. _ringpolymermdKeys:
 
