@@ -38,7 +38,8 @@ using namespace constants;
 AseDftbRunner::AseDftbRunner(
     const std::string                             &slakosPath,
     const bool                                     thirdOrder,
-    const std::unordered_map<std::string, double> &hubbardDerivs
+    const std::unordered_map<std::string, double> &hubbardDerivs,
+    const bool                                     dispersion
 )
     : ASEQMRunner()
 {
@@ -50,6 +51,16 @@ AseDftbRunner::AseDftbRunner(
         const py::dict calculatorArgs;
 
         calculatorArgs["slako_dir"] = slakosPath.c_str();
+
+        if (dispersion)
+        {
+            calculatorArgs["Hamiltonian_Dispersion"]            = "DftD3{";
+            calculatorArgs["Hamiltonian_Dispersion_Damping_a1"] = "0.746";
+            calculatorArgs["Hamiltonian_Dispersion_Damping_a2"] = "4.191";
+            calculatorArgs["Hamiltonian_Dispersion_Damping"] = "BeckeJohnson{";
+            calculatorArgs["Hamiltonian_Dispersion_s6"]      = "1.0";
+            calculatorArgs["Hamiltonian_Dispersion_s8"]      = "3.209";
+        }
 
         if (thirdOrder)
         {

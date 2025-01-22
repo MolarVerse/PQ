@@ -100,23 +100,29 @@ TEST_F(TestInputFileReader, parseDispersion)
     EXPECT_FALSE(QMSettings::useDispersionCorr());
 
     auto parser = QMInputParser(*_engine);
-    parser.parseDispersion({"dispersion", "=", "on"}, 0);
-    EXPECT_TRUE(QMSettings::useDispersionCorr());
-
-    parser.parseDispersion({"dispersion", "=", "off"}, 0);
-    EXPECT_FALSE(QMSettings::useDispersionCorr());
-
     parser.parseDispersion({"dispersion", "=", "true"}, 0);
     EXPECT_TRUE(QMSettings::useDispersionCorr());
 
+    parser.parseDispersion({"dispersion", "=", "yes"}, 0);
+    EXPECT_TRUE(QMSettings::useDispersionCorr());
+
+    parser.parseDispersion({"dispersion", "=", "on"}, 0);
+    EXPECT_TRUE(QMSettings::useDispersionCorr());
+
     parser.parseDispersion({"dispersion", "=", "false"}, 0);
+    EXPECT_FALSE(QMSettings::useDispersionCorr());
+
+    parser.parseDispersion({"dispersion", "=", "no"}, 0);
+    EXPECT_FALSE(QMSettings::useDispersionCorr());
+
+    parser.parseDispersion({"dispersion", "=", "off"}, 0);
     EXPECT_FALSE(QMSettings::useDispersionCorr());
 
     ASSERT_THROW_MSG(
         parser.parseDispersion({"dispersion", "=", "notABool"}, 0),
         InputFileException,
         "Invalid dispersion \"notABool\" in input file.\n"
-        "Possible values are: true, false, on, off"
+        "Possible values are: true, yes, on, false, no, off"
     )
 }
 
@@ -268,10 +274,7 @@ TEST_F(TestInputFileReader, parseHubbardDerivs)
 {
     auto parser = QMInputParser(*_engine);
 
-    parser.parseHubbardDerivs(
-        {"hubbard_derivs", "=", "H:1.0,He:2.0"},
-        0
-    );
+    parser.parseHubbardDerivs({"hubbard_derivs", "=", "H:1.0,He:2.0"}, 0);
 
     const auto hubbardDerivs = QMSettings::getHubbardDerivs();
     EXPECT_EQ(hubbardDerivs.size(), 2);

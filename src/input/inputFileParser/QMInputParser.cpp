@@ -233,16 +233,16 @@ void QMInputParser::parseDispersion(
 
     const auto dispersion = toLowerCopy(lineElements[2]);
 
-    if ("true" == dispersion || "on" == dispersion)
+    if ("true" == dispersion || "yes" == dispersion || "on" == dispersion)
         QMSettings::setUseDispersionCorrection(true);
 
-    else if ("false" == dispersion || "off" == dispersion)
+    else if ("false" == dispersion || "no" == dispersion || "off" == dispersion)
         QMSettings::setUseDispersionCorrection(false);
 
     else
         throw InputFileException(std::format(
             "Invalid dispersion \"{}\" in input file.\n"
-            "Possible values are: true, false, on, off",
+            "Possible values are: true, yes, on, false, no, off",
             lineElements[2]
         ));
 }

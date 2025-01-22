@@ -43,7 +43,8 @@ namespace QM
         explicit AseDftbRunner(
             const std::string                             &slakosPath,
             const bool                                     thirdOrder,
-            const std::unordered_map<std::string, double> &hubbardDerivs
+            const std::unordered_map<std::string, double> &hubbardDerivs,
+            const bool                                     dispersion
         );
 
         /***************************

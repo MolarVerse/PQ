@@ -108,7 +108,8 @@ void QMSetup::setupQMMethodAseDftbPlus()
 
     if (!QMSettings::useThirdOrderDftb() && QMSettings::isHubbardDerivsSet())
         throw InputFileException(
-            "You have set custom Hubbard derivatives but disabled 3rd order DFTB. "
+            "You have set custom Hubbard derivatives but disabled 3rd order "
+            "DFTB. "
             "This setup is invalid."
         );
 }
@@ -270,18 +271,21 @@ void QMSetup::setupWriteInfo() const
         const auto thirdOrder         = QMSettings::useThirdOrderDftb();
         const auto hubbardDerivs      = QMSettings::getHubbardDerivs();
         const auto ishubbardDerivsSet = QMSettings::isHubbardDerivsSet();
+        const auto dispersion         = QMSettings::useDispersionCorr();
 
         // clang-format off
-        const auto slakosTypeMsg           = std::format("DFTB approach:       {}", string(slakosType));
-        const auto slakosPathMsg           = std::format("sk file path:        {}", slakosPath);
-        const auto thirdOrderMsg           = std::format("3rd order is turned: {}", thirdOrder ? "on" : "off");
+        const auto slakosTypeMsg           = std::format("DFTB approach:        {}", string(slakosType));
+        const auto slakosPathMsg           = std::format("sk file path:         {}", slakosPath);
+        const auto dispersionMsg           = std::format("Dispersion is turned: {}", dispersion ? "on" : "off");
+        const auto thirdOrderMsg           = std::format("3rd order is turned:  {}", thirdOrder ? "on" : "off");
         const auto threeOBThirdOrderMsg    = std::format("3ob approach has been chosen while disabling 3rd order DFTB. This setup is not recommended.");
-        const auto hubbardDerivsMsg        = std::format("Hubbard derivatives: {}", string(hubbardDerivs));
+        const auto hubbardDerivsMsg        = std::format("Hubbard derivatives:  {}", string(hubbardDerivs));
         const auto threeOBHubbardDerivsMsg = std::format("3ob approach has been chosen while setting custom Hubbard derivatives. This setup is not recommended.");
         // clang-format on
 
         logOutput.writeSetupInfo(slakosTypeMsg);
         logOutput.writeSetupInfo(slakosPathMsg);
+        logOutput.writeSetupInfo(dispersionMsg);
         logOutput.writeSetupInfo(thirdOrderMsg);
         if (ishubbardDerivsSet)
             logOutput.writeSetupInfo(hubbardDerivsMsg);

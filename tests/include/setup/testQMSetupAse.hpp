@@ -61,6 +61,7 @@ class TestQMSetupAse : public ::testing::Test
         ::remove("default.log");
         QMSettings::setQMMethod(QMMethod::NONE);
         QMSettings::setSlakosType("none");
+        QMSettings::setUseDispersionCorrection(false);
         QMSettings::setUseThirdOrderDftb(false);
         QMSettings::setIsThirdOrderDftbSet(false);
         QMSettings::setHubbardDerivs({});

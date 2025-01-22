@@ -35,6 +35,7 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OB)
 {
     QMSettings::setSlakosType("3ob");
     QMSettings::setUseThirdOrderDftb(true);
+    QMSettings::setUseDispersionCorrection(true);
     _qmSetup->setupWriteInfo();
 
     std::ifstream file("default.log");
@@ -44,14 +45,16 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OB)
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
-    EXPECT_EQ(line, "         DFTB approach:       3ob");
+    EXPECT_EQ(line, "         DFTB approach:        3ob");
     getline(file, line);
     // clang-format off
     std::string skPath {__SLAKOS_DIR__ + string(QMSettings::getSlakosType()) + "/skfiles/"};
-    EXPECT_EQ(line, "         sk file path:        " + skPath);
+    EXPECT_EQ(line, "         sk file path:         " + skPath);
     // clang-format on
     getline(file, line);
-    EXPECT_EQ(line, "         3rd order is turned: on");
+    EXPECT_EQ(line, "         Dispersion is turned: on");
+    getline(file, line);
+    EXPECT_EQ(line, "         3rd order is turned:  on");
 }
 
 TEST_F(TestQMSetupAse, setupAseDftbplus3OBno3rdOrder)
@@ -68,14 +71,16 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OBno3rdOrder)
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
-    EXPECT_EQ(line, "         DFTB approach:       3ob");
+    EXPECT_EQ(line, "         DFTB approach:        3ob");
     getline(file, line);
     // clang-format off
     std::string skPath {__SLAKOS_DIR__ + string(QMSettings::getSlakosType()) + "/skfiles/"};
-    EXPECT_EQ(line, "         sk file path:        " + skPath);
+    EXPECT_EQ(line, "         sk file path:         " + skPath);
     // clang-format on
     getline(file, line);
-    EXPECT_EQ(line, "         3rd order is turned: off");
+    EXPECT_EQ(line, "         Dispersion is turned: off");
+    getline(file, line);
+    EXPECT_EQ(line, "         3rd order is turned:  off");
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
@@ -99,17 +104,19 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OBCustomHubbardDerivs)
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
-    EXPECT_EQ(line, "         DFTB approach:       3ob");
+    EXPECT_EQ(line, "         DFTB approach:        3ob");
     getline(file, line);
     // clang-format off
     std::string skPath {__SLAKOS_DIR__ + string(QMSettings::getSlakosType()) + "/skfiles/"};
-    EXPECT_EQ(line, "         sk file path:        " + skPath);
+    EXPECT_EQ(line, "         sk file path:         " + skPath);
     // clang-format on
     getline(file, line);
-    EXPECT_EQ(line, "         3rd order is turned: on");
+    EXPECT_EQ(line, "         Dispersion is turned: off");
+    getline(file, line);
+    EXPECT_EQ(line, "         3rd order is turned:  on");
     getline(file, line);
     // clang-format off
-    EXPECT_EQ(line, "         Hubbard derivatives: H: -0.3");
+    EXPECT_EQ(line, "         Hubbard derivatives:  H: -0.3");
     // clang-format on
     getline(file, line);
     EXPECT_EQ(line, "");
@@ -122,6 +129,7 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OBCustomHubbardDerivs)
 TEST_F(TestQMSetupAse, setupAseDftbplusMatsci)
 {
     QMSettings::setSlakosType("matsci");
+    QMSettings::setUseDispersionCorrection(true);
     _qmSetup->setupWriteInfo();
 
     std::ifstream file("default.log");
@@ -131,14 +139,16 @@ TEST_F(TestQMSetupAse, setupAseDftbplusMatsci)
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
-    EXPECT_EQ(line, "         DFTB approach:       matsci");
+    EXPECT_EQ(line, "         DFTB approach:        matsci");
     getline(file, line);
     // clang-format off
     std::string skPath {__SLAKOS_DIR__ + string(QMSettings::getSlakosType()) + "/skfiles/"};
-    EXPECT_EQ(line, "         sk file path:        " + skPath);
+    EXPECT_EQ(line, "         sk file path:         " + skPath);
     // clang-format on
     getline(file, line);
-    EXPECT_EQ(line, "         3rd order is turned: off");
+    EXPECT_EQ(line, "         Dispersion is turned: on");
+    getline(file, line);
+    EXPECT_EQ(line, "         3rd order is turned:  off");
 }
 
 TEST_F(TestQMSetupAse, setupAseDftbplusCustom)
@@ -154,17 +164,21 @@ TEST_F(TestQMSetupAse, setupAseDftbplusCustom)
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
-    EXPECT_EQ(line, "         DFTB approach:       custom");
+    EXPECT_EQ(line, "         DFTB approach:        custom");
     getline(file, line);
-    EXPECT_EQ(line, "         sk file path:        custom/path/");
+    EXPECT_EQ(line, "         sk file path:         custom/path/");
     getline(file, line);
-    EXPECT_EQ(line, "         3rd order is turned: off");
+    EXPECT_EQ(line, "         Dispersion is turned: off");
+    getline(file, line);
+    EXPECT_EQ(line, "         3rd order is turned:  off");
 }
 
 TEST_F(TestQMSetupAse, setupAseDftbplusCustom3rdOrder)
 {
     QMSettings::setSlakosType("custom");
     QMSettings::setSlakosPath("custom/path/");
+    QMSettings::setUseDispersionCorrection(true);
+    QMSettings::setUseThirdOrderDftb(true);
     QMSettings::setUseThirdOrderDftb(true);
     QMSettings::setIsThirdOrderDftbSet(true);
     QMSettings::setHubbardDerivs({{"H", -0.3}});
@@ -178,11 +192,13 @@ TEST_F(TestQMSetupAse, setupAseDftbplusCustom3rdOrder)
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
-    EXPECT_EQ(line, "         DFTB approach:       custom");
+    EXPECT_EQ(line, "         DFTB approach:        custom");
     getline(file, line);
-    EXPECT_EQ(line, "         sk file path:        custom/path/");
+    EXPECT_EQ(line, "         sk file path:         custom/path/");
     getline(file, line);
-    EXPECT_EQ(line, "         3rd order is turned: on");
+    EXPECT_EQ(line, "         Dispersion is turned: on");
     getline(file, line);
-    EXPECT_EQ(line, "         Hubbard derivatives: H: -0.3");
+    EXPECT_EQ(line, "         3rd order is turned:  on");
+    getline(file, line);
+    EXPECT_EQ(line, "         Hubbard derivatives:  H: -0.3");
 }
