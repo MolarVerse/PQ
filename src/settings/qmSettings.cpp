@@ -186,6 +186,9 @@ void QMSettings::setQMMethod(const std::string_view &method)
     else if ("mace" == methodToLowerAndReplaceDashes)
         _qmMethod = MACE;
 
+    else if ("fairchem" == methodToLowerAndReplaceDashes)
+        _qmMethod = FAIRCHEM;
+
     else if ("ase_dftbplus" == methodToLowerAndReplaceDashes)
         _qmMethod = ASEDFTBPLUS;
 
@@ -278,6 +281,63 @@ void QMSettings::setMaceModelPath(const std::string_view &path)
 {
     _maceModelPath = path;
 }
+
+/**
+ * @brief sets the FAIR-Chem config yml file in settings
+ *
+ * @param configyml
+ */
+void QMSettings::setFairchemConfigYml(const std::string_view &configyml)
+{
+    _fairchemConfigYml = configyml;
+}
+
+/**
+ * @brief sets the FAIR-Chem checkpoint path in settings
+ *
+ * @param checkpoint
+ */
+void QMSettings::setFairchemCheckpointPath(const std::string_view &checkpoint)
+{
+    _fairchemCheckpointPath = checkpoint;
+}
+
+/**
+ * @brief sets the FAIR-Chem model name in settings
+ *
+ * @param model
+ */
+void QMSettings::setFairchemModelName(const std::string_view &model)
+{
+    _fairchemModelName = model;
+}
+
+/**
+ * @brief sets the local cache for FAIR-Chem
+ *
+ * @param localCache
+ */
+void QMSettings::setFairchemLocalCache(const std::string_view &localCache)
+{
+    _fairchemLocalCache = localCache;
+}
+
+/**
+ * @brief sets the trainer for FAIR-Chem
+ *
+ * @param trainer
+ */
+
+void QMSettings::setFairchemTrainer(const std::string_view &trainer)
+{
+    _fairchemTrainer = trainer;
+}
+
+/**
+ * @brief sets  cpu is used for FAIR-Chem
+ * @param useCPU
+ */
+void QMSettings::setUseCPU(const bool useCPU) { _useCPU = useCPU; }
 
 /**
  * @brief sets the qmScript in settings

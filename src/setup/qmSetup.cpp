@@ -264,6 +264,32 @@ void QMSetup::setupWriteInfo() const
         logOutput.writeSetupInfo(dispCorrMsg);
     }
 
+    if (qmMethod == FAIRCHEM)
+    {
+        const auto config_yml      = QMSettings::getFairchemConfigYml();
+        const auto checkpoint_path = QMSettings::getFairchemCheckpointPath();
+        const auto model_name      = QMSettings::getFairchemModelName();
+        const auto local_cache     = QMSettings::getFairchemLocalCache();
+        const auto trainer         = QMSettings::getFairchemTrainer();
+        const auto useCpu          = QMSettings::useCPU() ? "on" : "off";
+
+        // clang-format off
+        const auto configYmlMsg      = std::format("Config yml:           {}", string(config_yml));
+        const auto checkpointPathMsg = std::format("Checkpoint path:      {}", string(checkpoint_path));
+        const auto modelNameMsg      = std::format("Model name:           {}", string(model_name));
+        const auto localCacheMsg     = std::format("Local cache:          {}", string(local_cache));
+        const auto trainerMsg        = std::format("Trainer:              {}", string(trainer));
+        const auto useCpuMsg         = std::format("Use CPU:              {}", useCpu);
+        // clang-format on
+
+        logOutput.writeSetupInfo(configYmlMsg);
+        logOutput.writeSetupInfo(checkpointPathMsg);
+        logOutput.writeSetupInfo(modelNameMsg);
+        logOutput.writeSetupInfo(localCacheMsg);
+        logOutput.writeSetupInfo(trainerMsg);
+        logOutput.writeSetupInfo(useCpuMsg);
+    }
+
     if (qmMethod == ASEDFTBPLUS)
     {
         const auto slakosType         = QMSettings::getSlakosType();

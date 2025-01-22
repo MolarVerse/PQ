@@ -44,7 +44,8 @@ namespace settings
         ASEDFTBPLUS,
         PYSCF,
         TURBOMOLE,
-        MACE
+        MACE,
+        FAIRCHEM
     };
 
     /**
@@ -107,6 +108,7 @@ namespace settings
         static inline std::string _slakosPath       = "";
 
         static inline bool _useDispersionCorrection = false;
+        static inline bool _useCPU                  = false;
         static inline bool _useThirdOrderDftb       = false;
         static inline bool _isThirdOrderDftbSet     = false;
         static inline bool _isHubbardDerivsSet      = false;
@@ -133,6 +135,13 @@ namespace settings
         static void setMaceModelType(const MaceModelType model);
         static void setMaceModelPath(const std::string_view &path);
 
+        static void setFairchemConfigYml(const std::string_view &configyml);
+        static void setFairchemCheckpointPath(const std::string_view &path);
+        static void setFairchemModelName(const std::string_view &model);
+        static void setFairchemLocalCache(const std::string_view &localcache);
+        static void setFairchemTrainer(const std::string_view &trainer);
+        static void setUseCPU(const bool use);
+
         static void setQMScript(const std::string_view &script);
         static void setQMScriptFullPath(const std::string_view &script);
 
@@ -158,6 +167,13 @@ namespace settings
         [[nodiscard]] static MaceModelSize getMaceModelSize();
         [[nodiscard]] static MaceModelType getMaceModelType();
         [[nodiscard]] static std::string   getMaceModelPath();
+
+        [[nodiscard]] static std::string getFairchemConfigYml();
+        [[nodiscard]] static std::string getFairchemCheckpointPath();
+        [[nodiscard]] static std::string getFairchemModelName();
+        [[nodiscard]] static std::string getFairchemLocalCache();
+        [[nodiscard]] static std::string getFairchemTrainer();
+        [[nodiscard]] static bool        useCPU();
 
         [[nodiscard]] static std::string getQMScript();
         [[nodiscard]] static std::string getQMScriptFullPath();
