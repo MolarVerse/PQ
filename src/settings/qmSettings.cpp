@@ -52,6 +52,7 @@ std::string settings::string(const QMMethod method)
         case PYSCF: return "PYSCF";
         case TURBOMOLE: return "TURBOMOLE";
         case MACE: return "MACE";
+        case FAIRCHEM: return "FAIRCHEM";
 
         default: return "none";
     }
