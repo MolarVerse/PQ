@@ -90,12 +90,6 @@ QMInputParser::QMInputParser(Engine &engine) : InputFileParser(engine)
     );
 
     addKeyword(
-        std::string("fairchem_model_name"),
-        bind_front(&QMInputParser::parseFairchemModelName, this),
-        false
-    );
-
-    addKeyword(
         std::string("slakos"),
         bind_front(&QMInputParser::parseSlakosType, this),
         false
@@ -341,13 +335,13 @@ void QMInputParser::parseMaceQMMethod(const std::string_view &model)
  * @param lineNumber
  */
 
-void QMInputParser::parseFairchemModelName(
+void QMInputParser::parseFairchemModelType(
     const std::vector<std::string> &lineElements,
     const size_t                    lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
-    QMSettings::setFairchemModelName(lineElements[2]);
+    QMSettings::setFairchemModelType(lineElements[2]);
 }
 
 /**

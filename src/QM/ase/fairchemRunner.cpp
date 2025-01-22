@@ -29,11 +29,11 @@ using QM::FairchemRunner;
 /**
  * @brief Construct a new FairchemRunner::FairchemRunner object
  *
- * @param model_name
+ * @param model
  *
  * @throw py::error_already_set if the import of the fairchem module fails
  */
-FairchemRunner::FairchemRunner(const std::string &model_name, ) : ASEQMRunner()
+FairchemRunner::FairchemRunner(const std::string &modelType) : ASEQMRunner()
 {
     try
     {
@@ -42,7 +42,9 @@ FairchemRunner::FairchemRunner(const std::string &model_name, ) : ASEQMRunner()
 
         const py::dict calculatorArgs;
 
-        calculatorArgs["model_name"] = model_name.c_str();
+        calculatorArgs["model_name"] = modelType.c_str();
+
+        calculatorArgs["local_cache"] = "/tmp/fairchem_checkpoints/";
 
         _calculator = calculators.attr("OCPCalculator")(**calculatorArgs);
     }

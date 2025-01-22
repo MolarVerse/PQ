@@ -134,7 +134,7 @@ namespace settings
         static void setMaceModelType(const MaceModelType model);
         static void setMaceModelPath(const std::string_view &path);
 
-        static void setFairchemModelName(const std::string_view &model);
+        static void setFairchemModelType(const std::string_view &model);
 
         static void setQMScript(const std::string_view &script);
         static void setQMScriptFullPath(const std::string_view &script);
@@ -162,7 +162,7 @@ namespace settings
         [[nodiscard]] static MaceModelType getMaceModelType();
         [[nodiscard]] static std::string   getMaceModelPath();
 
-        [[nodiscard]] static std::string getFairchemModelName();
+        [[nodiscard]] static std::string getFairchemModelType();
 
         [[nodiscard]] static std::string getQMScript();
         [[nodiscard]] static std::string getQMScriptFullPath();

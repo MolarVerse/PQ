@@ -118,8 +118,6 @@ qm_loop_time_limit          false
 dispersion                  false
 mace_model_size             false
 
-fairchem_model_name         false
-
 slakos                      false
 slakos_path                 false
 third_order                 false

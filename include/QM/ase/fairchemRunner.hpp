@@ -38,15 +38,7 @@ namespace QM
        public:
         ~FairchemRunner() override = default;
 
-        explicit FairchemRunner(
-            const std::string& config_yml,
-            const std::string& checkpoint_path,
-            const std::string& model_name,
-            const std::string& local_cache,
-            const std::string& trainer,
-            const bool         cpu
-
-        );
+        explicit FairchemRunner(const std::string& modelType);
     };
 }   // namespace QM
 

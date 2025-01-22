@@ -266,13 +266,13 @@ void QMSetup::setupWriteInfo() const
 
     if (qmMethod == FAIRCHEM)
     {
-        const auto model_name = QMSettings::getFairchemModelName();
+        const auto modelType = QMSettings::getFairchemModelType();
 
         // clang-format off
-        const auto modelNameMsg      = std::format("Model name:           {}", string(model_name));
+        const auto modelTypeMsg     = std::format("Model name:           {}", string(modelType));
         // clang-format on
 
-        logOutput.writeSetupInfo(modelNameMsg);
+        logOutput.writeSetupInfo(modelTypeMsg);
     }
 
     if (qmMethod == ASEDFTBPLUS)
