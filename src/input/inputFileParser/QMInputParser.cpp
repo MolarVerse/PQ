@@ -195,11 +195,17 @@ void QMInputParser::parseQMMethod(
     else if (method.starts_with("mace"))
         parseMaceQMMethod(method);
 
+    else if ("fairchem" == method)
+    {
+        QMSettings::setQMMethod(FAIRCHEM);
+        ReferencesOutput::addReferenceFile(_FAIRCHEM_FILE_);
+    }
+
     else
         throw InputFileException(std::format(
             "Invalid qm_prog \"{}\" in input file.\n"
             "Possible values are: dftbplus, ase_dftbplus, pyscf, turbomole, "
-            "mace, mace_mp, mace_off",
+            "mace, mace_mp, mace_off, fairchem",
             lineElements[2]
         ));
 }
@@ -356,6 +362,125 @@ void QMInputParser::parseMaceQMMethod(const std::string_view &model)
     }
 
     QMSettings::setQMMethod(QMMethod::MACE);
+}
+
+/**
+ * @brief parse the Fairchem model name
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
+
+void QMInputParser::parseFairchemModelName(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+    QMSettings::setFairchemModelName(lineElements[2]);
+}
+
+/**
+ * @brief parse the Fairchem config yml
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
+void QMInputParser::parseFairchemConfigYml(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+    QMSettings::setFairchemConfigYml(lineElements[2]);
+}
+
+/**
+ * @brief parse the Fairchem checkpoint path
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
+void QMInputParser::parseFairchemCheckpointPath(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+    QMSettings::setFairchemCheckpointPath(lineElements[2]);
+}
+
+/**
+ * @brief parse the Fairchem local cache
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
+void QMInputParser::parseFairchemLocalCache(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+
+    const auto localCache = toLowerCopy(lineElements[2]);
+
+    if ("true" == localCache || "yes" == localCache || "on" == localCache)
+        QMSettings::setFairchemLocalCache(true);
+
+    else if ("false" == localCache || "no" == localCache || "off" == localCache)
+        QMSettings::setFairchemLocalCache(false);
+
+    else
+        throw InputFileException(std::format(
+            "Invalid fairchem_local_cache \"{}\" in input file.\n"
+            "Possible values are: true, yes, on, false, no, off",
+            lineElements[2]
+        ));
+}
+
+/**
+ * @brief parse the Fairchem trainer
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
+void QMInputParser::parseFairchemTrainer(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+    QMSettings::setFairchemTrainer(lineElements[2]);
+}
+
+/**
+ * @brief parse if the CPU should be used
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
+void QMInputParser::parseUseCPU(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+
+    const auto useCPU = toLowerCopy(lineElements[2]);
+
+    if ("true" == useCPU || "yes" == useCPU || "on" == useCPU)
+        QMSettings::setUseCPU(true);
+
+    else if ("false" == useCPU || "no" == useCPU || "off" == useCPU)
+        QMSettings::setUseCPU(false);
+
+    else
+        throw InputFileException(std::format(
+            "Invalid use_cpu \"{}\" in input file.\n"
+            "Possible values are: true, yes, on, false, no, off",
+            lineElements[2]
+        ));
 }
 
 /**
