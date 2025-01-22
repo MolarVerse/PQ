@@ -1,6 +1,7 @@
 add_library(aseQM
     aseQMRunner.cpp
     maceRunner.cpp
+    fairchemRunner.cpp
     aseDftbRunner.cpp
 )
 
