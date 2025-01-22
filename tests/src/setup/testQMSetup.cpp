@@ -188,3 +188,22 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlusCustom)
     qmSetup.setupQMMethodAseDftbPlus();
     EXPECT_EQ(QMSettings::useThirdOrderDftb(), false);
 }
+
+TEST(TestQMSetup, setupQMMethodAseDftbPlusHubbardDerivsNo3rdOrder)
+{
+    engine::QMMDEngine engine;
+    QMSetup            qmSetup{QMSetup(engine)};
+
+    QMSettings::setQMMethod(QMMethod::ASEDFTBPLUS);
+    QMSettings::setSlakosType("custom");
+    QMSettings::setIsThirdOrderDftbSet(true);
+    QMSettings::setUseThirdOrderDftb(false);
+    QMSettings::setIsHubbardDerivsSet(true);
+    QMSettings::setHubbardDerivs({{"H", 1.0}});
+
+    ASSERT_THROW_MSG(
+        qmSetup.setupQMMethodAseDftbPlus(),
+        customException::InputFileException,
+        "You have set custom Hubbard derivatives but disabled 3rd order DFTB. This setup is invalid."
+    );
+}

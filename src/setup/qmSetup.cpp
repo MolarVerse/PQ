@@ -105,6 +105,12 @@ void QMSetup::setupQMMethodAseDftbPlus()
     if (QMSettings::getSlakosType() == SlakosType::THREEOB &&
         !QMSettings::isThirdOrderDftbSet())
         QMSettings::setUseThirdOrderDftb(true);
+
+    if (!QMSettings::useThirdOrderDftb() && QMSettings::isHubbardDerivsSet())
+        throw InputFileException(
+            "You have set custom Hubbard derivatives but disabled 3rd order DFTB. "
+            "This setup is invalid."
+        );
 }
 
 /**
