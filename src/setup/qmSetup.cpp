@@ -31,6 +31,7 @@
 #include "qmSettings.hpp"          // for QMMethod, QMSettings
 #include "qmmdEngine.hpp"          // for QMMDEngine
 #include "settings.hpp"            // for Settings
+#include "stdoutOutput.hpp"        // for StdoutOutput
 #include "stringUtilities.hpp"     // for toLowerCopy
 #include "turbomoleRunner.hpp"     // for TurbomoleRunner
 
@@ -220,6 +221,7 @@ void QMSetup::setupWriteInfo() const
     using enum QMMethod;
 
     auto &logOutput = _engine.getLogOutput();
+    auto &stdOut    = _engine.getStdoutOutput();
 
     const auto qmMethod        = QMSettings::getQMMethod();
     const auto qmRunnerMessage = std::format("QM runner: {}", string(qmMethod));
@@ -283,12 +285,14 @@ void QMSetup::setupWriteInfo() const
         {
             logOutput.writeEmptyLine();
             logOutput.writeSetupWarning(threeOBThirdOrderMsg);
+            stdOut.writeSetupWarning(threeOBThirdOrderMsg);
         }
 
         if (slakosType == SlakosType::THREEOB && ishubbardDerivsSet)
         {
             logOutput.writeEmptyLine();
             logOutput.writeSetupWarning(threeOBHubbardDerivsMsg);
+            stdOut.writeSetupWarning(threeOBHubbardDerivsMsg);
         }
     }
 
