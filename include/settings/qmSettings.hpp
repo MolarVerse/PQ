@@ -70,6 +70,14 @@ namespace settings
     };
 
     /**
+     * @class enum FairchemModelType
+     */
+    enum class FairchemModelType : size_t
+    {
+        ODAC23,
+    };
+
+    /**
      * @class enum Slakos
      */
     enum class SlakosType : size_t

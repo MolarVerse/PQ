@@ -29,7 +29,7 @@ using QM::FairchemRunner;
 /**
  * @brief Construct a new FairchemRunner::FairchemRunner object
  *
- * @param model
+ * @param modelType
  *
  * @throw py::error_already_set if the import of the fairchem module fails
  */
