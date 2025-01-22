@@ -90,6 +90,42 @@ QMInputParser::QMInputParser(Engine &engine) : InputFileParser(engine)
     );
 
     addKeyword(
+        std::string("fairchem_model_name"),
+        bind_front(&QMInputParser::parseFairchemModelName, this),
+        false
+    );
+
+    addKeyword(
+        std::string("fairchem_config_yml"),
+        bind_front(&QMInputParser::parseFairchemConfigYml, this),
+        false
+    );
+
+    addKeyword(
+        std::string("fairchem_checkpoint_path"),
+        bind_front(&QMInputParser::parseFairchemCheckpointPath, this),
+        false
+    );
+
+    addKeyword(
+        std::string("fairchem_local_cache"),
+        bind_front(&QMInputParser::parseFairchemLocalCache, this),
+        false
+    );
+
+    addKeyword(
+        std::string("fairchem_trainer"),
+        bind_front(&QMInputParser::parseFairchemTrainer, this),
+        false
+    );
+
+    addKeyword(
+        std::string("use_cpu"),
+        bind_front(&QMInputParser::parseUseCPU, this),
+        false
+    );
+
+    addKeyword(
         std::string("slakos"),
         bind_front(&QMInputParser::parseSlakosType, this),
         false
