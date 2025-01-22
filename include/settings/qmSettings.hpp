@@ -74,7 +74,7 @@ namespace settings
      */
     enum class FairchemModelType : size_t
     {
-        ODAC23,
+        ODAC23
     };
 
     /**
@@ -91,6 +91,7 @@ namespace settings
     std::string string(const QMMethod method);
     std::string string(const MaceModelSize model);
     std::string string(const MaceModelType model);
+    std::string string(const FairchemModelType model);
     std::string string(const SlakosType slakos);
     std::string string(
         const std::unordered_map<std::string, double> unordered_map
@@ -105,10 +106,12 @@ namespace settings
     class QMSettings
     {
        private:
-        static inline QMMethod      _qmMethod      = QMMethod::NONE;
-        static inline MaceModelSize _maceModelSize = MaceModelSize::MEDIUM;
-        static inline MaceModelType _maceModelType = MaceModelType::MACE_MP;
-        static inline SlakosType    _slakosType    = SlakosType::NONE;
+        static inline QMMethod          _qmMethod      = QMMethod::NONE;
+        static inline MaceModelSize     _maceModelSize = MaceModelSize::MEDIUM;
+        static inline MaceModelType     _maceModelType = MaceModelType::MACE_MP;
+        static inline FairchemModelType _fairchemModelType =
+            FairchemModelType::ODAC23;
+        static inline SlakosType _slakosType = SlakosType::NONE;
 
         static inline std::string _qmScript         = "";
         static inline std::string _qmScriptFullPath = "";
@@ -143,6 +146,7 @@ namespace settings
         static void setMaceModelPath(const std::string_view &path);
 
         static void setFairchemModelType(const std::string_view &model);
+        static void setFairchemModelType(const FairchemModelType model);
 
         static void setQMScript(const std::string_view &script);
         static void setQMScriptFullPath(const std::string_view &script);
@@ -170,7 +174,7 @@ namespace settings
         [[nodiscard]] static MaceModelType getMaceModelType();
         [[nodiscard]] static std::string   getMaceModelPath();
 
-        [[nodiscard]] static std::string getFairchemModelType();
+        [[nodiscard]] static FairchemModelType getFairchemModelType();
 
         [[nodiscard]] static std::string getQMScript();
         [[nodiscard]] static std::string getQMScriptFullPath();

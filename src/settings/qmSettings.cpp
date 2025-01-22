@@ -99,6 +99,23 @@ std::string settings::string(const MaceModelType model)
 }
 
 /**
+ * @brief returns the Fairchem Model Type as string
+ *
+ * @param model
+ * @return std::string
+ */
+std::string settings::string(const FairchemModelType model)
+{
+    switch (model)
+    {
+        using enum FairchemModelType;
+
+        case ODAC23: return "odac23";
+
+        default: return "none";
+    }
+}
+/**
  * @brief returns the Slakos Type as string
  *
  * @param slakos
@@ -281,6 +298,34 @@ void QMSettings::setMaceModelPath(const std::string_view &path)
 {
     _maceModelPath = path;
 }
+/**
+ * @brief sets the fairchemModelType to enum in settings
+ *
+ * @param model
+ */
+void QMSettings::setFairchemModelType(const std::string_view &model)
+{
+    using enum FairchemModelType;
+    const auto modelToLower = toLowerAndReplaceDashesCopy(model);
+
+    if ("odac23" == modelToLower)
+        _fairchemModelType = ODAC23;
+
+    else
+        throw UserInputException(
+            std::format("Fairchem {} model not recognized", model)
+        );
+}
+
+/**
+ * @brief sets the fairchemModelType to enum in settings
+ *
+ * @param model
+ */
+void QMSettings::setFairchemModelType(const FairchemModelType model)
+{
+    _fairchemModelType = model;
+}
 
 /**
  * @brief sets the qmScript in settings
@@ -457,6 +502,16 @@ MaceModelType QMSettings::getMaceModelType() { return _maceModelType; }
  * @return std::string
  */
 std::string QMSettings::getMaceModelPath() { return _maceModelPath; }
+
+/**
+ * @brief returns the fairchemModel
+ *
+ * @return FairchemModelType
+ */
+FairchemModelType QMSettings::getFairchemModelType()
+{
+    return _fairchemModelType;
+}
 
 /**
  * @brief returns the qmScript

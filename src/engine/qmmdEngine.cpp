@@ -125,9 +125,9 @@ void QMMDEngine::setMaceQMRunner()
 void QMMDEngine::setFairchemRunner()
 {
 #ifdef WITH_ASE
-    const auto ModelType = QMSettings::getFairchemModelType();
+    const auto modelType = string(QMSettings::getFairchemModelType());
 
-    _qmRunner = make_shared<FairchemRunner>(ModelType);
+    _qmRunner = make_shared<FairchemRunner>(modelType);
 #else
     throw CompileTimeException(
         "The FAIR-Chem qm method was requested but ASE was not enabled at "
