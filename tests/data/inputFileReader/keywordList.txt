@@ -119,11 +119,6 @@ dispersion                  false
 mace_model_size             false
 
 fairchem_model_name         false
-fairchem_config_yml         false
-fairchem_checkpoint_path    false
-fairchem_local_cache        false
-fairchem_trainer            false
-use_cpu                     false
 
 slakos                      false
 slakos_path                 false

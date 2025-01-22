@@ -125,21 +125,9 @@ void QMMDEngine::setMaceQMRunner()
 void QMMDEngine::setFairchemRunner()
 {
 #ifdef WITH_ASE
-    const auto configYml      = QMSettings::getFairchemConfigYml();
-    const auto checkpointPath = QMSettings::getFairchemCheckpointPath();
-    const auto modelName      = QMSettings::getFairchemModelName();
-    const auto localCache     = QMSettings::getFairchemLocalCache();
-    const auto trainer        = QMSettings::getFairchemTrainer();
-    const auto useCpu         = QMSettings::useCPU();
+    const auto modelName = QMSettings::getFairchemModelName();
 
-    _qmRunner = make_shared<FairchemRunner>(
-        configYml,
-        checkpointPath,
-        modelName,
-        localCache,
-        trainer,
-        useCpu
-    );
+    _qmRunner = make_shared<FairchemRunner>(modelName);
 #else
     throw CompileTimeException(
         "The FAIR-Chem qm method was requested but ASE was not enabled at "
