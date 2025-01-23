@@ -43,7 +43,7 @@ FairchemRunner::FairchemRunner(const std::string &modelType) : ASEQMRunner()
         const py::dict calculatorArgs;
 
         if (modelType == "odac23")
-            calculatorArgs["model_name"] = "odac23";
+            calculatorArgs["model_name"] = "GemNet-OC-S2EF-ODAC";
         else
             throw customException::UserInputException(
                 std::format("Fairchem {} model not recognized", modelType)
