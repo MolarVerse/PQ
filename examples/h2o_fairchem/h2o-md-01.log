@@ -1,0 +1,71 @@
+
+************************************************************************
+*                                                                      *
+*                                                                      *
+*                      88888888ba     ,ad8888ba,                       *
+*                      88      "8b   d8"'    `"8b                      *
+*                      88      ,8P  d8'        `8b                     *
+*                      88aaaaaa8P'  88          88                     *
+*                      88""""""'    88          88                     *
+*                      88           Y8,    "88,,8P                     *
+*                      88            Y8a.    Y88P                      *
+*                      88             `"Y8888Y"Y8a                     *
+*                                                                      *
+*                                                                      *
+************************************************************************
+
+         Author:        Jakob Gamper
+         Email:         97gamjak@gmail.com
+
+         Testing:       Josef M. Gallmetzer
+                        Armin Penz
+                        Stefan Seiwald
+                        Benjamin Reitmair
+
+         Version:       v0.5.2-dddde4b2
+         Compile date:  Jan 23 2025 10:39:57
+
+INFO:    Reading Moldescriptor File "moldescriptor.dat"
+
+INFO:    Reading Start File "h2o.rst"
+
+INFO:    Setup of QM runner
+
+         QM runner: FAIRCHEM
+
+         Model name:           odac23
+
+INFO:    Setup of Reset Kinetics
+
+         reset temperature:      first     0 steps, every    -1 steps
+         reset momentum:         first     0 steps, every    -1 steps
+         reset angular momentum: first     0 steps, every    -1 steps
+
+INFO:    Setup of simulation box
+
+         number of atoms:         30
+         total mass:             180.15280 g/mol
+         total charge:             0.00000
+         unconstrained DOF:       87
+
+         density:                0.29915 kg/L
+         volume:          
+
+         box dimensions:        10.00000 Å       10.00000 Å       10.00000 Å
+         box angles:            90.00000°        90.00000°        90.00000°
+
+         coulomb cutoff:         0.00000 Å
+
+         velocities taken from start file "h2o.rst"
+
+INFO:    Setup of thermostat
+
+INFO:    Setup of Manostat
+
+         No manostat selected
+
+
+************************ STARTING SIMULATION ****************************
+
+
+INFO:    Initial momentum = 0.00000e+00 Å*amu/fs
