@@ -39,6 +39,7 @@ namespace settings
         static inline bool _isBoxSet     = false;
 
         static inline bool _initializeVelocities = false;
+        static inline bool _zeroVelocities       = false;
 
        public:
         SimulationBoxSettings()  = delete;
@@ -51,14 +52,16 @@ namespace settings
         static void setDensitySet(const bool densitySet);
         static void setBoxSet(const bool boxSet);
         static void setInitializeVelocities(const bool initializeVelocities);
+        static void setZeroVelocities(const bool initializeVelocities);
 
         /********************
-         * standard setters *
+         * standard getters *
          ********************/
 
         [[nodiscard]] static bool getDensitySet();
         [[nodiscard]] static bool getBoxSet();
         [[nodiscard]] static bool getInitializeVelocities();
+        [[nodiscard]] static bool getZeroVelocities();
     };
 }   // namespace settings
 

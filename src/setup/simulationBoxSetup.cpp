@@ -109,6 +109,7 @@ void SimulationBoxSetup::setup()
     simBox.calculateDegreesOfFreedom();
     simBox.calculateCenterOfMassMolecules();
 
+    checkZeroVelocities();
     initVelocities();
 
     writeSetupInfo();
@@ -385,6 +386,26 @@ void SimulationBoxSetup::checkRcCutoff()
 }
 
 /**
+ * @brief Check if all velocities of the simulation box are 0
+ *
+ * @details If all velocities of the simulation box are 0, _zeroVelocities is
+ * set to true
+ */
+void SimulationBoxSetup::checkZeroVelocities()
+{
+    auto &simBox = _engine.getSimulationBox();
+
+    if (const auto velocities = simBox.getVelocities(); std::ranges::any_of(
+            velocities,
+            [](const auto &vel)
+            { return vel[0] != 0.0 || vel[1] != 0.0 || vel[2] != 0.0; }
+        ))
+        SimulationBoxSettings::setZeroVelocities(false);
+    else
+        SimulationBoxSettings::setZeroVelocities(true);
+}
+
+/**
  * @brief Initialize the velocities of the simulation box
  *
  * @details If initializeVelocities is set, the velocities are initialized with
@@ -392,7 +413,8 @@ void SimulationBoxSetup::checkRcCutoff()
  */
 void SimulationBoxSetup::initVelocities()
 {
-    if (SimulationBoxSettings::getInitializeVelocities())
+    if (SimulationBoxSettings::getInitializeVelocities() &&
+        SimulationBoxSettings::getZeroVelocities())
     {
         MaxwellBoltzmann maxwellBoltzmann;
         maxwellBoltzmann.initializeVelocities(_engine.getSimulationBox());
@@ -405,9 +427,9 @@ void SimulationBoxSetup::initVelocities()
  */
 void SimulationBoxSetup::writeSetupInfo() const
 {
-    auto &log     = _engine.getLogOutput();
-    auto &std  = _engine.getStdoutOutput();
-    auto &simBox  = _engine.getSimulationBox();
+    auto &log    = _engine.getLogOutput();
+    auto &std    = _engine.getStdoutOutput();
+    auto &simBox = _engine.getSimulationBox();
 
     const auto nAtoms = simBox.getNumberOfAtoms();
     const auto mass   = simBox.getTotalMass();
@@ -457,22 +479,20 @@ void SimulationBoxSetup::writeSetupInfo() const
     log.writeEmptyLine();
 
     if (SimulationBoxSettings::getInitializeVelocities() &&
-        MaxwellBoltzmann::useInitializeVelocities())
+        SimulationBoxSettings::getZeroVelocities())
         log.writeSetupInfo(
             "velocities initialized with Maxwell-Boltzmann distribution"
         );
     else if (SimulationBoxSettings::getInitializeVelocities())
     {
-        log.writeSetupWarning(
-            "Ignoring 'init_velocities' because non-zero velocities"
-            "in " +
+        log.writeSetupWarning(std::format(
+            "Ignoring 'init_velocities' because non-zero velocities in \"{}\"",
             FileSettings::getStartFileName()
-        );
-        std.writeSetupWarning(
-            "Ignoring 'init_velocities' because non-zero velocities"
-            "in " +
+        ));
+        std.writeSetupWarning(std::format(
+            "Ignoring 'init_velocities' because non-zero velocities in \"{}\"",
             FileSettings::getStartFileName()
-        );
+        ));
     }
     else
         log.writeSetupInfo(std::format(

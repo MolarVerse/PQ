@@ -57,9 +57,20 @@ void SimulationBoxSettings::setInitializeVelocities(const bool initVelocities)
     _initializeVelocities = initVelocities;
 }
 
+/**
+ * @brief Set zeroVelocities to indicate all zero entries in .rst file for
+ * velocities
+ *
+ * @param zeroVelocities
+ */
+void SimulationBoxSettings::setZeroVelocities(const bool zeroVelocities)
+{
+    _zeroVelocities = zeroVelocities;
+}
+
 /********************
  *                  *
- * standard setters *
+ * standard getters *
  *                  *
  ********************/
 
@@ -89,3 +100,11 @@ bool SimulationBoxSettings::getInitializeVelocities()
 {
     return _initializeVelocities;
 }
+
+/**
+ * @brief get if velocities in .rst file are all zero entries
+ *
+ * @return true
+ * @return false
+ */
+bool SimulationBoxSettings::getZeroVelocities() { return _zeroVelocities; }

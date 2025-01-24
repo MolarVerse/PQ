@@ -44,13 +44,10 @@ namespace maxwellBoltzmann
     {
        public:
         void initializeVelocities(pq::SimBox &);
-        static void setUseInitializeVelocities(const bool useInitializeVelocities);
-        static bool useInitializeVelocities();
 
        private:
         std::random_device _randomDevice{};
         std::mt19937       _generator{_randomDevice()};
-        static inline bool _useInitializeVelocities;
     };
 }   // namespace maxwellBoltzmann
 

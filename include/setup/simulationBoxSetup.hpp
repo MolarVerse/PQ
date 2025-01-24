@@ -60,6 +60,7 @@ namespace setup::simulationBox
         void checkBoxSettings();
         void checkRcCutoff();
 
+        void checkZeroVelocities();
         void initVelocities();
 
         void writeSetupInfo() const;
