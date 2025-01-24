@@ -57,7 +57,7 @@ using namespace resetKinetics;
 void MaxwellBoltzmann::initializeVelocities(SimulationBox &simBox)
 {
     // Check if any velocity entry is non-zero, if so early return the function
-    if (const auto velocities = simBox.getVelocities(); std::ranges::all_of(
+    if (const auto velocities = simBox.getVelocities(); std::ranges::any_of(
             velocities,
             [](const auto &vel)
             { return vel[0] != 0.0 || vel[1] != 0.0 || vel[2] != 0.0; }
