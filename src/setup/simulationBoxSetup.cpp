@@ -455,7 +455,7 @@ void SimulationBoxSetup::writeSetupInfo() const
     log.writeSetupInfo(std::format("coulomb cutoff:  {}", rcStr));
     log.writeEmptyLine();
 
-    if (SimulationBoxSettings::getInitializeVelocities())
+    if (SimulationBoxSettings::getInitializeVelocities() && MaxwellBoltzmann::useInitializeVelocities())
         log.writeSetupInfo(
             "velocities initialized with Maxwell-Boltzmann distribution"
         );

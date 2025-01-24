@@ -56,6 +56,17 @@ using namespace resetKinetics;
  */
 void MaxwellBoltzmann::initializeVelocities(SimulationBox &simBox)
 {
+    // Check if any velocity entry is non-zero, if so early return the function
+    if (const auto velocities = simBox.getVelocities(); std::ranges::all_of(
+            velocities,
+            [](const auto &vel)
+            { return vel[0] != 0.0 || vel[1] != 0.0 || vel[2] != 0.0; }
+        ))
+    {
+        _useInitializeVelocities = false;
+        return;
+    }
+
     auto generateVelocities = [this](auto &atom)
     {
         const auto mass = atom->getMass() * _AMU_TO_KG_;
@@ -92,9 +103,46 @@ void MaxwellBoltzmann::initializeVelocities(SimulationBox &simBox)
     std::ranges::for_each(simBox.getAtoms(), generateVelocities);
 #endif
 
+    MaxwellBoltzmann::setUseInitializeVelocities(true);
     auto resetKinetics = ResetKinetics();
     resetKinetics.setMomentum(simBox.calculateMomentum());
     resetKinetics.resetMomentum(simBox);
     resetKinetics.resetAngularMomentum(simBox);
     resetKinetics.resetTemperature(simBox);
+}
+
+/***************************
+ *                         *
+ * standard setter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief sets if the velocities have been initialized with a Maxwell
+ * Boltzmann distribution
+ *
+ * @param useInitializeVelocities
+ */
+void MaxwellBoltzmann::setUseInitializeVelocities(
+    const bool useInitializeVelocities
+)
+{
+    _useInitializeVelocities = useInitializeVelocities;
+}
+
+/***************************
+ *                         *
+ * standard getter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief returns if the velocities have been initialized with a Maxwell
+ * Boltzmann distribution
+ *
+ * @return bool
+ */
+bool MaxwellBoltzmann::useInitializeVelocities()
+{
+    return _useInitializeVelocities;
 }
