@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Enhancements
 
 - ASE interface for DFTB+ calculations added
+- init_velocities keyword is ignored if non-zero velocities are present
 
 ### CI
 
