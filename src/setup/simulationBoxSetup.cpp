@@ -80,7 +80,7 @@ void setup::simulationBox::setupSimulationBox(Engine &engine)
  *
  * @param engine
  */
-SimulationBoxSetup::SimulationBoxSetup(Engine &engine) : _engine(engine){};
+SimulationBoxSetup::SimulationBoxSetup(Engine &engine) : _engine(engine) {};
 
 /**
  * @brief setup simulation box
@@ -455,10 +455,18 @@ void SimulationBoxSetup::writeSetupInfo() const
     log.writeSetupInfo(std::format("coulomb cutoff:  {}", rcStr));
     log.writeEmptyLine();
 
-    if (SimulationBoxSettings::getInitializeVelocities() && MaxwellBoltzmann::useInitializeVelocities())
+    if (SimulationBoxSettings::getInitializeVelocities() &&
+        MaxwellBoltzmann::useInitializeVelocities())
         log.writeSetupInfo(
             "velocities initialized with Maxwell-Boltzmann distribution"
         );
+    else if (SimulationBoxSettings::getInitializeVelocities())
+    {
+        log.writeSetupWarning(
+            "keyword 'init_velocities' ignored, because non-zero velocities "
+            "are present"
+        );
+    }
     else
         log.writeSetupInfo(std::format(
             "velocities taken from start file \"{}\"",
