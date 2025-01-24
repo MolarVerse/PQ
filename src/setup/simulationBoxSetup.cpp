@@ -50,7 +50,6 @@
 #include "simulationBox.hpp"           // for SimulationBox
 #include "simulationBoxSettings.hpp"   // for SimulationBoxSettings
 #include "stdoutOutput.hpp"            // for StdoutOutput
-#include "stdoutOutput.hpp"            // for StdoutOutput
 #include "stringUtilities.hpp"   // for toLowerCopy, firstLetterToUpperCaseCopy
 
 using setup::simulationBox::SimulationBoxSetup;
@@ -406,9 +405,9 @@ void SimulationBoxSetup::initVelocities()
  */
 void SimulationBoxSetup::writeSetupInfo() const
 {
-    auto &log    = _engine.getLogOutput();
-    auto &stdOut = _engine.getStdoutOutput();
-    auto &simBox = _engine.getSimulationBox();
+    auto &log     = _engine.getLogOutput();
+    auto &std  = _engine.getStdoutOutput();
+    auto &simBox  = _engine.getSimulationBox();
 
     const auto nAtoms = simBox.getNumberOfAtoms();
     const auto mass   = simBox.getTotalMass();
@@ -465,12 +464,14 @@ void SimulationBoxSetup::writeSetupInfo() const
     else if (SimulationBoxSettings::getInitializeVelocities())
     {
         log.writeSetupWarning(
-            "keyword 'init_velocities' ignored, because non-zero velocities "
-            "are present"
+            "Ignoring 'init_velocities' because non-zero velocities"
+            "in " +
+            FileSettings::getStartFileName()
         );
-        stdOut.writeSetupWarning(
-            "keyword 'init_velocities' ignored, because non-zero velocities "
-            "are present"
+        std.writeSetupWarning(
+            "Ignoring 'init_velocities' because non-zero velocities"
+            "in " +
+            FileSettings::getStartFileName()
         );
     }
     else
