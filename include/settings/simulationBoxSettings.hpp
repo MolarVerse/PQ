@@ -24,8 +24,20 @@
 
 #define _SIMULATION_BOX_SETTINGS_HPP_
 
+#include <cstddef>   // for size_t
+
 namespace settings
 {
+    /**
+     * @class enum InitVelocities
+     */
+    enum class InitVelocities : size_t
+    {
+        FALSE,
+        TRUE,
+        FORCE
+    };
+
     /**
      * @class SimulationBoxSettings
      *
@@ -38,8 +50,9 @@ namespace settings
         static inline bool _isDensitySet = false;
         static inline bool _isBoxSet     = false;
 
-        static inline bool _initializeVelocities = false;
-        static inline bool _zeroVelocities       = false;
+        static inline InitVelocities _initializeVelocities =
+            InitVelocities::FALSE;
+        static inline bool _zeroVelocities = false;
 
        public:
         SimulationBoxSettings()  = delete;
@@ -51,17 +64,19 @@ namespace settings
 
         static void setDensitySet(const bool densitySet);
         static void setBoxSet(const bool boxSet);
-        static void setInitializeVelocities(const bool initializeVelocities);
+        static void setInitializeVelocities(
+            const InitVelocities initializeVelocities
+        );
         static void setZeroVelocities(const bool initializeVelocities);
 
         /********************
          * standard getters *
          ********************/
 
-        [[nodiscard]] static bool getDensitySet();
-        [[nodiscard]] static bool getBoxSet();
-        [[nodiscard]] static bool getInitializeVelocities();
-        [[nodiscard]] static bool getZeroVelocities();
+        [[nodiscard]] static bool           getDensitySet();
+        [[nodiscard]] static bool           getBoxSet();
+        [[nodiscard]] static InitVelocities getInitializeVelocities();
+        [[nodiscard]] static bool           getZeroVelocities();
     };
 }   // namespace settings
 

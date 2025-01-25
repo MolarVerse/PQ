@@ -413,12 +413,13 @@ void SimulationBoxSetup::checkZeroVelocities()
  */
 void SimulationBoxSetup::initVelocities()
 {
-    if (SimulationBoxSettings::getInitializeVelocities() &&
-        SimulationBoxSettings::getZeroVelocities())
-    {
-        MaxwellBoltzmann maxwellBoltzmann;
-        maxwellBoltzmann.initializeVelocities(_engine.getSimulationBox());
-    }
+    if (SimulationBoxSettings::getInitializeVelocities() ==
+            InitVelocities::FALSE ||
+        !SimulationBoxSettings::getZeroVelocities())
+        return;
+
+    MaxwellBoltzmann maxwellBoltzmann;
+    maxwellBoltzmann.initializeVelocities(_engine.getSimulationBox());
 }
 
 /**
@@ -478,12 +479,9 @@ void SimulationBoxSetup::writeSetupInfo() const
     log.writeSetupInfo(std::format("coulomb cutoff:  {}", rcStr));
     log.writeEmptyLine();
 
-    if (SimulationBoxSettings::getInitializeVelocities() &&
-        SimulationBoxSettings::getZeroVelocities())
-        log.writeSetupInfo(
-            "velocities initialized with Maxwell-Boltzmann distribution"
-        );
-    else if (SimulationBoxSettings::getInitializeVelocities())
+    if (SimulationBoxSettings::getInitializeVelocities() ==
+            InitVelocities::TRUE &&
+        !SimulationBoxSettings::getZeroVelocities())
     {
         log.writeSetupWarning(std::format(
             "Ignoring 'init_velocities' because non-zero velocities in \"{}\"",
@@ -494,6 +492,15 @@ void SimulationBoxSetup::writeSetupInfo() const
             FileSettings::getStartFileName()
         ));
     }
+
+    if ((SimulationBoxSettings::getInitializeVelocities() ==
+             InitVelocities::TRUE &&
+         SimulationBoxSettings::getZeroVelocities()) ||
+        SimulationBoxSettings::getInitializeVelocities() ==
+            InitVelocities::FORCE)
+        log.writeSetupInfo(
+            "velocities initialized with Maxwell-Boltzmann distribution"
+        );
     else
         log.writeSetupInfo(std::format(
             "velocities taken from start file \"{}\"",
