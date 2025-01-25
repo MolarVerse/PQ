@@ -7,17 +7,17 @@ on:
       - dev
 jobs:
   check-target-branch:
+    if: github.repository == 'MolarVerse/PQ'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout PR source branch
         uses: actions/checkout@v3
         with:
           ref: ${{ github.head_ref }}
-          fetch-depth: 0
 
       - name: Fetch target branch
         run: |
-          git fetch origin ${{ github.base_ref }} --depth=1
+          git fetch origin ${{ github.base_ref }}
 
       - name: Compare commits
         run: |
