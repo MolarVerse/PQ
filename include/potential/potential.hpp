@@ -54,25 +54,25 @@ namespace potential
      *
      */
     using calcForcesPtr = void (*)(
-        const Real *const   pos,
-        Real *const         force,
-        Real *const         shiftForce,
-        const Real *const   charge,
-        const Real *const   coulParams,
-        const Real *const   nonCoulParams,
-        const Real *const   ncCutOffs,
-        const Real *const   boxParams,
-        const size_t *const moleculeIndex,
-        const size_t *const molTypes,
-        const size_t *const atomTypes,
-        Real               *totalCoulombEnergy,
-        Real               *totalNonCoulombEnergy,
-        const Real          coulCutOff,
-        const size_t        nAtoms,
-        const size_t        nAtomTypes,
-        const size_t        nonCoulParamsOffset,
-        const size_t        maxNumAtomTypes,
-        const size_t        numMolTypes
+        const Real *__restrict__ const pos,
+        Real *__restrict__ const force,
+        Real *__restrict__ const shiftForce,
+        const Real *__restrict__ const charge,
+        const Real *__restrict__ const coulParams,
+        const Real *__restrict__ const nonCoulParams,
+        const Real *__restrict__ const ncCutOffs,
+        const Real *__restrict__ const boxParams,
+        const size_t *__restrict__ const moleculeIndex,
+        const size_t *__restrict__ const molTypes,
+        const size_t *__restrict__ const atomTypes,
+        Real *__restrict__ totalCoulombEnergy,
+        Real *__restrict__ totalNonCoulombEnergy,
+        const Real   coulCutOff,
+        const size_t nAtoms,
+        const size_t nAtomTypes,
+        const size_t nonCoulParamsOffset,
+        const size_t maxNumAtomTypes,
+        const size_t numMolTypes
     );
 
     /**
@@ -163,79 +163,94 @@ namespace potential
 
     template <typename CoulombType, typename NonCoulombType, typename BoxType>
     void cellList(
-        const Real *const   pos,
-        Real *const         force,
-        Real *const         shiftForce,
-        const Real *const   charge,
-        const Real *const   coulParams,
-        const Real *const   nonCoulParams,
-        const Real *const   ncCutOffs,
-        const Real *const   boxParams,
-        const size_t *const moleculeIndex,
-        const size_t *const molTypes,
-        const size_t *const atomTypes,
-        Real               *totalCoulombEnergy,
-        Real               *totalNonCoulombEnergy,
-        const Real          coulCutOff,
-        const size_t        nAtoms,
-        const size_t        nAtomTypes,
-        const size_t        nonCoulParamsOffset,
-        const size_t        maxNumAtomTypes,
-        const size_t        numMolTypes
+        const Real *__restrict__ const pos,
+        Real *__restrict__ const force,
+        Real *__restrict__ const shiftForce,
+        const Real *__restrict__ const charge,
+        const Real *__restrict__ const coulParams,
+        const Real *__restrict__ const nonCoulParams,
+        const Real *__restrict__ const ncCutOffs,
+        const Real *__restrict__ const boxParams,
+        const size_t *__restrict__ const moleculeIndex,
+        const size_t *__restrict__ const molTypes,
+        const size_t *__restrict__ const atomTypes,
+        Real *__restrict__ totalCoulombEnergy,
+        Real *__restrict__ totalNonCoulombEnergy,
+        const Real   coulCutOff,
+        const size_t nAtoms,
+        const size_t nAtomTypes,
+        const size_t nonCoulParamsOffset,
+        const size_t maxNumAtomTypes,
+        const size_t numMolTypes
     );
 
     template <typename CoulombType, typename NonCoulombType, typename BoxType>
     void bruteForce(
-        const Real *const   pos,
-        Real *const         force,
-        Real *const         shiftForce,
-        const Real *const   charge,
-        const Real *const   coulParams,
-        const Real *const   nonCoulParams,
-        const Real *const   ncCutOffs,
-        const Real *const   boxParams,
-        const size_t *const moleculeIndex,
-        const size_t *const molTypes,
-        const size_t *const atomTypes,
-        Real               *totalCoulombEnergy,
-        Real               *totalNonCoulombEnergy,
-        const Real          coulCutOff,
-        const size_t        nAtoms,
-        const size_t        nAtomTypes,
-        const size_t        nonCoulParamsOffset,
-        const size_t        maxNumAtomTypes,
-        const size_t        numMolTypes
+        const Real *__restrict__ const pos,
+        Real *__restrict__ const force,
+        Real *__restrict__ const shiftForce,
+        const Real *__restrict__ const charge,
+        const Real *__restrict__ const coulParams,
+        const Real *__restrict__ const nonCoulParams,
+        const Real *__restrict__ const ncCutOffs,
+        const Real *__restrict__ const boxParams,
+        const size_t *__restrict__ const moleculeIndex,
+        const size_t *__restrict__ const molTypes,
+        const size_t *__restrict__ const atomTypes,
+        Real *__restrict__ totalCoulombEnergy,
+        Real *__restrict__ totalNonCoulombEnergy,
+        const Real   coulCutOff,
+        const size_t nAtoms,
+        const size_t nAtomTypes,
+        const size_t nonCoulParamsOffset,
+        const size_t maxNumAtomTypes,
+        const size_t numMolTypes
     );
 
     template <typename BoxType>
     void inline image(
-        const auto &boxParams,
-        auto       &dx,
-        auto       &dy,
-        auto       &dz,
-        auto       &tx,
-        auto       &ty,
-        auto       &tz
+        const Real &boxParams,
+        Real       &dx,
+        Real       &dy,
+        Real       &dz,
+        Real       &tx,
+        Real       &ty,
+        Real       &tz
     );
 
     template <typename CoulombType>
     void inline calculateCoulomb(
-        auto             &coulombEnergy,
-        auto             &localForce,
-        const auto        distance,
-        const auto        coulombPreFactor,
-        const auto        coulCutOff,
-        const auto *const coulParams
+        Real             &coulombEnergy,
+        Real             &localForce,
+        const Real        distance,
+        const Real        coulombPreFactor,
+        const Real        coulCutOff,
+        const Real *const coulParams
     );
 
     template <typename NonCoulombType>
     void calculateNonCoulombEnergy(
-        auto             &nonCoulombEnergy,
-        auto             &localForce,
-        const auto        distance,
-        const auto        distanceSquared,
-        const auto        rncCutOff,
-        const auto *const nonCoulParams
+        Real      &nonCoulombEnergy,
+        Real      &localForce,
+        const Real distance,
+        const Real distanceSquared,
+        const Real rncCutOff,
+        const Real *__restrict__ const nonCoulParams
+    );
+
+    template <typename NonCoulombType>
+    static void inline fetchCombinedIndices(
+        const size_t *__restrict__ const atomTypes,
+        const size_t *__restrict__ const molTypes,
+        const size_t mol_i,
+        const size_t mol_j,
+        const size_t atom_i,
+        const size_t atom_j,
+        const size_t nAtomTypes,
+        const size_t nMolTypes,
+        const size_t nonCoulParamsOffset,
+        int         &comCutoffIndex,
+        int         &comIndex
     );
 
 }   // namespace potential

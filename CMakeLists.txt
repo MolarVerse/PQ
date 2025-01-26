@@ -73,7 +73,10 @@ endif()
 # add flags dependent on build type
 if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease")
     message("\n   Release build   \n")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Ofast -ffast-math -march=native -mtune=native -g")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Ofast -march=native -mtune=native -g")
+    if(NOT BUILD_WITH_GPU)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffast-math")
+    endif()
 
     set(BUILD_WITH_DEBUG OFF)
 elseif(CMAKE_BUILD_TYPE MATCHES "^[Dd]ebug")
@@ -106,7 +109,7 @@ if(BUILD_WITH_GPU)
         message(FATAL_ERROR "CUDA compiler not found")
     endif()
 
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__PQ_GPU__ -D__PQ_CUDA__ -mp=gpu -gpu=cc75,debug -cuda -lcudart")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__PQ_GPU__ -D__PQ_CUDA__ -mp=gpu -gpu=cc75,debug -cuda=fastmath -lcudart")
 
     set(CUDA_HOME $ENV{NVHPC_CUDA_HOME})
     if(NOT CUDA_HOME)

@@ -83,181 +83,157 @@ namespace potential
      * @param nAtomTypes the number of atom types
      * @param nonCoulParamsOffset the offset of the non-coulomb parameters
      * @param maxNumAtomTypes the maximum number of atom types
-     * @param numMolTypes the number of molecule types
+     * @param nMolTypes the number of molecule types
      */
     template <typename CoulombType, typename NonCoulombType, typename BoxType>
     __global__ void bruteForce(
-        const Real* const   pos,
-        Real* const         force,
-        Real* const         shiftForce,
-        const Real* const   charge,
-        const Real* const   coulParams,
-        const Real* const   nonCoulParams,
-        const Real* const   ncCutOffs,
-        const Real* const   boxParams,
-        const size_t* const moleculeIndex,
-        const size_t* const molTypes,
-        const size_t* const atomTypes,
-        Real*               totalCoulombEnergy,
-        Real*               totalNonCoulombEnergy,
-        const Real          coulCutOff,
-        const size_t        nAtoms,
-        const size_t        nAtomTypes,
-        const size_t        nonCoulParamsOffset,
-        const size_t        maxNumAtomTypes,
-        const size_t        numMolTypes
+        const Real* __restrict__ const pos,
+        Real* __restrict__ const force,
+        Real* __restrict__ const shiftForce,
+        const Real* __restrict__ const charge,
+        const Real* __restrict__ const coulParams,
+        const Real* __restrict__ const nonCoulParams,
+        const Real* __restrict__ const ncCutOffs,
+        const Real* __restrict__ const boxParams,
+        const size_t* __restrict__ const moleculeIndex,
+        const size_t* __restrict__ const molTypes,
+        const size_t* __restrict__ const atomTypes,
+        Real* __restrict__ totalCoulombEnergy,
+        Real* __restrict__ totalNonCoulombEnergy,
+        const Real   coulCutOff,
+        const size_t nAtoms,
+        const size_t nAtomTypes,
+        const size_t nonCoulParamsOffset,
+        const size_t maxNumAtomTypes,
+        const size_t nMolTypes
     )
     {
         const auto ithread = threadIdx.x + blockIdx.x * blockDim.x;
+        const auto iblock  = blockIdx.x;
+        const auto nblocks = gridDim.x;
 
         const auto coulCutOffSquared = coulCutOff * coulCutOff;
-        const auto indexHelper1 = numMolTypes * numMolTypes * maxNumAtomTypes;
-        const auto indexHelper2 = numMolTypes * maxNumAtomTypes;
+        // const auto indexHelper1      = nMolTypes * nMolTypes *
+        // maxNumAtomTypes; const auto indexHelper2      = nMolTypes *
+        // maxNumAtomTypes;
 
-        for (size_t atomIndex_i  = ithread; atomIndex_i < nAtoms;
-             atomIndex_i        += blockDim.x * gridDim.x)
+        for (size_t i = ithread; i < nAtoms; i += blockDim.x * nblocks)
         {
-            for (size_t atomIndex_j = 0; atomIndex_j < nAtoms; ++atomIndex_j)
+            Real fx = 0;
+            Real fy = 0;
+            Real fz = 0;
+
+            Real shiftFx = 0;
+            Real shiftFy = 0;
+            Real shiftFz = 0;
+
+            Real coulombEnergy_i    = 0.0;
+            Real nonCoulombEnergy_i = 0.0;
+
+            const auto xi = pos[i * 3];
+            const auto yi = pos[i * 3 + 1];
+            const auto zi = pos[i * 3 + 2];
+
+            const auto charge_i = charge[i];
+
+            const auto mol_i = moleculeIndex[i];
+
+            for (size_t j = 0; j < nAtoms; ++j)
             {
-                const auto mol_i = moleculeIndex[atomIndex_i];
-                const auto mol_j = moleculeIndex[atomIndex_j];
+                const auto mol_j = moleculeIndex[j];
 
-                if (mol_i < mol_j)
+                if (mol_i == mol_j)
+                    continue;
+
+                Real dx = xi - pos[j * 3];
+                Real dy = yi - pos[j * 3 + 1];
+                Real dz = zi - pos[j * 3 + 2];
+
+                Real tx = 0;
+                Real ty = 0;
+                Real tz = 0;
+
+                image<BoxType>(boxParams, dx, dy, dz, tx, ty, tz);
+
+                const double distanceSquared = dx * dx + dy * dy + dz * dz;
+
+                if (distanceSquared < coulCutOffSquared)
                 {
-                    const auto xi = pos[atomIndex_i * 3];
-                    const auto yi = pos[atomIndex_i * 3 + 1];
-                    const auto zi = pos[atomIndex_i * 3 + 2];
+                    Real localForce    = 0;
+                    auto coulombEnergy = 0.0;
 
-                    const auto xj = pos[atomIndex_j * 3];
-                    const auto yj = pos[atomIndex_j * 3 + 1];
-                    const auto zj = pos[atomIndex_j * 3 + 2];
+                    const auto distance = ::sqrt(distanceSquared);
 
-                    Real dx = xi - xj;
-                    Real dy = yi - yj;
-                    Real dz = zi - zj;
+                    const auto coulombPreFactor = charge_i * charge[j];
 
-                    Real tx = 0;
-                    Real ty = 0;
-                    Real tz = 0;
+                    calculateCoulombPotential<CoulombType>(
+                        coulombEnergy,
+                        localForce,
+                        distance,
+                        coulombPreFactor,
+                        coulCutOff,
+                        coulParams
+                    );
 
-                    image<BoxType>(boxParams, dx, dy, dz, tx, ty, tz);
+                    coulombEnergy_i += coulombEnergy;
 
-                    const double distanceSquared = dx * dx + dy * dy + dz * dz;
+                    int combinedCutoffIndex;
+                    int combinedIndex;
 
-                    if (distanceSquared < coulCutOffSquared)
+                    fetchCombinedIndices<NonCoulombType>(
+                        atomTypes,
+                        molTypes,
+                        mol_i,
+                        mol_j,
+                        i,
+                        j,
+                        nAtomTypes,
+                        nMolTypes,
+                        nonCoulParamsOffset,
+                        combinedCutoffIndex,
+                        combinedIndex
+                    );
+
+                    const auto rncCutOff = ncCutOffs[combinedCutoffIndex];
+
+                    if (distance < rncCutOff)
                     {
-                        Real localForce = 0;
-                        Real fx         = 0;
-                        Real fy         = 0;
-                        Real fz         = 0;
-                        Real shiftFx    = 0;
-                        Real shiftFy    = 0;
-                        Real shiftFz    = 0;
+                        auto nonCoulombEnergy = 0.0;
 
-                        auto coulombEnergy = 0.0;
-
-                        const auto distance = ::sqrt(distanceSquared);
-
-                        const auto coulombPreFactor =
-                            charge[atomIndex_i] * charge[atomIndex_j];
-
-                        calculateCoulombPotential<CoulombType>(
-                            coulombEnergy,
+                        calculateNonCoulombEnergy<NonCoulombType>(
+                            nonCoulombEnergy,
                             localForce,
                             distance,
-                            coulombPreFactor,
-                            coulCutOff,
-                            coulParams
+                            distanceSquared,
+                            rncCutOff,
+                            &nonCoulParams[combinedIndex]
                         );
 
-                        atomicAdd(totalCoulombEnergy, coulombEnergy);
-
-                        auto combinedCutoffIndex = -1;
-                        auto combinedIndex       = -1;
-
-                        // TODO: check here all FF types combined
-                        if constexpr (std::is_same_v<
-                                          NonCoulombType,
-                                          LennardJonesFF> ||
-                                      std::is_same_v<
-                                          NonCoulombType,
-                                          BuckinghamFF> ||
-                                      std::is_same_v<NonCoulombType, MorseFF>)
-                        {
-                            combinedCutoffIndex =
-                                atomTypes[atomIndex_i] * nAtomTypes +
-                                atomTypes[atomIndex_j];
-                            combinedIndex =
-                                (atomTypes[atomIndex_i] * nAtomTypes +
-                                 atomTypes[atomIndex_j]) *
-                                nonCoulParamsOffset;
-                        }
-                        else if constexpr (std::is_same_v<
-                                               NonCoulombType,
-                                               LennardJonesGuff> ||
-                                           std::is_same_v<
-                                               NonCoulombType,
-                                               BuckinghamGuff> ||
-                                           std::is_same_v<
-                                               NonCoulombType,
-                                               MorseGuff>)
-                        {
-                            auto index  = molTypes[mol_i] * indexHelper1;
-                            index      += molTypes[mol_j] * indexHelper2;
-                            index      += atomTypes[atomIndex_i] * numMolTypes;
-                            index      += atomTypes[atomIndex_j];
-                            combinedCutoffIndex = index;
-                            combinedIndex       = index * nonCoulParamsOffset;
-                        }
-                        else
-                            throw customException::NotImplementedException(
-                                "The nonCoulomb potential is not "
-                                "implemented "
-                                "yet"
-                            );
-
-                        const auto rncCutOff = ncCutOffs[combinedCutoffIndex];
-
-                        if (distance < rncCutOff)
-                        {
-                            auto nonCoulombEnergy = 0.0;
-
-                            calculateNonCoulombEnergy<NonCoulombType>(
-                                nonCoulombEnergy,
-                                localForce,
-                                distance,
-                                distanceSquared,
-                                rncCutOff,
-                                &nonCoulParams[combinedIndex]
-                            );
-
-                            atomicAdd(totalNonCoulombEnergy, nonCoulombEnergy);
-                        }
-
-                        localForce /= distance;
-
-                        fx = localForce * dx;
-                        fy = localForce * dy;
-                        fz = localForce * dz;
-
-                        shiftFx = fx * tx;
-                        shiftFy = fy * ty;
-                        shiftFz = fz * tz;
-
-                        atomicAdd(force + atomIndex_i * 3, +fx);
-                        atomicAdd(force + atomIndex_i * 3 + 1, +fy);
-                        atomicAdd(force + atomIndex_i * 3 + 2, +fz);
-
-                        atomicAdd(force + atomIndex_j * 3, -fx);
-                        atomicAdd(force + atomIndex_j * 3 + 1, -fy);
-                        atomicAdd(force + atomIndex_j * 3 + 2, -fz);
-
-                        atomicAdd(shiftForce + atomIndex_i * 3, +shiftFx);
-                        atomicAdd(shiftForce + atomIndex_i * 3 + 1, +shiftFy);
-                        atomicAdd(shiftForce + atomIndex_i * 3 + 2, +shiftFz);
+                        nonCoulombEnergy_i += nonCoulombEnergy;
                     }
+
+                    localForce /= distance;
+
+                    fx += localForce * dx;
+                    fy += localForce * dy;
+                    fz += localForce * dz;
+
+                    shiftFx += localForce * dx * tx;
+                    shiftFy += localForce * dy * ty;
+                    shiftFz += localForce * dz * tz;
                 }
             }
+
+            atomicAdd(force + i * 3, +fx);
+            atomicAdd(force + i * 3 + 1, +fy);
+            atomicAdd(force + i * 3 + 2, +fz);
+
+            atomicAdd(shiftForce + i * 3, +shiftFx * 0.5);
+            atomicAdd(shiftForce + i * 3 + 1, +shiftFy * 0.5);
+            atomicAdd(shiftForce + i * 3 + 2, +shiftFz * 0.5);
+
+            atomicAdd(totalCoulombEnergy, coulombEnergy_i * 0.5);
+            atomicAdd(totalNonCoulombEnergy, nonCoulombEnergy_i * 0.5);
         }
     }
 

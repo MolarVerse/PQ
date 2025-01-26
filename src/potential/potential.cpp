@@ -184,25 +184,18 @@ void Potential::calculateForces(
     }
 
 #ifdef __PQ_GPU__
-    std::cout << "Copying energies from device\n";
     device.deviceMemcpyFrom(
         &totalCoulombEnergy,
         totalCoulombEnergyPtr,
         sizeof(Real)
     );
-    std::cout << std::format("Coulomb energy: {}\n", totalCoulombEnergy);
     device.deviceMemcpyFrom(
         &totalNonCoulombEnergy,
         totalNonCoulombEnergyPtr,
         sizeof(Real)
     );
-    std::cout << std::format("Non-coulomb energy: {}\n", totalNonCoulombEnergy);
-    // TODO: check via interface via device class does not work
     __deviceFree(totalCoulombEnergyPtr);
-    std::cout << "Freed totalCoulombEnergyPtr\n";
-    // TODO: check via interface via device class does not work
     __deviceFree(totalNonCoulombEnergyPtr);
-    std::cout << "Freed totalNonCoulombEnergyPtr\n";
 #endif
 
     data.setCoulombEnergy(totalCoulombEnergy);
