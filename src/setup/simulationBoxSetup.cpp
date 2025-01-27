@@ -393,12 +393,16 @@ void SimulationBoxSetup::checkRcCutoff()
  */
 void SimulationBoxSetup::checkZeroVelocities()
 {
-    auto &simBox = _engine.getSimulationBox();
+    constexpr double epsilon = 1e-12;
+    auto            &simBox  = _engine.getSimulationBox();
 
     if (const auto velocities = simBox.getVelocities(); std::ranges::any_of(
             velocities,
-            [](const auto &vel)
-            { return vel[0] != 0.0 || vel[1] != 0.0 || vel[2] != 0.0; }
+            [epsilon](const auto &vel)
+            {
+                return std::abs(vel[0]) > epsilon ||
+                       std::abs(vel[1]) > epsilon || std::abs(vel[2]) > epsilon;
+            }
         ))
         SimulationBoxSettings::setZeroVelocities(false);
     else
