@@ -42,12 +42,12 @@ namespace maxwellBoltzmann
      */
     class MaxwellBoltzmann
     {
-       public:
-        void initializeVelocities(pq::SimBox &);
-
        private:
         std::random_device _randomDevice{};
         std::mt19937       _generator{_randomDevice()};
+
+       public:
+        void initializeVelocities(pq::SimBox &);
     };
 }   // namespace maxwellBoltzmann
 
