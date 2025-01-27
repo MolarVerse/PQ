@@ -393,20 +393,21 @@ void SimulationBoxSetup::checkRcCutoff()
  */
 void SimulationBoxSetup::checkZeroVelocities()
 {
-    constexpr double epsilon = 1e-12;
-    auto            &simBox  = _engine.getSimulationBox();
+    constexpr double epsilon    = 1e-10;
+    auto            &simBox     = _engine.getSimulationBox();
+    const auto       velocities = simBox.getVelocities();
 
-    if (const auto velocities = simBox.getVelocities(); std::ranges::any_of(
+    if ((std::ranges::any_of(
             velocities,
             [epsilon](const auto &vel)
             {
                 return std::abs(vel[0]) > epsilon ||
                        std::abs(vel[1]) > epsilon || std::abs(vel[2]) > epsilon;
             }
-        ))
-        SimulationBoxSettings::setZeroVelocities(false);
+        )))
+        _zeroVelocities = false;
     else
-        SimulationBoxSettings::setZeroVelocities(true);
+        _zeroVelocities = true;
 }
 
 /**
@@ -417,11 +418,17 @@ void SimulationBoxSetup::checkZeroVelocities()
  */
 void SimulationBoxSetup::initVelocities()
 {
-    if (SimulationBoxSettings::getInitializeVelocities() ==
-            InitVelocities::FALSE ||
-        !SimulationBoxSettings::getZeroVelocities())
+    if ((SimulationBoxSettings::getInitializeVelocities() ==
+         InitVelocities::FALSE) ||
+        ((SimulationBoxSettings::getInitializeVelocities() ==
+          InitVelocities::TRUE) &&
+         !_zeroVelocities))
+    {
+        std::cout << "APE TEST NO MAXWELL";
         return;
+    }
 
+    std::cout << "APE TEST MAXWELL";
     MaxwellBoltzmann maxwellBoltzmann;
     maxwellBoltzmann.initializeVelocities(_engine.getSimulationBox());
 }
@@ -483,9 +490,9 @@ void SimulationBoxSetup::writeSetupInfo() const
     log.writeSetupInfo(std::format("coulomb cutoff:  {}", rcStr));
     log.writeEmptyLine();
 
-    if (SimulationBoxSettings::getInitializeVelocities() ==
-            InitVelocities::TRUE &&
-        !SimulationBoxSettings::getZeroVelocities())
+    if ((SimulationBoxSettings::getInitializeVelocities() ==
+         InitVelocities::TRUE) &&
+        (!_zeroVelocities))
     {
         log.writeSetupWarning(std::format(
             "Ignoring 'init_velocities' because non-zero velocities in \"{}\"",
@@ -497,11 +504,11 @@ void SimulationBoxSetup::writeSetupInfo() const
         ));
     }
 
-    if ((SimulationBoxSettings::getInitializeVelocities() ==
-             InitVelocities::TRUE &&
-         SimulationBoxSettings::getZeroVelocities()) ||
-        SimulationBoxSettings::getInitializeVelocities() ==
-            InitVelocities::FORCE)
+    if (((SimulationBoxSettings::getInitializeVelocities() ==
+          InitVelocities::TRUE) &&
+         (_zeroVelocities)) ||
+        (SimulationBoxSettings::getInitializeVelocities() ==
+         InitVelocities::FORCE))
         log.writeSetupInfo(
             "velocities initialized with Maxwell-Boltzmann distribution"
         );

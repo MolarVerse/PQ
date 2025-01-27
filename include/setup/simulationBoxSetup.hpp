@@ -39,7 +39,8 @@ namespace setup::simulationBox
     class SimulationBoxSetup
     {
        private:
-        pq::Engine &_engine;
+        pq::Engine        &_engine;
+        static inline bool _zeroVelocities = false;
 
        public:
         explicit SimulationBoxSetup(pq::Engine &engine);

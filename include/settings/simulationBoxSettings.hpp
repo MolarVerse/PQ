@@ -52,7 +52,6 @@ namespace settings
 
         static inline InitVelocities _initializeVelocities =
             InitVelocities::FALSE;
-        static inline bool _zeroVelocities = false;
 
        public:
         SimulationBoxSettings()  = delete;
@@ -67,7 +66,6 @@ namespace settings
         static void setInitializeVelocities(
             const InitVelocities initializeVelocities
         );
-        static void setZeroVelocities(const bool initializeVelocities);
 
         /********************
          * standard getters *
@@ -76,7 +74,6 @@ namespace settings
         [[nodiscard]] static bool           getDensitySet();
         [[nodiscard]] static bool           getBoxSet();
         [[nodiscard]] static InitVelocities getInitializeVelocities();
-        [[nodiscard]] static bool           getZeroVelocities();
     };
 }   // namespace settings
 
