@@ -519,3 +519,16 @@ void SimulationBoxSetup::writeSetupInfo() const
         ));
     log.writeEmptyLine();
 }
+
+/***************************
+ *                         *
+ * standard getter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief returns if the velocities in the start file are zero
+ *
+ * @return bool
+ */
+bool SimulationBoxSetup::getZeroVelocities() { return _zeroVelocities; }

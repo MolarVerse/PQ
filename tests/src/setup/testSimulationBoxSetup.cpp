@@ -498,7 +498,7 @@ TEST_F(TestSetup, testCheckZeroVelocitiesFalse)
     simBox.getMolecules().push_back(molecule1);
 
     simBoxSetup.checkZeroVelocities();
-    EXPECT_FALSE(settings::SimulationBoxSettings::getZeroVelocities());
+    EXPECT_FALSE(SimulationBoxSetup::getZeroVelocities());
 }
 
 /**
