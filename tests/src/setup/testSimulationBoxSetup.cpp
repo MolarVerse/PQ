@@ -596,8 +596,6 @@ TEST_F(TestSetup, testWriteSetupInfo)
 {
     _engine->getEngineOutput().getLogOutput().setFilename("default.log");
     auto &simBox = _engine->getSimulationBox();
-    // auto &std = _engine->getStdoutOutput();
-
 
     const auto atom1 = std::make_shared<::simulationBox::Atom>();
     const auto atom2 = std::make_shared<::simulationBox::Atom>();
@@ -613,11 +611,6 @@ TEST_F(TestSetup, testWriteSetupInfo)
     simBox.setVolume(758373.194);
     simBox.setBoxDimensions({5.73, 9.93, 11.14});
     settings::PotentialSettings::setCoulombRadiusCutOff(5.79);
-
-    settings::SimulationBoxSettings::setInitializeVelocities(
-        settings::InitVelocities::TRUE
-    );
-    SimulationBoxSetup::setZeroVelocities(false);
     settings::FileSettings::setStartFileName("input.rst");
 
     SimulationBoxSetup(*_engine).writeSetupInfo();
@@ -652,6 +645,29 @@ TEST_F(TestSetup, testWriteSetupInfo)
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
+    EXPECT_EQ(line, "         velocities taken from start file \"input.rst\"");
+
+    ::remove("default.log");
+}
+
+TEST_F(TestSetup, testWriteSetupInfoMaxwellTrueNonZeroVelocities)
+{
+    _engine->getEngineOutput().getLogOutput().setFilename("default.log");
+
+    settings::SimulationBoxSettings::setInitializeVelocities(
+        settings::InitVelocities::TRUE
+    );
+    SimulationBoxSetup::setZeroVelocities(false);
+    settings::FileSettings::setStartFileName("input.rst");
+
+    SimulationBoxSetup(*_engine).writeSetupInfo();
+    std::ifstream file("default.log");
+    std::string   line;
+    for (int i = 0; i < 13; i++)
+    {
+        getline(file, line);
+    }
+    getline(file, line);
     EXPECT_EQ(
         line,
         "WARNING: Ignoring 'init_velocities' because non-zero velocities in "
@@ -659,6 +675,58 @@ TEST_F(TestSetup, testWriteSetupInfo)
     );
     getline(file, line);
     EXPECT_EQ(line, "         velocities taken from start file \"input.rst\"");
+
+    ::remove("default.log");
+}
+
+TEST_F(TestSetup, testWriteSetupInfoMaxwellTrueZeroVelocities)
+{
+    _engine->getEngineOutput().getLogOutput().setFilename("default.log");
+
+    settings::SimulationBoxSettings::setInitializeVelocities(
+        settings::InitVelocities::TRUE
+    );
+    SimulationBoxSetup::setZeroVelocities(true);
+    settings::FileSettings::setStartFileName("input.rst");
+
+    SimulationBoxSetup(*_engine).writeSetupInfo();
+    std::ifstream file("default.log");
+    std::string   line;
+    for (int i = 0; i < 13; i++)
+    {
+        getline(file, line);
+    }
+    getline(file, line);
+    EXPECT_EQ(
+        line,
+        "         velocities initialized with Maxwell-Boltzmann distribution"
+    );
+
+    ::remove("default.log");
+}
+
+TEST_F(TestSetup, testWriteSetupInfoMaxwellForceNonZeroVelocities)
+{
+    _engine->getEngineOutput().getLogOutput().setFilename("default.log");
+
+    settings::SimulationBoxSettings::setInitializeVelocities(
+        settings::InitVelocities::FORCE
+    );
+    SimulationBoxSetup::setZeroVelocities(false);
+    settings::FileSettings::setStartFileName("input.rst");
+
+    SimulationBoxSetup(*_engine).writeSetupInfo();
+    std::ifstream file("default.log");
+    std::string   line;
+    for (int i = 0; i < 13; i++)
+    {
+        getline(file, line);
+    }
+    getline(file, line);
+    EXPECT_EQ(
+        line,
+        "         velocities initialized with Maxwell-Boltzmann distribution"
+    );
 
     ::remove("default.log");
 }
