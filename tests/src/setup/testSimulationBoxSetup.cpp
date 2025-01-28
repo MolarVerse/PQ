@@ -482,23 +482,30 @@ TEST_F(TestSetup, testCheckRcCutoff)
     EXPECT_NO_THROW(simulationBox2Setup.checkRcCutoff());
 }
 
-TEST_F(TestSetup, testCheckZeroVelocitiesFalse)
+TEST_F(TestSetup, testCheckZeroVelocities)
 {
     SimulationBoxSetup simBoxSetup(*_engine);
     auto              &simBox = _engine->getSimulationBox();
 
-    ::simulationBox::Molecule molecule1(1);
-    molecule1.setNumberOfAtoms(2);
     const auto atom1 = std::make_shared<::simulationBox::Atom>();
     const auto atom2 = std::make_shared<::simulationBox::Atom>();
-    atom1->setVelocity({1.0, 0.0, 0.0});
-    atom2->setVelocity({0.0, 0.0, 0.0});
-    molecule1.addAtom(atom1);
-    molecule1.addAtom(atom2);
-    simBox.getMolecules().push_back(molecule1);
-
+    atom1->setVelocity({8e-10, 0.0, 0.0});
+    atom2->setVelocity({1.0, 2.0, 3.0});
+    simBox.getAtoms().push_back(atom1);
+    simBox.getAtoms().push_back(atom2);
     simBoxSetup.checkZeroVelocities();
+
     EXPECT_FALSE(SimulationBoxSetup::getZeroVelocities());
+
+    atom2->setVelocity({0.0, 0.0, 0.0});
+    simBoxSetup.checkZeroVelocities();
+
+    EXPECT_FALSE(SimulationBoxSetup::getZeroVelocities());
+
+    atom1->setVelocity({0.0, 0.0, 0.0});
+    simBoxSetup.checkZeroVelocities();
+
+    EXPECT_TRUE(SimulationBoxSetup::getZeroVelocities());
 }
 
 /**
