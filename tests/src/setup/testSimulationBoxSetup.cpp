@@ -687,7 +687,6 @@ TEST_F(TestSetup, testWriteSetupInfoMaxwellTrueZeroVelocities)
         settings::InitVelocities::TRUE
     );
     SimulationBoxSetup::setZeroVelocities(true);
-    settings::FileSettings::setStartFileName("input.rst");
 
     SimulationBoxSetup(*_engine).writeSetupInfo();
     std::ifstream file("default.log");
@@ -713,7 +712,6 @@ TEST_F(TestSetup, testWriteSetupInfoMaxwellForceNonZeroVelocities)
         settings::InitVelocities::FORCE
     );
     SimulationBoxSetup::setZeroVelocities(false);
-    settings::FileSettings::setStartFileName("input.rst");
 
     SimulationBoxSetup(*_engine).writeSetupInfo();
     std::ifstream file("default.log");
