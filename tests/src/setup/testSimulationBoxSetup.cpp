@@ -30,7 +30,8 @@
 #include "atom.hpp"                          // for Atom
 #include "constants/conversionFactors.hpp"   // for _AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_
 #include "engine.hpp"                        // for Engine
-#include "exceptions.hpp"   // for MolDescriptorException, InputFileException
+#include "exceptions.hpp"     // for MolDescriptorException, InputFileException
+#include "fileSettings.hpp"   // for FileSettings
 #include "forceFieldSettings.hpp"      // for ForceFieldSettings
 #include "gtest/gtest.h"               // for Message, TestPartResult
 #include "molecule.hpp"                // for Molecule
@@ -589,4 +590,67 @@ TEST_F(TestSetup, testFullSetup)
     settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
 
     EXPECT_NO_THROW(setup::simulationBox::setupSimulationBox(*_engine));
+}
+
+TEST_F(TestSetup, testWriteSetupInfo)
+{
+    _engine->getEngineOutput().getLogOutput().setFilename("default.log");
+    auto &simBox = _engine->getSimulationBox();
+    // auto &std = _engine->getStdoutOutput();
+
+    simBox.setTotalMass(13.05);
+    simBox.setTotalCharge(-7.03);
+    simBox.setDegreesOfFreedom(4);
+    simBox.setDensity(12341243.1234);
+    simBox.setVolume(758373.194);
+    simBox.setBoxDimensions({5.73, 9.93, 11.14});
+    settings::PotentialSettings::setCoulombRadiusCutOff(5.79);
+
+    settings::SimulationBoxSettings::setInitializeVelocities(
+        settings::InitVelocities::TRUE
+    );
+    SimulationBoxSetup::setZeroVelocities(false);
+    settings::FileSettings::setStartFileName("input.rst");
+
+    SimulationBoxSetup(*_engine).writeSetupInfo();
+    std::ifstream file("default.log");
+    std::string   line;
+    getline(file, line);
+    EXPECT_EQ(line, "         number of atoms:          0");
+    getline(file, line);
+    EXPECT_EQ(line, "         total mass:              13.05000 g/mol");
+    getline(file, line);
+    EXPECT_EQ(line, "         total charge:            -7.03000");
+    getline(file, line);
+    EXPECT_EQ(line, "         unconstrained DOF:        4");
+    getline(file, line);
+    EXPECT_EQ(line, "");
+    getline(file, line);
+    EXPECT_EQ(line, "         density:         12341243.12340 kg/L");
+    getline(file, line);
+    EXPECT_EQ(line, "         volume:          ");
+    getline(file, line);
+    EXPECT_EQ(line, "");
+    getline(file, line);
+    // clang-format off
+    EXPECT_EQ(line,"         box dimensions:         5.73000 \u212b        9.93000 \u212b       11.14000 \u212b");
+    getline(file, line);
+    EXPECT_EQ(line,"         box angles:            90.00000°        90.00000°        90.00000°");
+    // clang-format on
+    getline(file, line);
+    EXPECT_EQ(line, "");
+    getline(file, line);
+    EXPECT_EQ(line, "         coulomb cutoff:         5.79000 \u212b");
+    getline(file, line);
+    EXPECT_EQ(line, "");
+    getline(file, line);
+    EXPECT_EQ(
+        line,
+        "WARNING: Ignoring 'init_velocities' because non-zero velocities in "
+        "\"input.rst\""
+    );
+    getline(file, line);
+    EXPECT_EQ(line, "         velocities taken from start file \"input.rst\"");
+
+    ::remove("default.log");
 }
