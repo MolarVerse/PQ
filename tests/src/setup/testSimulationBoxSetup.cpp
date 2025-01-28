@@ -598,6 +598,14 @@ TEST_F(TestSetup, testWriteSetupInfo)
     auto &simBox = _engine->getSimulationBox();
     // auto &std = _engine->getStdoutOutput();
 
+
+    const auto atom1 = std::make_shared<::simulationBox::Atom>();
+    const auto atom2 = std::make_shared<::simulationBox::Atom>();
+    simBox.getAtoms().push_back(atom1);
+    simBox.getAtoms().push_back(atom2);
+    auto simBox2 = simBox;
+    simBox.copy(simBox2);
+
     simBox.setTotalMass(13.05);
     simBox.setTotalCharge(-7.03);
     simBox.setDegreesOfFreedom(4);
@@ -616,7 +624,7 @@ TEST_F(TestSetup, testWriteSetupInfo)
     std::ifstream file("default.log");
     std::string   line;
     getline(file, line);
-    EXPECT_EQ(line, "         number of atoms:          0");
+    EXPECT_EQ(line, "         number of atoms:          2");
     getline(file, line);
     EXPECT_EQ(line, "         total mass:              13.05000 g/mol");
     getline(file, line);
