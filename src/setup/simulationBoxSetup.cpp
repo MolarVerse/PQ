@@ -423,12 +423,8 @@ void SimulationBoxSetup::initVelocities()
         ((SimulationBoxSettings::getInitializeVelocities() ==
           InitVelocities::TRUE) &&
          !_zeroVelocities))
-    {
-        std::cout << "APE TEST NO MAXWELL";
         return;
-    }
 
-    std::cout << "APE TEST MAXWELL";
     MaxwellBoltzmann maxwellBoltzmann;
     maxwellBoltzmann.initializeVelocities(_engine.getSimulationBox());
 }
