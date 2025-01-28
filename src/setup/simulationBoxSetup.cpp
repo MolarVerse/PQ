@@ -405,9 +405,9 @@ void SimulationBoxSetup::checkZeroVelocities()
                        std::abs(vel[1]) > epsilon || std::abs(vel[2]) > epsilon;
             }
         )))
-        _zeroVelocities = false;
+        setZeroVelocities(false);
     else
-        _zeroVelocities = true;
+        setZeroVelocities(true);
 }
 
 /**
@@ -420,9 +420,9 @@ void SimulationBoxSetup::initVelocities()
 {
     if (SimulationBoxSettings::getInitializeVelocities() ==
             InitVelocities::FALSE ||
-        SimulationBoxSettings::getInitializeVelocities() ==
-                InitVelocities::TRUE &&
-            !_zeroVelocities)
+        (SimulationBoxSettings::getInitializeVelocities() ==
+             InitVelocities::TRUE &&
+         !getZeroVelocities()))
         return;
 
     MaxwellBoltzmann maxwellBoltzmann;
@@ -486,9 +486,9 @@ void SimulationBoxSetup::writeSetupInfo() const
     log.writeSetupInfo(std::format("coulomb cutoff:  {}", rcStr));
     log.writeEmptyLine();
 
-    if ((SimulationBoxSettings::getInitializeVelocities() ==
-         InitVelocities::TRUE) &&
-        (!_zeroVelocities))
+    if (SimulationBoxSettings::getInitializeVelocities() ==
+            InitVelocities::TRUE &&
+        !getZeroVelocities())
     {
         log.writeSetupWarning(std::format(
             "Ignoring 'init_velocities' because non-zero velocities in \"{}\"",
@@ -500,9 +500,9 @@ void SimulationBoxSetup::writeSetupInfo() const
         ));
     }
 
-    if (SimulationBoxSettings::getInitializeVelocities() ==
-                InitVelocities::TRUE &&
-            _zeroVelocities ||
+    if ((SimulationBoxSettings::getInitializeVelocities() ==
+             InitVelocities::TRUE &&
+         getZeroVelocities()) ||
         SimulationBoxSettings::getInitializeVelocities() ==
             InitVelocities::FORCE)
         log.writeSetupInfo(
@@ -514,6 +514,21 @@ void SimulationBoxSetup::writeSetupInfo() const
             FileSettings::getStartFileName()
         ));
     log.writeEmptyLine();
+}
+
+/***************************
+ *                         *
+ * standard setter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief sets if the velocities in the start file are zero
+ *
+ */
+void SimulationBoxSetup::setZeroVelocities(const bool zeroVelocities)
+{
+    _zeroVelocities = zeroVelocities;
 }
 
 /***************************

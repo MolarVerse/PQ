@@ -67,11 +67,17 @@ namespace setup::simulationBox
         void writeSetupInfo() const;
 
         /***************************
+         * standard setter methods *
+         ***************************/
+
+        static void setZeroVelocities(const bool zeroVelocities);
+
+        /***************************
          * standard getter methods *
          ***************************/
 
         [[nodiscard]] static bool getZeroVelocities();
-    };
+        };
 
 }   // namespace setup::simulationBox
 
