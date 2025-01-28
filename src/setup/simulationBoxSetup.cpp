@@ -455,7 +455,7 @@ void SimulationBoxSetup::writeSetupInfo() const
     const auto volumeStr = std::format("{:14.5f} {}³", volume, _ANGSTROM_);
 
     log.writeSetupInfo(std::format("density:         {:14.5f} kg/L", density));
-    log.writeSetupInfo(std::format("volume:          ", volumeStr));
+    log.writeSetupInfo(std::format("volume:          {}", volumeStr));
     log.writeEmptyLine();
 
     const auto boxA = simBox.getBoxDimensions()[0];

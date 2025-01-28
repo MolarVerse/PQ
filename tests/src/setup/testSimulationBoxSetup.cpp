@@ -629,7 +629,7 @@ TEST_F(TestSetup, testWriteSetupInfo)
     getline(file, line);
     EXPECT_EQ(line, "         density:         12341243.12340 kg/L");
     getline(file, line);
-    EXPECT_EQ(line, "         volume:          ");
+    EXPECT_EQ(line, "         volume:            758373.19400 \u212b³");
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
