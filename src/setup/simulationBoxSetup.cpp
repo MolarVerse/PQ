@@ -418,11 +418,11 @@ void SimulationBoxSetup::checkZeroVelocities()
  */
 void SimulationBoxSetup::initVelocities()
 {
-    if ((SimulationBoxSettings::getInitializeVelocities() ==
-         InitVelocities::FALSE) ||
-        ((SimulationBoxSettings::getInitializeVelocities() ==
-          InitVelocities::TRUE) &&
-         !_zeroVelocities))
+    if (SimulationBoxSettings::getInitializeVelocities() ==
+            InitVelocities::FALSE ||
+        SimulationBoxSettings::getInitializeVelocities() ==
+                InitVelocities::TRUE &&
+            !_zeroVelocities)
         return;
 
     MaxwellBoltzmann maxwellBoltzmann;
@@ -500,11 +500,11 @@ void SimulationBoxSetup::writeSetupInfo() const
         ));
     }
 
-    if (((SimulationBoxSettings::getInitializeVelocities() ==
-          InitVelocities::TRUE) &&
-         (_zeroVelocities)) ||
-        (SimulationBoxSettings::getInitializeVelocities() ==
-         InitVelocities::FORCE))
+    if (SimulationBoxSettings::getInitializeVelocities() ==
+                InitVelocities::TRUE &&
+            _zeroVelocities ||
+        SimulationBoxSettings::getInitializeVelocities() ==
+            InitVelocities::FORCE)
         log.writeSetupInfo(
             "velocities initialized with Maxwell-Boltzmann distribution"
         );
