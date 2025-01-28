@@ -67,10 +67,6 @@ namespace setup::simulationBox
         void writeSetupInfo() const;
 
         /***************************
-         * standard setter methods *
-         ***************************/
-
-        /***************************
          * standard getter methods *
          ***************************/
 
