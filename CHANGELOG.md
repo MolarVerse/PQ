@@ -10,6 +10,10 @@ All notable changes to this project will be documented in this file.
 - init_velocities keyword is ignored if non-zero velocities are present
 - init_velocities can now be forced via the 'force' option
 
+### Bug Fixes
+
+- Volume now gets correctly printed to the .log output file
+
 ### CI
 
 - Updated CMakeLists.txt to support macOS arm64 architecture.
