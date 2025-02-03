@@ -22,6 +22,7 @@
 
 #include "simulationBoxSettings.hpp"
 
+using settings::InitVelocities;
 using settings::SimulationBoxSettings;
 
 /********************
@@ -52,14 +53,16 @@ void SimulationBoxSettings::setBoxSet(const bool boxSet) { _isBoxSet = boxSet; }
  *
  * @param initVelocities
  */
-void SimulationBoxSettings::setInitializeVelocities(const bool initVelocities)
+void SimulationBoxSettings::setInitializeVelocities(
+    const InitVelocities initializeVelocities
+)
 {
-    _initializeVelocities = initVelocities;
+    _initializeVelocities = initializeVelocities;
 }
 
 /********************
  *                  *
- * standard setters *
+ * standard getters *
  *                  *
  ********************/
 
@@ -82,10 +85,11 @@ bool SimulationBoxSettings::getBoxSet() { return _isBoxSet; }
 /**
  * @brief get if the velocities are initialized
  *
- * @return true
- * @return false
+ * @return TRUE
+ * @return FALSE
+ * @return FORCE
  */
-bool SimulationBoxSettings::getInitializeVelocities()
+InitVelocities SimulationBoxSettings::getInitializeVelocities()
 {
     return _initializeVelocities;
 }
