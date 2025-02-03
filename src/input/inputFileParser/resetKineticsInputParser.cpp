@@ -77,6 +77,11 @@ ResetKineticsInputParser::ResetKineticsInputParser(Engine &engine)
         bind_front(&ResetKineticsInputParser::parseFResetAngular, this),
         false
     );
+    addKeyword(
+        std::string("freset_forces"),
+        bind_front(&ResetKineticsInputParser::parseFResetForces, this),
+        false
+    );
 }
 
 /**
@@ -227,4 +232,29 @@ void ResetKineticsInputParser::parseFResetAngular(
         throw InputFileException("Freset_angular must be positive");
 
     ResetKineticsSettings::setFResetAngular(static_cast<size_t>(fResetAngular));
+}
+
+/**
+ * @brief parse freset_force and set it in settings
+ *
+ * @details default value is 0 but then set to UINT_MAX in setup
+ *
+ * @param lineElements
+ * @param lineNumber
+ *
+ * @throw InputFileException if freset_force is negative
+ */
+void ResetKineticsInputParser::parseFResetForces(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+
+    const auto fResetForces = stoi(lineElements[2]);
+
+    if (fResetForces < 0)
+        throw InputFileException("Freset_force must be positive");
+
+    ResetKineticsSettings::setFResetForces(static_cast<size_t>(fResetForces));
 }

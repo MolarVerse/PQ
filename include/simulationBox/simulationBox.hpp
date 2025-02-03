@@ -115,6 +115,7 @@ namespace simulationBox
 
         [[nodiscard]] double    calculateTemperature();
         [[nodiscard]] double    calculateTotalForce();
+        [[nodiscard]] pq::Vec3D calculateTotalForceVector();
         [[nodiscard]] double    calculateRMSForce() const;
         [[nodiscard]] double    calculateMaxForce() const;
         [[nodiscard]] double    calculateRMSForceOld() const;

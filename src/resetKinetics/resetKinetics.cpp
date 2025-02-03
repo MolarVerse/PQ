@@ -57,14 +57,16 @@ ResetKinetics::ResetKinetics(
     const size_t nStepsMomentumReset,
     const size_t frequencyMomentumReset,
     const size_t nStepsAngularReset,
-    const size_t frequencyAngularReset
+    const size_t frequencyAngularReset,
+    const size_t nStepsForcesReset
 )
     : _nStepsTemperatureReset(nStepsTemperatureReset),
       _frequencyTemperatureReset(frequencyTemperatureReset),
       _nStepsMomentumReset(nStepsMomentumReset),
       _frequencyMomentumReset(frequencyMomentumReset),
       _nStepsAngularReset(nStepsAngularReset),
-      _frequencyAngularReset(frequencyAngularReset)
+      _frequencyAngularReset(frequencyAngularReset),
+      _nStepsForcesReset(nStepsForcesReset)
 {
 }
 
@@ -209,6 +211,29 @@ void ResetKinetics::resetAngularMomentum(SimulationBox &simBox)
     _angularMomentum = simBox.calculateAngularMomentum(_momentum);
 }
 
+/**
+ * @brief reset the force of the system
+ *
+ * @details subtract force correction from all forces - correction is the
+ * total force divided by the number of atoms
+ *
+ * @param step
+ * @param simBox
+ */
+void ResetKinetics::resetForces(const size_t step, SimulationBox &simBox)
+{
+    if (0 != step % _nStepsForcesReset)
+        return;
+
+    const auto forceVector     = simBox.calculateTotalForceVector();
+    const auto forceCorrection = forceVector / simBox.getNumberOfAtoms();
+
+    std::ranges::for_each(
+        simBox.getAtoms(),
+        [forceCorrection](auto &atom) { atom->addForce(-forceCorrection); }
+    );
+}
+
 /********************
  *                  *
  * standard setters *
@@ -289,4 +314,14 @@ size_t ResetKinetics::getNStepsMomentumReset() const
 size_t ResetKinetics::getFrequencyMomentumReset() const
 {
     return _frequencyMomentumReset;
+}
+
+/**
+ * @brief get the number of steps for force reset
+ *
+ * @return size_t
+ */
+size_t ResetKinetics::getNStepsForcesReset() const
+{
+    return _nStepsForcesReset;
 }
