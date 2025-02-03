@@ -54,6 +54,28 @@ TEST_F(TestSimulationBox, calculateDegreesOfFreedom)
 }
 
 /**
+ * @brief tests calculateTotalForce function
+ *
+ */
+TEST_F(TestSimulationBox, calculateTotalForce)
+{
+    auto totalForce = _simulationBox->calculateTotalForce();
+
+    EXPECT_NEAR(totalForce, 1.7320508075688772, 1e-8);
+}
+
+/**
+ * @brief tests calculateTotalForce function
+ *
+ */
+TEST_F(TestSimulationBox, calculateTotalForceVector)
+{
+    auto totalForceVector = _simulationBox->calculateTotalForceVector();
+
+    EXPECT_EQ(totalForceVector, linearAlgebra::Vec3D({1.0, 1.0, 1.0}));
+}
+
+/**
  * @brief tests calculateCenterOfMass function
  *
  */
