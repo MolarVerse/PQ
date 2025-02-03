@@ -93,6 +93,7 @@ for the following QM-engines:
 1) DFTB+
 2) Turbomole
 3) PySCF
+4) MACE
 
 ******************
 Molecular Dynamics
