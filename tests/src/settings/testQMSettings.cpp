@@ -94,7 +94,7 @@ TEST(QMSettingsTest, SetMaceModelTypeTest)
 
 TEST(QMSettingsTest, SetFairchemModelTypeTest)
 {
-    QMSettings::setFairchemModelType("odac23");
+    QMSettings::setFairchemModelType("fairchem_odac23");
     EXPECT_EQ(QMSettings::getFairchemModelType(), FairchemModelType::ODAC23);
 
     ASSERT_THROW_MSG(

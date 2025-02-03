@@ -1,0 +1,20 @@
+# Type of this run
+      jobtype = qm-md;
+
+# Number of steps to be performed and timestep in fs; nreset gives the first n steps in which the total momentum is reset
+      nstep = 1000; timestep = 0.5;
+
+# Time integration algorithm
+      integrator = v-verlet;
+
+# Output frequency of ALL data files
+      output_freq = 1;
+
+# Mace Calculation Setup Keywords
+      qm_prog = fairchem_odac23;
+      floating_point_type = float;
+
+# Files
+      start_file   = h2o.rst;
+      file_prefix  = h2o-md-01;
+

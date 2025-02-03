@@ -346,10 +346,11 @@ void QMInputParser::parseFairchemQMMethod(const std::string_view &model)
     {
         throw InputFileException(std::format(
             "Invalid fairchem model type \"{}\" in input file.\n"
-            "Possible values are: odac23",
+            "Possible values are: fairchem, fairchem_odac23",
             model
         ));
     }
+    QMSettings::setQMMethod(QMMethod::FAIRCHEM);
 }
 
 /**

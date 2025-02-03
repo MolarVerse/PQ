@@ -66,8 +66,8 @@ TEST_F(TestInputFileReader, parseQMMethod)
         parser.parseQMMethod({"qm_prog", "=", "notAMethod"}, 0),
         InputFileException,
         "Invalid qm_prog \"notAMethod\" in input file.\n"
-        "Possible values are: dftbplus, ase_dftbplus, pyscf, turbomole, mace, "
-        "mace_mp, mace_off"
+        "Possible values are: dftbplus, ase_dftbplus, pyscf, turbomole, "
+        "mace, mace_mp, mace_off, fairchem, fairchem_odac23"
     )
 }
 
@@ -204,8 +204,8 @@ TEST_F(TestInputFileReader, parseFairChemQMMethod)
     ASSERT_THROW_MSG(
         parser.parseFairchemQMMethod("notAFairchemModel"),
         InputFileException,
-        "Invalid fairchem type qm_method \"notAFairchemModel\" in input file.\n"
-        "Possible values are: fairchem"
+        "Invalid fairchem model type \"notAFairchemModel\" in input file.\n"
+        "Possible values are: fairchem, fairchem_odac23"
     )
 }
 TEST_F(TestInputFileReader, parseSlakosType)
