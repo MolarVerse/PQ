@@ -50,6 +50,7 @@ namespace input
         void parseFReset(const pq::strings &, const size_t);
         void parseNResetAngular(const pq::strings &, const size_t);
         void parseFResetAngular(const pq::strings &, const size_t);
+        void parseFResetForces(const pq::strings &, const size_t);
     };
 
 }   // namespace input

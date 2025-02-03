@@ -37,6 +37,7 @@
 #include "throwWithMessage.hpp"           // for EXPECT_THROW_MSG
 
 using namespace input;
+using settings::InitVelocities;
 
 /**
  * @brief tests parsing the "density" command
@@ -89,29 +90,44 @@ TEST_F(TestInputFileReader, parseInitVelocities)
         "true"
     };
     parser.parseInitializeVelocities(lineElements, 0);
-    EXPECT_EQ(settings::SimulationBoxSettings::getInitializeVelocities(), true);
+    EXPECT_EQ(
+        settings::SimulationBoxSettings::getInitializeVelocities(),
+        InitVelocities::TRUE
+    );
 
     const std::vector<std::string> lineElements2 = {
         "init_velocities",
         "=",
         "false"
     };
+
     parser.parseInitializeVelocities(lineElements2, 0);
     EXPECT_EQ(
         settings::SimulationBoxSettings::getInitializeVelocities(),
-        false
+        InitVelocities::FALSE
     );
 
     const std::vector<std::string> lineElements3 = {
         "init_velocities",
         "=",
+        "force"
+    };
+    parser.parseInitializeVelocities(lineElements3, 0);
+    EXPECT_EQ(
+        settings::SimulationBoxSettings::getInitializeVelocities(),
+        InitVelocities::FORCE
+    );
+
+    const std::vector<std::string> lineElements4 = {
+        "init_velocities",
+        "=",
         "wrongKeyword"
     };
     EXPECT_THROW_MSG(
-        parser.parseInitializeVelocities(lineElements3, 0),
+        parser.parseInitializeVelocities(lineElements4, 0),
         customException::InputFileException,
         "Invalid value for initialize velocities - \"wrongKeyword\" at line 0 "
         "in input file.\n"
-        "Possible options are: true, false"
+        "Possible options are: true, false, force"
     );
 }

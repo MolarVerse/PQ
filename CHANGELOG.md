@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 ## Next Release
 
+### Enhancements
+
+- ASE interface for DFTB+ calculations added
+- Add a new keyword 'freset_forces' to reset forces to zero after each step
+- init_velocities keyword is ignored if non-zero velocities are present
+- init_velocities can now be forced via the 'force' option
+
+### Bug Fixes
+
+- Volume now gets correctly printed to the .log output file
+
+### CI
+
+- Updated CMakeLists.txt to support macOS arm64 architecture.
+- Added CI workflow for macOS arm64 architecture.
+
 <!-- insertion marker -->
 ## [v0.5.2](https://github.com/MolarVerse/PQ/releases/tag/v0.5.2) - 2025-01-05
 

@@ -52,6 +52,7 @@ namespace output
 
         void writeSetup(const std::string &setup);
         void writeSetupInfo(const std::string &setupInfo);
+        void writeSetupWarning(const std::string &setupWarning);
         void writeSetupCompleted();
         void writeRead(const std::string &message, const std::string &file);
     };

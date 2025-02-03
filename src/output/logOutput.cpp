@@ -124,6 +124,15 @@ void LogOutput::writeSetupInfo(const std::string &setupInfo)
 }
 
 /**
+ * @brief write a message to issue a warning about the setup
+ *
+ */
+void LogOutput::writeSetupWarning(const std::string &setupWarning)
+{
+    _fp << _WARNING_ << setupWarning << '\n' << std::flush;
+}
+
+/**
  * @brief write a message to the stdout to inform that the setup is completed
  *
  * @param momentum

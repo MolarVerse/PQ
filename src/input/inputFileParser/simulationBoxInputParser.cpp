@@ -133,6 +133,7 @@ void SimulationBoxInputParser::parseDensity(
  * @details possible options are:
  * 1) true
  * 2) false (default)
+ * 3) force
  *
  * @param lineElements
  * @param lineNumber
@@ -142,21 +143,25 @@ void SimulationBoxInputParser::parseInitializeVelocities(
     const size_t                    lineNumber
 )
 {
+    using enum InitVelocities;
     checkCommand(lineElements, lineNumber);
 
     const auto initializeVelocities = toLowerCopy(lineElements[2]);
 
     if (initializeVelocities == "true")
-        SimulationBoxSettings::setInitializeVelocities(true);
+        SimulationBoxSettings::setInitializeVelocities(TRUE);
 
     else if (initializeVelocities == "false")
-        SimulationBoxSettings::setInitializeVelocities(false);
+        SimulationBoxSettings::setInitializeVelocities(FALSE);
+
+    else if (initializeVelocities == "force")
+        SimulationBoxSettings::setInitializeVelocities(FORCE);
 
     else
         throw InputFileException(std::format(
             "Invalid value for initialize velocities - \"{}\" at line {} in "
             "input file.\n"
-            "Possible options are: true, false",
+            "Possible options are: true, false, force",
             lineElements[2],
             lineNumber
         ));

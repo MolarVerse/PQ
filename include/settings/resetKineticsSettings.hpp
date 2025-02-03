@@ -43,6 +43,7 @@ namespace settings
         static inline size_t _fReset        = 0;
         static inline size_t _nResetAngular = 0;
         static inline size_t _fResetAngular = 0;
+        static inline size_t _fResetForces  = 0;
 
        public:
         ResetKineticsSettings()  = default;
@@ -58,6 +59,7 @@ namespace settings
         static void setFReset(const size_t fReset);
         static void setNResetAngular(const size_t nResetAngular);
         static void setFResetAngular(const size_t fResetAngular);
+        static void setFResetForces(const size_t fResetForces);
 
         /***************************
          * standard getter methods *
@@ -69,6 +71,7 @@ namespace settings
         [[nodiscard]] static size_t getFReset();
         [[nodiscard]] static size_t getNResetAngular();
         [[nodiscard]] static size_t getFResetAngular();
+        [[nodiscard]] static size_t getFResetForces();
     };
 }   // namespace settings
 

@@ -56,6 +56,7 @@ void StdoutOutput::writeHeader() const
 /**
  * @brief write a message to the stdout if the simulation ended normally
  *
+ * @param elapsedTime
  */
 void StdoutOutput::writeEndedNormally(const double elapsedTime) const
 {
@@ -104,7 +105,7 @@ void StdoutOutput::writeOptWarning(const std::string &msg) const
 /**
  * @brief write a message to the stdout to inform about the setup
  *
- * @param momentum
+ * @param setup
  */
 void StdoutOutput::writeSetup(const std::string &setup) const
 {
@@ -112,9 +113,18 @@ void StdoutOutput::writeSetup(const std::string &setup) const
 }
 
 /**
+ * @brief write a message to the stdout to issue a warning about the setup
+ *
+ * @param warning
+ */
+void StdoutOutput::writeSetupWarning(const std::string &warning) const
+{
+    std::cout << _WARNING_ << (warning) << "\n\n" << std::flush;
+}
+
+/**
  * @brief write a message to the stdout to inform that the setup is completed
  *
- * @param momentum
  */
 void StdoutOutput::writeSetupCompleted() const
 {
@@ -125,6 +135,7 @@ void StdoutOutput::writeSetupCompleted() const
  * @brief write a message to the stdout to inform about the start of reading a
  * file
  *
+ * @param message, file
  */
 void StdoutOutput::writeRead(
     const std::string &message,

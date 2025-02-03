@@ -36,10 +36,10 @@
  */
 TEST_F(TestLogOutput, writeHeader)
 {
-    _logOutput->setFilename("default.out");
+    _logOutput->setFilename("default.log");
     _logOutput->writeHeader();
     _logOutput->close();
-    std::ifstream file("default.out");
+    std::ifstream file("default.log");
     std::string   line;
     getline(file, line);
     EXPECT_EQ(line, "");
@@ -133,10 +133,10 @@ TEST_F(TestLogOutput, writeHeader)
  */
 TEST_F(TestLogOutput, writeEndedNormally)
 {
-    _logOutput->setFilename("default.out");
+    _logOutput->setFilename("default.log");
     _logOutput->writeEndedNormally(0.1);
     _logOutput->close();
-    std::ifstream file("default.out");
+    std::ifstream file("default.log");
     std::string   line;
     getline(file, line);
     EXPECT_EQ(line, "");
@@ -185,10 +185,10 @@ TEST_F(TestLogOutput, writeEndedNormally)
  */
 TEST_F(TestLogOutput, writeDensityWarning)
 {
-    _logOutput->setFilename("default.out");
+    _logOutput->setFilename("default.log");
     _logOutput->writeDensityWarning();
     _logOutput->close();
-    std::ifstream file("default.out");
+    std::ifstream file("default.log");
     std::string   line;
     getline(file, line);
     EXPECT_EQ(
@@ -203,10 +203,10 @@ TEST_F(TestLogOutput, writeDensityWarning)
  */
 TEST_F(TestLogOutput, writeInitialMomentum)
 {
-    _logOutput->setFilename("default.out");
+    _logOutput->setFilename("default.log");
     _logOutput->writeInitialMomentum(0.1);
     _logOutput->close();
-    std::ifstream file("default.out");
+    std::ifstream file("default.log");
     std::string   line;
     getline(file, line);
     getline(file, line);
@@ -216,5 +216,23 @@ TEST_F(TestLogOutput, writeInitialMomentum)
             "INFO:    Initial momentum = 1.00000e-01 {}*amu/fs",
             output::_ANGSTROM_
         )
+    );
+}
+
+/**
+ * @brief tests writing setup warning to log file
+ *
+ */
+TEST_F(TestLogOutput, TestwriteSetupWarning)
+{
+    _logOutput->setFilename("default.log");
+    _logOutput->writeSetupWarning("This is a warning message.");
+    _logOutput->close();
+    std::ifstream file("default.log");
+    std::string   line;
+    getline(file, line);
+    EXPECT_EQ(
+        line,
+        std::format("WARNING: This is a warning message.")
     );
 }

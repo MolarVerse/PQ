@@ -24,18 +24,19 @@
 
 #define _TEST_SIMULATION_BOX_HPP_
 
+#include <gtest/gtest.h>   // for Test
+
+#include <memory>   // for make_shared, __shared_ptr_access, share...
+
 #include "atom.hpp"            // for Atom
 #include "molecule.hpp"        // for Molecule
 #include "moleculeType.hpp"    // for MoleculeType
 #include "simulationBox.hpp"   // for SimulationBox
 #include "vector3d.hpp"        // for Vec3D
 
-#include <gtest/gtest.h>   // for Test
-#include <memory>          // for make_shared, __shared_ptr_access, share...
-
 class TestSimulationBox : public ::testing::Test
 {
-  protected:
+   protected:
     virtual void SetUp()
     {
         _simulationBox = new simulationBox::SimulationBox();
@@ -53,6 +54,9 @@ class TestSimulationBox : public ::testing::Test
         atom1->setPosition(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
         atom2->setPosition(linearAlgebra::Vec3D(1.0, 0.0, 0.0));
         atom3->setPosition(linearAlgebra::Vec3D(0.0, 1.0, 0.0));
+        atom1->setForce(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+        atom2->setForce(linearAlgebra::Vec3D(1.0, 0.0, 0.0));
+        atom3->setForce(linearAlgebra::Vec3D(0.0, 1.0, 0.0));
         atom1->setMass(1.0);
         atom2->setMass(2.0);
         atom3->setMass(3.0);
@@ -68,6 +72,8 @@ class TestSimulationBox : public ::testing::Test
 
         atom4->setPosition(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
         atom5->setPosition(linearAlgebra::Vec3D(1.0, 0.0, 0.0));
+        atom4->setForce(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+        atom5->setForce(linearAlgebra::Vec3D(0.0, 0.0, 1.0));
         atom4->setMass(1.0);
         atom5->setMass(2.0);
 

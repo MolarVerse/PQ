@@ -48,6 +48,7 @@ namespace output
         void writeOptWarning(const std::string &message) const;
 
         void writeSetup(const std::string &setup) const;
+        void writeSetupWarning(const std::string &setup) const;
         void writeSetupCompleted() const;
         void writeRead(const std::string &, const std::string &) const;
     };

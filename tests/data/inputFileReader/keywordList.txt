@@ -101,6 +101,7 @@ nreset                      false
 freset                      false
 nreset_angular              false
 freset_angular              false
+freset_forces               false
 
 rcoulomb                    false
 density                     false
@@ -117,6 +118,10 @@ qm_script_full_path         false
 qm_loop_time_limit          false
 dispersion                  false
 mace_model_size             false
+slakos                      false
+slakos_path                 false
+third_order                 false
+hubbard_derivs              false
 
 rpmd_n_replica              false
 
