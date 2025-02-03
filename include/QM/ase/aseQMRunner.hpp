@@ -60,6 +60,7 @@ namespace QM
         void run(pq::SimBox &, pq::PhysicalData &) override;
         void buildAseAtoms(const pq::SimBox &);
         void execute();
+        void calculateStress(const pq::SimBox &, pq::PhysicalData &) const;
 
         void collectData(pq::SimBox &, pq::PhysicalData &) const;
         void collectForces(pq::SimBox &) const;

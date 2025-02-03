@@ -108,16 +108,26 @@ void ASEQMRunner::execute()
 
         const auto forces = _atoms.attr("get_forces")();
         const auto energy = _atoms.attr("get_potential_energy")();
-        const auto stress = _atoms.attr("get_stress")(py::arg("voigt") = false);
 
         _forces = forces.cast<array_d>();
         _energy = energy.cast<double>();
-        _stress = stress.cast<array_d>();
     }
     catch (const py::error_already_set &)
     {
         ::PyErr_Print();
         throw;
+    }
+
+    // The stress is not always available in the ASE Calculator
+    try
+    {
+        const auto stress = _atoms.attr("get_stress")(py::arg("voigt") = false);
+
+        _stress = stress.cast<array_d>();
+    }
+    catch (const py::error_already_set &)
+    {
+        _stress = py::none();
     }
 }
 
@@ -186,6 +196,12 @@ void ASEQMRunner::collectStress(const SimulationBox &simBox, PhysicalData &data)
     const
 {
     linearAlgebra::tensor3D stress_;
+
+    if (_stress.is_none())
+    {
+        calculateStress(simBox, data);
+        return;
+    }
 
     try
     {
@@ -367,4 +383,48 @@ py::array_t<int> ASEQMRunner::aseAtomicNumbers(const SimulationBox &simBox
         ::PyErr_Print();
         throw;
     }
+}
+
+/**
+ * @brief calculate the stress from the ASE QM calculation
+ *
+ * @param simBox
+ * @param physicalData
+ */
+void ASEQMRunner::calculateStress(
+    const SimulationBox &simBox,
+    PhysicalData        &data
+) const
+{
+    const auto nAtoms = simBox.getNumberOfAtoms();
+    const auto pos    = simBox.getPositions();
+    const auto forces = simBox.getForces();
+
+    linearAlgebra::tensor3D virial_ = linearAlgebra::tensor3D(
+        {{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}}
+    );
+
+    for (size_t i = 0; i < nAtoms; ++i)
+    {
+        const auto _pos = pos[i];
+        const auto _f   = forces[i];
+
+        virial_[0][0] += _pos[0] * _f[0];
+        virial_[0][1] += _pos[0] * _f[1];
+        virial_[0][2] += _pos[0] * _f[2];
+
+        virial_[1][0] += _pos[1] * _f[0];
+        virial_[1][1] += _pos[1] * _f[1];
+        virial_[1][2] += _pos[1] * _f[2];
+
+        virial_[2][0] += _pos[2] * _f[0];
+        virial_[2][1] += _pos[2] * _f[1];
+        virial_[2][2] += _pos[2] * _f[2];
+    }
+
+    data.addVirial(virial_);
+
+    const auto stress_ = virial_ / simBox.getVolume();
+
+    data.setStressTensor(stress_);
 }

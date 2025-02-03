@@ -37,6 +37,10 @@ FairchemRunner::FairchemRunner(const std::string &modelType) : ASEQMRunner()
 {
     try
     {
+        // disable logging
+        const auto loggingModule = py::module_::import("logging");
+        loggingModule.attr("disable")(loggingModule.attr("CRITICAL"));
+
         const py::module_ calculators =
             py::module_::import("fairchem.core.common.relaxation.ase_utils");
 
