@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## Next Release
 
+<!-- insertion marker -->
+## [v0.5.3](https://github.com/MolarVerse/PQ/releases/tag/v0.5.3) - 2025-02-03
+
 ### Enhancements
 
 - ASE interface for DFTB+ calculations added
@@ -20,7 +23,6 @@ All notable changes to this project will be documented in this file.
 - Updated CMakeLists.txt to support macOS arm64 architecture.
 - Added CI workflow for macOS arm64 architecture.
 
-<!-- insertion marker -->
 ## [v0.5.2](https://github.com/MolarVerse/PQ/releases/tag/v0.5.2) - 2025-01-05
 
 ### Enhancements
