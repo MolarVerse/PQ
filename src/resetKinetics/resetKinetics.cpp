@@ -214,7 +214,7 @@ void ResetKinetics::resetAngularMomentum(SimulationBox &simBox)
 /**
  * @brief reset the force of the system
  *
- * @details subtract force correction from all velocities - correction is the
+ * @details subtract force correction from all forces - correction is the
  * total force divided by the number of atoms
  *
  * @param step
@@ -230,7 +230,7 @@ void ResetKinetics::resetForces(const size_t step, SimulationBox &simBox)
 
     std::ranges::for_each(
         simBox.getAtoms(),
-        [forceCorrection](auto &atom) { atom->addVelocity(-forceCorrection); }
+        [forceCorrection](auto &atom) { atom->addForce(-forceCorrection); }
     );
 }
 
