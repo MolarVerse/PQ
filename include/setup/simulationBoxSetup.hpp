@@ -39,7 +39,8 @@ namespace setup::simulationBox
     class SimulationBoxSetup
     {
        private:
-        pq::Engine &_engine;
+        pq::Engine        &_engine;
+        static inline bool _zeroVelocities = false;
 
        public:
         explicit SimulationBoxSetup(pq::Engine &engine);
@@ -60,10 +61,23 @@ namespace setup::simulationBox
         void checkBoxSettings();
         void checkRcCutoff();
 
+        void checkZeroVelocities();
         void initVelocities();
 
         void writeSetupInfo() const;
-    };
+
+        /***************************
+         * standard setter methods *
+         ***************************/
+
+        static void setZeroVelocities(const bool zeroVelocities);
+
+        /***************************
+         * standard getter methods *
+         ***************************/
+
+        [[nodiscard]] static bool getZeroVelocities();
+        };
 
 }   // namespace setup::simulationBox
 

@@ -12,19 +12,20 @@ jobs:
       - name: Checkout PR source branch
         uses: actions/checkout@v3
         with:
-          ref: ${{ github.head_ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Fetch target branch
         run: |
-          git fetch origin ${{ github.base_ref }}
+          git fetch origin ${{ github.event.pull_request.base.ref }}
 
       - name: Compare commits
         run: |
           # Get the latest commit hashes
-          target_commit_hash=$(git rev-parse origin/${{ github.base_ref }})
+          target_commit_hash=$(git rev-parse origin/${{ github.event.pull_request.base.ref }})
 
-          # Compare the commits
-          if ( git --no-pager log --sparse | grep -q $target_commit_hash ); then
+          # Check if the target commit is in the history of the source branch
+          if git merge-base --is-ancestor $target_commit_hash HEAD; then
             echo "The target branch has new commits since the PR was created."
             exit 1
           else
