@@ -48,6 +48,7 @@ namespace resetKinetics
         size_t _frequencyMomentumReset;
         size_t _nStepsAngularReset;
         size_t _frequencyAngularReset;
+        size_t _nStepsForcesReset;
 
         double    _temperature = 0.0;
         pq::Vec3D _momentum;
@@ -61,13 +62,15 @@ namespace resetKinetics
             const size_t nStepsMomentumReset,
             const size_t frequencyMomentumReset,
             const size_t nStepsAngularReset,
-            const size_t frequencyAngularReset
+            const size_t frequencyAngularReset,
+            const size_t nStepsForcesReset
         );
 
         void reset(const size_t step, pq::PhysicalData &, pq::SimBox &);
         void resetTemperature(pq::SimBox &);
         void resetMomentum(pq::SimBox &);
         void resetAngularMomentum(pq::SimBox &);
+        void resetForces(const size_t step, pq::SimBox &);
 
         /********************
          * standard setters *
@@ -85,6 +88,7 @@ namespace resetKinetics
         [[nodiscard]] size_t getFrequencyTemperatureReset() const;
         [[nodiscard]] size_t getNStepsMomentumReset() const;
         [[nodiscard]] size_t getFrequencyMomentumReset() const;
+        [[nodiscard]] size_t getNStepsForcesReset() const;
     };
 
 }   // namespace resetKinetics

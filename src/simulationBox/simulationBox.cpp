@@ -509,11 +509,23 @@ Vec3D SimulationBox::calculateAngularMomentum(const Vec3D& momentum)
 }
 
 /**
- * @brief calculate total force of simulationBox
+ * @brief calculate total force of simulationBox as scalar
  *
  * @return double
  */
 double SimulationBox::calculateTotalForce()
+{
+    const auto totalForce = calculateTotalForceVector();
+
+    return norm(totalForce);
+}
+
+/**
+ * @brief calculate total force of simulationBox as vector
+ *
+ * @return Vec3D
+ */
+Vec3D SimulationBox::calculateTotalForceVector()
 {
     Vec3D totalForce(0.0);
 
@@ -522,7 +534,7 @@ double SimulationBox::calculateTotalForce()
 
     std::ranges::for_each(_atoms, accumulateForce);
 
-    return norm(totalForce);
+    return totalForce;
 }
 
 /**
@@ -739,7 +751,7 @@ void SimulationBox::updateOldForces()
  */
 void SimulationBox::resetForces()
 {
-    auto resetForce = [](const auto& atom) { atom->setForceToZero(); };
+    auto resetForces = [](const auto& atom) { atom->setForceToZero(); };
 
-    std::ranges::for_each(_atoms, resetForce);
+    std::ranges::for_each(_atoms, resetForces);
 }

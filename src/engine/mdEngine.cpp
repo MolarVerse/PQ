@@ -141,6 +141,8 @@ void MDEngine::takeStepBeforeForces()
  */
 void MDEngine::takeStepAfterForces()
 {
+    _resetKinetics.resetForces(_step, *_simulationBox);
+
     _constraints->applyDistanceConstraints(
         *_simulationBox,
         *_physicalData,

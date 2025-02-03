@@ -668,15 +668,20 @@ Initial Velocities
 .. admonition:: Key
     :class: tip
 
-    init_velocities = {bool} -> false
+    init_velocities = {string} -> false
 
-To initialize the velocities of the system according to the target temperature with a Boltzmann distribution the user has to set the ``init_velocities`` to true.
+To initialize the velocities of the system according to the target temperature with a Boltzmann distribution the user has to set the ``init_velocities`` to ``true`` or ``force``.
 
 Possible options are:
 
    1. **false** (default) - velocities are taken from start file
 
-   2. **true** - velocities are initialized according to a Boltzmann distribution at the target temperature.
+   2. **true** - velocities are initialized according to a Boltzmann distribution at the target temperature, if all velocities in the start file are zero or not given
+
+   3. **force** - velocities are initialized according to a Boltzmann distribution at the target temperature, regardless of the velocities in the start file
+
+.. Danger::
+    The option ``force`` should be used very carefully, since it neglects the velocities in the start file.
 
 .. _temperatureCouplingKeys:
 
@@ -1348,7 +1353,7 @@ Possible options are:
 .. _slakosTypeKey:
 
 ASE-DFTB+ Approach
-=============
+==================
 
 .. admonition:: Key
     :class: tip

@@ -101,6 +101,7 @@ nreset                      false
 freset                      false
 nreset_angular              false
 freset_angular              false
+freset_forces               false
 
 rcoulomb                    false
 density                     false

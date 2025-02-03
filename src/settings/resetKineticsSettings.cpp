@@ -78,6 +78,16 @@ void ResetKineticsSettings::setFResetAngular(const size_t fResetAngular)
     _fResetAngular = fResetAngular;
 }
 
+/**
+ * @brief set fResetForces
+ *
+ * @param fResetForces
+ */
+void ResetKineticsSettings::setFResetForces(const size_t fResetForces)
+{
+    _fResetForces = fResetForces;
+}
+
 /***************************
  *                         *
  * standard getter methods *
@@ -125,3 +135,10 @@ size_t ResetKineticsSettings::getNResetAngular() { return _nResetAngular; }
  * @return size_t
  */
 size_t ResetKineticsSettings::getFResetAngular() { return _fResetAngular; }
+
+/**
+ * @brief get fResetForces
+ *
+ * @return size_t
+ */
+size_t ResetKineticsSettings::getFResetForces() { return _fResetForces; }
