@@ -53,6 +53,8 @@ namespace QM
         pybind11::array_t<double> _forces;
         pybind11::array_t<double> _stress;
 
+        bool _isStressAvailable = false;
+
        public:
         ASEQMRunner();
         ~ASEQMRunner() override = default;

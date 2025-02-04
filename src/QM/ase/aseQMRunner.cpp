@@ -124,10 +124,13 @@ void ASEQMRunner::execute()
         const auto stress = _atoms.attr("get_stress")(py::arg("voigt") = false);
 
         _stress = stress.cast<array_d>();
+
+        _isStressAvailable = true;
     }
     catch (const py::error_already_set &)
     {
-        _stress = py::none();
+        ::PyErr_Clear();
+        _isStressAvailable = false;
     }
 }
 
@@ -197,7 +200,7 @@ void ASEQMRunner::collectStress(const SimulationBox &simBox, PhysicalData &data)
 {
     linearAlgebra::tensor3D stress_;
 
-    if (_stress.is_none())
+    if (!_isStressAvailable)
     {
         calculateStress(simBox, data);
         return;
