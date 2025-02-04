@@ -54,6 +54,7 @@ FairchemRunner::FairchemRunner(const std::string &modelType) : ASEQMRunner()
             );
 
         calculatorArgs["local_cache"] = "/tmp/fairchem_checkpoints/";
+        calculatorArgs["cpu"]   = py::bool_(false);
 
         _calculator = calculators.attr("OCPCalculator")(**calculatorArgs);
     }

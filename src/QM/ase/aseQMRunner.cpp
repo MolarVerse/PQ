@@ -425,6 +425,9 @@ void ASEQMRunner::calculateStress(
         virial_[2][2] += _pos[2] * _f[2];
     }
 
+    // symmetrize the virial
+    virial_ = 0.5 * (virial_ + linearAlgebra::transpose(virial_));
+
     data.addVirial(virial_);
 
     const auto stress_ = virial_ / simBox.getVolume();
