@@ -199,13 +199,12 @@ TEST_F(TestInputFileReader, parseFairChemQMMethod)
 
     parser.parseFairchemQMMethod("fairchem");
     EXPECT_EQ(QMSettings::getQMMethod(), FAIRCHEM);
-    EXPECT_EQ(QMSettings::getFairchemModelType(), ODAC23);
 
     ASSERT_THROW_MSG(
         parser.parseFairchemQMMethod("notAFairchemModel"),
         InputFileException,
         "Invalid fairchem model type \"notAFairchemModel\" in input file.\n"
-        "Possible values are: fairchem, fairchem_odac23"
+        "Possible values are: fairchem"
     )
 }
 TEST_F(TestInputFileReader, parseSlakosType)

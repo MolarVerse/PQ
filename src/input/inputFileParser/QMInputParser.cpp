@@ -88,7 +88,21 @@ QMInputParser::QMInputParser(Engine &engine) : InputFileParser(engine)
         bind_front(&QMInputParser::parseMaceModelSize, this),
         false
     );
-
+    addKeyword(
+        std::string("fairchem_model_name"),
+        bind_front(&QMInputParser::parseFairchemModelName, this),
+        false
+    );
+    addKeyword(
+        std::string("fairchem_model_path"),
+        bind_front(&QMInputParser::parseFairchemModelPath, this),
+        false
+    );
+    addKeyword(
+        std::string("fairchem_cpu"),
+        bind_front(&QMInputParser::parseFairchemCPU, this),
+        false
+    );
     addKeyword(
         std::string("slakos"),
         bind_front(&QMInputParser::parseSlakosType, this),
@@ -166,7 +180,7 @@ void QMInputParser::parseQMMethod(
         throw InputFileException(std::format(
             "Invalid qm_prog \"{}\" in input file.\n"
             "Possible values are: dftbplus, ase_dftbplus, pyscf, turbomole, "
-            "mace, mace_mp, mace_off, fairchem, fairchem_odac23",
+            "mace, mace_mp, mace_off, fairchem, fairchem",
             lineElements[2]
         ));
 }
@@ -331,22 +345,80 @@ void QMInputParser::parseMaceQMMethod(const std::string_view &model)
  * @param lineElements
  * @param lineNumber
  */
+void QMInputParser::parseFairchemModelName(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+    QMSettings::setFairchemModelName(lineElements[2]);
+}
+
+/**
+ * @brief parse the Fairchem model path
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
+void QMInputParser::parseFairchemModelPath(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+    QMSettings::setFairchemModelPath(lineElements[2]);
+}
+
+/**
+ * @brief parse if Fairchem should be run on CPU
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
+void QMInputParser::parseFairchemCPU(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+
+    const auto cpu = toLowerCopy(lineElements[2]);
+
+    if ("on" == cpu || "yes" == cpu || "true" == cpu)
+        QMSettings::setFairchemOnCPU(true);
+
+    else if ("off" == cpu || "no" == cpu || "false" == cpu)
+        QMSettings::setFairchemOnCPU(false);
+
+    else
+        throw InputFileException(std::format(
+            "Invalid fairchem_cpu request \"{}\" in input file.\n"
+            "Possible values are: on, yes, true, off, no, false",
+            lineElements[2]
+        ));
+}
+
+/**
+ * @brief parse the Fairchem model name
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
 
 void QMInputParser::parseFairchemQMMethod(const std::string_view &model)
 {
     using enum FairchemModelType;
 
-    if ("fairchem" == model || "fairchem_odac23" == model)
+    if ("fairchem" == model)
     {
-        QMSettings::setFairchemModelType(ODAC23);
-        ReferencesOutput::addReferenceFile(_ODAC23_FILE_);
+        ReferencesOutput::addReferenceFile(_FAIRCHEM_FILE_);
     }
 
     else
     {
         throw InputFileException(std::format(
             "Invalid fairchem model type \"{}\" in input file.\n"
-            "Possible values are: fairchem, fairchem_odac23",
+            "Possible values are: fairchem",
             model
         ));
     }

@@ -1,8 +1,8 @@
 include(FetchContent)
 
 function(CloneRepository repositoryURL sourceDir)
-    #Commands are left empty so that we only checkout the source and no not perform any kind of build
-    if (EXISTS ${sourceDir})
+    # Commands are left empty so that we only checkout the source and no not perform any kind of build
+    if(EXISTS ${sourceDir})
         message("Directory ${sourceDir} already exists. Skipping cloning of ${repositoryURL}")
         return()
     endif()
@@ -26,3 +26,4 @@ CloneRepository("https://github.com/dftbparams/matsci.git" "${CMAKE_BINARY_DIR}/
 
 # define directory for 3ob and matsci for preprocessor
 add_compile_definitions(__SLAKOS_DIR__="${CMAKE_BINARY_DIR}/external/slakos/")
+add_compile_definitions(__FAIRCHEM_DIR__="${CMAKE_BINARY_DIR}/external/fairchem/")

@@ -94,6 +94,7 @@ for the following QM-engines:
 2) Turbomole
 3) PySCF
 4) MACE
+5) Fairchem
 
 ******************
 Molecular Dynamics

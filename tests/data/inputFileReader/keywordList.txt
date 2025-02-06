@@ -118,6 +118,9 @@ qm_script_full_path         false
 qm_loop_time_limit          false
 dispersion                  false
 mace_model_size             false
+fairchem_model_name         false
+fairchem_model_path         false
+fairchem_cpu                false
 
 slakos                      false
 slakos_path                 false

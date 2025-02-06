@@ -70,11 +70,34 @@ namespace settings
     };
 
     /**
+     * @class enum FairchemDatasetType
+     */
+    enum class FairchemDatasetType : size_t
+    {
+        ODAC23
+    };
+
+    /**
      * @class enum FairchemModelType
      */
     enum class FairchemModelType : size_t
     {
-        ODAC23
+        SCHNET,
+        DIMENETPLUSPLUS,
+        PAINN,
+        GEMNET_OC,
+        ESCN,
+        EQUIFORMERV2
+    };
+
+    /**
+     * @class enum FairchemTrainingType
+     */
+    enum class FairchemTrainingType : size_t
+    {
+        S2EF,
+        IS2RE,
+        IS2RS
     };
 
     /**
@@ -91,7 +114,9 @@ namespace settings
     std::string string(const QMMethod method);
     std::string string(const MaceModelSize model);
     std::string string(const MaceModelType model);
+    std::string string(const FairchemDatasetType dataset);
     std::string string(const FairchemModelType model);
+    std::string string(const FairchemTrainingType training);
     std::string string(const SlakosType slakos);
     std::string string(
         const std::unordered_map<std::string, double> unordered_map
@@ -106,11 +131,14 @@ namespace settings
     class QMSettings
     {
        private:
-        static inline QMMethod          _qmMethod      = QMMethod::NONE;
-        static inline MaceModelSize     _maceModelSize = MaceModelSize::MEDIUM;
-        static inline MaceModelType     _maceModelType = MaceModelType::MACE_MP;
-        static inline FairchemModelType _fairchemModelType =
-            FairchemModelType::ODAC23;
+        static inline QMMethod      _qmMethod      = QMMethod::NONE;
+        static inline MaceModelSize _maceModelSize = MaceModelSize::MEDIUM;
+        static inline MaceModelType _maceModelType = MaceModelType::MACE_MP;
+
+        static inline std::string _fairchemModelName = "";
+        static inline std::string _fairchemModelPath = __FAIRCHEM_DIR__;
+        static inline bool        _useFairchemCpu    = false;
+
         static inline SlakosType _slakosType = SlakosType::NONE;
 
         static inline std::string _qmScript         = "";
@@ -145,8 +173,9 @@ namespace settings
         static void setMaceModelType(const MaceModelType model);
         static void setMaceModelPath(const std::string_view &path);
 
-        static void setFairchemModelType(const std::string_view &model);
-        static void setFairchemModelType(const FairchemModelType model);
+        static void setFairchemModelName(const std::string_view &model);
+        static void setFairchemModelPath(const std::string_view &path);
+        static void setFairchemOnCPU(const bool cpu);
 
         static void setQMScript(const std::string_view &script);
         static void setQMScriptFullPath(const std::string_view &script);
@@ -174,7 +203,9 @@ namespace settings
         [[nodiscard]] static MaceModelType getMaceModelType();
         [[nodiscard]] static std::string   getMaceModelPath();
 
-        [[nodiscard]] static FairchemModelType getFairchemModelType();
+        [[nodiscard]] static std::string getFairchemModelName();
+        [[nodiscard]] static std::string getFairchemModelPath();
+        [[nodiscard]] static bool        useFairchemOnCPU();
 
         [[nodiscard]] static std::string getQMScript();
         [[nodiscard]] static std::string getQMScriptFullPath();

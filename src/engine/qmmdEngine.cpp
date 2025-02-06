@@ -118,24 +118,29 @@ void QMMDEngine::setMaceQMRunner()
 #endif
 }
 /**
- * @brief sets the QMRunner object for FAIR-Chem type qm methods.
+ * @brief sets the QMRunner object for fairchem type qm methods.
  *
- * @throws py::error_already_set if the import of the FAIR-Chem module fails
+ * @throws InputFileException if ASE was not enabled at compile
+ * time.
+ *
  */
 void QMMDEngine::setFairchemRunner()
 {
 #ifdef WITH_ASE
-    const auto modelType = string(QMSettings::getFairchemModelType());
+    const auto modelName = QMSettings::getFairchemModelName();
+    const auto modelPath = QMSettings::getFairchemModelPath();
+    const auto cpu       = QMSettings::useFairchemOnCPU();
 
-    _qmRunner = make_shared<FairchemRunner>(modelType);
+    _qmRunner = make_shared<FairchemRunner>(modelName, modelPath, cpu);
 #else
     throw CompileTimeException(
-        "The FAIR-Chem qm method was requested but ASE was not enabled at "
-        "compile time. Please recompile with ASE enabled to use mace type "
+        "The FairChem qm method was requested but ASE was not enabled at "
+        "compile time. Please recompile with ASE enabled to use FairChem type "
         "qm methods using: -DBUILD_WITH_ASE=ON"
     );
 #endif
 }
+
 /**
  * @brief sets the QMRunner object for ase dftbplus type qm methods.
  *

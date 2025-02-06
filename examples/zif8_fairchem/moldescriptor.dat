@@ -1,0 +1,49 @@
+# >>  moldescriptor.dat <<
+#
+#        Data File containing atom information of all known molecules
+#
+#      FREE FORMAT   DELIMITER ';' 
+      
+# Data Groups; 
+
+# <Molecule Name>   <Number of Atoms n>   <Total Charge of Molecule>
+# <Atom Name>  <Atom type Atom No. 1>     <MM point charge Atom No.1>
+# <Atom Name>  <Atom type Atom No. 2>     <MM point charge Atom No.2>
+#     .....      .....                      ..... 
+# <Atom Name>  <Atom type Atom No. n>     <MM point charge Atom No.n>
+#
+# Note: no comments or blank lines allowed in the data groups.
+#  
+
+
+
+# Moltype 1
+Zn(II)        1       2
+Zn            0      2.0     
+
+
+
+# Moltype 2
+CH3-Immidazol    11    1 
+N		  0   1.0
+C		  0   1.0
+C		  0   1.0
+H		  0   1.0
+H		  0   1.0
+H		  0   1.0
+N		  0   1.0
+C		  0   1.0
+H		  0   1.0
+C		  0   1.0
+H		  0   1.0
+
+
+
+
+
+
+
+
+
+
+

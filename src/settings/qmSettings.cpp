@@ -27,7 +27,9 @@
 #include "exceptions.hpp"        // for customException
 #include "stringUtilities.hpp"   // for toLowerCopy
 
+using settings::FairchemDatasetType;
 using settings::FairchemModelType;
+using settings::FairchemTrainingType;
 using settings::MaceModelSize;
 using settings::MaceModelType;
 using settings::QMMethod;
@@ -100,6 +102,24 @@ std::string settings::string(const MaceModelType model)
 }
 
 /**
+ * @brief returns the Fairchem Dataset Type as string
+ *
+ * @param dataset
+ * @return std::string
+ */
+std::string settings::string(const FairchemDatasetType dataset)
+{
+    switch (dataset)
+    {
+        using enum FairchemDatasetType;
+
+        case ODAC23: return "odac";
+
+        default: return "none";
+    }
+}
+
+/**
  * @brief returns the Fairchem Model Type as string
  *
  * @param model
@@ -111,11 +131,37 @@ std::string settings::string(const FairchemModelType model)
     {
         using enum FairchemModelType;
 
-        case ODAC23: return "odac23";
+        case SCHNET: return "schnet";
+        case DIMENETPLUSPLUS: return "dimenet++";
+        case PAINN: return "painn";
+        case GEMNET_OC: return "gemnet_oc";
+        case ESCN: return "escn";
+        case EQUIFORMERV2: return "equiformerv2";
 
         default: return "none";
     }
 }
+
+/**
+ * @brief returns the Fairchem Training Type as string
+ *
+ * @param training
+ * @return std::string
+ */
+std::string settings::string(const FairchemTrainingType training)
+{
+    switch (training)
+    {
+        using enum FairchemTrainingType;
+
+        case S2EF: return "s2ef";
+        case IS2RE: return "is2re";
+        case IS2RS: return "is2rs";
+
+        default: return "none";
+    }
+}
+
 /**
  * @brief returns the Slakos Type as string
  *
@@ -264,7 +310,7 @@ void QMSettings::setMaceModelSize(const MaceModelSize model)
 void QMSettings::setMaceModelType(const std::string_view &model)
 {
     using enum MaceModelType;
-    const auto modelToLower = toLowerAndReplaceDashesCopy(model);
+    const auto modelToLower = toLowerCopy(model);
 
     if ("mace_mp" == modelToLower)
         _maceModelType = MACE_MP;
@@ -299,34 +345,109 @@ void QMSettings::setMaceModelPath(const std::string_view &path)
 {
     _maceModelPath = path;
 }
+
 /**
- * @brief sets the fairchemModelType to enum in settings
+ * @brief sets the fairchemModelName in settings
  *
  * @param model
  */
-void QMSettings::setFairchemModelType(const std::string_view &model)
+void QMSettings::setFairchemModelName(const std::string_view &model)
 {
-    using enum FairchemModelType;
-    const auto modelToLower = toLowerAndReplaceDashesCopy(model);
+    const auto  modelToLower = toLowerAndReplaceDashesCopy(model);
+    std::string modelType;
+    std::string trainingType;
+    std::string datasetType;
+    std::string modelSize;
 
-    if ("fairchem_odac23" == modelToLower)
-        _fairchemModelType = ODAC23;
+    std::string word;
+    pq::strings modelParts = {};
 
-    else
+    std::stringstream ss(modelToLower);
+
+    while (std::getline(ss, word, '_')) modelParts.push_back(word);
+
+    // custom model
+    if (modelParts[0] == "custom")
+    {
+        _fairchemModelName = model;
+        return;
+    }
+
+    if (modelParts.size() > 4 || modelParts.size() < 3)
         throw UserInputException(
-            std::format("Fairchem {} model not recognized", model)
+            std::format("Fairchem model {} not recognized", model)
         );
+
+    if (modelParts.size() == 3)
+    {
+        modelType    = modelParts[0];
+        trainingType = modelParts[1];
+        datasetType  = modelParts[2];
+    }
+    else
+    {
+        modelType   = modelParts[0];
+        modelSize   = modelParts[1];
+        datasetType = modelParts[3];
+    }
+
+    while (true)
+    {
+        if (modelType == string(FairchemModelType::SCHNET))
+            break;
+        if (modelType == string(FairchemModelType::DIMENETPLUSPLUS))
+            break;
+        if (modelType == string(FairchemModelType::PAINN))
+            break;
+        if (modelType == string(FairchemModelType::GEMNET_OC))
+            break;
+        if (modelType == string(FairchemModelType::ESCN))
+            break;
+        if (modelType == string(FairchemModelType::EQUIFORMERV2))
+            break;
+        throw UserInputException(
+            std::format("Fairchem model {} not recognized", model)
+        );
+    }
+    while (true)
+    {
+        if (trainingType == string(FairchemTrainingType::S2EF))
+            break;
+        if (trainingType == string(FairchemTrainingType::IS2RE))
+            break;
+        if (trainingType == string(FairchemTrainingType::IS2RS))
+            break;
+        throw UserInputException(
+            std::format("Fairchem model {} not recognized", model)
+        );
+    }
+
+    while (true)
+    {
+        if (datasetType == string(FairchemDatasetType::ODAC23))
+            break;
+        throw UserInputException(
+            std::format("Fairchem model {} not recognized", model)
+        );
+    }
+    _fairchemModelName = model;
 }
 
 /**
- * @brief sets the fairchemModelType to enum in settings
+ * @brief sets the fairchemModelPath in settings
  *
- * @param model
+ * @param path
  */
-void QMSettings::setFairchemModelType(const FairchemModelType model)
+void QMSettings::setFairchemModelPath(const std::string_view &path)
 {
-    _fairchemModelType = model;
+    _fairchemModelPath = path;
 }
+
+/**
+ * @brief sets if Fairchem should be run on CPU
+ *
+ */
+void QMSettings::setFairchemOnCPU(const bool cpu) { _useFairchemCpu = cpu; }
 
 /**
  * @brief sets the qmScript in settings
@@ -505,14 +626,18 @@ MaceModelType QMSettings::getMaceModelType() { return _maceModelType; }
 std::string QMSettings::getMaceModelPath() { return _maceModelPath; }
 
 /**
- * @brief returns the fairchemModel
+ * @brief returns the fairchemModelName
  *
- * @return FairchemModelType
+ * @return FairchemModelName
  */
-FairchemModelType QMSettings::getFairchemModelType()
-{
-    return _fairchemModelType;
-}
+std::string QMSettings::getFairchemModelName() { return _fairchemModelName; }
+
+/**
+ * @brief returns the fairchemModelPath
+ *
+ * @return std::string
+ */
+std::string QMSettings::getFairchemModelPath() { return _fairchemModelPath; }
 
 /**
  * @brief returns the qmScript
@@ -579,6 +704,13 @@ std::unordered_map<std::string, double> QMSettings::getHubbardDerivs()
  * @return bool
  */
 bool QMSettings::useDispersionCorr() { return _useDispersionCorrection; }
+
+/**
+ * @brief returns if Fairchem should be run on CPU
+ *
+ * @return bool
+ */
+bool QMSettings::useFairchemOnCPU() { return _useFairchemCpu; }
 
 /**
  * @brief returns the qmLoopTimeLimit

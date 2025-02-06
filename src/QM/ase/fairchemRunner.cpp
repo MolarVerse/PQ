@@ -29,11 +29,18 @@ using QM::FairchemRunner;
 /**
  * @brief Construct a new FairchemRunner::FairchemRunner object
  *
- * @param modelType
+ * @param modelName
+ * @param modelPath
+ * @param cpu
  *
  * @throw py::error_already_set if the import of the fairchem module fails
  */
-FairchemRunner::FairchemRunner(const std::string &modelType) : ASEQMRunner()
+FairchemRunner::FairchemRunner(
+    const std::string &modelName,
+    const std::string &modelPath,
+    const bool         cpu
+)
+    : ASEQMRunner()
 {
     try
     {
@@ -45,16 +52,10 @@ FairchemRunner::FairchemRunner(const std::string &modelType) : ASEQMRunner()
             py::module_::import("fairchem.core.common.relaxation.ase_utils");
 
         const py::dict calculatorArgs;
-
-        if (modelType == "odac23")
-            calculatorArgs["model_name"] = "DimeNet++-S2EF-ODAC";
-        else
-            throw customException::UserInputException(
-                std::format("Fairchem {} model not recognized", modelType)
-            );
-
-        calculatorArgs["local_cache"] = "/tmp/fairchem_checkpoints/";
-        calculatorArgs["cpu"]   = py::bool_(false);
+        std::cout << "modelName: " << modelName << std::endl;
+        calculatorArgs["model_name"]  = modelName.c_str();
+        calculatorArgs["local_cache"] = modelPath.c_str();
+        calculatorArgs["cpu"]         = py::bool_(cpu);
 
         _calculator = calculators.attr("OCPCalculator")(**calculatorArgs);
     }

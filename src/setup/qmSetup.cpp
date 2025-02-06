@@ -64,7 +64,7 @@ void setup::setupQM(Engine &engine)
  *
  * @param engine
  */
-QMSetup::QMSetup(QMMDEngine &engine) : _engine(engine) {};
+QMSetup::QMSetup(QMMDEngine &engine) : _engine(engine) {}
 
 /**
  * @brief setup QM-MD for all subtypes
@@ -266,10 +266,14 @@ void QMSetup::setupWriteInfo() const
 
     if (qmMethod == FAIRCHEM)
     {
-        const auto modelType = QMSettings::getFairchemModelType();
+        const auto modelName = QMSettings::getFairchemModelName();
+        const auto modelPath = QMSettings::getFairchemModelPath();
+        const auto cpu       = QMSettings::useFairchemOnCPU() ? "on" : "off";
 
         // clang-format off
-        const auto modelTypeMsg     = std::format("Model name:           {}", string(modelType));
+        const auto modelTypeMsg     = std::format("Model name:           {}", modelName);
+        const auto modelPathMsg     = std::format("Model path:           {}", modelPath);
+        const auto cpuMsg           = std::format("Run on CPU:           {}", cpu);
         // clang-format on
 
         logOutput.writeSetupInfo(modelTypeMsg);
