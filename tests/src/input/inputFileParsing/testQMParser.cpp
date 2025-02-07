@@ -207,6 +207,53 @@ TEST_F(TestInputFileReader, parseFairChemQMMethod)
         "Possible values are: fairchem"
     )
 }
+TEST_F(TestInputFileReader, parseFairChemModelName)
+{
+    auto parser = QMInputParser(*_engine);
+    parser.parseFairchemModelName(
+        {"fairchem_model_name", "=", "DimeNet++-S2EF-ODAC"},
+        0
+    );
+    EXPECT_EQ(QMSettings::getFairchemModelName(), "DimeNet++-S2EF-ODAC");
+}
+TEST_F(TestInputFileReader, parseFairChemModelPath)
+{
+    auto parser = QMInputParser(*_engine);
+    parser.parseFairchemModelPath(
+        {"fairchem_model_path", "=", "/path/to/fairchem"},
+        0
+    );
+    EXPECT_EQ(QMSettings::getFairchemModelPath(), "/path/to/fairchem");
+}
+TEST_F(TestInputFileReader, parseFairChemCpu)
+{
+    auto parser = QMInputParser(*_engine);
+
+    parser.parseFairchemCpu({"fairchem_cpu", "=", "on"}, 0);
+    EXPECT_TRUE(QMSettings::useFairchemOnCpu());
+
+    parser.parseFairchemCpu({"fairchem_cpu", "=", "yes"}, 0);
+    EXPECT_TRUE(QMSettings::useFairchemOnCpu());
+
+    parser.parseFairchemCpu({"fairchem_cpu", "=", "true"}, 0);
+    EXPECT_TRUE(QMSettings::useFairchemOnCpu());
+
+    parser.parseFairchemCpu({"fairchem_cpu", "=", "off"}, 0);
+    EXPECT_FALSE(QMSettings::useFairchemOnCpu());
+
+    parser.parseFairchemCpu({"fairchem_cpu", "=", "no"}, 0);
+    EXPECT_FALSE(QMSettings::useFairchemOnCpu());
+
+    parser.parseFairchemCpu({"fairchem_cpu", "=", "false"}, 0);
+    EXPECT_FALSE(QMSettings::useFairchemOnCpu());
+
+    ASSERT_THROW_MSG(
+        parser.parseFairchemCpu({"fairchem_cpu", "=", "notABool"}, 0),
+        InputFileException,
+        "Invalid fairchem_cpu request \"notABool\" in input file.\n"
+        "Possible values are: on, yes, true, off, no, false"
+    )
+}
 TEST_F(TestInputFileReader, parseSlakosType)
 {
     using enum QMMethod;

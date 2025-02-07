@@ -91,18 +91,69 @@ TEST(QMSettingsTest, SetMaceModelTypeTest)
         "Mace notAMaceModelType model not recognized"
     )
 }
+TEST(QMSettingsTest, SetFairchemModelNameTest)
+{
+    QMSettings::setFairchemModelName("DimeNet++-S2EF-ODAC");
+    EXPECT_EQ(QMSettings::getFairchemModelName(), "DimeNet++-S2EF-ODAC");
 
-// TEST(QMSettingsTest, SetFairchemModelTypeTest)
-// {
-//     QMSettings::setFairchemModelType("fairchem");
-//     EXPECT_EQ(QMSettings::getFairchemModelType(), FairchemModelType::ODAC23);
+    QMSettings::setFairchemModelName("custom++-S2EF-ODAC");
+    EXPECT_EQ(QMSettings::getFairchemModelName(), "custom++-S2EF-ODAC");
 
-//     ASSERT_THROW_MSG(
-//         QMSettings::setFairchemModelType("notAFairchemModelType"),
-//         UserInputException,
-//         "Fairchem notAFairchemModelType model not recognized"
-//     )
-// }
+    QMSettings::setFairchemModelName("EquiformerV2-Large-S2EF-ODAC");
+    EXPECT_EQ(
+        QMSettings::getFairchemModelName(),
+        "EquiformerV2-Large-S2EF-ODAC"
+    );
+    ASSERT_THROW_MSG(
+        QMSettings::setFairchemModelName("notAFairchemModel"),
+        UserInputException,
+        "Fairchem model {} not recognized."
+        "Expected format: [modelType]-[trainingType]-[datasetType]"
+        " or [modelType]-[modelSize]-[trainingType]-[datasetType]"
+    )
+    ASSERT_THROW_MSG(
+        QMSettings::setFairchemModelName("DimeNet++-S2EF"),
+        UserInputException,
+        "Fairchem model DimeNet++-S2EF not recognized."
+        "Expected format: [modelType]-[trainingType]-[datasetType]"
+        " or [modelType]-[modelSize]-[trainingType]-[datasetType]"
+    );
+    ASSERT_THROW_MSG(
+        QMSettings::setFairchemModelName("DimeNet+-S2EF-ODAC"),
+        UserInputException,
+        "Fairchem model type DimeNet+ not recognized"
+        "Please choose from: schnet, dimenet++, painn, gemnet_oc, escn, "
+        "equiformerv2"
+    );
+    ASSERT_THROW_MSG(
+        QMSettings::setFairchemModelName("DimeNet++-S2EF-ODAC23"),
+        UserInputException,
+        "Fairchem dataset type ODAC23 not recognized"
+        "Please choose from: odac"
+        "Note: ODAC23 is called odac"
+    );
+    ASSERT_THROW_MSG(
+        QMSettings::setFairchemModelName("DimeNet++-SEF-ODAC"),
+        UserInputException,
+        "Fairchem training type SEF not recognized"
+        "Please choose from: s2ef, is2re, is2rs"
+    );
+}
+
+TEST(QMSettingsTest, SetFairchemModelPathTest)
+{
+    QMSettings::setFairchemModelPath("/path/to/fairchem");
+    EXPECT_EQ(QMSettings::getFairchemModelPath(), "/path/to/fairchem");
+}
+
+TEST(QMSettingsTest, SetFairchemUseCpuTest)
+{
+    QMSettings::SetFairchemUseCpu(true);
+    EXPECT_EQ(QMSettings::useFairchemOnCpu(), true);
+
+    QMSettings::SetFairchemUseCpu(false);
+    EXPECT_EQ(QMSettings::useFairchemOnCpu(), false);
+}
 
 TEST(QMSettingsTest, SetSlakosTypeTest)
 {
