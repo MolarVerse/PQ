@@ -180,7 +180,7 @@ void QMInputParser::parseQMMethod(
         throw InputFileException(std::format(
             "Invalid qm_prog \"{}\" in input file.\n"
             "Possible values are: dftbplus, ase_dftbplus, pyscf, turbomole, "
-            "mace, mace_mp, mace_off, fairchem, fairchem",
+            "mace, mace_mp, mace_off, fairchem",
             lineElements[2]
         ));
 }

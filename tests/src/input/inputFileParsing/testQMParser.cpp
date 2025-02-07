@@ -67,7 +67,7 @@ TEST_F(TestInputFileReader, parseQMMethod)
         InputFileException,
         "Invalid qm_prog \"notAMethod\" in input file.\n"
         "Possible values are: dftbplus, ase_dftbplus, pyscf, turbomole, "
-        "mace, mace_mp, mace_off, fairchem, fairchem_odac23"
+        "mace, mace_mp, mace_off, fairchem"
     )
 }
 

@@ -375,9 +375,9 @@ void QMSettings::setFairchemModelName(const std::string_view &model)
 
     if (modelParts.size() > 4 || modelParts.size() < 3)
         throw UserInputException(std::format(
-            "Fairchem model {} not recognized."
+            "Fairchem model {} not recognized. "
             "Expected format: [modelType]-[trainingType]-[datasetType]"
-            " or [modelType]-[modelSize]-[trainingType]-[datasetType]",
+            " or [modelType]-[modelSize]-[trainingType]-[datasetType].",
             model
         ));
 
@@ -389,9 +389,10 @@ void QMSettings::setFairchemModelName(const std::string_view &model)
     }
     else
     {
-        modelType   = modelParts[0];
-        modelSize   = modelParts[1];
-        datasetType = modelParts[3];
+        modelType    = modelParts[0];
+        modelSize    = modelParts[1];
+        trainingType = modelParts[2];
+        datasetType  = modelParts[3];
     }
 
     while (true)
@@ -409,9 +410,9 @@ void QMSettings::setFairchemModelName(const std::string_view &model)
         if (modelType == string(FairchemModelType::EQUIFORMERV2))
             break;
         throw UserInputException(std::format(
-            "Fairchem model type {} not recognized",
+            "Fairchem model type {} not recognized. "
             "Please choose from: schnet, dimenet++, painn, gemnet_oc, escn, "
-            "equiformerv2",
+            "equiformerv2.",
             modelType
         ));
     }
@@ -424,8 +425,8 @@ void QMSettings::setFairchemModelName(const std::string_view &model)
         if (trainingType == string(FairchemTrainingType::IS2RS))
             break;
         throw UserInputException(std::format(
-            "Fairchem training type {} not recognized",
-            "Please choose from: s2ef, is2re, is2rs",
+            "Fairchem training type {} not recognized. "
+            "Please choose from: s2ef, is2re, is2rs.",
             trainingType
         ));
     }
@@ -435,9 +436,9 @@ void QMSettings::setFairchemModelName(const std::string_view &model)
         if (datasetType == string(FairchemDatasetType::ODAC23))
             break;
         throw UserInputException(std::format(
-            "Fairchem dataset type {} not recognized",
-            "Please choose from: odac"
-            "Note: ODAC23 is called odac",
+            "Fairchem dataset type {} not recognized. "
+            "Please choose from: odac. "
+            "Note: ODAC23 is called odac.",
             datasetType
         ));
     }
