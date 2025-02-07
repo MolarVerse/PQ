@@ -175,7 +175,7 @@ namespace settings
 
         static void setFairchemModelName(const std::string_view &model);
         static void setFairchemModelPath(const std::string_view &path);
-        static void setFairchemUseCPU(const bool cpu);
+        static void SetFairchemUseCpu(const bool cpu);
 
         static void setQMScript(const std::string_view &script);
         static void setQMScriptFullPath(const std::string_view &script);
@@ -205,7 +205,7 @@ namespace settings
 
         [[nodiscard]] static std::string getFairchemModelName();
         [[nodiscard]] static std::string getFairchemModelPath();
-        [[nodiscard]] static bool        useFairchemOnCPU();
+        [[nodiscard]] static bool        useFairchemOnCpu();
 
         [[nodiscard]] static std::string getQMScript();
         [[nodiscard]] static std::string getQMScriptFullPath();

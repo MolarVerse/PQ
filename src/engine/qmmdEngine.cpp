@@ -129,7 +129,7 @@ void QMMDEngine::setFairchemRunner()
 #ifdef WITH_ASE
     const auto modelName = QMSettings::getFairchemModelName();
     const auto modelPath = QMSettings::getFairchemModelPath();
-    const bool cpu       = QMSettings::useFairchemOnCPU();
+    const bool cpu       = QMSettings::useFairchemOnCpu();
 
     _qmRunner = make_shared<FairchemRunner>(modelName, modelPath, cpu);
 #else

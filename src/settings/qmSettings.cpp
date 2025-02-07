@@ -374,9 +374,12 @@ void QMSettings::setFairchemModelName(const std::string_view &model)
     }
 
     if (modelParts.size() > 4 || modelParts.size() < 3)
-        throw UserInputException(
-            std::format("Fairchem model {} not recognized", model)
-        );
+        throw UserInputException(std::format(
+            "Fairchem model {} not recognized."
+            "Expected format: [modelType]-[trainingType]-[datasetType]"
+            " or [modelType]-[modelSize]-[trainingType]-[datasetType]",
+            model
+        ));
 
     if (modelParts.size() == 3)
     {
@@ -405,9 +408,12 @@ void QMSettings::setFairchemModelName(const std::string_view &model)
             break;
         if (modelType == string(FairchemModelType::EQUIFORMERV2))
             break;
-        throw UserInputException(
-            std::format("Fairchem model {} not recognized", model)
-        );
+        throw UserInputException(std::format(
+            "Fairchem model type {} not recognized",
+            "Please choose from: schnet, dimenet++, painn, gemnet_oc, escn, "
+            "equiformerv2",
+            modelType
+        ));
     }
     while (true)
     {
@@ -417,18 +423,23 @@ void QMSettings::setFairchemModelName(const std::string_view &model)
             break;
         if (trainingType == string(FairchemTrainingType::IS2RS))
             break;
-        throw UserInputException(
-            std::format("Fairchem model {} not recognized", model)
-        );
+        throw UserInputException(std::format(
+            "Fairchem training type {} not recognized",
+            "Please choose from: s2ef, is2re, is2rs",
+            trainingType
+        ));
     }
 
     while (true)
     {
         if (datasetType == string(FairchemDatasetType::ODAC23))
             break;
-        throw UserInputException(
-            std::format("Fairchem model {} not recognized", model)
-        );
+        throw UserInputException(std::format(
+            "Fairchem dataset type {} not recognized",
+            "Please choose from: odac"
+            "Note: ODAC23 is called odac",
+            datasetType
+        ));
     }
     _fairchemModelName = model;
 }
@@ -447,7 +458,7 @@ void QMSettings::setFairchemModelPath(const std::string_view &path)
  * @brief sets if Fairchem should be run on CPU
  *
  */
-void QMSettings::setFairchemUseCPU(const bool cpu) { _useFairchemCpu = cpu; }
+void QMSettings::SetFairchemUseCpu(const bool cpu) { _useFairchemCpu = cpu; }
 
 /**
  * @brief sets the qmScript in settings
@@ -710,7 +721,7 @@ bool QMSettings::useDispersionCorr() { return _useDispersionCorrection; }
  *
  * @return bool
  */
-bool QMSettings::useFairchemOnCPU() { return _useFairchemCpu; }
+bool QMSettings::useFairchemOnCpu() { return _useFairchemCpu; }
 
 /**
  * @brief returns the qmLoopTimeLimit

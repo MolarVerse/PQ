@@ -385,10 +385,10 @@ void QMInputParser::parseFairchemCpu(
     const auto cpu = toLowerCopy(lineElements[2]);
 
     if ("on" == cpu || "yes" == cpu || "true" == cpu)
-        QMSettings::setFairchemUseCPU(true);
+        QMSettings::SetFairchemUseCpu(true);
 
     else if ("off" == cpu || "no" == cpu || "false" == cpu || "none" == cpu)
-        QMSettings::setFairchemUseCPU(false);
+        QMSettings::SetFairchemUseCpu(false);
 
     else
         throw InputFileException(std::format(

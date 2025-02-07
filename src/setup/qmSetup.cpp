@@ -268,7 +268,7 @@ void QMSetup::setupWriteInfo() const
     {
         const auto modelName = QMSettings::getFairchemModelName();
         const auto modelPath = QMSettings::getFairchemModelPath();
-        const auto cpu       = QMSettings::useFairchemOnCPU() ? "on" : "off";
+        const auto cpu       = QMSettings::useFairchemOnCpu() ? "on" : "off";
 
         // clang-format off
         const auto modelTypeMsg     = std::format("Model name:           {}", modelName);
