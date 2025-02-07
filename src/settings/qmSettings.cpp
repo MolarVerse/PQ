@@ -134,7 +134,7 @@ std::string settings::string(const FairchemModelType model)
         case SCHNET: return "schnet";
         case DIMENETPLUSPLUS: return "dimenet++";
         case PAINN: return "painn";
-        case GEMNET_OC: return "gemnet_oc";
+        case GEMNET_OC: return "gemnet";
         case ESCN: return "escn";
         case EQUIFORMERV2: return "equiformerv2";
 
