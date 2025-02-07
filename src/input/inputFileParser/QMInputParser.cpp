@@ -100,7 +100,7 @@ QMInputParser::QMInputParser(Engine &engine) : InputFileParser(engine)
     );
     addKeyword(
         std::string("fairchem_cpu"),
-        bind_front(&QMInputParser::parseFairchemCPU, this),
+        bind_front(&QMInputParser::parseFairchemCpu, this),
         false
     );
     addKeyword(
@@ -375,7 +375,7 @@ void QMInputParser::parseFairchemModelPath(
  * @param lineElements
  * @param lineNumber
  */
-void QMInputParser::parseFairchemCPU(
+void QMInputParser::parseFairchemCpu(
     const std::vector<std::string> &lineElements,
     const size_t                    lineNumber
 )
@@ -385,10 +385,10 @@ void QMInputParser::parseFairchemCPU(
     const auto cpu = toLowerCopy(lineElements[2]);
 
     if ("on" == cpu || "yes" == cpu || "true" == cpu)
-        QMSettings::setFairchemOnCPU(true);
+        QMSettings::setFairchemUseCPU(true);
 
-    else if ("off" == cpu || "no" == cpu || "false" == cpu)
-        QMSettings::setFairchemOnCPU(false);
+    else if ("off" == cpu || "no" == cpu || "false" == cpu || "none" == cpu)
+        QMSettings::setFairchemUseCPU(false);
 
     else
         throw InputFileException(std::format(

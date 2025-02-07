@@ -57,7 +57,7 @@ namespace input
         void parseFairchemQMMethod(const std::string_view &);
         void parseFairchemModelName(const pq::strings &, const size_t);
         void parseFairchemModelPath(const pq::strings &, const size_t);
-        void parseFairchemCPU(const pq::strings &, const size_t);
+        void parseFairchemCpu(const pq::strings &, const size_t);
 
         void parseSlakosType(const pq::strings &, const size_t);
         void parseSlakosPath(const pq::strings &, const size_t);

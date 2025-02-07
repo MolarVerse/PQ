@@ -447,7 +447,7 @@ void QMSettings::setFairchemModelPath(const std::string_view &path)
  * @brief sets if Fairchem should be run on CPU
  *
  */
-void QMSettings::setFairchemOnCPU(const bool cpu) { _useFairchemCpu = cpu; }
+void QMSettings::setFairchemUseCPU(const bool cpu) { _useFairchemCpu = cpu; }
 
 /**
  * @brief sets the qmScript in settings
