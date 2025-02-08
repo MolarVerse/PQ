@@ -25,16 +25,25 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      
-      - uses: actions/setup-python@v3
+
+      - name: install gcc13
+        if: ${{ matrix.os != 'macos-latest' }}
+        run: |
+          sudo apt update
+          sudo apt install gcc-13 g++-13
+        shell: bash
+
+      - name: setup python ubuntu
+        if : ${{ matrix.os != 'macos-latest' }}
+        uses: actions/setup-python@v3
         with:
           python-version: '3.12'
-      
-      - uses: Dup4/actions-setup-gcc@v1
+
+      - name: setup python macos
+        if : ${{ matrix.os == 'macos-latest' }}
+        uses: actions/setup-python@v5
         with:
-          version: '13'
-          cc: true
-          env: true
+          python-version: '3.12'
 
       - name: Add conda to system path
         if : ${{ matrix.os == 'ubuntu-24.04' }}
