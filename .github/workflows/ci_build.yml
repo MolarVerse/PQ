@@ -1,4 +1,4 @@
-name: RELEASE BUILD
+name: BUILD
 
 on:
   pull_request:
@@ -24,7 +24,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: install gcc13
         if: ${{ matrix.os == 'ubuntu-24.04' || matrix.os == 'ubuntu-24.04-arm' }}
@@ -34,7 +34,7 @@ jobs:
         shell: bash
 
       - name: setup python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
