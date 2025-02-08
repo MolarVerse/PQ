@@ -1,5 +1,6 @@
 ignore:
   # - build/
+  - .github/
   - external/
   - _deps/
   - tests/
