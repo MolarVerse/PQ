@@ -32,7 +32,7 @@ jobs:
       
       - uses: Dup4/actions-setup-gcc@v1
         with:
-          version: '13.2'
+          version: '13'
           cc: true
           env: true
 
