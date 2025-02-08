@@ -34,7 +34,7 @@ jobs:
         shell: bash
 
       - name: setup python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v3
         with:
           python-version: '3.12'
 
@@ -73,7 +73,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=${{ matrix.build }} -DBUILD_WITH_GCOVR=ON ..
+          cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_WITH_GCOVR=ON ..
           make -j
           make coverage_xml
         env:
