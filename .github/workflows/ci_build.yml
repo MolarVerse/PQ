@@ -5,6 +5,7 @@ on:
     branches:
       - '*'
     paths:
+      - '.github/workflows/ci_build.yml'
       - '.cmake/**'
       - 'apps/**'
       - 'include/**'
