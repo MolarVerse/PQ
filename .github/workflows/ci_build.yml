@@ -68,7 +68,7 @@ jobs:
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=${{ matrix.build }} ..
-          make -j
+          make -j 20
           make test
         env:
           CC: gcc-13
@@ -82,7 +82,7 @@ jobs:
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=${{ matrix.build }} -DBUILD_WITH_GCOVR=ON ..
-          make -j
+          make -j 20
           make coverage_xml
         env:
           CC: gcc-13
