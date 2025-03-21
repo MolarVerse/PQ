@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 - Add a new keyword 'freset_forces' to reset forces to zero after each step
 - init_velocities keyword is ignored if non-zero velocities are present
 - init_velocities can now be forced via the 'force' option
+- new MACE models added
 
 ### Bug Fixes
 
