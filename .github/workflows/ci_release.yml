@@ -62,6 +62,7 @@ jobs:
           pip install pytest
           pip install pytest-cov
           pip install pqanalysis
+          conda update setuptools
           conda install conda-forge::gsl
           conda install conda-forge::dftbplus
 
