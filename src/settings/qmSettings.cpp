@@ -73,6 +73,13 @@ std::string settings::string(const MaceModelSize model)
         case MEDIUM: return "medium";
         case SMALL: return "small";
         case SMALL0B: return "small-0b";
+        case MEDIUM0B: return "medium-0b";
+        case SMALL0B2: return "small-0b2";
+        case MEDIUM0B2: return "medium-0b2";
+        case LARGE0B2: return "large-0b2";
+        case MEDIUM0B3: return "medium-0b3";
+        case MEDIUMMPA0: return "medium-mpa-0";
+        case MEDIUMOMAT0: return "medium-omat-0";
 
         default: return "none";
     }

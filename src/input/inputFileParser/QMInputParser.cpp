@@ -277,10 +277,33 @@ void QMInputParser::parseMaceModelSize(
     else if ("small_0b" == size)
         QMSettings::setMaceModelSize(SMALL0B);
 
+    else if ("medium_0b" == size)
+        QMSettings::setMaceModelSize(MEDIUM0B);
+
+    else if ("small_0b2" == size)
+        QMSettings::setMaceModelSize(SMALL0B2);
+
+    else if ("medium_0b2" == size)
+        QMSettings::setMaceModelSize(MEDIUM0B2);
+
+    else if ("large_0b2" == size)
+        QMSettings::setMaceModelSize(LARGE0B2);
+
+    else if ("medium_0b3" == size)
+        QMSettings::setMaceModelSize(MEDIUM0B3);
+
+    else if ("medium_mpa_0" == size)
+        QMSettings::setMaceModelSize(MEDIUMMPA0);
+
+    else if ("medium_omat_0" == size)
+        QMSettings::setMaceModelSize(MEDIUMOMAT0);
+
     else
         throw InputFileException(std::format(
             "Invalid mace_model_size \"{}\" in input file.\n"
-            "Possible values are: small, medium, large, small-0b",
+            "Possible values are: small, medium, large, small-0b,\n"
+            "medium_0b, small_0b2, medium_0b2, large_0b2, medium_0b3,\n"
+            "medium_mpa_0, medium_omat_0",
             lineElements[2]
         ));
 }

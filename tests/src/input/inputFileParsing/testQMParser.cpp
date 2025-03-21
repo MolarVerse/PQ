@@ -182,11 +182,34 @@ TEST_F(TestInputFileReader, parseMaceModelSize)
     parser.parseMaceModelSize({"mace_model_size", "=", "small_0b"}, 0);
     EXPECT_EQ(QMSettings::getMaceModelSize(), SMALL0B);
 
+    parser.parseMaceModelSize({"mace_model_size", "=", "medium_0b"}, 0);
+    EXPECT_EQ(QMSettings::getMaceModelSize(), MEDIUM0B);
+
+    parser.parseMaceModelSize({"mace_model_size", "=", "small_0b2"}, 0);
+    EXPECT_EQ(QMSettings::getMaceModelSize(), SMALL0B2);
+
+    parser.parseMaceModelSize({"mace_model_size", "=", "medium_0b2"}, 0);
+    EXPECT_EQ(QMSettings::getMaceModelSize(), MEDIUM0B2);
+
+    parser.parseMaceModelSize({"mace_model_size", "=", "large_0b2"}, 0);
+    EXPECT_EQ(QMSettings::getMaceModelSize(), LARGE0B2);
+
+    parser.parseMaceModelSize({"mace_model_size", "=", "medium_0b3"}, 0);
+    EXPECT_EQ(QMSettings::getMaceModelSize(), MEDIUM0B3);
+
+    parser.parseMaceModelSize({"mace_model_size", "=", "medium_mpa_0"}, 0);
+    EXPECT_EQ(QMSettings::getMaceModelSize(), MEDIUMMPA0);
+
+    parser.parseMaceModelSize({"mace_model_size", "=", "medium_omat_0"}, 0);
+    EXPECT_EQ(QMSettings::getMaceModelSize(), MEDIUMOMAT0);
+
     ASSERT_THROW_MSG(
         parser.parseMaceModelSize({"mace_model_size", "=", "notASize"}, 0),
         InputFileException,
         "Invalid mace_model_size \"notASize\" in input file.\n"
-        "Possible values are: small, medium, large, small-0b"
+        "Possible values are: small, medium, large, small-0b,\n"
+        "medium_0b, small_0b2, medium_0b2, large_0b2, medium_0b3,\n"
+        "medium_mpa_0, medium_omat_0"
     )
 }
 
