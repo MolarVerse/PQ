@@ -55,7 +55,8 @@ namespace settings
     {
         LARGE,
         MEDIUM,
-        SMALL
+        SMALL,
+        SMALL0B,
     };
 
     /**

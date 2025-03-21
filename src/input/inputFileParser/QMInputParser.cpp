@@ -263,7 +263,7 @@ void QMInputParser::parseMaceModelSize(
     using enum MaceModelSize;
     checkCommand(lineElements, lineNumber);
 
-    const auto size = toLowerCopy(lineElements[2]);
+    const auto size = toLowerAndReplaceDashesCopy(lineElements[2]);
 
     if ("small" == size)
         QMSettings::setMaceModelSize(SMALL);
@@ -274,10 +274,13 @@ void QMInputParser::parseMaceModelSize(
     else if ("large" == size)
         QMSettings::setMaceModelSize(LARGE);
 
+    else if ("small_0b" == size)
+        QMSettings::setMaceModelSize(SMALL0B);
+
     else
         throw InputFileException(std::format(
             "Invalid mace_model_size \"{}\" in input file.\n"
-            "Possible values are: small, medium, large",
+            "Possible values are: small, medium, large, small-0b",
             lineElements[2]
         ));
 }
