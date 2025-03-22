@@ -62,9 +62,7 @@ jobs:
           pip install pytest
           pip install pytest-cov
           pip install pqanalysis
-          conda update --force conda
-          conda uninstall setuptools
-          conda install setuptools
+          pip install setuptools --upgrade
           conda install conda-forge::gsl
           conda install conda-forge::dftbplus
 
