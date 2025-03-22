@@ -100,10 +100,10 @@ jobs:
       - name: Install Integration Test Dependencies
         if: ${{ matrix.os == 'ubuntu-24.04' }}
         run: |
-          pip install pytest
-          pip install pqanalysis
           conda install conda-forge::gsl
           conda install conda-forge::dftbplus
+          pip install pytest
+          pip install pqanalysis
 
       - name: Integration Tests
         if: ${{ matrix.os == 'ubuntu-24.04' }}
