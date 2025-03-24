@@ -94,7 +94,7 @@ Possible options are:
 
    2. **qm-md** - Represents a full quantum mechanics molecular dynamics simulation. For more information see the :ref:`qmKeys` section.
 
-   3. **qm-rpmd** - Represents a full quantum mechanics ring polymer molecular dynamics simulation. For more information see the :ref:`_ringpolymermdKeys` section
+   3. **qm-rpmd** - Represents a full quantum mechanics ring polymer molecular dynamics simulation. For more information see the :ref:`ringpolymermdKeys` section
 
    4. **qmmm-md** - Represents a hybrid quantum mechanics - molecular mechanics molecular dynamics simulation. (Not implemented yet)
 
@@ -1339,16 +1339,34 @@ MACE Model Size
 
     mace_model_size = {string} -> "medium"
 
-With the ``mace_model_size`` keyword the user can specify the size of the `MACE <https://arxiv.org/abs/2206.07697>`_ model for the QM calculations.
+With the ``mace_model_size`` keyword the user can specify the size of the `MACE <https://github.com/ACEsuit/mace>`_ model for the QM calculations.
 
 Possible options are:
 
-   1. **small** - small MACE model
+   1.  **small** - small MACE model
 
-   2. **medium** (default) - medium MACE model
+   2.  **medium** (default) - medium MACE model
 
-   3. **large** - large MACE model
+   3.  **large** - large MACE model
 
+   4.  **small-0b** - small MACE-MP-0b model
+
+   5.  **medium-0b** - medium MACE-MP-0b model
+
+   6.  **small-0b2** - small MACE-MP-0b2 model
+
+   7.  **medium-0b2** - medium MACE-MP-0b2 model
+
+   8.  **large-0b2** - large MACE-MP-0b2 model
+
+   9.  **medium-0b3** - medium MACE-MP-0b3 model
+
+   10. **medium-mpa-0** - medium MACE-MPA-0 model
+
+   11. **medium-omat-0** - medium MACE-OMAT-0 model
+
+.. Note::
+    The :ref:`qm_prog <qmprogamKey>` option ``mace-off`` is only compatible with the first three model sizes: "small", "medium" and "large"
 
 .. _slakosTypeKey:
 
