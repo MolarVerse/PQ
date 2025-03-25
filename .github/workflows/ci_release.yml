@@ -63,6 +63,7 @@ jobs:
           conda install conda-forge::dftbplus
           pip install pytest
           pip install pytest-cov
+          pip install pqanalysis=1.2.1
 
       - name: Integration Tests
         if: ${{ matrix.os != 'ubuntu-24.04-arm' }}
