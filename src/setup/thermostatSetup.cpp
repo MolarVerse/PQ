@@ -108,6 +108,8 @@ void ThermostatSetup::setup()
     }
 
     setupTemperatureRamp();
+
+    writeSetupInfo();
 }
 
 /**

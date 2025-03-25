@@ -28,3 +28,10 @@ googletest
 
 **/__pycache__*
 **/.pytest_cache
+
+# Virtual Environment
+venv
+.venv
+env
+.env
+

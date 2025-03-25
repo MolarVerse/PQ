@@ -4,9 +4,19 @@ All notable changes to this project will be documented in this file.
 
 ## Next Release
 
+
 ### Enhancements
 
 - new MACE models added
+
+### Bug Fixes
+
+- Temperature setup now gets correctly printed to the .log output file
+
+### CI
+
+- Combined all CI workflows into a single workflow file
+
 
 <!-- insertion marker -->
 ## [v0.5.3](https://github.com/MolarVerse/PQ/releases/tag/v0.5.3) - 2025-02-03
