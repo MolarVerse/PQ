@@ -66,7 +66,7 @@ jobs:
           conda install setuptools
           conda config --add channels conda-forge
           conda update -n base --all -y
-          conda install -n base mamba -y
+          conda install -n base mamba=1.5.9 -y
           mamba install 'dftbplus=*=nompi_*' -y
           mamba install gsl -y
 
