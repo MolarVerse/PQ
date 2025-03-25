@@ -64,7 +64,7 @@ void setup::setupQM(Engine &engine)
  *
  * @param engine
  */
-QMSetup::QMSetup(QMMDEngine &engine) : _engine(engine) {};
+QMSetup::QMSetup(QMMDEngine &engine) : _engine(engine) {}
 
 /**
  * @brief setup QM-MD for all subtypes
@@ -72,6 +72,8 @@ QMSetup::QMSetup(QMMDEngine &engine) : _engine(engine) {};
  */
 void QMSetup::setup()
 {
+    setupQMMethodMace();
+
     setupQMMethod();
 
     setupQMMethodAseDftbPlus();
@@ -112,6 +114,30 @@ void QMSetup::setupQMMethodAseDftbPlus()
             "DFTB. "
             "This setup is invalid."
         );
+}
+
+/**
+ * @brief setup the MACE method of the system
+ *
+ */
+void QMSetup::setupQMMethodMace()
+{
+    if (!(QMSettings::getQMMethod() == QMMethod::MACE))
+        return;
+
+    if (!(QMSettings::getMaceModelType() == MaceModelType::MACE_MP))
+    {
+        const auto modelSize = QMSettings::getMaceModelSize();
+        if (modelSize != MaceModelSize::SMALL &&
+            modelSize != MaceModelSize::MEDIUM &&
+            modelSize != MaceModelSize::LARGE)
+            throw InputFileException(std::format(
+                "The '{}' model size is only compatible with the '{}' model "
+                "type.",
+                string(modelSize),
+                string(MaceModelType::MACE_MP)
+            ));
+    }
 }
 
 /**
