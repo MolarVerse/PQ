@@ -44,6 +44,7 @@ jobs:
         run: |
           conda create -n env python=3.12 -y
           conda init bash
+          source /home/runner/.bashrc
           conda activate env
 
       - name: install python dependencies
