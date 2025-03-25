@@ -60,7 +60,7 @@ jobs:
         if: ${{ matrix.os != 'ubuntu-24.04-arm' }}
         run: |
           conda install conda-forge::gsl
-          conda install conda-forge::dftbplus
+          conda install conda-forge::dftbplus=21.1
           pip install pytest
           pip install pytest-cov
           pip install pqanalysis
