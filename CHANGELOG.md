@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## Next Release
 
+### Bug Fixes
+
+- Temperature setup now gets correctly printed to the .log output file
+
 ### CI
 
 - Combined all CI workflows into a single workflow file
