@@ -59,14 +59,11 @@ jobs:
       - name: Install Integration Test Dependencies
         if: ${{ matrix.os != 'ubuntu-24.04-arm' }}
         run: |
+          conda install conda-forge::gsl
+          conda install conda-forge::dftbplus
           pip install pytest
           pip install pytest-cov
           pip install pqanalysis
-          pip uninstall setuptools -y
-          conda install setuptools
-          conda install conda-forge::gsl
-          conda install conda-forge::dftbplus
-          pip install setuptools --upgrade
 
       - name: Integration Tests
         if: ${{ matrix.os != 'ubuntu-24.04-arm' }}
