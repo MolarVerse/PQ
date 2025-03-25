@@ -66,8 +66,7 @@ jobs:
           conda install setuptools
           conda install conda-forge::gsl
           conda install conda-forge::dftbplus
-          conda uninstall setuptools -y
-          pip install setuptools
+          pip install setuptools --upgrade
 
       - name: Integration Tests
         if: ${{ matrix.os != 'ubuntu-24.04-arm' }}
