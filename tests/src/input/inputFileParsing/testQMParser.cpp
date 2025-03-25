@@ -208,8 +208,8 @@ TEST_F(TestInputFileReader, parseMaceModelSize)
         InputFileException,
         "Invalid mace_model_size \"notASize\" in input file.\n"
         "Possible values are: small, medium, large, small-0b,\n"
-        "medium_0b, small_0b2, medium_0b2, large_0b2, medium_0b3,\n"
-        "medium_mpa_0, medium_omat_0"
+        "medium-0b, small-0b2, medium-0b2, large-0b2, medium-0b3,\n"
+        "medium-mpa-0, medium-omat-0"
     )
 }
 
