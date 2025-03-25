@@ -33,7 +33,7 @@ jobs:
       - name: setup python
         uses: actions/setup-python@v3
         with:
-          python-version: '3.8'
+          python-version: '3.12'
 
       - name: Add conda to system path
         run: |
@@ -62,13 +62,12 @@ jobs:
           pip install pytest
           pip install pytest-cov
           pip install pqanalysis
-          pip uninstall -y setuptools
+          pip uninstall setuptools -y
           conda install setuptools
-          conda config --add channels conda-forge
-          conda update -n base --all -y
-          conda install -n base mamba=1.5.3 -y
-          mamba install 'dftbplus=*=nompi_*' -y
-          mamba install gsl -y
+          conda install conda-forge::gsl
+          conda install conda-forge::dftbplus
+          conda uninstall setuptools -y
+          pip install setuptools
 
       - name: Integration Tests
         if: ${{ matrix.os != 'ubuntu-24.04-arm' }}
