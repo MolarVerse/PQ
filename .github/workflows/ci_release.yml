@@ -40,6 +40,11 @@ jobs:
           # $CONDA is an environment variable pointing to the root of the miniconda directory
           echo $CONDA/bin >> $GITHUB_PATH
 
+      - name: Create conda environment
+        run: |
+          conda create -n env python=3.12 -y
+          conda activate env
+
       - name: install python dependencies
         run: |
           python -m pip install numpy
