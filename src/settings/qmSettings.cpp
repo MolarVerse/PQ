@@ -215,16 +215,41 @@ void QMSettings::setQMMethod(const QMMethod method) { _qmMethod = method; }
 void QMSettings::setMaceModelSize(const std::string_view &model)
 {
     using enum MaceModelSize;
-    const auto modelToLower = toLowerCopy(model);
+    const auto modelToLowerAndReplaceDashes =
+        toLowerAndReplaceDashesCopy(model);
 
-    if ("large" == modelToLower)
-        _maceModelSize = LARGE;
+    if ("small" == modelToLowerAndReplaceDashes)
+        _maceModelSize = SMALL;
 
-    else if ("medium" == modelToLower)
+    else if ("medium" == modelToLowerAndReplaceDashes)
         _maceModelSize = MEDIUM;
 
-    else if ("small" == modelToLower)
-        _maceModelSize = SMALL;
+    else if ("large" == modelToLowerAndReplaceDashes)
+        _maceModelSize = LARGE;
+
+    else if ("small_0b" == modelToLowerAndReplaceDashes)
+        _maceModelSize = SMALL0B;
+
+    else if ("medium_0b" == modelToLowerAndReplaceDashes)
+        _maceModelSize = MEDIUM0B;
+
+    else if ("small_0b2" == modelToLowerAndReplaceDashes)
+        _maceModelSize = SMALL0B2;
+
+    else if ("medium_0b2" == modelToLowerAndReplaceDashes)
+        _maceModelSize = MEDIUM0B2;
+
+    else if ("large_0b2" == modelToLowerAndReplaceDashes)
+        _maceModelSize = LARGE0B2;
+
+    else if ("medium_0b3" == modelToLowerAndReplaceDashes)
+        _maceModelSize = MEDIUM0B3;
+
+    else if ("medium_mpa_0" == modelToLowerAndReplaceDashes)
+        _maceModelSize = MEDIUMMPA0;
+
+    else if ("medium_omat_0" == modelToLowerAndReplaceDashes)
+        _maceModelSize = MEDIUMOMAT0;
 
     else
         throw UserInputException(
