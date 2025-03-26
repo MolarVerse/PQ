@@ -316,10 +316,10 @@ void QMSettings::setXtbMethod(const std::string_view &method)
     if ("gfn1_xtb" == xtbMethod)
         _xtbMethod = GFN1;
 
-    else if ("matsci" == xtbMethod)
+    else if ("gfn2_xtb" == xtbMethod)
         _xtbMethod = GFN2;
 
-    else if ("custom" == xtbMethod)
+    else if ("ipea1_xtb" == xtbMethod)
         _xtbMethod = IPEA1;
 
     else

@@ -485,14 +485,10 @@ void QMInputParser::parseXtbMethod(
     const auto slakos = toLowerAndReplaceDashesCopy(lineElements[2]);
 
     if ("gfn1_xtb" == slakos)
-    {
         QMSettings::setXtbMethod(GFN1);
-    }
 
     else if ("gfn2_xtb" == slakos)
-    {
         QMSettings::setXtbMethod(GFN2);
-    }
 
     else if ("ipea1_xtb" == slakos)
         QMSettings::setXtbMethod(IPEA1);

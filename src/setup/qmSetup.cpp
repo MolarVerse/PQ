@@ -64,7 +64,7 @@ void setup::setupQM(Engine &engine)
  *
  * @param engine
  */
-QMSetup::QMSetup(QMMDEngine &engine) : _engine(engine) {};
+QMSetup::QMSetup(QMMDEngine &engine) : _engine(engine) {}
 
 /**
  * @brief setup QM-MD for all subtypes

@@ -290,3 +290,26 @@ TEST_F(TestInputFileReader, parseHubbardDerivs)
         "Invalid hubbard_derivs format \"H:1.0,He\" in input file."
     )
 }
+
+TEST_F(TestInputFileReader, parseXtbMethod)
+{
+    using enum QMMethod;
+
+    auto parser = QMInputParser(*_engine);
+
+    parser.parseXtbMethod({"xtb_method", "=", "Gfn1-XTb"}, 0);
+    EXPECT_EQ(QMSettings::getXtbMethod(), XtbMethod::GFN1);
+
+    parser.parseXtbMethod({"xtb_method", "=", "gfN2-XTb"}, 0);
+    EXPECT_EQ(QMSettings::getXtbMethod(), XtbMethod::GFN2);
+
+    parser.parseXtbMethod({"xtb_method", "=", "iPEa1-XTb"}, 0);
+    EXPECT_EQ(QMSettings::getXtbMethod(), XtbMethod::IPEA1);
+
+    ASSERT_THROW_MSG(
+        parser.parseXtbMethod({"xtb_method", "=", "notAnXtbMethod"}, 0),
+        InputFileException,
+        "Invalid xTB method \"notAnXtbMethod\" in input file.\n"
+        "Possible values are: GFN1-xTB, GFN2-xTB, IPEA1-xTB"
+    )
+}
