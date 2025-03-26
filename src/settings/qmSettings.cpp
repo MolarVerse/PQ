@@ -69,9 +69,9 @@ std::string settings::string(const MaceModelSize model)
     {
         using enum MaceModelSize;
 
-        case LARGE: return "large";
-        case MEDIUM: return "medium";
         case SMALL: return "small";
+        case MEDIUM: return "medium";
+        case LARGE: return "large";
         case SMALL0B: return "small-0b";
         case MEDIUM0B: return "medium-0b";
         case SMALL0B2: return "small-0b2";

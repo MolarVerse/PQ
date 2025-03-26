@@ -191,3 +191,25 @@ TEST(QMSettingsTest, ReturnSlakosTypeTest)
     EXPECT_EQ(string(SlakosType::CUSTOM), "custom");
     EXPECT_EQ(string(SlakosType::NONE), "none");
 }
+
+TEST(QMSettingsTest, ReturnMaceModelTypeTest)
+{
+    EXPECT_EQ(string(MaceModelType::MACE_MP), "mace_mp");
+    EXPECT_EQ(string(MaceModelType::MACE_OFF), "mace_off");
+    EXPECT_EQ(string(MaceModelType::MACE_ANICC), "mace_anicc");
+}
+
+TEST(QMSettingsTest, ReturnMaceModelSizeTest)
+{
+    EXPECT_EQ(string(MaceModelSize::SMALL), "small");
+    EXPECT_EQ(string(MaceModelSize::MEDIUM), "medium");
+    EXPECT_EQ(string(MaceModelSize::LARGE), "large");
+    EXPECT_EQ(string(MaceModelSize::SMALL0B), "small-0b");
+    EXPECT_EQ(string(MaceModelSize::MEDIUM0B), "medium-0b");
+    EXPECT_EQ(string(MaceModelSize::SMALL0B2), "small-0b2");
+    EXPECT_EQ(string(MaceModelSize::MEDIUM0B2), "medium-0b2");
+    EXPECT_EQ(string(MaceModelSize::LARGE0B2), "large-0b2");
+    EXPECT_EQ(string(MaceModelSize::MEDIUM0B3), "medium-0b3");
+    EXPECT_EQ(string(MaceModelSize::MEDIUMMPA0), "medium-mpa-0");
+    EXPECT_EQ(string(MaceModelSize::MEDIUMOMAT0), "medium-omat-0");
+}
