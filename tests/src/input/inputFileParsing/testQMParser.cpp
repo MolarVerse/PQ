@@ -57,14 +57,17 @@ TEST_F(TestInputFileReader, parseQMMethod)
     parser.parseQMMethod({"qm_prog", "=", "ase_dftbplus"}, 0);
     EXPECT_EQ(QMSettings::getQMMethod(), ASEDFTBPLUS);
 
+    parser.parseQMMethod({"qm_prog", "=", "ase_xtb"}, 0);
+    EXPECT_EQ(QMSettings::getQMMethod(), ASEXTB);
+
     // the more detailed mace parser is tested in TestMaceParser
 
     ASSERT_THROW_MSG(
         parser.parseQMMethod({"qm_prog", "=", "notAMethod"}, 0),
         InputFileException,
         "Invalid qm_prog \"notAMethod\" in input file.\n"
-        "Possible values are: dftbplus, ase_dftbplus, pyscf, turbomole, mace, "
-        "mace_mp, mace_off"
+        "Possible values are: dftbplus, ase_dftbplus, ase_xtb, pyscf, "
+        "turbomole, mace, mace_mp, mace_off"
     )
 }
 
@@ -285,5 +288,28 @@ TEST_F(TestInputFileReader, parseHubbardDerivs)
         parser.parseHubbardDerivs({"hubbard_derivs", "=", "H:1.0,He"}, 0),
         InputFileException,
         "Invalid hubbard_derivs format \"H:1.0,He\" in input file."
+    )
+}
+
+TEST_F(TestInputFileReader, parseXtbMethod)
+{
+    using enum QMMethod;
+
+    auto parser = QMInputParser(*_engine);
+
+    parser.parseXtbMethod({"xtb_method", "=", "Gfn1-XTb"}, 0);
+    EXPECT_EQ(QMSettings::getXtbMethod(), XtbMethod::GFN1);
+
+    parser.parseXtbMethod({"xtb_method", "=", "gfN2-XTb"}, 0);
+    EXPECT_EQ(QMSettings::getXtbMethod(), XtbMethod::GFN2);
+
+    parser.parseXtbMethod({"xtb_method", "=", "iPEa1-XTb"}, 0);
+    EXPECT_EQ(QMSettings::getXtbMethod(), XtbMethod::IPEA1);
+
+    ASSERT_THROW_MSG(
+        parser.parseXtbMethod({"xtb_method", "=", "notAnXtbMethod"}, 0),
+        InputFileException,
+        "Invalid xTB method \"notAnXtbMethod\" in input file.\n"
+        "Possible values are: GFN1-xTB, GFN2-xTB, IPEA1-xTB"
     )
 }

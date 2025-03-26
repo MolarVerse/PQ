@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## Next Release
 
+### Enhancements
+
+- ASE based xTB calculator added
+
 ### Bug Fixes
 
 - Temperature setup now gets correctly printed to the .log output file

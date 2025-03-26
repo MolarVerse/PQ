@@ -20,39 +20,26 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _QM_SETUP_HPP_
+#ifndef _ASE_XTB_RUNNER_HPP_
 
-#define _QM_SETUP_HPP_
+#define _ASE_XTB_RUNNER_HPP_
 
-#include "typeAliases.hpp"
+#include "aseQMRunner.hpp"   // for InternalQMRunner
 
-namespace setup
+namespace QM
 {
-    void setupQM(pq::Engine &);
-
     /**
-     * @class QMSetup
-     *
-     * @brief Setup QM
+     * @brief AseXtbRunner inherits from ASEQMRunner
      *
      */
-    class QMSetup
+    class __attribute__((visibility("default"))) AseXtbRunner
+        : public ASEQMRunner
     {
-       private:
-        pq::QMMDEngine &_engine;
-
        public:
-        explicit QMSetup(pq::QMMDEngine &engine);
+        ~AseXtbRunner() override = default;
 
-        void setup();
-        void setupQMMethod();
-        void setupQMMethodAseDftbPlus();
-        void setupQMMethodAseXtb();
-        void setupQMScript() const;
-        void setupCoulombRadiusCutOff() const;
-        void setupWriteInfo() const;
+        explicit AseXtbRunner(const std::string &method);
     };
+}   // namespace QM
 
-}   // namespace setup
-
-#endif   // _QM_SETUP_HPP_
+#endif   // _ASE_XTB_RUNNER_HPP_

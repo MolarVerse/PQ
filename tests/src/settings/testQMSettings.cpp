@@ -49,6 +49,9 @@ TEST(QMSettingsTest, SetQMMethodTest)
     QMSettings::setQMMethod("ase_dftbplus");
     EXPECT_EQ(QMSettings::getQMMethod(), QMMethod::ASEDFTBPLUS);
 
+    QMSettings::setQMMethod("ase_xtb");
+    EXPECT_EQ(QMSettings::getQMMethod(), QMMethod::ASEXTB);
+
     QMSettings::setQMMethod("none");
     EXPECT_EQ(QMSettings::getQMMethod(), QMMethod::NONE);
 }
@@ -150,10 +153,38 @@ TEST(QMSettingsTest, SetSlakosPathTest)
     );
 }
 
+TEST(QMSettingsTest, SetXtbMethodTest)
+{
+    QMSettings::setXtbMethod("GFN1-XtB");
+    EXPECT_EQ(QMSettings::getXtbMethod(), XtbMethod::GFN1);
+
+    QMSettings::setXtbMethod("gFn2_xTb");
+    EXPECT_EQ(QMSettings::getXtbMethod(), XtbMethod::GFN2);
+
+    QMSettings::setXtbMethod("IpeA1-xtB");
+    EXPECT_EQ(QMSettings::getXtbMethod(), XtbMethod::IPEA1);
+
+    QMSettings::setXtbMethod(XtbMethod::GFN1);
+    EXPECT_EQ(QMSettings::getXtbMethod(), XtbMethod::GFN1);
+
+    QMSettings::setXtbMethod(XtbMethod::GFN2);
+    EXPECT_EQ(QMSettings::getXtbMethod(), XtbMethod::GFN2);
+
+    QMSettings::setXtbMethod(XtbMethod::IPEA1);
+    EXPECT_EQ(QMSettings::getXtbMethod(), XtbMethod::IPEA1);
+
+    ASSERT_THROW_MSG(
+        QMSettings::setXtbMethod("notAnXtbMethod"),
+        UserInputException,
+        "xTB method \"notAnXtbMethod\" not recognized"
+    );
+}
+
 TEST(QMSettingsTest, ReturnQMMethodTest)
 {
     EXPECT_EQ(string(QMMethod::DFTBPLUS), "DFTBPLUS");
     EXPECT_EQ(string(QMMethod::ASEDFTBPLUS), "ASEDFTBPLUS");
+    EXPECT_EQ(string(QMMethod::ASEXTB), "ASEXTB");
     EXPECT_EQ(string(QMMethod::PYSCF), "PYSCF");
     EXPECT_EQ(string(QMMethod::TURBOMOLE), "TURBOMOLE");
     EXPECT_EQ(string(QMMethod::MACE), "MACE");
@@ -166,4 +197,11 @@ TEST(QMSettingsTest, ReturnSlakosTypeTest)
     EXPECT_EQ(string(SlakosType::MATSCI), "matsci");
     EXPECT_EQ(string(SlakosType::CUSTOM), "custom");
     EXPECT_EQ(string(SlakosType::NONE), "none");
+}
+
+TEST(QMSettingsTest, ReturnXtbMethodTest)
+{
+    EXPECT_EQ(string(XtbMethod::GFN1), "GFN1-xTB");
+    EXPECT_EQ(string(XtbMethod::GFN2), "GFN2-xTB");
+    EXPECT_EQ(string(XtbMethod::IPEA1), "IPEA1-xTB");
 }
