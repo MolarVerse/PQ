@@ -30,6 +30,8 @@
 #include "pyscfRunner.hpp"         // for PySCFRunner
 #include "qmSettings.hpp"          // for QMMethod, QMSettings
 #include "qmmdEngine.hpp"          // for QMMDEngine
+#include "references.hpp"          // for ReferencesOutput
+#include "referencesOutput.hpp"    // for ReferencesOutput
 #include "settings.hpp"            // for Settings
 #include "stdoutOutput.hpp"        // for StdoutOutput
 #include "stringUtilities.hpp"     // for toLowerCopy
@@ -41,6 +43,7 @@ using namespace engine;
 using namespace QM;
 using namespace utilities;
 using namespace customException;
+using namespace references;
 
 /**
  * @brief wrapper to build QMSetup object and call setup
@@ -75,6 +78,8 @@ void QMSetup::setup()
     setupQMMethod();
 
     setupQMMethodAseDftbPlus();
+
+    setupQMMethodAseXtb();
 
     if (QMSettings::isExternalQMRunner())
         setupQMScript();
@@ -112,6 +117,25 @@ void QMSetup::setupQMMethodAseDftbPlus()
             "DFTB. "
             "This setup is invalid."
         );
+}
+
+/**
+ * @brief setup the ASE DFTB+ method of the system
+ *
+ */
+void QMSetup::setupQMMethodAseXtb()
+{
+    if (!(QMSettings::getQMMethod() == QMMethod::ASEXTB))
+        return;
+
+    if (QMSettings::getXtbMethod() == XtbMethod::GFN1)
+        ReferencesOutput::addReferenceFile(_GFN1_FILE_);
+
+    else if (QMSettings::getXtbMethod() == XtbMethod::GFN2)
+        ReferencesOutput::addReferenceFile(_GFN2_FILE_);
+
+    else if (QMSettings::getXtbMethod() == XtbMethod::IPEA1)
+        ReferencesOutput::addReferenceFile(_IPEA1_FILE_);
 }
 
 /**
@@ -304,6 +328,17 @@ void QMSetup::setupWriteInfo() const
             logOutput.writeSetupWarning(threeOBHubbardDerivsMsg);
             stdOut.writeSetupWarning(threeOBHubbardDerivsMsg);
         }
+    }
+
+    if (qmMethod == ASEXTB)
+    {
+        const auto xtbMethod = QMSettings::getXtbMethod();
+
+        // clang-format off
+        const auto xtbMethodMsg = std::format("xTB Parametrization:   {}", string(xtbMethod));
+        // clang-format on
+
+        logOutput.writeSetupInfo(xtbMethodMsg);
     }
 
     logOutput.writeEmptyLine();

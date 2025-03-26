@@ -153,7 +153,6 @@ void QMInputParser::parseQMMethod(
     else if ("ase_xtb" == method)
     {
         QMSettings::setQMMethod(ASEXTB);
-        ReferencesOutput::addReferenceFile(_XTB_FILE_);
     }
 
     else if ("pyscf" == method)
