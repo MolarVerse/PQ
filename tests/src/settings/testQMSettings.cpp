@@ -55,14 +55,38 @@ TEST(QMSettingsTest, SetQMMethodTest)
 
 TEST(QMSettingsTest, SetMaceModelSizeTest)
 {
-    QMSettings::setMaceModelSize("large");
-    EXPECT_EQ(QMSettings::getMaceModelSize(), MaceModelSize::LARGE);
-
+    QMSettings::setMaceModelSize("small");
+    EXPECT_EQ(QMSettings::getMaceModelSize(), MaceModelSize::SMALL);
+    
     QMSettings::setMaceModelSize("medium");
     EXPECT_EQ(QMSettings::getMaceModelSize(), MaceModelSize::MEDIUM);
 
-    QMSettings::setMaceModelSize("small");
-    EXPECT_EQ(QMSettings::getMaceModelSize(), MaceModelSize::SMALL);
+    QMSettings::setMaceModelSize("large");
+    EXPECT_EQ(QMSettings::getMaceModelSize(), MaceModelSize::LARGE);
+
+    QMSettings::setMaceModelSize("small-0b");
+    EXPECT_EQ(QMSettings::getMaceModelSize(), MaceModelSize::SMALL0B);
+
+    QMSettings::setMaceModelSize("medium-0b");
+    EXPECT_EQ(QMSettings::getMaceModelSize(), MaceModelSize::MEDIUM0B);
+
+    QMSettings::setMaceModelSize("small-0b2");
+    EXPECT_EQ(QMSettings::getMaceModelSize(), MaceModelSize::SMALL0B2);
+
+    QMSettings::setMaceModelSize("medium-0b2");
+    EXPECT_EQ(QMSettings::getMaceModelSize(), MaceModelSize::MEDIUM0B2);
+
+    QMSettings::setMaceModelSize("large-0b2");
+    EXPECT_EQ(QMSettings::getMaceModelSize(), MaceModelSize::LARGE0B2);
+
+    QMSettings::setMaceModelSize("medium-0b3");
+    EXPECT_EQ(QMSettings::getMaceModelSize(), MaceModelSize::MEDIUM0B3);
+
+    QMSettings::setMaceModelSize("medium-mpa-0");
+    EXPECT_EQ(QMSettings::getMaceModelSize(), MaceModelSize::MEDIUMMPA0);
+
+    QMSettings::setMaceModelSize("medium-omat-0");
+    EXPECT_EQ(QMSettings::getMaceModelSize(), MaceModelSize::MEDIUMOMAT0);
 
     ASSERT_THROW_MSG(
         QMSettings::setMaceModelSize("notAMaceModelSize"),
