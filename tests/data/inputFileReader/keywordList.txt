@@ -123,6 +123,8 @@ slakos_path                 false
 third_order                 false
 hubbard_derivs              false
 
+xtb_method                  false
+
 rpmd_n_replica              false
 
 center                      false

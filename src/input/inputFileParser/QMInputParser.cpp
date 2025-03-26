@@ -112,6 +112,12 @@ QMInputParser::QMInputParser(Engine &engine) : InputFileParser(engine)
         bind_front(&QMInputParser::parseHubbardDerivs, this),
         false
     );
+
+    addKeyword(
+        std::string("xtb_method"),
+        bind_front(&QMInputParser::parseXtbMethod, this),
+        false
+    );
 }
 
 /**
@@ -144,6 +150,11 @@ void QMInputParser::parseQMMethod(
         ReferencesOutput::addReferenceFile(_DFTBPLUS_FILE_);
     }
 
+    else if ("ase_xtb" == method)
+    {
+        QMSettings::setQMMethod(ASEXTB);
+    }
+
     else if ("pyscf" == method)
     {
         QMSettings::setQMMethod(PYSCF);
@@ -162,8 +173,8 @@ void QMInputParser::parseQMMethod(
     else
         throw InputFileException(std::format(
             "Invalid qm_prog \"{}\" in input file.\n"
-            "Possible values are: dftbplus, ase_dftbplus, pyscf, turbomole, "
-            "mace, mace_mp, mace_off",
+            "Possible values are: dftbplus, ase_dftbplus, ase_xtb, pyscf, "
+            "turbomole, mace, mace_mp, mace_off",
             lineElements[2]
         ));
 }
@@ -478,4 +489,39 @@ void QMInputParser::parseHubbardDerivs(
 
     QMSettings::setHubbardDerivs(hubbardDerivs);
     QMSettings::setIsHubbardDerivsSet(true);
+}
+
+/**
+ * @brief parse the xTB method to be used
+ *
+ * @param lineElements
+ * @param lineNumber
+ *
+ * @throws InputFileException if the xTB method is not recognized
+ */
+void QMInputParser::parseXtbMethod(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    using enum XtbMethod;
+    checkCommand(lineElements, lineNumber);
+
+    const auto slakos = toLowerAndReplaceDashesCopy(lineElements[2]);
+
+    if ("gfn1_xtb" == slakos)
+        QMSettings::setXtbMethod(GFN1);
+
+    else if ("gfn2_xtb" == slakos)
+        QMSettings::setXtbMethod(GFN2);
+
+    else if ("ipea1_xtb" == slakos)
+        QMSettings::setXtbMethod(IPEA1);
+
+    else
+        throw InputFileException(std::format(
+            "Invalid xTB method \"{}\" in input file.\n"
+            "Possible values are: GFN1-xTB, GFN2-xTB, IPEA1-xTB",
+            lineElements[2]
+        ));
 }

@@ -4,10 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## Next Release
 
-
 ### Enhancements
 
 - new MACE models added
+- ASE based xTB calculator added
 
 ### Bug Fixes
 

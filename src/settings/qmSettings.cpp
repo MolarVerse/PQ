@@ -32,6 +32,7 @@ using settings::MaceModelType;
 using settings::QMMethod;
 using settings::QMSettings;
 using settings::SlakosType;
+using settings::XtbMethod;
 using namespace customException;
 using namespace utilities;
 
@@ -49,6 +50,7 @@ std::string settings::string(const QMMethod method)
 
         case DFTBPLUS: return "DFTBPLUS";
         case ASEDFTBPLUS: return "ASEDFTBPLUS";
+        case ASEXTB: return "ASEXTB";
         case PYSCF: return "PYSCF";
         case TURBOMOLE: return "TURBOMOLE";
         case MACE: return "MACE";
@@ -126,6 +128,26 @@ std::string settings::string(const SlakosType slakos)
 }
 
 /**
+ * @brief returns the xTB method as string
+ *
+ * @param method
+ * @return std::string
+ */
+std::string settings::string(const XtbMethod method)
+{
+    switch (method)
+    {
+        using enum XtbMethod;
+
+        case GFN1: return "GFN1-xTB";
+        case GFN2: return "GFN2-xTB";
+        case IPEA1: return "IPEA1-xTB";
+
+        default: return "none";
+    }
+}
+
+/**
  * @brief returns an unordered map as string
  *
  * @param unordered_map
@@ -195,6 +217,9 @@ void QMSettings::setQMMethod(const std::string_view &method)
 
     else if ("ase_dftbplus" == methodToLowerAndReplaceDashes)
         _qmMethod = ASEDFTBPLUS;
+
+    else if ("ase_xtb" == methodToLowerAndReplaceDashes)
+        _qmMethod = ASEXTB;
 
     else
         _qmMethod = NONE;
@@ -310,6 +335,38 @@ void QMSettings::setMaceModelPath(const std::string_view &path)
 {
     _maceModelPath = path;
 }
+
+/**
+ * @brief sets the XtbMethod to enum in settings
+ *
+ * @param method
+ */
+void QMSettings::setXtbMethod(const std::string_view &method)
+{
+    using enum XtbMethod;
+    const auto xtbMethod = toLowerAndReplaceDashesCopy(method);
+
+    if ("gfn1_xtb" == xtbMethod)
+        _xtbMethod = GFN1;
+
+    else if ("gfn2_xtb" == xtbMethod)
+        _xtbMethod = GFN2;
+
+    else if ("ipea1_xtb" == xtbMethod)
+        _xtbMethod = IPEA1;
+
+    else
+        throw UserInputException(
+            std::format("xTB method \"{}\" not recognized", method)
+        );
+}
+
+/**
+ * @brief sets the xTB method to enum in settings
+ *
+ * @param method
+ */
+void QMSettings::setXtbMethod(const XtbMethod method) { _xtbMethod = method; }
 
 /**
  * @brief sets the qmScript in settings
@@ -552,6 +609,13 @@ std::unordered_map<std::string, double> QMSettings::getHubbardDerivs()
  * @return bool
  */
 bool QMSettings::useDispersionCorr() { return _useDispersionCorrection; }
+
+/**
+ * @brief returns the xTBMethod
+ *
+ * @return XtbMethod
+ */
+XtbMethod QMSettings::getXtbMethod() { return _xtbMethod; }
 
 /**
  * @brief returns the qmLoopTimeLimit
