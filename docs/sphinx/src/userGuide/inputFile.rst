@@ -1278,6 +1278,9 @@ Possible options are:
 
    6. **ase-dftbplus** - `DFTB+ <https://wiki.fysik.dtu.dk/ase/ase/calculators/dftb.html#module-ase.calculators.dftb>`_ called by `ASE <https://wiki.fysik.dtu.dk/ase/>`_ 
    
+   7. **ase-xtb** - `xTB <https://xtb-docs.readthedocs.io/en/latest/>`_ called by `ASE <https://wiki.fysik.dtu.dk/ase/>`_ 
+
+
 .. _qmscriptKey:
 
 QM Script
@@ -1349,6 +1352,26 @@ Possible options are:
 
    3. **large** - large MACE model
 
+
+.. _xtbMethodKey:
+
+ASE-xTB Method
+===============
+
+.. admonition:: Key
+    :class: tip
+
+    xtb-method = {string} -> "GFN2-xTB"
+
+With the ``xtb-method`` keyword the user can specify the xTB method of the ``ase-xtb`` approach for the extended tight-binding calculation.
+
+Possible options are:
+
+    1. **GFN1-xTB** - GFN1-xTB parametrization
+
+    2. **GFN2-xTB** - GFN2-xTB parametrization
+
+    3. **IPEA1-xTB** - IPEA-xTB parametrization
 
 .. _slakosTypeKey:
 
