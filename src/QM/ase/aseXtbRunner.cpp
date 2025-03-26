@@ -35,7 +35,7 @@ using namespace constants;
  *
  * @throw py::error_already_set if the import of the mace module fails
  */
-AseXtbRunner::AseXtbRunner() : ASEQMRunner()
+AseXtbRunner::AseXtbRunner(const std::string &method) : ASEQMRunner()
 {
     try
     {
@@ -45,7 +45,7 @@ AseXtbRunner::AseXtbRunner() : ASEQMRunner()
         const py::dict calculatorArgs;
 
         calculatorArgs["Hamiltonian_"]       = "xTB";
-        calculatorArgs["Hamiltonian_Method"] = "GFN1-xTB";
+        calculatorArgs["Hamiltonian_Method"] = method;
 
         // default would be 1, which is incompatible with DFTB3
         calculatorArgs["ParserOptions_ParserVersion"] = "12";

@@ -70,6 +70,16 @@ namespace settings
     };
 
     /**
+     * @class enum xtbMethod
+     */
+    enum class XtbMethod : size_t
+    {
+        GFN1,
+        GFN2,
+        IPEA1,
+    };
+
+    /**
      * @class enum Slakos
      */
     enum class SlakosType : size_t
@@ -83,6 +93,7 @@ namespace settings
     std::string string(const QMMethod method);
     std::string string(const MaceModelSize model);
     std::string string(const MaceModelType model);
+    std::string string(const XtbMethod method);
     std::string string(const SlakosType slakos);
     std::string string(
         const std::unordered_map<std::string, double> unordered_map
@@ -101,6 +112,7 @@ namespace settings
         static inline MaceModelSize _maceModelSize = MaceModelSize::MEDIUM;
         static inline MaceModelType _maceModelType = MaceModelType::MACE_MP;
         static inline SlakosType    _slakosType    = SlakosType::NONE;
+        static inline XtbMethod     _xtbMethod     = XtbMethod::GFN2;
 
         static inline std::string _qmScript         = "";
         static inline std::string _qmScriptFullPath = "";
@@ -149,6 +161,9 @@ namespace settings
         );
         static void setIsHubbardDerivsSet(const bool isHubbardDerivsSet);
 
+        static void setXtbMethod(const std::string_view &method);
+        static void setXtbMethod(const XtbMethod method);
+
         static void setQMLoopTimeLimit(const double time);
 
         /***************************
@@ -172,6 +187,8 @@ namespace settings
         [[nodiscard]] static std::unordered_map<std::string, double> getHubbardDerivs(
         );
         [[nodiscard]] static bool isHubbardDerivsSet();
+
+        [[nodiscard]] static XtbMethod getXtbMethod();
 
         [[nodiscard]] static double getQMLoopTimeLimit();
     };

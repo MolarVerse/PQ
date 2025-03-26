@@ -159,7 +159,9 @@ void QMMDEngine::setAseXtbRunner()
 {
 #ifdef WITH_ASE
 
-    _qmRunner = make_shared<AseXtbRunner>();
+    const auto xtbMethod = string(QMSettings::getXtbMethod());
+
+    _qmRunner = make_shared<AseXtbRunner>(xtbMethod);
 #else
     throw CompileTimeException(
         "The ASE xTB qm method was requested but ASE was not enabled at "
