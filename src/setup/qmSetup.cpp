@@ -122,10 +122,10 @@ void QMSetup::setupQMMethodAseDftbPlus()
  */
 void QMSetup::setupQMMethodMace()
 {
-    if (!(QMSettings::getQMMethod() == QMMethod::MACE))
+    if (QMSettings::getQMMethod() != QMMethod::MACE)
         return;
 
-    if (!(QMSettings::getMaceModelType() == MaceModelType::MACE_MP))
+    if (QMSettings::getMaceModelType() != MaceModelType::MACE_MP)
     {
         const auto modelSize = QMSettings::getMaceModelSize();
         if (modelSize != MaceModelSize::SMALL &&
