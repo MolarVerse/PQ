@@ -35,6 +35,7 @@
 
 #ifdef WITH_ASE
 #include "aseDftbRunner.hpp"   // for aseDftbRunner
+#include "aseXtbRunner.hpp"    // for aseXtbRunner
 #include "maceRunner.hpp"      // for MaceRunner
 #endif
 
@@ -67,6 +68,9 @@ void QMMDEngine::setQMRunner(const QMMethod method)
 
     else if (method == ASEDFTBPLUS)
         setAseDftbRunner();
+
+    else if (method == ASEXTB)
+        setAseXtbRunner();
 
     else if (method == PYSCF)
         _qmRunner = make_shared<PySCFRunner>();
@@ -138,8 +142,30 @@ void QMMDEngine::setAseDftbRunner()
 #else
     throw CompileTimeException(
         "The ASE DFTB+ qm method was requested but ASE was not enabled at "
-        "compile time. Please recompile with ASE enabled to use mace type "
+        "compile time. Please recompile with ASE enabled to use ASE DFTB+ type "
         "qm methods using: -DBUILD_WITH_ASE=ON"
+    );
+#endif
+}
+
+/**
+ * @brief sets the QMRunner object for ase xTB type qm methods.
+ *
+ * @throws InputFileException if ASE was not enabled at compile
+ * time.
+ *
+ */
+void QMMDEngine::setAseXtbRunner()
+{
+#ifdef WITH_ASE
+
+    _qmRunner = make_shared<AseXtbRunner>();
+#else
+    throw CompileTimeException(
+        "The ASE xTB qm method was requested but ASE was not enabled at "
+        "compile time. Please recompile with ASE enabled to use the ASE xTB "
+        "type "
+        "qm method using: -DBUILD_WITH_ASE=ON"
     );
 #endif
 }

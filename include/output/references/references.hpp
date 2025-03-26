@@ -42,6 +42,7 @@ namespace references
 
     // QM Programs
     static constexpr char _DFTBPLUS_FILE_[]  = "dftbplus.ref";
+    static constexpr char _XTB_FILE_[]       = "xtb.ref";
     static constexpr char _PYSCF_FILE_[]     = "pyscf.ref";
     static constexpr char _TURBOMOLE_FILE_[] = "turbomole.ref";
     static constexpr char _MACEMP_FILE_[]    = "macemp.ref";

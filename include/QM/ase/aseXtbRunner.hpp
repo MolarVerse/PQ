@@ -20,43 +20,27 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _QM_MD_ENGINE_HPP_
+#ifndef _ASE_XTB_RUNNER_HPP_
 
-#define _QM_MD_ENGINE_HPP_
+#define _ASE_XTB_RUNNER_HPP_
 
-#include <memory>   // for unique_ptr
+#include "aseQMRunner.hpp"   // for InternalQMRunner
 
-#include "mdEngine.hpp"     // for Engine
-#include "qmRunner.hpp"     // for QMRunner
-#include "qmSettings.hpp"   // for QMSettings
-
-namespace engine
+namespace QM
 {
-
     /**
-     * @class QMMDEngine
-     *
-     * @brief Contains all the information needed to run a QM MD simulation
+     * @brief AseXtbRunner inherits from ASEQMRunner
      *
      */
-    class QMMDEngine : virtual public MDEngine
+    class __attribute__((visibility("default"))) AseXtbRunner
+        : public ASEQMRunner
     {
-       protected:
-        std::shared_ptr<QM::QMRunner> _qmRunner;
-
        public:
-        ~QMMDEngine() override = default;
+        ~AseXtbRunner() override = default;
 
-        void calculateForces() override;
+        explicit AseXtbRunner();
 
-        void setQMRunner(const settings::QMMethod method);
-        void setMaceQMRunner();
-        void setAseDftbRunner();
-        void setAseXtbRunner();
-
-        [[nodiscard]] QM::QMRunner *getQMRunner() const;
     };
+}   // namespace QM
 
-}   // namespace engine
-
-#endif   // _QM_MD_ENGINE_HPP_
+#endif   // _ASE_XTB_RUNNER_HPP_

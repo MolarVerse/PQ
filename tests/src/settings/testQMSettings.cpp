@@ -49,6 +49,9 @@ TEST(QMSettingsTest, SetQMMethodTest)
     QMSettings::setQMMethod("ase_dftbplus");
     EXPECT_EQ(QMSettings::getQMMethod(), QMMethod::ASEDFTBPLUS);
 
+    QMSettings::setQMMethod("ase_xtb");
+    EXPECT_EQ(QMSettings::getQMMethod(), QMMethod::ASEXTB);
+
     QMSettings::setQMMethod("none");
     EXPECT_EQ(QMSettings::getQMMethod(), QMMethod::NONE);
 }
@@ -154,6 +157,7 @@ TEST(QMSettingsTest, ReturnQMMethodTest)
 {
     EXPECT_EQ(string(QMMethod::DFTBPLUS), "DFTBPLUS");
     EXPECT_EQ(string(QMMethod::ASEDFTBPLUS), "ASEDFTBPLUS");
+    EXPECT_EQ(string(QMMethod::ASEXTB), "ASEXTB");
     EXPECT_EQ(string(QMMethod::PYSCF), "PYSCF");
     EXPECT_EQ(string(QMMethod::TURBOMOLE), "TURBOMOLE");
     EXPECT_EQ(string(QMMethod::MACE), "MACE");

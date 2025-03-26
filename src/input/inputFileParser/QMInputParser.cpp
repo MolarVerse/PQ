@@ -144,6 +144,12 @@ void QMInputParser::parseQMMethod(
         ReferencesOutput::addReferenceFile(_DFTBPLUS_FILE_);
     }
 
+    else if ("ase_xtb" == method)
+    {
+        QMSettings::setQMMethod(ASEXTB);
+        ReferencesOutput::addReferenceFile(_XTB_FILE_);
+    }
+
     else if ("pyscf" == method)
     {
         QMSettings::setQMMethod(PYSCF);
@@ -162,8 +168,8 @@ void QMInputParser::parseQMMethod(
     else
         throw InputFileException(std::format(
             "Invalid qm_prog \"{}\" in input file.\n"
-            "Possible values are: dftbplus, ase_dftbplus, pyscf, turbomole, "
-            "mace, mace_mp, mace_off",
+            "Possible values are: dftbplus, ase_dftbplus, ase_xtb, pyscf, "
+            "turbomole, mace, mace_mp, mace_off",
             lineElements[2]
         ));
 }

@@ -42,6 +42,7 @@ namespace settings
         NONE,
         DFTBPLUS,
         ASEDFTBPLUS,
+        ASEXTB,
         PYSCF,
         TURBOMOLE,
         MACE

@@ -49,6 +49,7 @@ std::string settings::string(const QMMethod method)
 
         case DFTBPLUS: return "DFTBPLUS";
         case ASEDFTBPLUS: return "ASEDFTBPLUS";
+        case ASEXTB: return "ASEXTB";
         case PYSCF: return "PYSCF";
         case TURBOMOLE: return "TURBOMOLE";
         case MACE: return "MACE";
@@ -187,6 +188,9 @@ void QMSettings::setQMMethod(const std::string_view &method)
 
     else if ("ase_dftbplus" == methodToLowerAndReplaceDashes)
         _qmMethod = ASEDFTBPLUS;
+
+    else if ("ase_xtb" == methodToLowerAndReplaceDashes)
+        _qmMethod = ASEXTB;
 
     else
         _qmMethod = NONE;
