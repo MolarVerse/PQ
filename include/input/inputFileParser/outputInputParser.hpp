@@ -44,6 +44,8 @@ namespace input
        public:
         explicit OutputInputParser(pq::Engine &);
 
+        void parseOverwriteOutput(const pq::strings &, const size_t);
+
         void parseOutputFreq(const pq::strings &, const size_t);
         void parseFilePrefix(const pq::strings &, const size_t);
 
