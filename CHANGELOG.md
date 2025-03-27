@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Enhancements
 
+- new MACE models added
 - ASE based xTB calculator added
 
 ### Bug Fixes
@@ -15,6 +16,7 @@ All notable changes to this project will be documented in this file.
 ### CI
 
 - Combined all CI workflows into a single workflow file
+
 
 <!-- insertion marker -->
 ## [v0.5.3](https://github.com/MolarVerse/PQ/releases/tag/v0.5.3) - 2025-02-03

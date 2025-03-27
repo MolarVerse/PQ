@@ -54,9 +54,17 @@ namespace settings
      */
     enum class MaceModelSize : size_t
     {
-        LARGE,
+        SMALL,
         MEDIUM,
-        SMALL
+        LARGE,
+        SMALL0B,
+        MEDIUM0B,
+        SMALL0B2,
+        MEDIUM0B2,
+        LARGE0B2,
+        MEDIUM0B3,
+        MEDIUMMPA0,
+        MEDIUMOMAT0
     };
 
     /**

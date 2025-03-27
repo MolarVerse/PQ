@@ -274,7 +274,7 @@ void QMInputParser::parseMaceModelSize(
     using enum MaceModelSize;
     checkCommand(lineElements, lineNumber);
 
-    const auto size = toLowerCopy(lineElements[2]);
+    const auto size = toLowerAndReplaceDashesCopy(lineElements[2]);
 
     if ("small" == size)
         QMSettings::setMaceModelSize(SMALL);
@@ -285,10 +285,36 @@ void QMInputParser::parseMaceModelSize(
     else if ("large" == size)
         QMSettings::setMaceModelSize(LARGE);
 
+    else if ("small_0b" == size)
+        QMSettings::setMaceModelSize(SMALL0B);
+
+    else if ("medium_0b" == size)
+        QMSettings::setMaceModelSize(MEDIUM0B);
+
+    else if ("small_0b2" == size)
+        QMSettings::setMaceModelSize(SMALL0B2);
+
+    else if ("medium_0b2" == size)
+        QMSettings::setMaceModelSize(MEDIUM0B2);
+
+    else if ("large_0b2" == size)
+        QMSettings::setMaceModelSize(LARGE0B2);
+
+    else if ("medium_0b3" == size)
+        QMSettings::setMaceModelSize(MEDIUM0B3);
+
+    else if ("medium_mpa_0" == size)
+        QMSettings::setMaceModelSize(MEDIUMMPA0);
+
+    else if ("medium_omat_0" == size)
+        QMSettings::setMaceModelSize(MEDIUMOMAT0);
+
     else
         throw InputFileException(std::format(
             "Invalid mace_model_size \"{}\" in input file.\n"
-            "Possible values are: small, medium, large",
+            "Possible values are: small, medium, large, small-0b,\n"
+            "medium-0b, small-0b2, medium-0b2, large-0b2, medium-0b3,\n"
+            "medium-mpa-0, medium-omat-0",
             lineElements[2]
         ));
 }
