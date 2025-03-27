@@ -1,15 +1,15 @@
 ignore:
   # - build/
-  - .github/
-  - external/
-  - _deps/
-  - tests/
-  - apps/
-  - benchmarks/
-  - tools/
+  - .github/*
+  - external/*
+  - _deps/*
+  - tests/*
+  - apps/*
+  - benchmarks/*
+  - tools/*
   - src/setup/setup.cpp # just one combining all setup methods - working as interface
   - src/engine/*.cpp # just one combining all engine methods - tested by integration tests
   - include/engine/*.hpp # just one combining all engine methods - tested by integration tests
-  - src/QM/ 
+  - src/QM/*
 codecov:
   token: bf914a3c-fad4-4ea0-936e-5fdf8a80e211
