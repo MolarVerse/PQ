@@ -90,6 +90,12 @@ QMInputParser::QMInputParser(Engine &engine) : InputFileParser(engine)
     );
 
     addKeyword(
+        std::string("mace_model_path"),
+        bind_front(&QMInputParser::parseMaceModelPath, this),
+        false
+    );
+
+    addKeyword(
         std::string("slakos"),
         bind_front(&QMInputParser::parseSlakosType, this),
         false
@@ -320,6 +326,21 @@ void QMInputParser::parseMaceModelSize(
             "medium-mpa-0, medium-omat-0, custom",
             lineElements[2]
         ));
+}
+
+/**
+ * @brief parse external MACE model url
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
+void QMInputParser::parseMaceModelPath(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+    QMSettings::setMaceModelPath(lineElements[2]);
 }
 
 /**

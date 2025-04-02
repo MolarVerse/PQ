@@ -1368,10 +1368,27 @@ Possible options are:
 
    11. **medium-omat-0** - medium MACE-OMAT-0 model
 
-   12. **custom** - custom MACE model (to be set *via* the ``mace_model_url`` keyword)
+   12. **custom** - custom MACE model (to be set *via* the :ref:`mace_model_path <maceModelPathKey>` keyword)
 
 .. Note::
     The :ref:`qm_prog <qmprogamKey>` option ``mace-off`` is only compatible with the first three model sizes: "small", "medium" and "large"
+
+
+.. _maceModelPathKey:
+
+MACE Model Path
+===============
+
+.. admonition:: Key
+    :class: tip
+
+    mace_model_path = {string}
+
+With the ``mace_model_path`` keyword the user can specify a custom URL corresponding to a `MACE <https://github.com/ACEsuit/mace-foundations?tab=readme-ov-file>`_ model for the QM calculations.
+
+.. Note::
+    The ``mace_model_path`` can only be specified if :ref:`mace_model_size <maceModelSizeKey>` keyword is set to ``custom``.
+
 
 .. _xtbMethodKey:
 
