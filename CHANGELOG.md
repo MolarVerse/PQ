@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## Next Release
 
+<!-- insertion marker -->
+## [v0.6.0](https://github.com/MolarVerse/PQ/releases/tag/v0.6.0) - 2025-04-02
+
 ### Enhancements
 
 - new MACE models added
@@ -23,8 +26,6 @@ All notable changes to this project will be documented in this file.
 
 - Added `src/QM` to ignore for code coverage reports
 
-
-<!-- insertion marker -->
 ## [v0.5.3](https://github.com/MolarVerse/PQ/releases/tag/v0.5.3) - 2025-02-03
 
 ### Enhancements
