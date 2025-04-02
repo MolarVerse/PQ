@@ -143,6 +143,22 @@ void QMSetup::setupQMMethodMace()
                 string(MaceModelType::MACE_MP)
             ));
     }
+
+    if (QMSettings::getMaceModelSize() == MaceModelSize::CUSTOM &&
+        QMSettings::getMaceModelPath().empty())
+        throw InputFileException(
+            "You have requested a custom MACE model but haven't provided a "
+            "MACE model path."
+            "This setup is invalid."
+        );
+
+    if (QMSettings::getMaceModelSize() != MaceModelSize::CUSTOM &&
+        !QMSettings::getMaceModelPath().empty())
+        throw InputFileException(
+            "You have set a custom MACE model path without requesting a custom "
+            "mace model size."
+            "This setup is invalid."
+        );
 }
 
 /**
@@ -298,18 +314,24 @@ void QMSetup::setupWriteInfo() const
     {
         const auto modelType = QMSettings::getMaceModelType();
         const auto modelSize = QMSettings::getMaceModelSize();
+        const auto modelPath = QMSettings::getMaceModelPath();
         const auto fp        = Settings::getFloatingPointPybindString();
         const auto useDisp   = QMSettings::useDispersionCorr() ? "on" : "off";
 
         // clang-format off
         const auto modelTypeMsg = std::format("Model type:            {}", string(modelType));
         const auto modelSizeMsg = std::format("Model size:            {}", string(modelSize));
+        const auto modelPathMsg = std::format("Model path:            {}", modelPath);
         const auto fpMsg        = std::format("Floating point type:   {}", fp);
         const auto dispCorrMsg  = std::format("Dispersion Correction: {}", useDisp);
         // clang-format on
 
         logOutput.writeSetupInfo(modelTypeMsg);
         logOutput.writeSetupInfo(modelSizeMsg);
+
+        if (modelSize == MaceModelSize::CUSTOM)
+            logOutput.writeSetupInfo(modelPathMsg);
+
         logOutput.writeSetupInfo(fpMsg);
         logOutput.writeSetupInfo(dispCorrMsg);
     }

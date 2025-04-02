@@ -60,7 +60,7 @@ TEST(QMSettingsTest, SetMaceModelSizeTest)
 {
     QMSettings::setMaceModelSize("small");
     EXPECT_EQ(QMSettings::getMaceModelSize(), MaceModelSize::SMALL);
-    
+
     QMSettings::setMaceModelSize("medium");
     EXPECT_EQ(QMSettings::getMaceModelSize(), MaceModelSize::MEDIUM);
 
@@ -90,6 +90,9 @@ TEST(QMSettingsTest, SetMaceModelSizeTest)
 
     QMSettings::setMaceModelSize("medium-omat-0");
     EXPECT_EQ(QMSettings::getMaceModelSize(), MaceModelSize::MEDIUMOMAT0);
+
+    QMSettings::setMaceModelSize("custom");
+    EXPECT_EQ(QMSettings::getMaceModelSize(), MaceModelSize::CUSTOM);
 
     ASSERT_THROW_MSG(
         QMSettings::setMaceModelSize("notAMaceModelSize"),
@@ -243,6 +246,7 @@ TEST(QMSettingsTest, ReturnMaceModelSizeTest)
     EXPECT_EQ(string(MaceModelSize::MEDIUM0B3), "medium-0b3");
     EXPECT_EQ(string(MaceModelSize::MEDIUMMPA0), "medium-mpa-0");
     EXPECT_EQ(string(MaceModelSize::MEDIUMOMAT0), "medium-omat-0");
+    EXPECT_EQ(string(MaceModelSize::CUSTOM), "custom");
 }
 
 TEST(QMSettingsTest, ReturnXtbMethodTest)

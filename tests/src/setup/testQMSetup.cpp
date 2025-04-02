@@ -225,3 +225,41 @@ TEST(TestQMSetup, setupQMMethodMaceOffInvalidModelSize)
         "model type."
     );
 }
+
+TEST(TestQMSetup, setupQMMethodMaceRedundantModelPath)
+{
+    engine::QMMDEngine engine;
+    QMSetup            qmSetup{QMSetup(engine)};
+
+    QMSettings::setQMMethod(QMMethod::MACE);
+    QMSettings::setMaceModelType("mace-mp");
+    QMSettings::setMaceModelSize("medium-omat-0");
+    QMSettings::setMaceModelPath("https://not-a-valid-url");
+
+    ASSERT_THROW_MSG(
+        qmSetup.setupQMMethodMace(),
+        customException::InputFileException,
+        "You have set a custom MACE model path without requesting a custom "
+        "mace model size."
+        "This setup is invalid."
+    );
+}
+
+TEST(TestQMSetup, setupQMMethodMaceMissingModelPath)
+{
+    engine::QMMDEngine engine;
+    QMSetup            qmSetup{QMSetup(engine)};
+
+    QMSettings::setQMMethod(QMMethod::MACE);
+    QMSettings::setMaceModelType("mace-mp");
+    QMSettings::setMaceModelSize("custom");
+    QMSettings::setMaceModelPath("");
+
+    ASSERT_THROW_MSG(
+        qmSetup.setupQMMethodMace(),
+        customException::InputFileException,
+        "You have requested a custom MACE model but haven't provided a "
+        "MACE model path."
+        "This setup is invalid."
+    );
+}

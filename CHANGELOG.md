@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 - new MACE models added
 - ASE based xTB calculator added
+- new keyword added to set custom MACE model *via* url
 - option to overwrite existing output files added
 
 ### Bug Fixes

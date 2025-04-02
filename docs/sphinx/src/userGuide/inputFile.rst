@@ -35,7 +35,7 @@ Every character following a ``#`` will be ignored. The ``#`` as a comment flag c
 Types of Input Values
 =====================
 
-In the following sections the types of the input values will be denoted via ``{}``, where ``{[]}`` represents a list of types:
+In the following sections the types of the input values will be denoted *via* ``{}``, where ``{[]}`` represents a list of types:
 
 +-------------+-------------------------------+
 |    Type     |          Description          |
@@ -90,7 +90,7 @@ With the ``jobtype`` keyword the user can choose from different engines to perfo
 
 Possible options are:
 
-   1. **mm-md** - Represents a full molecular mechanics molecular dynamics simulation performed via the :ref:`GUFF <guffdatFile>` formalism and/or the ``Amber force field``. Respective input file keys are found in the :ref:`mmKeys` section.
+   1. **mm-md** - Represents a full molecular mechanics molecular dynamics simulation performed *via* the :ref:`GUFF <guffdatFile>` formalism and/or the ``Amber force field``. Respective input file keys are found in the :ref:`mmKeys` section.
 
    2. **qm-md** - Represents a full quantum mechanics molecular dynamics simulation. For more information see the :ref:`qmKeys` section.
 
@@ -1380,8 +1380,27 @@ Possible options are:
 
    11. **medium-omat-0** - medium MACE-OMAT-0 model
 
+   12. **custom** - custom MACE model (to be set *via* the :ref:`mace_model_path <maceModelPathKey>` keyword)
+
 .. Note::
     The :ref:`qm_prog <qmprogamKey>` option ``mace-off`` is only compatible with the first three model sizes: "small", "medium" and "large"
+
+
+.. _maceModelPathKey:
+
+MACE Model Path
+===============
+
+.. admonition:: Key
+    :class: tip
+
+    mace_model_path = {string}
+
+With the ``mace_model_path`` keyword the user can specify a custom URL corresponding to a `MACE <https://github.com/ACEsuit/mace-foundations?tab=readme-ov-file>`_ model for the QM calculations.
+
+.. Note::
+    The ``mace_model_path`` can only be specified if :ref:`mace_model_size <maceModelSizeKey>` keyword is set to ``custom``.
+
 
 .. _xtbMethodKey:
 
