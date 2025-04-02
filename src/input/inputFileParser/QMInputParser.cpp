@@ -90,6 +90,12 @@ QMInputParser::QMInputParser(Engine &engine) : InputFileParser(engine)
     );
 
     addKeyword(
+        std::string("mace_model_path"),
+        bind_front(&QMInputParser::parseMaceModelPath, this),
+        false
+    );
+
+    addKeyword(
         std::string("slakos"),
         bind_front(&QMInputParser::parseSlakosType, this),
         false
@@ -110,6 +116,12 @@ QMInputParser::QMInputParser(Engine &engine) : InputFileParser(engine)
     addKeyword(
         std::string("hubbard_derivs"),
         bind_front(&QMInputParser::parseHubbardDerivs, this),
+        false
+    );
+
+    addKeyword(
+        std::string("xtb_method"),
+        bind_front(&QMInputParser::parseXtbMethod, this),
         false
     );
 }
@@ -144,6 +156,11 @@ void QMInputParser::parseQMMethod(
         ReferencesOutput::addReferenceFile(_DFTBPLUS_FILE_);
     }
 
+    else if ("ase_xtb" == method)
+    {
+        QMSettings::setQMMethod(ASEXTB);
+    }
+
     else if ("pyscf" == method)
     {
         QMSettings::setQMMethod(PYSCF);
@@ -162,8 +179,8 @@ void QMInputParser::parseQMMethod(
     else
         throw InputFileException(std::format(
             "Invalid qm_prog \"{}\" in input file.\n"
-            "Possible values are: dftbplus, ase_dftbplus, pyscf, turbomole, "
-            "mace, mace_mp, mace_off",
+            "Possible values are: dftbplus, ase_dftbplus, ase_xtb, pyscf, "
+            "turbomole, mace, mace_mp, mace_off",
             lineElements[2]
         ));
 }
@@ -263,7 +280,7 @@ void QMInputParser::parseMaceModelSize(
     using enum MaceModelSize;
     checkCommand(lineElements, lineNumber);
 
-    const auto size = toLowerCopy(lineElements[2]);
+    const auto size = toLowerAndReplaceDashesCopy(lineElements[2]);
 
     if ("small" == size)
         QMSettings::setMaceModelSize(SMALL);
@@ -274,12 +291,56 @@ void QMInputParser::parseMaceModelSize(
     else if ("large" == size)
         QMSettings::setMaceModelSize(LARGE);
 
+    else if ("small_0b" == size)
+        QMSettings::setMaceModelSize(SMALL0B);
+
+    else if ("medium_0b" == size)
+        QMSettings::setMaceModelSize(MEDIUM0B);
+
+    else if ("small_0b2" == size)
+        QMSettings::setMaceModelSize(SMALL0B2);
+
+    else if ("medium_0b2" == size)
+        QMSettings::setMaceModelSize(MEDIUM0B2);
+
+    else if ("large_0b2" == size)
+        QMSettings::setMaceModelSize(LARGE0B2);
+
+    else if ("medium_0b3" == size)
+        QMSettings::setMaceModelSize(MEDIUM0B3);
+
+    else if ("medium_mpa_0" == size)
+        QMSettings::setMaceModelSize(MEDIUMMPA0);
+
+    else if ("medium_omat_0" == size)
+        QMSettings::setMaceModelSize(MEDIUMOMAT0);
+
+    else if ("custom" == size)
+        QMSettings::setMaceModelSize(CUSTOM);
+
     else
         throw InputFileException(std::format(
             "Invalid mace_model_size \"{}\" in input file.\n"
-            "Possible values are: small, medium, large",
+            "Possible values are: small, medium, large, small-0b,\n"
+            "medium-0b, small-0b2, medium-0b2, large-0b2, medium-0b3,\n"
+            "medium-mpa-0, medium-omat-0, custom",
             lineElements[2]
         ));
+}
+
+/**
+ * @brief parse external MACE model url
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
+void QMInputParser::parseMaceModelPath(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+    QMSettings::setMaceModelPath(lineElements[2]);
 }
 
 /**
@@ -452,4 +513,39 @@ void QMInputParser::parseHubbardDerivs(
 
     QMSettings::setHubbardDerivs(hubbardDerivs);
     QMSettings::setIsHubbardDerivsSet(true);
+}
+
+/**
+ * @brief parse the xTB method to be used
+ *
+ * @param lineElements
+ * @param lineNumber
+ *
+ * @throws InputFileException if the xTB method is not recognized
+ */
+void QMInputParser::parseXtbMethod(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    using enum XtbMethod;
+    checkCommand(lineElements, lineNumber);
+
+    const auto slakos = toLowerAndReplaceDashesCopy(lineElements[2]);
+
+    if ("gfn1_xtb" == slakos)
+        QMSettings::setXtbMethod(GFN1);
+
+    else if ("gfn2_xtb" == slakos)
+        QMSettings::setXtbMethod(GFN2);
+
+    else if ("ipea1_xtb" == slakos)
+        QMSettings::setXtbMethod(IPEA1);
+
+    else
+        throw InputFileException(std::format(
+            "Invalid xTB method \"{}\" in input file.\n"
+            "Possible values are: GFN1-xTB, GFN2-xTB, IPEA1-xTB",
+            lineElements[2]
+        ));
 }

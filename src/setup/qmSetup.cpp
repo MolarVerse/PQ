@@ -30,6 +30,8 @@
 #include "pyscfRunner.hpp"         // for PySCFRunner
 #include "qmSettings.hpp"          // for QMMethod, QMSettings
 #include "qmmdEngine.hpp"          // for QMMDEngine
+#include "references.hpp"          // for ReferencesOutput
+#include "referencesOutput.hpp"    // for ReferencesOutput
 #include "settings.hpp"            // for Settings
 #include "stdoutOutput.hpp"        // for StdoutOutput
 #include "stringUtilities.hpp"     // for toLowerCopy
@@ -41,6 +43,7 @@ using namespace engine;
 using namespace QM;
 using namespace utilities;
 using namespace customException;
+using namespace references;
 
 /**
  * @brief wrapper to build QMSetup object and call setup
@@ -64,7 +67,7 @@ void setup::setupQM(Engine &engine)
  *
  * @param engine
  */
-QMSetup::QMSetup(QMMDEngine &engine) : _engine(engine) {};
+QMSetup::QMSetup(QMMDEngine &engine) : _engine(engine) {}
 
 /**
  * @brief setup QM-MD for all subtypes
@@ -72,9 +75,13 @@ QMSetup::QMSetup(QMMDEngine &engine) : _engine(engine) {};
  */
 void QMSetup::setup()
 {
+    setupQMMethodMace();
+
     setupQMMethod();
 
     setupQMMethodAseDftbPlus();
+
+    setupQMMethodAseXtb();
 
     if (QMSettings::isExternalQMRunner())
         setupQMScript();
@@ -112,6 +119,65 @@ void QMSetup::setupQMMethodAseDftbPlus()
             "DFTB. "
             "This setup is invalid."
         );
+}
+
+/**
+ * @brief setup the MACE method of the system
+ *
+ */
+void QMSetup::setupQMMethodMace()
+{
+    if (QMSettings::getQMMethod() != QMMethod::MACE)
+        return;
+
+    if (QMSettings::getMaceModelType() != MaceModelType::MACE_MP)
+    {
+        const auto modelSize = QMSettings::getMaceModelSize();
+        if (modelSize != MaceModelSize::SMALL &&
+            modelSize != MaceModelSize::MEDIUM &&
+            modelSize != MaceModelSize::LARGE)
+            throw InputFileException(std::format(
+                "The '{}' model size is only compatible with the '{}' model "
+                "type.",
+                string(modelSize),
+                string(MaceModelType::MACE_MP)
+            ));
+    }
+
+    if (QMSettings::getMaceModelSize() == MaceModelSize::CUSTOM &&
+        QMSettings::getMaceModelPath().empty())
+        throw InputFileException(
+            "You have requested a custom MACE model but haven't provided a "
+            "MACE model path."
+            "This setup is invalid."
+        );
+
+    if (QMSettings::getMaceModelSize() != MaceModelSize::CUSTOM &&
+        !QMSettings::getMaceModelPath().empty())
+        throw InputFileException(
+            "You have set a custom MACE model path without requesting a custom "
+            "mace model size."
+            "This setup is invalid."
+        );
+}
+
+/**
+ * @brief setup the ASE DFTB+ method of the system
+ *
+ */
+void QMSetup::setupQMMethodAseXtb()
+{
+    if (!(QMSettings::getQMMethod() == QMMethod::ASEXTB))
+        return;
+
+    if (QMSettings::getXtbMethod() == XtbMethod::GFN1)
+        ReferencesOutput::addReferenceFile(_GFN1_FILE_);
+
+    else if (QMSettings::getXtbMethod() == XtbMethod::GFN2)
+        ReferencesOutput::addReferenceFile(_GFN2_FILE_);
+
+    else if (QMSettings::getXtbMethod() == XtbMethod::IPEA1)
+        ReferencesOutput::addReferenceFile(_IPEA1_FILE_);
 }
 
 /**
@@ -248,18 +314,24 @@ void QMSetup::setupWriteInfo() const
     {
         const auto modelType = QMSettings::getMaceModelType();
         const auto modelSize = QMSettings::getMaceModelSize();
+        const auto modelPath = QMSettings::getMaceModelPath();
         const auto fp        = Settings::getFloatingPointPybindString();
         const auto useDisp   = QMSettings::useDispersionCorr() ? "on" : "off";
 
         // clang-format off
         const auto modelTypeMsg = std::format("Model type:            {}", string(modelType));
         const auto modelSizeMsg = std::format("Model size:            {}", string(modelSize));
+        const auto modelPathMsg = std::format("Model path:            {}", modelPath);
         const auto fpMsg        = std::format("Floating point type:   {}", fp);
         const auto dispCorrMsg  = std::format("Dispersion Correction: {}", useDisp);
         // clang-format on
 
         logOutput.writeSetupInfo(modelTypeMsg);
         logOutput.writeSetupInfo(modelSizeMsg);
+
+        if (modelSize == MaceModelSize::CUSTOM)
+            logOutput.writeSetupInfo(modelPathMsg);
+
         logOutput.writeSetupInfo(fpMsg);
         logOutput.writeSetupInfo(dispCorrMsg);
     }
@@ -304,6 +376,17 @@ void QMSetup::setupWriteInfo() const
             logOutput.writeSetupWarning(threeOBHubbardDerivsMsg);
             stdOut.writeSetupWarning(threeOBHubbardDerivsMsg);
         }
+    }
+
+    if (qmMethod == ASEXTB)
+    {
+        const auto xtbMethod = QMSettings::getXtbMethod();
+
+        // clang-format off
+        const auto xtbMethodMsg = std::format("xTB Parametrization:   {}", string(xtbMethod));
+        // clang-format on
+
+        logOutput.writeSetupInfo(xtbMethodMsg);
     }
 
     logOutput.writeEmptyLine();

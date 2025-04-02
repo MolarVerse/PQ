@@ -57,14 +57,17 @@ TEST_F(TestInputFileReader, parseQMMethod)
     parser.parseQMMethod({"qm_prog", "=", "ase_dftbplus"}, 0);
     EXPECT_EQ(QMSettings::getQMMethod(), ASEDFTBPLUS);
 
+    parser.parseQMMethod({"qm_prog", "=", "ase_xtb"}, 0);
+    EXPECT_EQ(QMSettings::getQMMethod(), ASEXTB);
+
     // the more detailed mace parser is tested in TestMaceParser
 
     ASSERT_THROW_MSG(
         parser.parseQMMethod({"qm_prog", "=", "notAMethod"}, 0),
         InputFileException,
         "Invalid qm_prog \"notAMethod\" in input file.\n"
-        "Possible values are: dftbplus, ase_dftbplus, pyscf, turbomole, mace, "
-        "mace_mp, mace_off"
+        "Possible values are: dftbplus, ase_dftbplus, ase_xtb, pyscf, "
+        "turbomole, mace, mace_mp, mace_off"
     )
 }
 
@@ -179,11 +182,40 @@ TEST_F(TestInputFileReader, parseMaceModelSize)
     parser.parseMaceModelSize({"mace_model_size", "=", "large"}, 0);
     EXPECT_EQ(QMSettings::getMaceModelSize(), LARGE);
 
+    parser.parseMaceModelSize({"mace_model_size", "=", "small_0b"}, 0);
+    EXPECT_EQ(QMSettings::getMaceModelSize(), SMALL0B);
+
+    parser.parseMaceModelSize({"mace_model_size", "=", "medium_0b"}, 0);
+    EXPECT_EQ(QMSettings::getMaceModelSize(), MEDIUM0B);
+
+    parser.parseMaceModelSize({"mace_model_size", "=", "small_0b2"}, 0);
+    EXPECT_EQ(QMSettings::getMaceModelSize(), SMALL0B2);
+
+    parser.parseMaceModelSize({"mace_model_size", "=", "medium_0b2"}, 0);
+    EXPECT_EQ(QMSettings::getMaceModelSize(), MEDIUM0B2);
+
+    parser.parseMaceModelSize({"mace_model_size", "=", "large_0b2"}, 0);
+    EXPECT_EQ(QMSettings::getMaceModelSize(), LARGE0B2);
+
+    parser.parseMaceModelSize({"mace_model_size", "=", "medium_0b3"}, 0);
+    EXPECT_EQ(QMSettings::getMaceModelSize(), MEDIUM0B3);
+
+    parser.parseMaceModelSize({"mace_model_size", "=", "medium_mpa_0"}, 0);
+    EXPECT_EQ(QMSettings::getMaceModelSize(), MEDIUMMPA0);
+
+    parser.parseMaceModelSize({"mace_model_size", "=", "medium_omat_0"}, 0);
+    EXPECT_EQ(QMSettings::getMaceModelSize(), MEDIUMOMAT0);
+
+    parser.parseMaceModelSize({"mace_model_size", "=", "custom"}, 0);
+    EXPECT_EQ(QMSettings::getMaceModelSize(), CUSTOM);
+
     ASSERT_THROW_MSG(
         parser.parseMaceModelSize({"mace_model_size", "=", "notASize"}, 0),
         InputFileException,
         "Invalid mace_model_size \"notASize\" in input file.\n"
-        "Possible values are: small, medium, large"
+        "Possible values are: small, medium, large, small-0b,\n"
+        "medium-0b, small-0b2, medium-0b2, large-0b2, medium-0b3,\n"
+        "medium-mpa-0, medium-omat-0, custom"
     )
 }
 
@@ -285,5 +317,28 @@ TEST_F(TestInputFileReader, parseHubbardDerivs)
         parser.parseHubbardDerivs({"hubbard_derivs", "=", "H:1.0,He"}, 0),
         InputFileException,
         "Invalid hubbard_derivs format \"H:1.0,He\" in input file."
+    )
+}
+
+TEST_F(TestInputFileReader, parseXtbMethod)
+{
+    using enum QMMethod;
+
+    auto parser = QMInputParser(*_engine);
+
+    parser.parseXtbMethod({"xtb_method", "=", "Gfn1-XTb"}, 0);
+    EXPECT_EQ(QMSettings::getXtbMethod(), XtbMethod::GFN1);
+
+    parser.parseXtbMethod({"xtb_method", "=", "gfN2-XTb"}, 0);
+    EXPECT_EQ(QMSettings::getXtbMethod(), XtbMethod::GFN2);
+
+    parser.parseXtbMethod({"xtb_method", "=", "iPEa1-XTb"}, 0);
+    EXPECT_EQ(QMSettings::getXtbMethod(), XtbMethod::IPEA1);
+
+    ASSERT_THROW_MSG(
+        parser.parseXtbMethod({"xtb_method", "=", "notAnXtbMethod"}, 0),
+        InputFileException,
+        "Invalid xTB method \"notAnXtbMethod\" in input file.\n"
+        "Possible values are: GFN1-xTB, GFN2-xTB, IPEA1-xTB"
     )
 }

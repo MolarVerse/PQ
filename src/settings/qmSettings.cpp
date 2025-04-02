@@ -32,6 +32,7 @@ using settings::MaceModelType;
 using settings::QMMethod;
 using settings::QMSettings;
 using settings::SlakosType;
+using settings::XtbMethod;
 using namespace customException;
 using namespace utilities;
 
@@ -49,6 +50,7 @@ std::string settings::string(const QMMethod method)
 
         case DFTBPLUS: return "DFTBPLUS";
         case ASEDFTBPLUS: return "ASEDFTBPLUS";
+        case ASEXTB: return "ASEXTB";
         case PYSCF: return "PYSCF";
         case TURBOMOLE: return "TURBOMOLE";
         case MACE: return "MACE";
@@ -69,9 +71,18 @@ std::string settings::string(const MaceModelSize model)
     {
         using enum MaceModelSize;
 
-        case LARGE: return "large";
-        case MEDIUM: return "medium";
         case SMALL: return "small";
+        case MEDIUM: return "medium";
+        case LARGE: return "large";
+        case SMALL0B: return "small-0b";
+        case MEDIUM0B: return "medium-0b";
+        case SMALL0B2: return "small-0b2";
+        case MEDIUM0B2: return "medium-0b2";
+        case LARGE0B2: return "large-0b2";
+        case MEDIUM0B3: return "medium-0b3";
+        case MEDIUMMPA0: return "medium-mpa-0";
+        case MEDIUMOMAT0: return "medium-omat-0";
+        case CUSTOM: return "custom";
 
         default: return "none";
     }
@@ -112,6 +123,26 @@ std::string settings::string(const SlakosType slakos)
         case THREEOB: return "3ob";
         case MATSCI: return "matsci";
         case CUSTOM: return "custom";
+
+        default: return "none";
+    }
+}
+
+/**
+ * @brief returns the xTB method as string
+ *
+ * @param method
+ * @return std::string
+ */
+std::string settings::string(const XtbMethod method)
+{
+    switch (method)
+    {
+        using enum XtbMethod;
+
+        case GFN1: return "GFN1-xTB";
+        case GFN2: return "GFN2-xTB";
+        case IPEA1: return "IPEA1-xTB";
 
         default: return "none";
     }
@@ -188,6 +219,9 @@ void QMSettings::setQMMethod(const std::string_view &method)
     else if ("ase_dftbplus" == methodToLowerAndReplaceDashes)
         _qmMethod = ASEDFTBPLUS;
 
+    else if ("ase_xtb" == methodToLowerAndReplaceDashes)
+        _qmMethod = ASEXTB;
+
     else
         _qmMethod = NONE;
 }
@@ -207,16 +241,44 @@ void QMSettings::setQMMethod(const QMMethod method) { _qmMethod = method; }
 void QMSettings::setMaceModelSize(const std::string_view &model)
 {
     using enum MaceModelSize;
-    const auto modelToLower = toLowerCopy(model);
+    const auto modelToLowerAndReplaceDashes =
+        toLowerAndReplaceDashesCopy(model);
 
-    if ("large" == modelToLower)
-        _maceModelSize = LARGE;
+    if ("small" == modelToLowerAndReplaceDashes)
+        _maceModelSize = SMALL;
 
-    else if ("medium" == modelToLower)
+    else if ("medium" == modelToLowerAndReplaceDashes)
         _maceModelSize = MEDIUM;
 
-    else if ("small" == modelToLower)
-        _maceModelSize = SMALL;
+    else if ("large" == modelToLowerAndReplaceDashes)
+        _maceModelSize = LARGE;
+
+    else if ("small_0b" == modelToLowerAndReplaceDashes)
+        _maceModelSize = SMALL0B;
+
+    else if ("medium_0b" == modelToLowerAndReplaceDashes)
+        _maceModelSize = MEDIUM0B;
+
+    else if ("small_0b2" == modelToLowerAndReplaceDashes)
+        _maceModelSize = SMALL0B2;
+
+    else if ("medium_0b2" == modelToLowerAndReplaceDashes)
+        _maceModelSize = MEDIUM0B2;
+
+    else if ("large_0b2" == modelToLowerAndReplaceDashes)
+        _maceModelSize = LARGE0B2;
+
+    else if ("medium_0b3" == modelToLowerAndReplaceDashes)
+        _maceModelSize = MEDIUM0B3;
+
+    else if ("medium_mpa_0" == modelToLowerAndReplaceDashes)
+        _maceModelSize = MEDIUMMPA0;
+
+    else if ("medium_omat_0" == modelToLowerAndReplaceDashes)
+        _maceModelSize = MEDIUMOMAT0;
+
+    else if ("custom" == modelToLowerAndReplaceDashes)
+        _maceModelSize = CUSTOM;
 
     else
         throw UserInputException(
@@ -277,6 +339,38 @@ void QMSettings::setMaceModelPath(const std::string_view &path)
 {
     _maceModelPath = path;
 }
+
+/**
+ * @brief sets the XtbMethod to enum in settings
+ *
+ * @param method
+ */
+void QMSettings::setXtbMethod(const std::string_view &method)
+{
+    using enum XtbMethod;
+    const auto xtbMethod = toLowerAndReplaceDashesCopy(method);
+
+    if ("gfn1_xtb" == xtbMethod)
+        _xtbMethod = GFN1;
+
+    else if ("gfn2_xtb" == xtbMethod)
+        _xtbMethod = GFN2;
+
+    else if ("ipea1_xtb" == xtbMethod)
+        _xtbMethod = IPEA1;
+
+    else
+        throw UserInputException(
+            std::format("xTB method \"{}\" not recognized", method)
+        );
+}
+
+/**
+ * @brief sets the xTB method to enum in settings
+ *
+ * @param method
+ */
+void QMSettings::setXtbMethod(const XtbMethod method) { _xtbMethod = method; }
 
 /**
  * @brief sets the qmScript in settings
@@ -519,6 +613,13 @@ std::unordered_map<std::string, double> QMSettings::getHubbardDerivs()
  * @return bool
  */
 bool QMSettings::useDispersionCorr() { return _useDispersionCorrection; }
+
+/**
+ * @brief returns the xTBMethod
+ *
+ * @return XtbMethod
+ */
+XtbMethod QMSettings::getXtbMethod() { return _xtbMethod; }
 
 /**
  * @brief returns the qmLoopTimeLimit

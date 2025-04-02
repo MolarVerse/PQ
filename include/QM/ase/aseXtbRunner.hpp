@@ -1,5 +1,4 @@
-"""
-*****************************************************************************
+/*****************************************************************************
 <GPL_HEADER>
 
     PQ
@@ -19,30 +18,28 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <GPL_HEADER>
-*****************************************************************************
-"""
+******************************************************************************/
 
-import pytest
-import os
+#ifndef _ASE_XTB_RUNNER_HPP_
 
-from conftest import execute_pq
-from analysis import check_pq_output
+#define _ASE_XTB_RUNNER_HPP_
 
+#include "aseQMRunner.hpp"   // for InternalQMRunner
 
-@pytest.mark.parametrize(
-    "example_dir",
-    ["acof/"],
-    indirect=False
-)
-def test_acof(test_with_data_dir):
-    # print list of all files in current directory and path of current directory
+namespace QM
+{
+    /**
+     * @brief AseXtbRunner inherits from ASEQMRunner
+     *
+     */
+    class __attribute__((visibility("default"))) AseXtbRunner
+        : public ASEQMRunner
+    {
+       public:
+        ~AseXtbRunner() override = default;
 
-    print("Current directory: ", os.getcwd())
-    print("List of files in current directory: ", os.listdir(os.getcwd()))
+        explicit AseXtbRunner(const std::string &method);
+    };
+}   // namespace QM
 
-    stdout, stderr = execute_pq("run-01.in")
-
-    # check if stderr is empty
-    assert stderr == b""
-
-    check_pq_output("md-01", "acof")
+#endif   // _ASE_XTB_RUNNER_HPP_

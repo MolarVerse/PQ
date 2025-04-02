@@ -69,6 +69,7 @@ coupling_frequency          false
 
 noncoulomb                  false
 
+overwrite_output            false
 output_freq                 false
 file_prefix                 false
 output_file                 false
@@ -118,10 +119,13 @@ qm_script_full_path         false
 qm_loop_time_limit          false
 dispersion                  false
 mace_model_size             false
+mace_model_path             false
 slakos                      false
 slakos_path                 false
 third_order                 false
 hubbard_derivs              false
+
+xtb_method                  false
 
 rpmd_n_replica              false
 

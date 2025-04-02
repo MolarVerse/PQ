@@ -35,7 +35,7 @@ Every character following a ``#`` will be ignored. The ``#`` as a comment flag c
 Types of Input Values
 =====================
 
-In the following sections the types of the input values will be denoted via ``{}``, where ``{[]}`` represents a list of types:
+In the following sections the types of the input values will be denoted *via* ``{}``, where ``{[]}`` represents a list of types:
 
 +-------------+-------------------------------+
 |    Type     |          Description          |
@@ -90,11 +90,11 @@ With the ``jobtype`` keyword the user can choose from different engines to perfo
 
 Possible options are:
 
-   1. **mm-md** - Represents a full molecular mechanics molecular dynamics simulation performed via the :ref:`GUFF <guffdatFile>` formalism and/or the ``Amber force field``. Respective input file keys are found in the :ref:`mmKeys` section.
+   1. **mm-md** - Represents a full molecular mechanics molecular dynamics simulation performed *via* the :ref:`GUFF <guffdatFile>` formalism and/or the ``Amber force field``. Respective input file keys are found in the :ref:`mmKeys` section.
 
    2. **qm-md** - Represents a full quantum mechanics molecular dynamics simulation. For more information see the :ref:`qmKeys` section.
 
-   3. **qm-rpmd** - Represents a full quantum mechanics ring polymer molecular dynamics simulation. For more information see the :ref:`_ringpolymermdKeys` section
+   3. **qm-rpmd** - Represents a full quantum mechanics ring polymer molecular dynamics simulation. For more information see the :ref:`ringpolymermdKeys` section
 
    4. **qmmm-md** - Represents a hybrid quantum mechanics - molecular mechanics molecular dynamics simulation. (Not implemented yet)
 
@@ -223,6 +223,18 @@ Output Frequency
 The ``output_freq`` keyword sets the frequency (*i.e.* every n-th step) of how often the application should write into the :ref:`outputFiles`. For a complete dry run without any output files the output frequency can be set to ``0``.
 
 .. centered:: *default value* = 1
+
+.. _overwriteoutputkey:
+
+Overwrite Output Files
+======================
+
+.. admonition:: Key
+    :class: tip
+
+    overwrite_output = {bool} -> false
+
+The ``overwrite_output`` keyword allows the user to overwrite any existing output files.
 
 .. _fileprefixkey:
 
@@ -1278,6 +1290,9 @@ Possible options are:
 
    6. **ase-dftbplus** - `DFTB+ <https://wiki.fysik.dtu.dk/ase/ase/calculators/dftb.html#module-ase.calculators.dftb>`_ called by `ASE <https://wiki.fysik.dtu.dk/ase/>`_ 
    
+   7. **ase-xtb** - `xTB <https://xtb-docs.readthedocs.io/en/latest/>`_ called by `ASE <https://wiki.fysik.dtu.dk/ase/>`_ 
+
+
 .. _qmscriptKey:
 
 QM Script
@@ -1339,16 +1354,73 @@ MACE Model Size
 
     mace_model_size = {string} -> "medium"
 
-With the ``mace_model_size`` keyword the user can specify the size of the `MACE <https://arxiv.org/abs/2206.07697>`_ model for the QM calculations.
+With the ``mace_model_size`` keyword the user can specify the size of the `MACE <https://github.com/ACEsuit/mace>`_ model for the QM calculations.
 
 Possible options are:
 
-   1. **small** - small MACE model
+   1.  **small** - small MACE model
 
-   2. **medium** (default) - medium MACE model
+   2.  **medium** (default) - medium MACE model
 
-   3. **large** - large MACE model
+   3.  **large** - large MACE model
 
+   4.  **small-0b** - small MACE-MP-0b model
+
+   5.  **medium-0b** - medium MACE-MP-0b model
+
+   6.  **small-0b2** - small MACE-MP-0b2 model
+
+   7.  **medium-0b2** - medium MACE-MP-0b2 model
+
+   8.  **large-0b2** - large MACE-MP-0b2 model
+
+   9.  **medium-0b3** - medium MACE-MP-0b3 model
+
+   10. **medium-mpa-0** - medium MACE-MPA-0 model
+
+   11. **medium-omat-0** - medium MACE-OMAT-0 model
+
+   12. **custom** - custom MACE model (to be set *via* the :ref:`mace_model_path <maceModelPathKey>` keyword)
+
+.. Note::
+    The :ref:`qm_prog <qmprogamKey>` option ``mace-off`` is only compatible with the first three model sizes: "small", "medium" and "large"
+
+
+.. _maceModelPathKey:
+
+MACE Model Path
+===============
+
+.. admonition:: Key
+    :class: tip
+
+    mace_model_path = {string}
+
+With the ``mace_model_path`` keyword the user can specify a custom URL corresponding to a `MACE <https://github.com/ACEsuit/mace-foundations?tab=readme-ov-file>`_ model for the QM calculations.
+
+.. Note::
+    The ``mace_model_path`` can only be specified if :ref:`mace_model_size <maceModelSizeKey>` keyword is set to ``custom``.
+
+
+.. _xtbMethodKey:
+
+ASE-xTB Method
+===============
+
+.. admonition:: Key
+    :class: tip
+
+    xtb-method = {string} -> "GFN2-xTB"
+
+With the ``xtb-method`` keyword the user can specify the xTB method of the ``ase-xtb`` approach for the extended tight-binding calculation.
+
+Possible options are:
+
+    1. **GFN1-xTB** - GFN1-xTB parametrization
+
+    2. **GFN2-xTB** - GFN2-xTB parametrization
+
+    3. **IPEA1-xTB** - IPEA-xTB parametrization
 
 .. _slakosTypeKey:
 

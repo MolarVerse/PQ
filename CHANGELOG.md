@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 ## Next Release
 
 <!-- insertion marker -->
+## [v0.6.0](https://github.com/MolarVerse/PQ/releases/tag/v0.6.0) - 2025-04-02
+
+### Enhancements
+
+- new MACE models added
+- ASE based xTB calculator added
+- new keyword added to set custom MACE model *via* url
+- option to overwrite existing output files added
+
+### Bug Fixes
+
+- Temperature setup now gets correctly printed to the .log output file
+
+### CI
+
+- Combined all CI workflows into a single workflow file
+
+### Testing
+
+- Added `src/QM` to ignore for code coverage reports
+
 ## [v0.5.3](https://github.com/MolarVerse/PQ/releases/tag/v0.5.3) - 2025-02-03
 
 ### Enhancements

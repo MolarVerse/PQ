@@ -34,6 +34,7 @@
 #include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
 
 using namespace input;
+using namespace settings;
 
 /**
  * @brief tests parsing the "outputfreq" command
@@ -46,7 +47,7 @@ TEST_F(TestInputFileReader, testParseOutputFreq)
     OutputInputParser        parser(*_engine);
     std::vector<std::string> lineElements = {"outputfreq", "=", "1000"};
     parser.parseOutputFreq(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getOutputFrequency(), 1000);
+    EXPECT_EQ(OutputFileSettings::getOutputFrequency(), 1000);
 
     lineElements = {"outputfreq", "=", "-1000"};
     EXPECT_THROW_MSG(
@@ -70,7 +71,7 @@ TEST_F(TestInputFileReader, testParseFilePrefix)
         "prefix"
     };
     parser.parseFilePrefix(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getFilePrefix(), "prefix");
+    EXPECT_EQ(OutputFileSettings::getFilePrefix(), "prefix");
 }
 
 /**
@@ -83,7 +84,7 @@ TEST_F(TestInputFileReader, testParseLogFilename)
     _fileName                             = "log.txt";
     std::vector<std::string> lineElements = {"logfilename", "=", _fileName};
     parser.parseLogFilename(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getLogFileName(), _fileName);
+    EXPECT_EQ(OutputFileSettings::getLogFileName(), _fileName);
 }
 
 /**
@@ -96,7 +97,7 @@ TEST_F(TestInputFileReader, testParseInfoFilename)
     _fileName                             = "info.txt";
     std::vector<std::string> lineElements = {"infoFilename", "=", "info.txt"};
     parser.parseInfoFilename(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getInfoFileName(), "info.txt");
+    EXPECT_EQ(OutputFileSettings::getInfoFileName(), "info.txt");
 }
 
 /**
@@ -109,7 +110,7 @@ TEST_F(TestInputFileReader, testParseEnergyFilename)
     _fileName                             = "energy.txt";
     std::vector<std::string> lineElements = {"energyFilename", "=", _fileName};
     parser.parseEnergyFilename(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getEnergyFileName(), _fileName);
+    EXPECT_EQ(OutputFileSettings::getEnergyFileName(), _fileName);
 }
 
 /**
@@ -126,10 +127,7 @@ TEST_F(TestInputFileReader, testParseInstantEnergyFilename)
         _fileName
     };
     parser.parseInstantEnergyFilename(lineElements, 0);
-    EXPECT_EQ(
-        settings::OutputFileSettings::getInstantEnergyFileName(),
-        _fileName
-    );
+    EXPECT_EQ(OutputFileSettings::getInstantEnergyFileName(), _fileName);
 }
 
 /**
@@ -146,7 +144,7 @@ TEST_F(TestInputFileReader, testParseTrajectoryFilename)
         _fileName
     };
     parser.parseTrajectoryFilename(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getTrajectoryFileName(), _fileName);
+    EXPECT_EQ(OutputFileSettings::getTrajectoryFileName(), _fileName);
 }
 
 /**
@@ -163,7 +161,7 @@ TEST_F(TestInputFileReader, testVelocityFilename)
         _fileName
     };
     parser.parseVelocityFilename(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getVelocityFileName(), _fileName);
+    EXPECT_EQ(OutputFileSettings::getVelocityFileName(), _fileName);
 }
 
 /**
@@ -176,7 +174,7 @@ TEST_F(TestInputFileReader, testForceFilename)
     _fileName                             = "force.xyz";
     std::vector<std::string> lineElements = {"forceFilename", "=", _fileName};
     parser.parseForceFilename(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getForceFileName(), _fileName);
+    EXPECT_EQ(OutputFileSettings::getForceFileName(), _fileName);
 }
 
 /**
@@ -189,7 +187,7 @@ TEST_F(TestInputFileReader, testParseRestartFilename)
     _fileName                             = "restart.xyz";
     std::vector<std::string> lineElements = {"restartFilename", "=", _fileName};
     parser.parseRestartFilename(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getRestartFileName(), _fileName);
+    EXPECT_EQ(OutputFileSettings::getRestartFileName(), _fileName);
 }
 
 /**
@@ -202,7 +200,7 @@ TEST_F(TestInputFileReader, testChargeFilename)
     _fileName                             = "charge.xyz";
     std::vector<std::string> lineElements = {"chargeFilename", "=", _fileName};
     parser.parseChargeFilename(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getChargeFileName(), _fileName);
+    EXPECT_EQ(OutputFileSettings::getChargeFileName(), _fileName);
 }
 
 /**
@@ -219,7 +217,7 @@ TEST_F(TestInputFileReader, testMomentumFilename)
         _fileName
     };
     parser.parseMomentumFilename(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getMomentumFileName(), _fileName);
+    EXPECT_EQ(OutputFileSettings::getMomentumFileName(), _fileName);
 }
 
 /**
@@ -236,7 +234,7 @@ TEST_F(TestInputFileReader, testVirialFilename)
         _fileName
     };
     parser.parseVirialFilename(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getVirialFileName(), _fileName);
+    EXPECT_EQ(OutputFileSettings::getVirialFileName(), _fileName);
 }
 
 /**
@@ -253,7 +251,7 @@ TEST_F(TestInputFileReader, testStressFilename)
         _fileName
     };
     parser.parseStressFilename(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getStressFileName(), _fileName);
+    EXPECT_EQ(OutputFileSettings::getStressFileName(), _fileName);
 }
 
 /**
@@ -266,7 +264,7 @@ TEST_F(TestInputFileReader, testBoxFilename)
     _fileName                                   = "box.xyz";
     const std::vector<std::string> lineElements = {"box_file", "=", _fileName};
     parser.parseBoxFilename(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getBoxFileName(), _fileName);
+    EXPECT_EQ(OutputFileSettings::getBoxFileName(), _fileName);
 }
 
 /**
@@ -277,9 +275,13 @@ TEST_F(TestInputFileReader, testTimingsFilename)
 {
     OutputInputParser parser(*_engine);
     _fileName                                   = "timings.txt";
-    const std::vector<std::string> lineElements = {"timings_file", "=", _fileName};
+    const std::vector<std::string> lineElements = {
+        "timings_file",
+        "=",
+        _fileName
+    };
     parser.parseTimingsFilename(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getTimingsFileName(), _fileName);
+    EXPECT_EQ(OutputFileSettings::getTimingsFileName(), _fileName);
 }
 
 /**
@@ -296,7 +298,7 @@ TEST_F(TestInputFileReader, testRPMDTrajectoryFilename)
         _fileName
     };
     parser.parseRPMDTrajectoryFilename(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getRPMDTrajFileName(), _fileName);
+    EXPECT_EQ(OutputFileSettings::getRPMDTrajFileName(), _fileName);
 }
 
 /**
@@ -313,10 +315,7 @@ TEST_F(TestInputFileReader, testRPMDRestartFilename)
         _fileName
     };
     parser.parseRPMDRestartFilename(lineElements, 0);
-    EXPECT_EQ(
-        settings::OutputFileSettings::getRPMDRestartFileName(),
-        _fileName
-    );
+    EXPECT_EQ(OutputFileSettings::getRPMDRestartFileName(), _fileName);
 }
 
 /**
@@ -333,7 +332,7 @@ TEST_F(TestInputFileReader, testRPMDEnergyFilename)
         _fileName
     };
     parser.parseRPMDEnergyFilename(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getRPMDEnergyFileName(), _fileName);
+    EXPECT_EQ(OutputFileSettings::getRPMDEnergyFileName(), _fileName);
 }
 
 /**
@@ -350,7 +349,7 @@ TEST_F(TestInputFileReader, testRPMDForceFilename)
         _fileName
     };
     parser.parseRPMDForceFilename(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getRPMDForceFileName(), _fileName);
+    EXPECT_EQ(OutputFileSettings::getRPMDForceFileName(), _fileName);
 }
 
 /**
@@ -367,7 +366,7 @@ TEST_F(TestInputFileReader, testRPMDChargeFilename)
         _fileName
     };
     parser.parseRPMDChargeFilename(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getRPMDChargeFileName(), _fileName);
+    EXPECT_EQ(OutputFileSettings::getRPMDChargeFileName(), _fileName);
 }
 
 /**
@@ -384,8 +383,40 @@ TEST_F(TestInputFileReader, testRPMDVelocityFilename)
         _fileName
     };
     parser.parseRPMDVelocityFilename(lineElements, 0);
-    EXPECT_EQ(
-        settings::OutputFileSettings::getRPMDVelocityFileName(),
-        _fileName
-    );
+    EXPECT_EQ(OutputFileSettings::getRPMDVelocityFileName(), _fileName);
+}
+
+/**
+ * @brief tests parsing the "overwrite_output" command
+ *
+ */
+TEST_F(TestInputFileReader, parseOverwriteOutput)
+{
+    EXPECT_FALSE(OutputFileSettings::getOverwriteOutputFiles());
+
+    OutputInputParser parser(*_engine);
+    parser.parseOverwriteOutput({"overwrite_output", "=", "true"}, 0);
+    EXPECT_TRUE(OutputFileSettings::getOverwriteOutputFiles());
+
+    parser.parseOverwriteOutput({"overwrite_output", "=", "yes"}, 0);
+    EXPECT_TRUE(OutputFileSettings::getOverwriteOutputFiles());
+
+    parser.parseOverwriteOutput({"overwrite_output", "=", "on"}, 0);
+    EXPECT_TRUE(OutputFileSettings::getOverwriteOutputFiles());
+
+    parser.parseOverwriteOutput({"overwrite_output", "=", "false"}, 0);
+    EXPECT_FALSE(OutputFileSettings::getOverwriteOutputFiles());
+
+    parser.parseOverwriteOutput({"overwrite_output", "=", "no"}, 0);
+    EXPECT_FALSE(OutputFileSettings::getOverwriteOutputFiles());
+
+    parser.parseOverwriteOutput({"overwrite_output", "=", "off"}, 0);
+    EXPECT_FALSE(OutputFileSettings::getOverwriteOutputFiles());
+
+    ASSERT_THROW_MSG(
+        parser.parseOverwriteOutput({"overwrite_output", "=", "notABool"}, 0),
+        customException::InputFileException,
+        "Invalid overwrite_output value \"notABool\" in input file.\n"
+        "Possible values are: true, yes, on, false, no, off"
+    )
 }

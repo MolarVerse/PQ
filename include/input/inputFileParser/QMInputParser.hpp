@@ -52,12 +52,15 @@ namespace input
         void parseDispersion(const pq::strings &, const size_t);
 
         void parseMaceModelSize(const pq::strings &, const size_t);
+        void parseMaceModelPath(const pq::strings &, const size_t);
         void parseMaceQMMethod(const std::string_view &);
 
         void parseSlakosType(const pq::strings &, const size_t);
         void parseSlakosPath(const pq::strings &, const size_t);
         void parseThirdOrder(const pq::strings &, const size_t);
         void parseHubbardDerivs(const pq::strings &, const size_t);
+
+        void parseXtbMethod(const pq::strings &, const size_t);
     };
 
 }   // namespace input

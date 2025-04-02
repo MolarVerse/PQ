@@ -204,6 +204,62 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlusHubbardDerivsNo3rdOrder)
     ASSERT_THROW_MSG(
         qmSetup.setupQMMethodAseDftbPlus(),
         customException::InputFileException,
-        "You have set custom Hubbard derivatives but disabled 3rd order DFTB. This setup is invalid."
+        "You have set custom Hubbard derivatives but disabled 3rd order DFTB. "
+        "This setup is invalid."
+    );
+}
+
+TEST(TestQMSetup, setupQMMethodMaceOffInvalidModelSize)
+{
+    engine::QMMDEngine engine;
+    QMSetup            qmSetup{QMSetup(engine)};
+
+    QMSettings::setQMMethod(QMMethod::MACE);
+    QMSettings::setMaceModelType("mace-off");
+    QMSettings::setMaceModelSize("medium-omat-0");
+
+    ASSERT_THROW_MSG(
+        qmSetup.setupQMMethodMace(),
+        customException::InputFileException,
+        "The 'medium-omat-0' model size is only compatible with the 'mace_mp' "
+        "model type."
+    );
+}
+
+TEST(TestQMSetup, setupQMMethodMaceRedundantModelPath)
+{
+    engine::QMMDEngine engine;
+    QMSetup            qmSetup{QMSetup(engine)};
+
+    QMSettings::setQMMethod(QMMethod::MACE);
+    QMSettings::setMaceModelType("mace-mp");
+    QMSettings::setMaceModelSize("medium-omat-0");
+    QMSettings::setMaceModelPath("https://not-a-valid-url");
+
+    ASSERT_THROW_MSG(
+        qmSetup.setupQMMethodMace(),
+        customException::InputFileException,
+        "You have set a custom MACE model path without requesting a custom "
+        "mace model size."
+        "This setup is invalid."
+    );
+}
+
+TEST(TestQMSetup, setupQMMethodMaceMissingModelPath)
+{
+    engine::QMMDEngine engine;
+    QMSetup            qmSetup{QMSetup(engine)};
+
+    QMSettings::setQMMethod(QMMethod::MACE);
+    QMSettings::setMaceModelType("mace-mp");
+    QMSettings::setMaceModelSize("custom");
+    QMSettings::setMaceModelPath("");
+
+    ASSERT_THROW_MSG(
+        qmSetup.setupQMMethodMace(),
+        customException::InputFileException,
+        "You have requested a custom MACE model but haven't provided a "
+        "MACE model path."
+        "This setup is invalid."
     );
 }
