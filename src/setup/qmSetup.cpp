@@ -152,7 +152,7 @@ void QMSetup::setupQMMethodMace()
             "This setup is invalid."
         );
 
-    if (!(QMSettings::getMaceModelSize() == MaceModelSize::CUSTOM) &&
+    if (QMSettings::getMaceModelSize() != MaceModelSize::CUSTOM &&
         !QMSettings::getMaceModelPath().empty())
         throw InputFileException(
             "You have set a custom MACE model path without requesting a custom "
