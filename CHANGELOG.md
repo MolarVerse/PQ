@@ -17,6 +17,10 @@ All notable changes to this project will be documented in this file.
 
 - Combined all CI workflows into a single workflow file
 
+### Testing
+
+- Added `src/QM` to ignore for code coverage reports
+
 
 <!-- insertion marker -->
 ## [v0.5.3](https://github.com/MolarVerse/PQ/releases/tag/v0.5.3) - 2025-02-03
