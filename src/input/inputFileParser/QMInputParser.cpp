@@ -309,12 +309,15 @@ void QMInputParser::parseMaceModelSize(
     else if ("medium_omat_0" == size)
         QMSettings::setMaceModelSize(MEDIUMOMAT0);
 
+    else if ("custom" == size)
+        QMSettings::setMaceModelSize(CUSTOM);
+
     else
         throw InputFileException(std::format(
             "Invalid mace_model_size \"{}\" in input file.\n"
             "Possible values are: small, medium, large, small-0b,\n"
             "medium-0b, small-0b2, medium-0b2, large-0b2, medium-0b3,\n"
-            "medium-mpa-0, medium-omat-0",
+            "medium-mpa-0, medium-omat-0, custom",
             lineElements[2]
         ));
 }

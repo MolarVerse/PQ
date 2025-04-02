@@ -82,6 +82,7 @@ std::string settings::string(const MaceModelSize model)
         case MEDIUM0B3: return "medium-0b3";
         case MEDIUMMPA0: return "medium-mpa-0";
         case MEDIUMOMAT0: return "medium-omat-0";
+        case CUSTOM: return "custom";
 
         default: return "none";
     }
@@ -275,6 +276,9 @@ void QMSettings::setMaceModelSize(const std::string_view &model)
 
     else if ("medium_omat_0" == modelToLowerAndReplaceDashes)
         _maceModelSize = MEDIUMOMAT0;
+
+    else if ("custom" == modelToLowerAndReplaceDashes)
+        _maceModelSize = CUSTOM;
 
     else
         throw UserInputException(

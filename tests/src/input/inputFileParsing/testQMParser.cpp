@@ -206,13 +206,16 @@ TEST_F(TestInputFileReader, parseMaceModelSize)
     parser.parseMaceModelSize({"mace_model_size", "=", "medium_omat_0"}, 0);
     EXPECT_EQ(QMSettings::getMaceModelSize(), MEDIUMOMAT0);
 
+    parser.parseMaceModelSize({"mace_model_size", "=", "custom"}, 0);
+    EXPECT_EQ(QMSettings::getMaceModelSize(), CUSTOM);
+
     ASSERT_THROW_MSG(
         parser.parseMaceModelSize({"mace_model_size", "=", "notASize"}, 0),
         InputFileException,
         "Invalid mace_model_size \"notASize\" in input file.\n"
         "Possible values are: small, medium, large, small-0b,\n"
         "medium-0b, small-0b2, medium-0b2, large-0b2, medium-0b3,\n"
-        "medium-mpa-0, medium-omat-0"
+        "medium-mpa-0, medium-omat-0, custom"
     )
 }
 

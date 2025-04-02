@@ -64,7 +64,8 @@ namespace settings
         LARGE0B2,
         MEDIUM0B3,
         MEDIUMMPA0,
-        MEDIUMOMAT0
+        MEDIUMOMAT0,
+        CUSTOM,
     };
 
     /**
