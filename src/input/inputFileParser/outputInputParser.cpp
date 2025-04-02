@@ -27,9 +27,11 @@
 
 #include "exceptions.hpp"           // for InputFileException
 #include "outputFileSettings.hpp"   // for OutputFileSettings
+#include "stringUtilities.hpp"      // for toLowerCopy
 
 using namespace input;
 using namespace engine;
+using namespace utilities;
 using namespace customException;
 using namespace settings;
 
@@ -186,6 +188,11 @@ OutputInputParser::OutputInputParser(Engine &engine) : InputFileParser(engine)
     addKeyword(
         std::string("rpmd_energy_file"),
         bind_front(&OutputInputParser::parseRPMDEnergyFilename, this),
+        false
+    );
+    addKeyword(
+        std::string("overwrite_output"),
+        bind_front(&OutputInputParser::parseOverwriteOutput, this),
         false
     );
 }
@@ -584,4 +591,33 @@ void OutputInputParser::parseRPMDEnergyFilename(
 {
     checkCommand(lineElements, lineNumber);
     OutputFileSettings::setRingPolymerEnergyFileName(lineElements[2]);
+}
+
+/**
+ * @brief parse if existing output files should be overwritten
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
+void OutputInputParser::parseOverwriteOutput(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+
+    const auto overwrite = toLowerCopy(lineElements[2]);
+
+    if ("true" == overwrite || "yes" == overwrite || "on" == overwrite)
+        OutputFileSettings::setOverwriteOutputFiles(true);
+
+    else if ("false" == overwrite || "no" == overwrite || "off" == overwrite)
+        OutputFileSettings::setOverwriteOutputFiles(false);
+
+    else
+        throw InputFileException(std::format(
+            "Invalid overwrite_output value \"{}\" in input file.\n"
+            "Possible values are: true, yes, on, false, no, off",
+            lineElements[2]
+        ));
 }

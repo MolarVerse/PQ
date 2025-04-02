@@ -20,13 +20,17 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <format>   // for format
-#include <string>   // for string
+#include <filesystem>   // for filesystem
+#include <format>       // for format
+#include <string>       // for string
 
 #include "exceptions.hpp"   // for InputFileException
 #include "gtest/gtest.h"   // for Test, Message, TestPartResult, InitGoogleTest, RUN_ALL_TESTS
-#include "output.hpp"             // for Output
-#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
+#include "output.hpp"               // for Output
+#include "outputFileSettings.hpp"   // for OutputFileSettings
+#include "throwWithMessage.hpp"     // for EXPECT_THROW_MSG
+
+using namespace settings;
 
 /**
  * @brief tests setting output filename
@@ -35,11 +39,13 @@
 TEST(TestOutput, testSpecialSetFilename)
 {
     auto output = output::Output("default.log");
+
     EXPECT_THROW_MSG(
         output.setFilename(""),
         customException::InputFileException,
         "Filename cannot be empty"
     );
+
     EXPECT_THROW_MSG(
         output.setFilename("src"),
         customException::InputFileException,
@@ -51,4 +57,23 @@ TEST(TestOutput, testSpecialSetFilename)
         customException::InputFileException,
         std::format("Could not open file - filename = src")
     );
+
+    const std::string testFileName = "test_output.txt";
+    std::ofstream     testFile(testFileName);
+    testFile.close();
+
+    EXPECT_THROW_MSG(
+        output.setFilename(testFileName),
+        customException::InputFileException,
+        std::format("File already exists - filename = {}", testFileName)
+    );
+
+    OutputFileSettings::setOverwriteOutputFiles(true);
+
+    EXPECT_NO_THROW(output.setFilename(testFileName));
+    EXPECT_NO_THROW(output.close());
+    EXPECT_EQ(output.getFilename(), testFileName);
+
+    OutputFileSettings::setOverwriteOutputFiles(false);
+    std::filesystem::remove(testFileName);
 }

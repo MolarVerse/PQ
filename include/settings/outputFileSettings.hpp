@@ -43,7 +43,8 @@ namespace settings
        private:
         static inline size_t _outputFrequency = 1;
 
-        static inline bool        _filePrefixSet = false;
+        static inline bool        _overwriteOutputFiles = false;
+        static inline bool        _filePrefixSet        = false;
         static inline std::string _filePrefix;
 
         static inline std::string _energyFile = defaults::_ENERGY_FILE_DEFAULT_;
@@ -116,6 +117,8 @@ namespace settings
 
         static void setTimingsFileName(const std::string_view);
 
+        static void setOverwriteOutputFiles(const bool);
+
         /***************************
          * standard getter methods *
          ***************************/
@@ -151,6 +154,8 @@ namespace settings
         [[nodiscard]] static std::string getRPMDEnergyFileName();
 
         [[nodiscard]] static std::string getTimingsFileName();
+
+        [[nodiscard]] static bool getOverwriteOutputFiles();
     };
 
 }   // namespace settings
