@@ -69,6 +69,7 @@ coupling_frequency          false
 
 noncoulomb                  false
 
+overwrite_output            false
 output_freq                 false
 file_prefix                 false
 output_file                 false

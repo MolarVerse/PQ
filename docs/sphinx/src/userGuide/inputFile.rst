@@ -224,6 +224,18 @@ The ``output_freq`` keyword sets the frequency (*i.e.* every n-th step) of how o
 
 .. centered:: *default value* = 1
 
+.. _overwriteoutputkey:
+
+Overwrite Output Files
+======================
+
+.. admonition:: Key
+    :class: tip
+
+    overwrite_output = {bool} -> false
+
+The ``overwrite_output`` keyword allows the user to overwrite any existing output files.
+
 .. _fileprefixkey:
 
 File Prefix

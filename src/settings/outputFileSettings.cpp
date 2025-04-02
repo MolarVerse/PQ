@@ -437,6 +437,16 @@ void OutputFileSettings::setTimingsFileName(const std::string_view name)
     _timeFile = name;
 }
 
+/**
+ * @brief sets if existing output files will be overwritten
+ *
+ * @param overwrite
+ */
+void OutputFileSettings::setOverwriteOutputFiles(const bool overwrite)
+{
+    _overwriteOutputFiles = overwrite;
+}
+
 /***************************
  *                         *
  * standard getter methods *
@@ -635,3 +645,13 @@ std::string OutputFileSettings::getRPMDEnergyFileName()
  * @return std::string
  */
 std::string OutputFileSettings::getTimingsFileName() { return _timeFile; }
+
+/**
+ * @brief returns if existing output files will be overwritten
+ *
+ * @return bool
+ */
+bool OutputFileSettings::getOverwriteOutputFiles()
+{
+    return _overwriteOutputFiles;
+}
