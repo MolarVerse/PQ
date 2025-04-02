@@ -68,6 +68,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#rpmd-start-file">RPMD Start File</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#general-output-keys">General Output Keys</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#output-frequency">Output Frequency</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#overwrite-output-files">Overwrite Output Files</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#file-prefix">File Prefix</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#log-file">Log File</a></li>
 </ul>
@@ -170,6 +171,8 @@
 <li class="toctree-l4"><a class="reference internal" href="#qm-loop-time-limit">QM Loop Time Limit</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#dispersion-correction">Dispersion Correction</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#mace-model-size">MACE Model Size</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mace-model-path">MACE Model Path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ase-xtb-method">ASE-xTB Method</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ase-dftb-approach">ASE-DFTB+ Approach</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#slater-koster-path">Slater-Koster Path</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#third-order">Third-Order</a></li>
@@ -276,7 +279,7 @@
 </section>
 <section id="types-of-input-values">
 <h3>Types of Input Values<a class="headerlink" href="#types-of-input-values" title="Link to this heading"></a></h3>
-<p>In the following sections the types of the input values will be denoted via <code class="docutils literal notranslate"><span class="pre">{}</span></code>, where <code class="docutils literal notranslate"><span class="pre">{[]}</span></code> represents a list of types:</p>
+<p>In the following sections the types of the input values will be denoted <em>via</em> <code class="docutils literal notranslate"><span class="pre">{}</span></code>, where <code class="docutils literal notranslate"><span class="pre">{[]}</span></code> represents a list of types:</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Type</p></th>
@@ -341,9 +344,9 @@
 <p>Possible options are:</p>
 <blockquote>
 <div><ol class="arabic simple">
-<li><p><strong>mm-md</strong> - Represents a full molecular mechanics molecular dynamics simulation performed via the <a class="reference internal" href="setupFiles.html#guffdatfile"><span class="std std-ref">GUFF</span></a> formalism and/or the <code class="docutils literal notranslate"><span class="pre">Amber</span> <span class="pre">force</span> <span class="pre">field</span></code>. Respective input file keys are found in the <a class="reference internal" href="#mmkeys"><span class="std std-ref">MM Keys</span></a> section.</p></li>
+<li><p><strong>mm-md</strong> - Represents a full molecular mechanics molecular dynamics simulation performed <em>via</em> the <a class="reference internal" href="setupFiles.html#guffdatfile"><span class="std std-ref">GUFF</span></a> formalism and/or the <code class="docutils literal notranslate"><span class="pre">Amber</span> <span class="pre">force</span> <span class="pre">field</span></code>. Respective input file keys are found in the <a class="reference internal" href="#mmkeys"><span class="std std-ref">MM Keys</span></a> section.</p></li>
 <li><p><strong>qm-md</strong> - Represents a full quantum mechanics molecular dynamics simulation. For more information see the <a class="reference internal" href="#qmkeys"><span class="std std-ref">QM Keys</span></a> section.</p></li>
-<li><p><strong>qm-rpmd</strong> - Represents a full quantum mechanics ring polymer molecular dynamics simulation. For more information see the <span class="xref std std-ref">_ringpolymermdKeys</span> section</p></li>
+<li><p><strong>qm-rpmd</strong> - Represents a full quantum mechanics ring polymer molecular dynamics simulation. For more information see the <a class="reference internal" href="#ringpolymermdkeys"><span class="std std-ref">Ring Polymer MD Keys</span></a> section</p></li>
 <li><p><strong>qmmm-md</strong> - Represents a hybrid quantum mechanics - molecular mechanics molecular dynamics simulation. (Not implemented yet)</p></li>
 <li><p><strong>mm-opt</strong> - represents a geometry optimization calculation using molecular mechanics.</p></li>
 </ol>
@@ -442,6 +445,14 @@
 <p>The <code class="docutils literal notranslate"><span class="pre">output_freq</span></code> keyword sets the frequency (<em>i.e.</em> every n-th step) of how often the application should write into the <a class="reference internal" href="outputFiles.html#outputfiles"><span class="std std-ref">Output Files</span></a>. For a complete dry run without any output files the output frequency can be set to <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
 <p class="centered">
 <strong><em>default value</em> = 1</strong></p></section>
+<section id="overwrite-output-files">
+<span id="overwriteoutputkey"></span><h3>Overwrite Output Files<a class="headerlink" href="#overwrite-output-files" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>overwrite_output = {bool} -&gt; false</p>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">overwrite_output</span></code> keyword allows the user to overwrite any existing output files.</p>
+</section>
 <section id="file-prefix">
 <span id="fileprefixkey"></span><h3>File Prefix<a class="headerlink" href="#file-prefix" title="Link to this heading"></a></h3>
 <div class="tip admonition">
@@ -1167,6 +1178,7 @@ input file. Further information about the individual files can be found in the <
 <li><p><strong>mace</strong>  - <a class="reference external" href="https://arxiv.org/abs/2401.00096">MACE-MP</a> same as using <strong>mace_mp</strong></p></li>
 <li><p><strong>mace_off</strong> - <a class="reference external" href="https://arxiv.org/abs/2312.15211">MACE-OFF23</a></p></li>
 <li><p><strong>ase-dftbplus</strong> - <a class="reference external" href="https://wiki.fysik.dtu.dk/ase/ase/calculators/dftb.html#module-ase.calculators.dftb">DFTB+</a> called by <a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE</a></p></li>
+<li><p><strong>ase-xtb</strong> - <a class="reference external" href="https://xtb-docs.readthedocs.io/en/latest/">xTB</a> called by <a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE</a></p></li>
 </ol>
 </div></blockquote>
 </section>
@@ -1212,13 +1224,54 @@ input file. Further information about the individual files can be found in the <
 <p class="admonition-title">Key</p>
 <p>mace_model_size = {string} -&gt; “medium”</p>
 </div>
-<p>With the <code class="docutils literal notranslate"><span class="pre">mace_model_size</span></code> keyword the user can specify the size of the <a class="reference external" href="https://arxiv.org/abs/2206.07697">MACE</a> model for the QM calculations.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">mace_model_size</span></code> keyword the user can specify the size of the <a class="reference external" href="https://github.com/ACEsuit/mace">MACE</a> model for the QM calculations.</p>
 <p>Possible options are:</p>
 <blockquote>
 <div><ol class="arabic simple">
 <li><p><strong>small</strong> - small MACE model</p></li>
 <li><p><strong>medium</strong> (default) - medium MACE model</p></li>
 <li><p><strong>large</strong> - large MACE model</p></li>
+<li><p><strong>small-0b</strong> - small MACE-MP-0b model</p></li>
+<li><p><strong>medium-0b</strong> - medium MACE-MP-0b model</p></li>
+<li><p><strong>small-0b2</strong> - small MACE-MP-0b2 model</p></li>
+<li><p><strong>medium-0b2</strong> - medium MACE-MP-0b2 model</p></li>
+<li><p><strong>large-0b2</strong> - large MACE-MP-0b2 model</p></li>
+<li><p><strong>medium-0b3</strong> - medium MACE-MP-0b3 model</p></li>
+<li><p><strong>medium-mpa-0</strong> - medium MACE-MPA-0 model</p></li>
+<li><p><strong>medium-omat-0</strong> - medium MACE-OMAT-0 model</p></li>
+<li><p><strong>custom</strong> - custom MACE model (to be set <em>via</em> the <a class="reference internal" href="#macemodelpathkey"><span class="std std-ref">mace_model_path</span></a> keyword)</p></li>
+</ol>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <a class="reference internal" href="#qmprogamkey"><span class="std std-ref">qm_prog</span></a> option <code class="docutils literal notranslate"><span class="pre">mace-off</span></code> is only compatible with the first three model sizes: “small”, “medium” and “large”</p>
+</div>
+</section>
+<section id="mace-model-path">
+<span id="macemodelpathkey"></span><h3>MACE Model Path<a class="headerlink" href="#mace-model-path" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>mace_model_path = {string}</p>
+</div>
+<p>With the <code class="docutils literal notranslate"><span class="pre">mace_model_path</span></code> keyword the user can specify a custom URL corresponding to a <a class="reference external" href="https://github.com/ACEsuit/mace-foundations?tab=readme-ov-file">MACE</a> model for the QM calculations.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">mace_model_path</span></code> can only be specified if <a class="reference internal" href="#macemodelsizekey"><span class="std std-ref">mace_model_size</span></a> keyword is set to <code class="docutils literal notranslate"><span class="pre">custom</span></code>.</p>
+</div>
+</section>
+<section id="ase-xtb-method">
+<span id="xtbmethodkey"></span><h3>ASE-xTB Method<a class="headerlink" href="#ase-xtb-method" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>xtb-method = {string} -&gt; “GFN2-xTB”</p>
+</div>
+<p>With the <code class="docutils literal notranslate"><span class="pre">xtb-method</span></code> keyword the user can specify the xTB method of the <code class="docutils literal notranslate"><span class="pre">ase-xtb</span></code> approach for the extended tight-binding calculation.</p>
+<p>Possible options are:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p><strong>GFN1-xTB</strong> - GFN1-xTB parametrization</p></li>
+<li><p><strong>GFN2-xTB</strong> - GFN2-xTB parametrization</p></li>
+<li><p><strong>IPEA1-xTB</strong> - IPEA-xTB parametrization</p></li>
 </ol>
 </div></blockquote>
 </section>
