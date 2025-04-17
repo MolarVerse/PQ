@@ -83,13 +83,15 @@ std::vector<std::string> utilities::getLineCommands(
             break;
 
         else if (!bool(::isspace(line[static_cast<size_t>(i)])))
-            throw InputFileException(std::format(
-                "Missing semicolon in input file at line {}",
-                lineNumber
-            ));
+            throw InputFileException(
+                std::format(
+                    "Missing semicolon in input file at line {}",
+                    lineNumber
+                )
+            );
     }
 
-    using std::operator""sv;
+    using std::    operator""sv;
     constexpr auto delim{";"sv};
 
     auto transformView = [](auto &&view)
@@ -207,6 +209,38 @@ bool utilities::fileExists(const std::string &filename)
 }
 
 /**
+ * @brief checks if the value of a input file keyword can be interpreted as true
+ * or false
+ *
+ * @param lineElements
+ * @return true if "on", "yes", "true"
+ * @return false if "off", "no", "false"
+ *
+ * @throw InputFileException if none of these strings is matched
+ */
+bool utilities::keywordToBool(const pq::strings &lineElements)
+{
+    const auto option = toLowerCopy(lineElements[2]);
+
+    if ("on" == option || "yes" == option || "true" == option)
+        return true;
+
+    else if ("off" == option || "no" == option || "false" == option)
+        return false;
+
+    else
+        throw InputFileException(
+            std::format(
+                "Invalid boolean option \"{}\" for keyword \"{}\" in input "
+                "file.\n"
+                "Possible values are: on, yes, true, off, no, false.",
+                lineElements[2],
+                lineElements[0]
+            )
+        );
+}
+
+/**
  * @brief adds leading and trailing spaces to a string
  *
  * @param command
@@ -226,10 +260,12 @@ void utilities::addSpaces(
         command.replace(equalSignPos, 1, " " + stringToReplace + " ");
 
     else
-        throw customException::InputFileException(std::format(
-            "Missing \"{}\" in command \"{}\" in line {}",
-            stringToReplace,
-            command,
-            lineNumber
-        ));
+        throw customException::InputFileException(
+            std::format(
+                "Missing \"{}\" in command \"{}\" in line {}",
+                stringToReplace,
+                command,
+                lineNumber
+            )
+        );
 }
