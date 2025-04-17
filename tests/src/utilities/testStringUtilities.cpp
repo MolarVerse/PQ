@@ -31,6 +31,7 @@
 #include "gmock/gmock.h"         // for ElementsAre, MakePredicateFormatter
 #include "gtest/gtest.h"         // for AssertionResult, Message, TestPartResult
 #include "stringUtilities.hpp"   // for getLineCommands, splitString, fileExists
+#include "throwWithMessage.hpp"   // for ASSERT_THROW_MSG
 
 /**
  * @brief removeComments test by comment character
@@ -113,6 +114,40 @@ TEST(TestStringUtilities, toLowerAndReplaceDashesCopy)
 {
     std::string line = "TE-S--T";
     EXPECT_EQ("te_s__t", utilities::toLowerAndReplaceDashesCopy(line));
+}
+
+/**
+ * @brief test keywordToBool function
+ *
+ */
+TEST(TestStringUtilities, keywordToBool)
+{
+    pq::strings line = {"keyword", "=", "oN"};
+    EXPECT_TRUE(utilities::keywordToBool(line));
+
+    line = {"keyword", "=", "YES"};
+    EXPECT_TRUE(utilities::keywordToBool(line));
+
+    line = {"keyword", "=", "TrUe"};
+    EXPECT_TRUE(utilities::keywordToBool(line));
+
+    line = {"keyword", "=", "oFf"};
+    EXPECT_FALSE(utilities::keywordToBool(line));
+
+    line = {"keyword", "=", "no"};
+    EXPECT_FALSE(utilities::keywordToBool(line));
+
+    line = {"keyword", "=", "FaLsE"};
+    EXPECT_FALSE(utilities::keywordToBool(line));
+
+    line = {"keyword", "=", "notABool"};
+    ASSERT_THROW_MSG(
+        utilities::keywordToBool(line),
+        customException::InputFileException,
+        "Invalid boolean option \"notABool\" for keyword \"keyword\" in "
+        "input file.\n"
+        "Possible values are: on, yes, true, off, no, false."
+    );
 }
 
 /**
