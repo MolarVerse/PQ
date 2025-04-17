@@ -277,6 +277,8 @@ std::pair<Molecule*, size_t> SimulationBox::findMoleculeByAtomIndex(
 
         if (sum >= atomIndex)
         {
+            if (atomIndex == 0)
+                break;
             const auto index = atomIndex - (sum - nAtomsInMolecule) - 1;
             return std::make_pair(&molecule, index);
         }
