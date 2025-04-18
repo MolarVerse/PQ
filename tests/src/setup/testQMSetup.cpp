@@ -286,7 +286,7 @@ TEST(TestQMSetup, setupQMLoopTimeLimitDefault)
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
-    EXPECT_EQ(line, "         QM looptime limit: unlimited");
+    EXPECT_EQ(line, "         QM looptime limit: 3600 s");
 
     ::remove("default.log");
     delete _engine;

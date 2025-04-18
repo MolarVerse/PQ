@@ -1328,9 +1328,9 @@ QM Loop Time Limit
 .. admonition:: Key
     :class: tip
 
-    qm_loop_time_limit = {double} s -> -1 s
+    qm_loop_time_limit = {double} s -> 3600 s
 
-With the ``qm_loop_time_limit`` keyword the user can specify the loop time limit in ``s`` of all QM type calculations. If the time limit is reached the calculation will be stopped. Default value is -1 s, which means no time limit is set, and the calculation will continue until it is finished. In general all negative values will be interpreted as no time limit.
+With the ``qm_loop_time_limit`` keyword the user can specify the loop time limit in ``s`` of all QM type calculations. If the time limit is reached the calculation will be stopped. Default value is 3600 s (1 hour). Values smaller equal than zero are interpreted as no time limit and the calculation will continue until it is finished.
 
 .. _disperstoncorrectionKey:
 

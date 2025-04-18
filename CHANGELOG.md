@@ -6,7 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ### Enhancements
 
-- QM looptime limit info now gets printed in the .log file
+- QM loop time limit info gets printed to the .log file
+- QM loop time limit default value is set to 3600 (1 hour)
 
 <!-- insertion marker -->
 ## [v0.6.0](https://github.com/MolarVerse/PQ/releases/tag/v0.6.0) - 2025-04-02
