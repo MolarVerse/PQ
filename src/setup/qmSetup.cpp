@@ -136,12 +136,15 @@ void QMSetup::setupQMMethodMace()
         if (modelSize != MaceModelSize::SMALL &&
             modelSize != MaceModelSize::MEDIUM &&
             modelSize != MaceModelSize::LARGE)
-            throw InputFileException(std::format(
-                "The '{}' model size is only compatible with the '{}' model "
-                "type.",
-                string(modelSize),
-                string(MaceModelType::MACE_MP)
-            ));
+            throw InputFileException(
+                std::format(
+                    "The '{}' model size is only compatible with the '{}' "
+                    "model "
+                    "type.",
+                    string(modelSize),
+                    string(MaceModelType::MACE_MP)
+                )
+            );
     }
 
     if (QMSettings::getMaceModelSize() == MaceModelSize::CUSTOM &&
@@ -389,5 +392,15 @@ void QMSetup::setupWriteInfo() const
         logOutput.writeSetupInfo(xtbMethodMsg);
     }
 
+    const auto qm_loop_time_limit = QMSettings::getQMLoopTimeLimit();
+
+    const auto qmLoopTimeLimitMsg = std::format(
+        "QM looptime limit: {}",
+        qm_loop_time_limit > 0 ? std::format("{} s", qm_loop_time_limit)
+                               : "unlimited"
+    );
+
+    logOutput.writeEmptyLine();
+    logOutput.writeSetupInfo(qmLoopTimeLimitMsg);
     logOutput.writeEmptyLine();
 }

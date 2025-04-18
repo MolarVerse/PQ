@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## Next Release
 
+### Enhancements
+
+- QM looptime limit info now gets printed in the .log file
+
 <!-- insertion marker -->
 ## [v0.6.0](https://github.com/MolarVerse/PQ/releases/tag/v0.6.0) - 2025-04-02
 

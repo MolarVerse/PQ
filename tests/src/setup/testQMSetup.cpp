@@ -263,3 +263,122 @@ TEST(TestQMSetup, setupQMMethodMaceMissingModelPath)
         "This setup is invalid."
     );
 }
+
+TEST(TestQMSetup, setupQMLoopTimeLimitDefault)
+{
+    auto _engine  = new engine::QMMDEngine();
+    auto _qmSetup = new QMSetup(*_engine);
+
+    _engine->getEngineOutput().getLogOutput().setFilename("default.log");
+    QMSettings::setQMMethod(QMMethod::DFTBPLUS);
+    QMSettings::setQMScript("paTH/To/myQMScript");
+
+    _qmSetup->setupWriteInfo();
+
+    std::ifstream file("default.log");
+    std::string   line;
+    getline(file, line);
+    EXPECT_EQ(line, "         QM runner: DFTBPLUS");
+    getline(file, line);
+    EXPECT_EQ(line, "");
+    getline(file, line);
+    EXPECT_EQ(line, "         QM script: path/to/myqmscript");
+    getline(file, line);
+    EXPECT_EQ(line, "");
+    getline(file, line);
+    EXPECT_EQ(line, "         QM looptime limit: unlimited");
+
+    ::remove("default.log");
+    delete _engine;
+    delete _qmSetup;
+}
+
+TEST(TestQMSetup, setupQMLoopTimeLimitNegative)
+{
+    auto _engine  = new engine::QMMDEngine();
+    auto _qmSetup = new QMSetup(*_engine);
+
+    _engine->getEngineOutput().getLogOutput().setFilename("default.log");
+    QMSettings::setQMMethod(QMMethod::DFTBPLUS);
+    QMSettings::setQMScript("paTH/To/myQMScript");
+    QMSettings::setQMLoopTimeLimit(-1.2);
+
+    _qmSetup->setupWriteInfo();
+
+    std::ifstream file("default.log");
+    std::string   line;
+    getline(file, line);
+    EXPECT_EQ(line, "         QM runner: DFTBPLUS");
+    getline(file, line);
+    EXPECT_EQ(line, "");
+    getline(file, line);
+    EXPECT_EQ(line, "         QM script: path/to/myqmscript");
+    getline(file, line);
+    EXPECT_EQ(line, "");
+    getline(file, line);
+    EXPECT_EQ(line, "         QM looptime limit: unlimited");
+
+    ::remove("default.log");
+    delete _engine;
+    delete _qmSetup;
+}
+
+TEST(TestQMSetup, setupQMLoopTimeLimitZero)
+{
+    auto _engine  = new engine::QMMDEngine();
+    auto _qmSetup = new QMSetup(*_engine);
+
+    _engine->getEngineOutput().getLogOutput().setFilename("default.log");
+    QMSettings::setQMMethod(QMMethod::DFTBPLUS);
+    QMSettings::setQMScript("paTH/To/myQMScript");
+    QMSettings::setQMLoopTimeLimit(0);
+
+    _qmSetup->setupWriteInfo();
+
+    std::ifstream file("default.log");
+    std::string   line;
+    getline(file, line);
+    EXPECT_EQ(line, "         QM runner: DFTBPLUS");
+    getline(file, line);
+    EXPECT_EQ(line, "");
+    getline(file, line);
+    EXPECT_EQ(line, "         QM script: path/to/myqmscript");
+    getline(file, line);
+    EXPECT_EQ(line, "");
+    getline(file, line);
+    EXPECT_EQ(line, "         QM looptime limit: unlimited");
+
+    ::remove("default.log");
+    delete _engine;
+    delete _qmSetup;
+}
+
+TEST(TestQMSetup, setupQMLoopTimeLimitPositive)
+{
+    auto _engine  = new engine::QMMDEngine();
+    auto _qmSetup = new QMSetup(*_engine);
+
+    _engine->getEngineOutput().getLogOutput().setFilename("default.log");
+    QMSettings::setQMMethod(QMMethod::DFTBPLUS);
+    QMSettings::setQMScript("paTH/To/myQMScript");
+    QMSettings::setQMLoopTimeLimit(3.14);
+
+    _qmSetup->setupWriteInfo();
+
+    std::ifstream file("default.log");
+    std::string   line;
+    getline(file, line);
+    EXPECT_EQ(line, "         QM runner: DFTBPLUS");
+    getline(file, line);
+    EXPECT_EQ(line, "");
+    getline(file, line);
+    EXPECT_EQ(line, "         QM script: path/to/myqmscript");
+    getline(file, line);
+    EXPECT_EQ(line, "");
+    getline(file, line);
+    EXPECT_EQ(line, "         QM looptime limit: 3.14 s");
+
+    ::remove("default.log");
+    delete _engine;
+    delete _qmSetup;
+}
