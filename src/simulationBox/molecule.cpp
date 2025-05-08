@@ -104,16 +104,14 @@ void Molecule::calculateCenterOfMass(const Box &box)
  */
 void Molecule::calculateCenterOfMassVelocity(const Box &box)
 {
-    _centerOfMassVel         = {0.0, 0.0, 0.0};
-    const auto velocityAtom1 = _atoms[0]->getVelocity();
+    _centerOfMassVel = {0.0, 0.0, 0.0};
 
     for (const auto &atom : _atoms)
     {
         const auto mass     = atom->getMass();
         const auto velocity = atom->getVelocity();
-        const auto deltaVel = velocity - velocityAtom1;
 
-        _centerOfMassVel += mass * (velocity - deltaVel);
+        _centerOfMassVel += mass * velocity;
     }
 
     _centerOfMassVel /= getMolMass();
