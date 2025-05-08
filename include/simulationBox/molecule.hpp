@@ -55,7 +55,8 @@ namespace simulationBox
         double _charge;   // set via molDescriptor not sum of partial charges!!!
         double _molMass;
 
-        pq::Vec3D _centerOfMass = pq::Vec3D(0.0, 0.0, 0.0);
+        pq::Vec3D _centerOfMass    = pq::Vec3D(0.0, 0.0, 0.0);
+        pq::Vec3D _centerOfMassVel = pq::Vec3D(0.0, 0.0, 0.0);
 
         std::map<size_t, size_t> _externalToInternalAtomTypes;
         pq::SharedAtomVec        _atoms;
@@ -66,7 +67,9 @@ namespace simulationBox
         explicit Molecule(const size_t moltype);
 
         void calculateCenterOfMass(const Box &);
+        void calculateCenterOfMassVelocity(const Box &);
         void scale(const pq::tensor3D &, const Box &);
+        void scaleVelocities(const pq::tensor3D &, const Box &);
 
         [[nodiscard]] size_t              getNumberOfAtomTypes();
         [[nodiscard]] std::vector<size_t> getExternalGlobalVDWTypes() const;

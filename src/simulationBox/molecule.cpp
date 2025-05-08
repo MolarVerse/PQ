@@ -40,14 +40,14 @@ using namespace settings;
  *
  * @param name
  */
-Molecule::Molecule(const std::string_view name) : _name(name){};
+Molecule::Molecule(const std::string_view name) : _name(name) {}
 
 /**
  * @brief Construct a new Molecule:: Molecule object
  *
  * @param moltype
  */
-Molecule::Molecule(const size_t moltype) : _moltype(moltype){};
+Molecule::Molecule(const size_t moltype) : _moltype(moltype) {}
 
 /**
  * @brief finds number of different atom types in molecule
@@ -96,6 +96,30 @@ void Molecule::calculateCenterOfMass(const Box &box)
 }
 
 /**
+ * @brief calculates the center of mass velocity of the molecule
+ *
+ * @details velocities are calculated relative to the first atom
+ *
+ * @param box
+ */
+void Molecule::calculateCenterOfMassVelocity(const Box &box)
+{
+    _centerOfMassVel         = {0.0, 0.0, 0.0};
+    const auto velocityAtom1 = _atoms[0]->getVelocity();
+
+    for (const auto &atom : _atoms)
+    {
+        const auto mass     = atom->getMass();
+        const auto velocity = atom->getVelocity();
+        const auto deltaVel = velocity - velocityAtom1;
+
+        _centerOfMassVel += mass * (velocity - deltaVel);
+    }
+
+    _centerOfMassVel /= getMolMass();
+}
+
+/**
  * @brief scales the positions of the molecule by shifting the center of mass
  *
  * @details scaling has to be done in orthogonal space since pressure scaling is
@@ -128,6 +152,44 @@ void Molecule::scale(const tensor3D &shiftTensor, const Box &box)
     };
 
     std::ranges::for_each(_atoms, scaleAtomPosition);
+}
+
+/**
+ * @brief scales the velocities of the molecule by scaling the center of mass
+ * velocity
+ *
+ * @details scaling has to be done in orthogonal space since pressure scaling is
+ * done in orthogonal space
+ *
+ * @param scalingTensor
+ * @param box
+ */
+void Molecule::scaleVelocities(const tensor3D &scalingTensor, const Box &box)
+{
+    calculateCenterOfMassVelocity(box);
+    auto centerOfMassVel = _centerOfMassVel;
+
+    if (ManostatSettings::getIsotropy() != Isotropy::FULL_ANISOTROPIC)
+        centerOfMassVel = box.toOrthoSpace(_centerOfMassVel);
+
+    const auto scaling = scalingTensor * centerOfMassVel - centerOfMassVel;
+
+    auto scaleAtomVelocities = [&box, scaling](auto atom)
+    {
+        auto velocity = atom->getVelocity();
+
+        if (ManostatSettings::getIsotropy() != Isotropy::FULL_ANISOTROPIC)
+            velocity = box.toOrthoSpace(velocity);
+
+        velocity += scaling;
+
+        if (ManostatSettings::getIsotropy() != Isotropy::FULL_ANISOTROPIC)
+            velocity = box.toSimSpace(velocity);
+
+        atom->setVelocity(velocity);
+    };
+
+    std::ranges::for_each(_atoms, scaleAtomVelocities);
 }
 
 /**

@@ -56,7 +56,9 @@ StochasticRescalingManostat::StochasticRescalingManostat(
     : Manostat(other),
       _tau(other._tau),
       _compressibility(other._compressibility),
-      _dt(other._dt) {};
+      _dt(other._dt)
+{
+}
 
 /**
  * @brief Construct a new Stochastic Rescaling Manostat:: Stochastic Rescaling
@@ -78,7 +80,9 @@ SemiIsotropicStochasticRescalingManostat::
     )
     : StochasticRescalingManostat(targetPressure, tau, compressibility),
       _2DAnisotropicAxis(anisotropicAxis),
-      _2DIsotropicAxes(isotropicAxes) {};
+      _2DIsotropicAxes(isotropicAxes)
+{
+}
 
 /**
  * @brief Construct a new Stochastic Rescaling Manostat:: Stochastic Rescaling
@@ -125,11 +129,11 @@ void StochasticRescalingManostat::applyManostat(
     auto scalePositions = [&mu, &simBox](auto &molecule)
     { molecule.scale(mu, simBox.getBox()); };
 
-    auto scaleVelocities = [&mu, &simBox](auto &atom)
-    { atom->scaleVelocityOrthogonalSpace(inverse(mu), simBox.getBox()); };
+    auto scaleVelocities = [&mu, &simBox](auto &molecule)
+    { molecule.scaleVelocities(inverse(mu), simBox.getBox()); };
 
     std::ranges::for_each(simBox.getMolecules(), scalePositions);
-    std::ranges::for_each(simBox.getAtoms(), scaleVelocities);
+    std::ranges::for_each(simBox.getMolecules(), scaleVelocities);
 
     stopTimingsSection("Stochastic Rescaling");
 }
@@ -211,7 +215,8 @@ tensor3D SemiIsotropicStochasticRescalingManostat::calculateMu(
  * @param volume
  * @return Vec3D
  */
-tensor3D AnisotropicStochasticRescalingManostat::calculateMu(const double volume
+tensor3D AnisotropicStochasticRescalingManostat::calculateMu(
+    const double volume
 )
 {
     const auto compress = _compressibility * _dt / _tau;
