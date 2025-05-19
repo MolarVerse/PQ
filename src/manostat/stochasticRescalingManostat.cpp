@@ -56,7 +56,9 @@ StochasticRescalingManostat::StochasticRescalingManostat(
     : Manostat(other),
       _tau(other._tau),
       _compressibility(other._compressibility),
-      _dt(other._dt) {};
+      _dt(other._dt)
+{
+}
 
 /**
  * @brief Construct a new Stochastic Rescaling Manostat:: Stochastic Rescaling
@@ -78,7 +80,9 @@ SemiIsotropicStochasticRescalingManostat::
     )
     : StochasticRescalingManostat(targetPressure, tau, compressibility),
       _2DAnisotropicAxis(anisotropicAxis),
-      _2DIsotropicAxes(isotropicAxes) {};
+      _2DIsotropicAxes(isotropicAxes)
+{
+}
 
 /**
  * @brief Construct a new Stochastic Rescaling Manostat:: Stochastic Rescaling
@@ -155,7 +159,9 @@ tensor3D StochasticRescalingManostat::calculateMu(const double volume)
 
     const auto deltaP = _targetPressure - _pressure;
 
-    return diagonalMatrix(::exp(-compress * (deltaP) + stochasticFactor / 3.0));
+    return diagonalMatrix(
+        ::exp(-compress * (deltaP) / 3.0 + stochasticFactor / 3.0)
+    );
 }
 
 /**
