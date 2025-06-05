@@ -110,7 +110,7 @@ void Molecule::scale(const tensor3D &shiftTensor, const Box &box)
     if (ManostatSettings::getIsotropy() != Isotropy::FULL_ANISOTROPIC)
         centerOfMass = box.toOrthoSpace(_centerOfMass);
 
-    const auto shift = shiftTensor * centerOfMass - centerOfMass;
+    const auto shift = shiftTensor; // * centerOfMass - centerOfMass;
 
     auto scaleAtomPosition = [&box, shift](auto atom)
     {
@@ -119,13 +119,10 @@ void Molecule::scale(const tensor3D &shiftTensor, const Box &box)
         if (ManostatSettings::getIsotropy() != Isotropy::FULL_ANISOTROPIC)
             position = box.toOrthoSpace(position);
 
-        position += shift;
+        position = shift * position;
 
         if (ManostatSettings::getIsotropy() != Isotropy::FULL_ANISOTROPIC)
             position = box.toSimSpace(position);
-
-        // add pbc to the position
-        box.applyPBC(position);
 
         atom->setPosition(position);
     };

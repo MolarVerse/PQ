@@ -119,13 +119,6 @@ void StochasticRescalingManostat::applyManostat(
 
     const auto mu = calculateMu(simBox.getVolume());
 
-    simBox.scaleBox(mu);
-
-    physicalData.setVolume(simBox.getVolume());
-    physicalData.setDensity(simBox.getDensity());
-
-    simBox.checkCoulRadiusCutOff(ExceptionType::MANOSTATEXCEPTION);
-
     auto scalePositions = [&mu, &simBox](auto &molecule)
     { molecule.scale(mu, simBox.getBox()); };
 
@@ -133,7 +126,29 @@ void StochasticRescalingManostat::applyManostat(
     { atom->scaleVelocityOrthogonalSpace(inverse(mu), simBox.getBox()); };
 
     std::ranges::for_each(simBox.getMolecules(), scalePositions);
+
     std::ranges::for_each(simBox.getAtoms(), scaleVelocities);
+
+    simBox.scaleBox(mu);
+
+    physicalData.setVolume(simBox.getVolume());
+    physicalData.setDensity(simBox.getDensity());
+
+    simBox.checkCoulRadiusCutOff(ExceptionType::MANOSTATEXCEPTION);
+
+    // auto pbcPositions = [&simBox](auto &molecule)
+    // {
+    //     molecule.calculateCenterOfMass(simBox.getBox());
+    //     for (std::size_t i = 0; i < molecule.getNumberOfAtoms(); ++i)
+    //     {
+    //         auto position  = molecule.getAtomPosition(i);
+    //         position      += molecule.getCenterOfMass();
+    //         simBox.applyPBC(position);
+    //         molecule.setAtomPosition(i, position);
+    //     }
+    // };
+
+    // std::ranges::for_each(simBox.getMolecules(), pbcPositions);
 
     stopTimingsSection("Stochastic Rescaling");
 }
