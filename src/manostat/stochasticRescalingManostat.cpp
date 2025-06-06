@@ -136,19 +136,12 @@ void StochasticRescalingManostat::applyManostat(
 
     simBox.checkCoulRadiusCutOff(ExceptionType::MANOSTATEXCEPTION);
 
-    // auto pbcPositions = [&simBox](auto &molecule)
-    // {
-    //     molecule.calculateCenterOfMass(simBox.getBox());
-    //     for (std::size_t i = 0; i < molecule.getNumberOfAtoms(); ++i)
-    //     {
-    //         auto position  = molecule.getAtomPosition(i);
-    //         position      += molecule.getCenterOfMass();
-    //         simBox.applyPBC(position);
-    //         molecule.setAtomPosition(i, position);
-    //     }
-    // };
+    simBox.calculateCenterOfMass();
 
-    // std::ranges::for_each(simBox.getMolecules(), pbcPositions);
+    auto decenterPositions = [&simBox](auto &molecule)
+    { molecule.decenter(simBox.getBox()); };
+
+    std::ranges::for_each(simBox.getMolecules(), decenterPositions);
 
     stopTimingsSection("Stochastic Rescaling");
 }

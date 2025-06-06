@@ -98,11 +98,11 @@ TEST_F(TestMolecule, scaleAtoms)
     const auto centerOfMassBeforeScaling = _molecule->getCenterOfMass();
 
     const linearAlgebra::Vec3D shift =
-        diagonal(scale); //* centerOfMassBeforeScaling - centerOfMassBeforeScaling;
+        diagonal(scale) * centerOfMassBeforeScaling - centerOfMassBeforeScaling;
 
-    linearAlgebra::Vec3D pos1 = shift * atomPosition_1;
-    linearAlgebra::Vec3D pos2 = shift * atomPosition_2;
-    linearAlgebra::Vec3D pos3 = shift * atomPosition_3;
+    linearAlgebra::Vec3D pos1 = atomPosition_1 + shift;
+    linearAlgebra::Vec3D pos2 = atomPosition_2 + shift;
+    linearAlgebra::Vec3D pos3 = atomPosition_3 + shift;
 
     _molecule->scale(scale, box);
 
@@ -112,6 +112,46 @@ TEST_F(TestMolecule, scaleAtoms)
     EXPECT_EQ(_molecule->getAtomPosition(0), pos1);
     EXPECT_EQ(_molecule->getAtomPosition(1), pos2);
     EXPECT_EQ(_molecule->getAtomPosition(2), pos3);
+}
+
+TEST_F(TestMolecule, decenterPositions)
+{
+    simulationBox::OrthorhombicBox box;
+    box.setBoxDimensions({1.0, 2.0, 3.0});
+    _molecule->setNumberOfAtoms(3);
+    _molecule->setAtomPosition(0, linearAlgebra::Vec3D(0.5, 0.0, 0.0));
+    _molecule->setAtomPosition(1, linearAlgebra::Vec3D(0.0, 1.5, 0.0));
+    _molecule->setAtomPosition(2, linearAlgebra::Vec3D(0.0, 0.0, 2.5));
+    const auto centerOfMassBeforeScaling = _molecule->getCenterOfMass();
+    const linearAlgebra::tensor3D scale =
+        diagonalMatrix(linearAlgebra::Vec3D{-2.0, -2.0, -2.0});
+    const linearAlgebra::Vec3D atomPosition_1 = _molecule->getAtomPosition(0);
+    const linearAlgebra::Vec3D atomPosition_2 = _molecule->getAtomPosition(1);
+    const linearAlgebra::Vec3D atomPosition_3 = _molecule->getAtomPosition(2);
+
+    _molecule->scale(scale, box);
+    _molecule->calculateCenterOfMass(box);
+    const auto centerOfMassAfterScaling = _molecule->getCenterOfMass();
+
+    _molecule->decenter(box);
+    const linearAlgebra::Vec3D shift =
+        diagonal(scale) * centerOfMassBeforeScaling - centerOfMassBeforeScaling;
+
+    linearAlgebra::Vec3D pos1 =
+        atomPosition_1 + shift + centerOfMassAfterScaling;
+    linearAlgebra::Vec3D pos2 =
+        atomPosition_2 + shift + centerOfMassAfterScaling;
+    linearAlgebra::Vec3D pos3 =
+        atomPosition_3 + shift + centerOfMassAfterScaling;
+
+    box.applyPBC(pos1);
+    box.applyPBC(pos2);
+    box.applyPBC(pos3);
+
+    EXPECT_EQ(_molecule->getAtomPosition(0), pos1);
+    EXPECT_EQ(_molecule->getAtomPosition(1), pos2);
+    EXPECT_EQ(_molecule->getAtomPosition(2), pos3);
+    EXPECT_EQ(_molecule->getCenterOfMass(), centerOfMassAfterScaling);
 }
 
 TEST_F(TestMolecule, setAtomForceToZero)
