@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file.
 
 - added function to check boolean strings in input file
 
+### Bug Fixes
+
+- Index 0 is now correctly out of bounds in topology file
+
 <!-- insertion marker -->
 ## [v0.6.0](https://github.com/MolarVerse/PQ/releases/tag/v0.6.0) - 2025-04-02
 

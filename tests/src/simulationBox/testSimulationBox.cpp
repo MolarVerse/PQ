@@ -142,6 +142,10 @@ TEST_F(TestSimulationBox, findMoleculeByAtomIndex)
     EXPECT_THROW([[maybe_unused]] const auto dummy =
                      _simulationBox->findMoleculeByAtomIndex(6);
                  , customException::UserInputException);
+
+    EXPECT_THROW([[maybe_unused]] const auto dummy =
+                     _simulationBox->findMoleculeByAtomIndex(0);
+                 , customException::UserInputException);
 }
 
 /**
