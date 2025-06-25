@@ -25,6 +25,7 @@
 #include <algorithm>    // for ranges::remove
 #include <format>       // for format
 #include <functional>   // for _Bind_front_t, bind_front
+#include <limits>       // for numeric_limits
 
 #include "engine.hpp"       // for Engine
 #include "exceptions.hpp"   // for InputFileException, customException
@@ -40,6 +41,7 @@ using namespace settings;
 using namespace utilities;
 using namespace customException;
 using namespace engine;
+using std::format;
 
 /**
  * @brief Construct a new Input File Parser General:: Input File Parser General
@@ -67,6 +69,12 @@ GeneralInputParser::GeneralInputParser(Engine &engine) : InputFileParser(engine)
     addKeyword(
         std::string("floating_point_type"),
         bind_front(&GeneralInputParser::parseFloatingPointType, this),
+        false
+    );
+
+    addKeyword(
+        std::string("random_seed"),
+        bind_front(&GeneralInputParser::parseRandomSeed, this),
         false
     );
 }
@@ -209,4 +217,39 @@ void GeneralInputParser::parseFloatingPointType(
             "Possible values are: float, double",
             lineElements[2]
         ));
+}
+
+/**
+ * @brief parse random seed value for PRNG
+ *
+ * @details value not set as default
+ *
+ * @param lineElements
+ *
+ * @throws InputFileException if random seed value is invalid, negative, or
+ * exceeds uint_fast32_t range
+ */
+void GeneralInputParser::parseRandomSeed(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+
+    const auto randomSeedll = std::stoll(lineElements[2]);
+
+    if (randomSeedll < 0)
+        throw InputFileException("Random seed value cannot be negative");
+
+    if (randomSeedll > std::numeric_limits<std::uint_fast32_t>::max())
+        throw InputFileException(format(
+            "Random seed value {} exceeds maximum allowed value of {}",
+            randomSeedll,
+            std::numeric_limits<std::uint_fast32_t>::max()
+        ));
+
+    const auto randomSeed = static_cast<std::uint_fast32_t>(randomSeedll);
+
+    Settings::setIsRandomSeedSet(true);
+    Settings::setRandomSeed(randomSeed);
 }

@@ -24,6 +24,7 @@
 
 #define _SETTINGS_HPP_
 
+#include <cstdint>       // for uint_fast32_t
 #include <string_view>   // for string_view
 
 #include "defaults.hpp"   // for _DIMENSIONALITY_DEFAULT_
@@ -69,8 +70,10 @@ namespace settings
     class Settings
     {
        private:
-        static inline JobType _jobtype;
-        static inline FPType  _floatingPointType = FPType::DOUBLE;
+        static inline JobType       _jobtype;
+        static inline FPType        _floatingPointType = FPType::DOUBLE;
+        static inline uint_fast32_t _randomSeed;
+        static inline bool          _isRandomSeedset = false;
 
         static inline bool _useKokkos = false;
 
@@ -94,6 +97,9 @@ namespace settings
         static void setFloatingPointType(const std::string_view);
         static void setFloatingPointType(const FPType);
 
+        static void setRandomSeed(const uint_fast32_t randomSeed);
+        static void setIsRandomSeedSet(const bool isRandomSeedSet);
+
         static void setIsRingPolymerMDActivated(const bool isRingPolymerMD);
         static void setDimensionality(const size_t dimensionality);
 
@@ -105,6 +111,9 @@ namespace settings
 
         [[nodiscard]] static FPType      getFloatingPointType();
         [[nodiscard]] static std::string getFloatingPointPybindString();
+
+        [[nodiscard]] static uint_fast32_t getRandomSeed();
+        [[nodiscard]] static bool          isRandomSeedSet();
 
         [[nodiscard]] static size_t getDimensionality();
 
