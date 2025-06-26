@@ -236,16 +236,37 @@ void GeneralInputParser::parseRandomSeed(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto randomSeedll = std::stoll(lineElements[2]);
+    long long      randomSeedll;
+    constexpr auto maxRandomSeed = static_cast<long long>(UINT32_MAX);
+
+    try
+    {
+        randomSeedll = std::stoll(lineElements[2]);
+    }
+    catch (const std::invalid_argument &)
+    {
+        throw InputFileException(format(
+            "Invalid random seed value \"{}\": not a valid number",
+            lineElements[2]
+        ));
+    }
+    catch (const std::out_of_range &)
+    {
+        throw InputFileException(format(
+            "Random seed value {} exceeds maximum allowed value of {}",
+            lineElements[2],
+            maxRandomSeed
+        ));
+    }
 
     if (randomSeedll < 0)
         throw InputFileException("Random seed value cannot be negative");
 
-    if (randomSeedll > std::numeric_limits<std::uint_fast32_t>::max())
+    if (randomSeedll > maxRandomSeed)
         throw InputFileException(format(
             "Random seed value {} exceeds maximum allowed value of {}",
             randomSeedll,
-            std::numeric_limits<std::uint_fast32_t>::max()
+            maxRandomSeed
         ));
 
     const auto randomSeed = static_cast<std::uint_fast32_t>(randomSeedll);
