@@ -22,8 +22,6 @@
 
 #include "randomNumberGenerator.hpp"
 
-#include <random>   // for std::random_device and std::mt19937
-
 #include "settings.hpp"   // for Settings
 
 using namespace randomNumberGenerator;
@@ -43,7 +41,20 @@ RandomNumberGenerator::RandomNumberGenerator()
  * @param mean
  * @param stddev
  */
-double RandomNumberGenerator::getNormalDistribution(double mean, double stddev) {
+double RandomNumberGenerator::getNormalDistribution(double mean, double stddev)
+{
     std::normal_distribution<double> distribution{mean, stddev};
+    return distribution(_generator);
+}
+
+/**
+ * @brief get a random double from a uniform real distribution
+ *
+ * @param min
+ * @param max
+ */
+double RandomNumberGenerator::getUniformRealDistribution(double min, double max)
+{
+    std::uniform_real_distribution<double> distribution{min, max};
     return distribution(_generator);
 }

@@ -24,10 +24,8 @@
 
 #define _MAXWELL_BOLTZMANN_HPP_
 
-#include <random>
-
+#include "randomNumberGenerator.hpp"   // for RandomNumberGenerator
 #include "typeAliases.hpp"
-#include "randomNumberGenerator.hpp"
 
 using namespace randomNumberGenerator;
 

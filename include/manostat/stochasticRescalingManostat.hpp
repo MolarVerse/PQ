@@ -24,10 +24,11 @@
 
 #define _STOCHASTIC_RESCALING_MANOSTAT_HPP_
 
-#include <random>   // for std::random_device, std::mt19937
+#include "manostat.hpp"                // for Manostat
+#include "randomNumberGenerator.hpp"   // for RandomNumberGenerator
+#include "typeAliases.hpp"             // for PhysicalData, SimulationBox
 
-#include "manostat.hpp"      // for Manostat
-#include "typeAliases.hpp"   // for PhysicalData, SimulationBox
+using namespace randomNumberGenerator;
 
 namespace manostat
 {
@@ -40,8 +41,7 @@ namespace manostat
     class StochasticRescalingManostat : public Manostat
     {
        protected:
-        std::random_device _randomDevice{};
-        std::mt19937       _generator{_randomDevice()};
+        RandomNumberGenerator _randomNumberGenerator{};
 
         double _tau;
         double _compressibility;

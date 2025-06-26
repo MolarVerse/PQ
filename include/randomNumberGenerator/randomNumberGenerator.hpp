@@ -24,7 +24,7 @@
 
 #define _RANDOM_NUMBER_GENERATOR_HPP_
 
-#include <random>   // for random_device and mt19937
+#include <random>   // for std::random_device and std::mt19937
 
 namespace randomNumberGenerator
 {
@@ -42,7 +42,9 @@ namespace randomNumberGenerator
 
        public:
         RandomNumberGenerator();
+
         double getNormalDistribution(double mean, double stddev);
+        double getUniformRealDistribution(double min, double max);
     };
 
 }   // namespace randomNumberGenerator

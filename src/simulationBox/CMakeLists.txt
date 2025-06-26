@@ -54,6 +54,7 @@ target_link_libraries(simulationBox
     exceptions
     settings
     timings
+    randomNumberGenerator
 )
 
 install(TARGETS simulationBox

@@ -18,6 +18,7 @@ target_link_libraries(thermostat
     physicalData
     settings
     timings
+    randomNumberGenerator
 )
 
 install(TARGETS thermostat
