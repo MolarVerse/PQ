@@ -9,10 +9,7 @@ target_include_directories(randomNumberGenerator
 
 target_link_libraries(randomNumberGenerator
     PUBLIC
-    simulationBox
-    thermostat
-    manostat
-    maxwellBoltzmann
+    settings
 )
 
 install(TARGETS randomNumberGenerator
