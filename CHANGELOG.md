@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## Next Release
 
+### Enhancements
+
+- new random_seed keyword for reproducibility
+
 ### Bug Fixes
 
 - Index 0 is now correctly out of bounds in topology file
