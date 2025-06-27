@@ -23,6 +23,7 @@
 #include "generalInputParser.hpp"
 
 #include <algorithm>    // for ranges::remove
+#include <cctype>       // for std::isdigit
 #include <format>       // for format
 #include <functional>   // for _Bind_front_t, bind_front
 #include <limits>       // for numeric_limits
@@ -239,35 +240,61 @@ void GeneralInputParser::parseRandomSeed(
     long long      randomSeedll;
     constexpr auto maxRandomSeed = static_cast<long long>(UINT32_MAX);
 
+    auto throwRangeError = [&maxRandomSeed](const auto &value)
+    {
+        throw InputFileException(format(
+            "Random seed value \"{}\" is out of range.\n"
+            "Must be an integer between \"0\" and \"{}\" (inclusive)",
+            value,
+            maxRandomSeed
+        ));
+    };
+
+    auto throwValidityError = [&maxRandomSeed](const auto &value)
+    {
+        throw InputFileException(format(
+            "Random seed value \"{}\" is invalid.\n"
+            "Must be an integer between \"0\" and \"{}\" (inclusive)",
+            value,
+            maxRandomSeed
+        ));
+    };
+
+    std::string_view seedStr = lineElements[2];
+    
+    size_t startPos = 0;
+    if (seedStr[0] == '+' || seedStr[0] == '-')
+    {
+        startPos = 1;
+        if (seedStr.length() == 1)
+        {
+            throwValidityError(seedStr);
+        }
+    }
+    
+    for (size_t i = startPos; i < seedStr.length(); ++i)
+    {
+        if (!std::isdigit(static_cast<unsigned char>(seedStr[i])))
+        {
+            throwValidityError(seedStr);
+        }
+    }
+
     try
     {
         randomSeedll = std::stoll(lineElements[2]);
     }
     catch (const std::invalid_argument &)
     {
-        throw InputFileException(format(
-            "Invalid random seed value \"{}\": not a valid number",
-            lineElements[2]
-        ));
+        throwValidityError(lineElements[2]);
     }
     catch (const std::out_of_range &)
     {
-        throw InputFileException(format(
-            "Random seed value {} exceeds maximum allowed value of {}",
-            lineElements[2],
-            maxRandomSeed
-        ));
+        throwRangeError(lineElements[2]);
     }
 
-    if (randomSeedll < 0)
-        throw InputFileException("Random seed value cannot be negative");
-
-    if (randomSeedll > maxRandomSeed)
-        throw InputFileException(format(
-            "Random seed value {} exceeds maximum allowed value of {}",
-            randomSeedll,
-            maxRandomSeed
-        ));
+    if (randomSeedll < 0 || randomSeedll > maxRandomSeed)
+        throwRangeError(randomSeedll);
 
     const auto randomSeed = static_cast<std::uint_fast32_t>(randomSeedll);
 
