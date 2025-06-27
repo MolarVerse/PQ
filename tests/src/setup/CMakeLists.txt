@@ -11,6 +11,7 @@ set(source_files
     testIntraNonBondedSetup.cpp
     testQMSetup.cpp
     testQMSetupAse.cpp
+    testRandomNumberGeneratorSetup.cpp
 )
 
 foreach(source_file ${source_files})
