@@ -139,8 +139,7 @@ void QMSetup::setupQMMethodMace()
             throw InputFileException(
                 std::format(
                     "The '{}' model size is only compatible with the '{}' "
-                    "model "
-                    "type.",
+                    "model type.",
                     string(modelSize),
                     string(MaceModelType::MACE_MP)
                 )
