@@ -1,6 +1,6 @@
 # PQ
 
-[![BUILD](https://github.com/MolarVerse/PQ/actions/workflows/ci_debug.yml/badge.svg?branch=main)](https://github.com/MolarVerse/PQ/actions/workflows/ci_debug.yml)
+[![BUILD](https://github.com/MolarVerse/PQ/actions/workflows/ci_build.yml/badge.svg)](https://github.com/MolarVerse/PQ/actions/workflows/ci_build.yml)
 [![codecov](https://codecov.io/gh/MolarVerse/PQ/branch/main/graph/badge.svg?token=5WERM83FI0)](https://codecov.io/gh/MolarVerse/PQ)
 [![Docs](https://github.com/MolarVerse/PQ/actions/workflows/jekyll-gh-pages.yml/badge.svg)](https://MolarVerse.github.io/PQ/)
 
