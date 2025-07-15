@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file.
 
 - Index 0 is now correctly out of bounds in topology file
 
+### CI
+
+- CI workflow for macOS architecture removed
+
 <!-- insertion marker -->
 ## [v0.6.0](https://github.com/MolarVerse/PQ/releases/tag/v0.6.0) - 2025-04-02
 
