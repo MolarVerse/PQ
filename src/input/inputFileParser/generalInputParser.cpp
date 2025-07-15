@@ -267,9 +267,7 @@ void GeneralInputParser::parseRandomSeed(
     {
         startPos = 1;
         if (seedStr.length() == 1)
-        {
             throwValidityError(seedStr);
-        }
     }
     
     for (size_t i = startPos; i < seedStr.length(); ++i)
