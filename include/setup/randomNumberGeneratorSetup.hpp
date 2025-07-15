@@ -39,10 +39,10 @@ namespace setup
     class RandomNumberGeneratorSetup
     {
        private:
-        pq::QMMDEngine &_engine;
+        pq::Engine &_engine;
 
        public:
-        explicit RandomNumberGeneratorSetup(pq::QMMDEngine &engine);
+        explicit RandomNumberGeneratorSetup(pq::Engine &engine);
 
         void setup();
         void setupWriteInfo() const;

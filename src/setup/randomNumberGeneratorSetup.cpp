@@ -22,7 +22,7 @@
 
 #include "randomNumberGeneratorSetup.hpp"
 
-#include "qmmdEngine.hpp"        // for QMMDEngine
+#include "engine.hpp"            // for Engine
 #include "settings.hpp"          // for Settings
 #include "stringUtilities.hpp"   // for toLowerCopy
 
@@ -39,9 +39,7 @@ void setup::setupRandomNumberGenerator(Engine &engine)
 {
     engine.getLogOutput().writeSetup("Random Number Generator");
 
-    RandomNumberGeneratorSetup randomNumberGeneratorSetup(
-        dynamic_cast<QMMDEngine &>(engine)
-    );
+    RandomNumberGeneratorSetup randomNumberGeneratorSetup(engine);
     randomNumberGeneratorSetup.setup();
 }
 
@@ -50,7 +48,7 @@ void setup::setupRandomNumberGenerator(Engine &engine)
  *
  * @param engine
  */
-RandomNumberGeneratorSetup::RandomNumberGeneratorSetup(QMMDEngine &engine)
+RandomNumberGeneratorSetup::RandomNumberGeneratorSetup(Engine &engine)
     : _engine(engine)
 {
 }
