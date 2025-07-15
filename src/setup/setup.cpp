@@ -89,8 +89,7 @@ void setup::setupRequestedJob(const std::string &inputFileName, Engine &engine)
             throw UserInputException(
                 std::format(
                     "Molecular Dynamics job type {} selected. Please set the "
-                    "time "
-                    "step in the input file.",
+                    "time step in the input file.",
                     string(Settings::getJobtype())
                 )
             );

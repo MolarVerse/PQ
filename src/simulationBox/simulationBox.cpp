@@ -187,9 +187,7 @@ void SimulationBox::setupMMOnlyAtoms(const std::vector<int>& atomIndices)
             throw UserInputException(
                 std::format(
                     "Ambiguous atom index {} - atom is already in QM only list "
-                    "- "
-                    "cannot be in MM only "
-                    "list",
+                    "- cannot be in MM only list",
                     index
                 )
             );
