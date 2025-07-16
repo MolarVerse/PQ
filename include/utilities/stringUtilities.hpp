@@ -51,6 +51,7 @@ namespace utilities
     void addSpaces(std::string &, const std::string &, const size_t);
 
     bool fileExists(const std::string &);
+    bool keywordToBool(const pq::strings &);
 
 }   // namespace utilities
 

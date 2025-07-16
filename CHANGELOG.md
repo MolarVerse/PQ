@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## Next Release
 
+### Internal
+
+- added function to check boolean strings in input file
+
 ### Bug Fixes
 
 - Index 0 is now correctly out of bounds in topology file
