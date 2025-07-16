@@ -64,12 +64,10 @@ void MaxwellBoltzmann::initializeVelocities(SimulationBox &simBox)
 
         const auto stddev = ::sqrt(kb * temp / mass) / _VELOCITY_UNIT_TO_SI_;
 
-        std::normal_distribution<double> distribution{0.0, stddev};
-
         atom->setVelocity(
-            {distribution(_generator),
-             distribution(_generator),
-             distribution(_generator)}
+            {_randomNumberGenerator.getNormalDistribution(0.0, stddev),
+             _randomNumberGenerator.getNormalDistribution(0.0, stddev),
+             _randomNumberGenerator.getNormalDistribution(0.0, stddev)}
         );
     };
 

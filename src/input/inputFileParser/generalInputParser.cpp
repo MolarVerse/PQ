@@ -23,8 +23,12 @@
 #include "generalInputParser.hpp"
 
 #include <algorithm>    // for ranges::remove
+#include <cctype>       // for std::isdigit
+#include <cstdint>      // for uint_fast32_t and UINT32_MAX
 #include <format>       // for format
 #include <functional>   // for _Bind_front_t, bind_front
+#include <limits>       // for numeric_limits
+#include <stdexcept>    // for out_of_range and invalid_argument
 
 #include "engine.hpp"       // for Engine
 #include "exceptions.hpp"   // for InputFileException, customException
@@ -40,6 +44,7 @@ using namespace settings;
 using namespace utilities;
 using namespace customException;
 using namespace engine;
+using std::format;
 
 /**
  * @brief Construct a new Input File Parser General:: Input File Parser General
@@ -67,6 +72,12 @@ GeneralInputParser::GeneralInputParser(Engine &engine) : InputFileParser(engine)
     addKeyword(
         std::string("floating_point_type"),
         bind_front(&GeneralInputParser::parseFloatingPointType, this),
+        false
+    );
+
+    addKeyword(
+        std::string("random_seed"),
+        bind_front(&GeneralInputParser::parseRandomSeed, this),
         false
     );
 }
@@ -209,4 +220,62 @@ void GeneralInputParser::parseFloatingPointType(
             "Possible values are: float, double",
             lineElements[2]
         ));
+}
+
+/**
+ * @brief parse random seed value for PRNG
+ *
+ * @details value not set as default
+ *
+ * @param lineElements
+ *
+ * @throws InputFileException if random seed value is invalid, negative, or
+ * exceeds uint_fast32_t range
+ */
+void GeneralInputParser::parseRandomSeed(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+
+    constexpr auto maxRandomSeed = static_cast<long long>(UINT32_MAX);
+
+    auto throwRangeError = [&maxRandomSeed](const auto &value)
+    {
+        throw InputFileException(format(
+            "Random seed value \"{}\" is out of range.\n"
+            "Must be an integer between \"0\" and \"{}\" (inclusive)",
+            value,
+            maxRandomSeed
+        ));
+    };
+
+    auto throwValidityError = [&maxRandomSeed](const auto &value)
+    {
+        throw InputFileException(format(
+            "Random seed value \"{}\" is invalid.\n"
+            "Must be an integer between \"0\" and \"{}\" (inclusive)",
+            value,
+            maxRandomSeed
+        ));
+    };
+
+    std::uint_fast32_t randomSeed;
+
+    try
+    {
+        randomSeed = utilities::stringToUintFast32t(lineElements[2]);
+    }
+    catch (const std::invalid_argument &)
+    {
+        throwValidityError(lineElements[2]);
+    }
+    catch (const std::out_of_range &)
+    {
+        throwRangeError(lineElements[2]);
+    }
+
+    Settings::setIsRandomSeedSet(true);
+    Settings::setRandomSeed(randomSeed);
 }

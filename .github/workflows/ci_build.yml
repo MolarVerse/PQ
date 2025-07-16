@@ -55,7 +55,7 @@ jobs:
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=${{ matrix.build }} ..
-          make -j
+          make -j2
           make test
         env:
           CC: gcc-13

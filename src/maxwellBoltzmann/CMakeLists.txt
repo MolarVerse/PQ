@@ -20,6 +20,7 @@ target_link_libraries(maxwellBoltzmann
     simulationBox
     settings
     resetKinetics
+    randomNumberGenerator
 )
 
 install(TARGETS maxwellBoltzmann

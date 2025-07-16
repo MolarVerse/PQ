@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Enhancements
 
+- new random_seed keyword for reproducibility
 - QM loop time limit info gets printed to the .log file
 - QM loop time limit default value is set to 3600 (1 hour)
 

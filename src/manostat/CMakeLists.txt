@@ -18,6 +18,7 @@ target_link_libraries(manostat
     linearAlgebra
     settings
     timings
+    randomNumberGenerator
 )
 
 install(TARGETS manostat

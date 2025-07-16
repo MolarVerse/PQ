@@ -20,33 +20,33 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MAXWELL_BOLTZMANN_HPP_
+#ifndef _RANDOM_NUMBER_GENERATOR_HPP_
 
-#define _MAXWELL_BOLTZMANN_HPP_
+#define _RANDOM_NUMBER_GENERATOR_HPP_
 
-#include "randomNumberGenerator.hpp"   // for RandomNumberGenerator
-#include "typeAliases.hpp"
+#include <random>   // for std::random_device and std::mt19937
 
-namespace maxwellBoltzmann
+namespace randomNumberGenerator
 {
     /**
-     * @class MaxwellBoltzmann
+     * @class RandomNumberGenerator
      *
-     * @brief class to initialize velocities of particles with a random maxwell
-     * boltzmann distribution
-     *
-     * @link https://www.biodiversitylibrary.org/item/53795#page/33/mode/1up
-     * @link https://www.biodiversitylibrary.org/item/20012#page/37/mode/1up
+     * @brief class to handle generation of random numbers
      *
      */
-    class MaxwellBoltzmann
+    class RandomNumberGenerator
     {
        private:
-        randomNumberGenerator::RandomNumberGenerator _randomNumberGenerator{};
+        std::random_device _randomDevice{};
+        std::mt19937       _generator;
 
        public:
-        void initializeVelocities(pq::SimBox &);
-    };
-}   // namespace maxwellBoltzmann
+        RandomNumberGenerator();
 
-#endif   // _MAXWELL_BOLTZMANN_HPP_
+        double getNormalDistribution(double mean, double stddev);
+        double getUniformRealDistribution(double min, double max);
+    };
+
+}   // namespace randomNumberGenerator
+
+#endif   // _RANDOM_NUMBER_GENERATOR_HPP_

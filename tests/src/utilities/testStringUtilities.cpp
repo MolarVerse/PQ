@@ -22,16 +22,18 @@
 
 #include <gtest/gtest.h>   // for Test, TestInfo (ptr only), EXPECT_EQ
 
-#include <cstdio>    // for remove
-#include <fstream>   // for ofstream
-#include <string>    // for string, allocator
-#include <vector>    // for vector
+#include <cstdint>     // for UINT32_MAX
+#include <cstdio>      // for remove
+#include <fstream>     // for ofstream
+#include <stdexcept>   // for out_of_range and invalid_argument
+#include <string>      // for string, allocator
+#include <vector>      // for vector
 
 #include "exceptions.hpp"        // for InputFileException
 #include "gmock/gmock.h"         // for ElementsAre, MakePredicateFormatter
 #include "gtest/gtest.h"         // for AssertionResult, Message, TestPartResult
 #include "stringUtilities.hpp"   // for getLineCommands, splitString, fileExists
-#include "throwWithMessage.hpp"   // for ASSERT_THROW_MSG
+#include "throwWithMessage.hpp"  // for EXPECT_THROW_MSG and ASSERT_THROW_MSG
 
 /**
  * @brief removeComments test by comment character
@@ -175,4 +177,86 @@ TEST(TestStringUtilities, fileExists)
     EXPECT_TRUE(utilities::fileExists(file));
     EXPECT_FALSE(utilities::fileExists("testFile2.txt"));
     std::remove(file.c_str());
+}
+
+/**
+ * @brief test stringToUintFast32t function
+ *
+ */
+TEST(TestStringUtilities, stringToUintFast32t)
+{
+    std::string str = "0";
+    EXPECT_EQ(0, utilities::stringToUintFast32t(str));
+
+    str = "+43";
+    EXPECT_EQ(43, utilities::stringToUintFast32t(str));
+
+    str = std::to_string(UINT32_MAX);
+    EXPECT_EQ(UINT32_MAX, utilities::stringToUintFast32t(str));
+
+    constexpr auto maxValue = UINT32_MAX;
+
+    str = std::to_string(static_cast<long long>(UINT32_MAX) + 1);
+    EXPECT_THROW_MSG(
+        utilities::stringToUintFast32t(str),
+        std::out_of_range,
+        std::format(
+            "The number has to be an integer between \"0\" and \"{}\" "
+            "(inclusive)",
+            maxValue
+        )
+    );
+
+    str = "-1";
+    EXPECT_THROW_MSG(
+        utilities::stringToUintFast32t(str),
+        std::out_of_range,
+        std::format(
+            "The number has to be an integer between \"0\" and \"{}\" "
+            "(inclusive)",
+            maxValue
+        )
+    );
+
+    str = "text";
+    EXPECT_THROW_MSG(
+        utilities::stringToUintFast32t(str),
+        std::invalid_argument,
+        std::format("String \"{}\" is not a valid unsigned integer", str)
+    );
+
+    str = "3.14159";
+    EXPECT_THROW_MSG(
+        utilities::stringToUintFast32t(str),
+        std::invalid_argument,
+        std::format("String \"{}\" is not a valid unsigned integer", str)
+    );
+
+    str = "1e3";
+    EXPECT_THROW_MSG(
+        utilities::stringToUintFast32t(str),
+        std::invalid_argument,
+        std::format("String \"{}\" is not a valid unsigned integer", str)
+    );
+
+    str = "+";
+    EXPECT_THROW_MSG(
+        utilities::stringToUintFast32t(str),
+        std::invalid_argument,
+        std::format("String \"{}\" is not a valid unsigned integer", str)
+    );
+
+    str = "-";
+    EXPECT_THROW_MSG(
+        utilities::stringToUintFast32t(str),
+        std::invalid_argument,
+        std::format("String \"{}\" is not a valid unsigned integer", str)
+    );
+
+    str = "";
+    EXPECT_THROW_MSG(
+        utilities::stringToUintFast32t(str),
+        std::invalid_argument,
+        std::format("Cannot convert empty string to unsigned integer", str)
+    );
 }

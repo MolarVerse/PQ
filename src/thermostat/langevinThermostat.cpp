@@ -106,9 +106,9 @@ void LangevinThermostat::applyLangevin(SimulationBox &simBox)
         const auto propagationFactor = 0.5 * timeStep * _FS_TO_S_ / mass;
 
         const Vec3D randomFactor = {
-            std::normal_distribution<double>(0.0, 1.0)(_generator),
-            std::normal_distribution<double>(0.0, 1.0)(_generator),
-            std::normal_distribution<double>(0.0, 1.0)(_generator)
+            _randomNumberGenerator.getNormalDistribution(0.0, 1.0),
+            _randomNumberGenerator.getNormalDistribution(0.0, 1.0),
+            _randomNumberGenerator.getNormalDistribution(0.0, 1.0)
         };
 
         const auto velocity = atom->getVelocity();

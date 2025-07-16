@@ -20,33 +20,34 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MAXWELL_BOLTZMANN_HPP_
+#ifndef _RANDOM_NUMBER_GENERATOR_SETUP_HPP_
 
-#define _MAXWELL_BOLTZMANN_HPP_
+#define _RANDOM_NUMBER_GENERATOR_SETUP_HPP_
 
-#include "randomNumberGenerator.hpp"   // for RandomNumberGenerator
 #include "typeAliases.hpp"
 
-namespace maxwellBoltzmann
+namespace setup
 {
+    void setupRandomNumberGenerator(pq::Engine &);
+
     /**
-     * @class MaxwellBoltzmann
+     * @class RandomNumberGeneratorSetup
      *
-     * @brief class to initialize velocities of particles with a random maxwell
-     * boltzmann distribution
-     *
-     * @link https://www.biodiversitylibrary.org/item/53795#page/33/mode/1up
-     * @link https://www.biodiversitylibrary.org/item/20012#page/37/mode/1up
+     * @brief Setup random number generator
      *
      */
-    class MaxwellBoltzmann
+    class RandomNumberGeneratorSetup
     {
        private:
-        randomNumberGenerator::RandomNumberGenerator _randomNumberGenerator{};
+        pq::Engine &_engine;
 
        public:
-        void initializeVelocities(pq::SimBox &);
-    };
-}   // namespace maxwellBoltzmann
+        explicit RandomNumberGeneratorSetup(pq::Engine &engine);
 
-#endif   // _MAXWELL_BOLTZMANN_HPP_
+        void setup();
+        void setupWriteInfo() const;
+    };
+
+}   // namespace setup
+
+#endif   // _RANDOM_NUMBER_GENERATOR_SETUP_HPP_
