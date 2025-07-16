@@ -606,18 +606,5 @@ void OutputInputParser::parseOverwriteOutput(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto overwrite = toLowerCopy(lineElements[2]);
-
-    if ("true" == overwrite || "yes" == overwrite || "on" == overwrite)
-        OutputFileSettings::setOverwriteOutputFiles(true);
-
-    else if ("false" == overwrite || "no" == overwrite || "off" == overwrite)
-        OutputFileSettings::setOverwriteOutputFiles(false);
-
-    else
-        throw InputFileException(std::format(
-            "Invalid overwrite_output value \"{}\" in input file.\n"
-            "Possible values are: true, yes, on, false, no, off",
-            lineElements[2]
-        ));
+    OutputFileSettings::setOverwriteOutputFiles(keywordToBool(lineElements));
 }

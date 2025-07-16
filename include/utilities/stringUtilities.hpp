@@ -53,6 +53,7 @@ namespace utilities
     std::uint_fast32_t stringToUintFast32t(const std::string &);
 
     bool fileExists(const std::string &);
+    bool keywordToBool(const pq::strings &);
 
 }   // namespace utilities
 
