@@ -248,21 +248,19 @@ void utilities::addSpaces(
  */
 std::uint_fast32_t utilities::stringToUintFast32t(const std::string &str)
 {
+    if (str.empty())
+        throw std::invalid_argument(
+            "Cannot convert empty string to unsigned integer"
+        );
+
     size_t startPos = 0;
-    if (str[0] == '+' || str[0] == '-')
-    {
+    if ((str[0] == '+' || str[0] == '-') && str.length() > 1)
         startPos = 1;
-        if (str.length() == 1)
-            throw std::invalid_argument(std::format(
-                "String \"{}\" cannot be converted to uint_fast32_t",
-                str[1]
-            ));
-    }
 
     for (size_t i = startPos; i < str.length(); ++i)
         if (!std::isdigit(static_cast<unsigned char>(str[i])))
             throw std::invalid_argument(std::format(
-                "String \"{}\" can only contain numbers and a sign \"+/-\"",
+                "String \"{}\" is not a valid unsigned integer",
                 str
             ));
 

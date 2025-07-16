@@ -163,8 +163,8 @@ TEST_F(TestInputFileReader, parseFloatingPointType)
  */
 TEST_F(TestInputFileReader, parseRandomSeed)
 {
-    GeneralInputParser       parser(*_engine);
-    
+    GeneralInputParser parser(*_engine);
+
     std::vector<std::string> lineElements = {"random_seed", "=", "0"};
     parser.parseRandomSeed(lineElements, 0);
     EXPECT_EQ(Settings::isRandomSeedSet(), true);
@@ -239,14 +239,14 @@ TEST_F(TestInputFileReader, parseRandomSeed)
     );
     EXPECT_EQ(Settings::isRandomSeedSet(), false);
 
-    lineElements = {"random_seed", "=", "10e3"};
+    lineElements = {"random_seed", "=", "1e3"};
     EXPECT_THROW_MSG(
         parser.parseRandomSeed(lineElements, 0),
         customException::InputFileException,
         std::format(
             "Random seed value \"{}\" is invalid.\n"
             "Must be an integer between \"0\" and \"{}\" (inclusive)",
-            "10e3",
+            "1e3",
             UINT32_MAX
         )
     );
