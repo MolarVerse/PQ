@@ -28,14 +28,12 @@
 #include "randomNumberGenerator.hpp"   // for RandomNumberGenerator
 #include "typeAliases.hpp"             // for PhysicalData, SimulationBox
 
-using namespace randomNumberGenerator;
-
 namespace manostat
 {
     class MonteCarloManostat : public Manostat
     {
        private:
-        RandomNumberGenerator _randomNumberGenerator{};
+        randomNumberGenerator::RandomNumberGenerator _randomNumberGenerator{};
 
        public:
         explicit MonteCarloManostat() = default;

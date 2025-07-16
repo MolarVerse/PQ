@@ -27,8 +27,6 @@
 #include "randomNumberGenerator.hpp"   // for RandomNumberGenerator
 #include "typeAliases.hpp"
 
-using namespace randomNumberGenerator;
-
 namespace maxwellBoltzmann
 {
     /**
@@ -44,7 +42,7 @@ namespace maxwellBoltzmann
     class MaxwellBoltzmann
     {
        private:
-        RandomNumberGenerator _randomNumberGenerator{};
+        randomNumberGenerator::RandomNumberGenerator _randomNumberGenerator{};
 
        public:
         void initializeVelocities(pq::SimBox &);

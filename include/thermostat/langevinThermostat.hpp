@@ -28,15 +28,13 @@
 #include "thermostat.hpp"
 #include "typeAliases.hpp"
 
-using namespace randomNumberGenerator;
-
 namespace thermostat
 {
 
     class LangevinThermostat : public Thermostat
     {
        private:
-        RandomNumberGenerator _randomNumberGenerator{};
+        randomNumberGenerator::RandomNumberGenerator _randomNumberGenerator{};
 
         double _friction = 0.0;
         double _sigma    = 0.0;

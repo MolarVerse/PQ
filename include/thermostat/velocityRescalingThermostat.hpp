@@ -28,8 +28,6 @@
 #include "thermostat.hpp"
 #include "typeAliases.hpp"
 
-using namespace randomNumberGenerator;
-
 namespace thermostat
 {
     /**
@@ -42,7 +40,7 @@ namespace thermostat
     class VelocityRescalingThermostat : public Thermostat
     {
        private:
-        RandomNumberGenerator _randomNumberGenerator{};
+        randomNumberGenerator::RandomNumberGenerator _randomNumberGenerator{};
 
         double _tau = 0.0;
 

@@ -28,8 +28,6 @@
 #include "randomNumberGenerator.hpp"   // for RandomNumberGenerator
 #include "typeAliases.hpp"             // for PhysicalData, SimulationBox
 
-using namespace randomNumberGenerator;
-
 namespace manostat
 {
     /**
@@ -41,7 +39,7 @@ namespace manostat
     class StochasticRescalingManostat : public Manostat
     {
        protected:
-        RandomNumberGenerator _randomNumberGenerator{};
+        randomNumberGenerator::RandomNumberGenerator _randomNumberGenerator{};
 
         double _tau;
         double _compressibility;
