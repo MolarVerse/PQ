@@ -24,11 +24,13 @@
 
 #include <algorithm>    // for __for_each_fn
 #include <cctype>       // for isspace
+#include <cstdint>      // for uint_fast32_t and UINT_FAST32_MAX
 #include <format>       // for format
 #include <fstream>      // IWYU pragma: keep for basic_istream, ifstream
 #include <functional>   // for identity
 #include <ranges>   // for begin, end, operator|, views::split, views::transform
 #include <sstream>       // IWYU pragma: keep for basic_stringstream
+#include <stdexcept>     // for out_of_range and invalid_argument
 #include <string>        // for string
 #include <string_view>   // for string_view
 #include <vector>        // for vector
@@ -265,7 +267,7 @@ std::uint_fast32_t utilities::stringToUintFast32t(const std::string &str)
             ));
 
     long long      valueLL{std::stoll(str)};
-    constexpr auto maxValue = static_cast<long long>(UINT32_MAX);
+    constexpr auto maxValue = static_cast<long long>(UINT_FAST32_MAX);
 
     if (valueLL < 0 || valueLL > maxValue)
         throw std::out_of_range(std::format(
