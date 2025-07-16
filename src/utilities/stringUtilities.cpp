@@ -24,7 +24,7 @@
 
 #include <algorithm>    // for __for_each_fn
 #include <cctype>       // for isspace
-#include <cstdint>      // for uint_fast32_t and UINT_FAST32_MAX
+#include <cstdint>      // for uint_fast32_t and UINT32_MAX
 #include <format>       // for format
 #include <fstream>      // IWYU pragma: keep for basic_istream, ifstream
 #include <functional>   // for identity
@@ -267,11 +267,12 @@ std::uint_fast32_t utilities::stringToUintFast32t(const std::string &str)
             ));
 
     long long      valueLL{std::stoll(str)};
-    constexpr auto maxValue = static_cast<long long>(UINT_FAST32_MAX);
+    constexpr auto maxValue = static_cast<long long>(UINT32_MAX);
 
     if (valueLL < 0 || valueLL > maxValue)
         throw std::out_of_range(std::format(
-            "The number has be an integer between \"0\" and \"{}\" (inclusive)",
+            "The number has to be an integer between \"0\" and \"{}\" "
+            "(inclusive)",
             maxValue
         ));
 

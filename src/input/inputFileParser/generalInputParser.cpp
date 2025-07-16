@@ -24,7 +24,7 @@
 
 #include <algorithm>    // for ranges::remove
 #include <cctype>       // for std::isdigit
-#include <cstdint>      // for uint_fast32_t and UINT_FAST32_MAX
+#include <cstdint>      // for uint_fast32_t and UINT32_MAX
 #include <format>       // for format
 #include <functional>   // for _Bind_front_t, bind_front
 #include <limits>       // for numeric_limits
@@ -239,7 +239,7 @@ void GeneralInputParser::parseRandomSeed(
 {
     checkCommand(lineElements, lineNumber);
 
-    constexpr auto maxRandomSeed = static_cast<long long>(UINT_FAST32_MAX);
+    constexpr auto maxRandomSeed = static_cast<long long>(UINT32_MAX);
 
     auto throwRangeError = [&maxRandomSeed](const auto &value)
     {
