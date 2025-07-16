@@ -136,14 +136,12 @@ void QMSetup::setupQMMethodMace()
         if (modelSize != MaceModelSize::SMALL &&
             modelSize != MaceModelSize::MEDIUM &&
             modelSize != MaceModelSize::LARGE)
-            throw InputFileException(
-                std::format(
-                    "The '{}' model size is only compatible with the '{}' "
-                    "model type.",
-                    string(modelSize),
-                    string(MaceModelType::MACE_MP)
-                )
-            );
+            throw InputFileException(std::format(
+                "The '{}' model size is only compatible with the '{}' "
+                "model type.",
+                string(modelSize),
+                string(MaceModelType::MACE_MP)
+            ));
     }
 
     if (QMSettings::getMaceModelSize() == MaceModelSize::CUSTOM &&
