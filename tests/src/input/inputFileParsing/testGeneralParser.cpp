@@ -164,10 +164,18 @@ TEST_F(TestInputFileReader, parseFloatingPointType)
 TEST_F(TestInputFileReader, parseRandomSeed)
 {
     GeneralInputParser       parser(*_engine);
+    
     std::vector<std::string> lineElements = {"random_seed", "=", "0"};
     parser.parseRandomSeed(lineElements, 0);
     EXPECT_EQ(Settings::isRandomSeedSet(), true);
     EXPECT_EQ(Settings::getRandomSeed(), 0);
+    Settings::setIsRandomSeedSet(false);
+
+    lineElements = {"random_seed", "=", "+73"};
+    parser.parseRandomSeed(lineElements, 0);
+    EXPECT_EQ(Settings::isRandomSeedSet(), true);
+    EXPECT_EQ(Settings::getRandomSeed(), 73);
+    Settings::setIsRandomSeedSet(false);
 
     lineElements = {"random_seed", "=", std::to_string(UINT32_MAX)};
     parser.parseRandomSeed(lineElements, 0);
