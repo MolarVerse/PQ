@@ -416,7 +416,8 @@ TEST_F(TestInputFileReader, parseOverwriteOutput)
     ASSERT_THROW_MSG(
         parser.parseOverwriteOutput({"overwrite_output", "=", "notABool"}, 0),
         customException::InputFileException,
-        "Invalid overwrite_output value \"notABool\" in input file.\n"
-        "Possible values are: true, yes, on, false, no, off"
+        "Invalid boolean option \"notABool\" for keyword \"overwrite_output\" "
+        "in input file.\n"
+        "Possible values are: on, yes, true, off, no, false."
     )
 }

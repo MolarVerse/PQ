@@ -248,20 +248,7 @@ void QMInputParser::parseDispersion(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto dispersion = toLowerCopy(lineElements[2]);
-
-    if ("true" == dispersion || "yes" == dispersion || "on" == dispersion)
-        QMSettings::setUseDispersionCorrection(true);
-
-    else if ("false" == dispersion || "no" == dispersion || "off" == dispersion)
-        QMSettings::setUseDispersionCorrection(false);
-
-    else
-        throw InputFileException(std::format(
-            "Invalid dispersion \"{}\" in input file.\n"
-            "Possible values are: true, yes, on, false, no, off",
-            lineElements[2]
-        ));
+    QMSettings::setUseDispersionCorrection(keywordToBool(lineElements));
 }
 
 /**
@@ -451,22 +438,7 @@ void QMInputParser::parseThirdOrder(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto third_order = toLowerCopy(lineElements[2]);
-
-    if ("on" == third_order || "yes" == third_order || "true" == third_order)
-        QMSettings::setUseThirdOrderDftb(true);
-
-    else if ("off" == third_order || "no" == third_order ||
-             "false" == third_order)
-        QMSettings::setUseThirdOrderDftb(false);
-
-    else
-        throw InputFileException(std::format(
-            "Invalid DFTB third_order request \"{}\" in input file.\n"
-            "Possible values are: on, yes, true, off, no, false",
-            lineElements[2]
-        ));
-
+    QMSettings::setUseThirdOrderDftb(keywordToBool(lineElements));
     QMSettings::setIsThirdOrderDftbSet(true);
 }
 
