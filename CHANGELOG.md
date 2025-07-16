@@ -4,13 +4,18 @@ All notable changes to this project will be documented in this file.
 
 ## Next Release
 
-### Internal
+### Enhancements
 
-- added function to check boolean strings in input file
+- QM loop time limit info gets printed to the .log file
+- QM loop time limit default value is set to 3600 (1 hour)
 
 ### Bug Fixes
 
 - Index 0 is now correctly out of bounds in topology file
+
+### Internal
+
+- added function to check boolean strings in input file
 
 ### CI
 
