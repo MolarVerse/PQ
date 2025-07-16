@@ -233,3 +233,45 @@ void utilities::addSpaces(
             lineNumber
         ));
 }
+
+/**
+ * @brief converts a string to an uint_fast32_t
+ *
+ * @param str
+ *
+ * @throw invalid_argument if the string is not valid for conversion to
+ * uint_fast32_t
+ * @throw out_of_range if number to be converted is negative or greater than an
+ * uint32
+ */
+std::uint_fast32_t utilities::stringToUintFast32t(const std::string &str)
+{
+    size_t startPos = 0;
+    if (str[0] == '+' || str[0] == '-')
+    {
+        startPos = 1;
+        if (str.length() == 1)
+            throw std::invalid_argument(std::format(
+                "String \"{}\" cannot be converted to uint_fast32_t",
+                str[1]
+            ));
+    }
+
+    for (size_t i = startPos; i < str.length(); ++i)
+        if (!std::isdigit(static_cast<unsigned char>(str[i])))
+            throw std::invalid_argument(std::format(
+                "String \"{}\" can only contain numbers and a sign \"+/-\"",
+                str
+            ));
+
+    long long      valueLL{std::stoll(str)};
+    constexpr auto maxValue = static_cast<long long>(UINT32_MAX);
+
+    if (valueLL < 0 || valueLL > maxValue)
+        throw std::out_of_range(std::format(
+            "The number has be an integer between \"0\" and \"{}\" (inclusive)",
+            maxValue
+        ));
+
+    return static_cast<std::uint_fast32_t>(valueLL);
+}

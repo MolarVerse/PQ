@@ -237,7 +237,6 @@ void GeneralInputParser::parseRandomSeed(
 {
     checkCommand(lineElements, lineNumber);
 
-    long long      randomSeedll;
     constexpr auto maxRandomSeed = static_cast<long long>(UINT32_MAX);
 
     auto throwRangeError = [&maxRandomSeed](const auto &value)
@@ -260,23 +259,11 @@ void GeneralInputParser::parseRandomSeed(
         ));
     };
 
-    std::string_view seedStr = lineElements[2];
-    
-    size_t startPos = 0;
-    if (seedStr[0] == '+' || seedStr[0] == '-')
-    {
-        startPos = 1;
-        if (seedStr.length() == 1)
-            throwValidityError(seedStr);
-    }
-    
-    for (size_t i = startPos; i < seedStr.length(); ++i)
-        if (!std::isdigit(static_cast<unsigned char>(seedStr[i])))
-            throwValidityError(seedStr);
+    std::uint_fast32_t randomSeed;
 
     try
     {
-        randomSeedll = std::stoll(lineElements[2]);
+        randomSeed = utilities::stringToUintFast32t(lineElements[2]);
     }
     catch (const std::invalid_argument &)
     {
@@ -286,11 +273,6 @@ void GeneralInputParser::parseRandomSeed(
     {
         throwRangeError(lineElements[2]);
     }
-
-    if (randomSeedll < 0 || randomSeedll > maxRandomSeed)
-        throwRangeError(randomSeedll);
-
-    const auto randomSeed = static_cast<std::uint_fast32_t>(randomSeedll);
 
     Settings::setIsRandomSeedSet(true);
     Settings::setRandomSeed(randomSeed);
