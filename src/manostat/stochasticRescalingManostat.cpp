@@ -119,13 +119,6 @@ void StochasticRescalingManostat::applyManostat(
 
     const auto mu = calculateMu(simBox.getVolume());
 
-    simBox.scaleBox(mu);
-
-    physicalData.setVolume(simBox.getVolume());
-    physicalData.setDensity(simBox.getDensity());
-
-    simBox.checkCoulRadiusCutOff(ExceptionType::MANOSTATEXCEPTION);
-
     auto scalePositions = [&mu, &simBox](auto &molecule)
     { molecule.scale(mu, simBox.getBox()); };
 
@@ -133,7 +126,22 @@ void StochasticRescalingManostat::applyManostat(
     { atom->scaleVelocityOrthogonalSpace(inverse(mu), simBox.getBox()); };
 
     std::ranges::for_each(simBox.getMolecules(), scalePositions);
+
     std::ranges::for_each(simBox.getAtoms(), scaleVelocities);
+
+    simBox.scaleBox(mu);
+
+    physicalData.setVolume(simBox.getVolume());
+    physicalData.setDensity(simBox.getDensity());
+
+    simBox.checkCoulRadiusCutOff(ExceptionType::MANOSTATEXCEPTION);
+
+    simBox.calculateCenterOfMass();
+
+    auto decenterPositions = [&simBox](auto &molecule)
+    { molecule.decenter(simBox.getBox()); };
+
+    std::ranges::for_each(simBox.getMolecules(), decenterPositions);
 
     stopTimingsSection("Stochastic Rescaling");
 }
@@ -159,7 +167,9 @@ tensor3D StochasticRescalingManostat::calculateMu(const double volume)
 
     const auto deltaP = _targetPressure - _pressure;
 
-    return diagonalMatrix(::exp(-compress * (deltaP) + stochasticFactor / 3.0));
+    return diagonalMatrix(
+        ::exp(-compress * (deltaP) / 3.0 + stochasticFactor / 3.0)
+    );
 }
 
 /**

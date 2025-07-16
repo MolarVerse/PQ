@@ -40,14 +40,14 @@ using namespace settings;
  *
  * @param name
  */
-Molecule::Molecule(const std::string_view name) : _name(name){};
+Molecule::Molecule(const std::string_view name) : _name(name) {}
 
 /**
  * @brief Construct a new Molecule:: Molecule object
  *
  * @param moltype
  */
-Molecule::Molecule(const size_t moltype) : _moltype(moltype){};
+Molecule::Molecule(const size_t moltype) : _moltype(moltype) {}
 
 /**
  * @brief finds number of different atom types in molecule
@@ -103,6 +103,32 @@ void Molecule::calculateCenterOfMass(const Box &box)
  *
  * @param shiftFactors
  */
+// void Molecule::scale(const tensor3D &shiftTensor, const Box &box)
+// {
+//     auto centerOfMass = _centerOfMass;
+
+//     if (ManostatSettings::getIsotropy() != Isotropy::FULL_ANISOTROPIC)
+//         centerOfMass = box.toOrthoSpace(_centerOfMass);
+
+//     const auto shift = shiftTensor; // * centerOfMass - centerOfMass;
+
+//     auto scaleAtomPosition = [&box, shift](auto atom)
+//     {
+//         auto position = atom->getPosition();
+
+//         if (ManostatSettings::getIsotropy() != Isotropy::FULL_ANISOTROPIC)
+//             position = box.toOrthoSpace(position);
+
+//         position = shift * position;
+
+//         if (ManostatSettings::getIsotropy() != Isotropy::FULL_ANISOTROPIC)
+//             position = box.toSimSpace(position);
+
+//         atom->setPosition(position);
+//     };
+
+//     std::ranges::for_each(_atoms, scaleAtomPosition);
+// }
 void Molecule::scale(const tensor3D &shiftTensor, const Box &box)
 {
     auto centerOfMass = _centerOfMass;
@@ -128,6 +154,41 @@ void Molecule::scale(const tensor3D &shiftTensor, const Box &box)
     };
 
     std::ranges::for_each(_atoms, scaleAtomPosition);
+}
+/**
+ * @brief decenter the positions of the molecule after bringing molecule into
+ * center of mass
+ *
+ * @details decenter has to be done in orthogonal space since pressure scaling
+ * is done in orthogonal space
+ *
+ * @param box
+ */
+void Molecule::decenter(const Box &box)
+{
+    auto centerOfMass = _centerOfMass;
+
+    if (ManostatSettings::getIsotropy() != Isotropy::FULL_ANISOTROPIC)
+        centerOfMass = box.toOrthoSpace(_centerOfMass);
+
+    auto decenterAtomPosition = [&box, centerOfMass](auto atom)
+    {
+        auto position = atom->getPosition();
+
+        if (ManostatSettings::getIsotropy() != Isotropy::FULL_ANISOTROPIC)
+            position = box.toOrthoSpace(position);
+
+        position += centerOfMass;
+
+        if (ManostatSettings::getIsotropy() != Isotropy::FULL_ANISOTROPIC)
+            position = box.toSimSpace(position);
+
+        box.applyPBC(position);
+
+        atom->setPosition(position);
+    };
+
+    std::ranges::for_each(_atoms, decenterAtomPosition);
 }
 
 /**
