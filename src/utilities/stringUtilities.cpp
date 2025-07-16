@@ -83,15 +83,13 @@ std::vector<std::string> utilities::getLineCommands(
             break;
 
         else if (!bool(::isspace(line[static_cast<size_t>(i)])))
-            throw InputFileException(
-                std::format(
-                    "Missing semicolon in input file at line {}",
-                    lineNumber
-                )
-            );
+            throw InputFileException(std::format(
+                "Missing semicolon in input file at line {}",
+                lineNumber
+            ));
     }
 
-    using std::    operator""sv;
+    using std::operator""sv;
     constexpr auto delim{";"sv};
 
     auto transformView = [](auto &&view)
@@ -229,15 +227,13 @@ bool utilities::keywordToBool(const pq::strings &lineElements)
         return false;
 
     else
-        throw InputFileException(
-            std::format(
-                "Invalid boolean option \"{}\" for keyword \"{}\" in input "
-                "file.\n"
-                "Possible values are: on, yes, true, off, no, false.",
-                lineElements[2],
-                lineElements[0]
-            )
-        );
+        throw InputFileException(std::format(
+            "Invalid boolean option \"{}\" for keyword \"{}\" in input "
+            "file.\n"
+            "Possible values are: on, yes, true, off, no, false.",
+            lineElements[2],
+            lineElements[0]
+        ));
 }
 
 /**
@@ -260,12 +256,10 @@ void utilities::addSpaces(
         command.replace(equalSignPos, 1, " " + stringToReplace + " ");
 
     else
-        throw customException::InputFileException(
-            std::format(
-                "Missing \"{}\" in command \"{}\" in line {}",
-                stringToReplace,
-                command,
-                lineNumber
-            )
-        );
+        throw customException::InputFileException(std::format(
+            "Missing \"{}\" in command \"{}\" in line {}",
+            stringToReplace,
+            command,
+            lineNumber
+        ));
 }
