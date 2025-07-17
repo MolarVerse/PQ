@@ -64,13 +64,14 @@ void DFTBPlusRunner::writeCoordsFile(SimulationBox &box)
     const std::string fileName = "coords";
     std::ofstream     coordsFile(fileName);
 
-    coordsFile << std::ranges::distance(box.getQMAtomsNew());
+    coordsFile << distance(box.getQMAtomsNew());
     coordsFile << "  " << (Settings::getJobtype() == JobType::QM_MD ? 'S' : 'C')
                << '\n';
 
     std::vector<std::string> uniqueAtomNames;
+    uniqueAtomNames.reserve(distance(box.getQMAtomsNew()));
     for (const auto &atom : box.getQMAtomsNew())
-        uniqueAtomNames.push_back(atom->getName());
+        uniqueAtomNames.emplace_back(atom->getName());
 
     std::sort(uniqueAtomNames.begin(), uniqueAtomNames.end());
     uniqueAtomNames.erase(
