@@ -33,10 +33,10 @@
 
 #include "atom.hpp"              // for Atom
 #include "exceptions.hpp"        // for InputFileException
+#include "fileSettings.hpp"      // for FileSettings
 #include "physicalData.hpp"      // for PhysicalData
 #include "qmSettings.hpp"        // for QMSettings
 #include "settings.hpp"          // for Settings
-#include "fileSettings.hpp"      // for FileSettings
 #include "simulationBox.hpp"     // for SimulationBox
 #include "stringUtilities.hpp"   // for fileExists
 #include "vector3d.hpp"          // for Vec3D
@@ -64,66 +64,77 @@ void DFTBPlusRunner::writeCoordsFile(SimulationBox &box)
     const std::string fileName = "coords";
     std::ofstream     coordsFile(fileName);
 
-    coordsFile << box.getNumberOfQMAtoms() << "  S\n";
+    coordsFile << std::ranges::distance(box.getQMAtomsNew());
+    coordsFile << "  " << (Settings::getJobtype() == JobType::QM_MD ? 'S' : 'C')
+               << '\n';
 
-    const auto uniqueAtomNames = box.getUniqueQMAtomNames();
+    std::vector<std::string> uniqueAtomNames;
+    for (const auto &atom : box.getQMAtomsNew())
+        uniqueAtomNames.push_back(atom->getName());
+
+    std::sort(uniqueAtomNames.begin(), uniqueAtomNames.end());
+    uniqueAtomNames.erase(
+        std::unique(uniqueAtomNames.begin(), uniqueAtomNames.end()),
+        uniqueAtomNames.end()
+    );
 
     for (const auto &atomName : uniqueAtomNames) coordsFile << atomName << "  ";
 
     coordsFile << "\n";
 
-    for (size_t i = 0, numberOfAtoms = box.getNumberOfQMAtoms();
-         i < numberOfAtoms;
-         ++i)
+    size_t atomIndex = 1;
+    for (const auto &atom : box.getQMAtomsNew())
     {
-        const auto &atom = box.getQMAtom(i);
-
-        const auto iter   = find(uniqueAtomNames, atom.getName());
+        const auto iter   = find(uniqueAtomNames, atom->getName());
         const auto atomId = distance(uniqueAtomNames.begin(), iter) + 1;
 
         coordsFile << std::format(
             "{:5d} {:5d}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
-            i + 1,
+            atomIndex,
             atomId,
-            atom.getPosition()[0],
-            atom.getPosition()[1],
-            atom.getPosition()[2]
+            atom->getPosition()[0],
+            atom->getPosition()[1],
+            atom->getPosition()[2]
         );
+        ++atomIndex;
     }
 
-    const auto boxMatrix = box.getBox().getBoxMatrix();
+    if (Settings::getJobtype() == JobType::QM_MD)
+    {
+        const auto boxMatrix = box.getBox().getBoxMatrix();
 
-    coordsFile << std::format(
-        "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
-        "",
-        0.0,
-        0.0,
-        0.0
-    );
+        coordsFile << std::format(
+            "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
+            "",
+            0.0,
+            0.0,
+            0.0
+        );
 
-    coordsFile << std::format(
-        "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
-        "",
-        boxMatrix[0][0],
-        boxMatrix[1][0],
-        boxMatrix[2][0]
-    );
+        coordsFile << std::format(
+            "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
+            "",
+            boxMatrix[0][0],
+            boxMatrix[1][0],
+            boxMatrix[2][0]
+        );
 
-    coordsFile << std::format(
-        "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
-        "",
-        boxMatrix[0][1],
-        boxMatrix[1][1],
-        boxMatrix[2][1]
-    );
+        coordsFile << std::format(
+            "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
+            "",
+            boxMatrix[0][1],
+            boxMatrix[1][1],
+            boxMatrix[2][1]
+        );
 
-    coordsFile << std::format(
-        "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
-        "",
-        boxMatrix[0][2],
-        boxMatrix[1][2],
-        boxMatrix[2][2]
-    );
+        coordsFile << std::format(
+            "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
+            "",
+            boxMatrix[0][2],
+            boxMatrix[1][2],
+            boxMatrix[2][2]
+        );
+    }
 
     coordsFile.close();
 }
@@ -143,8 +154,12 @@ void DFTBPlusRunner::execute()
 
     const auto reuseCharges = _isFirstExecution ? 1 : 0;
 
-    const auto command = 
-            std::format("{} 0 {} 0 0 0 {}", scriptFile, reuseCharges, FileSettings::getDFTBFileName());
+    const auto command = std::format(
+        "{} 0 {} 0 0 0 {}",
+        scriptFile,
+        reuseCharges,
+        FileSettings::getDFTBFileName()
+    );
     ::system(command.c_str());
 
     _isFirstExecution = false;
