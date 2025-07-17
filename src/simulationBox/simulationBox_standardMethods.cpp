@@ -20,6 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#include <ranges>   // for views::filter
+
+#include "settings.hpp"   // for Settings::getJobtype, JobType
 #include "simulationBox.hpp"
 
 using namespace simulationBox;
@@ -232,6 +235,34 @@ std::vector<std::shared_ptr<Atom>> &SimulationBox::getAtoms() { return _atoms; }
 std::vector<std::shared_ptr<Atom>> &SimulationBox::getQMAtoms()
 {
     return _qmAtoms;
+}
+
+/**
+ * @brief get all QM atoms using range-based filtering
+ *
+ * @return a view/range of QM atoms filtered from all atoms
+ *
+ * @details This function returns a range-based view that filters atoms
+ *          from _atoms based on job type and QMMM criteria. For QM_MD jobs,
+ *          all atoms are considered QM atoms. For other job types, atoms
+ *          are filtered based on their QMMMType.
+ */
+auto SimulationBox::getQMAtomsNew() const
+{
+    return _atoms | std::ranges::views::filter(
+                        [](const auto &atom)
+                        {
+                            if (settings::Settings::getJobtype() ==
+                                settings::JobType::QM_MD)
+                                return true;
+
+                            else if (atom->getQMMMType() == QMMMType::QM)
+                                return true;
+
+                            else
+                                return atom->isQMOnly();
+                        }
+                    );
 }
 
 /**

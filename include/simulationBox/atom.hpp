@@ -33,6 +33,28 @@
 namespace simulationBox
 {
     /**
+     * @class enum QMMMType
+     */
+    enum class QMMMType : size_t
+    {
+        NOT_QMMM,
+        QM,
+        MM
+    };
+
+    /**
+     * @class enum QMMMZone
+     */
+    enum class QMMMZone : size_t
+    {
+        NOT_QMMM,
+        QMCORE,
+        QMLAYER,
+        QMSMOOTHING,
+        MMZONE
+    };
+
+    /**
      * @class Atom
      *
      * @brief containing all information about an atom
@@ -48,6 +70,9 @@ namespace simulationBox
 
         size_t _externalAtomType;
         size_t _atomType;
+
+        QMMMType _qmmmType = QMMMType::NOT_QMMM;
+        QMMMZone _qmmmZone = QMMMZone::NOT_QMMM;
 
         bool _isQMOnly = false;
         bool _isMMOnly = false;
@@ -100,6 +125,9 @@ namespace simulationBox
         [[nodiscard]] bool isQMOnly() const;
         [[nodiscard]] bool isMMOnly() const;
 
+        [[nodiscard]] QMMMType getQMMMType() const;
+        [[nodiscard]] QMMMZone getQMMMZone() const;
+
         [[nodiscard]] std::string getName() const;
         [[nodiscard]] std::string getAtomTypeName() const;
 
@@ -126,6 +154,9 @@ namespace simulationBox
 
         void setQMOnly(const bool isQMOnly);
         void setMMOnly(const bool isMMOnly);
+
+        void setQMMMType(const QMMMType qmmmType);
+        void setQMMMZone(const QMMMZone qmmmZone);
 
         void setName(const std::string_view &name);
         void setAtomTypeName(const std::string_view &atomTypeName);

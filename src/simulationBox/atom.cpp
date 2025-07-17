@@ -222,6 +222,20 @@ size_t Atom::getExternalGlobalVDWType() const { return _externalGlobalVDWType; }
 size_t Atom::getInternalGlobalVDWType() const { return _internalGlobalVDWType; }
 
 /**
+ * @brief return the QMMM type of the atom
+ *
+ * @return QMMMType
+ */
+QMMMType Atom::getQMMMType() const { return _qmmmType; }
+
+/**
+ * @brief return the QMMM zone of the atom
+ *
+ * @return QMMMZone
+ */
+QMMMZone Atom::getQMMMZone() const { return _qmmmZone; }
+
+/**
  * @brief return the atomic number of the atom
  *
  * @return int
@@ -438,3 +452,17 @@ void Atom::setVelocityOld(const Vec3D &velocity) { _velocityOld = velocity; }
  * @param force
  */
 void Atom::setForceOld(const Vec3D &force) { _forceOld = force; }
+
+/**
+ * @brief set the QMMM type of the atom
+ *
+ * @param qmmmType
+ */
+void Atom::setQMMMType(const QMMMType qmmmType) { _qmmmType = qmmmType; }
+
+/**
+ * @brief set the QMMM zone of the atom
+ *
+ * @param qmmmZone
+ */
+void Atom::setQMMMZone(const QMMMZone qmmmZone) { _qmmmZone = qmmmZone; }

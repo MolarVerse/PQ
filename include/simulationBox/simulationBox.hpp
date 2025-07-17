@@ -195,6 +195,7 @@ namespace simulationBox
 
         [[nodiscard]] pq::SharedAtomVec&         getAtoms();
         [[nodiscard]] pq::SharedAtomVec&         getQMAtoms();
+        [[nodiscard]] auto                       getQMAtomsNew() const;
         [[nodiscard]] std::vector<Molecule>&     getMolecules();
         [[nodiscard]] std::vector<MoleculeType>& getMoleculeTypes();
 
