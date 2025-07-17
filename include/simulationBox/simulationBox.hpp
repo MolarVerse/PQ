@@ -26,6 +26,7 @@
 
 #include <map>        // for map
 #include <optional>   // for optional
+#include <ranges>     // for ranges::filter_view
 #include <string>     // for string
 #include <vector>     // for vector
 
@@ -36,6 +37,7 @@
 #include "molecule.hpp"          // for Molecule
 #include "moleculeType.hpp"      // for MoleculeType
 #include "orthorhombicBox.hpp"   // for OrthorhombicBox
+#include "settings.hpp"          // for Settings, JobType
 #include "triclinicBox.hpp"      // for TriclinicBox
 #include "typeAliases.hpp"       // for pq::Vec3D
 
@@ -248,6 +250,34 @@ namespace simulationBox
         void setBoxDimensions(const pq::Vec3D& boxDimensions) const;
         void setBoxSizeHasChanged(const bool boxSizeHasChanged) const;
     };
+
+    /**
+     * @brief get all QM atoms using range-based filtering
+     *
+     * @return a view/range of QM atoms filtered from all atoms
+     *
+     * @details This function returns a range-based view that filters atoms
+     *          from _atoms based on job type and QMMM criteria. For QM_MD jobs,
+     *          all atoms are considered QM atoms. For other job types, atoms
+     *          are filtered based on their QMMMType.
+     */
+    inline auto SimulationBox::getQMAtomsNew() const
+    {
+        return _atoms | std::ranges::views::filter(
+                            [](const auto& atom)
+                            {
+                                if (settings::Settings::getJobtype() ==
+                                    settings::JobType::QM_MD)
+                                    return true;
+
+                                else if (atom->getQMMMType() == QMMMType::QM)
+                                    return true;
+
+                                else
+                                    return atom->isQMOnly();
+                            }
+                        );
+    }
 
 }   // namespace simulationBox
 
