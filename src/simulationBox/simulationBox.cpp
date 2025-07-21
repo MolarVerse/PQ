@@ -112,7 +112,7 @@ std::optional<Molecule> SimulationBox::findMolecule(const size_t moleculeType)
 }
 
 /**
- * @brief adds all atomIndices to _qmCenterAtoms vector
+ * @brief adds all atomIndices to _qmCenterAtomIndices vector
  *
  * @param atomIndices
  *
@@ -126,9 +126,9 @@ void SimulationBox::addQMCenterAtoms(const std::vector<int>& atomIndices)
             throw UserInputException(
                 std::format("QM center atom index {} out of range", index)
             );
-
-        _qmCenterAtoms.push_back(_atoms[(size_t) index]);
     }
+
+    _qmCenterAtomIndices = atomIndices;
 }
 
 /**

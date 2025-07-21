@@ -84,8 +84,8 @@ namespace simulationBox
         std::shared_ptr<Box> _box = std::make_shared<OrthorhombicBox>();
 
         pq::Vec3D                 _centerOfMass = {0.0, 0.0, 0.0};
+        std::vector<int>          _qmCenterAtomIndices;
         pq::SharedAtomVec         _atoms;
-        pq::SharedAtomVec         _qmCenterAtoms;
         std::vector<Molecule>     _molecules;
         std::vector<MoleculeType> _moleculeTypes;
 
