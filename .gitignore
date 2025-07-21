@@ -41,6 +41,19 @@ examples/**/*.hsd
 examples/**/geom.gen
 examples/**/stress_tensor
 
+examples/**/auxbasis
+examples/**/basis
+examples/**/control
+examples/**/coord.prev
+examples/**/energy
+examples/**/gradient
+examples/**/gsdens
+examples/**/mos
+examples/**/sys
+examples/**/traj2box
+examples/**/tm.out.prev
+examples/**/tm.out
+
 
 *.gcov
 
