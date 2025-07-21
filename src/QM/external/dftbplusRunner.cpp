@@ -28,6 +28,7 @@
 #include <fstream>      // for ofstream
 #include <functional>   // for identity
 #include <ranges>       // for borrowed_iterator_t, __distance_fn
+#include <set>          // for set
 #include <string>       // for string
 #include <vector>       // for vector
 
@@ -51,9 +52,6 @@ using namespace constants;
 using namespace utilities;
 using namespace linearAlgebra;
 
-using std::ranges::distance;
-using std::ranges::find;
-
 /**
  * @brief writes the coords file in order to run the external qm program
  *
@@ -64,20 +62,13 @@ void DFTBPlusRunner::writeCoordsFile(SimulationBox &box)
     const std::string fileName = "coords";
     std::ofstream     coordsFile(fileName);
 
-    coordsFile << distance(box.getQMAtomsNew());
+    coordsFile << std::ranges::distance(box.getQMAtomsNew());
     coordsFile << "  " << (Settings::getJobtype() == JobType::QM_MD ? 'S' : 'C')
                << '\n';
 
-    std::vector<std::string> uniqueAtomNames;
-    uniqueAtomNames.reserve(distance(box.getQMAtomsNew()));
+    std::set<std::string> uniqueAtomNames;
     for (const auto &atom : box.getQMAtomsNew())
-        uniqueAtomNames.emplace_back(atom->getName());
-
-    std::sort(uniqueAtomNames.begin(), uniqueAtomNames.end());
-    uniqueAtomNames.erase(
-        std::unique(uniqueAtomNames.begin(), uniqueAtomNames.end()),
-        uniqueAtomNames.end()
-    );
+        uniqueAtomNames.insert(atom->getName());
 
     for (const auto &atomName : uniqueAtomNames) coordsFile << atomName << "  ";
 
@@ -86,8 +77,9 @@ void DFTBPlusRunner::writeCoordsFile(SimulationBox &box)
     size_t atomIndex = 1;
     for (const auto &atom : box.getQMAtomsNew())
     {
-        const auto iter   = find(uniqueAtomNames, atom->getName());
-        const auto atomId = distance(uniqueAtomNames.begin(), iter) + 1;
+        const auto iter = std::ranges::find(uniqueAtomNames, atom->getName());
+        const auto atomId =
+            std::ranges::distance(uniqueAtomNames.begin(), iter) + 1;
 
         coordsFile << std::format(
             "{:5d} {:5d}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
