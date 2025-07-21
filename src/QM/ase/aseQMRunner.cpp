@@ -144,7 +144,7 @@ void ASEQMRunner::collectData(SimulationBox &simBox, PhysicalData &physicalData)
  */
 void ASEQMRunner::collectForces(SimulationBox &simBox) const
 {
-    const auto nAtoms = simBox.getNumberOfAtoms();
+    const auto nAtoms = simBox.getNumberOfQMAtoms();
 
     try
     {
@@ -249,8 +249,8 @@ void ASEQMRunner::buildAseAtoms(const SimulationBox &simBox)
  */
 py::array ASEQMRunner::asePositions(const SimulationBox &simBox) const
 {
-    const auto nAtoms = simBox.getNumberOfAtoms();
-    const auto pos    = simBox.flattenPositions();
+    const auto nAtoms = simBox.getNumberOfQMAtoms();
+    const auto pos    = simBox.getFlattenedPositions();
 
     const auto shape      = std::vector<size_t>{nAtoms, 3};
     const auto sizeDouble = sizeof(double);
@@ -298,8 +298,7 @@ py::array_t<double> ASEQMRunner::aseCell(const SimulationBox &simBox) const
         boxDimension[2],
         boxAngles[0],
         boxAngles[1],
-        boxAngles[2]
-    };
+        boxAngles[2]};
 
     try
     {
@@ -354,7 +353,7 @@ py::array_t<int> ASEQMRunner::aseAtomicNumbers(const SimulationBox &simBox
 ) const
 {
     const auto atomicNumbers = simBox.getAtomicNumbers();
-    const auto nAtoms        = simBox.getNumberOfAtoms();
+    const auto nAtoms        = simBox.getNumberOfQMAtoms();
 
     try
     {

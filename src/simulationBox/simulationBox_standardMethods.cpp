@@ -337,7 +337,7 @@ std::vector<int> SimulationBox::getAtomicNumbers() const
  *
  * @return std::vector<double>
  */
-std::vector<double> SimulationBox::flattenPositions() const
+std::vector<double> SimulationBox::getFlattenedPositions() const
 {
     std::vector<double> positions;
 

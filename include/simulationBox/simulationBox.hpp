@@ -210,7 +210,7 @@ namespace simulationBox
         [[nodiscard]] std::vector<pq::Vec3D> getVelocities() const;
         [[nodiscard]] std::vector<pq::Vec3D> getForces() const;
         [[nodiscard]] std::vector<int>       getAtomicNumbers() const;
-        [[nodiscard]] std::vector<double>    flattenPositions() const;
+        [[nodiscard]] std::vector<double>    getFlattenedPositions() const;
 
         /***************************
          * standard setter methods *
