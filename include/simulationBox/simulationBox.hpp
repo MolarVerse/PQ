@@ -185,7 +185,6 @@ namespace simulationBox
         [[nodiscard]] pq::Vec3D& getCenterOfMass();
 
         [[nodiscard]] Atom&         getAtom(const size_t index);
-        [[nodiscard]] Atom&         getQMAtom(const size_t index);
         [[nodiscard]] Molecule&     getMolecule(const size_t index);
         [[nodiscard]] MoleculeType& getMoleculeType(const size_t index);
 
@@ -209,8 +208,8 @@ namespace simulationBox
         [[nodiscard]] std::vector<pq::Vec3D> getPositions() const;
         [[nodiscard]] std::vector<pq::Vec3D> getVelocities() const;
         [[nodiscard]] std::vector<pq::Vec3D> getForces() const;
-        [[nodiscard]] std::vector<int>       getAtomicNumbers() const;
-        [[nodiscard]] std::vector<double>    getFlattenedPositions() const;
+        [[nodiscard]] std::vector<int>       getQMAtomicNumbers() const;
+        [[nodiscard]] std::vector<double>    getFlattenedQMPositions() const;
 
         /***************************
          * standard setter methods *

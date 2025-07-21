@@ -318,26 +318,27 @@ std::vector<linearAlgebra::Vec3D> SimulationBox::getForces() const
 }
 
 /**
- * @brief get all atomic numbers of all atoms
+ * @brief get the atomic numbers of all QM atoms
  *
  * @return std::vector<int>
  */
-std::vector<int> SimulationBox::getAtomicNumbers() const
+std::vector<int> SimulationBox::getQMAtomicNumbers() const
 {
-    std::vector<int> atomicNumbers;
+    std::vector<int> qmAtomicNumbers;
+    qmAtomicNumbers.reserve(getNumberOfQMAtoms());
 
-    for (const auto &atom : _atoms)
-        atomicNumbers.push_back(atom->getAtomicNumber());
+    for (const auto &atom : getQMAtoms())
+        qmAtomicNumbers.emplace_back(atom->getAtomicNumber());
 
-    return atomicNumbers;
+    return qmAtomicNumbers;
 }
 
 /**
- * @brief flattens positions of each atom into a single vector of doubles
+ * @brief flattens positions of each QM atom into a single vector of doubles
  *
  * @return std::vector<double>
  */
-std::vector<double> SimulationBox::getFlattenedPositions() const
+std::vector<double> SimulationBox::getFlattenedQMPositions() const
 {
     std::vector<double> positions;
 
@@ -350,7 +351,7 @@ std::vector<double> SimulationBox::getFlattenedPositions() const
         positions.push_back(position[2]);
     };
 
-    std::ranges::for_each(_atoms, addPositions);
+    std::ranges::for_each(getQMAtoms(), addPositions);
 
     return positions;
 }

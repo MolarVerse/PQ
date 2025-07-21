@@ -144,18 +144,20 @@ void ASEQMRunner::collectData(SimulationBox &simBox, PhysicalData &physicalData)
  */
 void ASEQMRunner::collectForces(SimulationBox &simBox) const
 {
-    const auto nAtoms = simBox.getNumberOfQMAtoms();
-
     try
     {
         const auto forces = _forces.unchecked<2>();
 
-        for (size_t i = 0; i < nAtoms; ++i)
-            simBox.getAtoms()[i]->setForce(
+        size_t i = 0;
+        for (const auto &atom : simBox.getQMAtoms())
+        {
+            atom->setForce(
                 {forces(i, 0) * _EV_TO_KCAL_PER_MOL_,
                  forces(i, 1) * _EV_TO_KCAL_PER_MOL_,
                  forces(i, 2) * _EV_TO_KCAL_PER_MOL_}
             );
+            ++i;
+        }
     }
     catch (const py::error_already_set &)
     {
@@ -250,7 +252,7 @@ void ASEQMRunner::buildAseAtoms(const SimulationBox &simBox)
 py::array ASEQMRunner::asePositions(const SimulationBox &simBox) const
 {
     const auto nAtoms = simBox.getNumberOfQMAtoms();
-    const auto pos    = simBox.getFlattenedPositions();
+    const auto pos    = simBox.getFlattenedQMPositions();
 
     const auto shape      = std::vector<size_t>{nAtoms, 3};
     const auto sizeDouble = sizeof(double);
@@ -352,7 +354,7 @@ py::array_t<bool> ASEQMRunner::asePBC(const SimulationBox &) const
 py::array_t<int> ASEQMRunner::aseAtomicNumbers(const SimulationBox &simBox
 ) const
 {
-    const auto atomicNumbers = simBox.getAtomicNumbers();
+    const auto atomicNumbers = simBox.getQMAtomicNumbers();
     const auto nAtoms        = simBox.getNumberOfQMAtoms();
 
     try
