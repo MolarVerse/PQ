@@ -114,7 +114,7 @@ void ExternalQMRunner::readForceFile(
         atom->setForce(-grad * _HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM_);
     };
 
-    std::ranges::for_each(box.getQMAtomsNew(), readForces);
+    std::ranges::for_each(box.getQMAtoms(), readForces);
 
     forceFile.close();
 

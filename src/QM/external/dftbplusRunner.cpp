@@ -68,7 +68,7 @@ void DFTBPlusRunner::writeCoordsFile(SimulationBox &box)
                << '\n';
 
     std::set<std::string> uniqueAtomNames;
-    for (const auto &atom : box.getQMAtomsNew())
+    for (const auto &atom : box.getQMAtoms())
         uniqueAtomNames.insert(atom->getName());
 
     for (const auto &atomName : uniqueAtomNames) coordsFile << atomName << "  ";
@@ -76,7 +76,7 @@ void DFTBPlusRunner::writeCoordsFile(SimulationBox &box)
     coordsFile << "\n";
 
     size_t atomIndex = 1;
-    for (const auto &atom : box.getQMAtomsNew())
+    for (const auto &atom : box.getQMAtoms())
     {
         const auto iter = std::ranges::find(uniqueAtomNames, atom->getName());
         const auto atomId =

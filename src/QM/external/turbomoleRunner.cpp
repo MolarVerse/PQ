@@ -58,7 +58,7 @@ void TurbomoleRunner::writeCoordsFile(SimulationBox &box)
 
     coordsFile << "$coord\n";
 
-    for (const auto &atom : box.getQMAtomsNew())
+    for (const auto &atom : box.getQMAtoms())
     {
         const auto pos = atom->getPosition() * _ANGSTROM_TO_BOHR_;
 

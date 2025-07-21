@@ -193,7 +193,7 @@ namespace simulationBox
         [[nodiscard]] std::vector<double> getAtomicScalarForcesOld() const;
 
         [[nodiscard]] pq::SharedAtomVec&         getAtoms();
-        [[nodiscard]] auto                       getQMAtomsNew() const;
+        [[nodiscard]] auto                       getQMAtoms() const;
         [[nodiscard]] std::vector<Molecule>&     getMolecules();
         [[nodiscard]] std::vector<MoleculeType>& getMoleculeTypes();
 
@@ -257,7 +257,7 @@ namespace simulationBox
      *          all atoms are considered QM atoms. For other job types, atoms
      *          are filtered based on their QMMMType.
      */
-    inline auto SimulationBox::getQMAtomsNew() const
+    inline auto SimulationBox::getQMAtoms() const
     {
         return _atoms | std::ranges::views::filter(
                             [](const auto& atom)

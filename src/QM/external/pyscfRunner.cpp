@@ -26,7 +26,6 @@
 
 #include <format>     // for format
 #include <fstream>    // for ofstream, operator<<, basic_ostream
-#include <iterator>   // for std::ranges::distance
 #include <string>     // for allocator, string, operator+, operator<<
 
 #include "atom.hpp"              // for Atom
@@ -54,7 +53,7 @@ void PySCFRunner::writeCoordsFile(SimulationBox &box)
 
     coordsFile << box.getNumberOfQMAtoms() << "\n\n";
 
-    for (const auto &atom : box.getQMAtomsNew())
+    for (const auto &atom : box.getQMAtoms())
     {
         coordsFile << std::format(
             "{:5s}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",

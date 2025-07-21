@@ -24,7 +24,6 @@
 
 #include <cstddef>    // for size_t
 #include <fstream>    // for ifstream, std
-#include <iterator>   // for std::ranges::distance
 #include <memory>     // for shared_ptr, __shared_ptr_access
 #include <ranges>
 #include <string>   // for string, stod, allocator, basic_string
@@ -243,7 +242,7 @@ TEST_F(TestAtomSection, testProcessQMAtomLine)
     );
 
     settings::Settings::setJobtype(settings::JobType::QM_MD);
-    auto atoms      = _engine->getSimulationBox().getQMAtomsNew();
+    auto atoms      = _engine->getSimulationBox().getQMAtoms();
     auto first_atom = *atoms.begin();
 
     ASSERT_EQ(_engine->getSimulationBox().getNumberOfQMAtoms(), 1);
