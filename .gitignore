@@ -38,8 +38,10 @@ examples/**/qm_charges
 examples/**/*.out
 examples/**/coords
 examples/**/coords.prev
+examples/**/dftb.out.prev
 examples/**/*.hsd
 examples/**/geom.gen
+examples/**/charges.bin
 examples/**/stress_tensor
 
 examples/**/auxbasis
