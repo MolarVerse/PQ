@@ -262,7 +262,7 @@ namespace simulationBox
         return _atoms | std::ranges::views::filter(
                             [](const auto& atom)
                             {
-                                if (settings::Settings::isQMOnly())
+                                if (settings::Settings::isQMOnlyJobtype())
                                     return true;
 
                                 else if (atom->getQMMMType() == QMMMType::QM)

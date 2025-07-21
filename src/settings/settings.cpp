@@ -242,7 +242,7 @@ size_t Settings::getDimensionality() { return _dimensionality; }
  * @return true/false if the jobtype does not use any MM type simulations
  *
  */
-bool Settings::isQMOnly()
+bool Settings::isQMOnlyJobtype()
 {
     using enum JobType;
 
