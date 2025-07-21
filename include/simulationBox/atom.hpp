@@ -74,8 +74,8 @@ namespace simulationBox
         QMMMType _qmmmType = QMMMType::NOT_QMMM;
         QMMMZone _qmmmZone = QMMMZone::NOT_QMMM;
 
-        bool _isQMOnly = false;
-        bool _isMMOnly = false;
+        bool _isForcedQM = false;
+        bool _isForcedMM = false;
 
         int    _atomicNumber;
         double _mass;
@@ -122,8 +122,8 @@ namespace simulationBox
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] bool isQMOnly() const;
-        [[nodiscard]] bool isMMOnly() const;
+        [[nodiscard]] bool isForcedQM() const;
+        [[nodiscard]] bool isForcedMM() const;
 
         [[nodiscard]] QMMMType getQMMMType() const;
         [[nodiscard]] QMMMZone getQMMMZone() const;
@@ -152,8 +152,8 @@ namespace simulationBox
          * standard setter methods *
          ***************************/
 
-        void setQMOnly(const bool isQMOnly);
-        void setMMOnly(const bool isMMOnly);
+        void setForcedQM(const bool isForcedQM);
+        void setForcedMM(const bool isForcedMM);
 
         void setQMMMType(const QMMMType qmmmType);
         void setQMMMZone(const QMMMZone qmmmZone);

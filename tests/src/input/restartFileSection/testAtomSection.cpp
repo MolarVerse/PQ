@@ -201,15 +201,7 @@ TEST_F(TestAtomSection, testProcess)
         3
     );
 
-    line    = std::vector<std::string>(21);
-    line[2] = "0";
-    for (size_t i = 3; i < 21; ++i) line[i] = "1.0";
-
-    _section->process(line, *_engine);
-    EXPECT_EQ(
-        std::ranges::distance(_engine->getSimulationBox().getQMAtomsNew()),
-        1
-    );
+    EXPECT_EQ(_engine->getSimulationBox().getNumberOfQMAtoms(), 0);
 }
 
 TEST_F(TestAtomSection, testProcessAtomLine)
@@ -250,21 +242,25 @@ TEST_F(TestAtomSection, testProcessQMAtomLine)
         _engine->getSimulationBox()
     );
 
-    auto atoms = _engine->getSimulationBox().getQMAtomsNew();
+    settings::Settings::setJobtype(settings::JobType::QM_MD);
+    auto atoms      = _engine->getSimulationBox().getQMAtomsNew();
+    auto first_atom = *atoms.begin();
 
-    ASSERT_EQ(std::ranges::distance(atoms), 1);
+    ASSERT_EQ(_engine->getSimulationBox().getNumberOfQMAtoms(), 1);
     ASSERT_THAT(
-        atoms.front()->getPosition(),
+        first_atom->getPosition(),
         testing::ElementsAre(stod(line[3]), stod(line[4]), stod(line[5]))
     );
     ASSERT_THAT(
-        atoms.front()->getVelocity(),
+        first_atom->getVelocity(),
         testing::ElementsAre(stod(line[6]), stod(line[7]), stod(line[8]))
     );
     ASSERT_THAT(
-        atoms.front()->getForce(),
+        first_atom->getForce(),
         testing::ElementsAre(stod(line[9]), stod(line[10]), stod(line[11]))
     );
 
-    ASSERT_EQ(atoms.front()->getAtomTypeName(), line[0]);
+    ASSERT_EQ(first_atom->getAtomTypeName(), line[0]);
+
+    settings::Settings::setJobtype(settings::JobType::NONE);
 }

@@ -164,20 +164,20 @@ void Atom::addShiftForce(const Vec3D &shiftForce) { _shiftForce += shiftForce; }
  ***************************/
 
 /**
- * @brief return if the atom is QM only
+ * @brief return if the atom is forced to be QM
  *
  * @return true
  * @return false
  */
-bool Atom::isQMOnly() const { return _isQMOnly; }
+bool Atom::isForcedQM() const { return _isForcedQM; }
 
 /**
- * @brief return if the atom is MM only
+ * @brief return if the atom is forced to be MM
  *
  * @return true
  * @return false
  */
-bool Atom::isMMOnly() const { return _isMMOnly; }
+bool Atom::isForcedMM() const { return _isForcedMM; }
 
 /**
  * @brief return the name of the atom (element name)
@@ -305,18 +305,18 @@ Vec3D Atom::getShiftForce() const { return _shiftForce; }
  ***************************/
 
 /**
- * @brief set if the atom is QM only
+ * @brief set if the atom is forced to be QM
  *
  * @param position
  */
-void Atom::setQMOnly(const bool isQMOnly) { _isQMOnly = isQMOnly; }
+void Atom::setForcedQM(const bool isForcedQM) { _isForcedQM = isForcedQM; }
 
 /**
- * @brief set if the atom is MM only
+ * @brief set if the atom is forced to be MM
  *
  * @param position
  */
-void Atom::setMMOnly(const bool isMMOnly) { _isMMOnly = isMMOnly; }
+void Atom::setForcedMM(const bool isForcedMM) { _isForcedMM = isForcedMM; }
 
 /**
  * @brief set the name of the atom (element name)

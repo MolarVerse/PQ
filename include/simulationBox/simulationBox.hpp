@@ -158,8 +158,8 @@ namespace simulationBox
          ************************/
 
         void addQMCenterAtoms(const std::vector<int>& atomIndices);
-        void setupQMOnlyAtoms(const std::vector<int>& atomIndices);
-        void setupMMOnlyAtoms(const std::vector<int>& atomIndices);
+        void setupForcedQMAtoms(const std::vector<int>& atomIndices);
+        void setupForcedMMAtoms(const std::vector<int>& atomIndices);
 
         /************************
          * standard add methods *
@@ -268,8 +268,10 @@ namespace simulationBox
                                 else if (atom->getQMMMType() == QMMMType::QM)
                                     return true;
 
-                                else
-                                    return atom->isQMOnly();
+                                else if (atom->isForcedQM())
+                                    return true;
+
+                                return false;
                             }
                         );
     }

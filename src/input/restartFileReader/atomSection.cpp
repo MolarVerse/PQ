@@ -205,9 +205,6 @@ void AtomSection::processQMAtomLine(
 
     setAtomPropertyVectors(lineElements, atom);
 
-    atom->setQMOnly(true);
-    molecule->setQMOnly(true);
-
     molecule->addAtom(atom);
 
     simBox.addAtom(atom);

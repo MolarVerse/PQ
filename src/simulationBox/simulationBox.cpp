@@ -138,7 +138,7 @@ void SimulationBox::addQMCenterAtoms(const std::vector<int>& atomIndices)
  *
  * @throw UserInputException if atom index out of range
  */
-void SimulationBox::setupQMOnlyAtoms(const std::vector<int>& atomIndices)
+void SimulationBox::setupForcedQMAtoms(const std::vector<int>& atomIndices)
 {
     for (const auto index : atomIndices)
     {
@@ -147,14 +147,14 @@ void SimulationBox::setupQMOnlyAtoms(const std::vector<int>& atomIndices)
                 std::format("QM only atom index {} out of range", index)
             );
 
-        if (_atoms[(size_t) index]->isMMOnly())
+        if (_atoms[(size_t) index]->isForcedMM())
             throw UserInputException(std::format(
                 "Ambiguous atom index {} - atom is already in MM only list "
                 "- cannot be in QM only list",
                 index
             ));
         else
-            _atoms[(size_t) index]->setQMOnly(true);
+            _atoms[(size_t) index]->setForcedQM(true);
     }
 }
 
@@ -166,7 +166,7 @@ void SimulationBox::setupQMOnlyAtoms(const std::vector<int>& atomIndices)
  * @throw UserInputException if atom index out of range
  * @throw UserInputException if atom is already in QM only list
  */
-void SimulationBox::setupMMOnlyAtoms(const std::vector<int>& atomIndices)
+void SimulationBox::setupForcedMMAtoms(const std::vector<int>& atomIndices)
 {
     for (const auto index : atomIndices)
     {
@@ -175,14 +175,14 @@ void SimulationBox::setupMMOnlyAtoms(const std::vector<int>& atomIndices)
                 std::format("MM only atom index {} out of range", index)
             );
 
-        if (_atoms[(size_t) index]->isQMOnly())
+        if (_atoms[(size_t) index]->isForcedQM())
             throw UserInputException(std::format(
                 "Ambiguous atom index {} - atom is already in QM only list "
                 "- cannot be in MM only list",
                 index
             ));
         else
-            _atoms[(size_t) index]->setMMOnly(true);
+            _atoms[(size_t) index]->setForcedMM(true);
     }
 }
 

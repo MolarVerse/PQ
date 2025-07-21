@@ -107,7 +107,7 @@ void HybridSetup::setupQMOnlyList()
     const auto qmOnlyListString = HybridSettings::getCoreOnlyListString();
     const auto qmOnlyList = parseSelection(qmOnlyListString, "qm_only_list");
 
-    _engine.getSimulationBox().setupQMOnlyAtoms(qmOnlyList);
+    _engine.getSimulationBox().setupForcedQMAtoms(qmOnlyList);
 }
 
 /**
@@ -119,7 +119,7 @@ void HybridSetup::setupMMOnlyList()
     const auto mmOnlyListString = HybridSettings::getNonCoreOnlyListString();
     const auto mmOnlyList = parseSelection(mmOnlyListString, "mm_only_list");
 
-    _engine.getSimulationBox().setupMMOnlyAtoms(mmOnlyList);
+    _engine.getSimulationBox().setupForcedMMAtoms(mmOnlyList);
 }
 
 /**
