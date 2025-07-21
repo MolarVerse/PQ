@@ -237,9 +237,9 @@ size_t Settings::getDimensionality() { return _dimensionality; }
  ******************************/
 
 /**
- * @brief Returns true if the jobtype does no use any MM type simulations
+ * @brief Returns true if the jobtype does not use any MM type simulations
  *
- * @return true/false if the jobtype does no use any MM type simulations
+ * @return true/false if the jobtype does not use any MM type simulations
  *
  */
 bool Settings::isQMOnly()
