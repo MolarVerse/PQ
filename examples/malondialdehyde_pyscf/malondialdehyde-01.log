@@ -1,0 +1,96 @@
+
+************************************************************************
+*                                                                      *
+*                                                                      *
+*                      88888888ba     ,ad8888ba,                       *
+*                      88      "8b   d8"'    `"8b                      *
+*                      88      ,8P  d8'        `8b                     *
+*                      88aaaaaa8P'  88          88                     *
+*                      88""""""'    88          88                     *
+*                      88           Y8,    "88,,8P                     *
+*                      88            Y8a.    Y88P                      *
+*                      88             `"Y8888Y"Y8a                     *
+*                                                                      *
+*                                                                      *
+************************************************************************
+
+         Author:        Jakob Gamper
+         Email:         97gamjak@gmail.com
+
+         Testing:       Josef M. Gallmetzer
+                        Armin Penz
+                        Stefan Seiwald
+                        Benjamin Reitmair
+
+         Version:       v0.5.3-26be4f80
+         Compile date:  Jul 17 2025 18:06:02
+
+INFO:    Reading Moldescriptor File "moldescriptor.dat"
+
+INFO:    Reading Start File "MALONDIALDEHYDE-eq.rst"
+
+INFO:    Setup of QM runner
+
+         QM runner: PYSCF
+
+         QM script: pyscf_mp2.py
+
+         QM looptime limit: 3600 s
+
+INFO:    Setup of Random Number Generator
+
+         Using system-generated random seed
+
+INFO:    Setup of Reset Kinetics
+
+         reset temperature:      first     0 steps, every    -1 steps
+         reset momentum:         first     0 steps, every    -1 steps
+         reset angular momentum: first     0 steps, every    -1 steps
+         reset forces:           every    -1 steps   
+
+INFO:    Setup of simulation box
+
+         number of atoms:          9
+         total mass:              72.06266 g/mol
+         total charge:             0.00000
+         unconstrained DOF:       24
+
+         density:                0.00012 kg/L
+         volume:           1000000.00000 Å³
+
+         box dimensions:       100.00000 Å      100.00000 Å      100.00000 Å
+         box angles:            90.00000°        90.00000°        90.00000°
+
+         coulomb cutoff:         0.00000 Å
+
+         velocities initialized with Maxwell-Boltzmann distribution
+
+INFO:    Setup of thermostat
+
+         Thermostat type: berendsen
+
+         Target temperature: 298.15 K
+         Relaxation time:    0.1 ps
+
+INFO:    Setup of Manostat
+
+         No manostat selected
+
+
+************************ STARTING SIMULATION ****************************
+
+
+INFO:    Initial momentum = 8.46010e-17 Å*amu/fs
+
+
+         Elapsed time = 186.28700 s
+
+
+INFO:    For citation please refer to the ".ref" file.
+
+*************************************************************************
+*                                                                       *
+*                          PQ ended normally                            *
+*                                                                       *
+*************************************************************************
+

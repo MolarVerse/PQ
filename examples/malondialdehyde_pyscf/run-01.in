@@ -5,7 +5,7 @@
       jobtype = qm-md;
 
     # Number of steps to be performed and timestep in fs
-      nstep = 100; timestep = 0.2;
+      nstep = 5; timestep = 0.2;
       init_velocities = true;
 
       thermostat = berendsen; temp = 298.15; t_relaxation = 0.1;
