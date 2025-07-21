@@ -38,7 +38,6 @@ examples/**/*.out
 examples/**/coords
 examples/**/coords.prev
 examples/**/*.hsd
-examples/**/*.hsd
 examples/**/geom.gen
 examples/**/stress_tensor
 
