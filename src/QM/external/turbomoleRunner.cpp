@@ -27,7 +27,6 @@
 #include <format>       // for format
 #include <fstream>      // for ofstream
 #include <functional>   // for identity
-#include <ranges>       // for borrowed_iterator_t, __distance_fn
 #include <string>       // for string
 #include <vector>       // for vector
 
@@ -50,29 +49,25 @@ using namespace utilities;
 /**
  * @brief writes the coords file in turbomole format
  *
- * @param simBox
+ * @param box
  */
-void TurbomoleRunner::writeCoordsFile(SimulationBox &simBox)
+void TurbomoleRunner::writeCoordsFile(SimulationBox &box)
 {
     const std::string fileName = "coord";
     std::ofstream     coordsFile(fileName);
 
     coordsFile << "$coord\n";
 
-    const auto nAtoms = simBox.getNumberOfQMAtoms();
-
-    for (size_t i = 0; i < nAtoms; ++i)
+    for (const auto &atom : box.getQMAtomsNew())
     {
-        const auto &atom = simBox.getQMAtom(i);
-        const auto  pos  = atom.getPosition() * _ANGSTROM_TO_BOHR_;
+        const auto pos = atom->getPosition() * _ANGSTROM_TO_BOHR_;
 
-        // turbomole does not support tabs in the coord file
         coordsFile << std::format(
             "   {:16.12f}   {:16.12f}   {:16.12f}   {}\n",
             pos[0],
             pos[1],
             pos[2],
-            atom.getName()
+            atom->getName()
         );
     }
 
