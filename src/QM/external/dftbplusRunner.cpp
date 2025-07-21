@@ -22,12 +22,13 @@
 
 #include "dftbplusRunner.hpp"
 
+#include <algorithm>    // for std::ranges:find
 #include <cstddef>      // for size_t
 #include <cstdlib>      // for system
 #include <format>       // for format
 #include <fstream>      // for ofstream
 #include <functional>   // for identity
-#include <ranges>       // for borrowed_iterator_t, __distance_fn
+#include <iterator>     // for std::ranges::distance
 #include <set>          // for set
 #include <string>       // for string
 #include <vector>       // for vector

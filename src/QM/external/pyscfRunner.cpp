@@ -24,9 +24,10 @@
 
 #include <stdlib.h>   // for system, size_t
 
-#include <format>    // for format
-#include <fstream>   // for ofstream, operator<<, basic_ostream
-#include <string>    // for allocator, string, operator+, operator<<
+#include <format>     // for format
+#include <fstream>    // for ofstream, operator<<, basic_ostream
+#include <iterator>   // for std::ranges::distance
+#include <string>     // for allocator, string, operator+, operator<<
 
 #include "atom.hpp"              // for Atom
 #include "exceptions.hpp"        // for InputFileException
@@ -51,20 +52,16 @@ void PySCFRunner::writeCoordsFile(SimulationBox &box)
     const std::string fileName = "coords.xyz";
     std::ofstream     coordsFile(fileName);
 
-    coordsFile << box.getNumberOfQMAtoms() << "\n\n";
+    coordsFile << std::ranges::distance(box.getQMAtomsNew()) << "\n\n";
 
-    for (size_t i = 0, numberOfAtoms = box.getNumberOfQMAtoms();
-         i < numberOfAtoms;
-         ++i)
+    for (const auto &atom : box.getQMAtomsNew())
     {
-        const auto &atom = box.getQMAtom(i);
-
         coordsFile << std::format(
             "{:5s}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
-            atom.getName(),
-            atom.getPosition()[0],
-            atom.getPosition()[1],
-            atom.getPosition()[2]
+            atom->getName(),
+            atom->getPosition()[0],
+            atom->getPosition()[1],
+            atom->getPosition()[2]
         );
     }
 
