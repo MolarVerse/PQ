@@ -56,15 +56,11 @@ void SimulationBox::copy(const SimulationBox& toCopy)
     *this = toCopy;
 
     this->_atoms.clear();
-    this->_qmAtoms.clear();
 
     for (size_t i = 0; i < toCopy._atoms.size(); ++i)
     {
         const auto atom = std::make_shared<Atom>(*toCopy._atoms[i]);
         this->_atoms.push_back(atom);
-        // TODO: ATTENTION AT THE MOMENT ONLY VALID FOR ALL QM_CALCULATIONS
-        //       Probably best would be to remove _qmAtoms at all
-        this->_qmAtoms.push_back(atom);
     }
 
     auto fillAtomsInMolecules = [this](size_t runningIndex, Molecule& molecule)
@@ -632,28 +628,6 @@ void SimulationBox::checkCoulRadiusCutOff(const ExceptionType exceptionType
 }
 
 /**
- * @brief return all unique qm atom names
- *
- * @return std::vector<std::string>
- */
-std::vector<std::string> SimulationBox::getUniqueQMAtomNames()
-{
-    std::vector<std::string> uniqueQMAtomNames;
-
-    auto fillQMAtomNames = std::back_inserter(uniqueQMAtomNames);
-    auto getName         = [](const auto& atom) { return atom->getName(); };
-
-    std::ranges::transform(_qmAtoms, fillQMAtomNames, getName);
-    std::ranges::sort(uniqueQMAtomNames);
-
-    const auto [first, last] = std::ranges::unique(uniqueQMAtomNames);
-
-    uniqueQMAtomNames.erase(first, last);
-
-    return uniqueQMAtomNames;
-}
-
-/**
  * @brief calculate density of simulationBox
  *
  */
@@ -702,8 +676,7 @@ void SimulationBox::initPositions(const double displacement)
             randomNumberGenerator
                 .getUniformRealDistribution(-displacement, displacement),
             randomNumberGenerator
-                .getUniformRealDistribution(-displacement, displacement)
-        };
+                .getUniformRealDistribution(-displacement, displacement)};
 
         auto position = atom->getPosition() + random;
 

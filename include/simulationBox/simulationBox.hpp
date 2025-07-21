@@ -128,7 +128,6 @@ namespace simulationBox
         [[nodiscard]] pq::Vec3D calcShiftVector(const pq::Vec3D&) const;
 
         [[nodiscard]] bool moleculeTypeExists(const size_t) const;
-        [[nodiscard]] std::vector<std::string> getUniqueQMAtomNames();
 
         [[nodiscard]] std::optional<Molecule> findMolecule(const size_t);
         [[nodiscard]] MoleculeType& findMoleculeType(const size_t moleculeType);
