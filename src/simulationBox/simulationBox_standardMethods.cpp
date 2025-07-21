@@ -20,7 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <ranges>   // for views::filter
+#include <algorithm>   // for std::ranges:find
+#include <ranges>      // for views::filter
 
 #include "settings.hpp"   // for Settings::getJobtype, JobType
 #include "simulationBox.hpp"
@@ -41,16 +42,6 @@ using namespace simulationBox;
 void SimulationBox::addAtom(const std::shared_ptr<Atom> atom)
 {
     _atoms.push_back(atom);
-}
-
-/**
- * @brief Add a QM atom to the simulation box
- *
- * @param atom
- */
-void SimulationBox::addQMAtom(const std::shared_ptr<Atom> atom)
-{
-    _qmAtoms.push_back(atom);
 }
 
 /**
@@ -119,7 +110,10 @@ size_t SimulationBox::getNumberOfAtoms() const { return _atoms.size(); }
  *
  * @return size_t
  */
-size_t SimulationBox::getNumberOfQMAtoms() const { return _qmAtoms.size(); }
+size_t SimulationBox::getNumberOfQMAtoms() const
+{
+    return std::ranges::distance(SimulationBox::getQMAtomsNew());
+}
 
 /**
  * @brief get the total mass
@@ -156,17 +150,6 @@ linearAlgebra::Vec3D &SimulationBox::getCenterOfMass() { return _centerOfMass; }
  * @return Atom&
  */
 Atom &SimulationBox::getAtom(const size_t index) { return *(_atoms[index]); }
-
-/**
- * @brief get QM atom by index
- *
- * @param index
- * @return Atom&
- */
-Atom &SimulationBox::getQMAtom(const size_t index)
-{
-    return *(_qmAtoms[index]);
-}
 
 /**
  * @brief get molecule by index
@@ -226,16 +209,6 @@ std::vector<double> SimulationBox::getAtomicScalarForcesOld() const
  * @return std::vector<std::shared_ptr<Atom>>&
  */
 std::vector<std::shared_ptr<Atom>> &SimulationBox::getAtoms() { return _atoms; }
-
-/**
- * @brief get all QM atoms
- *
- * @return std::vector<std::shared_ptr<Atom>>&
- */
-std::vector<std::shared_ptr<Atom>> &SimulationBox::getQMAtoms()
-{
-    return _qmAtoms;
-}
 
 /**
  * @brief get all molecules

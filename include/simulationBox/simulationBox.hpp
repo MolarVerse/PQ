@@ -85,7 +85,6 @@ namespace simulationBox
 
         pq::Vec3D                 _centerOfMass = {0.0, 0.0, 0.0};
         pq::SharedAtomVec         _atoms;
-        pq::SharedAtomVec         _qmAtoms;
         pq::SharedAtomVec         _qmCenterAtoms;
         std::vector<Molecule>     _molecules;
         std::vector<MoleculeType> _moleculeTypes;
@@ -167,7 +166,6 @@ namespace simulationBox
          ************************/
 
         void addAtom(const pq::SharedAtom atom);
-        void addQMAtom(const pq::SharedAtom atom);
         void addMolecule(const Molecule& molecule);
         void addMoleculeType(const MoleculeType& molecule);
 
@@ -195,7 +193,6 @@ namespace simulationBox
         [[nodiscard]] std::vector<double> getAtomicScalarForcesOld() const;
 
         [[nodiscard]] pq::SharedAtomVec&         getAtoms();
-        [[nodiscard]] pq::SharedAtomVec&         getQMAtoms();
         [[nodiscard]] auto                       getQMAtomsNew() const;
         [[nodiscard]] std::vector<Molecule>&     getMolecules();
         [[nodiscard]] std::vector<MoleculeType>& getMoleculeTypes();

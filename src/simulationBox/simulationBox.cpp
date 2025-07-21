@@ -134,8 +134,6 @@ void SimulationBox::addQMCenterAtoms(const std::vector<int>& atomIndices)
 /**
  * @brief assigns isQMOnly to all atoms which are in the atomIndices vector
  *
- * @details If an atom is not already in the _qmAtoms vector it is added to it
- *
  * @param atomIndices
  *
  * @throw UserInputException if atom index out of range
@@ -149,12 +147,14 @@ void SimulationBox::setupQMOnlyAtoms(const std::vector<int>& atomIndices)
                 std::format("QM only atom index {} out of range", index)
             );
 
-        _atoms[(size_t) index]->setQMOnly(true);
-
-        auto it = std::ranges::find(_qmAtoms, _atoms[(size_t) index]);
-
-        if (it == _qmAtoms.end())
-            _qmAtoms.push_back(_atoms[(size_t) index]);
+        if (_atoms[(size_t) index]->isMMOnly())
+            throw UserInputException(std::format(
+                "Ambiguous atom index {} - atom is already in MM only list "
+                "- cannot be in QM only list",
+                index
+            ));
+        else
+            _atoms[(size_t) index]->setQMOnly(true);
     }
 }
 
@@ -175,16 +175,14 @@ void SimulationBox::setupMMOnlyAtoms(const std::vector<int>& atomIndices)
                 std::format("MM only atom index {} out of range", index)
             );
 
-        _atoms[(size_t) index]->setMMOnly(true);
-
-        auto it = std::ranges::find(_qmAtoms, _atoms[(size_t) index]);
-
-        if (it != _qmAtoms.end())
+        if (_atoms[(size_t) index]->isQMOnly())
             throw UserInputException(std::format(
                 "Ambiguous atom index {} - atom is already in QM only list "
                 "- cannot be in MM only list",
                 index
             ));
+        else
+            _atoms[(size_t) index]->setMMOnly(true);
     }
 }
 

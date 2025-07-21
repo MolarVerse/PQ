@@ -52,7 +52,7 @@ void PySCFRunner::writeCoordsFile(SimulationBox &box)
     const std::string fileName = "coords.xyz";
     std::ofstream     coordsFile(fileName);
 
-    coordsFile << std::ranges::distance(box.getQMAtomsNew()) << "\n\n";
+    coordsFile << box.getNumberOfQMAtoms() << "\n\n";
 
     for (const auto &atom : box.getQMAtomsNew())
     {

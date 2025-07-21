@@ -63,7 +63,7 @@ void DFTBPlusRunner::writeCoordsFile(SimulationBox &box)
     const std::string fileName = "coords";
     std::ofstream     coordsFile(fileName);
 
-    coordsFile << std::ranges::distance(box.getQMAtomsNew());
+    coordsFile << box.getNumberOfQMAtoms();
     coordsFile << "  " << (Settings::getJobtype() == JobType::QM_MD ? 'S' : 'C')
                << '\n';
 
