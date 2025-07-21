@@ -2,8 +2,6 @@ Geometry = GenFormat {
 <<< "geom.gen"
 }
 
-# Job-type - Geometry optimisation using
-# the LBFGS optimizer
 Driver = {}
 
 
@@ -26,7 +24,7 @@ Hamiltonian = DFTB {
   DampXHExponent = 4.0
   __GUESS__
   
-  # Sampling of the Briullouin zone according to 
+  # Sampling of the Brillouin zone according to 
   # the Monkhorst-Pack scheme
   KPointsAndWeights = {
     0.0 0.0 0.0 1.0
@@ -36,15 +34,12 @@ Hamiltonian = DFTB {
     C  = -0.1492
     O  = -0.1575
     H  = -0.1857
-    #Zn = -0.03
   }
 
 
 
   SlaterKosterFiles = Type2FileNames {
-    #Prefix = "/media/storage_5/jag/skf_files/3ob-3-1/"
-    #Prefix = "/scratch/c7241148/skf_files/3ob-3-1/"
-    Prefix = "/home/jag/skf_files/3ob-3-1/"
+    Prefix = "/home/ape/sk_files/3ob/"
     Separator = "-"
     Suffix = ".skf"
     LowerCaseTypeName = No
@@ -55,7 +50,6 @@ Hamiltonian = DFTB {
     C  = "p"
     O  = "p"
     H  = "s"
-    #Zn = "d "
   }
   
   Filling = Fermi {
