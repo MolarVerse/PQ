@@ -1,0 +1,31 @@
+# MOF-5 CUSTOM MACE MODEL MD
+
+
+    # Type of this run
+      jobtype = qm-md;
+
+    # Number of steps to be performed and timestep in fs
+      nstep = 5; timestep = 0.5; nreset = 5;
+
+      thermostat = nh-chain; start_temp = 1; temp = 298.15; t_relaxation = 0.1; nh-chain_length = 4;
+
+#     manostat = stochastic_rescaling; pressure = 1.013; p_relaxation = 1.0;
+#     stress_tensor = on;
+
+      integrator = v-verlet;
+      virial = molecular;
+
+    # QM programm
+      qm_prog             = mace-mp;
+      dispersion          = on;
+      floating_point_type = float;
+      mace_model_size     = custom;
+      mace_model_path     = https://github.com/ACEsuit/mace-foundations/releases/download/mace_matpes_0/MACE-matpes-pbe-omat-ft.model;
+
+
+    # Input file
+      start_file  = mof5-eq.rst;
+
+    # Output files
+      file_prefix = mof5-md-01;
+
