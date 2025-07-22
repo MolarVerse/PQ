@@ -93,7 +93,7 @@ std::shared_ptr<SimulationBox> SimulationBox::clone() const
 }
 
 /**
- * @brief finds molecule by moleculeType if (size_t)
+ * @brief finds molecule by moleculeType if size_t
  *
  * @param moleculeType
  * @return std::optional<Molecule &>
@@ -122,7 +122,7 @@ void SimulationBox::addQMCenterAtoms(const std::vector<int>& atomIndices)
 {
     for (const auto index : atomIndices)
     {
-        if (index < 0 || (size_t) index >= _atoms.size())
+        if (index < 0 || index >= static_cast<int>(_atoms.size()))
             throw UserInputException(
                 std::format("QM center atom index {} out of range", index)
             );
@@ -142,19 +142,19 @@ void SimulationBox::setupForcedQMAtoms(const std::vector<int>& atomIndices)
 {
     for (const auto index : atomIndices)
     {
-        if (index < 0 || (size_t) index >= _atoms.size())
+        if (index < 0 || index >= static_cast<int>(_atoms.size()))
             throw UserInputException(
                 std::format("QM only atom index {} out of range", index)
             );
 
-        if (_atoms[(size_t) index]->isForcedMM())
+        if (_atoms[static_cast<size_t>(index)]->isForcedMM())
             throw UserInputException(std::format(
                 "Ambiguous atom index {} - atom is already in MM only list "
                 "- cannot be in QM only list",
                 index
             ));
         else
-            _atoms[(size_t) index]->setForcedQM(true);
+            _atoms[static_cast<size_t>(index)]->setForcedQM(true);
     }
 }
 
@@ -170,24 +170,24 @@ void SimulationBox::setupForcedMMAtoms(const std::vector<int>& atomIndices)
 {
     for (const auto index : atomIndices)
     {
-        if (index < 0 || (size_t) index >= _atoms.size())
+        if (index < 0 || index >= static_cast<int>(_atoms.size()))
             throw UserInputException(
                 std::format("MM only atom index {} out of range", index)
             );
 
-        if (_atoms[(size_t) index]->isForcedQM())
+        if (_atoms[static_cast<size_t>(index)]->isForcedQM())
             throw UserInputException(std::format(
                 "Ambiguous atom index {} - atom is already in QM only list "
                 "- cannot be in MM only list",
                 index
             ));
         else
-            _atoms[(size_t) index]->setForcedMM(true);
+            _atoms[static_cast<size_t>(index)]->setForcedMM(true);
     }
 }
 
 /**
- * @brief find moleculeType by moleculeType if (size_t)
+ * @brief find moleculeType by moleculeType if size_t
  *
  * @param moleculeType
  * @return Molecule
@@ -210,7 +210,7 @@ MoleculeType& SimulationBox::findMoleculeType(const size_t moleculeType)
 }
 
 /**
- * @brief checks if molecule type exists by moleculeType id (size_t)
+ * @brief checks if molecule type exists by moleculeType id size_t
  *
  * @param moleculeType
  * @return true
