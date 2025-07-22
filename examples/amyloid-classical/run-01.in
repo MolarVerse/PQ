@@ -5,7 +5,7 @@
       jobtype = mm-md;
 
     # Number of steps to be performed and timestep in fs
-      nstep = 5; timestep = 2.0;
+      nstep = 2000; timestep = 2.0;
 
       thermostat = berendsen; temp = 298.15; t_relaxation = 0.1;
 

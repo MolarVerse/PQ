@@ -6,8 +6,8 @@
       rpmd_n_replica = 10;
 
     # Number of steps to be performed and timestep in fs
-      nstep = 2; timestep = 0.1;
-      init_velocities = true;
+      nstep = 2000; timestep = 0.1;
+      init_velocities = false;
       nreset = 100;
       freset = 10;
 
