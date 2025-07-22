@@ -60,6 +60,9 @@ using namespace linearAlgebra;
  */
 void DFTBPlusRunner::writeCoordsFile(SimulationBox &box)
 {
+    using std::ranges::distance;
+    using std::ranges::find;
+
     const std::string fileName = "coords";
     std::ofstream     coordsFile(fileName);
 
@@ -75,9 +78,8 @@ void DFTBPlusRunner::writeCoordsFile(SimulationBox &box)
     size_t atomIndex = 1;
     for (const auto &atom : box.getQMAtoms())
     {
-        const auto iter = std::ranges::find(uniqueAtomNames, atom->getName());
-        const auto atomId =
-            std::ranges::distance(uniqueAtomNames.begin(), iter) + 1;
+        const auto iter   = find(uniqueAtomNames, atom->getName());
+        const auto atomId = distance(uniqueAtomNames.begin(), iter) + 1;
 
         coordsFile << std::format(
             "{:5d} {:5d}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
