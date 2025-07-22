@@ -22,8 +22,8 @@
                         Stefan Seiwald
                         Benjamin Reitmair
 
-         Version:       v0.5.3-17429c07
-         Compile date:  Jul 22 2025 10:30:04
+         Version:       v0.6.0
+         Compile date:  Apr  2 2025 23:50:53
 
 INFO:    Reading Moldescriptor File "moldescriptor.dat"
 
@@ -34,15 +34,9 @@ INFO:    Setup of QM runner
          QM runner: ASEDFTBPLUS
 
          DFTB approach:        3ob
-         sk file path:         /home/ape/coding/PQ/build/external/slakos/3ob/skfiles/
+         sk file path:         /media/storage_6/pq/software/pq/0.6.0/build/external/slakos/3ob/skfiles/
          Dispersion is turned: off
          3rd order is turned:  on
-
-         QM looptime limit: 3600 s
-
-INFO:    Setup of Random Number Generator
-
-         Using system-generated random seed
 
 INFO:    Setup of Reset Kinetics
 
@@ -82,7 +76,7 @@ INFO:    Setup of Manostat
 INFO:    Initial momentum = 8.37131e-10 Å*amu/fs
 
 
-         Elapsed time = 9.48900 s
+         Elapsed time = 11.56800 s
 
 
 INFO:    For citation please refer to the ".ref" file.

@@ -22,8 +22,8 @@
                         Stefan Seiwald
                         Benjamin Reitmair
 
-         Version:       v0.5.3-17429c07
-         Compile date:  Jul 22 2025 10:30:04
+         Version:       v0.6.0
+         Compile date:  Apr  2 2025 23:50:53
 
 INFO:    Reading Moldescriptor File "moldescriptor.dat"
 
@@ -34,12 +34,6 @@ INFO:    Setup of QM runner
          QM runner: ASEXTB
 
          xTB Parametrization:   GFN2-xTB
-
-         QM looptime limit: 3600 s
-
-INFO:    Setup of Random Number Generator
-
-         Using system-generated random seed
 
 INFO:    Setup of Reset Kinetics
 
@@ -79,7 +73,7 @@ INFO:    Setup of Manostat
 INFO:    Initial momentum = 8.37131e-10 Å*amu/fs
 
 
-         Elapsed time = 19.30000 s
+         Elapsed time = 21.87400 s
 
 
 INFO:    For citation please refer to the ".ref" file.
