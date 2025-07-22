@@ -209,6 +209,7 @@ namespace simulationBox
         [[nodiscard]] std::vector<pq::Vec3D> getVelocities() const;
         [[nodiscard]] std::vector<pq::Vec3D> getForces() const;
         [[nodiscard]] std::vector<int>       getQMAtomicNumbers() const;
+        [[nodiscard]] pq::stringSet          getUniqueQMAtomNames() const;
         [[nodiscard]] std::vector<double>    getFlattenedQMPositions() const;
 
         /***************************

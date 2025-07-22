@@ -116,6 +116,19 @@ size_t SimulationBox::getNumberOfQMAtoms() const
 }
 
 /**
+ * @brief Get the unique names of the QM atoms
+ *
+ * @return set<string>
+ */
+pq::stringSet SimulationBox::getUniqueQMAtomNames() const
+{
+    pq::stringSet uniqueQMAtomNames;
+    for (const auto &atom : getQMAtoms())
+        uniqueQMAtomNames.insert(atom->getName());
+    return uniqueQMAtomNames;
+}
+
+/**
  * @brief get the total mass
  *
  * @return double

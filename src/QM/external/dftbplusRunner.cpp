@@ -67,12 +67,9 @@ void DFTBPlusRunner::writeCoordsFile(SimulationBox &box)
     coordsFile << "  " << (Settings::getJobtype() == JobType::QM_MD ? 'S' : 'C')
                << '\n';
 
-    std::set<std::string> uniqueAtomNames;
-    for (const auto &atom : box.getQMAtoms())
-        uniqueAtomNames.insert(atom->getName());
+    const auto uniqueAtomNames = box.getUniqueQMAtomNames();
 
     for (const auto &atomName : uniqueAtomNames) coordsFile << atomName << "  ";
-
     coordsFile << "\n";
 
     size_t atomIndex = 1;
