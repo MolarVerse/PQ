@@ -32,36 +32,36 @@ examples/**/*.vel
 examples/**/*.vir
 examples/**/*.xyz
 
-examples/**/mm_forces
-examples/**/qm_forces
-examples/**/qm_charges
-examples/**/*.out
+examples/**/charges.bin
 examples/**/coords
 examples/**/coords.prev
 examples/**/dftb.out.prev
-examples/**/*.hsd
-examples/**/*.gen
-examples/**/charges.bin
+examples/**/mm_forces
+examples/**/qm_charges
+examples/**/qm_forces
 examples/**/stress_tensor
+examples/**/*.gen
+examples/**/*.hsd
+examples/**/*.out
 
 examples/**/auxbasis
 examples/**/basis
+examples/**/CCl0o-1--1---0
 examples/**/control
 examples/**/coord.prev
 examples/**/energy
 examples/**/gradient
 examples/**/gsdens
 examples/**/mos
-examples/**/sys
-examples/**/traj2box
-examples/**/tm.out.prev
-examples/**/tm.out
-examples/**/*.cao
-examples/**/tm_define.in
+examples/**/restart.cc
 examples/**/statistics
 examples/**/statistics.ricc2
-examples/**/restart.cc
-examples/**/CCl0o-1--1---0
+examples/**/sys
+examples/**/tm_define.in
+examples/**/tm.out.prev
+examples/**/tm.out
+examples/**/traj2box
+examples/**/*.cao
 
 
 *.gcov
