@@ -24,9 +24,9 @@
 
 #include <stdlib.h>   // for system, size_t
 
-#include <format>     // for format
-#include <fstream>    // for ofstream, operator<<, basic_ostream
-#include <string>     // for allocator, string, operator+, operator<<
+#include <format>    // for format
+#include <fstream>   // for ofstream, operator<<, basic_ostream
+#include <string>    // for allocator, string, operator+, operator<<
 
 #include "atom.hpp"              // for Atom
 #include "exceptions.hpp"        // for InputFileException
