@@ -87,7 +87,10 @@ jobs:
         if: ${{ matrix.build == 'Release' }}
         run: |
           pip install pytest
+          pip install pytest-cov
           pip install pqanalysis
+          pip install ase
+          pip install pyscf
 
       - name: Integration Tests
         if: ${{ matrix.build == 'Release' }}
