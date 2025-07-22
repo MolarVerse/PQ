@@ -40,7 +40,7 @@ examples/**/coords
 examples/**/coords.prev
 examples/**/dftb.out.prev
 examples/**/*.hsd
-examples/**/geom.gen
+examples/**/*.gen
 examples/**/charges.bin
 examples/**/stress_tensor
 
