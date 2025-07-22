@@ -1,0 +1,75 @@
+########################################################################
+#                                                                      #
+#  This file contains all references to the software and theory used.  #
+#                                                                      #
+########################################################################
+
+PQ Software
+    Gamper, J., Gallmetzer, J. M., Weiss, A. K. H.,
+    Hofer, T. S. (2024). PQ: An Open-Source Platform
+    for Advanced Molecular Dynamics Simulations. Zenodo.
+    https://doi.org/10.5281/zenodo.14185071
+
+
+MACE-MP-0
+    Batatia, I., Benner, P., Chiang, Y., Elena, A.,
+    Kovacs, D., Riebesell, J., Advincula, X., Asta, M.,
+    Avaylon, M., Baldwin, W., Berger, F., Bernstein, N.,
+    Bhowmik, A., Blau, S., Cărare, V., Darby, J., De, S.,
+    Della Pia, F., Deringer, V., Elĳošius, R.,
+    El-Machachi, Z., Falcioni, F., Fako, E., Ferrari, A.,
+    Genreith-Schriever, A., George, J., Goodall, R., Grey, C.,
+    Grigorev, P., Han, S., Handley, W., Heenen, H.,
+    Hermansson, K., Holm, C., Jaafar, J., Hofmann, S.,
+    Jakob, K., Jung, H., Kapil, V., Kaplan, A., Karimitari, N.,
+    Kermode, J., Kroupa, N., Kullgren, J., Kuner, M.,
+    Kuryla, D., Liepuoniute, G., Margraf, J., Magdau, I.B.,
+    Michaelides, A., Moore, J., Naik, A., Niblett, S.,
+    Walton Norwood, S., O'Neill, N., Ortner, C., Persson, K.,
+    Reuter, K., Rosen, A., Schaaf, L., Schran, C., Shi, B.,
+    Sivonxay, E., Stenczel, T., Svahn, V., Sutton, C.,
+    Swinburne, T., Tilly, J., Oord, C., Varga-Umbrich, E.,
+    Vegge, T., Vondrák, M., Wang, Y., Witt, W., Zills, F.,
+    Csányi, G. 2023. A foundation model for atomistic materials
+    chemistry. arXiv e-prints, p.arXiv:2401.00096.
+    https://doi.org/10.48550/arXiv.2401.00096
+
+
+
+########################################################################
+#                                                                      #
+#                            BIBTEX ENTRIES                            #
+#                                                                      #
+########################################################################
+
+%%%%%%%%%%%%%%%
+% PQ Software %
+%%%%%%%%%%%%%%%
+
+@software{gamper_2024_14185072,
+  author       = {Gamper, Jakob and Gallmetzer, Josef Maria and Weiss, Alexander K. H. and Hofer, Thomas S.},
+  title        = {PQ: An Open-Source Platform for Advanced Molecular Dynamics Simulations},
+  month        = nov,
+  year         = 2024,
+  publisher    = {Zenodo},
+  version      = {0.5.0},
+  doi          = {10.5281/zenodo.14185072},
+  url          = {https://doi.org/10.5281/zenodo.14185072},
+}
+
+
+%%%%%%%%%%%%%
+% MACE-MP-0 %
+%%%%%%%%%%%%%
+
+@misc{batatia2024foundationmodelatomisticmaterials,
+      title={A foundation model for atomistic materials chemistry}, 
+      author={Ilyes Batatia and Philipp Benner and Yuan Chiang and Alin M. Elena and Dávid P. Kovács and Janosh Riebesell and Xavier R. Advincula and Mark Asta and Matthew Avaylon and William J. Baldwin and Fabian Berger and Noam Bernstein and Arghya Bhowmik and Samuel M. Blau and Vlad Cărare and James P. Darby and Sandip De and Flaviano Della Pia and Volker L. Deringer and Rokas Elijošius and Zakariya El-Machachi and Fabio Falcioni and Edvin Fako and Andrea C. Ferrari and Annalena Genreith-Schriever and Janine George and Rhys E. A. Goodall and Clare P. Grey and Petr Grigorev and Shuang Han and Will Handley and Hendrik H. Heenen and Kersti Hermansson and Christian Holm and Jad Jaafar and Stephan Hofmann and Konstantin S. Jakob and Hyunwook Jung and Venkat Kapil and Aaron D. Kaplan and Nima Karimitari and James R. Kermode and Namu Kroupa and Jolla Kullgren and Matthew C. Kuner and Domantas Kuryla and Guoda Liepuoniute and Johannes T. Margraf and Ioan-Bogdan Magdău and Angelos Michaelides and J. Harry Moore and Aakash A. Naik and Samuel P. Niblett and Sam Walton Norwood and Niamh O'Neill and Christoph Ortner and Kristin A. Persson and Karsten Reuter and Andrew S. Rosen and Lars L. Schaaf and Christoph Schran and Benjamin X. Shi and Eric Sivonxay and Tamás K. Stenczel and Viktor Svahn and Christopher Sutton and Thomas D. Swinburne and Jules Tilly and Cas van der Oord and Eszter Varga-Umbrich and Tejs Vegge and Martin Vondrák and Yangshuai Wang and William C. Witt and Fabian Zills and Gábor Csányi},
+      year={2024},
+      eprint={2401.00096},
+      archivePrefix={arXiv},
+      primaryClass={physics.chem-ph},
+      url={https://arxiv.org/abs/2401.00096}, 
+}
+
+
