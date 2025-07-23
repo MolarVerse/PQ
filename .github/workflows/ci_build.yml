@@ -83,16 +83,19 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
-      - name: Add conda to system path
-        run: |
-          # $CONDA is an environment variable pointing to the root of the miniconda directory
-          echo $CONDA/bin >> $GITHUB_PATH
+      - name: Setup Conda Environment
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-update-conda: true
+          python-version: '3.12'
+          activate-environment: test-env
+          channels: default, conda-forge
+          auto-activate-base: false
 
       - name: Install Integration Test Dependencies in Conda Env
         if: ${{ matrix.build == 'Release' }}
+        shell: bash -l {0}
         run: |
-          conda create -n test_env
-          conda activate test_env
           pip install pytest
           pip install pytest-cov
           pip install pqanalysis
@@ -102,6 +105,7 @@ jobs:
 
       - name: Integration Tests
         if: ${{ matrix.build == 'Release' }}
+        shell: bash -l {0}
         run: |
           pytest integration_tests
 
