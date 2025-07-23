@@ -124,6 +124,7 @@ namespace simulationBox
 
         [[nodiscard]] bool isForcedQM() const;
         [[nodiscard]] bool isForcedMM() const;
+        [[nodiscard]] bool isQMAtom() const;
 
         [[nodiscard]] QMMMType getQMMMType() const;
         [[nodiscard]] QMMMZone getQMMMZone() const;

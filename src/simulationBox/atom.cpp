@@ -26,6 +26,7 @@
 #include "box.hpp"                // for Box
 #include "exceptions.hpp"         // for MolDescriptorException
 #include "manostatSettings.hpp"   // for ManostatSettings
+#include "settings.hpp"           // for Settings
 #include "stringUtilities.hpp"    // for toLowerCopy
 #include "vector3d.hpp"           // for Vec3D
 
@@ -178,6 +179,30 @@ bool Atom::isForcedQM() const { return _isForcedQM; }
  * @return false
  */
 bool Atom::isForcedMM() const { return _isForcedMM; }
+
+/**
+ * @brief determine if an atom should be treated as QM
+ *
+ * @return true if the atom should be treated as QM, false otherwise
+ *
+ * @details Checks if an atom qualifies as a QM atom based on:
+ *          - QM-only job types (all atoms are QM)
+ *          - Atom's QMMM type designation
+ *          - Forced QM designation
+ */
+bool Atom::isQMAtom() const
+{
+    if (Settings::isQMOnlyJobtype())
+        return true;
+
+    if (getQMMMType() == QMMMType::QM)
+        return true;
+
+    if (isForcedQM())
+        return true;
+
+    return false;
+}
 
 /**
  * @brief return the name of the atom (element name)

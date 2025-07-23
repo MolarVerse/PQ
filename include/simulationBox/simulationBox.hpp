@@ -259,21 +259,10 @@ namespace simulationBox
      */
     inline auto SimulationBox::getQMAtoms() const
     {
-        return _atoms | std::ranges::views::filter(
-                            [](const auto& atom)
-                            {
-                                if (settings::Settings::isQMOnlyJobtype())
-                                    return true;
+        using std::ranges::views::filter;
 
-                                else if (atom->getQMMMType() == QMMMType::QM)
-                                    return true;
-
-                                else if (atom->isForcedQM())
-                                    return true;
-
-                                return false;
-                            }
-                        );
+        return _atoms |
+               filter([](const auto& atom) { return atom->isQMAtom(); });
     }
 
 }   // namespace simulationBox
