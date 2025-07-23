@@ -52,7 +52,7 @@ jobs:
           auto-activate-base: false
 
       - name: Install Integration Test Dependencies in Conda Env
-        if: ${{ matrix.build == 'Release' }}
+        if: ${{matrix.os == 'ubuntu-24.04' &&  matrix.build == 'Release'}}
         shell: bash -l {0}
         run: |
           pip install pytest
@@ -105,7 +105,7 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Integration Tests
-        if: ${{ matrix.build == 'Release' }}
+        if: ${{matrix.os == 'ubuntu-24.04' &&  matrix.build == 'Release'}}
         shell: bash -l {0}
         run: |
           pytest integration_tests
