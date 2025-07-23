@@ -105,8 +105,15 @@ jobs:
           conda install conda-forge::dftbplus
 
       - name: Integration Tests
-        if: ${{matrix.os == 'ubuntu-24.04' &&  matrix.build == 'Release'}}
+        if: ${{matrix.build == 'Release' }}
         shell: bash -l {0}
         run: |
-          pytest integration_tests
+          if [ "${{ matrix.os }}" = "ubuntu-24.04" ]; then
+            pytest integration_tests
+          else
+            pytest integration_tests/ase-xtb
+            pytest integration_tests/cgo
+            pytest integration_tests/chig
+            pytest integration_tests/pyscf
+          fi
 
