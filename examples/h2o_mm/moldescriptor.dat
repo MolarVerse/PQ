@@ -1,0 +1,67 @@
+# >>  moldescriptor.dat <<
+#
+#     Data File containing atom information of all known molecules
+#
+#      FREE FORMAT - DELIMITER ';'
+
+# Data Groups;
+
+# <Molecule Name>   <Number of Atoms n>   <Total Charge of Molecule>
+# <Atom Name>  <Atom type Atom No. 1>     <MM point charge Atom No.1>
+# <Atom Name>  <Atom type Atom No. 2>     <MM point charge Atom No.2>
+#     .....      .....                      .....
+# <Atom Name>  <Atom type Atom No. n>     <MM point charge Atom No.n>
+#
+# Note: no comments or blank lines allowed in the data groups.
+#
+WATER_TYPE 1
+AMMONIA_TYPE 2
+
+# Molecule 1
+  H2O            3   0.0
+  O              0  -0.65966
+  H              1   0.32983
+  H              1   0.32983
+
+# Molecule 2
+  Ammonia        4   0.0
+  N              0  -0.8022  11
+  H              1   0.2674  22
+  H              1   0.2674  33
+  H              1   0.2674  44
+
+# Molecule 3
+  Sodium         1   1.0
+  Na             0   1.0
+
+# Molecule 4
+  Cloride(-I)    1  -1.0
+  Cl             0  -1.0
+
+# Molecule 5
+  Potassium(I)   1   1.0
+  K              0   1.0
+
+# Molecule 6
+  Fluoride       1  -1.0
+  F              0  -1.0
+
+# Molecule 7
+# Aluminium(III)
+  Aluminium      1   3.0
+  Al             0   3.0
+
+# Molecule 8
+# Caesium(I)
+  Caesium        1   1.0
+  Cs             0   1.0
+
+# Molecule 9
+# Zinc(I)
+  Zinc           1   2.0
+  Zn             0   2.0
+
+# Molecule 10
+# Iron(III)
+  Iron           1   3.0
+  Fe             0   3.0

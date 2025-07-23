@@ -1,12 +1,15 @@
-# MALONDIALDEHYDE PYSCF MD
+# MALONDIALDEHYDE DFTB+ RPMD
 
 
     # Type of this run
-      jobtype = qm-md;
+      jobtype = qm-rpmd;
+      rpmd_n_replica = 10;
 
     # Number of steps to be performed and timestep in fs
-      nstep = 5000; timestep = 0.2;
+      nstep = 2000; timestep = 0.1;
       init_velocities = true;
+      nreset = 100;
+      freset = 10;
 
       thermostat = berendsen; temp = 298.15; t_relaxation = 0.1;
 
@@ -17,7 +20,7 @@
       virial = atomic;
 
     # QM programm
-      qm_prog = pyscf; qm_script = pyscf_mp2.py;
+      qm_prog = dftbplus; qm_script = dftbplus_periodic_stress;
 
 
     # Input file

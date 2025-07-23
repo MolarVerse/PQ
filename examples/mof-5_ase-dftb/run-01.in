@@ -1,0 +1,29 @@
+# MOF-5 ASE-DFTB+ MD
+
+
+    # Type of this run
+      jobtype = qm-md;
+
+    # Number of steps to be performed and timestep in fs
+      nstep = 5000; timestep = 0.5; nreset = 5;
+
+      thermostat = nh-chain; start_temp = 1; temp = 298.15; t_relaxation = 0.1; nh-chain_length = 4;
+
+#     manostat = stochastic_rescaling; pressure = 1.013; p_relaxation = 1.0;
+#     stress_tensor = on;
+
+      integrator = v-verlet;
+      virial = molecular;
+
+    # QM programm
+      qm_prog        = ase-dftbplus;
+      slakos         = 3ob;
+      dispersion     = on;
+
+
+    # Input file
+      start_file  = mof5-eq.rst;
+
+    # Output files
+      file_prefix = mof5-md-01;
+
