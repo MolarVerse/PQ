@@ -96,7 +96,6 @@ jobs:
           pip install pqanalysis
           pip install ase
           pip install pyscf
-          conda install conda-forge::gsl
           conda install conda-forge::dftbplus
 
       - name: Integration Tests
