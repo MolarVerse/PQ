@@ -88,9 +88,11 @@ jobs:
           # $CONDA is an environment variable pointing to the root of the miniconda directory
           echo $CONDA/bin >> $GITHUB_PATH
 
-      - name: Install Integration Test Dependencies
+      - name: Install Integration Test Dependencies in Conda Env
         if: ${{ matrix.build == 'Release' }}
         run: |
+          conda create -n test_env
+          conda activate test_env
           pip install pytest
           pip install pytest-cov
           pip install pqanalysis
