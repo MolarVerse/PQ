@@ -42,27 +42,6 @@ jobs:
           python -m pip install numpy
         shell: bash
 
-      - name: Setup Conda Environment
-        if: ${{matrix.os == 'ubuntu-24.04' &&  matrix.build == 'Release'}}
-        uses: conda-incubator/setup-miniconda@v3
-        with:
-          auto-update-conda: true
-          python-version: '3.12'
-          activate-environment: test-env
-          channels: default, conda-forge
-          auto-activate-base: false
-
-      - name: Install Integration Test Dependencies in Conda Env
-        if: ${{matrix.os == 'ubuntu-24.04' &&  matrix.build == 'Release'}}
-        shell: bash -l {0}
-        run: |
-          pip install pytest
-          pip install pytest-cov
-          pip install pqanalysis
-          pip install ase
-          pip install pyscf
-          conda install conda-forge::dftbplus
-
       - name: install coverage
         if : ${{ matrix.os == 'ubuntu-24.04' && matrix.build == 'Debug' }}
         run: |
@@ -103,6 +82,27 @@ jobs:
           gcov_executable: gcov-13
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Setup Conda Environment
+        if: ${{matrix.os == 'ubuntu-24.04' &&  matrix.build == 'Release'}}
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-update-conda: true
+          python-version: '3.12'
+          activate-environment: test-env
+          channels: default, conda-forge
+          auto-activate-base: false
+
+      - name: Install Integration Test Dependencies in Conda Env
+        if: ${{matrix.os == 'ubuntu-24.04' &&  matrix.build == 'Release'}}
+        shell: bash -l {0}
+        run: |
+          pip install pytest
+          pip install pytest-cov
+          pip install pqanalysis
+          pip install ase
+          pip install pyscf
+          conda install conda-forge::dftbplus
 
       - name: Integration Tests
         if: ${{matrix.os == 'ubuntu-24.04' &&  matrix.build == 'Release'}}
