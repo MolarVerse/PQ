@@ -195,7 +195,7 @@ bool Atom::isQMAtom() const
     if (Settings::isQMOnlyJobtype())
         return true;
 
-    if (getQMMMType() == QMMMType::QM)
+    if (getHybridType() == HybridType::QM)
         return true;
 
     if (isForcedQM())
@@ -247,18 +247,18 @@ size_t Atom::getExternalGlobalVDWType() const { return _externalGlobalVDWType; }
 size_t Atom::getInternalGlobalVDWType() const { return _internalGlobalVDWType; }
 
 /**
- * @brief return the QMMM type of the atom
+ * @brief return the Hybrid type of the atom
  *
- * @return QMMMType
+ * @return HybridType
  */
-QMMMType Atom::getQMMMType() const { return _qmmmType; }
+HybridType Atom::getHybridType() const { return _hybridType; }
 
 /**
- * @brief return the QMMM zone of the atom
+ * @brief return the Hybrid zone of the atom
  *
- * @return QMMMZone
+ * @return HybridZone
  */
-QMMMZone Atom::getQMMMZone() const { return _qmmmZone; }
+HybridZone Atom::getHybridZone() const { return _hybridZone; }
 
 /**
  * @brief return the atomic number of the atom
@@ -479,15 +479,15 @@ void Atom::setVelocityOld(const Vec3D &velocity) { _velocityOld = velocity; }
 void Atom::setForceOld(const Vec3D &force) { _forceOld = force; }
 
 /**
- * @brief set the QMMM type of the atom
+ * @brief set the Hybrid type of the atom
  *
  * @param qmmmType
  */
-void Atom::setQMMMType(const QMMMType qmmmType) { _qmmmType = qmmmType; }
+void Atom::setHybridType(const HybridType hybridType) { _hybridType = hybridType; }
 
 /**
- * @brief set the QMMM zone of the atom
+ * @brief set the Hybrid zone of the atom
  *
  * @param qmmmZone
  */
-void Atom::setQMMMZone(const QMMMZone qmmmZone) { _qmmmZone = qmmmZone; }
+void Atom::setHybridZone(const HybridZone hybridZone) { _hybridZone = hybridZone; }

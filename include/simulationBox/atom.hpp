@@ -33,25 +33,25 @@
 namespace simulationBox
 {
     /**
-     * @class enum QMMMType
+     * @class enum HybridType
      */
-    enum class QMMMType : size_t
+    enum class HybridType : size_t
     {
-        NOT_QMMM,
+        NOT_HYBRID,
         QM,
         MM
     };
 
     /**
-     * @class enum QMMMZone
+     * @class enum HybridZone
      */
-    enum class QMMMZone : size_t
+    enum class HybridZone : size_t
     {
-        NOT_QMMM,
-        QMCORE,
-        QMLAYER,
-        QMSMOOTHING,
-        MMZONE
+        NOT_HYBRID,
+        CORE,
+        LAYER,
+        SMOOTHING,
+        OUTER
     };
 
     /**
@@ -71,8 +71,8 @@ namespace simulationBox
         size_t _externalAtomType;
         size_t _atomType;
 
-        QMMMType _qmmmType = QMMMType::NOT_QMMM;
-        QMMMZone _qmmmZone = QMMMZone::NOT_QMMM;
+        HybridType _hybridType = HybridType::NOT_HYBRID;
+        HybridZone _hybridZone = HybridZone::NOT_HYBRID;
 
         bool _isForcedQM = false;
         bool _isForcedMM = false;
@@ -126,8 +126,8 @@ namespace simulationBox
         [[nodiscard]] bool isForcedMM() const;
         [[nodiscard]] bool isQMAtom() const;
 
-        [[nodiscard]] QMMMType getQMMMType() const;
-        [[nodiscard]] QMMMZone getQMMMZone() const;
+        [[nodiscard]] HybridType getHybridType() const;
+        [[nodiscard]] HybridZone getHybridZone() const;
 
         [[nodiscard]] std::string getName() const;
         [[nodiscard]] std::string getAtomTypeName() const;
@@ -156,8 +156,8 @@ namespace simulationBox
         void setForcedQM(const bool isForcedQM);
         void setForcedMM(const bool isForcedMM);
 
-        void setQMMMType(const QMMMType qmmmType);
-        void setQMMMZone(const QMMMZone qmmmZone);
+        void setHybridType(const HybridType hybridType);
+        void setHybridZone(const HybridZone hybridZone);
 
         void setName(const std::string_view &name);
         void setAtomTypeName(const std::string_view &atomTypeName);
