@@ -187,7 +187,7 @@ bool Atom::isForcedMM() const { return _isForcedMM; }
  *
  * @details Checks if an atom qualifies as a QM atom based on:
  *          - QM-only job types (all atoms are QM)
- *          - Atom's QMMM type designation
+ *          - Atom's Hybrid type designation
  *          - Forced QM designation
  */
 bool Atom::isQMAtom() const
@@ -481,13 +481,19 @@ void Atom::setForceOld(const Vec3D &force) { _forceOld = force; }
 /**
  * @brief set the Hybrid type of the atom
  *
- * @param qmmmType
+ * @param hybridType
  */
-void Atom::setHybridType(const HybridType hybridType) { _hybridType = hybridType; }
+void Atom::setHybridType(const HybridType hybridType)
+{
+    _hybridType = hybridType;
+}
 
 /**
  * @brief set the Hybrid zone of the atom
  *
- * @param qmmmZone
+ * @param hybridZone
  */
-void Atom::setHybridZone(const HybridZone hybridZone) { _hybridZone = hybridZone; }
+void Atom::setHybridZone(const HybridZone hybridZone)
+{
+    _hybridZone = hybridZone;
+}

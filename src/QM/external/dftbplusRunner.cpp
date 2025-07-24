@@ -67,8 +67,7 @@ void DFTBPlusRunner::writeCoordsFile(SimulationBox &box)
     std::ofstream     coordsFile(fileName);
 
     coordsFile << box.getNumberOfQMAtoms();
-    coordsFile << "  " << (Settings::isQMOnlyJobtype() ? 'S' : 'C')
-               << '\n';
+    coordsFile << "  " << (Settings::isQMOnlyJobtype() ? 'S' : 'C') << '\n';
 
     const auto uniqueAtomNames = box.getUniqueQMAtomNames();
 

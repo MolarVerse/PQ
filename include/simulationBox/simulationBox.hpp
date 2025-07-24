@@ -253,9 +253,7 @@ namespace simulationBox
      * @return a view/range of QM atoms filtered from all atoms
      *
      * @details This function returns a range-based view that filters atoms
-     *          from _atoms based on job type and QMMM criteria. For QM_MD jobs,
-     *          all atoms are considered QM atoms. For other job types, atoms
-     *          are filtered based on their QMMMType.
+     *          from _atoms based on whether they are designated as QM atoms.
      */
     inline auto SimulationBox::getQMAtoms() const
     {
