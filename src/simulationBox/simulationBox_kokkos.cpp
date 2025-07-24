@@ -434,9 +434,7 @@ DualView<size_t*>& KokkosSimulationBox::getInternalGlobalVDWTypes()
  * @return Kokkos::DualView<double* [3], Kokkos::LayoutLeft>&
  */
 DualView<double* [3], Kokkos::LayoutLeft>& KokkosSimulationBox::getPositions()
-{
-    return _positions;
-}
+{ return _positions; }
 
 /**
  * @brief get velocities
@@ -444,9 +442,7 @@ DualView<double* [3], Kokkos::LayoutLeft>& KokkosSimulationBox::getPositions()
  * @return Kokkos::DualView<double* [3], Kokkos::LayoutLeft>&
  */
 DualView<double* [3], Kokkos::LayoutLeft>& KokkosSimulationBox::getVelocities()
-{
-    return _velocities;
-}
+{ return _velocities; }
 
 /**
  * @brief get forces
@@ -454,9 +450,7 @@ DualView<double* [3], Kokkos::LayoutLeft>& KokkosSimulationBox::getVelocities()
  * @return Kokkos::DualView<double* [3], Kokkos::LayoutLeft>&
  */
 DualView<double* [3], Kokkos::LayoutLeft>& KokkosSimulationBox::getForces()
-{
-    return _forces;
-}
+{ return _forces; }
 
 /**
  * @brief get shift forces
@@ -464,16 +458,17 @@ DualView<double* [3], Kokkos::LayoutLeft>& KokkosSimulationBox::getForces()
  * @return Kokkos::DualView<double* [3], Kokkos::LayoutLeft>&
  */
 DualView<double* [3], Kokkos::LayoutLeft>& KokkosSimulationBox::getShiftForces()
-{
-    return _shiftForces;
-}
+{ return _shiftForces; }
 
 /**
  * @brief get masses
  *
  * @return Kokkos::DualView<double*>&
  */
-DualView<double*>& KokkosSimulationBox::getMasses() { return _masses; }
+DualView<double*>& KokkosSimulationBox::getMasses()
+{
+    return _masses;
+}
 
 /**
  * @brief get partial charges

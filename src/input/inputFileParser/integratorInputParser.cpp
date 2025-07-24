@@ -26,13 +26,13 @@
 #include <format>       // for format
 #include <functional>   // for _Bind_front_t, bind_front
 
-#include "exceptions.hpp"        // for InputFileException, customException
-#include "integrator.hpp"        // for VelocityVerlet, integrator
-#include "mdEngine.hpp"          // for Engine
-#include "settings.hpp"          // for Settings
+#include "exceptions.hpp"         // for InputFileException, customException
+#include "integrator.hpp"         // for VelocityVerlet, integrator
+#include "mdEngine.hpp"           // for Engine
 #include "references.hpp"         // for ReferencesOutput
 #include "referencesOutput.hpp"   // for ReferencesOutput
-#include "stringUtilities.hpp"   // for toLowerCopy
+#include "settings.hpp"           // for Settings
+#include "stringUtilities.hpp"    // for toLowerCopy
 
 using namespace input;
 using namespace engine;

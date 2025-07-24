@@ -24,11 +24,11 @@
 
 #define _TEST_MANOSTAT_HPP_
 
+#include <gtest/gtest.h>
+
 #include "manostat.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
-
-#include <gtest/gtest.h>
 
 /**
  * @class TestManostat
@@ -38,7 +38,7 @@
  */
 class TestManostat : public ::testing::Test
 {
-  protected:
+   protected:
     void SetUp() override
     {
         _manostat = new manostat::Manostat();
@@ -46,8 +46,12 @@ class TestManostat : public ::testing::Test
 
         _data->setVolume(2.0);
         _data->setVirial(diagonalMatrix(linearAlgebra::Vec3D(1.0, 2.0, 3.0)));
-        _data->setKineticEnergyMolecularVector(diagonalMatrix(linearAlgebra::Vec3D(1.0, 2.0, 3.0)));
-        _data->setKineticEnergyAtomicVector(diagonalMatrix(linearAlgebra::Vec3D(1.0, 1.0, 1.0)));
+        _data->setKineticEnergyMolecularVector(
+            diagonalMatrix(linearAlgebra::Vec3D(1.0, 2.0, 3.0))
+        );
+        _data->setKineticEnergyAtomicVector(
+            diagonalMatrix(linearAlgebra::Vec3D(1.0, 1.0, 1.0))
+        );
 
         _box = new simulationBox::SimulationBox();
         _box->setVolume(2.0);

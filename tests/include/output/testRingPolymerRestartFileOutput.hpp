@@ -24,17 +24,18 @@
 
 #define _TEST_RING_POLYMER_RESTART_FILE_OUTPUT_HPP_
 
+#include <gtest/gtest.h>   // for Test
+
+#include <algorithm>   // for copy, max
+#include <cstdio>      // for remove
+#include <memory>      // for __shared_ptr_access, shared_ptr
+#include <vector>      // for vector
+
 #include "atom.hpp"                           // for Atom
 #include "molecule.hpp"                       // for Molecule
 #include "ringPolymerRestartFileOutput.hpp"   // for RingPolymerRestartFileOutput
 #include "simulationBox.hpp"                  // for SimulationBox
 #include "vector3d.hpp"                       // for Vec3D, Vector3D
-
-#include <algorithm>       // for copy, max
-#include <cstdio>          // for remove
-#include <gtest/gtest.h>   // for Test
-#include <memory>          // for __shared_ptr_access, shared_ptr
-#include <vector>          // for vector
 
 /**
  * @class TestRingPolymerRestartFileOutput
@@ -44,10 +45,11 @@
  */
 class TestRingPolymerRestartFileOutput : public ::testing::Test
 {
-  protected:
+   protected:
     void SetUp() override
     {
-        _rstFileOutput  = new output::RingPolymerRestartFileOutput("default.rpmd.rst");
+        _rstFileOutput =
+            new output::RingPolymerRestartFileOutput("default.rpmd.rst");
         _simulationBox1 = new simulationBox::SimulationBox();
         _simulationBox2 = new simulationBox::SimulationBox();
 

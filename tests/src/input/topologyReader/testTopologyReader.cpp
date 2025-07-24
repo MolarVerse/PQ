@@ -26,9 +26,8 @@
 #include "exceptions.hpp"           // for InputFileException, TopologyException
 #include "fileSettings.hpp"         // for FileSettings
 #include "forceFieldSettings.hpp"   // for ForceFieldSettings
-#include "topologyReader.hpp"       // for TopologyReader
-
-#include "gtest/gtest.h"   // for AssertionResult, Message, TestPartResult
+#include "gtest/gtest.h"        // for AssertionResult, Message, TestPartResult
+#include "topologyReader.hpp"   // for TopologyReader
 
 using namespace input::topology;
 
@@ -57,9 +56,15 @@ TEST_F(TestTopologyReader, isNeeded)
  */
 TEST_F(TestTopologyReader, determineSection)
 {
-    EXPECT_NO_THROW([[maybe_unused]] const auto dummy = _topologyReader->determineSection({"shake"}));
-    EXPECT_THROW([[maybe_unused]] const auto dummy = _topologyReader->determineSection({"unknown"}),
-                 customException::TopologyException);
+    EXPECT_NO_THROW(
+        [[maybe_unused]] const auto dummy =
+            _topologyReader->determineSection({"shake"})
+    );
+    EXPECT_THROW(
+        [[maybe_unused]] const auto dummy =
+            _topologyReader->determineSection({"unknown"}),
+        customException::TopologyException
+    );
 }
 
 /**

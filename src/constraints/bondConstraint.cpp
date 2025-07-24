@@ -209,8 +209,7 @@ void BondConstraint::setShakeDistanceRef(const pq::Vec3D &shakeDistanceRef)
  *
  * @return target bond length
  */
-[[nodiscard]]
-double BondConstraint::getTargetBondLength() const
+[[nodiscard]] double BondConstraint::getTargetBondLength() const
 {
     return _targetBondLength;
 }
@@ -220,8 +219,7 @@ double BondConstraint::getTargetBondLength() const
  *
  * @return shake distance reference
  */
-[[nodiscard]]
-pq::Vec3D BondConstraint::getShakeDistanceRef() const
+[[nodiscard]] pq::Vec3D BondConstraint::getShakeDistanceRef() const
 {
     return _shakeDistanceRef;
 }

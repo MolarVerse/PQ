@@ -24,15 +24,15 @@
 
 #define _TEST_CELL_LIST_HPP_
 
+#include <gtest/gtest.h>
+
 #include "celllist.hpp"            // for CellList
 #include "potentialSettings.hpp"   // for PotentialSettings
 #include "simulationBox.hpp"       // for SimulationBox
 
-#include <gtest/gtest.h>
-
 class TestCellList : public ::testing::Test
 {
-  protected:
+   protected:
     virtual void SetUp()
     {
         _cellList = new simulationBox::CellList();

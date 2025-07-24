@@ -30,9 +30,9 @@
 #include "constraintSettings.hpp"   // for ConstraintSettings
 #include "constraints.hpp"          // for Constraints
 #include "engine.hpp"               // for Engine
+#include "exceptions.hpp"           // for InputFileException
 #include "references.hpp"           // for ReferencesOutput
 #include "referencesOutput.hpp"     // for ReferencesOutput
-#include "exceptions.hpp"           // for InputFileException
 
 using namespace input;
 using namespace engine;
