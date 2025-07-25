@@ -48,8 +48,18 @@
 <li class="toctree-l1"><a class="reference internal" href="../userGuide/userGuide.html">User Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation/installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Developer Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#project-structure">Project Structure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#tests">Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#project-structure">Project Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#core-directory-layout">Core Directory Layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#core-architecture">Core Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#build-configuration">Build Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#software-tests">Software Tests</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#unit-testing">Unit Testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#integration-testing">Integration Testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#github-actions">GitHub Actions</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#how-to-contribute">How to Contribute</a></li>
 </ul>
@@ -85,15 +95,146 @@
 <p>This section includes information for developers who want to contribute to the project. It includes information about the project structure, how to run the tests, and how to build the documentation. It also includes information about the project’s coding style and how to contribute to the project.</p>
 <section id="project-structure">
 <h2>Project Structure<a class="headerlink" href="#project-structure" title="Link to this heading"></a></h2>
+<p><strong>PQ</strong> is a C++ molecular dynamics simulation engine with Python bindings, organized into a modular architecture. The project follows standard C++ project conventions with clear separation between headers, source code, applications, tests, and documentation.</p>
+<section id="core-directory-layout">
+<h3>Core Directory Layout<a class="headerlink" href="#core-directory-layout" title="Link to this heading"></a></h3>
+<p>The main directories are organized as follows:</p>
+<dl class="simple">
+<dt><strong>Source Code:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">src/</span></code> - Implementation files (.cpp) containing the core functionality</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">include/</span></code> - Header files (.hpp) defining interfaces and declarations</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">apps/</span></code> - Main application executable (PQ.cpp)</p></li>
+</ul>
+</dd>
+<dt><strong>Build System:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> - Main CMake configuration file</p></li>
+</ul>
+</dd>
+<dt><strong>Testing:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tests/</span></code> - Unit tests for individual components</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">integration_tests/</span></code> - Integration tests using pytest</p></li>
+</ul>
+</dd>
+<dt><strong>Documentation:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">docs/</span></code> - Sphinx documentation source files and build configuration</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">README.md</span></code> - Project overview and installation instructions</p></li>
+</ul>
+</dd>
+<dt><strong>External Dependencies:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">external/</span></code> - Third-party libraries (googletest, progressbar, toml++)</p></li>
+</ul>
+</dd>
+<dt><strong>Utilities:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">scripts/</span></code> - Build scripts, Singularity definition files, and utility scripts</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">examples/</span></code> - Example simulation input files</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">config/</span></code> - License headers</p></li>
+</ul>
+</dd>
+</dl>
 </section>
-<section id="tests">
-<h2>Tests<a class="headerlink" href="#tests" title="Link to this heading"></a></h2>
+<section id="core-architecture">
+<h3>Core Architecture<a class="headerlink" href="#core-architecture" title="Link to this heading"></a></h3>
+<p>The <strong>PQ</strong> codebase is organized into functional modules, each contained in its own directory within both <code class="docutils literal notranslate"><span class="pre">src/</span></code> and <code class="docutils literal notranslate"><span class="pre">include/</span></code>:</p>
+<dl class="simple">
+<dt><strong>Simulation Engine:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">engine/</span></code> - Main simulation engine and orchestration</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">integrator/</span></code> - Numerical integration algorithms</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">thermostat/</span></code> - Temperature control algorithms</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">manostat/</span></code> - Pressure control algorithms</p></li>
+</ul>
+</dd>
+<dt><strong>Physical Models:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">forceField/</span></code> - MM bonded interactions</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">intraNonBonded/</span></code> - MM intramolecular non-bonded interactions</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">potential/</span></code> - MM intermolecular non-bonded interactions</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">QM/</span></code> - Interface to QM runner programs</p></li>
+</ul>
+</dd>
+<dt><strong>System Setup:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">input/</span></code> - Input and setup file parsing</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">setup/</span></code> - System initialization and configuration</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationBox/</span></code> - Simulation cell, molecule and atom handling</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">connectivity/</span></code> - Molecular topology and bonding information</p></li>
+</ul>
+</dd>
+<dt><strong>Data Management:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">box/</span></code> - Simulation box geometry and periodic boundary conditions</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">physicalData/</span></code> - Physical constants and unit conversions</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">output/</span></code> - Output file generation and data writing</p></li>
+</ul>
+</dd>
+<dt><strong>Computational Infrastructure:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">linearAlgebra/</span></code> - Vector and matrix operations</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">utilities/</span></code> - General utility functions and helpers</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">kernels/</span></code> - Computational kernels and optimized routines</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">timings/</span></code> - Performance profiling and timing utilities</p></li>
+</ul>
+</dd>
+<dt><strong>Advanced Features:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">constraints/</span></code> - Constraint algorithms (SHAKE, RATTLE, etc.)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">maxwellBoltzmann/</span></code> - Maxwell-Boltzmann velocity initialization</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">resetKinetics/</span></code> - Kinetic energy manipulation</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">virial/</span></code> - Virial stress tensor calculations</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mpi/</span></code> - MPI parallelization support</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">python/</span></code> - Python bindings and interface</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">opt/</span></code> - Optimization algorithms</p></li>
+</ul>
+</dd>
+<dt><strong>Design Patterns:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">concepts/</span></code> - C++20 concepts for template constraints</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">exceptions/</span></code> - Custom exception classes</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">settings/</span></code> - Configuration and settings management</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="build-configuration">
+<h3>Build Configuration<a class="headerlink" href="#build-configuration" title="Link to this heading"></a></h3>
+<p>The project uses CMake as its build system:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Root <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> configures the overall project</p></li>
+<li><p>Each major directory contains its own <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> for modular compilation</p></li>
+<li><p>External dependencies are managed through CMake’s FetchContent or find_package</p></li>
+<li><p>Support for different build types (Debug, Release) and optional features (MPI support)</p></li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+<section id="software-tests">
+<h2>Software Tests<a class="headerlink" href="#software-tests" title="Link to this heading"></a></h2>
+<section id="unit-testing">
+<h3>Unit Testing<a class="headerlink" href="#unit-testing" title="Link to this heading"></a></h3>
+<p>Unit tests are located in the <code class="docutils literal notranslate"><span class="pre">PQ/tests/</span></code> directory.
+After building the project, the unit tests can be run by executing the command <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">test</span></code> from within the build directory.</p>
+</section>
+<section id="integration-testing">
+<h3>Integration Testing<a class="headerlink" href="#integration-testing" title="Link to this heading"></a></h3>
+<p>Integration tests are located in the <code class="docutils literal notranslate"><span class="pre">PQ/integration_tests/</span></code> directory.
+To run these tests, ensure the following Python packages are installed:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="https://pypi.org/project/pytest/">pytest</a></p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/pytest-cov/">pytest-cov</a></p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/pqanalysis/">pqanalysis</a></p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/ase/">ase</a></p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/pyscf/">pyscf</a></p></li>
+</ul>
+</div></blockquote>
+<p>In addition, the <a class="reference external" href="https://dftbplus.org/index.html">DFTB+</a> program package has to be installed.
+You can then run the integration tests with the command <code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">PQ/integration_tests</span></code>.</p>
+</section>
+<section id="github-actions">
+<h3>GitHub Actions<a class="headerlink" href="#github-actions" title="Link to this heading"></a></h3>
+<p>The software workflow — from building the project to running unit and integration tests — is validated by continuous integration (CI) using GitHub Actions.
+The corresponding workflow configuration files are located in the <code class="docutils literal notranslate"><span class="pre">PQ/.github/workflows/</span></code> directory.</p>
+</section>
 </section>
 <section id="documentation">
 <h2>Documentation<a class="headerlink" href="#documentation" title="Link to this heading"></a></h2>
-<p>This documentation is written as <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html">reStructuredText</a> files <code class="docutils literal notranslate"><span class="pre">.rst</span></code> and converted to HTML websites files by <a class="reference external" href="https://www.sphinx-doc.org/en/master/index.html">Sphinx</a> .
+<p>This documentation is written as <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html">reStructuredText</a> files <code class="docutils literal notranslate"><span class="pre">.rst</span></code> and converted to HTML website files by <a class="reference external" href="https://www.sphinx-doc.org/en/master/index.html">Sphinx</a> .
 The respective source files are located in <code class="docutils literal notranslate"><span class="pre">PQ/docs/sphinx/src/</span></code>.
-In order to compile the files locally you need a python environment in which the following packages are installed:</p>
+In order to compile the files locally you need to install the following Python packages:</p>
 <blockquote>
 <div><ul class="simple">
 <li><p><a class="reference external" href="https://pypi.org/project/Sphinx/">Sphinx</a></p></li>
@@ -107,10 +248,10 @@ The resulting website can be viewed by opening the file <code class="docutils li
 </section>
 <section id="how-to-contribute">
 <h2>How to Contribute<a class="headerlink" href="#how-to-contribute" title="Link to this heading"></a></h2>
-<p>For any contributor willing to contribute to the project, it is important to understand the branching model used by the project. The project uses the <a class="reference external" href="http://nvie.com/posts/a-successful-git-branching-model/">Gitflow</a> branching model. In order to contribute to the project please follow the following steps:</p>
+<p>For anyone willing to contribute to the project, it is important to understand the branching model used by the project. The project uses the <a class="reference external" href="http://nvie.com/posts/a-successful-git-branching-model/">Gitflow</a> branching model. In order to contribute to the project, please follow these steps:</p>
 <blockquote>
 <div><ol class="arabic">
-<li><p>Fork the project on Github. (not necessary if you are a member of the project)</p></li>
+<li><p>Fork the project on GitHub. (not necessary if you are a member of the project)</p></li>
 <li><p>Clone your fork locally:</p>
 <blockquote>
 <div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/MolarVerse/PQ.git
@@ -143,7 +284,7 @@ $<span class="w"> </span>git<span class="w"> </span>flow<span class="w"> </span>
 </div>
 </div></blockquote>
 </li>
-<li><p>Create a pull request on Github.</p></li>
+<li><p>Create a pull request on GitHub.</p></li>
 </ol>
 </div></blockquote>
 </section>
