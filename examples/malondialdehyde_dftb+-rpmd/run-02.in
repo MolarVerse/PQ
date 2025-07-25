@@ -1,12 +1,15 @@
-# MALONDIALDEHYDE DFTB+ MD
+# MALONDIALDEHYDE DFTB+ RPMD
 
 
     # Type of this run
-      jobtype = qm-md;
+      jobtype = qm-rpmd;
+      rpmd_n_replica = 10;
 
     # Number of steps to be performed and timestep in fs
-      nstep = 5000; timestep = 0.2;
-      init_velocities = true;
+      nstep = 2000; timestep = 0.1;
+      init_velocities = false;
+      nreset = 100;
+      freset = 10;
 
       thermostat = berendsen; temp = 298.15; t_relaxation = 0.1;
 
@@ -21,8 +24,9 @@
 
 
     # Input file
-      start_file  = MALONDIALDEHYDE-eq.rst;
+      start_file      = malondialdehyde-01.rst;
+      rpmd_start_file = malondialdehyde-01.rpmd.rst;
 
     # Output files
-      file_prefix = malondialdehyde-01;
+      file_prefix = malondialdehyde-02;
 
