@@ -271,7 +271,7 @@ TEST(TestQMSetup, setupQMLoopTimeLimitDefault)
 
     _engine->getEngineOutput().getLogOutput().setFilename("default.log");
     QMSettings::setQMMethod(QMMethod::DFTBPLUS);
-    QMSettings::setQMScript("paTH/To/myQMScript");
+    QMSettings::setQMScript("path/To/myQMScript");
 
     _qmSetup->setupWriteInfo();
 
@@ -282,7 +282,7 @@ TEST(TestQMSetup, setupQMLoopTimeLimitDefault)
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
-    EXPECT_EQ(line, "         QM script: path/to/myqmscript");
+    EXPECT_EQ(line, "         QM script: path/To/myQMScript");
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
@@ -300,7 +300,7 @@ TEST(TestQMSetup, setupQMLoopTimeLimitNegative)
 
     _engine->getEngineOutput().getLogOutput().setFilename("default.log");
     QMSettings::setQMMethod(QMMethod::DFTBPLUS);
-    QMSettings::setQMScript("paTH/To/myQMScript");
+    QMSettings::setQMScript("path/To/myQMScript");
     QMSettings::setQMLoopTimeLimit(-1.2);
 
     _qmSetup->setupWriteInfo();
@@ -312,7 +312,7 @@ TEST(TestQMSetup, setupQMLoopTimeLimitNegative)
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
-    EXPECT_EQ(line, "         QM script: path/to/myqmscript");
+    EXPECT_EQ(line, "         QM script: path/To/myQMScript");
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
@@ -330,7 +330,7 @@ TEST(TestQMSetup, setupQMLoopTimeLimitZero)
 
     _engine->getEngineOutput().getLogOutput().setFilename("default.log");
     QMSettings::setQMMethod(QMMethod::DFTBPLUS);
-    QMSettings::setQMScript("paTH/To/myQMScript");
+    QMSettings::setQMScript("path/To/myQMScript");
     QMSettings::setQMLoopTimeLimit(0);
 
     _qmSetup->setupWriteInfo();
@@ -342,7 +342,7 @@ TEST(TestQMSetup, setupQMLoopTimeLimitZero)
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
-    EXPECT_EQ(line, "         QM script: path/to/myqmscript");
+    EXPECT_EQ(line, "         QM script: path/To/myQMScript");
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
@@ -360,7 +360,7 @@ TEST(TestQMSetup, setupQMLoopTimeLimitPositive)
 
     _engine->getEngineOutput().getLogOutput().setFilename("default.log");
     QMSettings::setQMMethod(QMMethod::DFTBPLUS);
-    QMSettings::setQMScript("paTH/To/myQMScript");
+    QMSettings::setQMScript("path/To/myQMScript");
     QMSettings::setQMLoopTimeLimit(3.14);
 
     _qmSetup->setupWriteInfo();
@@ -372,7 +372,7 @@ TEST(TestQMSetup, setupQMLoopTimeLimitPositive)
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
-    EXPECT_EQ(line, "         QM script: path/to/myqmscript");
+    EXPECT_EQ(line, "         QM script: path/To/myQMScript");
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);

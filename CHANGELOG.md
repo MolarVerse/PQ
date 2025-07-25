@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 ### Bug Fixes
 
 - Index 0 is now correctly out of bounds in topology file
+- The path provided for qm_script_full_path preserves its letter casing
 
 ### Internal
 

@@ -82,10 +82,10 @@ TEST_F(TestInputFileReader, parseQMScriptFullPath)
 {
     auto parser = QMInputParser(*_engine);
     parser.parseQMScriptFullPath(
-        {"qm_script_full_path", "=", "/path/to/script.sh"},
+        {"qm_script_full_path", "=", "/path/to/QM/Script.sh"},
         0
     );
-    EXPECT_EQ(QMSettings::getQMScriptFullPath(), "/path/to/script.sh");
+    EXPECT_EQ(QMSettings::getQMScriptFullPath(), "/path/to/QM/Script.sh");
 }
 
 TEST_F(TestInputFileReader, parseQMLoopTimeLimit)
