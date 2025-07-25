@@ -53,18 +53,14 @@ void PySCFRunner::writeCoordsFile(SimulationBox &box)
 
     coordsFile << box.getNumberOfQMAtoms() << "\n\n";
 
-    for (size_t i = 0, numberOfAtoms = box.getNumberOfQMAtoms();
-         i < numberOfAtoms;
-         ++i)
+    for (const auto &atom : box.getQMAtoms())
     {
-        const auto &atom = box.getQMAtom(i);
-
         coordsFile << std::format(
             "{:5s}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
-            atom.getName(),
-            atom.getPosition()[0],
-            atom.getPosition()[1],
-            atom.getPosition()[2]
+            atom->getName(),
+            atom->getPosition()[0],
+            atom->getPosition()[1],
+            atom->getPosition()[2]
         );
     }
 

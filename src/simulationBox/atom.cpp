@@ -26,6 +26,7 @@
 #include "box.hpp"                // for Box
 #include "exceptions.hpp"         // for MolDescriptorException
 #include "manostatSettings.hpp"   // for ManostatSettings
+#include "settings.hpp"           // for Settings
 #include "stringUtilities.hpp"    // for toLowerCopy
 #include "vector3d.hpp"           // for Vec3D
 
@@ -164,20 +165,44 @@ void Atom::addShiftForce(const Vec3D &shiftForce) { _shiftForce += shiftForce; }
  ***************************/
 
 /**
- * @brief return if the atom is QM only
+ * @brief return if the atom is forced to be QM
  *
  * @return true
  * @return false
  */
-bool Atom::isQMOnly() const { return _isQMOnly; }
+bool Atom::isForcedQM() const { return _isForcedQM; }
 
 /**
- * @brief return if the atom is MM only
+ * @brief return if the atom is forced to be MM
  *
  * @return true
  * @return false
  */
-bool Atom::isMMOnly() const { return _isMMOnly; }
+bool Atom::isForcedMM() const { return _isForcedMM; }
+
+/**
+ * @brief determine if an atom should be treated as QM
+ *
+ * @return true if the atom should be treated as QM, false otherwise
+ *
+ * @details Checks if an atom qualifies as a QM atom based on:
+ *          - QM-only job types (all atoms are QM)
+ *          - Atom's Hybrid type designation
+ *          - Forced QM designation
+ */
+bool Atom::isQMAtom() const
+{
+    if (Settings::isQMOnlyJobtype())
+        return true;
+
+    if (getHybridType() == HybridType::QM)
+        return true;
+
+    if (isForcedQM())
+        return true;
+
+    return false;
+}
 
 /**
  * @brief return the name of the atom (element name)
@@ -220,6 +245,20 @@ size_t Atom::getExternalGlobalVDWType() const { return _externalGlobalVDWType; }
  * @return size_t
  */
 size_t Atom::getInternalGlobalVDWType() const { return _internalGlobalVDWType; }
+
+/**
+ * @brief return the Hybrid type of the atom
+ *
+ * @return HybridType
+ */
+HybridType Atom::getHybridType() const { return _hybridType; }
+
+/**
+ * @brief return the Hybrid zone of the atom
+ *
+ * @return HybridZone
+ */
+HybridZone Atom::getHybridZone() const { return _hybridZone; }
 
 /**
  * @brief return the atomic number of the atom
@@ -291,18 +330,18 @@ Vec3D Atom::getShiftForce() const { return _shiftForce; }
  ***************************/
 
 /**
- * @brief set if the atom is QM only
+ * @brief set if the atom is forced to be QM
  *
  * @param position
  */
-void Atom::setQMOnly(const bool isQMOnly) { _isQMOnly = isQMOnly; }
+void Atom::setForcedQM(const bool isForcedQM) { _isForcedQM = isForcedQM; }
 
 /**
- * @brief set if the atom is MM only
+ * @brief set if the atom is forced to be MM
  *
  * @param position
  */
-void Atom::setMMOnly(const bool isMMOnly) { _isMMOnly = isMMOnly; }
+void Atom::setForcedMM(const bool isForcedMM) { _isForcedMM = isForcedMM; }
 
 /**
  * @brief set the name of the atom (element name)
@@ -438,3 +477,23 @@ void Atom::setVelocityOld(const Vec3D &velocity) { _velocityOld = velocity; }
  * @param force
  */
 void Atom::setForceOld(const Vec3D &force) { _forceOld = force; }
+
+/**
+ * @brief set the Hybrid type of the atom
+ *
+ * @param hybridType
+ */
+void Atom::setHybridType(const HybridType hybridType)
+{
+    _hybridType = hybridType;
+}
+
+/**
+ * @brief set the Hybrid zone of the atom
+ *
+ * @param hybridZone
+ */
+void Atom::setHybridZone(const HybridZone hybridZone)
+{
+    _hybridZone = hybridZone;
+}

@@ -33,6 +33,28 @@
 namespace simulationBox
 {
     /**
+     * @class enum HybridType
+     */
+    enum class HybridType : size_t
+    {
+        NOT_HYBRID,
+        QM,
+        MM
+    };
+
+    /**
+     * @class enum HybridZone
+     */
+    enum class HybridZone : size_t
+    {
+        NOT_HYBRID,
+        CORE,
+        LAYER,
+        SMOOTHING,
+        OUTER
+    };
+
+    /**
      * @class Atom
      *
      * @brief containing all information about an atom
@@ -49,8 +71,11 @@ namespace simulationBox
         size_t _externalAtomType;
         size_t _atomType;
 
-        bool _isQMOnly = false;
-        bool _isMMOnly = false;
+        HybridType _hybridType = HybridType::NOT_HYBRID;
+        HybridZone _hybridZone = HybridZone::NOT_HYBRID;
+
+        bool _isForcedQM = false;
+        bool _isForcedMM = false;
 
         int    _atomicNumber;
         double _mass;
@@ -97,8 +122,12 @@ namespace simulationBox
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] bool isQMOnly() const;
-        [[nodiscard]] bool isMMOnly() const;
+        [[nodiscard]] bool isForcedQM() const;
+        [[nodiscard]] bool isForcedMM() const;
+        [[nodiscard]] bool isQMAtom() const;
+
+        [[nodiscard]] HybridType getHybridType() const;
+        [[nodiscard]] HybridZone getHybridZone() const;
 
         [[nodiscard]] std::string getName() const;
         [[nodiscard]] std::string getAtomTypeName() const;
@@ -124,8 +153,11 @@ namespace simulationBox
          * standard setter methods *
          ***************************/
 
-        void setQMOnly(const bool isQMOnly);
-        void setMMOnly(const bool isMMOnly);
+        void setForcedQM(const bool isForcedQM);
+        void setForcedMM(const bool isForcedMM);
+
+        void setHybridType(const HybridType hybridType);
+        void setHybridZone(const HybridZone hybridZone);
 
         void setName(const std::string_view &name);
         void setAtomTypeName(const std::string_view &atomTypeName);

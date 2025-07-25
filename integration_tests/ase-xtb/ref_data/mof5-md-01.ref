@@ -1,0 +1,60 @@
+########################################################################
+#                                                                      #
+#  This file contains all references to the software and theory used.  #
+#                                                                      #
+########################################################################
+
+PQ Software
+    Gamper, J., Gallmetzer, J. M., Weiss, A. K. H.,
+    Hofer, T. S. (2024). PQ: An Open-Source Platform
+    for Advanced Molecular Dynamics Simulations. Zenodo.
+    https://doi.org/10.5281/zenodo.14185071
+
+
+GFN2-xTB
+    Christoph Bannwarth, Sebastian Ehlert, and Stefan Grimme
+    Journal of Chemical Theory and Computation 2019 15 (3), 1652-1671
+    https://doi.org/10.1021/acs.jctc.8b01176
+
+
+
+########################################################################
+#                                                                      #
+#                            BIBTEX ENTRIES                            #
+#                                                                      #
+########################################################################
+
+%%%%%%%%%%%%%%%
+% PQ Software %
+%%%%%%%%%%%%%%%
+
+@software{gamper_2024_14185072,
+  author       = {Gamper, Jakob and Gallmetzer, Josef Maria and Weiss, Alexander K. H. and Hofer, Thomas S.},
+  title        = {PQ: An Open-Source Platform for Advanced Molecular Dynamics Simulations},
+  month        = nov,
+  year         = 2024,
+  publisher    = {Zenodo},
+  version      = {0.5.0},
+  doi          = {10.5281/zenodo.14185072},
+  url          = {https://doi.org/10.5281/zenodo.14185072},
+}
+
+
+%%%%%%%%%%%%
+% GFN2-xTB %
+%%%%%%%%%%%%
+
+@article{doi:10.1021/acs.jctc.8b01176,
+    author = {Bannwarth, Christoph and Ehlert, Sebastian and Grimme, Stefan},
+    title = {GFN2-xTB—An Accurate and Broadly Parametrized Self-Consistent Tight-Binding Quantum Chemical Method with Multipole Electrostatics and Density-Dependent Dispersion Contributions},
+    journal = {Journal of Chemical Theory and Computation},
+    volume = {15},
+    number = {3},
+    pages = {1652-1671},
+    year = {2019},
+    doi = {10.1021/acs.jctc.8b01176},
+    note ={PMID: 30741547},
+    URL = {https://doi.org/10.1021/acs.jctc.8b01176},
+}
+
+

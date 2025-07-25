@@ -56,15 +56,11 @@ void SimulationBox::copy(const SimulationBox& toCopy)
     *this = toCopy;
 
     this->_atoms.clear();
-    this->_qmAtoms.clear();
 
     for (size_t i = 0; i < toCopy._atoms.size(); ++i)
     {
         const auto atom = std::make_shared<Atom>(*toCopy._atoms[i]);
         this->_atoms.push_back(atom);
-        // TODO: ATTENTION AT THE MOMENT ONLY VALID FOR ALL QM_CALCULATIONS
-        //       Probably best would be to remove _qmAtoms at all
-        this->_qmAtoms.push_back(atom);
     }
 
     auto fillAtomsInMolecules = [this](size_t runningIndex, Molecule& molecule)
@@ -97,7 +93,7 @@ std::shared_ptr<SimulationBox> SimulationBox::clone() const
 }
 
 /**
- * @brief finds molecule by moleculeType if (size_t)
+ * @brief finds molecule by moleculeType if size_t
  *
  * @param moleculeType
  * @return std::optional<Molecule &>
@@ -116,7 +112,7 @@ std::optional<Molecule> SimulationBox::findMolecule(const size_t moleculeType)
 }
 
 /**
- * @brief adds all atomIndices to _qmCenterAtoms vector
+ * @brief adds all atomIndices to _qmCenterAtomIndices vector
  *
  * @param atomIndices
  *
@@ -126,39 +122,39 @@ void SimulationBox::addQMCenterAtoms(const std::vector<int>& atomIndices)
 {
     for (const auto index : atomIndices)
     {
-        if (index < 0 || (size_t) index >= _atoms.size())
+        if (index < 0 || index >= static_cast<int>(_atoms.size()))
             throw UserInputException(
                 std::format("QM center atom index {} out of range", index)
             );
-
-        _qmCenterAtoms.push_back(_atoms[(size_t) index]);
     }
+
+    _qmCenterAtomIndices = atomIndices;
 }
 
 /**
  * @brief assigns isQMOnly to all atoms which are in the atomIndices vector
  *
- * @details If an atom is not already in the _qmAtoms vector it is added to it
- *
  * @param atomIndices
  *
  * @throw UserInputException if atom index out of range
  */
-void SimulationBox::setupQMOnlyAtoms(const std::vector<int>& atomIndices)
+void SimulationBox::setupForcedQMAtoms(const std::vector<int>& atomIndices)
 {
     for (const auto index : atomIndices)
     {
-        if (index < 0 || (size_t) index >= _atoms.size())
+        if (index < 0 || index >= static_cast<int>(_atoms.size()))
             throw UserInputException(
                 std::format("QM only atom index {} out of range", index)
             );
 
-        _atoms[(size_t) index]->setQMOnly(true);
-
-        auto it = std::ranges::find(_qmAtoms, _atoms[(size_t) index]);
-
-        if (it == _qmAtoms.end())
-            _qmAtoms.push_back(_atoms[(size_t) index]);
+        if (_atoms[static_cast<size_t>(index)]->isForcedMM())
+            throw UserInputException(std::format(
+                "Ambiguous atom index {} - atom is already in MM only list "
+                "- cannot be in QM only list",
+                index
+            ));
+        else
+            _atoms[static_cast<size_t>(index)]->setForcedQM(true);
     }
 }
 
@@ -170,30 +166,28 @@ void SimulationBox::setupQMOnlyAtoms(const std::vector<int>& atomIndices)
  * @throw UserInputException if atom index out of range
  * @throw UserInputException if atom is already in QM only list
  */
-void SimulationBox::setupMMOnlyAtoms(const std::vector<int>& atomIndices)
+void SimulationBox::setupForcedMMAtoms(const std::vector<int>& atomIndices)
 {
     for (const auto index : atomIndices)
     {
-        if (index < 0 || (size_t) index >= _atoms.size())
+        if (index < 0 || index >= static_cast<int>(_atoms.size()))
             throw UserInputException(
                 std::format("MM only atom index {} out of range", index)
             );
 
-        _atoms[(size_t) index]->setMMOnly(true);
-
-        auto it = std::ranges::find(_qmAtoms, _atoms[(size_t) index]);
-
-        if (it != _qmAtoms.end())
+        if (_atoms[static_cast<size_t>(index)]->isForcedQM())
             throw UserInputException(std::format(
                 "Ambiguous atom index {} - atom is already in QM only list "
                 "- cannot be in MM only list",
                 index
             ));
+        else
+            _atoms[static_cast<size_t>(index)]->setForcedMM(true);
     }
 }
 
 /**
- * @brief find moleculeType by moleculeType if (size_t)
+ * @brief find moleculeType by moleculeType if size_t
  *
  * @param moleculeType
  * @return Molecule
@@ -216,7 +210,7 @@ MoleculeType& SimulationBox::findMoleculeType(const size_t moleculeType)
 }
 
 /**
- * @brief checks if molecule type exists by moleculeType id (size_t)
+ * @brief checks if molecule type exists by moleculeType id size_t
  *
  * @param moleculeType
  * @return true
@@ -632,28 +626,6 @@ void SimulationBox::checkCoulRadiusCutOff(const ExceptionType exceptionType
 }
 
 /**
- * @brief return all unique qm atom names
- *
- * @return std::vector<std::string>
- */
-std::vector<std::string> SimulationBox::getUniqueQMAtomNames()
-{
-    std::vector<std::string> uniqueQMAtomNames;
-
-    auto fillQMAtomNames = std::back_inserter(uniqueQMAtomNames);
-    auto getName         = [](const auto& atom) { return atom->getName(); };
-
-    std::ranges::transform(_qmAtoms, fillQMAtomNames, getName);
-    std::ranges::sort(uniqueQMAtomNames);
-
-    const auto [first, last] = std::ranges::unique(uniqueQMAtomNames);
-
-    uniqueQMAtomNames.erase(first, last);
-
-    return uniqueQMAtomNames;
-}
-
-/**
  * @brief calculate density of simulationBox
  *
  */
@@ -702,8 +674,7 @@ void SimulationBox::initPositions(const double displacement)
             randomNumberGenerator
                 .getUniformRealDistribution(-displacement, displacement),
             randomNumberGenerator
-                .getUniformRealDistribution(-displacement, displacement)
-        };
+                .getUniformRealDistribution(-displacement, displacement)};
 
         auto position = atom->getPosition() + random;
 

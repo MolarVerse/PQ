@@ -26,6 +26,7 @@
 
 #include <map>        // for map
 #include <optional>   // for optional
+#include <ranges>     // for ranges::filter_view
 #include <string>     // for string
 #include <vector>     // for vector
 
@@ -36,6 +37,7 @@
 #include "molecule.hpp"          // for Molecule
 #include "moleculeType.hpp"      // for MoleculeType
 #include "orthorhombicBox.hpp"   // for OrthorhombicBox
+#include "settings.hpp"          // for Settings, JobType
 #include "triclinicBox.hpp"      // for TriclinicBox
 #include "typeAliases.hpp"       // for pq::Vec3D
 
@@ -82,9 +84,8 @@ namespace simulationBox
         std::shared_ptr<Box> _box = std::make_shared<OrthorhombicBox>();
 
         pq::Vec3D                 _centerOfMass = {0.0, 0.0, 0.0};
+        std::vector<int>          _qmCenterAtomIndices;
         pq::SharedAtomVec         _atoms;
-        pq::SharedAtomVec         _qmAtoms;
-        pq::SharedAtomVec         _qmCenterAtoms;
         std::vector<Molecule>     _molecules;
         std::vector<MoleculeType> _moleculeTypes;
 
@@ -126,7 +127,6 @@ namespace simulationBox
         [[nodiscard]] pq::Vec3D calcShiftVector(const pq::Vec3D&) const;
 
         [[nodiscard]] bool moleculeTypeExists(const size_t) const;
-        [[nodiscard]] std::vector<std::string> getUniqueQMAtomNames();
 
         [[nodiscard]] std::optional<Molecule> findMolecule(const size_t);
         [[nodiscard]] MoleculeType& findMoleculeType(const size_t moleculeType);
@@ -158,15 +158,14 @@ namespace simulationBox
          ************************/
 
         void addQMCenterAtoms(const std::vector<int>& atomIndices);
-        void setupQMOnlyAtoms(const std::vector<int>& atomIndices);
-        void setupMMOnlyAtoms(const std::vector<int>& atomIndices);
+        void setupForcedQMAtoms(const std::vector<int>& atomIndices);
+        void setupForcedMMAtoms(const std::vector<int>& atomIndices);
 
         /************************
          * standard add methods *
          ************************/
 
         void addAtom(const pq::SharedAtom atom);
-        void addQMAtom(const pq::SharedAtom atom);
         void addMolecule(const Molecule& molecule);
         void addMoleculeType(const MoleculeType& molecule);
 
@@ -186,7 +185,6 @@ namespace simulationBox
         [[nodiscard]] pq::Vec3D& getCenterOfMass();
 
         [[nodiscard]] Atom&         getAtom(const size_t index);
-        [[nodiscard]] Atom&         getQMAtom(const size_t index);
         [[nodiscard]] Molecule&     getMolecule(const size_t index);
         [[nodiscard]] MoleculeType& getMoleculeType(const size_t index);
 
@@ -194,7 +192,7 @@ namespace simulationBox
         [[nodiscard]] std::vector<double> getAtomicScalarForcesOld() const;
 
         [[nodiscard]] pq::SharedAtomVec&         getAtoms();
-        [[nodiscard]] pq::SharedAtomVec&         getQMAtoms();
+        [[nodiscard]] auto                       getQMAtoms() const;
         [[nodiscard]] std::vector<Molecule>&     getMolecules();
         [[nodiscard]] std::vector<MoleculeType>& getMoleculeTypes();
 
@@ -210,8 +208,9 @@ namespace simulationBox
         [[nodiscard]] std::vector<pq::Vec3D> getPositions() const;
         [[nodiscard]] std::vector<pq::Vec3D> getVelocities() const;
         [[nodiscard]] std::vector<pq::Vec3D> getForces() const;
-        [[nodiscard]] std::vector<int>       getAtomicNumbers() const;
-        [[nodiscard]] std::vector<double>    flattenPositions() const;
+        [[nodiscard]] std::vector<int>       getQMAtomicNumbers() const;
+        [[nodiscard]] pq::stringSet          getUniqueQMAtomNames() const;
+        [[nodiscard]] std::vector<double>    getFlattenedQMPositions() const;
 
         /***************************
          * standard setter methods *
@@ -247,6 +246,22 @@ namespace simulationBox
         void setBoxDimensions(const pq::Vec3D& boxDimensions) const;
         void setBoxSizeHasChanged(const bool boxSizeHasChanged) const;
     };
+
+    /**
+     * @brief get all QM atoms using range-based filtering
+     *
+     * @return a view/range of QM atoms filtered from all atoms
+     *
+     * @details This function returns a range-based view that filters atoms
+     *          from _atoms based on whether they are designated as QM atoms.
+     */
+    inline auto SimulationBox::getQMAtoms() const
+    {
+        using std::ranges::views::filter;
+
+        return _atoms |
+               filter([](const auto& atom) { return atom->isQMAtom(); });
+    }
 
 }   // namespace simulationBox
 
