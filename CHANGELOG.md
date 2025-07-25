@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## Next Release
 
+<!-- insertion marker -->
+## [v0.6.1](https://github.com/MolarVerse/PQ/releases/tag/v0.6.1) - 2025-07-25
+
 ### Enhancements
 
 - new random_seed keyword for reproducibility
@@ -24,7 +27,6 @@ All notable changes to this project will be documented in this file.
 
 - CI workflow for macOS architecture removed
 
-<!-- insertion marker -->
 ## [v0.6.0](https://github.com/MolarVerse/PQ/releases/tag/v0.6.0) - 2025-04-02
 
 ### Enhancements
