@@ -18,9 +18,9 @@ Tests
 Documentation
 *************
 
-This documentation is written as `reStructuredText <https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html>`_ files ``.rst`` and converted to HTML websites files by `Sphinx <https://www.sphinx-doc.org/en/master/index.html>`_ .
+This documentation is written as `reStructuredText <https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html>`_ files ``.rst`` and converted to HTML website files by `Sphinx <https://www.sphinx-doc.org/en/master/index.html>`_ .
 The respective source files are located in ``PQ/docs/sphinx/src/``.
-In order to compile the files locally you need a python environment in which the following packages are installed:
+In order to compile the files locally you need to install the following Python packages:
 
     - `Sphinx            <https://pypi.org/project/Sphinx/>`_
     - `sphinx_sitemap    <https://pypi.org/project/sphinx-sitemap/>`_
@@ -34,10 +34,10 @@ The resulting website can be viewed by opening the file ``PQ/docs/sphinx/_build/
 How to Contribute
 *****************
 
-For any contributor willing to contribute to the project, it is important to understand the branching model used by the project. The project uses the `Gitflow <http://nvie.com/posts/a-successful-git-branching-model/>`_ branching model. In order to contribute to the project please follow the following steps:
+For anyone willing to contribute to the project, it is important to understand the branching model used by the project. The project uses the `Gitflow <http://nvie.com/posts/a-successful-git-branching-model/>`_ branching model. In order to contribute to the project, please follow these steps:
 
 
-    #. Fork the project on Github. (not necessary if you are a member of the project)
+    #. Fork the project on GitHub. (not necessary if you are a member of the project)
 
     #. Clone your fork locally:
     
@@ -68,4 +68,4 @@ For any contributor willing to contribute to the project, it is important to und
             $ git commit -m "commit message"
             $ git flow feature publish <feature_branch_name>
     
-    #. Create a pull request on Github.
+    #. Create a pull request on GitHub.
