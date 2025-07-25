@@ -90,7 +90,8 @@ void ThermostatSettings::setThermostatType(
 )
 {
     using enum ThermostatType;
-    const auto thermostatTypeToLower = toLowerAndReplaceDashesCopy(thermostatType);
+    const auto thermostatTypeToLower =
+        toLowerAndReplaceDashesCopy(thermostatType);
 
     if (thermostatTypeToLower == "berendsen")
         _thermostatType = BERENDSEN;

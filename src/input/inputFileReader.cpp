@@ -140,7 +140,7 @@ void InputFileReader::addKeywords()
 void InputFileReader::process(const std::vector<std::string> &lineElements)
 {
     const auto original_keyword = lineElements[0];
-    const auto keyword = toLowerAndReplaceDashesCopy(original_keyword);
+    const auto keyword          = toLowerAndReplaceDashesCopy(original_keyword);
 
     if (!_keywordFuncMap.contains(keyword))
         throw InputFileException(std::format(

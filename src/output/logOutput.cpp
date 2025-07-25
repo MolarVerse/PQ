@@ -71,7 +71,8 @@ void LogOutput::writeEndedNormally(const double elapsedTime)
 void LogOutput::writeDensityWarning()
 {
     _fp << _WARNING_
-        << "Density and box dimensions set. Density will be ignored." << "\n\n"
+        << "Density and box dimensions set. Density will be ignored."
+        << "\n\n"
         << std::flush;
 }
 

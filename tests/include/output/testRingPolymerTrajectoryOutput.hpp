@@ -24,18 +24,19 @@
 
 #define _TEST_RING_POLYMER_TRAJECTORY_FILE_OUTPUT_HPP_
 
+#include <gtest/gtest.h>   // for Test
+#include <stdio.h>         // for remove
+
+#include <algorithm>   // for copy, max
+#include <memory>      // for __shared_ptr_access, shared_ptr, make_shared
+#include <vector>      // for vector
+
 #include "atom.hpp"                          // for Atom
 #include "molecule.hpp"                      // for Molecule
 #include "ringPolymerSettings.hpp"           // for RingPolymerSettings
 #include "ringPolymerTrajectoryOutput.hpp"   // for RingPolymerTrajectoryOutput
 #include "simulationBox.hpp"                 // for SimulationBox
 #include "vector3d.hpp"                      // for Vec3D
-
-#include <algorithm>       // for copy, max
-#include <gtest/gtest.h>   // for Test
-#include <memory>          // for __shared_ptr_access, shared_ptr, make_shared
-#include <stdio.h>         // for remove
-#include <vector>          // for vector
 
 /**
  * @class TestRingPolymerTrajectoryOutput
@@ -45,14 +46,15 @@
  */
 class TestRingPolymerTrajectoryOutput : public ::testing::Test
 {
-  protected:
+   protected:
     void SetUp() override
     {
         settings::RingPolymerSettings::setNumberOfBeads(2);
 
-        _trajectoryOutput = new output::RingPolymerTrajectoryOutput("default.rpmd.xyz");
-        _simulationBox1   = new simulationBox::SimulationBox();
-        _simulationBox2   = new simulationBox::SimulationBox();
+        _trajectoryOutput =
+            new output::RingPolymerTrajectoryOutput("default.rpmd.xyz");
+        _simulationBox1 = new simulationBox::SimulationBox();
+        _simulationBox2 = new simulationBox::SimulationBox();
 
         _simulationBox1->setBoxDimensions({10.0, 10.0, 10.0});
         _simulationBox2->setBoxDimensions({10.0, 10.0, 10.0});

@@ -33,7 +33,7 @@
 #include "gmock/gmock.h"         // for ElementsAre, MakePredicateFormatter
 #include "gtest/gtest.h"         // for AssertionResult, Message, TestPartResult
 #include "stringUtilities.hpp"   // for getLineCommands, splitString, fileExists
-#include "throwWithMessage.hpp"  // for EXPECT_THROW_MSG and ASSERT_THROW_MSG
+#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG and ASSERT_THROW_MSG
 
 /**
  * @brief removeComments test by comment character

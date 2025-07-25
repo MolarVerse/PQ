@@ -48,7 +48,7 @@ namespace QM
         virtual void execute() = 0;
 
         virtual void writeCoordsFile(pq::SimBox &) = 0;
-        virtual void readStressTensor(pq::Box &, pq::PhysicalData &) {};
+        virtual void readStressTensor(pq::Box &, pq::PhysicalData &){};
 
         void readForceFile(pq::SimBox &, pq::PhysicalData &);
 

@@ -168,8 +168,8 @@ void PotentialSetup::setupNonCoulombicPairs()
     simBox.setupExternalToInternalGlobalVdwTypesMap();
     nonCoulPot.determineInternalGlobalVdwTypes(extToIntVDWTypes);
 
-    const auto nGlobalVdwTypes = simBox.getExternalGlobalVdwTypes().size();
-    auto selfNonCoulPairs = nonCoulPot.getSelfInteractionNonCoulPairs();
+    const auto nGlobalVdwTypes  = simBox.getExternalGlobalVdwTypes().size();
+    auto       selfNonCoulPairs = nonCoulPot.getSelfInteractionNonCoulPairs();
 
     if (selfNonCoulPairs.size() != nGlobalVdwTypes)
         throw ParameterFileException(

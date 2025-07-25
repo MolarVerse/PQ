@@ -280,7 +280,11 @@ TEST_F(TestInputFileReader, testMShakeFileName)
 TEST_F(TestInputFileReader, testDFTBFileName)
 {
     FilesInputParser         parser(*_engine);
-    std::vector<std::string> lineElements = {"dftb_file", "=", "dftb_in.template"};
+    std::vector<std::string> lineElements = {
+        "dftb_file",
+        "=",
+        "dftb_in.template"
+    };
 
     EXPECT_THROW_MSG(
         parser.parseDFTBFilename(lineElements, 0),

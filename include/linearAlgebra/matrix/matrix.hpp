@@ -26,4 +26,4 @@
 
 #include "matrixClass.hpp"
 
-#endif // _MATRIX_HPP_
+#endif   // _MATRIX_HPP_

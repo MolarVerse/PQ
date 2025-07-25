@@ -24,14 +24,15 @@
 
 #define _TEST_ENERGY_OUTPUT_HPP_
 
+#include <gtest/gtest.h>   // for Test
+
+#include <cstdio>   // for remove
+#include <memory>   // for allocator
+
 #include "energyOutput.hpp"     // for EnergyOutput
 #include "infoOutput.hpp"       // for InfoOutput
 #include "momentumOutput.hpp"   // for MomentumOutput
 #include "physicalData.hpp"     // for PhysicalDat
-
-#include <cstdio>          // for remove
-#include <gtest/gtest.h>   // for Test
-#include <memory>          // for allocator
 
 /**
  * @class TestEnergyOutput
@@ -41,7 +42,7 @@
  */
 class TestEnergyOutput : public ::testing::Test
 {
-  protected:
+   protected:
     void SetUp() override
     {
         _infoOutput     = new output::InfoOutput("default.info");

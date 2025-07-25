@@ -77,7 +77,7 @@ namespace setup::simulationBox
          ***************************/
 
         [[nodiscard]] static bool getZeroVelocities();
-        };
+    };
 
 }   // namespace setup::simulationBox
 

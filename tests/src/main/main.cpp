@@ -26,22 +26,26 @@
 #include <Kokkos_Core.hpp>
 #endif
 
-class MyTestEnvironment : public ::testing::Environment {
-public:
-    void SetUp() override {
-        #ifdef WITH_KOKKOS
+class MyTestEnvironment : public ::testing::Environment
+{
+   public:
+    void SetUp() override
+    {
+#ifdef WITH_KOKKOS
         Kokkos::initialize();
-        #endif
+#endif
     }
 
-    void TearDown() override {
-        #ifdef WITH_KOKKOS
+    void TearDown() override
+    {
+#ifdef WITH_KOKKOS
         Kokkos::finalize();
-        #endif
+#endif
     }
 };
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv)
+{
     ::testing::InitGoogleTest(&argc, argv);
 
     // Register our custom environment

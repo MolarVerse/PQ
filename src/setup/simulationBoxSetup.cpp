@@ -80,7 +80,7 @@ void setup::simulationBox::setupSimulationBox(Engine &engine)
  *
  * @param engine
  */
-SimulationBoxSetup::SimulationBoxSetup(Engine &engine) : _engine(engine) {};
+SimulationBoxSetup::SimulationBoxSetup(Engine &engine) : _engine(engine){};
 
 /**
  * @brief setup simulation box

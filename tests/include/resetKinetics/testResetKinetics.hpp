@@ -33,7 +33,8 @@
 // #include "vector3d.hpp"             // for Vec3D
 
 // #include <gtest/gtest.h>   // for Test
-// #include <memory>          // for make_shared, __shared_ptr_access, shared_ptr
+// #include <memory>          // for make_shared, __shared_ptr_access,
+// shared_ptr
 
 // /**
 //  * @class TestResetKinetics
@@ -47,8 +48,8 @@
 //     void SetUp() override
 //     {
 //         settings::ThermostatSettings::setTargetTemperature(300.0);
-//         _resetKinetics = new resetKinetics::ResetKinetics(1, 2, 3, 4, 50, 11);
-//         _data          = new physicalData::PhysicalData();
+//         _resetKinetics = new resetKinetics::ResetKinetics(1, 2, 3, 4, 50,
+//         11); _data          = new physicalData::PhysicalData();
 
 //         _simulationBox = new simulationBox::SimulationBox();
 

@@ -24,16 +24,17 @@
 
 #define _TEST_CONSTRAINTS_HPP_
 
+#include <gtest/gtest.h>   // for Test
+
+#include <memory>   // for make_shared, __shared_ptr_access, shared_ptr
+#include <vector>   // for vector
+
 #include "atom.hpp"             // for Atom
 #include "bondConstraint.hpp"   // for BondConstraint
 #include "constraints.hpp"      // for Constraints
 #include "molecule.hpp"         // for Molecule
 #include "simulationBox.hpp"    // for SimulationBox
 #include "vector3d.hpp"         // for Vec3D
-
-#include <gtest/gtest.h>   // for Test
-#include <memory>          // for make_shared, __shared_ptr_access, shared_ptr
-#include <vector>          // for vector
 
 /**
  * @class TestConstraints
@@ -43,7 +44,7 @@
  */
 class TestConstraints : public ::testing::Test
 {
-  protected:
+   protected:
     virtual void SetUp()
     {
         auto molecule1 = simulationBox::Molecule();
@@ -90,8 +91,20 @@ class TestConstraints : public ::testing::Test
 
         _constraints = new constraints::Constraints();
 
-        auto bondConstraint1 = constraints::BondConstraint(&(_box->getMolecules()[0]), &(_box->getMolecules()[0]), 0, 1, 1.2);
-        auto bondConstraint2 = constraints::BondConstraint(&(_box->getMolecules()[0]), &(_box->getMolecules()[1]), 2, 1, 1.3);
+        auto bondConstraint1 = constraints::BondConstraint(
+            &(_box->getMolecules()[0]),
+            &(_box->getMolecules()[0]),
+            0,
+            1,
+            1.2
+        );
+        auto bondConstraint2 = constraints::BondConstraint(
+            &(_box->getMolecules()[0]),
+            &(_box->getMolecules()[1]),
+            2,
+            1,
+            1.3
+        );
 
         _constraints->addBondConstraint(bondConstraint1);
         _constraints->addBondConstraint(bondConstraint2);
