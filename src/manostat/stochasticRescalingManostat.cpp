@@ -56,7 +56,9 @@ StochasticRescalingManostat::StochasticRescalingManostat(
     : Manostat(other),
       _tau(other._tau),
       _compressibility(other._compressibility),
-      _dt(other._dt) {};
+      _dt(other._dt)
+{
+}
 
 /**
  * @brief Construct a new Stochastic Rescaling Manostat:: Stochastic Rescaling
@@ -78,7 +80,9 @@ SemiIsotropicStochasticRescalingManostat::
     )
     : StochasticRescalingManostat(targetPressure, tau, compressibility),
       _2DAnisotropicAxis(anisotropicAxis),
-      _2DIsotropicAxes(isotropicAxes) {};
+      _2DIsotropicAxes(isotropicAxes)
+{
+}
 
 /**
  * @brief Construct a new Stochastic Rescaling Manostat:: Stochastic Rescaling
@@ -147,7 +151,7 @@ tensor3D StochasticRescalingManostat::calculateMu(const double volume)
     const auto kb       = _BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_;
 
     const auto kT     = kb * ThermostatSettings::getActualTargetTemperature();
-    const auto random = std::normal_distribution<double>(0.0, 1.0)(_generator);
+    const auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
 
     auto stochasticFactor  = 2.0 * kT * compress / volume;
     stochasticFactor      *= _PRESSURE_FACTOR_;
@@ -173,7 +177,7 @@ tensor3D SemiIsotropicStochasticRescalingManostat::calculateMu(
     const auto kb       = _BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_;
 
     const auto kT     = kb * ThermostatSettings::getActualTargetTemperature();
-    const auto random = std::normal_distribution<double>(0.0, 1.0)(_generator);
+    const auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
 
     auto stochasticFactor  = 1 / 3.0 * kT * compress / volume;
     stochasticFactor      *= _PRESSURE_FACTOR_;
@@ -218,7 +222,7 @@ tensor3D AnisotropicStochasticRescalingManostat::calculateMu(const double volume
     const auto kb       = _BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_;
 
     const auto kT     = kb * ThermostatSettings::getActualTargetTemperature();
-    const auto random = std::normal_distribution<double>(0.0, 1.0)(_generator);
+    const auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
 
     auto stochasticFactor  = 2.0 / 3.0 * kT * compress / volume;
     stochasticFactor      *= _PRESSURE_FACTOR_;
@@ -244,7 +248,7 @@ tensor3D FullAnisotropicStochasticRescalingManostat::calculateMu(
     const auto kb       = _BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_;
 
     const auto kT     = kb * ThermostatSettings::getActualTargetTemperature();
-    const auto random = std::normal_distribution<double>(0.0, 1.0)(_generator);
+    const auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
 
     auto stochasticFactor  = 2.0 / 3.0 * kT * compress / volume;
     stochasticFactor      *= _PRESSURE_FACTOR_;

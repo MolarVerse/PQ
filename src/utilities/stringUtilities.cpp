@@ -24,11 +24,13 @@
 
 #include <algorithm>    // for __for_each_fn
 #include <cctype>       // for isspace
+#include <cstdint>      // for uint_fast32_t and UINT32_MAX
 #include <format>       // for format
 #include <fstream>      // IWYU pragma: keep for basic_istream, ifstream
 #include <functional>   // for identity
 #include <ranges>   // for begin, end, operator|, views::split, views::transform
 #include <sstream>       // IWYU pragma: keep for basic_stringstream
+#include <stdexcept>     // for out_of_range and invalid_argument
 #include <string>        // for string
 #include <string_view>   // for string_view
 #include <vector>        // for vector
@@ -207,6 +209,36 @@ bool utilities::fileExists(const std::string &filename)
 }
 
 /**
+ * @brief checks if the value of a input file keyword can be interpreted as true
+ * or false
+ *
+ * @param lineElements
+ * @return true if "on", "yes", "true"
+ * @return false if "off", "no", "false"
+ *
+ * @throw InputFileException if none of these strings is matched
+ */
+bool utilities::keywordToBool(const pq::strings &lineElements)
+{
+    const auto option = toLowerCopy(lineElements[2]);
+
+    if ("on" == option || "yes" == option || "true" == option)
+        return true;
+
+    else if ("off" == option || "no" == option || "false" == option)
+        return false;
+
+    else
+        throw InputFileException(std::format(
+            "Invalid boolean option \"{}\" for keyword \"{}\" in input "
+            "file.\n"
+            "Possible values are: on, yes, true, off, no, false.",
+            lineElements[2],
+            lineElements[0]
+        ));
+}
+
+/**
  * @brief adds leading and trailing spaces to a string
  *
  * @param command
@@ -232,4 +264,45 @@ void utilities::addSpaces(
             command,
             lineNumber
         ));
+}
+
+/**
+ * @brief converts a string to an uint_fast32_t
+ *
+ * @param str
+ *
+ * @throw invalid_argument if the string is not valid for conversion to
+ * uint_fast32_t
+ * @throw out_of_range if number to be converted is negative or greater than an
+ * uint32
+ */
+std::uint_fast32_t utilities::stringToUintFast32t(const std::string &str)
+{
+    if (str.empty())
+        throw std::invalid_argument(
+            "Cannot convert empty string to unsigned integer"
+        );
+
+    size_t startPos = 0;
+    if ((str[0] == '+' || str[0] == '-') && str.length() > 1)
+        startPos = 1;
+
+    for (size_t i = startPos; i < str.length(); ++i)
+        if (!std::isdigit(static_cast<unsigned char>(str[i])))
+            throw std::invalid_argument(std::format(
+                "String \"{}\" is not a valid unsigned integer",
+                str
+            ));
+
+    long long      valueLL{std::stoll(str)};
+    constexpr auto maxValue = static_cast<long long>(UINT32_MAX);
+
+    if (valueLL < 0 || valueLL > maxValue)
+        throw std::out_of_range(std::format(
+            "The number has to be an integer between \"0\" and \"{}\" "
+            "(inclusive)",
+            maxValue
+        ));
+
+    return static_cast<std::uint_fast32_t>(valueLL);
 }

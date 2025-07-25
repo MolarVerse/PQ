@@ -1,0 +1,29 @@
+# UMCM-9 DFTB+ MD
+
+
+    # Type of this run
+      jobtype = qm-md;
+
+    # Number of steps to be performed and timestep in fs
+      nstep = 5000; timestep = 2.0;
+
+      thermostat = berendsen; temp = 298.15; t_relaxation = 0.1;
+
+#     manostat = berendsen; p_relaxation = 1.0; pressure = 1.013;
+#     stress_tensor = on;
+
+      integrator = v-verlet;
+      virial = atomic;
+      shake = on;
+
+    # QM programm
+      qm_prog = dftbplus; qm_script = dftbplus_periodic_stress;
+
+
+    # Input files
+      start_file    = umcm-9-md-eq.rst;
+      topology_file = shake.top;
+
+    # Output files
+      file_prefix   = umcm-9-md-01;
+

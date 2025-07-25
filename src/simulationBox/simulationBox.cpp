@@ -30,8 +30,9 @@
 #include "constants.hpp"           // for _TEMPERATURE_FACTOR_
 #include "exceptions.hpp"          // for RstFileException, UserInputException
 #include "potentialSettings.hpp"   // for PotentialSettings
-#include "settings.hpp"            // for Settings
-#include "stlVector.hpp"           // for rms
+#include "randomNumberGenerator.hpp"   // for randomNumberGenerator
+#include "settings.hpp"                // for Settings
+#include "stlVector.hpp"               // for rms
 
 using simulationBox::SimulationBox;
 using namespace linearAlgebra;
@@ -39,6 +40,7 @@ using namespace simulationBox;
 using namespace customException;
 using namespace constants;
 using namespace settings;
+using namespace randomNumberGenerator;
 
 /**
  * @brief copy simulationBox object this
@@ -183,9 +185,8 @@ void SimulationBox::setupMMOnlyAtoms(const std::vector<int>& atomIndices)
 
         if (it != _qmAtoms.end())
             throw UserInputException(std::format(
-                "Ambiguous atom index {} - atom is already in QM only list - "
-                "cannot be in MM only "
-                "list",
+                "Ambiguous atom index {} - atom is already in QM only list "
+                "- cannot be in MM only list",
                 index
             ));
     }
@@ -277,6 +278,8 @@ std::pair<Molecule*, size_t> SimulationBox::findMoleculeByAtomIndex(
 
         if (sum >= atomIndex)
         {
+            if (atomIndex == 0)
+                break;
             const auto index = atomIndex - (sum - nAtomsInMolecule) - 1;
             return std::make_pair(&molecule, index);
         }
@@ -688,16 +691,18 @@ Vec3D SimulationBox::calcShiftVector(const Vec3D& position) const
  */
 void SimulationBox::initPositions(const double displacement)
 {
-    std::random_device             randomDevice;
-    std::mt19937                   randomGenerator(randomDevice());
-    std::uniform_real_distribution uniformDist{-displacement, displacement};
+    RandomNumberGenerator randomNumberGenerator{};
 
-    auto displacePositions = [&uniformDist, &randomGenerator, this](auto& atom)
+    auto displacePositions =
+        [&randomNumberGenerator, displacement, this](auto& atom)
     {
         const auto random = Vec3D{
-            uniformDist(randomGenerator),
-            uniformDist(randomGenerator),
-            uniformDist(randomGenerator)
+            randomNumberGenerator
+                .getUniformRealDistribution(-displacement, displacement),
+            randomNumberGenerator
+                .getUniformRealDistribution(-displacement, displacement),
+            randomNumberGenerator
+                .getUniformRealDistribution(-displacement, displacement)
         };
 
         auto position = atom->getPosition() + random;

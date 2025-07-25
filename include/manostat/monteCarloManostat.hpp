@@ -24,23 +24,21 @@
 
 #define _MONTE_CARLO_MANOSTAT_HPP_
 
-#include <random>   // for std::random_device, std::mt19937
-
-#include "manostat.hpp"      // for Manostat
-#include "typeAliases.hpp"   // for PhysicalData, SimulationBox
+#include "manostat.hpp"                // for Manostat
+#include "randomNumberGenerator.hpp"   // for RandomNumberGenerator
+#include "typeAliases.hpp"             // for PhysicalData, SimulationBox
 
 namespace manostat
 {
     class MonteCarloManostat : public Manostat
     {
        private:
-        std::random_device _randomDevice{};
-        std::mt19937       _generator{_randomDevice()};
+        randomNumberGenerator::RandomNumberGenerator _randomNumberGenerator{};
 
        public:
         explicit MonteCarloManostat() = default;
 
-        void applyManostat(pq::SimBox &, pq::PhysicalData &) override {};
+        void applyManostat(pq::SimBox &, pq::PhysicalData &) override {}
     };
 }   // namespace manostat
 

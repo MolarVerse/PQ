@@ -60,7 +60,9 @@ VelocityRescalingThermostat::VelocityRescalingThermostat(
 VelocityRescalingThermostat::VelocityRescalingThermostat(
     const VelocityRescalingThermostat &other
 )
-    : Thermostat(other), _tau(other._tau){};
+    : Thermostat(other), _tau(other._tau)
+{
+}
 
 /**
  * @brief apply thermostat - Velocity Rescaling
@@ -85,7 +87,7 @@ void VelocityRescalingThermostat::applyThermostat(
     const auto tempRatio = _targetTemperature / _temperature;
     const auto dof       = double(simulationBox.getDegreesOfFreedom());
 
-    const auto random = std::normal_distribution<double>(0.0, 1.0)(_generator);
+    const auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
 
     auto rescalingFactor  = 2.0 * ::sqrt(timeStep * tempRatio / (dof * _tau));
     rescalingFactor      *= random;

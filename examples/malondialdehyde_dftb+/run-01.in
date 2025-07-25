@@ -1,72 +1,28 @@
-# MIL-68(Al) all DFTB MD
+# MALONDIALDEHYDE DFTB+ MD
 
-
-# MD Keywords
 
     # Type of this run
-      jobtype = qm-md; #dim = 3d;
+      jobtype = qm-md;
 
-    # Number of steps to be performed and timestep in fs 
-      nstep = 1; timestep = 0.2;
+    # Number of steps to be performed and timestep in fs
+      nstep = 5000; timestep = 0.2;
       init_velocities = true;
-    # nscale=100;
 
-    # Output of coordinates and velocities enabled
-#      write_traj = on;
+      thermostat = berendsen; temp = 298.15; t_relaxation = 0.1;
 
-    # Output frequency of ALL data files
-      output_freq = 1;
+#     manostat = berendsen; p_relaxation = 1.0; pressure = 1.013;
+#     stress_tensor = on;
 
-    # Coulombic cutoff 
-#      rcoulomb= 9.0; 
-
-    # Enabling reaction field and giving a proper dielectric constant
-#      long_range = none; longrange_nc = off;
-      
-    # Temperature algorithm (Berendsen), Relaxation time in ps 
-    # and target temperature in K
-     thermostat = berendsen; temp = 297.714; t_relaxation = 0.1;
-#      thermostat = nh-chain; temp = 298.15; t_relaxation = 0.1; omega = 1000.0;
-
-    # Pressure coupling algorithm
-#      manostat = berendsen; p_relaxation = 1.0; pressure = 1.013;
-#      stress_tensor = on; 
-
-      integrator = v-verlet; 
-#water_intra = none;
-      
-#      guff_path = .; 
- 
-# QMCF Keywords
-
-#      NOSA = 616;  qm_center = 1;
-
-#      rcore = 100.0; rsmoothing = 100.5; rlayer=101.0;
-      
-    # QM programm
-      qm_prog = dftbplus; singularity_qm_script = /home/jag/projects/pimd_qmcf/src/QM/scripts/dftbplus_periodic_stress;
-
+      integrator = v-verlet;
       virial = atomic;
-   
-#      qm_whitelist = 1-616; 
 
-#      force-field = on; nonbonded = guff;
+    # QM programm
+      qm_prog = dftbplus; qm_script = dftbplus_periodic_stress;
 
-# Output files
 
-#      parameter_file = param.param;
-#      topology_file = shake_final.top;
+    # Input file
+      start_file  = MALONDIALDEHYDE-eq.rst;
 
-      start_file   = MALONDIALDEHYDE-eq.rst;
-
-      output_file  = malondialdehyde-01.out; 
-      info_file    = malondialdehyde-01.info;
-      energy_file  = malondialdehyde-01.en; 
-      traj_file    = malondialdehyde-01.xyz;
-      vel_file     = malondialdehyde-01.vel;
-      charge_file  = malondialdehyde-01.chrg;
-      restart_file = malondialdehyde-01.rst;
-      force_file   = malondialdehyde-01.force;
-      
-# end of infile
+    # Output files
+      file_prefix = malondialdehyde-01;
 

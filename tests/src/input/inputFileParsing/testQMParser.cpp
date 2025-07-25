@@ -82,10 +82,10 @@ TEST_F(TestInputFileReader, parseQMScriptFullPath)
 {
     auto parser = QMInputParser(*_engine);
     parser.parseQMScriptFullPath(
-        {"qm_script_full_path", "=", "/path/to/script.sh"},
+        {"qm_script_full_path", "=", "/path/to/QM/Script.sh"},
         0
     );
-    EXPECT_EQ(QMSettings::getQMScriptFullPath(), "/path/to/script.sh");
+    EXPECT_EQ(QMSettings::getQMScriptFullPath(), "/path/to/QM/Script.sh");
 }
 
 TEST_F(TestInputFileReader, parseQMLoopTimeLimit)
@@ -124,8 +124,9 @@ TEST_F(TestInputFileReader, parseDispersion)
     ASSERT_THROW_MSG(
         parser.parseDispersion({"dispersion", "=", "notABool"}, 0),
         InputFileException,
-        "Invalid dispersion \"notABool\" in input file.\n"
-        "Possible values are: true, yes, on, false, no, off"
+        "Invalid boolean option \"notABool\" for keyword \"dispersion\" in "
+        "input file.\n"
+        "Possible values are: on, yes, true, off, no, false."
     )
 }
 
@@ -297,8 +298,9 @@ TEST_F(TestInputFileReader, parseThirdOrder)
     ASSERT_THROW_MSG(
         parser.parseThirdOrder({"third_order", "=", "notABool"}, 0),
         InputFileException,
-        "Invalid DFTB third_order request \"notABool\" in input file.\n"
-        "Possible values are: on, yes, true, off, no, false"
+        "Invalid boolean option \"notABool\" for keyword \"third_order\" in "
+        "input file.\n"
+        "Possible values are: on, yes, true, off, no, false."
     )
 }
 

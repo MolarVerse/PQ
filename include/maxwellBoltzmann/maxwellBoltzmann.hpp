@@ -24,8 +24,7 @@
 
 #define _MAXWELL_BOLTZMANN_HPP_
 
-#include <random>
-
+#include "randomNumberGenerator.hpp"   // for RandomNumberGenerator
 #include "typeAliases.hpp"
 
 namespace maxwellBoltzmann
@@ -43,8 +42,7 @@ namespace maxwellBoltzmann
     class MaxwellBoltzmann
     {
        private:
-        std::random_device _randomDevice{};
-        std::mt19937       _generator{_randomDevice()};
+        randomNumberGenerator::RandomNumberGenerator _randomNumberGenerator{};
 
        public:
         void initializeVelocities(pq::SimBox &);

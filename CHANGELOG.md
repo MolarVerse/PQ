@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 
 ## Next Release
 
+### Enhancements
+
+- new random_seed keyword for reproducibility
+- QM loop time limit info gets printed to the .log file
+- QM loop time limit default value is set to 3600 (1 hour)
+- Cleaned up example runs and added three new examples
+
+### Bug Fixes
+
+- Index 0 is now correctly out of bounds in topology file
+- The path provided for qm_script_full_path preserves its letter casing
+
+### Internal
+
+- added function to check boolean strings in input file
+
+### CI
+
+- CI workflow for macOS architecture removed
+
 <!-- insertion marker -->
 ## [v0.6.0](https://github.com/MolarVerse/PQ/releases/tag/v0.6.0) - 2025-04-02
 

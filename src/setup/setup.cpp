@@ -24,35 +24,36 @@
 
 #include <iostream>   // for operator<<, basic_ostream, cout
 
-#include "celllistSetup.hpp"          // for setupCellList
-#include "constraintsSetup.hpp"       // for setupConstraints
-#include "engine.hpp"                 // for Engine
-#include "forceFieldSettings.hpp"     // for ForceFieldSettings
-#include "forceFieldSetup.hpp"        // for setupForceField
-#include "guffDatReader.hpp"          // for readGuffDat, readInput
-#include "hybridSetup.hpp"            // for setupQMMM
-#include "inputFileReader.hpp"        // for readInputFile
-#include "intraNonBondedReader.hpp"   // for readIntraNonBondedFile
-#include "intraNonBondedSetup.hpp"    // for setupIntraNonBonded
-#include "kokkosSetup.hpp"            // for setupKokkos
-#include "manostatSetup.hpp"          // for setupManostat
-#include "moldescriptorReader.hpp"    // for readMolDescriptor
-#include "optimizerSetup.hpp"         // for setupOptimizer
-#include "outputFilesSetup.hpp"       // for setupOutputFiles
-#include "parameterFileReader.hpp"    // for readParameterFile
-#include "potentialSetup.hpp"         // for setupPotential
-#include "qmSetup.hpp"                // for setupQM
-#include "qmmdEngine.hpp"             // for QMMDEngine
-#include "resetKineticsSetup.hpp"     // for setupResetKinetics
-#include "restartFileReader.hpp"      // for readRestartFile
-#include "ringPolymerEngine.hpp"      // for RingPolymerEngine
-#include "ringPolymerSetup.hpp"       // for setupRingPolymer
-#include "settings.hpp"               // for Settings
-#include "simulationBoxSetup.hpp"     // for setupSimulationBox
-#include "thermostatSetup.hpp"        // for setupThermostat
-#include "timer.hpp"                  // for Timings
-#include "timingsSettings.hpp"        // for TimingsSettings
-#include "topologyReader.hpp"         // for readTopologyFile
+#include "celllistSetup.hpp"                // for setupCellList
+#include "constraintsSetup.hpp"             // for setupConstraints
+#include "engine.hpp"                       // for Engine
+#include "forceFieldSettings.hpp"           // for ForceFieldSettings
+#include "forceFieldSetup.hpp"              // for setupForceField
+#include "guffDatReader.hpp"                // for readGuffDat, readInput
+#include "hybridSetup.hpp"                  // for setupQMMM
+#include "inputFileReader.hpp"              // for readInputFile
+#include "intraNonBondedReader.hpp"         // for readIntraNonBondedFile
+#include "intraNonBondedSetup.hpp"          // for setupIntraNonBonded
+#include "kokkosSetup.hpp"                  // for setupKokkos
+#include "manostatSetup.hpp"                // for setupManostat
+#include "moldescriptorReader.hpp"          // for readMolDescriptor
+#include "optimizerSetup.hpp"               // for setupOptimizer
+#include "outputFilesSetup.hpp"             // for setupOutputFiles
+#include "parameterFileReader.hpp"          // for readParameterFile
+#include "potentialSetup.hpp"               // for setupPotential
+#include "qmSetup.hpp"                      // for setupQM
+#include "qmmdEngine.hpp"                   // for QMMDEngine
+#include "randomNumberGeneratorSetup.hpp"   // for setupRandomNumberGenerator
+#include "resetKineticsSetup.hpp"           // for setupResetKinetics
+#include "restartFileReader.hpp"            // for readRestartFile
+#include "ringPolymerEngine.hpp"            // for RingPolymerEngine
+#include "ringPolymerSetup.hpp"             // for setupRingPolymer
+#include "settings.hpp"                     // for Settings
+#include "simulationBoxSetup.hpp"           // for setupSimulationBox
+#include "thermostatSetup.hpp"              // for setupThermostat
+#include "timer.hpp"                        // for Timings
+#include "timingsSettings.hpp"              // for TimingsSettings
+#include "topologyReader.hpp"               // for readTopologyFile
 
 using namespace engine;
 using namespace input;
@@ -86,8 +87,8 @@ void setup::setupRequestedJob(const std::string &inputFileName, Engine &engine)
     if (!TimingsSettings::isTimeStepSet())
         if (Settings::isMDJobType())
             throw UserInputException(std::format(
-                "Molecular Dynamics job type {} selected. Please set the time "
-                "step in the input file.",
+                "Molecular Dynamics job type {} selected. Please set the "
+                "time step in the input file.",
                 string(Settings::getJobtype())
             ));
 
@@ -173,7 +174,10 @@ void setup::setupEngine(Engine &engine)
         setupQM(engine);
 
     if (Settings::isMDJobType())
+    {
+        setupRandomNumberGenerator(engine);
         setupResetKinetics(engine);
+    }
 
     setupSimulationBox(engine);
 

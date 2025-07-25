@@ -2,7 +2,7 @@
       jobtype = qm-md;
 
 # Number of steps to be performed and timestep in fs; nreset gives the first n steps in which the total momentum is reset
-      nstep = 100; timestep = 0.5; nreset = 5;
+      nstep = 1000; timestep = 0.5; nreset = 5;
 
 # Time integration algorithm
       integrator = v-verlet;

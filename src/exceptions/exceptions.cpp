@@ -37,20 +37,20 @@ CustomException::CustomException(const std::string_view message)
 }
 
 /**
- * @brief Prints the exception type in color.
+ * @brief Prints the exceptionMsg type in color.
  *
  * @param color
- * @param exception
+ * @param exceptionMsg
  */
 void CustomException::colorfulOutput(
     const Color::Code      color,
-    const std::string_view exception
+    const std::string_view exceptionMsg
 ) const
 {
     const Color::Modifier modifier(color);
     const Color::Modifier def(Color::FG_DEFAULT);
 
-    std::cout << modifier << exception << def << '\n' << std::flush;
+    std::cout << modifier << exceptionMsg << def << '\n' << std::flush;
 }
 
 /**

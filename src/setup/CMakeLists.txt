@@ -15,6 +15,7 @@ set(setup_source_files
     ringPolymerSetup.cpp
     outputFilesSetup.cpp
     optimizerSetup.cpp
+    randomNumberGeneratorSetup.cpp
 )
 
 if(BUILD_WITH_KOKKOS)

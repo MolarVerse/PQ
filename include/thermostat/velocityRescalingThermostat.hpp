@@ -24,8 +24,7 @@
 
 #define _VELOCITY_RESCALING_THERMOSTAT_HPP_
 
-#include <random>   // for std::random_device, std::mt19937
-
+#include "randomNumberGenerator.hpp"   // for RandomNumberGenerator
 #include "thermostat.hpp"
 #include "typeAliases.hpp"
 
@@ -41,13 +40,10 @@ namespace thermostat
     class VelocityRescalingThermostat : public Thermostat
     {
        private:
-       private:
-        std::random_device _randomDevice{};
-        std::mt19937       _generator{_randomDevice()};
+        randomNumberGenerator::RandomNumberGenerator _randomNumberGenerator{};
 
         double _tau = 0.0;
 
-       public:
        public:
         VelocityRescalingThermostat() = default;
         VelocityRescalingThermostat(const VelocityRescalingThermostat &);

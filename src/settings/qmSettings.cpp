@@ -379,7 +379,7 @@ void QMSettings::setXtbMethod(const XtbMethod method) { _xtbMethod = method; }
  */
 void QMSettings::setQMScript(const std::string_view &script)
 {
-    _qmScript = toLowerAndReplaceDashesCopy(script);
+    _qmScript = script;
 }
 
 /**

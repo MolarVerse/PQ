@@ -1,69 +1,30 @@
-# Example file for a QMCF MD simulation of Zn(II)-Amyloid
-# lines starting with '#' are comments
-# The entire input is case insensitive (except filenames)
+# Zn(II)-Amyloid MMMD
 
-
-# MD Keywords
 
     # Type of this run
       jobtype = mm-md;
 
     # Number of steps to be performed and timestep in fs
-      nstep = 10; timestep = 2.0; 
-      #nreset = 50; 
-      #nscale = 5;
-#nreset_angular = 50;
+      nstep = 2000; timestep = 2.0;
 
-    # Output of coordinates, velocities ans solute charges enabled
-      #write_traj = on;
-
-    # Output frequency of ALL data files
-      output_freq = 1; 
-
-    # Coulombic cutoff 
-      rcoulomb = 12.0; 
-
-    # Density of the system - affects boxsize
-      density = 0.997; 
-
-    # Enabling reaction field and giving a proper dielectric constant
-      #long_range = rf; epsilon = 78.35530853;
-
-    # Temperature algorithm (Nose-Hoover Chain), Coupling frequency omega in 1/s,  
-    # number of coupled thermostats (chainlength) and target temperature in K
-    # 3E13 1/s corresponds to 1000 cm-1 (Speed of Light c = 3E10 cm/s) 
       thermostat = berendsen; temp = 298.15; t_relaxation = 0.1;
-      manostat = berendsen; p_relaxation = 0.1; pressure = 1.0;
 
-      #integrator = v-verlet-rattle; rattle = 23;
+      manostat = berendsen; pressure = 1.0; p_relaxation = 0.1;
+
       integrator = v-verlet;
 
       force-field = on;  
       shake = on;
-      #guff_path = .; 
-      #nonbonded = force-field;
 
       cell-list = on; cell-number = 10;
- 
-# Input Files
 
-     start_file       = amy-preeq.rst; 
+    # Input files
+      start_file           = amy-preeq.rst;
 
-     parameter_file   = qmcfc.param;
-     topology_file    = mod_top.top;
-     intra-nonbonded_file = intra_nonbonded.dat;
+      parameter_file       = qmcfc.param;
+      topology_file        = mod_top.top;
+      intra-nonbonded_file = intra_nonbonded.dat;
 
-
-# Output Files
-
-     output_file      = amy-zn-01.out; 
-     info_file        = amy-zn-01.info;
-     energy_file      = amy-zn-01.en; 
-     traj_file        = amy-zn-01.xyz;
-     vel_file         = amy-zn-01.vel;
-     charge_file      = amy-zn-01.chrg; 
-     restart_file     = amy-zn-01.rst;
-
-# end of infile
-
+    # Output files
+      file_prefix = amy-zn-01;
 

@@ -138,6 +138,26 @@ void Settings::setFloatingPointType(const FPType floatingPointType)
 }
 
 /**
+ * @brief sets the random seed value
+ *
+ * @param randomSeed
+ */
+void Settings::setRandomSeed(const uint_fast32_t randomSeed)
+{
+    _randomSeed = randomSeed;
+}
+
+/**
+ * @brief sets if the random seed value has been set
+ *
+ * @param isRandomSeedSet
+ */
+void Settings::setIsRandomSeedSet(const bool isRandomSeedSet)
+{
+    _isRandomSeedset = isRandomSeedSet;
+}
+
+/**
  * @brief sets Ring Polymer MD to active
  *
  * @param dimensionality
@@ -188,6 +208,20 @@ std::string Settings::getFloatingPointPybindString()
     else
         return "float64";
 }
+
+/**
+ * @brief get the random seed value
+ *
+ * @return uint_fast32_t
+ */
+uint_fast32_t Settings::getRandomSeed() { return _randomSeed; }
+
+/**
+ * @brief get if the random seed value has been set
+ *
+ * @return bool
+ */
+bool Settings::isRandomSeedSet() { return _isRandomSeedset; }
 
 /**
  * @brief get the dimensionality

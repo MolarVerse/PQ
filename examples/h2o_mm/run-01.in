@@ -1,0 +1,29 @@
+# Water MMMD
+
+
+    # Type of this run
+      jobtype = mm-md;
+
+    # Number of steps to be performed and timestep in fs
+      nstep = 25000; timestep = 0.5;
+      output_freq = 2;
+      density = 0.9523;
+
+      thermostat = berendsen; temp = 298.15; t_relaxation = 0.1;
+
+      manostat = berendsen; pressure = 1.0; p_relaxation = 0.1;
+
+      integrator = v-verlet;
+      virial     = molecular;
+
+      force-field = off;
+      rcoulomb    = 9.0;
+
+      cell-list = on; cell-number = 10;
+
+    # Input files
+      start_file  = input_h2o.rst;
+
+    # Output files
+      file_prefix = h2o-md-01;
+

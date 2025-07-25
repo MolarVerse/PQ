@@ -1,6 +1,7 @@
 jobtype                     true       
 dim                         false
 floating_point_type         false
+random_seed                 false
 
 optimizer                   false
 learning-rate-strategy      false

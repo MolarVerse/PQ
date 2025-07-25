@@ -24,8 +24,7 @@
 
 #define _LANGEVIN_THERMOSTAT_HPP_
 
-#include <random>   // for std::random_device, std::mt19937
-
+#include "randomNumberGenerator.hpp"   // for RandomNumberGenerator
 #include "thermostat.hpp"
 #include "typeAliases.hpp"
 
@@ -35,8 +34,7 @@ namespace thermostat
     class LangevinThermostat : public Thermostat
     {
        private:
-        std::random_device _randomDevice{};
-        std::mt19937       _generator{_randomDevice()};
+        randomNumberGenerator::RandomNumberGenerator _randomNumberGenerator{};
 
         double _friction = 0.0;
         double _sigma    = 0.0;
