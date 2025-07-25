@@ -104,7 +104,7 @@ jobs:
           pip install pyscf
           conda install conda-forge::dftbplus
 
-      - name: Integration Tests
+      - name: Integration Tests # arm dftbplus not working
         if: ${{matrix.build == 'Release' }}
         shell: bash -l {0}
         run: |
