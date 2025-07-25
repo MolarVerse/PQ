@@ -10,9 +10,39 @@ This section includes information for developers who want to contribute to the p
 Project Structure
 *****************
 
-*****
-Tests
-*****
+**************
+Software Tests
+**************
+
+============
+Unit Testing
+============
+
+Unit tests are located in the ``PQ/tests/`` directory.
+After building the project, the unit tests can be run by executing the command ``make test`` from within the build directory.
+
+===================
+Integration Testing
+===================
+
+Integration tests are located in the ``PQ/integration_tests/`` directory.
+To run these tests, ensure the following Python packages are installed:
+
+    - `pytest      <https://pypi.org/project/pytest/>`_
+    - `pytest-cov  <https://pypi.org/project/pytest-cov/>`_
+    - `pqanalysis  <https://pypi.org/project/pqanalysis/>`_
+    - `ase         <https://pypi.org/project/ase/>`_
+    - `pyscf       <https://pypi.org/project/pyscf/>`_
+
+In addition, the `DFTB+ <https://dftbplus.org/index.html>`_ program package has to be installed.
+You can then run the integration tests with the command ``pytest PQ/integration_tests``.
+
+==============
+GitHub Actions
+==============
+
+The software workflow --- from building the project to running unit and integration tests --- is validated by continuous integration (CI) using GitHub Actions.
+The corresponding workflow configuration files are located in the ``PQ/.github/workflows/`` directory.
 
 *************
 Documentation
