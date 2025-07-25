@@ -18,9 +18,9 @@ The concept of the input file is based on the definition of so-called "commands"
     2. key = [value1, value2, ...];
 
 .. Note::
-    The semicolon add the end of both command definitions is necessary, while the number of whitespace can be arbitrary at any position of the command as long as key and value are not split in parts.
+    The semicolon at the end of both command definitions is necessary, while the number of whitespaces can be arbitrary at any position of the command as long as key and value are not split in parts.
 
-Command definition 1. represents a single value command, whereas definition 2. can be considered as a list of input values to which will always be represented with ``[]``.
+Command definition 1. represents a single value command, whereas definition 2. can be considered as a list of input values which will always be represented with ``[]``.
 
 Command Usage
 =============
@@ -157,6 +157,21 @@ With the ``integrator`` keyword the user can choose the integrator type which sh
 Possible options are:
 
    1. **v-verlet** (default) - represents the Velocity-Verlet integrator 
+
+.. _randomSeedKey:
+
+Random Seed
+===========
+
+.. admonition:: Key
+    :class: tip
+
+    random_seed = {uint}
+
+With the ``random_seed`` keyword the user can provide a seed for all random events of the MD simulation.
+
+.. Danger::
+    This keyword should be used only for reproducibility purposes.
 
 .. _virialKey:
 
@@ -1328,9 +1343,9 @@ QM Loop Time Limit
 .. admonition:: Key
     :class: tip
 
-    qm_loop_time_limit = {double} s -> -1 s
+    qm_loop_time_limit = {double} s -> 3600 s
 
-With the ``qm_loop_time_limit`` keyword the user can specify the loop time limit in ``s`` of all QM type calculations. If the time limit is reached the calculation will be stopped. Default value is -1 s, which means no time limit is set, and the calculation will continue until it is finished. In general all negative values will be interpreted as no time limit.
+With the ``qm_loop_time_limit`` keyword the user can specify the loop time limit in ``s`` of all QM type calculations. If the time limit is reached the calculation will be stopped. Default value is 3600 s (1 hour). Values smaller equal than zero are interpreted as no time limit and the calculation will continue until it is finished.
 
 .. _disperstoncorrectionKey:
 

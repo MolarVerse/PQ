@@ -63,6 +63,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#nstep">NStep</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#floating-point-type">Floating Point Type</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#integrator">Integrator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#random-seed">Random Seed</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#virial">Virial</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#start-file">Start File</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#rpmd-start-file">RPMD Start File</a></li>
@@ -266,9 +267,9 @@
 </div></blockquote>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The semicolon add the end of both command definitions is necessary, while the number of whitespace can be arbitrary at any position of the command as long as key and value are not split in parts.</p>
+<p>The semicolon at the end of both command definitions is necessary, while the number of whitespaces can be arbitrary at any position of the command as long as key and value are not split in parts.</p>
 </div>
-<p>Command definition 1. represents a single value command, whereas definition 2. can be considered as a list of input values to which will always be represented with <code class="docutils literal notranslate"><span class="pre">[]</span></code>.</p>
+<p>Command definition 1. represents a single value command, whereas definition 2. can be considered as a list of input values which will always be represented with <code class="docutils literal notranslate"><span class="pre">[]</span></code>.</p>
 <section id="command-usage">
 <h3>Command Usage<a class="headerlink" href="#command-usage" title="Link to this heading"></a></h3>
 <p>Due to the use of <code class="docutils literal notranslate"><span class="pre">;</span></code> one line of the input file can contain multiple commands and blank lines will be ignored.</p>
@@ -396,6 +397,18 @@
 <li><p><strong>v-verlet</strong> (default) - represents the Velocity-Verlet integrator</p></li>
 </ol>
 </div></blockquote>
+</section>
+<section id="random-seed">
+<span id="randomseedkey"></span><h3>Random Seed<a class="headerlink" href="#random-seed" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>random_seed = {uint}</p>
+</div>
+<p>With the <code class="docutils literal notranslate"><span class="pre">random_seed</span></code> keyword the user can provide a seed for all random events of the MD simulation.</p>
+<div class="admonition danger">
+<p class="admonition-title">Danger</p>
+<p>This keyword should be used only for reproducibility purposes.</p>
+</div>
 </section>
 <section id="virial">
 <span id="virialkey"></span><h3>Virial<a class="headerlink" href="#virial" title="Link to this heading"></a></h3>
@@ -1206,9 +1219,9 @@ input file. Further information about the individual files can be found in the <
 <span id="qmlooptimelimitkey"></span><h3>QM Loop Time Limit<a class="headerlink" href="#qm-loop-time-limit" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
-<p>qm_loop_time_limit = {double} s -&gt; -1 s</p>
+<p>qm_loop_time_limit = {double} s -&gt; 3600 s</p>
 </div>
-<p>With the <code class="docutils literal notranslate"><span class="pre">qm_loop_time_limit</span></code> keyword the user can specify the loop time limit in <code class="docutils literal notranslate"><span class="pre">s</span></code> of all QM type calculations. If the time limit is reached the calculation will be stopped. Default value is -1 s, which means no time limit is set, and the calculation will continue until it is finished. In general all negative values will be interpreted as no time limit.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">qm_loop_time_limit</span></code> keyword the user can specify the loop time limit in <code class="docutils literal notranslate"><span class="pre">s</span></code> of all QM type calculations. If the time limit is reached the calculation will be stopped. Default value is 3600 s (1 hour). Values smaller equal than zero are interpreted as no time limit and the calculation will continue until it is finished.</p>
 </section>
 <section id="dispersion-correction">
 <span id="disperstoncorrectionkey"></span><h3>Dispersion Correction<a class="headerlink" href="#dispersion-correction" title="Link to this heading"></a></h3>
