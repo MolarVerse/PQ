@@ -18,7 +18,7 @@ All notable changes to this project will be documented in this file.
 ### Internal
 
 - added function to check boolean strings in input file
-- re-formatting of .cpp and .hpp files using clang-format-17.0.1
+- re-formatting of .cpp and .hpp files using clang-format-20.1.3
 
 ### CI
 
