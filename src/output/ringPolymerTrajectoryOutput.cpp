@@ -187,7 +187,8 @@ void RingPolymerTrajectoryOutput::writeForces(std::vector<SimulationBox> &beads)
  *
  * @param beads
  */
-void RingPolymerTrajectoryOutput::writeCharges(std::vector<SimulationBox> &beads
+void RingPolymerTrajectoryOutput::writeCharges(
+    std::vector<SimulationBox> &beads
 )
 {
     std::ostringstream buffer;

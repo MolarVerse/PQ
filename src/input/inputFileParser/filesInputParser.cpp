@@ -237,10 +237,12 @@ void FilesInputParser::parseRingPolymerStartFilename(
     const auto &filename = lineElements[2];
 
     if (!fileExists(filename))
-        throw InputFileException(std::format(
-            "Cannot open ring polymer start file - filename = {}",
-            filename
-        ));
+        throw InputFileException(
+            std::format(
+                "Cannot open ring polymer start file - filename = {}",
+                filename
+            )
+        );
 
     FileSettings::setRingPolymerStartFileName(filename);
     FileSettings::setIsRingPolymerStartFileNameSet();
@@ -265,11 +267,13 @@ void FilesInputParser::parseMoldescriptorFilename(
     const auto &filename = lineElements[2];
 
     if (!fileExists(filename))
-        throw InputFileException(std::format(
-            "Cannot open moldescriptor file - filename = \"{}\" - file not "
-            "found",
-            filename
-        ));
+        throw InputFileException(
+            std::format(
+                "Cannot open moldescriptor file - filename = \"{}\" - file not "
+                "found",
+                filename
+            )
+        );
 
     FileSettings::setMolDescriptorFileName(filename);
 }
@@ -284,10 +288,13 @@ void FilesInputParser::parseGuffPath(
     const size_t
 )
 {
-    throw InputFileException(std::format(
-        "The \"guff_path\" keyword id deprecated. Please use \"guffdat_file\" "
-        "instead."
-    ));
+    throw InputFileException(
+        std::format(
+            "The \"guff_path\" keyword id deprecated. Please use "
+            "\"guffdat_file\" "
+            "instead."
+        )
+    );
 }
 
 /**

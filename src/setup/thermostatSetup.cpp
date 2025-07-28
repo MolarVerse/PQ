@@ -70,7 +70,7 @@ void setup::setupThermostat(Engine &engine)
  *
  * @param engine
  */
-ThermostatSetup::ThermostatSetup(MDEngine &engine) : _engine(engine){};
+ThermostatSetup::ThermostatSetup(MDEngine &engine) : _engine(engine) {}
 
 /**
  * @brief setup thermostat
@@ -129,17 +129,21 @@ void ThermostatSetup::isTargetTemperatureSet() const
      ************************************************************/
 
     if (!targetTempDefined && !endTempDefined)
-        throw InputFileException(std::format(
-            "Target or end temperature not set for {} thermostat",
-            string(ThermostatSettings::getThermostatType())
-        ));
+        throw InputFileException(
+            std::format(
+                "Target or end temperature not set for {} thermostat",
+                string(ThermostatSettings::getThermostatType())
+            )
+        );
 
     if (targetTempDefined && endTempDefined)
-        throw InputFileException(std::format(
-            "Both target and end temperature set for {} thermostat. They "
-            "are mutually exclusive as they are treated as synonyms",
-            string(ThermostatSettings::getThermostatType())
-        ));
+        throw InputFileException(
+            std::format(
+                "Both target and end temperature set for {} thermostat. They "
+                "are mutually exclusive as they are treated as synonyms",
+                string(ThermostatSettings::getThermostatType())
+            )
+        );
 
     /**************************************************
      * Block to unify the target and end temperature. *
@@ -223,12 +227,14 @@ void ThermostatSetup::setupNoseHooverThermostat()
     auto fillChi = [&thermostat, nhChainLength](const auto pair)
     {
         if (pair.first > nhChainLength)
-            throw InputFileException(std::format(
-                "Chi index {} is larger than the number of nose hoover "
-                "chains {}",
-                pair.first,
-                nhChainLength
-            ));
+            throw InputFileException(
+                std::format(
+                    "Chi index {} is larger than the number of nose hoover "
+                    "chains {}",
+                    pair.first,
+                    nhChainLength
+                )
+            );
 
         thermostat.setChi(size_t(pair.first - 1), pair.second);
     };
@@ -285,24 +291,28 @@ void ThermostatSetup::setupTemperatureRamp()
         ThermostatSettings::setTemperatureRampSteps(steps);
     }
     else if (steps > TimingsSettings::getNumberOfSteps())
-        throw InputFileException(std::format(
-            "Number of total simulation steps {} is smaller than the "
-            "number of temperature ramping steps {}",
-            TimingsSettings::getNumberOfSteps(),
-            steps
-        ));
+        throw InputFileException(
+            std::format(
+                "Number of total simulation steps {} is smaller than the "
+                "number of temperature ramping steps {}",
+                TimingsSettings::getNumberOfSteps(),
+                steps
+            )
+        );
 
     _engine.getThermostat().setTemperatureRampingSteps(steps);
 
     const auto frequency = ThermostatSettings::getTemperatureRampFrequency();
 
     if (frequency > steps)
-        throw InputFileException(std::format(
-            "Temperature ramp frequency {} is larger than the number of "
-            "ramping steps {}",
-            frequency,
-            steps
-        ));
+        throw InputFileException(
+            std::format(
+                "Temperature ramp frequency {} is larger than the number of "
+                "ramping steps {}",
+                frequency,
+                steps
+            )
+        );
 
     const auto targetTemp   = ThermostatSettings::getTargetTemperature();
     const auto tempDelta    = targetTemp - startTemp;

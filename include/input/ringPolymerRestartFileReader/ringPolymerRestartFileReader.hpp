@@ -47,7 +47,10 @@ namespace input::ringPolymer
         pq::RingPolymerEngine &_engine;
 
        public:
-        RingPolymerRestartFileReader(const std::string &, pq::RingPolymerEngine &);
+        RingPolymerRestartFileReader(
+            const std::string &,
+            pq::RingPolymerEngine &
+        );
 
         void read();
     };

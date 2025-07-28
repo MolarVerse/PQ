@@ -541,7 +541,8 @@ void SimulationBox::setVolume(const double volume) const
  *
  * @param boxDimensions
  */
-void SimulationBox::setBoxDimensions(const linearAlgebra::Vec3D &boxDimensions
+void SimulationBox::setBoxDimensions(
+    const linearAlgebra::Vec3D &boxDimensions
 ) const
 {
     _box->setBoxDimensions(boxDimensions);

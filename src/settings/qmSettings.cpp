@@ -424,7 +424,8 @@ void QMSettings::setSlakosType(const std::string_view &slakos)
     }
 
     else
-        throw UserInputException(std::format("Slakos {} not recognized", slakos)
+        throw UserInputException(
+            std::format("Slakos {} not recognized", slakos)
         );
 }
 
@@ -455,10 +456,12 @@ void QMSettings::setSlakosPath(const std::string_view &path)
 
     else
     {
-        throw UserInputException(std::format(
-            "Slakos path cannot be set for slakos type: {}",
-            string(_slakosType)
-        ));
+        throw UserInputException(
+            std::format(
+                "Slakos path cannot be set for slakos type: {}",
+                string(_slakosType)
+            )
+        );
     }
 }
 

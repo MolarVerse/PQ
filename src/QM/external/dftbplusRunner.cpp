@@ -170,11 +170,13 @@ void DFTBPlusRunner::readStressTensor(Box &box, PhysicalData &data)
     std::ifstream stressFile(stressFileName);
 
     if (!stressFile.is_open())
-        throw QMRunnerException(std::format(
-            "Cannot open {} stress tensor \"{}\"",
-            string(QMSettings::getQMMethod()),
-            stressFileName
-        ));
+        throw QMRunnerException(
+            std::format(
+                "Cannot open {} stress tensor \"{}\"",
+                string(QMSettings::getQMMethod()),
+                stressFileName
+            )
+        );
 
     StaticMatrix3x3<double> stress;
 

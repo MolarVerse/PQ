@@ -285,8 +285,10 @@ void CellList::addMoleculesToCells(SimulationBox &simulationBox)
  * @param position
  * @return Vec3Dul
  */
-Vec3Dul CellList::getCellIndexOfAtom(const Vec3D &box, const Vec3D &position)
-    const
+Vec3Dul CellList::getCellIndexOfAtom(
+    const Vec3D &box,
+    const Vec3D &position
+) const
 {
     auto cellIndex = Vec3Dul(floor((position + box / 2.0) / _cellSize));
 

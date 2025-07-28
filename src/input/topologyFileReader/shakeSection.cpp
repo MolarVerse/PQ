@@ -58,11 +58,14 @@ void ShakeSection::processSection(
 )
 {
     if (lineElements.size() != 4 && lineElements.size() != 3)
-        throw TopologyException(std::format(
-            "Wrong number of arguments in topology file shake section at line "
-            "{} - number of elements has to be 3 or 4!",
-            _lineNumber
-        ));
+        throw TopologyException(
+            std::format(
+                "Wrong number of arguments in topology file shake section at "
+                "line "
+                "{} - number of elements has to be 3 or 4!",
+                _lineNumber
+            )
+        );
 
     auto atom1      = stoul(lineElements[0]);
     auto atom2      = stoul(lineElements[1]);
@@ -70,11 +73,13 @@ void ShakeSection::processSection(
     // TODO: auto linker = lineElements[3];
 
     if (atom1 == atom2)
-        throw TopologyException(std::format(
-            "Topology file shake section at line {} - atoms cannot be the "
-            "same!",
-            _lineNumber
-        ));
+        throw TopologyException(
+            std::format(
+                "Topology file shake section at line {} - atoms cannot be the "
+                "same!",
+                _lineNumber
+            )
+        );
 
     auto &simBox = engine.getSimulationBox();
 
@@ -109,8 +114,11 @@ std::string ShakeSection::keyword() { return "shake"; }
 void ShakeSection::endedNormally(const bool endedNormal) const
 {
     if (!endedNormal)
-        throw TopologyException(std::format(
-            "Topology file shake section at line {} - no end of section found!",
-            _lineNumber
-        ));
+        throw TopologyException(
+            std::format(
+                "Topology file shake section at line {} - no end of section "
+                "found!",
+                _lineNumber
+            )
+        );
 }

@@ -89,8 +89,9 @@ TEST(TestTriclinicBox, setBoxAngles)
         box.getTransformationMatrix(),
         linearAlgebra::StaticMatrix3x3<double>(
             {1.0, sqrt(0.5), ::cos(beta)},
-            {0.0, sqrt(0.5), (cos(alpha) - cos(beta) * cos(gamma)) / sin(gamma)
-            },
+            {0.0,
+             sqrt(0.5),
+             (cos(alpha) - cos(beta) * cos(gamma)) / sin(gamma)},
             {0.0,
              0.0,
              ::sqrt(

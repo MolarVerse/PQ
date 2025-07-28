@@ -45,11 +45,14 @@ using namespace settings;
 void NoseHooverSection::process(pq::strings &lineElements, Engine &)
 {
     if (4 != lineElements.size())
-        throw RstFileException(std::format(
-            "Error not enough arguments in line {} for a chi entry of the nose "
-            "hoover thermostat",
-            _lineNumber
-        ));
+        throw RstFileException(
+            std::format(
+                "Error not enough arguments in line {} for a chi entry of the "
+                "nose "
+                "hoover thermostat",
+                _lineNumber
+            )
+        );
 
     const auto idx  = stoul(lineElements[1]);
     const auto chi  = stod(lineElements[2]);
@@ -59,11 +62,13 @@ void NoseHooverSection::process(pq::strings &lineElements, Engine &)
     auto [iterZeta, zetaIsInserted] = ThermostatSettings::addZeta(idx, zeta);
 
     if (!chiIsInserted || !zetaIsInserted)
-        throw RstFileException(std::format(
-            "Error in line {} in restart file; chi or zeta entry already "
-            "exists",
-            _lineNumber
-        ));
+        throw RstFileException(
+            std::format(
+                "Error in line {} in restart file; chi or zeta entry already "
+                "exists",
+                _lineNumber
+            )
+        );
 }
 
 /**

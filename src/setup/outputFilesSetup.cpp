@@ -63,7 +63,7 @@ void setup::setupOutputFiles(Engine &engine)
  *
  * @param engine
  */
-OutputFilesSetup::OutputFilesSetup(Engine &engine) : _engine(engine){};
+OutputFilesSetup::OutputFilesSetup(Engine &engine) : _engine(engine) {}
 
 /**
  * @brief setup output files

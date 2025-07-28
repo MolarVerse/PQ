@@ -52,7 +52,7 @@ void setup::setupIntraNonBonded(engine::Engine &engine)
  *
  * @param engine
  */
-IntraNonBondedSetup::IntraNonBondedSetup(Engine &engine) : _engine(engine){};
+IntraNonBondedSetup::IntraNonBondedSetup(Engine &engine) : _engine(engine) {}
 
 /**
  * @brief Setup intra non bonded interactions

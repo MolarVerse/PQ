@@ -52,7 +52,7 @@ void setup::setupCellList(Engine &engine)
  *
  * @param engine
  */
-CellListSetup::CellListSetup(Engine &engine) : _engine(engine){};
+CellListSetup::CellListSetup(Engine &engine) : _engine(engine) {}
 
 /**
  * @brief setup cell list

@@ -54,7 +54,10 @@ namespace potential
          * standard setter methods *
          ***************************/
 
-        void setGuffNonCoulPair(const std::vector<size_t> &, const pq::SharedNonCoulPair &);
+        void setGuffNonCoulPair(
+            const std::vector<size_t> &,
+            const pq::SharedNonCoulPair &
+        );
 
         /***************************
          * standard setter methods *

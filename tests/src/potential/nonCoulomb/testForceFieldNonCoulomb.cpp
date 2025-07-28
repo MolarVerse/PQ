@@ -45,20 +45,14 @@ TEST(TestPotential, determineInternalGlobalVdwTypes)
 {
     auto potential = potential::ForceFieldNonCoulomb();
 
-    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
-        size_t(1),
-        size_t(5),
-        2.0,
-        1.0,
-        1.0
-    ));
-    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
-        size_t(1),
-        size_t(2),
-        2.0,
-        1.0,
-        1.0
-    ));
+    potential.addNonCoulombicPair(
+        std::make_shared<
+            potential::LennardJonesPair>(size_t(1), size_t(5), 2.0, 1.0, 1.0)
+    );
+    potential.addNonCoulombicPair(
+        std::make_shared<
+            potential::LennardJonesPair>(size_t(1), size_t(2), 2.0, 1.0, 1.0)
+    );
 
     std::map<size_t, size_t> externalToInternalTypes({{1, 0}, {2, 1}, {5, 2}});
 
@@ -122,20 +116,14 @@ TEST(TestPotential, findNonCoulombicPairByInternalTypes_findOneType)
 {
     auto potential = potential::ForceFieldNonCoulomb();
 
-    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
-        size_t(1),
-        size_t(5),
-        2.0,
-        1.0,
-        1.0
-    ));
-    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
-        size_t(1),
-        size_t(2),
-        2.0,
-        1.0,
-        1.0
-    ));
+    potential.addNonCoulombicPair(
+        std::make_shared<
+            potential::LennardJonesPair>(size_t(1), size_t(5), 2.0, 1.0, 1.0)
+    );
+    potential.addNonCoulombicPair(
+        std::make_shared<
+            potential::LennardJonesPair>(size_t(1), size_t(2), 2.0, 1.0, 1.0)
+    );
 
     // these two lines were already tested in
     // TestPotential_determineInternalGlobalVdwTypes
@@ -156,20 +144,14 @@ TEST(TestPotential, findNonCoulombicPairByInternalTypes_findNothing)
 {
     auto potential = potential::ForceFieldNonCoulomb();
 
-    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
-        size_t(1),
-        size_t(5),
-        2.0,
-        1.0,
-        1.0
-    ));
-    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
-        size_t(1),
-        size_t(2),
-        2.0,
-        1.0,
-        1.0
-    ));
+    potential.addNonCoulombicPair(
+        std::make_shared<
+            potential::LennardJonesPair>(size_t(1), size_t(5), 2.0, 1.0, 1.0)
+    );
+    potential.addNonCoulombicPair(
+        std::make_shared<
+            potential::LennardJonesPair>(size_t(1), size_t(2), 2.0, 1.0, 1.0)
+    );
 
     // these two lines were already tested in
     // TestPotential_determineInternalGlobalVdwTypes
@@ -189,27 +171,18 @@ TEST(TestPotential, findNonCoulombicPairByInternalTypes_findMultipleTypes)
 {
     auto potential = potential::ForceFieldNonCoulomb();
 
-    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
-        size_t(1),
-        size_t(5),
-        2.0,
-        1.0,
-        1.0
-    ));
-    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
-        size_t(1),
-        size_t(5),
-        2.0,
-        5.0,
-        1.0
-    ));
-    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
-        size_t(1),
-        size_t(2),
-        2.0,
-        1.0,
-        1.0
-    ));
+    potential.addNonCoulombicPair(
+        std::make_shared<
+            potential::LennardJonesPair>(size_t(1), size_t(5), 2.0, 1.0, 1.0)
+    );
+    potential.addNonCoulombicPair(
+        std::make_shared<
+            potential::LennardJonesPair>(size_t(1), size_t(5), 2.0, 5.0, 1.0)
+    );
+    potential.addNonCoulombicPair(
+        std::make_shared<
+            potential::LennardJonesPair>(size_t(1), size_t(2), 2.0, 1.0, 1.0)
+    );
 
     // these two lines were already tested in
     // TestPotential_determineInternalGlobalVdwTypes
@@ -237,13 +210,10 @@ TEST(
 {
     auto potential = potential::ForceFieldNonCoulomb();
 
-    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
-        size_t(1),
-        size_t(5),
-        2.0,
-        1.0,
-        1.0
-    ));
+    potential.addNonCoulombicPair(
+        std::make_shared<
+            potential::LennardJonesPair>(size_t(1), size_t(5), 2.0, 1.0, 1.0)
+    );
 
     // these two lines were already tested in
     // TestPotential_determineInternalGlobalVdwTypes
@@ -273,27 +243,18 @@ TEST(
 {
     auto potential = potential::ForceFieldNonCoulomb();
 
-    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
-        size_t(1),
-        size_t(2),
-        2.0,
-        1.0,
-        1.0
-    ));
-    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
-        size_t(1),
-        size_t(5),
-        2.0,
-        1.0,
-        1.0
-    ));
-    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
-        size_t(2),
-        size_t(5),
-        2.0,
-        1.0,
-        1.0
-    ));
+    potential.addNonCoulombicPair(
+        std::make_shared<
+            potential::LennardJonesPair>(size_t(1), size_t(2), 2.0, 1.0, 1.0)
+    );
+    potential.addNonCoulombicPair(
+        std::make_shared<
+            potential::LennardJonesPair>(size_t(1), size_t(5), 2.0, 1.0, 1.0)
+    );
+    potential.addNonCoulombicPair(
+        std::make_shared<
+            potential::LennardJonesPair>(size_t(2), size_t(5), 2.0, 1.0, 1.0)
+    );
 
     // these two lines were already tested in
     // TestPotential_determineInternalGlobalVdwTypes
@@ -334,27 +295,18 @@ TEST(
 {
     auto potential = potential::ForceFieldNonCoulomb();
 
-    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
-        size_t(2),
-        size_t(1),
-        2.0,
-        1.0,
-        1.0
-    ));
-    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
-        size_t(5),
-        size_t(1),
-        2.0,
-        1.0,
-        1.0
-    ));
-    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
-        size_t(5),
-        size_t(2),
-        2.0,
-        1.0,
-        1.0
-    ));
+    potential.addNonCoulombicPair(
+        std::make_shared<
+            potential::LennardJonesPair>(size_t(2), size_t(1), 2.0, 1.0, 1.0)
+    );
+    potential.addNonCoulombicPair(
+        std::make_shared<
+            potential::LennardJonesPair>(size_t(5), size_t(1), 2.0, 1.0, 1.0)
+    );
+    potential.addNonCoulombicPair(
+        std::make_shared<
+            potential::LennardJonesPair>(size_t(5), size_t(2), 2.0, 1.0, 1.0)
+    );
 
     // these two lines were already tested in
     // TestPotential_determineInternalGlobalVdwTypes
@@ -395,34 +347,22 @@ TEST(
 {
     auto potential = potential::ForceFieldNonCoulomb();
 
-    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
-        size_t(2),
-        size_t(1),
-        2.0,
-        1.0,
-        1.0
-    ));
-    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
-        size_t(1),
-        size_t(2),
-        2.0,
-        1.0,
-        1.0
-    ));
-    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
-        size_t(1),
-        size_t(5),
-        2.0,
-        1.0,
-        1.0
-    ));
-    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
-        size_t(2),
-        size_t(5),
-        2.0,
-        1.0,
-        1.0
-    ));
+    potential.addNonCoulombicPair(
+        std::make_shared<
+            potential::LennardJonesPair>(size_t(2), size_t(1), 2.0, 1.0, 1.0)
+    );
+    potential.addNonCoulombicPair(
+        std::make_shared<
+            potential::LennardJonesPair>(size_t(1), size_t(2), 2.0, 1.0, 1.0)
+    );
+    potential.addNonCoulombicPair(
+        std::make_shared<
+            potential::LennardJonesPair>(size_t(1), size_t(5), 2.0, 1.0, 1.0)
+    );
+    potential.addNonCoulombicPair(
+        std::make_shared<
+            potential::LennardJonesPair>(size_t(2), size_t(5), 2.0, 1.0, 1.0)
+    );
 
     // these two lines were already tested in
     // TestPotential_determineInternalGlobalVdwTypes
@@ -463,20 +403,14 @@ TEST(
 {
     auto potential = potential::ForceFieldNonCoulomb();
 
-    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
-        size_t(1),
-        size_t(2),
-        2.0,
-        1.0,
-        1.0
-    ));
-    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
-        size_t(2),
-        size_t(1),
-        5.0,
-        1.0,
-        1.0
-    ));
+    potential.addNonCoulombicPair(
+        std::make_shared<
+            potential::LennardJonesPair>(size_t(1), size_t(2), 2.0, 1.0, 1.0)
+    );
+    potential.addNonCoulombicPair(
+        std::make_shared<
+            potential::LennardJonesPair>(size_t(2), size_t(1), 5.0, 1.0, 1.0)
+    );
 
     // these two lines were already tested in
     // TestPotential_determineInternalGlobalVdwTypes
@@ -502,34 +436,22 @@ TEST(TestPotential, getSelfInteractionNonCoulPairs)
 {
     auto potential = potential::ForceFieldNonCoulomb();
 
-    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
-        size_t(1),
-        size_t(5),
-        2.0,
-        1.0,
-        1.0
-    ));
-    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
-        size_t(1),
-        size_t(2),
-        2.0,
-        1.0,
-        1.0
-    ));
-    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
-        size_t(2),
-        size_t(2),
-        2.0,
-        1.0,
-        1.0
-    ));
-    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
-        size_t(5),
-        size_t(5),
-        2.0,
-        1.0,
-        1.0
-    ));
+    potential.addNonCoulombicPair(
+        std::make_shared<
+            potential::LennardJonesPair>(size_t(1), size_t(5), 2.0, 1.0, 1.0)
+    );
+    potential.addNonCoulombicPair(
+        std::make_shared<
+            potential::LennardJonesPair>(size_t(1), size_t(2), 2.0, 1.0, 1.0)
+    );
+    potential.addNonCoulombicPair(
+        std::make_shared<
+            potential::LennardJonesPair>(size_t(2), size_t(2), 2.0, 1.0, 1.0)
+    );
+    potential.addNonCoulombicPair(
+        std::make_shared<
+            potential::LennardJonesPair>(size_t(5), size_t(5), 2.0, 1.0, 1.0)
+    );
 
     // these two lines were already tested in
     // TestPotential_determineInternalGlobalVdwTypes

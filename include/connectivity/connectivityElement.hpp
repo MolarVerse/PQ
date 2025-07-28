@@ -45,7 +45,10 @@ namespace connectivity
         std::vector<size_t>                    _atomIndices;
 
        public:
-        ConnectivityElement(const std::vector<pq::Molecule *> &, const std::vector<size_t> &);
+        ConnectivityElement(
+            const std::vector<pq::Molecule *> &,
+            const std::vector<size_t> &
+        );
 
         /***************************
          * standard getter methods *

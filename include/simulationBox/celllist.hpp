@@ -66,8 +66,10 @@ namespace simulationBox
         void addMoleculesToCells(SimulationBox &simulationBox);
 
         [[nodiscard]] size_t getCellIndex(const pq::Vec3Dul &cellIndices) const;
-        [[nodiscard]] pq::Vec3Dul getCellIndexOfAtom(const pq::Vec3D &, const pq::Vec3D &)
-            const;
+        [[nodiscard]] pq::Vec3Dul getCellIndexOfAtom(
+            const pq::Vec3D &,
+            const pq::Vec3D &
+        ) const;
 
         void resizeCells();
         void addCell(const Cell &cell);

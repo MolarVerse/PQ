@@ -158,11 +158,14 @@ void SimulationBoxInputParser::parseInitializeVelocities(
         SimulationBoxSettings::setInitializeVelocities(FORCE);
 
     else
-        throw InputFileException(std::format(
-            "Invalid value for initialize velocities - \"{}\" at line {} in "
-            "input file.\n"
-            "Possible options are: true, false, force",
-            lineElements[2],
-            lineNumber
-        ));
+        throw InputFileException(
+            std::format(
+                "Invalid value for initialize velocities - \"{}\" at line {} "
+                "in "
+                "input file.\n"
+                "Possible options are: true, false, force",
+                lineElements[2],
+                lineNumber
+            )
+        );
 }

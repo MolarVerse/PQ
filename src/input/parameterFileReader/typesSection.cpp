@@ -76,28 +76,37 @@ void TypesSection::process(
 void TypesSection::processSection(pq::strings &lineElements, Engine &)
 {
     if (lineElements.size() != 8)
-        throw ParameterFileException(std::format(
-            "Wrong number of arguments in parameter file types section at line "
-            "{} - number of elements has to be 8!",
-            _lineNumber
-        ));
+        throw ParameterFileException(
+            std::format(
+                "Wrong number of arguments in parameter file types section at "
+                "line "
+                "{} - number of elements has to be 8!",
+                _lineNumber
+            )
+        );
 
     const auto scaleCoulomb     = stod(lineElements[6]);
     const auto scaleVanDerWaals = stod(lineElements[7]);
 
     if (scaleCoulomb < 0.0 || scaleCoulomb > 1.0)
-        throw ParameterFileException(std::format(
-            "Wrong scaleCoulomb in parameter file types section at line {} - "
-            "has to be between 0 and 1!",
-            _lineNumber
-        ));
+        throw ParameterFileException(
+            std::format(
+                "Wrong scaleCoulomb in parameter file types section at line {} "
+                "- "
+                "has to be between 0 and 1!",
+                _lineNumber
+            )
+        );
 
     if (scaleVanDerWaals < 0.0 || scaleVanDerWaals > 1.0)
-        throw ParameterFileException(std::format(
-            "Wrong scaleVanDerWaals in parameter file types section at line {} "
-            "- has to be between 0 and 1!",
-            _lineNumber
-        ));
+        throw ParameterFileException(
+            std::format(
+                "Wrong scaleVanDerWaals in parameter file types section at "
+                "line {} "
+                "- has to be between 0 and 1!",
+                _lineNumber
+            )
+        );
 
     PotentialSettings::setScale14Coulomb(scaleCoulomb);
     PotentialSettings::setScale14VanDerWaals(scaleVanDerWaals);

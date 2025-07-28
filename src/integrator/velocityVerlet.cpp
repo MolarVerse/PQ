@@ -27,7 +27,7 @@
 using namespace integrator;
 using namespace simulationBox;
 
-VelocityVerlet::VelocityVerlet() : Integrator("VelocityVerlet"){};
+VelocityVerlet::VelocityVerlet() : Integrator("VelocityVerlet") {}
 
 /**
  * @brief applies first half step of velocity verlet algorithm

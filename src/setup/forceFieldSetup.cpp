@@ -59,7 +59,7 @@ void setup::setupForceField(Engine &engine)
  *
  * @param engine
  */
-ForceFieldSetup::ForceFieldSetup(Engine &engine) : _engine(engine){};
+ForceFieldSetup::ForceFieldSetup(Engine &engine) : _engine(engine) {}
 
 /**
  * @brief setup force field

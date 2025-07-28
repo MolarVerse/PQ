@@ -41,14 +41,16 @@ NonCoulombPair::NonCoulombPair(
 )
     : _vanDerWaalsType1(vanDerWaalsType1),
       _vanDerWaalsType2(vanDerWaalsType2),
-      _radialCutOff(cutOff){};
+      _radialCutOff(cutOff)
+{
+}
 
 /**
  * @brief Construct a new Non Coulomb Pair:: Non Coulomb Pair object
  *
  * @param cutOff
  */
-NonCoulombPair::NonCoulombPair(const double cutOff) : _radialCutOff(cutOff){};
+NonCoulombPair::NonCoulombPair(const double cutOff) : _radialCutOff(cutOff) {}
 
 /**
  * @brief Construct a new Non Coulomb Pair:: Non Coulomb Pair object
@@ -64,7 +66,9 @@ NonCoulombPair::NonCoulombPair(
 )
     : _radialCutOff(cutoff),
       _energyCutOff(energyCutoff),
-      _forceCutOff(forceCutoff){};
+      _forceCutOff(forceCutoff)
+{
+}
 
 /**
  * @brief operator overload for the comparison of two NonCoulombPair objects

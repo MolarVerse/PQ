@@ -45,8 +45,11 @@ PotentialBruteForce::~PotentialBruteForce() = default;
  * @param simBox
  * @param physicalData
  */
-inline void PotentialBruteForce::
-    calculateForces(SimulationBox &simBox, PhysicalData &physicalData, CellList &)
+inline void PotentialBruteForce::calculateForces(
+    SimulationBox &simBox,
+    PhysicalData  &physicalData,
+    CellList &
+)
 {
     startTimingsSection("InterNonBonded");
 

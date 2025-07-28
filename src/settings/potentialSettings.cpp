@@ -138,7 +138,8 @@ void PotentialSettings::setCoulombLongRangeType(const std::string_view &type)
  *
  * @param type
  */
-void PotentialSettings::setCoulombLongRangeType(const CoulombLongRangeType &type
+void PotentialSettings::setCoulombLongRangeType(
+    const CoulombLongRangeType &type
 )
 {
     _coulombLRType = type;

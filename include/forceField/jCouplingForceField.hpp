@@ -59,8 +59,8 @@ namespace forceField
             const size_t                       type
         );
 
-        void calculateEnergyAndForces(const pq::SimBox &, pq::PhysicalData &){
-        };   // TODO: implement
+        void calculateEnergyAndForces(const pq::SimBox &, pq::PhysicalData &) {
+        }   // TODO: implement
 
         /***************************
          * standard setter methods *

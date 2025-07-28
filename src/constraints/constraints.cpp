@@ -60,7 +60,8 @@ void Constraints::initMShake() { _mShake.initMShake(); }
  * @param simulationBox
  *
  */
-void Constraints::calculateConstraintBondRefs(const SimulationBox &simulationBox
+void Constraints::calculateConstraintBondRefs(
+    const SimulationBox &simulationBox
 )
 {
     startTimingsSection("Reference Bond Data");
@@ -113,11 +114,12 @@ void Constraints::_applyShake(SimulationBox &simBox)
         convergedVector.clear();
 
         auto applyShakeSingleBond =
-            [&simBox, &convergedVector, this](auto &bondConst) {
-                convergedVector.push_back(
-                    bondConst.applyShake(simBox, _shakeTolerance)
-                );
-            };
+            [&simBox, &convergedVector, this](auto &bondConst)
+        {
+            convergedVector.push_back(
+                bondConst.applyShake(simBox, _shakeTolerance)
+            );
+        };
 
         std::ranges::for_each(_bondConstraints, applyShakeSingleBond);
 
@@ -130,10 +132,12 @@ void Constraints::_applyShake(SimulationBox &simBox)
     }
 
     if (!converged)
-        throw ShakeException(std::format(
-            "Shake algorithm did not converge for {} bonds.",
-            std::ranges::count(convergedVector, false)
-        ));
+        throw ShakeException(
+            std::format(
+                "Shake algorithm did not converge for {} bonds.",
+                std::ranges::count(convergedVector, false)
+            )
+        );
 
     stopTimingsSection("Shake");
 }
@@ -188,8 +192,9 @@ void Constraints::_applyRattle()
     {
         convergedVector.clear();
 
-        auto applyRattleForSingleBond = [&convergedVector,
-                                         this](auto &bondConstraint) {
+        auto applyRattleForSingleBond =
+            [&convergedVector, this](auto &bondConstraint)
+        {
             convergedVector.push_back(
                 bondConstraint.applyRattle(_rattleTolerance)
             );
@@ -206,10 +211,12 @@ void Constraints::_applyRattle()
     }
 
     if (!converged)
-        throw ShakeException(std::format(
-            "Rattle algorithm did not converge for {} bonds.",
-            std::ranges::count(convergedVector, false)
-        ));
+        throw ShakeException(
+            std::format(
+                "Rattle algorithm did not converge for {} bonds.",
+                std::ranges::count(convergedVector, false)
+            )
+        );
 
     stopTimingsSection("Rattle");
 }
@@ -248,7 +255,8 @@ void Constraints::applyDistanceConstraints(
 
     std::ranges::for_each(
         _distanceConstraints,
-        [&simulationBox, effective_time](auto &distanceConstraint) {
+        [&simulationBox, effective_time](auto &distanceConstraint)
+        {
             distanceConstraint.applyDistanceConstraint(
                 simulationBox,
                 effective_time

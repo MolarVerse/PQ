@@ -56,8 +56,10 @@ namespace potential
         virtual ~CoulombPotential() = default;
         explicit CoulombPotential(const double coulombRadiusCutOff);
 
-        virtual std::pair<double, double> calculate(const double, const double)
-            const = 0;
+        virtual std::pair<double, double> calculate(
+            const double,
+            const double
+        ) const = 0;
 
         /***************************
          * standard setter methods *

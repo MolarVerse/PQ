@@ -38,7 +38,9 @@ CommandLineArgs::CommandLineArgs(
     const int                       argc,
     const std::vector<std::string> &argv
 )
-    : _argc(argc), _argv(argv){};
+    : _argc(argc), _argv(argv)
+{
+}
 
 /**
  * @brief Detects flags in the command line arguments. First argument is the

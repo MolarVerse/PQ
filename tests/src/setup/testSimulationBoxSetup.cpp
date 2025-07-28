@@ -453,7 +453,8 @@ TEST_F(TestSetup, testNoBox)
 TEST_F(TestSetup, testBoxAndDensitySet)
 {
     _engine->getSimulationBox().setTotalMass(6000);
-    _engine->getSimulationBox().setDensity(12341243.1234
+    _engine->getSimulationBox().setDensity(
+        12341243.1234
     );   // this should be ignored
     _engine->getSimulationBox().setBoxDimensions({10.0, 20.0, 30.0});
     settings::SimulationBoxSettings::setDensitySet(true);
@@ -584,7 +585,8 @@ TEST_F(TestSetup, testFullSetup)
     _engine->getSimulationBox().addMoleculeType(moleculeType2);
 
     _engine->getSimulationBox().setTotalMass(33.0);
-    _engine->getSimulationBox().setDensity(12341243.1234
+    _engine->getSimulationBox().setDensity(
+        12341243.1234
     );   // this should be ignored
     _engine->getSimulationBox().setBoxDimensions({10.0, 20.0, 30.0});
     settings::PotentialSettings::setCoulombRadiusCutOff(4.0);

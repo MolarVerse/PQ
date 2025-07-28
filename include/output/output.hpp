@@ -52,7 +52,7 @@ namespace output
         void openFile();
 
        public:
-        explicit Output(const std::string &filename) : _fileName(filename){};
+        explicit Output(const std::string &filename) : _fileName(filename) {}
 
         void setFilename(const std::string_view &);
         void close();

@@ -72,7 +72,8 @@ namespace potential
 
         [[nodiscard]] bool operator==(const BuckinghamPair &other) const;
 
-        [[nodiscard]] std::pair<double, double> calculate(const double distance
+        [[nodiscard]] std::pair<double, double> calculate(
+            const double distance
         ) const override;
 
         [[nodiscard]] double getA() const;

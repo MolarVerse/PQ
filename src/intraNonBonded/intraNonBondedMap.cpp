@@ -51,7 +51,9 @@ IntraNonBondedMap::IntraNonBondedMap(
     pq::Molecule            *molecule,
     IntraNonBondedContainer *intraNonBondedType
 )
-    : _molecule(molecule), _intraNonBondedContainer(intraNonBondedType){};
+    : _molecule(molecule), _intraNonBondedContainer(intraNonBondedType)
+{
+}
 
 /**
  * @brief calculate the intra non bonded interactions for a single

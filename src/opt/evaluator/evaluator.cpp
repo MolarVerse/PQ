@@ -91,7 +91,8 @@ void Evaluator::setConstraints(const std::shared_ptr<Constraints> constraints)
  *
  * @param physicalData - std::shared_ptr<PhysicalData>
  */
-void Evaluator::setPhysicalData(const std::shared_ptr<PhysicalData> physicalData
+void Evaluator::setPhysicalData(
+    const std::shared_ptr<PhysicalData> physicalData
 )
 {
     _physicalData = physicalData;

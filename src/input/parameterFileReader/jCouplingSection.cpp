@@ -83,11 +83,14 @@ void JCouplingSection::processSection(
 )
 {
     if (lineElements.size() != 7 && lineElements.size() != 8)
-        throw ParameterFileException(std::format(
-            "Wrong number of arguments in parameter file j-coupling section at "
-            "line {} - number of elements has to be 7 or 8!",
-            _lineNumber
-        ));
+        throw ParameterFileException(
+            std::format(
+                "Wrong number of arguments in parameter file j-coupling "
+                "section at "
+                "line {} - number of elements has to be 7 or 8!",
+                _lineNumber
+            )
+        );
 
     auto id            = stoul(lineElements[0]);
     auto J0            = stod(lineElements[1]);

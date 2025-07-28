@@ -63,7 +63,11 @@ namespace simulationBox
         KokkosSimulationBox()  = default;
         ~KokkosSimulationBox() = default;
 
-        KOKKOS_FUNCTION static void calcShiftVector(const double*, Kokkos::View<double*>, double*);
+        KOKKOS_FUNCTION static void calcShiftVector(
+            const double*,
+            Kokkos::View<double*>,
+            double*
+        );
 
         void initKokkosSimulationBox(pq::SimBox& simBox);
         void initForces();

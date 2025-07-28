@@ -68,7 +68,7 @@ void setup::setupPotential(Engine &engine)
  *
  * @param engine
  */
-PotentialSetup::PotentialSetup(Engine &engine) : _engine(engine){};
+PotentialSetup::PotentialSetup(Engine &engine) : _engine(engine) {}
 
 /**
  * @brief sets all nonBonded potential types

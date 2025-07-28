@@ -381,10 +381,12 @@ void GuffDatReader::addNonCoulombPair(
         }
         default:
         {
-            throw UserInputException(std::format(
-                "Invalid nonCoulombic type {} given",
-                string(PotentialSettings::getNonCoulombType())
-            ));
+            throw UserInputException(
+                std::format(
+                    "Invalid nonCoulombic type {} given",
+                    string(PotentialSettings::getNonCoulombType())
+                )
+            );
         }
     }
 }
@@ -713,20 +715,22 @@ void GuffDatReader::checkPartialCharges()
                     const auto prefactor = chargeSquared * _COULOMB_PREFACTOR_;
 
                     if (!compare(prefactor, coeff, 1e-6))
-                        throw GuffDatException(std::format(
-                            "Invalid coulomb coefficient guff file for "
-                            "molecule "
-                            "types {} and {} and the {}. and the {}. atom "
-                            "type. The coulomb "
-                            "coefficient should "
-                            "be {} but is {}",
-                            i + 1,
-                            j + 1,
-                            k + 1,
-                            l + 1,
-                            prefactor,
-                            coeff
-                        ));
+                        throw GuffDatException(
+                            std::format(
+                                "Invalid coulomb coefficient guff file for "
+                                "molecule "
+                                "types {} and {} and the {}. and the {}. atom "
+                                "type. The coulomb "
+                                "coefficient should "
+                                "be {} but is {}",
+                                i + 1,
+                                j + 1,
+                                k + 1,
+                                l + 1,
+                                prefactor,
+                                coeff
+                            )
+                        );
                 }
             }
         }
@@ -762,15 +766,18 @@ void GuffDatReader::checkNecessaryGuffPairs()
                                        [moleculeType1.getAtomType(atomIndex1)]
                                        [moleculeType2.getAtomType(atomIndex2)])
 
-                        throw GuffDatException(std::format(
-                            "No guff pair set for molecule types {} and {} and "
-                            "atom types {} and "
-                            "the {}",
-                            moleculeType1.getMoltype(),
-                            moleculeType2.getMoltype(),
-                            moleculeType1.getExternalAtomType(atomIndex1),
-                            moleculeType2.getExternalAtomType(atomIndex2)
-                        ));
+                        throw GuffDatException(
+                            std::format(
+                                "No guff pair set for molecule types {} and {} "
+                                "and "
+                                "atom types {} and "
+                                "the {}",
+                                moleculeType1.getMoltype(),
+                                moleculeType2.getMoltype(),
+                                moleculeType1.getExternalAtomType(atomIndex1),
+                                moleculeType2.getExternalAtomType(atomIndex2)
+                            )
+                        );
             }
         }
 }

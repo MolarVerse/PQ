@@ -94,9 +94,11 @@ void IntegratorInputParser::parseIntegrator(
     }
 
     else
-        throw InputFileException(std::format(
-            "Invalid integrator \"{}\" at line {} in input file",
-            lineElements[2],
-            lineNumber
-        ));
+        throw InputFileException(
+            std::format(
+                "Invalid integrator \"{}\" at line {} in input file",
+                lineElements[2],
+                lineNumber
+            )
+        );
 }

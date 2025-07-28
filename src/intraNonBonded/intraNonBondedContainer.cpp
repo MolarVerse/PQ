@@ -34,7 +34,9 @@ IntraNonBondedContainer::IntraNonBondedContainer(
     const size_t                         molType,
     const std::vector<std::vector<int>> &atomIndices
 )
-    : _molType(molType), _atomIndices(atomIndices){};
+    : _molType(molType), _atomIndices(atomIndices)
+{
+}
 
 /***************************
  *                         *

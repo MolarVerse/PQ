@@ -69,10 +69,12 @@ void input::checkCommandArray(
 )
 {
     if (lineElements.size() < 3)
-        throw InputFileException(std::format(
-            "Invalid number of arguments at line {} in input file",
-            lineNumber
-        ));
+        throw InputFileException(
+            std::format(
+                "Invalid number of arguments at line {} in input file",
+                lineNumber
+            )
+        );
 
     checkEqualSign(lineElements[1], lineNumber);
 }
@@ -92,10 +94,12 @@ void input::checkCommand(
 )
 {
     if (lineElements.size() != 3)
-        throw InputFileException(std::format(
-            "Invalid number of arguments at line {} in input file",
-            lineNumber
-        ));
+        throw InputFileException(
+            std::format(
+                "Invalid number of arguments at line {} in input file",
+                lineNumber
+            )
+        );
 
     checkEqualSign(lineElements[1], lineNumber);
 }

@@ -69,7 +69,8 @@ namespace potential
 
         [[nodiscard]] bool operator==(const LennardJonesPair &other) const;
 
-        [[nodiscard]] std::pair<double, double> calculate(const double distance
+        [[nodiscard]] std::pair<double, double> calculate(
+            const double distance
         ) const override;
 
         [[nodiscard]] double getC6() const;

@@ -64,11 +64,14 @@ void AngleSection::processSection(
 )
 {
     if (lineElements.size() != 4 && lineElements.size() != 5)
-        throw TopologyException(std::format(
-            "Wrong number of arguments in topology file angle section at line "
-            "{} - number of elements has to be 4 or 5!",
-            _lineNumber
-        ));
+        throw TopologyException(
+            std::format(
+                "Wrong number of arguments in topology file angle section at "
+                "line "
+                "{} - number of elements has to be 4 or 5!",
+                _lineNumber
+            )
+        );
 
     auto atom1     = stoul(lineElements[0]);
     auto atom2     = stoul(lineElements[1]);
@@ -82,19 +85,23 @@ void AngleSection::processSection(
             isLinker = true;
 
         else
-            throw TopologyException(std::format(
-                "Fifth entry in topology file in angle section has to be a "
-                "\'*\' or empty at line {}!",
-                _lineNumber
-            ));
+            throw TopologyException(
+                std::format(
+                    "Fifth entry in topology file in angle section has to be a "
+                    "\'*\' or empty at line {}!",
+                    _lineNumber
+                )
+            );
     }
 
     if (atom1 == atom2 || atom1 == atom3 || atom2 == atom3)
-        throw TopologyException(std::format(
-            "Topology file angle section at line {} - atoms cannot be the "
-            "same!",
-            _lineNumber
-        ));
+        throw TopologyException(
+            std::format(
+                "Topology file angle section at line {} - atoms cannot be the "
+                "same!",
+                _lineNumber
+            )
+        );
 
     auto &simBox = engine.getSimulationBox();
 
@@ -128,8 +135,11 @@ std::string AngleSection::keyword() { return "angles"; }
 void AngleSection::endedNormally(const bool endedNormal) const
 {
     if (!endedNormal)
-        throw TopologyException(std::format(
-            "Topology file angle section at line {} - no end of section found!",
-            _lineNumber
-        ));
+        throw TopologyException(
+            std::format(
+                "Topology file angle section at line {} - no end of section "
+                "found!",
+                _lineNumber
+            )
+        );
 }

@@ -61,7 +61,8 @@ void HybridSettings::setCoreOnlyListString(const std::string_view list)
  *
  * @param nonCoreOnlyList
  */
-void HybridSettings::setNonCoreOnlyListString(const std::string_view nonCoreOnly
+void HybridSettings::setNonCoreOnlyListString(
+    const std::string_view nonCoreOnly
 )
 {
     _nonCoreOnlyListString = nonCoreOnly;
