@@ -45,4 +45,4 @@ def test_ase_xtb(test_with_data_dir):
     # check if stderr is empty
     assert stderr == b""
 
-    check_pq_output("mof5-md-01", "ase-xtb")
+    check_pq_output("malondialdehyde-md-01", "ase-xtb")

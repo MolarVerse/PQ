@@ -1,8 +1,9 @@
 jobtype    = qm-md;
-nstep      = 1;
+nstep      = 2;
 timestep   = 0.5;
 qm_prog    = ase-xtb;
 xtb_method = gfn2-xtb;
 
-start_file   = input.rst;
-file_prefix  = mof5-md-01;
+start_file       = input.rst;
+file_prefix      = malondialdehyde-md-01;
+overwrite_output = on;

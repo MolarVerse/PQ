@@ -45,4 +45,4 @@ def test_pyscf(test_with_data_dir):
     # check if stderr is empty
     assert stderr == b""
 
-    check_pq_output("malondialdehyde-md-01", "pyscf", "ref_data", True)
+    check_pq_output("malondialdehyde-md-01", "pyscf")

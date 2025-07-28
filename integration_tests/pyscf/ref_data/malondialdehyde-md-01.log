@@ -22,8 +22,8 @@
                         Stefan Seiwald
                         Benjamin Reitmair
 
-         Version:       v0.6.0
-         Compile date:  Apr  2 2025 23:50:53
+         Version:       v0.6.1
+         Compile date:  Jul 28 2025 10:10:13
 
 INFO:    Reading Moldescriptor File "moldescriptor.dat"
 
@@ -33,7 +33,13 @@ INFO:    Setup of QM runner
 
          QM runner: PYSCF
 
-         QM script: pyscf_mp2.py
+         QM script: /home/ape/test_stuff/pq_test/malondialdehyde_pyscf/pyscf_hf.py
+
+         QM looptime limit: 3600 s
+
+INFO:    Setup of Random Number Generator
+
+         Using system-generated random seed
 
 INFO:    Setup of Reset Kinetics
 
@@ -73,7 +79,7 @@ INFO:    Setup of Manostat
 INFO:    Initial momentum = 0.00000e+00 Å*amu/fs
 
 
-         Elapsed time = 39.88500 s
+         Elapsed time = 2.72600 s
 
 
 INFO:    For citation please refer to the ".ref" file.
