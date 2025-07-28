@@ -33,14 +33,14 @@ using namespace simulationBox;
  *
  * @param moltype
  */
-MoleculeType::MoleculeType(const size_t moltype) : _moltype(moltype){};
+MoleculeType::MoleculeType(const size_t moltype) : _moltype(moltype) {}
 
 /**
  * @brief Construct a new Molecule Type:: Molecule Type object
  *
  * @param name
  */
-MoleculeType::MoleculeType(const std::string_view &name) : _name(name){};
+MoleculeType::MoleculeType(const std::string_view &name) : _name(name) {}
 
 /**
  * @brief finds number of different atom types in molecule

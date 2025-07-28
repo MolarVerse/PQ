@@ -90,10 +90,12 @@ void TurbomoleRunner::execute()
     const auto scriptFile = _scriptPath + QMSettings::getQMScript();
 
     if (!fileExists(scriptFile))
-        throw InputFileException(std::format(
-            "Turbomole script file \"{}\" does not exist.",
-            scriptFile
-        ));
+        throw InputFileException(
+            std::format(
+                "Turbomole script file \"{}\" does not exist.",
+                scriptFile
+            )
+        );
 
     const auto reuseCharges = _isFirstExecution ? 1 : 0;
 

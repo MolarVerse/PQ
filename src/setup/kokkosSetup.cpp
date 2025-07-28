@@ -61,7 +61,7 @@ void setup::setupKokkos(Engine &engine)
  *
  * @param engine
  */
-KokkosSetup::KokkosSetup(Engine &engine) : _engine(engine){};
+KokkosSetup::KokkosSetup(Engine &engine) : _engine(engine) {}
 
 /**
  * @brief setup Kokkos

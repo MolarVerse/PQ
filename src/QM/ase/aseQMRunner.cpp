@@ -127,8 +127,10 @@ void ASEQMRunner::execute()
  * @param simBox
  * @param physicalData
  */
-void ASEQMRunner::collectData(SimulationBox &simBox, PhysicalData &physicalData)
-    const
+void ASEQMRunner::collectData(
+    SimulationBox &simBox,
+    PhysicalData  &physicalData
+) const
 {
     collectForces(simBox);
     collectEnergy(physicalData);
@@ -182,8 +184,10 @@ void ASEQMRunner::collectEnergy(PhysicalData &physicalData) const
  *
  * @throw py::error_already_set if the collection of the stress fails
  */
-void ASEQMRunner::collectStress(const SimulationBox &simBox, PhysicalData &data)
-    const
+void ASEQMRunner::collectStress(
+    const SimulationBox &simBox,
+    PhysicalData        &data
+) const
 {
     linearAlgebra::tensor3D stress_;
 
@@ -260,14 +264,16 @@ py::array ASEQMRunner::asePositions(const SimulationBox &simBox) const
     {
         auto positions_array = array_d(ssize_t(nAtoms) * 3, &pos[0]);
 
-        const auto positions_array_reshaped = py::array(py::buffer_info(
-            positions_array.mutable_data(),            // Pointer to data
-            sizeDouble,                                // Size of one scalar
-            py::format_descriptor<double>::format(),   // Data type
-            2,                                         // Number of dimensions
-            shape,                                     // Shape (N, 3)
-            strides                                    // Strides
-        ));
+        const auto positions_array_reshaped = py::array(
+            py::buffer_info(
+                positions_array.mutable_data(),            // Pointer to data
+                sizeDouble,                                // Size of one scalar
+                py::format_descriptor<double>::format(),   // Data type
+                2,        // Number of dimensions
+                shape,    // Shape (N, 3)
+                strides   // Strides
+            )
+        );
 
         return positions_array_reshaped;
     }
@@ -350,7 +356,8 @@ py::array_t<bool> ASEQMRunner::asePBC(const SimulationBox &) const
  *
  * @throw py::error_already_set if the construction of the array fails
  */
-py::array_t<int> ASEQMRunner::aseAtomicNumbers(const SimulationBox &simBox
+py::array_t<int> ASEQMRunner::aseAtomicNumbers(
+    const SimulationBox &simBox
 ) const
 {
     const auto atomicNumbers = simBox.getAtomicNumbers();

@@ -64,12 +64,14 @@ namespace simulationBox
         [[nodiscard]] virtual pq::tensor3D getBoxMatrix() const;
 
         [[nodiscard]] virtual pq::Vec3D toOrthoSpace(const pq::Vec3D &) const;
-        [[nodiscard]] virtual pq::tensor3D toOrthoSpace(const pq::tensor3D &)
-            const;
+        [[nodiscard]] virtual pq::tensor3D toOrthoSpace(
+            const pq::tensor3D &
+        ) const;
 
         [[nodiscard]] virtual pq::Vec3D    toSimSpace(const pq::Vec3D &) const;
-        [[nodiscard]] virtual pq::tensor3D toSimSpace(const pq::tensor3D &)
-            const;
+        [[nodiscard]] virtual pq::tensor3D toSimSpace(
+            const pq::tensor3D &
+        ) const;
 
         /********************
          * standard getters *

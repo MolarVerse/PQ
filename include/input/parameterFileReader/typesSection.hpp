@@ -45,7 +45,7 @@ namespace input::parameterFile
 
         void process(pq::strings &, pq::Engine &) override;
         void processSection(pq::strings &, pq::Engine &) override;
-        void processHeader(pq::strings &, pq::Engine &) override {};
+        void processHeader(pq::strings &, pq::Engine &) override {}
         // TODO: implement processHeader
     };
 

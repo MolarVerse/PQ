@@ -80,8 +80,9 @@ void setup::setupRingPolymer(Engine &engine)
  *
  * @param engine
  */
-RingPolymerSetup::RingPolymerSetup(RingPolymerEngine &engine)
-    : _engine(engine){};
+RingPolymerSetup::RingPolymerSetup(RingPolymerEngine &engine) : _engine(engine)
+{
+}
 
 /**
  * @brief setup a ring polymer simulation

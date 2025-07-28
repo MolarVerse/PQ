@@ -298,7 +298,8 @@ void KokkosSimulationBox::transferBoxDimensionsFromSimulationBox(
 /**
  * @brief transfer positions to simulation box
  */
-void KokkosSimulationBox::transferPositionsToSimulationBox(SimulationBox& simBox
+void KokkosSimulationBox::transferPositionsToSimulationBox(
+    SimulationBox& simBox
 )
 {
     // copy positions back to host

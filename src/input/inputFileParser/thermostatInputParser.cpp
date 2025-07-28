@@ -290,7 +290,8 @@ void ThermostatInputParser::parseTemperatureRampFrequency(
     const auto tempRampFreq = stoi(lineElements[2]);
 
     if (tempRampFreq < 0)
-        throw InputFileException("Temperature ramp frequency cannot be negative"
+        throw InputFileException(
+            "Temperature ramp frequency cannot be negative"
         );
 
     ThermostatSettings::setTemperatureRampFrequency(size_t(tempRampFreq));
@@ -365,7 +366,8 @@ void ThermostatInputParser::parseThermostatChainLength(
     const auto chainLength = stoi(lineElements[2]);
 
     if (chainLength < 0)
-        throw InputFileException("Chain length of thermostat cannot be negative"
+        throw InputFileException(
+            "Chain length of thermostat cannot be negative"
         );
 
     ThermostatSettings::setNoseHooverChainLength(size_t(chainLength));

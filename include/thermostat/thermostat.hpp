@@ -59,9 +59,10 @@ namespace thermostat
         void applyTemperatureRamping();
 
         virtual void applyThermostat(pq::SimBox &, pq::PhysicalData &);
-        virtual void applyThermostatOnForces(pq::SimBox &) {};
-        virtual void applyThermostatHalfStep(pq::SimBox &, pq::PhysicalData &) {
-        };
+        virtual void applyThermostatOnForces(pq::SimBox &) {}
+        virtual void applyThermostatHalfStep(pq::SimBox &, pq::PhysicalData &)
+        {
+        }
 
         /***************************
          * standard setter methods *

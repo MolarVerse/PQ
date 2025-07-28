@@ -86,18 +86,22 @@ void ExternalQMRunner::readForceFile(
     std::ifstream forceFile(forceFileName);
 
     if (!forceFile.is_open())
-        throw QMRunnerException(std::format(
-            "Cannot open {} force file \"{}\"",
-            string(QMSettings::getQMMethod()),
-            forceFileName
-        ));
+        throw QMRunnerException(
+            std::format(
+                "Cannot open {} force file \"{}\"",
+                string(QMSettings::getQMMethod()),
+                forceFileName
+            )
+        );
 
     if (forceFile.peek() == std::ifstream::traits_type::eof())
-        throw QMRunnerException(std::format(
-            "Empty {} force file \"{}\"",
-            string(QMSettings::getQMMethod()),
-            forceFileName
-        ));
+        throw QMRunnerException(
+            std::format(
+                "Empty {} force file \"{}\"",
+                string(QMSettings::getQMMethod()),
+                forceFileName
+            )
+        );
 
     double energy = 0.0;
 

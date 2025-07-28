@@ -50,7 +50,10 @@ namespace input::parameterFile
         void         endedNormally(const bool);
 
         virtual std::string keyword() = 0;
-        virtual void processSection(pq::strings &lineElements, pq::Engine &) = 0;
+        virtual void        processSection(
+                   pq::strings &lineElements,
+                   pq::Engine &
+               )                                                            = 0;
         virtual void processHeader(pq::strings &lineElements, pq::Engine &) = 0;
 
         void setLineNumber(const int lineNumber);

@@ -41,7 +41,10 @@ namespace linearAlgebra
      ****************************/
 
     template <typename T>
-    StaticMatrix3x3<T> operator+(const StaticMatrix3x3<T> &, const StaticMatrix3x3<T> &);
+    StaticMatrix3x3<T> operator+(
+        const StaticMatrix3x3<T> &,
+        const StaticMatrix3x3<T> &
+    );
 
     template <typename T>
     StaticMatrix3x3<T> operator+(const StaticMatrix3x3<T> &lhs, const T &rhs);
@@ -54,7 +57,10 @@ namespace linearAlgebra
      ****************************/
 
     template <typename T>
-    StaticMatrix3x3<T> operator-(const StaticMatrix3x3<T> &, const StaticMatrix3x3<T> &);
+    StaticMatrix3x3<T> operator-(
+        const StaticMatrix3x3<T> &,
+        const StaticMatrix3x3<T> &
+    );
 
     template <typename T>
     void operator-=(StaticMatrix3x3<T> &lhs, const StaticMatrix3x3<T> &rhs);
@@ -64,7 +70,10 @@ namespace linearAlgebra
      ****************************/
 
     template <typename T>
-    StaticMatrix3x3<T> operator*(const StaticMatrix3x3<T> &, const StaticMatrix3x3<T> &);
+    StaticMatrix3x3<T> operator*(
+        const StaticMatrix3x3<T> &,
+        const StaticMatrix3x3<T> &
+    );
 
     template <typename T>
     StaticMatrix3x3<T> operator*(const StaticMatrix3x3<T> &mat, const T t);

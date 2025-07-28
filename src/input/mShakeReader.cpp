@@ -153,18 +153,20 @@ void MShakeReader::processCommentLine(
     }
 
     if (!foundMolType)
-        throw MShakeFileException(std::format(
-            "Unknown command in mShake file at line {}! The M-Shake file "
-            "should be in the form a an extended xyz file. Here, the "
-            "comment line should contain the molecule type from the "
-            "moldescriptor file in the following form: 'MolType = 1;'. "
-            "Please note that the syntax parsing works exactly like in the "
-            "input file. Thus, it is case insensitive and the commands are "
-            "separated by semicolons. Furthermore, the spaces around the "
-            "'=' sign can be of arbitrary length (including also no spaces "
-            "at all).",
-            _lineNumber
-        ));
+        throw MShakeFileException(
+            std::format(
+                "Unknown command in mShake file at line {}! The M-Shake file "
+                "should be in the form a an extended xyz file. Here, the "
+                "comment line should contain the molecule type from the "
+                "moldescriptor file in the following form: 'MolType = 1;'. "
+                "Please note that the syntax parsing works exactly like in the "
+                "input file. Thus, it is case insensitive and the commands are "
+                "separated by semicolons. Furthermore, the spaces around the "
+                "'=' sign can be of arbitrary length (including also no spaces "
+                "at all).",
+                _lineNumber
+            )
+        );
 }
 
 /**
@@ -193,13 +195,17 @@ void MShakeReader::processAtomLines(
         auto lineElements = splitString(line);
 
         if (lineElements.size() != 4)
-            throw MShakeFileException(std::format(
-                "Wrong number of elements in atom lines in mShake file "
-                "starting at line {}! The M-Shake file should be in the form a "
-                "an extended xyz file. Therefore, this line should contain the "
-                "atom type and the coordinates of the atom.",
-                _lineNumber
-            ));
+            throw MShakeFileException(
+                std::format(
+                    "Wrong number of elements in atom lines in mShake file "
+                    "starting at line {}! The M-Shake file should be in the "
+                    "form a "
+                    "an extended xyz file. Therefore, this line should contain "
+                    "the "
+                    "atom type and the coordinates of the atom.",
+                    _lineNumber
+                )
+            );
 
         const auto atomName = lineElements[0];
         const auto x        = std::stod(lineElements[1]);
@@ -220,22 +226,27 @@ void MShakeReader::processAtomLines(
 
     if (atoms.size() == 1)
     {
-        throw MShakeFileException(std::format(
-            "Molecule type {} has only one atom. M-Shake requires at least two "
-            "atoms.",
-            molType.getMoltype()
-        ));
+        throw MShakeFileException(
+            std::format(
+                "Molecule type {} has only one atom. M-Shake requires at least "
+                "two "
+                "atoms.",
+                molType.getMoltype()
+            )
+        );
     }
 
     if (atomNames != refAtomNames)
-        throw MShakeFileException(std::format(
-            "Atom names in mShake file at line {} do not match the atom "
-            "names of the molecule type! The M-Shake file should be in the "
-            "form a an extended xyz file. Therefore, the atom names in the "
-            "atom lines should match the atom names of the molecule type "
-            "from the restart file.",
-            _lineNumber
-        ));
+        throw MShakeFileException(
+            std::format(
+                "Atom names in mShake file at line {} do not match the atom "
+                "names of the molecule type! The M-Shake file should be in the "
+                "form a an extended xyz file. Therefore, the atom names in the "
+                "atom lines should match the atom names of the molecule type "
+                "from the restart file.",
+                _lineNumber
+            )
+        );
 
     mShakeReference.setAtoms(atoms);
 }

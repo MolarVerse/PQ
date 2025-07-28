@@ -96,7 +96,9 @@ IntraNonBondedReader::IntraNonBondedReader(
     const std::string &fileName,
     Engine            &engine
 )
-    : _fileName(fileName), _fp(fileName), _engine(engine){};
+    : _fileName(fileName), _fp(fileName), _engine(engine)
+{
+}
 
 /**
  * @brief reads the intra non bonded interactions from the intraNonBonded file

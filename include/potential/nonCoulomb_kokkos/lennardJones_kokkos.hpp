@@ -76,12 +76,18 @@ namespace potential
         [[nodiscard]] Kokkos::DualView<double **> &getC12();
         [[nodiscard]] double getC12(const size_t i, const size_t j) const;
 
-        KOKKOS_FUNCTION double getRadialCutoff(const size_t, const size_t)
-            const;
-        [[nodiscard]] double getEnergyCutoff(const size_t i, const size_t j)
-            const;
-        [[nodiscard]] double getForceCutoff(const size_t i, const size_t j)
-            const;
+        KOKKOS_FUNCTION double getRadialCutoff(
+            const size_t,
+            const size_t
+        ) const;
+        [[nodiscard]] double getEnergyCutoff(
+            const size_t i,
+            const size_t j
+        ) const;
+        [[nodiscard]] double getForceCutoff(
+            const size_t i,
+            const size_t j
+        ) const;
     };
 }   // namespace potential
 

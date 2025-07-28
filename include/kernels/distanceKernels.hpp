@@ -29,17 +29,30 @@
 
 namespace kernel
 {
-    [[nodiscard]] double distSquared(const pq::Vec3D &, const pq::Vec3D &, const pq::SimBox &);
+    [[nodiscard]] double distSquared(
+        const pq::Vec3D &,
+        const pq::Vec3D &,
+        const pq::SimBox &
+    );
 
     [[nodiscard]] pq::Vec3D distVec(const pq::Vec3D &, const pq::Vec3D &);
 
-    [[nodiscard]] pq::Vec3D distVec(const pq::Vec3D &, const pq::Vec3D &, const pq::SimBox &);
+    [[nodiscard]] pq::Vec3D distVec(
+        const pq::Vec3D &,
+        const pq::Vec3D &,
+        const pq::SimBox &
+    );
 
-    [[nodiscard]] std::pair<pq::Vec3D, double>
-    distVecAndDist2(const pq::Vec3D &, const pq::Vec3D &);
+    [[nodiscard]] std::pair<pq::Vec3D, double> distVecAndDist2(
+        const pq::Vec3D &,
+        const pq::Vec3D &
+    );
 
-    [[nodiscard]] std::pair<pq::Vec3D, double>
-    distVecAndDist2(const pq::Vec3D &, const pq::Vec3D &, const pq::SimBox &);
+    [[nodiscard]] std::pair<pq::Vec3D, double> distVecAndDist2(
+        const pq::Vec3D &,
+        const pq::Vec3D &,
+        const pq::SimBox &
+    );
 
 }   // namespace kernel
 

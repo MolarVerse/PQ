@@ -55,7 +55,7 @@ namespace input
         std::map<std::string, int>           _keywordCountMap;
 
        public:
-        explicit InputFileParser(pq::Engine &engine) : _engine(engine){};
+        explicit InputFileParser(pq::Engine &engine) : _engine(engine) {}
 
         void addKeyword(const std::string &, pq::ParseFunc, bool);
 

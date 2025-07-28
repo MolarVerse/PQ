@@ -64,7 +64,7 @@ void setup::setupManostat(Engine &engine)
  *
  * @param engine
  */
-ManostatSetup::ManostatSetup(MDEngine &engine) : _engine(engine){};
+ManostatSetup::ManostatSetup(MDEngine &engine) : _engine(engine) {}
 
 /**
  * @brief setup manostat
@@ -109,10 +109,12 @@ void ManostatSetup::setup()
 void ManostatSetup::isPressureSet() const
 {
     if (!ManostatSettings::isPressureSet())
-        throw InputFileException(std::format(
-            "Pressure not set for {} manostat",
-            string(ManostatSettings::getManostatType())
-        ));
+        throw InputFileException(
+            std::format(
+                "Pressure not set for {} manostat",
+                string(ManostatSettings::getManostatType())
+            )
+        );
 }
 
 /**

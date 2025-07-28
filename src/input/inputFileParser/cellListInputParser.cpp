@@ -92,13 +92,15 @@ void CellListInputParser::parseCellListActivated(
         _engine.getCellList().deactivate();
 
     else
-        throw InputFileException(std::format(
-            "Invalid cell-list keyword \"{}\" "
-            "at line {} in input file\n"
-            "Possible keywords are \"on\" and \"off\"",
-            lineElements[2],
-            lineNumber
-        ));
+        throw InputFileException(
+            std::format(
+                "Invalid cell-list keyword \"{}\" "
+                "at line {} in input file\n"
+                "Possible keywords are \"on\" and \"off\"",
+                lineElements[2],
+                lineNumber
+            )
+        );
 }
 
 /**

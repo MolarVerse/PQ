@@ -40,14 +40,14 @@ using namespace settings;
  *
  * @param name
  */
-Molecule::Molecule(const std::string_view name) : _name(name){};
+Molecule::Molecule(const std::string_view name) : _name(name) {}
 
 /**
  * @brief Construct a new Molecule:: Molecule object
  *
  * @param moltype
  */
-Molecule::Molecule(const size_t moltype) : _moltype(moltype){};
+Molecule::Molecule(const size_t moltype) : _moltype(moltype) {}
 
 /**
  * @brief finds number of different atom types in molecule

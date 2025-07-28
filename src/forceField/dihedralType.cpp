@@ -44,7 +44,9 @@ DihedralType::DihedralType(
     : _id(id),
       _forceConstant(forceConstant),
       _periodicity(frequency),
-      _phaseShift(phaseShift){};
+      _phaseShift(phaseShift)
+{
+}
 
 /**
  * @brief operator overload for the comparison of two DihedralType objects

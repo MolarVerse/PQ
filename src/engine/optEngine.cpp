@@ -64,10 +64,12 @@ void OptEngine::run()
 
     if (!_converged)
     {
-        throw customException::OptException(std::format(
-            "Optimizer did not converge after {} epochs.",
-            _optimizer->getNEpochs()
-        ));
+        throw customException::OptException(
+            std::format(
+                "Optimizer did not converge after {} epochs.",
+                _optimizer->getNEpochs()
+            )
+        );
     }
 
     if (_optStopped)

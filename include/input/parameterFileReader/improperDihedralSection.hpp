@@ -44,7 +44,7 @@ namespace input::parameterFile
         [[nodiscard]] std::string keyword() override;
 
         void processSection(pq::strings &, pq::Engine &) override;
-        void processHeader(pq::strings &, pq::Engine &) override {};
+        void processHeader(pq::strings &, pq::Engine &) override {}
         // TODO: implement processHeader
     };
 

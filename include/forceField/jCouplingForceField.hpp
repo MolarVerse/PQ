@@ -60,7 +60,7 @@ namespace forceField
         );
 
         void calculateEnergyAndForces(const pq::SimBox &, pq::PhysicalData &) {
-        };   // TODO: implement
+        }   // TODO: implement
 
         /***************************
          * standard setter methods *

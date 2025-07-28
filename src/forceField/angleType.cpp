@@ -41,7 +41,9 @@ AngleType::AngleType(
 )
     : _id(id),
       _equilibriumAngle(equilibriumAngle),
-      _forceConstant(springConstant){};
+      _forceConstant(springConstant)
+{
+}
 
 /**
  * @brief operator overload for the comparison of two AngleType objects

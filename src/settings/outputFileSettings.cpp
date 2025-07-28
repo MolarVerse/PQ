@@ -397,7 +397,8 @@ void OutputFileSettings::setRingPolymerVelocityFileName(
  *
  * @param name
  */
-void OutputFileSettings::setRingPolymerForceFileName(const std::string_view name
+void OutputFileSettings::setRingPolymerForceFileName(
+    const std::string_view name
 )
 {
     _rpmdForceFile = name;

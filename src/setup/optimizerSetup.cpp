@@ -209,8 +209,10 @@ pq::SharedLearningRate OptimizerSetup::setupLearningRateStrategy()
         default:
         {
             throw UserInputException(
-                std::format("In order to run the optimizer, you need to "
-                            "specify a learning rate strategy.")
+                std::format(
+                    "In order to run the optimizer, you need to "
+                    "specify a learning rate strategy."
+                )
             );
         }
     }
@@ -227,12 +229,14 @@ void OptimizerSetup::setupMinMaxLR(pq::SharedLearningRate &lrStrategy)
     const auto maxLR = OptimizerSettings::getMaxLearningRate();
 
     if (maxLR.has_value() && minLR >= maxLR.value())
-        throw UserInputException(std::format(
-            "The minimum learning rate {} is greater or equal to the "
-            "maximum learning rate {}, which is not allowed.",
-            minLR,
-            maxLR.value()
-        ));
+        throw UserInputException(
+            std::format(
+                "The minimum learning rate {} is greater or equal to the "
+                "maximum learning rate {}, which is not allowed.",
+                minLR,
+                maxLR.value()
+            )
+        );
 
     lrStrategy->setMinLearningRate(minLR);
     lrStrategy->setMaxLearningRate(maxLR);

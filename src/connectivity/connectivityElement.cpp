@@ -29,7 +29,9 @@ ConnectivityElement::ConnectivityElement(
     const std::vector<Molecule *> &molecules,
     const std::vector<size_t>     &atomIndices
 )
-    : _molecules(molecules), _atomIndices(atomIndices){};
+    : _molecules(molecules), _atomIndices(atomIndices)
+{
+}
 
 /***************************
  *                         *

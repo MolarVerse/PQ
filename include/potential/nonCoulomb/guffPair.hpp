@@ -49,9 +49,15 @@ namespace potential
 
        public:
         explicit GuffPair(const double, const std::vector<double> &);
-        explicit GuffPair(const double, const double, const double, const std::vector<double> &);
+        explicit GuffPair(
+            const double,
+            const double,
+            const double,
+            const std::vector<double> &
+        );
 
-        [[nodiscard]] std::pair<double, double> calculate(const double distance
+        [[nodiscard]] std::pair<double, double> calculate(
+            const double distance
         ) const override;
 
         [[nodiscard]] std::vector<double> getCoefficients() const;
