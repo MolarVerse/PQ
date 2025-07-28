@@ -101,7 +101,7 @@ jobs:
           pip install pytest-cov
           pip install pqanalysis
           pip install ase
-          pip install pyscf
+          pip install pyscf==2.9.0
           conda install conda-forge::dftbplus
 
       - name: Integration Tests # arm dftbplus not working
