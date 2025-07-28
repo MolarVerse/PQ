@@ -51,6 +51,7 @@ namespace QM
         virtual void readStressTensor(pq::Box &, pq::PhysicalData &) {};
 
         void readForceFile(pq::SimBox &, pq::PhysicalData &);
+        void readForces(auto&& atoms);
 
         /*******************************
          * standard getter and setters *

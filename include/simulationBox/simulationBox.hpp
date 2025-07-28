@@ -40,6 +40,7 @@
 #include "settings.hpp"          // for Settings, JobType
 #include "triclinicBox.hpp"      // for TriclinicBox
 #include "typeAliases.hpp"       // for pq::Vec3D
+#include "simulationBoxView.hpp" // for SimulationBoxView
 
 /**
  * @namespace simulationBox
@@ -69,7 +70,7 @@ namespace simulationBox
      * the SimulationBox class.
      *
      */
-    class SimulationBox
+    class SimulationBox : public SimulationBoxView<SimulationBox>
     {
        private:
         int _waterType;
@@ -192,7 +193,7 @@ namespace simulationBox
         [[nodiscard]] std::vector<double> getAtomicScalarForcesOld() const;
 
         [[nodiscard]] pq::SharedAtomVec&         getAtoms();
-        [[nodiscard]] auto                       getQMAtoms() const;
+        [[nodiscard]] const pq::SharedAtomVec&   getAtoms() const;
         [[nodiscard]] std::vector<Molecule>&     getMolecules();
         [[nodiscard]] std::vector<MoleculeType>& getMoleculeTypes();
 
@@ -246,22 +247,6 @@ namespace simulationBox
         void setBoxDimensions(const pq::Vec3D& boxDimensions) const;
         void setBoxSizeHasChanged(const bool boxSizeHasChanged) const;
     };
-
-    /**
-     * @brief get all QM atoms using range-based filtering
-     *
-     * @return a view/range of QM atoms filtered from all atoms
-     *
-     * @details This function returns a range-based view that filters atoms
-     *          from _atoms based on whether they are designated as QM atoms.
-     */
-    inline auto SimulationBox::getQMAtoms() const
-    {
-        using std::ranges::views::filter;
-
-        return _atoms |
-               filter([](const auto& atom) { return atom->isQMAtom(); });
-    }
 
 }   // namespace simulationBox
 

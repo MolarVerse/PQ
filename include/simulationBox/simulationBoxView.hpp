@@ -1,0 +1,94 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PQ
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
+#ifndef _SIMULATION_BOX_VIEW_HPP_
+
+#define _SIMULATION_BOX_VIEW_HPP_
+
+namespace simulationBox
+{
+    /**
+     * @class SimulationBoxView
+     *
+     * @brief
+     *
+     *  CRTP based class for all kind of views on atoms, molecules etc.
+     *
+     */
+    template <typename Derived>
+    class SimulationBoxView
+    {
+        private:
+            /**
+             * @brief Get the Atoms vector reference
+             * 
+             * @return const auto& 
+             */
+            const auto& getAtoms() const {
+                return static_cast<const Derived&>(*this).getAtoms();
+            }
+
+            /**
+             * @brief Get the Atoms vector reference
+             * 
+             * @return auto& 
+             */
+            auto& getAtoms() {
+                return static_cast<Derived&>(*this).getAtoms();
+            }
+
+        public:
+            
+            /**
+            * @brief get all QM atoms using range-based filtering
+            *
+            * @return a view/iterator of QM atoms filtered from all atoms
+            *
+            * @details This function returns a range-based view that filters atoms
+            *          from _atoms based on whether they are designated as QM atoms.
+            */
+            inline auto getQMAtoms() {
+                using std::ranges::views::filter;
+
+                return getAtoms() |
+                    filter([](const auto& atom) { return atom->isQMAtom(); });
+            }
+
+            /**
+            * @brief get all QM atoms using range-based filtering
+            *
+            * @return a view/iterator of QM atoms filtered from all atoms
+            *
+            * @details This function returns a range-based view that filters atoms
+            *          from _atoms based on whether they are designated as QM atoms.
+            */
+            inline const auto getQMAtoms() const {
+                using std::ranges::views::filter;
+
+                return getAtoms() |
+                    filter([](const auto& atom) { return atom->isQMAtom(); });
+            }
+    };
+
+}   // namespace simulationBox
+
+#endif   // _SIMULATION_BOX_VIEW_HPP_
