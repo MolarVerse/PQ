@@ -129,6 +129,15 @@ elif [[ "$lowercase_message" =~ ^dependency(\(.+\))?: ]]; then
   group="Dependency"
 fi
 
+# Workflow
+if [[ "$lowercase_message" =~ ^flow(\(.+\))?: ]]; then
+  matched=true
+  group="Workflow"
+elif [[ "$lowercase_message" =~ ^workflow(\(.+\))?: ]]; then
+  matched=true
+  group="Workflow"
+fi
+
 # CI
 if [[ "$lowercase_message" =~ ^ci(\(.+\))?: ]]; then
   matched=true
@@ -186,6 +195,7 @@ if ! $matched; then
   echo "  - Breaking:       breaking:"
   echo "  - Example:        example:, examples:"
   echo "  - Dependency:     deps:, dependency:"
+  echo "  - Workflow:       workflow:, flow:"
   echo "  - CI:             ci:"
   echo "  - Cmake:          cmake:"
   echo "  - Administrative: admin:, administrative:"
