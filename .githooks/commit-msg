@@ -10,27 +10,42 @@ matched=false
 if [[ "$lowercase_message" =~ ^feat(\(.+\))?: ]]; then
   matched=true
   group="Feature"
+elif [[ "$lowercase_message" =~ ^feature(\(.+\))?: ]]; then
+  matched=true
+  group="Feature"
 fi
 
 # Bug Fixes
 if [[ "$lowercase_message" =~ ^fix(\(.+\))?: ]]; then
   matched=true
   group="Fix"
+elif [[ "$lowercase_message" =~ ^bugfix(\(.+\))?: ]]; then
+  matched=true
+  group="Fix"
 fi
 
+# Documentation
 if [[ "$lowercase_message" =~ ^docs(\(.+\))?: ]]; then
   matched=true
   group="Docs"
 elif [[ "$lowercase_message" =~ ^doc(\(.+\))?: ]]; then
   matched=true
   group="Docs"
+elif [[ "$lowercase_message" =~ ^documentation(\(.+\))?: ]]; then
+  matched=true
+  group="Docs"
 fi
 
+# Style
 if [[ "$lowercase_message" =~ ^style(\(.+\))?: ]]; then
+  matched=true
+  group="Style"
+elif [[ "$lowercase_message" =~ ^format(\(.+\))?: ]]; then
   matched=true
   group="Style"
 fi
 
+# Refactor
 if [[ "$lowercase_message" =~ ^refactor(\(.+\))?: ]]; then
   matched=true
   group="Refactor"
@@ -39,26 +54,40 @@ elif [[ "$lowercase_message" =~ ^ref(\(.+\))?: ]]; then
   group="Refactor"
 fi
 
+# Performance
 if [[ "$lowercase_message" =~ ^perf(\(.+\))?: ]]; then
+  matched=true
+  group="Performance"
+elif [[ "$lowercase_message" =~ ^performance(\(.+\))?: ]]; then
   matched=true
   group="Performance"
 fi
 
+# Test
 if [[ "$lowercase_message" =~ ^test(\(.+\))?: ]]; then
   matched=true
   group="Test"
 elif [[ "$lowercase_message" =~ ^tests(\(.+\))?: ]]; then
   matched=true
   group="Test"
+elif [[ "$lowercase_message" =~ ^testing(\(.+\))?: ]]; then
+  matched=true
+  group="Test"
 fi
 
-#chore
+# Internal
+if [[ "$lowercase_message" =~ ^internal(\(.+\))?: ]]; then
+  matched=true
+  group="Internal"
+fi
+
+# Chore
 if [[ "$lowercase_message" =~ ^chore(\(.+\))?: ]]; then
   matched=true
   group="Chore"
 fi
 
-#merge
+# Merge
 if [[ "$lowercase_message" =~ ^merge(\(.+\))?: ]]; then
   matched=true
   group="Merge"
@@ -70,7 +99,14 @@ if [[ "$lowercase_message" =~ ^revert(\(.+\))?: ]]; then
   group="Revert"
 fi
 
+# Build
 if [[ "$lowercase_message" =~ ^build(\(.+\))?: ]]; then
+  matched=true
+  group="Build"
+fi
+
+# Breaking
+if [[ "$lowercase_message" =~ ^breaking(\(.+\))?: ]]; then
   matched=true
   group="Breaking"
 fi
@@ -88,28 +124,39 @@ fi
 if [[ "$lowercase_message" =~ ^deps(\(.+\))?: ]]; then
   matched=true
   group="Dependency"
+elif [[ "$lowercase_message" =~ ^dependency(\(.+\))?: ]]; then
+  matched=true
+  group="Dependency"
 fi
 
-# ci
+# CI
 if [[ "$lowercase_message" =~ ^ci(\(.+\))?: ]]; then
   matched=true
   group="CI"
 fi
 
-#cmake
+# CMake
 if [[ "$lowercase_message" =~ ^cmake(\(.+\))?: ]]; then
   matched=true
   group="cmake"
 fi
 
+# Administrative
 if [[ "$lowercase_message" =~ ^admin(\(.+\))?: ]]; then
+  matched=true
+  group="Administrative"
+elif [[ "$lowercase_message" =~ ^administrative(\(.+\))?: ]]; then
   matched=true
   group="Administrative"
 fi
 
-#random stuff that doesn't fit into any of the above categories
-#starting with a $
+# Random 
+# random stuff that doesn't fit into any of the above categories
+# starting with a $ or random
 if [[ "$lowercase_message" =~ ^\$ ]]; then
+  matched=true
+  group="Random"
+elif [[ "$lowercase_message" =~ ^random(\(.+\))?: ]]; then
   matched=true
   group="Random"
 fi
@@ -124,23 +171,25 @@ if ! $matched; then
   echo "Possible patterns are:"
   echo "  - Group:          Pattern(s)"
   echo "  - --------------------------------------------"
-  echo "  - Feature:        feat:"
-  echo "  - Fix:            fix:"
-  echo "  - Docs:           docs:, doc:"
-  echo "  - Style:          style:"
+  echo "  - Feature:        feature:, feat:"
+  echo "  - Fix:            bugfix:, fix:"
+  echo "  - Docs:           documentation:, docs:, doc:"
+  echo "  - Style:          style:, format:"
   echo "  - Refactor:       refactor:, ref:"
-  echo "  - Performance:    perf:"
-  echo "  - Test:           test:, tests:"
+  echo "  - Performance:    performance:, perf:"
+  echo "  - Test:           test:, tests:, testing:"
+  echo "  - Internal:       internal:"
   echo "  - Chore:          chore:"
   echo "  - Merge:          merge:"
   echo "  - Revert:         revert:"
   echo "  - Build:          build:"
+  echo "  - Breaking:       breaking:"
   echo "  - Example:        example:, examples:"
-  echo "  - Dependency:     deps:"
+  echo "  - Dependency:     deps:, dependency:"
   echo "  - CI:             ci:"
   echo "  - Cmake:          cmake:"
-  echo "  - Administrative: admin:"
-  echo "  - Random:         $"
+  echo "  - Administrative: admin:, administrative:"
+  echo "  - Random:         $:, random:"
   # ... (similar output for other patterns in the list)
   echo "  - --------------------------------------------\n"
 
