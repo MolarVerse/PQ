@@ -12,9 +12,9 @@ Project Structure
 
 **PQ** is a C++ molecular dynamics simulation engine with Python bindings, organized into a modular architecture. The project follows standard C++ project conventions with clear separation between headers, source code, applications, tests, and documentation.
 
-====================
+=====================
 Core Directory Layout
-====================
+=====================
 
 The main directories are organized as follows:
 
@@ -156,7 +156,10 @@ The resulting website can be viewed by opening the file ``PQ/docs/sphinx/_build/
 How to Contribute
 *****************
 
-For anyone willing to contribute to the project, it is important to understand the branching model used by the project. The project uses the `Gitflow <http://nvie.com/posts/a-successful-git-branching-model/>`_ branching model. In order to contribute to the project, please follow these steps:
+For anyone willing to contribute to the project, it is important to understand the branching model used by the project.
+The project uses the `git-flow <http://nvie.com/posts/a-successful-git-branching-model/>`_ branching model.
+Furthermore, ``git hooks`` for commit messages need to be enabled.
+In order to contribute to the project, please follow these steps:
 
 
     #. Fork the project on GitHub. (not necessary if you are a member of the project)
@@ -167,10 +170,17 @@ For anyone willing to contribute to the project, it is important to understand t
 
             $ git clone https://github.com/MolarVerse/PQ.git
 
-    #. Initialize git flow with the following settings (if not specified default settings are used)
+    #. Copy the commit-msg script to the ``.git/hooks/`` directory:
 
         .. code:: bash
 
+            $ cp .githooks/commit-msg .git/hooks/
+
+    #. Initialize ``git-flow`` and use the following settings (if not specified default settings are used)
+
+        .. code:: bash
+
+            $ git flow init
             [master] main
             [develop] dev
             [version tag prefix] v

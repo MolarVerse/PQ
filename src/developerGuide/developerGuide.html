@@ -248,7 +248,10 @@ The resulting website can be viewed by opening the file <code class="docutils li
 </section>
 <section id="how-to-contribute">
 <h2>How to Contribute<a class="headerlink" href="#how-to-contribute" title="Link to this heading"></a></h2>
-<p>For anyone willing to contribute to the project, it is important to understand the branching model used by the project. The project uses the <a class="reference external" href="http://nvie.com/posts/a-successful-git-branching-model/">Gitflow</a> branching model. In order to contribute to the project, please follow these steps:</p>
+<p>For anyone willing to contribute to the project, it is important to understand the branching model used by the project.
+The project uses the <a class="reference external" href="http://nvie.com/posts/a-successful-git-branching-model/">git-flow</a> branching model.
+Furthermore, <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">hooks</span></code> for commit messages need to be enabled.
+In order to contribute to the project, please follow these steps:</p>
 <blockquote>
 <div><ol class="arabic">
 <li><p>Fork the project on GitHub. (not necessary if you are a member of the project)</p></li>
@@ -259,9 +262,17 @@ The resulting website can be viewed by opening the file <code class="docutils li
 </div>
 </div></blockquote>
 </li>
-<li><p>Initialize git flow with the following settings (if not specified default settings are used)</p>
+<li><p>Copy the commit-msg script to the <code class="docutils literal notranslate"><span class="pre">.git/hooks/</span></code> directory:</p>
 <blockquote>
-<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">[</span>master<span class="o">]</span><span class="w"> </span>main
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cp<span class="w"> </span>.githooks/commit-msg<span class="w"> </span>.git/hooks/
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>Initialize <code class="docutils literal notranslate"><span class="pre">git-flow</span></code> and use the following settings (if not specified default settings are used)</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>flow<span class="w"> </span>init
+<span class="o">[</span>master<span class="o">]</span><span class="w"> </span>main
 <span class="o">[</span>develop<span class="o">]</span><span class="w"> </span>dev
 <span class="o">[</span>version<span class="w"> </span>tag<span class="w"> </span>prefix<span class="o">]</span><span class="w"> </span>v
 </pre></div>
