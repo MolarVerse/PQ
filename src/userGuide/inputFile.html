@@ -465,7 +465,8 @@
 <p>overwrite_output = {bool} -&gt; false</p>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">overwrite_output</span></code> keyword allows the user to overwrite any existing output files.</p>
-</section>
+<p class="centered">
+<strong><em>default value</em> = false</strong></p></section>
 <section id="file-prefix">
 <span id="fileprefixkey"></span><h3>File Prefix<a class="headerlink" href="#file-prefix" title="Link to this heading"></a></h3>
 <div class="tip admonition">
@@ -686,21 +687,24 @@ input file. Further information about the individual files can be found in the <
 <p class="admonition-title">Key</p>
 <p>moldescriptor_file = {file} -&gt; “moldescriptor.dat”</p>
 </div>
-</section>
+<p class="centered">
+<strong><em>default value</em> = “moldescriptor.dat”</strong></p></section>
 <section id="guff-file">
 <span id="gufffilekey"></span><h3>GUFF File<a class="headerlink" href="#guff-file" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>guff_file = {file} -&gt; “guff.dat”</p>
 </div>
-</section>
+<p class="centered">
+<strong><em>default value</em> = “guff.dat”</strong></p></section>
 <section id="dftb-setup-file">
 <span id="dftbfilekey"></span><h3>DFTB Setup File<a class="headerlink" href="#dftb-setup-file" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
 <p>dftb_file = {file} -&gt; “dftb_in.template”</p>
 </div>
-</section>
+<p class="centered">
+<strong><em>default value</em> = “dftb_in.template”</strong></p></section>
 <section id="topology-file">
 <span id="topologyfilekey"></span><h3>Topology File<a class="headerlink" href="#topology-file" title="Link to this heading"></a></h3>
 <div class="tip admonition">
@@ -1101,7 +1105,8 @@ input file. Further information about the individual files can be found in the <
 <p>distance-constraints = {string} -&gt; “off”</p>
 </div>
 <p>With the <code class="docutils literal notranslate"><span class="pre">distance-constraints</span></code> keyword it is possible to activate distance constraints for the simulation. The distance constraints are defined <em>via</em> the <a class="reference internal" href="setupFiles.html#topologyfile"><span class="std std-ref">Topology File</span></a>.</p>
-</section>
+<p class="centered">
+<strong><em>default value</em> = “off”</strong></p></section>
 </section>
 <section id="mm-keys">
 <span id="mmkeys"></span><h2>MM Keys<a class="headerlink" href="#mm-keys" title="Link to this heading"></a></h2>
@@ -1222,7 +1227,8 @@ input file. Further information about the individual files can be found in the <
 <p>qm_loop_time_limit = {double} s -&gt; 3600 s</p>
 </div>
 <p>With the <code class="docutils literal notranslate"><span class="pre">qm_loop_time_limit</span></code> keyword the user can specify the loop time limit in <code class="docutils literal notranslate"><span class="pre">s</span></code> of all QM type calculations. If the time limit is reached the calculation will be stopped. Default value is 3600 s (1 hour). Values smaller equal than zero are interpreted as no time limit and the calculation will continue until it is finished.</p>
-</section>
+<p class="centered">
+<strong><em>default value</em> = 3600 s</strong></p></section>
 <section id="dispersion-correction">
 <span id="disperstoncorrectionkey"></span><h3>Dispersion Correction<a class="headerlink" href="#dispersion-correction" title="Link to this heading"></a></h3>
 <div class="tip admonition">
@@ -1230,7 +1236,8 @@ input file. Further information about the individual files can be found in the <
 <p>dispersion = {bool} -&gt; false</p>
 </div>
 <p>With the <code class="docutils literal notranslate"><span class="pre">dispersion</span></code> keyword the user can activate the dispersion correction for the QM calculations - at the moment only enabled for ASE based QM engines.</p>
-</section>
+<p class="centered">
+<strong><em>default value</em> = false</strong></p></section>
 <section id="mace-model-size">
 <span id="macemodelsizekey"></span><h3>MACE Model Size<a class="headerlink" href="#mace-model-size" title="Link to this heading"></a></h3>
 <div class="tip admonition">
@@ -1283,7 +1290,7 @@ input file. Further information about the individual files can be found in the <
 <blockquote>
 <div><ol class="arabic simple">
 <li><p><strong>GFN1-xTB</strong> - GFN1-xTB parametrization</p></li>
-<li><p><strong>GFN2-xTB</strong> - GFN2-xTB parametrization</p></li>
+<li><p><strong>GFN2-xTB</strong> (default) - GFN2-xTB parametrization</p></li>
 <li><p><strong>IPEA1-xTB</strong> - IPEA-xTB parametrization</p></li>
 </ol>
 </div></blockquote>
@@ -1319,7 +1326,8 @@ input file. Further information about the individual files can be found in the <
 <p>third_order = {bool} -&gt; false</p>
 </div>
 <p>With the <code class="docutils literal notranslate"><span class="pre">third_order</span></code> keyword the user can activate the 3rd order DFTB expansion according to <a class="reference external" href="https://pubs.acs.org/doi/10.1021/ct100684s">Grimme et al.</a> for ASE DFTB+ calculations. Is automatically set to <code class="docutils literal notranslate"><span class="pre">true</span></code> if the <code class="docutils literal notranslate"><span class="pre">slakos</span></code> keyword is set to <strong>3ob</strong>.</p>
-</section>
+<p class="centered">
+<strong><em>default value</em> = false</strong></p></section>
 <section id="hubbard-derivatives">
 <span id="hubbardderivkey"></span><h3>Hubbard Derivatives<a class="headerlink" href="#hubbard-derivatives" title="Link to this heading"></a></h3>
 <div class="tip admonition">
@@ -1357,7 +1365,8 @@ input file. Further information about the individual files can be found in the <
 <p>qm_center = {selection} -&gt; 0</p>
 </div>
 <p>With the <code class="docutils literal notranslate"><span class="pre">qm_center</span></code> keyword the user can specify the center of the QM region. The default selection is the first atom of the system (<em>i.e.</em> 0). For more information about the selection grammar see the <a class="reference internal" href="#selectiontype">selectionType</a> section. The <code class="docutils literal notranslate"><span class="pre">qm_center</span></code> if more than one atom is selected will be by default the center of mass of the selected atoms.</p>
-</section>
+<p class="centered">
+<strong><em>default value</em> = 0</strong></p></section>
 <section id="qm-only-list">
 <span id="qmonlylistkey"></span><h3>QM Only List<a class="headerlink" href="#qm-only-list" title="Link to this heading"></a></h3>
 <div class="tip admonition">
@@ -1396,23 +1405,26 @@ input file. Further information about the individual files can be found in the <
 <p>qm_core_radius = {double} <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> -&gt; 0.0 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span></p>
 </div>
 <p>With the <code class="docutils literal notranslate"><span class="pre">qm_core_radius</span></code> keyword the user can specify the core radius in <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> around the <code class="docutils literal notranslate"><span class="pre">qm_center</span></code>. The default value is 0.0 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span>, which means that the core radius is not set and only explicit QM atoms are used for the QM region.</p>
-</section>
+<p class="centered">
+<strong><em>default value</em> = 0.0 Å</strong></p></section>
 <section id="qm-mm-layer-radius">
 <span id="qmmmlayerradiuskey"></span><h3>QM/MM Layer Radius<a class="headerlink" href="#qm-mm-layer-radius" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
-<p>qmmm_layer_radius = {double} <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> -&gt; 0.0 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}\)</span></p>
+<p>qmmm_layer_radius = {double} <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> -&gt; 0.0 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span></p>
 </div>
 <p>With the <code class="docutils literal notranslate"><span class="pre">qmmm_layer_radius</span></code> keyword the user can specify the layer radius in <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> around the <code class="docutils literal notranslate"><span class="pre">qm_center</span></code>. The default value is 0.0 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span>, which means that no special QM/MM treatment is applied.</p>
-</section>
+<p class="centered">
+<strong><em>default value</em> = 0.0 Å</strong></p></section>
 <section id="qm-mm-smoothing-radius">
 <span id="qmmmsmoothingradiuskey"></span><h3>QM/MM Smoothing Radius<a class="headerlink" href="#qm-mm-smoothing-radius" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
-<p>qmmm_smoothing_radius = {double} <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> -&gt; 0.0 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}\)</span></p>
+<p>qmmm_smoothing_radius = {double} <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> -&gt; 0.0 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span></p>
 </div>
 <p>With the <code class="docutils literal notranslate"><span class="pre">qmmm_smoothing_radius</span></code> keyword the user can specify the smoothing radius in <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> of the QM atoms. The default value is 0.0 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span>, which means that the smoothing radius is not set and no smoothing is applied.</p>
-</section>
+<p class="centered">
+<strong><em>default value</em> = 0.0 Å</strong></p></section>
 </section>
 <section id="cell-list-keys">
 <span id="celllistkeys"></span><h2>Cell List Keys<a class="headerlink" href="#cell-list-keys" title="Link to this heading"></a></h2>
@@ -1520,7 +1532,8 @@ input file. Further information about the individual files can be found in the <
 <p>use-energy-conv = {bool} -&gt; true</p>
 </div>
 <p>With the <code class="docutils literal notranslate"><span class="pre">use-energy-conv</span></code> keyword the user can enable or disable the energy convergence check for all kind of optimization jobs.</p>
-</section>
+<p class="centered">
+<strong><em>default value</em> = true</strong></p></section>
 <section id="enable-disable-max-force-convergence-check">
 <span id="maxforceconvergencecheckkey"></span><h3>Enable/Disable MAX Force Convergence Check<a class="headerlink" href="#enable-disable-max-force-convergence-check" title="Link to this heading"></a></h3>
 <div class="tip admonition">
@@ -1528,7 +1541,8 @@ input file. Further information about the individual files can be found in the <
 <p>use-max-force-conv = {bool} -&gt; true</p>
 </div>
 <p>With the <code class="docutils literal notranslate"><span class="pre">use-max-force-conv</span></code> keyword the user can enable or disable the maximum force convergence check for all kind of optimization jobs.</p>
-</section>
+<p class="centered">
+<strong><em>default value</em> = true</strong></p></section>
 <section id="enable-disable-rms-force-convergence-check">
 <span id="rmsforceconvergencecheckkey"></span><h3>Enable/Disable RMS Force Convergence Check<a class="headerlink" href="#enable-disable-rms-force-convergence-check" title="Link to this heading"></a></h3>
 <div class="tip admonition">
@@ -1536,7 +1550,8 @@ input file. Further information about the individual files can be found in the <
 <p>use-rms-force-conv = {bool} -&gt; true</p>
 </div>
 <p>With the <code class="docutils literal notranslate"><span class="pre">use-rms-force-conv</span></code> keyword the user can enable or disable the root mean square force convergence check for all kind of optimization jobs.</p>
-</section>
+<p class="centered">
+<strong><em>default value</em> = true</strong></p></section>
 <section id="energy-convergence-threshold">
 <span id="energyconvergencethresholdkey"></span><h3>Energy Convergence Threshold<a class="headerlink" href="#energy-convergence-threshold" title="Link to this heading"></a></h3>
 <div class="tip admonition">
