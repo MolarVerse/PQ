@@ -165,7 +165,8 @@ void Atom::addShiftForce(const Vec3D &shiftForce) { _shiftForce += shiftForce; }
  ***************************/
 
 /**
- * @brief return if the atom is forced to be in the inner region for hybrid calculations
+ * @brief return if the atom is forced to be in the inner region for hybrid
+ * calculations
  *
  * @return true
  * @return false
@@ -173,7 +174,8 @@ void Atom::addShiftForce(const Vec3D &shiftForce) { _shiftForce += shiftForce; }
 bool Atom::isForcedInner() const { return _isForcedInner; }
 
 /**
- * @brief return if the atom is forced to be in the outer region for hybrid calculations
+ * @brief return if the atom is forced to be in the outer region for hybrid
+ * calculations
  *
  * @return true
  * @return false
@@ -197,13 +199,16 @@ bool Atom::isActive() const { return _isActive; }
  *
  * @details Checks if an atom qualifies as a QM atom based on:
  *          - QM-only job types (all atoms are QM)
- *          - Atom is activated for calculation
- *          - Forced QM designation
+ *          - MM-only job types (no atoms are MM)
+ *          - Atom is activated for hybrid calculation
  */
 bool Atom::isQMAtom() const
 {
     if (Settings::isQMOnlyJobtype())
         return true;
+
+    if (Settings::isMMOnlyJobtype())
+        return false;
 
     if (isActive())
         return true;
@@ -218,13 +223,16 @@ bool Atom::isQMAtom() const
  *
  * @details Checks if an atom qualifies as a MM atom based on:
  *          - MM-only job types (all atoms are MM)
- *          - Atom is activated for calculation
- *          - Forced MM designation
+ *          - QM-only job types (no atoms are MM)
+ *          - Atom is activated for hybrid calculation
  */
 bool Atom::isMMAtom() const
 {
     if (Settings::isMMOnlyJobtype())
         return true;
+
+    if (Settings::isQMOnlyJobtype())
+        return false;
 
     if (isActive())
         return true;
