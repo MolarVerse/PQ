@@ -197,7 +197,7 @@ bool Atom::isActive() const { return _isActive; }
  *
  * @details Checks if an atom qualifies as a QM atom based on:
  *          - QM-only job types (all atoms are QM)
- *          - Atom's Hybrid type designation
+ *          - Atom is activated for calculation
  *          - Forced QM designation
  */
 bool Atom::isQMAtom() const
