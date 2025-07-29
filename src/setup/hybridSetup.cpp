@@ -55,11 +55,11 @@ void setup::setupHybrid(Engine &engine)
     if (!Settings::isQMMMActivated())
         return;
 
-    engine.getStdoutOutput().writeSetup("QMMM setup");
-    engine.getLogOutput().writeSetup("QMMM setup");
+    engine.getStdoutOutput().writeSetup("Hybrid setup");
+    engine.getLogOutput().writeSetup("Hybrid setup");
 
-    HybridSetup qmmmSetup(engine);
-    qmmmSetup.setup();
+    HybridSetup hybridSetup(engine);
+    hybridSetup.setup();
 }
 
 /**
@@ -70,7 +70,7 @@ void setup::setupHybrid(Engine &engine)
 HybridSetup::HybridSetup(Engine &engine) : _engine(engine) {}
 
 /**
- * @brief setup QMMM-MD
+ * @brief setup Hybrid-MD
  *
  */
 void HybridSetup::setup()
@@ -220,7 +220,6 @@ std::vector<int> HybridSetup::parseSelectionNoPython(
     const std::string &key
 )
 {
-    // parse the qm_center string
     std::vector<int> selectionVec;
 
     size_t pos = 0;
