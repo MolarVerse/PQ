@@ -22,9 +22,9 @@
 
 #include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ
 
-#include <cstddef>    // for size_t
-#include <fstream>    // for ifstream, std
-#include <memory>     // for shared_ptr, __shared_ptr_access
+#include <cstddef>   // for size_t
+#include <fstream>   // for ifstream, std
+#include <memory>    // for shared_ptr, __shared_ptr_access
 #include <ranges>
 #include <string>   // for string, stod, allocator, basic_string
 #include <vector>   // for vector
@@ -180,6 +180,8 @@ TEST_F(TestAtomSection, testProcess)
 
     _section->process(line, *_engine);
 
+    settings::Settings::setJobtype(settings::JobType::QM_MD);
+
     EXPECT_EQ(_engine->getSimulationBox().getMolecules().size(), 3);
 
     EXPECT_EQ(_engine->getSimulationBox().getMolecules()[0].getMoltype(), 1);
@@ -200,7 +202,9 @@ TEST_F(TestAtomSection, testProcess)
         3
     );
 
-    EXPECT_EQ(_engine->getSimulationBox().getNumberOfQMAtoms(), 0);
+    EXPECT_EQ(_engine->getSimulationBox().getNumberOfQMAtoms(), 10);
+
+    settings::Settings::setJobtype(settings::JobType::NONE);
 }
 
 TEST_F(TestAtomSection, testProcessAtomLine)

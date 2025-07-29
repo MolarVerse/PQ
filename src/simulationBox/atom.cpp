@@ -181,6 +181,16 @@ bool Atom::isForcedQM() const { return _isForcedQM; }
 bool Atom::isForcedMM() const { return _isForcedMM; }
 
 /**
+ * @brief return if the atom is active
+ *
+ * @return true
+ * @return false
+ *
+ * @details currently only used for hybrid calculations
+ */
+bool Atom::isActive() const { return _isActive; }
+
+/**
  * @brief determine if an atom should be treated as QM
  *
  * @return true if the atom should be treated as QM, false otherwise
@@ -193,6 +203,9 @@ bool Atom::isForcedMM() const { return _isForcedMM; }
 bool Atom::isQMAtom() const
 {
     if (Settings::isQMOnlyJobtype())
+        return true;
+
+    if (isActive())
         return true;
 
     if (isForcedQM())
@@ -322,16 +335,25 @@ Vec3D Atom::getShiftForce() const { return _shiftForce; }
 /**
  * @brief set if the atom is forced to be QM
  *
- * @param position
+ * @param isForcedQM
  */
 void Atom::setForcedQM(const bool isForcedQM) { _isForcedQM = isForcedQM; }
 
 /**
  * @brief set if the atom is forced to be MM
  *
- * @param position
+ * @param isForcedMM
  */
 void Atom::setForcedMM(const bool isForcedMM) { _isForcedMM = isForcedMM; }
+
+/**
+ * @brief set if the atom is active
+ *
+ * @param isActive
+ *
+ * @details currently only used for hybrid calculations
+ */
+void Atom::setIsActive(const bool isActive) { _isActive = isActive; }
 
 /**
  * @brief set the name of the atom (element name)

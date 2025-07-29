@@ -63,6 +63,7 @@ namespace simulationBox
 
         HybridZone _hybridZone = HybridZone::NOT_HYBRID;
 
+        bool _isActive   = true;
         bool _isForcedQM = false;
         bool _isForcedMM = false;
 
@@ -113,6 +114,7 @@ namespace simulationBox
 
         [[nodiscard]] bool isForcedQM() const;
         [[nodiscard]] bool isForcedMM() const;
+        [[nodiscard]] bool isActive() const;
         [[nodiscard]] bool isQMAtom() const;
 
         [[nodiscard]] HybridZone getHybridZone() const;
@@ -143,6 +145,7 @@ namespace simulationBox
 
         void setForcedQM(const bool isForcedQM);
         void setForcedMM(const bool isForcedMM);
+        void setIsActive(const bool isActive);
 
         void setHybridZone(const HybridZone hybridZone);
 
