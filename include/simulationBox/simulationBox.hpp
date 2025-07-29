@@ -193,6 +193,7 @@ namespace simulationBox
 
         [[nodiscard]] pq::SharedAtomVec&         getAtoms();
         [[nodiscard]] auto                       getQMAtoms() const;
+        [[nodiscard]] auto                       getMMAtoms() const;
         [[nodiscard]] std::vector<Molecule>&     getMolecules();
         [[nodiscard]] std::vector<MoleculeType>& getMoleculeTypes();
 
@@ -261,6 +262,22 @@ namespace simulationBox
 
         return _atoms |
                filter([](const auto& atom) { return atom->isQMAtom(); });
+    }
+
+    /**
+     * @brief get all MM atoms using range-based filtering
+     *
+     * @return a view/range of MM atoms filtered from all atoms
+     *
+     * @details This function returns a range-based view that filters atoms
+     *          from _atoms based on whether they are designated as MM atoms.
+     */
+    inline auto SimulationBox::getMMAtoms() const
+    {
+        using std::ranges::views::filter;
+
+        return _atoms |
+               filter([](const auto& atom) { return atom->isMMAtom(); });
     }
 
 }   // namespace simulationBox

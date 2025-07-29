@@ -215,6 +215,30 @@ bool Atom::isQMAtom() const
 }
 
 /**
+ * @brief determine if an atom should be treated as MM
+ *
+ * @return true if the atom should be treated as MM, false otherwise
+ *
+ * @details Checks if an atom qualifies as a MM atom based on:
+ *          - MM-only job types (all atoms are QM)
+ *          - Atom is activated for calculation
+ *          - Forced MM designation
+ */
+bool Atom::isMMAtom() const
+{
+    if (Settings::isMMOnlyJobtype())
+        return true;
+
+    if (isActive())
+        return true;
+
+    if (isForcedMM())
+        return true;
+
+    return false;
+}
+
+/**
  * @brief return the name of the atom (element name)
  *
  * @return std::string

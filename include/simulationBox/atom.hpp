@@ -116,6 +116,7 @@ namespace simulationBox
         [[nodiscard]] bool isForcedMM() const;
         [[nodiscard]] bool isActive() const;
         [[nodiscard]] bool isQMAtom() const;
+        [[nodiscard]] bool isMMAtom() const;
 
         [[nodiscard]] HybridZone getHybridZone() const;
 

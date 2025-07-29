@@ -257,6 +257,23 @@ bool Settings::isQMOnlyJobtype()
 }
 
 /**
+ * @brief Returns true if the jobtype does not use any QM type simulations
+ *
+ * @return true/false if the jobtype does not use any QM type simulations
+ *
+ */
+bool Settings::isMMOnlyJobtype()
+{
+    using enum JobType;
+
+    if (_jobtype == MM_MD)
+        return true;
+
+    else
+        return false;
+}
+
+/**
  * @brief Returns true if the jobtype does is based on MD simulations
  *
  * @return true/false

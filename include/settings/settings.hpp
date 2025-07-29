@@ -126,6 +126,7 @@ namespace settings
         static void deactivateRingPolymerMD();
 
         [[nodiscard]] static bool isQMOnlyJobtype();
+        [[nodiscard]] static bool isMMOnlyJobtype();
         [[nodiscard]] static bool isMMActivated();
         [[nodiscard]] static bool isQMActivated();
         [[nodiscard]] static bool isQMMMActivated();
