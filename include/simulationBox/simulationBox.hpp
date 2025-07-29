@@ -158,8 +158,8 @@ namespace simulationBox
          ************************/
 
         void addQMCenterAtoms(const std::vector<int>& atomIndices);
-        void setupForcedQMAtoms(const std::vector<int>& atomIndices);
-        void setupForcedMMAtoms(const std::vector<int>& atomIndices);
+        void setupForcedInnerAtoms(const std::vector<int>& atomIndices);
+        void setupForcedOuterAtoms(const std::vector<int>& atomIndices);
 
         /************************
          * standard add methods *

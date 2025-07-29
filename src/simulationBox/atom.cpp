@@ -165,20 +165,20 @@ void Atom::addShiftForce(const Vec3D &shiftForce) { _shiftForce += shiftForce; }
  ***************************/
 
 /**
- * @brief return if the atom is forced to be QM
+ * @brief return if the atom is forced to be in the inner region for hybrid calculations
  *
  * @return true
  * @return false
  */
-bool Atom::isForcedQM() const { return _isForcedQM; }
+bool Atom::isForcedInner() const { return _isForcedInner; }
 
 /**
- * @brief return if the atom is forced to be MM
+ * @brief return if the atom is forced to be in the outer region for hybrid calculations
  *
  * @return true
  * @return false
  */
-bool Atom::isForcedMM() const { return _isForcedMM; }
+bool Atom::isForcedOuter() const { return _isForcedOuter; }
 
 /**
  * @brief return if the atom is active
@@ -208,9 +208,6 @@ bool Atom::isQMAtom() const
     if (isActive())
         return true;
 
-    if (isForcedQM())
-        return true;
-
     return false;
 }
 
@@ -220,7 +217,7 @@ bool Atom::isQMAtom() const
  * @return true if the atom should be treated as MM, false otherwise
  *
  * @details Checks if an atom qualifies as a MM atom based on:
- *          - MM-only job types (all atoms are QM)
+ *          - MM-only job types (all atoms are MM)
  *          - Atom is activated for calculation
  *          - Forced MM designation
  */
@@ -230,9 +227,6 @@ bool Atom::isMMAtom() const
         return true;
 
     if (isActive())
-        return true;
-
-    if (isForcedMM())
         return true;
 
     return false;
@@ -357,18 +351,26 @@ Vec3D Atom::getShiftForce() const { return _shiftForce; }
  ***************************/
 
 /**
- * @brief set if the atom is forced to be QM
+ * @brief set if the atom is forced to be in the inner region for hybrid
+ * calculations
  *
- * @param isForcedQM
+ * @param isForcedInner
  */
-void Atom::setForcedQM(const bool isForcedQM) { _isForcedQM = isForcedQM; }
+void Atom::setForcedInner(const bool isForcedInner)
+{
+    _isForcedInner = isForcedInner;
+}
 
 /**
- * @brief set if the atom is forced to be MM
+ * @brief set if the atom is forced to be in the outer region for hybrid
+ * calculations
  *
- * @param isForcedMM
+ * @param isForcedOuter
  */
-void Atom::setForcedMM(const bool isForcedMM) { _isForcedMM = isForcedMM; }
+void Atom::setForcedOuter(const bool isForcedOuter)
+{
+    _isForcedOuter = isForcedOuter;
+}
 
 /**
  * @brief set if the atom is active

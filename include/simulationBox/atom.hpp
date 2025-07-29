@@ -63,9 +63,9 @@ namespace simulationBox
 
         HybridZone _hybridZone = HybridZone::NOT_HYBRID;
 
-        bool _isActive   = true;
-        bool _isForcedQM = false;
-        bool _isForcedMM = false;
+        bool _isActive      = true;
+        bool _isForcedInner = false;
+        bool _isForcedOuter = false;
 
         int    _atomicNumber;
         double _mass;
@@ -112,8 +112,8 @@ namespace simulationBox
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] bool isForcedQM() const;
-        [[nodiscard]] bool isForcedMM() const;
+        [[nodiscard]] bool isForcedInner() const;
+        [[nodiscard]] bool isForcedOuter() const;
         [[nodiscard]] bool isActive() const;
         [[nodiscard]] bool isQMAtom() const;
         [[nodiscard]] bool isMMAtom() const;
@@ -144,8 +144,8 @@ namespace simulationBox
          * standard setter methods *
          ***************************/
 
-        void setForcedQM(const bool isForcedQM);
-        void setForcedMM(const bool isForcedMM);
+        void setForcedInner(const bool isForcedInner);
+        void setForcedOuter(const bool isForcedOuter);
         void setIsActive(const bool isActive);
 
         void setHybridZone(const HybridZone hybridZone);

@@ -45,8 +45,8 @@ namespace input
         explicit HybridInputParser(pq::Engine &);
 
         void parseCoreCenter(const pq::strings &, const size_t);
-        void parseCoreOnlyList(const pq::strings &, const size_t);
-        void parseNonCoreOnlyList(const pq::strings &, const size_t);
+        void parseForcedInnerList(const pq::strings &, const size_t);
+        void parseForcedOuterList(const pq::strings &, const size_t);
         void parseUseQMCharges(const pq::strings &, const size_t);
         void parseCoreRadius(const pq::strings &, const size_t);
         void parseLayerRadius(const pq::strings &, const size_t);

@@ -44,27 +44,33 @@ void HybridSettings::setCoreCenterString(const std::string_view coreCenter)
 }
 
 /**
- * @brief set the coreOnlyList string in the settings
+ * @brief set the _forcedInnerListString
  *
- * @details the coreOnlyList string is a string representation of a selection
- * with which the atoms of the core region can be selected
+ * @details the forcedInnterListString is a string representation of a selection
+ * with which the atoms of the inner region of the hybrid calculation can be
+ * selected
  *
- * @param qmOnlyList
+ * @param list
  */
-void HybridSettings::setCoreOnlyListString(const std::string_view list)
+void HybridSettings::setForcedInnerListString(const std::string_view list)
 {
-    _coreOnlyListString = list;
+    _forcedInnerListString = list;
 }
 
 /**
- * @brief set the nonCoreOnlyList string in the settings
+ * @brief set the _forcedOuterListString
  *
- * @param nonCoreOnlyList
+ * @details the forcedOuterListString is a string representation of a selection
+ * with which the atoms of the outer region of the hybrid calculation can be
+ * selected
+ *
+ * @param list
  */
-void HybridSettings::setNonCoreOnlyListString(const std::string_view nonCoreOnly
+void HybridSettings::setForcedOuterListString(
+    const std::string_view forcedOuterList
 )
 {
-    _nonCoreOnlyListString = nonCoreOnly;
+    _forcedOuterListString = forcedOuterList;
 }
 
 /**
@@ -131,9 +137,9 @@ std::string HybridSettings::getCoreCenterString() { return _coreCenterString; }
  *
  * @return std::string
  */
-std::string HybridSettings::getCoreOnlyListString()
+std::string HybridSettings::getForcedInnerListString()
 {
-    return _coreOnlyListString;
+    return _forcedInnerListString;
 }
 
 /**
@@ -141,9 +147,9 @@ std::string HybridSettings::getCoreOnlyListString()
  *
  * @return std::string
  */
-std::string HybridSettings::getNonCoreOnlyListString()
+std::string HybridSettings::getForcedOuterListString()
 {
-    return _nonCoreOnlyListString;
+    return _forcedOuterListString;
 }
 
 /**
