@@ -84,7 +84,7 @@ namespace simulationBox
         std::shared_ptr<Box> _box = std::make_shared<OrthorhombicBox>();
 
         pq::Vec3D                 _centerOfMass = {0.0, 0.0, 0.0};
-        std::vector<int>          _qmCenterAtomIndices;
+        std::vector<int>          _innerRegionCenterAtomIndices;
         pq::SharedAtomVec         _atoms;
         std::vector<Molecule>     _molecules;
         std::vector<MoleculeType> _moleculeTypes;
@@ -157,7 +157,7 @@ namespace simulationBox
          * QMMM related methods *
          ************************/
 
-        void addQMCenterAtoms(const std::vector<int>& atomIndices);
+        void addInnerRegionCenterAtoms(const std::vector<int>& atomIndices);
         void setupForcedInnerAtoms(const std::vector<int>& atomIndices);
         void setupForcedOuterAtoms(const std::vector<int>& atomIndices);
 

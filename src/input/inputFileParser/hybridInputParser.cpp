@@ -47,8 +47,8 @@ using namespace utilities;
 HybridInputParser::HybridInputParser(Engine &engine) : InputFileParser(engine)
 {
     addKeyword(
-        std::string("core_center"),
-        bind_front(&HybridInputParser::parseCoreCenter, this),
+        std::string("inner_region_center"),
+        bind_front(&HybridInputParser::parseInnerRegionCenter, this),
         false
     );
     addKeyword(
@@ -89,13 +89,13 @@ HybridInputParser::HybridInputParser(Engine &engine) : InputFileParser(engine)
  * @param lineElements
  * @param lineNumber
  */
-void HybridInputParser::parseCoreCenter(
+void HybridInputParser::parseInnerRegionCenter(
     const std::vector<std::string> &lineElements,
     const size_t                    lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
-    HybridSettings::setCoreCenterString(lineElements[2]);
+    HybridSettings::setInnerRegionCenterString(lineElements[2]);
 }
 
 /**

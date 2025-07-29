@@ -75,27 +75,29 @@ HybridSetup::HybridSetup(Engine &engine) : _engine(engine) {}
  */
 void HybridSetup::setup()
 {
-    setupQMCenter();
+    setupInnerRegionCenter();
     setupForcedInnerList();
     setupForcedOuterList();
     throw UserInputException("Not implemented yet");
 }
 
 /**
- * @brief setup QM center
+ * @brief setup inner region center
  *
- * @details This function determines the indices of the atoms that should be
- * treated as the QM center. The QM center is the region of the system that is
- * treated with QM methods. All atomIndices that are part of the QM center are
- * added to the QM center list in the simulation box.
+ * @details This function determines the indices of the atoms that mark the
+ * center of the inner region of hybrid type calculations. All atomIndices
+ * that are part of the inner region center are added to the inner region center
+ * list in the simulation box.
  *
  */
-void HybridSetup::setupQMCenter()
+void HybridSetup::setupInnerRegionCenter()
 {
-    const auto qmCenterString = HybridSettings::getCoreCenterString();
-    const auto qmCenter       = parseSelection(qmCenterString, "qm_center");
+    const auto innerRegionCenterString =
+        HybridSettings::getInnerRegionCenterString();
+    const auto innerRegionCenter =
+        parseSelection(innerRegionCenterString, "inner_region_center");
 
-    _engine.getSimulationBox().addQMCenterAtoms(qmCenter);
+    _engine.getSimulationBox().addInnerRegionCenterAtoms(innerRegionCenter);
 }
 
 /**
@@ -265,12 +267,9 @@ std::vector<int> HybridSetup::parseSelectionNoPython(
         throw customException::InputFileException(
             std::format(
                 "The value of key {} - {} is an empty list. The {} string must "
-                "be "
-                "a comma-separated list of integers or ranges, representing "
-                "the "
-                "atom indices in the restart file that should be treated as "
-                "the "
-                "{}.",
+                "be a comma-separated list of integers or ranges, representing "
+                "the atom indices in the restart file that should be treated "
+                "as the {}.",
                 key,
                 selection,
                 key,

@@ -44,7 +44,7 @@ namespace input
        public:
         explicit HybridInputParser(pq::Engine &);
 
-        void parseCoreCenter(const pq::strings &, const size_t);
+        void parseInnerRegionCenter(const pq::strings &, const size_t);
         void parseForcedInnerList(const pq::strings &, const size_t);
         void parseForcedOuterList(const pq::strings &, const size_t);
         void parseUseQMCharges(const pq::strings &, const size_t);

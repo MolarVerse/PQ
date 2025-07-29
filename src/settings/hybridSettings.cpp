@@ -31,16 +31,19 @@ using settings::HybridSettings;
  ********************/
 
 /**
- * @brief set the coreCenter string in the settings
+ * @brief set the innerRegionCenter string in the settings
  *
- * @details the coreCenter string is a string representation of a selection
- * with which the center of the core region can be selected
+ * @details the innerRegionCenter string is a string representation of a
+ * selection with which the center of the inner region of a hybrid calculation
+ * can be selected
  *
- * @param qmCenter
+ * @param innerRegionCenter
  */
-void HybridSettings::setCoreCenterString(const std::string_view coreCenter)
+void HybridSettings::setInnerRegionCenterString(
+    const std::string_view innerRegionCenter
+)
 {
-    _coreCenterString = coreCenter;
+    _innerRegionCenterString = innerRegionCenter;
 }
 
 /**
@@ -126,11 +129,14 @@ void HybridSettings::setSmoothingRadius(const double radius)
  ********************/
 
 /**
- * @brief get the coreCenter string
+ * @brief get the innerRegionCenter string
  *
  * @return std::string
  */
-std::string HybridSettings::getCoreCenterString() { return _coreCenterString; }
+std::string HybridSettings::getInnerRegionCenterString()
+{
+    return _innerRegionCenterString;
+}
 
 /**
  * @brief get the coreOnlyList string

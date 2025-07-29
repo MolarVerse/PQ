@@ -48,7 +48,7 @@ namespace setup
         explicit HybridSetup(pq::Engine &engine);
 
         void setup();
-        void setupQMCenter();
+        void setupInnerRegionCenter();
         void setupForcedInnerList();
         void setupForcedOuterList();
 

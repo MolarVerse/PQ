@@ -112,23 +112,28 @@ std::optional<Molecule> SimulationBox::findMolecule(const size_t moleculeType)
 }
 
 /**
- * @brief adds all atomIndices to _qmCenterAtomIndices vector
+ * @brief adds all atomIndices to _innerRegionCenterAtomIndices vector
  *
  * @param atomIndices
  *
  * @throw UserInputException if atom index out of range
  */
-void SimulationBox::addQMCenterAtoms(const std::vector<int>& atomIndices)
+void SimulationBox::addInnerRegionCenterAtoms(
+    const std::vector<int>& atomIndices
+)
 {
     for (const auto index : atomIndices)
     {
         if (index < 0 || index >= static_cast<int>(_atoms.size()))
             throw UserInputException(
-                std::format("QM center atom index {} out of range", index)
+                std::format(
+                    "Inner region center atom index {} out of range",
+                    index
+                )
             );
     }
 
-    _qmCenterAtomIndices = atomIndices;
+    _innerRegionCenterAtomIndices = atomIndices;
 }
 
 /**
