@@ -33,16 +33,6 @@
 namespace simulationBox
 {
     /**
-     * @class enum HybridType
-     */
-    enum class HybridType : size_t
-    {
-        NOT_HYBRID,
-        QM,
-        MM
-    };
-
-    /**
      * @class enum HybridZone
      */
     enum class HybridZone : size_t
@@ -71,7 +61,6 @@ namespace simulationBox
         size_t _externalAtomType;
         size_t _atomType;
 
-        HybridType _hybridType = HybridType::NOT_HYBRID;
         HybridZone _hybridZone = HybridZone::NOT_HYBRID;
 
         bool _isForcedQM = false;
@@ -126,7 +115,6 @@ namespace simulationBox
         [[nodiscard]] bool isForcedMM() const;
         [[nodiscard]] bool isQMAtom() const;
 
-        [[nodiscard]] HybridType getHybridType() const;
         [[nodiscard]] HybridZone getHybridZone() const;
 
         [[nodiscard]] std::string getName() const;
@@ -156,7 +144,6 @@ namespace simulationBox
         void setForcedQM(const bool isForcedQM);
         void setForcedMM(const bool isForcedMM);
 
-        void setHybridType(const HybridType hybridType);
         void setHybridZone(const HybridZone hybridZone);
 
         void setName(const std::string_view &name);

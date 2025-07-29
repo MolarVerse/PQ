@@ -195,9 +195,6 @@ bool Atom::isQMAtom() const
     if (Settings::isQMOnlyJobtype())
         return true;
 
-    if (getHybridType() == HybridType::QM)
-        return true;
-
     if (isForcedQM())
         return true;
 
@@ -245,13 +242,6 @@ size_t Atom::getExternalGlobalVDWType() const { return _externalGlobalVDWType; }
  * @return size_t
  */
 size_t Atom::getInternalGlobalVDWType() const { return _internalGlobalVDWType; }
-
-/**
- * @brief return the Hybrid type of the atom
- *
- * @return HybridType
- */
-HybridType Atom::getHybridType() const { return _hybridType; }
 
 /**
  * @brief return the Hybrid zone of the atom
@@ -477,16 +467,6 @@ void Atom::setVelocityOld(const Vec3D &velocity) { _velocityOld = velocity; }
  * @param force
  */
 void Atom::setForceOld(const Vec3D &force) { _forceOld = force; }
-
-/**
- * @brief set the Hybrid type of the atom
- *
- * @param hybridType
- */
-void Atom::setHybridType(const HybridType hybridType)
-{
-    _hybridType = hybridType;
-}
 
 /**
  * @brief set the Hybrid zone of the atom
