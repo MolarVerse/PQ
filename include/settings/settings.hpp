@@ -127,9 +127,9 @@ namespace settings
 
         [[nodiscard]] static bool isQMOnlyJobtype();
         [[nodiscard]] static bool isMMOnlyJobtype();
+        [[nodiscard]] static bool isHybridJobtype();
         [[nodiscard]] static bool isMMActivated();
         [[nodiscard]] static bool isQMActivated();
-        [[nodiscard]] static bool isQMMMActivated();
         [[nodiscard]] static bool isQMOnlyActivated();
         [[nodiscard]] static bool isMMOnlyActivated();
         [[nodiscard]] static bool isRingPolymerMDActivated();

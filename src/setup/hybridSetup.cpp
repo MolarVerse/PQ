@@ -52,7 +52,7 @@ using namespace customException;
  */
 void setup::setupHybrid(Engine &engine)
 {
-    if (!Settings::isQMMMActivated())
+    if (!Settings::isHybridJobtype())
         return;
 
     engine.getStdoutOutput().writeSetup("Hybrid setup");

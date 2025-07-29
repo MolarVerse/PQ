@@ -86,11 +86,13 @@ void setup::setupRequestedJob(const std::string &inputFileName, Engine &engine)
 
     if (!TimingsSettings::isTimeStepSet())
         if (Settings::isMDJobType())
-            throw UserInputException(std::format(
-                "Molecular Dynamics job type {} selected. Please set the "
-                "time step in the input file.",
-                string(Settings::getJobtype())
-            ));
+            throw UserInputException(
+                std::format(
+                    "Molecular Dynamics job type {} selected. Please set the "
+                    "time step in the input file.",
+                    string(Settings::getJobtype())
+                )
+            );
 
     setupOutputFiles(engine);
 
@@ -205,7 +207,7 @@ void setup::setupEngine(Engine &engine)
     if (Settings::isMDJobType())
         setupRingPolymer(engine);
 
-    if (Settings::isQMMMActivated())
+    if (Settings::isHybridJobtype())
         setupHybrid(engine);
 
     if (Settings::isOptJobType())
