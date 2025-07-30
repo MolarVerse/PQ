@@ -44,7 +44,7 @@ namespace QM
         ExternalQMRunner()           = default;
         ~ExternalQMRunner() override = default;
 
-        void         run(pq::SimBox &, pq::PhysicalData &, size_t dim) override;
+        void         run(pq::SimBox &, pq::PhysicalData &, Periodicity per) override;
         virtual void execute() = 0;
 
         virtual void writeCoordsFile(pq::SimBox &) = 0;

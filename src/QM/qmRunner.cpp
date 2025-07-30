@@ -66,12 +66,12 @@ void QMRunner::throwAfterTimeout(const std::stop_token stopToken) const
 }
 
 /**
- * @brief run the qm engine with default periodicity (3d)
+ * @brief run the qm engine with default periodicity XYZ (3d)
  *
  * @param simBox SimulationBox reference
  * @param physicalData PhysicalData reference
  */
 void QMRunner::run(pq::SimBox &simBox, pq::PhysicalData &physicalData)
 {
-    run(simBox, physicalData, _DIMENSIONALITY_DEFAULT_);
+    run(simBox, physicalData, Periodicity::XYZ);
 }

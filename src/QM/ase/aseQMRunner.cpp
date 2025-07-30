@@ -29,6 +29,8 @@
 #include "simulationBox.hpp"
 
 using QM::ASEQMRunner;
+using enum QM::Periodicity;
+
 using namespace simulationBox;
 using namespace physicalData;
 using namespace constants;
@@ -76,10 +78,10 @@ ASEQMRunner::ASEQMRunner()
 void ASEQMRunner::run(
     SimulationBox &simBox,
     PhysicalData  &physicalData,
-    size_t         dim
+    Periodicity    per
 )
 {
-    _dimensionality = dim;
+    _periodicity = per;
 
     std::jthread timeoutThread{[this](const std::stop_token stopToken)
                                { throwAfterTimeout(stopToken); }};
@@ -337,13 +339,20 @@ py::array_t<double> ASEQMRunner::aseCell(const SimulationBox &simBox) const
  */
 py::array_t<bool> ASEQMRunner::asePBC() const
 {
-    // 0D: molecule/cluster in vacuum (false, false, false)
-    // 3D: periodic in x,y,z (true, true, true)
-    const std::array<bool, 3> pbc_array = {
-        _dimensionality == 3,
-        _dimensionality == 3,
-        _dimensionality == 3
-    };
+    std::array<bool, 3> pbc_array;
+
+    switch (_periodicity)
+    {
+        case NON_PERIODIC: pbc_array = {false, false, false}; break;
+        case X: pbc_array = {true, false, false}; break;
+        case Y: pbc_array = {false, true, false}; break;
+        case Z: pbc_array = {false, false, true}; break;
+        case XY: pbc_array = {true, true, false}; break;
+        case XZ: pbc_array = {true, false, true}; break;
+        case YZ: pbc_array = {false, true, true}; break;
+        case XYZ: pbc_array = {true, true, true}; break;
+        default: pbc_array = {false, false, false}; break;
+    }
 
     try
     {

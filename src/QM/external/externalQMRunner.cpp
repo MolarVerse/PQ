@@ -39,6 +39,8 @@
 #include "vector3d.hpp"                      // for Vec3D
 
 using QM::ExternalQMRunner;
+using enum QM::Periodicity;
+
 using namespace simulationBox;
 using namespace physicalData;
 using namespace customException;
@@ -50,15 +52,21 @@ using namespace constants;
  *
  * @param simBox SimulationBox reference
  * @param physicalData PhysicalData reference
- * @param dim Dimensionality used for periodicity
+ * @param per periodicity of the system
  */
 void ExternalQMRunner::run(
     SimulationBox &simBox,
     PhysicalData  &physicalData,
-    size_t         dim
+    Periodicity    per
 )
 {
-    _dimensionality = dim;
+    if (per != XYZ && per != NON_PERIODIC)
+        throw QMRunnerException(
+            "External QM runners only available for non- and 3D-periodic "
+            "calculations."
+        );
+
+    _periodicity = per;
 
     writeCoordsFile(simBox);
 
