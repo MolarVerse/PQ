@@ -67,7 +67,7 @@ void DFTBPlusRunner::writeCoordsFile(SimulationBox &box)
     std::ofstream     coordsFile(fileName);
 
     coordsFile << box.getNumberOfQMAtoms();
-    coordsFile << "  " << (Settings::isQMOnlyJobtype() ? 'S' : 'C') << '\n';
+    coordsFile << "  " << (_dimensionality == 0 ? 'C' : 'S') << '\n';
 
     const auto uniqueAtomNames = box.getUniqueQMAtomNames();
 
@@ -91,7 +91,7 @@ void DFTBPlusRunner::writeCoordsFile(SimulationBox &box)
         ++atomIndex;
     }
 
-    if (Settings::isQMOnlyJobtype())
+    if (_dimensionality == 3)
     {
         const auto boxMatrix = box.getBox().getBoxMatrix();
 
@@ -165,7 +165,7 @@ void DFTBPlusRunner::execute()
  */
 void DFTBPlusRunner::readStressTensor(Box &box, PhysicalData &data)
 {
-    if (Settings::getJobtype() != JobType::QM_MD)
+    if (_dimensionality == 0)
         return;
 
     const std::string stressFileName = "stress_tensor";

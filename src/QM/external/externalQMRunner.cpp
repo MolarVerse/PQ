@@ -48,10 +48,18 @@ using namespace constants;
 /**
  * @brief run the qm engine
  *
- * @param simBox
+ * @param simBox SimulationBox reference
+ * @param physicalData PhysicalData reference
+ * @param dim Dimensionality used for periodicity
  */
-void ExternalQMRunner::run(SimulationBox &simBox, PhysicalData &physicalData)
+void ExternalQMRunner::run(
+    SimulationBox &simBox,
+    PhysicalData  &physicalData,
+    size_t         dim
+)
 {
+    _dimensionality = dim;
+
     writeCoordsFile(simBox);
 
     std::jthread timeoutThread{[this](const std::stop_token stopToken)
@@ -86,18 +94,22 @@ void ExternalQMRunner::readForceFile(
     std::ifstream forceFile(forceFileName);
 
     if (!forceFile.is_open())
-        throw QMRunnerException(std::format(
-            "Cannot open {} force file \"{}\"",
-            string(QMSettings::getQMMethod()),
-            forceFileName
-        ));
+        throw QMRunnerException(
+            std::format(
+                "Cannot open {} force file \"{}\"",
+                string(QMSettings::getQMMethod()),
+                forceFileName
+            )
+        );
 
     if (forceFile.peek() == std::ifstream::traits_type::eof())
-        throw QMRunnerException(std::format(
-            "Empty {} force file \"{}\"",
-            string(QMSettings::getQMMethod()),
-            forceFileName
-        ));
+        throw QMRunnerException(
+            std::format(
+                "Empty {} force file \"{}\"",
+                string(QMSettings::getQMMethod()),
+                forceFileName
+            )
+        );
 
     double energy = 0.0;
 
@@ -121,11 +133,11 @@ void ExternalQMRunner::readForceFile(
     ::system(std::format("rm -f {}", forceFileName).c_str());
 }
 
-/*******************************
- *                             *
- * standard getter and setters *
- *                             *
- *******************************/
+/********************************
+ *                              *
+ * standard getters and setters *
+ *                              *
+ ********************************/
 
 /**
  * @brief getter for the script path
