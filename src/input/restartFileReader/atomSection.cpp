@@ -179,13 +179,10 @@ void AtomSection::processAtomLine(
 
     simBox.addAtom(atom);
     molecule.addAtom(atom);
-
-    if (Settings::isQMOnly())
-        simBox.addQMAtom(atom);
 }
 
 /**
- * @brief adds a single atom with moltype 0 to the simulation box _qmAtoms
+ * @brief adds a single atom with moltype 0 to the simulation box
  *
  * @details for details how the line looks like see processAtomLine
  *
@@ -208,13 +205,9 @@ void AtomSection::processQMAtomLine(
 
     setAtomPropertyVectors(lineElements, atom);
 
-    atom->setQMOnly(true);
-    molecule->setQMOnly(true);
-
     molecule->addAtom(atom);
 
     simBox.addAtom(atom);
-    simBox.addQMAtom(atom);
     simBox.addMolecule(*molecule);
 }
 

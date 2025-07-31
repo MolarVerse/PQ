@@ -20,6 +20,10 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#include <algorithm>   // for std::ranges:find
+#include <ranges>      // for views::filter
+
+#include "settings.hpp"   // for Settings::getJobtype, JobType
 #include "simulationBox.hpp"
 
 using namespace simulationBox;
@@ -38,16 +42,6 @@ using namespace simulationBox;
 void SimulationBox::addAtom(const std::shared_ptr<Atom> atom)
 {
     _atoms.push_back(atom);
-}
-
-/**
- * @brief Add a QM atom to the simulation box
- *
- * @param atom
- */
-void SimulationBox::addQMAtom(const std::shared_ptr<Atom> atom)
-{
-    _qmAtoms.push_back(atom);
 }
 
 /**
@@ -116,7 +110,23 @@ size_t SimulationBox::getNumberOfAtoms() const { return _atoms.size(); }
  *
  * @return size_t
  */
-size_t SimulationBox::getNumberOfQMAtoms() const { return _qmAtoms.size(); }
+size_t SimulationBox::getNumberOfQMAtoms() const
+{
+    return std::ranges::distance(SimulationBox::getQMAtoms());
+}
+
+/**
+ * @brief Get the unique names of the QM atoms
+ *
+ * @return set<string>
+ */
+pq::stringSet SimulationBox::getUniqueQMAtomNames() const
+{
+    pq::stringSet uniqueQMAtomNames;
+    for (const auto &atom : getQMAtoms())
+        uniqueQMAtomNames.insert(atom->getName());
+    return uniqueQMAtomNames;
+}
 
 /**
  * @brief get the total mass
@@ -153,17 +163,6 @@ linearAlgebra::Vec3D &SimulationBox::getCenterOfMass() { return _centerOfMass; }
  * @return Atom&
  */
 Atom &SimulationBox::getAtom(const size_t index) { return *(_atoms[index]); }
-
-/**
- * @brief get QM atom by index
- *
- * @param index
- * @return Atom&
- */
-Atom &SimulationBox::getQMAtom(const size_t index)
-{
-    return *(_qmAtoms[index]);
-}
 
 /**
  * @brief get molecule by index
@@ -223,16 +222,6 @@ std::vector<double> SimulationBox::getAtomicScalarForcesOld() const
  * @return std::vector<std::shared_ptr<Atom>>&
  */
 std::vector<std::shared_ptr<Atom>> &SimulationBox::getAtoms() { return _atoms; }
-
-/**
- * @brief get all QM atoms
- *
- * @return std::vector<std::shared_ptr<Atom>>&
- */
-std::vector<std::shared_ptr<Atom>> &SimulationBox::getQMAtoms()
-{
-    return _qmAtoms;
-}
 
 /**
  * @brief get all molecules
@@ -342,26 +331,27 @@ std::vector<linearAlgebra::Vec3D> SimulationBox::getForces() const
 }
 
 /**
- * @brief get all atomic numbers of all atoms
+ * @brief get the atomic numbers of all QM atoms
  *
  * @return std::vector<int>
  */
-std::vector<int> SimulationBox::getAtomicNumbers() const
+std::vector<int> SimulationBox::getQMAtomicNumbers() const
 {
-    std::vector<int> atomicNumbers;
+    std::vector<int> qmAtomicNumbers;
+    qmAtomicNumbers.reserve(getNumberOfQMAtoms());
 
-    for (const auto &atom : _atoms)
-        atomicNumbers.push_back(atom->getAtomicNumber());
+    for (const auto &atom : getQMAtoms())
+        qmAtomicNumbers.emplace_back(atom->getAtomicNumber());
 
-    return atomicNumbers;
+    return qmAtomicNumbers;
 }
 
 /**
- * @brief flattens positions of each atom into a single vector of doubles
+ * @brief flattens positions of each QM atom into a single vector of doubles
  *
  * @return std::vector<double>
  */
-std::vector<double> SimulationBox::flattenPositions() const
+std::vector<double> SimulationBox::getFlattenedQMPositions() const
 {
     std::vector<double> positions;
 
@@ -374,7 +364,7 @@ std::vector<double> SimulationBox::flattenPositions() const
         positions.push_back(position[2]);
     };
 
-    std::ranges::for_each(_atoms, addPositions);
+    std::ranges::for_each(getQMAtoms(), addPositions);
 
     return positions;
 }

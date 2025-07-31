@@ -22,26 +22,29 @@
 
 #include "dftbplusRunner.hpp"
 
+#include <algorithm>    // for std::ranges:find
 #include <cstddef>      // for size_t
 #include <cstdlib>      // for system
 #include <format>       // for format
 #include <fstream>      // for ofstream
 #include <functional>   // for identity
-#include <ranges>       // for borrowed_iterator_t, __distance_fn
+#include <iterator>     // for std::ranges::distance
+#include <set>          // for set
 #include <string>       // for string
 #include <vector>       // for vector
 
 #include "atom.hpp"              // for Atom
 #include "exceptions.hpp"        // for InputFileException
+#include "fileSettings.hpp"      // for FileSettings
 #include "physicalData.hpp"      // for PhysicalData
 #include "qmSettings.hpp"        // for QMSettings
 #include "settings.hpp"          // for Settings
-#include "fileSettings.hpp"      // for FileSettings
 #include "simulationBox.hpp"     // for SimulationBox
 #include "stringUtilities.hpp"   // for fileExists
 #include "vector3d.hpp"          // for Vec3D
 
 using QM::DFTBPlusRunner;
+using enum QM::Periodicity;
 
 using namespace simulationBox;
 using namespace physicalData;
@@ -51,9 +54,6 @@ using namespace constants;
 using namespace utilities;
 using namespace linearAlgebra;
 
-using std::ranges::distance;
-using std::ranges::find;
-
 /**
  * @brief writes the coords file in order to run the external qm program
  *
@@ -61,69 +61,131 @@ using std::ranges::find;
  */
 void DFTBPlusRunner::writeCoordsFile(SimulationBox &box)
 {
+    using std::ranges::distance;
+    using std::ranges::find;
+
     const std::string fileName = "coords";
     std::ofstream     coordsFile(fileName);
 
-    coordsFile << box.getNumberOfQMAtoms() << "  S\n";
+    coordsFile << box.getNumberOfQMAtoms();
+    coordsFile << "  " << (_periodicity == NON_PERIODIC ? 'C' : 'S') << '\n';
 
     const auto uniqueAtomNames = box.getUniqueQMAtomNames();
 
     for (const auto &atomName : uniqueAtomNames) coordsFile << atomName << "  ";
-
     coordsFile << "\n";
 
-    for (size_t i = 0, numberOfAtoms = box.getNumberOfQMAtoms();
-         i < numberOfAtoms;
-         ++i)
+    size_t atomIndex = 1;
+    for (const auto &atom : box.getQMAtoms())
     {
-        const auto &atom = box.getQMAtom(i);
-
-        const auto iter   = find(uniqueAtomNames, atom.getName());
+        const auto iter   = find(uniqueAtomNames, atom->getName());
         const auto atomId = distance(uniqueAtomNames.begin(), iter) + 1;
 
         coordsFile << std::format(
             "{:5d} {:5d}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
-            i + 1,
+            atomIndex,
             atomId,
-            atom.getPosition()[0],
-            atom.getPosition()[1],
-            atom.getPosition()[2]
+            atom->getPosition()[0],
+            atom->getPosition()[1],
+            atom->getPosition()[2]
         );
+        ++atomIndex;
     }
 
-    const auto boxMatrix = box.getBox().getBoxMatrix();
+    if (_periodicity != NON_PERIODIC)
+    {
+        auto             boxMatrix  = box.getBox().getBoxMatrix();
+        constexpr double vacuumSize = 200.0;   // Large vacuum spacing in Å
 
-    coordsFile << std::format(
-        "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
-        "",
-        0.0,
-        0.0,
-        0.0
-    );
+        switch (_periodicity)
+        {
+            case X:
+                // Periodic in X only, set Y and Z to large values
+                boxMatrix[1][1] = vacuumSize;              // Y dimension
+                boxMatrix[2][2] = vacuumSize;              // Z dimension
+                boxMatrix[0][1] = boxMatrix[0][2] = 0.0;   // Clear cross terms
+                boxMatrix[1][0] = boxMatrix[1][2] = 0.0;
+                boxMatrix[2][0] = boxMatrix[2][1] = 0.0;
+                break;
+            case Y:
+                // Periodic in Y only, set X and Z to large values
+                boxMatrix[0][0] = vacuumSize;              // X dimension
+                boxMatrix[2][2] = vacuumSize;              // Z dimension
+                boxMatrix[0][1] = boxMatrix[0][2] = 0.0;   // Clear cross terms
+                boxMatrix[1][0] = boxMatrix[1][2] = 0.0;
+                boxMatrix[2][0] = boxMatrix[2][1] = 0.0;
+                break;
+            case Z:
+                // Periodic in Z only, set X and Y to large values
+                boxMatrix[0][0] = vacuumSize;              // X dimension
+                boxMatrix[1][1] = vacuumSize;              // Y dimension
+                boxMatrix[0][1] = boxMatrix[0][2] = 0.0;   // Clear cross terms
+                boxMatrix[1][0] = boxMatrix[1][2] = 0.0;
+                boxMatrix[2][0] = boxMatrix[2][1] = 0.0;
+                break;
+            case XY:
+                // Periodic in XY, set Z to large value
+                boxMatrix[2][2] = vacuumSize;   // Z dimension
+                boxMatrix[0][2] = boxMatrix[2][0] =
+                    0.0;   // Clear XZ cross terms
+                boxMatrix[1][2] = boxMatrix[2][1] =
+                    0.0;   // Clear YZ cross terms
+                break;
+            case XZ:
+                // Periodic in XZ, set Y to large value
+                boxMatrix[1][1] = vacuumSize;   // Y dimension
+                boxMatrix[0][1] = boxMatrix[1][0] =
+                    0.0;   // Clear XY cross terms
+                boxMatrix[1][2] = boxMatrix[2][1] =
+                    0.0;   // Clear YZ cross terms
+                break;
+            case YZ:
+                // Periodic in YZ, set X to large value
+                boxMatrix[0][0] = vacuumSize;   // X dimension
+                boxMatrix[0][1] = boxMatrix[1][0] =
+                    0.0;   // Clear XY cross terms
+                boxMatrix[0][2] = boxMatrix[2][0] =
+                    0.0;   // Clear XZ cross terms
+                break;
+            default: break;
+        }
 
-    coordsFile << std::format(
-        "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
-        "",
-        boxMatrix[0][0],
-        boxMatrix[1][0],
-        boxMatrix[2][0]
-    );
+        // coordinate origin
+        coordsFile << std::format(
+            "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
+            "",
+            0.0,
+            0.0,
+            0.0
+        );
 
-    coordsFile << std::format(
-        "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
-        "",
-        boxMatrix[0][1],
-        boxMatrix[1][1],
-        boxMatrix[2][1]
-    );
+        // lattice vector a
+        coordsFile << std::format(
+            "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
+            "",
+            boxMatrix[0][0],
+            boxMatrix[1][0],
+            boxMatrix[2][0]
+        );
 
-    coordsFile << std::format(
-        "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
-        "",
-        boxMatrix[0][2],
-        boxMatrix[1][2],
-        boxMatrix[2][2]
-    );
+        // lattice vector b
+        coordsFile << std::format(
+            "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
+            "",
+            boxMatrix[0][1],
+            boxMatrix[1][1],
+            boxMatrix[2][1]
+        );
+
+        // lattice vector c
+        coordsFile << std::format(
+            "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
+            "",
+            boxMatrix[0][2],
+            boxMatrix[1][2],
+            boxMatrix[2][2]
+        );
+    }
 
     coordsFile.close();
 }
@@ -143,8 +205,12 @@ void DFTBPlusRunner::execute()
 
     const auto reuseCharges = _isFirstExecution ? 1 : 0;
 
-    const auto command = 
-            std::format("{} 0 {} 0 0 0 {}", scriptFile, reuseCharges, FileSettings::getDFTBFileName());
+    const auto command = std::format(
+        "{} 0 {} 0 0 0 {}",
+        scriptFile,
+        reuseCharges,
+        FileSettings::getDFTBFileName()
+    );
     ::system(command.c_str());
 
     _isFirstExecution = false;
@@ -158,7 +224,7 @@ void DFTBPlusRunner::execute()
  */
 void DFTBPlusRunner::readStressTensor(Box &box, PhysicalData &data)
 {
-    if (Settings::getJobtype() != JobType::QM_MD)
+    if (_periodicity == NON_PERIODIC)
         return;
 
     const std::string stressFileName = "stress_tensor";
@@ -166,11 +232,13 @@ void DFTBPlusRunner::readStressTensor(Box &box, PhysicalData &data)
     std::ifstream stressFile(stressFileName);
 
     if (!stressFile.is_open())
-        throw QMRunnerException(std::format(
-            "Cannot open {} stress tensor \"{}\"",
-            string(QMSettings::getQMMethod()),
-            stressFileName
-        ));
+        throw QMRunnerException(
+            std::format(
+                "Cannot open {} stress tensor \"{}\"",
+                string(QMSettings::getQMMethod()),
+                stressFileName
+            )
+        );
 
     StaticMatrix3x3<double> stress;
 

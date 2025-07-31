@@ -50,8 +50,6 @@ namespace simulationBox
         size_t      _moltype;
         size_t      _numberOfAtoms;
 
-        bool _isQMOnly = false;
-
         double _charge;   // set via molDescriptor not sum of partial charges!!!
         double _molMass;
 
@@ -121,8 +119,6 @@ namespace simulationBox
         [[nodiscard]] size_t getNumberOfAtoms() const;
         [[nodiscard]] size_t getDegreesOfFreedom() const;
 
-        [[nodiscard]] bool isQMOnly() const;
-
         [[nodiscard]] double getCharge() const;
         [[nodiscard]] double getMolMass() const;
 
@@ -138,7 +134,6 @@ namespace simulationBox
          ***************************/
 
         void setName(const std::string_view name);
-        void setQMOnly(const bool isQMOnly);
 
         void setNumberOfAtoms(const size_t numberOfAtoms);
         void setMoltype(const size_t moltype);

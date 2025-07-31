@@ -1540,29 +1540,35 @@ QM Center
 
 With the ``qm_center`` keyword the user can specify the center of the QM region. The default selection is the first atom of the system (*i.e.* 0). For more information about the selection grammar see the `selectionType`_ section. The ``qm_center`` if more than one atom is selected will be by default the center of mass of the selected atoms.
 
-.. _qmonlylistKey:
+.. _forcedinnerlistKey:
 
-QM Only List
-============
-
-.. admonition:: Key
-    :class: tip
-
-    qm_only_list = {selection}
-
-With the ``qm_only_list`` keyword the user can specify a list of atoms which should be treated as QM atoms only. This means that these atoms can not leave the QM region during the simulation. For more information see the reference manual. For more information about the selection grammar see the `selectionType`_ section. By default no atoms are selected.
-
-.. _mmonlylistKey:
-
-MM Only List
-============
+Forced Inner List
+==================
 
 .. admonition:: Key
     :class: tip
 
-    mm_only_list = {selection}
+    forced_inner_list = {selection}
 
-With the ``mm_only_list`` keyword the user can specify a list of atoms which should be treated as MM atoms only. This means that these atoms can not enter the QM region during the simulation. For more information see the reference manual. For more information about the selection grammar see the `selectionType`_ section. By default no atoms are selected.
+With the ``forced_inner_list`` keyword the user can specify a list of atoms which has to remain in the inner region of the hybrid system.
+This setting is only relevant for hybrid calculations and means that the selected atoms cannot leave the inner region during the simulation.
+For more information about the selection grammar see the `selectionType`_ section.
+By default no atoms are selected.
+
+.. _forcedouterlistKey:
+
+Forced Outer List
+==================
+
+.. admonition:: Key
+    :class: tip
+
+    forced_outer_list = {selection}
+
+With the ``forced_outer_list`` keyword the user can specify a list of atoms which has to remain in the outer region of the hybrid system.
+This setting is only relevant for hybrid calculations and means that the selected atoms cannot leave the outer region during the simulation.
+For more information about the selection grammar see the `selectionType`_ section.
+By default no atoms are selected.
 
 .. _qmchargesKey:
 
