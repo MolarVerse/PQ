@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## Next Release
 
+# Tests
+
+- added integration tests for QM programs
+
 <!-- insertion marker -->
 ## [v0.6.1](https://github.com/MolarVerse/PQ/releases/tag/v0.6.1) - 2025-07-25
 
