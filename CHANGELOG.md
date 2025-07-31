@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file.
 
 - added integration tests for QM programs
 
+# Build
+
+- Suppress googletest warnings for double promotion
+
 <!-- insertion marker -->
 ## [v0.6.1](https://github.com/MolarVerse/PQ/releases/tag/v0.6.1) - 2025-07-25
 

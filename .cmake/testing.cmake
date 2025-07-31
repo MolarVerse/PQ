@@ -18,7 +18,15 @@ endif()
 
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
+# Suppress double promotion warnings for googletest library
+set(CMAKE_CXX_FLAGS_BACKUP "${CMAKE_CXX_FLAGS}")
+string(REPLACE "-Wdouble-promotion" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+
 add_subdirectory(external/googletest EXCLUDE_FROM_ALL)
+
+# Restore original flags
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_BACKUP}")
+
 enable_testing()
 option(INSTALL_GMOCK "install Googletest's GMock?" OFF)
 option(INSTALL_GTEST "install Googletest's GTest?" OFF)
