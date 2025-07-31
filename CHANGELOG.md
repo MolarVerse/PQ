@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file.
 
 - re-formatting of whole codebase with clang-format 20.1.3
 
+# Tests
+
+- added integration tests for QM programs
+
 <!-- insertion marker -->
 ## [v0.6.1](https://github.com/MolarVerse/PQ/releases/tag/v0.6.1) - 2025-07-25
 

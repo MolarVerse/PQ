@@ -1,0 +1,65 @@
+  Geometry = GenFormat {
+<<< "geom.gen"
+}
+
+Driver = {}
+
+
+
+Hamiltonian = DFTB {
+  charge = 0
+  SCC = Yes
+  SCCTolerance = 1.0e-6
+  MaxSccIterations = 250
+
+  ThirdOrderFull = Yes
+  Dispersion = DftD3 {}
+  DampXH = Yes
+  DampXHExponent = 4.0
+  __GUESS__
+
+
+  HubbardDerivs {
+  C  = -0.1492
+  O  = -0.1575
+  H  = -0.1857
+  }
+
+
+  # Sampling of the Briullouin zone according to 
+  # the Monkhorst-Pack scheme
+  KPointsAndWeights = {
+    0.0 0.0 0.0 1.0
+  }
+
+
+  SlaterKosterFiles = Type2FileNames {
+    Prefix = "../../build/external/slakos/3ob/skfiles/"
+    Separator = "-"
+    Suffix = ".skf"
+    LowerCaseTypeName = No
+  }
+
+
+  MaxAngularMomentum {
+    C  = "p"
+    O  = "p"
+    H  = "s"
+  }
+
+  Filling = Fermi {
+    Temperature [Kelvin] = 300.0
+  }
+}
+
+Options {}
+
+Analysis = {
+   MullikenAnalysis = Yes
+   CalculateForces = Yes
+}
+
+
+ParserOptions {
+  ParserVersion = 5
+}
