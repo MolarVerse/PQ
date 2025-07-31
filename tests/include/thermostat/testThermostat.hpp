@@ -24,6 +24,10 @@
 
 #define _TEST_THERMOSTAT_HPP_
 
+#include <gtest/gtest.h>   // for Test
+
+#include <memory>   // for make_shared, __shared_ptr_access, shared_ptr
+
 #include "atom.hpp"            // for Atom
 #include "molecule.hpp"        // for Molecule
 #include "physicalData.hpp"    // for PhysicalData
@@ -31,12 +35,9 @@
 #include "thermostat.hpp"      // for Thermostat
 #include "vector3d.hpp"        // for Vec3D
 
-#include <gtest/gtest.h>   // for Test
-#include <memory>          // for make_shared, __shared_ptr_access, shared_ptr
-
 class TestThermostat : public ::testing::Test
 {
-  protected:
+   protected:
     void SetUp() override
     {
         _thermostat = new thermostat::Thermostat();

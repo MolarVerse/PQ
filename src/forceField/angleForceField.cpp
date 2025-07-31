@@ -50,7 +50,9 @@ AngleForceField::AngleForceField(
     const std::vector<size_t>     &atomIndices,
     const size_t                   type
 )
-    : Angle(molecules, atomIndices), _type(type){};
+    : Angle(molecules, atomIndices), _type(type)
+{
+}
 
 /**
  * @brief calculate energy and forces for a single alpha

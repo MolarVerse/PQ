@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## Next Release
 
+### Style
+
+- re-formatting of whole codebase with clang-format 20.1.3
+
 # Tests
 
 - added integration tests for QM programs

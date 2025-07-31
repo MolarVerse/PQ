@@ -50,7 +50,9 @@ DihedralForceField::DihedralForceField(
     const std::vector<size_t>     &atomIndices,
     const size_t                   type
 )
-    : Dihedral(molecules, atomIndices), _type(type){};
+    : Dihedral(molecules, atomIndices), _type(type)
+{
+}
 
 /**
  * @brief calculate energy and forces for a single dihedral

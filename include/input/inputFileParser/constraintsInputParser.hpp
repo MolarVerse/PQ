@@ -31,7 +31,6 @@
 #include "inputFileParser.hpp"   // for InputFileParser
 #include "typeAliases.hpp"       // for pq::strings
 
-
 namespace input
 {
     /**
@@ -51,7 +50,10 @@ namespace input
         void parseRattleTolerance(const pq::strings &, const size_t);
         void parseRattleIteration(const pq::strings &, const size_t);
 
-        void parseDistanceConstraintActivated(const pq::strings &, const size_t);
+        void parseDistanceConstraintActivated(
+            const pq::strings &,
+            const size_t
+        );
     };
 
 }   // namespace input

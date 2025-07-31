@@ -73,10 +73,12 @@ void StdoutOutput::writeDensityWarning() const
 {
     try
     {
-        throw UserInputExceptionWarning(std::format(
-            "{}Density and box dimensions set. Density will be ignored.",
-            _OUTPUT_
-        ));
+        throw UserInputExceptionWarning(
+            std::format(
+                "{}Density and box dimensions set. Density will be ignored.",
+                _OUTPUT_
+            )
+        );
     }
     catch (const UserInputExceptionWarning &e)
     {

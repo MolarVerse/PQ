@@ -32,4 +32,4 @@ using namespace engine;
  *
  * @param engine
  */
-IntegratorSetup::IntegratorSetup(MDEngine &engine) : _engine(engine){};
+IntegratorSetup::IntegratorSetup(MDEngine &engine) : _engine(engine) {}

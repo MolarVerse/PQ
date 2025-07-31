@@ -57,7 +57,9 @@ DistanceConstraint::DistanceConstraint(
       _lowerDistance(lowerDistance),
       _upperDistance(upperDistance),
       _springConstant(springConstant),
-      _dSpringConstantDt(dSpringConstantDt){};
+      _dSpringConstantDt(dSpringConstantDt)
+{
+}
 
 /**
  * @brief calculates the reference distance of all distance constraints

@@ -231,8 +231,5 @@ TEST_F(TestLogOutput, TestwriteSetupWarning)
     std::ifstream file("default.log");
     std::string   line;
     getline(file, line);
-    EXPECT_EQ(
-        line,
-        std::format("WARNING: This is a warning message.")
-    );
+    EXPECT_EQ(line, std::format("WARNING: This is a warning message."));
 }

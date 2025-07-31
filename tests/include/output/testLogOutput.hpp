@@ -24,11 +24,12 @@
 
 #define _TEST_LOGOUTPUT_HPP_
 
-#include "logOutput.hpp"   // for LogOutput
-
 #include <gtest/gtest.h>   // for Test
-#include <memory>          // for allocator
 #include <stdio.h>         // for remove
+
+#include <memory>   // for allocator
+
+#include "logOutput.hpp"   // for LogOutput
 
 /**
  * @class TestLogOutput
@@ -38,7 +39,7 @@
  */
 class TestLogOutput : public ::testing::Test
 {
-  protected:
+   protected:
     void SetUp() override { _logOutput = new output::LogOutput("default.log"); }
 
     void TearDown() override

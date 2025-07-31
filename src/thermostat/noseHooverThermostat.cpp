@@ -57,7 +57,9 @@ NoseHooverThermostat::NoseHooverThermostat(
     : Thermostat(targetTemp),
       _chi(chi),
       _zeta(zeta),
-      _couplingFrequency(couplingFrequency){};
+      _couplingFrequency(couplingFrequency)
+{
+}
 
 /**
  * @brief applies the Nose-Hoover thermostat on the forces

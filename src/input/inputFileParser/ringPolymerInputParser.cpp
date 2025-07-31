@@ -68,10 +68,12 @@ void RingPolymerInputParser::parseNumberOfBeads(
     auto numberOfBeads = stoi(lineElements[2]);
 
     if (numberOfBeads < 2)
-        throw InputFileException(std::format(
-            "Number of beads must be at least 2 - in input file in line {}",
-            lineNumber
-        ));
+        throw InputFileException(
+            std::format(
+                "Number of beads must be at least 2 - in input file in line {}",
+                lineNumber
+            )
+        );
 
     RingPolymerSettings::setNumberOfBeads(size_t(numberOfBeads));
 }

@@ -76,7 +76,13 @@ namespace manostat
         std::vector<size_t> _2DIsotropicAxes;
 
        public:
-        SemiIsotropicBerendsenManostat(const double, const double, const double, const size_t, const std::vector<size_t> &);
+        SemiIsotropicBerendsenManostat(
+            const double,
+            const double,
+            const double,
+            const size_t,
+            const std::vector<size_t> &
+        );
 
         [[nodiscard]] pq::tensor3D calculateMu() const override;
 

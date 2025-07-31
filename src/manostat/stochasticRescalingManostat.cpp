@@ -215,7 +215,8 @@ tensor3D SemiIsotropicStochasticRescalingManostat::calculateMu(
  * @param volume
  * @return Vec3D
  */
-tensor3D AnisotropicStochasticRescalingManostat::calculateMu(const double volume
+tensor3D AnisotropicStochasticRescalingManostat::calculateMu(
+    const double volume
 )
 {
     const auto compress = _compressibility * _dt / _tau;

@@ -119,12 +119,15 @@ void ForceFieldNonCoulomb::sortNonCoulombicsPairs(
     const auto iter = adjacent_find(nonCoulPairsVec, compareSharedPtrs);
 
     if (iter != nonCoulPairsVec.end())
-        throw ParameterFileException(std::format(
-            "Non-coulombic pairs with global van der Waals types {} and {} in "
-            "the parameter file are defined twice",
-            (*iter)->getVanDerWaalsType1(),
-            (*iter)->getVanDerWaalsType2()
-        ));
+        throw ParameterFileException(
+            std::format(
+                "Non-coulombic pairs with global van der Waals types {} and {} "
+                "in "
+                "the parameter file are defined twice",
+                (*iter)->getVanDerWaalsType1(),
+                (*iter)->getVanDerWaalsType2()
+            )
+        );
 }
 
 /**
@@ -190,15 +193,18 @@ void ForceFieldNonCoulomb::setOffDiagonalElement(
         {
             const auto vdwType1 = (*nonCoulPair1)->getVanDerWaalsType1();
             const auto vdwType2 = (*nonCoulPair1)->getVanDerWaalsType2();
-            throw ParameterFileException(std::format(
-                "Non-coulombic pairs with global van der Waals types {}, {} "
-                "and {}, {} in the parameter file have "
-                "different parameters",
-                vdwType1,
-                vdwType2,
-                vdwType2,
-                vdwType1
-            ));
+            throw ParameterFileException(
+                std::format(
+                    "Non-coulombic pairs with global van der Waals types {}, "
+                    "{} "
+                    "and {}, {} in the parameter file have "
+                    "different parameters",
+                    vdwType1,
+                    vdwType2,
+                    vdwType2,
+                    vdwType1
+                )
+            );
         }
 
         _nonCoulPairsMat(atomType1, atomType2) = *nonCoulPair1;
@@ -265,8 +271,10 @@ std::vector<std::shared_ptr<NonCoulombPair>> ForceFieldNonCoulomb::
  * @throws if the non coulombic pair is found twice
  */
 std::optional<std::shared_ptr<NonCoulombPair>> ForceFieldNonCoulomb::
-    findNonCoulPairByInternalTypes(const size_t intType1, const size_t intType2)
-        const
+    findNonCoulPairByInternalTypes(
+        const size_t intType1,
+        const size_t intType2
+    ) const
 {
     auto findByIntAtomTypes = [intType1, intType2](const auto &nonCoulPair)
     {
@@ -294,12 +302,15 @@ std::optional<std::shared_ptr<NonCoulombPair>> ForceFieldNonCoulomb::
         {
             auto vdwType1 = (*firstNonCoulPair)->getVanDerWaalsType1();
             auto vdwType2 = (*firstNonCoulPair)->getVanDerWaalsType2();
-            throw ParameterFileException(std::format(
-                "Non coulombic pair with global van der waals types {} and {} "
-                "is defined twice in the parameter file.",
-                vdwType1,
-                vdwType2
-            ));
+            throw ParameterFileException(
+                std::format(
+                    "Non coulombic pair with global van der waals types {} and "
+                    "{} "
+                    "is defined twice in the parameter file.",
+                    vdwType1,
+                    vdwType2
+                )
+            );
         }
 
         return *firstNonCoulPair;

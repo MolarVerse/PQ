@@ -52,18 +52,22 @@ using namespace customException;
 void StepCountSection::process(std::vector<std::string> &lineElements, Engine &)
 {
     if (lineElements.size() != 2)
-        throw RstFileException(std::format(
-            "Error in line {}: Step count section must have 2 elements",
-            _lineNumber
-        ));
+        throw RstFileException(
+            std::format(
+                "Error in line {}: Step count section must have 2 elements",
+                _lineNumber
+            )
+        );
 
     auto stepCount = stoi(lineElements[1]);
 
     if (stepCount < 0)
-        throw RstFileException(std::format(
-            "Error in line {}: Step count must be positive",
-            _lineNumber
-        ));
+        throw RstFileException(
+            std::format(
+                "Error in line {}: Step count must be positive",
+                _lineNumber
+            )
+        );
 
     TimingsSettings::setStepCount(size_t(stepCount));
 }

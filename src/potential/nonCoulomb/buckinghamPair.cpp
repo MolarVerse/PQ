@@ -50,7 +50,9 @@ BuckinghamPair::BuckinghamPair(
     : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff),
       _a(a),
       _dRho(dRho),
-      _c6(c6){};
+      _c6(c6)
+{
+}
 
 /**
  * @brief Construct a new Buckingham Pair:: Buckingham Pair object
@@ -66,7 +68,9 @@ BuckinghamPair::BuckinghamPair(
     const double dRho,
     const double c6
 )
-    : NonCoulombPair(cutOff), _a(a), _dRho(dRho), _c6(c6){};
+    : NonCoulombPair(cutOff), _a(a), _dRho(dRho), _c6(c6)
+{
+}
 
 /**
  * @brief Construct a new Buckingham Pair:: Buckingham Pair object
@@ -89,7 +93,9 @@ BuckinghamPair::BuckinghamPair(
     : NonCoulombPair(cutOff, energyCutoff, forceCutoff),
       _a(a),
       _dRho(dRho),
-      _c6(c6){};
+      _c6(c6)
+{
+}
 
 /**
  * @brief operator overload for the comparison of two BuckinghamPair objects

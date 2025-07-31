@@ -81,11 +81,14 @@ void NonCoulombicsSection::processHeader(pq::strings &lineElements, Engine &)
             PotentialSettings::setNonCoulombType(MORSE);
 
         else
-            throw ParameterFileException(std::format(
-                "Invalid type of nonCoulombic in parameter file nonCoulombic "
-                "section at line {} - has to be lj, buckingham or morse!",
-                _lineNumber
-            ));
+            throw ParameterFileException(
+                std::format(
+                    "Invalid type of nonCoulombic in parameter file "
+                    "nonCoulombic "
+                    "section at line {} - has to be lj, buckingham or morse!",
+                    _lineNumber
+                )
+            );
     }
     else
         // default of guff gets overriden
@@ -116,11 +119,13 @@ void NonCoulombicsSection::processSection(
         case MORSE: processMorse(lineElements, engine); break;
 
         default:
-            throw ParameterFileException(std::format(
-                "Wrong type of nonCoulombic in parameter file nonCoulombic "
-                "section at line {}  - has to be lj, buckingham or morse!",
-                _lineNumber
-            ));
+            throw ParameterFileException(
+                std::format(
+                    "Wrong type of nonCoulombic in parameter file nonCoulombic "
+                    "section at line {}  - has to be lj, buckingham or morse!",
+                    _lineNumber
+                )
+            );
     }
 }
 
@@ -142,16 +147,20 @@ void NonCoulombicsSection::processSection(
  * @throw ParameterFileException if number of elements in line
  * is not 4 or 5
  */
-void NonCoulombicsSection::processLJ(pq::strings &lineElements, Engine &engine)
-    const
+void NonCoulombicsSection::processLJ(
+    pq::strings &lineElements,
+    Engine      &engine
+) const
 {
     if (lineElements.size() != 4 && lineElements.size() != 5)
-        throw ParameterFileException(std::format(
-            "Wrong number of arguments in parameter file in Lennard Jones "
-            "nonCoulombics section at line {} - number of "
-            "elements has to be 4 or 5!",
-            _lineNumber
-        ));
+        throw ParameterFileException(
+            std::format(
+                "Wrong number of arguments in parameter file in Lennard Jones "
+                "nonCoulombics section at line {} - number of "
+                "elements has to be 4 or 5!",
+                _lineNumber
+            )
+        );
 
     const size_t atomType1 = stoul(lineElements[0]);
     const size_t atomType2 = stoul(lineElements[1]);
@@ -167,13 +176,10 @@ void NonCoulombicsSection::processLJ(pq::strings &lineElements, Engine &engine)
     auto &pot       = engine.getPotential().getNonCoulombPotential();
     auto &potential = dynamic_cast<ForceFieldNonCoulomb &>(pot);
 
-    potential.addNonCoulombicPair(std::make_shared<LennardJonesPair>(
-        atomType1,
-        atomType2,
-        cutOff,
-        c6,
-        c12
-    ));
+    potential.addNonCoulombicPair(
+        std::make_shared<
+            LennardJonesPair>(atomType1, atomType2, cutOff, c6, c12)
+    );
 }
 
 /**
@@ -201,12 +207,14 @@ void NonCoulombicsSection::processBuckingham(
 ) const
 {
     if (lineElements.size() != 5 && lineElements.size() != 6)
-        throw ParameterFileException(std::format(
-            "Wrong number of arguments in parameter file in Lennard Jones "
-            "nonCoulombics section at line {} - number of "
-            "elements has to be 5 or 6!",
-            _lineNumber
-        ));
+        throw ParameterFileException(
+            std::format(
+                "Wrong number of arguments in parameter file in Lennard Jones "
+                "nonCoulombics section at line {} - number of "
+                "elements has to be 5 or 6!",
+                _lineNumber
+            )
+        );
 
     const size_t atomType1 = stoul(lineElements[0]);
     const size_t atomType2 = stoul(lineElements[1]);
@@ -223,14 +231,10 @@ void NonCoulombicsSection::processBuckingham(
     auto &pot       = engine.getPotential().getNonCoulombPotential();
     auto &potential = dynamic_cast<ForceFieldNonCoulomb &>(pot);
 
-    potential.addNonCoulombicPair(std::make_shared<BuckinghamPair>(
-        atomType1,
-        atomType2,
-        cutOff,
-        a,
-        dRho,
-        c6
-    ));
+    potential.addNonCoulombicPair(
+        std::make_shared<
+            BuckinghamPair>(atomType1, atomType2, cutOff, a, dRho, c6)
+    );
 }
 
 /**
@@ -258,12 +262,14 @@ void NonCoulombicsSection::processMorse(
 ) const
 {
     if (lineElements.size() != 5 && lineElements.size() != 6)
-        throw ParameterFileException(std::format(
-            "Wrong number of arguments in parameter file in Lennard Jones "
-            "nonCoulombics section at line {} - number of "
-            "elements has to be 5 or 6!",
-            _lineNumber
-        ));
+        throw ParameterFileException(
+            std::format(
+                "Wrong number of arguments in parameter file in Lennard Jones "
+                "nonCoulombics section at line {} - number of "
+                "elements has to be 5 or 6!",
+                _lineNumber
+            )
+        );
 
     const size_t atomType1           = stoul(lineElements[0]);
     const size_t atomType2           = stoul(lineElements[1]);
@@ -280,12 +286,14 @@ void NonCoulombicsSection::processMorse(
     auto &pot       = engine.getPotential().getNonCoulombPotential();
     auto &potential = dynamic_cast<ForceFieldNonCoulomb &>(pot);
 
-    potential.addNonCoulombicPair(std::make_shared<MorsePair>(
-        atomType1,
-        atomType2,
-        cutOff,
-        dissociationEnergy,
-        wellWidth,
-        equilibriumDistance
-    ));
+    potential.addNonCoulombicPair(
+        std::make_shared<MorsePair>(
+            atomType1,
+            atomType2,
+            cutOff,
+            dissociationEnergy,
+            wellWidth,
+            equilibriumDistance
+        )
+    );
 }

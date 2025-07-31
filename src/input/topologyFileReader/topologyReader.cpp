@@ -125,7 +125,8 @@ TopologySection *TopologyReader::determineSection(
     const auto iterEnd   = _topologySections.end();
 
     for (auto section = iterStart; section != iterEnd; ++section)
-        if ((*section)->keyword() == toLowerAndReplaceDashesCopy(lineElements[0]))
+        if ((*section)->keyword() ==
+            toLowerAndReplaceDashesCopy(lineElements[0]))
             return (*section).get();
 
     throw TopologyException(

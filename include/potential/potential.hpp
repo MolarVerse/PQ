@@ -59,7 +59,11 @@ namespace potential
        public:
         virtual ~Potential() = default;
 
-        virtual void calculateForces(pq::SimBox &, pq::PhysicalData &, pq::CellList &) = 0;
+        virtual void calculateForces(
+            pq::SimBox &,
+            pq::PhysicalData &,
+            pq::CellList &
+        )                                         = 0;
         virtual pq::SharedPotential clone() const = 0;
 
         std::pair<double, double> calculateSingleInteraction(

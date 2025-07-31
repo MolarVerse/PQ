@@ -33,10 +33,10 @@
 
 #include "atom.hpp"              // for Atom
 #include "exceptions.hpp"        // for InputFileException
+#include "fileSettings.hpp"      // for FileSettings
 #include "physicalData.hpp"      // for PhysicalData
 #include "qmSettings.hpp"        // for QMSettings
 #include "settings.hpp"          // for Settings
-#include "fileSettings.hpp"      // for FileSettings
 #include "simulationBox.hpp"     // for SimulationBox
 #include "stringUtilities.hpp"   // for fileExists
 #include "vector3d.hpp"          // for Vec3D
@@ -143,8 +143,12 @@ void DFTBPlusRunner::execute()
 
     const auto reuseCharges = _isFirstExecution ? 1 : 0;
 
-    const auto command = 
-            std::format("{} 0 {} 0 0 0 {}", scriptFile, reuseCharges, FileSettings::getDFTBFileName());
+    const auto command = std::format(
+        "{} 0 {} 0 0 0 {}",
+        scriptFile,
+        reuseCharges,
+        FileSettings::getDFTBFileName()
+    );
     ::system(command.c_str());
 
     _isFirstExecution = false;
@@ -166,11 +170,13 @@ void DFTBPlusRunner::readStressTensor(Box &box, PhysicalData &data)
     std::ifstream stressFile(stressFileName);
 
     if (!stressFile.is_open())
-        throw QMRunnerException(std::format(
-            "Cannot open {} stress tensor \"{}\"",
-            string(QMSettings::getQMMethod()),
-            stressFileName
-        ));
+        throw QMRunnerException(
+            std::format(
+                "Cannot open {} stress tensor \"{}\"",
+                string(QMSettings::getQMMethod()),
+                stressFileName
+            )
+        );
 
     StaticMatrix3x3<double> stress;
 

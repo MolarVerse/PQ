@@ -72,7 +72,8 @@ namespace potential
 
         [[nodiscard]] bool operator==(const MorsePair &other) const;
 
-        [[nodiscard]] std::pair<double, double> calculate(const double distance
+        [[nodiscard]] std::pair<double, double> calculate(
+            const double distance
         ) const override;
 
         [[nodiscard]] double getDissociationEnergy() const;

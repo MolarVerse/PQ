@@ -68,7 +68,7 @@ void setup::setupPotential(Engine &engine)
  *
  * @param engine
  */
-PotentialSetup::PotentialSetup(Engine &engine) : _engine(engine){};
+PotentialSetup::PotentialSetup(Engine &engine) : _engine(engine) {}
 
 /**
  * @brief sets all nonBonded potential types
@@ -168,8 +168,8 @@ void PotentialSetup::setupNonCoulombicPairs()
     simBox.setupExternalToInternalGlobalVdwTypesMap();
     nonCoulPot.determineInternalGlobalVdwTypes(extToIntVDWTypes);
 
-    const auto nGlobalVdwTypes = simBox.getExternalGlobalVdwTypes().size();
-    auto selfNonCoulPairs = nonCoulPot.getSelfInteractionNonCoulPairs();
+    const auto nGlobalVdwTypes  = simBox.getExternalGlobalVdwTypes().size();
+    auto       selfNonCoulPairs = nonCoulPot.getSelfInteractionNonCoulPairs();
 
     if (selfNonCoulPairs.size() != nGlobalVdwTypes)
         throw ParameterFileException(

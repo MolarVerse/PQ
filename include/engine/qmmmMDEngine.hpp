@@ -41,7 +41,7 @@ namespace engine
         QMMMMDEngine()  = default;
         ~QMMMMDEngine() = default;
 
-        void calculateForces() override {};   // TODO: implement
+        void calculateForces() override {}   // TODO: implement
     };
 
 }   // namespace engine

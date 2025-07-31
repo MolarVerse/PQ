@@ -40,8 +40,11 @@ namespace potential
        public:
         ~PotentialBruteForce() override;
 
-        void calculateForces(pq::SimBox &, pq::PhysicalData &, pq::CellList &)
-            override;
+        void calculateForces(
+            pq::SimBox &,
+            pq::PhysicalData &,
+            pq::CellList &
+        ) override;
 
         pq::SharedPotential clone() const override;
     };
