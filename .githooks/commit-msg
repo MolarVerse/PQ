@@ -159,17 +159,6 @@ elif [[ "$lowercase_message" =~ ^administrative(\(.+\))?: ]]; then
   group="Administrative"
 fi
 
-# Random 
-# random stuff that doesn't fit into any of the above categories
-# starting with a $ or random
-if [[ "$lowercase_message" =~ ^\$ ]]; then
-  matched=true
-  group="Random"
-elif [[ "$lowercase_message" =~ ^random(\(.+\))?: ]]; then
-  matched=true
-  group="Random"
-fi
-
 # ... (similar checks for other patterns in the list)
 
 # No match found
@@ -199,7 +188,6 @@ if ! $matched; then
   echo "  - CI:             ci:"
   echo "  - Cmake:          cmake:"
   echo "  - Administrative: admin:, administrative:"
-  echo "  - Random:         $:, random:"
   # ... (similar output for other patterns in the list)
   echo "  - --------------------------------------------\n"
 
