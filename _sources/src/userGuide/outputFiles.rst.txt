@@ -220,7 +220,8 @@ Stores the individual components of the stress tensor *σ* for every frame in th
 
 The individual components of the stress tensor are given in units of :math:`\frac{\text{kcal}}{\text{mol Å}^3}`. The first character
 of the index denotes the lattice parameter (*a*, *b*, *c*), while the second character denotes the respective lattice parameter component 
-(*x*, *y*, *z*).
+(*x*, *y*, *z*). The diagonal elements of the tensor (*σ*:sub:`ax`, *σ*:sub:`by`, *σ*:sub:`cz`) denote the normal stresses and the off diagonal 
+elements (*σ*:sub:`ay` = *σ*:sub:`bx`, *σ*:sub:`az` = *σ*:sub:`cx`, *σ*:sub:`bz` = *σ*:sub:`cy`) represent the shear stresses.
 
 .. _timingFile:
 
