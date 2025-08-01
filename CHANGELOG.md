@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## Next Release
 
+### Workflow
+
+- added/updated git hooks for commit messages
+
 # Tests
 
 - added integration tests for QM programs
