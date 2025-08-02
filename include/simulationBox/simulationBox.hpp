@@ -30,16 +30,17 @@
 #include <string>     // for string
 #include <vector>     // for vector
 
-#include "atom.hpp"              // for Atom
-#include "box.hpp"               // for Box
-#include "defaults.hpp"          // for _COULOMB_CUT_OFF_DEFAULT_
-#include "exceptions.hpp"        // for ExceptionType
-#include "molecule.hpp"          // for Molecule
-#include "moleculeType.hpp"      // for MoleculeType
-#include "orthorhombicBox.hpp"   // for OrthorhombicBox
-#include "settings.hpp"          // for Settings, JobType
-#include "triclinicBox.hpp"      // for TriclinicBox
-#include "typeAliases.hpp"       // for pq::Vec3D
+#include "atom.hpp"                // for Atom
+#include "box.hpp"                 // for Box
+#include "defaults.hpp"            // for _COULOMB_CUT_OFF_DEFAULT_
+#include "exceptions.hpp"          // for ExceptionType
+#include "molecule.hpp"            // for Molecule
+#include "moleculeType.hpp"        // for MoleculeType
+#include "orthorhombicBox.hpp"     // for OrthorhombicBox
+#include "settings.hpp"            // for Settings, JobType
+#include "simulationBoxView.hpp"   // for SimulationBoxView
+#include "triclinicBox.hpp"        // for TriclinicBox
+#include "typeAliases.hpp"         // for pq::Vec3D
 
 /**
  * @namespace simulationBox
@@ -69,7 +70,7 @@ namespace simulationBox
      * the SimulationBox class.
      *
      */
-    class SimulationBox
+    class SimulationBox : public SimulationBoxView<SimulationBox>
     {
        private:
         int _waterType;
@@ -192,8 +193,7 @@ namespace simulationBox
         [[nodiscard]] std::vector<double> getAtomicScalarForcesOld() const;
 
         [[nodiscard]] pq::SharedAtomVec&         getAtoms();
-        [[nodiscard]] auto                       getQMAtoms() const;
-        [[nodiscard]] auto                       getMMAtoms() const;
+        [[nodiscard]] const pq::SharedAtomVec&   getAtoms() const;
         [[nodiscard]] std::vector<Molecule>&     getMolecules();
         [[nodiscard]] std::vector<MoleculeType>& getMoleculeTypes();
 
@@ -248,40 +248,8 @@ namespace simulationBox
         void setBoxSizeHasChanged(const bool boxSizeHasChanged) const;
     };
 
-    /**
-     * @brief get all QM atoms using range-based filtering
-     *
-     * @return a view/range of QM atoms filtered from all atoms
-     *
-     * @details This function returns a range-based view that filters atoms
-     *          from _atoms based on whether they are designated as QM atoms.
-     */
-    inline auto SimulationBox::getQMAtoms() const
-    {
-        using std::ranges::views::filter;
-
-        return _atoms |
-               filter([](const auto& atom) { return atom->isQMAtom(); });
-    }
-
-    /**
-     * @brief get all MM atoms using range-based filtering
-     *
-     * @return a view/range of MM atoms filtered from all atoms
-     *
-     * @details This function returns a range-based view that filters atoms
-     *          from _atoms based on whether they are designated as MM atoms.
-     */
-    inline auto SimulationBox::getMMAtoms() const
-    {
-        using std::ranges::views::filter;
-
-        return _atoms |
-               filter([](const auto& atom) { return atom->isMMAtom(); });
-    }
-
 }   // namespace simulationBox
 
-#include "simulationBox.tpp.hpp"   // DO NOT MOVE THIS LINE
+#include "simulationBox.tpp.hpp"   // IWYU pragma: export # Do not move this line
 
 #endif   // _SIMULATION_BOX_HPP_
