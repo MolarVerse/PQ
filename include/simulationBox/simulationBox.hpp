@@ -250,6 +250,6 @@ namespace simulationBox
 
 }   // namespace simulationBox
 
-#include "simulationBox.tpp.hpp"   // DO NOT MOVE THIS LINE
+#include "simulationBox.tpp.hpp"   // IWYU pragma: export # Do not move this line
 
 #endif   // _SIMULATION_BOX_HPP_

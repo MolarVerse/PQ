@@ -24,6 +24,8 @@
 
 #define _SIMULATION_BOX_VIEW_HPP_
 
+#include "views.hpp"
+
 namespace simulationBox
 {
     /**
@@ -37,56 +39,84 @@ namespace simulationBox
     template <typename Derived>
     class SimulationBoxView
     {
-        private:
-            /**
-             * @brief Get the Atoms vector reference
-             * 
-             * @return const auto& 
-             */
-            const auto& getAtoms() const {
-                return static_cast<const Derived&>(*this).getAtoms();
-            }
+       private:
+        /**
+         * @brief Get the Atoms vector reference
+         *
+         * @return const auto& a reference to the atoms vector
+         */
+        const auto& getAtoms() const
+        {
+            return static_cast<const Derived&>(*this).getAtoms();
+        }
 
-            /**
-             * @brief Get the Atoms vector reference
-             * 
-             * @return auto& 
-             */
-            auto& getAtoms() {
-                return static_cast<Derived&>(*this).getAtoms();
-            }
+        /**
+         * @brief Get the Atoms vector reference
+         *
+         * @return auto& a reference to the atoms vector
+         */
+        auto& getAtoms() { return static_cast<Derived&>(*this).getAtoms(); }
 
-        public:
-            
-            /**
-            * @brief get all QM atoms using range-based filtering
-            *
-            * @return a view/iterator of QM atoms filtered from all atoms
-            *
-            * @details This function returns a range-based view that filters atoms
-            *          from _atoms based on whether they are designated as QM atoms.
-            */
-            inline auto getQMAtoms() {
-                using std::ranges::views::filter;
+       public:
+        /**
+         * @brief get all QM atoms using range-based filtering
+         *
+         * @return a view/iterator of QM atoms filtered from all atoms
+         *
+         * @details This function returns a range-based view that filters atoms
+         *          from _atoms based on whether they are designated as QM
+         * atoms.
+         */
+        inline auto getQMAtoms()
+        {
+            return getAtoms() | pqviews::filter([](const auto& atom)
+                                                { return atom->isQMAtom(); });
+        }
 
-                return getAtoms() |
-                    filter([](const auto& atom) { return atom->isQMAtom(); });
-            }
+        /**
+         * @brief get all QM atoms using range-based filtering
+         *
+         * @return a view/iterator of QM atoms filtered from all atoms
+         *
+         * @details This function returns a range-based view that filters atoms
+         *          from _atoms based on whether they are designated as QM
+         * atoms.
+         */
+        inline auto getQMAtoms() const
+        {
+            return getAtoms() | pqviews::filter([](const auto& atom)
+                                                { return atom->isQMAtom(); });
+        }
 
-            /**
-            * @brief get all QM atoms using range-based filtering
-            *
-            * @return a view/iterator of QM atoms filtered from all atoms
-            *
-            * @details This function returns a range-based view that filters atoms
-            *          from _atoms based on whether they are designated as QM atoms.
-            */
-            inline const auto getQMAtoms() const {
-                using std::ranges::views::filter;
+        /**
+         * @brief get all MM atoms using range-based filtering
+         *
+         * @return a view/iterator of MM atoms filtered from all atoms
+         *
+         * @details This function returns a range-based view that filters atoms
+         *          from _atoms based on whether they are designated as MM
+         * atoms.
+         */
+        inline auto getMMAtoms()
+        {
+            return getAtoms() | pqviews::filter([](const auto& atom)
+                                                { return atom->isMMAtom(); });
+        }
 
-                return getAtoms() |
-                    filter([](const auto& atom) { return atom->isQMAtom(); });
-            }
+        /**
+         * @brief get all MM atoms using range-based filtering
+         *
+         * @return a view/iterator of MM atoms filtered from all atoms
+         *
+         * @details This function returns a range-based view that filters atoms
+         *          from _atoms based on whether they are designated as MM
+         * atoms.
+         */
+        inline auto getMMAtoms() const
+        {
+            return getAtoms() | pqviews::filter([](const auto& atom)
+                                                { return atom->isMMAtom(); });
+        }
     };
 
 }   // namespace simulationBox
