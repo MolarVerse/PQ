@@ -52,14 +52,14 @@ using namespace customException;
  */
 void setup::setupHybrid(Engine &engine)
 {
-    if (!Settings::isQMMMActivated())
+    if (!Settings::isHybridJobtype())
         return;
 
-    engine.getStdoutOutput().writeSetup("QMMM setup");
-    engine.getLogOutput().writeSetup("QMMM setup");
+    engine.getStdoutOutput().writeSetup("Hybrid setup");
+    engine.getLogOutput().writeSetup("Hybrid setup");
 
-    HybridSetup qmmmSetup(engine);
-    qmmmSetup.setup();
+    HybridSetup hybridSetup(engine);
+    hybridSetup.setup();
 }
 
 /**
@@ -67,59 +67,65 @@ void setup::setupHybrid(Engine &engine)
  *
  * @param engine
  */
-HybridSetup::HybridSetup(Engine &engine) : _engine(engine){};
+HybridSetup::HybridSetup(Engine &engine) : _engine(engine) {}
 
 /**
- * @brief setup QMMM-MD
+ * @brief setup Hybrid-MD
  *
  */
 void HybridSetup::setup()
 {
-    setupQMCenter();
-    setupQMOnlyList();
-    setupMMOnlyList();
+    setupInnerRegionCenter();
+    setupForcedInnerList();
+    setupForcedOuterList();
     throw UserInputException("Not implemented yet");
 }
 
 /**
- * @brief setup QM center
+ * @brief setup inner region center
  *
- * @details This function determines the indices of the atoms that should be
- * treated as the QM center. The QM center is the region of the system that is
- * treated with QM methods. All atomIndices that are part of the QM center are
- * added to the QM center list in the simulation box.
+ * @details This function determines the indices of the atoms that mark the
+ * center of the inner region of hybrid type calculations. All atomIndices
+ * that are part of the inner region center are added to the inner region center
+ * list in the simulation box.
  *
  */
-void HybridSetup::setupQMCenter()
+void HybridSetup::setupInnerRegionCenter()
 {
-    const auto qmCenterString = HybridSettings::getCoreCenterString();
-    const auto qmCenter       = parseSelection(qmCenterString, "qm_center");
+    const auto innerRegionCenterString =
+        HybridSettings::getInnerRegionCenterString();
+    const auto innerRegionCenter =
+        parseSelection(innerRegionCenterString, "inner_region_center");
 
-    _engine.getSimulationBox().addQMCenterAtoms(qmCenter);
+    _engine.getSimulationBox().addInnerRegionCenterAtoms(innerRegionCenter);
 }
 
 /**
- * @brief setup QM only list
+ * @brief setup forced inner list
  *
  */
-void HybridSetup::setupQMOnlyList()
+void HybridSetup::setupForcedInnerList()
 {
-    const auto qmOnlyListString = HybridSettings::getCoreOnlyListString();
-    const auto qmOnlyList = parseSelection(qmOnlyListString, "qm_only_list");
+    const auto forcedInnerListString =
+        HybridSettings::getForcedInnerListString();
+    const auto forcedInnerList =
+        parseSelection(forcedInnerListString, "forced_inner_list");
 
-    _engine.getSimulationBox().setupForcedQMAtoms(qmOnlyList);
+    _engine.getSimulationBox().setupForcedInnerAtoms(forcedInnerList);
 }
 
 /**
- * @brief setup MM only list
+ * @brief setup forced outer list
  *
  */
-void HybridSetup::setupMMOnlyList()
+void HybridSetup::setupForcedOuterList()
 {
-    const auto mmOnlyListString = HybridSettings::getNonCoreOnlyListString();
-    const auto mmOnlyList = parseSelection(mmOnlyListString, "mm_only_list");
+    const auto forcedOuterListString =
+        HybridSettings::getForcedOuterListString();
+    const auto forcedOuterList =
+        parseSelection(forcedOuterListString, "forced_outer_list");
 
-    _engine.getSimulationBox().setupForcedMMAtoms(mmOnlyList);
+    _engine.getSimulationBox().setupForcedOuterAtoms(forcedOuterList);
 }
 
 /**
@@ -169,19 +175,22 @@ std::vector<int> HybridSetup::parseSelection(
     // check if string contains any characters that are not digits or commas
     if (needsPython)
     {
-        throw InputFileException(std::format(
-            "The value of key {} - {} contains characters that are not digits, "
-            "\"-\" or commas. The current build of PQ was compiled without "
-            "Python bindings, so the {} string must be a comma-separated list "
-            "of integers, representing the atom indices in the restart file "
-            "that should be treated as the {}. In order to use the full "
-            "selection parser power of the PQAnalysis Python package, the PQ "
-            "build must be compiled with Python bindings.",
-            key,
-            selection,
-            key,
-            key
-        ));
+        throw InputFileException(
+            std::format(
+                "The value of key {} - {} contains characters that are not "
+                "digits, \"-\" or commas. The current build of PQ was compiled "
+                "without Python bindings, so the {} string must be a "
+                "comma-separated list of integers, representing the atom "
+                "indices in the restart file that should be treated as the {}. "
+                "In order to use the full selection parser power of the "
+                "PQAnalysis Python package, the PQ build must be compiled with "
+                "Python bindings.",
+                key,
+                selection,
+                key,
+                key
+            )
+        );
     }
 #endif
 
@@ -211,7 +220,6 @@ std::vector<int> HybridSetup::parseSelectionNoPython(
     const std::string &key
 )
 {
-    // parse the qm_center string
     std::vector<int> selectionVec;
 
     size_t pos = 0;
@@ -255,16 +263,18 @@ std::vector<int> HybridSetup::parseSelectionNoPython(
     // check if the selection vector is empty or contains duplicates
     if (selectionVec.empty())
     {
-        throw customException::InputFileException(std::format(
-            "The value of key {} - {} is an empty list. The {} string must be "
-            "a comma-separated list of integers or ranges, representing the "
-            "atom indices in the restart file that should be treated as the "
-            "{}.",
-            key,
-            selection,
-            key,
-            key
-        ));
+        throw customException::InputFileException(
+            std::format(
+                "The value of key {} - {} is an empty list. The {} string must "
+                "be a comma-separated list of integers or ranges, representing "
+                "the atom indices in the restart file that should be treated "
+                "as the {}.",
+                key,
+                selection,
+                key,
+                key
+            )
+        );
     }
 
     return selectionVec;

@@ -39,9 +39,9 @@ namespace settings
     class HybridSettings
     {
        private:
-        static inline std::string _coreCenterString      = "";
-        static inline std::string _coreOnlyListString    = "";
-        static inline std::string _nonCoreOnlyListString = "";
+        static inline std::string _innerRegionCenterString = "";
+        static inline std::string _forcedInnerListString   = "";
+        static inline std::string _forcedOuterListString   = "";
 
         static inline bool _useQMCharges = false;
 
@@ -54,9 +54,15 @@ namespace settings
          * standard setters *
          ********************/
 
-        static void setCoreCenterString(const std::string_view qmCenter);
-        static void setCoreOnlyListString(const std::string_view qmOnlyList);
-        static void setNonCoreOnlyListString(const std::string_view mmOnlyList);
+        static void setInnerRegionCenterString(
+            const std::string_view innerRegionCenter
+        );
+        static void setForcedInnerListString(
+            const std::string_view forcedInnerList
+        );
+        static void setForcedOuterListString(
+            const std::string_view forcedOuterList
+        );
 
         static void setUseQMCharges(const bool useQMCharges);
 
@@ -68,9 +74,9 @@ namespace settings
          * standard getters *
          ********************/
 
-        [[nodiscard]] static std::string getCoreCenterString();
-        [[nodiscard]] static std::string getCoreOnlyListString();
-        [[nodiscard]] static std::string getNonCoreOnlyListString();
+        [[nodiscard]] static std::string getInnerRegionCenterString();
+        [[nodiscard]] static std::string getForcedInnerListString();
+        [[nodiscard]] static std::string getForcedOuterListString();
 
         [[nodiscard]] static bool getUseQMCharges();
 

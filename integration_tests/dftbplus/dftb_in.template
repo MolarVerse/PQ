@@ -23,7 +23,6 @@ Hamiltonian = DFTB {
   C  = -0.1492
   O  = -0.1575
   H  = -0.1857
-  Zn = -0.03
   }
 
 
@@ -46,11 +45,10 @@ Hamiltonian = DFTB {
     C  = "p"
     O  = "p"
     H  = "s"
-    Zn = "d "
   }
 
   Filling = Fermi {
-    Temperature [Kelvin] = 0.0
+    Temperature [Kelvin] = 300.0
   }
 }
 

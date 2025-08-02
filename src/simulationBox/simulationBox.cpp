@@ -112,77 +112,97 @@ std::optional<Molecule> SimulationBox::findMolecule(const size_t moleculeType)
 }
 
 /**
- * @brief adds all atomIndices to _qmCenterAtomIndices vector
+ * @brief adds all atomIndices to _innerRegionCenterAtomIndices vector
  *
  * @param atomIndices
  *
  * @throw UserInputException if atom index out of range
  */
-void SimulationBox::addQMCenterAtoms(const std::vector<int>& atomIndices)
+void SimulationBox::addInnerRegionCenterAtoms(
+    const std::vector<int>& atomIndices
+)
 {
     for (const auto index : atomIndices)
     {
         if (index < 0 || index >= static_cast<int>(_atoms.size()))
             throw UserInputException(
-                std::format("QM center atom index {} out of range", index)
+                std::format(
+                    "Inner region center atom index {} out of range",
+                    index
+                )
             );
     }
 
-    _qmCenterAtomIndices = atomIndices;
+    _innerRegionCenterAtomIndices = atomIndices;
 }
 
 /**
- * @brief assigns isQMOnly to all atoms which are in the atomIndices vector
+ * @brief assigns _isForcedInner to all atoms which are in the atomIndices
+ * vector
  *
  * @param atomIndices
  *
  * @throw UserInputException if atom index out of range
+ * @throw UserInputException if atom is already _isForcedOuter
  */
-void SimulationBox::setupForcedQMAtoms(const std::vector<int>& atomIndices)
+void SimulationBox::setupForcedInnerAtoms(const std::vector<int>& atomIndices)
 {
     for (const auto index : atomIndices)
     {
         if (index < 0 || index >= static_cast<int>(_atoms.size()))
             throw UserInputException(
-                std::format("QM only atom index {} out of range", index)
+                std::format(
+                    "Forced inner region atom index {} out of range",
+                    index
+                )
             );
 
-        if (_atoms[static_cast<size_t>(index)]->isForcedMM())
-            throw UserInputException(std::format(
-                "Ambiguous atom index {} - atom is already in MM only list "
-                "- cannot be in QM only list",
-                index
-            ));
+        if (_atoms[static_cast<size_t>(index)]->isForcedOuter())
+            throw UserInputException(
+                std::format(
+                    "Ambiguous atom index {} - atom is already in forced outer "
+                    "list "
+                    "- cannot be in forced inner list",
+                    index
+                )
+            );
         else
-            _atoms[static_cast<size_t>(index)]->setForcedQM(true);
+            _atoms[static_cast<size_t>(index)]->setForcedInner(true);
     }
 }
 
 /**
- * @brief assigns isMMOnly to all atoms which are in the atomIndices vector
+ * @brief assigns _isForcedOuter to all atoms which are in the atomIndices
+ * vector
  *
  * @param atomIndices
  *
  * @throw UserInputException if atom index out of range
- * @throw UserInputException if atom is already in QM only list
+ * @throw UserInputException if atom is already _isForcedInner
  */
-void SimulationBox::setupForcedMMAtoms(const std::vector<int>& atomIndices)
+void SimulationBox::setupForcedOuterAtoms(const std::vector<int>& atomIndices)
 {
     for (const auto index : atomIndices)
     {
         if (index < 0 || index >= static_cast<int>(_atoms.size()))
             throw UserInputException(
-                std::format("MM only atom index {} out of range", index)
+                std::format(
+                    "Forced inner region atom index {} out of range",
+                    index
+                )
             );
 
-        if (_atoms[static_cast<size_t>(index)]->isForcedQM())
-            throw UserInputException(std::format(
-                "Ambiguous atom index {} - atom is already in QM only list "
-                "- cannot be in MM only list",
-                index
-            ));
+        if (_atoms[static_cast<size_t>(index)]->isForcedInner())
+            throw UserInputException(
+                std::format(
+                    "Ambiguous atom index {} - atom is already in forced inner "
+                    "list "
+                    "- cannot be in forced outer list",
+                    index
+                )
+            );
         else
-            _atoms[static_cast<size_t>(index)]->setForcedMM(true);
+            _atoms[static_cast<size_t>(index)]->setForcedOuter(true);
     }
 }
 
@@ -279,11 +299,13 @@ std::pair<Molecule*, size_t> SimulationBox::findMoleculeByAtomIndex(
         }
     }
 
-    throw UserInputException(std::format(
-        "Atom index {} out of range - total number of atoms: {}",
-        atomIndex,
-        sum
-    ));
+    throw UserInputException(
+        std::format(
+            "Atom index {} out of range - total number of atoms: {}",
+            atomIndex,
+            sum
+        )
+    );
 }
 
 /**
@@ -335,10 +357,12 @@ void SimulationBox::setPartialChargesOfMoleculesFromMoleculeTypes()
             molecule.setPartialCharges(molType->getPartialCharges());
 
         else if (molecule.getMoltype() != 0)
-            throw UserInputException(std::format(
-                "Molecule type {} not found in molecule types",
-                molecule.getMoltype()
-            ));
+            throw UserInputException(
+                std::format(
+                    "Molecule type {} not found in molecule types",
+                    molecule.getMoltype()
+                )
+            );
     };
 
     std::ranges::for_each(_molecules, setPartialCharges);
@@ -607,7 +631,8 @@ double SimulationBox::calculateTemperature()
  * @throw UserInputException if coulomb radius cut off is larger than half of
  * the minimal box dimension
  */
-void SimulationBox::checkCoulRadiusCutOff(const ExceptionType exceptionType
+void SimulationBox::checkCoulRadiusCutOff(
+    const ExceptionType exceptionType
 ) const
 {
     const auto coulRadiusCutOff = PotentialSettings::getCoulombRadiusCutOff();
@@ -674,7 +699,8 @@ void SimulationBox::initPositions(const double displacement)
             randomNumberGenerator
                 .getUniformRealDistribution(-displacement, displacement),
             randomNumberGenerator
-                .getUniformRealDistribution(-displacement, displacement)};
+                .getUniformRealDistribution(-displacement, displacement)
+        };
 
         auto position = atom->getPosition() + random;
 

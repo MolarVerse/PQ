@@ -257,7 +257,41 @@ bool Settings::isQMOnlyJobtype()
 }
 
 /**
- * @brief Returns true if the jobtype does is based on MD simulations
+ * @brief Returns true if the jobtype does not use any QM type simulations
+ *
+ * @return true/false if the jobtype does not use any QM type simulations
+ *
+ */
+bool Settings::isMMOnlyJobtype()
+{
+    using enum JobType;
+
+    if (_jobtype == MM_MD)
+        return true;
+
+    else
+        return false;
+}
+
+/**
+ * @brief Returns true if the jobtype is a hybrid type simulation
+ *
+ * @return true/false if the jobtype is a hybrid type simulation
+ *
+ */
+bool Settings::isHybridJobtype()
+{
+    using enum JobType;
+
+    if (_jobtype == JobType::QMMM_MD)
+        return true;
+
+    else
+        return false;
+}
+
+/**
+ * @brief Returns true if the jobtype performs an MD simulation
  *
  * @return true/false
  *
@@ -320,14 +354,6 @@ bool Settings::isQMActivated()
 
     return isQM;
 }
-
-/**
- * @brief Returns true if both MM and QM simulations are activated
- *
- * @return true/false
- *
- */
-bool Settings::isQMMMActivated() { return _jobtype == JobType::QMMM_MD; }
 
 /**
  * @brief Returns true if only QM simulations are activated

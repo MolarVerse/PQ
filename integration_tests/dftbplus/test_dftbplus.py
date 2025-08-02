@@ -45,4 +45,4 @@ def test_dftbplus(test_with_data_dir):
     # check if stderr is empty
     assert stderr == b""
 
-    check_pq_output("mof5-md-01", "dftbplus")
+    check_pq_output("malondialdehyde-md-01", "dftbplus")

@@ -1,0 +1,68 @@
+Section                       	  Time [s]	  Time [%]
+------------------------------	----------	----------
+
+Total                         	     3.053	   100.000
+
+QM Engine                     	     2.500	    81.887
+Setup                         	     0.535	    17.524
+Output                        	     0.000	     0.000
+Thermostat                    	     0.000	     0.000
+Integrator                    	     0.000	     0.000
+Constraints                   	     0.000	     0.000
+Cell List                     	     0.000	     0.000
+Potential                     	     0.000	     0.000
+IntraNonBonded                	     0.000	     0.000
+Virial                        	     0.000	     0.000
+Physical Data                 	     0.000	     0.000
+Manostat                      	     0.000	     0.000
+Reset Kinetics                	     0.000	     0.000
+
+
+
+
+Section                       	  Time [s]	  Time [%]	  RelT [%]
+------------------------------	----------	----------	----------
+
+Total                         	     3.053	   100.000	   100.000
+
+QM Engine                     	     2.500	    81.887	   100.000
+Execute ASE QM                	     2.491	   100.000	    99.652
+Build ASE Atoms               	     0.009	   100.000	     0.374
+Collect ASE Data              	     0.000	   100.000	     0.001
+
+Setup                         	     0.535	    17.524	   100.000
+TotalSetup                    	     0.535	   100.000	   100.014
+
+Output                        	     0.000	     0.000	   100.000
+RstFileOutput                 	     0.001	   100.000	       inf
+TrajectoryOutput              	     0.000	   100.000	       inf
+InfoOutput                    	     0.000	   100.000	       inf
+EnergyOutput                  	     0.000	   100.000	       inf
+VirialOutput                  	     0.000	   100.000	       inf
+MomentumOutput                	     0.000	   100.000	       inf
+StressOutput                  	     0.000	   100.000	       inf
+InstantEnergyOutput           	     0.000	   100.000	       inf
+BoxFileOutput                 	     0.000	   100.000	       inf
+
+Thermostat                    	     0.000	     0.000	   100.000
+Calc Temperature              	     0.000	   100.000	       inf
+
+Integrator                    	     0.000	     0.000	   100.000
+Velocity Verlet - First Step  	     0.000	   100.000	       inf
+Velocity Verlet - Second Step 	     0.000	   100.000	       inf
+
+Constraints                   	     0.000	     0.000	   100.000
+Reference Bond Data           	     0.000	   100.000	       inf
+
+Virial                        	     0.000	     0.000	   100.000
+IntraMolecular Correction     	     0.000	   100.000	       inf
+
+Physical Data                 	     0.000	     0.000	   100.000
+Calc Kinetics                 	     0.000	   100.000	       inf
+
+Manostat                      	     0.000	     0.000	   100.000
+Calc Pressure                 	     0.000	   100.000	       inf
+
+Reset Kinetics                	     0.000	     0.000	   100.000
+Reset Kinetics                	     0.000	   100.000	       inf
+

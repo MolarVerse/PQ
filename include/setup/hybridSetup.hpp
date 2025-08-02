@@ -48,12 +48,18 @@ namespace setup
         explicit HybridSetup(pq::Engine &engine);
 
         void setup();
-        void setupQMCenter();
-        void setupQMOnlyList();
-        void setupMMOnlyList();
+        void setupInnerRegionCenter();
+        void setupForcedInnerList();
+        void setupForcedOuterList();
 
-        std::vector<int> parseSelection(const std::string &, const std::string &);
-        std::vector<int> parseSelectionNoPython(const std::string &, const std::string &);
+        std::vector<int> parseSelection(
+            const std::string &,
+            const std::string &
+        );
+        std::vector<int> parseSelectionNoPython(
+            const std::string &,
+            const std::string &
+        );
     };
 
 }   // namespace setup

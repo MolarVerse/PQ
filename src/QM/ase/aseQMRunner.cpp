@@ -29,6 +29,8 @@
 #include "simulationBox.hpp"
 
 using QM::ASEQMRunner;
+using enum QM::Periodicity;
+
 using namespace simulationBox;
 using namespace physicalData;
 using namespace constants;
@@ -73,8 +75,14 @@ ASEQMRunner::ASEQMRunner()
  *
  * @throw QMRunnerException if the calculation takes too long
  */
-void ASEQMRunner::run(SimulationBox &simBox, PhysicalData &physicalData)
+void ASEQMRunner::run(
+    SimulationBox &simBox,
+    PhysicalData  &physicalData,
+    Periodicity    per
+)
 {
+    _periodicity = per;
+
     std::jthread timeoutThread{[this](const std::stop_token stopToken)
                                { throwAfterTimeout(stopToken); }};
 
@@ -127,8 +135,10 @@ void ASEQMRunner::execute()
  * @param simBox
  * @param physicalData
  */
-void ASEQMRunner::collectData(SimulationBox &simBox, PhysicalData &physicalData)
-    const
+void ASEQMRunner::collectData(
+    SimulationBox &simBox,
+    PhysicalData  &physicalData
+) const
 {
     collectForces(simBox);
     collectEnergy(physicalData);
@@ -184,8 +194,10 @@ void ASEQMRunner::collectEnergy(PhysicalData &physicalData) const
  *
  * @throw py::error_already_set if the collection of the stress fails
  */
-void ASEQMRunner::collectStress(const SimulationBox &simBox, PhysicalData &data)
-    const
+void ASEQMRunner::collectStress(
+    const SimulationBox &simBox,
+    PhysicalData        &data
+) const
 {
     linearAlgebra::tensor3D stress_;
 
@@ -223,7 +235,7 @@ void ASEQMRunner::buildAseAtoms(const SimulationBox &simBox)
     {
         const auto positions     = asePositions(simBox);
         const auto cell          = aseCell(simBox);
-        const auto pbc           = asePBC(simBox);
+        const auto pbc           = asePBC();
         const auto atomicNumbers = aseAtomicNumbers(simBox);
 
         _atoms = _atomsModule.attr("Atoms")(
@@ -262,14 +274,16 @@ py::array ASEQMRunner::asePositions(const SimulationBox &simBox) const
     {
         auto positions_array = array_d(ssize_t(nAtoms) * 3, &pos[0]);
 
-        const auto positions_array_reshaped = py::array(py::buffer_info(
-            positions_array.mutable_data(),            // Pointer to data
-            sizeDouble,                                // Size of one scalar
-            py::format_descriptor<double>::format(),   // Data type
-            2,                                         // Number of dimensions
-            shape,                                     // Shape (N, 3)
-            strides                                    // Strides
-        ));
+        const auto positions_array_reshaped = py::array(
+            py::buffer_info(
+                positions_array.mutable_data(),            // Pointer to data
+                sizeDouble,                                // Size of one scalar
+                py::format_descriptor<double>::format(),   // Data type
+                2,        // Number of dimensions
+                shape,    // Shape (N, 3)
+                strides   // Strides
+            )
+        );
 
         return positions_array_reshaped;
     }
@@ -300,7 +314,8 @@ py::array_t<double> ASEQMRunner::aseCell(const SimulationBox &simBox) const
         boxDimension[2],
         boxAngles[0],
         boxAngles[1],
-        boxAngles[2]};
+        boxAngles[2]
+    };
 
     try
     {
@@ -318,22 +333,30 @@ py::array_t<double> ASEQMRunner::aseCell(const SimulationBox &simBox) const
 /**
  * @brief get the periodic boundary conditions of the ASE Atoms object
  *
- * @param simBox
- *
  * @return py::array_t<bool>
  *
  * @throw py::error_already_set if the construction of the array fails
  */
-py::array_t<bool> ASEQMRunner::asePBC(const SimulationBox &) const
+py::array_t<bool> ASEQMRunner::asePBC() const
 {
-    const auto          pbc       = std::vector<bool>{true, true, true};
-    std::array<bool, 3> pbc_array = {pbc[0], pbc[1], pbc[2]};
+    std::array<bool, 3> pbc_array;
+
+    switch (_periodicity)
+    {
+        case NON_PERIODIC: pbc_array = {false, false, false}; break;
+        case X: pbc_array = {true, false, false}; break;
+        case Y: pbc_array = {false, true, false}; break;
+        case Z: pbc_array = {false, false, true}; break;
+        case XY: pbc_array = {true, true, false}; break;
+        case XZ: pbc_array = {true, false, true}; break;
+        case YZ: pbc_array = {false, true, true}; break;
+        case XYZ: pbc_array = {true, true, true}; break;
+        default: pbc_array = {false, false, false}; break;
+    }
 
     try
     {
-        const auto pbc_array_ = py::array_t<bool>(3, &pbc_array[0]);
-
-        return pbc_array_;
+        return py::array_t<bool>(3, pbc_array.data());
     }
     catch (const py::error_already_set &)
     {
@@ -351,7 +374,8 @@ py::array_t<bool> ASEQMRunner::asePBC(const SimulationBox &) const
  *
  * @throw py::error_already_set if the construction of the array fails
  */
-py::array_t<int> ASEQMRunner::aseAtomicNumbers(const SimulationBox &simBox
+py::array_t<int> ASEQMRunner::aseAtomicNumbers(
+    const SimulationBox &simBox
 ) const
 {
     const auto atomicNumbers = simBox.getQMAtomicNumbers();

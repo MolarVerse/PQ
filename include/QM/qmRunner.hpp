@@ -37,6 +37,21 @@
 namespace QM
 {
     /**
+     * @class enum Periodicity
+     */
+    enum class Periodicity : size_t
+    {
+        NON_PERIODIC,
+        X,
+        Y,
+        Z,
+        XY,
+        XZ,
+        YZ,
+        XYZ
+    };
+
+    /**
      * @class QMRunner
      *
      * @brief base class for different qm engines
@@ -44,11 +59,15 @@ namespace QM
      */
     class QMRunner : public timings::Timer
     {
+       protected:
+        Periodicity _periodicity;
+
        public:
         virtual ~QMRunner() = default;
 
-        void throwAfterTimeout(const std::stop_token stopToken) const;
-        virtual void run(pq::SimBox &, pq::PhysicalData &) = 0;
+        void         throwAfterTimeout(const std::stop_token stopToken) const;
+        void         run(pq::SimBox &, pq::PhysicalData &);
+        virtual void run(pq::SimBox &, pq::PhysicalData &, Periodicity per) = 0;
     };
 }   // namespace QM
 
