@@ -112,28 +112,6 @@ size_t SimulationBox::getNumberOfAtoms() const { return _atoms.size(); }
  */
 size_t SimulationBox::getNumberOfQMAtoms() const
 {
-    using MyRange = std::vector<std::shared_ptr<simulationBox::Atom>>;
-    using MyPred  = decltype([](const auto &atom) { return atom->isQMAtom(); });
-    using MyIter  = pqviews::
-        FilterIterator<decltype(std::begin(std::declval<MyRange &>())), MyPred>;
-
-    static_assert(std::default_initializable<pqviews::FilterSentinel<MyIter>>);
-    static_assert(std::default_initializable<MyIter>);
-    static_assert(std::copy_constructible<pqviews::FilterSentinel<MyIter>>);
-    static_assert(std::assignable_from<
-                  pqviews::FilterSentinel<MyIter> &,
-                  const pqviews::FilterSentinel<MyIter>>);
-    static_assert(std::destructible<pqviews::FilterSentinel<MyIter>>);
-    static_assert(std::semiregular<pqviews::FilterSentinel<MyIter>>);
-    static_assert(std::sentinel_for<
-                  pqviews::FilterSentinel<MyIter>,
-                  pqviews::FilterIterator<MyIter, MyPred>>);
-    static_assert(std::input_iterator<pqviews::FilterIterator<MyIter, MyPred>>);
-    static_assert(std::sentinel_for<
-                  pqviews::FilterSentinel<MyIter>,
-                  pqviews::FilterIterator<MyIter, MyPred>>);
-    static_assert(std::ranges::range<pqviews::FilterView<MyRange, MyPred>>);
-
     return std::ranges::distance(getQMAtoms());
 }
 
