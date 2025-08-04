@@ -116,11 +116,13 @@ void AtomSection::process(
          ********************************************************************************/
 
         if (molecule->getMoltype() != moltype)
-            throw RstFileException(std::format(
-                "Error in line {}: Molecule must have {} atoms",
-                _lineNumber,
-                molecule->getNumberOfAtoms()
-            ));
+            throw RstFileException(
+                std::format(
+                    "Error in line {}: Molecule must have {} atoms",
+                    _lineNumber,
+                    molecule->getNumberOfAtoms()
+                )
+            );
 
         processAtomLine(lineElements, simBox, *molecule);
 
@@ -237,11 +239,13 @@ void AtomSection::checkAtomLine(
     ++_lineNumber;
 
     if (std::string line; !getline(*_fp, line))
-        throw RstFileException(std::format(
-            "Error in line {}: Molecule must have {} atoms",
-            _lineNumber,
-            molecule.getNumberOfAtoms()
-        ));
+        throw RstFileException(
+            std::format(
+                "Error in line {}: Molecule must have {} atoms",
+                _lineNumber,
+                molecule.getNumberOfAtoms()
+            )
+        );
     else
     {
         line         = removeComments(line, "#");
@@ -260,55 +264,62 @@ void AtomSection::setAtomPropertyVectors(
     std::shared_ptr<Atom>    &atom
 ) const
 {
-    const auto x = stod(lineElements[3]);
-    const auto y = stod(lineElements[4]);
-    const auto z = stod(lineElements[5]);
-
-    atom->setPosition({x, y, z});
-
-    if (lineElements.size() > 6)
+    try
     {
-        const auto vx = stod(lineElements[6]);
-        const auto vy = stod(lineElements[7]);
-        const auto vz = stod(lineElements[8]);
+        const auto x = stringToDouble(lineElements[3]);
+        const auto y = stringToDouble(lineElements[4]);
+        const auto z = stringToDouble(lineElements[5]);
 
-        atom->setVelocity({vx, vy, vz});
+        atom->setPosition({x, y, z});
+
+        if (lineElements.size() > 6)
+        {
+            const auto vx = stringToDouble(lineElements[6]);
+            const auto vy = stringToDouble(lineElements[7]);
+            const auto vz = stringToDouble(lineElements[8]);
+
+            atom->setVelocity({vx, vy, vz});
+        }
+
+        if (lineElements.size() > 9)
+        {
+            const auto fx = stringToDouble(lineElements[9]);
+            const auto fy = stringToDouble(lineElements[10]);
+            const auto fz = stringToDouble(lineElements[11]);
+
+            atom->setForce({fx, fy, fz});
+        }
+
+        if (lineElements.size() > 12)
+        {
+            const auto oldX = stringToDouble(lineElements[12]);
+            const auto oldY = stringToDouble(lineElements[13]);
+            const auto oldZ = stringToDouble(lineElements[14]);
+
+            atom->setPositionOld({oldX, oldY, oldZ});
+        }
+
+        if (lineElements.size() > 15)
+        {
+            const auto oldVx = stringToDouble(lineElements[15]);
+            const auto oldVy = stringToDouble(lineElements[16]);
+            const auto oldVz = stringToDouble(lineElements[17]);
+
+            atom->setVelocityOld({oldVx, oldVy, oldVz});
+        }
+
+        if (lineElements.size() > 18)
+        {
+            const auto oldFx = stringToDouble(lineElements[18]);
+            const auto oldFy = stringToDouble(lineElements[19]);
+            const auto oldFz = stringToDouble(lineElements[20]);
+
+            atom->setForceOld({oldFx, oldFy, oldFz});
+        }
     }
-
-    if (lineElements.size() > 9)
+    catch (const std::exception &e)
     {
-        const auto fx = stod(lineElements[9]);
-        const auto fy = stod(lineElements[10]);
-        const auto fz = stod(lineElements[11]);
-
-        atom->setForce({fx, fy, fz});
-    }
-
-    if (lineElements.size() > 12)
-    {
-        const auto oldX = stod(lineElements[12]);
-        const auto oldY = stod(lineElements[13]);
-        const auto oldZ = stod(lineElements[14]);
-
-        atom->setPositionOld({oldX, oldY, oldZ});
-    }
-
-    if (lineElements.size() > 15)
-    {
-        const auto oldVx = stod(lineElements[15]);
-        const auto oldVy = stod(lineElements[16]);
-        const auto oldVz = stod(lineElements[17]);
-
-        atom->setVelocityOld({oldVx, oldVy, oldVz});
-    }
-
-    if (lineElements.size() > 18)
-    {
-        const auto oldFx = stod(lineElements[18]);
-        const auto oldFy = stod(lineElements[19]);
-        const auto oldFz = stod(lineElements[20]);
-
-        atom->setForceOld({oldFx, oldFy, oldFz});
+        throw RstFileException(e.what());
     }
 }
 
@@ -328,11 +339,13 @@ void AtomSection::checkNumberOfLineArguments(
     const auto lineSize = lineElements.size();
 
     if (lineSize % 3 != 0 || lineSize < 6 || lineSize > 21)
-        throw RstFileException(std::format(
-            "Error in line {}: Atom section must have 6, 9, 12, 15, 18 or "
-            "21 elements",
-            _lineNumber
-        ));
+        throw RstFileException(
+            std::format(
+                "Error in line {}: Atom section must have 6, 9, 12, 15, 18 or "
+                "21 elements",
+                _lineNumber
+            )
+        );
 }
 
 /**

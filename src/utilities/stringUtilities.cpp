@@ -24,6 +24,7 @@
 
 #include <algorithm>    // for __for_each_fn
 #include <cctype>       // for isspace
+#include <cmath>        // for isnan, isinf
 #include <cstdint>      // for uint_fast32_t and UINT32_MAX
 #include <format>       // for format
 #include <fstream>      // IWYU pragma: keep for basic_istream, ifstream
@@ -85,13 +86,15 @@ std::vector<std::string> utilities::getLineCommands(
             break;
 
         else if (!bool(::isspace(line[static_cast<size_t>(i)])))
-            throw InputFileException(std::format(
-                "Missing semicolon in input file at line {}",
-                lineNumber
-            ));
+            throw InputFileException(
+                std::format(
+                    "Missing semicolon in input file at line {}",
+                    lineNumber
+                )
+            );
     }
 
-    using std::operator""sv;
+    using std::    operator""sv;
     constexpr auto delim{";"sv};
 
     auto transformView = [](auto &&view)
@@ -229,13 +232,15 @@ bool utilities::keywordToBool(const pq::strings &lineElements)
         return false;
 
     else
-        throw InputFileException(std::format(
-            "Invalid boolean option \"{}\" for keyword \"{}\" in input "
-            "file.\n"
-            "Possible values are: on, yes, true, off, no, false.",
-            lineElements[2],
-            lineElements[0]
-        ));
+        throw InputFileException(
+            std::format(
+                "Invalid boolean option \"{}\" for keyword \"{}\" in input "
+                "file.\n"
+                "Possible values are: on, yes, true, off, no, false.",
+                lineElements[2],
+                lineElements[0]
+            )
+        );
 }
 
 /**
@@ -258,12 +263,14 @@ void utilities::addSpaces(
         command.replace(equalSignPos, 1, " " + stringToReplace + " ");
 
     else
-        throw customException::InputFileException(std::format(
-            "Missing \"{}\" in command \"{}\" in line {}",
-            stringToReplace,
-            command,
-            lineNumber
-        ));
+        throw customException::InputFileException(
+            std::format(
+                "Missing \"{}\" in command \"{}\" in line {}",
+                stringToReplace,
+                command,
+                lineNumber
+            )
+        );
 }
 
 /**
@@ -289,20 +296,44 @@ std::uint_fast32_t utilities::stringToUintFast32t(const std::string &str)
 
     for (size_t i = startPos; i < str.length(); ++i)
         if (!std::isdigit(static_cast<unsigned char>(str[i])))
-            throw std::invalid_argument(std::format(
-                "String \"{}\" is not a valid unsigned integer",
-                str
-            ));
+            throw std::invalid_argument(
+                std::format(
+                    "String \"{}\" is not a valid unsigned integer",
+                    str
+                )
+            );
 
     long long      valueLL{std::stoll(str)};
     constexpr auto maxValue = static_cast<long long>(UINT32_MAX);
 
     if (valueLL < 0 || valueLL > maxValue)
-        throw std::out_of_range(std::format(
-            "The number has to be an integer between \"0\" and \"{}\" "
-            "(inclusive)",
-            maxValue
-        ));
+        throw std::out_of_range(
+            std::format(
+                "The number has to be an integer between \"0\" and \"{}\" "
+                "(inclusive)",
+                maxValue
+            )
+        );
 
     return static_cast<std::uint_fast32_t>(valueLL);
+}
+
+/**
+ * @brief converts a string to a double
+ *
+ * @param str
+ *
+ * @throw invalid_argument if the string is not valid for conversion to double
+ * @throw out_of_range if number is out of range for a double
+ */
+double utilities::stringToDouble(const std::string &str)
+{
+    const auto value = std::stod(str);
+
+    if (std::isnan(value) || std::isinf(value))
+        throw std::invalid_argument(
+            std::format("Invalid floating-point value '{}' encountered", str)
+        );
+
+    return value;
 }
