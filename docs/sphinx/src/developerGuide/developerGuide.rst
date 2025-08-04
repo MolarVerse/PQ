@@ -170,11 +170,11 @@ In order to contribute to the project, please follow these steps:
 
             $ git clone https://github.com/MolarVerse/PQ.git
 
-    #. Copy the commit-msg script to the ``.git/hooks/`` directory:
+    #. Enable the project's commit message validation by linking the provided git hook script:
 
         .. code:: bash
 
-            $ cp .githooks/commit-msg .git/hooks/
+            $ ln -s .githooks/commit-msg .git/hooks/
 
     #. Initialize ``git-flow`` and use the following settings (if not specified default settings are used)
 
