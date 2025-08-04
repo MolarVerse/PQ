@@ -8,11 +8,16 @@ All notable changes to this project will be documented in this file.
 
 - added/updated git hooks for commit messages
 
-# Tests
+### Bug Fixes
+
+- NaN and Inf are now recognized as invalid in .rst file input 
+  and when produced as forces by QM programs
+
+### Tests
 
 - added integration tests for QM programs
 
-# Build
+### Build
 
 - Suppress googletest warnings for double promotion
 
