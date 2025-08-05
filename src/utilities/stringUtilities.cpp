@@ -319,14 +319,14 @@ std::uint_fast32_t utilities::stringToUintFast32t(const std::string &str)
 }
 
 /**
- * @brief converts a string to a double
+ * @brief converts a string to a non-Nan and non-Inf double
  *
  * @param str
  *
  * @throw invalid_argument if the string is not valid for conversion to double
  * @throw out_of_range if number is out of range for a double
  */
-double utilities::stringToDouble(const std::string &str)
+double utilities::stringToValidDouble(const std::string &str)
 {
     const auto value = std::stod(str);
 
