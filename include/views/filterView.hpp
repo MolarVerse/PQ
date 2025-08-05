@@ -25,7 +25,8 @@
 
 #include <utility>
 
-#include "iterator.hpp"
+#include "filterIterator.hpp"
+#include "filterSentinel.hpp"
 
 namespace pqviews
 {
@@ -46,53 +47,81 @@ namespace pqviews
         using c_begin_t = decltype(std::begin(std::declval<const Range&>()));
         using c_end_t   = decltype(std::end(std::declval<const Range&>()));
 
+        Range _range;
+        Pred  _pred;
+
+       public:
         using iterator       = FilterIterator<begin_t, Pred>;
         using sentinel       = FilterSentinel<end_t>;
         using const_iterator = FilterIterator<c_begin_t, Pred>;
         using const_sentinel = FilterSentinel<c_end_t>;
 
-        Range _range;
-        Pred  _pred;
+        FilterView(Range r, Pred p);
 
-       public:
-        FilterView(Range r, Pred p)
-            : _range(std::move(r)), _pred(std::move(p)){};
+        iterator begin();
+        sentinel end();
 
-        /**
-         * @brief returns an iterator to the beginning of the filtered range
-         *
-         * @return iterator
-         */
-        iterator begin()
-        {
-            return iterator{std::begin(_range), std::end(_range), &_pred};
-        }
-
-        /**
-         * @brief returns a sentinel to the end of the filtered range
-         *
-         * @return sentinel
-         */
-        sentinel end() { return sentinel{std::end(_range)}; }
-
-        /**
-         * @brief returns a const iterator to the beginning of the filtered
-         * range
-         *
-         * @return const_iterator
-         */
-        const_iterator begin() const
-        {
-            return const_iterator{std::begin(_range), std::end(_range), &_pred};
-        }
-
-        /**
-         * @brief returns a const sentinel to the end of the filtered range
-         *
-         * @return const_sentinel
-         */
-        const_sentinel end() const { return const_sentinel{std::end(_range)}; }
+        const_iterator begin() const;
+        const_sentinel end() const;
     };
+
+    /**
+     * @brief Constructor for FilterView
+     *
+     * @param r The range to be filtered
+     * @param p The predicate to be used for filtering
+     */
+    template <typename Range, typename Pred>
+    FilterView<Range, Pred>::FilterView(Range r, Pred p)
+        : _range(std::move(r)), _pred(std::move(p))
+    {
+    }
+
+    /**
+     * @brief returns an iterator to the beginning of the filtered range
+     *
+     * @return iterator
+     */
+    template <typename Range, typename Pred>
+    FilterView<Range, Pred>::iterator FilterView<Range, Pred>::begin()
+    {
+        return iterator{std::begin(_range), std::end(_range), &_pred};
+    }
+
+    /**
+     * @brief returns a sentinel to the end of the filtered range
+     *
+     * @return sentinel
+     */
+    template <typename Range, typename Pred>
+    FilterView<Range, Pred>::sentinel FilterView<Range, Pred>::end()
+    {
+        return sentinel{std::end(_range)};
+    }
+
+    /**
+     * @brief returns a const iterator to the beginning of the filtered
+     * range
+     *
+     * @return const_iterator
+     */
+    template <typename Range, typename Pred>
+    FilterView<Range, Pred>::const_iterator FilterView<Range, Pred>::begin(
+    ) const
+    {
+        return const_iterator{std::begin(_range), std::end(_range), &_pred};
+    }
+
+    /**
+     * @brief returns a const sentinel to the end of the filtered range
+     *
+     * @return const_sentinel
+     */
+    template <typename Range, typename Pred>
+    FilterView<Range, Pred>::const_sentinel FilterView<Range, Pred>::end() const
+    {
+        return const_sentinel{std::end(_range)};
+    }
 
 }   // namespace pqviews
 
