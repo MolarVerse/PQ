@@ -24,12 +24,13 @@
 
 #include <thread>
 
+#include "box.hpp"   // for simulationBox::Periodicity
 #include "physicalData.hpp"
 #include "pybind11/embed.h"
 #include "simulationBox.hpp"
 
 using QM::ASEQMRunner;
-using enum QM::Periodicity;
+using enum simulationBox::Periodicity;
 
 using namespace simulationBox;
 using namespace physicalData;

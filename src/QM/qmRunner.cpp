@@ -30,6 +30,8 @@
 #include "qmSettings.hpp"
 
 using QM::QMRunner;
+using enum simulationBox::Periodicity;
+
 using namespace settings;
 using namespace defaults;
 using namespace customException;
@@ -73,5 +75,5 @@ void QMRunner::throwAfterTimeout(const std::stop_token stopToken) const
  */
 void QMRunner::run(pq::SimBox &simBox, pq::PhysicalData &physicalData)
 {
-    run(simBox, physicalData, Periodicity::XYZ);
+    run(simBox, physicalData, XYZ);
 }

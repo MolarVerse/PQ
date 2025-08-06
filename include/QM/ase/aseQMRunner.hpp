@@ -57,7 +57,7 @@ namespace QM
         ASEQMRunner();
         ~ASEQMRunner() override = default;
 
-        void run(pq::SimBox &, pq::PhysicalData &, Periodicity per) override;
+        void run(pq::SimBox &, pq::PhysicalData &, simulationBox::Periodicity per) override;
         void buildAseAtoms(const pq::SimBox &);
         void execute();
 

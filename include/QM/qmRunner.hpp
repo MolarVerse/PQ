@@ -31,26 +31,12 @@
 #include <stop_token>
 #include <string>
 
+#include "box.hpp"
 #include "timer.hpp"
 #include "typeAliases.hpp"
 
 namespace QM
 {
-    /**
-     * @class enum Periodicity
-     */
-    enum class Periodicity : size_t
-    {
-        NON_PERIODIC,
-        X,
-        Y,
-        Z,
-        XY,
-        XZ,
-        YZ,
-        XYZ
-    };
-
     /**
      * @class QMRunner
      *
@@ -60,14 +46,14 @@ namespace QM
     class QMRunner : public timings::Timer
     {
        protected:
-        Periodicity _periodicity;
+        simulationBox::Periodicity _periodicity;
 
        public:
         virtual ~QMRunner() = default;
 
         void         throwAfterTimeout(const std::stop_token stopToken) const;
         void         run(pq::SimBox &, pq::PhysicalData &);
-        virtual void run(pq::SimBox &, pq::PhysicalData &, Periodicity per) = 0;
+        virtual void run(pq::SimBox &, pq::PhysicalData &, simulationBox::Periodicity per) = 0;
     };
 }   // namespace QM
 

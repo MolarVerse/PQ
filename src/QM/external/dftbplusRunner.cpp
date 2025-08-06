@@ -34,6 +34,7 @@
 #include <vector>       // for vector
 
 #include "atom.hpp"              // for Atom
+#include "box.hpp"               // for simulationBox::Periodicity
 #include "exceptions.hpp"        // for InputFileException
 #include "fileSettings.hpp"      // for FileSettings
 #include "physicalData.hpp"      // for PhysicalData
@@ -44,7 +45,7 @@
 #include "vector3d.hpp"          // for Vec3D
 
 using QM::DFTBPlusRunner;
-using enum QM::Periodicity;
+using enum simulationBox::Periodicity;
 
 using namespace simulationBox;
 using namespace physicalData;
@@ -94,61 +95,7 @@ void DFTBPlusRunner::writeCoordsFile(SimulationBox &box)
 
     if (_periodicity != NON_PERIODIC)
     {
-        auto             boxMatrix  = box.getBox().getBoxMatrix();
-        constexpr double vacuumSize = 200.0;   // Large vacuum spacing in Å
-
-        switch (_periodicity)
-        {
-            case X:
-                // Periodic in X only, set Y and Z to large values
-                boxMatrix[1][1] = vacuumSize;              // Y dimension
-                boxMatrix[2][2] = vacuumSize;              // Z dimension
-                boxMatrix[0][1] = boxMatrix[0][2] = 0.0;   // Clear cross terms
-                boxMatrix[1][0] = boxMatrix[1][2] = 0.0;
-                boxMatrix[2][0] = boxMatrix[2][1] = 0.0;
-                break;
-            case Y:
-                // Periodic in Y only, set X and Z to large values
-                boxMatrix[0][0] = vacuumSize;              // X dimension
-                boxMatrix[2][2] = vacuumSize;              // Z dimension
-                boxMatrix[0][1] = boxMatrix[0][2] = 0.0;   // Clear cross terms
-                boxMatrix[1][0] = boxMatrix[1][2] = 0.0;
-                boxMatrix[2][0] = boxMatrix[2][1] = 0.0;
-                break;
-            case Z:
-                // Periodic in Z only, set X and Y to large values
-                boxMatrix[0][0] = vacuumSize;              // X dimension
-                boxMatrix[1][1] = vacuumSize;              // Y dimension
-                boxMatrix[0][1] = boxMatrix[0][2] = 0.0;   // Clear cross terms
-                boxMatrix[1][0] = boxMatrix[1][2] = 0.0;
-                boxMatrix[2][0] = boxMatrix[2][1] = 0.0;
-                break;
-            case XY:
-                // Periodic in XY, set Z to large value
-                boxMatrix[2][2] = vacuumSize;   // Z dimension
-                boxMatrix[0][2] = boxMatrix[2][0] =
-                    0.0;   // Clear XZ cross terms
-                boxMatrix[1][2] = boxMatrix[2][1] =
-                    0.0;   // Clear YZ cross terms
-                break;
-            case XZ:
-                // Periodic in XZ, set Y to large value
-                boxMatrix[1][1] = vacuumSize;   // Y dimension
-                boxMatrix[0][1] = boxMatrix[1][0] =
-                    0.0;   // Clear XY cross terms
-                boxMatrix[1][2] = boxMatrix[2][1] =
-                    0.0;   // Clear YZ cross terms
-                break;
-            case YZ:
-                // Periodic in YZ, set X to large value
-                boxMatrix[0][0] = vacuumSize;   // X dimension
-                boxMatrix[0][1] = boxMatrix[1][0] =
-                    0.0;   // Clear XY cross terms
-                boxMatrix[0][2] = boxMatrix[2][0] =
-                    0.0;   // Clear XZ cross terms
-                break;
-            default: break;
-        }
+        const auto boxMatrix = box.getBox().getBoxMatrix(_periodicity);
 
         // coordinate origin
         coordsFile << std::format(
@@ -159,7 +106,6 @@ void DFTBPlusRunner::writeCoordsFile(SimulationBox &box)
             0.0
         );
 
-        // lattice vector a
         coordsFile << std::format(
             "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
             "",
@@ -168,7 +114,6 @@ void DFTBPlusRunner::writeCoordsFile(SimulationBox &box)
             boxMatrix[2][0]
         );
 
-        // lattice vector b
         coordsFile << std::format(
             "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
             "",
@@ -177,7 +122,6 @@ void DFTBPlusRunner::writeCoordsFile(SimulationBox &box)
             boxMatrix[2][1]
         );
 
-        // lattice vector c
         coordsFile << std::format(
             "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
             "",

@@ -39,7 +39,7 @@
 #include "vector3d.hpp"                      // for Vec3D
 
 using QM::ExternalQMRunner;
-using enum QM::Periodicity;
+using enum simulationBox::Periodicity;
 
 using namespace simulationBox;
 using namespace physicalData;
