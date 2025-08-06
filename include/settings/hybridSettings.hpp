@@ -55,13 +55,13 @@ namespace settings
          ********************/
 
         static void setInnerRegionCenterString(
-            const std::string_view innerRegionCenter
+            const std::string_view &innerRegionCenter
         );
         static void setForcedInnerListString(
-            const std::string_view forcedInnerList
+            const std::string_view &forcedInnerList
         );
         static void setForcedOuterListString(
-            const std::string_view forcedOuterList
+            const std::string_view &forcedOuterList
         );
 
         static void setUseQMCharges(const bool useQMCharges);
