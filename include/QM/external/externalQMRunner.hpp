@@ -44,14 +44,17 @@ namespace QM
         ExternalQMRunner()           = default;
         ~ExternalQMRunner() override = default;
 
-        void         run(pq::SimBox &, pq::PhysicalData &, simulationBox::Periodicity per) override;
+        void run(
+            pq::SimBox &,
+            pq::PhysicalData &,
+            simulationBox::Periodicity per
+        ) override;
         virtual void execute() = 0;
 
         virtual void writeCoordsFile(pq::SimBox &) = 0;
         virtual void readStressTensor(pq::Box &, pq::PhysicalData &) {}
 
         void readForceFile(pq::SimBox &, pq::PhysicalData &);
-        void readForces(auto&& atoms);
 
         /*******************************
          * standard getter and setters *
