@@ -328,7 +328,28 @@ std::uint_fast32_t utilities::stringToUintFast32t(const std::string &str)
  */
 double utilities::stringToValidDouble(const std::string &str)
 {
-    const auto value = std::stod(str);
+    double value{};
+
+    try
+    {
+        value = std::stod(str);
+    }
+    catch (const std::invalid_argument &)
+    {
+        throw std::invalid_argument(
+            std::format("Invalid floating-point value '{}' encountered", str)
+        );
+    }
+    catch (const std::out_of_range &)
+    {
+        throw std::out_of_range(
+            std::format(
+                "Floating-point value '{}' exceeds the representable range for "
+                "a double",
+                str
+            )
+        );
+    }
 
     if (std::isnan(value) || std::isinf(value))
         throw std::invalid_argument(

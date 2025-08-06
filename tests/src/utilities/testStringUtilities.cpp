@@ -33,7 +33,7 @@
 #include "gmock/gmock.h"         // for ElementsAre, MakePredicateFormatter
 #include "gtest/gtest.h"         // for AssertionResult, Message, TestPartResult
 #include "stringUtilities.hpp"   // for getLineCommands, splitString, fileExists
-#include "throwWithMessage.hpp"  // for EXPECT_THROW_MSG and ASSERT_THROW_MSG
+#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG and ASSERT_THROW_MSG
 
 /**
  * @brief removeComments test by comment character
@@ -258,5 +258,68 @@ TEST(TestStringUtilities, stringToUintFast32t)
         utilities::stringToUintFast32t(str),
         std::invalid_argument,
         std::format("Cannot convert empty string to unsigned integer", str)
+    );
+}
+
+/**
+ * @brief test stringToValidDouble function
+ *
+ */
+TEST(TestStringUtilities, stringToValidDouble)
+{
+    std::string str = "0";
+    EXPECT_EQ(0, utilities::stringToValidDouble(str));
+
+    str = "+3.14159";
+    EXPECT_EQ(3.14159, utilities::stringToValidDouble(str));
+
+    str = "-6.022e23";
+    EXPECT_EQ(-6.022e23, utilities::stringToValidDouble(str));
+
+    constexpr auto maxValue = DBL_MAX;
+
+    str = std::to_string(maxValue);
+    EXPECT_EQ(maxValue, utilities::stringToValidDouble(str));
+
+    str = std::to_string(-maxValue);
+    EXPECT_EQ(-maxValue, utilities::stringToValidDouble(str));
+
+    str = "abc";
+    EXPECT_THROW_MSG(
+        utilities::stringToValidDouble(str),
+        std::invalid_argument,
+        std::format("Invalid floating-point value '{}' encountered", str)
+    );
+
+    str = "-nan";
+    EXPECT_THROW_MSG(
+        utilities::stringToValidDouble(str),
+        std::invalid_argument,
+        std::format("Invalid floating-point value '{}' encountered", str)
+    );
+
+    str = "Inf";
+    EXPECT_THROW_MSG(
+        utilities::stringToValidDouble(str),
+        std::invalid_argument,
+        std::format("Invalid floating-point value '{}' encountered", str)
+    );
+
+    str = "-infinity";
+    EXPECT_THROW_MSG(
+        utilities::stringToValidDouble(str),
+        std::invalid_argument,
+        std::format("Invalid floating-point value '{}' encountered", str)
+    );
+
+    str = "1.23456789e10000";
+    EXPECT_THROW_MSG(
+        utilities::stringToValidDouble(str),
+        std::out_of_range,
+        std::format(
+            "Floating-point value '{}' exceeds the representable range for a "
+            "double",
+            str
+        )
     );
 }
