@@ -10,8 +10,8 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
-- NaN and Inf are now recognized as invalid in .rst file input 
-  and when produced as forces by QM programs
+- NaN and Inf are recognized as invalid in .rst file input 
+- VelocityRescalingThermostat is prevented from generating -nan velocities
 
 ### Tests
 
