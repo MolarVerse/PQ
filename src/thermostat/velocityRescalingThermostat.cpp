@@ -95,8 +95,8 @@ void VelocityRescalingThermostat::applyThermostat(
     auto lambda  = 1.0 + timeStep / _tau * (tempRatio - 1.0);
     lambda      += rescalingFactor;
 
-    // If the stochastic term makes lambda negative, subtract it prevent sqrt of
-    // a negative number, leading to -nan velocities
+    // If the stochastic term makes lambda negative, exclude it to prevent sqrt
+    // of a negative number, leading to -nan velocities
     if (lambda < 0.0)
         lambda -= rescalingFactor;
 
