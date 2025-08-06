@@ -266,53 +266,53 @@ void AtomSection::setAtomPropertyVectors(
 {
     try
     {
-        const auto x = stringToValidDouble(lineElements[3]);
-        const auto y = stringToValidDouble(lineElements[4]);
-        const auto z = stringToValidDouble(lineElements[5]);
+        const auto x = stringToFiniteDouble(lineElements[3]);
+        const auto y = stringToFiniteDouble(lineElements[4]);
+        const auto z = stringToFiniteDouble(lineElements[5]);
 
         atom->setPosition({x, y, z});
 
         if (lineElements.size() > 6)
         {
-            const auto vx = stringToValidDouble(lineElements[6]);
-            const auto vy = stringToValidDouble(lineElements[7]);
-            const auto vz = stringToValidDouble(lineElements[8]);
+            const auto vx = stringToFiniteDouble(lineElements[6]);
+            const auto vy = stringToFiniteDouble(lineElements[7]);
+            const auto vz = stringToFiniteDouble(lineElements[8]);
 
             atom->setVelocity({vx, vy, vz});
         }
 
         if (lineElements.size() > 9)
         {
-            const auto fx = stringToValidDouble(lineElements[9]);
-            const auto fy = stringToValidDouble(lineElements[10]);
-            const auto fz = stringToValidDouble(lineElements[11]);
+            const auto fx = stringToFiniteDouble(lineElements[9]);
+            const auto fy = stringToFiniteDouble(lineElements[10]);
+            const auto fz = stringToFiniteDouble(lineElements[11]);
 
             atom->setForce({fx, fy, fz});
         }
 
         if (lineElements.size() > 12)
         {
-            const auto oldX = stringToValidDouble(lineElements[12]);
-            const auto oldY = stringToValidDouble(lineElements[13]);
-            const auto oldZ = stringToValidDouble(lineElements[14]);
+            const auto oldX = stringToFiniteDouble(lineElements[12]);
+            const auto oldY = stringToFiniteDouble(lineElements[13]);
+            const auto oldZ = stringToFiniteDouble(lineElements[14]);
 
             atom->setPositionOld({oldX, oldY, oldZ});
         }
 
         if (lineElements.size() > 15)
         {
-            const auto oldVx = stringToValidDouble(lineElements[15]);
-            const auto oldVy = stringToValidDouble(lineElements[16]);
-            const auto oldVz = stringToValidDouble(lineElements[17]);
+            const auto oldVx = stringToFiniteDouble(lineElements[15]);
+            const auto oldVy = stringToFiniteDouble(lineElements[16]);
+            const auto oldVz = stringToFiniteDouble(lineElements[17]);
 
             atom->setVelocityOld({oldVx, oldVy, oldVz});
         }
 
         if (lineElements.size() > 18)
         {
-            const auto oldFx = stringToValidDouble(lineElements[18]);
-            const auto oldFy = stringToValidDouble(lineElements[19]);
-            const auto oldFz = stringToValidDouble(lineElements[20]);
+            const auto oldFx = stringToFiniteDouble(lineElements[18]);
+            const auto oldFy = stringToFiniteDouble(lineElements[19]);
+            const auto oldFz = stringToFiniteDouble(lineElements[20]);
 
             atom->setForceOld({oldFx, oldFy, oldFz});
         }

@@ -51,7 +51,7 @@ namespace utilities
     void addSpaces(std::string &, const std::string &, const size_t);
 
     std::uint_fast32_t stringToUintFast32t(const std::string &);
-    double             stringToValidDouble(const std::string &);
+    double             stringToFiniteDouble(const std::string &);
 
     bool fileExists(const std::string &);
     bool keywordToBool(const pq::strings &);

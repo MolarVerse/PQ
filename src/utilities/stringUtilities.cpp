@@ -326,7 +326,7 @@ std::uint_fast32_t utilities::stringToUintFast32t(const std::string &str)
  * @throw invalid_argument if the string is not valid for conversion to double
  * @throw out_of_range if number is out of range for a double
  */
-double utilities::stringToValidDouble(const std::string &str)
+double utilities::stringToFiniteDouble(const std::string &str)
 {
     double value{};
 
