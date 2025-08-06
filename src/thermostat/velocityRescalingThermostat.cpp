@@ -95,6 +95,11 @@ void VelocityRescalingThermostat::applyThermostat(
     auto lambda  = 1.0 + timeStep / _tau * (tempRatio - 1.0);
     lambda      += rescalingFactor;
 
+    // If the stochastic term makes lambda negative, subtract it prevent sqrt of
+    // a negative number, leading to -nan velocities
+    if (lambda < 0.0)
+        lambda -= rescalingFactor;
+
     const auto berendsenFactor = ::sqrt(lambda);
 
     for (const auto &atom : simulationBox.getAtoms())
