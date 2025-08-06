@@ -112,7 +112,7 @@ size_t SimulationBox::getNumberOfAtoms() const { return _atoms.size(); }
  */
 size_t SimulationBox::getNumberOfQMAtoms() const
 {
-    return std::ranges::distance(SimulationBox::getQMAtoms());
+    return std::ranges::distance(getQMAtoms());
 }
 
 /**
@@ -222,6 +222,16 @@ std::vector<double> SimulationBox::getAtomicScalarForcesOld() const
  * @return std::vector<std::shared_ptr<Atom>>&
  */
 std::vector<std::shared_ptr<Atom>> &SimulationBox::getAtoms() { return _atoms; }
+
+/**
+ * @brief get all atoms
+ *
+ * @return std::vector<std::shared_ptr<Atom>>&
+ */
+const std::vector<std::shared_ptr<Atom>> &SimulationBox::getAtoms() const
+{
+    return _atoms;
+}
 
 /**
  * @brief get all molecules

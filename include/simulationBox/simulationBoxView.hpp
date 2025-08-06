@@ -1,0 +1,142 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PQ
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
+#ifndef _SIMULATION_BOX_VIEW_HPP_
+
+#define _SIMULATION_BOX_VIEW_HPP_
+
+#include "views.hpp"
+
+namespace simulationBox
+{
+    /**
+     * @class SimulationBoxView
+     *
+     * @brief
+     *
+     *  CRTP based class for all kind of views on atoms, molecules etc.
+     *
+     */
+    template <typename Derived>
+    class SimulationBoxView
+    {
+       private:
+        auto& getAtoms() const;
+        auto& getAtoms();
+
+       public:
+        auto getQMAtoms();
+        auto getQMAtoms() const;
+
+        auto getMMAtoms();
+        auto getMMAtoms() const;
+    };
+
+    /**
+     * @brief Get the Atoms vector reference
+     *
+     * @return const auto& a reference to the atoms vector
+     */
+    template <typename Derived>
+    auto& SimulationBoxView<Derived>::getAtoms() const
+    {
+        return static_cast<const Derived&>(*this).getAtoms();
+    }
+
+    /**
+     * @brief Get the Atoms vector reference
+     *
+     * @return auto& a reference to the atoms vector
+     */
+    template <typename Derived>
+    auto& SimulationBoxView<Derived>::getAtoms()
+    {
+        return static_cast<Derived&>(*this).getAtoms();
+    }
+
+    /**
+     * @brief get all QM atoms using range-based filtering
+     *
+     * @return a view/iterator of QM atoms filtered from all atoms
+     *
+     * @details This function returns a range-based view that filters atoms
+     *          from _atoms based on whether they are designated as QM
+     * atoms.
+     */
+    template <typename Derived>
+    auto SimulationBoxView<Derived>::getQMAtoms()
+    {
+        return getAtoms() | pqviews::filter([](const auto& atom)
+                                            { return atom->isQMAtom(); });
+    }
+
+    /**
+     * @brief get all QM atoms using range-based filtering
+     *
+     * @return a view/iterator of QM atoms filtered from all atoms
+     *
+     * @details This function returns a range-based view that filters atoms
+     *          from _atoms based on whether they are designated as QM
+     * atoms.
+     */
+    template <typename Derived>
+    auto SimulationBoxView<Derived>::getQMAtoms() const
+    {
+        return getAtoms() | pqviews::filter([](const auto& atom)
+                                            { return atom->isQMAtom(); });
+    }
+
+    /**
+     * @brief get all MM atoms using range-based filtering
+     *
+     * @return a view/iterator of MM atoms filtered from all atoms
+     *
+     * @details This function returns a range-based view that filters atoms
+     *          from _atoms based on whether they are designated as MM
+     * atoms.
+     */
+    template <typename Derived>
+    auto SimulationBoxView<Derived>::getMMAtoms()
+    {
+        return getAtoms() | pqviews::filter([](const auto& atom)
+                                            { return atom->isMMAtom(); });
+    }
+
+    /**
+     * @brief get all MM atoms using range-based filtering
+     *
+     * @return a view/iterator of MM atoms filtered from all atoms
+     *
+     * @details This function returns a range-based view that filters atoms
+     *          from _atoms based on whether they are designated as MM
+     * atoms.
+     */
+    template <typename Derived>
+    auto SimulationBoxView<Derived>::getMMAtoms() const
+    {
+        return getAtoms() | pqviews::filter([](const auto& atom)
+                                            { return atom->isMMAtom(); });
+    }
+
+}   // namespace simulationBox
+
+#endif   // _SIMULATION_BOX_VIEW_HPP_
