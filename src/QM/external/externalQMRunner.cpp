@@ -116,23 +116,6 @@ void ExternalQMRunner::readForceFile(
 
         forceFile >> grad[0] >> grad[1] >> grad[2];
 
-        for (size_t i = 0; i < 3; ++i)
-        {
-            const auto force_component = grad[i];
-            if (std::isnan(force_component) || std::isinf(force_component))
-            {
-                throw QMRunnerException(
-                    std::format(
-                        "Invalid force value encountered for atom {}, "
-                        "component {}: {}",
-                        atom->getName(),
-                        i,
-                        force_component
-                    )
-                );
-            }
-        }
-
         atom->setForce(-grad * _HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM_);
     };
 

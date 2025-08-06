@@ -158,28 +158,6 @@ void ASEQMRunner::collectForces(SimulationBox &simBox) const
     {
         const auto forces = _forces.unchecked<2>();
 
-        // Check for invalid values in the entire forces array
-        for (size_t i = 0; i < nAtoms; ++i)
-        {
-            for (size_t j = 0; j < 3; ++j)
-            {
-                const auto force_component = forces(i, j);
-                if (std::isnan(force_component) || std::isinf(force_component))
-                {
-                    throw QMRunnerException(
-                        std::format(
-                            "Invalid force value encountered for atom {}, "
-                            "component {}: {}",
-                            i,
-                            j,
-                            force_component
-                        )
-                    );
-                }
-            }
-        }
-
-        // Set forces if all values are valid
         for (size_t i = 0; i < nAtoms; ++i)
             simBox.getAtoms()[i]->setForce(
                 {forces(i, 0) * _EV_TO_KCAL_PER_MOL_,
