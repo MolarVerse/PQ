@@ -40,7 +40,7 @@ using settings::HybridSettings;
  * @param innerRegionCenter
  */
 void HybridSettings::setInnerRegionCenterString(
-    const std::string_view innerRegionCenter
+    const std::string_view &innerRegionCenter
 )
 {
     _innerRegionCenterString = innerRegionCenter;
@@ -55,7 +55,7 @@ void HybridSettings::setInnerRegionCenterString(
  *
  * @param list
  */
-void HybridSettings::setForcedInnerListString(const std::string_view list)
+void HybridSettings::setForcedInnerListString(const std::string_view &list)
 {
     _forcedInnerListString = list;
 }
@@ -70,7 +70,7 @@ void HybridSettings::setForcedInnerListString(const std::string_view list)
  * @param list
  */
 void HybridSettings::setForcedOuterListString(
-    const std::string_view forcedOuterList
+    const std::string_view &forcedOuterList
 )
 {
     _forcedOuterListString = forcedOuterList;
