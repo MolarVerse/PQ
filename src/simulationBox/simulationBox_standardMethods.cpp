@@ -341,22 +341,6 @@ std::vector<linearAlgebra::Vec3D> SimulationBox::getForces() const
 }
 
 /**
- * @brief get the atomic numbers of all QM atoms
- *
- * @return std::vector<int>
- */
-std::vector<int> SimulationBox::getQMAtomicNumbers() const
-{
-    std::vector<int> qmAtomicNumbers;
-    qmAtomicNumbers.reserve(getNumberOfQMAtoms());
-
-    for (const auto &atom : getQMAtoms())
-        qmAtomicNumbers.emplace_back(atom->getAtomicNumber());
-
-    return qmAtomicNumbers;
-}
-
-/**
  * @brief flattens positions of each QM atom into a single vector of doubles
  *
  * @return std::vector<double>
@@ -541,7 +525,8 @@ void SimulationBox::setVolume(const double volume) const
  *
  * @param boxDimensions
  */
-void SimulationBox::setBoxDimensions(const linearAlgebra::Vec3D &boxDimensions
+void SimulationBox::setBoxDimensions(
+    const linearAlgebra::Vec3D &boxDimensions
 ) const
 {
     _box->setBoxDimensions(boxDimensions);

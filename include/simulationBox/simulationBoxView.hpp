@@ -49,6 +49,8 @@ namespace simulationBox
 
         auto getMMAtoms();
         auto getMMAtoms() const;
+
+        auto getQMAtomicNumbers() const;
     };
 
     /**
@@ -135,6 +137,19 @@ namespace simulationBox
     {
         return getAtoms() | pqviews::filter([](const auto& atom)
                                             { return atom->isMMAtom(); });
+    }
+
+    /**
+     * @brief get all QM atomic numbers using range-based filtering
+     *
+     * @return a view/iterator of QM atomic numbers
+     */
+    template <typename Derived>
+    auto SimulationBoxView<Derived>::getQMAtomicNumbers() const
+    {
+        return getQMAtoms() |
+               pqviews::transform([](const auto& atom)
+                                  { return atom->getAtomicNumber(); });
     }
 
 }   // namespace simulationBox

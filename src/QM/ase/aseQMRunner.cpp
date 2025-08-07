@@ -379,12 +379,16 @@ py::array_t<int> ASEQMRunner::aseAtomicNumbers(
     const SimulationBox &simBox
 ) const
 {
-    const auto atomicNumbers = simBox.getQMAtomicNumbers();
-    const auto nAtoms        = simBox.getNumberOfQMAtoms();
+    std::vector<int> atomicNumbers;
+    atomicNumbers.reserve(simBox.getNumberOfQMAtoms());
+
+    for (const auto atomicNumber : simBox.getQMAtomicNumbers())
+        atomicNumbers.emplace_back(atomicNumber);
 
     try
     {
-        const auto atomicNumbers_ = array_i(ssize_t(nAtoms), &atomicNumbers[0]);
+        const auto atomicNumbers_ =
+            array_i(atomicNumbers.size(), atomicNumbers.data());
 
         return atomicNumbers_;
     }

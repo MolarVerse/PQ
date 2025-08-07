@@ -20,33 +20,46 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef __VIEWS_HPP__
-#define __VIEWS_HPP__
+#ifndef __TRANSFORM_ADAPTOR_HPP__
+#define __TRANSFORM_ADAPTOR_HPP__
 
-#include <utility>
-
-#include "filterAdaptor.hpp"      // IWYU pragma: export
-#include "filterView.hpp"         // IWYU pragma: export
-#include "transformAdaptor.hpp"   // IWYU pragma: export
-#include "transformView.hpp"      // IWYU pragma: export
+#include "transformView.hpp"
 
 namespace pqviews
 {
     /**
-     * @brief A range-based view that applies an adaptor to a range
+     * @brief TransformAdaptor is a functor that creates a TransformView
      *
-     * @tparam Range The type of the range to be adapted
-     * @tparam Adaptor The type of the adaptor to be applied
-     * @param r The range to be adapted
-     * @param a The adaptor to be applied
-     * @return auto A view of the adapted range
+     * @tparam Func Function type used for transformation
      */
-    template <typename Range, typename Adaptor>
-    auto operator|(Range&& r, const Adaptor& a)
+    template <typename Func>
+    struct TransformAdaptor
     {
-        return a(std::forward<Range>(r));
+        Func _func;
+
+        template <typename Range>
+        auto operator()(Range&& range) const
+        {
+            return TransformView<std::decay_t<Range>, Func>{
+                std::forward<Range>(range),
+                _func
+            };
+        }
+    };
+
+    /**
+     * @brief Creates a TransformAdaptor with the given transformation function
+     *
+     * @tparam Func Function type used for transformation
+     * @param func Function to be used for transformation
+     * @return TransformAdaptor<Func>
+     */
+    template <typename Func>
+    auto transform(Func func)
+    {
+        return TransformAdaptor<Func>{func};
     }
 
 }   // namespace pqviews
 
-#endif   // __VIEWS_HPP__
+#endif   // __TRANSFORM_ADAPTOR_HPP__
