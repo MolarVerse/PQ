@@ -1,7 +1,8 @@
 set(source_files
+testOutputFileSettings.cpp
     testPotentialSettings.cpp
     testQMSettings.cpp
-    testOutputFileSettings.cpp
+    testSettings.cpp
     testThermostatSettings.cpp
 )
 
