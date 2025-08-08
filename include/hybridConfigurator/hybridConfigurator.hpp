@@ -24,6 +24,8 @@
 
 #define _HYBRID_CONFIGURATOR_HPP_
 
+#include <vector>   // for vector
+
 #include "simulationBox.hpp"
 #include "typeAliases.hpp"
 
@@ -33,16 +35,22 @@ namespace configurator
     class HybridConfigurator
     {
        private:
-        pq::Vec3D innerRegionCenter = {0.0, 0.0, 0.0};
+        pq::Vec3D _innerRegionCenter = {0.0, 0.0, 0.0};
 
        public:
-        virtual ~HybridConfigurator() = default;
-
-        virtual void run(pq::SimBox &) = 0;
-
         void calculateInnerRegionCenter(pq::SimBox &);
         void shiftAtomsToInnerRegionCenter(pq::SimBox &);
         void shiftAtomsBackToInitialPositions(pq::SimBox &);
+        void assignHybridZones(pq::SimBox &);
+        void getNumberOfMoleculesInSmoothingRegion(pq::SimBox &);
+        void deactivateMolecules(std::vector<int>, pq::SimBox &);
+
+        /********************************
+         * standard getters and setters *
+         ********************************/
+
+        [[nodiscard]] pq::Vec3D getInnerRegionCenter();
+        void                    setInnerRegionCenter(pq::Vec3D);
     };
 
 }   // namespace configurator

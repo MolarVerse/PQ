@@ -157,6 +157,17 @@ double SimulationBox::getDensity() const { return _density; }
 linearAlgebra::Vec3D &SimulationBox::getCenterOfMass() { return _centerOfMass; }
 
 /**
+ * @brief get the indices of the atoms marking the center of the inner region
+ * for hybrid type calculations
+ *
+ * @return vector<int>
+ */
+std::vector<int> SimulationBox::getInnerRegionCenterAtomIndices()
+{
+    return _innerRegionCenterAtomIndices;
+}
+
+/**
  * @brief get atom by index
  *
  * @param index

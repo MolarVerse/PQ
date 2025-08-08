@@ -22,7 +22,55 @@
 
 #include "hybridConfigurator.hpp"
 
-#include "simulationBox.hpp"
+#include <functional>   // for reference_wrapper
+
+#include "atom.hpp"            // for Atom
+#include "simulationBox.hpp"   // for SimulationBox
 
 using namespace pq;
 using namespace configurator;
+using namespace simulationBox;
+
+void HybridConfigurator::calculateInnerRegionCenter(pq::SimBox& simBox)
+{
+    const auto indices = simBox.getInnerRegionCenterAtomIndices();
+
+    std::vector<std::reference_wrapper<Atom>> centerAtoms;
+    centerAtoms.reserve(indices.size());
+
+    for (const auto index : indices)
+        centerAtoms.emplace_back(simBox.getAtom(index));
+
+    Vec3D  center     = {0.0, 0.0, 0.0};
+    double total_mass = 0.0;
+
+    for (const auto& atom : centerAtoms)
+    {
+        center     += atom.get().getPosition() * atom.get().getMass();
+        total_mass += atom.get().getMass();
+    }
+
+    center /= total_mass;
+    setInnerRegionCenter(center);
+}
+
+/********************************
+ * standard getters and setters *
+ ********************************/
+
+/**
+ * @brief get the center of the inner region of the hybrid calculation
+ *
+ * @return Vec3D innerRegionCenter
+ */
+Vec3D HybridConfigurator::getInnerRegionCenter() { return _innerRegionCenter; }
+
+/**
+ * @brief set the center of the inner region of the hybrid calculation
+ *
+ * @param innerRegionCenter
+ */
+void HybridConfigurator::setInnerRegionCenter(Vec3D innerRegionCenter)
+{
+    _innerRegionCenter = innerRegionCenter;
+}

@@ -24,6 +24,7 @@
 
 #define _HYBRID_MD_ENGINE_HPP_
 
+#include "hybridConfigurator.hpp"
 #include "mmmdEngine.hpp"
 #include "qmmdEngine.hpp"
 
@@ -39,6 +40,9 @@ namespace engine
      */
     class HybridMDEngine : virtual public MMMDEngine, virtual public QMMDEngine
     {
+       protected:
+        configurator::HybridConfigurator _configurator{};
+
        public:
         HybridMDEngine()  = default;
         ~HybridMDEngine() = default;

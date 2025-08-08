@@ -58,6 +58,7 @@ target_link_libraries(engine
     forceField
     intraNonBonded
     references
+    hybridConfigurator
 
     optimization
     QM

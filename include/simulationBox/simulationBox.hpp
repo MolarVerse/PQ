@@ -174,16 +174,17 @@ namespace simulationBox
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] int        getWaterType() const;
-        [[nodiscard]] int        getAmmoniaType() const;
-        [[nodiscard]] size_t     getNumberOfMolecules() const;
-        [[nodiscard]] size_t     getDegreesOfFreedom() const;
-        [[nodiscard]] size_t     getNumberOfAtoms() const;
-        [[nodiscard]] size_t     getNumberOfQMAtoms() const;
-        [[nodiscard]] double     getTotalMass() const;
-        [[nodiscard]] double     getTotalCharge() const;
-        [[nodiscard]] double     getDensity() const;
-        [[nodiscard]] pq::Vec3D& getCenterOfMass();
+        [[nodiscard]] int              getWaterType() const;
+        [[nodiscard]] int              getAmmoniaType() const;
+        [[nodiscard]] size_t           getNumberOfMolecules() const;
+        [[nodiscard]] size_t           getDegreesOfFreedom() const;
+        [[nodiscard]] size_t           getNumberOfAtoms() const;
+        [[nodiscard]] size_t           getNumberOfQMAtoms() const;
+        [[nodiscard]] double           getTotalMass() const;
+        [[nodiscard]] double           getTotalCharge() const;
+        [[nodiscard]] double           getDensity() const;
+        [[nodiscard]] pq::Vec3D&       getCenterOfMass();
+        [[nodiscard]] std::vector<int> getInnerRegionCenterAtomIndices();
 
         [[nodiscard]] Atom&         getAtom(const size_t index);
         [[nodiscard]] Molecule&     getMolecule(const size_t index);
