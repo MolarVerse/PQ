@@ -23,7 +23,9 @@
 #ifndef __TRANSFORM_ITERATOR_HPP__
 #define __TRANSFORM_ITERATOR_HPP__
 
-#include <iterator>
+#include <functional>
+
+#include "rangeIterator.hpp"
 
 namespace pqviews
 {
@@ -35,20 +37,16 @@ namespace pqviews
      * @tparam Func The transformation function type
      */
     template <typename Iter, typename Func>
-    class TransformIterator
+    class TransformIterator : public RangeIterator<Iter>
     {
        private:
-        Iter        _current;
         const Func* _func;
 
        public:
-        using iterator_category = std::input_iterator_tag;
-        using value_type =
-            std::decay_t<decltype(std::declval<Func>()(*std::declval<Iter>()))>;
-        using pointer   = value_type*;
-        using reference = value_type;
-        using difference_type =
-            typename std::iterator_traits<Iter>::difference_type;
+        using base_ref   = std::iter_reference_t<Iter>;
+        using reference  = std::invoke_result_t<const Func&, base_ref>;
+        using value_type = std::remove_cvref_t<reference>;
+        using pointer    = value_type*;
 
         // make it default constructible, copyable, and movable
         TransformIterator()                                    = default;
@@ -59,14 +57,9 @@ namespace pqviews
 
         TransformIterator(Iter current, const Func* func);
 
-        reference          operator*() const;
+        reference operator*() const;
+        // pointer            operator->() const;
         TransformIterator& operator++();
-        TransformIterator  operator++(int);
-
-        bool operator==(const TransformIterator& other) const;
-        bool operator!=(const TransformIterator& other) const;
-
-        Iter current() const;
     };
 
     /**
@@ -80,7 +73,7 @@ namespace pqviews
         Iter        current,
         const Func* func
     )
-        : _current(current), _func(func)
+        : RangeIterator<Iter>(current), _func(func)
     {
     }
 
@@ -94,8 +87,21 @@ namespace pqviews
         Iter,
         Func>::operator*() const
     {
-        return _func->operator()(*_current);
+        return std::invoke(*_func, *this->_current);
     }
+
+    /**
+     * @brief returns a pointer to the transformed value
+     *
+     * @return pointer to the transformed value
+     */
+    // template <typename Iter, typename Func>
+    // typename TransformIterator<Iter, Func>::pointer TransformIterator<
+    //     Iter,
+    //     Func>::operator->() const
+    // {
+    //     return std::addressof(std::invoke(*_func, *this->_current));
+    // }
 
     /**
      * @brief increment the iterator to the next element
@@ -105,60 +111,8 @@ namespace pqviews
     template <typename Iter, typename Func>
     TransformIterator<Iter, Func>& TransformIterator<Iter, Func>::operator++()
     {
-        ++_current;
+        ++(this->_current);
         return *this;
-    }
-
-    /**
-     * @brief post-increment the iterator to the next element
-     *
-     * @return TransformIterator
-     */
-    template <typename Iter, typename Func>
-    TransformIterator<Iter, Func> TransformIterator<Iter, Func>::operator++(int)
-    {
-        TransformIterator temp = *this;
-        ++(*this);
-        return temp;
-    }
-
-    /**
-     * @brief checks if two TransformIterators are equal
-     *
-     * @param other the other TransformIterator to compare with
-     * @return true if they are equal, false otherwise
-     */
-    template <typename Iter, typename Func>
-    bool TransformIterator<Iter, Func>::operator==(
-        const TransformIterator& other
-    ) const
-    {
-        return _current == other._current;
-    }
-
-    /**
-     * @brief checks if two TransformIterators are not equal
-     *
-     * @param other the other TransformIterator to compare with
-     * @return true if they are not equal, false otherwise
-     */
-    template <typename Iter, typename Func>
-    bool TransformIterator<Iter, Func>::operator!=(
-        const TransformIterator& other
-    ) const
-    {
-        return !(*this == other);
-    }
-
-    /**
-     * @brief returns the current iterator
-     *
-     * @return Iter
-     */
-    template <typename Iter, typename Func>
-    Iter TransformIterator<Iter, Func>::current() const
-    {
-        return _current;
     }
 
 }   // namespace pqviews

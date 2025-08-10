@@ -147,20 +147,6 @@ namespace pqviews
     }
 
     /**
-     * @brief post-increment the iterator to the next element in the
-     * filtered range
-     *
-     * @return FilterIterator
-     */
-    template <typename Iter, typename Pred>
-    FilterIterator<Iter, Pred> FilterIterator<Iter, Pred>::operator++(int)
-    {
-        FilterIterator temp = *this;
-        ++(*this);
-        return temp;
-    }
-
-    /**
      * @brief checks if two FilterIterators are equal
      *
      * @param other the other FilterIterator to compare with

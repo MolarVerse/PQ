@@ -26,7 +26,7 @@
 #include <utility>
 
 #include "filterIterator.hpp"
-#include "filterSentinel.hpp"
+#include "rangeSentinel.hpp"
 
 namespace pqviews
 {
@@ -52,9 +52,9 @@ namespace pqviews
 
        public:
         using iterator       = FilterIterator<begin_t, Pred>;
-        using sentinel       = FilterSentinel<end_t>;
+        using sentinel       = RangeSentinel<end_t>;
         using const_iterator = FilterIterator<c_begin_t, Pred>;
-        using const_sentinel = FilterSentinel<c_end_t>;
+        using const_sentinel = RangeSentinel<c_end_t>;
 
         FilterView(Range r, Pred p);
 

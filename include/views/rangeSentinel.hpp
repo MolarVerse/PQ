@@ -20,20 +20,20 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef __FILTER_SENTINEL_HPP__
-#define __FILTER_SENTINEL_HPP__
+#ifndef __RANGE_SENTINEL_HPP__
+#define __RANGE_SENTINEL_HPP__
 
 #include <iterator>   // for std::input_iterator_tag
 
 namespace pqviews
 {
     /**
-     * @brief FilterSentinel is a sentinel for FilterIterator
+     * @brief RangeSentinel is a sentinel for RangeIterator
      *
-     * @tparam Iter The iterator type to be filtered
+     * @tparam Iter The iterator type to be used with the sentinel
      */
     template <typename Iter>
-    class FilterSentinel
+    class RangeSentinel
     {
        private:
         Iter _end;
@@ -43,23 +43,23 @@ namespace pqviews
             typename std::iterator_traits<Iter>::difference_type;
 
         // make it default constructible, copyable, and movable
-        FilterSentinel()                                 = default;
-        FilterSentinel(const FilterSentinel&)            = default;
-        FilterSentinel(FilterSentinel&&)                 = default;
-        FilterSentinel& operator=(const FilterSentinel&) = default;
-        FilterSentinel& operator=(FilterSentinel&&)      = default;
+        RangeSentinel()                                = default;
+        RangeSentinel(const RangeSentinel&)            = default;
+        RangeSentinel(RangeSentinel&&)                 = default;
+        RangeSentinel& operator=(const RangeSentinel&) = default;
+        RangeSentinel& operator=(RangeSentinel&&)      = default;
 
         // Required by std::sentinel_for
-        explicit FilterSentinel(Iter end) : _end(end) {}
+        explicit RangeSentinel(Iter end) : _end(end) {}
 
         /**
          * @brief checks if the iterator is equal to the sentinel
          *
-         * @param it the FilterIterator to compare with
+         * @param it the RangeIterator to compare with
          * @return true if they are equal, false otherwise
          */
         template <typename Iterator>
-        friend bool operator==(const Iterator& it, const FilterSentinel& s)
+        friend bool operator==(const Iterator& it, const RangeSentinel& s)
         {
             return it.current() == s._end;
         }
@@ -67,11 +67,11 @@ namespace pqviews
         /**
          * @brief checks if the sentinel is equal to the iterator
          *
-         * @param it the FilterIterator to compare with
+         * @param it the RangeIterator to compare with
          * @return true if they are equal, false otherwise
          */
         template <typename Iterator>
-        friend bool operator!=(const Iterator& it, const FilterSentinel& s)
+        friend bool operator!=(const Iterator& it, const RangeSentinel& s)
         {
             return !(it == s);
         }
@@ -79,14 +79,14 @@ namespace pqviews
         /**
          * @brief calculates the distance between the sentinel and the iterator
          *
-         * @param s the FilterSentinel to compare with
-         * @param it the FilterIterator to compare with
+         * @param s the RangeSentinel to compare with
+         * @param it the RangeIterator to compare with
          * @return difference_type the distance between the two
          */
         template <typename Iterator>
         friend difference_type operator-(
-            const FilterSentinel& s,
-            const Iterator&       it
+            const RangeSentinel& s,
+            const Iterator&      it
         )
         {
             return std::distance(it.current(), s._end);
@@ -95,14 +95,14 @@ namespace pqviews
         /**
          * @brief calculates the distance between the iterator and the sentinel
          *
-         * @param it the FilterIterator to compare with
-         * @param s the FilterSentinel to compare with
+         * @param it the RangeIterator to compare with
+         * @param s the RangeSentinel to compare with
          * @return difference_type the distance between the two
          */
         template <typename Iterator>
         friend difference_type operator-(
-            const Iterator&       it,
-            const FilterSentinel& s
+            const Iterator&      it,
+            const RangeSentinel& s
         )
         {
             return -std::distance(it.current(), s._end);
@@ -111,4 +111,4 @@ namespace pqviews
 
 }   // namespace pqviews
 
-#endif   // __FILTER_SENTINEL_HPP__
+#endif   // __RANGE_SENTINEL_HPP__
