@@ -129,7 +129,7 @@ void HybridSetup::checkZoneRadii()
     if (coreRadius > layerRadius)
         throw(InputFileException(
             std::format(
-                "Core radius ({}) cannot be larger than layer radius ({})",
+                "Core radius ({} Å) cannot be larger than layer radius ({} Å)",
                 coreRadius,
                 layerRadius
             )
@@ -138,8 +138,8 @@ void HybridSetup::checkZoneRadii()
     if (coreRadius > (layerRadius - smoothingRegionThickness))
         throw(InputFileException(
             std::format(
-                "Smoothing region is too thick ({}) for the chosen combination "
-                "of core ({}) and layer radius ({})",
+                "Smoothing region is too thick ({} Å) for the chosen combination "
+                "of core ({} Å) and layer radius ({} Å)",
                 smoothingRegionThickness,
                 coreRadius,
                 layerRadius
