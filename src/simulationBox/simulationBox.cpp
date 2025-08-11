@@ -161,8 +161,7 @@ void SimulationBox::setupForcedInnerAtoms(const std::vector<int>& atomIndices)
             throw UserInputException(
                 std::format(
                     "Ambiguous atom index {} - atom is already in forced outer "
-                    "list "
-                    "- cannot be in forced inner list",
+                    "list - cannot be in forced inner list",
                     index
                 )
             );
@@ -196,8 +195,7 @@ void SimulationBox::setupForcedOuterAtoms(const std::vector<int>& atomIndices)
             throw UserInputException(
                 std::format(
                     "Ambiguous atom index {} - atom is already in forced inner "
-                    "list "
-                    "- cannot be in forced outer list",
+                    "list - cannot be in forced outer list",
                     index
                 )
             );
