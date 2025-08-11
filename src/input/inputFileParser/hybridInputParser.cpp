@@ -77,8 +77,8 @@ HybridInputParser::HybridInputParser(Engine &engine) : InputFileParser(engine)
         false
     );
     addKeyword(
-        std::string("smoothing_radius"),
-        bind_front(&HybridInputParser::parseSmoothingRadius, this),
+        std::string("smoothing_region_thickness"),
+        bind_front(&HybridInputParser::parseSmoothingRegionThickness, this),
         false
     );
 }
@@ -158,8 +158,6 @@ void HybridInputParser::parseUseQMCharges(
                 lineElements[2]
             )
         );
-
-    throw UserInputException("Not implemented");
 }
 
 /**
@@ -187,8 +185,6 @@ void HybridInputParser::parseCoreRadius(
         );
 
     HybridSettings::setCoreRadius(coreRadius);
-
-    throw UserInputException("Not implemented");
 }
 
 /**
@@ -216,26 +212,26 @@ void HybridInputParser::parseLayerRadius(
         );
 
     HybridSettings::setLayerRadius(layerRadius);
-
-    throw UserInputException("Not implemented");
 }
 
 /**
- * @brief parse smoothing radius
+ * @brief parse smoothing region thickness
  *
  * @param lineElements
  * @param lineNumber
+ *
+ * @throws InputFileException if the thickness is negative
  */
-void HybridInputParser::parseSmoothingRadius(
+void HybridInputParser::parseSmoothingRegionThickness(
     const std::vector<std::string> &lineElements,
     const size_t                    lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto smoothingRadius = std::stod(lineElements[2]);
+    const auto thickness = std::stod(lineElements[2]);
 
-    if (smoothingRadius < 0.0)
+    if (thickness < 0.0)
         throw InputFileException(
             std::format(
                 "Invalid {} {} in input file - must be a positive number",
@@ -244,7 +240,5 @@ void HybridInputParser::parseSmoothingRadius(
             )
         );
 
-    HybridSettings::setSmoothingRadius(smoothingRadius);
-
-    throw UserInputException("Not implemented");
+    HybridSettings::setSmoothingRegionThickness(thickness);
 }

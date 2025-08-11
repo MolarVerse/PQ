@@ -51,6 +51,7 @@ namespace setup
         void setupInnerRegionCenter();
         void setupForcedInnerList();
         void setupForcedOuterList();
+        void checkZoneRadii();
 
         std::vector<int> parseSelection(
             const std::string &,

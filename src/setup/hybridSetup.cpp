@@ -78,6 +78,7 @@ void HybridSetup::setup()
     setupInnerRegionCenter();
     setupForcedInnerList();
     setupForcedOuterList();
+    checkZoneRadii();
     throw UserInputException("Not implemented yet");
 }
 
@@ -126,6 +127,42 @@ void HybridSetup::setupForcedOuterList()
         parseSelection(forcedOuterListString, "forced_outer_list");
 
     _engine.getSimulationBox().setupForcedOuterAtoms(forcedOuterList);
+}
+
+/**
+ * @brief Validate zone radii configuration for hybrid calculations
+ *
+ * @throws customException::InputFileException if the core radius is larger than
+ * the layer radius
+ * @throws customException::InputFileException if the smoothing region is too
+ * thick for the chosen combinatin of core and layer radius
+ */
+void HybridSetup::checkZoneRadii()
+{
+    const auto coreRadius  = HybridSettings::getCoreRadius();
+    const auto layerRadius = HybridSettings::getLayerRadius();
+    const auto smoothingRegionThickness =
+        HybridSettings::getSmoothingRegionThickness();
+
+    if (coreRadius > layerRadius)
+        throw(InputFileException(
+            std::format(
+                "Core radius ({}) cannot be larger than layer radius ({})",
+                coreRadius,
+                layerRadius
+            )
+        ));
+
+    if (coreRadius > (layerRadius - smoothingRegionThickness))
+        throw(InputFileException(
+            std::format(
+                "Smoothing region is too thick ({}) for the chosen combination "
+                "of core ({}) and layer radius ({})",
+                smoothingRegionThickness,
+                coreRadius,
+                layerRadius
+            )
+        ));
 }
 
 /**

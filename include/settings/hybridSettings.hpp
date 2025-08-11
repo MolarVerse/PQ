@@ -45,9 +45,9 @@ namespace settings
 
         static inline bool _useQMCharges = false;
 
-        static inline double _coreRadius      = 0.0;
-        static inline double _layerRadius     = 0.0;
-        static inline double _smoothingRadius = 0.0;
+        static inline double _coreRadius               = 0.0;
+        static inline double _layerRadius              = 0.0;
+        static inline double _smoothingRegionThickness = 0.0;
 
        public:
         /********************
@@ -68,7 +68,7 @@ namespace settings
 
         static void setCoreRadius(const double qmCoreRadius);
         static void setLayerRadius(const double qmmmLayerRadius);
-        static void setSmoothingRadius(const double qmmmSmoothingRadius);
+        static void setSmoothingRegionThickness(const double thickness);
 
         /********************
          * standard getters *
@@ -82,7 +82,7 @@ namespace settings
 
         [[nodiscard]] static double getCoreRadius();
         [[nodiscard]] static double getLayerRadius();
-        [[nodiscard]] static double getSmoothingRadius();
+        [[nodiscard]] static double getSmoothingRegionThickness();
     };
 }   // namespace settings
 

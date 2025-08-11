@@ -112,6 +112,12 @@ void HybridConfigurator::shiftAtomsBackToInitialPositions(SimBox& simBox)
         atom->setPosition(position);
     }
 }
+
+void HybridConfigurator::assignHybridZones(SimBox& simBox) 
+{
+    
+}
+
 /********************************
  * standard getters and setters *
  ********************************/

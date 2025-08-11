@@ -50,7 +50,7 @@ namespace input
         void parseUseQMCharges(const pq::strings &, const size_t);
         void parseCoreRadius(const pq::strings &, const size_t);
         void parseLayerRadius(const pq::strings &, const size_t);
-        void parseSmoothingRadius(const pq::strings &, const size_t);
+        void parseSmoothingRegionThickness(const pq::strings &, const size_t);
     };
 
 }   // namespace input

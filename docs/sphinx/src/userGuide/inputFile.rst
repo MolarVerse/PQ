@@ -1612,17 +1612,17 @@ QM/MM Layer Radius
 
 With the ``qmmm_layer_radius`` keyword the user can specify the layer radius in :math:`\mathrm{\mathring{A}}` around the ``qm_center``. The default value is 0.0 :math:`\mathrm{\mathring{A}}`, which means that no special QM/MM treatment is applied.
 
-.. _qmmmsmoothingradiuskey:
+.. _qmmmsmoothingthicknesskey:
 
-QM/MM Smoothing Radius
-======================
+QM/MM Smoothing Region Thickness
+================================
 
 .. admonition:: Key
     :class: tip
 
-    qmmm_smoothing_radius = {double} :math:`\mathrm{\mathring{A}}` -> 0.0 :math:`\mathrm{\mathring{A}`
+    qmmm_smoothing_thickness = {double} :math:`\mathrm{\mathring{A}}` -> 0.0 :math:`\mathrm{\mathring{A}`
 
-With the ``qmmm_smoothing_radius`` keyword the user can specify the smoothing radius in :math:`\mathrm{\mathring{A}}` of the QM atoms. The default value is 0.0 :math:`\mathrm{\mathring{A}}`, which means that the smoothing radius is not set and no smoothing is applied.
+With the ``qmmm_smoothing_thickness`` keyword the user can specify the thickness of the smoothing region in :math:`\mathrm{\mathring{A}}`. The default value is 0.0 :math:`\mathrm{\mathring{A}}`, which means that no smoothing is applied.
 
 .. _celllistKeys:
 

@@ -111,15 +111,13 @@ void HybridSettings::setLayerRadius(const double radius)
 }
 
 /**
- * @brief set the smoothingRadius in the settings
+ * @brief set the smoothingRegionThickness in the settings
  *
- * @details the smoothingRadius is the radius of the smoothing region
- *
- * @param qmmmSmoothingRadius
+ * @param thickness
  */
-void HybridSettings::setSmoothingRadius(const double radius)
+void HybridSettings::setSmoothingRegionThickness(const double thickness)
 {
-    _smoothingRadius = radius;
+    _smoothingRegionThickness = thickness;
 }
 
 /********************
@@ -180,8 +178,11 @@ double HybridSettings::getCoreRadius() { return _coreRadius; }
 double HybridSettings::getLayerRadius() { return _layerRadius; }
 
 /**
- * @brief get the smoothingRadius
+ * @brief get the smoothingRegionThickness
  *
  * @return double
  */
-double HybridSettings::getSmoothingRadius() { return _smoothingRadius; }
+double HybridSettings::getSmoothingRegionThickness()
+{
+    return _smoothingRegionThickness;
+}
