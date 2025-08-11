@@ -27,6 +27,7 @@
 #include <cstddef>       // for size_t
 #include <string>        // for string
 #include <string_view>   // for string_view
+#include <vector>        // for vector
 
 namespace settings
 {
@@ -39,9 +40,9 @@ namespace settings
     class HybridSettings
     {
        private:
-        static inline std::string _innerRegionCenterString = "";
-        static inline std::string _forcedInnerListString   = "";
-        static inline std::string _forcedOuterListString   = "";
+        static inline std::vector<int> _innerRegionCenter;
+        static inline std::vector<int> _forcedInnerList;
+        static inline std::vector<int> _forcedOuterList;
 
         static inline bool _useQMCharges = false;
 
@@ -54,15 +55,9 @@ namespace settings
          * standard setters *
          ********************/
 
-        static void setInnerRegionCenterString(
-            const std::string_view &innerRegionCenter
-        );
-        static void setForcedInnerListString(
-            const std::string_view &forcedInnerList
-        );
-        static void setForcedOuterListString(
-            const std::string_view &forcedOuterList
-        );
+        static void setInnerRegionCenter(const std::vector<int> &);
+        static void setForcedInnerList(const std::vector<int> &);
+        static void setForcedOuterList(const std::vector<int> &);
 
         static void setUseQMCharges(const bool useQMCharges);
 
@@ -74,9 +69,9 @@ namespace settings
          * standard getters *
          ********************/
 
-        [[nodiscard]] static std::string getInnerRegionCenterString();
-        [[nodiscard]] static std::string getForcedInnerListString();
-        [[nodiscard]] static std::string getForcedOuterListString();
+        [[nodiscard]] static std::vector<int> getInnerRegionCenter();
+        [[nodiscard]] static std::vector<int> getForcedInnerList();
+        [[nodiscard]] static std::vector<int> getForcedOuterList();
 
         [[nodiscard]] static bool getUseQMCharges();
 

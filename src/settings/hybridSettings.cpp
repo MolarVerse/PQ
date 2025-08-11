@@ -22,6 +22,8 @@
 
 #include "hybridSettings.hpp"
 
+#include <vector>
+
 using settings::HybridSettings;
 
 /********************
@@ -31,49 +33,44 @@ using settings::HybridSettings;
  ********************/
 
 /**
- * @brief set the innerRegionCenter string in the settings
+ * @brief set the innerRegionCenter in the settings
  *
- * @details the innerRegionCenter string is a string representation of a
- * selection with which the center of the inner region of a hybrid calculation
- * can be selected
+ * @details the innerRegionCenter is a list of atom indices with which the
+ * center of the inner region of a hybrid calculation can be selected
  *
  * @param innerRegionCenter
  */
-void HybridSettings::setInnerRegionCenterString(
-    const std::string_view &innerRegionCenter
+void HybridSettings::setInnerRegionCenter(
+    const std::vector<int> &innerRegionCenter
 )
 {
-    _innerRegionCenterString = innerRegionCenter;
+    _innerRegionCenter = innerRegionCenter;
 }
 
 /**
- * @brief set the _forcedInnerListString
+ * @brief set the _forcedInnerList in the settings
  *
- * @details the forcedInnterListString is a string representation of a selection
- * with which the atoms of the inner region of the hybrid calculation can be
- * selected
+ * @details the forcedInnerList is a list of atoms which will always be treated
+ * with the method chosen for the inner region of the hybrid calculation
  *
  * @param list
  */
-void HybridSettings::setForcedInnerListString(const std::string_view &list)
+void HybridSettings::setForcedInnerList(const std::vector<int> &list)
 {
-    _forcedInnerListString = list;
+    _forcedInnerList = list;
 }
 
 /**
- * @brief set the _forcedOuterListString
+ * @brief set the _forcedOuterList in the settings
  *
- * @details the forcedOuterListString is a string representation of a selection
- * with which the atoms of the outer region of the hybrid calculation can be
- * selected
+ * @details the forcedInnerList is a list of atoms which will always be treated
+ * with the method chosen for the outer region of the hybrid calculation
  *
  * @param list
  */
-void HybridSettings::setForcedOuterListString(
-    const std::string_view &forcedOuterList
-)
+void HybridSettings::setForcedOuterList(const std::vector<int> &list)
 {
-    _forcedOuterListString = forcedOuterList;
+    _forcedOuterList = list;
 }
 
 /**
@@ -127,33 +124,33 @@ void HybridSettings::setSmoothingRegionThickness(const double thickness)
  ********************/
 
 /**
- * @brief get the innerRegionCenter string
+ * @brief get the innerRegionCenter as list of int
  *
- * @return std::string
+ * @return vector<int>
  */
-std::string HybridSettings::getInnerRegionCenterString()
+std::vector<int> HybridSettings::getInnerRegionCenter()
 {
-    return _innerRegionCenterString;
+    return _innerRegionCenter;
 }
 
 /**
- * @brief get the coreOnlyList string
+ * @brief get the forcedInnerList
  *
- * @return std::string
+ * @return vector<int>
  */
-std::string HybridSettings::getForcedInnerListString()
+std::vector<int> HybridSettings::getForcedInnerList()
 {
-    return _forcedInnerListString;
+    return _forcedInnerList;
 }
 
 /**
- * @brief get the nonCoreOnlyList string
+ * @brief get the forcedOuterList
  *
- * @return std::string
+ * @return vector<int>
  */
-std::string HybridSettings::getForcedOuterListString()
+std::vector<int> HybridSettings::getForcedOuterList()
 {
-    return _forcedOuterListString;
+    return _forcedOuterList;
 }
 
 /**
