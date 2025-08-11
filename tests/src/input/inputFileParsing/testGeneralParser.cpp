@@ -88,6 +88,7 @@ TEST_F(TestInputFileReader, JobType)
         "- mm-md\n"
         "- qm-md\n"
         "- qm-rpmd\n"
+        "- qmmm-md\n"
     );
 
     EXPECT_NO_THROW(parser.parseJobType(lineElements, 0));
