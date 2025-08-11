@@ -39,6 +39,18 @@
 namespace simulationBox
 {
     /**
+     * @class enum HybridZone
+     */
+    enum class HybridZone : size_t
+    {
+        NOT_HYBRID,
+        CORE,
+        LAYER,
+        SMOOTHING,
+        OUTER
+    };
+
+    /**
      * @class Molecule
      *
      * @brief containing all information about a molecule
@@ -53,7 +65,8 @@ namespace simulationBox
         double _charge;   // set via molDescriptor not sum of partial charges!!!
         double _molMass;
 
-        pq::Vec3D _centerOfMass = pq::Vec3D(0.0, 0.0, 0.0);
+        pq::Vec3D  _centerOfMass = pq::Vec3D(0.0, 0.0, 0.0);
+        HybridZone _hybridZone   = HybridZone::NOT_HYBRID;
 
         std::map<size_t, size_t> _externalToInternalAtomTypes;
         pq::SharedAtomVec        _atoms;
@@ -124,7 +137,8 @@ namespace simulationBox
 
         [[nodiscard]] std::string getName() const;
 
-        [[nodiscard]] pq::Vec3D getCenterOfMass() const;
+        [[nodiscard]] pq::Vec3D  getCenterOfMass() const;
+        [[nodiscard]] HybridZone getHybridZone() const;
 
         [[nodiscard]] Atom              &getAtom(const size_t index);
         [[nodiscard]] pq::SharedAtomVec &getAtoms();
@@ -141,6 +155,7 @@ namespace simulationBox
         void setCharge(const double charge);
         void setMolMass(const double molMass);
         void setCenterOfMass(const pq::Vec3D &centerOfMass);
+        void setHybridZone(const HybridZone hybridZone);
     };
 
 }   // namespace simulationBox

@@ -283,13 +283,6 @@ size_t Atom::getExternalGlobalVDWType() const { return _externalGlobalVDWType; }
 size_t Atom::getInternalGlobalVDWType() const { return _internalGlobalVDWType; }
 
 /**
- * @brief return the Hybrid zone of the atom
- *
- * @return HybridZone
- */
-HybridZone Atom::getHybridZone() const { return _hybridZone; }
-
-/**
  * @brief return the atomic number of the atom
  *
  * @return int
@@ -523,13 +516,3 @@ void Atom::setVelocityOld(const Vec3D &velocity) { _velocityOld = velocity; }
  * @param force
  */
 void Atom::setForceOld(const Vec3D &force) { _forceOld = force; }
-
-/**
- * @brief set the Hybrid zone of the atom
- *
- * @param hybridZone
- */
-void Atom::setHybridZone(const HybridZone hybridZone)
-{
-    _hybridZone = hybridZone;
-}

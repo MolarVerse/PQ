@@ -40,14 +40,14 @@ using namespace settings;
  *
  * @param name
  */
-Molecule::Molecule(const std::string_view name) : _name(name){};
+Molecule::Molecule(const std::string_view name) : _name(name) {}
 
 /**
  * @brief Construct a new Molecule:: Molecule object
  *
  * @param moltype
  */
-Molecule::Molecule(const size_t moltype) : _moltype(moltype){};
+Molecule::Molecule(const size_t moltype) : _moltype(moltype) {}
 
 /**
  * @brief finds number of different atom types in molecule
@@ -491,6 +491,13 @@ std::string Molecule::getName() const { return _name; }
 Vec3D Molecule::getCenterOfMass() const { return _centerOfMass; }
 
 /**
+ * @brief return the Hybrid zone of the molecule
+ *
+ * @return HybridZone
+ */
+HybridZone Molecule::getHybridZone() const { return _hybridZone; }
+
+/**
  * @brief returns the atom by index
  *
  * @param index
@@ -557,4 +564,14 @@ void Molecule::setMolMass(const double molMass) { _molMass = molMass; }
 void Molecule::setCenterOfMass(const Vec3D &centerOfMass)
 {
     _centerOfMass = centerOfMass;
+}
+
+/**
+ * @brief set the Hybrid zone of the molecule
+ *
+ * @param hybridZone
+ */
+void Molecule::setHybridZone(const HybridZone hybridZone)
+{
+    _hybridZone = hybridZone;
 }

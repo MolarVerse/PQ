@@ -33,18 +33,6 @@
 namespace simulationBox
 {
     /**
-     * @class enum HybridZone
-     */
-    enum class HybridZone : size_t
-    {
-        NOT_HYBRID,
-        CORE,
-        LAYER,
-        SMOOTHING,
-        OUTER
-    };
-
-    /**
      * @class Atom
      *
      * @brief containing all information about an atom
@@ -60,8 +48,6 @@ namespace simulationBox
 
         size_t _externalAtomType;
         size_t _atomType;
-
-        HybridZone _hybridZone = HybridZone::NOT_HYBRID;
 
         bool _isActive      = true;
         bool _isForcedInner = false;
@@ -118,8 +104,6 @@ namespace simulationBox
         [[nodiscard]] bool isQMAtom() const;
         [[nodiscard]] bool isMMAtom() const;
 
-        [[nodiscard]] HybridZone getHybridZone() const;
-
         [[nodiscard]] std::string getName() const;
         [[nodiscard]] std::string getAtomTypeName() const;
 
@@ -147,8 +131,6 @@ namespace simulationBox
         void setForcedInner(const bool isForcedInner);
         void setForcedOuter(const bool isForcedOuter);
         void setIsActive(const bool isActive);
-
-        void setHybridZone(const HybridZone hybridZone);
 
         void setName(const std::string_view &name);
         void setAtomTypeName(const std::string_view &atomTypeName);
