@@ -22,7 +22,7 @@
 
 #include "hybridConfigurator.hpp"
 
-#include <functional>   // for reference_wrapper
+#include <stdexcept>   // for domain_error
 
 #include "atom.hpp"            // for Atom
 #include "simulationBox.hpp"   // for SimulationBox
@@ -31,23 +31,24 @@ using namespace pq;
 using namespace configurator;
 using namespace simulationBox;
 
-void HybridConfigurator::calculateInnerRegionCenter(pq::SimBox& simBox)
+void HybridConfigurator::calculateInnerRegionCenter(SimBox& simBox)
 {
-    const auto indices = simBox.getInnerRegionCenterAtomIndices();
+    const auto& indices = simBox.getInnerRegionCenterAtomIndices();
 
-    std::vector<std::reference_wrapper<Atom>> centerAtoms;
-    centerAtoms.reserve(indices.size());
-
-    for (const auto index : indices)
-        centerAtoms.emplace_back(simBox.getAtom(index));
+    if (indices.empty())
+        throw(std::domain_error(
+            "Cannot calculate inner region center: no center atoms specified"
+        ));
 
     Vec3D  center     = {0.0, 0.0, 0.0};
     double total_mass = 0.0;
 
-    for (const auto& atom : centerAtoms)
+    for (const auto index : indices)
     {
-        center     += atom.get().getPosition() * atom.get().getMass();
-        total_mass += atom.get().getMass();
+        const auto& atom  = simBox.getAtom(index);
+        const auto  mass  = atom.getMass();
+        center           += atom.getPosition() * mass;
+        total_mass       += mass;
     }
 
     center /= total_mass;
