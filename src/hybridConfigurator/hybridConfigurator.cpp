@@ -31,6 +31,18 @@ using namespace pq;
 using namespace configurator;
 using namespace simulationBox;
 
+/**
+ * @brief Calculate the center of mass of the inner region center atoms
+ *
+ * @param simBox The simulation box containing all atoms
+ *
+ * @details This function calculates the mass-weighted center of the
+ * atoms specified by the inner region center atom indices. The calculated
+ * center is stored as the inner region center for the hybrid calculation.
+ *
+ * @throw std::domain_error if no center atoms are specified (empty indices
+ * list)
+ */
 void HybridConfigurator::calculateInnerRegionCenter(SimBox& simBox)
 {
     const auto& indices = simBox.getInnerRegionCenterAtomIndices();
@@ -55,6 +67,51 @@ void HybridConfigurator::calculateInnerRegionCenter(SimBox& simBox)
     setInnerRegionCenter(center);
 }
 
+/**
+ * @brief Shift all atoms so that the inner region center is at the origin
+ *
+ * @param simBox The simulation box containing all atoms to be shifted
+ *
+ * @details This function translates all atoms in the simulation box by
+ * subtracting the inner region center position from each atom's coordinates.
+ * After shifting, periodic boundary conditions are applied to ensure atoms
+ * remain within the simulation box bounds.
+ *
+ * @note The inner region center must be calculated before calling this function
+ */
+void HybridConfigurator::shiftAtomsToInnerRegionCenter(SimBox& simBox)
+{
+    for (auto& atom : simBox.getAtoms())
+    {
+        auto position = atom->getPosition() - _innerRegionCenter;
+        simBox.applyPBC(position);
+        atom->setPosition(position);
+    }
+}
+
+/**
+ * @brief Shift all atoms back to their original positions before centering
+ *
+ * @param simBox The simulation box containing all atoms to be shifted back
+ *
+ * @details This function reverses the translation applied by
+ *          shiftAtomsToInnerRegionCenter() by adding the inner region center
+ *          position back to each atom's coordinates. After shifting, periodic
+ *          boundary conditions are applied to ensure atoms remain within the
+ *          simulation box bounds.
+ *
+ * @note This function should be called after shiftAtomsToInnerRegionCenter()
+ *       to restore the original atomic positions
+ */
+void HybridConfigurator::shiftAtomsBackToInitialPositions(SimBox& simBox)
+{
+    for (auto& atom : simBox.getAtoms())
+    {
+        auto position = atom->getPosition() + _innerRegionCenter;
+        simBox.applyPBC(position);
+        atom->setPosition(position);
+    }
+}
 /********************************
  * standard getters and setters *
  ********************************/
