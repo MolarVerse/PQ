@@ -115,6 +115,31 @@ void HybridConfigurator::shiftAtomsBackToInitialPositions(SimBox& simBox)
     }
 }
 
+/**
+ * @brief Assign hybrid zones to all molecules based on their distance from the
+ * inner region center
+ *
+ * @param simBox The simulation box containing molecules to be assigned to zones
+ *
+ * @details This function assigns each molecule in the simulation box to one of
+ * four hybrid zones based on the distance of the molecule's center of mass from
+ * the inner region center:
+ *
+ * - **CORE**: Distance ≤ core radius
+ * - **LAYER**: core radius < distance ≤ (layer radius - smoothing region
+ * thickness)
+ * - **SMOOTHING**: (layer radius - smoothing region thickness) < distance ≤
+ * layer radius
+ * - **OUTER**: Distance > layer radius
+ *
+ * The function calculates the center of mass for each molecule and determines
+ * its zone assignment using the hybrid settings parameters (core radius, layer
+ * radius, and smoothing region thickness).
+ *
+ * @note The inner region center should be set to the origin (via
+ *       shiftAtomsToInnerRegionCenter) before calling this function for
+ *       accurate distance calculations
+ */
 void HybridConfigurator::assignHybridZones(SimBox& simBox)
 {
     using enum HybridZone;
