@@ -384,8 +384,65 @@ std::vector<int> HybridInputParser::parseSelectionNoPython(
         {
             const auto startString = atomIndexStr.substr(0, rangePos);
             const auto endString   = atomIndexStr.substr(rangePos + 1);
-            int        start       = std::stoi(std::string(startString));
-            int        end         = std::stoi(std::string(endString));
+
+            int start, end;
+            try
+            {
+                start = std::stoi(std::string(startString));
+            }
+            catch (const std::invalid_argument &)
+            {
+                throw InputFileException(
+                    std::format(
+                        "Invalid start index \"{}\" in range \"{}\" for key "
+                        "{}. Must be a valid integer.",
+                        startString,
+                        atomIndexStr,
+                        key
+                    )
+                );
+            }
+            catch (const std::out_of_range &)
+            {
+                throw InputFileException(
+                    std::format(
+                        "Start index \"{}\" in range \"{}\" for key {} is out "
+                        "of range.",
+                        startString,
+                        atomIndexStr,
+                        key
+                    )
+                );
+            }
+
+            try
+            {
+                end = std::stoi(std::string(endString));
+            }
+            catch (const std::invalid_argument &)
+            {
+                throw InputFileException(
+                    std::format(
+                        "Invalid end index \"{}\" in range \"{}\" for key {}. "
+                        "Must be a valid integer.",
+                        endString,
+                        atomIndexStr,
+                        key
+                    )
+                );
+            }
+            catch (const std::out_of_range &)
+            {
+                throw InputFileException(
+                    std::format(
+                        "End index \"{}\" in range \"{}\" for key {} is out of "
+                        "range.",
+                        endString,
+                        atomIndexStr,
+                        key
+                    )
+                );
+            }
 
             for (int i = start; i <= end; ++i) selectionVec.push_back(i);
 
@@ -393,11 +450,35 @@ std::vector<int> HybridInputParser::parseSelectionNoPython(
             continue;
         }
 
-        selectionVec.push_back(std::stoi(std::string(atomIndexStr)));
+        try
+        {
+            selectionVec.push_back(std::stoi(std::string(atomIndexStr)));
+        }
+        catch (const std::invalid_argument &)
+        {
+            throw InputFileException(
+                std::format(
+                    "Invalid atom index \"{}\" for key {}. Must be a valid "
+                    "integer.",
+                    atomIndexStr,
+                    key
+                )
+            );
+        }
+        catch (const std::out_of_range &)
+        {
+            throw InputFileException(
+                std::format(
+                    "Atom index \"{}\" for key {} is out of range.",
+                    atomIndexStr,
+                    key
+                )
+            );
+        }
         pos = nextPos + 1;
     }
 
-    // check if the selection vector is empty or contains duplicates
+    // check if the selection vector is empty
     if (selectionVec.empty())
     {
         throw customException::InputFileException(
