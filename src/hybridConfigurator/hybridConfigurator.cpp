@@ -24,11 +24,13 @@
 
 #include <stdexcept>   // for domain_error
 
-#include "atom.hpp"            // for Atom
-#include "simulationBox.hpp"   // for SimulationBox
+#include "atom.hpp"             // for Atom
+#include "hybridSettings.hpp"   // for HybridSettings
+#include "simulationBox.hpp"    // for SimulationBox
 
 using namespace pq;
 using namespace configurator;
+using namespace settings;
 using namespace simulationBox;
 
 /**
@@ -113,9 +115,29 @@ void HybridConfigurator::shiftAtomsBackToInitialPositions(SimBox& simBox)
     }
 }
 
-void HybridConfigurator::assignHybridZones(SimBox& simBox) 
+void HybridConfigurator::assignHybridZones(SimBox& simBox)
 {
-    
+    using enum HybridZone;
+
+    for (auto& mol : simBox.getMolecules())
+    {
+        mol.calculateCenterOfMass(simBox.getBox());
+        const auto com = norm(mol.getCenterOfMass());
+
+        const auto coreRadius  = HybridSettings::getCoreRadius();
+        const auto layerRadius = HybridSettings::getLayerRadius();
+        const auto smoothingRegionThickness =
+            HybridSettings::getSmoothingRegionThickness();
+
+        if (com <= coreRadius)
+            mol.setHybridZone(CORE);
+        else if (com <= (layerRadius - smoothingRegionThickness))
+            mol.setHybridZone(LAYER);
+        else if (com <= layerRadius)
+            mol.setHybridZone(SMOOTHING);
+        else
+            mol.setHybridZone(OUTER);
+    }
 }
 
 /********************************
