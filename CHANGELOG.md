@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file.
 ### Build
 
 - Suppress googletest warnings for double promotion
+- Fix warnings when building the Sphinx documentation
 
 <!-- insertion marker -->
 ## [v0.6.1](https://github.com/MolarVerse/PQ/releases/tag/v0.6.1) - 2025-07-25

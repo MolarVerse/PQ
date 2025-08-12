@@ -82,9 +82,9 @@ DFTB Setup File
 
 **Default Name:** ``dftb_in.template``
 
-The DFTB setup file is used by PQ to generate the dftb_in.hsd file, which is used as input for calculations by the `DFTB+ <https://dftbplus.org/index.html>`_ software.
+The DFTB setup file is used by PQ to generate the dftb_in.hsd file, which is used as input for calculations by the `DFTB+ <https://dftbplus.org/index.html>`__ software.
 As such, it has the same structure and keywords as the human-readable structured data (HSD) file for a single point calculation.
-The documentation of which can be found `here <https://www.dftbplus.org/documentation.html>`_.
+The documentation of which can be found `here <https://www.dftbplus.org/documentation.html>`__.
 There is an additional keyword, named ``__GUESS__``, that can be used within the Hamiltonian of the DFTB setup file.
 If the ``__GUESS__`` flag is included, the charges will be read for an initial guess in every step of the MD simulation except the first.
 
