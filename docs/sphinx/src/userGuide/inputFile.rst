@@ -1628,6 +1628,11 @@ Smoothing Region Thickness
 With the ``smoothing_region_thickness`` keyword the user can specify the thickness of the smoothing region in Å.
 The default value is 0.0 Å, which means that no smoothing is applied.
 
+.. image:: hybrid_zones.png
+    :width: 600
+    :align: center
+    :alt: graphical representation of the different hybrid zones and the associated keywords
+
 .. _celllistKeys:
 
 **************
