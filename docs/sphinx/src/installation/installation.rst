@@ -54,7 +54,7 @@ Singularity
 Singularity is a containerization tool that allows to run applications in a container. This is especially useful 
 for running applications on HPC systems where the user does not have root access. Singularity is available on most 
 HPC systems. The PQ software package provides three (hopefully) useful singularity definition files, which can be 
-found in the `<https://github.com/MolarVerse/PQ>`_. 
+found in the `<https://github.com/MolarVerse/PQ>`__. 
 
 The file ``PQ.def`` represents a definition file to build a singularity container based on a fully sequential build 
 of the latest release of PQ. The file ``PQ_openmpi.def`` is an extension of the previously mentioned definition 
