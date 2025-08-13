@@ -88,7 +88,7 @@ void HybridSettings::setUseQMCharges(const bool useQMCharges)
  *
  * @details the coreRadius is the radius of the core region
  *
- * @param qmCoreRadius
+ * @param radius
  */
 void HybridSettings::setCoreRadius(const double radius)
 {
@@ -100,7 +100,7 @@ void HybridSettings::setCoreRadius(const double radius)
  *
  * @details the layerRadius is the radius of the layer region
  *
- * @param qmmmLayerRadius
+ * @param radius
  */
 void HybridSettings::setLayerRadius(const double radius)
 {
@@ -115,6 +115,19 @@ void HybridSettings::setLayerRadius(const double radius)
 void HybridSettings::setSmoothingRegionThickness(const double thickness)
 {
     _smoothingRegionThickness = thickness;
+}
+
+/**
+ * @brief set the pointChargeRadius in the settings
+ *
+ * @details the pointChargeRadius added to the layerRadius is the distance
+ * measured from the core center up to which point charges are included
+ *
+ * @param radius
+ */
+void HybridSettings::setPointChargeRadius(const double radius)
+{
+    _pointChargeRadius = radius;
 }
 
 /********************
@@ -183,3 +196,10 @@ double HybridSettings::getSmoothingRegionThickness()
 {
     return _smoothingRegionThickness;
 }
+
+/**
+ * @brief get the pointChargeRadius
+ *
+ * @return double
+ */
+double HybridSettings::getPointChargeRadius() { return _pointChargeRadius; }

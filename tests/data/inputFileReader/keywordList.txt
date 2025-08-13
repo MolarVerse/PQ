@@ -136,4 +136,5 @@ forced_outer_list           false
 qm_charges                  false
 core_radius                 false
 layer_radius                false
-smoothing_radius            false
+smoothing_region_thickness  false
+point_charge_radius         false

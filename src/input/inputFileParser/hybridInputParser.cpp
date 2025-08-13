@@ -94,6 +94,11 @@ HybridInputParser::HybridInputParser(Engine &engine) : InputFileParser(engine)
         bind_front(&HybridInputParser::parseSmoothingRegionThickness, this),
         false
     );
+    addKeyword(
+        std::string("point_charge_radius"),
+        bind_front(&HybridInputParser::parsePointChargeRadius, this),
+        false
+    );
 }
 
 /**
@@ -184,6 +189,8 @@ void HybridInputParser::parseUseQMCharges(
  *
  * @param lineElements
  * @param lineNumber
+ *
+ * @throws InputFileException if the radius is negative
  */
 void HybridInputParser::parseCoreRadius(
     const std::vector<std::string> &lineElements,
@@ -211,6 +218,8 @@ void HybridInputParser::parseCoreRadius(
  *
  * @param lineElements
  * @param lineNumber
+ *
+ * @throws InputFileException if the radius is negative
  */
 void HybridInputParser::parseLayerRadius(
     const std::vector<std::string> &lineElements,
@@ -262,8 +271,34 @@ void HybridInputParser::parseSmoothingRegionThickness(
     HybridSettings::setSmoothingRegionThickness(thickness);
 }
 
-using namespace settings;
-using namespace customException;
+/**
+ * @brief parse point charge radius
+ *
+ * @param lineElements
+ * @param lineNumber
+ *
+ * @throws InputFileException if the radius is negative
+ */
+void HybridInputParser::parsePointChargeRadius(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+
+    const auto radius = std::stod(lineElements[2]);
+
+    if (radius < 0.0)
+        throw InputFileException(
+            std::format(
+                "Invalid {} {} in input file - must be a positive number",
+                lineElements[0],
+                lineElements[2]
+            )
+        );
+
+    HybridSettings::setPointChargeRadius(radius);
+}
 
 /**
  * @brief parse selection string
