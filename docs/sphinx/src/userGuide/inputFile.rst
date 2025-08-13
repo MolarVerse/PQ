@@ -1628,6 +1628,19 @@ Smoothing Region Thickness
 With the ``smoothing_region_thickness`` keyword the user can specify the thickness of the smoothing region in Å.
 The default value is 0.0 Å, which means that no smoothing is applied.
 
+.. _pointChargeRadiusKey:
+
+Point Charge Radius
+===================
+
+.. admonition:: Key
+    :class: tip
+
+    point_charge_radius = {double} Å -> 0.0 Å
+
+With the ``point_charge_radius`` keyword the user can specify the distance from the :ref:`layer_radius <layerRadiusKey>` up to which point charges are included in Å.
+The default value is 0.0 Å, which means that no point charges are included.
+
 .. image:: hybrid_zones.png
     :width: 600
     :align: center
