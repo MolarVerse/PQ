@@ -31,40 +31,49 @@ using settings::HybridSettings;
  ********************/
 
 /**
- * @brief set the coreCenter string in the settings
+ * @brief set the innerRegionCenter string in the settings
  *
- * @details the coreCenter string is a string representation of a selection
- * with which the center of the core region can be selected
+ * @details the innerRegionCenter string is a string representation of a
+ * selection with which the center of the inner region of a hybrid calculation
+ * can be selected
  *
- * @param qmCenter
+ * @param innerRegionCenter
  */
-void HybridSettings::setCoreCenterString(const std::string_view coreCenter)
-{
-    _coreCenterString = coreCenter;
-}
-
-/**
- * @brief set the coreOnlyList string in the settings
- *
- * @details the coreOnlyList string is a string representation of a selection
- * with which the atoms of the core region can be selected
- *
- * @param qmOnlyList
- */
-void HybridSettings::setCoreOnlyListString(const std::string_view list)
-{
-    _coreOnlyListString = list;
-}
-
-/**
- * @brief set the nonCoreOnlyList string in the settings
- *
- * @param nonCoreOnlyList
- */
-void HybridSettings::setNonCoreOnlyListString(const std::string_view nonCoreOnly
+void HybridSettings::setInnerRegionCenterString(
+    const std::string_view &innerRegionCenter
 )
 {
-    _nonCoreOnlyListString = nonCoreOnly;
+    _innerRegionCenterString = innerRegionCenter;
+}
+
+/**
+ * @brief set the _forcedInnerListString
+ *
+ * @details the forcedInnterListString is a string representation of a selection
+ * with which the atoms of the inner region of the hybrid calculation can be
+ * selected
+ *
+ * @param list
+ */
+void HybridSettings::setForcedInnerListString(const std::string_view &list)
+{
+    _forcedInnerListString = list;
+}
+
+/**
+ * @brief set the _forcedOuterListString
+ *
+ * @details the forcedOuterListString is a string representation of a selection
+ * with which the atoms of the outer region of the hybrid calculation can be
+ * selected
+ *
+ * @param list
+ */
+void HybridSettings::setForcedOuterListString(
+    const std::string_view &forcedOuterList
+)
+{
+    _forcedOuterListString = forcedOuterList;
 }
 
 /**
@@ -120,20 +129,23 @@ void HybridSettings::setSmoothingRadius(const double radius)
  ********************/
 
 /**
- * @brief get the coreCenter string
+ * @brief get the innerRegionCenter string
  *
  * @return std::string
  */
-std::string HybridSettings::getCoreCenterString() { return _coreCenterString; }
+std::string HybridSettings::getInnerRegionCenterString()
+{
+    return _innerRegionCenterString;
+}
 
 /**
  * @brief get the coreOnlyList string
  *
  * @return std::string
  */
-std::string HybridSettings::getCoreOnlyListString()
+std::string HybridSettings::getForcedInnerListString()
 {
-    return _coreOnlyListString;
+    return _forcedInnerListString;
 }
 
 /**
@@ -141,9 +153,9 @@ std::string HybridSettings::getCoreOnlyListString()
  *
  * @return std::string
  */
-std::string HybridSettings::getNonCoreOnlyListString()
+std::string HybridSettings::getForcedOuterListString()
 {
-    return _nonCoreOnlyListString;
+    return _forcedOuterListString;
 }
 
 /**

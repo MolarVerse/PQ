@@ -26,6 +26,7 @@
 #include "box.hpp"                // for Box
 #include "exceptions.hpp"         // for MolDescriptorException
 #include "manostatSettings.hpp"   // for ManostatSettings
+#include "settings.hpp"           // for Settings
 #include "stringUtilities.hpp"    // for toLowerCopy
 #include "vector3d.hpp"           // for Vec3D
 
@@ -164,20 +165,80 @@ void Atom::addShiftForce(const Vec3D &shiftForce) { _shiftForce += shiftForce; }
  ***************************/
 
 /**
- * @brief return if the atom is QM only
+ * @brief return if the atom is forced to be in the inner region for hybrid
+ * calculations
  *
  * @return true
  * @return false
  */
-bool Atom::isQMOnly() const { return _isQMOnly; }
+bool Atom::isForcedInner() const { return _isForcedInner; }
 
 /**
- * @brief return if the atom is MM only
+ * @brief return if the atom is forced to be in the outer region for hybrid
+ * calculations
  *
  * @return true
  * @return false
  */
-bool Atom::isMMOnly() const { return _isMMOnly; }
+bool Atom::isForcedOuter() const { return _isForcedOuter; }
+
+/**
+ * @brief return if the atom is active
+ *
+ * @return true
+ * @return false
+ *
+ * @details currently only used for hybrid calculations
+ */
+bool Atom::isActive() const { return _isActive; }
+
+/**
+ * @brief determine if an atom should be treated as QM
+ *
+ * @return true if the atom should be treated as QM, false otherwise
+ *
+ * @details Checks if an atom qualifies as a QM atom based on:
+ *          - QM-only job types (all atoms are QM)
+ *          - MM-only job types (no atoms are MM)
+ *          - Atom is activated for hybrid calculation
+ */
+bool Atom::isQMAtom() const
+{
+    if (Settings::isQMOnlyJobtype())
+        return true;
+
+    if (Settings::isMMOnlyJobtype())
+        return false;
+
+    if (isActive())
+        return true;
+
+    return false;
+}
+
+/**
+ * @brief determine if an atom should be treated as MM
+ *
+ * @return true if the atom should be treated as MM, false otherwise
+ *
+ * @details Checks if an atom qualifies as a MM atom based on:
+ *          - MM-only job types (all atoms are MM)
+ *          - QM-only job types (no atoms are MM)
+ *          - Atom is activated for hybrid calculation
+ */
+bool Atom::isMMAtom() const
+{
+    if (Settings::isMMOnlyJobtype())
+        return true;
+
+    if (Settings::isQMOnlyJobtype())
+        return false;
+
+    if (isActive())
+        return true;
+
+    return false;
+}
 
 /**
  * @brief return the name of the atom (element name)
@@ -220,6 +281,13 @@ size_t Atom::getExternalGlobalVDWType() const { return _externalGlobalVDWType; }
  * @return size_t
  */
 size_t Atom::getInternalGlobalVDWType() const { return _internalGlobalVDWType; }
+
+/**
+ * @brief return the Hybrid zone of the atom
+ *
+ * @return HybridZone
+ */
+HybridZone Atom::getHybridZone() const { return _hybridZone; }
 
 /**
  * @brief return the atomic number of the atom
@@ -291,18 +359,35 @@ Vec3D Atom::getShiftForce() const { return _shiftForce; }
  ***************************/
 
 /**
- * @brief set if the atom is QM only
+ * @brief set if the atom is forced to be in the inner region for hybrid
+ * calculations
  *
- * @param position
+ * @param isForcedInner
  */
-void Atom::setQMOnly(const bool isQMOnly) { _isQMOnly = isQMOnly; }
+void Atom::setForcedInner(const bool isForcedInner)
+{
+    _isForcedInner = isForcedInner;
+}
 
 /**
- * @brief set if the atom is MM only
+ * @brief set if the atom is forced to be in the outer region for hybrid
+ * calculations
  *
- * @param position
+ * @param isForcedOuter
  */
-void Atom::setMMOnly(const bool isMMOnly) { _isMMOnly = isMMOnly; }
+void Atom::setForcedOuter(const bool isForcedOuter)
+{
+    _isForcedOuter = isForcedOuter;
+}
+
+/**
+ * @brief set if the atom is active
+ *
+ * @param isActive
+ *
+ * @details currently only used for hybrid calculations
+ */
+void Atom::setIsActive(const bool isActive) { _isActive = isActive; }
 
 /**
  * @brief set the name of the atom (element name)
@@ -438,3 +523,13 @@ void Atom::setVelocityOld(const Vec3D &velocity) { _velocityOld = velocity; }
  * @param force
  */
 void Atom::setForceOld(const Vec3D &force) { _forceOld = force; }
+
+/**
+ * @brief set the Hybrid zone of the atom
+ *
+ * @param hybridZone
+ */
+void Atom::setHybridZone(const HybridZone hybridZone)
+{
+    _hybridZone = hybridZone;
+}

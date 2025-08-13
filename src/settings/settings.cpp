@@ -237,12 +237,12 @@ size_t Settings::getDimensionality() { return _dimensionality; }
  ******************************/
 
 /**
- * @brief Returns true if the jobtype does no use any MM type simulations
+ * @brief Returns true if the jobtype does not use any MM type simulations
  *
- * @return true/false if the jobtype does no use any MM type simulations
+ * @return true/false if the jobtype does not use any MM type simulations
  *
  */
-bool Settings::isQMOnly()
+bool Settings::isQMOnlyJobtype()
 {
     using enum JobType;
 
@@ -257,7 +257,23 @@ bool Settings::isQMOnly()
 }
 
 /**
- * @brief Returns true if the jobtype does is based on MD simulations
+ * @brief Returns true if the jobtype does not use any QM type simulations
+ *
+ * @return true/false if the jobtype does not use any QM type simulations
+ *
+ */
+bool Settings::isMMOnlyJobtype() { return _jobtype == JobType::MM_MD; }
+
+/**
+ * @brief Returns true if the jobtype is a hybrid type simulation
+ *
+ * @return true/false if the jobtype is a hybrid type simulation
+ *
+ */
+bool Settings::isHybridJobtype() { return _jobtype == JobType::QMMM_MD; }
+
+/**
+ * @brief Returns true if the jobtype performs an MD simulation
  *
  * @return true/false
  *
@@ -320,14 +336,6 @@ bool Settings::isQMActivated()
 
     return isQM;
 }
-
-/**
- * @brief Returns true if both MM and QM simulations are activated
- *
- * @return true/false
- *
- */
-bool Settings::isQMMMActivated() { return _jobtype == JobType::QMMM_MD; }
 
 /**
  * @brief Returns true if only QM simulations are activated

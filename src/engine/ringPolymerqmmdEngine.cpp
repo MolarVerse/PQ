@@ -339,7 +339,7 @@ void RingPolymerQMMDEngine::applyManostat()
 
     for (size_t i = 0; i < _ringPolymerBeads.size(); ++i)
     {
-        auto positions  = _ringPolymerBeads[i].flattenPositions();
+        auto positions  = _ringPolymerBeads[i].getFlattenedQMPositions();
         auto velocities = _ringPolymerBeads[i].flattenVelocities();
 
         auto &box = _ringPolymerBeads[i].getBox();

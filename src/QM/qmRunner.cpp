@@ -25,11 +25,15 @@
 #include <cmath>    // for ceil
 #include <thread>   // for sleep_for
 
+#include "defaults.hpp"   // for _DIMENSIONALITY_DEFAULT_
 #include "exceptions.hpp"
 #include "qmSettings.hpp"
 
 using QM::QMRunner;
+using enum simulationBox::Periodicity;
+
 using namespace settings;
+using namespace defaults;
 using namespace customException;
 
 /**
@@ -61,4 +65,15 @@ void QMRunner::throwAfterTimeout(const std::stop_token stopToken) const
     }
 
     throw QMRunnerException("QM calculation timeout");
+}
+
+/**
+ * @brief run the qm engine with default periodicity XYZ (3d)
+ *
+ * @param simBox SimulationBox reference
+ * @param physicalData PhysicalData reference
+ */
+void QMRunner::run(pq::SimBox &simBox, pq::PhysicalData &physicalData)
+{
+    run(simBox, physicalData, XYZ);
 }

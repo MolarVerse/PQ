@@ -175,7 +175,7 @@ void GeneralInputParser::parseDimensionality(
     const auto dimensionality = std::stoi(dimensionalityString);
 
     if (dimensionality == 3)
-        Settings::setDimensionality(size_t(dimensionality));
+        Settings::setDimensionality(static_cast<size_t>(dimensionality));
 
     else
         throw InputFileException(format(

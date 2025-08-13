@@ -57,7 +57,7 @@ namespace QM
         ASEQMRunner();
         ~ASEQMRunner() override = default;
 
-        void run(pq::SimBox &, pq::PhysicalData &) override;
+        void run(pq::SimBox &, pq::PhysicalData &, simulationBox::Periodicity per) override;
         void buildAseAtoms(const pq::SimBox &);
         void execute();
 
@@ -69,7 +69,7 @@ namespace QM
         // clang-format off
         [[nodiscard]] py::array           asePositions(const pq::SimBox &) const;
         [[nodiscard]] py::array_t<double> aseCell(const pq::SimBox &) const;
-        [[nodiscard]] py::array_t<bool>   asePBC(const pq::SimBox &) const;
+        [[nodiscard]] py::array_t<bool>   asePBC() const;
         [[nodiscard]] py::array_t<int>    aseAtomicNumbers(const pq::SimBox &) const;
         // clang-format on
     };

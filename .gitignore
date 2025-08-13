@@ -77,3 +77,4 @@ venv
 env
 .env
 
+compile_commands.json

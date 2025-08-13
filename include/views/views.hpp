@@ -20,48 +20,33 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _HYBRID_SETUP_HPP_
+#ifndef __VIEWS_HPP__
+#define __VIEWS_HPP__
 
-#define _HYBRID_SETUP_HPP_
+#include <utility>
 
-#include <string>   // for string
-#include <vector>   // for vector
+#include "filterAdaptor.hpp"      // IWYU pragma: export
+#include "filterView.hpp"         // IWYU pragma: export
+#include "transformAdaptor.hpp"   // IWYU pragma: export
+#include "transformView.hpp"      // IWYU pragma: export
 
-#include "typeAliases.hpp"
-
-namespace setup
+namespace pqviews
 {
-    void setupHybrid(pq::Engine &);
-
     /**
-     * @class HybridSetup
+     * @brief A range-based view that applies an adaptor to a range
      *
-     * @brief Setup Hybrid calculations e.g. QM/MM
-     *
+     * @tparam Range The type of the range to be adapted
+     * @tparam Adaptor The type of the adaptor to be applied
+     * @param r The range to be adapted
+     * @param a The adaptor to be applied
+     * @return auto A view of the adapted range
      */
-    class HybridSetup
+    template <typename Range, typename Adaptor>
+    auto operator|(Range&& r, const Adaptor& a)
     {
-       private:
-        pq::Engine &_engine;
+        return a(std::forward<Range>(r));
+    }
 
-       public:
-        explicit HybridSetup(pq::Engine &engine);
+}   // namespace pqviews
 
-        void setup();
-        void setupInnerRegionCenter();
-        void setupForcedInnerList();
-        void setupForcedOuterList();
-
-        std::vector<int> parseSelection(
-            const std::string &,
-            const std::string &
-        );
-        std::vector<int> parseSelectionNoPython(
-            const std::string &,
-            const std::string &
-        );
-    };
-
-}   // namespace setup
-
-#endif   // _HYBRID_SETUP_HPP_
+#endif   // __VIEWS_HPP__

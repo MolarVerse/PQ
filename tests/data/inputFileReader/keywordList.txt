@@ -130,9 +130,9 @@ xtb_method                  false
 
 rpmd_n_replica              false
 
-center                      false
-core_only_list              false
-non_core_only_list          false
+inner_region_center         false
+forced_inner_list           false
+forced_outer_list           false
 qm_charges                  false
 core_radius                 false
 layer_radius                false

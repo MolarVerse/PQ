@@ -31,6 +31,21 @@
 namespace simulationBox
 {
     /**
+     * @class enum Periodicity
+     */
+    enum class Periodicity : size_t
+    {
+        NON_PERIODIC,
+        X,
+        Y,
+        Z,
+        XY,
+        XZ,
+        YZ,
+        XYZ
+    };
+
+    /**
      * @class Box
      *
      * @brief This class represents the unit cell of a general triclinic box
@@ -62,14 +77,19 @@ namespace simulationBox
 
         [[nodiscard]] virtual pq::Vec3D    getBoxAngles() const;
         [[nodiscard]] virtual pq::tensor3D getBoxMatrix() const;
+        [[nodiscard]] virtual pq::tensor3D getBoxMatrix(
+            const Periodicity per
+        ) const;
 
         [[nodiscard]] virtual pq::Vec3D toOrthoSpace(const pq::Vec3D &) const;
-        [[nodiscard]] virtual pq::tensor3D toOrthoSpace(const pq::tensor3D &)
-            const;
+        [[nodiscard]] virtual pq::tensor3D toOrthoSpace(
+            const pq::tensor3D &
+        ) const;
 
         [[nodiscard]] virtual pq::Vec3D    toSimSpace(const pq::Vec3D &) const;
-        [[nodiscard]] virtual pq::tensor3D toSimSpace(const pq::tensor3D &)
-            const;
+        [[nodiscard]] virtual pq::tensor3D toSimSpace(
+            const pq::tensor3D &
+        ) const;
 
         /********************
          * standard getters *

@@ -441,13 +441,6 @@ std::string Molecule::getAtomName(const size_t index) const
  ***************************/
 
 /**
- * @brief checks if the molecule is QM only
- *
- * @return size_t
- */
-bool Molecule::isQMOnly() const { return _isQMOnly; }
-
-/**
  * @brief returns the moltype of the molecule
  *
  * @return size_t
@@ -524,13 +517,6 @@ std::vector<std::shared_ptr<Atom>> &Molecule::getAtoms() { return _atoms; }
  * @param name
  */
 void Molecule::setName(const std::string_view name) { _name = name; }
-
-/**
- * @brief set if the molecule is QM only
- *
- * @param isQMOnly
- */
-void Molecule::setQMOnly(const bool isQMOnly) { _isQMOnly = isQMOnly; }
 
 /**
  * @brief set the number of atoms in the molecule
