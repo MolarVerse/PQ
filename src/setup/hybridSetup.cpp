@@ -118,6 +118,11 @@ void HybridSetup::setupForcedOuterList()
  * the layer radius
  * @throws customException::InputFileException if the smoothing region is too
  * thick for the chosen combinatin of core and layer radius
+ * @throws customException::InputFileException if the layer radius exceeds one
+ quarter of the smallest box dimension (minimum image convention)
+ * @throws customException::InputFileException if the sum of layer radius and
+ point charge radius exceeds three quarters of the smallest box dimension
+ (includes point charges from beyond immediate neighboring cells)
  */
 void HybridSetup::checkZoneRadii()
 {
@@ -125,6 +130,9 @@ void HybridSetup::checkZoneRadii()
     const auto layerRadius = HybridSettings::getLayerRadius();
     const auto smoothingRegionThickness =
         HybridSettings::getSmoothingRegionThickness();
+    const auto pointChargeRadius = HybridSettings::getPointChargeRadius();
+    const auto minimalBoxDimension =
+        _engine.getSimulationBox().getMinimalBoxDimension();
 
     if (coreRadius > layerRadius)
         throw(InputFileException(
@@ -143,6 +151,30 @@ void HybridSetup::checkZoneRadii()
                 smoothingRegionThickness,
                 coreRadius,
                 layerRadius
+            )
+        ));
+
+    if (layerRadius > (minimalBoxDimension / 4))
+        throw(InputFileException(
+            std::format(
+                "Layer radius ({} Å) exceeds one quarter of the smallest box "
+                "dimension ({} Å). This configuration is not allowed to ensure "
+                "compliance with the minimum image convention.",
+                layerRadius,
+                minimalBoxDimension
+            )
+        ));
+
+    if ((layerRadius + pointChargeRadius) > (minimalBoxDimension * 3 / 2))
+        throw(InputFileException(
+            std::format(
+                "Layer radius ({} Å) plus point charge radius ({} Å) exceeds "
+                "three halves of the smallest box dimension ({} Å). This "
+                "configuration is not allowed, as it would include point "
+                "charges from beyond the immediate neighboring cells.",
+                layerRadius,
+                pointChargeRadius,
+                minimalBoxDimension
             )
         ));
 }
