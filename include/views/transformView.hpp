@@ -25,8 +25,8 @@
 
 #include <utility>
 
+#include "sentinel.hpp"
 #include "transformIterator.hpp"
-#include "transformSentinel.hpp"
 
 namespace pqviews
 {
@@ -52,9 +52,9 @@ namespace pqviews
 
        public:
         using iterator       = TransformIterator<begin_t, Func>;
-        using sentinel       = TransformSentinel<end_t>;
         using const_iterator = TransformIterator<c_begin_t, Func>;
-        using const_sentinel = TransformSentinel<c_end_t>;
+        using sentinel       = Sentinel<end_t>;
+        using const_sentinel = Sentinel<c_end_t>;
 
         TransformView(Range r, Func f);
 
@@ -83,8 +83,7 @@ namespace pqviews
      * @return iterator
      */
     template <typename Range, typename Func>
-    typename TransformView<Range, Func>::iterator TransformView<Range, Func>::
-        begin()
+    TransformView<Range, Func>::iterator TransformView<Range, Func>::begin()
     {
         return iterator{std::begin(_range), &_func};
     }
@@ -95,8 +94,7 @@ namespace pqviews
      * @return sentinel
      */
     template <typename Range, typename Func>
-    typename TransformView<Range, Func>::sentinel TransformView<Range, Func>::
-        end()
+    TransformView<Range, Func>::sentinel TransformView<Range, Func>::end()
     {
         return sentinel{std::end(_range)};
     }
@@ -108,9 +106,8 @@ namespace pqviews
      * @return const_iterator
      */
     template <typename Range, typename Func>
-    typename TransformView<Range, Func>::const_iterator TransformView<
-        Range,
-        Func>::begin() const
+    TransformView<Range, Func>::const_iterator TransformView<Range, Func>::
+        begin() const
     {
         return const_iterator{std::begin(_range), &_func};
     }
@@ -121,9 +118,8 @@ namespace pqviews
      * @return const_sentinel
      */
     template <typename Range, typename Func>
-    typename TransformView<Range, Func>::const_sentinel TransformView<
-        Range,
-        Func>::end() const
+    TransformView<Range, Func>::const_sentinel TransformView<Range, Func>::end(
+    ) const
     {
         return const_sentinel{std::end(_range)};
     }
