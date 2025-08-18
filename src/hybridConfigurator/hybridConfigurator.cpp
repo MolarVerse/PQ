@@ -153,6 +153,7 @@ void HybridConfigurator::assignHybridZones(SimBox& simBox)
         const auto layerRadius = HybridSettings::getLayerRadius();
         const auto smoothingRegionThickness =
             HybridSettings::getSmoothingRegionThickness();
+        const auto pointChargeRadius = HybridSettings::getPointChargeRadius();
 
         if (com <= coreRadius)
             mol.setHybridZone(CORE);
@@ -160,6 +161,8 @@ void HybridConfigurator::assignHybridZones(SimBox& simBox)
             mol.setHybridZone(LAYER);
         else if (com <= layerRadius)
             mol.setHybridZone(SMOOTHING);
+        else if (com <= layerRadius + pointChargeRadius)
+            mol.setHybridZone(POINT_CHARGE);
         else
             mol.setHybridZone(OUTER);
     }

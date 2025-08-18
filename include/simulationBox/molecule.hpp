@@ -47,6 +47,7 @@ namespace simulationBox
         CORE,
         LAYER,
         SMOOTHING,
+        POINT_CHARGE,
         OUTER
     };
 
