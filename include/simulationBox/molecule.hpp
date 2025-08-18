@@ -88,6 +88,8 @@ namespace simulationBox
 
         void setPartialCharges(const std::vector<double> &partialCharges);
         void setAtomForcesToZero();
+        void activateAtoms();
+        void deactivateAtoms();
 
         /****************************************
          * standard adder methods for atom data *

@@ -24,7 +24,7 @@
 
 #define _HYBRID_CONFIGURATOR_HPP_
 
-#include <vector>   // for vector
+#include <unordered_set>   // for unordered_set
 
 #include "simulationBox.hpp"
 #include "typeAliases.hpp"
@@ -43,7 +43,10 @@ namespace configurator
         void shiftAtomsToInnerRegionCenter(pq::SimBox &);
         void shiftAtomsBackToInitialPositions(pq::SimBox &);
         void assignHybridZones(pq::SimBox &);
-        void deactivateMolecules(std::vector<int>, pq::SimBox &);
+        void deactivateMoleculesForInnerCalculation(
+            std::unordered_set<int>,
+            pq::SimBox &
+        );
 
         /********************************
          * standard getters and setters *

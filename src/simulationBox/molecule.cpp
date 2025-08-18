@@ -195,6 +195,24 @@ void Molecule::setAtomForcesToZero()
     std::ranges::for_each(_atoms, [](auto atom) { atom->setForceToZero(); });
 }
 
+/**
+ * @brief activates the atoms in the molecule for hybrid calculations
+ *
+ */
+void Molecule::activateAtoms()
+{
+    for (auto &atom : getAtoms()) atom->setIsActive(true);
+}
+
+/**
+ * @brief deactivates the atoms in the molecule for hybrid calculations
+ *
+ */
+void Molecule::deactivateAtoms()
+{
+    for (auto &atom : getAtoms()) atom->setIsActive(false);
+}
+
 /****************************************
  *                                      *
  * standard adder methods for atom data *
