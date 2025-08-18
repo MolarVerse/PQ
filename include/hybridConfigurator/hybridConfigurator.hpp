@@ -35,14 +35,14 @@ namespace configurator
     class HybridConfigurator
     {
        private:
-        pq::Vec3D _innerRegionCenter = {0.0, 0.0, 0.0};
+        pq::Vec3D _innerRegionCenter          = {0.0, 0.0, 0.0};
+        int       _numberPointChargeMolecules = 0;
 
        public:
         void calculateInnerRegionCenter(pq::SimBox &);
         void shiftAtomsToInnerRegionCenter(pq::SimBox &);
         void shiftAtomsBackToInitialPositions(pq::SimBox &);
         void assignHybridZones(pq::SimBox &);
-        void getNumberOfMoleculesInSmoothingRegion(pq::SimBox &);
         void deactivateMolecules(std::vector<int>, pq::SimBox &);
 
         /********************************
@@ -50,7 +50,10 @@ namespace configurator
          ********************************/
 
         [[nodiscard]] pq::Vec3D getInnerRegionCenter();
-        void                    setInnerRegionCenter(pq::Vec3D);
+        [[nodiscard]] int       getNumberPointChargeMolecules();
+
+        void setInnerRegionCenter(pq::Vec3D);
+        void setNumberPointChargeMolecules(int);
     };
 
 }   // namespace configurator

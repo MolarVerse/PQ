@@ -130,11 +130,13 @@ void HybridConfigurator::shiftAtomsBackToInitialPositions(SimBox& simBox)
  * thickness)
  * - **SMOOTHING**: (layer radius - smoothing region thickness) < distance ≤
  * layer radius
- * - **OUTER**: Distance > layer radius
+ * - **POINT_CHARGE** layer radius < distance ≤ (layer radius +
+ * pointChargeRadius)
+ * - **OUTER**: Distance > layer radius + pointChargeRadius
  *
  * The function calculates the center of mass for each molecule and determines
  * its zone assignment using the hybrid settings parameters (core radius, layer
- * radius, and smoothing region thickness).
+ * radius, smoothing region thickness and point charge radius).
  *
  * @note The inner region center should be set to the origin (via
  *       shiftAtomsToInnerRegionCenter) before calling this function for
@@ -143,6 +145,7 @@ void HybridConfigurator::shiftAtomsBackToInitialPositions(SimBox& simBox)
 void HybridConfigurator::assignHybridZones(SimBox& simBox)
 {
     using enum HybridZone;
+    auto numberPointChargeMolecules = getNumberPointChargeMolecules();
 
     for (auto& mol : simBox.getMolecules())
     {
@@ -162,10 +165,15 @@ void HybridConfigurator::assignHybridZones(SimBox& simBox)
         else if (com <= layerRadius)
             mol.setHybridZone(SMOOTHING);
         else if (com <= layerRadius + pointChargeRadius)
+        {
             mol.setHybridZone(POINT_CHARGE);
+            ++numberPointChargeMolecules;
+        }
         else
             mol.setHybridZone(OUTER);
     }
+
+    setNumberPointChargeMolecules(numberPointChargeMolecules);
 }
 
 /********************************
@@ -180,6 +188,17 @@ void HybridConfigurator::assignHybridZones(SimBox& simBox)
 Vec3D HybridConfigurator::getInnerRegionCenter() { return _innerRegionCenter; }
 
 /**
+ * @brief get the number of molecules in the point charge region of the hybrid
+ * calculation
+ *
+ * @return int numberPointChargeMolecules
+ */
+int HybridConfigurator::getNumberPointChargeMolecules()
+{
+    return _numberPointChargeMolecules;
+}
+
+/**
  * @brief set the center of the inner region of the hybrid calculation
  *
  * @param innerRegionCenter
@@ -187,4 +206,15 @@ Vec3D HybridConfigurator::getInnerRegionCenter() { return _innerRegionCenter; }
 void HybridConfigurator::setInnerRegionCenter(Vec3D innerRegionCenter)
 {
     _innerRegionCenter = innerRegionCenter;
+}
+
+/**
+ * @brief set the number of molecules in the point charge region of the hybrid
+ * calculation
+ *
+ * @param count
+ */
+void HybridConfigurator::setNumberPointChargeMolecules(int count)
+{
+    _numberPointChargeMolecules = count;
 }
