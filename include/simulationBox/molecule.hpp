@@ -145,8 +145,9 @@ namespace simulationBox
         [[nodiscard]] HybridZone getHybridZone() const;
         [[nodiscard]] double     getSmoothingFactor() const;
 
-        [[nodiscard]] Atom              &getAtom(const size_t index);
-        [[nodiscard]] pq::SharedAtomVec &getAtoms();
+        [[nodiscard]] Atom                    &getAtom(const size_t index);
+        [[nodiscard]] pq::SharedAtomVec       &getAtoms();
+        [[nodiscard]] const pq::SharedAtomVec &getAtoms() const;
 
         /***************************
          * standard setter methods *

@@ -69,6 +69,7 @@ void ExternalQMRunner::run(
     _periodicity = per;
 
     writeCoordsFile(simBox);
+    writePointChargeFile(simBox);
 
     std::jthread timeoutThread{[this](const std::stop_token stopToken)
                                { throwAfterTimeout(stopToken); }};
@@ -81,9 +82,11 @@ void ExternalQMRunner::run(
     readStressTensor(simBox.getBox(), physicalData);
 }
 
+void ExternalQMRunner::writePointChargeFile(SimulationBox &box) {}
+
 /**
- * @brief reads the force file (including qm energy) and sets the forces of the
- * atoms
+ * @brief reads the force file (including qm energy) and sets the forces of
+ * the atoms
  *
  * @param box
  * @param physicalData

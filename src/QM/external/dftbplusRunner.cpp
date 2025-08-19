@@ -134,6 +134,30 @@ void DFTBPlusRunner::writeCoordsFile(SimulationBox &box)
     coordsFile.close();
 }
 
+void DFTBPlusRunner::writePointChargeFile(pq::SimBox &box)
+{
+    if (!(Settings::isHybridJobtype()))
+        return;
+
+    const std::string fileName = "mm_pointcharges";
+    std::ofstream     pcFile(fileName);
+
+    for (const auto &mol : box.getMolecules())
+        if (mol.getHybridZone() == HybridZone::POINT_CHARGE ||
+            mol.getHybridZone() == HybridZone::SMOOTHING)
+            for (const auto &atom : mol.getAtoms())
+                if (!(atom->isActive()))
+                    pcFile << std::format(
+                        "{:16.12f}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
+                        atom->getPosition()[0],
+                        atom->getPosition()[1],
+                        atom->getPosition()[2],
+                        atom->getPartialCharge()
+                    );
+
+    pcFile.close();
+}
+
 /**
  * @brief executes the qm script of the external program
  *

@@ -537,6 +537,16 @@ Atom &Molecule::getAtom(const size_t index) { return *(_atoms[index]); }
  */
 std::vector<std::shared_ptr<Atom>> &Molecule::getAtoms() { return _atoms; }
 
+/**
+ * @brief returns the atoms of the molecule
+ *
+ * @return std::vector<Atom>
+ */
+const std::vector<std::shared_ptr<Atom>> &Molecule::getAtoms() const
+{
+    return _atoms;
+}
+
 /***************************
  *                         *
  * standard setter methods *
