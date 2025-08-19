@@ -516,6 +516,13 @@ Vec3D Molecule::getCenterOfMass() const { return _centerOfMass; }
 HybridZone Molecule::getHybridZone() const { return _hybridZone; }
 
 /**
+ * @brief return the smoothing factor of the molecule for hybrid calculations
+ *
+ * @return double
+ */
+double Molecule::getSmoothingFactor() const { return _smoothingFactor; }
+
+/**
  * @brief returns the atom by index
  *
  * @param index
@@ -592,4 +599,14 @@ void Molecule::setCenterOfMass(const Vec3D &centerOfMass)
 void Molecule::setHybridZone(const HybridZone hybridZone)
 {
     _hybridZone = hybridZone;
+}
+
+/**
+ * @brief set the smoothing factor of the molecule for hybrid calculations
+ *
+ * @param factor
+ */
+void Molecule::setSmoothingFactor(const double factor)
+{
+    _smoothingFactor = factor;
 }

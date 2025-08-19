@@ -216,6 +216,47 @@ void HybridConfigurator::deactivateMoleculesForInnerCalculation(
     }
 }
 
+/**
+ * @brief Calculate smoothing factors for molecules in the smoothing region
+ *
+ * This function computes and assigns a smoothing factor to each molecule in the
+ * smoothing region of the simulation box. The smoothing factor is calculated
+ * based on the molecule's center of mass distance from the layer radius,
+ * normalized by the smoothing region thickness. The formula used ensures a
+ * smooth transition of the factor within the region.
+ *
+ * @param simBox Simulation box containing the molecules
+ *
+ * @throw std::domain_error if a molecule is outside the smoothing region
+ */
+void HybridConfigurator::calculateSmoothingFactors(pq::SimBox& simBox)
+{
+    const auto layerRadius = HybridSettings::getLayerRadius();
+    const auto smoothingRegionThickness =
+        HybridSettings::getSmoothingRegionThickness();
+
+    for (auto& mol : simBox.getSmoothingMolecules())
+    {
+        mol.calculateCenterOfMass(simBox.getBox());
+        const auto com = norm(mol.getCenterOfMass());
+
+        double distanceFactor = (com - layerRadius + smoothingRegionThickness) /
+                                smoothingRegionThickness;
+
+        if (distanceFactor < 0.0 || distanceFactor > 1.0)
+            throw(std::domain_error(
+                "Cannot calculate smoothing factor for molecule outside the "
+                "smoothing region"
+            ));
+
+        double dF = distanceFactor - 0.5;
+
+        mol.setSmoothingFactor(
+            dF * (dF * dF * (-6.0 * dF * dF + 0.5) - 1.875) + 0.5
+        );
+    }
+}
+
 /********************************
  * standard getters and setters *
  ********************************/

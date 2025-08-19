@@ -196,7 +196,7 @@ namespace simulationBox
         return getMolecules() |
                pqviews::filter(
                    [](const auto& mol)
-                   { return mol->getHybridZone() == HybridZone::SMOOTHING; }
+                   { return mol.getHybridZone() == HybridZone::SMOOTHING; }
                );
     }
 
@@ -216,7 +216,7 @@ namespace simulationBox
         return getMolecules() |
                pqviews::filter(
                    [](const auto& mol)
-                   { return mol->getHybridZone() == HybridZone::SMOOTHING; }
+                   { return mol.getHybridZone() == HybridZone::SMOOTHING; }
                );
     }
 

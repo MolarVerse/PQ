@@ -68,6 +68,7 @@ namespace simulationBox
 
         pq::Vec3D  _centerOfMass = pq::Vec3D(0.0, 0.0, 0.0);
         HybridZone _hybridZone   = HybridZone::NOT_HYBRID;
+        double     _smoothingFactor;
 
         std::map<size_t, size_t> _externalToInternalAtomTypes;
         pq::SharedAtomVec        _atoms;
@@ -142,6 +143,7 @@ namespace simulationBox
 
         [[nodiscard]] pq::Vec3D  getCenterOfMass() const;
         [[nodiscard]] HybridZone getHybridZone() const;
+        [[nodiscard]] double     getSmoothingFactor() const;
 
         [[nodiscard]] Atom              &getAtom(const size_t index);
         [[nodiscard]] pq::SharedAtomVec &getAtoms();
@@ -159,6 +161,7 @@ namespace simulationBox
         void setMolMass(const double molMass);
         void setCenterOfMass(const pq::Vec3D &centerOfMass);
         void setHybridZone(const HybridZone hybridZone);
+        void setSmoothingFactor(const double factor);
     };
 
 }   // namespace simulationBox
