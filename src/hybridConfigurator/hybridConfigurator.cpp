@@ -191,11 +191,11 @@ void HybridConfigurator::assignHybridZones(SimBox& simBox)
  * @param simBox Simulation box containing the molecules
  */
 void HybridConfigurator::deactivateMoleculesForInnerCalculation(
-    std::unordered_set<int> inactiveMolecules,
-    pq::SimBox&             simBox
+    std::unordered_set<size_t> inactiveMolecules,
+    pq::SimBox&                simBox
 )
 {
-    int count{0};
+    size_t count{0};
 
     for (auto& mol : simBox.getMolecules())
     {

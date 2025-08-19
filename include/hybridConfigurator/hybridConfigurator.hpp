@@ -44,7 +44,7 @@ namespace configurator
         void shiftAtomsBackToInitialPositions(pq::SimBox &);
         void assignHybridZones(pq::SimBox &);
         void deactivateMoleculesForInnerCalculation(
-            std::unordered_set<int>,
+            std::unordered_set<size_t>,
             pq::SimBox &
         );
         void calculateSmoothingFactors(pq::SimBox &);
