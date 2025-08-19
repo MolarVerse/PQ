@@ -134,6 +134,16 @@ void DFTBPlusRunner::writeCoordsFile(SimulationBox &box)
     coordsFile.close();
 }
 
+/**
+ * @brief Writes a file containing point charges for hybrid simulations.
+ *
+ * This function creates the file "mm_pointcharges" listing the positions and
+ * partial charges of all inactive atoms in molecules assigned to the
+ * POINT_CHARGE or SMOOTHING hybrid zones. The file is used for QM/MM coupling
+ * in DFTB+ calculations.
+ *
+ * @param box Simulation box containing molecules and atoms.
+ */
 void DFTBPlusRunner::writePointChargeFile(pq::SimBox &box)
 {
     if (!(Settings::isHybridJobtype()))
