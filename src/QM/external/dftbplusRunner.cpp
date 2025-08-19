@@ -157,6 +157,7 @@ void DFTBPlusRunner::writePointChargeFile(pq::SimBox &box)
             mol.getHybridZone() == HybridZone::SMOOTHING)
             for (const auto &atom : mol.getAtoms())
                 if (!(atom->isActive()))
+                {
                     pcFile << std::format(
                         "{:16.12f}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
                         atom->getPosition()[0],
@@ -164,7 +165,8 @@ void DFTBPlusRunner::writePointChargeFile(pq::SimBox &box)
                         atom->getPosition()[2],
                         atom->getPartialCharge()
                     );
-
+                    _usePointCharges = true;
+                }
     pcFile.close();
 }
 
@@ -181,12 +183,14 @@ void DFTBPlusRunner::execute()
             std::format("DFTB+ script file \"{}\" does not exist.", scriptFile)
         );
 
-    const auto reuseCharges = _isFirstExecution ? 1 : 0;
+    const auto reuseCharges    = _isFirstExecution ? 1 : 0;
+    const auto usePointCharges = _usePointCharges ? 1 : 0;
 
     const auto command = std::format(
-        "{} 0 {} 0 0 0 {}",
+        "{} 0 {} 0 {} 0 {}",
         scriptFile,
         reuseCharges,
+        usePointCharges,
         FileSettings::getDFTBFileName()
     );
     ::system(command.c_str());

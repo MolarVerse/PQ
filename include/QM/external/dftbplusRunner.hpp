@@ -39,6 +39,7 @@ namespace QM
     {
        private:
         bool _isFirstExecution = true;
+        bool _usePointCharges  = false;
 
        public:
         void writeCoordsFile(pq::SimBox &) override;
