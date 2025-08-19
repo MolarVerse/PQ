@@ -14,7 +14,7 @@ $progname =~ s{^.*/}{};
 my $charge             = $ARGV[0];             # charge of the qm region
 my $changed            = $ARGV[1];             # flag if define has to be run
 my $guess_mo           = $ARGV[2];             # flag if a dft step is performed as a guess
-my $pointcharges       = $ARGV[3];             # pointcharge scheme
+my $pointcharges       = $ARGV[3];             # flag if point charges are used
 my $nprocessors        = $ARGV[4];             # number of processors
 my $dftb_template      = $ARGV[5];             # dftb setup file that generates $dftb_input
 
@@ -38,11 +38,11 @@ my $dftb_input        = "dftb_in.hsd";       # dftb input file
 my $dftb_out          = "dftb.out";          # dftb output file
 my $dftb_out_prev     = "dftb.out.prev";     # summary file - previous step
 
-my $qm_forces          = "qm_forces";              # result file: energy plus forces of all qm atoms
-my $qm_charges         = "qm_charges";             # result file: partial charges of all qm atoms
-my $mm_forces          = "mm_forces";              # result file: forces of all mm atoms 
-my $stress_tensor_file = "stress_tensor";          # result file: stress tensor 
-my $stress_tensor_file_mat = "stress_tensor_mat";  # result file: stress tensor 
+my $qm_forces              = "qm_forces";              # result file: energy plus forces of all qm atoms
+my $qm_charges             = "qm_charges";             # result file: partial charges of all qm atoms
+my $mm_forces              = "mm_forces";              # result file: forces of all mm atoms 
+my $stress_tensor_file     = "stress_tensor";          # result file: stress tensor 
+my $stress_tensor_file_mat = "stress_tensor_mat";      # result file: stress tensor 
 
 my $qm_coords             = "coords";               # coordinates
 my $qm_coords_prev        = "coords.prev";          # coordinates previous step
@@ -53,22 +53,21 @@ my $forces_found          = 0;                     # forces  control flag
 my $charges_found         = 0;                     # charges control flag
 my $stress_tensor_found   = 0;                     # stress-tensor control flag
 
-my $n_pc                  = 0;                     # charges control flag
+my $n_pc                  = 0;                     # number of point charges read from mm_pointcharges
 my $n_fields              = 0;
 
 `cat coords > geom.gen`;   
 
 # count number of mm pointcharges
-# open (MM_PC, "< $mm_pointcharges") or
-#       die "\n\n\t (-) $progname: Error opening file $mm_pointcharges'\n";
-
-while (<MM_PC>) 
+if ($pointcharges == 1)
 {
-   $n_pc ++;
+  open (MM_PC, "< $mm_pointcharges") or
+        die "\n\n\t (-) $progname: Error opening file $mm_pointcharges'\n";
+
+  while (<MM_PC>) { $n_pc ++; }
+
+  close (MM_PC);
 }
-
-close (MM_PC);
-
 
 # check if molecules have been exchanged between QM and MM region
 if ($changed == 1)
