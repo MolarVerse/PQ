@@ -35,8 +35,8 @@ namespace configurator
     class HybridConfigurator
     {
        private:
-        pq::Vec3D _innerRegionCenter          = {0.0, 0.0, 0.0};
-        int       _numberPointChargeMolecules = 0;
+        pq::Vec3D _innerRegionCenter        = {0.0, 0.0, 0.0};
+        int       _numberSmoothingMolecules = 0;
 
        public:
         void calculateInnerRegionCenter(pq::SimBox &);
@@ -47,16 +47,17 @@ namespace configurator
             std::unordered_set<int>,
             pq::SimBox &
         );
+        void calculateSmoothingFactors(pq::SimBox &);
 
         /********************************
          * standard getters and setters *
          ********************************/
 
         [[nodiscard]] pq::Vec3D getInnerRegionCenter();
-        [[nodiscard]] int       getNumberPointChargeMolecules();
+        [[nodiscard]] int       getNumberSmoothingMolecules();
 
         void setInnerRegionCenter(pq::Vec3D);
-        void setNumberPointChargeMolecules(int);
+        void setNumberSmoothingMolecules(int);
     };
 
 }   // namespace configurator

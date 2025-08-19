@@ -147,7 +147,7 @@ void HybridConfigurator::shiftAtomsBackToInitialPositions(SimBox& simBox)
  */
 void HybridConfigurator::assignHybridZones(SimBox& simBox)
 {
-    auto numberPointChargeMolecules = getNumberPointChargeMolecules();
+    auto numberSmoothingMolecules = getNumberSmoothingMolecules();
 
     for (auto& mol : simBox.getMolecules())
     {
@@ -165,19 +165,35 @@ void HybridConfigurator::assignHybridZones(SimBox& simBox)
         else if (com <= (layerRadius - smoothingRegionThickness))
             mol.setHybridZone(LAYER);
         else if (com <= layerRadius)
-            mol.setHybridZone(SMOOTHING);
-        else if (com <= layerRadius + pointChargeRadius)
         {
-            mol.setHybridZone(POINT_CHARGE);
-            ++numberPointChargeMolecules;
+            mol.setHybridZone(SMOOTHING);
+            ++numberSmoothingMolecules;
         }
+        else if (com <= layerRadius + pointChargeRadius)
+            mol.setHybridZone(POINT_CHARGE);
         else
             mol.setHybridZone(OUTER);
     }
 
-    setNumberPointChargeMolecules(numberPointChargeMolecules);
+    setNumberSmoothingMolecules(numberSmoothingMolecules);
 }
 
+/**
+ * @brief Deactivate atoms in molecules for inner region calculation
+ *
+ * This function iterates over all molecules in the simulation box and activates
+ * or deactivates their atoms based on their hybrid zone and whether their index
+ * is present in the inactiveMolecules set.
+ *
+ * - Atoms in molecules with hybrid zones CORE, LAYER, or SMOOTHING are
+ * activated.
+ * - Atoms in molecules whose index is in inactiveMolecules, or whose hybrid
+ * zone is POINT_CHARGE or OUTER, are deactivated.
+ *
+ * @param inactiveMolecules Set of molecule indices to be deactivated regardless
+ * of zone
+ * @param simBox Simulation box containing the molecules
+ */
 void HybridConfigurator::deactivateMoleculesForInnerCalculation(
     std::unordered_set<int> inactiveMolecules,
     pq::SimBox&             simBox
@@ -217,9 +233,9 @@ Vec3D HybridConfigurator::getInnerRegionCenter() { return _innerRegionCenter; }
  *
  * @return int numberPointChargeMolecules
  */
-int HybridConfigurator::getNumberPointChargeMolecules()
+int HybridConfigurator::getNumberSmoothingMolecules()
 {
-    return _numberPointChargeMolecules;
+    return _numberSmoothingMolecules;
 }
 
 /**
@@ -238,7 +254,7 @@ void HybridConfigurator::setInnerRegionCenter(Vec3D innerRegionCenter)
  *
  * @param count
  */
-void HybridConfigurator::setNumberPointChargeMolecules(int count)
+void HybridConfigurator::setNumberSmoothingMolecules(int count)
 {
-    _numberPointChargeMolecules = count;
+    _numberSmoothingMolecules = count;
 }
