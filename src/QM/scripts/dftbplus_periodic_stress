@@ -12,7 +12,7 @@ $progname =~ s{^.*/}{};
 
 # input data from the PQ program
 my $charge             = $ARGV[0];             # charge of the qm region
-my $changed            = $ARGV[1];             # flag if define has to be run
+my $changed            = $ARGV[1];             # flag if initial charges should be read from charges.bin
 my $guess_mo           = $ARGV[2];             # flag if a dft step is performed as a guess
 my $pointcharges       = $ARGV[3];             # flag if point charges are used
 my $nprocessors        = $ARGV[4];             # number of processors
@@ -74,49 +74,28 @@ if ($changed == 1)
 {
   # remove charges.bin   
   unlink $dftb_chrg;
-   
-# create dftb_in.hsd from template  
-# and insert QM charge and GUESS FLAG
-  open (DFTB_TEMPLATE, "< $dftb_template") or
-      die "\n\n\t (-) $progname: Error opening file $dftb_template'\n";
-
-  open (DFTB_IN, "> $dftb_input") or
-      die "\n\n\t (-) $progname: Error opening file $dftb_input\n";
-
-  while (<DFTB_TEMPLATE>) 
-  {
-     s{__GUESS__}{ReadInitialCharges = No};  
-     s{__CHARGE__}{$charge};
-     s{__N_PC__}{$n_pc};
-     print DFTB_IN;
-  }
-
-  close (DFTB_TEMPLATE);
-  close (DFTB_IN);  
 }
-else
-{
 
 # create dftb_in.hsd from template  
 # and insert QM charge and GUESS FLAG
-  open (DFTB_TEMPLATE, "< $dftb_template") or
-      die "\n\n\t (-) $progname: Error opening file $dftb_template'\n";
+open (DFTB_TEMPLATE, "< $dftb_template") or
+    die "\n\n\t (-) $progname: Error opening file $dftb_template'\n";
 
-  open (DFTB_IN, "> $dftb_input") or
-      die "\n\n\t (-) $progname: Error opening file $dftb_input\n";
+open (DFTB_IN, "> $dftb_input") or
+    die "\n\n\t (-) $progname: Error opening file $dftb_input\n";
 
-  while (<DFTB_TEMPLATE>) 
-  {  
-    s{__GUESS__}{ReadInitialCharges = Yes};      
+# check if molecules have been exchanged between QM and MM region
+my $guess_value = $changed == 1 ? "No" : "Yes";
+while (<DFTB_TEMPLATE>)
+{
+    s{__GUESS__}{"ReadInitialCharges = $guess_value"};
     s{__CHARGE__}{$charge};
     s{__N_PC__}{$n_pc};
     print DFTB_IN;
-  }
-
-  close (DFTB_TEMPLATE);
-  close (DFTB_IN);
 }
 
+close (DFTB_TEMPLATE);
+close (DFTB_IN);  
 
 # execute dftb
 if(system("dftb+ > run.out"))
@@ -128,7 +107,7 @@ if(system("mv detailed.out $dftb_out"))
   die "\n\n\t (-) $progname: Error moving detailed.out to $dftb_out.\n";
 }
 
-# extract energy and forces from Gaussian output and write forces to file
+# extract energy and forces from DFTB+ output and write forces to file
 
 open (DFTB_OUT, "< $dftb_out") or
   die "\n\n\t (-) $progname: Error opening file '$dftb_out'\n";
@@ -208,9 +187,6 @@ while (<DFTB_OUT>)
   close (CHARGES);   
   close (MM_FORCES);
   close (STRESS_TENSOR);
-
-#`mv $stress_tensor_file $stress_tensor_file_mat`;
-#`julia /home/jag/qmcfc_dissociative_dev_20210111/scripts/diagonalize_stresstensor.jl $stress_tensor_file_mat`;
 
 # create the "log-file" for the last run
 `mv $dftb_out  $dftb_out_prev`;
