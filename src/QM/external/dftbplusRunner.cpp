@@ -152,9 +152,14 @@ void DFTBPlusRunner::writePointChargeFile(pq::SimBox &box)
     const std::string fileName = "mm_pointcharges";
     std::ofstream     pcFile(fileName);
 
+    _usePointCharges = false;
+
+    using enum HybridZone;
     for (const auto &mol : box.getMolecules())
-        if (mol.getHybridZone() == HybridZone::POINT_CHARGE ||
-            mol.getHybridZone() == HybridZone::SMOOTHING)
+    {
+        const auto zone = mol.getHybridZone();
+
+        if (zone == POINT_CHARGE || zone == SMOOTHING)
             for (const auto &atom : mol.getAtoms())
                 if (!(atom->isActive()))
                 {
@@ -167,6 +172,7 @@ void DFTBPlusRunner::writePointChargeFile(pq::SimBox &box)
                     );
                     _usePointCharges = true;
                 }
+    }
     pcFile.close();
 }
 
