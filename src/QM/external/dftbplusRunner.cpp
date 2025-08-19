@@ -189,13 +189,13 @@ void DFTBPlusRunner::execute()
             std::format("DFTB+ script file \"{}\" does not exist.", scriptFile)
         );
 
-    const auto reuseCharges    = _isFirstExecution ? 1 : 0;
-    const auto usePointCharges = _usePointCharges ? 1 : 0;
+    const auto discardOldCharges = _isFirstExecution ? 1 : 0;
+    const auto usePointCharges   = _usePointCharges ? 1 : 0;
 
     const auto command = std::format(
         "{} 0 {} 0 {} 0 {}",
         scriptFile,
-        reuseCharges,
+        discardOldCharges,
         usePointCharges,
         FileSettings::getDFTBFileName()
     );
