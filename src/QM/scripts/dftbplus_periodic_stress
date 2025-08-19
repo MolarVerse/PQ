@@ -1,7 +1,5 @@
 #!/usr/bin/perl
 #
-#  calc_forces.dftbplus 
-#
 #  Interface between PQ and DFTB+
 
 use strict;
@@ -56,7 +54,7 @@ my $stress_tensor_found   = 0;                     # stress-tensor control flag
 my $n_pc                  = 0;                     # number of point charges read from mm_pointcharges
 my $n_fields              = 0;
 
-`cat coords > geom.gen`;   
+`cat coords > geom.gen`;
 
 # count number of mm pointcharges
 if ($pointcharges == 1)
@@ -79,25 +77,25 @@ if ($changed == 1)
 # create dftb_in.hsd from template  
 # and insert QM charge and GUESS FLAG
 open (DFTB_TEMPLATE, "< $dftb_template") or
-    die "\n\n\t (-) $progname: Error opening file $dftb_template'\n";
+  die "\n\n\t (-) $progname: Error opening file $dftb_template'\n";
 
 open (DFTB_IN, "> $dftb_input") or
-    die "\n\n\t (-) $progname: Error opening file $dftb_input\n";
+  die "\n\n\t (-) $progname: Error opening file $dftb_input\n";
 
 # check if molecules have been exchanged between QM and MM region
 my $guess_value = $changed == 1 ? "No" : "Yes";
 while (<DFTB_TEMPLATE>)
 {
-    s{__GUESS__}{"ReadInitialCharges = $guess_value"};
-    s{__CHARGE__}{$charge};
-    s{__N_PC__}{$n_pc};
-    print DFTB_IN;
+  s{__GUESS__}{ReadInitialCharges = $guess_value};
+  s{__CHARGE__}{$charge};
+  s{__N_PC__}{$n_pc};
+  print DFTB_IN;
 }
 
 close (DFTB_TEMPLATE);
 close (DFTB_IN);  
 
-# execute dftb
+# execute dftb+
 if(system("dftb+ > run.out"))
 {
   die "\n\n\t (-) $progname: Error executing dftb+.\n";
@@ -117,7 +115,7 @@ open (FORCES, "> $qm_forces") or
 
 open (CHARGES, "> $qm_charges") or 
   die "\n\n\t (-) $progname: Error opening file '$qm_charges'\n";
-   
+
 open (MM_FORCES, "> $mm_forces") or
   die "\n\n\t (-) $progname: Error opening file '$mm_forces'\n";
 
@@ -127,25 +125,24 @@ open (STRESS_TENSOR, "> $stress_tensor_file") or
 while (<DFTB_OUT>) 
 {
   # extract energy
+  if (/^\s*Total energy:\s+(.*?)\s+H\s+.*?/) 
+  {
+    printf FORCES ("%20.9f\n", $1);
+    $energy_found = 1;
+  }
 
-    if (/^\s*Total energy:\s+(.*?)\s+H\s+.*?/) 
+  # extract forces
+  if (/^\s*Total Forces/ .. /^\s*Maximal derivative component:/)  
+  {
+    if (/^\s+-*\d/) 
     {
-      printf FORCES ("%20.9f\n", $1);
-      $energy_found = 1;
-    }
+      @line = split;
+      $n_fields = scalar( @line  ) - 3;
 
-    # extract forces
-    if (/^\s*Total Forces/ .. /^\s*Maximal derivative component:/)  
-    {
-      if (/^\s+-*\d/) 
-      {
-        @line = split;
-        $n_fields = scalar( @line  ) - 3;
-
-        printf FORCES ("%27.18e  %27.18e  %27.18e\n", -$line[0+$n_fields],  -$line[1+$n_fields], -$line[2+$n_fields]);      
-        $forces_found = 1;
-      }
+      printf FORCES ("%27.18e  %27.18e  %27.18e\n", -$line[0+$n_fields],  -$line[1+$n_fields], -$line[2+$n_fields]);      
+      $forces_found = 1;
     }
+  }
 
   # extract charges  
   if ( (/^\s*Atom       Net charge/  .. /^\s*COMPONENT/ ) || (/^\s*Atomic gross charges/ .. /^\s*COMPONENT/) )
@@ -178,13 +175,12 @@ while (<DFTB_OUT>)
 	printf STRESS_TENSOR ("%27.18e  %27.18e  %27.18e\n", $line[0],  $line[1],  $line[2]);       
 	$stress_tensor_found = 1;
       }
-  }  
-  
+  }
 }
-  
-  close (DFTB_OUT);   
-  close (FORCES);   
-  close (CHARGES);   
+
+  close (DFTB_OUT);
+  close (FORCES);
+  close (CHARGES);
   close (MM_FORCES);
   close (STRESS_TENSOR);
 
@@ -209,14 +205,14 @@ if ($forces_found != 1)
 if ($charges_found != 1)
 {
      printf("\n\n\t (-) $progname: Error encountered while reading $dftb_out.");
-     printf("\n\t     QM charges have not been read!");     
-}     
+     printf("\n\t     QM charges have not been read!");
+}
 
 if ($stress_tensor_found != 1)
 {
      printf("\n\n\t (-) $progname: Error encountered while reading $dftb_out.");
-     printf("\n\t     Stress tensor has not been read!");     
-} 
-     
+     printf("\n\t     Stress tensor has not been read!");
+}
+
 exit 0;
 
