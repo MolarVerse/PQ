@@ -252,6 +252,16 @@ const std::vector<std::shared_ptr<Atom>> &SimulationBox::getAtoms() const
 std::vector<Molecule> &SimulationBox::getMolecules() { return _molecules; }
 
 /**
+ * @brief get all molecules
+ *
+ * @return std::vector<Molecule>&
+ */
+const std::vector<Molecule> &SimulationBox::getMolecules() const
+{
+    return _molecules;
+}
+
+/**
  * @brief get all molecule types
  *
  * @return std::vector<MoleculeType>&

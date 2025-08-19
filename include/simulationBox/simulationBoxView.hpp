@@ -43,6 +43,9 @@ namespace simulationBox
         auto& getAtoms() const;
         auto& getAtoms();
 
+        auto& getMolecules() const;
+        auto& getMolecules();
+
        public:
         auto getQMAtoms();
         auto getQMAtoms() const;
@@ -51,6 +54,9 @@ namespace simulationBox
         auto getMMAtoms() const;
 
         auto getQMAtomicNumbers() const;
+
+        auto getSmoothingMolecules();
+        auto getSmoothingMolecules() const;
     };
 
     /**
@@ -73,6 +79,28 @@ namespace simulationBox
     auto& SimulationBoxView<Derived>::getAtoms()
     {
         return static_cast<Derived&>(*this).getAtoms();
+    }
+
+    /**
+     * @brief Get the Molecules vector reference
+     *
+     * @return const auto& a reference to the molecules vector
+     */
+    template <typename Derived>
+    auto& SimulationBoxView<Derived>::getMolecules() const
+    {
+        return static_cast<const Derived&>(*this).getMolecules();
+    }
+
+    /**
+     * @brief Get the Molecules vector reference
+     *
+     * @return auto& a reference to the molecules vector
+     */
+    template <typename Derived>
+    auto& SimulationBoxView<Derived>::getMolecules()
+    {
+        return static_cast<Derived&>(*this).getMolecules();
     }
 
     /**
@@ -150,6 +178,46 @@ namespace simulationBox
         return getQMAtoms() |
                pqviews::transform([](const auto& atom)
                                   { return atom->getAtomicNumber(); });
+    }
+
+    /**
+     * @brief get all molecules in the smoothing region using range-based
+     * filtering
+     *
+     * @return a view/iterator of molecules in the smoothing region filtered
+     * from all molecules
+     *
+     * @details This function returns a range-based view that filters molecules
+     * from _molecules based on whether their HybridZone is SMOOTHING
+     */
+    template <typename Derived>
+    auto SimulationBoxView<Derived>::getSmoothingMolecules()
+    {
+        return getMolecules() |
+               pqviews::filter(
+                   [](const auto& mol)
+                   { return mol->getHybridZone() == HybridZone::SMOOTHING; }
+               );
+    }
+
+    /**
+     * @brief get all molecules in the smoothing region using range-based
+     * filtering
+     *
+     * @return a view/iterator of molecules in the smoothing region filtered
+     * from all molecules
+     *
+     * @details This function returns a range-based view that filters molecules
+     * from _molecules based on whether their HybridZone is SMOOTHING
+     */
+    template <typename Derived>
+    auto SimulationBoxView<Derived>::getSmoothingMolecules() const
+    {
+        return getMolecules() |
+               pqviews::filter(
+                   [](const auto& mol)
+                   { return mol->getHybridZone() == HybridZone::SMOOTHING; }
+               );
     }
 
 }   // namespace simulationBox

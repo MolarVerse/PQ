@@ -193,10 +193,11 @@ namespace simulationBox
         [[nodiscard]] std::vector<double> getAtomicScalarForces() const;
         [[nodiscard]] std::vector<double> getAtomicScalarForcesOld() const;
 
-        [[nodiscard]] pq::SharedAtomVec&         getAtoms();
-        [[nodiscard]] const pq::SharedAtomVec&   getAtoms() const;
-        [[nodiscard]] std::vector<Molecule>&     getMolecules();
-        [[nodiscard]] std::vector<MoleculeType>& getMoleculeTypes();
+        [[nodiscard]] pq::SharedAtomVec&           getAtoms();
+        [[nodiscard]] const pq::SharedAtomVec&     getAtoms() const;
+        [[nodiscard]] std::vector<Molecule>&       getMolecules();
+        [[nodiscard]] const std::vector<Molecule>& getMolecules() const;
+        [[nodiscard]] std::vector<MoleculeType>&   getMoleculeTypes();
 
         [[nodiscard]] std::vector<size_t>& getExternalGlobalVdwTypes();
         [[nodiscard]] std::map<size_t, size_t>& getExternalToInternalGlobalVDWTypes(
