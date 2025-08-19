@@ -68,8 +68,8 @@ void HybridConfigurator::calculateInnerRegionCenter(SimBox& simBox)
         total_mass       += mass;
     }
 
-    center /= total_mass;
-    setInnerRegionCenter(center);
+    center             /= total_mass;
+    _innerRegionCenter  = center;
 }
 
 /**
@@ -147,18 +147,16 @@ void HybridConfigurator::shiftAtomsBackToInitialPositions(SimBox& simBox)
  */
 void HybridConfigurator::assignHybridZones(SimBox& simBox)
 {
-    auto numberSmoothingMolecules = getNumberSmoothingMolecules();
+    const auto coreRadius  = HybridSettings::getCoreRadius();
+    const auto layerRadius = HybridSettings::getLayerRadius();
+    const auto smoothingRegionThickness =
+        HybridSettings::getSmoothingRegionThickness();
+    const auto pointChargeRadius = HybridSettings::getPointChargeRadius();
 
     for (auto& mol : simBox.getMolecules())
     {
         mol.calculateCenterOfMass(simBox.getBox());
         const auto com = norm(mol.getCenterOfMass());
-
-        const auto coreRadius  = HybridSettings::getCoreRadius();
-        const auto layerRadius = HybridSettings::getLayerRadius();
-        const auto smoothingRegionThickness =
-            HybridSettings::getSmoothingRegionThickness();
-        const auto pointChargeRadius = HybridSettings::getPointChargeRadius();
 
         if (com <= coreRadius)
             mol.setHybridZone(CORE);
@@ -167,15 +165,13 @@ void HybridConfigurator::assignHybridZones(SimBox& simBox)
         else if (com <= layerRadius)
         {
             mol.setHybridZone(SMOOTHING);
-            ++numberSmoothingMolecules;
+            ++_numberSmoothingMolecules;
         }
         else if (com <= layerRadius + pointChargeRadius)
             mol.setHybridZone(POINT_CHARGE);
         else
             mol.setHybridZone(OUTER);
     }
-
-    setNumberSmoothingMolecules(numberSmoothingMolecules);
 }
 
 /**
