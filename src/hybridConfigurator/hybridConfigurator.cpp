@@ -236,8 +236,8 @@ void HybridConfigurator::calculateSmoothingFactors(pq::SimBox& simBox)
         mol.calculateCenterOfMass(simBox.getBox());
         const auto com = norm(mol.getCenterOfMass());
 
-        const double distanceFactor =
-            (com - layerRadius + smoothingRegionThickness) /
+        const auto distanceFactor =
+            (com - (layerRadius - smoothingRegionThickness)) /
             smoothingRegionThickness;
 
         if (distanceFactor < 0.0 || distanceFactor > 1.0)
@@ -246,7 +246,7 @@ void HybridConfigurator::calculateSmoothingFactors(pq::SimBox& simBox)
                 "smoothing region"
             ));
 
-        const double dF = distanceFactor - 0.5;
+        const auto dF = distanceFactor - 0.5;
 
         mol.setSmoothingFactor(
             dF * (dF * dF * (-6.0 * dF * dF + 0.5) - 1.875) + 0.5
