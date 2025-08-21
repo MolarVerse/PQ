@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Workflow
 
 - added/updated git hooks for commit messages
+- added license header check in CI workflow
 
 ### Bug Fixes
 
