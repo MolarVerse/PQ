@@ -1,0 +1,115 @@
+name: License Header Check
+
+on:
+  pull_request:
+    branches:
+      - '*'
+    paths:
+      - '**/*.cpp'
+      - '**/*.hpp'
+      - '**/*.c'
+      - '**/*.h'
+      - '.github/workflows/license_check.yml'
+      - 'scripts/addLicense.sh'
+      - 'config/licenseHeader.txt'
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - '**/*.cpp'
+      - '**/*.hpp'
+      - '**/*.c'
+      - '**/*.h'
+      - '.github/workflows/license_check.yml'
+      - 'scripts/addLicense.sh'
+      - 'config/licenseHeader.txt'
+  workflow_dispatch:
+
+jobs:
+  license-check:
+    runs-on: ubuntu-latest
+    name: Check License Headers
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for license headers in C++ files
+        run: |
+          echo "Checking for exact GPL license headers in C++ files..."
+          
+          # Verify license header template exists
+          if [ ! -f "config/licenseHeader.txt" ]; then
+            echo "❌ License header template not found at config/licenseHeader.txt"
+            exit 1
+          fi
+          
+          # Get the expected license header content
+          license_header=$(cat config/licenseHeader.txt)
+          header_line_count=$(wc -l < config/licenseHeader.txt)
+          
+          echo "Expected license header has $header_line_count lines"
+          echo ""
+          
+          # Find all C++ files in the relevant directories (excluding external dependencies)
+          missing_count=0
+          total_files=0
+          
+          find src/ tests/ include/ apps/ benchmarks/ -regex ".*\.\(hpp\|cpp\|c\|h\)$" -print0 2>/dev/null | while IFS= read -r -d '' file; do
+            total_files=$((total_files + 1))
+            echo "Checking: $file"
+            
+            # Extract the first N lines from the file (where N = number of lines in license header)
+            file_header=$(head -n "$header_line_count" "$file" 2>/dev/null)
+            
+            # Compare the extracted header with the expected license header
+            if [ "$file_header" = "$license_header" ]; then
+              echo "✅ Exact license header match: $file"
+            else
+              echo "❌ License header mismatch: $file"
+              echo "$file" >> /tmp/missing_files.txt
+            fi
+          done
+          
+          # Count missing files
+          if [ -f /tmp/missing_files.txt ]; then
+            missing_count=$(wc -l < /tmp/missing_files.txt)
+          else
+            missing_count=0
+          fi
+          
+          # Get total file count
+          total_files=$(find src/ tests/ include/ apps/ benchmarks/ -regex ".*\.\(hpp\|cpp\|c\|h\)$" 2>/dev/null | wc -l)
+          
+          echo ""
+          echo "=== License Check Summary ==="
+          echo "Total files checked: $total_files"
+          echo "Files with missing/invalid license headers: $missing_count"
+          
+          if [ $missing_count -gt 0 ]; then
+            echo ""
+            echo "Files with incorrect license headers:"
+            cat /tmp/missing_files.txt | while read -r file; do
+              echo "  - $file"
+            done
+            echo ""
+            echo "To fix these issues, you can run the addLicense.sh script:"
+            echo "  bash scripts/addLicense.sh"
+            echo ""
+            echo "Or manually ensure each file starts with the exact content from:"
+            echo "  config/licenseHeader.txt"
+            exit 1
+          else
+            echo "✅ All files have the exact license header!"
+          fi
+        shell: bash
+
+      - name: Show license header template
+        run: |
+          echo "=== License Header Template ==="
+          echo "Using template from: config/licenseHeader.txt"
+          echo "Template content:"
+          cat config/licenseHeader.txt
+          echo "=== End of Template ==="
+        shell: bash
