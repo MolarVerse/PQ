@@ -45,6 +45,18 @@ elif [[ "$lowercase_message" =~ ^format(\(.+\))?: ]]; then
   group="Style"
 fi
 
+# Cleanup
+if [[ "$lowercase_message" =~ ^cleanup(\(.+\))?: ]]; then
+  matched=true
+  group="Cleanup"
+elif [[ "$lowercase_message" =~ ^clean-up(\(.+\))?: ]]; then
+  matched=true
+  group="Cleanup"
+elif [[ "$lowercase_message" =~ ^clean(\(.+\))?: ]]; then
+  matched=true
+  group="Cleanup"
+fi
+
 # Refactor
 if [[ "$lowercase_message" =~ ^refactor(\(.+\))?: ]]; then
   matched=true
@@ -173,6 +185,7 @@ if ! $matched; then
   echo "  - Fix:            bugfix:, fix:"
   echo "  - Docs:           documentation:, docs:, doc:"
   echo "  - Style:          style:, format:"
+  echo "  - Cleanup:        cleanup:, clean-up:, clean:"
   echo "  - Refactor:       refactor:, ref:"
   echo "  - Performance:    performance:, perf:"
   echo "  - Test:           test:, tests:, testing:"
