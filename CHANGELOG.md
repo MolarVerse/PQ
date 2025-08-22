@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## Next Release
 
+<!-- insertion marker -->
+## [v0.6.2](https://github.com/MolarVerse/PQ/releases/tag/v0.6.2) - 2025-08-22
+
 ### Workflow
 
 - added/updated git hooks for commit messages
@@ -23,7 +26,6 @@ All notable changes to this project will be documented in this file.
 - Suppress googletest warnings for double promotion
 - Fix warnings when building the Sphinx documentation
 
-<!-- insertion marker -->
 ## [v0.6.1](https://github.com/MolarVerse/PQ/releases/tag/v0.6.1) - 2025-07-25
 
 ### Enhancements
