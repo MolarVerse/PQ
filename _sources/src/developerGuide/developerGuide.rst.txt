@@ -120,13 +120,13 @@ Integration Testing
 Integration tests are located in the ``PQ/integration_tests/`` directory.
 To run these tests, ensure the following Python packages are installed:
 
-    - `pytest      <https://pypi.org/project/pytest/>`_
-    - `pytest-cov  <https://pypi.org/project/pytest-cov/>`_
-    - `pqanalysis  <https://pypi.org/project/pqanalysis/>`_
-    - `ase         <https://pypi.org/project/ase/>`_
-    - `pyscf       <https://pypi.org/project/pyscf/>`_
+    - `pytest      <https://pypi.org/project/pytest/>`__
+    - `pytest-cov  <https://pypi.org/project/pytest-cov/>`__
+    - `pqanalysis  <https://pypi.org/project/pqanalysis/>`__
+    - `ase         <https://pypi.org/project/ase/>`__
+    - `pyscf       <https://pypi.org/project/pyscf/>`__
 
-In addition, the `DFTB+ <https://dftbplus.org/index.html>`_ program package has to be installed.
+In addition, the `DFTB+ <https://dftbplus.org/index.html>`__ program package has to be installed.
 You can then run the integration tests with the command ``pytest PQ/integration_tests``.
 
 ==============
@@ -140,14 +140,14 @@ The corresponding workflow configuration files are located in the ``PQ/.github/w
 Documentation
 *************
 
-This documentation is written as `reStructuredText <https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html>`_ files ``.rst`` and converted to HTML website files by `Sphinx <https://www.sphinx-doc.org/en/master/index.html>`_ .
+This documentation is written as `reStructuredText <https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html>`__ files ``.rst`` and converted to HTML website files by `Sphinx <https://www.sphinx-doc.org/en/master/index.html>`_ .
 The respective source files are located in ``PQ/docs/sphinx/src/``.
 In order to compile the files locally you need to install the following Python packages:
 
-    - `Sphinx            <https://pypi.org/project/Sphinx/>`_
-    - `sphinx_sitemap    <https://pypi.org/project/sphinx-sitemap/>`_
-    - `breathe           <https://pypi.org/project/breathe/>`_
-    - `sphinx_rtd_theme  <https://pypi.org/project/sphinx-rtd-theme/>`_
+    - `Sphinx            <https://pypi.org/project/Sphinx/>`__
+    - `sphinx_sitemap    <https://pypi.org/project/sphinx-sitemap/>`__
+    - `breathe           <https://pypi.org/project/breathe/>`__
+    - `sphinx_rtd_theme  <https://pypi.org/project/sphinx-rtd-theme/>`__
 
 The project is built by running ``make html`` in the folder ``PQ/docs/sphinx/``.
 The resulting website can be viewed by opening the file ``PQ/docs/sphinx/_build/html/index.html`` *via* your favorite browser.
