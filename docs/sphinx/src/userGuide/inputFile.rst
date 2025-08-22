@@ -64,7 +64,7 @@ In the following sections the types of the input values will be denoted *via* ``
 .. _selectionType:
 
 .. Note::
-    The ``{selection}`` type is used to select a specific atom or group of atoms. If the PQ software package was build including ``python3.12`` dependencies, the user can apply the selection grammar defined in the `PQAnalysis package <https://molarverse.github.io/PQAnalysis/code/PQAnalysis.topology.selection.html>`_. However, if PQ was compiled without these dependencies it is possible to index *via* the atomic indices starting from 0. If more than one atom index should be selected, the user can give a list of indices like ``{0, 1, 2}``. If a range of atom indices should be selected the user can use the following syntax ``{0-5, 10-15}`` or ``{0..5, 10-15}`` or ``{0..5, 10..15}``, where all would be equivalent to ``{0, 1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15}``.
+    The ``{selection}`` type is used to select a specific atom or group of atoms. If the PQ software package was build including ``python3.12`` dependencies, the user can apply the selection grammar defined in the `PQAnalysis package <https://molarverse.github.io/PQAnalysis/code/PQAnalysis.topology.selection.html>`__. However, if PQ was compiled without these dependencies it is possible to index *via* the atomic indices starting from 0. If more than one atom index should be selected, the user can give a list of indices like ``{0, 1, 2}``. If a range of atom indices should be selected the user can use the following syntax ``{0-5, 10-15}`` or ``{0..5, 10-15}`` or ``{0..5, 10..15}``, where all would be equivalent to ``{0, 1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15}``.
 
 Input Keys
 ==========
@@ -808,12 +808,12 @@ Possible options are:
 
    1. **none** (default) - no thermostat is set, hence {N/µ}{p/V}E settings are applied.
 
-   2. **berendsen** - the `Berendsen <https://doi.org/10.1063/1.448118>`_ weak coupling thermostat. Based on the rescaling of velocities according to the scaling factor :math:`\zeta`, equation :eq:`BerendsenThermostatEquation`. Ideal for crude temperature adjustments. Not able to reproduce the correct canonical ensemble.
+   2. **berendsen** - the `Berendsen <https://doi.org/10.1063/1.448118>`__ weak coupling thermostat. Based on the rescaling of velocities according to the scaling factor :math:`\zeta`, equation :eq:`BerendsenThermostatEquation`. Ideal for crude temperature adjustments. Not able to reproduce the correct canonical ensemble.
 
         .. math:: \zeta = \sqrt{1 + \frac{\Delta t}{\tau} \left( \frac{T_0}{T} - 1 \right)}
             :label: BerendsenThermostatEquation
 
-   3. **velocity_rescaling** - the stochastic velocity rescaling thermostat also known as `Bussi-Donadio-Parrinello <https://doi.org/10.1063/1.2408420>`_ thermostat. Based on the rescaling of velocities according to the scaling factor :math:`\zeta`, equation :eq:`BussiDonadioParrinelloThermostatEquation`. Enforces a canonical kinetic energy distribution.
+   3. **velocity_rescaling** - the stochastic velocity rescaling thermostat also known as `Bussi-Donadio-Parrinello <https://doi.org/10.1063/1.2408420>`__ thermostat. Based on the rescaling of velocities according to the scaling factor :math:`\zeta`, equation :eq:`BussiDonadioParrinelloThermostatEquation`. Enforces a canonical kinetic energy distribution.
 
         .. math:: \zeta = \sqrt{1 + \frac{\Delta t}{\tau} \left( \frac{T_0}{T} - 1 +2 \sqrt{\frac{T_0}{T} \frac{\Delta t}{\tau} \frac{1}{df}} dW \right)}
             :label: BussiDonadioParrinelloThermostatEquation
@@ -823,7 +823,7 @@ Possible options are:
         .. math:: m_{\text i} \dot{v}_{\text i} = F_{\text i} - \gamma \cdot p_{\text i} + \xi
             :label: LangevinThermostatEquation
 
-   5. **nh-chain** - temperature coupling *via* `Nose Hoover extended Lagrangian <https://doi.org/10.1063/1.463940>`_. Based on modifying the forces after each time step. The length of the Nose Hoover chain and the coupling frequency can be set with the :ref:`nhchainlenghtKey` and the :ref:`couplingFrequencyKey` keywords, respectively. Enforces a canonical kinetic energy distribution.
+   5. **nh-chain** - temperature coupling *via* `Nose Hoover extended Lagrangian <https://doi.org/10.1063/1.463940>`__. Based on modifying the forces after each time step. The length of the Nose Hoover chain and the coupling frequency can be set with the :ref:`nhchainlenghtKey` and the :ref:`couplingFrequencyKey` keywords, respectively. Enforces a canonical kinetic energy distribution.
 
 .. _temperatureRelaxationTimeKey:
 
@@ -1303,19 +1303,19 @@ With the ``qm_prog`` keyword the external QM engine for any kind of QM MD simula
 
 Possible options are:
 
-   1. **dftbplus** - `DFTB+ <https://dftbplus.org/index.html>`_
+   1. **dftbplus** - `DFTB+ <https://dftbplus.org/index.html>`__
 
-   2. **pyscf** - `PySCF <https://pyscf.org/>`_
+   2. **pyscf** - `PySCF <https://pyscf.org/>`__
 
-   3. **turbomole** - `Turbomole <https://www.turbomole.org/>`_
+   3. **turbomole** - `Turbomole <https://www.turbomole.org/>`__
 
-   4. **mace**  - `MACE-MP <https://arxiv.org/abs/2401.00096>`_ same as using **mace_mp**
+   4. **mace**  - `MACE-MP <https://arxiv.org/abs/2401.00096>`__ same as using **mace_mp**
 
-   5. **mace_off** - `MACE-OFF23 <https://arxiv.org/abs/2312.15211>`_
+   5. **mace_off** - `MACE-OFF23 <https://arxiv.org/abs/2312.15211>`__
 
-   6. **ase-dftbplus** - `DFTB+ <https://wiki.fysik.dtu.dk/ase/ase/calculators/dftb.html#module-ase.calculators.dftb>`_ called by `ASE <https://wiki.fysik.dtu.dk/ase/>`_ 
+   6. **ase-dftbplus** - `DFTB+ <https://wiki.fysik.dtu.dk/ase/ase/calculators/dftb.html#module-ase.calculators.dftb>`__ called by `ASE <https://wiki.fysik.dtu.dk/ase/>`__ 
    
-   7. **ase-xtb** - `xTB <https://xtb-docs.readthedocs.io/en/latest/>`_ called by `ASE <https://wiki.fysik.dtu.dk/ase/>`_ 
+   7. **ase-xtb** - `xTB <https://xtb-docs.readthedocs.io/en/latest/>`__ called by `ASE <https://wiki.fysik.dtu.dk/ase/>`__ 
 
 
 .. _qmscriptKey:
@@ -1328,7 +1328,7 @@ QM Script
 
     qm_script = {file}
 
-With the ``qm_script`` keyword the external executable to run the QM engine and to parse its output is chosen. All possible scripts can be found under `<https://github.com/MolarVerse/PQ/tree/main/src/QM/scripts>`_. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.
+With the ``qm_script`` keyword the external executable to run the QM engine and to parse its output is chosen. All possible scripts can be found under `<https://github.com/MolarVerse/PQ/tree/main/src/QM/scripts>`__. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.
 
 .. _qmscriptfullpathKey:
 
@@ -1343,7 +1343,7 @@ QM Script Full Path
 .. attention::
    This keyword can not be used in conjunction with the ``qm_script`` keyword! Furthermore, this keyword needs to be used in combination with any singularity or static build of PQ. For further details regarding the compilation/installation please refer to the :ref:`userG_installation` section.
 
-With the ``qm_script_full_path`` keyword the user can specify the full path to the external executable to run the QM engine and to parse its output. All possible scripts can be found under `<https://github.com/MolarVerse/PQ/tree/main/src/QM/scripts>`_. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.
+With the ``qm_script_full_path`` keyword the user can specify the full path to the external executable to run the QM engine and to parse its output. All possible scripts can be found under `<https://github.com/MolarVerse/PQ/tree/main/src/QM/scripts>`__. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.
 
 .. _qmlooptimelimitKey:
 
@@ -1425,7 +1425,7 @@ MACE Model Path
 
     mace_model_path = {string}
 
-With the ``mace_model_path`` keyword the user can specify a custom URL corresponding to a `MACE <https://github.com/ACEsuit/mace-foundations?tab=readme-ov-file>`_ model for the QM calculations.
+With the ``mace_model_path`` keyword the user can specify a custom URL corresponding to a `MACE <https://github.com/ACEsuit/mace-foundations?tab=readme-ov-file>`__ model for the QM calculations.
 
 .. Note::
     The ``mace_model_path`` can only be specified if :ref:`mace_model_size <maceModelSizeKey>` keyword is set to ``custom``.
@@ -1493,7 +1493,7 @@ Third-Order
 
     third_order = {bool} -> false
 
-With the ``third_order`` keyword the user can activate the 3rd order DFTB expansion according to `Grimme et al. <https://pubs.acs.org/doi/10.1021/ct100684s>`_ for ASE DFTB+ calculations. Is automatically set to ``true`` if the ``slakos`` keyword is set to **3ob**.
+With the ``third_order`` keyword the user can activate the 3rd order DFTB expansion according to `Grimme et al. <https://pubs.acs.org/doi/10.1021/ct100684s>`__ for ASE DFTB+ calculations. Is automatically set to ``true`` if the ``slakos`` keyword is set to **3ob**.
 
 .. centered:: *default value* = false
 
@@ -1507,7 +1507,7 @@ Hubbard Derivatives
 
     hubbard_derivs = {dict}
 
-If the Slater-Koster parameters are of DFTB3 type, the Hubbard derivatives can be set with the ``hubbard_derivs`` keyword. The Hubbard derivatives are given as a dictionary with the chemical element as key and the Hubbard derivative as value. Standard Hubbard derivatives for ``slakos`` **3ob** are preset according to `dftb.org <https://github.com/dftbparams/3ob>`_ and can be overwritten by the user.
+If the Slater-Koster parameters are of DFTB3 type, the Hubbard derivatives can be set with the ``hubbard_derivs`` keyword. The Hubbard derivatives are given as a dictionary with the chemical element as key and the Hubbard derivative as value. Standard Hubbard derivatives for ``slakos`` **3ob** are preset according to `dftb.org <https://github.com/dftbparams/3ob>`__ and can be overwritten by the user.
 
 .. admonition:: Example
     :class: code

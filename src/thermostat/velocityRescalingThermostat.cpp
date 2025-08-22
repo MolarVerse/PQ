@@ -87,13 +87,24 @@ void VelocityRescalingThermostat::applyThermostat(
     const auto tempRatio = _targetTemperature / _temperature;
     const auto dof       = double(simulationBox.getDegreesOfFreedom());
 
-    const auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
+    auto lambda = 1.0 + timeStep / _tau * (tempRatio - 1.0);
 
-    auto rescalingFactor  = 2.0 * ::sqrt(timeStep * tempRatio / (dof * _tau));
-    rescalingFactor      *= random;
+    const auto rescalingFactor =
+        2.0 * ::sqrt(timeStep * tempRatio / (dof * _tau));
 
-    auto lambda  = 1.0 + timeStep / _tau * (tempRatio - 1.0);
-    lambda      += rescalingFactor;
+    auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
+
+    lambda += rescalingFactor * random;
+
+    // If the stochastic term makes lambda negative, draw a new random number
+    // until lambda is positive to prevent sqrt of a negative number, leading to
+    // -nan velocities
+    while (lambda < 0.0)
+    {
+        lambda -= rescalingFactor * random;
+        random  = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
+        lambda += rescalingFactor * random;
+    }
 
     const auto berendsenFactor = ::sqrt(lambda);
 
