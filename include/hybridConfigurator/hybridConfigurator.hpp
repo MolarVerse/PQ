@@ -53,10 +53,8 @@ namespace configurator
          * standard getters and setters *
          ********************************/
 
-        [[nodiscard]] pq::Vec3D getInnerRegionCenter();
-        [[nodiscard]] int       getNumberSmoothingMolecules();
+        [[nodiscard]] int getNumberSmoothingMolecules();
 
-        void setInnerRegionCenter(pq::Vec3D);
         void setNumberSmoothingMolecules(int);
     };
 

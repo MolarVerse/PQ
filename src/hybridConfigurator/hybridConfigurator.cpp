@@ -259,13 +259,6 @@ void HybridConfigurator::calculateSmoothingFactors(pq::SimBox& simBox)
  ********************************/
 
 /**
- * @brief get the center of the inner region of the hybrid calculation
- *
- * @return Vec3D innerRegionCenter
- */
-Vec3D HybridConfigurator::getInnerRegionCenter() { return _innerRegionCenter; }
-
-/**
  * @brief get the number of molecules in the point charge region of the
  * hybrid calculation
  *
@@ -274,16 +267,6 @@ Vec3D HybridConfigurator::getInnerRegionCenter() { return _innerRegionCenter; }
 int HybridConfigurator::getNumberSmoothingMolecules()
 {
     return _numberSmoothingMolecules;
-}
-
-/**
- * @brief set the center of the inner region of the hybrid calculation
- *
- * @param innerRegionCenter
- */
-void HybridConfigurator::setInnerRegionCenter(Vec3D innerRegionCenter)
-{
-    _innerRegionCenter = innerRegionCenter;
 }
 
 /**
