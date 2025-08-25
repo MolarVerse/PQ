@@ -95,8 +95,8 @@ HybridInputParser::HybridInputParser(Engine &engine) : InputFileParser(engine)
         false
     );
     addKeyword(
-        std::string("point_charge_radius"),
-        bind_front(&HybridInputParser::parsePointChargeRadius, this),
+        std::string("point_charge_thickness"),
+        bind_front(&HybridInputParser::parsePointChargeThickness, this),
         false
     );
 }
@@ -272,14 +272,14 @@ void HybridInputParser::parseSmoothingRegionThickness(
 }
 
 /**
- * @brief parse point charge radius
+ * @brief parse point charge thickness
  *
  * @param lineElements
  * @param lineNumber
  *
  * @throws InputFileException if the radius is negative
  */
-void HybridInputParser::parsePointChargeRadius(
+void HybridInputParser::parsePointChargeThickness(
     const std::vector<std::string> &lineElements,
     const size_t                    lineNumber
 )
@@ -297,7 +297,7 @@ void HybridInputParser::parsePointChargeRadius(
             )
         );
 
-    HybridSettings::setPointChargeRadius(radius);
+    HybridSettings::setPointChargeThickness(radius);
 }
 
 /**

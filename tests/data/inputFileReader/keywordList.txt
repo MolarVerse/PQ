@@ -137,4 +137,4 @@ qm_charges                  false
 core_radius                 false
 layer_radius                false
 smoothing_region_thickness  false
-point_charge_radius         false
+point_charge_thickness      false

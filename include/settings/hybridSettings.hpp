@@ -49,7 +49,7 @@ namespace settings
         static inline double _coreRadius               = 0.0;
         static inline double _layerRadius              = 0.0;
         static inline double _smoothingRegionThickness = 0.0;
-        static inline double _pointChargeRadius        = 0.0;
+        static inline double _pointChargeThickness     = 0.0;
 
        public:
         /********************
@@ -65,7 +65,7 @@ namespace settings
         static void setCoreRadius(const double radius);
         static void setLayerRadius(const double radius);
         static void setSmoothingRegionThickness(const double thickness);
-        static void setPointChargeRadius(const double radius);
+        static void setPointChargeThickness(const double radius);
 
         /********************
          * standard getters *
@@ -80,7 +80,7 @@ namespace settings
         [[nodiscard]] static double getCoreRadius();
         [[nodiscard]] static double getLayerRadius();
         [[nodiscard]] static double getSmoothingRegionThickness();
-        [[nodiscard]] static double getPointChargeRadius();
+        [[nodiscard]] static double getPointChargeThickness();
     };
 }   // namespace settings
 

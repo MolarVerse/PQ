@@ -51,7 +51,7 @@ namespace input
         void parseCoreRadius(const pq::strings &, const size_t);
         void parseLayerRadius(const pq::strings &, const size_t);
         void parseSmoothingRegionThickness(const pq::strings &, const size_t);
-        void parsePointChargeRadius(const pq::strings &, const size_t);
+        void parsePointChargeThickness(const pq::strings &, const size_t);
 
         std::vector<int> parseSelection(
             const std::string &,

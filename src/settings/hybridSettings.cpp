@@ -118,16 +118,16 @@ void HybridSettings::setSmoothingRegionThickness(const double thickness)
 }
 
 /**
- * @brief set the pointChargeRadius in the settings
+ * @brief set the pointChargeThickness in the settings
  *
- * @details the pointChargeRadius added to the layerRadius is the distance
- * measured from the core center up to which point charges are included
+ * @details the pointChargeThickness is the distance measured from the layer
+ * radius up to which point charges are included
  *
  * @param radius
  */
-void HybridSettings::setPointChargeRadius(const double radius)
+void HybridSettings::setPointChargeThickness(const double radius)
 {
-    _pointChargeRadius = radius;
+    _pointChargeThickness = radius;
 }
 
 /********************
@@ -198,8 +198,11 @@ double HybridSettings::getSmoothingRegionThickness()
 }
 
 /**
- * @brief get the pointChargeRadius
+ * @brief get the pointChargeThickness
  *
  * @return double
  */
-double HybridSettings::getPointChargeRadius() { return _pointChargeRadius; }
+double HybridSettings::getPointChargeThickness()
+{
+    return _pointChargeThickness;
+}

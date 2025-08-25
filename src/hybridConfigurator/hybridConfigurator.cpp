@@ -139,12 +139,12 @@ void HybridConfigurator::shiftAtomsBackToInitialPositions(SimBox& simBox)
  * - **SMOOTHING**: (layer radius - smoothing region thickness) < distance ≤
  * layer radius
  * - **POINT_CHARGE** layer radius < distance ≤ (layer radius +
- * pointChargeRadius)
- * - **OUTER**: Distance > layer radius + pointChargeRadius
+ * pointChargeThickness)
+ * - **OUTER**: Distance > layer radius + pointChargeThickness
  *
  * The function calculates the center of mass for each molecule and determines
  * its zone assignment using the hybrid settings parameters (core radius, layer
- * radius, smoothing region thickness and point charge radius).
+ * radius, smoothing region thickness and point charge thickness).
  *
  * @note The inner region center should be set to the origin (via
  *       shiftAtomsToInnerRegionCenter) before calling this function for
@@ -156,7 +156,7 @@ void HybridConfigurator::assignHybridZones(SimBox& simBox)
     const auto layerRadius = HybridSettings::getLayerRadius();
     const auto smoothingRegionThickness =
         HybridSettings::getSmoothingRegionThickness();
-    const auto pointChargeRadius = HybridSettings::getPointChargeRadius();
+    const auto pointChargeThickness = HybridSettings::getPointChargeThickness();
 
     for (auto& mol : simBox.getMolecules())
     {
@@ -172,7 +172,7 @@ void HybridConfigurator::assignHybridZones(SimBox& simBox)
             mol.setHybridZone(SMOOTHING);
             ++_numberSmoothingMolecules;
         }
-        else if (com <= layerRadius + pointChargeRadius)
+        else if (com <= layerRadius + pointChargeThickness)
             mol.setHybridZone(POINT_CHARGE);
         else
             mol.setHybridZone(OUTER);
