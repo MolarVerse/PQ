@@ -22,10 +22,10 @@
 
 #include "hybridConfigurator.hpp"
 
-#include <stdexcept>       // for domain_error
 #include <unordered_set>   // for unordered_set
 
 #include "atom.hpp"             // for Atom
+#include "exceptions.hpp"       // for HybridConfiguratorException
 #include "hybridSettings.hpp"   // for HybridSettings
 #include "simulationBox.hpp"    // for SimulationBox
 
@@ -33,6 +33,7 @@ using enum simulationBox::HybridZone;
 
 using namespace pq;
 using namespace configurator;
+using namespace customException;
 using namespace settings;
 using namespace simulationBox;
 
@@ -45,15 +46,15 @@ using namespace simulationBox;
  * atoms specified by the inner region center atom indices. The calculated
  * center is stored as the inner region center for the hybrid calculation.
  *
- * @throw std::domain_error if no center atoms are specified (empty indices
- * list)
+ * @throw HybridConfiguratorException if no center atoms are specified (empty
+ * indices list)
  */
 void HybridConfigurator::calculateInnerRegionCenter(SimBox& simBox)
 {
     const auto& indices = simBox.getInnerRegionCenterAtomIndices();
 
     if (indices.empty())
-        throw(std::domain_error(
+        throw(HybridConfiguratorException(
             "Cannot calculate inner region center: no center atoms specified"
         ));
 
@@ -223,7 +224,8 @@ void HybridConfigurator::deactivateMoleculesForInnerCalculation(
  *
  * @param simBox Simulation box containing the molecules
  *
- * @throw std::domain_error if a molecule is outside the smoothing region
+ * @throw HybridConfiguratorException if a molecule is outside the smoothing
+ * region
  */
 void HybridConfigurator::calculateSmoothingFactors(pq::SimBox& simBox)
 {
@@ -241,7 +243,7 @@ void HybridConfigurator::calculateSmoothingFactors(pq::SimBox& simBox)
             smoothingRegionThickness;
 
         if (distanceFactor < 0.0 || distanceFactor > 1.0)
-            throw(std::domain_error(
+            throw(HybridConfiguratorException(
                 "Cannot calculate smoothing factor for molecule outside the "
                 "smoothing region"
             ));
