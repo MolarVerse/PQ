@@ -146,9 +146,6 @@ void DFTBPlusRunner::writeCoordsFile(SimulationBox &box)
  */
 void DFTBPlusRunner::writePointChargeFile(pq::SimBox &box)
 {
-    if (!(Settings::isHybridJobtype()))
-        return;
-
     const std::string fileName = "mm_pointcharges";
     std::ofstream     pcFile(fileName);
 

@@ -69,7 +69,9 @@ void ExternalQMRunner::run(
     _periodicity = per;
 
     writeCoordsFile(simBox);
-    writePointChargeFile(simBox);
+    
+    if (Settings::isHybridJobtype())
+        writePointChargeFile(simBox);
 
     std::jthread timeoutThread{[this](const std::stop_token stopToken)
                                { throwAfterTimeout(stopToken); }};
