@@ -15,6 +15,7 @@ my $guess_mo           = $ARGV[2];             # flag if a dft step is performed
 my $pointcharges       = $ARGV[3];             # flag if point charges are used
 my $nprocessors        = $ARGV[4];             # number of processors
 my $dftb_template      = $ARGV[5];             # dftb setup file that generates $dftb_input
+my $pointcharges_file  = $ARGV[6];             # name of the pointcharges_file
 
 
 # various variables
@@ -44,23 +45,22 @@ my $stress_tensor_file_mat = "stress_tensor_mat";      # result file: stress ten
 
 my $qm_coords             = "coords";               # coordinates
 my $qm_coords_prev        = "coords.prev";          # coordinates previous step
-my $mm_pointcharges       = "mm_pointcharges";      # mm_pointcharges
 
 my $energy_found          = 0;                     # energy  control flag
 my $forces_found          = 0;                     # forces  control flag
 my $charges_found         = 0;                     # charges control flag
 my $stress_tensor_found   = 0;                     # stress-tensor control flag
 
-my $n_pc                  = 0;                     # number of point charges read from mm_pointcharges
+my $n_pc                  = 0;                     # number of point charges read from the $pointcharges_file
 my $n_fields              = 0;
 
 `cat coords > geom.gen`;
 
-# count number of mm pointcharges
+# count number of pointcharges in $pointcharges_file
 if ($pointcharges == 1)
 {
-  open (MM_PC, "< $mm_pointcharges") or
-        die "\n\n\t (-) $progname: Error opening file $mm_pointcharges'\n";
+  open (MM_PC, "< $pointcharges_file") or
+        die "\n\n\t (-) $progname: Error opening file $pointcharges_file'\n";
 
   while (<MM_PC>) { $n_pc ++; }
 

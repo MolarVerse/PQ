@@ -47,13 +47,13 @@
 using QM::DFTBPlusRunner;
 using enum simulationBox::Periodicity;
 
-using namespace simulationBox;
-using namespace physicalData;
 using namespace customException;
-using namespace settings;
 using namespace constants;
-using namespace utilities;
 using namespace linearAlgebra;
+using namespace physicalData;
+using namespace settings;
+using namespace simulationBox;
+using namespace utilities;
 
 /**
  * @brief writes the coords file in order to run the external qm program
@@ -137,7 +137,7 @@ void DFTBPlusRunner::writeCoordsFile(SimulationBox &box)
 /**
  * @brief Writes a file containing point charges for hybrid simulations.
  *
- * This function creates the file "mm_pointcharges" listing the positions and
+ * This function creates the pointcharges file listing the positions and
  * partial charges of all inactive atoms in molecules assigned to the
  * POINT_CHARGE or SMOOTHING hybrid zones. The file is used for QM/MM coupling
  * in DFTB+ calculations.
@@ -146,7 +146,7 @@ void DFTBPlusRunner::writeCoordsFile(SimulationBox &box)
  */
 void DFTBPlusRunner::writePointChargeFile(pq::SimBox &box)
 {
-    const std::string fileName = "mm_pointcharges";
+    const std::string fileName = FileSettings::getPointChargeFileName();
     std::ofstream     pcFile(fileName);
 
     _usePointCharges = false;
@@ -190,11 +190,12 @@ void DFTBPlusRunner::execute()
     const auto usePointCharges   = _usePointCharges ? 1 : 0;
 
     const auto command = std::format(
-        "{} 0 {} 0 {} 0 {}",
+        "{} 0 {} 0 {} 0 {} {}",
         scriptFile,
         discardOldCharges,
         usePointCharges,
-        FileSettings::getDFTBFileName()
+        FileSettings::getDFTBFileName(),
+        FileSettings::getPointChargeFileName()
     );
     ::system(command.c_str());
 
