@@ -82,8 +82,6 @@ void ExternalQMRunner::run(
     readStressTensor(simBox.getBox(), physicalData);
 }
 
-void ExternalQMRunner::writePointChargeFile(SimulationBox &box) {}
-
 /**
  * @brief reads the force file (including qm energy) and sets the forces of
  * the atoms
