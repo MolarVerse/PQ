@@ -58,19 +58,23 @@ void HybridConfigurator::calculateInnerRegionCenter(SimBox& simBox)
             "Cannot calculate inner region center: no center atoms specified"
         ));
 
-    Vec3D  center     = {0.0, 0.0, 0.0};
-    double total_mass = 0.0;
+    Vec3D      center        = {0.0, 0.0, 0.0};
+    double     total_mass    = 0.0;
+    const auto positionAtom1 = simBox.getAtom(indices.at(0)).getPosition();
 
     for (const auto index : indices)
     {
-        const auto& atom  = simBox.getAtom(index);
-        const auto  mass  = atom.getMass();
-        center           += atom.getPosition() * mass;
-        total_mass       += mass;
+        const auto& atom     = simBox.getAtom(index);
+        const auto  mass     = atom.getMass();
+        const auto  position = atom.getPosition();
+        const auto  deltaPos = position - positionAtom1;
+
+        center     += mass * (position - simBox.calcShiftVector(deltaPos));
+        total_mass += mass;
     }
 
     center             /= total_mass;
-    _innerRegionCenter  = center;
+    _innerRegionCenter  = center - simBox.calcShiftVector(center);
 }
 
 /**
