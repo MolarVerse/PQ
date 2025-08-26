@@ -208,10 +208,10 @@ void HybridConfigurator::deactivateMoleculesForInnerCalculation(
 
         if (hybridZone == CORE || hybridZone == LAYER ||
             hybridZone == SMOOTHING)
-            mol.activateAtoms();
+            mol.activateMolecule();
         else if (inactiveMolecules.contains(count) ||
                  hybridZone == POINT_CHARGE || hybridZone == OUTER)
-            mol.deactivateAtoms();
+            mol.deactivateMolecule();
 
         ++count;
     }

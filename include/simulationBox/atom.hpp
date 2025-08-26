@@ -40,6 +40,8 @@ namespace simulationBox
     class Atom
     {
        private:
+        friend class Molecule;
+
         std::string _name;
         std::string _atomTypeName;
 
@@ -130,7 +132,6 @@ namespace simulationBox
 
         void setForcedInner(const bool isForcedInner);
         void setForcedOuter(const bool isForcedOuter);
-        void setIsActive(const bool isActive);
 
         void setName(const std::string_view &name);
         void setAtomTypeName(const std::string_view &atomTypeName);

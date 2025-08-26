@@ -196,21 +196,23 @@ void Molecule::setAtomForcesToZero()
 }
 
 /**
- * @brief activates the atoms in the molecule for hybrid calculations
+ * @brief activates the molecule and it's atoms for hybrid calculations
  *
  */
-void Molecule::activateAtoms()
+void Molecule::activateMolecule()
 {
-    for (auto &atom : getAtoms()) atom->setIsActive(true);
+    _isActive = true;
+    for (auto &atom : getAtoms()) atom->_isActive = true;
 }
 
 /**
- * @brief deactivates the atoms in the molecule for hybrid calculations
+ * @brief deactivates the molecule and it's atoms for hybrid calculations
  *
  */
-void Molecule::deactivateAtoms()
+void Molecule::deactivateMolecule()
 {
-    for (auto &atom : getAtoms()) atom->setIsActive(false);
+    _isActive = false;
+    for (auto &atom : getAtoms()) atom->_isActive = false;
 }
 
 /****************************************
@@ -514,6 +516,13 @@ Vec3D Molecule::getCenterOfMass() const { return _centerOfMass; }
  * @return HybridZone
  */
 HybridZone Molecule::getHybridZone() const { return _hybridZone; }
+
+/**
+ * @brief return if the molecule is activate for hybrid calculations
+ *
+ * @return isActive
+ */
+bool Molecule::isActive() const { return _isActive; }
 
 /**
  * @brief return the smoothing factor of the molecule for hybrid calculations

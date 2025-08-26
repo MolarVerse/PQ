@@ -68,6 +68,7 @@ namespace simulationBox
 
         pq::Vec3D  _centerOfMass = pq::Vec3D(0.0, 0.0, 0.0);
         HybridZone _hybridZone   = HybridZone::NOT_HYBRID;
+        bool       _isActive     = true;
         double     _smoothingFactor;
 
         std::map<size_t, size_t> _externalToInternalAtomTypes;
@@ -89,8 +90,8 @@ namespace simulationBox
 
         void setPartialCharges(const std::vector<double> &partialCharges);
         void setAtomForcesToZero();
-        void activateAtoms();
-        void deactivateAtoms();
+        void activateMolecule();
+        void deactivateMolecule();
 
         /****************************************
          * standard adder methods for atom data *
@@ -143,6 +144,7 @@ namespace simulationBox
 
         [[nodiscard]] pq::Vec3D  getCenterOfMass() const;
         [[nodiscard]] HybridZone getHybridZone() const;
+        [[nodiscard]] bool       isActive() const;
         [[nodiscard]] double     getSmoothingFactor() const;
 
         [[nodiscard]] Atom                    &getAtom(const size_t index);
