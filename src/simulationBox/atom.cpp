@@ -374,6 +374,13 @@ void Atom::setForcedOuter(const bool isForcedOuter)
 }
 
 /**
+ * @brief set if the atom is active
+ *
+ * @param isActive
+ */
+void Atom::setActive(const bool isActive) { _isActive = isActive; }
+
+/**
  * @brief set the name of the atom (element name)
  *
  * @param name

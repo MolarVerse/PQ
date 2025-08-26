@@ -202,7 +202,7 @@ void Molecule::setAtomForcesToZero()
 void Molecule::activateMolecule()
 {
     _isActive = true;
-    for (auto &atom : getAtoms()) atom->_isActive = true;
+    for (auto &atom : getAtoms()) atom->setActive(true);
 }
 
 /**
@@ -212,7 +212,7 @@ void Molecule::activateMolecule()
 void Molecule::deactivateMolecule()
 {
     _isActive = false;
-    for (auto &atom : getAtoms()) atom->_isActive = false;
+    for (auto &atom : getAtoms()) atom->setActive(false);
 }
 
 /****************************************
