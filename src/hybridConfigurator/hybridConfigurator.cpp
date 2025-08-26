@@ -204,13 +204,21 @@ void HybridConfigurator::deactivateMoleculesForInnerCalculation(
 
     for (auto& mol : simBox.getMolecules())
     {
-        const auto hybridZone = mol.getHybridZone();
+        const auto zone       = mol.getHybridZone();
+        const bool isInactive = inactiveMolecules.contains(count);
 
-        if (hybridZone == CORE || hybridZone == LAYER ||
-            hybridZone == SMOOTHING)
+        if (isInactive && zone != SMOOTHING)
+            throw(HybridConfiguratorException(
+                std::format(
+                    "Molecule at index {} is not a smoothing molecule and "
+                    "cannot be deactivated",
+                    count
+                )
+            ));
+
+        if (zone == CORE || zone == LAYER || (zone == SMOOTHING && !isInactive))
             mol.activateMolecule();
-        else if (inactiveMolecules.contains(count) ||
-                 hybridZone == POINT_CHARGE || hybridZone == OUTER)
+        else
             mol.deactivateMolecule();
 
         ++count;
