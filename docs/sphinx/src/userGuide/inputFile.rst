@@ -64,7 +64,7 @@ In the following sections the types of the input values will be denoted *via* ``
 .. _selectionType:
 
 .. Note::
-    The ``{selection}`` type is used to select a specific atom or group of atoms. If the PQ software package was build including ``python3.12`` dependencies, the user can apply the selection grammar defined in the `PQAnalysis package <https://molarverse.github.io/PQAnalysis/code/PQAnalysis.topology.selection.html>`_. However, if PQ was compiled without these dependencies it is possible to index *via* the atomic indices starting from 0. If more than one atom index should be selected, the user can give a list of indices like ``{0, 1, 2}``. If a range of atom indices should be selected the user can use the following syntax ``{0-5, 10-15}`` or ``{0..5, 10-15}`` or ``{0..5, 10..15}``, where all would be equivalent to ``{0, 1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15}``.
+    The ``{selection}`` type is used to select a specific atom or group of atoms. If the PQ software package was build including ``python3.12`` dependencies, the user can apply the selection grammar defined in the `PQAnalysis package <https://molarverse.github.io/PQAnalysis/code/PQAnalysis.topology.selection.html>`__. However, if PQ was compiled without these dependencies it is possible to index *via* the atomic indices starting from 0. If more than one atom index should be selected, the user can give a list of indices like ``{0, 1, 2}``. If a range of atom indices should be selected the user can use the following syntax ``{0-5, 10-15}`` or ``{0..5, 10-15}`` or ``{0..5, 10..15}``, where all would be equivalent to ``{0, 1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15}``.
 
 Input Keys
 ==========
@@ -250,6 +250,8 @@ Overwrite Output Files
     overwrite_output = {bool} -> false
 
 The ``overwrite_output`` keyword allows the user to overwrite any existing output files.
+
+.. centered:: *default value* = false
 
 .. _fileprefixkey:
 
@@ -593,6 +595,8 @@ Moldesctiptor File
 
     moldescriptor_file = {file} -> "moldescriptor.dat"
 
+.. centered:: *default value* = "moldescriptor.dat"
+
 .. _gufffileKey:
 
 GUFF File
@@ -603,6 +607,8 @@ GUFF File
 
     guff_file = {file} -> "guff.dat"
 
+.. centered:: *default value* = "guff.dat"
+
 .. _dftbfileKey:
 
 DFTB Setup File
@@ -612,6 +618,8 @@ DFTB Setup File
     :class: tip
 
     dftb_file = {file} -> "dftb_in.template"
+
+.. centered:: *default value* = "dftb_in.template"
 
 .. _topologyFileKey:
 
@@ -800,12 +808,12 @@ Possible options are:
 
    1. **none** (default) - no thermostat is set, hence {N/µ}{p/V}E settings are applied.
 
-   2. **berendsen** - the `Berendsen <https://doi.org/10.1063/1.448118>`_ weak coupling thermostat. Based on the rescaling of velocities according to the scaling factor :math:`\zeta`, equation :eq:`BerendsenThermostatEquation`. Ideal for crude temperature adjustments. Not able to reproduce the correct canonical ensemble.
+   2. **berendsen** - the `Berendsen <https://doi.org/10.1063/1.448118>`__ weak coupling thermostat. Based on the rescaling of velocities according to the scaling factor :math:`\zeta`, equation :eq:`BerendsenThermostatEquation`. Ideal for crude temperature adjustments. Not able to reproduce the correct canonical ensemble.
 
         .. math:: \zeta = \sqrt{1 + \frac{\Delta t}{\tau} \left( \frac{T_0}{T} - 1 \right)}
             :label: BerendsenThermostatEquation
 
-   3. **velocity_rescaling** - the stochastic velocity rescaling thermostat also known as `Bussi-Donadio-Parrinello <https://doi.org/10.1063/1.2408420>`_ thermostat. Based on the rescaling of velocities according to the scaling factor :math:`\zeta`, equation :eq:`BussiDonadioParrinelloThermostatEquation`. Enforces a canonical kinetic energy distribution.
+   3. **velocity_rescaling** - the stochastic velocity rescaling thermostat also known as `Bussi-Donadio-Parrinello <https://doi.org/10.1063/1.2408420>`__ thermostat. Based on the rescaling of velocities according to the scaling factor :math:`\zeta`, equation :eq:`BussiDonadioParrinelloThermostatEquation`. Enforces a canonical kinetic energy distribution.
 
         .. math:: \zeta = \sqrt{1 + \frac{\Delta t}{\tau} \left( \frac{T_0}{T} - 1 +2 \sqrt{\frac{T_0}{T} \frac{\Delta t}{\tau} \frac{1}{df}} dW \right)}
             :label: BussiDonadioParrinelloThermostatEquation
@@ -815,7 +823,7 @@ Possible options are:
         .. math:: m_{\text i} \dot{v}_{\text i} = F_{\text i} - \gamma \cdot p_{\text i} + \xi
             :label: LangevinThermostatEquation
 
-   5. **nh-chain** - temperature coupling *via* `Nose Hoover extended Lagrangian <https://doi.org/10.1063/1.463940>`_. Based on modifying the forces after each time step. The length of the Nose Hoover chain and the coupling frequency can be set with the :ref:`nhchainlenghtKey` and the :ref:`couplingFrequencyKey` keywords, respectively. Enforces a canonical kinetic energy distribution.
+   5. **nh-chain** - temperature coupling *via* `Nose Hoover extended Lagrangian <https://doi.org/10.1063/1.463940>`__. Based on modifying the forces after each time step. The length of the Nose Hoover chain and the coupling frequency can be set with the :ref:`nhchainlenghtKey` and the :ref:`couplingFrequencyKey` keywords, respectively. Enforces a canonical kinetic energy distribution.
 
 .. _temperatureRelaxationTimeKey:
 
@@ -1181,6 +1189,8 @@ Distance Constraints
 
 With the ``distance-constraints`` keyword it is possible to activate distance constraints for the simulation. The distance constraints are defined *via* the :ref:`topologyFile`.
 
+.. centered:: *default value* = "off"
+
 .. _mmKeys:
 
 *******
@@ -1293,19 +1303,19 @@ With the ``qm_prog`` keyword the external QM engine for any kind of QM MD simula
 
 Possible options are:
 
-   1. **dftbplus** - `DFTB+ <https://dftbplus.org/index.html>`_
+   1. **dftbplus** - `DFTB+ <https://dftbplus.org/index.html>`__
 
-   2. **pyscf** - `PySCF <https://pyscf.org/>`_
+   2. **pyscf** - `PySCF <https://pyscf.org/>`__
 
-   3. **turbomole** - `Turbomole <https://www.turbomole.org/>`_
+   3. **turbomole** - `Turbomole <https://www.turbomole.org/>`__
 
-   4. **mace**  - `MACE-MP <https://arxiv.org/abs/2401.00096>`_ same as using **mace_mp**
+   4. **mace**  - `MACE-MP <https://arxiv.org/abs/2401.00096>`__ same as using **mace_mp**
 
-   5. **mace_off** - `MACE-OFF23 <https://arxiv.org/abs/2312.15211>`_
+   5. **mace_off** - `MACE-OFF23 <https://arxiv.org/abs/2312.15211>`__
 
-   6. **ase-dftbplus** - `DFTB+ <https://wiki.fysik.dtu.dk/ase/ase/calculators/dftb.html#module-ase.calculators.dftb>`_ called by `ASE <https://wiki.fysik.dtu.dk/ase/>`_ 
+   6. **ase-dftbplus** - `DFTB+ <https://wiki.fysik.dtu.dk/ase/ase/calculators/dftb.html#module-ase.calculators.dftb>`__ called by `ASE <https://wiki.fysik.dtu.dk/ase/>`__ 
    
-   7. **ase-xtb** - `xTB <https://xtb-docs.readthedocs.io/en/latest/>`_ called by `ASE <https://wiki.fysik.dtu.dk/ase/>`_ 
+   7. **ase-xtb** - `xTB <https://xtb-docs.readthedocs.io/en/latest/>`__ called by `ASE <https://wiki.fysik.dtu.dk/ase/>`__ 
 
 
 .. _qmscriptKey:
@@ -1318,7 +1328,7 @@ QM Script
 
     qm_script = {file}
 
-With the ``qm_script`` keyword the external executable to run the QM engine and to parse its output is chosen. All possible scripts can be found under `<https://github.com/MolarVerse/PQ/tree/main/src/QM/scripts>`_. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.
+With the ``qm_script`` keyword the external executable to run the QM engine and to parse its output is chosen. All possible scripts can be found under `<https://github.com/MolarVerse/PQ/tree/main/src/QM/scripts>`__. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.
 
 .. _qmscriptfullpathKey:
 
@@ -1333,7 +1343,7 @@ QM Script Full Path
 .. attention::
    This keyword can not be used in conjunction with the ``qm_script`` keyword! Furthermore, this keyword needs to be used in combination with any singularity or static build of PQ. For further details regarding the compilation/installation please refer to the :ref:`userG_installation` section.
 
-With the ``qm_script_full_path`` keyword the user can specify the full path to the external executable to run the QM engine and to parse its output. All possible scripts can be found under `<https://github.com/MolarVerse/PQ/tree/main/src/QM/scripts>`_. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.
+With the ``qm_script_full_path`` keyword the user can specify the full path to the external executable to run the QM engine and to parse its output. All possible scripts can be found under `<https://github.com/MolarVerse/PQ/tree/main/src/QM/scripts>`__. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.
 
 .. _qmlooptimelimitKey:
 
@@ -1347,6 +1357,8 @@ QM Loop Time Limit
 
 With the ``qm_loop_time_limit`` keyword the user can specify the loop time limit in ``s`` of all QM type calculations. If the time limit is reached the calculation will be stopped. Default value is 3600 s (1 hour). Values smaller equal than zero are interpreted as no time limit and the calculation will continue until it is finished.
 
+.. centered:: *default value* = 3600 s
+
 .. _disperstoncorrectionKey:
 
 Dispersion Correction
@@ -1358,6 +1370,8 @@ Dispersion Correction
     dispersion = {bool} -> false
 
 With the ``dispersion`` keyword the user can activate the dispersion correction for the QM calculations - at the moment only enabled for ASE based QM engines.
+
+.. centered:: *default value* = false
 
 .. _maceModelSizeKey:
 
@@ -1411,7 +1425,7 @@ MACE Model Path
 
     mace_model_path = {string}
 
-With the ``mace_model_path`` keyword the user can specify a custom URL corresponding to a `MACE <https://github.com/ACEsuit/mace-foundations?tab=readme-ov-file>`_ model for the QM calculations.
+With the ``mace_model_path`` keyword the user can specify a custom URL corresponding to a `MACE <https://github.com/ACEsuit/mace-foundations?tab=readme-ov-file>`__ model for the QM calculations.
 
 .. Note::
     The ``mace_model_path`` can only be specified if :ref:`mace_model_size <maceModelSizeKey>` keyword is set to ``custom``.
@@ -1433,7 +1447,7 @@ Possible options are:
 
     1. **GFN1-xTB** - GFN1-xTB parametrization
 
-    2. **GFN2-xTB** - GFN2-xTB parametrization
+    2. **GFN2-xTB** (default) - GFN2-xTB parametrization
 
     3. **IPEA1-xTB** - IPEA-xTB parametrization
 
@@ -1479,7 +1493,9 @@ Third-Order
 
     third_order = {bool} -> false
 
-With the ``third_order`` keyword the user can activate the 3rd order DFTB expansion according to `Grimme et al. <https://pubs.acs.org/doi/10.1021/ct100684s>`_ for ASE DFTB+ calculations. Is automatically set to ``true`` if the ``slakos`` keyword is set to **3ob**.
+With the ``third_order`` keyword the user can activate the 3rd order DFTB expansion according to `Grimme et al. <https://pubs.acs.org/doi/10.1021/ct100684s>`__ for ASE DFTB+ calculations. Is automatically set to ``true`` if the ``slakos`` keyword is set to **3ob**.
+
+.. centered:: *default value* = false
 
 .. _hubbardDerivKey:
 
@@ -1491,7 +1507,7 @@ Hubbard Derivatives
 
     hubbard_derivs = {dict}
 
-If the Slater-Koster parameters are of DFTB3 type, the Hubbard derivatives can be set with the ``hubbard_derivs`` keyword. The Hubbard derivatives are given as a dictionary with the chemical element as key and the Hubbard derivative as value. Standard Hubbard derivatives for ``slakos`` **3ob** are preset according to `dftb.org <https://github.com/dftbparams/3ob>`_ and can be overwritten by the user.
+If the Slater-Koster parameters are of DFTB3 type, the Hubbard derivatives can be set with the ``hubbard_derivs`` keyword. The Hubbard derivatives are given as a dictionary with the chemical element as key and the Hubbard derivative as value. Standard Hubbard derivatives for ``slakos`` **3ob** are preset according to `dftb.org <https://github.com/dftbparams/3ob>`__ and can be overwritten by the user.
 
 .. admonition:: Example
     :class: code
@@ -1539,6 +1555,8 @@ QM Center
     qm_center = {selection} -> 0
 
 With the ``qm_center`` keyword the user can specify the center of the QM region. The default selection is the first atom of the system (*i.e.* 0). For more information about the selection grammar see the `selectionType`_ section. The ``qm_center`` if more than one atom is selected will be by default the center of mass of the selected atoms.
+
+.. centered:: *default value* = 0
 
 .. _forcedinnerlistKey:
 
@@ -1600,6 +1618,8 @@ QM Core Radius
 
 With the ``qm_core_radius`` keyword the user can specify the core radius in :math:`\mathrm{\mathring{A}}` around the ``qm_center``. The default value is 0.0 :math:`\mathrm{\mathring{A}}`, which means that the core radius is not set and only explicit QM atoms are used for the QM region.
 
+.. centered:: *default value* = 0.0 Å
+
 .. _qmmmlayerradiuskey:
 
 QM/MM Layer Radius
@@ -1608,9 +1628,11 @@ QM/MM Layer Radius
 .. admonition:: Key
     :class: tip
 
-    qmmm_layer_radius = {double} :math:`\mathrm{\mathring{A}}` -> 0.0 :math:`\mathrm{\mathring{A}`
+    qmmm_layer_radius = {double} :math:`\mathrm{\mathring{A}}` -> 0.0 :math:`\mathrm{\mathring{A}}`
 
 With the ``qmmm_layer_radius`` keyword the user can specify the layer radius in :math:`\mathrm{\mathring{A}}` around the ``qm_center``. The default value is 0.0 :math:`\mathrm{\mathring{A}}`, which means that no special QM/MM treatment is applied.
+
+.. centered:: *default value* = 0.0 Å
 
 .. _qmmmsmoothingradiuskey:
 
@@ -1620,9 +1642,11 @@ QM/MM Smoothing Radius
 .. admonition:: Key
     :class: tip
 
-    qmmm_smoothing_radius = {double} :math:`\mathrm{\mathring{A}}` -> 0.0 :math:`\mathrm{\mathring{A}`
+    qmmm_smoothing_radius = {double} :math:`\mathrm{\mathring{A}}` -> 0.0 :math:`\mathrm{\mathring{A}}`
 
 With the ``qmmm_smoothing_radius`` keyword the user can specify the smoothing radius in :math:`\mathrm{\mathring{A}}` of the QM atoms. The default value is 0.0 :math:`\mathrm{\mathring{A}}`, which means that the smoothing radius is not set and no smoothing is applied.
+
+.. centered:: *default value* = 0.0 Å
 
 .. _celllistKeys:
 
@@ -1776,6 +1800,8 @@ Enable/Disable Energy Convergence Check
 
 With the ``use-energy-conv`` keyword the user can enable or disable the energy convergence check for all kind of optimization jobs.
 
+.. centered:: *default value* = true
+
 .. _maxforceconvergencecheckKey:
 
 Enable/Disable MAX Force Convergence Check
@@ -1788,6 +1814,8 @@ Enable/Disable MAX Force Convergence Check
 
 With the ``use-max-force-conv`` keyword the user can enable or disable the maximum force convergence check for all kind of optimization jobs.
 
+.. centered:: *default value* = true
+
 .. _rmsforceconvergencecheckKey:
 
 Enable/Disable RMS Force Convergence Check
@@ -1799,6 +1827,8 @@ Enable/Disable RMS Force Convergence Check
     use-rms-force-conv = {bool} -> true
 
 With the ``use-rms-force-conv`` keyword the user can enable or disable the root mean square force convergence check for all kind of optimization jobs.
+
+.. centered:: *default value* = true
 
 .. _energyconvergencethresholdKey:
 
