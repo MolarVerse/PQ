@@ -57,6 +57,9 @@ namespace simulationBox
 
         auto getSmoothingMolecules();
         auto getSmoothingMolecules() const;
+
+        auto getInactiveMolecules();
+        auto getInactiveMolecules() const;
     };
 
     /**
@@ -218,6 +221,38 @@ namespace simulationBox
                    [](const auto& mol)
                    { return mol.getHybridZone() == HybridZone::SMOOTHING; }
                );
+    }
+
+    /**
+     * @brief get all inactive molecules using range-based filtering
+     *
+     * @return a view/iterator of inactive molecules filtered from all
+     * molecules
+     *
+     * @details This function returns a range-based view that filters molecules
+     * from _molecules based on whether they are inactive (i.e., not active).
+     */
+    template <typename Derived>
+    auto SimulationBoxView<Derived>::getInactiveMolecules()
+    {
+        return getMolecules() |
+               pqviews::filter([](const auto& mol) { return !mol.isActive(); });
+    }
+
+    /**
+     * @brief get all inactive molecules using range-based filtering
+     *
+     * @return a view/iterator of inactive molecules filtered from all
+     * molecules
+     *
+     * @details This function returns a range-based view that filters molecules
+     * from _molecules based on whether they are inactive (i.e., not active).
+     */
+    template <typename Derived>
+    auto SimulationBoxView<Derived>::getInactiveMolecules() const
+    {
+        return getMolecules() |
+               pqviews::filter([](const auto& mol) { return !mol.isActive(); });
     }
 
 }   // namespace simulationBox

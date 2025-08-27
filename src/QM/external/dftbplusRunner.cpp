@@ -138,9 +138,9 @@ void DFTBPlusRunner::writeCoordsFile(SimulationBox &box)
  * @brief Writes a file containing point charges for hybrid simulations.
  *
  * This function creates the pointcharges file listing the positions and
- * partial charges of all inactive atoms in molecules assigned to the
- * POINT_CHARGE or SMOOTHING hybrid zones. The file is used for QM/MM coupling
- * in DFTB+ calculations.
+ * partial charges of all atoms in inactive molecules assigned to the
+ * SMOOTHING or POINT_CHARGE hybrid zones. The file is used for QM/QM and QM/MM
+ * coupling in DFTB+ calculations.
  *
  * @param box Simulation box containing molecules and atoms.
  */
@@ -152,23 +152,22 @@ void DFTBPlusRunner::writePointChargeFile(pq::SimBox &box)
     _usePointCharges = false;
 
     using enum HybridZone;
-    for (const auto &mol : box.getMolecules())
+    for (const auto &mol : box.getInactiveMolecules())
     {
         const auto zone = mol.getHybridZone();
 
-        if (zone == POINT_CHARGE || zone == SMOOTHING)
+        if (zone == SMOOTHING || zone == POINT_CHARGE)
             for (const auto &atom : mol.getAtoms())
-                if (!(atom->isActive()))
-                {
-                    pcFile << std::format(
-                        "{:16.12f}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
-                        atom->getPosition()[0],
-                        atom->getPosition()[1],
-                        atom->getPosition()[2],
-                        atom->getPartialCharge()
-                    );
-                    _usePointCharges = true;
-                }
+            {
+                pcFile << std::format(
+                    "{:16.12f}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
+                    atom->getPosition()[0],
+                    atom->getPosition()[1],
+                    atom->getPosition()[2],
+                    atom->getPartialCharge()
+                );
+                _usePointCharges = true;
+            }
     }
     pcFile.close();
 }
