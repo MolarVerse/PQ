@@ -4,11 +4,28 @@ All notable changes to this project will be documented in this file.
 
 ## Next Release
 
-# Tests
+<!-- insertion marker -->
+## [v0.6.2](https://github.com/MolarVerse/PQ/releases/tag/v0.6.2) - 2025-08-22
+
+### Workflow
+
+- added/updated git hooks for commit messages
+- added license header check in CI workflow
+
+### Bug Fixes
+
+- NaN and Inf are recognized as invalid in .rst file input 
+- VelocityRescalingThermostat is prevented from generating -nan velocities
+
+### Tests
 
 - added integration tests for QM programs
 
-<!-- insertion marker -->
+### Build
+
+- Suppress googletest warnings for double promotion
+- Fix warnings when building the Sphinx documentation
+
 ## [v0.6.1](https://github.com/MolarVerse/PQ/releases/tag/v0.6.1) - 2025-07-25
 
 ### Enhancements

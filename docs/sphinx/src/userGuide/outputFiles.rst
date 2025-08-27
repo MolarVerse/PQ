@@ -181,7 +181,7 @@ Stores the coordinates, velocities, and forces of each atom for the last perform
 The first line contains the string "Step" followed by the total number of performed simulation steps. The second line starts with the string 
 "Box" followed by the parameters *a*, *b*, *c*, *α*, *β*, and *γ*, which denote the parameters of the simulation box in units of Å and degrees. 
 The following lines contain the element symbol, a running index just for human readability, the moltype the atom belongs to according to the 
-:ref:`moldescriptorFile` setup file, the Cartesian coordinates in Å, the velocities in :math:`\frac{\text{Å}}{\text{fs}}`, and the forces in 
+:ref:`moldescriptorFile` setup file, the Cartesian coordinates in Å, the velocities in :math:`\frac{\text{Å}}{\text{s}}`, and the forces in 
 :math:`\frac{\text{kcal}}{\text{mol Å}}` for each atom in the system. The moltype value is set to 0 if no :ref:`moldescriptorFile` file is used.
 
 .. note::
@@ -220,7 +220,8 @@ Stores the individual components of the stress tensor *σ* for every frame in th
 
 The individual components of the stress tensor are given in units of :math:`\frac{\text{kcal}}{\text{mol Å}^3}`. The first character
 of the index denotes the lattice parameter (*a*, *b*, *c*), while the second character denotes the respective lattice parameter component 
-(*x*, *y*, *z*).
+(*x*, *y*, *z*). The diagonal elements of the tensor (*σ*:sub:`ax`, *σ*:sub:`by`, *σ*:sub:`cz`) denote the normal stresses and the off diagonal 
+elements (*σ*:sub:`ay`, *σ*:sub:`az`, *σ*:sub:`bx`, *σ*:sub:`bz`, *σ*:sub:`cx`, *σ*:sub:`cy`) represent the shear stresses.
 
 .. _timingFile:
 
@@ -267,7 +268,7 @@ Stores the velocity *v* of each atom for every frame of the simulation in the fo
 The parameters n_atoms, *a*, *b*, *c*, *α*, *β*, and *γ* in the first line of every frame denote the number of atoms in the simulation
 box and the respective box parameters in units of Å and degrees. The second line is left empty. The following lines contain the name 
 of the atom type (as given in the :ref:`moldescriptorFile` file) and the associated velocities along the x, y and z direction in 
-:math:`\frac{\text{Å}}{\text{fs}}` for each atom in the system.
+:math:`\frac{\text{Å}}{\text{s}}` for each atom in the system.
 
 .. _virialFile:
 
