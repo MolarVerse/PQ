@@ -21,3 +21,45 @@
 ******************************************************************************/
 
 #include "qmmmMDEngine.hpp"
+
+#include <iterator>   // for std::ranges:distance
+
+namespace engine
+{
+    /**
+     * @brief calculate QM/MM forces
+     *
+     */
+    void QMMMMDEngine::calculateForces()
+    {
+        using std::ranges::distance;
+        using enum simulationBox::HybridZone;
+
+        _configurator.calculateInnerRegionCenter(*_simulationBox);
+        _configurator.shiftAtomsToInnerRegionCenter(*_simulationBox);
+        _configurator.assignHybridZones(*_simulationBox);
+        _configurator.calculateSmoothingFactors(*_simulationBox);
+
+        const auto n_SmoothingMolecules =
+            _configurator.getNumberSmoothingMolecules();
+
+        for (size_t i{0}; i < (1UZ << n_SmoothingMolecules); ++i)
+        {
+            std::unordered_set<size_t> inactiveMolecules;
+
+            for (size_t j{0}; j < n_SmoothingMolecules; ++j)
+                if (i & (1UZ << j))
+                    inactiveMolecules.insert(j);
+
+            _configurator.deactivateMoleculesForInnerCalculation(
+                inactiveMolecules,
+                *_simulationBox
+            );
+
+            QMMDEngine::calculateForces();
+        }
+
+        _configurator.shiftAtomsBackToInitialPositions(*_simulationBox);
+    }
+
+}   // namespace engine

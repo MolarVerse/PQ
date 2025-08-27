@@ -55,8 +55,11 @@ namespace simulationBox
 
         auto getQMAtomicNumbers() const;
 
-        auto getSmoothingMolecules();
-        auto getSmoothingMolecules() const;
+        auto getMoleculesInsideZone(const HybridZone) const;
+        auto getMoleculesInsideZone(const HybridZone);
+
+        auto getMoleculesOutsideZone(const HybridZone) const;
+        auto getMoleculesOutsideZone(const HybridZone);
 
         auto getInactiveMolecules();
         auto getInactiveMolecules() const;
@@ -184,43 +187,85 @@ namespace simulationBox
     }
 
     /**
-     * @brief get all molecules in the smoothing region using range-based
+     * @brief get all molecules in the specified hybrid zone using range-based
      * filtering
      *
-     * @return a view/iterator of molecules in the smoothing region filtered
-     * from all molecules
+     * @return a view/iterator of molecules in the specified zone filtered from
+     * all molecules
      *
      * @details This function returns a range-based view that filters molecules
-     * from _molecules based on whether their HybridZone is SMOOTHING
+     * from _molecules based on whether they are in the specified HybridZone
      */
     template <typename Derived>
-    auto SimulationBoxView<Derived>::getSmoothingMolecules()
+    auto SimulationBoxView<Derived>::getMoleculesInsideZone(
+        const HybridZone zone
+    )
     {
         return getMolecules() |
-               pqviews::filter(
-                   [](const auto& mol)
-                   { return mol.getHybridZone() == HybridZone::SMOOTHING; }
-               );
+               pqviews::filter([zone](const auto& mol)
+                               { return mol.getHybridZone() == zone; });
     }
 
     /**
-     * @brief get all molecules in the smoothing region using range-based
+     * @brief get all molecules in the specified hybrid zone using range-based
      * filtering
      *
-     * @return a view/iterator of molecules in the smoothing region filtered
+     * @return a view/iterator of molecules in the specified zone filtered from
+     * all molecules
+     *
+     * @details This function returns a range-based view that filters molecules
+     * from _molecules based on whether they are in the specified HybridZone
+     */
+    template <typename Derived>
+    auto SimulationBoxView<Derived>::getMoleculesInsideZone(
+        const HybridZone zone
+    ) const
+    {
+        return getMolecules() |
+               pqviews::filter([zone](const auto& mol)
+                               { return mol.getHybridZone() == zone; });
+    }
+
+    /**
+     * @brief get all molecules outside the specified hybrid zone using
+     * range-based filtering
+     *
+     * @return a view/iterator of molecules outside the specified zone filtered
      * from all molecules
      *
      * @details This function returns a range-based view that filters molecules
-     * from _molecules based on whether their HybridZone is SMOOTHING
+     * from _molecules based on whether they are outside the specified
+     * HybridZone
      */
     template <typename Derived>
-    auto SimulationBoxView<Derived>::getSmoothingMolecules() const
+    auto SimulationBoxView<Derived>::getMoleculesOutsideZone(
+        const HybridZone zone
+    )
     {
         return getMolecules() |
-               pqviews::filter(
-                   [](const auto& mol)
-                   { return mol.getHybridZone() == HybridZone::SMOOTHING; }
-               );
+               pqviews::filter([zone](const auto& mol)
+                               { return mol.getHybridZone() != zone; });
+    }
+
+    /**
+     * @brief get all molecules outside the specified hybrid zone using
+     * range-based filtering
+     *
+     * @return a view/iterator of molecules outside the specified zone filtered
+     * from all molecules
+     *
+     * @details This function returns a range-based view that filters molecules
+     * from _molecules based on whether they are outside the specified
+     * HybridZone
+     */
+    template <typename Derived>
+    auto SimulationBoxView<Derived>::getMoleculesOutsideZone(
+        const HybridZone zone
+    ) const
+    {
+        return getMolecules() |
+               pqviews::filter([zone](const auto& mol)
+                               { return mol.getHybridZone() != zone; });
     }
 
     /**

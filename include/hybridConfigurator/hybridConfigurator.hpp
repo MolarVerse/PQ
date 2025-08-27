@@ -36,7 +36,7 @@ namespace configurator
     {
        private:
         pq::Vec3D _innerRegionCenter        = {0.0, 0.0, 0.0};
-        int       _numberSmoothingMolecules = 0;
+        size_t    _numberSmoothingMolecules = 0;
 
        public:
         void calculateInnerRegionCenter(pq::SimBox &);
@@ -53,9 +53,9 @@ namespace configurator
          * standard getters and setters *
          ********************************/
 
-        [[nodiscard]] int getNumberSmoothingMolecules();
+        [[nodiscard]] size_t getNumberSmoothingMolecules();
 
-        void setNumberSmoothingMolecules(int);
+        void setNumberSmoothingMolecules(size_t);
     };
 
 }   // namespace configurator

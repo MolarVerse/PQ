@@ -200,26 +200,23 @@ void HybridConfigurator::deactivateMoleculesForInnerCalculation(
     pq::SimBox&                simBox
 )
 {
-    size_t count{0};
-
-    for (auto& mol : simBox.getMolecules())
+    for (auto& mol : simBox.getMoleculesOutsideZone(SMOOTHING))
     {
-        const auto zone       = mol.getHybridZone();
-        const bool isInactive = inactiveMolecules.contains(count);
+        const auto zone = mol.getHybridZone();
 
-        if (isInactive && zone != SMOOTHING)
-            throw(HybridConfiguratorException(
-                std::format(
-                    "Molecule at index {} is not a smoothing molecule and "
-                    "cannot be deactivated",
-                    count
-                )
-            ));
-
-        if (zone == CORE || zone == LAYER || (zone == SMOOTHING && !isInactive))
+        if (zone == CORE || zone == LAYER)
             mol.activateMolecule();
         else
             mol.deactivateMolecule();
+    }
+
+    size_t count{0};
+    for (auto& mol : simBox.getMoleculesInsideZone(SMOOTHING))
+    {
+        if (inactiveMolecules.contains(count))
+            mol.deactivateMolecule();
+        else
+            mol.activateMolecule();
 
         ++count;
     }
@@ -245,7 +242,7 @@ void HybridConfigurator::calculateSmoothingFactors(pq::SimBox& simBox)
     const auto smoothingRegionThickness =
         HybridSettings::getSmoothingRegionThickness();
 
-    for (auto& mol : simBox.getSmoothingMolecules())
+    for (auto& mol : simBox.getMoleculesInsideZone(SMOOTHING))
     {
         mol.calculateCenterOfMass(simBox.getBox());
         const auto com = norm(mol.getCenterOfMass());
@@ -276,9 +273,9 @@ void HybridConfigurator::calculateSmoothingFactors(pq::SimBox& simBox)
  * @brief get the number of molecules in the point charge region of the
  * hybrid calculation
  *
- * @return int numberPointChargeMolecules
+ * @return size_t numberSmoothingMolecules
  */
-int HybridConfigurator::getNumberSmoothingMolecules()
+size_t HybridConfigurator::getNumberSmoothingMolecules()
 {
     return _numberSmoothingMolecules;
 }
@@ -289,7 +286,7 @@ int HybridConfigurator::getNumberSmoothingMolecules()
  *
  * @param count
  */
-void HybridConfigurator::setNumberSmoothingMolecules(int count)
+void HybridConfigurator::setNumberSmoothingMolecules(size_t count)
 {
     _numberSmoothingMolecules = count;
 }
