@@ -66,13 +66,15 @@ namespace simulationBox
         double _charge;   // set via molDescriptor not sum of partial charges!!!
         double _molMass;
 
-        pq::Vec3D  _centerOfMass = pq::Vec3D(0.0, 0.0, 0.0);
-        HybridZone _hybridZone   = HybridZone::NOT_HYBRID;
-        bool       _isActive     = true;
-        double     _smoothingFactor;
+        pq::Vec3D _centerOfMass = pq::Vec3D(0.0, 0.0, 0.0);
 
         std::map<size_t, size_t> _externalToInternalAtomTypes;
         pq::SharedAtomVec        _atoms;
+
+        // hybrid calculation related member variables
+        HybridZone _hybridZone = HybridZone::NOT_HYBRID;
+        bool       _isActive   = true;
+        double     _smoothingFactor;
 
        public:
         Molecule() = default;
