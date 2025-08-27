@@ -43,12 +43,12 @@ namespace engine
         const auto n_SmoothingMolecules =
             _configurator.getNumberSmoothingMolecules();
 
-        for (size_t i{0}; i < (1UZ << n_SmoothingMolecules); ++i)
+        for (size_t i{0}; i < (1u << n_SmoothingMolecules); ++i)
         {
             std::unordered_set<size_t> inactiveMolecules;
 
             for (size_t j{0}; j < n_SmoothingMolecules; ++j)
-                if (i & (1UZ << j))
+                if (i & (1u << j))
                     inactiveMolecules.insert(j);
 
             _configurator.deactivateMoleculesForInnerCalculation(
@@ -56,7 +56,11 @@ namespace engine
                 *_simulationBox
             );
 
-            QMMDEngine::calculateForces();
+            _qmRunner->run(
+                *_simulationBox,
+                *_physicalData,
+                simulationBox::Periodicity::NON_PERIODIC
+            );
         }
 
         _configurator.shiftAtomsBackToInitialPositions(*_simulationBox);
