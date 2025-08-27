@@ -13,8 +13,8 @@ my $charge             = $ARGV[0];             # charge of the qm region
 my $changed            = $ARGV[1];             # flag if initial charges should be read from charges.bin
 my $guess_mo           = $ARGV[2];             # flag if a dft step is performed as a guess
 my $pointcharges       = $ARGV[3];             # flag if point charges are used
-my $dftb_template      = $ARGV[5];             # dftb setup file that generates $dftb_input
-my $pointcharges_file  = $ARGV[6];             # name of the pointcharges_file
+my $dftb_template      = $ARGV[4];             # dftb setup file that generates $dftb_input
+my $pointcharges_file  = $ARGV[5];             # name of the pointcharges_file
 
 
 # various variables
