@@ -149,8 +149,6 @@ void DFTBPlusRunner::writePointChargeFile(pq::SimBox &box)
     const std::string fileName = FileSettings::getPointChargeFileName();
     std::ofstream     pcFile(fileName);
 
-    _usePointCharges = false;
-
     using enum HybridZone;
     for (const auto &mol : box.getInactiveMolecules())
     {
@@ -198,7 +196,9 @@ void DFTBPlusRunner::execute()
     );
     ::system(command.c_str());
 
+    // set for next execution
     _isFirstExecution = false;
+    _usePointCharges  = false;
 }
 
 /**
