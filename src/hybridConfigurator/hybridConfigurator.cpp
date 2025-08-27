@@ -180,20 +180,26 @@ void HybridConfigurator::assignHybridZones(SimBox& simBox)
 }
 
 /**
- * @brief Deactivate atoms in molecules for inner region calculation
+ * @brief Activate or deactivate molecules for inner region calculation
  *
- * This function iterates over all molecules in the simulation box and activates
- * or deactivates their atoms based on their hybrid zone and whether their index
- * is present in the inactiveMolecules set.
+ * This function controls molecule activation based on hybrid zones and
+ * selective deactivation of smoothing molecules. The function operates in two
+ * phases:
  *
- * - Atoms in molecules with hybrid zones CORE, LAYER, or SMOOTHING are
- * activated.
- * - Atoms in molecules whose index is in inactiveMolecules, or whose hybrid
- * zone is POINT_CHARGE or OUTER, are deactivated.
+ * **Phase 1 - Non-smoothing molecules:**
+ * - CORE and LAYER molecules are activated
+ * - POINT_CHARGE and OUTER molecules are deactivated
  *
- * @param inactiveMolecules Set of molecule indices to be deactivated regardless
- * of zone
+ * **Phase 2 - Smoothing molecules:**
+ * - Smoothing molecules specified in inactiveMolecules are deactivated
+ * - All other smoothing molecules are activated
+ *
+ * @param inactiveMolecules Set of smoothing molecule indices (0-based within
+ * smoothing zone) to be deactivated
  * @param simBox Simulation box containing the molecules
+ *
+ * @note The indices in inactiveMolecules refer to the position within the
+ * smoothing zone, not the global molecule index
  */
 void HybridConfigurator::deactivateMoleculesForInnerCalculation(
     std::unordered_set<size_t> inactiveMolecules,
