@@ -38,7 +38,7 @@ my $dftb_out_prev     = "dftb.out.prev";     # summary file - previous step
 
 my $qm_forces              = "qm_forces";              # result file: energy plus forces of all qm atoms
 my $qm_charges             = "qm_charges";             # result file: partial charges of all qm atoms
-my $mm_forces              = "mm_forces";              # result file: forces of all mm atoms 
+my $pc_forces              = "pc_forces";              # result file: forces of all point charges 
 my $stress_tensor_file     = "stress_tensor";          # result file: stress tensor 
 my $stress_tensor_file_mat = "stress_tensor_mat";      # result file: stress tensor 
 
@@ -48,6 +48,7 @@ my $qm_coords_prev        = "coords.prev";          # coordinates previous step
 my $energy_found          = 0;                     # energy  control flag
 my $forces_found          = 0;                     # forces  control flag
 my $charges_found         = 0;                     # charges control flag
+my $pc_forces_found       = 0;                     # pointcharge forces control flag
 my $stress_tensor_found   = 0;                     # stress-tensor control flag
 
 my $n_pc                  = 0;                     # number of point charges read from the $pointcharges_file
@@ -58,12 +59,12 @@ my $n_fields              = 0;
 # count number of pointcharges in $pointcharges_file
 if ($pointcharges == 1)
 {
-  open (MM_PC, "< $pointcharges_file") or
+  open (PC_FILE, "< $pointcharges_file") or
         die "\n\n\t (-) $progname: Error opening file $pointcharges_file'\n";
 
-  while (<MM_PC>) { $n_pc ++; }
+  while (<PC_FILE>) { $n_pc ++; }
 
-  close (MM_PC);
+  close (PC_FILE);
 }
 
 # check if molecules have been exchanged between QM and MM region
@@ -95,17 +96,17 @@ close (DFTB_TEMPLATE);
 close (DFTB_IN);  
 
 # execute dftb+
-if(system("dftb+ > run.out"))
+if (system("dftb+ > run.out"))
 {
   die "\n\n\t (-) $progname: Error executing dftb+.\n";
 }
-if(system("mv detailed.out $dftb_out"))
+
+if (system("mv detailed.out $dftb_out"))
 {
   die "\n\n\t (-) $progname: Error moving detailed.out to $dftb_out.\n";
 }
 
-# extract energy and forces from DFTB+ output and write forces to file
-
+# create the files to which the results are written
 open (DFTB_OUT, "< $dftb_out") or
   die "\n\n\t (-) $progname: Error opening file '$dftb_out'\n";
 
@@ -115,8 +116,11 @@ open (FORCES, "> $qm_forces") or
 open (CHARGES, "> $qm_charges") or 
   die "\n\n\t (-) $progname: Error opening file '$qm_charges'\n";
 
-open (MM_FORCES, "> $mm_forces") or
-  die "\n\n\t (-) $progname: Error opening file '$mm_forces'\n";
+if ($pointcharges == 1)
+{
+  open (PC_FORCES, "> $pc_forces") or
+    die "\n\n\t (-) $progname: Error opening file '$pc_forces'\n";
+}
 
 open (STRESS_TENSOR, "> $stress_tensor_file") or
   die "\n\n\t (-) $progname: Error opening file '$stress_tensor_file'\n";
@@ -149,19 +153,19 @@ while (<DFTB_OUT>)
     if (/^\s+\d+\s+/) 
       {
         @line = split;
-	printf CHARGES ("%s  %20.8f\n",$line[0], $line[1]); 
-	$charges_found = 1;
+	      printf CHARGES ("%s  %20.8f\n",$line[0], $line[1]); 
+	      $charges_found = 1;
       }
   }
 
-  # extract mm_forces
+  # extract pointcharge forces
   if (/^\s*Forces on external charges/ .. /^\s*Volume:/ ) 
   {
     if (/^\s+-*\d/)  
       {
         @line = split;
-	printf MM_FORCES ("%27.18e  %27.18e  %27.18e\n", -$line[0],  -$line[1],  -$line[2]);       
-	$charges_found = 1;
+	      printf PC_FORCES ("%27.18e  %27.18e  %27.18e\n", -$line[0],  -$line[1],  -$line[2]);       
+	      $pc_forces_found = 1;
       }
   }
   
@@ -171,46 +175,50 @@ while (<DFTB_OUT>)
     if (/^\s+-*\d/)  
       {
         @line = split;
-	printf STRESS_TENSOR ("%27.18e  %27.18e  %27.18e\n", $line[0],  $line[1],  $line[2]);       
-	$stress_tensor_found = 1;
+	      printf STRESS_TENSOR ("%27.18e  %27.18e  %27.18e\n", $line[0],  $line[1],  $line[2]);       
+	      $stress_tensor_found = 1;
       }
   }
 }
 
-  close (DFTB_OUT);
-  close (FORCES);
-  close (CHARGES);
-  close (MM_FORCES);
-  close (STRESS_TENSOR);
+close (DFTB_OUT);
+close (FORCES);
+close (CHARGES);
+close (PC_FORCES);
+close (STRESS_TENSOR);
 
 # create the "log-file" for the last run
 `mv $dftb_out  $dftb_out_prev`;
 `mv $qm_coords $qm_coords_prev`;
 
-exit;
-
 if ($energy_found != 1)
 {
-     printf("\n\n\t (-) $progname: Error encountered while reading $dftb_out.");
-     printf("\n\t     QM energy has not been read!");
+  printf("\n\n\t (-) $progname: Error encountered while reading $dftb_out.");
+  printf("\n\t     QM energy has not been read!");
 }
 
 if ($forces_found != 1)
 {
-     printf("\n\n\t (-) $progname: Error encountered while reading $dftb_out$.");
-     printf("\n\t     QM forces have not been read!");
+  printf("\n\n\t (-) $progname: Error encountered while reading $dftb_out$.");
+  printf("\n\t     QM forces have not been read!");
 }
      
 if ($charges_found != 1)
 {
-     printf("\n\n\t (-) $progname: Error encountered while reading $dftb_out.");
-     printf("\n\t     QM charges have not been read!");
+  printf("\n\n\t (-) $progname: Error encountered while reading $dftb_out.");
+  printf("\n\t     QM charges have not been read!");
+}
+
+if ($pointcharges == 1 && $pc_forces_found != 1)
+{
+  printf("\n\n\t (-) $progname: Error encountered while reading $dftb_out.");
+  printf("\n\t     PC forces have not been read!");
 }
 
 if ($stress_tensor_found != 1)
 {
-     printf("\n\n\t (-) $progname: Error encountered while reading $dftb_out.");
-     printf("\n\t     Stress tensor has not been read!");
+  printf("\n\n\t (-) $progname: Error encountered while reading $dftb_out.");
+  printf("\n\t     Stress tensor has not been read!");
 }
 
 exit 0;
