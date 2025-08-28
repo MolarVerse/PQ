@@ -43,16 +43,17 @@ namespace engine
         const auto n_SmoothingMolecules =
             _configurator.getNumberSmoothingMolecules();
 
+        // exact smoothing: loop over all combinations of smoothing molecules
         for (size_t i{0}; i < (1u << n_SmoothingMolecules); ++i)
         {
-            std::unordered_set<size_t> inactiveMolecules;
+            std::unordered_set<size_t> inactiveForInnerCalcMolecules;
 
             for (size_t j{0}; j < n_SmoothingMolecules; ++j)
                 if (i & (1u << j))
-                    inactiveMolecules.insert(j);
+                    inactiveForInnerCalcMolecules.insert(j);
 
             _configurator.deactivateMoleculesForInnerCalculation(
-                inactiveMolecules,
+                inactiveForInnerCalcMolecules,
                 *_simulationBox
             );
 
@@ -61,6 +62,18 @@ namespace engine
                 *_physicalData,
                 simulationBox::Periodicity::NON_PERIODIC
             );
+
+            // _configurator.activateMoleculesForOuterCalculation(
+            //     inactiveForInnerCalcMolecules,
+            //     *_simulationBox
+            // );
+
+            // MM calculation for outer region
+
+            // calculate global smoothing factor for this configuration
+
+            // Force for this configuration = (QM force + MM force) * global smoothing factor
+            // Add to total force
         }
 
         _configurator.shiftAtomsBackToInitialPositions(*_simulationBox);
