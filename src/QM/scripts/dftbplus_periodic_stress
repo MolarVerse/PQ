@@ -36,23 +36,41 @@ my $dftb_out_prev = "dftb.out.prev";   # summary file - previous step
 
 my $qm_forces              = "qm_forces";           # result file: energy plus forces of all qm atoms
 my $qm_charges             = "qm_charges";          # result file: partial charges of all qm atoms
-my $pc_forces              = "pc_forces";           # result file: forces of all point charges 
-my $stress_tensor_file     = "stress_tensor";       # result file: stress tensor 
-my $stress_tensor_file_mat = "stress_tensor_mat";   # result file: stress tensor 
+my $pc_forces              = "pc_forces";           # result file: forces of all point charges
+my $stress_tensor_file     = "stress_tensor";       # result file: stress tensor
 
 my $qm_coords      = "coords";        # coordinates
 my $qm_coords_prev = "coords.prev";   # coordinates previous step
 
-my $energy_found        = 0;   # energy  control flag
-my $forces_found        = 0;   # forces  control flag
+my $energy_found        = 0;   # energy control flag
+my $forces_found        = 0;   # forces control flag
 my $charges_found       = 0;   # charges control flag
 my $pc_forces_found     = 0;   # pointcharge forces control flag
 my $stress_tensor_found = 0;   # stress-tensor control flag
+my $periodic            = 0;   # periodic system control flag
 
 my $n_pc     = 0;   # number of point charges read from the $pointcharges_file
 my $n_fields = 0;
 
 `cat coords > geom.gen`;
+
+# check if the system is periodic by reading the first line of geom.gen
+open (GEOM_FILE, "< geom.gen") or
+  die "\n\n\t (-) $progname: Error opening file geom.gen\n";
+
+my $first_line = <GEOM_FILE>;
+close (GEOM_FILE);
+
+if (defined $first_line) 
+{
+  chomp $first_line;
+  my @geom_fields = split /\s+/, $first_line;
+  
+  if (defined $geom_fields[1] && $geom_fields[1] eq 'S') 
+  {
+    $periodic = 1;
+  }
+}
 
 # count number of pointcharges in $pointcharges_file
 if ($pointcharges == 1)
@@ -111,7 +129,7 @@ open (DFTB_OUT, "< $dftb_out") or
 open (FORCES, "> $qm_forces") or
   die "\n\n\t (-) $progname: Error opening file '$qm_forces'\n";
 
-open (CHARGES, "> $qm_charges") or 
+open (CHARGES, "> $qm_charges") or
   die "\n\n\t (-) $progname: Error opening file '$qm_charges'\n";
 
 if ($pointcharges == 1)
@@ -120,13 +138,16 @@ if ($pointcharges == 1)
     die "\n\n\t (-) $progname: Error opening file '$pc_forces'\n";
 }
 
-open (STRESS_TENSOR, "> $stress_tensor_file") or
-  die "\n\n\t (-) $progname: Error opening file '$stress_tensor_file'\n";
+if ($periodic == 1)
+{
+  open (STRESS_TENSOR, "> $stress_tensor_file") or
+    die "\n\n\t (-) $progname: Error opening file '$stress_tensor_file'\n";
+}
 
 while (<DFTB_OUT>) 
 {
   # extract energy
-  if (/^\s*Total energy:\s+(.*?)\s+H\s+.*?/) 
+  if (/^\s*Total energy:\s+(.*?)\s+H\s+.*?/)
   {
     printf FORCES ("%20.9f\n", $1);
     $energy_found = 1;
@@ -135,12 +156,12 @@ while (<DFTB_OUT>)
   # extract forces
   if (/^\s*Total Forces/ .. /^\s*Maximal derivative component:/)
   {
-    if (/^\s+-*\d/) 
+    if (/^\s+-*\d/)
     {
       @line = split;
       $n_fields = scalar( @line  ) - 3;
 
-      printf FORCES ("%27.18e  %27.18e  %27.18e\n", -$line[0+$n_fields],  -$line[1+$n_fields], -$line[2+$n_fields]);      
+      printf FORCES ("%27.18e  %27.18e  %27.18e\n", -$line[0+$n_fields],  -$line[1+$n_fields], -$line[2+$n_fields]);
       $forces_found = 1;
     }
   }
@@ -151,7 +172,7 @@ while (<DFTB_OUT>)
     if (/^\s+\d+\s+/) 
     {
       @line = split;
-      printf CHARGES ("%s  %20.8f\n",$line[0], $line[1]); 
+      printf CHARGES ("%s  %20.8f\n",$line[0], $line[1]);
       $charges_found = 1;
     }
   }
@@ -162,7 +183,7 @@ while (<DFTB_OUT>)
     if (/^\s+-*\d/)  
     {
       @line = split;
-      printf PC_FORCES ("%27.18e  %27.18e  %27.18e\n", -$line[0],  -$line[1],  -$line[2]);       
+      printf PC_FORCES ("%27.18e  %27.18e  %27.18e\n", -$line[0],  -$line[1],  -$line[2]);
       $pc_forces_found = 1;
     }
   }
@@ -173,7 +194,7 @@ while (<DFTB_OUT>)
     if (/^\s+-*\d/)  
     {
       @line = split;
-	    printf STRESS_TENSOR ("%27.18e  %27.18e  %27.18e\n", $line[0],  $line[1],  $line[2]);       
+	    printf STRESS_TENSOR ("%27.18e  %27.18e  %27.18e\n", $line[0],  $line[1],  $line[2]);
 	    $stress_tensor_found = 1;
     }
   }
@@ -213,7 +234,7 @@ if ($pointcharges == 1 && $pc_forces_found != 1)
   printf("\n\t     PC forces have not been read!");
 }
 
-if ($stress_tensor_found != 1)
+if ($periodic == 1 && $stress_tensor_found != 1)
 {
   printf("\n\n\t (-) $progname: Error encountered while reading $dftb_out.");
   printf("\n\t     Stress tensor has not been read!");
