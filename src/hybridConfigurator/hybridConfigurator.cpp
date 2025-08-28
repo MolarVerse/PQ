@@ -229,6 +229,55 @@ void HybridConfigurator::deactivateMoleculesForInnerCalculation(
 }
 
 /**
+ * @brief Activate or deactivate molecules for outer region calculation
+ *
+ * This function controls molecule activation based on hybrid zones and
+ * selective deactivation of smoothing molecules. The function operates in two
+ * phases:
+ *
+ * **Phase 1 - Non-smoothing molecules:**
+ * - CORE and LAYER molecules are deactivated
+ * - POINT_CHARGE and OUTER molecules are activated
+ *
+ * **Phase 2 - Smoothing molecules:**
+ * - Smoothing molecules specified in activeMolecules are activated
+ * - All other smoothing molecules are deactivated
+ *
+ * @param activeMolecules Set of smoothing molecule indices (0-based within
+ * smoothing zone) to be deactivated
+ * @param simBox Simulation box containing the molecules
+ *
+ * @note The indices in inactiveMolecules refer to the position within the
+ * smoothing zone, not the global molecule index
+ */
+void HybridConfigurator::activateMoleculesForOuterCalculation(
+    std::unordered_set<size_t> activeMolecules,
+    pq::SimBox&                simBox
+)
+{
+    for (auto& mol : simBox.getMoleculesOutsideZone(SMOOTHING))
+    {
+        const auto zone = mol.getHybridZone();
+
+        if (zone == CORE || zone == LAYER)
+            mol.deactivateMolecule();
+        else
+            mol.activateMolecule();
+    }
+
+    size_t count{0};
+    for (auto& mol : simBox.getMoleculesInsideZone(SMOOTHING))
+    {
+        if (activeMolecules.contains(count))
+            mol.activateMolecule();
+        else
+            mol.deactivateMolecule();
+
+        ++count;
+    }
+}
+
+/**
  * @brief Calculate smoothing factors for molecules in the smoothing region
  *
  * This function computes and assigns a smoothing factor to each molecule in the

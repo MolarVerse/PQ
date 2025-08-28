@@ -63,10 +63,10 @@ namespace engine
                 simulationBox::Periodicity::NON_PERIODIC
             );
 
-            // _configurator.activateMoleculesForOuterCalculation(
-            //     inactiveForInnerCalcMolecules,
-            //     *_simulationBox
-            // );
+            _configurator.activateMoleculesForOuterCalculation(
+                inactiveForInnerCalcMolecules,
+                *_simulationBox
+            );
 
             // MM calculation for outer region
 

@@ -47,6 +47,10 @@ namespace configurator
             std::unordered_set<size_t>,
             pq::SimBox &
         );
+        void activateMoleculesForOuterCalculation(
+            std::unordered_set<size_t>,
+            pq::SimBox &
+        );
         void calculateSmoothingFactors(pq::SimBox &);
 
         /********************************
