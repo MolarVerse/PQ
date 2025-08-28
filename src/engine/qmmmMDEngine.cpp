@@ -70,9 +70,21 @@ namespace engine
 
             // MM calculation for outer region
 
-            // calculate global smoothing factor for this configuration
+            double globalSmoothingFactor = 1.0;
 
-            // Force for this configuration = (QM force + MM force) * global smoothing factor
+            size_t index{0};
+            for (const auto& mol :
+                 _simulationBox->getMoleculesInsideZone(SMOOTHING))
+            {
+                if (inactiveForInnerCalcMolecules.contains(index))
+                    globalSmoothingFactor *= 1 - mol.getSmoothingFactor();
+                else
+                    globalSmoothingFactor *= mol.getSmoothingFactor();
+
+                ++index;
+            }
+
+            // F for this config = (QM force + MM force) * globaSmoothingFactor
             // Add to total force
         }
 
