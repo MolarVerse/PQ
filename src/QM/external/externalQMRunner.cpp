@@ -69,7 +69,7 @@ void ExternalQMRunner::run(
     _periodicity = per;
 
     writeCoordsFile(simBox);
-    
+
     if (Settings::isHybridJobtype())
         writePointChargeFile(simBox);
 
@@ -81,7 +81,9 @@ void ExternalQMRunner::run(
     timeoutThread.request_stop();
 
     readForceFile(simBox, physicalData);
-    readStressTensor(simBox.getBox(), physicalData);
+
+    if (per != NON_PERIODIC)
+        readStressTensor(simBox.getBox(), physicalData);
 }
 
 /**
