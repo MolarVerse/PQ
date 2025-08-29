@@ -47,10 +47,11 @@ namespace simulationBox
        public:
         virtual ~Box() = default;
 
-        virtual void      applyPBC(pq::Vec3D &position) const          = 0;
-        virtual void      scaleBox(const pq::tensor3D &scalingFactors) = 0;
-        virtual double    calculateVolume()                            = 0;
-        virtual pq::Vec3D calcShiftVector(const pq::Vec3D &) const     = 0;
+        virtual void      applyPBC(pq::Vec3D &position) const           = 0;
+        virtual pq::Vec3D wrapPositionsIntoBox(const pq::Vec3D &) const = 0;
+        virtual void      scaleBox(const pq::tensor3D &scalingFactors)  = 0;
+        virtual double    calculateVolume()                             = 0;
+        virtual pq::Vec3D calcShiftVector(const pq::Vec3D &) const      = 0;
 
         /*****************************************************
          * virtual methods that are overriden in triclinicBox *
@@ -64,12 +65,14 @@ namespace simulationBox
         [[nodiscard]] virtual pq::tensor3D getBoxMatrix() const;
 
         [[nodiscard]] virtual pq::Vec3D toOrthoSpace(const pq::Vec3D &) const;
-        [[nodiscard]] virtual pq::tensor3D toOrthoSpace(const pq::tensor3D &)
-            const;
+        [[nodiscard]] virtual pq::tensor3D toOrthoSpace(
+            const pq::tensor3D &
+        ) const;
 
         [[nodiscard]] virtual pq::Vec3D    toSimSpace(const pq::Vec3D &) const;
-        [[nodiscard]] virtual pq::tensor3D toSimSpace(const pq::tensor3D &)
-            const;
+        [[nodiscard]] virtual pq::tensor3D toSimSpace(
+            const pq::tensor3D &
+        ) const;
 
         /********************
          * standard getters *

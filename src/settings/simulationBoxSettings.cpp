@@ -49,6 +49,16 @@ void SimulationBoxSettings::setDensitySet(const bool densitySet)
 void SimulationBoxSettings::setBoxSet(const bool boxSet) { _isBoxSet = boxSet; }
 
 /**
+ * @brief Set if the box is triclinic
+ *
+ * @param isBoxTriclinic
+ */
+void SimulationBoxSettings::setIsBoxTriclinic(const bool isBoxTriclinic)
+{
+    _isBoxTriclinic = isBoxTriclinic;
+}
+
+/**
  * @brief Set the initialize velocities
  *
  * @param initVelocities
@@ -81,6 +91,14 @@ bool SimulationBoxSettings::getDensitySet() { return _isDensitySet; }
  * @return false
  */
 bool SimulationBoxSettings::getBoxSet() { return _isBoxSet; }
+
+/**
+ * @brief get if the box is triclinic
+ *
+ * @return true
+ * @return false
+ */
+bool SimulationBoxSettings::isBoxTriclinic() { return _isBoxTriclinic; }
 
 /**
  * @brief get if the velocities are initialized

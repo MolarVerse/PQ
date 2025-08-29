@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## Next Release
 
+### Enhancements
+
+- Atom positions of triclinic boxes are now wrapped into the simulation box
+  when written to the trajectory output file
+
 <!-- insertion marker -->
 ## [v0.6.2](https://github.com/MolarVerse/PQ/releases/tag/v0.6.2) - 2025-08-22
 

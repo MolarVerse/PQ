@@ -47,8 +47,9 @@ namespace settings
     class SimulationBoxSettings
     {
        private:
-        static inline bool _isDensitySet = false;
-        static inline bool _isBoxSet     = false;
+        static inline bool _isDensitySet   = false;
+        static inline bool _isBoxSet       = false;
+        static inline bool _isBoxTriclinic = false;
 
         static inline InitVelocities _initializeVelocities =
             InitVelocities::FALSE;
@@ -63,6 +64,7 @@ namespace settings
 
         static void setDensitySet(const bool densitySet);
         static void setBoxSet(const bool boxSet);
+        static void setIsBoxTriclinic(const bool isBoxTriclinic);
         static void setInitializeVelocities(
             const InitVelocities initializeVelocities
         );
@@ -73,6 +75,7 @@ namespace settings
 
         [[nodiscard]] static bool           getDensitySet();
         [[nodiscard]] static bool           getBoxSet();
+        [[nodiscard]] static bool           isBoxTriclinic();
         [[nodiscard]] static InitVelocities getInitializeVelocities();
     };
 }   // namespace settings
