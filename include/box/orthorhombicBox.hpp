@@ -54,10 +54,7 @@ namespace simulationBox
 
         [[nodiscard]] pq::Vec3D wrapPositionIntoBox(
             const pq::Vec3D &pos
-        ) const override
-        {
-            return pos;
-        }
+        ) const override;
     };
 
 }   // namespace simulationBox
