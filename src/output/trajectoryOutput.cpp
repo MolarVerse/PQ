@@ -71,7 +71,7 @@ void TrajectoryOutput::writeXyz(SimulationBox &simBox)
         auto pos = atom->getPosition();
 
         if (SimulationBoxSettings::isBoxTriclinic())
-            pos = simBox.getBox().wrapPositionsIntoBox(pos);
+            pos = simBox.getBox().wrapPositionIntoBox(pos);
 
         buffer << std::format("{:15.8f}\t", pos[0]);
         buffer << std::format("{:15.8f}\t", pos[1]);

@@ -48,7 +48,7 @@ namespace simulationBox
         virtual ~Box() = default;
 
         virtual void      applyPBC(pq::Vec3D &position) const           = 0;
-        virtual pq::Vec3D wrapPositionsIntoBox(const pq::Vec3D &) const = 0;
+        virtual pq::Vec3D wrapPositionIntoBox(const pq::Vec3D &) const = 0;
         virtual void      scaleBox(const pq::tensor3D &scalingFactors)  = 0;
         virtual double    calculateVolume()                             = 0;
         virtual pq::Vec3D calcShiftVector(const pq::Vec3D &) const      = 0;

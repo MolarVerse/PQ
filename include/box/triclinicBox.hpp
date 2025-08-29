@@ -82,7 +82,7 @@ namespace simulationBox
         [[nodiscard]] pq::Vec3D    getBoxAngles() const override;
         [[nodiscard]] pq::tensor3D getBoxMatrix() const override;
         [[nodiscard]] pq::tensor3D getTransformationMatrix() const;
-        [[nodiscard]] pq::Vec3D    wrapPositionsIntoBox(
+        [[nodiscard]] pq::Vec3D    wrapPositionIntoBox(
                const pq::Vec3D &
            ) const override;
     };

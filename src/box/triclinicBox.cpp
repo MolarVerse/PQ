@@ -157,7 +157,7 @@ void TriclinicBox::applyPBC(Vec3D &position) const
  * @param position position to be wrapped
  * @return Vec3D wrapped position with box centered at origin
  */
-Vec3D TriclinicBox::wrapPositionsIntoBox(const Vec3D &position) const
+Vec3D TriclinicBox::wrapPositionIntoBox(const Vec3D &position) const
 {
     auto fractionalPosition = inverse(_boxMatrix) * position;
 

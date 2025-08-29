@@ -52,7 +52,7 @@ namespace simulationBox
             const double density
         );
 
-        [[nodiscard]] pq::Vec3D wrapPositionsIntoBox(
+        [[nodiscard]] pq::Vec3D wrapPositionIntoBox(
             const pq::Vec3D &pos
         ) const override
         {
