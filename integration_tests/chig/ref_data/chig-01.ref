@@ -1,0 +1,96 @@
+########################################################################
+#                                                                      #
+#  This file contains all references to the software and theory used.  #
+#                                                                      #
+########################################################################
+
+PQ Software
+    Gamper, J., Gallmetzer, J. M., Weiss, A. K. H.,
+    Hofer, T. S. (2024). PQ: An Open-Source Platform
+    for Advanced Molecular Dynamics Simulations. Zenodo.
+    https://doi.org/10.5281/zenodo.14185071
+
+
+RATTLE Algoritm
+    Hans C Andersen,
+    Rattle: A “velocity” version of the shake 
+    algorithm for molecular dynamics calculations,
+    Journal of Computational Physics,
+    Volume 52, Issue 1, 1983, Pages 24-34,
+    ISSN 0021-9991,
+    https://doi.org/10.1016/0021-9991(83)90014-1.
+
+
+Velocity Verlet Algorithm
+    William C. Swope, Hans C. Andersen, Peter H. Berens,
+    Kent R. Wilson; A computer simulation method for the
+    calculation of equilibrium constants for the formation
+    of physical clusters of molecules: Application to
+    small water clusters. J. Chem. Phys. 1 January 1982;
+    76 (1): 637–649.
+    https://doi.org/10.1063/1.442716
+
+
+
+########################################################################
+#                                                                      #
+#                            BIBTEX ENTRIES                            #
+#                                                                      #
+########################################################################
+
+%%%%%%%%%%%%%%%
+% PQ Software %
+%%%%%%%%%%%%%%%
+
+@software{gamper_2024_14185072,
+  author       = {Gamper, Jakob and Gallmetzer, Josef Maria and Weiss, Alexander K. H. and Hofer, Thomas S.},
+  title        = {PQ: An Open-Source Platform for Advanced Molecular Dynamics Simulations},
+  month        = nov,
+  year         = 2024,
+  publisher    = {Zenodo},
+  version      = {0.5.0},
+  doi          = {10.5281/zenodo.14185072},
+  url          = {https://doi.org/10.5281/zenodo.14185072},
+}
+
+
+%%%%%%%%%%%%%%%%%%%
+% RATTLE Algoritm %
+%%%%%%%%%%%%%%%%%%%
+
+@article{ANDERSEN198324,
+title = {Rattle: A “velocity” version of the shake algorithm for molecular dynamics calculations},
+journal = {Journal of Computational Physics},
+volume = {52},
+number = {1},
+pages = {24-34},
+year = {1983},
+issn = {0021-9991},
+doi = {https://doi.org/10.1016/0021-9991(83)90014-1},
+url = {https://www.sciencedirect.com/science/article/pii/0021999183900141},
+author = {Hans C Andersen},
+abstract = {An algorithm, called RATTLE, for integrating the equations of motion in molecular dynamics calculations for molecular models with internal constraints is presented. The algorithm is similar to SHAKE, which is one of the standard methods for performing such calculations. RATTLE calculates the positions and velocities at the next time from the positions and velocities at the present time step, without requiring information about the earlier history. Like SHAKE, it is based on the Verlet algorithm and retains the simplicity of using Cartesian coordinates for each of the atoms to describe the configuration of a molecule with internal constraints. RATTLE guarantees that the coordinates and velocities of the atoms in a molecule satisfy the internal constraints at each time step. RATTLE has two advantages over SHAKE. On computers of fixed precision, it is of higher precision than SHAKE. Since it deals directly with the velocities, it is easier to modify RATTLE for use with the recently developed constant temperature and constant pressure molecular dynamics methods and with the nonequilibrium molecular dynamics methods that make use of rescaling of the atomic velocities.}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Velocity Verlet Algorithm %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+@article{10.1063/1.442716,
+    author = {Swope, William C. and Andersen, Hans C. and Berens, Peter H. and Wilson, Kent R.},
+    title = {A computer simulation method for the calculation of equilibrium constants for the formation of physical clusters of molecules: Application to small water clusters},
+    journal = {The Journal of Chemical Physics},
+    volume = {76},
+    number = {1},
+    pages = {637-649},
+    year = {1982},
+    month = {01},
+    abstract = {We present a molecular dynamics computer simulation method for calculating equilibrium constants for the formation of physical clusters of molecules. The method is based on Hill’s formal theory of physical clusters. In the method, a molecular dynamics calculation is used to calculate the average potential energy of a cluster of molecules as a function of temperature, and the equilibrium constants are calculated from the integral of the energy with respect to reciprocal temperature. The method is illustrated by calculations of the equilibrium constants for the formation of clusters of two to five water molecules that interact with each other by an intermolecular potential devised by Watts. The method is compared with other procedures for calculating the thermodynamic properties of clusters.},
+    issn = {0021-9606},
+    doi = {10.1063/1.442716},
+    url = {https://doi.org/10.1063/1.442716},
+    eprint = {https://pubs.aip.org/aip/jcp/article-pdf/76/1/637/18934474/637\_1\_online.pdf},
+}
+
+
