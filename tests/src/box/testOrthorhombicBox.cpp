@@ -26,6 +26,7 @@
 #include "gtest/gtest.h"                     // for Message, TestPartResult
 #include "orthorhombicBox.hpp"               // for OrthorhombicBox
 #include "vector3d.hpp"                      // for Vec3D
+#include "vectorNear.hpp"                    // for EXPECT_VECTOR_NEAR
 
 using namespace simulationBox;
 
@@ -110,8 +111,10 @@ TEST(TestOrthoRhombicBox, wrapPositionIntoBox)
 
     box.setBoxDimensions({1.0, 1.0, 1.0});
     const linearAlgebra::Vec3D vector{1.2, 1.7, -0.6};
-    
-    EXPECT_NEAR(box.wrapPositionIntoBox(vector)[0], 0.2, tolerance);
-    EXPECT_NEAR(box.wrapPositionIntoBox(vector)[1], -0.3, tolerance);
-    EXPECT_NEAR(box.wrapPositionIntoBox(vector)[2], 0.4, tolerance);
+
+    EXPECT_VECTOR_NEAR(
+        box.wrapPositionIntoBox(vector),
+        linearAlgebra::Vec3D(0.2, -0.3, 0.4),
+        tolerance
+    );
 }
