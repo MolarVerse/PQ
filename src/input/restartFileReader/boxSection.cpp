@@ -106,7 +106,6 @@ void BoxSection::process(std::vector<std::string> &lineElements, Engine &engine)
     if (!compare(boxAngles, Vec3D{90.0, 90.0, 90.0}, 1e-5))
     {
         auto box = TriclinicBox();
-        SimulationBoxSettings::setIsBoxTriclinic(true);
         box.setBoxAngles(boxAngles);
         box.setBoxDimensions(boxDimensions);
         engine.getSimulationBox().setBox(box);
