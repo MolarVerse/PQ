@@ -293,18 +293,15 @@ void HybridConfigurator::activateMoleculesForOuterCalculation(
  */
 void HybridConfigurator::calculateSmoothingFactors(pq::SimBox& simBox)
 {
-    const auto layerRadius = HybridSettings::getLayerRadius();
-    const auto smoothingRegionThickness =
-        HybridSettings::getSmoothingRegionThickness();
+    const auto layer     = HybridSettings::getLayerRadius();
+    const auto thickness = HybridSettings::getSmoothingRegionThickness();
 
     for (auto& mol : simBox.getMoleculesInsideZone(SMOOTHING))
     {
         mol.calculateCenterOfMass(simBox.getBox());
         const auto com = norm(mol.getCenterOfMass());
 
-        const auto distanceFactor =
-            (com - (layerRadius - smoothingRegionThickness)) /
-            smoothingRegionThickness;
+        const auto distanceFactor = (com - (layer - thickness)) / thickness;
 
         if (distanceFactor < 0.0 || distanceFactor > 1.0)
             throw(HybridConfiguratorException(
@@ -312,11 +309,10 @@ void HybridConfigurator::calculateSmoothingFactors(pq::SimBox& simBox)
                 "smoothing region"
             ));
 
-        const auto dF = distanceFactor - 0.5;
+        const auto dF  = distanceFactor - 0.5;
+        const auto smF = dF * (dF * dF * (-6.0 * dF * dF + 0.5) - 1.875) + 0.5;
 
-        mol.setSmoothingFactor(
-            dF * (dF * dF * (-6.0 * dF * dF + 0.5) - 1.875) + 0.5
-        );
+        mol.setSmoothingFactor(smF);
     }
 }
 
