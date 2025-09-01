@@ -141,7 +141,7 @@ void HybridSettings::setPointChargeThickness(const double radius)
  *
  * @return vector<int>
  */
-std::vector<int> HybridSettings::getInnerRegionCenter()
+std::optional<std::vector<int>> HybridSettings::getInnerRegionCenter()
 {
     return _innerRegionCenter;
 }

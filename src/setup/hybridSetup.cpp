@@ -77,15 +77,19 @@ void HybridSetup::setup()
  * @brief setup inner region center
  *
  * @details This function determines the indices of the atoms that mark the
- * center of the inner region of hybrid type calculations. All atomIndices
- * that are part of the inner region center are added to the inner region center
- * list in the simulation box.
+ * center of the inner region of hybrid type calculations. If inner region
+ * center atoms are specified in the settings, those atom indices are used.
+ * If no inner region center is specified, atom 0 (e.g. the first atom) is used
+ * as the default center. All determined atom indices are added to the inner
+ * region center list in the simulation box.
  *
  */
 void HybridSetup::setupInnerRegionCenter()
 {
+    const auto innerRegionCenter = HybridSettings::getInnerRegionCenter();
+
     _engine.getSimulationBox().addInnerRegionCenterAtoms(
-        HybridSettings::getInnerRegionCenter()
+        innerRegionCenter ? innerRegionCenter.value() : std::vector<int>{0}
     );
 }
 

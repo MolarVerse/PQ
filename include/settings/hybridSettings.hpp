@@ -25,6 +25,7 @@
 #define _HYBRID_SETTINGS_HPP_
 
 #include <cstddef>       // for size_t
+#include <optional>      // for optional
 #include <string>        // for string
 #include <string_view>   // for string_view
 #include <vector>        // for vector
@@ -40,9 +41,9 @@ namespace settings
     class HybridSettings
     {
        private:
-        static inline std::vector<int> _innerRegionCenter;
-        static inline std::vector<int> _forcedInnerList;
-        static inline std::vector<int> _forcedOuterList;
+        static inline std::optional<std::vector<int>> _innerRegionCenter;
+        static inline std::vector<int>                _forcedInnerList;
+        static inline std::vector<int>                _forcedOuterList;
 
         static inline bool _useQMCharges = false;
 
@@ -71,7 +72,8 @@ namespace settings
          * standard getters *
          ********************/
 
-        [[nodiscard]] static std::vector<int> getInnerRegionCenter();
+        [[nodiscard]] static std::optional<std::vector<int>> getInnerRegionCenter(
+        );
         [[nodiscard]] static std::vector<int> getForcedInnerList();
         [[nodiscard]] static std::vector<int> getForcedOuterList();
 
