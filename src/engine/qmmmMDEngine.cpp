@@ -48,7 +48,7 @@ namespace engine
         {
             std::unordered_set<size_t> inactiveForInnerCalcMolecules;
 
-            for (size_t j{0}; j < n_SmoothingMolecules; ++j)
+            for (size_t j = 1; j < n_SmoothingMolecules; ++j)
                 if (i & (1u << j))
                     inactiveForInnerCalcMolecules.insert(j);
 
