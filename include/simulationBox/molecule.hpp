@@ -39,15 +39,35 @@
 namespace simulationBox
 {
     /**
-     * @class enum HybridZone
+     * @enum HybridZone
+     * @brief Defines the zones for hybrid type calculations
+     *
+     * @details This enum categorizes molecules based on their distance from
+     * the center of mass in hybrid calculations. The zones are assigned
+     * concentrically based on radial distance thresholds.
      */
     enum class HybridZone : size_t
     {
+        /** Default, molecule not assigned to any hybrid zone */
         NOT_HYBRID,
+
+        /** Innermost region (distance ≤ core radius) */
         CORE,
+
+        /** Inner zone layer region (core radius < distance ≤ layer radius -
+           smoothing thickness) */
         LAYER,
+
+        /** Transition region between inner and outer region (layer radius -
+           smoothing thickness < distance ≤ layer radius) */
         SMOOTHING,
+
+        /** Point charge region surrounding the inner region (layer radius <
+           distance ≤ layer radius + point charge thickness) */
         POINT_CHARGE,
+
+        /** Outer region beyond point charges (distance > layer radius + point
+           charge thickness) */
         OUTER
     };
 
