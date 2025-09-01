@@ -68,7 +68,7 @@ namespace engine
                 *_simulationBox
             );
 
-            // MM calculation for outer region
+            // TODO: https://github.com/MolarVerse/PQ/issues/195
 
             double globalSmoothingFactor = 1.0;
 
