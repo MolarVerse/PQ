@@ -50,16 +50,19 @@ namespace simulationBox
 
        public:
         [[nodiscard]] double    calculateVolume() override;
-        [[nodiscard]] pq::Vec3D calcShiftVector(const pq::Vec3D &)
-            const override;
+        [[nodiscard]] pq::Vec3D calcShiftVector(
+            const pq::Vec3D &
+        ) const override;
 
         [[nodiscard]] pq::Vec3D toOrthoSpace(const pq::Vec3D &) const override;
-        [[nodiscard]] pq::tensor3D toOrthoSpace(const pq::tensor3D &)
-            const override;
+        [[nodiscard]] pq::tensor3D toOrthoSpace(
+            const pq::tensor3D &
+        ) const override;
 
         [[nodiscard]] pq::Vec3D    toSimSpace(const pq::Vec3D &) const override;
-        [[nodiscard]] pq::tensor3D toSimSpace(const pq::tensor3D &)
-            const override;
+        [[nodiscard]] pq::tensor3D toSimSpace(
+            const pq::tensor3D &
+        ) const override;
 
         void applyPBC(pq::Vec3D &position) const override;
         void scaleBox(const pq::tensor3D &scalingTensor) override;
@@ -79,6 +82,9 @@ namespace simulationBox
         [[nodiscard]] pq::Vec3D    getBoxAngles() const override;
         [[nodiscard]] pq::tensor3D getBoxMatrix() const override;
         [[nodiscard]] pq::tensor3D getTransformationMatrix() const;
+        [[nodiscard]] pq::Vec3D    wrapPositionIntoBox(
+               const pq::Vec3D &
+           ) const override;
     };
 
 }   // namespace simulationBox

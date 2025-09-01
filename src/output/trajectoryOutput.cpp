@@ -29,11 +29,13 @@
 #include <string>    // for operator<<
 #include <vector>    // for vector
 
-#include "molecule.hpp"        // for Molecule
-#include "simulationBox.hpp"   // for SimulationBox
-#include "vector3d.hpp"        // for Vec3D
+#include "molecule.hpp"                // for Molecule
+#include "simulationBox.hpp"           // for SimulationBox
+#include "simulationBoxSettings.hpp"   // for SimulationBoxSettings
+#include "vector3d.hpp"                // for Vec3D
 
 using namespace output;
+using namespace settings;
 using namespace simulationBox;
 
 /**
@@ -62,20 +64,16 @@ void TrajectoryOutput::writeXyz(SimulationBox &simBox)
     writeHeader(simBox);
     buffer << '\n';
 
-    for (const auto &molecule : simBox.getMolecules())
+    for (const auto &atom : simBox.getAtoms())
     {
-        const auto nAtoms = molecule.getNumberOfAtoms();
+        buffer << std::format("{:<5}\t", atom->getName());
 
-        for (size_t i = 0; i < nAtoms; ++i)
-        {
-            buffer << std::format("{:<5}\t", molecule.getAtomName(i));
+        const auto &pos =
+            simBox.getBox().wrapPositionIntoBox(atom->getPosition());
 
-            const auto &pos = molecule.getAtomPosition(i);
-
-            buffer << std::format("{:15.8f}\t", pos[0]);
-            buffer << std::format("{:15.8f}\t", pos[1]);
-            buffer << std::format("{:15.8f}\n", pos[2]);
-        }
+        buffer << std::format("{:15.8f}\t", pos[0]);
+        buffer << std::format("{:15.8f}\t", pos[1]);
+        buffer << std::format("{:15.8f}\n", pos[2]);
     }
 
     // Write the buffer to the file

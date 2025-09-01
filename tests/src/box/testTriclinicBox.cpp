@@ -89,8 +89,9 @@ TEST(TestTriclinicBox, setBoxAngles)
         box.getTransformationMatrix(),
         linearAlgebra::StaticMatrix3x3<double>(
             {1.0, sqrt(0.5), ::cos(beta)},
-            {0.0, sqrt(0.5), (cos(alpha) - cos(beta) * cos(gamma)) / sin(gamma)
-            },
+            {0.0,
+             sqrt(0.5),
+             (cos(alpha) - cos(beta) * cos(gamma)) / sin(gamma)},
             {0.0,
              0.0,
              ::sqrt(
@@ -163,4 +164,27 @@ TEST(TestTriclinicBox, calculateShiftVectors)
     const auto shiftVector = box.calcShiftVector(position);
 
     EXPECT_VECTOR_NEAR(shiftVector, (position - newPosition), 1e-8);
+}
+
+TEST(TestTriclinicBox, wrapPositionIntoBox)
+{
+    auto box = TriclinicBox();
+    box.setBoxDimensions({60.0, 60.0, 4.542});
+    box.setBoxAngles({90.0, 90.0, 120.0});
+
+    auto outsidePos = linearAlgebra::Vec3D({5.0, -30.0, -0.1});
+
+    box.applyPBC(outsidePos);
+    EXPECT_VECTOR_NEAR(
+        outsidePos,
+        linearAlgebra::Vec3D(5.0, -30.0, -0.1),
+        1e-10
+    );
+
+    const auto wrappedPos = box.wrapPositionIntoBox(outsidePos);
+    EXPECT_VECTOR_NEAR(
+        wrappedPos,
+        linearAlgebra::Vec3D(-25.0, 21.96152422706632, -0.1),
+        1e-10
+    );
 }
