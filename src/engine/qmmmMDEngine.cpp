@@ -84,9 +84,10 @@ namespace engine
                 ++index;
             }
 
-            // F for this config = (QM force + MM force) * globaSmoothingFactor
-            // Add to total force
+            // TODO: https://github.com/MolarVerse/PQ/issues/197
         }
+
+        // TODO: https://github.com/MolarVerse/PQ/issues/198
 
         _configurator.shiftAtomsBackToInitialPositions(*_simulationBox);
     }
