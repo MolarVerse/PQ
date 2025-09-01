@@ -44,7 +44,7 @@ namespace engine
             _configurator.getNumberSmoothingMolecules();
 
         // exact smoothing: loop over all combinations of smoothing molecules
-        for (size_t i{0}; i < (1u << n_SmoothingMolecules); ++i)
+        for (size_t i = 0; i < (1u << n_SmoothingMolecules); ++i)
         {
             std::unordered_set<size_t> inactiveForInnerCalcMolecules;
 
