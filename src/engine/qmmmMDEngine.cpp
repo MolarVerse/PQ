@@ -25,6 +25,35 @@
 namespace engine
 {
     /**
+     * @brief Generate set of inactive smoothing molecule indices from bit
+     * pattern
+     *
+     * @param bitPattern Binary representation where each bit indicates if a
+     *                   smoothing molecule should be inactive (1) or active (0)
+     * @param totalMolecules Total number of smoothing molecules
+     * @return std::unordered_set<size_t> Set of indices to deactivate
+     *
+     * @details This function converts a bit pattern into a set of molecule
+     * indices. Each bit position corresponds to a smoothing molecule index. If
+     * bit j is set, molecule j will be included in the inactive set.
+     *
+     * @note Starts from j=1, skipping the first molecule (index 0)
+     */
+    std::unordered_set<size_t> QMMMMDEngine::generateInactiveMoleculeSet(
+        size_t bitPattern,
+        size_t totalMolecules
+    )
+    {
+        std::unordered_set<size_t> inactiveMolecules;
+
+        for (size_t j = 1; j < totalMolecules; ++j)
+            if (bitPattern & (1u << j))
+                inactiveMolecules.insert(j);
+
+        return inactiveMolecules;
+    }
+
+    /**
      * @brief calculate QM/MM forces
      *
      */
@@ -43,11 +72,8 @@ namespace engine
         // exact smoothing: loop over all combinations of smoothing molecules
         for (size_t i = 0; i < (1u << n_SmoothingMolecules); ++i)
         {
-            std::unordered_set<size_t> inactiveForInnerCalcMolecules;
-
-            for (size_t j = 1; j < n_SmoothingMolecules; ++j)
-                if (i & (1u << j))
-                    inactiveForInnerCalcMolecules.insert(j);
+            const auto inactiveForInnerCalcMolecules =
+                generateInactiveMoleculeSet(i, n_SmoothingMolecules);
 
             _configurator.activateMolecules(*_simulationBox);
             _configurator.deactivateOuterMolecules(*_simulationBox);
