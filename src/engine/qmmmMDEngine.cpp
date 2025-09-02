@@ -25,35 +25,6 @@
 namespace engine
 {
     /**
-     * @brief Generate set of inactive smoothing molecule indices from bit
-     * pattern
-     *
-     * @param bitPattern Binary representation where each bit indicates if a
-     *                   smoothing molecule should be inactive (1) or active (0)
-     * @param totalMolecules Total number of smoothing molecules
-     * @return std::unordered_set<size_t> Set of indices to deactivate
-     *
-     * @details This function converts a bit pattern into a set of molecule
-     * indices. Each bit position corresponds to a smoothing molecule index. If
-     * bit j is set, molecule j will be included in the inactive set.
-     *
-     * @note Starts from j=1, skipping the first molecule (index 0)
-     */
-    std::unordered_set<size_t> QMMMMDEngine::generateInactiveMoleculeSet(
-        size_t bitPattern,
-        size_t totalMolecules
-    )
-    {
-        std::unordered_set<size_t> inactiveMolecules;
-
-        for (size_t j = 1; j < totalMolecules; ++j)
-            if (bitPattern & (1u << j))
-                inactiveMolecules.insert(j);
-
-        return inactiveMolecules;
-    }
-
-    /**
      * @brief calculate QM/MM forces
      *
      */
@@ -66,15 +37,65 @@ namespace engine
         _configurator.assignHybridZones(*_simulationBox);
         _configurator.calculateSmoothingFactors(*_simulationBox);
 
+        applyExactSmoothing();
+        // TODO: https://github.com/MolarVerse/PQ/issues/198
+
+        _configurator.shiftAtomsBackToInitialPositions(*_simulationBox);
+    }
+
+    /**
+     * @brief Generate set of inactive smoothing molecule indices from bit
+     * pattern
+     *
+     * @param bitPattern Binary representation where each bit indicates if a
+     *                   smoothing molecule should be inactive (1) or active (0)
+     * @param totalMolecules Total number of smoothing molecules
+     * @return std::unordered_set<size_t> Set of indices to deactivate
+     *
+     * @details This function converts a bit pattern into a set of molecule
+     * indices. Each bit position corresponds to a smoothing molecule index. If
+     * bit j is set, molecule j will be included in the inactive set.
+     */
+    std::unordered_set<size_t> QMMMMDEngine::generateInactiveMoleculeSet(
+        size_t bitPattern,
+        size_t totalMolecules
+    )
+    {
+        std::unordered_set<size_t> inactiveMolecules;
+
+        for (size_t j = 0; j < totalMolecules; ++j)
+            if (bitPattern & (1u << j))
+                inactiveMolecules.insert(j);
+
+        return inactiveMolecules;
+    }
+
+    /**
+     * @brief Apply exact smoothing algorithm for QM/MM boundary treatment
+     *
+     * @details This function implements the exact smoothing algorithm by
+     * iterating through all 2^n combinations of smoothing molecules being
+     * active/inactive in the inner (QM) region. For each combination:
+     * 1. Run QM calculation with selected smoothing molecules
+     * 2. Run MM calculation for the complementary set
+     * 3. Calculate global smoothing factor for weighted contribution
+     *
+     * @note Computational cost: O(2^n) where n = number of smoothing molecules
+     */
+    void QMMMMDEngine::applyExactSmoothing()
+    {
+        using enum simulationBox::HybridZone;
+
         const auto n_SmoothingMolecules =
             _configurator.getNumberSmoothingMolecules();
 
-        // exact smoothing: loop over all combinations of smoothing molecules
+        // Loop over all combinations of smoothing molecules
         for (size_t i = 0; i < (1u << n_SmoothingMolecules); ++i)
         {
             const auto inactiveForInnerCalcMolecules =
                 generateInactiveMoleculeSet(i, n_SmoothingMolecules);
 
+            // STEP 1: Setup and run QM calculation
             _configurator.activateMolecules(*_simulationBox);
             _configurator.deactivateOuterMolecules(*_simulationBox);
             _configurator.deactivateSmoothingMolecules(
@@ -88,6 +109,7 @@ namespace engine
                 simulationBox::Periodicity::NON_PERIODIC
             );
 
+            // STEP 2: Setup and run MM calculation
             _configurator.activateMolecules(*_simulationBox);
             _configurator.deactivateInnerMolecules(*_simulationBox);
             _configurator.activateSmoothingMolecules(
@@ -97,6 +119,7 @@ namespace engine
 
             // TODO: https://github.com/MolarVerse/PQ/issues/195
 
+            // STEP 3: Calculate global smoothing factor for this combination
             double globalSmoothingFactor = 1.0;
 
             size_t index{0};
@@ -113,10 +136,6 @@ namespace engine
 
             // TODO: https://github.com/MolarVerse/PQ/issues/197
         }
-
-        // TODO: https://github.com/MolarVerse/PQ/issues/198
-
-        _configurator.shiftAtomsBackToInitialPositions(*_simulationBox);
     }
 
 }   // namespace engine

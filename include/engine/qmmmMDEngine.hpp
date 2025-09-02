@@ -46,6 +46,8 @@ namespace engine
         void calculateForces() override;
 
        private:
+        void applyExactSmoothing();
+
         [[nodiscard]] std::unordered_set<size_t> generateInactiveMoleculeSet(
             size_t bitPattern,
             size_t totalMolecules
