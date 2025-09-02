@@ -180,48 +180,80 @@ void HybridConfigurator::assignHybridZones(SimBox& simBox)
 }
 
 /**
- * @brief Activate or deactivate molecules for inner region calculation
+ * @brief Activate all molecules in the simulation box
  *
- * This function controls molecule activation based on hybrid zones and
- * selective deactivation of smoothing molecules. The function operates in two
- * phases:
+ * @param simBox The simulation box containing molecules to be activated
  *
- * **Phase 1 - Non-smoothing molecules:**
- * - CORE and LAYER molecules are activated
- * - POINT_CHARGE and OUTER molecules are deactivated
- *
- * **Phase 2 - Smoothing molecules:**
- * - Smoothing molecules specified in inactiveMolecules are deactivated
- * - All other smoothing molecules are activated
- *
- * @param inactiveMolecules Set of smoothing molecule indices (0-based within
- * smoothing zone) to be deactivated
- * @param simBox Simulation box containing the molecules
- *
- * @note The indices in inactiveMolecules refer to the position within the
- * smoothing zone, not the global molecule index
+ * @details This function activates all molecules regardless of their hybrid
+ * zone assignment. This is typically used to reset the activation state before
+ * applying selective activation/deactivation patterns.
  */
-void HybridConfigurator::deactivateMoleculesForInnerCalculation(
-    std::unordered_set<size_t> inactiveMolecules,
-    pq::SimBox&                simBox
-)
+void HybridConfigurator::activateMolecules(pq::SimBox& simBox)
 {
-    for (auto& mol : simBox.getMoleculesOutsideZone(SMOOTHING))
+    for (auto& mol : simBox.getMolecules()) mol.activateMolecule();
+}
+
+/**
+ * @brief Deactivate molecules in the inner regions (CORE, LAYER, SMOOTHING)
+ *
+ * @param simBox The simulation box containing molecules to be deactivated
+ *
+ * @details This function deactivates molecules in the inner hybrid zones:
+ * CORE, LAYER, and SMOOTHING regions. This is typically used during outer
+ * region calculations where only the outer molecules (POINT_CHARGE and OUTER)
+ * should be active.
+ */
+void HybridConfigurator::deactivateInnerMolecules(pq::SimBox& simBox)
+{
+    for (auto& mol : simBox.getMolecules())
     {
         const auto zone = mol.getHybridZone();
 
-        if (zone == CORE || zone == LAYER)
-            mol.activateMolecule();
-        else
+        if (zone == CORE || zone == LAYER || zone == SMOOTHING)
             mol.deactivateMolecule();
     }
+}
 
+/**
+ * @brief Deactivate molecules in the outer regions (POINT_CHARGE, OUTER)
+ *
+ * @param simBox The simulation box containing molecules to be deactivated
+ *
+ * @details This function deactivates molecules in the outer hybrid zones:
+ * POINT_CHARGE and OUTER regions. This is typically used during inner
+ * region calculations where only the inner molecules should be active.
+ */
+void HybridConfigurator::deactivateOuterMolecules(pq::SimBox& simBox)
+{
+    for (auto& mol : simBox.getMolecules())
+    {
+        const auto zone = mol.getHybridZone();
+
+        if (zone == POINT_CHARGE || zone == OUTER)
+            mol.deactivateMolecule();
+    }
+}
+
+/**
+ * @brief Activate specific smoothing molecules by their indices
+ *
+ * @param inactiveMolecules Set of smoothing molecule indices (0-based within
+ * smoothing zone) to be activated
+ * @param simBox The simulation box containing the molecules
+ *
+ * @details This function activates only the smoothing molecules specified
+ * in the activeMolecules set. The indices refer to the position within
+ * the smoothing zone, not the global molecule index.
+ */
+void HybridConfigurator::activateSmoothingMolecules(
+    std::unordered_set<size_t> activeMolecules,
+    pq::SimBox&                simBox
+)
+{
     size_t count{0};
     for (auto& mol : simBox.getMoleculesInsideZone(SMOOTHING))
     {
-        if (inactiveMolecules.contains(count))
-            mol.deactivateMolecule();
-        else
+        if (activeMolecules.contains(count))
             mol.activateMolecule();
 
         ++count;
@@ -229,48 +261,25 @@ void HybridConfigurator::deactivateMoleculesForInnerCalculation(
 }
 
 /**
- * @brief Activate or deactivate molecules for outer region calculation
+ * @brief Deactivate specific smoothing molecules by their indices
  *
- * This function controls molecule activation based on hybrid zones and
- * selective deactivation of smoothing molecules. The function operates in two
- * phases:
- *
- * **Phase 1 - Non-smoothing molecules:**
- * - CORE and LAYER molecules are deactivated
- * - POINT_CHARGE and OUTER molecules are activated
- *
- * **Phase 2 - Smoothing molecules:**
- * - Smoothing molecules specified in activeMolecules are activated
- * - All other smoothing molecules are deactivated
- *
- * @param activeMolecules Set of smoothing molecule indices (0-based within
+ * @param inactiveMolecules Set of smoothing molecule indices (0-based within
  * smoothing zone) to be deactivated
- * @param simBox Simulation box containing the molecules
+ * @param simBox The simulation box containing the molecules
  *
- * @note The indices in inactiveMolecules refer to the position within the
- * smoothing zone, not the global molecule index
+ * @details This function deactivates only the smoothing molecules specified
+ * in the inactiveMolecules set. The indices refer to the position within
+ * the smoothing zone, not the global molecule index.
  */
-void HybridConfigurator::activateMoleculesForOuterCalculation(
-    std::unordered_set<size_t> activeMolecules,
+void HybridConfigurator::deactivateSmoothingMolecules(
+    std::unordered_set<size_t> inactiveMolecules,
     pq::SimBox&                simBox
 )
 {
-    for (auto& mol : simBox.getMoleculesOutsideZone(SMOOTHING))
-    {
-        const auto zone = mol.getHybridZone();
-
-        if (zone == CORE || zone == LAYER)
-            mol.deactivateMolecule();
-        else
-            mol.activateMolecule();
-    }
-
     size_t count{0};
     for (auto& mol : simBox.getMoleculesInsideZone(SMOOTHING))
     {
-        if (activeMolecules.contains(count))
-            mol.activateMolecule();
-        else
+        if (inactiveMolecules.contains(count))
             mol.deactivateMolecule();
 
         ++count;

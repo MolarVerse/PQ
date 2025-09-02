@@ -43,11 +43,14 @@ namespace configurator
         void shiftAtomsToInnerRegionCenter(pq::SimBox &);
         void shiftAtomsBackToInitialPositions(pq::SimBox &);
         void assignHybridZones(pq::SimBox &);
-        void deactivateMoleculesForInnerCalculation(
+        void activateMolecules(pq::SimBox &);
+        void deactivateInnerMolecules(pq::SimBox &);
+        void deactivateOuterMolecules(pq::SimBox &);
+        void activateSmoothingMolecules(
             std::unordered_set<size_t>,
             pq::SimBox &
         );
-        void activateMoleculesForOuterCalculation(
+        void deactivateSmoothingMolecules(
             std::unordered_set<size_t>,
             pq::SimBox &
         );

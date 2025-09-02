@@ -52,7 +52,9 @@ namespace engine
                 if (i & (1u << j))
                     inactiveForInnerCalcMolecules.insert(j);
 
-            _configurator.deactivateMoleculesForInnerCalculation(
+            _configurator.activateMolecules(*_simulationBox);
+            _configurator.deactivateOuterMolecules(*_simulationBox);
+            _configurator.deactivateSmoothingMolecules(
                 inactiveForInnerCalcMolecules,
                 *_simulationBox
             );
@@ -63,7 +65,9 @@ namespace engine
                 simulationBox::Periodicity::NON_PERIODIC
             );
 
-            _configurator.activateMoleculesForOuterCalculation(
+            _configurator.activateMolecules(*_simulationBox);
+            _configurator.deactivateInnerMolecules(*_simulationBox);
+            _configurator.activateSmoothingMolecules(
                 inactiveForInnerCalcMolecules,
                 *_simulationBox
             );
