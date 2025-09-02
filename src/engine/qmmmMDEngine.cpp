@@ -42,33 +42,6 @@ namespace engine
     }
 
     /**
-     * @brief Generate set of inactive smoothing molecule indices from bit
-     * pattern
-     *
-     * @param bitPattern Binary representation where each bit indicates if a
-     *                   smoothing molecule should be inactive (1) or active (0)
-     * @param totalMolecules Total number of smoothing molecules
-     * @return std::unordered_set<size_t> Set of indices to deactivate
-     *
-     * @details This function converts a bit pattern into a set of molecule
-     * indices. Each bit position corresponds to a smoothing molecule index. If
-     * bit j is set, molecule j will be included in the inactive set.
-     */
-    std::unordered_set<size_t> QMMMMDEngine::generateInactiveMoleculeSet(
-        size_t bitPattern,
-        size_t totalMolecules
-    )
-    {
-        std::unordered_set<size_t> inactiveMolecules;
-
-        for (size_t j = 0; j < totalMolecules; ++j)
-            if (bitPattern & (1u << j))
-                inactiveMolecules.insert(j);
-
-        return inactiveMolecules;
-    }
-
-    /**
      * @brief Apply exact smoothing algorithm for QM/MM boundary treatment
      *
      * @details This function implements the exact smoothing algorithm by
@@ -121,6 +94,33 @@ namespace engine
 
             // TODO: https://github.com/MolarVerse/PQ/issues/197
         }
+    }
+
+    /**
+     * @brief Generate set of inactive smoothing molecule indices from bit
+     * pattern
+     *
+     * @param bitPattern Binary representation where each bit indicates if a
+     *                   smoothing molecule should be inactive (1) or active (0)
+     * @param totalMolecules Total number of smoothing molecules
+     * @return std::unordered_set<size_t> Set of indices to deactivate
+     *
+     * @details This function converts a bit pattern into a set of molecule
+     * indices. Each bit position corresponds to a smoothing molecule index. If
+     * bit j is set, molecule j will be included in the inactive set.
+     */
+    std::unordered_set<size_t> QMMMMDEngine::generateInactiveMoleculeSet(
+        size_t bitPattern,
+        size_t totalMolecules
+    )
+    {
+        std::unordered_set<size_t> inactiveMolecules;
+
+        for (size_t j = 0; j < totalMolecules; ++j)
+            if (bitPattern & (1u << j))
+                inactiveMolecules.insert(j);
+
+        return inactiveMolecules;
     }
 
     /**
