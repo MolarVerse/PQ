@@ -153,16 +153,19 @@ while (<DFTB_OUT>)
     $energy_found = 1;
   }
 
-  # extract forces
-  if (/^\s*Total Forces/ .. /^\s*Maximal derivative component:/)
+  # extract forces if no pointcharges are used
+  if ($pointcharges == 0)
   {
-    if (/^\s+-*\d/)
+    if (/^\s*Total Forces/ .. /^\s*Maximal derivative component:/)
     {
-      @line = split;
-      $n_fields = scalar( @line  ) - 3;
+      if (/^\s+-*\d/)
+      {
+        @line = split;
+        $n_fields = scalar( @line  ) - 3;
 
-      printf FORCES ("%27.18e  %27.18e  %27.18e\n", -$line[0+$n_fields],  -$line[1+$n_fields], -$line[2+$n_fields]);
-      $forces_found = 1;
+        printf FORCES ("%27.18e  %27.18e  %27.18e\n", -$line[0+$n_fields],  -$line[1+$n_fields], -$line[2+$n_fields]);
+        $forces_found = 1;
+      }
     }
   }
 
@@ -209,6 +212,120 @@ close (STRESS_TENSOR);
 # create the "log-file" for the last run
 `mv $dftb_out  $dftb_out_prev`;
 `mv $qm_coords $qm_coords_prev`;
+
+# calculate the forces via a separate dftb+ execution
+# if pointcharges have been used
+if ($pointcharges == 1)
+{
+  # open dftb_in.hsd and modify it for force calculation
+  my @file_contents;
+  if (-e $dftb_input) {  # Check if file exists
+      open (DFTB_IN_READ, "< $dftb_input") or
+          die "\n\n\t (-) $progname: Error reading file $dftb_input\n";
+      @file_contents = <DFTB_IN_READ>;
+      close (DFTB_IN_READ);
+  }
+
+  # Modify the contents as needed - handle multiline patterns
+  my $file_content = join('', @file_contents);
+
+  # Replace Single Point Driver = {} for Geometry Optimization Driver
+  $file_content =~ s/Driver\s*=\s*\{\s*\}/Driver = {\n    MaxSteps = 0\n    Optimizer = SteepestDescent{}\n}/gs;
+
+  # Set MaxSccIterations = 1
+  if ($file_content =~ /MaxSccIterations\s*=\s*\d+/) {
+      # If MaxSccIterations exists, replace it with 1
+      $file_content =~ s/MaxSccIterations\s*=\s*\d+/MaxSccIterations = 1/gs;
+  } else {
+      # If MaxSccIterations doesn't exist, add it inside Hamiltonian block
+      $file_content =~ s/(Hamiltonian\s*=\s*\{[^}]*?)(\})/\1    MaxSccIterations = 1\n\2/gs;
+  }
+
+  # Set ConvergentSccOnly = No
+  if ($file_content =~ /ConvergentSccOnly\s*=\s*\w+/) {
+      # If ConvergentSccOnly exists, replace it with No
+      $file_content =~ s/ConvergentSccOnly\s*=\s*\w+/ConvergentSccOnly = No/gs;
+  } else {
+      # If ConvergentSccOnly doesn't exist, add it inside Hamiltonian block
+      $file_content =~ s/(Hamiltonian\s*=\s*\{[^}]*?)(\})/\1    ConvergentSccOnly = No\n\2/gs;
+  }
+
+  # Set ReadInitialCharges = Yes
+  if ($file_content =~ /ReadInitialCharges\s*=\s*\w+/) {
+      # If ReadInitialCharges exists, replace it with Yes
+      $file_content =~ s/ReadInitialCharges\s*=\s*\w+/ReadInitialCharges = Yes/gs;
+  } else {
+      # If ReadInitialCharges doesn't exist, add it inside Hamiltonian block
+      $file_content =~ s/(Hamiltonian\s*=\s*\{[^}]*?)(\})/\1    ReadInitialCharges = Yes\n\2/gs;
+  }
+
+  # Remove entire ElectricField block (including the ElectricField keyword and all content within braces)
+  while ($file_content =~ s/(\s*)ElectricField\s*=\s*\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}\s*/$1/gs) {
+      # Keep looping until no more nested ElectricField blocks are found
+  }
+
+  # Add mixer block inside Hamiltonian block
+  $file_content =~ s/(Hamiltonian\s*=\s*\{[^}]*?)(\})/\1    mixer = simple{\n        mixingparameter = 0.0000000001\n    }\n\2/gs;
+
+  # Handle Analysis block with PrintForces = Yes
+  if ($file_content =~ /Analysis\s*=\s*\{/) {
+      # Analysis block exists, add PrintForces inside it (if not already there)
+      if ($file_content !~ /PrintForces\s*=\s*\w+/) {
+          $file_content =~ s/(Analysis\s*=\s*\{[^}]*?)(\})/\1    PrintForces = Yes\n\2/gs;
+      }
+  } else {
+      # Analysis block doesn't exist, create it with PrintForces
+      $file_content .= "\nAnalysis = {\n    PrintForces = Yes\n}\n";
+  }
+
+  # Split back into lines
+  @file_contents = split(/(?<=\n)/, $file_content);
+
+  # Write the modified contents back
+  open (DFTB_IN, "> $dftb_input") or
+      die "\n\n\t (-) $progname: Error opening file $dftb_input\n";
+  print DFTB_IN @file_contents;
+  close (DFTB_IN); 
+
+  # execute dftb+
+  if (system("dftb+ > run.out"))
+  {
+    die "\n\n\t (-) $progname: Error executing dftb+.\n";
+  }
+
+  if (system("mv detailed.out $dftb_out"))
+  {
+    die "\n\n\t (-) $progname: Error moving detailed.out to $dftb_out.\n";
+  }
+
+  # create the files to which the results are written
+  open (DFTB_OUT, "< $dftb_out") or
+    die "\n\n\t (-) $progname: Error opening file '$dftb_out'\n";
+
+  open (FORCES, "> $qm_forces") or
+    die "\n\n\t (-) $progname: Error opening file '$qm_forces'\n";
+
+  while (<DFTB_OUT>) 
+  {
+    if (/^\s*Total Forces/ .. /^\s*Maximal derivative component:/)
+    {
+      if (/^\s+-*\d/)
+      {
+        @line = split;
+        $n_fields = scalar( @line  ) - 3;
+
+        printf FORCES ("%27.18e  %27.18e  %27.18e\n", -$line[0+$n_fields],  -$line[1+$n_fields], -$line[2+$n_fields]);
+        $forces_found = 1;
+      }
+    }
+  }
+
+  close (DFTB_OUT);
+  close (FORCES);
+
+  # create the "log-file" for the last run
+  `mv $dftb_out  $dftb_out_prev`;
+}
 
 if ($energy_found != 1)
 {
