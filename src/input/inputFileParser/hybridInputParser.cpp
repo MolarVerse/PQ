@@ -171,7 +171,7 @@ void HybridInputParser::parseUseQMCharges(
 )
 {
     checkCommand(lineElements, lineNumber);
-    auto use_qm_charges = toLowerCopy(lineElements[2]);
+    auto use_qm_charges = toLowerAndReplaceDashesCopy(lineElements[2]);
 
     if ("qm" == use_qm_charges)
         HybridSettings::setUseQMCharges(true);
