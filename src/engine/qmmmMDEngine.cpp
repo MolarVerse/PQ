@@ -22,8 +22,6 @@
 
 #include "qmmmMDEngine.hpp"
 
-#include <iterator>   // for std::ranges:distance
-
 namespace engine
 {
     /**
@@ -32,7 +30,6 @@ namespace engine
      */
     void QMMMMDEngine::calculateForces()
     {
-        using std::ranges::distance;
         using enum simulationBox::HybridZone;
 
         _configurator.calculateInnerRegionCenter(*_simulationBox);
