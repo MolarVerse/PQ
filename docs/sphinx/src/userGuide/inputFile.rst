@@ -1680,12 +1680,12 @@ Point Charge Thickness
 With the ``point_charge_thickness`` keyword the user can specify the distance from the :ref:`layer_radius <layerRadiusKey>` up to which point charges are included in Å.
 The default value is 0.0 Å, which means that no point charges are included.
 
+.. centered:: *default value* = 0.0 Å
+
 .. image:: hybrid_zones.png
     :width: 600
     :align: center
     :alt: graphical representation of the different hybrid zones and the associated keywords
-
-.. centered:: *default value* = 0.0 Å
 
 .. _celllistKeys:
 
