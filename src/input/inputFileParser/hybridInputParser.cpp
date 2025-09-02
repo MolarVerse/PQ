@@ -99,6 +99,11 @@ HybridInputParser::HybridInputParser(Engine &engine) : InputFileParser(engine)
         bind_front(&HybridInputParser::parsePointChargeThickness, this),
         false
     );
+    addKeyword(
+        std::string("smoothing_method"),
+        bind_front(&HybridInputParser::parseSmoothingMethod, this),
+        false
+    );
 }
 
 /**
@@ -298,6 +303,38 @@ void HybridInputParser::parsePointChargeThickness(
         );
 
     HybridSettings::setPointChargeThickness(radius);
+}
+
+/**
+ * @brief parse smoothing method
+ *
+ * @param lineElements
+ * @param lineNumber
+ *
+ * @throws InputFileException if
+ */
+void HybridInputParser::parseSmoothingMethod(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    const auto method = toLowerAndReplaceDashesCopy(lineElements[2]);
+
+    using enum settings::SmoothingMethod;
+
+    if (method == "hotspot")
+        HybridSettings::setSmoothingMethod(HOTSPOT);
+
+    else if (method == "exact")
+        HybridSettings::setSmoothingMethod(EXACT);
+    else
+        throw InputFileException(
+            std::format(
+                "Invalid smoothing method \"{}\" in input file\n"
+                "Possible values are: hotspot, exact",
+                lineElements[2]
+            )
+        );
 }
 
 /**

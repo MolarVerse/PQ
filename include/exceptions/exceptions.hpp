@@ -389,6 +389,19 @@ namespace customException
         const char *what() const throw() override;
     };
 
+    /**
+     * @class HybridMDEngineException inherits from CustomException
+     *
+     * @brief Exception for hybrid MD engine errors
+     */
+    class HybridMDEngineException : public CustomException
+    {
+       public:
+        using CustomException::CustomException;
+
+        const char *what() const throw() override;
+    };
+
 }   // namespace customException
 
 #endif   // _EXCEPTIONS_HPP_

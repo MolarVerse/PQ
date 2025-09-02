@@ -1607,6 +1607,23 @@ Possible options are:
 
    2. **on** - charges of the QM atoms are taken from the QM calculation
 
+.. _smoothingMethodKey:
+
+Smoothing Method
+=================
+.. admonition:: Key
+    :class: tip
+
+    smoothing_method = {string} -> "hotspot"
+
+With the ``smoothing_method`` keyword the user can specify the smoothing method for the hybrid calculation.
+
+Possible options are:
+
+   1. **hotspot** (default) - all molecules in the smoothing region are treated as QM molecules and their contribution is weighted according to their position in the smoothing region
+
+   2. **exact** - all possible combinations of QM and MM treatment of the molecules in the smoothing region are calculated and weighted according to a global smoothing factor --- Computational cost: O(2\ :sup:`n`) where n = number of smoothing molecules
+
 .. _coreRadiusKey:
 
 Core Radius

@@ -22,6 +22,14 @@
 
 #include "qmmmMDEngine.hpp"
 
+#include <format>   // for format
+
+#include "exceptions.hpp"       // for HybridMDEngineException
+#include "hybridSettings.hpp"   // for HybridSettings
+
+using namespace settings;
+using namespace customException;
+
 namespace engine
 {
     /**
@@ -35,8 +43,18 @@ namespace engine
         _configurator.assignHybridZones(*_simulationBox);
         _configurator.calculateSmoothingFactors(*_simulationBox);
 
-        applyExactSmoothing();
+        const auto& smoothingMethod = HybridSettings::getSmoothingMethod();
+        using enum SmoothingMethod;
+
         // TODO: https://github.com/MolarVerse/PQ/issues/198
+        if (smoothingMethod == HOTSPOT)
+            throw HybridMDEngineException(
+                "Hotspot smoothing method not yet implemented"
+            );
+        else if (smoothingMethod == EXACT)
+            applyExactSmoothing();
+        else
+            throw HybridMDEngineException("Unknown smoothing method requested");
 
         _configurator.shiftAtomsBackToInitialPositions(*_simulationBox);
     }

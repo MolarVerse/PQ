@@ -305,3 +305,14 @@ const char *HybridConfiguratorException::what() const throw()
     colorfulOutput(Color::FG_RED, "HybridConfiguratorError");
     return _message.c_str();
 }
+
+/**
+ * @brief Construct a new Custom Exception:: Custom Exception object
+ *
+ * @param message
+ */
+const char *HybridMDEngineException::what() const throw()
+{
+    colorfulOutput(Color::FG_RED, "HybridMDEngineError");
+    return _message.c_str();
+}

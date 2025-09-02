@@ -33,6 +33,18 @@
 namespace settings
 {
     /**
+     * @enum SmoothingMethod
+     *
+     * @brief enum class to store the type of smoothing method
+     *
+     */
+    enum class SmoothingMethod
+    {
+        HOTSPOT,
+        EXACT
+    };
+
+    /**
      * @class HybridSettings
      *
      * @brief stores all information about the external qmmm runner
@@ -52,6 +64,9 @@ namespace settings
         static inline double _smoothingRegionThickness = 0.0;
         static inline double _pointChargeThickness     = 0.0;
 
+        static inline SmoothingMethod _smoothingMethod =
+            SmoothingMethod::HOTSPOT;
+
        public:
         /********************
          * standard setters *
@@ -68,6 +83,8 @@ namespace settings
         static void setSmoothingRegionThickness(const double thickness);
         static void setPointChargeThickness(const double radius);
 
+        static void setSmoothingMethod(const SmoothingMethod method);
+
         /********************
          * standard getters *
          ********************/
@@ -83,6 +100,8 @@ namespace settings
         [[nodiscard]] static double getLayerRadius();
         [[nodiscard]] static double getSmoothingRegionThickness();
         [[nodiscard]] static double getPointChargeThickness();
+
+        [[nodiscard]] static SmoothingMethod getSmoothingMethod();
     };
 }   // namespace settings
 

@@ -130,6 +130,16 @@ void HybridSettings::setPointChargeThickness(const double radius)
     _pointChargeThickness = radius;
 }
 
+/**
+ * @brief set the smoothing method in the settings
+ *
+ * @param method
+ */
+void HybridSettings::setSmoothingMethod(const SmoothingMethod method)
+{
+    _smoothingMethod = method;
+}
+
 /********************
  *                  *
  * standard getters *
@@ -205,4 +215,14 @@ double HybridSettings::getSmoothingRegionThickness()
 double HybridSettings::getPointChargeThickness()
 {
     return _pointChargeThickness;
+}
+
+/**
+ * @brief get the smoothing method
+ *
+ * @return SmoothingMethod
+ */
+settings::SmoothingMethod HybridSettings::getSmoothingMethod()
+{
+    return _smoothingMethod;
 }
