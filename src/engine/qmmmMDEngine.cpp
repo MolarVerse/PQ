@@ -30,8 +30,6 @@ namespace engine
      */
     void QMMMMDEngine::calculateForces()
     {
-        using enum simulationBox::HybridZone;
-
         _configurator.calculateInnerRegionCenter(*_simulationBox);
         _configurator.shiftAtomsToInnerRegionCenter(*_simulationBox);
         _configurator.assignHybridZones(*_simulationBox);
@@ -84,8 +82,6 @@ namespace engine
      */
     void QMMMMDEngine::applyExactSmoothing()
     {
-        using enum simulationBox::HybridZone;
-
         const auto n_SmoothingMolecules =
             _configurator.getNumberSmoothingMolecules();
 
@@ -120,22 +116,47 @@ namespace engine
             // TODO: https://github.com/MolarVerse/PQ/issues/195
 
             // STEP 3: Calculate global smoothing factor for this combination
-            double globalSmoothingFactor = 1.0;
-
-            size_t index{0};
-            for (const auto& mol :
-                 _simulationBox->getMoleculesInsideZone(SMOOTHING))
-            {
-                if (inactiveForInnerCalcMolecules.contains(index))
-                    globalSmoothingFactor *= 1 - mol.getSmoothingFactor();
-                else
-                    globalSmoothingFactor *= mol.getSmoothingFactor();
-
-                ++index;
-            }
+            const double globalSmoothingFactor =
+                calculateGlobalSmoothingFactor(inactiveForInnerCalcMolecules);
 
             // TODO: https://github.com/MolarVerse/PQ/issues/197
         }
+    }
+
+    /**
+     * @brief Calculate global smoothing factor for QM/MM boundary treatment
+     *
+     * @param inactiveForInnerCalcMolecules Set of molecule indices that are
+     *                                      inactive for inner calculation
+     * @return double Global smoothing factor for weighted contribution
+     *
+     * @details This function calculates the global smoothing factor by
+     * iterating through all smoothing molecules and multiplying their
+     * individual smoothing factors. For molecules marked as inactive for
+     * inner calculation, it uses (1 - smoothingFactor), otherwise it uses
+     * the smoothingFactor directly.
+     */
+    double QMMMMDEngine::calculateGlobalSmoothingFactor(
+        const std::unordered_set<size_t>& inactiveForInnerCalcMolecules
+    )
+    {
+        using enum simulationBox::HybridZone;
+
+        double globalSmoothingFactor = 1.0;
+
+        size_t index = 0;
+        for (const auto& mol :
+             _simulationBox->getMoleculesInsideZone(SMOOTHING))
+        {
+            if (inactiveForInnerCalcMolecules.contains(index))
+                globalSmoothingFactor *= 1 - mol.getSmoothingFactor();
+            else
+                globalSmoothingFactor *= mol.getSmoothingFactor();
+
+            ++index;
+        }
+
+        return globalSmoothingFactor;
     }
 
 }   // namespace engine

@@ -52,6 +52,9 @@ namespace engine
             size_t bitPattern,
             size_t totalMolecules
         );
+        [[nodiscard]] double calculateGlobalSmoothingFactor(
+            const std::unordered_set<size_t>& inactiveForInnerCalcMolecules
+        );
     };
 
 }   // namespace engine
