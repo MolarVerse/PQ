@@ -341,6 +341,16 @@ size_t HybridConfigurator::getNumberSmoothingMolecules()
 }
 
 /**
+ * @brief get the inner region center coordinates
+ *
+ * @return pq::Vec3D innerRegionCenter
+ */
+Vec3D HybridConfigurator::getInnerRegionCenter() const
+{
+    return _innerRegionCenter;
+}
+
+/**
  * @brief set the number of molecules in the point charge region of the
  * hybrid calculation
  *
