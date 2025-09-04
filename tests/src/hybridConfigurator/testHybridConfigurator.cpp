@@ -25,16 +25,19 @@
 #include "atom.hpp"                 // for Atom
 #include "exceptions.hpp"           // for HybridConfiguratorException
 #include "hybridConfigurator.hpp"   // for HybridConfigurator
+#include "hybridSettings.hpp"       // for HybridSettings
+#include "molecule.hpp"             // for Molecule
 #include "simulationBox.hpp"        // for SimulationBox
 #include "throwWithMessage.hpp"     // for EXPECT_THROW_MSG
 #include "vector3d.hpp"             // for Vec3D
 #include "vectorNear.hpp"           // for EXPECT_VECTOR_NEAR
 
-using namespace pq;
-using namespace customException;
 using namespace configurator;
-using namespace simulationBox;
+using namespace customException;
 using namespace linearAlgebra;
+using namespace pq;
+using namespace settings;
+using namespace simulationBox;
 
 TEST(testHybridConfigurator, calculateInnerRegionCenterAndShiftAtoms)
 {
@@ -130,4 +133,85 @@ TEST(testHybridConfigurator, calculateInnerRegionCenterAndShiftAtoms)
         atom4.getPosition(),
         1e-10
     );
+}
+
+TEST(testHybridConfigurator, assignHybridZones)
+{
+    HybridConfigurator hybridConfigurator;
+    SimBox             simBox;
+
+    simBox.setBoxDimensions({100.0, 100.0, 100.0});
+
+    HybridSettings::setCoreRadius(6.0);
+    HybridSettings::setLayerRadius(12.0);
+    HybridSettings::setSmoothingRegionThickness(2.0);
+    HybridSettings::setPointChargeThickness(7.0);
+
+    auto atom1 = std::make_shared<Atom>();
+    atom1->setPosition({3.95, 3.15, 1.95}
+    );   // C atom: r ≈ 5.41 < 6.0 (inside core)
+    atom1->setName("C");
+    atom1->initMass();
+
+    auto atom2 = std::make_shared<Atom>();
+    atom2->setPosition({4.45, 3.95, 2.45}
+    );   // O atom: r ≈ 6.44 > 6.0 (outside core)
+    atom2->setName("O");
+    atom2->initMass();
+
+    // mol1 com: (4.22, 3.58, 2.22), r ≈ 5.96 < 6.0 (inside core)
+    auto mol1 = Molecule();
+    mol1.addAtom(atom1);
+    mol1.addAtom(atom2);
+    mol1.setMolMass(atom1->getMass() + atom2->getMass());
+    simBox.addMolecule(mol1);
+
+    auto atom3 = std::make_shared<Atom>();
+    atom3->setPosition({6.5, 5.0, 3.5});
+    atom3->setName("Ar");
+    atom3->initMass();
+
+    auto mol2 = Molecule();
+    mol2.addAtom(atom3);
+    mol2.setMolMass(atom3->getMass());
+    simBox.addMolecule(mol2);
+
+    auto atom4 = std::make_shared<Atom>();
+    atom4->setPosition({0.0, 0.0, 12.0});
+    atom4->setName("Re");
+    atom4->initMass();
+
+    auto mol3 = Molecule();
+    mol3.addAtom(atom4);
+    mol3.setMolMass(atom4->getMass());
+    simBox.addMolecule(mol3);
+
+    auto atom5 = std::make_shared<Atom>();
+    atom5->setPosition({0.0, 19.0, 0.0});
+    atom5->setName("Zr");
+    atom5->initMass();
+
+    auto mol4 = Molecule();
+    mol4.addAtom(atom5);
+    mol4.setMolMass(atom5->getMass());
+    simBox.addMolecule(mol4);
+
+    auto atom6 = std::make_shared<Atom>();
+    atom6->setPosition({19.0, 0.001, 0.0});
+    atom6->setName("Tc");
+    atom6->initMass();
+
+    auto mol5 = Molecule();
+    mol5.addAtom(atom6);
+    mol5.setMolMass(atom6->getMass());
+    simBox.addMolecule(mol5);
+
+    hybridConfigurator.assignHybridZones(simBox);
+
+    using enum simulationBox::HybridZone;
+    EXPECT_EQ(simBox.getMolecule(0).getHybridZone(), CORE);
+    EXPECT_EQ(simBox.getMolecule(1).getHybridZone(), LAYER);
+    EXPECT_EQ(simBox.getMolecule(2).getHybridZone(), SMOOTHING);
+    EXPECT_EQ(simBox.getMolecule(3).getHybridZone(), POINT_CHARGE);
+    EXPECT_EQ(simBox.getMolecule(4).getHybridZone(), OUTER);
 }
