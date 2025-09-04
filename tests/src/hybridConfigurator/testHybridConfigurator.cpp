@@ -276,32 +276,20 @@ TEST(testHybridConfigurator, activateDeactivateMolecules)
 
     hybridConfigurator.deactivateInnerMolecules(simBox);
 
-    EXPECT_EQ(simBox.getMolecule(0).isActive(), false);
-    EXPECT_EQ(simBox.getMolecule(0).getAtom(0).isActive(), false);
-    EXPECT_EQ(simBox.getMolecule(1).isActive(), false);
-    EXPECT_EQ(simBox.getMolecule(1).getAtom(0).isActive(), false);
-    EXPECT_EQ(simBox.getMolecule(2).isActive(), false);
-    EXPECT_EQ(simBox.getMolecule(2).getAtom(0).isActive(), false);
-    EXPECT_EQ(simBox.getMolecule(3).isActive(), false);
-    EXPECT_EQ(simBox.getMolecule(3).getAtom(0).isActive(), false);
-    EXPECT_EQ(simBox.getMolecule(4).isActive(), true);
-    EXPECT_EQ(simBox.getMolecule(4).getAtom(0).isActive(), true);
-    EXPECT_EQ(simBox.getMolecule(5).isActive(), true);
-    EXPECT_EQ(simBox.getMolecule(5).getAtom(0).isActive(), true);
+    std::vector<bool> expected = {false, false, false, false, true, true};
+    for (size_t i = 0; i < 6; ++i)
+    {
+        EXPECT_EQ(simBox.getMolecule(i).isActive(), expected[i]);
+        EXPECT_EQ(simBox.getMolecule(i).getAtom(0).isActive(), expected[i]);
+    }
 
     hybridConfigurator.activateMolecules(simBox);
     hybridConfigurator.deactivateOuterMolecules(simBox);
 
-    EXPECT_EQ(simBox.getMolecule(0).isActive(), true);
-    EXPECT_EQ(simBox.getMolecule(0).getAtom(0).isActive(), true);
-    EXPECT_EQ(simBox.getMolecule(1).isActive(), true);
-    EXPECT_EQ(simBox.getMolecule(1).getAtom(0).isActive(), true);
-    EXPECT_EQ(simBox.getMolecule(2).isActive(), true);
-    EXPECT_EQ(simBox.getMolecule(2).getAtom(0).isActive(), true);
-    EXPECT_EQ(simBox.getMolecule(3).isActive(), true);
-    EXPECT_EQ(simBox.getMolecule(3).getAtom(0).isActive(), true);
-    EXPECT_EQ(simBox.getMolecule(4).isActive(), false);
-    EXPECT_EQ(simBox.getMolecule(4).getAtom(0).isActive(), false);
-    EXPECT_EQ(simBox.getMolecule(5).isActive(), false);
-    EXPECT_EQ(simBox.getMolecule(5).getAtom(0).isActive(), false);
+    expected = {true, true, true, true, false, false};
+    for (size_t i = 0; i < 6; ++i)
+    {
+        EXPECT_EQ(simBox.getMolecule(i).isActive(), expected[i]);
+        EXPECT_EQ(simBox.getMolecule(i).getAtom(0).isActive(), expected[i]);
+    }
 }
