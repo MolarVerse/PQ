@@ -251,14 +251,13 @@ void HybridConfigurator::activateSmoothingMolecules(
 )
 {
     size_t count{0};
-    for (auto& mol : simBox.getMolecules())
-        if (mol.getHybridZone() == SMOOTHING)
-        {
-            if (activeMolecules.contains(count))
-                mol.activateMolecule();
+    for (auto& mol : simBox.getMoleculesInsideZone(SMOOTHING))
+    {
+        if (activeMolecules.contains(count))
+            mol.activateMolecule();
 
-            ++count;
-        }
+        ++count;
+    }
 }
 
 /**
@@ -278,14 +277,13 @@ void HybridConfigurator::deactivateSmoothingMolecules(
 )
 {
     size_t count{0};
-    for (auto& mol : simBox.getMolecules())
-        if (mol.getHybridZone() == SMOOTHING)
-        {
-            if (inactiveMolecules.contains(count))
-                mol.deactivateMolecule();
+    for (auto& mol : simBox.getMoleculesInsideZone(SMOOTHING))
+    {
+        if (inactiveMolecules.contains(count))
+            mol.deactivateMolecule();
 
-            ++count;
-        }
+        ++count;
+    }
 }
 
 /**
