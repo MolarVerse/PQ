@@ -309,3 +309,71 @@ TEST(testHybridConfigurator, activateDeactivateMolecules)
     EXPECT_EQ(simBox.getMolecule(2).isActive(), true);
     EXPECT_EQ(simBox.getMolecule(2).getAtom(0).isActive(), true);
 }
+
+TEST(testHybridConfigurator, calculateSmoothingFactors)
+{
+    HybridConfigurator hybridConfigurator;
+    SimBox             simBox;
+
+    simBox.setBoxDimensions({100.0, 100.0, 100.0});
+
+    HybridSettings::setLayerRadius(12.0);
+    HybridSettings::setSmoothingRegionThickness(2.0);
+
+    using enum simulationBox::HybridZone;
+
+    auto atom1 = std::make_shared<Atom>();
+    atom1->setPosition({10.0, 0.0, 0.0});
+    atom1->setName("Au");
+    atom1->initMass();
+
+    auto mol1 = Molecule();
+    mol1.addAtom(atom1);
+    mol1.setMolMass(atom1->getMass());
+    mol1.setHybridZone(SMOOTHING);
+    simBox.addMolecule(mol1);
+
+    auto atom2 = std::make_shared<Atom>();
+    atom2->setPosition({11.0, 0.0, 0.0});
+    atom2->setName("Ag");
+    atom2->initMass();
+
+    auto mol2 = Molecule();
+    mol2.addAtom(atom2);
+    mol2.setMolMass(atom2->getMass());
+    mol2.setHybridZone(SMOOTHING);
+    simBox.addMolecule(mol2);
+
+    auto atom3 = std::make_shared<Atom>();
+    atom3->setPosition({12.0, 0.0, 0.0});
+    atom3->setName("As");
+    atom3->initMass();
+
+    auto mol3 = Molecule();
+    mol3.addAtom(atom3);
+    mol3.setMolMass(atom3->getMass());
+    mol3.setHybridZone(SMOOTHING);
+    simBox.addMolecule(mol3);
+
+    auto atom4 = std::make_shared<Atom>();
+    atom4->setPosition({11.73, 0.0, 0.0});
+    atom4->setName("At");
+    atom4->initMass();
+
+    auto mol4 = Molecule();
+    mol4.addAtom(atom4);
+    mol4.setMolMass(atom4->getMass());
+    mol4.setHybridZone(SMOOTHING);
+    simBox.addMolecule(mol4);
+
+    hybridConfigurator.calculateSmoothingFactors(simBox);
+
+    EXPECT_NEAR(simBox.getMolecule(0).getSmoothingFactor(), 1.0, 1e-10);
+    EXPECT_NEAR(simBox.getMolecule(1).getSmoothingFactor(), 0.5, 1e-10);
+    EXPECT_NEAR(simBox.getMolecule(2).getSmoothingFactor(), 0.0, 1e-10);
+    EXPECT_NEAR(
+        simBox.getMolecule(3).getSmoothingFactor(),
+        0.019890532631249892,
+        1e-10
+    );
+}
