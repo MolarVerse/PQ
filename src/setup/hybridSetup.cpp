@@ -70,7 +70,6 @@ void HybridSetup::setup()
     setupForcedInnerList();
     setupForcedOuterList();
     checkZoneRadii();
-    throw UserInputException("Not implemented yet");
 }
 
 /**
