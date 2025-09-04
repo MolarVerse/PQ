@@ -112,7 +112,10 @@ size_t SimulationBox::getNumberOfAtoms() const { return _atoms.size(); }
  */
 size_t SimulationBox::getNumberOfQMAtoms() const
 {
-    return std::ranges::distance(getQMAtoms());
+    return std::ranges::count_if(
+        _atoms,
+        [](const auto &atom) { return atom->isQMAtom(); }
+    );
 }
 
 /**
