@@ -121,8 +121,8 @@ namespace simulationBox
     template <typename Derived>
     auto SimulationBoxView<Derived>::getQMAtoms()
     {
-        return getAtoms() | pqviews::filter([](const auto& atom)
-                                            { return atom->isQMAtom(); });
+        return getAtoms() |
+               pqviews::filter([](auto& atom) { return atom->isQMAtom(); });
     }
 
     /**
@@ -153,8 +153,8 @@ namespace simulationBox
     template <typename Derived>
     auto SimulationBoxView<Derived>::getMMAtoms()
     {
-        return getAtoms() | pqviews::filter([](const auto& atom)
-                                            { return atom->isMMAtom(); });
+        return getAtoms() |
+               pqviews::filter([](auto& atom) { return atom->isMMAtom(); });
     }
 
     /**
@@ -202,7 +202,7 @@ namespace simulationBox
     )
     {
         return getMolecules() |
-               pqviews::filter([zone](const auto& mol)
+               pqviews::filter([zone](auto& mol)
                                { return mol.getHybridZone() == zone; });
     }
 
@@ -243,7 +243,7 @@ namespace simulationBox
     )
     {
         return getMolecules() |
-               pqviews::filter([zone](const auto& mol)
+               pqviews::filter([zone](auto& mol)
                                { return mol.getHybridZone() != zone; });
     }
 
@@ -281,7 +281,7 @@ namespace simulationBox
     auto SimulationBoxView<Derived>::getInactiveMolecules()
     {
         return getMolecules() |
-               pqviews::filter([](const auto& mol) { return !mol.isActive(); });
+               pqviews::filter([](auto& mol) { return !mol.isActive(); });
     }
 
     /**

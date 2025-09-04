@@ -292,4 +292,20 @@ TEST(testHybridConfigurator, activateDeactivateMolecules)
         EXPECT_EQ(simBox.getMolecule(i).isActive(), expected[i]);
         EXPECT_EQ(simBox.getMolecule(i).getAtom(0).isActive(), expected[i]);
     }
+
+    hybridConfigurator.deactivateSmoothingMolecules(
+        std::unordered_set<size_t>{0},
+        simBox
+    );
+
+    EXPECT_EQ(simBox.getMolecule(2).isActive(), false);
+    EXPECT_EQ(simBox.getMolecule(2).getAtom(0).isActive(), false);
+
+    hybridConfigurator.activateSmoothingMolecules(
+        std::unordered_set<size_t>{0},
+        simBox
+    );
+
+    EXPECT_EQ(simBox.getMolecule(2).isActive(), true);
+    EXPECT_EQ(simBox.getMolecule(2).getAtom(0).isActive(), true);
 }
