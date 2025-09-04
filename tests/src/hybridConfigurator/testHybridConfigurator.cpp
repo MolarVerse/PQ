@@ -36,7 +36,7 @@ using namespace configurator;
 using namespace simulationBox;
 using namespace linearAlgebra;
 
-TEST(testHybridConfigurator, calculateInnerRegionCenter)
+TEST(testHybridConfigurator, calculateInnerRegionCenterAndShiftAtoms)
 {
     HybridConfigurator hybridConfigurator;
     SimBox             simBox;
@@ -65,7 +65,7 @@ TEST(testHybridConfigurator, calculateInnerRegionCenter)
     atom3.initMass();
 
     auto atom4 = Atom();
-    atom4.setPosition({4.0, 3.0, -2.0});
+    atom4.setPosition({4.0, -4.5, -2.0});
     atom4.setName("Zr");
     atom4.initMass();
 
@@ -82,6 +82,52 @@ TEST(testHybridConfigurator, calculateInnerRegionCenter)
     EXPECT_VECTOR_NEAR(
         hybridConfigurator.getInnerRegionCenter(),
         center,
+        1e-10
+    );
+
+    hybridConfigurator.shiftAtomsToInnerRegionCenter(simBox);
+
+    EXPECT_VECTOR_NEAR(
+        simBox.getAtom(0).getPosition(),
+        Vec3D({-0.03578203672853264, -0.05063041043437561, 0.0}),
+        1e-10
+    );
+    EXPECT_VECTOR_NEAR(
+        simBox.getAtom(1).getPosition(),
+        Vec3D({0.92421796327146732, -0.05063041043437561, 0.0}),
+        1e-10
+    );
+    EXPECT_VECTOR_NEAR(
+        simBox.getAtom(2).getPosition(),
+        Vec3D({-0.35623661672853263, 0.85430541956562439, 0.0}),
+        1e-10
+    );
+    EXPECT_VECTOR_NEAR(
+        simBox.getAtom(3).getPosition(),
+        Vec3D({3.5633740132714674, 4.8955335995656242, -2.0}),
+        1e-10
+    );
+
+    hybridConfigurator.shiftAtomsBackToInitialPositions(simBox);
+
+    EXPECT_VECTOR_NEAR(
+        simBox.getAtom(0).getPosition(),
+        atom1.getPosition(),
+        1e-10
+    );
+    EXPECT_VECTOR_NEAR(
+        simBox.getAtom(1).getPosition(),
+        atom2.getPosition(),
+        1e-10
+    );
+    EXPECT_VECTOR_NEAR(
+        simBox.getAtom(2).getPosition(),
+        atom3.getPosition(),
+        1e-10
+    );
+    EXPECT_VECTOR_NEAR(
+        simBox.getAtom(3).getPosition(),
+        atom4.getPosition(),
         1e-10
     );
 }
