@@ -319,7 +319,7 @@ void HybridConfigurator::calculateSmoothingFactors(pq::SimBox& simBox)
             ));
 
         const auto dF  = distanceFactor - 0.5;
-        const auto smF = dF * (dF * dF * (-6.0 * dF * dF + 0.5) - 1.875) + 0.5;
+        const auto smF = dF * (dF * dF * (-6.0 * dF * dF + 5.0) - 1.875) + 0.5;
 
         mol.setSmoothingFactor(smF);
     }
