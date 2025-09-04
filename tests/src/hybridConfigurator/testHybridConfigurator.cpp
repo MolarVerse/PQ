@@ -22,6 +22,9 @@
 
 #include <gtest/gtest.h>   // for TEST, EXPECT_THROW_WITH_MESSAGE
 
+#include <memory>          // for shared_ptr, make_shared
+#include <unordered_set>   // for unordered_set
+
 #include "atom.hpp"                 // for Atom
 #include "exceptions.hpp"           // for HybridConfiguratorException
 #include "hybridConfigurator.hpp"   // for HybridConfigurator
@@ -216,4 +219,89 @@ TEST(testHybridConfigurator, assignHybridZones)
     EXPECT_EQ(simBox.getMolecule(4).getHybridZone(), OUTER);
 
     EXPECT_EQ(hybridConfigurator.getNumberSmoothingMolecules(), 1);
+}
+
+TEST(testHybridConfigurator, activateDeactivateMolecules)
+{
+    HybridConfigurator hybridConfigurator;
+    SimBox             simBox;
+
+    using enum simulationBox::HybridZone;
+
+    auto atom1 = std::make_shared<Atom>();
+    auto mol1  = Molecule();
+    mol1.addAtom(atom1);
+    mol1.setHybridZone(CORE);
+
+    auto atom2 = std::make_shared<Atom>();
+    auto mol2  = Molecule();
+    mol2.addAtom(atom2);
+    mol2.setHybridZone(LAYER);
+
+    auto atom3 = std::make_shared<Atom>();
+    auto mol3  = Molecule();
+    mol3.addAtom(atom3);
+    mol3.setHybridZone(SMOOTHING);
+
+    auto atom4 = std::make_shared<Atom>();
+    auto mol4  = Molecule();
+    mol4.addAtom(atom4);
+    mol4.setHybridZone(SMOOTHING);
+
+    auto atom5 = std::make_shared<Atom>();
+    auto mol5  = Molecule();
+    mol5.addAtom(atom5);
+    mol5.setHybridZone(POINT_CHARGE);
+
+    auto atom6 = std::make_shared<Atom>();
+    auto mol6  = Molecule();
+    mol6.addAtom(atom6);
+    mol6.setHybridZone(OUTER);
+
+    simBox.addMolecule(mol1);
+    simBox.addMolecule(mol2);
+    simBox.addMolecule(mol3);
+    simBox.addMolecule(mol4);
+    simBox.addMolecule(mol5);
+    simBox.addMolecule(mol6);
+
+    hybridConfigurator.activateMolecules(simBox);
+
+    const auto &nMol = simBox.getMolecules().size();
+    for (size_t i = 0; i < nMol; ++i)
+    {
+        EXPECT_EQ(simBox.getMolecule(i).isActive(), true);
+        EXPECT_EQ(simBox.getMolecule(i).getAtom(0).isActive(), true);
+    }
+
+    hybridConfigurator.deactivateInnerMolecules(simBox);
+
+    EXPECT_EQ(simBox.getMolecule(0).isActive(), false);
+    EXPECT_EQ(simBox.getMolecule(0).getAtom(0).isActive(), false);
+    EXPECT_EQ(simBox.getMolecule(1).isActive(), false);
+    EXPECT_EQ(simBox.getMolecule(1).getAtom(0).isActive(), false);
+    EXPECT_EQ(simBox.getMolecule(2).isActive(), false);
+    EXPECT_EQ(simBox.getMolecule(2).getAtom(0).isActive(), false);
+    EXPECT_EQ(simBox.getMolecule(3).isActive(), false);
+    EXPECT_EQ(simBox.getMolecule(3).getAtom(0).isActive(), false);
+    EXPECT_EQ(simBox.getMolecule(4).isActive(), true);
+    EXPECT_EQ(simBox.getMolecule(4).getAtom(0).isActive(), true);
+    EXPECT_EQ(simBox.getMolecule(5).isActive(), true);
+    EXPECT_EQ(simBox.getMolecule(5).getAtom(0).isActive(), true);
+
+    hybridConfigurator.activateMolecules(simBox);
+    hybridConfigurator.deactivateOuterMolecules(simBox);
+
+    EXPECT_EQ(simBox.getMolecule(0).isActive(), true);
+    EXPECT_EQ(simBox.getMolecule(0).getAtom(0).isActive(), true);
+    EXPECT_EQ(simBox.getMolecule(1).isActive(), true);
+    EXPECT_EQ(simBox.getMolecule(1).getAtom(0).isActive(), true);
+    EXPECT_EQ(simBox.getMolecule(2).isActive(), true);
+    EXPECT_EQ(simBox.getMolecule(2).getAtom(0).isActive(), true);
+    EXPECT_EQ(simBox.getMolecule(3).isActive(), true);
+    EXPECT_EQ(simBox.getMolecule(3).getAtom(0).isActive(), true);
+    EXPECT_EQ(simBox.getMolecule(4).isActive(), false);
+    EXPECT_EQ(simBox.getMolecule(4).getAtom(0).isActive(), false);
+    EXPECT_EQ(simBox.getMolecule(5).isActive(), false);
+    EXPECT_EQ(simBox.getMolecule(5).getAtom(0).isActive(), false);
 }
