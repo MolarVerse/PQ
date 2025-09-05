@@ -33,22 +33,25 @@
 #include <string>       // for string
 #include <vector>       // for vector
 
-#include "atom.hpp"              // for Atom
-#include "box.hpp"               // for simulationBox::Periodicity
-#include "exceptions.hpp"        // for InputFileException
-#include "fileSettings.hpp"      // for FileSettings
-#include "physicalData.hpp"      // for PhysicalData
-#include "qmSettings.hpp"        // for QMSettings
-#include "settings.hpp"          // for Settings
-#include "simulationBox.hpp"     // for SimulationBox
-#include "stringUtilities.hpp"   // for fileExists
-#include "vector3d.hpp"          // for Vec3D
+#include "atom.hpp"                 // for Atom
+#include "box.hpp"                  // for simulationBox::Periodicity
+#include "exceptions.hpp"           // for InputFileException
+#include "fileSettings.hpp"         // for FileSettings
+#include "hybridConfigurator.hpp"   // for HybridConfigurator
+#include "hybridSettings.hpp"       // for SmoothingMethod
+#include "physicalData.hpp"         // for PhysicalData
+#include "qmSettings.hpp"           // for QMSettings
+#include "settings.hpp"             // for Settings
+#include "simulationBox.hpp"        // for SimulationBox
+#include "stringUtilities.hpp"      // for fileExists
+#include "vector3d.hpp"             // for Vec3D
 
 using QM::DFTBPlusRunner;
 using enum simulationBox::Periodicity;
 
-using namespace customException;
+using namespace configurator;
 using namespace constants;
+using namespace customException;
 using namespace linearAlgebra;
 using namespace physicalData;
 using namespace settings;
@@ -183,7 +186,15 @@ void DFTBPlusRunner::execute()
             std::format("DFTB+ script file \"{}\" does not exist.", scriptFile)
         );
 
-    const auto readChargesBin  = _isFirstExecution ? 0 : 1;
+    auto molChangedZone = HybridConfigurator::getMoleculeChangedZone();
+
+    using enum settings::SmoothingMethod;
+
+    // TODO: https://github.com/MolarVerse/PQ/issues/200
+    if (HybridSettings::getSmoothingMethod() == EXACT)
+        molChangedZone = true;
+
+    const auto readChargesBin  = !_isFirstExecution && !molChangedZone ? 1 : 0;
     const auto usePointCharges = _usePointCharges ? 1 : 0;
 
     const auto command = std::format(
@@ -199,6 +210,7 @@ void DFTBPlusRunner::execute()
     // set for next execution
     _isFirstExecution = false;
     _usePointCharges  = false;
+    HybridConfigurator::setMoleculeChangedZone(false);
 }
 
 /**

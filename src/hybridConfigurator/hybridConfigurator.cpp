@@ -164,18 +164,40 @@ void HybridConfigurator::assignHybridZones(SimBox& simBox)
         const auto com = norm(mol.getCenterOfMass());
 
         if (com <= coreRadius)
+        {
+            if (mol.getHybridZone() != CORE)
+                _molChangedZone = true;
+
             mol.setHybridZone(CORE);
+        }
         else if (com <= (layerRadius - smoothingRegionThickness))
+        {
+            if (mol.getHybridZone() != LAYER)
+                _molChangedZone = true;
+
             mol.setHybridZone(LAYER);
+        }
         else if (com <= layerRadius)
         {
+            if (mol.getHybridZone() != SMOOTHING)
+                _molChangedZone = true;
+
             mol.setHybridZone(SMOOTHING);
             ++_numberSmoothingMolecules;
         }
         else if (com <= layerRadius + pointChargeThickness)
+        {
+            if (mol.getHybridZone() != POINT_CHARGE)
+                _molChangedZone = true;
+
             mol.setHybridZone(POINT_CHARGE);
+        }
         else
+        {
+            if (mol.getHybridZone() != OUTER)
+                _molChangedZone = true;
             mol.setHybridZone(OUTER);
+        }
     }
 }
 
@@ -350,6 +372,12 @@ Vec3D HybridConfigurator::getInnerRegionCenter() const
     return _innerRegionCenter;
 }
 
+/** @brief get if a molecule changed its hybrid zone since last assignation
+ *
+ * @return bool molChangedZone
+ */
+bool HybridConfigurator::getMoleculeChangedZone() { return _molChangedZone; }
+
 /**
  * @brief set the number of molecules in the point charge region of the
  * hybrid calculation
@@ -359,4 +387,14 @@ Vec3D HybridConfigurator::getInnerRegionCenter() const
 void HybridConfigurator::setNumberSmoothingMolecules(size_t count)
 {
     _numberSmoothingMolecules = count;
+}
+
+/**
+ * @brief set whether a molecule changed its hybrid zone since last assignation
+ *
+ * @param changed
+ */
+void HybridConfigurator::setMoleculeChangedZone(bool changed)
+{
+    _molChangedZone = changed;
 }
