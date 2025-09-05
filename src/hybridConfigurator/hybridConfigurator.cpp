@@ -158,46 +158,34 @@ void HybridConfigurator::assignHybridZones(SimBox& simBox)
         HybridSettings::getSmoothingRegionThickness();
     const auto pointChargeThickness = HybridSettings::getPointChargeThickness();
 
+    // Helper lambda to set zone and track changes
+    auto setZone = [this](auto& mol, HybridZone newZone)
+    {
+        if (mol.getHybridZone() != newZone)
+        {
+            _molChangedZone = true;
+            mol.setHybridZone(newZone);
+        }
+    };
+
     for (auto& mol : simBox.getMolecules())
     {
         mol.calculateCenterOfMass(simBox.getBox());
         const auto com = norm(mol.getCenterOfMass());
 
         if (com <= coreRadius)
-        {
-            if (mol.getHybridZone() != CORE)
-                _molChangedZone = true;
-
-            mol.setHybridZone(CORE);
-        }
+            setZone(mol, CORE);
         else if (com <= (layerRadius - smoothingRegionThickness))
-        {
-            if (mol.getHybridZone() != LAYER)
-                _molChangedZone = true;
-
-            mol.setHybridZone(LAYER);
-        }
+            setZone(mol, LAYER);
         else if (com <= layerRadius)
         {
-            if (mol.getHybridZone() != SMOOTHING)
-                _molChangedZone = true;
-
-            mol.setHybridZone(SMOOTHING);
+            setZone(mol, SMOOTHING);
             ++_numberSmoothingMolecules;
         }
         else if (com <= layerRadius + pointChargeThickness)
-        {
-            if (mol.getHybridZone() != POINT_CHARGE)
-                _molChangedZone = true;
-
-            mol.setHybridZone(POINT_CHARGE);
-        }
+            setZone(mol, POINT_CHARGE);
         else
-        {
-            if (mol.getHybridZone() != OUTER)
-                _molChangedZone = true;
-            mol.setHybridZone(OUTER);
-        }
+            setZone(mol, OUTER);
     }
 }
 
