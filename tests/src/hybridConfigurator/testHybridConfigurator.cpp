@@ -376,4 +376,22 @@ TEST(testHybridConfigurator, calculateSmoothingFactors)
         0.019890532631249892,
         1e-10
     );
+
+    auto atom5 = std::make_shared<Atom>();
+    atom5->setPosition({0.0, 0.0, 0.0});
+    atom5->setName("Al");
+    atom5->initMass();
+
+    auto mol5 = Molecule();
+    mol5.addAtom(atom5);
+    mol5.setMolMass(atom5->getMass());
+    mol5.setHybridZone(SMOOTHING);
+    simBox.addMolecule(mol5);
+
+    EXPECT_THROW_MSG(
+        hybridConfigurator.calculateSmoothingFactors(simBox),
+        HybridConfiguratorException,
+        "Cannot calculate smoothing factor for molecule outside the "
+        "smoothing region"
+    );
 }
