@@ -47,11 +47,11 @@ namespace configurator
         void deactivateInnerMolecules(pq::SimBox &);
         void deactivateOuterMolecules(pq::SimBox &);
         void activateSmoothingMolecules(
-            std::unordered_set<size_t>,
+            std::unordered_set<size_t> activeMolecules,
             pq::SimBox &
         );
         void deactivateSmoothingMolecules(
-            std::unordered_set<size_t>,
+            std::unordered_set<size_t> inactiveMolecules,
             pq::SimBox &
         );
         void calculateSmoothingFactors(pq::SimBox &);
