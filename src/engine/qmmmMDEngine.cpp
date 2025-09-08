@@ -73,20 +73,18 @@ namespace engine
      */
     void QMMMMDEngine::applyExactSmoothing()
     {
-        const auto nSmoothingMolecules =
-            _configurator.getNumberSmoothingMolecules();
+        const auto nSmMol = _configurator.getNumberSmoothingMolecules();
 
         // Loop over all combinations of smoothing molecules
-        for (size_t i = 0; i < (1u << nSmoothingMolecules); ++i)
+        for (size_t i = 0; i < (1u << nSmMol); ++i)
         {
-            const auto inactiveForInnerCalcMolecules =
-                generateInactiveMoleculeSet(i, nSmoothingMolecules);
+            const auto inactiveSmMol = generateInactiveMoleculeSet(i, nSmMol);
 
             // STEP 1: Setup and run QM calculation
             _configurator.activateMolecules(*_simulationBox);
             _configurator.deactivateOuterMolecules(*_simulationBox);
             _configurator.deactivateSmoothingMolecules(
-                inactiveForInnerCalcMolecules,
+                inactiveSmMol,
                 *_simulationBox
             );
 
@@ -103,7 +101,7 @@ namespace engine
 
             // STEP 3: Calculate global smoothing factor for this combination
             const double globalSmoothingFactor =
-                calculateGlobalSmoothingFactor(inactiveForInnerCalcMolecules);
+                calculateGlobalSmoothingFactor(inactiveSmMol);
 
             // TODO: https://github.com/MolarVerse/PQ/issues/197
         }
