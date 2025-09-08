@@ -28,6 +28,8 @@
 
 using namespace simulationBox;
 
+using std::ranges::distance;
+
 /************************
  *                      *
  * standard add methods *
@@ -112,10 +114,7 @@ size_t SimulationBox::getNumberOfAtoms() const { return _atoms.size(); }
  */
 size_t SimulationBox::getNumberOfQMAtoms() const
 {
-    return std::ranges::count_if(
-        _atoms,
-        [](const auto &atom) { return atom->isQMAtom(); }
-    );
+    return distance(getQMAtoms());
 }
 
 /**
