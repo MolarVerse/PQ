@@ -274,19 +274,9 @@ TEST(testHybridConfigurator, activateDeactivateMolecules)
         EXPECT_EQ(simBox.getMolecule(i).getAtom(0).isActive(), true);
     }
 
-    hybridConfigurator.deactivateInnerMolecules(simBox);
-
-    std::vector<bool> expected = {false, false, false, false, true, true};
-    for (size_t i = 0; i < 6; ++i)
-    {
-        EXPECT_EQ(simBox.getMolecule(i).isActive(), expected[i]);
-        EXPECT_EQ(simBox.getMolecule(i).getAtom(0).isActive(), expected[i]);
-    }
-
-    hybridConfigurator.activateMolecules(simBox);
     hybridConfigurator.deactivateOuterMolecules(simBox);
 
-    expected = {true, true, true, true, false, false};
+    std::vector<bool> expected = {true, true, true, true, false, false};
     for (size_t i = 0; i < 6; ++i)
     {
         EXPECT_EQ(simBox.getMolecule(i).isActive(), expected[i]);
@@ -298,16 +288,21 @@ TEST(testHybridConfigurator, activateDeactivateMolecules)
         simBox
     );
 
-    EXPECT_EQ(simBox.getMolecule(2).isActive(), false);
-    EXPECT_EQ(simBox.getMolecule(2).getAtom(0).isActive(), false);
+    expected = {true, true, false, true, false, false};
+    for (size_t i = 0; i < 6; ++i)
+    {
+        EXPECT_EQ(simBox.getMolecule(i).isActive(), expected[i]);
+        EXPECT_EQ(simBox.getMolecule(i).getAtom(0).isActive(), expected[i]);
+    }
 
-    hybridConfigurator.activateSmoothingMolecules(
-        std::unordered_set<size_t>{0},
-        simBox
-    );
+    hybridConfigurator.toggleMoleculeActivation(simBox);
 
-    EXPECT_EQ(simBox.getMolecule(2).isActive(), true);
-    EXPECT_EQ(simBox.getMolecule(2).getAtom(0).isActive(), true);
+    expected = {false, false, true, false, true, true};
+    for (size_t i = 0; i < 6; ++i)
+    {
+        EXPECT_EQ(simBox.getMolecule(i).isActive(), expected[i]);
+        EXPECT_EQ(simBox.getMolecule(i).getAtom(0).isActive(), expected[i]);
+    }
 }
 
 TEST(testHybridConfigurator, calculateSmoothingFactors)

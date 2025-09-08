@@ -204,27 +204,6 @@ void HybridConfigurator::activateMolecules(pq::SimBox& simBox)
 }
 
 /**
- * @brief Deactivate molecules in the inner regions (CORE, LAYER, SMOOTHING)
- *
- * @param simBox The simulation box containing molecules to be deactivated
- *
- * @details This function deactivates molecules in the inner hybrid zones:
- * CORE, LAYER, and SMOOTHING regions. This is typically used during outer
- * region calculations where only the outer molecules (POINT_CHARGE and OUTER)
- * should be active.
- */
-void HybridConfigurator::deactivateInnerMolecules(pq::SimBox& simBox)
-{
-    for (auto& mol : simBox.getMolecules())
-    {
-        const auto zone = mol.getHybridZone();
-
-        if (zone == CORE || zone == LAYER || zone == SMOOTHING)
-            mol.deactivateMolecule();
-    }
-}
-
-/**
  * @brief Deactivate molecules in the outer regions (POINT_CHARGE, OUTER)
  *
  * @param simBox The simulation box containing molecules to be deactivated
@@ -241,32 +220,6 @@ void HybridConfigurator::deactivateOuterMolecules(pq::SimBox& simBox)
 
         if (zone == POINT_CHARGE || zone == OUTER)
             mol.deactivateMolecule();
-    }
-}
-
-/**
- * @brief Activate specific smoothing molecules by their indices
- *
- * @param inactiveMolecules Set of smoothing molecule indices (0-based within
- * smoothing zone) to be activated
- * @param simBox The simulation box containing the molecules
- *
- * @details This function activates only the smoothing molecules specified
- * in the activeMolecules set. The indices refer to the position within
- * the smoothing zone, not the global molecule index.
- */
-void HybridConfigurator::activateSmoothingMolecules(
-    std::unordered_set<size_t> activeMolecules,
-    pq::SimBox&                simBox
-)
-{
-    size_t count{0};
-    for (auto& mol : simBox.getMoleculesInsideZone(SMOOTHING))
-    {
-        if (activeMolecules.contains(count))
-            mol.activateMolecule();
-
-        ++count;
     }
 }
 
@@ -294,6 +247,26 @@ void HybridConfigurator::deactivateSmoothingMolecules(
 
         ++count;
     }
+}
+
+/**
+ * @brief Toggle the activation state of all molecules in the simulation box
+ *
+ * @param simBox The simulation box containing molecules with their activation
+ * state to be toggled
+ *
+ * @details This function toggles the activation state of each molecule in the
+ * simulation box: active molecules are deactivated and inactive molecules are
+ * activated. This operation is performed regardless of the molecules' hybrid
+ * zone assignments and is useful for implementing complementary calculations.
+ */
+void HybridConfigurator::toggleMoleculeActivation(pq::SimBox& simBox)
+{
+    for (auto& mol : simBox.getMolecules())
+        if (mol.isActive())
+            mol.deactivateMolecule();
+        else
+            mol.activateMolecule();
 }
 
 /**

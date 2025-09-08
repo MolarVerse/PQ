@@ -97,12 +97,7 @@ namespace engine
             );
 
             // STEP 2: Setup and run MM calculation
-            _configurator.activateMolecules(*_simulationBox);
-            _configurator.deactivateInnerMolecules(*_simulationBox);
-            _configurator.activateSmoothingMolecules(
-                inactiveForInnerCalcMolecules,
-                *_simulationBox
-            );
+            _configurator.toggleMoleculeActivation(*_simulationBox);
 
             // TODO: https://github.com/MolarVerse/PQ/issues/195
 

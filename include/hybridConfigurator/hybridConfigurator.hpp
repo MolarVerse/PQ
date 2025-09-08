@@ -45,16 +45,12 @@ namespace configurator
         void shiftAtomsBackToInitialPositions(pq::SimBox &);
         void assignHybridZones(pq::SimBox &);
         void activateMolecules(pq::SimBox &);
-        void deactivateInnerMolecules(pq::SimBox &);
         void deactivateOuterMolecules(pq::SimBox &);
-        void activateSmoothingMolecules(
-            std::unordered_set<size_t> activeMolecules,
-            pq::SimBox &
-        );
         void deactivateSmoothingMolecules(
             std::unordered_set<size_t> inactiveMolecules,
             pq::SimBox &
         );
+        void toggleMoleculeActivation(pq::SimBox &);
         void calculateSmoothingFactors(pq::SimBox &);
 
         /********************************
