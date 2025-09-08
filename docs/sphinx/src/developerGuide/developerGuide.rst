@@ -140,6 +140,10 @@ The corresponding workflow configuration files are located in the ``PQ/.github/w
 Documentation
 *************
 
+======
+Sphinx
+======
+
 This documentation is written as `reStructuredText <https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html>`__ files ``.rst`` and converted to HTML website files by `Sphinx <https://www.sphinx-doc.org/en/master/index.html>`_ .
 The respective source files are located in ``PQ/docs/sphinx/src/``.
 In order to compile the files locally you need to install the following Python packages:
@@ -151,6 +155,34 @@ In order to compile the files locally you need to install the following Python p
 
 The project is built by running ``make html`` in the folder ``PQ/docs/sphinx/``.
 The resulting website can be viewed by opening the file ``PQ/docs/sphinx/_build/html/index.html`` *via* your favorite browser.
+
+=======
+Doxygen
+=======
+
+**PQ** includes comprehensive API documentation generated using `Doxygen <https://www.doxygen.nl/>`__. 
+This documentation provides detailed information about all classes, functions, methods, and their usage throughout the codebase.
+The documentation is automatically extracted from specially formatted comments in the source code using Doxygen markup syntax.
+To generate the Doxygen documentation, you need to have Doxygen installed on your system.
+The documentation can be built as follows:
+
+    #. Enable documentation during CMake configuration:
+
+        .. code:: bash
+
+            $ cmake .. -DBUILD_WITH_DOC=ON
+
+    #. Build the documentation:
+
+        .. code:: bash
+
+            $ make docs
+
+    #. View the documentation:
+
+        .. code:: bash
+
+            $ favorite_browser build/docs/html/index.html
 
 *****************
 How to Contribute
