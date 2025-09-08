@@ -35,7 +35,7 @@ namespace configurator
     class HybridConfigurator
     {
        private:
-        pq::Vec3D          _innerRegionCenter        = {0.0, 0.0, 0.0};
+        pq::Vec3D          _innerRegionCenter        = {0.0};
         size_t             _numberSmoothingMolecules = 0;
         static inline bool _molChangedZone           = false;
 
