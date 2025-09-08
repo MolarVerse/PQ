@@ -178,10 +178,7 @@ void HybridConfigurator::assignHybridZones(SimBox& simBox)
         else if (com <= (layerRadius - smoothingRegionThickness))
             setZone(mol, LAYER);
         else if (com <= layerRadius)
-        {
             setZone(mol, SMOOTHING);
-            ++_numberSmoothingMolecules;
-        }
         else if (com <= layerRadius + pointChargeThickness)
             setZone(mol, POINT_CHARGE);
         else
@@ -313,17 +310,6 @@ void HybridConfigurator::calculateSmoothingFactors(pq::SimBox& simBox)
  ********************************/
 
 /**
- * @brief get the number of molecules in the point charge region of the
- * hybrid calculation
- *
- * @return size_t numberSmoothingMolecules
- */
-size_t HybridConfigurator::getNumberSmoothingMolecules()
-{
-    return _numberSmoothingMolecules;
-}
-
-/**
  * @brief get the inner region center coordinates
  *
  * @return pq::Vec3D innerRegionCenter
@@ -338,17 +324,6 @@ Vec3D HybridConfigurator::getInnerRegionCenter() const
  * @return bool molChangedZone
  */
 bool HybridConfigurator::getMoleculeChangedZone() { return _molChangedZone; }
-
-/**
- * @brief set the number of molecules in the point charge region of the
- * hybrid calculation
- *
- * @param count
- */
-void HybridConfigurator::setNumberSmoothingMolecules(size_t count)
-{
-    _numberSmoothingMolecules = count;
-}
 
 /**
  * @brief set whether a molecule changed its hybrid zone since last assignation

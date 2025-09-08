@@ -217,8 +217,6 @@ TEST(testHybridConfigurator, assignHybridZones)
     EXPECT_EQ(simBox.getMolecule(2).getHybridZone(), SMOOTHING);
     EXPECT_EQ(simBox.getMolecule(3).getHybridZone(), POINT_CHARGE);
     EXPECT_EQ(simBox.getMolecule(4).getHybridZone(), OUTER);
-
-    EXPECT_EQ(hybridConfigurator.getNumberSmoothingMolecules(), 1);
 }
 
 TEST(testHybridConfigurator, activateDeactivateMolecules)

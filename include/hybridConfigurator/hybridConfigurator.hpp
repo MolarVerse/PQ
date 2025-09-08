@@ -35,9 +35,8 @@ namespace configurator
     class HybridConfigurator
     {
        private:
-        pq::Vec3D          _innerRegionCenter        = {0.0};
-        size_t             _numberSmoothingMolecules = 0;
-        static inline bool _molChangedZone           = false;
+        pq::Vec3D          _innerRegionCenter = {0.0};
+        static inline bool _molChangedZone    = false;
 
        public:
         void calculateInnerRegionCenter(pq::SimBox &);
@@ -57,11 +56,9 @@ namespace configurator
          * standard getters and setters *
          ********************************/
 
-        [[nodiscard]] size_t      getNumberSmoothingMolecules();
         [[nodiscard]] pq::Vec3D   getInnerRegionCenter() const;
         [[nodiscard]] static bool getMoleculeChangedZone();
 
-        void        setNumberSmoothingMolecules(size_t);
         static void setMoleculeChangedZone(bool);
     };
 

@@ -23,6 +23,7 @@
 #include "qmmmMDEngine.hpp"
 
 #include <format>   // for format
+#include <ranges>   // for distance
 
 #include "exceptions.hpp"       // for HybridMDEngineException
 #include "hybridSettings.hpp"   // for HybridSettings
@@ -73,7 +74,11 @@ namespace engine
      */
     void QMMMMDEngine::applyExactSmoothing()
     {
-        const auto nSmMol = _configurator.getNumberSmoothingMolecules();
+        using enum simulationBox::HybridZone;
+        using std::ranges::distance;
+
+        const auto nSmMol =
+            distance(_simulationBox->getMoleculesInsideZone(SMOOTHING));
 
         // Loop over all combinations of smoothing molecules
         for (size_t i = 0; i < (1u << nSmMol); ++i)
