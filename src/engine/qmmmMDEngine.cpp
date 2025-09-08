@@ -73,14 +73,14 @@ namespace engine
      */
     void QMMMMDEngine::applyExactSmoothing()
     {
-        const auto n_SmoothingMolecules =
+        const auto nSmoothingMolecules =
             _configurator.getNumberSmoothingMolecules();
 
         // Loop over all combinations of smoothing molecules
-        for (size_t i = 0; i < (1u << n_SmoothingMolecules); ++i)
+        for (size_t i = 0; i < (1u << nSmoothingMolecules); ++i)
         {
             const auto inactiveForInnerCalcMolecules =
-                generateInactiveMoleculeSet(i, n_SmoothingMolecules);
+                generateInactiveMoleculeSet(i, nSmoothingMolecules);
 
             // STEP 1: Setup and run QM calculation
             _configurator.activateMolecules(*_simulationBox);
