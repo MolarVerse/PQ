@@ -61,7 +61,11 @@
 <li class="toctree-l3"><a class="reference internal" href="#github-actions">GitHub Actions</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#sphinx">Sphinx</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#doxygen">Doxygen</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#how-to-contribute">How to Contribute</a></li>
 </ul>
 </li>
@@ -233,6 +237,8 @@ The corresponding workflow configuration files are located in the <code class="d
 </section>
 <section id="documentation">
 <h2>Documentation<a class="headerlink" href="#documentation" title="Link to this heading"></a></h2>
+<section id="sphinx">
+<h3>Sphinx<a class="headerlink" href="#sphinx" title="Link to this heading"></a></h3>
 <p>This documentation is written as <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html">reStructuredText</a> files <code class="docutils literal notranslate"><span class="pre">.rst</span></code> and converted to HTML website files by <a class="reference external" href="https://www.sphinx-doc.org/en/master/index.html">Sphinx</a> .
 The respective source files are located in <code class="docutils literal notranslate"><span class="pre">PQ/docs/sphinx/src/</span></code>.
 In order to compile the files locally you need to install the following Python packages:</p>
@@ -246,6 +252,40 @@ In order to compile the files locally you need to install the following Python p
 </div></blockquote>
 <p>The project is built by running <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">html</span></code> in the folder <code class="docutils literal notranslate"><span class="pre">PQ/docs/sphinx/</span></code>.
 The resulting website can be viewed by opening the file <code class="docutils literal notranslate"><span class="pre">PQ/docs/sphinx/_build/html/index.html</span></code> <em>via</em> your favorite browser.</p>
+</section>
+<section id="doxygen">
+<h3>Doxygen<a class="headerlink" href="#doxygen" title="Link to this heading"></a></h3>
+<p><strong>PQ</strong> includes comprehensive API documentation generated using <a class="reference external" href="https://www.doxygen.nl/">Doxygen</a>.
+This documentation provides detailed information about all classes, functions, methods, and their usage throughout the codebase.
+The documentation is automatically extracted from specially formatted comments in the source code using Doxygen markup syntax.
+To generate the Doxygen documentation, you need to have Doxygen installed on your system.
+The documentation can be built as follows:</p>
+<blockquote>
+<div><ol class="arabic">
+<li><p>Enable documentation during CMake configuration:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cmake<span class="w"> </span>..<span class="w"> </span>-DBUILD_WITH_DOC<span class="o">=</span>ON
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>Build the documentation:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span>docs
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>View the documentation:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>favorite_browser<span class="w"> </span>build/docs/html/index.html
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ol>
+</div></blockquote>
+</section>
 </section>
 <section id="how-to-contribute">
 <h2>How to Contribute<a class="headerlink" href="#how-to-contribute" title="Link to this heading"></a></h2>
