@@ -291,61 +291,94 @@ if ($pointcharges == 1)
   my $file_content = join('', @file_contents);
 
   # Replace Single Point Driver = {} for Geometry Optimization Driver
-  $file_content =~ s/Driver\s*=\s*\{\s*\}/Driver = {\n    MaxSteps = 0\n    Optimizer = SteepestDescent{}\n}/gs;
+  $file_content =~ s/Driver\s*=\s*\{\s*\}/Driver = GeometryOptimisation{\n    MaxSteps = 0\n    Optimizer = SteepestDescent{}\n}/gs;
 
   # Set MaxSccIterations = 1
   if ($file_content =~ /MaxSccIterations\s*=\s*\d+/) {
       # If MaxSccIterations exists, replace it with 1
-      $file_content =~ s/MaxSccIterations\s*=\s*\d+/MaxSccIterations = 1/gs;
+      $file_content =~ s/MaxSccIterations\s*=\s*\d+/MaxSccIterations = 1/g;
   } else {
-      # If MaxSccIterations doesn't exist, add it inside Hamiltonian block
-      $file_content =~ s/(Hamiltonian\s*=\s*\{[^}]*?)(\})/\1    MaxSccIterations = 1\n\2/gs;
+      # If MaxSccIterations doesn't exist, add it after SCC = Yes line
+      $file_content =~ s/(SCC\s*=\s*Yes\s*\n)/$1  MaxSccIterations = 1\n/g;
   }
 
   # Set ConvergentSccOnly = No
   if ($file_content =~ /ConvergentSccOnly\s*=\s*\w+/) {
       # If ConvergentSccOnly exists, replace it with No
-      $file_content =~ s/ConvergentSccOnly\s*=\s*\w+/ConvergentSccOnly = No/gs;
+      $file_content =~ s/ConvergentSccOnly\s*=\s*\w+/ConvergentSccOnly = No/g;
   } else {
-      # If ConvergentSccOnly doesn't exist, add it inside Hamiltonian block
-      $file_content =~ s/(Hamiltonian\s*=\s*\{[^}]*?)(\})/\1    ConvergentSccOnly = No\n\2/gs;
+      # If ConvergentSccOnly doesn't exist, add it after MaxSccIterations
+      $file_content =~ s/(MaxSccIterations\s*=\s*\d+\s*\n)/$1  ConvergentSccOnly = No\n/g;
   }
 
-  # Set ReadInitialCharges = Yes
-  if ($file_content =~ /ReadInitialCharges\s*=\s*\w+/) {
-      # If ReadInitialCharges exists, replace it with Yes
-      $file_content =~ s/ReadInitialCharges\s*=\s*\w+/ReadInitialCharges = Yes/gs;
-  } else {
-      # If ReadInitialCharges doesn't exist, add it inside Hamiltonian block
-      $file_content =~ s/(Hamiltonian\s*=\s*\{[^}]*?)(\})/\1    ReadInitialCharges = Yes\n\2/gs;
-  }
+  # Set ReadInitialCharges = Yes (this should already be set correctly)
+  $file_content =~ s/ReadInitialCharges\s*=\s*\w+/ReadInitialCharges = Yes/g;
 
-  # Remove entire ElectricField block (including the ElectricField keyword and all content within braces)
-  while ($file_content =~ s/(\s*)ElectricField\s*=\s*\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}\s*/$1/gs) {
-      # Keep looping until no more nested ElectricField blocks are found
+  # Remove entire ElectricField block
+  my $temp_content = $file_content;
+  my $changes_made = 1;
+  while ($changes_made) {
+      $changes_made = 0;
+      # Remove ElectricField blocks that have no nested braces
+      if ($temp_content =~ s/(\s*)ElectricField\s*=\s*\{[^{}]*\}\s*\n?/$1/gs) {
+          $changes_made = 1;
+      }
+      # Remove ElectricField blocks that have one level of nested braces
+      if ($temp_content =~ s/(\s*)ElectricField\s*=\s*\{[^{}]*\{[^{}]*\}[^{}]*\}\s*\n?/$1/gs) {
+          $changes_made = 1;
+      }
+      # Remove ElectricField blocks that have two levels of nested braces
+      if ($temp_content =~ s/(\s*)ElectricField\s*=\s*\{[^{}]*\{[^{}]*\{[^{}]*\}[^{}]*\}[^{}]*\}\s*\n?/$1/gs) {
+          $changes_made = 1;
+      }
   }
+  $file_content = $temp_content;
 
-  # Add mixer block inside Hamiltonian block
-  $file_content =~ s/(Hamiltonian\s*=\s*\{[^}]*?)(\})/\1    mixer = simple{\n        mixingparameter = 0.0000000001\n    }\n\2/gs;
+  # Add mixer block - insert it before the closing brace of Hamiltonian
+  # Find the last closing brace that belongs to Hamiltonian
+  my @lines = split(/\n/, $file_content);
+  my $in_hamiltonian = 0;
+  my $brace_count = 0;
+  my $hamiltonian_end_line = -1;
+  
+  for my $i (0..$#lines) {
+      if ($lines[$i] =~ /^\s*Hamiltonian\s*=\s*DFTB\s*\{/) {
+          $in_hamiltonian = 1;
+          $brace_count = 1;
+      } elsif ($in_hamiltonian) {
+          $brace_count += ($lines[$i] =~ tr/{/{/);
+          $brace_count -= ($lines[$i] =~ tr/}/}/);
+          
+          if ($brace_count == 0) {
+              $hamiltonian_end_line = $i;
+              last;
+          }
+      }
+  }
+  
+  # Insert mixer block before the Hamiltonian closing brace
+  if ($hamiltonian_end_line >= 0) {
+      splice @lines, $hamiltonian_end_line, 0, "  mixer = simple{", "    mixingparameter = 0.0000000001", "  }";
+  }
+  
+  $file_content = join("\n", @lines) . "\n";
 
   # Handle Analysis block with PrintForces = Yes
   if ($file_content =~ /Analysis\s*=\s*\{/) {
       # Analysis block exists, add PrintForces inside it (if not already there)
       if ($file_content !~ /PrintForces\s*=\s*\w+/) {
-          $file_content =~ s/(Analysis\s*=\s*\{[^}]*?)(\})/\1    PrintForces = Yes\n\2/gs;
+          # Find the Analysis block and add PrintForces before its closing brace
+          $file_content =~ s/(Analysis\s*=\s*\{[^}]*?)(\s*\})/$1\n   PrintForces = Yes$2/gs;
       }
   } else {
       # Analysis block doesn't exist, create it with PrintForces
       $file_content .= "\nAnalysis = {\n    PrintForces = Yes\n}\n";
   }
 
-  # Split back into lines
-  @file_contents = split(/(?<=\n)/, $file_content);
-
   # Write the modified contents back
   open (DFTB_IN, "> $dftb_input") or
       die "\n\n\t (-) $progname: Error opening file $dftb_input\n";
-  print DFTB_IN @file_contents;
+  print DFTB_IN $file_content;
   close (DFTB_IN); 
 
   # execute dftb+
