@@ -105,10 +105,15 @@ namespace engine
             // TODO: https://github.com/MolarVerse/PQ/issues/195
 
             // STEP 3: Calculate global smoothing factor for this combination
+            // and scale all forces
             const double globalSmoothingFactor =
                 calculateGlobalSmoothingFactor(inactiveSmMol);
 
-            // TODO: https://github.com/MolarVerse/PQ/issues/197
+            for (auto& atom : _simulationBox->getAtoms())
+            {
+                const auto force = atom->getForce();
+                atom->setForce(force * globalSmoothingFactor);
+            }
         }
     }
 
