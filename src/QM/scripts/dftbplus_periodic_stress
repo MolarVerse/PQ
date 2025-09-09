@@ -55,10 +55,12 @@ my $n_fields = 0;
 `cat coords > geom.gen`;
 
 # check if the system is periodic by reading the first line of geom.gen
+# and read elements from the second line
 open (GEOM_FILE, "< geom.gen") or
   die "\n\n\t (-) $progname: Error opening file geom.gen\n";
 
 my $first_line = <GEOM_FILE>;
+my $second_line = <GEOM_FILE>;
 close (GEOM_FILE);
 
 if (defined $first_line) 
@@ -69,6 +71,18 @@ if (defined $first_line)
   if (defined $geom_fields[1] && $geom_fields[1] eq 'S') 
   {
     $periodic = 1;
+  }
+}
+
+# Parse elements from second line
+my %elements_present = ();
+if (defined $second_line)
+{
+  chomp $second_line;
+  my @element_list = split /\s+/, $second_line;
+  foreach my $element (@element_list)
+  {
+    $elements_present{$element} = 1 if $element ne '';
   }
 }
 
@@ -89,22 +103,70 @@ if ($readChargesBin == 0)
   unlink $dftb_chrg;
 }
 
-# create dftb_in.hsd from template  
-# and insert QM charge and GUESS FLAG
+# create dftb_in.hsd from dftb_in.template and insert QM charge and GUESS FLAG
 open (DFTB_TEMPLATE, "< $dftb_template") or
   die "\n\n\t (-) $progname: Error opening file $dftb_template'\n";
 
 open (DFTB_IN, "> $dftb_input") or
   die "\n\n\t (-) $progname: Error opening file $dftb_input\n";
 
-# check if molecules have been exchanged between QM and MM region
 my $guess_value = $readChargesBin == 1 ? "Yes" : "No";
+my $in_hubbard_block = 0;
+my $in_max_angular_block = 0;
+my $brace_count = 0;
+
 while (<DFTB_TEMPLATE>)
 {
-  s{__GUESS__}{ReadInitialCharges = $guess_value};
-  s{__CHARGE__}{$charge};
-  s{__N_PC__}{$n_pc};
-  print DFTB_IN;
+  # Track if we're in HubbardDerivs or MaxAngularMomentum blocks
+  if (/^\s*HubbardDerivs\s*\{/)
+  {
+    $in_hubbard_block = 1;
+    $brace_count = 1;
+  }
+  elsif (/^\s*MaxAngularMomentum\s*\{/)
+  {
+    $in_max_angular_block = 1;
+    $brace_count = 1;
+  }
+  elsif ($in_hubbard_block || $in_max_angular_block)
+  {
+    # Count braces to track block nesting
+    $brace_count += tr/{/{/;
+    $brace_count -= tr/}/}/;
+    
+    # Reset flags when we exit the block (brace_count reaches 0)
+    if ($brace_count <= 0)
+    {
+      $in_hubbard_block = 0;
+      $in_max_angular_block = 0;
+    }
+  }
+  
+  # Process the line
+  my $line = $_;
+  
+  # Comment out element lines in HubbardDerivs and MaxAngularMomentum blocks
+  # if the element is not present in the system
+  if (($in_hubbard_block || $in_max_angular_block) && $brace_count > 0)
+  {
+    # Check if this line defines an element (format: "Element = value")
+    if ($line =~ /^\s*([A-Z][a-z]?)\s*=/)
+    {
+      my $element = $1;
+      if (!exists $elements_present{$element})
+      {
+        # Comment out this line by adding # at the beginning
+        $line =~ s/^(\s*)/\1# /;
+      }
+    }
+  }
+  
+  # Perform standard substitutions
+  $line =~ s{__GUESS__}{ReadInitialCharges = $guess_value};
+  $line =~ s{__CHARGE__}{$charge};
+  $line =~ s{__N_PC__}{$n_pc};
+  
+  print DFTB_IN $line;
 }
 
 close (DFTB_TEMPLATE);
