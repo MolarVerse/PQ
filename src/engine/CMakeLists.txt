@@ -6,6 +6,8 @@ set(engine_source_files
 
     mmmdEngine.cpp
     qmmdEngine.cpp
+    qmCapable.cpp
+    qmRunnerManager.cpp
     ringPolymerEngine.cpp
     ringPolymerqmmdEngine.cpp
 

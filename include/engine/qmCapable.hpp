@@ -20,35 +20,41 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _QM_MD_ENGINE_HPP_
+#ifndef _QM_CAPABLE_HPP_
 
-#define _QM_MD_ENGINE_HPP_
+#define _QM_CAPABLE_HPP_
 
-#include <memory>   // for unique_ptr
+#include <memory>
 
-#include "mdEngine.hpp"          // for Engine
-#include "qmCapable.hpp"         // for QMCapable
-#include "qmRunner.hpp"          // for QMRunner
-#include "qmRunnerManager.hpp"   // for QMRunnerManager
-#include "qmSettings.hpp"        // for QMSettings
+#include "qmRunner.hpp"
+#include "qmRunnerManager.hpp"
+#include "qmSettings.hpp"
+#include "typeAliases.hpp"
 
 namespace engine
 {
-
     /**
-     * @class QMMDEngine
+     * @class QMCapable
      *
-     * @brief Contains all the information needed to run a QM MD simulation
+     * @brief Mixin class providing QM functionality to engines
      *
+     * @details This class provides QM runner management functionality that can
+     * be inherited by any engine that needs QM capabilities. It uses
+     * composition to avoid inheritance dependencies between different engines.
      */
-    class QMMDEngine : virtual public MDEngine, public QMCapable
+    class QMCapable
     {
-       public:
-        ~QMMDEngine() override = default;
+       protected:
+        std::shared_ptr<QM::QMRunner> _qmRunner;
 
-        void calculateForces() override;
+       public:
+        virtual ~QMCapable() = default;
+
+        void setQMRunner(const settings::QMMethod method);
+        [[nodiscard]] QM::QMRunner *getQMRunner() const;
+        [[nodiscard]] bool          hasQMRunner() const;
     };
 
 }   // namespace engine
 
-#endif   // _QM_MD_ENGINE_HPP_
+#endif   // _QM_CAPABLE_HPP_

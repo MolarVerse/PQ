@@ -17,18 +17,35 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-<GPL_HEADER>
-******************************************************************************/
+    <GPL_HEADER>
+    ******************************************************************************/
 
-#include "qmmdEngine.hpp"
+#include "qmCapable.hpp"
 
-#include "qmRunnerManager.hpp"   // for QMRunnerManager
-
-using engine::QMMDEngine;
+using namespace engine;
+using namespace settings;
 using namespace QM;
 
 /**
- * @brief calculate QM forces
+ * @brief Set the QM runner based on the specified method
  *
+ * @param method The QM method to use
  */
-void QMMDEngine::calculateForces() { _qmRunner->run(*_simulationBox, *_physicalData); }
+void QMCapable::setQMRunner(const QMMethod method)
+{
+    _qmRunner = QMRunnerManager::createQMRunner(method);
+}
+
+/**
+ * @brief Get the QM runner
+ *
+ * @return QM::QMRunner* Pointer to the QM runner
+ */
+QMRunner *QMCapable::getQMRunner() const { return _qmRunner.get(); }
+
+/**
+ * @brief Check if QM runner is set
+ *
+ * @return bool True if QM runner is set, false otherwise
+ */
+bool QMCapable::hasQMRunner() const { return _qmRunner != nullptr; }

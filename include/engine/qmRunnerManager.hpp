@@ -20,35 +20,41 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _QM_MD_ENGINE_HPP_
+#ifndef _QM_RUNNER_MANAGER_HPP_
 
-#define _QM_MD_ENGINE_HPP_
+#define _QM_RUNNER_MANAGER_HPP_
 
-#include <memory>   // for unique_ptr
+#include <memory>
 
-#include "mdEngine.hpp"          // for Engine
-#include "qmCapable.hpp"         // for QMCapable
-#include "qmRunner.hpp"          // for QMRunner
-#include "qmRunnerManager.hpp"   // for QMRunnerManager
-#include "qmSettings.hpp"        // for QMSettings
+#include "qmRunner.hpp"
+#include "qmSettings.hpp"
 
 namespace engine
 {
-
     /**
-     * @class QMMDEngine
+     * @class QMRunnerManager
      *
-     * @brief Contains all the information needed to run a QM MD simulation
+     * @brief Factory class for creating and managing QM runners
      *
+     * @details This utility class provides static methods to create QM runners
+     * based on the specified QM method. It encapsulates all the logic for
+     * QM runner creation and configuration, making it reusable across different
+     * engine types without requiring inheritance dependencies.
      */
-    class QMMDEngine : virtual public MDEngine, public QMCapable
+    class QMRunnerManager
     {
-       public:
-        ~QMMDEngine() override = default;
+       private:
+        QMRunnerManager() = default;
 
-        void calculateForces() override;
+       public:
+        static std::shared_ptr<QM::QMRunner> createQMRunner(
+            const settings::QMMethod method
+        );
+        static std::shared_ptr<QM::QMRunner> createMaceQMRunner();
+        static std::shared_ptr<QM::QMRunner> createAseDftbRunner();
+        static std::shared_ptr<QM::QMRunner> createAseXtbRunner();
     };
 
 }   // namespace engine
 
-#endif   // _QM_MD_ENGINE_HPP_
+#endif   // _QM_RUNNER_MANAGER_HPP_
