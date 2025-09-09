@@ -152,6 +152,13 @@ void Atom::addForce(
 }
 
 /**
+ * @brief add a Vec3D to the current hybrid force of the atom
+ *
+ * @param forceHybrid
+ */
+void Atom::addForceHybrid(const Vec3D &force) { _forceHybrid += force; }
+
+/**
  * @brief add a Vec3D to the current shift force of the atom
  *
  * @param shiftForce
@@ -339,6 +346,13 @@ Vec3D Atom::getForce() const { return _force; }
 Vec3D Atom::getForceOld() const { return _forceOld; }
 
 /**
+ * @brief return the hybrid force of the atom
+ *
+ * @return Vec3D
+ */
+Vec3D Atom::getForceHybrid() const { return _forceHybrid; }
+
+/**
  * @brief return the shift force of the atom
  *
  * @return Vec3D
@@ -481,6 +495,12 @@ void Atom::setVelocity(const Vec3D &velocity) { _velocity = velocity; }
  * @param force
  */
 void Atom::setForce(const Vec3D &force) { _force = force; }
+
+/**
+ * @brief set the hybrid force of the atom
+ * @param force
+ */
+void Atom::setForceHybrid(const Vec3D &force) { _forceHybrid = force; }
 
 /**
  * @brief set the shift force of the atom
