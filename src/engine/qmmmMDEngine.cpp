@@ -77,6 +77,10 @@ namespace engine
         using enum simulationBox::HybridZone;
         using std::ranges::distance;
 
+        // Initialize hybrid forces to zero once
+        auto& atoms = _simulationBox->getAtoms();
+        for (auto& atom : atoms) atom->setForceHybrid({0.0, 0.0, 0.0});
+
         const auto nSmMol =
             distance(_simulationBox->getMoleculesInsideZone(SMOOTHING));
 
@@ -104,17 +108,18 @@ namespace engine
 
             // TODO: https://github.com/MolarVerse/PQ/issues/195
 
-            // STEP 3: Calculate global smoothing factor for this combination
-            // and scale all forces
+            // STEP 3: Calculate global smoothing factor and accumulate forces
             const double globalSmoothingFactor =
                 calculateGlobalSmoothingFactor(inactiveSmMol);
 
-            for (auto& atom : _simulationBox->getAtoms())
+            for (auto& atom : atoms)
             {
                 const auto force = atom->getForce();
-                atom->setForce(force * globalSmoothingFactor);
+                atom->addForceHybrid(force * globalSmoothingFactor);
             }
         }
+
+        for (auto& atom : atoms) atom->setForce(atom->getForceHybrid());
     }
 
     /**

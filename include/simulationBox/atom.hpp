@@ -65,6 +65,7 @@ namespace simulationBox
 
         pq::Vec3D _force;
         pq::Vec3D _forceOld;
+        pq::Vec3D _forceHybrid;
         pq::Vec3D _shiftForce;
 
        public:
@@ -92,6 +93,7 @@ namespace simulationBox
         void addVelocity(const pq::Vec3D &velocity);
         void addForce(const pq::Vec3D &force);
         void addForce(const double, const double, const double);
+        void addForceHybrid(const pq::Vec3D &forceHybrid);
         void addShiftForce(const pq::Vec3D &shiftForce);
 
         /***************************
@@ -122,6 +124,7 @@ namespace simulationBox
         [[nodiscard]] pq::Vec3D getVelocity() const;
         [[nodiscard]] pq::Vec3D getForce() const;
         [[nodiscard]] pq::Vec3D getForceOld() const;
+        [[nodiscard]] pq::Vec3D getForceHybrid() const;
         [[nodiscard]] pq::Vec3D getShiftForce() const;
 
         /***************************
@@ -147,6 +150,7 @@ namespace simulationBox
         void setPosition(const pq::Vec3D &position);
         void setVelocity(const pq::Vec3D &velocity);
         void setForce(const pq::Vec3D &force);
+        void setForceHybrid(const pq::Vec3D &forceHybrid);
         void setShiftForce(const pq::Vec3D &shiftForce);
 
         void setPositionOld(const pq::Vec3D &positionOld);
