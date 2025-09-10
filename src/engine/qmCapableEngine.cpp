@@ -26,6 +26,8 @@ using namespace engine;
 using namespace settings;
 using namespace QM;
 
+using std::shared_ptr;
+
 /**
  * @brief Set the QM runner based on the specified method
  *
@@ -39,9 +41,9 @@ void QMCapableEngine::setQMRunner(const QMMethod method)
 /**
  * @brief Get the QM runner
  *
- * @return QM::QMRunner* Pointer to the QM runner
+ * @return shared_ptr<QMRunner> Shared pointer to the QM runner
  */
-QMRunner *QMCapableEngine::getQMRunner() const { return _qmRunner.get(); }
+shared_ptr<QMRunner> QMCapableEngine::getQMRunner() const { return _qmRunner; }
 
 /**
  * @brief Check if QM runner is set

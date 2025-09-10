@@ -51,8 +51,8 @@ namespace engine
         virtual ~QMCapableEngine() = default;
 
         void setQMRunner(const settings::QMMethod method);
-        [[nodiscard]] QM::QMRunner *getQMRunner() const;
-        [[nodiscard]] bool          hasQMRunner() const;
+        [[nodiscard]] std::shared_ptr<QM::QMRunner> getQMRunner() const;
+        [[nodiscard]] bool                          hasQMRunner() const;
     };
 
 }   // namespace engine
