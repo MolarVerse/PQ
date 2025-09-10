@@ -26,7 +26,7 @@
 
 #include "hybridConfigurator.hpp"
 #include "mmmdEngine.hpp"
-#include "qmCapable.hpp"
+#include "qmCapableEngine.hpp"
 
 namespace engine
 {
@@ -34,11 +34,11 @@ namespace engine
      * @brief HybridMDEngine
      *
      * @details This class is a pure virtual class that inherits from MMMDEngine
-     * and QMCapable and is used to implement the Hybrid MD engine backbone
-     * that can run in general combinations of MM and QM engines.
+     * and QMCapableEngine and is used to implement the Hybrid MD engine
+     * backbone that can run in general combinations of MM and QM engines.
      *
      */
-    class HybridMDEngine : virtual public MMMDEngine, public QMCapable
+    class HybridMDEngine : virtual public MMMDEngine, public QMCapableEngine
     {
        protected:
         configurator::HybridConfigurator _configurator{};

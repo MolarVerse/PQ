@@ -24,7 +24,7 @@
 
 #define _QM_SETUP_HPP_
 
-#include "qmCapable.hpp"
+#include "qmCapableEngine.hpp"
 #include "typeAliases.hpp"
 
 namespace setup
@@ -40,10 +40,10 @@ namespace setup
     class QMSetup
     {
        private:
-        engine::QMCapable &_qmCapableEngine;
+        engine::QMCapableEngine &_qmCapableEngine;
 
        public:
-        explicit QMSetup(engine::QMCapable &qmCapableEngine);
+        explicit QMSetup(engine::QMCapableEngine &qmCapableEngine);
 
         void setup();
         void setupQMMethod();

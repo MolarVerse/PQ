@@ -20,9 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _QM_CAPABLE_HPP_
+#ifndef _QM_CAPABLE_ENGINE_HPP_
 
-#define _QM_CAPABLE_HPP_
+#define _QM_CAPABLE_ENGINE_HPP_
 
 #include <memory>
 
@@ -34,7 +34,7 @@
 namespace engine
 {
     /**
-     * @class QMCapable
+     * @class QMCapableEngine
      *
      * @brief Mixin class providing QM functionality to engines
      *
@@ -42,13 +42,13 @@ namespace engine
      * be inherited by any engine that needs QM capabilities. It uses
      * composition to avoid inheritance dependencies between different engines.
      */
-    class QMCapable
+    class QMCapableEngine
     {
        protected:
         std::shared_ptr<QM::QMRunner> _qmRunner;
 
        public:
-        virtual ~QMCapable() = default;
+        virtual ~QMCapableEngine() = default;
 
         void setQMRunner(const settings::QMMethod method);
         [[nodiscard]] QM::QMRunner *getQMRunner() const;
@@ -57,4 +57,4 @@ namespace engine
 
 }   // namespace engine
 
-#endif   // _QM_CAPABLE_HPP_
+#endif   // _QM_CAPABLE_ENGINE_HPP_

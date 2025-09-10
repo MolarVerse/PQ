@@ -27,7 +27,7 @@
 #include <memory>   // for unique_ptr
 
 #include "mdEngine.hpp"          // for Engine
-#include "qmCapable.hpp"         // for QMCapable
+#include "qmCapableEngine.hpp"   // for QMCapableEngine
 #include "qmRunner.hpp"          // for QMRunner
 #include "qmRunnerManager.hpp"   // for QMRunnerManager
 #include "qmSettings.hpp"        // for QMSettings
@@ -41,7 +41,7 @@ namespace engine
      * @brief Contains all the information needed to run a QM MD simulation
      *
      */
-    class QMMDEngine : virtual public MDEngine, public QMCapable
+    class QMMDEngine : virtual public MDEngine, public QMCapableEngine
     {
        public:
         ~QMMDEngine() override = default;

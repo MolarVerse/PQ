@@ -29,7 +29,7 @@
 #include "exceptions.hpp"          // for InputFileException
 #include "potentialSettings.hpp"   // for PotentialSettings
 #include "pyscfRunner.hpp"         // for PySCFRunner
-#include "qmCapable.hpp"           // for QMCapable
+#include "qmCapableEngine.hpp"     // for QMCapableEngine
 #include "qmSettings.hpp"          // for QMMethod, QMSettings
 #include "references.hpp"          // for ReferencesOutput
 #include "referencesOutput.hpp"    // for ReferencesOutput
@@ -51,7 +51,7 @@ using namespace references;
  *
  * @param qmCapableEngine
  */
-QMSetup::QMSetup(engine::QMCapable &qmCapableEngine)
+QMSetup::QMSetup(engine::QMCapableEngine &qmCapableEngine)
     : _qmCapableEngine(qmCapableEngine)
 {
 }
@@ -69,10 +69,12 @@ void setup::setupQM(Engine &engine)
     engine.getStdoutOutput().writeSetup("QM runner");
     engine.getLogOutput().writeSetup("QM runner");
 
-    // Try to cast to QMCapable first (covers both QMMDEngine and QMMMMDEngine)
-    if (auto *qmCapable = dynamic_cast<engine::QMCapable *>(&engine))
+    // Try to cast to QMCapableEngine first (covers both QMMDEngine and
+    // QMMMMDEngine)
+    if (auto *qmCapableEngine =
+            dynamic_cast<engine::QMCapableEngine *>(&engine))
     {
-        QMSetup qmSetup(*qmCapable);
+        QMSetup qmSetup(*qmCapableEngine);
         qmSetup.setup();
     }
     else
@@ -309,7 +311,7 @@ void QMSetup::setupWriteInfo() const
 {
     using enum QMMethod;
 
-    // Cast QMCapable to Engine to access output methods
+    // Cast QMCapableEngine to Engine to access output methods
     auto &engine    = dynamic_cast<Engine &>(_qmCapableEngine);
     auto &logOutput = engine.getLogOutput();
     auto &stdOut    = engine.getStdoutOutput();

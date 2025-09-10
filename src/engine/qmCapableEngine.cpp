@@ -20,7 +20,7 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "qmCapable.hpp"
+#include "qmCapableEngine.hpp"
 
 using namespace engine;
 using namespace settings;
@@ -31,7 +31,7 @@ using namespace QM;
  *
  * @param method The QM method to use
  */
-void QMCapable::setQMRunner(const QMMethod method)
+void QMCapableEngine::setQMRunner(const QMMethod method)
 {
     _qmRunner = QMRunnerManager::createQMRunner(method);
 }
@@ -41,11 +41,11 @@ void QMCapable::setQMRunner(const QMMethod method)
  *
  * @return QM::QMRunner* Pointer to the QM runner
  */
-QMRunner *QMCapable::getQMRunner() const { return _qmRunner.get(); }
+QMRunner *QMCapableEngine::getQMRunner() const { return _qmRunner.get(); }
 
 /**
  * @brief Check if QM runner is set
  *
  * @return bool True if QM runner is set, false otherwise
  */
-bool QMCapable::hasQMRunner() const { return _qmRunner != nullptr; }
+bool QMCapableEngine::hasQMRunner() const { return _qmRunner != nullptr; }
