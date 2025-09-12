@@ -50,9 +50,6 @@ namespace simulationBox
         auto getQMAtoms();
         auto getQMAtoms() const;
 
-        auto getMMAtoms();
-        auto getMMAtoms() const;
-
         auto getQMAtomicNumbers() const;
 
         auto getMoleculesInsideZone(const HybridZone) const;
@@ -139,38 +136,6 @@ namespace simulationBox
     {
         return getAtoms() | pqviews::filter([](const auto& atom)
                                             { return atom->isQMAtom(); });
-    }
-
-    /**
-     * @brief get all MM atoms using range-based filtering
-     *
-     * @return a view/iterator of MM atoms filtered from all atoms
-     *
-     * @details This function returns a range-based view that filters atoms
-     *          from _atoms based on whether they are designated as MM
-     * atoms.
-     */
-    template <typename Derived>
-    auto SimulationBoxView<Derived>::getMMAtoms()
-    {
-        return getAtoms() |
-               pqviews::filter([](auto& atom) { return atom->isMMAtom(); });
-    }
-
-    /**
-     * @brief get all MM atoms using range-based filtering
-     *
-     * @return a view/iterator of MM atoms filtered from all atoms
-     *
-     * @details This function returns a range-based view that filters atoms
-     *          from _atoms based on whether they are designated as MM
-     * atoms.
-     */
-    template <typename Derived>
-    auto SimulationBoxView<Derived>::getMMAtoms() const
-    {
-        return getAtoms() | pqviews::filter([](const auto& atom)
-                                            { return atom->isMMAtom(); });
     }
 
     /**
