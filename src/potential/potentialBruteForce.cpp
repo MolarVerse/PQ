@@ -45,8 +45,11 @@ PotentialBruteForce::~PotentialBruteForce() = default;
  * @param simBox
  * @param physicalData
  */
-inline void PotentialBruteForce::
-    calculateForces(SimulationBox &simBox, PhysicalData &physicalData, CellList &)
+inline void PotentialBruteForce::calculateForces(
+    SimulationBox &simBox,
+    PhysicalData  &physicalData,
+    CellList &
+)
 {
     startTimingsSection("InterNonBonded");
 
@@ -56,38 +59,35 @@ inline void PotentialBruteForce::
     double totalNonCoulombEnergy = 0.0;
 
     // inter molecular forces
-    const size_t nMol = simBox.getNumberOfMolecules();
-
-    for (size_t mol_i = 0; mol_i < nMol; ++mol_i)
+    size_t i = 0;
+    for (auto &mol1 : simBox.getMMMolecules())
     {
-        auto        &molecule_i    = simBox.getMolecule(mol_i);
-        const size_t nAtomsInMol_i = molecule_i.getNumberOfAtoms();
-
-        for (size_t mol_j = 0; mol_j < mol_i; ++mol_j)
+        size_t j = 0;
+        for (auto &mol2 : simBox.getMMMolecules())
         {
-            auto        &molecule_j    = simBox.getMolecule(mol_j);
-            const size_t nAtomsInMol_j = molecule_j.getNumberOfAtoms();
+            // avoid double counting and self interaction
+            if (j >= i)
+                break;
 
-            for (size_t atom1 = 0; atom1 < nAtomsInMol_i; ++atom1)
-            {
-                for (size_t atom2 = 0; atom2 < nAtomsInMol_j; ++atom2)
+            for (auto &atom1 : mol1.getAtoms())
+                for (auto &atom2 : mol2.getAtoms())
                 {
                     const auto [coulombEnergy, nonCoulombEnergy] =
                         calculateSingleInteraction(
                             *box,
-                            molecule_i,
-                            molecule_j,
-                            atom1,
-                            atom2
+                            mol1,
+                            mol2,
+                            *atom1,
+                            *atom2
                         );
 
                     totalCoulombEnergy    += coulombEnergy;
                     totalNonCoulombEnergy += nonCoulombEnergy;
                 }
-            }
+            ++j;
         }
+        ++i;
     }
-
     physicalData.setCoulombEnergy(totalCoulombEnergy);
     physicalData.setNonCoulombEnergy(totalNonCoulombEnergy);
 

@@ -20,36 +20,41 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _HYBRID_MD_ENGINE_HPP_
+#ifndef _QM_RUNNER_MANAGER_HPP_
 
-#define _HYBRID_MD_ENGINE_HPP_
+#define _QM_RUNNER_MANAGER_HPP_
 
-#include "hybridConfigurator.hpp"
-#include "mmmdEngine.hpp"
-#include "qmCapableEngine.hpp"
+#include <memory>
+
+#include "qmRunner.hpp"
+#include "qmSettings.hpp"
 
 namespace engine
 {
     /**
-     * @brief HybridMDEngine
+     * @class QMRunnerManager
      *
-     * @details This class is a pure virtual class that inherits from MDEngine
-     * and QMCapableEngine and is used to implement the Hybrid MD engine
-     * backbone that can run in general combinations of MM and QM engines.
+     * @brief Factory class for creating and managing QM runners
      *
+     * @details This utility class provides static methods to create QM runners
+     * based on the specified QM method. It encapsulates all the logic for
+     * QM runner creation and configuration, making it reusable across different
+     * engine types without requiring inheritance dependencies.
      */
-    class HybridMDEngine : virtual public MDEngine, public QMCapableEngine
+    class QMRunnerManager
     {
-       protected:
-        configurator::HybridConfigurator _configurator{};
+       private:
+        QMRunnerManager() = default;
 
        public:
-        HybridMDEngine()  = default;
-        ~HybridMDEngine() = default;
-
-        void calculateForces() override = 0;
+        static std::shared_ptr<QM::QMRunner> createQMRunner(
+            const settings::QMMethod method
+        );
+        static std::shared_ptr<QM::QMRunner> createMaceQMRunner();
+        static std::shared_ptr<QM::QMRunner> createAseDftbRunner();
+        static std::shared_ptr<QM::QMRunner> createAseXtbRunner();
     };
 
 }   // namespace engine
 
-#endif   // _HYBRID_MD_ENGINE_HPP_
+#endif   // _QM_RUNNER_MANAGER_HPP_

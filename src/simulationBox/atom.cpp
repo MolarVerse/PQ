@@ -152,6 +152,13 @@ void Atom::addForce(
 }
 
 /**
+ * @brief add a Vec3D to the current hybrid force of the atom
+ *
+ * @param forceHybrid
+ */
+void Atom::addForceHybrid(const Vec3D &force) { _forceHybrid += force; }
+
+/**
  * @brief add a Vec3D to the current shift force of the atom
  *
  * @param shiftForce
@@ -283,13 +290,6 @@ size_t Atom::getExternalGlobalVDWType() const { return _externalGlobalVDWType; }
 size_t Atom::getInternalGlobalVDWType() const { return _internalGlobalVDWType; }
 
 /**
- * @brief return the Hybrid zone of the atom
- *
- * @return HybridZone
- */
-HybridZone Atom::getHybridZone() const { return _hybridZone; }
-
-/**
  * @brief return the atomic number of the atom
  *
  * @return int
@@ -346,6 +346,13 @@ Vec3D Atom::getForce() const { return _force; }
 Vec3D Atom::getForceOld() const { return _forceOld; }
 
 /**
+ * @brief return the hybrid force of the atom
+ *
+ * @return Vec3D
+ */
+Vec3D Atom::getForceHybrid() const { return _forceHybrid; }
+
+/**
  * @brief return the shift force of the atom
  *
  * @return Vec3D
@@ -384,10 +391,8 @@ void Atom::setForcedOuter(const bool isForcedOuter)
  * @brief set if the atom is active
  *
  * @param isActive
- *
- * @details currently only used for hybrid calculations
  */
-void Atom::setIsActive(const bool isActive) { _isActive = isActive; }
+void Atom::setActive(const bool isActive) { _isActive = isActive; }
 
 /**
  * @brief set the name of the atom (element name)
@@ -492,6 +497,12 @@ void Atom::setVelocity(const Vec3D &velocity) { _velocity = velocity; }
 void Atom::setForce(const Vec3D &force) { _force = force; }
 
 /**
+ * @brief set the hybrid force of the atom
+ * @param force
+ */
+void Atom::setForceHybrid(const Vec3D &force) { _forceHybrid = force; }
+
+/**
  * @brief set the shift force of the atom
  *
  * @param shiftForce
@@ -523,13 +534,3 @@ void Atom::setVelocityOld(const Vec3D &velocity) { _velocityOld = velocity; }
  * @param force
  */
 void Atom::setForceOld(const Vec3D &force) { _forceOld = force; }
-
-/**
- * @brief set the Hybrid zone of the atom
- *
- * @param hybridZone
- */
-void Atom::setHybridZone(const HybridZone hybridZone)
-{
-    _hybridZone = hybridZone;
-}

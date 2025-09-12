@@ -70,6 +70,9 @@ void ExternalQMRunner::run(
 
     writeCoordsFile(simBox);
 
+    if (Settings::isHybridJobtype())
+        writePointChargeFile(simBox);
+
     std::jthread timeoutThread{[this](const std::stop_token stopToken)
                                { throwAfterTimeout(stopToken); }};
 
@@ -78,12 +81,14 @@ void ExternalQMRunner::run(
     timeoutThread.request_stop();
 
     readForceFile(simBox, physicalData);
-    readStressTensor(simBox.getBox(), physicalData);
+
+    if (per != NON_PERIODIC)
+        readStressTensor(simBox.getBox(), physicalData);
 }
 
 /**
- * @brief reads the force file (including qm energy) and sets the forces of the
- * atoms
+ * @brief reads the force file (including qm energy) and sets the forces of
+ * the atoms
  *
  * @param box
  * @param physicalData

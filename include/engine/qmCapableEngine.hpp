@@ -20,36 +20,41 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _HYBRID_MD_ENGINE_HPP_
+#ifndef _QM_CAPABLE_ENGINE_HPP_
 
-#define _HYBRID_MD_ENGINE_HPP_
+#define _QM_CAPABLE_ENGINE_HPP_
 
-#include "hybridConfigurator.hpp"
-#include "mmmdEngine.hpp"
-#include "qmCapableEngine.hpp"
+#include <memory>
+
+#include "qmRunner.hpp"
+#include "qmRunnerManager.hpp"
+#include "qmSettings.hpp"
+#include "typeAliases.hpp"
 
 namespace engine
 {
     /**
-     * @brief HybridMDEngine
+     * @class QMCapableEngine
      *
-     * @details This class is a pure virtual class that inherits from MDEngine
-     * and QMCapableEngine and is used to implement the Hybrid MD engine
-     * backbone that can run in general combinations of MM and QM engines.
+     * @brief Mixin class providing QM functionality to engines
      *
+     * @details This class provides QM runner management functionality that can
+     * be inherited by any engine that needs QM capabilities. It uses
+     * composition to avoid inheritance dependencies between different engines.
      */
-    class HybridMDEngine : virtual public MDEngine, public QMCapableEngine
+    class QMCapableEngine
     {
        protected:
-        configurator::HybridConfigurator _configurator{};
+        std::shared_ptr<QM::QMRunner> _qmRunner;
 
        public:
-        HybridMDEngine()  = default;
-        ~HybridMDEngine() = default;
+        virtual ~QMCapableEngine() = default;
 
-        void calculateForces() override = 0;
+        void setQMRunner(const settings::QMMethod method);
+        [[nodiscard]] std::shared_ptr<QM::QMRunner> getQMRunner() const;
+        [[nodiscard]] bool                          hasQMRunner() const;
     };
 
 }   // namespace engine
 
-#endif   // _HYBRID_MD_ENGINE_HPP_
+#endif   // _QM_CAPABLE_ENGINE_HPP_

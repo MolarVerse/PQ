@@ -16,7 +16,7 @@
 #     + check the pointcharge scheme ($pointcharges [0 mulliken, 1 loewdin, 2 nbo])
 #     + inset the charge
 #     + run define with tm_define.in 
-#     + insert point-charges from mm_pointcharges to control file
+#     + insert point-charges from pointcharges_file to control file
 #     + run dscf
 #     + check if DFT orbitals are employed for the guess
 #       if YES ($guess_mo == 1)
@@ -26,7 +26,7 @@
 #       if NO  ($changed == 0)
 #         + remove '$pop' entry from control file
 #         + remove previous point-charges from the control file
-#         + insert new point-charges from mm_pointcharges to control file
+#         + insert new point-charges from pointcharges_file to control file
 #         + run dscf
 # + add '$pop' entry from control file
 # + run ricc2
@@ -48,12 +48,13 @@ use subs qw(remove_pointcharges);
 my $progname = $0;
 $progname =~ s{^.*/}{};
 
-# input data from the QMCFC programm
+# input data from the PQ program
 my $charge             = $ARGV[0];             # charge of the qm region
 my $changed            = $ARGV[1];             # flag if define has to be run
 my $guess_mo           = $ARGV[2];             # flag if a dft step is performed as a guess
 my $pointcharges       = $ARGV[3];             # pointcharge scheme
 my $nprocessors        = $ARGV[4];             # number of processors
+my $pointcharges_file  = $ARGV[5];             # name of the pointcharges_file
 
 # various variables
 my $line;                                      # helper variable - gradient
@@ -64,14 +65,13 @@ my $energy;                                    # QM energy
 my $control_contents   = "";                   # helper variable - control file modifications
 my $tm_out             = "";                   # output of define, dscf, and grad
 my $converged_string   = 'convergence criteria satisfied after\s*\d+' .
-  '\s+iterations';		               # energy search string
-my $n_mm_pointcharges;                         # number of pointcharges variable                    
+  '\s+iterations';		                         # energy search string
+my $n_pointcharges;                            # number of pointcharges variable                    
 
 # files and commands
 my $qm_coords            = "coord";              # coordinate file
-my $mm_pointcharges      = "mm_pointcharges";    # coordinates of pointcharges
 my $dscf_exe             = "dscf";               # tm modul for scf calculation
-my $ricc2_exe            = "ricc2";  	         # tm modul for RICC2 energy, gradients and charges
+my $ricc2_exe            = "ricc2";  	           # tm modul for RICC2 energy, gradients and charges
 my $define_template      = "tm_define.template"; # must exist before you start!
 my $control_file         = "control";            # tm control file
 my $energy_file          = "energy";             # tm output energy
@@ -81,13 +81,13 @@ my $moloch_out           = "moloch.out";         # tm output population analysis
 my $qm_forces            = "qm_forces";          # result file: energy plus forces of all qm atoms
 my $qm_charges           = "qm_charges";         # restul file: partial charges of all qm atoms
                                    
-my $out_file             = "tm.out";	         # summary file
+my $out_file             = "tm.out";	           # summary file
 my $out_file_prev        = "tm.out.prev";        # summary file - previous step
 my $qm_coords_prev       = "coord.prev";         # summary file - coordinates previous step
-my $mm_pointcharges_prev =  "mm_pointcharges.prev";
+my $pointcharges_prev    = "pointcharges.prev";
 
-#$n_mm_pointcharges = `wc -l mm_pointcharges`;
-$n_mm_pointcharges = 0;
+#$n_pointcharges = `wc -l pointcharges`;
+$n_pointcharges = 0;
 
 # check if molecules have been exchanged between QM and MM region
 if ($changed == 1)
@@ -138,7 +138,7 @@ if ($changed == 1)
   #print CONTROL $control_contents;
   #close (CONTROL);
 
-  if ($n_mm_pointcharges != 0)
+  if ($n_pointcharges != 0)
   {     
     # insert pointcharges in the control file	
       insert_pointcharges; 
@@ -187,7 +187,7 @@ else
   print CONTROL $control_contents;
    close (CONTORL);
    
-  if ($n_mm_pointcharges != 0)
+  if ($n_pointcharges != 0)
   {  
    # insert pointcharges in the control file	
      insert_pointcharges; 
@@ -198,7 +198,7 @@ else
     exit 1 if ($tm_out !~ /$converged_string/);
 }
 
- if ($n_mm_pointcharges != 0)
+ if ($n_pointcharges != 0)
  { 
    # pointcharges are not included for the gradient calculation
    # delete pointcharges	
@@ -345,7 +345,7 @@ close(CHARGE);
 # create the "log-file" for the last run
 `mv $out_file  $out_file_prev`;
 `mv $qm_coords $qm_coords_prev`;
-#`mv $mm_pointcharges $mm_pointcharges_prev`;
+#`mv $pointcharges $pointcharges_prev`;
 
 
 exit 0;
@@ -370,8 +370,8 @@ sub insert_pointcharges {
   open (CONTROL, "> $control_file") or
     die "\n\n\t (-) $progname: Error opening file '$control_file'\n";
 
-  open (PNT_CHARGE, "< $mm_pointcharges") or
-    die "\n\n\t (-) $progname: Error opening file '$mm_pointcharges'\n";
+  open (PNT_CHARGE, "< $pointcharges_file") or
+    die "\n\n\t (-) $progname: Error opening file '$pointcharges_file'\n";
 
   print CONTROL $control_contents;
   print CONTROL "\$point_charges\n";

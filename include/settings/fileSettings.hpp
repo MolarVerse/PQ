@@ -42,10 +42,9 @@ namespace settings
        private:
         // clang-format off
         static inline std::string _molDescriptorFile = defaults::_MOLDESCRIPTOR_FILE_DEFAULT_;
-        // clang-format on
-
+        
         static inline std::string _guffDatFile = defaults::_GUFF_FILE_DEFAULT_;
-
+        
         static inline std::string _topologyFile;
         static inline std::string _parameterFile;
         static inline std::string _intraNonBondedFile;
@@ -53,13 +52,15 @@ namespace settings
         static inline std::string _rpmdStartFile;
         static inline std::string _mShakeFile;
         static inline std::string _dftbFile = defaults::_DFTB_FILE_DEFAULT_;
-
+        static inline std::string _pointChargeFile = defaults::_POINTCHARGE_FILE_DEFAULT_;
+        
         static bool inline _isTopologyFileSet       = false;
         static bool inline _isParameterFileSet      = false;
         static bool inline _isIntraNonBondedFileSet = false;
         static bool inline _isRPMDStartFileSet      = false;
         static bool inline _isMShakeFileSet         = false;
         static bool inline _isDFTBFileSet           = false;
+        // clang-format on
 
        public:
         FileSettings()  = default;
@@ -78,6 +79,7 @@ namespace settings
         [[nodiscard]] static std::string getRingPolymerStartFileName();
         [[nodiscard]] static std::string getMShakeFileName();
         [[nodiscard]] static std::string getDFTBFileName();
+        [[nodiscard]] static std::string getPointChargeFileName();
 
         [[nodiscard]] static bool isTopologyFileNameSet();
         [[nodiscard]] static bool isParameterFileNameSet();
@@ -99,6 +101,7 @@ namespace settings
         static void setRingPolymerStartFileName(const std::string_view name);
         static void setMShakeFileName(const std::string_view name);
         static void setDFTBFileName(const std::string_view name);
+        static void setPointChargeFileName(const std::string_view name);
 
         static void setIsTopologyFileNameSet();
         static void setIsParameterFileNameSet();

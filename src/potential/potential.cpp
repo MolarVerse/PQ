@@ -38,25 +38,25 @@ using namespace simulationBox;
  * interactions
  *
  * @param box
- * @param molecule1
- * @param molecule2
+ * @param mol1
+ * @param mol2
  * @param atom1
  * @param atom2
  * @return std::pair<double, double>
  */
 std::pair<double, double> Potential::calculateSingleInteraction(
-    const Box   &box,
-    Molecule    &molecule1,
-    Molecule    &molecule2,
-    const size_t atom1,
-    const size_t atom2
+    const Box &box,
+    Molecule  &mol1,
+    Molecule  &mol2,
+    Atom      &atom1,
+    Atom      &atom2
 ) const
 {
     auto coulombEnergy    = 0.0;
     auto nonCoulombEnergy = 0.0;
 
-    const auto xyz_i = molecule1.getAtomPosition(atom1);
-    const auto xyz_j = molecule2.getAtomPosition(atom2);
+    const auto xyz_i = atom1.getPosition();
+    const auto xyz_j = atom2.getPosition();
 
     auto dxyz = xyz_i - xyz_j;
 
@@ -70,14 +70,14 @@ std::pair<double, double> Potential::calculateSingleInteraction(
         distanceSquared < RcCutOff * RcCutOff)
     {
         const double distance   = ::sqrt(distanceSquared);
-        const size_t atomType_i = molecule1.getAtomType(atom1);
-        const size_t atomType_j = molecule2.getAtomType(atom2);
+        const auto   atomType_i = atom1.getAtomType();
+        const auto   atomType_j = atom2.getAtomType();
 
-        const auto globalVdwType_i = molecule1.getInternalGlobalVDWType(atom1);
-        const auto globalVdwType_j = molecule2.getInternalGlobalVDWType(atom2);
+        const auto globalVdwType_i = atom1.getInternalGlobalVDWType();
+        const auto globalVdwType_j = atom2.getInternalGlobalVDWType();
 
-        const auto moltype_i = molecule1.getMoltype();
-        const auto moltype_j = molecule2.getMoltype();
+        const auto moltype_i = mol1.getMoltype();
+        const auto moltype_j = mol2.getMoltype();
 
         const auto combinedIdx = {
             moltype_i,
@@ -88,8 +88,8 @@ std::pair<double, double> Potential::calculateSingleInteraction(
             globalVdwType_j
         };
 
-        const auto charge_i         = molecule1.getPartialCharge(atomType_i);
-        const auto charge_j         = molecule2.getPartialCharge(atomType_j);
+        const auto charge_i         = atom1.getPartialCharge();
+        const auto charge_j         = atom2.getPartialCharge();
         const auto coulombPreFactor = charge_i * charge_j;
 
         auto [e, f] = _coulombPotential->calculate(distance, coulombPreFactor);
@@ -112,10 +112,10 @@ std::pair<double, double> Potential::calculateSingleInteraction(
 
         const auto shiftForcexyz = forcexyz * txyz;
 
-        molecule1.addAtomForce(atom1, forcexyz);
-        molecule2.addAtomForce(atom2, -forcexyz);
+        atom1.addForce(forcexyz);
+        atom2.addForce(-forcexyz);
 
-        molecule1.addAtomShiftForce(atom1, shiftForcexyz);
+        atom1.addShiftForce(shiftForcexyz);
     }
 
     return {coulombEnergy, nonCoulombEnergy};

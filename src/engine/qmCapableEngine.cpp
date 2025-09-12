@@ -20,36 +20,34 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _HYBRID_MD_ENGINE_HPP_
-
-#define _HYBRID_MD_ENGINE_HPP_
-
-#include "hybridConfigurator.hpp"
-#include "mmmdEngine.hpp"
 #include "qmCapableEngine.hpp"
 
-namespace engine
+using namespace engine;
+using namespace settings;
+using namespace QM;
+
+using std::shared_ptr;
+
+/**
+ * @brief Set the QM runner based on the specified method
+ *
+ * @param method The QM method to use
+ */
+void QMCapableEngine::setQMRunner(const QMMethod method)
 {
-    /**
-     * @brief HybridMDEngine
-     *
-     * @details This class is a pure virtual class that inherits from MDEngine
-     * and QMCapableEngine and is used to implement the Hybrid MD engine
-     * backbone that can run in general combinations of MM and QM engines.
-     *
-     */
-    class HybridMDEngine : virtual public MDEngine, public QMCapableEngine
-    {
-       protected:
-        configurator::HybridConfigurator _configurator{};
+    _qmRunner = QMRunnerManager::createQMRunner(method);
+}
 
-       public:
-        HybridMDEngine()  = default;
-        ~HybridMDEngine() = default;
+/**
+ * @brief Get the QM runner
+ *
+ * @return shared_ptr<QMRunner> Shared pointer to the QM runner
+ */
+shared_ptr<QMRunner> QMCapableEngine::getQMRunner() const { return _qmRunner; }
 
-        void calculateForces() override = 0;
-    };
-
-}   // namespace engine
-
-#endif   // _HYBRID_MD_ENGINE_HPP_
+/**
+ * @brief Check if QM runner is set
+ *
+ * @return bool True if QM runner is set, false otherwise
+ */
+bool QMCapableEngine::hasQMRunner() const { return _qmRunner != nullptr; }

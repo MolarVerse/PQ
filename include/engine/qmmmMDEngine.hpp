@@ -24,6 +24,8 @@
 
 #define _QM_MM_MD_ENGINE_HPP_
 
+#include <unordered_set>   // for unordered_set
+
 #include "hybridMDEngine.hpp"
 
 namespace engine
@@ -41,7 +43,18 @@ namespace engine
         QMMMMDEngine()  = default;
         ~QMMMMDEngine() = default;
 
-        void calculateForces() override {};   // TODO: implement
+        void calculateForces() override;
+
+       private:
+        void applyExactSmoothing();
+
+        [[nodiscard]] std::unordered_set<size_t> generateInactiveMoleculeSet(
+            size_t bitPattern,
+            size_t totalMolecules
+        );
+        [[nodiscard]] double calculateGlobalSmoothingFactor(
+            const std::unordered_set<size_t>& inactiveForInnerCalcMolecules
+        );
     };
 
 }   // namespace engine

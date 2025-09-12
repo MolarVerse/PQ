@@ -174,16 +174,17 @@ namespace simulationBox
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] int        getWaterType() const;
-        [[nodiscard]] int        getAmmoniaType() const;
-        [[nodiscard]] size_t     getNumberOfMolecules() const;
-        [[nodiscard]] size_t     getDegreesOfFreedom() const;
-        [[nodiscard]] size_t     getNumberOfAtoms() const;
-        [[nodiscard]] size_t     getNumberOfQMAtoms() const;
-        [[nodiscard]] double     getTotalMass() const;
-        [[nodiscard]] double     getTotalCharge() const;
-        [[nodiscard]] double     getDensity() const;
-        [[nodiscard]] pq::Vec3D& getCenterOfMass();
+        [[nodiscard]] int              getWaterType() const;
+        [[nodiscard]] int              getAmmoniaType() const;
+        [[nodiscard]] size_t           getNumberOfMolecules() const;
+        [[nodiscard]] size_t           getDegreesOfFreedom() const;
+        [[nodiscard]] size_t           getNumberOfAtoms() const;
+        [[nodiscard]] size_t           getNumberOfQMAtoms() const;
+        [[nodiscard]] double           getTotalMass() const;
+        [[nodiscard]] double           getTotalCharge() const;
+        [[nodiscard]] double           getDensity() const;
+        [[nodiscard]] pq::Vec3D&       getCenterOfMass();
+        [[nodiscard]] std::vector<int> getInnerRegionCenterAtomIndices();
 
         [[nodiscard]] Atom&         getAtom(const size_t index);
         [[nodiscard]] Molecule&     getMolecule(const size_t index);
@@ -192,10 +193,11 @@ namespace simulationBox
         [[nodiscard]] std::vector<double> getAtomicScalarForces() const;
         [[nodiscard]] std::vector<double> getAtomicScalarForcesOld() const;
 
-        [[nodiscard]] pq::SharedAtomVec&         getAtoms();
-        [[nodiscard]] const pq::SharedAtomVec&   getAtoms() const;
-        [[nodiscard]] std::vector<Molecule>&     getMolecules();
-        [[nodiscard]] std::vector<MoleculeType>& getMoleculeTypes();
+        [[nodiscard]] pq::SharedAtomVec&           getAtoms();
+        [[nodiscard]] const pq::SharedAtomVec&     getAtoms() const;
+        [[nodiscard]] std::vector<Molecule>&       getMolecules();
+        [[nodiscard]] const std::vector<Molecule>& getMolecules() const;
+        [[nodiscard]] std::vector<MoleculeType>&   getMoleculeTypes();
 
         [[nodiscard]] std::vector<size_t>& getExternalGlobalVdwTypes();
         [[nodiscard]] std::map<size_t, size_t>& getExternalToInternalGlobalVDWTypes(

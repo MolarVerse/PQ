@@ -25,6 +25,7 @@ add_subdirectory(box)
 add_subdirectory(kernels)
 add_subdirectory(opt)
 add_subdirectory(randomNumberGenerator)
+add_subdirectory(hybridConfigurator)
 
 if(BUILD_WITH_PYTHON_BINDINGS)
     add_subdirectory(python)

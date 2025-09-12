@@ -27,6 +27,7 @@
 #include <cstddef>   // for size_t
 #include <vector>    // for vector
 
+#include "cellView.hpp"   // for CellView
 #include "typeAliases.hpp"
 
 namespace simulationBox
@@ -37,7 +38,7 @@ namespace simulationBox
      * @brief Cell is a class for a single cell in the cellList
      *
      */
-    class Cell
+    class Cell : public CellView<Cell>
     {
        private:
         std::vector<pq::Molecule *>      _molecules;
@@ -68,7 +69,8 @@ namespace simulationBox
         [[nodiscard]] const pq::Vec3Dul &getCellIndex() const;
 
         [[nodiscard]] pq::Molecule *getMolecule(const size_t index) const;
-        [[nodiscard]] std::vector<Molecule *> getMolecules() const;
+        [[nodiscard]] const std::vector<Molecule *> &getMolecules() const;
+        [[nodiscard]] std::vector<Molecule *>       &getMolecules();
 
         [[nodiscard]] Cell *getNeighbourCell(const size_t index) const;
         [[nodiscard]] std::vector<Cell *> getNeighbourCells() const;

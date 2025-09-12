@@ -58,7 +58,7 @@ TEST(TestQMSetup, setupDftbplus)
     ASSERT_THROW_MSG(
         setupQM.setup(),
         customException::InputFileException,
-        "A qm based jobtype was requested but no external program via "
+        "A QM based jobtype was requested but no valid external program via "
         "\"qm_prog\" provided"
     );
 }
@@ -82,7 +82,7 @@ TEST(TestQMSetup, setupPySCF)
     ASSERT_THROW_MSG(
         setupQM.setup(),
         customException::InputFileException,
-        "A qm based jobtype was requested but no external program via "
+        "A QM based jobtype was requested but no valid external program via "
         "\"qm_prog\" provided"
     );
 }
@@ -106,7 +106,7 @@ TEST(TestQMSetup, setupTurbomoleRunner)
     ASSERT_THROW_MSG(
         setupQM.setup(),
         customException::InputFileException,
-        "A qm based jobtype was requested but no external program via "
+        "A QM based jobtype was requested but no valid external program via "
         "\"qm_prog\" provided"
     );
 }
