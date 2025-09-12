@@ -52,6 +52,9 @@ namespace simulationBox
 
         auto getQMAtomicNumbers() const;
 
+        auto getMMMolecules();
+        auto getMMMolecules() const;
+
         auto getMoleculesInsideZone(const HybridZone) const;
         auto getMoleculesInsideZone(const HybridZone);
 
@@ -149,6 +152,47 @@ namespace simulationBox
         return getQMAtoms() |
                pqviews::transform([](const auto& atom)
                                   { return atom->getAtomicNumber(); });
+    }
+
+    /**
+     * @brief get all MM molecules using range-based filtering
+     *
+     * @return a view/iterator of MM molecules filtered from all molecules
+     *
+     * @details This function returns a range-based view that filters molecules
+     *          from _molecules based on whether they are designated as
+     * molecular mechanics (MM) molecules. The classification depends on the job
+     * type:
+     *          - MM-only simulations: all molecules are MM molecules
+     *          - QM-only simulations: no molecules are MM molecules
+     *          - Hybrid QM/MM simulations: active molecules are MM molecules
+     */
+    template <typename Derived>
+    auto SimulationBoxView<Derived>::getMMMolecules()
+    {
+        return getMolecules() |
+               pqviews::filter([](auto& mol) { return mol->isMMMolecule(); });
+    }
+
+    /**
+     * @brief get all MM molecules using range-based filtering
+     *
+     * @return a view/iterator of MM molecules filtered from all molecules
+     *
+     * @details This function returns a range-based view that filters molecules
+     *          from _molecules based on whether they are designated as
+     * molecular mechanics (MM) molecules. The classification depends on the job
+     * type:
+     *          - MM-only simulations: all molecules are MM molecules
+     *          - QM-only simulations: no molecules are MM molecules
+     *          - Hybrid QM/MM simulations: active molecules are MM molecules
+     */
+    template <typename Derived>
+    auto SimulationBoxView<Derived>::getMMMolecules() const
+    {
+        return getMolecules() |
+               pqviews::filter([](const auto& mol)
+                               { return mol->isMMMolecule(); });
     }
 
     /**

@@ -29,6 +29,7 @@
 
 #include "box.hpp"                // for Box
 #include "manostatSettings.hpp"   // for ManostatSettings
+#include "settings.hpp"           // for Settings
 #include "vector3d.hpp"           // for Vec3D
 
 using namespace simulationBox;
@@ -173,6 +174,31 @@ std::vector<double> Molecule::getPartialCharges() const
         partialCharges[i] = _atoms[i]->getPartialCharge();
 
     return partialCharges;
+}
+
+/**
+ * @brief Determines if this molecule should be treated as a MM molecule
+ *
+ * @details The classification logic is as follows:
+ * - For MM-only simulations: all molecules are MM molecules
+ * - For QM-only simulations: no molecules are MM molecules
+ * - For hybrid QM/MM simulations: active molecules are MM molecules
+ *
+ * @return true if the molecule should be treated with MM methods, false
+ * otherwise
+ */
+bool Molecule::isMMMolecule() const
+{
+    if (Settings::isMMOnlyJobtype())
+        return true;
+
+    if (Settings::isQMOnlyJobtype())
+        return false;
+
+    if (isActive())
+        return true;
+
+    return false;
 }
 
 /**

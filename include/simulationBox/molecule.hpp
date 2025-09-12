@@ -110,6 +110,8 @@ namespace simulationBox
         [[nodiscard]] std::vector<double> getAtomMasses() const;
         [[nodiscard]] std::vector<double> getPartialCharges() const;
 
+        [[nodiscard]] bool isMMMolecule() const;
+
         void setPartialCharges(const std::vector<double> &partialCharges);
         void setAtomForcesToZero();
         void activateMolecule();
