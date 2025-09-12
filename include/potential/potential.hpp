@@ -28,6 +28,8 @@
 #include <memory>    // for shared_ptr, __shared_ptr_access, make_shared
 #include <utility>   // for pair
 
+#include "atom.hpp"
+#include "molecule.hpp"
 #include "timer.hpp"
 #include "typeAliases.hpp"
 
@@ -64,11 +66,11 @@ namespace potential
         virtual pq::SharedPotential clone() const = 0;
 
         std::pair<double, double> calculateSingleInteraction(
-            const pq::Box &,
-            pq::Molecule &,
-            pq::Molecule &,
-            const size_t,
-            const size_t
+            const pq::Box &box,
+            pq::Molecule  &mol1,
+            pq::Molecule  &mol2,
+            pq::Atom      &atom1,
+            pq::Atom      &atom2
         ) const;
 
         template <typename T>

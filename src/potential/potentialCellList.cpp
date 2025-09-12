@@ -70,77 +70,62 @@ inline void PotentialCellList::calculateForces(
 
     for (const auto &cell_i : cellList.getCells())
     {
-        const auto nMols = cell_i.getNumberOfMolecules();
-
-        for (size_t mol_i = 0; mol_i < nMols; ++mol_i)
+        size_t i = 0;
+        for (auto &mol1 : cell_i.getMMMolecules())
         {
-            auto *molecule_i = cell_i.getMolecule(mol_i);
-
-            for (size_t mol_j = 0; mol_j < mol_i; ++mol_j)
+            size_t j = 0;
+            for (auto &mol2 : cell_i.getMMMolecules())
             {
-                auto *molecule_j = cell_i.getMolecule(mol_j);
+                // avoid double counting and self interaction
+                if (j >= i)
+                    break;
 
-                for (const size_t atom_i : cell_i.getAtomIndices(mol_i))
-                {
-                    for (const size_t atom_j : cell_i.getAtomIndices(mol_j))
+                for (auto &atom1 : mol1->getAtoms())
+                    for (auto &atom2 : mol2->getAtoms())
                     {
                         const auto [coulombEnergy, nonCoulombEnergy] =
                             calculateSingleInteraction(
                                 *box,
-                                *molecule_i,
-                                *molecule_j,
-                                atom_i,
-                                atom_j
+                                *mol1,
+                                *mol2,
+                                *atom1,
+                                *atom2
                             );
 
                         totalCoulombEnergy    += coulombEnergy;
                         totalNonCoulombEnergy += nonCoulombEnergy;
                     }
-                }
+                ++j;
             }
+            ++i;
         }
     }
 
-    for (const auto &cell_i : cellList.getCells())
-    {
-        const auto nMolsInCell_i = cell_i.getNumberOfMolecules();
-
-        for (const auto *cell_j : cell_i.getNeighbourCells())
-        {
-            const auto nMolsInCell_j = cell_j->getNumberOfMolecules();
-
-            for (size_t mol_i = 0; mol_i < nMolsInCell_i; ++mol_i)
-            {
-                auto *molecule_i = cell_i.getMolecule(mol_i);
-
-                for (const auto atom_i : cell_i.getAtomIndices(mol_i))
+    for (const auto &cell1 : cellList.getCells())
+        for (const auto *cell2 : cell1.getNeighbourCells())
+            for (auto &mol1 : cell1.getMMMolecules())
+                for (auto &mol2 : cell2->getMMMolecules())
                 {
-                    for (size_t mol_j = 0; mol_j < nMolsInCell_j; ++mol_j)
-                    {
-                        auto *molecule_j = cell_j->getMolecule(mol_j);
+                    // avoid self interaction
+                    if (mol1 == mol2)
+                        continue;
 
-                        if (molecule_i == molecule_j)
-                            continue;
-
-                        for (const auto atom_j : cell_j->getAtomIndices(mol_j))
+                    for (auto &atom1 : mol1->getAtoms())
+                        for (auto &atom2 : mol2->getAtoms())
                         {
                             const auto [coulombEnergy, nonCoulombEnergy] =
                                 calculateSingleInteraction(
                                     *box,
-                                    *molecule_i,
-                                    *molecule_j,
-                                    atom_i,
-                                    atom_j
+                                    *mol1,
+                                    *mol2,
+                                    *atom1,
+                                    *atom2
                                 );
 
                             totalCoulombEnergy    += coulombEnergy;
                             totalNonCoulombEnergy += nonCoulombEnergy;
                         }
-                    }
                 }
-            }
-        }
-    }
 
     physicalData.setCoulombEnergy(totalCoulombEnergy);
     physicalData.setNonCoulombEnergy(totalNonCoulombEnergy);

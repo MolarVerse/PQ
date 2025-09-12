@@ -171,7 +171,7 @@ namespace simulationBox
     auto SimulationBoxView<Derived>::getMMMolecules()
     {
         return getMolecules() |
-               pqviews::filter([](auto& mol) { return mol->isMMMolecule(); });
+               pqviews::filter([](auto& mol) { return mol.isMMMolecule(); });
     }
 
     /**
@@ -192,7 +192,7 @@ namespace simulationBox
     {
         return getMolecules() |
                pqviews::filter([](const auto& mol)
-                               { return mol->isMMMolecule(); });
+                               { return mol.isMMMolecule(); });
     }
 
     /**
