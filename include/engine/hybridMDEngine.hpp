@@ -33,12 +33,12 @@ namespace engine
     /**
      * @brief HybridMDEngine
      *
-     * @details This class is a pure virtual class that inherits from MMMDEngine
+     * @details This class is a pure virtual class that inherits from MDEngine
      * and QMCapableEngine and is used to implement the Hybrid MD engine
      * backbone that can run in general combinations of MM and QM engines.
      *
      */
-    class HybridMDEngine : virtual public MMMDEngine, public QMCapableEngine
+    class HybridMDEngine : virtual public MDEngine, public QMCapableEngine
     {
        protected:
         configurator::HybridConfigurator _configurator{};
