@@ -79,7 +79,7 @@ namespace engine
 
         // Initialize hybrid forces to zero once
         auto& atoms = _simulationBox->getAtoms();
-        for (auto& atom : atoms) atom->setForceHybrid({0.0, 0.0, 0.0});
+        for (auto& atom : atoms) atom->setForceHybrid(0.0);
 
         const auto nSmMol =
             distance(_simulationBox->getMoleculesInsideZone(SMOOTHING));
@@ -87,6 +87,9 @@ namespace engine
         // Loop over all combinations of smoothing molecules
         for (size_t i = 0; i < (1u << nSmMol); ++i)
         {
+            // Reset forces to zero before each QM/MM calculation
+            for (auto& atom : atoms) atom->setForce(0.0);
+
             const auto inactiveSmMol = generateInactiveMoleculeSet(i, nSmMol);
 
             // STEP 1: Setup and run QM calculation
@@ -119,6 +122,7 @@ namespace engine
             }
         }
 
+        // Finally, set forces to the accumulated hybrid forces for MD routine
         for (auto& atom : atoms) atom->setForce(atom->getForceHybrid());
     }
 
