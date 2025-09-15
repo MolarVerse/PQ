@@ -62,7 +62,20 @@ namespace potential
             pq::SimBox &,
             pq::PhysicalData &,
             pq::CellList &
-        )                                         = 0;
+        ) = 0;
+
+        virtual void calculateCoreToOuterForces(
+            pq::SimBox &,
+            pq::PhysicalData &,
+            pq::CellList &
+        ) = 0;
+
+        virtual void calculateLayerToOuterForces(
+            pq::SimBox &,
+            pq::PhysicalData &,
+            pq::CellList &
+        ) = 0;
+
         virtual pq::SharedPotential clone() const = 0;
 
         std::pair<double, double> calculateSingleInteraction(

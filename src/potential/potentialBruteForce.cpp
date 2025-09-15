@@ -129,6 +129,13 @@ inline void PotentialBruteForce::calculateCoreToOuterForces(
     stopTimingsSection("InterNonBondedCoreToOuter");
 }
 
+/**
+ * @brief calculates forces between layer and outer molecules
+ *
+ * @param simBox simulation box containing molecules
+ * @param physicalData physical data to store energy results
+ * @param unused CellList parameter (not used in brute force approach)
+ */
 inline void PotentialBruteForce::calculateLayerToOuterForces(
     SimulationBox &simBox,
     PhysicalData  &physicalData,

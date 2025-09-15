@@ -50,13 +50,13 @@ namespace potential
             pq::SimBox &,
             pq::PhysicalData &,
             pq::CellList &
-        );
+        ) override;
 
         void calculateLayerToOuterForces(
             pq::SimBox &,
             pq::PhysicalData &,
             pq::CellList &
-        );
+        ) override;
 
         pq::SharedPotential clone() const override;
     };
