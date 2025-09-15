@@ -47,7 +47,7 @@ PotentialBruteForce::~PotentialBruteForce() = default;
  * @param simBox
  * @param physicalData
  */
-inline void PotentialBruteForce::calculateForces(
+void PotentialBruteForce::calculateForces(
     SimulationBox &simBox,
     PhysicalData  &physicalData,
     CellList &
@@ -104,7 +104,7 @@ inline void PotentialBruteForce::calculateForces(
  * @param physicalData physical data to store energy results
  * @param unused CellList parameter (not used in brute force approach)
  */
-inline void PotentialBruteForce::calculateCoreToOuterForces(
+void PotentialBruteForce::calculateCoreToOuterForces(
     SimulationBox &simBox,
     PhysicalData  &physicalData,
     CellList &
@@ -136,7 +136,7 @@ inline void PotentialBruteForce::calculateCoreToOuterForces(
  * @param physicalData physical data to store energy results
  * @param unused CellList parameter (not used in brute force approach)
  */
-inline void PotentialBruteForce::calculateLayerToOuterForces(
+void PotentialBruteForce::calculateLayerToOuterForces(
     SimulationBox &simBox,
     PhysicalData  &physicalData,
     CellList &

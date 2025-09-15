@@ -58,7 +58,7 @@ PotentialCellList::~PotentialCellList() = default;
  * @param physicalData
  * @param cellList
  */
-inline void PotentialCellList::calculateForces(
+void PotentialCellList::calculateForces(
     SimulationBox &simBox,
     PhysicalData  &physicalData,
     CellList      &cellList
@@ -149,7 +149,7 @@ inline void PotentialCellList::calculateForces(
  * @param physicalData physical data to store energy results
  * @param cellList cell list structure for efficient neighbor searching
  */
-inline void PotentialCellList::calculateCoreToOuterForces(
+void PotentialCellList::calculateCoreToOuterForces(
     SimulationBox &simBox,
     PhysicalData  &physicalData,
     CellList      &cellList
@@ -190,7 +190,7 @@ inline void PotentialCellList::calculateCoreToOuterForces(
     stopTimingsSection("InterNonBondedCoreToOuter");
 }
 
-inline void PotentialCellList::calculateLayerToOuterForces(
+void PotentialCellList::calculateLayerToOuterForces(
     SimulationBox &simBox,
     PhysicalData  &physicalData,
     CellList      &cellList
