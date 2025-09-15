@@ -88,7 +88,7 @@ namespace engine
         for (size_t i = 0; i < (1u << nSmMol); ++i)
         {
             // Reset forces to zero before each QM/MM calculation
-            for (auto& atom : atoms) atom->setForce(0.0);
+            _simulationBox->resetForces();
 
             const auto inactiveSmMol = generateInactiveMoleculeSet(i, nSmMol);
 
