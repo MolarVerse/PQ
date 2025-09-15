@@ -129,6 +129,48 @@ inline void PotentialBruteForce::calculateCoreToOuterForces(
     stopTimingsSection("InterNonBondedCoreToOuter");
 }
 
+inline void PotentialBruteForce::calculateLayerToOuterForces(
+    SimulationBox &simBox,
+    PhysicalData  &physicalData,
+    CellList &
+)
+{
+    startTimingsSection("InterNonBondedLayerToOuter");
+
+    const auto box = simBox.getBoxPtr();
+
+    double totalCoulombEnergy    = 0.0;
+    double totalNonCoulombEnergy = 0.0;
+
+    // inter molecular forces
+    for (auto &mol1 : simBox.getMMMolecules())
+        for (auto &mol2 : simBox.getInactiveMolecules())
+        {
+            if (mol2.getHybridZone() == CORE)
+                continue;
+
+            for (auto &atom1 : mol1.getAtoms())
+                for (auto &atom2 : mol2.getAtoms())
+                {
+                    const auto [coulombEnergy, nonCoulombEnergy] =
+                        calculateSingleInteraction(
+                            *box,
+                            mol1,
+                            mol2,
+                            *atom1,
+                            *atom2
+                        );
+
+                    totalCoulombEnergy    += coulombEnergy;
+                    totalNonCoulombEnergy += nonCoulombEnergy;
+                }
+        }
+    physicalData.addCoulombEnergy(totalCoulombEnergy);
+    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
+
+    stopTimingsSection("InterNonBondedLayerToOuter");
+}
+
 /**
  * @brief clone the potential
  *

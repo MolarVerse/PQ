@@ -52,6 +52,12 @@ namespace potential
             pq::CellList &
         );
 
+        void calculateLayerToOuterForces(
+            pq::SimBox &,
+            pq::PhysicalData &,
+            pq::CellList &
+        );
+
         pq::SharedPotential clone() const override;
     };
 }   // namespace potential
