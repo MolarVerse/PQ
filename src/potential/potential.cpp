@@ -32,6 +32,18 @@
 
 using namespace potential;
 using namespace simulationBox;
+using namespace physicalData;
+
+void Potential::calculateHybridForces(
+    SimulationBox &simBox,
+    PhysicalData  &physicalData,
+    CellList      &cellList
+)
+{
+    calculateForces(simBox, physicalData, cellList);
+    calculateCoreToOuterForces(simBox, physicalData, cellList);
+    calculateLayerToOuterForces(simBox, physicalData, cellList);
+}
 
 /**
  * @brief inner part of the double loop to calculate non-bonded inter molecular

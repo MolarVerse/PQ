@@ -190,6 +190,20 @@ void PotentialCellList::calculateCoreToOuterForces(
     stopTimingsSection("InterNonBondedCoreToOuter");
 }
 
+/**
+ * @brief calculates forces between layer and outer molecules using cell list
+ * optimization
+ *
+ * @details loops over all cells and calculates interactions between MM
+ * molecules and inactive molecules within the same cell, then between MM
+ * molecules in one cell and inactive molecules in neighboring cells. Skips
+ * interactions with core zone molecules. Uses cell list structure for efficient
+ * neighbor searching.
+ *
+ * @param simBox simulation box containing molecules
+ * @param physicalData physical data to store energy results
+ * @param cellList cell list structure for efficient neighbor searching
+ */
 void PotentialCellList::calculateLayerToOuterForces(
     SimulationBox &simBox,
     PhysicalData  &physicalData,

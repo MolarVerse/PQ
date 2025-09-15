@@ -64,6 +64,12 @@ namespace potential
             pq::CellList &
         ) = 0;
 
+        void calculateHybridForces(
+            pq::SimBox &,
+            pq::PhysicalData &,
+            pq::CellList &
+        );
+
         virtual void calculateCoreToOuterForces(
             pq::SimBox &,
             pq::PhysicalData &,

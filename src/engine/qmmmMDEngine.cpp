@@ -109,6 +109,11 @@ namespace engine
             // STEP 2: Setup and run MM calculation
             _configurator.toggleMoleculeActivation(*_simulationBox);
 
+            _potential->calculateHybridForces(
+                *_simulationBox,
+                *_physicalData,
+                *_cellList
+            );
             // TODO: https://github.com/MolarVerse/PQ/issues/195
 
             // STEP 3: Calculate global smoothing factor and accumulate forces
