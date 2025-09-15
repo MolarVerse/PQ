@@ -121,6 +121,60 @@ std::pair<double, double> Potential::calculateSingleInteraction(
     return {coulombEnergy, nonCoulombEnergy};
 }
 
+/**
+ * @brief calculate single Coulomb interaction between two atoms
+ *
+ * @param box simulation box for periodic boundary conditions
+ * @param atom1 first atom
+ * @param atom2 second atom
+ * @return double Coulomb energy
+ */
+double Potential::calculateSingleCoulombInteraction(
+    const Box &box,
+    Atom      &atom1,
+    Atom      &atom2
+) const
+{
+    auto coulombEnergy = 0.0;
+
+    const auto xyz_i = atom1.getPosition();
+    const auto xyz_j = atom2.getPosition();
+
+    auto dxyz = xyz_i - xyz_j;
+
+    const auto txyz = -box.calcShiftVector(dxyz);
+
+    dxyz += txyz;
+
+    const double distanceSquared = normSquared(dxyz);
+
+    if (const auto RcCutOff = CoulombPotential::getCoulombRadiusCutOff();
+        distanceSquared < RcCutOff * RcCutOff)
+    {
+        const double distance = ::sqrt(distanceSquared);
+
+        const auto charge_i         = atom1.getPartialCharge();
+        const auto charge_j         = atom2.getPartialCharge();
+        const auto coulombPreFactor = charge_i * charge_j;
+
+        auto [e, f] = _coulombPotential->calculate(distance, coulombPreFactor);
+        coulombEnergy = e;
+
+        f /= distance;
+
+        const auto forcexyz = f * dxyz;
+
+        const auto shiftForcexyz = forcexyz * txyz;
+
+        atom1.addForce(forcexyz);
+        atom2.addForce(-forcexyz);
+
+        atom1.addShiftForce(shiftForcexyz);
+    }
+
+    return coulombEnergy;
+}
+
 /***************************
  *                         *
  * standard setter methods *

@@ -73,6 +73,12 @@ namespace potential
             pq::Atom      &atom2
         ) const;
 
+        double calculateSingleCoulombInteraction(
+            const pq::Box &box,
+            pq::Atom      &atom1,
+            pq::Atom      &atom2
+        ) const;
+
         template <typename T>
         void makeCoulombPotential(T p);
 

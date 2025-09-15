@@ -32,6 +32,8 @@ using namespace potential;
 using namespace simulationBox;
 using namespace physicalData;
 
+using enum simulationBox::HybridZone;
+
 /**
  * @brief Destroy the Potential Brute Force:: Potential Brute Force object
  *
@@ -92,6 +94,39 @@ inline void PotentialBruteForce::calculateForces(
     physicalData.setNonCoulombEnergy(totalNonCoulombEnergy);
 
     stopTimingsSection("InterNonBonded");
+}
+
+/**
+ * @brief calculates Coulomb forces between core zone molecules and all
+ * MM molecules
+ *
+ * @param simBox simulation box containing molecules
+ * @param physicalData physical data to store energy results
+ * @param unused CellList parameter (not used in brute force approach)
+ */
+inline void PotentialBruteForce::calculateCoreToOuterForces(
+    SimulationBox &simBox,
+    PhysicalData  &physicalData,
+    CellList &
+)
+{
+    startTimingsSection("InterNonBondedCoreToOuter");
+
+    const auto box = simBox.getBoxPtr();
+
+    double totalCoulombEnergy = 0.0;
+
+    // inter molecular Coulomb forces
+    for (auto &mol1 : simBox.getMoleculesInsideZone(CORE))
+        for (auto &mol2 : simBox.getMMMolecules())
+            for (auto &atom1 : mol1.getAtoms())
+                for (auto &atom2 : mol2.getAtoms())
+                    totalCoulombEnergy +=
+                        calculateSingleCoulombInteraction(*box, *atom1, *atom2);
+
+    physicalData.addCoulombEnergy(totalCoulombEnergy);
+
+    stopTimingsSection("InterNonBondedCoreToOuter");
 }
 
 /**
