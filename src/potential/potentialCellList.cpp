@@ -218,12 +218,12 @@ void PotentialCellList::calculateLayerToOuterForces(
     double totalNonCoulombEnergy = 0.0;
 
     for (const auto &cell_i : cellList.getCells())
-        for (auto &mol1 : cell_i.getMMMolecules())
-            for (auto &mol2 : cell_i.getInactiveMolecules())
-            {
-                if (mol2->getHybridZone() == CORE)
-                    continue;
+        for (auto &mol1 : cell_i.getInactiveMolecules())
+        {
+            if (mol1->getHybridZone() == CORE)
+                continue;
 
+            for (auto &mol2 : cell_i.getMMMolecules())
                 for (auto &atom1 : mol1->getAtoms())
                     for (auto &atom2 : mol2->getAtoms())
                     {
@@ -239,7 +239,7 @@ void PotentialCellList::calculateLayerToOuterForces(
                         totalCoulombEnergy    += coulombEnergy;
                         totalNonCoulombEnergy += nonCoulombEnergy;
                     }
-            }
+        }
 
     for (const auto &cell1 : cellList.getCells())
         for (const auto *cell2 : cell1.getNeighbourCells())

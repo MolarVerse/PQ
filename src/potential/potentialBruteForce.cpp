@@ -150,12 +150,12 @@ void PotentialBruteForce::calculateLayerToOuterForces(
     double totalNonCoulombEnergy = 0.0;
 
     // inter molecular forces
-    for (auto &mol1 : simBox.getMMMolecules())
-        for (auto &mol2 : simBox.getInactiveMolecules())
-        {
-            if (mol2.getHybridZone() == CORE)
-                continue;
+    for (auto &mol1 : simBox.getInactiveMolecules())
+    {
+        if (mol1.getHybridZone() == CORE)
+            continue;
 
+        for (auto &mol2 : simBox.getMMMolecules())
             for (auto &atom1 : mol1.getAtoms())
                 for (auto &atom2 : mol2.getAtoms())
                 {
@@ -171,7 +171,7 @@ void PotentialBruteForce::calculateLayerToOuterForces(
                     totalCoulombEnergy    += coulombEnergy;
                     totalNonCoulombEnergy += nonCoulombEnergy;
                 }
-        }
+    }
     physicalData.addCoulombEnergy(totalCoulombEnergy);
     physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
 
