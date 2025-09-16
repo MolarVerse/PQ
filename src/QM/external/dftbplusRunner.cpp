@@ -210,7 +210,6 @@ void DFTBPlusRunner::execute()
     // set for next execution
     _isFirstExecution = false;
     _usePointCharges  = false;
-    HybridConfigurator::setMoleculeChangedZone(false);
 }
 
 /**

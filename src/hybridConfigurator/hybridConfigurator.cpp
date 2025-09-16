@@ -158,6 +158,8 @@ void HybridConfigurator::assignHybridZones(SimBox& simBox)
         HybridSettings::getSmoothingRegionThickness();
     const auto pointChargeThickness = HybridSettings::getPointChargeThickness();
 
+    _molChangedZone = false;
+
     // Helper lambda to set zone and track changes
     auto setZone = [this](auto& mol, HybridZone newZone)
     {
@@ -324,13 +326,3 @@ Vec3D HybridConfigurator::getInnerRegionCenter() const
  * @return bool molChangedZone
  */
 bool HybridConfigurator::getMoleculeChangedZone() { return _molChangedZone; }
-
-/**
- * @brief set whether a molecule changed its hybrid zone since last assignation
- *
- * @param changed
- */
-void HybridConfigurator::setMoleculeChangedZone(bool changed)
-{
-    _molChangedZone = changed;
-}
