@@ -101,11 +101,11 @@ void MDEngine::run()
 
     if (Settings::isQMActivated())
     {
-        dynamic_cast<QMMDEngine *>(this)->getQMRunner()->setTimerName(
+        dynamic_cast<QMCapableEngine *>(this)->getQMRunner()->setTimerName(
             "QM Engine"
         );
         _timer.addTimer(
-            dynamic_cast<QMMDEngine *>(this)->getQMRunner()->getTimer()
+            dynamic_cast<QMCapableEngine *>(this)->getQMRunner()->getTimer()
         );
     }
 
