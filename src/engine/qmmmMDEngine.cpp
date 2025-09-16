@@ -74,6 +74,9 @@ namespace engine
         using enum simulationBox::HybridZone;
         using std::ranges::distance;
 
+        auto coulombEnergy    = 0.0;
+        auto nonCoulombEnergy = 0.0;
+
         auto& atoms = _simulationBox->getAtoms();
 
         const auto nSmMol =
@@ -86,7 +89,7 @@ namespace engine
             // associated global smoothing factor for this configuration
             const auto inactiveSmMol = generateInactiveMoleculeSet(i, nSmMol);
 
-            const double globalSmoothingFactor =
+            const auto globalSmF =
                 calculateGlobalSmoothingFactor(inactiveSmMol);
 
             // STEP 2: Setup and run QM calculation and accumulate QM forces
@@ -106,7 +109,7 @@ namespace engine
             for (auto& atom : atoms)
             {
                 const auto force = atom->getForce();
-                atom->addForceInner(force * globalSmoothingFactor);
+                atom->addForceInner(force * globalSmF);
             }
             _simulationBox->resetForces();
 
@@ -124,9 +127,14 @@ namespace engine
             for (auto& atom : atoms)
             {
                 const auto force = atom->getForce();
-                atom->addForceOuter(force * globalSmoothingFactor);
+                atom->addForceOuter(force * globalSmF);
             }
             _simulationBox->resetForces();
+
+            // Scale and accumulate energies
+            coulombEnergy += _physicalData->getCoulombEnergy() * globalSmF;
+            nonCoulombEnergy +=
+                _physicalData->getNonCoulombEnergy() * globalSmF;
         }
 
         // STEP 4: Set forces to the accumulated hybrid forces for MD routine
@@ -136,6 +144,10 @@ namespace engine
             const auto outerForce = atom->getForceOuter();
             atom->setForce(innerForce + outerForce);
         }
+
+        // STEP 5: Set energies to the accumulated hybrid energies
+        _physicalData->setCoulombEnergy(coulombEnergy);
+        _physicalData->setNonCoulombEnergy(nonCoulombEnergy);
     }
 
     /**
