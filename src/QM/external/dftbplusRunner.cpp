@@ -171,6 +171,9 @@ void DFTBPlusRunner::writePointChargeFile(pq::SimBox &box)
             }
     }
     pcFile.close();
+
+    if (!_usePointCharges)
+        ::system(std::format("rm -f {}", fileName).c_str());
 }
 
 /**
