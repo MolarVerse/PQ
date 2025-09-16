@@ -746,12 +746,51 @@ void SimulationBox::updateOldForces()
 }
 
 /**
+ * @brief reset all forces of all atoms, i.e. forces, inner forces and outer
+ * forces
+ *
+ */
+void SimulationBox::resetAllForces()
+{
+    auto resetForces = [](const auto& atom)
+    {
+        atom->setForceToZero();
+        atom->setInnerForceToZero();
+        atom->setOuterForceToZero();
+    };
+
+    std::ranges::for_each(_atoms, resetForces);
+}
+
+/**
  * @brief reset forces of all atoms
  *
  */
 void SimulationBox::resetForces()
 {
     auto resetForces = [](const auto& atom) { atom->setForceToZero(); };
+
+    std::ranges::for_each(_atoms, resetForces);
+}
+
+/**
+ * @brief reset inner forces of all atoms
+ *
+ */
+void SimulationBox::resetForcesInner()
+{
+    auto resetForces = [](const auto& atom) { atom->setInnerForceToZero(); };
+
+    std::ranges::for_each(_atoms, resetForces);
+}
+
+/**
+ * @brief reset outer forces of all atoms
+ *
+ */
+void SimulationBox::resetForcesOuter()
+{
+    auto resetForces = [](const auto& atom) { atom->setOuterForceToZero(); };
 
     std::ranges::for_each(_atoms, resetForces);
 }

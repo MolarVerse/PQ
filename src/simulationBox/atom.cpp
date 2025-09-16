@@ -152,11 +152,20 @@ void Atom::addForce(
 }
 
 /**
- * @brief add a Vec3D to the current hybrid force of the atom
+ * @brief add a Vec3D to the current force of the atom calculated from the inner
+ * region method of the hybrid calculation
  *
- * @param forceHybrid
+ * @param force
  */
-void Atom::addForceHybrid(const Vec3D &force) { _forceHybrid += force; }
+void Atom::addForceInner(const Vec3D &force) { _forceInner += force; }
+
+/**
+ * @brief add a Vec3D to the current force of the atom calculated from the outer
+ * region method of the hybrid calculation
+ *
+ * @param force
+ */
+void Atom::addForceOuter(const Vec3D &force) { _forceOuter += force; }
 
 /**
  * @brief add a Vec3D to the current shift force of the atom
@@ -346,11 +355,20 @@ Vec3D Atom::getForce() const { return _force; }
 Vec3D Atom::getForceOld() const { return _forceOld; }
 
 /**
- * @brief return the hybrid force of the atom
+ * @brief return the force of the atom calculated from the inner region method
+ * of the hybrid calculation
  *
  * @return Vec3D
  */
-Vec3D Atom::getForceHybrid() const { return _forceHybrid; }
+Vec3D Atom::getForceInner() const { return _forceInner; }
+
+/**
+ * @brief return the force of the atom calculated from the outer region method
+ * of the hybrid calculation
+ *
+ * @return Vec3D
+ */
+Vec3D Atom::getForceOuter() const { return _forceOuter; }
 
 /**
  * @brief return the shift force of the atom
@@ -497,10 +515,18 @@ void Atom::setVelocity(const Vec3D &velocity) { _velocity = velocity; }
 void Atom::setForce(const Vec3D &force) { _force = force; }
 
 /**
- * @brief set the hybrid force of the atom
+ * @brief set the force of the atom calculated from the inner region method of
+ * the hybrid calculation
  * @param force
  */
-void Atom::setForceHybrid(const Vec3D &force) { _forceHybrid = force; }
+void Atom::setForceInner(const Vec3D &force) { _forceInner = force; }
+
+/**
+ * @brief set the force of the atom calculated from the outer region method of
+ * the hybrid calculation
+ * @param force
+ */
+void Atom::setForceOuter(const Vec3D &force) { _forceOuter = force; }
 
 /**
  * @brief set the shift force of the atom
@@ -513,6 +539,18 @@ void Atom::setShiftForce(const Vec3D &shiftForce) { _shiftForce = shiftForce; }
  * @brief set the force of the atom to zero
  */
 void Atom::setForceToZero() { _force = {0.0, 0.0, 0.0}; }
+
+/**
+ * @brief set the inner force of the atom calculated from the outer region
+ * method of the hybrid calculation to zero
+ */
+void Atom::setInnerForceToZero() { _forceInner = {0.0, 0.0, 0.0}; }
+
+/**
+ * @brief set the outer force of the atom calculated from the outer region
+ * method of the hybrid calculation to zero
+ */
+void Atom::setOuterForceToZero() { _forceOuter = {0.0, 0.0, 0.0}; }
 
 /**
  * @brief set the old position of the atom

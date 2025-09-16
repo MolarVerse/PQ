@@ -110,7 +110,10 @@ namespace simulationBox
         void updateOldVelocities();
         void updateOldForces();
 
+        void resetAllForces();
         void resetForces();
+        void resetForcesInner();
+        void resetForcesOuter();
 
         void setPartialChargesOfMoleculesFromMoleculeTypes();
         void initPositions(const double displacement);

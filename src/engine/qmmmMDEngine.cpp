@@ -65,10 +65,7 @@ namespace engine
      *
      * @details This function implements the exact smoothing algorithm by
      * iterating through all 2^n combinations of smoothing molecules being
-     * active/inactive in the inner (QM) region. For each combination:
-     * 1. Run QM calculation with selected smoothing molecules
-     * 2. Run MM calculation for the complementary set
-     * 3. Calculate global smoothing factor for weighted contribution
+     * active/inactive in the inner (QM) region.
      *
      * @note Computational cost: O(2^n) where n = number of smoothing molecules
      */
@@ -77,9 +74,7 @@ namespace engine
         using enum simulationBox::HybridZone;
         using std::ranges::distance;
 
-        // Initialize hybrid forces to zero once
         auto& atoms = _simulationBox->getAtoms();
-        for (auto& atom : atoms) atom->setForceHybrid(0.0);
 
         const auto nSmMol =
             distance(_simulationBox->getMoleculesInsideZone(SMOOTHING));
@@ -87,12 +82,14 @@ namespace engine
         // Loop over all combinations of smoothing molecules
         for (size_t i = 0; i < (1u << nSmMol); ++i)
         {
-            // Reset forces to zero before each QM/MM calculation
-            _simulationBox->resetForces();
-
+            // STEP 1: Generate set of inactive molecules and calculate
+            // associated global smoothing factor for this configuration
             const auto inactiveSmMol = generateInactiveMoleculeSet(i, nSmMol);
 
-            // STEP 1: Setup and run QM calculation
+            const double globalSmoothingFactor =
+                calculateGlobalSmoothingFactor(inactiveSmMol);
+
+            // STEP 2: Setup and run QM calculation and accumulate QM forces
             _configurator.activateMolecules(*_simulationBox);
             _configurator.deactivateOuterMolecules(*_simulationBox);
             _configurator.deactivateSmoothingMolecules(
@@ -106,7 +103,14 @@ namespace engine
                 simulationBox::Periodicity::NON_PERIODIC
             );
 
-            // STEP 2: Setup and run MM calculation
+            for (auto& atom : atoms)
+            {
+                const auto force = atom->getForce();
+                atom->addForceInner(force * globalSmoothingFactor);
+            }
+            _simulationBox->resetForces();
+
+            // STEP 3: Setup and run MM calculation and accumulate MM forces
             _configurator.toggleMoleculeActivation(*_simulationBox);
 
             _potential->calculateHybridForces(
@@ -114,21 +118,24 @@ namespace engine
                 *_physicalData,
                 *_cellList
             );
-            // TODO: https://github.com/MolarVerse/PQ/issues/195
 
-            // STEP 3: Calculate global smoothing factor and accumulate forces
-            const double globalSmoothingFactor =
-                calculateGlobalSmoothingFactor(inactiveSmMol);
+            // TODO: https://github.com/MolarVerse/PQ/issues/195
 
             for (auto& atom : atoms)
             {
                 const auto force = atom->getForce();
-                atom->addForceHybrid(force * globalSmoothingFactor);
+                atom->addForceOuter(force * globalSmoothingFactor);
             }
+            _simulationBox->resetForces();
         }
 
-        // Finally, set forces to the accumulated hybrid forces for MD routine
-        for (auto& atom : atoms) atom->setForce(atom->getForceHybrid());
+        // STEP 4: Set forces to the accumulated hybrid forces for MD routine
+        for (auto& atom : atoms)
+        {
+            const auto innerForce = atom->getForceInner();
+            const auto outerForce = atom->getForceOuter();
+            atom->setForce(innerForce + outerForce);
+        }
     }
 
     /**

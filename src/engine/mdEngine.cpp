@@ -177,7 +177,7 @@ void MDEngine::takeStepAfterForces()
 
 void MDEngine::calculateForcesWrapper()
 {
-    _simulationBox->resetForces();
+    _simulationBox->resetAllForces();
     calculateForces();
 }
 
