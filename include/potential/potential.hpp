@@ -64,7 +64,7 @@ namespace potential
             pq::CellList &
         ) = 0;
 
-        void calculateHybridForces(
+        void calculateQMMMForces(
             pq::SimBox &,
             pq::PhysicalData &,
             pq::CellList &

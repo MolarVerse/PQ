@@ -34,7 +34,7 @@ using namespace potential;
 using namespace simulationBox;
 using namespace physicalData;
 
-void Potential::calculateHybridForces(
+void Potential::calculateQMMMForces(
     SimulationBox &simBox,
     PhysicalData  &physicalData,
     CellList      &cellList

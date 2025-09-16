@@ -113,7 +113,7 @@ namespace engine
             // STEP 3: Setup and run MM calculation and accumulate MM forces
             _configurator.toggleMoleculeActivation(*_simulationBox);
 
-            _potential->calculateHybridForces(
+            _potential->calculateQMMMForces(
                 *_simulationBox,
                 *_physicalData,
                 *_cellList
