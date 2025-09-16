@@ -175,6 +175,12 @@ void MDEngine::takeStepAfterForces()
     }
 }
 
+void MDEngine::calculateForcesWrapper()
+{
+    _simulationBox->resetForces();
+    calculateForces();
+}
+
 /**
  * @brief Takes one step in the simulation.
  *
@@ -183,7 +189,7 @@ void MDEngine::takeStep()
 {
     takeStepBeforeForces();
 
-    calculateForces();
+    calculateForcesWrapper();
 
     takeStepAfterForces();
 }
