@@ -169,6 +169,19 @@ namespace engine
         _physicalData->setVirial(virial);
     }
 
+    /**
+     * @brief Apply hotspot smoothing algorithm for QM/MM boundary treatment
+     *
+     * @details This function implements the hotspot smoothing algorithm by
+     * running separate QM and MM calculations and scaling forces of smoothing
+     * molecules according to their individual smoothing factors. More
+     * computationally efficient than exact smoothing but less rigorous.
+     *
+     * @warning The energies yielded by this smoothing method are not correct
+     *
+     * @note Computational cost: O(1) - constant time regardless of number of
+     * smoothing molecules
+     */
     void QMMMMDEngine::applyHotspotSmoothing()
     {
         using enum HybridZone;
