@@ -50,22 +50,17 @@ void Virial::calculateVirial(SimulationBox &simBox, PhysicalData &data)
 
     _virial = {0.0};
 
-    for (auto &molecule : simBox.getMolecules())
+    for (auto &atom : simBox.getAtoms())
     {
-        const size_t numberOfAtoms = molecule.getNumberOfAtoms();
+        const auto forcexyz      = atom->getForce();
+        const auto shiftForcexyz = atom->getShiftForce();
+        const auto xyz           = atom->getPosition();
 
-        for (size_t i = 0; i < numberOfAtoms; ++i)
-        {
-            const auto forcexyz      = molecule.getAtomForce(i);
-            const auto shiftForcexyz = molecule.getAtomShiftForce(i);
-            const auto xyz           = molecule.getAtomPosition(i);
+        const auto tensor = tensorProduct(xyz, forcexyz);
 
-            const auto tensor = tensorProduct(xyz, forcexyz);
+        _virial += tensor + diagonalMatrix(shiftForcexyz);
 
-            _virial += tensor + diagonalMatrix(shiftForcexyz);
-
-            molecule.setAtomShiftForce(i, {0.0, 0.0, 0.0});
-        }
+        atom->setShiftForce(0.0);
     }
 
     data.setVirial(_virial);
