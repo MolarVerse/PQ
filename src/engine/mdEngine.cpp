@@ -169,10 +169,8 @@ void MDEngine::takeStepAfterForces()
 
     _thermostat->applyTemperatureRamping();
 
-    if (Settings::isQMActivated())
-    {
+    if (Settings::isQMOnlyJobtype())
         _physicalData->setNumberOfQMAtoms(_simulationBox->getNumberOfQMAtoms());
-    }
 }
 
 void MDEngine::calculateForcesWrapper()

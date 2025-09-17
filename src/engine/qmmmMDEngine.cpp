@@ -44,6 +44,9 @@ namespace engine
         _configurator.assignHybridZones(*_simulationBox);
         _configurator.calculateSmoothingFactors(*_simulationBox);
 
+        // Set number of QM atoms in physical data for output purposes
+        setNumberOfQMAtoms();
+
         const auto& smoothingMethod = HybridSettings::getSmoothingMethod();
         using enum SmoothingMethod;
 
@@ -211,6 +214,14 @@ namespace engine
         }
 
         return globalSmoothingFactor;
+    }
+
+    void QMMMMDEngine::setNumberOfQMAtoms()
+    {
+        _configurator.activateMolecules(*_simulationBox);
+        _configurator.deactivateOuterMolecules(*_simulationBox);
+        _physicalData->setNumberOfQMAtoms(_simulationBox->getNumberOfQMAtoms());
+        _configurator.activateMolecules(*_simulationBox);
     }
 
 }   // namespace engine

@@ -48,6 +48,8 @@ namespace engine
        private:
         void applyExactSmoothing();
 
+        void setNumberOfQMAtoms();
+
         [[nodiscard]] std::unordered_set<size_t> generateInactiveMoleculeSet(
             size_t bitPattern,
             size_t totalMolecules
