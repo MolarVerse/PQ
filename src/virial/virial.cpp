@@ -33,6 +33,7 @@ using namespace virial;
 using namespace simulationBox;
 using namespace physicalData;
 using namespace linearAlgebra;
+using namespace pq;
 
 /**
  * @brief calculate virial for general systems
@@ -70,6 +71,39 @@ void Virial::calculateVirial(SimulationBox &simBox, PhysicalData &data)
     data.setVirial(_virial);
 
     stopTimingsSection("Virial");
+}
+
+/**
+ * @brief calculate virial contribution from QM atoms only
+ *
+ * @details calculates the virial tensor for QM atoms using the tensor product
+ * of atomic positions and forces. This is used in hybrid QM/MM simulations to
+ * compute the QM contribution to the total virial tensor.
+ *
+ * @warning This function assumes the center of the QM region is at the origin
+ * of the box. As a result the shift forces from periodic images are taken to be
+ * zero and are not considered.
+ *
+ * @param simBox simulation box containing QM atoms
+ * @return tensor3D virial tensor from QM atoms
+ */
+tensor3D Virial::calculateQMVirial(SimulationBox &simBox)
+{
+    startTimingsSection("VirialQM");
+
+    tensor3D virial = {0.0};
+
+    for (const auto &atom : simBox.getQMAtoms())
+    {
+        const auto forcexyz = atom->getForce();
+        const auto xyz      = atom->getPosition();
+
+        virial += tensorProduct(xyz, forcexyz);
+    }
+
+    stopTimingsSection("VirialQM");
+
+    return virial;
 }
 
 /**

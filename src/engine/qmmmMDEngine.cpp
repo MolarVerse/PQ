@@ -25,8 +25,9 @@
 #include <format>   // for format
 #include <ranges>   // for distance
 
-#include "exceptions.hpp"       // for HybridMDEngineException
-#include "hybridSettings.hpp"   // for HybridSettings
+#include "exceptions.hpp"         // for HybridMDEngineException
+#include "hybridSettings.hpp"     // for HybridSettings
+#include "manostatSettings.hpp"   // for ManostatType
 
 using namespace settings;
 using namespace customException;
@@ -77,9 +78,10 @@ namespace engine
         using enum simulationBox::HybridZone;
         using std::ranges::distance;
 
-        auto qmEnergy         = 0.0;
-        auto coulombEnergy    = 0.0;
-        auto nonCoulombEnergy = 0.0;
+        auto         qmEnergy         = 0.0;
+        auto         coulombEnergy    = 0.0;
+        auto         nonCoulombEnergy = 0.0;
+        pq::tensor3D virial           = {0.0};
 
         auto& atoms = _simulationBox->getAtoms();
 
@@ -96,7 +98,8 @@ namespace engine
             const auto globalSmF =
                 calculateGlobalSmoothingFactor(inactiveSmMol);
 
-            // STEP 2: Setup and run QM calculation and accumulate QM forces
+            // STEP 2: Setup and run QM calculation, accumulate QM forces and QM
+            // virial contribution
             _configurator.activateMolecules(*_simulationBox);
             _configurator.deactivateOuterMolecules(*_simulationBox);
             _configurator.deactivateSmoothingMolecules(
@@ -110,6 +113,10 @@ namespace engine
                 simulationBox::Periodicity::NON_PERIODIC
             );
 
+            if (ManostatSettings::getManostatType() != ManostatType::NONE)
+                virial +=
+                    _virial->calculateQMVirial(*_simulationBox) * globalSmF;
+
             for (auto& atom : atoms)
             {
                 const auto force = atom->getForce();
@@ -117,7 +124,8 @@ namespace engine
             }
             _simulationBox->resetForces();
 
-            // STEP 3: Setup and run MM calculation and accumulate MM forces
+            // STEP 3: Setup and run MM calculation, accumulate MM forces and MM
+            // virial contribution
             _configurator.toggleMoleculeActivation(*_simulationBox);
 
             _potential->calculateQMMMForces(
@@ -134,6 +142,12 @@ namespace engine
                 atom->addForceOuter(force * globalSmF);
             }
             _simulationBox->resetForces();
+
+            if (ManostatSettings::getManostatType() != ManostatType::NONE)
+            {
+                _virial->calculateVirial(*_simulationBox, *_physicalData);
+                virial += _physicalData->getVirial() * globalSmF;
+            }
 
             // Scale and accumulate energies
             qmEnergy      += _physicalData->getQMEnergy() * globalSmF;
@@ -154,6 +168,7 @@ namespace engine
         _physicalData->setQMEnergy(qmEnergy);
         _physicalData->setCoulombEnergy(coulombEnergy);
         _physicalData->setNonCoulombEnergy(nonCoulombEnergy);
+        _physicalData->setVirial(virial);
     }
 
     /**
@@ -219,6 +234,14 @@ namespace engine
         return globalSmoothingFactor;
     }
 
+    /**
+     * @brief Set the number of QM atoms in physical data for output purposes
+     *
+     * @details This function temporarily configures the simulation box to count
+     * only QM atoms by activating all molecules and then deactivating outer
+     * molecules. The count is stored in physical data and then all molecules
+     * are reactivated to restore the original state.
+     */
     void QMMMMDEngine::setNumberOfQMAtoms()
     {
         _configurator.activateMolecules(*_simulationBox);
