@@ -34,6 +34,8 @@ using namespace customException;
 using namespace settings;
 using namespace simulationBox;
 
+using enum SmoothingMethod;
+
 namespace engine
 {
     /**
@@ -51,7 +53,6 @@ namespace engine
         setNumberOfQMAtoms();
 
         const auto& smoothingMethod = HybridSettings::getSmoothingMethod();
-        using enum SmoothingMethod;
 
         // TODO: https://github.com/MolarVerse/PQ/issues/198
         // TODO: https://github.com/MolarVerse/PQ/issues/202
