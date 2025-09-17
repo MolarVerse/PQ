@@ -234,27 +234,27 @@ void PhysicalData::calculateTemperature(SimulationBox &simulationBox)
 }
 
 /**
- * @brief calculate potential energy
+ * @brief calculate total energy
  *
  * @return double
  */
 double PhysicalData::getTotalEnergy() const
 {
-    auto potentialEnergy = 0.0;
+    auto totalEnergy = 0.0;
 
-    potentialEnergy += _bondEnergy;
-    potentialEnergy += _angleEnergy;
-    potentialEnergy += _dihedralEnergy;
-    potentialEnergy += _improperEnergy;
+    totalEnergy += _bondEnergy;
+    totalEnergy += _angleEnergy;
+    totalEnergy += _dihedralEnergy;
+    totalEnergy += _improperEnergy;
 
-    potentialEnergy += _coulombEnergy;      // intra + inter
-    potentialEnergy += _nonCoulombEnergy;   // intra + inter
+    totalEnergy += _coulombEnergy;      // intra + inter
+    totalEnergy += _nonCoulombEnergy;   // intra + inter
 
-    potentialEnergy += _kineticEnergy;
+    totalEnergy += _kineticEnergy;
 
-    potentialEnergy += _qmEnergy;
+    totalEnergy += _qmEnergy;
 
-    return potentialEnergy;
+    return totalEnergy;
 }
 
 /**
