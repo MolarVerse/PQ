@@ -29,6 +29,7 @@
 #include "hybridSettings.hpp"     // for HybridSettings
 #include "manostatSettings.hpp"   // for ManostatType
 
+using namespace pq;
 using namespace settings;
 using namespace customException;
 
@@ -78,10 +79,10 @@ namespace engine
         using enum simulationBox::HybridZone;
         using std::ranges::distance;
 
-        auto         qmEnergy         = 0.0;
-        auto         coulombEnergy    = 0.0;
-        auto         nonCoulombEnergy = 0.0;
-        pq::tensor3D virial           = {0.0};
+        auto     qmEnergy         = 0.0;
+        auto     coulombEnergy    = 0.0;
+        auto     nonCoulombEnergy = 0.0;
+        tensor3D virial           = {0.0};
 
         auto& atoms = _simulationBox->getAtoms();
 
