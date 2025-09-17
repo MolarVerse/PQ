@@ -85,6 +85,8 @@ namespace simulationBox
         void scaleVelocity(const double scaleFactor);
         void scaleVelocity(const pq::Vec3D &scaleFactor);
         void scaleVelocityOrthogonalSpace(const pq::tensor3D &, const Box &);
+        void scaleForce(const double scaleFactor);
+        void scaleForce(const pq::Vec3D &scaleFactor);
 
         /**************************
          * standard adder methods *

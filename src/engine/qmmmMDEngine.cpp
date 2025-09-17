@@ -30,8 +30,9 @@
 #include "manostatSettings.hpp"   // for ManostatType
 
 using namespace pq;
-using namespace settings;
 using namespace customException;
+using namespace settings;
+using namespace simulationBox;
 
 namespace engine
 {
@@ -54,9 +55,7 @@ namespace engine
 
         // TODO: https://github.com/MolarVerse/PQ/issues/198
         if (smoothingMethod == HOTSPOT)
-            throw HybridMDEngineException(
-                "Hotspot smoothing method not yet implemented"
-            );
+            applyHotspotSmoothing();
         else if (smoothingMethod == EXACT)
             applyExactSmoothing();
         else
@@ -76,7 +75,8 @@ namespace engine
      */
     void QMMMMDEngine::applyExactSmoothing()
     {
-        using enum simulationBox::HybridZone;
+        using enum HybridZone;
+        using enum Periodicity;
         using std::ranges::distance;
 
         auto     qmEnergy         = 0.0;
@@ -108,11 +108,7 @@ namespace engine
                 *_simulationBox
             );
 
-            _qmRunner->run(
-                *_simulationBox,
-                *_physicalData,
-                simulationBox::Periodicity::NON_PERIODIC
-            );
+            _qmRunner->run(*_simulationBox, *_physicalData, NON_PERIODIC);
 
             if (ManostatSettings::getManostatType() != ManostatType::NONE)
                 virial +=
@@ -172,6 +168,60 @@ namespace engine
         _physicalData->setVirial(virial);
     }
 
+    void QMMMMDEngine::applyHotspotSmoothing()
+    {
+        using enum HybridZone;
+        using enum Periodicity;
+
+        auto& atoms = _simulationBox->getAtoms();
+
+        // STEP 1: Setup and run QM calculation, scale forces of smoothing
+        // molecules
+        _configurator.activateMolecules(*_simulationBox);
+        _configurator.deactivateOuterMolecules(*_simulationBox);
+
+        _qmRunner->run(*_simulationBox, *_physicalData, NON_PERIODIC);
+
+        for (auto& mol : _simulationBox->getMoleculesInsideZone(SMOOTHING))
+        {
+            const auto smF = mol.getSmoothingFactor();
+            for (auto& atom : mol.getAtoms()) atom->scaleForce(smF);
+        }
+
+        for (auto& atom : atoms) atom->addForceInner(atom->getForce());
+        _simulationBox->resetForces();
+
+        // STEP 2: Setup and run MM calculation, scale forces of smoothing
+        // molecules
+        _configurator.toggleMoleculeActivation(*_simulationBox);
+
+        _potential
+            ->calculateQMMMForces(*_simulationBox, *_physicalData, *_cellList);
+
+        // TODO: https://github.com/MolarVerse/PQ/issues/195
+
+        for (auto& mol : _simulationBox->getMoleculesInsideZone(SMOOTHING))
+        {
+            const auto smF = mol.getSmoothingFactor();
+            for (auto& atom : mol.getAtoms()) atom->scaleForce(1 - smF);
+        }
+
+        for (auto& atom : atoms)
+        {
+            const auto force = atom->getForce();
+            atom->addForceOuter(force);
+        }
+        _simulationBox->resetForces();
+
+        // STEP 3: Set forces to the sum of individual hybrid forces
+        for (auto& atom : atoms)
+        {
+            const auto innerForce = atom->getForceInner();
+            const auto outerForce = atom->getForceOuter();
+            atom->setForce(innerForce + outerForce);
+        }
+    }
+
     /**
      * @brief Generate set of inactive smoothing molecule indices from bit
      * pattern
@@ -216,7 +266,7 @@ namespace engine
         const std::unordered_set<size_t>& inactiveForInnerCalcMolecules
     )
     {
-        using enum simulationBox::HybridZone;
+        using enum HybridZone;
 
         double globalSmoothingFactor = 1.0;
 

@@ -108,6 +108,20 @@ void Atom::scaleVelocityOrthogonalSpace(
         _velocity = box.toSimSpace(_velocity);
 }
 
+/**
+ * @brief scales the force of the atom
+ *
+ * @param scaleFactor double
+ */
+void Atom::scaleForce(const double scaleFactor) { _force *= scaleFactor; }
+
+/**
+ * @brief scales the force of the atom by a Vec3D elementwise
+ *
+ * @param scaleFactor Vec3D
+ */
+void Atom::scaleForce(const Vec3D &scaleFactor) { _force *= scaleFactor; }
+
 /**************************
  *                        *
  * standard adder methods *

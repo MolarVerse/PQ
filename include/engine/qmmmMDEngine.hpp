@@ -47,6 +47,7 @@ namespace engine
 
        private:
         void applyExactSmoothing();
+        void applyHotspotSmoothing();
 
         void setNumberOfQMAtoms();
 
