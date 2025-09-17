@@ -54,6 +54,7 @@ namespace engine
         using enum SmoothingMethod;
 
         // TODO: https://github.com/MolarVerse/PQ/issues/198
+        // TODO: https://github.com/MolarVerse/PQ/issues/202
         if (smoothingMethod == HOTSPOT)
             applyHotspotSmoothing();
         else if (smoothingMethod == EXACT)
