@@ -77,6 +77,7 @@ namespace engine
         using enum simulationBox::HybridZone;
         using std::ranges::distance;
 
+        auto qmEnergy         = 0.0;
         auto coulombEnergy    = 0.0;
         auto nonCoulombEnergy = 0.0;
 
@@ -135,6 +136,7 @@ namespace engine
             _simulationBox->resetForces();
 
             // Scale and accumulate energies
+            qmEnergy      += _physicalData->getQMEnergy() * globalSmF;
             coulombEnergy += _physicalData->getCoulombEnergy() * globalSmF;
             nonCoulombEnergy +=
                 _physicalData->getNonCoulombEnergy() * globalSmF;
@@ -149,6 +151,7 @@ namespace engine
         }
 
         // STEP 5: Set energies to the accumulated hybrid energies
+        _physicalData->setQMEnergy(qmEnergy);
         _physicalData->setCoulombEnergy(coulombEnergy);
         _physicalData->setNonCoulombEnergy(nonCoulombEnergy);
     }
