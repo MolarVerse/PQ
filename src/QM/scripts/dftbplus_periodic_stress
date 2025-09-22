@@ -49,8 +49,9 @@ my $pc_forces_found     = 0;   # pointcharge forces control flag
 my $stress_tensor_found = 0;   # stress-tensor control flag
 my $periodic            = 0;   # periodic system control flag
 
-my $n_pc     = 0;   # number of point charges read from the $pointcharges_file
-my $n_fields = 0;
+my $n_pc      = 0;     # number of point charges read from the $pointcharges_file
+my $n_fields  = 0;
+my $qm_energy = 0.0;   # store total qm energy from converged SCC SP for point charge case
 
 `cat coords > geom.gen`;
 
@@ -210,6 +211,7 @@ while (<DFTB_OUT>)
   # extract energy
   if (/^\s*Total energy:\s+(.*?)\s+H\s+.*?/)
   {
+    $qm_energy = $1;  # store energy for possible upcoming point charge calculation
     printf FORCES ("%20.9f\n", $1);
     $energy_found = 1;
   }
@@ -226,7 +228,7 @@ while (<DFTB_OUT>)
 
         printf FORCES ("%27.18e  %27.18e  %27.18e\n", -$line[0+$n_fields],  -$line[1+$n_fields], -$line[2+$n_fields]);
         $forces_found = 1;
-      }
+              }
     }
   }
 
@@ -398,6 +400,9 @@ if ($pointcharges == 1)
 
   open (FORCES, "> $qm_forces") or
     die "\n\n\t (-) $progname: Error opening file '$qm_forces'\n";
+
+  # Write the stored qm energy from the first SCC convergence run to maintain file format consistency
+  printf FORCES ("%20.9f\n", $qm_energy);
 
   while (<DFTB_OUT>) 
   {
