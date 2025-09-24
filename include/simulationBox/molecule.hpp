@@ -83,7 +83,10 @@ namespace simulationBox
         size_t      _moltype;
         size_t      _numberOfAtoms;
 
-        double _charge;   // set via molDescriptor not sum of partial charges!!!
+        // set via molDescriptor not sum of partial charges!!!
+        // 0 (neutral) as default when molecule has no moltype
+        int _charge = 0;
+
         double _molMass;
 
         pq::Vec3D _centerOfMass = pq::Vec3D(0.0, 0.0, 0.0);
@@ -161,7 +164,7 @@ namespace simulationBox
         [[nodiscard]] size_t getNumberOfAtoms() const;
         [[nodiscard]] size_t getDegreesOfFreedom() const;
 
-        [[nodiscard]] double getCharge() const;
+        [[nodiscard]] int    getCharge() const;
         [[nodiscard]] double getMolMass() const;
 
         [[nodiscard]] std::string getName() const;
@@ -184,7 +187,7 @@ namespace simulationBox
         void setNumberOfAtoms(const size_t numberOfAtoms);
         void setMoltype(const size_t moltype);
 
-        void setCharge(const double charge);
+        void setCharge(const int charge);
         void setMolMass(const double molMass);
         void setCenterOfMass(const pq::Vec3D &centerOfMass);
         void setHybridZone(const HybridZone hybridZone);

@@ -510,10 +510,10 @@ size_t Molecule::getDegreesOfFreedom() const { return 3 * getNumberOfAtoms(); }
 /**
  * @brief returns the charge of the molecule
  *
- * @return double
+ * @return int
  */
 
-double Molecule::getCharge() const { return _charge; }
+int Molecule::getCharge() const { return _charge; }
 
 /**
  * @brief returns the molecular mass of the molecule
@@ -617,7 +617,7 @@ void Molecule::setMoltype(const size_t moltype) { _moltype = moltype; }
  *
  * @param charge
  */
-void Molecule::setCharge(const double charge) { _charge = charge; }
+void Molecule::setCharge(const int charge) { _charge = charge; }
 
 /**
  * @brief set the molecular mass of the molecule

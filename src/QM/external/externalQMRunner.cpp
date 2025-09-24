@@ -76,7 +76,7 @@ void ExternalQMRunner::run(
     std::jthread timeoutThread{[this](const std::stop_token stopToken)
                                { throwAfterTimeout(stopToken); }};
 
-    execute();
+    execute(simBox);
 
     timeoutThread.request_stop();
 

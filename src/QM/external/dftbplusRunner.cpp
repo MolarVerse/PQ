@@ -180,7 +180,7 @@ void DFTBPlusRunner::writePointChargeFile(pq::SimBox &box)
  * @brief executes the qm script of the external program
  *
  */
-void DFTBPlusRunner::execute()
+void DFTBPlusRunner::execute(SimulationBox &box)
 {
     const auto scriptFile = _scriptPath + QMSettings::getQMScript();
 
@@ -188,6 +188,8 @@ void DFTBPlusRunner::execute()
         throw InputFileException(
             std::format("DFTB+ script file \"{}\" does not exist.", scriptFile)
         );
+
+    auto charge = box.calcActiveMolCharge();
 
     auto molChangedZone = HybridConfigurator::getMoleculeChangedZone();
 
@@ -201,8 +203,9 @@ void DFTBPlusRunner::execute()
     const auto usePointCharges = _usePointCharges ? 1 : 0;
 
     const auto command = std::format(
-        "{} 0 {} 0 {} {} {}",
+        "{} {} {} 0 {} {} {}",
         scriptFile,
+        charge,
         readChargesBin,
         usePointCharges,
         FileSettings::getDFTBFileName(),

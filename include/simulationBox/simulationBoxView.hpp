@@ -61,6 +61,9 @@ namespace simulationBox
         auto getMoleculesOutsideZone(const HybridZone) const;
         auto getMoleculesOutsideZone(const HybridZone);
 
+        auto getActiveMolecules();
+        auto getActiveMolecules() const;
+
         auto getInactiveMolecules();
         auto getInactiveMolecules() const;
     };
@@ -190,9 +193,8 @@ namespace simulationBox
     template <typename Derived>
     auto SimulationBoxView<Derived>::getMMMolecules() const
     {
-        return getMolecules() |
-               pqviews::filter([](const auto& mol)
-                               { return mol.isMMMolecule(); });
+        return getMolecules() | pqviews::filter([](const auto& mol)
+                                                { return mol.isMMMolecule(); });
     }
 
     /**
@@ -275,6 +277,38 @@ namespace simulationBox
         return getMolecules() |
                pqviews::filter([zone](const auto& mol)
                                { return mol.getHybridZone() != zone; });
+    }
+
+    /**
+     * @brief get all active molecules using range-based filtering
+     *
+     * @return a view/iterator of active molecules filtered from all
+     * molecules
+     *
+     * @details This function returns a range-based view that filters molecules
+     * from _molecules based on whether they are active.
+     */
+    template <typename Derived>
+    auto SimulationBoxView<Derived>::getActiveMolecules()
+    {
+        return getMolecules() |
+               pqviews::filter([](auto& mol) { return mol.isActive(); });
+    }
+
+    /**
+     * @brief get all active molecules using range-based filtering
+     *
+     * @return a view/iterator of active molecules filtered from all
+     * molecules
+     *
+     * @details This function returns a range-based view that filters molecules
+     * from _molecules based on whether they are active.
+     */
+    template <typename Derived>
+    auto SimulationBoxView<Derived>::getActiveMolecules() const
+    {
+        return getMolecules() |
+               pqviews::filter([](const auto& mol) { return mol.isActive(); });
     }
 
     /**

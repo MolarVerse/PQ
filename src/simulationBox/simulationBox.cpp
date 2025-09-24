@@ -680,6 +680,15 @@ Vec3D SimulationBox::calcShiftVector(const Vec3D& position) const
     return _box->calcShiftVector(position);
 }
 
+int SimulationBox::calcActiveMolCharge() const
+{
+    int charge = 0;
+
+    for (const auto& mol : getActiveMolecules()) charge += mol.getCharge();
+
+    return charge;
+}
+
 /**
  * @brief initialize positions of all atoms
  *

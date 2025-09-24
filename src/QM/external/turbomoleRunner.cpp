@@ -81,7 +81,7 @@ void TurbomoleRunner::writeCoordsFile(SimulationBox &box)
  * @brief executes the external qm program
  *
  */
-void TurbomoleRunner::execute()
+void TurbomoleRunner::execute(SimulationBox &box)
 {
     const auto scriptFile = _scriptPath + QMSettings::getQMScript();
 

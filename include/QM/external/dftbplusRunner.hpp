@@ -44,7 +44,7 @@ namespace QM
        public:
         void writeCoordsFile(pq::SimBox &) override;
         void writePointChargeFile(pq::SimBox &) override;
-        void execute() override;
+        void execute(pq::SimBox &) override;
         void readStressTensor(pq::Box &box, pq::PhysicalData &data) override;
     };
 }   // namespace QM
