@@ -203,7 +203,7 @@ void DFTBPlusRunner::execute(SimulationBox &box)
     const auto usePointCharges = _usePointCharges ? 1 : 0;
 
     const auto command = std::format(
-        "{} {} {} 0 {} {} {}",
+        "{} {} {} {} {} {}",
         scriptFile,
         charge,
         readChargesBin,
