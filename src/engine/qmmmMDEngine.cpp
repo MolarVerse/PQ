@@ -134,18 +134,18 @@ namespace engine
 
             // TODO: https://github.com/MolarVerse/PQ/issues/195
 
+            if (ManostatSettings::getManostatType() != ManostatType::NONE)
+            {
+                _virial->calculateVirial(*_simulationBox, *_physicalData);
+                virial += _physicalData->getVirial() * globalSmF;
+            }
+
             for (auto& atom : atoms)
             {
                 const auto force = atom->getForce();
                 atom->addForceOuter(force * globalSmF);
             }
             _simulationBox->resetForces();
-
-            if (ManostatSettings::getManostatType() != ManostatType::NONE)
-            {
-                _virial->calculateVirial(*_simulationBox, *_physicalData);
-                virial += _physicalData->getVirial() * globalSmF;
-            }
 
             // Scale and accumulate energies
             qmEnergy      += _physicalData->getQMEnergy() * globalSmF;
