@@ -54,7 +54,6 @@ namespace engine
 
         const auto& smoothingMethod = HybridSettings::getSmoothingMethod();
 
-        // TODO: https://github.com/MolarVerse/PQ/issues/198
         // TODO: https://github.com/MolarVerse/PQ/issues/202
         if (smoothingMethod == HOTSPOT)
             applyHotspotSmoothing();
