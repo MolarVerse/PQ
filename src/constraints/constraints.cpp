@@ -147,7 +147,7 @@ void Constraints::_applyShake(SimulationBox &simBox)
 void Constraints::_applyMShake(SimulationBox &simulationBox)
 {
     startTimingsSection("MShake - Shake");
-    _mShake.applyMShake(_shakeTolerance, simulationBox);
+    _mShake.applyMShake(_shakeTolerance, _shakeMaxIter, simulationBox);
     stopTimingsSection("MShake - Shake");
 }
 
