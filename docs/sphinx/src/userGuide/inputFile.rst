@@ -1161,7 +1161,7 @@ Rattle Tolerance
 
 With the ``rattle-tolerance`` keyword the user can specify the tolerance in ``s⁻¹kg⁻¹``, with which the velocities of the shaked bonds should converge.
 
-.. centered:: *default value* = 20 s⁻¹kg⁻¹
+.. centered:: *default value* = 1e4 s⁻¹kg⁻¹
 
 .. _rattleiterationKey:
 
