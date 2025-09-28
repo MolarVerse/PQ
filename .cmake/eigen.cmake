@@ -1,11 +1,13 @@
 message(CHECK_START "Fetching Eigen3")
 list(APPEND CMAKE_MESSAGE_INDENT "  ")
 
+set(EIGEN_TAG 3.4.1)
+
 include(FetchContent)
 FetchContent_Declare(
     Eigen
     GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
-    GIT_TAG master
+    GIT_TAG ${EIGEN_TAG}
     GIT_SHALLOW TRUE
     GIT_PROGRESS TRUE
 )
