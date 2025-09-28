@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 ### Bug Fixes
 
 - Eigen version finally fixed to 5.0.0 (latest aka master broken on 28.09.25)
+- Fix problems with convergence and indices in MShake
 
 <!-- insertion marker -->
 ## [v0.6.2](https://github.com/MolarVerse/PQ/releases/tag/v0.6.2) - 2025-08-22
