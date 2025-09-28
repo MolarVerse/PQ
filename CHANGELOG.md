@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## Next Release
 
+### Bug Fixes
+
+- Eigen version finally fixed to 3.4.1 (latest aka 5.0.0 broken 28.09.25)
+
 <!-- insertion marker -->
 ## [v0.6.2](https://github.com/MolarVerse/PQ/releases/tag/v0.6.2) - 2025-08-22
 
