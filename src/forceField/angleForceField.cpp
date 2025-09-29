@@ -50,7 +50,9 @@ AngleForceField::AngleForceField(
     const std::vector<size_t>     &atomIndices,
     const size_t                   type
 )
-    : Angle(molecules, atomIndices), _type(type){};
+    : Angle(molecules, atomIndices), _type(type)
+{
+}
 
 /**
  * @brief calculate energy and forces for a single alpha
@@ -68,6 +70,10 @@ void AngleForceField::calculateEnergyAndForces(
     NonCoulombPotential    &nonCoulombPotential
 )
 {
+    if (!_molecules[0]->isActive() && !_molecules[1]->isActive() &&
+        !_molecules[2]->isActive())
+        return;
+
     // central position of alpha
     const auto position1 = _molecules[0]->getAtomPosition(_atomIndices[0]);
     const auto position2 = _molecules[1]->getAtomPosition(_atomIndices[1]);

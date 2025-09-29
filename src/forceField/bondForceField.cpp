@@ -54,7 +54,9 @@ BondForceField::BondForceField(
     const size_t atomIndex2,
     const size_t type
 )
-    : Bond(molecule1, molecule2, atomIndex1, atomIndex2), _type(type){};
+    : Bond(molecule1, molecule2, atomIndex1, atomIndex2), _type(type)
+{
+}
 
 /**
  * @brief calculate energy and forces for a single bond
@@ -72,6 +74,9 @@ void BondForceField::calculateEnergyAndForces(
     NonCoulombPotential    &nonCoulombPotential
 )
 {
+    if (!_molecules[0]->isActive() && !_molecules[1]->isActive())
+        return;
+
     const auto position1 = _molecules[0]->getAtomPosition(_atomIndices[0]);
     const auto position2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
     auto       dPosition = position1 - position2;
@@ -127,7 +132,8 @@ void BondForceField::setIsLinker(const bool isLinker) { _isLinker = isLinker; }
  *
  * @param equilibriumBondLength
  */
-void BondForceField::setEquilibriumBondLength(const double equilibriumBondLength
+void BondForceField::setEquilibriumBondLength(
+    const double equilibriumBondLength
 )
 {
     _equilBondLength = equilibriumBondLength;

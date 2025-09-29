@@ -132,13 +132,22 @@ namespace engine
                 *_cellList
             );
 
-            // TODO: https://github.com/MolarVerse/PQ/issues/195
+            _intraNonBonded->calculate(*_simulationBox, *_physicalData);
 
             if (ManostatSettings::getManostatType() != ManostatType::NONE)
             {
                 _virial->calculateVirial(*_simulationBox, *_physicalData);
                 virial += _physicalData->getVirial() * globalSmF;
             }
+
+            _physicalData->setVirial({0.0});
+
+            _forceField->calculateBondedInteractions(
+                *_simulationBox,
+                *_physicalData
+            );
+
+            virial += _physicalData->getVirial() * globalSmF;
 
             for (auto& atom : atoms)
             {
@@ -212,7 +221,12 @@ namespace engine
         _potential
             ->calculateQMMMForces(*_simulationBox, *_physicalData, *_cellList);
 
-        // TODO: https://github.com/MolarVerse/PQ/issues/195
+        _intraNonBonded->calculate(*_simulationBox, *_physicalData);
+
+        _forceField->calculateBondedInteractions(
+            *_simulationBox,
+            *_physicalData
+        );
 
         for (auto& mol : _simulationBox->getMoleculesInsideZone(SMOOTHING))
         {
