@@ -381,8 +381,7 @@ void SimulationBoxSetup::checkRcCutoff()
         throw InputFileException(
             std::format(
                 "Rc cutoff is larger than half of the minimal box dimension of "
-                "{} "
-                "Angstrom.",
+                "{} Angstrom.",
                 minDim
             )
         );
