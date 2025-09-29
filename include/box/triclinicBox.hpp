@@ -83,6 +83,9 @@ namespace simulationBox
         [[nodiscard]] pq::tensor3D getBoxMatrix() const override;
         [[nodiscard]] pq::tensor3D getBoxMatrix(Periodicity per) const override;
         [[nodiscard]] pq::tensor3D getTransformationMatrix() const;
+        [[nodiscard]] pq::Vec3D    wrapPositionIntoBox(
+               const pq::Vec3D &
+           ) const override;
     };
 
 }   // namespace simulationBox

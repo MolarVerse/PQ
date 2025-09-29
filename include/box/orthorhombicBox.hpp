@@ -43,13 +43,18 @@ namespace simulationBox
         void applyPBC(pq::Vec3D &position) const override;
         void scaleBox(const pq::tensor3D &scalingTensor) override;
 
-        [[nodiscard]] pq::Vec3D calcShiftVector(const pq::Vec3D &)
-            const override;
+        [[nodiscard]] pq::Vec3D calcShiftVector(
+            const pq::Vec3D &
+        ) const override;
 
         [[nodiscard]] pq::Vec3D calcBoxDimFromDensity(
             const double totalMass,
             const double density
         );
+
+        [[nodiscard]] pq::Vec3D wrapPositionIntoBox(
+            const pq::Vec3D &pos
+        ) const override;
     };
 
 }   // namespace simulationBox

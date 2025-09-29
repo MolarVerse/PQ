@@ -22,8 +22,8 @@
                         Stefan Seiwald
                         Benjamin Reitmair
 
-         Version:       v0.3.9.2-f05d52f3
-         Compile date:  May 28 2024 22:02:55
+         Version:       v0.6.2-48c9c6bb
+         Compile date:  Aug 29 2025 14:42:18
 
 INFO:    Reading Moldescriptor File "moldescriptor.dat"
 
@@ -35,11 +35,16 @@ INFO:    Reading Parameter File "qmcfc.param"
 
 INFO:    Reading Intra Non-Bonded File "intra_nonbonded.dat"
 
+INFO:    Setup of Random Number Generator
+
+         Using system-generated random seed
+
 INFO:    Setup of Reset Kinetics
 
          reset temperature:      first     0 steps, every    -1 steps
          reset momentum:         first     0 steps, every    -1 steps
          reset angular momentum: first     0 steps, every    -1 steps
+         reset forces:           every    -1 steps   
 
 INFO:    Setup of simulation box
 
@@ -61,21 +66,53 @@ INFO:    Setup of simulation box
 INFO:    Setup of thermostat
 
          No thermostat selected
-
-INFO:    Setup of manostat
+INFO:    Setup of Manostat
 
          No manostat selected
 
 INFO:    Setup of MM potential
 
-INFO:    Setup of intra non-bonded interactions
+         Coulomb long range type: wolf
 
-INFO:    Setup of force field
+         Coulomb radius cut-off: 20
+         Wolf parameter:         0.25
 
-INFO:    Setup of constraints (e.g. SHAKE, RATTLE)
+         Non-coulombic potential: ForceField
+         Total Global VDW types:  14
 
-         constraint DOF:       7303
-         simulation DOF:      14840
+INFO:    Setup of Intra Non-Bonded Interactions
+
+INFO:    Setup of Force Field
+
+         Bonds:     80
+         Angles:    249
+         Dihedrals: 457
+         Impropers: 36
+
+         Bond Types:     42
+         Angle Types:    86
+         Dihedral Types: 60
+         Improper Types: 4
+
+INFO:    Setup of Constraints
+
+         SHAKE:   enabled
+         M-SHAKE: disabled
+
+         Number of SHAKE bonds:       7303
+         Number of M-SHAKE types:     0
+         Number of M-SHAKE molecules: 0
+
+         SHAKE Tolerance:  0.001
+         RATTLE Tolerance: 1e+09
+
+         SHAKE Max Iter:  20
+         RATTLE Max Iter: 20
+
+         SHAKE DOF:   7303
+         M-SHAKE DOF: 0
+         Total DOF:   14840
+
 
 ************************ STARTING SIMULATION ****************************
 
@@ -83,7 +120,7 @@ INFO:    Setup of constraints (e.g. SHAKE, RATTLE)
 INFO:    Initial momentum = 0.00000e+00 Å*amu/fs
 
 
-         Elapsed time = 16.28500 s
+         Elapsed time = 22.83500 s
 
 
 INFO:    For citation please refer to the ".ref" file.
