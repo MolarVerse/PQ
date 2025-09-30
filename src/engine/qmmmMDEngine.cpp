@@ -221,6 +221,19 @@ namespace engine
         _potential
             ->calculateQMMMForces(*_simulationBox, *_physicalData, *_cellList);
 
+        for (auto& mol : _simulationBox->getMoleculesInsideZone(SMOOTHING))
+        {
+            const auto smF = mol.getSmoothingFactor();
+            for (auto& atom : mol.getAtoms()) atom->scaleForce(smF);
+        }
+
+        for (auto& atom : atoms)
+        {
+            const auto force = atom->getForce();
+            atom->addForceOuter(force);
+        }
+        _simulationBox->resetForces();
+
         _intraNonBonded->calculate(*_simulationBox, *_physicalData);
 
         _forceField->calculateBondedInteractions(
@@ -238,6 +251,24 @@ namespace engine
         {
             const auto force = atom->getForce();
             atom->addForceOuter(force);
+        }
+        _simulationBox->resetForces();
+
+        _potential->calculateHotspotSmoothingMMForces(
+            *_simulationBox,
+            *_physicalData,
+            *_cellList
+        );
+
+        for (auto& mol : _simulationBox->getMoleculesInsideZone(SMOOTHING))
+        {
+            const auto smF = mol.getSmoothingFactor();
+
+            for (auto& atom : mol.getAtoms())
+            {
+                const auto force = atom->getForce();
+                atom->addForceOuter(force * (1 - smF));
+            }
         }
         _simulationBox->resetForces();
 

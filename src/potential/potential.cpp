@@ -34,7 +34,7 @@ using namespace potential;
 using namespace simulationBox;
 using namespace physicalData;
 
-using enum ChargesType;
+using enum ChargeType;
 
 void Potential::calculateQMMMForces(
     SimulationBox &simBox,
@@ -56,16 +56,18 @@ void Potential::calculateQMMMForces(
  * @param mol2
  * @param atom1
  * @param atom2
- * @param chargesType   whether to use QM charges or MM charges for QM atoms
+ * @param chargeType1 whether to use the QM charge or MM charge for atom1
+ * @param chargeType2 whether to use the QM charge or MM charge for atom2
  * @return std::pair<double, double>
  */
 std::pair<double, double> Potential::calculateSingleInteraction(
-    const Box  &box,
-    Molecule   &mol1,
-    Molecule   &mol2,
-    Atom       &atom1,
-    Atom       &atom2,
-    ChargesType chargesType
+    const Box &box,
+    Molecule  &mol1,
+    Molecule  &mol2,
+    Atom      &atom1,
+    Atom      &atom2,
+    ChargeType chargeType1,
+    ChargeType chargeType2
 ) const
 {
     auto coulombEnergy    = 0.0;
@@ -107,12 +109,12 @@ std::pair<double, double> Potential::calculateSingleInteraction(
         auto charge_i = 0.0;
         auto charge_j = 0.0;
 
-        if (atom1.getQMCharge().has_value() && chargesType == QM_CHARGES)
+        if (atom1.getQMCharge().has_value() && chargeType1 == QM_CHARGE)
             charge_i = atom1.getQMCharge().value();
         else
             charge_i = atom1.getPartialCharge();
 
-        if (atom2.getQMCharge().has_value() && chargesType == QM_CHARGES)
+        if (atom2.getQMCharge().has_value() && chargeType2 == QM_CHARGE)
             charge_j = atom2.getQMCharge().value();
         else
             charge_j = atom2.getPartialCharge();
@@ -154,14 +156,16 @@ std::pair<double, double> Potential::calculateSingleInteraction(
  * @param box simulation box for periodic boundary conditions
  * @param atom1 first atom
  * @param atom2 second atom
- * @param chargesType whether to use QM charges or MM charges for QM atoms
+ * @param chargeType1 whether to use the QM charge or MM charge for atom1
+ * @param chargeType2 whether to use the QM charge or MM charge for atom2
  * @return double Coulomb energy
  */
 double Potential::calculateSingleCoulombInteraction(
-    const Box  &box,
-    Atom       &atom1,
-    Atom       &atom2,
-    ChargesType chargesType
+    const Box &box,
+    Atom      &atom1,
+    Atom      &atom2,
+    ChargeType chargeType1,
+    ChargeType chargeType2
 ) const
 {
     auto coulombEnergy = 0.0;
@@ -185,12 +189,12 @@ double Potential::calculateSingleCoulombInteraction(
         auto charge_i = 0.0;
         auto charge_j = 0.0;
 
-        if (atom1.getQMCharge().has_value() && chargesType == QM_CHARGES)
+        if (atom1.getQMCharge().has_value() && chargeType1 == QM_CHARGE)
             charge_i = atom1.getQMCharge().value();
         else
             charge_i = atom1.getPartialCharge();
 
-        if (atom2.getQMCharge().has_value() && chargesType == QM_CHARGES)
+        if (atom2.getQMCharge().has_value() && chargeType2 == QM_CHARGE)
             charge_j = atom2.getQMCharge().value();
         else
             charge_j = atom2.getPartialCharge();
@@ -213,6 +217,95 @@ double Potential::calculateSingleCoulombInteraction(
     }
 
     return coulombEnergy;
+}
+
+std::pair<double, double> Potential::calculateSingleInteractionOneWay(
+    const Box &box,
+    Molecule  &mol1,
+    Molecule  &mol2,
+    Atom      &atom1,
+    Atom      &atom2,
+    ChargeType chargeType1,
+    ChargeType chargeType2
+) const
+{
+    auto coulombEnergy    = 0.0;
+    auto nonCoulombEnergy = 0.0;
+
+    const auto xyz_i = atom1.getPosition();
+    const auto xyz_j = atom2.getPosition();
+
+    auto dxyz = xyz_i - xyz_j;
+
+    const auto txyz = -box.calcShiftVector(dxyz);
+
+    dxyz += txyz;
+
+    const double distanceSquared = normSquared(dxyz);
+
+    if (const auto RcCutOff = CoulombPotential::getCoulombRadiusCutOff();
+        distanceSquared < RcCutOff * RcCutOff)
+    {
+        const double distance   = ::sqrt(distanceSquared);
+        const auto   atomType_i = atom1.getAtomType();
+        const auto   atomType_j = atom2.getAtomType();
+
+        const auto globalVdwType_i = atom1.getInternalGlobalVDWType();
+        const auto globalVdwType_j = atom2.getInternalGlobalVDWType();
+
+        const auto moltype_i = mol1.getMoltype();
+        const auto moltype_j = mol2.getMoltype();
+
+        const auto combinedIdx = {
+            moltype_i,
+            moltype_j,
+            atomType_i,
+            atomType_j,
+            globalVdwType_i,
+            globalVdwType_j
+        };
+
+        auto charge_i = 0.0;
+        auto charge_j = 0.0;
+
+        if (atom1.getQMCharge().has_value() && chargeType1 == QM_CHARGE)
+            charge_i = atom1.getQMCharge().value();
+        else
+            charge_i = atom1.getPartialCharge();
+
+        if (atom2.getQMCharge().has_value() && chargeType2 == QM_CHARGE)
+            charge_j = atom2.getQMCharge().value();
+        else
+            charge_j = atom2.getPartialCharge();
+
+        const auto coulombPreFactor = charge_i * charge_j;
+
+        auto [e, f] = _coulombPotential->calculate(distance, coulombPreFactor);
+        coulombEnergy = e;
+
+        const auto nonCoulPair = _nonCoulombPot->getNonCoulPair(combinedIdx);
+        const auto rncCutOff   = nonCoulPair->getRadialCutOff();
+
+        if (distance < rncCutOff)
+        {
+            const auto &[nonCoulE, nonCoulF] = nonCoulPair->calculate(distance);
+            nonCoulombEnergy                 = nonCoulE;
+
+            f += nonCoulF;
+        }
+
+        f /= distance;
+
+        const auto forcexyz = f * dxyz;
+
+        const auto shiftForcexyz = forcexyz * txyz;
+
+        atom1.addForce(forcexyz);
+
+        atom1.addShiftForce(shiftForcexyz);
+    }
+
+    return {coulombEnergy, nonCoulombEnergy};
 }
 
 /***************************

@@ -32,7 +32,7 @@ using namespace potential;
 using namespace simulationBox;
 using namespace physicalData;
 
-using enum ChargesType;
+using enum ChargeType;
 using enum simulationBox::HybridZone;
 
 /**
@@ -82,7 +82,8 @@ void PotentialBruteForce::calculateForces(
                             mol2,
                             *atom1,
                             *atom2,
-                            MM_CHARGES
+                            MM_CHARGE,
+                            MM_CHARGE
                         );
 
                     totalCoulombEnergy    += coulombEnergy;
@@ -127,7 +128,8 @@ void PotentialBruteForce::calculateCoreToOuterForces(
                         *box,
                         *atom1,
                         *atom2,
-                        QM_CHARGES
+                        QM_CHARGE,
+                        MM_CHARGE
                     );
 
     physicalData.addCoulombEnergy(totalCoulombEnergy);
@@ -172,7 +174,8 @@ void PotentialBruteForce::calculateLayerToOuterForces(
                             mol2,
                             *atom1,
                             *atom2,
-                            QM_CHARGES
+                            QM_CHARGE,
+                            MM_CHARGE
                         );
 
                     totalCoulombEnergy    += coulombEnergy;
@@ -183,6 +186,83 @@ void PotentialBruteForce::calculateLayerToOuterForces(
     physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
 
     stopTimingsSection("InterNonBondedLayerToOuter");
+}
+
+void PotentialBruteForce::calculateHotspotSmoothingMMForces(
+    SimulationBox &simBox,
+    PhysicalData  &physicalData,
+    CellList &
+)
+{
+    startTimingsSection("InterNonBondedSmoothingMM");
+
+    const auto box = simBox.getBoxPtr();
+
+    double totalCoulombEnergy    = 0.0;
+    double totalNonCoulombEnergy = 0.0;
+
+    // inter molecular forces
+    for (auto &mol1 : simBox.getMoleculesInsideZone(SMOOTHING))
+        for (auto &mol2 : simBox.getMoleculesOutsideZone(SMOOTHING))
+            for (auto &atom1 : mol1.getAtoms())
+                for (auto &atom2 : mol2.getAtoms())
+                {
+                    const auto [coulombEnergy, nonCoulombEnergy] =
+                        calculateSingleInteraction(
+                            *box,
+                            mol1,
+                            mol2,
+                            *atom1,
+                            *atom2,
+                            MM_CHARGE,
+                            QM_CHARGE
+                        );
+
+                    totalCoulombEnergy    += coulombEnergy;
+                    totalNonCoulombEnergy += nonCoulombEnergy;
+                }
+
+    physicalData.addCoulombEnergy(totalCoulombEnergy);
+    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
+
+    size_t i = 0;
+    for (auto &mol1 : simBox.getMoleculesInsideZone(SMOOTHING))
+    {
+        size_t j = 0;
+        for (auto &mol2 : simBox.getMoleculesInsideZone(SMOOTHING))
+        {
+            if (i == j)
+            {
+                ++j;
+                continue;
+            }
+
+            for (auto &atom1 : mol1.getAtoms())
+                for (auto &atom2 : mol2.getAtoms())
+                {
+                    const auto [coulombEnergy, nonCoulombEnergy] =
+                        calculateSingleInteractionOneWay(
+                            *box,
+                            mol1,
+                            mol2,
+                            *atom1,
+                            *atom2,
+                            MM_CHARGE,
+                            QM_CHARGE
+                        );
+
+                    totalCoulombEnergy    += coulombEnergy;
+                    totalNonCoulombEnergy += nonCoulombEnergy;
+                }
+            ++j;
+        }
+        ++i;
+    }
+
+    physicalData.addCoulombEnergy(totalCoulombEnergy);
+    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
+
+    stopTimingsSection("InterNonBondedSmoothingMM");
 }
 
 /**

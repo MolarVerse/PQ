@@ -58,6 +58,12 @@ namespace potential
             pq::CellList &
         ) override;
 
+        void calculateHotspotSmoothingMMForces(
+            pq::SimBox &,
+            pq::PhysicalData &,
+            pq::CellList &
+        ) override;
+
         pq::SharedPotential clone() const override;
     };
 

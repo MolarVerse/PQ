@@ -51,6 +51,9 @@ namespace simulationBox
         auto getMoleculesInsideZone(const HybridZone) const;
         auto getMoleculesInsideZone(const HybridZone);
 
+        auto getMoleculesOutsideZone(const HybridZone) const;
+        auto getMoleculesOutsideZone(const HybridZone);
+
         auto getInactiveMolecules();
         auto getInactiveMolecules() const;
     };
@@ -152,6 +155,43 @@ namespace simulationBox
         return getMolecules() |
                pqviews::filter([zone](const auto& mol)
                                { return mol->getHybridZone() == zone; });
+    }
+
+    /**
+     * @brief get all molecules outside the specified hybrid zone using
+     * range-based filtering
+     *
+     * @return a view/iterator of molecules outside the specified zone filtered
+     * from all molecules
+     *
+     * @details This function returns a range-based view that filters molecules
+     * from _molecules based on whether they are outside the specified
+     * HybridZone
+     */
+    template <typename Derived>
+    auto CellView<Derived>::getMoleculesOutsideZone(const HybridZone zone)
+    {
+        return getMolecules() |
+               pqviews::filter([zone](auto& mol)
+                               { return mol->getHybridZone() != zone; });
+    }
+
+    /**
+     * @brief get all molecules outside the specified hybrid zone using range-based
+     * filtering
+     *
+     * @return a view/iterator of molecules outside the specified zone filtered from
+     * all molecules
+     *
+     * @details This function returns a range-based view that filters molecules
+     * from _molecules based on whether they are outside the specified HybridZone
+     */
+    template <typename Derived>
+    auto CellView<Derived>::getMoleculesOutsideZone(const HybridZone zone) const
+    {
+        return getMolecules() |
+               pqviews::filter([zone](const auto& mol)
+                               { return mol->getHybridZone() != zone; });
     }
 
     /**

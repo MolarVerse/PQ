@@ -35,7 +35,7 @@ using namespace potential;
 using namespace simulationBox;
 using namespace physicalData;
 
-using enum ChargesType;
+using enum ChargeType;
 using enum simulationBox::HybridZone;
 
 /**
@@ -94,7 +94,8 @@ void PotentialCellList::calculateForces(
                                 *mol2,
                                 *atom1,
                                 *atom2,
-                                MM_CHARGES
+                                MM_CHARGE,
+                                MM_CHARGE
                             );
 
                         totalCoulombEnergy    += coulombEnergy;
@@ -125,7 +126,8 @@ void PotentialCellList::calculateForces(
                                     *mol2,
                                     *atom1,
                                     *atom2,
-                                    MM_CHARGES
+                                    MM_CHARGE,
+                                    MM_CHARGE
                                 );
 
                             totalCoulombEnergy    += coulombEnergy;
@@ -173,7 +175,8 @@ void PotentialCellList::calculateCoreToOuterForces(
                             *box,
                             *atom1,
                             *atom2,
-                            QM_CHARGES
+                            QM_CHARGE,
+                            MM_CHARGE
                         );
 
     for (const auto &cell1 : cellList.getCells())
@@ -187,7 +190,8 @@ void PotentialCellList::calculateCoreToOuterForces(
                                     *box,
                                     *atom1,
                                     *atom2,
-                                    QM_CHARGES
+                                    QM_CHARGE,
+                                    MM_CHARGE
                                 );
 
     physicalData.addCoulombEnergy(totalCoulombEnergy);
@@ -239,7 +243,8 @@ void PotentialCellList::calculateLayerToOuterForces(
                                 *mol2,
                                 *atom1,
                                 *atom2,
-                                QM_CHARGES
+                                QM_CHARGE,
+                                MM_CHARGE
                             );
 
                         totalCoulombEnergy    += coulombEnergy;
@@ -265,7 +270,8 @@ void PotentialCellList::calculateLayerToOuterForces(
                                     *mol2,
                                     *atom1,
                                     *atom2,
-                                    QM_CHARGES
+                                    QM_CHARGE,
+                                    MM_CHARGE
                                 );
 
                             totalCoulombEnergy    += coulombEnergy;
@@ -277,6 +283,141 @@ void PotentialCellList::calculateLayerToOuterForces(
     physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
 
     stopTimingsSection("InterNonBondedLayerToOuter");
+}
+
+void PotentialCellList::calculateHotspotSmoothingMMForces(
+    SimulationBox &simBox,
+    PhysicalData  &physicalData,
+    CellList      &cellList
+)
+{
+    startTimingsSection("InterNonBondedSmoothingMM");
+
+    const auto box = simBox.getBoxPtr();
+
+    double totalCoulombEnergy    = 0.0;
+    double totalNonCoulombEnergy = 0.0;
+
+    for (const auto &cell_i : cellList.getCells())
+        for (auto &mol1 : cell_i.getMoleculesInsideZone(SMOOTHING))
+            for (auto &mol2 : cell_i.getMoleculesOutsideZone(SMOOTHING))
+                for (auto &atom1 : mol1->getAtoms())
+                    for (auto &atom2 : mol2->getAtoms())
+                    {
+                        const auto [coulombEnergy, nonCoulombEnergy] =
+                            calculateSingleInteraction(
+                                *box,
+                                *mol1,
+                                *mol2,
+                                *atom1,
+                                *atom2,
+                                MM_CHARGE,
+                                QM_CHARGE
+                            );
+
+                        totalCoulombEnergy    += coulombEnergy;
+                        totalNonCoulombEnergy += nonCoulombEnergy;
+                    }
+
+    for (const auto &cell1 : cellList.getCells())
+        for (const auto *cell2 : cell1.getNeighbourCells())
+            for (auto &mol1 : cell1.getMoleculesInsideZone(SMOOTHING))
+                for (auto &mol2 : cell2->getMoleculesOutsideZone(SMOOTHING))
+                    for (auto &atom1 : mol1->getAtoms())
+                        for (auto &atom2 : mol2->getAtoms())
+                        {
+                            const auto [coulombEnergy, nonCoulombEnergy] =
+                                calculateSingleInteraction(
+                                    *box,
+                                    *mol1,
+                                    *mol2,
+                                    *atom1,
+                                    *atom2,
+                                    MM_CHARGE,
+                                    QM_CHARGE
+                                );
+
+                            totalCoulombEnergy    += coulombEnergy;
+                            totalNonCoulombEnergy += nonCoulombEnergy;
+                        }
+
+    for (const auto &cell_i : cellList.getCells())
+    {
+        size_t i = 0;
+        for (auto &mol1 : cell_i.getMoleculesInsideZone(SMOOTHING))
+        {
+            size_t j = 0;
+            for (auto &mol2 : cell_i.getMoleculesInsideZone(SMOOTHING))
+            {
+                if (i == j)
+                {
+                    ++j;
+                    continue;
+                }
+                for (auto &atom1 : mol1->getAtoms())
+                    for (auto &atom2 : mol2->getAtoms())
+                    {
+                        const auto [coulombEnergy, nonCoulombEnergy] =
+                            calculateSingleInteractionOneWay(
+                                *box,
+                                *mol1,
+                                *mol2,
+                                *atom1,
+                                *atom2,
+                                MM_CHARGE,
+                                QM_CHARGE
+                            );
+
+                        totalCoulombEnergy    += coulombEnergy;
+                        totalNonCoulombEnergy += nonCoulombEnergy;
+                    }
+                ++j;
+            }
+            ++i;
+        }
+    }
+
+    for (const auto &cell1 : cellList.getCells())
+        for (const auto *cell2 : cell1.getNeighbourCells())
+        {
+            size_t i = 0;
+            for (auto &mol1 : cell1.getMoleculesInsideZone(SMOOTHING))
+            {
+                size_t j = 0;
+                for (auto &mol2 : cell2->getMoleculesInsideZone(SMOOTHING))
+                {
+                    if (i == j)
+                    {
+                        ++j;
+                        continue;
+                    }
+                    for (auto &atom1 : mol1->getAtoms())
+                        for (auto &atom2 : mol2->getAtoms())
+                        {
+                            const auto [coulombEnergy, nonCoulombEnergy] =
+                                calculateSingleInteractionOneWay(
+                                    *box,
+                                    *mol1,
+                                    *mol2,
+                                    *atom1,
+                                    *atom2,
+                                    MM_CHARGE,
+                                    QM_CHARGE
+                                );
+
+                            totalCoulombEnergy    += coulombEnergy;
+                            totalNonCoulombEnergy += nonCoulombEnergy;
+                        }
+                    ++j;
+                }
+                ++i;
+            }
+        }
+
+    physicalData.addCoulombEnergy(totalCoulombEnergy);
+    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
+
+    stopTimingsSection("InterNonBondedSmoothingMM");
 }
 
 /**

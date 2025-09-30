@@ -35,10 +35,10 @@
 
 namespace potential
 {
-    enum class ChargesType : size_t
+    enum class ChargeType : size_t
     {
-        QM_CHARGES,
-        MM_CHARGES
+        QM_CHARGE,
+        MM_CHARGE
     };
 
     /**
@@ -88,6 +88,12 @@ namespace potential
             pq::CellList &
         ) = 0;
 
+        virtual void calculateHotspotSmoothingMMForces(
+            pq::SimBox &,
+            pq::PhysicalData &,
+            pq::CellList &
+        ) = 0;
+
         virtual pq::SharedPotential clone() const = 0;
 
         std::pair<double, double> calculateSingleInteraction(
@@ -96,14 +102,26 @@ namespace potential
             pq::Molecule  &mol2,
             pq::Atom      &atom1,
             pq::Atom      &atom2,
-            ChargesType    chargesType
+            ChargeType     chargeType1,
+            ChargeType     chargeType2
         ) const;
 
         double calculateSingleCoulombInteraction(
             const pq::Box &box,
             pq::Atom      &atom1,
             pq::Atom      &atom2,
-            ChargesType    chargesType
+            ChargeType     chargeType1,
+            ChargeType     chargeType2
+        ) const;
+
+        std::pair<double, double> calculateSingleInteractionOneWay(
+            const pq::Box &box,
+            pq::Molecule  &mol1,
+            pq::Molecule  &mol2,
+            pq::Atom      &atom1,
+            pq::Atom      &atom2,
+            ChargeType     chargeType1,
+            ChargeType     chargeType2
         ) const;
 
         template <typename T>
