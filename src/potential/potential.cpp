@@ -34,6 +34,8 @@ using namespace potential;
 using namespace simulationBox;
 using namespace physicalData;
 
+using enum ChargesType;
+
 void Potential::calculateQMMMForces(
     SimulationBox &simBox,
     PhysicalData  &physicalData,
@@ -54,14 +56,16 @@ void Potential::calculateQMMMForces(
  * @param mol2
  * @param atom1
  * @param atom2
+ * @param chargesType   whether to use QM charges or MM charges for QM atoms
  * @return std::pair<double, double>
  */
 std::pair<double, double> Potential::calculateSingleInteraction(
-    const Box &box,
-    Molecule  &mol1,
-    Molecule  &mol2,
-    Atom      &atom1,
-    Atom      &atom2
+    const Box  &box,
+    Molecule   &mol1,
+    Molecule   &mol2,
+    Atom       &atom1,
+    Atom       &atom2,
+    ChargesType chargesType
 ) const
 {
     auto coulombEnergy    = 0.0;
@@ -103,12 +107,12 @@ std::pair<double, double> Potential::calculateSingleInteraction(
         auto charge_i = 0.0;
         auto charge_j = 0.0;
 
-        if (atom1.getQMCharge().has_value())
+        if (atom1.getQMCharge().has_value() && chargesType == QM_CHARGES)
             charge_i = atom1.getQMCharge().value();
         else
             charge_i = atom1.getPartialCharge();
 
-        if (atom2.getQMCharge().has_value())
+        if (atom2.getQMCharge().has_value() && chargesType == QM_CHARGES)
             charge_j = atom2.getQMCharge().value();
         else
             charge_j = atom2.getPartialCharge();
@@ -150,12 +154,14 @@ std::pair<double, double> Potential::calculateSingleInteraction(
  * @param box simulation box for periodic boundary conditions
  * @param atom1 first atom
  * @param atom2 second atom
+ * @param chargesType whether to use QM charges or MM charges for QM atoms
  * @return double Coulomb energy
  */
 double Potential::calculateSingleCoulombInteraction(
-    const Box &box,
-    Atom      &atom1,
-    Atom      &atom2
+    const Box  &box,
+    Atom       &atom1,
+    Atom       &atom2,
+    ChargesType chargesType
 ) const
 {
     auto coulombEnergy = 0.0;
@@ -176,8 +182,19 @@ double Potential::calculateSingleCoulombInteraction(
     {
         const double distance = ::sqrt(distanceSquared);
 
-        const auto charge_i         = atom1.getPartialCharge();
-        const auto charge_j         = atom2.getPartialCharge();
+        auto charge_i = 0.0;
+        auto charge_j = 0.0;
+
+        if (atom1.getQMCharge().has_value() && chargesType == QM_CHARGES)
+            charge_i = atom1.getQMCharge().value();
+        else
+            charge_i = atom1.getPartialCharge();
+
+        if (atom2.getQMCharge().has_value() && chargesType == QM_CHARGES)
+            charge_j = atom2.getQMCharge().value();
+        else
+            charge_j = atom2.getPartialCharge();
+
         const auto coulombPreFactor = charge_i * charge_j;
 
         auto [e, f] = _coulombPotential->calculate(distance, coulombPreFactor);

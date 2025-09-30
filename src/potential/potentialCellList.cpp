@@ -35,6 +35,7 @@ using namespace potential;
 using namespace simulationBox;
 using namespace physicalData;
 
+using enum ChargesType;
 using enum simulationBox::HybridZone;
 
 /**
@@ -92,7 +93,8 @@ void PotentialCellList::calculateForces(
                                 *mol1,
                                 *mol2,
                                 *atom1,
-                                *atom2
+                                *atom2,
+                                MM_CHARGES
                             );
 
                         totalCoulombEnergy    += coulombEnergy;
@@ -122,7 +124,8 @@ void PotentialCellList::calculateForces(
                                     *mol1,
                                     *mol2,
                                     *atom1,
-                                    *atom2
+                                    *atom2,
+                                    MM_CHARGES
                                 );
 
                             totalCoulombEnergy    += coulombEnergy;
@@ -169,7 +172,8 @@ void PotentialCellList::calculateCoreToOuterForces(
                         totalCoulombEnergy += calculateSingleCoulombInteraction(
                             *box,
                             *atom1,
-                            *atom2
+                            *atom2,
+                            QM_CHARGES
                         );
 
     for (const auto &cell1 : cellList.getCells())
@@ -182,7 +186,8 @@ void PotentialCellList::calculateCoreToOuterForces(
                                 calculateSingleCoulombInteraction(
                                     *box,
                                     *atom1,
-                                    *atom2
+                                    *atom2,
+                                    QM_CHARGES
                                 );
 
     physicalData.addCoulombEnergy(totalCoulombEnergy);
@@ -233,7 +238,8 @@ void PotentialCellList::calculateLayerToOuterForces(
                                 *mol1,
                                 *mol2,
                                 *atom1,
-                                *atom2
+                                *atom2,
+                                QM_CHARGES
                             );
 
                         totalCoulombEnergy    += coulombEnergy;
@@ -258,7 +264,8 @@ void PotentialCellList::calculateLayerToOuterForces(
                                     *mol1,
                                     *mol2,
                                     *atom1,
-                                    *atom2
+                                    *atom2,
+                                    QM_CHARGES
                                 );
 
                             totalCoulombEnergy    += coulombEnergy;

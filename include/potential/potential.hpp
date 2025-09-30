@@ -35,6 +35,12 @@
 
 namespace potential
 {
+    enum class ChargesType : size_t
+    {
+        QM_CHARGES,
+        MM_CHARGES
+    };
+
     /**
      * @class Potential
      *
@@ -89,13 +95,15 @@ namespace potential
             pq::Molecule  &mol1,
             pq::Molecule  &mol2,
             pq::Atom      &atom1,
-            pq::Atom      &atom2
+            pq::Atom      &atom2,
+            ChargesType    chargesType
         ) const;
 
         double calculateSingleCoulombInteraction(
             const pq::Box &box,
             pq::Atom      &atom1,
-            pq::Atom      &atom2
+            pq::Atom      &atom2,
+            ChargesType    chargesType
         ) const;
 
         template <typename T>

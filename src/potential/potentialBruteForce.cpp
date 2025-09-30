@@ -32,6 +32,7 @@ using namespace potential;
 using namespace simulationBox;
 using namespace physicalData;
 
+using enum ChargesType;
 using enum simulationBox::HybridZone;
 
 /**
@@ -80,7 +81,8 @@ void PotentialBruteForce::calculateForces(
                             mol1,
                             mol2,
                             *atom1,
-                            *atom2
+                            *atom2,
+                            MM_CHARGES
                         );
 
                     totalCoulombEnergy    += coulombEnergy;
@@ -121,8 +123,12 @@ void PotentialBruteForce::calculateCoreToOuterForces(
         for (auto &mol2 : simBox.getMMMolecules())
             for (auto &atom1 : mol1.getAtoms())
                 for (auto &atom2 : mol2.getAtoms())
-                    totalCoulombEnergy +=
-                        calculateSingleCoulombInteraction(*box, *atom1, *atom2);
+                    totalCoulombEnergy += calculateSingleCoulombInteraction(
+                        *box,
+                        *atom1,
+                        *atom2,
+                        QM_CHARGES
+                    );
 
     physicalData.addCoulombEnergy(totalCoulombEnergy);
 
@@ -165,7 +171,8 @@ void PotentialBruteForce::calculateLayerToOuterForces(
                             mol1,
                             mol2,
                             *atom1,
-                            *atom2
+                            *atom2,
+                            QM_CHARGES
                         );
 
                     totalCoulombEnergy    += coulombEnergy;
