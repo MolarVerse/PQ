@@ -193,6 +193,23 @@ void SimulationBoxSetup::setExternalVDWTypes()
         auto       moleculeType = simBox.findMoleculeType(molType);
         const auto nAtoms       = molecule.getNumberOfAtoms();
 
+        if (moleculeType.getExternalGlobalVDWTypes().size() != nAtoms)
+        {
+            throw UserInputException(
+                std::format(
+                    "Ooooops! Something went wrong. Please check again your "
+                    "input files and please report this issue to the "
+                    "developers via https://github.com/Molarverse/PQ/issues.\n"
+                    "in simulationBoxSetup.cpp: setExternalVDWTypes()\n"
+                    "Number of external VDW types ({}) does not match number "
+                    "of atoms ({}) in molecule type {}",
+                    moleculeType.getExternalGlobalVDWTypes().size(),
+                    nAtoms,
+                    molType
+                )
+            );
+        }
+
         for (size_t i = 0; i < nAtoms; ++i)
         {
             const auto extVDWType = moleculeType.getExternalGlobalVDWTypes()[i];
@@ -381,8 +398,7 @@ void SimulationBoxSetup::checkRcCutoff()
         throw InputFileException(
             std::format(
                 "Rc cutoff is larger than half of the minimal box dimension of "
-                "{} "
-                "Angstrom.",
+                "{} Angstrom.",
                 minDim
             )
         );
