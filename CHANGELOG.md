@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## Next Release
 
+### Bug Fixes
+
+- Fixed segfault when setting force-field to "bonded"
+
 ### Enhancements
 
 - Atom positions of triclinic boxes are now wrapped into the simulation box
