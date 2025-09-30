@@ -336,11 +336,11 @@ double Atom::getMass() const { return _mass; }
 double Atom::getPartialCharge() const { return _partialCharge; }
 
 /**
- * @brief return the qm charge of the atom
+ * @brief return a reference to the qm charge of the atom
  *
- * @return optional<double>
+ * @return optional<double> &
  */
-optional<double> Atom::getQMCharge() const { return _qmCharge; }
+optional<double> &Atom::getQMCharge() { return _qmCharge; }
 
 /**
  * @brief return the position of the atom
@@ -478,13 +478,6 @@ void Atom::setPartialCharge(const double partialCharge)
 {
     _partialCharge = partialCharge;
 }
-
-/**
- * @brief set the qm charge of the atom
- *
- * @param qmCharge
- */
-void Atom::setQMCharge(const double qmCharge) { _qmCharge = qmCharge; }
 
 /**
  * @brief set the atom type (internal)

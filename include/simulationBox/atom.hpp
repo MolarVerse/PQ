@@ -80,6 +80,8 @@ namespace simulationBox
         void updateOldVelocity();
         void updateOldForce();
 
+        [[nodiscard]] std::optional<double> &getQMCharge();
+
         /*******************
          * scaling methods *
          *******************/
@@ -121,10 +123,9 @@ namespace simulationBox
         [[nodiscard]] size_t getExternalGlobalVDWType() const;
         [[nodiscard]] size_t getInternalGlobalVDWType() const;
 
-        [[nodiscard]] int                   getAtomicNumber() const;
-        [[nodiscard]] double                getMass() const;
-        [[nodiscard]] double                getPartialCharge() const;
-        [[nodiscard]] std::optional<double> getQMCharge() const;
+        [[nodiscard]] int    getAtomicNumber() const;
+        [[nodiscard]] double getMass() const;
+        [[nodiscard]] double getPartialCharge() const;
 
         [[nodiscard]] pq::Vec3D getPosition() const;
         [[nodiscard]] pq::Vec3D getPositionOld() const;
@@ -149,7 +150,6 @@ namespace simulationBox
 
         void setMass(const double mass);
         void setPartialCharge(const double partialCharge);
-        void setQMCharge(const double qmCharge);
 
         void setAtomType(const size_t atomType);
         void setExternalAtomType(const size_t externalAtomType);

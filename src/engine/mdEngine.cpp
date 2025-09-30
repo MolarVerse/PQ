@@ -177,6 +177,7 @@ void MDEngine::calculateForcesWrapper()
 {
     _simulationBox->resetAllForces();
     calculateForces();
+    for (auto &atom : _simulationBox->getAtoms()) atom->getQMCharge().reset();
 }
 
 /**

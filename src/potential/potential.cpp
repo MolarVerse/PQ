@@ -100,8 +100,19 @@ std::pair<double, double> Potential::calculateSingleInteraction(
             globalVdwType_j
         };
 
-        const auto charge_i         = atom1.getPartialCharge();
-        const auto charge_j         = atom2.getPartialCharge();
+        auto charge_i = 0.0;
+        auto charge_j = 0.0;
+
+        if (atom1.getQMCharge().has_value())
+            charge_i = atom1.getQMCharge().value();
+        else
+            charge_i = atom1.getPartialCharge();
+
+        if (atom2.getQMCharge().has_value())
+            charge_j = atom2.getQMCharge().value();
+        else
+            charge_j = atom2.getPartialCharge();
+
         const auto coulombPreFactor = charge_i * charge_j;
 
         auto [e, f] = _coulombPotential->calculate(distance, coulombPreFactor);
