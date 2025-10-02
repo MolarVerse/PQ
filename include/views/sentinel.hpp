@@ -127,7 +127,16 @@ namespace pqviews
         template <typename Iterator>
         friend difference_type operator-(const Sentinel& s, const Iterator& it)
         {
-            return std::distance(it.current(), s._end);
+            Iterator        temp  = it;
+            difference_type count = 0;
+
+            while (temp != s)
+            {
+                ++temp;
+                ++count;
+            }
+
+            return count;
         }
 
         /**
@@ -140,7 +149,7 @@ namespace pqviews
         template <typename Iterator>
         friend difference_type operator-(const Iterator& it, const Sentinel& s)
         {
-            return -std::distance(it.current(), s._end);
+            return -(s - it);
         }
     };
 

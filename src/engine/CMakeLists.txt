@@ -6,6 +6,8 @@ set(engine_source_files
 
     mmmdEngine.cpp
     qmmdEngine.cpp
+    qmCapableEngine.cpp
+    qmRunnerManager.cpp
     ringPolymerEngine.cpp
     ringPolymerqmmdEngine.cpp
 
@@ -58,6 +60,7 @@ target_link_libraries(engine
     forceField
     intraNonBonded
     references
+    hybridConfigurator
 
     optimization
     QM

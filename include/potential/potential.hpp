@@ -28,11 +28,19 @@
 #include <memory>    // for shared_ptr, __shared_ptr_access, make_shared
 #include <utility>   // for pair
 
+#include "atom.hpp"
+#include "molecule.hpp"
 #include "timer.hpp"
 #include "typeAliases.hpp"
 
 namespace potential
 {
+    enum class ChargeType : size_t
+    {
+        QM_CHARGE,
+        MM_CHARGE
+    };
+
     /**
      * @class Potential
      *
@@ -60,15 +68,60 @@ namespace potential
             pq::SimBox &,
             pq::PhysicalData &,
             pq::CellList &
-        )                                         = 0;
+        ) = 0;
+
+        void calculateQMMMForces(
+            pq::SimBox &,
+            pq::PhysicalData &,
+            pq::CellList &
+        );
+
+        virtual void calculateCoreToOuterForces(
+            pq::SimBox &,
+            pq::PhysicalData &,
+            pq::CellList &
+        ) = 0;
+
+        virtual void calculateLayerToOuterForces(
+            pq::SimBox &,
+            pq::PhysicalData &,
+            pq::CellList &
+        ) = 0;
+
+        virtual void calculateHotspotSmoothingMMForces(
+            pq::SimBox &,
+            pq::PhysicalData &,
+            pq::CellList &
+        ) = 0;
+
         virtual pq::SharedPotential clone() const = 0;
 
         std::pair<double, double> calculateSingleInteraction(
-            const pq::Box &,
-            pq::Molecule &,
-            pq::Molecule &,
-            const size_t,
-            const size_t
+            const pq::Box &box,
+            pq::Molecule  &mol1,
+            pq::Molecule  &mol2,
+            pq::Atom      &atom1,
+            pq::Atom      &atom2,
+            ChargeType     chargeType1,
+            ChargeType     chargeType2
+        ) const;
+
+        double calculateSingleCoulombInteraction(
+            const pq::Box &box,
+            pq::Atom      &atom1,
+            pq::Atom      &atom2,
+            ChargeType     chargeType1,
+            ChargeType     chargeType2
+        ) const;
+
+        std::pair<double, double> calculateSingleInteractionOneWay(
+            const pq::Box &box,
+            pq::Molecule  &mol1,
+            pq::Molecule  &mol2,
+            pq::Atom      &atom1,
+            pq::Atom      &atom2,
+            ChargeType     chargeType1,
+            ChargeType     chargeType2
         ) const;
 
         template <typename T>

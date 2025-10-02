@@ -20,7 +20,7 @@ target_link_libraries(externalQM
     utilities
     physicalData
     exceptions
-
+    hybridConfigurator
     QM
 )
 

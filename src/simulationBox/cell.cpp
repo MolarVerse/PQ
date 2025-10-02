@@ -126,9 +126,16 @@ Molecule *Cell::getMolecule(const size_t index) const
 /**
  * @brief returns the molecules vector
  *
- * @return std::vector<Molecule*>
+ * @return std::vector<Molecule*>&
  */
-std::vector<Molecule *> Cell::getMolecules() const { return _molecules; }
+const std::vector<Molecule *> &Cell::getMolecules() const { return _molecules; }
+
+/**
+ * @brief returns the molecules vector
+ *
+ * @return std::vector<Molecule*>&
+ */
+std::vector<Molecule *> &Cell::getMolecules() { return _molecules; }
 
 /**
  * @brief returns the neighbour cell at the given index

@@ -161,8 +161,7 @@ void SimulationBox::setupForcedInnerAtoms(const std::vector<int>& atomIndices)
             throw UserInputException(
                 std::format(
                     "Ambiguous atom index {} - atom is already in forced outer "
-                    "list "
-                    "- cannot be in forced inner list",
+                    "list - cannot be in forced inner list",
                     index
                 )
             );
@@ -196,8 +195,7 @@ void SimulationBox::setupForcedOuterAtoms(const std::vector<int>& atomIndices)
             throw UserInputException(
                 std::format(
                     "Ambiguous atom index {} - atom is already in forced inner "
-                    "list "
-                    "- cannot be in forced outer list",
+                    "list - cannot be in forced outer list",
                     index
                 )
             );
@@ -682,6 +680,15 @@ Vec3D SimulationBox::calcShiftVector(const Vec3D& position) const
     return _box->calcShiftVector(position);
 }
 
+int SimulationBox::calcActiveMolCharge() const
+{
+    int charge = 0;
+
+    for (const auto& mol : getActiveMolecules()) charge += mol.getCharge();
+
+    return charge;
+}
+
 /**
  * @brief initialize positions of all atoms
  *
@@ -748,12 +755,51 @@ void SimulationBox::updateOldForces()
 }
 
 /**
+ * @brief reset all forces of all atoms, i.e. forces, inner forces and outer
+ * forces
+ *
+ */
+void SimulationBox::resetAllForces()
+{
+    auto resetForces = [](const auto& atom)
+    {
+        atom->setForceToZero();
+        atom->setInnerForceToZero();
+        atom->setOuterForceToZero();
+    };
+
+    std::ranges::for_each(_atoms, resetForces);
+}
+
+/**
  * @brief reset forces of all atoms
  *
  */
 void SimulationBox::resetForces()
 {
     auto resetForces = [](const auto& atom) { atom->setForceToZero(); };
+
+    std::ranges::for_each(_atoms, resetForces);
+}
+
+/**
+ * @brief reset inner forces of all atoms
+ *
+ */
+void SimulationBox::resetForcesInner()
+{
+    auto resetForces = [](const auto& atom) { atom->setInnerForceToZero(); };
+
+    std::ranges::for_each(_atoms, resetForces);
+}
+
+/**
+ * @brief reset outer forces of all atoms
+ *
+ */
+void SimulationBox::resetForcesOuter()
+{
+    auto resetForces = [](const auto& atom) { atom->setOuterForceToZero(); };
 
     std::ranges::for_each(_atoms, resetForces);
 }

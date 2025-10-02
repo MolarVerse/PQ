@@ -37,6 +37,8 @@ using namespace customException;
 using namespace linearAlgebra;
 using namespace settings;
 
+using std::optional;
+
 /**
  * @brief sets the mass of the atom
  *
@@ -108,6 +110,20 @@ void Atom::scaleVelocityOrthogonalSpace(
         _velocity = box.toSimSpace(_velocity);
 }
 
+/**
+ * @brief scales the force of the atom
+ *
+ * @param scaleFactor double
+ */
+void Atom::scaleForce(const double scaleFactor) { _force *= scaleFactor; }
+
+/**
+ * @brief scales the force of the atom by a Vec3D elementwise
+ *
+ * @param scaleFactor Vec3D
+ */
+void Atom::scaleForce(const Vec3D &scaleFactor) { _force *= scaleFactor; }
+
 /**************************
  *                        *
  * standard adder methods *
@@ -150,6 +166,22 @@ void Atom::addForce(
 {
     _force += {force_x, force_y, force_z};
 }
+
+/**
+ * @brief add a Vec3D to the current force of the atom calculated from the inner
+ * region method of the hybrid calculation
+ *
+ * @param force
+ */
+void Atom::addForceInner(const Vec3D &force) { _forceInner += force; }
+
+/**
+ * @brief add a Vec3D to the current force of the atom calculated from the outer
+ * region method of the hybrid calculation
+ *
+ * @param force
+ */
+void Atom::addForceOuter(const Vec3D &force) { _forceOuter += force; }
 
 /**
  * @brief add a Vec3D to the current shift force of the atom
@@ -283,13 +315,6 @@ size_t Atom::getExternalGlobalVDWType() const { return _externalGlobalVDWType; }
 size_t Atom::getInternalGlobalVDWType() const { return _internalGlobalVDWType; }
 
 /**
- * @brief return the Hybrid zone of the atom
- *
- * @return HybridZone
- */
-HybridZone Atom::getHybridZone() const { return _hybridZone; }
-
-/**
  * @brief return the atomic number of the atom
  *
  * @return int
@@ -309,6 +334,13 @@ double Atom::getMass() const { return _mass; }
  * @return double
  */
 double Atom::getPartialCharge() const { return _partialCharge; }
+
+/**
+ * @brief return a reference to the qm charge of the atom
+ *
+ * @return optional<double> &
+ */
+optional<double> &Atom::getQMCharge() { return _qmCharge; }
 
 /**
  * @brief return the position of the atom
@@ -344,6 +376,22 @@ Vec3D Atom::getForce() const { return _force; }
  * @return Vec3D
  */
 Vec3D Atom::getForceOld() const { return _forceOld; }
+
+/**
+ * @brief return the force of the atom calculated from the inner region method
+ * of the hybrid calculation
+ *
+ * @return Vec3D
+ */
+Vec3D Atom::getForceInner() const { return _forceInner; }
+
+/**
+ * @brief return the force of the atom calculated from the outer region method
+ * of the hybrid calculation
+ *
+ * @return Vec3D
+ */
+Vec3D Atom::getForceOuter() const { return _forceOuter; }
 
 /**
  * @brief return the shift force of the atom
@@ -384,10 +432,8 @@ void Atom::setForcedOuter(const bool isForcedOuter)
  * @brief set if the atom is active
  *
  * @param isActive
- *
- * @details currently only used for hybrid calculations
  */
-void Atom::setIsActive(const bool isActive) { _isActive = isActive; }
+void Atom::setActive(const bool isActive) { _isActive = isActive; }
 
 /**
  * @brief set the name of the atom (element name)
@@ -492,6 +538,20 @@ void Atom::setVelocity(const Vec3D &velocity) { _velocity = velocity; }
 void Atom::setForce(const Vec3D &force) { _force = force; }
 
 /**
+ * @brief set the force of the atom calculated from the inner region method of
+ * the hybrid calculation
+ * @param force
+ */
+void Atom::setForceInner(const Vec3D &force) { _forceInner = force; }
+
+/**
+ * @brief set the force of the atom calculated from the outer region method of
+ * the hybrid calculation
+ * @param force
+ */
+void Atom::setForceOuter(const Vec3D &force) { _forceOuter = force; }
+
+/**
  * @brief set the shift force of the atom
  *
  * @param shiftForce
@@ -502,6 +562,18 @@ void Atom::setShiftForce(const Vec3D &shiftForce) { _shiftForce = shiftForce; }
  * @brief set the force of the atom to zero
  */
 void Atom::setForceToZero() { _force = {0.0, 0.0, 0.0}; }
+
+/**
+ * @brief set the inner force of the atom calculated from the outer region
+ * method of the hybrid calculation to zero
+ */
+void Atom::setInnerForceToZero() { _forceInner = {0.0, 0.0, 0.0}; }
+
+/**
+ * @brief set the outer force of the atom calculated from the outer region
+ * method of the hybrid calculation to zero
+ */
+void Atom::setOuterForceToZero() { _forceOuter = {0.0, 0.0, 0.0}; }
 
 /**
  * @brief set the old position of the atom
@@ -523,13 +595,3 @@ void Atom::setVelocityOld(const Vec3D &velocity) { _velocityOld = velocity; }
  * @param force
  */
 void Atom::setForceOld(const Vec3D &force) { _forceOld = force; }
-
-/**
- * @brief set the Hybrid zone of the atom
- *
- * @param hybridZone
- */
-void Atom::setHybridZone(const HybridZone hybridZone)
-{
-    _hybridZone = hybridZone;
-}

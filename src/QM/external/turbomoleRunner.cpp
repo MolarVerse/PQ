@@ -33,6 +33,7 @@
 #include "atom.hpp"              // for Atom
 #include "constants.hpp"         // for constants
 #include "exceptions.hpp"        // for InputFileException
+#include "fileSettings.hpp"      // for FileSettings
 #include "qmSettings.hpp"        // for QMSettings
 #include "simulationBox.hpp"     // for SimulationBox
 #include "stringUtilities.hpp"   // for fileExists
@@ -80,19 +81,26 @@ void TurbomoleRunner::writeCoordsFile(SimulationBox &box)
  * @brief executes the external qm program
  *
  */
-void TurbomoleRunner::execute()
+void TurbomoleRunner::execute(SimulationBox &box)
 {
     const auto scriptFile = _scriptPath + QMSettings::getQMScript();
 
     if (!fileExists(scriptFile))
-        throw InputFileException(std::format(
-            "Turbomole script file \"{}\" does not exist.",
-            scriptFile
-        ));
+        throw InputFileException(
+            std::format(
+                "Turbomole script file \"{}\" does not exist.",
+                scriptFile
+            )
+        );
 
     const auto reuseCharges = _isFirstExecution ? 1 : 0;
 
-    const auto command = std::format("{} 0 {} 0 0 0", scriptFile, reuseCharges);
+    const auto command = std::format(
+        "{} 0 {} 0 0 0 {}",
+        scriptFile,
+        reuseCharges,
+        FileSettings::getPointChargeFileName()
+    );
     ::system(command.c_str());
 
     _isFirstExecution = false;

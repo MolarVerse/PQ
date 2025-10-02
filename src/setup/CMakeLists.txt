@@ -66,15 +66,6 @@ if(BUILD_WITH_MPI)
     )
 endif()
 
-if(BUILD_WITH_PYTHON_BINDINGS)
-    add_definitions(-DPYTHON_ENABLED)
-
-    target_link_libraries(setup
-        PUBLIC
-        pq_python
-    )
-endif()
-
 install(TARGETS setup
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

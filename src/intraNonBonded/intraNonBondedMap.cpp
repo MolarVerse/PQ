@@ -51,7 +51,9 @@ IntraNonBondedMap::IntraNonBondedMap(
     pq::Molecule            *molecule,
     IntraNonBondedContainer *intraNonBondedType
 )
-    : _molecule(molecule), _intraNonBondedContainer(intraNonBondedType){};
+    : _molecule(molecule), _intraNonBondedContainer(intraNonBondedType)
+{
+}
 
 /**
  * @brief calculate the intra non bonded interactions for a single
@@ -122,6 +124,9 @@ std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(
     NonCoulombPotential    *nonCoulPot
 ) const
 {
+    if (!_molecule->isActive())
+        return {0.0, 0.0};
+
     auto coulombEnergy    = 0.0;
     auto nonCoulombEnergy = 0.0;
 

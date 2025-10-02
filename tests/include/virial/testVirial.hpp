@@ -77,6 +77,10 @@ class TestVirial : public ::testing::Test
         _simBox->addMolecule(molecule1);
         _simBox->addMolecule(molecule2);
 
+        _simBox->addAtom(atom1);
+        _simBox->addAtom(atom2);
+        _simBox->addAtom(atom3);
+
         _simBox->setBoxDimensions(linearAlgebra::Vec3D(10.0, 10.0, 10.0));
     }
 

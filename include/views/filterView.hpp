@@ -73,7 +73,7 @@ namespace pqviews
      */
     template <typename Range, typename Pred>
     FilterView<Range, Pred>::FilterView(Range r, Pred p)
-        : _range(std::move(r)), _pred(std::move(p))
+        : _range(std::forward<Range>(r)), _pred(std::move(p))
     {
     }
 

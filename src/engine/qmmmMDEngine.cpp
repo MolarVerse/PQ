@@ -21,3 +21,343 @@
 ******************************************************************************/
 
 #include "qmmmMDEngine.hpp"
+
+#include <format>   // for format
+#include <ranges>   // for distance
+
+#include "exceptions.hpp"         // for HybridMDEngineException
+#include "hybridSettings.hpp"     // for HybridSettings
+#include "manostatSettings.hpp"   // for ManostatType
+
+using namespace pq;
+using namespace customException;
+using namespace settings;
+using namespace simulationBox;
+
+using enum SmoothingMethod;
+
+namespace engine
+{
+    /**
+     * @brief calculate QM/MM forces
+     *
+     */
+    void QMMMMDEngine::calculateForces()
+    {
+        _configurator.calculateInnerRegionCenter(*_simulationBox);
+        _configurator.shiftAtomsToInnerRegionCenter(*_simulationBox);
+        _configurator.assignHybridZones(*_simulationBox);
+        _configurator.calculateSmoothingFactors(*_simulationBox);
+
+        // Set number of QM atoms in physical data for output purposes
+        setNumberOfQMAtoms();
+
+        const auto& smoothingMethod = HybridSettings::getSmoothingMethod();
+
+        // TODO: https://github.com/MolarVerse/PQ/issues/202
+        if (smoothingMethod == HOTSPOT)
+            applyHotspotSmoothing();
+        else if (smoothingMethod == EXACT)
+            applyExactSmoothing();
+        else
+            throw HybridMDEngineException("Unknown smoothing method requested");
+
+        _configurator.shiftAtomsBackToInitialPositions(*_simulationBox);
+    }
+
+    /**
+     * @brief Apply exact smoothing algorithm for QM/MM boundary treatment
+     *
+     * @details This function implements the exact smoothing algorithm by
+     * iterating through all 2^n combinations of smoothing molecules being
+     * active/inactive in the inner (QM) region.
+     *
+     * @note Computational cost: O(2^n) where n = number of smoothing molecules
+     */
+    void QMMMMDEngine::applyExactSmoothing()
+    {
+        using enum HybridZone;
+        using enum Periodicity;
+        using std::ranges::distance;
+
+        auto     qmEnergy         = 0.0;
+        auto     coulombEnergy    = 0.0;
+        auto     nonCoulombEnergy = 0.0;
+        tensor3D virial           = {0.0};
+
+        auto& atoms = _simulationBox->getAtoms();
+
+        const auto nSmMol =
+            distance(_simulationBox->getMoleculesInsideZone(SMOOTHING));
+
+        // Loop over all combinations of smoothing molecules
+        for (size_t i = 0; i < (1u << nSmMol); ++i)
+        {
+            // STEP 1: Generate set of inactive molecules and calculate
+            // associated global smoothing factor for this configuration
+            const auto inactiveSmMol = generateInactiveMoleculeSet(i, nSmMol);
+
+            const auto globalSmF =
+                calculateGlobalSmoothingFactor(inactiveSmMol);
+
+            // STEP 2: Setup and run QM calculation, accumulate QM forces and QM
+            // virial contribution
+            _configurator.activateMolecules(*_simulationBox);
+            _configurator.deactivateOuterMolecules(*_simulationBox);
+            _configurator.deactivateSmoothingMolecules(
+                inactiveSmMol,
+                *_simulationBox
+            );
+
+            _qmRunner->run(*_simulationBox, *_physicalData, NON_PERIODIC);
+
+            if (ManostatSettings::getManostatType() != ManostatType::NONE)
+                virial +=
+                    _virial->calculateQMVirial(*_simulationBox) * globalSmF;
+
+            for (auto& atom : atoms)
+            {
+                const auto force = atom->getForce();
+                atom->addForceInner(force * globalSmF);
+            }
+            _simulationBox->resetForces();
+
+            // STEP 3: Setup and run MM calculation, accumulate MM forces and MM
+            // virial contribution
+            _configurator.toggleMoleculeActivation(*_simulationBox);
+
+            _potential->calculateQMMMForces(
+                *_simulationBox,
+                *_physicalData,
+                *_cellList
+            );
+
+            _intraNonBonded->calculate(*_simulationBox, *_physicalData);
+
+            if (ManostatSettings::getManostatType() != ManostatType::NONE)
+            {
+                _virial->calculateVirial(*_simulationBox, *_physicalData);
+                virial += _physicalData->getVirial() * globalSmF;
+            }
+
+            _physicalData->setVirial({0.0});
+
+            _forceField->calculateBondedInteractions(
+                *_simulationBox,
+                *_physicalData
+            );
+
+            virial += _physicalData->getVirial() * globalSmF;
+
+            for (auto& atom : atoms)
+            {
+                const auto force = atom->getForce();
+                atom->addForceOuter(force * globalSmF);
+            }
+            _simulationBox->resetForces();
+
+            // Scale and accumulate energies
+            qmEnergy      += _physicalData->getQMEnergy() * globalSmF;
+            coulombEnergy += _physicalData->getCoulombEnergy() * globalSmF;
+            nonCoulombEnergy +=
+                _physicalData->getNonCoulombEnergy() * globalSmF;
+        }
+
+        // STEP 4: Set forces to the accumulated hybrid forces for MD routine
+        for (auto& atom : atoms)
+        {
+            const auto innerForce = atom->getForceInner();
+            const auto outerForce = atom->getForceOuter();
+            atom->setForce(innerForce + outerForce);
+        }
+
+        // STEP 5: Set energies to the accumulated hybrid energies
+        _physicalData->setQMEnergy(qmEnergy);
+        _physicalData->setCoulombEnergy(coulombEnergy);
+        _physicalData->setNonCoulombEnergy(nonCoulombEnergy);
+        _physicalData->setVirial(virial);
+    }
+
+    /**
+     * @brief Apply hotspot smoothing algorithm for QM/MM boundary treatment
+     *
+     * @details This function implements the hotspot smoothing algorithm by
+     * running separate QM and MM calculations and scaling forces of smoothing
+     * molecules according to their individual smoothing factors. More
+     * computationally efficient than exact smoothing but less rigorous.
+     *
+     * @warning The energies yielded by this smoothing method are not correct
+     *
+     * @note Computational cost: O(1) - constant time regardless of number of
+     * smoothing molecules
+     */
+    void QMMMMDEngine::applyHotspotSmoothing()
+    {
+        using enum HybridZone;
+        using enum Periodicity;
+
+        auto& atoms = _simulationBox->getAtoms();
+
+        // STEP 1: Setup and run QM calculation, scale forces of smoothing
+        // molecules
+        _configurator.activateMolecules(*_simulationBox);
+        _configurator.deactivateOuterMolecules(*_simulationBox);
+
+        _qmRunner->run(*_simulationBox, *_physicalData, NON_PERIODIC);
+
+        for (auto& mol : _simulationBox->getMoleculesInsideZone(SMOOTHING))
+        {
+            const auto smF = mol.getSmoothingFactor();
+            for (auto& atom : mol.getAtoms()) atom->scaleForce(smF);
+        }
+
+        for (auto& atom : atoms) atom->addForceInner(atom->getForce());
+        _simulationBox->resetForces();
+
+        // STEP 2: Setup and run MM calculation, scale forces of smoothing
+        // molecules
+        _configurator.toggleMoleculeActivation(*_simulationBox);
+
+        _potential
+            ->calculateQMMMForces(*_simulationBox, *_physicalData, *_cellList);
+
+        for (auto& mol : _simulationBox->getMoleculesInsideZone(SMOOTHING))
+        {
+            const auto smF = mol.getSmoothingFactor();
+            for (auto& atom : mol.getAtoms()) atom->scaleForce(smF);
+        }
+
+        for (auto& atom : atoms)
+        {
+            const auto force = atom->getForce();
+            atom->addForceOuter(force);
+        }
+        _simulationBox->resetForces();
+
+        _intraNonBonded->calculate(*_simulationBox, *_physicalData);
+
+        _forceField->calculateBondedInteractions(
+            *_simulationBox,
+            *_physicalData
+        );
+
+        for (auto& mol : _simulationBox->getMoleculesInsideZone(SMOOTHING))
+        {
+            const auto smF = mol.getSmoothingFactor();
+            for (auto& atom : mol.getAtoms()) atom->scaleForce(1 - smF);
+        }
+
+        for (auto& atom : atoms)
+        {
+            const auto force = atom->getForce();
+            atom->addForceOuter(force);
+        }
+        _simulationBox->resetForces();
+
+        _potential->calculateHotspotSmoothingMMForces(
+            *_simulationBox,
+            *_physicalData,
+            *_cellList
+        );
+
+        for (auto& mol : _simulationBox->getMoleculesInsideZone(SMOOTHING))
+        {
+            const auto smF = mol.getSmoothingFactor();
+
+            for (auto& atom : mol.getAtoms())
+            {
+                const auto force = atom->getForce();
+                atom->addForceOuter(force * (1 - smF));
+            }
+        }
+        _simulationBox->resetForces();
+
+        // STEP 3: Set forces to the sum of individual hybrid forces
+        for (auto& atom : atoms)
+        {
+            const auto innerForce = atom->getForceInner();
+            const auto outerForce = atom->getForceOuter();
+            atom->setForce(innerForce + outerForce);
+        }
+    }
+
+    /**
+     * @brief Generate set of inactive smoothing molecule indices from bit
+     * pattern
+     *
+     * @param bitPattern Binary representation where each bit indicates if a
+     *                   smoothing molecule should be inactive (1) or active (0)
+     * @param totalMolecules Total number of smoothing molecules
+     * @return std::unordered_set<size_t> Set of indices to deactivate
+     *
+     * @details This function converts a bit pattern into a set of molecule
+     * indices. Each bit position corresponds to a smoothing molecule index. If
+     * bit j is set, molecule j will be included in the inactive set.
+     */
+    std::unordered_set<size_t> QMMMMDEngine::generateInactiveMoleculeSet(
+        size_t bitPattern,
+        size_t totalMolecules
+    )
+    {
+        std::unordered_set<size_t> inactiveMolecules;
+
+        for (size_t j = 0; j < totalMolecules; ++j)
+            if (bitPattern & (1u << j))
+                inactiveMolecules.insert(j);
+
+        return inactiveMolecules;
+    }
+
+    /**
+     * @brief Calculate global smoothing factor for QM/MM boundary treatment
+     *
+     * @param inactiveForInnerCalcMolecules Set of molecule indices that are
+     *                                      inactive for inner calculation
+     * @return double Global smoothing factor for weighted contribution
+     *
+     * @details This function calculates the global smoothing factor by
+     * iterating through all smoothing molecules and multiplying their
+     * individual smoothing factors. For molecules marked as inactive for
+     * inner calculation, it uses (1 - smoothingFactor), otherwise it uses
+     * the smoothingFactor directly.
+     */
+    double QMMMMDEngine::calculateGlobalSmoothingFactor(
+        const std::unordered_set<size_t>& inactiveForInnerCalcMolecules
+    )
+    {
+        using enum HybridZone;
+
+        double globalSmoothingFactor = 1.0;
+
+        size_t index = 0;
+        for (const auto& mol :
+             _simulationBox->getMoleculesInsideZone(SMOOTHING))
+        {
+            if (inactiveForInnerCalcMolecules.contains(index))
+                globalSmoothingFactor *= 1 - mol.getSmoothingFactor();
+            else
+                globalSmoothingFactor *= mol.getSmoothingFactor();
+
+            ++index;
+        }
+
+        return globalSmoothingFactor;
+    }
+
+    /**
+     * @brief Set the number of QM atoms in physical data for output purposes
+     *
+     * @details This function temporarily configures the simulation box to count
+     * only QM atoms by activating all molecules and then deactivating outer
+     * molecules. The count is stored in physical data and then all molecules
+     * are reactivated to restore the original state.
+     */
+    void QMMMMDEngine::setNumberOfQMAtoms()
+    {
+        _configurator.activateMolecules(*_simulationBox);
+        _configurator.deactivateOuterMolecules(*_simulationBox);
+        _physicalData->setNumberOfQMAtoms(_simulationBox->getNumberOfQMAtoms());
+        _configurator.activateMolecules(*_simulationBox);
+    }
+
+}   // namespace engine

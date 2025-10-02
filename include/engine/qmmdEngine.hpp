@@ -26,9 +26,11 @@
 
 #include <memory>   // for unique_ptr
 
-#include "mdEngine.hpp"     // for Engine
-#include "qmRunner.hpp"     // for QMRunner
-#include "qmSettings.hpp"   // for QMSettings
+#include "mdEngine.hpp"          // for Engine
+#include "qmCapableEngine.hpp"   // for QMCapableEngine
+#include "qmRunner.hpp"          // for QMRunner
+#include "qmRunnerManager.hpp"   // for QMRunnerManager
+#include "qmSettings.hpp"        // for QMSettings
 
 namespace engine
 {
@@ -39,22 +41,12 @@ namespace engine
      * @brief Contains all the information needed to run a QM MD simulation
      *
      */
-    class QMMDEngine : virtual public MDEngine
+    class QMMDEngine : virtual public MDEngine, public QMCapableEngine
     {
-       protected:
-        std::shared_ptr<QM::QMRunner> _qmRunner;
-
        public:
         ~QMMDEngine() override = default;
 
         void calculateForces() override;
-
-        void setQMRunner(const settings::QMMethod method);
-        void setMaceQMRunner();
-        void setAseDftbRunner();
-        void setAseXtbRunner();
-
-        [[nodiscard]] QM::QMRunner *getQMRunner() const;
     };
 
 }   // namespace engine
