@@ -35,6 +35,7 @@ using namespace settings;
 using namespace simulationBox;
 
 using enum SmoothingMethod;
+using enum HybridZone;
 
 namespace engine
 {
@@ -47,6 +48,7 @@ namespace engine
         _configurator.calculateInnerRegionCenter(*_simulationBox);
         _configurator.shiftAtomsToInnerRegionCenter(*_simulationBox);
         _configurator.assignHybridZones(*_simulationBox);
+        moltypeCheck();
         _configurator.calculateSmoothingFactors(*_simulationBox);
 
         // Set number of QM atoms in physical data for output purposes
@@ -358,6 +360,32 @@ namespace engine
         _configurator.deactivateOuterMolecules(*_simulationBox);
         _physicalData->setNumberOfQMAtoms(_simulationBox->getNumberOfQMAtoms());
         _configurator.activateMolecules(*_simulationBox);
+    }
+
+    /**
+     * @brief Validates that all non-core molecules have a non-zero moltype
+     *
+     * @details This function iterates through all molecules and verifies that
+     * each molecule outside the QM core has a moltype that is not zero.
+     *
+     * @throws HybridMDEngineException if any non-core molecule has moltype == 0
+     */
+    void QMMMMDEngine::moltypeCheck()
+    {
+        size_t count = 0;
+        for (const auto& mol : _simulationBox->getMolecules())
+        {
+            if (mol.getMoltype() == 0 && mol.getHybridZone() != CORE)
+                throw(HybridMDEngineException(
+                    std::format(
+                        "Molecule number {} is outside the QM core and has "
+                        "moltype 0. All molecules outside the QM core must "
+                        "have a non-zero moltype assigned.",
+                        count
+                    )
+                ));
+            ++count;
+        }
     }
 
 }   // namespace engine

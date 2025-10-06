@@ -50,6 +50,7 @@ namespace engine
         void applyHotspotSmoothing();
 
         void setNumberOfQMAtoms();
+        void moltypeCheck();
 
         [[nodiscard]] std::unordered_set<size_t> generateInactiveMoleculeSet(
             size_t bitPattern,
