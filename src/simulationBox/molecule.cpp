@@ -582,6 +582,24 @@ const std::vector<std::shared_ptr<Atom>> &Molecule::getAtoms() const
     return _atoms;
 }
 
+/**
+ * @brief return if the molecule is forced to be in the inner region for hybrid
+ * calculations
+ *
+ * @return true
+ * @return false
+ */
+bool Molecule::isForcedInner() const { return _isForcedInner; }
+
+/**
+ * @brief return if the molecule is forced to be in the outer region for hybrid
+ * calculations
+ *
+ * @return true
+ * @return false
+ */
+bool Molecule::isForcedOuter() const { return _isForcedOuter; }
+
 /***************************
  *                         *
  * standard setter methods *
@@ -654,4 +672,26 @@ void Molecule::setHybridZone(const HybridZone hybridZone)
 void Molecule::setSmoothingFactor(const double factor)
 {
     _smoothingFactor = factor;
+}
+
+/**
+ * @brief set if the molecule is forced to be in the inner region for hybrid
+ * calculations
+ *
+ * @param isForcedInner
+ */
+void Molecule::setForcedInner(const bool isForcedInner)
+{
+    _isForcedInner = isForcedInner;
+}
+
+/**
+ * @brief set if the molecule is forced to be in the outer region for hybrid
+ * calculations
+ *
+ * @param isForcedOuter
+ */
+void Molecule::setForcedOuter(const bool isForcedOuter)
+{
+    _isForcedOuter = isForcedOuter;
 }

@@ -98,6 +98,8 @@ namespace simulationBox
         HybridZone _hybridZone = HybridZone::NOT_HYBRID;
         bool       _isActive   = true;
         double     _smoothingFactor;
+        bool       _isForcedInner = false;
+        bool       _isForcedOuter = false;
 
        public:
         Molecule() = default;
@@ -178,6 +180,9 @@ namespace simulationBox
         [[nodiscard]] pq::SharedAtomVec       &getAtoms();
         [[nodiscard]] const pq::SharedAtomVec &getAtoms() const;
 
+        [[nodiscard]] bool isForcedInner() const;
+        [[nodiscard]] bool isForcedOuter() const;
+
         /***************************
          * standard setter methods *
          ***************************/
@@ -192,6 +197,9 @@ namespace simulationBox
         void setCenterOfMass(const pq::Vec3D &centerOfMass);
         void setHybridZone(const HybridZone hybridZone);
         void setSmoothingFactor(const double factor);
+
+        void setForcedInner(const bool isForcedInner);
+        void setForcedOuter(const bool isForcedOuter);
     };
 
 }   // namespace simulationBox

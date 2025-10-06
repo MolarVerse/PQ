@@ -197,24 +197,6 @@ void Atom::addShiftForce(const Vec3D &shiftForce) { _shiftForce += shiftForce; }
  ***************************/
 
 /**
- * @brief return if the atom is forced to be in the inner region for hybrid
- * calculations
- *
- * @return true
- * @return false
- */
-bool Atom::isForcedInner() const { return _isForcedInner; }
-
-/**
- * @brief return if the atom is forced to be in the outer region for hybrid
- * calculations
- *
- * @return true
- * @return false
- */
-bool Atom::isForcedOuter() const { return _isForcedOuter; }
-
-/**
  * @brief return if the atom is active
  *
  * @return true
@@ -405,28 +387,6 @@ Vec3D Atom::getShiftForce() const { return _shiftForce; }
  * standard setter methods *
  *                         *
  ***************************/
-
-/**
- * @brief set if the atom is forced to be in the inner region for hybrid
- * calculations
- *
- * @param isForcedInner
- */
-void Atom::setForcedInner(const bool isForcedInner)
-{
-    _isForcedInner = isForcedInner;
-}
-
-/**
- * @brief set if the atom is forced to be in the outer region for hybrid
- * calculations
- *
- * @param isForcedOuter
- */
-void Atom::setForcedOuter(const bool isForcedOuter)
-{
-    _isForcedOuter = isForcedOuter;
-}
 
 /**
  * @brief set if the atom is active

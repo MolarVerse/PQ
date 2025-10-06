@@ -137,70 +137,74 @@ void SimulationBox::addInnerRegionCenterAtoms(
 }
 
 /**
- * @brief assigns _isForcedInner to all atoms which are in the atomIndices
- * vector
+ * @brief assigns _isForcedInner to all molecules which are in the
+ * moleculeIndices vector
  *
- * @param atomIndices
+ * @param moleculeIndices
  *
- * @throw UserInputException if atom index out of range
- * @throw UserInputException if atom is already _isForcedOuter
+ * @throw UserInputException if molecule index is out of range
+ * @throw UserInputException if molecule is already _isForcedOuter
  */
-void SimulationBox::setupForcedInnerAtoms(const std::vector<int>& atomIndices)
+void SimulationBox::setupForcedInnerMolecules(
+    const std::vector<int>& moleculeIndices
+)
 {
-    for (const auto index : atomIndices)
+    for (const auto index : moleculeIndices)
     {
-        if (index < 0 || index >= static_cast<int>(_atoms.size()))
+        if (index < 0 || index >= static_cast<int>(_molecules.size()))
             throw UserInputException(
                 std::format(
-                    "Forced inner region atom index {} out of range",
+                    "Forced inner region molecule index {} out of range",
                     index
                 )
             );
 
-        if (_atoms[static_cast<size_t>(index)]->isForcedOuter())
+        if (_molecules[static_cast<size_t>(index)].isForcedOuter())
             throw UserInputException(
                 std::format(
-                    "Ambiguous atom index {} - atom is already in forced outer "
-                    "list - cannot be in forced inner list",
+                    "Ambiguous molecule index {} - molecule is already in "
+                    "forced outer list - cannot be in forced inner list",
                     index
                 )
             );
         else
-            _atoms[static_cast<size_t>(index)]->setForcedInner(true);
+            _molecules[static_cast<size_t>(index)].setForcedInner(true);
     }
 }
 
 /**
- * @brief assigns _isForcedOuter to all atoms which are in the atomIndices
- * vector
+ * @brief assigns _isForcedOuter to all molecules which are in the
+ * moleculeIndices vector
  *
- * @param atomIndices
+ * @param moleculeIndices
  *
- * @throw UserInputException if atom index out of range
- * @throw UserInputException if atom is already _isForcedInner
+ * @throw UserInputException if molecule index is out of range
+ * @throw UserInputException if molecule is already _isForcedInner
  */
-void SimulationBox::setupForcedOuterAtoms(const std::vector<int>& atomIndices)
+void SimulationBox::setupForcedOuterMolecules(
+    const std::vector<int>& moleculeIndices
+)
 {
-    for (const auto index : atomIndices)
+    for (const auto index : moleculeIndices)
     {
-        if (index < 0 || index >= static_cast<int>(_atoms.size()))
+        if (index < 0 || index >= static_cast<int>(_molecules.size()))
             throw UserInputException(
                 std::format(
-                    "Forced inner region atom index {} out of range",
+                    "Forced outer region molecule index {} out of range",
                     index
                 )
             );
 
-        if (_atoms[static_cast<size_t>(index)]->isForcedInner())
+        if (_molecules[static_cast<size_t>(index)].isForcedInner())
             throw UserInputException(
                 std::format(
-                    "Ambiguous atom index {} - atom is already in forced inner "
-                    "list - cannot be in forced outer list",
+                    "Ambiguous molecule index {} - molecule is already in "
+                    "forced inner list - cannot be in forced outer list",
                     index
                 )
             );
         else
-            _atoms[static_cast<size_t>(index)]->setForcedOuter(true);
+            _molecules[static_cast<size_t>(index)].setForcedOuter(true);
     }
 }
 

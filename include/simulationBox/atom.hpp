@@ -50,9 +50,7 @@ namespace simulationBox
         size_t _externalAtomType;
         size_t _atomType;
 
-        bool _isActive      = true;
-        bool _isForcedInner = false;
-        bool _isForcedOuter = false;
+        bool _isActive = true;
 
         int                   _atomicNumber;
         double                _mass;
@@ -108,8 +106,6 @@ namespace simulationBox
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] bool isForcedInner() const;
-        [[nodiscard]] bool isForcedOuter() const;
         [[nodiscard]] bool isActive() const;
         [[nodiscard]] bool isQMAtom() const;
         [[nodiscard]] bool isMMAtom() const;
@@ -140,8 +136,6 @@ namespace simulationBox
          * standard setter methods *
          ***************************/
 
-        void setForcedInner(const bool isForcedInner);
-        void setForcedOuter(const bool isForcedOuter);
         void setActive(const bool isActive);
 
         void setName(const std::string_view &name);

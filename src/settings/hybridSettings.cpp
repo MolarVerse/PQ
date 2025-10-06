@@ -50,8 +50,8 @@ void HybridSettings::setInnerRegionCenter(
 /**
  * @brief set the _forcedInnerList in the settings
  *
- * @details the forcedInnerList is a list of atoms which will always be treated
- * with the method chosen for the inner region of the hybrid calculation
+ * @details the forcedInnerList is a list of molecules which will always be
+ * treated with the method chosen for the inner region of the hybrid calculation
  *
  * @param list
  */
@@ -63,8 +63,8 @@ void HybridSettings::setForcedInnerList(const std::vector<int> &list)
 /**
  * @brief set the _forcedOuterList in the settings
  *
- * @details the forcedInnerList is a list of atoms which will always be treated
- * with the method chosen for the outer region of the hybrid calculation
+ * @details the forcedInnerList is a list of molecules which will always be
+ * treated with the method chosen for the outer region of the hybrid calculation
  *
  * @param list
  */

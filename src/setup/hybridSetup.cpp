@@ -98,7 +98,7 @@ void HybridSetup::setupInnerRegionCenter()
  */
 void HybridSetup::setupForcedInnerList()
 {
-    _engine.getSimulationBox().setupForcedInnerAtoms(
+    _engine.getSimulationBox().setupForcedInnerMolecules(
         HybridSettings::getForcedInnerList()
     );
 }
@@ -109,7 +109,7 @@ void HybridSetup::setupForcedInnerList()
  */
 void HybridSetup::setupForcedOuterList()
 {
-    _engine.getSimulationBox().setupForcedOuterAtoms(
+    _engine.getSimulationBox().setupForcedOuterMolecules(
         HybridSettings::getForcedOuterList()
     );
 }

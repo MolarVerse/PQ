@@ -124,7 +124,7 @@ void HybridInputParser::parseInnerRegionCenter(
 }
 
 /**
- * @brief parse list of atoms which are forced to the inner region in hybrid
+ * @brief parse list of molecules which are forced to the inner region in hybrid
  * calculations
  *
  * @param lineElements
@@ -142,7 +142,7 @@ void HybridInputParser::parseForcedInnerList(
 }
 
 /**
- * @brief parse list of atoms which are forced to the outer region in hybrid
+ * @brief parse list of molecules which are forced to the outer region in hybrid
  * calculations
  *
  * @param lineElements

@@ -163,8 +163,8 @@ namespace simulationBox
          ************************/
 
         void addInnerRegionCenterAtoms(const std::vector<int>& atomIndices);
-        void setupForcedInnerAtoms(const std::vector<int>& atomIndices);
-        void setupForcedOuterAtoms(const std::vector<int>& atomIndices);
+        void setupForcedInnerMolecules(const std::vector<int>& moleculeIndices);
+        void setupForcedOuterMolecules(const std::vector<int>& moleculeIndices);
 
         /************************
          * standard add methods *
