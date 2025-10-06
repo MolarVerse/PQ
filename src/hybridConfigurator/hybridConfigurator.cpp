@@ -172,8 +172,24 @@ void HybridConfigurator::assignHybridZones(SimBox& simBox)
 
     for (auto& mol : simBox.getMolecules())
     {
+        if (mol.isForcedInner())
+        {
+            setZone(mol, CORE);
+            continue;
+        }
+
         mol.calculateCenterOfMass(simBox.getBox());
         const auto com = norm(mol.getCenterOfMass());
+
+        if (mol.isForcedOuter())
+        {
+            if (com <= layerRadius + pointChargeThickness)
+                setZone(mol, POINT_CHARGE);
+            else
+                setZone(mol, OUTER);
+
+            continue;
+        }
 
         if (com <= coreRadius)
             setZone(mol, CORE);

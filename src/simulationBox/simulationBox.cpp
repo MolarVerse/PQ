@@ -162,8 +162,8 @@ void SimulationBox::setupForcedInnerMolecules(
         if (_molecules[static_cast<size_t>(index)].isForcedOuter())
             throw UserInputException(
                 std::format(
-                    "Ambiguous molecule index {} - molecule is already in "
-                    "forced outer list - cannot be in forced inner list",
+                    "Ambiguous molecule index {} - molecule cannot be in "
+                    "forced_inner_list AND forced_outer_list at the same time",
                     index
                 )
             );
@@ -198,8 +198,8 @@ void SimulationBox::setupForcedOuterMolecules(
         if (_molecules[static_cast<size_t>(index)].isForcedInner())
             throw UserInputException(
                 std::format(
-                    "Ambiguous molecule index {} - molecule is already in "
-                    "forced inner list - cannot be in forced outer list",
+                    "Ambiguous molecule index {} - molecule cannot be in "
+                    "forced_inner_list AND forced_outer_list at the same time",
                     index
                 )
             );
