@@ -196,7 +196,8 @@ namespace engine
         using enum HybridZone;
         using enum Periodicity;
 
-        auto& atoms = _simulationBox->getAtoms();
+        auto&    atoms  = _simulationBox->getAtoms();
+        tensor3D virial = {0.0};
 
         // STEP 1: Setup and run QM calculation, scale forces of smoothing
         // molecules with smF
@@ -210,6 +211,9 @@ namespace engine
             const auto smF = mol.getSmoothingFactor();
             for (auto& atom : mol.getAtoms()) atom->scaleForce(smF);
         }
+
+        if (ManostatSettings::getManostatType() != ManostatType::NONE)
+            virial += _virial->calculateQMVirial(*_simulationBox);
 
         for (auto& atom : atoms) atom->addForceInner(atom->getForce());
         _simulationBox->resetForces();
@@ -226,6 +230,12 @@ namespace engine
         {
             const auto smF = mol.getSmoothingFactor();
             for (auto& atom : mol.getAtoms()) atom->scaleForce(smF);
+        }
+
+        if (ManostatSettings::getManostatType() != ManostatType::NONE)
+        {
+            _virial->calculateVirial(*_simulationBox, *_physicalData);
+            virial += _physicalData->getVirial();
         }
 
         for (auto& atom : atoms)
@@ -247,12 +257,19 @@ namespace engine
         for (auto& mol : _simulationBox->getMoleculesInsideZone(SMOOTHING))
         {
             const auto smF = mol.getSmoothingFactor();
+            for (auto& atom : mol.getAtoms()) atom->scaleForce(1 - smF);
+        }
 
-            for (auto& atom : mol.getAtoms())
-            {
-                const auto force = atom->getForce();
-                atom->addForceOuter(force * (1 - smF));
-            }
+        if (ManostatSettings::getManostatType() != ManostatType::NONE)
+        {
+            _virial->calculateVirial(*_simulationBox, *_physicalData);
+            virial += _physicalData->getVirial();
+        }
+
+        for (auto& atom : atoms)
+        {
+            const auto force = atom->getForce();
+            atom->addForceOuter(force);
         }
         _simulationBox->resetForces();
 
@@ -263,10 +280,34 @@ namespace engine
 
         _intraNonBonded->calculate(*_simulationBox, *_physicalData);
 
+        for (auto& mol : _simulationBox->getMoleculesInsideZone(SMOOTHING))
+        {
+            const auto smF = mol.getSmoothingFactor();
+            for (auto& atom : mol.getAtoms()) atom->scaleForce(1 - smF);
+        }
+
+        if (ManostatSettings::getManostatType() != ManostatType::NONE)
+        {
+            _virial->calculateVirial(*_simulationBox, *_physicalData);
+            virial += _physicalData->getVirial();
+        }
+
+        for (auto& atom : atoms)
+        {
+            const auto force = atom->getForce();
+            atom->addForceOuter(force);
+        }
+
+        _simulationBox->resetForces();
+
+        _physicalData->setVirial({0.0});
+
         _forceField->calculateBondedInteractions(
             *_simulationBox,
             *_physicalData
         );
+
+        virial += _physicalData->getVirial();
 
         for (auto& mol : _simulationBox->getMoleculesInsideZone(SMOOTHING))
         {
@@ -279,6 +320,8 @@ namespace engine
             const auto force = atom->getForce();
             atom->addForceOuter(force);
         }
+
+        _physicalData->setVirial(virial);
     }
 
     /**
