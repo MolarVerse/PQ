@@ -1571,9 +1571,9 @@ Forced Inner List
 
     forced_inner_list = {selection}
 
-With the ``forced_inner_list`` keyword the user can specify a list of atoms which will always be treated with the method chosen for the inner region of the hybrid system.
+With the ``forced_inner_list`` keyword the user can specify a list of molecules which will always be treated with the method chosen for the inner region of the hybrid system.
 For more information about the selection grammar see the `selectionType`_ section.
-By default, no atoms are selected.
+By default, no molecules are selected.
 
 .. _forcedOuterListKey:
 
@@ -1585,9 +1585,9 @@ Forced Outer List
 
     forced_outer_list = {selection}
 
-With the ``forced_outer_list`` keyword the user can specify a list of atoms which will always be treated with the method chosen for the outer region of the hybrid system.
+With the ``forced_outer_list`` keyword the user can specify a list of molecules which will always be treated with the method chosen for the outer region of the hybrid system.
 For more information about the selection grammar see the `selectionType`_ section.
-By default, no atoms are selected.
+By default, no molecules are selected.
 
 .. _qmChargesKey:
 
