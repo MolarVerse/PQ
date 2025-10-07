@@ -64,6 +64,13 @@ namespace engine
         else
             throw HybridMDEngineException("Unknown smoothing method requested");
 
+        for (auto& atom : _simulationBox->getAtoms())
+        {
+            const auto innerForce = atom->getForceInner();
+            const auto outerForce = atom->getForceOuter();
+            atom->setForce(innerForce + outerForce);
+        }
+
         _configurator.shiftAtomsBackToInitialPositions(*_simulationBox);
     }
 
@@ -156,7 +163,6 @@ namespace engine
                 const auto force = atom->getForce();
                 atom->addForceOuter(force * globalSmF);
             }
-            _simulationBox->resetForces();
 
             // Scale and accumulate energies
             qmEnergy      += _physicalData->getQMEnergy() * globalSmF;
@@ -165,15 +171,7 @@ namespace engine
                 _physicalData->getNonCoulombEnergy() * globalSmF;
         }
 
-        // STEP 4: Set forces to the accumulated hybrid forces for MD routine
-        for (auto& atom : atoms)
-        {
-            const auto innerForce = atom->getForceInner();
-            const auto outerForce = atom->getForceOuter();
-            atom->setForce(innerForce + outerForce);
-        }
-
-        // STEP 5: Set energies to the accumulated hybrid energies
+        // STEP 4: Set energies to the accumulated hybrid energies
         _physicalData->setQMEnergy(qmEnergy);
         _physicalData->setCoulombEnergy(coulombEnergy);
         _physicalData->setNonCoulombEnergy(nonCoulombEnergy);
@@ -201,7 +199,7 @@ namespace engine
         auto& atoms = _simulationBox->getAtoms();
 
         // STEP 1: Setup and run QM calculation, scale forces of smoothing
-        // molecules
+        // molecules with smF
         _configurator.activateMolecules(*_simulationBox);
         _configurator.deactivateOuterMolecules(*_simulationBox);
 
@@ -216,8 +214,9 @@ namespace engine
         for (auto& atom : atoms) atom->addForceInner(atom->getForce());
         _simulationBox->resetForces();
 
-        // STEP 2: Setup and run MM calculation, scale forces of smoothing
-        // molecules
+        // STEP 2: Calculate inter-nonbonded forces between
+        // MM-MM , CORE-MM , LAYER+SMOOTHING-MM
+        // scale forces of smoothing molecules with smF
         _configurator.toggleMoleculeActivation(*_simulationBox);
 
         _potential
@@ -236,25 +235,8 @@ namespace engine
         }
         _simulationBox->resetForces();
 
-        _intraNonBonded->calculate(*_simulationBox, *_physicalData);
-
-        _forceField->calculateBondedInteractions(
-            *_simulationBox,
-            *_physicalData
-        );
-
-        for (auto& mol : _simulationBox->getMoleculesInsideZone(SMOOTHING))
-        {
-            const auto smF = mol.getSmoothingFactor();
-            for (auto& atom : mol.getAtoms()) atom->scaleForce(1 - smF);
-        }
-
-        for (auto& atom : atoms)
-        {
-            const auto force = atom->getForce();
-            atom->addForceOuter(force);
-        }
-        _simulationBox->resetForces();
+        // STEP 3: Calculate inter-nonbonded forces between SMOOTHING molecules
+        // scale forces of smoothing molecules with (1 - smF)
 
         _potential->calculateHotspotSmoothingMMForces(
             *_simulationBox,
@@ -274,12 +256,28 @@ namespace engine
         }
         _simulationBox->resetForces();
 
-        // STEP 3: Set forces to the sum of individual hybrid forces
+        // STEP 4: Calculate intra-nonbonded and bonded forces
+        // scale forces of smoothing molecules with (1 - smF)
+
+        _configurator.activateSmoothingMolecules(*_simulationBox);
+
+        _intraNonBonded->calculate(*_simulationBox, *_physicalData);
+
+        _forceField->calculateBondedInteractions(
+            *_simulationBox,
+            *_physicalData
+        );
+
+        for (auto& mol : _simulationBox->getMoleculesInsideZone(SMOOTHING))
+        {
+            const auto smF = mol.getSmoothingFactor();
+            for (auto& atom : mol.getAtoms()) atom->scaleForce(1 - smF);
+        }
+
         for (auto& atom : atoms)
         {
-            const auto innerForce = atom->getForceInner();
-            const auto outerForce = atom->getForceOuter();
-            atom->setForce(innerForce + outerForce);
+            const auto force = atom->getForce();
+            atom->addForceOuter(force);
         }
     }
 

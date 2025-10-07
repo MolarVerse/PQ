@@ -239,6 +239,17 @@ void HybridConfigurator::deactivateOuterMolecules(pq::SimBox& simBox)
 }
 
 /**
+ * @brief Activate molecules within hybrid zone SMOOTHING
+ *
+ * @param simBox The simulation box containing the molecules
+ */
+void HybridConfigurator::activateSmoothingMolecules(pq::SimBox& simBox)
+{
+    for (auto& mol : simBox.getMoleculesInsideZone(SMOOTHING))
+        mol.activateMolecule();
+}
+
+/**
  * @brief Deactivate specific smoothing molecules by their indices
  *
  * @param inactiveMolecules Set of smoothing molecule indices (0-based within

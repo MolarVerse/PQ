@@ -71,14 +71,9 @@ void DihedralForceField::calculateEnergyAndForces(
     NonCoulombPotential    &nonCoulombPotential
 )
 {
-    // Count inactive molecules
-    const size_t inactiveCount = (_molecules[0]->isActive() ? 0 : 1) +
-                                 (_molecules[1]->isActive() ? 0 : 1) +
-                                 (_molecules[2]->isActive() ? 0 : 1) +
-                                 (_molecules[3]->isActive() ? 0 : 1);
-
-    // Return if 3 or more molecules are inactive
-    if (inactiveCount >= 3)
+    // Return if all 4 molecules are inactive
+    if (!_molecules[0]->isActive() && !_molecules[1]->isActive() &&
+        !_molecules[2]->isActive() && !_molecules[3]->isActive())
         return;
 
     const auto position2 = _molecules[1]->getAtomPosition(_atomIndices[1]);

@@ -45,6 +45,7 @@ namespace configurator
         void assignHybridZones(pq::SimBox &);
         void activateMolecules(pq::SimBox &);
         void deactivateOuterMolecules(pq::SimBox &);
+        void activateSmoothingMolecules(pq::SimBox &);
         void deactivateSmoothingMolecules(
             std::unordered_set<size_t> inactiveMolecules,
             pq::SimBox &
