@@ -38,6 +38,8 @@ using namespace linearAlgebra;
 using namespace physicalData;
 using namespace potential;
 
+using enum HybridZone;
+
 /**
  * @brief constructor
  *
@@ -73,6 +75,10 @@ void AngleForceField::calculateEnergyAndForces(
     if (!_molecules[0]->isActive() && !_molecules[1]->isActive() &&
         !_molecules[2]->isActive())
         return;
+
+    auto smF = 1.0;
+    if (_molecules[0]->getHybridZone() == SMOOTHING)
+        smF = _molecules[0]->getSmoothingFactor();
 
     // central position of alpha
     const auto position1 = _molecules[0]->getAtomPosition(_atomIndices[0]);
@@ -139,7 +145,9 @@ void AngleForceField::calculateEnergyAndForces(
 
             forcexyz = forceMagnitude * dPosition23;
 
-            physicalData.addVirial(tensorProduct(dPosition23, forcexyz));
+            physicalData.addVirial(
+                tensorProduct(dPosition23, forcexyz) * (1 - smF)
+            );
 
             _molecules[1]->addAtomForce(_atomIndices[1], forcexyz);
             _molecules[2]->addAtomForce(_atomIndices[2], -forcexyz);

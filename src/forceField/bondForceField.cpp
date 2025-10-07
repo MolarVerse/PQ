@@ -38,6 +38,8 @@ using namespace linearAlgebra;
 using namespace physicalData;
 using namespace potential;
 
+using enum HybridZone;
+
 /**
  * @brief constructor
  *
@@ -77,6 +79,10 @@ void BondForceField::calculateEnergyAndForces(
     if (!_molecules[0]->isActive() && !_molecules[1]->isActive())
         return;
 
+    auto smF = 1.0;
+    if (_molecules[0]->getHybridZone() == SMOOTHING)
+        smF = _molecules[0]->getSmoothingFactor();
+
     const auto position1 = _molecules[0]->getAtomPosition(_atomIndices[0]);
     const auto position2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
     auto       dPosition = position1 - position2;
@@ -111,7 +117,7 @@ void BondForceField::calculateEnergyAndForces(
     _molecules[0]->addAtomForce(_atomIndices[0], force);
     _molecules[1]->addAtomForce(_atomIndices[1], -force);
 
-    physicalData.addVirial(tensorProduct(dPosition, force));
+    physicalData.addVirial(tensorProduct(dPosition, force) * (1 - smF));
 }
 
 /***************************

@@ -38,6 +38,8 @@ using namespace physicalData;
 using namespace potential;
 using namespace simulationBox;
 
+using enum HybridZone;
+
 /**
  * @brief Construct a new Dihedral Force Field:: Dihedral Force Field object
  *
@@ -75,6 +77,10 @@ void DihedralForceField::calculateEnergyAndForces(
     if (!_molecules[0]->isActive() && !_molecules[1]->isActive() &&
         !_molecules[2]->isActive() && !_molecules[3]->isActive())
         return;
+
+    auto smF = 1.0;
+    if (_molecules[0]->getHybridZone() == SMOOTHING)
+        smF = _molecules[0]->getSmoothingFactor();
 
     const auto position2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
     const auto position3 = _molecules[2]->getAtomPosition(_atomIndices[2]);
@@ -163,7 +169,9 @@ void DihedralForceField::calculateEnergyAndForces(
             const auto forcexyz = forceMagnitude * dPosition14;
 
             if (!isImproperDihedral)
-                physicalData.addVirial(tensorProduct(dPosition14, forcexyz));
+                physicalData.addVirial(
+                    tensorProduct(dPosition14, forcexyz) * (1 - smF)
+                );
 
             _molecules[0]->addAtomForce(_atomIndices[0], forcexyz);
             _molecules[3]->addAtomForce(_atomIndices[3], -forcexyz);
