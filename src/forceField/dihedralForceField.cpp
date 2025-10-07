@@ -78,7 +78,7 @@ void DihedralForceField::calculateEnergyAndForces(
         !_molecules[2]->isActive() && !_molecules[3]->isActive())
         return;
 
-    auto smF = 1.0;
+    auto smF = 0.0;
     if (_molecules[0]->getHybridZone() == SMOOTHING)
         smF = _molecules[0]->getSmoothingFactor();
 
