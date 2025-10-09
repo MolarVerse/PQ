@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-#  pq_calc.turbomole_mp2
+#  pq_calc.turbomole_rimp2
 #
 # + Interface between PQ and Turbomole
 # + initializes QM run: define
