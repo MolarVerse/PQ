@@ -152,6 +152,8 @@ if ($pointcharges == 1)
   # save files control and mos for grad calc
   `cp control control.bak`;
   `cp mos mos.bak`;
+  `cp alpha alpha.bak`;
+  `cp beta beta.bak`;
 
   $control_contents = "";
 
@@ -201,6 +203,8 @@ if ($pointcharges == 1)
 {
   `cp control.bak control`;
   `cp mos.bak mos`;
+  `cp alpha.bak alpha`;
+  `cp beta.bak beta`;
   unlink "dscf_problem";
 }
 
