@@ -7,22 +7,23 @@
 #  runs QM calculation: dscf, grad, moloch2
 #  etracts data - energy, gradient, pointcharges
 #
-# + check if hotspot is changed ($changed=[0,1])
+# + check if inital mo guess can be reused via $changed
 #   if YES ($changed == 1)
 #     + remove old turbomole files
 #     + make tm_define.in from tm_define.template
-#     + check the pointcharge scheme ($pointcharge_scheme [0 mulliken, 1 loewdin])
-#     + inset the $charge
 #     + run define with tm_define.in 
-#     + insert point-charges from $pointcharges_file to control file
-#     + run dscf
-#     + remove point_charges
+#     + check the pointcharge scheme ($pointcharge_scheme [0 mulliken, 1 loewdin])
+# + insert point-charges from $pointcharges_file to control file
+# + run dscf
+# + remove point_charges
+#   if pointcharges have been used
+#     + compute energy without pointcharge contribution
+# + extract energy and write it to $qm_forces
 # + run grad
-# + transform gradient
+# + extract gradients and write them to $qm_forces
 # + run moloch2
-# + extracts charges and write them to charge.out
-# + summary and cleanup
-# + exit 
+# + extract charges and write them to $qm_charges
+# + exit script
 #
 
 
@@ -30,7 +31,7 @@ use strict;
 
 # subroutines
 use subs qw(insert_pointcharges);
-use subs qw(remove_pointcharges); 
+use subs qw(remove_pointcharges);
 
 
 # script's name
@@ -132,7 +133,7 @@ if ($changed == 1)
       print CONTROL $control_contents;
       close (CONTORL);
      }
-   }
+  }
 
 if ($pointcharges == 1)
 {
@@ -308,7 +309,6 @@ sub insert_pointcharges {
   }
   close (CONTROL);
 
-
   open (CONTROL, "> $control_file") or
     die "\n\n\t (-) $progname: Error opening file '$control_file'\n";
 
@@ -348,7 +348,7 @@ sub remove_pointcharges {
   }
   close (CONTROL);
 
-  open (CONTROL, "> $control_file") or 
+  open (CONTROL, "> $control_file") or
       die "\n\n\t (-) $progname: Error opening file '$control_file'\n";
   print CONTROL $contents;
   close (CONTROL);
