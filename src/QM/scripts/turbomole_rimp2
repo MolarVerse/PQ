@@ -51,8 +51,8 @@ $progname =~ s{^.*/}{};
 # input data from the PQ program
 my $charge             = $ARGV[0];             # charge of the qm region
 my $changed            = $ARGV[1];             # flag if define has to be run
-my $guess_mo           = $ARGV[2];             # flag if a dft step is performed as a guess
-my $pointcharges       = $ARGV[3];             # pointcharge scheme
+my $pointcharges       = $ARGV[2];             # flag if point charges are used
+my $pointcharge_scheme = $ARGV[3];             # pointcharge scheme
 my $nprocessors        = $ARGV[4];             # number of processors
 my $pointcharges_file  = $ARGV[5];             # name of the pointcharges_file
 
@@ -66,7 +66,6 @@ my $control_contents   = "";                   # helper variable - control file 
 my $tm_out             = "";                   # output of define, dscf, and grad
 my $converged_string   = 'convergence criteria satisfied after\s*\d+' .
   '\s+iterations';		                         # energy search string
-my $n_pointcharges;                            # number of pointcharges variable                    
 
 # files and commands
 my $qm_coords            = "coord";              # coordinate file
@@ -86,8 +85,6 @@ my $out_file_prev        = "tm.out.prev";        # summary file - previous step
 my $qm_coords_prev       = "coord.prev";         # summary file - coordinates previous step
 my $pointcharges_prev    = "pointcharges.prev";
 
-#$n_pointcharges = `wc -l pointcharges`;
-$n_pointcharges = 0;
 
 # check if molecules have been exchanged between QM and MM region
 if ($changed == 1)
@@ -138,7 +135,7 @@ if ($changed == 1)
   #print CONTROL $control_contents;
   #close (CONTROL);
 
-  if ($n_pointcharges != 0)
+  if ($pointcharges == 1)
   {     
     # insert pointcharges in the control file	
       insert_pointcharges; 
@@ -147,20 +144,6 @@ if ($changed == 1)
 # run dscf step
   $tm_out = `$dscf_exe $nprocessors 2>&1 | tee -a $out_file`;	 
   exit 1 if ($tm_out !~ /$converged_string/);
-
-  if ($guess_mo == 1)
-  {	
-      # switch off dft and rerun dscf
-
-      open (TM_DEFINE_OFF, "< tm_define.off") or
-          die "\n\n\t (-) $progname: Error opening file 'tm_define.off'\n";
-      close (TM_DEFINE_OFF);
-
-      $tm_out = `define < tm_define.off 2>&1 | tee -a $out_file`;
-           
-      $tm_out = `$dscf_exe $nprocessors 2>&1 | tee -a $out_file`;	
-      exit 1 if ($tm_out !~ /$converged_string/);
-  }
 }
 else
 { 
@@ -187,7 +170,7 @@ else
   print CONTROL $control_contents;
    close (CONTORL);
    
-  if ($n_pointcharges != 0)
+  if ($pointcharges == 1)
   {  
    # insert pointcharges in the control file	
      insert_pointcharges; 
@@ -198,7 +181,7 @@ else
     exit 1 if ($tm_out !~ /$converged_string/);
 }
 
- if ($n_pointcharges != 0)
+ if ($pointcharges == 1)
  { 
    # pointcharges are not included for the gradient calculation
    # delete pointcharges	
@@ -291,7 +274,7 @@ open(OUT , "< $out_file") or
 open(CHARGE, "> $qm_charges") or 
    die "\n\n\t (-) $progname: Error opening file '$qm_charges'\n";
 
-if ($pointcharges == 0)
+if ($pointcharge_scheme == 0)
 {
   # mulliken
     $start_flag = "atom      charge";
@@ -312,12 +295,12 @@ if ($pointcharges == 0)
     }
   }
 }
-elsif ($pointcharges == 1)
+elsif ($pointcharge_scheme == 1)
 {
  die "\n\n\t (-) $progname: Error - Loewdin population analysis not implemented - exiting ...";
 }
 
-elsif ($pointcharges == 2)
+elsif ($pointcharge_scheme == 2)
 {
   # nbo
     $start_flag = "cartesian gradients written onto";
@@ -345,7 +328,6 @@ close(CHARGE);
 # create the "log-file" for the last run
 `mv $out_file  $out_file_prev`;
 `mv $qm_coords $qm_coords_prev`;
-#`mv $pointcharges $pointcharges_prev`;
 
 
 exit 0;

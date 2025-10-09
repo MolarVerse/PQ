@@ -42,7 +42,7 @@ $progname =~ s{^.*/}{};
 # input data from the PQ programm
 my $charge             = $ARGV[0];             # charge of the qm region
 my $changed            = $ARGV[1];             # flag if define has to be run
-my $guess_mo           = $ARGV[2];             # flag if a dft step is performed as a guess
+my $pointcharges       = $ARGV[2];             # flag if point charges are used
 my $pointcharge_scheme = $ARGV[3];             # pointcharge scheme
 my $nprocessors        = $ARGV[4];             # number of processors
 my $pointcharges_file  = $ARGV[5];             # name of the pointcharges_file
@@ -82,8 +82,6 @@ my $qm_coords_prev     = "coord.prev";         # summary file - coordinates prev
 # my $mm_pointcharges_prev =  "mm_pointcharges.prev";
 
 my $energy_nopc;
-
-my $pointcharges = 0;      # change later to read it as command line argument: 0 - no pointcharges, 1 - pointcharges
 
 if ($changed == 1)
   {
@@ -146,7 +144,6 @@ $tm_out = `$dscf_exe $nprocessors 2>&1 | tee $out_file`;
 exit 1 if ($tm_out !~ /$converged_string/);
 
 
-
 if ($pointcharges == 1)
 {
   remove_pointcharges;
@@ -156,7 +153,9 @@ if ($pointcharges == 1)
   `cp control control.bak`;
   `cp mos mos.bak`;
 
+print "Debug: DSCF calculation completed successfully\n";
   $control_contents = "";
+
 
   open (CONTROL, "< $control_file") or
     die "\n\n\t (-) $progname: Error opening file '$control_file'\n";

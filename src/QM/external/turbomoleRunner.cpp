@@ -77,6 +77,36 @@ void TurbomoleRunner::writeCoordsFile(SimulationBox &box)
     coordsFile.close();
 }
 
+void TurbomoleRunner::writePointChargeFile(pq::SimBox &box)
+{
+    const std::string fileName = FileSettings::getPointChargeFileName();
+    std::ofstream     pcFile(fileName);
+
+    using enum HybridZone;
+    for (const auto &mol : box.getInactiveMolecules())
+    {
+        const auto zone = mol.getHybridZone();
+
+        if (zone == SMOOTHING || zone == POINT_CHARGE)
+            for (const auto &atom : mol.getAtoms())
+            {
+                const auto pos = atom->getPosition() * _ANGSTROM_TO_BOHR_;
+                pcFile << std::format(
+                    "{:16.12f}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
+                    pos[0],
+                    pos[1],
+                    pos[2],
+                    atom->getPartialCharge()
+                );
+                _usePointCharges = true;
+            }
+    }
+    pcFile.close();
+
+    if (!_usePointCharges)
+        ::system(std::format("rm -f {}", fileName).c_str());
+}
+
 /**
  * @brief executes the external qm program
  *
@@ -93,15 +123,18 @@ void TurbomoleRunner::execute(SimulationBox &box)
             )
         );
 
-    const auto reuseCharges = _isFirstExecution ? 1 : 0;
+    const auto reuseCharges    = _isFirstExecution ? 1 : 0;
+    const auto usePointCharges = _usePointCharges ? 1 : 0;
 
     const auto command = std::format(
-        "{} 0 {} 0 0 0 {}",
+        "{} 0 {} {} 0 0 {}",
         scriptFile,
         reuseCharges,
+        usePointCharges,
         FileSettings::getPointChargeFileName()
     );
     ::system(command.c_str());
 
     _isFirstExecution = false;
+    _usePointCharges  = false;
 }
