@@ -35,10 +35,12 @@
 
 namespace potential
 {
-    enum class ChargeType : size_t
+    struct QMChargeTag
     {
-        QM_CHARGE,
-        MM_CHARGE
+    };
+
+    struct MMChargeTag
+    {
     };
 
     /**
@@ -96,32 +98,29 @@ namespace potential
 
         virtual pq::SharedPotential clone() const = 0;
 
+        template <typename ChargeTag1, typename ChargeTag2>
         std::pair<double, double> calculateSingleInteraction(
             const pq::Box &box,
             pq::Molecule  &mol1,
             pq::Molecule  &mol2,
             pq::Atom      &atom1,
-            pq::Atom      &atom2,
-            ChargeType     chargeType1,
-            ChargeType     chargeType2
+            pq::Atom      &atom2
         ) const;
 
+        template <typename ChargeTag1, typename ChargeTag2>
         double calculateSingleCoulombInteraction(
             const pq::Box &box,
             pq::Atom      &atom1,
-            pq::Atom      &atom2,
-            ChargeType     chargeType1,
-            ChargeType     chargeType2
+            pq::Atom      &atom2
         ) const;
 
+        template <typename ChargeTag1, typename ChargeTag2>
         std::pair<double, double> calculateSingleInteractionOneWay(
             const pq::Box &box,
             pq::Molecule  &mol1,
             pq::Molecule  &mol2,
             pq::Atom      &atom1,
-            pq::Atom      &atom2,
-            ChargeType     chargeType1,
-            ChargeType     chargeType2
+            pq::Atom      &atom2
         ) const;
 
         template <typename T>
@@ -129,6 +128,9 @@ namespace potential
 
         template <typename T>
         void makeNonCoulombPotential(T nonCoulombPot);
+
+        template <typename T>
+        double getPartialCharge(pq::Atom &atom) const;
 
         /***************************
          * standard setter methods *

@@ -32,7 +32,6 @@ using namespace potential;
 using namespace simulationBox;
 using namespace physicalData;
 
-using enum ChargeType;
 using enum simulationBox::HybridZone;
 
 /**
@@ -76,14 +75,12 @@ void PotentialBruteForce::calculateForces(
                 for (auto &atom2 : mol2.getAtoms())
                 {
                     const auto [coulombEnergy, nonCoulombEnergy] =
-                        calculateSingleInteraction(
+                        calculateSingleInteraction<MMChargeTag, MMChargeTag>(
                             *box,
                             mol1,
                             mol2,
                             *atom1,
-                            *atom2,
-                            MM_CHARGE,
-                            MM_CHARGE
+                            *atom2
                         );
 
                     totalCoulombEnergy    += coulombEnergy;
@@ -124,13 +121,9 @@ void PotentialBruteForce::calculateCoreToOuterForces(
         for (auto &mol2 : simBox.getMMMolecules())
             for (auto &atom1 : mol1.getAtoms())
                 for (auto &atom2 : mol2.getAtoms())
-                    totalCoulombEnergy += calculateSingleCoulombInteraction(
-                        *box,
-                        *atom1,
-                        *atom2,
-                        QM_CHARGE,
-                        MM_CHARGE
-                    );
+                    totalCoulombEnergy += calculateSingleCoulombInteraction<
+                        QMChargeTag,
+                        MMChargeTag>(*box, *atom1, *atom2);
 
     physicalData.addCoulombEnergy(totalCoulombEnergy);
 
@@ -168,14 +161,12 @@ void PotentialBruteForce::calculateLayerToOuterForces(
                 for (auto &atom2 : mol2.getAtoms())
                 {
                     const auto [coulombEnergy, nonCoulombEnergy] =
-                        calculateSingleInteraction(
+                        calculateSingleInteraction<QMChargeTag, MMChargeTag>(
                             *box,
                             mol1,
                             mol2,
                             *atom1,
-                            *atom2,
-                            QM_CHARGE,
-                            MM_CHARGE
+                            *atom2
                         );
 
                     totalCoulombEnergy    += coulombEnergy;
@@ -208,14 +199,12 @@ void PotentialBruteForce::calculateHotspotSmoothingMMForces(
                 for (auto &atom2 : mol2.getAtoms())
                 {
                     const auto [coulombEnergy, nonCoulombEnergy] =
-                        calculateSingleInteraction(
+                        calculateSingleInteraction<MMChargeTag, QMChargeTag>(
                             *box,
                             mol1,
                             mol2,
                             *atom1,
-                            *atom2,
-                            MM_CHARGE,
-                            QM_CHARGE
+                            *atom2
                         );
 
                     totalCoulombEnergy    += coulombEnergy;
@@ -241,15 +230,9 @@ void PotentialBruteForce::calculateHotspotSmoothingMMForces(
                 for (auto &atom2 : mol2.getAtoms())
                 {
                     const auto [coulombEnergy, nonCoulombEnergy] =
-                        calculateSingleInteractionOneWay(
-                            *box,
-                            mol1,
-                            mol2,
-                            *atom1,
-                            *atom2,
-                            MM_CHARGE,
-                            QM_CHARGE
-                        );
+                        calculateSingleInteractionOneWay<
+                            MMChargeTag,
+                            QMChargeTag>(*box, mol1, mol2, *atom1, *atom2);
 
                     totalCoulombEnergy    += coulombEnergy;
                     totalNonCoulombEnergy += nonCoulombEnergy;
