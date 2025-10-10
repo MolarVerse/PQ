@@ -21,7 +21,6 @@
 # + extract energy and write it to $qm_forces
 # + run grad
 # + extract gradients and write them to $qm_forces
-# + run moloch2
 # + extract charges and write them to $qm_charges
 # + exit script
 #
@@ -63,86 +62,58 @@ my $n_pointcharges;                            # number of pointcharges variable
 
 # files and commands
 my $qm_coords          = "coord";              # coordinate file
-# my $mm_pointcharges    = "mm_pointcharges";    # coordinates of pointcharges
-my $dscf_exe           = "dscf";                # tm modul for scf calculation
-my $grad_exe           = "grad";	       # tm modul for gradient calculation
+my $dscf_exe           = "dscf";               # tm modul for scf calculation
+my $grad_exe           = "grad";	             # tm modul for gradient calculation
 my $define_template    = "tm_define.template"; # must exist before you start!
 my $control_file       = "control";            # tm control file
 my $energy_file        = "energy";             # tm output energy
 my $gradient_file      = "gradient";           # tm output gradients
-my $moloch_out         = "moloch.out";         # tm output population analysis   
 
 my $qm_forces          = "qm_forces";          # result file: energy plus forces of all qm atoms
 my $qm_charges         = "qm_charges";         # result file: partial charges of all qm atoms
 
 my $dscf_nopc_out      = "dscf_nopc.out";      # dscf file - no pointcharges                                 
 my $out_file           = "tm.out";	           # summary file
-my $out_file_prev      = "tm.out.prev";        # summary file - previous step
-my $qm_coords_prev     = "coord.prev";         # summary file - coordinates previous step
-# my $mm_pointcharges_prev =  "mm_pointcharges.prev";
-
-my $energy_nopc;
 
 if ($changed == 1)
-  {
-    unlink "control";
-    unlink "basis";
-    unlink "mos";
-    unlink "alpha";
-    unlink "beta";
-    unlink "tmp.input";
+{
+  unlink "control";
+  unlink "basis";
+  unlink "mos";
+  unlink "alpha";
+  unlink "beta";
+  unlink "tmp.input";
 
 # create tm_define.in from tm_define.template
 # and insert QM charge
-    open (TM_DEFINE_TEMPLATE, "< tm_define.template") or
-         die "\n\n\t (-) $progname: Error opening file 'tm_define.template'\n";
+  open (TM_DEFINE_TEMPLATE, "< tm_define.template") or
+        die "\n\n\t (-) $progname: Error opening file 'tm_define.template'\n";
 
-    open (TM_DEFINE_IN, "> tm_define.in") or
-         die "\n\n\t (-) $progname: Error opening file 'tm_define.in'\n";
+  open (TM_DEFINE_IN, "> tm_define.in") or
+        die "\n\n\t (-) $progname: Error opening file 'tm_define.in'\n";
 
-    while (<TM_DEFINE_TEMPLATE>)
-    {
-       s{__CHARGE__}{$charge};
-       print TM_DEFINE_IN;
-    }
+  while (<TM_DEFINE_TEMPLATE>)
+  {
+      s{__CHARGE__}{$charge};
+      print TM_DEFINE_IN;
+  }
 
-   close (TM_DEFINE_TEMPLATE);
-   close (TM_DEFINE_IN);
+  close (TM_DEFINE_TEMPLATE);
+  close (TM_DEFINE_IN);
 
 # execute the define
-   $tm_out = `define < tm_define.in 2>&1 | tee $out_file`;
-
-# replace mulliken by loewdin if requested
-   if ($pointcharge_scheme == 1)
-     {
-
-      open (CONTROL, "< $control_file") or
-         die "\n\n\t (-) $progname: Error opening file '$control_file'\n";
-
-       while (<CONTROL>)
-         {
-            s{mulliken}{loewdin};
-            $control_contents .= $_;
-         }
-      close (CONTORL);
-
-      open (CONTROL, "> $control_file") or
-            die "\n\n\t (-) $progname: Error opening file '$control_file'\n";
-      print CONTROL $control_contents;
-      close (CONTORL);
-     }
-  }
+  $tm_out = `define < tm_define.in 2>&1 | tee $out_file`;
+}
 
 if ($pointcharges == 1)
 {
   # insert pointcharges in the control file
     insert_pointcharges;
 }
-  
-# execute dscf
-$tm_out = `$dscf_exe $nprocessors 2>&1 | tee $out_file`;	
-exit 1 if ($tm_out !~ /$converged_string/);
 
+# execute dscf
+$tm_out = `$dscf_exe 2>&1 | tee $out_file`;	
+exit 1 if ($tm_out !~ /$converged_string/);
 
 if ($pointcharges == 1)
 {
@@ -151,9 +122,9 @@ if ($pointcharges == 1)
   # compute energy without pointcharge contribution
   # save files control and mos for grad calc
   `cp control control.bak`;
-  `cp mos mos.bak`;
-  `cp alpha alpha.bak`;
-  `cp beta beta.bak`;
+  `cp mos mos.bak 2>/dev/null`;
+  `cp alpha alpha.bak 2>/dev/null`;
+  `cp beta beta.bak 2>/dev/null`;
 
   $control_contents = "";
 
@@ -180,15 +151,16 @@ if ($pointcharges == 1)
   close (CONTORL);
 
   # execute dscf
-  `$dscf_exe $nprocessors 2>&1 | tee $dscf_nopc_out`;
+  `$dscf_exe 2>&1 | tee $dscf_nopc_out`;
 }
 
-# read in energy from dscf output, if pointcharges are used read from dscf_nopc.out
-my $energy_file_to_open = ($pointcharges == 1) ? $dscf_nopc_out : $out_file;
-open (ENERGY, "< $energy_file_to_open") or
-  die "\n\n\t (-)  Error opening file '$energy_file_to_open'\n";
+if ($pointcharges == 1)
+{
+  # read in 1st SCF energy from dscf_nopc_out
+  open (ENERGY, "< $dscf_nopc_out") or
+    die "\n\n\t (-)  Error opening file '$dscf_nopc_out'\n";
 
-while (<ENERGY>) 
+  while (<ENERGY>) 
   {
       
     if (/^\s+1\s+-\d+.\d+\s+-\d+.\d+\s+\d+.\d+\s+\d+.\d+D\+\d+\s+\d+.\d+D/)
@@ -197,20 +169,43 @@ while (<ENERGY>)
       $energy = (split ' ', $line)[1];
     }
   }
+
+  close (ENERGY);
+}
+else
+{
+# read in total energy from out_file
+open (ENERGY, "< $out_file") or
+  die "\n\n\t (-)  Error opening file '$out_file'\n";
+
+ while (<ENERGY>)
+ {
+   last if /^\s+\:\s+kinetic/;
+
+   y/D/E/;
+
+   if (/^\s+\|\s+total/)
+   {
+      my @energy_line = split;
+
+     $energy=$energy_line[4];   
+   }
+ }
+
 close (ENERGY);
+}
 
 if ($pointcharges == 1)
 {
   `cp control.bak control`;
-  `cp mos.bak mos`;
-  `cp alpha.bak alpha`;
-  `cp beta.bak beta`;
-  unlink "dscf_problem";
+  `cp mos.bak mos 2>/dev/null`;
+  `cp alpha.bak alpha 2>/dev/null`;
+  `cp beta.bak beta 2>/dev/null`;
 }
 
 unlink $gradient_file;   
 # execute the grad
-$tm_out = `grad $nprocessors 2>&1 | tee -a $out_file`;	
+$tm_out = `grad 2>&1 | tee -a $out_file`;	
 exit 1 if ($tm_out !~ /grad ended normally/);
 
 open (FORCES, "> $qm_forces") or
@@ -233,7 +228,10 @@ while (<GRADIENT>) {
 
   my @gradient = split;
 
- # write  gradient to qm_forces
+  # Skip coordinate lines (4 entries: x, y, z, atom_type)
+  next if ($#gradient == 3);
+
+  # Process gradient lines (3 entries: force_x, force_y, force_z)
   if ($#gradient == 2) {
     printf FORCES ("%20.14G  %20.14G  %20.14G\n",
 		   $gradient[0], $gradient[1], $gradient[2]);
@@ -243,56 +241,36 @@ while (<GRADIENT>) {
 close (FORCES);
 close (GRADIENT);
 
-# run moloch2 to calculate charges of QM atoms
+# initialize the correct flags
+  # mulliken
+$start_flag = "atom      charge";
+$stop_flag  = "from total density versus population analysis";
 
-# RHF-calculations: moloch.out is in the working directory
-# UHF-calculations: moloch.out is in working/moloch_n_dir/
-# in case of UHF - copy moloch.out into the working directory
-
-unlink $moloch_out;
-
-$tm_out =`moloch2  2>&1 | tee -a $out_file`;
-if (-f "moloch_n_dir/moloch.out") {
-        `cp -f moloch_n_dir/moloch.out moloch.out`;
-}
-
-# extract qm partial charges
-# mulliken
-if ($pointcharge_scheme == 0)
-{
-  $start_flag = "atomic brutto population";
-  $stop_flag  = "atomic netto population";
-}
-# loewdin
-elsif ($pointcharge_scheme == 1)
-{
-  $start_flag = "loewdin population analysis";
-  $stop_flag  = "elapsed time for loewdin population analysis";
-}
-
-open(MOLOCH , "< $moloch_out") or
-   die "\n\n\t (-) $progname: Error opening file '$moloch_out'\n";
+my $charge_file_to_open = ($pointcharges == 1) ? $dscf_nopc_out : $out_file;
+open(OUT, "< $charge_file_to_open") or
+   die "\n\n\t (-) $progname: Error opening file '$charge_file_to_open'\n";
      
 open(CHARGE, "> $qm_charges") or 
    die "\n\n\t (-) $progname: Error opening file '$qm_charges'\n";
 
-while (<MOLOCH>) 
+while (<OUT>) 
   {
     last if ($_ =~ m/$stop_flag/);
     $flag = 1 if ($_ =~ m/$start_flag/);
-    if ($flag && m/charge/) 
+
+    if ($flag && m/\s+\d+(\S+)\s+(\S+)/) 
       {
          my $line = $_;
-         $line =~ s/\s+\S+\s+\S+\s+(\S+)\s+\S+\s\S+\s\S\s+\S+\s+\S+\s\S\s+(\S+)/$1 $2/;
+  	     $line =~ s/\s+\d+(\S+)\s+(\S+)/$1 $2/;
          my @item = split(/\s+/, $line);
-         printf CHARGE ("%s  %11.4f\n", @item);
+         printf CHARGE ("%s  %12.5f\n", @item);
       }
   }
-close(MOLOCH);
+
+close(OUT);
 close(CHARGE);
 
 exit 0;
-
 
 
 #### SUBROUTINES ###
