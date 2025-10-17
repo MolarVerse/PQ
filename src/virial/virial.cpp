@@ -84,8 +84,6 @@ void Virial::calculateVirial(SimulationBox &simBox, PhysicalData &data)
  */
 tensor3D Virial::calculateQMVirial(SimulationBox &simBox)
 {
-    startTimingsSection("VirialQM");
-
     tensor3D virial = {0.0};
 
     for (const auto &atom : simBox.getQMAtoms())
@@ -95,8 +93,6 @@ tensor3D Virial::calculateQMVirial(SimulationBox &simBox)
 
         virial += tensorProduct(xyz, forcexyz);
     }
-
-    stopTimingsSection("VirialQM");
 
     return virial;
 }

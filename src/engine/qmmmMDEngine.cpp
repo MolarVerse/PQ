@@ -33,6 +33,7 @@ using namespace pq;
 using namespace customException;
 using namespace settings;
 using namespace simulationBox;
+using namespace virial;
 
 using enum SmoothingMethod;
 using enum HybridZone;
@@ -116,7 +117,7 @@ namespace engine
 
             _qmRunner->run(*_simulationBox, *_physicalData, NON_PERIODIC);
 
-            virial += _virial->calculateQMVirial(*_simulationBox) * globalSmF;
+            virial += Virial::calculateQMVirial(*_simulationBox) * globalSmF;
             accumulateInnerForces(atoms, globalSmF);
 
             // STEP 3: Setup and run MM calculation, accumulate MM forces and MM
@@ -187,7 +188,7 @@ namespace engine
         _qmRunner->run(*_simulationBox, *_physicalData, NON_PERIODIC);
 
         scaleSmoothingMoleculeForcesInner();
-        virial += _virial->calculateQMVirial(*_simulationBox);
+        virial += Virial::calculateQMVirial(*_simulationBox);
         accumulateInnerForces(atoms);
 
         // STEP 2: Setup and run inter-nonbonded calculation between
