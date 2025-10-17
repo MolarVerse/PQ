@@ -102,7 +102,6 @@ namespace engine
             // STEP 1: Generate set of inactive molecules and calculate
             // associated global smoothing factor for this configuration
             const auto inactiveSmMol = generateInactiveMoleculeSet(i, nSmMol);
-
             const auto globalSmF =
                 calculateGlobalSmoothingFactor(inactiveSmMol);
 
@@ -118,7 +117,6 @@ namespace engine
             _qmRunner->run(*_simulationBox, *_physicalData, NON_PERIODIC);
 
             virial += _virial->calculateQMVirial(*_simulationBox) * globalSmF;
-
             accumulateInnerForces(atoms, globalSmF);
 
             // STEP 3: Setup and run MM calculation, accumulate MM forces and MM
@@ -136,6 +134,7 @@ namespace engine
             _virial->calculateVirial(*_simulationBox, *_physicalData);
             virial += _physicalData->getVirial() * globalSmF;
 
+            // bonded interactions directly add to physical data virial
             _physicalData->setVirial({0.0});
 
             _forceField->calculateBondedInteractions(
@@ -144,17 +143,16 @@ namespace engine
             );
 
             virial += _physicalData->getVirial() * globalSmF;
-
             accumulateOuterForces(atoms, globalSmF);
 
-            // Scale and accumulate energies
+            // STEP 4: Scale and accumulate hybrid energies
             qmEnergy      += _physicalData->getQMEnergy() * globalSmF;
             coulombEnergy += _physicalData->getCoulombEnergy() * globalSmF;
             nonCoulombEnergy +=
                 _physicalData->getNonCoulombEnergy() * globalSmF;
         }
 
-        // STEP 4: Set energies to the accumulated hybrid energies
+        // STEP 5: Set energies and virial to their accumulated values
         _physicalData->setQMEnergy(qmEnergy);
         _physicalData->setCoulombEnergy(coulombEnergy);
         _physicalData->setNonCoulombEnergy(nonCoulombEnergy);
@@ -234,6 +232,7 @@ namespace engine
         // STEP 5: Run intra-bonded calculation and scale forces of
         // smoothing molecules with (1 - smF)
 
+        // bonded interactions directly add to physical data virial
         _physicalData->setVirial({0.0});
 
         _forceField->calculateBondedInteractions(
