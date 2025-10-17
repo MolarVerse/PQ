@@ -124,12 +124,7 @@ namespace engine
                 virial +=
                     _virial->calculateQMVirial(*_simulationBox) * globalSmF;
 
-            for (auto& atom : atoms)
-            {
-                const auto force = atom->getForce();
-                atom->addForceInner(force * globalSmF);
-            }
-            _simulationBox->resetForces();
+            accumulateInnerForces(atoms, globalSmF);
 
             // STEP 3: Setup and run MM calculation, accumulate MM forces and MM
             // virial contribution
@@ -158,11 +153,7 @@ namespace engine
 
             virial += _physicalData->getVirial() * globalSmF;
 
-            for (auto& atom : atoms)
-            {
-                const auto force = atom->getForce();
-                atom->addForceOuter(force * globalSmF);
-            }
+            accumulateOuterForces(atoms, globalSmF);
 
             // Scale and accumulate energies
             qmEnergy      += _physicalData->getQMEnergy() * globalSmF;
@@ -409,6 +400,54 @@ namespace engine
     }
 
     /**
+     * @brief Accumulate current forces to inner force storage and reset forces
+     *
+     * @param atoms Vector of atoms whose forces should be accumulated
+     *
+     * @details This function copies the current force on each atom to the inner
+     * force accumulator using addForceInner(), then resets all forces in the
+     * simulation box to zero.
+     */
+    void QMMMMDEngine::accumulateInnerForces(pq::SharedAtomVec& atoms)
+    {
+        for (auto& atom : atoms)
+        {
+            const auto force = atom->getForce();
+            atom->addForceInner(force);
+        }
+
+        _simulationBox->resetForces();
+    }
+
+    /**
+     * @brief Accumulate scaled forces to inner force storage and reset forces
+     *
+     * @param atoms Vector of atoms whose forces should be accumulated
+     * @param globalSmF Global smoothing factor to scale forces before
+     * accumulation
+     *
+     * @details This function copies the current force on each atom, scales it
+     * by the global smoothing factor, then adds it to the inner force
+     * accumulator using addForceInner(). After accumulation, all forces in the
+     * simulation box are reset to zero. This overload is used in exact
+     * smoothing where forces need to be weighted by the configuration-specific
+     * global smoothing factor.
+     */
+    void QMMMMDEngine::accumulateInnerForces(
+        pq::SharedAtomVec& atoms,
+        const double       globalSmF
+    )
+    {
+        for (auto& atom : atoms)
+        {
+            const auto force = atom->getForce();
+            atom->addForceInner(force * globalSmF);
+        }
+
+        _simulationBox->resetForces();
+    }
+
+    /**
      * @brief Accumulate current forces to outer force storage and reset forces
      *
      * @param atoms Vector of atoms whose forces should be accumulated
@@ -429,20 +468,28 @@ namespace engine
     }
 
     /**
-     * @brief Accumulate current forces to inner force storage and reset forces
+     * @brief Accumulate scaled forces to outer force storage and reset forces
      *
      * @param atoms Vector of atoms whose forces should be accumulated
+     * @param globalSmF Global smoothing factor to scale forces before
+     * accumulation
      *
-     * @details This function copies the current force on each atom to the inner
-     * force accumulator using addForceInner(), then resets all forces in the
-     * simulation box to zero.
+     * @details This function copies the current force on each atom, scales it
+     * by the global smoothing factor, then adds it to the outer force
+     * accumulator using addForceOuter(). After accumulation, all forces in the
+     * simulation box are reset to zero. This overload is used in exact
+     * smoothing where forces need to be weighted by the configuration-specific
+     * global smoothing factor.
      */
-    void QMMMMDEngine::accumulateInnerForces(pq::SharedAtomVec& atoms)
+    void QMMMMDEngine::accumulateOuterForces(
+        pq::SharedAtomVec& atoms,
+        const double       globalSmF
+    )
     {
         for (auto& atom : atoms)
         {
             const auto force = atom->getForce();
-            atom->addForceInner(force);
+            atom->addForceOuter(force * globalSmF);
         }
 
         _simulationBox->resetForces();

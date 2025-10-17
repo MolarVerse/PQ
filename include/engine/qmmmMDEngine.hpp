@@ -51,8 +51,18 @@ namespace engine
 
         void setNumberOfQMAtoms();
         void moltypeCheck();
-        void accumulateOuterForces(pq::SharedAtomVec& atoms);
+
         void accumulateInnerForces(pq::SharedAtomVec& atoms);
+        void accumulateInnerForces(
+            pq::SharedAtomVec& atoms,
+            const double       globalSmF
+        );
+
+        void accumulateOuterForces(pq::SharedAtomVec& atoms);
+        void accumulateOuterForces(
+            pq::SharedAtomVec& atoms,
+            const double       globalSmF
+        );
 
         [[nodiscard]] std::unordered_set<size_t> generateInactiveMoleculeSet(
             size_t bitPattern,
