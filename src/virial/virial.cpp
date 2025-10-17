@@ -69,7 +69,42 @@ void Virial::calculateVirial(SimulationBox &simBox, PhysicalData &data)
 }
 
 /**
- * @brief calculate virial contribution from QM atoms only
+ * @brief Calculate virial tensor without modifying object state
+ *
+ * @param simBox simulation box containing all atoms
+ * @return tensor3D calculated virial tensor
+ *
+ * @details This is an overloaded version of calculateVirial that computes
+ * the virial tensor for all atoms in the simulation box and returns it
+ * directly without storing it in the member variable or modifying the
+ * PhysicalData object. It includes contributions from both atomic forces
+ * and shift forces (from periodic boundary conditions). After calculation,
+ * shift forces are reset to zero. This version is useful when you need the
+ * virial value without side effects on the object state.
+ */
+tensor3D Virial::calculateVirial(SimulationBox &simBox)
+{
+    tensor3D virial = {0.0};
+
+    for (auto &atom : simBox.getAtoms())
+    {
+        const auto forcexyz      = atom->getForce();
+        const auto shiftForcexyz = atom->getShiftForce();
+        const auto xyz           = atom->getPosition();
+
+        const auto tensor = tensorProduct(xyz, forcexyz);
+
+        virial += tensor + diagonalMatrix(shiftForcexyz);
+
+        atom->setShiftForce(0.0);
+    }
+
+    return virial;
+}
+
+/**
+ * @brief Calculate virial contribution from QM atoms only without modifying
+ * object state
  *
  * @details calculates the virial tensor for QM atoms using the tensor product
  * of atomic positions and forces. This is used in hybrid QM/MM simulations to

@@ -131,9 +131,7 @@ namespace engine
             );
 
             _intraNonBonded->calculate(*_simulationBox, *_physicalData);
-
-            _virial->calculateVirial(*_simulationBox, *_physicalData);
-            virial += _physicalData->getVirial() * globalSmF;
+            virial += Virial::calculateVirial(*_simulationBox) * globalSmF;
 
             // bonded interactions directly add to physical data virial
             _physicalData->setVirial({0.0});
@@ -200,8 +198,7 @@ namespace engine
             ->calculateQMMMForces(*_simulationBox, *_physicalData, *_cellList);
 
         scaleSmoothingMoleculeForcesInner();
-        _virial->calculateVirial(*_simulationBox, *_physicalData);
-        virial += _physicalData->getVirial();
+        virial += Virial::calculateQMVirial(*_simulationBox);
         accumulateOuterForces(atoms);
 
         // STEP 3: Calculate inter-nonbonded forces between SMOOTHING molecules
@@ -214,8 +211,7 @@ namespace engine
         );
 
         scaleSmoothingMoleculeForcesOuter();
-        _virial->calculateVirial(*_simulationBox, *_physicalData);
-        virial += _physicalData->getVirial();
+        virial += Virial::calculateQMVirial(*_simulationBox);
         accumulateOuterForces(atoms);
 
         // STEP 4: Setup and run intra-nonbonded calculation and scale forces of
@@ -226,8 +222,7 @@ namespace engine
         _intraNonBonded->calculate(*_simulationBox, *_physicalData);
 
         scaleSmoothingMoleculeForcesOuter();
-        _virial->calculateVirial(*_simulationBox, *_physicalData);
-        virial += _physicalData->getVirial();
+        virial += Virial::calculateQMVirial(*_simulationBox);
         accumulateOuterForces(atoms);
 
         // STEP 5: Run intra-bonded calculation and scale forces of
