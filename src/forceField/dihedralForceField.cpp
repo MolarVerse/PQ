@@ -73,14 +73,12 @@ void DihedralForceField::calculateEnergyAndForces(
     NonCoulombPotential    &nonCoulombPotential
 )
 {
-    // Return if all 4 molecules are inactive
-    if (!_molecules[0]->isActive() && !_molecules[1]->isActive() &&
-        !_molecules[2]->isActive() && !_molecules[3]->isActive())
-        return;
+    const bool allInactive =
+        !_molecules[0]->isActive() && !_molecules[1]->isActive() &&
+        !_molecules[2]->isActive() && !_molecules[3]->isActive();
 
-    auto smF = 0.0;
-    if (_molecules[0]->getHybridZone() == SMOOTHING)
-        smF = _molecules[0]->getSmoothingFactor();
+    if (allInactive)
+        return;
 
     const auto position2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
     const auto position3 = _molecules[2]->getAtomPosition(_atomIndices[2]);
@@ -167,6 +165,10 @@ void DihedralForceField::calculateEnergyAndForces(
             forceMagnitude /= distance14;
 
             const auto forcexyz = forceMagnitude * dPosition14;
+
+            auto smF = 0.0;
+            if (_molecules[0]->getHybridZone() == SMOOTHING)
+                smF = _molecules[0]->getSmoothingFactor();
 
             if (!isImproperDihedral)
                 physicalData.addVirial(

@@ -76,12 +76,11 @@ void BondForceField::calculateEnergyAndForces(
     NonCoulombPotential    &nonCoulombPotential
 )
 {
-    if (!_molecules[0]->isActive() && !_molecules[1]->isActive())
-        return;
+    const bool bothInactive =
+        !_molecules[0]->isActive() && !_molecules[1]->isActive();
 
-    auto smF = 0.0;
-    if (_molecules[0]->getHybridZone() == SMOOTHING)
-        smF = _molecules[0]->getSmoothingFactor();
+    if (bothInactive)
+        return;
 
     const auto position1 = _molecules[0]->getAtomPosition(_atomIndices[0]);
     const auto position2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
@@ -116,6 +115,10 @@ void BondForceField::calculateEnergyAndForces(
 
     _molecules[0]->addAtomForce(_atomIndices[0], force);
     _molecules[1]->addAtomForce(_atomIndices[1], -force);
+
+    auto smF = 0.0;
+    if (_molecules[0]->getHybridZone() == SMOOTHING)
+        smF = _molecules[0]->getSmoothingFactor();
 
     physicalData.addVirial(tensorProduct(dPosition, force) * (1 - smF));
 }

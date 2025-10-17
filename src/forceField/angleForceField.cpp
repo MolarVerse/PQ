@@ -72,13 +72,12 @@ void AngleForceField::calculateEnergyAndForces(
     NonCoulombPotential    &nonCoulombPotential
 )
 {
-    if (!_molecules[0]->isActive() && !_molecules[1]->isActive() &&
-        !_molecules[2]->isActive())
-        return;
+    const bool allInactive = !_molecules[0]->isActive() &&
+                             !_molecules[1]->isActive() &&
+                             !_molecules[2]->isActive();
 
-    auto smF = 0.0;
-    if (_molecules[0]->getHybridZone() == SMOOTHING)
-        smF = _molecules[0]->getSmoothingFactor();
+    if (allInactive)
+        return;
 
     // central position of alpha
     const auto position1 = _molecules[0]->getAtomPosition(_atomIndices[0]);
@@ -144,6 +143,10 @@ void AngleForceField::calculateEnergyAndForces(
             forceMagnitude /= distance23;
 
             forcexyz = forceMagnitude * dPosition23;
+
+            auto smF = 0.0;
+            if (_molecules[0]->getHybridZone() == SMOOTHING)
+                smF = _molecules[0]->getSmoothingFactor();
 
             physicalData.addVirial(
                 tensorProduct(dPosition23, forcexyz) * (1 - smF)
