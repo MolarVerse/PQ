@@ -89,13 +89,11 @@ namespace engine
         using enum Periodicity;
         using std::ranges::distance;
 
-        auto     qmEnergy         = 0.0;
-        auto     coulombEnergy    = 0.0;
-        auto     nonCoulombEnergy = 0.0;
-        tensor3D virial           = {0.0};
-
-        auto& atoms = _simulationBox->getAtoms();
-
+        auto       qmEnergy         = 0.0;
+        auto       coulombEnergy    = 0.0;
+        auto       nonCoulombEnergy = 0.0;
+        tensor3D   virial           = {0.0};
+        auto&      atoms            = _simulationBox->getAtoms();
         const auto nSmMol =
             distance(_simulationBox->getMoleculesInsideZone(SMOOTHING));
 
