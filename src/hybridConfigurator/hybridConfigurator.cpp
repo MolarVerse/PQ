@@ -348,7 +348,7 @@ Vec3D HybridConfigurator::getInnerRegionCenter() const
     return _innerRegionCenter;
 }
 
-/** @brief get if a molecule changed its hybrid zone since last assignation
+/** @brief get if any molecule changed its hybrid zone since last assignation
  *
  * @return bool molChangedZone
  */
