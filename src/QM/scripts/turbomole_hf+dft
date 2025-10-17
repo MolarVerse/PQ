@@ -48,10 +48,10 @@ my $pointcharges_file  = $ARGV[5];             # name of the pointcharges_file
 
 
 # various variables
-my $line;                                      # helper variable - gradient
-my $flag = undef;                              # helper variable - moloch
-my $start_flag         = "";                   # helper variable - moloch
-my $stop_flag          = "";                   # helper variable - moloch
+my $line;                                      # helper variable
+my $flag = undef;                              # helper variable
+my $start_flag         = "";                   # helper variable
+my $stop_flag          = "";                   # helper variable
 my $energy;                                    # QM energy
 my $control_contents   = "";                   # helper variable - control file modifications
 my $tm_out             = "";                   # output of define, dscf, and grad
