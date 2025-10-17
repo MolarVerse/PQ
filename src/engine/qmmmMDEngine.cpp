@@ -120,9 +120,7 @@ namespace engine
 
             _qmRunner->run(*_simulationBox, *_physicalData, NON_PERIODIC);
 
-            if (ManostatSettings::getManostatType() != ManostatType::NONE)
-                virial +=
-                    _virial->calculateQMVirial(*_simulationBox) * globalSmF;
+            virial += _virial->calculateQMVirial(*_simulationBox) * globalSmF;
 
             accumulateInnerForces(atoms, globalSmF);
 
@@ -138,11 +136,8 @@ namespace engine
 
             _intraNonBonded->calculate(*_simulationBox, *_physicalData);
 
-            if (ManostatSettings::getManostatType() != ManostatType::NONE)
-            {
-                _virial->calculateVirial(*_simulationBox, *_physicalData);
-                virial += _physicalData->getVirial() * globalSmF;
-            }
+            _virial->calculateVirial(*_simulationBox, *_physicalData);
+            virial += _physicalData->getVirial() * globalSmF;
 
             _physicalData->setVirial({0.0});
 
@@ -203,8 +198,7 @@ namespace engine
             for (auto& atom : mol.getAtoms()) atom->scaleForce(smF);
         }
 
-        if (ManostatSettings::getManostatType() != ManostatType::NONE)
-            virial += _virial->calculateQMVirial(*_simulationBox);
+        virial += _virial->calculateQMVirial(*_simulationBox);
 
         accumulateInnerForces(atoms);
 
@@ -222,11 +216,8 @@ namespace engine
             for (auto& atom : mol.getAtoms()) atom->scaleForce(smF);
         }
 
-        if (ManostatSettings::getManostatType() != ManostatType::NONE)
-        {
-            _virial->calculateVirial(*_simulationBox, *_physicalData);
-            virial += _physicalData->getVirial();
-        }
+        _virial->calculateVirial(*_simulationBox, *_physicalData);
+        virial += _physicalData->getVirial();
 
         accumulateOuterForces(atoms);
 
@@ -245,11 +236,8 @@ namespace engine
             for (auto& atom : mol.getAtoms()) atom->scaleForce(1 - smF);
         }
 
-        if (ManostatSettings::getManostatType() != ManostatType::NONE)
-        {
-            _virial->calculateVirial(*_simulationBox, *_physicalData);
-            virial += _physicalData->getVirial();
-        }
+        _virial->calculateVirial(*_simulationBox, *_physicalData);
+        virial += _physicalData->getVirial();
 
         accumulateOuterForces(atoms);
 
@@ -266,11 +254,8 @@ namespace engine
             for (auto& atom : mol.getAtoms()) atom->scaleForce(1 - smF);
         }
 
-        if (ManostatSettings::getManostatType() != ManostatType::NONE)
-        {
-            _virial->calculateVirial(*_simulationBox, *_physicalData);
-            virial += _physicalData->getVirial();
-        }
+        _virial->calculateVirial(*_simulationBox, *_physicalData);
+        virial += _physicalData->getVirial();
 
         accumulateOuterForces(atoms);
 
