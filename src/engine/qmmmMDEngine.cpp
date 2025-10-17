@@ -215,8 +215,7 @@ namespace engine
         if (ManostatSettings::getManostatType() != ManostatType::NONE)
             virial += _virial->calculateQMVirial(*_simulationBox);
 
-        for (auto& atom : atoms) atom->addForceInner(atom->getForce());
-        _simulationBox->resetForces();
+        accumulateInnerForces(atoms);
 
         // STEP 2: Calculate inter-nonbonded forces between
         // MM-MM , CORE-MM , LAYER+SMOOTHING-MM
@@ -238,12 +237,7 @@ namespace engine
             virial += _physicalData->getVirial();
         }
 
-        for (auto& atom : atoms)
-        {
-            const auto force = atom->getForce();
-            atom->addForceOuter(force);
-        }
-        _simulationBox->resetForces();
+        accumulateOuterForces(atoms);
 
         // STEP 3: Calculate inter-nonbonded forces between SMOOTHING molecules
         // scale forces of smoothing molecules with (1 - smF)
@@ -266,12 +260,7 @@ namespace engine
             virial += _physicalData->getVirial();
         }
 
-        for (auto& atom : atoms)
-        {
-            const auto force = atom->getForce();
-            atom->addForceOuter(force);
-        }
-        _simulationBox->resetForces();
+        accumulateOuterForces(atoms);
 
         // STEP 4: Calculate intra-nonbonded and bonded forces
         // scale forces of smoothing molecules with (1 - smF)
@@ -292,13 +281,7 @@ namespace engine
             virial += _physicalData->getVirial();
         }
 
-        for (auto& atom : atoms)
-        {
-            const auto force = atom->getForce();
-            atom->addForceOuter(force);
-        }
-
-        _simulationBox->resetForces();
+        accumulateOuterForces(atoms);
 
         _physicalData->setVirial({0.0});
 
@@ -315,11 +298,7 @@ namespace engine
             for (auto& atom : mol.getAtoms()) atom->scaleForce(1 - smF);
         }
 
-        for (auto& atom : atoms)
-        {
-            const auto force = atom->getForce();
-            atom->addForceOuter(force);
-        }
+        accumulateOuterForces(atoms);
 
         _physicalData->setVirial(virial);
     }
@@ -427,6 +406,46 @@ namespace engine
                 ));
             ++count;
         }
+    }
+
+    /**
+     * @brief Accumulate current forces to outer force storage and reset forces
+     *
+     * @param atoms Vector of atoms whose forces should be accumulated
+     *
+     * @details This function copies the current force on each atom to the outer
+     * force accumulator using addForceOuter(), then resets all forces in the
+     * simulation box to zero.
+     */
+    void QMMMMDEngine::accumulateOuterForces(pq::SharedAtomVec& atoms)
+    {
+        for (auto& atom : atoms)
+        {
+            const auto force = atom->getForce();
+            atom->addForceOuter(force);
+        }
+
+        _simulationBox->resetForces();
+    }
+
+    /**
+     * @brief Accumulate current forces to inner force storage and reset forces
+     *
+     * @param atoms Vector of atoms whose forces should be accumulated
+     *
+     * @details This function copies the current force on each atom to the inner
+     * force accumulator using addForceInner(), then resets all forces in the
+     * simulation box to zero.
+     */
+    void QMMMMDEngine::accumulateInnerForces(pq::SharedAtomVec& atoms)
+    {
+        for (auto& atom : atoms)
+        {
+            const auto force = atom->getForce();
+            atom->addForceInner(force);
+        }
+
+        _simulationBox->resetForces();
     }
 
 }   // namespace engine
