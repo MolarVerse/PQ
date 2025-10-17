@@ -85,7 +85,6 @@ namespace engine
      */
     void QMMMMDEngine::applyExactSmoothing()
     {
-        using enum HybridZone;
         using enum Periodicity;
         using std::ranges::distance;
 
@@ -177,7 +176,6 @@ namespace engine
      */
     void QMMMMDEngine::applyHotspotSmoothing()
     {
-        using enum HybridZone;
         using enum Periodicity;
 
         auto&    atoms  = _simulationBox->getAtoms();
@@ -190,37 +188,25 @@ namespace engine
 
         _qmRunner->run(*_simulationBox, *_physicalData, NON_PERIODIC);
 
-        for (auto& mol : _simulationBox->getMoleculesInsideZone(SMOOTHING))
-        {
-            const auto smF = mol.getSmoothingFactor();
-            for (auto& atom : mol.getAtoms()) atom->scaleForce(smF);
-        }
-
+        scaleSmoothingMoleculeForcesInner();
         virial += _virial->calculateQMVirial(*_simulationBox);
-
         accumulateInnerForces(atoms);
 
-        // STEP 2: Calculate inter-nonbonded forces between
-        // MM-MM , CORE-MM , LAYER+SMOOTHING-MM
-        // scale forces of smoothing molecules with smF
+        // STEP 2: Setup and run inter-nonbonded calculation between
+        // MM-MM , CORE-MM , LAYER+SMOOTHING-MM and scale forces of smoothing
+        // molecules with smF
         _configurator.toggleMoleculeActivation(*_simulationBox);
 
         _potential
             ->calculateQMMMForces(*_simulationBox, *_physicalData, *_cellList);
 
-        for (auto& mol : _simulationBox->getMoleculesInsideZone(SMOOTHING))
-        {
-            const auto smF = mol.getSmoothingFactor();
-            for (auto& atom : mol.getAtoms()) atom->scaleForce(smF);
-        }
-
+        scaleSmoothingMoleculeForcesInner();
         _virial->calculateVirial(*_simulationBox, *_physicalData);
         virial += _physicalData->getVirial();
-
         accumulateOuterForces(atoms);
 
         // STEP 3: Calculate inter-nonbonded forces between SMOOTHING molecules
-        // scale forces of smoothing molecules with (1 - smF)
+        // and scale forces of smoothing molecules with (1 - smF)
 
         _potential->calculateHotspotSmoothingMMForces(
             *_simulationBox,
@@ -228,34 +214,25 @@ namespace engine
             *_cellList
         );
 
-        for (auto& mol : _simulationBox->getMoleculesInsideZone(SMOOTHING))
-        {
-            const auto smF = mol.getSmoothingFactor();
-            for (auto& atom : mol.getAtoms()) atom->scaleForce(1 - smF);
-        }
-
+        scaleSmoothingMoleculeForcesOuter();
         _virial->calculateVirial(*_simulationBox, *_physicalData);
         virial += _physicalData->getVirial();
-
         accumulateOuterForces(atoms);
 
-        // STEP 4: Calculate intra-nonbonded and bonded forces
-        // scale forces of smoothing molecules with (1 - smF)
+        // STEP 4: Setup and run intra-nonbonded calculation and scale forces of
+        // smoothing molecules with (1 - smF)
 
         _configurator.activateSmoothingMolecules(*_simulationBox);
 
         _intraNonBonded->calculate(*_simulationBox, *_physicalData);
 
-        for (auto& mol : _simulationBox->getMoleculesInsideZone(SMOOTHING))
-        {
-            const auto smF = mol.getSmoothingFactor();
-            for (auto& atom : mol.getAtoms()) atom->scaleForce(1 - smF);
-        }
-
+        scaleSmoothingMoleculeForcesOuter();
         _virial->calculateVirial(*_simulationBox, *_physicalData);
         virial += _physicalData->getVirial();
-
         accumulateOuterForces(atoms);
+
+        // STEP 5: Run intra-bonded calculation and scale forces of
+        // smoothing molecules with (1 - smF)
 
         _physicalData->setVirial({0.0});
 
@@ -265,13 +242,7 @@ namespace engine
         );
 
         virial += _physicalData->getVirial();
-
-        for (auto& mol : _simulationBox->getMoleculesInsideZone(SMOOTHING))
-        {
-            const auto smF = mol.getSmoothingFactor();
-            for (auto& atom : mol.getAtoms()) atom->scaleForce(1 - smF);
-        }
-
+        scaleSmoothingMoleculeForcesOuter();
         accumulateOuterForces(atoms);
 
         _physicalData->setVirial(virial);
@@ -476,6 +447,46 @@ namespace engine
         }
 
         _simulationBox->resetForces();
+    }
+
+    /**
+     * @brief Scale forces of smoothing zone molecules by their smoothing factor
+     * for inner (QM) contribution
+     *
+     * @details This function iterates through all molecules in the smoothing
+     * region and scales their atomic forces by their individual smoothing
+     * factor (smF). This scaling is used in the hotspot smoothing algorithm
+     * to weight the QM contribution of smoothing molecules. The smoothing
+     * factor represents the degree to which a molecule should be treated with
+     * QM methods, with smF = 1 being fully QM and smF = 0 being fully MM.
+     */
+    void QMMMMDEngine::scaleSmoothingMoleculeForcesInner()
+    {
+        for (auto& mol : _simulationBox->getMoleculesInsideZone(SMOOTHING))
+        {
+            const auto smF = mol.getSmoothingFactor();
+            for (auto& atom : mol.getAtoms()) atom->scaleForce(smF);
+        }
+    }
+
+    /**
+     * @brief Scale forces of smoothing zone molecules by complementary
+     * smoothing factor for outer (MM) contribution
+     *
+     * @details This function iterates through all molecules in the smoothing
+     * region and scales their atomic forces by (1 - smoothing factor). This
+     * complementary scaling is used in the hotspot smoothing algorithm to
+     * weight the MM contribution of smoothing molecules. Since the total weight
+     * must sum to 1, molecules with high QM character (high smF) receive low MM
+     * weight (1 - smF), ensuring a smooth transition between QM and MM regions.
+     */
+    void QMMMMDEngine::scaleSmoothingMoleculeForcesOuter()
+    {
+        for (auto& mol : _simulationBox->getMoleculesInsideZone(SMOOTHING))
+        {
+            const auto smF = mol.getSmoothingFactor();
+            for (auto& atom : mol.getAtoms()) atom->scaleForce(1 - smF);
+        }
     }
 
 }   // namespace engine
