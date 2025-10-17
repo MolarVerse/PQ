@@ -55,6 +55,13 @@ namespace engine
         // Set number of QM atoms in physical data for output purposes
         setNumberOfQMAtoms();
 
+        applySmoothing();
+        combineInnerOuterForces();
+        _configurator.shiftAtomsBackToInitialPositions(*_simulationBox);
+    }
+
+    void QMMMMDEngine::applySmoothing()
+    {
         const auto& smoothingMethod = HybridSettings::getSmoothingMethod();
 
         // TODO: https://github.com/MolarVerse/PQ/issues/202
@@ -64,15 +71,6 @@ namespace engine
             applyExactSmoothing();
         else
             throw HybridMDEngineException("Unknown smoothing method requested");
-
-        for (auto& atom : _simulationBox->getAtoms())
-        {
-            const auto innerForce = atom->getForceInner();
-            const auto outerForce = atom->getForceOuter();
-            atom->setForce(innerForce + outerForce);
-        }
-
-        _configurator.shiftAtomsBackToInitialPositions(*_simulationBox);
     }
 
     /**
@@ -481,6 +479,16 @@ namespace engine
         {
             const auto smF = mol.getSmoothingFactor();
             for (auto& atom : mol.getAtoms()) atom->scaleForce(1 - smF);
+        }
+    }
+
+    void QMMMMDEngine::combineInnerOuterForces()
+    {
+        for (auto& atom : _simulationBox->getAtoms())
+        {
+            const auto innerForce = atom->getForceInner();
+            const auto outerForce = atom->getForceOuter();
+            atom->setForce(innerForce + outerForce);
         }
     }
 

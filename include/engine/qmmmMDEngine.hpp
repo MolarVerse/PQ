@@ -46,11 +46,13 @@ namespace engine
         void calculateForces() override;
 
        private:
+        void applySmoothing();
         void applyExactSmoothing();
         void applyHotspotSmoothing();
 
-        void setNumberOfQMAtoms();
         void moltypeCheck();
+        void setNumberOfQMAtoms();
+        void combineInnerOuterForces();
 
         void accumulateInnerForces(pq::SharedAtomVec& atoms);
         void accumulateInnerForces(
