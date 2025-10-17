@@ -60,6 +60,19 @@ namespace engine
         _configurator.shiftAtomsBackToInitialPositions(*_simulationBox);
     }
 
+    /**
+     * @brief Apply the selected smoothing method for QM/MM boundary treatment
+     *
+     * @throws HybridMDEngineException if an unknown smoothing method is
+     * requested
+     *
+     * @details This function dispatches to the appropriate smoothing algorithm
+     * (hotspot or exact) based on the user-configured smoothing method setting.
+     * The smoothing method determines how forces and energies are calculated in
+     * the boundary region between QM and MM zones. This is a wrapper function
+     * that delegates to either applyHotspotSmoothing() or
+     * applyExactSmoothing().
+     */
     void QMMMMDEngine::applySmoothing()
     {
         const auto& smoothingMethod = HybridSettings::getSmoothingMethod();
@@ -482,6 +495,16 @@ namespace engine
         }
     }
 
+    /**
+     * @brief Combine inner (QM) and outer (MM) forces into final atomic forces
+     *
+     * @details This function finalizes the hybrid QM/MM force calculation by
+     * summing the separately accumulated inner and outer force contributions
+     * for each atom. After the smoothing algorithm has computed and accumulated
+     * QM forces (inner) and MM forces (outer) with appropriate weighting, this
+     * function combines them to produce the final total force on each atom that
+     * will be used for integration.
+     */
     void QMMMMDEngine::combineInnerOuterForces()
     {
         for (auto& atom : _simulationBox->getAtoms())
