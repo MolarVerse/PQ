@@ -44,8 +44,8 @@ namespace engine
         configurator::HybridConfigurator _configurator{};
 
        public:
-        HybridMDEngine()  = default;
-        ~HybridMDEngine() = default;
+        HybridMDEngine()           = default;
+        ~HybridMDEngine() override = default;
 
         void calculateForces() override = 0;
     };

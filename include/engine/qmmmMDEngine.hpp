@@ -40,8 +40,8 @@ namespace engine
     class QMMMMDEngine : public HybridMDEngine
     {
        public:
-        QMMMMDEngine()  = default;
-        ~QMMMMDEngine() = default;
+        QMMMMDEngine()           = default;
+        ~QMMMMDEngine() override = default;
 
         void calculateForces() override;
 
