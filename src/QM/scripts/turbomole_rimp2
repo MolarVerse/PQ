@@ -52,9 +52,7 @@ $progname =~ s{^.*/}{};
 my $charge             = $ARGV[0];             # charge of the qm region
 my $changed            = $ARGV[1];             # flag if define has to be run
 my $pointcharges       = $ARGV[2];             # flag if point charges are used
-my $pointcharge_scheme = $ARGV[3];             # pointcharge scheme
-my $nprocessors        = $ARGV[4];             # number of processors
-my $pointcharges_file  = $ARGV[5];             # name of the pointcharges_file
+my $pointcharges_file  = $ARGV[3];             # name of the pointcharges_file
 
 # various variables
 my $line;                                      # helper variable - gradient
@@ -85,6 +83,7 @@ my $out_file_prev        = "tm.out.prev";        # summary file - previous step
 my $qm_coords_prev       = "coord.prev";         # summary file - coordinates previous step
 my $pointcharges_prev    = "pointcharges.prev";
 
+my $pointcharge_scheme = 0;
 
 # check if molecules have been exchanged between QM and MM region
 if ($changed == 1)

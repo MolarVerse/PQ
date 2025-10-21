@@ -30,19 +30,22 @@
 #include <string>       // for string
 #include <vector>       // for vector
 
-#include "atom.hpp"              // for Atom
-#include "constants.hpp"         // for constants
-#include "exceptions.hpp"        // for InputFileException
-#include "fileSettings.hpp"      // for FileSettings
-#include "qmSettings.hpp"        // for QMSettings
-#include "simulationBox.hpp"     // for SimulationBox
-#include "stringUtilities.hpp"   // for fileExists
-#include "vector3d.hpp"          // for Vec3D
+#include "atom.hpp"                 // for Atom
+#include "constants.hpp"            // for constants
+#include "exceptions.hpp"           // for InputFileException
+#include "fileSettings.hpp"         // for FileSettings
+#include "hybridConfigurator.hpp"   // for HybridConfigurator
+#include "hybridSettings.hpp"       // for SmoothingMethod
+#include "qmSettings.hpp"           // for QMSettings
+#include "simulationBox.hpp"        // for SimulationBox
+#include "stringUtilities.hpp"      // for fileExists
+#include "vector3d.hpp"             // for Vec3D
 
 using QM::TurbomoleRunner;
 
 using namespace simulationBox;
 using namespace customException;
+using namespace configurator;
 using namespace constants;
 using namespace settings;
 using namespace utilities;
@@ -113,6 +116,8 @@ void TurbomoleRunner::writePointChargeFile(pq::SimBox &box)
  */
 void TurbomoleRunner::execute(SimulationBox &box)
 {
+    using enum settings::SmoothingMethod;
+
     const auto scriptFile = _scriptPath + QMSettings::getQMScript();
 
     if (!fileExists(scriptFile))
@@ -123,13 +128,21 @@ void TurbomoleRunner::execute(SimulationBox &box)
             )
         );
 
-    const auto reuseCharges    = _isFirstExecution ? 1 : 0;
+    auto charge         = box.calcActiveMolCharge();
+    auto molChangedZone = HybridConfigurator::getMoleculeChangedZone();
+
+    // TODO: https://github.com/MolarVerse/PQ/issues/200
+    if (HybridSettings::getSmoothingMethod() == EXACT)
+        molChangedZone = true;
+
+    const auto runTMDefine     = molChangedZone || _isFirstExecution ? 1 : 0;
     const auto usePointCharges = _usePointCharges ? 1 : 0;
 
     const auto command = std::format(
-        "{} 0 {} {} 0 0 {}",
+        "{} {} {} {} {}",
         scriptFile,
-        reuseCharges,
+        charge,
+        runTMDefine,
         usePointCharges,
         FileSettings::getPointChargeFileName()
     );

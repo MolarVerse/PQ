@@ -4,22 +4,21 @@
 #
 #  Interface between PQ and Turbomole
 #  initializes QM run: define
-#  runs QM calculation: dscf, grad, moloch2
-#  etracts data - energy, gradient, pointcharges
+#  runs QM calculation: dscf, grad
+#  extracts data - energy, gradient, pointcharges
 #
-# + check if inital mo guess can be reused via $changed
-#   if YES ($changed == 1)
+# + check if inital mo guess can be reused via $run_define
+#   if YES ($run_define == 1)
 #     + remove old turbomole files
 #     + make tm_define.in from tm_define.template
-#     + run define with tm_define.in 
-#     + check the pointcharge scheme ($pointcharge_scheme [0 mulliken, 1 loewdin])
-# + insert point-charges from $pointcharges_file to control file
+#     + run define with tm_define.in
+# + insert pointcharges from $pointcharges_file to control file
 # + run dscf
-# + remove point_charges
+# + remove pointcharges from control file
 #   if pointcharges have been used
 #     + compute energy without pointcharge contribution
-# + extract energy and write it to $qm_forces
 # + run grad
+# + extract energy and write it to $qm_forces
 # + extract gradients and write them to $qm_forces
 # + extract charges and write them to $qm_charges
 # + exit script
@@ -37,15 +36,11 @@ use subs qw(remove_pointcharges);
 my $progname = $0;
 $progname =~ s{^.*/}{};
 
-
 # input data from the PQ programm
 my $charge             = $ARGV[0];             # charge of the qm region
-my $changed            = $ARGV[1];             # flag if define has to be run
+my $run_define         = $ARGV[1];             # flag if define has to be run
 my $pointcharges       = $ARGV[2];             # flag if point charges are used
-my $pointcharge_scheme = $ARGV[3];             # pointcharge scheme
-my $nprocessors        = $ARGV[4];             # number of processors
-my $pointcharges_file  = $ARGV[5];             # name of the pointcharges_file
-
+my $pointcharges_file  = $ARGV[3];             # name of the pointcharges_file
 
 # various variables
 my $line;                                      # helper variable
@@ -58,7 +53,6 @@ my $tm_out             = "";                   # output of define, dscf, and gra
 my $converged_string   = 'convergence criteria satisfied after\s*\d+' .
   '\s+iterations';		                         # energy search string
 my $n_pointcharges;                            # number of pointcharges variable   
-
 
 # files and commands
 my $qm_coords          = "coord";              # coordinate file
@@ -75,7 +69,7 @@ my $qm_charges         = "qm_charges";         # result file: partial charges of
 my $dscf_nopc_out      = "dscf_nopc.out";      # dscf file - no pointcharges                                 
 my $out_file           = "tm.out";	           # summary file
 
-if ($changed == 1)
+if ($run_define == 1)
 {
   unlink "control";
   unlink "basis";
