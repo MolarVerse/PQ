@@ -46,6 +46,8 @@ namespace input
 
         void parseForceFieldType(const pq::strings &, const size_t);
         void parseNonCoulombType(const pq::strings &, const size_t);
+        void parseWaterIntraModel(const pq::strings &, const size_t);
+        void parseWaterInterModel(const pq::strings &, const size_t);
     };
 
 }   // namespace input

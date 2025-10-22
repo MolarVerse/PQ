@@ -34,6 +34,7 @@
 #include "potential.hpp"              // for Potential
 #include "potentialSettings.hpp"      // for PotentialSettings
 #include "stringUtilities.hpp"        // for toLowerCopy
+#include "waterModelSettings.hpp"     // for WaterModelSettings
 
 using namespace input;
 using namespace engine;
@@ -61,6 +62,16 @@ MMInputParser::MMInputParser(Engine &engine) : InputFileParser(engine)
     addKeyword(
         std::string("noncoulomb"),
         bind_front(&MMInputParser::parseNonCoulombType, this),
+        false
+    );
+    addKeyword(
+        std::string("water_intra"),
+        bind_front(&MMInputParser::parseWaterIntraModel, this),
+        false
+    );
+    addKeyword(
+        std::string("water_inter"),
+        bind_front(&MMInputParser::parseWaterInterModel, this),
         false
     );
 }
@@ -107,7 +118,7 @@ void MMInputParser::parseForceFieldType(
         throw InputFileException(format(
             "Invalid force-field keyword \"{}\" at line {} "
             "in input file\n"
-            "Possible keywords are \"on\", \"off\" or \"bonded\"",
+            "Possible options are \"on\", \"off\" or \"bonded\"",
             lineElements[2],
             lineNumber
         ));
@@ -153,6 +164,74 @@ void MMInputParser::parseNonCoulombType(
         throw InputFileException(format(
             "Invalid nonCoulomb type \"{}\" at line {} in input file.\n"
             "Possible options are: lj, buck, morse and guff",
+            lineElements[2],
+            lineNumber
+        ));
+}
+
+/**
+ * @brief Parse the intramolecular water model type
+ *
+ * @details Possible options are:
+ * 1) "SPC/Fw" - SPC flexible water model for intramolecular interactions
+ *
+ * @param lineElements
+ * @param lineNumber
+ *
+ * @throws InputFileException if invalid water_intra model type
+ */
+void MMInputParser::parseWaterIntraModel(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    using enum WaterIntraModel;
+
+    checkCommand(lineElements, lineNumber);
+
+    const auto waterIntraModel = toLowerAndReplaceDashesCopy(lineElements[2]);
+
+    if (waterIntraModel == "spc/fw")
+        WaterModelSettings::setWaterIntraModel(SPC_FW);
+    else
+        throw InputFileException(format(
+            "Invalid water_intra keyword \"{}\" at line {} "
+            "in input file\n"
+            "Possible options are \"SPC/Fw\"",
+            lineElements[2],
+            lineNumber
+        ));
+}
+
+/**
+ * @brief Parse the intermolecular water model type
+ *
+ * @details Possible options are:
+ * 1) "SPC/Fw" - SPC flexible water model for intermolecular interactions
+ *
+ * @param lineElements
+ * @param lineNumber
+ *
+ * @throws InputFileException if invalid water_inter model type
+ */
+void MMInputParser::parseWaterInterModel(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    using enum WaterInterModel;
+
+    checkCommand(lineElements, lineNumber);
+
+    const auto waterInterModel = toLowerAndReplaceDashesCopy(lineElements[2]);
+
+    if (waterInterModel == "spc/fw")
+        WaterModelSettings::setWaterInterModel(SPC_FW);
+    else
+        throw InputFileException(format(
+            "Invalid water_inter keyword \"{}\" at line {} "
+            "in input file\n"
+            "Possible options are \"SPC/Fw\"",
             lineElements[2],
             lineNumber
         ));
