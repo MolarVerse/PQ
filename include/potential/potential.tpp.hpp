@@ -29,6 +29,7 @@
 
 #include "box.hpp"                   // for Box
 #include "coulombPotential.hpp"      // for CoulombPotential
+#include "hybridSettings.hpp"        // for HybridSettings
 #include "molecule.hpp"              // for Molecule
 #include "nonCoulombPair.hpp"        // for NonCoulombPair
 #include "nonCoulombPotential.hpp"   // for NonCoulombPotential
@@ -363,7 +364,9 @@ namespace potential
     template <>
     inline double Potential::getPartialCharge<QMChargeTag>(pq::Atom &atom) const
     {
-        if (atom.getQMCharge().has_value())
+        const auto useQMCharges = settings::HybridSettings::getUseQMCharges();
+
+        if (atom.getQMCharge() && useQMCharges)
             return atom.getQMCharge().value();
         else
             return atom.getPartialCharge();
