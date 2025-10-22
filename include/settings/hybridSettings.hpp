@@ -57,7 +57,7 @@ namespace settings
         static inline std::vector<int>                _forcedInnerList;
         static inline std::vector<int>                _forcedOuterList;
 
-        static inline bool _useQMCharges = false;
+        static inline bool _useQMCharges = true;
 
         static inline double _coreRadius               = 0.0;
         static inline double _layerRadius              = 0.0;

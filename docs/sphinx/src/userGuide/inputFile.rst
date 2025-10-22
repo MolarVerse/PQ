@@ -1597,15 +1597,15 @@ QM Charges
 .. admonition:: Key
     :class: tip
 
-    qm_charges = {string} -> "off"
+    qm_charges = {string} -> "qm"
 
 With the ``qm_charges`` keyword the user can specify the charge model for the QM atoms.
 
 Possible options are:
 
-   1. **off** (default) - charges of the QM atoms are taken from the MM model
+   1. **qm** (default) - charges of the QM atoms are taken from the QM calculation
 
-   2. **on** - charges of the QM atoms are taken from the QM calculation
+   2. **mm** - charges of the QM atoms are taken from the total charge of the associated moltype specified in the :ref:`moldescriptorFile` setup file
 
 .. _smoothingMethodKey:
 
