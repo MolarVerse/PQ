@@ -29,6 +29,7 @@
 #include <string>      // for char_traits, string
 #include <vector>      // for vector
 
+#include "MMInputParser.hpp"                 // for MMParserForceField
 #include "QMInputParser.hpp"                 // for InputFileParserQM
 #include "cellListInputParser.hpp"           // for CellListInputParser
 #include "constraintsInputParser.hpp"        // for InputFileParserConstraints
@@ -37,12 +38,10 @@
 #include "engine.hpp"                        // for Engine
 #include "exceptions.hpp"                    // for InputFileException
 #include "filesInputParser.hpp"              // for InputFileParserFiles
-#include "forceFieldInputParser.hpp"         // for InputFileParserForceField
 #include "generalInputParser.hpp"            // for InputFileParserGeneral
 #include "hybridInputParser.hpp"             // for InputFileParserQMMM
 #include "integratorInputParser.hpp"         // for InputFileParserIntegrator
 #include "manostatInputParser.hpp"           // for InputFileParserManostat
-#include "nonCoulombInputParser.hpp"         // for InputFileParserNonCoulomb
 #include "optInputParser.hpp"                // for OptInputParser
 #include "outputInputParser.hpp"             // for InputFileParserOutput
 #include "resetKineticsInputParser.hpp"      // for InputFileParserResetKinetics
@@ -78,11 +77,10 @@ InputFileReader::InputFileReader(
     _parsers.push_back(make_unique<ConstraintsInputParser>(_engine));
     _parsers.push_back(make_unique<CoulombLongRangeInputParser>(_engine));
     _parsers.push_back(make_unique<FilesInputParser>(_engine));
-    _parsers.push_back(make_unique<ForceFieldInputParser>(_engine));
     _parsers.push_back(make_unique<GeneralInputParser>(_engine));
     _parsers.push_back(make_unique<IntegratorInputParser>(_engine));
     _parsers.push_back(make_unique<ManostatInputParser>(_engine));
-    _parsers.push_back(make_unique<NonCoulombInputParser>(_engine));
+    _parsers.push_back(make_unique<MMInputParser>(_engine));
     _parsers.push_back(make_unique<OutputInputParser>(_engine));
     _parsers.push_back(make_unique<ResetKineticsInputParser>(_engine));
     _parsers.push_back(make_unique<SimulationBoxInputParser>(_engine));
@@ -140,14 +138,16 @@ void InputFileReader::addKeywords()
 void InputFileReader::process(const std::vector<std::string> &lineElements)
 {
     const auto original_keyword = lineElements[0];
-    const auto keyword = toLowerAndReplaceDashesCopy(original_keyword);
+    const auto keyword          = toLowerAndReplaceDashesCopy(original_keyword);
 
     if (!_keywordFuncMap.contains(keyword))
-        throw InputFileException(std::format(
-            "Invalid keyword \"{}\" at line {}",
-            original_keyword,
-            _lineNumber
-        ));
+        throw InputFileException(
+            std::format(
+                "Invalid keyword \"{}\" at line {}",
+                original_keyword,
+                _lineNumber
+            )
+        );
 
     pq::ParseFunc parserFunc = _keywordFuncMap[keyword];
     parserFunc(lineElements, _lineNumber);
@@ -328,11 +328,13 @@ void input::processEqualSign(std::string &command, const size_t lineNumber)
         command.replace(equalSignPos, 1, " = ");
 
     else
-        throw InputFileException(std::format(
-            "Missing equal sign in command \"{}\" in line {}",
-            command,
-            lineNumber
-        ));
+        throw InputFileException(
+            std::format(
+                "Missing equal sign in command \"{}\" in line {}",
+                command,
+                lineNumber
+            )
+        );
 }
 
 /***************************

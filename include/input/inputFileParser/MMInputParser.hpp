@@ -20,9 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _NON_COULOMB_INPUT_PARSER_HPP_
+#ifndef _MM_INPUT_PARSER_HPP_
 
-#define _NON_COULOMB_INPUT_PARSER_HPP_
+#define _MM_INPUT_PARSER_HPP_
 
 #include <cstddef>   // for size_t
 #include <string>    // for string
@@ -34,19 +34,20 @@
 namespace input
 {
     /**
-     * @class NonCoulombInputParser inherits from InputFileParser
+     * @class MMInputParser inherits from InputFileParser
      *
-     * @brief Parses the non-Coulomb type commands in the input file
+     * @brief Parses the MM related commands in the input file
      *
      */
-    class NonCoulombInputParser : public InputFileParser
+    class MMInputParser : public InputFileParser
     {
        public:
-        explicit NonCoulombInputParser(pq::Engine &);
+        explicit MMInputParser(pq::Engine &);
 
+        void parseForceFieldType(const pq::strings &, const size_t);
         void parseNonCoulombType(const pq::strings &, const size_t);
     };
 
 }   // namespace input
 
-#endif   // _NON_COULOMB_INPUT_PARSER_HPP_
+#endif   // _MM_INPUT_PARSER_HPP_

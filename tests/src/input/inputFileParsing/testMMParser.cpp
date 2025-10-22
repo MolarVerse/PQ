@@ -20,20 +20,57 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for EXPECT_EQ, TestInfo (ptr only)
+#include <gtest/gtest.h>   // for EXPECT_FALSE, EXPECT_TRUE
 
 #include <string>   // for string, allocator, basic_string
 #include <vector>   // for vector
 
-#include "exceptions.hpp"        // for InputFileException
-#include "gtest/gtest.h"         // for Message, TestPartResult
-#include "inputFileParser.hpp"   // for readInput
-#include "nonCoulombInputParser.hpp"
+#include "MMInputParser.hpp"
+#include "engine.hpp"                // for Engine
+#include "exceptions.hpp"            // for InputFileException, customException
+#include "forceFieldClass.hpp"       // for ForceField
+#include "forceFieldSettings.hpp"    // for ForceFieldSettings
+#include "gtest/gtest.h"             // for AssertionResult, Message
+#include "inputFileParser.hpp"       // for readInput
 #include "potentialSettings.hpp"     // for PotentialSettings
 #include "testInputFileReader.hpp"   // for TestInputFileReader
-#include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
+#include "throwWithMessage.hpp"      // for ASSERT_THROW_MSG
 
 using namespace input;
+
+/**
+ * @brief tests parsing the "force-field" command
+ *
+ * @details possible options are on, off or bonded - otherwise throws
+ * inputFileException
+ *
+ */
+TEST_F(TestInputFileReader, testParseForceField)
+{
+    MMInputParser            parser(*_engine);
+    std::vector<std::string> lineElements = {"force-field", "=", "on"};
+    parser.parseForceFieldType(lineElements, 0);
+    EXPECT_TRUE(settings::ForceFieldSettings::isActive());
+    EXPECT_TRUE(_engine->getForceFieldPtr()->isNonCoulombicActivated());
+
+    lineElements = {"force-field", "=", "off"};
+    parser.parseForceFieldType(lineElements, 0);
+    EXPECT_FALSE(settings::ForceFieldSettings::isActive());
+    EXPECT_FALSE(_engine->getForceFieldPtr()->isNonCoulombicActivated());
+
+    lineElements = {"force-field", "=", "bonded"};
+    parser.parseForceFieldType(lineElements, 0);
+    EXPECT_TRUE(settings::ForceFieldSettings::isActive());
+    EXPECT_FALSE(_engine->getForceFieldPtr()->isNonCoulombicActivated());
+
+    lineElements = {"forceField", "=", "notValid"};
+    ASSERT_THROW_MSG(
+        parser.parseForceFieldType(lineElements, 0),
+        customException::InputFileException,
+        "Invalid force-field keyword \"notValid\" at line 0 in input file\n"
+        "Possible keywords are \"on\", \"off\" or \"bonded\""
+    );
+}
 
 /**
  * @brief tests parsing the "noncoulomb" command
@@ -44,7 +81,7 @@ using namespace input;
  */
 TEST_F(TestInputFileReader, testParseNonCoulombType)
 {
-    NonCoulombInputParser    parser(*_engine);
+    MMInputParser            parser(*_engine);
     std::vector<std::string> lineElements = {"noncoulomb", "=", "guff"};
     parser.parseNonCoulombType(lineElements, 0);
     EXPECT_EQ(

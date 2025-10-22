@@ -7,12 +7,11 @@ add_library(inputFileParser
     convergenceInputParser.cpp
     coulombLongRangeInputParser.cpp
     filesInputParser.cpp
-    forceFieldInputParser.cpp
     generalInputParser.cpp
     hybridInputParser.cpp
     integratorInputParser.cpp
     manostatInputParser.cpp
-    nonCoulombInputParser.cpp
+    MMInputParser.cpp
     outputInputParser.cpp
     optInputParser.cpp
     QMInputParser.cpp

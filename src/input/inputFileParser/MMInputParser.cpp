@@ -20,7 +20,7 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "forceFieldInputParser.hpp"
+#include "MMInputParser.hpp"
 
 #include <cstddef>      // for size_t
 #include <format>       // for format
@@ -32,6 +32,7 @@
 #include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
 #include "forceFieldSettings.hpp"     // for ForceFieldSettings
 #include "potential.hpp"              // for Potential
+#include "potentialSettings.hpp"      // for PotentialSettings
 #include "stringUtilities.hpp"        // for toLowerCopy
 
 using namespace input;
@@ -50,18 +51,22 @@ using namespace potential;
  *
  * @param engine
  */
-ForceFieldInputParser::ForceFieldInputParser(Engine &engine)
-    : InputFileParser(engine)
+MMInputParser::MMInputParser(Engine &engine) : InputFileParser(engine)
 {
     addKeyword(
         std::string("force-field"),
-        bind_front(&ForceFieldInputParser::parseForceFieldType, this),
+        bind_front(&MMInputParser::parseForceFieldType, this),
+        false
+    );
+    addKeyword(
+        std::string("noncoulomb"),
+        bind_front(&MMInputParser::parseNonCoulombType, this),
         false
     );
 }
 
 /**
- * @brief Parse the integrator used in the simulation
+ * @brief Parse the force field type
  *
  * @details Possible options are:
  * 1) "on"  - force-field is activated
@@ -73,7 +78,7 @@ ForceFieldInputParser::ForceFieldInputParser(Engine &engine)
  * @throws InputFileException if force-field is not valid - currently only on,
  * off and bonded are supported
  */
-void ForceFieldInputParser::parseForceFieldType(
+void MMInputParser::parseForceFieldType(
     const std::vector<std::string> &lineElements,
     const size_t                    lineNumber
 )
@@ -103,6 +108,51 @@ void ForceFieldInputParser::parseForceFieldType(
             "Invalid force-field keyword \"{}\" at line {} "
             "in input file\n"
             "Possible keywords are \"on\", \"off\" or \"bonded\"",
+            lineElements[2],
+            lineNumber
+        ));
+}
+
+/**
+ * @brief Parse the nonCoulombic type of the guff.dat file
+ *
+ * @details Possible options are:
+ * 1) "guff"  - guff.dat file is used (default)
+ * 2) "lj"
+ * 3) "buck"
+ * 4) "morse"
+ *
+ * @param lineElements
+ *
+ * @throws InputFileException if invalid nonCoulomb type
+ */
+void MMInputParser::parseNonCoulombType(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+
+    const auto type = toLowerCopy(lineElements[2]);
+
+    using enum NonCoulombType;
+
+    if (type == "guff")
+        PotentialSettings::setNonCoulombType(GUFF);
+
+    else if (type == "lj")
+        PotentialSettings::setNonCoulombType(LJ);
+
+    else if (type == "buck")
+        PotentialSettings::setNonCoulombType(BUCKINGHAM);
+
+    else if (type == "morse")
+        PotentialSettings::setNonCoulombType(MORSE);
+
+    else
+        throw InputFileException(format(
+            "Invalid nonCoulomb type \"{}\" at line {} in input file.\n"
+            "Possible options are: lj, buck, morse and guff",
             lineElements[2],
             lineNumber
         ));
