@@ -69,6 +69,7 @@ void HybridSetup::setup()
     setupInnerRegionCenter();
     setupForcedInnerList();
     setupForcedOuterList();
+    validateQMChargeSettings();
     checkZoneRadii();
 }
 
@@ -179,5 +180,31 @@ void HybridSetup::checkZoneRadii()
                 pointChargeThickness,
                 minimalBoxDimension
             )
+        ));
+}
+
+/**
+ * @brief Validate the compatibility between QM charge settings and moltype 0
+ * presence
+ *
+ * @details This function checks for a configuration conflict in hybrid QM/MM
+ * calculations where MM charges are requested (qm_charges = mm) but QM atoms
+ * (moltype 0) are present in the system.
+ *
+ * @throws customException::InputFileException if MM charges are requested but
+ * atoms without moltype are present in the simulation box
+ */
+void HybridSetup::validateQMChargeSettings()
+{
+    const auto mmChargesRequested = !HybridSettings::getUseQMCharges();
+    const auto qmAtomsPresent =
+        _engine.getSimulationBox().moleculeTypeExists(0);
+
+    if (mmChargesRequested && qmAtomsPresent)
+        throw(InputFileException(
+            "Invalid configuration: MM charges requested (qm_charges = mm) in "
+            "input file but atoms with moltype \"0\" are present in the "
+            "system. Either set \"qm_charges = qm\" or ensure all atoms have a"
+            "non-zero moltype."
         ));
 }

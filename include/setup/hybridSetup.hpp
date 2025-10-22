@@ -52,6 +52,7 @@ namespace setup
         void setupForcedInnerList();
         void setupForcedOuterList();
         void checkZoneRadii();
+        void validateQMChargeSettings();
     };
 
 }   // namespace setup
