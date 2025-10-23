@@ -280,7 +280,11 @@ TEST_F(TestInputFileReader, testMShakeFileName)
 TEST_F(TestInputFileReader, testDFTBFileName)
 {
     FilesInputParser         parser(*_engine);
-    std::vector<std::string> lineElements = {"dftb_file", "=", "dftb_in.template"};
+    std::vector<std::string> lineElements = {
+        "dftb_file",
+        "=",
+        "dftb_in.template"
+    };
 
     EXPECT_THROW_MSG(
         parser.parseDFTBFilename(lineElements, 0),
@@ -293,5 +297,35 @@ TEST_F(TestInputFileReader, testDFTBFileName)
     EXPECT_EQ(
         settings::FileSettings::getDFTBFileName(),
         "data/dftbReader/dftb_in.template"
+    );
+}
+
+/**
+ * @brief tests parsing the "turbomole_file" command
+ */
+TEST_F(TestInputFileReader, testTMFileName)
+{
+    FilesInputParser         parser(*_engine);
+    std::vector<std::string> lineElements = {
+        "turbomole_file",
+        "=",
+        "tm_define.template"
+    };
+
+    EXPECT_THROW_MSG(
+        parser.parseTMFilename(lineElements, 0),
+        customException::InputFileException,
+        "Cannot open TURBOMOLE setup file - filename = tm_define.template"
+    );
+
+    lineElements = {
+        "turbomole_file",
+        "=",
+        "data/turbomoleReader/tm_define.template"
+    };
+    parser.parseTMFilename(lineElements, 0);
+    EXPECT_EQ(
+        settings::FileSettings::getTMFileName(),
+        "data/turbomoleReader/tm_define.template"
     );
 }

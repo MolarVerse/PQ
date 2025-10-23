@@ -46,6 +46,7 @@ parameter_file              false
 intra-nonBonded_file        false
 mshake_file                 false
 dftb_file                   false
+turbomole_file              false
 
 integrator                  false
 

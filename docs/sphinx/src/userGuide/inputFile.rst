@@ -621,6 +621,18 @@ DFTB Setup File
 
 .. centered:: *default value* = "dftb_in.template"
 
+.. _turbomolefileKey:
+
+TURBOMOLE Setup File
+====================
+
+.. admonition:: Key
+    :class: tip
+
+    turbomole_file = {file} -> "tm_define.template"
+
+.. centered:: *default value* = "tm_define.template"
+
 .. _topologyFileKey:
 
 Topology File
