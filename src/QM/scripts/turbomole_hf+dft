@@ -36,11 +36,12 @@ use subs qw(remove_pointcharges);
 my $progname = $0;
 $progname =~ s{^.*/}{};
 
-# input data from the PQ programm
+# input data from the PQ program
 my $charge             = $ARGV[0];             # charge of the qm region
 my $run_define         = $ARGV[1];             # flag if define has to be run
 my $pointcharges       = $ARGV[2];             # flag if point charges are used
-my $pointcharges_file  = $ARGV[3];             # name of the pointcharges_file
+my $tm_template_file   = $ARGV[3];             # tm template file that generates tm_define.in
+my $pointcharges_file  = $ARGV[4];             # name of the pointcharges_file
 
 # various variables
 my $line;                                      # helper variable
@@ -58,7 +59,6 @@ my $n_pointcharges;                            # number of pointcharges variable
 my $qm_coords          = "coord";              # coordinate file
 my $dscf_exe           = "dscf";               # tm modul for scf calculation
 my $grad_exe           = "grad";	             # tm modul for gradient calculation
-my $define_template    = "tm_define.template"; # must exist before you start!
 my $control_file       = "control";            # tm control file
 my $energy_file        = "energy";             # tm output energy
 my $gradient_file      = "gradient";           # tm output gradients
@@ -78,12 +78,12 @@ if ($run_define == 1)
   unlink "beta";
   unlink "tmp.input";
 
-# create tm_define.in from tm_define.template
+# create tm_define.in from $tm_template_file
 # and insert QM charge
-  open (TM_DEFINE_TEMPLATE, "< tm_define.template") or
+  open (TM_DEFINE_TEMPLATE, "< $tm_template_file") or
         die "\n\n\t (-) $progname: Error opening file 'tm_define.template'\n";
 
-  open (TM_DEFINE_IN, "> tm_define.in") or
+  open (TM_DEFINE_IN, "> $tm_template_file") or
         die "\n\n\t (-) $progname: Error opening file 'tm_define.in'\n";
 
   while (<TM_DEFINE_TEMPLATE>)
@@ -101,7 +101,6 @@ if ($run_define == 1)
 
 if ($pointcharges == 1)
 {
-  # insert pointcharges in the control file
     insert_pointcharges;
 }
 

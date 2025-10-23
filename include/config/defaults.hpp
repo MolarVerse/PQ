@@ -36,6 +36,7 @@ namespace defaults
     static constexpr char   _MOLDESCRIPTOR_FILE_DEFAULT_[] = "moldescriptor.dat";
     static constexpr char   _GUFF_FILE_DEFAULT_[]          = "guff.dat";
     static constexpr char   _DFTB_FILE_DEFAULT_[]          = "dftb_in.template";
+    static constexpr char   _TM_FILE_DEFAULT_[]            = "tm_define.template";
     static constexpr char   _POINTCHARGE_FILE_DEFAULT_[]   = "pointcharges";
     static constexpr size_t _NUMBER_OF_GUFF_ENTRIES_       = 28;
 
