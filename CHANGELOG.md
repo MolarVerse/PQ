@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 
 - Atom positions of triclinic boxes are now wrapped into the simulation box
   when written to the trajectory output file
+- Atom charges are now written to the .chrg output file in case of pure QM-MD jobs
 
 ### CI
 

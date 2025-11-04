@@ -25,6 +25,7 @@
 #define _ATOM_HPP_
 
 #include <cstddef>       // for size_t
+#include <optional>      // for optional
 #include <string>        // for string
 #include <string_view>   // for string_view
 
@@ -52,9 +53,10 @@ namespace simulationBox
         bool _isQMOnly = false;
         bool _isMMOnly = false;
 
-        int    _atomicNumber;
-        double _mass;
-        double _partialCharge;
+        int                   _atomicNumber;
+        double                _mass;
+        double                _partialCharge;
+        std::optional<double> _qmCharge;
 
         pq::Vec3D _position;
         pq::Vec3D _positionOld;
@@ -74,6 +76,8 @@ namespace simulationBox
         void updateOldPosition();
         void updateOldVelocity();
         void updateOldForce();
+
+        [[nodiscard]] std::optional<double> &getQMCharge();
 
         /*******************
          * scaling methods *

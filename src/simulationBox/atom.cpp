@@ -36,6 +36,8 @@ using namespace customException;
 using namespace linearAlgebra;
 using namespace settings;
 
+using std::optional;
+
 /**
  * @brief sets the mass of the atom
  *
@@ -241,6 +243,13 @@ double Atom::getMass() const { return _mass; }
  * @return double
  */
 double Atom::getPartialCharge() const { return _partialCharge; }
+
+/**
+ * @brief return a reference to the qm charge of the atom
+ *
+ * @return optional<double> &
+ */
+optional<double> &Atom::getQMCharge() { return _qmCharge; }
 
 /**
  * @brief return the position of the atom

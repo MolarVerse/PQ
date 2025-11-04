@@ -62,6 +62,9 @@ void ExternalQMRunner::run(SimulationBox &simBox, PhysicalData &physicalData)
     timeoutThread.request_stop();
 
     readForceFile(simBox, physicalData);
+
+    readChargeFile(simBox);
+
     readStressTensor(simBox.getBox(), physicalData);
 }
 
@@ -86,18 +89,22 @@ void ExternalQMRunner::readForceFile(
     std::ifstream forceFile(forceFileName);
 
     if (!forceFile.is_open())
-        throw QMRunnerException(std::format(
-            "Cannot open {} force file \"{}\"",
-            string(QMSettings::getQMMethod()),
-            forceFileName
-        ));
+        throw QMRunnerException(
+            std::format(
+                "Cannot open {} force file \"{}\"",
+                string(QMSettings::getQMMethod()),
+                forceFileName
+            )
+        );
 
     if (forceFile.peek() == std::ifstream::traits_type::eof())
-        throw QMRunnerException(std::format(
-            "Empty {} force file \"{}\"",
-            string(QMSettings::getQMMethod()),
-            forceFileName
-        ));
+        throw QMRunnerException(
+            std::format(
+                "Empty {} force file \"{}\"",
+                string(QMSettings::getQMMethod()),
+                forceFileName
+            )
+        );
 
     double energy = 0.0;
 
@@ -119,6 +126,56 @@ void ExternalQMRunner::readForceFile(
     forceFile.close();
 
     ::system(std::format("rm -f {}", forceFileName).c_str());
+}
+
+/**
+ * @brief reads the charge file (qm_charges) and sets the _qmCharge the atoms
+ *
+ * @param box
+ *
+ * @throw QMRunnerException
+ *  - if the charge file cannot be opened
+ *  - if the charge file is empty
+ */
+void ExternalQMRunner::readChargeFile(SimulationBox &box)
+{
+    const std::string chargeFileName = "qm_charges";
+
+    std::ifstream chargeFile(chargeFileName);
+
+    if (!chargeFile.is_open())
+        throw QMRunnerException(
+            std::format(
+                "Cannot open {} charge file \"{}\"",
+                string(QMSettings::getQMMethod()),
+                chargeFileName
+            )
+        );
+
+    if (chargeFile.peek() == std::ifstream::traits_type::eof())
+        throw QMRunnerException(
+            std::format(
+                "Empty {} charge file \"{}\"",
+                string(QMSettings::getQMMethod()),
+                chargeFileName
+            )
+        );
+
+    auto readCharges = [&chargeFile](auto &atom)
+    {
+        auto index  = 0;     // Read and discard the first column (index)
+        auto charge = 0.0;   // Read the second column (charge value)
+
+        chargeFile >> index >> charge;
+
+        atom->getQMCharge() = charge;
+    };
+
+    std::ranges::for_each(box.getQMAtoms(), readCharges);
+
+    chargeFile.close();
+
+    ::system(std::format("rm -f {}", chargeFileName).c_str());
 }
 
 /*******************************
