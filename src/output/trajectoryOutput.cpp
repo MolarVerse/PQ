@@ -162,16 +162,14 @@ void TrajectoryOutput::writeCharges(SimulationBox &simBox)
     writeHeader(simBox);
     buffer << '\n';
 
-    for (const auto &molecule : simBox.getMolecules())
+    for (const auto &atom : simBox.getAtoms())
     {
-        const auto nAtoms = molecule.getNumberOfAtoms();
+        const auto charge =
+            atom->getQMCharge().value_or(atom->getPartialCharge());
 
-        for (size_t i = 0; i < nAtoms; ++i)
-        {
-            buffer << std::format("{:<5}\t", molecule.getAtomName(i));
-            buffer << std::format("{:15.8f}\n", molecule.getPartialCharge(i));
-            buffer << std::flush;
-        }
+        buffer << std::format("{:<5}\t", atom->getName());
+        buffer << std::format("{:15.8f}\n", charge);
+        buffer << std::flush;
     }
 
     // Write the buffer to the file

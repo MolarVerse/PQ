@@ -126,6 +126,10 @@ namespace engine
                 *_simulationBox
             );
 
+            // to not carry over qm_charges of atoms which are not qm anymore
+            for (auto& atom : _simulationBox->getAtoms())
+                atom->getQMCharge().reset();
+
             _qmRunner->run(*_simulationBox, *_physicalData, NON_PERIODIC);
 
             virial += Virial::calculateQMVirial(*_simulationBox) * globalSmF;
