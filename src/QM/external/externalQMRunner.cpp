@@ -161,6 +161,8 @@ void ExternalQMRunner::readChargeFile(SimulationBox &box)
             )
         );
 
+    box.resetQMCharges();
+
     auto readCharges = [&chargeFile](auto &atom)
     {
         auto index  = 0;     // Read and discard the first column (index)

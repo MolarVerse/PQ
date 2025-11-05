@@ -245,11 +245,11 @@ double Atom::getMass() const { return _mass; }
 double Atom::getPartialCharge() const { return _partialCharge; }
 
 /**
- * @brief return a reference to the qm charge of the atom
+ * @brief return the qm charge of the atom
  *
- * @return optional<double> &
+ * @return optional<double>
  */
-optional<double> &Atom::getQMCharge() { return _qmCharge; }
+optional<double> Atom::getQMCharge() const { return _qmCharge; }
 
 /**
  * @brief return the position of the atom
@@ -358,6 +358,13 @@ void Atom::setPartialCharge(const double partialCharge)
 }
 
 /**
+ * @brief set the qm charge of the atom
+ *
+ * @param partialCharge
+ */
+void Atom::setQMCharge(const double charge) { _qmCharge = charge; }
+
+/**
  * @brief set the atom type (internal)
  *
  * @param atomType
@@ -447,3 +454,8 @@ void Atom::setVelocityOld(const Vec3D &velocity) { _velocityOld = velocity; }
  * @param force
  */
 void Atom::setForceOld(const Vec3D &force) { _forceOld = force; }
+
+/**
+ * @brief reset the qm charge of the atom
+ */
+void Atom::resetQMCharge() { _qmCharge.reset(); }
