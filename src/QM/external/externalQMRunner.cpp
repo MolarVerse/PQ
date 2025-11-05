@@ -129,7 +129,7 @@ void ExternalQMRunner::readForceFile(
 }
 
 /**
- * @brief reads the charge file (qm_charges) and sets the _qmCharge the atoms
+ * @brief reads the charge file (qm_charges) and sets the _qmCharge of the atoms
  *
  * @param box
  *
@@ -170,7 +170,7 @@ void ExternalQMRunner::readChargeFile(SimulationBox &box)
 
         chargeFile >> index >> charge;
 
-        atom->getQMCharge() = charge;
+        atom->setQMCharge(charge);
     };
 
     std::ranges::for_each(box.getQMAtoms(), readCharges);
