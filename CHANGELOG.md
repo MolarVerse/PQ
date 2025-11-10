@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 ### CI
 
 - Daily CI workflow added to build and test the codebase
+- Automatic git tag creation on new release via GitHub Actions
 
 
 <!-- insertion marker -->
