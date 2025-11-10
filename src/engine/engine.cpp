@@ -22,6 +22,8 @@
 
 #include "engine.hpp"
 
+#include <filesystem>   // for remove
+
 #include "constants/conversionFactors.hpp"   // for _FS_TO_PS_
 #include "logOutput.hpp"                     // for LogOutput
 #include "outputFileSettings.hpp"            // for OutputFileSettings
@@ -62,6 +64,21 @@ double Engine::calculateTotalSimulationTime() const
     const auto effStep = _step + step0;
 
     return static_cast<double>(effStep) * dt;
+}
+
+/**
+ * @brief Delete temporary files
+ *
+ * @details This function removes temporary files created during calculations.
+ * The files are safely deleted using std::filesystem::remove, which does not
+ * throw exceptions if the files do not exist.
+ */
+void Engine::deleteTempFiles()
+{
+    using std::filesystem::remove;
+
+    remove("qm_forces");
+    remove("qm_charges");
 }
 
 /**

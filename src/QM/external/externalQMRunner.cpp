@@ -24,7 +24,6 @@
 
 #include <algorithm>    // for __for_each_fn, for_each
 #include <chrono>       // for seconds
-#include <filesystem>   // for remove
 #include <format>       // for format
 #include <fstream>      // for ofstream
 #include <functional>   // for identity
@@ -125,8 +124,6 @@ void ExternalQMRunner::readForceFile(
     std::ranges::for_each(box.getQMAtoms(), readForces);
 
     forceFile.close();
-
-    ::system(std::format("rm -f {}", forceFileName).c_str());
 }
 
 /**
@@ -177,8 +174,6 @@ void ExternalQMRunner::readChargeFile(SimulationBox &box)
     std::ranges::for_each(box.getQMAtoms(), readCharges);
 
     chargeFile.close();
-
-    std::filesystem::remove(chargeFileName);
 }
 
 /*******************************
