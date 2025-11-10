@@ -25,6 +25,7 @@
 #include <filesystem>   // for remove
 
 #include "constants/conversionFactors.hpp"   // for _FS_TO_PS_
+#include "fileSettings.hpp"                  // for FileSettings
 #include "logOutput.hpp"                     // for LogOutput
 #include "outputFileSettings.hpp"            // for OutputFileSettings
 #include "progressbar.hpp"                   // for progressbar
@@ -77,9 +78,13 @@ void Engine::deleteTempFiles()
 {
     using std::filesystem::remove;
 
-    remove("qm_forces");
-    remove("qm_charges");
-    remove("stress_tensor");
+    const auto qm_forces     = FileSettings::getQMForcesTempFileName();
+    const auto qm_charges    = FileSettings::getQMChargesTempFileName();
+    const auto stress_tensor = FileSettings::getStressTensorTempFileName();
+
+    remove(qm_forces);
+    remove(qm_charges);
+    remove(stress_tensor);
 }
 
 /**

@@ -33,6 +33,7 @@
 
 #include "constants/conversionFactors.hpp"   // for _HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM_, _HARTREE_TO_KCAL_PER_MOL_
 #include "exceptions.hpp"                    // for InputFileException
+#include "fileSettings.hpp"                  // for FileSettings
 #include "physicalData.hpp"                  // for PhysicalData
 #include "qmSettings.hpp"                    // for QMSettings
 #include "simulationBox.hpp"                 // for SimulationBox
@@ -84,7 +85,7 @@ void ExternalQMRunner::readForceFile(
     PhysicalData  &physicalData
 )
 {
-    const std::string forceFileName = "qm_forces";
+    const auto forceFileName = FileSettings::getQMForcesTempFileName();
 
     std::ifstream forceFile(forceFileName);
 
@@ -137,7 +138,7 @@ void ExternalQMRunner::readForceFile(
  */
 void ExternalQMRunner::readChargeFile(SimulationBox &box)
 {
-    const std::string chargeFileName = "qm_charges";
+    const auto chargeFileName = FileSettings::getQMChargesTempFileName();
 
     std::ifstream chargeFile(chargeFileName);
 
