@@ -78,8 +78,6 @@ if ($run_define == 1)
   unlink "beta";
   unlink "tmp.input";
 
-# create tm_define.in from $tm_template_file
-# and insert QM charge
   open (TM_DEFINE_TEMPLATE, "< $tm_template_file") or
         die "\n\n\t (-) $progname: Error opening file 'tm_define.template'\n";
 
@@ -95,7 +93,6 @@ if ($run_define == 1)
   close (TM_DEFINE_TEMPLATE);
   close (TM_DEFINE_IN);
 
-# execute the define
   $tm_out = `define < tm_define.in 2>&1 | tee $out_file`;
 }
 
@@ -127,23 +124,24 @@ if ($pointcharges == 1)
 
   while (<CONTROL>) 
   {
-  if (/^\s*\$scfiterlimit/)
-  { 
-    $control_contents .= "\$scfiterlimit      1\n"
-  }
-  else
-  {
-    $control_contents .= $_;
-  }
+    if (/^\s*\$scfiterlimit/)
+    { 
+      $control_contents .= "\$scfiterlimit      1\n"
+    }
+    else
+    {
+      $control_contents .= $_;
+    }
   }
   close (CONTORL);
 
   open (CONTROL, "> $control_file") or
     die "\n\n\t (-) $progname: Error opening file '$control_file'\n";
+
   print CONTROL $control_contents;
+
   close (CONTORL);
 
-  # execute dscf
   `$dscf_exe 2>&1 | tee $dscf_nopc_out`;
 }
 
@@ -155,7 +153,6 @@ if ($pointcharges == 1)
 
   while (<ENERGY>) 
   {
-      
     if (/^\s+1\s+-\d+.\d+\s+-\d+.\d+\s+\d+.\d+\s+\d+.\d+D\+\d+\s+\d+.\d+D/)
     {
       $line = $_;
@@ -167,25 +164,24 @@ if ($pointcharges == 1)
 }
 else
 {
-# read in total energy from out_file
-open (ENERGY, "< $out_file") or
-  die "\n\n\t (-)  Error opening file '$out_file'\n";
+  # read in total energy from out_file
+  open (ENERGY, "< $out_file") or
+    die "\n\n\t (-)  Error opening file '$out_file'\n";
 
- while (<ENERGY>)
- {
-   last if /^\s+\:\s+kinetic/;
+  while (<ENERGY>)
+  {
+    last if /^\s+\:\s+kinetic/;
 
-   y/D/E/;
+    y/D/E/;
 
-   if (/^\s+\|\s+total/)
-   {
+    if (/^\s+\|\s+total/)
+    {
       my @energy_line = split;
+      $energy=$energy_line[4];   
+    }
+  }
 
-     $energy=$energy_line[4];   
-   }
- }
-
-close (ENERGY);
+  close (ENERGY);
 }
 
 if ($pointcharges == 1)
@@ -246,19 +242,19 @@ open(OUT, "< $charge_file_to_open") or
 open(CHARGE, "> $qm_charges") or 
    die "\n\n\t (-) $progname: Error opening file '$qm_charges'\n";
 
-while (<OUT>) 
-  {
-    last if ($_ =~ m/$stop_flag/);
-    $flag = 1 if ($_ =~ m/$start_flag/);
+while (<OUT>)
+{
+  last if ($_ =~ m/$stop_flag/);
+  $flag = 1 if ($_ =~ m/$start_flag/);
 
-    if ($flag && m/\s+\d+(\S+)\s+(\S+)/) 
-      {
-         my $line = $_;
-  	     $line =~ s/\s+\d+(\S+)\s+(\S+)/$1 $2/;
-         my @item = split(/\s+/, $line);
-         printf CHARGE ("%s  %12.5f\n", @item);
-      }
+  if ($flag && m/\s+\d+(\S+)\s+(\S+)/)
+  {
+    my $line = $_;
+    $line =~ s/\s+\d+(\S+)\s+(\S+)/$1 $2/;
+    my @item = split(/\s+/, $line);
+    printf CHARGE ("%s  %12.5f\n", @item);
   }
+}
 
 close(OUT);
 close(CHARGE);
