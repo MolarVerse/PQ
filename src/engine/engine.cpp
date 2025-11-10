@@ -79,6 +79,7 @@ void Engine::deleteTempFiles()
 
     remove("qm_forces");
     remove("qm_charges");
+    remove("stress_tensor");
 }
 
 /**

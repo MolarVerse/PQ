@@ -186,6 +186,4 @@ void DFTBPlusRunner::readStressTensor(Box &box, PhysicalData &data)
     data.addVirial(virial);
 
     stressFile.close();
-
-    ::system(std::format("rm -f {}", stressFileName).c_str());
 }
