@@ -191,9 +191,9 @@ if ($pointcharges == 1)
   `cp beta.bak beta 2>/dev/null`;
 }
 
-unlink $gradient_file;   
+unlink $gradient_file;
 # execute the grad
-$tm_out = `grad 2>&1 | tee -a $out_file`;	
+$tm_out = `grad 2>&1 | tee -a $out_file`;
 exit 1 if ($tm_out !~ /grad ended normally/);
 
 open (FORCES, "> $qm_forces") or

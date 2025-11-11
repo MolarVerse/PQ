@@ -77,9 +77,10 @@ if ($run_define == 1)
   unlink "control";
   unlink "basis";
   unlink "mos";
-  unlink "alpha";    
-  unlink "beta"; 
-  unlink "tmp.input";      
+  unlink "alpha";
+  unlink "beta";
+  unlink "tmp.input";
+  unlink "CCl0o-1--1---0";
 
   open (TM_DEFINE_TEMPLATE, "< $tm_template_file") or
         die "\n\n\t (-) $progname: Error opening file '$tm_template_file'\n";
@@ -236,14 +237,14 @@ open(CHARGE, "> $qm_charges") or
    die "\n\n\t (-) $progname: Error opening file '$qm_charges'\n";
 
 my $ricc2_found = 0;
-while (<OUT>) 
+while (<OUT>)
 {
   # Look for begin of ricc2 section
   if (!$ricc2_found && m/\s*R\s+I\s+C\s+C\s+2/) {
     $ricc2_found = 1;
     next;
   }
-  
+
   # Look for start/stop flags in ricc2 section
   if ($ricc2_found) {
     last if ($_ =~ m/$stop_flag/);
