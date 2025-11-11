@@ -263,7 +263,7 @@ exit 0;
 
 #### SUBROUTINES ###
 
-# append point-charges keyword and values before the $end of the $control_file
+# append pointcharges keyword and values before the $end of the $control_file
 sub insert_pointcharges {
   my $control_contents = "";
 

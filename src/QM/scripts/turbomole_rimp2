@@ -225,29 +225,37 @@ while (<GRADIENT>) {
 close (FORCES);
 close (GRADIENT);
 
-# initialize the correct flags
-  # mulliken
+# extract mulliken charges from ricc2 output
 $start_flag = "atom      charge";
 $stop_flag  = "from total density versus population analysis";
 
-my $charge_file_to_open = ($pointcharges == 1) ? $dscf_nopc_out : $out_file;
-open(OUT, "< $charge_file_to_open") or
-   die "\n\n\t (-) $progname: Error opening file '$charge_file_to_open'\n";
+open(OUT, "< $out_file") or
+   die "\n\n\t (-) $progname: Error opening file '$out_file'\n";
 
 open(CHARGE, "> $qm_charges") or 
    die "\n\n\t (-) $progname: Error opening file '$qm_charges'\n";
 
+my $ricc2_found = 0;
 while (<OUT>) 
 {
-  last if ($_ =~ m/$stop_flag/);
-  $flag = 1 if ($_ =~ m/$start_flag/);
+  # Look for begin of ricc2 section
+  if (!$ricc2_found && m/\s*R\s+I\s+C\s+C\s+2/) {
+    $ricc2_found = 1;
+    next;
+  }
+  
+  # Look for start/stop flags in ricc2 section
+  if ($ricc2_found) {
+    last if ($_ =~ m/$stop_flag/);
+    $flag = 1 if ($_ =~ m/$start_flag/);
 
-  if ($flag && m/\s+\d+(\S+)\s+(\S+)/) 
-  {
-    my $line = $_;
-    $line =~ s/\s+\d+(\S+)\s+(\S+)/$1 $2/;
-    my @item = split(/\s+/, $line);
-    printf CHARGE ("%s  %12.5f\n", @item);
+    if ($flag && m/\s+\d+(\S+)\s+(\S+)/) 
+    {
+      my $line = $_;
+      $line =~ s/\s+\d+(\S+)\s+(\S+)/$1 $2/;
+      my @item = split(/\s+/, $line);
+      printf CHARGE ("%s  %12.5f\n", @item);
+    }
   }
 }
 
@@ -259,7 +267,7 @@ exit 0;
 
 #### SUBROUTINES ###
 
-# append point-charges keyword and values before the $end of the $control_file
+# append pointcharges keyword and values before the $end of the $control_file
 sub insert_pointcharges {
   my $control_contents = "";
 
