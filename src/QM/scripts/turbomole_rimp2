@@ -2,25 +2,25 @@
 #
 #  turbomole_rimp2
 #
-# Interface between PQ and Turbomole
-# initializes QM run: define
-# modification of the control file to run rimp2 using 
-#   Turbomoles 'ricc2' module
-# runs QM calculation: dscf, ricc2
-# etracts data - energy, gradient, pointcharges
+#  Interface between PQ and Turbomole
+#  initializes QM run: define
+#  runs QM calculation: dscf, ricc2
+#  extracts data - energy, gradient, pointcharges
 #
 # + check if inital mo guess can be reused via $run_define
 #   if YES ($run_define == 1)
 #     + remove old turbomole files
 #     + make tm_define.in from tm_define.template
 #     + run define with tm_define.in 
-# + insert point-charges from pointcharges_file to control file
+# + insert pointcharges from pointcharges_file to control file
 # + run dscf
 # + remove pointcharges from control file
 #   if pointcharges have been used
 #     + compute energy without pointcharge contribution
+# + extract hf energy from dscf output
 # + run ricc2
-# + extract forces and write energy and forces to qm_forces
+# + extract ricc2 energy correction and add it to the hf energy
+# + write total energy to qm_forces
 # + extract gradients and write them to $qm_forces
 # + extract charges and write them to qm_charges
 # + exit script
@@ -147,44 +147,25 @@ if ($pointcharges == 1)
   `$dscf_exe 2>&1 | tee $dscf_nopc_out`;
 }
 
-if ($pointcharges == 1)
+# read in hf energy from dscf_nopc_out if pointcharges have been present, else from out_file
+my $energy_file_to_open = ($pointcharges == 1) ? $dscf_nopc_out : $out_file;
+open (ENERGY, "< $energy_file_to_open") or
+  die "\n\n\t (-)  Error opening file '$energy_file_to_open'\n";
+
+while (<ENERGY>)
 {
-  # read in 1st SCF energy from dscf_nopc_out
-  open (ENERGY, "< $dscf_nopc_out") or
-    die "\n\n\t (-)  Error opening file '$dscf_nopc_out'\n";
+  last if /^\s+\:\s+kinetic/;
 
-  while (<ENERGY>) 
+  y/D/E/;
+
+  if (/^\s+\|\s+total/)
   {
-    if (/^\s+1\s+-\d+.\d+\s+-\d+.\d+\s+\d+.\d+\s+\d+.\d+D\+\d+\s+\d+.\d+D/)
-    {
-      $line = $_;
-      $hf_energy = (split ' ', $line)[1];
-    }
+    my @energy_line = split;
+    $hf_energy=$energy_line[4];   
   }
-
-  close (ENERGY);
 }
-else
-{
-  # read in hf energy from out_file
-  open (ENERGY, "< $out_file") or
-    die "\n\n\t (-)  Error opening file '$out_file'\n";
 
-  while (<ENERGY>)
-  {
-    last if /^\s+\:\s+kinetic/;
-
-    y/D/E/;
-
-    if (/^\s+\|\s+total/)
-    {
-      my @energy_line = split;
-      $hf_energy=$energy_line[4];   
-    }
-  }
-
-  close (ENERGY);
-}
+close (ENERGY);
 
 if ($pointcharges == 1)
 {
@@ -200,17 +181,17 @@ unlink $gradient_file;
 $tm_out = `ricc2 2>&1 | tee -a $out_file`;
 exit 1 if ($tm_out !~ /all done/);
 
-# extract the QM energy
+# extract the ricc2 energy correction to calculate the total QM energy
 open (ENERGY, "< $energy_file") or
   die "\n\n\t (-) $progname: Error opening file '$energy_file'\n";
 
-# get energy
 while (<ENERGY>) 
 {
   next if /\s*\$/;
   $line = $_;
 }
-# QM energy is HF energy plus RIMP2 correction
+
+# Total QM energy is HF energy plus RICC2 correction
 $energy = $hf_energy + (split ' ', $line)[4];
 close (ENERGY);
 
@@ -234,7 +215,7 @@ while (<GRADIENT>) {
 
   my @gradient = split;
 
- # write  gradient to qm_forces
+ # write gradient to qm_forces
   if ($#gradient == 2) {
     printf FORCES ("%20.14G  %20.14G  %20.14G\n",
 		   $gradient[0], $gradient[1], $gradient[2]);
