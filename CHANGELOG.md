@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## Next Release
 
+<!-- insertion marker -->
+## [v0.6.3](https://github.com/MolarVerse/PQ/releases/tag/v0.6.2) - 2025-11-12
+
 ### Bug Fixes
 
 - Fixed segfault when setting force-field to "bonded"
@@ -20,8 +23,6 @@ All notable changes to this project will be documented in this file.
 - Daily CI workflow added to build and test the codebase
 - Automatic git tag creation on new release via GitHub Actions
 
-
-<!-- insertion marker -->
 ## [v0.6.2](https://github.com/MolarVerse/PQ/releases/tag/v0.6.2) - 2025-08-22
 
 ### Workflow
