@@ -1,0 +1,89 @@
+name: Create Release Tag
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  create-tag:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Extract release version from PR
+        id: extract_version
+        run: |
+          title="${{ github.event.pull_request.title }}"
+          body="${{ github.event.pull_request.body }}"
+
+          regex='[Rr][Ee][Ll][Ee][Aa][Ss][Ee]-([0-9]+\.[0-9]+\.[0-9]+)'
+
+          if [[ "$title" =~ $regex ]]; then
+            version="${BASH_REMATCH[1]}"
+          elif [[ "$body" =~ $regex ]]; then
+            version="${BASH_REMATCH[1]}"
+          else
+            echo "❌ No valid release version found in PR title or description."
+            exit 1
+          fi
+
+          echo "✅ Found release version: $version"
+          echo "version=$version" >> $GITHUB_OUTPUT
+
+      - name: Update CHANGELOG.md
+        run: |
+          version="${{ steps.extract_version.outputs.version }}"
+          python3 scripts/update_changelog.py "$version"
+
+      - name: Commit and push changelog update
+        run: |
+          version="${{ steps.extract_version.outputs.version }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add CHANGELOG.md
+          git commit -m "docs: update changelog for $version"
+          git push origin HEAD:main
+
+      - name: Create Git tag
+        id: create_tag
+        run: |
+          version="${{ steps.extract_version.outputs.version }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git tag "$version"
+          git push origin "$version"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.extract_version.outputs.version }}
+          name: Release ${{ steps.extract_version.outputs.version }}
+          body: |
+            🚀 **Automatic release:** `${{ steps.extract_version.outputs.version }}`
+            - Created from PR: #${{ github.event.pull_request.number }}
+            - Commit: `${{ github.sha }}`
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Merge main back into dev
+        run: |
+          git fetch origin dev
+          git checkout dev
+          git merge origin/main --no-edit
+          git push origin dev

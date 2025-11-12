@@ -6,7 +6,20 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Fixed segfault when setting force-field to "bonded"
 - Eigen version finally fixed to 5.0.0 (latest aka master broken on 28.09.25)
+
+### Enhancements
+
+- Atom positions of triclinic boxes are now wrapped into the simulation box
+  when written to the trajectory output file
+- Atom charges are now written to the .chrg output file in case of pure QM-MD jobs
+
+### CI
+
+- Daily CI workflow added to build and test the codebase
+- Automatic git tag creation on new release via GitHub Actions
+
 
 <!-- insertion marker -->
 ## [v0.6.2](https://github.com/MolarVerse/PQ/releases/tag/v0.6.2) - 2025-08-22

@@ -76,6 +76,13 @@ Vec3D OrthorhombicBox::calcBoxDimFromDensity(
     return Vec3D(::cbrt(_volume));
 }
 
+Vec3D OrthorhombicBox::wrapPositionIntoBox(const Vec3D &pos) const
+{
+    Vec3D position = pos;
+    applyPBC(position);
+    return position;
+}
+
 /**
  * @brief scales the cell dimensions and recalculates the volume
  *

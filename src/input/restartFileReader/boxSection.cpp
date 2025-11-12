@@ -63,16 +63,15 @@ using namespace engine;
  * @throws RstFileException if the box angles are not positive
  * or larger than 90°
  */
-void BoxSection::process(
-    std::vector<std::string> &lineElements,
-    Engine           &engine
-)
+void BoxSection::process(std::vector<std::string> &lineElements, Engine &engine)
 {
     if ((lineElements.size() != 4) && (lineElements.size() != 7))
-        throw RstFileException(std::format(
-            "Error in line {}: Box section must have 4 or 7 elements",
-            _lineNumber
-        ));
+        throw RstFileException(
+            std::format(
+                "Error in line {}: Box section must have 4 or 7 elements",
+                _lineNumber
+            )
+        );
 
     const auto boxDimensions = Vec3D{
         stod(lineElements[1]),
