@@ -1243,9 +1243,9 @@ Force Field
 .. admonition:: Key
     :class: tip
 
-    forcefield = {string} -> "off"
+    force-field = {string} -> "off"
 
-With the ``forcefield`` keyword the user can switch from the GUFF formalism to a force field type simulation (For details see Reference Manual).
+With the ``force-field`` keyword the user can switch from the GUFF formalism to a force field type simulation (For details see Reference Manual).
 
 Possible options are:
 

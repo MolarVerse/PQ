@@ -60,6 +60,7 @@ void MDEngine::run()
         takeStep();
 
         writeOutput();
+        deleteTempFiles();
     }
 
     _timer.stopSimulationTimer();

@@ -54,7 +54,13 @@ namespace settings
         static inline std::string _dftbFile = defaults::_DFTB_FILE_DEFAULT_;
         static inline std::string _tmFile = defaults::_TM_FILE_DEFAULT_;
         static inline std::string _pointChargeFile = defaults::_POINTCHARGE_FILE_DEFAULT_;
-        
+
+        // clang-format off
+        static inline std::string _qmForcesTempFile     = defaults::_QM_FORCES_TEMP_FILE_DEFAULT_;
+        static inline std::string _qmChargesTempFile    = defaults::_QM_CHARGES_TEMP_FILE_DEFAULT_;
+        static inline std::string _StressTensorTempFile = defaults::_STRESS_TENSOR_TEMP_FILE_DEFAULT_;
+        // clang-format on
+
         static bool inline _isTopologyFileSet       = false;
         static bool inline _isParameterFileSet      = false;
         static bool inline _isIntraNonBondedFileSet = false;
@@ -82,6 +88,10 @@ namespace settings
         [[nodiscard]] static std::string getDFTBFileName();
         [[nodiscard]] static std::string getTMFileName();
         [[nodiscard]] static std::string getPointChargeFileName();
+
+        [[nodiscard]] static std::string getQMForcesTempFileName();
+        [[nodiscard]] static std::string getQMChargesTempFileName();
+        [[nodiscard]] static std::string getStressTensorTempFileName();
 
         [[nodiscard]] static bool isTopologyFileNameSet();
         [[nodiscard]] static bool isParameterFileNameSet();

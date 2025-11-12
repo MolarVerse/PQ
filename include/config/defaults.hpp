@@ -64,6 +64,10 @@ namespace defaults
     static constexpr char _RPMD_CHARGE_FILE_DEFAULT_[] = "default.rpmd.charge";
     static constexpr char _RPMD_ENERGY_FILE_DEFAULT_[] = "default.rpmd.en";
 
+    static constexpr char _QM_FORCES_TEMP_FILE_DEFAULT_[]     = "qm_forces";
+    static constexpr char _QM_CHARGES_TEMP_FILE_DEFAULT_[]    = "qm_charges";
+    static constexpr char _STRESS_TENSOR_TEMP_FILE_DEFAULT_[] = "stress_tensor";
+
     static constexpr double _COULOMB_CUT_OFF_DEFAULT_           = 12.5;   // in Angstrom
     static constexpr double _SCALE_14_COULOMB_DEFAULT_          = 1.0;
     static constexpr double _SCALE_14_VAN_DER_WAALS_DEFAULT_    = 1.0;

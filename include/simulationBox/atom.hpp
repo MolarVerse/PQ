@@ -50,7 +50,9 @@ namespace simulationBox
         size_t _externalAtomType;
         size_t _atomType;
 
-        bool _isActive = true;
+        bool _isActive      = true;
+        bool _isForcedInner = false;
+        bool _isForcedOuter = false;
 
         int                   _atomicNumber;
         double                _mass;
@@ -77,8 +79,6 @@ namespace simulationBox
         void updateOldPosition();
         void updateOldVelocity();
         void updateOldForce();
-
-        [[nodiscard]] std::optional<double> &getQMCharge();
 
         /*******************
          * scaling methods *
@@ -119,9 +119,10 @@ namespace simulationBox
         [[nodiscard]] size_t getExternalGlobalVDWType() const;
         [[nodiscard]] size_t getInternalGlobalVDWType() const;
 
-        [[nodiscard]] int    getAtomicNumber() const;
-        [[nodiscard]] double getMass() const;
-        [[nodiscard]] double getPartialCharge() const;
+        [[nodiscard]] int                   getAtomicNumber() const;
+        [[nodiscard]] double                getMass() const;
+        [[nodiscard]] double                getPartialCharge() const;
+        [[nodiscard]] std::optional<double> getQMCharge() const;
 
         [[nodiscard]] pq::Vec3D getPosition() const;
         [[nodiscard]] pq::Vec3D getPositionOld() const;
@@ -144,6 +145,7 @@ namespace simulationBox
 
         void setMass(const double mass);
         void setPartialCharge(const double partialCharge);
+        void setQMCharge(const double charge);
 
         void setAtomType(const size_t atomType);
         void setExternalAtomType(const size_t externalAtomType);
@@ -164,6 +166,8 @@ namespace simulationBox
         void setForceToZero();
         void setInnerForceToZero();
         void setOuterForceToZero();
+
+        void resetQMCharge();
     };
 }   // namespace simulationBox
 
