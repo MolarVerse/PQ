@@ -50,7 +50,18 @@ namespace input
         void parseUseQMCharges(const pq::strings &, const size_t);
         void parseCoreRadius(const pq::strings &, const size_t);
         void parseLayerRadius(const pq::strings &, const size_t);
-        void parseSmoothingRadius(const pq::strings &, const size_t);
+        void parseSmoothingRegionThickness(const pq::strings &, const size_t);
+        void parsePointChargeThickness(const pq::strings &, const size_t);
+        void parseSmoothingMethod(const pq::strings &, const size_t);
+
+        std::vector<int> parseSelection(
+            const std::string &,
+            const std::string &
+        );
+        std::vector<int> parseSelectionNoPython(
+            const std::string &,
+            const std::string &
+        );
     };
 
 }   // namespace input

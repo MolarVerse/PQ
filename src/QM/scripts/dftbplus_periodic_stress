@@ -1,7 +1,5 @@
 #!/usr/bin/perl
 #
-#  calc_forces.dftbplus 
-#
 #  Interface between PQ and DFTB+
 
 use strict;
@@ -11,237 +9,446 @@ my $progname = $0;
 $progname =~ s{^.*/}{};
 
 # input data from the PQ program
-my $charge             = $ARGV[0];             # charge of the qm region
-my $changed            = $ARGV[1];             # flag if define has to be run
-my $guess_mo           = $ARGV[2];             # flag if a dft step is performed as a guess
-my $pointcharges       = $ARGV[3];             # pointcharge scheme
-my $nprocessors        = $ARGV[4];             # number of processors
-my $dftb_template      = $ARGV[5];             # dftb setup file that generates $dftb_input
-
+my $charge            = $ARGV[0];   # charge of the qm region
+my $readChargesBin    = $ARGV[1];   # flag if initial charges should be read from charges.bin
+my $pointcharges      = $ARGV[2];   # flag if point charges are used
+my $dftb_template     = $ARGV[3];   # dftb setup file that generates $dftb_input
+my $pointcharges_file = $ARGV[4];   # name of the pointcharges_file
 
 # various variables
-my @line;                                      # helper variable
-my $flag = undef;                              # helper variable
-my $start_flag         = "";                   # helper variable
-my $stop_flag          = "";                   # helper variable
-my $energy;                                    # QM energy
-my $control_contents   = "";                   # helper variable - control file modifications
-my $gaussian_out       = "";                   # output of define, dscf, and grad
-my $converged_string   = 'convergence criteria satisfied after\s*\d+' .
-  '\s+iterations';		                         # energy search string
-
+my @line;                    # helper variable
+my $flag = undef;            # helper variable
+my $start_flag       = "";   # helper variable
+my $stop_flag        = "";   # helper variable
+my $energy;                  # QM energy
+my $control_contents = "";   # helper variable - control file modifications
+my $gaussian_out     = "";   # output of define, dscf, and grad
+my $converged_string = 'convergence criteria satisfied after\s*\d+' .
+  '\s+iterations';		         # energy search string
 
 # files and commands
-my $dftb_exe          = "dftb+";             # executable
-my $dftb_chrg         = "charges.bin";       # result file: converged charges of all qm atoms
-my $dftb_input        = "dftb_in.hsd";       # dftb input file
-my $dftb_out          = "dftb.out";          # dftb output file
-my $dftb_out_prev     = "dftb.out.prev";     # summary file - previous step
+my $dftb_exe      = "dftb+";           # executable
+my $dftb_chrg     = "charges.bin";     # result file: converged charges of all qm atoms
+my $dftb_input    = "dftb_in.hsd";     # dftb input file
+my $dftb_out      = "dftb.out";        # dftb output file
+my $dftb_out_prev = "dftb.out.prev";   # summary file - previous step
 
-my $qm_forces          = "qm_forces";              # result file: energy plus forces of all qm atoms
-my $qm_charges         = "qm_charges";             # result file: partial charges of all qm atoms
-my $mm_forces          = "mm_forces";              # result file: forces of all mm atoms 
-my $stress_tensor_file = "stress_tensor";          # result file: stress tensor 
-my $stress_tensor_file_mat = "stress_tensor_mat";  # result file: stress tensor 
+my $qm_forces              = "qm_forces";           # result file: energy plus forces of all qm atoms
+my $qm_charges             = "qm_charges";          # result file: partial charges of all qm atoms
+my $pc_forces              = "pc_forces";           # result file: forces of all point charges
+my $stress_tensor_file     = "stress_tensor";       # result file: stress tensor
 
-my $qm_coords             = "coords";               # coordinates
-my $qm_coords_prev        = "coords.prev";          # coordinates previous step
-my $mm_pointcharges       = "mm_pointcharges";      # mm_pointcharges
+my $qm_coords      = "coords";        # coordinates
+my $qm_coords_prev = "coords.prev";   # coordinates previous step
 
-my $energy_found          = 0;                     # energy  control flag
-my $forces_found          = 0;                     # forces  control flag
-my $charges_found         = 0;                     # charges control flag
-my $stress_tensor_found   = 0;                     # stress-tensor control flag
+my $energy_found        = 0;   # energy control flag
+my $forces_found        = 0;   # forces control flag
+my $charges_found       = 0;   # charges control flag
+my $pc_forces_found     = 0;   # pointcharge forces control flag
+my $stress_tensor_found = 0;   # stress-tensor control flag
+my $periodic            = 0;   # periodic system control flag
 
-my $n_pc                  = 0;                     # charges control flag
-my $n_fields              = 0;
+my $n_pc      = 0;     # number of point charges read from the $pointcharges_file
+my $n_fields  = 0;
 
-`cat coords > geom.gen`;   
+`cat coords > geom.gen`;
 
-# count number of mm pointcharges
-# open (MM_PC, "< $mm_pointcharges") or
-#       die "\n\n\t (-) $progname: Error opening file $mm_pointcharges'\n";
+# check if the system is periodic by reading the first line of geom.gen
+# and read elements from the second line
+open (GEOM_FILE, "< geom.gen") or
+  die "\n\n\t (-) $progname: Error opening file geom.gen\n";
 
-while (<MM_PC>) 
+my $first_line = <GEOM_FILE>;
+my $second_line = <GEOM_FILE>;
+close (GEOM_FILE);
+
+if (defined $first_line) 
 {
-   $n_pc ++;
-}
-
-close (MM_PC);
-
-
-# check if molecules have been exchanged between QM and MM region
-if ($changed == 1)
-{
-  # remove charges.bin   
-  unlink $dftb_chrg;
-   
-# create dftb_in.hsd from template  
-# and insert QM charge and GUESS FLAG
-  open (DFTB_TEMPLATE, "< $dftb_template") or
-      die "\n\n\t (-) $progname: Error opening file $dftb_template'\n";
-
-  open (DFTB_IN, "> $dftb_input") or
-      die "\n\n\t (-) $progname: Error opening file $dftb_input\n";
-
-  while (<DFTB_TEMPLATE>) 
+  chomp $first_line;
+  my @geom_fields = split /\s+/, $first_line;
+  
+  if (defined $geom_fields[1] && $geom_fields[1] eq 'S') 
   {
-     s{__GUESS__}{ReadInitialCharges = No};  
-     s{__CHARGE__}{$charge};
-     s{__N_PC__}{$n_pc};
-     print DFTB_IN;
+    $periodic = 1;
   }
-
-  close (DFTB_TEMPLATE);
-  close (DFTB_IN);  
 }
-else
+
+# Parse elements from second line
+my %elements_present = ();
+if (defined $second_line)
 {
-
-# create dftb_in.hsd from template  
-# and insert QM charge and GUESS FLAG
-  open (DFTB_TEMPLATE, "< $dftb_template") or
-      die "\n\n\t (-) $progname: Error opening file $dftb_template'\n";
-
-  open (DFTB_IN, "> $dftb_input") or
-      die "\n\n\t (-) $progname: Error opening file $dftb_input\n";
-
-  while (<DFTB_TEMPLATE>) 
-  {  
-    s{__GUESS__}{ReadInitialCharges = Yes};      
-    s{__CHARGE__}{$charge};
-    s{__N_PC__}{$n_pc};
-    print DFTB_IN;
+  chomp $second_line;
+  my @element_list = split /\s+/, $second_line;
+  foreach my $element (@element_list)
+  {
+    $elements_present{$element} = 1 if $element ne '';
   }
-
-  close (DFTB_TEMPLATE);
-  close (DFTB_IN);
 }
 
+# count number of pointcharges in $pointcharges_file
+if ($pointcharges == 1)
+{
+  open (PC_FILE, "< $pointcharges_file") or
+        die "\n\n\t (-) $progname: Error opening file $pointcharges_file'\n";
 
-# execute dftb
-if(system("dftb+ > run.out"))
+  while (<PC_FILE>) { $n_pc ++; }
+
+  close (PC_FILE);
+}
+
+if ($readChargesBin == 0)
+{
+  # remove charges.bin 
+  unlink $dftb_chrg;
+}
+
+# create dftb_in.hsd from dftb_in.template and insert QM charge and GUESS FLAG
+open (DFTB_TEMPLATE, "< $dftb_template") or
+  die "\n\n\t (-) $progname: Error opening file $dftb_template'\n";
+
+open (DFTB_IN, "> $dftb_input") or
+  die "\n\n\t (-) $progname: Error opening file $dftb_input\n";
+
+my $guess_value = $readChargesBin == 1 ? "Yes" : "No";
+my $in_hubbard_block = 0;
+my $in_max_angular_block = 0;
+my $brace_count = 0;
+
+while (<DFTB_TEMPLATE>)
+{
+  # Track if we're in HubbardDerivs or MaxAngularMomentum blocks
+  if (/^\s*HubbardDerivs\s*\{/)
+  {
+    $in_hubbard_block = 1;
+    $brace_count = 1;
+  }
+  elsif (/^\s*MaxAngularMomentum\s*\{/)
+  {
+    $in_max_angular_block = 1;
+    $brace_count = 1;
+  }
+  elsif ($in_hubbard_block || $in_max_angular_block)
+  {
+    # Count braces to track block nesting
+    $brace_count += tr/{/{/;
+    $brace_count -= tr/}/}/;
+    
+    # Reset flags when we exit the block (brace_count reaches 0)
+    if ($brace_count <= 0)
+    {
+      $in_hubbard_block = 0;
+      $in_max_angular_block = 0;
+    }
+  }
+  
+  # Process the line
+  my $line = $_;
+  
+  # Comment out element lines in HubbardDerivs and MaxAngularMomentum blocks
+  # if the element is not present in the system
+  if (($in_hubbard_block || $in_max_angular_block) && $brace_count > 0)
+  {
+    # Check if this line defines an element (format: "Element = value")
+    if ($line =~ /^\s*([A-Z][a-z]?)\s*=/)
+    {
+      my $element = $1;
+      if (!exists $elements_present{$element})
+      {
+        # Comment out this line by adding # at the beginning
+        $line =~ s/^(\s*)/\1# /;
+      }
+    }
+  }
+  
+  # Perform standard substitutions
+  $line =~ s{__GUESS__}{ReadInitialCharges = $guess_value};
+  $line =~ s{__CHARGE__}{$charge};
+  $line =~ s{__N_PC__}{$n_pc};
+  
+  print DFTB_IN $line;
+}
+
+close (DFTB_TEMPLATE);
+close (DFTB_IN);  
+
+# execute dftb+
+if (system("dftb+ > run.out"))
 {
   die "\n\n\t (-) $progname: Error executing dftb+.\n";
 }
-if(system("mv detailed.out $dftb_out"))
+
+if (system("mv detailed.out $dftb_out"))
 {
   die "\n\n\t (-) $progname: Error moving detailed.out to $dftb_out.\n";
 }
 
-# extract energy and forces from Gaussian output and write forces to file
-
+# create the files to which the results are written
 open (DFTB_OUT, "< $dftb_out") or
   die "\n\n\t (-) $progname: Error opening file '$dftb_out'\n";
 
 open (FORCES, "> $qm_forces") or
   die "\n\n\t (-) $progname: Error opening file '$qm_forces'\n";
 
-open (CHARGES, "> $qm_charges") or 
+open (CHARGES, "> $qm_charges") or
   die "\n\n\t (-) $progname: Error opening file '$qm_charges'\n";
-   
-open (MM_FORCES, "> $mm_forces") or
-  die "\n\n\t (-) $progname: Error opening file '$mm_forces'\n";
 
-open (STRESS_TENSOR, "> $stress_tensor_file") or
-  die "\n\n\t (-) $progname: Error opening file '$stress_tensor_file'\n";
+if ($pointcharges == 1)
+{
+  open (PC_FORCES, "> $pc_forces") or
+    die "\n\n\t (-) $progname: Error opening file '$pc_forces'\n";
+}
+
+if ($periodic == 1)
+{
+  open (STRESS_TENSOR, "> $stress_tensor_file") or
+    die "\n\n\t (-) $progname: Error opening file '$stress_tensor_file'\n";
+}
 
 while (<DFTB_OUT>) 
 {
   # extract energy
+  if (/^\s*Total energy:\s+(.*?)\s+H\s+.*?/)
+  {
+    printf FORCES ("%20.9f\n", $1);
+    $energy_found = 1;
+  }
 
-    if (/^\s*Total energy:\s+(.*?)\s+H\s+.*?/) 
+  # extract forces if no pointcharges are used
+  if ($pointcharges == 0)
+  {
+    if (/^\s*Total Forces/ .. /^\s*Maximal derivative component:/)
     {
-      printf FORCES ("%20.9f\n", $1);
-      $energy_found = 1;
-    }
-
-    # extract forces
-    if (/^\s*Total Forces/ .. /^\s*Maximal derivative component:/)  
-    {
-      if (/^\s+-*\d/) 
+      if (/^\s+-*\d/)
       {
         @line = split;
         $n_fields = scalar( @line  ) - 3;
 
-        printf FORCES ("%27.18e  %27.18e  %27.18e\n", -$line[0+$n_fields],  -$line[1+$n_fields], -$line[2+$n_fields]);      
+        printf FORCES ("%27.18e  %27.18e  %27.18e\n", -$line[0+$n_fields],  -$line[1+$n_fields], -$line[2+$n_fields]);
         $forces_found = 1;
-      }
+              }
     }
+  }
 
   # extract charges  
   if ( (/^\s*Atom       Net charge/  .. /^\s*COMPONENT/ ) || (/^\s*Atomic gross charges/ .. /^\s*COMPONENT/) )
   {
     if (/^\s+\d+\s+/) 
-      {
-        @line = split;
-	printf CHARGES ("%s  %20.8f\n",$line[0], $line[1]); 
-	$charges_found = 1;
-      }
+    {
+      @line = split;
+      printf CHARGES ("%s  %20.8f\n",$line[0], $line[1]);
+      $charges_found = 1;
+    }
   }
 
-  # extract mm_forces
-  if (/^\s*Forces on external charges/ .. /^\s*Volume:/ ) 
+  # extract pointcharge forces
+  if (/^\s*Forces on external charges/ .. /^\s*Volume:/ )
   {
     if (/^\s+-*\d/)  
-      {
-        @line = split;
-	printf MM_FORCES ("%27.18e  %27.18e  %27.18e\n", -$line[0],  -$line[1],  -$line[2]);       
-	$charges_found = 1;
-      }
+    {
+      @line = split;
+      printf PC_FORCES ("%27.18e  %27.18e  %27.18e\n", -$line[0],  -$line[1],  -$line[2]);
+      $pc_forces_found = 1;
+    }
   }
   
   # extract stress tensor
-  if (/^\s*Total stress tensor/ .. /^\s*Total lattice derivs/ ) 
+  if (/^\s*Total stress tensor/ .. /^\s*Total lattice derivs/ )
   {
     if (/^\s+-*\d/)  
-      {
-        @line = split;
-	printf STRESS_TENSOR ("%27.18e  %27.18e  %27.18e\n", $line[0],  $line[1],  $line[2]);       
-	$stress_tensor_found = 1;
-      }
-  }  
-  
+    {
+      @line = split;
+	    printf STRESS_TENSOR ("%27.18e  %27.18e  %27.18e\n", $line[0],  $line[1],  $line[2]);
+	    $stress_tensor_found = 1;
+    }
+  }
 }
-  
-  close (DFTB_OUT);   
-  close (FORCES);   
-  close (CHARGES);   
-  close (MM_FORCES);
-  close (STRESS_TENSOR);
 
-#`mv $stress_tensor_file $stress_tensor_file_mat`;
-#`julia /home/jag/qmcfc_dissociative_dev_20210111/scripts/diagonalize_stresstensor.jl $stress_tensor_file_mat`;
+close (DFTB_OUT);
+close (FORCES);
+close (CHARGES);
+close (PC_FORCES);
+close (STRESS_TENSOR);
 
 # create the "log-file" for the last run
 `mv $dftb_out  $dftb_out_prev`;
 `mv $qm_coords $qm_coords_prev`;
 
-exit;
+# calculate the forces via a separate dftb+ execution
+# if pointcharges have been used
+if ($pointcharges == 1)
+{
+  # open dftb_in.hsd and modify it for force calculation
+  my @file_contents;
+  if (-e $dftb_input) {  # Check if file exists
+      open (DFTB_IN_READ, "< $dftb_input") or
+          die "\n\n\t (-) $progname: Error reading file $dftb_input\n";
+      @file_contents = <DFTB_IN_READ>;
+      close (DFTB_IN_READ);
+  }
+
+  # Modify the contents as needed - handle multiline patterns
+  my $file_content = join('', @file_contents);
+
+  # Replace Single Point Driver = {} for Geometry Optimization Driver
+  $file_content =~ s/Driver\s*=\s*\{\s*\}/Driver = GeometryOptimisation{\n    MaxSteps = 0\n    Optimizer = SteepestDescent{}\n}/gs;
+
+  # Set MaxSccIterations = 1
+  if ($file_content =~ /MaxSccIterations\s*=\s*\d+/) {
+      # If MaxSccIterations exists, replace it with 1
+      $file_content =~ s/MaxSccIterations\s*=\s*\d+/MaxSccIterations = 1/g;
+  } else {
+      # If MaxSccIterations doesn't exist, add it after SCC = Yes line
+      $file_content =~ s/(SCC\s*=\s*Yes\s*\n)/$1  MaxSccIterations = 1\n/g;
+  }
+
+  # Set ConvergentSccOnly = No
+  if ($file_content =~ /ConvergentSccOnly\s*=\s*\w+/) {
+      # If ConvergentSccOnly exists, replace it with No
+      $file_content =~ s/ConvergentSccOnly\s*=\s*\w+/ConvergentSccOnly = No/g;
+  } else {
+      # If ConvergentSccOnly doesn't exist, add it after MaxSccIterations
+      $file_content =~ s/(MaxSccIterations\s*=\s*\d+\s*\n)/$1  ConvergentSccOnly = No\n/g;
+  }
+
+  # Set ReadInitialCharges = Yes (this should already be set correctly)
+  $file_content =~ s/ReadInitialCharges\s*=\s*\w+/ReadInitialCharges = Yes/g;
+
+  # Remove entire ElectricField block
+  my $temp_content = $file_content;
+  my $changes_made = 1;
+  while ($changes_made) {
+      $changes_made = 0;
+      # Remove ElectricField blocks that have no nested braces
+      if ($temp_content =~ s/(\s*)ElectricField\s*=\s*\{[^{}]*\}\s*\n?/$1/gs) {
+          $changes_made = 1;
+      }
+      # Remove ElectricField blocks that have one level of nested braces
+      if ($temp_content =~ s/(\s*)ElectricField\s*=\s*\{[^{}]*\{[^{}]*\}[^{}]*\}\s*\n?/$1/gs) {
+          $changes_made = 1;
+      }
+      # Remove ElectricField blocks that have two levels of nested braces
+      if ($temp_content =~ s/(\s*)ElectricField\s*=\s*\{[^{}]*\{[^{}]*\{[^{}]*\}[^{}]*\}[^{}]*\}\s*\n?/$1/gs) {
+          $changes_made = 1;
+      }
+  }
+  $file_content = $temp_content;
+
+  # Add mixer block - insert it before the closing brace of Hamiltonian
+  # Find the last closing brace that belongs to Hamiltonian
+  my @lines = split(/\n/, $file_content);
+  my $in_hamiltonian = 0;
+  my $brace_count = 0;
+  my $hamiltonian_end_line = -1;
+  
+  for my $i (0..$#lines) {
+      if ($lines[$i] =~ /^\s*Hamiltonian\s*=\s*DFTB\s*\{/) {
+          $in_hamiltonian = 1;
+          $brace_count = 1;
+      } elsif ($in_hamiltonian) {
+          $brace_count += ($lines[$i] =~ tr/{/{/);
+          $brace_count -= ($lines[$i] =~ tr/}/}/);
+          
+          if ($brace_count == 0) {
+              $hamiltonian_end_line = $i;
+              last;
+          }
+      }
+  }
+  
+  # Insert mixer block before the Hamiltonian closing brace
+  if ($hamiltonian_end_line >= 0) {
+      splice @lines, $hamiltonian_end_line, 0, "  mixer = simple{", "    mixingparameter = 0.0000000001", "  }";
+  }
+  
+  $file_content = join("\n", @lines) . "\n";
+
+  # Handle Analysis block with PrintForces = Yes
+  if ($file_content =~ /Analysis\s*=\s*\{/) {
+      # Analysis block exists, add PrintForces inside it (if not already there)
+      if ($file_content !~ /PrintForces\s*=\s*\w+/) {
+          # Find the Analysis block and add PrintForces before its closing brace
+          $file_content =~ s/(Analysis\s*=\s*\{[^}]*?)(\s*\})/$1\n   PrintForces = Yes$2/gs;
+      }
+  } else {
+      # Analysis block doesn't exist, create it with PrintForces
+      $file_content .= "\nAnalysis = {\n    PrintForces = Yes\n}\n";
+  }
+
+  # Write the modified contents back
+  open (DFTB_IN, "> $dftb_input") or
+      die "\n\n\t (-) $progname: Error opening file $dftb_input\n";
+  print DFTB_IN $file_content;
+  close (DFTB_IN); 
+
+  # execute dftb+
+  if (system("dftb+ > run.out"))
+  {
+    die "\n\n\t (-) $progname: Error executing dftb+.\n";
+  }
+
+  if (system("mv detailed.out $dftb_out"))
+  {
+    die "\n\n\t (-) $progname: Error moving detailed.out to $dftb_out.\n";
+  }
+
+  # create the files to which the results are written
+  open (DFTB_OUT, "< $dftb_out") or
+    die "\n\n\t (-) $progname: Error opening file '$dftb_out'\n";
+
+  open (FORCES, ">> $qm_forces") or
+    die "\n\n\t (-) $progname: Error opening file '$qm_forces'\n";
+
+  while (<DFTB_OUT>) 
+  {
+    if (/^\s*Total Forces/ .. /^\s*Maximal derivative component:/)
+    {
+      if (/^\s+-*\d/)
+      {
+        @line = split;
+        $n_fields = scalar( @line  ) - 3;
+
+        printf FORCES ("%27.18e  %27.18e  %27.18e\n", -$line[0+$n_fields],  -$line[1+$n_fields], -$line[2+$n_fields]);
+        $forces_found = 1;
+      }
+    }
+  }
+
+  close (DFTB_OUT);
+  close (FORCES);
+
+  # create the "log-file" for the last run
+  `mv $dftb_out  $dftb_out_prev`;
+}
 
 if ($energy_found != 1)
 {
-     printf("\n\n\t (-) $progname: Error encountered while reading $dftb_out.");
-     printf("\n\t     QM energy has not been read!");
+  printf("\n\n\t (-) $progname: Error encountered while reading $dftb_out.");
+  printf("\n\t     QM energy has not been read!");
 }
 
 if ($forces_found != 1)
 {
-     printf("\n\n\t (-) $progname: Error encountered while reading $dftb_out$.");
-     printf("\n\t     QM forces have not been read!");
+  printf("\n\n\t (-) $progname: Error encountered while reading $dftb_out$.");
+  printf("\n\t     QM forces have not been read!");
 }
      
 if ($charges_found != 1)
 {
-     printf("\n\n\t (-) $progname: Error encountered while reading $dftb_out.");
-     printf("\n\t     QM charges have not been read!");     
-}     
+  printf("\n\n\t (-) $progname: Error encountered while reading $dftb_out.");
+  printf("\n\t     QM charges have not been read!");
+}
 
-if ($stress_tensor_found != 1)
+if ($pointcharges == 1 && $pc_forces_found != 1)
 {
-     printf("\n\n\t (-) $progname: Error encountered while reading $dftb_out.");
-     printf("\n\t     Stress tensor has not been read!");     
-} 
-     
+  printf("\n\n\t (-) $progname: Error encountered while reading $dftb_out.");
+  printf("\n\t     PC forces have not been read!");
+}
+
+if ($periodic == 1 && $stress_tensor_found != 1)
+{
+  printf("\n\n\t (-) $progname: Error encountered while reading $dftb_out.");
+  printf("\n\t     Stress tensor has not been read!");
+}
+
 exit 0;
 

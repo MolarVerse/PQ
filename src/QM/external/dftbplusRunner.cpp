@@ -33,27 +33,30 @@
 #include <string>       // for string
 #include <vector>       // for vector
 
-#include "atom.hpp"              // for Atom
-#include "box.hpp"               // for simulationBox::Periodicity
-#include "exceptions.hpp"        // for InputFileException
-#include "fileSettings.hpp"      // for FileSettings
-#include "physicalData.hpp"      // for PhysicalData
-#include "qmSettings.hpp"        // for QMSettings
-#include "settings.hpp"          // for Settings
-#include "simulationBox.hpp"     // for SimulationBox
-#include "stringUtilities.hpp"   // for fileExists
-#include "vector3d.hpp"          // for Vec3D
+#include "atom.hpp"                 // for Atom
+#include "box.hpp"                  // for simulationBox::Periodicity
+#include "exceptions.hpp"           // for InputFileException
+#include "fileSettings.hpp"         // for FileSettings
+#include "hybridConfigurator.hpp"   // for HybridConfigurator
+#include "hybridSettings.hpp"       // for SmoothingMethod
+#include "physicalData.hpp"         // for PhysicalData
+#include "qmSettings.hpp"           // for QMSettings
+#include "settings.hpp"             // for Settings
+#include "simulationBox.hpp"        // for SimulationBox
+#include "stringUtilities.hpp"      // for fileExists
+#include "vector3d.hpp"             // for Vec3D
 
 using QM::DFTBPlusRunner;
 using enum simulationBox::Periodicity;
 
-using namespace simulationBox;
-using namespace physicalData;
-using namespace customException;
-using namespace settings;
+using namespace configurator;
 using namespace constants;
-using namespace utilities;
+using namespace customException;
 using namespace linearAlgebra;
+using namespace physicalData;
+using namespace settings;
+using namespace simulationBox;
+using namespace utilities;
 
 /**
  * @brief writes the coords file in order to run the external qm program
@@ -135,10 +138,49 @@ void DFTBPlusRunner::writeCoordsFile(SimulationBox &box)
 }
 
 /**
+ * @brief Writes a file containing point charges for hybrid simulations.
+ *
+ * This function creates the pointcharges file listing the positions and
+ * partial charges of all atoms in inactive molecules assigned to the
+ * SMOOTHING or POINT_CHARGE hybrid zones. The file is used for QM/QM and QM/MM
+ * coupling in DFTB+ calculations.
+ *
+ * @param box Simulation box containing molecules and atoms.
+ */
+void DFTBPlusRunner::writePointChargeFile(pq::SimBox &box)
+{
+    const std::string fileName = FileSettings::getPointChargeFileName();
+    std::ofstream     pcFile(fileName);
+
+    using enum HybridZone;
+    for (const auto &mol : box.getInactiveMolecules())
+    {
+        const auto zone = mol.getHybridZone();
+
+        if (zone == SMOOTHING || zone == POINT_CHARGE)
+            for (const auto &atom : mol.getAtoms())
+            {
+                pcFile << std::format(
+                    "{:16.12f}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
+                    atom->getPosition()[0],
+                    atom->getPosition()[1],
+                    atom->getPosition()[2],
+                    atom->getPartialCharge()
+                );
+                _usePointCharges = true;
+            }
+    }
+    pcFile.close();
+
+    if (!_usePointCharges)
+        ::system(std::format("rm -f {}", fileName).c_str());
+}
+
+/**
  * @brief executes the qm script of the external program
  *
  */
-void DFTBPlusRunner::execute()
+void DFTBPlusRunner::execute(SimulationBox &box)
 {
     const auto scriptFile = _scriptPath + QMSettings::getQMScript();
 
@@ -147,17 +189,33 @@ void DFTBPlusRunner::execute()
             std::format("DFTB+ script file \"{}\" does not exist.", scriptFile)
         );
 
-    const auto reuseCharges = _isFirstExecution ? 1 : 0;
+    auto charge = box.calcActiveMolCharge();
+
+    auto molChangedZone = HybridConfigurator::getMoleculeChangedZone();
+
+    using enum settings::SmoothingMethod;
+
+    // TODO: https://github.com/MolarVerse/PQ/issues/200
+    if (HybridSettings::getSmoothingMethod() == EXACT)
+        molChangedZone = true;
+
+    const auto readChargesBin  = !_isFirstExecution && !molChangedZone ? 1 : 0;
+    const auto usePointCharges = _usePointCharges ? 1 : 0;
 
     const auto command = std::format(
-        "{} 0 {} 0 0 0 {}",
+        "{} {} {} {} {} {}",
         scriptFile,
-        reuseCharges,
-        FileSettings::getDFTBFileName()
+        charge,
+        readChargesBin,
+        usePointCharges,
+        FileSettings::getDFTBFileName(),
+        FileSettings::getPointChargeFileName()
     );
     ::system(command.c_str());
 
+    // set for next execution
     _isFirstExecution = false;
+    _usePointCharges  = false;
 }
 
 /**
@@ -168,9 +226,6 @@ void DFTBPlusRunner::execute()
  */
 void DFTBPlusRunner::readStressTensor(Box &box, PhysicalData &data)
 {
-    if (_periodicity == NON_PERIODIC)
-        return;
-
     const auto stressFileName = FileSettings::getStressTensorTempFileName();
 
     std::ifstream stressFile(stressFileName);

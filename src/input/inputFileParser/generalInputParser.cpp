@@ -30,11 +30,12 @@
 #include <limits>       // for numeric_limits
 #include <stdexcept>    // for out_of_range and invalid_argument
 
-#include "engine.hpp"       // for Engine
-#include "exceptions.hpp"   // for InputFileException, customException
-#include "mmmdEngine.hpp"   // for MMMDEngine
-#include "optEngine.hpp"    // for MMOptEngine
-#include "qmmdEngine.hpp"   // for QMMDEngine
+#include "engine.hpp"         // for Engine
+#include "exceptions.hpp"     // for InputFileException, customException
+#include "mmmdEngine.hpp"     // for MMMDEngine
+#include "optEngine.hpp"      // for MMOptEngine
+#include "qmmdEngine.hpp"     // for QMMDEngine
+#include "qmmmMDEngine.hpp"   // for QMMMMDEngine
 #include "ringPolymerqmmdEngine.hpp"   // for RingPolymerQMMDEngine
 #include "settings.hpp"                // for Settings
 #include "stringUtilities.hpp"         // for toLowerCopy
@@ -138,13 +139,19 @@ void GeneralInputParser::parseJobTypeForEngine(
         Settings::setJobtype(RING_POLYMER_QM_MD);
         engine.reset(new RingPolymerQMMDEngine());
     }
+    else if (jobtype == "qmmm_md")
+    {
+        Settings::setJobtype(QMMM_MD);
+        engine.reset(new QMMMMDEngine());
+    }
     else
         throw InputFileException(format(
             "Invalid jobtype \"{}\" in input file - possible values are:\n"
             "- mm-opt\n"
             "- mm-md\n"
             "- qm-md\n"
-            "- qm-rpmd\n",
+            "- qm-rpmd\n"
+            "- qmmm-md\n",
             lineElements[2]
         ));
 }

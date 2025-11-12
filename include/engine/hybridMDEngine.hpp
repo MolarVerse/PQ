@@ -24,24 +24,28 @@
 
 #define _HYBRID_MD_ENGINE_HPP_
 
+#include "hybridConfigurator.hpp"
 #include "mmmdEngine.hpp"
-#include "qmmdEngine.hpp"
+#include "qmCapableEngine.hpp"
 
 namespace engine
 {
     /**
      * @brief HybridMDEngine
      *
-     * @details This class is a pure virtual class that inherits from MMMDEngine
-     * and QMMDEngine and is used to implement the Hybrid MD engine backbone
-     * that can run in general combinations of MM and QM engines.
+     * @details This class is a pure virtual class that inherits from MDEngine
+     * and QMCapableEngine and is used to implement the Hybrid MD engine
+     * backbone that can run in general combinations of MM and QM engines.
      *
      */
-    class HybridMDEngine : virtual public MMMDEngine, virtual public QMMDEngine
+    class HybridMDEngine : virtual public MDEngine, public QMCapableEngine
     {
+       protected:
+        configurator::HybridConfigurator _configurator{};
+
        public:
-        HybridMDEngine()  = default;
-        ~HybridMDEngine() = default;
+        HybridMDEngine()           = default;
+        ~HybridMDEngine() override = default;
 
         void calculateForces() override = 0;
     };

@@ -25,11 +25,12 @@
 #include <string_view>   // for string_view
 
 #include "dftbplusRunner.hpp"      // for DFTBPlusRunner
+#include "engine.hpp"              // for Engine
 #include "exceptions.hpp"          // for InputFileException
 #include "potentialSettings.hpp"   // for PotentialSettings
 #include "pyscfRunner.hpp"         // for PySCFRunner
+#include "qmCapableEngine.hpp"     // for QMCapableEngine
 #include "qmSettings.hpp"          // for QMMethod, QMSettings
-#include "qmmdEngine.hpp"          // for QMMDEngine
 #include "references.hpp"          // for ReferencesOutput
 #include "referencesOutput.hpp"    // for ReferencesOutput
 #include "settings.hpp"            // for Settings
@@ -46,6 +47,16 @@ using namespace customException;
 using namespace references;
 
 /**
+ * @brief constructor
+ *
+ * @param qmCapableEngine
+ */
+QMSetup::QMSetup(engine::QMCapableEngine &qmCapableEngine)
+    : _qmCapableEngine(qmCapableEngine)
+{
+}
+
+/**
  * @brief wrapper to build QMSetup object and call setup
  *
  * @param engine
@@ -58,16 +69,21 @@ void setup::setupQM(Engine &engine)
     engine.getStdoutOutput().writeSetup("QM runner");
     engine.getLogOutput().writeSetup("QM runner");
 
-    QMSetup qmSetup(dynamic_cast<QMMDEngine &>(engine));
-    qmSetup.setup();
+    // Try to cast to QMCapableEngine first (covers both QMMDEngine and
+    // QMMMMDEngine)
+    if (auto *qmCapableEngine =
+            dynamic_cast<engine::QMCapableEngine *>(&engine))
+    {
+        QMSetup qmSetup(*qmCapableEngine);
+        qmSetup.setup();
+    }
+    else
+    {
+        throw InputFileException(
+            "QM setup requested but engine does not support QM capabilities"
+        );
+    }
 }
-
-/**
- * @brief constructor
- *
- * @param engine
- */
-QMSetup::QMSetup(QMMDEngine &engine) : _engine(engine) {}
 
 /**
  * @brief setup QM-MD for all subtypes
@@ -97,7 +113,7 @@ void QMSetup::setup()
  */
 void QMSetup::setupQMMethod()
 {
-    _engine.setQMRunner(QMSettings::getQMMethod());
+    _qmCapableEngine.setQMRunner(QMSettings::getQMMethod());
 }
 
 /**
@@ -136,12 +152,14 @@ void QMSetup::setupQMMethodMace()
         if (modelSize != MaceModelSize::SMALL &&
             modelSize != MaceModelSize::MEDIUM &&
             modelSize != MaceModelSize::LARGE)
-            throw InputFileException(std::format(
-                "The '{}' model size is only compatible with the '{}' "
-                "model type.",
-                string(modelSize),
-                string(MaceModelType::MACE_MP)
-            ));
+            throw InputFileException(
+                std::format(
+                    "The '{}' model size is only compatible with the '{}' "
+                    "model type.",
+                    string(modelSize),
+                    string(MaceModelType::MACE_MP)
+                )
+            );
     }
 
     if (QMSettings::getMaceModelSize() == MaceModelSize::CUSTOM &&
@@ -194,7 +212,7 @@ void QMSetup::setupQMMethodAseXtb()
  */
 void QMSetup::setupQMScript() const
 {
-    auto &qmRunner         = *_engine.getQMRunner();
+    auto &qmRunner         = *_qmCapableEngine.getQMRunner();
     auto &externalQMRunner = dynamic_cast<ExternalQMRunner &>(qmRunner);
 
     const auto singularityString = externalQMRunner.getSingularity();
@@ -293,8 +311,10 @@ void QMSetup::setupWriteInfo() const
 {
     using enum QMMethod;
 
-    auto &logOutput = _engine.getLogOutput();
-    auto &stdOut    = _engine.getStdoutOutput();
+    // Cast QMCapableEngine to Engine to access output methods
+    auto &engine    = dynamic_cast<Engine &>(_qmCapableEngine);
+    auto &logOutput = engine.getLogOutput();
+    auto &stdOut    = engine.getStdoutOutput();
 
     const auto qmMethod        = QMSettings::getQMMethod();
     const auto qmRunnerMessage = std::format("QM runner: {}", string(qmMethod));

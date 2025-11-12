@@ -25,11 +25,25 @@
 #define _HYBRID_SETTINGS_HPP_
 
 #include <cstddef>       // for size_t
+#include <optional>      // for optional
 #include <string>        // for string
 #include <string_view>   // for string_view
+#include <vector>        // for vector
 
 namespace settings
 {
+    /**
+     * @enum SmoothingMethod
+     *
+     * @brief enum class to store the type of smoothing method
+     *
+     */
+    enum class SmoothingMethod
+    {
+        HOTSPOT,
+        EXACT
+    };
+
     /**
      * @class HybridSettings
      *
@@ -39,50 +53,54 @@ namespace settings
     class HybridSettings
     {
        private:
-        static inline std::string _innerRegionCenterString = "";
-        static inline std::string _forcedInnerListString   = "";
-        static inline std::string _forcedOuterListString   = "";
+        static inline std::optional<std::vector<int>> _innerRegionCenter;
+        static inline std::vector<int>                _forcedInnerList;
+        static inline std::vector<int>                _forcedOuterList;
 
         static inline bool _useQMCharges = false;
 
-        static inline double _coreRadius      = 0.0;
-        static inline double _layerRadius     = 0.0;
-        static inline double _smoothingRadius = 0.0;
+        static inline double _coreRadius               = 0.0;
+        static inline double _layerRadius              = 0.0;
+        static inline double _smoothingRegionThickness = 0.0;
+        static inline double _pointChargeThickness     = 0.0;
+
+        static inline SmoothingMethod _smoothing = SmoothingMethod::HOTSPOT;
 
        public:
         /********************
          * standard setters *
          ********************/
 
-        static void setInnerRegionCenterString(
-            const std::string_view &innerRegionCenter
-        );
-        static void setForcedInnerListString(
-            const std::string_view &forcedInnerList
-        );
-        static void setForcedOuterListString(
-            const std::string_view &forcedOuterList
-        );
+        static void setInnerRegionCenter(const std::vector<int> &);
+        static void setForcedInnerList(const std::vector<int> &);
+        static void setForcedOuterList(const std::vector<int> &);
 
         static void setUseQMCharges(const bool useQMCharges);
 
-        static void setCoreRadius(const double qmCoreRadius);
-        static void setLayerRadius(const double qmmmLayerRadius);
-        static void setSmoothingRadius(const double qmmmSmoothingRadius);
+        static void setCoreRadius(const double radius);
+        static void setLayerRadius(const double radius);
+        static void setSmoothingRegionThickness(const double thickness);
+        static void setPointChargeThickness(const double radius);
+
+        static void setSmoothingMethod(const SmoothingMethod method);
 
         /********************
          * standard getters *
          ********************/
 
-        [[nodiscard]] static std::string getInnerRegionCenterString();
-        [[nodiscard]] static std::string getForcedInnerListString();
-        [[nodiscard]] static std::string getForcedOuterListString();
+        [[nodiscard]] static std::optional<std::vector<int>> getInnerRegionCenter(
+        );
+        [[nodiscard]] static std::vector<int> getForcedInnerList();
+        [[nodiscard]] static std::vector<int> getForcedOuterList();
 
         [[nodiscard]] static bool getUseQMCharges();
 
         [[nodiscard]] static double getCoreRadius();
         [[nodiscard]] static double getLayerRadius();
-        [[nodiscard]] static double getSmoothingRadius();
+        [[nodiscard]] static double getSmoothingRegionThickness();
+        [[nodiscard]] static double getPointChargeThickness();
+
+        [[nodiscard]] static SmoothingMethod getSmoothingMethod();
     };
 }   // namespace settings
 

@@ -27,12 +27,15 @@
 
 #include "cell.hpp"            // for Cell, simulationBox
 #include "celllist.hpp"        // for CellList
+#include "molecule.hpp"        // for Molecule
 #include "physicalData.hpp"    // for PhysicalData
 #include "simulationBox.hpp"   // for SimulationBox
 
 using namespace potential;
 using namespace simulationBox;
 using namespace physicalData;
+
+using enum simulationBox::HybridZone;
 
 /**
  * @brief Destroy the Potential Cell List:: Potential Cell List object
@@ -55,7 +58,7 @@ PotentialCellList::~PotentialCellList() = default;
  * @param physicalData
  * @param cellList
  */
-inline void PotentialCellList::calculateForces(
+void PotentialCellList::calculateForces(
     SimulationBox &simBox,
     PhysicalData  &physicalData,
     CellList      &cellList
@@ -70,82 +73,342 @@ inline void PotentialCellList::calculateForces(
 
     for (const auto &cell_i : cellList.getCells())
     {
-        const auto nMols = cell_i.getNumberOfMolecules();
-
-        for (size_t mol_i = 0; mol_i < nMols; ++mol_i)
+        size_t i = 0;
+        for (auto &mol1 : cell_i.getMMMolecules())
         {
-            auto *molecule_i = cell_i.getMolecule(mol_i);
-
-            for (size_t mol_j = 0; mol_j < mol_i; ++mol_j)
+            size_t j = 0;
+            for (auto &mol2 : cell_i.getMMMolecules())
             {
-                auto *molecule_j = cell_i.getMolecule(mol_j);
+                // avoid double counting and self interaction
+                if (j >= i)
+                    break;
 
-                for (const size_t atom_i : cell_i.getAtomIndices(mol_i))
-                {
-                    for (const size_t atom_j : cell_i.getAtomIndices(mol_j))
+                for (auto &atom1 : mol1->getAtoms())
+                    for (auto &atom2 : mol2->getAtoms())
                     {
                         const auto [coulombEnergy, nonCoulombEnergy] =
-                            calculateSingleInteraction(
+                            calculateSingleInteraction<
+                                MMChargeTag,
+                                MMChargeTag>(
                                 *box,
-                                *molecule_i,
-                                *molecule_j,
-                                atom_i,
-                                atom_j
+                                *mol1,
+                                *mol2,
+                                *atom1,
+                                *atom2
                             );
 
                         totalCoulombEnergy    += coulombEnergy;
                         totalNonCoulombEnergy += nonCoulombEnergy;
                     }
-                }
+                ++j;
             }
+            ++i;
         }
     }
 
-    for (const auto &cell_i : cellList.getCells())
-    {
-        const auto nMolsInCell_i = cell_i.getNumberOfMolecules();
-
-        for (const auto *cell_j : cell_i.getNeighbourCells())
-        {
-            const auto nMolsInCell_j = cell_j->getNumberOfMolecules();
-
-            for (size_t mol_i = 0; mol_i < nMolsInCell_i; ++mol_i)
-            {
-                auto *molecule_i = cell_i.getMolecule(mol_i);
-
-                for (const auto atom_i : cell_i.getAtomIndices(mol_i))
+    for (const auto &cell1 : cellList.getCells())
+        for (const auto *cell2 : cell1.getNeighbourCells())
+            for (auto &mol1 : cell1.getMMMolecules())
+                for (auto &mol2 : cell2->getMMMolecules())
                 {
-                    for (size_t mol_j = 0; mol_j < nMolsInCell_j; ++mol_j)
-                    {
-                        auto *molecule_j = cell_j->getMolecule(mol_j);
+                    // avoid self interaction
+                    if (mol1 == mol2)
+                        continue;
 
-                        if (molecule_i == molecule_j)
-                            continue;
-
-                        for (const auto atom_j : cell_j->getAtomIndices(mol_j))
+                    for (auto &atom1 : mol1->getAtoms())
+                        for (auto &atom2 : mol2->getAtoms())
                         {
                             const auto [coulombEnergy, nonCoulombEnergy] =
-                                calculateSingleInteraction(
+                                calculateSingleInteraction<
+                                    MMChargeTag,
+                                    MMChargeTag>(
                                     *box,
-                                    *molecule_i,
-                                    *molecule_j,
-                                    atom_i,
-                                    atom_j
+                                    *mol1,
+                                    *mol2,
+                                    *atom1,
+                                    *atom2
                                 );
 
                             totalCoulombEnergy    += coulombEnergy;
                             totalNonCoulombEnergy += nonCoulombEnergy;
                         }
-                    }
                 }
-            }
-        }
-    }
 
     physicalData.setCoulombEnergy(totalCoulombEnergy);
     physicalData.setNonCoulombEnergy(totalNonCoulombEnergy);
 
     stopTimingsSection("InterNonBonded");
+}
+
+/**
+ * @brief calculates Coulomb forces between core zone molecules and all MM
+ * molecules using cell list optimization
+ *
+ * @details loops over all cells and calculates interactions between core zone
+ * molecules and MM molecules within the same cell, then between core zone
+ * molecules in one cell and MM molecules in neighboring cells. Uses cell list
+ * structure for efficient neighbor searching.
+ *
+ * @param simBox simulation box containing molecules
+ * @param physicalData physical data to store energy results
+ * @param cellList cell list structure for efficient neighbor searching
+ */
+void PotentialCellList::calculateCoreToOuterForces(
+    SimulationBox &simBox,
+    PhysicalData  &physicalData,
+    CellList      &cellList
+)
+{
+    startTimingsSection("InterNonBondedCoreToOuter");
+
+    const auto box = simBox.getBoxPtr();
+
+    double totalCoulombEnergy = 0.0;
+
+    for (const auto &cell_i : cellList.getCells())
+        for (auto &mol1 : cell_i.getMoleculesInsideZone(CORE))
+            for (auto &mol2 : cell_i.getMMMolecules())
+                for (auto &atom1 : mol1->getAtoms())
+                    for (auto &atom2 : mol2->getAtoms())
+                        totalCoulombEnergy += calculateSingleCoulombInteraction<
+                            QMChargeTag,
+                            MMChargeTag>(*box, *atom1, *atom2);
+
+    for (const auto &cell1 : cellList.getCells())
+        for (const auto *cell2 : cell1.getNeighbourCells())
+            for (auto &mol1 : cell1.getMoleculesInsideZone(CORE))
+                for (auto &mol2 : cell2->getMMMolecules())
+                    for (auto &atom1 : mol1->getAtoms())
+                        for (auto &atom2 : mol2->getAtoms())
+                            totalCoulombEnergy +=
+                                calculateSingleCoulombInteraction<
+                                    QMChargeTag,
+                                    MMChargeTag>(*box, *atom1, *atom2);
+
+    physicalData.addCoulombEnergy(totalCoulombEnergy);
+
+    stopTimingsSection("InterNonBondedCoreToOuter");
+}
+
+/**
+ * @brief calculates forces between layer and outer molecules using cell list
+ * optimization
+ *
+ * @details loops over all cells and calculates interactions between MM
+ * molecules and inactive molecules within the same cell, then between MM
+ * molecules in one cell and inactive molecules in neighboring cells. Skips
+ * interactions with core zone molecules. Uses cell list structure for efficient
+ * neighbor searching.
+ *
+ * @param simBox simulation box containing molecules
+ * @param physicalData physical data to store energy results
+ * @param cellList cell list structure for efficient neighbor searching
+ */
+void PotentialCellList::calculateLayerToOuterForces(
+    SimulationBox &simBox,
+    PhysicalData  &physicalData,
+    CellList      &cellList
+)
+{
+    startTimingsSection("InterNonBondedLayerToOuter");
+
+    const auto box = simBox.getBoxPtr();
+
+    double totalCoulombEnergy    = 0.0;
+    double totalNonCoulombEnergy = 0.0;
+
+    for (const auto &cell_i : cellList.getCells())
+        for (auto &mol1 : cell_i.getInactiveMolecules())
+        {
+            if (mol1->getHybridZone() == CORE)
+                continue;
+
+            for (auto &mol2 : cell_i.getMMMolecules())
+                for (auto &atom1 : mol1->getAtoms())
+                    for (auto &atom2 : mol2->getAtoms())
+                    {
+                        const auto [coulombEnergy, nonCoulombEnergy] =
+                            calculateSingleInteraction<
+                                QMChargeTag,
+                                MMChargeTag>(
+                                *box,
+                                *mol1,
+                                *mol2,
+                                *atom1,
+                                *atom2
+                            );
+
+                        totalCoulombEnergy    += coulombEnergy;
+                        totalNonCoulombEnergy += nonCoulombEnergy;
+                    }
+        }
+
+    for (const auto &cell1 : cellList.getCells())
+        for (const auto *cell2 : cell1.getNeighbourCells())
+            for (auto &mol1 : cell1.getMMMolecules())
+                for (auto &mol2 : cell2->getInactiveMolecules())
+                {
+                    if (mol2->getHybridZone() == CORE)
+                        continue;
+
+                    for (auto &atom1 : mol1->getAtoms())
+                        for (auto &atom2 : mol2->getAtoms())
+                        {
+                            const auto [coulombEnergy, nonCoulombEnergy] =
+                                calculateSingleInteraction<
+                                    QMChargeTag,
+                                    MMChargeTag>(
+                                    *box,
+                                    *mol1,
+                                    *mol2,
+                                    *atom1,
+                                    *atom2
+                                );
+
+                            totalCoulombEnergy    += coulombEnergy;
+                            totalNonCoulombEnergy += nonCoulombEnergy;
+                        }
+                }
+
+    physicalData.addCoulombEnergy(totalCoulombEnergy);
+    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
+
+    stopTimingsSection("InterNonBondedLayerToOuter");
+}
+
+void PotentialCellList::calculateHotspotSmoothingMMForces(
+    SimulationBox &simBox,
+    PhysicalData  &physicalData,
+    CellList      &cellList
+)
+{
+    startTimingsSection("InterNonBondedSmoothingMM");
+
+    const auto box = simBox.getBoxPtr();
+
+    double totalCoulombEnergy    = 0.0;
+    double totalNonCoulombEnergy = 0.0;
+
+    for (const auto &cell_i : cellList.getCells())
+        for (auto &mol1 : cell_i.getMoleculesInsideZone(SMOOTHING))
+            for (auto &mol2 : cell_i.getMoleculesOutsideZone(SMOOTHING))
+                for (auto &atom1 : mol1->getAtoms())
+                    for (auto &atom2 : mol2->getAtoms())
+                    {
+                        const auto [coulombEnergy, nonCoulombEnergy] =
+                            calculateSingleInteraction<
+                                MMChargeTag,
+                                QMChargeTag>(
+                                *box,
+                                *mol1,
+                                *mol2,
+                                *atom1,
+                                *atom2
+                            );
+
+                        totalCoulombEnergy    += coulombEnergy;
+                        totalNonCoulombEnergy += nonCoulombEnergy;
+                    }
+
+    for (const auto &cell1 : cellList.getCells())
+        for (const auto *cell2 : cell1.getNeighbourCells())
+            for (auto &mol1 : cell1.getMoleculesInsideZone(SMOOTHING))
+                for (auto &mol2 : cell2->getMoleculesOutsideZone(SMOOTHING))
+                    for (auto &atom1 : mol1->getAtoms())
+                        for (auto &atom2 : mol2->getAtoms())
+                        {
+                            const auto [coulombEnergy, nonCoulombEnergy] =
+                                calculateSingleInteraction<
+                                    MMChargeTag,
+                                    QMChargeTag>(
+                                    *box,
+                                    *mol1,
+                                    *mol2,
+                                    *atom1,
+                                    *atom2
+                                );
+
+                            totalCoulombEnergy    += coulombEnergy;
+                            totalNonCoulombEnergy += nonCoulombEnergy;
+                        }
+
+    for (const auto &cell_i : cellList.getCells())
+    {
+        size_t i = 0;
+        for (auto &mol1 : cell_i.getMoleculesInsideZone(SMOOTHING))
+        {
+            size_t j = 0;
+            for (auto &mol2 : cell_i.getMoleculesInsideZone(SMOOTHING))
+            {
+                if (i == j)
+                {
+                    ++j;
+                    continue;
+                }
+                for (auto &atom1 : mol1->getAtoms())
+                    for (auto &atom2 : mol2->getAtoms())
+                    {
+                        const auto [coulombEnergy, nonCoulombEnergy] =
+                            calculateSingleInteractionOneWay<
+                                MMChargeTag,
+                                QMChargeTag>(
+                                *box,
+                                *mol1,
+                                *mol2,
+                                *atom1,
+                                *atom2
+                            );
+
+                        totalCoulombEnergy    += coulombEnergy;
+                        totalNonCoulombEnergy += nonCoulombEnergy;
+                    }
+                ++j;
+            }
+            ++i;
+        }
+    }
+
+    for (const auto &cell1 : cellList.getCells())
+        for (const auto *cell2 : cell1.getNeighbourCells())
+        {
+            size_t i = 0;
+            for (auto &mol1 : cell1.getMoleculesInsideZone(SMOOTHING))
+            {
+                size_t j = 0;
+                for (auto &mol2 : cell2->getMoleculesInsideZone(SMOOTHING))
+                {
+                    if (i == j)
+                    {
+                        ++j;
+                        continue;
+                    }
+                    for (auto &atom1 : mol1->getAtoms())
+                        for (auto &atom2 : mol2->getAtoms())
+                        {
+                            const auto [coulombEnergy, nonCoulombEnergy] =
+                                calculateSingleInteractionOneWay<
+                                    MMChargeTag,
+                                    QMChargeTag>(
+                                    *box,
+                                    *mol1,
+                                    *mol2,
+                                    *atom1,
+                                    *atom2
+                                );
+
+                            totalCoulombEnergy    += coulombEnergy;
+                            totalNonCoulombEnergy += nonCoulombEnergy;
+                        }
+                    ++j;
+                }
+                ++i;
+            }
+        }
+
+    physicalData.addCoulombEnergy(totalCoulombEnergy);
+    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
+
+    stopTimingsSection("InterNonBondedSmoothingMM");
 }
 
 /**

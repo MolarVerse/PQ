@@ -1538,23 +1538,26 @@ With the ``rpmd_n_replica`` keyword the number of beads for a ring polymer MD si
 .. Note::
     This keyword is required for any kind of ring polymer MD simulation!
 
-.. _qmmmKeys:
+.. _HybridCalculationKeys:
 
-**********
-QM/MM Keys
-**********
+************************
+Hybrid Calculation Keys
+************************
 
-.. _qmcenterKey:
+.. _innerRegionCenterKey:
 
-QM Center
-=========
+Inner Region Center
+====================
 
 .. admonition:: Key
     :class: tip
 
-    qm_center = {selection} -> 0
+    inner_region_center = {selection} -> 0
 
-With the ``qm_center`` keyword the user can specify the center of the QM region. The default selection is the first atom of the system (*i.e.* 0). For more information about the selection grammar see the `selectionType`_ section. The ``qm_center`` if more than one atom is selected will be by default the center of mass of the selected atoms.
+With the ``inner_region_center`` keyword the user can specify the center of the inner region.
+The default selection is the first atom of the system (*i.e.* 0).
+For more information about the selection grammar see the `selectionType`_ section.
+The ``inner_region_center`` if more than one atom is selected will be by default the center of mass of the selected atoms.
 
 .. centered:: *default value* = 0
 
@@ -1568,12 +1571,11 @@ Forced Inner List
 
     forced_inner_list = {selection}
 
-With the ``forced_inner_list`` keyword the user can specify a list of atoms which has to remain in the inner region of the hybrid system.
-This setting is only relevant for hybrid calculations and means that the selected atoms cannot leave the inner region during the simulation.
+With the ``forced_inner_list`` keyword the user can specify a list of molecules which will always be treated with the method chosen for the inner region of the hybrid system.
 For more information about the selection grammar see the `selectionType`_ section.
-By default no atoms are selected.
+By default, no molecules are selected.
 
-.. _forcedouterlistKey:
+.. _forcedOuterListKey:
 
 Forced Outer List
 ==================
@@ -1583,12 +1585,11 @@ Forced Outer List
 
     forced_outer_list = {selection}
 
-With the ``forced_outer_list`` keyword the user can specify a list of atoms which has to remain in the outer region of the hybrid system.
-This setting is only relevant for hybrid calculations and means that the selected atoms cannot leave the outer region during the simulation.
+With the ``forced_outer_list`` keyword the user can specify a list of molecules which will always be treated with the method chosen for the outer region of the hybrid system.
 For more information about the selection grammar see the `selectionType`_ section.
-By default no atoms are selected.
+By default, no molecules are selected.
 
-.. _qmchargesKey:
+.. _qmChargesKey:
 
 QM Charges
 ==========
@@ -1606,47 +1607,85 @@ Possible options are:
 
    2. **on** - charges of the QM atoms are taken from the QM calculation
 
-.. _qmcoreradiusKey:
+.. _smoothingMethodKey:
 
-QM Core Radius
-==============
+Smoothing Method
+=================
+.. admonition:: Key
+    :class: tip
+
+    smoothing_method = {string} -> "hotspot"
+
+With the ``smoothing_method`` keyword the user can specify the smoothing method for the hybrid calculation.
+
+Possible options are:
+
+   1. **hotspot** (default) - all molecules in the smoothing region are treated as QM molecules and their contribution is weighted according to their position in the smoothing region
+
+   2. **exact** - all possible combinations of QM and MM treatment of the molecules in the smoothing region are calculated and weighted according to a global smoothing factor --- Computational cost: O(2\ :sup:`n`) where n = number of smoothing molecules
+
+.. _coreRadiusKey:
+
+Core Radius
+===========
 
 .. admonition:: Key
     :class: tip
 
-    qm_core_radius = {double} :math:`\mathrm{\mathring{A}}` -> 0.0 :math:`\mathrm{\mathring{A}}`
+    core_radius = {double} Å -> 0.0 Å
 
-With the ``qm_core_radius`` keyword the user can specify the core radius in :math:`\mathrm{\mathring{A}}` around the ``qm_center``. The default value is 0.0 :math:`\mathrm{\mathring{A}}`, which means that the core radius is not set and only explicit QM atoms are used for the QM region.
+With the ``core_radius`` keyword the user can specify the core radius in Å around the center of the inner region in hybrid type calculations.
+The default value is 0.0 Å, which means that the core radius is not set and only :ref:`forced_inner_list <forcedInnerListKey>` atoms are treated by the method chosen for the inner region.
 
 .. centered:: *default value* = 0.0 Å
 
-.. _qmmmlayerradiuskey:
+.. _layerRadiusKey:
 
-QM/MM Layer Radius
-==================
+Layer Radius
+============
 
 .. admonition:: Key
     :class: tip
 
-    qmmm_layer_radius = {double} :math:`\mathrm{\mathring{A}}` -> 0.0 :math:`\mathrm{\mathring{A}}`
+    layer_radius = {double} Å -> 0.0 Å
 
-With the ``qmmm_layer_radius`` keyword the user can specify the layer radius in :math:`\mathrm{\mathring{A}}` around the ``qm_center``. The default value is 0.0 :math:`\mathrm{\mathring{A}}`, which means that no special QM/MM treatment is applied.
+With the ``layer_radius`` keyword the user can specify the layer radius in Å measured from the ``inner_region_center``.
+The default value is 0.0 Å, which means that no special hybrid method treatment is applied.
+
+.. _smoothingRegionThicknessKey:
+
+Smoothing Region Thickness
+===========================
+
+.. admonition:: Key
+    :class: tip
+
+    smoothing_region_thickness = {double} Å -> 0.0 Å
+
+With the ``smoothing_region_thickness`` keyword the user can specify the thickness of the smoothing region in Å.
+The default value is 0.0 Å, which means that no smoothing is applied.
 
 .. centered:: *default value* = 0.0 Å
 
-.. _qmmmsmoothingradiuskey:
+.. _pointChargeThicknessKey:
 
-QM/MM Smoothing Radius
+Point Charge Thickness
 ======================
 
 .. admonition:: Key
     :class: tip
 
-    qmmm_smoothing_radius = {double} :math:`\mathrm{\mathring{A}}` -> 0.0 :math:`\mathrm{\mathring{A}}`
+    point_charge_thickness = {double} Å -> 0.0 Å
 
-With the ``qmmm_smoothing_radius`` keyword the user can specify the smoothing radius in :math:`\mathrm{\mathring{A}}` of the QM atoms. The default value is 0.0 :math:`\mathrm{\mathring{A}}`, which means that the smoothing radius is not set and no smoothing is applied.
+With the ``point_charge_thickness`` keyword the user can specify the distance from the :ref:`layer_radius <layerRadiusKey>` up to which point charges are included in Å.
+The default value is 0.0 Å, which means that no point charges are included.
 
 .. centered:: *default value* = 0.0 Å
+
+.. image:: hybrid_zones.png
+    :width: 600
+    :align: center
+    :alt: graphical representation of the different hybrid zones and the associated keywords
 
 .. _celllistKeys:
 

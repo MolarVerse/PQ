@@ -102,11 +102,11 @@ void MDEngine::run()
 
     if (Settings::isQMActivated())
     {
-        dynamic_cast<QMMDEngine *>(this)->getQMRunner()->setTimerName(
+        dynamic_cast<QMCapableEngine *>(this)->getQMRunner()->setTimerName(
             "QM Engine"
         );
         _timer.addTimer(
-            dynamic_cast<QMMDEngine *>(this)->getQMRunner()->getTimer()
+            dynamic_cast<QMCapableEngine *>(this)->getQMRunner()->getTimer()
         );
     }
 
@@ -170,10 +170,15 @@ void MDEngine::takeStepAfterForces()
 
     _thermostat->applyTemperatureRamping();
 
-    if (Settings::isQMActivated())
-    {
+    if (Settings::isQMOnlyJobtype())
         _physicalData->setNumberOfQMAtoms(_simulationBox->getNumberOfQMAtoms());
-    }
+}
+
+void MDEngine::calculateForcesWrapper()
+{
+    _simulationBox->resetAllForces();
+    calculateForces();
+    for (auto &atom : _simulationBox->getAtoms()) atom->getQMCharge().reset();
 }
 
 /**
@@ -184,7 +189,7 @@ void MDEngine::takeStep()
 {
     takeStepBeforeForces();
 
-    calculateForces();
+    calculateForcesWrapper();
 
     takeStepAfterForces();
 }

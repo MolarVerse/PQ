@@ -61,7 +61,8 @@ namespace customException
         LINEARALGEBRAEXCEPTION,
         OPTEXCEPTION,
         OPTWARNING,
-        COMPILETIMEEXCEPTION
+        COMPILETIMEEXCEPTION,
+        HYBRIDCONFIGURATOREXCEPTION
     };
 
     /**
@@ -368,6 +369,32 @@ namespace customException
      * @brief Exception for compile time errors
      */
     class CompileTimeException : public CustomException
+    {
+       public:
+        using CustomException::CustomException;
+
+        const char *what() const throw() override;
+    };
+
+    /**
+     * @class HybridConfiguratorException inherits from CustomException
+     *
+     * @brief Exception for hybrid configurator errors
+     */
+    class HybridConfiguratorException : public CustomException
+    {
+       public:
+        using CustomException::CustomException;
+
+        const char *what() const throw() override;
+    };
+
+    /**
+     * @class HybridMDEngineException inherits from CustomException
+     *
+     * @brief Exception for hybrid MD engine errors
+     */
+    class HybridMDEngineException : public CustomException
     {
        public:
         using CustomException::CustomException;

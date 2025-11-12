@@ -1,0 +1,60 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PQ
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
+#ifndef _QM_CAPABLE_ENGINE_HPP_
+
+#define _QM_CAPABLE_ENGINE_HPP_
+
+#include <memory>
+
+#include "qmRunner.hpp"
+#include "qmRunnerManager.hpp"
+#include "qmSettings.hpp"
+#include "typeAliases.hpp"
+
+namespace engine
+{
+    /**
+     * @class QMCapableEngine
+     *
+     * @brief Mixin class providing QM functionality to engines
+     *
+     * @details This class provides QM runner management functionality that can
+     * be inherited by any engine that needs QM capabilities. It uses
+     * composition to avoid inheritance dependencies between different engines.
+     */
+    class QMCapableEngine
+    {
+       protected:
+        std::shared_ptr<QM::QMRunner> _qmRunner;
+
+       public:
+        virtual ~QMCapableEngine() = default;
+
+        void setQMRunner(const settings::QMMethod method);
+        [[nodiscard]] std::shared_ptr<QM::QMRunner> getQMRunner() const;
+        [[nodiscard]] bool                          hasQMRunner() const;
+    };
+
+}   // namespace engine
+
+#endif   // _QM_CAPABLE_ENGINE_HPP_

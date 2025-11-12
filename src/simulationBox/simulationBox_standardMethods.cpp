@@ -28,6 +28,8 @@
 
 using namespace simulationBox;
 
+using std::ranges::distance;
+
 /************************
  *                      *
  * standard add methods *
@@ -112,7 +114,7 @@ size_t SimulationBox::getNumberOfAtoms() const { return _atoms.size(); }
  */
 size_t SimulationBox::getNumberOfQMAtoms() const
 {
-    return std::ranges::distance(getQMAtoms());
+    return distance(getQMAtoms());
 }
 
 /**
@@ -155,6 +157,17 @@ double SimulationBox::getDensity() const { return _density; }
  * @return linearAlgebra::Vec3D&
  */
 linearAlgebra::Vec3D &SimulationBox::getCenterOfMass() { return _centerOfMass; }
+
+/**
+ * @brief get the indices of the atoms marking the center of the inner region
+ * for hybrid type calculations
+ *
+ * @return vector<int>
+ */
+std::vector<int> SimulationBox::getInnerRegionCenterAtomIndices()
+{
+    return _innerRegionCenterAtomIndices;
+}
 
 /**
  * @brief get atom by index
@@ -239,6 +252,16 @@ const std::vector<std::shared_ptr<Atom>> &SimulationBox::getAtoms() const
  * @return std::vector<Molecule>&
  */
 std::vector<Molecule> &SimulationBox::getMolecules() { return _molecules; }
+
+/**
+ * @brief get all molecules
+ *
+ * @return std::vector<Molecule>&
+ */
+const std::vector<Molecule> &SimulationBox::getMolecules() const
+{
+    return _molecules;
+}
 
 /**
  * @brief get all molecule types

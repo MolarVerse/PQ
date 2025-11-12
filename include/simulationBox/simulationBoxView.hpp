@@ -43,14 +43,29 @@ namespace simulationBox
         auto& getAtoms() const;
         auto& getAtoms();
 
+        auto& getMolecules() const;
+        auto& getMolecules();
+
        public:
         auto getQMAtoms();
         auto getQMAtoms() const;
 
-        auto getMMAtoms();
-        auto getMMAtoms() const;
-
         auto getQMAtomicNumbers() const;
+
+        auto getMMMolecules();
+        auto getMMMolecules() const;
+
+        auto getMoleculesInsideZone(const HybridZone) const;
+        auto getMoleculesInsideZone(const HybridZone);
+
+        auto getMoleculesOutsideZone(const HybridZone) const;
+        auto getMoleculesOutsideZone(const HybridZone);
+
+        auto getActiveMolecules();
+        auto getActiveMolecules() const;
+
+        auto getInactiveMolecules();
+        auto getInactiveMolecules() const;
     };
 
     /**
@@ -76,6 +91,28 @@ namespace simulationBox
     }
 
     /**
+     * @brief Get the Molecules vector reference
+     *
+     * @return const auto& a reference to the molecules vector
+     */
+    template <typename Derived>
+    auto& SimulationBoxView<Derived>::getMolecules() const
+    {
+        return static_cast<const Derived&>(*this).getMolecules();
+    }
+
+    /**
+     * @brief Get the Molecules vector reference
+     *
+     * @return auto& a reference to the molecules vector
+     */
+    template <typename Derived>
+    auto& SimulationBoxView<Derived>::getMolecules()
+    {
+        return static_cast<Derived&>(*this).getMolecules();
+    }
+
+    /**
      * @brief get all QM atoms using range-based filtering
      *
      * @return a view/iterator of QM atoms filtered from all atoms
@@ -87,8 +124,8 @@ namespace simulationBox
     template <typename Derived>
     auto SimulationBoxView<Derived>::getQMAtoms()
     {
-        return getAtoms() | pqviews::filter([](const auto& atom)
-                                            { return atom->isQMAtom(); });
+        return getAtoms() |
+               pqviews::filter([](auto& atom) { return atom->isQMAtom(); });
     }
 
     /**
@@ -108,38 +145,6 @@ namespace simulationBox
     }
 
     /**
-     * @brief get all MM atoms using range-based filtering
-     *
-     * @return a view/iterator of MM atoms filtered from all atoms
-     *
-     * @details This function returns a range-based view that filters atoms
-     *          from _atoms based on whether they are designated as MM
-     * atoms.
-     */
-    template <typename Derived>
-    auto SimulationBoxView<Derived>::getMMAtoms()
-    {
-        return getAtoms() | pqviews::filter([](const auto& atom)
-                                            { return atom->isMMAtom(); });
-    }
-
-    /**
-     * @brief get all MM atoms using range-based filtering
-     *
-     * @return a view/iterator of MM atoms filtered from all atoms
-     *
-     * @details This function returns a range-based view that filters atoms
-     *          from _atoms based on whether they are designated as MM
-     * atoms.
-     */
-    template <typename Derived>
-    auto SimulationBoxView<Derived>::getMMAtoms() const
-    {
-        return getAtoms() | pqviews::filter([](const auto& atom)
-                                            { return atom->isMMAtom(); });
-    }
-
-    /**
      * @brief get all QM atomic numbers using range-based filtering
      *
      * @return a view/iterator of QM atomic numbers
@@ -150,6 +155,192 @@ namespace simulationBox
         return getQMAtoms() |
                pqviews::transform([](const auto& atom)
                                   { return atom->getAtomicNumber(); });
+    }
+
+    /**
+     * @brief get all MM molecules using range-based filtering
+     *
+     * @return a view/iterator of MM molecules filtered from all molecules
+     *
+     * @details This function returns a range-based view that filters molecules
+     *          from _molecules based on whether they are designated as
+     * molecular mechanics (MM) molecules. The classification depends on the job
+     * type:
+     *          - MM-only simulations: all molecules are MM molecules
+     *          - QM-only simulations: no molecules are MM molecules
+     *          - Hybrid QM/MM simulations: active molecules are MM molecules
+     */
+    template <typename Derived>
+    auto SimulationBoxView<Derived>::getMMMolecules()
+    {
+        return getMolecules() |
+               pqviews::filter([](auto& mol) { return mol.isMMMolecule(); });
+    }
+
+    /**
+     * @brief get all MM molecules using range-based filtering
+     *
+     * @return a view/iterator of MM molecules filtered from all molecules
+     *
+     * @details This function returns a range-based view that filters molecules
+     *          from _molecules based on whether they are designated as
+     * molecular mechanics (MM) molecules. The classification depends on the job
+     * type:
+     *          - MM-only simulations: all molecules are MM molecules
+     *          - QM-only simulations: no molecules are MM molecules
+     *          - Hybrid QM/MM simulations: active molecules are MM molecules
+     */
+    template <typename Derived>
+    auto SimulationBoxView<Derived>::getMMMolecules() const
+    {
+        return getMolecules() | pqviews::filter([](const auto& mol)
+                                                { return mol.isMMMolecule(); });
+    }
+
+    /**
+     * @brief get all molecules in the specified hybrid zone using range-based
+     * filtering
+     *
+     * @return a view/iterator of molecules in the specified zone filtered from
+     * all molecules
+     *
+     * @details This function returns a range-based view that filters molecules
+     * from _molecules based on whether they are in the specified HybridZone
+     */
+    template <typename Derived>
+    auto SimulationBoxView<Derived>::getMoleculesInsideZone(
+        const HybridZone zone
+    )
+    {
+        return getMolecules() |
+               pqviews::filter([zone](auto& mol)
+                               { return mol.getHybridZone() == zone; });
+    }
+
+    /**
+     * @brief get all molecules in the specified hybrid zone using range-based
+     * filtering
+     *
+     * @return a view/iterator of molecules in the specified zone filtered from
+     * all molecules
+     *
+     * @details This function returns a range-based view that filters molecules
+     * from _molecules based on whether they are in the specified HybridZone
+     */
+    template <typename Derived>
+    auto SimulationBoxView<Derived>::getMoleculesInsideZone(
+        const HybridZone zone
+    ) const
+    {
+        return getMolecules() |
+               pqviews::filter([zone](const auto& mol)
+                               { return mol.getHybridZone() == zone; });
+    }
+
+    /**
+     * @brief get all molecules outside the specified hybrid zone using
+     * range-based filtering
+     *
+     * @return a view/iterator of molecules outside the specified zone filtered
+     * from all molecules
+     *
+     * @details This function returns a range-based view that filters molecules
+     * from _molecules based on whether they are outside the specified
+     * HybridZone
+     */
+    template <typename Derived>
+    auto SimulationBoxView<Derived>::getMoleculesOutsideZone(
+        const HybridZone zone
+    )
+    {
+        return getMolecules() |
+               pqviews::filter([zone](auto& mol)
+                               { return mol.getHybridZone() != zone; });
+    }
+
+    /**
+     * @brief get all molecules outside the specified hybrid zone using
+     * range-based filtering
+     *
+     * @return a view/iterator of molecules outside the specified zone filtered
+     * from all molecules
+     *
+     * @details This function returns a range-based view that filters molecules
+     * from _molecules based on whether they are outside the specified
+     * HybridZone
+     */
+    template <typename Derived>
+    auto SimulationBoxView<Derived>::getMoleculesOutsideZone(
+        const HybridZone zone
+    ) const
+    {
+        return getMolecules() |
+               pqviews::filter([zone](const auto& mol)
+                               { return mol.getHybridZone() != zone; });
+    }
+
+    /**
+     * @brief get all active molecules using range-based filtering
+     *
+     * @return a view/iterator of active molecules filtered from all
+     * molecules
+     *
+     * @details This function returns a range-based view that filters molecules
+     * from _molecules based on whether they are active.
+     */
+    template <typename Derived>
+    auto SimulationBoxView<Derived>::getActiveMolecules()
+    {
+        return getMolecules() |
+               pqviews::filter([](auto& mol) { return mol.isActive(); });
+    }
+
+    /**
+     * @brief get all active molecules using range-based filtering
+     *
+     * @return a view/iterator of active molecules filtered from all
+     * molecules
+     *
+     * @details This function returns a range-based view that filters molecules
+     * from _molecules based on whether they are active.
+     */
+    template <typename Derived>
+    auto SimulationBoxView<Derived>::getActiveMolecules() const
+    {
+        return getMolecules() |
+               pqviews::filter([](const auto& mol) { return mol.isActive(); });
+    }
+
+    /**
+     * @brief get all inactive molecules using range-based filtering
+     *
+     * @return a view/iterator of inactive molecules filtered from all
+     * molecules
+     *
+     * @details This function returns a range-based view that filters molecules
+     * from _molecules based on whether they are inactive (i.e., not active).
+     */
+    template <typename Derived>
+    auto SimulationBoxView<Derived>::getInactiveMolecules()
+    {
+        return getMolecules() |
+               pqviews::filter([](auto& mol) { return !mol.isActive(); });
+    }
+
+    /**
+     * @brief get all inactive molecules using range-based filtering
+     *
+     * @return a view/iterator of inactive molecules filtered from all
+     * molecules
+     *
+     * @details This function returns a range-based view that filters molecules
+     * from _molecules based on whether they are inactive (i.e., not active).
+     */
+    template <typename Derived>
+    auto SimulationBoxView<Derived>::getInactiveMolecules() const
+    {
+        return getMolecules() |
+               pqviews::filter([](const auto& mol) { return !mol.isActive(); });
     }
 
 }   // namespace simulationBox

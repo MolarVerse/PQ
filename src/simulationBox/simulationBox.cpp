@@ -137,72 +137,74 @@ void SimulationBox::addInnerRegionCenterAtoms(
 }
 
 /**
- * @brief assigns _isForcedInner to all atoms which are in the atomIndices
- * vector
+ * @brief assigns _isForcedInner to all molecules which are in the
+ * moleculeIndices vector
  *
- * @param atomIndices
+ * @param moleculeIndices
  *
- * @throw UserInputException if atom index out of range
- * @throw UserInputException if atom is already _isForcedOuter
+ * @throw UserInputException if molecule index is out of range
+ * @throw UserInputException if molecule is already _isForcedOuter
  */
-void SimulationBox::setupForcedInnerAtoms(const std::vector<int>& atomIndices)
+void SimulationBox::setupForcedInnerMolecules(
+    const std::vector<int>& moleculeIndices
+)
 {
-    for (const auto index : atomIndices)
+    for (const auto index : moleculeIndices)
     {
-        if (index < 0 || index >= static_cast<int>(_atoms.size()))
+        if (index < 0 || index >= static_cast<int>(_molecules.size()))
             throw UserInputException(
                 std::format(
-                    "Forced inner region atom index {} out of range",
+                    "Forced inner region molecule index {} out of range",
                     index
                 )
             );
 
-        if (_atoms[static_cast<size_t>(index)]->isForcedOuter())
+        if (_molecules[static_cast<size_t>(index)].isForcedOuter())
             throw UserInputException(
                 std::format(
-                    "Ambiguous atom index {} - atom is already in forced outer "
-                    "list "
-                    "- cannot be in forced inner list",
+                    "Ambiguous molecule index {} - molecule cannot be in "
+                    "forced_inner_list AND forced_outer_list at the same time",
                     index
                 )
             );
         else
-            _atoms[static_cast<size_t>(index)]->setForcedInner(true);
+            _molecules[static_cast<size_t>(index)].setForcedInner(true);
     }
 }
 
 /**
- * @brief assigns _isForcedOuter to all atoms which are in the atomIndices
- * vector
+ * @brief assigns _isForcedOuter to all molecules which are in the
+ * moleculeIndices vector
  *
- * @param atomIndices
+ * @param moleculeIndices
  *
- * @throw UserInputException if atom index out of range
- * @throw UserInputException if atom is already _isForcedInner
+ * @throw UserInputException if molecule index is out of range
+ * @throw UserInputException if molecule is already _isForcedInner
  */
-void SimulationBox::setupForcedOuterAtoms(const std::vector<int>& atomIndices)
+void SimulationBox::setupForcedOuterMolecules(
+    const std::vector<int>& moleculeIndices
+)
 {
-    for (const auto index : atomIndices)
+    for (const auto index : moleculeIndices)
     {
-        if (index < 0 || index >= static_cast<int>(_atoms.size()))
+        if (index < 0 || index >= static_cast<int>(_molecules.size()))
             throw UserInputException(
                 std::format(
-                    "Forced inner region atom index {} out of range",
+                    "Forced outer region molecule index {} out of range",
                     index
                 )
             );
 
-        if (_atoms[static_cast<size_t>(index)]->isForcedInner())
+        if (_molecules[static_cast<size_t>(index)].isForcedInner())
             throw UserInputException(
                 std::format(
-                    "Ambiguous atom index {} - atom is already in forced inner "
-                    "list "
-                    "- cannot be in forced outer list",
+                    "Ambiguous molecule index {} - molecule cannot be in "
+                    "forced_inner_list AND forced_outer_list at the same time",
                     index
                 )
             );
         else
-            _atoms[static_cast<size_t>(index)]->setForcedOuter(true);
+            _molecules[static_cast<size_t>(index)].setForcedOuter(true);
     }
 }
 
@@ -682,6 +684,15 @@ Vec3D SimulationBox::calcShiftVector(const Vec3D& position) const
     return _box->calcShiftVector(position);
 }
 
+int SimulationBox::calcActiveMolCharge() const
+{
+    int charge = 0;
+
+    for (const auto& mol : getActiveMolecules()) charge += mol.getCharge();
+
+    return charge;
+}
+
 /**
  * @brief initialize positions of all atoms
  *
@@ -748,12 +759,51 @@ void SimulationBox::updateOldForces()
 }
 
 /**
+ * @brief reset all forces of all atoms, i.e. forces, inner forces and outer
+ * forces
+ *
+ */
+void SimulationBox::resetAllForces()
+{
+    auto resetForces = [](const auto& atom)
+    {
+        atom->setForceToZero();
+        atom->setInnerForceToZero();
+        atom->setOuterForceToZero();
+    };
+
+    std::ranges::for_each(_atoms, resetForces);
+}
+
+/**
  * @brief reset forces of all atoms
  *
  */
 void SimulationBox::resetForces()
 {
     auto resetForces = [](const auto& atom) { atom->setForceToZero(); };
+
+    std::ranges::for_each(_atoms, resetForces);
+}
+
+/**
+ * @brief reset inner forces of all atoms
+ *
+ */
+void SimulationBox::resetForcesInner()
+{
+    auto resetForces = [](const auto& atom) { atom->setInnerForceToZero(); };
+
+    std::ranges::for_each(_atoms, resetForces);
+}
+
+/**
+ * @brief reset outer forces of all atoms
+ *
+ */
+void SimulationBox::resetForcesOuter()
+{
+    auto resetForces = [](const auto& atom) { atom->setOuterForceToZero(); };
 
     std::ranges::for_each(_atoms, resetForces);
 }

@@ -29,6 +29,7 @@
 
 #include "box.hpp"                // for Box
 #include "manostatSettings.hpp"   // for ManostatSettings
+#include "settings.hpp"           // for Settings
 #include "vector3d.hpp"           // for Vec3D
 
 using namespace simulationBox;
@@ -40,14 +41,14 @@ using namespace settings;
  *
  * @param name
  */
-Molecule::Molecule(const std::string_view name) : _name(name){};
+Molecule::Molecule(const std::string_view name) : _name(name) {}
 
 /**
  * @brief Construct a new Molecule:: Molecule object
  *
  * @param moltype
  */
-Molecule::Molecule(const size_t moltype) : _moltype(moltype){};
+Molecule::Molecule(const size_t moltype) : _moltype(moltype) {}
 
 /**
  * @brief finds number of different atom types in molecule
@@ -176,6 +177,31 @@ std::vector<double> Molecule::getPartialCharges() const
 }
 
 /**
+ * @brief Determines if this molecule should be treated as a MM molecule
+ *
+ * @details The classification logic is as follows:
+ * - For MM-only simulations: all molecules are MM molecules
+ * - For QM-only simulations: no molecules are MM molecules
+ * - For hybrid QM/MM simulations: active molecules are MM molecules
+ *
+ * @return true if the molecule should be treated with MM methods, false
+ * otherwise
+ */
+bool Molecule::isMMMolecule() const
+{
+    if (Settings::isMMOnlyJobtype())
+        return true;
+
+    if (Settings::isQMOnlyJobtype())
+        return false;
+
+    if (isActive())
+        return true;
+
+    return false;
+}
+
+/**
  * @brief sets the partial charges of the atoms in the molecule
  *
  * @param partialCharges
@@ -193,6 +219,26 @@ void Molecule::setPartialCharges(const std::vector<double> &partialCharges)
 void Molecule::setAtomForcesToZero()
 {
     std::ranges::for_each(_atoms, [](auto atom) { atom->setForceToZero(); });
+}
+
+/**
+ * @brief activates the molecule and it's atoms for hybrid calculations
+ *
+ */
+void Molecule::activateMolecule()
+{
+    _isActive = true;
+    for (auto &atom : getAtoms()) atom->setActive(true);
+}
+
+/**
+ * @brief deactivates the molecule and it's atoms for hybrid calculations
+ *
+ */
+void Molecule::deactivateMolecule()
+{
+    _isActive = false;
+    for (auto &atom : getAtoms()) atom->setActive(false);
 }
 
 /****************************************
@@ -464,10 +510,10 @@ size_t Molecule::getDegreesOfFreedom() const { return 3 * getNumberOfAtoms(); }
 /**
  * @brief returns the charge of the molecule
  *
- * @return double
+ * @return int
  */
 
-double Molecule::getCharge() const { return _charge; }
+int Molecule::getCharge() const { return _charge; }
 
 /**
  * @brief returns the molecular mass of the molecule
@@ -491,6 +537,27 @@ std::string Molecule::getName() const { return _name; }
 Vec3D Molecule::getCenterOfMass() const { return _centerOfMass; }
 
 /**
+ * @brief return the Hybrid zone of the molecule
+ *
+ * @return HybridZone
+ */
+HybridZone Molecule::getHybridZone() const { return _hybridZone; }
+
+/**
+ * @brief return if the molecule is activate for hybrid calculations
+ *
+ * @return isActive
+ */
+bool Molecule::isActive() const { return _isActive; }
+
+/**
+ * @brief return the smoothing factor of the molecule for hybrid calculations
+ *
+ * @return double
+ */
+double Molecule::getSmoothingFactor() const { return _smoothingFactor; }
+
+/**
  * @brief returns the atom by index
  *
  * @param index
@@ -504,6 +571,34 @@ Atom &Molecule::getAtom(const size_t index) { return *(_atoms[index]); }
  * @return std::vector<Atom>
  */
 std::vector<std::shared_ptr<Atom>> &Molecule::getAtoms() { return _atoms; }
+
+/**
+ * @brief returns the atoms of the molecule
+ *
+ * @return std::vector<Atom>
+ */
+const std::vector<std::shared_ptr<Atom>> &Molecule::getAtoms() const
+{
+    return _atoms;
+}
+
+/**
+ * @brief return if the molecule is forced to be in the inner region for hybrid
+ * calculations
+ *
+ * @return true
+ * @return false
+ */
+bool Molecule::isForcedInner() const { return _isForcedInner; }
+
+/**
+ * @brief return if the molecule is forced to be in the outer region for hybrid
+ * calculations
+ *
+ * @return true
+ * @return false
+ */
+bool Molecule::isForcedOuter() const { return _isForcedOuter; }
 
 /***************************
  *                         *
@@ -540,7 +635,7 @@ void Molecule::setMoltype(const size_t moltype) { _moltype = moltype; }
  *
  * @param charge
  */
-void Molecule::setCharge(const double charge) { _charge = charge; }
+void Molecule::setCharge(const int charge) { _charge = charge; }
 
 /**
  * @brief set the molecular mass of the molecule
@@ -557,4 +652,46 @@ void Molecule::setMolMass(const double molMass) { _molMass = molMass; }
 void Molecule::setCenterOfMass(const Vec3D &centerOfMass)
 {
     _centerOfMass = centerOfMass;
+}
+
+/**
+ * @brief set the Hybrid zone of the molecule
+ *
+ * @param hybridZone
+ */
+void Molecule::setHybridZone(const HybridZone hybridZone)
+{
+    _hybridZone = hybridZone;
+}
+
+/**
+ * @brief set the smoothing factor of the molecule for hybrid calculations
+ *
+ * @param factor
+ */
+void Molecule::setSmoothingFactor(const double factor)
+{
+    _smoothingFactor = factor;
+}
+
+/**
+ * @brief set if the molecule is forced to be in the inner region for hybrid
+ * calculations
+ *
+ * @param isForcedInner
+ */
+void Molecule::setForcedInner(const bool isForcedInner)
+{
+    _isForcedInner = isForcedInner;
+}
+
+/**
+ * @brief set if the molecule is forced to be in the outer region for hybrid
+ * calculations
+ *
+ * @param isForcedOuter
+ */
+void Molecule::setForcedOuter(const bool isForcedOuter)
+{
+    _isForcedOuter = isForcedOuter;
 }

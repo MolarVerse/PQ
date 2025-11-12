@@ -110,7 +110,10 @@ namespace simulationBox
         void updateOldVelocities();
         void updateOldForces();
 
+        void resetAllForces();
         void resetForces();
+        void resetForcesInner();
+        void resetForcesOuter();
         void resetQMCharges();
 
         void setPartialChargesOfMoleculesFromMoleculeTypes();
@@ -127,6 +130,7 @@ namespace simulationBox
         [[nodiscard]] pq::Vec3D calculateAngularMomentum(const pq::Vec3D&);
         [[nodiscard]] pq::Vec3D calcBoxDimFromDensity() const;
         [[nodiscard]] pq::Vec3D calcShiftVector(const pq::Vec3D&) const;
+        [[nodiscard]] int       calcActiveMolCharge() const;
 
         [[nodiscard]] bool moleculeTypeExists(const size_t) const;
 
@@ -160,8 +164,8 @@ namespace simulationBox
          ************************/
 
         void addInnerRegionCenterAtoms(const std::vector<int>& atomIndices);
-        void setupForcedInnerAtoms(const std::vector<int>& atomIndices);
-        void setupForcedOuterAtoms(const std::vector<int>& atomIndices);
+        void setupForcedInnerMolecules(const std::vector<int>& moleculeIndices);
+        void setupForcedOuterMolecules(const std::vector<int>& moleculeIndices);
 
         /************************
          * standard add methods *
@@ -175,16 +179,17 @@ namespace simulationBox
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] int        getWaterType() const;
-        [[nodiscard]] int        getAmmoniaType() const;
-        [[nodiscard]] size_t     getNumberOfMolecules() const;
-        [[nodiscard]] size_t     getDegreesOfFreedom() const;
-        [[nodiscard]] size_t     getNumberOfAtoms() const;
-        [[nodiscard]] size_t     getNumberOfQMAtoms() const;
-        [[nodiscard]] double     getTotalMass() const;
-        [[nodiscard]] double     getTotalCharge() const;
-        [[nodiscard]] double     getDensity() const;
-        [[nodiscard]] pq::Vec3D& getCenterOfMass();
+        [[nodiscard]] int              getWaterType() const;
+        [[nodiscard]] int              getAmmoniaType() const;
+        [[nodiscard]] size_t           getNumberOfMolecules() const;
+        [[nodiscard]] size_t           getDegreesOfFreedom() const;
+        [[nodiscard]] size_t           getNumberOfAtoms() const;
+        [[nodiscard]] size_t           getNumberOfQMAtoms() const;
+        [[nodiscard]] double           getTotalMass() const;
+        [[nodiscard]] double           getTotalCharge() const;
+        [[nodiscard]] double           getDensity() const;
+        [[nodiscard]] pq::Vec3D&       getCenterOfMass();
+        [[nodiscard]] std::vector<int> getInnerRegionCenterAtomIndices();
 
         [[nodiscard]] Atom&         getAtom(const size_t index);
         [[nodiscard]] Molecule&     getMolecule(const size_t index);
@@ -193,10 +198,11 @@ namespace simulationBox
         [[nodiscard]] std::vector<double> getAtomicScalarForces() const;
         [[nodiscard]] std::vector<double> getAtomicScalarForcesOld() const;
 
-        [[nodiscard]] pq::SharedAtomVec&         getAtoms();
-        [[nodiscard]] const pq::SharedAtomVec&   getAtoms() const;
-        [[nodiscard]] std::vector<Molecule>&     getMolecules();
-        [[nodiscard]] std::vector<MoleculeType>& getMoleculeTypes();
+        [[nodiscard]] pq::SharedAtomVec&           getAtoms();
+        [[nodiscard]] const pq::SharedAtomVec&     getAtoms() const;
+        [[nodiscard]] std::vector<Molecule>&       getMolecules();
+        [[nodiscard]] const std::vector<Molecule>& getMolecules() const;
+        [[nodiscard]] std::vector<MoleculeType>&   getMoleculeTypes();
 
         [[nodiscard]] std::vector<size_t>& getExternalGlobalVdwTypes();
         [[nodiscard]] std::map<size_t, size_t>& getExternalToInternalGlobalVDWTypes(

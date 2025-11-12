@@ -23,6 +23,8 @@
 #ifndef __FILTER_ADAPTOR_HPP__
 #define __FILTER_ADAPTOR_HPP__
 
+#include <type_traits>
+
 #include "filterView.hpp"
 
 namespace pqviews
@@ -40,10 +42,18 @@ namespace pqviews
         template <typename Range>
         auto operator()(Range&& range) const
         {
-            return FilterView<std::decay_t<Range>, Pred>{
-                std::forward<Range>(range),
-                _pred
-            };
+            if constexpr (std::is_lvalue_reference_v<Range>)
+                // For lvalue references, store a reference to avoid copying
+                return FilterView<Range, Pred>{
+                    std::forward<Range>(range),
+                    _pred
+                };
+            else
+                // For rvalue references, decay
+                return FilterView<std::decay_t<Range>, Pred>{
+                    std::forward<Range>(range),
+                    _pred
+                };
         }
     };
 

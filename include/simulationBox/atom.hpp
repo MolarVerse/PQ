@@ -34,18 +34,6 @@
 namespace simulationBox
 {
     /**
-     * @class enum HybridZone
-     */
-    enum class HybridZone : size_t
-    {
-        NOT_HYBRID,
-        CORE,
-        LAYER,
-        SMOOTHING,
-        OUTER
-    };
-
-    /**
      * @class Atom
      *
      * @brief containing all information about an atom
@@ -61,8 +49,6 @@ namespace simulationBox
 
         size_t _externalAtomType;
         size_t _atomType;
-
-        HybridZone _hybridZone = HybridZone::NOT_HYBRID;
 
         bool _isActive      = true;
         bool _isForcedInner = false;
@@ -81,6 +67,8 @@ namespace simulationBox
 
         pq::Vec3D _force;
         pq::Vec3D _forceOld;
+        pq::Vec3D _forceInner;
+        pq::Vec3D _forceOuter;
         pq::Vec3D _shiftForce;
 
        public:
@@ -99,6 +87,8 @@ namespace simulationBox
         void scaleVelocity(const double scaleFactor);
         void scaleVelocity(const pq::Vec3D &scaleFactor);
         void scaleVelocityOrthogonalSpace(const pq::tensor3D &, const Box &);
+        void scaleForce(const double scaleFactor);
+        void scaleForce(const pq::Vec3D &scaleFactor);
 
         /**************************
          * standard adder methods *
@@ -108,19 +98,17 @@ namespace simulationBox
         void addVelocity(const pq::Vec3D &velocity);
         void addForce(const pq::Vec3D &force);
         void addForce(const double, const double, const double);
+        void addForceInner(const pq::Vec3D &force);
+        void addForceOuter(const pq::Vec3D &force);
         void addShiftForce(const pq::Vec3D &shiftForce);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] bool isForcedInner() const;
-        [[nodiscard]] bool isForcedOuter() const;
         [[nodiscard]] bool isActive() const;
         [[nodiscard]] bool isQMAtom() const;
         [[nodiscard]] bool isMMAtom() const;
-
-        [[nodiscard]] HybridZone getHybridZone() const;
 
         [[nodiscard]] std::string getName() const;
         [[nodiscard]] std::string getAtomTypeName() const;
@@ -141,17 +129,15 @@ namespace simulationBox
         [[nodiscard]] pq::Vec3D getVelocity() const;
         [[nodiscard]] pq::Vec3D getForce() const;
         [[nodiscard]] pq::Vec3D getForceOld() const;
+        [[nodiscard]] pq::Vec3D getForceInner() const;
+        [[nodiscard]] pq::Vec3D getForceOuter() const;
         [[nodiscard]] pq::Vec3D getShiftForce() const;
 
         /***************************
          * standard setter methods *
          ***************************/
 
-        void setForcedInner(const bool isForcedInner);
-        void setForcedOuter(const bool isForcedOuter);
-        void setIsActive(const bool isActive);
-
-        void setHybridZone(const HybridZone hybridZone);
+        void setActive(const bool isActive);
 
         void setName(const std::string_view &name);
         void setAtomTypeName(const std::string_view &atomTypeName);
@@ -169,6 +155,8 @@ namespace simulationBox
         void setPosition(const pq::Vec3D &position);
         void setVelocity(const pq::Vec3D &velocity);
         void setForce(const pq::Vec3D &force);
+        void setForceInner(const pq::Vec3D &force);
+        void setForceOuter(const pq::Vec3D &force);
         void setShiftForce(const pq::Vec3D &shiftForce);
 
         void setPositionOld(const pq::Vec3D &positionOld);
@@ -176,6 +164,9 @@ namespace simulationBox
         void setForceOld(const pq::Vec3D &forceOld);
 
         void setForceToZero();
+        void setInnerForceToZero();
+        void setOuterForceToZero();
+
         void resetQMCharge();
     };
 }   // namespace simulationBox

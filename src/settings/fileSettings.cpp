@@ -104,6 +104,13 @@ std::string FileSettings::getMShakeFileName() { return _mShakeFile; }
 std::string FileSettings::getDFTBFileName() { return _dftbFile; }
 
 /**
+ * @brief Get the pointcharge file name
+ *
+ * @return std::string
+ */
+std::string FileSettings::getPointChargeFileName() { return _pointChargeFile; }
+
+/*
  * @brief Get the QM forces temp file name
  *
  * @return std::string
@@ -275,6 +282,16 @@ void FileSettings::setMShakeFileName(const std::string_view name)
 void FileSettings::setDFTBFileName(const std::string_view name)
 {
     FileSettings::_dftbFile = name;
+}
+
+/**
+ * @brief set the pointcharge file name
+ *
+ * @param name
+ */
+void FileSettings::setPointChargeFileName(const std::string_view name)
+{
+    FileSettings::_pointChargeFile = name;
 }
 
 /**

@@ -51,15 +51,7 @@ namespace setup
         void setupInnerRegionCenter();
         void setupForcedInnerList();
         void setupForcedOuterList();
-
-        std::vector<int> parseSelection(
-            const std::string &,
-            const std::string &
-        );
-        std::vector<int> parseSelectionNoPython(
-            const std::string &,
-            const std::string &
-        );
+        void checkZoneRadii();
     };
 
 }   // namespace setup
