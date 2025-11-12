@@ -110,6 +110,36 @@ std::string FileSettings::getDFTBFileName() { return _dftbFile; }
  */
 std::string FileSettings::getPointChargeFileName() { return _pointChargeFile; }
 
+/*
+ * @brief Get the QM forces temp file name
+ *
+ * @return std::string
+ */
+std::string FileSettings::getQMForcesTempFileName()
+{
+    return _qmForcesTempFile;
+}
+
+/**
+ * @brief Get the QM charges temp file name
+ *
+ * @return std::string
+ */
+std::string FileSettings::getQMChargesTempFileName()
+{
+    return _qmChargesTempFile;
+}
+
+/**
+ * @brief Get the stress tensor temp file name
+ *
+ * @return std::string
+ */
+std::string FileSettings::getStressTensorTempFileName()
+{
+    return _StressTensorTempFile;
+}
+
 /**
  * @brief Check if the topology file name is set
  *

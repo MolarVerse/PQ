@@ -229,7 +229,7 @@ void DFTBPlusRunner::readStressTensor(Box &box, PhysicalData &data)
     if (_periodicity == NON_PERIODIC)
         return;
 
-    const std::string stressFileName = "stress_tensor";
+    const auto stressFileName = FileSettings::getStressTensorTempFileName();
 
     std::ifstream stressFile(stressFileName);
 
@@ -256,6 +256,4 @@ void DFTBPlusRunner::readStressTensor(Box &box, PhysicalData &data)
     data.addVirial(virial);
 
     stressFile.close();
-
-    ::system(std::format("rm -f {}", stressFileName).c_str());
 }
