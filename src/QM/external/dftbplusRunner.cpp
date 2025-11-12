@@ -226,9 +226,6 @@ void DFTBPlusRunner::execute(SimulationBox &box)
  */
 void DFTBPlusRunner::readStressTensor(Box &box, PhysicalData &data)
 {
-    if (_periodicity == NON_PERIODIC)
-        return;
-
     const auto stressFileName = FileSettings::getStressTensorTempFileName();
 
     std::ifstream stressFile(stressFileName);

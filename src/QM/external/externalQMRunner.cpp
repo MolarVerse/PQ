@@ -197,56 +197,6 @@ void ExternalQMRunner::readChargeFile(SimulationBox &box)
     chargeFile.close();
 }
 
-/**
- * @brief reads the charge file (qm_charges) and sets the _qmCharge the atoms
- *
- * @param box
- *
- * @throw QMRunnerException
- *  - if the charge file cannot be opened
- *  - if the charge file is empty
- */
-void ExternalQMRunner::readChargeFile(SimulationBox &box)
-{
-    const std::string chargeFileName = "qm_charges";
-
-    std::ifstream chargeFile(chargeFileName);
-
-    if (!chargeFile.is_open())
-        throw QMRunnerException(
-            std::format(
-                "Cannot open {} charge file \"{}\"",
-                string(QMSettings::getQMMethod()),
-                chargeFileName
-            )
-        );
-
-    if (chargeFile.peek() == std::ifstream::traits_type::eof())
-        throw QMRunnerException(
-            std::format(
-                "Empty {} charge file \"{}\"",
-                string(QMSettings::getQMMethod()),
-                chargeFileName
-            )
-        );
-
-    auto readCharges = [&chargeFile](auto &atom)
-    {
-        auto index  = 0;     // Read and discard the first column (index)
-        auto charge = 0.0;   // Read the second column (charge value)
-
-        chargeFile >> index >> charge;
-
-        atom->getQMCharge() = charge;
-    };
-
-    std::ranges::for_each(box.getQMAtoms(), readCharges);
-
-    chargeFile.close();
-
-    ::system(std::format("rm -f {}", chargeFileName).c_str());
-}
-
 /********************************
  *                              *
  * standard getters and setters *
