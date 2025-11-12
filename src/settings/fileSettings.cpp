@@ -104,6 +104,36 @@ std::string FileSettings::getMShakeFileName() { return _mShakeFile; }
 std::string FileSettings::getDFTBFileName() { return _dftbFile; }
 
 /**
+ * @brief Get the QM forces temp file name
+ *
+ * @return std::string
+ */
+std::string FileSettings::getQMForcesTempFileName()
+{
+    return _qmForcesTempFile;
+}
+
+/**
+ * @brief Get the QM charges temp file name
+ *
+ * @return std::string
+ */
+std::string FileSettings::getQMChargesTempFileName()
+{
+    return _qmChargesTempFile;
+}
+
+/**
+ * @brief Get the stress tensor temp file name
+ *
+ * @return std::string
+ */
+std::string FileSettings::getStressTensorTempFileName()
+{
+    return _StressTensorTempFile;
+}
+
+/**
  * @brief Check if the topology file name is set
  *
  * @return bool

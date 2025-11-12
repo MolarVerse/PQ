@@ -33,6 +33,7 @@
 
 #include "constants/conversionFactors.hpp"   // for _HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM_, _HARTREE_TO_KCAL_PER_MOL_
 #include "exceptions.hpp"                    // for InputFileException
+#include "fileSettings.hpp"                  // for FileSettings
 #include "physicalData.hpp"                  // for PhysicalData
 #include "qmSettings.hpp"                    // for QMSettings
 #include "simulationBox.hpp"                 // for SimulationBox
@@ -78,6 +79,9 @@ void ExternalQMRunner::run(
     timeoutThread.request_stop();
 
     readForceFile(simBox, physicalData);
+
+    readChargeFile(simBox);
+
     readStressTensor(simBox.getBox(), physicalData);
 }
 
@@ -97,7 +101,7 @@ void ExternalQMRunner::readForceFile(
     PhysicalData  &physicalData
 )
 {
-    const std::string forceFileName = "qm_forces";
+    const auto forceFileName = FileSettings::getQMForcesTempFileName();
 
     std::ifstream forceFile(forceFileName);
 
@@ -137,8 +141,56 @@ void ExternalQMRunner::readForceFile(
     std::ranges::for_each(box.getQMAtoms(), readForces);
 
     forceFile.close();
+}
 
-    ::system(std::format("rm -f {}", forceFileName).c_str());
+/**
+ * @brief reads the charge file (qm_charges) and sets the _qmCharge of the atoms
+ *
+ * @param box
+ *
+ * @throw QMRunnerException
+ *  - if the charge file cannot be opened
+ *  - if the charge file is empty
+ */
+void ExternalQMRunner::readChargeFile(SimulationBox &box)
+{
+    const auto chargeFileName = FileSettings::getQMChargesTempFileName();
+
+    std::ifstream chargeFile(chargeFileName);
+
+    if (!chargeFile.is_open())
+        throw QMRunnerException(
+            std::format(
+                "Cannot open {} charge file \"{}\"",
+                string(QMSettings::getQMMethod()),
+                chargeFileName
+            )
+        );
+
+    if (chargeFile.peek() == std::ifstream::traits_type::eof())
+        throw QMRunnerException(
+            std::format(
+                "Empty {} charge file \"{}\"",
+                string(QMSettings::getQMMethod()),
+                chargeFileName
+            )
+        );
+
+    box.resetQMCharges();
+
+    auto readCharges = [&chargeFile](auto &atom)
+    {
+        auto index  = 0;     // Read and discard the first column (index)
+        auto charge = 0.0;   // Read the second column (charge value)
+
+        chargeFile >> index >> charge;
+
+        atom->setQMCharge(charge);
+    };
+
+    std::ranges::for_each(box.getQMAtoms(), readCharges);
+
+    chargeFile.close();
 }
 
 /********************************

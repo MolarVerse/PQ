@@ -37,6 +37,8 @@ using namespace customException;
 using namespace linearAlgebra;
 using namespace settings;
 
+using std::optional;
+
 /**
  * @brief sets the mass of the atom
  *
@@ -311,6 +313,13 @@ double Atom::getMass() const { return _mass; }
 double Atom::getPartialCharge() const { return _partialCharge; }
 
 /**
+ * @brief return the qm charge of the atom
+ *
+ * @return optional<double>
+ */
+optional<double> Atom::getQMCharge() const { return _qmCharge; }
+
+/**
  * @brief return the position of the atom
  *
  * @return Vec3D
@@ -434,6 +443,13 @@ void Atom::setPartialCharge(const double partialCharge)
 }
 
 /**
+ * @brief set the qm charge of the atom
+ *
+ * @param partialCharge
+ */
+void Atom::setQMCharge(const double charge) { _qmCharge = charge; }
+
+/**
  * @brief set the atom type (internal)
  *
  * @param atomType
@@ -533,3 +549,9 @@ void Atom::setHybridZone(const HybridZone hybridZone)
 {
     _hybridZone = hybridZone;
 }
+
+/*
+ * @brief reset the qm charge of the atom
+ */
+void Atom::resetQMCharge() { _qmCharge.reset(); }
+
