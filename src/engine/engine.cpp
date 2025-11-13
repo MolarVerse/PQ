@@ -74,17 +74,19 @@ double Engine::calculateTotalSimulationTime() const
  * The files are safely deleted using std::filesystem::remove, which does not
  * throw exceptions if the files do not exist.
  */
-void Engine::deleteTempFiles()
+void Engine::deleteTmpFiles()
 {
     using std::filesystem::remove;
 
     const auto qm_forces     = FileSettings::getQMForcesTempFileName();
     const auto qm_charges    = FileSettings::getQMChargesTempFileName();
     const auto stress_tensor = FileSettings::getStressTensorTempFileName();
+    const auto pointcharges  = FileSettings::getPointChargeFileName();
 
     remove(qm_forces);
     remove(qm_charges);
     remove(stress_tensor);
+    remove(pointcharges);
 }
 
 /**
