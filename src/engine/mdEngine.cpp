@@ -129,8 +129,6 @@ void MDEngine::run()
  */
 void MDEngine::takeStepBeforeForces()
 {
-    for (auto &atom : _simulationBox->getAtoms()) atom->getQMCharge().reset();
-
     _thermostat->applyThermostatHalfStep(*_simulationBox, *_physicalData);
 
     _integrator->firstStep(*_simulationBox);
