@@ -107,11 +107,11 @@ void MoldescriptorReader::read()
             auto &simBox = _engine.getSimulationBox();
 
             if ("water_type" == toLowerAndReplaceDashesCopy(lineElements[0]))
-                simBox.setWaterType(std::stoi(lineElements[1]));
+                simBox.setWaterType(std::stoull(lineElements[1]));
 
             else if ("ammonia_type" ==
                      toLowerAndReplaceDashesCopy(lineElements[0]))
-                simBox.setAmmoniaType(std::stoi(lineElements[1]));
+                simBox.setAmmoniaType(std::stoull(lineElements[1]));
 
             else
                 processMolecule(lineElements);

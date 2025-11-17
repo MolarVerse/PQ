@@ -21,6 +21,7 @@
 ******************************************************************************/
 
 #include <algorithm>   // for std::ranges:find
+#include <optional>    // for optional
 #include <ranges>      // for views::filter
 
 #include "settings.hpp"   // for Settings::getJobtype, JobType
@@ -28,6 +29,7 @@
 
 using namespace simulationBox;
 
+using std::optional;
 using std::ranges::distance;
 
 /************************
@@ -77,14 +79,14 @@ void SimulationBox::addMoleculeType(const MoleculeType &molecule)
  *
  * @return int
  */
-int SimulationBox::getWaterType() const { return _waterType; }
+optional<size_t> SimulationBox::getWaterType() const { return _waterType; }
 
 /**
  * @brief Get the ammonia type
  *
  * @return int
  */
-int SimulationBox::getAmmoniaType() const { return _ammoniaType; }
+optional<size_t> SimulationBox::getAmmoniaType() const { return _ammoniaType; }
 
 /**
  * @brief Get the number of molecules
@@ -397,7 +399,7 @@ std::vector<double> SimulationBox::getFlattenedQMPositions() const
  *
  * @param waterType
  */
-void SimulationBox::setWaterType(const int waterType)
+void SimulationBox::setWaterType(const size_t waterType)
 {
     _waterType = waterType;
 }
@@ -407,7 +409,7 @@ void SimulationBox::setWaterType(const int waterType)
  *
  * @param ammoniaType
  */
-void SimulationBox::setAmmoniaType(const int ammoniaType)
+void SimulationBox::setAmmoniaType(const size_t ammoniaType)
 {
     _ammoniaType = ammoniaType;
 }

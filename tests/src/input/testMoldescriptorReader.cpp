@@ -98,6 +98,7 @@ TEST_F(TestMoldescriptorReader, moldescriptorReader)
  */
 TEST_F(TestMoldescriptorReader, specialTypes)
 {
+    ASSERT_EQ(_engine->getSimulationBox().getWaterType(), std::nullopt);
     settings::FileSettings::setMolDescriptorFileName("examples/setup/moldescriptor.dat");
     readMolDescriptor(*_engine);
     ASSERT_EQ(_engine->getSimulationBox().getWaterType(), 1);
