@@ -66,6 +66,9 @@ namespace simulationBox
 
         auto getInactiveMolecules();
         auto getInactiveMolecules() const;
+
+        auto getWaterTypeMolecules();
+        auto getWaterTypeMolecules() const;
     };
 
     /**
@@ -341,6 +344,37 @@ namespace simulationBox
     {
         return getMolecules() |
                pqviews::filter([](const auto& mol) { return !mol.isActive(); });
+    }
+
+    template <typename Derived>
+    auto SimulationBoxView<Derived>::getWaterTypeMolecules()
+    {
+        const auto waterType = static_cast<Derived&>(*this).getWaterType();
+
+        if (!waterType.has_value())
+            return getMolecules() |
+                   pqviews::filter([](auto& mol) { return false; });
+
+        const auto waterTypeValue = waterType.value();
+        return getMolecules() |
+               pqviews::filter([waterTypeValue](auto& mol)
+                               { return mol.getMoltype() == waterTypeValue; });
+    }
+
+    template <typename Derived>
+    auto SimulationBoxView<Derived>::getWaterTypeMolecules() const
+    {
+        const auto waterType =
+            static_cast<const Derived&>(*this).getWaterType();
+
+        if (!waterType.has_value())
+            return getMolecules() |
+                   pqviews::filter([](const auto& mol) { return false; });
+
+        const auto waterTypeValue = waterType.value();
+        return getMolecules() |
+               pqviews::filter([waterTypeValue](const auto& mol)
+                               { return mol.getMoltype() == waterTypeValue; });
     }
 
 }   // namespace simulationBox
