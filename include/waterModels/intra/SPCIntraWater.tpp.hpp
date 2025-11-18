@@ -105,13 +105,13 @@ void waterModels::SPCIntraWater<Derived>::calculate(
         auto normalPosition  = cross(dOH2, dOH1);
         normalPosition      /= normalDistance;
 
-        auto forceAngle = forceMagnitudeAngle / distOH1;
+        auto forceAngle = forceMagnitudeAngle / (distOH1 * distOH1);
         auto forcexyz   = forceAngle * cross(dOH1, normalPosition);
 
         oxygen.addForce(-forcexyz);
         hydrogen1.addForce(forcexyz);
 
-        forceAngle = forceMagnitudeAngle / distOH2;
+        forceAngle = forceMagnitudeAngle / (distOH2 * distOH2);
         forcexyz   = forceAngle * cross(normalPosition, dOH2);
 
         oxygen.addForce(-forcexyz);
