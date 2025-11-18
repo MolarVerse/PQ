@@ -24,6 +24,7 @@
 #define _SPC_INTRA_WATER_HPP_
 
 #include "intraWater.hpp"
+#include "physicalData.hpp"    // for PhysicalData
 #include "simulationBox.hpp"   // for SimulationBox
 #include "typeAliases.hpp"
 
@@ -33,16 +34,16 @@ namespace waterModels
     class SPCIntraWater : public IntraWater
     {
        public:
-        virtual void calculate(pq::SimBox& box) override;
+        virtual void calculate(pq::SimBox&, pq::PhysicalData&) override;
     };
 
     class SPCFwIntraParam : public SPCIntraWater<SPCFwIntraParam>
     {
        private:
-        static constexpr double _eqOHDistance          = 1.012;
-        static constexpr double _eqHOHAngle            = 113.24;
-        static constexpr double _forceConstantOHBond   = 1059.162;
-        static constexpr double _forceConstantHOHAngle = 75.9;
+        static constexpr auto _eqOHDistance          = 1.012;
+        static constexpr auto _eqHOHAngle            = 113.24;
+        static constexpr auto _forceConstantOHBond   = 1059.162;
+        static constexpr auto _forceConstantHOHAngle = 75.9;
 
         friend class SPCIntraWater<SPCFwIntraParam>;
     };
@@ -50,10 +51,10 @@ namespace waterModels
     class qSPCFwIntraParam : public SPCIntraWater<qSPCFwIntraParam>
     {
        private:
-        static constexpr double _eqOHDistance          = 1.0;
-        static constexpr double _eqHOHAngle            = 112.0;
-        static constexpr double _forceConstantOHBond   = 1059.162;
-        static constexpr double _forceConstantHOHAngle = 75.9;
+        static constexpr auto _eqOHDistance          = 1.0;
+        static constexpr auto _eqHOHAngle            = 112.0;
+        static constexpr auto _forceConstantOHBond   = 1059.162;
+        static constexpr auto _forceConstantHOHAngle = 75.9;
 
         friend class SPCIntraWater<qSPCFwIntraParam>;
     };
