@@ -21,8 +21,10 @@
 ******************************************************************************/
 
 #ifndef _INTRA_WATER_HPP_
+
 #define _INTRA_WATER_HPP_
 
+#include "physicalData.hpp"    // for PhysicalData
 #include "simulationBox.hpp"   // for SimulationBox
 #include "typeAliases.hpp"
 
@@ -31,7 +33,7 @@ namespace waterModels
     class IntraWater
     {
        public:
-        virtual void calculate(pq::SimBox &) = 0;
+        virtual void calculate(pq::SimBox &, pq::PhysicalData &) = 0;
     };
 
 }   // namespace waterModels

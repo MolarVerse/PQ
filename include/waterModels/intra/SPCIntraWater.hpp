@@ -21,6 +21,7 @@
 ******************************************************************************/
 
 #ifndef _SPC_INTRA_WATER_HPP_
+
 #define _SPC_INTRA_WATER_HPP_
 
 #include "intraWater.hpp"

@@ -48,71 +48,71 @@ void waterModels::SPCIntraWater<Derived>::calculate(
         auto& hydrogen1 = water.getAtom(1);
         auto& hydrogen2 = water.getAtom(2);
 
-        const auto posOxygen    = oxygen.getPosition();
-        const auto posHydrogen1 = hydrogen1.getPosition();
-        const auto posHydrogen2 = hydrogen2.getPosition();
+        const auto posO  = oxygen.getPosition();
+        const auto posH1 = hydrogen1.getPosition();
+        const auto posH2 = hydrogen2.getPosition();
 
-        auto dOH1 = posOxygen - posHydrogen1;
+        auto dOH1 = posO - posH1;
 
         box.applyPBC(dOH1);
 
-        const auto dist1          = norm(dOH1);
-        const auto deltaDistance1 = dist1 - eqOHDistance;
+        const auto distOH1          = norm(dOH1);
+        const auto deltaDistanceOH1 = distOH1 - eqOHDistance;
 
-        auto forceMagnitude1 = -kOHBond * deltaDistance1;
+        auto forceMagnitudeOH1 = -kOHBond * deltaDistanceOH1;
 
-        physicalData.addBondEnergy(-forceMagnitude1 * deltaDistance1 / 2.0);
+        physicalData.addBondEnergy(-forceMagnitudeOH1 * deltaDistanceOH1 / 2.0);
 
-        forceMagnitude1 /= dist1;
+        forceMagnitudeOH1 /= distOH1;
 
-        const auto force1 = forceMagnitude1 * dOH1;
-        oxygen.addForce(force1);
-        hydrogen1.addForce(-force1);
+        const auto forceOH1 = forceMagnitudeOH1 * dOH1;
+        oxygen.addForce(forceOH1);
+        hydrogen1.addForce(-forceOH1);
 
-        auto dOH2 = posOxygen - posHydrogen2;
+        auto dOH2 = posO - posH2;
 
         box.applyPBC(dOH2);
 
-        const auto dist2          = norm(dOH2);
-        const auto deltaDistance2 = dist2 - eqOHDistance;
+        const auto distOH2          = norm(dOH2);
+        const auto deltaDistanceOH2 = distOH2 - eqOHDistance;
 
-        auto forceMagnitude2 = -kOHBond * deltaDistance2;
+        auto forceMagnitudeOH2 = -kOHBond * deltaDistanceOH2;
 
-        physicalData.addBondEnergy(-forceMagnitude2 * deltaDistance2 / 2.0);
+        physicalData.addBondEnergy(-forceMagnitudeOH2 * deltaDistanceOH2 / 2.0);
 
-        forceMagnitude2 /= dist2;
+        forceMagnitudeOH2 /= distOH2;
 
-        const auto force2 = forceMagnitude2 * dOH2;
-        oxygen.addForce(force2);
-        hydrogen2.addForce(-force2);
+        const auto forceOH2 = forceMagnitudeOH2 * dOH2;
+        oxygen.addForce(forceOH2);
+        hydrogen2.addForce(-forceOH2);
 
         auto smF = 0.0;
-        if (water->getHybridZone() == SMOOTHING)
-            smF = water->getSmoothingFactor();
+        if (water.getHybridZone() == SMOOTHING)
+            smF = water.getSmoothingFactor();
 
-        physicalData.addVirial(tensorProduct(dist1, force1) * (1 - smF));
-        physicalData.addVirial(tensorProduct(dist2, force2) * (1 - smF));
+        physicalData.addVirial(tensorProduct(distOH1, forceOH1) * (1 - smF));
+        physicalData.addVirial(tensorProduct(distOH2, forceOH2) * (1 - smF));
 
         const auto alpha      = angle(dOH1, dOH2);
         const auto deltaAngle = alpha - eqHOHAngle;
 
-        forceMagnitude3 = -kHOHAngle * deltaAngle;
+        auto forceMagnitudeAngle = -kHOHAngle * deltaAngle;
 
-        physicalData.addAngleEnergy(-forceMagnitude3 * deltaAngle / 2.0);
+        physicalData.addAngleEnergy(-forceMagnitudeAngle * deltaAngle / 2.0);
 
-        const auto normalDistance = dist1 * dist2 * ::sin(alpha);
+        const auto normalDistance = distOH1 * distOH2 * ::sin(alpha);
 
         auto normalPosition  = cross(dOH2, dOH1);
         normalPosition      /= normalDistance;
 
-        auto force3   = forceMagnitude3 / dist1;
-        auto forcexyz = force3 * cross(dOH1, normalPosition);
+        auto forceAngle = forceMagnitudeAngle / distOH1;
+        auto forcexyz   = forceAngle * cross(dOH1, normalPosition);
 
         oxygen.addForce(-forcexyz);
         hydrogen1.addForce(forcexyz);
 
-        force4   = forceMagnitude3 / dist2;
-        forcexyz = force4 * cross(normalPosition, dOH2);
+        forceAngle = forceMagnitudeAngle / distOH2;
+        forcexyz   = forceAngle * cross(normalPosition, dOH2);
 
         oxygen.addForce(-forcexyz);
         hydrogen2.addForce(forcexyz);
