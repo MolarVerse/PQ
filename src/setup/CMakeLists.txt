@@ -16,6 +16,7 @@ set(setup_source_files
     outputFilesSetup.cpp
     optimizerSetup.cpp
     randomNumberGeneratorSetup.cpp
+    waterModelSetup.cpp
 )
 
 if(BUILD_WITH_KOKKOS)

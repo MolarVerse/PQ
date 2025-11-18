@@ -34,6 +34,13 @@ using namespace customException;
  ********************/
 
 /**
+ * @brief returns whether a water model is set
+ *
+ * @return true if water model is set
+ */
+bool WaterModelSettings::isWaterModelSet() { return _isWaterModelSet; }
+
+/**
  * @brief returns the waterIntraModel
  *
  * @return waterIntraModel
@@ -56,6 +63,16 @@ WaterInterModel WaterModelSettings::getWaterInterModel()
 /********************
  * standard setters *
  ********************/
+
+/**
+ * @brief sets whether a water model is set
+ *
+ * @param isSet
+ */
+void WaterModelSettings::setIsWaterModelSet(const bool isSet)
+{
+    _isWaterModelSet = isSet;
+}
 
 /**
  * @brief sets the waterIntraModel to enum in settings

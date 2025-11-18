@@ -102,7 +102,7 @@ namespace simulationBox
         [[nodiscard]] std::string getName() const;
         [[nodiscard]] std::string getAtomName(const size_t index) const;
 
-        [[nodiscard]] std::vector<std::string> &getAtomNames();
+        [[nodiscard]] std::vector<std::string>  getAtomNames() const;
         [[nodiscard]] std::vector<size_t>      &getExternalAtomTypes();
         [[nodiscard]] std::vector<size_t>      &getExternalGlobalVDWTypes();
         [[nodiscard]] std::vector<double>      &getPartialCharges();

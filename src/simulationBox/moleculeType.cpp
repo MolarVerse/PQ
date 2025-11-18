@@ -279,9 +279,12 @@ std::string MoleculeType::getAtomName(const size_t index) const
 /**
  * @brief get the atom names of the molecule
  *
- * @return std::vector<std::string>&
+ * @return std::vector<std::string>
  */
-std::vector<std::string> &MoleculeType::getAtomNames() { return _atomNames; }
+std::vector<std::string> MoleculeType::getAtomNames() const
+{
+    return _atomNames;
+}
 
 /**
  * @brief get the external atom types of the molecule

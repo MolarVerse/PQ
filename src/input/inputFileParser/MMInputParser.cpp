@@ -201,6 +201,8 @@ void MMInputParser::parseWaterIntraModel(
             lineElements[2],
             lineNumber
         ));
+
+    WaterModelSettings::setIsWaterModelSet(true);
 }
 
 /**
@@ -235,4 +237,6 @@ void MMInputParser::parseWaterInterModel(
             lineElements[2],
             lineNumber
         ));
+
+    WaterModelSettings::setIsWaterModelSet(true);
 }

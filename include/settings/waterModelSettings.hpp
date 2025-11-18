@@ -56,6 +56,7 @@ namespace settings
     class WaterModelSettings
     {
        private:
+        static inline bool            _isWaterModelSet = false;
         static inline WaterIntraModel _waterIntraModel = WaterIntraModel::NONE;
         static inline WaterInterModel _waterInterModel = WaterInterModel::NONE;
 
@@ -67,12 +68,15 @@ namespace settings
          * standard getters *
          ********************/
 
+        [[nodiscard]] static bool            isWaterModelSet();
         [[nodiscard]] static WaterIntraModel getWaterIntraModel();
         [[nodiscard]] static WaterInterModel getWaterInterModel();
 
         /********************
          * standard setters *
          ********************/
+
+        static void setIsWaterModelSet(const bool isSet);
 
         static void setWaterIntraModel(const std::string_view &model);
         static void setWaterIntraModel(const WaterIntraModel model);

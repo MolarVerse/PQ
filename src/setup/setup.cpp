@@ -54,6 +54,8 @@
 #include "timer.hpp"                        // for Timings
 #include "timingsSettings.hpp"              // for TimingsSettings
 #include "topologyReader.hpp"               // for readTopologyFile
+#include "waterModelSettings.hpp"           // for WaterModelSettings
+#include "waterModelSetup.hpp"              // for setupWaterModel
 
 using namespace engine;
 using namespace input;
@@ -201,6 +203,9 @@ void setup::setupEngine(Engine &engine)
 
     if (ForceFieldSettings::isActive())
         setupForceField(engine);
+
+    if (WaterModelSettings::isWaterModelSet())
+        setupWaterModel(engine);
 
     setupConstraints(engine);
 
