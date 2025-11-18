@@ -29,7 +29,7 @@
 #include "simulationBox.hpp"   // for SimulationBox
 #include "typeAliases.hpp"
 
-namespace waterModels
+namespace waterModel
 {
     template <class Derived>
     class SPCIntraWater : public IntraWater
@@ -60,7 +60,7 @@ namespace waterModels
         friend class SPCIntraWater<qSPCFwIntraParam>;
     };
 
-}   // namespace waterModels
+}   // namespace waterModel
 
 #include "SPCIntraWater.tpp.hpp"   // DO NOT MOVE THIS LINE
 

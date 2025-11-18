@@ -32,7 +32,7 @@
 #include "vector3d.hpp"        // for Vector3D, norm, operator*, Vec3D
 
 template <class Derived>
-void waterModels::SPCIntraWater<Derived>::calculate(
+void waterModel::SPCIntraWater<Derived>::calculate(
     pq::SimBox&       box,
     pq::PhysicalData& physicalData
 )

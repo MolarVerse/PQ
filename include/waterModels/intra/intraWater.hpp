@@ -28,7 +28,7 @@
 #include "simulationBox.hpp"   // for SimulationBox
 #include "typeAliases.hpp"
 
-namespace waterModels
+namespace waterModel
 {
     class IntraWater
     {
@@ -36,6 +36,6 @@ namespace waterModels
         virtual void calculate(pq::SimBox &, pq::PhysicalData &) = 0;
     };
 
-}   // namespace waterModels
+}   // namespace waterModel
 
 #endif   //  _INTRA_WATER_HPP_
