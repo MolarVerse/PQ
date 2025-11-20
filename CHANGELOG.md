@@ -9,6 +9,10 @@ All notable changes to this project will be documented in this file.
 - Atom positions of triclinic boxes are now wrapped into the simulation box
   when written to the trajectory output file
 
+### Build
+
+- Added mstd-0.0.2 as git submodule to external directory for future generalizations
+
 <!-- insertion marker -->
 ## [v0.6.2](https://github.com/MolarVerse/PQ/releases/tag/v0.6.2) - 2025-08-22
 
