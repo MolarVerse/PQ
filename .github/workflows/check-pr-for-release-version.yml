@@ -1,0 +1,30 @@
+name: Release Pattern Check
+
+on:
+  pull_request:
+    branches:
+      - main
+    types: [opened, edited, reopened, synchronize]
+
+jobs:
+  check-release-pattern:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check PR Title or Description
+        run: |
+          title="${{ github.event.pull_request.title }}"
+          body="${{ github.event.pull_request.body }}"
+          echo "Checking PR title: $title"
+          echo "Checking PR body: $body"
+
+          # Regex: Release-x.y.z (case-insensitive, numeric x, y, z of variable length)
+          regex='[Rr][Ee][Ll][Ee][Aa][Ss][Ee]-[0-9]+\.[0-9]+\.[0-9]+'
+
+          if [[ "$title" =~ $regex ]] || [[ "$body" =~ $regex ]]; then
+            echo "✅ Found valid Release pattern in title or description."
+            exit 0
+          else
+            echo "❌ Invalid PR. Title or description must contain: Release-x.y.z (e.g., Release-1.2.3)"
+            exit 1
+          fi

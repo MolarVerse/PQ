@@ -60,6 +60,7 @@ void OptEngine::run()
             break;
 
         writeOutput();
+        deleteTempFiles();
     }
 
     if (!_converged)

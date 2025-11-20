@@ -760,3 +760,14 @@ void SimulationBox::resetForces()
 
     std::ranges::for_each(_atoms, resetForces);
 }
+
+/**
+ * @brief reset qmCharges of all atoms
+ *
+ */
+void SimulationBox::resetQMCharges()
+{
+    auto reset = [](const auto& atom) { atom->resetQMCharge(); };
+
+    std::ranges::for_each(_atoms, reset);
+}

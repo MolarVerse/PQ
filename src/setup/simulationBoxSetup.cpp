@@ -80,7 +80,7 @@ void setup::simulationBox::setupSimulationBox(Engine &engine)
  *
  * @param engine
  */
-SimulationBoxSetup::SimulationBoxSetup(Engine &engine) : _engine(engine) {};
+SimulationBoxSetup::SimulationBoxSetup(Engine &engine) : _engine(engine) {}
 
 /**
  * @brief setup simulation box
@@ -90,7 +90,7 @@ void SimulationBoxSetup::setup()
 {
     setAtomNames();
     setAtomTypes();
-    if (ForceFieldSettings::isActive())
+    if (_engine.getForceFieldPtr()->isNonCoulombicActivated())
         setExternalVDWTypes();
     setPartialCharges();
 
@@ -192,6 +192,23 @@ void SimulationBoxSetup::setExternalVDWTypes()
 
         auto       moleculeType = simBox.findMoleculeType(molType);
         const auto nAtoms       = molecule.getNumberOfAtoms();
+
+        if (moleculeType.getExternalGlobalVDWTypes().size() != nAtoms)
+        {
+            throw UserInputException(
+                std::format(
+                    "Ooooops! Something went wrong. Please check again your "
+                    "input files and please report this issue to the "
+                    "developers via https://github.com/Molarverse/PQ/issues.\n"
+                    "in simulationBoxSetup.cpp: setExternalVDWTypes()\n"
+                    "Number of external VDW types ({}) does not match number "
+                    "of atoms ({}) in molecule type {}",
+                    moleculeType.getExternalGlobalVDWTypes().size(),
+                    nAtoms,
+                    molType
+                )
+            );
+        }
 
         for (size_t i = 0; i < nAtoms; ++i)
         {
@@ -378,11 +395,13 @@ void SimulationBoxSetup::checkRcCutoff()
     const auto  minDim = simBox.getMinimalBoxDimension();
 
     if (rc > minDim / 2.0)
-        throw InputFileException(std::format(
-            "Rc cutoff is larger than half of the minimal box dimension of {} "
-            "Angstrom.",
-            minDim
-        ));
+        throw InputFileException(
+            std::format(
+                "Rc cutoff is larger than half of the minimal box dimension of "
+                "{} Angstrom.",
+                minDim
+            )
+        );
 }
 
 /**
@@ -490,14 +509,20 @@ void SimulationBoxSetup::writeSetupInfo() const
             InitVelocities::TRUE &&
         !getZeroVelocities())
     {
-        log.writeSetupWarning(std::format(
-            "Ignoring 'init_velocities' because non-zero velocities in \"{}\"",
-            FileSettings::getStartFileName()
-        ));
-        std.writeSetupWarning(std::format(
-            "Ignoring 'init_velocities' because non-zero velocities in \"{}\"",
-            FileSettings::getStartFileName()
-        ));
+        log.writeSetupWarning(
+            std::format(
+                "Ignoring 'init_velocities' because non-zero velocities in "
+                "\"{}\"",
+                FileSettings::getStartFileName()
+            )
+        );
+        std.writeSetupWarning(
+            std::format(
+                "Ignoring 'init_velocities' because non-zero velocities in "
+                "\"{}\"",
+                FileSettings::getStartFileName()
+            )
+        );
     }
 
     if ((SimulationBoxSettings::getInitializeVelocities() ==
@@ -509,10 +534,12 @@ void SimulationBoxSetup::writeSetupInfo() const
             "velocities initialized with Maxwell-Boltzmann distribution"
         );
     else
-        log.writeSetupInfo(std::format(
-            "velocities taken from start file \"{}\"",
-            FileSettings::getStartFileName()
-        ));
+        log.writeSetupInfo(
+            std::format(
+                "velocities taken from start file \"{}\"",
+                FileSettings::getStartFileName()
+            )
+        );
     log.writeEmptyLine();
 }
 

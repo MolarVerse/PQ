@@ -1,9 +1,9 @@
 Section                       	  Time [s]	  Time [%]
 ------------------------------	----------	----------
 
-Total                         	     2.726	   100.000
+Total                         	     3.326	   100.000
 
-Setup                         	     0.001	     0.037
+Setup                         	     0.001	     0.030
 Output                        	     0.000	     0.000
 Thermostat                    	     0.000	     0.000
 Integrator                    	     0.000	     0.000
@@ -23,21 +23,21 @@ QM Engine                     	     0.000	     0.000
 Section                       	  Time [s]	  Time [%]	  RelT [%]
 ------------------------------	----------	----------	----------
 
-Total                         	     2.726	   100.000	   100.000
+Total                         	     3.326	   100.000	   100.000
 
-Setup                         	     0.001	     0.037	   100.000
-TotalSetup                    	     0.001	   100.000	   139.363
+Setup                         	     0.001	     0.030	   100.000
+TotalSetup                    	     0.001	   100.000	   117.803
 
 Output                        	     0.000	     0.000	   100.000
 RstFileOutput                 	     0.000	   100.000	       inf
-InfoOutput                    	     0.000	   100.000	       inf
 TrajectoryOutput              	     0.000	   100.000	       inf
+InfoOutput                    	     0.000	   100.000	       inf
 EnergyOutput                  	     0.000	   100.000	       inf
+BoxFileOutput                 	     0.000	   100.000	       inf
 VirialOutput                  	     0.000	   100.000	       inf
 MomentumOutput                	     0.000	   100.000	       inf
 StressOutput                  	     0.000	   100.000	       inf
 InstantEnergyOutput           	     0.000	   100.000	       inf
-BoxFileOutput                 	     0.000	   100.000	       inf
 
 Thermostat                    	     0.000	     0.000	   100.000
 Calc Temperature              	     0.000	   100.000	       inf
