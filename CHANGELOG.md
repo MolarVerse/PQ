@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## Next Release
 
+### Build
+
+- Added mstd-0.0.2 as git submodule to external directory for future generalizations
+
 <!-- insertion marker -->
 ## [v0.6.3](https://github.com/MolarVerse/PQ/releases/tag/v0.6.2) - 2025-11-12
 
