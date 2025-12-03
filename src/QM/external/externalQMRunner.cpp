@@ -184,10 +184,9 @@ void ExternalQMRunner::readChargeFile(SimulationBox &box)
 
     auto readCharges = [&chargeFile](auto &atom)
     {
-        auto index  = 0;     // Read and discard the first column (index)
-        auto charge = 0.0;   // Read the second column (charge value)
+        auto charge = 0.0;
 
-        chargeFile >> index >> charge;
+        chargeFile >> charge;
 
         atom->setQMCharge(charge);
     };

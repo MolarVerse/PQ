@@ -251,7 +251,7 @@ while (<OUT>)
     my $line = $_;
     $line =~ s/\s+\d+(\S+)\s+(\S+)/$1 $2/;
     my @item = split(/\s+/, $line);
-    printf CHARGE ("%s  %12.5f\n", @item);
+    printf CHARGE ("%12.5f\n", $item[1]);
   }
 }
 

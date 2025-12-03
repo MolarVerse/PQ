@@ -34,5 +34,5 @@ with open('qm_forces', 'w') as f:
         print(grad[i][0], grad[i][1], grad[i][2], file=f)
 
 with open('qm_charges', 'w') as f:
-    for i, charge in enumerate(charges, 1):
-        print(f"{i:4d}    {charge:13.10f}", file=f)
+    for charge in charges:
+        print(f"{charge:13.10f}", file=f)
