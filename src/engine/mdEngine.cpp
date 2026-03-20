@@ -152,7 +152,11 @@ void MDEngine::takeStepAfterForces()
 
     _constraints->calculateConstraintBondRefs(*_simulationBox);
 
-    _virial->intraMolecularVirialCorrection(*_simulationBox, *_physicalData);
+    if (!Settings::isHybridJobtype())
+        _virial->intraMolecularVirialCorrection(
+            *_simulationBox,
+            *_physicalData
+        );
 
     _thermostat->applyThermostatOnForces(*_simulationBox);
 

@@ -26,6 +26,7 @@
 
 #include "coulombPotential.hpp"   // for CoulombPotential
 #include "forceField.hpp"         // for correctLinker
+#include "hybridSettings.hpp"     // for HybridSettings
 #include "molecule.hpp"           // for Molecule
 #include "physicalData.hpp"       // for PhysicalData
 #include "simulationBox.hpp"      // for SimulationBox
@@ -37,6 +38,7 @@ using namespace connectivity;
 using namespace linearAlgebra;
 using namespace physicalData;
 using namespace potential;
+using namespace settings;
 
 using enum HybridZone;
 
@@ -116,8 +118,12 @@ void BondForceField::calculateEnergyAndForces(
     _molecules[0]->addAtomForce(_atomIndices[0], force);
     _molecules[1]->addAtomForce(_atomIndices[1], -force);
 
-    auto smF = 0.0;
-    if (_molecules[0]->getHybridZone() == SMOOTHING)
+    using enum SmoothingMethod;
+
+    auto       smF       = 0.0;
+    const auto smoothing = HybridSettings::getSmoothingMethod();
+
+    if (smoothing == HOTSPOT && _molecules[0]->getHybridZone() == SMOOTHING)
         smF = _molecules[0]->getSmoothingFactor();
 
     physicalData.addVirial(tensorProduct(dPosition, force) * (1 - smF));

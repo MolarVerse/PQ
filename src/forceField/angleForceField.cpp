@@ -26,6 +26,7 @@
 
 #include "coulombPotential.hpp"   // for CoulombPotential
 #include "forceField.hpp"         // for correctLinker
+#include "hybridSettings.hpp"     // for HybridSettings
 #include "molecule.hpp"           // for Molecule
 #include "physicalData.hpp"       // for PhysicalData
 #include "simulationBox.hpp"      // for SimulationBox
@@ -37,6 +38,7 @@ using namespace connectivity;
 using namespace linearAlgebra;
 using namespace physicalData;
 using namespace potential;
+using namespace settings;
 
 using enum HybridZone;
 
@@ -144,8 +146,13 @@ void AngleForceField::calculateEnergyAndForces(
 
             forcexyz = forceMagnitude * dPosition23;
 
-            auto smF = 0.0;
-            if (_molecules[0]->getHybridZone() == SMOOTHING)
+            using enum SmoothingMethod;
+
+            auto       smF       = 0.0;
+            const auto smoothing = HybridSettings::getSmoothingMethod();
+
+            if (smoothing == HOTSPOT &&
+                _molecules[0]->getHybridZone() == SMOOTHING)
                 smF = _molecules[0]->getSmoothingFactor();
 
             physicalData.addVirial(

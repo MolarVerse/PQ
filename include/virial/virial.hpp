@@ -52,8 +52,8 @@ namespace virial
 
         virtual std::shared_ptr<Virial> clone() const = 0;
 
-        static pq::tensor3D calculateVirial(pq::SimBox &);
-        static pq::tensor3D calculateQMVirial(pq::SimBox &);
+        virtual pq::tensor3D calculateVirial(pq::SimBox &) const;
+        virtual pq::tensor3D calculateQMVirial(pq::SimBox &) const;
 
         virtual void calculateVirial(pq::SimBox &, pq::PhysicalData &);
         virtual void intraMolecularVirialCorrection(
@@ -61,6 +61,10 @@ namespace virial
             pq::PhysicalData &
         )
         {
+        }
+        virtual pq::tensor3D intraMolecularVirialCorrection(pq::SimBox &) const
+        {
+            return pq::tensor3D{0.0};
         }
 
         void setVirial(const pq::tensor3D &virial);

@@ -77,7 +77,6 @@ namespace engine
     {
         const auto& smoothingMethod = HybridSettings::getSmoothingMethod();
 
-        // TODO: https://github.com/MolarVerse/PQ/issues/202
         if (smoothingMethod == HOTSPOT)
             applyHotspotSmoothing();
         else if (smoothingMethod == EXACT)
@@ -103,7 +102,7 @@ namespace engine
         auto       qmEnergy         = 0.0;
         auto       coulombEnergy    = 0.0;
         auto       nonCoulombEnergy = 0.0;
-        tensor3D   virial           = {0.0};
+        auto       virial           = tensor3D{0.0};
         auto&      atoms            = _simulationBox->getAtoms();
         const auto nSmMol =
             distance(_simulationBox->getMoleculesInsideZone(SMOOTHING));
@@ -132,7 +131,9 @@ namespace engine
 
             _qmRunner->run(*_simulationBox, *_physicalData, NON_PERIODIC);
 
-            virial += Virial::calculateQMVirial(*_simulationBox) * globalSmF;
+            virial += _virial->calculateQMVirial(*_simulationBox) * globalSmF;
+            virial += _virial->intraMolecularVirialCorrection(*_simulationBox) *
+                      globalSmF;
             accumulateInnerForces(atoms, globalSmF);
 
             // STEP 3: Setup and run MM calculation, accumulate MM forces and MM
@@ -146,7 +147,11 @@ namespace engine
             );
 
             _intraNonBonded->calculate(*_simulationBox, *_physicalData);
-            virial += Virial::calculateVirial(*_simulationBox) * globalSmF;
+
+            virial += _virial->calculateVirial(*_simulationBox) * globalSmF;
+            virial += _virial->intraMolecularVirialCorrection(*_simulationBox) *
+                      globalSmF;
+            accumulateOuterForces(atoms, globalSmF);
 
             // bonded interactions directly add to physical data virial
             _physicalData->setVirial({0.0});
@@ -157,6 +162,8 @@ namespace engine
             );
 
             virial += _physicalData->getVirial() * globalSmF;
+            virial += _virial->intraMolecularVirialCorrection(*_simulationBox) *
+                      globalSmF;
             accumulateOuterForces(atoms, globalSmF);
 
             // STEP 4: Scale and accumulate hybrid energies
@@ -201,7 +208,8 @@ namespace engine
         _qmRunner->run(*_simulationBox, *_physicalData, NON_PERIODIC);
 
         scaleSmoothingMoleculeForcesInner();
-        virial += Virial::calculateQMVirial(*_simulationBox);
+        virial += _virial->calculateQMVirial(*_simulationBox);
+        virial += _virial->intraMolecularVirialCorrection(*_simulationBox);
         accumulateInnerForces(atoms);
 
         // STEP 2: Setup and run inter-nonbonded calculation between
@@ -213,7 +221,8 @@ namespace engine
             ->calculateQMMMForces(*_simulationBox, *_physicalData, *_cellList);
 
         scaleSmoothingMoleculeForcesInner();
-        virial += Virial::calculateVirial(*_simulationBox);
+        virial += _virial->calculateVirial(*_simulationBox);
+        virial += _virial->intraMolecularVirialCorrection(*_simulationBox);
         accumulateOuterForces(atoms);
 
         // STEP 3: Calculate inter-nonbonded forces between SMOOTHING molecules
@@ -226,7 +235,8 @@ namespace engine
         );
 
         scaleSmoothingMoleculeForcesOuter();
-        virial += Virial::calculateVirial(*_simulationBox);
+        virial += _virial->calculateVirial(*_simulationBox);
+        virial += _virial->intraMolecularVirialCorrection(*_simulationBox);
         accumulateOuterForces(atoms);
 
         // STEP 4: Setup and run intra-nonbonded calculation and scale forces of
@@ -237,7 +247,8 @@ namespace engine
         _intraNonBonded->calculate(*_simulationBox, *_physicalData);
 
         scaleSmoothingMoleculeForcesOuter();
-        virial += Virial::calculateVirial(*_simulationBox);
+        virial += _virial->calculateVirial(*_simulationBox);
+        virial += _virial->intraMolecularVirialCorrection(*_simulationBox);
         accumulateOuterForces(atoms);
 
         // STEP 5: Run intra-bonded calculation and scale forces of
@@ -251,8 +262,9 @@ namespace engine
             *_physicalData
         );
 
-        virial += _physicalData->getVirial();
         scaleSmoothingMoleculeForcesOuter();
+        virial += _physicalData->getVirial();
+        virial += _virial->intraMolecularVirialCorrection(*_simulationBox);
         accumulateOuterForces(atoms);
 
         _physicalData->setVirial(virial);
