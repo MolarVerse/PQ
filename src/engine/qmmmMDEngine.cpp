@@ -33,9 +33,7 @@ using namespace pq;
 using namespace customException;
 using namespace settings;
 using namespace simulationBox;
-using namespace virial;
 
-using enum SmoothingMethod;
 using enum HybridZone;
 
 namespace engine
@@ -75,6 +73,8 @@ namespace engine
      */
     void QMMMMDEngine::applySmoothing()
     {
+        using enum SmoothingMethod;
+
         const auto& smoothingMethod = HybridSettings::getSmoothingMethod();
 
         if (smoothingMethod == HOTSPOT)
@@ -112,7 +112,8 @@ namespace engine
         {
             // STEP 1: Generate set of inactive molecules and calculate
             // associated global smoothing factor for this configuration
-            const auto inactiveSmMol = generateInactiveMoleculeSet(i, nSmMol);
+            const auto inactiveSmMol =
+                generateInactiveSmoothingMoleculeSet(i, nSmMol);
             const auto globalSmF =
                 calculateGlobalSmoothingFactor(inactiveSmMol);
 
@@ -134,7 +135,7 @@ namespace engine
             virial += _virial->calculateQMVirial(*_simulationBox) * globalSmF;
             virial += _virial->intraMolecularVirialCorrection(*_simulationBox) *
                       globalSmF;
-            accumulateInnerForces(atoms, globalSmF);
+            addScaledCurrentForcesToInnerAndReset(atoms, globalSmF);
 
             // STEP 3: Setup and run MM calculation, accumulate MM forces and MM
             // virial contribution
@@ -151,7 +152,7 @@ namespace engine
             virial += _virial->calculateVirial(*_simulationBox) * globalSmF;
             virial += _virial->intraMolecularVirialCorrection(*_simulationBox) *
                       globalSmF;
-            accumulateOuterForces(atoms, globalSmF);
+            addScaledCurrentForcesToOuterAndReset(atoms, globalSmF);
 
             // bonded interactions directly add to physical data virial
             _physicalData->setVirial({0.0});
@@ -164,7 +165,7 @@ namespace engine
             virial += _physicalData->getVirial() * globalSmF;
             virial += _virial->intraMolecularVirialCorrection(*_simulationBox) *
                       globalSmF;
-            accumulateOuterForces(atoms, globalSmF);
+            addScaledCurrentForcesToOuterAndReset(atoms, globalSmF);
 
             // STEP 4: Scale and accumulate hybrid energies
             qmEnergy      += _physicalData->getQMEnergy() * globalSmF;
@@ -210,7 +211,7 @@ namespace engine
         scaleSmoothingMoleculeForcesInner();
         virial += _virial->calculateQMVirial(*_simulationBox);
         virial += _virial->intraMolecularVirialCorrection(*_simulationBox);
-        accumulateInnerForces(atoms);
+        addCurrentForcesToInnerAndReset(atoms);
 
         // STEP 2: Setup and run inter-nonbonded calculation between
         // MM-MM , CORE-MM , LAYER+SMOOTHING-MM and scale forces of smoothing
@@ -223,7 +224,7 @@ namespace engine
         scaleSmoothingMoleculeForcesInner();
         virial += _virial->calculateVirial(*_simulationBox);
         virial += _virial->intraMolecularVirialCorrection(*_simulationBox);
-        accumulateOuterForces(atoms);
+        addCurrentForcesToOuterAndReset(atoms);
 
         // STEP 3: Calculate inter-nonbonded forces between SMOOTHING molecules
         // and scale forces of smoothing molecules with (1 - smF)
@@ -237,7 +238,7 @@ namespace engine
         scaleSmoothingMoleculeForcesOuter();
         virial += _virial->calculateVirial(*_simulationBox);
         virial += _virial->intraMolecularVirialCorrection(*_simulationBox);
-        accumulateOuterForces(atoms);
+        addCurrentForcesToOuterAndReset(atoms);
 
         // STEP 4: Setup and run intra-nonbonded calculation and scale forces of
         // smoothing molecules with (1 - smF)
@@ -249,7 +250,7 @@ namespace engine
         scaleSmoothingMoleculeForcesOuter();
         virial += _virial->calculateVirial(*_simulationBox);
         virial += _virial->intraMolecularVirialCorrection(*_simulationBox);
-        accumulateOuterForces(atoms);
+        addCurrentForcesToOuterAndReset(atoms);
 
         // STEP 5: Run intra-bonded calculation and scale forces of
         // smoothing molecules with (1 - smF)
@@ -265,72 +266,9 @@ namespace engine
         scaleSmoothingMoleculeForcesOuter();
         virial += _physicalData->getVirial();
         virial += _virial->intraMolecularVirialCorrection(*_simulationBox);
-        accumulateOuterForces(atoms);
+        addCurrentForcesToOuterAndReset(atoms);
 
         _physicalData->setVirial(virial);
-    }
-
-    /**
-     * @brief Generate set of inactive smoothing molecule indices from bit
-     * pattern
-     *
-     * @param bitPattern Binary representation where each bit indicates if a
-     *                   smoothing molecule should be inactive (1) or active (0)
-     * @param totalMolecules Total number of smoothing molecules
-     * @return std::unordered_set<size_t> Set of indices to deactivate
-     *
-     * @details This function converts a bit pattern into a set of molecule
-     * indices. Each bit position corresponds to a smoothing molecule index. If
-     * bit j is set, molecule j will be included in the inactive set.
-     */
-    std::unordered_set<size_t> QMMMMDEngine::generateInactiveMoleculeSet(
-        size_t bitPattern,
-        size_t totalMolecules
-    )
-    {
-        std::unordered_set<size_t> inactiveMolecules;
-
-        for (size_t j = 0; j < totalMolecules; ++j)
-            if (bitPattern & (1u << j))
-                inactiveMolecules.insert(j);
-
-        return inactiveMolecules;
-    }
-
-    /**
-     * @brief Calculate global smoothing factor for QM/MM boundary treatment
-     *
-     * @param inactiveForInnerCalcMolecules Set of molecule indices that are
-     *                                      inactive for inner calculation
-     * @return double Global smoothing factor for weighted contribution
-     *
-     * @details This function calculates the global smoothing factor by
-     * iterating through all smoothing molecules and multiplying their
-     * individual smoothing factors. For molecules marked as inactive for
-     * inner calculation, it uses (1 - smoothingFactor), otherwise it uses
-     * the smoothingFactor directly.
-     */
-    double QMMMMDEngine::calculateGlobalSmoothingFactor(
-        const std::unordered_set<size_t>& inactiveForInnerCalcMolecules
-    )
-    {
-        using enum HybridZone;
-
-        double globalSmoothingFactor = 1.0;
-
-        size_t index = 0;
-        for (const auto& mol :
-             _simulationBox->getMoleculesInsideZone(SMOOTHING))
-        {
-            if (inactiveForInnerCalcMolecules.contains(index))
-                globalSmoothingFactor *= 1 - mol.getSmoothingFactor();
-            else
-                globalSmoothingFactor *= mol.getSmoothingFactor();
-
-            ++index;
-        }
-
-        return globalSmoothingFactor;
     }
 
     /**
@@ -372,162 +310,6 @@ namespace engine
                     )
                 ));
             ++count;
-        }
-    }
-
-    /**
-     * @brief Accumulate current forces to inner force storage and reset forces
-     *
-     * @param atoms Vector of atoms whose forces should be accumulated
-     *
-     * @details This function copies the current force on each atom to the inner
-     * force accumulator using addForceInner(), then resets all forces in the
-     * simulation box to zero.
-     */
-    void QMMMMDEngine::accumulateInnerForces(pq::SharedAtomVec& atoms)
-    {
-        for (auto& atom : atoms)
-        {
-            const auto force = atom->getForce();
-            atom->addForceInner(force);
-        }
-
-        _simulationBox->resetForces();
-    }
-
-    /**
-     * @brief Accumulate scaled forces to inner force storage and reset forces
-     *
-     * @param atoms Vector of atoms whose forces should be accumulated
-     * @param globalSmF Global smoothing factor to scale forces before
-     * accumulation
-     *
-     * @details This function copies the current force on each atom, scales it
-     * by the global smoothing factor, then adds it to the inner force
-     * accumulator using addForceInner(). After accumulation, all forces in the
-     * simulation box are reset to zero. This overload is used in exact
-     * smoothing where forces need to be weighted by the configuration-specific
-     * global smoothing factor.
-     */
-    void QMMMMDEngine::accumulateInnerForces(
-        pq::SharedAtomVec& atoms,
-        const double       globalSmF
-    )
-    {
-        for (auto& atom : atoms)
-        {
-            const auto force = atom->getForce();
-            atom->addForceInner(force * globalSmF);
-        }
-
-        _simulationBox->resetForces();
-    }
-
-    /**
-     * @brief Accumulate current forces to outer force storage and reset forces
-     *
-     * @param atoms Vector of atoms whose forces should be accumulated
-     *
-     * @details This function copies the current force on each atom to the outer
-     * force accumulator using addForceOuter(), then resets all forces in the
-     * simulation box to zero.
-     */
-    void QMMMMDEngine::accumulateOuterForces(pq::SharedAtomVec& atoms)
-    {
-        for (auto& atom : atoms)
-        {
-            const auto force = atom->getForce();
-            atom->addForceOuter(force);
-        }
-
-        _simulationBox->resetForces();
-    }
-
-    /**
-     * @brief Accumulate scaled forces to outer force storage and reset forces
-     *
-     * @param atoms Vector of atoms whose forces should be accumulated
-     * @param globalSmF Global smoothing factor to scale forces before
-     * accumulation
-     *
-     * @details This function copies the current force on each atom, scales it
-     * by the global smoothing factor, then adds it to the outer force
-     * accumulator using addForceOuter(). After accumulation, all forces in the
-     * simulation box are reset to zero. This overload is used in exact
-     * smoothing where forces need to be weighted by the configuration-specific
-     * global smoothing factor.
-     */
-    void QMMMMDEngine::accumulateOuterForces(
-        pq::SharedAtomVec& atoms,
-        const double       globalSmF
-    )
-    {
-        for (auto& atom : atoms)
-        {
-            const auto force = atom->getForce();
-            atom->addForceOuter(force * globalSmF);
-        }
-
-        _simulationBox->resetForces();
-    }
-
-    /**
-     * @brief Scale forces of smoothing zone molecules by their smoothing factor
-     * for inner (QM) contribution
-     *
-     * @details This function iterates through all molecules in the smoothing
-     * region and scales their atomic forces by their individual smoothing
-     * factor (smF). This scaling is used in the hotspot smoothing algorithm
-     * to weight the QM contribution of smoothing molecules. The smoothing
-     * factor represents the degree to which a molecule should be treated with
-     * QM methods, with smF = 1 being fully QM and smF = 0 being fully MM.
-     */
-    void QMMMMDEngine::scaleSmoothingMoleculeForcesInner()
-    {
-        for (auto& mol : _simulationBox->getMoleculesInsideZone(SMOOTHING))
-        {
-            const auto smF = mol.getSmoothingFactor();
-            for (auto& atom : mol.getAtoms()) atom->scaleForce(smF);
-        }
-    }
-
-    /**
-     * @brief Scale forces of smoothing zone molecules by complementary
-     * smoothing factor for outer (MM) contribution
-     *
-     * @details This function iterates through all molecules in the smoothing
-     * region and scales their atomic forces by (1 - smoothing factor). This
-     * complementary scaling is used in the hotspot smoothing algorithm to
-     * weight the MM contribution of smoothing molecules. Since the total weight
-     * must sum to 1, molecules with high QM character (high smF) receive low MM
-     * weight (1 - smF), ensuring a smooth transition between QM and MM regions.
-     */
-    void QMMMMDEngine::scaleSmoothingMoleculeForcesOuter()
-    {
-        for (auto& mol : _simulationBox->getMoleculesInsideZone(SMOOTHING))
-        {
-            const auto smF = mol.getSmoothingFactor();
-            for (auto& atom : mol.getAtoms()) atom->scaleForce(1 - smF);
-        }
-    }
-
-    /**
-     * @brief Combine inner (QM) and outer (MM) forces into final atomic forces
-     *
-     * @details This function finalizes the hybrid QM/MM force calculation by
-     * summing the separately accumulated inner and outer force contributions
-     * for each atom. After the smoothing algorithm has computed and accumulated
-     * QM forces (inner) and MM forces (outer) with appropriate weighting, this
-     * function combines them to produce the final total force on each atom that
-     * will be used for integration.
-     */
-    void QMMMMDEngine::combineInnerOuterForces()
-    {
-        for (auto& atom : _simulationBox->getAtoms())
-        {
-            const auto innerForce = atom->getForceInner();
-            const auto outerForce = atom->getForceOuter();
-            atom->setForce(innerForce + outerForce);
         }
     }
 

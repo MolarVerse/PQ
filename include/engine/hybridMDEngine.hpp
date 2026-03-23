@@ -43,6 +43,32 @@ namespace engine
        protected:
         configurator::HybridConfigurator _configurator{};
 
+        void combineInnerOuterForces();
+
+        void addCurrentForcesToInnerAndReset(pq::SharedAtomVec& atoms);
+        void addScaledCurrentForcesToInnerAndReset(
+            pq::SharedAtomVec& atoms,
+            const double       globalSmF
+        );
+
+        void addCurrentForcesToOuterAndReset(pq::SharedAtomVec& atoms);
+        void addScaledCurrentForcesToOuterAndReset(
+            pq::SharedAtomVec& atoms,
+            const double       globalSmF
+        );
+
+        void scaleSmoothingMoleculeForcesInner();
+        void scaleSmoothingMoleculeForcesOuter();
+
+        [[nodiscard]] std::unordered_set<size_t> generateInactiveSmoothingMoleculeSet(
+            size_t bitPattern,
+            size_t totalMolecules
+        ) const;
+
+        [[nodiscard]] double calculateGlobalSmoothingFactor(
+            const std::unordered_set<size_t>& inactiveForInnerCalcMolecules
+        ) const;
+
        public:
         HybridMDEngine()           = default;
         ~HybridMDEngine() override = default;
