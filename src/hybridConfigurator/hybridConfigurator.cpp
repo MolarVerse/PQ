@@ -22,6 +22,7 @@
 
 #include "hybridConfigurator.hpp"
 
+#include <limits>          // for numeric_limits
 #include <unordered_set>   // for unordered_set
 
 #include "atom.hpp"             // for Atom
@@ -157,6 +158,8 @@ void HybridConfigurator::assignHybridZones(SimBox& simBox)
     const auto smoothingRegionThickness =
         HybridSettings::getSmoothingRegionThickness();
     const auto pointChargeThickness = HybridSettings::getPointChargeThickness();
+    const auto coreEpsilon = 10.0 * std::numeric_limits<double>::epsilon();
+    const bool coreEnabled = coreRadius > coreEpsilon;
 
     _molChangedZone = false;
 
@@ -191,7 +194,7 @@ void HybridConfigurator::assignHybridZones(SimBox& simBox)
             continue;
         }
 
-        if (com <= coreRadius)
+        if (coreEnabled && com <= coreRadius)
             setZone(mol, CORE);
         else if (com <= (layerRadius - smoothingRegionThickness))
             setZone(mol, LAYER);
