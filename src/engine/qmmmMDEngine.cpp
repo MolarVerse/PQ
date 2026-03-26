@@ -50,10 +50,8 @@ namespace engine
         moltypeCheck();
         _configurator.calculateSmoothingFactors(*_simulationBox);
 
-        // Set number of QM atoms in physical data for output purposes
-        setNumberOfQMAtoms();
-
         applySmoothing();
+
         combineInnerOuterForces();
         _configurator.shiftAtomsBackToInitialPositions(*_simulationBox);
     }
@@ -103,6 +101,7 @@ namespace engine
         auto       coulombEnergy    = 0.0;
         auto       nonCoulombEnergy = 0.0;
         auto       virial           = tensor3D{0.0};
+        auto       numQMAtoms       = 0.0;
         auto&      atoms            = _simulationBox->getAtoms();
         const auto nSmMol =
             distance(_simulationBox->getMoleculesInsideZone(SMOOTHING));
@@ -118,13 +117,16 @@ namespace engine
                 calculateGlobalSmoothingFactor(inactiveSmMol);
 
             // STEP 2: Setup and run QM calculation, accumulate QM forces and QM
-            // virial contribution
+            // virial contribution and the number of QM atoms for this
+            // combination
             _configurator.activateMolecules(*_simulationBox);
             _configurator.deactivateOuterMolecules(*_simulationBox);
             _configurator.deactivateSmoothingMolecules(
                 inactiveSmMol,
                 *_simulationBox
             );
+
+            numQMAtoms += _simulationBox->getNumberOfQMAtoms() * globalSmF;
 
             // to not carry over qm_charges of atoms which are not qm anymore
             for (auto& atom : _simulationBox->getAtoms())
@@ -174,11 +176,13 @@ namespace engine
                 _physicalData->getNonCoulombEnergy() * globalSmF;
         }
 
-        // STEP 5: Set energies and virial to their accumulated values
+        // STEP 5: Set energies, virial and numQMAtoms to their accumulated
+        // values
         _physicalData->setQMEnergy(qmEnergy);
         _physicalData->setCoulombEnergy(coulombEnergy);
         _physicalData->setNonCoulombEnergy(nonCoulombEnergy);
         _physicalData->setVirial(virial);
+        _physicalData->setNumberOfQMAtoms(numQMAtoms);
     }
 
     /**
@@ -200,6 +204,9 @@ namespace engine
 
         auto&    atoms  = _simulationBox->getAtoms();
         tensor3D virial = {0.0};
+
+        // Set number of QM atoms in physical data for output purposes
+        setNumberOfQMAtoms();
 
         // STEP 1: Setup and run QM calculation, scale forces of smoothing
         // molecules with smF
