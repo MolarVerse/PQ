@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## Next Release
 
+### Bug Fixes
+
+- Added unit conversion from fs to s in applyShake routine
+
 ### Build
 
 - Added mstd-0.0.2 as git submodule to external directory for future generalizations
