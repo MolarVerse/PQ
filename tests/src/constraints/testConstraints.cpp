@@ -77,20 +77,21 @@ TEST_F(TestConstraints, applyShake_converged)
             testing::DoubleNear(2.53669, 1e-5)
         )
     );
+
     EXPECT_THAT(
         _box->getMolecules()[0].getAtomVelocity(0),
         testing::ElementsAre(
-            testing::DoubleNear(0.0, 1e-5),
-            testing::DoubleNear(0.115827, 1e-5),
-            testing::DoubleNear(0.231654, 1e-5)
+            testing::DoubleNear(0.0, 1e10),
+            testing::DoubleNear(1.15827e14, 1e10),
+            testing::DoubleNear(2.31654e14, 1e10)
         )
     );
     EXPECT_THAT(
         _box->getMolecules()[0].getAtomVelocity(1),
         testing::ElementsAre(
-            testing::DoubleNear(1.0, 1e-5),
-            testing::DoubleNear(0.884173, 1e-5),
-            testing::DoubleNear(0.768346, 1e-5)
+            testing::DoubleNear(1.0, 1e10),
+            testing::DoubleNear(1.0 - 1.15827e14, 1e10),
+            testing::DoubleNear(1.0 - 2.31654e14, 1e10)
         )
     );
 }
