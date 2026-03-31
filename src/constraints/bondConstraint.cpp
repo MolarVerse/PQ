@@ -128,8 +128,8 @@ bool BondConstraint::applyShake(
         _molecules[0]->addAtomPosition(_atomIndices[0], +invMass1 * dPosition);
         _molecules[1]->addAtomPosition(_atomIndices[1], -invMass2 * dPosition);
 
-        const auto timeStep = TimingsSettings::getTimeStep();
-        const auto dVelocity = dPosition / (timeStep * _FS_TO_S_);
+        const auto timeStep  = TimingsSettings::getTimeStep() * _FS_TO_S_;
+        const auto dVelocity = dPosition / timeStep;
 
         _molecules[0]->addAtomVelocity(_atomIndices[0], +invMass1 * dVelocity);
         _molecules[1]->addAtomVelocity(_atomIndices[1], -invMass2 * dVelocity);
