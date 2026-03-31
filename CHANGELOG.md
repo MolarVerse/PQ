@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## Next Release
 
+<!-- insertion marker -->
+## [v0.6.4](https://github.com/MolarVerse/PQ/releases/tag/v0.6.4) - 2026-03-31
+
 ### Bug Fixes
 
 - Added unit conversion from fs to s in applyShake routine
@@ -12,8 +15,7 @@ All notable changes to this project will be documented in this file.
 
 - Added mstd-0.0.2 as git submodule to external directory for future generalizations
 
-<!-- insertion marker -->
-## [v0.6.3](https://github.com/MolarVerse/PQ/releases/tag/v0.6.2) - 2025-11-12
+## [v0.6.3](https://github.com/MolarVerse/PQ/releases/tag/v0.6.3) - 2025-11-12
 
 ### Bug Fixes
 
