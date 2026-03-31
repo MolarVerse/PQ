@@ -25,6 +25,7 @@
 #include <cmath>
 #include <vector>
 
+#include "constants/conversionFactors.hpp"
 #include "distanceKernels.hpp"
 #include "molecule.hpp"
 #include "simulationBox.hpp"
@@ -36,6 +37,7 @@ using namespace simulationBox;
 using namespace linearAlgebra;
 using namespace kernel;
 using namespace settings;
+using namespace constants;
 
 /**
  * @brief Constructor
@@ -126,7 +128,8 @@ bool BondConstraint::applyShake(
         _molecules[0]->addAtomPosition(_atomIndices[0], +invMass1 * dPosition);
         _molecules[1]->addAtomPosition(_atomIndices[1], -invMass2 * dPosition);
 
-        const auto dVelocity = dPosition / TimingsSettings::getTimeStep();
+        const auto timeStep  = TimingsSettings::getTimeStep() * _FS_TO_S_;
+        const auto dVelocity = dPosition / timeStep;
 
         _molecules[0]->addAtomVelocity(_atomIndices[0], +invMass1 * dVelocity);
         _molecules[1]->addAtomVelocity(_atomIndices[1], -invMass2 * dVelocity);

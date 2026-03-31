@@ -22,8 +22,8 @@
                         Stefan Seiwald
                         Benjamin Reitmair
 
-         Version:       v0.6.2-48c9c6bb
-         Compile date:  Aug 29 2025 14:42:18
+         Version:       v0.6.3-b13e4ab7
+         Compile date:  Mar 31 2026 10:42:10
 
 INFO:    Reading Moldescriptor File "moldescriptor.dat"
 
@@ -120,7 +120,7 @@ INFO:    Setup of Constraints
 INFO:    Initial momentum = 0.00000e+00 Å*amu/fs
 
 
-         Elapsed time = 22.83500 s
+         Elapsed time = 15.27100 s
 
 
 INFO:    For citation please refer to the ".ref" file.
