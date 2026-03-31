@@ -1,16 +1,16 @@
 Section                       	  Time [s]	  Time [%]
 ------------------------------	----------	----------
 
-Total                         	    22.835	   100.000
+Total                         	    15.271	   100.000
 
-Potential                     	    22.185	    97.153
-Output                        	     0.438	     1.918
-Setup                         	     0.112	     0.490
-Constraints                   	     0.071	     0.311
-Integrator                    	     0.007	     0.031
-Virial                        	     0.005	     0.022
-Physical Data                 	     0.004	     0.018
-IntraNonBonded                	     0.003	     0.013
+Potential                     	    14.866	    97.348
+Output                        	     0.253	     1.657
+Setup                         	     0.087	     0.570
+Constraints                   	     0.045	     0.295
+Integrator                    	     0.003	     0.020
+Physical Data                 	     0.003	     0.020
+IntraNonBonded                	     0.002	     0.013
+Virial                        	     0.002	     0.013
 Thermostat                    	     0.000	     0.000
 Cell List                     	     0.000	     0.000
 Manostat                      	     0.000	     0.000
@@ -22,46 +22,46 @@ Reset Kinetics                	     0.000	     0.000
 Section                       	  Time [s]	  Time [%]	  RelT [%]
 ------------------------------	----------	----------	----------
 
-Total                         	    22.835	   100.000	   100.000
+Total                         	    15.271	   100.000	   100.000
 
-Potential                     	    22.185	    97.153	   100.000
-InterNonBonded                	    22.185	   100.000	   100.002
+Potential                     	    14.866	    97.348	   100.000
+InterNonBonded                	    14.866	   100.000	   100.002
 
-Output                        	     0.438	     1.918	   100.000
-TrajectoryOutput              	     0.229	   100.000	    52.227
-RstFileOutput                 	     0.207	   100.000	    47.288
-InfoOutput                    	     0.003	   100.000	     0.715
-VirialOutput                  	     0.000	   100.000	     0.051
-EnergyOutput                  	     0.000	   100.000	     0.036
-MomentumOutput                	     0.000	   100.000	     0.022
-InstantEnergyOutput           	     0.000	   100.000	     0.021
-BoxFileOutput                 	     0.000	   100.000	     0.020
-StressOutput                  	     0.000	   100.000	     0.018
+Output                        	     0.253	     1.657	   100.000
+TrajectoryOutput              	     0.138	   100.000	    54.365
+RstFileOutput                 	     0.117	   100.000	    46.071
+InfoOutput                    	     0.001	   100.000	     0.334
+VirialOutput                  	     0.000	   100.000	     0.060
+EnergyOutput                  	     0.000	   100.000	     0.048
+InstantEnergyOutput           	     0.000	   100.000	     0.032
+MomentumOutput                	     0.000	   100.000	     0.032
+StressOutput                  	     0.000	   100.000	     0.031
+BoxFileOutput                 	     0.000	   100.000	     0.027
 
-Setup                         	     0.112	     0.490	   100.000
-TotalSetup                    	     0.112	   100.000	   100.316
+Setup                         	     0.087	     0.570	   100.000
+TotalSetup                    	     0.088	   100.000	   101.041
 
-Constraints                   	     0.071	     0.311	   100.000
-Rattle                        	     0.059	   100.000	    82.998
-Shake                         	     0.010	   100.000	    13.520
-Reference Bond Data           	     0.004	   100.000	     6.063
+Constraints                   	     0.045	     0.295	   100.000
+Rattle                        	     0.038	   100.000	    85.312
+Shake                         	     0.006	   100.000	    14.030
+Reference Bond Data           	     0.002	   100.000	     3.616
 
-Integrator                    	     0.007	     0.031	   100.000
-Velocity Verlet - First Step  	     0.006	   100.000	    88.810
-Velocity Verlet - Second Step 	     0.002	   100.000	    24.633
+Integrator                    	     0.003	     0.020	   100.000
+Velocity Verlet - First Step  	     0.003	   100.000	   114.174
+Velocity Verlet - Second Step 	     0.001	   100.000	    28.502
 
-Virial                        	     0.005	     0.022	   100.000
-Virial                        	     0.003	   100.000	    67.607
-IntraMolecular Correction     	     0.003	   100.000	    56.709
+Physical Data                 	     0.003	     0.020	   100.000
+Calc Kinetics                 	     0.004	   100.000	   119.032
 
-Physical Data                 	     0.004	     0.018	   100.000
-Calc Kinetics                 	     0.005	   100.000	   123.559
+IntraNonBonded                	     0.002	     0.013	   100.000
+IntraNonBonded                	     0.002	   100.000	   116.569
 
-IntraNonBonded                	     0.003	     0.013	   100.000
-IntraNonBonded                	     0.003	   100.000	   112.114
+Virial                        	     0.002	     0.013	   100.000
+IntraMolecular Correction     	     0.002	   100.000	    86.236
+Virial                        	     0.002	   100.000	    84.914
 
 Thermostat                    	     0.000	     0.000	   100.000
-Calc Temperature              	     0.001	   100.000	       inf
+Calc Temperature              	     0.000	   100.000	       inf
 
 Manostat                      	     0.000	     0.000	   100.000
 Calc Pressure                 	     0.000	   100.000	       inf
