@@ -510,6 +510,15 @@ void QMSettings::setUseDispersionCorrection(const bool useDispersionCorr)
 }
 
 /**
+ * @brief sets if the net force should be removed after reading in the QM forces
+ *
+ */
+void QMSettings::setRemoveNetForce(const bool removeNetForce)
+{
+    _removeNetForce = removeNetForce;
+}
+
+/**
  * @brief sets the qmLoopTimeLimit in settings
  *
  * @param time
@@ -613,6 +622,14 @@ std::unordered_map<std::string, double> QMSettings::getHubbardDerivs()
  * @return bool
  */
 bool QMSettings::useDispersionCorr() { return _useDispersionCorrection; }
+
+/**
+ * @brief returns if the net force should be removed after reading in the QM
+ * forces
+ *
+ * @return bool
+ */
+bool QMSettings::getRemoveNetForce() { return _removeNetForce; }
 
 /**
  * @brief returns the xTBMethod

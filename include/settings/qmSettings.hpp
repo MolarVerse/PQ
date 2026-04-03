@@ -129,6 +129,7 @@ namespace settings
         static inline std::string _slakosPath       = "";
 
         static inline bool _useDispersionCorrection = false;
+        static inline bool _removeNetForce          = false;
         static inline bool _useThirdOrderDftb       = false;
         static inline bool _isThirdOrderDftbSet     = false;
         static inline bool _isHubbardDerivsSet      = false;
@@ -163,6 +164,7 @@ namespace settings
         static void setSlakosPath(const std::string_view &path);
 
         static void setUseDispersionCorrection(const bool use);
+        static void setRemoveNetForce(const bool use);
         static void setUseThirdOrderDftb(const bool use);
         static void setIsThirdOrderDftbSet(const bool isThirdOrderDftbSet);
         static void setHubbardDerivs(
@@ -191,6 +193,7 @@ namespace settings
         [[nodiscard]] static std::string getSlakosPath();
 
         [[nodiscard]] static bool useDispersionCorr();
+        [[nodiscard]] static bool getRemoveNetForce();
         [[nodiscard]] static bool useThirdOrderDftb();
         [[nodiscard]] static bool isThirdOrderDftbSet();
         [[nodiscard]] static std::unordered_map<std::string, double> getHubbardDerivs(
