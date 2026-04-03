@@ -130,6 +130,38 @@ TEST_F(TestInputFileReader, parseDispersion)
     )
 }
 
+TEST_F(TestInputFileReader, parseRemoveNetForce)
+{
+    EXPECT_FALSE(QMSettings::getRemoveNetForce());
+
+    auto parser = QMInputParser(*_engine);
+    parser.parseRemoveNetForce({"remove_net_force", "=", "true"}, 0);
+    EXPECT_TRUE(QMSettings::getRemoveNetForce());
+
+    parser.parseRemoveNetForce({"remove_net_force", "=", "yes"}, 0);
+    EXPECT_TRUE(QMSettings::getRemoveNetForce());
+
+    parser.parseRemoveNetForce({"remove_net_force", "=", "on"}, 0);
+    EXPECT_TRUE(QMSettings::getRemoveNetForce());
+
+    parser.parseRemoveNetForce({"remove_net_force", "=", "false"}, 0);
+    EXPECT_FALSE(QMSettings::getRemoveNetForce());
+
+    parser.parseRemoveNetForce({"remove_net_force", "=", "no"}, 0);
+    EXPECT_FALSE(QMSettings::getRemoveNetForce());
+
+    parser.parseRemoveNetForce({"remove_net_force", "=", "off"}, 0);
+    EXPECT_FALSE(QMSettings::getRemoveNetForce());
+
+    ASSERT_THROW_MSG(
+        parser.parseRemoveNetForce({"remove_net_force", "=", "notABool"}, 0),
+        InputFileException,
+        "Invalid boolean option \"notABool\" for keyword \"remove_net_force\" "
+        "in input file.\n"
+        "Possible values are: on, yes, true, off, no, false."
+    )
+}
+
 TEST_F(TestInputFileReader, parseMaceQMMethod)
 {
     using enum QMMethod;

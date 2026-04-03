@@ -1373,6 +1373,22 @@ With the ``dispersion`` keyword the user can activate the dispersion correction 
 
 .. centered:: *default value* = false
 
+.. _removeNetForceKey:
+
+Remove Net Force
+=================
+
+.. admonition:: Key
+    :class: tip
+
+    remove_net_force = {bool} -> false
+
+With the ``remove_net_force`` keyword the user can request the removal of the net force after reading in forces from the QM program.
+Removal is achieved by distributing the total net force evenly across all atoms in the system.
+This can increase momentum conservation when using a QM program with limited numerical precision.
+
+.. centered:: *default value* = false
+
 .. _maceModelSizeKey:
 
 MACE Model Size

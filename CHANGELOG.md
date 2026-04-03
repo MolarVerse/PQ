@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## Next Release
 
+### Enhancements
+
+- Add keyword "remove_net_force" for removing total net force when reading in 
+  forces from QM calculations
+
 <!-- insertion marker -->
 ## [v0.6.4](https://github.com/MolarVerse/PQ/releases/tag/v0.6.4) - 2026-03-31
 
