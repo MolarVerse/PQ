@@ -771,3 +771,22 @@ void SimulationBox::resetQMCharges()
 
     std::ranges::for_each(_atoms, reset);
 }
+
+/**
+ * @brief Remove net force from the system
+ *
+ * @details Computes the total force vector, distributes the opposite mean
+ * force equally to all atoms, and thereby enforces zero total force.
+ */
+void SimulationBox::removeNetForce()
+{
+    const auto nAtoms = getNumberOfAtoms();
+
+    if (nAtoms == 0)
+        return;
+
+    const auto correctionForce =
+        -calculateTotalForceVector() / static_cast<double>(nAtoms);
+
+    for (auto& atom : getAtoms()) atom->addForce(correctionForce);
+}
