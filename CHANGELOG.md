@@ -26,6 +26,7 @@ All notable changes to this project will be documented in this file.
 
 - Fixed segfault when setting force-field to "bonded"
 - Eigen version finally fixed to 5.0.0 (latest aka master broken on 28.09.25)
+- Fix problems with convergence and indices in MShake
 
 ### Enhancements
 

@@ -129,7 +129,7 @@ void MShake::initMShakeReferences()
  * @param simBox
  *
  */
-void MShake::applyMShake(const double shakeTolerance, SimulationBox &simBox)
+void MShake::applyMShake(const double shakeTolerance, const size_t shakeIterations, SimulationBox &simBox)
 {
     auto &molecules = simBox.getMolecules();
 
@@ -212,10 +212,14 @@ void MShake::applyMShake(const double shakeTolerance, SimulationBox &simBox)
                 ++index_ij;
             }
 
+        size_t iteration = 0;
+
         while (true)
         {
             auto converged = true;
             index_ij       = 0;
+
+            iteration++;
 
             /*****************************************
              * fill (nBonds x nBonds) m-Shake matrix *
@@ -232,7 +236,7 @@ void MShake::applyMShake(const double shakeTolerance, SimulationBox &simBox)
 
                     for (size_t k = 0; k < nAtoms - 1; ++k)
                     {
-                        for (size_t l = 0; l < nAtoms - 1; ++l)
+                        for (size_t l = k + 1; l < nAtoms; ++l)
                         {
                             const auto mShakeElement = calcMatrixElement(
                                 {i, j, k, l},
@@ -331,8 +335,19 @@ void MShake::applyMShake(const double shakeTolerance, SimulationBox &simBox)
                 }
             }
 
-            if (!converged)
+            if (converged)
                 break;
+
+            if (iteration >= shakeIterations)
+            {
+                throw customException::MShakeException(
+                    std::format(
+                        "M-Shake did not converge within {} iterations for molecule type {}",
+                        shakeIterations,
+                        moltype
+                    )
+                );
+            }
         }
 
         for (size_t i = 0; i < nAtoms; ++i)
