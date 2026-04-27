@@ -26,6 +26,7 @@
 #include <format>       // for format
 #include <functional>   // for _Bind_front_t, bind_front
 
+#include "SPCIntraWater.hpp"          // for SPCIntraWater models
 #include "engine.hpp"                 // for Engine
 #include "exceptions.hpp"             // for InputFileException, customException
 #include "forceFieldClass.hpp"        // for ForceField
@@ -42,6 +43,7 @@ using namespace customException;
 using namespace settings;
 using namespace utilities;
 using namespace potential;
+using namespace waterModel;
 
 /**
  * @brief Construct a new Input File Parser Force Field:: Input File Parser
@@ -192,7 +194,10 @@ void MMInputParser::parseWaterIntraModel(
     const auto waterIntraModel = toLowerAndReplaceDashesCopy(lineElements[2]);
 
     if (waterIntraModel == "spc_fw")
+    {
         WaterModelSettings::setWaterIntraModel(SPC_FW);
+        _engine.makeIntraWater(SPCFwIntraParam{});
+    }
     else
         throw InputFileException(format(
             "Invalid water_intra keyword \"{}\" at line {} "

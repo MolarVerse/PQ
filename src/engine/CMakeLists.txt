@@ -31,6 +31,7 @@ add_library(engine
 target_include_directories(engine
     PUBLIC
     ${PROJECT_SOURCE_DIR}/include/engine
+    ${PROJECT_SOURCE_DIR}/include/waterModels/intra
     PRIVATE
     ${PROJECT_SOURCE_DIR}/external/progressbar/include
 )

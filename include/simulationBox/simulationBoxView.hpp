@@ -349,32 +349,23 @@ namespace simulationBox
     template <typename Derived>
     auto SimulationBoxView<Derived>::getWaterTypeMolecules()
     {
-        const auto waterType = static_cast<Derived&>(*this).getWaterType();
-
-        if (!waterType.has_value())
-            return getMolecules() |
-                   pqviews::filter([](auto& mol) { return false; });
-
-        const auto waterTypeValue = waterType.value();
         return getMolecules() |
-               pqviews::filter([waterTypeValue](auto& mol)
-                               { return mol.getMoltype() == waterTypeValue; });
+               pqviews::filter(
+                   [waterType =
+                        static_cast<Derived&>(*this).getWaterType()](auto& mol)
+                   { return waterType && mol.getMoltype() == *waterType; }
+               );
     }
 
     template <typename Derived>
     auto SimulationBoxView<Derived>::getWaterTypeMolecules() const
     {
-        const auto waterType =
-            static_cast<const Derived&>(*this).getWaterType();
-
-        if (!waterType.has_value())
-            return getMolecules() |
-                   pqviews::filter([](const auto& mol) { return false; });
-
-        const auto waterTypeValue = waterType.value();
         return getMolecules() |
-               pqviews::filter([waterTypeValue](const auto& mol)
-                               { return mol.getMoltype() == waterTypeValue; });
+               pqviews::filter(
+                   [waterType = static_cast<const Derived&>(*this).getWaterType(
+                    )](const auto& mol)
+                   { return waterType && mol.getMoltype() == *waterType; }
+               );
     }
 
 }   // namespace simulationBox

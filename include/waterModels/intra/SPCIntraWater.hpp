@@ -24,10 +24,10 @@
 
 #define _SPC_INTRA_WATER_HPP_
 
-#include "conversionFactors.hpp"   // for constants
-#include "intraWater.hpp"          // for IntraWater
-#include "physicalData.hpp"        // for PhysicalData
-#include "simulationBox.hpp"       // for SimulationBox
+#include "constants/conversionFactors.hpp"   // for constants
+#include "intraWater.hpp"                    // for IntraWater
+#include "physicalData.hpp"                  // for PhysicalData
+#include "simulationBox.hpp"                 // for SimulationBox
 #include "typeAliases.hpp"
 
 using namespace constants;

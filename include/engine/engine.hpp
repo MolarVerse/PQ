@@ -33,6 +33,7 @@
 #include "forceFieldClass.hpp"
 #include "globalTimer.hpp"
 #include "intraNonBonded.hpp"
+#include "intraWater.hpp"
 #include "molecularVirial.hpp"
 #include "physicalData.hpp"
 #include "potential.hpp"
@@ -79,6 +80,7 @@ namespace engine
         pq::SharedIntraNonBond _intraNonBonded = std::make_shared<pq::IntraNonBond>();
         pq::SharedForceField   _forceField     = std::make_shared<pq::ForceField>();
         pq::SharedConstraints  _constraints    = std::make_shared<pq::Constraints>();
+        pq::UniqueIntraWater   _intraWater     = std::make_unique<pq::IntraWater>();
         // clang-format on
 
 #ifdef WITH_KOKKOS
@@ -173,6 +175,8 @@ namespace engine
         void makePotential(T);
         template <typename T>
         void makeVirial(T virial);
+        template <typename T>
+        void makeIntraWater(T);
 
         /********************************
          * standard getters and setters *

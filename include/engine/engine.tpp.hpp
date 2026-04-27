@@ -53,6 +53,18 @@ namespace engine
     {
         _virial = std::make_unique<T>(virial);
     }
+
+    /**
+     * @brief make unique_ptr for waterIntra
+     *
+     * @tparam T
+     */
+    template <typename T>
+    inline void Engine::makeIntraWater(T intraWaterModel)
+    {
+        _intraWater = std::make_unique<T>(intraWaterModel);
+    }
+
 }   // namespace engine
 
 #endif   // _ENGINE_TPP_

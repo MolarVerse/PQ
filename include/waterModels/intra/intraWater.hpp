@@ -33,7 +33,9 @@ namespace waterModel
     class IntraWater
     {
        public:
-        virtual void calculate(pq::SimBox &, pq::PhysicalData &) = 0;
+        virtual ~IntraWater() = default;
+
+        virtual void calculate(pq::SimBox &, pq::PhysicalData &) {}
     };
 
 }   // namespace waterModel

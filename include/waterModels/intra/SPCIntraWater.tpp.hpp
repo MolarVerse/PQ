@@ -32,6 +32,9 @@
 #include "simulationBox.hpp"    // for SimulationBox
 #include "vector3d.hpp"         // for Vector3D, norm, operator*, Vec3D
 
+using namespace settings;
+using namespace simulationBox;
+
 template <class Derived>
 void waterModel::SPCIntraWater<Derived>::calculate(
     pq::SimBox&       box,
@@ -87,6 +90,7 @@ void waterModel::SPCIntraWater<Derived>::calculate(
         oxygen.addForce(forceOH2);
         hydrogen2.addForce(-forceOH2);
 
+        using enum HybridZone;
         using enum SmoothingMethod;
 
         auto       smF       = 0.0;
@@ -95,8 +99,8 @@ void waterModel::SPCIntraWater<Derived>::calculate(
         if (smoothing == HOTSPOT && water.getHybridZone() == SMOOTHING)
             smF = water.getSmoothingFactor();
 
-        physicalData.addVirial(tensorProduct(distOH1, forceOH1) * (1 - smF));
-        physicalData.addVirial(tensorProduct(distOH2, forceOH2) * (1 - smF));
+        physicalData.addVirial(tensorProduct(dOH1, forceOH1) * (1 - smF));
+        physicalData.addVirial(tensorProduct(dOH2, forceOH2) * (1 - smF));
 
         const auto alpha      = angle(dOH1, dOH2);
         const auto deltaAngle = alpha - eqHOHAngle;
