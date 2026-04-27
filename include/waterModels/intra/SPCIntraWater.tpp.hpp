@@ -26,10 +26,11 @@
 
 #include <cmath>   // for sin
 
-#include "SPCIntraWater.hpp"   // for SPCIntraWater
-#include "physicalData.hpp"    // for PhysicalData
-#include "simulationBox.hpp"   // for SimulationBox
-#include "vector3d.hpp"        // for Vector3D, norm, operator*, Vec3D
+#include "SPCIntraWater.hpp"    // for SPCIntraWater
+#include "hybridSettings.hpp"   // for HybridSettings
+#include "physicalData.hpp"     // for PhysicalData
+#include "simulationBox.hpp"    // for SimulationBox
+#include "vector3d.hpp"         // for Vector3D, norm, operator*, Vec3D
 
 template <class Derived>
 void waterModel::SPCIntraWater<Derived>::calculate(
@@ -86,8 +87,12 @@ void waterModel::SPCIntraWater<Derived>::calculate(
         oxygen.addForce(forceOH2);
         hydrogen2.addForce(-forceOH2);
 
-        auto smF = 0.0;
-        if (water.getHybridZone() == SMOOTHING)
+        using enum SmoothingMethod;
+
+        auto       smF       = 0.0;
+        const auto smoothing = HybridSettings::getSmoothingMethod();
+
+        if (smoothing == HOTSPOT && water.getHybridZone() == SMOOTHING)
             smF = water.getSmoothingFactor();
 
         physicalData.addVirial(tensorProduct(distOH1, forceOH1) * (1 - smF));

@@ -24,10 +24,13 @@
 
 #define _SPC_INTRA_WATER_HPP_
 
-#include "intraWater.hpp"      // for IntraWater
-#include "physicalData.hpp"    // for PhysicalData
-#include "simulationBox.hpp"   // for SimulationBox
+#include "conversionFactors.hpp"   // for constants
+#include "intraWater.hpp"          // for IntraWater
+#include "physicalData.hpp"        // for PhysicalData
+#include "simulationBox.hpp"       // for SimulationBox
 #include "typeAliases.hpp"
+
+using namespace constants;
 
 namespace waterModel
 {
@@ -41,10 +44,12 @@ namespace waterModel
     class SPCFwIntraParam : public SPCIntraWater<SPCFwIntraParam>
     {
        private:
-        static constexpr auto _eqOHDistance          = 1.012;
-        static constexpr auto _eqHOHAngle            = 113.24;
-        static constexpr auto _forceConstantOHBond   = 1059.162;
-        static constexpr auto _forceConstantHOHAngle = 75.9;
+        static constexpr auto _eqOHDistance = 1.012;                 // Angström
+        static constexpr auto _eqHOHAngle = 113.24 * _DEG_TO_RAD_;   // radians
+        static constexpr auto _forceConstantOHBond =
+            1059.162;   // kcal mol^-1 Angström^-2
+        static constexpr auto _forceConstantHOHAngle =
+            75.9;   // kcal mol^-1 rad^-2
 
         friend class SPCIntraWater<SPCFwIntraParam>;
     };
@@ -52,10 +57,12 @@ namespace waterModel
     class qSPCFwIntraParam : public SPCIntraWater<qSPCFwIntraParam>
     {
        private:
-        static constexpr auto _eqOHDistance          = 1.0;
-        static constexpr auto _eqHOHAngle            = 112.0;
-        static constexpr auto _forceConstantOHBond   = 1059.162;
-        static constexpr auto _forceConstantHOHAngle = 75.9;
+        static constexpr auto _eqOHDistance = 1.0;   // Angström
+        static constexpr auto _eqHOHAngle   = 112.0 * _DEG_TO_RAD_;   // radians
+        static constexpr auto _forceConstantOHBond =
+            1059.162;   // kcal mol^-1 Angström^-2
+        static constexpr auto _forceConstantHOHAngle =
+            75.9;   // kcal mol^-1 rad^-2
 
         friend class SPCIntraWater<qSPCFwIntraParam>;
     };
