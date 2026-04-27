@@ -24,7 +24,7 @@
 
 #define _SPC_INTRA_WATER_HPP_
 
-#include "intraWater.hpp"
+#include "intraWater.hpp"      // for IntraWater
 #include "physicalData.hpp"    // for PhysicalData
 #include "simulationBox.hpp"   // for SimulationBox
 #include "typeAliases.hpp"

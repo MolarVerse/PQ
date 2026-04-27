@@ -26,7 +26,7 @@
 
 #include <cmath>   // for sin
 
-#include "SPCIntraWater.hpp"
+#include "SPCIntraWater.hpp"   // for SPCIntraWater
 #include "physicalData.hpp"    // for PhysicalData
 #include "simulationBox.hpp"   // for SimulationBox
 #include "vector3d.hpp"        // for Vector3D, norm, operator*, Vec3D
