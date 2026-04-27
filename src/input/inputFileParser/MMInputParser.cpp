@@ -191,13 +191,13 @@ void MMInputParser::parseWaterIntraModel(
 
     const auto waterIntraModel = toLowerAndReplaceDashesCopy(lineElements[2]);
 
-    if (waterIntraModel == "spc/fw")
+    if (waterIntraModel == "spc_fw")
         WaterModelSettings::setWaterIntraModel(SPC_FW);
     else
         throw InputFileException(format(
             "Invalid water_intra keyword \"{}\" at line {} "
             "in input file\n"
-            "Possible options are \"SPC/Fw\"",
+            "Possible options are \"SPC_Fw\"",
             lineElements[2],
             lineNumber
         ));
@@ -227,13 +227,13 @@ void MMInputParser::parseWaterInterModel(
 
     const auto waterInterModel = toLowerAndReplaceDashesCopy(lineElements[2]);
 
-    if (waterInterModel == "spc/fw")
+    if (waterInterModel == "spc_fw")
         WaterModelSettings::setWaterInterModel(SPC_FW);
     else
         throw InputFileException(format(
             "Invalid water_inter keyword \"{}\" at line {} "
             "in input file\n"
-            "Possible options are \"SPC/Fw\"",
+            "Possible options are \"SPC_Fw\"",
             lineElements[2],
             lineNumber
         ));

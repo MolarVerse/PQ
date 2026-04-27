@@ -84,7 +84,7 @@ void WaterModelSettings::setWaterIntraModel(const std::string_view &model)
     using enum WaterIntraModel;
     const auto waterModel = toLowerAndReplaceDashesCopy(model);
 
-    if ("spc/fw" == waterModel)
+    if ("spc_fw" == waterModel)
         _waterIntraModel = SPC_FW;
     else
         throw UserInputException(
@@ -112,7 +112,7 @@ void WaterModelSettings::setWaterInterModel(const std::string_view &model)
     using enum WaterInterModel;
     const auto waterModel = toLowerAndReplaceDashesCopy(model);
 
-    if ("spc/fw" == waterModel)
+    if ("spc_fw" == waterModel)
         _waterInterModel = SPC_FW;
     else
         throw UserInputException(
