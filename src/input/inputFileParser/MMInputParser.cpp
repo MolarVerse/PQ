@@ -204,12 +204,21 @@ void MMInputParser::parseWaterIntraModel(
         _engine.makeIntraWater(qSPCFwIntraParam{});
     }
     else if (waterIntraModel == "tip3p")
+    {
         WaterModelSettings::setWaterIntraModel(TIP3P);
+        _engine.getConstraints().activateShake();
+    }
+    else if (waterIntraModel == "opc3")
+    {
+        WaterModelSettings::setWaterIntraModel(OPC3);
+        _engine.getConstraints().activateShake();
+    }
     else
         throw InputFileException(format(
             "Invalid water_intra keyword \"{}\" at line {} "
             "in input file\n"
-            "Possible options are \"SPC_Fw\", \"qSPC_Fw\" and \"TIP3P\"",
+            "Possible options are \"SPC_Fw\", \"qSPC_Fw\", \"TIP3P\" and "
+            "\"OPC3\"",
             lineElements[2],
             lineNumber
         ));
@@ -245,11 +254,13 @@ void MMInputParser::parseWaterInterModel(
         WaterModelSettings::setWaterInterModel(QSPC_FW);
     else if (waterInterModel == "tip3p")
         WaterModelSettings::setWaterInterModel(TIP3P);
+    else if (waterInterModel == "opc3")
+        WaterModelSettings::setWaterInterModel(OPC3);
     else
         throw InputFileException(format(
             "Invalid water_inter keyword \"{}\" at line {} "
             "in input file\n"
-            "Possible options are \"SPC_Fw\", \"qSPC_Fw\" and \"TIP3P\"",
+            "Possible options are \"SPC_Fw\", \"qSPC_Fw\", \"TIP3P\" and \"OPC3\"",
             lineElements[2],
             lineNumber
         ));

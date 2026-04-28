@@ -24,10 +24,19 @@
 
 #define _WATER_MODEL_SETUP_HPP_
 
+#include <optional>
+
 #include "typeAliases.hpp"
+#include "waterModelSettings.hpp"
 
 namespace setup
 {
+    struct RigidWaterGeometry
+    {
+        double dOH{0.0};
+        double dHH{0.0};
+    };
+
     void setupWaterModel(pq::Engine &);
 
     /**
@@ -41,11 +50,16 @@ namespace setup
        private:
         pq::MDEngine &_engine;
 
+        void checkTopologyFile();
+        void shakeSetupForRigidWater(const RigidWaterGeometry &geometry);
+        [[nodiscard]] std::optional<RigidWaterGeometry> getRigidWaterGeometry(
+            const settings::WaterIntraModel intraModel
+        );
+
        public:
         explicit WaterModelSetup(pq::MDEngine &engine);
 
         void setup();
-        void checkTopologyFile();
     };
 
 }   // namespace setup

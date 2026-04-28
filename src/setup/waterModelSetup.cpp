@@ -23,8 +23,10 @@
 #include "waterModelSetup.hpp"
 
 #include <format>
+#include <optional>
 #include <unordered_set>
 
+#include "bondConstraint.hpp"       // for BondConstraint
 #include "engine.hpp"               // for Engine
 #include "exceptions.hpp"           // for customException
 #include "fileSettings.hpp"         // for FileSettings
@@ -32,10 +34,11 @@
 #include "molecule.hpp"             // for Molecule
 #include "waterModelSettings.hpp"   // for WaterModelSettings
 
-using namespace setup;
-using namespace settings;
-using namespace engine;
+using namespace constraints;
 using namespace customException;
+using namespace engine;
+using namespace settings;
+using namespace setup;
 
 /**
  * @brief wrapper for water model setup
@@ -94,6 +97,11 @@ void WaterModelSetup::setup()
         ));
 
     checkTopologyFile();
+
+    if (const auto geometry =
+            getRigidWaterGeometry(WaterModelSettings::getWaterIntraModel());
+        geometry.has_value())
+        shakeSetupForRigidWater(geometry.value());
 
     _engine.getLogOutput().writeSetupInfo(
         std::format(
@@ -176,5 +184,43 @@ void WaterModelSetup::checkTopologyFile()
             ));
 
         ++angleIndex;
+    }
+}
+
+std::optional<RigidWaterGeometry> WaterModelSetup::getRigidWaterGeometry(
+    const WaterIntraModel intraModel
+)
+{
+    switch (intraModel)
+    {
+        case WaterIntraModel::TIP3P: return RigidWaterGeometry{0.9572, 1.5139};
+        case WaterIntraModel::OPC3:
+            return RigidWaterGeometry{0.97888, 1.598492306};
+        default: return std::nullopt;
+    }
+}
+
+void WaterModelSetup::shakeSetupForRigidWater(
+    const RigidWaterGeometry &geometry
+)
+{
+    const auto   dOH     = geometry.dOH;
+    const auto   dHH     = geometry.dHH;
+    const size_t OIndex  = 0;
+    const size_t H1Index = 1;
+    const size_t H2Index = 2;
+
+    for (auto &waterMol : _engine.getSimulationBox().getWaterTypeMolecules())
+    {
+        auto bondConstraintOH1 =
+            BondConstraint(&waterMol, &waterMol, OIndex, H1Index, dOH);
+        auto bondConstraintOH2 =
+            BondConstraint(&waterMol, &waterMol, OIndex, H2Index, dOH);
+        auto bondConstraintHH =
+            BondConstraint(&waterMol, &waterMol, H1Index, H2Index, dHH);
+
+        _engine.getConstraints().addBondConstraint(bondConstraintOH1);
+        _engine.getConstraints().addBondConstraint(bondConstraintOH2);
+        _engine.getConstraints().addBondConstraint(bondConstraintHH);
     }
 }
