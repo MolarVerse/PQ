@@ -73,7 +73,7 @@ void WaterModelSetup::setup()
         ));
 
     const auto water =
-        _engine.getSimulationBox().getMoleculeType(waterType.value());
+        _engine.getSimulationBox().findMoleculeType(waterType.value());
 
     // water atoms have to be in this order for calculation
     if (water.getAtomNames() != pq::strings{"O", "H", "H"})
