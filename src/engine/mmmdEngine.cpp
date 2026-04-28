@@ -68,4 +68,6 @@ void MMMDEngine::calculateForces()
     _virial->calculateVirial(*_simulationBox, *_physicalData);
 
     _forceField->calculateBondedInteractions(*_simulationBox, *_physicalData);
+
+    _intraWater->calculate(*_simulationBox, *_physicalData);
 }

@@ -164,6 +164,8 @@ namespace engine
                 *_physicalData
             );
 
+            _intraWater->calculate(*_simulationBox, *_physicalData);
+
             virial += _physicalData->getVirial() * globalSmF;
             virial += _virial->intraMolecularVirialCorrection(*_simulationBox) *
                       globalSmF;
@@ -269,6 +271,8 @@ namespace engine
             *_simulationBox,
             *_physicalData
         );
+
+        _intraWater->calculate(*_simulationBox, *_physicalData);
 
         scaleSmoothingMoleculeForcesOuter();
         virial += _physicalData->getVirial();

@@ -48,6 +48,9 @@ void waterModel::SPCIntraWater<Derived>::calculate(
 
     for (auto& water : box.getWaterTypeMolecules())
     {
+        if (!water.isActive())
+            continue;
+
         auto& oxygen    = water.getAtom(0);
         auto& hydrogen1 = water.getAtom(1);
         auto& hydrogen2 = water.getAtom(2);
