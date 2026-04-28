@@ -88,7 +88,28 @@ void WaterModelSetup::setup()
             "order: O (oxygen), H (hydrogen), H (hydrogen)."
         ));
 
+    if (Settings::isQMOnlyJobtype())
+        throw(UserInputException(
+            "Water models are not supported for QM-only job types."
+        ));
+
     checkTopologyFile();
+
+    _engine.getLogOutput().writeSetupInfo(
+        std::format(
+            "Intramolecular water model: {}",
+            string(WaterModelSettings::getWaterIntraModel())
+        )
+    );
+
+    _engine.getLogOutput().writeSetupInfo(
+        std::format(
+            "Intermolecular water model: {}",
+            string(WaterModelSettings::getWaterInterModel())
+        )
+    );
+
+    _engine.getLogOutput().writeEmptyLine();
 }
 
 void WaterModelSetup::checkTopologyFile()
