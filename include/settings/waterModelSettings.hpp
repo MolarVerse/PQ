@@ -37,7 +37,8 @@ namespace settings
     {
         NONE,
         SPC_FW,
-        QSPC_FW
+        QSPC_FW,
+        TIP3P
     };
 
     [[nodiscard]] std::string string(const WaterIntraModel &waterIntraModel);
@@ -49,7 +50,8 @@ namespace settings
     {
         NONE,
         SPC_FW,
-        QSPC_FW
+        QSPC_FW,
+        TIP3P
     };
 
     [[nodiscard]] std::string string(const WaterInterModel &waterInterModel);

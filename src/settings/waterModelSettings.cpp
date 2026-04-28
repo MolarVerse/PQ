@@ -86,6 +86,10 @@ void WaterModelSettings::setWaterIntraModel(const std::string_view &model)
 
     if ("spc_fw" == waterModel)
         _waterIntraModel = SPC_FW;
+    else if ("qspc_fw" == waterModel)
+        _waterIntraModel = QSPC_FW;
+    else if ("tip3p" == waterModel)
+        _waterIntraModel = TIP3P;
     else
         throw UserInputException(
             std::format("Water intra model \"{}\" not recognized", model)
@@ -114,6 +118,10 @@ void WaterModelSettings::setWaterInterModel(const std::string_view &model)
 
     if ("spc_fw" == waterModel)
         _waterInterModel = SPC_FW;
+    else if ("qspc_fw" == waterModel)
+        _waterInterModel = QSPC_FW;
+    else if ("tip3p" == waterModel)
+        _waterInterModel = TIP3P;
     else
         throw UserInputException(
             std::format("Water inter model \"{}\" not recognized", model)
@@ -138,6 +146,7 @@ std::string settings::string(const WaterIntraModel &waterIntraModel)
 
         case SPC_FW: return "SPC/Fw";
         case QSPC_FW: return "qSPC/Fw";
+        case TIP3P: return "TIP3P";
 
         default: return "none";
     }
@@ -151,6 +160,7 @@ std::string settings::string(const WaterInterModel &waterInterModel)
 
         case SPC_FW: return "SPC/Fw";
         case QSPC_FW: return "qSPC/Fw";
+        case TIP3P: return "TIP3P";
 
         default: return "none";
     }
