@@ -45,6 +45,7 @@ namespace setup
         explicit WaterModelSetup(pq::MDEngine &engine);
 
         void setup();
+        void checkTopologyFile();
     };
 
 }   // namespace setup

@@ -25,6 +25,7 @@
 #define _WATER_MODEL_SETTINGS_HPP_
 
 #include <cstddef>       // for size_t
+#include <string>        // for string
 #include <string_view>   // for string_view
 
 namespace settings
@@ -38,6 +39,8 @@ namespace settings
         SPC_FW
     };
 
+    [[nodiscard]] std::string string(const WaterIntraModel &waterIntraModel);
+
     /**
      * @brief Enum for intermolecular water model types
      */
@@ -46,6 +49,8 @@ namespace settings
         NONE,
         SPC_FW
     };
+
+    [[nodiscard]] std::string string(const WaterInterModel &waterInterModel);
 
     /**
      * @class WaterModelSettings

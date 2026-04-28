@@ -129,3 +129,27 @@ void WaterModelSettings::setWaterInterModel(const WaterInterModel model)
 {
     _waterInterModel = model;
 }
+
+std::string settings::string(const WaterIntraModel &waterIntraModel)
+{
+    switch (waterIntraModel)
+    {
+        using enum WaterIntraModel;
+
+        case SPC_FW: return "SPC/Fw";
+
+        default: return "none";
+    }
+}
+
+std::string settings::string(const WaterInterModel &waterInterModel)
+{
+    switch (waterInterModel)
+    {
+        using enum WaterInterModel;
+
+        case SPC_FW: return "SPC/Fw";
+
+        default: return "none";
+    }
+}

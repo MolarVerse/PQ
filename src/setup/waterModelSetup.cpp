@@ -22,9 +22,15 @@
 
 #include "waterModelSetup.hpp"
 
-#include "engine.hpp"       // for Engine
-#include "exceptions.hpp"   // for customException
-#include "mdEngine.hpp"     // for MDEngine
+#include <format>
+#include <unordered_set>
+
+#include "engine.hpp"               // for Engine
+#include "exceptions.hpp"           // for customException
+#include "fileSettings.hpp"         // for FileSettings
+#include "mdEngine.hpp"             // for MDEngine
+#include "molecule.hpp"             // for Molecule
+#include "waterModelSettings.hpp"   // for WaterModelSettings
 
 using namespace setup;
 using namespace settings;
@@ -81,4 +87,73 @@ void WaterModelSetup::setup()
             "Water molecule type must have exactly 3 atoms in the following "
             "order: O (oxygen), H (hydrogen), H (hydrogen)."
         ));
+
+    checkTopologyFile();
+}
+
+void WaterModelSetup::checkTopologyFile()
+{
+    std::unordered_set<const pq::Molecule *> waterMolecules;
+    for (const auto &waterMol :
+         _engine.getSimulationBox().getWaterTypeMolecules())
+        waterMolecules.insert(&waterMol);
+
+    size_t bondIndex = 1;
+
+    for (const auto &bond : _engine.getForceField().getBonds())
+    {
+        const auto *mol1 = bond.getMolecule1();
+        const auto *mol2 = bond.getMolecule2();
+
+        const bool involvesWater =
+            (mol1 && waterMolecules.find(mol1) != waterMolecules.end()) ||
+            (mol2 && waterMolecules.find(mol2) != waterMolecules.end());
+
+        if (involvesWater)
+            throw(UserInputException(
+                std::format(
+                    "A water type molecule is included in the bond list of the "
+                    "topology file \"{}\" at entry number {}. Requesting the "
+                    "use of the \"{}\" intramolecular water type model expects "
+                    "the molecules of this moltype not to appear in the "
+                    "topology file.",
+                    FileSettings::getTopologyFileName(),
+                    bondIndex,
+                    string(WaterModelSettings::getWaterIntraModel())
+                )
+            ));
+
+        ++bondIndex;
+    }
+
+    size_t angleIndex = 1;
+
+    for (const auto &angle : _engine.getForceField().getAngles())
+    {
+        const auto  molecules = angle.getMolecules();
+        const auto *mol1      = molecules[0];
+        const auto *mol2      = molecules[1];
+        const auto *mol3      = molecules[2];
+
+        const bool involvesWater =
+            (mol1 && waterMolecules.find(mol1) != waterMolecules.end()) ||
+            (mol2 && waterMolecules.find(mol2) != waterMolecules.end()) ||
+            (mol3 && waterMolecules.find(mol3) != waterMolecules.end());
+
+        if (involvesWater)
+            throw(UserInputException(
+                std::format(
+                    "A water type molecule is included in the angle list of "
+                    "the topology file \"{}\" at entry number {}. Requesting "
+                    "the use of the \"{}\" intramolecular water type model "
+                    "expects the molecules of this moltype not to appear in "
+                    "the topology file.",
+                    FileSettings::getTopologyFileName(),
+                    angleIndex,
+                    string(WaterModelSettings::getWaterIntraModel())
+                )
+            ));
+
+        ++angleIndex;
+    }
 }
