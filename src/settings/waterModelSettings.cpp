@@ -137,6 +137,7 @@ std::string settings::string(const WaterIntraModel &waterIntraModel)
         using enum WaterIntraModel;
 
         case SPC_FW: return "SPC/Fw";
+        case QSPC_FW: return "qSPC/Fw";
 
         default: return "none";
     }
@@ -149,6 +150,7 @@ std::string settings::string(const WaterInterModel &waterInterModel)
         using enum WaterInterModel;
 
         case SPC_FW: return "SPC/Fw";
+        case QSPC_FW: return "qSPC/Fw";
 
         default: return "none";
     }

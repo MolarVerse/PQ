@@ -198,11 +198,16 @@ void MMInputParser::parseWaterIntraModel(
         WaterModelSettings::setWaterIntraModel(SPC_FW);
         _engine.makeIntraWater(SPCFwIntraParam{});
     }
+    else if (waterIntraModel == "qspc_fw")
+    {
+        WaterModelSettings::setWaterIntraModel(QSPC_FW);
+        _engine.makeIntraWater(qSPCFwIntraParam{});
+    }
     else
         throw InputFileException(format(
             "Invalid water_intra keyword \"{}\" at line {} "
             "in input file\n"
-            "Possible options are \"SPC_Fw\"",
+            "Possible options are \"SPC_Fw\" and \"qSPC_Fw\"",
             lineElements[2],
             lineNumber
         ));
@@ -234,11 +239,13 @@ void MMInputParser::parseWaterInterModel(
 
     if (waterInterModel == "spc_fw")
         WaterModelSettings::setWaterInterModel(SPC_FW);
+    else if (waterInterModel == "qspc_fw")
+        WaterModelSettings::setWaterInterModel(QSPC_FW);
     else
         throw InputFileException(format(
             "Invalid water_inter keyword \"{}\" at line {} "
             "in input file\n"
-            "Possible options are \"SPC_Fw\"",
+            "Possible options are \"SPC_Fw\" and \"qSPC_Fw\"",
             lineElements[2],
             lineNumber
         ));

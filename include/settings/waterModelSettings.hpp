@@ -36,7 +36,8 @@ namespace settings
     enum class WaterIntraModel : size_t
     {
         NONE,
-        SPC_FW
+        SPC_FW,
+        QSPC_FW
     };
 
     [[nodiscard]] std::string string(const WaterIntraModel &waterIntraModel);
@@ -47,7 +48,8 @@ namespace settings
     enum class WaterInterModel : size_t
     {
         NONE,
-        SPC_FW
+        SPC_FW,
+        QSPC_FW
     };
 
     [[nodiscard]] std::string string(const WaterInterModel &waterInterModel);
