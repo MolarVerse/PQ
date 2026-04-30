@@ -255,11 +255,20 @@ void MMInputParser::parseWaterInterModel(
         _engine.makeInterWater(SPCFwInterParam{});
     }
     else if (waterInterModel == "qspc_fw")
+    {
         WaterModelSettings::setWaterInterModel(QSPC_FW);
+        _engine.makeInterWater(qSPCFwInterParam{});
+    }
     else if (waterInterModel == "tip3p")
+    {
         WaterModelSettings::setWaterInterModel(TIP3P);
+        _engine.makeInterWater(TIP3PInterParam{});
+    }
     else if (waterInterModel == "opc3")
+    {
         WaterModelSettings::setWaterInterModel(OPC3);
+        _engine.makeInterWater(OPC3InterParam{});
+    }
     else
         throw InputFileException(format(
             "Invalid water_inter keyword \"{}\" at line {} "

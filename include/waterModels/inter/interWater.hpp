@@ -101,8 +101,14 @@ namespace waterModel
     class qSPCFwInterParam : public InterWaterImpl<qSPCFwInterParam>
     {
        private:
-        static constexpr auto _oxygenCharge   = -0.84;
-        static constexpr auto _hydrogenCharge = 0.42;
+        static constexpr auto                   _oxygenCharge   = -0.84;
+        static constexpr auto                   _hydrogenCharge = 0.42;
+        inline static const std::vector<double> _guffCoefficientsOO =
+            constants::_QSPC_FW_GUFF_COEFFICIENTS_OO_;
+        inline static const std::vector<double> _guffCoefficientsOH =
+            constants::_ZERO_GUFF_COEFFICIENTS_;
+        inline static const std::vector<double> _guffCoefficientsHH =
+            constants::_ZERO_GUFF_COEFFICIENTS_;
 
         friend class InterWaterImpl<qSPCFwInterParam>;
     };
@@ -110,8 +116,14 @@ namespace waterModel
     class TIP3PInterParam : public InterWaterImpl<TIP3PInterParam>
     {
        private:
-        static constexpr auto _oxygenCharge   = -0.834;
-        static constexpr auto _hydrogenCharge = 0.417;
+        static constexpr auto                   _oxygenCharge   = -0.834;
+        static constexpr auto                   _hydrogenCharge = 0.417;
+        inline static const std::vector<double> _guffCoefficientsOO =
+            constants::_TIP3P_GUFF_COEFFICIENTS_OO_;
+        inline static const std::vector<double> _guffCoefficientsOH =
+            constants::_ZERO_GUFF_COEFFICIENTS_;
+        inline static const std::vector<double> _guffCoefficientsHH =
+            constants::_ZERO_GUFF_COEFFICIENTS_;
 
         friend class InterWaterImpl<TIP3PInterParam>;
     };
@@ -119,8 +131,14 @@ namespace waterModel
     class OPC3InterParam : public InterWaterImpl<OPC3InterParam>
     {
        private:
-        static constexpr auto _oxygenCharge   = -0.89517;
-        static constexpr auto _hydrogenCharge = 0.447585;
+        static constexpr auto                   _oxygenCharge   = -0.89517;
+        static constexpr auto                   _hydrogenCharge = 0.447585;
+        inline static const std::vector<double> _guffCoefficientsOO =
+            constants::_OPC3_GUFF_COEFFICIENTS_OO_;
+        inline static const std::vector<double> _guffCoefficientsOH =
+            constants::_ZERO_GUFF_COEFFICIENTS_;
+        inline static const std::vector<double> _guffCoefficientsHH =
+            constants::_ZERO_GUFF_COEFFICIENTS_;
 
         friend class InterWaterImpl<OPC3InterParam>;
     };
