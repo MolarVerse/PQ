@@ -31,12 +31,15 @@ namespace constants
     static const std::vector<double> _SPC_FW_GUFF_COEFFICIENTS_OO_ = []
     {
         std::vector<double> coefficients(22, 0.0);
-        coefficients[0] = 626.0;
+        coefficients[0] = 625.5024676571352;
         coefficients[1] = 6.0;
-        coefficients[2] = -630000.0;
+        coefficients[2] = -629326.9774051674;
         coefficients[3] = 12.0;
         return coefficients;
     }();
+
+    static const std::vector<double> _ZERO_GUFF_COEFFICIENTS_(22, 0.0);
+
 }   // namespace constants
 
 #endif   // _GUFF_COEFFICIENTS_HPP_

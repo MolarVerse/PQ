@@ -24,6 +24,8 @@
 
 #define _INTER_WATER_COULOMB_TPP_HPP_
 
+#include <utility>
+
 #include "coulombPotential.hpp"
 #include "guffPair.hpp"            // for GuffPair
 #include "interWaterCoulomb.hpp"   // for InterWaterCoulomb
@@ -35,25 +37,24 @@
 template <class Derived>
 void waterModel::InterWaterCoulomb<Derived>::initGuffPairs()
 {
-    const auto guffCoefficientsOO = Derived::_guffCoefficientsOO;
-    const auto guffCoefficientsOH = Derived::_guffCoefficientsOH;
-    const auto guffCoefficientsHH = Derived::_guffCoefficientsHH;
+    const auto makeGuffPair = [this](const std::vector<double> &coefficients)
+    { return potential::GuffPair{_nonCoulombCutOff, coefficients}; };
 
-    _GuffPairOO = potential::GuffPair{_nonCoulombCutOff, guffCoefficientsOO};
-    _GuffPairOH = potential::GuffPair{_nonCoulombCutOff, guffCoefficientsOH};
-    _GuffPairHH = potential::GuffPair{_nonCoulombCutOff, guffCoefficientsHH};
+    const auto finalizeCutOff = [this](auto &guffPair)
+    {
+        const auto [energyCutOff, forceCutOff] =
+            guffPair.calculate(_nonCoulombCutOff);
+        guffPair.setEnergyCutOff(energyCutOff);
+        guffPair.setForceCutOff(forceCutOff);
+    };
 
-    const auto &[e, f] = _GuffPairOO.calculate(_nonCoulombCutOff);
-    _GuffPairOO.setEnergyCutOff(e);
-    _GuffPairOO.setForceCutOff(f);
+    _GuffPairOO = makeGuffPair(Derived::_guffCoefficientsOO);
+    _GuffPairOH = makeGuffPair(Derived::_guffCoefficientsOH);
+    _GuffPairHH = makeGuffPair(Derived::_guffCoefficientsHH);
 
-    const auto &[e, f] = _GuffPairOH.calculate(_nonCoulombCutOff);
-    _GuffPairOH.setEnergyCutOff(e);
-    _GuffPairOH.setForceCutOff(f);
-
-    const auto &[e, f] = _GuffPairHH.calculate(_nonCoulombCutOff);
-    _GuffPairHH.setEnergyCutOff(e);
-    _GuffPairHH.setForceCutOff(f);
+    finalizeCutOff(_GuffPairOO);
+    finalizeCutOff(_GuffPairOH);
+    finalizeCutOff(_GuffPairHH);
 }
 
 template <class Derived>
@@ -72,7 +73,8 @@ void waterModel::InterWaterCoulomb<Derived>::calculate(
     const auto rCut        = pq::CoulombPot::getCoulombRadiusCutOff();
     const auto rCutSquared = rCut * rCut;
 
-    auto totalCoulombEnergy = 0.0;
+    auto totalCoulombEnergy    = 0.0;
+    auto totalNonCoulombEnergy = 0.0;
 
     size_t i = 0;
     for (auto &water1 : simBox.getWaterTypeMolecules())
@@ -100,34 +102,42 @@ void waterModel::InterWaterCoulomb<Derived>::calculate(
             auto &hydrogen3 = water2.getAtom(1);
             auto &hydrogen4 = water2.getAtom(2);
 
-            const auto singleInteraction = [&](pq::Atom    &atomA,
-                                               pq::Atom    &atomB,
-                                               const double chargeProduct)
+            const auto singleInteraction =
+                [&](pq::Atom                  &atomA,
+                    pq::Atom                  &atomB,
+                    const double               chargeProduct,
+                    const potential::GuffPair &guffPair)
             {
-                totalCoulombEnergy += calculateSingleInteraction(
+                const auto [coulE, nonCoulE] = calculateSingleInteraction(
                     atomA,
                     atomB,
                     chargeProduct,
                     coulombPotential,
                     rCutSquared,
-                    simBox
+                    simBox,
+                    guffPair
                 );
+
+                totalCoulombEnergy    += coulE;
+                totalNonCoulombEnergy += nonCoulE;
             };
 
             // O-O interaction
-            singleInteraction(oxygen1, oxygen2, chargeProductOO);
+            singleInteraction(oxygen1, oxygen2, chargeProductOO, _guffPairOO);
 
             // O-H interactions
-            singleInteraction(oxygen1, hydrogen3, chargeProductOH);
-            singleInteraction(oxygen1, hydrogen4, chargeProductOH);
-            singleInteraction(oxygen2, hydrogen1, chargeProductOH);
-            singleInteraction(oxygen2, hydrogen2, chargeProductOH);
+            singleInteraction(oxygen1, hydrogen3, chargeProductOH, _guffPairOH);
+            singleInteraction(oxygen1, hydrogen4, chargeProductOH, _guffPairOH);
+            singleInteraction(oxygen2, hydrogen1, chargeProductOH, _guffPairOH);
+            singleInteraction(oxygen2, hydrogen2, chargeProductOH, _guffPairOH);
 
             // H-H interactions
-            singleInteraction(hydrogen1, hydrogen3, chargeProductHH);
-            singleInteraction(hydrogen1, hydrogen4, chargeProductHH);
-            singleInteraction(hydrogen2, hydrogen3, chargeProductHH);
-            singleInteraction(hydrogen2, hydrogen4, chargeProductHH);
+            // clang-format off
+            singleInteraction(hydrogen1, hydrogen3, chargeProductHH, _guffPairHH);
+            singleInteraction(hydrogen1, hydrogen4, chargeProductHH, _guffPairHH);
+            singleInteraction(hydrogen2, hydrogen3, chargeProductHH, _guffPairHH);
+            singleInteraction(hydrogen2, hydrogen4, chargeProductHH, _guffPairHH);
+            // clang-format on
 
             ++j;
         }
@@ -135,19 +145,23 @@ void waterModel::InterWaterCoulomb<Derived>::calculate(
     }
 
     physicalData.addCoulombEnergy(totalCoulombEnergy);
+    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
 }
 
 template <class Derived>
-double waterModel::InterWaterCoulomb<Derived>::calculateSingleInteraction(
-    pq::Atom             &atom1,
-    pq::Atom             &atom2,
-    double                chargeProduct,
-    pq::SharedCoulombPot &coulombPotential,
-    double                rCutSquared,
-    pq::SimBox           &simBox
-)
+std::pair<double, double> waterModel::InterWaterCoulomb<Derived>::
+    calculateSingleInteraction(
+        pq::Atom                   &atom1,
+        pq::Atom                   &atom2,
+        const double                chargeProduct,
+        const pq::SharedCoulombPot &coulombPotential,
+        const double                rCutSquared,
+        const pq::SimBox           &simBox,
+        const potential::GuffPair  &guffPair
+    )
 {
-    auto coulombEnergy = 0.0;
+    auto coulombEnergy    = 0.0;
+    auto nonCoulombEnergy = 0.0;
 
     const auto xyz_i = atom1.getPosition();
     const auto xyz_j = atom2.getPosition();
@@ -164,9 +178,16 @@ double waterModel::InterWaterCoulomb<Derived>::calculateSingleInteraction(
     {
         const double distance = ::sqrt(distanceSquared);
 
-        auto [e, f] = coulombPotential->calculate(distance, chargeProduct);
+        auto [e, f]   = coulombPotential->calculate(distance, chargeProduct);
+        coulombEnergy = e;
 
-        coulombEnergy       += e;
+        if (distance < _nonCoulombCutOff)
+        {
+            auto [nonCoulE, nonCoulF]  = guffPair.calculate(distance);
+            nonCoulombEnergy           = nonCoulE;
+            f                         += nonCoulF;
+        }
+
         f                   /= distance;
         const auto forcexyz  = f * dxyz;
 
@@ -178,7 +199,7 @@ double waterModel::InterWaterCoulomb<Derived>::calculateSingleInteraction(
         atom1.addShiftForce(shiftForcexyz);
     }
 
-    return coulombEnergy;
+    return {coulombEnergy, nonCoulombEnergy};
 }
 
 #endif   //  _INTER_WATER_COULOMB_TPP_HPP_

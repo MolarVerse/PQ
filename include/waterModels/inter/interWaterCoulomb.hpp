@@ -24,7 +24,8 @@
 
 #define _INTER_WATER_COULOMB_HPP_
 
-#include <array>
+#include <utility>
+#include <vector>
 
 #include "atom.hpp"               // for Atom
 #include "guffCoefficients.hpp"   // for guffPairCoefficients
@@ -53,25 +54,28 @@ namespace waterModel
         auto _guffPairOH       = potential::GuffPair();
         auto _guffPairHH       = potential::GuffPair();
 
-        double calculateSingleInteraction(
-            pq::Atom             &atom1,
-            pq::Atom             &atom2,
-            double                chargeProduct,
-            pq::SharedCoulombPot &coulombPotential,
-            double                rCutSquared,
-            pq::SimBox           &simBox
+        std::pair<double, double> calculateSingleInteraction(
+            pq::Atom                   &atom1,
+            pq::Atom                   &atom2,
+            const double                chargeProduct,
+            const pq::SharedCoulombPot &coulombPotential,
+            const double                rCutSquared,
+            const pq::SimBox           &simBox,
+            const potential::GuffPair  &guffPair
         );
     };
 
     class SPCFwInterParam : public InterWaterCoulomb<SPCFwInterParam>
     {
        private:
-        static constexpr auto _oxygenCharge   = -0.82;
-        static constexpr auto _hydrogenCharge = 0.41;
-        static constexpr auto _guffCoefficientsOO =
+        static constexpr auto                   _oxygenCharge   = -0.82;
+        static constexpr auto                   _hydrogenCharge = 0.41;
+        inline static const std::vector<double> _guffCoefficientsOO =
             constants::_SPC_FW_GUFF_COEFFICIENTS_OO_;
-        static constexpr std::array<double, 22> _guffCoefficientsOH{};
-        static constexpr std::array<double, 22> _guffCoefficientsHH{};
+        inline static const std::vector<double> _guffCoefficientsOH =
+            constants::_ZERO_GUFF_COEFFICIENTS_;
+        inline static const std::vector<double> _guffCoefficientsHH =
+            constants::_ZERO_GUFF_COEFFICIENTS_;
 
         friend class InterWaterCoulomb<SPCFwInterParam>;
     };
