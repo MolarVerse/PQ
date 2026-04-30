@@ -642,9 +642,14 @@ void GuffDatReader::calculatePartialCharges()
 {
     auto      &simBox    = _engine.getSimulationBox();
     const auto nMolTypes = simBox.getMoleculeTypes().size();
+    const auto waterType = simBox.getWaterType();
 
     for (size_t i = 0; i < nMolTypes; ++i)
     {
+        // Skip water type molecules - their charges come from moldescriptor
+        if (waterType.has_value() && (i + 1) == waterType.value())
+            continue;
+
         auto      *moleculeType = &(simBox.findMoleculeType(i + 1));
         const auto nAtoms       = moleculeType->getNumberOfAtoms();
 
