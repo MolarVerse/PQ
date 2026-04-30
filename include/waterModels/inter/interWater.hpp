@@ -38,17 +38,31 @@
 
 namespace waterModel
 {
-    template <class Derived>
     class InterWater
     {
        public:
-        void initGuffPairs();
+        virtual void initGuffPairs() {}
 
-        void calculate(
+        virtual void calculate(
             pq::SimBox &,
             pq::PhysicalData &,
-            pq::SharedCoulombPot &
-        );
+            const pq::SharedCoulombPot &
+        )
+        {
+        }
+    };
+
+    template <class Derived>
+    class InterWaterImpl : public InterWater
+    {
+       public:
+        virtual void initGuffPairs() override;
+
+        virtual void calculate(
+            pq::SimBox &,
+            pq::PhysicalData &,
+            const pq::SharedCoulombPot &
+        ) override;
 
        private:
         auto _nonCoulombCutOff = defaults::_COULOMB_CUT_OFF_DEFAULT_;
@@ -67,7 +81,7 @@ namespace waterModel
         );
     };
 
-    class SPCFwInterParam : public InterWater<SPCFwInterParam>
+    class SPCFwInterParam : public InterWaterImpl<SPCFwInterParam>
     {
        private:
         static constexpr auto                   _oxygenCharge   = -0.82;
@@ -79,34 +93,34 @@ namespace waterModel
         inline static const std::vector<double> _guffCoefficientsHH =
             constants::_ZERO_GUFF_COEFFICIENTS_;
 
-        friend class InterWater<SPCFwInterParam>;
+        friend class InterWaterImpl<SPCFwInterParam>;
     };
 
-    class qSPCFwInterParam : public InterWater<qSPCFwInterParam>
+    class qSPCFwInterParam : public InterWaterImpl<qSPCFwInterParam>
     {
        private:
         static constexpr auto _oxygenCharge   = -0.84;
         static constexpr auto _hydrogenCharge = 0.42;
 
-        friend class InterWater<qSPCFwInterParam>;
+        friend class InterWaterImpl<qSPCFwInterParam>;
     };
 
-    class TIP3PInterParam : public InterWater<TIP3PInterParam>
+    class TIP3PInterParam : public InterWaterImpl<TIP3PInterParam>
     {
        private:
         static constexpr auto _oxygenCharge   = -0.834;
         static constexpr auto _hydrogenCharge = 0.417;
 
-        friend class InterWater<TIP3PInterParam>;
+        friend class InterWaterImpl<TIP3PInterParam>;
     };
 
-    class OPC3InterParam : public InterWater<OPC3InterParam>
+    class OPC3InterParam : public InterWaterImpl<OPC3InterParam>
     {
        private:
         static constexpr auto _oxygenCharge   = -0.89517;
         static constexpr auto _hydrogenCharge = 0.447585;
 
-        friend class InterWater<OPC3InterParam>;
+        friend class InterWaterImpl<OPC3InterParam>;
     };
 
 }   // namespace waterModel

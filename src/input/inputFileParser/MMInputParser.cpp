@@ -32,6 +32,7 @@
 #include "forceFieldClass.hpp"        // for ForceField
 #include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
 #include "forceFieldSettings.hpp"     // for ForceFieldSettings
+#include "interWater.hpp"             // for interWater models
 #include "potential.hpp"              // for Potential
 #include "potentialSettings.hpp"      // for PotentialSettings
 #include "stringUtilities.hpp"        // for toLowerCopy
@@ -249,7 +250,10 @@ void MMInputParser::parseWaterInterModel(
     const auto waterInterModel = toLowerAndReplaceDashesCopy(lineElements[2]);
 
     if (waterInterModel == "spc_fw")
+    {
         WaterModelSettings::setWaterInterModel(SPC_FW);
+        _engine.makeInterWater(SPCFwInterParam{});
+    }
     else if (waterInterModel == "qspc_fw")
         WaterModelSettings::setWaterInterModel(QSPC_FW);
     else if (waterInterModel == "tip3p")
@@ -260,7 +264,8 @@ void MMInputParser::parseWaterInterModel(
         throw InputFileException(format(
             "Invalid water_inter keyword \"{}\" at line {} "
             "in input file\n"
-            "Possible options are \"SPC_Fw\", \"qSPC_Fw\", \"TIP3P\" and \"OPC3\"",
+            "Possible options are \"SPC_Fw\", \"qSPC_Fw\", \"TIP3P\" and "
+            "\"OPC3\"",
             lineElements[2],
             lineNumber
         ));

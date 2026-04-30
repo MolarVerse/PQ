@@ -239,15 +239,24 @@ void GuffDatReader::setupGuffMaps()
  */
 void GuffDatReader::parseLine(const std::vector<std::string> &lineCommands)
 {
-    MoleculeType molecule1;
-    MoleculeType molecule2;
+    const size_t moltype1 = stoul(lineCommands[0]);
+    const size_t moltype2 = stoul(lineCommands[2]);
 
     auto &simBox = _engine.getSimulationBox();
 
+    // Skip entries if both molecule types are water type molecules
+    const auto waterType = simBox.getWaterType();
+    if (waterType.has_value() && moltype1 == waterType.value() &&
+        moltype2 == waterType.value())
+        return;
+
+    MoleculeType molecule1;
+    MoleculeType molecule2;
+
     try
     {
-        molecule1 = simBox.findMoleculeType(stoul(lineCommands[0]));
-        molecule2 = simBox.findMoleculeType(stoul(lineCommands[2]));
+        molecule1 = simBox.findMoleculeType(moltype1);
+        molecule2 = simBox.findMoleculeType(moltype2);
     }
     catch (const std::exception &)
     {
@@ -284,9 +293,6 @@ void GuffDatReader::parseLine(const std::vector<std::string> &lineCommands)
         [&guffCoefficients](const auto &entry)
         { guffCoefficients.push_back(stod(entry)); }
     );
-
-    const size_t moltype1 = stoul(lineCommands[0]);
-    const size_t moltype2 = stoul(lineCommands[2]);
 
     // clang-format off
     _guffCoulombCoeffs[moltype1 - 1][moltype2 - 1][atomType1][atomType2] = coulombCoeff;
@@ -748,10 +754,17 @@ void GuffDatReader::checkNecessaryGuffPairs()
 {
     auto      &simBox                 = _engine.getSimulationBox();
     const auto necessaryMoleculeTypes = simBox.findNecessaryMoleculeTypes();
+    const auto waterType              = simBox.getWaterType();
 
     for (const auto &moleculeType1 : necessaryMoleculeTypes)
         for (const auto &moleculeType2 : necessaryMoleculeTypes)
         {
+            // Skip validation if both molecule types are water
+            if (waterType.has_value() &&
+                moleculeType1.getMoltype() == waterType.value() &&
+                moleculeType2.getMoltype() == waterType.value())
+                continue;
+
             const auto nAtoms1 = moleculeType1.getNumberOfAtoms();
             for (size_t atomIndex1 = 0; atomIndex1 < nAtoms1; ++atomIndex1)
             {

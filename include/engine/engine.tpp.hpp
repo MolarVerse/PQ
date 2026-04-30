@@ -65,6 +65,18 @@ namespace engine
         _intraWater = std::make_unique<T>(intraWaterModel);
     }
 
+    /**
+     * @brief make unique_ptr for waterInter
+     *
+     * @tparam T
+     */
+    template <typename T>
+    inline void Engine::makeInterWater(T interWaterModel)
+    {
+        _interWater = std::make_unique<T>(interWaterModel);
+        _interWater->initGuffPairs();
+    }
+
 }   // namespace engine
 
 #endif   // _ENGINE_TPP_

@@ -36,7 +36,7 @@
 #include "vector3d.hpp"   // for Vector3D, norm, operator*, Vec3D
 
 template <class Derived>
-void waterModel::InterWater<Derived>::initGuffPairs()
+void waterModel::InterWaterImpl<Derived>::initGuffPairs()
 {
     _nonCoulombCutOff =
         settings::PotentialSettings::getNonCoulombRadiusCutOff().value_or(
@@ -64,10 +64,10 @@ void waterModel::InterWater<Derived>::initGuffPairs()
 }
 
 template <class Derived>
-void waterModel::InterWater<Derived>::calculate(
+void waterModel::InterWaterImpl<Derived>::calculate(
     pq::SimBox           &simBox,
     pq::PhysicalData     &physicalData,
-    pq::SharedCoulombPot &coulombPotential
+    const pq::SharedCoulombPot &coulombPotential
 )
 {
     const auto oxygenCharge    = Derived::_oxygenCharge;
@@ -155,7 +155,7 @@ void waterModel::InterWater<Derived>::calculate(
 }
 
 template <class Derived>
-std::pair<double, double> waterModel::InterWater<Derived>::
+std::pair<double, double> waterModel::InterWaterImpl<Derived>::
     calculateSingleInteraction(
         pq::Atom                   &atom1,
         pq::Atom                   &atom2,
