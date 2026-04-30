@@ -108,6 +108,7 @@ freset_angular              false
 freset_forces               false
 
 rcoulomb                    false
+rnoncoulomb                 false
 density                     false
 init_velocities             false
 

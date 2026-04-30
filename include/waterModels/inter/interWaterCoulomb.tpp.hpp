@@ -30,6 +30,7 @@
 #include "guffPair.hpp"            // for GuffPair
 #include "interWaterCoulomb.hpp"   // for InterWaterCoulomb
 #include "physicalData.hpp"        // for PhysicalData
+#include "potentialSettings.hpp"   // for PotentialSettings
 #include "simulationBox.hpp"       // for SimulationBox
 #include "typeAliases.hpp"
 #include "vector3d.hpp"   // for Vector3D, norm, operator*, Vec3D
@@ -37,6 +38,11 @@
 template <class Derived>
 void waterModel::InterWaterCoulomb<Derived>::initGuffPairs()
 {
+    _nonCoulombCutOff =
+        settings::PotentialSettings::getNonCoulombRadiusCutOff().value_or(
+            settings::PotentialSettings::getCoulombRadiusCutOff()
+        );
+
     const auto makeGuffPair = [this](const std::vector<double> &coefficients)
     { return potential::GuffPair{_nonCoulombCutOff, coefficients}; };
 

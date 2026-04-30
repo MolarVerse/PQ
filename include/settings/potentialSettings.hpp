@@ -25,6 +25,7 @@
 #define _POSITION_SETTINGS_HPP_
 
 #include <cstddef>       // for size_t
+#include <optional>      // for optional
 #include <string>        // for allocator, string
 #include <string_view>   // for string_view
 
@@ -79,6 +80,7 @@ namespace settings
         static inline NonCoulombType       _nonCoulombType = NonCoulombType::GUFF;
 
         static inline double _coulombRadiusCutOff = defaults::_COULOMB_CUT_OFF_DEFAULT_;
+        static inline std::optional<double> _nonCoulombRadiusCutOff;
         static inline double _scale14Coulomb      = defaults::_SCALE_14_COULOMB_DEFAULT_;
         static inline double _scale14VanDerWaals  = defaults::_SCALE_14_VAN_DER_WAALS_DEFAULT_;
         // clang-format on
@@ -98,10 +100,13 @@ namespace settings
         static void setCoulombLongRangeType(const std::string_view &type);
         static void setCoulombLongRangeType(const CoulombLongRangeType &type);
 
+        // clang-format off
         static void setCoulombRadiusCutOff(const double coulombRadiusCutOff);
+        static void setNonCoulombRadiusCutOff(const double nonCoulombRadiusCutOff);
         static void setScale14Coulomb(const double scale14Coulomb);
         static void setScale14VanDerWaals(const double scale14VanDerWaals);
         static void setWolfParameter(const double wolfParameter);
+        // clang-format on
 
         /********************
          * standard getters *
@@ -110,10 +115,11 @@ namespace settings
         [[nodiscard]] static CoulombLongRangeType getCoulombLongRangeType();
         [[nodiscard]] static NonCoulombType       getNonCoulombType();
 
-        [[nodiscard]] static double getCoulombRadiusCutOff();
-        [[nodiscard]] static double getScale14Coulomb();
-        [[nodiscard]] static double getScale14VDW();
-        [[nodiscard]] static double getWolfParameter();
+        [[nodiscard]] static double                getCoulombRadiusCutOff();
+        [[nodiscard]] static std::optional<double> getNonCoulombRadiusCutOff();
+        [[nodiscard]] static double                getScale14Coulomb();
+        [[nodiscard]] static double                getScale14VDW();
+        [[nodiscard]] static double                getWolfParameter();
     };
 
 }   // namespace settings

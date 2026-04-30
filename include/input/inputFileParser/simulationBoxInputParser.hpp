@@ -45,6 +45,7 @@ namespace input
         explicit SimulationBoxInputParser(pq::Engine &);
 
         void parseCoulombRadius(const pq::strings &, const size_t);
+        void parseNonCoulombRadius(const pq::strings &, const size_t);
         void parseDensity(const pq::strings &, const size_t);
         void parseInitializeVelocities(const pq::strings &, const size_t);
     };
