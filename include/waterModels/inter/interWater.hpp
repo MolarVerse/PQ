@@ -20,9 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INTER_WATER_COULOMB_HPP_
+#ifndef _INTER_WATER_HPP_
 
-#define _INTER_WATER_COULOMB_HPP_
+#define _INTER_WATER_HPP_
 
 #include <utility>
 #include <vector>
@@ -37,7 +37,7 @@
 namespace waterModel
 {
     template <class Derived>
-    class InterWaterCoulomb
+    class InterWater
     {
        public:
         void initGuffPairs();
@@ -65,7 +65,7 @@ namespace waterModel
         );
     };
 
-    class SPCFwInterParam : public InterWaterCoulomb<SPCFwInterParam>
+    class SPCFwInterParam : public InterWater<SPCFwInterParam>
     {
        private:
         static constexpr auto                   _oxygenCharge   = -0.82;
@@ -77,38 +77,38 @@ namespace waterModel
         inline static const std::vector<double> _guffCoefficientsHH =
             constants::_ZERO_GUFF_COEFFICIENTS_;
 
-        friend class InterWaterCoulomb<SPCFwInterParam>;
+        friend class InterWater<SPCFwInterParam>;
     };
 
-    class qSPCFwInterParam : public InterWaterCoulomb<qSPCFwInterParam>
+    class qSPCFwInterParam : public InterWater<qSPCFwInterParam>
     {
        private:
         static constexpr auto _oxygenCharge   = -0.84;
         static constexpr auto _hydrogenCharge = 0.42;
 
-        friend class InterWaterCoulomb<qSPCFwInterParam>;
+        friend class InterWater<qSPCFwInterParam>;
     };
 
-    class TIP3PInterParam : public InterWaterCoulomb<TIP3PInterParam>
+    class TIP3PInterParam : public InterWater<TIP3PInterParam>
     {
        private:
         static constexpr auto _oxygenCharge   = -0.834;
         static constexpr auto _hydrogenCharge = 0.417;
 
-        friend class InterWaterCoulomb<TIP3PInterParam>;
+        friend class InterWater<TIP3PInterParam>;
     };
 
-    class OPC3InterParam : public InterWaterCoulomb<OPC3InterParam>
+    class OPC3InterParam : public InterWater<OPC3InterParam>
     {
        private:
         static constexpr auto _oxygenCharge   = -0.89517;
         static constexpr auto _hydrogenCharge = 0.447585;
 
-        friend class InterWaterCoulomb<OPC3InterParam>;
+        friend class InterWater<OPC3InterParam>;
     };
 
 }   // namespace waterModel
 
-#include "interWaterCoulomb.tpp.hpp"   // DO NOT MOVE THIS LINE
+#include "interWater.tpp.hpp"   // DO NOT MOVE THIS LINE
 
-#endif   //  _INTER_WATER_COULOMB_HPP_
+#endif   //  _INTER_WATER_HPP_

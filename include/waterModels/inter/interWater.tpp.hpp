@@ -20,15 +20,15 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INTER_WATER_COULOMB_TPP_HPP_
+#ifndef _INTER_WATER_TPP_HPP_
 
-#define _INTER_WATER_COULOMB_TPP_HPP_
+#define _INTER_WATER_TPP_HPP_
 
 #include <utility>
 
 #include "coulombPotential.hpp"
 #include "guffPair.hpp"            // for GuffPair
-#include "interWaterCoulomb.hpp"   // for InterWaterCoulomb
+#include "interWater.hpp"          // for InterWater
 #include "physicalData.hpp"        // for PhysicalData
 #include "potentialSettings.hpp"   // for PotentialSettings
 #include "simulationBox.hpp"       // for SimulationBox
@@ -36,7 +36,7 @@
 #include "vector3d.hpp"   // for Vector3D, norm, operator*, Vec3D
 
 template <class Derived>
-void waterModel::InterWaterCoulomb<Derived>::initGuffPairs()
+void waterModel::InterWater<Derived>::initGuffPairs()
 {
     _nonCoulombCutOff =
         settings::PotentialSettings::getNonCoulombRadiusCutOff().value_or(
@@ -64,7 +64,7 @@ void waterModel::InterWaterCoulomb<Derived>::initGuffPairs()
 }
 
 template <class Derived>
-void waterModel::InterWaterCoulomb<Derived>::calculate(
+void waterModel::InterWater<Derived>::calculate(
     pq::SimBox           &simBox,
     pq::PhysicalData     &physicalData,
     pq::SharedCoulombPot &coulombPotential
@@ -155,7 +155,7 @@ void waterModel::InterWaterCoulomb<Derived>::calculate(
 }
 
 template <class Derived>
-std::pair<double, double> waterModel::InterWaterCoulomb<Derived>::
+std::pair<double, double> waterModel::InterWater<Derived>::
     calculateSingleInteraction(
         pq::Atom                   &atom1,
         pq::Atom                   &atom2,
@@ -208,4 +208,4 @@ std::pair<double, double> waterModel::InterWaterCoulomb<Derived>::
     return {coulombEnergy, nonCoulombEnergy};
 }
 
-#endif   //  _INTER_WATER_COULOMB_TPP_HPP_
+#endif   //  _INTER_WATER_TPP_HPP_
