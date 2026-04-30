@@ -27,11 +27,13 @@
 #include <utility>
 #include <vector>
 
-#include "atom.hpp"               // for Atom
-#include "guffCoefficients.hpp"   // for guffPairCoefficients
-#include "guffPair.hpp"           // for GuffPair
-#include "physicalData.hpp"       // for PhysicalData
-#include "simulationBox.hpp"      // for SimulationBox
+#include "atom.hpp"                // for Atom
+#include "defaults.hpp"            // for defaults
+#include "guffCoefficients.hpp"    // for guffPairCoefficients
+#include "guffPair.hpp"            // for GuffPair
+#include "physicalData.hpp"        // for PhysicalData
+#include "potentialSettings.hpp"   // for PotentialSettings
+#include "simulationBox.hpp"       // for SimulationBox
 #include "typeAliases.hpp"
 
 namespace waterModel
@@ -49,7 +51,7 @@ namespace waterModel
         );
 
        private:
-        auto _nonCoulombCutOff = 12.0;
+        auto _nonCoulombCutOff = defaults::_COULOMB_CUT_OFF_DEFAULT_;
         auto _guffPairOO       = potential::GuffPair();
         auto _guffPairOH       = potential::GuffPair();
         auto _guffPairHH       = potential::GuffPair();
