@@ -66,7 +66,7 @@ void MMMDEngine::calculateForces()
     _interWater->calculate(
         *_simulationBox,
         *_physicalData,
-        _potential->getCoulombPotential()
+        _potential->getCoulombPotSharedPtr()
     );
 
     _intraNonBonded->calculate(*_simulationBox, *_physicalData);

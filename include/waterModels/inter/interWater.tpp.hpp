@@ -54,19 +54,19 @@ void waterModel::InterWaterImpl<Derived>::initGuffPairs()
         guffPair.setForceCutOff(forceCutOff);
     };
 
-    _GuffPairOO = makeGuffPair(Derived::_guffCoefficientsOO);
-    _GuffPairOH = makeGuffPair(Derived::_guffCoefficientsOH);
-    _GuffPairHH = makeGuffPair(Derived::_guffCoefficientsHH);
+    _guffPairOO = makeGuffPair(Derived::_guffCoefficientsOO);
+    _guffPairOH = makeGuffPair(Derived::_guffCoefficientsOH);
+    _guffPairHH = makeGuffPair(Derived::_guffCoefficientsHH);
 
-    finalizeCutOff(_GuffPairOO);
-    finalizeCutOff(_GuffPairOH);
-    finalizeCutOff(_GuffPairHH);
+    finalizeCutOff(_guffPairOO);
+    finalizeCutOff(_guffPairOH);
+    finalizeCutOff(_guffPairHH);
 }
 
 template <class Derived>
 void waterModel::InterWaterImpl<Derived>::calculate(
-    pq::SimBox           &simBox,
-    pq::PhysicalData     &physicalData,
+    pq::SimBox                 &simBox,
+    pq::PhysicalData           &physicalData,
     const pq::SharedCoulombPot &coulombPotential
 )
 {

@@ -65,10 +65,12 @@ namespace waterModel
         ) override;
 
        private:
-        auto _nonCoulombCutOff = defaults::_COULOMB_CUT_OFF_DEFAULT_;
-        auto _guffPairOO       = potential::GuffPair();
-        auto _guffPairOH       = potential::GuffPair();
-        auto _guffPairHH       = potential::GuffPair();
+        // clang-format off
+        double _nonCoulombCutOff = defaults::_COULOMB_CUT_OFF_DEFAULT_;
+        potential::GuffPair _guffPairOO{_nonCoulombCutOff, std::vector<double>{}};
+        potential::GuffPair _guffPairOH{_nonCoulombCutOff, std::vector<double>{}};
+        potential::GuffPair _guffPairHH{_nonCoulombCutOff, std::vector<double>{}};
+        // clang-format on
 
         std::pair<double, double> calculateSingleInteraction(
             pq::Atom                   &atom1,
