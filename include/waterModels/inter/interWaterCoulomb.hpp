@@ -24,9 +24,13 @@
 
 #define _INTER_WATER_COULOMB_HPP_
 
-#include "atom.hpp"            // for Atom
-#include "physicalData.hpp"    // for PhysicalData
-#include "simulationBox.hpp"   // for SimulationBox
+#include <array>
+
+#include "atom.hpp"               // for Atom
+#include "guffCoefficients.hpp"   // for guffPairCoefficients
+#include "guffPair.hpp"           // for GuffPair
+#include "physicalData.hpp"       // for PhysicalData
+#include "simulationBox.hpp"      // for SimulationBox
 #include "typeAliases.hpp"
 
 namespace waterModel
@@ -35,6 +39,8 @@ namespace waterModel
     class InterWaterCoulomb
     {
        public:
+        void initGuffPairs();
+
         void calculate(
             pq::SimBox &,
             pq::PhysicalData &,
@@ -42,6 +48,11 @@ namespace waterModel
         );
 
        private:
+        auto _nonCoulombCutOff = 12.0;
+        auto _guffPairOO       = potential::GuffPair();
+        auto _guffPairOH       = potential::GuffPair();
+        auto _guffPairHH       = potential::GuffPair();
+
         double calculateSingleInteraction(
             pq::Atom             &atom1,
             pq::Atom             &atom2,
@@ -57,6 +68,10 @@ namespace waterModel
        private:
         static constexpr auto _oxygenCharge   = -0.82;
         static constexpr auto _hydrogenCharge = 0.41;
+        static constexpr auto _guffCoefficientsOO =
+            constants::_SPC_FW_GUFF_COEFFICIENTS_OO_;
+        static constexpr std::array<double, 22> _guffCoefficientsOH{};
+        static constexpr std::array<double, 22> _guffCoefficientsHH{};
 
         friend class InterWaterCoulomb<SPCFwInterParam>;
     };

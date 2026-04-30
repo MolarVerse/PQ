@@ -25,11 +25,36 @@
 #define _INTER_WATER_COULOMB_TPP_HPP_
 
 #include "coulombPotential.hpp"
+#include "guffPair.hpp"            // for GuffPair
 #include "interWaterCoulomb.hpp"   // for InterWaterCoulomb
 #include "physicalData.hpp"        // for PhysicalData
 #include "simulationBox.hpp"       // for SimulationBox
 #include "typeAliases.hpp"
 #include "vector3d.hpp"   // for Vector3D, norm, operator*, Vec3D
+
+template <class Derived>
+void waterModel::InterWaterCoulomb<Derived>::initGuffPairs()
+{
+    const auto guffCoefficientsOO = Derived::_guffCoefficientsOO;
+    const auto guffCoefficientsOH = Derived::_guffCoefficientsOH;
+    const auto guffCoefficientsHH = Derived::_guffCoefficientsHH;
+
+    _GuffPairOO = potential::GuffPair{_nonCoulombCutOff, guffCoefficientsOO};
+    _GuffPairOH = potential::GuffPair{_nonCoulombCutOff, guffCoefficientsOH};
+    _GuffPairHH = potential::GuffPair{_nonCoulombCutOff, guffCoefficientsHH};
+
+    const auto &[e, f] = _GuffPairOO.calculate(_nonCoulombCutOff);
+    _GuffPairOO.setEnergyCutOff(e);
+    _GuffPairOO.setForceCutOff(f);
+
+    const auto &[e, f] = _GuffPairOH.calculate(_nonCoulombCutOff);
+    _GuffPairOH.setEnergyCutOff(e);
+    _GuffPairOH.setForceCutOff(f);
+
+    const auto &[e, f] = _GuffPairHH.calculate(_nonCoulombCutOff);
+    _GuffPairHH.setEnergyCutOff(e);
+    _GuffPairHH.setForceCutOff(f);
+}
 
 template <class Derived>
 void waterModel::InterWaterCoulomb<Derived>::calculate(
