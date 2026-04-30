@@ -56,13 +56,13 @@ namespace waterModel
     class InterWaterImpl : public InterWater
     {
        public:
-        virtual void initGuffPairs() override;
+        virtual void initGuffPairs() override final;
 
         virtual void calculate(
             pq::SimBox &,
             pq::PhysicalData &,
             const pq::SharedCoulombPot &
-        ) override;
+        ) override final;
 
        private:
         // clang-format off

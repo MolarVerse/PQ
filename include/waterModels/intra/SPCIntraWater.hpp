@@ -38,7 +38,7 @@ namespace waterModel
     class SPCIntraWater : public IntraWater
     {
        public:
-        virtual void calculate(pq::SimBox&, pq::PhysicalData&) override;
+        virtual void calculate(pq::SimBox&, pq::PhysicalData&) override final;
     };
 
     class SPCFwIntraParam : public SPCIntraWater<SPCFwIntraParam>
