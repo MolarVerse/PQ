@@ -41,13 +41,29 @@ namespace waterModel
     class InterWater
     {
        public:
-        virtual void initGuffPairs() {}
+        virtual ~InterWater() = default;
+
+        virtual void initGuffPairs() = 0;
 
         virtual void calculate(
             pq::SimBox &,
             pq::PhysicalData &,
             const pq::SharedCoulombPot &
-        )
+        ) = 0;
+    };
+
+    class NullInterWater : public InterWater
+    {
+       public:
+        NullInterWater() = default;
+
+        void initGuffPairs() override {}
+
+        void calculate(
+            pq::SimBox &,
+            pq::PhysicalData &,
+            const pq::SharedCoulombPot &
+        ) override
         {
         }
     };

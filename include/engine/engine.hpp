@@ -82,7 +82,7 @@ namespace engine
         pq::SharedForceField   _forceField     = std::make_shared<pq::ForceField>();
         pq::SharedConstraints  _constraints    = std::make_shared<pq::Constraints>();
         pq::UniqueIntraWater   _intraWater     = std::make_unique<pq::IntraWater>();
-        pq::UniqueInterWater   _interWater     = std::make_unique<pq::InterWater>();
+        pq::UniqueInterWater   _interWater     = std::make_unique<pq::NullInterWater>();
         // clang-format on
 
 #ifdef WITH_KOKKOS
