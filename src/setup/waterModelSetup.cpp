@@ -96,7 +96,8 @@ void WaterModelSetup::setup()
             "Water models are not supported for QM-only job types."
         ));
 
-    checkTopologyFile();
+    if (WaterModelSettings::getWaterIntraModel() != WaterIntraModel::NONE)
+        checkTopologyFile();
 
     if (const auto geometry =
             getRigidWaterGeometry(WaterModelSettings::getWaterIntraModel());
@@ -191,11 +192,12 @@ std::optional<RigidWaterGeometry> WaterModelSetup::getRigidWaterGeometry(
     const WaterIntraModel intraModel
 )
 {
+    using enum WaterIntraModel;
+
     switch (intraModel)
     {
-        case WaterIntraModel::TIP3P: return RigidWaterGeometry{0.9572, 1.5139};
-        case WaterIntraModel::OPC3:
-            return RigidWaterGeometry{0.97888, 1.598492306};
+        case TIP3P: return RigidWaterGeometry{0.9572, 1.5139};
+        case OPC3: return RigidWaterGeometry{0.97888, 1.598492306};
         default: return std::nullopt;
     }
 }
