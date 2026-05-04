@@ -57,14 +57,15 @@ void PotentialBruteForce::calculateForces(
 {
     startTimingsSection("InterNonBonded");
 
-    const auto box             = simBox.getBoxPtr();
-    const auto isWaterModelSet = WaterModelSettings::isWaterModelSet();
+    const auto box = simBox.getBoxPtr();
+    const auto isWaterInterModelSet =
+        WaterModelSettings::getWaterInterModel() != WaterInterModel::NONE;
 
     double totalCoulombEnergy    = 0.0;
     double totalNonCoulombEnergy = 0.0;
 
     // inter molecular forces
-    if (isWaterModelSet)
+    if (isWaterInterModelSet)
     {
         const auto waterTypeValue = simBox.getWaterType().value_or(size_t{0});
 
