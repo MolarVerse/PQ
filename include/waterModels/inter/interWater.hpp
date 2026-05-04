@@ -38,70 +38,91 @@
 
 namespace waterModel
 {
-    class InterWater
+    struct InterWaterState
+    {
+        double _oxygenCharge{};
+        double _hydrogenCharge{};
+        double _nonCoulombCutOff = defaults::_COULOMB_CUT_OFF_DEFAULT_;
+        std::vector<double> _guffCoefficientsOO;
+        std::vector<double> _guffCoefficientsOH;
+        std::vector<double> _guffCoefficientsHH;
+        potential::GuffPair _guffPairOO{_nonCoulombCutOff, _guffCoefficientsOO};
+        potential::GuffPair _guffPairOH{_nonCoulombCutOff, _guffCoefficientsOH};
+        potential::GuffPair _guffPairHH{_nonCoulombCutOff, _guffCoefficientsHH};
+    };
+
+    class InterWaterStrategy
     {
        public:
-        virtual ~InterWater() = default;
-
-        virtual void initGuffPairs() = 0;
+        ~InterWaterStrategy() = default;
 
         virtual void calculate(
+            const InterWaterState &,
             pq::SimBox &,
             pq::PhysicalData &,
             const pq::SharedCoulombPot &
         ) = 0;
     };
 
-    class NullInterWater : public InterWater
+    class InterWater
     {
        public:
-        NullInterWater() = default;
+        InterWater();
 
-        void initGuffPairs() override {}
+        InterWater(
+            InterWaterState                     state,
+            std::unique_ptr<InterWaterStrategy> strategy
+        )
+            : _state{std::move(state)}, _strategy{std::move(strategy)}
+        {
+        }
+
+        void initGuffPairs();
 
         void calculate(
+            pq::SimBox                 &simBox,
+            pq::PhysicalData           &physicalData,
+            const pq::SharedCoulombPot &sharedCoulombPot
+        )
+        {
+            if (!_strategy)
+                return;
+
+            _strategy
+                ->calculate(_state, simBox, physicalData, sharedCoulombPot);
+        }
+
+       private:
+        InterWaterState                     _state;
+        std::unique_ptr<InterWaterStrategy> _strategy;
+    };
+
+    class InterWaterStrategyNull : public InterWaterStrategy
+    {
+       public:
+        virtual void calculate(
+            const InterWaterState &,
             pq::SimBox &,
             pq::PhysicalData &,
             const pq::SharedCoulombPot &
-        ) override
+        ) override final
         {
         }
     };
 
-    template <class Derived>
-    class InterWaterImpl : public InterWater
+    class InterWaterStrategyBruteForce : public InterWaterStrategy
     {
        public:
-        virtual void initGuffPairs() override final;
-
         virtual void calculate(
+            const InterWaterState &,
             pq::SimBox &,
             pq::PhysicalData &,
             const pq::SharedCoulombPot &
         ) override final;
-
-       private:
-        // clang-format off
-        double _nonCoulombCutOff = defaults::_COULOMB_CUT_OFF_DEFAULT_;
-        potential::GuffPair _guffPairOO{_nonCoulombCutOff, std::vector<double>{}};
-        potential::GuffPair _guffPairOH{_nonCoulombCutOff, std::vector<double>{}};
-        potential::GuffPair _guffPairHH{_nonCoulombCutOff, std::vector<double>{}};
-        // clang-format on
-
-        std::pair<double, double> calculateSingleInteraction(
-            pq::Atom                   &atom1,
-            pq::Atom                   &atom2,
-            const double                chargeProduct,
-            const pq::SharedCoulombPot &coulombPotential,
-            const double                rCutSquared,
-            const pq::SimBox           &simBox,
-            const potential::GuffPair  &guffPair
-        );
     };
 
-    class SPCFwInterParam : public InterWaterImpl<SPCFwInterParam>
+    struct SPCFwInterParam
     {
-       private:
         static constexpr auto                   _oxygenCharge   = -0.82;
         static constexpr auto                   _hydrogenCharge = 0.41;
         inline static const std::vector<double> _guffCoefficientsOO =
@@ -110,13 +131,10 @@ namespace waterModel
             constants::_ZERO_GUFF_COEFFICIENTS_;
         inline static const std::vector<double> _guffCoefficientsHH =
             constants::_ZERO_GUFF_COEFFICIENTS_;
-
-        friend class InterWaterImpl<SPCFwInterParam>;
     };
 
-    class qSPCFwInterParam : public InterWaterImpl<qSPCFwInterParam>
+    struct qSPCFwInterParam
     {
-       private:
         static constexpr auto                   _oxygenCharge   = -0.84;
         static constexpr auto                   _hydrogenCharge = 0.42;
         inline static const std::vector<double> _guffCoefficientsOO =
@@ -125,13 +143,10 @@ namespace waterModel
             constants::_ZERO_GUFF_COEFFICIENTS_;
         inline static const std::vector<double> _guffCoefficientsHH =
             constants::_ZERO_GUFF_COEFFICIENTS_;
-
-        friend class InterWaterImpl<qSPCFwInterParam>;
     };
 
-    class TIP3PInterParam : public InterWaterImpl<TIP3PInterParam>
+    struct TIP3PInterParam
     {
-       private:
         static constexpr auto                   _oxygenCharge   = -0.834;
         static constexpr auto                   _hydrogenCharge = 0.417;
         inline static const std::vector<double> _guffCoefficientsOO =
@@ -140,13 +155,10 @@ namespace waterModel
             constants::_ZERO_GUFF_COEFFICIENTS_;
         inline static const std::vector<double> _guffCoefficientsHH =
             constants::_ZERO_GUFF_COEFFICIENTS_;
-
-        friend class InterWaterImpl<TIP3PInterParam>;
     };
 
-    class OPC3InterParam : public InterWaterImpl<OPC3InterParam>
+    struct OPC3InterParam
     {
-       private:
         static constexpr auto                   _oxygenCharge   = -0.89517;
         static constexpr auto                   _hydrogenCharge = 0.447585;
         inline static const std::vector<double> _guffCoefficientsOO =
@@ -155,10 +167,42 @@ namespace waterModel
             constants::_ZERO_GUFF_COEFFICIENTS_;
         inline static const std::vector<double> _guffCoefficientsHH =
             constants::_ZERO_GUFF_COEFFICIENTS_;
-
-        friend class InterWaterImpl<OPC3InterParam>;
     };
 
+    template <class T>
+    concept InterWaterParameterClass = requires {
+        { T::_oxygenCharge } -> std::convertible_to<double>;
+        { T::_hydrogenCharge } -> std::convertible_to<double>;
+        { T::_guffCoefficientsOO } -> std::convertible_to<std::vector<double>>;
+        { T::_guffCoefficientsOH } -> std::convertible_to<std::vector<double>>;
+        { T::_guffCoefficientsHH } -> std::convertible_to<std::vector<double>>;
+    };
+
+    template <InterWaterParameterClass T>
+    inline InterWaterState makeInterWaterState()
+    {
+        auto state                = InterWaterState();
+        state._oxygenCharge       = T::_oxygenCharge;
+        state._hydrogenCharge     = T::_hydrogenCharge;
+        state._guffCoefficientsOO = T::_guffCoefficientsOO;
+        state._guffCoefficientsOH = T::_guffCoefficientsOH;
+        state._guffCoefficientsHH = T::_guffCoefficientsHH;
+
+        return state;
+    }
+
+    namespace detail
+    {
+        inline std::pair<double, double> calculateSingleInteraction(
+            pq::Atom                   &atom1,
+            pq::Atom                   &atom2,
+            const double                chargeProduct,
+            const pq::SharedCoulombPot &coulombPotential,
+            const double                rCutSquared,
+            const pq::SimBox           &simBox,
+            const potential::GuffPair  &guffPair
+        );
+    }
 }   // namespace waterModel
 
 #include "interWater.tpp.hpp"   // DO NOT MOVE THIS LINE

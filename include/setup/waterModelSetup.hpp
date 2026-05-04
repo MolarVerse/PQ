@@ -50,6 +50,7 @@ namespace setup
        private:
         pq::MDEngine &_engine;
 
+        void makeInterWater();
         void checkTopologyFile();
         void shakeSetupForRigidWater(const RigidWaterGeometry &geometry);
         [[nodiscard]] std::optional<RigidWaterGeometry> getRigidWaterGeometry(

@@ -30,6 +30,7 @@
 #include "engine.hpp"               // for Engine
 #include "exceptions.hpp"           // for customException
 #include "fileSettings.hpp"         // for FileSettings
+#include "interWater.hpp"           // for InterWater
 #include "mdEngine.hpp"             // for MDEngine
 #include "molecule.hpp"             // for Molecule
 #include "waterModelSettings.hpp"   // for WaterModelSettings
@@ -39,6 +40,7 @@ using namespace customException;
 using namespace engine;
 using namespace settings;
 using namespace setup;
+using namespace waterModel;
 
 /**
  * @brief Set up the configured water model for an MD engine.
@@ -111,6 +113,9 @@ void WaterModelSetup::setup()
             getRigidWaterGeometry(WaterModelSettings::getWaterIntraModel());
         geometry.has_value())
         shakeSetupForRigidWater(geometry.value());
+
+    if (WaterModelSettings::getWaterInterModel() != WaterInterModel::NONE)
+        makeInterWater();
 
     _engine.getLogOutput().writeSetupInfo(
         std::format(
@@ -252,4 +257,35 @@ void WaterModelSetup::shakeSetupForRigidWater(
         _engine.getConstraints().addBondConstraint(bondConstraintOH2);
         _engine.getConstraints().addBondConstraint(bondConstraintHH);
     }
+}
+
+void WaterModelSetup::makeInterWater()
+{
+    using enum WaterInterModel;
+    auto state = InterWaterState();
+
+    const auto model = WaterModelSettings::getWaterInterModel();
+
+    switch (model)
+    {
+        case SPC_FW: state = makeInterWaterState<SPCFwInterParam>(); break;
+        case QSPC_FW: state = makeInterWaterState<qSPCFwInterParam>(); break;
+        case TIP3P: state = makeInterWaterState<TIP3PInterParam>(); break;
+        case OPC3: state = makeInterWaterState<OPC3InterParam>(); break;
+    }
+
+    std::unique_ptr<InterWaterStrategy> strategy;
+
+    auto isCellListActivated = _engine.getCellList().isActive();
+    if (isCellListActivated)
+        strategy = std::make_unique<InterWaterStrategyBruteForce>();
+    // TODO: implement cell-list strategy
+    else
+        strategy = std::make_unique<InterWaterStrategyBruteForce>();
+
+    auto interWater = std::make_unique<InterWater>(state, std::move(strategy));
+
+    interWater->initGuffPairs();
+
+    _engine.setInterWater(std::move(interWater));
 }

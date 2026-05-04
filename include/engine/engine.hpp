@@ -82,7 +82,7 @@ namespace engine
         pq::SharedForceField   _forceField     = std::make_shared<pq::ForceField>();
         pq::SharedConstraints  _constraints    = std::make_shared<pq::Constraints>();
         pq::UniqueIntraWater   _intraWater     = std::make_unique<pq::IntraWater>();
-        pq::UniqueInterWater   _interWater     = std::make_unique<pq::NullInterWater>();
+        pq::UniqueInterWater   _interWater     = std::make_unique<pq::InterWater>();
         // clang-format on
 
 #ifdef WITH_KOKKOS
@@ -179,8 +179,6 @@ namespace engine
         void makeVirial(T virial);
         template <typename T>
         void makeIntraWater(T);
-        template <typename T>
-        void makeInterWater(T);
 
         /********************************
          * standard getters and setters *
@@ -190,6 +188,7 @@ namespace engine
         [[nodiscard]] timings::GlobalTimer &getTimer() { return _timer; }
 
         void setTimer(const timings::GlobalTimer &timer) { _timer = timer; }
+        void setInterWater(pq::UniqueInterWater interWater);
 
 #ifdef WITH_KOKKOS
         [[nodiscard]] pq::KokkosSimBox    &getKokkosSimulationBox();

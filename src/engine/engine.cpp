@@ -258,6 +258,16 @@ Constraints *Engine::getConstraintsPtr() { return _constraints.get(); }
 IntraNonBonded *Engine::getIntraNonBondedPtr() { return _intraNonBonded.get(); }
 
 /**
+ * @brief set the inter-water interactions handler
+ *
+ * @param interWater The new inter-water handler to use
+ */
+void Engine::setInterWater(pq::UniqueInterWater interWater)
+{
+    _interWater = std::move(interWater);
+}
+
+/**
  * @brief get the reference to the engine output
  *
  * @return EngineOutput&

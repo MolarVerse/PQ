@@ -206,9 +206,8 @@ namespace input
 
 namespace waterModel
 {
-    class IntraWater;       // forward declaration
-    class InterWater;       // forward declaration
-    class NullInterWater;   // forward declaration
+    class IntraWater;   // forward declaration
+    class InterWater;   // forward declaration
 }   // namespace waterModel
 
 namespace pq
@@ -434,9 +433,8 @@ namespace pq
      * water model namespace *
      *************************/
 
-    using IntraWater     = waterModel::IntraWater;
-    using InterWater     = waterModel::InterWater;
-    using NullInterWater = waterModel::NullInterWater;
+    using IntraWater = waterModel::IntraWater;
+    using InterWater = waterModel::InterWater;
 
     using UniqueIntraWater = std::unique_ptr<IntraWater>;
     using UniqueInterWater = std::unique_ptr<InterWater>;
