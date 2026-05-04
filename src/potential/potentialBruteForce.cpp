@@ -24,11 +24,13 @@
 
 #include <cstddef>   // for size_t
 
-#include "molecule.hpp"        // for Molecule
-#include "physicalData.hpp"    // for PhysicalData
-#include "simulationBox.hpp"   // for SimulationBox
+#include "molecule.hpp"             // for Molecule
+#include "physicalData.hpp"         // for PhysicalData
+#include "simulationBox.hpp"        // for SimulationBox
+#include "waterModelSettings.hpp"   // for WaterModelSettings
 
 using namespace potential;
+using namespace settings;
 using namespace simulationBox;
 using namespace physicalData;
 
@@ -55,41 +57,79 @@ void PotentialBruteForce::calculateForces(
 {
     startTimingsSection("InterNonBonded");
 
-    const auto box = simBox.getBoxPtr();
+    const auto box             = simBox.getBoxPtr();
+    const auto isWaterModelSet = WaterModelSettings::isWaterModelSet();
 
     double totalCoulombEnergy    = 0.0;
     double totalNonCoulombEnergy = 0.0;
 
     // inter molecular forces
-    size_t i = 0;
-    for (auto &mol1 : simBox.getMMMolecules())
+    if (isWaterModelSet)
     {
-        size_t j = 0;
-        for (auto &mol2 : simBox.getMMMolecules())
+        const auto waterTypeValue = simBox.getWaterType().value_or(size_t{0});
+
+        size_t i = 0;
+        for (auto &mol1 : simBox.getMMMolecules())
         {
-            // avoid double counting and self interaction
-            if (j >= i)
-                break;
+            size_t j = 0;
+            for (auto &mol2 : simBox.getMMMolecules())
+            {
+                // avoid double counting and self interaction
+                if (j >= i)
+                    break;
 
-            for (auto &atom1 : mol1.getAtoms())
-                for (auto &atom2 : mol2.getAtoms())
+                if (mol1.getMoltype() == waterTypeValue &&
+                    mol2.getMoltype() == waterTypeValue)
                 {
-                    const auto [coulombEnergy, nonCoulombEnergy] =
-                        calculateSingleInteraction<MMChargeTag, MMChargeTag>(
-                            *box,
-                            mol1,
-                            mol2,
-                            *atom1,
-                            *atom2
-                        );
-
-                    totalCoulombEnergy    += coulombEnergy;
-                    totalNonCoulombEnergy += nonCoulombEnergy;
+                    ++j;
+                    continue;
                 }
-            ++j;
+
+                for (auto &atom1 : mol1.getAtoms())
+                    for (auto &atom2 : mol2.getAtoms())
+                    {
+                        const auto [coulombEnergy, nonCoulombEnergy] =
+                            calculateSingleInteraction<
+                                MMChargeTag,
+                                MMChargeTag>(*box, mol1, mol2, *atom1, *atom2);
+
+                        totalCoulombEnergy    += coulombEnergy;
+                        totalNonCoulombEnergy += nonCoulombEnergy;
+                    }
+                ++j;
+            }
+            ++i;
         }
-        ++i;
     }
+    else
+    {
+        size_t i = 0;
+        for (auto &mol1 : simBox.getMMMolecules())
+        {
+            size_t j = 0;
+            for (auto &mol2 : simBox.getMMMolecules())
+            {
+                // avoid double counting and self interaction
+                if (j >= i)
+                    break;
+
+                for (auto &atom1 : mol1.getAtoms())
+                    for (auto &atom2 : mol2.getAtoms())
+                    {
+                        const auto [coulombEnergy, nonCoulombEnergy] =
+                            calculateSingleInteraction<
+                                MMChargeTag,
+                                MMChargeTag>(*box, mol1, mol2, *atom1, *atom2);
+
+                        totalCoulombEnergy    += coulombEnergy;
+                        totalNonCoulombEnergy += nonCoulombEnergy;
+                    }
+                ++j;
+            }
+            ++i;
+        }
+    }
+
     physicalData.setCoulombEnergy(totalCoulombEnergy);
     physicalData.setNonCoulombEnergy(totalNonCoulombEnergy);
 
