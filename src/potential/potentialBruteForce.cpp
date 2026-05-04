@@ -29,10 +29,10 @@
 #include "simulationBox.hpp"        // for SimulationBox
 #include "waterModelSettings.hpp"   // for WaterModelSettings
 
+using namespace physicalData;
 using namespace potential;
 using namespace settings;
 using namespace simulationBox;
-using namespace physicalData;
 
 using enum simulationBox::HybridZone;
 

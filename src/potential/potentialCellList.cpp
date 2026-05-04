@@ -25,15 +25,17 @@
 #include <cstddef>   // for size_t
 #include <vector>    // for vector
 
-#include "cell.hpp"            // for Cell, simulationBox
-#include "celllist.hpp"        // for CellList
-#include "molecule.hpp"        // for Molecule
-#include "physicalData.hpp"    // for PhysicalData
-#include "simulationBox.hpp"   // for SimulationBox
+#include "cell.hpp"                 // for Cell, simulationBox
+#include "celllist.hpp"             // for CellList
+#include "molecule.hpp"             // for Molecule
+#include "physicalData.hpp"         // for PhysicalData
+#include "simulationBox.hpp"        // for SimulationBox
+#include "waterModelSettings.hpp"   // for WaterModelSettings
 
-using namespace potential;
-using namespace simulationBox;
 using namespace physicalData;
+using namespace potential;
+using namespace settings;
+using namespace simulationBox;
 
 using enum simulationBox::HybridZone;
 
@@ -66,54 +68,34 @@ void PotentialCellList::calculateForces(
 {
     startTimingsSection("InterNonBonded");
 
-    const auto box = simBox.getBoxPtr();
+    const auto box             = simBox.getBoxPtr();
+    const auto isWaterModelSet = WaterModelSettings::isWaterModelSet();
 
     double totalCoulombEnergy    = 0.0;
     double totalNonCoulombEnergy = 0.0;
 
-    for (const auto &cell_i : cellList.getCells())
+    if (isWaterModelSet)
     {
-        size_t i = 0;
-        for (auto &mol1 : cell_i.getMMMolecules())
+        const auto waterTypeValue = simBox.getWaterType().value_or(size_t{0});
+
+        for (const auto &cell_i : cellList.getCells())
         {
-            size_t j = 0;
-            for (auto &mol2 : cell_i.getMMMolecules())
+            size_t i = 0;
+            for (auto &mol1 : cell_i.getMMMolecules())
             {
-                // avoid double counting and self interaction
-                if (j >= i)
-                    break;
-
-                for (auto &atom1 : mol1->getAtoms())
-                    for (auto &atom2 : mol2->getAtoms())
-                    {
-                        const auto [coulombEnergy, nonCoulombEnergy] =
-                            calculateSingleInteraction<
-                                MMChargeTag,
-                                MMChargeTag>(
-                                *box,
-                                *mol1,
-                                *mol2,
-                                *atom1,
-                                *atom2
-                            );
-
-                        totalCoulombEnergy    += coulombEnergy;
-                        totalNonCoulombEnergy += nonCoulombEnergy;
-                    }
-                ++j;
-            }
-            ++i;
-        }
-    }
-
-    for (const auto &cell1 : cellList.getCells())
-        for (const auto *cell2 : cell1.getNeighbourCells())
-            for (auto &mol1 : cell1.getMMMolecules())
-                for (auto &mol2 : cell2->getMMMolecules())
+                size_t j = 0;
+                for (auto &mol2 : cell_i.getMMMolecules())
                 {
-                    // avoid self interaction
-                    if (mol1 == mol2)
+                    // avoid double counting and self interaction
+                    if (j >= i)
+                        break;
+
+                    if (mol1->getMoltype() == waterTypeValue &&
+                        mol2->getMoltype() == waterTypeValue)
+                    {
+                        ++j;
                         continue;
+                    }
 
                     for (auto &atom1 : mol1->getAtoms())
                         for (auto &atom2 : mol2->getAtoms())
@@ -132,8 +114,109 @@ void PotentialCellList::calculateForces(
                             totalCoulombEnergy    += coulombEnergy;
                             totalNonCoulombEnergy += nonCoulombEnergy;
                         }
+                    ++j;
                 }
+                ++i;
+            }
+        }
 
+        for (const auto &cell1 : cellList.getCells())
+            for (const auto *cell2 : cell1.getNeighbourCells())
+                for (auto &mol1 : cell1.getMMMolecules())
+                    for (auto &mol2 : cell2->getMMMolecules())
+                    {
+                        // avoid self interaction
+                        if (mol1 == mol2)
+                            continue;
+
+                        if (mol1->getMoltype() == waterTypeValue &&
+                            mol2->getMoltype() == waterTypeValue)
+                            continue;
+
+                        for (auto &atom1 : mol1->getAtoms())
+                            for (auto &atom2 : mol2->getAtoms())
+                            {
+                                const auto [coulombEnergy, nonCoulombEnergy] =
+                                    calculateSingleInteraction<
+                                        MMChargeTag,
+                                        MMChargeTag>(
+                                        *box,
+                                        *mol1,
+                                        *mol2,
+                                        *atom1,
+                                        *atom2
+                                    );
+
+                                totalCoulombEnergy    += coulombEnergy;
+                                totalNonCoulombEnergy += nonCoulombEnergy;
+                            }
+                    }
+    }
+    else
+    {
+        for (const auto &cell_i : cellList.getCells())
+        {
+            size_t i = 0;
+            for (auto &mol1 : cell_i.getMMMolecules())
+            {
+                size_t j = 0;
+                for (auto &mol2 : cell_i.getMMMolecules())
+                {
+                    // avoid double counting and self interaction
+                    if (j >= i)
+                        break;
+
+                    for (auto &atom1 : mol1->getAtoms())
+                        for (auto &atom2 : mol2->getAtoms())
+                        {
+                            const auto [coulombEnergy, nonCoulombEnergy] =
+                                calculateSingleInteraction<
+                                    MMChargeTag,
+                                    MMChargeTag>(
+                                    *box,
+                                    *mol1,
+                                    *mol2,
+                                    *atom1,
+                                    *atom2
+                                );
+
+                            totalCoulombEnergy    += coulombEnergy;
+                            totalNonCoulombEnergy += nonCoulombEnergy;
+                        }
+                    ++j;
+                }
+                ++i;
+            }
+        }
+
+        for (const auto &cell1 : cellList.getCells())
+            for (const auto *cell2 : cell1.getNeighbourCells())
+                for (auto &mol1 : cell1.getMMMolecules())
+                    for (auto &mol2 : cell2->getMMMolecules())
+                    {
+                        // avoid self interaction
+                        if (mol1 == mol2)
+                            continue;
+
+                        for (auto &atom1 : mol1->getAtoms())
+                            for (auto &atom2 : mol2->getAtoms())
+                            {
+                                const auto [coulombEnergy, nonCoulombEnergy] =
+                                    calculateSingleInteraction<
+                                        MMChargeTag,
+                                        MMChargeTag>(
+                                        *box,
+                                        *mol1,
+                                        *mol2,
+                                        *atom1,
+                                        *atom2
+                                    );
+
+                                totalCoulombEnergy    += coulombEnergy;
+                                totalNonCoulombEnergy += nonCoulombEnergy;
+                            }
+                    }
+    }
     physicalData.setCoulombEnergy(totalCoulombEnergy);
     physicalData.setNonCoulombEnergy(totalNonCoulombEnergy);
 
