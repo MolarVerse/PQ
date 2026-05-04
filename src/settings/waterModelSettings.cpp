@@ -142,6 +142,15 @@ void WaterModelSettings::setWaterInterModel(const WaterInterModel model)
     _waterInterModel = model;
 }
 
+/**
+ * @brief Convert a water intramolecular model enum to its string
+ * representation.
+ *
+ * @param waterIntraModel The water intramolecular model enum value.
+ *
+ * @return A human-readable string for the model (e.g., "SPC/Fw", "TIP3P"),
+ * or "none" if the model is unknown.
+ */
 std::string settings::string(const WaterIntraModel &waterIntraModel)
 {
     switch (waterIntraModel)
@@ -157,6 +166,15 @@ std::string settings::string(const WaterIntraModel &waterIntraModel)
     }
 }
 
+/**
+ * @brief Convert a water intermolecular model enum to its string
+ * representation.
+ *
+ * @param waterInterModel The water intermolecular model enum value.
+ *
+ * @return A human-readable string for the model (e.g., "SPC/Fw", "TIP3P"),
+ * or "none" if the model is unknown.
+ */
 std::string settings::string(const WaterInterModel &waterInterModel)
 {
     switch (waterInterModel)

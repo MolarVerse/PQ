@@ -41,11 +41,13 @@ using namespace settings;
 using namespace setup;
 
 /**
- * @brief wrapper for water model setup
+ * @brief Set up the configured water model for an MD engine.
  *
- * @details constructs a water model setup object and calls the setup function
+ * @details This is the public entry point to the water model setup. It writes
+ * setup output, constructs a @ref WaterModelSetup helper and runs the actual
+ * setup routine.
  *
- * @param engine
+ * @param engine The engine that should receive the water model setup.
  */
 void setup::setupWaterModel(Engine &engine)
 {
@@ -57,19 +59,25 @@ void setup::setupWaterModel(Engine &engine)
 }
 
 /**
- * @brief Construct a new Water Model Setup object
+ * @brief Construct a water model setup helper.
  *
- * @param engine
+ * @param engine The MD engine used to access simulation state, constraints,
+ * and force-field data during water model setup.
  */
 WaterModelSetup::WaterModelSetup(MDEngine &engine) : _engine(engine) {}
 
 /**
- * @brief setup water model
+ * @brief Perform all water model setup steps.
  *
- * @throw UserInputException if water model is requested but no water type is
- * specified
- * @throw MolDescriptorException if water molecule doesn't have exactly 3 atoms
- * in the required order (O, H, H)
+ * @details Validates that a water moltype exists, checks that the molecule
+ * descriptor matches the supported geometry, rejects unsupported job types,
+ * optionally verifies the topology file, and installs constraints for rigid
+ * water models.
+ *
+ * @throws UserInputException If water model setup is requested without a water
+ * moltype or for unsupported QM-only jobs.
+ * @throws MolDescriptorException If the selected water molecule does not
+ * contain exactly three atoms in O-H-H order.
  */
 void WaterModelSetup::setup()
 {
@@ -188,6 +196,16 @@ void WaterModelSetup::checkTopologyFile()
     }
 }
 
+/**
+ * @brief Get the rigid geometry parameters for a water model.
+ *
+ * @details Only rigid water variants return geometry data. Flexible water
+ * models return @c std::nullopt and are handled without constraints.
+ *
+ * @param intraModel The configured intramolecular water model.
+ * @return The O-H and H-H distances for rigid models, or @c std::nullopt if
+ * the model is not rigid.
+ */
 std::optional<RigidWaterGeometry> WaterModelSetup::getRigidWaterGeometry(
     const WaterIntraModel intraModel
 )
@@ -202,6 +220,15 @@ std::optional<RigidWaterGeometry> WaterModelSetup::getRigidWaterGeometry(
     }
 }
 
+/**
+ * @brief Construct and add SHAKE-style bond constraints for rigid water
+ * molecules.
+ *
+ * @details Adds constraints for both O-H bonds and the H-H distance of each
+ * water type molecule in the current simulation box.
+ *
+ * @param geometry The target rigid water geometry.
+ */
 void WaterModelSetup::shakeSetupForRigidWater(
     const RigidWaterGeometry &geometry
 )

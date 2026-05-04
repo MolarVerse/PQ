@@ -35,6 +35,19 @@
 #include "typeAliases.hpp"
 #include "vector3d.hpp"   // for Vector3D, norm, operator*, Vec3D
 
+/**
+ * @brief Initialize GUFF pair objects for all water-water interaction types.
+ *
+ * @details Creates and configures GUFF pair objects for O-O, O-H, and H-H
+ * interactions. Each pair is finalized by computing energy and force cutoff
+ * corrections at the non-Coulomb cutoff distance.
+ *
+ * @tparam Derived The derived water model class providing GUFF coefficients
+ * and atomic partial charges.
+ *
+ * @note This method must be called once during water model initialization
+ * before any force calculations are performed.
+ */
 template <class Derived>
 void waterModel::InterWaterImpl<Derived>::initGuffPairs()
 {
@@ -63,6 +76,21 @@ void waterModel::InterWaterImpl<Derived>::initGuffPairs()
     finalizeCutOff(_guffPairHH);
 }
 
+/**
+ * @brief Calculate all intermolecular water-water interactions for the system.
+ *
+ * @details Iterates over all pairs of water molecules, computing O-O, O-H, and
+ * H-H Coulomb and non-Coulomb interactions for each pair. Forces are applied
+ * directly to the atoms, and energies are accumulated and stored in the
+ * physical data container.
+ *
+ * @param simBox The simulation box containing the system molecules.
+ * @param physicalData The physical data container to accumulate energies.
+ * @param coulombPotential The Coulomb potential evaluator.
+ *
+ * @tparam Derived The derived water model class providing GUFF coefficients,
+ * charges, and interaction pair objects.
+ */
 template <class Derived>
 void waterModel::InterWaterImpl<Derived>::calculate(
     pq::SimBox                 &simBox,
@@ -154,6 +182,30 @@ void waterModel::InterWaterImpl<Derived>::calculate(
     physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
 }
 
+/**
+ * @brief Calculate Coulomb and non-Coulomb energy and force for a single
+ * atom pair.
+ *
+ * @details Applies periodic boundary conditions, computes the distance,
+ * evaluates Coulomb potential if within the Coulomb cutoff, and evaluates
+ * non-Coulomb if within the non-Coulomb cutoff. Returns the Coulomb and
+ * non-Coulomb energy contributions; forces are accumulated directly on the
+ * atoms.
+ *
+ * @param atom1 The first atom of the pair.
+ * @param atom2 The second atom of the pair.
+ * @param chargeProduct The product of the atomic charges (pre-computed
+ * for efficiency).
+ * @param coulombPotential The Coulomb potential evaluator.
+ * @param rCutSquared The squared Coulomb cutoff distance.
+ * @param simBox The simulation box for periodic boundary calculations.
+ * @param guffPair The GUFF pair object for non-Coulomb evaluation.
+ *
+ * @return A pair<double, double> containing the Coulomb and non-Coulomb energy
+ * contributions. Force is added directly to the atoms' force vectors.
+ *
+ * @tparam Derived The derived water model class.
+ */
 template <class Derived>
 std::pair<double, double> waterModel::InterWaterImpl<Derived>::
     calculateSingleInteraction(

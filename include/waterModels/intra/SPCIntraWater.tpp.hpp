@@ -32,6 +32,26 @@
 #include "simulationBox.hpp"    // for SimulationBox
 #include "vector3d.hpp"         // for Vector3D, norm, operator*, Vec3D
 
+/**
+ * @brief Calculate intramolecular SPC water interactions for all water
+ * molecules.
+ *
+ * @details For each water molecule, computes:
+ * - Two O-H bond energies and forces using a harmonic potential.
+ * - One H-O-H angle energy and force using a harmonic potential.
+ * - Applies periodic boundary conditions to bond vectors.
+ * - Accumulates bond energy, angle energy, and virial contributions.
+ * - Handles hybrid-zone smoothing factors if applicable.
+ *
+ * @param box The simulation box containing water molecules and PBC settings.
+ * @param physicalData The physical data container to accumulate energies and
+ * virial.
+ *
+ * @tparam Derived The derived SPC water model class providing equilibrium
+ * distances, angles, and force constants.
+ *
+ * @note Inactive molecules are skipped.
+ */
 template <class Derived>
 void waterModel::SPCIntraWater<Derived>::calculate(
     pq::SimBox&       box,
