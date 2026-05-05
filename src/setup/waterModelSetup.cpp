@@ -272,6 +272,7 @@ void WaterModelSetup::makeInterWater()
         case QSPC_FW: state = makeInterWaterState<qSPCFwInterParam>(); break;
         case TIP3P: state = makeInterWaterState<TIP3PInterParam>(); break;
         case OPC3: state = makeInterWaterState<OPC3InterParam>(); break;
+        default: break;
     }
 
     std::unique_ptr<InterWaterStrategy> strategy;
