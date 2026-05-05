@@ -65,7 +65,7 @@ InterWater::InterWater(
 )
     : _state{std::move(state)}, _strategy{std::move(strategy)}
 {
-    initGuffPairs();
+    initState();
 }
 
 /**
@@ -102,6 +102,21 @@ void InterWater::initGuffPairs()
 }
 
 /**
+ * @brief Precompute pairwise charge products for inter-water interactions.
+ *
+ * @details Caches O-O, O-H, and H-H charge products in the inter-water state
+ * to avoid repeated multiplications during the interaction loops.
+ */
+void InterWater::initChargeProducts()
+{
+    const auto oxygenCharge   = _state._oxygenCharge;
+    const auto hydrogenCharge = _state._hydrogenCharge;
+    _state._chargeProductOO   = oxygenCharge * oxygenCharge;
+    _state._chargeProductOH   = oxygenCharge * hydrogenCharge;
+    _state._chargeProductHH   = hydrogenCharge * hydrogenCharge;
+}
+
+/**
  * @brief Evaluate intermolecular water interactions by brute force.
  *
  * @details Iterates over all active water-molecule pairs, accumulates Coulomb
@@ -114,11 +129,9 @@ void InterWaterStrategyBruteForce::calculate(
     const SharedCoulombPot &coulombPotential
 )
 {
-    const auto oxygenCharge    = state._oxygenCharge;
-    const auto hydrogenCharge  = state._hydrogenCharge;
-    const auto chargeProductOO = oxygenCharge * oxygenCharge;
-    const auto chargeProductOH = oxygenCharge * hydrogenCharge;
-    const auto chargeProductHH = hydrogenCharge * hydrogenCharge;
+    const auto chargeProductOO = state._chargeProductOO;
+    const auto chargeProductOH = state._chargeProductOH;
+    const auto chargeProductHH = state._chargeProductHH;
 
     const auto rCut        = CoulombPot::getCoulombRadiusCutOff();
     const auto rCutSquared = rCut * rCut;

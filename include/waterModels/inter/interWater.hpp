@@ -42,6 +42,9 @@ namespace waterModel
     {
         double _oxygenCharge{};
         double _hydrogenCharge{};
+        double _chargeProductOO{};
+        double _chargeProductOH{};
+        double _chargeProductHH{};
         double _nonCoulombCutOff = defaults::_COULOMB_CUT_OFF_DEFAULT_;
         std::vector<double> _guffCoefficientsOO;
         std::vector<double> _guffCoefficientsOH;
@@ -102,6 +105,12 @@ namespace waterModel
         std::unique_ptr<InterWaterStrategy> _strategy;
 
         void initGuffPairs();
+        void initChargeProducts();
+        void initState()
+        {
+            initGuffPairs();
+            initChargeProducts();
+        }
     };
 
     class InterWaterStrategyNull : public InterWaterStrategy
