@@ -57,7 +57,7 @@ namespace waterModel
     class InterWaterStrategy
     {
        public:
-        ~InterWaterStrategy() = default;
+        virtual ~InterWaterStrategy() = default;
 
         virtual void calculate(
             const InterWaterState &,

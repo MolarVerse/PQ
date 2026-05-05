@@ -46,7 +46,7 @@ using namespace waterModel;
  * InterWater object can exist before a real water model is configured.
  */
 InterWater::InterWater()
-    : InterWater(InterWaterState{}, std::make_unique<InterWaterStrategyNull>())
+    : _state{}, _strategy{std::make_unique<InterWaterStrategyNull>()}
 {
 }
 
