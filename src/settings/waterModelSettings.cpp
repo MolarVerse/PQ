@@ -41,6 +41,16 @@ using namespace customException;
 bool WaterModelSettings::isWaterModelSet() { return _isWaterModelSet; }
 
 /**
+ * @brief returns whether a intermolecular water model is set
+ *
+ * @return true if intermolecular water model is set
+ */
+bool WaterModelSettings::isInterWaterModelSet()
+{
+    return _isInterWaterModelSet;
+}
+
+/**
  * @brief returns the waterIntraModel
  *
  * @return waterIntraModel
@@ -72,6 +82,16 @@ WaterInterModel WaterModelSettings::getWaterInterModel()
 void WaterModelSettings::setIsWaterModelSet(const bool isSet)
 {
     _isWaterModelSet = isSet;
+}
+
+/**
+ * @brief sets whether a intermolecular water model is set
+ *
+ * @param isSet
+ */
+void WaterModelSettings::setIsInterWaterModelSet(const bool isSet)
+{
+    _isInterWaterModelSet = isSet;
 }
 
 /**

@@ -176,7 +176,7 @@ void MMInputParser::parseNonCoulombType(
  * @brief Parse the intramolecular water model type
  *
  * @details Possible options are:
- * 1) "SPC/Fw" - SPC flexible water model for intramolecular interactions
+ * 1) "SPC/Fw"
  *
  * @param lineElements
  * @param lineNumber
@@ -231,7 +231,7 @@ void MMInputParser::parseWaterIntraModel(
  * @brief Parse the intermolecular water model type
  *
  * @details Possible options are:
- * 1) "SPC/Fw" - SPC flexible water model for intermolecular interactions
+ * 1) "SPC/Fw"
  *
  * @param lineElements
  * @param lineNumber
@@ -272,4 +272,5 @@ void MMInputParser::parseWaterInterModel(
         ));
 
     WaterModelSettings::setIsWaterModelSet(true);
+    WaterModelSettings::setIsInterWaterModelSet(true);
 }

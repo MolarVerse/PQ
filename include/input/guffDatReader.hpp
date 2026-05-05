@@ -64,6 +64,10 @@ namespace input::guffdat
         void calculatePartialCharges();
         void checkPartialCharges();
         void checkNecessaryGuffPairs();
+        bool bothMoltypesAreWaterType(
+            const size_t molType1,
+            const size_t molType2
+        );
         void addNonCoulombPair(
             const size_t               molType1,
             const size_t               molType2,

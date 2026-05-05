@@ -50,6 +50,7 @@
 #include "settings.hpp"              // for settings
 #include "simulationBox.hpp"         // for SimulationBox
 #include "stringUtilities.hpp"   // for fileExists, getLineCommands, removeComments, splitString
+#include "waterModelSettings.hpp"   // for WaterModelSettings
 
 using namespace input::guffdat;
 using namespace settings;
@@ -244,10 +245,7 @@ void GuffDatReader::parseLine(const std::vector<std::string> &lineCommands)
 
     auto &simBox = _engine.getSimulationBox();
 
-    // Skip entries if both molecule types are water type molecules
-    const auto waterType = simBox.getWaterType();
-    if (waterType.has_value() && moltype1 == waterType.value() &&
-        moltype2 == waterType.value())
+    if (bothMoltypesAreWaterType(moltype1, moltype2))
         return;
 
     MoleculeType molecule1;
@@ -686,7 +684,6 @@ void GuffDatReader::checkPartialCharges()
 {
     auto      &simBox    = _engine.getSimulationBox();
     const auto nMolTypes = simBox.getMoleculeTypes().size();
-    const auto waterType = simBox.getWaterType();
 
     for (size_t i = 0; i < nMolTypes; ++i)
     {
@@ -709,9 +706,10 @@ void GuffDatReader::checkPartialCharges()
             if (moleculeType2Optional == std::nullopt)
                 continue;
 
-            if (waterType.has_value() &&
-                moleculeType1.getMoltype() == waterType.value() &&
-                moleculeType2Optional.value().getMoltype() == waterType.value())
+            if (bothMoltypesAreWaterType(
+                    moleculeType1.getMoltype(),
+                    moleculeType2Optional.value().getMoltype()
+                ))
                 continue;
 
             else
@@ -774,10 +772,10 @@ void GuffDatReader::checkNecessaryGuffPairs()
     for (const auto &moleculeType1 : necessaryMoleculeTypes)
         for (const auto &moleculeType2 : necessaryMoleculeTypes)
         {
-            // Skip validation if both molecule types are water
-            if (waterType.has_value() &&
-                moleculeType1.getMoltype() == waterType.value() &&
-                moleculeType2.getMoltype() == waterType.value())
+            if (bothMoltypesAreWaterType(
+                    moleculeType1.getMoltype(),
+                    moleculeType2.getMoltype()
+                ))
                 continue;
 
             const auto nAtoms1 = moleculeType1.getNumberOfAtoms();
@@ -804,6 +802,33 @@ void GuffDatReader::checkNecessaryGuffPairs()
                         );
             }
         }
+}
+
+/**
+ * @brief Determine if both provided molecule types are of the
+ *        water molecule type.
+ *
+ * This helper checks whether the inter-water model is enabled and whether
+ * both molecule type indices match the simulation box's configured water
+ * type. Note that molecule type indices are expected to be 1-based in the
+ * surrounding code.
+ *
+ * @param molType1 1-based index of the first molecule type
+ * @param molType2 1-based index of the second molecule type
+ * @return true if the inter-water model is set and both indices equal the
+ *         configured water type; false otherwise
+ */
+bool GuffDatReader::bothMoltypesAreWaterType(
+    const size_t molType1,
+    const size_t molType2
+)
+{
+    auto      &simBox    = _engine.getSimulationBox();
+    const auto waterType = simBox.getWaterType();
+
+    return WaterModelSettings::isInterWaterModelSet() &&
+           waterType.has_value() && molType1 == waterType.value() &&
+           molType2 == waterType.value();
 }
 
 /********************
