@@ -20,20 +20,24 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INTER_WATER_TPP_HPP_
-
-#define _INTER_WATER_TPP_HPP_
+#include "interWater.hpp"   // for InterWater
 
 #include <utility>
+#include <vector>
 
+#include "atom.hpp"                // for Atom
 #include "coulombPotential.hpp"    // for CoulombPotential
 #include "guffPair.hpp"            // for GuffPair
-#include "interWater.hpp"          // for InterWater
 #include "physicalData.hpp"        // for PhysicalData
 #include "potentialSettings.hpp"   // for PotentialSettings
 #include "simulationBox.hpp"       // for SimulationBox
 #include "typeAliases.hpp"
-#include "vector3d.hpp"   // for Vector3D, norm, operator*, Vec3D
+#include "vector3d.hpp"   // for normSquared
+
+using namespace potential;
+using namespace pq;
+using namespace settings;
+using namespace waterModel;
 
 /**
  * @brief Construct an inert inter-water handler.
@@ -41,7 +45,7 @@
  * @details Creates a default state and installs the null strategy so an
  * InterWater object can exist before a real water model is configured.
  */
-inline waterModel::InterWater::InterWater()
+InterWater::InterWater()
     : InterWater(InterWaterState{}, std::make_unique<InterWaterStrategyNull>())
 {
 }
@@ -55,7 +59,7 @@ inline waterModel::InterWater::InterWater()
  * @param state The inter-water parameters.
  * @param strategy The strategy object used to evaluate the interaction.
  */
-inline waterModel::InterWater::InterWater(
+InterWater::InterWater(
     InterWaterState                     state,
     std::unique_ptr<InterWaterStrategy> strategy
 )
@@ -70,15 +74,15 @@ inline waterModel::InterWater::InterWater(
  * @details Resolves the non-Coulomb cutoff, instantiates the three GUFF pair
  * objects, and finalizes their cutoff-dependent coefficients.
  */
-inline void waterModel::InterWater::initGuffPairs()
+void InterWater::initGuffPairs()
 {
     _state._nonCoulombCutOff =
-        settings::PotentialSettings::getNonCoulombRadiusCutOff().value_or(
-            settings::PotentialSettings::getCoulombRadiusCutOff()
+        PotentialSettings::getNonCoulombRadiusCutOff().value_or(
+            PotentialSettings::getCoulombRadiusCutOff()
         );
 
     const auto makeGuffPair = [this](const std::vector<double> &coefficients)
-    { return potential::GuffPair{_state._nonCoulombCutOff, coefficients}; };
+    { return GuffPair{_state._nonCoulombCutOff, coefficients}; };
 
     const auto finalizeCutOff = [this](auto &guffPair)
     {
@@ -103,12 +107,11 @@ inline void waterModel::InterWater::initGuffPairs()
  * @details Iterates over all active water-molecule pairs, accumulates Coulomb
  * and non-Coulomb contributions, and adds forces directly to the atoms.
  */
-inline void waterModel::InterWaterStrategyBruteForce::calculate(
-    const InterWaterState      &state,
-    pq::SimBox                 &simBox,
-    pq::PhysicalData           &physicalData,
-    const pq::SharedCoulombPot &coulombPotential
-
+void InterWaterStrategyBruteForce::calculate(
+    const InterWaterState  &state,
+    SimBox                 &simBox,
+    PhysicalData           &physicalData,
+    const SharedCoulombPot &coulombPotential
 )
 {
     const auto oxygenCharge    = state._oxygenCharge;
@@ -117,7 +120,7 @@ inline void waterModel::InterWaterStrategyBruteForce::calculate(
     const auto chargeProductOH = oxygenCharge * hydrogenCharge;
     const auto chargeProductHH = hydrogenCharge * hydrogenCharge;
 
-    const auto rCut        = pq::CoulombPot::getCoulombRadiusCutOff();
+    const auto rCut        = CoulombPot::getCoulombRadiusCutOff();
     const auto rCutSquared = rCut * rCut;
 
     auto totalCoulombEnergy    = 0.0;
@@ -149,11 +152,10 @@ inline void waterModel::InterWaterStrategyBruteForce::calculate(
             auto &hydrogen3 = water2.getAtom(1);
             auto &hydrogen4 = water2.getAtom(2);
 
-            const auto singleInteraction =
-                [&](pq::Atom                  &atomA,
-                    pq::Atom                  &atomB,
-                    const double               chargeProduct,
-                    const potential::GuffPair &guffPair)
+            const auto singleInteraction = [&](Atom           &atomA,
+                                               Atom           &atomB,
+                                               const double    chargeProduct,
+                                               const GuffPair &guffPair)
             {
                 const auto [coulE, nonCoulE] = calculateSingleInteraction(
                     atomA,
@@ -216,16 +218,15 @@ inline void waterModel::InterWaterStrategyBruteForce::calculate(
  * @return A pair<double, double> containing the Coulomb and non-Coulomb energy
  * contributions. Force is added directly to the atoms' force vectors.
  */
-inline std::pair<double, double> waterModel::InterWaterStrategy::
-    calculateSingleInteraction(
-        pq::Atom                   &atom1,
-        pq::Atom                   &atom2,
-        const double                chargeProduct,
-        const pq::SharedCoulombPot &coulombPotential,
-        const double                rCutSquared,
-        const pq::SimBox           &simBox,
-        const potential::GuffPair  &guffPair
-    )
+std::pair<double, double> InterWaterStrategy::calculateSingleInteraction(
+    Atom                   &atom1,
+    Atom                   &atom2,
+    const double            chargeProduct,
+    const SharedCoulombPot &coulombPotential,
+    const double            rCutSquared,
+    const SimBox           &simBox,
+    const GuffPair         &guffPair
+)
 {
     auto coulombEnergy    = 0.0;
     auto nonCoulombEnergy = 0.0;
@@ -268,5 +269,3 @@ inline std::pair<double, double> waterModel::InterWaterStrategy::
 
     return {coulombEnergy, nonCoulombEnergy};
 }
-
-#endif   //  _INTER_WATER_TPP_HPP_

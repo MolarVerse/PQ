@@ -61,6 +61,7 @@ target_link_libraries(engine
     virial
     forceField
     intraNonBonded
+    interWater
     references
     hybridConfigurator
 
