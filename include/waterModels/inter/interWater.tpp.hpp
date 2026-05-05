@@ -47,6 +47,24 @@ inline waterModel::InterWater::InterWater()
 }
 
 /**
+ * @brief Construct an inter-water handler from a state and a strategy.
+ *
+ * @details Takes ownership of the supplied strategy, stores the provided
+ * state, and initializes the GUFF pairs for the configured water model.
+ *
+ * @param state The inter-water parameters.
+ * @param strategy The strategy object used to evaluate the interaction.
+ */
+inline waterModel::InterWater::InterWater(
+    InterWaterState                     state,
+    std::unique_ptr<InterWaterStrategy> strategy
+)
+    : _state{std::move(state)}, _strategy{std::move(strategy)}
+{
+    initGuffPairs();
+}
+
+/**
  * @brief Build the GUFF pairs for the configured inter-water model.
  *
  * @details Resolves the non-Coulomb cutoff, instantiates the three GUFF pair
@@ -137,16 +155,15 @@ inline void waterModel::InterWaterStrategyBruteForce::calculate(
                     const double               chargeProduct,
                     const potential::GuffPair &guffPair)
             {
-                const auto [coulE, nonCoulE] =
-                    detail::calculateSingleInteraction(
-                        atomA,
-                        atomB,
-                        chargeProduct,
-                        coulombPotential,
-                        rCutSquared,
-                        simBox,
-                        guffPair
-                    );
+                const auto [coulE, nonCoulE] = calculateSingleInteraction(
+                    atomA,
+                    atomB,
+                    chargeProduct,
+                    coulombPotential,
+                    rCutSquared,
+                    simBox,
+                    guffPair
+                );
 
                 totalCoulombEnergy    += coulE;
                 totalNonCoulombEnergy += nonCoulE;
@@ -199,15 +216,16 @@ inline void waterModel::InterWaterStrategyBruteForce::calculate(
  * @return A pair<double, double> containing the Coulomb and non-Coulomb energy
  * contributions. Force is added directly to the atoms' force vectors.
  */
-inline std::pair<double, double> waterModel::detail::calculateSingleInteraction(
-    pq::Atom                   &atom1,
-    pq::Atom                   &atom2,
-    const double                chargeProduct,
-    const pq::SharedCoulombPot &coulombPotential,
-    const double                rCutSquared,
-    const pq::SimBox           &simBox,
-    const potential::GuffPair  &guffPair
-)
+inline std::pair<double, double> waterModel::InterWaterStrategy::
+    calculateSingleInteraction(
+        pq::Atom                   &atom1,
+        pq::Atom                   &atom2,
+        const double                chargeProduct,
+        const pq::SharedCoulombPot &coulombPotential,
+        const double                rCutSquared,
+        const pq::SimBox           &simBox,
+        const potential::GuffPair  &guffPair
+    )
 {
     auto coulombEnergy    = 0.0;
     auto nonCoulombEnergy = 0.0;

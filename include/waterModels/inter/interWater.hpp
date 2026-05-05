@@ -62,6 +62,16 @@ namespace waterModel
             pq::PhysicalData &,
             const pq::SharedCoulombPot &
         ) = 0;
+
+        std::pair<double, double> calculateSingleInteraction(
+            pq::Atom                   &atom1,
+            pq::Atom                   &atom2,
+            const double                chargeProduct,
+            const pq::SharedCoulombPot &coulombPotential,
+            const double                rCutSquared,
+            const pq::SimBox           &simBox,
+            const potential::GuffPair  &guffPair
+        );
     };
 
     class InterWater
@@ -72,12 +82,7 @@ namespace waterModel
         InterWater(
             InterWaterState                     state,
             std::unique_ptr<InterWaterStrategy> strategy
-        )
-            : _state{std::move(state)}, _strategy{std::move(strategy)}
-        {
-        }
-
-        void initGuffPairs();
+        );
 
         void calculate(
             pq::SimBox                 &simBox,
@@ -95,6 +100,8 @@ namespace waterModel
        private:
         InterWaterState                     _state;
         std::unique_ptr<InterWaterStrategy> _strategy;
+
+        void initGuffPairs();
     };
 
     class InterWaterStrategyNull : public InterWaterStrategy
@@ -191,18 +198,6 @@ namespace waterModel
         return state;
     }
 
-    namespace detail
-    {
-        inline std::pair<double, double> calculateSingleInteraction(
-            pq::Atom                   &atom1,
-            pq::Atom                   &atom2,
-            const double                chargeProduct,
-            const pq::SharedCoulombPot &coulombPotential,
-            const double                rCutSquared,
-            const pq::SimBox           &simBox,
-            const potential::GuffPair  &guffPair
-        );
-    }
 }   // namespace waterModel
 
 #include "interWater.tpp.hpp"   // DO NOT MOVE THIS LINE

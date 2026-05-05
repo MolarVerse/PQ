@@ -285,7 +285,5 @@ void WaterModelSetup::makeInterWater()
 
     auto interWater = std::make_unique<InterWater>(state, std::move(strategy));
 
-    interWater->initGuffPairs();
-
     _engine.setInterWater(std::move(interWater));
 }
