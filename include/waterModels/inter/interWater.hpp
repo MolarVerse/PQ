@@ -66,14 +66,16 @@ namespace waterModel
             const pq::SharedCoulombPot &
         ) = 0;
 
-        std::pair<double, double> calculateSingleInteraction(
+        void calculateSingleInteraction(
             pq::Atom                   &atom1,
             pq::Atom                   &atom2,
             const double                chargeProduct,
             const pq::SharedCoulombPot &coulombPotential,
             const double                rCutSquared,
             const pq::SimBox           &simBox,
-            const potential::GuffPair  &guffPair
+            const potential::GuffPair  &guffPair,
+            double                     &coulombEnergy,
+            double                     &nonCoulombEnergy
         );
     };
 

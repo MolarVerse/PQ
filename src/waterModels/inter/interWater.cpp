@@ -170,18 +170,17 @@ void InterWaterStrategyBruteForce::calculate(
                                                const double    chargeProduct,
                                                const GuffPair &guffPair)
             {
-                const auto [coulE, nonCoulE] = calculateSingleInteraction(
+                calculateSingleInteraction(
                     atomA,
                     atomB,
                     chargeProduct,
                     coulombPotential,
                     rCutSquared,
                     simBox,
-                    guffPair
+                    guffPair,
+                    totalCoulombEnergy,
+                    totalNonCoulombEnergy
                 );
-
-                totalCoulombEnergy    += coulE;
-                totalNonCoulombEnergy += nonCoulE;
             };
 
             // clang-format off
@@ -231,19 +230,18 @@ void InterWaterStrategyBruteForce::calculate(
  * @return A pair<double, double> containing the Coulomb and non-Coulomb energy
  * contributions. Force is added directly to the atoms' force vectors.
  */
-std::pair<double, double> InterWaterStrategy::calculateSingleInteraction(
+void InterWaterStrategy::calculateSingleInteraction(
     Atom                   &atom1,
     Atom                   &atom2,
     const double            chargeProduct,
     const SharedCoulombPot &coulombPotential,
     const double            rCutSquared,
     const SimBox           &simBox,
-    const GuffPair         &guffPair
+    const GuffPair         &guffPair,
+    double                 &coulombEnergy,
+    double                 &nonCoulombEnergy
 )
 {
-    auto coulombEnergy    = 0.0;
-    auto nonCoulombEnergy = 0.0;
-
     const auto xyz_i = atom1.getPosition();
     const auto xyz_j = atom2.getPosition();
 
@@ -259,13 +257,13 @@ std::pair<double, double> InterWaterStrategy::calculateSingleInteraction(
     {
         const double distance = ::sqrt(distanceSquared);
 
-        auto [e, f]   = coulombPotential->calculate(distance, chargeProduct);
-        coulombEnergy = e;
+        auto [e, f]    = coulombPotential->calculate(distance, chargeProduct);
+        coulombEnergy += e;
 
         if (distance < guffPair.getRadialCutOff())
         {
             auto [nonCoulE, nonCoulF]  = guffPair.calculate(distance);
-            nonCoulombEnergy           = nonCoulE;
+            nonCoulombEnergy          += nonCoulE;
             f                         += nonCoulF;
         }
 
@@ -279,6 +277,4 @@ std::pair<double, double> InterWaterStrategy::calculateSingleInteraction(
 
         atom1.addShiftForce(shiftForcexyz);
     }
-
-    return {coulombEnergy, nonCoulombEnergy};
 }
