@@ -284,7 +284,8 @@ void WaterModelSetup::makeInterWater()
     else
         strategy = std::make_unique<InterWaterStrategyBruteForce>();
 
-    auto interWater = std::make_unique<InterWater>(state, std::move(strategy));
+    auto interWater =
+        std::make_unique<InterWater>(std::move(state), std::move(strategy));
 
     _engine.setInterWater(std::move(interWater));
 }

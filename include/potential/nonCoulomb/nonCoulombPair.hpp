@@ -70,6 +70,7 @@ namespace potential
 
         void setInternalType1(const size_t internalType1);
         void setInternalType2(const size_t internalType2);
+        void setRadialCutOff(const double radialCutoff);
         void setEnergyCutOff(const double energyCutoff);
         void setForceCutOff(const double forceCutoff);
 

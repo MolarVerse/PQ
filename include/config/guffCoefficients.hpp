@@ -28,47 +28,19 @@
 
 namespace constants
 {
-    static const std::vector<double> _SPC_FW_GUFF_COEFFICIENTS_OO_ = []
-    {
-        std::vector<double> coefficients(22, 0.0);
-        coefficients[0] = -625.5024676571352;   // LJ C6 in A^6 kcal mol^-1
-        coefficients[1] = 6.0;
-        coefficients[2] = 629326.9774051674;   // LJ C12 in A^12 kcal mol^-1
-        coefficients[3] = 12.0;
-        return coefficients;
-    }();
+    // clang-format off
+    static constexpr double _SPC_FW_LJ_C6_OO_  = -625.5024676571352; // A^6 kcal mol^-1
+    static constexpr double _SPC_FW_LJ_C12_OO_ =  629326.9774051674; // A^6 kcal mol^-1
 
-    static const std::vector<double> _QSPC_FW_GUFF_COEFFICIENTS_OO_ = []
-    {
-        std::vector<double> coefficients(22, 0.0);
-        coefficients[0] = -625.5020652114152;   // LJ C6 in A^6 kcal mol^-1
-        coefficients[1] = 6.0;
-        coefficients[2] = 629326.5724987736;   // LJ C12 in A^12 kcal mol^-1
-        coefficients[3] = 12.0;
-        return coefficients;
-    }();
+    static constexpr double _QSPC_FW_LJ_C6_OO_  = -625.5020652114152; // A^6 kcal mol^-1
+    static constexpr double _QSPC_FW_LJ_C12_OO_ =  629326.5724987736; // A^6 kcal mol^-1
 
-    static const std::vector<double> _TIP3P_GUFF_COEFFICIENTS_OO_ = []
-    {
-        std::vector<double> coefficients(22, 0.0);
-        coefficients[0] = -595.0676884276835;   // LJ C6 in A^6 kcal mol^-1
-        coefficients[1] = 6.0;
-        coefficients[2] = 582015.099443679;   // LJ C12 in A^12 kcal mol^-1
-        coefficients[3] = 12.0;
-        return coefficients;
-    }();
+    static constexpr double _TIP3P_LJ_C6_OO_  = -595.067688427684; // A^6 kcal mol^-1
+    static constexpr double _TIP3P_LJ_C12_OO_ =  582015.099443679; // A^6 kcal mol^-1
 
-    static const std::vector<double> _OPC3_GUFF_COEFFICIENTS_OO_ = []
-    {
-        std::vector<double> coefficients(22, 0.0);
-        coefficients[0] = -668.637501352773;   // LJ C6 in A^6 kcal mol^-1
-        coefficients[1] = 6.0;
-        coefficients[2] = 683996.5615895836;   // LJ C12 in A^12 kcal mol^-1
-        coefficients[3] = 12.0;
-        return coefficients;
-    }();
-
-    static const std::vector<double> _ZERO_GUFF_COEFFICIENTS_(22, 0.0);
+    static constexpr double _OPC3_LJ_C6_OO_  = -668.637501352773; // A^6 kcal mol^-1
+    static constexpr double _OPC3_LJ_C12_OO_ =  683996.561589584; // A^6 kcal mol^-1
+    // clang-format on
 
 }   // namespace constants
 

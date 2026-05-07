@@ -54,7 +54,8 @@ InterWater::InterWater()
  * @brief Construct an inter-water handler from a state and a strategy.
  *
  * @details Takes ownership of the supplied strategy, stores the provided
- * state, and initializes the GUFF pairs for the configured water model.
+ * state, and initializes the non-Coulomb pairs for the configured water
+ * model.
  *
  * @param state The inter-water parameters.
  * @param strategy The strategy object used to evaluate the interaction.
@@ -69,51 +70,56 @@ InterWater::InterWater(
 }
 
 /**
- * @brief Build the GUFF pairs for the configured inter-water model.
+ * @brief Apply radial cutoffs to configured inter-water non-Coulomb pairs.
  *
- * @details Resolves the non-Coulomb cutoff, instantiates the three GUFF pair
- * objects, and finalizes their cutoff-dependent coefficients.
+ * @details Uses the explicit non-Coulomb cutoff when configured, otherwise
+ * falls back to the Coulomb cutoff. O-O is always updated, while O-H and H-H
+ * are only updated when oxygen-only non-Coulomb interactions are disabled.
  */
-void InterWater::initGuffPairs()
+void InterWater::setNonCoulombCutOffRadii()
 {
-    _state._nonCoulombCutOff =
+    const auto radialCutOff =
         PotentialSettings::getNonCoulombRadiusCutOff().value_or(
             PotentialSettings::getCoulombRadiusCutOff()
         );
 
-    const auto makeGuffPair = [this](const std::vector<double> &coefficients)
-    { return GuffPair{_state._nonCoulombCutOff, coefficients}; };
-
-    const auto finalizeCutOff = [this](auto &guffPair)
+    const auto setCutOff = [radialCutOff](auto &nonCoulombPair)
     {
-        const auto [energyCutOff, forceCutOff] =
-            guffPair.calculate(_state._nonCoulombCutOff);
-        guffPair.setEnergyCutOff(energyCutOff);
-        guffPair.setForceCutOff(forceCutOff);
+        if (nonCoulombPair)
+            nonCoulombPair->setRadialCutOff(radialCutOff);
     };
 
-    _state._guffPairOO = makeGuffPair(_state._guffCoefficientsOO);
-    _state._guffPairOH = makeGuffPair(_state._guffCoefficientsOH);
-    _state._guffPairHH = makeGuffPair(_state._guffCoefficientsHH);
+    setCutOff(_state._nonCoulombPairOO);
 
-    finalizeCutOff(_state._guffPairOO);
-    finalizeCutOff(_state._guffPairOH);
-    finalizeCutOff(_state._guffPairHH);
+    if (!_state._oxygenOnlyNonCoulomb)
+    {
+        setCutOff(_state._nonCoulombPairOH);
+        setCutOff(_state._nonCoulombPairHH);
+    }
 }
 
 /**
- * @brief Precompute pairwise charge products for inter-water interactions.
+ * @brief Initialize the non-Coulomb pairs for the configured inter-water model.
  *
- * @details Caches O-O, O-H, and H-H charge products in the inter-water state
- * to avoid repeated multiplications during the interaction loops.
+ * @details Sets up energy and force cutoff values for the three inter-water
+ * non-Coulomb pairs (OO, OH, HH) by evaluating them at their radial cutoff
+ * distances.
  */
-void InterWater::initChargeProducts()
+void InterWater::initNonCoulombPairs()
 {
-    const auto oxygenCharge   = _state._oxygenCharge;
-    const auto hydrogenCharge = _state._hydrogenCharge;
-    _state._chargeProductOO   = oxygenCharge * oxygenCharge;
-    _state._chargeProductOH   = oxygenCharge * hydrogenCharge;
-    _state._chargeProductHH   = hydrogenCharge * hydrogenCharge;
+    const auto setForceAndEnergyCutOff = [](auto &nonCoulPair)
+    {
+        if (!nonCoulPair)
+            return;
+        const auto [energyCutOff, forceCutOff] =
+            nonCoulPair->calculate(nonCoulPair->getRadialCutOff());
+        nonCoulPair->setEnergyCutOff(energyCutOff);
+        nonCoulPair->setForceCutOff(forceCutOff);
+    };
+
+    setForceAndEnergyCutOff(_state._nonCoulombPairOO);
+    setForceAndEnergyCutOff(_state._nonCoulombPairOH);
+    setForceAndEnergyCutOff(_state._nonCoulombPairHH);
 }
 
 /**
@@ -165,39 +171,40 @@ void InterWaterStrategyBruteForce::calculate(
             auto &hydrogen3 = water2.getAtom(1);
             auto &hydrogen4 = water2.getAtom(2);
 
-            const auto singleInteraction = [&](Atom           &atomA,
-                                               Atom           &atomB,
-                                               const double    chargeProduct,
-                                               const GuffPair &guffPair)
+            const auto singleInteraction = [&](Atom        &atomA,
+                                               Atom        &atomB,
+                                               const double chargeProduct,
+                                               const auto  &nonCoulPairPtr)
             {
-                calculateSingleInteraction(
-                    atomA,
-                    atomB,
-                    chargeProduct,
-                    coulombPotential,
-                    rCutSquared,
-                    simBox,
-                    guffPair,
-                    totalCoulombEnergy,
-                    totalNonCoulombEnergy
-                );
+                if (nonCoulPairPtr)
+                    calculateSingleInteraction(
+                        atomA,
+                        atomB,
+                        chargeProduct,
+                        coulombPotential,
+                        rCutSquared,
+                        simBox,
+                        *nonCoulPairPtr,
+                        totalCoulombEnergy,
+                        totalNonCoulombEnergy
+                    );
             };
 
             // clang-format off
             // O-O interaction
-            singleInteraction(oxygen1, oxygen2, chargeProductOO, state._guffPairOO);
+            singleInteraction(oxygen1, oxygen2, chargeProductOO, state._nonCoulombPairOO);
 
             // O-H interactions
-            singleInteraction(oxygen1, hydrogen3, chargeProductOH, state._guffPairOH);
-            singleInteraction(oxygen1, hydrogen4, chargeProductOH, state._guffPairOH);
-            singleInteraction(oxygen2, hydrogen1, chargeProductOH, state._guffPairOH);
-            singleInteraction(oxygen2, hydrogen2, chargeProductOH, state._guffPairOH);
+            singleInteraction(oxygen1, hydrogen3, chargeProductOH, state._nonCoulombPairOH);
+            singleInteraction(oxygen1, hydrogen4, chargeProductOH, state._nonCoulombPairOH);
+            singleInteraction(oxygen2, hydrogen1, chargeProductOH, state._nonCoulombPairOH);
+            singleInteraction(oxygen2, hydrogen2, chargeProductOH, state._nonCoulombPairOH);
 
             // H-H interactions
-            singleInteraction(hydrogen1, hydrogen3, chargeProductHH, state._guffPairHH);
-            singleInteraction(hydrogen1, hydrogen4, chargeProductHH, state._guffPairHH);
-            singleInteraction(hydrogen2, hydrogen3, chargeProductHH, state._guffPairHH);
-            singleInteraction(hydrogen2, hydrogen4, chargeProductHH, state._guffPairHH);
+            singleInteraction(hydrogen1, hydrogen3, chargeProductHH, state._nonCoulombPairHH);
+            singleInteraction(hydrogen1, hydrogen4, chargeProductHH, state._nonCoulombPairHH);
+            singleInteraction(hydrogen2, hydrogen3, chargeProductHH, state._nonCoulombPairHH);
+            singleInteraction(hydrogen2, hydrogen4, chargeProductHH, state._nonCoulombPairHH);
             // clang-format on
 
             ++j;
@@ -225,7 +232,7 @@ void InterWaterStrategyBruteForce::calculate(
  * @param coulombPotential The Coulomb potential evaluator.
  * @param rCutSquared The squared Coulomb cutoff distance.
  * @param simBox The simulation box for periodic boundary calculations.
- * @param guffPair The GUFF pair object for non-Coulomb evaluation.
+ * @param nonCoulPair The non-Coulomb pair object for non-Coulomb evaluation.
  *
  * @return A pair<double, double> containing the Coulomb and non-Coulomb energy
  * contributions. Force is added directly to the atoms' force vectors.
@@ -237,7 +244,7 @@ void InterWaterStrategy::calculateSingleInteraction(
     const SharedCoulombPot &coulombPotential,
     const double            rCutSquared,
     const SimBox           &simBox,
-    const GuffPair         &guffPair,
+    const NonCoulombPair   &nonCoulPair,
     double                 &coulombEnergy,
     double                 &nonCoulombEnergy
 )
@@ -260,9 +267,9 @@ void InterWaterStrategy::calculateSingleInteraction(
         auto [e, f]    = coulombPotential->calculate(distance, chargeProduct);
         coulombEnergy += e;
 
-        if (distance < guffPair.getRadialCutOff())
+        if (distance < nonCoulPair.getRadialCutOff())
         {
-            auto [nonCoulE, nonCoulF]  = guffPair.calculate(distance);
+            auto [nonCoulE, nonCoulF]  = nonCoulPair.calculate(distance);
             nonCoulombEnergy          += nonCoulE;
             f                         += nonCoulF;
         }

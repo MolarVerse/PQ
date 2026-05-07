@@ -119,6 +119,16 @@ void NonCoulombPair::setInternalType2(const size_t internalType2)
 }
 
 /**
+ * @brief set radial cut off
+ *
+ * @param energyCutoff
+ */
+void NonCoulombPair::setRadialCutOff(const double radialCutoff)
+{
+    _radialCutOff = radialCutoff;
+}
+
+/**
  * @brief set energy cut off
  *
  * @param energyCutoff

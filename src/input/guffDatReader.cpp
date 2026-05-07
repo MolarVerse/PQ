@@ -767,7 +767,6 @@ void GuffDatReader::checkNecessaryGuffPairs()
 {
     auto      &simBox                 = _engine.getSimulationBox();
     const auto necessaryMoleculeTypes = simBox.findNecessaryMoleculeTypes();
-    const auto waterType              = simBox.getWaterType();
 
     for (const auto &moleculeType1 : necessaryMoleculeTypes)
         for (const auto &moleculeType2 : necessaryMoleculeTypes)

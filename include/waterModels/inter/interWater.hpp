@@ -30,7 +30,7 @@
 #include "atom.hpp"                // for Atom
 #include "defaults.hpp"            // for defaults
 #include "guffCoefficients.hpp"    // for guffPairCoefficients
-#include "guffPair.hpp"            // for GuffPair
+#include "nonCoulombPair.hpp"      // for NonCoulombPair
 #include "physicalData.hpp"        // for PhysicalData
 #include "potentialSettings.hpp"   // for PotentialSettings
 #include "simulationBox.hpp"       // for SimulationBox
@@ -40,18 +40,15 @@ namespace waterModel
 {
     struct InterWaterState
     {
-        double _oxygenCharge{};
-        double _hydrogenCharge{};
+        // clang-format off
         double _chargeProductOO{};
         double _chargeProductOH{};
         double _chargeProductHH{};
-        double _nonCoulombCutOff = defaults::_COULOMB_CUT_OFF_DEFAULT_;
-        std::vector<double> _guffCoefficientsOO;
-        std::vector<double> _guffCoefficientsOH;
-        std::vector<double> _guffCoefficientsHH;
-        potential::GuffPair _guffPairOO{_nonCoulombCutOff, _guffCoefficientsOO};
-        potential::GuffPair _guffPairOH{_nonCoulombCutOff, _guffCoefficientsOH};
-        potential::GuffPair _guffPairHH{_nonCoulombCutOff, _guffCoefficientsHH};
+        bool   _oxygenOnlyNonCoulomb{false};
+        std::unique_ptr<pq::NonCoulPair> _nonCoulombPairOO;
+        std::unique_ptr<pq::NonCoulPair> _nonCoulombPairOH;
+        std::unique_ptr<pq::NonCoulPair> _nonCoulombPairHH;
+        // clang-format on
     };
 
     class InterWaterStrategy
@@ -73,7 +70,7 @@ namespace waterModel
             const pq::SharedCoulombPot &coulombPotential,
             const double                rCutSquared,
             const pq::SimBox           &simBox,
-            const potential::GuffPair  &guffPair,
+            const pq::NonCoulPair      &nonCoulPair,
             double                     &coulombEnergy,
             double                     &nonCoulombEnergy
         );
@@ -106,12 +103,12 @@ namespace waterModel
         InterWaterState                     _state;
         std::unique_ptr<InterWaterStrategy> _strategy;
 
-        void initGuffPairs();
-        void initChargeProducts();
+        void setNonCoulombCutOffRadii();
+        void initNonCoulombPairs();
         void initState()
         {
-            initGuffPairs();
-            initChargeProducts();
+            setNonCoulombCutOffRadii();
+            initNonCoulombPairs();
         }
     };
 
