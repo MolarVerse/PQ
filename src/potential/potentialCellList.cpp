@@ -70,7 +70,7 @@ void PotentialCellList::calculateForces(
 
     const auto box = simBox.getBoxPtr();
     const auto isWaterInterModelSet =
-        WaterModelSettings::getWaterInterModel() != WaterInterModel::NONE;
+        WaterModelSettings::isInterWaterModelSet();
 
     double totalCoulombEnergy    = 0.0;
     double totalNonCoulombEnergy = 0.0;

@@ -28,6 +28,7 @@
 #include <vector>
 
 #include "atom.hpp"                // for Atom
+#include "celllist.hpp"            // for CellList
 #include "defaults.hpp"            // for defaults
 #include "guffCoefficients.hpp"    // for guffPairCoefficients
 #include "nonCoulombPair.hpp"      // for NonCoulombPair
@@ -60,7 +61,8 @@ namespace waterModel
             const InterWaterState &,
             pq::SimBox &,
             pq::PhysicalData &,
-            const pq::SharedCoulombPot &
+            const pq::SharedCoulombPot &,
+            pq::CellList &
         ) = 0;
 
         void calculateSingleInteraction(
@@ -89,14 +91,20 @@ namespace waterModel
         void calculate(
             pq::SimBox                 &simBox,
             pq::PhysicalData           &physicalData,
-            const pq::SharedCoulombPot &sharedCoulombPot
+            const pq::SharedCoulombPot &sharedCoulombPot,
+            pq::CellList               &cellList
         )
         {
             if (!_strategy)
                 return;
 
-            _strategy
-                ->calculate(_state, simBox, physicalData, sharedCoulombPot);
+            _strategy->calculate(
+                _state,
+                simBox,
+                physicalData,
+                sharedCoulombPot,
+                cellList
+            );
         }
 
        private:
@@ -119,7 +127,8 @@ namespace waterModel
             const InterWaterState &,
             pq::SimBox &,
             pq::PhysicalData &,
-            const pq::SharedCoulombPot &
+            const pq::SharedCoulombPot &,
+            pq::CellList &
         ) override final
         {
         }
@@ -132,7 +141,20 @@ namespace waterModel
             const InterWaterState &,
             pq::SimBox &,
             pq::PhysicalData &,
-            const pq::SharedCoulombPot &
+            const pq::SharedCoulombPot &,
+            pq::CellList &
+        ) override final;
+    };
+
+    class InterWaterStrategyCellList : public InterWaterStrategy
+    {
+       public:
+        virtual void calculate(
+            const InterWaterState &,
+            pq::SimBox &,
+            pq::PhysicalData &,
+            const pq::SharedCoulombPot &,
+            pq::CellList &
         ) override final;
     };
 

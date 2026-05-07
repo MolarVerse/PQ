@@ -346,6 +346,16 @@ namespace simulationBox
                pqviews::filter([](const auto& mol) { return !mol.isActive(); });
     }
 
+    /**
+     * @brief Get molecules of the configured water type.
+     *
+     * @details Returns a filtered view over all molecules and keeps only the
+     * molecules whose moltype matches the water type configured on the derived
+     * simulation box view.
+     *
+     * @return A filtered view containing only molecules of the configured
+     * water type.
+     */
     template <typename Derived>
     auto SimulationBoxView<Derived>::getWaterTypeMolecules()
     {
@@ -357,6 +367,16 @@ namespace simulationBox
                );
     }
 
+    /**
+     * @brief Get molecules of the configured water type.
+     *
+     * @details Returns a filtered view over all molecules and keeps only the
+     * molecules whose moltype matches the water type configured on the derived
+     * simulation box view.
+     *
+     * @return A filtered view containing only molecules of the configured
+     * water type.
+     */
     template <typename Derived>
     auto SimulationBoxView<Derived>::getWaterTypeMolecules() const
     {

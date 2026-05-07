@@ -56,6 +56,9 @@ namespace simulationBox
 
         auto getInactiveMolecules();
         auto getInactiveMolecules() const;
+
+        auto getWaterTypeMolecules(const std::optional<size_t>);
+        auto getWaterTypeMolecules(const std::optional<size_t>) const;
     };
 
     /**
@@ -177,14 +180,15 @@ namespace simulationBox
     }
 
     /**
-     * @brief get all molecules outside the specified hybrid zone using range-based
-     * filtering
+     * @brief get all molecules outside the specified hybrid zone using
+     * range-based filtering
      *
-     * @return a view/iterator of molecules outside the specified zone filtered from
-     * all molecules
+     * @return a view/iterator of molecules outside the specified zone filtered
+     * from all molecules
      *
      * @details This function returns a range-based view that filters molecules
-     * from _molecules based on whether they are outside the specified HybridZone
+     * from _molecules based on whether they are outside the specified
+     * HybridZone
      */
     template <typename Derived>
     auto CellView<Derived>::getMoleculesOutsideZone(const HybridZone zone) const
@@ -224,6 +228,52 @@ namespace simulationBox
     {
         return getMolecules() | pqviews::filter([](const auto& mol)
                                                 { return !mol->isActive(); });
+    }
+
+    /**
+     * @brief Get molecules of the requested water type.
+     *
+     * @details Returns a filtered view over all molecules that keeps only the
+     * molecules whose moltype matches the supplied water type. If no water
+     * type is provided, the resulting view is empty.
+     *
+     * @param waterType The optional water type identifier to filter by.
+     *
+     * @return A filtered view of molecules matching the given water type.
+     */
+    template <typename Derived>
+    auto CellView<Derived>::getWaterTypeMolecules(
+        const std::optional<size_t> waterType
+    )
+    {
+        return getMolecules() |
+               pqviews::filter(
+                   [waterType](auto& mol)
+                   { return waterType && mol->getMoltype() == *waterType; }
+               );
+    }
+
+    /**
+     * @brief Get molecules of the requested water type.
+     *
+     * @details Returns a filtered view over all molecules that keeps only the
+     * molecules whose moltype matches the supplied water type. If no water
+     * type is provided, the resulting view is empty.
+     *
+     * @param waterType The optional water type identifier to filter by.
+     *
+     * @return A filtered view of molecules matching the given water type.
+     */
+    template <typename Derived>
+    auto CellView<Derived>::getWaterTypeMolecules(
+        const std::optional<size_t> waterType
+    ) const
+    {
+        return getMolecules() |
+               pqviews::filter(
+                   [waterType](const auto& mol)
+                   { return waterType && mol->getMoltype() == *waterType; }
+               );
     }
 
 }   // namespace simulationBox

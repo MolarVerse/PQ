@@ -1,5 +1,7 @@
 add_library(interWater
     interWater.cpp
+    interWaterBruteForce.cpp
+    interWaterCellList.cpp
 )
 
 target_include_directories(interWater
