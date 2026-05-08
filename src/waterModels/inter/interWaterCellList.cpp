@@ -91,14 +91,18 @@ void InterWaterStrategyCellList::calculate(
             {
                 auto *molecule_j = cell_i.getMolecule(mol_j);
                 if (molecule_j->getMoltype() != waterType ||
-                    !molecule_i->isActive())
+                    !molecule_j->isActive())
                     continue;
 
                 for (auto &atom_i : cell_i.getAtoms(mol_i))
+                {
+                    const bool isAtom_i_O = atom_i->getName() == "O";
                     for (auto &atom_j : cell_i.getAtoms(mol_j))
                     {
-                        // O-H interaction
-                        if (atom_i->getName() != atom_j->getName())
+                        const bool isAtom_j_O = atom_j->getName() == "O";
+
+                        // O-H interaction (different atom types)
+                        if (isAtom_i_O != isAtom_j_O)
                             singleInteraction(
                                 *atom_i,
                                 *atom_j,
@@ -106,7 +110,7 @@ void InterWaterStrategyCellList::calculate(
                                 state._nonCoulombPairOH
                             );
                         // O-O interaction
-                        else if (atom_i->getName() == "O")
+                        else if (isAtom_i_O)
                             singleInteraction(
                                 *atom_i,
                                 *atom_j,
@@ -122,6 +126,7 @@ void InterWaterStrategyCellList::calculate(
                                 state._nonCoulombPairHH
                             );
                     }
+                }
             }
         }
     }
@@ -142,11 +147,13 @@ void InterWaterStrategyCellList::calculate(
                     continue;
 
                 for (auto &atom_i : cell_i.getAtoms(mol_i))
+                {
+                    const bool isAtom_i_O = atom_i->getName() == "O";
                     for (size_t mol_j = 0; mol_j < nMolsInCell_j; ++mol_j)
                     {
                         auto *molecule_j = cell_j->getMolecule(mol_j);
                         if (molecule_j->getMoltype() != waterType ||
-                            !molecule_i->isActive())
+                            !molecule_j->isActive())
                             continue;
 
                         if (molecule_i == molecule_j)
@@ -154,8 +161,10 @@ void InterWaterStrategyCellList::calculate(
 
                         for (auto &atom_j : cell_j->getAtoms(mol_j))
                         {
-                            // O-H interaction
-                            if (atom_i->getName() != atom_j->getName())
+                            const bool isAtom_j_O = atom_j->getName() == "O";
+
+                            // O-H interaction (different atom types)
+                            if (isAtom_i_O != isAtom_j_O)
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
@@ -163,7 +172,7 @@ void InterWaterStrategyCellList::calculate(
                                     state._nonCoulombPairOH
                                 );
                             // O-O interaction
-                            else if (atom_i->getName() == "O")
+                            else if (isAtom_i_O)
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
@@ -180,6 +189,7 @@ void InterWaterStrategyCellList::calculate(
                                 );
                         }
                     }
+                }
             }
         }
     }
