@@ -57,138 +57,132 @@ void InterWaterStrategyCellList::calculate(
 
     const auto waterType = simBox.getWaterType();
 
+    const auto singleInteraction = [&](Atom        &atomA,
+                                       Atom        &atomB,
+                                       const double chargeProduct,
+                                       const auto  &nonCoulPairPtr)
+    {
+        if (nonCoulPairPtr)
+            calculateSingleInteraction(
+                atomA,
+                atomB,
+                chargeProduct,
+                coulombPotential,
+                rCutSquared,
+                simBox,
+                *nonCoulPairPtr,
+                totalCoulombEnergy,
+                totalNonCoulombEnergy
+            );
+    };
+
     for (const auto &cell_i : cellList.getCells())
     {
-        size_t i = 0;
-        for (auto &water1 : cell_i.getWaterTypeMolecules(waterType))
+        const auto nMols = cell_i.getNumberOfMolecules();
+
+        for (size_t mol_i = 0; mol_i < nMols; ++mol_i)
         {
-            if (!water1->isActive())
+            auto *molecule_i = cell_i.getMolecule(mol_i);
+            if (molecule_i->getMoltype() != waterType ||
+                !molecule_i->isActive())
                 continue;
 
-            size_t j = 0;
-            for (auto &water2 : cell_i.getWaterTypeMolecules(waterType))
+            for (size_t mol_j = 0; mol_j < mol_i; ++mol_j)
             {
-                // avoid double counting and self interaction
-                if (j >= i)
-                    break;
-
-                if (!water2->isActive())
-                {
-                    ++j;
+                auto *molecule_j = cell_i.getMolecule(mol_j);
+                if (molecule_j->getMoltype() != waterType ||
+                    !molecule_i->isActive())
                     continue;
-                }
 
-                auto &oxygen1   = water1->getAtom(0);
-                auto &oxygen2   = water2->getAtom(0);
-                auto &hydrogen1 = water1->getAtom(1);
-                auto &hydrogen2 = water1->getAtom(2);
-                auto &hydrogen3 = water2->getAtom(1);
-                auto &hydrogen4 = water2->getAtom(2);
-
-                const auto singleInteraction = [&](Atom        &atomA,
-                                                   Atom        &atomB,
-                                                   const double chargeProduct,
-                                                   const auto  &nonCoulPairPtr)
-                {
-                    if (nonCoulPairPtr)
-                        calculateSingleInteraction(
-                            atomA,
-                            atomB,
-                            chargeProduct,
-                            coulombPotential,
-                            rCutSquared,
-                            simBox,
-                            *nonCoulPairPtr,
-                            totalCoulombEnergy,
-                            totalNonCoulombEnergy
-                        );
-                };
-
-                // clang-format off
-                // O-O interaction
-                singleInteraction(oxygen1, oxygen2, chargeProductOO, state._nonCoulombPairOO);
-
-                // O-H interactions
-                singleInteraction(oxygen1, hydrogen3, chargeProductOH, state._nonCoulombPairOH);
-                singleInteraction(oxygen1, hydrogen4, chargeProductOH, state._nonCoulombPairOH);
-                singleInteraction(oxygen2, hydrogen1, chargeProductOH, state._nonCoulombPairOH);
-                singleInteraction(oxygen2, hydrogen2, chargeProductOH, state._nonCoulombPairOH);
-
-                // H-H interactions
-                singleInteraction(hydrogen1, hydrogen3, chargeProductHH, state._nonCoulombPairHH);
-                singleInteraction(hydrogen1, hydrogen4, chargeProductHH, state._nonCoulombPairHH);
-                singleInteraction(hydrogen2, hydrogen3, chargeProductHH, state._nonCoulombPairHH);
-                singleInteraction(hydrogen2, hydrogen4, chargeProductHH, state._nonCoulombPairHH);
-                // clang-format on
-
-                ++j;
+                for (auto &atom_i : cell_i.getAtoms(mol_i))
+                    for (auto &atom_j : cell_i.getAtoms(mol_j))
+                    {
+                        // O-H interaction
+                        if (atom_i->getName() != atom_j->getName())
+                            singleInteraction(
+                                *atom_i,
+                                *atom_j,
+                                chargeProductOH,
+                                state._nonCoulombPairOH
+                            );
+                        // O-O interaction
+                        else if (atom_i->getName() == "O")
+                            singleInteraction(
+                                *atom_i,
+                                *atom_j,
+                                chargeProductOO,
+                                state._nonCoulombPairOO
+                            );
+                        // H-H interaction
+                        else
+                            singleInteraction(
+                                *atom_i,
+                                *atom_j,
+                                chargeProductHH,
+                                state._nonCoulombPairHH
+                            );
+                    }
             }
-            ++i;
         }
     }
 
-    for (const auto &cell1 : cellList.getCells())
-        for (const auto *cell2 : cell1.getNeighbourCells())
-            for (auto &water1 : cell1.getWaterTypeMolecules(waterType))
+    for (const auto &cell_i : cellList.getCells())
+    {
+        const auto nMolsInCell_i = cell_i.getNumberOfMolecules();
+
+        for (const auto *cell_j : cell_i.getNeighbourCells())
+        {
+            const auto nMolsInCell_j = cell_j->getNumberOfMolecules();
+
+            for (size_t mol_i = 0; mol_i < nMolsInCell_i; ++mol_i)
             {
-                if (!water1->isActive())
+                auto *molecule_i = cell_i.getMolecule(mol_i);
+                if (molecule_i->getMoltype() != waterType ||
+                    !molecule_i->isActive())
                     continue;
 
-                for (auto &water2 : cell2->getWaterTypeMolecules(waterType))
-                {
-                    // avoid self interaction
-                    if (water1 == water2)
-                        continue;
-
-                    if (!water2->isActive())
-                        continue;
-
-                    auto &oxygen1   = water1->getAtom(0);
-                    auto &oxygen2   = water2->getAtom(0);
-                    auto &hydrogen1 = water1->getAtom(1);
-                    auto &hydrogen2 = water1->getAtom(2);
-                    auto &hydrogen3 = water2->getAtom(1);
-                    auto &hydrogen4 = water2->getAtom(2);
-
-                    const auto singleInteraction =
-                        [&](Atom        &atomA,
-                            Atom        &atomB,
-                            const double chargeProduct,
-                            const auto  &nonCoulPairPtr)
+                for (auto &atom_i : cell_i.getAtoms(mol_i))
+                    for (size_t mol_j = 0; mol_j < nMolsInCell_j; ++mol_j)
                     {
-                        if (nonCoulPairPtr)
-                            calculateSingleInteraction(
-                                atomA,
-                                atomB,
-                                chargeProduct,
-                                coulombPotential,
-                                rCutSquared,
-                                simBox,
-                                *nonCoulPairPtr,
-                                totalCoulombEnergy,
-                                totalNonCoulombEnergy
-                            );
-                    };
+                        auto *molecule_j = cell_j->getMolecule(mol_j);
+                        if (molecule_j->getMoltype() != waterType ||
+                            !molecule_i->isActive())
+                            continue;
 
-                    // clang-format off
-                    // O-O interaction
-                    singleInteraction(oxygen1, oxygen2, chargeProductOO, state._nonCoulombPairOO);
+                        if (molecule_i == molecule_j)
+                            continue;
 
-                    // O-H interactions
-                    singleInteraction(oxygen1, hydrogen3, chargeProductOH, state._nonCoulombPairOH);
-                    singleInteraction(oxygen1, hydrogen4, chargeProductOH, state._nonCoulombPairOH);
-                    singleInteraction(oxygen2, hydrogen1, chargeProductOH, state._nonCoulombPairOH);
-                    singleInteraction(oxygen2, hydrogen2, chargeProductOH, state._nonCoulombPairOH);
-
-                    // H-H interactions
-                    singleInteraction(hydrogen1, hydrogen3, chargeProductHH, state._nonCoulombPairHH);
-                    singleInteraction(hydrogen1, hydrogen4, chargeProductHH, state._nonCoulombPairHH);
-                    singleInteraction(hydrogen2, hydrogen3, chargeProductHH, state._nonCoulombPairHH);
-                    singleInteraction(hydrogen2, hydrogen4, chargeProductHH, state._nonCoulombPairHH);
-                    // clang-format on
-                }
+                        for (auto &atom_j : cell_j->getAtoms(mol_j))
+                        {
+                            // O-H interaction
+                            if (atom_i->getName() != atom_j->getName())
+                                singleInteraction(
+                                    *atom_i,
+                                    *atom_j,
+                                    chargeProductOH,
+                                    state._nonCoulombPairOH
+                                );
+                            // O-O interaction
+                            else if (atom_i->getName() == "O")
+                                singleInteraction(
+                                    *atom_i,
+                                    *atom_j,
+                                    chargeProductOO,
+                                    state._nonCoulombPairOO
+                                );
+                            // H-H interaction
+                            else
+                                singleInteraction(
+                                    *atom_i,
+                                    *atom_j,
+                                    chargeProductHH,
+                                    state._nonCoulombPairHH
+                                );
+                        }
+                    }
             }
-
+        }
+    }
     physicalData.addCoulombEnergy(totalCoulombEnergy);
     physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
 }
