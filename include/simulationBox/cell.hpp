@@ -41,9 +41,9 @@ namespace simulationBox
     class Cell : public CellView<Cell>
     {
        private:
-        std::vector<pq::Molecule *>      _molecules;
-        std::vector<std::vector<size_t>> _atomIndices;
-        std::vector<Cell *>              _neighbourCells;
+        std::vector<pq::Molecule *>          _molecules;
+        std::vector<std::vector<pq::Atom *>> _atoms;
+        std::vector<Cell *>                  _neighbourCells;
 
         pq::Vec3D   _lowerBoundary = {0, 0, 0};
         pq::Vec3D   _upperBoundary = {0, 0, 0};
@@ -51,12 +51,12 @@ namespace simulationBox
 
        public:
         void clearMolecules();
-        void clearAtomIndices();
+        void clearAtoms();
 
         void addMolecule(pq::Molecule &molecule);
         void addMolecule(pq::Molecule *molecule);
         void addNeighbourCell(Cell *cell);
-        void addAtomIndices(const std::vector<size_t> &atomIndices);
+        void addAtoms(const std::vector<pq::Atom *> &atomPointers);
 
         /***************************
          * standard getter methods *
@@ -75,8 +75,8 @@ namespace simulationBox
         [[nodiscard]] Cell *getNeighbourCell(const size_t index) const;
         [[nodiscard]] std::vector<Cell *> getNeighbourCells() const;
 
-        [[nodiscard]] const std::vector<size_t> &getAtomIndices(
-            const size_t index
+        [[nodiscard]] const std::vector<pq::Atom *> &getAtoms(
+            const size_t molIndex
         ) const;
 
         /***************************

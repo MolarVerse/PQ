@@ -194,7 +194,7 @@ void CellList::addNeighbouringCellPointers(Cell &cell)
  * @details it checks if the box size has changed and if so it clears the cell
  * list and sets it up again then it clears all molecular and atomic information
  * in the cells (for the case the box size has not changed) and add the
- * molecules and atomic indices again to the cells depending on their new
+ * molecules and atom pointers again to the cells depending on their new
  * positions
  *
  * @param simulationBox
@@ -213,13 +213,13 @@ void CellList::updateCellList(SimulationBox &simulationBox)
         setup(simulationBox);
     }
 
-    auto clearMoleculesAndAtomIndices = [](auto &cell)
+    auto clearMoleculesAndAtoms = [](auto &cell)
     {
         cell.clearMolecules();
-        cell.clearAtomIndices();
+        cell.clearAtoms();
     };
 
-    std::ranges::for_each(_cells, clearMoleculesAndAtomIndices);
+    std::ranges::for_each(_cells, clearMoleculesAndAtoms);
 
     addMoleculesToCells(simulationBox);
 
@@ -227,7 +227,7 @@ void CellList::updateCellList(SimulationBox &simulationBox)
 }
 
 /**
- * @brief add molecules and atom indices to cells
+ * @brief add molecules and atom pointers to cells
  *
  * @details it is not sufficient to just add the molecules to the cells, because
  * this program works on an atom based cutoff scheme therefore e.g. the center
@@ -243,37 +243,40 @@ void CellList::addMoleculesToCells(SimulationBox &simulationBox)
 
     for (size_t i = 0; i < nMolecules; ++i)
     {
-        auto *molecule                = &simulationBox.getMolecule(i);
-        auto  mapCellIndexToAtomIndex = std::map<size_t, std::vector<size_t>>();
+        auto *molecule = &simulationBox.getMolecule(i);
+        auto  mapCellIndexToAtomPointers =
+            std::map<size_t, std::vector<Atom *>>();
 
         const auto nAtomsInMolecule = molecule->getNumberOfAtoms();
 
         for (size_t j = 0; j < nAtomsInMolecule; ++j)
         {
+            auto      *atom     = &molecule->getAtom(j);
             const auto position = molecule->getAtomPosition(j);
 
             const auto atomCellIndices = getCellIndexOfAtom(box, position);
             const auto cellIndexScalar = getCellIndex(atomCellIndices);
 
-            const auto &[_, successful] = mapCellIndexToAtomIndex.try_emplace(
-                cellIndexScalar,
-                std::vector<size_t>({j})
-            );
+            const auto &[_, successful] =
+                mapCellIndexToAtomPointers.try_emplace(
+                    cellIndexScalar,
+                    std::vector<Atom *>({atom})
+                );
 
             if (!successful)
-                mapCellIndexToAtomIndex[cellIndexScalar].push_back(j);
+                mapCellIndexToAtomPointers[cellIndexScalar].push_back(atom);
         }
 
-        auto addMoleculeAndAtomIndicesToCell = [this, molecule](auto &pair)
+        auto addMoleculeAndAtomPointersToCell = [this, molecule](auto &pair)
         {
-            const auto &[cellIndex, atomIndices] = pair;
+            const auto &[cellIndex, atomPointers] = pair;
             _cells[cellIndex].addMolecule(molecule);
-            _cells[cellIndex].addAtomIndices(atomIndices);
+            _cells[cellIndex].addAtoms(atomPointers);
         };
 
         std::ranges::for_each(
-            mapCellIndexToAtomIndex,
-            addMoleculeAndAtomIndicesToCell
+            mapCellIndexToAtomPointers,
+            addMoleculeAndAtomPointersToCell
         );
     }
 }
@@ -285,8 +288,10 @@ void CellList::addMoleculesToCells(SimulationBox &simulationBox)
  * @param position
  * @return Vec3Dul
  */
-Vec3Dul CellList::getCellIndexOfAtom(const Vec3D &box, const Vec3D &position)
-    const
+Vec3Dul CellList::getCellIndexOfAtom(
+    const Vec3D &box,
+    const Vec3D &position
+) const
 {
     auto cellIndex = Vec3Dul(floor((position + box / 2.0) / _cellSize));
 

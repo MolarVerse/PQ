@@ -32,10 +32,10 @@ using namespace linearAlgebra;
 void Cell::clearMolecules() { _molecules.clear(); }
 
 /**
- * @brief clears the atomIndices vector
+ * @brief clears the atoms vector
  *
  */
-void Cell::clearAtomIndices() { _atomIndices.clear(); }
+void Cell::clearAtoms() { _atoms.clear(); }
 
 /**
  * @brief adds a molecule to the molecules vector
@@ -59,13 +59,13 @@ void Cell::addMolecule(Molecule *molecule) { _molecules.push_back(molecule); }
 void Cell::addNeighbourCell(Cell *cell) { _neighbourCells.push_back(cell); }
 
 /**
- * @brief adds atom indices to the atomIndices vector
+ * @brief adds atoms to the atoms vector
  *
  * @param lowerBoundary
  */
-void Cell::addAtomIndices(const std::vector<size_t> &atomIndices)
+void Cell::addAtoms(const std::vector<pq::Atom *> &atomPointers)
 {
-    _atomIndices.push_back(atomIndices);
+    _atoms.push_back(atomPointers);
 }
 
 /***************************
@@ -156,14 +156,14 @@ Cell *Cell::getNeighbourCell(const size_t index) const
 std::vector<Cell *> Cell::getNeighbourCells() const { return _neighbourCells; }
 
 /**
- * @brief returns the atom indices at the given index
+ * @brief returns the atoms at the given molecule index
  *
  * @param index
  * @return const std::vector<size_t>&
  */
-const std::vector<size_t> &Cell::getAtomIndices(const size_t index) const
+const std::vector<pq::Atom *> &Cell::getAtoms(const size_t molIndex) const
 {
-    return _atomIndices[index];
+    return _atoms[molIndex];
 }
 
 /***************************
