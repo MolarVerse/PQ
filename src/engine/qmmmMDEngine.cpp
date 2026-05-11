@@ -44,12 +44,12 @@ namespace engine
      */
     void QMMMMDEngine::calculateForces()
     {
-        _cellList->updateCellList(*_simulationBox);
         _configurator.calculateInnerRegionCenter(*_simulationBox);
         _configurator.shiftAtomsToInnerRegionCenter(*_simulationBox);
         _configurator.assignHybridZones(*_simulationBox);
         moltypeCheck();
         _configurator.calculateSmoothingFactors(*_simulationBox);
+        _cellList->updateCellList(*_simulationBox);
 
         applySmoothing();
 
