@@ -222,6 +222,17 @@ void PotentialCellList::calculateCoreToOuterForces(
                                     QMChargeTag,
                                     MMChargeTag>(*box, *atom_i, *atom_j);
 
+    for (const auto &cell_i : cellList.getCells())
+        for (const auto *cell_j : cell_i.getNeighbourCells())
+            for (auto mol_i : cell_j->getCoreMoleculeIndices())
+                for (auto mol_j : cell_i.getActiveMoleculeIndices())
+                    for (auto &atom_i : cell_j->getAtoms(mol_i))
+                        for (auto &atom_j : cell_i.getAtoms(mol_j))
+                            totalCoulombEnergy +=
+                                calculateSingleCoulombInteraction<
+                                    QMChargeTag,
+                                    MMChargeTag>(*box, *atom_i, *atom_j);
+
     physicalData.addCoulombEnergy(totalCoulombEnergy);
 
     stopTimingsSection("InterNonBondedCoreToOuter");
@@ -295,6 +306,36 @@ void PotentialCellList::calculateLayerToOuterForces(
 
                     for (auto &atom_i : cell_i.getAtoms(mol_i))
                         for (auto &atom_j : cell_j->getAtoms(mol_j))
+                        {
+                            const auto [coulombEnergy, nonCoulombEnergy] =
+                                calculateSingleInteraction<
+                                    QMChargeTag,
+                                    MMChargeTag>(
+                                    *box,
+                                    *molecule_i,
+                                    *molecule_j,
+                                    *atom_i,
+                                    *atom_j
+                                );
+
+                            totalCoulombEnergy    += coulombEnergy;
+                            totalNonCoulombEnergy += nonCoulombEnergy;
+                        }
+                }
+            }
+
+    for (const auto &cell_i : cellList.getCells())
+        for (const auto *cell_j : cell_i.getNeighbourCells())
+            for (auto mol_i : cell_j->getInactiveNonCoreMoleculeIndices())
+            {
+                auto *molecule_i = cell_j->getMolecule(mol_i);
+
+                for (auto mol_j : cell_i.getActiveMoleculeIndices())
+                {
+                    auto *molecule_j = cell_i.getMolecule(mol_j);
+
+                    for (auto &atom_i : cell_j->getAtoms(mol_i))
+                        for (auto &atom_j : cell_i.getAtoms(mol_j))
                         {
                             const auto [coulombEnergy, nonCoulombEnergy] =
                                 calculateSingleInteraction<
