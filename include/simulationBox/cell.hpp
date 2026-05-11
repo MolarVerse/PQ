@@ -47,7 +47,7 @@ namespace simulationBox
         std::vector<size_t>                  _coreMoleculeIndices;
         std::vector<size_t>                  _smoothingMoleculeIndices;
         std::vector<size_t>                  _activeMoleculeIndices;
-        std::vector<size_t>                  _inactiveMoleculeIndices;
+        std::vector<size_t>                  _inactiveNonCoreMoleculeIndices;
 
         pq::Vec3D   _lowerBoundary = {0, 0, 0};
         pq::Vec3D   _upperBoundary = {0, 0, 0};
@@ -89,7 +89,7 @@ namespace simulationBox
         ) const;
         [[nodiscard]] const std::vector<size_t> &getActiveMoleculeIndices(
         ) const;
-        [[nodiscard]] const std::vector<size_t> &getInactiveMoleculeIndices(
+        [[nodiscard]] const std::vector<size_t> &getInactiveNonCoreMoleculeIndices(
         ) const;
 
         /***************************
