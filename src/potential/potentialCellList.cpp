@@ -292,6 +292,7 @@ void PotentialCellList::calculateLayerToOuterForces(
                 for (auto mol_j : cell_j->getActiveMoleculeIndices())
                 {
                     auto *molecule_j = cell_j->getMolecule(mol_j);
+
                     for (auto &atom_i : cell_i.getAtoms(mol_i))
                         for (auto &atom_j : cell_j->getAtoms(mol_j))
                         {
@@ -316,6 +317,86 @@ void PotentialCellList::calculateLayerToOuterForces(
     physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
 
     stopTimingsSection("InterNonBondedLayerToOuter");
+}
+
+void PotentialCellList::calculateOuterToOuterForces(
+    SimulationBox &simBox,
+    PhysicalData  &physicalData,
+    CellList      &cellList
+)
+{
+    const auto box = simBox.getBoxPtr();
+
+    double totalCoulombEnergy    = 0.0;
+    double totalNonCoulombEnergy = 0.0;
+
+    for (const auto &cell_i : cellList.getCells())
+        for (auto mol_i : cell_i.getActiveMoleculeIndices())
+        {
+            auto *molecule_i = cell_i.getMolecule(mol_i);
+
+            for (auto mol_j : cell_i.getActiveMoleculeIndices())
+            {
+                if (mol_j >= mol_i)
+                    break;
+
+                auto *molecule_j = cell_i.getMolecule(mol_j);
+
+                for (auto &atom_i : cell_i.getAtoms(mol_i))
+                    for (auto &atom_j : cell_i.getAtoms(mol_j))
+                    {
+                        const auto [coulombEnergy, nonCoulombEnergy] =
+                            calculateSingleInteraction<
+                                MMChargeTag,
+                                MMChargeTag>(
+                                *box,
+                                *molecule_i,
+                                *molecule_j,
+                                *atom_i,
+                                *atom_j
+                            );
+
+                        totalCoulombEnergy    += coulombEnergy;
+                        totalNonCoulombEnergy += nonCoulombEnergy;
+                    }
+            }
+        }
+
+    for (const auto &cell_i : cellList.getCells())
+        for (const auto *cell_j : cell_i.getNeighbourCells())
+            for (auto mol_i : cell_i.getActiveMoleculeIndices())
+            {
+                auto *molecule_i = cell_i.getMolecule(mol_i);
+
+                for (auto mol_j : cell_j->getActiveMoleculeIndices())
+                {
+                    auto *molecule_j = cell_j->getMolecule(mol_j);
+
+                    if (molecule_i == molecule_j)
+                        continue;
+
+                    for (auto &atom_i : cell_i.getAtoms(mol_i))
+                        for (auto &atom_j : cell_j->getAtoms(mol_j))
+                        {
+                            const auto [coulombEnergy, nonCoulombEnergy] =
+                                calculateSingleInteraction<
+                                    MMChargeTag,
+                                    MMChargeTag>(
+                                    *box,
+                                    *molecule_i,
+                                    *molecule_j,
+                                    *atom_i,
+                                    *atom_j
+                                );
+
+                            totalCoulombEnergy    += coulombEnergy;
+                            totalNonCoulombEnergy += nonCoulombEnergy;
+                        }
+                }
+            }
+
+    physicalData.addCoulombEnergy(totalCoulombEnergy);
+    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
 }
 
 void PotentialCellList::calculateHotspotSmoothingMMForces(

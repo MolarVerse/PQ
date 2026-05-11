@@ -220,6 +220,29 @@ void PotentialBruteForce::calculateLayerToOuterForces(
     stopTimingsSection("InterNonBondedLayerToOuter");
 }
 
+/**
+ * @brief calculates forces between outer-zone molecules
+ *
+ * @param simBox simulation box containing molecules
+ * @param physicalData physical data to store energy results
+ * @param cellList cell list (unused in brute force approach)
+ */
+void PotentialBruteForce::calculateOuterToOuterForces(
+    SimulationBox &simBox,
+    PhysicalData  &physicalData,
+    CellList      &cellList
+)
+{
+    calculateForces(simBox, physicalData, cellList);
+}
+
+/**
+ * @brief calculates forces between smoothing-zone molecules and all others
+ *
+ * @param simBox simulation box containing molecules
+ * @param physicalData physical data to store energy results
+ * @param unused CellList parameter (not used in brute force approach)
+ */
 void PotentialBruteForce::calculateHotspotSmoothingMMForces(
     SimulationBox &simBox,
     PhysicalData  &physicalData,

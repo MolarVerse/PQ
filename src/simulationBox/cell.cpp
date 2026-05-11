@@ -31,14 +31,7 @@ using namespace linearAlgebra;
  * @brief clears the molecules vector
  *
  */
-void Cell::clearMolecules()
-{
-    _molecules.clear();
-    _coreMoleculeIndices.clear();
-    _smoothingMoleculeIndices.clear();
-    _activeMoleculeIndices.clear();
-    _inactiveNonCoreMoleculeIndices.clear();
-}
+void Cell::clearMolecules() { _molecules.clear(); }
 
 /**
  * @brief clears the atoms vector
@@ -85,6 +78,11 @@ void Cell::addAtoms(const std::vector<pq::Atom *> &atomPointers)
  */
 void Cell::assignMoleculeHybridZoneIndices()
 {
+    _coreMoleculeIndices.clear();
+    _smoothingMoleculeIndices.clear();
+    _activeMoleculeIndices.clear();
+    _inactiveNonCoreMoleculeIndices.clear();
+
     using enum HybridZone;
     const auto nMol = getNumberOfMolecules();
 

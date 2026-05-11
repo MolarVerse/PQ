@@ -50,9 +50,6 @@ namespace engine
         moltypeCheck();
         _configurator.calculateSmoothingFactors(*_simulationBox);
 
-        if (isCellListActivated())
-            _cellList->assignMoleculeHybridZoneIndices();
-
         applySmoothing();
 
         combineInnerOuterForces();
@@ -146,6 +143,9 @@ namespace engine
             // virial contribution
             _configurator.toggleMoleculeActivation(*_simulationBox);
 
+            if (isCellListActivated())
+                _cellList->assignMoleculeHybridZoneIndices();
+
             _potential->calculateQMMMForces(
                 *_simulationBox,
                 *_physicalData,
@@ -229,6 +229,9 @@ namespace engine
         // MM-MM , CORE-MM , LAYER+SMOOTHING-MM and scale forces of smoothing
         // molecules with smF
         _configurator.toggleMoleculeActivation(*_simulationBox);
+
+        if (isCellListActivated())
+            _cellList->assignMoleculeHybridZoneIndices();
 
         _potential
             ->calculateQMMMForces(*_simulationBox, *_physicalData, *_cellList);

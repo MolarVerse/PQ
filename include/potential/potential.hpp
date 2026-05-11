@@ -90,6 +90,12 @@ namespace potential
             pq::CellList &
         ) = 0;
 
+        virtual void calculateOuterToOuterForces(
+            pq::SimBox &,
+            pq::PhysicalData &,
+            pq::CellList &
+        ) = 0;
+
         virtual void calculateHotspotSmoothingMMForces(
             pq::SimBox &,
             pq::PhysicalData &,
