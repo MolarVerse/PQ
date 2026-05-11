@@ -33,9 +33,9 @@ void Cell::clearMolecules()
 {
     _molecules.clear();
     _coreMoleculeIndices.clear();
-    _layerMoleculeIndices.clear();
     _smoothingMoleculeIndices.clear();
-    _outerMoleculeIndices.clear();
+    _activeMoleculeIndices.clear();
+    _inactiveMoleculeIndices.clear();
 }
 
 /**
@@ -76,7 +76,7 @@ void Cell::addAtoms(const std::vector<pq::Atom *> &atomPointers)
 }
 
 /**
- * @brief Assign molecule indices to hybrid-zone buckets.
+ * @brief Assign molecule indices to hybrid-zone and active/inactive buckets
  *
  * @details Uses the current `_molecules` order; call after molecules have been
  * added and hybrid zone have been assigned
@@ -92,12 +92,15 @@ void Cell::assignMoleculeHybridZoneIndices()
         switch (hybridZone)
         {
             case CORE: _coreMoleculeIndices.push_back(mol); break;
-            case LAYER: _layerMoleculeIndices.push_back(mol); break;
             case SMOOTHING: _smoothingMoleculeIndices.push_back(mol); break;
-            case POINT_CHARGE: _outerMoleculeIndices.push_back(mol); break;
-            case OUTER: _outerMoleculeIndices.push_back(mol); break;
             default: break;
         }
+
+        const auto isActive = _molecules[mol]->isActive();
+        if (isActive)
+            _activeMoleculeIndices.push_back(mol);
+        else
+            _inactiveMoleculeIndices.push_back(mol);
     }
 }
 
@@ -210,16 +213,6 @@ const std::vector<size_t> &Cell::getCoreMoleculeIndices() const
 }
 
 /**
- * @brief returns the molecule indices in the layer hybrid zone
- *
- * @return const std::vector<size_t>&
- */
-const std::vector<size_t> &Cell::getLayerMoleculeIndices() const
-{
-    return _layerMoleculeIndices;
-}
-
-/**
  * @brief returns the molecule indices in the smoothing hybrid zone
  *
  * @return const std::vector<size_t>&
@@ -230,13 +223,23 @@ const std::vector<size_t> &Cell::getSmoothingMoleculeIndices() const
 }
 
 /**
- * @brief returns the molecule indices in the outer hybrid zone
+ * @brief returns the indices of the active molecules
  *
  * @return const std::vector<size_t>&
  */
-const std::vector<size_t> &Cell::getOuterMoleculeIndices() const
+const std::vector<size_t> &Cell::getActiveMoleculeIndices() const
 {
-    return _outerMoleculeIndices;
+    return _activeMoleculeIndices;
+}
+
+/**
+ * @brief returns the indices of the inactive molecules
+ *
+ * @return const std::vector<size_t>&
+ */
+const std::vector<size_t> &Cell::getInactiveMoleculeIndices() const
+{
+    return _inactiveMoleculeIndices;
 }
 
 /***************************

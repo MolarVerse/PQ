@@ -45,9 +45,9 @@ namespace simulationBox
         std::vector<std::vector<pq::Atom *>> _atoms;
         std::vector<Cell *>                  _neighbourCells;
         std::vector<size_t>                  _coreMoleculeIndices;
-        std::vector<size_t>                  _layerMoleculeIndices;
         std::vector<size_t>                  _smoothingMoleculeIndices;
-        std::vector<size_t>                  _outerMoleculeIndices;
+        std::vector<size_t>                  _activeMoleculeIndices;
+        std::vector<size_t>                  _inactiveMoleculeIndices;
 
         pq::Vec3D   _lowerBoundary = {0, 0, 0};
         pq::Vec3D   _upperBoundary = {0, 0, 0};
@@ -85,11 +85,11 @@ namespace simulationBox
         ) const;
 
         [[nodiscard]] const std::vector<size_t> &getCoreMoleculeIndices() const;
-        [[nodiscard]] const std::vector<size_t> &getLayerMoleculeIndices(
-        ) const;
         [[nodiscard]] const std::vector<size_t> &getSmoothingMoleculeIndices(
         ) const;
-        [[nodiscard]] const std::vector<size_t> &getOuterMoleculeIndices(
+        [[nodiscard]] const std::vector<size_t> &getActiveMoleculeIndices(
+        ) const;
+        [[nodiscard]] const std::vector<size_t> &getInactiveMoleculeIndices(
         ) const;
 
         /***************************

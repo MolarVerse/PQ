@@ -207,7 +207,7 @@ void PotentialCellList::calculateCoreToOuterForces(
         {
             auto *molecule_i = cell_i.getMolecule(mol_i);
 
-            for (auto mol_j : cell_i.getOuterMoleculeIndices())
+            for (auto mol_j : cell_i.getActiveMoleculeIndices())
             {
                 auto *molecule_j = cell_i.getMolecule(mol_j);
 
@@ -225,7 +225,7 @@ void PotentialCellList::calculateCoreToOuterForces(
             {
                 auto *molecule_i = cell_i.getMolecule(mol_i);
 
-                for (auto mol_j : cell_j->getOuterMoleculeIndices())
+                for (auto mol_j : cell_j->getActiveMoleculeIndices())
                 {
                     auto *molecule_j = cell_j->getMolecule(mol_j);
                     for (auto &atom_i : cell_i.getAtoms(mol_i))
