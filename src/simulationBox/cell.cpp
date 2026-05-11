@@ -22,8 +22,6 @@
 
 #include "cell.hpp"
 
-#include <unordered_set>
-
 using namespace simulationBox;
 using namespace linearAlgebra;
 
@@ -89,6 +87,9 @@ void Cell::assignMoleculeHybridZoneIndices()
     for (size_t mol = 0; mol < nMol; ++mol)
     {
         const auto hybridZone = _molecules[mol]->getHybridZone();
+        const bool isCore     = (hybridZone == CORE);
+        const auto isActive   = _molecules[mol]->isActive();
+
         switch (hybridZone)
         {
             case CORE: _coreMoleculeIndices.push_back(mol); break;
@@ -96,21 +97,10 @@ void Cell::assignMoleculeHybridZoneIndices()
             default: break;
         }
 
-        const auto isActive = _molecules[mol]->isActive();
         if (isActive)
             _activeMoleculeIndices.push_back(mol);
-        else
+        else if (!isCore)
             _inactiveNonCoreMoleculeIndices.push_back(mol);
-
-        const std::unordered_set<size_t> core(
-            _coreMoleculeIndices.begin(),
-            _coreMoleculeIndices.end()
-        );
-
-        std::erase_if(
-            _inactiveNonCoreMoleculeIndices,
-            [&](size_t idx) { return core.contains(idx); }
-        );
     }
 }
 
