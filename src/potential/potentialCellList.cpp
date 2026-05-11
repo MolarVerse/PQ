@@ -203,25 +203,39 @@ void PotentialCellList::calculateCoreToOuterForces(
     double totalCoulombEnergy = 0.0;
 
     for (const auto &cell_i : cellList.getCells())
-        for (auto &mol1 : cell_i.getMoleculesInsideZone(CORE))
-            for (auto &mol2 : cell_i.getMMMolecules())
-                for (auto &atom1 : mol1->getAtoms())
-                    for (auto &atom2 : mol2->getAtoms())
+        for (auto mol_i : cell_i.getCoreMoleculeIndices())
+        {
+            auto *molecule_i = cell_i.getMolecule(mol_i);
+
+            for (auto mol_j : cell_i.getOuterMoleculeIndices())
+            {
+                auto *molecule_j = cell_i.getMolecule(mol_j);
+
+                for (auto &atom_i : cell_i.getAtoms(mol_i))
+                    for (auto &atom_j : cell_i.getAtoms(mol_j))
                         totalCoulombEnergy += calculateSingleCoulombInteraction<
                             QMChargeTag,
-                            MMChargeTag>(*box, *atom1, *atom2);
+                            MMChargeTag>(*box, *atom_i, *atom_j);
+            }
+        }
 
-    for (const auto &cell1 : cellList.getCells())
-        for (const auto *cell2 : cell1.getNeighbourCells())
-            for (auto &mol1 : cell1.getMoleculesInsideZone(CORE))
-                for (auto &mol2 : cell2->getMMMolecules())
-                    for (auto &atom1 : mol1->getAtoms())
-                        for (auto &atom2 : mol2->getAtoms())
+    for (const auto &cell_i : cellList.getCells())
+        for (const auto *cell_j : cell_i.getNeighbourCells())
+            for (auto mol_i : cell_i.getCoreMoleculeIndices())
+            {
+                auto *molecule_i = cell_i.getMolecule(mol_i);
+
+                for (auto mol_j : cell_j->getOuterMoleculeIndices())
+                {
+                    auto *molecule_j = cell_j->getMolecule(mol_j);
+                    for (auto &atom_i : cell_i.getAtoms(mol_i))
+                        for (auto &atom_j : cell_j->getAtoms(mol_j))
                             totalCoulombEnergy +=
                                 calculateSingleCoulombInteraction<
                                     QMChargeTag,
-                                    MMChargeTag>(*box, *atom1, *atom2);
-
+                                    MMChargeTag>(*box, *atom_i, *atom_j);
+                }
+            }
     physicalData.addCoulombEnergy(totalCoulombEnergy);
 
     stopTimingsSection("InterNonBondedCoreToOuter");

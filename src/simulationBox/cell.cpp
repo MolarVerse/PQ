@@ -29,7 +29,14 @@ using namespace linearAlgebra;
  * @brief clears the molecules vector
  *
  */
-void Cell::clearMolecules() { _molecules.clear(); }
+void Cell::clearMolecules()
+{
+    _molecules.clear();
+    _coreMoleculeIndices.clear();
+    _layerMoleculeIndices.clear();
+    _smoothingMoleculeIndices.clear();
+    _outerMoleculeIndices.clear();
+}
 
 /**
  * @brief clears the atoms vector
@@ -66,6 +73,32 @@ void Cell::addNeighbourCell(Cell *cell) { _neighbourCells.push_back(cell); }
 void Cell::addAtoms(const std::vector<pq::Atom *> &atomPointers)
 {
     _atoms.push_back(atomPointers);
+}
+
+/**
+ * @brief Assign molecule indices to hybrid-zone buckets.
+ *
+ * @details Uses the current `_molecules` order; call after molecules have been
+ * added and hybrid zone have been assigned
+ */
+void Cell::assignMoleculeHybridZoneIndices()
+{
+    using enum HybridZone;
+    const auto nMol = getNumberOfMolecules();
+
+    for (size_t mol = 0; mol < nMol; ++mol)
+    {
+        const auto hybridZone = _molecules[mol]->getHybridZone();
+        switch (hybridZone)
+        {
+            case CORE: _coreMoleculeIndices.push_back(mol); break;
+            case LAYER: _layerMoleculeIndices.push_back(mol); break;
+            case SMOOTHING: _smoothingMoleculeIndices.push_back(mol); break;
+            case POINT_CHARGE: _outerMoleculeIndices.push_back(mol); break;
+            case OUTER: _outerMoleculeIndices.push_back(mol); break;
+            default: break;
+        }
+    }
 }
 
 /***************************
@@ -164,6 +197,46 @@ std::vector<Cell *> Cell::getNeighbourCells() const { return _neighbourCells; }
 const std::vector<pq::Atom *> &Cell::getAtoms(const size_t molIndex) const
 {
     return _atoms[molIndex];
+}
+
+/**
+ * @brief returns the molecule indices in the core hybrid zone
+ *
+ * @return const std::vector<size_t>&
+ */
+const std::vector<size_t> &Cell::getCoreMoleculeIndices() const
+{
+    return _coreMoleculeIndices;
+}
+
+/**
+ * @brief returns the molecule indices in the layer hybrid zone
+ *
+ * @return const std::vector<size_t>&
+ */
+const std::vector<size_t> &Cell::getLayerMoleculeIndices() const
+{
+    return _layerMoleculeIndices;
+}
+
+/**
+ * @brief returns the molecule indices in the smoothing hybrid zone
+ *
+ * @return const std::vector<size_t>&
+ */
+const std::vector<size_t> &Cell::getSmoothingMoleculeIndices() const
+{
+    return _smoothingMoleculeIndices;
+}
+
+/**
+ * @brief returns the molecule indices in the outer hybrid zone
+ *
+ * @return const std::vector<size_t>&
+ */
+const std::vector<size_t> &Cell::getOuterMoleculeIndices() const
+{
+    return _outerMoleculeIndices;
 }
 
 /***************************

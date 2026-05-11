@@ -282,6 +282,14 @@ void CellList::addMoleculesToCells(SimulationBox &simulationBox)
 }
 
 /**
+ * @brief Assign molecule hybrid-zone indices for all cells.
+ */
+void CellList::assignMoleculeHybridZoneIndices()
+{
+    for (auto &cell : _cells) cell.assignMoleculeHybridZoneIndices();
+}
+
+/**
  * @brief get cell index of atom
  *
  * @param simulationBox

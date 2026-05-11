@@ -44,6 +44,10 @@ namespace simulationBox
         std::vector<pq::Molecule *>          _molecules;
         std::vector<std::vector<pq::Atom *>> _atoms;
         std::vector<Cell *>                  _neighbourCells;
+        std::vector<size_t>                  _coreMoleculeIndices;
+        std::vector<size_t>                  _layerMoleculeIndices;
+        std::vector<size_t>                  _smoothingMoleculeIndices;
+        std::vector<size_t>                  _outerMoleculeIndices;
 
         pq::Vec3D   _lowerBoundary = {0, 0, 0};
         pq::Vec3D   _upperBoundary = {0, 0, 0};
@@ -57,6 +61,7 @@ namespace simulationBox
         void addMolecule(pq::Molecule *molecule);
         void addNeighbourCell(Cell *cell);
         void addAtoms(const std::vector<pq::Atom *> &atomPointers);
+        void assignMoleculeHybridZoneIndices();
 
         /***************************
          * standard getter methods *
@@ -77,6 +82,14 @@ namespace simulationBox
 
         [[nodiscard]] const std::vector<pq::Atom *> &getAtoms(
             const size_t molIndex
+        ) const;
+
+        [[nodiscard]] const std::vector<size_t> &getCoreMoleculeIndices() const;
+        [[nodiscard]] const std::vector<size_t> &getLayerMoleculeIndices(
+        ) const;
+        [[nodiscard]] const std::vector<size_t> &getSmoothingMoleculeIndices(
+        ) const;
+        [[nodiscard]] const std::vector<size_t> &getOuterMoleculeIndices(
         ) const;
 
         /***************************

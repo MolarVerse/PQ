@@ -50,6 +50,9 @@ namespace engine
         moltypeCheck();
         _configurator.calculateSmoothingFactors(*_simulationBox);
 
+        if (isCellListActivated())
+            _cellList->assignMoleculeHybridZoneIndices();
+
         applySmoothing();
 
         combineInnerOuterForces();
