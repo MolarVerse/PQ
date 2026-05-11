@@ -44,6 +44,7 @@ namespace engine
      */
     void QMMMMDEngine::calculateForces()
     {
+        _cellList->updateCellList(*_simulationBox);
         _configurator.calculateInnerRegionCenter(*_simulationBox);
         _configurator.shiftAtomsToInnerRegionCenter(*_simulationBox);
         _configurator.assignHybridZones(*_simulationBox);

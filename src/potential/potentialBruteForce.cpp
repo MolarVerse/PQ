@@ -131,8 +131,8 @@ void PotentialBruteForce::calculateForces(
         }
     }
 
-    physicalData.setCoulombEnergy(totalCoulombEnergy);
-    physicalData.setNonCoulombEnergy(totalNonCoulombEnergy);
+    physicalData.addCoulombEnergy(totalCoulombEnergy);
+    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
 
     stopTimingsSection("InterNonBonded");
 }
