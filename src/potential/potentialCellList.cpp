@@ -454,120 +454,191 @@ void PotentialCellList::calculateHotspotSmoothingMMForces(
     double totalNonCoulombEnergy = 0.0;
 
     for (const auto &cell_i : cellList.getCells())
-        for (auto &mol1 : cell_i.getMoleculesInsideZone(SMOOTHING))
-            for (auto &mol2 : cell_i.getMoleculesOutsideZone(SMOOTHING))
-                for (auto &atom1 : mol1->getAtoms())
-                    for (auto &atom2 : mol2->getAtoms())
+        for (auto mol_i : cell_i.getSmoothingMoleculeIndices())
+        {
+            auto *molecule_i = cell_i.getMolecule(mol_i);
+
+            for (auto mol_j : cell_i.getNonSmoothingMoleculeIndices())
+            {
+                auto *molecule_j = cell_i.getMolecule(mol_j);
+
+                for (auto &atom_i : cell_i.getAtoms(mol_i))
+                    for (auto &atom_j : cell_i.getAtoms(mol_j))
                     {
                         const auto [coulombEnergy, nonCoulombEnergy] =
                             calculateSingleInteraction<
                                 MMChargeTag,
                                 QMChargeTag>(
                                 *box,
-                                *mol1,
-                                *mol2,
-                                *atom1,
-                                *atom2
+                                *molecule_i,
+                                *molecule_j,
+                                *atom_i,
+                                *atom_j
                             );
 
                         totalCoulombEnergy    += coulombEnergy;
                         totalNonCoulombEnergy += nonCoulombEnergy;
                     }
+            }
+        }
 
-    for (const auto &cell1 : cellList.getCells())
-        for (const auto *cell2 : cell1.getNeighbourCells())
-            for (auto &mol1 : cell1.getMoleculesInsideZone(SMOOTHING))
-                for (auto &mol2 : cell2->getMoleculesOutsideZone(SMOOTHING))
-                    for (auto &atom1 : mol1->getAtoms())
-                        for (auto &atom2 : mol2->getAtoms())
+    for (const auto &cell_i : cellList.getCells())
+        for (const auto *cell_j : cell_i.getNeighbourCells())
+            for (auto mol_i : cell_i.getSmoothingMoleculeIndices())
+            {
+                auto *molecule_i = cell_i.getMolecule(mol_i);
+
+                for (auto mol_j : cell_j->getNonSmoothingMoleculeIndices())
+                {
+                    auto *molecule_j = cell_j->getMolecule(mol_j);
+
+                    for (auto &atom_i : cell_i.getAtoms(mol_i))
+                        for (auto &atom_j : cell_j->getAtoms(mol_j))
                         {
                             const auto [coulombEnergy, nonCoulombEnergy] =
                                 calculateSingleInteraction<
                                     MMChargeTag,
                                     QMChargeTag>(
                                     *box,
-                                    *mol1,
-                                    *mol2,
-                                    *atom1,
-                                    *atom2
+                                    *molecule_i,
+                                    *molecule_j,
+                                    *atom_i,
+                                    *atom_j
                                 );
 
                             totalCoulombEnergy    += coulombEnergy;
                             totalNonCoulombEnergy += nonCoulombEnergy;
                         }
+                }
+            }
 
     for (const auto &cell_i : cellList.getCells())
-    {
-        size_t i = 0;
-        for (auto &mol1 : cell_i.getMoleculesInsideZone(SMOOTHING))
-        {
-            size_t j = 0;
-            for (auto &mol2 : cell_i.getMoleculesInsideZone(SMOOTHING))
+        for (const auto *cell_j : cell_i.getNeighbourCells())
+            for (auto mol_i : cell_j->getSmoothingMoleculeIndices())
             {
-                if (i == j)
+                auto *molecule_i = cell_j->getMolecule(mol_i);
+
+                for (auto mol_j : cell_i.getNonSmoothingMoleculeIndices())
                 {
-                    ++j;
-                    continue;
+                    auto *molecule_j = cell_i.getMolecule(mol_j);
+
+                    for (auto &atom_i : cell_j->getAtoms(mol_i))
+                        for (auto &atom_j : cell_i.getAtoms(mol_j))
+                        {
+                            const auto [coulombEnergy, nonCoulombEnergy] =
+                                calculateSingleInteraction<
+                                    MMChargeTag,
+                                    QMChargeTag>(
+                                    *box,
+                                    *molecule_i,
+                                    *molecule_j,
+                                    *atom_i,
+                                    *atom_j
+                                );
+
+                            totalCoulombEnergy    += coulombEnergy;
+                            totalNonCoulombEnergy += nonCoulombEnergy;
+                        }
                 }
-                for (auto &atom1 : mol1->getAtoms())
-                    for (auto &atom2 : mol2->getAtoms())
+            }
+
+    for (const auto &cell_i : cellList.getCells())
+        for (auto mol_i : cell_i.getSmoothingMoleculeIndices())
+        {
+            auto *molecule_i = cell_i.getMolecule(mol_i);
+
+            for (auto mol_j : cell_i.getSmoothingMoleculeIndices())
+            {
+                if (mol_i == mol_j)
+                    continue;
+
+                auto *molecule_j = cell_i.getMolecule(mol_j);
+
+                for (auto &atom_i : cell_i.getAtoms(mol_i))
+                    for (auto &atom_j : cell_i.getAtoms(mol_j))
                     {
                         const auto [coulombEnergy, nonCoulombEnergy] =
                             calculateSingleInteractionOneWay<
                                 MMChargeTag,
                                 QMChargeTag>(
                                 *box,
-                                *mol1,
-                                *mol2,
-                                *atom1,
-                                *atom2
+                                *molecule_i,
+                                *molecule_j,
+                                *atom_i,
+                                *atom_j
                             );
 
                         totalCoulombEnergy    += coulombEnergy;
                         totalNonCoulombEnergy += nonCoulombEnergy;
                     }
-                ++j;
             }
-            ++i;
         }
-    }
 
-    for (const auto &cell1 : cellList.getCells())
-        for (const auto *cell2 : cell1.getNeighbourCells())
-        {
-            size_t i = 0;
-            for (auto &mol1 : cell1.getMoleculesInsideZone(SMOOTHING))
+    for (const auto &cell_i : cellList.getCells())
+        for (const auto *cell_j : cell_i.getNeighbourCells())
+            for (auto mol_i : cell_i.getSmoothingMoleculeIndices())
             {
-                size_t j = 0;
-                for (auto &mol2 : cell2->getMoleculesInsideZone(SMOOTHING))
+                auto *molecule_i = cell_i.getMolecule(mol_i);
+
+                for (auto mol_j : cell_j->getSmoothingMoleculeIndices())
                 {
-                    if (i == j)
-                    {
-                        ++j;
+                    auto *molecule_j = cell_j->getMolecule(mol_j);
+
+                    if (molecule_i == molecule_j)
                         continue;
-                    }
-                    for (auto &atom1 : mol1->getAtoms())
-                        for (auto &atom2 : mol2->getAtoms())
+
+                    for (auto &atom_i : cell_i.getAtoms(mol_i))
+                        for (auto &atom_j : cell_j->getAtoms(mol_j))
                         {
                             const auto [coulombEnergy, nonCoulombEnergy] =
                                 calculateSingleInteractionOneWay<
                                     MMChargeTag,
                                     QMChargeTag>(
                                     *box,
-                                    *mol1,
-                                    *mol2,
-                                    *atom1,
-                                    *atom2
+                                    *molecule_i,
+                                    *molecule_j,
+                                    *atom_i,
+                                    *atom_j
                                 );
 
                             totalCoulombEnergy    += coulombEnergy;
                             totalNonCoulombEnergy += nonCoulombEnergy;
                         }
-                    ++j;
                 }
-                ++i;
             }
-        }
+
+    for (const auto &cell_i : cellList.getCells())
+        for (const auto *cell_j : cell_i.getNeighbourCells())
+            for (auto mol_i : cell_j->getSmoothingMoleculeIndices())
+            {
+                auto *molecule_i = cell_j->getMolecule(mol_i);
+
+                for (auto mol_j : cell_i.getSmoothingMoleculeIndices())
+                {
+                    auto *molecule_j = cell_i.getMolecule(mol_j);
+
+                    if (molecule_i == molecule_j)
+                        continue;
+
+                    for (auto &atom_i : cell_j->getAtoms(mol_i))
+                        for (auto &atom_j : cell_i.getAtoms(mol_j))
+                        {
+                            const auto [coulombEnergy, nonCoulombEnergy] =
+                                calculateSingleInteractionOneWay<
+                                    MMChargeTag,
+                                    QMChargeTag>(
+                                    *box,
+                                    *molecule_i,
+                                    *molecule_j,
+                                    *atom_i,
+                                    *atom_j
+                                );
+
+                            totalCoulombEnergy    += coulombEnergy;
+                            totalNonCoulombEnergy += nonCoulombEnergy;
+                        }
+                }
+            }
 
     physicalData.addCoulombEnergy(totalCoulombEnergy);
     physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);

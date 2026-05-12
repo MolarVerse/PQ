@@ -78,6 +78,7 @@ void Cell::assignMoleculeHybridZoneIndices()
 {
     _coreMoleculeIndices.clear();
     _smoothingMoleculeIndices.clear();
+    _nonSmoothingMoleculeIndices.clear();
     _activeMoleculeIndices.clear();
     _inactiveNonCoreMoleculeIndices.clear();
 
@@ -96,6 +97,9 @@ void Cell::assignMoleculeHybridZoneIndices()
             case SMOOTHING: _smoothingMoleculeIndices.push_back(mol); break;
             default: break;
         }
+
+        if (hybridZone != SMOOTHING)
+            _nonSmoothingMoleculeIndices.push_back(mol);
 
         if (isActive)
             _activeMoleculeIndices.push_back(mol);
@@ -220,6 +224,16 @@ const std::vector<size_t> &Cell::getCoreMoleculeIndices() const
 const std::vector<size_t> &Cell::getSmoothingMoleculeIndices() const
 {
     return _smoothingMoleculeIndices;
+}
+
+/**
+ * @brief returns the molecule indices outside the smoothing hybrid zone
+ *
+ * @return const std::vector<size_t>&
+ */
+const std::vector<size_t> &Cell::getNonSmoothingMoleculeIndices() const
+{
+    return _nonSmoothingMoleculeIndices;
 }
 
 /**

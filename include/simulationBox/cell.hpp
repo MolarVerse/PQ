@@ -46,6 +46,7 @@ namespace simulationBox
         std::vector<Cell *>                  _neighbourCells;
         std::vector<size_t>                  _coreMoleculeIndices;
         std::vector<size_t>                  _smoothingMoleculeIndices;
+        std::vector<size_t>                  _nonSmoothingMoleculeIndices;
         std::vector<size_t>                  _activeMoleculeIndices;
         std::vector<size_t>                  _inactiveNonCoreMoleculeIndices;
 
@@ -86,6 +87,8 @@ namespace simulationBox
 
         [[nodiscard]] const std::vector<size_t> &getCoreMoleculeIndices() const;
         [[nodiscard]] const std::vector<size_t> &getSmoothingMoleculeIndices(
+        ) const;
+        [[nodiscard]] const std::vector<size_t> &getNonSmoothingMoleculeIndices(
         ) const;
         [[nodiscard]] const std::vector<size_t> &getActiveMoleculeIndices(
         ) const;
