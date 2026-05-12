@@ -27,7 +27,6 @@
 #include <cstddef>   // for size_t
 #include <vector>    // for vector
 
-#include "cellView.hpp"   // for CellView
 #include "typeAliases.hpp"
 
 namespace simulationBox
@@ -38,7 +37,7 @@ namespace simulationBox
      * @brief Cell is a class for a single cell in the cellList
      *
      */
-    class Cell : public CellView<Cell>
+    class Cell
     {
        private:
         std::vector<pq::Molecule *>          _molecules;

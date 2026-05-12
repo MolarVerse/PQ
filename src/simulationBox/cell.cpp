@@ -22,6 +22,8 @@
 
 #include "cell.hpp"
 
+#include "molecule.hpp"   // for Molecule
+
 using namespace simulationBox;
 using namespace linearAlgebra;
 
