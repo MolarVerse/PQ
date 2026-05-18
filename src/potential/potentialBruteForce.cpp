@@ -64,71 +64,46 @@ void PotentialBruteForce::calculateForces(
     double totalCoulombEnergy    = 0.0;
     double totalNonCoulombEnergy = 0.0;
 
-    // inter molecular forces
-    if (isWaterInterModelSet)
+    const auto waterTypeValue = simBox.getWaterType().value_or(size_t{0});
+
+    size_t i = 0;
+    for (auto &mol1 : simBox.getMMMolecules())
     {
-        const auto waterTypeValue = simBox.getWaterType().value_or(size_t{0});
+        const auto moltype1 = mol1.getMoltype();
 
-        size_t i = 0;
-        for (auto &mol1 : simBox.getMMMolecules())
+        size_t j = 0;
+        for (auto &mol2 : simBox.getMMMolecules())
         {
-            size_t j = 0;
-            for (auto &mol2 : simBox.getMMMolecules())
-            {
-                // avoid double counting and self interaction
-                if (j >= i)
-                    break;
+            // avoid double counting and self interaction
+            if (j >= i)
+                break;
 
-                if (mol1.getMoltype() == waterTypeValue &&
-                    mol2.getMoltype() == waterTypeValue)
+            // skip water-moltype - water-moltype interactions
+            if (isWaterInterModelSet && moltype1 == waterTypeValue &&
+                mol2.getMoltype() == waterTypeValue)
+            {
+                ++j;
+                continue;
+            }
+
+            for (auto &atom1 : mol1.getAtoms())
+                for (auto &atom2 : mol2.getAtoms())
                 {
-                    ++j;
-                    continue;
+                    const auto [coulombEnergy, nonCoulombEnergy] =
+                        calculateSingleInteraction<MMChargeTag, MMChargeTag>(
+                            *box,
+                            mol1,
+                            mol2,
+                            *atom1,
+                            *atom2
+                        );
+
+                    totalCoulombEnergy    += coulombEnergy;
+                    totalNonCoulombEnergy += nonCoulombEnergy;
                 }
-
-                for (auto &atom1 : mol1.getAtoms())
-                    for (auto &atom2 : mol2.getAtoms())
-                    {
-                        const auto [coulombEnergy, nonCoulombEnergy] =
-                            calculateSingleInteraction<
-                                MMChargeTag,
-                                MMChargeTag>(*box, mol1, mol2, *atom1, *atom2);
-
-                        totalCoulombEnergy    += coulombEnergy;
-                        totalNonCoulombEnergy += nonCoulombEnergy;
-                    }
-                ++j;
-            }
-            ++i;
+            ++j;
         }
-    }
-    else
-    {
-        size_t i = 0;
-        for (auto &mol1 : simBox.getMMMolecules())
-        {
-            size_t j = 0;
-            for (auto &mol2 : simBox.getMMMolecules())
-            {
-                // avoid double counting and self interaction
-                if (j >= i)
-                    break;
-
-                for (auto &atom1 : mol1.getAtoms())
-                    for (auto &atom2 : mol2.getAtoms())
-                    {
-                        const auto [coulombEnergy, nonCoulombEnergy] =
-                            calculateSingleInteraction<
-                                MMChargeTag,
-                                MMChargeTag>(*box, mol1, mol2, *atom1, *atom2);
-
-                        totalCoulombEnergy    += coulombEnergy;
-                        totalNonCoulombEnergy += nonCoulombEnergy;
-                    }
-                ++j;
-            }
-            ++i;
-        }
+        ++i;
     }
 
     physicalData.addCoulombEnergy(totalCoulombEnergy);
