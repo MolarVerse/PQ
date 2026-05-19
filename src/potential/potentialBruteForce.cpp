@@ -283,9 +283,6 @@ void PotentialBruteForce::calculateHotspotSmoothingMMForces(
         }
     }
 
-    physicalData.addCoulombEnergy(totalCoulombEnergy);
-    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
-
     size_t i = 0;
     for (auto &mol1 : simBox.getMoleculesInsideZone(SMOOTHING))
     {
