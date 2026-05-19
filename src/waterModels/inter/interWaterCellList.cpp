@@ -196,3 +196,43 @@ void InterWaterStrategyCellList::calculate(
     physicalData.addCoulombEnergy(totalCoulombEnergy);
     physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
 }
+
+void InterWaterStrategyCellList::calculateCoreToOuterForces(
+    const InterWaterState  &state,
+    SimBox                 &simBox,
+    PhysicalData           &physicalData,
+    const SharedCoulombPot &coulombPotential,
+    CellList               &cellList
+)
+{
+}
+
+void InterWaterStrategyCellList::calculateLayerToOuterForces(
+    const InterWaterState  &state,
+    SimBox                 &simBox,
+    PhysicalData           &physicalData,
+    const SharedCoulombPot &coulombPotential,
+    CellList               &cellList
+)
+{
+}
+
+void InterWaterStrategyCellList::calculateOuterToOuterForces(
+    const InterWaterState  &state,
+    SimBox                 &simBox,
+    PhysicalData           &physicalData,
+    const SharedCoulombPot &coulombPotential,
+    CellList               &cellList
+)
+{
+}
+
+void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
+    const InterWaterState  &state,
+    SimBox                 &simBox,
+    PhysicalData           &physicalData,
+    const SharedCoulombPot &coulombPotential,
+    CellList               &cellList
+)
+{
+}

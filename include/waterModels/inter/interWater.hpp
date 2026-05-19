@@ -65,6 +65,38 @@ namespace waterModel
             pq::CellList &
         ) = 0;
 
+        virtual void calculateCoreToOuterForces(
+            const InterWaterState &,
+            pq::SimBox &,
+            pq::PhysicalData &,
+            const pq::SharedCoulombPot &,
+            pq::CellList &
+        ) = 0;
+
+        virtual void calculateLayerToOuterForces(
+            const InterWaterState &,
+            pq::SimBox &,
+            pq::PhysicalData &,
+            const pq::SharedCoulombPot &,
+            pq::CellList &
+        ) = 0;
+
+        virtual void calculateOuterToOuterForces(
+            const InterWaterState &,
+            pq::SimBox &,
+            pq::PhysicalData &,
+            const pq::SharedCoulombPot &,
+            pq::CellList &
+        ) = 0;
+
+        virtual void calculateHotspotSmoothingMMForces(
+            const InterWaterState &,
+            pq::SimBox &,
+            pq::PhysicalData &,
+            const pq::SharedCoulombPot &,
+            pq::CellList &
+        ) = 0;
+
         void calculateSingleInteraction(
             pq::Atom                   &atom1,
             pq::Atom                   &atom2,
@@ -75,6 +107,16 @@ namespace waterModel
             const pq::NonCoulPair      &nonCoulPair,
             double                     &coulombEnergy,
             double                     &nonCoulombEnergy
+        );
+
+        void calculateSingleCoulombInteraction(
+            pq::Atom                   &atom1,
+            pq::Atom                   &atom2,
+            const double                chargeProduct,
+            const pq::SharedCoulombPot &coulombPotential,
+            const double                rCutSquared,
+            const pq::SimBox           &simBox,
+            double                     &coulombEnergy
         );
     };
 
@@ -93,19 +135,21 @@ namespace waterModel
             pq::PhysicalData           &physicalData,
             const pq::SharedCoulombPot &sharedCoulombPot,
             pq::CellList               &cellList
-        )
-        {
-            if (!_strategy)
-                return;
+        );
 
-            _strategy->calculate(
-                _state,
-                simBox,
-                physicalData,
-                sharedCoulombPot,
-                cellList
-            );
-        }
+        void calculateQMMMForces(
+            pq::SimBox                 &simBox,
+            pq::PhysicalData           &physicalData,
+            const pq::SharedCoulombPot &sharedCoulombPot,
+            pq::CellList               &cellList
+        );
+
+        void calculateHotspotSmoothingMMForces(
+            pq::SimBox                 &simBox,
+            pq::PhysicalData           &physicalData,
+            const pq::SharedCoulombPot &sharedCoulombPot,
+            pq::CellList               &cellList
+        );
 
        private:
         InterWaterState                     _state;
@@ -132,6 +176,46 @@ namespace waterModel
         ) override final
         {
         }
+
+        virtual void calculateCoreToOuterForces(
+            const InterWaterState &,
+            pq::SimBox &,
+            pq::PhysicalData &,
+            const pq::SharedCoulombPot &,
+            pq::CellList &
+        ) override final
+        {
+        }
+
+        virtual void calculateLayerToOuterForces(
+            const InterWaterState &,
+            pq::SimBox &,
+            pq::PhysicalData &,
+            const pq::SharedCoulombPot &,
+            pq::CellList &
+        ) override final
+        {
+        }
+
+        virtual void calculateOuterToOuterForces(
+            const InterWaterState &,
+            pq::SimBox &,
+            pq::PhysicalData &,
+            const pq::SharedCoulombPot &,
+            pq::CellList &
+        ) override final
+        {
+        }
+
+        virtual void calculateHotspotSmoothingMMForces(
+            const InterWaterState &,
+            pq::SimBox &,
+            pq::PhysicalData &,
+            const pq::SharedCoulombPot &,
+            pq::CellList &
+        ) override final
+        {
+        }
     };
 
     class InterWaterStrategyBruteForce : public InterWaterStrategy
@@ -144,12 +228,76 @@ namespace waterModel
             const pq::SharedCoulombPot &,
             pq::CellList &
         ) override final;
+
+        virtual void calculateCoreToOuterForces(
+            const InterWaterState &,
+            pq::SimBox &,
+            pq::PhysicalData &,
+            const pq::SharedCoulombPot &,
+            pq::CellList &
+        ) override final;
+
+        virtual void calculateLayerToOuterForces(
+            const InterWaterState &,
+            pq::SimBox &,
+            pq::PhysicalData &,
+            const pq::SharedCoulombPot &,
+            pq::CellList &
+        ) override final;
+
+        virtual void calculateOuterToOuterForces(
+            const InterWaterState &,
+            pq::SimBox &,
+            pq::PhysicalData &,
+            const pq::SharedCoulombPot &,
+            pq::CellList &
+        ) override final;
+
+        virtual void calculateHotspotSmoothingMMForces(
+            const InterWaterState &,
+            pq::SimBox &,
+            pq::PhysicalData &,
+            const pq::SharedCoulombPot &,
+            pq::CellList &
+        ) override final;
     };
 
     class InterWaterStrategyCellList : public InterWaterStrategy
     {
        public:
         virtual void calculate(
+            const InterWaterState &,
+            pq::SimBox &,
+            pq::PhysicalData &,
+            const pq::SharedCoulombPot &,
+            pq::CellList &
+        ) override final;
+
+        virtual void calculateCoreToOuterForces(
+            const InterWaterState &,
+            pq::SimBox &,
+            pq::PhysicalData &,
+            const pq::SharedCoulombPot &,
+            pq::CellList &
+        ) override final;
+
+        virtual void calculateLayerToOuterForces(
+            const InterWaterState &,
+            pq::SimBox &,
+            pq::PhysicalData &,
+            const pq::SharedCoulombPot &,
+            pq::CellList &
+        ) override final;
+
+        virtual void calculateOuterToOuterForces(
+            const InterWaterState &,
+            pq::SimBox &,
+            pq::PhysicalData &,
+            const pq::SharedCoulombPot &,
+            pq::CellList &
+        ) override final;
+
+        virtual void calculateHotspotSmoothingMMForces(
             const InterWaterState &,
             pq::SimBox &,
             pq::PhysicalData &,

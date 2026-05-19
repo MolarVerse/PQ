@@ -50,6 +50,87 @@ InterWater::InterWater()
 }
 
 /**
+ * @brief Dispatch inter-water calculations via the active strategy.
+ *
+ * @param simBox Simulation box containing molecules.
+ * @param physicalData Physical data to store energy results.
+ * @param sharedCoulombPot Shared Coulomb potential used by the strategy.
+ * @param cellList Cell list structure used for neighbor searching.
+ */
+void InterWater::calculate(
+    pq::SimBox                 &simBox,
+    pq::PhysicalData           &physicalData,
+    const pq::SharedCoulombPot &sharedCoulombPot,
+    pq::CellList               &cellList
+)
+{
+    if (!_strategy)
+        return;
+
+    _strategy
+        ->calculate(_state, simBox, physicalData, sharedCoulombPot, cellList);
+}
+
+/**
+ * @brief Dispatch inter-water QMMM force calculations via the active strategy.
+ *
+ * @param simBox Simulation box containing molecules.
+ * @param physicalData Physical data to store energy results.
+ * @param sharedCoulombPot Shared Coulomb potential used by the strategy.
+ * @param cellList Cell list structure used for neighbor searching.
+ */
+void InterWater::calculateQMMMForces(
+    pq::SimBox                 &simBox,
+    pq::PhysicalData           &physicalData,
+    const pq::SharedCoulombPot &sharedCoulombPot,
+    pq::CellList               &cellList
+)
+{
+    if (!_strategy)
+        return;
+
+    _strategy->calculateCoreToOuterForces(
+        _state,
+        simBox,
+        physicalData,
+        sharedCoulombPot,
+        cellList
+    );
+
+    _strategy->calculateLayerToOuterForces(
+        _state,
+        simBox,
+        physicalData,
+        sharedCoulombPot,
+        cellList
+    );
+
+    _strategy->calculateOuterToOuterForces(
+        _state,
+        simBox,
+        physicalData,
+        sharedCoulombPot,
+        cellList
+    );
+}
+
+void InterWater::calculateHotspotSmoothingMMForces(
+    pq::SimBox                 &simBox,
+    pq::PhysicalData           &physicalData,
+    const pq::SharedCoulombPot &sharedCoulombPot,
+    pq::CellList               &cellList
+)
+{
+    _strategy->calculateHotspotSmoothingMMForces(
+        _state,
+        simBox,
+        physicalData,
+        sharedCoulombPot,
+        cellList
+    );
+}
+
+/**
  * @brief Construct an inter-water handler from a state and a strategy.
  *
  * @details Takes ownership of the supplied strategy, stores the provided
@@ -178,6 +259,46 @@ void InterWaterStrategy::calculateSingleInteraction(
             nonCoulombEnergy          += nonCoulE;
             f                         += nonCoulF;
         }
+
+        f                   /= distance;
+        const auto forcexyz  = f * dxyz;
+
+        const auto shiftForcexyz = forcexyz * txyz;
+
+        atom1.addForce(forcexyz);
+        atom2.addForce(-forcexyz);
+
+        atom1.addShiftForce(shiftForcexyz);
+    }
+}
+
+void InterWaterStrategy::calculateSingleCoulombInteraction(
+    Atom                   &atom1,
+    Atom                   &atom2,
+    const double            chargeProduct,
+    const SharedCoulombPot &coulombPotential,
+    const double            rCutSquared,
+    const SimBox           &simBox,
+    double                 &coulombEnergy
+)
+{
+    const auto xyz_i = atom1.getPosition();
+    const auto xyz_j = atom2.getPosition();
+
+    auto dxyz = xyz_i - xyz_j;
+
+    const auto txyz = -simBox.calcShiftVector(dxyz);
+
+    dxyz += txyz;
+
+    const double distanceSquared = normSquared(dxyz);
+
+    if (distanceSquared < rCutSquared)
+    {
+        const double distance = ::sqrt(distanceSquared);
+
+        auto [e, f]    = coulombPotential->calculate(distance, chargeProduct);
+        coulombEnergy += e;
 
         f                   /= distance;
         const auto forcexyz  = f * dxyz;

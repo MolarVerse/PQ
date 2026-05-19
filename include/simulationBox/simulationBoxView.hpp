@@ -363,7 +363,10 @@ namespace simulationBox
                pqviews::filter(
                    [waterType =
                         static_cast<Derived&>(*this).getWaterType()](auto& mol)
-                   { return waterType && mol.getMoltype() == *waterType; }
+                   {
+                       return waterType && mol.getMoltype() == *waterType &&
+                              mol.isActive();
+                   }
                );
     }
 
@@ -384,7 +387,10 @@ namespace simulationBox
                pqviews::filter(
                    [waterType = static_cast<const Derived&>(*this).getWaterType(
                     )](const auto& mol)
-                   { return waterType && mol.getMoltype() == *waterType; }
+                   {
+                       return waterType && mol.getMoltype() == *waterType &&
+                              mol.isActive();
+                   }
                );
     }
 

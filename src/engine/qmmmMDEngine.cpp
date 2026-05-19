@@ -156,7 +156,7 @@ namespace engine
                 *_cellList
             );
 
-            _interWater->calculate(
+            _interWater->calculateQMMMForces(
                 *_simulationBox,
                 *_physicalData,
                 _potential->getCoulombPotSharedPtr(),
@@ -250,7 +250,7 @@ namespace engine
         _potential
             ->calculateQMMMForces(*_simulationBox, *_physicalData, *_cellList);
 
-        _interWater->calculate(
+        _interWater->calculateQMMMForces(
             *_simulationBox,
             *_physicalData,
             _potential->getCoulombPotSharedPtr(),
@@ -268,6 +268,13 @@ namespace engine
         _potential->calculateHotspotSmoothingMMForces(
             *_simulationBox,
             *_physicalData,
+            *_cellList
+        );
+
+        _interWater->calculateHotspotSmoothingMMForces(
+            *_simulationBox,
+            *_physicalData,
+            _potential->getCoulombPotSharedPtr(),
             *_cellList
         );
 
