@@ -22,8 +22,11 @@
 
 #include "cell.hpp"
 
-#include "molecule.hpp"   // for Molecule
+#include "molecule.hpp"             // for Molecule
+#include "simulationBox.hpp"        // for SimulationBox
+#include "waterModelSettings.hpp"   // for WaterModelSettings
 
+using namespace settings;
 using namespace simulationBox;
 using namespace linearAlgebra;
 
@@ -107,6 +110,33 @@ void Cell::assignMoleculeHybridZoneIndices()
             _activeMoleculeIndices.push_back(mol);
         else if (!isCore)
             _inactiveNonCoreMoleculeIndices.push_back(mol);
+    }
+}
+
+/**
+ * @brief assigns the indices of water molecules in the cell
+ *
+ * @param simBox
+ */
+void Cell::assignWaterMoleculeIndices(const SimulationBox &simBox)
+{
+    const auto isWaterInterModelSet =
+        WaterModelSettings::isInterWaterModelSet();
+
+    if (!isWaterInterModelSet)
+        return;
+
+    _waterMoleculeIndices.clear();
+
+    const auto nMol           = getNumberOfMolecules();
+    const auto waterTypeValue = simBox.getWaterType().value_or(size_t{0});
+
+    for (size_t mol = 0; mol < nMol; ++mol)
+    {
+        const auto moltype = _molecules[mol]->getMoltype();
+
+        if (moltype == waterTypeValue)
+            _waterMoleculeIndices.push_back(mol);
     }
 }
 
@@ -256,6 +286,16 @@ const std::vector<size_t> &Cell::getActiveMoleculeIndices() const
 const std::vector<size_t> &Cell::getInactiveNonCoreMoleculeIndices() const
 {
     return _inactiveNonCoreMoleculeIndices;
+}
+
+/**
+ * @brief returns the indices of the water molecules
+ *
+ * @return const std::vector<size_t>&
+ */
+const std::vector<size_t> &Cell::getWaterMoleculeIndices() const
+{
+    return _waterMoleculeIndices;
 }
 
 /***************************

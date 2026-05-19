@@ -145,7 +145,10 @@ namespace engine
             _configurator.toggleMoleculeActivation(*_simulationBox);
 
             if (isCellListActivated())
+            {
                 _cellList->assignMoleculeHybridZoneIndices();
+                _cellList->assignWaterMoleculeIndices(*_simulationBox);
+            }
 
             _potential->calculateQMMMForces(
                 *_simulationBox,
@@ -239,7 +242,10 @@ namespace engine
         _configurator.toggleMoleculeActivation(*_simulationBox);
 
         if (isCellListActivated())
+        {
             _cellList->assignMoleculeHybridZoneIndices();
+            _cellList->assignWaterMoleculeIndices(*_simulationBox);
+        }
 
         _potential
             ->calculateQMMMForces(*_simulationBox, *_physicalData, *_cellList);

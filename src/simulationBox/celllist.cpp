@@ -290,6 +290,14 @@ void CellList::assignMoleculeHybridZoneIndices()
 }
 
 /**
+ * @brief Assign water molecule indices for all cells.
+ */
+void CellList::assignWaterMoleculeIndices(SimulationBox &simBox)
+{
+    for (auto &cell : _cells) cell.assignWaterMoleculeIndices(simBox);
+}
+
+/**
  * @brief get cell index of atom
  *
  * @param simulationBox

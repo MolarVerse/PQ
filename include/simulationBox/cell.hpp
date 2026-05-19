@@ -48,6 +48,7 @@ namespace simulationBox
         std::vector<size_t>                  _nonSmoothingMoleculeIndices;
         std::vector<size_t>                  _activeMoleculeIndices;
         std::vector<size_t>                  _inactiveNonCoreMoleculeIndices;
+        std::vector<size_t>                  _waterMoleculeIndices;
 
         pq::Vec3D   _lowerBoundary = {0, 0, 0};
         pq::Vec3D   _upperBoundary = {0, 0, 0};
@@ -62,6 +63,7 @@ namespace simulationBox
         void addNeighbourCell(Cell *cell);
         void addAtoms(const std::vector<pq::Atom *> &atomPointers);
         void assignMoleculeHybridZoneIndices();
+        void assignWaterMoleculeIndices(const pq::SimBox &);
 
         /***************************
          * standard getter methods *
@@ -92,6 +94,8 @@ namespace simulationBox
         [[nodiscard]] const std::vector<size_t> &getActiveMoleculeIndices(
         ) const;
         [[nodiscard]] const std::vector<size_t> &getInactiveNonCoreMoleculeIndices(
+        ) const;
+        [[nodiscard]] const std::vector<size_t> &getWaterMoleculeIndices(
         ) const;
 
         /***************************
