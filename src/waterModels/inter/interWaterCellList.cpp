@@ -245,12 +245,12 @@ void InterWaterStrategyCellList::calculateCoreToOuterForces(
     {
         const auto &waterMolecules = cell_i.getWaterMoleculeIndices();
 
-        for (auto mol_i : cell_i.getCoreMoleculeIndices())
+        for (const auto mol_i : cell_i.getCoreMoleculeIndices())
         {
             if (isNonWaterMolecule(waterMolecules, mol_i))
                 continue;
 
-            for (auto mol_j : cell_i.getActiveMoleculeIndices())
+            for (const auto mol_j : cell_i.getActiveMoleculeIndices())
             {
                 if (isNonWaterMolecule(waterMolecules, mol_j))
                     continue;
@@ -297,7 +297,7 @@ void InterWaterStrategyCellList::calculateCoreToOuterForces(
         {
             const auto &waterMolecules_j = cell_j->getWaterMoleculeIndices();
 
-            for (auto mol_i : cell_i.getCoreMoleculeIndices())
+            for (const auto mol_i : cell_i.getCoreMoleculeIndices())
             {
                 if (isNonWaterMolecule(waterMolecules_i, mol_i))
                     continue;
@@ -305,7 +305,7 @@ void InterWaterStrategyCellList::calculateCoreToOuterForces(
                 for (auto &atom_i : cell_i.getAtoms(mol_i))
                 {
                     const bool isAtom_i_O = atom_i->getName() == "O";
-                    for (auto mol_j : cell_j->getActiveMoleculeIndices())
+                    for (const auto mol_j : cell_j->getActiveMoleculeIndices())
                     {
                         if (isNonWaterMolecule(waterMolecules_j, mol_j))
                             continue;
@@ -350,7 +350,7 @@ void InterWaterStrategyCellList::calculateCoreToOuterForces(
         {
             const auto &waterMolecules_j = cell_j->getWaterMoleculeIndices();
 
-            for (auto mol_i : cell_j->getCoreMoleculeIndices())
+            for (const auto mol_i : cell_j->getCoreMoleculeIndices())
             {
                 if (isNonWaterMolecule(waterMolecules_j, mol_i))
                     continue;
@@ -358,7 +358,7 @@ void InterWaterStrategyCellList::calculateCoreToOuterForces(
                 for (auto &atom_i : cell_j->getAtoms(mol_i))
                 {
                     const bool isAtom_i_O = atom_i->getName() == "O";
-                    for (auto mol_j : cell_i.getActiveMoleculeIndices())
+                    for (const auto mol_j : cell_i.getActiveMoleculeIndices())
                     {
                         if (isNonWaterMolecule(waterMolecules_i, mol_j))
                             continue;

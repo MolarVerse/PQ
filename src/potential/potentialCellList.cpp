@@ -215,8 +215,8 @@ void PotentialCellList::calculateCoreToOuterForces(
     {
         const auto &waterMolecules = cell_i.getWaterMoleculeIndices();
 
-        for (auto mol_i : cell_i.getCoreMoleculeIndices())
-            for (auto mol_j : cell_i.getActiveMoleculeIndices())
+        for (const auto mol_i : cell_i.getCoreMoleculeIndices())
+            for (const auto mol_j : cell_i.getActiveMoleculeIndices())
             {
                 if (isWaterMolecule(waterMolecules, mol_i) &&
                     isWaterMolecule(waterMolecules, mol_j))
@@ -238,8 +238,8 @@ void PotentialCellList::calculateCoreToOuterForces(
         {
             const auto &waterMolecules_j = cell_j->getWaterMoleculeIndices();
 
-            for (auto mol_i : cell_i.getCoreMoleculeIndices())
-                for (auto mol_j : cell_j->getActiveMoleculeIndices())
+            for (const auto mol_i : cell_i.getCoreMoleculeIndices())
+                for (const auto mol_j : cell_j->getActiveMoleculeIndices())
                 {
                     if (isWaterMolecule(waterMolecules_i, mol_i) &&
                         isWaterMolecule(waterMolecules_j, mol_j))
@@ -263,8 +263,8 @@ void PotentialCellList::calculateCoreToOuterForces(
         {
             const auto &waterMolecules_j = cell_j->getWaterMoleculeIndices();
 
-            for (auto mol_i : cell_j->getCoreMoleculeIndices())
-                for (auto mol_j : cell_i.getActiveMoleculeIndices())
+            for (const auto mol_i : cell_j->getCoreMoleculeIndices())
+                for (const auto mol_j : cell_i.getActiveMoleculeIndices())
                 {
                     if (isWaterMolecule(waterMolecules_j, mol_i) &&
                         isWaterMolecule(waterMolecules_i, mol_j))
@@ -325,11 +325,11 @@ void PotentialCellList::calculateLayerToOuterForces(
     {
         const auto &waterMolecules = cell_i.getWaterMoleculeIndices();
 
-        for (auto mol_i : cell_i.getInactiveNonCoreMoleculeIndices())
+        for (const auto mol_i : cell_i.getInactiveNonCoreMoleculeIndices())
         {
             auto *molecule_i = cell_i.getMolecule(mol_i);
 
-            for (auto mol_j : cell_i.getActiveMoleculeIndices())
+            for (const auto mol_j : cell_i.getActiveMoleculeIndices())
             {
                 if (isWaterMolecule(waterMolecules, mol_i) &&
                     isWaterMolecule(waterMolecules, mol_j))
@@ -366,11 +366,11 @@ void PotentialCellList::calculateLayerToOuterForces(
         {
             const auto &waterMolecules_j = cell_j->getWaterMoleculeIndices();
 
-            for (auto mol_i : cell_i.getInactiveNonCoreMoleculeIndices())
+            for (const auto mol_i : cell_i.getInactiveNonCoreMoleculeIndices())
             {
                 auto *molecule_i = cell_i.getMolecule(mol_i);
 
-                for (auto mol_j : cell_j->getActiveMoleculeIndices())
+                for (const auto mol_j : cell_j->getActiveMoleculeIndices())
                 {
                     if (isWaterMolecule(waterMolecules_i, mol_i) &&
                         isWaterMolecule(waterMolecules_j, mol_j))
@@ -408,11 +408,11 @@ void PotentialCellList::calculateLayerToOuterForces(
         {
             const auto &waterMolecules_j = cell_j->getWaterMoleculeIndices();
 
-            for (auto mol_i : cell_j->getInactiveNonCoreMoleculeIndices())
+            for (const auto mol_i : cell_j->getInactiveNonCoreMoleculeIndices())
             {
                 auto *molecule_i = cell_j->getMolecule(mol_i);
 
-                for (auto mol_j : cell_i.getActiveMoleculeIndices())
+                for (const auto mol_j : cell_i.getActiveMoleculeIndices())
                 {
                     if (isWaterMolecule(waterMolecules_j, mol_i) &&
                         isWaterMolecule(waterMolecules_i, mol_j))
@@ -472,11 +472,11 @@ void PotentialCellList::calculateOuterToOuterForces(
     {
         const auto &waterMolecules = cell_i.getWaterMoleculeIndices();
 
-        for (auto mol_i : cell_i.getActiveMoleculeIndices())
+        for (const auto mol_i : cell_i.getActiveMoleculeIndices())
         {
             auto *molecule_i = cell_i.getMolecule(mol_i);
 
-            for (auto mol_j : cell_i.getActiveMoleculeIndices())
+            for (const auto mol_j : cell_i.getActiveMoleculeIndices())
             {
                 if (mol_j >= mol_i)
                     break;
@@ -516,11 +516,11 @@ void PotentialCellList::calculateOuterToOuterForces(
         {
             const auto &waterMolecules_j = cell_j->getWaterMoleculeIndices();
 
-            for (auto mol_i : cell_i.getActiveMoleculeIndices())
+            for (const auto mol_i : cell_i.getActiveMoleculeIndices())
             {
                 auto *molecule_i = cell_i.getMolecule(mol_i);
 
-                for (auto mol_j : cell_j->getActiveMoleculeIndices())
+                for (const auto mol_j : cell_j->getActiveMoleculeIndices())
                 {
                     if (isWaterMolecule(waterMolecules_i, mol_i) &&
                         isWaterMolecule(waterMolecules_j, mol_j))
@@ -583,11 +583,11 @@ void PotentialCellList::calculateHotspotSmoothingMMForces(
     {
         const auto &waterMolecules = cell_i.getWaterMoleculeIndices();
 
-        for (auto mol_i : cell_i.getSmoothingMoleculeIndices())
+        for (const auto mol_i : cell_i.getSmoothingMoleculeIndices())
         {
             auto *molecule_i = cell_i.getMolecule(mol_i);
 
-            for (auto mol_j : cell_i.getNonSmoothingMoleculeIndices())
+            for (const auto mol_j : cell_i.getNonSmoothingMoleculeIndices())
             {
                 if (isWaterMolecule(waterMolecules, mol_i) &&
                     isWaterMolecule(waterMolecules, mol_j))
@@ -624,11 +624,12 @@ void PotentialCellList::calculateHotspotSmoothingMMForces(
         {
             const auto &waterMolecules_j = cell_j->getWaterMoleculeIndices();
 
-            for (auto mol_i : cell_i.getSmoothingMoleculeIndices())
+            for (const auto mol_i : cell_i.getSmoothingMoleculeIndices())
             {
                 auto *molecule_i = cell_i.getMolecule(mol_i);
 
-                for (auto mol_j : cell_j->getNonSmoothingMoleculeIndices())
+                for (const auto mol_j :
+                     cell_j->getNonSmoothingMoleculeIndices())
                 {
                     if (isWaterMolecule(waterMolecules_i, mol_i) &&
                         isWaterMolecule(waterMolecules_j, mol_j))
@@ -666,11 +667,11 @@ void PotentialCellList::calculateHotspotSmoothingMMForces(
         {
             const auto &waterMolecules_j = cell_j->getWaterMoleculeIndices();
 
-            for (auto mol_i : cell_j->getSmoothingMoleculeIndices())
+            for (const auto mol_i : cell_j->getSmoothingMoleculeIndices())
             {
                 auto *molecule_i = cell_j->getMolecule(mol_i);
 
-                for (auto mol_j : cell_i.getNonSmoothingMoleculeIndices())
+                for (const auto mol_j : cell_i.getNonSmoothingMoleculeIndices())
                 {
                     if (isWaterMolecule(waterMolecules_j, mol_i) &&
                         isWaterMolecule(waterMolecules_i, mol_j))
@@ -704,11 +705,11 @@ void PotentialCellList::calculateHotspotSmoothingMMForces(
     {
         const auto &waterMolecules = cell_i.getWaterMoleculeIndices();
 
-        for (auto mol_i : cell_i.getSmoothingMoleculeIndices())
+        for (const auto mol_i : cell_i.getSmoothingMoleculeIndices())
         {
             auto *molecule_i = cell_i.getMolecule(mol_i);
 
-            for (auto mol_j : cell_i.getSmoothingMoleculeIndices())
+            for (const auto mol_j : cell_i.getSmoothingMoleculeIndices())
             {
                 if (mol_i == mol_j)
                     continue;
@@ -748,11 +749,11 @@ void PotentialCellList::calculateHotspotSmoothingMMForces(
         {
             const auto &waterMolecules_j = cell_j->getWaterMoleculeIndices();
 
-            for (auto mol_i : cell_i.getSmoothingMoleculeIndices())
+            for (const auto mol_i : cell_i.getSmoothingMoleculeIndices())
             {
                 auto *molecule_i = cell_i.getMolecule(mol_i);
 
-                for (auto mol_j : cell_j->getSmoothingMoleculeIndices())
+                for (const auto mol_j : cell_j->getSmoothingMoleculeIndices())
                 {
                     if (isWaterMolecule(waterMolecules_i, mol_i) &&
                         isWaterMolecule(waterMolecules_j, mol_j))
@@ -793,11 +794,11 @@ void PotentialCellList::calculateHotspotSmoothingMMForces(
         {
             const auto &waterMolecules_j = cell_j->getWaterMoleculeIndices();
 
-            for (auto mol_i : cell_j->getSmoothingMoleculeIndices())
+            for (const auto mol_i : cell_j->getSmoothingMoleculeIndices())
             {
                 auto *molecule_i = cell_j->getMolecule(mol_i);
 
-                for (auto mol_j : cell_i.getSmoothingMoleculeIndices())
+                for (const auto mol_j : cell_i.getSmoothingMoleculeIndices())
                 {
                     if (isWaterMolecule(waterMolecules_j, mol_i) &&
                         isWaterMolecule(waterMolecules_i, mol_j))
