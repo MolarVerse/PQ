@@ -153,6 +153,13 @@ namespace engine
                 *_cellList
             );
 
+            _interWater->calculate(
+                *_simulationBox,
+                *_physicalData,
+                _potential->getCoulombPotSharedPtr(),
+                *_cellList
+            );
+
             _intraNonBonded->calculate(*_simulationBox, *_physicalData);
 
             virial += _virial->calculateVirial(*_simulationBox) * globalSmF;
@@ -236,6 +243,13 @@ namespace engine
 
         _potential
             ->calculateQMMMForces(*_simulationBox, *_physicalData, *_cellList);
+
+        _interWater->calculate(
+            *_simulationBox,
+            *_physicalData,
+            _potential->getCoulombPotSharedPtr(),
+            *_cellList
+        );
 
         scaleSmoothingMoleculeForcesInner();
         virial += _virial->calculateVirial(*_simulationBox);

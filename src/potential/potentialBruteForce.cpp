@@ -57,14 +57,13 @@ void PotentialBruteForce::calculateForces(
 {
     startTimingsSection("InterNonBonded");
 
-    const auto box = simBox.getBoxPtr();
+    const auto box            = simBox.getBoxPtr();
+    const auto waterTypeValue = simBox.getWaterType().value_or(size_t{0});
     const auto isWaterInterModelSet =
         WaterModelSettings::isInterWaterModelSet();
 
     double totalCoulombEnergy    = 0.0;
     double totalNonCoulombEnergy = 0.0;
-
-    const auto waterTypeValue = simBox.getWaterType().value_or(size_t{0});
 
     size_t i = 0;
     for (auto &mol1 : simBox.getMMMolecules())
@@ -78,7 +77,6 @@ void PotentialBruteForce::calculateForces(
             if (j >= i)
                 break;
 
-            // skip water-moltype - water-moltype interactions
             if (isWaterInterModelSet && moltype1 == waterTypeValue &&
                 mol2.getMoltype() == waterTypeValue)
             {
@@ -132,14 +130,27 @@ void PotentialBruteForce::calculateCoreToOuterForces(
 
     double totalCoulombEnergy = 0.0;
 
-    // inter molecular Coulomb forces
+    const auto waterTypeValue = simBox.getWaterType().value_or(size_t{0});
+    const auto isWaterInterModelSet =
+        WaterModelSettings::isInterWaterModelSet();
+
     for (auto &mol1 : simBox.getMoleculesInsideZone(CORE))
+    {
+        const auto moltype1 = mol1.getMoltype();
+
         for (auto &mol2 : simBox.getMMMolecules())
+        {
+            if (isWaterInterModelSet && moltype1 == waterTypeValue &&
+                mol2.getMoltype() == waterTypeValue)
+                continue;
+
             for (auto &atom1 : mol1.getAtoms())
                 for (auto &atom2 : mol2.getAtoms())
                     totalCoulombEnergy += calculateSingleCoulombInteraction<
                         QMChargeTag,
                         MMChargeTag>(*box, *atom1, *atom2);
+        }
+    }
 
     physicalData.addCoulombEnergy(totalCoulombEnergy);
 
@@ -161,18 +172,27 @@ void PotentialBruteForce::calculateLayerToOuterForces(
 {
     startTimingsSection("InterNonBondedLayerToOuter");
 
-    const auto box = simBox.getBoxPtr();
+    const auto box            = simBox.getBoxPtr();
+    const auto waterTypeValue = simBox.getWaterType().value_or(size_t{0});
+    const auto isWaterInterModelSet =
+        WaterModelSettings::isInterWaterModelSet();
 
     double totalCoulombEnergy    = 0.0;
     double totalNonCoulombEnergy = 0.0;
 
-    // inter molecular forces
     for (auto &mol1 : simBox.getInactiveMolecules())
     {
         if (mol1.getHybridZone() == CORE)
             continue;
 
+        const auto moltype1 = mol1.getMoltype();
+
         for (auto &mol2 : simBox.getMMMolecules())
+        {
+            if (isWaterInterModelSet && moltype1 == waterTypeValue &&
+                mol2.getMoltype() == waterTypeValue)
+                continue;
+
             for (auto &atom1 : mol1.getAtoms())
                 for (auto &atom2 : mol2.getAtoms())
                 {
@@ -188,6 +208,7 @@ void PotentialBruteForce::calculateLayerToOuterForces(
                     totalCoulombEnergy    += coulombEnergy;
                     totalNonCoulombEnergy += nonCoulombEnergy;
                 }
+        }
     }
     physicalData.addCoulombEnergy(totalCoulombEnergy);
     physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
@@ -226,14 +247,24 @@ void PotentialBruteForce::calculateHotspotSmoothingMMForces(
 {
     startTimingsSection("InterNonBondedSmoothingMM");
 
-    const auto box = simBox.getBoxPtr();
+    const auto box            = simBox.getBoxPtr();
+    const auto waterTypeValue = simBox.getWaterType().value_or(size_t{0});
+    const auto isWaterInterModelSet =
+        WaterModelSettings::isInterWaterModelSet();
 
     double totalCoulombEnergy    = 0.0;
     double totalNonCoulombEnergy = 0.0;
 
-    // inter molecular forces
     for (auto &mol1 : simBox.getMoleculesInsideZone(SMOOTHING))
+    {
+        const auto moltype1 = mol1.getMoltype();
+
         for (auto &mol2 : simBox.getMoleculesOutsideZone(SMOOTHING))
+        {
+            if (isWaterInterModelSet && moltype1 == waterTypeValue &&
+                mol2.getMoltype() == waterTypeValue)
+                continue;
+
             for (auto &atom1 : mol1.getAtoms())
                 for (auto &atom2 : mol2.getAtoms())
                 {
@@ -249,6 +280,8 @@ void PotentialBruteForce::calculateHotspotSmoothingMMForces(
                     totalCoulombEnergy    += coulombEnergy;
                     totalNonCoulombEnergy += nonCoulombEnergy;
                 }
+        }
+    }
 
     physicalData.addCoulombEnergy(totalCoulombEnergy);
     physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
@@ -256,10 +289,19 @@ void PotentialBruteForce::calculateHotspotSmoothingMMForces(
     size_t i = 0;
     for (auto &mol1 : simBox.getMoleculesInsideZone(SMOOTHING))
     {
+        const auto moltype1 = mol1.getMoltype();
+
         size_t j = 0;
         for (auto &mol2 : simBox.getMoleculesInsideZone(SMOOTHING))
         {
             if (i == j)
+            {
+                ++j;
+                continue;
+            }
+
+            if (isWaterInterModelSet && moltype1 == waterTypeValue &&
+                mol2.getMoltype() == waterTypeValue)
             {
                 ++j;
                 continue;
