@@ -42,9 +42,8 @@ namespace waterModel
     struct InterWaterState
     {
         // clang-format off
-        double _chargeProductOO{};
-        double _chargeProductOH{};
-        double _chargeProductHH{};
+        double _oxygenCharge{};
+        double _hydrogenCharge{};
         bool   _oxygenOnlyNonCoulomb{false};
         std::unique_ptr<pq::NonCoulPair> _nonCoulombPairOO;
         std::unique_ptr<pq::NonCoulPair> _nonCoulombPairOH;

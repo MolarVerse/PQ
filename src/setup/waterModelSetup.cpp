@@ -22,8 +22,10 @@
 
 #include "waterModelSetup.hpp"
 
+#include <cmath>
 #include <format>
 #include <optional>
+#include <string>
 #include <unordered_set>
 
 #include "bondConstraint.hpp"       // for BondConstraint
@@ -202,6 +204,52 @@ void WaterModelSetup::checkTopologyFile()
 }
 
 /**
+ * @brief Validate water molecule partial charges against the inter-water model.
+ *
+ * @throws UserInputException If any water molecule partial charge differs from
+ * the expected inter-water model charge by more than the allowed tolerance.
+ *
+ * @param state Inter-water parameters providing expected charge values.
+ */
+void WaterModelSetup::checkMoldescriptorWaterCharge(
+    const InterWaterState &state
+)
+{
+    const auto modelName = string(WaterModelSettings::getWaterInterModel());
+    constexpr double tol = 1e-8;
+    const auto       checkCharge = [tol, &modelName](
+                                 const pq::Molecule &water,
+                                 const size_t        atomIndex,
+                                 const double        expected,
+                                 const std::string  &atomName
+                             )
+    {
+        const auto actual = water.getPartialCharge(atomIndex);
+        if (std::abs(actual - expected) > tol)
+            throw(UserInputException(
+                std::format(
+                    "Water molecule partial charge mismatch for atom {}: "
+                    "expected {} (according to {} water model), got {}.",
+                    atomName,
+                    expected,
+                    modelName,
+                    actual
+                )
+            ));
+    };
+
+    const auto &waterMolecules =
+        _engine.getSimulationBoxPtr()->getWaterTypeMolecules();
+
+    for (const auto &water : waterMolecules)
+    {
+        checkCharge(water, 0, state._oxygenCharge, "O");
+        checkCharge(water, 1, state._hydrogenCharge, "H1");
+        checkCharge(water, 2, state._hydrogenCharge, "H2");
+    };
+}
+
+/**
  * @brief Get the rigid geometry parameters for a water model.
  *
  * @details Only rigid water variants return geometry data. Flexible water
@@ -274,6 +322,8 @@ void WaterModelSetup::makeInterWater()
         case OPC3: state = makeInterWaterState<OPC3InterParam>(); break;
         default: break;
     }
+
+    checkMoldescriptorWaterCharge(state);
 
     std::unique_ptr<InterWaterStrategy> strategy;
 

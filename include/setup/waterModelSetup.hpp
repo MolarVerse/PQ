@@ -26,6 +26,7 @@
 
 #include <optional>
 
+#include "interWater.hpp"
 #include "typeAliases.hpp"
 #include "waterModelSettings.hpp"
 
@@ -52,6 +53,7 @@ namespace setup
 
         void makeInterWater();
         void checkTopologyFile();
+        void checkMoldescriptorWaterCharge(const waterModel::InterWaterState &);
         void shakeSetupForRigidWater(const RigidWaterGeometry &geometry);
         [[nodiscard]] std::optional<RigidWaterGeometry> getRigidWaterGeometry(
             const settings::WaterIntraModel intraModel

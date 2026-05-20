@@ -47,13 +47,10 @@ namespace waterModel
     template <InterWaterParameterClass T>
     inline InterWaterState makeInterWaterState()
     {
-        auto       state          = InterWaterState();
-        const auto oxygenCharge   = T::_oxygenCharge;
-        const auto hydrogenCharge = T::_hydrogenCharge;
+        auto state = InterWaterState();
 
-        state._chargeProductOO      = oxygenCharge * oxygenCharge;
-        state._chargeProductOH      = oxygenCharge * hydrogenCharge;
-        state._chargeProductHH      = hydrogenCharge * hydrogenCharge;
+        state._oxygenCharge         = T::_oxygenCharge;
+        state._hydrogenCharge       = T::_hydrogenCharge;
         state._oxygenOnlyNonCoulomb = T::_oxygenOnlyNonCoulomb;
         state._nonCoulombPairOO =
             std::make_unique<std::decay_t<decltype(T::_nonCoulombPairOO)>>(
