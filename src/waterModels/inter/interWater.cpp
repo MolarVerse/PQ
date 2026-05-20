@@ -114,6 +114,14 @@ void InterWater::calculateQMMMForces(
     );
 }
 
+/**
+ * @brief Dispatch inter-water hotspot smoothing force calculations.
+ *
+ * @param simBox Simulation box containing molecules.
+ * @param physicalData Physical data to store energy results.
+ * @param sharedCoulombPot Shared Coulomb potential used by the strategy.
+ * @param cellList Cell list structure used for neighbor searching.
+ */
 void InterWater::calculateHotspotSmoothingMMForces(
     pq::SimBox                 &simBox,
     pq::PhysicalData           &physicalData,

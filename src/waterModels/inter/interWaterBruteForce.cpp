@@ -116,6 +116,14 @@ void InterWaterStrategyBruteForce::calculate(
     physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
 }
 
+/**
+ * @brief Compute core-to-outer Coulomb interactions by brute force.
+ *
+ * @param state Inter-water parameters.
+ * @param simBox Simulation box containing molecules.
+ * @param physicalData Physical data to store energy results.
+ * @param coulombPotential Coulomb potential evaluator.
+ */
 void InterWaterStrategyBruteForce::calculateCoreToOuterForces(
     const InterWaterState &,
     SimBox                 &simBox,
@@ -180,6 +188,14 @@ void InterWaterStrategyBruteForce::calculateCoreToOuterForces(
     physicalData.addCoulombEnergy(totalCoulombEnergy);
 }
 
+/**
+ * @brief Compute layer-to-outer Coulomb and non-Coulomb interactions.
+ *
+ * @param state Inter-water parameters.
+ * @param simBox Simulation box containing molecules.
+ * @param physicalData Physical data to store energy results.
+ * @param coulombPotential Coulomb potential evaluator.
+ */
 void InterWaterStrategyBruteForce::calculateLayerToOuterForces(
     const InterWaterState  &state,
     SimBox                 &simBox,
@@ -253,6 +269,15 @@ void InterWaterStrategyBruteForce::calculateLayerToOuterForces(
     physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
 }
 
+/**
+ * @brief Compute outer-to-outer interactions by brute force.
+ *
+ * @param state Inter-water parameters.
+ * @param simBox Simulation box containing molecules.
+ * @param physicalData Physical data to store energy results.
+ * @param coulombPotential Coulomb potential evaluator.
+ * @param cellList Cell list structure (unused).
+ */
 void InterWaterStrategyBruteForce::calculateOuterToOuterForces(
     const InterWaterState  &state,
     SimBox                 &simBox,
@@ -264,6 +289,14 @@ void InterWaterStrategyBruteForce::calculateOuterToOuterForces(
     calculate(state, simBox, physicalData, coulombPotential, cellList);
 }
 
+/**
+ * @brief Compute smoothing-zone interactions against MM molecules.
+ *
+ * @param state Inter-water parameters.
+ * @param simBox Simulation box containing molecules.
+ * @param physicalData Physical data to store energy results.
+ * @param coulombPotential Coulomb potential evaluator.
+ */
 void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
     const InterWaterState  &state,
     SimBox                 &simBox,

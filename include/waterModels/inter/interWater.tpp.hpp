@@ -37,6 +37,12 @@
 
 namespace waterModel
 {
+    /**
+     * @brief Compute Coulomb and non-Coulomb contributions for one atom pair.
+     *
+     * @tparam ChargeTag1 Charge tag for atom1.
+     * @tparam ChargeTag2 Charge tag for atom2.
+     */
     template <typename ChargeTag1, typename ChargeTag2>
     void InterWaterStrategy::calculateSingleInteraction(
         pq::Atom                   &atom1,
@@ -91,6 +97,12 @@ namespace waterModel
         }
     }
 
+    /**
+     * @brief Compute Coulomb contribution for one atom pair.
+     *
+     * @tparam ChargeTag1 Charge tag for atom1.
+     * @tparam ChargeTag2 Charge tag for atom2.
+     */
     template <typename ChargeTag1, typename ChargeTag2>
     void InterWaterStrategy::calculateSingleCoulombInteraction(
         pq::Atom                   &atom1,
@@ -136,6 +148,12 @@ namespace waterModel
         }
     }
 
+    /**
+     * @brief Compute one-way Coulomb and non-Coulomb contributions.
+     *
+     * @tparam ChargeTag1 Charge tag for atom1.
+     * @tparam ChargeTag2 Charge tag for atom2.
+     */
     template <typename ChargeTag1, typename ChargeTag2>
     void InterWaterStrategy::calculateSingleInteractionOneWay(
         pq::Atom                   &atom1,
@@ -189,6 +207,11 @@ namespace waterModel
         }
     }
 
+    /**
+     * @brief Return the partial charge for a tagged atom.
+     *
+     * @tparam T Charge tag type.
+     */
     template <typename T>
     double InterWaterStrategy::getPartialCharge(pq::Atom &atom) const
     {
