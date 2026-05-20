@@ -311,3 +311,51 @@ void InterWaterStrategy::calculateSingleCoulombInteraction(
         atom1.addShiftForce(shiftForcexyz);
     }
 }
+
+void InterWaterStrategy::calculateSingleInteractionOneWay(
+    Atom                   &atom1,
+    Atom                   &atom2,
+    const double            chargeProduct,
+    const SharedCoulombPot &coulombPotential,
+    const double            rCutSquared,
+    const SimBox           &simBox,
+    const NonCoulombPair   &nonCoulPair,
+    double                 &coulombEnergy,
+    double                 &nonCoulombEnergy
+)
+{
+    const auto xyz_i = atom1.getPosition();
+    const auto xyz_j = atom2.getPosition();
+
+    auto dxyz = xyz_i - xyz_j;
+
+    const auto txyz = -simBox.calcShiftVector(dxyz);
+
+    dxyz += txyz;
+
+    const double distanceSquared = normSquared(dxyz);
+
+    if (distanceSquared < rCutSquared)
+    {
+        const double distance = ::sqrt(distanceSquared);
+
+        auto [e, f]    = coulombPotential->calculate(distance, chargeProduct);
+        coulombEnergy += e;
+
+        if (distance < nonCoulPair.getRadialCutOff())
+        {
+            auto [nonCoulE, nonCoulF]  = nonCoulPair.calculate(distance);
+            nonCoulombEnergy          += nonCoulE;
+            f                         += nonCoulF;
+        }
+
+        f                   /= distance;
+        const auto forcexyz  = f * dxyz;
+
+        const auto shiftForcexyz = forcexyz * txyz;
+
+        atom1.addForce(forcexyz);
+
+        atom1.addShiftForce(shiftForcexyz);
+    }
+}

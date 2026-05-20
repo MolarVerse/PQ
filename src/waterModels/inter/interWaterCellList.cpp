@@ -214,8 +214,6 @@ void InterWaterStrategyCellList::calculateCoreToOuterForces(
 
     auto totalCoulombEnergy = 0.0;
 
-    const auto waterType = simBox.getWaterType();
-
     const auto singleCoulombInteraction =
         [&](Atom &atomA, Atom &atomB, const double chargeProduct)
     {
@@ -394,7 +392,6 @@ void InterWaterStrategyCellList::calculateCoreToOuterForces(
             }
         }
     }
-
     physicalData.addCoulombEnergy(totalCoulombEnergy);
 }
 
@@ -406,6 +403,210 @@ void InterWaterStrategyCellList::calculateLayerToOuterForces(
     CellList               &cellList
 )
 {
+    const auto chargeProductOO = state._chargeProductOO;
+    const auto chargeProductOH = state._chargeProductOH;
+    const auto chargeProductHH = state._chargeProductHH;
+
+    const auto rCut        = CoulombPot::getCoulombRadiusCutOff();
+    const auto rCutSquared = rCut * rCut;
+
+    auto totalCoulombEnergy    = 0.0;
+    auto totalNonCoulombEnergy = 0.0;
+
+    const auto singleInteraction = [&](Atom        &atomA,
+                                       Atom        &atomB,
+                                       const double chargeProduct,
+                                       const auto  &nonCoulPairPtr)
+    {
+        if (nonCoulPairPtr)
+            calculateSingleInteraction(
+                atomA,
+                atomB,
+                chargeProduct,
+                coulombPotential,
+                rCutSquared,
+                simBox,
+                *nonCoulPairPtr,
+                totalCoulombEnergy,
+                totalNonCoulombEnergy
+            );
+    };
+
+    const auto isNonWaterMolecule =
+        [](const std::vector<size_t> &waterMolecules,
+           const size_t               molIndex) -> bool
+    {
+        return std::find(
+                   waterMolecules.begin(),
+                   waterMolecules.end(),
+                   molIndex
+               ) == waterMolecules.end();
+    };
+
+    for (const auto &cell_i : cellList.getCells())
+    {
+        const auto &waterMolecules = cell_i.getWaterMoleculeIndices();
+
+        for (const auto mol_i : cell_i.getInactiveNonCoreMoleculeIndices())
+        {
+            if (isNonWaterMolecule(waterMolecules, mol_i))
+                continue;
+
+            for (const auto mol_j : cell_i.getActiveMoleculeIndices())
+            {
+                if (isNonWaterMolecule(waterMolecules, mol_j))
+                    continue;
+
+                for (auto &atom_i : cell_i.getAtoms(mol_i))
+                {
+                    const bool isAtom_i_O = atom_i->getName() == "O";
+                    for (auto &atom_j : cell_i.getAtoms(mol_j))
+                    {
+                        const bool isAtom_j_O = atom_j->getName() == "O";
+
+                        // O-H interaction (different atom types)
+                        if (isAtom_i_O != isAtom_j_O)
+                            singleInteraction(
+                                *atom_i,
+                                *atom_j,
+                                chargeProductOH,
+                                state._nonCoulombPairOH
+                            );
+                        // O-O interaction
+                        else if (isAtom_i_O)
+                            singleInteraction(
+                                *atom_i,
+                                *atom_j,
+                                chargeProductOO,
+                                state._nonCoulombPairOO
+                            );
+                        // H-H interaction
+                        else
+                            singleInteraction(
+                                *atom_i,
+                                *atom_j,
+                                chargeProductHH,
+                                state._nonCoulombPairHH
+                            );
+                    }
+                }
+            }
+        }
+    }
+
+    for (const auto &cell_i : cellList.getCells())
+    {
+        const auto &waterMolecules_i = cell_i.getWaterMoleculeIndices();
+
+        for (const auto *cell_j : cell_i.getNeighbourCells())
+        {
+            const auto &waterMolecules_j = cell_j->getWaterMoleculeIndices();
+
+            for (const auto mol_i : cell_i.getInactiveNonCoreMoleculeIndices())
+            {
+                if (isNonWaterMolecule(waterMolecules_i, mol_i))
+                    continue;
+
+                for (auto &atom_i : cell_i.getAtoms(mol_i))
+                {
+                    const bool isAtom_i_O = atom_i->getName() == "O";
+                    for (const auto mol_j : cell_j->getActiveMoleculeIndices())
+                    {
+                        if (isNonWaterMolecule(waterMolecules_j, mol_j))
+                            continue;
+
+                        for (auto &atom_j : cell_j->getAtoms(mol_j))
+                        {
+                            const bool isAtom_j_O = atom_j->getName() == "O";
+
+                            // O-H interaction (different atom types)
+                            if (isAtom_i_O != isAtom_j_O)
+                                singleInteraction(
+                                    *atom_i,
+                                    *atom_j,
+                                    chargeProductOH,
+                                    state._nonCoulombPairOH
+                                );
+                            // O-O interaction
+                            else if (isAtom_i_O)
+                                singleInteraction(
+                                    *atom_i,
+                                    *atom_j,
+                                    chargeProductOO,
+                                    state._nonCoulombPairOO
+                                );
+                            // H-H interaction
+                            else
+                                singleInteraction(
+                                    *atom_i,
+                                    *atom_j,
+                                    chargeProductHH,
+                                    state._nonCoulombPairHH
+                                );
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    for (const auto &cell_i : cellList.getCells())
+    {
+        const auto &waterMolecules_i = cell_i.getWaterMoleculeIndices();
+
+        for (const auto *cell_j : cell_i.getNeighbourCells())
+        {
+            const auto &waterMolecules_j = cell_j->getWaterMoleculeIndices();
+
+            for (const auto mol_i : cell_j->getInactiveNonCoreMoleculeIndices())
+            {
+                if (isNonWaterMolecule(waterMolecules_j, mol_i))
+                    continue;
+
+                for (auto &atom_i : cell_j->getAtoms(mol_i))
+                {
+                    const bool isAtom_i_O = atom_i->getName() == "O";
+                    for (const auto mol_j : cell_i.getActiveMoleculeIndices())
+                    {
+                        if (isNonWaterMolecule(waterMolecules_i, mol_j))
+                            continue;
+
+                        for (auto &atom_j : cell_i.getAtoms(mol_j))
+                        {
+                            const bool isAtom_j_O = atom_j->getName() == "O";
+
+                            // O-H interaction (different atom types)
+                            if (isAtom_i_O != isAtom_j_O)
+                                singleInteraction(
+                                    *atom_i,
+                                    *atom_j,
+                                    chargeProductOH,
+                                    state._nonCoulombPairOH
+                                );
+                            // O-O interaction
+                            else if (isAtom_i_O)
+                                singleInteraction(
+                                    *atom_i,
+                                    *atom_j,
+                                    chargeProductOO,
+                                    state._nonCoulombPairOO
+                                );
+                            // H-H interaction
+                            else
+                                singleInteraction(
+                                    *atom_i,
+                                    *atom_j,
+                                    chargeProductHH,
+                                    state._nonCoulombPairHH
+                                );
+                        }
+                    }
+                }
+            }
+        }
+    }
+    physicalData.addCoulombEnergy(totalCoulombEnergy);
+    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
 }
 
 void InterWaterStrategyCellList::calculateOuterToOuterForces(
@@ -416,6 +617,164 @@ void InterWaterStrategyCellList::calculateOuterToOuterForces(
     CellList               &cellList
 )
 {
+    const auto chargeProductOO = state._chargeProductOO;
+    const auto chargeProductOH = state._chargeProductOH;
+    const auto chargeProductHH = state._chargeProductHH;
+
+    const auto rCut        = CoulombPot::getCoulombRadiusCutOff();
+    const auto rCutSquared = rCut * rCut;
+
+    auto totalCoulombEnergy    = 0.0;
+    auto totalNonCoulombEnergy = 0.0;
+
+    const auto singleInteraction = [&](Atom        &atomA,
+                                       Atom        &atomB,
+                                       const double chargeProduct,
+                                       const auto  &nonCoulPairPtr)
+    {
+        if (nonCoulPairPtr)
+            calculateSingleInteraction(
+                atomA,
+                atomB,
+                chargeProduct,
+                coulombPotential,
+                rCutSquared,
+                simBox,
+                *nonCoulPairPtr,
+                totalCoulombEnergy,
+                totalNonCoulombEnergy
+            );
+    };
+
+    const auto isNonWaterMolecule =
+        [](const std::vector<size_t> &waterMolecules,
+           const size_t               molIndex) -> bool
+    {
+        return std::find(
+                   waterMolecules.begin(),
+                   waterMolecules.end(),
+                   molIndex
+               ) == waterMolecules.end();
+    };
+
+    for (const auto &cell_i : cellList.getCells())
+    {
+        const auto &waterMolecules = cell_i.getWaterMoleculeIndices();
+
+        for (const auto mol_i : cell_i.getActiveMoleculeIndices())
+        {
+            if (isNonWaterMolecule(waterMolecules, mol_i))
+                continue;
+
+            for (const auto mol_j : cell_i.getActiveMoleculeIndices())
+            {
+                if (mol_j >= mol_i)
+                    break;
+
+                if (isNonWaterMolecule(waterMolecules, mol_j))
+                    continue;
+
+                for (auto &atom_i : cell_i.getAtoms(mol_i))
+                {
+                    const bool isAtom_i_O = atom_i->getName() == "O";
+                    for (auto &atom_j : cell_i.getAtoms(mol_j))
+                    {
+                        const bool isAtom_j_O = atom_j->getName() == "O";
+
+                        // O-H interaction (different atom types)
+                        if (isAtom_i_O != isAtom_j_O)
+                            singleInteraction(
+                                *atom_i,
+                                *atom_j,
+                                chargeProductOH,
+                                state._nonCoulombPairOH
+                            );
+                        // O-O interaction
+                        else if (isAtom_i_O)
+                            singleInteraction(
+                                *atom_i,
+                                *atom_j,
+                                chargeProductOO,
+                                state._nonCoulombPairOO
+                            );
+                        // H-H interaction
+                        else
+                            singleInteraction(
+                                *atom_i,
+                                *atom_j,
+                                chargeProductHH,
+                                state._nonCoulombPairHH
+                            );
+                    }
+                }
+            }
+        }
+    }
+
+    for (const auto &cell_i : cellList.getCells())
+    {
+        const auto &waterMolecules_i = cell_i.getWaterMoleculeIndices();
+
+        for (const auto *cell_j : cell_i.getNeighbourCells())
+        {
+            const auto &waterMolecules_j = cell_j->getWaterMoleculeIndices();
+
+            for (const auto mol_i : cell_i.getActiveMoleculeIndices())
+            {
+                if (isNonWaterMolecule(waterMolecules_i, mol_i))
+                    continue;
+
+                auto *molecule_i = cell_i.getMolecule(mol_i);
+
+                for (auto &atom_i : cell_i.getAtoms(mol_i))
+                {
+                    const bool isAtom_i_O = atom_i->getName() == "O";
+                    for (const auto mol_j : cell_j->getActiveMoleculeIndices())
+                    {
+                        if (isNonWaterMolecule(waterMolecules_j, mol_j))
+                            continue;
+
+                        auto *molecule_j = cell_j->getMolecule(mol_j);
+
+                        if (molecule_i == molecule_j)
+                            continue;
+
+                        for (auto &atom_j : cell_j->getAtoms(mol_j))
+                        {
+                            const bool isAtom_j_O = atom_j->getName() == "O";
+
+                            // O-H interaction (different atom types)
+                            if (isAtom_i_O != isAtom_j_O)
+                                singleInteraction(
+                                    *atom_i,
+                                    *atom_j,
+                                    chargeProductOH,
+                                    state._nonCoulombPairOH
+                                );
+                            // O-O interaction
+                            else if (isAtom_i_O)
+                                singleInteraction(
+                                    *atom_i,
+                                    *atom_j,
+                                    chargeProductOO,
+                                    state._nonCoulombPairOO
+                                );
+                            // H-H interaction
+                            else
+                                singleInteraction(
+                                    *atom_i,
+                                    *atom_j,
+                                    chargeProductHH,
+                                    state._nonCoulombPairHH
+                                );
+                        }
+                    }
+                }
+            }
+        }
+    }
+    physicalData.addCoulombEnergy(totalCoulombEnergy);
+    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
 }
 
 void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
@@ -426,4 +785,411 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
     CellList               &cellList
 )
 {
+    const auto chargeProductOO = state._chargeProductOO;
+    const auto chargeProductOH = state._chargeProductOH;
+    const auto chargeProductHH = state._chargeProductHH;
+
+    const auto rCut        = CoulombPot::getCoulombRadiusCutOff();
+    const auto rCutSquared = rCut * rCut;
+
+    auto totalCoulombEnergy    = 0.0;
+    auto totalNonCoulombEnergy = 0.0;
+
+    const auto singleInteraction = [&](Atom        &atomA,
+                                       Atom        &atomB,
+                                       const double chargeProduct,
+                                       const auto  &nonCoulPairPtr)
+    {
+        if (nonCoulPairPtr)
+            calculateSingleInteraction(
+                atomA,
+                atomB,
+                chargeProduct,
+                coulombPotential,
+                rCutSquared,
+                simBox,
+                *nonCoulPairPtr,
+                totalCoulombEnergy,
+                totalNonCoulombEnergy
+            );
+    };
+
+    const auto singleInteractionOneWay = [&](Atom        &atomA,
+                                             Atom        &atomB,
+                                             const double chargeProduct,
+                                             const auto  &nonCoulPairPtr)
+    {
+        if (nonCoulPairPtr)
+            calculateSingleInteractionOneWay(
+                atomA,
+                atomB,
+                chargeProduct,
+                coulombPotential,
+                rCutSquared,
+                simBox,
+                *nonCoulPairPtr,
+                totalCoulombEnergy,
+                totalNonCoulombEnergy
+            );
+    };
+
+    const auto isNonWaterMolecule =
+        [](const std::vector<size_t> &waterMolecules,
+           const size_t               molIndex) -> bool
+    {
+        return std::find(
+                   waterMolecules.begin(),
+                   waterMolecules.end(),
+                   molIndex
+               ) == waterMolecules.end();
+    };
+
+    for (const auto &cell_i : cellList.getCells())
+    {
+        const auto &waterMolecules = cell_i.getWaterMoleculeIndices();
+
+        for (const auto mol_i : cell_i.getSmoothingMoleculeIndices())
+        {
+            if (isNonWaterMolecule(waterMolecules, mol_i))
+                continue;
+
+            for (const auto mol_j : cell_i.getNonSmoothingMoleculeIndices())
+            {
+                if (isNonWaterMolecule(waterMolecules, mol_j))
+                    continue;
+
+                for (auto &atom_i : cell_i.getAtoms(mol_i))
+                {
+                    const bool isAtom_i_O = atom_i->getName() == "O";
+                    for (auto &atom_j : cell_i.getAtoms(mol_j))
+                    {
+                        const bool isAtom_j_O = atom_j->getName() == "O";
+
+                        // O-H interaction (different atom types)
+                        if (isAtom_i_O != isAtom_j_O)
+                            singleInteraction(
+                                *atom_i,
+                                *atom_j,
+                                chargeProductOH,
+                                state._nonCoulombPairOH
+                            );
+                        // O-O interaction
+                        else if (isAtom_i_O)
+                            singleInteraction(
+                                *atom_i,
+                                *atom_j,
+                                chargeProductOO,
+                                state._nonCoulombPairOO
+                            );
+                        // H-H interaction
+                        else
+                            singleInteraction(
+                                *atom_i,
+                                *atom_j,
+                                chargeProductHH,
+                                state._nonCoulombPairHH
+                            );
+                    }
+                }
+            }
+        }
+    }
+
+    for (const auto &cell_i : cellList.getCells())
+    {
+        const auto &waterMolecules_i = cell_i.getWaterMoleculeIndices();
+
+        for (const auto *cell_j : cell_i.getNeighbourCells())
+        {
+            const auto &waterMolecules_j = cell_j->getWaterMoleculeIndices();
+
+            for (const auto mol_i : cell_i.getSmoothingMoleculeIndices())
+            {
+                if (isNonWaterMolecule(waterMolecules_i, mol_i))
+                    continue;
+
+                for (auto &atom_i : cell_i.getAtoms(mol_i))
+                {
+                    const bool isAtom_i_O = atom_i->getName() == "O";
+                    for (const auto mol_j :
+                         cell_j->getNonSmoothingMoleculeIndices())
+                    {
+                        if (isNonWaterMolecule(waterMolecules_j, mol_j))
+                            continue;
+
+                        for (auto &atom_j : cell_j->getAtoms(mol_j))
+                        {
+                            const bool isAtom_j_O = atom_j->getName() == "O";
+
+                            // O-H interaction (different atom types)
+                            if (isAtom_i_O != isAtom_j_O)
+                                singleInteraction(
+                                    *atom_i,
+                                    *atom_j,
+                                    chargeProductOH,
+                                    state._nonCoulombPairOH
+                                );
+                            // O-O interaction
+                            else if (isAtom_i_O)
+                                singleInteraction(
+                                    *atom_i,
+                                    *atom_j,
+                                    chargeProductOO,
+                                    state._nonCoulombPairOO
+                                );
+                            // H-H interaction
+                            else
+                                singleInteraction(
+                                    *atom_i,
+                                    *atom_j,
+                                    chargeProductHH,
+                                    state._nonCoulombPairHH
+                                );
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    for (const auto &cell_i : cellList.getCells())
+    {
+        const auto &waterMolecules_i = cell_i.getWaterMoleculeIndices();
+
+        for (const auto *cell_j : cell_i.getNeighbourCells())
+        {
+            const auto &waterMolecules_j = cell_j->getWaterMoleculeIndices();
+
+            for (const auto mol_i : cell_j->getSmoothingMoleculeIndices())
+            {
+                if (isNonWaterMolecule(waterMolecules_j, mol_i))
+                    continue;
+
+                for (auto &atom_i : cell_j->getAtoms(mol_i))
+                {
+                    const bool isAtom_i_O = atom_i->getName() == "O";
+                    for (const auto mol_j :
+                         cell_i.getNonSmoothingMoleculeIndices())
+                    {
+                        if (isNonWaterMolecule(waterMolecules_i, mol_j))
+                            continue;
+
+                        for (auto &atom_j : cell_i.getAtoms(mol_j))
+                        {
+                            const bool isAtom_j_O = atom_j->getName() == "O";
+
+                            // O-H interaction (different atom types)
+                            if (isAtom_i_O != isAtom_j_O)
+                                singleInteraction(
+                                    *atom_i,
+                                    *atom_j,
+                                    chargeProductOH,
+                                    state._nonCoulombPairOH
+                                );
+                            // O-O interaction
+                            else if (isAtom_i_O)
+                                singleInteraction(
+                                    *atom_i,
+                                    *atom_j,
+                                    chargeProductOO,
+                                    state._nonCoulombPairOO
+                                );
+                            // H-H interaction
+                            else
+                                singleInteraction(
+                                    *atom_i,
+                                    *atom_j,
+                                    chargeProductHH,
+                                    state._nonCoulombPairHH
+                                );
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    for (const auto &cell_i : cellList.getCells())
+    {
+        const auto &waterMolecules = cell_i.getWaterMoleculeIndices();
+
+        for (const auto mol_i : cell_i.getSmoothingMoleculeIndices())
+        {
+            if (isNonWaterMolecule(waterMolecules, mol_i))
+                continue;
+
+            for (const auto mol_j : cell_i.getSmoothingMoleculeIndices())
+            {
+                if (isNonWaterMolecule(waterMolecules, mol_j))
+                    continue;
+
+                if (mol_i == mol_j)
+                    continue;
+
+                for (auto &atom_i : cell_i.getAtoms(mol_i))
+                {
+                    const bool isAtom_i_O = atom_i->getName() == "O";
+                    for (auto &atom_j : cell_i.getAtoms(mol_j))
+                    {
+                        const bool isAtom_j_O = atom_j->getName() == "O";
+
+                        // O-H interaction (different atom types)
+                        if (isAtom_i_O != isAtom_j_O)
+                            singleInteractionOneWay(
+                                *atom_i,
+                                *atom_j,
+                                chargeProductOH,
+                                state._nonCoulombPairOH
+                            );
+                        // O-O interaction
+                        else if (isAtom_i_O)
+                            singleInteractionOneWay(
+                                *atom_i,
+                                *atom_j,
+                                chargeProductOO,
+                                state._nonCoulombPairOO
+                            );
+                        // H-H interaction
+                        else
+                            singleInteractionOneWay(
+                                *atom_i,
+                                *atom_j,
+                                chargeProductHH,
+                                state._nonCoulombPairHH
+                            );
+                    }
+                }
+            }
+        }
+    }
+
+    for (const auto &cell_i : cellList.getCells())
+    {
+        const auto &waterMolecules_i = cell_i.getWaterMoleculeIndices();
+
+        for (const auto *cell_j : cell_i.getNeighbourCells())
+        {
+            const auto &waterMolecules_j = cell_j->getWaterMoleculeIndices();
+
+            for (const auto mol_i : cell_i.getSmoothingMoleculeIndices())
+            {
+                if (isNonWaterMolecule(waterMolecules_i, mol_i))
+                    continue;
+
+                auto *molecule_i = cell_i.getMolecule(mol_i);
+
+                for (auto &atom_i : cell_i.getAtoms(mol_i))
+                {
+                    const bool isAtom_i_O = atom_i->getName() == "O";
+                    for (const auto mol_j :
+                         cell_j->getSmoothingMoleculeIndices())
+                    {
+                        if (isNonWaterMolecule(waterMolecules_j, mol_j))
+                            continue;
+
+                        auto *molecule_j = cell_j->getMolecule(mol_j);
+
+                        if (molecule_i == molecule_j)
+                            continue;
+
+                        for (auto &atom_j : cell_j->getAtoms(mol_j))
+                        {
+                            const bool isAtom_j_O = atom_j->getName() == "O";
+
+                            // O-H interaction (different atom types)
+                            if (isAtom_i_O != isAtom_j_O)
+                                singleInteractionOneWay(
+                                    *atom_i,
+                                    *atom_j,
+                                    chargeProductOH,
+                                    state._nonCoulombPairOH
+                                );
+                            // O-O interaction
+                            else if (isAtom_i_O)
+                                singleInteractionOneWay(
+                                    *atom_i,
+                                    *atom_j,
+                                    chargeProductOO,
+                                    state._nonCoulombPairOO
+                                );
+                            // H-H interaction
+                            else
+                                singleInteractionOneWay(
+                                    *atom_i,
+                                    *atom_j,
+                                    chargeProductHH,
+                                    state._nonCoulombPairHH
+                                );
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    for (const auto &cell_i : cellList.getCells())
+    {
+        const auto &waterMolecules_i = cell_i.getWaterMoleculeIndices();
+
+        for (const auto *cell_j : cell_i.getNeighbourCells())
+        {
+            const auto &waterMolecules_j = cell_j->getWaterMoleculeIndices();
+
+            for (const auto mol_i : cell_j->getSmoothingMoleculeIndices())
+            {
+                if (isNonWaterMolecule(waterMolecules_j, mol_i))
+                    continue;
+
+                auto *molecule_i = cell_j->getMolecule(mol_i);
+
+                for (auto &atom_i : cell_j->getAtoms(mol_i))
+                {
+                    const bool isAtom_i_O = atom_i->getName() == "O";
+                    for (const auto mol_j :
+                         cell_i.getSmoothingMoleculeIndices())
+                    {
+                        if (isNonWaterMolecule(waterMolecules_i, mol_j))
+                            continue;
+
+                        auto *molecule_j = cell_i.getMolecule(mol_j);
+
+                        if (molecule_i == molecule_j)
+                            continue;
+
+                        for (auto &atom_j : cell_i.getAtoms(mol_j))
+                        {
+                            const bool isAtom_j_O = atom_j->getName() == "O";
+
+                            // O-H interaction (different atom types)
+                            if (isAtom_i_O != isAtom_j_O)
+                                singleInteractionOneWay(
+                                    *atom_i,
+                                    *atom_j,
+                                    chargeProductOH,
+                                    state._nonCoulombPairOH
+                                );
+                            // O-O interaction
+                            else if (isAtom_i_O)
+                                singleInteractionOneWay(
+                                    *atom_i,
+                                    *atom_j,
+                                    chargeProductOO,
+                                    state._nonCoulombPairOO
+                                );
+                            // H-H interaction
+                            else
+                                singleInteractionOneWay(
+                                    *atom_i,
+                                    *atom_j,
+                                    chargeProductHH,
+                                    state._nonCoulombPairHH
+                                );
+                        }
+                    }
+                }
+            }
+        }
+    }
+    physicalData.addCoulombEnergy(totalCoulombEnergy);
+    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
 }

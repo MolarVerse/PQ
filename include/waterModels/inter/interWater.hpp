@@ -118,6 +118,18 @@ namespace waterModel
             const pq::SimBox           &simBox,
             double                     &coulombEnergy
         );
+
+        void calculateSingleInteractionOneWay(
+            pq::Atom                   &atom1,
+            pq::Atom                   &atom2,
+            const double                chargeProduct,
+            const pq::SharedCoulombPot &coulombPotential,
+            const double                rCutSquared,
+            const pq::SimBox           &simBox,
+            const pq::NonCoulPair      &nonCoulPair,
+            double                     &coulombEnergy,
+            double                     &nonCoulombEnergy
+        );
     };
 
     class InterWater
