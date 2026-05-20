@@ -307,6 +307,8 @@ void WaterModelSetup::shakeSetupForRigidWater(
         _engine.getConstraints().addBondConstraint(bondConstraintOH2);
         _engine.getConstraints().addBondConstraint(bondConstraintHH);
     }
+
+    _engine.getConstraints().activateShake();
 }
 
 void WaterModelSetup::makeInterWater()

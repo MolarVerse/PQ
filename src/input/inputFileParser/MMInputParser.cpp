@@ -195,15 +195,9 @@ void MMInputParser::parseWaterIntraModel(
     const auto waterIntraModel = toLowerAndReplaceDashesCopy(lineElements[2]);
 
     if (waterIntraModel == "spc")
-    {
         WaterModelSettings::setWaterIntraModel(SPC);
-        _engine.getConstraints().activateShake();
-    }
     else if (waterIntraModel == "spc_e")
-    {
         WaterModelSettings::setWaterIntraModel(SPC_E);
-        _engine.getConstraints().activateShake();
-    }
     else if (waterIntraModel == "spc_fw")
     {
         WaterModelSettings::setWaterIntraModel(SPC_FW);
@@ -215,15 +209,9 @@ void MMInputParser::parseWaterIntraModel(
         _engine.makeIntraWater(qSPCFwIntraParam{});
     }
     else if (waterIntraModel == "tip3p")
-    {
         WaterModelSettings::setWaterIntraModel(TIP3P);
-        _engine.getConstraints().activateShake();
-    }
     else if (waterIntraModel == "opc3")
-    {
         WaterModelSettings::setWaterIntraModel(OPC3);
-        _engine.getConstraints().activateShake();
-    }
     else
         throw InputFileException(format(
             "Invalid water_intra keyword \"{}\" at line {} "
