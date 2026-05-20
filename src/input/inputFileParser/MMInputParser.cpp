@@ -199,7 +199,7 @@ void MMInputParser::parseWaterIntraModel(
         WaterModelSettings::setWaterIntraModel(SPC);
         _engine.getConstraints().activateShake();
     }
-    if (waterIntraModel == "spc_e")
+    else if (waterIntraModel == "spc_e")
     {
         WaterModelSettings::setWaterIntraModel(SPC_E);
         _engine.getConstraints().activateShake();
