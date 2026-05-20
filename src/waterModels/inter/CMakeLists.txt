@@ -7,6 +7,7 @@ add_library(interWater
 target_include_directories(interWater
     PUBLIC
     ${PROJECT_SOURCE_DIR}/include/waterModels/inter
+    ${PROJECT_SOURCE_DIR}/include/potential
 )
 
 target_link_libraries(interWater

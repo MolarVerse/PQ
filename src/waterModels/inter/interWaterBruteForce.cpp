@@ -27,9 +27,11 @@
 #include "coulombPotential.hpp"   // for CoulombPotential
 #include "interWater.hpp"         // for InterWater
 #include "physicalData.hpp"       // for PhysicalData
+#include "potential.hpp"          // for ChargeTag
 #include "simulationBox.hpp"      // for SimulationBox
 #include "typeAliases.hpp"
 
+using namespace potential;
 using namespace pq;
 using namespace waterModel;
 
@@ -49,10 +51,6 @@ void InterWaterStrategyBruteForce::calculate(
     CellList &
 )
 {
-    const auto chargeProductOO = state._chargeProductOO;
-    const auto chargeProductOH = state._chargeProductOH;
-    const auto chargeProductHH = state._chargeProductHH;
-
     const auto rCut        = CoulombPot::getCoulombRadiusCutOff();
     const auto rCutSquared = rCut * rCut;
 
@@ -76,16 +74,13 @@ void InterWaterStrategyBruteForce::calculate(
             auto &hydrogen3 = water2.getAtom(1);
             auto &hydrogen4 = water2.getAtom(2);
 
-            const auto singleInteraction = [&](Atom        &atomA,
-                                               Atom        &atomB,
-                                               const double chargeProduct,
-                                               const auto  &nonCoulPairPtr)
+            const auto singleInteraction =
+                [&](Atom &atomA, Atom &atomB, const auto &nonCoulPairPtr)
             {
                 if (nonCoulPairPtr)
-                    calculateSingleInteraction(
+                    calculateSingleInteraction<MMChargeTag, MMChargeTag>(
                         atomA,
                         atomB,
-                        chargeProduct,
                         coulombPotential,
                         rCutSquared,
                         simBox,
@@ -97,19 +92,19 @@ void InterWaterStrategyBruteForce::calculate(
 
             // clang-format off
             // O-O interaction
-            singleInteraction(oxygen1, oxygen2, chargeProductOO, state._nonCoulombPairOO);
+            singleInteraction(oxygen1, oxygen2, state._nonCoulombPairOO);
 
             // O-H interactions
-            singleInteraction(oxygen1, hydrogen3, chargeProductOH, state._nonCoulombPairOH);
-            singleInteraction(oxygen1, hydrogen4, chargeProductOH, state._nonCoulombPairOH);
-            singleInteraction(oxygen2, hydrogen1, chargeProductOH, state._nonCoulombPairOH);
-            singleInteraction(oxygen2, hydrogen2, chargeProductOH, state._nonCoulombPairOH);
+            singleInteraction(oxygen1, hydrogen3, state._nonCoulombPairOH);
+            singleInteraction(oxygen1, hydrogen4, state._nonCoulombPairOH);
+            singleInteraction(oxygen2, hydrogen1, state._nonCoulombPairOH);
+            singleInteraction(oxygen2, hydrogen2, state._nonCoulombPairOH);
 
             // H-H interactions
-            singleInteraction(hydrogen1, hydrogen3, chargeProductHH, state._nonCoulombPairHH);
-            singleInteraction(hydrogen1, hydrogen4, chargeProductHH, state._nonCoulombPairHH);
-            singleInteraction(hydrogen2, hydrogen3, chargeProductHH, state._nonCoulombPairHH);
-            singleInteraction(hydrogen2, hydrogen4, chargeProductHH, state._nonCoulombPairHH);
+            singleInteraction(hydrogen1, hydrogen3, state._nonCoulombPairHH);
+            singleInteraction(hydrogen1, hydrogen4, state._nonCoulombPairHH);
+            singleInteraction(hydrogen2, hydrogen3, state._nonCoulombPairHH);
+            singleInteraction(hydrogen2, hydrogen4, state._nonCoulombPairHH);
             // clang-format on
 
             ++j;
@@ -122,17 +117,13 @@ void InterWaterStrategyBruteForce::calculate(
 }
 
 void InterWaterStrategyBruteForce::calculateCoreToOuterForces(
-    const InterWaterState  &state,
+    const InterWaterState &,
     SimBox                 &simBox,
     PhysicalData           &physicalData,
     const SharedCoulombPot &coulombPotential,
     CellList &
 )
 {
-    const auto chargeProductOO = state._chargeProductOO;
-    const auto chargeProductOH = state._chargeProductOH;
-    const auto chargeProductHH = state._chargeProductHH;
-
     const auto rCut        = CoulombPot::getCoulombRadiusCutOff();
     const auto rCutSquared = rCut * rCut;
 
@@ -157,13 +148,11 @@ void InterWaterStrategyBruteForce::calculateCoreToOuterForces(
             auto &hydrogen3 = water2.getAtom(1);
             auto &hydrogen4 = water2.getAtom(2);
 
-            const auto singleCoulombInteraction =
-                [&](Atom &atomA, Atom &atomB, const double chargeProduct)
+            const auto singleCoulombInteraction = [&](Atom &atomA, Atom &atomB)
             {
-                calculateSingleCoulombInteraction(
+                calculateSingleCoulombInteraction<QMChargeTag, MMChargeTag>(
                     atomA,
                     atomB,
-                    chargeProduct,
                     coulombPotential,
                     rCutSquared,
                     simBox,
@@ -172,19 +161,19 @@ void InterWaterStrategyBruteForce::calculateCoreToOuterForces(
             };
 
             // O-O interaction
-            singleCoulombInteraction(oxygen1, oxygen2, chargeProductOO);
+            singleCoulombInteraction(oxygen1, oxygen2);
 
             // O-H interactions
-            singleCoulombInteraction(oxygen1, hydrogen3, chargeProductOH);
-            singleCoulombInteraction(oxygen1, hydrogen4, chargeProductOH);
-            singleCoulombInteraction(oxygen2, hydrogen1, chargeProductOH);
-            singleCoulombInteraction(oxygen2, hydrogen2, chargeProductOH);
+            singleCoulombInteraction(oxygen1, hydrogen3);
+            singleCoulombInteraction(oxygen1, hydrogen4);
+            singleCoulombInteraction(oxygen2, hydrogen1);
+            singleCoulombInteraction(oxygen2, hydrogen2);
 
             // H-H interactions
-            singleCoulombInteraction(hydrogen1, hydrogen3, chargeProductHH);
-            singleCoulombInteraction(hydrogen1, hydrogen4, chargeProductHH);
-            singleCoulombInteraction(hydrogen2, hydrogen3, chargeProductHH);
-            singleCoulombInteraction(hydrogen2, hydrogen4, chargeProductHH);
+            singleCoulombInteraction(hydrogen1, hydrogen3);
+            singleCoulombInteraction(hydrogen1, hydrogen4);
+            singleCoulombInteraction(hydrogen2, hydrogen3);
+            singleCoulombInteraction(hydrogen2, hydrogen4);
         }
     }
 
@@ -199,10 +188,6 @@ void InterWaterStrategyBruteForce::calculateLayerToOuterForces(
     CellList &
 )
 {
-    const auto chargeProductOO = state._chargeProductOO;
-    const auto chargeProductOH = state._chargeProductOH;
-    const auto chargeProductHH = state._chargeProductHH;
-
     const auto rCut        = CoulombPot::getCoulombRadiusCutOff();
     const auto rCutSquared = rCut * rCut;
 
@@ -231,16 +216,13 @@ void InterWaterStrategyBruteForce::calculateLayerToOuterForces(
             auto &hydrogen3 = water2.getAtom(1);
             auto &hydrogen4 = water2.getAtom(2);
 
-            const auto singleInteraction = [&](Atom        &atomA,
-                                               Atom        &atomB,
-                                               const double chargeProduct,
-                                               const auto  &nonCoulPairPtr)
+            const auto singleInteraction =
+                [&](Atom &atomA, Atom &atomB, const auto &nonCoulPairPtr)
             {
                 if (nonCoulPairPtr)
-                    calculateSingleInteraction(
+                    calculateSingleInteraction<QMChargeTag, MMChargeTag>(
                         atomA,
                         atomB,
-                        chargeProduct,
                         coulombPotential,
                         rCutSquared,
                         simBox,
@@ -250,22 +232,20 @@ void InterWaterStrategyBruteForce::calculateLayerToOuterForces(
                     );
             };
 
-            // clang-format off
             // O-O interaction
-            singleInteraction(oxygen1, oxygen2, chargeProductOO, state._nonCoulombPairOO);
+            singleInteraction(oxygen1, oxygen2, state._nonCoulombPairOO);
 
             // O-H interactions
-            singleInteraction(oxygen1, hydrogen3, chargeProductOH, state._nonCoulombPairOH);
-            singleInteraction(oxygen1, hydrogen4, chargeProductOH, state._nonCoulombPairOH);
-            singleInteraction(oxygen2, hydrogen1, chargeProductOH, state._nonCoulombPairOH);
-            singleInteraction(oxygen2, hydrogen2, chargeProductOH, state._nonCoulombPairOH);
+            singleInteraction(oxygen1, hydrogen3, state._nonCoulombPairOH);
+            singleInteraction(oxygen1, hydrogen4, state._nonCoulombPairOH);
+            singleInteraction(oxygen2, hydrogen1, state._nonCoulombPairOH);
+            singleInteraction(oxygen2, hydrogen2, state._nonCoulombPairOH);
 
             // H-H interactions
-            singleInteraction(hydrogen1, hydrogen3, chargeProductHH, state._nonCoulombPairHH);
-            singleInteraction(hydrogen1, hydrogen4, chargeProductHH, state._nonCoulombPairHH);
-            singleInteraction(hydrogen2, hydrogen3, chargeProductHH, state._nonCoulombPairHH);
-            singleInteraction(hydrogen2, hydrogen4, chargeProductHH, state._nonCoulombPairHH);
-            // clang-format on
+            singleInteraction(hydrogen1, hydrogen3, state._nonCoulombPairHH);
+            singleInteraction(hydrogen1, hydrogen4, state._nonCoulombPairHH);
+            singleInteraction(hydrogen2, hydrogen3, state._nonCoulombPairHH);
+            singleInteraction(hydrogen2, hydrogen4, state._nonCoulombPairHH);
         }
     }
 
@@ -292,10 +272,6 @@ void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
     CellList &
 )
 {
-    const auto chargeProductOO = state._chargeProductOO;
-    const auto chargeProductOH = state._chargeProductOH;
-    const auto chargeProductHH = state._chargeProductHH;
-
     const auto rCut        = CoulombPot::getCoulombRadiusCutOff();
     const auto rCutSquared = rCut * rCut;
 
@@ -321,16 +297,13 @@ void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
             auto &hydrogen3 = water2.getAtom(1);
             auto &hydrogen4 = water2.getAtom(2);
 
-            const auto singleInteraction = [&](Atom        &atomA,
-                                               Atom        &atomB,
-                                               const double chargeProduct,
-                                               const auto  &nonCoulPairPtr)
+            const auto singleInteraction =
+                [&](Atom &atomA, Atom &atomB, const auto &nonCoulPairPtr)
             {
                 if (nonCoulPairPtr)
-                    calculateSingleInteraction(
+                    calculateSingleInteraction<MMChargeTag, QMChargeTag>(
                         atomA,
                         atomB,
-                        chargeProduct,
                         coulombPotential,
                         rCutSquared,
                         simBox,
@@ -340,22 +313,20 @@ void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
                     );
             };
 
-            // clang-format off
             // O-O interaction
-            singleInteraction(oxygen1, oxygen2, chargeProductOO, state._nonCoulombPairOO);
+            singleInteraction(oxygen1, oxygen2, state._nonCoulombPairOO);
 
             // O-H interactions
-            singleInteraction(oxygen1, hydrogen3, chargeProductOH, state._nonCoulombPairOH);
-            singleInteraction(oxygen1, hydrogen4, chargeProductOH, state._nonCoulombPairOH);
-            singleInteraction(oxygen2, hydrogen1, chargeProductOH, state._nonCoulombPairOH);
-            singleInteraction(oxygen2, hydrogen2, chargeProductOH, state._nonCoulombPairOH);
+            singleInteraction(oxygen1, hydrogen3, state._nonCoulombPairOH);
+            singleInteraction(oxygen1, hydrogen4, state._nonCoulombPairOH);
+            singleInteraction(oxygen2, hydrogen1, state._nonCoulombPairOH);
+            singleInteraction(oxygen2, hydrogen2, state._nonCoulombPairOH);
 
             // H-H interactions
-            singleInteraction(hydrogen1, hydrogen3, chargeProductHH, state._nonCoulombPairHH);
-            singleInteraction(hydrogen1, hydrogen4, chargeProductHH, state._nonCoulombPairHH);
-            singleInteraction(hydrogen2, hydrogen3, chargeProductHH, state._nonCoulombPairHH);
-            singleInteraction(hydrogen2, hydrogen4, chargeProductHH, state._nonCoulombPairHH);
-            // clang-format on
+            singleInteraction(hydrogen1, hydrogen3, state._nonCoulombPairHH);
+            singleInteraction(hydrogen1, hydrogen4, state._nonCoulombPairHH);
+            singleInteraction(hydrogen2, hydrogen3, state._nonCoulombPairHH);
+            singleInteraction(hydrogen2, hydrogen4, state._nonCoulombPairHH);
         }
     }
 
@@ -390,16 +361,13 @@ void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
             auto &hydrogen3 = water2.getAtom(1);
             auto &hydrogen4 = water2.getAtom(2);
 
-            const auto singleInteraction = [&](Atom        &atomA,
-                                               Atom        &atomB,
-                                               const double chargeProduct,
-                                               const auto  &nonCoulPairPtr)
+            const auto singleInteraction =
+                [&](Atom &atomA, Atom &atomB, const auto &nonCoulPairPtr)
             {
                 if (nonCoulPairPtr)
-                    calculateSingleInteraction(
+                    calculateSingleInteraction<MMChargeTag, QMChargeTag>(
                         atomA,
                         atomB,
-                        chargeProduct,
                         coulombPotential,
                         rCutSquared,
                         simBox,
@@ -409,22 +377,20 @@ void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
                     );
             };
 
-            // clang-format off
             // O-O interaction
-            singleInteraction(oxygen1, oxygen2, chargeProductOO, state._nonCoulombPairOO);
+            singleInteraction(oxygen1, oxygen2, state._nonCoulombPairOO);
 
             // O-H interactions
-            singleInteraction(oxygen1, hydrogen3, chargeProductOH, state._nonCoulombPairOH);
-            singleInteraction(oxygen1, hydrogen4, chargeProductOH, state._nonCoulombPairOH);
-            singleInteraction(oxygen2, hydrogen1, chargeProductOH, state._nonCoulombPairOH);
-            singleInteraction(oxygen2, hydrogen2, chargeProductOH, state._nonCoulombPairOH);
+            singleInteraction(oxygen1, hydrogen3, state._nonCoulombPairOH);
+            singleInteraction(oxygen1, hydrogen4, state._nonCoulombPairOH);
+            singleInteraction(oxygen2, hydrogen1, state._nonCoulombPairOH);
+            singleInteraction(oxygen2, hydrogen2, state._nonCoulombPairOH);
 
             // H-H interactions
-            singleInteraction(hydrogen1, hydrogen3, chargeProductHH, state._nonCoulombPairHH);
-            singleInteraction(hydrogen1, hydrogen4, chargeProductHH, state._nonCoulombPairHH);
-            singleInteraction(hydrogen2, hydrogen3, chargeProductHH, state._nonCoulombPairHH);
-            singleInteraction(hydrogen2, hydrogen4, chargeProductHH, state._nonCoulombPairHH);
-            // clang-format on
+            singleInteraction(hydrogen1, hydrogen3, state._nonCoulombPairHH);
+            singleInteraction(hydrogen1, hydrogen4, state._nonCoulombPairHH);
+            singleInteraction(hydrogen2, hydrogen3, state._nonCoulombPairHH);
+            singleInteraction(hydrogen2, hydrogen4, state._nonCoulombPairHH);
 
             ++j;
         }

@@ -97,10 +97,10 @@ namespace waterModel
             pq::CellList &
         ) = 0;
 
+        template <typename ChargeTag1, typename ChargeTag2>
         void calculateSingleInteraction(
             pq::Atom                   &atom1,
             pq::Atom                   &atom2,
-            const double                chargeProduct,
             const pq::SharedCoulombPot &coulombPotential,
             const double                rCutSquared,
             const pq::SimBox           &simBox,
@@ -109,20 +109,20 @@ namespace waterModel
             double                     &nonCoulombEnergy
         );
 
+        template <typename ChargeTag1, typename ChargeTag2>
         void calculateSingleCoulombInteraction(
             pq::Atom                   &atom1,
             pq::Atom                   &atom2,
-            const double                chargeProduct,
             const pq::SharedCoulombPot &coulombPotential,
             const double                rCutSquared,
             const pq::SimBox           &simBox,
             double                     &coulombEnergy
         );
 
+        template <typename ChargeTag1, typename ChargeTag2>
         void calculateSingleInteractionOneWay(
             pq::Atom                   &atom1,
             pq::Atom                   &atom2,
-            const double                chargeProduct,
             const pq::SharedCoulombPot &coulombPotential,
             const double                rCutSquared,
             const pq::SimBox           &simBox,
@@ -130,6 +130,9 @@ namespace waterModel
             double                     &coulombEnergy,
             double                     &nonCoulombEnergy
         );
+
+        template <typename T>
+        double getPartialCharge(pq::Atom &atom) const;
     };
 
     class InterWater
@@ -320,6 +323,7 @@ namespace waterModel
 
 }   // namespace waterModel
 
+#include "interWater.tpp.hpp"        // DO NOT MOVE THIS LINE
 #include "interWaterParamters.hpp"   // DO NOT MOVE THIS LINE
 
 #endif   //  _INTER_WATER_HPP_

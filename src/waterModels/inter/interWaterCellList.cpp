@@ -27,9 +27,11 @@
 #include "coulombPotential.hpp"   // for CoulombPotential
 #include "interWater.hpp"         // for InterWater
 #include "physicalData.hpp"       // for PhysicalData
+#include "potential.hpp"          // for ChargeTag
 #include "simulationBox.hpp"      // for SimulationBox
 #include "typeAliases.hpp"
 
+using namespace potential;
 using namespace pq;
 using namespace waterModel;
 
@@ -45,10 +47,6 @@ void InterWaterStrategyCellList::calculate(
     CellList               &cellList
 )
 {
-    const auto chargeProductOO = state._chargeProductOO;
-    const auto chargeProductOH = state._chargeProductOH;
-    const auto chargeProductHH = state._chargeProductHH;
-
     const auto rCut        = CoulombPot::getCoulombRadiusCutOff();
     const auto rCutSquared = rCut * rCut;
 
@@ -57,16 +55,13 @@ void InterWaterStrategyCellList::calculate(
 
     const auto waterType = simBox.getWaterType();
 
-    const auto singleInteraction = [&](Atom        &atomA,
-                                       Atom        &atomB,
-                                       const double chargeProduct,
-                                       const auto  &nonCoulPairPtr)
+    const auto singleInteraction =
+        [&](Atom &atomA, Atom &atomB, const auto &nonCoulPairPtr)
     {
         if (nonCoulPairPtr)
-            calculateSingleInteraction(
+            calculateSingleInteraction<MMChargeTag, MMChargeTag>(
                 atomA,
                 atomB,
-                chargeProduct,
                 coulombPotential,
                 rCutSquared,
                 simBox,
@@ -106,7 +101,6 @@ void InterWaterStrategyCellList::calculate(
                             singleInteraction(
                                 *atom_i,
                                 *atom_j,
-                                chargeProductOH,
                                 state._nonCoulombPairOH
                             );
                         // O-O interaction
@@ -114,7 +108,6 @@ void InterWaterStrategyCellList::calculate(
                             singleInteraction(
                                 *atom_i,
                                 *atom_j,
-                                chargeProductOO,
                                 state._nonCoulombPairOO
                             );
                         // H-H interaction
@@ -122,7 +115,6 @@ void InterWaterStrategyCellList::calculate(
                             singleInteraction(
                                 *atom_i,
                                 *atom_j,
-                                chargeProductHH,
                                 state._nonCoulombPairHH
                             );
                     }
@@ -168,7 +160,6 @@ void InterWaterStrategyCellList::calculate(
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
-                                    chargeProductOH,
                                     state._nonCoulombPairOH
                                 );
                             // O-O interaction
@@ -176,7 +167,6 @@ void InterWaterStrategyCellList::calculate(
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
-                                    chargeProductOO,
                                     state._nonCoulombPairOO
                                 );
                             // H-H interaction
@@ -184,7 +174,6 @@ void InterWaterStrategyCellList::calculate(
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
-                                    chargeProductHH,
                                     state._nonCoulombPairHH
                                 );
                         }
@@ -198,29 +187,23 @@ void InterWaterStrategyCellList::calculate(
 }
 
 void InterWaterStrategyCellList::calculateCoreToOuterForces(
-    const InterWaterState  &state,
+    const InterWaterState &,
     SimBox                 &simBox,
     PhysicalData           &physicalData,
     const SharedCoulombPot &coulombPotential,
     CellList               &cellList
 )
 {
-    const auto chargeProductOO = state._chargeProductOO;
-    const auto chargeProductOH = state._chargeProductOH;
-    const auto chargeProductHH = state._chargeProductHH;
-
     const auto rCut        = CoulombPot::getCoulombRadiusCutOff();
     const auto rCutSquared = rCut * rCut;
 
     auto totalCoulombEnergy = 0.0;
 
-    const auto singleCoulombInteraction =
-        [&](Atom &atomA, Atom &atomB, const double chargeProduct)
+    const auto singleCoulombInteraction = [&](Atom &atomA, Atom &atomB)
     {
-        calculateSingleCoulombInteraction(
+        calculateSingleCoulombInteraction<QMChargeTag, MMChargeTag>(
             atomA,
             atomB,
-            chargeProduct,
             coulombPotential,
             rCutSquared,
             simBox,
@@ -262,25 +245,13 @@ void InterWaterStrategyCellList::calculateCoreToOuterForces(
 
                         // O-H interaction (different atom types)
                         if (isAtom_i_O != isAtom_j_O)
-                            singleCoulombInteraction(
-                                *atom_i,
-                                *atom_j,
-                                chargeProductOH
-                            );
+                            singleCoulombInteraction(*atom_i, *atom_j);
                         // O-O interaction
                         else if (isAtom_i_O)
-                            singleCoulombInteraction(
-                                *atom_i,
-                                *atom_j,
-                                chargeProductOO
-                            );
+                            singleCoulombInteraction(*atom_i, *atom_j);
                         // H-H interaction
                         else
-                            singleCoulombInteraction(
-                                *atom_i,
-                                *atom_j,
-                                chargeProductHH
-                            );
+                            singleCoulombInteraction(*atom_i, *atom_j);
                     }
                 }
             }
@@ -314,25 +285,13 @@ void InterWaterStrategyCellList::calculateCoreToOuterForces(
 
                             // O-H interaction (different atom types)
                             if (isAtom_i_O != isAtom_j_O)
-                                singleCoulombInteraction(
-                                    *atom_i,
-                                    *atom_j,
-                                    chargeProductOH
-                                );
+                                singleCoulombInteraction(*atom_i, *atom_j);
                             // O-O interaction
                             else if (isAtom_i_O)
-                                singleCoulombInteraction(
-                                    *atom_i,
-                                    *atom_j,
-                                    chargeProductOO
-                                );
+                                singleCoulombInteraction(*atom_i, *atom_j);
                             // H-H interaction
                             else
-                                singleCoulombInteraction(
-                                    *atom_i,
-                                    *atom_j,
-                                    chargeProductHH
-                                );
+                                singleCoulombInteraction(*atom_i, *atom_j);
                         }
                     }
                 }
@@ -367,25 +326,13 @@ void InterWaterStrategyCellList::calculateCoreToOuterForces(
 
                             // O-H interaction (different atom types)
                             if (isAtom_i_O != isAtom_j_O)
-                                singleCoulombInteraction(
-                                    *atom_i,
-                                    *atom_j,
-                                    chargeProductOH
-                                );
+                                singleCoulombInteraction(*atom_i, *atom_j);
                             // O-O interaction
                             else if (isAtom_i_O)
-                                singleCoulombInteraction(
-                                    *atom_i,
-                                    *atom_j,
-                                    chargeProductOO
-                                );
+                                singleCoulombInteraction(*atom_i, *atom_j);
                             // H-H interaction
                             else
-                                singleCoulombInteraction(
-                                    *atom_i,
-                                    *atom_j,
-                                    chargeProductHH
-                                );
+                                singleCoulombInteraction(*atom_i, *atom_j);
                         }
                     }
                 }
@@ -403,26 +350,19 @@ void InterWaterStrategyCellList::calculateLayerToOuterForces(
     CellList               &cellList
 )
 {
-    const auto chargeProductOO = state._chargeProductOO;
-    const auto chargeProductOH = state._chargeProductOH;
-    const auto chargeProductHH = state._chargeProductHH;
-
     const auto rCut        = CoulombPot::getCoulombRadiusCutOff();
     const auto rCutSquared = rCut * rCut;
 
     auto totalCoulombEnergy    = 0.0;
     auto totalNonCoulombEnergy = 0.0;
 
-    const auto singleInteraction = [&](Atom        &atomA,
-                                       Atom        &atomB,
-                                       const double chargeProduct,
-                                       const auto  &nonCoulPairPtr)
+    const auto singleInteraction =
+        [&](Atom &atomA, Atom &atomB, const auto &nonCoulPairPtr)
     {
         if (nonCoulPairPtr)
-            calculateSingleInteraction(
+            calculateSingleInteraction<QMChargeTag, MMChargeTag>(
                 atomA,
                 atomB,
-                chargeProduct,
                 coulombPotential,
                 rCutSquared,
                 simBox,
@@ -469,7 +409,6 @@ void InterWaterStrategyCellList::calculateLayerToOuterForces(
                             singleInteraction(
                                 *atom_i,
                                 *atom_j,
-                                chargeProductOH,
                                 state._nonCoulombPairOH
                             );
                         // O-O interaction
@@ -477,7 +416,6 @@ void InterWaterStrategyCellList::calculateLayerToOuterForces(
                             singleInteraction(
                                 *atom_i,
                                 *atom_j,
-                                chargeProductOO,
                                 state._nonCoulombPairOO
                             );
                         // H-H interaction
@@ -485,7 +423,6 @@ void InterWaterStrategyCellList::calculateLayerToOuterForces(
                             singleInteraction(
                                 *atom_i,
                                 *atom_j,
-                                chargeProductHH,
                                 state._nonCoulombPairHH
                             );
                     }
@@ -524,7 +461,6 @@ void InterWaterStrategyCellList::calculateLayerToOuterForces(
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
-                                    chargeProductOH,
                                     state._nonCoulombPairOH
                                 );
                             // O-O interaction
@@ -532,7 +468,6 @@ void InterWaterStrategyCellList::calculateLayerToOuterForces(
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
-                                    chargeProductOO,
                                     state._nonCoulombPairOO
                                 );
                             // H-H interaction
@@ -540,7 +475,6 @@ void InterWaterStrategyCellList::calculateLayerToOuterForces(
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
-                                    chargeProductHH,
                                     state._nonCoulombPairHH
                                 );
                         }
@@ -580,7 +514,6 @@ void InterWaterStrategyCellList::calculateLayerToOuterForces(
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
-                                    chargeProductOH,
                                     state._nonCoulombPairOH
                                 );
                             // O-O interaction
@@ -588,7 +521,6 @@ void InterWaterStrategyCellList::calculateLayerToOuterForces(
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
-                                    chargeProductOO,
                                     state._nonCoulombPairOO
                                 );
                             // H-H interaction
@@ -596,7 +528,6 @@ void InterWaterStrategyCellList::calculateLayerToOuterForces(
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
-                                    chargeProductHH,
                                     state._nonCoulombPairHH
                                 );
                         }
@@ -617,26 +548,19 @@ void InterWaterStrategyCellList::calculateOuterToOuterForces(
     CellList               &cellList
 )
 {
-    const auto chargeProductOO = state._chargeProductOO;
-    const auto chargeProductOH = state._chargeProductOH;
-    const auto chargeProductHH = state._chargeProductHH;
-
     const auto rCut        = CoulombPot::getCoulombRadiusCutOff();
     const auto rCutSquared = rCut * rCut;
 
     auto totalCoulombEnergy    = 0.0;
     auto totalNonCoulombEnergy = 0.0;
 
-    const auto singleInteraction = [&](Atom        &atomA,
-                                       Atom        &atomB,
-                                       const double chargeProduct,
-                                       const auto  &nonCoulPairPtr)
+    const auto singleInteraction =
+        [&](Atom &atomA, Atom &atomB, const auto &nonCoulPairPtr)
     {
         if (nonCoulPairPtr)
-            calculateSingleInteraction(
+            calculateSingleInteraction<MMChargeTag, MMChargeTag>(
                 atomA,
                 atomB,
-                chargeProduct,
                 coulombPotential,
                 rCutSquared,
                 simBox,
@@ -686,7 +610,6 @@ void InterWaterStrategyCellList::calculateOuterToOuterForces(
                             singleInteraction(
                                 *atom_i,
                                 *atom_j,
-                                chargeProductOH,
                                 state._nonCoulombPairOH
                             );
                         // O-O interaction
@@ -694,7 +617,6 @@ void InterWaterStrategyCellList::calculateOuterToOuterForces(
                             singleInteraction(
                                 *atom_i,
                                 *atom_j,
-                                chargeProductOO,
                                 state._nonCoulombPairOO
                             );
                         // H-H interaction
@@ -702,7 +624,6 @@ void InterWaterStrategyCellList::calculateOuterToOuterForces(
                             singleInteraction(
                                 *atom_i,
                                 *atom_j,
-                                chargeProductHH,
                                 state._nonCoulombPairHH
                             );
                     }
@@ -748,7 +669,6 @@ void InterWaterStrategyCellList::calculateOuterToOuterForces(
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
-                                    chargeProductOH,
                                     state._nonCoulombPairOH
                                 );
                             // O-O interaction
@@ -756,7 +676,6 @@ void InterWaterStrategyCellList::calculateOuterToOuterForces(
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
-                                    chargeProductOO,
                                     state._nonCoulombPairOO
                                 );
                             // H-H interaction
@@ -764,7 +683,6 @@ void InterWaterStrategyCellList::calculateOuterToOuterForces(
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
-                                    chargeProductHH,
                                     state._nonCoulombPairHH
                                 );
                         }
@@ -785,26 +703,19 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
     CellList               &cellList
 )
 {
-    const auto chargeProductOO = state._chargeProductOO;
-    const auto chargeProductOH = state._chargeProductOH;
-    const auto chargeProductHH = state._chargeProductHH;
-
     const auto rCut        = CoulombPot::getCoulombRadiusCutOff();
     const auto rCutSquared = rCut * rCut;
 
     auto totalCoulombEnergy    = 0.0;
     auto totalNonCoulombEnergy = 0.0;
 
-    const auto singleInteraction = [&](Atom        &atomA,
-                                       Atom        &atomB,
-                                       const double chargeProduct,
-                                       const auto  &nonCoulPairPtr)
+    const auto singleInteraction =
+        [&](Atom &atomA, Atom &atomB, const auto &nonCoulPairPtr)
     {
         if (nonCoulPairPtr)
-            calculateSingleInteraction(
+            calculateSingleInteraction<MMChargeTag, QMChargeTag>(
                 atomA,
                 atomB,
-                chargeProduct,
                 coulombPotential,
                 rCutSquared,
                 simBox,
@@ -814,16 +725,13 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
             );
     };
 
-    const auto singleInteractionOneWay = [&](Atom        &atomA,
-                                             Atom        &atomB,
-                                             const double chargeProduct,
-                                             const auto  &nonCoulPairPtr)
+    const auto singleInteractionOneWay =
+        [&](Atom &atomA, Atom &atomB, const auto &nonCoulPairPtr)
     {
         if (nonCoulPairPtr)
-            calculateSingleInteractionOneWay(
+            calculateSingleInteractionOneWay<MMChargeTag, QMChargeTag>(
                 atomA,
                 atomB,
-                chargeProduct,
                 coulombPotential,
                 rCutSquared,
                 simBox,
@@ -870,7 +778,6 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                             singleInteraction(
                                 *atom_i,
                                 *atom_j,
-                                chargeProductOH,
                                 state._nonCoulombPairOH
                             );
                         // O-O interaction
@@ -878,7 +785,6 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                             singleInteraction(
                                 *atom_i,
                                 *atom_j,
-                                chargeProductOO,
                                 state._nonCoulombPairOO
                             );
                         // H-H interaction
@@ -886,7 +792,6 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                             singleInteraction(
                                 *atom_i,
                                 *atom_j,
-                                chargeProductHH,
                                 state._nonCoulombPairHH
                             );
                     }
@@ -926,7 +831,6 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
-                                    chargeProductOH,
                                     state._nonCoulombPairOH
                                 );
                             // O-O interaction
@@ -934,7 +838,6 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
-                                    chargeProductOO,
                                     state._nonCoulombPairOO
                                 );
                             // H-H interaction
@@ -942,7 +845,6 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
-                                    chargeProductHH,
                                     state._nonCoulombPairHH
                                 );
                         }
@@ -983,7 +885,6 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
-                                    chargeProductOH,
                                     state._nonCoulombPairOH
                                 );
                             // O-O interaction
@@ -991,7 +892,6 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
-                                    chargeProductOO,
                                     state._nonCoulombPairOO
                                 );
                             // H-H interaction
@@ -999,7 +899,6 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
-                                    chargeProductHH,
                                     state._nonCoulombPairHH
                                 );
                         }
@@ -1038,7 +937,6 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                             singleInteractionOneWay(
                                 *atom_i,
                                 *atom_j,
-                                chargeProductOH,
                                 state._nonCoulombPairOH
                             );
                         // O-O interaction
@@ -1046,7 +944,6 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                             singleInteractionOneWay(
                                 *atom_i,
                                 *atom_j,
-                                chargeProductOO,
                                 state._nonCoulombPairOO
                             );
                         // H-H interaction
@@ -1054,7 +951,6 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                             singleInteractionOneWay(
                                 *atom_i,
                                 *atom_j,
-                                chargeProductHH,
                                 state._nonCoulombPairHH
                             );
                     }
@@ -1101,7 +997,6 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                                 singleInteractionOneWay(
                                     *atom_i,
                                     *atom_j,
-                                    chargeProductOH,
                                     state._nonCoulombPairOH
                                 );
                             // O-O interaction
@@ -1109,7 +1004,6 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                                 singleInteractionOneWay(
                                     *atom_i,
                                     *atom_j,
-                                    chargeProductOO,
                                     state._nonCoulombPairOO
                                 );
                             // H-H interaction
@@ -1117,7 +1011,6 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                                 singleInteractionOneWay(
                                     *atom_i,
                                     *atom_j,
-                                    chargeProductHH,
                                     state._nonCoulombPairHH
                                 );
                         }
@@ -1165,7 +1058,6 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                                 singleInteractionOneWay(
                                     *atom_i,
                                     *atom_j,
-                                    chargeProductOH,
                                     state._nonCoulombPairOH
                                 );
                             // O-O interaction
@@ -1173,7 +1065,6 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                                 singleInteractionOneWay(
                                     *atom_i,
                                     *atom_j,
-                                    chargeProductOO,
                                     state._nonCoulombPairOO
                                 );
                             // H-H interaction
@@ -1181,7 +1072,6 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                                 singleInteractionOneWay(
                                     *atom_i,
                                     *atom_j,
-                                    chargeProductHH,
                                     state._nonCoulombPairHH
                                 );
                         }
