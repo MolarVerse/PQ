@@ -68,6 +68,40 @@ namespace waterModel
         return state;
     }
 
+    struct SPCInterParam
+    {
+        static constexpr auto    _oxygenCharge         = -0.82;
+        static constexpr auto    _hydrogenCharge       = 0.41;
+        static constexpr bool    _oxygenOnlyNonCoulomb = true;
+        inline static const auto _nonCoulombPairOO =
+            potential::LennardJonesPair(
+                defaults::_COULOMB_CUT_OFF_DEFAULT_,
+                constants::_SPC_LJ_C6_OO_,
+                constants::_SPC_LJ_C12_OO_
+            );
+        inline static const auto _nonCoulombPairOH =
+            potential::LennardJonesPair(0.01, 0.0, 0.0);
+        inline static const auto _nonCoulombPairHH =
+            potential::LennardJonesPair(0.01, 0.0, 0.0);
+    };
+
+    struct SPCEInterParam
+    {
+        static constexpr auto    _oxygenCharge         = -0.8476;
+        static constexpr auto    _hydrogenCharge       = 0.4238;
+        static constexpr bool    _oxygenOnlyNonCoulomb = true;
+        inline static const auto _nonCoulombPairOO =
+            potential::LennardJonesPair(
+                defaults::_COULOMB_CUT_OFF_DEFAULT_,
+                constants::_SPC_E_LJ_C6_OO_,
+                constants::_SPC_E_LJ_C12_OO_
+            );
+        inline static const auto _nonCoulombPairOH =
+            potential::LennardJonesPair(0.01, 0.0, 0.0);
+        inline static const auto _nonCoulombPairHH =
+            potential::LennardJonesPair(0.01, 0.0, 0.0);
+    };
+
     struct SPCFwInterParam
     {
         static constexpr auto    _oxygenCharge         = -0.82;

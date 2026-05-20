@@ -267,6 +267,8 @@ std::optional<RigidWaterGeometry> WaterModelSetup::getRigidWaterGeometry(
 
     switch (intraModel)
     {
+        case SPC: return RigidWaterGeometry{1.0, 1.632993162};
+        case SPC_E: return RigidWaterGeometry{1.0, 1.632993162};
         case TIP3P: return RigidWaterGeometry{0.9572, 1.5139};
         case OPC3: return RigidWaterGeometry{0.97888, 1.598492306};
         default: return std::nullopt;
@@ -316,6 +318,8 @@ void WaterModelSetup::makeInterWater()
 
     switch (model)
     {
+        case SPC: state = makeInterWaterState<SPCInterParam>(); break;
+        case SPC_E: state = makeInterWaterState<SPCEInterParam>(); break;
         case SPC_FW: state = makeInterWaterState<SPCFwInterParam>(); break;
         case QSPC_FW: state = makeInterWaterState<qSPCFwInterParam>(); break;
         case TIP3P: state = makeInterWaterState<TIP3PInterParam>(); break;

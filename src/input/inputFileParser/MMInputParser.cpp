@@ -194,7 +194,17 @@ void MMInputParser::parseWaterIntraModel(
 
     const auto waterIntraModel = toLowerAndReplaceDashesCopy(lineElements[2]);
 
-    if (waterIntraModel == "spc_fw")
+    if (waterIntraModel == "spc")
+    {
+        WaterModelSettings::setWaterIntraModel(SPC);
+        _engine.getConstraints().activateShake();
+    }
+    if (waterIntraModel == "spc_e")
+    {
+        WaterModelSettings::setWaterIntraModel(SPC_E);
+        _engine.getConstraints().activateShake();
+    }
+    else if (waterIntraModel == "spc_fw")
     {
         WaterModelSettings::setWaterIntraModel(SPC_FW);
         _engine.makeIntraWater(SPCFwIntraParam{});
@@ -218,8 +228,8 @@ void MMInputParser::parseWaterIntraModel(
         throw InputFileException(format(
             "Invalid water_intra keyword \"{}\" at line {} "
             "in input file\n"
-            "Possible options are \"SPC_Fw\", \"qSPC_Fw\", \"TIP3P\" and "
-            "\"OPC3\"",
+            "Possible options are \"SPC\", \"SPC_E\", \"SPC_Fw\", \"qSPC_Fw\", "
+            "\"TIP3P\" and \"OPC3\"",
             lineElements[2],
             lineNumber
         ));
@@ -249,15 +259,16 @@ void MMInputParser::parseWaterInterModel(
 
     const auto waterInterModel = toLowerAndReplaceDashesCopy(lineElements[2]);
 
-    if (waterInterModel == "spc_fw")
+    if (waterInterModel == "spc")
+        WaterModelSettings::setWaterInterModel(SPC);
+    else if (waterInterModel == "spc_e")
+        WaterModelSettings::setWaterInterModel(SPC_E);
+    else if (waterInterModel == "spc_fw")
         WaterModelSettings::setWaterInterModel(SPC_FW);
-
     else if (waterInterModel == "qspc_fw")
         WaterModelSettings::setWaterInterModel(QSPC_FW);
-
     else if (waterInterModel == "tip3p")
         WaterModelSettings::setWaterInterModel(TIP3P);
-
     else if (waterInterModel == "opc3")
         WaterModelSettings::setWaterInterModel(OPC3);
 
@@ -265,8 +276,8 @@ void MMInputParser::parseWaterInterModel(
         throw InputFileException(format(
             "Invalid water_inter keyword \"{}\" at line {} "
             "in input file\n"
-            "Possible options are \"SPC_Fw\", \"qSPC_Fw\", \"TIP3P\" and "
-            "\"OPC3\"",
+            "Possible options are \"SPC\", \"SPC_E\", \"SPC_Fw\", \"qSPC_Fw\", "
+            "\"TIP3P\" and \"OPC3\"",
             lineElements[2],
             lineNumber
         ));

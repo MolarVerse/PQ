@@ -36,6 +36,8 @@ namespace settings
     enum class WaterIntraModel : size_t
     {
         NONE,
+        SPC,
+        SPC_E,
         SPC_FW,
         QSPC_FW,
         TIP3P,
@@ -50,6 +52,8 @@ namespace settings
     enum class WaterInterModel : size_t
     {
         NONE,
+        SPC,
+        SPC_E,
         SPC_FW,
         QSPC_FW,
         TIP3P,

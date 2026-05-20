@@ -104,7 +104,9 @@ void WaterModelSettings::setWaterIntraModel(const std::string_view &model)
     using enum WaterIntraModel;
     const auto waterModel = toLowerAndReplaceDashesCopy(model);
 
-    if ("spc_fw" == waterModel)
+    if ("spc_e" == waterModel)
+        _waterIntraModel = SPC_E;
+    else if ("spc_fw" == waterModel)
         _waterIntraModel = SPC_FW;
     else if ("qspc_fw" == waterModel)
         _waterIntraModel = QSPC_FW;
@@ -138,7 +140,11 @@ void WaterModelSettings::setWaterInterModel(const std::string_view &model)
     using enum WaterInterModel;
     const auto waterModel = toLowerAndReplaceDashesCopy(model);
 
-    if ("spc_fw" == waterModel)
+    if ("spc" == waterModel)
+        _waterInterModel = SPC;
+    else if ("spc_e" == waterModel)
+        _waterInterModel = SPC_E;
+    else if ("spc_fw" == waterModel)
         _waterInterModel = SPC_FW;
     else if ("qspc_fw" == waterModel)
         _waterInterModel = QSPC_FW;
@@ -177,6 +183,8 @@ std::string settings::string(const WaterIntraModel &waterIntraModel)
     {
         using enum WaterIntraModel;
 
+        case SPC: return "SPC";
+        case SPC_E: return "SPC/E";
         case SPC_FW: return "SPC/Fw";
         case QSPC_FW: return "qSPC/Fw";
         case TIP3P: return "TIP3P";
@@ -201,6 +209,8 @@ std::string settings::string(const WaterInterModel &waterInterModel)
     {
         using enum WaterInterModel;
 
+        case SPC: return "SPC";
+        case SPC_E: return "SPC/E";
         case SPC_FW: return "SPC/Fw";
         case QSPC_FW: return "qSPC/Fw";
         case TIP3P: return "TIP3P";
