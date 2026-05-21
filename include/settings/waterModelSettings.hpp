@@ -40,6 +40,8 @@ namespace settings
         SPC_E,
         SPC_FW,
         QSPC_FW,
+        SPC_DC,
+        H2O_DC,
         TIP3P,
         OPC3
     };
@@ -56,6 +58,8 @@ namespace settings
         SPC_E,
         SPC_FW,
         QSPC_FW,
+        SPC_DC,
+        H2O_DC,
         TIP3P,
         OPC3
     };

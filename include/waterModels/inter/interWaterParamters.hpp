@@ -136,6 +136,40 @@ namespace waterModel
             potential::LennardJonesPair(0.01, 0.0, 0.0);
     };
 
+    struct SPCDCInterParam
+    {
+        static constexpr auto    _oxygenCharge         = -0.87362;
+        static constexpr auto    _hydrogenCharge       = 0.43681;
+        static constexpr bool    _oxygenOnlyNonCoulomb = true;
+        inline static const auto _nonCoulombPairOO =
+            potential::LennardJonesPair(
+                defaults::_COULOMB_CUT_OFF_DEFAULT_,
+                constants::_H2O_DC_LJ_C6_OO_,
+                constants::_H2O_DC_LJ_C12_OO_
+            );
+        inline static const auto _nonCoulombPairOH =
+            potential::LennardJonesPair(0.01, 0.0, 0.0);
+        inline static const auto _nonCoulombPairHH =
+            potential::LennardJonesPair(0.01, 0.0, 0.0);
+    };
+
+    struct H2ODCInterParam
+    {
+        static constexpr auto    _oxygenCharge         = -0.9099;
+        static constexpr auto    _hydrogenCharge       = 0.45495;
+        static constexpr bool    _oxygenOnlyNonCoulomb = true;
+        inline static const auto _nonCoulombPairOO =
+            potential::LennardJonesPair(
+                defaults::_COULOMB_CUT_OFF_DEFAULT_,
+                constants::_H2O_DC_LJ_C6_OO_,
+                constants::_H2O_DC_LJ_C12_OO_
+            );
+        inline static const auto _nonCoulombPairOH =
+            potential::LennardJonesPair(0.01, 0.0, 0.0);
+        inline static const auto _nonCoulombPairHH =
+            potential::LennardJonesPair(0.01, 0.0, 0.0);
+    };
+
     struct TIP3PInterParam
     {
         static constexpr auto    _oxygenCharge         = -0.834;

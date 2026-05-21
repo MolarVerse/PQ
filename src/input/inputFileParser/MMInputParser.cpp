@@ -208,6 +208,10 @@ void MMInputParser::parseWaterIntraModel(
         WaterModelSettings::setWaterIntraModel(QSPC_FW);
         _engine.makeIntraWater(qSPCFwIntraParam{});
     }
+    else if (waterIntraModel == "spc_dc")
+        WaterModelSettings::setWaterIntraModel(SPC_DC);
+    else if (waterIntraModel == "h2o_dc")
+        WaterModelSettings::setWaterIntraModel(H2O_DC);
     else if (waterIntraModel == "tip3p")
         WaterModelSettings::setWaterIntraModel(TIP3P);
     else if (waterIntraModel == "opc3")
@@ -217,7 +221,7 @@ void MMInputParser::parseWaterIntraModel(
             "Invalid water_intra keyword \"{}\" at line {} "
             "in input file\n"
             "Possible options are \"SPC\", \"SPC_E\", \"SPC_Fw\", \"qSPC_Fw\", "
-            "\"TIP3P\" and \"OPC3\"",
+            "\"SPC_DC\", \"H2O-DC\", \"TIP3P\" and \"OPC3\"",
             lineElements[2],
             lineNumber
         ));
@@ -255,6 +259,10 @@ void MMInputParser::parseWaterInterModel(
         WaterModelSettings::setWaterInterModel(SPC_FW);
     else if (waterInterModel == "qspc_fw")
         WaterModelSettings::setWaterInterModel(QSPC_FW);
+    else if (waterInterModel == "spc_dc")
+        WaterModelSettings::setWaterInterModel(SPC_DC);
+    else if (waterInterModel == "h2o_dc")
+        WaterModelSettings::setWaterInterModel(H2O_DC);
     else if (waterInterModel == "tip3p")
         WaterModelSettings::setWaterInterModel(TIP3P);
     else if (waterInterModel == "opc3")
@@ -265,7 +273,7 @@ void MMInputParser::parseWaterInterModel(
             "Invalid water_inter keyword \"{}\" at line {} "
             "in input file\n"
             "Possible options are \"SPC\", \"SPC_E\", \"SPC_Fw\", \"qSPC_Fw\", "
-            "\"TIP3P\" and \"OPC3\"",
+            "\"SPC-DC\", \"H2O-DC\", \"TIP3P\" and \"OPC3\"",
             lineElements[2],
             lineNumber
         ));

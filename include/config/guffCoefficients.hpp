@@ -41,6 +41,12 @@ namespace constants
     static constexpr double _QSPC_FW_LJ_C6_OO_  = -625.5020652114152; // A^6  kcal mol^-1
     static constexpr double _QSPC_FW_LJ_C12_OO_ =  629326.5724987736; // A^12 kcal mol^-1
 
+    static constexpr double _SPC_DC_LJ_C6_OO_  = -779.8414665600154; // A^6  kcal mol^-1
+    static constexpr double _SPC_DC_LJ_C12_OO_ =  773048.5510230307; // A^12 kcal mol^-1
+
+    static constexpr double _H2O_DC_LJ_C6_OO_  = -590.6923729027751; // A^6  kcal mol^-1
+    static constexpr double _H2O_DC_LJ_C12_OO_ =  615459.8371975797; // A^12 kcal mol^-1
+
     static constexpr double _TIP3P_LJ_C6_OO_  = -595.067688427684; // A^6  kcal mol^-1
     static constexpr double _TIP3P_LJ_C12_OO_ =  582015.099443679; // A^12 kcal mol^-1
 

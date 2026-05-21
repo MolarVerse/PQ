@@ -110,6 +110,10 @@ void WaterModelSettings::setWaterIntraModel(const std::string_view &model)
         _waterIntraModel = SPC_FW;
     else if ("qspc_fw" == waterModel)
         _waterIntraModel = QSPC_FW;
+    else if ("spc_dc" == waterModel)
+        _waterIntraModel = SPC_DC;
+    else if ("h2o_dc" == waterModel)
+        _waterIntraModel = H2O_DC;
     else if ("tip3p" == waterModel)
         _waterIntraModel = TIP3P;
     else if ("opc3" == waterModel)
@@ -148,6 +152,10 @@ void WaterModelSettings::setWaterInterModel(const std::string_view &model)
         _waterInterModel = SPC_FW;
     else if ("qspc_fw" == waterModel)
         _waterInterModel = QSPC_FW;
+    else if ("spc_dc" == waterModel)
+        _waterInterModel = SPC_DC;
+    else if ("h2o_dc" == waterModel)
+        _waterInterModel = H2O_DC;
     else if ("tip3p" == waterModel)
         _waterInterModel = TIP3P;
     else if ("opc3" == waterModel)
@@ -187,6 +195,8 @@ std::string settings::string(const WaterIntraModel &waterIntraModel)
         case SPC_E: return "SPC/E";
         case SPC_FW: return "SPC/Fw";
         case QSPC_FW: return "qSPC/Fw";
+        case SPC_DC: return "SPC/DC";
+        case H2O_DC: return "H2O-DC";
         case TIP3P: return "TIP3P";
         case OPC3: return "OPC3";
 
@@ -213,6 +223,8 @@ std::string settings::string(const WaterInterModel &waterInterModel)
         case SPC_E: return "SPC/E";
         case SPC_FW: return "SPC/Fw";
         case QSPC_FW: return "qSPC/Fw";
+        case SPC_DC: return "SPC/DC";
+        case H2O_DC: return "H2O-DC";
         case TIP3P: return "TIP3P";
         case OPC3: return "OPC3";
 
