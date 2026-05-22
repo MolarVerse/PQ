@@ -118,6 +118,10 @@ void WaterModelSettings::setWaterIntraModel(const std::string_view &model)
         _waterIntraModel = TIP3P;
     else if ("opc3" == waterModel)
         _waterIntraModel = OPC3;
+    else if ("spc_mtr" == waterModel)
+        _waterIntraModel = SPC_MTR;
+    else if ("tip3p_mtr" == waterModel)
+        _waterIntraModel = TIP3P_MTR;
     else
         throw UserInputException(
             std::format("Water intra model \"{}\" not recognized", model)
@@ -199,6 +203,8 @@ std::string settings::string(const WaterIntraModel &waterIntraModel)
         case H2O_DC: return "H2O-DC";
         case TIP3P: return "TIP3P";
         case OPC3: return "OPC3";
+        case SPC_MTR: return "SPC-mTR";
+        case TIP3P_MTR: return "TIP3P-mTR";
 
         default: return "none";
     }

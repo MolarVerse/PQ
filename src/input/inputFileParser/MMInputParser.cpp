@@ -33,6 +33,7 @@
 #include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
 #include "forceFieldSettings.hpp"     // for ForceFieldSettings
 #include "interWater.hpp"             // for interWater models
+#include "mTRIntraWater.hpp"          // for MTRIntraWater models
 #include "potential.hpp"              // for Potential
 #include "potentialSettings.hpp"      // for PotentialSettings
 #include "stringUtilities.hpp"        // for toLowerCopy
@@ -216,12 +217,23 @@ void MMInputParser::parseWaterIntraModel(
         WaterModelSettings::setWaterIntraModel(TIP3P);
     else if (waterIntraModel == "opc3")
         WaterModelSettings::setWaterIntraModel(OPC3);
+    else if (waterIntraModel == "spc_mtr")
+    {
+        WaterModelSettings::setWaterIntraModel(SPC_MTR);
+        _engine.makeIntraWater(SPCMTRIntraParam{});
+    }
+    else if (waterIntraModel == "tip3p_mtr")
+    {
+        WaterModelSettings::setWaterIntraModel(TIP3P_MTR);
+        _engine.makeIntraWater(TIP3PMTRIntraParam{});
+    }
     else
         throw InputFileException(format(
             "Invalid water_intra keyword \"{}\" at line {} "
             "in input file\n"
             "Possible options are \"SPC\", \"SPC_E\", \"SPC_Fw\", \"qSPC_Fw\", "
-            "\"SPC_DC\", \"H2O-DC\", \"TIP3P\" and \"OPC3\"",
+            "\"SPC_DC\", \"H2O-DC\", \"TIP3P\", \"OPC3\", \"SPC-mTR\" and "
+            "\"TIP3P-mTR\"",
             lineElements[2],
             lineNumber
         ));

@@ -80,6 +80,16 @@ namespace linearAlgebra
     requires std::three_way_comparable<U> && std::three_way_comparable<V>
     bool operator<=(const Vector3D<U> &lhs, const V &rhs);
 
+    /************************
+     * unary + / - operator *
+     ************************/
+
+    template <pq::ArithmeticVector3D U>
+    auto operator+(const U &vec) -> U;
+
+    template <pq::ArithmeticVector3D U>
+    auto operator-(const U &vec) -> Vector3D<decltype(-vec[0])>;
+
     /*********************
      * binary + operator *
      *********************/
