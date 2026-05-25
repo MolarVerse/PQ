@@ -52,6 +52,12 @@ namespace constants
 
     static constexpr double _OPC3_LJ_C6_OO_  = -668.637501352773; // A^6  kcal mol^-1
     static constexpr double _OPC3_LJ_C12_OO_ =  683996.561589584; // A^12 kcal mol^-1
+
+    static constexpr double _SPC_MTR_LJ_C6_OO_  = -613.527724665392; // A^6  kcal mol^-1
+    static constexpr double _SPC_MTR_LJ_C12_OO_ =  629302.103250478; // A^12 kcal mol^-1
+
+    static constexpr double _TIP3P_MTR_LJ_C6_OO_  = -454.1108986615679; // A^6  kcal mol^-1
+    static constexpr double _TIP3P_MTR_LJ_C12_OO_ =  513862.3326959847; // A^12 kcal mol^-1
     // clang-format on
 
 }   // namespace constants

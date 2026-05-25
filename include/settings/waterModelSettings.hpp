@@ -63,7 +63,9 @@ namespace settings
         SPC_DC,
         H2O_DC,
         TIP3P,
-        OPC3
+        OPC3,
+        SPC_MTR,
+        TIP3P_MTR
     };
 
     [[nodiscard]] std::string string(const WaterInterModel &waterInterModel);

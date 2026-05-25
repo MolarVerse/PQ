@@ -279,13 +279,17 @@ void MMInputParser::parseWaterInterModel(
         WaterModelSettings::setWaterInterModel(TIP3P);
     else if (waterInterModel == "opc3")
         WaterModelSettings::setWaterInterModel(OPC3);
-
+    else if (waterInterModel == "spc_mtr")
+        WaterModelSettings::setWaterInterModel(SPC_MTR);
+    else if (waterInterModel == "tip3p_mtr")
+        WaterModelSettings::setWaterInterModel(TIP3P_MTR);
     else
         throw InputFileException(format(
             "Invalid water_inter keyword \"{}\" at line {} "
             "in input file\n"
             "Possible options are \"SPC\", \"SPC_E\", \"SPC_Fw\", \"qSPC_Fw\", "
-            "\"SPC-DC\", \"H2O-DC\", \"TIP3P\" and \"OPC3\"",
+            "\"SPC-DC\", \"H2O-DC\", \"TIP3P\", \"OPC3\", \"SPC-mTR\" and "
+            "\"TIP3P-mTR\"",
             lineElements[2],
             lineNumber
         ));
