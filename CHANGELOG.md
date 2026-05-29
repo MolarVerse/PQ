@@ -29,6 +29,12 @@ All notable changes to this project will be documented in this file.
   on Vector3D compound-assignment operators and fixed a narrowing conversion in
   TriclinicBox)
 
+### Internal
+
+- `CellList::getCells()` and `Cell::getNeighbourCells()` now return by
+  `const &` instead of by value, and `VelocityVerlet::secondStep` no longer
+  copies the per-atom `shared_ptr` into its lambda parameter
+
 <!-- insertion marker -->
 ## [v0.6.4](https://github.com/MolarVerse/PQ/releases/tag/v0.6.4) - 2026-03-31
 

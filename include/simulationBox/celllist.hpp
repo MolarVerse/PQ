@@ -87,7 +87,7 @@ namespace simulationBox
         [[nodiscard]] pq::Vec3Dul       getNumberOfCells() const;
         [[nodiscard]] pq::Vec3Dul       getNumberOfNeighbourCells() const;
         [[nodiscard]] pq::Vec3D         getCellSize() const;
-        [[nodiscard]] std::vector<Cell> getCells() const;
+        [[nodiscard]] const std::vector<Cell> &getCells() const;
         [[nodiscard]] Cell             &getCell(const size_t index);
 
         /***************************
