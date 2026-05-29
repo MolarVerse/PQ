@@ -63,8 +63,10 @@ namespace benchSetup
         {
             auto atom = std::make_shared<simulationBox::Atom>();
 
-            const double d = static_cast<double>(i);
-            atom->setPosition({origin + 1.0 + 0.7 * d, 0.4 * d, 0.25 * d});
+            const double               d = static_cast<double>(i);
+            const linearAlgebra::Vec3D pos{origin + 1.0 + 0.7 * d, 0.4 * d, 0.25 * d};
+            atom->setPosition(pos);
+            atom->setPositionOld(pos);   // at-rest start (stable for constraints)
             atom->setVelocity({0.01 * (d + 1.0), -0.015, 0.02});
             atom->setForce({0.1, -0.2, 0.05});
             atom->setShiftForce({0.0, 0.0, 0.0});

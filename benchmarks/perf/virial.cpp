@@ -34,7 +34,7 @@
 #include "molecularVirial.hpp"
 #include "physicalData.hpp"
 
-static constexpr long ITERATIONS = 20000;
+static constexpr long ITERATIONS = 1000;
 
 int main()
 {

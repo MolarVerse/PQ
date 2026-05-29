@@ -12,6 +12,7 @@ set(perf_benchmarks
     integrator.cpp
     kinetics.cpp
     virial.cpp
+    constraints.cpp
 )
 
 include(CheckIncludeFileCXX)
@@ -33,6 +34,7 @@ foreach(perf_source ${perf_benchmarks})
         forceField
         integrator
         virial
+        constraints
         simulationBox
         potential
         physicalData

@@ -20,9 +20,11 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-// Fixed-work micro-benchmark of the per-step kinetic diagnostics
-// (temperature, momentum, angular momentum, total force).
+// Fixed-work micro-benchmark of the SHAKE/RATTLE constraint solver. One bond
+// constraint per molecule, started at rest (positionOld == position) so the
+// solver is stable across iterations.
 
+#include <cstddef>
 #include <cstdio>
 
 #ifdef PQ_WITH_CALLGRIND
@@ -32,25 +34,45 @@
 #endif
 
 #include "benchSetup.hpp"
+#include "bondConstraint.hpp"
+#include "constraints.hpp"
+#include "molecule.hpp"
+#include "simulationBox.hpp"
+#include "timingsSettings.hpp"
 #include "vector3d.hpp"
 
 static constexpr long ITERATIONS = 1000;
 
 int main()
 {
-    auto box = benchSetup::makePopulatedBox(20, 3);
+    settings::TimingsSettings::setTimeStep(0.001);
+
+    auto  box       = benchSetup::makePopulatedBox(20, 3);
+    auto &molecules = box.getMolecules();
+
+    auto constr = constraints::Constraints();
+    constr.setShakeMaxIter(100);
+    constr.setRattleMaxIter(100);
+    constr.setShakeTolerance(1.0e-8);
+    constr.setRattleTolerance(1.0e-8);
+    constr.activateShake();
+
+    for (std::size_t m = 0; m < molecules.size(); ++m)
+        constr.addBondConstraint(
+            constraints::BondConstraint(&molecules[m], &molecules[m], 0, 1, 0.85)
+        );
+
+    constr.calculateConstraintBondRefs(box);
 
     CALLGRIND_ZERO_STATS;
 
-    double sink = 0.0;
     for (long i = 0; i < ITERATIONS; ++i)
     {
-        sink += box.calculateTemperature();
-        sink += box.calculateMomentum()[0];
-        sink += box.calculateAngularMomentum({0.0, 0.0, 0.0})[0];
-        sink += box.calculateTotalForce();
+        constr.applyShake(box);
+        constr.applyRattle(box);
     }
 
-    std::printf("%.6f\n", sink);
+    // read state so the loop cannot be optimized away
+    std::printf("%.6f\n", box.calculateMomentum()[0]);
     return 0;
 }
