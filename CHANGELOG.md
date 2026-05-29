@@ -29,6 +29,10 @@ All notable changes to this project will be documented in this file.
   on Vector3D compound-assignment operators and fixed a narrowing conversion in
   TriclinicBox)
 
+### Internal
+
+- Added missing trailing newline at end of `src/simulationBox/simulationBox.cpp`
+
 <!-- insertion marker -->
 ## [v0.6.4](https://github.com/MolarVerse/PQ/releases/tag/v0.6.4) - 2026-03-31
 
