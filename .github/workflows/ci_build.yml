@@ -49,8 +49,30 @@ jobs:
           python -m pip install gcovr
         shell: bash
 
+      - name: Setup Conda Environment
+        if: ${{matrix.build == 'Release'}}
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-update-conda: true
+          python-version: '3.12'
+          activate-environment: test-env
+          channels: default, conda-forge
+          auto-activate-base: false
+
+      - name: Install Integration Test Dependencies in Conda Env
+        if: ${{matrix.build == 'Release'}}
+        shell: bash -l {0}
+        run: |
+          pip install pytest
+          pip install pytest-cov
+          pip install pqanalysis
+          pip install ase
+          pip install pyscf==2.9.0
+          conda install conda-forge::dftbplus
+
       - name: Build and Test Project
         if : ${{ matrix.os != 'ubuntu-24.04' || (matrix.os == 'ubuntu-24.04' && matrix.build != 'Debug') }}
+        shell: bash -l {0}
         run: |
           mkdir build
           cd build
@@ -83,41 +105,8 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
-      - name: Setup Conda Environment
-        if: ${{matrix.build == 'Release'}}
-        uses: conda-incubator/setup-miniconda@v3
-        with:
-          auto-update-conda: true
-          python-version: '3.12'
-          activate-environment: test-env
-          channels: default, conda-forge
-          auto-activate-base: false
-
-      - name: Install Integration Test Dependencies in Conda Env
-        if: ${{matrix.build == 'Release'}}
-        shell: bash -l {0}
-        run: |
-          pip install pytest
-          pip install pytest-cov
-          pip install pqanalysis
-          pip install ase
-          pip install pyscf==2.9.0
-          conda install conda-forge::dftbplus
-
-      - name: Verify Environment Setup
-        if: ${{matrix.build == 'Release'}}
-        shell: bash -l {0}
-        run: |
-          conda activate test-env
-          python -c "import pyscf; print(f'pyscf version: {pyscf.__version__}')"
-          python -c "import ase; print(f'ase version: {ase.__version__}')"
-          python -c "import PQAnalysis; print(f'PQAnalysis version: {PQAnalysis.__version__}')"
-          which python
-          pip list | grep -E "pyscf|ase|PQAnalysis|dftbplus"
-
       - name: Integration Tests
         if: ${{matrix.build == 'Release' }}
         shell: bash -l {0}
         run: |
-            conda activate test-env
             pytest integration_tests -v
