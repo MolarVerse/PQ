@@ -104,9 +104,20 @@ jobs:
           pip install pyscf==2.9.0
           conda install conda-forge::dftbplus
 
+      - name: Verify Environment Setup
+        if: ${{matrix.build == 'Release'}}
+        shell: bash -l {0}
+        run: |
+          conda activate test-env
+          python -c "import pyscf; print(f'pyscf version: {pyscf.__version__}')"
+          python -c "import ase; print(f'ase version: {ase.__version__}')"
+          python -c "import PQAnalysis; print(f'PQAnalysis version: {PQAnalysis.__version__}')"
+          which python
+          pip list | grep -E "pyscf|ase|PQAnalysis|dftbplus"
+
       - name: Integration Tests
         if: ${{matrix.build == 'Release' }}
         shell: bash -l {0}
         run: |
-            pytest integration_tests
-
+            conda activate test-env
+            pytest integration_tests -v
