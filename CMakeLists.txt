@@ -76,7 +76,7 @@ if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mcpu=native")
     endif()
 
-    if(NOT BUILD_WITH_KOKKOS)
+    if(BUILD_WITH_LTO AND NOT BUILD_WITH_KOKKOS)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -flto")
     endif()
 elseif(CMAKE_BUILD_TYPE MATCHES "^[Rr]el[Ww]ith[Dd]ebug")
