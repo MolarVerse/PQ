@@ -11,9 +11,10 @@ All notable changes to this project will be documented in this file.
 
 ### Build
 
-- Link-time optimization (`-flto`) is now opt-in via `BUILD_WITH_LTO` (default
-  OFF) instead of always-on in Release builds, dramatically cutting Release
-  build/link time for day-to-day development
+- Faster builds: link-time optimization (`-flto`) is now opt-in via
+  `BUILD_WITH_LTO` (default OFF) instead of always-on in Release builds;
+  `ccache` is used automatically as a compiler launcher when available; and a
+  faster linker (`mold`/`lld`) is used automatically on Linux when available
 
 <!-- insertion marker -->
 ## [v0.6.4](https://github.com/MolarVerse/PQ/releases/tag/v0.6.4) - 2026-03-31

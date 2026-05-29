@@ -100,6 +100,30 @@ endif()
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_COMPILE_VERSION_=\\\"${GIT_VERSION}\\\"")
 message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}\n")
 
+# *********************************
+# optional build-speed accelerators
+# *********************************
+# use ccache as compiler launcher if available (greatly speeds up rebuilds)
+find_program(CCACHE_PROGRAM ccache)
+if(CCACHE_PROGRAM)
+    message(STATUS "ccache found - using it as compiler launcher: ${CCACHE_PROGRAM}")
+    set(CMAKE_CXX_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
+    set(CMAKE_C_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
+endif()
+
+# use a faster linker (mold, then lld) if available (speeds up linking)
+if(UNIX AND NOT APPLE)
+    find_program(MOLD_PROGRAM mold)
+    find_program(LLD_PROGRAM ld.lld)
+    if(MOLD_PROGRAM)
+        message(STATUS "mold found - using it as linker")
+        add_link_options("-fuse-ld=mold")
+    elseif(LLD_PROGRAM)
+        message(STATUS "lld found - using it as linker")
+        add_link_options("-fuse-ld=lld")
+    endif()
+endif()
+
 # ************************
 # include dir for c++ code
 # ************************
