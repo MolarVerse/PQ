@@ -20,6 +20,11 @@ All notable changes to this project will be documented in this file.
 
 - Faster CI: install and use the `mold` linker, and build with all available
   cores instead of two
+- Faster CI: build with `-DBUILD_WITH_NATIVE=Off` (portable, no `-march=native`)
+  so compilation can be cached across runs with `ccache`
+- New `BUILD_WITH_NATIVE` option (default ON) to toggle `-march=native`
+- Faster CI: cache the conda environment (integration-test dependencies),
+  skipping reinstall on a cache hit
 - Enabled compilation with Clang/Apple Clang (matched the `requires`-clause form
   on Vector3D compound-assignment operators and fixed a narrowing conversion in
   TriclinicBox)

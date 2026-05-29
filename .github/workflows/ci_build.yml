@@ -32,6 +32,12 @@ jobs:
           sudo apt install gcc-13 g++-13 mold
         shell: bash
 
+      # safe because CI builds with -DBUILD_WITH_NATIVE=Off (portable objects)
+      - name: setup ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: ${{ matrix.os }}-${{ matrix.build }}
+
       - name: setup python ubuntu
         uses: actions/setup-python@v3
         with:
@@ -54,7 +60,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=${{ matrix.build }} ..
+          cmake -DCMAKE_BUILD_TYPE=${{ matrix.build }} -DBUILD_WITH_NATIVE=Off ..
           make -j$(nproc)
           make test
         env:
@@ -66,8 +72,8 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_WITH_GCOVR=ON ..
-          make -j
+          cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_WITH_GCOVR=ON -DBUILD_WITH_NATIVE=Off ..
+          make -j$(nproc)
           make coverage_xml
         env:
           CC: gcc-13
@@ -93,8 +99,16 @@ jobs:
           channels: default, conda-forge
           auto-activate-base: false
 
-      - name: Install Integration Test Dependencies in Conda Env
+      - name: Cache conda env
         if: ${{matrix.build == 'Release'}}
+        id: cache-conda-env
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.CONDA }}/envs/test-env
+          key: conda-env-${{ matrix.os }}-${{ hashFiles('.github/workflows/ci_build.yml') }}
+
+      - name: Install Integration Test Dependencies in Conda Env
+        if: ${{matrix.build == 'Release' && steps.cache-conda-env.outputs.cache-hit != 'true'}}
         run: |
           conda install -n test-env -y pip conda-forge::dftbplus conda-forge::xtb
           conda run -n test-env python -m pip install pytest pytest-cov pqanalysis ase pyscf==2.9.0

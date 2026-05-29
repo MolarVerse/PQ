@@ -74,3 +74,11 @@ option(BUILD_WITH_SINGULARITY "Build with Singularity" OFF)
 # BUILD WITH LTO
 # **************
 option(BUILD_WITH_LTO "Build Release with link-time optimization (-flto)" OFF)
+
+# *****************
+# BUILD WITH NATIVE
+# *****************
+# Tune Release for the build machine's CPU (-march=native). Turn OFF for
+# portable/cacheable builds (e.g. CI), where -march=native would otherwise
+# produce binaries that crash on a different CPU.
+option(BUILD_WITH_NATIVE "Optimize Release for the build machine's CPU (-march=native)" ON)
