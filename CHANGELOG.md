@@ -15,6 +15,9 @@ All notable changes to this project will be documented in this file.
   `BUILD_WITH_LTO` (default OFF) instead of always-on in Release builds;
   `ccache` is used automatically as a compiler launcher when available; and a
   faster linker (`mold`/`lld`) is used automatically on Linux when available
+- Fixed compilation with `-DBUILD_WITH_ASE=Off`: the built-in SLAKOS path
+  (`__SLAKOS_DIR__`) is now guarded, so non-ASE builds compile and report a
+  clear error only if a built-in SLAKOS set is actually requested
 
 ### CI
 
