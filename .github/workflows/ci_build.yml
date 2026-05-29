@@ -95,18 +95,12 @@ jobs:
 
       - name: Install Integration Test Dependencies in Conda Env
         if: ${{matrix.build == 'Release'}}
-        shell: bash -l {0}
         run: |
-          pip install pytest
-          pip install pytest-cov
-          pip install pqanalysis
-          pip install ase
-          pip install pyscf==2.9.0
-          conda install conda-forge::dftbplus
+          conda install -n test-env -y conda-forge::dftbplus conda-forge::xtb
+          conda run -n test-env python -m pip install pytest pytest-cov pqanalysis ase pyscf==2.9.0
 
       - name: Integration Tests
         if: ${{matrix.build == 'Release' }}
-        shell: bash -l {0}
         run: |
-            pytest integration_tests
+          conda run -n test-env pytest integration_tests -v
 
