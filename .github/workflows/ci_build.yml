@@ -29,7 +29,7 @@ jobs:
       - name: install gcc13
         run: |
           sudo apt update
-          sudo apt install gcc-13 g++-13
+          sudo apt install gcc-13 g++-13 mold
         shell: bash
 
       - name: setup python ubuntu
@@ -55,7 +55,7 @@ jobs:
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=${{ matrix.build }} ..
-          make -j2
+          make -j$(nproc)
           make test
         env:
           CC: gcc-13

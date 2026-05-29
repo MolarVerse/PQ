@@ -11,6 +11,15 @@ All notable changes to this project will be documented in this file.
 
 ### Build
 
+- Faster builds: link-time optimization (`-flto`) is now opt-in via
+  `BUILD_WITH_LTO` (default OFF) instead of always-on in Release builds;
+  `ccache` is used automatically as a compiler launcher when available; and a
+  faster linker (`mold`/`lld`) is used automatically on Linux when available
+
+### CI
+
+- Faster CI: install and use the `mold` linker, and build with all available
+  cores instead of two
 - Enabled compilation with Clang/Apple Clang (matched the `requires`-clause form
   on Vector3D compound-assignment operators and fixed a narrowing conversion in
   TriclinicBox)

@@ -69,3 +69,8 @@ option(BUILD_WITH_ASE "Build with ASE" ON)
 # BUILD WITH SINGULARITY
 # **********************
 option(BUILD_WITH_SINGULARITY "Build with Singularity" OFF)
+
+# **************
+# BUILD WITH LTO
+# **************
+option(BUILD_WITH_LTO "Build Release with link-time optimization (-flto)" OFF)
