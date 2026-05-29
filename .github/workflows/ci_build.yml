@@ -96,8 +96,7 @@ jobs:
           auto-update-conda: true
           python-version: '3.12'
           activate-environment: test-env
-          channels: conda-forge, defaults
-          mamba-version: "*"
+          channels: default, conda-forge
           auto-activate-base: false
 
       - name: Cache conda env
@@ -111,7 +110,7 @@ jobs:
       - name: Install Integration Test Dependencies in Conda Env
         if: ${{matrix.build == 'Release' && steps.cache-conda-env.outputs.cache-hit != 'true'}}
         run: |
-          mamba install -n test-env -y pip conda-forge::dftbplus conda-forge::xtb
+          conda install -n test-env -y pip conda-forge::dftbplus conda-forge::xtb
           conda run -n test-env python -m pip install pytest pytest-cov pqanalysis ase pyscf==2.9.0
 
       - name: Integration Tests
