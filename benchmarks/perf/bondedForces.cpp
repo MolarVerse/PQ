@@ -21,12 +21,10 @@
 ******************************************************************************/
 
 // Fixed-work micro-benchmark of the bonded force kernels (bond, angle,
-// dihedral). Setup mirrors the forceField unit tests.
+// dihedral).
 
 #include <cmath>
-#include <cstddef>
 #include <cstdio>
-#include <memory>
 
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
@@ -35,23 +33,13 @@
 #endif
 
 #include "angleForceField.hpp"
-#include "atom.hpp"
+#include "benchSetup.hpp"
 #include "bondForceField.hpp"
 #include "coulombShiftedPotential.hpp"
 #include "dihedralForceField.hpp"
-#include "forceFieldNonCoulomb.hpp"
-#include "lennardJonesPair.hpp"
-#include "matrix.hpp"
-#include "molecule.hpp"
 #include "physicalData.hpp"
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
-#include "vector3d.hpp"
-
-namespace potential
-{
-    class NonCoulombPair;   // forward declaration
-}
 
 static constexpr long ITERATIONS = 20000;
 
@@ -62,30 +50,9 @@ int main()
 
     auto physicalData        = physicalData::PhysicalData();
     auto coulombPotential    = potential::CoulombShiftedPotential(20.0);
-    auto nonCoulombPotential = potential::ForceFieldNonCoulomb();
+    auto nonCoulombPotential = benchSetup::makeNonCoulomb();
 
-    auto nonCoulombPair =
-        potential::LennardJonesPair(size_t(0), size_t(1), 15.0, 2.0, 4.0);
-    nonCoulombPotential.setNonCoulombPairsMatrix(
-        linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(2, 2)
-    );
-    nonCoulombPotential.setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
-    nonCoulombPotential.setNonCoulombPairsMatrix(1, 0, nonCoulombPair);
-
-    auto molecule = simulationBox::Molecule();
-    molecule.setMoltype(0);
-    molecule.setNumberOfAtoms(4);
-
-    for (size_t i = 0; i < 4; ++i)
-    {
-        auto atom = std::make_shared<simulationBox::Atom>();
-        atom->setPosition({double(i), 0.5 * double(i), 0.3 * double(i)});
-        atom->setForce({0.0, 0.0, 0.0});
-        atom->setInternalGlobalVDWType(i % 2);
-        atom->setAtomType(i % 2);
-        atom->setPartialCharge((i % 2 == 0) ? 1.0 : -0.5);
-        molecule.addAtom(atom);
-    }
+    auto molecule = benchSetup::makeMolecule(4);
 
     settings::PotentialSettings::setScale14Coulomb(0.75);
     settings::PotentialSettings::setScale14VanDerWaals(0.5);
@@ -94,8 +61,11 @@ int main()
     bond.setEquilibriumBondLength(1.2);
     bond.setForceConstant(3.0);
 
-    auto angle =
-        forceField::AngleForceField({&molecule, &molecule, &molecule}, {0, 1, 2}, 0);
+    auto angle = forceField::AngleForceField(
+        {&molecule, &molecule, &molecule},
+        {0, 1, 2},
+        0
+    );
     angle.setEquilibriumAngle(M_PI / 2.0);
     angle.setForceConstant(3.0);
 

@@ -9,6 +9,9 @@ set(perf_benchmarks
     linearAlgebra.cpp
     boxTransforms.cpp
     bondedForces.cpp
+    integrator.cpp
+    kinetics.cpp
+    virial.cpp
 )
 
 include(CheckIncludeFileCXX)
@@ -28,6 +31,8 @@ foreach(perf_source ${perf_benchmarks})
         PRIVATE
         intraNonBonded
         forceField
+        integrator
+        virial
         simulationBox
         potential
         physicalData
