@@ -29,6 +29,13 @@ All notable changes to this project will be documented in this file.
   on Vector3D compound-assignment operators and fixed a narrowing conversion in
   TriclinicBox)
 
+### Tests
+
+- New unit test asserting that `PotentialBruteForce::calculateForces` and
+  `PotentialCellList::calculateForces` produce identical per-atom forces and
+  intermolecular energies for the same configuration, guarding the
+  brute-force/cell-list equivalence under hot-path refactors
+
 <!-- insertion marker -->
 ## [v0.6.4](https://github.com/MolarVerse/PQ/releases/tag/v0.6.4) - 2026-03-31
 
