@@ -20,6 +20,9 @@ All notable changes to this project will be documented in this file.
 
 - Faster CI: install and use the `mold` linker, and build with all available
   cores instead of two
+- Enabled compilation with Clang/Apple Clang (matched the `requires`-clause form
+  on Vector3D compound-assignment operators and fixed a narrowing conversion in
+  TriclinicBox)
 
 <!-- insertion marker -->
 ## [v0.6.4](https://github.com/MolarVerse/PQ/releases/tag/v0.6.4) - 2026-03-31
