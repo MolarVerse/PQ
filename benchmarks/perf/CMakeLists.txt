@@ -6,6 +6,9 @@ set(perf_benchmarks
     coulombKernel.cpp
     nonCoulombPairs.cpp
     shiftVector.cpp
+    linearAlgebra.cpp
+    boxTransforms.cpp
+    bondedForces.cpp
 )
 
 include(CheckIncludeFileCXX)
@@ -24,8 +27,10 @@ foreach(perf_source ${perf_benchmarks})
     target_link_libraries(perf_${perf_name}
         PRIVATE
         intraNonBonded
+        forceField
         simulationBox
         potential
+        physicalData
         box
         linearAlgebra
     )
