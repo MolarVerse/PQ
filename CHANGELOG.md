@@ -16,6 +16,11 @@ All notable changes to this project will be documented in this file.
   `ccache` is used automatically as a compiler launcher when available; and a
   faster linker (`mold`/`lld`) is used automatically on Linux when available
 
+### CI
+
+- Faster CI: cache compilation with `ccache`, install/use `mold`, and build
+  with all available cores
+
 <!-- insertion marker -->
 ## [v0.6.4](https://github.com/MolarVerse/PQ/releases/tag/v0.6.4) - 2026-03-31
 
