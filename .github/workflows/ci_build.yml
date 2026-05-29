@@ -39,8 +39,6 @@ jobs:
 
       - name: install python dependencies
         run: |
-          sudo apt install python3.12-dev
-          python -m pip install --upgrade pip
           python -m pip install numpy
         shell: bash
 
@@ -51,30 +49,8 @@ jobs:
           python -m pip install gcovr
         shell: bash
 
-      - name: Setup Conda Environment
-        if: ${{matrix.build == 'Release'}}
-        uses: conda-incubator/setup-miniconda@v3
-        with:
-          auto-update-conda: true
-          python-version: '3.12'
-          activate-environment: test-env
-          channels: default, conda-forge
-          auto-activate-base: false
-
-      - name: Install Integration Test Dependencies in Conda Env
-        if: ${{matrix.build == 'Release'}}
-        shell: bash -l {0}
-        run: |
-          pip install pytest
-          pip install pytest-cov
-          pip install pqanalysis
-          pip install ase
-          pip install pyscf==2.9.0
-          conda install conda-forge::dftbplus
-
       - name: Build and Test Project
         if : ${{ matrix.os != 'ubuntu-24.04' || (matrix.os == 'ubuntu-24.04' && matrix.build != 'Debug') }}
-        shell: bash -l {0}
         run: |
           mkdir build
           cd build
@@ -107,8 +83,30 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
+      - name: Setup Conda Environment
+        if: ${{matrix.build == 'Release'}}
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-update-conda: true
+          python-version: '3.12'
+          activate-environment: test-env
+          channels: default, conda-forge
+          auto-activate-base: false
+
+      - name: Install Integration Test Dependencies in Conda Env
+        if: ${{matrix.build == 'Release'}}
+        shell: bash -l {0}
+        run: |
+          pip install pytest
+          pip install pytest-cov
+          pip install pqanalysis
+          pip install ase
+          pip install pyscf==2.9.0
+          conda install conda-forge::dftbplus
+
       - name: Integration Tests
         if: ${{matrix.build == 'Release' }}
         shell: bash -l {0}
         run: |
-            pytest integration_tests -v
+            pytest integration_tests
+
