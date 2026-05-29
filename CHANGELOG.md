@@ -18,8 +18,8 @@ All notable changes to this project will be documented in this file.
 
 ### CI
 
-- Faster CI: cache compilation with `ccache`, install/use `mold`, and build
-  with all available cores
+- Faster CI: install and use the `mold` linker, and build with all available
+  cores instead of two
 
 <!-- insertion marker -->
 ## [v0.6.4](https://github.com/MolarVerse/PQ/releases/tag/v0.6.4) - 2026-03-31
