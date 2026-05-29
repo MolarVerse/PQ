@@ -3,6 +3,9 @@
 # (.github/workflows/perf.yml) auto-discovers every perf_* target.
 set(perf_benchmarks
     forceKernel.cpp
+    coulombKernel.cpp
+    nonCoulombPairs.cpp
+    shiftVector.cpp
 )
 
 include(CheckIncludeFileCXX)
@@ -23,6 +26,7 @@ foreach(perf_source ${perf_benchmarks})
         intraNonBonded
         simulationBox
         potential
+        box
         linearAlgebra
     )
 
