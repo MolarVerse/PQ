@@ -32,6 +32,12 @@ jobs:
           sudo apt install gcc-13 g++-13 mold
         shell: bash
 
+      # safe because CI builds with -DBUILD_WITH_NATIVE=Off (portable objects)
+      - name: setup ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: ${{ matrix.os }}-${{ matrix.build }}
+
       - name: setup python ubuntu
         uses: actions/setup-python@v3
         with:
@@ -54,7 +60,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=${{ matrix.build }} ..
+          cmake -DCMAKE_BUILD_TYPE=${{ matrix.build }} -DBUILD_WITH_NATIVE=Off ..
           make -j$(nproc)
           make test
         env:
@@ -66,8 +72,8 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_WITH_GCOVR=ON ..
-          make -j
+          cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_WITH_GCOVR=ON -DBUILD_WITH_NATIVE=Off ..
+          make -j$(nproc)
           make coverage_xml
         env:
           CC: gcc-13
