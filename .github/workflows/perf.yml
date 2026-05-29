@@ -1,0 +1,65 @@
+name: Performance Gate
+
+# Builds the fixed-work perf benchmarks for the PR and for the base branch,
+# runs each under callgrind, and fails if any regressed by more than the
+# threshold. Instruction counts are deterministic, so this is not flaky.
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+  workflow_dispatch:
+
+jobs:
+  perf-regression:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout PR
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Checkout base branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.base_ref || 'dev' }}
+          submodules: recursive
+          path: base
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-13 g++-13 valgrind mold
+        shell: bash
+
+      - name: Setup ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: perf-${{ github.base_ref || 'dev' }}
+
+      - name: Build PR benchmarks
+        run: |
+          cmake -S . -B build-pr \
+            -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_NATIVE=Off \
+            -DBUILD_WITH_PERF_BENCH=On -DBUILD_WITH_ASE=Off \
+            -DBUILD_WITH_TESTS=Off -DBUILD_WITH_DOCS=Off
+          cmake --build build-pr --target perf_benchmarks -j$(nproc)
+        env:
+          CC: gcc-13
+          CXX: g++-13
+
+      - name: Build base benchmarks (baseline)
+        run: |
+          cmake -S base -B build-base \
+            -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_NATIVE=Off \
+            -DBUILD_WITH_PERF_BENCH=On -DBUILD_WITH_ASE=Off \
+            -DBUILD_WITH_TESTS=Off -DBUILD_WITH_DOCS=Off || true
+          cmake --build build-base --target perf_benchmarks -j$(nproc) \
+            || echo "base branch has no perf benchmarks yet - baseline skipped"
+        env:
+          CC: gcc-13
+          CXX: g++-13
+
+      - name: Compare instruction counts (gate)
+        run: bash scripts/perf_gate.sh build-pr/benchmarks/perf build-base/benchmarks/perf 2

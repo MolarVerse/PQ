@@ -8,6 +8,7 @@ set(perf_benchmarks
 include(CheckIncludeFileCXX)
 check_include_file_cxx("valgrind/callgrind.h" HAVE_CALLGRIND_H)
 
+set(perf_targets "")
 foreach(perf_source ${perf_benchmarks})
     get_filename_component(perf_name ${perf_source} NAME_WE)
     add_executable(perf_${perf_name} ${perf_source})
@@ -29,4 +30,10 @@ foreach(perf_source ${perf_benchmarks})
     if(HAVE_CALLGRIND_H)
         target_compile_definitions(perf_${perf_name} PRIVATE PQ_WITH_CALLGRIND)
     endif()
+
+    list(APPEND perf_targets perf_${perf_name})
 endforeach()
+
+# aggregate target so CI can build every benchmark with one command
+add_custom_target(perf_benchmarks)
+add_dependencies(perf_benchmarks ${perf_targets})
