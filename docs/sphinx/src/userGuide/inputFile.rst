@@ -1255,6 +1255,107 @@ Possible options are:
 
    3. **bonded** - non bonded interaction are described *via* GUFF formalism and bonded interactions *via* force field approach
 
+.. _waterModelKeys:
+
+*****************
+Water Model Keys
+*****************
+
+.. |H2O-DC| replace:: H\ :sub:`2`\ O-DC
+.. _H2O-DC: https://pubs.acs.org/doi/10.1021/jp3002383
+
+
+.. _intraWaterModelKey:
+
+Intramolecular Water Model
+==========================
+
+.. admonition:: Key
+    :class: tip
+
+    water_intra = {string}
+
+With the ``water_intra`` keyword the model for the intramolecular water potential can be chosen.
+
+Possible options are:
+
+   1. **SPC** - `SPC <https://doi.org/10.1007/978-94-015-7658-1_21>`__
+
+   2. **SPC_E** - `SPC/E <https://pubs.acs.org/doi/10.1021/j100308a038>`__
+
+   3. **SPC_Fw** - `SPC/Fw <https://pubs.aip.org/aip/jcp/article/124/2/024503/295556>`__
+
+   4. **qSPC_Fw** - `qSPC/Fw <https://pubs.aip.org/aip/jcp/article/125/18/184507/187988>`__
+
+   5. **SPC_DC** - `SPC/DC <https://pubs.acs.org/doi/10.1021/jp3002383>`__
+
+   6. **H2O-DC** - |H2O-DC|_
+   
+   7. **TIP3P** - `TIP3P <https://pubs.aip.org/aip/jcp/article/79/2/926/776316>`__
+
+   8. **OPC3** - `OPC3 <https://pubs.aip.org/aip/jcp/article/145/7/074501/810108>`__
+
+   9. **SPC-mTR** - `SPC-mTR <https://www.sciencedirect.com/science/article/pii/S0378381297002719>`__
+
+   10. **TIP3P-mTR** - `TIP3P-mTR <https://www.sciencedirect.com/science/article/pii/S0378381297002719>`__
+
+
+
+.. _interWaterModelKey:
+
+Intermolecular Water Model
+==========================
+
+.. admonition:: Key
+    :class: tip
+
+    water_inter = {string}
+
+With the ``water_inter`` keyword the model for the intermolecular water potential can be chosen.
+
+Possible options are:
+
+   1. **SPC** - `SPC <https://doi.org/10.1007/978-94-015-7658-1_21>`__
+
+   2. **SPC_E** - `SPC/E <https://pubs.acs.org/doi/10.1021/j100308a038>`__
+
+   3. **SPC_Fw** - `SPC/Fw <https://pubs.aip.org/aip/jcp/article/124/2/024503/295556>`__
+
+   4. **qSPC_Fw** - `qSPC/Fw <https://pubs.aip.org/aip/jcp/article/125/18/184507/187988>`__
+
+   5. **SPC_DC** - `SPC/DC <https://pubs.acs.org/doi/10.1021/jp3002383>`__
+
+   6. **H2O-DC** - |H2O-DC|_
+   
+   7. **TIP3P** - `TIP3P <https://pubs.aip.org/aip/jcp/article/79/2/926/776316>`__
+
+   8. **OPC3** - `OPC3 <https://pubs.aip.org/aip/jcp/article/145/7/074501/810108>`__
+
+   9. **SPC-mTR** - `SPC-mTR <https://www.sciencedirect.com/science/article/pii/S0378381297002719>`__
+
+   10. **TIP3P-mTR** - `TIP3P-mTR <https://www.sciencedirect.com/science/article/pii/S0378381297002719>`__
+
+
+
+
+.. _noncoulombRadiusKey:
+
+NonCoulombRadiusCutoff
+======================
+
+.. admonition:: Key
+    :class: tip
+
+    rnoncoulomb = {double} :math:`\mathrm{\mathring{A}}` -> :ref:`rcoulomb <radialCoulombCutoffKey>`
+
+With the ``rnoncoulomb`` keyword the user can specify the cutoff radius for non-coulomb interactions between water type molecules.
+
+.. Note::
+
+    This keyword is only considered if usage of an intermolecular water model is requested.
+
+.. centered:: *default value* = the value of :ref:`rcoulomb <radialCoulombCutoffKey>`
+
 .. _longrangecorrectionKeys:
 
 *********************
