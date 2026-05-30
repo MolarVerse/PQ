@@ -104,3 +104,59 @@ TEST(TestGuffPair, calculateEnergyAndForces)
     EXPECT_DOUBLE_EQ(energy, energyREF);
     EXPECT_DOUBLE_EQ(force, forceREF);
 }
+
+/**
+ * @brief regression test for the zero-coefficient gating: terms with a zero
+ * leading coefficient must not contribute, and must not call pow/exp on
+ * pathological inputs (e.g. pow(distance - rExp, n) when rExp == distance).
+ */
+TEST(TestGuffPair, calculateWithSparseCoefficients)
+{
+    const auto distance     = 2.0;
+    const auto rncCutoff    = 3.0;
+    const auto energyCutoff = 0.0;
+    const auto forceCutoff  = 0.0;
+
+    // Only c1 (inverse-power term) and c9 (sigmoid term) are non-zero. The
+    // remaining six contribution blocks must be skipped entirely. The c15
+    // and c19 blocks would otherwise compute pow(distance - rExp17/21, n)
+    // with rExp17 == rExp21 == distance, which is 0^0 = NaN-prone; the gate
+    // keeps the result finite.
+    auto coefficients = std::vector<double>(22, 0.0);
+    coefficients[0]  = 4.0;        // c1
+    coefficients[1]  = 6.0;        // n2
+    coefficients[8]  = 1.5;        // c9
+    coefficients[9]  = 2.0;        // cexp10
+    coefficients[10] = 1.0;        // rExp11
+    coefficients[16] = distance;   // rExp17  - would make distance - rExp17 == 0
+    coefficients[17] = 3.0;        // n18
+    coefficients[20] = distance;   // rExp21
+    coefficients[21] = 3.0;        // n22
+
+    const auto pair =
+        potential::GuffPair(rncCutoff, energyCutoff, forceCutoff, coefficients);
+
+    const auto [energy, force] = pair.calculate(distance);
+
+    // Only the two non-zero terms contribute. Distance cutoff terms are zero
+    // because energyCutoff = forceCutoff = 0.
+    const auto expectedEnergy =
+        coefficients[0] / ::pow(distance, coefficients[1]) +
+        coefficients[8] /
+            (1 + ::exp(coefficients[9] * (distance - coefficients[10])));
+
+    const auto expectedForce =
+        coefficients[1] * coefficients[0] /
+            (::pow(distance, coefficients[1]) * distance) +
+        coefficients[8] * coefficients[9] *
+            ::exp(coefficients[9] * (distance - coefficients[10])) /
+            ::pow(
+                1 + ::exp(coefficients[9] * (distance - coefficients[10])),
+                2
+            );
+
+    EXPECT_DOUBLE_EQ(energy, expectedEnergy);
+    EXPECT_DOUBLE_EQ(force, expectedForce);
+    EXPECT_FALSE(std::isnan(energy));
+    EXPECT_FALSE(std::isnan(force));
+}
