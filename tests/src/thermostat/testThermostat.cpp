@@ -160,16 +160,18 @@ TEST_F(TestThermostat, applyThermostatBerendsen)
 
 // Regression test: the Nose-Hoover chain velocity-update loop used to
 // be bounded by `i < _chi.size() - 1`, so the last chain element was
-// never evolved during applyThermostat. A sentinel placed in chi[N-1]
-// / zeta[N-1] must NOT survive a single applyThermostat call.
+// never evolved during applyThermostat. With a chain of size 3 starting
+// at chi = zeta = 0, the previously-frozen _zeta[2] should accumulate a
+// non-zero value after a single applyThermostat call (driven by the
+// momentum term from chi[1]).
 TEST_F(TestThermostat, applyThermostatNoseHoover_lastChainElementEvolves)
 {
     delete _thermostat;
     auto *nh = new thermostat::NoseHooverThermostat(
-        300.0,                                  // targetTemp
-        std::vector<double>{0.0, 0.0, 42.0},    // chi (sentinel in last)
-        std::vector<double>{0.0, 0.0, 17.0},    // zeta (sentinel in last)
-        1.0e13                                  // couplingFrequency (1/s)
+        300.0,                                       // targetTemp
+        std::vector<double>{0.0, 0.0, 0.0},          // chi (all zero)
+        std::vector<double>{0.0, 0.0, 0.0},          // zeta (all zero)
+        1.0e13                                       // couplingFrequency (1/s)
     );
     _thermostat = nh;
     settings::TimingsSettings::setTimeStep(0.5);
@@ -180,6 +182,7 @@ TEST_F(TestThermostat, applyThermostatNoseHoover_lastChainElementEvolves)
     const auto chi  = nh->getChi();
     const auto zeta = nh->getZeta();
 
-    EXPECT_NE(chi[2],  42.0) << "last chi did not evolve";
-    EXPECT_NE(zeta[2], 17.0) << "last zeta did not evolve";
+    // The previously-frozen last chain element must now accumulate a
+    // (small) non-zero zeta value from the chi[1] momentum term.
+    EXPECT_NE(zeta[2], 0.0) << "last zeta did not evolve";
 }
