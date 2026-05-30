@@ -59,6 +59,11 @@ All notable changes to this project will be documented in this file.
   - new `shakeIterations` parameter bounds the inner SHAKE iterations
     and throws `MShakeException` instead of looping forever if the
     constraint solver fails to converge
+- `BerendsenThermostat::applyThermostat` no longer produces NaN
+  velocities when called with zero kinetic energy: the `T_target / T`
+  ratio would diverge and `0.0 * Inf = NaN` corrupted every atom's
+  velocity. The thermostat now skips silently when `_temperature == 0`,
+  mirroring the velocity-rescaling NaN guard added in v0.6.2
 
 ### Internal
 
