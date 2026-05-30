@@ -28,6 +28,7 @@
 #include "berendsenThermostat.hpp"                   // for BerendsenThermostat
 #include "constants/internalConversionFactors.hpp"   // for _TEMPERATURE_FACTOR_
 #include "gtest/gtest.h"                             // for InitGoogleTest
+#include "noseHooverThermostat.hpp"                  // for NoseHooverThermostat
 #include "physicalData.hpp"                          // for PhysicalData
 #include "simulationBox.hpp"                         // for SimulationBox
 #include "timingsSettings.hpp"                       // for TimingsSettings
@@ -155,4 +156,30 @@ TEST_F(TestThermostat, applyThermostatBerendsen)
         _data->getTemperature(),
         oldTemperature * berendsenFactor * berendsenFactor
     );
+}
+
+// Regression test: the Nose-Hoover chain velocity-update loop used to
+// be bounded by `i < _chi.size() - 1`, so the last chain element was
+// never evolved during applyThermostat. A sentinel placed in chi[N-1]
+// / zeta[N-1] must NOT survive a single applyThermostat call.
+TEST_F(TestThermostat, applyThermostatNoseHoover_lastChainElementEvolves)
+{
+    delete _thermostat;
+    auto *nh = new thermostat::NoseHooverThermostat(
+        300.0,                                  // targetTemp
+        std::vector<double>{0.0, 0.0, 42.0},    // chi (sentinel in last)
+        std::vector<double>{0.0, 0.0, 17.0},    // zeta (sentinel in last)
+        1.0e13                                  // couplingFrequency (1/s)
+    );
+    _thermostat = nh;
+    settings::TimingsSettings::setTimeStep(0.5);
+
+    _data->calculateTemperature(*_simulationBox);
+    _thermostat->applyThermostat(*_simulationBox, *_data);
+
+    const auto chi  = nh->getChi();
+    const auto zeta = nh->getZeta();
+
+    EXPECT_NE(chi[2],  42.0) << "last chi did not evolve";
+    EXPECT_NE(zeta[2], 17.0) << "last zeta did not evolve";
 }

@@ -45,6 +45,15 @@ All notable changes to this project will be documented in this file.
   skipped (≈ half the workflow), with identical numerics (callgrind is
   deterministic per binary)
 
+### Bug Fixes
+
+- Nose-Hoover chain velocity update now evolves the last chain element:
+  `applyThermostat`'s inner loop ran `i < _chi.size() - 1`, leaving
+  `_chi[N-1]` / `_zeta[N-1]` frozen at their initial values. Loop bound
+  extended to `_chi.size()` with the `_chi[i] * _chi[i + 1]` coupling
+  term gated on `i + 1 < _chi.size()` (Tobias-Brown form: the last
+  thermostat has no downstream coupling)
+
 ### Internal
 
 - Added missing trailing newline at end of `src/simulationBox/simulationBox.cpp`

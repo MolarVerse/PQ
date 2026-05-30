@@ -132,11 +132,15 @@ void NoseHooverThermostat::applyThermostat(
     auto energyMomentum = ratio;
     auto energyFriction = degreesOfFreedom * _zeta[0];
 
-    for (size_t i = 1; i < _chi.size() - 1; ++i)
+    for (size_t i = 1; i < _chi.size(); ++i)
     {
         chi  = ratio;
         chi -= kT_target;
-        chi -= _chi[i] * _chi[i + 1] / kT_target * couplingFreqSquared;
+        // The last chain element has no downstream thermostat, so the
+        // _chi[i] * _chi[i + 1] friction-coupling term is omitted; only
+        // the previous element's momentum drives it (Tobias-Brown form).
+        if (i + 1 < _chi.size())
+            chi -= _chi[i] * _chi[i + 1] / kT_target * couplingFreqSquared;
 
         _chi[i] += timestep * chi;
 
