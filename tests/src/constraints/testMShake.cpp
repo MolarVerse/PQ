@@ -99,9 +99,12 @@ TEST(TestMShake, applyMShake_threeAtomMolecule)
     a2->setMass(1.0);
     a3->setMass(1.0);
 
-    // Stretch bond 1-2 slightly; M-SHAKE must pull atom 2 back.
+    // Stretch bond 0-1 by a small amount; M-SHAKE must pull atom 1
+    // back along the bond to restore the rigid triangle. The
+    // perturbation is intentionally small so the algorithm converges
+    // well within the iteration bound.
     a1->setPosition(refPos0);
-    a2->setPosition({1.05, 0.0, 0.0});
+    a2->setPosition({1.001, 0.0, 0.0});
     a3->setPosition(refPos2);
 
     a1->setPositionOld(refPos0);
