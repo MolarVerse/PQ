@@ -31,6 +31,9 @@ All notable changes to this project will be documented in this file.
 - Enabled compilation with Clang/Apple Clang (matched the `requires`-clause form
   on Vector3D compound-assignment operators and fixed a narrowing conversion in
   TriclinicBox)
+- Performance-regression gate: fixed-work benchmarks (`BUILD_WITH_PERF_BENCH`)
+  run under callgrind; CI fails if a benchmark's instruction count regresses vs
+  the base branch (deterministic, so not flaky)
 
 <!-- insertion marker -->
 ## [v0.6.4](https://github.com/MolarVerse/PQ/releases/tag/v0.6.4) - 2026-03-31
