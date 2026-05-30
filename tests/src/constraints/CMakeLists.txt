@@ -1,6 +1,7 @@
 set(source_files
     testConstraints.cpp
     testBondConstraint.cpp
+    testMShake.cpp
 )
 
 foreach(source_file ${source_files})
