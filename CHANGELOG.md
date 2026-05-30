@@ -45,6 +45,14 @@ All notable changes to this project will be documented in this file.
   skipped (≈ half the workflow), with identical numerics (callgrind is
   deterministic per binary)
 
+### Bug Fixes
+
+- M-SHAKE inner loop in `applyShake` now iterates upper-triangular
+  `(k+1 .. nAtoms)` bond pairs instead of a rectangular `(nAtoms-1)²`
+  grid, matching the matrix-init loop. Previous loop wrote past the
+  `(nBonds, nBonds)` `mShakeMatrix` and read past `bondsUnconstrained`
+  for any molecule with `nAtoms ≥ 3`
+
 ### Internal
 
 - Added missing trailing newline at end of `src/simulationBox/simulationBox.cpp`

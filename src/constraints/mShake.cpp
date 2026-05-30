@@ -232,7 +232,7 @@ void MShake::applyMShake(const double shakeTolerance, SimulationBox &simBox)
 
                     for (size_t k = 0; k < nAtoms - 1; ++k)
                     {
-                        for (size_t l = 0; l < nAtoms - 1; ++l)
+                        for (size_t l = k + 1; l < nAtoms; ++l)
                         {
                             const auto mShakeElement = calcMatrixElement(
                                 {i, j, k, l},
