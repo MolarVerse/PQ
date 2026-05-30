@@ -13,6 +13,19 @@ on:
       - 'integration_tests/**'
       - 'tests/**'
       - 'CMakeLists.txt'
+  push:
+    branches:
+      - dev
+      - main
+    paths:
+      - '.github/workflows/ci_build.yml'
+      - '.cmake/**'
+      - 'apps/**'
+      - 'include/**'
+      - 'src/**'
+      - 'integration_tests/**'
+      - 'tests/**'
+      - 'CMakeLists.txt'
   workflow_dispatch:
 
 jobs:
