@@ -76,6 +76,9 @@ All notable changes to this project will be documented in this file.
 - Cell-list rebuild no longer constructs a temporary `std::vector<size_t>`
   per atom: `try_emplace(cellIndexScalar, std::vector<size_t>({j}))` +
   fallback `push_back` replaced by a single `mapCellIndexToAtomIndex[cellIndexScalar].push_back(j)`
+- `utilities::isZero<T>(a)` helper added to `mathUtilities.hpp`,
+  centralizing the exact-zero check (`a == T(0)`). Callers that need a
+  tolerance can still use `compare(a, T(0), tol)`
 
 ### Tests
 
@@ -83,9 +86,6 @@ All notable changes to this project will be documented in this file.
   `PotentialCellList::calculateForces` produce identical per-atom forces and
   intermolecular energies for the same configuration, guarding the
   brute-force/cell-list equivalence under hot-path refactors
-- `utilities::isZero<T>(a)` helper added to `mathUtilities.hpp`,
-  centralizing the approximate-zero check for floating-point types
-  (`std::fabs(a) < std::numeric_limits<T>::epsilon()`)
 
 <!-- insertion marker -->
 ## [v0.6.4](https://github.com/MolarVerse/PQ/releases/tag/v0.6.4) - 2026-03-31
