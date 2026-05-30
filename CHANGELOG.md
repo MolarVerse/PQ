@@ -37,6 +37,9 @@ All notable changes to this project will be documented in this file.
 - Performance-regression gate: fixed-work benchmarks (`BUILD_WITH_PERF_BENCH`)
   run under callgrind; CI fails if a benchmark's instruction count regresses vs
   the base branch (deterministic, so not flaky)
+- Perf gate now triggers only on PRs that touch code, benchmarks, build
+  config, or the gate itself; doc / changelog / unrelated-workflow PRs no
+  longer spend ~5 min building benchmarks for a no-op diff
 
 <!-- insertion marker -->
 ## [v0.6.4](https://github.com/MolarVerse/PQ/releases/tag/v0.6.4) - 2026-03-31

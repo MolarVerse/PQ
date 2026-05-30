@@ -9,6 +9,19 @@ on:
     branches:
       - main
       - dev
+    # Only run when something that can actually affect instruction counts
+    # changes — code, benchmarks, build config, submodules, or the gate
+    # itself. Doc / changelog / unrelated-workflow PRs skip the gate.
+    paths:
+      - 'src/**'
+      - 'include/**'
+      - 'apps/**'
+      - 'benchmarks/**'
+      - 'external/**'
+      - 'CMakeLists.txt'
+      - '.cmake/**'
+      - '.github/workflows/perf.yml'
+      - 'scripts/perf_gate.sh'
   workflow_dispatch:
 
 permissions:
