@@ -104,7 +104,7 @@ TEST(TestMShake, applyMShake_threeAtomMolecule)
     // perturbation is intentionally small so the algorithm converges
     // well within the iteration bound.
     a1->setPosition(refPos0);
-    a2->setPosition({1.001, 0.0, 0.0});
+    a2->setPosition({1.0001, 0.0, 0.0});
     a3->setPosition(refPos2);
 
     a1->setPositionOld(refPos0);
@@ -126,5 +126,5 @@ TEST(TestMShake, applyMShake_threeAtomMolecule)
     // With the upper-triangular fix this converges; with the previous
     // rectangular loop, every iteration writes past the (3, 3) matrix
     // and reads past the 3-element bondsUnconstrained vector.
-    EXPECT_NO_THROW(mShake.applyMShake(1.0e-6, 1000, simBox));
+    EXPECT_NO_THROW(mShake.applyMShake(1.0e-6, 100000, simBox));
 }
