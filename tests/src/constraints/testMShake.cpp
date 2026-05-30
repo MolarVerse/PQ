@@ -27,6 +27,7 @@
 #include <vector>
 
 #include "atom.hpp"
+#include "exceptions.hpp"
 #include "gtest/gtest.h"
 #include "mShake.hpp"
 #include "mShakeReference.hpp"
@@ -123,8 +124,15 @@ TEST(TestMShake, applyMShake_threeAtomMolecule)
 
     settings::TimingsSettings::setTimeStep(0.5);
 
-    // With the upper-triangular fix this converges; with the previous
-    // rectangular loop, every iteration writes past the (3, 3) matrix
-    // and reads past the 3-element bondsUnconstrained vector.
-    EXPECT_NO_THROW(mShake.applyMShake(1.0e-6, 100000, simBox));
+    // With max_iter = 1 the algorithm cannot reach tolerance and must
+    // throw MShakeException. Reaching the throw at all proves:
+    //   * the matrix-fill loop ran without OOB writes past the
+    //     (nBonds, nBonds) mShakeMatrix or OOB reads past
+    //     bondsUnconstrained (the rectangular vs upper-triangular
+    //     B4 bug would crash here for nAtoms = 3, not throw cleanly);
+    //   * the iteration bound + throw path from #205 is wired up.
+    EXPECT_THROW(
+        mShake.applyMShake(1.0e-6, 1, simBox),
+        customException::MShakeException
+    );
 }
