@@ -90,6 +90,7 @@ jobs:
           script: |
             const fs = require('fs');
             const marker = '<!-- perf-gate-comment -->';
+            const botLogin = 'pq-perf-bot[bot]';
             let body;
             try { body = fs.readFileSync('perf_report.md', 'utf8'); }
             catch (e) { core.info('no perf_report.md, skipping comment'); return; }
@@ -98,12 +99,22 @@ jobs:
             const { data: comments } =
               await github.rest.issues.listComments({ owner, repo, issue_number });
             const existing = comments.find(c => c.body && c.body.includes(marker));
-            if (existing)
-              await github.rest.issues.updateComment(
-                { owner, repo, comment_id: existing.id, body });
-            else
+            // GitHub fixes a comment's author at creation time; if an older
+            // comment exists under a different author (e.g. github-actions[bot]
+            // before the App was wired in), delete and recreate so the visible
+            // author becomes pq-perf-bot[bot].
+            if (existing && existing.user.login !== botLogin) {
+              await github.rest.issues.deleteComment(
+                { owner, repo, comment_id: existing.id });
               await github.rest.issues.createComment(
                 { owner, repo, issue_number, body });
+            } else if (existing) {
+              await github.rest.issues.updateComment(
+                { owner, repo, comment_id: existing.id, body });
+            } else {
+              await github.rest.issues.createComment(
+                { owner, repo, issue_number, body });
+            }
 
       - name: Fail on regression
         if: steps.gate.outcome == 'failure'
