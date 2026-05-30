@@ -92,22 +92,33 @@ void AngleForceField::calculateEnergyAndForces(
 
     physicalData.addAngleEnergy(-forceMagnitude * deltaAngle / 2.0);
 
-    const auto normalDistance = distance12 * distance13 * ::sin(alpha);
+    auto forcexyz = linearAlgebra::Vec3D{0.0, 0.0, 0.0};
 
-    auto normalPosition  = cross(dPosition13, dPosition12);
-    normalPosition      /= normalDistance;
+    // The bend-force decomposition divides by sin(alpha); skip it (and only
+    // it) when the angle is collinear (alpha ~ 0 or pi), where the
+    // normal-direction is degenerate. Energy already added above; the linker
+    // correction below depends on forceMagnitude (set above) and dPosition23,
+    // not on this block, so it still runs.
+    const auto sinAlpha = ::sin(alpha);
+    if (std::fabs(sinAlpha) >= 1.0e-10)
+    {
+        const auto normalDistance = distance12 * distance13 * sinAlpha;
 
-    auto force    = forceMagnitude / distance12Squared;
-    auto forcexyz = force * cross(dPosition12, normalPosition);
+        auto normalPosition  = cross(dPosition13, dPosition12);
+        normalPosition      /= normalDistance;
 
-    _molecules[0]->addAtomForce(_atomIndices[0], -forcexyz);
-    _molecules[1]->addAtomForce(_atomIndices[1], forcexyz);
+        auto force = forceMagnitude / distance12Squared;
+        forcexyz   = force * cross(dPosition12, normalPosition);
 
-    force    = forceMagnitude / distance13Squared;
-    forcexyz = force * cross(normalPosition, dPosition13);
+        _molecules[0]->addAtomForce(_atomIndices[0], -forcexyz);
+        _molecules[1]->addAtomForce(_atomIndices[1], forcexyz);
 
-    _molecules[0]->addAtomForce(_atomIndices[0], -forcexyz);
-    _molecules[2]->addAtomForce(_atomIndices[2], forcexyz);
+        force    = forceMagnitude / distance13Squared;
+        forcexyz = force * cross(normalPosition, dPosition13);
+
+        _molecules[0]->addAtomForce(_atomIndices[0], -forcexyz);
+        _molecules[2]->addAtomForce(_atomIndices[2], forcexyz);
+    }
 
     if (_isLinker)
     {

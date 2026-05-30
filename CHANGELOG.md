@@ -45,6 +45,15 @@ All notable changes to this project will be documented in this file.
   skipped (≈ half the workflow), with identical numerics (callgrind is
   deterministic per binary)
 
+### Bug Fixes
+
+- `AngleForceField::calculateEnergyAndForces` no longer divides by
+  `sin(alpha)` when the angle is collinear (alpha ≈ 0 or π): the
+  bend-force decomposition is now gated on `|sin(alpha)| >= 1e-10`,
+  preventing NaN forces for linear-equilibrium parametrizations (e.g.
+  CO₂ with α₀ = 180°) and transient collinear configurations. Energy
+  contribution and the linker correction below are unaffected
+
 ### Internal
 
 - Added missing trailing newline at end of `src/simulationBox/simulationBox.cpp`
