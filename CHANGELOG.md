@@ -37,6 +37,13 @@ All notable changes to this project will be documented in this file.
 - Performance-regression gate: fixed-work benchmarks (`BUILD_WITH_PERF_BENCH`)
   run under callgrind; CI fails if a benchmark's instruction count regresses vs
   the base branch (deterministic, so not flaky)
+- Perf gate now triggers only on PRs that touch code, benchmarks, build
+  config, or the gate itself; doc / changelog / unrelated-workflow PRs no
+  longer spend ~5 min building benchmarks for a no-op diff
+- Perf gate now caches the base-branch instruction counts keyed on the base
+  commit SHA; on a hit the whole base checkout + build + callgrind run is
+  skipped (≈ half the workflow), with identical numerics (callgrind is
+  deterministic per binary)
 
 ### Internal
 
