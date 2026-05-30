@@ -47,11 +47,18 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
-- M-SHAKE inner loop in `applyShake` now iterates upper-triangular
-  `(k+1 .. nAtoms)` bond pairs instead of a rectangular `(nAtoms-1)²`
-  grid, matching the matrix-init loop. Previous loop wrote past the
-  `(nBonds, nBonds)` `mShakeMatrix` and read past `bondsUnconstrained`
-  for any molecule with `nAtoms ≥ 3`
+- Multiple M-SHAKE fixes in `applyMShake`:
+  - inner loop now iterates upper-triangular `(k+1 .. nAtoms)` bond
+    pairs instead of a rectangular `(nAtoms-1)²` grid, matching the
+    matrix-init loop. The previous loop wrote past the
+    `(nBonds, nBonds)` `mShakeMatrix` and read past
+    `bondsUnconstrained` for any molecule with `nAtoms ≥ 3`
+  - convergence check inverted: the loop now breaks when `converged`
+    is true, not when it's false (the old code exited the iteration
+    the first time anything wasn't converged)
+  - new `shakeIterations` parameter bounds the inner SHAKE iterations
+    and throws `MShakeException` instead of looping forever if the
+    constraint solver fails to converge
 
 ### Internal
 
