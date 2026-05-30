@@ -52,6 +52,9 @@ All notable changes to this project will be documented in this file.
   and `getCoulombForceCutOff()` are now `inline` in the header so the
   per-pair call in `Potential::calculateSingleInteraction` can be elided
   without LTO
+- Cell-list rebuild no longer constructs a temporary `std::vector<size_t>`
+  per atom: `try_emplace(cellIndexScalar, std::vector<size_t>({j}))` +
+  fallback `push_back` replaced by a single `mapCellIndexToAtomIndex[cellIndexScalar].push_back(j)`
 
 ### Tests
 
