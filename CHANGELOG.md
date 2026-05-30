@@ -48,6 +48,10 @@ All notable changes to this project will be documented in this file.
 ### Internal
 
 - Added missing trailing newline at end of `src/simulationBox/simulationBox.cpp`
+- `CoulombPotential::getCoulombRadiusCutOff()`, `getCoulombEnergyCutOff()`
+  and `getCoulombForceCutOff()` are now `inline` in the header so the
+  per-pair call in `Potential::calculateSingleInteraction` can be elided
+  without LTO
 
 <!-- insertion marker -->
 ## [v0.6.4](https://github.com/MolarVerse/PQ/releases/tag/v0.6.4) - 2026-03-31
