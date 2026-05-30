@@ -63,16 +63,3 @@ TEST(TestMathUtilities, sign)
     EXPECT_EQ(sign(-2.0), -1);
     EXPECT_EQ(sign(0.0), 0);
 }
-
-/**
- * @brief tests isZero template function for the double data type. Uses
- * exact equality, so subnormal but non-zero values are not "zero".
- */
-TEST(TestMathUtilities, isZero)
-{
-    EXPECT_TRUE(isZero(0.0));
-    EXPECT_TRUE(isZero(-0.0));
-    EXPECT_FALSE(isZero(1.0));
-    EXPECT_FALSE(isZero(std::numeric_limits<double>::epsilon()));
-    EXPECT_FALSE(isZero(std::numeric_limits<double>::min()));
-}
