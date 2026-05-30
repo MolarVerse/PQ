@@ -72,6 +72,24 @@ namespace utilities
     [[nodiscard]] bool compare(const pq::Vec3D &a, const pq::Vec3D &b);
 
     /**
+     * @brief check whether a number is exactly zero
+     *
+     * @details Uses exact equality (`a == T(0)`) rather than an epsilon
+     * comparison: callers that guard against division-by-zero or `0 * Inf`
+     * NaN propagation only need to catch literal zero. Use the explicit
+     * `compare(a, T(0), tol)` overload when a tolerance is wanted.
+     *
+     * @tparam T
+     * @param a
+     * @return true if a == T(0), false otherwise
+     */
+    template <typename T>
+    [[nodiscard]] bool isZero(const T &a)
+    {
+        return a == T(0);
+    }
+
+    /**
      * @brief calculates the sign of a number
      *
      * @tparam T
