@@ -37,7 +37,19 @@ jobs:
         with:
           submodules: recursive
 
+      # Callgrind instruction counts are a pure function of the binary, which
+      # is a pure function of the base commit SHA. So we cache the measured
+      # base Ir counts keyed on that SHA: on a hit we skip the base checkout,
+      # build, and base callgrind run entirely (~half the workflow).
+      - name: Restore cached base instruction counts
+        id: base-ir-cache
+        uses: actions/cache@v4
+        with:
+          path: base_ir.tsv
+          key: perf-base-ir-${{ github.event.pull_request.base.sha || github.sha }}
+
       - name: Checkout base branch
+        if: steps.base-ir-cache.outputs.cache-hit != 'true'
         uses: actions/checkout@v4
         with:
           ref: ${{ github.base_ref || 'dev' }}
@@ -67,6 +79,7 @@ jobs:
           CXX: g++-13
 
       - name: Build base benchmarks (baseline)
+        if: steps.base-ir-cache.outputs.cache-hit != 'true'
         run: |
           cmake -S base -B build-base \
             -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_NATIVE=Off \
@@ -81,6 +94,11 @@ jobs:
       - name: Compare instruction counts (gate)
         id: gate
         continue-on-error: true
+        env:
+          # The script loads base counts from this file if it exists (cache
+          # hit) and (re)writes the freshly-known counts to it at the end so
+          # actions/cache@v4 saves them at job end (cache miss path).
+          PERF_BASE_IR_FILE: base_ir.tsv
         run: bash scripts/perf_gate.sh build-pr/benchmarks/perf build-base/benchmarks/perf 2
 
       - name: Mint PQ Perf Bot installation token

@@ -40,6 +40,10 @@ All notable changes to this project will be documented in this file.
 - Perf gate now triggers only on PRs that touch code, benchmarks, build
   config, or the gate itself; doc / changelog / unrelated-workflow PRs no
   longer spend ~5 min building benchmarks for a no-op diff
+- Perf gate now caches the base-branch instruction counts keyed on the base
+  commit SHA; on a hit the whole base checkout + build + callgrind run is
+  skipped (≈ half the workflow), with identical numerics (callgrind is
+  deterministic per binary)
 
 <!-- insertion marker -->
 ## [v0.6.4](https://github.com/MolarVerse/PQ/releases/tag/v0.6.4) - 2026-03-31
