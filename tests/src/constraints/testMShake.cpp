@@ -60,10 +60,15 @@ TEST(TestMShake, applyMShake_threeAtomMolecule)
     moltype.setNumberOfAtoms(3);
 
     auto refAtoms = std::vector<simulationBox::Atom>(3);
+    // Atom::initMass (called from MShake::initMShakeReferences) looks the
+    // mass up from a name table, so each reference atom needs a valid
+    // element name.
+    refAtoms[0].setName("H");
+    refAtoms[1].setName("H");
+    refAtoms[2].setName("H");
     refAtoms[0].setPosition({0.0, 0.0, 0.0});
     refAtoms[1].setPosition({1.0, 0.0, 0.0});
     refAtoms[2].setPosition({0.5, std::sqrt(3.0) / 2.0, 0.0});
-    for (auto &atom : refAtoms) atom.setMass(1.0);
 
     auto mShakeRef = constraints::MShakeReference();
     mShakeRef.setMoleculeType(moltype);
