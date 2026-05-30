@@ -31,6 +31,9 @@ All notable changes to this project will be documented in this file.
 - Enabled compilation with Clang/Apple Clang (matched the `requires`-clause form
   on Vector3D compound-assignment operators and fixed a narrowing conversion in
   TriclinicBox)
+- Faster CI: also trigger the build workflow on push to `dev`/`main` so the
+  `ccache` and conda-env caches get populated on the base branch and
+  subsequently-opened PRs start warm instead of cold
 - Performance-regression gate: fixed-work benchmarks (`BUILD_WITH_PERF_BENCH`)
   run under callgrind; CI fails if a benchmark's instruction count regresses vs
   the base branch (deterministic, so not flaky)
