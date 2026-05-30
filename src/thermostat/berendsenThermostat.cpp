@@ -27,6 +27,7 @@
 #include <vector>   // for vector
 
 #include "atom.hpp"                 // for Atom
+#include "mathUtilities.hpp"        // for isZero
 #include "physicalData.hpp"         // for PhysicalData
 #include "simulationBox.hpp"        // for SimulationBox
 #include "thermostatSettings.hpp"   // for ThermostatType
@@ -36,6 +37,7 @@ using thermostat::BerendsenThermostat;
 using namespace settings;
 using namespace simulationBox;
 using namespace physicalData;
+using namespace utilities;
 
 /**
  * @brief Construct a new Berendsen Thermostat object
@@ -70,10 +72,10 @@ void BerendsenThermostat::applyThermostat(
 
     _temperature = data.getTemperature();
 
-    // If the kinetic energy is zero, there is nothing to thermostat:
-    // dividing by _temperature would NaN all velocities (1 / 0 -> Inf,
-    // then vel * Inf = NaN when vel is 0). Skip silently.
-    if (_temperature == 0.0)
+    // If the kinetic energy is (approximately) zero, there is nothing to
+    // thermostat: dividing by _temperature would NaN all velocities
+    // (1 / 0 -> Inf, then vel * Inf = NaN when vel is 0). Skip silently.
+    if (isZero(_temperature))
     {
         stopTimingsSection("Berendsen");
         return;

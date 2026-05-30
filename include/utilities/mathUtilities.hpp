@@ -72,6 +72,20 @@ namespace utilities
     [[nodiscard]] bool compare(const pq::Vec3D &a, const pq::Vec3D &b);
 
     /**
+     * @brief check whether a number is approximately zero via machine
+     * precision
+     *
+     * @tparam T
+     * @param a
+     * @return true if |a| < std::numeric_limits<T>::epsilon()
+     */
+    template <typename T>
+    [[nodiscard]] bool isZero(const T &a)
+    {
+        return compare(a, T(0));
+    }
+
+    /**
      * @brief calculates the sign of a number
      *
      * @tparam T

@@ -62,8 +62,9 @@ All notable changes to this project will be documented in this file.
 - `BerendsenThermostat::applyThermostat` no longer produces NaN
   velocities when called with zero kinetic energy: the `T_target / T`
   ratio would diverge and `0.0 * Inf = NaN` corrupted every atom's
-  velocity. The thermostat now skips silently when `_temperature == 0`,
-  mirroring the velocity-rescaling NaN guard added in v0.6.2
+  velocity. The thermostat now skips silently when `_temperature` is
+  (approximately) zero, mirroring the velocity-rescaling NaN guard
+  added in v0.6.2
 
 ### Internal
 
@@ -82,6 +83,9 @@ All notable changes to this project will be documented in this file.
   `PotentialCellList::calculateForces` produce identical per-atom forces and
   intermolecular energies for the same configuration, guarding the
   brute-force/cell-list equivalence under hot-path refactors
+- `utilities::isZero<T>(a)` helper added to `mathUtilities.hpp`,
+  centralizing the approximate-zero check for floating-point types
+  (`std::fabs(a) < std::numeric_limits<T>::epsilon()`)
 
 <!-- insertion marker -->
 ## [v0.6.4](https://github.com/MolarVerse/PQ/releases/tag/v0.6.4) - 2026-03-31
