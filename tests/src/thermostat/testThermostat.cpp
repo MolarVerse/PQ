@@ -196,6 +196,31 @@ TEST_F(TestThermostat, velocityRescaling_applyDoesNotNaN)
         }
 }
 
+// Regression test: starting from zero kinetic energy (T == 0) used to
+// produce NaN velocities, because tempRatio = T_target / 0 = Inf and
+// the velocity scaling 0 * Inf = NaN. The guard skips the scaling and
+// leaves velocities at zero.
+TEST_F(TestThermostat, applyBerendsen_zeroTemperatureNoNaN)
+{
+    delete _thermostat;
+    _thermostat = new thermostat::BerendsenThermostat(300.0, 100.0);
+    settings::TimingsSettings::setTimeStep(0.1);
+
+    for (auto &atom : _simulationBox->getAtoms())
+        atom->setVelocity({0.0, 0.0, 0.0});
+
+    _thermostat->applyThermostat(*_simulationBox, *_data);
+
+    EXPECT_FALSE(std::isnan(_data->getTemperature()));
+    EXPECT_FALSE(std::isinf(_data->getTemperature()));
+    for (const auto &atom : _simulationBox->getAtoms())
+        for (size_t i = 0; i < 3; ++i)
+        {
+            EXPECT_FALSE(std::isnan(atom->getVelocity()[i]));
+            EXPECT_FALSE(std::isinf(atom->getVelocity()[i]));
+        }
+}
+
 /* ---------- LangevinThermostat ---------- */
 
 TEST_F(TestThermostat, langevin_constructorComputesSigma)

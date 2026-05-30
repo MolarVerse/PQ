@@ -45,6 +45,15 @@ All notable changes to this project will be documented in this file.
   skipped (≈ half the workflow), with identical numerics (callgrind is
   deterministic per binary)
 
+### Bug Fixes
+
+- `BerendsenThermostat::applyThermostat` no longer produces NaN
+  velocities when called with zero kinetic energy: the `T_target / T`
+  ratio would diverge and `0.0 * Inf = NaN` corrupted every atom's
+  velocity. The thermostat now skips silently when `_temperature` is
+  (approximately) zero, mirroring the velocity-rescaling NaN guard
+  added in v0.6.2
+
 ### Internal
 
 - Added missing trailing newline at end of `src/simulationBox/simulationBox.cpp`
@@ -55,6 +64,9 @@ All notable changes to this project will be documented in this file.
 - Cell-list rebuild no longer constructs a temporary `std::vector<size_t>`
   per atom: `try_emplace(cellIndexScalar, std::vector<size_t>({j}))` +
   fallback `push_back` replaced by a single `mapCellIndexToAtomIndex[cellIndexScalar].push_back(j)`
+- `utilities::isZero<T>(a)` helper added to `mathUtilities.hpp`,
+  centralizing the exact-zero check (`a == T(0)`). Callers that need a
+  tolerance can still use `compare(a, T(0), tol)`
 
 ### Tests
 
