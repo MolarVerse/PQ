@@ -82,3 +82,10 @@ option(BUILD_WITH_LTO "Build Release with link-time optimization (-flto)" OFF)
 # portable/cacheable builds (e.g. CI), where -march=native would otherwise
 # produce binaries that crash on a different CPU.
 option(BUILD_WITH_NATIVE "Optimize Release for the build machine's CPU (-march=native)" ON)
+
+# *********************
+# BUILD WITH PERF BENCH
+# *********************
+# Build the fixed-work performance-regression benchmark (benchmarks/perf),
+# used by CI to gate on instruction-count regressions via callgrind.
+option(BUILD_WITH_PERF_BENCH "Build the performance-regression benchmark" OFF)

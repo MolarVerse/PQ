@@ -162,6 +162,10 @@ endif()
 
 add_subdirectory(apps)
 
+if(BUILD_WITH_PERF_BENCH)
+    add_subdirectory(benchmarks/perf)
+endif()
+
 if(BUILD_WITH_DOC)
     include(doxygen)
     add_subdirectory(docs EXCLUDE_FROM_ALL)

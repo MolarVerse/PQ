@@ -34,6 +34,9 @@ All notable changes to this project will be documented in this file.
 - Faster CI: also trigger the build workflow on push to `dev`/`main` so the
   `ccache` and conda-env caches get populated on the base branch and
   subsequently-opened PRs start warm instead of cold
+- Performance-regression gate: fixed-work benchmarks (`BUILD_WITH_PERF_BENCH`)
+  run under callgrind; CI fails if a benchmark's instruction count regresses vs
+  the base branch (deterministic, so not flaky)
 
 <!-- insertion marker -->
 ## [v0.6.4](https://github.com/MolarVerse/PQ/releases/tag/v0.6.4) - 2026-03-31
