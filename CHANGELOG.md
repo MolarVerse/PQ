@@ -59,6 +59,11 @@ All notable changes to this project will be documented in this file.
   was therefore storing wrong reference squared bond lengths, so
   `applyMShake` was driving the constraint toward an incorrect target
   and could not converge
+- `ExternalQMRunner::readForceFile` now throws `QMRunnerException` if the
+  QM energy or any force component read from the external force file is
+  NaN/Inf, mirroring the v0.6.2 NaN/Inf input-file guard. Previously a
+  failed/garbage QM calculation silently propagated NaN into the
+  trajectory
 
 ### Internal
 
