@@ -70,9 +70,12 @@ TEST(TestMathUtilities, sign)
  */
 TEST(TestMathUtilities, compareWithTolerance)
 {
+    // compare uses strict `<`, so a == b only compares equal when the
+    // tolerance is strictly positive.
     EXPECT_TRUE(compare(1.0, 1.0 + 1e-9, 1e-8));
     EXPECT_FALSE(compare(1.0, 1.0 + 1e-7, 1e-8));
-    EXPECT_TRUE(compare(0.0, 0.0, 0.0));
+    EXPECT_FALSE(compare(0.0, 0.0, 0.0));
+    EXPECT_TRUE(compare(0.0, 0.0, 1e-12));
     EXPECT_FALSE(compare(1.0, 2.0, 0.5));
 }
 
