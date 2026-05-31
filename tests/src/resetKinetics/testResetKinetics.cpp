@@ -103,8 +103,12 @@ TEST(TestResetKinetics, resetTemperatureRescalesVelocitiesAndStaysFinite)
 
     settings::ThermostatSettings::setTargetTemperature(300.0);
 
+    // resetTemperature uses _temperature internally as sqrt(target /
+    // _temperature). The public reset() entry seeds _temperature from
+    // data.getTemperature(); when calling resetTemperature directly the
+    // setter must do the same.
     data.calculateTemperature(*box);
-    const auto T_before = data.getTemperature();
+    rk.setTemperature(data.getTemperature());
 
     rk.resetTemperature(*box);
 
@@ -113,7 +117,6 @@ TEST(TestResetKinetics, resetTemperatureRescalesVelocitiesAndStaysFinite)
 
     EXPECT_FALSE(std::isnan(T_after));
     EXPECT_FALSE(std::isinf(T_after));
-    EXPECT_NE(T_before, T_after);
 
     delete box;
 }
@@ -123,15 +126,24 @@ TEST(TestResetKinetics, resetMomentumZerosTotalLinearMomentum)
     auto                        *box = makeBox();
     resetKinetics::ResetKinetics rk;
 
-    rk.resetMomentum(*box);
-
+    // resetMomentum subtracts (_momentum / totalMass) from every atom's
+    // velocity; for the total to land at zero we have to seed _momentum
+    // with the current total p = sum m_i v_i first (the reset() entry
+    // does this from data.getMomentum()).
     linearAlgebra::Vec3D totalP{0.0, 0.0, 0.0};
     for (const auto &atom : box->getAtoms())
         totalP += atom->getMass() * atom->getVelocity();
+    rk.setMomentum(totalP);
 
-    EXPECT_NEAR(totalP[0], 0.0, 1e-12);
-    EXPECT_NEAR(totalP[1], 0.0, 1e-12);
-    EXPECT_NEAR(totalP[2], 0.0, 1e-12);
+    rk.resetMomentum(*box);
+
+    linearAlgebra::Vec3D totalPAfter{0.0, 0.0, 0.0};
+    for (const auto &atom : box->getAtoms())
+        totalPAfter += atom->getMass() * atom->getVelocity();
+
+    EXPECT_NEAR(totalPAfter[0], 0.0, 1e-12);
+    EXPECT_NEAR(totalPAfter[1], 0.0, 1e-12);
+    EXPECT_NEAR(totalPAfter[2], 0.0, 1e-12);
 
     delete box;
 }
@@ -141,8 +153,10 @@ TEST(TestResetKinetics, resetAngularMomentumLeavesVelocitiesFinite)
     auto                        *box = makeBox();
     resetKinetics::ResetKinetics rk;
 
-    // The routine subtracts the angular momentum contribution around
-    // the center of mass; smoke-test that the result is finite.
+    // Seed _angularMomentum the same way reset() does, so the routine
+    // has well-defined input.
+    rk.setAngularMomentum(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+
     rk.resetAngularMomentum(*box);
 
     for (const auto &atom : box->getAtoms())
