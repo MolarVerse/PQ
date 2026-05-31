@@ -82,6 +82,11 @@ All notable changes to this project will be documented in this file.
   momentum to ~0), `resetAngularMomentum` (finite velocities), and
   `resetForces` (zeros per-atom forces). The previously 0%-covered
   97-line `src/resetKinetics/resetKinetics.cpp` is now exercised
+- Coverage for `ManostatSettings`, `ConstraintSettings`, `FileSettings`,
+  and `ConvergenceSettings` static-class setters/getters (manostat type
+  + isotropy string round-trips, shake/rattle tolerances + max-iters,
+  input/output file-name round-trips, optional energy/force convergence
+  thresholds)
 - Expanded coverage for `mathUtilities` (`compare` with tolerance,
   `compare(Vec3D)` with tolerance, `kroneckerDelta`); `Thermostat`
   variants (`VelocityRescaling`: tau getter/setter, thermostat type,
