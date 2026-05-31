@@ -25,50 +25,50 @@
 #include "convergenceSettings.hpp"
 #include "gtest/gtest.h"
 
-TEST(ConvergenceSettingsTest, EnergyConvSettersAndOptionalGetters)
+TEST(ConvSettingsTest, EnergyConvSettersAndOptionalGetters)
 {
-    settings::ConvergenceSettings::setEnergyConv(1.0e-6);
-    ASSERT_TRUE(settings::ConvergenceSettings::getEnergyConv().has_value());
+    settings::ConvSettings::setEnergyConv(1.0e-6);
+    ASSERT_TRUE(settings::ConvSettings::getEnergyConv().has_value());
     EXPECT_DOUBLE_EQ(
-        settings::ConvergenceSettings::getEnergyConv().value(),
+        settings::ConvSettings::getEnergyConv().value(),
         1.0e-6
     );
 
-    settings::ConvergenceSettings::setRelEnergyConv(1.0e-5);
-    ASSERT_TRUE(settings::ConvergenceSettings::getRelEnergyConv().has_value());
+    settings::ConvSettings::setRelEnergyConv(1.0e-5);
+    ASSERT_TRUE(settings::ConvSettings::getRelEnergyConv().has_value());
     EXPECT_DOUBLE_EQ(
-        settings::ConvergenceSettings::getRelEnergyConv().value(),
+        settings::ConvSettings::getRelEnergyConv().value(),
         1.0e-5
     );
 
-    settings::ConvergenceSettings::setAbsEnergyConv(1.0e-4);
-    ASSERT_TRUE(settings::ConvergenceSettings::getAbsEnergyConv().has_value());
+    settings::ConvSettings::setAbsEnergyConv(1.0e-4);
+    ASSERT_TRUE(settings::ConvSettings::getAbsEnergyConv().has_value());
     EXPECT_DOUBLE_EQ(
-        settings::ConvergenceSettings::getAbsEnergyConv().value(),
+        settings::ConvSettings::getAbsEnergyConv().value(),
         1.0e-4
     );
 }
 
-TEST(ConvergenceSettingsTest, ForceConvSettersAndOptionalGetters)
+TEST(ConvSettingsTest, ForceConvSettersAndOptionalGetters)
 {
-    settings::ConvergenceSettings::setForceConv(1.0e-3);
-    ASSERT_TRUE(settings::ConvergenceSettings::getForceConv().has_value());
+    settings::ConvSettings::setForceConv(1.0e-3);
+    ASSERT_TRUE(settings::ConvSettings::getForceConv().has_value());
     EXPECT_DOUBLE_EQ(
-        settings::ConvergenceSettings::getForceConv().value(),
+        settings::ConvSettings::getForceConv().value(),
         1.0e-3
     );
 
-    settings::ConvergenceSettings::setMaxForceConv(1.0e-2);
-    ASSERT_TRUE(settings::ConvergenceSettings::getMaxForceConv().has_value());
+    settings::ConvSettings::setMaxForceConv(1.0e-2);
+    ASSERT_TRUE(settings::ConvSettings::getMaxForceConv().has_value());
     EXPECT_DOUBLE_EQ(
-        settings::ConvergenceSettings::getMaxForceConv().value(),
+        settings::ConvSettings::getMaxForceConv().value(),
         1.0e-2
     );
 
-    settings::ConvergenceSettings::setRMSForceConv(1.0e-3);
-    ASSERT_TRUE(settings::ConvergenceSettings::getRMSForceConv().has_value());
+    settings::ConvSettings::setRMSForceConv(1.0e-3);
+    ASSERT_TRUE(settings::ConvSettings::getRMSForceConv().has_value());
     EXPECT_DOUBLE_EQ(
-        settings::ConvergenceSettings::getRMSForceConv().value(),
+        settings::ConvSettings::getRMSForceConv().value(),
         1.0e-3
     );
 }
