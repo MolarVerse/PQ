@@ -59,6 +59,16 @@ All notable changes to this project will be documented in this file.
   `PotentialCellList::calculateForces` produce identical per-atom forces and
   intermolecular energies for the same configuration, guarding the
   brute-force/cell-list equivalence under hot-path refactors
+- Expanded coverage for `mathUtilities` (`compare` with tolerance,
+  `compare(Vec3D)` with tolerance, `kroneckerDelta`); `Thermostat`
+  variants (`VelocityRescaling`: tau getter/setter, thermostat type,
+  apply doesn't produce NaN; `Langevin`: sigma after construction,
+  setters/getters, sigma recompute on target-temperature change,
+  thermostat type; `NoseHoover`: thermostat type, coupling-frequency
+  setter/getter, chi/zeta index setter); and `Manostat` variants
+  (`BerendsenManostat`: tau and compressibility getters, manostat type
+  and isotropy; isotropy and type for `SemiIsotropic`, `Anisotropic`,
+  and `FullAnisotropic` Berendsen)
 
 <!-- insertion marker -->
 ## [v0.6.4](https://github.com/MolarVerse/PQ/releases/tag/v0.6.4) - 2026-03-31
