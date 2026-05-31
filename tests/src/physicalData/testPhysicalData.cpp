@@ -257,3 +257,67 @@ TEST_F(TestPhysicalData, addIntraNonCoulombEnergy)
     EXPECT_EQ(_physicalData->getIntraNonCoulombEnergy(), 1.0);
     EXPECT_EQ(_physicalData->getNonCoulombEnergy(), 1.0);
 }
+
+/* ---------- Energy accumulators (add… functions) ---------- */
+
+TEST_F(TestPhysicalData, addCoulombEnergy_accumulates)
+{
+    _physicalData->setCoulombEnergy(2.0);
+    _physicalData->addCoulombEnergy(3.5);
+    EXPECT_DOUBLE_EQ(_physicalData->getCoulombEnergy(), 5.5);
+}
+
+TEST_F(TestPhysicalData, addNonCoulombEnergy_accumulates)
+{
+    _physicalData->setNonCoulombEnergy(1.0);
+    _physicalData->addNonCoulombEnergy(0.25);
+    _physicalData->addNonCoulombEnergy(0.25);
+    EXPECT_DOUBLE_EQ(_physicalData->getNonCoulombEnergy(), 1.5);
+}
+
+TEST_F(TestPhysicalData, addBondEnergy_accumulates)
+{
+    _physicalData->setBondEnergy(0.0);
+    _physicalData->addBondEnergy(1.0);
+    _physicalData->addBondEnergy(2.0);
+    EXPECT_DOUBLE_EQ(_physicalData->getBondEnergy(), 3.0);
+}
+
+TEST_F(TestPhysicalData, addAngleEnergy_accumulates)
+{
+    _physicalData->setAngleEnergy(0.0);
+    _physicalData->addAngleEnergy(1.0);
+    _physicalData->addAngleEnergy(-0.5);
+    EXPECT_DOUBLE_EQ(_physicalData->getAngleEnergy(), 0.5);
+}
+
+TEST_F(TestPhysicalData, addDihedralEnergy_accumulates)
+{
+    _physicalData->setDihedralEnergy(0.0);
+    _physicalData->addDihedralEnergy(1.0);
+    EXPECT_DOUBLE_EQ(_physicalData->getDihedralEnergy(), 1.0);
+}
+
+TEST_F(TestPhysicalData, addImproperEnergy_accumulates)
+{
+    _physicalData->setImproperEnergy(0.0);
+    _physicalData->addImproperEnergy(1.5);
+    EXPECT_DOUBLE_EQ(_physicalData->getImproperEnergy(), 1.5);
+}
+
+TEST_F(TestPhysicalData, addRingPolymerEnergy_accumulates)
+{
+    _physicalData->setRingPolymerEnergy(0.0);
+    _physicalData->addRingPolymerEnergy(2.0);
+    _physicalData->addRingPolymerEnergy(3.0);
+    EXPECT_DOUBLE_EQ(_physicalData->getRingPolymerEnergy(), 5.0);
+}
+
+TEST_F(TestPhysicalData, addVirial_accumulates)
+{
+    const auto v0 = diagonalMatrix(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+    const auto v1 = diagonalMatrix(linearAlgebra::Vec3D(0.5, 0.5, 0.5));
+    _physicalData->setVirial(v0);
+    _physicalData->addVirial(v1);
+    EXPECT_EQ(_physicalData->getVirial(), v0 + v1);
+}

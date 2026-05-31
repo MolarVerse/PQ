@@ -206,6 +206,39 @@ TEST_F(TestCellList, checkCoulombCutoff)
     );
 }
 
+/* ---------- activate / deactivate / isActive ---------- */
+
+TEST_F(TestCellList, activateDeactivateToggles_isActive)
+{
+    _cellList->activate();
+    EXPECT_TRUE(_cellList->isActive());
+
+    _cellList->deactivate();
+    EXPECT_FALSE(_cellList->isActive());
+
+    _cellList->activate();
+    EXPECT_TRUE(_cellList->isActive());
+}
+
+/* ---------- clone() copies the configured cell counts ---------- */
+
+TEST_F(TestCellList, clone_preservesNumberOfCellsAndNeighbourCells)
+{
+    _cellList->setNumberOfCells(4);
+    _cellList->setNumberOfNeighbourCells(2);
+    _cellList->activate();
+
+    const auto cloned = _cellList->clone();
+
+    ASSERT_NE(cloned, nullptr);
+    EXPECT_EQ(cloned->getNumberOfCells(), _cellList->getNumberOfCells());
+    EXPECT_EQ(
+        cloned->getNumberOfNeighbourCells(),
+        _cellList->getNumberOfNeighbourCells()
+    );
+    EXPECT_EQ(cloned->isActive(), _cellList->isActive());
+}
+
 /**
  * @brief testing updateCellList and setup method
  *
