@@ -87,6 +87,11 @@ All notable changes to this project will be documented in this file.
   + isotropy string round-trips, shake/rattle tolerances + max-iters,
   input/output file-name round-trips, optional energy/force convergence
   thresholds)
+- Coverage for the `kernel::dist*` family (no-PBC `distVec` /
+  `distVecAndDist2` matching analytical subtraction and squared norm;
+  PBC overloads choosing the minimum-image displacement on a known
+  orthorhombic box; consistency between `distSquared`, `distVec`, and
+  `distVecAndDist2` under PBC)
 - Expanded coverage for `mathUtilities` (`compare` with tolerance,
   `compare(Vec3D)` with tolerance, `kroneckerDelta`); `Thermostat`
   variants (`VelocityRescaling`: tau getter/setter, thermostat type,
