@@ -48,6 +48,8 @@ namespace
         auto a2 = std::make_shared<simulationBox::Atom>();
         a1->setMass(1.0);
         a2->setMass(1.0);
+        a1->setPosition(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+        a2->setPosition(linearAlgebra::Vec3D(1.0, 0.0, 0.0));
         a1->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
         a2->setVelocity(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
         molecule.setMolMass(2.0);
@@ -58,6 +60,7 @@ namespace
         molecule2.setNumberOfAtoms(1);
         auto a3 = std::make_shared<simulationBox::Atom>();
         a3->setMass(1.0);
+        a3->setPosition(linearAlgebra::Vec3D(0.0, 1.0, 0.0));
         a3->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
         molecule2.setMolMass(1.0);
         molecule2.addAtom(a3);
