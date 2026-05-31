@@ -71,6 +71,11 @@ All notable changes to this project will be documented in this file.
   - new `shakeIterations` parameter bounds the inner SHAKE iterations
     and throws `MShakeException` instead of looping forever if the
     constraint solver fails to converge
+  - `dt` is now converted from fs to s via `_FS_TO_S_` (mirroring the
+    v0.6.4 fix to `applyShake`); the position adjustment was
+    unaffected (dt² cancels), but the velocity correction
+    `posAdjustment / (mass * dt)` was being divided by raw fs,
+    leaving velocities essentially uncorrected by M-SHAKE
 
 ### Internal
 

@@ -33,6 +33,7 @@
 #include "stlVector.hpp"         // for dot
 #include "timingsSettings.hpp"   // for settings
 
+using namespace constants;
 using namespace constraints;
 using namespace kernel;
 using namespace linearAlgebra;
@@ -137,7 +138,7 @@ void MShake::applyMShake(
 {
     auto &molecules = simBox.getMolecules();
 
-    const auto dt          = TimingsSettings::getTimeStep();
+    const auto dt          = TimingsSettings::getTimeStep() * _FS_TO_S_;
     const auto timeFactor  = 4.0 * dt * dt;
     const auto shakeFactor = 2.0 * dt * dt;
 
