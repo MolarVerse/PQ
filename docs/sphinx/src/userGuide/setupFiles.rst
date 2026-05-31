@@ -40,6 +40,16 @@ identical elements exposed to a similar chemical environment from different molt
     set to 0 and the global_vdW_type can be omitted. For MM calculations that utilize just the :ref:`guffdatFile`, the 
     point_charge can be set to 0 and the global_vdW_type can be omitted.
 
+.. Attention::
+
+    If an :ref:`intra- <intraWaterModelKey>` or :ref:`intermolecular <interWaterModelKey>` water model has been selected *via* the 
+    :ref:`Input File <inputFile>`, the water moltype must be specified using a single line in the moldescriptor file of the following form:
+
+    | Water_Type moltype_number
+
+    where the *moltype_number* integer denotes the moltype number corresponding to the water molecules. Additionally, the specified water moltype 
+    must contain exactly three atoms, namely "O", "H" and "H", in this specific order. Furthermore, if an :ref:`intermolecular water model<interWaterModelKey>` has 
+    been selected, the *charge* of each atom must coincide with the partial charge defined by the associate intermolecular water potential.
 
 .. _guffdatFile:
 
@@ -73,6 +83,12 @@ are given in Å and energies in kcal/mol. The units of the parameters are chosen
 
     Using the GUFF file requires the :ref:`moldescriptorFile` setup file to be provided as well.
 
+
+.. Note::
+
+    GUFF entries corresponding to interactions between water moltypes (as defined in the :ref:`moldescriptorFile` setup file) may be omitted. If such entries
+    are provided nonetheless, they will be ignored. The cutoff radius for van der Waals interactions between water molecules can be adjusted *via* the
+    :ref:`rnoncoulomb <noncoulombRadiusKey>` key in the :ref:`Input File <inputFile>`.
 
 .. _dftbFile:
 
