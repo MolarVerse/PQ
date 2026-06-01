@@ -94,6 +94,12 @@ All notable changes to this project will be documented in this file.
   and `FullAnisotropic` Berendsen)
 - Coverage for `JCouplingType` and `JCouplingForceField` (operator==
   contract, getter/setter coverage, default symmetry flags)
+- Expanded coverage for `PhysicalData` energy/virial accumulators
+  (`addCoulombEnergy`, `addNonCoulombEnergy`, `addBondEnergy`,
+  `addAngleEnergy`, `addDihedralEnergy`, `addImproperEnergy`,
+  `addRingPolymerEnergy`, `addVirial`); and `CellList` lifecycle
+  (`activate`/`deactivate`/`isActive` toggle; `clone` preserves the
+  configured cell counts, neighbour-cell count, and activation state)
 
 <!-- insertion marker -->
 ## [v0.6.4](https://github.com/MolarVerse/PQ/releases/tag/v0.6.4) - 2026-03-31
