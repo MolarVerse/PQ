@@ -172,6 +172,14 @@ All notable changes to this project will be documented in this file.
   brute-force inter-non-bonded, intra-non-bonded, bonded-interaction
   steps without throwing on a minimal one-molecule box; per-atom force
   buffer is zeroed when there are no inter-molecular pairs)
+- Coverage for the previously 0%-covered `Output::write()` writers
+  (`BoxFileOutput`, `StressOutput`, `VirialOutput`,
+  `RingPolymerEnergyOutput`, `references::ReferencesOutput`): step
+  column, all tensor components / box parameters / per-replica
+  energies present; one line per call; ring-polymer sum/max
+  aggregators reduce to expected scalars; references file emits the
+  fixed header + bibtex banner and tolerates non-existent registered
+  reference files
 
 <!-- insertion marker -->
 ## [v0.6.4](https://github.com/MolarVerse/PQ/releases/tag/v0.6.4) - 2026-03-31
