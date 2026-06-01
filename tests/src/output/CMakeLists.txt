@@ -9,6 +9,27 @@ set(source_files
     testMomentumOutput.cpp
     testRingPolymerRestartFileOutput.cpp
     testRingPolymerTrajectoryOutput.cpp
+    testOptOutput.cpp
+    testTimingsOutput.cpp
+)
+
+# Per-test extra include dirs and libs (defaults to empty for the legacy tests).
+set(testOptOutput_extra_includes
+    ${PROJECT_SOURCE_DIR}/include/opt/optimizer
+    ${PROJECT_SOURCE_DIR}/include/opt/convergence
+    ${PROJECT_SOURCE_DIR}/include/settings
+)
+set(testOptOutput_extra_libs
+    optimization
+    convergence
+    settings
+)
+
+set(testTimingsOutput_extra_includes
+    ${PROJECT_SOURCE_DIR}/include/timings
+)
+set(testTimingsOutput_extra_libs
+    timings
 )
 
 foreach(source_file ${source_files})
@@ -18,11 +39,13 @@ foreach(source_file ${source_files})
         PRIVATE
         ${PROJECT_SOURCE_DIR}/tests/include/macros
         ${PROJECT_SOURCE_DIR}/tests/include/output
+        ${${test_name}_extra_includes}
     )
     target_link_libraries(${test_name}
         PRIVATE
         output
         simulationBox
+        ${${test_name}_extra_libs}
         gtest
         gmock
         pq_test_main

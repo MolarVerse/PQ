@@ -12,6 +12,8 @@ set(source_files
     testQMSetup.cpp
     testQMSetupAse.cpp
     testRandomNumberGeneratorSetup.cpp
+    testOptimizerSetup.cpp
+    testHybridSetup.cpp
 )
 
 foreach(source_file ${source_files})

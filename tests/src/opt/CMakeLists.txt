@@ -1,5 +1,47 @@
 set(source_files
     testLearningRateStrategy.cpp
+    testConvergence.cpp
+    testOptimizer.cpp
+)
+
+# Per-source link/include overrides so each test only pulls in the libraries
+# it actually needs.
+set(testLearningRateStrategy_includes
+    ${PROJECT_SOURCE_DIR}/include/opt/learningRateStrategy
+)
+set(testLearningRateStrategy_libs
+    learningRateStrategy
+)
+
+set(testConvergence_includes
+    ${PROJECT_SOURCE_DIR}/include/opt/convergence
+    ${PROJECT_SOURCE_DIR}/include/settings
+    ${PROJECT_SOURCE_DIR}/include/config
+)
+set(testConvergence_libs
+    convergence
+    settings
+)
+
+set(testOptimizer_includes
+    ${PROJECT_SOURCE_DIR}/include/opt/optimizer
+    ${PROJECT_SOURCE_DIR}/include/opt/convergence
+    ${PROJECT_SOURCE_DIR}/include/settings
+    ${PROJECT_SOURCE_DIR}/include/exceptions
+    ${PROJECT_SOURCE_DIR}/include/physicalData
+    ${PROJECT_SOURCE_DIR}/include/simulationBox
+    ${PROJECT_SOURCE_DIR}/include/linearAlgebra
+    ${PROJECT_SOURCE_DIR}/include/linearAlgebra/vector3d
+    ${PROJECT_SOURCE_DIR}/include/config
+)
+set(testOptimizer_libs
+    optimizer
+    convergence
+    physicalData
+    simulationBox
+    exceptions
+    settings
+    linearAlgebra
 )
 
 foreach(source_file ${source_files})
@@ -8,11 +50,11 @@ foreach(source_file ${source_files})
     target_include_directories(${test_name}
         PRIVATE
         ${PROJECT_SOURCE_DIR}/tests/include/macros
-        ${PROJECT_SOURCE_DIR}/include/opt/learningRateStrategy
+        ${${test_name}_includes}
     )
     target_link_libraries(${test_name}
         PRIVATE
-        learningRateStrategy
+        ${${test_name}_libs}
         gtest
         gmock
         pq_test_main

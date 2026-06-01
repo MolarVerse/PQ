@@ -126,6 +126,40 @@ All notable changes to this project will be documented in this file.
   `addRingPolymerEnergy`, `addVirial`); and `CellList` lifecycle
   (`activate`/`deactivate`/`isActive` toggle; `clone` preserves the
   configured cell counts, neighbour-cell count, and activation state)
+- Coverage for `opt::Convergence` (all four `ConvStrategy` branches
+  in `checkConvergence`, `calcEnergyConvergence` / `calcForceConvergence`
+  flag flips above/below threshold, disabled-flag short-circuits,
+  threshold getters)
+- Coverage for `opt::Optimizer` via `SteepestDescent` (constructor stores
+  `nEpochs`, `maxHistoryLength`, `clone`, history-index out-of-range
+  exception, `updateHistory` populates deques and trims to the history
+  cap, offset-indexed `getEnergy` / `getMaxForce` / `getRMSForce` /
+  `getForces` / `getPositions`, `setConvergence` / `getConvergence`
+  round-trip, `hasConverged` for flat-energy/zero-force vs. large-force)
+- Coverage for `setup::OptimizerSetup` (free `setupOptimizer` no-op when
+  not an opt job; `setupLearningRateStrategy` for `CONSTANT`,
+  `CONSTANT_DECAY`, `EXPONENTIAL_DECAY` and exception paths for
+  `LINESEARCH_WOLFE` / `NONE` / missing decay; `setupMinMaxLR`
+  min ≥ max guard; `setupEmptyOptimizer` for `STEEPEST_DESCENT`,
+  `ADAM`, exception for `NONE`; `setupConvergence` writes back into
+  the optimizer; `setupEvaluator` for `MM_OPT` and exception for
+  non-opt jobs; full `setup()` happy path)
+- Coverage for `setup::HybridSetup` (free `setupHybrid` no-op when QMMM
+  inactive; `parseSelectionNoPython` for single index, comma list,
+  range, mixed range+list, empty input throws; `parseSelection`
+  empty-string returns `{0}`, sorts and dedupes, throws on
+  letters without Python bindings; `setup()` throws not-implemented)
+- Coverage for `output::OptOutput::write` (step column, all four
+  convergence-threshold columns, `ABSOLUTE` zeros the relative-energy
+  indicator, `RELATIVE` zeros the absolute-energy indicator, disabled
+  energy convergence zeros both energy indicators)
+- Coverage for `output::TimingsOutput::write` (header rows present,
+  `Total` row present, sub-timer registered via `Timer::startTimingsSection`
+  is listed in the per-section block)
+- Coverage for both `JCouplingSection` parsers (parameter-file: 7- and
+  8-element lines with `+` / `-` / `0` symmetry, wrong-count throws;
+  topology-file: keyword, `endedNormally`, 5-element happy path,
+  wrong-count throws, duplicate-atom-index throws)
 
 <!-- insertion marker -->
 ## [v0.6.4](https://github.com/MolarVerse/PQ/releases/tag/v0.6.4) - 2026-03-31
