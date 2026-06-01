@@ -11,6 +11,11 @@ set(source_files
     testRingPolymerTrajectoryOutput.cpp
     testOptOutput.cpp
     testTimingsOutput.cpp
+    testBoxOutput.cpp
+    testStressOutput.cpp
+    testVirialOutput.cpp
+    testRingPolymerEnergyOutput.cpp
+    testReferencesOutput.cpp
 )
 
 # Per-test extra include dirs and libs (defaults to empty for the legacy tests).
@@ -30,6 +35,43 @@ set(testTimingsOutput_extra_includes
 )
 set(testTimingsOutput_extra_libs
     timings
+)
+
+set(testBoxOutput_extra_includes
+    ${PROJECT_SOURCE_DIR}/include/box
+)
+set(testBoxOutput_extra_libs
+    box
+)
+
+set(testStressOutput_extra_includes
+    ${PROJECT_SOURCE_DIR}/include/physicalData
+)
+set(testStressOutput_extra_libs
+    physicalData
+)
+
+set(testVirialOutput_extra_includes
+    ${PROJECT_SOURCE_DIR}/include/physicalData
+)
+set(testVirialOutput_extra_libs
+    physicalData
+)
+
+set(testRingPolymerEnergyOutput_extra_includes
+    ${PROJECT_SOURCE_DIR}/include/physicalData
+)
+set(testRingPolymerEnergyOutput_extra_libs
+    physicalData
+)
+
+set(testReferencesOutput_extra_includes
+    ${PROJECT_SOURCE_DIR}/include/output/references
+    ${PROJECT_SOURCE_DIR}/include/settings
+)
+set(testReferencesOutput_extra_libs
+    references
+    settings
 )
 
 foreach(source_file ${source_files})
