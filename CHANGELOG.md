@@ -180,6 +180,17 @@ All notable changes to this project will be documented in this file.
   aggregators reduce to expected scalars; references file emits the
   fixed header + bibtex banner and tolerates non-existent registered
   reference files
+- Coverage for `setup::resetKinetics::ResetKineticsSetup`
+  (free `setupResetKinetics` no-op when not an MD job; happy path
+  populates the MDEngine's `ResetKinetics`; zero-frequency conversion
+  to `numberOfSteps + 1`; non-zero frequencies accepted)
+- Coverage for `setup::OutputFilesSetup` (Opt-job path replaces
+  defaults and assigns the `.opt` file; MD path runs without throwing;
+  RPMD path also assigns ring-polymer output filenames)
+- Coverage for `setup::RingPolymerSetup` (free `setupRingPolymer`
+  no-op when RPMD inactive; `setup()` throws when number of beads not
+  set; `setupPhysicalData` / `setupSimulationBox` succeed with beads
+  configured)
 
 <!-- insertion marker -->
 ## [v0.6.4](https://github.com/MolarVerse/PQ/releases/tag/v0.6.4) - 2026-03-31
