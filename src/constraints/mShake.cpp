@@ -595,10 +595,17 @@ double MShake::calcMatrixElement(
     const auto k = std::get<2>(indices);
     const auto l = std::get<3>(indices);
 
-    const auto ik = utilities::kroneckerDelta(i, k);
-    const auto il = utilities::kroneckerDelta(i, l);
-    const auto jk = utilities::kroneckerDelta(j, k);
-    const auto jl = utilities::kroneckerDelta(j, l);
+    // Cast to double before the subtractions: kroneckerDelta returns
+    // size_t and e.g. (ik - il) underflows to a huge value when ik=0,
+    // il=1 (which happens for any cross-bond matrix element where i is
+    // the "other" atom in the second bond, e.g. bond (0,1) paired with
+    // bond (1,2) on a 3-atom molecule gives jk=1, jl=0 → (jl - jk) =
+    // SIZE_T_MAX). The resulting matrix is garbage and M-SHAKE cannot
+    // converge for any nAtoms ≥ 3.
+    const auto ik = static_cast<double>(utilities::kroneckerDelta(i, k));
+    const auto il = static_cast<double>(utilities::kroneckerDelta(i, l));
+    const auto jk = static_cast<double>(utilities::kroneckerDelta(j, k));
+    const auto jl = static_cast<double>(utilities::kroneckerDelta(j, l));
 
     const auto mass_i = masses.first;
     const auto mass_j = masses.second;
