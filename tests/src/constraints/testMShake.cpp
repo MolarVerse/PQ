@@ -202,13 +202,13 @@ TEST(TestMShake, applyMShake_throwsWhenIterationLimitTooSmall)
 
     settings::TimingsSettings::setTimeStep(0.5);
 
-    // tolerance = 0.0 + max_iter = 1: the convergence check is strict
-    // `|r2Dev| / (2 r2Ref) > tolerance`, which can only succeed at
-    // exact zero deviation - unattainable in a single Newton step from
-    // the perturbed start. The iteration-bound throw must fire
-    // regardless of the platform's floating-point rounding.
+    // Use a negative tolerance so the strict convergence check
+    // `|r2Dev| / (2 r2Ref) > shakeTolerance` can never succeed
+    // (the left-hand side is non-negative and -1.0 is always smaller).
+    // Combined with max_iter = 1 this triggers the iteration-bound
+    // throw on the first pass, deterministically across platforms.
     EXPECT_THROW(
-        mShake.applyMShake(0.0, 1, simBox),
+        mShake.applyMShake(-1.0, 1, simBox),
         customException::MShakeException
     );
 }
