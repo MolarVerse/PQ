@@ -160,6 +160,18 @@ All notable changes to this project will be documented in this file.
   8-element lines with `+` / `-` / `0` symmetry, wrong-count throws;
   topology-file: keyword, `endedNormally`, 5-element happy path,
   wrong-count throws, duplicate-atom-index throws)
+- Coverage for `opt::SteepestDescent::update` (single-step
+  `pos_new = pos + lr * force`, old position stored, PBC wrap on
+  out-of-box updated positions, no-op at zero learning rate)
+- Coverage for `opt::Adam::update` (analytic step-1 reduction to
+  `pos_new ≈ pos + lr * sign(force)` with per-component sign
+  preservation, old position stored, PBC wrap, no-op on zero force;
+  both constructors and `clone` / `maxHistoryLength`)
+- Coverage for `opt::MMEvaluator` (`clone` produces an `MMEvaluator`
+  instance; `evaluate()` walks copy-old, force-reset, cell-list update,
+  brute-force inter-non-bonded, intra-non-bonded, bonded-interaction
+  steps without throwing on a minimal one-molecule box; per-atom force
+  buffer is zeroed when there are no inter-molecular pairs)
 
 <!-- insertion marker -->
 ## [v0.6.4](https://github.com/MolarVerse/PQ/releases/tag/v0.6.4) - 2026-03-31
