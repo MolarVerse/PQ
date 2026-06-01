@@ -73,6 +73,11 @@ All notable changes to this project will be documented in this file.
 - `utilities::isZero<T>(a)` helper added to `mathUtilities.hpp`,
   centralizing the exact-zero check (`a == T(0)`). Callers that need a
   tolerance can still use `compare(a, T(0), tol)`
+- `TrajectoryOutput::writeXyz` / `writeVelocities` / `writeForces` now
+  issue one `std::format` call per atom line instead of four (one per
+  coordinate plus the name). ASCII output is bit-identical; ~13% of the
+  output-system wall-clock cost on a worst-case `output_freq=1`
+  benchmark — see `OUTPUT_IO_REPORT.md` for the full profile
 
 ### Tests
 
