@@ -14,6 +14,8 @@ set(source_files
     testRandomNumberGeneratorSetup.cpp
     testOptimizerSetup.cpp
     testHybridSetup.cpp
+    testOutputFilesSetup.cpp
+    testRingPolymerSetup.cpp
 )
 
 foreach(source_file ${source_files})
