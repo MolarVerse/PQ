@@ -2,6 +2,9 @@ set(source_files
     testLearningRateStrategy.cpp
     testConvergence.cpp
     testOptimizer.cpp
+    testSteepestDescent.cpp
+    testAdam.cpp
+    testMMEvaluator.cpp
 )
 
 # Per-source link/include overrides so each test only pulls in the libraries
@@ -41,6 +44,61 @@ set(testOptimizer_libs
     simulationBox
     exceptions
     settings
+    linearAlgebra
+)
+
+set(testSteepestDescent_includes
+    ${PROJECT_SOURCE_DIR}/include/opt/optimizer
+    ${PROJECT_SOURCE_DIR}/include/opt/convergence
+    ${PROJECT_SOURCE_DIR}/include/simulationBox
+    ${PROJECT_SOURCE_DIR}/include/linearAlgebra
+    ${PROJECT_SOURCE_DIR}/include/linearAlgebra/vector3d
+    ${PROJECT_SOURCE_DIR}/include/config
+)
+set(testSteepestDescent_libs
+    optimizer
+    convergence
+    simulationBox
+    linearAlgebra
+)
+
+set(testAdam_includes
+    ${PROJECT_SOURCE_DIR}/include/opt/optimizer
+    ${PROJECT_SOURCE_DIR}/include/opt/convergence
+    ${PROJECT_SOURCE_DIR}/include/simulationBox
+    ${PROJECT_SOURCE_DIR}/include/linearAlgebra
+    ${PROJECT_SOURCE_DIR}/include/linearAlgebra/vector3d
+    ${PROJECT_SOURCE_DIR}/include/config
+)
+set(testAdam_libs
+    optimizer
+    convergence
+    simulationBox
+    linearAlgebra
+)
+
+set(testMMEvaluator_includes
+    ${PROJECT_SOURCE_DIR}/include/opt/evaluator
+    ${PROJECT_SOURCE_DIR}/include/simulationBox
+    ${PROJECT_SOURCE_DIR}/include/physicalData
+    ${PROJECT_SOURCE_DIR}/include/potential
+    ${PROJECT_SOURCE_DIR}/include/forceField
+    ${PROJECT_SOURCE_DIR}/include/intraNonBonded
+    ${PROJECT_SOURCE_DIR}/include/virial
+    ${PROJECT_SOURCE_DIR}/include/constraints
+    ${PROJECT_SOURCE_DIR}/include/linearAlgebra
+    ${PROJECT_SOURCE_DIR}/include/linearAlgebra/vector3d
+    ${PROJECT_SOURCE_DIR}/include/config
+)
+set(testMMEvaluator_libs
+    evaluator
+    simulationBox
+    physicalData
+    potential
+    forceField
+    intraNonBonded
+    virial
+    constraints
     linearAlgebra
 )
 
