@@ -77,6 +77,8 @@ All notable changes to this project will be documented in this file.
   (`BerendsenManostat`: tau and compressibility getters, manostat type
   and isotropy; isotropy and type for `SemiIsotropic`, `Anisotropic`,
   and `FullAnisotropic` Berendsen)
+- Coverage for `JCouplingType` and `JCouplingForceField` (operator==
+  contract, getter/setter coverage, default symmetry flags)
 
 <!-- insertion marker -->
 ## [v0.6.4](https://github.com/MolarVerse/PQ/releases/tag/v0.6.4) - 2026-03-31
