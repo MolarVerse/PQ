@@ -59,6 +59,14 @@ All notable changes to this project will be documented in this file.
   `PotentialCellList::calculateForces` produce identical per-atom forces and
   intermolecular energies for the same configuration, guarding the
   brute-force/cell-list equivalence under hot-path refactors
+- `testResetKinetics` revived: the file was 500 lines of commented-out
+  tests targeting an old 6-arg constructor; replaced with 6 working
+  tests covering the 7-arg constructor's getters, the temperature /
+  momentum / angular-momentum setters, `resetTemperature` (lambda
+  rescaling, finite output), `resetMomentum` (drives total linear
+  momentum to ~0), `resetAngularMomentum` (finite velocities), and
+  `resetForces` (zeros per-atom forces). The previously 0%-covered
+  97-line `src/resetKinetics/resetKinetics.cpp` is now exercised
 - Expanded coverage for `mathUtilities` (`compare` with tolerance,
   `compare(Vec3D)` with tolerance, `kroneckerDelta`); `Thermostat`
   variants (`VelocityRescaling`: tau getter/setter, thermostat type,
