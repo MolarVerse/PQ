@@ -8,10 +8,11 @@ foreach(source_file ${source_files})
     target_include_directories(${test_name}
         PRIVATE
         ${PROJECT_SOURCE_DIR}/tests/include/macros
+        ${PROJECT_SOURCE_DIR}/include/opt/learningRateStrategy
     )
     target_link_libraries(${test_name}
         PRIVATE
-        opt
+        learningRateStrategy
         gtest
         gmock
         pq_test_main
