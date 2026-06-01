@@ -66,14 +66,12 @@ void TrajectoryOutput::writeXyz(SimulationBox &simBox)
 
     for (const auto &atom : simBox.getAtoms())
     {
-        buffer << std::format("{:<5}\t", atom->getName());
-
         const auto &pos =
             simBox.getBox().wrapPositionIntoBox(atom->getPosition());
 
-        buffer << std::format("{:15.8f}\t", pos[0]);
-        buffer << std::format("{:15.8f}\t", pos[1]);
-        buffer << std::format("{:15.8f}\n", pos[2]);
+        buffer << std::format(
+            "{:<5}\t{:15.8f}\t{:15.8f}\t{:15.8f}\n",
+            atom->getName(), pos[0], pos[1], pos[2]);
     }
 
     // Write the buffer to the file
@@ -99,13 +97,11 @@ void TrajectoryOutput::writeVelocities(SimulationBox &simBox)
 
         for (size_t i = 0; i < nAtoms; ++i)
         {
-            buffer << std::format("{:<5}\t", molecule.getAtomName(i));
-
             const auto &vel = molecule.getAtomVelocity(i);
 
-            buffer << std::format("{:20.8e}\t", vel[0]);
-            buffer << std::format("{:20.8e}\t", vel[1]);
-            buffer << std::format("{:20.8e}\n", vel[2]);
+            buffer << std::format(
+                "{:<5}\t{:20.8e}\t{:20.8e}\t{:20.8e}\n",
+                molecule.getAtomName(i), vel[0], vel[1], vel[2]);
         }
     }
 
@@ -135,13 +131,11 @@ void TrajectoryOutput::writeForces(SimulationBox &simBox)
 
         for (size_t i = 0; i < nAtoms; ++i)
         {
-            buffer << std::format("{:<5}\t", molecule.getAtomName(i));
-
             const auto &force = molecule.getAtomForce(i);
 
-            buffer << std::format("{:15.8f}\t", force[0]);
-            buffer << std::format("{:15.8f}\t", force[1]);
-            buffer << std::format("{:15.8f}\n", force[2]);
+            buffer << std::format(
+                "{:<5}\t{:15.8f}\t{:15.8f}\t{:15.8f}\n",
+                molecule.getAtomName(i), force[0], force[1], force[2]);
         }
     }
 
