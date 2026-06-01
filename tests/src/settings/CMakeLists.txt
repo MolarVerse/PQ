@@ -3,6 +3,10 @@ set(source_files
     testQMSettings.cpp
     testOutputFileSettings.cpp
     testThermostatSettings.cpp
+    testManostatSettings.cpp
+    testConstraintSettings.cpp
+    testFileSettings.cpp
+    testConvergenceSettings.cpp
 )
 
 foreach(source_file ${source_files})
