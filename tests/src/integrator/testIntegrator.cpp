@@ -82,6 +82,25 @@ TEST_F(TestIntegrator, integratePositions)
 }
 
 /**
+ * @brief regression test for B12: integratePositions must save the
+ * pre-update position into _positionOld so M-SHAKE has a non-zero
+ * bondPrev reference. Without this the M-SHAKE solver multiplies its
+ * solution by (0,0,0) and never converges.
+ */
+TEST_F(TestIntegrator, integratePositions_savesPositionOldFromPreUpdateValue)
+{
+    auto       atom        = _box->getAtoms()[1].get();
+    const auto positionPre = atom->getPosition();
+
+    _integrator->integratePositions(atom, *_box);
+
+    // positionOld must be the position from BEFORE the velocity update,
+    // not the updated position and not the default (0,0,0).
+    EXPECT_EQ(atom->getPositionOld(), positionPre);
+    EXPECT_NE(atom->getPositionOld(), atom->getPosition());
+}
+
+/**
  * @brief tests function firstStep of velocity verlet integrator
  *
  */

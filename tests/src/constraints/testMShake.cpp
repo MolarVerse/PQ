@@ -124,22 +124,86 @@ TEST(TestMShake, applyMShake_threeAtomMolecule)
 
     settings::TimingsSettings::setTimeStep(0.5);
 
-    // Exercise the nAtoms = 3 code path. Either outcome is acceptable
-    // and platform-portable: the solver may converge within the
-    // iteration bound (no throw), or it may not and throw a clean
-    // MShakeException. Both prove the matrix-fill loop ran without
-    // OOB writes past (nBonds, nBonds) mShakeMatrix or OOB reads past
-    // bondsUnconstrained - the rectangular vs upper-triangular B4 bug
-    // would corrupt memory and crash here, not return cleanly via
-    // either path. Any other exception type would be a regression.
-    try
-    {
-        mShake.applyMShake(1.0e-6, 100, simBox);
-    }
-    catch (const customException::MShakeException &)
-    {
-        // Solver did not converge within the iteration bound - fine,
-        // see the rationale above.
-    }
-    SUCCEED();
+    // With all five fixes (B4 loop bound + B8 fs->s + B11 kroneckerDelta
+    // cast + B12 integrator updateOldPosition + #205 convergence check
+    // inversion) M-SHAKE converges for this 3-atom setup; bondPrev is
+    // taken directly from positionOld which we set above.
+    EXPECT_NO_THROW(mShake.applyMShake(1.0e-6, 100, simBox));
+
+    // After convergence the perturbed bond 0-1 must be back to the
+    // reference length 1.0 within the requested tolerance.
+    const auto pos0 = molecule.getAtomPosition(0);
+    const auto pos1 = molecule.getAtomPosition(1);
+    const auto bond01 = linearAlgebra::norm(pos1 - pos0);
+    EXPECT_NEAR(bond01, 1.0, 1.0e-3);
+}
+
+/**
+ * @brief regression test for the iteration-bound throw (#205): if the
+ * solver cannot reach tolerance within `shakeIterations` steps, the
+ * routine must throw MShakeException rather than looping forever or
+ * silently giving up.
+ */
+TEST(TestMShake, applyMShake_throwsWhenIterationLimitTooSmall)
+{
+    auto moltype = simulationBox::MoleculeType();
+    moltype.setMoltype(1);
+    moltype.setName("triangle");
+    moltype.setNumberOfAtoms(3);
+
+    auto refAtoms = std::vector<simulationBox::Atom>(3);
+    refAtoms[0].setName("H");
+    refAtoms[1].setName("H");
+    refAtoms[2].setName("H");
+    refAtoms[0].setPosition({0.0, 0.0, 0.0});
+    refAtoms[1].setPosition({1.0, 0.0, 0.0});
+    refAtoms[2].setPosition({0.5, std::sqrt(3.0) / 2.0, 0.0});
+
+    auto mShakeRef = constraints::MShakeReference();
+    mShakeRef.setMoleculeType(moltype);
+    mShakeRef.setAtoms(refAtoms);
+
+    auto mShake = constraints::MShake();
+    mShake.addMShakeReference(mShakeRef);
+    mShake.initMShake();
+
+    auto simBox = simulationBox::SimulationBox();
+    simBox.setBoxDimensions({100.0, 100.0, 100.0});
+
+    auto molecule = simulationBox::Molecule();
+    molecule.setMoltype(1);
+    molecule.setNumberOfAtoms(3);
+
+    const auto refPos0 = linearAlgebra::Vec3D(0.0, 0.0, 0.0);
+    const auto refPos1 = linearAlgebra::Vec3D(1.0, 0.0, 0.0);
+    const auto refPos2 =
+        linearAlgebra::Vec3D(0.5, std::sqrt(3.0) / 2.0, 0.0);
+
+    auto a1 = std::make_shared<simulationBox::Atom>();
+    auto a2 = std::make_shared<simulationBox::Atom>();
+    auto a3 = std::make_shared<simulationBox::Atom>();
+    a1->setMass(1.0);
+    a2->setMass(1.0);
+    a3->setMass(1.0);
+    // Large perturbation so the solver cannot converge in 1 iteration.
+    a1->setPosition(refPos0);
+    a2->setPosition({1.5, 0.0, 0.0});
+    a3->setPosition(refPos2);
+    a1->setPositionOld(refPos0);
+    a2->setPositionOld(refPos1);
+    a3->setPositionOld(refPos2);
+    a1->setVelocity({0.0, 0.0, 0.0});
+    a2->setVelocity({0.0, 0.0, 0.0});
+    a3->setVelocity({0.0, 0.0, 0.0});
+    molecule.addAtom(a1);
+    molecule.addAtom(a2);
+    molecule.addAtom(a3);
+    simBox.addMolecule(molecule);
+
+    settings::TimingsSettings::setTimeStep(0.5);
+
+    EXPECT_THROW(
+        mShake.applyMShake(1.0e-6, 1, simBox),
+        customException::MShakeException
+    );
 }
