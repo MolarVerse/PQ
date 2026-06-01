@@ -53,6 +53,12 @@ All notable changes to this project will be documented in this file.
   velocity. The thermostat now skips silently when `_temperature` is
   (approximately) zero, mirroring the velocity-rescaling NaN guard
   added in v0.6.2
+- `kernel::distVecAndDist2(pos_i, pos_j)` (no-PBC overload) now
+  correctly returns `dot(r_ij, r_ij)` for the squared distance instead
+  of `dot(pos_i, pos_j)`. The only caller, `MShake::initMShakeReferences`,
+  was therefore storing wrong reference squared bond lengths, so
+  `applyMShake` was driving the constraint toward an incorrect target
+  and could not converge
 
 ### Internal
 
@@ -87,6 +93,12 @@ All notable changes to this project will be documented in this file.
   + isotropy string round-trips, shake/rattle tolerances + max-iters,
   input/output file-name round-trips, optional energy/force convergence
   thresholds)
+- Coverage for the `kernel::dist*` family (no-PBC `distVec` /
+  `distVecAndDist2` matching analytical subtraction and squared norm;
+  PBC overloads choosing the minimum-image displacement on a known
+  orthorhombic box; consistency between `distSquared`, `distVec`, and
+  `distVecAndDist2` under PBC) — these tests caught a real bug in the
+  no-PBC `distVecAndDist2` that's also fixed here
 - Expanded coverage for `mathUtilities` (`compare` with tolerance,
   `compare(Vec3D)` with tolerance, `kroneckerDelta`); `Thermostat`
   variants (`VelocityRescaling`: tau getter/setter, thermostat type,
