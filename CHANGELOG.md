@@ -99,6 +99,15 @@ All notable changes to this project will be documented in this file.
   orthorhombic box; consistency between `distSquared`, `distVec`, and
   `distVecAndDist2` under PBC) — these tests caught a real bug in the
   no-PBC `distVecAndDist2` that's also fixed here
+- Coverage for `opt::LearningRateStrategy` and its three concrete
+  variants (`ConstantLRStrategy`, `ConstantDecayLRStrategy`,
+  `ExpDecayLR`): constructor stores the initial rate, the constant
+  strategy's `updateLearningRate` is a no-op, the constant-decay
+  variant decays only on frequency hits, the exponential-decay variant
+  matches the analytical `initial * exp(-decay * step / nEpochs)` and
+  is monotonically decreasing, and the base class's
+  `checkLearningRate` clamps to the min/max bounds and appends a
+  warning
 - Expanded coverage for `mathUtilities` (`compare` with tolerance,
   `compare(Vec3D)` with tolerance, `kroneckerDelta`); `Thermostat`
   variants (`VelocityRescaling`: tau getter/setter, thermostat type,
