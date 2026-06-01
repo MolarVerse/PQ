@@ -82,10 +82,12 @@ TEST_F(TestIntegrator, integratePositions)
 }
 
 /**
- * @brief regression test for B12: integratePositions must save the
- * pre-update position into _positionOld so M-SHAKE has a non-zero
- * bondPrev reference. Without this the M-SHAKE solver multiplies its
- * solution by (0,0,0) and never converges.
+ * @brief integratePositions must save the pre-update position into
+ * _positionOld so M-SHAKE has a non-zero bondPrev reference. Without
+ * this the M-SHAKE solver multiplies its solution by (0,0,0) on every
+ * iteration and the constraint can never be satisfied. The only
+ * consumer of getPositionOld is M-SHAKE, so SHAKE tests would not
+ * catch a regression here.
  */
 TEST_F(TestIntegrator, integratePositions_savesPositionOldFromPreUpdateValue)
 {

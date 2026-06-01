@@ -124,10 +124,10 @@ TEST(TestMShake, applyMShake_threeAtomMolecule)
 
     settings::TimingsSettings::setTimeStep(0.5);
 
-    // With all five fixes (B4 loop bound + B8 fs->s + B11 kroneckerDelta
-    // cast + B12 integrator updateOldPosition + #205 convergence check
-    // inversion) M-SHAKE converges for this 3-atom setup; bondPrev is
-    // taken directly from positionOld which we set above.
+    // With this PR's fixes (matrix-fill loop bound, fs->s unit
+    // conversion, kroneckerDelta double-cast, and integrator saving
+    // positionOld) M-SHAKE converges for this 3-atom setup; bondPrev
+    // is taken directly from positionOld which we set above.
     EXPECT_NO_THROW(mShake.applyMShake(1.0e-6, 100, simBox));
 
     // After convergence the perturbed bond 0-1 must be back to the
@@ -202,8 +202,13 @@ TEST(TestMShake, applyMShake_throwsWhenIterationLimitTooSmall)
 
     settings::TimingsSettings::setTimeStep(0.5);
 
+    // tolerance = 0.0 + max_iter = 1: the convergence check is strict
+    // `|r2Dev| / (2 r2Ref) > tolerance`, which can only succeed at
+    // exact zero deviation - unattainable in a single Newton step from
+    // the perturbed start. The iteration-bound throw must fire
+    // regardless of the platform's floating-point rounding.
     EXPECT_THROW(
-        mShake.applyMShake(1.0e-6, 1, simBox),
+        mShake.applyMShake(0.0, 1, simBox),
         customException::MShakeException
     );
 }
