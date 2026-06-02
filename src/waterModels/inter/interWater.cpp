@@ -128,7 +128,9 @@ void InterWater::calculateHotspotSmoothingMMForces(
     const pq::SharedCoulombPot &sharedCoulombPot,
     pq::CellList               &cellList
 )
-{
+    if (!_strategy)
+        return;
+
     _strategy->calculateHotspotSmoothingMMForces(
         _state,
         simBox,
