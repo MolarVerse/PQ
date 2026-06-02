@@ -85,7 +85,7 @@ optional<size_t> SimulationBox::getWaterType() const { return _waterType; }
  * @brief Get the ammonia type
  *
  * @return int
- */
+ * @return std::optional<size_t>
 optional<size_t> SimulationBox::getAmmoniaType() const { return _ammoniaType; }
 
 /**
