@@ -48,7 +48,7 @@ TEST_F(TestCellList, determineCellBoundaries)
     _cellList->resizeCells();
     _cellList->determineCellBoundaries(_simulationBox->getBoxDimensions());
 
-    auto cells = _cellList->getCells();
+    const auto &cells = _cellList->getCells();
 
     const auto box = _simulationBox->getBoxDimensions();
     auto index     = static_cast<linearAlgebra::Vec3D>(cells[0].getCellIndex());
@@ -110,7 +110,7 @@ TEST_F(TestCellList, addNeighbouringCellPointers)
     _cellList->determineCellBoundaries(_simulationBox->getBoxDimensions());
     _cellList->addNeighbouringCellPointers(cell);
 
-    const auto neighbourCells = cell.getNeighbourCells();
+    const auto &neighbourCells = cell.getNeighbourCells();
 
     EXPECT_EQ(neighbourCells.size(), 13);
     EXPECT_EQ(
@@ -179,7 +179,7 @@ TEST_F(TestCellList, addNeighbouringCells)
 
     for (const auto &cell : _cellList->getCells())
     {
-        const auto neighbourCells = cell.getNeighbourCells();
+        const auto &neighbourCells = cell.getNeighbourCells();
         EXPECT_EQ(neighbourCells.size(), 62);
     }
 
