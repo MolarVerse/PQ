@@ -77,7 +77,7 @@ void SimulationBox::addMoleculeType(const MoleculeType &molecule)
 /**
  * @brief Get the water type
  *
- * @return int
+ * @return std::optional<size_t>
  */
 optional<size_t> SimulationBox::getWaterType() const { return _waterType; }
 
