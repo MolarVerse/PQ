@@ -257,14 +257,7 @@ void CellList::addMoleculesToCells(SimulationBox &simulationBox)
             const auto atomCellIndices = getCellIndexOfAtom(box, position);
             const auto cellIndexScalar = getCellIndex(atomCellIndices);
 
-            const auto &[_, successful] =
-                mapCellIndexToAtomPointers.try_emplace(
-                    cellIndexScalar,
-                    std::vector<Atom *>({atom})
-                );
-
-            if (!successful)
-                mapCellIndexToAtomPointers[cellIndexScalar].push_back(atom);
+            mapCellIndexToAtomPointers[cellIndexScalar].push_back(atom);
         }
 
         auto addMoleculeAndAtomPointersToCell = [this, molecule](auto &pair)

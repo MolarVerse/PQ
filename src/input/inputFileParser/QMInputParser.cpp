@@ -84,6 +84,12 @@ QMInputParser::QMInputParser(Engine &engine) : InputFileParser(engine)
     );
 
     addKeyword(
+        std::string("remove_net_force"),
+        bind_front(&QMInputParser::parseRemoveNetForce, this),
+        false
+    );
+
+    addKeyword(
         std::string("mace_model_size"),
         bind_front(&QMInputParser::parseMaceModelSize, this),
         false
@@ -249,6 +255,22 @@ void QMInputParser::parseDispersion(
     checkCommand(lineElements, lineNumber);
 
     QMSettings::setUseDispersionCorrection(keywordToBool(lineElements));
+}
+
+/**
+ * @brief parse the remove net force option
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
+void QMInputParser::parseRemoveNetForce(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+
+    QMSettings::setRemoveNetForce(keywordToBool(lineElements));
 }
 
 /**

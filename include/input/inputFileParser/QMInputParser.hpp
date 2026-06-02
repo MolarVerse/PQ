@@ -50,6 +50,7 @@ namespace input
         void parseQMLoopTimeLimit(const pq::strings &, const size_t);
 
         void parseDispersion(const pq::strings &, const size_t);
+        void parseRemoveNetForce(const pq::strings &, const size_t);
 
         void parseMaceModelSize(const pq::strings &, const size_t);
         void parseMaceModelPath(const pq::strings &, const size_t);

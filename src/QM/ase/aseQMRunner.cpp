@@ -27,6 +27,7 @@
 #include "box.hpp"   // for simulationBox::Periodicity
 #include "physicalData.hpp"
 #include "pybind11/embed.h"
+#include "qmSettings.hpp"   // for QMSettings
 #include "simulationBox.hpp"
 
 using QM::ASEQMRunner;
@@ -35,6 +36,7 @@ using enum simulationBox::Periodicity;
 using namespace simulationBox;
 using namespace physicalData;
 using namespace constants;
+using namespace settings;
 
 using array_d = py::array_t<double>;
 using array_i = py::array_t<int>;
@@ -175,6 +177,9 @@ void ASEQMRunner::collectForces(SimulationBox &simBox) const
         ::PyErr_Print();
         throw;
     }
+
+    if (QMSettings::getRemoveNetForce())
+        simBox.removeNetForce();
 }
 
 /**

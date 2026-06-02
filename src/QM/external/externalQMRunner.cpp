@@ -145,6 +145,9 @@ void ExternalQMRunner::readForceFile(
     std::ranges::for_each(box.getQMAtoms(), readForces);
 
     forceFile.close();
+
+    if (QMSettings::getRemoveNetForce())
+        box.removeNetForce();
 }
 
 /**

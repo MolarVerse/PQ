@@ -128,7 +128,11 @@ void TriclinicBox::applyPBC(Vec3D &position) const
             for (int j = -1; j <= 1; ++j)
                 for (int k = -1; k <= 1; ++k)
                 {
-                    const auto shift = _boxMatrix * Vec3D{i, j, k};
+                    const auto shift = _boxMatrix * Vec3D{
+                        static_cast<double>(i),
+                        static_cast<double>(j),
+                        static_cast<double>(k),
+                    };
 
                     const auto newPosition = originalPosition + shift;
 

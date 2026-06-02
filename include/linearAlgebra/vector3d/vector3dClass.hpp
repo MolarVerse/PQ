@@ -90,28 +90,28 @@ namespace linearAlgebra
 
         // += operators
         void operator+=(const Vector3D<T> &)
-        requires(pq::ArithmeticVector3D<T> || pq::Arithmetic<T>);
+        requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>;
 
         Vector3D &operator+=(const T)
         requires pq::Arithmetic<T>;
 
         // -= operators
         Vector3D &operator-=(const Vector3D<T> &)
-        requires(pq::ArithmeticVector3D<T> || pq::Arithmetic<T>);
+        requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>;
 
         Vector3D &operator-=(const T)
         requires pq::Arithmetic<T>;
 
         // *= operators
         Vector3D &operator*=(const Vector3D<T> &)
-        requires(pq::ArithmeticVector3D<T> || pq::Arithmetic<T>);
+        requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>;
 
         Vector3D &operator*=(const T)
         requires pq::Arithmetic<T>;
 
         // /= operators
         Vector3D &operator/=(const Vector3D<T> &)
-        requires(pq::ArithmeticVector3D<T> || pq::Arithmetic<T>);
+        requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>;
 
         Vector3D &operator/=(const T)
         requires pq::Arithmetic<T>;

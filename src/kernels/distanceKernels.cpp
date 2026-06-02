@@ -104,7 +104,7 @@ std::pair<Vec3D, double> kernel::distVecAndDist2(
 {
     const auto r_ij = pos_i - pos_j;
 
-    const auto r2 = dot(pos_i, pos_j);
+    const auto r2 = dot(r_ij, r_ij);
 
     return std::make_pair(r_ij, r2);
 }
