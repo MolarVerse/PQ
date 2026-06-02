@@ -1,4 +1,5 @@
 set(source_files
+    testBruteForceCellListEquivalence.cpp
 )
 
 if(BUILD_WITH_KOKKOS)

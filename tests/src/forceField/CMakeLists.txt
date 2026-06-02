@@ -6,6 +6,7 @@ set(source_files
     testBondForceField.cpp
     testDihedralType.cpp
     testDihedralForceField.cpp
+    testJCoupling.cpp
 )
 
 foreach(source_file ${source_files})

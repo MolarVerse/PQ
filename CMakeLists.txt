@@ -70,13 +70,15 @@ endif()
 if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease")
     message("\n   Release build   \n")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
-    if (${CMAKE_SYSTEM_PROCESSOR} MATCHES "x86_64")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -mtune=native")
-    elseif(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mcpu=native")
+    if(BUILD_WITH_NATIVE)
+        if (${CMAKE_SYSTEM_PROCESSOR} MATCHES "x86_64")
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -mtune=native")
+        elseif(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64")
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mcpu=native")
+        endif()
     endif()
 
-    if(NOT BUILD_WITH_KOKKOS)
+    if(BUILD_WITH_LTO AND NOT BUILD_WITH_KOKKOS)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -flto")
     endif()
 elseif(CMAKE_BUILD_TYPE MATCHES "^[Rr]el[Ww]ith[Dd]ebug")
@@ -99,6 +101,30 @@ endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_COMPILE_VERSION_=\\\"${GIT_VERSION}\\\"")
 message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}\n")
+
+# *********************************
+# optional build-speed accelerators
+# *********************************
+# use ccache as compiler launcher if available (greatly speeds up rebuilds)
+find_program(CCACHE_PROGRAM ccache)
+if(CCACHE_PROGRAM)
+    message(STATUS "ccache found - using it as compiler launcher: ${CCACHE_PROGRAM}")
+    set(CMAKE_CXX_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
+    set(CMAKE_C_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
+endif()
+
+# use a faster linker (mold, then lld) if available (speeds up linking)
+if(UNIX AND NOT APPLE)
+    find_program(MOLD_PROGRAM mold)
+    find_program(LLD_PROGRAM ld.lld)
+    if(MOLD_PROGRAM)
+        message(STATUS "mold found - using it as linker")
+        add_link_options("-fuse-ld=mold")
+    elseif(LLD_PROGRAM)
+        message(STATUS "lld found - using it as linker")
+        add_link_options("-fuse-ld=lld")
+    endif()
+endif()
 
 # ************************
 # include dir for c++ code
@@ -135,6 +161,10 @@ if(BUILD_WITH_TESTS)
 endif()
 
 add_subdirectory(apps)
+
+if(BUILD_WITH_PERF_BENCH)
+    add_subdirectory(benchmarks/perf)
+endif()
 
 if(BUILD_WITH_DOC)
     include(doxygen)

@@ -20,72 +20,69 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-// #include "engine.hpp"                  // for Engine
-// #include "resetKinetics.hpp"           // for ResetMomentum, ResetTemperature
-// #include "resetKineticsSettings.hpp"   // for ResetKineticsSettings
-// #include "resetKineticsSetup.hpp"      // for ResetKineticsSetup,
-// setupResetKine... #include "testSetup.hpp"               // for TestSetup
-// #include "timingsSettings.hpp"         // for TimingsSettings
+#include <gtest/gtest.h>
 
-// #include "gtest/gtest.h"   // for Message, TestPartResult
-// #include <gtest/gtest.h>   // for EXPECT_EQ, InitGoogleTest, RUN_ALL...
-// #include <string>          // for allocator, basic_string
+#include "mdEngine.hpp"
+#include "resetKineticsSettings.hpp"
+#include "resetKineticsSetup.hpp"
+#include "settings.hpp"
+#include "testSetup.hpp"
+#include "timingsSettings.hpp"
 
-// using namespace setup;
+using namespace setup::resetKinetics;
+using namespace settings;
 
-// TEST_F(TestSetup, setup)
-// {
-//     ResetKineticsSetup resetKineticsSetup(*_engine);
+namespace
+{
+    void resetSettings()
+    {
+        ResetKineticsSettings::setNScale(0);
+        ResetKineticsSettings::setFScale(0);
+        ResetKineticsSettings::setNReset(0);
+        ResetKineticsSettings::setFReset(0);
+        ResetKineticsSettings::setNResetAngular(0);
+        ResetKineticsSettings::setFResetAngular(0);
+        ResetKineticsSettings::setFResetForces(0);
+    }
+}   // namespace
 
-//     settings::TimingsSettings::setNumberOfSteps(100);
+TEST_F(TestSetup, setupResetKineticsIsNoOpWhenNotMDJob)
+{
+    resetSettings();
+    Settings::setJobtype(JobType::MM_OPT);
+    EXPECT_NO_THROW(setupResetKinetics(*_engine));
+}
 
-//     resetKineticsSetup.setup();
-//     const auto resetKinetics = dynamic_cast<resetKinetics::ResetKinetics
-//     &>(_engine->getResetKinetics()); EXPECT_EQ(typeid(resetKinetics),
-//     typeid(resetKinetics::ResetKinetics));
+TEST_F(TestSetup, setupResetKineticsPopulatesResetKineticsOnMDEngine)
+{
+    resetSettings();
+    Settings::setJobtype(JobType::MM_MD);
+    TimingsSettings::setNumberOfSteps(100);
 
-//     settings::ResetKineticsSettings::setNScale(1);
-//     resetKineticsSetup.setup();
-//     const auto resetKinetics2 = dynamic_cast<resetKinetics::ResetTemperature
-//     &>(_engine->getResetKinetics()); EXPECT_EQ(typeid(resetKinetics2),
-//     typeid(resetKinetics::ResetTemperature));
-//     EXPECT_EQ(resetKinetics2.getNStepsTemperatureReset(), 1);
-//     EXPECT_EQ(resetKinetics2.getFrequencyTemperatureReset(), 100 + 1);
-//     EXPECT_EQ(resetKinetics2.getNStepsMomentumReset(), 0);
-//     EXPECT_EQ(resetKinetics2.getFrequencyMomentumReset(), 100 + 1);
+    EXPECT_NO_THROW(setupResetKinetics(*_mdEngine));
+    EXPECT_NO_THROW((void)_mdEngine->getResetKinetics());
+}
 
-//     settings::ResetKineticsSettings::setNScale(0);
-//     settings::ResetKineticsSettings::setFScale(1);
-//     resetKineticsSetup.setup();
-//     const auto resetKinetics3 = dynamic_cast<resetKinetics::ResetTemperature
-//     &>(_engine->getResetKinetics()); EXPECT_EQ(typeid(resetKinetics3),
-//     typeid(resetKinetics::ResetTemperature));
-//     EXPECT_EQ(resetKinetics3.getNStepsTemperatureReset(), 0);
-//     EXPECT_EQ(resetKinetics3.getFrequencyTemperatureReset(), 1);
-//     EXPECT_EQ(resetKinetics3.getNStepsMomentumReset(), 0);
-//     EXPECT_EQ(resetKinetics3.getFrequencyMomentumReset(), 100 + 1);
+TEST_F(TestSetup, setupConvertsZeroFrequenciesToNumberOfStepsPlusOne)
+{
+    resetSettings();
+    Settings::setJobtype(JobType::MM_MD);
+    TimingsSettings::setNumberOfSteps(42);
 
-//     settings::ResetKineticsSettings::setFScale(0);
-//     settings::ResetKineticsSettings::setNReset(1);
-//     resetKineticsSetup.setup();
-//     const auto resetKinetics4 = dynamic_cast<resetKinetics::ResetMomentum
-//     &>(_engine->getResetKinetics()); EXPECT_EQ(typeid(resetKinetics4),
-//     typeid(resetKinetics::ResetMomentum));
-//     EXPECT_EQ(resetKinetics4.getNStepsTemperatureReset(), 0);
-//     EXPECT_EQ(resetKinetics4.getFrequencyTemperatureReset(), 100 + 1);
-//     EXPECT_EQ(resetKinetics4.getNStepsMomentumReset(), 1);
-//     EXPECT_EQ(resetKinetics4.getFrequencyMomentumReset(), 100 + 1);
+    ResetKineticsSetup s(*_mdEngine);
+    EXPECT_NO_THROW(s.setup());
+}
 
-//     settings::ResetKineticsSettings::setNReset(0);
-//     settings::ResetKineticsSettings::setFReset(1);
-//     resetKineticsSetup.setup();
-//     const auto resetKinetics5 = dynamic_cast<resetKinetics::ResetMomentum
-//     &>(_engine->getResetKinetics()); EXPECT_EQ(typeid(resetKinetics5),
-//     typeid(resetKinetics::ResetMomentum));
-//     EXPECT_EQ(resetKinetics5.getNStepsTemperatureReset(), 0);
-//     EXPECT_EQ(resetKinetics5.getFrequencyTemperatureReset(), 100 + 1);
-//     EXPECT_EQ(resetKinetics5.getNStepsMomentumReset(), 0);
-//     EXPECT_EQ(resetKinetics5.getFrequencyMomentumReset(), 1);
+TEST_F(TestSetup, setupAcceptsNonZeroFrequencies)
+{
+    resetSettings();
+    Settings::setJobtype(JobType::MM_MD);
+    TimingsSettings::setNumberOfSteps(50);
+    ResetKineticsSettings::setFScale(10);
+    ResetKineticsSettings::setFReset(5);
+    ResetKineticsSettings::setFResetAngular(3);
+    ResetKineticsSettings::setFResetForces(2);
 
-//     EXPECT_NO_THROW(setupResetKinetics(*_engine));
-// }
+    ResetKineticsSetup s(*_mdEngine);
+    EXPECT_NO_THROW(s.setup());
+}

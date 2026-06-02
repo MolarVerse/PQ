@@ -129,6 +129,25 @@ std::string settings::string(const SlakosType slakos)
 }
 
 /**
+ * @brief builds the file path for a built-in SLAKOS set (3ob/matsci)
+ *
+ * @details __SLAKOS_DIR__ is only defined when building with ASE support (see
+ * .cmake/slakos.cmake). In a build without ASE, requesting a built-in set is
+ * reported as a user input error instead of failing to compile.
+ */
+static std::string builtinSlakosPath([[maybe_unused]] const SlakosType type)
+{
+#ifdef __SLAKOS_DIR__
+    return __SLAKOS_DIR__ + settings::string(type) + "/skfiles/";
+#else
+    throw InputFileException(
+        "Built-in SLAKOS sets (3ob/matsci) require building PQ with "
+        "-DBUILD_WITH_ASE=On"
+    );
+#endif
+}
+
+/**
  * @brief returns the xTB method as string
  *
  * @param method
@@ -405,13 +424,13 @@ void QMSettings::setSlakosType(const std::string_view &slakos)
     if ("3ob" == slakosType)
     {
         _slakosType = THREEOB;
-        _slakosPath = __SLAKOS_DIR__ + string(_slakosType) + "/skfiles/";
+        _slakosPath = builtinSlakosPath(_slakosType);
     }
 
     else if ("matsci" == slakosType)
     {
         _slakosType = MATSCI;
-        _slakosPath = __SLAKOS_DIR__ + string(_slakosType) + "/skfiles/";
+        _slakosPath = builtinSlakosPath(_slakosType);
     }
 
     else if ("custom" == slakosType)
@@ -507,6 +526,15 @@ void QMSettings::setIsHubbardDerivsSet(const bool isHubbardDerivsSet)
 void QMSettings::setUseDispersionCorrection(const bool useDispersionCorr)
 {
     _useDispersionCorrection = useDispersionCorr;
+}
+
+/**
+ * @brief sets if the net force should be removed after reading in the QM forces
+ *
+ */
+void QMSettings::setRemoveNetForce(const bool removeNetForce)
+{
+    _removeNetForce = removeNetForce;
 }
 
 /**
@@ -613,6 +641,14 @@ std::unordered_map<std::string, double> QMSettings::getHubbardDerivs()
  * @return bool
  */
 bool QMSettings::useDispersionCorr() { return _useDispersionCorrection; }
+
+/**
+ * @brief returns if the net force should be removed after reading in the QM
+ * forces
+ *
+ * @return bool
+ */
+bool QMSettings::getRemoveNetForce() { return _removeNetForce; }
 
 /**
  * @brief returns the xTBMethod

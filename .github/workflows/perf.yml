@@ -1,0 +1,154 @@
+name: Performance Gate
+
+# Builds the fixed-work perf benchmarks for the PR and for the base branch,
+# runs each under callgrind, and fails if any regressed by more than the
+# threshold. Instruction counts are deterministic, so this is not flaky.
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+    # Only run when something that can actually affect instruction counts
+    # changes — code, benchmarks, build config, submodules, or the gate
+    # itself. Doc / changelog / unrelated-workflow PRs skip the gate.
+    paths:
+      - 'src/**'
+      - 'include/**'
+      - 'apps/**'
+      - 'benchmarks/**'
+      - 'external/**'
+      - 'CMakeLists.txt'
+      - '.cmake/**'
+      - '.github/workflows/perf.yml'
+      - 'scripts/perf_gate.sh'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  perf-regression:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout PR
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      # Callgrind instruction counts are a pure function of the binary, which
+      # is a pure function of the base commit SHA. So we cache the measured
+      # base Ir counts keyed on that SHA: on a hit we skip the base checkout,
+      # build, and base callgrind run entirely (~half the workflow).
+      - name: Restore cached base instruction counts
+        id: base-ir-cache
+        uses: actions/cache@v4
+        with:
+          path: base_ir.tsv
+          key: perf-base-ir-${{ github.event.pull_request.base.sha || github.sha }}
+
+      - name: Checkout base branch
+        if: steps.base-ir-cache.outputs.cache-hit != 'true'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.base_ref || 'dev' }}
+          submodules: recursive
+          path: base
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-13 g++-13 valgrind mold
+        shell: bash
+
+      - name: Setup ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: perf-${{ github.base_ref || 'dev' }}
+
+      - name: Build PR benchmarks
+        run: |
+          cmake -S . -B build-pr \
+            -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_NATIVE=Off \
+            -DBUILD_WITH_PERF_BENCH=On -DBUILD_WITH_ASE=Off \
+            -DBUILD_WITH_TESTS=Off -DBUILD_WITH_DOCS=Off
+          cmake --build build-pr --target perf_benchmarks -j$(nproc)
+        env:
+          CC: gcc-13
+          CXX: g++-13
+
+      - name: Build base benchmarks (baseline)
+        if: steps.base-ir-cache.outputs.cache-hit != 'true'
+        run: |
+          cmake -S base -B build-base \
+            -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_NATIVE=Off \
+            -DBUILD_WITH_PERF_BENCH=On -DBUILD_WITH_ASE=Off \
+            -DBUILD_WITH_TESTS=Off -DBUILD_WITH_DOCS=Off || true
+          cmake --build build-base --target perf_benchmarks -j$(nproc) \
+            || echo "base branch has no perf benchmarks yet - baseline skipped"
+        env:
+          CC: gcc-13
+          CXX: g++-13
+
+      - name: Compare instruction counts (gate)
+        id: gate
+        continue-on-error: true
+        env:
+          # The script loads base counts from this file if it exists (cache
+          # hit) and (re)writes the freshly-known counts to it at the end so
+          # actions/cache@v4 saves them at job end (cache miss path).
+          PERF_BASE_IR_FILE: base_ir.tsv
+        run: bash scripts/perf_gate.sh build-pr/benchmarks/perf build-base/benchmarks/perf 2
+
+      - name: Mint PQ Perf Bot installation token
+        id: app-token
+        if: always() && github.event_name == 'pull_request'
+        continue-on-error: true
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.PQ_PERF_BOT_APP_ID }}
+          private-key: ${{ secrets.PQ_PERF_BOT_PRIVATE_KEY }}
+
+      - name: Post / update performance comment
+        if: always() && github.event_name == 'pull_request'
+        continue-on-error: true
+        uses: actions/github-script@v7
+        with:
+          # Comment author is pq-perf-bot[bot] when the token mint succeeds,
+          # else falls back to github-actions[bot] so the comment still posts.
+          github-token: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const marker = '<!-- perf-gate-comment -->';
+            const botLogin = 'pq-perf-bot[bot]';
+            let body;
+            try { body = fs.readFileSync('perf_report.md', 'utf8'); }
+            catch (e) { core.info('no perf_report.md, skipping comment'); return; }
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+            const { data: comments } =
+              await github.rest.issues.listComments({ owner, repo, issue_number });
+            const existing = comments.find(c => c.body && c.body.includes(marker));
+            // GitHub fixes a comment's author at creation time; if an older
+            // comment exists under a different author (e.g. github-actions[bot]
+            // before the App was wired in), delete and recreate so the visible
+            // author becomes pq-perf-bot[bot].
+            if (existing && existing.user.login !== botLogin) {
+              await github.rest.issues.deleteComment(
+                { owner, repo, comment_id: existing.id });
+              await github.rest.issues.createComment(
+                { owner, repo, issue_number, body });
+            } else if (existing) {
+              await github.rest.issues.updateComment(
+                { owner, repo, comment_id: existing.id, body });
+            } else {
+              await github.rest.issues.createComment(
+                { owner, repo, issue_number, body });
+            }
+
+      - name: Fail on regression
+        if: steps.gate.outcome == 'failure'
+        run: |
+          echo "performance regression detected (see the comment / summary above)"
+          exit 1
