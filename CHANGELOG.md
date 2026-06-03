@@ -76,6 +76,13 @@ All notable changes to this project will be documented in this file.
     unaffected (dt² cancels), but the velocity correction
     `posAdjustment / (mass * dt)` was being divided by raw fs,
     leaving velocities essentially uncorrected by M-SHAKE
+  - `MDEngine::takeStepBeforeForces` now snapshots `_positionOld` via
+    `SimulationBox::updateOldPositions()` before the integrator's
+    first half-step when M-SHAKE is active. Without this, M-SHAKE's
+    `bondPrev` reference was whatever the `.rst` file initialised
+    `_positionOld` to (or `(0,0,0)` for files missing the old-position
+    columns), so `posAdjustment = solution * bondPrev = 0` and the
+    solver never converged
 - `ExternalQMRunner::readForceFile` now throws `QMRunnerException` if the
   QM energy or any force component read from the external force file is
   NaN/Inf, mirroring the v0.6.2 NaN/Inf input-file guard. Previously a

@@ -82,21 +82,6 @@ TEST_F(TestIntegrator, integratePositions)
 }
 
 /**
- * @brief integratePositions must save the pre-update position into
- * _positionOld
- */
-TEST_F(TestIntegrator, integratePositions_savesPositionOldFromPreUpdateValue)
-{
-    auto       atom        = _box->getAtoms()[1].get();
-    const auto positionPre = atom->getPosition();
-
-    _integrator->integratePositions(atom, *_box);
-
-    EXPECT_EQ(atom->getPositionOld(), positionPre);
-    EXPECT_NE(atom->getPositionOld(), atom->getPosition());
-}
-
-/**
  * @brief tests function firstStep of velocity verlet integrator
  *
  */

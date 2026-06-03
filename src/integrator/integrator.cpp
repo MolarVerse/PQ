@@ -73,8 +73,6 @@ void Integrator::integrateVelocities(Atom *atom) const
 void Integrator::integratePositions(Atom *atom, const SimulationBox &simBox)
     const
 {
-    atom->updateOldPosition();
-
     auto       position = atom->getPosition();
     const auto velocity = atom->getVelocity();
 
