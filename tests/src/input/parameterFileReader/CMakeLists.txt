@@ -7,6 +7,7 @@ set(source_files
     testDihedralTypesSection.cpp
     testImproperDihedralTypesSection.cpp
     testNonCoulombicTypesSection.cpp
+    testJCouplingTypesSection.cpp
 )
 
 foreach(source_file ${source_files})

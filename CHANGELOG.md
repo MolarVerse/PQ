@@ -76,6 +76,11 @@ All notable changes to this project will be documented in this file.
     unaffected (dt² cancels), but the velocity correction
     `posAdjustment / (mass * dt)` was being divided by raw fs,
     leaving velocities essentially uncorrected by M-SHAKE
+- `ExternalQMRunner::readForceFile` now throws `QMRunnerException` if the
+  QM energy or any force component read from the external force file is
+  NaN/Inf, mirroring the v0.6.2 NaN/Inf input-file guard. Previously a
+  failed/garbage QM calculation silently propagated NaN into the
+  trajectory
 
 ### Internal
 
@@ -116,6 +121,15 @@ All notable changes to this project will be documented in this file.
   orthorhombic box; consistency between `distSquared`, `distVec`, and
   `distVecAndDist2` under PBC) — these tests caught a real bug in the
   no-PBC `distVecAndDist2` that's also fixed here
+- Coverage for `opt::LearningRateStrategy` and its three concrete
+  variants (`ConstantLRStrategy`, `ConstantDecayLRStrategy`,
+  `ExpDecayLR`): constructor stores the initial rate, the constant
+  strategy's `updateLearningRate` is a no-op, the constant-decay
+  variant decays only on frequency hits, the exponential-decay variant
+  matches the analytical `initial * exp(-decay * step / nEpochs)` and
+  is monotonically decreasing, and the base class's
+  `checkLearningRate` clamps to the min/max bounds and appends a
+  warning
 - Expanded coverage for `mathUtilities` (`compare` with tolerance,
   `compare(Vec3D)` with tolerance, `kroneckerDelta`); `Thermostat`
   variants (`VelocityRescaling`: tau getter/setter, thermostat type,
@@ -134,6 +148,77 @@ All notable changes to this project will be documented in this file.
   `addRingPolymerEnergy`, `addVirial`); and `CellList` lifecycle
   (`activate`/`deactivate`/`isActive` toggle; `clone` preserves the
   configured cell counts, neighbour-cell count, and activation state)
+- Coverage for `opt::Convergence` (all four `ConvStrategy` branches
+  in `checkConvergence`, `calcEnergyConvergence` / `calcForceConvergence`
+  flag flips above/below threshold, disabled-flag short-circuits,
+  threshold getters)
+- Coverage for `opt::Optimizer` via `SteepestDescent` (constructor stores
+  `nEpochs`, `maxHistoryLength`, `clone`, history-index out-of-range
+  exception, `updateHistory` populates deques and trims to the history
+  cap, offset-indexed `getEnergy` / `getMaxForce` / `getRMSForce` /
+  `getForces` / `getPositions`, `setConvergence` / `getConvergence`
+  round-trip, `hasConverged` for flat-energy/zero-force vs. large-force)
+- Coverage for `setup::OptimizerSetup` (free `setupOptimizer` no-op when
+  not an opt job; `setupLearningRateStrategy` for `CONSTANT`,
+  `CONSTANT_DECAY`, `EXPONENTIAL_DECAY` and exception paths for
+  `LINESEARCH_WOLFE` / `NONE` / missing decay; `setupMinMaxLR`
+  min ≥ max guard; `setupEmptyOptimizer` for `STEEPEST_DESCENT`,
+  `ADAM`, exception for `NONE`; `setupConvergence` writes back into
+  the optimizer; `setupEvaluator` for `MM_OPT` and exception for
+  non-opt jobs; full `setup()` happy path)
+- Coverage for `setup::HybridSetup` (free `setupHybrid` no-op when QMMM
+  inactive; `parseSelectionNoPython` for single index, comma list,
+  range, mixed range+list, empty input throws; `parseSelection`
+  empty-string returns `{0}`, sorts and dedupes, throws on
+  letters without Python bindings; `setup()` throws not-implemented)
+- Coverage for `output::OptOutput::write` (step column, all four
+  convergence-threshold columns, `ABSOLUTE` zeros the relative-energy
+  indicator, `RELATIVE` zeros the absolute-energy indicator, disabled
+  energy convergence zeros both energy indicators)
+- Coverage for `output::TimingsOutput::write` (header rows present,
+  `Total` row present, sub-timer registered via `Timer::startTimingsSection`
+  is listed in the per-section block)
+- Coverage for both `JCouplingSection` parsers (parameter-file: 7- and
+  8-element lines with `+` / `-` / `0` symmetry, wrong-count throws;
+  topology-file: keyword, `endedNormally`, 5-element happy path,
+  wrong-count throws, duplicate-atom-index throws)
+- Coverage for `opt::SteepestDescent::update` (single-step
+  `pos_new = pos + lr * force`, old position stored, PBC wrap on
+  out-of-box updated positions, no-op at zero learning rate)
+- Coverage for `opt::Adam::update` (analytic step-1 reduction to
+  `pos_new ≈ pos + lr * sign(force)` with per-component sign
+  preservation, old position stored, PBC wrap, no-op on zero force;
+  both constructors and `clone` / `maxHistoryLength`)
+- Coverage for `opt::MMEvaluator` (`clone` produces an `MMEvaluator`
+  instance; `evaluate()` walks copy-old, force-reset, cell-list update,
+  brute-force inter-non-bonded, intra-non-bonded, bonded-interaction
+  steps without throwing on a minimal one-molecule box; per-atom force
+  buffer is zeroed when there are no inter-molecular pairs)
+- Coverage for the previously 0%-covered `Output::write()` writers
+  (`BoxFileOutput`, `StressOutput`, `VirialOutput`,
+  `RingPolymerEnergyOutput`, `references::ReferencesOutput`): step
+  column, all tensor components / box parameters / per-replica
+  energies present; one line per call; ring-polymer sum/max
+  aggregators reduce to expected scalars; references file emits the
+  fixed header + bibtex banner and tolerates non-existent registered
+  reference files
+- Coverage for `setup::resetKinetics::ResetKineticsSetup`
+  (free `setupResetKinetics` no-op when not an MD job; happy path
+  populates the MDEngine's `ResetKinetics`; zero-frequency conversion
+  to `numberOfSteps + 1`; non-zero frequencies accepted)
+- Coverage for `setup::OutputFilesSetup` (Opt-job path replaces
+  defaults and assigns the `.opt` file; MD path runs without throwing;
+  RPMD path also assigns ring-polymer output filenames)
+- Coverage for `setup::RingPolymerSetup` (free `setupRingPolymer`
+  no-op when RPMD inactive; `setup()` throws when number of beads not
+  set; `setupPhysicalData` / `setupSimulationBox` succeed with beads
+  configured)
+
+### Internal
+
+- `CellList::getCells()` and `Cell::getNeighbourCells()` now return by
+  `const &` instead of by value, and `VelocityVerlet::secondStep` no longer
+  copies the per-atom `shared_ptr` into its lambda parameter
 
 <!-- insertion marker -->
 ## [v0.6.4](https://github.com/MolarVerse/PQ/releases/tag/v0.6.4) - 2026-03-31
