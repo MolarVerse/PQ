@@ -83,11 +83,7 @@ TEST_F(TestIntegrator, integratePositions)
 
 /**
  * @brief integratePositions must save the pre-update position into
- * _positionOld so M-SHAKE has a non-zero bondPrev reference. Without
- * this the M-SHAKE solver multiplies its solution by (0,0,0) on every
- * iteration and the constraint can never be satisfied. The only
- * consumer of getPositionOld is M-SHAKE, so SHAKE tests would not
- * catch a regression here.
+ * _positionOld
  */
 TEST_F(TestIntegrator, integratePositions_savesPositionOldFromPreUpdateValue)
 {
@@ -96,8 +92,6 @@ TEST_F(TestIntegrator, integratePositions_savesPositionOldFromPreUpdateValue)
 
     _integrator->integratePositions(atom, *_box);
 
-    // positionOld must be the position from BEFORE the velocity update,
-    // not the updated position and not the default (0,0,0).
     EXPECT_EQ(atom->getPositionOld(), positionPre);
     EXPECT_NE(atom->getPositionOld(), atom->getPosition());
 }

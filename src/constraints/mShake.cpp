@@ -349,7 +349,7 @@ void MShake::applyMShake(
                         "M-Shake did not converge within {} iterations for "
                         "molecule type {}",
                         shakeIterations,
-                        molecule.getMoltype()
+                        moltype
                     )
                 );
         }
@@ -595,13 +595,8 @@ double MShake::calcMatrixElement(
     const auto k = std::get<2>(indices);
     const auto l = std::get<3>(indices);
 
-    // Cast to double before the subtractions: kroneckerDelta returns
-    // size_t and e.g. (ik - il) underflows to a huge value when ik=0,
-    // il=1 (which happens for any cross-bond matrix element where i is
-    // the "other" atom in the second bond, e.g. bond (0,1) paired with
-    // bond (1,2) on a 3-atom molecule gives jk=1, jl=0 → (jl - jk) =
-    // SIZE_T_MAX). The resulting matrix is garbage and M-SHAKE cannot
-    // converge for any nAtoms ≥ 3.
+    // Cast to double: kroneckerDelta returns size_t, so subtractions
+    // like (ik - il) underflow to SIZE_T_MAX when the first operand is 0.
     const auto ik = static_cast<double>(utilities::kroneckerDelta(i, k));
     const auto il = static_cast<double>(utilities::kroneckerDelta(i, l));
     const auto jk = static_cast<double>(utilities::kroneckerDelta(j, k));

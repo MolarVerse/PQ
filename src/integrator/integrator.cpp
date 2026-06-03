@@ -73,12 +73,6 @@ void Integrator::integrateVelocities(Atom *atom) const
 void Integrator::integratePositions(Atom *atom, const SimulationBox &simBox)
     const
 {
-    // Save the position at the start of this step so M-SHAKE has a
-    // well-defined "previous bond" reference. Without this, _positionOld
-    // is whatever the .rst file initialised it to (or (0,0,0) for files
-    // missing the old-position columns), so M-SHAKE's bondPrev is zero
-    // and posAdjustment = solution * bondPrev = 0 — the constraint
-    // solver can never make progress.
     atom->updateOldPosition();
 
     auto       position = atom->getPosition();
