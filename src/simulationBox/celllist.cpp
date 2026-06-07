@@ -255,13 +255,7 @@ void CellList::addMoleculesToCells(SimulationBox &simulationBox)
             const auto atomCellIndices = getCellIndexOfAtom(box, position);
             const auto cellIndexScalar = getCellIndex(atomCellIndices);
 
-            const auto &[_, successful] = mapCellIndexToAtomIndex.try_emplace(
-                cellIndexScalar,
-                std::vector<size_t>({j})
-            );
-
-            if (!successful)
-                mapCellIndexToAtomIndex[cellIndexScalar].push_back(j);
+            mapCellIndexToAtomIndex[cellIndexScalar].push_back(j);
         }
 
         auto addMoleculeAndAtomIndicesToCell = [this, molecule](auto &pair)
@@ -364,9 +358,9 @@ Vec3D CellList::getCellSize() const { return _cellSize; }
 /**
  * @brief get cells
  *
- * @return std::vector<Cell>
+ * @return const std::vector<Cell>&
  */
-std::vector<Cell> CellList::getCells() const { return _cells; }
+const std::vector<Cell> &CellList::getCells() const { return _cells; }
 
 /**
  * @brief get cell by index

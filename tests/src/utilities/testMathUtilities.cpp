@@ -63,3 +63,54 @@ TEST(TestMathUtilities, sign)
     EXPECT_EQ(sign(-2.0), -1);
     EXPECT_EQ(sign(0.0), 0);
 }
+
+/**
+ * @brief tests compare<T>(a, b, tolerance) — 3-arg overload with a
+ * user-supplied tolerance.
+ */
+TEST(TestMathUtilities, compareWithTolerance)
+{
+    // compare uses strict `<`, so a == b only compares equal when the
+    // tolerance is strictly positive.
+    EXPECT_TRUE(compare(1.0, 1.0 + 1e-9, 1e-8));
+    EXPECT_FALSE(compare(1.0, 1.0 + 1e-7, 1e-8));
+    EXPECT_FALSE(compare(0.0, 0.0, 0.0));
+    EXPECT_TRUE(compare(0.0, 0.0, 1e-12));
+    EXPECT_FALSE(compare(1.0, 2.0, 0.5));
+}
+
+/**
+ * @brief tests compare(Vec3D, Vec3D, tolerance) — Vec3D compare with
+ * a user-supplied tolerance.
+ */
+TEST(TestMathUtilities, compareVec3DWithTolerance)
+{
+    const auto a = linearAlgebra::Vec3D(1.0, 2.0, 3.0);
+    const auto b = linearAlgebra::Vec3D(1.0 + 1e-9, 2.0, 3.0 - 1e-9);
+    EXPECT_TRUE(compare(a, b, 1e-8));
+    EXPECT_FALSE(compare(a, b, 1e-10));
+}
+
+/**
+ * @brief tests kroneckerDelta(i, j): 1 when i == j, 0 otherwise.
+ */
+TEST(TestMathUtilities, kroneckerDelta)
+{
+    EXPECT_EQ(kroneckerDelta(0u, 0u), 1u);
+    EXPECT_EQ(kroneckerDelta(1u, 1u), 1u);
+    EXPECT_EQ(kroneckerDelta(0u, 1u), 0u);
+    EXPECT_EQ(kroneckerDelta(5u, 7u), 0u);
+}
+
+/**
+ * @brief tests isZero template function for the double data type. Uses
+ * exact equality, so subnormal but non-zero values are not "zero".
+ */
+TEST(TestMathUtilities, isZero)
+{
+    EXPECT_TRUE(isZero(0.0));
+    EXPECT_TRUE(isZero(-0.0));
+    EXPECT_FALSE(isZero(1.0));
+    EXPECT_FALSE(isZero(std::numeric_limits<double>::epsilon()));
+    EXPECT_FALSE(isZero(std::numeric_limits<double>::min()));
+}

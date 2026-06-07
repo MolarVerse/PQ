@@ -48,7 +48,7 @@ TEST_F(TestCellList, determineCellBoundaries)
     _cellList->resizeCells();
     _cellList->determineCellBoundaries(_simulationBox->getBoxDimensions());
 
-    auto cells = _cellList->getCells();
+    const auto &cells = _cellList->getCells();
 
     const auto box = _simulationBox->getBoxDimensions();
     auto index     = static_cast<linearAlgebra::Vec3D>(cells[0].getCellIndex());
@@ -110,7 +110,7 @@ TEST_F(TestCellList, addNeighbouringCellPointers)
     _cellList->determineCellBoundaries(_simulationBox->getBoxDimensions());
     _cellList->addNeighbouringCellPointers(cell);
 
-    const auto neighbourCells = cell.getNeighbourCells();
+    const auto &neighbourCells = cell.getNeighbourCells();
 
     EXPECT_EQ(neighbourCells.size(), 13);
     EXPECT_EQ(
@@ -179,7 +179,7 @@ TEST_F(TestCellList, addNeighbouringCells)
 
     for (const auto &cell : _cellList->getCells())
     {
-        const auto neighbourCells = cell.getNeighbourCells();
+        const auto &neighbourCells = cell.getNeighbourCells();
         EXPECT_EQ(neighbourCells.size(), 62);
     }
 
@@ -204,6 +204,39 @@ TEST_F(TestCellList, checkCoulombCutoff)
         customException::CellListException,
         "Coulomb cutoff is smaller than half of the largest cell size."
     );
+}
+
+/* ---------- activate / deactivate / isActive ---------- */
+
+TEST_F(TestCellList, activateDeactivateToggles_isActive)
+{
+    _cellList->activate();
+    EXPECT_TRUE(_cellList->isActive());
+
+    _cellList->deactivate();
+    EXPECT_FALSE(_cellList->isActive());
+
+    _cellList->activate();
+    EXPECT_TRUE(_cellList->isActive());
+}
+
+/* ---------- clone() copies the configured cell counts ---------- */
+
+TEST_F(TestCellList, clone_preservesNumberOfCellsAndNeighbourCells)
+{
+    _cellList->setNumberOfCells(4);
+    _cellList->setNumberOfNeighbourCells(2);
+    _cellList->activate();
+
+    const auto cloned = _cellList->clone();
+
+    ASSERT_NE(cloned, nullptr);
+    EXPECT_EQ(cloned->getNumberOfCells(), _cellList->getNumberOfCells());
+    EXPECT_EQ(
+        cloned->getNumberOfNeighbourCells(),
+        _cellList->getNumberOfNeighbourCells()
+    );
+    EXPECT_EQ(cloned->isActive(), _cellList->isActive());
 }
 
 /**
