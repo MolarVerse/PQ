@@ -453,5 +453,7 @@ TEST_F(TestSimulationBox, updateOldPositions)
     _simulationBox->updateOldPositions();
 
     for (const auto &atom : _simulationBox->getAtoms())
+    {
         EXPECT_VECTOR_NEAR(atom->getPositionOld(), atom->getPosition(), 1e-10);
+    }
 }
