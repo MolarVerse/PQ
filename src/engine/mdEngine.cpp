@@ -131,8 +131,6 @@ void MDEngine::takeStepBeforeForces()
 {
     _thermostat->applyThermostatHalfStep(*_simulationBox, *_physicalData);
 
-    // M-SHAKE needs the pre-update positions as bondPrev reference;
-    // snapshot here only when active so non-M-SHAKE runs don't pay it.
     if (_constraints->isMShakeActive())
         _simulationBox->updateOldPositions();
 
