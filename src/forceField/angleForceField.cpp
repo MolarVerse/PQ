@@ -92,22 +92,29 @@ void AngleForceField::calculateEnergyAndForces(
 
     physicalData.addAngleEnergy(-forceMagnitude * deltaAngle / 2.0);
 
-    const auto normalDistance = distance12 * distance13 * ::sin(alpha);
+    auto forcexyz = linearAlgebra::Vec3D{0.0, 0.0, 0.0};
 
-    auto normalPosition  = cross(dPosition13, dPosition12);
-    normalPosition      /= normalDistance;
+    // Guard against near-collinear angles where division by sin(alpha) is unstable.
+    const auto sinAlpha = ::sin(alpha);
+    if (std::fabs(sinAlpha) >= 1.0e-10)
+    {
+        const auto normalDistance = distance12 * distance13 * sinAlpha;
 
-    auto force    = forceMagnitude / distance12Squared;
-    auto forcexyz = force * cross(dPosition12, normalPosition);
+        auto normalPosition  = cross(dPosition13, dPosition12);
+        normalPosition      /= normalDistance;
 
-    _molecules[0]->addAtomForce(_atomIndices[0], -forcexyz);
-    _molecules[1]->addAtomForce(_atomIndices[1], forcexyz);
+        auto force = forceMagnitude / distance12Squared;
+        forcexyz   = force * cross(dPosition12, normalPosition);
 
-    force    = forceMagnitude / distance13Squared;
-    forcexyz = force * cross(normalPosition, dPosition13);
+        _molecules[0]->addAtomForce(_atomIndices[0], -forcexyz);
+        _molecules[1]->addAtomForce(_atomIndices[1], forcexyz);
 
-    _molecules[0]->addAtomForce(_atomIndices[0], -forcexyz);
-    _molecules[2]->addAtomForce(_atomIndices[2], forcexyz);
+        force    = forceMagnitude / distance13Squared;
+        forcexyz = force * cross(normalPosition, dPosition13);
+
+        _molecules[0]->addAtomForce(_atomIndices[0], -forcexyz);
+        _molecules[2]->addAtomForce(_atomIndices[2], forcexyz);
+    }
 
     if (_isLinker)
     {

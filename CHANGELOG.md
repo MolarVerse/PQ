@@ -47,6 +47,12 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- `AngleForceField::calculateEnergyAndForces` no longer divides by
+  `sin(alpha)` when the angle is collinear (alpha ≈ 0 or π): the
+  bend-force decomposition is now gated on `|sin(alpha)| >= 1e-10`,
+  preventing NaN forces for linear-equilibrium parametrizations (e.g.
+  CO₂ with α₀ = 180°) and transient collinear configurations. Energy
+  contribution and the linker correction below are unaffected
 - `BerendsenThermostat::applyThermostat` no longer produces NaN
   velocities when called with zero kinetic energy: the `T_target / T`
   ratio would diverge and `0.0 * Inf = NaN` corrupted every atom's
