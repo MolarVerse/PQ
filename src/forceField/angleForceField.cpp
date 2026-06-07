@@ -94,11 +94,7 @@ void AngleForceField::calculateEnergyAndForces(
 
     auto forcexyz = linearAlgebra::Vec3D{0.0, 0.0, 0.0};
 
-    // The bend-force decomposition divides by sin(alpha); skip it (and only
-    // it) when the angle is collinear (alpha ~ 0 or pi), where the
-    // normal-direction is degenerate. Energy already added above; the linker
-    // correction below depends on forceMagnitude (set above) and dPosition23,
-    // not on this block, so it still runs.
+    // Guard against near-collinear angles where division by sin(alpha) is unstable.
     const auto sinAlpha = ::sin(alpha);
     if (std::fabs(sinAlpha) >= 1.0e-10)
     {
