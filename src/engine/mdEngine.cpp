@@ -131,6 +131,9 @@ void MDEngine::takeStepBeforeForces()
 {
     _thermostat->applyThermostatHalfStep(*_simulationBox, *_physicalData);
 
+    if (_constraints->isMShakeActive())
+        _simulationBox->updateOldPositions();
+
     _integrator->firstStep(*_simulationBox);
 
     _constraints->applyShake(*_simulationBox);

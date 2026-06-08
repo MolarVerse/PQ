@@ -65,6 +65,30 @@ All notable changes to this project will be documented in this file.
   was therefore storing wrong reference squared bond lengths, so
   `applyMShake` was driving the constraint toward an incorrect target
   and could not converge
+- Multiple M-SHAKE fixes in `applyMShake`:
+  - inner loop now iterates upper-triangular `(k+1 .. nAtoms)` bond
+    pairs instead of a rectangular `(nAtoms-1)²` grid, matching the
+    matrix-init loop. The previous loop wrote past the
+    `(nBonds, nBonds)` `mShakeMatrix` and read past
+    `bondsUnconstrained` for any molecule with `nAtoms ≥ 3`
+  - convergence check inverted: the loop now breaks when `converged`
+    is true, not when it's false (the old code exited the iteration
+    the first time anything wasn't converged)
+  - new `shakeIterations` parameter bounds the inner SHAKE iterations
+    and throws `MShakeException` instead of looping forever if the
+    constraint solver fails to converge
+  - `dt` is now converted from fs to s via `_FS_TO_S_` (mirroring the
+    v0.6.4 fix to `applyShake`); the position adjustment was
+    unaffected (dt² cancels), but the velocity correction
+    `posAdjustment / (mass * dt)` was being divided by raw fs,
+    leaving velocities essentially uncorrected by M-SHAKE
+  - `MDEngine::takeStepBeforeForces` now snapshots `_positionOld` via
+    `SimulationBox::updateOldPositions()` before the integrator's
+    first half-step when M-SHAKE is active. Without this, M-SHAKE's
+    `bondPrev` reference was whatever the `.rst` file initialised
+    `_positionOld` to (or `(0,0,0)` for files missing the old-position
+    columns), so `posAdjustment = solution * bondPrev = 0` and the
+    solver never converged
 - `ExternalQMRunner::readForceFile` now throws `QMRunnerException` if the
   QM energy or any force component read from the external force file is
   NaN/Inf, mirroring the v0.6.2 NaN/Inf input-file guard. Previously a

@@ -56,7 +56,11 @@ namespace constraints
 
         void initMShake();
         void initMShakeReferences();
-        void applyMShake(const double, pq::SimBox &);
+        void applyMShake(
+            const double shakeTolerance,
+            const size_t shakeIterations,
+            pq::SimBox  &simBox
+        );
         void applyMRattle(pq::SimBox &);
 
         [[nodiscard]] size_t calcNumberOfMShakeMolecules(pq::SimBox &) const;
