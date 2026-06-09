@@ -34,9 +34,20 @@
 #include "mathUtilities.hpp"       // for compare
 #include "molecule.hpp"            // for Molecule
 #include "potentialSettings.hpp"   // for PotentialSettings
+#include "stochasticRescalingManostat.hpp"   // for StochasticRescalingManostat
+#include "thermostatSettings.hpp"            // for ThermostatSettings
 #include "throwWithMessage.hpp"    // for EXPECT_THROW_MSG
 #include "timingsSettings.hpp"     // for TimingsSettings
 #include "vector3d.hpp"            // for Vector3D, Vec3D
+
+class TestableStochasticRescalingManostat
+    : public manostat::StochasticRescalingManostat
+{
+  public:
+    using StochasticRescalingManostat::StochasticRescalingManostat;
+
+    void setPressure(const double pressure) { _pressure = pressure; }
+};
 
 /**
  * @brief tests function calculate pressure
@@ -140,6 +151,23 @@ TEST_F(TestManostat, applyNoneManostat)
     _manostat->applyManostat(*_box, *_data);
 
     EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * constants::_PRESSURE_FACTOR_);
+}
+
+TEST_F(TestManostat, stochasticRescalingMuUsesLengthScaling)
+{
+    settings::ThermostatSettings::setActualTargetTemperature(0.0);
+    settings::TimingsSettings::setTimeStep(0.5);
+
+    auto manostat = TestableStochasticRescalingManostat(7.0, 0.25, 0.12);
+    manostat.setPressure(1.0);
+
+    const auto mu = manostat.calculateMu(10.0);
+    const auto expected =
+        ::exp(-(0.12 * 0.5 / 0.25) * (7.0 - 1.0) / 3.0);
+
+    EXPECT_DOUBLE_EQ(mu[0][0], expected);
+    EXPECT_DOUBLE_EQ(mu[1][1], expected);
+    EXPECT_DOUBLE_EQ(mu[2][2], expected);
 }
 
 /**

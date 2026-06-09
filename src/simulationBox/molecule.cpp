@@ -124,6 +124,8 @@ void Molecule::scale(const tensor3D &shiftTensor, const Box &box)
         if (ManostatSettings::getIsotropy() != Isotropy::FULL_ANISOTROPIC)
             position = box.toSimSpace(position);
 
+        box.applyPBC(position);
+
         atom->setPosition(position);
     };
 
