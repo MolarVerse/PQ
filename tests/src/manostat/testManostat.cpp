@@ -31,6 +31,7 @@
 #include "constants/internalConversionFactors.hpp"   // for _PRESSURE_FACTOR_
 #include "exceptions.hpp"                            // for ManostatException
 #include "gtest/gtest.h"           // for Message, TestPartResult
+#include "manostatSettings.hpp"    // for ManostatSettings
 #include "mathUtilities.hpp"       // for compare
 #include "molecule.hpp"            // for Molecule
 #include "potentialSettings.hpp"   // for PotentialSettings
@@ -111,6 +112,52 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
         _box->getMolecule(0).getAtomPosition(0),
         linearAlgebra::Vec3D(1.0, 0.0, 0.0) * scaleFactors,
         1e-9
+    ));
+}
+
+TEST_F(TestManostat, berendsenManostatWrapsScaledMoleculeAtoms)
+{
+    settings::ManostatSettings::setIsotropy(settings::Isotropy::ISOTROPIC);
+    settings::PotentialSettings::setCoulombRadiusCutOff(0.49);
+    settings::TimingsSettings::setTimeStep(1.0);
+
+    _box->setBoxDimensions({2.0, 2.0, 2.0});
+    _box->setVolume(8.0);
+
+    _data->setVirial(linearAlgebra::tensor3D(0.0));
+    _data->setKineticEnergyMolecularVector(linearAlgebra::tensor3D(0.0));
+
+    auto molecule = simulationBox::Molecule();
+    molecule.setNumberOfAtoms(3);
+    molecule.setMolMass(3.0);
+
+    const auto addAtom = [&molecule](const linearAlgebra::Vec3D &position)
+    {
+        auto atom = std::make_shared<simulationBox::Atom>();
+        atom->setMass(1.0);
+        atom->setPosition(position);
+        molecule.addAtom(atom);
+    };
+
+    addAtom({0.9, 0.0, 0.0});
+    addAtom({-0.9, 0.0, 0.0});
+    addAtom({0.9, 0.1, 0.0});
+
+    molecule.calculateCenterOfMass(_box->getBox());
+    _box->addMolecule(molecule);
+
+    _manostat = new manostat::BerendsenManostat(0.875, 1.0, 1.0);
+    _manostat->applyManostat(*_box, *_data);
+
+    EXPECT_TRUE(utilities::compare(
+        _box->getBoxDimensions(),
+        linearAlgebra::Vec3D(1.0, 1.0, 1.0),
+        1e-12
+    ));
+    EXPECT_TRUE(utilities::compare(
+        _box->getMolecule(0).getAtomPosition(1),
+        linearAlgebra::Vec3D(-0.3833333333333333, -0.0166666666666667, 0.0),
+        1e-12
     ));
 }
 
