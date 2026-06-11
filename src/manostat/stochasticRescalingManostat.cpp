@@ -159,9 +159,7 @@ tensor3D StochasticRescalingManostat::calculateMu(const double volume)
 
     const auto deltaP = _targetPressure - _pressure;
 
-    return diagonalMatrix(
-        ::exp(-compress * deltaP / 3.0 + stochasticFactor / 3.0)
-    );
+    return diagonalMatrix(::exp((-compress * deltaP + stochasticFactor) / 3.0));
 }
 
 /**
