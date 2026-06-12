@@ -55,7 +55,7 @@ PotentialCellList::~PotentialCellList() = default;
  * @param physicalData
  * @param cellList
  */
-inline void PotentialCellList::calculateForces(
+void PotentialCellList::calculateForces(
     SimulationBox &simBox,
     PhysicalData  &physicalData,
     CellList      &cellList
