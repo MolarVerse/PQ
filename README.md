@@ -23,7 +23,8 @@ PQ is designed for researchers in computational chemistry and materials science 
 
 Comprehensive documentation is available on the [PQ documentation website](https://MolarVerse.github.io/PQ/), covering:
 
-- **User Guide**: Detailed instructions on input file structure, necessary setup files and generated output files
+- **Quick Start and Examples**: First local run and overview of checked-in example systems
+- **User Guide and Reference Manual**: Input file structure, setup files, output files and keyword defaults
 - **Installation Guide**: Step-by-step building instructions, including Singularity containers
 - **Feature List**: Complete overview of implemented features
 - **Developer Guide**: Project architecture, software testing and contributing guidelines
@@ -59,15 +60,14 @@ Within this directory configure CMake:
 
     cmake ../ -DCMAKE_BUILD_TYPE=Release
 
-Optionally it is also possible to enable MPI for Ring Polymer MD
-
-    cmake ../ -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_MPI=On
-
 For compilation then type:
 
-    make -j<#procs>
+    make -j <number_of_processors>
 
 The executable binary is then found in the subfolder named "apps" inside the build directory.
+
+For optional build settings such as MPI, ASE support, Kokkos, native CPU tuning
+and LTO, see the Installation Guide.
 
 ## Citation
 
