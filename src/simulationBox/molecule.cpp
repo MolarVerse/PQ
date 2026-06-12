@@ -64,9 +64,10 @@ size_t Molecule::getNumberOfAtomTypes()
 
     std::ranges::transform(_atoms, fill, getExternalAtomType);
 
-    const auto nUnique = std::ranges::size(std::ranges::unique(extAtomTypes));
+    std::ranges::sort(extAtomTypes);
+    const auto uniqueAtomTypes = std::ranges::unique(extAtomTypes);
 
-    return getNumberOfAtoms() - nUnique;
+    return std::ranges::distance(extAtomTypes.begin(), uniqueAtomTypes.begin());
 }
 
 /**

@@ -50,8 +50,8 @@ namespace
             ".log",     ".info",    ".rst",     ".en",     ".xyz",
             ".timings", ".force",   ".instant_en", ".vel",  ".chrg",
             ".mom",     ".vir",     ".stress",  ".box",    ".rpmd.rst",
-            ".rpmd.xyz",".rpmd.vel",".rpmd.frc",".rpmd.chrg",".rpmd.en",
-            ".opt",     ".ref"
+            ".rpmd.xyz",".rpmd.vel",".rpmd.frc",".rpmd.force",".rpmd.chrg",
+            ".rpmd.en", ".opt",     ".ref"
         };
         for (const auto &s : suffixes)
             ::remove((std::string(_PREFIX) + s).c_str());

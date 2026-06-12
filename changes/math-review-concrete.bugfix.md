@@ -1,0 +1,1 @@
+- Fix concrete math and force-kernel regressions found during the critical math review: count non-adjacent atom-type duplicates correctly, export brute-force and cell-list force kernels, keep Langevin sigma in sync with friction changes, and reject aliased periodic cell-list neighbor layouts.

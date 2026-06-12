@@ -189,6 +189,21 @@ TEST_F(TestCellList, addNeighbouringCells)
     );
 }
 
+TEST_F(TestCellList, addNeighbouringCellsRejectsAliasedPeriodicOffsets)
+{
+    _cellList->setNumberOfCells(2);
+    _cellList->determineCellSize(_simulationBox->getBoxDimensions());
+    _cellList->resizeCells();
+    _cellList->determineCellBoundaries(_simulationBox->getBoxDimensions());
+
+    EXPECT_THROW_MSG(
+        _cellList->addNeighbouringCells(4.0),
+        customException::CellListException,
+        "Number of cells per dimension must be at least "
+        "2 * neighbour cells + 1."
+    );
+}
+
 /**
  * @brief testing checkCoulombCutoff method
  *
@@ -247,7 +262,10 @@ TEST_F(TestCellList, clone_preservesNumberOfCellsAndNeighbourCells)
  */
 TEST_F(TestCellList, updateCellList)
 {
-    settings::PotentialSettings::setCoulombRadiusCutOff(22.0);
+    settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
+    _cellList->setNumberOfCells(11);
+    _cellList->resizeCells();
+
     EXPECT_NO_THROW(_cellList->updateCellList(*_simulationBox));
     _cellList->activate();
 

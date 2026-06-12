@@ -23,6 +23,7 @@
 #include "testMolecule.hpp"
 
 #include "gtest/gtest.h"         // for Message, TestPartResult
+#include "moleculeType.hpp"      // for MoleculeType
 #include "orthorhombicBox.hpp"   // for OrthorhombicBox
 #include "staticMatrix.hpp"      // for diagonalMatrix
 
@@ -72,4 +73,35 @@ TEST_F(TestMolecule, setAtomForceToZero)
 TEST_F(TestMolecule, getNumberOfAtomTypes)
 {
     EXPECT_EQ(_molecule->getNumberOfAtomTypes(), 2);
+}
+
+TEST_F(TestMolecule, getNumberOfAtomTypesCountsNonAdjacentDuplicates)
+{
+    auto molecule = simulationBox::Molecule();
+    molecule.setNumberOfAtoms(3);
+
+    const auto atom1 = std::make_shared<simulationBox::Atom>();
+    const auto atom2 = std::make_shared<simulationBox::Atom>();
+    const auto atom3 = std::make_shared<simulationBox::Atom>();
+
+    atom1->setExternalAtomType(1);
+    atom2->setExternalAtomType(2);
+    atom3->setExternalAtomType(1);
+
+    molecule.addAtom(atom1);
+    molecule.addAtom(atom2);
+    molecule.addAtom(atom3);
+
+    EXPECT_EQ(molecule.getNumberOfAtomTypes(), 2);
+}
+
+TEST_F(TestMolecule, moleculeTypeCountsNonAdjacentDuplicates)
+{
+    auto moleculeType = simulationBox::MoleculeType();
+
+    moleculeType.addAtomType(1);
+    moleculeType.addAtomType(2);
+    moleculeType.addAtomType(1);
+
+    EXPECT_EQ(moleculeType.getNumberOfAtomTypes(), 2);
 }

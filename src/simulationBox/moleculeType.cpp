@@ -51,9 +51,12 @@ MoleculeType::MoleculeType(const std::string_view &name) : _name(name){};
  */
 size_t MoleculeType::MoleculeType::getNumberOfAtomTypes()
 {
-    const auto nUnique = std::ranges::size(std::ranges::unique(_atomTypes));
+    auto atomTypes = _atomTypes;
 
-    return _externalAtomTypes.size() - nUnique;
+    std::ranges::sort(atomTypes);
+    const auto uniqueAtomTypes = std::ranges::unique(atomTypes);
+
+    return std::ranges::distance(atomTypes.begin(), uniqueAtomTypes.begin());
 }
 
 /**************************

@@ -142,6 +142,15 @@ void CellList::addNeighbouringCells(const double coulombCutoff)
 {
     _nNeighbourCells = Vec3Dul(ceil(coulombCutoff / _cellSize));
 
+    const auto requiredCells = _nNeighbourCells * 2 + 1;
+
+    for (size_t i = 0; i < 3; ++i)
+        if (_nCells[i] < requiredCells[i])
+            throw CellListException(
+                "Number of cells per dimension must be at least "
+                "2 * neighbour cells + 1."
+            );
+
     auto addCell = [this](auto &cell) { addNeighbouringCellPointers(cell); };
 
     std::ranges::for_each(_cells, addCell);
