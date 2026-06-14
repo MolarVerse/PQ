@@ -1,0 +1,1 @@
+- Add regression tests for pair-potential force/energy derivative consistency and periodic distance-kernel symmetry.

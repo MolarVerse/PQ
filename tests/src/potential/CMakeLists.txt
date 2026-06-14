@@ -1,5 +1,6 @@
 set(source_files
     testBruteForceCellListEquivalence.cpp
+    testPairPotentialDerivatives.cpp
 )
 
 if(BUILD_WITH_KOKKOS)
