@@ -30,6 +30,7 @@
 #include "exceptions.hpp"              // for InputFileException
 #include "generalInputParser.hpp"      // for GeneralInputParser
 #include "gtest/gtest.h"               // for Message, TestPartResult
+#include "hessianEngine.hpp"           // for HessianEngine
 #include "inputFileParser.hpp"         // for readInput
 #include "mmmdEngine.hpp"              // for MMMDEngine
 #include "optEngine.hpp"               // for MMOptEngine
@@ -79,12 +80,19 @@ TEST_F(TestInputFileReader, JobType)
     EXPECT_EQ(Settings::isMMActivated(), true);
     EXPECT_EQ(typeid(*engine), typeid(engine::OptEngine));
 
+    lineElements = {"jobtype", "=", "mm-hessian"};
+    parser.parseJobTypeForEngine(lineElements, 0, engine);
+    EXPECT_EQ(Settings::getJobtype(), JobType::MM_HESSIAN);
+    EXPECT_EQ(Settings::isMMActivated(), true);
+    EXPECT_EQ(typeid(*engine), typeid(engine::HessianEngine));
+
     lineElements = {"jobtype", "=", "notValid"};
     EXPECT_THROW_MSG(
         parser.parseJobTypeForEngine(lineElements, 0, engine),
         customException::InputFileException,
         "Invalid jobtype \"notValid\" in input file - possible values are:\n"
         "- mm-opt\n"
+        "- mm-hessian\n"
         "- mm-md\n"
         "- qm-md\n"
         "- qm-rpmd\n"

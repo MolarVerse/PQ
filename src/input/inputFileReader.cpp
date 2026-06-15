@@ -39,6 +39,7 @@
 #include "filesInputParser.hpp"              // for InputFileParserFiles
 #include "forceFieldInputParser.hpp"         // for InputFileParserForceField
 #include "generalInputParser.hpp"            // for InputFileParserGeneral
+#include "hessianInputParser.hpp"            // for HessianInputParser
 #include "hybridInputParser.hpp"             // for InputFileParserQMMM
 #include "integratorInputParser.hpp"         // for InputFileParserIntegrator
 #include "manostatInputParser.hpp"           // for InputFileParserManostat
@@ -80,6 +81,7 @@ InputFileReader::InputFileReader(
     _parsers.push_back(make_unique<FilesInputParser>(_engine));
     _parsers.push_back(make_unique<ForceFieldInputParser>(_engine));
     _parsers.push_back(make_unique<GeneralInputParser>(_engine));
+    _parsers.push_back(make_unique<HessianInputParser>(_engine));
     _parsers.push_back(make_unique<IntegratorInputParser>(_engine));
     _parsers.push_back(make_unique<ManostatInputParser>(_engine));
     _parsers.push_back(make_unique<NonCoulombInputParser>(_engine));

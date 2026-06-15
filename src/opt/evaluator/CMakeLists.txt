@@ -1,5 +1,6 @@
 add_library(evaluator
     evaluator.cpp
+    hessianBuilder.cpp
 
     mmEvaluator.cpp
 )

@@ -7,6 +7,7 @@ set(source_files
     testConstraintSettings.cpp
     testFileSettings.cpp
     testConvergenceSettings.cpp
+    testHessianSettings.cpp
 )
 
 foreach(source_file ${source_files})

@@ -15,6 +15,7 @@ add_library(settings
     outputFileSettings.cpp
     optimizerSettings.cpp
     convergenceSettings.cpp
+    hessianSettings.cpp
 )
 
 target_include_directories(settings

@@ -58,7 +58,8 @@ void TimingsSettings::setStepCount(const size_t stepCount)
  */
 void TimingsSettings::setNumberOfSteps(const size_t numberOfSteps)
 {
-    _numberOfSteps = numberOfSteps;
+    _numberOfSteps      = numberOfSteps;
+    _isNumberOfStepsSet = true;
 }
 
 /********************
@@ -94,3 +95,10 @@ size_t TimingsSettings::getNumberOfSteps() { return _numberOfSteps; }
  * @return bool
  */
 bool TimingsSettings::isTimeStepSet() { return _isTimeStepSet; }
+
+/**
+ * @brief check if the number of steps is set
+ *
+ * @return bool
+ */
+bool TimingsSettings::isNumberOfStepsSet() { return _isNumberOfStepsSet; }

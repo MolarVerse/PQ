@@ -27,6 +27,8 @@
 #include "boxOutput.hpp"                      // for BoxFileOutput
 #include "energyOutput.hpp"                   // for EnergyOutput
 #include "engine.hpp"                         // for Engine
+#include "hessianEngine.hpp"                  // for HessianEngine
+#include "hessianSettings.hpp"                // for HessianSettings
 #include "infoOutput.hpp"                     // for InfoOutput
 #include "logOutput.hpp"                      // for LogOutput
 #include "mdEngine.hpp"                       // for MDEngine
@@ -142,5 +144,17 @@ void OutputFilesSetup::setup()
         const auto optFileName = OutputFileSettings::getOptFileName();
 
         optEngine.getOptOutput().setFilename(optFileName);
+    }
+
+    if (
+        Settings::getJobtype() == JobType::MM_HESSIAN &&
+        HessianSettings::optimizeBeforeHessian()
+    )
+    {
+        auto &hessianEngine = dynamic_cast<HessianEngine &>(_engine);
+
+        const auto optFileName = OutputFileSettings::getOptFileName();
+
+        hessianEngine.getOptOutput().setFilename(optFileName);
     }
 }
