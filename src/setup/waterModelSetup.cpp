@@ -141,6 +141,17 @@ void WaterModelSetup::setup()
     addReferences();
 }
 
+/**
+ * @brief Verify that water molecules do not appear in the topology file bonds/angles.
+ *
+ * @details For intramolecular water models that use constraints, water molecules
+ * should not have their bonds or angles defined in the topology file. This function
+ * checks the bond and angle lists and throws an exception if any water molecule
+ * is found.
+ *
+ * @throws UserInputException If a water type molecule is found in the bond or
+ * angle list of the topology file.
+ */
 void WaterModelSetup::checkTopologyFile()
 {
     std::unordered_set<const pq::Molecule *> waterMolecules;
@@ -318,6 +329,16 @@ void WaterModelSetup::shakeSetupForRigidWater(
     _engine.getConstraints().activateShake();
 }
 
+/**
+ * @brief Set up the intermolecular water interaction model.
+ *
+ * @details Creates an @ref InterWater object with the appropriate parameters and
+ * strategy (cell-list or brute-force) based on the configured intermolecular water
+ * model. Also validates water molecule partial charges against expected values.
+ *
+ * @throws UserInputException If water molecule partial charges do not match the
+ * expected values for the selected intermolecular model.
+ */
 void WaterModelSetup::makeInterWater()
 {
     using enum WaterInterModel;
@@ -356,6 +377,12 @@ void WaterModelSetup::makeInterWater()
     _engine.setInterWater(std::move(interWater));
 }
 
+/**
+ * @brief Add reference file entries for the configured water models.
+ *
+ * @details Adds bibliography references for both intramolecular and intermolecular
+ * water models to the references output.
+ */
 void WaterModelSetup::addReferences()
 {
     const auto intraModel = WaterModelSettings::getWaterIntraModel();
