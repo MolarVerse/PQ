@@ -35,11 +35,14 @@
 #include "interWater.hpp"           // for InterWater
 #include "mdEngine.hpp"             // for MDEngine
 #include "molecule.hpp"             // for Molecule
+#include "references.hpp"           // for References
+#include "referencesOutput.hpp"     // for ReferencesOutput
 #include "waterModelSettings.hpp"   // for WaterModelSettings
 
 using namespace constraints;
 using namespace customException;
 using namespace engine;
+using namespace references;
 using namespace settings;
 using namespace setup;
 using namespace waterModel;
@@ -134,6 +137,8 @@ void WaterModelSetup::setup()
     );
 
     _engine.getLogOutput().writeEmptyLine();
+
+    addReferences();
 }
 
 void WaterModelSetup::checkTopologyFile()
@@ -349,4 +354,44 @@ void WaterModelSetup::makeInterWater()
         std::make_unique<InterWater>(std::move(state), std::move(strategy));
 
     _engine.setInterWater(std::move(interWater));
+}
+
+void WaterModelSetup::addReferences()
+{
+    const auto intraModel = WaterModelSettings::getWaterIntraModel();
+    const auto interModel = WaterModelSettings::getWaterInterModel();
+
+    // clang-format off
+    switch (intraModel)
+    {
+        using enum WaterIntraModel;
+        case SPC: ReferencesOutput::addReferenceFile(_SPC_FILE_); break;
+        case SPC_E: ReferencesOutput::addReferenceFile(_SPC_E_FILE_); break;
+        case SPC_FW: ReferencesOutput::addReferenceFile(_SPC_FW_FILE_); break;
+        case QSPC_FW: ReferencesOutput::addReferenceFile(_QSPC_FW_FILE_); break;
+        case SPC_DC: ReferencesOutput::addReferenceFile(_SPC_DC_FILE_); break;
+        case H2O_DC: ReferencesOutput::addReferenceFile(_H2O_DC_FILE_); break;
+        case TIP3P: ReferencesOutput::addReferenceFile(_TIP3P_FILE_); break;
+        case OPC3: ReferencesOutput::addReferenceFile(_OPC3_FILE_); break;
+        case SPC_MTR: ReferencesOutput::addReferenceFile(_SPC_MTR_FILE_); break;
+        case TIP3P_MTR: ReferencesOutput::addReferenceFile(_TIP3P_MTR_FILE_); break;
+        default: break;
+    }
+
+    switch (interModel)
+    {
+        using enum WaterInterModel;
+        case SPC: ReferencesOutput::addReferenceFile(_SPC_FILE_); break;
+        case SPC_E: ReferencesOutput::addReferenceFile(_SPC_E_FILE_); break;
+        case SPC_FW: ReferencesOutput::addReferenceFile(_SPC_FW_FILE_); break;
+        case QSPC_FW: ReferencesOutput::addReferenceFile(_QSPC_FW_FILE_); break;
+        case SPC_DC: ReferencesOutput::addReferenceFile(_SPC_DC_FILE_); break;
+        case H2O_DC: ReferencesOutput::addReferenceFile(_H2O_DC_FILE_); break;
+        case TIP3P: ReferencesOutput::addReferenceFile(_TIP3P_FILE_); break;
+        case OPC3: ReferencesOutput::addReferenceFile(_OPC3_FILE_); break;
+        case SPC_MTR: ReferencesOutput::addReferenceFile(_SPC_MTR_FILE_); break;
+        case TIP3P_MTR: ReferencesOutput::addReferenceFile(_TIP3P_MTR_FILE_); break;
+        default: break;
+    }
+    //clang-format on
 }
