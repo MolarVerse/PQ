@@ -133,6 +133,46 @@ void Molecule::scale(const tensor3D &shiftTensor, const Box &box)
 }
 
 /**
+ * @brief scales the center-of-mass velocity of the molecule
+ *
+ * @details pressure scaling moves molecules by their center of mass. The
+ * matching velocity scaling must not change the internal molecular velocities.
+ *
+ * @param scalingTensor
+ * @param box
+ */
+void Molecule::scaleVelocity(const tensor3D &scalingTensor, const Box &box)
+{
+    auto centerOfMassVelocity = Vec3D(0.0);
+
+    for (const auto &atom : _atoms)
+        centerOfMassVelocity += atom->getMass() * atom->getVelocity();
+
+    centerOfMassVelocity /= getMolMass();
+
+    auto scaledCenterOfMassVelocity = centerOfMassVelocity;
+
+    if (ManostatSettings::getIsotropy() != Isotropy::FULL_ANISOTROPIC)
+        scaledCenterOfMassVelocity =
+            box.toOrthoSpace(scaledCenterOfMassVelocity);
+
+    scaledCenterOfMassVelocity =
+        scalingTensor * scaledCenterOfMassVelocity;
+
+    if (ManostatSettings::getIsotropy() != Isotropy::FULL_ANISOTROPIC)
+        scaledCenterOfMassVelocity =
+            box.toSimSpace(scaledCenterOfMassVelocity);
+
+    const auto velocityShift =
+        scaledCenterOfMassVelocity - centerOfMassVelocity;
+
+    auto shiftAtomVelocity = [velocityShift](auto atom)
+    { atom->addVelocity(velocityShift); };
+
+    std::ranges::for_each(_atoms, shiftAtomVelocity);
+}
+
+/**
  * @brief returns the external global vdw types of the atoms in the molecule
  *
  * @return std::vector<size_t>

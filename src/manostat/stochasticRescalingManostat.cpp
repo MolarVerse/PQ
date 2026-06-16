@@ -129,11 +129,11 @@ void StochasticRescalingManostat::applyManostat(
     auto scalePositions = [&mu, &simBox](auto &molecule)
     { molecule.scale(mu, simBox.getBox()); };
 
-    auto scaleVelocities = [&mu, &simBox](auto &atom)
-    { atom->scaleVelocityOrthogonalSpace(inverse(mu), simBox.getBox()); };
+    auto scaleVelocities = [&mu, &simBox](auto &molecule)
+    { molecule.scaleVelocity(inverse(mu), simBox.getBox()); };
 
     std::ranges::for_each(simBox.getMolecules(), scalePositions);
-    std::ranges::for_each(simBox.getAtoms(), scaleVelocities);
+    std::ranges::for_each(simBox.getMolecules(), scaleVelocities);
 
     stopTimingsSection("Stochastic Rescaling");
 }

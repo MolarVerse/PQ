@@ -217,6 +217,70 @@ TEST_F(TestManostat, stochasticRescalingMuUsesLengthScaling)
     EXPECT_DOUBLE_EQ(mu[2][2], expected);
 }
 
+TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
+{
+    settings::ManostatSettings::setIsotropy(settings::Isotropy::ISOTROPIC);
+    settings::PotentialSettings::setCoulombRadiusCutOff(0.49);
+    settings::ThermostatSettings::setActualTargetTemperature(0.0);
+    settings::TimingsSettings::setTimeStep(0.5);
+
+    _box->setBoxDimensions({10.0, 10.0, 10.0});
+    _box->setVolume(1000.0);
+
+    _data->setVirial(linearAlgebra::tensor3D(0.0));
+    _data->setKineticEnergyMolecularVector(linearAlgebra::tensor3D(0.0));
+
+    auto molecule = simulationBox::Molecule();
+    molecule.setNumberOfAtoms(2);
+    molecule.setMolMass(2.0);
+
+    const auto addAtom =
+        [this, &molecule](
+            const linearAlgebra::Vec3D &position,
+            const linearAlgebra::Vec3D &velocity
+        )
+    {
+        auto atom = std::make_shared<simulationBox::Atom>();
+        atom->setMass(1.0);
+        atom->setPosition(position);
+        atom->setVelocity(velocity);
+        molecule.addAtom(atom);
+        _box->addAtom(atom);
+    };
+
+    addAtom({1.0, 0.0, 0.0}, {2.0, 0.0, 0.0});
+    addAtom({2.0, 0.0, 0.0}, {4.0, 0.0, 0.0});
+
+    molecule.calculateCenterOfMass(_box->getBox());
+    _box->addMolecule(molecule);
+
+    _manostat = new manostat::StochasticRescalingManostat(7.0, 0.25, 0.12);
+
+    const auto mu =
+        ::exp(-(0.12 * 0.5 / 0.25) * (7.0 - 0.0) / 3.0);
+    const auto expectedCenterOfMassVelocity =
+        linearAlgebra::Vec3D(3.0 / mu, 0.0, 0.0);
+    const auto expectedRelativeVelocity =
+        linearAlgebra::Vec3D(2.0, 0.0, 0.0);
+
+    _manostat->applyManostat(*_box, *_data);
+
+    const auto velocity0 = _box->getMolecule(0).getAtomVelocity(0);
+    const auto velocity1 = _box->getMolecule(0).getAtomVelocity(1);
+    const auto centerOfMassVelocity = (velocity0 + velocity1) / 2.0;
+
+    EXPECT_TRUE(utilities::compare(
+        centerOfMassVelocity,
+        expectedCenterOfMassVelocity,
+        1e-12
+    ));
+    EXPECT_TRUE(utilities::compare(
+        velocity1 - velocity0,
+        expectedRelativeVelocity,
+        1e-12
+    ));
+}
+
 /**
  * @brief test rotation of mu
  */

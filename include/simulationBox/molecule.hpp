@@ -67,6 +67,7 @@ namespace simulationBox
 
         void calculateCenterOfMass(const Box &);
         void scale(const pq::tensor3D &, const Box &);
+        void scaleVelocity(const pq::tensor3D &, const Box &);
 
         [[nodiscard]] size_t              getNumberOfAtomTypes();
         [[nodiscard]] std::vector<size_t> getExternalGlobalVDWTypes() const;

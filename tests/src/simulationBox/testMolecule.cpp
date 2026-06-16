@@ -23,6 +23,8 @@
 #include "testMolecule.hpp"
 
 #include "gtest/gtest.h"         // for Message, TestPartResult
+#include "manostatSettings.hpp"  // for ManostatSettings
+#include "mathUtilities.hpp"     // for compare
 #include "orthorhombicBox.hpp"   // for OrthorhombicBox
 #include "staticMatrix.hpp"      // for diagonalMatrix
 
@@ -90,6 +92,52 @@ TEST_F(TestMolecule, scaleAtomsWrapsIntoBox)
     EXPECT_EQ(_molecule->getAtomPosition(0), expectedPosition0);
     EXPECT_EQ(_molecule->getAtomPosition(1), expectedPosition1);
     EXPECT_EQ(_molecule->getAtomPosition(2), expectedPosition2);
+}
+
+TEST_F(TestMolecule, scaleVelocityPreservesInternalVelocities)
+{
+    settings::ManostatSettings::setIsotropy(settings::Isotropy::ISOTROPIC);
+
+    const linearAlgebra::tensor3D scale =
+        diagonalMatrix(linearAlgebra::Vec3D{0.5, 0.25, 2.0});
+
+    simulationBox::OrthorhombicBox box;
+    box.setBoxDimensions({10.0, 10.0, 10.0});
+
+    const auto relativeVelocity10 =
+        _molecule->getAtomVelocity(1) - _molecule->getAtomVelocity(0);
+    const auto relativeVelocity20 =
+        _molecule->getAtomVelocity(2) - _molecule->getAtomVelocity(0);
+
+    const auto centerOfMassVelocity =
+        (1.0 * _molecule->getAtomVelocity(0) +
+         2.0 * _molecule->getAtomVelocity(1) +
+         3.0 * _molecule->getAtomVelocity(2)) /
+        6.0;
+
+    _molecule->scaleVelocity(scale, box);
+
+    const auto scaledCenterOfMassVelocity =
+        (1.0 * _molecule->getAtomVelocity(0) +
+         2.0 * _molecule->getAtomVelocity(1) +
+         3.0 * _molecule->getAtomVelocity(2)) /
+        6.0;
+
+    EXPECT_TRUE(utilities::compare(
+        scaledCenterOfMassVelocity,
+        scale * centerOfMassVelocity,
+        1e-12
+    ));
+    EXPECT_TRUE(utilities::compare(
+        _molecule->getAtomVelocity(1) - _molecule->getAtomVelocity(0),
+        relativeVelocity10,
+        1e-12
+    ));
+    EXPECT_TRUE(utilities::compare(
+        _molecule->getAtomVelocity(2) - _molecule->getAtomVelocity(0),
+        relativeVelocity20,
+        1e-12
+    ));
 }
 
 TEST_F(TestMolecule, setAtomForceToZero)
