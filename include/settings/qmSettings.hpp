@@ -135,7 +135,7 @@ namespace settings
         static inline bool _useThirdOrderDftb       = false;
         static inline bool _isThirdOrderDftbSet     = false;
         static inline bool _isHubbardDerivsSet      = false;
-        static inline bool _useGPUPreprocessing     = false;
+        static inline bool _useGPUPreprocessing     = true;
 
         static inline std::unordered_map<std::string, double> _hubbardDerivs;
 

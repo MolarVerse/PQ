@@ -1317,6 +1317,7 @@ Possible options are:
    
    7. **ase-xtb** - `xTB <https://xtb-docs.readthedocs.io/en/latest/>`__ called by `ASE <https://wiki.fysik.dtu.dk/ase/>`__ 
 
+   8. **fennol**  - `FeNNol <https://doi.org/10.1063/5.0217688>`__
 
 .. _qmscriptKey:
 
@@ -1530,8 +1531,34 @@ If the Slater-Koster parameters are of DFTB3 type, the Hubbard derivatives can b
 
     hubbard_derivs = C: 0.1, H: 0.2, O: 0.3;
 
+.. _fennolModelPathKey:
 
+FeNNol Model Path
+=================
 
+.. admonition:: Key
+    :class: tip
+
+    fennol_model_path = {string}
+
+With the ``fennol_model_path`` keyword the path to the FeNNol model to be used can be specified.
+
+.. Note::
+    The ``fennol_model_path`` keyword is mandatory when the :ref:`qm_prog <qmprogamKey>` keyword is set to ``fennol``.
+
+.. _gpuPreprocessingKey:
+
+GPU Pre-processing
+==================
+
+.. admonition:: Key
+    :class: tip
+
+    gpu_preprocessing = {bool} -> true
+
+With the ``gpu_preprocessing`` keyword the user can activate/deactivate the GPU preprocessing step of the FeNNol QM runner.
+
+.. centered:: *default value* = true
 
 .. _ringpolymermdKeys:
 
