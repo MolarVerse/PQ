@@ -45,7 +45,8 @@ namespace settings
         ASEXTB,
         PYSCF,
         TURBOMOLE,
-        MACE
+        MACE,
+        FENNOL
     };
 
     /**
@@ -127,12 +128,14 @@ namespace settings
         static inline std::string _qmScriptFullPath = "";
         static inline std::string _maceModelPath    = "";
         static inline std::string _slakosPath       = "";
+        static inline std::string _fennolModelPath  = "";
 
         static inline bool _useDispersionCorrection = false;
         static inline bool _removeNetForce          = false;
         static inline bool _useThirdOrderDftb       = false;
         static inline bool _isThirdOrderDftbSet     = false;
         static inline bool _isHubbardDerivsSet      = false;
+        static inline bool _useGPUPreprocessing     = false;
 
         static inline std::unordered_map<std::string, double> _hubbardDerivs;
 
@@ -175,6 +178,9 @@ namespace settings
         static void setXtbMethod(const std::string_view &method);
         static void setXtbMethod(const XtbMethod method);
 
+        static void setFennolModelPath(const std::string_view &path);
+        static void setUseGPUPreprocessing(const bool use);
+
         static void setQMLoopTimeLimit(const double time);
 
         /***************************
@@ -201,6 +207,9 @@ namespace settings
         [[nodiscard]] static bool isHubbardDerivsSet();
 
         [[nodiscard]] static XtbMethod getXtbMethod();
+
+        [[nodiscard]] static std::string getFennolModelPath();
+        [[nodiscard]] static bool        useGPUPreprocessing();
 
         [[nodiscard]] static double getQMLoopTimeLimit();
     };

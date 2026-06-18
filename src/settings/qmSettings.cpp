@@ -54,6 +54,7 @@ std::string settings::string(const QMMethod method)
         case PYSCF: return "PYSCF";
         case TURBOMOLE: return "TURBOMOLE";
         case MACE: return "MACE";
+        case FENNOL: return "FeNNol";
 
         default: return "none";
     }
@@ -240,6 +241,9 @@ void QMSettings::setQMMethod(const std::string_view &method)
 
     else if ("ase_xtb" == methodToLowerAndReplaceDashes)
         _qmMethod = ASEXTB;
+
+    else if ("fennol" == methodToLowerAndReplaceDashes)
+        _qmMethod = FENNOL;
 
     else
         _qmMethod = NONE;
@@ -547,6 +551,25 @@ void QMSettings::setQMLoopTimeLimit(const double time)
     _qmLoopTimeLimit = time;
 }
 
+/**
+ * @brief sets the FeNNol model path
+ *
+ * @param script
+ */
+void QMSettings::setFennolModelPath(const std::string_view &path)
+{
+    _fennolModelPath = path;
+}
+
+/**
+ * @brief sets if the GPU pre-processing should be enabled for FeNNol
+ *
+ */
+void QMSettings::setUseGPUPreprocessing(const bool useGPUPreprocessing)
+{
+    _useGPUPreprocessing = useGPUPreprocessing;
+}
+
 /***************************
  *                         *
  * standard getter methods *
@@ -663,3 +686,17 @@ XtbMethod QMSettings::getXtbMethod() { return _xtbMethod; }
  * @return double
  */
 double QMSettings::getQMLoopTimeLimit() { return _qmLoopTimeLimit; }
+
+/**
+ * @brief returns the FeNNol model path
+ *
+ * @return std::string
+ */
+std::string QMSettings::getFennolModelPath() { return _fennolModelPath; }
+
+/**
+ * @brief returns if GPU pre-processing should be used for FeNNol
+ *
+ * @return bool
+ */
+bool QMSettings::useGPUPreprocessing() { return _useGPUPreprocessing; }

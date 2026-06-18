@@ -130,6 +130,18 @@ QMInputParser::QMInputParser(Engine &engine) : InputFileParser(engine)
         bind_front(&QMInputParser::parseXtbMethod, this),
         false
     );
+
+    addKeyword(
+        std::string("fennol_model_path"),
+        bind_front(&QMInputParser::parseFennolModelPath, this),
+        false
+    );
+
+    addKeyword(
+        std::string("gpu_preprocessing"),
+        bind_front(&QMInputParser::parseGPUPreprocessing, this),
+        false
+    );
 }
 
 /**
@@ -163,9 +175,7 @@ void QMInputParser::parseQMMethod(
     }
 
     else if ("ase_xtb" == method)
-    {
         QMSettings::setQMMethod(ASEXTB);
-    }
 
     else if ("pyscf" == method)
     {
@@ -179,16 +189,21 @@ void QMInputParser::parseQMMethod(
         ReferencesOutput::addReferenceFile(_TURBOMOLE_FILE_);
     }
 
+    else if ("fennol" == method)
+        QMSettings::setQMMethod(method);
+
     else if (method.starts_with("mace"))
         parseMaceQMMethod(method);
 
     else
-        throw InputFileException(std::format(
-            "Invalid qm_prog \"{}\" in input file.\n"
-            "Possible values are: dftbplus, ase_dftbplus, ase_xtb, pyscf, "
-            "turbomole, mace, mace_mp, mace_off",
-            lineElements[2]
-        ));
+        throw InputFileException(
+            std::format(
+                "Invalid qm_prog \"{}\" in input file.\n"
+                "Possible values are: dftbplus, ase_dftbplus, ase_xtb, pyscf, "
+                "turbomole, fennol, mace, mace_mp, mace_off",
+                lineElements[2]
+            )
+        );
 }
 
 /**
@@ -253,7 +268,6 @@ void QMInputParser::parseDispersion(
 )
 {
     checkCommand(lineElements, lineNumber);
-
     QMSettings::setUseDispersionCorrection(keywordToBool(lineElements));
 }
 
@@ -542,4 +556,34 @@ void QMInputParser::parseXtbMethod(
             "Possible values are: GFN1-xTB, GFN2-xTB, IPEA1-xTB",
             lineElements[2]
         ));
+}
+
+/**
+ * @brief parse FeNNol model path
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
+void QMInputParser::parseFennolModelPath(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+    QMSettings::setFennolModelPath(lineElements[2]);
+}
+
+/**
+ * @brief parse if GPU pre-processing is enabled for FeNNol
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
+void QMInputParser::parseGPUPreprocessing(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+    QMSettings::setUseGPUPreprocessing(keywordToBool(lineElements));
 }

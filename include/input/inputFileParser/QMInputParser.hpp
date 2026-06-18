@@ -62,6 +62,9 @@ namespace input
         void parseHubbardDerivs(const pq::strings &, const size_t);
 
         void parseXtbMethod(const pq::strings &, const size_t);
+
+        void parseFennolModelPath(const pq::strings &, const size_t);
+        void parseGPUPreprocessing(const pq::strings &, const size_t);
     };
 
 }   // namespace input
