@@ -33,6 +33,7 @@
 #include "qmSetup.hpp"            // for QMSetup, setupQM
 #include "qmSetup.hpp"            // for QMSetup
 #include "qmmdEngine.hpp"         // for QMMDEngine
+#include "settings.hpp"           // for Settings
 #include "throwWithMessage.hpp"   // for ASSERT_THROW_MSG
 #include "turbomoleRunner.hpp"    // for TurbomoleRunner
 
@@ -377,6 +378,56 @@ TEST(TestQMSetup, setupQMLoopTimeLimitPositive)
     EXPECT_EQ(line, "");
     getline(file, line);
     EXPECT_EQ(line, "         QM looptime limit: 3.14 s");
+
+    ::remove("default.log");
+    delete _engine;
+    delete _qmSetup;
+}
+
+TEST(TestQMSetup, setupQMMethodFennol)
+{
+    engine::QMMDEngine engine;
+    QMSetup            qmSetup{QMSetup(engine)};
+
+    QMSettings::setQMMethod(QMMethod::FENNOL);
+    ASSERT_THROW_MSG(
+        qmSetup.setupQMMethodFennol(),
+        customException::InputFileException,
+        "The FeNNol QM runner has been selected but the "
+        "\"fennol_model_path\" keyword has not been set. This setup is "
+        "invalid."
+    );
+    QMSettings::setFennolModelPath("/patH/to/fennol_model.fnx");
+    ASSERT_NO_THROW(qmSetup.setupQMMethodFennol());
+}
+
+TEST(TestQMSetup, setupQMRunnerFennol)
+{
+    auto _engine  = new engine::QMMDEngine();
+    auto _qmSetup = new QMSetup(*_engine);
+
+    _engine->getEngineOutput().getLogOutput().setFilename("default.log");
+    QMSettings::setQMMethod(QMMethod::FENNOL);
+    QMSettings::setFennolModelPath("path/To/fennol_model.fnx");
+    QMSettings::setUseGPUPreprocessing(false);
+    Settings::setFloatingPointType(FPType::FLOAT);
+
+    _qmSetup->setupWriteInfo();
+
+    // clang-format off
+    std::ifstream file("default.log");
+    std::string   line;
+    getline(file, line);
+    EXPECT_EQ(line, "         QM runner: FeNNol");
+    getline(file, line);
+    EXPECT_EQ(line, "");
+    getline(file, line);
+    EXPECT_EQ(line, "         Model path:               path/To/fennol_model.fnx");
+    getline(file, line);
+    EXPECT_EQ(line, "         Using GPU pre-processing: false");
+    getline(file, line);
+    EXPECT_EQ(line, "         Using float64:            false");
+    // clang-format on
 
     ::remove("default.log");
     delete _engine;

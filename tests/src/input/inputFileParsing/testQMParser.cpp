@@ -379,3 +379,27 @@ TEST_F(TestInputFileReader, parseXtbMethod)
         "Possible values are: GFN1-xTB, GFN2-xTB, IPEA1-xTB"
     )
 }
+
+TEST_F(TestInputFileReader, parseFennolModelPath)
+{
+    using enum QMMethod;
+
+    auto parser = QMInputParser(*_engine);
+
+    // clang-format off
+    EXPECT_EQ(QMSettings::getFennolModelPath(), "");
+    parser.parseFennolModelPath({"fennol_model_path", "=", "/pAth/to/fennol_model.fnx"}, 0);
+    EXPECT_EQ(QMSettings::getFennolModelPath(), "/pAth/to/fennol_model.fnx");
+    // clang-format on
+}
+
+TEST_F(TestInputFileReader, parseGPUPreprocessing)
+{
+    using enum QMMethod;
+
+    auto parser = QMInputParser(*_engine);
+
+    EXPECT_EQ(QMSettings::useGPUPreprocessing(), true);
+    parser.parseGPUPreprocessing({"GPU-Preprocessing", "=", "false"}, 0);
+    EXPECT_EQ(QMSettings::useGPUPreprocessing(), false);
+}
