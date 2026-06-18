@@ -190,7 +190,10 @@ void QMInputParser::parseQMMethod(
     }
 
     else if ("fennol" == method)
+    {
         QMSettings::setQMMethod(method);
+        ReferencesOutput::addReferenceFile(_FENNOL_FILE_);
+    }
 
     else if (method.starts_with("mace"))
         parseMaceQMMethod(method);
@@ -342,13 +345,15 @@ void QMInputParser::parseMaceModelSize(
         QMSettings::setMaceModelSize(CUSTOM);
 
     else
-        throw InputFileException(std::format(
-            "Invalid mace_model_size \"{}\" in input file.\n"
-            "Possible values are: small, medium, large, small-0b,\n"
-            "medium-0b, small-0b2, medium-0b2, large-0b2, medium-0b3,\n"
-            "medium-mpa-0, medium-omat-0, custom",
-            lineElements[2]
-        ));
+        throw InputFileException(
+            std::format(
+                "Invalid mace_model_size \"{}\" in input file.\n"
+                "Possible values are: small, medium, large, small-0b,\n"
+                "medium-0b, small-0b2, medium-0b2, large-0b2, medium-0b3,\n"
+                "medium-mpa-0, medium-omat-0, custom",
+                lineElements[2]
+            )
+        );
 }
 
 /**
@@ -390,17 +395,21 @@ void QMInputParser::parseMaceQMMethod(const std::string_view &model)
     }
 
     else if ("mace_anicc" == model || "mace_ani" == model)
-        throw InputFileException(std::format(
-            "The mace ani model is not supported in this version of PQ.\n"
-        ));
+        throw InputFileException(
+            std::format(
+                "The mace ani model is not supported in this version of PQ.\n"
+            )
+        );
 
     else
     {
-        throw InputFileException(std::format(
-            "Invalid mace type qm_method \"{}\" in input file.\n"
-            "Possible values are: mace (mace_mp), mace_off",
-            model
-        ));
+        throw InputFileException(
+            std::format(
+                "Invalid mace type qm_method \"{}\" in input file.\n"
+                "Possible values are: mace (mace_mp), mace_off",
+                model
+            )
+        );
     }
 
     QMSettings::setQMMethod(QMMethod::MACE);
@@ -439,11 +448,13 @@ void QMInputParser::parseSlakosType(
         QMSettings::setSlakosType(CUSTOM);
 
     else
-        throw InputFileException(std::format(
-            "Invalid slakos type \"{}\" in input file.\n"
-            "Possible values are: 3ob, matsci, custom",
-            lineElements[2]
-        ));
+        throw InputFileException(
+            std::format(
+                "Invalid slakos type \"{}\" in input file.\n"
+                "Possible values are: 3ob, matsci, custom",
+                lineElements[2]
+            )
+        );
 }
 
 /**
@@ -512,10 +523,12 @@ void QMInputParser::parseHubbardDerivs(
         }
         else
         {
-            throw InputFileException(std::format(
-                "Invalid hubbard_derivs format \"{}\" in input file.",
-                derivs
-            ));
+            throw InputFileException(
+                std::format(
+                    "Invalid hubbard_derivs format \"{}\" in input file.",
+                    derivs
+                )
+            );
         }
     }
 
@@ -551,11 +564,13 @@ void QMInputParser::parseXtbMethod(
         QMSettings::setXtbMethod(IPEA1);
 
     else
-        throw InputFileException(std::format(
-            "Invalid xTB method \"{}\" in input file.\n"
-            "Possible values are: GFN1-xTB, GFN2-xTB, IPEA1-xTB",
-            lineElements[2]
-        ));
+        throw InputFileException(
+            std::format(
+                "Invalid xTB method \"{}\" in input file.\n"
+                "Possible values are: GFN1-xTB, GFN2-xTB, IPEA1-xTB",
+                lineElements[2]
+            )
+        );
 }
 
 /**
