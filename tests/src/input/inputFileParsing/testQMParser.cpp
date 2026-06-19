@@ -261,7 +261,10 @@ TEST_F(TestInputFileReader, parseMaceModelPath)
 
     QMSettings::setMaceModelPath("");
     EXPECT_EQ(QMSettings::getMaceModelPath(), "");
-    parser.parseMaceModelPath({"mace_model_path", "=", "/pAth/to/mace.model"}, 0);
+    parser.parseMaceModelPath(
+        {"mace_model_path", "=", "/pAth/to/mace.model"},
+        0
+    );
     EXPECT_EQ(QMSettings::getMaceModelPath(), "/pAth/to/mace.model");
 }
 
@@ -397,7 +400,6 @@ TEST_F(TestInputFileReader, parseFennolModelPath)
     auto parser = QMInputParser(*_engine);
 
     // clang-format off
-    QMSettings::setFennolModelPath("");
     EXPECT_EQ(QMSettings::getFennolModelPath(), "");
     parser.parseFennolModelPath({"fennol_model_path", "=", "/pAth/to/fennol_model.fnx"}, 0);
     EXPECT_EQ(QMSettings::getFennolModelPath(), "/pAth/to/fennol_model.fnx");
@@ -419,7 +421,6 @@ TEST_F(TestInputFileReader, parseGPUPreprocessing)
 
     auto parser = QMInputParser(*_engine);
 
-    QMSettings::setUseGPUPreprocessing(true);
     EXPECT_EQ(QMSettings::useGPUPreprocessing(), true);
     parser.parseGPUPreprocessing({"GPU-Preprocessing", "=", "false"}, 0);
     EXPECT_EQ(QMSettings::useGPUPreprocessing(), false);
@@ -430,8 +431,8 @@ TEST_F(TestInputFileReader, parseGPUPreprocessing)
     ASSERT_THROW_MSG(
         parser.parseGPUPreprocessing({"gpu_preprocessing", "=", "notABool"}, 0),
         InputFileException,
-        "Invalid boolean option \"notABool\" for keyword \"gpu_preprocessing\" in "
-        "input file.\n"
+        "Invalid boolean option \"notABool\" for keyword \"gpu_preprocessing\" "
+        "in input file.\n"
         "Possible values are: on, yes, true, off, no, false."
     )
 }
