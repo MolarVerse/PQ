@@ -143,7 +143,7 @@ void QMMDEngine::setAseFennolRunner()
 #else
     throw CompileTimeException(
         "A fennol type qm method was requested but ASE was not enabled at "
-        "compile time. Please recompile with ASE enabled to use fennnol type "
+        "compile time. Please recompile with ASE enabled to use fennol type "
         "qm methods using: -DBUILD_WITH_ASE=ON"
     );
 #endif

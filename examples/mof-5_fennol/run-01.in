@@ -17,7 +17,7 @@
       floating_point_type = float;
       gpu_preprocessing   = on;
       #################################################
-      fennol_model_path   = /path/to/fenol-model.fnx; # ADJUST THIS!  ################################################
+      fennol_model_path   = /path/to/fennol-model.fnx; # ADJUST THIS!  ################################################
 
 
     # Input file
@@ -25,4 +25,3 @@
 
     # Output files
       file_prefix = mof5-md-01;
-
