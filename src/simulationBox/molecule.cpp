@@ -96,6 +96,32 @@ void Molecule::calculateCenterOfMass(const Box &box)
 }
 
 /**
+ * @brief reconstructs the molecule into the current center-of-mass image
+ *
+ * @details Molecules cut by the periodic box carry raw coordinate jumps from
+ * the current box. Before a manostat changes the box, these jumps have to be
+ * converted back to molecular internal vectors around the cached molecular
+ * center of mass, otherwise the old box length leaks into constrained
+ * intramolecular distances after the resize.
+ *
+ * @param box current simulation box
+ */
+void Molecule::reconstruct(const Box &box)
+{
+    if (_atoms.empty())
+        return;
+
+    auto reconstructAtom = [&box, this](auto atom)
+    {
+        auto position = atom->getPosition();
+        position -= box.calcShiftVector(position - _centerOfMass);
+        atom->setPosition(position);
+    };
+
+    std::ranges::for_each(_atoms, reconstructAtom);
+}
+
+/**
  * @brief scales the positions of the molecule by shifting the center of mass
  *
  * @details scaling has to be done in orthogonal space since pressure scaling is
@@ -156,8 +182,7 @@ void Molecule::scaleVelocity(const tensor3D &scalingTensor, const Box &box)
         scaledCenterOfMassVelocity =
             box.toOrthoSpace(scaledCenterOfMassVelocity);
 
-    scaledCenterOfMassVelocity =
-        scalingTensor * scaledCenterOfMassVelocity;
+    scaledCenterOfMassVelocity = scalingTensor * scaledCenterOfMassVelocity;
 
     if (ManostatSettings::getIsotropy() != Isotropy::FULL_ANISOTROPIC)
         scaledCenterOfMassVelocity =

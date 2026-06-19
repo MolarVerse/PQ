@@ -92,6 +92,11 @@ void BerendsenManostat::applyManostat(
 
     const auto mu = calculateMu();
 
+    auto reconstructMolecule = [&simBox](auto &molecule)
+    { molecule.reconstruct(simBox.getBox()); };
+
+    std::ranges::for_each(simBox.getMolecules(), reconstructMolecule);
+
     simBox.scaleBox(mu);
 
     physicalData.setVolume(simBox.getVolume());

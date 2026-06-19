@@ -50,6 +50,88 @@ class TestableStochasticRescalingManostat
     void setPressure(const double pressure) { _pressure = pressure; }
 };
 
+namespace
+{
+    void setupCutMolecule(
+        simulationBox::SimulationBox &box,
+        physicalData::PhysicalData   &data
+    )
+    {
+        settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
+        settings::TimingsSettings::setTimeStep(1.0);
+
+        box.setBoxDimensions({10.0, 10.0, 10.0});
+        box.setVolume(box.calculateVolume());
+        box.setTotalMass(2.0);
+
+        data.setVirial(diagonalMatrix(linearAlgebra::Vec3D(0.0)));
+        data.setKineticEnergyMolecularVector(
+            diagonalMatrix(linearAlgebra::Vec3D(0.0))
+        );
+        data.setKineticEnergyAtomicVector(
+            diagonalMatrix(linearAlgebra::Vec3D(0.0))
+        );
+
+        auto atom1 = std::make_shared<simulationBox::Atom>();
+        auto atom2 = std::make_shared<simulationBox::Atom>();
+
+        atom1->setPosition({4.95, 0.0, 0.0});
+        atom2->setPosition({-4.85, 0.0, 0.0});
+        atom1->setMass(1.0);
+        atom2->setMass(1.0);
+
+        auto molecule = simulationBox::Molecule();
+        molecule.setNumberOfAtoms(2);
+        molecule.setMolMass(2.0);
+        molecule.addAtom(atom1);
+        molecule.addAtom(atom2);
+        molecule.calculateCenterOfMass(box.getBox());
+
+        box.addAtom(atom1);
+        box.addAtom(atom2);
+        box.addMolecule(molecule);
+    }
+
+    linearAlgebra::Vec3D getMinimumImageDistance(
+        simulationBox::SimulationBox &box
+    )
+    {
+        auto dPosition = box.getMolecule(0).getAtomPosition(1) -
+                         box.getMolecule(0).getAtomPosition(0);
+        box.applyPBC(dPosition);
+
+        return dPosition;
+    }
+
+    void expectCutMoleculeScaled(simulationBox::SimulationBox &box)
+    {
+        const auto dPosition = getMinimumImageDistance(box);
+
+        box.getMolecule(0).calculateCenterOfMass(box.getBox());
+        const auto centerOfMass = box.getMolecule(0).getCenterOfMass();
+
+        EXPECT_NEAR(box.getBoxDimensions()[0], 9.8, 1e-12);
+        EXPECT_NEAR(centerOfMass[0], -4.851, 1e-12);
+        EXPECT_NEAR(centerOfMass[1], 0.0, 1e-12);
+        EXPECT_NEAR(centerOfMass[2], 0.0, 1e-12);
+        EXPECT_NEAR(dPosition[0], 0.2, 1e-12);
+        EXPECT_NEAR(dPosition[1], 0.0, 1e-12);
+        EXPECT_NEAR(dPosition[2], 0.0, 1e-12);
+    }
+
+    double getMinimumImageDistance(
+        simulationBox::SimulationBox &box,
+        const size_t                  moleculeIndex
+    )
+    {
+        auto dPosition = box.getMolecule(moleculeIndex).getAtomPosition(1) -
+                         box.getMolecule(moleculeIndex).getAtomPosition(0);
+        box.applyPBC(dPosition);
+
+        return norm(dPosition);
+    }
+}   // namespace
+
 /**
  * @brief tests function calculate pressure
  *
@@ -115,50 +197,77 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
     ));
 }
 
-TEST_F(TestManostat, berendsenManostatWrapsScaledMoleculeAtoms)
+/**
+ * @brief tests that manostat scaling keeps cut molecules internally intact
+ *
+ */
+TEST_F(TestManostat, testApplyBerendsenManostat_preservesCutMoleculeGeometry)
 {
-    settings::ManostatSettings::setIsotropy(settings::Isotropy::ISOTROPIC);
-    settings::PotentialSettings::setCoulombRadiusCutOff(0.49);
-    settings::TimingsSettings::setTimeStep(1.0);
+    setupCutMolecule(*_box, *_data);
 
-    _box->setBoxDimensions({2.0, 2.0, 2.0});
-    _box->setVolume(8.0);
+    auto manostat = manostat::BerendsenManostat(1.0, 1.0, 0.058808);
+    manostat.applyManostat(*_box, *_data);
 
-    _data->setVirial(linearAlgebra::tensor3D(0.0));
-    _data->setKineticEnergyMolecularVector(linearAlgebra::tensor3D(0.0));
+    expectCutMoleculeScaled(*_box);
+}
+
+/**
+ * @brief tests that stochastic rescaling keeps cut molecules internally intact
+ *
+ */
+TEST_F(
+    TestManostat,
+    testApplyStochasticRescalingManostat_preservesCutMoleculeGeometry
+)
+{
+    setupCutMolecule(*_box, *_data);
+    settings::ThermostatSettings::setActualTargetTemperature(0.0);
+
+    auto manostat =
+        manostat::StochasticRescalingManostat(-3.0 * ::log(0.98), 1.0, 1.0);
+    manostat.applyManostat(*_box, *_data);
+
+    expectCutMoleculeScaled(*_box);
+}
+
+TEST_F(
+    TestManostat,
+    testApplyStochasticRescalingManostat_matchesCutAndInsideDistances
+)
+{
+    setupCutMolecule(*_box, *_data);
+    settings::ThermostatSettings::setActualTargetTemperature(0.0);
+
+    auto atom1 = std::make_shared<simulationBox::Atom>();
+    auto atom2 = std::make_shared<simulationBox::Atom>();
+
+    atom1->setPosition({-1.0, 0.0, 0.0});
+    atom2->setPosition({-0.8, 0.0, 0.0});
+    atom1->setMass(1.0);
+    atom2->setMass(1.0);
 
     auto molecule = simulationBox::Molecule();
-    molecule.setNumberOfAtoms(3);
-    molecule.setMolMass(3.0);
-
-    const auto addAtom = [&molecule](const linearAlgebra::Vec3D &position)
-    {
-        auto atom = std::make_shared<simulationBox::Atom>();
-        atom->setMass(1.0);
-        atom->setPosition(position);
-        molecule.addAtom(atom);
-    };
-
-    addAtom({0.9, 0.0, 0.0});
-    addAtom({-0.9, 0.0, 0.0});
-    addAtom({0.9, 0.1, 0.0});
-
+    molecule.setNumberOfAtoms(2);
+    molecule.setMolMass(2.0);
+    molecule.addAtom(atom1);
+    molecule.addAtom(atom2);
     molecule.calculateCenterOfMass(_box->getBox());
+
+    _box->addAtom(atom1);
+    _box->addAtom(atom2);
     _box->addMolecule(molecule);
+    _box->setTotalMass(4.0);
 
-    _manostat = new manostat::BerendsenManostat(0.875, 1.0, 1.0);
-    _manostat->applyManostat(*_box, *_data);
+    auto manostat =
+        manostat::StochasticRescalingManostat(-3.0 * ::log(0.98), 1.0, 1.0);
+    manostat.applyManostat(*_box, *_data);
 
-    EXPECT_TRUE(utilities::compare(
-        _box->getBoxDimensions(),
-        linearAlgebra::Vec3D(1.0, 1.0, 1.0),
-        1e-12
-    ));
-    EXPECT_TRUE(utilities::compare(
-        _box->getMolecule(0).getAtomPosition(1),
-        linearAlgebra::Vec3D(-0.3833333333333333, -0.0166666666666667, 0.0),
-        1e-12
-    ));
+    const auto cutDistance    = getMinimumImageDistance(*_box, 0);
+    const auto insideDistance = getMinimumImageDistance(*_box, 1);
+
+    EXPECT_NEAR(cutDistance, 0.2, 1e-12);
+    EXPECT_NEAR(insideDistance, 0.2, 1e-12);
+    EXPECT_NEAR(cutDistance, insideDistance, 1e-12);
 }
 
 /**
