@@ -120,7 +120,7 @@ void StochasticRescalingManostat::applyManostat(
     const auto mu = calculateMu(simBox.getVolume());
 
     auto reconstructMolecule = [&simBox](auto &molecule)
-    { molecule.reconstruct(simBox.getBox()); };
+    { molecule.reconstructAtomsAroundCenterOfMass(simBox.getBox()); };
 
     std::ranges::for_each(simBox.getMolecules(), reconstructMolecule);
 

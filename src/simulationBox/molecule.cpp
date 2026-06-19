@@ -96,7 +96,7 @@ void Molecule::calculateCenterOfMass(const Box &box)
 }
 
 /**
- * @brief reconstructs the molecule into the current center-of-mass image
+ * @brief reconstructs atom positions around the current center-of-mass image
  *
  * @details Molecules cut by the periodic box carry raw coordinate jumps from
  * the current box. Before a manostat changes the box, these jumps have to be
@@ -106,11 +106,8 @@ void Molecule::calculateCenterOfMass(const Box &box)
  *
  * @param box current simulation box
  */
-void Molecule::reconstruct(const Box &box)
+void Molecule::reconstructAtomsAroundCenterOfMass(const Box &box)
 {
-    if (_atoms.empty())
-        return;
-
     auto reconstructAtom = [&box, this](auto atom)
     {
         auto position = atom->getPosition();

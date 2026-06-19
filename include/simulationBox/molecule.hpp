@@ -66,7 +66,7 @@ namespace simulationBox
         explicit Molecule(const size_t moltype);
 
         void calculateCenterOfMass(const Box &);
-        void reconstruct(const Box &);
+        void reconstructAtomsAroundCenterOfMass(const Box &);
         void scale(const pq::tensor3D &, const Box &);
         void scaleVelocity(const pq::tensor3D &, const Box &);
 
