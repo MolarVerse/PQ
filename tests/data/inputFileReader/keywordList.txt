@@ -126,6 +126,8 @@ slakos                      false
 slakos_path                 false
 third_order                 false
 hubbard_derivs              false
+fennol_model_path           false
+gpu_preprocessing           false
 
 xtb_method                  false
 

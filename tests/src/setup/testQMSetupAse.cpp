@@ -26,6 +26,11 @@
 
 #include <string>   // for allocator, basic_string
 
+#ifdef WITH_ASE
+#include "aseFennolRunner.hpp"   // for AseFennolRunner
+#include "pybind11/embed.h"      // for scoped_interpreter
+#endif
+
 #include "exceptions.hpp"         // for InputFileException
 #include "gtest/gtest.h"          // for Message, TestPartResult
 #include "qmRunner.hpp"           // for QMRunner
@@ -202,3 +207,54 @@ TEST_F(TestQMSetupAse, setupAseDftbplusCustom3rdOrder)
     getline(file, line);
     EXPECT_EQ(line, "         Hubbard derivatives:  H: -0.3");
 }
+
+#ifdef WITH_ASE
+TEST_F(TestQMSetupAse, setupAseFennolRunnerConstructsCalculator)
+{
+    pybind11::scoped_interpreter guard{};
+    const auto                   types = pybind11::module_::import("types");
+    const auto                   sys   = pybind11::module_::import("sys");
+    const auto                   modules = sys.attr("modules");
+
+    auto aseModule       = types.attr("ModuleType")("ase");
+    auto aseAtomsModule  = types.attr("ModuleType")("ase.atoms");
+    auto fennolModule    = types.attr("ModuleType")("fennol");
+    auto fennolAseModule = types.attr("ModuleType")("fennol.ase");
+
+    aseModule.attr("__path__")    = pybind11::list();
+    fennolModule.attr("__path__") = pybind11::list();
+    aseModule.attr("atoms")       = aseAtomsModule;
+    fennolModule.attr("ase")      = fennolAseModule;
+
+    pybind11::exec(
+        R"py(
+class FENNIXCalculator:
+    last_kwargs = None
+
+    def __init__(self, **kwargs):
+        type(self).last_kwargs = kwargs
+)py",
+        pybind11::globals(),
+        fennolAseModule.attr("__dict__")
+    );
+
+    modules["ase"]        = aseModule;
+    modules["ase.atoms"]  = aseAtomsModule;
+    modules["fennol"]     = fennolModule;
+    modules["fennol.ase"] = fennolAseModule;
+
+    ASSERT_NO_THROW({ QM::AseFennolRunner runner("model.fnx", false, true); });
+
+    auto lastKwargs = fennolAseModule.attr("FENNIXCalculator").attr("last_kwargs")
+                          .cast<pybind11::dict>();
+
+    EXPECT_EQ(lastKwargs["model"].cast<std::string>(), "model.fnx");
+    EXPECT_EQ(lastKwargs["gpu_preprocessing"].cast<bool>(), false);
+    EXPECT_EQ(lastKwargs["use_float64"].cast<bool>(), true);
+
+    modules.attr("pop")("fennol.ase", pybind11::none());
+    modules.attr("pop")("fennol", pybind11::none());
+    modules.attr("pop")("ase.atoms", pybind11::none());
+    modules.attr("pop")("ase", pybind11::none());
+}
+#endif

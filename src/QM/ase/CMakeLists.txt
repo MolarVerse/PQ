@@ -3,6 +3,7 @@ add_library(aseQM
     maceRunner.cpp
     aseDftbRunner.cpp
     aseXtbRunner.cpp
+    aseFennolRunner.cpp
 )
 
 target_include_directories(aseQM

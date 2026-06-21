@@ -60,6 +60,9 @@ TEST_F(TestInputFileReader, parseQMMethod)
     parser.parseQMMethod({"qm_prog", "=", "ase_xtb"}, 0);
     EXPECT_EQ(QMSettings::getQMMethod(), ASEXTB);
 
+    parser.parseQMMethod({"qm_prog", "=", "fennol"}, 0);
+    EXPECT_EQ(QMSettings::getQMMethod(), FENNOL);
+
     // the more detailed mace parser is tested in TestMaceParser
 
     ASSERT_THROW_MSG(
@@ -67,7 +70,7 @@ TEST_F(TestInputFileReader, parseQMMethod)
         InputFileException,
         "Invalid qm_prog \"notAMethod\" in input file.\n"
         "Possible values are: dftbplus, ase_dftbplus, ase_xtb, pyscf, "
-        "turbomole, mace, mace_mp, mace_off"
+        "turbomole, fennol, mace, mace_mp, mace_off"
     )
 }
 
@@ -252,6 +255,19 @@ TEST_F(TestInputFileReader, parseMaceModelSize)
     )
 }
 
+TEST_F(TestInputFileReader, parseMaceModelPath)
+{
+    auto parser = QMInputParser(*_engine);
+
+    QMSettings::setMaceModelPath("");
+    EXPECT_EQ(QMSettings::getMaceModelPath(), "");
+    parser.parseMaceModelPath(
+        {"mace_model_path", "=", "/pAth/to/mace.model"},
+        0
+    );
+    EXPECT_EQ(QMSettings::getMaceModelPath(), "/pAth/to/mace.model");
+}
+
 TEST_F(TestInputFileReader, parseSlakosType)
 {
     using enum QMMethod;
@@ -375,4 +391,59 @@ TEST_F(TestInputFileReader, parseXtbMethod)
         "Invalid xTB method \"notAnXtbMethod\" in input file.\n"
         "Possible values are: GFN1-xTB, GFN2-xTB, IPEA1-xTB"
     )
+}
+
+TEST_F(TestInputFileReader, parseFennolModelPath)
+{
+    using enum QMMethod;
+
+    auto parser = QMInputParser(*_engine);
+
+    // clang-format off
+    EXPECT_EQ(QMSettings::getFennolModelPath(), "");
+    parser.parseFennolModelPath({"fennol_model_path", "=", "/pAth/to/fennol_model.fnx"}, 0);
+    EXPECT_EQ(QMSettings::getFennolModelPath(), "/pAth/to/fennol_model.fnx");
+    // clang-format on
+
+    ASSERT_THROW_MSG(
+        parser.parseFennolModelPath(
+            {"fennol_model_path", "=", "/path/to/model.fnx", "extra"},
+            42
+        ),
+        InputFileException,
+        "Invalid number of arguments at line 42 in input file"
+    )
+}
+
+TEST_F(TestInputFileReader, parseGPUPreprocessing)
+{
+    using enum QMMethod;
+
+    auto parser = QMInputParser(*_engine);
+
+    EXPECT_EQ(QMSettings::useGPUPreprocessing(), true);
+    parser.parseGPUPreprocessing({"GPU-Preprocessing", "=", "false"}, 0);
+    EXPECT_EQ(QMSettings::useGPUPreprocessing(), false);
+
+    parser.parseGPUPreprocessing({"gpu_preprocessing", "=", "on"}, 0);
+    EXPECT_EQ(QMSettings::useGPUPreprocessing(), true);
+
+    ASSERT_THROW_MSG(
+        parser.parseGPUPreprocessing({"gpu_preprocessing", "=", "notABool"}, 0),
+        InputFileException,
+        "Invalid boolean option \"notABool\" for keyword \"gpu_preprocessing\" "
+        "in input file.\n"
+        "Possible values are: on, yes, true, off, no, false."
+    )
+}
+
+TEST_F(TestInputFileReader, processFennolKeywords)
+{
+    _inputFileReader->process({"fennol-model-path", "=", "model.fnx"});
+    EXPECT_EQ(QMSettings::getFennolModelPath(), "model.fnx");
+    EXPECT_EQ(_inputFileReader->getKeywordCount("fennol_model_path"), 1);
+
+    _inputFileReader->process({"GPU-Preprocessing", "=", "off"});
+    EXPECT_EQ(QMSettings::useGPUPreprocessing(), false);
+    EXPECT_EQ(_inputFileReader->getKeywordCount("gpu_preprocessing"), 1);
 }

@@ -47,11 +47,11 @@ namespace
     void cleanupPrefix()
     {
         const std::vector<std::string> suffixes = {
-            ".log",     ".info",    ".rst",     ".en",     ".xyz",
-            ".timings", ".force",   ".instant_en", ".vel",  ".chrg",
-            ".mom",     ".vir",     ".stress",  ".box",    ".rpmd.rst",
-            ".rpmd.xyz",".rpmd.vel",".rpmd.frc",".rpmd.chrg",".rpmd.en",
-            ".opt",     ".ref"
+            ".log",      ".info",     ".rst",        ".en",        ".xyz",
+            ".timings",  ".force",    ".instant_en", ".vel",       ".chrg",
+            ".mom",      ".vir",      ".stress",     ".box",       ".rpmd.rst",
+            ".rpmd.xyz", ".rpmd.vel", ".rpmd.force", ".rpmd.chrg", ".rpmd.en",
+            ".opt",      ".ref"
         };
         for (const auto &s : suffixes)
             ::remove((std::string(_PREFIX) + s).c_str());
@@ -68,8 +68,14 @@ TEST_F(TestSetup, setupOutputFilesOptJobReplaceDefaultsAndAssignsOptFile)
     EXPECT_NO_THROW(setupOutputFiles(*_engine));
 
     // After setup, the log/timings/info filenames are now prefix-substituted.
-    EXPECT_EQ(OutputFileSettings::getLogFileName(), std::string(_PREFIX) + ".log");
-    EXPECT_EQ(OutputFileSettings::getOptFileName(), std::string(_PREFIX) + ".opt");
+    EXPECT_EQ(
+        OutputFileSettings::getLogFileName(),
+        std::string(_PREFIX) + ".log"
+    );
+    EXPECT_EQ(
+        OutputFileSettings::getOptFileName(),
+        std::string(_PREFIX) + ".opt"
+    );
 
     cleanupPrefix();
 }

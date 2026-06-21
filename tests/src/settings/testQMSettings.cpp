@@ -215,6 +215,7 @@ TEST(QMSettingsTest, ReturnQMMethodTest)
     EXPECT_EQ(string(QMMethod::PYSCF), "PYSCF");
     EXPECT_EQ(string(QMMethod::TURBOMOLE), "TURBOMOLE");
     EXPECT_EQ(string(QMMethod::MACE), "MACE");
+    EXPECT_EQ(string(QMMethod::FENNOL), "FeNNol");
     EXPECT_EQ(string(QMMethod::NONE), "none");
 }
 
@@ -254,4 +255,18 @@ TEST(QMSettingsTest, ReturnXtbMethodTest)
     EXPECT_EQ(string(XtbMethod::GFN1), "GFN1-xTB");
     EXPECT_EQ(string(XtbMethod::GFN2), "GFN2-xTB");
     EXPECT_EQ(string(XtbMethod::IPEA1), "IPEA1-xTB");
+}
+
+TEST(QMSettingsTest, SetFennolModelPath)
+{
+    QMSettings::setFennolModelPath("/paTh/to/fennol_model.fnx");
+    EXPECT_EQ(QMSettings::getFennolModelPath(), "/paTh/to/fennol_model.fnx");
+}
+
+TEST(QMSettingsTest, SetGPUPreprocessing)
+{
+    QMSettings::setUseGPUPreprocessing(false);
+    EXPECT_EQ(QMSettings::useGPUPreprocessing(), false);
+    QMSettings::setUseGPUPreprocessing(true);
+    EXPECT_EQ(QMSettings::useGPUPreprocessing(), true);
 }
