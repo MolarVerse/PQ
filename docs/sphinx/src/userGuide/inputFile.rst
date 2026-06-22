@@ -1177,6 +1177,34 @@ With the ``rattle-iter`` keyword the user can specify the maximum number of iter
 
 .. centered:: *default value* = 20
 
+.. _mshaketoleranceKey:
+
+MShake Tolerance
+================
+
+.. admonition:: Key
+    :class: tip
+
+    mshake-tolerance = {double} -> 1e-8
+
+With the ``mshake-tolerance`` keyword the user can specify the tolerance, with which the bond length of the mshaked bonds should converge.
+
+.. centered:: *default value* = 1e-8
+
+.. _mshakeiterationKey:
+
+MShake Iteration
+================
+
+.. admonition:: Key
+    :class: tip
+
+    mshake-iter = {uint+} -> 20
+
+With the ``mshake-iter`` keyword the user can specify the maximum number of iterations until the convergence of the bond lengths should be reached within the mshake algorithm.
+
+.. centered:: *default value* = 20
+
 .. _distanceConstraintsKey:
 
 Distance Constraints

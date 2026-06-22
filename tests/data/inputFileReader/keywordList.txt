@@ -31,6 +31,8 @@ shake-tolerance             false
 shake-iter                  false
 rattle-iter                 false
 rattle-tolerance            false
+mshake-tolerance            false
+mshake-iter                 false
 distance-constraints        false
 
 long_range                  false
