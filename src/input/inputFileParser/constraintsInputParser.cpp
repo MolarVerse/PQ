@@ -30,9 +30,9 @@
 #include "constraintSettings.hpp"   // for ConstraintSettings
 #include "constraints.hpp"          // for Constraints
 #include "engine.hpp"               // for Engine
+#include "exceptions.hpp"           // for InputFileException
 #include "references.hpp"           // for ReferencesOutput
 #include "referencesOutput.hpp"     // for ReferencesOutput
-#include "exceptions.hpp"           // for InputFileException
 
 using namespace input;
 using namespace engine;
@@ -77,6 +77,16 @@ ConstraintsInputParser::ConstraintsInputParser(Engine &engine)
     addKeyword(
         std::string("rattle-tolerance"),
         bind_front(&ConstraintsInputParser::parseRattleTolerance, this),
+        false
+    );
+    addKeyword(
+        std::string("mshake-tolerance"),
+        bind_front(&ConstraintsInputParser::parseMShakeTolerance, this),
+        false
+    );
+    addKeyword(
+        std::string("mshake-iter"),
+        bind_front(&ConstraintsInputParser::parseMShakeIteration, this),
         false
     );
 
@@ -236,6 +246,54 @@ void ConstraintsInputParser::parseRattleIteration(
         throw InputFileException("Maximum rattle iterations must be positive");
 
     ConstraintSettings::setRattleMaxIter(size_t(iteration));
+}
+
+/**
+ * @brief parsing MShake tolerance
+ *
+ * @details default value is 1e-8
+ *
+ * @param lineElements
+ *
+ * @throw InputFileException if tolerance is negative
+ */
+void ConstraintsInputParser::parseMShakeTolerance(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+
+    const auto tolerance = stod(lineElements[2]);
+
+    if (tolerance < 0.0)
+        throw InputFileException("MShake tolerance must be positive");
+
+    ConstraintSettings::setMShakeTolerance(tolerance);
+}
+
+/**
+ * @brief parsing MShake iteration
+ *
+ * @details default value is 20
+ *
+ * @param lineElements
+ *
+ * @throw InputFileException if iteration is negative
+ */
+void ConstraintsInputParser::parseMShakeIteration(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+
+    const auto iteration = stoi(lineElements[2]);
+
+    if (iteration < 0)
+        throw InputFileException("Maximum MShake iterations must be positive");
+
+    ConstraintSettings::setMShakeMaxIter(size_t(iteration));
 }
 
 /**

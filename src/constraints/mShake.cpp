@@ -24,14 +24,15 @@
 
 #include <format>   // for std::format
 
-#include "constants.hpp"         // for constants
-#include "distanceKernels.hpp"   // for distVecAndDist2
-#include "mShakeReference.hpp"   // for MShakeReference
-#include "mathUtilities.hpp"     // for dot
-#include "matrix.hpp"            // for Matrix
-#include "simulationBox.hpp"     // for SimulationBox
-#include "stlVector.hpp"         // for dot
-#include "timingsSettings.hpp"   // for settings
+#include "constants.hpp"            // for constants
+#include "constraintSettings.hpp"   // for ConstraintSettings
+#include "distanceKernels.hpp"      // for distVecAndDist2
+#include "mShakeReference.hpp"      // for MShakeReference
+#include "mathUtilities.hpp"        // for dot
+#include "matrix.hpp"               // for Matrix
+#include "simulationBox.hpp"        // for SimulationBox
+#include "stlVector.hpp"            // for dot
+#include "timingsSettings.hpp"      // for settings
 
 using namespace constants;
 using namespace constraints;
@@ -130,13 +131,11 @@ void MShake::initMShakeReferences()
  * @param simBox
  *
  */
-void MShake::applyMShake(
-    const double   shakeTolerance,
-    const size_t   shakeIterations,
-    SimulationBox &simBox
-)
+void MShake::applyMShake(SimulationBox &simBox)
 {
-    auto &molecules = simBox.getMolecules();
+    const auto mShakeMaxIter   = ConstraintSettings::getMShakeMaxIter();
+    const auto mShakeTolerance = ConstraintSettings::getMShakeTolerance();
+    auto      &molecules       = simBox.getMolecules();
 
     const auto dt          = TimingsSettings::getTimeStep() * _FS_TO_S_;
     const auto timeFactor  = 4.0 * dt * dt;
@@ -333,7 +332,7 @@ void MShake::applyMShake(
                      * reference value is larger than the tolerance value *
                      ******************************************************/
 
-                    if (::abs(r2Deviation) / (2.0 * r2Ref) > shakeTolerance)
+                    if (::abs(r2Deviation) / (2.0 * r2Ref) > mShakeTolerance)
                         converged = false;
 
                     ++index_ij;
@@ -343,12 +342,12 @@ void MShake::applyMShake(
             if (converged)
                 break;
 
-            if (iteration >= shakeIterations)
+            if (iteration >= mShakeMaxIter)
                 throw customException::MShakeException(
                     std::format(
                         "M-Shake did not converge within {} iterations for "
                         "molecule type {}",
-                        shakeIterations,
+                        mShakeMaxIter,
                         moltype
                     )
                 );
@@ -364,7 +363,6 @@ void MShake::applyMShake(
 /**
  * @brief apply M - Rattle to correct velocities
  *
- * @param shakeTolerance
  * @param simulationBox
  *
  */

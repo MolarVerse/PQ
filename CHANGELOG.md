@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - Add keyword "remove_net_force" for removing total net force when reading in 
   forces from QM calculations
 - Add FeNNol neural network potential as ASE QM runner
+- Add keywords "mshake-iter" and "mshake-tolerance"
 
 ### Build
 
