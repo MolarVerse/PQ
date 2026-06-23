@@ -29,11 +29,11 @@
 namespace QM
 {
     /**
-     * @brief AseFennolRunner inherits from ASEQMRunner
+     * @brief AseFennolRunner inherits from AseQMRunner
      *
      */
     class __attribute__((visibility("default"))) AseFennolRunner
-        : public ASEQMRunner
+        : public AseQMRunner
     {
        public:
         ~AseFennolRunner() override = default;

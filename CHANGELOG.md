@@ -114,8 +114,9 @@ All notable changes to this project will be documented in this file.
 - `utilities::isZero<T>(a)` helper added to `mathUtilities.hpp`,
   centralizing the exact-zero check (`a == T(0)`). Callers that need a
   tolerance can still use `compare(a, T(0), tol)`
-- Add option to queue warnings before the .log output file has been created 
+- Add option to queue warnings before the .log output file has been created
   and flush them to the file at the end of the setup
+- Rename `MaceRunner` class to `AseMaceRunner` and `ASEQMRunner` to `AseQMRunner` for consistency
 
 ### Tests
 

@@ -36,8 +36,8 @@
 #ifdef WITH_ASE
 #include "aseDftbRunner.hpp"     // for aseDftbRunner
 #include "aseFennolRunner.hpp"   // for AseFennolRunner
+#include "aseMaceRunner.hpp"     // for AseMaceRunner
 #include "aseXtbRunner.hpp"      // for aseXtbRunner
-#include "maceRunner.hpp"        // for MaceRunner
 #endif
 
 using engine::QMMDEngine;
@@ -112,7 +112,8 @@ void QMMDEngine::setMaceQMRunner()
     if (!modelPath.empty())
         maceModel = modelPath;
 
-    _qmRunner = make_shared<MaceRunner>(modelType, maceModel, fpType, useDFTD);
+    _qmRunner =
+        make_shared<AseMaceRunner>(modelType, maceModel, fpType, useDFTD);
 #else
     throw CompileTimeException(
         "A mace type qm method was requested but ASE was not enabled at "

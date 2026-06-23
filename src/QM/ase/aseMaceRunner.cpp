@@ -20,14 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "maceRunner.hpp"
+#include "aseMaceRunner.hpp"
 
 #include "pybind11/embed.h"
 
-using QM::MaceRunner;
+using QM::AseMaceRunner;
 
 /**
- * @brief Construct a new MaceRunner::MaceRunner object
+ * @brief Construct a new AseMaceRunner::AseMaceRunner object
  *
  * @param modelType
  * @param model
@@ -36,13 +36,13 @@ using QM::MaceRunner;
  *
  * @throw py::error_already_set if the import of the mace module fails
  */
-MaceRunner::MaceRunner(
+AseMaceRunner::AseMaceRunner(
     const std::string &modelType,
     const std::string &model,
     const std::string &fpType,
     const bool         dispersion
 )
-    : ASEQMRunner()
+    : AseQMRunner()
 {
     try
     {
