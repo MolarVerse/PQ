@@ -29,6 +29,7 @@
 #include "engine.hpp"           // for Engine
 #include "exceptions.hpp"       // for InputFileException, UserInputException
 #include "hybridSettings.hpp"   // for HybridSettings
+#include "qmSettings.hpp"       // for QMSettings
 #include "settings.hpp"         // for Settings
 
 using setup::HybridSetup;
@@ -66,11 +67,42 @@ HybridSetup::HybridSetup(Engine &engine) : _engine(engine) {}
  */
 void HybridSetup::setup()
 {
+    validateQMMethod();
     setupInnerRegionCenter();
     setupForcedInnerList();
     setupForcedOuterList();
     validateQMChargeSettings();
     checkZoneRadii();
+}
+
+/**
+ * @brief Check if chosen QM method is available for hybrid type calculations
+ *
+ * @throws customException::InputFileException if the QM method is not supported
+ * for hybrid type calculations
+ */
+void HybridSetup::validateQMMethod()
+{
+    using enum QMMethod;
+
+    const auto qmMethod = QMSettings::getQMMethod();
+    const auto errorMsg = std::format(
+        "QM method \"{}\" is not supported for hybrid type "
+        "calculations. Supported QM methods are \"dftbplus\" and "
+        "\"turbomole\".",
+        string(qmMethod)
+
+    );
+
+    // clang-format off
+    switch (qmMethod)
+    {
+        case DFTBPLUS:
+        case TURBOMOLE: 
+            break;
+        default: throw(InputFileException(errorMsg));
+    }
+    // clang-format on
 }
 
 /**

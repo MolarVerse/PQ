@@ -44,6 +44,7 @@ target_link_libraries(setup
     ringPolymerRestartFileReader
 
     engine
+    settings
     utilities
     output
     potential
