@@ -27,7 +27,7 @@
 #include <vector>   // for vector
 
 #include "engine.hpp"           // for Engine
-#include "exceptions.hpp"       // for InputFileException, UserInputException
+#include "exceptions.hpp"       // for InputFileException
 #include "hybridSettings.hpp"   // for HybridSettings
 #include "qmSettings.hpp"       // for QMSettings
 #include "settings.hpp"         // for Settings
