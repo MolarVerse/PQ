@@ -24,7 +24,10 @@
 
 #define _LOG_OUTPUT_HPP_
 
+#include <string>
+
 #include "output.hpp"
+#include "typeAliases.hpp"
 
 namespace output
 {
@@ -55,6 +58,12 @@ namespace output
         void writeSetupWarning(const std::string &setupWarning);
         void writeSetupCompleted();
         void writeRead(const std::string &message, const std::string &file);
+
+        void queueWarning(const std::string &warning);
+        void flushQueuedWarnings();
+
+       private:
+        pq::strings _pendingWarnings;
     };
 
 }   // namespace output

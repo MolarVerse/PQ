@@ -217,7 +217,7 @@ TEST(TestQMSetup, setupQMMethodMaceOffInvalidModelSize)
 
     QMSettings::setQMMethod(QMMethod::MACE);
     QMSettings::setMaceModelType("mace-off");
-    QMSettings::setMaceModelSize("medium-omat-0");
+    QMSettings::setMaceModel("medium-omat-0");
 
     ASSERT_THROW_MSG(
         qmSetup.setupQMMethodMace(),
@@ -234,7 +234,7 @@ TEST(TestQMSetup, setupQMMethodMaceRedundantModelPath)
 
     QMSettings::setQMMethod(QMMethod::MACE);
     QMSettings::setMaceModelType("mace-mp");
-    QMSettings::setMaceModelSize("medium-omat-0");
+    QMSettings::setMaceModel("medium-omat-0");
     QMSettings::setMaceModelPath("https://not-a-valid-url");
 
     ASSERT_THROW_MSG(
@@ -253,7 +253,7 @@ TEST(TestQMSetup, setupQMMethodMaceMissingModelPath)
 
     QMSettings::setQMMethod(QMMethod::MACE);
     QMSettings::setMaceModelType("mace-mp");
-    QMSettings::setMaceModelSize("custom");
+    QMSettings::setMaceModel("custom");
     QMSettings::setMaceModelPath("");
 
     ASSERT_THROW_MSG(

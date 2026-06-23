@@ -1418,17 +1418,17 @@ This can increase momentum conservation when using a QM program with limited num
 
 .. centered:: *default value* = false
 
-.. _maceModelSizeKey:
+.. _maceModelKey:
 
-MACE Model Size
-===============
+MACE Model
+==========
 
 .. admonition:: Key
     :class: tip
 
-    mace_model_size = {string} -> "medium"
+    mace_model = {string} -> "medium"
 
-With the ``mace_model_size`` keyword the user can specify the size of the `MACE <https://github.com/ACEsuit/mace>`_ model for the QM calculations.
+With the ``mace_model`` keyword the user can specify the `MACE <https://github.com/ACEsuit/mace>`_ model for the QM calculations.
 
 Possible options are:
 
@@ -1457,7 +1457,7 @@ Possible options are:
    12. **custom** - custom MACE model (to be set *via* the :ref:`mace_model_path <maceModelPathKey>` keyword)
 
 .. Note::
-    The :ref:`qm_prog <qmprogamKey>` option ``mace-off`` is only compatible with the first three model sizes: "small", "medium" and "large"
+    The :ref:`qm_prog <qmprogamKey>` option ``mace-off`` is only compatible with the first three models: "small", "medium" and "large"
 
 
 .. _maceModelPathKey:
@@ -1473,7 +1473,7 @@ MACE Model Path
 With the ``mace_model_path`` keyword the user can specify a custom URL corresponding to a `MACE <https://github.com/ACEsuit/mace-foundations?tab=readme-ov-file>`__ model for the QM calculations.
 
 .. Note::
-    The ``mace_model_path`` can only be specified if :ref:`mace_model_size <maceModelSizeKey>` keyword is set to ``custom``.
+    The ``mace_model_path`` can only be specified if :ref:`mace_model <maceModelKey>` keyword is set to ``custom``.
 
 
 .. _xtbMethodKey:

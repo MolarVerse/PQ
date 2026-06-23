@@ -50,10 +50,10 @@ namespace settings
     };
 
     /**
-     * @class enum MaceModelSize
+     * @class enum MaceModel
      *
      */
-    enum class MaceModelSize : size_t
+    enum class MaceModel : size_t
     {
         SMALL,
         MEDIUM,
@@ -101,7 +101,7 @@ namespace settings
     };
 
     std::string string(const QMMethod method);
-    std::string string(const MaceModelSize model);
+    std::string string(const MaceModel model);
     std::string string(const MaceModelType model);
     std::string string(const XtbMethod method);
     std::string string(const SlakosType slakos);
@@ -119,7 +119,7 @@ namespace settings
     {
        private:
         static inline QMMethod      _qmMethod      = QMMethod::NONE;
-        static inline MaceModelSize _maceModelSize = MaceModelSize::MEDIUM;
+        static inline MaceModel     _maceModel     = MaceModel::MEDIUM;
         static inline MaceModelType _maceModelType = MaceModelType::MACE_MP;
         static inline SlakosType    _slakosType    = SlakosType::NONE;
         static inline XtbMethod     _xtbMethod     = XtbMethod::GFN2;
@@ -153,8 +153,8 @@ namespace settings
         static void setQMMethod(const std::string_view &method);
         static void setQMMethod(const QMMethod method);
 
-        static void setMaceModelSize(const std::string_view &model);
-        static void setMaceModelSize(const MaceModelSize model);
+        static void setMaceModel(const std::string_view &model);
+        static void setMaceModel(const MaceModel model);
         static void setMaceModelType(const std::string_view &model);
         static void setMaceModelType(const MaceModelType model);
         static void setMaceModelPath(const std::string_view &path);
@@ -188,7 +188,7 @@ namespace settings
          ***************************/
 
         [[nodiscard]] static QMMethod      getQMMethod();
-        [[nodiscard]] static MaceModelSize getMaceModelSize();
+        [[nodiscard]] static MaceModel     getMaceModel();
         [[nodiscard]] static MaceModelType getMaceModelType();
         [[nodiscard]] static std::string   getMaceModelPath();
 

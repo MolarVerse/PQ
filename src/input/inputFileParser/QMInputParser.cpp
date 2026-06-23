@@ -28,6 +28,7 @@
 #include <sstream>         // for stringstream
 #include <unordered_map>   // for unordered_map
 
+#include "engine.hpp"             // for Engine
 #include "exceptions.hpp"         // for InputFileException, customException
 #include "hubbardDerivMap.hpp"    // for hubbardDerivMap3ob
 #include "qmSettings.hpp"         // for Settings
@@ -91,7 +92,13 @@ QMInputParser::QMInputParser(Engine &engine) : InputFileParser(engine)
 
     addKeyword(
         std::string("mace_model_size"),
-        bind_front(&QMInputParser::parseMaceModelSize, this),
+        bind_front(&QMInputParser::parseMaceModel, this),
+        false
+    );
+
+    addKeyword(
+        std::string("mace_model"),
+        bind_front(&QMInputParser::parseMaceModel, this),
         false
     );
 
@@ -291,63 +298,75 @@ void QMInputParser::parseRemoveNetForce(
 }
 
 /**
- * @brief parse the size of the Mace model
+ * @brief parse the Mace model
  *
  * @param lineElements
  * @param lineNumber
  *
- * @throws InputFileException if the size is not recognized
+ * @throws InputFileException if the model is not recognized
  */
-void QMInputParser::parseMaceModelSize(
+void QMInputParser::parseMaceModel(
     const std::vector<std::string> &lineElements,
     const size_t                    lineNumber
 )
 {
-    using enum MaceModelSize;
+    using enum MaceModel;
     checkCommand(lineElements, lineNumber);
+
+    auto      &logOutput = _engine.getLogOutput();
+    auto      &stdOut    = _engine.getStdoutOutput();
+    const auto modelSizeWarning =
+        "The keyword \"mace_model_size\" is deprecated and has been renamed to "
+        "\"mace_model\". It will be removed in a future release.";
+
+    if (lineElements[0] == "mace_model_size")
+    {
+        logOutput.queueWarning(modelSizeWarning);
+        stdOut.writeSetupWarning(modelSizeWarning);
+    }
 
     const auto size = toLowerAndReplaceDashesCopy(lineElements[2]);
 
     if ("small" == size)
-        QMSettings::setMaceModelSize(SMALL);
+        QMSettings::setMaceModel(SMALL);
 
     else if ("medium" == size)
-        QMSettings::setMaceModelSize(MEDIUM);
+        QMSettings::setMaceModel(MEDIUM);
 
     else if ("large" == size)
-        QMSettings::setMaceModelSize(LARGE);
+        QMSettings::setMaceModel(LARGE);
 
     else if ("small_0b" == size)
-        QMSettings::setMaceModelSize(SMALL0B);
+        QMSettings::setMaceModel(SMALL0B);
 
     else if ("medium_0b" == size)
-        QMSettings::setMaceModelSize(MEDIUM0B);
+        QMSettings::setMaceModel(MEDIUM0B);
 
     else if ("small_0b2" == size)
-        QMSettings::setMaceModelSize(SMALL0B2);
+        QMSettings::setMaceModel(SMALL0B2);
 
     else if ("medium_0b2" == size)
-        QMSettings::setMaceModelSize(MEDIUM0B2);
+        QMSettings::setMaceModel(MEDIUM0B2);
 
     else if ("large_0b2" == size)
-        QMSettings::setMaceModelSize(LARGE0B2);
+        QMSettings::setMaceModel(LARGE0B2);
 
     else if ("medium_0b3" == size)
-        QMSettings::setMaceModelSize(MEDIUM0B3);
+        QMSettings::setMaceModel(MEDIUM0B3);
 
     else if ("medium_mpa_0" == size)
-        QMSettings::setMaceModelSize(MEDIUMMPA0);
+        QMSettings::setMaceModel(MEDIUMMPA0);
 
     else if ("medium_omat_0" == size)
-        QMSettings::setMaceModelSize(MEDIUMOMAT0);
+        QMSettings::setMaceModel(MEDIUMOMAT0);
 
     else if ("custom" == size)
-        QMSettings::setMaceModelSize(CUSTOM);
+        QMSettings::setMaceModel(CUSTOM);
 
     else
         throw InputFileException(
             std::format(
-                "Invalid mace_model_size \"{}\" in input file.\n"
+                "Invalid mace_model \"{}\" in input file.\n"
                 "Possible values are: small, medium, large, small-0b,\n"
                 "medium-0b, small-0b2, medium-0b2, large-0b2, medium-0b3,\n"
                 "medium-mpa-0, medium-omat-0, custom",

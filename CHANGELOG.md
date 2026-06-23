@@ -11,6 +11,10 @@ All notable changes to this project will be documented in this file.
 - Add FeNNol neural network potential as ASE QM runner
 - Add keywords "mshake-iter" and "mshake-tolerance"
 
+### Refactor
+
+- Rename keyword "mace_model_size" to "mace_model" and add deprecation warning
+
 ### Build
 
 - Faster builds: link-time optimization (`-flto`) is now opt-in via
@@ -110,6 +114,8 @@ All notable changes to this project will be documented in this file.
 - `utilities::isZero<T>(a)` helper added to `mathUtilities.hpp`,
   centralizing the exact-zero check (`a == T(0)`). Callers that need a
   tolerance can still use `compare(a, T(0), tol)`
+- Add option to queue warnings before the .log output file has been created 
+  and flush them to the file at the end of the setup
 
 ### Tests
 
