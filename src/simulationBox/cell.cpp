@@ -184,16 +184,6 @@ const Vec3D &Cell::getUpperBoundary() const { return _upperBoundary; }
  */
 const Vec3Dul &Cell::getCellIndex() const { return _cellIndex; }
 
-/**
- * @brief returns the molecule at the given index
- *
- * @param index
- * @return Molecule*
- */
-Molecule *Cell::getMolecule(const size_t index) const
-{
-    return _molecules[index];
-}
 
 /**
  * @brief returns the molecules vector
@@ -230,16 +220,6 @@ const std::vector<Cell *> &Cell::getNeighbourCells() const
     return _neighbourCells;
 }
 
-/**
- * @brief returns the atoms at the given molecule index
- *
- * @param index
- * @return const std::vector<size_t>&
- */
-const std::vector<pq::Atom *> &Cell::getAtoms(const size_t molIndex) const
-{
-    return _atoms[molIndex];
-}
 
 /**
  * @brief returns the molecule indices in the core hybrid zone

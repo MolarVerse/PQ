@@ -96,11 +96,14 @@ namespace simulationBox
 
         void addPosition(const pq::Vec3D &position);
         void addVelocity(const pq::Vec3D &velocity);
-        void addForce(const pq::Vec3D &force);
+        void addForce(const pq::Vec3D &force) { _force += force; }
         void addForce(const double, const double, const double);
         void addForceInner(const pq::Vec3D &force);
         void addForceOuter(const pq::Vec3D &force);
-        void addShiftForce(const pq::Vec3D &shiftForce);
+        void addShiftForce(const pq::Vec3D &shiftForce)
+        {
+            _shiftForce += shiftForce;
+        }
 
         /***************************
          * standard getter methods *
@@ -121,7 +124,7 @@ namespace simulationBox
 
         [[nodiscard]] int                   getAtomicNumber() const;
         [[nodiscard]] double                getMass() const;
-        [[nodiscard]] double                getPartialCharge() const;
+        [[nodiscard]] double getPartialCharge() const { return _partialCharge; }
         [[nodiscard]] std::optional<double> getQMCharge() const;
 
         [[nodiscard]] const pq::Vec3D &getPosition() const { return _position; }

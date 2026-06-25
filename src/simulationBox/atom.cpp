@@ -145,13 +145,6 @@ void Atom::addPosition(const Vec3D &position) { _position += position; }
 void Atom::addVelocity(const Vec3D &velocity) { _velocity += velocity; }
 
 /**
- * @brief add a Vec3D to the current force of the atom
- *
- * @param force
- */
-void Atom::addForce(const Vec3D &force) { _force += force; }
-
-/**
  * @brief  add a force to the current force of the atom
  *
  * @param force_x
@@ -183,12 +176,6 @@ void Atom::addForceInner(const Vec3D &force) { _forceInner += force; }
  */
 void Atom::addForceOuter(const Vec3D &force) { _forceOuter += force; }
 
-/**
- * @brief add a Vec3D to the current shift force of the atom
- *
- * @param shiftForce
- */
-void Atom::addShiftForce(const Vec3D &shiftForce) { _shiftForce += shiftForce; }
 
 /***************************
  *                         *
@@ -303,12 +290,6 @@ int Atom::getAtomicNumber() const { return _atomicNumber; }
  */
 double Atom::getMass() const { return _mass; }
 
-/**
- * @brief return the partial charge of the atom
- *
- * @return double
- */
-double Atom::getPartialCharge() const { return _partialCharge; }
 
 /*
  * @brief return the qm charge of the atom

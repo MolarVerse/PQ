@@ -75,7 +75,10 @@ namespace simulationBox
         [[nodiscard]] const pq::Vec3D   &getUpperBoundary() const;
         [[nodiscard]] const pq::Vec3Dul &getCellIndex() const;
 
-        [[nodiscard]] pq::Molecule *getMolecule(const size_t index) const;
+        [[nodiscard]] pq::Molecule *getMolecule(const size_t index) const
+        {
+            return _molecules[index];
+        }
         [[nodiscard]] const std::vector<Molecule *> &getMolecules() const;
         [[nodiscard]] std::vector<Molecule *>       &getMolecules();
 
@@ -84,7 +87,10 @@ namespace simulationBox
 
         [[nodiscard]] const std::vector<pq::Atom *> &getAtoms(
             const size_t molIndex
-        ) const;
+        ) const
+        {
+            return _atoms[molIndex];
+        }
 
         [[nodiscard]] const std::vector<size_t> &getCoreMoleculeIndices() const;
         [[nodiscard]] const std::vector<size_t> &getSmoothingMoleculeIndices(
