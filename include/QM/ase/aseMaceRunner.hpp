@@ -29,15 +29,16 @@
 namespace QM
 {
     /**
-     * @brief MaceRunner inherits from ASEQMRunner
+     * @brief AseMaceRunner inherits from AseQMRunner
      *
      */
-    class __attribute__((visibility("default"))) MaceRunner : public ASEQMRunner
+    class __attribute__((visibility("default"))) AseMaceRunner
+        : public AseQMRunner
     {
        public:
-        ~MaceRunner() override = default;
+        ~AseMaceRunner() override = default;
 
-        explicit MaceRunner(
+        explicit AseMaceRunner(
             const std::string& modelType,
             const std::string& model,
             const std::string& fpType,
