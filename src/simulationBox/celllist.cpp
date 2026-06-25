@@ -380,7 +380,7 @@ Vec3D CellList::getCellSize() const { return _cellSize; }
  *
  * @return std::vector<Cell>
  */
-std::vector<Cell> CellList::getCells() const { return _cells; }
+const std::vector<Cell> &CellList::getCells() const { return _cells; }
 
 /**
  * @brief get cell by index

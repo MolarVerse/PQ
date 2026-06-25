@@ -255,13 +255,6 @@ bool Atom::isMMAtom() const
 }
 
 /**
- * @brief return the name of the atom (element name)
- *
- * @return std::string
- */
-std::string Atom::getName() const { return _name; }
-
-/**
  * @brief return the atom type name
  *
  * @return std::string
@@ -323,13 +316,6 @@ double Atom::getPartialCharge() const { return _partialCharge; }
  * @return optional<double>
  */
 optional<double> Atom::getQMCharge() const { return _qmCharge; }
-
-/**
- * @brief return the position of the atom
- *
- * @return Vec3D
- */
-Vec3D Atom::getPosition() const { return _position; }
 
 /**
  * @brief return the old position of the atom

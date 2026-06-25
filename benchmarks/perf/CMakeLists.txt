@@ -13,6 +13,7 @@ set(perf_benchmarks
     kinetics.cpp
     virial.cpp
     constraints.cpp
+    interWater.cpp
 )
 
 include(CheckIncludeFileCXX)
@@ -37,6 +38,8 @@ foreach(perf_source ${perf_benchmarks})
         constraints
         simulationBox
         potential
+        interWater
+        settings
         physicalData
         box
         linearAlgebra

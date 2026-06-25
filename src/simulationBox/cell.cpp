@@ -225,7 +225,10 @@ Cell *Cell::getNeighbourCell(const size_t index) const
  *
  * @return std::vector<Cell*>
  */
-std::vector<Cell *> Cell::getNeighbourCells() const { return _neighbourCells; }
+const std::vector<Cell *> &Cell::getNeighbourCells() const
+{
+    return _neighbourCells;
+}
 
 /**
  * @brief returns the atoms at the given molecule index

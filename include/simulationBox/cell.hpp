@@ -80,7 +80,7 @@ namespace simulationBox
         [[nodiscard]] std::vector<Molecule *>       &getMolecules();
 
         [[nodiscard]] Cell *getNeighbourCell(const size_t index) const;
-        [[nodiscard]] std::vector<Cell *> getNeighbourCells() const;
+        [[nodiscard]] const std::vector<Cell *> &getNeighbourCells() const;
 
         [[nodiscard]] const std::vector<pq::Atom *> &getAtoms(
             const size_t molIndex
