@@ -28,6 +28,7 @@
 
 #ifdef WITH_ASE
 #include "aseFennolRunner.hpp"   // for AseFennolRunner
+#include "aseMaceRunner.hpp"     // for AseMaceRunner
 #include "pybind11/embed.h"      // for scoped_interpreter
 #endif
 
@@ -254,6 +255,60 @@ class FENNIXCalculator:
 
     modules.attr("pop")("fennol.ase", pybind11::none());
     modules.attr("pop")("fennol", pybind11::none());
+    modules.attr("pop")("ase.atoms", pybind11::none());
+    modules.attr("pop")("ase", pybind11::none());
+}
+#endif
+
+#ifdef WITH_ASE
+TEST_F(TestQMSetupAse, setupAseMaceRunnerConstructsCalculator)
+{
+    pybind11::scoped_interpreter guard{};
+    const auto                   types   = pybind11::module_::import("types");
+    const auto                   sys     = pybind11::module_::import("sys");
+    const auto                   modules = sys.attr("modules");
+
+    auto aseModule         = types.attr("ModuleType")("ase");
+    auto aseAtomsModule    = types.attr("ModuleType")("ase.atoms");
+    auto maceModule        = types.attr("ModuleType")("mace");
+    auto calculatorsModule = types.attr("ModuleType")("mace.calculators");
+
+    aseModule.attr("__path__")     = pybind11::list();
+    maceModule.attr("__path__")    = pybind11::list();
+    aseModule.attr("atoms")        = aseAtomsModule;
+    maceModule.attr("calculators") = calculatorsModule;
+
+    pybind11::exec(
+        R"py(
+class MACECalculator:
+    last_kwargs = None
+
+    def __init__(self, **kwargs):
+        type(self).last_kwargs = kwargs
+)py",
+        pybind11::globals(),
+        calculatorsModule.attr("__dict__")
+    );
+
+    modules["ase"]              = aseModule;
+    modules["ase.atoms"]        = aseAtomsModule;
+    modules["mace"]             = maceModule;
+    modules["mace.calculators"] = calculatorsModule;
+
+    ASSERT_NO_THROW(
+        { QM::AseMaceRunner runner("MACECalculator", "model.model", "float64", true); }
+    );
+
+    auto lastKwargs = calculatorsModule.attr("MACECalculator").attr("last_kwargs")
+                          .cast<pybind11::dict>();
+
+    EXPECT_EQ(lastKwargs["model"].cast<std::string>(), "model.model");
+    EXPECT_EQ(lastKwargs["dispersion"].cast<bool>(), true);
+    EXPECT_EQ(lastKwargs["default_dtype"].cast<std::string>(), "float64");
+    EXPECT_EQ(lastKwargs["device"].cast<std::string>(), "cuda");
+
+    modules.attr("pop")("mace.calculators", pybind11::none());
+    modules.attr("pop")("mace", pybind11::none());
     modules.attr("pop")("ase.atoms", pybind11::none());
     modules.attr("pop")("ase", pybind11::none());
 }
