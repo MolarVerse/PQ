@@ -9,17 +9,6 @@ All notable changes to this project will be documented in this file.
 - Add keyword "remove_net_force" for removing total net force when reading in 
   forces from QM calculations
 
-### Performance
-
-- Hot accessors used per atom pair in the intermolecular kernels are now
-  inlined and returned by const reference instead of by value out-of-line:
-  `Atom::getName()` (was a `std::string` copy per atom used to classify O/H in
-  the inter-water kernel), `Atom::getPosition()`, `CellList::getCells()` and
-  `Cell::getNeighbourCells()` (the latter two avoid deep-copying the whole cell
-  list on every access). Results are unchanged; the inter-water cell-list kernel
-  drops ~22% of its instruction count. Adds a fixed-work `interWater` perf
-  benchmark.
-
 ### Build
 
 - Faster builds: link-time optimization (`-flto`) is now opt-in via

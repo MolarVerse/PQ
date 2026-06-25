@@ -110,10 +110,6 @@ namespace simulationBox
         [[nodiscard]] bool isQMAtom() const;
         [[nodiscard]] bool isMMAtom() const;
 
-        // Inlined and returned by const-ref: getName() is called per atom per
-        // pair in the inter-water kernel to classify O vs H, where returning a
-        // std::string by value (out-of-line, across the library boundary) was a
-        // measurable hot spot.
         [[nodiscard]] const std::string &getName() const { return _name; }
         [[nodiscard]] std::string        getAtomTypeName() const;
 
@@ -128,9 +124,6 @@ namespace simulationBox
         [[nodiscard]] double                getPartialCharge() const;
         [[nodiscard]] std::optional<double> getQMCharge() const;
 
-        // Inlined and returned by const-ref: getPosition() is read for every
-        // atom in every intermolecular pair; returning Vec3D by value
-        // out-of-line (across the library boundary) was a measurable hot spot.
         [[nodiscard]] const pq::Vec3D &getPosition() const { return _position; }
         [[nodiscard]] pq::Vec3D        getPositionOld() const;
         [[nodiscard]] pq::Vec3D getVelocity() const;
