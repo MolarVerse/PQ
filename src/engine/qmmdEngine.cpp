@@ -107,7 +107,7 @@ void QMMDEngine::setMaceQMRunner()
     const auto useDFTD   = QMSettings::useDispersionCorr();
     const auto fpType    = Settings::getFloatingPointPybindString();
 
-    auto maceModel = string(QMSettings::getMaceModelSize());
+    auto maceModel = string(QMSettings::getMaceModel());
 
     if (!modelPath.empty())
         maceModel = modelPath;

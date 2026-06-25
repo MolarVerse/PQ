@@ -151,19 +151,20 @@ void QMSetup::setupQMMethodMace()
 
     if (QMSettings::getMaceModelType() != MaceModelType::MACE_MP)
     {
-        const auto modelSize = QMSettings::getMaceModelSize();
-        if (modelSize != MaceModelSize::SMALL &&
-            modelSize != MaceModelSize::MEDIUM &&
-            modelSize != MaceModelSize::LARGE)
-            throw InputFileException(std::format(
-                "The '{}' model size is only compatible with the '{}' "
-                "model type.",
-                string(modelSize),
-                string(MaceModelType::MACE_MP)
-            ));
+        const auto modelSize = QMSettings::getMaceModel();
+        if (modelSize != MaceModel::SMALL && modelSize != MaceModel::MEDIUM &&
+            modelSize != MaceModel::LARGE)
+            throw InputFileException(
+                std::format(
+                    "The '{}' model size is only compatible with the '{}' "
+                    "model type.",
+                    string(modelSize),
+                    string(MaceModelType::MACE_MP)
+                )
+            );
     }
 
-    if (QMSettings::getMaceModelSize() == MaceModelSize::CUSTOM &&
+    if (QMSettings::getMaceModel() == MaceModel::CUSTOM &&
         QMSettings::getMaceModelPath().empty())
         throw InputFileException(
             "You have requested a custom MACE model but haven't provided a "
@@ -171,7 +172,7 @@ void QMSetup::setupQMMethodMace()
             "This setup is invalid."
         );
 
-    if (QMSettings::getMaceModelSize() != MaceModelSize::CUSTOM &&
+    if (QMSettings::getMaceModel() != MaceModel::CUSTOM &&
         !QMSettings::getMaceModelPath().empty())
         throw InputFileException(
             "You have set a custom MACE model path without requesting a custom "
@@ -332,7 +333,7 @@ void QMSetup::setupWriteInfo() const
     if (qmMethod == MACE)
     {
         const auto modelType = QMSettings::getMaceModelType();
-        const auto modelSize = QMSettings::getMaceModelSize();
+        const auto modelSize = QMSettings::getMaceModel();
         const auto modelPath = QMSettings::getMaceModelPath();
         const auto fp        = Settings::getFloatingPointPybindString();
         const auto useDisp   = QMSettings::useDispersionCorr() ? "on" : "off";
@@ -348,7 +349,7 @@ void QMSetup::setupWriteInfo() const
         logOutput.writeSetupInfo(modelTypeMsg);
         logOutput.writeSetupInfo(modelSizeMsg);
 
-        if (modelSize == MaceModelSize::CUSTOM)
+        if (modelSize == MaceModel::CUSTOM)
             logOutput.writeSetupInfo(modelPathMsg);
 
         logOutput.writeSetupInfo(fpMsg);

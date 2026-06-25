@@ -27,7 +27,7 @@
 #include "exceptions.hpp"        // for customException
 #include "stringUtilities.hpp"   // for toLowerCopy
 
-using settings::MaceModelSize;
+using settings::MaceModel;
 using settings::MaceModelType;
 using settings::QMMethod;
 using settings::QMSettings;
@@ -66,11 +66,11 @@ std::string settings::string(const QMMethod method)
  * @param model
  * @return std::string
  */
-std::string settings::string(const MaceModelSize model)
+std::string settings::string(const MaceModel model)
 {
     switch (model)
     {
-        using enum MaceModelSize;
+        using enum MaceModel;
 
         case SMALL: return "small";
         case MEDIUM: return "medium";
@@ -261,47 +261,47 @@ void QMSettings::setQMMethod(const QMMethod method) { _qmMethod = method; }
  *
  * @param model
  */
-void QMSettings::setMaceModelSize(const std::string_view &model)
+void QMSettings::setMaceModel(const std::string_view &model)
 {
-    using enum MaceModelSize;
+    using enum MaceModel;
     const auto modelToLowerAndReplaceDashes =
         toLowerAndReplaceDashesCopy(model);
 
     if ("small" == modelToLowerAndReplaceDashes)
-        _maceModelSize = SMALL;
+        _maceModel = SMALL;
 
     else if ("medium" == modelToLowerAndReplaceDashes)
-        _maceModelSize = MEDIUM;
+        _maceModel = MEDIUM;
 
     else if ("large" == modelToLowerAndReplaceDashes)
-        _maceModelSize = LARGE;
+        _maceModel = LARGE;
 
     else if ("small_0b" == modelToLowerAndReplaceDashes)
-        _maceModelSize = SMALL0B;
+        _maceModel = SMALL0B;
 
     else if ("medium_0b" == modelToLowerAndReplaceDashes)
-        _maceModelSize = MEDIUM0B;
+        _maceModel = MEDIUM0B;
 
     else if ("small_0b2" == modelToLowerAndReplaceDashes)
-        _maceModelSize = SMALL0B2;
+        _maceModel = SMALL0B2;
 
     else if ("medium_0b2" == modelToLowerAndReplaceDashes)
-        _maceModelSize = MEDIUM0B2;
+        _maceModel = MEDIUM0B2;
 
     else if ("large_0b2" == modelToLowerAndReplaceDashes)
-        _maceModelSize = LARGE0B2;
+        _maceModel = LARGE0B2;
 
     else if ("medium_0b3" == modelToLowerAndReplaceDashes)
-        _maceModelSize = MEDIUM0B3;
+        _maceModel = MEDIUM0B3;
 
     else if ("medium_mpa_0" == modelToLowerAndReplaceDashes)
-        _maceModelSize = MEDIUMMPA0;
+        _maceModel = MEDIUMMPA0;
 
     else if ("medium_omat_0" == modelToLowerAndReplaceDashes)
-        _maceModelSize = MEDIUMOMAT0;
+        _maceModel = MEDIUMOMAT0;
 
     else if ("custom" == modelToLowerAndReplaceDashes)
-        _maceModelSize = CUSTOM;
+        _maceModel = CUSTOM;
 
     else
         throw UserInputException(
@@ -314,10 +314,7 @@ void QMSettings::setMaceModelSize(const std::string_view &model)
  *
  * @param model
  */
-void QMSettings::setMaceModelSize(const MaceModelSize model)
-{
-    _maceModelSize = model;
-}
+void QMSettings::setMaceModel(const MaceModel model) { _maceModel = model; }
 
 /**
  * @brief sets the maceModelType to enum in settings
@@ -447,7 +444,8 @@ void QMSettings::setSlakosType(const std::string_view &slakos)
     }
 
     else
-        throw UserInputException(std::format("Slakos {} not recognized", slakos)
+        throw UserInputException(
+            std::format("Slakos {} not recognized", slakos)
         );
 }
 
@@ -478,10 +476,12 @@ void QMSettings::setSlakosPath(const std::string_view &path)
 
     else
     {
-        throw UserInputException(std::format(
-            "Slakos path cannot be set for slakos type: {}",
-            string(_slakosType)
-        ));
+        throw UserInputException(
+            std::format(
+                "Slakos path cannot be set for slakos type: {}",
+                string(_slakosType)
+            )
+        );
     }
 }
 
@@ -586,9 +586,9 @@ QMMethod QMSettings::getQMMethod() { return _qmMethod; }
 /**
  * @brief returns the maceModel
  *
- * @return MaceModelSize
+ * @return MaceModel
  */
-MaceModelSize QMSettings::getMaceModelSize() { return _maceModelSize; }
+MaceModel QMSettings::getMaceModel() { return _maceModel; }
 
 MaceModelType QMSettings::getMaceModelType() { return _maceModelType; }
 
