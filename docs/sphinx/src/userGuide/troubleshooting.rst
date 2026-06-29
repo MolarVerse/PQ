@@ -27,8 +27,8 @@ directory, or use explicit paths for the corresponding setup-file key.
 
 Some setup files are only required for specific modes:
 
-    | ``topology_file`` is required when topology-defined constraints or bonded force-field terms are used.
-    | ``parameter_file`` is required for force-field simulations.
+    | ``topology_file`` is required when ``force-field`` is set to ``bonded`` or ``on``, or when ``shake`` is set to ``on`` or ``shake``.
+    | ``parameter_file`` is required when ``force-field`` is set to ``bonded`` or ``on``.
     | ``mshake_file`` is required when ``shake = mshake`` is selected.
     | ``dftb_file`` is required for direct DFTB+ calculations.
 
@@ -41,8 +41,6 @@ If setup reports an invalid ``jobtype``, use one of the supported job types:
     | ``qm-md``
     | ``qm-rpmd``
     | ``mm-opt``
-
-These values are case-insensitive and dashes are treated like underscores.
 
 ASE and Slater-Koster Files
 ***************************

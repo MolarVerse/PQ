@@ -7,6 +7,13 @@ Setup Files
 The following setup files can be given as additional input to **PQ**. The names of the used files need to be provided with the according 
 :ref:`setupfilekeys` in the ``.in`` file if the name does not match the default name.
 
+.. Note::
+
+    ``topology_file`` becomes mandatory when :ref:`force-field <forcefieldKey>`
+    is set to ``on`` or ``bonded``, or when :ref:`shake <shakeKey>` is set to
+    ``on`` or ``shake``. ``parameter_file`` becomes mandatory when
+    :ref:`force-field <forcefieldKey>` is set to ``on`` or ``bonded``.
+
 .. _moldescriptorFile:
 
 **************
@@ -197,6 +204,7 @@ The M-SHAKE file defines one reference geometry per molecule type for the
 
 The first line of each block is the number of atoms in the reference geometry.
 The second line must contain ``moltype = <id>;`` and is parsed with the same
-command syntax as the input file. It is followed by one atom line per reference
-atom: atom name and Cartesian coordinates. The atom names must match the atom
-names of the referenced molecule type.
+command syntax as the input file. The ``moltype`` value is the molecule type
+defined in the :ref:`moldescriptorFile`. It is followed by one atom line per
+reference atom: atom name and Cartesian coordinates. The atom names must match
+the atom names of the referenced molecule type.

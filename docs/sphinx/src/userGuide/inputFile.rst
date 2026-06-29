@@ -19,6 +19,7 @@ The concept of the input file is based on the definition of so-called "commands"
 
 .. Note::
     The semicolon at the end of both command definitions is necessary, while the number of whitespaces can be arbitrary at any position of the command as long as key and value are not split in parts.
+    Input keys and string options are case-insensitive. Dashes and underscores are treated equivalently where both spellings are supported.
 
 Command definition 1. represents a single value command, whereas definition 2. can be considered as a list of input values which will always be represented with ``[]``.
 
@@ -585,6 +586,13 @@ Setup File Keys
 In order to set up certain calculations additional input files have to be used. The names of these setup files have to be specified in the 
 input file. Further information about the individual files can be found in the :ref:`setupFiles` section.
 
+.. Note::
+
+    ``topology_file`` becomes mandatory when :ref:`force-field <forcefieldKey>`
+    is set to ``on`` or ``bonded``, or when :ref:`shake <shakeKey>` is set to
+    ``on`` or ``shake``. ``parameter_file`` becomes mandatory when
+    :ref:`force-field <forcefieldKey>` is set to ``on`` or ``bonded``.
+
 .. _moldescriptorfileKey:
 
 Moldescriptor File
@@ -1127,11 +1135,9 @@ Possible options are:
 
    1. **off** (default) - no shake will be applied
 
-   2. **on** - SHAKE for bond constraints defined in the :ref:`topologyFile` will be applied.
+   2. **on** or **shake** - SHAKE for bond constraints defined in the :ref:`topologyFile` will be applied.
 
-   3. **shake** - SHAKE for bond constraints defined in the :ref:`topologyFile` will be applied.
-
-   4. **mshake** - M-SHAKE for bond constraints defined in a special :ref:`mshakeFile` will be applied. As the M-SHAKE algorithm is designed for the treatment of rigid body molecular units the general shake algorithm will be activated automatically along with the M-SHAKE algorithm. The shake bonds can be defined as usual in the :ref:`topologyFile` and if no SHAKE bonds are defined only the M-SHAKE algorithm will be applied (without any overhead)
+   3. **mshake** - M-SHAKE for bond constraints defined in a special :ref:`mshakeFile` will be applied. As the M-SHAKE algorithm is designed for the treatment of rigid body molecular units the general shake algorithm will be activated automatically along with the M-SHAKE algorithm. The shake bonds can be defined as usual in the :ref:`topologyFile` and if no SHAKE bonds are defined only the M-SHAKE algorithm will be applied (without any overhead)
 
 .. _shaketoleranceKey:
 

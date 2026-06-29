@@ -13,89 +13,89 @@ listed separately so they are not confused with currently available run modes.
 Run Modes
 *********
 
-The supported ``jobtype`` values are:
+The supported :ref:`jobtype <jobtype>` values are:
 
-    | ``mm-md`` - molecular-mechanics molecular dynamics
-    | ``qm-md`` - quantum-mechanics molecular dynamics
-    | ``qm-rpmd`` - quantum-mechanics ring-polymer molecular dynamics
-    | ``mm-opt`` - molecular-mechanics geometry optimization
+* ``mm-md`` - molecular-mechanics molecular dynamics
+* ``qm-md`` - quantum-mechanics molecular dynamics
+* ``qm-rpmd`` - quantum-mechanics ring-polymer molecular dynamics
+* ``mm-opt`` - molecular-mechanics geometry optimization
 
 *******************
 Molecular Mechanics
 *******************
 
-Force-field models:
+**Force-field models**
 
-    | GUFF (Grand Unified Force Field)
-    | AMBER-type force fields
-    | Lennard-Jones, Buckingham and Morse non-Coulombic interactions
+* :ref:`GUFF <guffdatFile>` (Grand Unified Force Field)
+* AMBER-type force fields with :ref:`force-field <forcefieldKey>`
+* Lennard-Jones, Buckingham and Morse :ref:`non-Coulombic interactions <noncoulombKey>`
 
-Force evaluation:
+**Force evaluation**
 
-    | brute-force pair evaluation
-    | cell-list pair evaluation
-    | optional Kokkos acceleration for supported MM Lennard-Jones/Wolf setups
+* brute-force pair evaluation
+* :ref:`cell-list <celllistKeys>` pair evaluation
+* optional Kokkos acceleration for supported MM Lennard-Jones/Wolf setups
 
-Long-range corrections:
+**Long-range corrections**
 
-    | no correction
-    | Wolf summation
+* no correction
+* :ref:`Wolf summation <longrangeKey>`
 
 *****************
 Quantum Mechanics
 *****************
 
-Supported QM runners:
+**Supported QM runners**
 
-    | DFTB+
-    | Turbomole
-    | PySCF
-    | MACE-MP and MACE-OFF
-    | ASE-DFTB+
-    | ASE-xTB
+* :ref:`DFTB+ <qmprogamKey>`
+* :ref:`Turbomole <qmprogamKey>`
+* :ref:`PySCF <qmprogamKey>`
+* :ref:`MACE-MP and MACE-OFF <qmprogamKey>`
+* :ref:`ASE-DFTB+ <qmprogamKey>`
+* :ref:`ASE-xTB <qmprogamKey>`
 
 ******************
 Molecular Dynamics
 ******************
 
-Integrator:
+**Integrator**
 
-    | Velocity Verlet
+* Velocity Verlet
 
-Thermostats:
+**Thermostats**
 
-    | Langevin
-    | Berendsen
-    | stochastic velocity rescaling
-    | Nose-Hoover chain
+* :ref:`Langevin <thermostatKey>`
+* :ref:`Berendsen <thermostatKey>`
+* :ref:`stochastic velocity rescaling <thermostatKey>`
+* :ref:`Nose-Hoover chain <thermostatKey>`
 
-Manostats:
+**Manostats**
 
-    | Berendsen
-    | stochastic cell rescaling
+* :ref:`Berendsen <manostatKey>`
+* :ref:`stochastic cell rescaling <manostatKey>`
 
-Cell coupling modes:
+**Cell coupling modes**
 
-    | isotropic
-    | semi-isotropic
-    | anisotropic cell lengths
-    | full anisotropic cell lengths and angles
+* :ref:`isotropic <isotropyKey>`
+* :ref:`semi-isotropic <isotropyKey>`
+* :ref:`anisotropic cell lengths <isotropyKey>`
+* :ref:`full anisotropic cell lengths and angles <isotropyKey>`
 
-Constraints:
+**Constraints**
 
-    | SHAKE/RATTLE
-    | M-SHAKE
-    | distance constraints
+* :ref:`SHAKE/RATTLE <shakeKey>`
+* :ref:`M-SHAKE <shakeKey>`
+* :ref:`distance constraints <distanceConstraintsKey>`
 
 ************
 Optimization
 ************
 
 Geometry optimization is available for molecular-mechanics calculations. The
-supported optimizers are:
+supported :ref:`optimizers <optimizerKey>` are:
 
-    | steepest descent
-    | ADAM
+* steepest descent
+* ADAM
 
 ***
 MPI
@@ -109,11 +109,11 @@ except for external QM programs that provide their own parallel execution.
 Planned Items
 *************
 
-The following items are not documented as supported features in this release:
+The following items are planned for future releases:
 
-    | hybrid QM/MM job type
-    | MM-RPMD
-    | Verlet-list force evaluation
-    | Ewald summation
-    | reaction-field correction
-    | LINCS constraints
+* hybrid QM/MM job type
+* MM-RPMD
+* Verlet-list force evaluation
+* Ewald summation
+* reaction-field correction
+* LINCS constraints

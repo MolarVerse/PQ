@@ -46,7 +46,7 @@ A PQ run is controlled by one input file. The water example uses:
 
     | ``jobtype = mm-md`` for a molecular-mechanics MD simulation
     | ``start_file = input_h2o.rst`` for the initial structure
-    | default ``moldescriptor_file`` and ``guff_file`` setup names
+    | default ``moldescriptor_file`` and ``guff_file`` setup files
     | ``file_prefix = h2o-md-01`` for generated output names
 
 Additional setup files and output formats are documented in the
