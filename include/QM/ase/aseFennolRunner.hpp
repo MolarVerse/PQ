@@ -20,30 +20,30 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MACE_RUNNER_HPP_
+#ifndef _ASE_FENNOL_RUNNER_HPP_
 
-#define _MACE_RUNNER_HPP_
+#define _ASE_FENNOL_RUNNER_HPP_
 
 #include "aseQMRunner.hpp"   // for InternalQMRunner
 
 namespace QM
 {
     /**
-     * @brief MaceRunner inherits from ASEQMRunner
+     * @brief AseFennolRunner inherits from AseQMRunner
      *
      */
-    class __attribute__((visibility("default"))) MaceRunner : public ASEQMRunner
+    class __attribute__((visibility("default"))) AseFennolRunner
+        : public AseQMRunner
     {
        public:
-        ~MaceRunner() override = default;
+        ~AseFennolRunner() override = default;
 
-        explicit MaceRunner(
-            const std::string& modelType,
-            const std::string& model,
-            const std::string& fpType,
-            const bool         dispersion
+        explicit AseFennolRunner(
+            const std::string& modelPath,
+            const bool         gpuPreprocessing,
+            const bool         useFloat64
         );
     };
 }   // namespace QM
 
-#endif   // _MACE_RUNNER_HPP_
+#endif   // _ASE_FENNOL_RUNNER_HPP_

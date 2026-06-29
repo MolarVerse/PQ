@@ -31,6 +31,8 @@ shake-tolerance             false
 shake-iter                  false
 rattle-iter                 false
 rattle-tolerance            false
+mshake-tolerance            false
+mshake-iter                 false
 distance-constraints        false
 
 long_range                  false
@@ -126,12 +128,15 @@ qm_script_full_path         false
 qm_loop_time_limit          false
 dispersion                  false
 remove_net_force            false
+mace_model                  false
 mace_model_size             false
 mace_model_path             false
 slakos                      false
 slakos_path                 false
 third_order                 false
 hubbard_derivs              false
+fennol_model_path           false
+gpu_preprocessing           false
 
 xtb_method                  false
 

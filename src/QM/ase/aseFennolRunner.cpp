@@ -20,41 +20,39 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "aseXtbRunner.hpp"
+#include "aseFennolRunner.hpp"
 
-#include "hubbardDerivMap.hpp"
 #include "pybind11/embed.h"
 
-using QM::AseXtbRunner;
-using namespace constants;
+using QM::AseFennolRunner;
 
 /**
- * @brief Construct a new AseDftbRunner::AseDftbRunner object
+ * @brief Construct a new AseFennolRunner::AseFennolRunner object
  *
- * @param slakos
+ * @param modelPath
+ * @param gpuPreprocessing
+ * @param useFloat64
  *
- * @throw py::error_already_set if the import of the mace module fails
+ * @throw py::error_already_set if the import of the fennol module fails
  */
-AseXtbRunner::AseXtbRunner(const std::string &method) : AseQMRunner()
+AseFennolRunner::AseFennolRunner(
+    const std::string &modelPath,
+    const bool         gpuPreprocessing,
+    const bool         useFloat64
+)
+    : AseQMRunner()
 {
     try
     {
-        const py::module_ calculator =
-            py::module_::import("ase.calculators.dftb");
+        const py::module_ calculators = py::module_::import("fennol.ase");
 
         const py::dict calculatorArgs;
 
-        calculatorArgs["Hamiltonian_"]       = "xTB";
-        calculatorArgs["Hamiltonian_Method"] = method;
+        calculatorArgs["model"]             = modelPath.c_str();
+        calculatorArgs["gpu_preprocessing"] = pybind11::bool_(gpuPreprocessing);
+        calculatorArgs["use_float64"]       = pybind11::bool_(useFloat64);
 
-        // default would be 1, which is incompatible with DFTB3
-        calculatorArgs["ParserOptions_ParserVersion"] = "12";
-        // SCC = "Yes" is mandatory for SCC cycles to be performed
-        calculatorArgs["Hamiltonian_SCC"]              = "Yes";
-        calculatorArgs["Hamiltonian_SCCTolerance"]     = "1e-6";
-        calculatorArgs["Hamiltonian_MaxSCCIterations"] = "250";
-        calculatorArgs["kpts"] = py::make_tuple(1, 1, 1);
-        _calculator            = calculator.attr("Dftb")(**calculatorArgs);
+        _calculator = calculators.attr("FENNIXCalculator")(**calculatorArgs);
     }
     catch (const py::error_already_set &)
     {

@@ -20,44 +20,31 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _QM_MD_ENGINE_HPP_
+#ifndef _MACE_RUNNER_HPP_
 
-#define _QM_MD_ENGINE_HPP_
+#define _MACE_RUNNER_HPP_
 
-#include <memory>   // for unique_ptr
+#include "aseQMRunner.hpp"   // for InternalQMRunner
 
-#include "mdEngine.hpp"     // for Engine
-#include "qmRunner.hpp"     // for QMRunner
-#include "qmSettings.hpp"   // for QMSettings
-
-namespace engine
+namespace QM
 {
-
     /**
-     * @class QMMDEngine
-     *
-     * @brief Contains all the information needed to run a QM MD simulation
+     * @brief AseMaceRunner inherits from AseQMRunner
      *
      */
-    class QMMDEngine : virtual public MDEngine
+    class __attribute__((visibility("default"))) AseMaceRunner
+        : public AseQMRunner
     {
-       protected:
-        std::shared_ptr<QM::QMRunner> _qmRunner;
-
        public:
-        ~QMMDEngine() override = default;
+        ~AseMaceRunner() override = default;
 
-        void calculateForces() override;
-
-        void setQMRunner(const settings::QMMethod method);
-        void setMaceQMRunner();
-        void setAseFennolRunner();
-        void setAseDftbRunner();
-        void setAseXtbRunner();
-
-        [[nodiscard]] QM::QMRunner *getQMRunner() const;
+        explicit AseMaceRunner(
+            const std::string& modelType,
+            const std::string& model,
+            const std::string& fpType,
+            const bool         dispersion
+        );
     };
+}   // namespace QM
 
-}   // namespace engine
-
-#endif   // _QM_MD_ENGINE_HPP_
+#endif   // _MACE_RUNNER_HPP_

@@ -45,14 +45,15 @@ namespace settings
         ASEXTB,
         PYSCF,
         TURBOMOLE,
-        MACE
+        MACE,
+        FENNOL
     };
 
     /**
-     * @class enum MaceModelSize
+     * @class enum MaceModel
      *
      */
-    enum class MaceModelSize : size_t
+    enum class MaceModel : size_t
     {
         SMALL,
         MEDIUM,
@@ -100,7 +101,7 @@ namespace settings
     };
 
     std::string string(const QMMethod method);
-    std::string string(const MaceModelSize model);
+    std::string string(const MaceModel model);
     std::string string(const MaceModelType model);
     std::string string(const XtbMethod method);
     std::string string(const SlakosType slakos);
@@ -118,7 +119,7 @@ namespace settings
     {
        private:
         static inline QMMethod      _qmMethod      = QMMethod::NONE;
-        static inline MaceModelSize _maceModelSize = MaceModelSize::MEDIUM;
+        static inline MaceModel     _maceModel     = MaceModel::MEDIUM;
         static inline MaceModelType _maceModelType = MaceModelType::MACE_MP;
         static inline SlakosType    _slakosType    = SlakosType::NONE;
         static inline XtbMethod     _xtbMethod     = XtbMethod::GFN2;
@@ -127,12 +128,14 @@ namespace settings
         static inline std::string _qmScriptFullPath = "";
         static inline std::string _maceModelPath    = "";
         static inline std::string _slakosPath       = "";
+        static inline std::string _fennolModelPath  = "";
 
         static inline bool _useDispersionCorrection = false;
         static inline bool _removeNetForce          = false;
         static inline bool _useThirdOrderDftb       = false;
         static inline bool _isThirdOrderDftbSet     = false;
         static inline bool _isHubbardDerivsSet      = false;
+        static inline bool _useGPUPreprocessing     = true;
 
         static inline std::unordered_map<std::string, double> _hubbardDerivs;
 
@@ -150,8 +153,8 @@ namespace settings
         static void setQMMethod(const std::string_view &method);
         static void setQMMethod(const QMMethod method);
 
-        static void setMaceModelSize(const std::string_view &model);
-        static void setMaceModelSize(const MaceModelSize model);
+        static void setMaceModel(const std::string_view &model);
+        static void setMaceModel(const MaceModel model);
         static void setMaceModelType(const std::string_view &model);
         static void setMaceModelType(const MaceModelType model);
         static void setMaceModelPath(const std::string_view &path);
@@ -175,6 +178,9 @@ namespace settings
         static void setXtbMethod(const std::string_view &method);
         static void setXtbMethod(const XtbMethod method);
 
+        static void setFennolModelPath(const std::string_view &path);
+        static void setUseGPUPreprocessing(const bool use);
+
         static void setQMLoopTimeLimit(const double time);
 
         /***************************
@@ -182,7 +188,7 @@ namespace settings
          ***************************/
 
         [[nodiscard]] static QMMethod      getQMMethod();
-        [[nodiscard]] static MaceModelSize getMaceModelSize();
+        [[nodiscard]] static MaceModel     getMaceModel();
         [[nodiscard]] static MaceModelType getMaceModelType();
         [[nodiscard]] static std::string   getMaceModelPath();
 
@@ -201,6 +207,9 @@ namespace settings
         [[nodiscard]] static bool isHubbardDerivsSet();
 
         [[nodiscard]] static XtbMethod getXtbMethod();
+
+        [[nodiscard]] static std::string getFennolModelPath();
+        [[nodiscard]] static bool        useGPUPreprocessing();
 
         [[nodiscard]] static double getQMLoopTimeLimit();
     };
