@@ -117,6 +117,7 @@ All notable changes to this project will be documented in this file.
 - Add option to queue warnings before the .log output file has been created
   and flush them to the file at the end of the setup
 - Rename `MaceRunner` class to `AseMaceRunner` and `ASEQMRunner` to `AseQMRunner` for consistency
+- Add .clangd file for clangd language server
 
 ### Tests
 
