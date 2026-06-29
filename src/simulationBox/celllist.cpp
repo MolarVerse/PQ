@@ -23,6 +23,7 @@
 #include "celllist.hpp"
 
 #include <algorithm>     // for ranges::for_each
+#include <array>         // for array
 #include <format>        // for format
 #include <functional>    // for identity
 #include <map>           // for map
@@ -144,12 +145,7 @@ void CellList::addNeighbouringCells(const double coulombCutoff)
     _nNeighbourCells = Vec3Dul(ceil(coulombCutoff / _cellSize));
 
     const auto requiredCells = _nNeighbourCells * 2 + 1;
-    const auto axisName      = [](const size_t index) -> std::string_view
-    {
-        if (0 == index) return "x";
-        if (1 == index) return "y";
-        return "z";
-    };
+    constexpr auto axisNames = std::array<std::string_view, 3>{"x", "y", "z"};
 
     for (size_t i = 0; i < 3; ++i)
         if (_nCells[i] < requiredCells[i])
@@ -159,7 +155,7 @@ void CellList::addNeighbouringCells(const double coulombCutoff)
                     "must be at least 2 * neighbour cells + 1 "
                     "(required {}, configured {}). Decrease coulomb radius "
                     "cutoff or increase cell-number.",
-                    axisName(i),
+                    axisNames[i],
                     requiredCells[i],
                     _nCells[i]
                 )
