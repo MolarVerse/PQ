@@ -199,8 +199,9 @@ TEST_F(TestCellList, addNeighbouringCellsRejectsAliasedPeriodicOffsets)
     EXPECT_THROW_MSG(
         _cellList->addNeighbouringCells(4.0),
         customException::CellListException,
-        "Number of cells per dimension must be at least "
-        "2 * neighbour cells + 1."
+        "Invalid cell-list layout for x dimension: cell-number must be at "
+        "least 2 * neighbour cells + 1 (required 3, configured 2). Decrease "
+        "coulomb radius cutoff or increase cell-number."
     );
 }
 
