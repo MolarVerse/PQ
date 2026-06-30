@@ -101,6 +101,30 @@ TEST(QMSettingsTest, SetMaceModelTest)
     );
 }
 
+TEST(QMSettingsTest, SetMaceModeTest)
+{
+    using enum MaceMode;
+
+    QMSettings::setMaceMode("accurate");
+    EXPECT_EQ(QMSettings::getMaceMode(), ACCURATE);
+
+    QMSettings::setMaceMode("fast");
+    EXPECT_EQ(QMSettings::getMaceMode(), FAST);
+
+    QMSettings::setMaceMode(ACCURATE);
+    EXPECT_EQ(QMSettings::getMaceMode(), ACCURATE);
+
+    EXPECT_EQ(string(ACCURATE), "accurate");
+    EXPECT_EQ(string(FAST), "fast");
+
+    ASSERT_THROW_MSG(
+        QMSettings::setMaceMode("notAMode"),
+        UserInputException,
+        "Unknown mace_mode \"notAMode\". Valid values are \"accurate\" (exact "
+        "e3nn reference) or \"fast\" (cuequivariance-accelerated)."
+    );
+}
+
 TEST(QMSettingsTest, SetMaceModelTypeTest)
 {
     QMSettings::setMaceModelType("mace_mp");

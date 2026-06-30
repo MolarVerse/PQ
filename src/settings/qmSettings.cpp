@@ -27,6 +27,7 @@
 #include "exceptions.hpp"        // for customException
 #include "stringUtilities.hpp"   // for toLowerCopy
 
+using settings::MaceMode;
 using settings::MaceModel;
 using settings::MaceModelType;
 using settings::QMMethod;
@@ -106,6 +107,25 @@ std::string settings::string(const MaceModelType model)
         case MACE_ANICC: return "mace_anicc";
 
         default: return "none";
+    }
+}
+
+/**
+ * @brief returns the maceMode as string
+ *
+ * @param mode
+ * @return std::string
+ */
+std::string settings::string(const MaceMode mode)
+{
+    switch (mode)
+    {
+        using enum MaceMode;
+
+        case ACCURATE: return "accurate";
+        case FAST: return "fast";
+
+        default: return "unknown mode";
     }
 }
 
@@ -352,6 +372,37 @@ void QMSettings::setMaceModelType(const MaceModelType model)
 }
 
 /**
+ * @brief sets the maceMode to enum in settings
+ *
+ * @param mode
+ */
+void QMSettings::setMaceMode(const std::string_view &mode)
+{
+    using enum MaceMode;
+    const auto modeToLower = toLowerAndReplaceDashesCopy(mode);
+
+    if ("accurate" == modeToLower)
+        _maceMode = ACCURATE;
+
+    else if ("fast" == modeToLower)
+        _maceMode = FAST;
+
+    else
+        throw UserInputException(std::format(
+            "Unknown mace_mode \"{}\". Valid values are \"accurate\" (exact "
+            "e3nn reference) or \"fast\" (cuequivariance-accelerated).",
+            mode
+        ));
+}
+
+/**
+ * @brief sets the maceMode to enum in settings
+ *
+ * @param mode
+ */
+void QMSettings::setMaceMode(const MaceMode mode) { _maceMode = mode; }
+
+/**
  * @brief set the mace model path
  *
  */
@@ -591,6 +642,13 @@ QMMethod QMSettings::getQMMethod() { return _qmMethod; }
 MaceModel QMSettings::getMaceModel() { return _maceModel; }
 
 MaceModelType QMSettings::getMaceModelType() { return _maceModelType; }
+
+/**
+ * @brief returns the maceMode
+ *
+ * @return MaceMode
+ */
+MaceMode QMSettings::getMaceMode() { return _maceMode; }
 
 /**
  * @brief returns the maceModelPath
