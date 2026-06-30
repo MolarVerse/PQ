@@ -69,12 +69,14 @@ AseMaceRunner::AseMaceRunner(
             ::fprintf(
                 stderr,
                 "\nPQ: mace_mode = fast uses cuequivariance-accelerated MACE "
-                "kernels and requires the Python packages 'cuequivariance' and "
-                "'cuequivariance-torch', built for the same CUDA version as the "
-                "installed torch. If the error above is a missing or "
-                "incompatible cuequivariance, install the matching packages; "
-                "otherwise set mace_mode = accurate to use the standard e3nn "
-                "evaluation.\n"
+                "kernels. These need 'cuequivariance', 'cuequivariance-torch' "
+                "and -- the piece pip does NOT pull in automatically -- the "
+                "matching CUDA ops package 'cuequivariance-ops-torch-cuXX', "
+                "where XX is the CUDA major your torch was built against (e.g. "
+                "cu13 for a CUDA-13 torch build: "
+                "'pip install cuequivariance-ops-torch-cu13'). Install that to "
+                "use fast mode, or set mace_mode = accurate for the standard "
+                "e3nn evaluation.\n"
             );
         throw;
     }

@@ -1495,7 +1495,7 @@ Possible options are:
    2. **fast** - cuequivariance-accelerated kernels; substantially faster for MD, but the results are an approximation of (not bit-identical to) the e3nn reference
 
 .. Note::
-    The ``fast`` mode requires the ``cuequivariance`` and ``cuequivariance-torch`` packages, built for the same CUDA version as the installed ``torch``. Use ``accurate`` for the exact e3nn reference.
+    The ``fast`` mode requires ``cuequivariance``, ``cuequivariance-torch`` and the matching CUDA ops package ``cuequivariance-ops-torch-cuXX``, where ``XX`` is the CUDA major your ``torch`` was built against (e.g. ``cu13`` for a CUDA-13 ``torch`` build). The ops package is **not** pulled in automatically by ``cuequivariance-torch`` -- install it explicitly, e.g. ``pip install cuequivariance-ops-torch-cu13``. Use ``accurate`` for the exact e3nn reference.
 
 .. centered:: *default value* = "accurate"
 
