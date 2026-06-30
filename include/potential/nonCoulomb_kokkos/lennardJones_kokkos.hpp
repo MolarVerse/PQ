@@ -26,9 +26,6 @@
 
 #include <Kokkos_DualView.hpp>
 
-#include "forceFieldNonCoulomb.hpp"   // for matrix_shared_pair
-#include "lennardJonesPair.hpp"       // for LennardJonesPair
-#include "matrix.hpp"                 // for matrix
 #include "typeAliases.hpp"
 
 namespace potential

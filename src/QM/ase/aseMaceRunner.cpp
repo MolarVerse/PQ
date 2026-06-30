@@ -22,8 +22,6 @@
 
 #include "aseMaceRunner.hpp"
 
-#include "pybind11/embed.h"
-
 using QM::AseMaceRunner;
 
 /**

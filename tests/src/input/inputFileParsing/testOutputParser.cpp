@@ -27,7 +27,6 @@
 
 #include "exceptions.hpp"           // for InputFileException
 #include "gtest/gtest.h"            // for Message, TestPartResult
-#include "inputFileParser.hpp"      // for readInput
 #include "outputFileSettings.hpp"   // for OutputFileSettings
 #include "outputInputParser.hpp"
 #include "testInputFileReader.hpp"   // for TestInputFileReader

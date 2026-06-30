@@ -34,7 +34,6 @@
 #include "atom.hpp"   // for Atom
 #include "box.hpp"    // for Box
 #include "typeAliases.hpp"
-#include "vector3d.hpp"   // for Vec3D
 
 namespace simulationBox
 {

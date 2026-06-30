@@ -28,7 +28,6 @@
 #include "exceptions.hpp"         // for InputFileException
 #include "gtest/gtest.h"          // for Message, TestPartResult
 #include "pyscfRunner.hpp"        // for PySCFRunner
-#include "qmRunner.hpp"           // for QMRunner
 #include "qmSettings.hpp"         // for QMMethod, QMSettings
 #include "qmSetup.hpp"            // for QMSetup, setupQM
 #include "qmSetup.hpp"            // for QMSetup

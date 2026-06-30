@@ -31,12 +31,12 @@
 #include "constants/internalConversionFactors.hpp"   // for _PRESSURE_FACTOR_
 #include "exceptions.hpp"                            // for ManostatException
 #include "gtest/gtest.h"           // for Message, TestPartResult
+#include "manostatSettings.hpp"    // for ManostatType, Isotropy
 #include "mathUtilities.hpp"       // for compare
 #include "molecule.hpp"            // for Molecule
 #include "potentialSettings.hpp"   // for PotentialSettings
 #include "throwWithMessage.hpp"    // for EXPECT_THROW_MSG
 #include "timingsSettings.hpp"     // for TimingsSettings
-#include "vector3d.hpp"            // for Vector3D, Vec3D
 
 /**
  * @brief tests function calculate pressure

@@ -25,7 +25,6 @@
 #include "distanceKernels.hpp"
 #include "gtest/gtest.h"
 #include "simulationBox.hpp"
-#include "vector3d.hpp"
 
 using namespace kernel;
 

@@ -31,7 +31,6 @@
 #include "defaults.hpp"   // for _NUMBER_OF_CELLS_DEFAULT_, _CELL_LIST_IS_ACT...
 #include "timer.hpp"      // for Timer
 #include "typeAliases.hpp"
-#include "vector3d.hpp"   // for Vec3Dul, Vec3D
 
 namespace simulationBox
 { /**

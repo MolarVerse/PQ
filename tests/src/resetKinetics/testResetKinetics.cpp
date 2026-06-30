@@ -32,7 +32,7 @@
 #include "resetKinetics.hpp"
 #include "simulationBox.hpp"
 #include "thermostatSettings.hpp"
-#include "vector3d.hpp"
+#include "vector3d.hpp"   // IWYU pragma: keep
 
 namespace
 {

@@ -37,7 +37,6 @@
 #include "molecule.hpp"                  // for Molecule
 #include "physicalData.hpp"              // for PhysicalData
 #include "simulationBox.hpp"             // for SimulationBox
-#include "vector3d.hpp"                  // for Vector3D, Vec3D, operator*
 
 namespace potential
 {

@@ -34,9 +34,9 @@
 #include <string>       // for std::string
 #include <vector>       // for std::vector
 
-#include "matrix.hpp"
-#include "staticMatrix.hpp"
-#include "vector3d.hpp"
+#include "../linearAlgebra/matrix.hpp"         // IWYU pragma: export
+#include "../linearAlgebra/staticMatrix.hpp"   // IWYU pragma: export
+#include "../linearAlgebra/vector3d.hpp"       // IWYU pragma: export
 
 namespace simulationBox
 {

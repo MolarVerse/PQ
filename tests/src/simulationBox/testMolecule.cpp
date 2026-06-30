@@ -24,7 +24,6 @@
 
 #include "gtest/gtest.h"         // for Message, TestPartResult
 #include "orthorhombicBox.hpp"   // for OrthorhombicBox
-#include "staticMatrix.hpp"      // for diagonalMatrix
 
 TEST_F(TestMolecule, calculateCenterOfMass)
 {

@@ -24,16 +24,13 @@
 
 #include <format>    // for format
 #include <ostream>   // for basic_ostream, ofstream
-#include <string>    // for operator<<
 
 #include "constraintSettings.hpp"   // for ConstraintSettings
 #include "forceFieldSettings.hpp"   // for ForceFieldSettings
 #include "manostatSettings.hpp"     // for ManostatSettings
 #include "physicalData.hpp"         // for PhysicalData
 #include "settings.hpp"             // for Settings
-#include "stlVector.hpp"            // for mean, max
 #include "thermostatSettings.hpp"   // for ThermostatSettings
-#include "vector3d.hpp"             // for norm
 
 using namespace output;
 using namespace physicalData;

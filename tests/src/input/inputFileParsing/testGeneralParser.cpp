@@ -30,7 +30,6 @@
 #include "exceptions.hpp"              // for InputFileException
 #include "generalInputParser.hpp"      // for GeneralInputParser
 #include "gtest/gtest.h"               // for Message, TestPartResult
-#include "inputFileParser.hpp"         // for readInput
 #include "mmmdEngine.hpp"              // for MMMDEngine
 #include "optEngine.hpp"               // for MMOptEngine
 #include "qmmdEngine.hpp"              // for QMMDEngine

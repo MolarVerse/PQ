@@ -31,10 +31,8 @@
 #include "exceptions.hpp"             // for InputFileException, customException
 #include "gtest/gtest.h"              // for Message, TestPartResult
 #include "langevinThermostat.hpp"     // for LangevinThermostat
-#include "mdEngine.hpp"               // for MDEngine
 #include "noseHooverThermostat.hpp"   // for NoseHooverThermostat
 #include "testSetup.hpp"              // for TestSetup
-#include "thermostat.hpp"             // for BerendsenThermostat, Thermostat
 #include "thermostatSettings.hpp"     // for ThermostatSettings
 #include "thermostatSetup.hpp"        // for ThermostatSetup, setupThermostat
 #include "throwWithMessage.hpp"       // for EXPECT_THROW_MSG

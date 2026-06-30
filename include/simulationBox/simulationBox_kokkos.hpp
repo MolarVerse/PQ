@@ -26,9 +26,7 @@
 
 #include <Kokkos_DualView.hpp>
 
-#include "simulationBox.hpp"   // for SimulationBox
 #include "typeAliases.hpp"
-#include "vector3d.hpp"   // for Vector3D
 
 /**
  * @namespace simulationBox

@@ -24,8 +24,6 @@
 
 #define _EVALUATOR_HPP_
 
-#include <memory>   // for shared_ptr
-
 #include "typeAliases.hpp"
 
 namespace opt

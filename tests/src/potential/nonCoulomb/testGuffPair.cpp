@@ -27,7 +27,6 @@
 
 #include "gtest/gtest.h"        // for Message, TestPartResult
 #include "guffPair.hpp"         // for GuffPair
-#include "nonCoulombPair.hpp"   // for potential
 
 using namespace potential;
 

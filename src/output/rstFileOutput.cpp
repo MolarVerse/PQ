@@ -25,14 +25,12 @@
 #include <format>    // for format
 #include <ostream>   // for basic_ostream, operator<<, flush, std
 #include <sstream>   // for ostringstream
-#include <string>    // for char_traits, operator<<
 #include <vector>    // for vector
 
 #include "molecule.hpp"               // for Molecule
 #include "noseHooverThermostat.hpp"   // for NoseHooverThermostat
 #include "simulationBox.hpp"          // for SimulationBox
 #include "thermostatSettings.hpp"     // for ThermostatType
-#include "vector3d.hpp"               // for operator<<
 
 using namespace output;
 using namespace simulationBox;

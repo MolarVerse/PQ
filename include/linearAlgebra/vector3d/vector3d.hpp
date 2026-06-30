@@ -25,6 +25,7 @@
 #define _VECTOR3d_HPP_
 
 #include <cmath>
+#include <ostream>
 
 #include "concepts/vector3dConcepts.hpp"
 #include "vector3dClass.hpp"

@@ -22,9 +22,9 @@
 
 #include "celllistSetup.hpp"
 
-#include "celllist.hpp"   // for CellList
 #include "engine.hpp"     // for Engine
 #include "potential.hpp"   // for PotentialBruteForce, PotentialCellList, Potential
+#include "potentialCellList.hpp"   // for PotentialCellList
 
 using namespace setup;
 using namespace engine;

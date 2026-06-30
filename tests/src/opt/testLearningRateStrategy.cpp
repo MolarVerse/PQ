@@ -29,7 +29,6 @@
 #include "constantDecay.hpp"
 #include "expDecay.hpp"
 #include "gtest/gtest.h"
-#include "learningRateStrategy.hpp"
 
 using namespace opt;
 

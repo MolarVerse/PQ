@@ -25,10 +25,8 @@
 #define _OPTIMIZER_HPP_
 
 #include <cstddef>   // for size_t
-#include <memory>    // for shared_ptr
 
 #include "convergence.hpp"           // for Convergence
-#include "convergenceSettings.hpp"   // for ConvergenceSettings
 #include "typeAliases.hpp"           // for SharedSimulationBox
 
 namespace opt

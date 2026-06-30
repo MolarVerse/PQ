@@ -27,9 +27,7 @@
 
 #include "engine.hpp"
 #include "exceptions.hpp"
-#include "forceFieldClass.hpp"
 #include "jCouplingSection.hpp"
-#include "jCouplingType.hpp"
 #include "testParameterFileSection.hpp"
 
 using namespace input::parameterFile;

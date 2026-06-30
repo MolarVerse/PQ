@@ -25,6 +25,8 @@
 #define _FORCE_FIELD_TPP_
 
 #include "forceField.hpp"
+#include "nonCoulombPair.hpp"   // IWYU pragma: keep
+#include "potentialSettings.hpp"
 #include "typeAliases.hpp"
 
 namespace forceField

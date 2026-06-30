@@ -23,13 +23,11 @@
 #include "molecule.hpp"
 
 #include <algorithm>    // for std::ranges::for_each
-#include <functional>   // for identity, equal_to
 #include <iterator>     // for _Size, size
 #include <ranges>       // for subrange
 
 #include "box.hpp"                // for Box
 #include "manostatSettings.hpp"   // for ManostatSettings
-#include "vector3d.hpp"           // for Vec3D
 
 using namespace simulationBox;
 using namespace linearAlgebra;

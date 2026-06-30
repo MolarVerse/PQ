@@ -25,6 +25,10 @@ All notable changes to this project will be documented in this file.
   (`__SLAKOS_DIR__`) is now guarded, so non-ASE builds compile and report a
   clear error only if a built-in SLAKOS set is actually requested
 
+### Cleanup
+
+- Clean include directives - IWYU
+
 ### CI
 
 - Faster CI: install and use the `mold` linker, and build with all available

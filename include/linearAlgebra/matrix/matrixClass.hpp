@@ -63,6 +63,6 @@ namespace linearAlgebra
 
 }   // namespace linearAlgebra
 
-#include "matrixClass.tpp.hpp"   // DO NOT MOVE THIS LINE
+#include "matrixClass.tpp.hpp"   // IWYU pragma: keep - DO NOT MOVE THIS LINE
 
 #endif   // _MATRIX_CLASS_HPP_

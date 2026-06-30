@@ -28,23 +28,23 @@
 #include <memory>    // for make_unique, unique_ptr
 #include <vector>    // for vector
 
-#include "boxOutput.hpp"
-#include "energyOutput.hpp"
-#include "infoOutput.hpp"
-#include "logOutput.hpp"
-#include "momentumOutput.hpp"
-#include "optOutput.hpp"
-#include "ringPolymerEnergyOutput.hpp"
-#include "ringPolymerRestartFileOutput.hpp"
-#include "ringPolymerTrajectoryOutput.hpp"
-#include "rstFileOutput.hpp"
-#include "stdoutOutput.hpp"
-#include "stressOutput.hpp"
-#include "timer.hpp"   // for Timer
-#include "timingsOutput.hpp"
-#include "trajectoryOutput.hpp"
+#include "boxOutput.hpp"                      // IWYU pragma: keep
+#include "energyOutput.hpp"                   // IWYU pragma: keep
+#include "infoOutput.hpp"                     // IWYU pragma: keep
+#include "logOutput.hpp"                      // IWYU pragma: keep
+#include "momentumOutput.hpp"                 // IWYU pragma: keep
+#include "optOutput.hpp"                      // IWYU pragma: keep
+#include "ringPolymerEnergyOutput.hpp"        // IWYU pragma: keep
+#include "ringPolymerRestartFileOutput.hpp"   // IWYU pragma: keep
+#include "ringPolymerTrajectoryOutput.hpp"    // IWYU pragma: keep
+#include "rstFileOutput.hpp"                  // IWYU pragma: keep
+#include "stdoutOutput.hpp"                   // IWYU pragma: keep
+#include "stressOutput.hpp"                   // IWYU pragma: keep
+#include "timer.hpp"                          // for Timer
+#include "timingsOutput.hpp"                  // IWYU pragma: keep
+#include "trajectoryOutput.hpp"               // IWYU pragma: keep
 #include "typeAliases.hpp"
-#include "virialOutput.hpp"
+#include "virialOutput.hpp"   // IWYU pragma: keep
 
 namespace engine
 {

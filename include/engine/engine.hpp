@@ -27,26 +27,23 @@
 #include <cstddef>   // for size_t
 #include <memory>
 
-#include "celllist.hpp"
-#include "constraints.hpp"
+#include "celllist.hpp"      // IWYU pragma: keep
+#include "constraints.hpp"   // IWYU pragma: keep
 #include "engineOutput.hpp"
-#include "forceFieldClass.hpp"
+#include "forceFieldClass.hpp"   // IWYU pragma: keep
 #include "globalTimer.hpp"
-#include "intraNonBonded.hpp"
-#include "molecularVirial.hpp"
-#include "physicalData.hpp"
-#include "potential.hpp"
-#include "potentialBruteForce.hpp"
-#include "potentialCellList.hpp"
-#include "simulationBox.hpp"
+#include "intraNonBonded.hpp"        // IWYU pragma: keep
+#include "molecularVirial.hpp"       // IWYU pragma: keep
+#include "physicalData.hpp"          // IWYU pragma: keep
+#include "potentialBruteForce.hpp"   // IWYU pragma: keep
+#include "simulationBox.hpp"         // IWYU pragma: keep
 #include "typeAliases.hpp"
-#include "virial.hpp"
 
 #ifdef WITH_KOKKOS
-#include "coulombWolf_kokkos.hpp"
-#include "lennardJones_kokkos.hpp"
-#include "potential_kokkos.hpp"
-#include "simulationBox_kokkos.hpp"
+#include "coulombWolf_kokkos.hpp"     // IWYU pragma: keep
+#include "lennardJones_kokkos.hpp"    // IWYU pragma: keep
+#include "potential_kokkos.hpp"       // IWYU pragma: keep
+#include "simulationBox_kokkos.hpp"   // IWYU pragma: keep
 #endif
 
 namespace engine
@@ -203,6 +200,6 @@ namespace engine
     };
 }   // namespace engine
 
-#include "engine.tpp.hpp"   // DO NOT MOVE THIS LINE!
+#include "engine.tpp.hpp"   // IWYU pragma: keep - DO NOT MOVE THIS LINE!
 
 #endif   // _ENGINE_HPP_

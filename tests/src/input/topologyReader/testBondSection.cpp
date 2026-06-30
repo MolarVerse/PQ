@@ -20,12 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "bondForceField.hpp"        // for BondForceField
 #include "bondSection.hpp"           // for BondSection
 #include "engine.hpp"                // for Engine
 #include "exceptions.hpp"            // for TopologyException
-#include "forceFieldClass.hpp"       // for ForceField
-#include "simulationBox.hpp"         // for SimulationBox
 #include "testTopologySection.hpp"   // for TestTopologySection
 
 #include "gtest/gtest.h"   // for Message, TestPartResult

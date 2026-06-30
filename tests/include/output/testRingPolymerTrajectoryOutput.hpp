@@ -29,9 +29,7 @@
 #include "ringPolymerSettings.hpp"           // for RingPolymerSettings
 #include "ringPolymerTrajectoryOutput.hpp"   // for RingPolymerTrajectoryOutput
 #include "simulationBox.hpp"                 // for SimulationBox
-#include "vector3d.hpp"                      // for Vec3D
 
-#include <algorithm>       // for copy, max
 #include <gtest/gtest.h>   // for Test
 #include <memory>          // for __shared_ptr_access, shared_ptr, make_shared
 #include <stdio.h>         // for remove

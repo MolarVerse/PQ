@@ -24,21 +24,11 @@
 
 #include <string>   // for string
 
-#include "boxOutput.hpp"                      // for BoxFileOutput
-#include "energyOutput.hpp"                   // for EnergyOutput
 #include "engine.hpp"                         // for Engine
-#include "infoOutput.hpp"                     // for InfoOutput
-#include "logOutput.hpp"                      // for LogOutput
 #include "mdEngine.hpp"                       // for MDEngine
-#include "momentumOutput.hpp"                 // for MomentumOutput
 #include "optEngine.hpp"                      // for OptEngine
 #include "outputFileSettings.hpp"             // for OutputFileSettings
-#include "ringPolymerRestartFileOutput.hpp"   // for RingPolymerRestartFileOutput
-#include "ringPolymerTrajectoryOutput.hpp"    // for RingPolymerTrajectoryOutput
-#include "rstFileOutput.hpp"                  // for RstFileOutput
 #include "settings.hpp"                       // for Settings
-#include "stdoutOutput.hpp"                   // for StdoutOutput
-#include "trajectoryOutput.hpp"               // for TrajectoryOutput
 
 using setup::OutputFilesSetup;
 using namespace settings;

@@ -27,7 +27,7 @@
 #include <vector>      // for vector
 
 #include "physicalData.hpp"   // for PhysicalData
-#include "stlVector.hpp"      // for sum
+#include "stlVector.hpp"      // IWYU pragma: keep - for accumulate
 
 using namespace output;
 using namespace physicalData;

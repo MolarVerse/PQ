@@ -27,7 +27,6 @@
 
 #include "exceptions.hpp"        // for InputFileException
 #include "gtest/gtest.h"         // for Message, TestPartResult, testing
-#include "inputFileParser.hpp"   // for readInput
 #include "manostatInputParser.hpp"
 #include "manostatSettings.hpp"      // for ManostatSettings
 #include "testInputFileReader.hpp"   // for TestInputFileReader

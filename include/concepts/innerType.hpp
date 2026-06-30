@@ -24,8 +24,6 @@
 
 #define _INNER_TYPE_HPP_
 
-#include <concepts>
-
 #include "base.hpp"
 
 namespace pq

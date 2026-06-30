@@ -24,7 +24,6 @@
 
 #include <algorithm>   // for for_each
 #include <fstream>     // for fstream
-#include <iostream>    // for cout
 #include <string>      // for string
 
 #include "references.hpp"           // for ReferencesOutput

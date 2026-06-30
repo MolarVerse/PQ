@@ -28,7 +28,6 @@
 
 #include "timer.hpp"   // for Timer
 #include "typeAliases.hpp"
-#include "vector3d.hpp"   // for Vec3D
 
 namespace resetKinetics
 {

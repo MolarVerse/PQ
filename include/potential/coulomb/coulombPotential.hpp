@@ -24,11 +24,7 @@
 
 #define _COULOMB_POTENTIAL_HPP_
 
-#include <cstddef>   // for size_t
 #include <utility>   // for pair
-#include <vector>    // for vector
-
-#include "defaults.hpp"   // for _COULOMB_CUT_OFF_DEFAULT_
 
 namespace potential
 {

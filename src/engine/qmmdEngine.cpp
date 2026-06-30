@@ -23,14 +23,8 @@
 #include "qmmdEngine.hpp"
 
 #include "dftbplusRunner.hpp"    // for DFTBPlusRunner
-#include "integrator.hpp"        // for Integrator
-#include "manostat.hpp"          // for Manostat
-#include "physicalData.hpp"      // for PhysicalData
 #include "pyscfRunner.hpp"       // for PySCFRunner
-#include "resetKinetics.hpp"     // for ResetKinetics
 #include "settings.hpp"          // for Settings
-#include "thermostat.hpp"        // for Thermostat
-#include "timingsSettings.hpp"   // for TimingsSettings
 #include "turbomoleRunner.hpp"   // for TurbomoleRunner
 
 #ifdef WITH_ASE

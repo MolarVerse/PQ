@@ -28,7 +28,6 @@
 #include "constants/conversionFactors.hpp"   // for _DEG_TO_RAD_
 #include "engine.hpp"                        // for Engine
 #include "exceptions.hpp"                    // for ParameterFileException
-#include "forceFieldClass.hpp"               // for ForceField
 
 using namespace input::parameterFile;
 using namespace engine;

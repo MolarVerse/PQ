@@ -32,7 +32,7 @@
 #include "manostatSettings.hpp"   // for ManostatSettings
 #include "mdEngine.hpp"           // for Engine
 #include "settings.hpp"           // for IsMDJobType
-#include "stochasticRescalingManostat.hpp"   // for StochasticRescalingManostat
+#include "stochasticRescalingManostat.hpp"   // IWYU pragma: keep - for StochasticRescalingManostat
 #include "typeAliases.hpp"
 
 using namespace setup;

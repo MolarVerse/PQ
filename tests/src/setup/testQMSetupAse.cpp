@@ -32,10 +32,7 @@
 #include "pybind11/embed.h"      // for scoped_interpreter
 #endif
 
-#include "exceptions.hpp"         // for InputFileException
 #include "gtest/gtest.h"          // for Message, TestPartResult
-#include "qmRunner.hpp"           // for QMRunner
-#include "throwWithMessage.hpp"   // for ASSERT_THROW_MSG
 
 TEST_F(TestQMSetupAse, setupAseDftbplus3OB)
 {

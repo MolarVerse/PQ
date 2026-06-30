@@ -28,7 +28,6 @@
 #include <cstdint>      // for uint_fast32_t and UINT32_MAX
 #include <format>       // for format
 #include <fstream>      // IWYU pragma: keep for basic_istream, ifstream
-#include <functional>   // for identity
 #include <ranges>   // for begin, end, operator|, views::split, views::transform
 #include <sstream>       // IWYU pragma: keep for basic_stringstream
 #include <stdexcept>     // for out_of_range and invalid_argument

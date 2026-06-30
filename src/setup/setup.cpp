@@ -22,8 +22,6 @@
 
 #include "setup.hpp"
 
-#include <iostream>   // for operator<<, basic_ostream, cout
-
 #include "celllistSetup.hpp"                // for setupCellList
 #include "constraintsSetup.hpp"             // for setupConstraints
 #include "engine.hpp"                       // for Engine
@@ -42,11 +40,9 @@
 #include "parameterFileReader.hpp"          // for readParameterFile
 #include "potentialSetup.hpp"               // for setupPotential
 #include "qmSetup.hpp"                      // for setupQM
-#include "qmmdEngine.hpp"                   // for QMMDEngine
 #include "randomNumberGeneratorSetup.hpp"   // for setupRandomNumberGenerator
 #include "resetKineticsSetup.hpp"           // for setupResetKinetics
 #include "restartFileReader.hpp"            // for readRestartFile
-#include "ringPolymerEngine.hpp"            // for RingPolymerEngine
 #include "ringPolymerSetup.hpp"             // for setupRingPolymer
 #include "settings.hpp"                     // for Settings
 #include "simulationBoxSetup.hpp"           // for setupSimulationBox

@@ -23,7 +23,6 @@
 #include "testThermostat.hpp"
 
 #include <cmath>    // for sqrt
-#include <memory>   // for allocator
 
 #include "berendsenThermostat.hpp"                    // for BerendsenThermostat
 #include "constants/internalConversionFactors.hpp"    // for _TEMPERATURE_FACTOR_

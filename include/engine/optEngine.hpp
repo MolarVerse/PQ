@@ -26,13 +26,13 @@
 
 #include <memory>   // for unique_ptr
 
-#include "constant.hpp"               // for ConstantLearningRateStrategy
+#include "constant.hpp"               // IWYU pragma: keep
 #include "engine.hpp"                 // for Engine
-#include "evaluator.hpp"              // for Evaluator
-#include "learningRateStrategy.hpp"   // for learningRateStrategy
-#include "mmEvaluator.hpp"            // for MMEvaluator
-#include "optimizer.hpp"              // for Optimizer
-#include "steepestDescent.hpp"        // for SteepestDescent
+#include "evaluator.hpp"              // IWYU pragma: keep
+#include "learningRateStrategy.hpp"   // IWYU pragma: keep
+#include "mmEvaluator.hpp"            // IWYU pragma: keep
+#include "optimizer.hpp"              // IWYU pragma: keep
+#include "steepestDescent.hpp"        // IWYU pragma: keep
 #include "typeAliases.hpp"
 
 namespace engine

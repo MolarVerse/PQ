@@ -31,7 +31,6 @@
 
 #include "exceptions.hpp"         // for InputFileException, customException
 #include "gtest/gtest.h"          // for Message, TestPartResult
-#include "inputFileParser.hpp"    // for readInput
 #include "mmmdEngine.hpp"         // for MMMDEngine
 #include "settings.hpp"           // for Settings
 #include "throwWithMessage.hpp"   // for throwWithMessage

@@ -25,16 +25,12 @@
 #define _MD_ENGINE_HPP_
 
 #include "engine.hpp"
-#include "integrator.hpp"
-#include "manostat.hpp"
-#include "resetKinetics.hpp"
-#include "thermostat.hpp"
+#include "integrator.hpp"      // IWYU pragma: keep
+#include "manostat.hpp"        // IWYU pragma: keep
+#include "resetKinetics.hpp"   // IWYU pragma: keep
+#include "thermostat.hpp"      // IWYU pragma: keep
 #include "typeAliases.hpp"
-#include "velocityVerlet.hpp"   // for VelocityVerlet
-
-#ifdef WITH_KOKKOS
-#include "integrator_kokkos.hpp"
-#endif
+#include "velocityVerlet.hpp"   // IWYU pragma: keep
 
 namespace engine
 {
@@ -102,6 +98,6 @@ namespace engine
     };
 }   // namespace engine
 
-#include "mdEngine.tpp.hpp"   // DO NOT MOVE THIS LINE
+#include "mdEngine.tpp.hpp"   // IWYU pragma: keep - DO NOT MOVE THIS LINE
 
 #endif   // _MD_ENGINE_HPP_

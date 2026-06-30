@@ -22,13 +22,12 @@
 
 #include "mmEvaluator.hpp"
 
-#include "celllist.hpp"
-#include "constraints.hpp"
-#include "forceFieldClass.hpp"
-#include "intraNonBonded.hpp"
-#include "potential.hpp"
-#include "simulationBox.hpp"
-#include "virial.hpp"
+#include "celllist.hpp"          // IWYU pragma: keep
+#include "forceFieldClass.hpp"   // IWYU pragma: keep
+#include "intraNonBonded.hpp"    // IWYU pragma: keep
+#include "physicalData.hpp"      // IWYU pragma: keep
+#include "potential.hpp"         // IWYU pragma: keep
+#include "simulationBox.hpp"     // IWYU pragma: keep
 
 using namespace opt;
 
