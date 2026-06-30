@@ -125,7 +125,7 @@ std::string settings::string(const MaceMode mode)
         case ACCURATE: return "accurate";
         case FAST: return "fast";
 
-        default: return "accurate";
+        default: return "unknown mode";
     }
 }
 
