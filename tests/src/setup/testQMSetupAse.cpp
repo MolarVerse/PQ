@@ -295,15 +295,18 @@ class MACECalculator:
     modules["mace"]             = maceModule;
     modules["mace.calculators"] = calculatorsModule;
 
-    ASSERT_NO_THROW(
-        { QM::AseMaceRunner runner("MACECalculator", "model.model", "float64", true); }
-    );
+    ASSERT_NO_THROW({
+        QM::AseMaceRunner runner(
+            "MACECalculator", "model.model", "float64", true, false
+        );
+    });
 
     auto lastKwargs = calculatorsModule.attr("MACECalculator").attr("last_kwargs")
                           .cast<pybind11::dict>();
 
     EXPECT_EQ(lastKwargs["model"].cast<std::string>(), "model.model");
     EXPECT_EQ(lastKwargs["dispersion"].cast<bool>(), true);
+    EXPECT_EQ(lastKwargs["enable_cueq"].cast<bool>(), false);
     EXPECT_EQ(lastKwargs["default_dtype"].cast<std::string>(), "float64");
     EXPECT_EQ(lastKwargs["device"].cast<std::string>(), "cuda");
 
@@ -311,5 +314,20 @@ class MACECalculator:
     modules.attr("pop")("mace", pybind11::none());
     modules.attr("pop")("ase.atoms", pybind11::none());
     modules.attr("pop")("ase", pybind11::none());
+}
+
+TEST_F(TestQMSetupAse, setupAseMaceWriteInfoFast)
+{
+    QMSettings::setQMMethod(QMMethod::MACE);
+    QMSettings::setMaceMode("fast");
+    _qmSetup->setupWriteInfo();
+
+    std::ifstream file("default.log");
+    std::string   line;
+    std::string   all;
+    while (std::getline(file, line)) all += line + "\n";
+
+    EXPECT_NE(all.find("Evaluation mode:       fast"), std::string::npos);
+    EXPECT_NE(all.find("cuequivariance-accelerated"), std::string::npos);
 }
 #endif

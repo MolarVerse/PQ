@@ -22,6 +22,8 @@
 
 #include "aseMaceRunner.hpp"
 
+#include <cstdio>   // for fprintf, stderr
+
 #include "pybind11/embed.h"
 
 using QM::AseMaceRunner;
@@ -33,6 +35,7 @@ using QM::AseMaceRunner;
  * @param model
  * @param fpType
  * @param dispersion
+ * @param enableCueq
  *
  * @throw py::error_already_set if the import of the mace module fails
  */
@@ -40,7 +43,8 @@ AseMaceRunner::AseMaceRunner(
     const std::string &modelType,
     const std::string &model,
     const std::string &fpType,
-    const bool         dispersion
+    const bool         dispersion,
+    const bool         enableCueq
 )
     : AseQMRunner()
 {
@@ -52,6 +56,7 @@ AseMaceRunner::AseMaceRunner(
 
         calculatorArgs["model"]         = model.c_str();
         calculatorArgs["dispersion"]    = pybind11::bool_(dispersion);
+        calculatorArgs["enable_cueq"]   = pybind11::bool_(enableCueq);
         calculatorArgs["default_dtype"] = fpType.c_str();
         calculatorArgs["device"]        = pybind11::str("cuda");
 
@@ -60,6 +65,17 @@ AseMaceRunner::AseMaceRunner(
     catch (const py::error_already_set &)
     {
         ::PyErr_Print();
+        if (enableCueq)
+            ::fprintf(
+                stderr,
+                "\nPQ: mace_mode = fast uses cuequivariance-accelerated MACE "
+                "kernels and requires the Python packages 'cuequivariance' and "
+                "'cuequivariance-torch', built for the same CUDA version as the "
+                "installed torch. If the error above is a missing or "
+                "incompatible cuequivariance, install the matching packages; "
+                "otherwise set mace_mode = accurate to use the standard e3nn "
+                "evaluation.\n"
+            );
         throw;
     }
 }

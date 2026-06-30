@@ -53,6 +53,7 @@ namespace input
         void parseRemoveNetForce(const pq::strings &, const size_t);
 
         void parseMaceModel(const pq::strings &, const size_t);
+        void parseMaceMode(const pq::strings &, const size_t);
         void parseMaceModelPath(const pq::strings &, const size_t);
         void parseMaceQMMethod(const std::string_view &);
 

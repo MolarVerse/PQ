@@ -1476,6 +1476,30 @@ With the ``mace_model_path`` keyword the user can specify a custom URL correspon
     The ``mace_model_path`` can only be specified if :ref:`mace_model <maceModelKey>` keyword is set to ``custom``.
 
 
+.. _maceModeKey:
+
+MACE Mode
+===============
+
+.. admonition:: Key
+    :class: tip
+
+    mace_mode = {string} -> "accurate"
+
+With the ``mace_mode`` keyword the user can select the evaluation mode / kernel backend of the `MACE <https://github.com/ACEsuit/mace>`_ model for the QM calculations.
+
+Possible options are:
+
+   1. **accurate** (default) - the exact e3nn reference implementation
+
+   2. **fast** - cuequivariance-accelerated kernels; substantially faster for MD, but the results are an approximation of (not bit-identical to) the e3nn reference
+
+.. Note::
+    The ``fast`` mode requires the ``cuequivariance`` and ``cuequivariance-torch`` packages, built for the same CUDA version as the installed ``torch``. Use ``accurate`` for the exact e3nn reference.
+
+.. centered:: *default value* = "accurate"
+
+
 .. _xtbMethodKey:
 
 ASE-xTB Method

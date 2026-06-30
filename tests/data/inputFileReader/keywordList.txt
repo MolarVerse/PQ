@@ -125,6 +125,7 @@ remove_net_force            false
 mace_model                  false
 mace_model_size             false
 mace_model_path             false
+mace_mode                   false
 slakos                      false
 slakos_path                 false
 third_order                 false

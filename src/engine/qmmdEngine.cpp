@@ -106,6 +106,7 @@ void QMMDEngine::setMaceQMRunner()
     const auto modelPath = QMSettings::getMaceModelPath();
     const auto useDFTD   = QMSettings::useDispersionCorr();
     const auto fpType    = Settings::getFloatingPointPybindString();
+    const auto useCueq   = QMSettings::getMaceMode() == MaceMode::FAST;
 
     auto maceModel = string(QMSettings::getMaceModel());
 
@@ -113,7 +114,7 @@ void QMMDEngine::setMaceQMRunner()
         maceModel = modelPath;
 
     _qmRunner =
-        make_shared<AseMaceRunner>(modelType, maceModel, fpType, useDFTD);
+        make_shared<AseMaceRunner>(modelType, maceModel, fpType, useDFTD, useCueq);
 #else
     throw CompileTimeException(
         "A mace type qm method was requested but ASE was not enabled at "
