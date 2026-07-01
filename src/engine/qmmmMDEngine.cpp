@@ -101,7 +101,7 @@ namespace engine
         auto       qmEnergy         = 0.0;
         auto       coulombEnergy    = 0.0;
         auto       nonCoulombEnergy = 0.0;
-        auto       virial           = tensor3D{0.0};
+        tensor3D   virial           = {0.0};
         auto       numQMAtoms       = 0.0;
         auto&      atoms            = _simulationBox->getAtoms();
         const auto nSmMol =
