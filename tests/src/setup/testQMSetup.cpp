@@ -39,30 +39,13 @@
 using setup::QMSetup;
 using namespace settings;
 
-namespace
-{
-    constexpr auto _testQMScript = "test";
-
-    void clearQMScriptSettings()
-    {
-        QMSettings::setQMScript("");
-        QMSettings::setQMScriptFullPath("");
-    }
-
-    void setQMScriptFullPath()
-    {
-        clearQMScriptSettings();
-        QMSettings::setQMScriptFullPath(_testQMScript);
-    }
-}   // namespace
-
 TEST(TestQMSetup, setupDftbplus)
 {
     engine::QMMDEngine engine;
     auto               setupQM = setup::QMSetup(engine);
 
     settings::QMSettings::setQMMethod(settings::QMMethod::DFTBPLUS);
-    setQMScriptFullPath();
+    settings::QMSettings::setQMScript("test");
     setupQM.setup();
 
     EXPECT_EQ(
@@ -71,7 +54,6 @@ TEST(TestQMSetup, setupDftbplus)
     );
 
     settings::QMSettings::setQMMethod(settings::QMMethod::NONE);
-    clearQMScriptSettings();
 
     ASSERT_THROW_MSG(
         setupQM.setup(),
@@ -87,7 +69,7 @@ TEST(TestQMSetup, setupPySCF)
     auto               setupQM = setup::QMSetup(engine);
 
     settings::QMSettings::setQMMethod(settings::QMMethod::PYSCF);
-    setQMScriptFullPath();
+    settings::QMSettings::setQMScript("test");
     setupQM.setup();
 
     EXPECT_EQ(
@@ -96,7 +78,6 @@ TEST(TestQMSetup, setupPySCF)
     );
 
     settings::QMSettings::setQMMethod(settings::QMMethod::NONE);
-    clearQMScriptSettings();
 
     ASSERT_THROW_MSG(
         setupQM.setup(),
@@ -112,7 +93,7 @@ TEST(TestQMSetup, setupTurbomoleRunner)
     auto               setupQM = setup::QMSetup(engine);
 
     settings::QMSettings::setQMMethod(settings::QMMethod::TURBOMOLE);
-    setQMScriptFullPath();
+    settings::QMSettings::setQMScript("test");
     setupQM.setup();
 
     EXPECT_EQ(
@@ -121,7 +102,6 @@ TEST(TestQMSetup, setupTurbomoleRunner)
     );
 
     settings::QMSettings::setQMMethod(settings::QMMethod::NONE);
-    clearQMScriptSettings();
 
     ASSERT_THROW_MSG(
         setupQM.setup(),
