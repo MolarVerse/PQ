@@ -85,8 +85,13 @@ namespace settings
         static inline WaterInterModel _waterInterModel = WaterInterModel::NONE;
 
        public:
-        WaterModelSettings()  = default;
-        ~WaterModelSettings() = default;
+        WaterModelSettings()  = delete;
+        ~WaterModelSettings() = delete;
+
+        WaterModelSettings(const WaterModelSettings &)            = delete;
+        WaterModelSettings(WaterModelSettings &&)                 = delete;
+        WaterModelSettings &operator=(const WaterModelSettings &) = delete;
+        WaterModelSettings &operator=(WaterModelSettings &&)      = delete;
 
         /********************
          * standard getters *
