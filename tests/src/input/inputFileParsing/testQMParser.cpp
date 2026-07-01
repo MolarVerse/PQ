@@ -254,6 +254,26 @@ TEST_F(TestInputFileReader, parseMaceModel)
     )
 }
 
+TEST_F(TestInputFileReader, parseMaceMode)
+{
+    using enum MaceMode;
+
+    auto parser = QMInputParser(*_engine);
+
+    parser.parseMaceMode({"mace_mode", "=", "accurate"}, 0);
+    EXPECT_EQ(QMSettings::getMaceMode(), ACCURATE);
+
+    parser.parseMaceMode({"mace_mode", "=", "fast"}, 0);
+    EXPECT_EQ(QMSettings::getMaceMode(), FAST);
+
+    ASSERT_THROW_MSG(
+        parser.parseMaceMode({"mace_mode", "=", "notAMode"}, 0),
+        UserInputException,
+        "Unknown mace_mode \"notAMode\". Valid values are \"accurate\" (exact "
+        "e3nn reference) or \"fast\" (cuequivariance-accelerated)."
+    )
+}
+
 TEST_F(TestInputFileReader, parseMaceModelPath)
 {
     auto parser = QMInputParser(*_engine);

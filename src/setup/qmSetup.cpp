@@ -335,6 +335,7 @@ void QMSetup::setupWriteInfo() const
         const auto modelPath = QMSettings::getMaceModelPath();
         const auto fp        = Settings::getFloatingPointPybindString();
         const auto useDisp   = QMSettings::useDispersionCorr() ? "on" : "off";
+        const auto maceMode  = QMSettings::getMaceMode();
 
         // clang-format off
         const auto modelTypeMsg = std::format("Model type:            {}", string(modelType));
@@ -342,6 +343,7 @@ void QMSetup::setupWriteInfo() const
         const auto modelPathMsg = std::format("Model path:            {}", modelPath);
         const auto fpMsg        = std::format("Floating point type:   {}", fp);
         const auto dispCorrMsg  = std::format("Dispersion Correction: {}", useDisp);
+        const auto modeMsg      = std::format("Evaluation mode:       {}", string(maceMode));
         // clang-format on
 
         logOutput.writeSetupInfo(modelTypeMsg);
@@ -352,6 +354,14 @@ void QMSetup::setupWriteInfo() const
 
         logOutput.writeSetupInfo(fpMsg);
         logOutput.writeSetupInfo(dispCorrMsg);
+        logOutput.writeSetupInfo(modeMsg);
+
+        if (maceMode == MaceMode::FAST)
+            logOutput.writeSetupInfo(std::format(
+                "                       cuequivariance-accelerated kernels; "
+                "results are not bit-identical to the e3nn reference "
+                "(use mace_mode = accurate for the exact reference)"
+            ));
     }
 
     if (qmMethod == FENNOL)

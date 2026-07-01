@@ -102,6 +102,12 @@ QMInputParser::QMInputParser(Engine &engine) : InputFileParser(engine)
     );
 
     addKeyword(
+        std::string("mace_mode"),
+        bind_front(&QMInputParser::parseMaceMode, this),
+        false
+    );
+
+    addKeyword(
         std::string("mace_model_path"),
         bind_front(&QMInputParser::parseMaceModelPath, this),
         false
@@ -372,6 +378,22 @@ void QMInputParser::parseMaceModel(
                 lineElements[2]
             )
         );
+}
+
+/**
+ * @brief parse the MACE evaluation mode
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
+void QMInputParser::parseMaceMode(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+
+    QMSettings::setMaceMode(lineElements[2]);
 }
 
 /**
