@@ -29,6 +29,7 @@
 #include <format>       // for format
 #include <fstream>      // IWYU pragma: keep for basic_istream, ifstream
 #include <functional>   // for identity
+#include <limits>
 #include <ranges>   // for begin, end, operator|, views::split, views::transform
 #include <sstream>       // IWYU pragma: keep for basic_stringstream
 #include <stdexcept>     // for out_of_range and invalid_argument
@@ -319,11 +320,71 @@ std::uint_fast32_t utilities::stringToUintFast32t(const std::string &str)
 }
 
 /**
+ * @brief converts a string to an unsigned long long int
+ *
+ * @param str
+ *
+ * @throw invalid_argument if the string is not valid for conversion to
+ * unsigned long long int
+ * @throw out_of_range if number to be converted is negative or greater than an
+ * unsigned long long int
+ */
+unsigned long long utilities::stringToULL(const std::string &str)
+{
+    if (str.empty())
+        throw std::invalid_argument(
+            "Cannot convert empty string to unsigned long long"
+        );
+
+    const auto maxValue = std::numeric_limits<std::uint64_t>::max();
+
+    if (str[0] == '-')
+        throw std::out_of_range(
+            std::format(
+                "The number has to be an integer between \"0\" and "
+                "\"{}\" (inclusive)",
+                maxValue
+            )
+        );
+
+    size_t startPos = (str[0] == '+') ? 1 : 0;
+    if (startPos == str.length())
+        throw std::invalid_argument(
+            std::format("String \"{}\" is not a valid unsigned long long", str)
+        );
+
+    for (size_t i = startPos; i < str.length(); ++i)
+        if (!std::isdigit(static_cast<unsigned char>(str[i])))
+            throw std::invalid_argument(
+                std::format(
+                    "String \"{}\" is not a valid unsigned long long",
+                    str
+                )
+            );
+
+    try
+    {
+        return std::stoull(str);
+    }
+    catch (const std::out_of_range &)
+    {
+        throw std::out_of_range(
+            std::format(
+                "The number has to be an integer between \"0\" and \"{}\" "
+                "(inclusive)",
+                maxValue
+            )
+        );
+    }
+}
+
+/**
  * @brief converts a string to a non-Nan and non-Inf double
  *
  * @param str
  *
- * @throw invalid_argument if the string is not valid for conversion to double
+ * @throw invalid_argument if the string is not valid for conversion to
+ * double
  * @throw out_of_range if number is out of range for a double
  */
 double utilities::stringToFiniteDouble(const std::string &str)
@@ -344,7 +405,8 @@ double utilities::stringToFiniteDouble(const std::string &str)
     {
         throw std::out_of_range(
             std::format(
-                "Floating-point value '{}' exceeds the representable range for "
+                "Floating-point value '{}' exceeds the representable range "
+                "for "
                 "a double",
                 str
             )
