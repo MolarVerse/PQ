@@ -24,6 +24,7 @@
 #include <vector>
 
 #include "atom.hpp"               // for Atom
+#include "celllist.hpp"           // for CellList
 #include "coulombPotential.hpp"   // for CoulombPotential
 #include "interWater.hpp"         // for InterWater
 #include "physicalData.hpp"       // for PhysicalData

@@ -27,14 +27,6 @@
 #include <utility>
 #include <vector>
 
-#include "atom.hpp"                // for Atom
-#include "celllist.hpp"            // for CellList
-#include "defaults.hpp"            // for defaults
-#include "guffCoefficients.hpp"    // for guffPairCoefficients
-#include "nonCoulombPair.hpp"      // for NonCoulombPair
-#include "physicalData.hpp"        // for PhysicalData
-#include "potentialSettings.hpp"   // for PotentialSettings
-#include "simulationBox.hpp"       // for SimulationBox
 #include "typeAliases.hpp"
 
 namespace waterModel
