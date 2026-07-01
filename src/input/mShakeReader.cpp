@@ -221,8 +221,8 @@ void MShakeReader::processAtomLines(
         atoms.push_back(atom);
     }
 
-    auto molType      = mShakeReference.getMoleculeType();
-    auto refAtomNames = molType.getAtomNames();
+    const auto &molType      = mShakeReference.getMoleculeType();
+    const auto  refAtomNames = molType.getAtomNames();
 
     if (atoms.size() == 1)
     {
