@@ -45,6 +45,8 @@ target_include_directories(simulationBox
     PUBLIC
     ${PROJECT_SOURCE_DIR}/include/simulationBox
     ${PROJECT_SOURCE_DIR}/include/config
+    PRIVATE
+    ${PROJECT_SOURCE_DIR}/include/utilities
 )
 
 target_link_libraries(simulationBox
