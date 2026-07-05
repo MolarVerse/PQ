@@ -24,7 +24,7 @@
 
 #define _DEFAULTS_HPP_
 
-#include <stddef.h>   // for size_t
+#include <cstddef>   // for size_t
 
 /**
  * @brief namespace containing all default values

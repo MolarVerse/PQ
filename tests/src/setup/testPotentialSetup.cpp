@@ -21,10 +21,10 @@
 ******************************************************************************/
 
 #include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ
-#include <stddef.h>        // for size_t
 
-#include <memory>   // for make_shared
-#include <string>   // for allocator, basic_string
+#include <cstddef>   // for size_t
+#include <memory>    // for make_shared
+#include <string>    // for allocator, basic_string
 
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
 #include "coulombWolf.hpp"               // for CoulombWolf
