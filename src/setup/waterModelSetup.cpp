@@ -28,17 +28,19 @@
 #include <string>
 #include <unordered_set>
 
-#include "bondConstraint.hpp"       // for BondConstraint
-#include "engine.hpp"               // for Engine
-#include "exceptions.hpp"           // for customException
-#include "fileSettings.hpp"         // for FileSettings
-#include "interWater.hpp"           // for InterWater
-#include "mdEngine.hpp"             // for MDEngine
-#include "molecule.hpp"             // for Molecule
-#include "references.hpp"           // for References
-#include "referencesOutput.hpp"     // for ReferencesOutput
+#include "bondConstraint.hpp"     // for BondConstraint
+#include "engine.hpp"             // for Engine
+#include "exceptions.hpp"         // for customException
+#include "fileSettings.hpp"       // for FileSettings
+#include "interWater.hpp"         // for InterWater
+#include "mdEngine.hpp"           // for MDEngine
+#include "molecule.hpp"           // for Molecule
+#include "references.hpp"         // for References
+#include "referencesOutput.hpp"   // for ReferencesOutput
+#include "rigidWaterGeometry.hpp"
 #include "waterModelSettings.hpp"   // for WaterModelSettings
 
+using namespace constants;
 using namespace constraints;
 using namespace customException;
 using namespace engine;
@@ -142,12 +144,13 @@ void WaterModelSetup::setup()
 }
 
 /**
- * @brief Verify that water molecules do not appear in the topology file bonds/angles.
+ * @brief Verify that water molecules do not appear in the topology file
+ * bonds/angles.
  *
- * @details For intramolecular water models that use constraints, water molecules
- * should not have their bonds or angles defined in the topology file. This function
- * checks the bond and angle lists and throws an exception if any water molecule
- * is found.
+ * @details For intramolecular water models that use constraints, water
+ * molecules should not have their bonds or angles defined in the topology file.
+ * This function checks the bond and angle lists and throws an exception if any
+ * water molecule is found.
  *
  * @throws UserInputException If a water type molecule is found in the bond or
  * angle list of the topology file.
@@ -281,16 +284,18 @@ std::optional<RigidWaterGeometry> WaterModelSetup::getRigidWaterGeometry(
 {
     using enum WaterIntraModel;
 
+    // clang-format off
     switch (intraModel)
     {
-        case SPC: return RigidWaterGeometry{1.0, 1.632993162};
-        case SPC_E: return RigidWaterGeometry{1.0, 1.632993162};
-        case SPC_DC: return RigidWaterGeometry{1.0, 1.632993162};
-        case H2O_DC: return RigidWaterGeometry{0.958, 1.56441};
-        case TIP3P: return RigidWaterGeometry{0.9572, 1.5139};
-        case OPC3: return RigidWaterGeometry{0.97888, 1.598492306};
+        case SPC: return RigidWaterGeometry{_SPC_OH_DIST_, _SPC_HH_DIST_};
+        case SPC_E: return RigidWaterGeometry{_SPC_E_OH_DIST_, _SPC_E_HH_DIST_};
+        case SPC_DC: return RigidWaterGeometry{_SPC_DC_OH_DIST_, _SPC_DC_HH_DIST_};
+        case H2O_DC: return RigidWaterGeometry{_H2O_DC_OH_DIST_, _H2O_DC_HH_DIST_};
+        case TIP3P: return RigidWaterGeometry{_TIP3P_OH_DIST_, _TIP3P_HH_DIST_};
+        case OPC3: return RigidWaterGeometry{_OPC3_OH_DIST_, _OPC3_HH_DIST_};
         default: return std::nullopt;
     }
+    // clang-format on
 }
 
 /**
@@ -332,9 +337,10 @@ void WaterModelSetup::shakeSetupForRigidWater(
 /**
  * @brief Set up the intermolecular water interaction model.
  *
- * @details Creates an @ref InterWater object with the appropriate parameters and
- * strategy (cell-list or brute-force) based on the configured intermolecular water
- * model. Also validates water molecule partial charges against expected values.
+ * @details Creates an @ref InterWater object with the appropriate parameters
+ * and strategy (cell-list or brute-force) based on the configured
+ * intermolecular water model. Also validates water molecule partial charges
+ * against expected values.
  *
  * @throws UserInputException If water molecule partial charges do not match the
  * expected values for the selected intermolecular model.
@@ -380,8 +386,8 @@ void WaterModelSetup::makeInterWater()
 /**
  * @brief Add reference file entries for the configured water models.
  *
- * @details Adds bibliography references for both intramolecular and intermolecular
- * water models to the references output.
+ * @details Adds bibliography references for both intramolecular and
+ * intermolecular water models to the references output.
  */
 void WaterModelSetup::addReferences()
 {

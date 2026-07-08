@@ -24,8 +24,6 @@
 
 #define _GUFF_COEFFICIENTS_HPP_
 
-#include <vector>   // for vector
-
 namespace constants
 {
     // clang-format off
