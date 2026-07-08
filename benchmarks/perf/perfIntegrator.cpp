@@ -20,7 +20,7 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-// Fixed-work micro-benchmark of the molecular virial computation.
+// Fixed-work micro-benchmark of the velocity-Verlet integrator step.
 
 #include <cstdio>
 
@@ -30,24 +30,28 @@
 #define CALLGRIND_ZERO_STATS
 #endif
 
-#include "benchSetup.hpp"
-#include "molecularVirial.hpp"
-#include "physicalData.hpp"
+#include "perfBenchSetup.hpp"
+#include "timingsSettings.hpp"
+#include "velocityVerlet.hpp"
 
 static constexpr long ITERATIONS = 1000;
 
 int main()
 {
-    auto box          = benchSetup::makePopulatedBox(20, 3);
-    auto physicalData = physicalData::PhysicalData();
-    auto virial       = virial::MolecularVirial();
+    settings::TimingsSettings::setTimeStep(0.001);
+
+    auto box        = benchSetup::makePopulatedBox(20, 3);
+    auto integrator = integrator::VelocityVerlet();
 
     CALLGRIND_ZERO_STATS;
 
     for (long i = 0; i < ITERATIONS; ++i)
-        virial.calculateVirial(box, physicalData);
+    {
+        integrator.firstStep(box);
+        integrator.secondStep(box);
+    }
 
-    const auto result = virial.getVirial();
-    std::printf("%.6f\n", result[0][0] + result[1][1] + result[2][2]);
+    // read state so the loop cannot be optimized away
+    std::printf("%.6f\n", box.calculateMomentum()[0]);
     return 0;
 }

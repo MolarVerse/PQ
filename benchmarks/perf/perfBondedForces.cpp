@@ -33,7 +33,7 @@
 #endif
 
 #include "angleForceField.hpp"
-#include "benchSetup.hpp"
+#include "perfBenchSetup.hpp"
 #include "bondForceField.hpp"
 #include "coulombShiftedPotential.hpp"
 #include "dihedralForceField.hpp"
