@@ -158,8 +158,8 @@ void HybridConfigurator::assignHybridZones(SimBox& simBox)
     const auto smoothingRegionThickness =
         HybridSettings::getSmoothingRegionThickness();
     const auto pointChargeThickness = HybridSettings::getPointChargeThickness();
-    const auto coreEpsilon = 10.0 * std::numeric_limits<double>::epsilon();
-    const bool coreEnabled = coreRadius > coreEpsilon;
+    const auto coreEpsilon          = std::numeric_limits<double>::epsilon();
+    const bool coreEnabled          = coreRadius > coreEpsilon;
 
     _molChangedZone = false;
 
