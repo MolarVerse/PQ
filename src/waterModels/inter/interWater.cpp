@@ -64,7 +64,7 @@ void InterWater::calculate(
     pq::CellList               &cellList
 )
 {
-    if (!_strategy)
+    if (_strategy == nullptr)
         return;
 
     _strategy
@@ -86,7 +86,7 @@ void InterWater::calculateQMMMForces(
     pq::CellList               &cellList
 )
 {
-    if (!_strategy)
+    if (_strategy == nullptr)
         return;
 
     _strategy->calculateCoreToOuterForces(
@@ -129,7 +129,7 @@ void InterWater::calculateHotspotSmoothingMMForces(
     pq::CellList               &cellList
 )
 {
-    if (!_strategy)
+    if (_strategy == nullptr)
         return;
 
     _strategy->calculateHotspotSmoothingMMForces(
@@ -174,9 +174,9 @@ void InterWater::setNonCoulombCutOffRadii()
             PotentialSettings::getCoulombRadiusCutOff()
         );
 
-    const auto setCutOff = [radialCutOff](auto &nonCoulombPair)
+    const auto setCutOff = [radialCutOff](const auto &nonCoulombPair)
     {
-        if (nonCoulombPair)
+        if (nonCoulombPair != nullptr)
             nonCoulombPair->setRadialCutOff(radialCutOff);
     };
 
@@ -198,14 +198,15 @@ void InterWater::setNonCoulombCutOffRadii()
  */
 void InterWater::initNonCoulombPairs()
 {
-    const auto setForceAndEnergyCutOff = [](auto &nonCoulPair)
+    const auto setForceAndEnergyCutOff = [](const auto &nonCoulombPair)
     {
-        if (!nonCoulPair)
+        if (nonCoulombPair == nullptr)
             return;
+
         const auto [energyCutOff, forceCutOff] =
-            nonCoulPair->calculate(nonCoulPair->getRadialCutOff());
-        nonCoulPair->setEnergyCutOff(energyCutOff);
-        nonCoulPair->setForceCutOff(forceCutOff);
+            nonCoulombPair->calculate(nonCoulombPair->getRadialCutOff());
+        nonCoulombPair->setEnergyCutOff(energyCutOff);
+        nonCoulombPair->setForceCutOff(forceCutOff);
     };
 
     setForceAndEnergyCutOff(_state._nonCoulombPairOO);
