@@ -103,9 +103,9 @@ void PotentialCellList::calculateForces(
                 if (isWaterPair(molecule_i, molecule_j))
                     continue;
 
-                for (auto &atom_i : cell_i.getAtoms(mol_i))
+                for (auto *atom_i : cell_i.getAtoms(mol_i))
                 {
-                    for (auto &atom_j : cell_i.getAtoms(mol_j))
+                    for (auto *atom_j : cell_i.getAtoms(mol_j))
                     {
                         const auto [coulombEnergy, nonCoulombEnergy] =
                             calculateSingleInteraction<
@@ -138,7 +138,7 @@ void PotentialCellList::calculateForces(
             {
                 auto *molecule_i = cell_i.getMolecule(mol_i);
 
-                for (auto &atom_i : cell_i.getAtoms(mol_i))
+                for (auto *atom_i : cell_i.getAtoms(mol_i))
                 {
                     for (size_t mol_j = 0; mol_j < nMolsInCell_j; ++mol_j)
                     {
@@ -150,7 +150,7 @@ void PotentialCellList::calculateForces(
                         if (molecule_i == molecule_j)
                             continue;
 
-                        for (auto &atom_j : cell_j->getAtoms(mol_j))
+                        for (auto *atom_j : cell_j->getAtoms(mol_j))
                         {
                             const auto [coulombEnergy, nonCoulombEnergy] =
                                 calculateSingleInteraction<
@@ -222,8 +222,8 @@ void PotentialCellList::calculateCoreToOuterForces(
                     isWaterMolecule(waterMolecules, mol_j))
                     continue;
 
-                for (auto &atom_i : cell_i.getAtoms(mol_i))
-                    for (auto &atom_j : cell_i.getAtoms(mol_j))
+                for (auto *atom_i : cell_i.getAtoms(mol_i))
+                    for (auto *atom_j : cell_i.getAtoms(mol_j))
                         totalCoulombEnergy += calculateSingleCoulombInteraction<
                             QMChargeTag,
                             MMChargeTag>(*box, *atom_i, *atom_j);
@@ -245,8 +245,8 @@ void PotentialCellList::calculateCoreToOuterForces(
                         isWaterMolecule(waterMolecules_j, mol_j))
                         continue;
 
-                    for (auto &atom_i : cell_i.getAtoms(mol_i))
-                        for (auto &atom_j : cell_j->getAtoms(mol_j))
+                    for (auto *atom_i : cell_i.getAtoms(mol_i))
+                        for (auto *atom_j : cell_j->getAtoms(mol_j))
                             totalCoulombEnergy +=
                                 calculateSingleCoulombInteraction<
                                     QMChargeTag,
@@ -270,8 +270,8 @@ void PotentialCellList::calculateCoreToOuterForces(
                         isWaterMolecule(waterMolecules_i, mol_j))
                         continue;
 
-                    for (auto &atom_i : cell_j->getAtoms(mol_i))
-                        for (auto &atom_j : cell_i.getAtoms(mol_j))
+                    for (auto *atom_i : cell_j->getAtoms(mol_i))
+                        for (auto *atom_j : cell_i.getAtoms(mol_j))
                             totalCoulombEnergy +=
                                 calculateSingleCoulombInteraction<
                                     QMChargeTag,
@@ -337,8 +337,8 @@ void PotentialCellList::calculateLayerToOuterForces(
 
                 auto *molecule_j = cell_i.getMolecule(mol_j);
 
-                for (auto &atom_i : cell_i.getAtoms(mol_i))
-                    for (auto &atom_j : cell_i.getAtoms(mol_j))
+                for (auto *atom_i : cell_i.getAtoms(mol_i))
+                    for (auto *atom_j : cell_i.getAtoms(mol_j))
                     {
                         const auto [coulombEnergy, nonCoulombEnergy] =
                             calculateSingleInteraction<
@@ -378,8 +378,8 @@ void PotentialCellList::calculateLayerToOuterForces(
 
                     auto *molecule_j = cell_j->getMolecule(mol_j);
 
-                    for (auto &atom_i : cell_i.getAtoms(mol_i))
-                        for (auto &atom_j : cell_j->getAtoms(mol_j))
+                    for (auto *atom_i : cell_i.getAtoms(mol_i))
+                        for (auto *atom_j : cell_j->getAtoms(mol_j))
                         {
                             const auto [coulombEnergy, nonCoulombEnergy] =
                                 calculateSingleInteraction<
@@ -420,8 +420,8 @@ void PotentialCellList::calculateLayerToOuterForces(
 
                     auto *molecule_j = cell_i.getMolecule(mol_j);
 
-                    for (auto &atom_i : cell_j->getAtoms(mol_i))
-                        for (auto &atom_j : cell_i.getAtoms(mol_j))
+                    for (auto *atom_i : cell_j->getAtoms(mol_i))
+                        for (auto *atom_j : cell_i.getAtoms(mol_j))
                         {
                             const auto [coulombEnergy, nonCoulombEnergy] =
                                 calculateSingleInteraction<
@@ -487,8 +487,8 @@ void PotentialCellList::calculateOuterToOuterForces(
 
                 auto *molecule_j = cell_i.getMolecule(mol_j);
 
-                for (auto &atom_i : cell_i.getAtoms(mol_i))
-                    for (auto &atom_j : cell_i.getAtoms(mol_j))
+                for (auto *atom_i : cell_i.getAtoms(mol_i))
+                    for (auto *atom_j : cell_i.getAtoms(mol_j))
                     {
                         const auto [coulombEnergy, nonCoulombEnergy] =
                             calculateSingleInteraction<
@@ -531,8 +531,8 @@ void PotentialCellList::calculateOuterToOuterForces(
                     if (molecule_i == molecule_j)
                         continue;
 
-                    for (auto &atom_i : cell_i.getAtoms(mol_i))
-                        for (auto &atom_j : cell_j->getAtoms(mol_j))
+                    for (auto *atom_i : cell_i.getAtoms(mol_i))
+                        for (auto *atom_j : cell_j->getAtoms(mol_j))
                         {
                             const auto [coulombEnergy, nonCoulombEnergy] =
                                 calculateSingleInteraction<
@@ -595,8 +595,8 @@ void PotentialCellList::calculateHotspotSmoothingMMForces(
 
                 auto *molecule_j = cell_i.getMolecule(mol_j);
 
-                for (auto &atom_i : cell_i.getAtoms(mol_i))
-                    for (auto &atom_j : cell_i.getAtoms(mol_j))
+                for (auto *atom_i : cell_i.getAtoms(mol_i))
+                    for (auto *atom_j : cell_i.getAtoms(mol_j))
                     {
                         const auto [coulombEnergy, nonCoulombEnergy] =
                             calculateSingleInteraction<
@@ -637,8 +637,8 @@ void PotentialCellList::calculateHotspotSmoothingMMForces(
 
                     auto *molecule_j = cell_j->getMolecule(mol_j);
 
-                    for (auto &atom_i : cell_i.getAtoms(mol_i))
-                        for (auto &atom_j : cell_j->getAtoms(mol_j))
+                    for (auto *atom_i : cell_i.getAtoms(mol_i))
+                        for (auto *atom_j : cell_j->getAtoms(mol_j))
                         {
                             const auto [coulombEnergy, nonCoulombEnergy] =
                                 calculateSingleInteraction<
@@ -679,8 +679,8 @@ void PotentialCellList::calculateHotspotSmoothingMMForces(
 
                     auto *molecule_j = cell_i.getMolecule(mol_j);
 
-                    for (auto &atom_i : cell_j->getAtoms(mol_i))
-                        for (auto &atom_j : cell_i.getAtoms(mol_j))
+                    for (auto *atom_i : cell_j->getAtoms(mol_i))
+                        for (auto *atom_j : cell_i.getAtoms(mol_j))
                         {
                             const auto [coulombEnergy, nonCoulombEnergy] =
                                 calculateSingleInteraction<
@@ -720,8 +720,8 @@ void PotentialCellList::calculateHotspotSmoothingMMForces(
 
                 auto *molecule_j = cell_i.getMolecule(mol_j);
 
-                for (auto &atom_i : cell_i.getAtoms(mol_i))
-                    for (auto &atom_j : cell_i.getAtoms(mol_j))
+                for (auto *atom_i : cell_i.getAtoms(mol_i))
+                    for (auto *atom_j : cell_i.getAtoms(mol_j))
                     {
                         const auto [coulombEnergy, nonCoulombEnergy] =
                             calculateSingleInteractionOneWay<
@@ -764,8 +764,8 @@ void PotentialCellList::calculateHotspotSmoothingMMForces(
                     if (molecule_i == molecule_j)
                         continue;
 
-                    for (auto &atom_i : cell_i.getAtoms(mol_i))
-                        for (auto &atom_j : cell_j->getAtoms(mol_j))
+                    for (auto *atom_i : cell_i.getAtoms(mol_i))
+                        for (auto *atom_j : cell_j->getAtoms(mol_j))
                         {
                             const auto [coulombEnergy, nonCoulombEnergy] =
                                 calculateSingleInteractionOneWay<
@@ -809,8 +809,8 @@ void PotentialCellList::calculateHotspotSmoothingMMForces(
                     if (molecule_i == molecule_j)
                         continue;
 
-                    for (auto &atom_i : cell_j->getAtoms(mol_i))
-                        for (auto &atom_j : cell_i.getAtoms(mol_j))
+                    for (auto *atom_i : cell_j->getAtoms(mol_i))
+                        for (auto *atom_j : cell_i.getAtoms(mol_j))
                         {
                             const auto [coulombEnergy, nonCoulombEnergy] =
                                 calculateSingleInteractionOneWay<

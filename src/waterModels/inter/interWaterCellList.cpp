@@ -90,10 +90,10 @@ void InterWaterStrategyCellList::calculate(
                     !molecule_j->isActive())
                     continue;
 
-                for (auto &atom_i : cell_i.getAtoms(mol_i))
+                for (auto *atom_i : cell_i.getAtoms(mol_i))
                 {
                     const bool isAtom_i_O = atom_i->getName() == "O";
-                    for (auto &atom_j : cell_i.getAtoms(mol_j))
+                    for (auto *atom_j : cell_i.getAtoms(mol_j))
                     {
                         const bool isAtom_j_O = atom_j->getName() == "O";
 
@@ -139,7 +139,7 @@ void InterWaterStrategyCellList::calculate(
                     !molecule_i->isActive())
                     continue;
 
-                for (auto &atom_i : cell_i.getAtoms(mol_i))
+                for (auto *atom_i : cell_i.getAtoms(mol_i))
                 {
                     const bool isAtom_i_O = atom_i->getName() == "O";
                     for (size_t mol_j = 0; mol_j < nMolsInCell_j; ++mol_j)
@@ -152,7 +152,7 @@ void InterWaterStrategyCellList::calculate(
                         if (molecule_i == molecule_j)
                             continue;
 
-                        for (auto &atom_j : cell_j->getAtoms(mol_j))
+                        for (auto *atom_j : cell_j->getAtoms(mol_j))
                         {
                             const bool isAtom_j_O = atom_j->getName() == "O";
 
@@ -246,10 +246,10 @@ void InterWaterStrategyCellList::calculateCoreToOuterForces(
                 if (isNonWaterMolecule(waterMolecules, mol_j))
                     continue;
 
-                for (auto &atom_i : cell_i.getAtoms(mol_i))
+                for (auto *atom_i : cell_i.getAtoms(mol_i))
                 {
                     const bool isAtom_i_O = atom_i->getName() == "O";
-                    for (auto &atom_j : cell_i.getAtoms(mol_j))
+                    for (auto *atom_j : cell_i.getAtoms(mol_j))
                     {
                         const bool isAtom_j_O = atom_j->getName() == "O";
 
@@ -281,7 +281,7 @@ void InterWaterStrategyCellList::calculateCoreToOuterForces(
                 if (isNonWaterMolecule(waterMolecules_i, mol_i))
                     continue;
 
-                for (auto &atom_i : cell_i.getAtoms(mol_i))
+                for (auto *atom_i : cell_i.getAtoms(mol_i))
                 {
                     const bool isAtom_i_O = atom_i->getName() == "O";
                     for (const auto mol_j : cell_j->getActiveMoleculeIndices())
@@ -289,7 +289,7 @@ void InterWaterStrategyCellList::calculateCoreToOuterForces(
                         if (isNonWaterMolecule(waterMolecules_j, mol_j))
                             continue;
 
-                        for (auto &atom_j : cell_j->getAtoms(mol_j))
+                        for (auto *atom_j : cell_j->getAtoms(mol_j))
                         {
                             const bool isAtom_j_O = atom_j->getName() == "O";
 
@@ -322,7 +322,7 @@ void InterWaterStrategyCellList::calculateCoreToOuterForces(
                 if (isNonWaterMolecule(waterMolecules_j, mol_i))
                     continue;
 
-                for (auto &atom_i : cell_j->getAtoms(mol_i))
+                for (auto *atom_i : cell_j->getAtoms(mol_i))
                 {
                     const bool isAtom_i_O = atom_i->getName() == "O";
                     for (const auto mol_j : cell_i.getActiveMoleculeIndices())
@@ -330,7 +330,7 @@ void InterWaterStrategyCellList::calculateCoreToOuterForces(
                         if (isNonWaterMolecule(waterMolecules_i, mol_j))
                             continue;
 
-                        for (auto &atom_j : cell_i.getAtoms(mol_j))
+                        for (auto *atom_j : cell_i.getAtoms(mol_j))
                         {
                             const bool isAtom_j_O = atom_j->getName() == "O";
 
@@ -416,10 +416,10 @@ void InterWaterStrategyCellList::calculateLayerToOuterForces(
                 if (isNonWaterMolecule(waterMolecules, mol_j))
                     continue;
 
-                for (auto &atom_i : cell_i.getAtoms(mol_i))
+                for (auto *atom_i : cell_i.getAtoms(mol_i))
                 {
                     const bool isAtom_i_O = atom_i->getName() == "O";
-                    for (auto &atom_j : cell_i.getAtoms(mol_j))
+                    for (auto *atom_j : cell_i.getAtoms(mol_j))
                     {
                         const bool isAtom_j_O = atom_j->getName() == "O";
 
@@ -463,7 +463,7 @@ void InterWaterStrategyCellList::calculateLayerToOuterForces(
                 if (isNonWaterMolecule(waterMolecules_i, mol_i))
                     continue;
 
-                for (auto &atom_i : cell_i.getAtoms(mol_i))
+                for (auto *atom_i : cell_i.getAtoms(mol_i))
                 {
                     const bool isAtom_i_O = atom_i->getName() == "O";
                     for (const auto mol_j : cell_j->getActiveMoleculeIndices())
@@ -471,7 +471,7 @@ void InterWaterStrategyCellList::calculateLayerToOuterForces(
                         if (isNonWaterMolecule(waterMolecules_j, mol_j))
                             continue;
 
-                        for (auto &atom_j : cell_j->getAtoms(mol_j))
+                        for (auto *atom_j : cell_j->getAtoms(mol_j))
                         {
                             const bool isAtom_j_O = atom_j->getName() == "O";
 
@@ -516,7 +516,7 @@ void InterWaterStrategyCellList::calculateLayerToOuterForces(
                 if (isNonWaterMolecule(waterMolecules_j, mol_i))
                     continue;
 
-                for (auto &atom_i : cell_j->getAtoms(mol_i))
+                for (auto *atom_i : cell_j->getAtoms(mol_i))
                 {
                     const bool isAtom_i_O = atom_i->getName() == "O";
                     for (const auto mol_j : cell_i.getActiveMoleculeIndices())
@@ -524,7 +524,7 @@ void InterWaterStrategyCellList::calculateLayerToOuterForces(
                         if (isNonWaterMolecule(waterMolecules_i, mol_j))
                             continue;
 
-                        for (auto &atom_j : cell_i.getAtoms(mol_j))
+                        for (auto *atom_j : cell_i.getAtoms(mol_j))
                         {
                             const bool isAtom_j_O = atom_j->getName() == "O";
 
@@ -626,10 +626,10 @@ void InterWaterStrategyCellList::calculateOuterToOuterForces(
                 if (isNonWaterMolecule(waterMolecules, mol_j))
                     continue;
 
-                for (auto &atom_i : cell_i.getAtoms(mol_i))
+                for (auto *atom_i : cell_i.getAtoms(mol_i))
                 {
                     const bool isAtom_i_O = atom_i->getName() == "O";
-                    for (auto &atom_j : cell_i.getAtoms(mol_j))
+                    for (auto *atom_j : cell_i.getAtoms(mol_j))
                     {
                         const bool isAtom_j_O = atom_j->getName() == "O";
 
@@ -675,7 +675,7 @@ void InterWaterStrategyCellList::calculateOuterToOuterForces(
 
                 auto *molecule_i = cell_i.getMolecule(mol_i);
 
-                for (auto &atom_i : cell_i.getAtoms(mol_i))
+                for (auto *atom_i : cell_i.getAtoms(mol_i))
                 {
                     const bool isAtom_i_O = atom_i->getName() == "O";
                     for (const auto mol_j : cell_j->getActiveMoleculeIndices())
@@ -688,7 +688,7 @@ void InterWaterStrategyCellList::calculateOuterToOuterForces(
                         if (molecule_i == molecule_j)
                             continue;
 
-                        for (auto &atom_j : cell_j->getAtoms(mol_j))
+                        for (auto *atom_j : cell_j->getAtoms(mol_j))
                         {
                             const bool isAtom_j_O = atom_j->getName() == "O";
 
@@ -803,10 +803,10 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                 if (isNonWaterMolecule(waterMolecules, mol_j))
                     continue;
 
-                for (auto &atom_i : cell_i.getAtoms(mol_i))
+                for (auto *atom_i : cell_i.getAtoms(mol_i))
                 {
                     const bool isAtom_i_O = atom_i->getName() == "O";
-                    for (auto &atom_j : cell_i.getAtoms(mol_j))
+                    for (auto *atom_j : cell_i.getAtoms(mol_j))
                     {
                         const bool isAtom_j_O = atom_j->getName() == "O";
 
@@ -850,7 +850,7 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                 if (isNonWaterMolecule(waterMolecules_i, mol_i))
                     continue;
 
-                for (auto &atom_i : cell_i.getAtoms(mol_i))
+                for (auto *atom_i : cell_i.getAtoms(mol_i))
                 {
                     const bool isAtom_i_O = atom_i->getName() == "O";
                     for (const auto mol_j :
@@ -859,7 +859,7 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                         if (isNonWaterMolecule(waterMolecules_j, mol_j))
                             continue;
 
-                        for (auto &atom_j : cell_j->getAtoms(mol_j))
+                        for (auto *atom_j : cell_j->getAtoms(mol_j))
                         {
                             const bool isAtom_j_O = atom_j->getName() == "O";
 
@@ -904,7 +904,7 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                 if (isNonWaterMolecule(waterMolecules_j, mol_i))
                     continue;
 
-                for (auto &atom_i : cell_j->getAtoms(mol_i))
+                for (auto *atom_i : cell_j->getAtoms(mol_i))
                 {
                     const bool isAtom_i_O = atom_i->getName() == "O";
                     for (const auto mol_j :
@@ -913,7 +913,7 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                         if (isNonWaterMolecule(waterMolecules_i, mol_j))
                             continue;
 
-                        for (auto &atom_j : cell_i.getAtoms(mol_j))
+                        for (auto *atom_j : cell_i.getAtoms(mol_j))
                         {
                             const bool isAtom_j_O = atom_j->getName() == "O";
 
@@ -962,10 +962,10 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                 if (mol_i == mol_j)
                     continue;
 
-                for (auto &atom_i : cell_i.getAtoms(mol_i))
+                for (auto *atom_i : cell_i.getAtoms(mol_i))
                 {
                     const bool isAtom_i_O = atom_i->getName() == "O";
-                    for (auto &atom_j : cell_i.getAtoms(mol_j))
+                    for (auto *atom_j : cell_i.getAtoms(mol_j))
                     {
                         const bool isAtom_j_O = atom_j->getName() == "O";
 
@@ -1011,7 +1011,7 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
 
                 auto *molecule_i = cell_i.getMolecule(mol_i);
 
-                for (auto &atom_i : cell_i.getAtoms(mol_i))
+                for (auto *atom_i : cell_i.getAtoms(mol_i))
                 {
                     const bool isAtom_i_O = atom_i->getName() == "O";
                     for (const auto mol_j :
@@ -1025,7 +1025,7 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                         if (molecule_i == molecule_j)
                             continue;
 
-                        for (auto &atom_j : cell_j->getAtoms(mol_j))
+                        for (auto *atom_j : cell_j->getAtoms(mol_j))
                         {
                             const bool isAtom_j_O = atom_j->getName() == "O";
 
@@ -1072,7 +1072,7 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
 
                 auto *molecule_i = cell_j->getMolecule(mol_i);
 
-                for (auto &atom_i : cell_j->getAtoms(mol_i))
+                for (auto *atom_i : cell_j->getAtoms(mol_i))
                 {
                     const bool isAtom_i_O = atom_i->getName() == "O";
                     for (const auto mol_j :
@@ -1086,7 +1086,7 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                         if (molecule_i == molecule_j)
                             continue;
 
-                        for (auto &atom_j : cell_i.getAtoms(mol_j))
+                        for (auto *atom_j : cell_i.getAtoms(mol_j))
                         {
                             const bool isAtom_j_O = atom_j->getName() == "O";
 
