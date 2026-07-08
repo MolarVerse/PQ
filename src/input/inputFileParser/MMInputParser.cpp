@@ -202,12 +202,12 @@ void MMInputParser::parseWaterIntraModel(
     else if (waterIntraModel == "spc_fw")
     {
         WaterModelSettings::setWaterIntraModel(SPC_FW);
-        _engine.makeIntraWater(SPCFwIntraParam{});
+        _engine.makeIntraWater(SPCFwIntraWater{});
     }
     else if (waterIntraModel == "qspc_fw")
     {
         WaterModelSettings::setWaterIntraModel(QSPC_FW);
-        _engine.makeIntraWater(qSPCFwIntraParam{});
+        _engine.makeIntraWater(qSPCFwIntraWater{});
     }
     else if (waterIntraModel == "spc_dc")
         WaterModelSettings::setWaterIntraModel(SPC_DC);
@@ -220,12 +220,12 @@ void MMInputParser::parseWaterIntraModel(
     else if (waterIntraModel == "spc_mtr")
     {
         WaterModelSettings::setWaterIntraModel(SPC_MTR);
-        _engine.makeIntraWater(SPCMTRIntraParam{});
+        _engine.makeIntraWater(SPCMTRIntraWater{});
     }
     else if (waterIntraModel == "tip3p_mtr")
     {
         WaterModelSettings::setWaterIntraModel(TIP3P_MTR);
-        _engine.makeIntraWater(TIP3PMTRIntraParam{});
+        _engine.makeIntraWater(TIP3PMTRIntraWater{});
     }
     else
         throw InputFileException(format(

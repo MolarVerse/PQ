@@ -30,23 +30,23 @@
 #include "mTRIntraWater.hpp"    // for MTRIntraWater
 #include "physicalData.hpp"     // for PhysicalData
 #include "simulationBox.hpp"    // for SimulationBox
-// #include "staticMatrix3x3.hpp"   // for tensorProduct
-#include "vector3d.hpp"   // for norm
+#include "vector3d.hpp"         // for norm
 
-template <class Derived>
-void waterModel::MTRIntraWater<Derived>::calculate(
+void waterModel::MTRIntraWater::calculate(
     pq::SimBox&       box,
     pq::PhysicalData& physicalData
 )
 {
-    const auto eqOHDistance = Derived::_eqOHDistance;
-    const auto eqHHDistance = Derived::_eqHHDistance;
-    const auto DOH          = Derived::_DOH;
-    const auto alpha        = Derived::_alpha;
-    const auto beta         = Derived::_beta;
-    const auto Ltt          = Derived::_Ltt;
-    const auto Lrt          = Derived::_Lrt;
-    const auto Lrr          = Derived::_Lrr;
+    const auto& parameters = get_parameters();
+
+    const auto eqOHDistance = parameters._eqOHDistance;
+    const auto eqHHDistance = parameters._eqHHDistance;
+    const auto DOH          = parameters._DOH;
+    const auto alpha        = parameters._alpha;
+    const auto beta         = parameters._beta;
+    const auto Ltt          = parameters._Ltt;
+    const auto Lrt          = parameters._Lrt;
+    const auto Lrr          = parameters._Lrr;
 
     for (auto& water : box.getWaterTypeMolecules())
     {

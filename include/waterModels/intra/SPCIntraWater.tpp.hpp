@@ -52,16 +52,17 @@
  *
  * @note Inactive molecules are skipped.
  */
-template <class Derived>
-void waterModel::SPCIntraWater<Derived>::calculate(
+void waterModel::SPCIntraWater::calculate(
     pq::SimBox&       box,
     pq::PhysicalData& physicalData
 )
 {
-    const auto eqOHDistance = Derived::_eqOHDistance;
-    const auto eqHOHAngle   = Derived::_eqHOHAngle;
-    const auto kOHBond      = Derived::_forceConstantOHBond;
-    const auto kHOHAngle    = Derived::_forceConstantHOHAngle;
+    const auto& parameters = get_parameters();
+
+    const auto eqOHDistance = parameters._eqOHDistance;
+    const auto eqHOHAngle   = parameters._eqHOHAngle;
+    const auto kOHBond      = parameters._forceConstantOHBond;
+    const auto kHOHAngle    = parameters._forceConstantHOHAngle;
 
     for (auto& water : box.getWaterTypeMolecules())
     {
