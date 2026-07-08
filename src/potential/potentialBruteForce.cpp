@@ -68,7 +68,7 @@ void PotentialBruteForce::calculateForces(
     size_t i = 0;
     for (auto &mol1 : simBox.getMMMolecules())
     {
-        const auto moltype1 = mol1.getMoltype();
+        const auto isMol1Water = mol1.getMoltype() == waterTypeValue;
 
         size_t j = 0;
         for (auto &mol2 : simBox.getMMMolecules())
@@ -77,7 +77,7 @@ void PotentialBruteForce::calculateForces(
             if (j >= i)
                 break;
 
-            if (isWaterInterModelSet && moltype1 == waterTypeValue &&
+            if (isWaterInterModelSet && isMol1Water &&
                 mol2.getMoltype() == waterTypeValue)
             {
                 ++j;
@@ -136,11 +136,11 @@ void PotentialBruteForce::calculateCoreToOuterForces(
 
     for (auto &mol1 : simBox.getMoleculesInsideZone(CORE))
     {
-        const auto moltype1 = mol1.getMoltype();
+        const auto isMol1Water = mol1.getMoltype() == waterTypeValue;
 
         for (auto &mol2 : simBox.getMMMolecules())
         {
-            if (isWaterInterModelSet && moltype1 == waterTypeValue &&
+            if (isWaterInterModelSet && isMol1Water &&
                 mol2.getMoltype() == waterTypeValue)
                 continue;
 
@@ -185,11 +185,11 @@ void PotentialBruteForce::calculateLayerToOuterForces(
         if (mol1.getHybridZone() == CORE)
             continue;
 
-        const auto moltype1 = mol1.getMoltype();
+        const auto isMol1Water = mol1.getMoltype() == waterTypeValue;
 
         for (auto &mol2 : simBox.getMMMolecules())
         {
-            if (isWaterInterModelSet && moltype1 == waterTypeValue &&
+            if (isWaterInterModelSet && isMol1Water &&
                 mol2.getMoltype() == waterTypeValue)
                 continue;
 
@@ -257,11 +257,11 @@ void PotentialBruteForce::calculateHotspotSmoothingMMForces(
 
     for (auto &mol1 : simBox.getMoleculesInsideZone(SMOOTHING))
     {
-        const auto moltype1 = mol1.getMoltype();
+        const auto isMol1Water = mol1.getMoltype() == waterTypeValue;
 
         for (auto &mol2 : simBox.getMoleculesOutsideZone(SMOOTHING))
         {
-            if (isWaterInterModelSet && moltype1 == waterTypeValue &&
+            if (isWaterInterModelSet && isMol1Water &&
                 mol2.getMoltype() == waterTypeValue)
                 continue;
 
@@ -286,7 +286,7 @@ void PotentialBruteForce::calculateHotspotSmoothingMMForces(
     size_t i = 0;
     for (auto &mol1 : simBox.getMoleculesInsideZone(SMOOTHING))
     {
-        const auto moltype1 = mol1.getMoltype();
+        const auto isMol1Water = mol1.getMoltype() == waterTypeValue;
 
         size_t j = 0;
         for (auto &mol2 : simBox.getMoleculesInsideZone(SMOOTHING))
@@ -297,7 +297,7 @@ void PotentialBruteForce::calculateHotspotSmoothingMMForces(
                 continue;
             }
 
-            if (isWaterInterModelSet && moltype1 == waterTypeValue &&
+            if (isWaterInterModelSet && isMol1Water &&
                 mol2.getMoltype() == waterTypeValue)
             {
                 ++j;
