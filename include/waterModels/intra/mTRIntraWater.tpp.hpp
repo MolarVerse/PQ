@@ -39,14 +39,14 @@ void waterModel::MTRIntraWater::calculate(
 {
     const auto& parameters = get_parameters();
 
-    const auto eqOHDistance = parameters._eqOHDistance;
-    const auto eqHHDistance = parameters._eqHHDistance;
-    const auto DOH          = parameters._DOH;
-    const auto alpha        = parameters._alpha;
-    const auto beta         = parameters._beta;
-    const auto Ltt          = parameters._Ltt;
-    const auto Lrt          = parameters._Lrt;
-    const auto Lrr          = parameters._Lrr;
+    const auto eqOHDistance = parameters.eqOHDistance;
+    const auto eqHHDistance = parameters.eqHHDistance;
+    const auto DOH          = parameters.DOH;
+    const auto alpha        = parameters.alpha;
+    const auto beta         = parameters.beta;
+    const auto Ltt          = parameters.Ltt;
+    const auto Lrt          = parameters.Lrt;
+    const auto Lrr          = parameters.Lrr;
 
     for (auto& water : box.getWaterTypeMolecules())
     {

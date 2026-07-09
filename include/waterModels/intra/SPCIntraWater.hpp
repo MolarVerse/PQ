@@ -36,10 +36,10 @@ namespace waterModel
 {
     struct SPCIntraWaterParam
     {
-        double _eqOHDistance          = 0.0;   // Angström
-        double _eqHOHAngle            = 0.0;   // radians
-        double _forceConstantOHBond   = 0.0;   // kcal mol^-1 Angström^-2
-        double _forceConstantHOHAngle = 0.0;   // kcal mol^-1 rad^-2
+        double eqOHDistance          = 0.0;   // Angström
+        double eqHOHAngle            = 0.0;   // radians
+        double forceConstantOHBond   = 0.0;   // kcal mol^-1 Angström^-2
+        double forceConstantHOHAngle = 0.0;   // kcal mol^-1 rad^-2
     };
 
     class SPCIntraWater : public IntraWater
@@ -60,10 +60,10 @@ namespace waterModel
         SPCFwIntraWater()
         {
             // clang-format off
-            _parameters._eqOHDistance          = 1.012;                 // Angström
-            _parameters._eqHOHAngle            = 113.24 * _DEG_TO_RAD_; // radians
-            _parameters._forceConstantOHBond   = 1059.162;              // kcal mol^-1 Angström^-2
-            _parameters._forceConstantHOHAngle = 75.9;                  // kcal mol^-1 rad^-2
+            _parameters.eqOHDistance          = 1.012;                 // Angström
+            _parameters.eqHOHAngle            = 113.24 * _DEG_TO_RAD_; // radians
+            _parameters.forceConstantOHBond   = 1059.162;              // kcal mol^-1 Angström^-2
+            _parameters.forceConstantHOHAngle = 75.9;                  // kcal mol^-1 rad^-2
             // clang-format on
         }
 
@@ -82,10 +82,10 @@ namespace waterModel
         qSPCFwIntraWater()
         {
             // clang-format off
-            _parameters._eqOHDistance          = 1.0;                 // Angström
-            _parameters._eqHOHAngle            = 112.0 * _DEG_TO_RAD_; // radians
-            _parameters._forceConstantOHBond   = 1059.162;              // kcal mol^-1 Angström^-2
-            _parameters._forceConstantHOHAngle = 75.9;                  // kcal mol^-1 rad^-2
+            _parameters.eqOHDistance          = 1.0;                 // Angström
+            _parameters.eqHOHAngle            = 112.0 * _DEG_TO_RAD_; // radians
+            _parameters.forceConstantOHBond   = 1059.162;              // kcal mol^-1 Angström^-2
+            _parameters.forceConstantHOHAngle = 75.9;                  // kcal mol^-1 rad^-2
             // clang-format on
         }
 

@@ -36,14 +36,14 @@ namespace waterModel
 {
     struct MTRIntraWaterParam
     {
-        double _eqOHDistance = 0.0;   // Angström
-        double _eqHHDistance = 0.0;   // Angström
-        double _DOH          = 0.0;   // kcal mol^-1
-        double _alpha        = 0.0;   // Angström^-1
-        double _beta         = 0.0;   // Angström^-2
-        double _Ltt          = 0.0;   // kcal mol^-1 Angström^-2
-        double _Lrt          = 0.0;   // kcal mol^-1 Angström^-2
-        double _Lrr          = 0.0;   // kcal mol^-1 Angström^-2
+        double eqOHDistance = 0.0;   // Angström
+        double eqHHDistance = 0.0;   // Angström
+        double DOH          = 0.0;   // kcal mol^-1
+        double alpha        = 0.0;   // Angström^-1
+        double beta         = 0.0;   // Angström^-2
+        double Ltt          = 0.0;   // kcal mol^-1 Angström^-2
+        double Lrt          = 0.0;   // kcal mol^-1 Angström^-2
+        double Lrr          = 0.0;   // kcal mol^-1 Angström^-2
     };
 
     class MTRIntraWater : public IntraWater
@@ -63,14 +63,14 @@ namespace waterModel
        public:
         SPCMTRIntraWater()
         {
-            _parameters._eqOHDistance = 1.0;                 // Angström
-            _parameters._eqHHDistance = 1.632993162;         // Angström
-            _parameters._DOH          = 101.9048757170172;   // kcal mol^-1
-            _parameters._alpha        = 2.511;               // Angström^-1
-            _parameters._beta         = 3.0;                 // Angström^-2
-            _parameters._Ltt = 264.5841300191204;    // kcal mol^-1 Angström^-2
-            _parameters._Lrt = -211.0444550669216;   // kcal mol^-1 Angström^-2
-            _parameters._Lrr = 155.7839388145315;    // kcal mol^-1 Angström^-2
+            _parameters.eqOHDistance = 1.0;                 // Angström
+            _parameters.eqHHDistance = 1.632993162;         // Angström
+            _parameters.DOH          = 101.9048757170172;   // kcal mol^-1
+            _parameters.alpha        = 2.511;               // Angström^-1
+            _parameters.beta         = 3.0;                 // Angström^-2
+            _parameters.Ltt = 264.5841300191204;    // kcal mol^-1 Angström^-2
+            _parameters.Lrt = -211.0444550669216;   // kcal mol^-1 Angström^-2
+            _parameters.Lrr = 155.7839388145315;    // kcal mol^-1 Angström^-2
         }
 
         const MTRIntraWaterParam &get_parameters() const final
@@ -87,14 +87,14 @@ namespace waterModel
        public:
         TIP3PMTRIntraWater()
         {
-            _parameters._eqOHDistance = 0.9572;              // Angström
-            _parameters._eqHHDistance = 1.5139;              // Angström
-            _parameters._DOH          = 101.9048757170172;   // kcal mol^-1
-            _parameters._alpha        = 2.483;               // Angström^-1
-            _parameters._beta         = 3.0;                 // Angström^-2
-            _parameters._Ltt = 235.2449808795411;    // kcal mol^-1 Angström^-2
-            _parameters._Lrt = -181.2906309751434;   // kcal mol^-1 Angström^-2
-            _parameters._Lrr = 127.1534416826004;    // kcal mol^-1 Angström^-2
+            _parameters.eqOHDistance = 0.9572;              // Angström
+            _parameters.eqHHDistance = 1.5139;              // Angström
+            _parameters.DOH          = 101.9048757170172;   // kcal mol^-1
+            _parameters.alpha        = 2.483;               // Angström^-1
+            _parameters.beta         = 3.0;                 // Angström^-2
+            _parameters.Ltt = 235.2449808795411;    // kcal mol^-1 Angström^-2
+            _parameters.Lrt = -181.2906309751434;   // kcal mol^-1 Angström^-2
+            _parameters.Lrr = 127.1534416826004;    // kcal mol^-1 Angström^-2
         }
 
         const MTRIntraWaterParam &get_parameters() const final
