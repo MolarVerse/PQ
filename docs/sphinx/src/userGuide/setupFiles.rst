@@ -7,13 +7,6 @@ Setup Files
 The following setup files can be given as additional input to **PQ**. The names of the used files need to be provided with the according 
 :ref:`setupfilekeys` in the ``.in`` file if the name does not match the default name.
 
-.. Note::
-
-    ``topology_file`` becomes mandatory when :ref:`force-field <forcefieldKey>`
-    is set to ``on`` or ``bonded``, or when :ref:`shake <shakeKey>` is set to
-    ``on`` or ``shake``. ``parameter_file`` becomes mandatory when
-    :ref:`force-field <forcefieldKey>` is set to ``on`` or ``bonded``.
-
 .. _moldescriptorFile:
 
 **************
@@ -140,6 +133,12 @@ indices from the current structure.
     1 2 1
     END
 
+.. Note::
+
+    ``topology_file`` is mandatory when :ref:`force-field <forcefieldKey>`
+    is set to ``on`` or ``bonded``, or when :ref:`shake <shakeKey>` is set to
+    ``on`` or ``shake``.
+
 .. _parameterFile:
 
 **************
@@ -184,6 +183,11 @@ read in degrees.
     NONCOULOMBICS LJ
     1 2 0.1 1.2 12.0
     END
+
+.. Note::
+
+    ``parameter_file`` is mandatory when :ref:`force-field <forcefieldKey>`
+    is set to ``on`` or ``bonded``.
 
 .. _mshakeFile:
 

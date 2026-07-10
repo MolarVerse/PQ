@@ -50,6 +50,7 @@ Quantum Mechanics
 * :ref:`DFTB+ <qmprogamKey>`
 * :ref:`Turbomole <qmprogamKey>`
 * :ref:`PySCF <qmprogamKey>`
+* :ref:`FeNNol <qmprogamKey>`
 * :ref:`MACE-MP and MACE-OFF <qmprogamKey>`
 * :ref:`ASE-DFTB+ <qmprogamKey>`
 * :ref:`ASE-xTB <qmprogamKey>`
