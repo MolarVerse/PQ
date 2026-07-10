@@ -34,12 +34,28 @@ using namespace constants;
 
 namespace waterModel
 {
-    struct SPCIntraWaterParam
+    class SPCIntraWaterParam
     {
-        double eqOHDistance          = 0.0;   // Angström
-        double eqHOHAngle            = 0.0;   // radians
-        double forceConstantOHBond   = 0.0;   // kcal mol^-1 Angström^-2
-        double forceConstantHOHAngle = 0.0;   // kcal mol^-1 rad^-2
+       public:
+        double eqOHDistance{};            // Angström
+        double eqHOHAngle{};              // radians
+        double forceConstantOHBond{};     // kcal mol^-1 Angström^-2
+        double forceConstantHOHAngle{};   // kcal mol^-1 rad^-2
+
+        SPCIntraWaterParam() = delete;
+
+        constexpr SPCIntraWaterParam(
+            const double eqOHDist,
+            const double eqHOHAng,
+            const double forceConstOHBond,
+            const double forceConstHOHAngle
+        ) noexcept
+            : eqOHDistance{eqOHDist},
+              eqHOHAngle{eqHOHAng},
+              forceConstantOHBond{forceConstOHBond},
+              forceConstantHOHAngle{forceConstHOHAngle}
+        {
+        }
     };
 
     class SPCIntraWater : public IntraWater
@@ -54,19 +70,16 @@ namespace waterModel
     class SPCFwIntraWater : public SPCIntraWater
     {
        private:
-        SPCIntraWaterParam _parameters;
+        // clang-format off
+        const SPCIntraWaterParam _parameters{
+            1.012,                 // eqOHDistance in Angström
+            113.24 * _DEG_TO_RAD_, // eqHOHAngle in radians
+            1059.162,              // forceConstantOHBond in kcal mol^-1 Angström^-2
+            75.9                   // forceConstantHOHAngle in kcal mol^-1 rad^-2
+        };
+        // clang-format on
 
        public:
-        SPCFwIntraWater()
-        {
-            // clang-format off
-            _parameters.eqOHDistance          = 1.012;                 // Angström
-            _parameters.eqHOHAngle            = 113.24 * _DEG_TO_RAD_; // radians
-            _parameters.forceConstantOHBond   = 1059.162;              // kcal mol^-1 Angström^-2
-            _parameters.forceConstantHOHAngle = 75.9;                  // kcal mol^-1 rad^-2
-            // clang-format on
-        }
-
         const SPCIntraWaterParam &get_parameters() const final
         {
             return _parameters;
@@ -76,19 +89,16 @@ namespace waterModel
     class qSPCFwIntraWater : public SPCIntraWater
     {
        private:
-        SPCIntraWaterParam _parameters;
+        // clang-format off
+        const SPCIntraWaterParam _parameters{
+            1.0,                  // eqOHDistance in Angström
+            112.0 * _DEG_TO_RAD_, // eqHOHAngle in radians
+            1059.162,             // forceConstantOHBond in kcal mol^-1 Angström^-2
+            75.9                  // forceConstantHOHAngle in kcal mol^-1 rad^-2
+        };
+        // clang-format on
 
        public:
-        qSPCFwIntraWater()
-        {
-            // clang-format off
-            _parameters.eqOHDistance          = 1.0;                 // Angström
-            _parameters.eqHOHAngle            = 112.0 * _DEG_TO_RAD_; // radians
-            _parameters.forceConstantOHBond   = 1059.162;              // kcal mol^-1 Angström^-2
-            _parameters.forceConstantHOHAngle = 75.9;                  // kcal mol^-1 rad^-2
-            // clang-format on
-        }
-
         const SPCIntraWaterParam &get_parameters() const final
         {
             return _parameters;
