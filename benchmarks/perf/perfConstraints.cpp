@@ -33,7 +33,7 @@
 #define CALLGRIND_ZERO_STATS
 #endif
 
-#include "benchSetup.hpp"
+#include "perfBenchSetup.hpp"
 #include "bondConstraint.hpp"
 #include "constraints.hpp"
 #include "molecule.hpp"

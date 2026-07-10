@@ -25,6 +25,7 @@
 #include <vector>
 
 #include "atom.hpp"
+#include "constraintSettings.hpp"
 #include "exceptions.hpp"
 #include "gtest/gtest.h"
 #include "mShake.hpp"
@@ -91,8 +92,7 @@ TEST(TestMShake, applyMShake_threeAtomMolecule)
 
     const auto refPos0 = Vec3D(0.0, 0.0, 0.0);
     const auto refPos1 = Vec3D(1.0, 0.0, 0.0);
-    const auto refPos2 =
-        Vec3D(0.5, std::sqrt(3.0) / 2.0, 0.0);
+    const auto refPos2 = Vec3D(0.5, std::sqrt(3.0) / 2.0, 0.0);
 
     auto a1 = std::make_shared<Atom>();
     auto a2 = std::make_shared<Atom>();
@@ -125,21 +125,21 @@ TEST(TestMShake, applyMShake_threeAtomMolecule)
     simBox.addMolecule(molecule);
 
     settings::TimingsSettings::setTimeStep(0.5);
+    settings::ConstraintSettings::setMShakeMaxIter(100);
 
-    EXPECT_NO_THROW(mShake.applyMShake(1.0e-6, 100, simBox));
+    EXPECT_NO_THROW(mShake.applyMShake(simBox));
 
     // After convergence the perturbed bond 0-1 must be back to the
     // reference length 1.0 within the requested tolerance.
-    const auto pos0 = molecule.getAtomPosition(0);
-    const auto pos1 = molecule.getAtomPosition(1);
+    const auto pos0   = molecule.getAtomPosition(0);
+    const auto pos1   = molecule.getAtomPosition(1);
     const auto bond01 = norm(pos1 - pos0);
     EXPECT_NEAR(bond01, 1.0, 1.0e-5);
 }
 
 /**
- * @brief regression test for the iteration-bound throw (#205): if the
- * solver cannot reach tolerance within `shakeIterations` steps, the
- * routine must throw MShakeException rather than looping forever or
+ * @brief if the solver cannot reach tolerance within `shakeIterations` steps,
+ * the routine must throw MShakeException rather than looping forever or
  * silently giving up.
  */
 TEST(TestMShake, applyMShake_throwsWhenIterationLimitTooSmall)
@@ -174,8 +174,7 @@ TEST(TestMShake, applyMShake_throwsWhenIterationLimitTooSmall)
 
     const auto refPos0 = Vec3D(0.0, 0.0, 0.0);
     const auto refPos1 = Vec3D(1.0, 0.0, 0.0);
-    const auto refPos2 =
-        Vec3D(0.5, std::sqrt(3.0) / 2.0, 0.0);
+    const auto refPos2 = Vec3D(0.5, std::sqrt(3.0) / 2.0, 0.0);
 
     auto a1 = std::make_shared<Atom>();
     auto a2 = std::make_shared<Atom>();
@@ -199,14 +198,8 @@ TEST(TestMShake, applyMShake_throwsWhenIterationLimitTooSmall)
     simBox.addMolecule(molecule);
 
     settings::TimingsSettings::setTimeStep(0.5);
+    settings::ConstraintSettings::setMShakeMaxIter(1);
+    settings::ConstraintSettings::setMShakeTolerance(-1.0);
 
-    // Use a negative tolerance so the strict convergence check
-    // `|r2Dev| / (2 r2Ref) > shakeTolerance` can never succeed
-    // (the left-hand side is non-negative and -1.0 is always smaller).
-    // Combined with max_iter = 1 this triggers the iteration-bound
-    // throw on the first pass, deterministically across platforms.
-    EXPECT_THROW(
-        mShake.applyMShake(-1.0, 1, simBox),
-        customException::MShakeException
-    );
+    EXPECT_THROW(mShake.applyMShake(simBox), customException::MShakeException);
 }

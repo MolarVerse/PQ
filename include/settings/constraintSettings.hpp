@@ -46,9 +46,11 @@ namespace settings
 
         static inline size_t _shakeMaxIter  = defaults::_SHAKE_MAX_ITER_DEFAULT_;
         static inline size_t _rattleMaxIter = defaults::_RATTLE_MAX_ITER_DEFAULT_;
+        static inline size_t _mshakeMaxIter = defaults::_MSHAKE_MAX_ITER_DEFAULT_;
 
         static inline double _shakeTolerance  = defaults::_SHAKE_TOLERANCE_DEFAULT_;
         static inline double _rattleTolerance = defaults::_RATTLE_TOLERANCE_DEFAULT_;
+        static inline double _mshakeTolerance = defaults::_MSHAKE_TOLERANCE_DEFAULT_;
         // clang-format on
 
        public:
@@ -76,8 +78,10 @@ namespace settings
 
         [[nodiscard]] static size_t getShakeMaxIter();
         [[nodiscard]] static size_t getRattleMaxIter();
+        [[nodiscard]] static size_t getMShakeMaxIter();
         [[nodiscard]] static double getShakeTolerance();
         [[nodiscard]] static double getRattleTolerance();
+        [[nodiscard]] static double getMShakeTolerance();
 
         /***************************
          * standard setter methods *
@@ -85,8 +89,10 @@ namespace settings
 
         static void setShakeMaxIter(const size_t shakeMaxIter);
         static void setRattleMaxIter(const size_t rattleMaxIter);
+        static void setMShakeMaxIter(const size_t mshakeMaxIter);
         static void setShakeTolerance(const double shakeTolerance);
         static void setRattleTolerance(const double rattleTolerance);
+        static void setMShakeTolerance(const double mshakeTolerance);
     };
 
 }   // namespace settings
