@@ -147,7 +147,7 @@ void CellList::addNeighbouringCells(const double coulombCutoff)
     const auto requiredCells = _nNeighbourCells * 2 + 1;
     constexpr auto axisNames = std::array<std::string_view, 3>{"x", "y", "z"};
 
-    for (size_t i = 0; i < 3; ++i)
+    for (size_t i = 0; i < axisNames.size(); ++i)
         if (_nCells[i] < requiredCells[i])
             throw CellListException(
                 std::format(
