@@ -119,6 +119,8 @@ void StochasticRescalingManostat::applyManostat(
 
     const auto mu = calculateMu(simBox.getVolume());
 
+    // Reconstruction temporarily unwraps atoms. Molecule::scale() below wraps
+    // every position into the resized box.
     auto reconstructMolecule = [&simBox](auto &molecule)
     { molecule.reconstructAtomsAroundCenterOfMass(simBox.getBox()); };
 

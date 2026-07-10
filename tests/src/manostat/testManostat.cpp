@@ -117,6 +117,17 @@ namespace
         EXPECT_NEAR(dPosition[0], 0.2, 1e-12);
         EXPECT_NEAR(dPosition[1], 0.0, 1e-12);
         EXPECT_NEAR(dPosition[2], 0.0, 1e-12);
+
+        for (size_t atomIndex = 0; atomIndex < 2; ++atomIndex)
+            for (size_t axis = 0; axis < 3; ++axis)
+            {
+                const auto coordinate =
+                    box.getMolecule(0).getAtomPosition(atomIndex)[axis];
+                const auto halfBoxLength = box.getBoxDimensions()[axis] / 2.0;
+
+                EXPECT_GE(coordinate, -halfBoxLength);
+                EXPECT_LT(coordinate, halfBoxLength);
+            }
     }
 
     double getMinimumImageDistance(

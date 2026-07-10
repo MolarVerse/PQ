@@ -92,6 +92,8 @@ void BerendsenManostat::applyManostat(
 
     const auto mu = calculateMu();
 
+    // Reconstruction temporarily unwraps atoms. Molecule::scale() below wraps
+    // every position into the resized box.
     auto reconstructMolecule = [&simBox](auto &molecule)
     { molecule.reconstructAtomsAroundCenterOfMass(simBox.getBox()); };
 
