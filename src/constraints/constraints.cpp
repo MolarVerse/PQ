@@ -60,7 +60,8 @@ void Constraints::initMShake() { _mShake.initMShake(); }
  * @param simulationBox
  *
  */
-void Constraints::calculateConstraintBondRefs(const SimulationBox &simulationBox
+void Constraints::calculateConstraintBondRefs(
+    const SimulationBox &simulationBox
 )
 {
     startTimingsSection("Reference Bond Data");
@@ -147,7 +148,7 @@ void Constraints::_applyShake(SimulationBox &simBox)
 void Constraints::_applyMShake(SimulationBox &simulationBox)
 {
     startTimingsSection("MShake - Shake");
-    _mShake.applyMShake(_shakeTolerance, _shakeMaxIter, simulationBox);
+    _mShake.applyMShake(simulationBox);
     stopTimingsSection("MShake - Shake");
 }
 

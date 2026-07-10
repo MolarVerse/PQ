@@ -150,3 +150,28 @@ void LogOutput::writeRead(const std::string &message, const std::string &file)
 {
     _fp << readMessage(message, file) << '\n' << std::flush;
 }
+
+/**
+ * @brief add a warning message that will be printed after the output file has
+ * been created
+ *
+ */
+void LogOutput::queueWarning(const std::string &warning)
+{
+    _pendingWarnings.push_back(warning);
+}
+
+/**
+ * @brief flush pending warning messages to the output file
+ *
+ */
+void LogOutput::flushQueuedWarnings()
+{
+    for (const auto &message : _pendingWarnings)
+    {
+        writeSetupWarning(message);
+        writeEmptyLine();
+    }
+
+    _pendingWarnings.clear();
+}

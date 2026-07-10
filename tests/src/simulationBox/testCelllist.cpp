@@ -99,6 +99,35 @@ TEST_F(TestCellList, getCellIndexOfAtom)
     );
 }
 
+TEST_F(TestCellList, getCellIndexOfAtom_wrapsPeriodicBoundaryCoordinates)
+{
+    _simulationBox->setBoxDimensions(linearAlgebra::Vec3D(10.0, 10.0, 10.0));
+    _cellList->setNumberOfCells(2);
+    _cellList->determineCellSize(_simulationBox->getBoxDimensions());
+
+    EXPECT_EQ(
+        _cellList->getCellIndexOfAtom(
+            _simulationBox->getBoxDimensions(),
+            linearAlgebra::Vec3D(-5.0, -5.0, -5.0)
+        ),
+        linearAlgebra::Vec3Dul(0, 0, 0)
+    );
+    EXPECT_EQ(
+        _cellList->getCellIndexOfAtom(
+            _simulationBox->getBoxDimensions(),
+            linearAlgebra::Vec3D(0.0, 0.0, 0.0)
+        ),
+        linearAlgebra::Vec3Dul(1, 1, 1)
+    );
+    EXPECT_EQ(
+        _cellList->getCellIndexOfAtom(
+            _simulationBox->getBoxDimensions(),
+            linearAlgebra::Vec3D(5.0, 5.0, 5.0)
+        ),
+        linearAlgebra::Vec3Dul(0, 0, 0)
+    );
+}
+
 TEST_F(TestCellList, addNeighbouringCellPointers)
 {
     auto cell = simulationBox::Cell();

@@ -231,6 +231,14 @@ TEST_F(TestThermostat, langevin_constructorComputesSigma)
     EXPECT_DOUBLE_EQ(langevin.getFriction(), 0.1);
 }
 
+TEST_F(TestThermostat, langevin_zeroFrictionHasZeroSigma)
+{
+    const auto langevin = thermostat::LangevinThermostat(300.0, 0.0);
+
+    EXPECT_DOUBLE_EQ(langevin.getSigma(), 0.0);
+    EXPECT_DOUBLE_EQ(langevin.getFriction(), 0.0);
+}
+
 TEST_F(TestThermostat, langevin_settersAndGetters)
 {
     auto langevin = thermostat::LangevinThermostat(300.0, 0.1);

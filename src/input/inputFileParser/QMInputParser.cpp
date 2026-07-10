@@ -28,6 +28,7 @@
 #include <sstream>         // for stringstream
 #include <unordered_map>   // for unordered_map
 
+#include "engine.hpp"             // for Engine
 #include "exceptions.hpp"         // for InputFileException, customException
 #include "hubbardDerivMap.hpp"    // for hubbardDerivMap3ob
 #include "qmSettings.hpp"         // for Settings
@@ -91,7 +92,19 @@ QMInputParser::QMInputParser(Engine &engine) : InputFileParser(engine)
 
     addKeyword(
         std::string("mace_model_size"),
-        bind_front(&QMInputParser::parseMaceModelSize, this),
+        bind_front(&QMInputParser::parseMaceModel, this),
+        false
+    );
+
+    addKeyword(
+        std::string("mace_model"),
+        bind_front(&QMInputParser::parseMaceModel, this),
+        false
+    );
+
+    addKeyword(
+        std::string("mace_mode"),
+        bind_front(&QMInputParser::parseMaceMode, this),
         false
     );
 
@@ -130,6 +143,18 @@ QMInputParser::QMInputParser(Engine &engine) : InputFileParser(engine)
         bind_front(&QMInputParser::parseXtbMethod, this),
         false
     );
+
+    addKeyword(
+        std::string("fennol_model_path"),
+        bind_front(&QMInputParser::parseFennolModelPath, this),
+        false
+    );
+
+    addKeyword(
+        std::string("gpu_preprocessing"),
+        bind_front(&QMInputParser::parseGPUPreprocessing, this),
+        false
+    );
 }
 
 /**
@@ -163,9 +188,7 @@ void QMInputParser::parseQMMethod(
     }
 
     else if ("ase_xtb" == method)
-    {
         QMSettings::setQMMethod(ASEXTB);
-    }
 
     else if ("pyscf" == method)
     {
@@ -179,16 +202,24 @@ void QMInputParser::parseQMMethod(
         ReferencesOutput::addReferenceFile(_TURBOMOLE_FILE_);
     }
 
+    else if ("fennol" == method)
+    {
+        QMSettings::setQMMethod(method);
+        ReferencesOutput::addReferenceFile(_FENNOL_FILE_);
+    }
+
     else if (method.starts_with("mace"))
         parseMaceQMMethod(method);
 
     else
-        throw InputFileException(std::format(
-            "Invalid qm_prog \"{}\" in input file.\n"
-            "Possible values are: dftbplus, ase_dftbplus, ase_xtb, pyscf, "
-            "turbomole, mace, mace_mp, mace_off",
-            lineElements[2]
-        ));
+        throw InputFileException(
+            std::format(
+                "Invalid qm_prog \"{}\" in input file.\n"
+                "Possible values are: dftbplus, ase_dftbplus, ase_xtb, pyscf, "
+                "turbomole, fennol, mace, mace_mp, mace_off",
+                lineElements[2]
+            )
+        );
 }
 
 /**
@@ -253,7 +284,6 @@ void QMInputParser::parseDispersion(
 )
 {
     checkCommand(lineElements, lineNumber);
-
     QMSettings::setUseDispersionCorrection(keywordToBool(lineElements));
 }
 
@@ -274,67 +304,97 @@ void QMInputParser::parseRemoveNetForce(
 }
 
 /**
- * @brief parse the size of the Mace model
+ * @brief parse the Mace model
  *
  * @param lineElements
  * @param lineNumber
  *
- * @throws InputFileException if the size is not recognized
+ * @throws InputFileException if the model is not recognized
  */
-void QMInputParser::parseMaceModelSize(
+void QMInputParser::parseMaceModel(
     const std::vector<std::string> &lineElements,
     const size_t                    lineNumber
 )
 {
-    using enum MaceModelSize;
+    using enum MaceModel;
     checkCommand(lineElements, lineNumber);
+
+    auto      &logOutput = _engine.getLogOutput();
+    auto      &stdOut    = _engine.getStdoutOutput();
+    const auto modelSizeWarning =
+        "The keyword \"mace_model_size\" is deprecated and has been renamed to "
+        "\"mace_model\". It will be removed in a future release.";
+
+    if (lineElements[0] == "mace_model_size")
+    {
+        logOutput.queueWarning(modelSizeWarning);
+        stdOut.writeSetupWarning(modelSizeWarning);
+    }
 
     const auto size = toLowerAndReplaceDashesCopy(lineElements[2]);
 
     if ("small" == size)
-        QMSettings::setMaceModelSize(SMALL);
+        QMSettings::setMaceModel(SMALL);
 
     else if ("medium" == size)
-        QMSettings::setMaceModelSize(MEDIUM);
+        QMSettings::setMaceModel(MEDIUM);
 
     else if ("large" == size)
-        QMSettings::setMaceModelSize(LARGE);
+        QMSettings::setMaceModel(LARGE);
 
     else if ("small_0b" == size)
-        QMSettings::setMaceModelSize(SMALL0B);
+        QMSettings::setMaceModel(SMALL0B);
 
     else if ("medium_0b" == size)
-        QMSettings::setMaceModelSize(MEDIUM0B);
+        QMSettings::setMaceModel(MEDIUM0B);
 
     else if ("small_0b2" == size)
-        QMSettings::setMaceModelSize(SMALL0B2);
+        QMSettings::setMaceModel(SMALL0B2);
 
     else if ("medium_0b2" == size)
-        QMSettings::setMaceModelSize(MEDIUM0B2);
+        QMSettings::setMaceModel(MEDIUM0B2);
 
     else if ("large_0b2" == size)
-        QMSettings::setMaceModelSize(LARGE0B2);
+        QMSettings::setMaceModel(LARGE0B2);
 
     else if ("medium_0b3" == size)
-        QMSettings::setMaceModelSize(MEDIUM0B3);
+        QMSettings::setMaceModel(MEDIUM0B3);
 
     else if ("medium_mpa_0" == size)
-        QMSettings::setMaceModelSize(MEDIUMMPA0);
+        QMSettings::setMaceModel(MEDIUMMPA0);
 
     else if ("medium_omat_0" == size)
-        QMSettings::setMaceModelSize(MEDIUMOMAT0);
+        QMSettings::setMaceModel(MEDIUMOMAT0);
 
     else if ("custom" == size)
-        QMSettings::setMaceModelSize(CUSTOM);
+        QMSettings::setMaceModel(CUSTOM);
 
     else
-        throw InputFileException(std::format(
-            "Invalid mace_model_size \"{}\" in input file.\n"
-            "Possible values are: small, medium, large, small-0b,\n"
-            "medium-0b, small-0b2, medium-0b2, large-0b2, medium-0b3,\n"
-            "medium-mpa-0, medium-omat-0, custom",
-            lineElements[2]
-        ));
+        throw InputFileException(
+            std::format(
+                "Invalid mace_model \"{}\" in input file.\n"
+                "Possible values are: small, medium, large, small-0b,\n"
+                "medium-0b, small-0b2, medium-0b2, large-0b2, medium-0b3,\n"
+                "medium-mpa-0, medium-omat-0, custom",
+                lineElements[2]
+            )
+        );
+}
+
+/**
+ * @brief parse the MACE evaluation mode
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
+void QMInputParser::parseMaceMode(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+
+    QMSettings::setMaceMode(lineElements[2]);
 }
 
 /**
@@ -376,17 +436,21 @@ void QMInputParser::parseMaceQMMethod(const std::string_view &model)
     }
 
     else if ("mace_anicc" == model || "mace_ani" == model)
-        throw InputFileException(std::format(
-            "The mace ani model is not supported in this version of PQ.\n"
-        ));
+        throw InputFileException(
+            std::format(
+                "The mace ani model is not supported in this version of PQ.\n"
+            )
+        );
 
     else
     {
-        throw InputFileException(std::format(
-            "Invalid mace type qm_method \"{}\" in input file.\n"
-            "Possible values are: mace (mace_mp), mace_off",
-            model
-        ));
+        throw InputFileException(
+            std::format(
+                "Invalid mace type qm_method \"{}\" in input file.\n"
+                "Possible values are: mace (mace_mp), mace_off",
+                model
+            )
+        );
     }
 
     QMSettings::setQMMethod(QMMethod::MACE);
@@ -425,11 +489,13 @@ void QMInputParser::parseSlakosType(
         QMSettings::setSlakosType(CUSTOM);
 
     else
-        throw InputFileException(std::format(
-            "Invalid slakos type \"{}\" in input file.\n"
-            "Possible values are: 3ob, matsci, custom",
-            lineElements[2]
-        ));
+        throw InputFileException(
+            std::format(
+                "Invalid slakos type \"{}\" in input file.\n"
+                "Possible values are: 3ob, matsci, custom",
+                lineElements[2]
+            )
+        );
 }
 
 /**
@@ -498,10 +564,12 @@ void QMInputParser::parseHubbardDerivs(
         }
         else
         {
-            throw InputFileException(std::format(
-                "Invalid hubbard_derivs format \"{}\" in input file.",
-                derivs
-            ));
+            throw InputFileException(
+                std::format(
+                    "Invalid hubbard_derivs format \"{}\" in input file.",
+                    derivs
+                )
+            );
         }
     }
 
@@ -537,9 +605,41 @@ void QMInputParser::parseXtbMethod(
         QMSettings::setXtbMethod(IPEA1);
 
     else
-        throw InputFileException(std::format(
-            "Invalid xTB method \"{}\" in input file.\n"
-            "Possible values are: GFN1-xTB, GFN2-xTB, IPEA1-xTB",
-            lineElements[2]
-        ));
+        throw InputFileException(
+            std::format(
+                "Invalid xTB method \"{}\" in input file.\n"
+                "Possible values are: GFN1-xTB, GFN2-xTB, IPEA1-xTB",
+                lineElements[2]
+            )
+        );
+}
+
+/**
+ * @brief parse FeNNol model path
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
+void QMInputParser::parseFennolModelPath(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+    QMSettings::setFennolModelPath(lineElements[2]);
+}
+
+/**
+ * @brief parse if GPU pre-processing is enabled for FeNNol
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
+void QMInputParser::parseGPUPreprocessing(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+    QMSettings::setUseGPUPreprocessing(keywordToBool(lineElements));
 }

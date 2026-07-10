@@ -35,7 +35,7 @@ using namespace constants;
  *
  * @throw py::error_already_set if the import of the mace module fails
  */
-AseXtbRunner::AseXtbRunner(const std::string &method) : ASEQMRunner()
+AseXtbRunner::AseXtbRunner(const std::string &method) : AseQMRunner()
 {
     try
     {

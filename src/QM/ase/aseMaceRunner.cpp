@@ -20,29 +20,33 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "maceRunner.hpp"
+#include "aseMaceRunner.hpp"
+
+#include <cstdio>   // for fprintf, stderr
 
 #include "pybind11/embed.h"
 
-using QM::MaceRunner;
+using QM::AseMaceRunner;
 
 /**
- * @brief Construct a new MaceRunner::MaceRunner object
+ * @brief Construct a new AseMaceRunner::AseMaceRunner object
  *
  * @param modelType
  * @param model
  * @param fpType
  * @param dispersion
+ * @param enableCueq
  *
  * @throw py::error_already_set if the import of the mace module fails
  */
-MaceRunner::MaceRunner(
+AseMaceRunner::AseMaceRunner(
     const std::string &modelType,
     const std::string &model,
     const std::string &fpType,
-    const bool         dispersion
+    const bool         dispersion,
+    const bool         enableCueq
 )
-    : ASEQMRunner()
+    : AseQMRunner()
 {
     try
     {
@@ -52,6 +56,7 @@ MaceRunner::MaceRunner(
 
         calculatorArgs["model"]         = model.c_str();
         calculatorArgs["dispersion"]    = pybind11::bool_(dispersion);
+        calculatorArgs["enable_cueq"]   = pybind11::bool_(enableCueq);
         calculatorArgs["default_dtype"] = fpType.c_str();
         calculatorArgs["device"]        = pybind11::str("cuda");
 
@@ -60,6 +65,19 @@ MaceRunner::MaceRunner(
     catch (const py::error_already_set &)
     {
         ::PyErr_Print();
+        if (enableCueq)
+            ::fprintf(
+                stderr,
+                "\nPQ: mace_mode = fast uses cuequivariance-accelerated MACE "
+                "kernels. These need 'cuequivariance', 'cuequivariance-torch' "
+                "and -- the piece pip does NOT pull in automatically -- the "
+                "matching CUDA ops package 'cuequivariance-ops-torch-cuXX', "
+                "where XX is the CUDA major your torch was built against (e.g. "
+                "cu13 for a CUDA-13 torch build: "
+                "'pip install cuequivariance-ops-torch-cu13'). Install that to "
+                "use fast mode, or set mace_mode = accurate for the standard "
+                "e3nn evaluation.\n"
+            );
         throw;
     }
 }
