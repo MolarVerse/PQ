@@ -20,38 +20,32 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-// Fixed-work micro-benchmark of the velocity-Verlet integrator step.
+#ifndef _MACE_RUNNER_HPP_
 
-#include <cstdio>
+#define _MACE_RUNNER_HPP_
 
-#ifdef PQ_WITH_CALLGRIND
-#include <valgrind/callgrind.h>
-#else
-#define CALLGRIND_ZERO_STATS
-#endif
+#include "aseQMRunner.hpp"   // for InternalQMRunner
 
-#include "benchSetup.hpp"
-#include "timingsSettings.hpp"
-#include "velocityVerlet.hpp"
-
-static constexpr long ITERATIONS = 1000;
-
-int main()
+namespace QM
 {
-    settings::TimingsSettings::setTimeStep(0.001);
-
-    auto box        = benchSetup::makePopulatedBox(20, 3);
-    auto integrator = integrator::VelocityVerlet();
-
-    CALLGRIND_ZERO_STATS;
-
-    for (long i = 0; i < ITERATIONS; ++i)
+    /**
+     * @brief AseMaceRunner inherits from AseQMRunner
+     *
+     */
+    class __attribute__((visibility("default"))) AseMaceRunner
+        : public AseQMRunner
     {
-        integrator.firstStep(box);
-        integrator.secondStep(box);
-    }
+       public:
+        ~AseMaceRunner() override = default;
 
-    // read state so the loop cannot be optimized away
-    std::printf("%.6f\n", box.calculateMomentum()[0]);
-    return 0;
-}
+        explicit AseMaceRunner(
+            const std::string& modelType,
+            const std::string& model,
+            const std::string& fpType,
+            const bool         dispersion,
+            const bool         enableCueq
+        );
+    };
+}   // namespace QM
+
+#endif   // _MACE_RUNNER_HPP_

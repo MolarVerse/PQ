@@ -1177,6 +1177,34 @@ With the ``rattle-iter`` keyword the user can specify the maximum number of iter
 
 .. centered:: *default value* = 20
 
+.. _mshaketoleranceKey:
+
+MShake Tolerance
+================
+
+.. admonition:: Key
+    :class: tip
+
+    mshake-tolerance = {double} -> 1e-8
+
+With the ``mshake-tolerance`` keyword the user can specify the tolerance, with which the bond length of the mshaked bonds should converge.
+
+.. centered:: *default value* = 1e-8
+
+.. _mshakeiterationKey:
+
+MShake Iteration
+================
+
+.. admonition:: Key
+    :class: tip
+
+    mshake-iter = {uint+} -> 20
+
+With the ``mshake-iter`` keyword the user can specify the maximum number of iterations until the convergence of the bond lengths should be reached within the mshake algorithm.
+
+.. centered:: *default value* = 20
+
 .. _distanceConstraintsKey:
 
 Distance Constraints
@@ -1317,6 +1345,7 @@ Possible options are:
    
    7. **ase-xtb** - `xTB <https://xtb-docs.readthedocs.io/en/latest/>`__ called by `ASE <https://wiki.fysik.dtu.dk/ase/>`__ 
 
+   8. **fennol**  - `FeNNol <https://doi.org/10.1063/5.0217688>`__
 
 .. _qmscriptKey:
 
@@ -1389,17 +1418,17 @@ This can increase momentum conservation when using a QM program with limited num
 
 .. centered:: *default value* = false
 
-.. _maceModelSizeKey:
+.. _maceModelKey:
 
-MACE Model Size
-===============
+MACE Model
+==========
 
 .. admonition:: Key
     :class: tip
 
-    mace_model_size = {string} -> "medium"
+    mace_model = {string} -> "medium"
 
-With the ``mace_model_size`` keyword the user can specify the size of the `MACE <https://github.com/ACEsuit/mace>`_ model for the QM calculations.
+With the ``mace_model`` keyword the user can specify the `MACE <https://github.com/ACEsuit/mace>`_ model for the QM calculations.
 
 Possible options are:
 
@@ -1428,7 +1457,7 @@ Possible options are:
    12. **custom** - custom MACE model (to be set *via* the :ref:`mace_model_path <maceModelPathKey>` keyword)
 
 .. Note::
-    The :ref:`qm_prog <qmprogamKey>` option ``mace-off`` is only compatible with the first three model sizes: "small", "medium" and "large"
+    The :ref:`qm_prog <qmprogamKey>` option ``mace-off`` is only compatible with the first three models: "small", "medium" and "large"
 
 
 .. _maceModelPathKey:
@@ -1444,7 +1473,31 @@ MACE Model Path
 With the ``mace_model_path`` keyword the user can specify a custom URL corresponding to a `MACE <https://github.com/ACEsuit/mace-foundations?tab=readme-ov-file>`__ model for the QM calculations.
 
 .. Note::
-    The ``mace_model_path`` can only be specified if :ref:`mace_model_size <maceModelSizeKey>` keyword is set to ``custom``.
+    The ``mace_model_path`` can only be specified if :ref:`mace_model <maceModelKey>` keyword is set to ``custom``.
+
+
+.. _maceModeKey:
+
+MACE Mode
+===============
+
+.. admonition:: Key
+    :class: tip
+
+    mace_mode = {string} -> "accurate"
+
+With the ``mace_mode`` keyword the user can select the evaluation mode / kernel backend of the `MACE <https://github.com/ACEsuit/mace>`_ model for the QM calculations.
+
+Possible options are:
+
+   1. **accurate** (default) - the exact e3nn reference implementation
+
+   2. **fast** - cuequivariance-accelerated kernels; substantially faster for MD, but the results are an approximation of (not bit-identical to) the e3nn reference
+
+.. Note::
+    The ``fast`` mode requires ``cuequivariance``, ``cuequivariance-torch`` and the matching CUDA ops package ``cuequivariance-ops-torch-cuXX``, where ``XX`` is the CUDA major your ``torch`` was built against (e.g. ``cu13`` for a CUDA-13 ``torch`` build). The ops package is **not** pulled in automatically by ``cuequivariance-torch`` -- install it explicitly, e.g. ``pip install cuequivariance-ops-torch-cu13``. Use ``accurate`` for the exact e3nn reference.
+
+.. centered:: *default value* = "accurate"
 
 
 .. _xtbMethodKey:
@@ -1530,8 +1583,34 @@ If the Slater-Koster parameters are of DFTB3 type, the Hubbard derivatives can b
 
     hubbard_derivs = C: 0.1, H: 0.2, O: 0.3;
 
+.. _fennolModelPathKey:
 
+FeNNol Model Path
+=================
 
+.. admonition:: Key
+    :class: tip
+
+    fennol_model_path = {string}
+
+With the ``fennol_model_path`` keyword the path to the FeNNol model to be used can be specified.
+
+.. Note::
+    The ``fennol_model_path`` keyword is mandatory when the :ref:`qm_prog <qmprogamKey>` keyword is set to ``fennol``.
+
+.. _gpuPreprocessingKey:
+
+GPU Pre-processing
+==================
+
+.. admonition:: Key
+    :class: tip
+
+    gpu_preprocessing = {bool} -> true
+
+With the ``gpu_preprocessing`` keyword the user can activate/deactivate the GPU preprocessing step of the FeNNol QM runner.
+
+.. centered:: *default value* = true
 
 .. _ringpolymermdKeys:
 

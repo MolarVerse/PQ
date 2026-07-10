@@ -1,0 +1,1 @@
+- Count non-adjacent duplicate atom types correctly when determining molecule and molecule-type atom-type counts.

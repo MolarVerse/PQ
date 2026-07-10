@@ -77,6 +77,31 @@ TEST(TestDistanceKernels, distVecAndDist2WithPBC_consistentWithDistVec)
     EXPECT_DOUBLE_EQ(r2, linearAlgebra::normSquared(dxyz));
 }
 
+TEST(TestDistanceKernels, distVecWithPBC_isSymmetricAcrossAllAxes)
+{
+    auto box = simulationBox::SimulationBox();
+    box.setBoxDimensions({10.0, 12.0, 14.0});
+
+    const auto a = linearAlgebra::Vec3D(4.8, -5.5, 6.2);
+    const auto b = linearAlgebra::Vec3D(-4.7, 5.6, -6.1);
+
+    const auto ab        = distVec(a, b, box);
+    const auto ba        = distVec(b, a, box);
+    const auto [ab2, r2] = distVecAndDist2(a, b, box);
+
+    EXPECT_NEAR(ab[0], -0.5, 1e-12);
+    EXPECT_NEAR(ab[1], 0.9, 1e-12);
+    EXPECT_NEAR(ab[2], -1.7, 1e-12);
+
+    EXPECT_EQ(ab, ab2);
+    EXPECT_NEAR(r2, linearAlgebra::normSquared(ab), 1e-12);
+    EXPECT_NEAR(distSquared(a, b, box), distSquared(b, a, box), 1e-12);
+
+    EXPECT_NEAR(ab[0], -ba[0], 1e-12);
+    EXPECT_NEAR(ab[1], -ba[1], 1e-12);
+    EXPECT_NEAR(ab[2], -ba[2], 1e-12);
+}
+
 TEST(TestDistanceKernels, distSquaredWithPBC_minimumImageDistance)
 {
     auto box = simulationBox::SimulationBox();

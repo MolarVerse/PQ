@@ -20,34 +20,30 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-// Fixed-work micro-benchmark of the molecular virial computation.
+#ifndef _ASE_FENNOL_RUNNER_HPP_
 
-#include <cstdio>
+#define _ASE_FENNOL_RUNNER_HPP_
 
-#ifdef PQ_WITH_CALLGRIND
-#include <valgrind/callgrind.h>
-#else
-#define CALLGRIND_ZERO_STATS
-#endif
+#include "aseQMRunner.hpp"   // for InternalQMRunner
 
-#include "benchSetup.hpp"
-#include "molecularVirial.hpp"
-#include "physicalData.hpp"
-
-static constexpr long ITERATIONS = 1000;
-
-int main()
+namespace QM
 {
-    auto box          = benchSetup::makePopulatedBox(20, 3);
-    auto physicalData = physicalData::PhysicalData();
-    auto virial       = virial::MolecularVirial();
+    /**
+     * @brief AseFennolRunner inherits from AseQMRunner
+     *
+     */
+    class __attribute__((visibility("default"))) AseFennolRunner
+        : public AseQMRunner
+    {
+       public:
+        ~AseFennolRunner() override = default;
 
-    CALLGRIND_ZERO_STATS;
+        explicit AseFennolRunner(
+            const std::string& modelPath,
+            const bool         gpuPreprocessing,
+            const bool         useFloat64
+        );
+    };
+}   // namespace QM
 
-    for (long i = 0; i < ITERATIONS; ++i)
-        virial.calculateVirial(box, physicalData);
-
-    const auto result = virial.getVirial();
-    std::printf("%.6f\n", result[0][0] + result[1][1] + result[2][2]);
-    return 0;
-}
+#endif   // _ASE_FENNOL_RUNNER_HPP_

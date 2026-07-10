@@ -22,12 +22,11 @@
 
 #include "molecule.hpp"
 
-#include <algorithm>    // for std::ranges::for_each
-#include <functional>   // for identity, equal_to
-#include <iterator>     // for _Size, size
-#include <ranges>       // for subrange
+#include <algorithm>   // for std::ranges::for_each, ranges::transform
+#include <iterator>    // for back_inserter
 
 #include "box.hpp"                // for Box
+#include "collectionUtilities.hpp"
 #include "manostatSettings.hpp"   // for ManostatSettings
 #include "vector3d.hpp"           // for Vec3D
 
@@ -64,9 +63,7 @@ size_t Molecule::getNumberOfAtomTypes()
 
     std::ranges::transform(_atoms, fill, getExternalAtomType);
 
-    const auto nUnique = std::ranges::size(std::ranges::unique(extAtomTypes));
-
-    return getNumberOfAtoms() - nUnique;
+    return utilities::getUniqueElements(extAtomTypes).size();
 }
 
 /**

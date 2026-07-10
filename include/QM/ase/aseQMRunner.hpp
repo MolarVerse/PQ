@@ -39,10 +39,10 @@ namespace py = pybind11;
 namespace QM
 {
     /**
-     * @brief ASEQMRunner inherits from QMRunner
+     * @brief AseQMRunner inherits from QMRunner
      *
      */
-    class __attribute__((visibility("default"))) ASEQMRunner : public QMRunner
+    class __attribute__((visibility("default"))) AseQMRunner : public QMRunner
     {
        protected:
         double           _energy;
@@ -54,8 +54,8 @@ namespace QM
         pybind11::array_t<double> _stress;
 
        public:
-        ASEQMRunner();
-        ~ASEQMRunner() override = default;
+        AseQMRunner();
+        ~AseQMRunner() override = default;
 
         void run(pq::SimBox &, pq::PhysicalData &) override;
         void buildAseAtoms(const pq::SimBox &);

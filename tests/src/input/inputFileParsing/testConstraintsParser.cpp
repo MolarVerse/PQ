@@ -174,6 +174,48 @@ TEST_F(TestInputFileReader, testParseRattleIteration)
 }
 
 /**
+ * @brief tests parsing the "mshake-tolerance" command
+ *
+ * @details if the tolerance is negative, throws inputFileException
+ *
+ */
+TEST_F(TestInputFileReader, testParseMShakeTolerance)
+{
+    ConstraintsInputParser   parser(*_engine);
+    std::vector<std::string> lineElements = {"mshake-tolerance", "=", "0.01"};
+    parser.parseMShakeTolerance(lineElements, 0);
+    EXPECT_EQ(ConstraintSettings::getMShakeTolerance(), 0.01);
+
+    lineElements = {"mshake-tolerance", "=", "-0.0001"};
+    EXPECT_THROW_MSG(
+        parser.parseMShakeTolerance(lineElements, 0),
+        customException::InputFileException,
+        "MShake tolerance must be positive"
+    );
+}
+
+/**
+ * @brief tests parsing the "mshake-iter" command
+ *
+ * @details if the number of iterations is negative, throws inputFileException
+ *
+ */
+TEST_F(TestInputFileReader, testParseMShakeIteration)
+{
+    ConstraintsInputParser   parser(*_engine);
+    std::vector<std::string> lineElements = {"mshake-iter", "=", "73"};
+    parser.parseMShakeIteration(lineElements, 0);
+    EXPECT_EQ(ConstraintSettings::getMShakeMaxIter(), 73);
+
+    lineElements = {"mshake-iter", "=", "-100"};
+    EXPECT_THROW_MSG(
+        parser.parseMShakeIteration(lineElements, 0),
+        customException::InputFileException,
+        "Maximum MShake iterations must be positive"
+    );
+}
+
+/**
  * @brief tests parsing the distance_constraints section
  *
  */

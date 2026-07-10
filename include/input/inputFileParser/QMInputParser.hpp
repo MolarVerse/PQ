@@ -52,7 +52,8 @@ namespace input
         void parseDispersion(const pq::strings &, const size_t);
         void parseRemoveNetForce(const pq::strings &, const size_t);
 
-        void parseMaceModelSize(const pq::strings &, const size_t);
+        void parseMaceModel(const pq::strings &, const size_t);
+        void parseMaceMode(const pq::strings &, const size_t);
         void parseMaceModelPath(const pq::strings &, const size_t);
         void parseMaceQMMethod(const std::string_view &);
 
@@ -62,6 +63,9 @@ namespace input
         void parseHubbardDerivs(const pq::strings &, const size_t);
 
         void parseXtbMethod(const pq::strings &, const size_t);
+
+        void parseFennolModelPath(const pq::strings &, const size_t);
+        void parseGPUPreprocessing(const pq::strings &, const size_t);
     };
 
 }   // namespace input

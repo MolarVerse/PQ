@@ -117,6 +117,13 @@ size_t ConstraintSettings::getShakeMaxIter() { return _shakeMaxIter; }
 size_t ConstraintSettings::getRattleMaxIter() { return _rattleMaxIter; }
 
 /**
+ * @brief get the maximum number of iterations for the MShake algorithm
+ *
+ * @return the maximum number of iterations
+ */
+size_t ConstraintSettings::getMShakeMaxIter() { return _mshakeMaxIter; }
+
+/**
  * @brief get the tolerance for the shake algorithm
  *
  * @return the tolerance
@@ -129,6 +136,13 @@ double ConstraintSettings::getShakeTolerance() { return _shakeTolerance; }
  * @return the tolerance
  */
 double ConstraintSettings::getRattleTolerance() { return _rattleTolerance; }
+
+/**
+ * @brief get the tolerance for the MShake algorithm
+ *
+ * @return the tolerance
+ */
+double ConstraintSettings::getMShakeTolerance() { return _mshakeTolerance; }
 
 /*****************************
  *                           *
@@ -157,6 +171,16 @@ void ConstraintSettings::setRattleMaxIter(const size_t rattleMaxIter)
 }
 
 /**
+ * @brief set the maximum number of iterations for the MShake algorithm
+ *
+ * @param mshakeMaxIter
+ */
+void ConstraintSettings::setMShakeMaxIter(const size_t mshakeMaxIter)
+{
+    _mshakeMaxIter = mshakeMaxIter;
+}
+
+/**
  * @brief set the tolerance for the shake algorithm
  *
  * @param shakeTolerance
@@ -174,4 +198,14 @@ void ConstraintSettings::setShakeTolerance(const double shakeTolerance)
 void ConstraintSettings::setRattleTolerance(const double rattleTolerance)
 {
     _rattleTolerance = rattleTolerance;
+}
+
+/**
+ * @brief set the tolerance for the MShake algorithm
+ *
+ * @param mshakeTolerance
+ */
+void ConstraintSettings::setMShakeTolerance(const double mshakeTolerance)
+{
+    _mshakeTolerance = mshakeTolerance;
 }
