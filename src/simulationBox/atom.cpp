@@ -277,13 +277,6 @@ size_t Atom::getExternalGlobalVDWType() const { return _externalGlobalVDWType; }
 size_t Atom::getInternalGlobalVDWType() const { return _internalGlobalVDWType; }
 
 /**
- * @brief return the atomic number of the atom
- *
- * @return int
- */
-int Atom::getAtomicNumber() const { return _atomicNumber; }
-
-/**
  * @brief return the mass of the atom
  *
  * @return double
@@ -534,4 +527,3 @@ void Atom::setForceOld(const Vec3D &force) { _forceOld = force; }
  * @brief reset the qm charge of the atom
  */
 void Atom::resetQMCharge() { _qmCharge.reset(); }
-

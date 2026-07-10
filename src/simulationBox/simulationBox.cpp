@@ -673,17 +673,6 @@ Vec3D SimulationBox::calcBoxDimFromDensity() const
     return orthoBox.calcBoxDimFromDensity(_totalMass, _density);
 }
 
-/**
- * @brief calculate shift vector
- *
- * @param position
- * @return Vec3D
- */
-Vec3D SimulationBox::calcShiftVector(const Vec3D& position) const
-{
-    return _box->calcShiftVector(position);
-}
-
 int SimulationBox::calcActiveMolCharge() const
 {
     int charge = 0;

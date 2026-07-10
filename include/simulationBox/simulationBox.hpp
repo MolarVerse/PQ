@@ -130,7 +130,12 @@ namespace simulationBox
         [[nodiscard]] pq::Vec3D calculateMomentum();
         [[nodiscard]] pq::Vec3D calculateAngularMomentum(const pq::Vec3D&);
         [[nodiscard]] pq::Vec3D calcBoxDimFromDensity() const;
-        [[nodiscard]] pq::Vec3D calcShiftVector(const pq::Vec3D&) const;
+        [[nodiscard]] pq::Vec3D calcShiftVector(
+            const pq::Vec3D &position
+        ) const
+        {
+            return _box->calcShiftVector(position);
+        }
         [[nodiscard]] int       calcActiveMolCharge() const;
 
         [[nodiscard]] bool moleculeTypeExists(const size_t) const;

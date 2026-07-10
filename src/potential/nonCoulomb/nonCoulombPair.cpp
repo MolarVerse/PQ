@@ -183,13 +183,6 @@ size_t NonCoulombPair::getInternalType1() const { return _internalType1; }
 size_t NonCoulombPair::getInternalType2() const { return _internalType2; }
 
 /**
- * @brief get radial cut off
- *
- * @return double
- */
-double NonCoulombPair::getRadialCutOff() const { return _radialCutOff; }
-
-/**
  * @brief get energy cut off
  *
  * @return double

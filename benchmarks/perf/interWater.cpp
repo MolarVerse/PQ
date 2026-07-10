@@ -53,6 +53,8 @@ using linearAlgebra::Vec3D;
 static constexpr long   ITERATIONS = 50;
 static constexpr size_t WATER_TYPE = 1;
 static constexpr double CUTOFF     = 9.0;
+static constexpr int    HYDROGEN_ATOMIC_NUMBER = 1;
+static constexpr int    OXYGEN_ATOMIC_NUMBER   = 8;
 
 int main()
 {
@@ -75,11 +77,16 @@ int main()
     waterType.setNumberOfAtoms(3);
     simBox.addMoleculeType(waterType);
 
-    const auto makeAtom =
-        [](const std::string_view name, const Vec3D &pos, const double charge)
+    const auto makeAtom = [](
+                              const std::string_view name,
+                              const Vec3D           &pos,
+                              const double           charge,
+                              const int              atomicNumber
+                          )
     {
         auto atom = std::make_shared<Atom>();
         atom->setName(name);
+        atom->setAtomicNumber(atomicNumber);
         atom->setPosition(pos);
         atom->setAtomType(0);
         atom->setInternalGlobalVDWType(0);
@@ -101,12 +108,24 @@ int main()
                 Molecule molecule;
                 molecule.setMoltype(WATER_TYPE);
                 molecule.setNumberOfAtoms(3);
-                molecule.addAtom(makeAtom("O", o, -0.82));
                 molecule.addAtom(
-                    makeAtom("H", o + Vec3D(0.9572, 0.0, 0.0), 0.41)
+                    makeAtom("O", o, -0.82, OXYGEN_ATOMIC_NUMBER)
                 );
                 molecule.addAtom(
-                    makeAtom("H", o + Vec3D(-0.24, 0.927, 0.0), 0.41)
+                    makeAtom(
+                        "H",
+                        o + Vec3D(0.9572, 0.0, 0.0),
+                        0.41,
+                        HYDROGEN_ATOMIC_NUMBER
+                    )
+                );
+                molecule.addAtom(
+                    makeAtom(
+                        "H",
+                        o + Vec3D(-0.24, 0.927, 0.0),
+                        0.41,
+                        HYDROGEN_ATOMIC_NUMBER
+                    )
                 );
                 simBox.addMolecule(molecule);
             }
@@ -143,6 +162,10 @@ int main()
         interWater.calculate(simBox, physicalData, coulombPot, cellList);
 
     // read state so the loop cannot be optimized away
-    std::printf("%.6f\n", physicalData.getCoulombEnergy());
+    std::printf(
+        "%.6f %.6f\n",
+        physicalData.getCoulombEnergy(),
+        physicalData.getNonCoulombEnergy()
+    );
     return 0;
 }

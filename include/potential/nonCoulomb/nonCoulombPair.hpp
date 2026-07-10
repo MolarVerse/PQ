@@ -82,7 +82,7 @@ namespace potential
         [[nodiscard]] size_t getVanDerWaalsType2() const;
         [[nodiscard]] size_t getInternalType1() const;
         [[nodiscard]] size_t getInternalType2() const;
-        [[nodiscard]] double getRadialCutOff() const;
+        [[nodiscard]] double getRadialCutOff() const { return _radialCutOff; }
         [[nodiscard]] double getEnergyCutOff() const;
         [[nodiscard]] double getForceCutOff() const;
     };

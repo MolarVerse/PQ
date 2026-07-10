@@ -122,7 +122,7 @@ namespace simulationBox
         [[nodiscard]] size_t getExternalGlobalVDWType() const;
         [[nodiscard]] size_t getInternalGlobalVDWType() const;
 
-        [[nodiscard]] int                   getAtomicNumber() const;
+        [[nodiscard]] int getAtomicNumber() const { return _atomicNumber; }
         [[nodiscard]] double                getMass() const;
         [[nodiscard]] double getPartialCharge() const { return _partialCharge; }
         [[nodiscard]] std::optional<double> getQMCharge() const;

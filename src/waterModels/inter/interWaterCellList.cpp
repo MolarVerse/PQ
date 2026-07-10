@@ -38,6 +38,11 @@ using namespace potential;
 using namespace pq;
 using namespace waterModel;
 
+namespace
+{
+    const auto oxygenAtomicNumber = atomNumberMap.at("o");
+}
+
 /**
  * @brief Evaluate intermolecular water interactions via cell list.
  *
@@ -95,11 +100,11 @@ void InterWaterStrategyCellList::calculate(
                 for (auto *atom_i : cell_i.getAtoms(mol_i))
                 {
                     const bool isAtom_i_O =
-                        atom_i->getAtomicNumber() == atomNumberMap.at("o");
+                        atom_i->getAtomicNumber() == oxygenAtomicNumber;
                     for (auto *atom_j : cell_i.getAtoms(mol_j))
                     {
                         const bool isAtom_j_O =
-                            atom_j->getAtomicNumber() == atomNumberMap.at("o");
+                            atom_j->getAtomicNumber() == oxygenAtomicNumber;
 
                         // O-H interaction (different atom types)
                         if (isAtom_i_O != isAtom_j_O)
@@ -146,7 +151,7 @@ void InterWaterStrategyCellList::calculate(
                 for (auto *atom_i : cell_i.getAtoms(mol_i))
                 {
                     const bool isAtom_i_O =
-                        atom_i->getAtomicNumber() == atomNumberMap.at("o");
+                        atom_i->getAtomicNumber() == oxygenAtomicNumber;
                     for (size_t mol_j = 0; mol_j < nMolsInCell_j; ++mol_j)
                     {
                         auto *molecule_j = cell_j->getMolecule(mol_j);
@@ -160,7 +165,7 @@ void InterWaterStrategyCellList::calculate(
                         for (auto *atom_j : cell_j->getAtoms(mol_j))
                         {
                             const bool isAtom_j_O = atom_j->getAtomicNumber() ==
-                                                    atomNumberMap.at("o");
+                                                    oxygenAtomicNumber;
 
                             // O-H interaction (different atom types)
                             if (isAtom_i_O != isAtom_j_O)
@@ -255,11 +260,11 @@ void InterWaterStrategyCellList::calculateCoreToOuterForces(
                 for (auto *atom_i : cell_i.getAtoms(mol_i))
                 {
                     const bool isAtom_i_O =
-                        atom_i->getAtomicNumber() == atomNumberMap.at("o");
+                        atom_i->getAtomicNumber() == oxygenAtomicNumber;
                     for (auto *atom_j : cell_i.getAtoms(mol_j))
                     {
                         const bool isAtom_j_O =
-                            atom_j->getAtomicNumber() == atomNumberMap.at("o");
+                            atom_j->getAtomicNumber() == oxygenAtomicNumber;
 
                         // O-H interaction (different atom types)
                         if (isAtom_i_O != isAtom_j_O)
@@ -292,7 +297,7 @@ void InterWaterStrategyCellList::calculateCoreToOuterForces(
                 for (auto *atom_i : cell_i.getAtoms(mol_i))
                 {
                     const bool isAtom_i_O =
-                        atom_i->getAtomicNumber() == atomNumberMap.at("o");
+                        atom_i->getAtomicNumber() == oxygenAtomicNumber;
                     for (const auto mol_j : cell_j->getActiveMoleculeIndices())
                     {
                         if (isNonWaterMolecule(waterMolecules_j, mol_j))
@@ -301,7 +306,7 @@ void InterWaterStrategyCellList::calculateCoreToOuterForces(
                         for (auto *atom_j : cell_j->getAtoms(mol_j))
                         {
                             const bool isAtom_j_O = atom_j->getAtomicNumber() ==
-                                                    atomNumberMap.at("o");
+                                                    oxygenAtomicNumber;
 
                             // O-H interaction (different atom types)
                             if (isAtom_i_O != isAtom_j_O)
@@ -335,7 +340,7 @@ void InterWaterStrategyCellList::calculateCoreToOuterForces(
                 for (auto *atom_i : cell_j->getAtoms(mol_i))
                 {
                     const bool isAtom_i_O =
-                        atom_i->getAtomicNumber() == atomNumberMap.at("o");
+                        atom_i->getAtomicNumber() == oxygenAtomicNumber;
                     for (const auto mol_j : cell_i.getActiveMoleculeIndices())
                     {
                         if (isNonWaterMolecule(waterMolecules_i, mol_j))
@@ -344,7 +349,7 @@ void InterWaterStrategyCellList::calculateCoreToOuterForces(
                         for (auto *atom_j : cell_i.getAtoms(mol_j))
                         {
                             const bool isAtom_j_O = atom_j->getAtomicNumber() ==
-                                                    atomNumberMap.at("o");
+                                                    oxygenAtomicNumber;
 
                             // O-H interaction (different atom types)
                             if (isAtom_i_O != isAtom_j_O)
@@ -431,11 +436,11 @@ void InterWaterStrategyCellList::calculateLayerToOuterForces(
                 for (auto *atom_i : cell_i.getAtoms(mol_i))
                 {
                     const bool isAtom_i_O =
-                        atom_i->getAtomicNumber() == atomNumberMap.at("o");
+                        atom_i->getAtomicNumber() == oxygenAtomicNumber;
                     for (auto *atom_j : cell_i.getAtoms(mol_j))
                     {
                         const bool isAtom_j_O =
-                            atom_j->getAtomicNumber() == atomNumberMap.at("o");
+                            atom_j->getAtomicNumber() == oxygenAtomicNumber;
 
                         // O-H interaction (different atom types)
                         if (isAtom_i_O != isAtom_j_O)
@@ -480,7 +485,7 @@ void InterWaterStrategyCellList::calculateLayerToOuterForces(
                 for (auto *atom_i : cell_i.getAtoms(mol_i))
                 {
                     const bool isAtom_i_O =
-                        atom_i->getAtomicNumber() == atomNumberMap.at("o");
+                        atom_i->getAtomicNumber() == oxygenAtomicNumber;
                     for (const auto mol_j : cell_j->getActiveMoleculeIndices())
                     {
                         if (isNonWaterMolecule(waterMolecules_j, mol_j))
@@ -489,7 +494,7 @@ void InterWaterStrategyCellList::calculateLayerToOuterForces(
                         for (auto *atom_j : cell_j->getAtoms(mol_j))
                         {
                             const bool isAtom_j_O = atom_j->getAtomicNumber() ==
-                                                    atomNumberMap.at("o");
+                                                    oxygenAtomicNumber;
 
                             // O-H interaction (different atom types)
                             if (isAtom_i_O != isAtom_j_O)
@@ -535,7 +540,7 @@ void InterWaterStrategyCellList::calculateLayerToOuterForces(
                 for (auto *atom_i : cell_j->getAtoms(mol_i))
                 {
                     const bool isAtom_i_O =
-                        atom_i->getAtomicNumber() == atomNumberMap.at("o");
+                        atom_i->getAtomicNumber() == oxygenAtomicNumber;
                     for (const auto mol_j : cell_i.getActiveMoleculeIndices())
                     {
                         if (isNonWaterMolecule(waterMolecules_i, mol_j))
@@ -544,7 +549,7 @@ void InterWaterStrategyCellList::calculateLayerToOuterForces(
                         for (auto *atom_j : cell_i.getAtoms(mol_j))
                         {
                             const bool isAtom_j_O = atom_j->getAtomicNumber() ==
-                                                    atomNumberMap.at("o");
+                                                    oxygenAtomicNumber;
 
                             // O-H interaction (different atom types)
                             if (isAtom_i_O != isAtom_j_O)
@@ -647,11 +652,11 @@ void InterWaterStrategyCellList::calculateOuterToOuterForces(
                 for (auto *atom_i : cell_i.getAtoms(mol_i))
                 {
                     const bool isAtom_i_O =
-                        atom_i->getAtomicNumber() == atomNumberMap.at("o");
+                        atom_i->getAtomicNumber() == oxygenAtomicNumber;
                     for (auto *atom_j : cell_i.getAtoms(mol_j))
                     {
                         const bool isAtom_j_O =
-                            atom_j->getAtomicNumber() == atomNumberMap.at("o");
+                            atom_j->getAtomicNumber() == oxygenAtomicNumber;
 
                         // O-H interaction (different atom types)
                         if (isAtom_i_O != isAtom_j_O)
@@ -698,7 +703,7 @@ void InterWaterStrategyCellList::calculateOuterToOuterForces(
                 for (auto *atom_i : cell_i.getAtoms(mol_i))
                 {
                     const bool isAtom_i_O =
-                        atom_i->getAtomicNumber() == atomNumberMap.at("o");
+                        atom_i->getAtomicNumber() == oxygenAtomicNumber;
                     for (const auto mol_j : cell_j->getActiveMoleculeIndices())
                     {
                         if (isNonWaterMolecule(waterMolecules_j, mol_j))
@@ -712,7 +717,7 @@ void InterWaterStrategyCellList::calculateOuterToOuterForces(
                         for (auto *atom_j : cell_j->getAtoms(mol_j))
                         {
                             const bool isAtom_j_O = atom_j->getAtomicNumber() ==
-                                                    atomNumberMap.at("o");
+                                                    oxygenAtomicNumber;
 
                             // O-H interaction (different atom types)
                             if (isAtom_i_O != isAtom_j_O)
@@ -828,11 +833,11 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                 for (auto *atom_i : cell_i.getAtoms(mol_i))
                 {
                     const bool isAtom_i_O =
-                        atom_i->getAtomicNumber() == atomNumberMap.at("o");
+                        atom_i->getAtomicNumber() == oxygenAtomicNumber;
                     for (auto *atom_j : cell_i.getAtoms(mol_j))
                     {
                         const bool isAtom_j_O =
-                            atom_j->getAtomicNumber() == atomNumberMap.at("o");
+                            atom_j->getAtomicNumber() == oxygenAtomicNumber;
 
                         // O-H interaction (different atom types)
                         if (isAtom_i_O != isAtom_j_O)
@@ -877,7 +882,7 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                 for (auto *atom_i : cell_i.getAtoms(mol_i))
                 {
                     const bool isAtom_i_O =
-                        atom_i->getAtomicNumber() == atomNumberMap.at("o");
+                        atom_i->getAtomicNumber() == oxygenAtomicNumber;
                     for (const auto mol_j :
                          cell_j->getNonSmoothingMoleculeIndices())
                     {
@@ -887,7 +892,7 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                         for (auto *atom_j : cell_j->getAtoms(mol_j))
                         {
                             const bool isAtom_j_O = atom_j->getAtomicNumber() ==
-                                                    atomNumberMap.at("o");
+                                                    oxygenAtomicNumber;
 
                             // O-H interaction (different atom types)
                             if (isAtom_i_O != isAtom_j_O)
@@ -933,7 +938,7 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                 for (auto *atom_i : cell_j->getAtoms(mol_i))
                 {
                     const bool isAtom_i_O =
-                        atom_i->getAtomicNumber() == atomNumberMap.at("o");
+                        atom_i->getAtomicNumber() == oxygenAtomicNumber;
                     for (const auto mol_j :
                          cell_i.getNonSmoothingMoleculeIndices())
                     {
@@ -943,7 +948,7 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                         for (auto *atom_j : cell_i.getAtoms(mol_j))
                         {
                             const bool isAtom_j_O = atom_j->getAtomicNumber() ==
-                                                    atomNumberMap.at("o");
+                                                    oxygenAtomicNumber;
 
                             // O-H interaction (different atom types)
                             if (isAtom_i_O != isAtom_j_O)
@@ -993,11 +998,11 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                 for (auto *atom_i : cell_i.getAtoms(mol_i))
                 {
                     const bool isAtom_i_O =
-                        atom_i->getAtomicNumber() == atomNumberMap.at("o");
+                        atom_i->getAtomicNumber() == oxygenAtomicNumber;
                     for (auto *atom_j : cell_i.getAtoms(mol_j))
                     {
                         const bool isAtom_j_O =
-                            atom_j->getAtomicNumber() == atomNumberMap.at("o");
+                            atom_j->getAtomicNumber() == oxygenAtomicNumber;
 
                         // O-H interaction (different atom types)
                         if (isAtom_i_O != isAtom_j_O)
@@ -1044,7 +1049,7 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                 for (auto *atom_i : cell_i.getAtoms(mol_i))
                 {
                     const bool isAtom_i_O =
-                        atom_i->getAtomicNumber() == atomNumberMap.at("o");
+                        atom_i->getAtomicNumber() == oxygenAtomicNumber;
                     for (const auto mol_j :
                          cell_j->getSmoothingMoleculeIndices())
                     {
@@ -1059,7 +1064,7 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                         for (auto *atom_j : cell_j->getAtoms(mol_j))
                         {
                             const bool isAtom_j_O = atom_j->getAtomicNumber() ==
-                                                    atomNumberMap.at("o");
+                                                    oxygenAtomicNumber;
 
                             // O-H interaction (different atom types)
                             if (isAtom_i_O != isAtom_j_O)
@@ -1107,7 +1112,7 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                 for (auto *atom_i : cell_j->getAtoms(mol_i))
                 {
                     const bool isAtom_i_O =
-                        atom_i->getAtomicNumber() == atomNumberMap.at("o");
+                        atom_i->getAtomicNumber() == oxygenAtomicNumber;
                     for (const auto mol_j :
                          cell_i.getSmoothingMoleculeIndices())
                     {
@@ -1122,7 +1127,7 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                         for (auto *atom_j : cell_i.getAtoms(mol_j))
                         {
                             const bool isAtom_j_O = atom_j->getAtomicNumber() ==
-                                                    atomNumberMap.at("o");
+                                                    oxygenAtomicNumber;
 
                             // O-H interaction (different atom types)
                             if (isAtom_i_O != isAtom_j_O)
