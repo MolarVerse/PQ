@@ -146,3 +146,30 @@ TEST_F(TestIntegrator, secondStep)
         3.0 + 0.1 * 2.5 * constants::_V_VERLET_VELOCITY_FACTOR_
     );
 }
+
+TEST_F(TestIntegrator, velocityVerletZeroForceKeepsFreeParticleVelocity)
+{
+    settings::TimingsSettings::setTimeStep(0.2);
+
+    auto *atom = _box->getAtoms()[1].get();
+    atom->setPosition(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+    atom->setVelocity(linearAlgebra::Vec3D(2.0, -3.0, 4.0));
+    atom->setForce(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+
+    const auto initialPosition = atom->getPosition();
+    const auto initialVelocity = atom->getVelocity();
+
+    _integrator->firstStep(*_box);
+    _integrator->secondStep(*_box);
+
+    const auto expectedPosition =
+        initialPosition + 0.2 * initialVelocity * constants::_FS_TO_S_;
+
+    EXPECT_DOUBLE_EQ(atom->getVelocity()[0], initialVelocity[0]);
+    EXPECT_DOUBLE_EQ(atom->getVelocity()[1], initialVelocity[1]);
+    EXPECT_DOUBLE_EQ(atom->getVelocity()[2], initialVelocity[2]);
+
+    EXPECT_DOUBLE_EQ(atom->getPosition()[0], expectedPosition[0]);
+    EXPECT_DOUBLE_EQ(atom->getPosition()[1], expectedPosition[1]);
+    EXPECT_DOUBLE_EQ(atom->getPosition()[2], expectedPosition[2]);
+}
