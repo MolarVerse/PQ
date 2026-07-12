@@ -6,142 +6,115 @@
 Feature List
 ############
 
-This is a hopefully up to date list of the features implemented in the current release version of the code.
+This page summarizes the main features supported by **PQ**. Planned items are
+listed separately so they are not confused with currently available run modes.
 
-If the features are marked in red, they are not yet implemented but are planned for the future. There exist
-three main categories of not yet implemented features:
+*********
+Run Modes
+*********
 
-1) Features that are planned but not yet implemented (Planned)
-2) Features that have a high priority but are not yet implemented (Coming Soon)
-3) Features that are in the pipeline but are not yet implemented (In development)
+The supported :ref:`jobtype <jobtype>` values are:
 
+* ``mm-md`` - molecular-mechanics molecular dynamics
+* ``qm-md`` - quantum-mechanics molecular dynamics
+* ``qm-rpmd`` - quantum-mechanics ring-polymer molecular dynamics
+* ``mm-opt`` - molecular-mechanics geometry optimization
 
-*******
-Runners
-*******
+*******************
+Molecular Mechanics
+*******************
 
-1) Molecular Mechanics (MM)
+**Force-field models**
 
-    - Classical Molecular Dynamics (MD)
-    - :red:`Ring Polymer Molecular Dynamcis (RPMD) - Coming Soon`
-    - :red:`Geometry Optimisation (OPT) - In development`
-    - :red:`Guffcheck - Coming soon`
-    
+* :ref:`GUFF <guffdatFile>` (Grand Unified Force Field)
+* AMBER-type force fields with :ref:`force-field <forcefieldKey>`
+* Lennard-Jones, Buckingham and Morse :ref:`non-Coulombic interactions <noncoulombKey>`
 
-2) Quantum Mechanics (QM)
+**Force evaluation**
 
-    - Classical Molecular Dynamics (MD)
-    - Ring Polymer Molecular Dynamcis (RPMD)
+* brute-force pair evaluation
+* :ref:`cell-list <celllistKeys>` pair evaluation
+* optional Kokkos acceleration for supported MM Lennard-Jones/Wolf setups
 
-3) :red:`Hybrid QM/MM - Planned`
+**Long-range corrections**
 
-    - Classical Molecular Dynamics (MD)
-    - Ring Polymer Molecular Dynamcis (RPMD)
-
-************************
-Molecular Mechanics (MM)
-************************
-
-At the moment the program supports two different types of force fields
-with some further specializations or extensions:
-
-    a) Guff (General Unified Force Field)
-
-        - full Guff equation
-        - Lennard Jones quick routine
-        - Buckingham quick routine
-        - Morse quick routine
-        
-    b) AMBER type force fields
-
-        - standard AMBER force field with (Lennard Jones non-bonded interactions)
-        - Buckingham non-bonded interactions
-        - Morse non-bonded interactions
-
-Evaluation Scheme
-=================
-
-The evaluation of the forces can be performed *via* the following schemes
-
-1) Brute Force Evaluation
-2) Cell List Evaluation
-3) :red:`Verlet List with Cell List Evaluation - Coming Soon`
-
-Long Range Corrections
-======================
-
-Following long range corrections are implemented:
-
-1) :red:`Ewald Summation - Planned`
-2) Wolf Summation
-3) :red:`Reaction Field - Coming Soon`
-
-4) :red:`Range separation for non Coulombic interactions - Planned`
-
-Special Moltypes
-================
-
-1) :red:`Water - Coming Soon`
+* no correction
+* :ref:`Wolf summation <longrangeKey>`
 
 *****************
 Quantum Mechanics
 *****************
 
-At the moment the evaluation of quantum mechanical forces is implemented
-for the following QM-engines:
+**Supported QM runners**
 
-1) DFTB+
-2) Turbomole
-3) PySCF
-4) MACE
+* :ref:`DFTB+ <qmprogamKey>`
+* :ref:`Turbomole <qmprogamKey>`
+* :ref:`PySCF <qmprogamKey>`
+* :ref:`FeNNol <qmprogamKey>`
+* :ref:`MACE-MP and MACE-OFF <qmprogamKey>`
+* :ref:`ASE-DFTB+ <qmprogamKey>`
+* :ref:`ASE-xTB <qmprogamKey>`
 
 ******************
 Molecular Dynamics
 ******************
 
-Integrators
-===========
+**Integrator**
 
-1) Velocity Verlet
+* Velocity Verlet
 
-Thermostats
-===========
+**Thermostats**
 
-1) Langevin Thermostat
-2) Berendsen Thermostat
-3) Velocity Rescaling Thermostat
-4) Nose-Hoover Thermostat
+* :ref:`Langevin <thermostatKey>`
+* :ref:`Berendsen <thermostatKey>`
+* :ref:`stochastic velocity rescaling <thermostatKey>`
+* :ref:`Nose-Hoover chain <thermostatKey>`
 
-Manostats
-=========
+**Manostats**
 
-1) Berendsen Manostat
-2) Stochastic Rescaling Manostat
+* :ref:`Berendsen <manostatKey>`
+* :ref:`stochastic cell rescaling <manostatKey>`
 
-Isotropicity
-============
+**Cell coupling modes**
 
-All calculation schemes of any MD runner can be performed with triclinic cells
+* :ref:`isotropic <isotropyKey>`
+* :ref:`semi-isotropic <isotropyKey>`
+* :ref:`anisotropic cell lengths <isotropyKey>`
+* :ref:`full anisotropic cell lengths and angles <isotropyKey>`
 
-1) Isotropic
-2) Semi-Isotropic
-3) Anisotropic (only cell lengths)
-4) Full Anisotropic (cell lengths and angles)
+**Constraints**
 
-Constraints
-===========
+* :ref:`SHAKE/RATTLE <shakeKey>`
+* :ref:`M-SHAKE <shakeKey>`
+* :ref:`distance constraints <distanceConstraintsKey>`
 
-1) Shake/Rattle
-2) :red:`Lincs - Planned`
-3) :red:`M-Shake - Planned`
+************
+Optimization
+************
+
+Geometry optimization is available for molecular-mechanics calculations. The
+supported :ref:`optimizers <optimizerKey>` are:
+
+* steepest descent
+* ADAM
 
 ***
 MPI
 ***
 
-At the moment only Ring Polymer Molecular Dynamics (RPMD) is implemented in parallel.
-Meaning that each ring polymer can be calculated on a different rank, but the calculation of 
-the forces is still performed on a single rank. The only exceptions are the QM-engines, which
-are called as external programs and can be run in parallel.
+MPI support is used for QM-RPMD, where individual ring-polymer beads can be
+distributed across ranks. Force evaluation itself remains local to each rank,
+except for external QM programs that provide their own parallel execution.
 
+*************
+Planned Items
+*************
 
+The following items are planned for future releases:
+
+* hybrid QM/MM job type
+* MM-RPMD
+* Verlet-list force evaluation
+* Ewald summation
+* reaction-field correction
+* LINCS constraints
