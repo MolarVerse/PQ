@@ -1,5 +1,6 @@
 set(source_files
     testCoulombPotential.cpp
+    testCoulombReactionField.cpp
     testCoulombShiftedPotential.cpp
     testCoulombWolf.cpp
 )
