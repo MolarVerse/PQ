@@ -42,8 +42,8 @@ namespace potential
     class CoulombReactionField : public CoulombPotential
     {
        private:
-        double _epsilon{};       // double check unit!!!
-        double _rfPrefactor{};   // double check unit!!!
+        double _epsilon{};
+        double _rfPrefactor{};
 
        public:
         CoulombReactionField(

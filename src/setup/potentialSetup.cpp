@@ -30,6 +30,7 @@
 #include <vector>        // for vector
 
 #include "angleForceField.hpp"           // for potential
+#include "coulombReactionField.hpp"      // for CoulombReactionField
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
 #include "coulombWolf.hpp"               // for CoulombWolf
 #include "engine.hpp"                    // for Engine
@@ -68,7 +69,7 @@ void setup::setupPotential(Engine &engine)
  *
  * @param engine
  */
-PotentialSetup::PotentialSetup(Engine &engine) : _engine(engine){};
+PotentialSetup::PotentialSetup(Engine &engine) : _engine(engine) {}
 
 /**
  * @brief sets all nonBonded potential types
@@ -79,13 +80,12 @@ PotentialSetup::PotentialSetup(Engine &engine) : _engine(engine){};
  */
 void PotentialSetup::setup()
 {
+    checkRequiredKeywords();
     setupCoulomb();
     setupNonCoulomb();
 
-    if (!_engine.isForceFieldNonCoulombicsActivated())
-        return;
-
-    setupNonCoulombicPairs();
+    if (_engine.isForceFieldNonCoulombicsActivated())
+        setupNonCoulombicPairs();
 
     writeSetupInfo();
 }
@@ -95,7 +95,8 @@ void PotentialSetup::setup()
  *
  * @details possible types are:
  * 1) none (shifted coulomb potential)
- * 2) wolf (wolf long range correction)
+ * 2) reaction field long range correction
+ * 2) wolf long range correction
  *
  * @param coulombType
  */
@@ -103,11 +104,18 @@ void PotentialSetup::setupCoulomb()
 {
     const auto coulRCut  = PotentialSettings::getCoulombRadiusCutOff();
     const auto wolfParam = PotentialSettings::getWolfParameter();
+    const auto rfEpsilon = PotentialSettings::getReactionFieldEpsilon();
     auto      &potential = _engine.getPotential();
 
     switch (PotentialSettings::getCoulombLongRangeType())
     {
         using enum CoulombLongRangeType;
+
+        case REACTION_FIELD:
+            potential.makeCoulombPotential(
+                CoulombReactionField(coulRCut, rfEpsilon.value())
+            );
+            break;
 
         case WOLF:
             potential.makeCoulombPotential(CoulombWolf(coulRCut, wolfParam));
@@ -168,8 +176,8 @@ void PotentialSetup::setupNonCoulombicPairs()
     simBox.setupExternalToInternalGlobalVdwTypesMap();
     nonCoulPot.determineInternalGlobalVdwTypes(extToIntVDWTypes);
 
-    const auto nGlobalVdwTypes = simBox.getExternalGlobalVdwTypes().size();
-    auto selfNonCoulPairs = nonCoulPot.getSelfInteractionNonCoulPairs();
+    const auto nGlobalVdwTypes  = simBox.getExternalGlobalVdwTypes().size();
+    auto       selfNonCoulPairs = nonCoulPot.getSelfInteractionNonCoulPairs();
 
     if (selfNonCoulPairs.size() != nGlobalVdwTypes)
         throw ParameterFileException(
@@ -218,18 +226,25 @@ void PotentialSetup::writeCoulombInfo() const
 
     const auto coulRCut  = PotentialSettings::getCoulombRadiusCutOff();
     auto       wolfParam = 0.0;
+    auto       rfEpsilon = 0.0;
 
     if (coulLRType == CoulombLongRangeType::WOLF)
         wolfParam = PotentialSettings::getWolfParameter();
 
+    if (coulLRType == CoulombLongRangeType::REACTION_FIELD)
+        rfEpsilon = PotentialSettings::getReactionFieldEpsilon().value();
+
     // clang-format off
     const auto coulRCutStr  = std::format("Coulomb radius cut-off: {}", coulRCut);
     const auto wolfParamStr = std::format("Wolf parameter:         {}", wolfParam);
+    const auto rfEpsilonStr = std::format("Reaction-field static relative permittivity: {}", rfEpsilon);
     // clang-format on
 
     log.writeSetupInfo(coulRCutStr);
     if (coulLRType == CoulombLongRangeType::WOLF)
         log.writeSetupInfo(wolfParamStr);
+    else if (coulLRType == CoulombLongRangeType::REACTION_FIELD)
+        log.writeSetupInfo(rfEpsilonStr);
     log.writeEmptyLine();
 }
 
@@ -255,4 +270,29 @@ void PotentialSetup::writeNonCoulombInfo() const
         log.writeSetupInfo("Non-coulombic potential: Guff");
 
     log.writeEmptyLine();
+}
+
+/**
+ * @brief checks whether required potential-related input keywords are set
+ *
+ * @details validates that `rf_epsilon` is present when reaction-field
+ * Coulomb long-range correction is selected.
+ *
+ * @throws InputFileException if reaction-field long-range correction is
+ * enabled but `rf_epsilon` is missing in the input file
+ */
+void PotentialSetup::checkRequiredKeywords() const
+{
+    using enum CoulombLongRangeType;
+
+    const auto epsilon = PotentialSettings::getReactionFieldEpsilon();
+    const auto longRangeCorrection =
+        PotentialSettings::getCoulombLongRangeType();
+
+    if (longRangeCorrection == REACTION_FIELD && !epsilon.has_value())
+        throw(InputFileException(
+            "Missing required keyword \"rf_epsilon\" in input file: it must be "
+            "set when the Coulomb long-range correction is set to "
+            "\"reaction-field\"."
+        ));
 }

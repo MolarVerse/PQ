@@ -24,7 +24,8 @@
 
 #define _POSITION_SETTINGS_HPP_
 
-#include <cstddef>       // for size_t
+#include <cstddef>   // for size_t
+#include <optional>
 #include <string>        // for allocator, string
 #include <string_view>   // for string_view
 
@@ -56,8 +57,9 @@ namespace settings
      */
     enum class CoulombLongRangeType : size_t
     {
-        WOLF,
-        SHIFTED
+        SHIFTED,
+        REACTION_FIELD,
+        WOLF
     };
 
     // TODO: implement long range type as enum
@@ -84,6 +86,7 @@ namespace settings
         // clang-format on
 
         static inline double _wolfParameter = defaults::_WOLF_PARAM_DEFAULT_;
+        static inline std::optional<double> _reactionFieldEpsilon;
 
        public:
         PotentialSettings()  = default;
@@ -101,6 +104,7 @@ namespace settings
         static void setCoulombRadiusCutOff(const double coulombRadiusCutOff);
         static void setScale14Coulomb(const double scale14Coulomb);
         static void setScale14VanDerWaals(const double scale14VanDerWaals);
+        static void setReactionFieldEpsilon(const double epsilon);
         static void setWolfParameter(const double wolfParameter);
 
         /********************
@@ -110,10 +114,11 @@ namespace settings
         [[nodiscard]] static CoulombLongRangeType getCoulombLongRangeType();
         [[nodiscard]] static NonCoulombType       getNonCoulombType();
 
-        [[nodiscard]] static double getCoulombRadiusCutOff();
-        [[nodiscard]] static double getScale14Coulomb();
-        [[nodiscard]] static double getScale14VDW();
-        [[nodiscard]] static double getWolfParameter();
+        [[nodiscard]] static double                getCoulombRadiusCutOff();
+        [[nodiscard]] static double                getScale14Coulomb();
+        [[nodiscard]] static double                getScale14VDW();
+        [[nodiscard]] static std::optional<double> getReactionFieldEpsilon();
+        [[nodiscard]] static double                getWolfParameter();
     };
 
 }   // namespace settings

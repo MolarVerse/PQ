@@ -52,6 +52,8 @@ namespace setup
         void writeSetupInfo() const;
         void writeCoulombInfo() const;
         void writeNonCoulombInfo() const;
+
+        void checkRequiredKeywords() const;
     };
 
 }   // namespace setup
