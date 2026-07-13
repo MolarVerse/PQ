@@ -1313,9 +1313,25 @@ Possible options are:
 
    1. **none** (default) - no long range correction
 
-   2. **wolf** - Wolf summation
+   2. **reaction-field** - reaction field
 
-.. _wolfParameterKey:
+   3. **wolf** - Wolf summation
+
+.. _reactionFieldEpsilonKey:
+
+Reaction Field Epsilon
+======================
+
+.. admonition:: Key
+    :class: tip
+
+    rf_epsilon = {double}
+
+With the ``rf_epsilon`` keyword the user can set the static relative permittivity :math:`\epsilon` used by the reaction field Coulomb correction. The value must be greater than 1.0.
+
+.. Note::
+
+    This keyword has no default value and is therefore mandatory if the :ref:`long_range <longrangeKey>` keyword is set to ``reaction-field``.
 
 Wolf Parameter
 ==============
