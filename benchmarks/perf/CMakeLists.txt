@@ -13,7 +13,7 @@ set(perf_benchmarks
     kinetics.cpp
     virial.cpp
     constraints.cpp
-    interWater.cpp
+    perfInterWater.cpp
 )
 
 include(CheckIncludeFileCXX)
