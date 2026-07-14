@@ -24,8 +24,7 @@
 
 #define _POSITION_SETTINGS_HPP_
 
-#include <cstddef>   // for size_t
-#include <optional>
+#include <cstddef>       // for size_t
 #include <string>        // for allocator, string
 #include <string_view>   // for string_view
 
@@ -86,7 +85,7 @@ namespace settings
         // clang-format on
 
         static inline double _wolfParameter = defaults::_WOLF_PARAM_DEFAULT_;
-        static inline std::optional<double> _reactionFieldEpsilon;
+        static inline double _reactionFieldEpsilon;
 
        public:
         PotentialSettings()  = default;
@@ -114,11 +113,11 @@ namespace settings
         [[nodiscard]] static CoulombLongRangeType getCoulombLongRangeType();
         [[nodiscard]] static NonCoulombType       getNonCoulombType();
 
-        [[nodiscard]] static double                getCoulombRadiusCutOff();
-        [[nodiscard]] static double                getScale14Coulomb();
-        [[nodiscard]] static double                getScale14VDW();
-        [[nodiscard]] static std::optional<double> getReactionFieldEpsilon();
-        [[nodiscard]] static double                getWolfParameter();
+        [[nodiscard]] static double getCoulombRadiusCutOff();
+        [[nodiscard]] static double getScale14Coulomb();
+        [[nodiscard]] static double getScale14VDW();
+        [[nodiscard]] static double getReactionFieldEpsilon();
+        [[nodiscard]] static double getWolfParameter();
     };
 
 }   // namespace settings

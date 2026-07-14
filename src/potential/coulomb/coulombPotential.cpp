@@ -36,12 +36,7 @@ using namespace potential;
  */
 CoulombPotential::CoulombPotential(const double coulombRadiusCutOff)
 {
-    _coulombRadiusCutOff = coulombRadiusCutOff;
-    _coulombEnergyCutOff = 1 / _coulombRadiusCutOff;
-    _coulombForceCutOff  = 1 / (_coulombRadiusCutOff * _coulombRadiusCutOff);
-    _coulombCutOffCubedInverse =
-        1 /
-        (_coulombRadiusCutOff * _coulombRadiusCutOff * _coulombRadiusCutOff);
+    setCoulombRadiusCutOff(coulombRadiusCutOff);
 }
 
 /***************************

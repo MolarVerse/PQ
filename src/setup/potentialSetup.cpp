@@ -80,7 +80,6 @@ PotentialSetup::PotentialSetup(Engine &engine) : _engine(engine) {}
  */
 void PotentialSetup::setup()
 {
-    checkRequiredKeywords();
     setupCoulomb();
     setupNonCoulomb();
 
@@ -113,7 +112,7 @@ void PotentialSetup::setupCoulomb()
 
         case REACTION_FIELD:
             potential.makeCoulombPotential(
-                CoulombReactionField(coulRCut, rfEpsilon.value())
+                CoulombReactionField(coulRCut, rfEpsilon)
             );
             break;
 
@@ -232,7 +231,7 @@ void PotentialSetup::writeCoulombInfo() const
         wolfParam = PotentialSettings::getWolfParameter();
 
     if (coulLRType == CoulombLongRangeType::REACTION_FIELD)
-        rfEpsilon = PotentialSettings::getReactionFieldEpsilon().value();
+        rfEpsilon = PotentialSettings::getReactionFieldEpsilon();
 
     // clang-format off
     const auto coulRCutStr  = std::format("Coulomb radius cut-off: {}", coulRCut);
@@ -270,29 +269,4 @@ void PotentialSetup::writeNonCoulombInfo() const
         log.writeSetupInfo("Non-coulombic potential: Guff");
 
     log.writeEmptyLine();
-}
-
-/**
- * @brief checks whether required potential-related input keywords are set
- *
- * @details validates that `rf_epsilon` is present when reaction-field
- * Coulomb long-range correction is selected.
- *
- * @throws InputFileException if reaction-field long-range correction is
- * enabled but `rf_epsilon` is missing in the input file
- */
-void PotentialSetup::checkRequiredKeywords() const
-{
-    using enum CoulombLongRangeType;
-
-    const auto epsilon = PotentialSettings::getReactionFieldEpsilon();
-    const auto longRangeCorrection =
-        PotentialSettings::getCoulombLongRangeType();
-
-    if (longRangeCorrection == REACTION_FIELD && !epsilon.has_value())
-        throw(InputFileException(
-            "Missing required keyword \"rf_epsilon\" in input file: it must be "
-            "set when the Coulomb long-range correction is set to "
-            "\"reaction-field\"."
-        ));
 }

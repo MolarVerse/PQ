@@ -58,14 +58,6 @@ TEST_F(TestSetup, setupReactionFieldPotential)
     PotentialSettings::setCoulombLongRangeType("reaction-field");
     PotentialSetup potentialSetup(*_engine);
 
-    EXPECT_THROW_MSG(
-        potentialSetup.checkRequiredKeywords(),
-        customException::InputFileException,
-        "Missing required keyword \"rf_epsilon\" in input file: it must be "
-        "set when the Coulomb long-range correction is set to "
-        "\"reaction-field\"."
-    );
-
     PotentialSettings::setReactionFieldEpsilon(80.0);
     EXPECT_NO_THROW(potentialSetup.setup());
     EXPECT_EQ(

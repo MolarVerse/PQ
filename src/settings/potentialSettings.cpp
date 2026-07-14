@@ -22,8 +22,6 @@
 
 #include "potentialSettings.hpp"
 
-#include <optional>
-
 #include "exceptions.hpp"
 #include "stringUtilities.hpp"
 
@@ -255,9 +253,9 @@ double PotentialSettings::getScale14VDW() { return _scale14VanDerWaals; }
 /**
  * @brief get the reaction field epsilon
  *
- * @return std::optional<double>
+ * @return double
  */
-std::optional<double> PotentialSettings::getReactionFieldEpsilon()
+double PotentialSettings::getReactionFieldEpsilon()
 {
     return _reactionFieldEpsilon;
 }

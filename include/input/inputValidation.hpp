@@ -20,40 +20,18 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _POTENTIAL_SETUP_HPP_
+#ifndef _INPUT_VALIDATION_HPP_
 
-#define _POTENTIAL_SETUP_HPP_
+#define _INPUT_VALIDATION_HPP_
 
-#include "typeAliases.hpp"
-
-namespace setup
+namespace input
 {
-    void setupPotential(pq::Engine &);
+    class InputFileReader;
 
-    /**
-     * @class PotentialSetup
-     *
-     * @brief Setup potential
-     *
-     */
-    class PotentialSetup
-    {
-       private:
-        pq::Engine &_engine;
+    void validateInputConfiguration(const InputFileReader& inputFileReader);
 
-       public:
-        explicit PotentialSetup(pq::Engine &engine);
+    void validateReactionFieldCoulomb(const InputFileReader& inputFileReader);
 
-        void setup();
-        void setupCoulomb();
-        void setupNonCoulomb();
-        void setupNonCoulombicPairs();
+}   // namespace input
 
-        void writeSetupInfo() const;
-        void writeCoulombInfo() const;
-        void writeNonCoulombInfo() const;
-    };
-
-}   // namespace setup
-
-#endif   // _POTENTIAL_SETUP_HPP_
+#endif   // _INPUT_VALIDATION_HPP_

@@ -65,6 +65,7 @@ namespace input
         std::map<std::string, pq::ParseFunc> _keywordFuncMap;
         std::map<std::string, size_t>        _keywordCountMap;
         std::map<std::string, bool>          _keywordRequiredMap;
+        std::map<std::string, bool>          _keywordSetMap;
 
         std::vector<std::unique_ptr<InputFileParser>> _parsers;
 
@@ -89,11 +90,13 @@ namespace input
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] size_t getKeywordCount(const std::string &keyword);
-        [[nodiscard]] bool   getKeywordRequired(const std::string &keyword);
+        [[nodiscard]] size_t getKeywordCount(const std::string &keyword) const;
+        [[nodiscard]] bool getKeywordSet(const std::string &keyword) const;
+        [[nodiscard]] bool getKeywordRequired(const std::string &keyword) const;
 
         // clang-format off
         [[nodiscard]] std::map<std::string, size_t> getKeywordCountMap() const;
+        [[nodiscard]] std::map<std::string, bool> getKeywordSetMap() const;
         [[nodiscard]] std::map<std::string, bool> getKeywordRequiredMap() const;
         [[nodiscard]] std::map<std::string, pq::ParseFunc> getKeywordFuncMap() const;
         // clang-format on

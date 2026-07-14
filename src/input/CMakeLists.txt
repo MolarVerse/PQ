@@ -2,6 +2,7 @@
 add_library(PQ_input
     guffDatReader.cpp
     inputFileReader.cpp
+    inputValidation.cpp
     intraNonBondedReader.cpp
     moldescriptorReader.cpp
     mShakeReader.cpp
