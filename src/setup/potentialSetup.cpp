@@ -235,16 +235,21 @@ void PotentialSetup::writeCoulombInfo() const
 
     // clang-format off
     const auto coulRCutStr  = std::format("Coulomb radius cut-off: {}", coulRCut);
-    const auto wolfParamStr = std::format("Wolf parameter:         {}", wolfParam);
-    const auto rfEpsilonStr = std::format("Reaction-field static relative permittivity: {}", rfEpsilon);
-    // clang-format on
-
     log.writeSetupInfo(coulRCutStr);
+
     if (coulLRType == CoulombLongRangeType::WOLF)
+    {
+        const auto wolfParamStr = std::format("Wolf parameter:         {}", wolfParam);
         log.writeSetupInfo(wolfParamStr);
+    }
     else if (coulLRType == CoulombLongRangeType::REACTION_FIELD)
+    {
+        const auto rfEpsilonStr = std::format("Reaction-field static relative permittivity: {}", rfEpsilon);
         log.writeSetupInfo(rfEpsilonStr);
+    }
+
     log.writeEmptyLine();
+    // clang-format on
 }
 
 /**
