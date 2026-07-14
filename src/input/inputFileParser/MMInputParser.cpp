@@ -25,6 +25,7 @@
 #include <cstddef>      // for size_t
 #include <format>       // for format
 #include <functional>   // for _Bind_front_t, bind_front
+#include <memory>
 
 #include "SPCIntraWater.hpp"          // for SPCIntraWater models
 #include "engine.hpp"                 // for Engine
@@ -202,12 +203,16 @@ void MMInputParser::parseWaterIntraModel(
     else if (waterIntraModel == "spc_fw")
     {
         WaterModelSettings::setWaterIntraModel(SPC_FW);
-        _engine.makeIntraWater(SPCFwIntraWater{});
+        _engine.makeIntraWater(
+            SPCIntraWater{std::make_unique<SPCFwIntraWaterParam>()}
+        );
     }
     else if (waterIntraModel == "qspc_fw")
     {
         WaterModelSettings::setWaterIntraModel(QSPC_FW);
-        _engine.makeIntraWater(qSPCFwIntraWater{});
+        _engine.makeIntraWater(
+            SPCIntraWater{std::make_unique<qSPCFwIntraWaterParam>()}
+        );
     }
     else if (waterIntraModel == "spc_dc")
         WaterModelSettings::setWaterIntraModel(SPC_DC);
@@ -220,12 +225,16 @@ void MMInputParser::parseWaterIntraModel(
     else if (waterIntraModel == "spc_mtr")
     {
         WaterModelSettings::setWaterIntraModel(SPC_MTR);
-        _engine.makeIntraWater(SPCMTRIntraWater{});
+        _engine.makeIntraWater(
+            MTRIntraWater{std::make_unique<SPCMTRIntraWaterParam>()}
+        );
     }
     else if (waterIntraModel == "tip3p_mtr")
     {
         WaterModelSettings::setWaterIntraModel(TIP3P_MTR);
-        _engine.makeIntraWater(TIP3PMTRIntraWater{});
+        _engine.makeIntraWater(
+            MTRIntraWater{std::make_unique<TIP3PMTRIntraWaterParam>()}
+        );
     }
     else
         throw InputFileException(format(

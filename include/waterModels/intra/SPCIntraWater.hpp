@@ -24,6 +24,9 @@
 
 #define _SPC_INTRA_WATER_HPP_
 
+#include <memory>
+#include <utility>
+
 #include "constants/conversionFactors.hpp"   // for constants
 #include "intraWater.hpp"                    // for IntraWater
 #include "physicalData.hpp"                  // for PhysicalData
@@ -37,72 +40,49 @@ namespace waterModel
     class SPCIntraWaterParam
     {
        public:
-        double eqOHDistance{};            // Angström
-        double eqHOHAngle{};              // radians
-        double forceConstantOHBond{};     // kcal mol^-1 Angström^-2
-        double forceConstantHOHAngle{};   // kcal mol^-1 rad^-2
-
-        SPCIntraWaterParam() = delete;
-
-        constexpr SPCIntraWaterParam(
-            const double eqOHDist,
-            const double eqHOHAng,
-            const double forceConstOHBond,
-            const double forceConstHOHAngle
-        ) noexcept
-            : eqOHDistance{eqOHDist},
-              eqHOHAngle{eqHOHAng},
-              forceConstantOHBond{forceConstOHBond},
-              forceConstantHOHAngle{forceConstHOHAngle}
-        {
-        }
+        // clang-format off
+        virtual double getEqOHDistance() const noexcept = 0;         // Angström
+        virtual double getEqHOHAngle() const noexcept = 0;           // radians
+        virtual double getForceConstantOHBond() const noexcept = 0;  // kcal mol^-1 Angström^-2
+        virtual double getForceConstantHOHAngle() const noexcept = 0;// kcal mol^-1 rad^-2
+        // clang-format on
     };
 
     class SPCIntraWater : public IntraWater
     {
+       private:
+        std::unique_ptr<SPCIntraWaterParam> _parameter;
+
        public:
+        SPCIntraWater() = delete;
+        SPCIntraWater(std::unique_ptr<SPCIntraWaterParam> parameter)
+            : _parameter{std::move(parameter)}
+        {
+        }
+
         void calculate(pq::SimBox &, pq::PhysicalData &) final;
-
-       private:
-        virtual const SPCIntraWaterParam &get_parameters() const = 0;
     };
 
-    class SPCFwIntraWater : public SPCIntraWater
+    class SPCFwIntraWaterParam : public SPCIntraWaterParam
     {
-       private:
         // clang-format off
-        const SPCIntraWaterParam _parameters{
-            1.012,                 // eqOHDistance in Angström
-            113.24 * _DEG_TO_RAD_, // eqHOHAngle in radians
-            1059.162,              // forceConstantOHBond in kcal mol^-1 Angström^-2
-            75.9                   // forceConstantHOHAngle in kcal mol^-1 rad^-2
-        };
-        // clang-format on
-
        public:
-        const SPCIntraWaterParam &get_parameters() const final
-        {
-            return _parameters;
-        }
+        double getEqOHDistance() const noexcept final { return 1.012;}               // Angström
+        double getEqHOHAngle() const noexcept final { return 113.24 * _DEG_TO_RAD_;} // radians
+        double getForceConstantOHBond() const noexcept final { return 1059.162;}     // kcal mol^-1 Angström^-2
+        double getForceConstantHOHAngle() const noexcept final { return 75.9;}       // kcal mol^-1 rad^-2
+        // clang-format on
     };
 
-    class qSPCFwIntraWater : public SPCIntraWater
+    class qSPCFwIntraWaterParam : public SPCIntraWaterParam
     {
-       private:
         // clang-format off
-        const SPCIntraWaterParam _parameters{
-            1.0,                  // eqOHDistance in Angström
-            112.0 * _DEG_TO_RAD_, // eqHOHAngle in radians
-            1059.162,             // forceConstantOHBond in kcal mol^-1 Angström^-2
-            75.9                  // forceConstantHOHAngle in kcal mol^-1 rad^-2
-        };
-        // clang-format on
-
        public:
-        const SPCIntraWaterParam &get_parameters() const final
-        {
-            return _parameters;
-        }
+        double getEqOHDistance() const noexcept final { return 1.0;}                // Angström
+        double getEqHOHAngle() const noexcept final { return 112.0 * _DEG_TO_RAD_;} // radians
+        double getForceConstantOHBond() const noexcept final { return 1059.162;}    // kcal mol^-1 Angström^-2
+        double getForceConstantHOHAngle() const noexcept final { return 75.9;}      // kcal mol^-1 rad^-2
+        // clang-format on
     };
 
 }   // namespace waterModel

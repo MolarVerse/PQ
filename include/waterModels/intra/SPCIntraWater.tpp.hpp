@@ -57,12 +57,10 @@ void waterModel::SPCIntraWater::calculate(
     pq::PhysicalData& physicalData
 )
 {
-    const auto& parameters = get_parameters();
-
-    const auto eqOHDistance = parameters.eqOHDistance;
-    const auto eqHOHAngle   = parameters.eqHOHAngle;
-    const auto kOHBond      = parameters.forceConstantOHBond;
-    const auto kHOHAngle    = parameters.forceConstantHOHAngle;
+    const auto eqOHDistance = _parameter->getEqOHDistance();
+    const auto eqHOHAngle   = _parameter->getEqHOHAngle();
+    const auto kOHBond      = _parameter->getForceConstantOHBond();
+    const auto kHOHAngle    = _parameter->getForceConstantHOHAngle();
 
     for (auto& water : box.getWaterTypeMolecules())
     {

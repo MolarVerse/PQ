@@ -24,6 +24,9 @@
 
 #define _MTR_INTRA_WATER_HPP_
 
+#include <memory>
+#include <utility>
+
 #include "constants/conversionFactors.hpp"   // for constants
 #include "intraWater.hpp"                    // for IntraWater
 #include "physicalData.hpp"                  // for PhysicalData
@@ -37,92 +40,59 @@ namespace waterModel
     class MTRIntraWaterParam
     {
        public:
-        double eqOHDistance{};   // Angström
-        double eqHHDistance{};   // Angström
-        double DOH{};            // kcal mol^-1
-        double alpha{};          // Angström^-1
-        double beta{};           // Angström^-2
-        double Ltt{};            // kcal mol^-1 Angström^-2
-        double Lrt{};            // kcal mol^-1 Angström^-2
-        double Lrr{};            // kcal mol^-1 Angström^-2
-
-        MTRIntraWaterParam() = delete;
-
-        constexpr MTRIntraWaterParam(
-            const double eqOHDist,
-            const double eqHHDist,
-            const double doh,
-            const double alphaAngle,
-            const double betaAngle,
-            const double ltt,
-            const double lrt,
-            const double lrr
-        ) noexcept
-            : eqOHDistance{eqOHDist},
-              eqHHDistance{eqHHDist},
-              DOH{doh},
-              alpha{alphaAngle},
-              beta{betaAngle},
-              Ltt{ltt},
-              Lrt{lrt},
-              Lrr{lrr}
-        {
-        }
+        virtual double getEqOHDistance() const noexcept = 0;   // Angström
+        virtual double getEqHHDistance() const noexcept = 0;   // Angström
+        virtual double getDOH() const noexcept          = 0;   // kcal mol^-1
+        virtual double getAlpha() const noexcept        = 0;   // Angström^-1
+        virtual double getBeta() const noexcept         = 0;   // Angström^-2
+        virtual double getLtt() const noexcept = 0;   // kcal mol^-1 Angström^-2
+        virtual double getLrt() const noexcept = 0;   // kcal mol^-1 Angström^-2
+        virtual double getLrr() const noexcept = 0;   // kcal mol^-1 Angström^-2
     };
 
     class MTRIntraWater : public IntraWater
     {
+       private:
+        std::unique_ptr<MTRIntraWaterParam> _parameter;
+
        public:
+        MTRIntraWater() = delete;
+        MTRIntraWater(std::unique_ptr<MTRIntraWaterParam> parameter)
+            : _parameter{std::move(parameter)}
+        {
+        }
+
         void calculate(pq::SimBox &, pq::PhysicalData &) final;
-
-       private:
-        virtual const MTRIntraWaterParam &get_parameters() const = 0;
     };
 
-    class SPCMTRIntraWater : public MTRIntraWater
+    class SPCMTRIntraWaterParam : public MTRIntraWaterParam
     {
-       private:
-        // clang-format off
-        const MTRIntraWaterParam _parameters{
-            1.0,                // eqOHDistance in Angström
-            1.632993162,        // eqHHDistance in Angström
-            101.9048757170172,  // DOH          in kcal mol^-1
-            2.511,              // alpha        in Angström^-1
-            3.0,                // beta         in Angström^-2
-            264.5841300191204,  // Ltt          in kcal mol^-1 Angström^-2
-            -211.0444550669216, // Lrt          in kcal mol^-1 Angström^-2
-            155.7839388145315   // Lrr          in kcal mol^-1 Angström^-2
-        };
-        // clang-format on
-
        public:
-        const MTRIntraWaterParam &get_parameters() const final
-        {
-            return _parameters;
-        }
+        // clang-format off
+        double getEqOHDistance() const noexcept final { return 1.0; }         // Angström
+        double getEqHHDistance() const noexcept final { return 1.632993162; } // Angström
+        double getDOH() const noexcept final { return 101.9048757170172; }    // kcal mol^-1
+        double getAlpha() const noexcept final { return 2.511; }              // Angström^-1
+        double getBeta() const noexcept final { return 3.0; }                 // Angström^-2
+        double getLtt() const noexcept final { return 264.5841300191204; }    // kcal mol^-1 Angström^-2
+        double getLrt() const noexcept final { return -211.0444550669216; }   // kcal mol^-1 Angström^-2
+        double getLrr() const noexcept final { return 155.7839388145315; }    // kcal mol^-1 Angström^-2
+        // clang-format on
     };
 
-    class TIP3PMTRIntraWater : public MTRIntraWater
+    class TIP3PMTRIntraWaterParam : public MTRIntraWaterParam
     {
-       private:
-        // clang-format off
-        const MTRIntraWaterParam _parameters{
-         0.9572,             // eqOHDistance in Angström
-         1.5139,             // eqHHDistance in Angström
-         101.9048757170172,  // DOH          in kcal mol^-1
-         2.483,              // alpha        in Angström^-1
-         3.0,                // beta         in Angström^-2
-         235.2449808795411,  // Ltt          in kcal mol^-1 Angström^-2
-         -181.2906309751434, // Lrt          in kcal mol^-1 Angström^-2
-         127.1534416826004   // Lrr          in kcal mol^-1 Angström^-2
-        };
-        // clang-format on
-
        public:
-        const MTRIntraWaterParam &get_parameters() const final
-        {
-            return _parameters;
-        }
+        // clang-format off
+        double getEqOHDistance() const noexcept final { return  0.9572; }    // Angström
+        double getEqHHDistance() const noexcept final { return 1.5139; }     // Angström
+        double getDOH() const noexcept final { return   101.9048757170172; } // kcal mol^-1
+        double getAlpha() const noexcept final { return 2.483; }             // Angström^-1
+        double getBeta() const noexcept final { return 3.0; }                // Angström^-2
+        double getLtt() const noexcept final { return 235.2449808795411; }   // kcal mol^-1 Angström^-2
+        double getLrt() const noexcept final { return -181.2906309751434; }  // kcal mol^-1 Angström^-2
+        double getLrr() const noexcept final { return 127.1534416826004; }   // kcal mol^-1 Angström^-2
+        // clang-format on
     };
 
 }   // namespace waterModel

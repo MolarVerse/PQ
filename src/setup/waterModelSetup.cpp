@@ -24,9 +24,11 @@
 
 #include <cmath>
 #include <format>
+#include <memory>
 #include <optional>
 #include <string>
 #include <unordered_set>
+#include <utility>
 
 #include "bondConstraint.hpp"     // for BondConstraint
 #include "engine.hpp"             // for Engine

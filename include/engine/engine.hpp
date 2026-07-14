@@ -178,7 +178,7 @@ namespace engine
         template <typename T>
         void makeVirial(T virial);
         template <typename T>
-        void makeIntraWater(T);
+        void makeIntraWater(T &&);
 
         /********************************
          * standard getters and setters *
