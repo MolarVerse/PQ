@@ -39,6 +39,7 @@ Molecular Mechanics
 **Long-range corrections**
 
 * no correction
+* :ref:`Reaction field <longrangeKey>`
 * :ref:`Wolf summation <longrangeKey>`
 
 *****************
@@ -116,5 +117,4 @@ The following items are planned for future releases:
 * MM-RPMD
 * Verlet-list force evaluation
 * Ewald summation
-* reaction-field correction
 * LINCS constraints
