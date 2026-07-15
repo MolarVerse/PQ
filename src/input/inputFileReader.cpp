@@ -48,7 +48,6 @@
 #include "resetKineticsInputParser.hpp"      // for InputFileParserResetKinetics
 #include "ringPolymerInputParser.hpp"        // for InputFileParserRingPolymer
 #include "simulationBoxInputParser.hpp"      // for InputFileParserSimulationBox
-#include "inputValidation.hpp"               // for validateInputConfiguration
 #include "stringUtilities.hpp"         // for getLineCommands, removeComments
 #include "thermostatInputParser.hpp"   // for InputFileParserThermostat
 #include "timingsInputParser.hpp"      // for InputFileParserTimings
@@ -287,7 +286,7 @@ void input::readInputFile(
     InputFileReader inputFileReader(fileName, engine);
     inputFileReader.read();
     inputFileReader.postProcess();
-    validateInputConfiguration(inputFileReader);
+    inputFileReader.validateInputConfiguration();
 }
 
 /**

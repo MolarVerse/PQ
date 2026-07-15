@@ -47,7 +47,10 @@ namespace engine
 namespace input
 {
     void readInputFile(const std::string_view &fileName, engine::Engine &);
-    void readJobType(const std::string &fileName, std::unique_ptr<engine::Engine> &);
+    void readJobType(
+        const std::string &fileName,
+        std::unique_ptr<engine::Engine> &
+    );
     void processEqualSign(std::string &command, const size_t lineNumber);
 
     /**
@@ -78,6 +81,7 @@ namespace input
         void addKeywords();
         void process(const pq::strings &lineElements);
         void postProcess();
+        void validateInputConfiguration() const;
 
         /***************************
          * standard setter methods *
@@ -91,7 +95,7 @@ namespace input
          ***************************/
 
         [[nodiscard]] size_t getKeywordCount(const std::string &keyword) const;
-        [[nodiscard]] bool getKeywordSet(const std::string &keyword) const;
+        [[nodiscard]] bool   getKeywordSet(const std::string &keyword) const;
         [[nodiscard]] bool getKeywordRequired(const std::string &keyword) const;
 
         // clang-format off
@@ -100,6 +104,13 @@ namespace input
         [[nodiscard]] std::map<std::string, bool> getKeywordRequiredMap() const;
         [[nodiscard]] std::map<std::string, pq::ParseFunc> getKeywordFuncMap() const;
         // clang-format on
+
+       private:
+        /******************************
+         * input validation functions *
+         ******************************/
+
+        void validateReactionFieldCoulomb() const;
     };
 
 }   // namespace input

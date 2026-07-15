@@ -20,8 +20,6 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "inputValidation.hpp"
-
 #include "exceptions.hpp"          // for InputFileException
 #include "inputFileReader.hpp"     // for InputFileReader
 #include "potentialSettings.hpp"   // for PotentialSettings
@@ -36,9 +34,9 @@ using namespace customException;
  * @details this is intended for cross-keyword checks that cannot be
  * verified within a single keyword parser.
  */
-void input::validateInputConfiguration(const InputFileReader& inputFileReader)
+void InputFileReader::validateInputConfiguration() const
 {
-    validateReactionFieldCoulomb(inputFileReader);
+    validateReactionFieldCoulomb();
 }
 
 /**
@@ -48,15 +46,14 @@ void input::validateInputConfiguration(const InputFileReader& inputFileReader)
  * @throws InputFileException if reaction-field Coulomb long-range correction
  * is selected but `rf_epsilon` is missing in the current input file
  */
-void input::validateReactionFieldCoulomb(const InputFileReader& inputFileReader)
+void InputFileReader::validateReactionFieldCoulomb() const
 {
     using enum CoulombLongRangeType;
 
     const auto longRangeCorrection =
         PotentialSettings::getCoulombLongRangeType();
 
-    if (longRangeCorrection == REACTION_FIELD &&
-        !inputFileReader.getKeywordSet("rf_epsilon"))
+    if (longRangeCorrection == REACTION_FIELD && !getKeywordSet("rf_epsilon"))
         throw InputFileException(
             "Missing required keyword \"rf_epsilon\" in input file: it must "
             "be set when the Coulomb long-range correction is set to "
