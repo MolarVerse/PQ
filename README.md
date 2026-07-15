@@ -73,6 +73,6 @@ and LTO, see the Installation Guide.
 
 If you use PQ in your research, please cite:
 
-- Gamper, J., Gallmetzer, J. M., Weiss, A. K. H., & Hofer, T. S. (2025). PQ: An Open-Source Platform for Advanced Molecular Dynamics Simulations. Zenodo. <https://doi.org/10.5281/zenodo.14185071>
+- Gamper, J., Gallmetzer, J. M., Penz, A., Weiss, A. K. H., & Hofer, T. S. PQ: An Open-Source Platform for Advanced Molecular Dynamics Simulations. Zenodo. <https://doi.org/10.5281/zenodo.14185071>
 
-- Gamper, J., Gallmetzer, J. M., Weiss, A. K. H., & Hofer, T. S. (2024). PQAnalysis (1.2.1). Zenodo. <https://doi.org/10.5281/zenodo.11322103>
+- Gamper, J., Gallmetzer, J. M., Weiss, A. K. H., & Hofer, T. S. PQAnalysis. Zenodo. <https://doi.org/10.5281/zenodo.11322103>
