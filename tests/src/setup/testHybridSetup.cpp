@@ -27,12 +27,14 @@
 
 #include "exceptions.hpp"
 #include "hybridSetup.hpp"
+#include "inputFileParser/hybridInputParser.hpp"
 #include "settings.hpp"
 #include "testSetup.hpp"
 
 using namespace setup;
 using namespace settings;
 using namespace customException;
+using namespace input;
 
 /* ---------- free function ---------- */
 
@@ -46,16 +48,16 @@ TEST_F(TestSetup, setupHybridIsNoOpWhenQMMMNotActive)
 
 TEST_F(TestSetup, parseSelectionNoPythonSingleIndex)
 {
-    HybridSetup hs(*_engine);
-    const auto  v = hs.parseSelectionNoPython("3", "qm_center");
+    HybridInputParser parser(*_engine);
+    const auto        v = parser.parseSelectionNoPython("3", "qm_center");
     ASSERT_EQ(v.size(), 1u);
     EXPECT_EQ(v[0], 3);
 }
 
 TEST_F(TestSetup, parseSelectionNoPythonCommaList)
 {
-    HybridSetup hs(*_engine);
-    const auto  v = hs.parseSelectionNoPython("1,3,5", "qm_center");
+    HybridInputParser parser(*_engine);
+    const auto        v = parser.parseSelectionNoPython("1,3,5", "qm_center");
     ASSERT_EQ(v.size(), 3u);
     EXPECT_EQ(v[0], 1);
     EXPECT_EQ(v[1], 3);
@@ -64,8 +66,8 @@ TEST_F(TestSetup, parseSelectionNoPythonCommaList)
 
 TEST_F(TestSetup, parseSelectionNoPythonRange)
 {
-    HybridSetup hs(*_engine);
-    const auto  v = hs.parseSelectionNoPython("2-5", "qm_center");
+    HybridInputParser parser(*_engine);
+    const auto        v = parser.parseSelectionNoPython("2-5", "qm_center");
     ASSERT_EQ(v.size(), 4u);
     EXPECT_EQ(v[0], 2);
     EXPECT_EQ(v[3], 5);
@@ -73,8 +75,8 @@ TEST_F(TestSetup, parseSelectionNoPythonRange)
 
 TEST_F(TestSetup, parseSelectionNoPythonMixedRangeAndList)
 {
-    HybridSetup hs(*_engine);
-    const auto  v = hs.parseSelectionNoPython("1,3-4,7", "qm_center");
+    HybridInputParser parser(*_engine);
+    const auto        v = parser.parseSelectionNoPython("1,3-4,7", "qm_center");
     ASSERT_EQ(v.size(), 4u);
     EXPECT_EQ(v[0], 1);
     EXPECT_EQ(v[1], 3);
@@ -84,9 +86,9 @@ TEST_F(TestSetup, parseSelectionNoPythonMixedRangeAndList)
 
 TEST_F(TestSetup, parseSelectionNoPythonEmptyThrows)
 {
-    HybridSetup hs(*_engine);
+    HybridInputParser parser(*_engine);
     EXPECT_THROW(
-        hs.parseSelectionNoPython("", "qm_center"),
+        parser.parseSelectionNoPython("", "qm_center"),
         InputFileException
     );
 }
@@ -95,16 +97,16 @@ TEST_F(TestSetup, parseSelectionNoPythonEmptyThrows)
 
 TEST_F(TestSetup, parseSelectionEmptyReturnsZeroOnly)
 {
-    HybridSetup hs(*_engine);
-    const auto  v = hs.parseSelection("", "qm_center");
+    HybridInputParser parser(*_engine);
+    const auto        v = parser.parseSelection("", "qm_center");
     ASSERT_EQ(v.size(), 1u);
     EXPECT_EQ(v[0], 0);
 }
 
 TEST_F(TestSetup, parseSelectionSortsAndDeduplicates)
 {
-    HybridSetup hs(*_engine);
-    const auto  v = hs.parseSelection("5,1,3,1", "qm_center");
+    HybridInputParser parser(*_engine);
+    const auto        v = parser.parseSelection("5,1,3,1", "qm_center");
     ASSERT_EQ(v.size(), 3u);
     EXPECT_EQ(v[0], 1);
     EXPECT_EQ(v[1], 3);
@@ -114,9 +116,9 @@ TEST_F(TestSetup, parseSelectionSortsAndDeduplicates)
 #ifndef PYTHON_ENABLED
 TEST_F(TestSetup, parseSelectionWithLettersThrowsWithoutPython)
 {
-    HybridSetup hs(*_engine);
+    HybridInputParser parser(*_engine);
     EXPECT_THROW(
-        hs.parseSelection("not_a_number", "qm_center"),
+        parser.parseSelection("not_a_number", "qm_center"),
         InputFileException
     );
 }
