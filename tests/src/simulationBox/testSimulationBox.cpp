@@ -437,3 +437,23 @@ TEST_F(TestSimulationBox, removeNetForce)
         1e-10
     );
 }
+
+/**
+ * @brief tests SimulationBox::updateOldPositions()
+ *
+ */
+TEST_F(TestSimulationBox, updateOldPositions)
+{
+    using namespace simulationBox;
+    using namespace linearAlgebra;
+
+    _simulationBox->getAtoms()[0]->setPositionOld({9.0, 9.0, 9.0});
+    _simulationBox->getAtoms()[1]->setPositionOld({9.0, 9.0, 9.0});
+
+    _simulationBox->updateOldPositions();
+
+    for (const auto &atom : _simulationBox->getAtoms())
+    {
+        EXPECT_VECTOR_NEAR(atom->getPositionOld(), atom->getPosition(), 1e-10);
+    }
+}

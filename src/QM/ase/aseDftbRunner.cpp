@@ -41,7 +41,7 @@ AseDftbRunner::AseDftbRunner(
     const std::unordered_map<std::string, double> &hubbardDerivs,
     const bool                                     dispersion
 )
-    : ASEQMRunner()
+    : AseQMRunner()
 {
     try
     {

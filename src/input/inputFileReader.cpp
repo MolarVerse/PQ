@@ -120,6 +120,9 @@ void InputFileReader::addKeywords()
 
         _keywordFuncMap.insert(keywordFuncMap.begin(), keywordFuncMap.end());
         _keywordCountMap.insert(keywordCountMap.begin(), keywordCountMap.end());
+
+        for (const auto &[keyword, _] : keywordCountMap)
+            _keywordSetMap[keyword] = false;
     };
 
     std::ranges::for_each(_parsers, addKeyword);
@@ -153,6 +156,7 @@ void InputFileReader::process(const std::vector<std::string> &lineElements)
     parserFunc(lineElements, _lineNumber);
 
     ++_keywordCountMap[keyword];
+    _keywordSetMap[keyword] = true;
 }
 
 /**
@@ -282,6 +286,7 @@ void input::readInputFile(
     InputFileReader inputFileReader(fileName, engine);
     inputFileReader.read();
     inputFileReader.postProcess();
+    inputFileReader.validateInputConfiguration();
 }
 
 /**
@@ -365,6 +370,7 @@ void InputFileReader::setKeywordCount(
 )
 {
     _keywordCountMap[keyword] = count;
+    _keywordSetMap[keyword]   = (count > 0);
 }
 
 /***************************
@@ -379,9 +385,26 @@ void InputFileReader::setKeywordCount(
  * @param keyword
  * @return size_t
  */
-size_t InputFileReader::getKeywordCount(const std::string &keyword)
+size_t InputFileReader::getKeywordCount(const std::string &keyword) const
 {
-    return _keywordCountMap[keyword];
+    if (!_keywordCountMap.contains(keyword))
+        return 0;
+
+    return _keywordCountMap.at(keyword);
+}
+
+/**
+ * @brief get whether the keyword has been set in input
+ *
+ * @param keyword
+ * @return bool
+ */
+bool InputFileReader::getKeywordSet(const std::string &keyword) const
+{
+    if (!_keywordSetMap.contains(keyword))
+        return false;
+
+    return _keywordSetMap.at(keyword);
 }
 
 /**
@@ -390,9 +413,12 @@ size_t InputFileReader::getKeywordCount(const std::string &keyword)
  * @param keyword
  * @return bool
  */
-bool InputFileReader::getKeywordRequired(const std::string &keyword)
+bool InputFileReader::getKeywordRequired(const std::string &keyword) const
 {
-    return _keywordRequiredMap[keyword];
+    if (!_keywordRequiredMap.contains(keyword))
+        return false;
+
+    return _keywordRequiredMap.at(keyword);
 }
 
 /**
@@ -403,6 +429,16 @@ bool InputFileReader::getKeywordRequired(const std::string &keyword)
 std::map<std::string, size_t> InputFileReader::getKeywordCountMap() const
 {
     return _keywordCountMap;
+}
+
+/**
+ * @brief get the keyword set map
+ *
+ * @return std::map<std::string, bool>
+ */
+std::map<std::string, bool> InputFileReader::getKeywordSetMap() const
+{
+    return _keywordSetMap;
 }
 
 /**

@@ -50,6 +50,8 @@ namespace input
         void parseShakeIteration(const pq::strings &, const size_t);
         void parseRattleTolerance(const pq::strings &, const size_t);
         void parseRattleIteration(const pq::strings &, const size_t);
+        void parseMShakeTolerance(const pq::strings &, const size_t);
+        void parseMShakeIteration(const pq::strings &, const size_t);
 
         void parseDistanceConstraintActivated(const pq::strings &, const size_t);
     };

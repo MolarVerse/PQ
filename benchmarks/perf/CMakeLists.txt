@@ -1,19 +1,19 @@
 # Each performance-regression benchmark is a standalone fixed-work executable.
-# To add one: drop a <name>.cpp here and add it to the list below. The CI gate
-# (.github/workflows/perf.yml) auto-discovers every perf_* target.
+# To add one: drop a perf<Name>.cpp here and add it to the list below. The CI
+# gate (.github/workflows/perf.yml) auto-discovers every perf_* target.
 set(perf_benchmarks
-    forceKernel.cpp
-    coulombKernel.cpp
-    nonCoulombPairs.cpp
-    shiftVector.cpp
-    linearAlgebra.cpp
-    boxTransforms.cpp
-    bondedForces.cpp
-    integrator.cpp
-    kinetics.cpp
-    virial.cpp
-    constraints.cpp
     perfInterWater.cpp
+    perfForceKernel.cpp
+    perfCoulombKernel.cpp
+    perfNonCoulombPairs.cpp
+    perfShiftVector.cpp
+    perfLinearAlgebra.cpp
+    perfBoxTransforms.cpp
+    perfBondedForces.cpp
+    perfIntegrator.cpp
+    perfKinetics.cpp
+    perfVirial.cpp
+    perfConstraints.cpp
 )
 
 include(CheckIncludeFileCXX)
@@ -21,7 +21,13 @@ check_include_file_cxx("valgrind/callgrind.h" HAVE_CALLGRIND_H)
 
 set(perf_targets "")
 foreach(perf_source ${perf_benchmarks})
-    get_filename_component(perf_name ${perf_source} NAME_WE)
+    get_filename_component(perf_source_name ${perf_source} NAME_WE)
+    string(REGEX REPLACE "^perf" "" perf_name_tail "${perf_source_name}")
+    string(SUBSTRING "${perf_name_tail}" 0 1 perf_name_first)
+    string(SUBSTRING "${perf_name_tail}" 1 -1 perf_name_rest)
+    string(TOLOWER "${perf_name_first}" perf_name_first)
+    set(perf_name "${perf_name_first}${perf_name_rest}")
+
     add_executable(perf_${perf_name} ${perf_source})
 
     target_include_directories(perf_${perf_name}

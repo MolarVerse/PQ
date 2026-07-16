@@ -48,7 +48,7 @@ TEST_F(TestCellList, determineCellBoundaries)
     _cellList->resizeCells();
     _cellList->determineCellBoundaries(_simulationBox->getBoxDimensions());
 
-    auto cells = _cellList->getCells();
+    const auto &cells = _cellList->getCells();
 
     const auto box = _simulationBox->getBoxDimensions();
     auto index     = static_cast<linearAlgebra::Vec3D>(cells[0].getCellIndex());
@@ -99,6 +99,35 @@ TEST_F(TestCellList, getCellIndexOfAtom)
     );
 }
 
+TEST_F(TestCellList, getCellIndexOfAtom_wrapsPeriodicBoundaryCoordinates)
+{
+    _simulationBox->setBoxDimensions(linearAlgebra::Vec3D(10.0, 10.0, 10.0));
+    _cellList->setNumberOfCells(2);
+    _cellList->determineCellSize(_simulationBox->getBoxDimensions());
+
+    EXPECT_EQ(
+        _cellList->getCellIndexOfAtom(
+            _simulationBox->getBoxDimensions(),
+            linearAlgebra::Vec3D(-5.0, -5.0, -5.0)
+        ),
+        linearAlgebra::Vec3Dul(0, 0, 0)
+    );
+    EXPECT_EQ(
+        _cellList->getCellIndexOfAtom(
+            _simulationBox->getBoxDimensions(),
+            linearAlgebra::Vec3D(0.0, 0.0, 0.0)
+        ),
+        linearAlgebra::Vec3Dul(1, 1, 1)
+    );
+    EXPECT_EQ(
+        _cellList->getCellIndexOfAtom(
+            _simulationBox->getBoxDimensions(),
+            linearAlgebra::Vec3D(5.0, 5.0, 5.0)
+        ),
+        linearAlgebra::Vec3Dul(0, 0, 0)
+    );
+}
+
 TEST_F(TestCellList, addNeighbouringCellPointers)
 {
     auto cell = simulationBox::Cell();
@@ -110,7 +139,7 @@ TEST_F(TestCellList, addNeighbouringCellPointers)
     _cellList->determineCellBoundaries(_simulationBox->getBoxDimensions());
     _cellList->addNeighbouringCellPointers(cell);
 
-    const auto neighbourCells = cell.getNeighbourCells();
+    const auto &neighbourCells = cell.getNeighbourCells();
 
     EXPECT_EQ(neighbourCells.size(), 13);
     EXPECT_EQ(
@@ -179,7 +208,7 @@ TEST_F(TestCellList, addNeighbouringCells)
 
     for (const auto &cell : _cellList->getCells())
     {
-        const auto neighbourCells = cell.getNeighbourCells();
+        const auto &neighbourCells = cell.getNeighbourCells();
         EXPECT_EQ(neighbourCells.size(), 62);
     }
 

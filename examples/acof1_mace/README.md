@@ -22,6 +22,6 @@ The input file `run-01.in` contains the following settings:
 - `manostat = stochastic_rescaling`: Stochastic rescaling manostat (Bussi).
 - `isotropy = full_anisotropic`: Full anisotropic pressure coupling.
 - `qm_prog = mace_mp`: MACE-MP-0 model for the "QM" calculation.
-- `mace_model_size = large`: Large model size.
+- `mace_model = large`: Large MACE model.
 - `dispersion = true`: Dispersion correction on.
 - `floating_point_type = float`: Single precision.

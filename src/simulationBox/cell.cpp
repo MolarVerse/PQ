@@ -213,13 +213,12 @@ Cell *Cell::getNeighbourCell(const size_t index) const
 /**
  * @brief returns the neighbour cells vector
  *
- * @return std::vector<Cell*>
+ * @return const std::vector<Cell*>&
  */
 const std::vector<Cell *> &Cell::getNeighbourCells() const
 {
     return _neighbourCells;
 }
-
 
 /**
  * @brief returns the molecule indices in the core hybrid zone

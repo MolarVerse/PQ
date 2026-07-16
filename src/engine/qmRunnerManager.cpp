@@ -31,8 +31,8 @@
 
 #ifdef WITH_ASE
 #include "aseDftbRunner.hpp"   // for AseDftbRunner
+#include "aseMaceRunner.hpp"   // for AseMaceRunner
 #include "aseXtbRunner.hpp"    // for AseXtbRunner
-#include "maceRunner.hpp"      // for MaceRunner
 #endif
 
 using namespace engine;
@@ -89,13 +89,20 @@ shared_ptr<QMRunner> QMRunnerManager::createMaceQMRunner()
     const auto modelPath = QMSettings::getMaceModelPath();
     const auto useDFTD   = QMSettings::useDispersionCorr();
     const auto fpType    = Settings::getFloatingPointPybindString();
+    const auto useCueq   = QMSettings::getMaceMode() == MaceMode::FAST;
 
-    auto maceModel = string(QMSettings::getMaceModelSize());
+    auto maceModel = string(QMSettings::getMaceModel());
 
     if (!modelPath.empty())
         maceModel = modelPath;
 
-    return make_shared<QM::MaceRunner>(modelType, maceModel, fpType, useDFTD);
+    return make_shared<QM::AseMaceRunner>(
+        modelType,
+        maceModel,
+        fpType,
+        useDFTD,
+        useCueq
+    );
 #else
     throw CompileTimeException(
         "A MACE type QM method was requested but ASE was not enabled at "

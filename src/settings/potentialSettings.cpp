@@ -63,6 +63,7 @@ std::string settings::string(const CoulombLongRangeType coulombLongRangeType)
     {
         using enum CoulombLongRangeType;
 
+        case REACTION_FIELD: return "reaction-field";
         case WOLF: return "wolf";
         case SHIFTED: return "shifted";
 
@@ -119,9 +120,12 @@ void PotentialSettings::setNonCoulombType(const NonCoulombType type)
 void PotentialSettings::setCoulombLongRangeType(const std::string_view &type)
 {
     using enum CoulombLongRangeType;
-    const auto typeToLower = toLowerCopy(type);
+    const auto typeToLower = toLowerAndReplaceDashesCopy(type);
 
-    if (typeToLower == "wolf")
+    if (typeToLower == "reaction_field")
+        _coulombLRType = REACTION_FIELD;
+
+    else if (typeToLower == "wolf")
         _coulombLRType = WOLF;
 
     else if (typeToLower == "shifted")
@@ -138,7 +142,8 @@ void PotentialSettings::setCoulombLongRangeType(const std::string_view &type)
  *
  * @param type
  */
-void PotentialSettings::setCoulombLongRangeType(const CoulombLongRangeType &type
+void PotentialSettings::setCoulombLongRangeType(
+    const CoulombLongRangeType &type
 )
 {
     _coulombLRType = type;
@@ -185,6 +190,16 @@ void PotentialSettings::setScale14Coulomb(const double scale14Coulomb)
 void PotentialSettings::setScale14VanDerWaals(const double scale14VanDerWaals)
 {
     _scale14VanDerWaals = scale14VanDerWaals;
+}
+
+/**
+ * @brief Set the reaction field epsilon in the PotentialSettings class
+ *
+ * @param epsilon
+ */
+void PotentialSettings::setReactionFieldEpsilon(const double epsilon)
+{
+    _reactionFieldEpsilon = epsilon;
 }
 
 /**
@@ -256,6 +271,16 @@ double PotentialSettings::getScale14Coulomb() { return _scale14Coulomb; }
  * @return double
  */
 double PotentialSettings::getScale14VDW() { return _scale14VanDerWaals; }
+
+/**
+ * @brief get the reaction field epsilon
+ *
+ * @return double
+ */
+double PotentialSettings::getReactionFieldEpsilon()
+{
+    return _reactionFieldEpsilon;
+}
 
 /**
  * @brief get the Wolf parameter

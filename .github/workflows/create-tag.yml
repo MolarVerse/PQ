@@ -42,6 +42,15 @@ jobs:
           echo "✅ Found release version: $version"
           echo "version=$version" >> $GITHUB_OUTPUT
 
+      # git-cliff renders the Next Release section from conventional
+      # commits when no curated content exists. The script preserves any
+      # curated entries in CHANGELOG.md verbatim, so this binary is only
+      # actually invoked for releases where Next Release is empty.
+      - name: Install git-cliff
+        uses: taiki-e/install-action@v2
+        with:
+          tool: git-cliff
+
       - name: Update CHANGELOG.md
         run: |
           version="${{ steps.extract_version.outputs.version }}"
