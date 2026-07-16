@@ -24,6 +24,7 @@
 
 #include <algorithm>    // for __for_each_fn, for_each
 #include <chrono>       // for seconds
+#include <cmath>        // for isnan, isinf
 #include <format>       // for format
 #include <fstream>      // for ofstream
 #include <functional>   // for identity
@@ -131,13 +132,29 @@ void ExternalQMRunner::readForceFile(
 
     forceFile >> energy;
 
+    if (std::isnan(energy) || std::isinf(energy))
+        throw QMRunnerException(std::format(
+            "Invalid QM energy (NaN/Inf) in {} force file \"{}\"",
+            string(QMSettings::getQMMethod()),
+            forceFileName
+        ));
+
     physicalData.setQMEnergy(energy * _HARTREE_TO_KCAL_PER_MOL_);
 
-    auto readForces = [&forceFile](auto &atom)
+    auto readForces = [&forceFile, &forceFileName](auto &atom)
     {
         auto grad = linearAlgebra::Vec3D();
 
         forceFile >> grad[0] >> grad[1] >> grad[2];
+
+        for (size_t i = 0; i < 3; ++i)
+            if (std::isnan(grad[i]) || std::isinf(grad[i]))
+                throw QMRunnerException(std::format(
+                    "Invalid QM force component (NaN/Inf) in {} force file "
+                    "\"{}\"",
+                    string(QMSettings::getQMMethod()),
+                    forceFileName
+                ));
 
         atom->setForce(-grad * _HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM_);
     };

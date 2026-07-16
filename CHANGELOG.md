@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 - Add keyword "remove_net_force" for removing total net force when reading in 
   forces from QM calculations
+- Add FeNNol neural network potential as ASE QM runner
+- Add keywords "mshake-iter" and "mshake-tolerance"
+
+### Refactor
+
+- Rename keyword "mace_model_size" to "mace_model" and add deprecation warning
 
 ### Build
 
@@ -44,9 +50,21 @@ All notable changes to this project will be documented in this file.
   commit SHA; on a hit the whole base checkout + build + callgrind run is
   skipped (≈ half the workflow), with identical numerics (callgrind is
   deterministic per binary)
+- Per-PR changelog edits are no longer required: the `## Next Release`
+  section is auto-generated from conventional-commit subjects at release
+  time via `git-cliff` (see `cliff.toml`). The `Check Changelog` CI gate
+  and the legacy `changes/` fragment flow are deprecated; existing
+  curated `## Next Release` entries are preserved by the release script
+  unchanged
 
 ### Bug Fixes
 
+- `AngleForceField::calculateEnergyAndForces` no longer divides by
+  `sin(alpha)` when the angle is collinear (alpha ≈ 0 or π): the
+  bend-force decomposition is now gated on `|sin(alpha)| >= 1e-10`,
+  preventing NaN forces for linear-equilibrium parametrizations (e.g.
+  CO₂ with α₀ = 180°) and transient collinear configurations. Energy
+  contribution and the linker correction below are unaffected
 - `BerendsenThermostat::applyThermostat` no longer produces NaN
   velocities when called with zero kinetic energy: the `T_target / T`
   ratio would diverge and `0.0 * Inf = NaN` corrupted every atom's
@@ -59,6 +77,35 @@ All notable changes to this project will be documented in this file.
   was therefore storing wrong reference squared bond lengths, so
   `applyMShake` was driving the constraint toward an incorrect target
   and could not converge
+- Multiple M-SHAKE fixes in `applyMShake`:
+  - inner loop now iterates upper-triangular `(k+1 .. nAtoms)` bond
+    pairs instead of a rectangular `(nAtoms-1)²` grid, matching the
+    matrix-init loop. The previous loop wrote past the
+    `(nBonds, nBonds)` `mShakeMatrix` and read past
+    `bondsUnconstrained` for any molecule with `nAtoms ≥ 3`
+  - convergence check inverted: the loop now breaks when `converged`
+    is true, not when it's false (the old code exited the iteration
+    the first time anything wasn't converged)
+  - new `shakeIterations` parameter bounds the inner SHAKE iterations
+    and throws `MShakeException` instead of looping forever if the
+    constraint solver fails to converge
+  - `dt` is now converted from fs to s via `_FS_TO_S_` (mirroring the
+    v0.6.4 fix to `applyShake`); the position adjustment was
+    unaffected (dt² cancels), but the velocity correction
+    `posAdjustment / (mass * dt)` was being divided by raw fs,
+    leaving velocities essentially uncorrected by M-SHAKE
+  - `MDEngine::takeStepBeforeForces` now snapshots `_positionOld` via
+    `SimulationBox::updateOldPositions()` before the integrator's
+    first half-step when M-SHAKE is active. Without this, M-SHAKE's
+    `bondPrev` reference was whatever the `.rst` file initialised
+    `_positionOld` to (or `(0,0,0)` for files missing the old-position
+    columns), so `posAdjustment = solution * bondPrev = 0` and the
+    solver never converged
+- `ExternalQMRunner::readForceFile` now throws `QMRunnerException` if the
+  QM energy or any force component read from the external force file is
+  NaN/Inf, mirroring the v0.6.2 NaN/Inf input-file guard. Previously a
+  failed/garbage QM calculation silently propagated NaN into the
+  trajectory
 
 ### Internal
 
@@ -73,6 +120,10 @@ All notable changes to this project will be documented in this file.
 - `utilities::isZero<T>(a)` helper added to `mathUtilities.hpp`,
   centralizing the exact-zero check (`a == T(0)`). Callers that need a
   tolerance can still use `compare(a, T(0), tol)`
+- Add option to queue warnings before the .log output file has been created
+  and flush them to the file at the end of the setup
+- Rename `MaceRunner` class to `AseMaceRunner` and `ASEQMRunner` to `AseQMRunner` for consistency
+- Add .clangd file for clangd language server
 
 ### Tests
 
@@ -191,6 +242,12 @@ All notable changes to this project will be documented in this file.
   no-op when RPMD inactive; `setup()` throws when number of beads not
   set; `setupPhysicalData` / `setupSimulationBox` succeed with beads
   configured)
+
+### Internal
+
+- `CellList::getCells()` and `Cell::getNeighbourCells()` now return by
+  `const &` instead of by value, and `VelocityVerlet::secondStep` no longer
+  copies the per-atom `shared_ptr` into its lambda parameter
 
 <!-- insertion marker -->
 ## [v0.6.4](https://github.com/MolarVerse/PQ/releases/tag/v0.6.4) - 2026-03-31

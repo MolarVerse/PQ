@@ -75,8 +75,10 @@ namespace defaults
     static constexpr bool   _CONSTRAINTS_ACTIVE_DEFAULT_ = false;
     static constexpr size_t _SHAKE_MAX_ITER_DEFAULT_     = 20;
     static constexpr size_t _RATTLE_MAX_ITER_DEFAULT_    = 20;
+    static constexpr size_t _MSHAKE_MAX_ITER_DEFAULT_    = 20;
     static constexpr double _SHAKE_TOLERANCE_DEFAULT_    = 1e-8;
     static constexpr double _RATTLE_TOLERANCE_DEFAULT_   = 1e-8 * 1e12;
+    static constexpr double _MSHAKE_TOLERANCE_DEFAULT_   = 1e-8;
 
     static constexpr bool   _CELL_LIST_IS_ACTIVE_DEFAULT_ = false;   // default is brute force routine
     static constexpr size_t _NUMBER_OF_CELLS_DEFAULT_     = 7;       // for each dimension

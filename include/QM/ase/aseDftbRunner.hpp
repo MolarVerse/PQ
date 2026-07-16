@@ -31,11 +31,11 @@
 namespace QM
 {
     /**
-     * @brief AseDftbRunner inherits from ASEQMRunner
+     * @brief AseDftbRunner inherits from AseQMRunner
      *
      */
     class __attribute__((visibility("default"))) AseDftbRunner
-        : public ASEQMRunner
+        : public AseQMRunner
     {
        public:
         ~AseDftbRunner() override = default;

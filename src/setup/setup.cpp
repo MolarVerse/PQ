@@ -212,4 +212,6 @@ void setup::setupEngine(Engine &engine)
 
     if (Settings::isOptJobType())
         setupOptimizer(engine);
+
+    engine.getLogOutput().flushQueuedWarnings();
 }

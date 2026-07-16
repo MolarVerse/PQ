@@ -40,6 +40,15 @@ TEST(ConstraintSettingsTest, RattleMaxIterRoundTrip)
     EXPECT_EQ(settings::ConstraintSettings::getRattleMaxIter(), 750u);
 }
 
+TEST(ConstraintSettingsTest, MShakeMaxIterRoundTrip)
+{
+    settings::ConstraintSettings::setMShakeMaxIter(5u);
+    EXPECT_EQ(settings::ConstraintSettings::getMShakeMaxIter(), 5u);
+
+    settings::ConstraintSettings::setMShakeMaxIter(2u);
+    EXPECT_EQ(settings::ConstraintSettings::getMShakeMaxIter(), 2u);
+}
+
 TEST(ConstraintSettingsTest, ShakeToleranceRoundTrip)
 {
     settings::ConstraintSettings::setShakeTolerance(1.0e-4);
@@ -63,3 +72,19 @@ TEST(ConstraintSettingsTest, RattleToleranceRoundTrip)
         1.0e-6
     );
 }
+
+TEST(ConstraintSettingsTest, MShakeToleranceRoundTrip)
+{
+    settings::ConstraintSettings::setMShakeTolerance(3.0e-5);
+    EXPECT_DOUBLE_EQ(
+        settings::ConstraintSettings::getMShakeTolerance(),
+        3.0e-5
+    );
+
+    settings::ConstraintSettings::setMShakeTolerance(1.1e-10);
+    EXPECT_DOUBLE_EQ(
+        settings::ConstraintSettings::getMShakeTolerance(),
+        1.1e-10
+    );
+}
+

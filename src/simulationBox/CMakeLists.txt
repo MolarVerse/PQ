@@ -46,6 +46,8 @@ target_include_directories(simulationBox
     ${PROJECT_SOURCE_DIR}/include/simulationBox
     ${PROJECT_SOURCE_DIR}/include/config
     ${PROJECT_SOURCE_DIR}/include/views
+    PRIVATE
+    ${PROJECT_SOURCE_DIR}/include/utilities
 )
 
 target_link_libraries(simulationBox

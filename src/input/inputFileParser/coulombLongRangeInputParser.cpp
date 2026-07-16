@@ -61,6 +61,15 @@ CoulombLongRangeInputParser::CoulombLongRangeInputParser(Engine &engine)
         bind_front(&CoulombLongRangeInputParser::parseWolfParameter, this),
         false
     );
+
+    addKeyword(
+        std::string("rf_epsilon"),
+        bind_front(
+            &CoulombLongRangeInputParser::parseReactionFieldEpsilon,
+            this
+        ),
+        false
+    );
 }
 
 /**
@@ -68,6 +77,7 @@ CoulombLongRangeInputParser::CoulombLongRangeInputParser(Engine &engine)
  *
  * @details Possible options are:
  * 1) "none" - no long-range correction is used (default) = shifted potential
+ * 2) "reaction_field" - reaction field long-range correction is used
  * 2) "wolf" - wolf long-range correction is used
  *
  * @param lineElements
@@ -82,12 +92,15 @@ void CoulombLongRangeInputParser::parseCoulombLongRange(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto type = toLowerCopy(lineElements[2]);
+    const auto type = toLowerAndReplaceDashesCopy(lineElements[2]);
 
     using enum CoulombLongRangeType;
 
     if (type == "none" || type == "shifted")
         PotentialSettings::setCoulombLongRangeType(SHIFTED);
+
+    else if (type == "reaction_field")
+        PotentialSettings::setCoulombLongRangeType(REACTION_FIELD);
 
     else if (type == "wolf")
         PotentialSettings::setCoulombLongRangeType(WOLF);
@@ -96,7 +109,7 @@ void CoulombLongRangeInputParser::parseCoulombLongRange(
         throw InputFileException(format(
             "Invalid long-range type for coulomb correction "
             "\"{}\" at line {} in input file\n"
-            "Possible options are: none, shifted, wolf",
+            "Possible options are: none, shifted, reaction-field, wolf",
             lineElements[2],
             lineNumber
         ));
@@ -124,4 +137,29 @@ void CoulombLongRangeInputParser::parseWolfParameter(
         throw InputFileException("Wolf parameter cannot be negative");
 
     PotentialSettings::setWolfParameter(wolfParameter);
+}
+
+/**
+ * @brief parse the reaction field epsilon used in the simulation
+ *
+ * @param lineElements
+ *
+ * @throws InputFileException if epsilon is negative
+ */
+void CoulombLongRangeInputParser::parseReactionFieldEpsilon(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+
+    const auto epsilon = stod(lineElements[2]);
+
+    if (epsilon < 1.0)
+        throw InputFileException(
+            "Static relative permittivity \"rf_epsilon\" cannot be lower than "
+            "1.0"
+        );
+
+    PotentialSettings::setReactionFieldEpsilon(epsilon);
 }

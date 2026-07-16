@@ -9,7 +9,8 @@ This page explains in detail how to set up and use the PQ application. Please re
 .. toctree::
     :maxdepth: 1
 
+    quickStart.rst
     generalUsage.rst
-    inputFile.rst
-    setupFiles.rst
-    outputFiles.rst
+    examples.rst
+    referenceManual.rst
+    troubleshooting.rst

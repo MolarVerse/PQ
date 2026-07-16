@@ -30,9 +30,9 @@
 #include "qmSettings.hpp"   // for QMSettings
 #include "simulationBox.hpp"
 
-using QM::ASEQMRunner;
 using enum simulationBox::Periodicity;
 
+using QM::AseQMRunner;
 using namespace simulationBox;
 using namespace physicalData;
 using namespace constants;
@@ -42,11 +42,11 @@ using array_d = py::array_t<double>;
 using array_i = py::array_t<int>;
 
 /**
- * @brief Construct a new ASEQMRunner::ASEQMRunner object
+ * @brief Construct a new AseQMRunner::AseQMRunner object
  *
  * @throw py::error_already_set if the import of the ase.atoms module fails
  */
-ASEQMRunner::ASEQMRunner()
+AseQMRunner::AseQMRunner()
 {
     try
     {
@@ -78,7 +78,7 @@ ASEQMRunner::ASEQMRunner()
  *
  * @throw QMRunnerException if the calculation takes too long
  */
-void ASEQMRunner::run(
+void AseQMRunner::run(
     SimulationBox &simBox,
     PhysicalData  &physicalData,
     Periodicity    per
@@ -111,7 +111,7 @@ void ASEQMRunner::run(
  *
  * @throw py::error_already_set if the execution of the ASE QM calculation fails
  */
-void ASEQMRunner::execute()
+void AseQMRunner::execute()
 {
     try
     {
@@ -138,7 +138,7 @@ void ASEQMRunner::execute()
  * @param simBox
  * @param physicalData
  */
-void ASEQMRunner::collectData(
+void AseQMRunner::collectData(
     SimulationBox &simBox,
     PhysicalData  &physicalData
 ) const
@@ -155,7 +155,7 @@ void ASEQMRunner::collectData(
  *
  * @throw py::error_already_set if the collection of the forces fails
  */
-void ASEQMRunner::collectForces(SimulationBox &simBox) const
+void AseQMRunner::collectForces(SimulationBox &simBox) const
 {
     try
     {
@@ -187,7 +187,7 @@ void ASEQMRunner::collectForces(SimulationBox &simBox) const
  *
  * @param physicalData
  */
-void ASEQMRunner::collectEnergy(PhysicalData &physicalData) const
+void AseQMRunner::collectEnergy(PhysicalData &physicalData) const
 {
     physicalData.setQMEnergy(_energy * _EV_TO_KCAL_PER_MOL_);
 }
@@ -200,7 +200,7 @@ void ASEQMRunner::collectEnergy(PhysicalData &physicalData) const
  *
  * @throw py::error_already_set if the collection of the stress fails
  */
-void ASEQMRunner::collectStress(
+void AseQMRunner::collectStress(
     const SimulationBox &simBox,
     PhysicalData        &data
 ) const
@@ -235,7 +235,7 @@ void ASEQMRunner::collectStress(
  *
  * @throw py::error_already_set if the construction of the Atoms object fails
  */
-void ASEQMRunner::buildAseAtoms(const SimulationBox &simBox)
+void AseQMRunner::buildAseAtoms(const SimulationBox &simBox)
 {
     try
     {
@@ -267,7 +267,7 @@ void ASEQMRunner::buildAseAtoms(const SimulationBox &simBox)
  *
  * @throw py::error_already_set if the construction of the array fails
  */
-py::array ASEQMRunner::asePositions(const SimulationBox &simBox) const
+py::array AseQMRunner::asePositions(const SimulationBox &simBox) const
 {
     const auto nAtoms = simBox.getNumberOfQMAtoms();
     const auto pos    = simBox.getFlattenedQMPositions();
@@ -309,7 +309,7 @@ py::array ASEQMRunner::asePositions(const SimulationBox &simBox) const
  *
  * @throw py::error_already_set if the construction of the array fails
  */
-py::array_t<double> ASEQMRunner::aseCell(const SimulationBox &simBox) const
+py::array_t<double> AseQMRunner::aseCell(const SimulationBox &simBox) const
 {
     const auto boxDimension = simBox.getBoxDimensions();
     const auto boxAngles    = simBox.getBoxAngles();
@@ -343,7 +343,7 @@ py::array_t<double> ASEQMRunner::aseCell(const SimulationBox &simBox) const
  *
  * @throw py::error_already_set if the construction of the array fails
  */
-py::array_t<bool> ASEQMRunner::asePBC() const
+py::array_t<bool> AseQMRunner::asePBC() const
 {
     std::array<bool, 3> pbc_array;
 
@@ -380,7 +380,7 @@ py::array_t<bool> ASEQMRunner::asePBC() const
  *
  * @throw py::error_already_set if the construction of the array fails
  */
-py::array_t<int> ASEQMRunner::aseAtomicNumbers(
+py::array_t<int> AseQMRunner::aseAtomicNumbers(
     const SimulationBox &simBox
 ) const
 {
