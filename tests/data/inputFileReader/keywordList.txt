@@ -36,6 +36,7 @@ mshake-iter                 false
 distance-constraints        false
 
 long_range                  false
+rf_epsilon                  false
 wolf_param                  false
 
 force-field                 false
