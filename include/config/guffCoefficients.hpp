@@ -27,14 +27,15 @@
 namespace constants
 {
     // clang-format off
-    static constexpr double _SPC_LJ_C6_OO_  = -625.5024676571352; // A^6  kcal mol^-1
-    static constexpr double _SPC_LJ_C12_OO_ =  629326.9774051674; // A^12 kcal mol^-1
+    // values calculated from the original SPC publication
+    static constexpr double _SPC_LJ_C6_OO_  = -625.455653639347; // A^6  kcal mol^-1
+    static constexpr double _SPC_LJ_C12_OO_ =  629358.472583307; // A^12 kcal mol^-1
 
     static constexpr double _SPC_E_LJ_C6_OO_  =  _SPC_LJ_C6_OO_;  // A^6  kcal mol^-1
     static constexpr double _SPC_E_LJ_C12_OO_ =  _SPC_LJ_C12_OO_; // A^12 kcal mol^-1
 
-    static constexpr double _SPC_FW_LJ_C6_OO_  =  _SPC_LJ_C6_OO_;  // A^6  kcal mol^-1
-    static constexpr double _SPC_FW_LJ_C12_OO_ =  _SPC_LJ_C12_OO_; // A^12 kcal mol^-1
+    static constexpr double _SPC_FW_LJ_C6_OO_  =  -625.5024676571352; // A^6  kcal mol^-1
+    static constexpr double _SPC_FW_LJ_C12_OO_ =   629326.9774051674; // A^12 kcal mol^-1
 
     static constexpr double _QSPC_FW_LJ_C6_OO_  = -625.5020652114152; // A^6  kcal mol^-1
     static constexpr double _QSPC_FW_LJ_C12_OO_ =  629326.5724987736; // A^12 kcal mol^-1
