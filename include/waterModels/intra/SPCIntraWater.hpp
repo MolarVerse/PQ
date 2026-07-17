@@ -24,9 +24,6 @@
 
 #define _SPC_INTRA_WATER_HPP_
 
-#include <memory>
-#include <utility>
-
 #include "constants/conversionFactors.hpp"   // for constants
 #include "intraWater.hpp"                    // for IntraWater
 #include "physicalData.hpp"                  // for PhysicalData
@@ -37,51 +34,50 @@ using namespace constants;
 
 namespace waterModel
 {
-    class SPCIntraWaterParam
-    {
-       public:
-        // clang-format off
-        virtual double getEqOHDistance() const noexcept = 0;         // Angström
-        virtual double getEqHOHAngle() const noexcept = 0;           // radians
-        virtual double getForceConstantOHBond() const noexcept = 0;  // kcal mol^-1 Angström^-2
-        virtual double getForceConstantHOHAngle() const noexcept = 0;// kcal mol^-1 rad^-2
-        // clang-format on
-    };
-
     class SPCIntraWater : public IntraWater
     {
-       private:
-        std::unique_ptr<SPCIntraWaterParam> _parameter;
-
        public:
-        SPCIntraWater() = delete;
-        SPCIntraWater(std::unique_ptr<SPCIntraWaterParam> parameter)
-            : _parameter{std::move(parameter)}
-        {
-        }
-
         void calculate(pq::SimBox &, pq::PhysicalData &) final;
-    };
 
-    class SPCFwIntraWaterParam : public SPCIntraWaterParam
-    {
         // clang-format off
-       public:
-        double getEqOHDistance() const noexcept final { return 1.012;}               // Angström
-        double getEqHOHAngle() const noexcept final { return 113.24 * _DEG_TO_RAD_;} // radians
-        double getForceConstantOHBond() const noexcept final { return 1059.162;}     // kcal mol^-1 Angström^-2
-        double getForceConstantHOHAngle() const noexcept final { return 75.9;}       // kcal mol^-1 rad^-2
+        virtual double getEqOHDistance() const noexcept = 0;          // Angström
+        virtual double getEqHOHAngle() const noexcept = 0;            // radians
+        virtual double getForceConstantOHBond() const noexcept = 0;   // kcal mol^-1 Angström^-2
+        virtual double getForceConstantHOHAngle() const noexcept = 0; // kcal mol^-1 rad^-2
         // clang-format on
     };
 
-    class qSPCFwIntraWaterParam : public SPCIntraWaterParam
+    class SPCFwIntraWater : public SPCIntraWater
     {
         // clang-format off
+       private:
+        static constexpr double _eqOHDistance          = 1.012;                 // Angström
+        static constexpr double _eqHOHAngle            = 113.24 * _DEG_TO_RAD_; // radians
+        static constexpr double _forceConstantOHBond   = 1059.162;              // kcal mol^-1 Angström^-2
+        static constexpr double _forceConstantHOHAngle = 75.9;                  // kcal mol^-1 rad^-2
+
        public:
-        double getEqOHDistance() const noexcept final { return 1.0;}                // Angström
-        double getEqHOHAngle() const noexcept final { return 112.0 * _DEG_TO_RAD_;} // radians
-        double getForceConstantOHBond() const noexcept final { return 1059.162;}    // kcal mol^-1 Angström^-2
-        double getForceConstantHOHAngle() const noexcept final { return 75.9;}      // kcal mol^-1 rad^-2
+        double getEqOHDistance() const noexcept final          { return _eqOHDistance; }         
+        double getEqHOHAngle() const noexcept final            { return _eqHOHAngle; }           
+        double getForceConstantOHBond() const noexcept final   { return _forceConstantOHBond; }  
+        double getForceConstantHOHAngle() const noexcept final { return _forceConstantHOHAngle; }
+        // clang-format on
+    };
+
+    class qSPCFwIntraWater : public SPCIntraWater
+    {
+        // clang-format off
+       private:
+        static constexpr double _eqOHDistance          = 1.0;                  // Angström
+        static constexpr double _eqHOHAngle            = 112.0 * _DEG_TO_RAD_; // radians
+        static constexpr double _forceConstantOHBond   = 1059.162;             // kcal mol^-1 Angström^-2
+        static constexpr double _forceConstantHOHAngle = 75.9;                 // kcal mol^-1 rad^-2
+
+       public:
+        double getEqOHDistance() const noexcept final          { return _eqOHDistance; }         
+        double getEqHOHAngle() const noexcept final            { return _eqHOHAngle; }           
+        double getForceConstantOHBond() const noexcept final   { return _forceConstantOHBond; }  
+        double getForceConstantHOHAngle() const noexcept final { return _forceConstantHOHAngle; }
         // clang-format on
     };
 

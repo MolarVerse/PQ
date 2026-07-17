@@ -24,9 +24,6 @@
 
 #define _MTR_INTRA_WATER_HPP_
 
-#include <memory>
-#include <utility>
-
 #include "constants/conversionFactors.hpp"   // for constants
 #include "intraWater.hpp"                    // for IntraWater
 #include "physicalData.hpp"                  // for PhysicalData
@@ -37,9 +34,11 @@ using namespace constants;
 
 namespace waterModel
 {
-    class MTRIntraWaterParam
+    class MTRIntraWater : public IntraWater
     {
        public:
+        void calculate(pq::SimBox &, pq::PhysicalData &) final;
+
         virtual double getEqOHDistance() const noexcept = 0;   // Angström
         virtual double getEqHHDistance() const noexcept = 0;   // Angström
         virtual double getDOH() const noexcept          = 0;   // kcal mol^-1
@@ -50,48 +49,53 @@ namespace waterModel
         virtual double getLrr() const noexcept = 0;   // kcal mol^-1 Angström^-2
     };
 
-    class MTRIntraWater : public IntraWater
+    class SPCMTRIntraWater : public MTRIntraWater
     {
-       private:
-        std::unique_ptr<MTRIntraWaterParam> _parameter;
-
-       public:
-        MTRIntraWater() = delete;
-        MTRIntraWater(std::unique_ptr<MTRIntraWaterParam> parameter)
-            : _parameter{std::move(parameter)}
-        {
-        }
-
-        void calculate(pq::SimBox &, pq::PhysicalData &) final;
-    };
-
-    class SPCMTRIntraWaterParam : public MTRIntraWaterParam
-    {
-       public:
         // clang-format off
-        double getEqOHDistance() const noexcept final { return 1.0; }         // Angström
-        double getEqHHDistance() const noexcept final { return 1.632993162; } // Angström
-        double getDOH() const noexcept final { return 101.9048757170172; }    // kcal mol^-1
-        double getAlpha() const noexcept final { return 2.511; }              // Angström^-1
-        double getBeta() const noexcept final { return 3.0; }                 // Angström^-2
-        double getLtt() const noexcept final { return 264.5841300191204; }    // kcal mol^-1 Angström^-2
-        double getLrt() const noexcept final { return -211.0444550669216; }   // kcal mol^-1 Angström^-2
-        double getLrr() const noexcept final { return 155.7839388145315; }    // kcal mol^-1 Angström^-2
+        private:
+        static constexpr double eqOHDistance = 1.0;         // Angström
+        static constexpr double eqHHDistance = 1.632993162; // Angström
+        static constexpr double dOH = 101.9048757170172;    // kcal mol^-1
+        static constexpr double alpha = 2.511;              // Angström^-1
+        static constexpr double beta = 3.0;                 // Angström^-2
+        static constexpr double Ltt = 264.5841300191204;    // kcal mol^-1 Angström^-2
+        static constexpr double Lrt = -211.0444550669216;   // kcal mol^-1 Angström^-2
+        static constexpr double Lrr = 155.7839388145315;    // kcal mol^-1 Angström^-2
+
+       public:
+        double getEqOHDistance() const noexcept final { return eqOHDistance; }
+        double getEqHHDistance() const noexcept final { return eqHHDistance; }
+        double getDOH() const noexcept final { return dOH; }
+        double getAlpha() const noexcept final { return alpha; }
+        double getBeta() const noexcept final { return beta; }
+        double getLtt() const noexcept final { return Ltt; }
+        double getLrt() const noexcept final { return Lrt; }
+        double getLrr() const noexcept final { return Lrr; }
         // clang-format on
     };
 
-    class TIP3PMTRIntraWaterParam : public MTRIntraWaterParam
+    class TIP3PMTRIntraWater : public MTRIntraWater
     {
-       public:
         // clang-format off
-        double getEqOHDistance() const noexcept final { return  0.9572; }    // Angström
-        double getEqHHDistance() const noexcept final { return 1.5139; }     // Angström
-        double getDOH() const noexcept final { return   101.9048757170172; } // kcal mol^-1
-        double getAlpha() const noexcept final { return 2.483; }             // Angström^-1
-        double getBeta() const noexcept final { return 3.0; }                // Angström^-2
-        double getLtt() const noexcept final { return 235.2449808795411; }   // kcal mol^-1 Angström^-2
-        double getLrt() const noexcept final { return -181.2906309751434; }  // kcal mol^-1 Angström^-2
-        double getLrr() const noexcept final { return 127.1534416826004; }   // kcal mol^-1 Angström^-2
+        private:
+        static constexpr double eqOHDistance = 0.9572;    // Angström
+        static constexpr double eqHHDistance = 1.5139;    // Angström
+        static constexpr double dOH = 101.9048757170172;  // kcal mol^-1
+        static constexpr double alpha = 2.483;            // Angström^-1
+        static constexpr double beta = 3.0;               // Angström^-2
+        static constexpr double Ltt = 235.2449808795411;  // kcal mol^-1 Angström^-2
+        static constexpr double Lrt = -181.2906309751434; // kcal mol^-1 Angström^-2
+        static constexpr double Lrr = 127.1534416826004;  // kcal mol^-1 Angström^-2
+
+       public:
+        double getEqOHDistance() const noexcept final { return eqOHDistance; }
+        double getEqHHDistance() const noexcept final { return eqHHDistance; }
+        double getDOH() const noexcept final { return dOH; }
+        double getAlpha() const noexcept final { return alpha; }
+        double getBeta() const noexcept final { return beta; }
+        double getLtt() const noexcept final { return Ltt; }
+        double getLrt() const noexcept final { return Lrt; }
+        double getLrr() const noexcept final { return Lrr; }
         // clang-format on
     };
 
