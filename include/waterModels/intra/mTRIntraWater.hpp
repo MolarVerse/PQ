@@ -39,14 +39,14 @@ namespace waterModel
        public:
         void calculate(pq::SimBox &, pq::PhysicalData &) final;
 
-        virtual double getEqOHDistance() const noexcept = 0;   // Angström
-        virtual double getEqHHDistance() const noexcept = 0;   // Angström
-        virtual double getDOH() const noexcept          = 0;   // kcal mol^-1
-        virtual double getAlpha() const noexcept        = 0;   // Angström^-1
-        virtual double getBeta() const noexcept         = 0;   // Angström^-2
-        virtual double getLtt() const noexcept = 0;   // kcal mol^-1 Angström^-2
-        virtual double getLrt() const noexcept = 0;   // kcal mol^-1 Angström^-2
-        virtual double getLrr() const noexcept = 0;   // kcal mol^-1 Angström^-2
+        virtual double getEqOHDistance() const = 0;   // Angström
+        virtual double getEqHHDistance() const = 0;   // Angström
+        virtual double getDOH() const          = 0;   // kcal mol^-1
+        virtual double getAlpha() const        = 0;   // Angström^-1
+        virtual double getBeta() const         = 0;   // Angström^-2
+        virtual double getLtt() const          = 0;   // kcal mol^-1 Angström^-2
+        virtual double getLrt() const          = 0;   // kcal mol^-1 Angström^-2
+        virtual double getLrr() const          = 0;   // kcal mol^-1 Angström^-2
     };
 
     class SPCMTRIntraWater : public MTRIntraWater
@@ -61,17 +61,17 @@ namespace waterModel
         static constexpr double Ltt = 264.5841300191204;    // kcal mol^-1 Angström^-2
         static constexpr double Lrt = -211.0444550669216;   // kcal mol^-1 Angström^-2
         static constexpr double Lrr = 155.7839388145315;    // kcal mol^-1 Angström^-2
+        // clang-format on
 
        public:
-        double getEqOHDistance() const noexcept final { return eqOHDistance; }
-        double getEqHHDistance() const noexcept final { return eqHHDistance; }
-        double getDOH() const noexcept final { return dOH; }
-        double getAlpha() const noexcept final { return alpha; }
-        double getBeta() const noexcept final { return beta; }
-        double getLtt() const noexcept final { return Ltt; }
-        double getLrt() const noexcept final { return Lrt; }
-        double getLrr() const noexcept final { return Lrr; }
-        // clang-format on
+        double getEqOHDistance() const final { return eqOHDistance; }
+        double getEqHHDistance() const final { return eqHHDistance; }
+        double getDOH() const final { return dOH; }
+        double getAlpha() const final { return alpha; }
+        double getBeta() const final { return beta; }
+        double getLtt() const final { return Ltt; }
+        double getLrt() const final { return Lrt; }
+        double getLrr() const final { return Lrr; }
     };
 
     class TIP3PMTRIntraWater : public MTRIntraWater
@@ -86,17 +86,17 @@ namespace waterModel
         static constexpr double Ltt = 235.2449808795411;  // kcal mol^-1 Angström^-2
         static constexpr double Lrt = -181.2906309751434; // kcal mol^-1 Angström^-2
         static constexpr double Lrr = 127.1534416826004;  // kcal mol^-1 Angström^-2
+        // clang-format on
 
        public:
-        double getEqOHDistance() const noexcept final { return eqOHDistance; }
-        double getEqHHDistance() const noexcept final { return eqHHDistance; }
-        double getDOH() const noexcept final { return dOH; }
-        double getAlpha() const noexcept final { return alpha; }
-        double getBeta() const noexcept final { return beta; }
-        double getLtt() const noexcept final { return Ltt; }
-        double getLrt() const noexcept final { return Lrt; }
-        double getLrr() const noexcept final { return Lrr; }
-        // clang-format on
+        double getEqOHDistance() const final { return eqOHDistance; }
+        double getEqHHDistance() const final { return eqHHDistance; }
+        double getDOH() const final { return dOH; }
+        double getAlpha() const final { return alpha; }
+        double getBeta() const final { return beta; }
+        double getLtt() const final { return Ltt; }
+        double getLrt() const final { return Lrt; }
+        double getLrr() const final { return Lrr; }
     };
 
 }   // namespace waterModel
