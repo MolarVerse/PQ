@@ -24,6 +24,7 @@
 
 #include <cstddef>      // for size_t
 #include <cstdlib>      // for system
+#include <filesystem>   // for remove
 #include <format>       // for format
 #include <fstream>      // for ofstream
 #include <functional>   // for identity
@@ -107,7 +108,7 @@ void TurbomoleRunner::writePointChargeFile(pq::SimBox &box)
     pcFile.close();
 
     if (!_usePointCharges)
-        ::system(std::format("rm -f {}", fileName).c_str());
+        std::filesystem::remove(fileName);
 }
 
 /**
@@ -139,11 +140,12 @@ void TurbomoleRunner::execute(SimulationBox &box)
     const auto usePointCharges = _usePointCharges ? 1 : 0;
 
     const auto command = std::format(
-        "{} {} {} {} {}",
+        "{} {} {} {} {} {}",
         scriptFile,
         charge,
         runTMDefine,
         usePointCharges,
+        FileSettings::getTMFileName(),
         FileSettings::getPointChargeFileName()
     );
     ::system(command.c_str());

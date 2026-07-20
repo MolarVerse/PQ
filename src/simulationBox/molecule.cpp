@@ -483,12 +483,6 @@ std::string Molecule::getAtomName(const size_t index) const
  *                         *
  ***************************/
 
-/**
- * @brief returns the moltype of the molecule
- *
- * @return size_t
- */
-size_t Molecule::getMoltype() const { return _moltype; }
 
 /**
  * @brief returns the number of atoms in the molecule
@@ -540,12 +534,6 @@ Vec3D Molecule::getCenterOfMass() const { return _centerOfMass; }
  */
 HybridZone Molecule::getHybridZone() const { return _hybridZone; }
 
-/**
- * @brief return if the molecule is activate for hybrid calculations
- *
- * @return isActive
- */
-bool Molecule::isActive() const { return _isActive; }
 
 /**
  * @brief return the smoothing factor of the molecule for hybrid calculations

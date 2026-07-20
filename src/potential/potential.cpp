@@ -36,9 +36,9 @@ void Potential::calculateQMMMForces(
     CellList      &cellList
 )
 {
-    calculateForces(simBox, physicalData, cellList);
     calculateCoreToOuterForces(simBox, physicalData, cellList);
     calculateLayerToOuterForces(simBox, physicalData, cellList);
+    calculateOuterToOuterForces(simBox, physicalData, cellList);
 }
 
 /***************************

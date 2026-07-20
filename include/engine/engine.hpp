@@ -32,7 +32,9 @@
 #include "engineOutput.hpp"
 #include "forceFieldClass.hpp"
 #include "globalTimer.hpp"
+#include "interWater.hpp"
 #include "intraNonBonded.hpp"
+#include "intraWater.hpp"
 #include "molecularVirial.hpp"
 #include "physicalData.hpp"
 #include "potential.hpp"
@@ -79,6 +81,8 @@ namespace engine
         pq::SharedIntraNonBond _intraNonBonded = std::make_shared<pq::IntraNonBond>();
         pq::SharedForceField   _forceField     = std::make_shared<pq::ForceField>();
         pq::SharedConstraints  _constraints    = std::make_shared<pq::Constraints>();
+        pq::UniqueIntraWater   _intraWater     = std::make_unique<pq::IntraWater>();
+        pq::UniqueInterWater   _interWater     = std::make_unique<pq::InterWater>();
         // clang-format on
 
 #ifdef WITH_KOKKOS
@@ -94,7 +98,7 @@ namespace engine
 
         virtual void run()         = 0;
         virtual void writeOutput() = 0;
-        void deleteTempFiles();
+        void         deleteTmpFiles();
 
         void addTimer(const timings::Timer &timings);
 
@@ -173,6 +177,8 @@ namespace engine
         void makePotential(T);
         template <typename T>
         void makeVirial(T virial);
+        template <typename T>
+        void makeIntraWater(T &&);
 
         /********************************
          * standard getters and setters *
@@ -182,6 +188,7 @@ namespace engine
         [[nodiscard]] timings::GlobalTimer &getTimer() { return _timer; }
 
         void setTimer(const timings::GlobalTimer &timer) { _timer = timer; }
+        void setInterWater(pq::UniqueInterWater interWater);
 
 #ifdef WITH_KOKKOS
         [[nodiscard]] pq::KokkosSimBox    &getKokkosSimulationBox();

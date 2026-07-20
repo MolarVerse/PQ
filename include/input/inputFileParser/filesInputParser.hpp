@@ -54,6 +54,7 @@ namespace input
         void parseGuffPath(const pq::strings &, const size_t);
         void parseMShakeFilename(const pq::strings &, const size_t);
         void parseDFTBFilename(const pq::strings &, const size_t);
+        void parseTMFilename(const pq::strings &, const size_t);
     };
 
 }   // namespace input

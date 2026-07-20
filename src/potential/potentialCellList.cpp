@@ -22,18 +22,21 @@
 
 #include "potentialCellList.hpp"   // for PotentialCellList
 
-#include <cstddef>   // for size_t
-#include <vector>    // for vector
+#include <algorithm>   // for find
+#include <cstddef>     // for size_t
+#include <vector>      // for vector
 
-#include "cell.hpp"            // for Cell, simulationBox
-#include "celllist.hpp"        // for CellList
-#include "molecule.hpp"        // for Molecule
-#include "physicalData.hpp"    // for PhysicalData
-#include "simulationBox.hpp"   // for SimulationBox
+#include "cell.hpp"                 // for Cell, simulationBox
+#include "celllist.hpp"             // for CellList
+#include "molecule.hpp"             // for Molecule
+#include "physicalData.hpp"         // for PhysicalData
+#include "simulationBox.hpp"        // for SimulationBox
+#include "waterModelSettings.hpp"   // for WaterModelSettings
 
-using namespace potential;
-using namespace simulationBox;
 using namespace physicalData;
+using namespace potential;
+using namespace settings;
+using namespace simulationBox;
 
 using enum simulationBox::HybridZone;
 
@@ -66,74 +69,108 @@ void PotentialCellList::calculateForces(
 {
     startTimingsSection("InterNonBonded");
 
-    const auto box = simBox.getBoxPtr();
+    const auto box            = simBox.getBoxPtr();
+    const auto waterTypeValue = simBox.getWaterType().value_or(size_t{0});
+    const auto isWaterInterModelSet =
+        WaterModelSettings::isInterWaterModelSet();
 
     double totalCoulombEnergy    = 0.0;
     double totalNonCoulombEnergy = 0.0;
 
+    const auto isWaterPair = [waterTypeValue, isWaterInterModelSet](
+                                 const Molecule *mol_i,
+                                 const Molecule *mol_j
+                             ) -> bool
+    {
+        if (!isWaterInterModelSet)
+            return false;
+        return mol_i->getMoltype() == waterTypeValue &&
+               mol_j->getMoltype() == waterTypeValue;
+    };
+
     for (const auto &cell_i : cellList.getCells())
     {
-        size_t i = 0;
-        for (auto &mol1 : cell_i.getMMMolecules())
-        {
-            size_t j = 0;
-            for (auto &mol2 : cell_i.getMMMolecules())
-            {
-                // avoid double counting and self interaction
-                if (j >= i)
-                    break;
+        const auto nMols = cell_i.getNumberOfMolecules();
 
-                for (auto &atom1 : mol1->getAtoms())
-                    for (auto &atom2 : mol2->getAtoms())
+        for (size_t mol_i = 0; mol_i < nMols; ++mol_i)
+        {
+            auto *molecule_i = cell_i.getMolecule(mol_i);
+
+            for (size_t mol_j = 0; mol_j < mol_i; ++mol_j)
+            {
+                auto *molecule_j = cell_i.getMolecule(mol_j);
+
+                if (isWaterPair(molecule_i, molecule_j))
+                    continue;
+
+                for (auto *atom_i : cell_i.getAtoms(mol_i))
+                {
+                    for (auto *atom_j : cell_i.getAtoms(mol_j))
                     {
                         const auto [coulombEnergy, nonCoulombEnergy] =
                             calculateSingleInteraction<
                                 MMChargeTag,
                                 MMChargeTag>(
                                 *box,
-                                *mol1,
-                                *mol2,
-                                *atom1,
-                                *atom2
+                                *molecule_i,
+                                *molecule_j,
+                                *atom_i,
+                                *atom_j
                             );
 
                         totalCoulombEnergy    += coulombEnergy;
                         totalNonCoulombEnergy += nonCoulombEnergy;
                     }
-                ++j;
+                }
             }
-            ++i;
         }
     }
 
-    for (const auto &cell1 : cellList.getCells())
-        for (const auto *cell2 : cell1.getNeighbourCells())
-            for (auto &mol1 : cell1.getMMMolecules())
-                for (auto &mol2 : cell2->getMMMolecules())
-                {
-                    // avoid self interaction
-                    if (mol1 == mol2)
-                        continue;
+    for (const auto &cell_i : cellList.getCells())
+    {
+        const auto nMolsInCell_i = cell_i.getNumberOfMolecules();
 
-                    for (auto &atom1 : mol1->getAtoms())
-                        for (auto &atom2 : mol2->getAtoms())
+        for (const auto *cell_j : cell_i.getNeighbourCells())
+        {
+            const auto nMolsInCell_j = cell_j->getNumberOfMolecules();
+
+            for (size_t mol_i = 0; mol_i < nMolsInCell_i; ++mol_i)
+            {
+                auto *molecule_i = cell_i.getMolecule(mol_i);
+
+                for (auto *atom_i : cell_i.getAtoms(mol_i))
+                {
+                    for (size_t mol_j = 0; mol_j < nMolsInCell_j; ++mol_j)
+                    {
+                        auto *molecule_j = cell_j->getMolecule(mol_j);
+
+                        if (isWaterPair(molecule_i, molecule_j))
+                            continue;
+
+                        if (molecule_i == molecule_j)
+                            continue;
+
+                        for (auto *atom_j : cell_j->getAtoms(mol_j))
                         {
                             const auto [coulombEnergy, nonCoulombEnergy] =
                                 calculateSingleInteraction<
                                     MMChargeTag,
                                     MMChargeTag>(
                                     *box,
-                                    *mol1,
-                                    *mol2,
-                                    *atom1,
-                                    *atom2
+                                    *molecule_i,
+                                    *molecule_j,
+                                    *atom_i,
+                                    *atom_j
                                 );
 
                             totalCoulombEnergy    += coulombEnergy;
                             totalNonCoulombEnergy += nonCoulombEnergy;
                         }
+                    }
                 }
-
+            }
+        }
+    }
     physicalData.setCoulombEnergy(totalCoulombEnergy);
     physicalData.setNonCoulombEnergy(totalNonCoulombEnergy);
 
@@ -161,29 +198,87 @@ void PotentialCellList::calculateCoreToOuterForces(
 {
     startTimingsSection("InterNonBondedCoreToOuter");
 
-    const auto box = simBox.getBoxPtr();
+    const auto box             = simBox.getBoxPtr();
+    const auto isWaterMolecule = [](const std::vector<size_t> &waterMolecules,
+                                    const size_t               molIndex) -> bool
+    {
+        return std::find(
+                   waterMolecules.begin(),
+                   waterMolecules.end(),
+                   molIndex
+               ) != waterMolecules.end();
+    };
 
     double totalCoulombEnergy = 0.0;
 
     for (const auto &cell_i : cellList.getCells())
-        for (auto &mol1 : cell_i.getMoleculesInsideZone(CORE))
-            for (auto &mol2 : cell_i.getMMMolecules())
-                for (auto &atom1 : mol1->getAtoms())
-                    for (auto &atom2 : mol2->getAtoms())
+    {
+        const auto &waterMolecules = cell_i.getWaterMoleculeIndices();
+
+        for (const auto mol_i : cell_i.getCoreMoleculeIndices())
+            for (const auto mol_j : cell_i.getActiveMoleculeIndices())
+            {
+                if (isWaterMolecule(waterMolecules, mol_i) &&
+                    isWaterMolecule(waterMolecules, mol_j))
+                    continue;
+
+                for (auto *atom_i : cell_i.getAtoms(mol_i))
+                    for (auto *atom_j : cell_i.getAtoms(mol_j))
                         totalCoulombEnergy += calculateSingleCoulombInteraction<
                             QMChargeTag,
-                            MMChargeTag>(*box, *atom1, *atom2);
+                            MMChargeTag>(*box, *atom_i, *atom_j);
+            }
+    }
 
-    for (const auto &cell1 : cellList.getCells())
-        for (const auto *cell2 : cell1.getNeighbourCells())
-            for (auto &mol1 : cell1.getMoleculesInsideZone(CORE))
-                for (auto &mol2 : cell2->getMMMolecules())
-                    for (auto &atom1 : mol1->getAtoms())
-                        for (auto &atom2 : mol2->getAtoms())
+    for (const auto &cell_i : cellList.getCells())
+    {
+        const auto &waterMolecules_i = cell_i.getWaterMoleculeIndices();
+
+        for (const auto *cell_j : cell_i.getNeighbourCells())
+        {
+            const auto &waterMolecules_j = cell_j->getWaterMoleculeIndices();
+
+            for (const auto mol_i : cell_i.getCoreMoleculeIndices())
+                for (const auto mol_j : cell_j->getActiveMoleculeIndices())
+                {
+                    if (isWaterMolecule(waterMolecules_i, mol_i) &&
+                        isWaterMolecule(waterMolecules_j, mol_j))
+                        continue;
+
+                    for (auto *atom_i : cell_i.getAtoms(mol_i))
+                        for (auto *atom_j : cell_j->getAtoms(mol_j))
                             totalCoulombEnergy +=
                                 calculateSingleCoulombInteraction<
                                     QMChargeTag,
-                                    MMChargeTag>(*box, *atom1, *atom2);
+                                    MMChargeTag>(*box, *atom_i, *atom_j);
+                }
+        }
+    }
+
+    for (const auto &cell_i : cellList.getCells())
+    {
+        const auto &waterMolecules_i = cell_i.getWaterMoleculeIndices();
+
+        for (const auto *cell_j : cell_i.getNeighbourCells())
+        {
+            const auto &waterMolecules_j = cell_j->getWaterMoleculeIndices();
+
+            for (const auto mol_i : cell_j->getCoreMoleculeIndices())
+                for (const auto mol_j : cell_i.getActiveMoleculeIndices())
+                {
+                    if (isWaterMolecule(waterMolecules_j, mol_i) &&
+                        isWaterMolecule(waterMolecules_i, mol_j))
+                        continue;
+
+                    for (auto *atom_i : cell_j->getAtoms(mol_i))
+                        for (auto *atom_j : cell_i.getAtoms(mol_j))
+                            totalCoulombEnergy +=
+                                calculateSingleCoulombInteraction<
+                                    QMChargeTag,
+                                    MMChargeTag>(*box, *atom_i, *atom_j);
+                }
+        }
+    }
 
     physicalData.addCoulombEnergy(totalCoulombEnergy);
 
@@ -212,68 +307,254 @@ void PotentialCellList::calculateLayerToOuterForces(
 {
     startTimingsSection("InterNonBondedLayerToOuter");
 
-    const auto box = simBox.getBoxPtr();
+    const auto box             = simBox.getBoxPtr();
+    const auto isWaterMolecule = [](const std::vector<size_t> &waterMolecules,
+                                    const size_t               molIndex) -> bool
+    {
+        return std::find(
+                   waterMolecules.begin(),
+                   waterMolecules.end(),
+                   molIndex
+               ) != waterMolecules.end();
+    };
 
     double totalCoulombEnergy    = 0.0;
     double totalNonCoulombEnergy = 0.0;
 
     for (const auto &cell_i : cellList.getCells())
-        for (auto &mol1 : cell_i.getInactiveMolecules())
-        {
-            if (mol1->getHybridZone() == CORE)
-                continue;
+    {
+        const auto &waterMolecules = cell_i.getWaterMoleculeIndices();
 
-            for (auto &mol2 : cell_i.getMMMolecules())
-                for (auto &atom1 : mol1->getAtoms())
-                    for (auto &atom2 : mol2->getAtoms())
+        for (const auto mol_i : cell_i.getInactiveNonCoreMoleculeIndices())
+        {
+            auto *molecule_i = cell_i.getMolecule(mol_i);
+
+            for (const auto mol_j : cell_i.getActiveMoleculeIndices())
+            {
+                if (isWaterMolecule(waterMolecules, mol_i) &&
+                    isWaterMolecule(waterMolecules, mol_j))
+                    continue;
+
+                auto *molecule_j = cell_i.getMolecule(mol_j);
+
+                for (auto *atom_i : cell_i.getAtoms(mol_i))
+                    for (auto *atom_j : cell_i.getAtoms(mol_j))
                     {
                         const auto [coulombEnergy, nonCoulombEnergy] =
                             calculateSingleInteraction<
                                 QMChargeTag,
                                 MMChargeTag>(
                                 *box,
-                                *mol1,
-                                *mol2,
-                                *atom1,
-                                *atom2
+                                *molecule_i,
+                                *molecule_j,
+                                *atom_i,
+                                *atom_j
                             );
 
                         totalCoulombEnergy    += coulombEnergy;
                         totalNonCoulombEnergy += nonCoulombEnergy;
                     }
+            }
         }
+    }
 
-    for (const auto &cell1 : cellList.getCells())
-        for (const auto *cell2 : cell1.getNeighbourCells())
-            for (auto &mol1 : cell1.getMMMolecules())
-                for (auto &mol2 : cell2->getInactiveMolecules())
+    for (const auto &cell_i : cellList.getCells())
+    {
+        const auto &waterMolecules_i = cell_i.getWaterMoleculeIndices();
+
+        for (const auto *cell_j : cell_i.getNeighbourCells())
+        {
+            const auto &waterMolecules_j = cell_j->getWaterMoleculeIndices();
+
+            for (const auto mol_i : cell_i.getInactiveNonCoreMoleculeIndices())
+            {
+                auto *molecule_i = cell_i.getMolecule(mol_i);
+
+                for (const auto mol_j : cell_j->getActiveMoleculeIndices())
                 {
-                    if (mol2->getHybridZone() == CORE)
+                    if (isWaterMolecule(waterMolecules_i, mol_i) &&
+                        isWaterMolecule(waterMolecules_j, mol_j))
                         continue;
 
-                    for (auto &atom1 : mol1->getAtoms())
-                        for (auto &atom2 : mol2->getAtoms())
+                    auto *molecule_j = cell_j->getMolecule(mol_j);
+
+                    for (auto *atom_i : cell_i.getAtoms(mol_i))
+                        for (auto *atom_j : cell_j->getAtoms(mol_j))
                         {
                             const auto [coulombEnergy, nonCoulombEnergy] =
                                 calculateSingleInteraction<
                                     QMChargeTag,
                                     MMChargeTag>(
                                     *box,
-                                    *mol1,
-                                    *mol2,
-                                    *atom1,
-                                    *atom2
+                                    *molecule_i,
+                                    *molecule_j,
+                                    *atom_i,
+                                    *atom_j
                                 );
 
                             totalCoulombEnergy    += coulombEnergy;
                             totalNonCoulombEnergy += nonCoulombEnergy;
                         }
                 }
+            }
+        }
+    }
+
+    for (const auto &cell_i : cellList.getCells())
+    {
+        const auto &waterMolecules_i = cell_i.getWaterMoleculeIndices();
+
+        for (const auto *cell_j : cell_i.getNeighbourCells())
+        {
+            const auto &waterMolecules_j = cell_j->getWaterMoleculeIndices();
+
+            for (const auto mol_i : cell_j->getInactiveNonCoreMoleculeIndices())
+            {
+                auto *molecule_i = cell_j->getMolecule(mol_i);
+
+                for (const auto mol_j : cell_i.getActiveMoleculeIndices())
+                {
+                    if (isWaterMolecule(waterMolecules_j, mol_i) &&
+                        isWaterMolecule(waterMolecules_i, mol_j))
+                        continue;
+
+                    auto *molecule_j = cell_i.getMolecule(mol_j);
+
+                    for (auto *atom_i : cell_j->getAtoms(mol_i))
+                        for (auto *atom_j : cell_i.getAtoms(mol_j))
+                        {
+                            const auto [coulombEnergy, nonCoulombEnergy] =
+                                calculateSingleInteraction<
+                                    QMChargeTag,
+                                    MMChargeTag>(
+                                    *box,
+                                    *molecule_i,
+                                    *molecule_j,
+                                    *atom_i,
+                                    *atom_j
+                                );
+
+                            totalCoulombEnergy    += coulombEnergy;
+                            totalNonCoulombEnergy += nonCoulombEnergy;
+                        }
+                }
+            }
+        }
+    }
 
     physicalData.addCoulombEnergy(totalCoulombEnergy);
     physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
 
     stopTimingsSection("InterNonBondedLayerToOuter");
+}
+
+void PotentialCellList::calculateOuterToOuterForces(
+    SimulationBox &simBox,
+    PhysicalData  &physicalData,
+    CellList      &cellList
+)
+{
+    const auto box             = simBox.getBoxPtr();
+    const auto isWaterMolecule = [](const std::vector<size_t> &waterMolecules,
+                                    const size_t               molIndex) -> bool
+    {
+        return std::find(
+                   waterMolecules.begin(),
+                   waterMolecules.end(),
+                   molIndex
+               ) != waterMolecules.end();
+    };
+
+    double totalCoulombEnergy    = 0.0;
+    double totalNonCoulombEnergy = 0.0;
+
+    for (const auto &cell_i : cellList.getCells())
+    {
+        const auto &waterMolecules = cell_i.getWaterMoleculeIndices();
+
+        for (const auto mol_i : cell_i.getActiveMoleculeIndices())
+        {
+            auto *molecule_i = cell_i.getMolecule(mol_i);
+
+            for (const auto mol_j : cell_i.getActiveMoleculeIndices())
+            {
+                if (mol_j >= mol_i)
+                    break;
+
+                if (isWaterMolecule(waterMolecules, mol_i) &&
+                    isWaterMolecule(waterMolecules, mol_j))
+                    continue;
+
+                auto *molecule_j = cell_i.getMolecule(mol_j);
+
+                for (auto *atom_i : cell_i.getAtoms(mol_i))
+                    for (auto *atom_j : cell_i.getAtoms(mol_j))
+                    {
+                        const auto [coulombEnergy, nonCoulombEnergy] =
+                            calculateSingleInteraction<
+                                MMChargeTag,
+                                MMChargeTag>(
+                                *box,
+                                *molecule_i,
+                                *molecule_j,
+                                *atom_i,
+                                *atom_j
+                            );
+
+                        totalCoulombEnergy    += coulombEnergy;
+                        totalNonCoulombEnergy += nonCoulombEnergy;
+                    }
+            }
+        }
+    }
+
+    for (const auto &cell_i : cellList.getCells())
+    {
+        const auto &waterMolecules_i = cell_i.getWaterMoleculeIndices();
+
+        for (const auto *cell_j : cell_i.getNeighbourCells())
+        {
+            const auto &waterMolecules_j = cell_j->getWaterMoleculeIndices();
+
+            for (const auto mol_i : cell_i.getActiveMoleculeIndices())
+            {
+                auto *molecule_i = cell_i.getMolecule(mol_i);
+
+                for (const auto mol_j : cell_j->getActiveMoleculeIndices())
+                {
+                    if (isWaterMolecule(waterMolecules_i, mol_i) &&
+                        isWaterMolecule(waterMolecules_j, mol_j))
+                        continue;
+
+                    auto *molecule_j = cell_j->getMolecule(mol_j);
+
+                    if (molecule_i == molecule_j)
+                        continue;
+
+                    for (auto *atom_i : cell_i.getAtoms(mol_i))
+                        for (auto *atom_j : cell_j->getAtoms(mol_j))
+                        {
+                            const auto [coulombEnergy, nonCoulombEnergy] =
+                                calculateSingleInteraction<
+                                    MMChargeTag,
+                                    MMChargeTag>(
+                                    *box,
+                                    *molecule_i,
+                                    *molecule_j,
+                                    *atom_i,
+                                    *atom_j
+                                );
+
+                            totalCoulombEnergy    += coulombEnergy;
+                            totalNonCoulombEnergy += nonCoulombEnergy;
+                        }
+                }
+            }
+        }
+    }
+
+    physicalData.addCoulombEnergy(totalCoulombEnergy);
+    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
 }
 
 void PotentialCellList::calculateHotspotSmoothingMMForces(
@@ -284,126 +565,271 @@ void PotentialCellList::calculateHotspotSmoothingMMForces(
 {
     startTimingsSection("InterNonBondedSmoothingMM");
 
-    const auto box = simBox.getBoxPtr();
+    const auto box             = simBox.getBoxPtr();
+    const auto isWaterMolecule = [](const std::vector<size_t> &waterMolecules,
+                                    const size_t               molIndex) -> bool
+    {
+        return std::find(
+                   waterMolecules.begin(),
+                   waterMolecules.end(),
+                   molIndex
+               ) != waterMolecules.end();
+    };
 
     double totalCoulombEnergy    = 0.0;
     double totalNonCoulombEnergy = 0.0;
 
     for (const auto &cell_i : cellList.getCells())
-        for (auto &mol1 : cell_i.getMoleculesInsideZone(SMOOTHING))
-            for (auto &mol2 : cell_i.getMoleculesOutsideZone(SMOOTHING))
-                for (auto &atom1 : mol1->getAtoms())
-                    for (auto &atom2 : mol2->getAtoms())
+    {
+        const auto &waterMolecules = cell_i.getWaterMoleculeIndices();
+
+        for (const auto mol_i : cell_i.getSmoothingMoleculeIndices())
+        {
+            auto *molecule_i = cell_i.getMolecule(mol_i);
+
+            for (const auto mol_j : cell_i.getNonSmoothingMoleculeIndices())
+            {
+                if (isWaterMolecule(waterMolecules, mol_i) &&
+                    isWaterMolecule(waterMolecules, mol_j))
+                    continue;
+
+                auto *molecule_j = cell_i.getMolecule(mol_j);
+
+                for (auto *atom_i : cell_i.getAtoms(mol_i))
+                    for (auto *atom_j : cell_i.getAtoms(mol_j))
                     {
                         const auto [coulombEnergy, nonCoulombEnergy] =
                             calculateSingleInteraction<
                                 MMChargeTag,
                                 QMChargeTag>(
                                 *box,
-                                *mol1,
-                                *mol2,
-                                *atom1,
-                                *atom2
+                                *molecule_i,
+                                *molecule_j,
+                                *atom_i,
+                                *atom_j
                             );
 
                         totalCoulombEnergy    += coulombEnergy;
                         totalNonCoulombEnergy += nonCoulombEnergy;
                     }
+            }
+        }
+    }
 
-    for (const auto &cell1 : cellList.getCells())
-        for (const auto *cell2 : cell1.getNeighbourCells())
-            for (auto &mol1 : cell1.getMoleculesInsideZone(SMOOTHING))
-                for (auto &mol2 : cell2->getMoleculesOutsideZone(SMOOTHING))
-                    for (auto &atom1 : mol1->getAtoms())
-                        for (auto &atom2 : mol2->getAtoms())
+    for (const auto &cell_i : cellList.getCells())
+    {
+        const auto &waterMolecules_i = cell_i.getWaterMoleculeIndices();
+
+        for (const auto *cell_j : cell_i.getNeighbourCells())
+        {
+            const auto &waterMolecules_j = cell_j->getWaterMoleculeIndices();
+
+            for (const auto mol_i : cell_i.getSmoothingMoleculeIndices())
+            {
+                auto *molecule_i = cell_i.getMolecule(mol_i);
+
+                for (const auto mol_j :
+                     cell_j->getNonSmoothingMoleculeIndices())
+                {
+                    if (isWaterMolecule(waterMolecules_i, mol_i) &&
+                        isWaterMolecule(waterMolecules_j, mol_j))
+                        continue;
+
+                    auto *molecule_j = cell_j->getMolecule(mol_j);
+
+                    for (auto *atom_i : cell_i.getAtoms(mol_i))
+                        for (auto *atom_j : cell_j->getAtoms(mol_j))
                         {
                             const auto [coulombEnergy, nonCoulombEnergy] =
                                 calculateSingleInteraction<
                                     MMChargeTag,
                                     QMChargeTag>(
                                     *box,
-                                    *mol1,
-                                    *mol2,
-                                    *atom1,
-                                    *atom2
+                                    *molecule_i,
+                                    *molecule_j,
+                                    *atom_i,
+                                    *atom_j
                                 );
 
                             totalCoulombEnergy    += coulombEnergy;
                             totalNonCoulombEnergy += nonCoulombEnergy;
                         }
+                }
+            }
+        }
+    }
 
     for (const auto &cell_i : cellList.getCells())
     {
-        size_t i = 0;
-        for (auto &mol1 : cell_i.getMoleculesInsideZone(SMOOTHING))
+        const auto &waterMolecules_i = cell_i.getWaterMoleculeIndices();
+
+        for (const auto *cell_j : cell_i.getNeighbourCells())
         {
-            size_t j = 0;
-            for (auto &mol2 : cell_i.getMoleculesInsideZone(SMOOTHING))
+            const auto &waterMolecules_j = cell_j->getWaterMoleculeIndices();
+
+            for (const auto mol_i : cell_j->getSmoothingMoleculeIndices())
             {
-                if (i == j)
+                auto *molecule_i = cell_j->getMolecule(mol_i);
+
+                for (const auto mol_j : cell_i.getNonSmoothingMoleculeIndices())
                 {
-                    ++j;
-                    continue;
+                    if (isWaterMolecule(waterMolecules_j, mol_i) &&
+                        isWaterMolecule(waterMolecules_i, mol_j))
+                        continue;
+
+                    auto *molecule_j = cell_i.getMolecule(mol_j);
+
+                    for (auto *atom_i : cell_j->getAtoms(mol_i))
+                        for (auto *atom_j : cell_i.getAtoms(mol_j))
+                        {
+                            const auto [coulombEnergy, nonCoulombEnergy] =
+                                calculateSingleInteraction<
+                                    MMChargeTag,
+                                    QMChargeTag>(
+                                    *box,
+                                    *molecule_i,
+                                    *molecule_j,
+                                    *atom_i,
+                                    *atom_j
+                                );
+
+                            totalCoulombEnergy    += coulombEnergy;
+                            totalNonCoulombEnergy += nonCoulombEnergy;
+                        }
                 }
-                for (auto &atom1 : mol1->getAtoms())
-                    for (auto &atom2 : mol2->getAtoms())
+            }
+        }
+    }
+
+    for (const auto &cell_i : cellList.getCells())
+    {
+        const auto &waterMolecules = cell_i.getWaterMoleculeIndices();
+
+        for (const auto mol_i : cell_i.getSmoothingMoleculeIndices())
+        {
+            auto *molecule_i = cell_i.getMolecule(mol_i);
+
+            for (const auto mol_j : cell_i.getSmoothingMoleculeIndices())
+            {
+                if (mol_i == mol_j)
+                    continue;
+
+                if (isWaterMolecule(waterMolecules, mol_i) &&
+                    isWaterMolecule(waterMolecules, mol_j))
+                    continue;
+
+                auto *molecule_j = cell_i.getMolecule(mol_j);
+
+                for (auto *atom_i : cell_i.getAtoms(mol_i))
+                    for (auto *atom_j : cell_i.getAtoms(mol_j))
                     {
                         const auto [coulombEnergy, nonCoulombEnergy] =
                             calculateSingleInteractionOneWay<
                                 MMChargeTag,
                                 QMChargeTag>(
                                 *box,
-                                *mol1,
-                                *mol2,
-                                *atom1,
-                                *atom2
+                                *molecule_i,
+                                *molecule_j,
+                                *atom_i,
+                                *atom_j
                             );
 
                         totalCoulombEnergy    += coulombEnergy;
                         totalNonCoulombEnergy += nonCoulombEnergy;
                     }
-                ++j;
             }
-            ++i;
         }
     }
 
-    for (const auto &cell1 : cellList.getCells())
-        for (const auto *cell2 : cell1.getNeighbourCells())
+    for (const auto &cell_i : cellList.getCells())
+    {
+        const auto &waterMolecules_i = cell_i.getWaterMoleculeIndices();
+
+        for (const auto *cell_j : cell_i.getNeighbourCells())
         {
-            size_t i = 0;
-            for (auto &mol1 : cell1.getMoleculesInsideZone(SMOOTHING))
+            const auto &waterMolecules_j = cell_j->getWaterMoleculeIndices();
+
+            for (const auto mol_i : cell_i.getSmoothingMoleculeIndices())
             {
-                size_t j = 0;
-                for (auto &mol2 : cell2->getMoleculesInsideZone(SMOOTHING))
+                auto *molecule_i = cell_i.getMolecule(mol_i);
+
+                for (const auto mol_j : cell_j->getSmoothingMoleculeIndices())
                 {
-                    if (i == j)
-                    {
-                        ++j;
+                    if (isWaterMolecule(waterMolecules_i, mol_i) &&
+                        isWaterMolecule(waterMolecules_j, mol_j))
                         continue;
-                    }
-                    for (auto &atom1 : mol1->getAtoms())
-                        for (auto &atom2 : mol2->getAtoms())
+
+                    auto *molecule_j = cell_j->getMolecule(mol_j);
+
+                    if (molecule_i == molecule_j)
+                        continue;
+
+                    for (auto *atom_i : cell_i.getAtoms(mol_i))
+                        for (auto *atom_j : cell_j->getAtoms(mol_j))
                         {
                             const auto [coulombEnergy, nonCoulombEnergy] =
                                 calculateSingleInteractionOneWay<
                                     MMChargeTag,
                                     QMChargeTag>(
                                     *box,
-                                    *mol1,
-                                    *mol2,
-                                    *atom1,
-                                    *atom2
+                                    *molecule_i,
+                                    *molecule_j,
+                                    *atom_i,
+                                    *atom_j
                                 );
 
                             totalCoulombEnergy    += coulombEnergy;
                             totalNonCoulombEnergy += nonCoulombEnergy;
                         }
-                    ++j;
                 }
-                ++i;
             }
         }
+    }
+
+    for (const auto &cell_i : cellList.getCells())
+    {
+        const auto &waterMolecules_i = cell_i.getWaterMoleculeIndices();
+
+        for (const auto *cell_j : cell_i.getNeighbourCells())
+        {
+            const auto &waterMolecules_j = cell_j->getWaterMoleculeIndices();
+
+            for (const auto mol_i : cell_j->getSmoothingMoleculeIndices())
+            {
+                auto *molecule_i = cell_j->getMolecule(mol_i);
+
+                for (const auto mol_j : cell_i.getSmoothingMoleculeIndices())
+                {
+                    if (isWaterMolecule(waterMolecules_j, mol_i) &&
+                        isWaterMolecule(waterMolecules_i, mol_j))
+                        continue;
+
+                    auto *molecule_j = cell_i.getMolecule(mol_j);
+
+                    if (molecule_i == molecule_j)
+                        continue;
+
+                    for (auto *atom_i : cell_j->getAtoms(mol_i))
+                        for (auto *atom_j : cell_i.getAtoms(mol_j))
+                        {
+                            const auto [coulombEnergy, nonCoulombEnergy] =
+                                calculateSingleInteractionOneWay<
+                                    MMChargeTag,
+                                    QMChargeTag>(
+                                    *box,
+                                    *molecule_i,
+                                    *molecule_j,
+                                    *atom_i,
+                                    *atom_j
+                                );
+
+                            totalCoulombEnergy    += coulombEnergy;
+                            totalNonCoulombEnergy += nonCoulombEnergy;
+                        }
+                }
+            }
+        }
+    }
 
     physicalData.addCoulombEnergy(totalCoulombEnergy);
     physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);

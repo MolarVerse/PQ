@@ -27,8 +27,9 @@
 #include <vector>   // for vector
 
 #include "engine.hpp"           // for Engine
-#include "exceptions.hpp"       // for InputFileException, UserInputException
+#include "exceptions.hpp"       // for InputFileException
 #include "hybridSettings.hpp"   // for HybridSettings
+#include "qmSettings.hpp"       // for QMSettings
 #include "settings.hpp"         // for Settings
 
 using setup::HybridSetup;
@@ -66,10 +67,42 @@ HybridSetup::HybridSetup(Engine &engine) : _engine(engine) {}
  */
 void HybridSetup::setup()
 {
+    validateQMMethod();
     setupInnerRegionCenter();
     setupForcedInnerList();
     setupForcedOuterList();
+    validateQMChargeSettings();
     checkZoneRadii();
+}
+
+/**
+ * @brief Check if chosen QM method is available for hybrid type calculations
+ *
+ * @throws customException::InputFileException if the QM method is not supported
+ * for hybrid type calculations
+ */
+void HybridSetup::validateQMMethod()
+{
+    using enum QMMethod;
+
+    const auto qmMethod = QMSettings::getQMMethod();
+    const auto errorMsg = std::format(
+        "QM method \"{}\" is not supported for hybrid type "
+        "calculations. Supported QM methods are \"dftbplus\" and "
+        "\"turbomole\".",
+        string(qmMethod)
+
+    );
+
+    // clang-format off
+    switch (qmMethod)
+    {
+        case DFTBPLUS:
+        case TURBOMOLE: 
+            break;
+        default: throw(InputFileException(errorMsg));
+    }
+    // clang-format on
 }
 
 /**
@@ -179,5 +212,31 @@ void HybridSetup::checkZoneRadii()
                 pointChargeThickness,
                 minimalBoxDimension
             )
+        ));
+}
+
+/**
+ * @brief Validate the compatibility between QM charge settings and moltype 0
+ * presence
+ *
+ * @details This function checks for a configuration conflict in hybrid QM/MM
+ * calculations where MM charges are requested (qm_charges = mm) but QM atoms
+ * (moltype 0) are present in the system.
+ *
+ * @throws customException::InputFileException if MM charges are requested but
+ * atoms without moltype are present in the simulation box
+ */
+void HybridSetup::validateQMChargeSettings()
+{
+    const auto mmChargesRequested = !HybridSettings::getUseQMCharges();
+    const auto qmAtomsPresent =
+        _engine.getSimulationBox().moleculeTypeExists(0);
+
+    if (mmChargesRequested && qmAtomsPresent)
+        throw(InputFileException(
+            "Invalid configuration: MM charges requested (qm_charges = mm) in "
+            "input file but atoms with moltype \"0\" are present in the "
+            "system. Either set \"qm_charges = qm\" or ensure all atoms have a"
+            "non-zero moltype."
         ));
 }

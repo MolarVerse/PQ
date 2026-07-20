@@ -235,7 +235,7 @@ while (<DFTB_OUT>)
     if (/^\s+\d+\s+/) 
     {
       @line = split;
-      printf CHARGES ("%s  %20.8f\n",$line[0], $line[1]);
+      printf CHARGES ("%20.8f\n", $line[1]);
       $charges_found = 1;
     }
   }

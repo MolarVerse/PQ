@@ -43,9 +43,11 @@ namespace virial
 
         std::shared_ptr<Virial> clone() const override;
 
-        void calculateVirial(pq::SimBox &, pq::PhysicalData &) override;
-        void intraMolecularVirialCorrection(pq::SimBox &, pq::PhysicalData &)
-            override;
+        void intraMolecularVirialCorrection(
+            pq::SimBox &,
+            pq::PhysicalData &
+        ) override;
+        pq::tensor3D intraMolecularVirialCorrection(pq::SimBox &) const override;
     };
 
 }   // namespace virial

@@ -25,6 +25,7 @@
 #include <algorithm>    // for std::ranges:find
 #include <cstddef>      // for size_t
 #include <cstdlib>      // for system
+#include <filesystem>   // for remove
 #include <format>       // for format
 #include <fstream>      // for ofstream
 #include <functional>   // for identity
@@ -173,7 +174,7 @@ void DFTBPlusRunner::writePointChargeFile(pq::SimBox &box)
     pcFile.close();
 
     if (!_usePointCharges)
-        ::system(std::format("rm -f {}", fileName).c_str());
+        std::filesystem::remove(fileName);
 }
 
 /**

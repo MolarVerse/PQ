@@ -60,7 +60,7 @@ void MDEngine::run()
         takeStep();
 
         writeOutput();
-        deleteTempFiles();
+        deleteTmpFiles();
     }
 
     _timer.stopSimulationTimer();
@@ -155,7 +155,11 @@ void MDEngine::takeStepAfterForces()
 
     _constraints->calculateConstraintBondRefs(*_simulationBox);
 
-    _virial->intraMolecularVirialCorrection(*_simulationBox, *_physicalData);
+    if (!Settings::isHybridJobtype())
+        _virial->intraMolecularVirialCorrection(
+            *_simulationBox,
+            *_physicalData
+        );
 
     _thermostat->applyThermostatOnForces(*_simulationBox);
 
@@ -181,7 +185,6 @@ void MDEngine::calculateForcesWrapper()
 {
     _simulationBox->resetAllForces();
     calculateForces();
-    for (auto &atom : _simulationBox->getAtoms()) atom->getQMCharge().reset();
 }
 
 /**

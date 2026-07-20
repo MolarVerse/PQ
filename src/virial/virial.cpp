@@ -82,7 +82,7 @@ void Virial::calculateVirial(SimulationBox &simBox, PhysicalData &data)
  * shift forces are reset to zero. This version is useful when you need the
  * virial value without side effects on the object state.
  */
-tensor3D Virial::calculateVirial(SimulationBox &simBox)
+tensor3D Virial::calculateVirial(SimulationBox &simBox) const
 {
     tensor3D virial = {0.0};
 
@@ -117,7 +117,7 @@ tensor3D Virial::calculateVirial(SimulationBox &simBox)
  * @param simBox simulation box containing QM atoms
  * @return tensor3D virial tensor from QM atoms
  */
-tensor3D Virial::calculateQMVirial(SimulationBox &simBox)
+tensor3D Virial::calculateQMVirial(SimulationBox &simBox) const
 {
     tensor3D virial = {0.0};
 

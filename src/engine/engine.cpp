@@ -74,17 +74,19 @@ double Engine::calculateTotalSimulationTime() const
  * The files are safely deleted using std::filesystem::remove, which does not
  * throw exceptions if the files do not exist.
  */
-void Engine::deleteTempFiles()
+void Engine::deleteTmpFiles()
 {
     using std::filesystem::remove;
 
     const auto qm_forces     = FileSettings::getQMForcesTempFileName();
     const auto qm_charges    = FileSettings::getQMChargesTempFileName();
     const auto stress_tensor = FileSettings::getStressTensorTempFileName();
+    const auto pointcharges  = FileSettings::getPointChargeFileName();
 
     remove(qm_forces);
     remove(qm_charges);
     remove(stress_tensor);
+    remove(pointcharges);
 }
 
 /**
@@ -254,6 +256,16 @@ Constraints *Engine::getConstraintsPtr() { return _constraints.get(); }
  * @return IntraNonBonded*
  */
 IntraNonBonded *Engine::getIntraNonBondedPtr() { return _intraNonBonded.get(); }
+
+/**
+ * @brief set the inter-water interactions handler
+ *
+ * @param interWater The new inter-water handler to use
+ */
+void Engine::setInterWater(pq::UniqueInterWater interWater)
+{
+    _interWater = std::move(interWater);
+}
 
 /**
  * @brief get the reference to the engine output

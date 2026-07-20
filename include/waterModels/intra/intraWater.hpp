@@ -20,33 +20,24 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _FORCE_FIELD_INPUT_PARSER_HPP_
+#ifndef _INTRA_WATER_HPP_
 
-#define _FORCE_FIELD_INPUT_PARSER_HPP_
+#define _INTRA_WATER_HPP_
 
-#include <cstddef>   // for size_t
-#include <string>    // for string
-#include <vector>    // for vector
+#include "physicalData.hpp"    // for PhysicalData
+#include "simulationBox.hpp"   // for SimulationBox
+#include "typeAliases.hpp"
 
-#include "inputFileParser.hpp"   // for InputFileParser
-#include "typeAliases.hpp"       // for pq::strings
-
-namespace input
+namespace waterModel
 {
-    /**
-     * @class ForceFieldInputParser inherits from InputFileParser
-     *
-     * @brief Parses the force field commands in the input file
-     *
-     */
-    class ForceFieldInputParser : public InputFileParser
+    class IntraWater
     {
        public:
-        explicit ForceFieldInputParser(pq::Engine &);
+        virtual ~IntraWater() = default;
 
-        void parseForceFieldType(const pq::strings &, const size_t);
+        virtual void calculate(pq::SimBox &, pq::PhysicalData &) {}
     };
 
-}   // namespace input
+}   // namespace waterModel
 
-#endif   // _FORCE_FIELD_INPUT_PARSER_HPP_
+#endif   //  _INTRA_WATER_HPP_

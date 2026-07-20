@@ -204,6 +204,12 @@ namespace input
     }
 }   // namespace input
 
+namespace waterModel
+{
+    class IntraWater;   // forward declaration
+    class InterWater;   // forward declaration
+}   // namespace waterModel
+
 namespace pq
 {
     using Time = std::chrono::time_point<std::chrono::high_resolution_clock>;
@@ -422,6 +428,16 @@ namespace pq
     using UniqueRPMDRstFileOutput = std::unique_ptr<RPMDRstFileOutput>;
     using UniqueRPMDTrajOutput    = std::unique_ptr<RPMDTrajOutput>;
     using UniqueRPMDEnergyOutput  = std::unique_ptr<RPMDEnergyOutput>;
+
+    /*************************
+     * water model namespace *
+     *************************/
+
+    using IntraWater = waterModel::IntraWater;
+    using InterWater = waterModel::InterWater;
+
+    using UniqueIntraWater = std::unique_ptr<IntraWater>;
+    using UniqueInterWater = std::unique_ptr<InterWater>;
 
 }   // namespace pq
 

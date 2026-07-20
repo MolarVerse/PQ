@@ -219,6 +219,39 @@ TEST(testHybridConfigurator, assignHybridZones)
     EXPECT_EQ(simBox.getMolecule(4).getHybridZone(), OUTER);
 }
 
+TEST(testHybridConfigurator, assignHybridZonesCoreZero)
+{
+    HybridConfigurator hybridConfigurator;
+    SimBox             simBox;
+
+    simBox.setBoxDimensions({100.0, 100.0, 100.0});
+
+    HybridSettings::setCoreRadius(0.0);
+    HybridSettings::setLayerRadius(7.0);
+    HybridSettings::setSmoothingRegionThickness(0.2);
+    HybridSettings::setPointChargeThickness(7.0);
+
+    auto atom = std::make_shared<Atom>();
+    atom->setPosition({0.0, 0.0, 0.0});
+    atom->setName("Dy");
+    atom->initMass();
+
+    auto mol = Molecule();
+    mol.addAtom(atom);
+    mol.setMolMass(atom->getMass());
+    simBox.addMolecule(mol);
+
+    hybridConfigurator.assignHybridZones(simBox);
+
+    using enum simulationBox::HybridZone;
+    EXPECT_EQ(simBox.getMolecule(0).getHybridZone(), LAYER);
+
+    HybridSettings::setCoreRadius(0.00001);
+    hybridConfigurator.assignHybridZones(simBox);
+
+    EXPECT_EQ(simBox.getMolecule(0).getHybridZone(), CORE);
+}
+
 TEST(testHybridConfigurator, activateDeactivateMolecules)
 {
     HybridConfigurator hybridConfigurator;

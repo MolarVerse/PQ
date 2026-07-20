@@ -52,8 +52,7 @@ namespace QM
         virtual void execute(pq::SimBox &) = 0;
 
         virtual void writeCoordsFile(pq::SimBox &) = 0;
-        virtual void writePointChargeFile(pq::SimBox &) {
-        }   // TODO: https://github.com/MolarVerse/PQ/issues/194
+        virtual void writePointChargeFile(pq::SimBox &) {}
         virtual void readStressTensor(pq::Box &, pq::PhysicalData &) {}
 
         void readForceFile(pq::SimBox &, pq::PhysicalData &);

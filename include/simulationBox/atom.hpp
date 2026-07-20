@@ -96,11 +96,14 @@ namespace simulationBox
 
         void addPosition(const pq::Vec3D &position);
         void addVelocity(const pq::Vec3D &velocity);
-        void addForce(const pq::Vec3D &force);
+        void addForce(const pq::Vec3D &force) { _force += force; }
         void addForce(const double, const double, const double);
         void addForceInner(const pq::Vec3D &force);
         void addForceOuter(const pq::Vec3D &force);
-        void addShiftForce(const pq::Vec3D &shiftForce);
+        void addShiftForce(const pq::Vec3D &shiftForce)
+        {
+            _shiftForce += shiftForce;
+        }
 
         /***************************
          * standard getter methods *
@@ -110,8 +113,8 @@ namespace simulationBox
         [[nodiscard]] bool isQMAtom() const;
         [[nodiscard]] bool isMMAtom() const;
 
-        [[nodiscard]] std::string getName() const;
-        [[nodiscard]] std::string getAtomTypeName() const;
+        [[nodiscard]] const std::string &getName() const { return _name; }
+        [[nodiscard]] std::string        getAtomTypeName() const;
 
         [[nodiscard]] size_t getExternalAtomType() const;
         [[nodiscard]] size_t getAtomType() const;
@@ -119,13 +122,13 @@ namespace simulationBox
         [[nodiscard]] size_t getExternalGlobalVDWType() const;
         [[nodiscard]] size_t getInternalGlobalVDWType() const;
 
-        [[nodiscard]] int                   getAtomicNumber() const;
+        [[nodiscard]] int getAtomicNumber() const { return _atomicNumber; }
         [[nodiscard]] double                getMass() const;
-        [[nodiscard]] double                getPartialCharge() const;
+        [[nodiscard]] double getPartialCharge() const { return _partialCharge; }
         [[nodiscard]] std::optional<double> getQMCharge() const;
 
-        [[nodiscard]] pq::Vec3D getPosition() const;
-        [[nodiscard]] pq::Vec3D getPositionOld() const;
+        [[nodiscard]] const pq::Vec3D &getPosition() const { return _position; }
+        [[nodiscard]] pq::Vec3D        getPositionOld() const;
         [[nodiscard]] pq::Vec3D getVelocity() const;
         [[nodiscard]] pq::Vec3D getForce() const;
         [[nodiscard]] pq::Vec3D getForceOld() const;

@@ -197,6 +197,44 @@ namespace linearAlgebra
         return !(lhs < rhs);
     }
 
+    /************************
+     *                      *
+     * unary + / - operator *
+     *                      *
+     ************************/
+
+    /**
+     * @brief unary + operator for a Vector3d object
+     *
+     * @example +Vector3D<int>
+     *
+     * @tparam U
+     * @param vec
+     * @return U
+     */
+    template <pq::ArithmeticVector3D U>
+    auto operator+(const U &vec) -> U
+    {
+        return vec;
+    }
+
+    /**
+     * @brief unary - operator for a Vector3d object
+     *
+     * @example -Vector3D<int>
+     *
+     * @tparam U
+     * @param vec
+     * @return Vector3D<decltype(-vec[0])>
+     */
+    template <pq::ArithmeticVector3D U>
+    auto operator-(const U &vec) -> Vector3D<decltype(-vec[0])>
+    {
+        using ResultType = decltype(-vec[0]);
+
+        return Vector3D<ResultType>(-vec[0], -vec[1], -vec[2]);
+    }
+
     /*********************
      *                   *
      * binary + operator *

@@ -145,13 +145,6 @@ void Atom::addPosition(const Vec3D &position) { _position += position; }
 void Atom::addVelocity(const Vec3D &velocity) { _velocity += velocity; }
 
 /**
- * @brief add a Vec3D to the current force of the atom
- *
- * @param force
- */
-void Atom::addForce(const Vec3D &force) { _force += force; }
-
-/**
  * @brief  add a force to the current force of the atom
  *
  * @param force_x
@@ -183,12 +176,6 @@ void Atom::addForceInner(const Vec3D &force) { _forceInner += force; }
  */
 void Atom::addForceOuter(const Vec3D &force) { _forceOuter += force; }
 
-/**
- * @brief add a Vec3D to the current shift force of the atom
- *
- * @param shiftForce
- */
-void Atom::addShiftForce(const Vec3D &shiftForce) { _shiftForce += shiftForce; }
 
 /***************************
  *                         *
@@ -255,13 +242,6 @@ bool Atom::isMMAtom() const
 }
 
 /**
- * @brief return the name of the atom (element name)
- *
- * @return std::string
- */
-std::string Atom::getName() const { return _name; }
-
-/**
  * @brief return the atom type name
  *
  * @return std::string
@@ -297,25 +277,12 @@ size_t Atom::getExternalGlobalVDWType() const { return _externalGlobalVDWType; }
 size_t Atom::getInternalGlobalVDWType() const { return _internalGlobalVDWType; }
 
 /**
- * @brief return the atomic number of the atom
- *
- * @return int
- */
-int Atom::getAtomicNumber() const { return _atomicNumber; }
-
-/**
  * @brief return the mass of the atom
  *
  * @return double
  */
 double Atom::getMass() const { return _mass; }
 
-/**
- * @brief return the partial charge of the atom
- *
- * @return double
- */
-double Atom::getPartialCharge() const { return _partialCharge; }
 
 /*
  * @brief return the qm charge of the atom
@@ -323,13 +290,6 @@ double Atom::getPartialCharge() const { return _partialCharge; }
  * @return optional<double>
  */
 optional<double> Atom::getQMCharge() const { return _qmCharge; }
-
-/**
- * @brief return the position of the atom
- *
- * @return Vec3D
- */
-Vec3D Atom::getPosition() const { return _position; }
 
 /**
  * @brief return the old position of the atom
@@ -567,4 +527,3 @@ void Atom::setForceOld(const Vec3D &force) { _forceOld = force; }
  * @brief reset the qm charge of the atom
  */
 void Atom::resetQMCharge() { _qmCharge.reset(); }
-

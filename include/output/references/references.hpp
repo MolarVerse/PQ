@@ -54,6 +54,18 @@ namespace references
     // Constraint Dynamics
     static constexpr char _RATTLE_FILE_[] = "rattle.ref";
 
+    // Water Models
+    static constexpr char _SPC_FILE_[]       = "water_model_spc.ref";
+    static constexpr char _SPC_E_FILE_[]     = "water_model_spce.ref";
+    static constexpr char _SPC_FW_FILE_[]    = "water_model_spcfw.ref";
+    static constexpr char _QSPC_FW_FILE_[]   = "water_model_qspcfw.ref";
+    static constexpr char _SPC_DC_FILE_[]    = "water_model_spcdc.ref";
+    static constexpr char _H2O_DC_FILE_[]    = "water_model_h2odc.ref";
+    static constexpr char _TIP3P_FILE_[]     = "water_model_tip3p.ref";
+    static constexpr char _OPC3_FILE_[]      = "water_model_opc3.ref";
+    static constexpr char _SPC_MTR_FILE_[]   = "water_model_spcmtr.ref";
+    static constexpr char _TIP3P_MTR_FILE_[] = "water_model_tip3pmtr.ref";
+
     // clang-format on
 
 }   // namespace references

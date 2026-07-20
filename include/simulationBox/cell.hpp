@@ -27,7 +27,6 @@
 #include <cstddef>   // for size_t
 #include <vector>    // for vector
 
-#include "cellView.hpp"   // for CellView
 #include "typeAliases.hpp"
 
 namespace simulationBox
@@ -38,12 +37,18 @@ namespace simulationBox
      * @brief Cell is a class for a single cell in the cellList
      *
      */
-    class Cell : public CellView<Cell>
+    class Cell
     {
        private:
-        std::vector<pq::Molecule *>      _molecules;
-        std::vector<std::vector<size_t>> _atomIndices;
-        std::vector<Cell *>              _neighbourCells;
+        std::vector<pq::Molecule *>          _molecules;
+        std::vector<std::vector<pq::Atom *>> _atoms;
+        std::vector<Cell *>                  _neighbourCells;
+        std::vector<size_t>                  _coreMoleculeIndices;
+        std::vector<size_t>                  _smoothingMoleculeIndices;
+        std::vector<size_t>                  _nonSmoothingMoleculeIndices;
+        std::vector<size_t>                  _activeMoleculeIndices;
+        std::vector<size_t>                  _inactiveNonCoreMoleculeIndices;
+        std::vector<size_t>                  _waterMoleculeIndices;
 
         pq::Vec3D   _lowerBoundary = {0, 0, 0};
         pq::Vec3D   _upperBoundary = {0, 0, 0};
@@ -51,12 +56,14 @@ namespace simulationBox
 
        public:
         void clearMolecules();
-        void clearAtomIndices();
+        void clearAtoms();
 
         void addMolecule(pq::Molecule &molecule);
         void addMolecule(pq::Molecule *molecule);
         void addNeighbourCell(Cell *cell);
-        void addAtomIndices(const std::vector<size_t> &atomIndices);
+        void addAtoms(const std::vector<pq::Atom *> &atomPointers);
+        void assignMoleculeHybridZoneIndices();
+        void assignWaterMoleculeIndices(const pq::SimBox &);
 
         /***************************
          * standard getter methods *
@@ -68,15 +75,33 @@ namespace simulationBox
         [[nodiscard]] const pq::Vec3D   &getUpperBoundary() const;
         [[nodiscard]] const pq::Vec3Dul &getCellIndex() const;
 
-        [[nodiscard]] pq::Molecule *getMolecule(const size_t index) const;
+        [[nodiscard]] pq::Molecule *getMolecule(const size_t index) const
+        {
+            return _molecules[index];
+        }
         [[nodiscard]] const std::vector<Molecule *> &getMolecules() const;
         [[nodiscard]] std::vector<Molecule *>       &getMolecules();
 
         [[nodiscard]] Cell *getNeighbourCell(const size_t index) const;
         [[nodiscard]] const std::vector<Cell *> &getNeighbourCells() const;
 
-        [[nodiscard]] const std::vector<size_t> &getAtomIndices(
-            const size_t index
+        [[nodiscard]] const std::vector<pq::Atom *> &getAtoms(
+            const size_t molIndex
+        ) const
+        {
+            return _atoms[molIndex];
+        }
+
+        [[nodiscard]] const std::vector<size_t> &getCoreMoleculeIndices() const;
+        [[nodiscard]] const std::vector<size_t> &getSmoothingMoleculeIndices(
+        ) const;
+        [[nodiscard]] const std::vector<size_t> &getNonSmoothingMoleculeIndices(
+        ) const;
+        [[nodiscard]] const std::vector<size_t> &getActiveMoleculeIndices(
+        ) const;
+        [[nodiscard]] const std::vector<size_t> &getInactiveNonCoreMoleculeIndices(
+        ) const;
+        [[nodiscard]] const std::vector<size_t> &getWaterMoleculeIndices(
         ) const;
 
         /***************************

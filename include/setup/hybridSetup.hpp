@@ -48,10 +48,12 @@ namespace setup
         explicit HybridSetup(pq::Engine &engine);
 
         void setup();
+        void validateQMMethod();
         void setupInnerRegionCenter();
         void setupForcedInnerList();
         void setupForcedOuterList();
         void checkZoneRadii();
+        void validateQMChargeSettings();
     };
 
 }   // namespace setup

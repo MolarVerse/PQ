@@ -73,8 +73,8 @@ namespace simulationBox
     class SimulationBox : public SimulationBoxView<SimulationBox>
     {
        private:
-        int _waterType;
-        int _ammoniaType;
+        std::optional<size_t> _waterType;
+        std::optional<size_t> _ammoniaType;
 
         size_t _degreesOfFreedom = 0;
 
@@ -130,7 +130,12 @@ namespace simulationBox
         [[nodiscard]] pq::Vec3D calculateMomentum();
         [[nodiscard]] pq::Vec3D calculateAngularMomentum(const pq::Vec3D&);
         [[nodiscard]] pq::Vec3D calcBoxDimFromDensity() const;
-        [[nodiscard]] pq::Vec3D calcShiftVector(const pq::Vec3D&) const;
+        [[nodiscard]] pq::Vec3D calcShiftVector(
+            const pq::Vec3D &position
+        ) const
+        {
+            return _box->calcShiftVector(position);
+        }
         [[nodiscard]] int       calcActiveMolCharge() const;
 
         [[nodiscard]] bool moleculeTypeExists(const size_t) const;
@@ -180,17 +185,17 @@ namespace simulationBox
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] int              getWaterType() const;
-        [[nodiscard]] int              getAmmoniaType() const;
-        [[nodiscard]] size_t           getNumberOfMolecules() const;
-        [[nodiscard]] size_t           getDegreesOfFreedom() const;
-        [[nodiscard]] size_t           getNumberOfAtoms() const;
-        [[nodiscard]] size_t           getNumberOfQMAtoms() const;
-        [[nodiscard]] double           getTotalMass() const;
-        [[nodiscard]] double           getTotalCharge() const;
-        [[nodiscard]] double           getDensity() const;
-        [[nodiscard]] pq::Vec3D&       getCenterOfMass();
-        [[nodiscard]] std::vector<int> getInnerRegionCenterAtomIndices();
+        [[nodiscard]] std::optional<size_t> getWaterType() const;
+        [[nodiscard]] std::optional<size_t> getAmmoniaType() const;
+        [[nodiscard]] size_t                getNumberOfMolecules() const;
+        [[nodiscard]] size_t                getDegreesOfFreedom() const;
+        [[nodiscard]] size_t                getNumberOfAtoms() const;
+        [[nodiscard]] size_t                getNumberOfQMAtoms() const;
+        [[nodiscard]] double                getTotalMass() const;
+        [[nodiscard]] double                getTotalCharge() const;
+        [[nodiscard]] double                getDensity() const;
+        [[nodiscard]] pq::Vec3D&            getCenterOfMass();
+        [[nodiscard]] std::vector<int>      getInnerRegionCenterAtomIndices();
 
         [[nodiscard]] Atom&         getAtom(const size_t index);
         [[nodiscard]] Molecule&     getMolecule(const size_t index);
@@ -224,8 +229,8 @@ namespace simulationBox
          * standard setter methods *
          ***************************/
 
-        void setWaterType(const int waterType);
-        void setAmmoniaType(const int ammoniaType);
+        void setWaterType(const size_t waterType);
+        void setAmmoniaType(const size_t ammoniaType);
         void setTotalMass(const double totalMass);
         void setTotalCharge(const double totalCharge);
         void setDensity(const double density);

@@ -104,6 +104,13 @@ std::string FileSettings::getMShakeFileName() { return _mShakeFile; }
 std::string FileSettings::getDFTBFileName() { return _dftbFile; }
 
 /**
+ * @brief Get the TM setup file name
+ *
+ * @return std::string
+ */
+std::string FileSettings::getTMFileName() { return _tmFile; }
+
+/**
  * @brief Get the pointcharge file name
  *
  * @return std::string
@@ -199,7 +206,7 @@ bool FileSettings::isDFTBFileNameSet() { return _isDFTBFileSet; }
  *
  * @param name
  */
-void FileSettings::setMolDescriptorFileName(const std::string_view name)
+void FileSettings::setMolDescriptorFileName(const std::string_view& name)
 {
     FileSettings::_molDescriptorFile = name;
 }
@@ -209,7 +216,7 @@ void FileSettings::setMolDescriptorFileName(const std::string_view name)
  *
  * @param name
  */
-void FileSettings::setGuffDatFileName(const std::string_view name)
+void FileSettings::setGuffDatFileName(const std::string_view& name)
 {
     FileSettings::_guffDatFile = name;
 }
@@ -219,7 +226,7 @@ void FileSettings::setGuffDatFileName(const std::string_view name)
  *
  * @param name
  */
-void FileSettings::setTopologyFileName(const std::string_view name)
+void FileSettings::setTopologyFileName(const std::string_view& name)
 {
     FileSettings::_topologyFile = name;
 }
@@ -229,7 +236,7 @@ void FileSettings::setTopologyFileName(const std::string_view name)
  *
  * @param name
  */
-void FileSettings::setParameterFileName(const std::string_view name)
+void FileSettings::setParameterFileName(const std::string_view& name)
 {
     FileSettings::_parameterFile = name;
 }
@@ -239,7 +246,7 @@ void FileSettings::setParameterFileName(const std::string_view name)
  *
  * @param name
  */
-void FileSettings::setIntraNonBondedFileName(const std::string_view name)
+void FileSettings::setIntraNonBondedFileName(const std::string_view& name)
 {
     FileSettings::_intraNonBondedFile = name;
 }
@@ -249,7 +256,7 @@ void FileSettings::setIntraNonBondedFileName(const std::string_view name)
  *
  * @param name
  */
-void FileSettings::setStartFileName(const std::string_view name)
+void FileSettings::setStartFileName(const std::string_view& name)
 {
     FileSettings::_startFile = name;
 }
@@ -259,7 +266,7 @@ void FileSettings::setStartFileName(const std::string_view name)
  *
  * @param name
  */
-void FileSettings::setRingPolymerStartFileName(const std::string_view name)
+void FileSettings::setRingPolymerStartFileName(const std::string_view& name)
 {
     FileSettings::_rpmdStartFile = name;
 }
@@ -269,7 +276,7 @@ void FileSettings::setRingPolymerStartFileName(const std::string_view name)
  *
  * @param name
  */
-void FileSettings::setMShakeFileName(const std::string_view name)
+void FileSettings::setMShakeFileName(const std::string_view& name)
 {
     FileSettings::_mShakeFile = name;
 }
@@ -279,9 +286,19 @@ void FileSettings::setMShakeFileName(const std::string_view name)
  *
  * @param name
  */
-void FileSettings::setDFTBFileName(const std::string_view name)
+void FileSettings::setDFTBFileName(const std::string_view& name)
 {
     FileSettings::_dftbFile = name;
+}
+
+/**
+ * @brief set the TM setup file name
+ *
+ * @param name
+ */
+void FileSettings::setTMFileName(const std::string_view& name)
+{
+    FileSettings::_tmFile = name;
 }
 
 /**
@@ -289,7 +306,7 @@ void FileSettings::setDFTBFileName(const std::string_view name)
  *
  * @param name
  */
-void FileSettings::setPointChargeFileName(const std::string_view name)
+void FileSettings::setPointChargeFileName(const std::string_view& name)
 {
     FileSettings::_pointChargeFile = name;
 }

@@ -129,5 +129,5 @@ TEST_F(TestSetup, parseSelectionWithLettersThrowsWithoutPython)
 TEST_F(TestSetup, setupThrowsNotImplemented)
 {
     HybridSetup hs(*_engine);
-    EXPECT_THROW(hs.setup(), UserInputException);
+    EXPECT_THROW(hs.setup(), InputFileException);
 }

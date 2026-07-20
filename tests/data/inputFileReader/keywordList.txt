@@ -39,8 +39,6 @@ long_range                  false
 rf_epsilon                  false
 wolf_param                  false
 
-force-field                 false
-
 start_file                  true
 rpmd_start_file             false
 moldescriptor_file          false
@@ -51,6 +49,7 @@ parameter_file              false
 intra-nonBonded_file        false
 mshake_file                 false
 dftb_file                   false
+turbomole_file              false
 
 integrator                  false
 
@@ -71,7 +70,10 @@ friction                    false
 nh-chain_length             false
 coupling_frequency          false
 
+force-field                 false
 noncoulomb                  false
+water_intra                 false
+water_inter                 false
 
 overwrite_output            false
 output_freq                 false
@@ -109,6 +111,7 @@ freset_angular              false
 freset_forces               false
 
 rcoulomb                    false
+rnoncoulomb                 false
 density                     false
 init_velocities             false
 

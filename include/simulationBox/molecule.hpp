@@ -162,7 +162,7 @@ namespace simulationBox
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] size_t getMoltype() const;
+        [[nodiscard]] size_t getMoltype() const { return _moltype; }
         [[nodiscard]] size_t getNumberOfAtoms() const;
         [[nodiscard]] size_t getDegreesOfFreedom() const;
 
@@ -173,7 +173,7 @@ namespace simulationBox
 
         [[nodiscard]] pq::Vec3D  getCenterOfMass() const;
         [[nodiscard]] HybridZone getHybridZone() const;
-        [[nodiscard]] bool       isActive() const;
+        [[nodiscard]] bool       isActive() const { return _isActive; }
         [[nodiscard]] double     getSmoothingFactor() const;
 
         [[nodiscard]] Atom                    &getAtom(const size_t index);

@@ -64,10 +64,14 @@ namespace simulationBox
         void addNeighbouringCells(const double coulombCutoff);
         void addNeighbouringCellPointers(Cell &);
         void addMoleculesToCells(SimulationBox &simulationBox);
+        void assignMoleculeHybridZoneIndices();
+        void assignWaterMoleculeIndices(SimulationBox &);
 
         [[nodiscard]] size_t getCellIndex(const pq::Vec3Dul &cellIndices) const;
-        [[nodiscard]] pq::Vec3Dul getCellIndexOfAtom(const pq::Vec3D &, const pq::Vec3D &)
-            const;
+        [[nodiscard]] pq::Vec3Dul getCellIndexOfAtom(
+            const pq::Vec3D &,
+            const pq::Vec3D &
+        ) const;
 
         void resizeCells();
         void addCell(const Cell &cell);

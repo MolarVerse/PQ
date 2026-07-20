@@ -40,6 +40,7 @@ namespace settings
      */
     enum class SmoothingMethod
     {
+        NONE,
         HOTSPOT,
         EXACT
     };
@@ -57,14 +58,14 @@ namespace settings
         static inline std::vector<int>                _forcedInnerList;
         static inline std::vector<int>                _forcedOuterList;
 
-        static inline bool _useQMCharges = false;
+        static inline bool _useQMCharges = true;
 
         static inline double _coreRadius               = 0.0;
         static inline double _layerRadius              = 0.0;
         static inline double _smoothingRegionThickness = 0.0;
         static inline double _pointChargeThickness     = 0.0;
 
-        static inline SmoothingMethod _smoothing = SmoothingMethod::HOTSPOT;
+        static inline SmoothingMethod _smoothing = SmoothingMethod::NONE;
 
        public:
         /********************
