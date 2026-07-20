@@ -50,6 +50,11 @@ namespace engine
         moltypeCheck();
         _configurator.calculateSmoothingFactors(*_simulationBox);
         _cellList->updateCellList(*_simulationBox);
+        _physicalData->setNumberOfSmoothingMolecules(
+            static_cast<size_t>(std::ranges::distance(
+                _simulationBox->getMoleculesInsideZone(SMOOTHING)
+            ))
+        );
 
         applySmoothing();
 
@@ -104,8 +109,9 @@ namespace engine
         tensor3D   virial           = {0.0};
         auto       numQMAtoms       = 0.0;
         auto&      atoms            = _simulationBox->getAtoms();
-        const auto nSmMol =
-            distance(_simulationBox->getMoleculesInsideZone(SMOOTHING));
+        const auto nSmMol           = static_cast<size_t>(
+            distance(_simulationBox->getMoleculesInsideZone(SMOOTHING))
+        );
 
         // Loop over all combinations of smoothing molecules
         for (size_t i = 0; i < (1u << nSmMol); ++i)

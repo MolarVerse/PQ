@@ -20,6 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#include <cstddef>
+
 #include "physicalData.hpp"
 
 using namespace physicalData;
@@ -333,6 +335,16 @@ void PhysicalData::setImproperEnergy(const double improperEnergy)
 void PhysicalData::setQMEnergy(const double qmEnergy) { _qmEnergy = qmEnergy; }
 
 /**
+ * @brief set the number of smoothing molecules
+ *
+ * @param numberSmMol
+ */
+void PhysicalData::setNumberOfSmoothingMolecules(const size_t numberSmMol)
+{
+    _numberOfSmoothingMol = numberSmMol;
+}
+
+/**
  * @brief set nose hoover momentum energy
  *
  * @param momentumEnergy
@@ -519,6 +531,16 @@ double PhysicalData::getImproperEnergy() const { return _improperEnergy; }
  * @return double
  */
 double PhysicalData::getQMEnergy() const { return _qmEnergy; }
+
+/**
+ * @brief get the number of smoothing molecules
+ *
+ * @return size_t
+ */
+size_t PhysicalData::getNumberOfSmoothingMolecules() const
+{
+    return _numberOfSmoothingMol;
+}
 
 /**
  * @brief get the nose hoover momentum energy
