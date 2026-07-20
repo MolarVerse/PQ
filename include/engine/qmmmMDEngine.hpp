@@ -46,12 +46,25 @@ namespace engine
         void calculateForces() override;
 
        private:
+        double _qmEnergy              = 0.0;
+        double _coulombEnergy         = 0.0;
+        double _nonCoulombEnergy      = 0.0;
+        double _bondEnergy            = 0.0;
+        double _angleEnergy           = 0.0;
+        double _dihedralEnergy        = 0.0;
+        double _improperEnergy        = 0.0;
+        double _intraCoulombEnergy    = 0.0;
+        double _intraNonCoulombEnergy = 0.0;
+
         void applySmoothing();
         void applyExactSmoothing();
         void applyHotspotSmoothing();
 
         void moltypeCheck();
         void setNumberOfQMAtoms();
+
+        void scaleAndAccumulateEnergies(const double globalSmF);
+        void moveEnergiesToPhysicalData();
     };
 
 }   // namespace engine

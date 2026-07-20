@@ -98,12 +98,9 @@ namespace engine
         using enum Periodicity;
         using std::ranges::distance;
 
-        auto       qmEnergy         = 0.0;
-        auto       coulombEnergy    = 0.0;
-        auto       nonCoulombEnergy = 0.0;
-        tensor3D   virial           = {0.0};
-        auto       numQMAtoms       = 0.0;
-        auto&      atoms            = _simulationBox->getAtoms();
+        tensor3D   virial     = {0.0};
+        auto       numQMAtoms = 0.0;
+        auto&      atoms      = _simulationBox->getAtoms();
         const auto nSmMol =
             distance(_simulationBox->getMoleculesInsideZone(SMOOTHING));
 
@@ -186,17 +183,12 @@ namespace engine
             addScaledCurrentForcesToOuterAndReset(atoms, globalSmF);
 
             // STEP 4: Scale and accumulate hybrid energies
-            qmEnergy      += _physicalData->getQMEnergy() * globalSmF;
-            coulombEnergy += _physicalData->getCoulombEnergy() * globalSmF;
-            nonCoulombEnergy +=
-                _physicalData->getNonCoulombEnergy() * globalSmF;
+            scaleAndAccumulateEnergies(globalSmF);
+            _physicalData->reset();
         }
 
-        // STEP 5: Set energies, virial and numQMAtoms to their accumulated
-        // values
-        _physicalData->setQMEnergy(qmEnergy);
-        _physicalData->setCoulombEnergy(coulombEnergy);
-        _physicalData->setNonCoulombEnergy(nonCoulombEnergy);
+        // STEP 5: Set energies, virial and numQMAtoms to accumulated values
+        moveEnergiesToPhysicalData();
         _physicalData->setVirial(virial);
         _physicalData->setNumberOfQMAtoms(numQMAtoms);
     }
@@ -356,6 +348,54 @@ namespace engine
                 ));
             ++count;
         }
+    }
+
+    /**
+     * @brief Scale current PhysicalData energies and add them to the internal
+     * accumulators. Used for the exact smoothing method.
+     *
+     * @param globalSmF Global smoothing factor for the current configuration.
+     */
+    void QMMMMDEngine::scaleAndAccumulateEnergies(const double globalSmF)
+    {
+        // clang-format off
+        _qmEnergy              += _physicalData->getQMEnergy()              * globalSmF;
+        _coulombEnergy         += _physicalData->getCoulombEnergy()         * globalSmF;
+        _nonCoulombEnergy      += _physicalData->getNonCoulombEnergy()      * globalSmF;
+        _bondEnergy            += _physicalData->getBondEnergy()            * globalSmF;
+        _angleEnergy           += _physicalData->getAngleEnergy()           * globalSmF;
+        _dihedralEnergy        += _physicalData->getDihedralEnergy()        * globalSmF;
+        _improperEnergy        += _physicalData->getImproperEnergy()        * globalSmF;
+        _intraCoulombEnergy    += _physicalData->getIntraCoulombEnergy()    * globalSmF;
+        _intraNonCoulombEnergy += _physicalData->getIntraNonCoulombEnergy() * globalSmF;
+        // clang-format on
+    }
+
+    /**
+     * @brief Transfer internal accumulated energies to PhysicalData and clear
+     * accumulators. Used for the exact smoothing method.
+     */
+    void QMMMMDEngine::moveEnergiesToPhysicalData()
+    {
+        _physicalData->setQMEnergy(_qmEnergy);
+        _physicalData->setCoulombEnergy(_coulombEnergy);
+        _physicalData->setNonCoulombEnergy(_nonCoulombEnergy);
+        _physicalData->setBondEnergy(_bondEnergy);
+        _physicalData->setAngleEnergy(_angleEnergy);
+        _physicalData->setDihedralEnergy(_dihedralEnergy);
+        _physicalData->setImproperEnergy(_improperEnergy);
+        _physicalData->setIntraCoulombEnergy(_intraCoulombEnergy);
+        _physicalData->setIntraNonCoulombEnergy(_intraNonCoulombEnergy);
+
+        _qmEnergy              = 0.0;
+        _coulombEnergy         = 0.0;
+        _nonCoulombEnergy      = 0.0;
+        _bondEnergy            = 0.0;
+        _angleEnergy           = 0.0;
+        _dihedralEnergy        = 0.0;
+        _improperEnergy        = 0.0;
+        _intraCoulombEnergy    = 0.0;
+        _intraNonCoulombEnergy = 0.0;
     }
 
 }   // namespace engine

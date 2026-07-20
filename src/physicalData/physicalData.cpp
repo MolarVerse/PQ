@@ -192,6 +192,11 @@ void PhysicalData::reset()
     _numberOfQMAtoms = 0.0;
     _loopTime        = 0.0;
 
+    _volume      = 0.0;
+    _density     = 0.0;
+    _temperature = 0.0;
+    _pressure    = 0.0;
+
     _kineticEnergy         = 0.0;
     _coulombEnergy         = 0.0;
     _nonCoulombEnergy      = 0.0;
@@ -203,22 +208,21 @@ void PhysicalData::reset()
     _dihedralEnergy = 0.0;
     _improperEnergy = 0.0;
 
-    _temperature = 0.0;
-    _volume      = 0.0;
-    _density     = 0.0;
-    _pressure    = 0.0;
-    _virial      = {0.0};
-
     _qmEnergy = 0.0;
-
-    _momentum        = {0.0, 0.0, 0.0};
-    _angularMomentum = {0.0, 0.0, 0.0};
 
     _noseHooverMomentumEnergy = 0.0;
     _noseHooverFrictionEnergy = 0.0;
 
     _lowerDistanceConstraints = 0.0;
     _upperDistanceConstraints = 0.0;
+
+    _momentum                  = {0.0, 0.0, 0.0};
+    _angularMomentum           = {0.0, 0.0, 0.0};
+    _kineticEnergyAtomicTensor = {0.0};
+    _kinEnergyMolTensor        = {0.0};
+
+    _virial       = {0.0};
+    _stressTensor = {0.0};
 
     _ringPolymerEnergy = 0.0;
 }
