@@ -99,11 +99,7 @@ void InfoOutput::write(const double simulationTime, const PhysicalData &data)
 
     if (Settings::isHybridJobtype())
     {
-        writeLeftInteger(
-            data.getNumberOfSmoothingMolecules(),
-            "N(SM-MOL)",
-            "-"
-        );
+        writeLeft(data.getNumberOfSmoothingMolecules(), "N(SM-MOL)", "-");
         writeRight();
     }
 

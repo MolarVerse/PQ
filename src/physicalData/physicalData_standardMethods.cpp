@@ -20,8 +20,6 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <cstddef>
-
 #include "physicalData.hpp"
 
 using namespace physicalData;
@@ -339,7 +337,7 @@ void PhysicalData::setQMEnergy(const double qmEnergy) { _qmEnergy = qmEnergy; }
  *
  * @param numberSmMol
  */
-void PhysicalData::setNumberOfSmoothingMolecules(const size_t numberSmMol)
+void PhysicalData::setNumberOfSmoothingMolecules(const double numberSmMol)
 {
     _numberOfSmoothingMol = numberSmMol;
 }
@@ -535,9 +533,9 @@ double PhysicalData::getQMEnergy() const { return _qmEnergy; }
 /**
  * @brief get the number of smoothing molecules
  *
- * @return size_t
+ * @return double
  */
-size_t PhysicalData::getNumberOfSmoothingMolecules() const
+double PhysicalData::getNumberOfSmoothingMolecules() const
 {
     return _numberOfSmoothingMol;
 }

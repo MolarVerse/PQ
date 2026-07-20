@@ -24,7 +24,6 @@
 
 #define _PHYSICAL_DATA_HPP_
 
-#include <cstddef>
 #include <functional>   // for _Bind_front_t, bind_front, function
 #include <vector>       // for vector
 
@@ -67,7 +66,7 @@ namespace physicalData
 
         double _qmEnergy = 0.0;
 
-        size_t _numberOfSmoothingMol = 0UL;
+        double _numberOfSmoothingMol = 0.0;
 
         double _noseHooverMomentumEnergy = 0.0;
         double _noseHooverFrictionEnergy = 0.0;
@@ -154,7 +153,7 @@ namespace physicalData
 
         void setQMEnergy(const double qmEnergy);
 
-        void setNumberOfSmoothingMolecules(const size_t numberSmMol);
+        void setNumberOfSmoothingMolecules(const double numberSmMol);
 
         void setNoseHooverMomentumEnergy(const double momentumEnergy);
         void setNoseHooverFrictionEnergy(const double frictionEnergy);
@@ -190,7 +189,7 @@ namespace physicalData
 
         [[nodiscard]] double getQMEnergy() const;
 
-        [[nodiscard]] size_t getNumberOfSmoothingMolecules() const;
+        [[nodiscard]] double getNumberOfSmoothingMolecules() const;
 
         [[nodiscard]] double getNoseHooverMomentumEnergy() const;
         [[nodiscard]] double getNoseHooverFrictionEnergy() const;

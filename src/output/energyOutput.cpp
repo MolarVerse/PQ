@@ -86,7 +86,7 @@ void EnergyOutput::write(const size_t step, const PhysicalData &data)
     }
 
     if (Settings::isHybridJobtype())
-        _fp << std::format("{:20}\t", data.getNumberOfSmoothingMolecules());
+        _fp << std::format("{:20.12f}\t", data.getNumberOfSmoothingMolecules());
 
     if (ManostatSettings::getManostatType() != ManostatType::NONE)
     {
