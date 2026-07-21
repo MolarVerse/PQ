@@ -50,6 +50,11 @@ namespace engine
         moltypeCheck();
         _configurator.calculateSmoothingFactors(*_simulationBox);
         _cellList->updateCellList(*_simulationBox);
+        _physicalData->setNumberOfSmoothingMolecules(
+            std::ranges::distance(
+                _simulationBox->getMoleculesInsideZone(SMOOTHING)
+            )
+        );
 
         applySmoothing();
 
