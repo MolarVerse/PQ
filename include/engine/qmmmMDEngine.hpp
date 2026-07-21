@@ -27,6 +27,7 @@
 #include <unordered_set>   // for unordered_set
 
 #include "hybridMDEngine.hpp"
+#include "typeAliases.hpp"
 
 namespace engine
 {
@@ -46,15 +47,7 @@ namespace engine
         void calculateForces() override;
 
        private:
-        double _qmEnergy              = 0.0;
-        double _coulombEnergy         = 0.0;
-        double _nonCoulombEnergy      = 0.0;
-        double _bondEnergy            = 0.0;
-        double _angleEnergy           = 0.0;
-        double _dihedralEnergy        = 0.0;
-        double _improperEnergy        = 0.0;
-        double _intraCoulombEnergy    = 0.0;
-        double _intraNonCoulombEnergy = 0.0;
+        pq::PhysicalData _qmmmPhysicalData{};
 
         void applySmoothing();
         void applyExactSmoothing();

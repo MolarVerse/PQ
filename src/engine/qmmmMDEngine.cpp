@@ -189,7 +189,7 @@ namespace engine
 
             // STEP 4: Scale and accumulate hybrid energies
             scaleAndAccumulateEnergies(globalSmF);
-            _physicalData->reset();
+            _physicalData->resetEnergies();
         }
 
         // STEP 5: Set energies, virial and numQMAtoms to accumulated values
@@ -357,50 +357,45 @@ namespace engine
 
     /**
      * @brief Scale current PhysicalData energies and add them to the internal
-     * accumulators. Used for the exact smoothing method.
+     * QM/MM PhyscialData object. Used for the exact smoothing method.
      *
      * @param globalSmF Global smoothing factor for the current configuration.
      */
     void QMMMMDEngine::scaleAndAccumulateEnergies(const double globalSmF)
     {
         // clang-format off
-        _qmEnergy              += _physicalData->getQMEnergy()              * globalSmF;
-        _coulombEnergy         += _physicalData->getCoulombEnergy()         * globalSmF;
-        _nonCoulombEnergy      += _physicalData->getNonCoulombEnergy()      * globalSmF;
-        _bondEnergy            += _physicalData->getBondEnergy()            * globalSmF;
-        _angleEnergy           += _physicalData->getAngleEnergy()           * globalSmF;
-        _dihedralEnergy        += _physicalData->getDihedralEnergy()        * globalSmF;
-        _improperEnergy        += _physicalData->getImproperEnergy()        * globalSmF;
-        _intraCoulombEnergy    += _physicalData->getIntraCoulombEnergy()    * globalSmF;
-        _intraNonCoulombEnergy += _physicalData->getIntraNonCoulombEnergy() * globalSmF;
+        _qmmmPhysicalData.addQMEnergy             ( _physicalData->getQMEnergy()              * globalSmF);
+        _qmmmPhysicalData.addCoulombEnergy        ( _physicalData->getCoulombEnergy()         * globalSmF);
+        _qmmmPhysicalData.addNonCoulombEnergy     ( _physicalData->getNonCoulombEnergy()      * globalSmF);
+        _qmmmPhysicalData.addBondEnergy           ( _physicalData->getBondEnergy()            * globalSmF);
+        _qmmmPhysicalData.addAngleEnergy          ( _physicalData->getAngleEnergy()           * globalSmF);
+        _qmmmPhysicalData.addDihedralEnergy       ( _physicalData->getDihedralEnergy()        * globalSmF);
+        _qmmmPhysicalData.addImproperEnergy       ( _physicalData->getImproperEnergy()        * globalSmF);
+        _qmmmPhysicalData.addIntraCoulombEnergy   ( _physicalData->getIntraCoulombEnergy()    * globalSmF);
+        _qmmmPhysicalData.addIntraNonCoulombEnergy( _physicalData->getIntraNonCoulombEnergy() * globalSmF);
         // clang-format on
     }
 
     /**
-     * @brief Transfer internal accumulated energies to PhysicalData and clear
-     * accumulators. Used for the exact smoothing method.
+     * @brief Transfer internal accumulated energies from the QM/MM PhysicalData
+     * object to PhysicalData and reset the internal object. Used for the exact
+     * smoothing method.
      */
     void QMMMMDEngine::moveEnergiesToPhysicalData()
     {
-        _physicalData->setQMEnergy(_qmEnergy);
-        _physicalData->setCoulombEnergy(_coulombEnergy);
-        _physicalData->setNonCoulombEnergy(_nonCoulombEnergy);
-        _physicalData->setBondEnergy(_bondEnergy);
-        _physicalData->setAngleEnergy(_angleEnergy);
-        _physicalData->setDihedralEnergy(_dihedralEnergy);
-        _physicalData->setImproperEnergy(_improperEnergy);
-        _physicalData->setIntraCoulombEnergy(_intraCoulombEnergy);
-        _physicalData->setIntraNonCoulombEnergy(_intraNonCoulombEnergy);
+        // clang-format off
+        _physicalData->setQMEnergy              ( _qmmmPhysicalData.getQMEnergy()              );
+        _physicalData->setCoulombEnergy         ( _qmmmPhysicalData.getCoulombEnergy()         );
+        _physicalData->setNonCoulombEnergy      ( _qmmmPhysicalData.getNonCoulombEnergy()      );
+        _physicalData->setBondEnergy            ( _qmmmPhysicalData.getBondEnergy()            );
+        _physicalData->setAngleEnergy           ( _qmmmPhysicalData.getAngleEnergy()           );
+        _physicalData->setDihedralEnergy        ( _qmmmPhysicalData.getDihedralEnergy()        );
+        _physicalData->setImproperEnergy        ( _qmmmPhysicalData.getImproperEnergy()        );
+        _physicalData->setIntraCoulombEnergy    ( _qmmmPhysicalData.getIntraCoulombEnergy()    );
+        _physicalData->setIntraNonCoulombEnergy ( _qmmmPhysicalData.getIntraNonCoulombEnergy() );
+        // clang-format on
 
-        _qmEnergy              = 0.0;
-        _coulombEnergy         = 0.0;
-        _nonCoulombEnergy      = 0.0;
-        _bondEnergy            = 0.0;
-        _angleEnergy           = 0.0;
-        _dihedralEnergy        = 0.0;
-        _improperEnergy        = 0.0;
-        _intraCoulombEnergy    = 0.0;
-        _intraNonCoulombEnergy = 0.0;
+        _qmmmPhysicalData.reset();
     }
 
 }   // namespace engine

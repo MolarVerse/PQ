@@ -237,6 +237,29 @@ void PhysicalData::reset()
 }
 
 /**
+ * @brief Clear all energies in PhysicalData. Used in QM/MM exact smoothing.
+ *
+ */
+void PhysicalData::resetEnergies()
+{
+    _kineticEnergy         = 0.0;
+    _coulombEnergy         = 0.0;
+    _nonCoulombEnergy      = 0.0;
+    _intraCoulombEnergy    = 0.0;
+    _intraNonCoulombEnergy = 0.0;
+
+    _bondEnergy     = 0.0;
+    _angleEnergy    = 0.0;
+    _dihedralEnergy = 0.0;
+    _improperEnergy = 0.0;
+
+    _qmEnergy = 0.0;
+
+    _kineticEnergyAtomicTensor = {0.0};
+    _kinEnergyMolTensor        = {0.0};
+}
+
+/**
  * @brief calculate temperature
  *
  * @param simulationBox
