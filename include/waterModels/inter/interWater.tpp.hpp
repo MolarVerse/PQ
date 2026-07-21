@@ -80,9 +80,10 @@ namespace waterModel
 
             if (distance < nonCoulPair.getRadialCutOff())
             {
-                auto [nonCoulE, nonCoulF]  = nonCoulPair.calculate(distance);
-                nonCoulombEnergy          += nonCoulE;
-                f                         += nonCoulF;
+                const auto [nonCoulE, nonCoulF] =
+                    nonCoulPair.calculate(distance);
+                nonCoulombEnergy += nonCoulE;
+                f                += nonCoulF;
             }
 
             f                   /= distance;

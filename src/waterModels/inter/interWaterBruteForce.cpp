@@ -90,7 +90,6 @@ void InterWaterStrategyBruteForce::calculate(
                     );
             };
 
-            // clang-format off
             // O-O interaction
             singleInteraction(oxygen1, oxygen2, state._nonCoulombPairOO);
 
@@ -105,7 +104,6 @@ void InterWaterStrategyBruteForce::calculate(
             singleInteraction(hydrogen1, hydrogen4, state._nonCoulombPairHH);
             singleInteraction(hydrogen2, hydrogen3, state._nonCoulombPairHH);
             singleInteraction(hydrogen2, hydrogen4, state._nonCoulombPairHH);
-            // clang-format on
 
             ++j;
         }
@@ -375,7 +373,7 @@ void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
         size_t j = 0;
         for (auto &water2 : simBox.getMoleculesInsideZone(SMOOTHING))
         {
-            if (water1.getMoltype() != waterTypeValue)
+            if (water2.getMoltype() != waterTypeValue)
             {
                 ++j;
                 continue;
@@ -398,7 +396,7 @@ void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
                 [&](Atom &atomA, Atom &atomB, const auto &nonCoulPairPtr)
             {
                 if (nonCoulPairPtr)
-                    calculateSingleInteraction<MMChargeTag, QMChargeTag>(
+                    calculateSingleInteractionOneWay<MMChargeTag, QMChargeTag>(
                         atomA,
                         atomB,
                         coulombPotential,
