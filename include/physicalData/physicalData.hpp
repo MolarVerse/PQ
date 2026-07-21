@@ -98,6 +98,7 @@ namespace physicalData
         void updateAverages(const PhysicalData &);
         void makeAverages(const double);
         void reset();
+        void resetEnergies();
 
         void addIntraCoulombEnergy(const double intraCoulombEnergy);
         void addIntraNonCoulombEnergy(const double intraNonCoulombEnergy);
@@ -109,6 +110,7 @@ namespace physicalData
          *************************/
 
         void addVirial(const pq::tensor3D &virial);
+        void addQMEnergy(const double qmEnergy);
         void addCoulombEnergy(const double coulombEnergy);
         void addNonCoulombEnergy(const double nonCoulombEnergy);
 

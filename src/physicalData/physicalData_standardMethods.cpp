@@ -41,6 +41,14 @@ void PhysicalData::addVirial(const linearAlgebra::tensor3D &virial)
 }
 
 /**
+ * @brief add QM energy to the current QM energy stored in physical
+ * data
+ *
+ * @param qmEnergy
+ */
+void PhysicalData::addQMEnergy(const double qmEnergy) { _qmEnergy += qmEnergy; }
+
+/**
  * @brief add coulomb energy to the current coulomb energy stored in physical
  * data
  *

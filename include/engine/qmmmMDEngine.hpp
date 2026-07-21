@@ -27,6 +27,7 @@
 #include <unordered_set>   // for unordered_set
 
 #include "hybridMDEngine.hpp"
+#include "typeAliases.hpp"
 
 namespace engine
 {
@@ -46,12 +47,17 @@ namespace engine
         void calculateForces() override;
 
        private:
+        pq::PhysicalData _qmmmPhysicalData{};
+
         void applySmoothing();
         void applyExactSmoothing();
         void applyHotspotSmoothing();
 
         void moltypeCheck();
         void setNumberOfQMAtoms();
+
+        void scaleAndAccumulateEnergies(const double globalSmF);
+        void moveEnergiesToPhysicalData();
     };
 
 }   // namespace engine
