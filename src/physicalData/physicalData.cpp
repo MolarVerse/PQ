@@ -130,6 +130,8 @@ void PhysicalData::updateAverages(const PhysicalData &physicalData)
 
     _qmEnergy += physicalData.getQMEnergy();
 
+    _numberOfSmoothingMol += physicalData.getNumberOfSmoothingMolecules();
+
     _momentum        += physicalData.getMomentum();
     _angularMomentum += physicalData.getAngularMomentum();
 
@@ -171,6 +173,8 @@ void PhysicalData::makeAverages(const double outputFrequency)
 
     _qmEnergy /= outputFrequency;
 
+    _numberOfSmoothingMol /= outputFrequency;
+
     _momentum        /= outputFrequency;
     _angularMomentum /= outputFrequency;
 
@@ -210,6 +214,8 @@ void PhysicalData::reset()
     _virial      = {0.0};
 
     _qmEnergy = 0.0;
+
+    _numberOfSmoothingMol = 0.0;
 
     _momentum        = {0.0, 0.0, 0.0};
     _angularMomentum = {0.0, 0.0, 0.0};

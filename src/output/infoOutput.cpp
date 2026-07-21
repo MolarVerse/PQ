@@ -97,6 +97,12 @@ void InfoOutput::write(const double simulationTime, const PhysicalData &data)
         writeRight(data.getImproperEnergy(), "E(IMPROPER)", "kcal/mol");
     }
 
+    if (Settings::isHybridJobtype())
+    {
+        writeLeft(data.getNumberOfSmoothingMolecules(), "N(SM-MOL)", "-");
+        writeRight();
+    }
+
     if (ManostatSettings::getManostatType() != ManostatType::NONE)
     {
         writeLeft(data.getVolume(), "VOLUME", "A^3");
@@ -227,4 +233,13 @@ void InfoOutput::writeRight(
 )
 {
     _fp << std::format("{:<15} {:15.5f} {:<8}   |\n", name, value, unit);
+}
+
+/**
+ * @brief write empty right column to info file
+ *
+ */
+void InfoOutput::writeRight()
+{
+    _fp << "                                           |\n";
 }

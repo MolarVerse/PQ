@@ -333,6 +333,16 @@ void PhysicalData::setImproperEnergy(const double improperEnergy)
 void PhysicalData::setQMEnergy(const double qmEnergy) { _qmEnergy = qmEnergy; }
 
 /**
+ * @brief set the number of smoothing molecules
+ *
+ * @param numberSmMol
+ */
+void PhysicalData::setNumberOfSmoothingMolecules(const double numberSmMol)
+{
+    _numberOfSmoothingMol = numberSmMol;
+}
+
+/**
  * @brief set nose hoover momentum energy
  *
  * @param momentumEnergy
@@ -519,6 +529,16 @@ double PhysicalData::getImproperEnergy() const { return _improperEnergy; }
  * @return double
  */
 double PhysicalData::getQMEnergy() const { return _qmEnergy; }
+
+/**
+ * @brief get the number of smoothing molecules
+ *
+ * @return double
+ */
+double PhysicalData::getNumberOfSmoothingMolecules() const
+{
+    return _numberOfSmoothingMol;
+}
 
 /**
  * @brief get the nose hoover momentum energy
