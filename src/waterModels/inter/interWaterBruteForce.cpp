@@ -96,8 +96,8 @@ void InterWaterStrategyBruteForce::calculate(
             // O-H interactions
             singleInteraction(oxygen1, hydrogen3, state._nonCoulombPairOH);
             singleInteraction(oxygen1, hydrogen4, state._nonCoulombPairOH);
-            singleInteraction(oxygen2, hydrogen1, state._nonCoulombPairOH);
-            singleInteraction(oxygen2, hydrogen2, state._nonCoulombPairOH);
+            singleInteraction(hydrogen1, oxygen2, state._nonCoulombPairOH);
+            singleInteraction(hydrogen2, oxygen2, state._nonCoulombPairOH);
 
             // H-H interactions
             singleInteraction(hydrogen1, hydrogen3, state._nonCoulombPairHH);
@@ -172,8 +172,8 @@ void InterWaterStrategyBruteForce::calculateCoreToOuterForces(
             // O-H interactions
             singleCoulombInteraction(oxygen1, hydrogen3);
             singleCoulombInteraction(oxygen1, hydrogen4);
-            singleCoulombInteraction(oxygen2, hydrogen1);
-            singleCoulombInteraction(oxygen2, hydrogen2);
+            singleCoulombInteraction(hydrogen1, oxygen2);
+            singleCoulombInteraction(hydrogen2, oxygen2);
 
             // H-H interactions
             singleCoulombInteraction(hydrogen1, hydrogen3);
@@ -252,8 +252,8 @@ void InterWaterStrategyBruteForce::calculateLayerToOuterForces(
             // O-H interactions
             singleInteraction(oxygen1, hydrogen3, state._nonCoulombPairOH);
             singleInteraction(oxygen1, hydrogen4, state._nonCoulombPairOH);
-            singleInteraction(oxygen2, hydrogen1, state._nonCoulombPairOH);
-            singleInteraction(oxygen2, hydrogen2, state._nonCoulombPairOH);
+            singleInteraction(hydrogen1, oxygen2, state._nonCoulombPairOH);
+            singleInteraction(hydrogen2, oxygen2, state._nonCoulombPairOH);
 
             // H-H interactions
             singleInteraction(hydrogen1, hydrogen3, state._nonCoulombPairHH);
@@ -350,8 +350,8 @@ void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
             // O-H interactions
             singleInteraction(oxygen1, hydrogen3, state._nonCoulombPairOH);
             singleInteraction(oxygen1, hydrogen4, state._nonCoulombPairOH);
-            singleInteraction(oxygen2, hydrogen1, state._nonCoulombPairOH);
-            singleInteraction(oxygen2, hydrogen2, state._nonCoulombPairOH);
+            singleInteraction(hydrogen1, oxygen2, state._nonCoulombPairOH);
+            singleInteraction(hydrogen2, oxygen2, state._nonCoulombPairOH);
 
             // H-H interactions
             singleInteraction(hydrogen1, hydrogen3, state._nonCoulombPairHH);
@@ -392,7 +392,7 @@ void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
             auto &hydrogen3 = water2.getAtom(1);
             auto &hydrogen4 = water2.getAtom(2);
 
-            const auto singleInteraction =
+            const auto singleInteractionOneWay =
                 [&](Atom &atomA, Atom &atomB, const auto &nonCoulPairPtr)
             {
                 if (nonCoulPairPtr)
@@ -408,20 +408,22 @@ void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
                     );
             };
 
+            // clang-format off
             // O-O interaction
-            singleInteraction(oxygen1, oxygen2, state._nonCoulombPairOO);
+            singleInteractionOneWay(oxygen1, oxygen2, state._nonCoulombPairOO);
 
             // O-H interactions
-            singleInteraction(oxygen1, hydrogen3, state._nonCoulombPairOH);
-            singleInteraction(oxygen1, hydrogen4, state._nonCoulombPairOH);
-            singleInteraction(oxygen2, hydrogen1, state._nonCoulombPairOH);
-            singleInteraction(oxygen2, hydrogen2, state._nonCoulombPairOH);
+            singleInteractionOneWay(oxygen1, hydrogen3, state._nonCoulombPairOH);
+            singleInteractionOneWay(oxygen1, hydrogen4, state._nonCoulombPairOH);
+            singleInteractionOneWay(hydrogen1, oxygen2, state._nonCoulombPairOH);
+            singleInteractionOneWay(hydrogen2, oxygen2, state._nonCoulombPairOH);
 
             // H-H interactions
-            singleInteraction(hydrogen1, hydrogen3, state._nonCoulombPairHH);
-            singleInteraction(hydrogen1, hydrogen4, state._nonCoulombPairHH);
-            singleInteraction(hydrogen2, hydrogen3, state._nonCoulombPairHH);
-            singleInteraction(hydrogen2, hydrogen4, state._nonCoulombPairHH);
+            singleInteractionOneWay(hydrogen1, hydrogen3, state._nonCoulombPairHH);
+            singleInteractionOneWay(hydrogen1, hydrogen4, state._nonCoulombPairHH);
+            singleInteractionOneWay(hydrogen2, hydrogen3, state._nonCoulombPairHH);
+            singleInteractionOneWay(hydrogen2, hydrogen4, state._nonCoulombPairHH);
+            //clang-format on
 
             ++j;
         }
