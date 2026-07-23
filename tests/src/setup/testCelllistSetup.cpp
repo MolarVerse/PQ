@@ -24,6 +24,7 @@
 #include "celllistSetup.hpp"   // for CellListSetup, setupCellList, setup
 #include "engine.hpp"          // for Engine
 #include "potential.hpp"       // for PotentialBruteForce, PotentialCellList
+#include "potentialSettings.hpp"   // for PotentialSettings
 #include "testSetup.hpp"       // for TestSetup
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
@@ -43,6 +44,9 @@ TEST_F(TestSetup, setupCellList)
 
     EXPECT_EQ(typeid((_engine->getPotential())), typeid(potential::PotentialBruteForce));
 
+    settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
+    _engine->getSimulationBox().setBoxDimensions({15.0, 15.0, 15.0});
+    _engine->getCellList().setNumberOfCells(3);
     _engine->getCellList().activate();
     cellListSetup.setup();
 
