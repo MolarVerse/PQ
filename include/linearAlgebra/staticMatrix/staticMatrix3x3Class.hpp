@@ -67,6 +67,8 @@ namespace linearAlgebra
     };
 }   // namespace linearAlgebra
 
+#ifndef _STATIC_MATRIX_CLASS_3x3_TPP_
 #include "staticMatrix3x3Class.tpp.hpp"   // IWYU pragma: keep - DO NOT MOVE THIS LINE
+#endif
 
 #endif   // _STATIC_MATRIX_CLASS_3X3_HPP_

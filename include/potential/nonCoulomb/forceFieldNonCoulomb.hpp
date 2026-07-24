@@ -81,6 +81,8 @@ namespace potential
 
 }   // namespace potential
 
+#ifndef _FORCE_FIELD_NON_COULOMB_TPP_
 #include "forceFieldNonCoulomb.tpp.hpp"   // IWYU pragma: keep - DO NOT MOVE THIS LINE
+#endif
 
 #endif   // _FORCE_FIELD_NON_COULOMB_HPP_

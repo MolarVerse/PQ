@@ -94,6 +94,8 @@ namespace potential
 
 }   // namespace potential
 
+#ifndef _POTENTIAL_TPP_
 #include "potential.tpp.hpp"   // IWYU pragma: keep - DO NOT MOVE THIS LINE
+#endif
 
 #endif   // _POTENTIAL_HPP_

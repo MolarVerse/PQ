@@ -131,6 +131,8 @@ namespace linearAlgebra
 
 }   // namespace linearAlgebra
 
+#ifndef _STATIC_MATRIX_3X3_TPP_
 #include "staticMatrix3x3.tpp.hpp"   // IWYU pragma: keep - DO NOT MOVE THIS LINE
+#endif
 
 #endif   // _STATIC_MATRIX_3X3_HPP_

@@ -200,6 +200,8 @@ namespace engine
     };
 }   // namespace engine
 
+#ifndef _ENGINE_TPP_
 #include "engine.tpp.hpp"   // IWYU pragma: keep - DO NOT MOVE THIS LINE!
+#endif
 
 #endif   // _ENGINE_HPP_
