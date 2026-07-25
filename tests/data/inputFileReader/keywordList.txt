@@ -41,6 +41,12 @@ wolf_param                  false
 
 force-field                 false
 
+hessian_file                false
+hessian_info_file           false
+hessian_displacement        false
+optimize_before_hessian     false
+hessian_builder             false
+
 start_file                  true
 rpmd_start_file             false
 moldescriptor_file          false
@@ -113,7 +119,7 @@ density                     false
 init_velocities             false
 
 timestep                    false
-nstep                       true
+nstep                       false
 
 virial                      false
 

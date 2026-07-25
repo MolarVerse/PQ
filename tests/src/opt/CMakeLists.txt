@@ -5,6 +5,7 @@ set(source_files
     testSteepestDescent.cpp
     testAdam.cpp
     testMMEvaluator.cpp
+    testHessianBuilder.cpp
 )
 
 # Per-source link/include overrides so each test only pulls in the libraries
@@ -99,6 +100,23 @@ set(testMMEvaluator_libs
     intraNonBonded
     virial
     constraints
+    linearAlgebra
+)
+
+set(testHessianBuilder_includes
+    ${PROJECT_SOURCE_DIR}/include/opt/evaluator
+    ${PROJECT_SOURCE_DIR}/include/simulationBox
+    ${PROJECT_SOURCE_DIR}/include/settings
+    ${PROJECT_SOURCE_DIR}/include/exceptions
+    ${PROJECT_SOURCE_DIR}/include/linearAlgebra
+    ${PROJECT_SOURCE_DIR}/include/linearAlgebra/vector3d
+    ${PROJECT_SOURCE_DIR}/include/config
+)
+set(testHessianBuilder_libs
+    evaluator
+    simulationBox
+    settings
+    exceptions
     linearAlgebra
 )
 

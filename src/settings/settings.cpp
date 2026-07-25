@@ -45,6 +45,7 @@ std::string settings::string(const JobType jobtype)
         case QMMM_MD: return "QMMM_MD";
         case RING_POLYMER_QM_MD: return "RING_POLYMER_QM_MD";
         case MM_OPT: return "MM_OPT";
+        case MM_HESSIAN: return "MM_HESSIAN";
         case NONE: return "NONE";
 
         default: return "NONE";
@@ -82,6 +83,9 @@ void Settings::setJobtype(const std::string_view jobtype)
     else if (jobtypeToLower == "mmopt")
         setJobtype(MM_OPT);
 
+    else if (jobtypeToLower == "mmhessian")
+        setJobtype(MM_HESSIAN);
+
     else
         setJobtype(NONE);
 }
@@ -99,7 +103,8 @@ void Settings::setJobtype(const JobType jobtype)
     {
         using enum JobType;
 
-        case MM_OPT:   // fallthrough
+        case MM_OPT:       // fallthrough
+        case MM_HESSIAN:   // fallthrough
         case MM_MD: deactivateRingPolymerMD(); break;
         case QM_MD: deactivateRingPolymerMD(); break;
         case RING_POLYMER_QM_MD: activateRingPolymerMD(); break;
@@ -298,6 +303,7 @@ bool Settings::isMMActivated()
     isMM = isMM || _jobtype == MM_MD;
     isMM = isMM || _jobtype == QMMM_MD;
     isMM = isMM || _jobtype == MM_OPT;
+    isMM = isMM || _jobtype == MM_HESSIAN;
 
     return isMM;
 }

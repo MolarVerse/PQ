@@ -42,6 +42,7 @@ namespace settings
         static inline size_t _stepCount = 0;
 
         static inline bool _isTimeStepSet = false;
+        static inline bool _isNumberOfStepsSet = false;
 
        public:
         TimingsSettings()  = default;
@@ -63,6 +64,7 @@ namespace settings
         [[nodiscard]] static size_t getStepCount();
         [[nodiscard]] static size_t getNumberOfSteps();
         [[nodiscard]] static bool   isTimeStepSet();
+        [[nodiscard]] static bool   isNumberOfStepsSet();
     };
 }   // namespace settings
 

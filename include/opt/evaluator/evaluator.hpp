@@ -25,6 +25,7 @@
 #define _EVALUATOR_HPP_
 
 #include <memory>   // for shared_ptr
+#include <vector>   // for vector
 
 #include "typeAliases.hpp"
 
@@ -56,6 +57,9 @@ namespace opt
 
         virtual pq::SharedEvaluator clone() const = 0;
         virtual void                evaluate()    = 0;
+
+        [[nodiscard]] virtual bool supportsAnalyticHessian() const;
+        [[nodiscard]] virtual pq::HessianMatrix calculateAnalyticHessian();
 
         /***************************
          * standard setter methods *

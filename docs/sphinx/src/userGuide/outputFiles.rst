@@ -114,6 +114,26 @@ Stores information about various quantities of the system and their units for th
 to those in the ``.en`` file (described under section :ref:`energyFile`), except the first entry which is the total simulation time 
 in ps instead of the step number. Entries in the ``.info`` file are read from left to right and top to bottom.
 
+.. _hessianFile:
+
+************
+Hessian File
+************
+
+**File Type:** ``.hessian`` or user-defined
+
+Stores the Cartesian Hessian matrix written by ``mm-hessian``. The matrix is written as whitespace-separated floating point values with one matrix row per line. For finite-difference force builders, the Hessian is defined as ``-dF_i/dx_j`` and the default unit is :math:`\frac{\text{kcal}}{\text{mol Å}^2}`.
+
+.. _hessianInfoFile:
+
+*****************
+Hessian Info File
+*****************
+
+**File Type:** ``.hessian.info`` or user-defined
+
+Stores metadata for a generated Hessian, including the matrix filename, Hessian builder, optimization flag, finite-difference displacement, sign convention, unit and matrix dimensions. The file starts with ``format = pq-hessian-info-v1`` so downstream tools can identify the metadata format.
+
 .. _instantEnergyFile:
 
 ********************
