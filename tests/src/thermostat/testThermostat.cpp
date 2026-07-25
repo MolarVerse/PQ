@@ -265,6 +265,19 @@ TEST_F(TestThermostat, langevin_setTargetTemperatureRecomputesSigma)
     EXPECT_GT(sigmaAt600, sigmaAt300);
 }
 
+TEST_F(TestThermostat, langevin_setFrictionRecomputesSigma)
+{
+    auto langevin = thermostat::LangevinThermostat(300.0, 0.1);
+    settings::TimingsSettings::setTimeStep(0.1);
+    const auto sigmaAtFrictionPointOne = langevin.getSigma();
+
+    langevin.setFriction(0.5);
+    const auto sigmaAtFrictionPointFive = langevin.getSigma();
+
+    EXPECT_NE(sigmaAtFrictionPointOne, sigmaAtFrictionPointFive);
+    EXPECT_GT(sigmaAtFrictionPointFive, sigmaAtFrictionPointOne);
+}
+
 TEST_F(TestThermostat, langevin_thermostatType)
 {
     auto langevin = thermostat::LangevinThermostat(300.0, 0.1);

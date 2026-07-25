@@ -184,6 +184,7 @@ void LangevinThermostat::setTargetTemperature(const double targetTemperature)
 void LangevinThermostat::setFriction(const double friction)
 {
     _friction = friction;
+    calculateSigma(friction, _targetTemperature);
 }
 
 /**

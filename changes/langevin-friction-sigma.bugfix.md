@@ -1,0 +1,1 @@
+- Recompute the Langevin noise amplitude when friction changes so thermostat setters keep dependent state consistent.
