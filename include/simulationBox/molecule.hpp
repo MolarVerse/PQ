@@ -66,7 +66,9 @@ namespace simulationBox
         explicit Molecule(const size_t moltype);
 
         void calculateCenterOfMass(const Box &);
+        void reconstructAtomsAroundCenterOfMass(const Box &);
         void scale(const pq::tensor3D &, const Box &);
+        void scaleVelocity(const pq::tensor3D &, const Box &);
 
         [[nodiscard]] size_t              getNumberOfAtomTypes();
         [[nodiscard]] std::vector<size_t> getExternalGlobalVDWTypes() const;

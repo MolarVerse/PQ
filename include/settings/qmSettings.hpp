@@ -80,6 +80,17 @@ namespace settings
     };
 
     /**
+     * @class enum MaceMode
+     *
+     * @brief enum class for the MACE evaluation mode / kernel backend
+     */
+    enum class MaceMode : size_t
+    {
+        ACCURATE,
+        FAST
+    };
+
+    /**
      * @class enum xtbMethod
      */
     enum class XtbMethod : size_t
@@ -103,6 +114,7 @@ namespace settings
     std::string string(const QMMethod method);
     std::string string(const MaceModel model);
     std::string string(const MaceModelType model);
+    std::string string(const MaceMode mode);
     std::string string(const XtbMethod method);
     std::string string(const SlakosType slakos);
     std::string string(
@@ -121,6 +133,7 @@ namespace settings
         static inline QMMethod      _qmMethod      = QMMethod::NONE;
         static inline MaceModel     _maceModel     = MaceModel::MEDIUM;
         static inline MaceModelType _maceModelType = MaceModelType::MACE_MP;
+        static inline MaceMode      _maceMode      = MaceMode::ACCURATE;
         static inline SlakosType    _slakosType    = SlakosType::NONE;
         static inline XtbMethod     _xtbMethod     = XtbMethod::GFN2;
 
@@ -157,6 +170,8 @@ namespace settings
         static void setMaceModel(const MaceModel model);
         static void setMaceModelType(const std::string_view &model);
         static void setMaceModelType(const MaceModelType model);
+        static void setMaceMode(const std::string_view &mode);
+        static void setMaceMode(const MaceMode mode);
         static void setMaceModelPath(const std::string_view &path);
 
         static void setQMScript(const std::string_view &script);
@@ -190,6 +205,7 @@ namespace settings
         [[nodiscard]] static QMMethod      getQMMethod();
         [[nodiscard]] static MaceModel     getMaceModel();
         [[nodiscard]] static MaceModelType getMaceModelType();
+        [[nodiscard]] static MaceMode      getMaceMode();
         [[nodiscard]] static std::string   getMaceModelPath();
 
         [[nodiscard]] static std::string getQMScript();

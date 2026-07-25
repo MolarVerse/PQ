@@ -20,38 +20,31 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-// Fixed-work micro-benchmark of the velocity-Verlet integrator step.
+#include <gtest/gtest.h>   // for Test, EXPECT_EQ
 
-#include <cstdio>
+#include <string>   // for string
+#include <vector>   // for vector
 
-#ifdef PQ_WITH_CALLGRIND
-#include <valgrind/callgrind.h>
-#else
-#define CALLGRIND_ZERO_STATS
-#endif
+#include "collectionUtilities.hpp"   // for getUniqueElements
 
-#include "benchSetup.hpp"
-#include "timingsSettings.hpp"
-#include "velocityVerlet.hpp"
-
-static constexpr long ITERATIONS = 1000;
-
-int main()
+/**
+ * @brief getUniqueElements sorts elements and removes duplicates.
+ */
+TEST(TestCollectionUtilities, getUniqueElements)
 {
-    settings::TimingsSettings::setTimeStep(0.001);
+    const auto elements       = std::vector<size_t>{3u, 1u, 2u, 1u, 3u};
+    const auto uniqueElements = utilities::getUniqueElements(elements);
 
-    auto box        = benchSetup::makePopulatedBox(20, 3);
-    auto integrator = integrator::VelocityVerlet();
+    EXPECT_EQ(uniqueElements, (std::vector<size_t>{1u, 2u, 3u}));
+}
 
-    CALLGRIND_ZERO_STATS;
+/**
+ * @brief getUniqueElements supports string vectors.
+ */
+TEST(TestCollectionUtilities, getUniqueElementsWithStrings)
+{
+    const auto elements = std::vector<std::string>{"O", "H", "O", "C", "H"};
+    const auto uniqueElements = utilities::getUniqueElements(elements);
 
-    for (long i = 0; i < ITERATIONS; ++i)
-    {
-        integrator.firstStep(box);
-        integrator.secondStep(box);
-    }
-
-    // read state so the loop cannot be optimized away
-    std::printf("%.6f\n", box.calculateMomentum()[0]);
-    return 0;
+    EXPECT_EQ(uniqueElements, (std::vector<std::string>{"C", "H", "O"}));
 }

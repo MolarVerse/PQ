@@ -50,6 +50,12 @@ All notable changes to this project will be documented in this file.
   commit SHA; on a hit the whole base checkout + build + callgrind run is
   skipped (≈ half the workflow), with identical numerics (callgrind is
   deterministic per binary)
+- Per-PR changelog edits are no longer required: the `## Next Release`
+  section is auto-generated from conventional-commit subjects at release
+  time via `git-cliff` (see `cliff.toml`). The `Check Changelog` CI gate
+  and the legacy `changes/` fragment flow are deprecated; existing
+  curated `## Next Release` entries are preserved by the release script
+  unchanged
 
 ### Bug Fixes
 
@@ -117,6 +123,7 @@ All notable changes to this project will be documented in this file.
 - Add option to queue warnings before the .log output file has been created
   and flush them to the file at the end of the setup
 - Rename `MaceRunner` class to `AseMaceRunner` and `ASEQMRunner` to `AseQMRunner` for consistency
+- Add .clangd file for clangd language server
 
 ### Tests
 

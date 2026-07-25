@@ -11,4 +11,9 @@ file ``PQ.in`` and can be executed in the following form:
 
     $ PQ PQ.in
 
-For details on the general file structure of an input file and additional setup files please refer to section :ref:`inputFile` and :ref:`setupFiles`.
+Run **PQ** from the directory that contains the input file and any setup files
+referenced with relative paths. The input file selects the job type, physical
+model, output names and required setup files.
+
+For a first complete run, see :ref:`quickStart`. For the full input syntax and
+file formats, see :ref:`referenceManual`.

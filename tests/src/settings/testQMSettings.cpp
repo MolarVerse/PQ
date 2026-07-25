@@ -101,6 +101,30 @@ TEST(QMSettingsTest, SetMaceModelTest)
     );
 }
 
+TEST(QMSettingsTest, SetMaceModeTest)
+{
+    using enum MaceMode;
+
+    QMSettings::setMaceMode("accurate");
+    EXPECT_EQ(QMSettings::getMaceMode(), ACCURATE);
+
+    QMSettings::setMaceMode("fast");
+    EXPECT_EQ(QMSettings::getMaceMode(), FAST);
+
+    QMSettings::setMaceMode(ACCURATE);
+    EXPECT_EQ(QMSettings::getMaceMode(), ACCURATE);
+
+    EXPECT_EQ(string(ACCURATE), "accurate");
+    EXPECT_EQ(string(FAST), "fast");
+
+    ASSERT_THROW_MSG(
+        QMSettings::setMaceMode("notAMode"),
+        UserInputException,
+        "Unknown mace_mode \"notAMode\". Valid values are \"accurate\" (exact "
+        "e3nn reference) or \"fast\" (cuequivariance-accelerated)."
+    );
+}
+
 TEST(QMSettingsTest, SetMaceModelTypeTest)
 {
     QMSettings::setMaceModelType("mace_mp");
@@ -121,23 +145,25 @@ TEST(QMSettingsTest, SetMaceModelTypeTest)
 
 TEST(QMSettingsTest, SetSlakosTypeTest)
 {
+#ifdef WITH_ASE
     QMSettings::setSlakosType("3ob");
     EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::THREEOB);
 
     QMSettings::setSlakosType("matsci");
     EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::MATSCI);
 
-    QMSettings::setSlakosType("custom");
-    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::CUSTOM);
-
-    QMSettings::setSlakosType("none");
-    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::NONE);
-
     QMSettings::setSlakosType(SlakosType::THREEOB);
     EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::THREEOB);
 
     QMSettings::setSlakosType(SlakosType::MATSCI);
     EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::MATSCI);
+#endif
+
+    QMSettings::setSlakosType("custom");
+    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::CUSTOM);
+
+    QMSettings::setSlakosType("none");
+    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::NONE);
 
     QMSettings::setSlakosType(SlakosType::CUSTOM);
     EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::CUSTOM);
@@ -152,6 +178,27 @@ TEST(QMSettingsTest, SetSlakosTypeTest)
     );
 }
 
+#ifndef WITH_ASE
+TEST(QMSettingsTest, SetBuiltInSlakosTypeRequiresAse)
+{
+    ASSERT_THROW_MSG(
+        QMSettings::setSlakosType("3ob"),
+        InputFileException,
+        "Built-in SLAKOS sets (3ob/matsci) require building PQ with "
+        "-DBUILD_WITH_ASE=On"
+    );
+
+    ASSERT_THROW_MSG(
+        QMSettings::setSlakosType("matsci"),
+        InputFileException,
+        "Built-in SLAKOS sets (3ob/matsci) require building PQ with "
+        "-DBUILD_WITH_ASE=On"
+    );
+
+    QMSettings::setSlakosType("none");
+}
+#endif
+
 TEST(QMSettingsTest, SetSlakosPathTest)
 {
     QMSettings::setSlakosType("none");
@@ -165,6 +212,7 @@ TEST(QMSettingsTest, SetSlakosPathTest)
     QMSettings::setSlakosPath("/path/to/slakos");
     EXPECT_EQ(QMSettings::getSlakosPath(), "/path/to/slakos");
 
+#ifdef WITH_ASE
     QMSettings::setSlakosType("3ob");
     ASSERT_THROW_MSG(
         QMSettings::setSlakosPath("/path/to/slakos"),
@@ -178,6 +226,7 @@ TEST(QMSettingsTest, SetSlakosPathTest)
         UserInputException,
         "Slakos path cannot be set for slakos type: matsci"
     );
+#endif
 }
 
 TEST(QMSettingsTest, SetXtbMethodTest)

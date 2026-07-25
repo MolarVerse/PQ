@@ -23,6 +23,8 @@
 #include "celllist.hpp"
 
 #include <algorithm>     // for ranges::for_each
+#include <array>         // for array
+#include <format>        // for format
 #include <functional>    // for identity
 #include <map>           // for map
 #include <string_view>   // for string_view
@@ -141,6 +143,23 @@ void CellList::determineCellBoundaries(const Vec3D &box)
 void CellList::addNeighbouringCells(const double coulombCutoff)
 {
     _nNeighbourCells = Vec3Dul(ceil(coulombCutoff / _cellSize));
+
+    const auto requiredCells = _nNeighbourCells * 2 + 1;
+    constexpr auto axisNames = std::array<std::string_view, 3>{"x", "y", "z"};
+
+    for (size_t i = 0; i < axisNames.size(); ++i)
+        if (_nCells[i] < requiredCells[i])
+            throw CellListException(
+                std::format(
+                    "Invalid cell-list layout for {} dimension: cell-number "
+                    "must be at least 2 * neighbour cells + 1 "
+                    "(required {}, configured {}). Decrease coulomb radius "
+                    "cutoff or increase cell-number.",
+                    axisNames[i],
+                    requiredCells[i],
+                    _nCells[i]
+                )
+            );
 
     auto addCell = [this](auto &cell) { addNeighbouringCellPointers(cell); };
 

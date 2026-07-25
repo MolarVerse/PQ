@@ -136,6 +136,14 @@ GitHub Actions
 The software workflow --- from building the project to running unit and integration tests --- is validated by continuous integration (CI) using GitHub Actions.
 The corresponding workflow configuration files are located in the ``PQ/.github/workflows/`` directory.
 
+************
+Coding Style
+************
+
+The C++ source code is formatted with `clang-format <https://clang.llvm.org/docs/ClangFormat.html>`__ using the project configuration in ``PQ/.clang-format``.
+Use clang-format version 16 or newer. Older versions do not support all options used in the current configuration, and different clang-format versions can produce different formatting.
+When changing C++ files, format the touched files before committing them.
+
 *************
 Documentation
 *************
@@ -182,7 +190,7 @@ The documentation can be built as follows:
 
         .. code:: bash
 
-            $ favorite_browser build/docs/html/index.html
+            $ <browser> build/docs/html/index.html
 
 *****************
 How to Contribute

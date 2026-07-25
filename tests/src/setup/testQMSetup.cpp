@@ -121,6 +121,7 @@ TEST(TestQMSetup, setupQMFull)
     EXPECT_NO_THROW(setup::setupQM(engine));
 }
 
+#ifdef WITH_ASE
 TEST(TestQMSetup, setupQMMethodAseDftbPlus3ob3rdOrderNotSet)
 {
     engine::QMMDEngine engine;
@@ -175,6 +176,7 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlusMatsci)
     qmSetup.setupQMMethodAseDftbPlus();
     EXPECT_EQ(QMSettings::useThirdOrderDftb(), false);
 }
+#endif
 
 TEST(TestQMSetup, setupQMMethodAseDftbPlusCustom)
 {
