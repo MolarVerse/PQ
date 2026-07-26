@@ -22,7 +22,8 @@
 
 #include <gtest/gtest.h>   // for Test, TestInfo (ptr only), InitGoogleTest, RUN_ALL_TESTS
 
-#include <string>   // for allocator, basic_string
+#include <string>        // for allocator, basic_string
+#include <string_view>   // for string_view
 
 #include "dftbplusRunner.hpp"     // for DFTBPlusRunner
 #include "exceptions.hpp"         // for InputFileException
@@ -40,13 +41,42 @@
 using setup::QMSetup;
 using namespace settings;
 
+namespace
+{
+    class ExternalQMScriptGuard
+    {
+       public:
+        ExternalQMScriptGuard()
+        {
+            QMSettings::setQMScript("");
+            QMSettings::setQMScriptFullPath("");
+
+            const auto needsFullPath =
+                std::string_view{STATIC_BUILD_} == "ON" ||
+                std::string_view{SINGULARITY_} == "ON";
+
+            if (needsFullPath)
+                QMSettings::setQMScriptFullPath("test");
+            else
+                QMSettings::setQMScript("test");
+        }
+
+        ~ExternalQMScriptGuard()
+        {
+            QMSettings::setQMScript("");
+            QMSettings::setQMScriptFullPath("");
+        }
+    };
+}   // namespace
+
 TEST(TestQMSetup, setupDftbplus)
 {
+    const ExternalQMScriptGuard scriptGuard;
+
     engine::QMMDEngine engine;
     auto               setupQM = setup::QMSetup(engine);
 
     settings::QMSettings::setQMMethod(settings::QMMethod::DFTBPLUS);
-    settings::QMSettings::setQMScript("test");
     setupQM.setup();
 
     EXPECT_EQ(
@@ -66,11 +96,12 @@ TEST(TestQMSetup, setupDftbplus)
 
 TEST(TestQMSetup, setupPySCF)
 {
+    const ExternalQMScriptGuard scriptGuard;
+
     engine::QMMDEngine engine;
     auto               setupQM = setup::QMSetup(engine);
 
     settings::QMSettings::setQMMethod(settings::QMMethod::PYSCF);
-    settings::QMSettings::setQMScript("test");
     setupQM.setup();
 
     EXPECT_EQ(
@@ -90,11 +121,12 @@ TEST(TestQMSetup, setupPySCF)
 
 TEST(TestQMSetup, setupTurbomoleRunner)
 {
+    const ExternalQMScriptGuard scriptGuard;
+
     engine::QMMDEngine engine;
     auto               setupQM = setup::QMSetup(engine);
 
     settings::QMSettings::setQMMethod(settings::QMMethod::TURBOMOLE);
-    settings::QMSettings::setQMScript("test");
     setupQM.setup();
 
     EXPECT_EQ(

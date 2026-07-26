@@ -1,14 +1,7 @@
 # *********************
 # minimum cmake version
 # *********************
-cmake_minimum_required(VERSION 3.7...3.26)
-
-# # ****************
-# # set cmake policy
-# # ****************
-if(${CMAKE_VERSION} VERSION_LESS 3.12)
-    cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
-endif()
+cmake_minimum_required(VERSION 3.20...3.26)
 
 # ***********************
 # project initializeation
@@ -58,9 +51,11 @@ endif()
 # cmake cxx flags
 # ***************
 set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # set default flags
-set(CMAKE_CXX_FLAGS "-std=c++23 -Wall -Wextra")
+string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra")
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wswitch-enum -Werror=switch-enum")
@@ -75,15 +70,24 @@ if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease")
     message("\n   Release build   \n")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
     if(BUILD_WITH_NATIVE)
-        if (${CMAKE_SYSTEM_PROCESSOR} MATCHES "x86_64")
+        if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(x86_64|AMD64|amd64)$")
             set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -mtune=native")
-        elseif(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64")
+        elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(aarch64|arm64)$")
             set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mcpu=native")
         endif()
     endif()
 
     if(BUILD_WITH_LTO AND NOT BUILD_WITH_KOKKOS)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -flto")
+        include(CheckIPOSupported)
+        check_ipo_supported(
+            RESULT ltoSupported
+            OUTPUT ltoError
+            LANGUAGES CXX
+        )
+        if(NOT ltoSupported)
+            message(FATAL_ERROR "LTO requested but unavailable: ${ltoError}")
+        endif()
+        set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
     endif()
 elseif(CMAKE_BUILD_TYPE MATCHES "^[Rr]el[Ww]ith[Dd]ebug")
     message("\n   Release with Debug build   \n")
