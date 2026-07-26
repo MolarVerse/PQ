@@ -115,7 +115,9 @@ void NonCoulombicsSection::processSection(
 
         case MORSE: processMorse(lineElements, engine); break;
 
-        default:
+        case LJ_9_12:
+        case GUFF:
+        case NONE:
             throw ParameterFileException(std::format(
                 "Wrong type of nonCoulombic in parameter file nonCoulombic "
                 "section at line {}  - has to be lj, buckingham or morse!",

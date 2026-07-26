@@ -46,10 +46,10 @@ std::string settings::string(const JobType jobtype)
         case RING_POLYMER_QM_MD: return "RING_POLYMER_QM_MD";
         case MM_OPT: return "MM_OPT";
         case MM_HESSIAN: return "MM_HESSIAN";
-        case NONE: return "NONE";
-
-        default: return "NONE";
+        case NONE: break;
     }
+
+    return "NONE";
 }
 
 /***************************
@@ -109,9 +109,7 @@ void Settings::setJobtype(const JobType jobtype)
         case QM_MD: deactivateRingPolymerMD(); break;
         case RING_POLYMER_QM_MD: activateRingPolymerMD(); break;
         case QMMM_MD: deactivateRingPolymerMD(); break;
-
-        // case NONE: fallthrough
-        default: deactivateRingPolymerMD(); break;
+        case NONE: deactivateRingPolymerMD(); break;
     }
 }
 

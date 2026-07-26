@@ -114,16 +114,16 @@ void PotentialSetup::setupCoulomb()
             potential.makeCoulombPotential(
                 CoulombReactionField(coulRCut, rfEpsilon)
             );
-            break;
+            return;
 
         case WOLF:
             potential.makeCoulombPotential(CoulombWolf(coulRCut, wolfParam));
-            break;
+            return;
 
-        case SHIFTED:
-        default:
-            potential.makeCoulombPotential(CoulombShiftedPotential(coulRCut));
+        case SHIFTED: break;
     }
+
+    potential.makeCoulombPotential(CoulombShiftedPotential(coulRCut));
 }
 
 /**

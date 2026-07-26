@@ -281,6 +281,7 @@ TEST(QMSettingsTest, ReturnMaceModelTypeTest)
     EXPECT_EQ(string(MaceModelType::MACE_MP), "mace_mp");
     EXPECT_EQ(string(MaceModelType::MACE_OFF), "mace_off");
     EXPECT_EQ(string(MaceModelType::MACE_ANICC), "mace_anicc");
+    EXPECT_EQ(string(static_cast<MaceModelType>(-1)), "none");
 }
 
 TEST(QMSettingsTest, ReturnMaceModelTest)
@@ -297,6 +298,14 @@ TEST(QMSettingsTest, ReturnMaceModelTest)
     EXPECT_EQ(string(MaceModel::MEDIUMMPA0), "medium-mpa-0");
     EXPECT_EQ(string(MaceModel::MEDIUMOMAT0), "medium-omat-0");
     EXPECT_EQ(string(MaceModel::CUSTOM), "custom");
+    EXPECT_EQ(string(static_cast<MaceModel>(-1)), "none");
+}
+
+TEST(QMSettingsTest, ReturnMaceModeTest)
+{
+    EXPECT_EQ(string(MaceMode::ACCURATE), "accurate");
+    EXPECT_EQ(string(MaceMode::FAST), "fast");
+    EXPECT_EQ(string(static_cast<MaceMode>(-1)), "unknown mode");
 }
 
 TEST(QMSettingsTest, ReturnXtbMethodTest)
@@ -304,6 +313,7 @@ TEST(QMSettingsTest, ReturnXtbMethodTest)
     EXPECT_EQ(string(XtbMethod::GFN1), "GFN1-xTB");
     EXPECT_EQ(string(XtbMethod::GFN2), "GFN2-xTB");
     EXPECT_EQ(string(XtbMethod::IPEA1), "IPEA1-xTB");
+    EXPECT_EQ(string(static_cast<XtbMethod>(-1)), "none");
 }
 
 TEST(QMSettingsTest, SetFennolModelPath)

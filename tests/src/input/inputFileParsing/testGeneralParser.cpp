@@ -99,6 +99,11 @@ TEST_F(TestInputFileReader, JobType)
     );
 
     EXPECT_NO_THROW(parser.parseJobType(lineElements, 0));
+
+    Settings::setIsRingPolymerMDActivated(true);
+    Settings::setJobtype(JobType::NONE);
+    EXPECT_FALSE(Settings::isRingPolymerMDActivated());
+    EXPECT_EQ(string(JobType::NONE), "NONE");
 }
 
 /**

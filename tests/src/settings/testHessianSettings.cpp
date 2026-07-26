@@ -51,6 +51,7 @@ TEST(TestHessianSettings, setBuilder)
 
     HessianSettings::setBuilder("unknown");
     EXPECT_EQ(HessianSettings::getBuilder(), HessianBuilderType::NONE);
+    EXPECT_EQ(string(HessianBuilderType::NONE), "NONE");
 }
 
 TEST(TestHessianSettings, setFilesAndDisplacement)

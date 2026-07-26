@@ -62,6 +62,10 @@ set(CMAKE_CXX_STANDARD 20)
 # set default flags
 set(CMAKE_CXX_FLAGS "-std=c++20 -Wall -Wextra")
 
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wswitch-enum -Werror=switch-enum")
+endif()
+
 if(WIN32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-use-linker-plugin")
 endif()

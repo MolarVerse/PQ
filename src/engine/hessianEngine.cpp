@@ -290,11 +290,13 @@ pq::SharedOptimizer HessianEngine::setupEmptyOptimizer()
             break;
         }
 
-        default:
-            throw UserInputException(
-                std::format("Unknown optimizer type {}", string(optimizerType))
-            );
+        case NONE: break;
     }
+
+    if (!optimizer)
+        throw UserInputException(
+            std::format("Unknown optimizer type {}", string(optimizerType))
+        );
 
     optimizer->setSimulationBox(getSharedSimulationBox());
     optimizer->setPhysicalData(getSharedPhysicalData());
@@ -358,12 +360,13 @@ pq::SharedLearningRate HessianEngine::setupLearningRateStrategy()
                 "implemented"
             );
 
-        default:
-            throw UserInputException(
-                "In order to run the optimizer, you need to specify a "
-                "learning rate strategy."
-            );
+        case NONE: break;
     }
+
+    throw UserInputException(
+        "In order to run the optimizer, you need to specify a "
+        "learning rate strategy."
+    );
 }
 
 void HessianEngine::setupConvergence(pq::SharedOptimizer &optimizer)
