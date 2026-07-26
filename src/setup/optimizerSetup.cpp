@@ -130,6 +130,7 @@ pq::SharedOptimizer OptimizerSetup::setupEmptyOptimizer()
             break;
         }
 
+        case NONE:
         default:
             throw UserInputException(
                 std::format("Unknown optimizer type {}", string(optimizerType))
@@ -206,6 +207,7 @@ pq::SharedLearningRate OptimizerSetup::setupLearningRateStrategy()
             );
         }
 
+        case NONE:
         default:
         {
             throw UserInputException(

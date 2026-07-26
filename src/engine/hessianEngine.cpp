@@ -290,6 +290,7 @@ pq::SharedOptimizer HessianEngine::setupEmptyOptimizer()
             break;
         }
 
+        case NONE:
         default:
             throw UserInputException(
                 std::format("Unknown optimizer type {}", string(optimizerType))
@@ -358,6 +359,7 @@ pq::SharedLearningRate HessianEngine::setupLearningRateStrategy()
                 "implemented"
             );
 
+        case NONE:
         default:
             throw UserInputException(
                 "In order to run the optimizer, you need to specify a "

@@ -38,6 +38,7 @@ std::string settings::string(const ManostatType &manostatType)
         case ManostatType::BERENDSEN: return "berendsen";
 
         case ManostatType::STOCHASTIC_RESCALING: return "stochastic_rescaling";
+        case ManostatType::NONE: return "none";
 
         default: return "none";
     }
@@ -58,6 +59,7 @@ std::string settings::string(const Isotropy &isotropy)
         case SEMI_ISOTROPIC: return "semi_isotropic";
         case ANISOTROPIC: return "anisotropic";
         case FULL_ANISOTROPIC: return "full_anisotropic";
+        case NONE: return "isotropic";
 
         default: return "isotropic";
     }

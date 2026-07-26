@@ -46,6 +46,7 @@ std::string settings::string(const NonCoulombType nonCoulombType)
         case BUCKINGHAM: return "buck";
         case MORSE: return "morse";
         case GUFF: return "guff";
+        case NONE: return "none";
 
         default: return "none";
     }

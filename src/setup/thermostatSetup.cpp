@@ -104,6 +104,7 @@ void ThermostatSetup::setup()
 
         case NOSE_HOOVER: setupNoseHooverThermostat(); break;
 
+        case NONE:
         default: _engine.makeThermostat(Thermostat());
     }
 
