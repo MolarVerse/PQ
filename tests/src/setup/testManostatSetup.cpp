@@ -30,12 +30,23 @@
 #include "manostatSettings.hpp"    // for ManostatSettings
 #include "manostatSetup.hpp"       // for ManostatSetup, setupManostat, setup
 #include "mdEngine.hpp"            // for MDEngine
+#include "settings.hpp"            // for JobType, Settings
 #include "stochasticRescalingManostat.hpp"   // for StochasticRescalingManostat
 #include "testSetup.hpp"                     // for TestSetup
 
 using namespace setup;
 using namespace settings;
 using namespace manostat;
+
+TEST_F(TestSetup, setupManostatSkipsNonMDJobs)
+{
+    const auto jobType = Settings::getJobtype();
+    Settings::setJobtype(JobType::MM_OPT);
+
+    EXPECT_NO_THROW(setupManostat(*_engine));
+
+    Settings::setJobtype(jobType);
+}
 
 TEST_F(TestSetup, setupManostatNone)
 {

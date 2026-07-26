@@ -184,6 +184,15 @@ TEST_F(TestInputValidation, rejectsBothThermostatTemperatures)
     );
 }
 
+TEST_F(TestInputValidation, acceptsEndTemperatureForThermostat)
+{
+    configureMDJob(JobType::MM_MD);
+    ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
+    setKeyword("end_temp");
+
+    EXPECT_NO_THROW(_reader->validateInputConfiguration());
+}
+
 TEST_F(TestInputValidation, rejectsTemperatureRampLongerThanSimulation)
 {
     configureMDJob(JobType::MM_MD);
@@ -277,6 +286,23 @@ TEST_F(TestInputValidation, acceptsHubbardDerivativesWithThirdOrder)
 }
 
 #ifdef WITH_ASE
+TEST_F(TestInputValidation, rejectsExplicitlyDisabledThreeObThirdOrder)
+{
+    configureMDJob(JobType::QM_MD);
+    QMSettings::setQMMethod(QMMethod::ASEDFTBPLUS);
+    QMSettings::setSlakosType(SlakosType::THREEOB);
+    QMSettings::setUseThirdOrderDftb(false);
+    setKeyword("third_order");
+    setKeyword("hubbard_derivs");
+
+    ASSERT_THROW_MSG(
+        _reader->validateInputConfiguration(),
+        InputFileException,
+        "You have set custom Hubbard derivatives but disabled 3rd order DFTB. "
+        "This setup is invalid."
+    );
+}
+
 TEST_F(TestInputValidation, acceptsThreeObDefaultThirdOrder)
 {
     configureMDJob(JobType::QM_MD);
@@ -324,6 +350,16 @@ TEST_F(TestInputValidation, rejectsMaceModelForWrongModelType)
         "The 'medium-omat-0' model size is only compatible with the 'mace_mp' "
         "model type."
     );
+}
+
+TEST_F(TestInputValidation, acceptsStandardMaceModelForNonMpType)
+{
+    configureMDJob(JobType::QM_MD);
+    QMSettings::setQMMethod(QMMethod::MACE);
+    QMSettings::setMaceModelType(MaceModelType::MACE_OFF);
+    QMSettings::setMaceModel(MaceModel::SMALL);
+
+    EXPECT_NO_THROW(_reader->validateInputConfiguration());
 }
 
 TEST_F(TestInputValidation, requiresPathForCustomMaceModel)
