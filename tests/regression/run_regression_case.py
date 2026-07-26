@@ -29,6 +29,7 @@ def main():
     parser.add_argument("--pq", required=True)
     parser.add_argument("--case-zip", required=True)
     parser.add_argument("--manifest", required=True)
+    parser.add_argument("--launcher", nargs=argparse.REMAINDER, default=[])
     args = parser.parse_args()
 
     pq = Path(args.pq)
@@ -53,7 +54,7 @@ def main():
         timeout = manifest.get("timeout_seconds", 30)
 
         completed = subprocess.run(
-            [str(pq), input_file],
+            [*args.launcher, str(pq), input_file],
             cwd=case_dir,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
