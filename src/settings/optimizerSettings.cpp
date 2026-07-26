@@ -41,8 +41,8 @@ std::string settings::string(const OptimizerType method)
 
         case STEEPEST_DESCENT: return "STEEPEST-DESCENT";
         case ADAM: return "ADAM";
-        case NONE: return "none";
 
+        case NONE:
         default: return "none";
     }
 }
@@ -63,8 +63,8 @@ std::string settings::string(const LREnum method)
         case CONSTANT_DECAY: return "CONSTANT-DECAY";
         case EXPONENTIAL_DECAY: return "EXPONENTIAL-DECAY";
         case LINESEARCH_WOLFE: return "LINESEARCH-WOLFE";
-        case NONE: return "none";
 
+        case NONE:
         default: return "none";
     }
 }

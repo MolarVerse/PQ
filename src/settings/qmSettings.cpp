@@ -56,8 +56,8 @@ std::string settings::string(const QMMethod method)
         case TURBOMOLE: return "TURBOMOLE";
         case MACE: return "MACE";
         case FENNOL: return "FeNNol";
-        case NONE: return "none";
 
+        case NONE:
         default: return "none";
     }
 }
@@ -145,8 +145,8 @@ std::string settings::string(const SlakosType slakos)
         case THREEOB: return "3ob";
         case MATSCI: return "matsci";
         case CUSTOM: return "custom";
-        case NONE: return "none";
 
+        case NONE:
         default: return "none";
     }
 }

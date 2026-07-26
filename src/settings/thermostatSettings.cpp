@@ -43,8 +43,8 @@ std::string settings::string(const ThermostatType &thermostatType)
         case VELOCITY_RESCALING: return "velocity_rescaling";
         case LANGEVIN: return "langevin";
         case NOSE_HOOVER: return "nh-chain";
-        case NONE: return "none";
 
+        case NONE:
         default: return "none";
     }
 }
