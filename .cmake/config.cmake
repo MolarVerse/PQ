@@ -58,7 +58,7 @@ option(BUILD_WITH_DOCS "Build documentation" ON)
 # ***********************
 # BUILD WITH BENCHMARKING
 # ***********************
-option(BUILD_WITH_BENCHMARKING "Build benchmarking" OFF)
+option(BUILD_WITH_BENCHMARKING "Build the Google Benchmark suite" OFF)
 
 # **************
 # BULID_WITH_ASE
