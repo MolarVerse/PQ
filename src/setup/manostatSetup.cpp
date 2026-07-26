@@ -148,8 +148,7 @@ void ManostatSetup::setupBerendsenManostat()
             break;
 
         case NONE: // fall through
-        case ISOTROPIC: // fall through
-        default:
+        case ISOTROPIC:
             _engine.makeManostat(BerendsenManostat(pTarget, tau, compress));
 
             // clang-format on
@@ -190,8 +189,7 @@ void ManostatSetup::setupStochasticRescalingManostat()
             break;
 
         case NONE: // fall through
-        case ISOTROPIC: // fall through
-        default:
+        case ISOTROPIC:
             _engine.makeManostat(pq::StochasticManostat(pTarget, tau, compress));
 
             // clang-format on
@@ -233,8 +231,7 @@ void ManostatSetup::writeManostatSelection() const
             logOutput.writeSetupInfo("Stochastic rescaling manostat selected");
             break;
 
-        case NONE:
-        default: logOutput.writeSetupInfo("No manostat selected");
+        case NONE: logOutput.writeSetupInfo("No manostat selected");
     }
 
     logOutput.writeEmptyLine();
@@ -312,8 +309,7 @@ void ManostatSetup::writeIsotropy() const
             logOutput.writeSetupInfo("Isotropy: full anisotropic");
             break;
 
-        case NONE:
-        default: logOutput.writeSetupInfo("Isotropy: isotropic");
+        case NONE: logOutput.writeSetupInfo("Isotropy: isotropic");
     }
 
     logOutput.writeEmptyLine();

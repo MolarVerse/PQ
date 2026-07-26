@@ -381,7 +381,6 @@ void GuffDatReader::addNonCoulombPair(
         }
         case LJ_9_12:
         case NONE:
-        default:
         {
             throw UserInputException(std::format(
                 "Invalid nonCoulombic type {} given",

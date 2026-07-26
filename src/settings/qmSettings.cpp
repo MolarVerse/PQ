@@ -57,9 +57,10 @@ std::string settings::string(const QMMethod method)
         case MACE: return "MACE";
         case FENNOL: return "FeNNol";
 
-        case NONE:
-        default: return "none";
+        case NONE: break;
     }
+
+    return "none";
 }
 
 /**
@@ -86,9 +87,9 @@ std::string settings::string(const MaceModel model)
         case MEDIUMMPA0: return "medium-mpa-0";
         case MEDIUMOMAT0: return "medium-omat-0";
         case CUSTOM: return "custom";
-
-        default: return "none";
     }
+
+    return "none";
 }
 
 /**
@@ -106,9 +107,9 @@ std::string settings::string(const MaceModelType model)
         case MACE_MP: return "mace_mp";
         case MACE_OFF: return "mace_off";
         case MACE_ANICC: return "mace_anicc";
-
-        default: return "none";
     }
+
+    return "none";
 }
 
 /**
@@ -125,9 +126,9 @@ std::string settings::string(const MaceMode mode)
 
         case ACCURATE: return "accurate";
         case FAST: return "fast";
-
-        default: return "unknown mode";
     }
+
+    return "unknown mode";
 }
 
 /**
@@ -146,9 +147,10 @@ std::string settings::string(const SlakosType slakos)
         case MATSCI: return "matsci";
         case CUSTOM: return "custom";
 
-        case NONE:
-        default: return "none";
+        case NONE: break;
     }
+
+    return "none";
 }
 
 /**
@@ -185,9 +187,9 @@ std::string settings::string(const XtbMethod method)
         case GFN1: return "GFN1-xTB";
         case GFN2: return "GFN2-xTB";
         case IPEA1: return "IPEA1-xTB";
-
-        default: return "none";
     }
+
+    return "none";
 }
 
 /**

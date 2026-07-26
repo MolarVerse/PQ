@@ -37,10 +37,10 @@ std::string settings::string(const HessianBuilderType builder)
         case FINITE_DIFFERENCE_FORCES_FORWARD: return "FORWARD";
         case FINITE_DIFFERENCE_FORCES_FIVE_POINT: return "FIVE-POINT";
         case ANALYTIC: return "ANALYTIC";
-        case NONE: return "NONE";
-
-        default: return "NONE";
+        case NONE: break;
     }
+
+    return "NONE";
 }
 
 void HessianSettings::setHessianFile(const std::string_view &filename)
