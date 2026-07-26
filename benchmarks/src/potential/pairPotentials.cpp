@@ -23,6 +23,7 @@
 #include <benchmark/benchmark.h>
 
 #include "buckinghamPair.hpp"
+#include "coulombReactionField.hpp"
 #include "coulombShiftedPotential.hpp"
 #include "coulombWolf.hpp"
 #include "lennardJonesPair.hpp"
@@ -36,7 +37,7 @@ namespace
         PairPotential&    potential
     )
     {
-        double distance = 3.0;
+        double distance = static_cast<double>(state.range(0)) / 1000.0;
 
         for (auto _ : state)
         {
@@ -52,7 +53,7 @@ namespace
         CoulombPotential& potential
     )
     {
-        double distance      = 3.0;
+        double distance      = static_cast<double>(state.range(0)) / 1000.0;
         double chargeProduct = -0.25;
 
         for (auto _ : state)
@@ -94,9 +95,40 @@ namespace
         runCoulombBenchmark(state, potential);
     }
 
-    BENCHMARK(BM_LennardJones);
-    BENCHMARK(BM_Buckingham);
-    BENCHMARK(BM_Morse);
-    BENCHMARK(BM_CoulombShifted);
-    BENCHMARK(BM_CoulombWolf);
+    void BM_CoulombReactionField(benchmark::State& state)
+    {
+        potential::CoulombReactionField potential(9.0, 78.5);
+        runCoulombBenchmark(state, potential);
+    }
+
+    BENCHMARK(BM_LennardJones)
+        ->ArgName("distance_milliangstrom")
+        ->Arg(1500)
+        ->Arg(3000)
+        ->Arg(6000);
+    BENCHMARK(BM_Buckingham)
+        ->ArgName("distance_milliangstrom")
+        ->Arg(1500)
+        ->Arg(3000)
+        ->Arg(6000);
+    BENCHMARK(BM_Morse)
+        ->ArgName("distance_milliangstrom")
+        ->Arg(1500)
+        ->Arg(3000)
+        ->Arg(6000);
+    BENCHMARK(BM_CoulombShifted)
+        ->ArgName("distance_milliangstrom")
+        ->Arg(1500)
+        ->Arg(3000)
+        ->Arg(6000);
+    BENCHMARK(BM_CoulombWolf)
+        ->ArgName("distance_milliangstrom")
+        ->Arg(1500)
+        ->Arg(3000)
+        ->Arg(6000);
+    BENCHMARK(BM_CoulombReactionField)
+        ->ArgName("distance_milliangstrom")
+        ->Arg(1500)
+        ->Arg(3000)
+        ->Arg(6000);
 }   // namespace

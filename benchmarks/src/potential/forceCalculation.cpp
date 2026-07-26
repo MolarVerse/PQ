@@ -113,6 +113,7 @@ namespace
     BENCHMARK_TEMPLATE(BM_ForceCalculation, potential::PotentialBruteForce)
         ->ArgName("cells_per_side")
         ->Arg(5)
+        ->Arg(6)
         ->Arg(8)
         ->Arg(10)
         ->Complexity(benchmark::oNSquared);
@@ -121,6 +122,8 @@ namespace
         ->ArgName("cells_per_side")
         ->Arg(5)
         ->Arg(8)
+        ->Arg(12)
         ->Arg(16)
+        ->Arg(24)
         ->Complexity(benchmark::oN);
 }   // namespace

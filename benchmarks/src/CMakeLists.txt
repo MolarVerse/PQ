@@ -48,6 +48,16 @@ add_pq_benchmark(
     potential/forceCalculation.cpp
     potential
 )
+add_pq_benchmark(
+    benchmark_integrator
+    integrator/velocityVerlet.cpp
+    integrator
+)
+add_pq_benchmark(
+    benchmark_kinetics
+    simulationBox/kinetics.cpp
+    simulationBox
+)
 
 add_custom_target(google_benchmarks)
 add_dependencies(
@@ -57,4 +67,6 @@ add_dependencies(
     benchmark_pairPotentials
     benchmark_cellList
     benchmark_forceCalculation
+    benchmark_integrator
+    benchmark_kinetics
 )

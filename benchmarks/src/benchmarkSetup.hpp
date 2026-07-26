@@ -29,6 +29,7 @@
 #include "atom.hpp"
 #include "molecule.hpp"
 #include "simulationBox.hpp"
+#include "vector3d.hpp"
 
 namespace benchmarkSetup
 {
@@ -50,28 +51,41 @@ namespace benchmarkSetup
                 for (std::size_t z = 0; z < cellsPerSide; ++z)
                 {
                     auto atom = std::make_shared<simulationBox::Atom>();
-                    atom->setPosition({
+                    const linearAlgebra::Vec3D position{
                         -boxEdge / 2.0 +
                             (static_cast<double>(x) + 0.5) * cellEdge,
                         -boxEdge / 2.0 +
                             (static_cast<double>(y) + 0.5) * cellEdge,
                         -boxEdge / 2.0 +
                             (static_cast<double>(z) + 0.5) * cellEdge,
+                    };
+                    atom->setPosition(position);
+                    atom->setPositionOld(position);
+                    atom->setVelocity({
+                        0.001 * static_cast<double>(atomIndex + 1),
+                        -0.015,
+                        0.02,
                     });
+                    atom->setForce({0.1, -0.2, 0.05});
+                    atom->setMass(12.0);
                     atom->setAtomType(0);
                     atom->setInternalGlobalVDWType(0);
                     atom->setPartialCharge(atomIndex++ % 2 == 0 ? 0.4 : -0.4);
-                    atom->setForceToZero();
                     atom->setShiftForce({0.0, 0.0, 0.0});
 
                     simulationBox::Molecule molecule;
                     molecule.setMoltype(1);
                     molecule.setNumberOfAtoms(1);
+                    molecule.setMolMass(12.0);
                     molecule.addAtom(atom);
 
                     simulationBox.addAtom(atom);
                     simulationBox.addMolecule(molecule);
                 }
+
+        simulationBox.calculateTotalMass();
+        simulationBox.calculateDegreesOfFreedom();
+        simulationBox.calculateCenterOfMass();
 
         return simulationBox;
     }

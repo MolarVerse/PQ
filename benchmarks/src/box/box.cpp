@@ -23,11 +23,13 @@
 #include <benchmark/benchmark.h>
 
 #include "orthorhombicBox.hpp"
+#include "staticMatrix.hpp"
 #include "triclinicBox.hpp"
 #include "vector3d.hpp"
 
 namespace
 {
+    using linearAlgebra::tensor3D;
     using linearAlgebra::Vec3D;
     using simulationBox::OrthorhombicBox;
     using simulationBox::TriclinicBox;
@@ -112,9 +114,55 @@ namespace
         }
     }
 
+    void BM_TriclinicToOrthoSpace(benchmark::State& state)
+    {
+        auto  box = makeTriclinicBox();
+        Vec3D vector{3.2, -1.7, 4.6};
+
+        for (auto _ : state)
+        {
+            benchmark::DoNotOptimize(vector);
+            auto result = box.toOrthoSpace(vector);
+            benchmark::DoNotOptimize(result);
+        }
+    }
+
+    void BM_TriclinicToSimSpace(benchmark::State& state)
+    {
+        auto  box = makeTriclinicBox();
+        Vec3D vector{3.2, -1.7, 4.6};
+
+        for (auto _ : state)
+        {
+            benchmark::DoNotOptimize(vector);
+            auto result = box.toSimSpace(vector);
+            benchmark::DoNotOptimize(result);
+        }
+    }
+
+    void BM_TriclinicTensorRoundTrip(benchmark::State& state)
+    {
+        auto     box = makeTriclinicBox();
+        tensor3D tensor{
+            Vec3D{2.0, 0.1, 0.2},
+            Vec3D{0.3, 3.0, 0.1},
+            Vec3D{0.2, 0.1, 4.0}
+        };
+
+        for (auto _ : state)
+        {
+            benchmark::DoNotOptimize(tensor);
+            auto result = box.toSimSpace(box.toOrthoSpace(tensor));
+            benchmark::DoNotOptimize(result);
+        }
+    }
+
     BENCHMARK(BM_OrthorhombicShiftVector);
     BENCHMARK(BM_TriclinicShiftVector);
     BENCHMARK(BM_OrthorhombicWrapPosition);
     BENCHMARK(BM_TriclinicWrapPosition);
     BENCHMARK(BM_TriclinicCoordinateRoundTrip);
+    BENCHMARK(BM_TriclinicToOrthoSpace);
+    BENCHMARK(BM_TriclinicToSimSpace);
+    BENCHMARK(BM_TriclinicTensorRoundTrip);
 }   // namespace

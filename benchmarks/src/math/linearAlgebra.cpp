@@ -84,6 +84,18 @@ namespace
         }
     }
 
+    void BM_VectorNormSquared(benchmark::State& state)
+    {
+        Vec3D vector{1.1, 2.2, 3.3};
+
+        for (auto _ : state)
+        {
+            benchmark::DoNotOptimize(vector);
+            auto result = normSquared(vector);
+            benchmark::DoNotOptimize(result);
+        }
+    }
+
     void BM_MatrixVectorProduct(benchmark::State& state)
     {
         StaticMatrix3x3<double> matrix{
@@ -118,10 +130,68 @@ namespace
         }
     }
 
+    void BM_MatrixProduct(benchmark::State& state)
+    {
+        StaticMatrix3x3<double> lhs{
+            Vec3D{2.0, 0.1, 0.2},
+            Vec3D{0.3, 3.0, 0.1},
+            Vec3D{0.2, 0.1, 4.0}
+        };
+        StaticMatrix3x3<double> rhs{
+            Vec3D{1.5, 0.4, 0.1},
+            Vec3D{0.2, 2.5, 0.3},
+            Vec3D{0.1, 0.2, 3.5}
+        };
+
+        for (auto _ : state)
+        {
+            benchmark::DoNotOptimize(lhs);
+            benchmark::DoNotOptimize(rhs);
+            auto result = lhs * rhs;
+            benchmark::DoNotOptimize(result);
+        }
+    }
+
+    void BM_MatrixTranspose(benchmark::State& state)
+    {
+        StaticMatrix3x3<double> matrix{
+            Vec3D{2.0, 0.1, 0.2},
+            Vec3D{0.3, 3.0, 0.1},
+            Vec3D{0.2, 0.1, 4.0}
+        };
+
+        for (auto _ : state)
+        {
+            benchmark::DoNotOptimize(matrix);
+            auto result = transpose(matrix);
+            benchmark::DoNotOptimize(result);
+        }
+    }
+
+    void BM_MatrixDeterminant(benchmark::State& state)
+    {
+        StaticMatrix3x3<double> matrix{
+            Vec3D{2.0, 0.1, 0.2},
+            Vec3D{0.3, 3.0, 0.1},
+            Vec3D{0.2, 0.1, 4.0}
+        };
+
+        for (auto _ : state)
+        {
+            benchmark::DoNotOptimize(matrix);
+            auto result = det(matrix);
+            benchmark::DoNotOptimize(result);
+        }
+    }
+
     BENCHMARK(BM_VectorArithmetic);
     BENCHMARK(BM_DotProduct);
     BENCHMARK(BM_CrossProduct);
     BENCHMARK(BM_VectorNorm);
+    BENCHMARK(BM_VectorNormSquared);
     BENCHMARK(BM_MatrixVectorProduct);
     BENCHMARK(BM_MatrixInverse);
+    BENCHMARK(BM_MatrixProduct);
+    BENCHMARK(BM_MatrixTranspose);
+    BENCHMARK(BM_MatrixDeterminant);
 }   // namespace
