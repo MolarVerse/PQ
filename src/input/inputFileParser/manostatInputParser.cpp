@@ -148,7 +148,6 @@ void ManostatInputParser::parsePressure(
     checkCommand(lineElements, lineNumber);
 
     ManostatSettings::setTargetPressure(stod(lineElements[2]));
-    ManostatSettings::setPressureSet(true);
 }
 
 /**

@@ -27,7 +27,6 @@
 
 #include "berendsenManostat.hpp"             // for BerendsenManostat
 #include "constants/conversionFactors.hpp"   // for _PS_TO_FS_
-#include "exceptions.hpp"         // for InputFileException, customException
 #include "manostat.hpp"           // for BerendsenManostat, Manostat, manostat
 #include "manostatSettings.hpp"   // for ManostatSettings
 #include "mdEngine.hpp"           // for Engine
@@ -39,7 +38,6 @@ using namespace setup;
 using namespace engine;
 using namespace settings;
 using namespace manostat;
-using namespace customException;
 using namespace constants;
 
 /**
@@ -69,24 +67,14 @@ ManostatSetup::ManostatSetup(MDEngine &engine) : _engine(engine){};
 /**
  * @brief setup manostat
  *
- * @details checks if a manostat was set in the input file,
- * If a manostat was selected than the user has to provide a target pressure for
- * the manostat.
- *
  * @note the base class manostat does not apply any pressure coupling to the
  * system and therefore it represents the none manostat.
- *
- * @throws InputFileException if no pressure was set for the manostat
- *
  */
 void ManostatSetup::setup()
 {
     using enum ManostatType;
 
     const auto manostatType = ManostatSettings::getManostatType();
-
-    if (manostatType != NONE)
-        isPressureSet();
 
     if (manostatType == BERENDSEN)
         setupBerendsenManostat();
@@ -98,21 +86,6 @@ void ManostatSetup::setup()
         _engine.makeManostat(Manostat());
 
     writeSetupInfo();
-}
-
-/**
- * @brief check if pressure is set for the manostat
- *
- * @throws InputFileException if no pressure was set for the manostat
- *
- */
-void ManostatSetup::isPressureSet() const
-{
-    if (!ManostatSettings::isPressureSet())
-        throw InputFileException(std::format(
-            "Pressure not set for {} manostat",
-            string(ManostatSettings::getManostatType())
-        ));
 }
 
 /**
