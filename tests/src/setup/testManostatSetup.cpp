@@ -81,6 +81,23 @@ TEST_F(TestSetup, setupManostatBerendsen)
     EXPECT_EQ(berendsen.getCompressibility(), 4.0);
 }
 
+TEST_F(TestSetup, setupManostatNoneIsotropyDefaultsToIsotropic)
+{
+    ManostatSettings::setManostatType(ManostatType::BERENDSEN);
+    ManostatSettings::setIsotropy(Isotropy::NONE);
+    ManostatSettings::setPressureSet(true);
+    ManostatSettings::setTargetPressure(300.0);
+    ManostatSettings::setTauManostat(0.2);
+    ManostatSettings::setCompressibility(4.0);
+
+    ManostatSetup manostatSetup(*_mdEngine);
+    EXPECT_NO_THROW(manostatSetup.setup());
+
+    const auto &manostat = _mdEngine->getManostat();
+    const auto berendsen = dynamic_cast<const BerendsenManostat &>(manostat);
+    EXPECT_EQ(berendsen.getIsotropy(), Isotropy::ISOTROPIC);
+}
+
 TEST_F(TestSetup, setupManostatSemiIsotropicBerendsen)
 {
     ManostatSettings::setManostatType("berendsen");
