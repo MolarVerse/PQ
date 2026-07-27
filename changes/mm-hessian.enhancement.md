@@ -1,1 +1,0 @@
-- Added an `mm-hessian` job type for molecular-mechanics Hessian generation with optional pre-optimization.

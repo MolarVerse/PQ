@@ -1,1 +1,0 @@
-- Reject periodic cell-list neighbor layouts where neighbour offsets can alias the same cell.
