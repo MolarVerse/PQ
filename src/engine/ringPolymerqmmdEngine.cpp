@@ -141,8 +141,8 @@ void RingPolymerQMMDEngine::qmCalculation()
         auto forces   = _ringPolymerBeads[i].flattenForces();
         auto qmEnergy = _ringPolymerBeadsPhysicalData[i].getQMEnergy();
 
-        auto &virialMatrix = _ringPolymerBeadsPhysicalData[i].getVirial();
-        auto  virial       = virialMatrix.toStdVector();
+        auto virial =
+            _ringPolymerBeadsPhysicalData[i].getVirial().toStdVector();
 
         ::MPI_Bcast(
             forces.data(),
@@ -169,9 +169,7 @@ void RingPolymerQMMDEngine::qmCalculation()
 
         _ringPolymerBeads[i].deFlattenForces(forces);
         _ringPolymerBeadsPhysicalData[i].setQMEnergy(qmEnergy);
-
-        const auto virialMatrix = StaticMatrix3x3(virial);
-        _ringPolymerBeadsPhysicalData[i].setVirial(virialMatrix);
+        _ringPolymerBeadsPhysicalData[i].setVirial(StaticMatrix3x3(virial));
     }
 }
 #else
@@ -384,7 +382,11 @@ void RingPolymerQMMDEngine::applyManostat()
             MPI_COMM_WORLD
         );
 
-        const auto boxDimensionsVec = Vec3D(boxDimensions);
+        const auto boxDimensionsVec = Vec3D(
+            boxDimensions[0],
+            boxDimensions[1],
+            boxDimensions[2]
+        );
 
         _ringPolymerBeads[i].deFlattenVelocities(velocities);
         _ringPolymerBeads[i].deFlattenPositions(positions);

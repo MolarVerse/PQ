@@ -22,7 +22,8 @@
 
 #include <gtest/gtest.h>   // for Test, TestInfo (ptr only), InitGoogleTest, RUN_ALL_TESTS
 
-#include <string>   // for allocator, basic_string
+#include <string>        // for allocator, basic_string
+#include <string_view>   // for string_view
 
 #include "dftbplusRunner.hpp"     // for DFTBPlusRunner
 #include "exceptions.hpp"         // for InputFileException
@@ -40,13 +41,28 @@
 using setup::QMSetup;
 using namespace settings;
 
+namespace
+{
+    void setBuildCompatibleQMScript()
+    {
+        QMSettings::setQMScript("");
+        QMSettings::setQMScriptFullPath("");
+
+        if (std::string_view(SINGULARITY_) == "ON" ||
+            std::string_view(STATIC_BUILD_) == "ON")
+            QMSettings::setQMScriptFullPath("test");
+        else
+            QMSettings::setQMScript("test");
+    }
+}   // namespace
+
 TEST(TestQMSetup, setupDftbplus)
 {
     engine::QMMDEngine engine;
     auto               setupQM = setup::QMSetup(engine);
 
     settings::QMSettings::setQMMethod(settings::QMMethod::DFTBPLUS);
-    settings::QMSettings::setQMScript("test");
+    setBuildCompatibleQMScript();
     setupQM.setup();
 
     EXPECT_EQ(
@@ -70,7 +86,7 @@ TEST(TestQMSetup, setupPySCF)
     auto               setupQM = setup::QMSetup(engine);
 
     settings::QMSettings::setQMMethod(settings::QMMethod::PYSCF);
-    settings::QMSettings::setQMScript("test");
+    setBuildCompatibleQMScript();
     setupQM.setup();
 
     EXPECT_EQ(
@@ -94,7 +110,7 @@ TEST(TestQMSetup, setupTurbomoleRunner)
     auto               setupQM = setup::QMSetup(engine);
 
     settings::QMSettings::setQMMethod(settings::QMMethod::TURBOMOLE);
-    settings::QMSettings::setQMScript("test");
+    setBuildCompatibleQMScript();
     setupQM.setup();
 
     EXPECT_EQ(
