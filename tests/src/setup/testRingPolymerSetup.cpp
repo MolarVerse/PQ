@@ -22,7 +22,6 @@
 
 #include <gtest/gtest.h>
 
-#include "exceptions.hpp"
 #include "ringPolymerqmmdEngine.hpp"
 #include "ringPolymerSettings.hpp"
 #include "ringPolymerSetup.hpp"
@@ -31,25 +30,11 @@
 
 using namespace setup;
 using namespace settings;
-using namespace customException;
 
 TEST_F(TestSetup, setupRingPolymerIsNoOpWhenNotActivated)
 {
     Settings::setIsRingPolymerMDActivated(false);
     EXPECT_NO_THROW(setupRingPolymer(*_engine));
-}
-
-TEST_F(TestSetup, ringPolymerSetupThrowsWhenNumberOfBeadsNotSet)
-{
-    Settings::setIsRingPolymerMDActivated(true);
-
-    // Construct a RingPolymerEngine on the stack — it's a derived MDEngine.
-    engine::RingPolymerQMMDEngine rpEngine;
-
-    RingPolymerSetup s(rpEngine);
-    EXPECT_THROW(s.setup(), InputFileException);
-
-    Settings::setIsRingPolymerMDActivated(false);   // restore
 }
 
 TEST_F(TestSetup, ringPolymerSetupPhysicalDataResizesBeads)

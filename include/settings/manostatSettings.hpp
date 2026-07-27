@@ -75,8 +75,6 @@ namespace settings
         static inline ManostatType _manostatType = ManostatType::NONE;
         static inline Isotropy     _isotropy     = Isotropy::ISOTROPIC;
 
-        static inline bool _isPressureSet = false;
-
         static inline double _targetPressure;
 
         // clang-format off
@@ -101,7 +99,6 @@ namespace settings
         static void setIsotropy(const std::string_view &isotropy);
         static void setIsotropy(const Isotropy &isotropy);
 
-        static void setPressureSet(const bool pressureSet);
         static void setTargetPressure(const double targetPressure);
         static void setTauManostat(const double tauManostat);
         static void setCompressibility(const double compressibility);
@@ -112,7 +109,6 @@ namespace settings
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] static bool isPressureSet();
         [[nodiscard]] static bool isBerendsenBased();
 
         [[nodiscard]] static ManostatType        getManostatType();

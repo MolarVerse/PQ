@@ -110,7 +110,12 @@ namespace input
          * input validation functions *
          ******************************/
 
+        void validateTimings() const;
+        void validateQM() const;
+        void validateThermostat() const;
+        void validateManostat() const;
         void validateReactionFieldCoulomb() const;
+        void validateRingPolymer() const;
     };
 
 }   // namespace input
