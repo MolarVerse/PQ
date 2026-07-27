@@ -62,154 +62,222 @@ implementation changes are documented in
 
 ### Bug Fixes
 
-- Correct the time-unit conversion in SHAKE velocity corrections.
+- Added unit conversion from fs to s in applyShake routine
+
+### Build
+
+- Added mstd-0.0.2 as git submodule to external directory for future generalizations
 
 ## [v0.6.3](https://github.com/MolarVerse/PQ/releases/tag/v0.6.3) - 2025-11-12
 
 ### Bug Fixes
 
-- Fix a segmentation fault when using the `bonded` force field.
-- Pin Eigen to a working version.
+- Fixed segfault when setting force-field to "bonded"
+- Eigen version finally fixed to 5.0.0 (latest aka master broken on 28.09.25)
 
 ### Enhancements
 
-- Wrap atom positions in triclinic boxes before writing trajectory output.
-- Write atom charges to `.chrg` output for pure QM-MD jobs.
+- Atom positions of triclinic boxes are now wrapped into the simulation box
+  when written to the trajectory output file
+- Atom charges are now written to the .chrg output file in case of pure QM-MD jobs
+
+### CI
+
+- Daily CI workflow added to build and test the codebase
+- Automatic git tag creation on new release via GitHub Actions
 
 ## [v0.6.2](https://github.com/MolarVerse/PQ/releases/tag/v0.6.2) - 2025-08-22
 
+### Workflow
+
+- added/updated git hooks for commit messages
+- added license header check in CI workflow
+
 ### Bug Fixes
 
-- Reject NaN and infinite values in restart-file input.
-- Prevent the velocity-rescaling thermostat from producing invalid velocities.
+- NaN and Inf are recognized as invalid in .rst file input 
+- VelocityRescalingThermostat is prevented from generating -nan velocities
+
+### Tests
+
+- added integration tests for QM programs
+
+### Build
+
+- Suppress googletest warnings for double promotion
+- Fix warnings when building the Sphinx documentation
 
 ## [v0.6.1](https://github.com/MolarVerse/PQ/releases/tag/v0.6.1) - 2025-07-25
 
 ### Enhancements
 
-- Add `random_seed` for reproducible simulations.
-- Report the QM loop time limit in the log.
-- Set the default QM loop time limit to one hour.
-- Refresh the example simulations and add three new examples.
+- new random_seed keyword for reproducibility
+- QM loop time limit info gets printed to the .log file
+- QM loop time limit default value is set to 3600 (1 hour)
+- Cleaned up example runs and added three new examples
 
 ### Bug Fixes
 
-- Treat atom index zero as out of bounds in topology files.
-- Preserve letter casing in `qm_script_full_path`.
+- Index 0 is now correctly out of bounds in topology file
+- The path provided for qm_script_full_path preserves its letter casing
+
+### Internal
+
+- added function to check boolean strings in input file
+
+### CI
+
+- CI workflow for macOS architecture removed
 
 ## [v0.6.0](https://github.com/MolarVerse/PQ/releases/tag/v0.6.0) - 2025-04-02
 
 ### Enhancements
 
-- Add new MACE models.
-- Add the ASE-based xTB calculator.
-- Add a keyword for loading a custom MACE model from a URL.
-- Add an option to overwrite existing output files.
+- new MACE models added
+- ASE based xTB calculator added
+- new keyword added to set custom MACE model *via* url
+- option to overwrite existing output files added
 
 ### Bug Fixes
 
-- Print temperature setup correctly in the log output.
+- Temperature setup now gets correctly printed to the .log output file
+
+### CI
+
+- Combined all CI workflows into a single workflow file
+
+### Testing
+
+- Added `src/QM` to ignore for code coverage reports
 
 ## [v0.5.3](https://github.com/MolarVerse/PQ/releases/tag/v0.5.3) - 2025-02-03
 
 ### Enhancements
 
-- Add the ASE interface for DFTB+ calculations.
-- Add `freset_forces` for resetting forces after each step.
-- Ignore `init_velocities` when non-zero velocities are already present.
-- Add a `force` option for reinitializing velocities.
+- ASE interface for DFTB+ calculations added
+- Add a new keyword 'freset_forces' to reset forces to zero after each step
+- init_velocities keyword is ignored if non-zero velocities are present
+- init_velocities can now be forced via the 'force' option
 
 ### Bug Fixes
 
-- Print volume correctly in the log output.
+- Volume now gets correctly printed to the .log output file
+
+### CI
+
+- Updated CMakeLists.txt to support macOS arm64 architecture.
+- Added CI workflow for macOS arm64 architecture.
 
 ## [v0.5.2](https://github.com/MolarVerse/PQ/releases/tag/v0.5.2) - 2025-01-05
 
 ### Enhancements
 
-- Give reference output its own file and `reference_file` input keyword.
-- Add citations for supported QM programs, velocity Verlet, RATTLE, and PQ.
-- Include BibTeX entries in `.ref` output.
+- The reference output file is now decoupled from the .log output file and is given
+  its own input file keyword 'reference_file'
+- Citations added in the .ref output file for the available QM programs,
+  the v-Verlet integrator, the RATTLE algorithm and PQ itself
+- BibTeX entries are now included in the .ref output file
+
+### CI
+
+- CI workflows removed `on push` events
+- building and testing workflows are deployed now only if relevant files change
+- Added checks to PRs if latest base commit is included in changes of PR
 
 ### Bug Fixes
 
-- Fix full-anisotropic coupling with the stochastic cell-rescaling manostat.
+- CI for Release build updated to install all integration test dependencies
+- Full anistrop coupling works now with stochastic cell rescaling manostat
 
 ## [v0.5.1](https://github.com/MolarVerse/PQ/releases/tag/v0.5.1) - 2025-01-05
 
 ### Enhancements
 
-- Restore old Nose-Hoover chain parameters when restarting.
-- Add `dftb_file` for selecting the DFTB+ input template.
-- Accept input keys case-insensitively and with either `-` or `_`.
+- Nose-Hoover chain restarting now including old chain parameters
+- 'dftb_file' keyword added to change default input file dtfb.template
+  for dftbplus QMMD
+- Input keys in input file can now be given case-insensitive as well as with '-' or '_'
+- Checks for `CHANGELOG.md` modifications on pull requests and pulls
 
 ### Bug Fixes
 
-- Fix QM atom updates in QM-MD calculations.
+- Fixed QM atoms update for QM-MD calculations
+
+### Testing
+
+- Integration test added for DFTB+ calculation
 
 ## [v0.4.5](https://github.com/MolarVerse/PQ/releases/tag/v0.4.5) - 2024-07-13
 
 ### Bug Fixes
 
-- Implement the analytic minimum-image convention for triclinic cells.
+- Minimal Image Convention for triclinic cells now implemented with analytic extension
 
 ## [v0.4.4](https://github.com/MolarVerse/PQ/releases/tag/v0.4.4) - 2024-07-09
 
 ### Bug Fixes
 
-- Fix anisotropic NPT calculations.
+- Anisotropic NPT calculations now working correctly
 
 ### Known Bugs
 
-- The minimum-image convention for triclinic cells is approximate.
+- Minimal Image Convention for triclinic cells only approximate
 
 ## [v0.4.3](https://github.com/MolarVerse/PQ/releases/tag/v0.4.3) - 2024-07-08
 
 ### Bug Fixes
 
-- Correct virial evaluation in MACE NPT calculations.
+- MACE NPT calculations bug fix - virial evaluation is now correct
 
 ### Known Bugs
 
-- Anisotropic NPT calculations do not work correctly.
-- The minimum-image convention for triclinic cells is approximate.
+- Anisotropic NPT calculations not working properly!
+- Minimal Image Convention for triclinic cells only approximate
 
 ## [v0.4.2](https://github.com/MolarVerse/PQ/releases/tag/v0.4.2) - 2024-07-04
 
 ### Bug Fixes
 
-- Fix segmentation faults in isotropic manostats.
-- Always write the latest tag as the version number in output files.
+- Isotropic manostats producing SEGFAULTS is now fixed
+- Version number in output files is now always the latest tag
+
+### Testing
+
+-Integration Test added for an exemplary NPT calculation using Berendsen-Thermostat and -Manostat (isotropic)
 
 ### Known Bugs
 
-- MACE NPT calculations do not work.
-- Anisotropic NPT calculations do not work correctly.
-- The minimum-image convention for triclinic cells is approximate.
+- MACE NPT calculations not working!
+- Anisotropic NPT calculations not working properly!
+- Minimal Image Convention for triclinic cells only approximate
 
 ## [v0.4.1](https://github.com/MolarVerse/PQ/releases/tag/v0.4.1) - 2024-07-02
 
 ### Enhancements
 
-- Expand log output with the important simulation settings.
+- Logfile output updated to give all important information about the simulation settings
+
+### CI
+
+- added CI workflow for Kokkos enabled compilations
 
 ### Known Bugs
 
-- Isotropic manostats can produce segmentation faults.
-- MACE NPT calculations do not work.
-- Anisotropic NPT calculations do not work correctly.
-- The minimum-image convention for triclinic cells is approximate.
+- Isotropic manostats producing SEGFAULTS
+- MACE NPT calculations not working!
+- Anisotropic NPT calculations not working properly!
+- Minimal Image Convention for triclinic cells only approximate
 
 ## [v0.4.0](https://github.com/MolarVerse/PQ/releases/tag/v0.4.0) - 2024-07-01
 
 ### Features
 
-- Add M-SHAKE.
-- Add the MACE neural-network potential for QM-MD calculations.
-- Add the steepest-descent and ADAM optimizers.
+- M-Shake
+- MACE Neural Network Potential for QM-MD calculations
+- Steepest-Descent Optimizer and ADAM optimizer
 
 ### Known Bugs
 
-- MACE NPT calculations do not work.
-- Anisotropic NPT calculations do not work correctly.
-- The minimum-image convention for triclinic cells is approximate.
+- MACE NPT calculations not working!
+- Anisotropic NPT calculations not working properly!
+- Minimal Image Convention for triclinic cells only approximate

@@ -2,6 +2,8 @@
 
 Build, CI, test, refactor, and implementation changes are documented here.
 User-visible release notes are documented in [CHANGELOG.md](CHANGELOG.md).
+This split starts with the next release; older release entries remain unchanged
+in `CHANGELOG.md`.
 
 ## Next Release
 
@@ -90,92 +92,3 @@ User-visible release notes are documented in [CHANGELOG.md](CHANGELOG.md).
 - Refresh the reference manual, quick start, examples, and troubleshooting.
 
 <!-- insertion marker -->
-## [v0.6.4](https://github.com/MolarVerse/PQ/releases/tag/v0.6.4) - 2026-03-31
-
-### Build
-
-- Add mstd 0.0.2 as a submodule for future generalizations.
-
-## [v0.6.3](https://github.com/MolarVerse/PQ/releases/tag/v0.6.3) - 2025-11-12
-
-### CI
-
-- Add the daily build and test workflow.
-- Add automatic tag creation for releases.
-
-## [v0.6.2](https://github.com/MolarVerse/PQ/releases/tag/v0.6.2) - 2025-08-22
-
-### Workflow
-
-- Add and update commit-message hooks.
-- Add the license-header check.
-
-### Tests
-
-- Add integration tests for QM programs.
-
-### Build
-
-- Suppress GoogleTest double-promotion warnings.
-- Fix warnings in Sphinx documentation builds.
-
-## [v0.6.1](https://github.com/MolarVerse/PQ/releases/tag/v0.6.1) - 2025-07-25
-
-### Internal
-
-- Add a helper for validating boolean input strings.
-
-### CI
-
-- Remove the macOS workflow.
-
-## [v0.6.0](https://github.com/MolarVerse/PQ/releases/tag/v0.6.0) - 2025-04-02
-
-### CI
-
-- Combine the CI workflows.
-
-### Tests
-
-- Exclude `src/QM` from coverage reports.
-
-## [v0.5.3](https://github.com/MolarVerse/PQ/releases/tag/v0.5.3) - 2025-02-03
-
-### Build
-
-- Add macOS arm64 support to CMake.
-
-### CI
-
-- Add the macOS arm64 workflow.
-
-## [v0.5.2](https://github.com/MolarVerse/PQ/releases/tag/v0.5.2) - 2025-01-05
-
-### CI
-
-- Run build and test workflows only for relevant changes.
-- Check that pull requests include the latest base commit.
-- Install all integration-test dependencies in release builds.
-
-## [v0.5.1](https://github.com/MolarVerse/PQ/releases/tag/v0.5.1) - 2025-01-05
-
-### Workflow
-
-- Add changelog checks for pull requests.
-
-### Tests
-
-- Add a DFTB+ integration test.
-
-## [v0.4.2](https://github.com/MolarVerse/PQ/releases/tag/v0.4.2) - 2024-07-04
-
-### Tests
-
-- Add an isotropic NPT integration test using the Berendsen thermostat and
-  manostat.
-
-## [v0.4.1](https://github.com/MolarVerse/PQ/releases/tag/v0.4.1) - 2024-07-02
-
-### CI
-
-- Add a Kokkos build workflow.
