@@ -256,6 +256,22 @@ The ``overwrite_output`` keyword allows the user to overwrite any existing outpu
 
 .. centered:: *default value* = false
 
+.. _includeoutputmetadatakey:
+
+Output Metadata
+===============
+
+.. admonition:: Key
+    :class: tip
+
+    include_output_metadata = {bool} -> false
+
+When enabled, ``include_output_metadata`` adds a comment header containing the
+simulation timestep to the averaged and instantaneous MD energy files. It is
+disabled by default to preserve the existing numeric file format.
+
+.. centered:: *default value* = false
+
 .. _fileprefixkey:
 
 File Prefix

@@ -65,6 +65,7 @@ using namespace settings;
  * 22) rpmd_force_file <string>
  * 23) rpmd_charge_file <string>
  * 24) rpmd_energy_file <string>
+ * 25) include_output_metadata <bool>
  *
  * @param engine
  */
@@ -193,6 +194,11 @@ OutputInputParser::OutputInputParser(Engine &engine) : InputFileParser(engine)
     addKeyword(
         std::string("overwrite_output"),
         bind_front(&OutputInputParser::parseOverwriteOutput, this),
+        false
+    );
+    addKeyword(
+        std::string("include_output_metadata"),
+        bind_front(&OutputInputParser::parseIncludeOutputMetadata, this),
         false
     );
 }
@@ -607,4 +613,20 @@ void OutputInputParser::parseOverwriteOutput(
     checkCommand(lineElements, lineNumber);
 
     OutputFileSettings::setOverwriteOutputFiles(keywordToBool(lineElements));
+}
+
+/**
+ * @brief parse if output files should include metadata
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
+void OutputInputParser::parseIncludeOutputMetadata(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+
+    OutputFileSettings::setIncludeOutputMetadata(keywordToBool(lineElements));
 }

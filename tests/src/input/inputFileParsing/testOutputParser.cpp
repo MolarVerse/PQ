@@ -421,3 +421,36 @@ TEST_F(TestInputFileReader, parseOverwriteOutput)
         "Possible values are: on, yes, true, off, no, false."
     )
 }
+
+/**
+ * @brief tests parsing the "include_output_metadata" command
+ *
+ */
+TEST_F(TestInputFileReader, parseIncludeOutputMetadata)
+{
+    EXPECT_FALSE(OutputFileSettings::getIncludeOutputMetadata());
+
+    OutputInputParser parser(*_engine);
+    parser.parseIncludeOutputMetadata(
+        {"include_output_metadata", "=", "true"},
+        0
+    );
+    EXPECT_TRUE(OutputFileSettings::getIncludeOutputMetadata());
+
+    parser.parseIncludeOutputMetadata(
+        {"include_output_metadata", "=", "false"},
+        0
+    );
+    EXPECT_FALSE(OutputFileSettings::getIncludeOutputMetadata());
+
+    ASSERT_THROW_MSG(
+        parser.parseIncludeOutputMetadata(
+            {"include_output_metadata", "=", "notABool"},
+            0
+        ),
+        customException::InputFileException,
+        "Invalid boolean option \"notABool\" for keyword "
+        "\"include_output_metadata\" in input file.\n"
+        "Possible values are: on, yes, true, off, no, false."
+    )
+}

@@ -51,6 +51,9 @@ Energy File
 
 **File Type:** ``.en``
 
+If :ref:`includeoutputmetadatakey` is enabled, the file starts with a
+``# timestep = <value> fs`` comment. By default, the first line remains numeric.
+
 Stores information about the energy and various other quantities of the system for every frame in the following format:
 
     step_number *T* *P* *E*:sub:`tot` *E*:sub:`QM` *N*:sub:`QM-atoms` *E*:sub:`kin` *E*:sub:`intra` *E*:sub:`Coulomb` *E*:sub:`non-Coulomb` *E*:sub:`bond` *E*:sub:`angle` *E*:sub:`dihedral` *E*:sub:`improper` *V* *ρ* *E*:sub:`p-NH` *E*:sub:`χ-NH` *r*:sub:`lower` *r*:sub:`upper` *p* looptime

@@ -120,7 +120,8 @@ void OutputFilesSetup::setup()
         mdEngine.getStressOutput().setFilename(stressFile);
         mdEngine.getBoxFileOutput().setFilename(boxFile);
 
-        if (TimingsSettings::isTimeStepSet())
+        if (OutputFileSettings::getIncludeOutputMetadata() &&
+            TimingsSettings::isTimeStepSet())
         {
             const auto timeStep = TimingsSettings::getTimeStep();
             _engine.getEnergyOutput().writeHeader(timeStep);
