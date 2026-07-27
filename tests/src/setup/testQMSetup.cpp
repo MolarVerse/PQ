@@ -43,40 +43,26 @@ using namespace settings;
 
 namespace
 {
-    class ExternalQMScriptGuard
+    void setBuildCompatibleQMScript()
     {
-       public:
-        ExternalQMScriptGuard()
-        {
-            QMSettings::setQMScript("");
-            QMSettings::setQMScriptFullPath("");
+        QMSettings::setQMScript("");
+        QMSettings::setQMScriptFullPath("");
 
-            const auto needsFullPath =
-                std::string_view{STATIC_BUILD_} == "ON" ||
-                std::string_view{SINGULARITY_} == "ON";
-
-            if (needsFullPath)
-                QMSettings::setQMScriptFullPath("test");
-            else
-                QMSettings::setQMScript("test");
-        }
-
-        ~ExternalQMScriptGuard()
-        {
-            QMSettings::setQMScript("");
-            QMSettings::setQMScriptFullPath("");
-        }
-    };
+        if (std::string_view(SINGULARITY_) == "ON" ||
+            std::string_view(STATIC_BUILD_) == "ON")
+            QMSettings::setQMScriptFullPath("test");
+        else
+            QMSettings::setQMScript("test");
+    }
 }   // namespace
 
 TEST(TestQMSetup, setupDftbplus)
 {
-    const ExternalQMScriptGuard scriptGuard;
-
     engine::QMMDEngine engine;
     auto               setupQM = setup::QMSetup(engine);
 
     settings::QMSettings::setQMMethod(settings::QMMethod::DFTBPLUS);
+    setBuildCompatibleQMScript();
     setupQM.setup();
 
     EXPECT_EQ(
@@ -96,12 +82,11 @@ TEST(TestQMSetup, setupDftbplus)
 
 TEST(TestQMSetup, setupPySCF)
 {
-    const ExternalQMScriptGuard scriptGuard;
-
     engine::QMMDEngine engine;
     auto               setupQM = setup::QMSetup(engine);
 
     settings::QMSettings::setQMMethod(settings::QMMethod::PYSCF);
+    setBuildCompatibleQMScript();
     setupQM.setup();
 
     EXPECT_EQ(
@@ -121,12 +106,11 @@ TEST(TestQMSetup, setupPySCF)
 
 TEST(TestQMSetup, setupTurbomoleRunner)
 {
-    const ExternalQMScriptGuard scriptGuard;
-
     engine::QMMDEngine engine;
     auto               setupQM = setup::QMSetup(engine);
 
     settings::QMSettings::setQMMethod(settings::QMMethod::TURBOMOLE);
+    setBuildCompatibleQMScript();
     setupQM.setup();
 
     EXPECT_EQ(
