@@ -32,7 +32,7 @@
 #include "manostatSettings.hpp"   // for ManostatSettings
 #include "mdEngine.hpp"           // for Engine
 #include "settings.hpp"           // for IsMDJobType
-#include "stochasticRescalingManostat.hpp"   // IWYU pragma: keep - for StochasticRescalingManostat
+#include "stochasticRescalingManostat.hpp"
 #include "typeAliases.hpp"
 
 using namespace setup;
@@ -64,7 +64,7 @@ void setup::setupManostat(Engine &engine)
  *
  * @param engine
  */
-ManostatSetup::ManostatSetup(MDEngine &engine) : _engine(engine){};
+ManostatSetup::ManostatSetup(MDEngine &engine) : _engine(engine) {}
 
 /**
  * @brief setup manostat
@@ -109,10 +109,12 @@ void ManostatSetup::setup()
 void ManostatSetup::isPressureSet() const
 {
     if (!ManostatSettings::isPressureSet())
-        throw InputFileException(std::format(
-            "Pressure not set for {} manostat",
-            string(ManostatSettings::getManostatType())
-        ));
+        throw InputFileException(
+            std::format(
+                "Pressure not set for {} manostat",
+                string(ManostatSettings::getManostatType())
+            )
+        );
 }
 
 /**
@@ -190,7 +192,7 @@ void ManostatSetup::setupStochasticRescalingManostat()
 
         case ISOTROPIC: // fall through
         default:
-            _engine.makeManostat(pq::StochasticManostat(pTarget, tau, compress));
+            _engine.makeManostat(manostat::StochasticRescalingManostat(pTarget, tau, compress));
 
             // clang-format on
     }

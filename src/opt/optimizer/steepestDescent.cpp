@@ -23,7 +23,6 @@
 #include "steepestDescent.hpp"
 
 #include "optimizer.hpp"
-#include "simulationBox.hpp"   // IWYU pragma: keep
 
 using namespace opt;
 

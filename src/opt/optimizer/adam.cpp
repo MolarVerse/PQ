@@ -24,8 +24,6 @@
 
 #include <cmath>   // for pow, sqrt
 
-#include "simulationBox.hpp"   // IWYU pragma: keep
-
 using namespace opt;
 
 /**

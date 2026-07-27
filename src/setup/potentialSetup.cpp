@@ -33,7 +33,6 @@
 #include "exceptions.hpp"                // for ParameterFileException
 #include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
 #include "guffNonCoulomb.hpp"            // for GuffNonCoulomb
-#include "nonCoulombPair.hpp"            // IWYU pragma: keep for NonCoulombPair
 #include "potential.hpp"                 // for Potential
 #include "potentialSettings.hpp"         // for PotentialSettings
 #include "simulationBox.hpp"             // for SimulationBox

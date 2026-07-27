@@ -22,7 +22,6 @@
 
 #include <gtest/gtest.h>   // for Test, CmpHelperNE, TestInfo
 
-#include <cmath>     // for M_PI
 #include <cstddef>   // for size_t
 #include <memory>    // for shared_ptr, allocator
 #include <string>    // for operator+, to_string, char_traits

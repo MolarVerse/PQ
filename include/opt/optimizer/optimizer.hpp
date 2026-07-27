@@ -26,8 +26,10 @@
 
 #include <cstddef>   // for size_t
 
-#include "convergence.hpp"           // for Convergence
-#include "typeAliases.hpp"           // for SharedSimulationBox
+#include "convergence.hpp"   // for Convergence
+#include "physicalData.hpp"
+#include "simulationBox.hpp"
+#include "typeAliases.hpp"   // for SharedSimulationBox
 
 namespace opt
 {
@@ -44,9 +46,9 @@ namespace opt
 
         opt::Convergence _convergence;
 
-        pq::SharedSimBox       _simulationBox;
-        pq::SharedPhysicalData _physicalData;
-        pq::SharedPhysicalData _physicalDataOld;
+        std::shared_ptr<simulationBox::SimulationBox> _simulationBox;
+        std::shared_ptr<physicalData::PhysicalData>   _physicalData;
+        std::shared_ptr<physicalData::PhysicalData>   _physicalDataOld;
 
         std::deque<double> _energyHistory;
         std::deque<double> _maxForceHistory;

@@ -25,7 +25,6 @@
 #include <cstdlib>   // for abs, size_t
 
 #include "coulombPotential.hpp"      // for CoulombPotential
-#include "nonCoulombPair.hpp"        // IWYU pragma: keep - for NonCoulombPair
 #include "nonCoulombPotential.hpp"   // for NonCoulombPotential
 #include "physicalData.hpp"          // for PhysicalData
 #include "potentialSettings.hpp"     // for PotentialSettings

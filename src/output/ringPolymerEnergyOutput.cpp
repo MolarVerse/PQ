@@ -24,10 +24,10 @@
 
 #include <algorithm>   // for for_each
 #include <format>      // for format
-#include <vector>      // for vector
+#include <numeric>
+#include <vector>   // for vector
 
 #include "physicalData.hpp"   // for PhysicalData
-#include "stlVector.hpp"      // IWYU pragma: keep - for accumulate
 
 using namespace output;
 using namespace physicalData;

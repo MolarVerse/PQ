@@ -24,7 +24,15 @@
 
 #define _EVALUATOR_HPP_
 
+#include "celllist.hpp"
+#include "constraints.hpp"
+#include "forceFieldClass.hpp"
+#include "intraNonBonded.hpp"
+#include "physicalData.hpp"
+#include "potential.hpp"
+#include "simulationBox.hpp"
 #include "typeAliases.hpp"
+#include "virial.hpp"
 
 namespace opt
 {
@@ -38,15 +46,15 @@ namespace opt
     class Evaluator
     {
        protected:
-        pq::SharedPotential    _potential;
-        pq::SharedSimBox       _simulationBox;
-        pq::SharedConstraints  _constraints;
-        pq::SharedCellList     _cellList;
-        pq::SharedForceField   _forceField;
-        pq::SharedPhysicalData _physicalData;
-        pq::SharedPhysicalData _physicalDataOld;
-        pq::SharedVirial       _virial;
-        pq::SharedIntraNonBond _intraNonBonded;
+        std::shared_ptr<potential::Potential>           _potential;
+        std::shared_ptr<simulationBox::SimulationBox>   _simulationBox;
+        std::shared_ptr<constraints::Constraints>       _constraints;
+        std::shared_ptr<simulationBox::CellList>        _cellList;
+        std::shared_ptr<forceField::ForceField>         _forceField;
+        std::shared_ptr<physicalData::PhysicalData>     _physicalData;
+        std::shared_ptr<physicalData::PhysicalData>     _physicalDataOld;
+        std::shared_ptr<virial::Virial>                 _virial;
+        std::shared_ptr<intraNonBonded::IntraNonBonded> _intraNonBonded;
 
        public:
         Evaluator()          = default;
