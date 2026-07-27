@@ -20,66 +20,49 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "velocityVerlet.hpp"
-
 #include <benchmark/benchmark.h>
 
 #include <cstddef>
 #include <cstdint>
 
 #include "benchmarkSetup.hpp"
-#include "timingsSettings.hpp"
+#include "celllist.hpp"
+#include "potentialSettings.hpp"
 
 namespace
 {
-    void BM_VelocityVerletFirstStep(benchmark::State& state)
+    void BM_CellListUpdate(benchmark::State& state)
     {
         const auto cellsPerSide = static_cast<std::size_t>(state.range(0));
         auto       simBox       = benchmarkSetup::makeLattice(cellsPerSide);
 
-        settings::TimingsSettings::setTimeStep(0.001);
-        integrator::VelocityVerlet integrator;
+        settings::PotentialSettings::setCoulombRadiusCutOff(
+            benchmarkSetup::cutOff
+        );
+
+        simulationBox::CellList cellList;
+        cellList.setNumberOfCells(cellsPerSide);
+        cellList.resizeCells();
+        cellList.setup(simBox);
+        cellList.activate();
 
         for (auto _ : state)
         {
-            integrator.firstStep(simBox);
-            benchmark::DoNotOptimize(simBox.getAtoms().data());
+            cellList.updateCellList(simBox);
+            benchmark::DoNotOptimize(cellList.getCells().data());
         }
 
         state.SetItemsProcessed(
             state.iterations() *
-            static_cast<std::int64_t>(simBox.getNumberOfAtoms())
+            static_cast<std::int64_t>(simBox.getNumberOfMolecules())
         );
     }
 
-    void BM_VelocityVerletSecondStep(benchmark::State& state)
-    {
-        const auto cellsPerSide = static_cast<std::size_t>(state.range(0));
-        auto       simBox       = benchmarkSetup::makeLattice(cellsPerSide);
-
-        settings::TimingsSettings::setTimeStep(0.001);
-        integrator::VelocityVerlet integrator;
-
-        for (auto _ : state)
-        {
-            integrator.secondStep(simBox);
-            benchmark::DoNotOptimize(simBox.getAtoms().data());
-        }
-
-        state.SetItemsProcessed(
-            state.iterations() *
-            static_cast<std::int64_t>(simBox.getNumberOfAtoms())
-        );
-    }
-
-    BENCHMARK(BM_VelocityVerletFirstStep)
+    BENCHMARK(BM_CellListUpdate)
         ->ArgName("cells_per_side")
         ->Arg(5)
         ->Arg(8)
-        ->Arg(12);
-    BENCHMARK(BM_VelocityVerletSecondStep)
-        ->ArgName("cells_per_side")
-        ->Arg(5)
-        ->Arg(8)
-        ->Arg(12);
+        ->Arg(12)
+        ->Arg(16)
+        ->Arg(24);
 }   // namespace

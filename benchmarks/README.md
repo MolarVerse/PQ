@@ -21,20 +21,21 @@ Run the short smoke set:
 ctest --test-dir build-benchmark -L benchmark --output-on-failure
 ```
 
-Run the full local suite:
+Run the full local suite from the repository root:
 
 ```sh
-benchmarks/run_benchmarks.sh build-benchmark
+./benchmarks/run_benchmarks.sh build-benchmark
 ```
 
 The runner measures every registered case for at least three seconds and writes
 one JSON result per executable to `benchmark-results`. Set
 `PQ_BENCHMARK_MIN_TIME` to adjust the sampling time.
 
-For measurements, run a benchmark executable directly. Google Benchmark
-options such as `--benchmark_filter` and `--benchmark_out` can narrow or save
-the results:
+The benchmarks are standalone executables under
+`build-benchmark/benchmarks/src`; they are not invoked through the `pq`
+executable. Google Benchmark options such as `--benchmark_filter` and
+`--benchmark_out` can narrow or save the results:
 
 ```sh
-build-benchmark/benchmarks/src/benchmark_forceCalculation
+./build-benchmark/benchmarks/src/benchmark_forceCalculation
 ```

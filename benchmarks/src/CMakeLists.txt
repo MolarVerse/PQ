@@ -23,39 +23,39 @@ endfunction()
 
 add_pq_benchmark(
     benchmark_linearAlgebra
-    math/linearAlgebra.cpp
+    math/benchmarkLinearAlgebra.cpp
     linearAlgebra
 )
 add_pq_benchmark(
     benchmark_box
-    box/box.cpp
+    box/benchmarkBox.cpp
     box
     linearAlgebra
 )
 add_pq_benchmark(
     benchmark_pairPotentials
-    potential/pairPotentials.cpp
+    potential/benchmarkPairPotentials.cpp
     coulombPotential
     nonCoulombPotential
 )
 add_pq_benchmark(
     benchmark_cellList
-    simulationBox/cellList.cpp
+    simulationBox/benchmarkCellList.cpp
     simulationBox
 )
 add_pq_benchmark(
     benchmark_forceCalculation
-    potential/forceCalculation.cpp
+    potential/benchmarkForceCalculation.cpp
     potential
 )
 add_pq_benchmark(
     benchmark_integrator
-    integrator/velocityVerlet.cpp
+    integrator/benchmarkVelocityVerlet.cpp
     integrator
 )
 add_pq_benchmark(
     benchmark_kinetics
-    simulationBox/kinetics.cpp
+    simulationBox/benchmarkKinetics.cpp
     simulationBox
 )
 

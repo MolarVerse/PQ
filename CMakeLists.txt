@@ -26,6 +26,8 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/.cmake)
 # includes
 # ********
 include(config) # include default settins
+# Avoid colliding with Google Benchmark's GetGitVersion.cmake on
+# case-insensitive filesystems.
 include(pqGitVersion) # include get git version
 
 # **************
