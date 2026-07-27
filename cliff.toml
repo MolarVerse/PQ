@@ -1,18 +1,20 @@
-# git-cliff configuration for PQ.
+# git-cliff configuration for PQ's developer changelog.
 #
-# Generates the CHANGELOG.md "Next Release" section from conventional
-# commits since the last tag, so per-PR changelog edits are no longer
-# required. Verbosity is kept under control by:
+# Generates the DEV-CHANGELOG.md release section from conventional commits
+# since the last tag. CHANGELOG.md is curated separately for users in the
+# release PR. Regular PRs do not edit either file.
+#
+# Developer-changelog verbosity is kept under control by:
 #
 #   * skipping merge commits and trivial types (chore/style/format),
-#   * grouping all commits under PQ's existing CHANGELOG sections so a
+#   * grouping all commits under stable developer sections so a
 #     20-commit release renders as ~6 short sections rather than one
 #     long wall of bullets,
 #   * keeping each entry to the commit subject only (no body),
 #   * de-duplicating identical entries.
 #
-# The maintainer always reviews the generated Next Release section in
-# the release PR before tagging.
+# The generated output is the technical record; user-facing release notes are
+# reviewed separately in CHANGELOG.md.
 
 [changelog]
 header = ""
@@ -63,8 +65,8 @@ ignore_tags = ""
 topo_order = false
 sort_commits = "newest"
 
-# Map every prefix the commit-msg hook accepts to one of PQ's CHANGELOG
-# sections, plus skip rules for the noisy ones.
+# Map every prefix the commit-msg hook accepts to a developer changelog
+# section, plus skip rules for the noisy ones.
 commit_parsers = [
   # Skip merge commits, GitHub release PR bodies, and revert markers.
   { message = "^[Mm]erge ", skip = true },
