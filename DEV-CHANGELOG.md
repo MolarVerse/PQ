@@ -9,7 +9,6 @@ in `CHANGELOG.md`.
 
 ### Enhancements
 
-- Add input-file validation.
 - Implement Reaction Field long-range correction.
 - Add `mace_mode` for selecting accurate or accelerated MACE execution.
 - Add `mshake-iter` and `mshake-tolerance`.

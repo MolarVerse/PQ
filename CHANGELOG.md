@@ -22,7 +22,6 @@ implementation changes are documented in
 
 - Rename `mace_model_size` to `mace_model`; the old keyword remains available
   with a deprecation warning.
-- Validate incompatible input settings before simulation setup.
 
 ### Bug Fixes
 
