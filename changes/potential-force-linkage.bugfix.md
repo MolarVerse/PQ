@@ -1,1 +1,0 @@
-- Export brute-force and cell-list force-kernel definitions so the potential equivalence test can link and run.
