@@ -131,3 +131,40 @@ jobs:
         run: |
           conda run -n test-env pytest integration_tests -v
 
+  mpi-build:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt update
+          sudo apt install \
+            gcc-13 \
+            g++-13 \
+            mold \
+            openmpi-bin \
+            libopenmpi-dev \
+            python-is-python3
+
+      - name: Setup ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: mpi-release
+
+      - name: Build project
+        run: |
+          cmake -S . -B build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_WITH_MPI=ON \
+            -DBUILD_WITH_ASE=OFF \
+            -DBUILD_WITH_NATIVE=OFF \
+            -DBUILD_WITH_TESTS=ON
+          cmake --build build --parallel "$(nproc)"
+        env:
+          CC: gcc-13
+          CXX: g++-13
+
+      - name: Run tests
+        run: ctest --test-dir build --output-on-failure -j1
