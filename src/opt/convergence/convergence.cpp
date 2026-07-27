@@ -22,6 +22,8 @@
 
 #include "convergence.hpp"
 
+#include <cmath>   // for abs
+
 #include "convergenceSettings.hpp"
 
 using namespace opt;
