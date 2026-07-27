@@ -24,9 +24,10 @@
 
 #include <string>   // for allocator, basic_string
 
-#include "celllistSetup.hpp"       // for CellListSetup, setupCellList, setup
-#include "engine.hpp"              // for Engine
-#include "gtest/gtest.h"           // for Message, TestPartResult
+#include "celllistSetup.hpp"   // for CellListSetup, setupCellList, setup
+#include "engine.hpp"          // for Engine
+#include "gtest/gtest.h"       // for Message, TestPartResult
+#include "potentialBruteForce.hpp"
 #include "potentialCellList.hpp"   // for PotentialCellList
 #include "testSetup.hpp"           // for TestSetup
 

@@ -25,25 +25,24 @@
 #define _ENGINE_HPP_
 
 #include <cstddef>   // for size_t
-#include <memory>
 
-#include "celllist.hpp"      // IWYU pragma: keep
-#include "constraints.hpp"   // IWYU pragma: keep
+#include "celllist.hpp"
+#include "constraints.hpp"
 #include "engineOutput.hpp"
-#include "forceFieldClass.hpp"   // IWYU pragma: keep
+#include "forceFieldClass.hpp"
 #include "globalTimer.hpp"
-#include "intraNonBonded.hpp"        // IWYU pragma: keep
-#include "molecularVirial.hpp"       // IWYU pragma: keep
-#include "physicalData.hpp"          // IWYU pragma: keep
-#include "potentialBruteForce.hpp"   // IWYU pragma: keep
-#include "simulationBox.hpp"         // IWYU pragma: keep
+#include "intraNonBonded.hpp"
+#include "physicalData.hpp"
+#include "potential.hpp"
+#include "simulationBox.hpp"
 #include "typeAliases.hpp"
+#include "virial.hpp"
 
 #ifdef WITH_KOKKOS
-#include "coulombWolf_kokkos.hpp"     // IWYU pragma: keep
-#include "lennardJones_kokkos.hpp"    // IWYU pragma: keep
-#include "potential_kokkos.hpp"       // IWYU pragma: keep
-#include "simulationBox_kokkos.hpp"   // IWYU pragma: keep
+#include "coulombWolf_kokkos.hpp"
+#include "lennardJones_kokkos.hpp"
+#include "potential_kokkos.hpp"
+#include "simulationBox_kokkos.hpp"
 #endif
 
 namespace engine
@@ -65,33 +64,31 @@ namespace engine
 
         timings::GlobalTimer _timer;
 
-        pq::PhysicalData _averagePhysicalData;
+        physicalData::PhysicalData _averagePhysicalData;
 
-        // clang-format off
-        pq::SharedVirial       _virial         = std::make_shared<pq::MolecularVirial>();
-        pq::SharedPotential    _potential      = std::make_shared<pq::BruteForcePot>();
-        pq::SharedPhysicalData _physicalData   = std::make_shared<pq::PhysicalData>();
-        pq::SharedSimBox       _simulationBox  = std::make_shared<pq::SimBox>();
-        pq::SharedCellList     _cellList       = std::make_shared<pq::CellList>();
-        pq::SharedIntraNonBond _intraNonBonded = std::make_shared<pq::IntraNonBond>();
-        pq::SharedForceField   _forceField     = std::make_shared<pq::ForceField>();
-        pq::SharedConstraints  _constraints    = std::make_shared<pq::Constraints>();
-        // clang-format on
+        pq::SharedVirial       _virial;
+        pq::SharedPotential    _potential;
+        pq::SharedPhysicalData _physicalData;
+        pq::SharedSimBox       _simulationBox;
+        pq::SharedCellList     _cellList;
+        pq::SharedIntraNonBond _intraNonBonded;
+        pq::SharedForceField   _forceField;
+        pq::SharedConstraints  _constraints;
 
 #ifdef WITH_KOKKOS
-        pq::KokkosSimBox    _kokkosSimulationBox;
-        pq::KokkosLJ        _kokkosLennardJones;
-        pq::KokkosWolf      _kokkosCoulombWolf;
-        pq::KokkosPotential _kokkosPotential;
+        simulationBox::KokkosSimulationBox _kokkosSimulationBox;
+        potential::KokkosLennardJones      _kokkosLennardJones;
+        potential::KokkosCoulombWolf       _kokkosCoulombWolf;
+        potential::KokkosPotential         _kokkosPotential;
 #endif
 
        public:
-        Engine()          = default;
+        Engine();
         virtual ~Engine() = default;
 
         virtual void run()         = 0;
         virtual void writeOutput() = 0;
-        void deleteTempFiles();
+        void         deleteTempFiles();
 
         void addTimer(const timings::Timer &timings);
 
@@ -111,43 +108,43 @@ namespace engine
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] pq::CellList     &getCellList();
-        [[nodiscard]] pq::SimBox       &getSimulationBox();
-        [[nodiscard]] pq::PhysicalData &getPhysicalData();
-        [[nodiscard]] pq::PhysicalData &getAveragePhysicalData();
-        [[nodiscard]] pq::Constraints  &getConstraints();
-        [[nodiscard]] pq::ForceField   &getForceField();
-        [[nodiscard]] pq::IntraNonBond &getIntraNonBonded();
-        [[nodiscard]] pq::Virial       &getVirial();
-        [[nodiscard]] pq::Potential    &getPotential();
+        [[nodiscard]] simulationBox::CellList        &getCellList();
+        [[nodiscard]] simulationBox::SimulationBox   &getSimulationBox();
+        [[nodiscard]] physicalData::PhysicalData     &getPhysicalData();
+        [[nodiscard]] physicalData::PhysicalData     &getAveragePhysicalData();
+        [[nodiscard]] constraints::Constraints       &getConstraints();
+        [[nodiscard]] forceField::ForceField         &getForceField();
+        [[nodiscard]] intraNonBonded::IntraNonBonded &getIntraNonBonded();
+        [[nodiscard]] virial::Virial                 &getVirial();
+        [[nodiscard]] potential::Potential           &getPotential();
 
         /*************************
          * output getter methods *
          *************************/
 
-        [[nodiscard]] EngineOutput      &getEngineOutput();
-        [[nodiscard]] pq::LogOutput     &getLogOutput();
-        [[nodiscard]] pq::StdoutOutput  &getStdoutOutput();
-        [[nodiscard]] pq::TimingsOutput &getTimingsOutput();
+        [[nodiscard]] EngineOutput          &getEngineOutput();
+        [[nodiscard]] output::LogOutput     &getLogOutput();
+        [[nodiscard]] output::StdoutOutput  &getStdoutOutput();
+        [[nodiscard]] output::TimingsOutput &getTimingsOutput();
 
-        [[nodiscard]] pq::TrajectoryOutput &getXyzOutput();
-        [[nodiscard]] pq::TrajectoryOutput &getForceOutput();
-        [[nodiscard]] pq::InfoOutput       &getInfoOutput();
-        [[nodiscard]] pq::EnergyOutput     &getEnergyOutput();
-        [[nodiscard]] pq::RstFileOutput    &getRstFileOutput();
+        [[nodiscard]] output::TrajectoryOutput &getXyzOutput();
+        [[nodiscard]] output::TrajectoryOutput &getForceOutput();
+        [[nodiscard]] output::InfoOutput       &getInfoOutput();
+        [[nodiscard]] output::EnergyOutput     &getEnergyOutput();
+        [[nodiscard]] output::RstFileOutput    &getRstFileOutput();
 
         /***********************
          * get pointer methods *
          ***********************/
 
-        [[nodiscard]] pq::ForceField   *getForceFieldPtr();
-        [[nodiscard]] pq::Potential    *getPotentialPtr();
-        [[nodiscard]] pq::Virial       *getVirialPtr();
-        [[nodiscard]] pq::CellList     *getCellListPtr();
-        [[nodiscard]] pq::SimBox       *getSimulationBoxPtr();
-        [[nodiscard]] pq::PhysicalData *getPhysicalDataPtr();
-        [[nodiscard]] pq::Constraints  *getConstraintsPtr();
-        [[nodiscard]] pq::IntraNonBond *getIntraNonBondedPtr();
+        [[nodiscard]] forceField::ForceField         *getForceFieldPtr();
+        [[nodiscard]] potential::Potential           *getPotentialPtr();
+        [[nodiscard]] virial::Virial                 *getVirialPtr();
+        [[nodiscard]] simulationBox::CellList        *getCellListPtr();
+        [[nodiscard]] simulationBox::SimulationBox   *getSimulationBoxPtr();
+        [[nodiscard]] physicalData::PhysicalData     *getPhysicalDataPtr();
+        [[nodiscard]] constraints::Constraints       *getConstraintsPtr();
+        [[nodiscard]] intraNonBonded::IntraNonBonded *getIntraNonBondedPtr();
 
         /******************************
          * get shared pointer methods *
@@ -181,10 +178,11 @@ namespace engine
         void setTimer(const timings::GlobalTimer &timer) { _timer = timer; }
 
 #ifdef WITH_KOKKOS
-        [[nodiscard]] pq::KokkosSimBox    &getKokkosSimulationBox();
-        [[nodiscard]] pq::KokkosLJ        &getKokkosLennardJones();
-        [[nodiscard]] pq::KokkosWolf      &getKokkosCoulombWolf();
-        [[nodiscard]] pq::KokkosPotential &getKokkosPotential();
+        [[nodiscard]] simulationBox::KokkosSimulationBox &getKokkosSimulationBox(
+        );
+        [[nodiscard]] potential::KokkosLennardJones &getKokkosLennardJones();
+        [[nodiscard]] potential::KokkosCoulombWolf  &getKokkosCoulombWolf();
+        [[nodiscard]] potential::KokkosPotential    &getKokkosPotential();
         void initKokkosSimulationBox(const size_t numAtoms);
         void initKokkosLennardJones(const size_t numAtomTypes);
         void initKokkosCoulombWolf(

@@ -36,7 +36,8 @@
 #include "mmmdEngine.hpp"                // for Engine
 #include "molecule.hpp"                  // for Molecule
 #include "moleculeType.hpp"              // for MoleculeType
-#include "potentialSettings.hpp"         // for PotentialSettings
+#include "potentialBruteForce.hpp"
+#include "potentialSettings.hpp"   // for PotentialSettings
 
 /**
  * @class TestGuffDatReader
