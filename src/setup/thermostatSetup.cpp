@@ -75,15 +75,8 @@ ThermostatSetup::ThermostatSetup(MDEngine &engine) : _engine(engine){};
 /**
  * @brief setup thermostat
  *
- * @details checks if a thermostat was set in the input file,
- * If a thermostat was selected than the user has to provide a target
- * temperature for the thermostat.
- *
  * @note the base class Thermostat does not apply any temperature coupling to
  * the system and therefore it represents the none thermostat.
- *
- * @throws InputFileException if no temperature was set for the thermostat
- *
  */
 void ThermostatSetup::setup()
 {
@@ -92,7 +85,7 @@ void ThermostatSetup::setup()
     const auto thermostatType = ThermostatSettings::getThermostatType();
 
     if (thermostatType != NONE)
-        isTargetTemperatureSet();
+        setupTargetTemperature();
 
     switch (thermostatType)
     {
@@ -113,37 +106,12 @@ void ThermostatSetup::setup()
 }
 
 /**
- * @brief check if target temperature is set
- *
- * @throws InputFileException if neither target nor end temperature is set
- * @throws InputFileException if both target and end temperature are set
- *
+ * @brief keeps target and end temperature synchronized
  */
-void ThermostatSetup::isTargetTemperatureSet() const
+void ThermostatSetup::setupTargetTemperature() const
 {
     const auto targetTempDefined = ThermostatSettings::isTemperatureSet();
     const auto endTempDefined    = ThermostatSettings::isEndTemperatureSet();
-
-    /************************************************************
-     * Check if exactly one of target or end temperature is set *
-     ************************************************************/
-
-    if (!targetTempDefined && !endTempDefined)
-        throw InputFileException(std::format(
-            "Target or end temperature not set for {} thermostat",
-            string(ThermostatSettings::getThermostatType())
-        ));
-
-    if (targetTempDefined && endTempDefined)
-        throw InputFileException(std::format(
-            "Both target and end temperature set for {} thermostat. They "
-            "are mutually exclusive as they are treated as synonyms",
-            string(ThermostatSettings::getThermostatType())
-        ));
-
-    /**************************************************
-     * Block to unify the target and end temperature. *
-     **************************************************/
 
     if (endTempDefined)
     {
@@ -248,11 +216,6 @@ void ThermostatSetup::setupNoseHooverThermostat()
  * @details if the start temperature is defined, the temperature ramp is
  * enabled
  *
- * @throws InputFileException if the number of steps is smaller than the
- * number
- * @throws InputFileException if the temperature ramp frequency is larger
- * than the number of steps
- *
  */
 void ThermostatSetup::setupTemperatureRamp()
 {
@@ -284,25 +247,10 @@ void ThermostatSetup::setupTemperatureRamp()
         steps = TimingsSettings::getNumberOfSteps();
         ThermostatSettings::setTemperatureRampSteps(steps);
     }
-    else if (steps > TimingsSettings::getNumberOfSteps())
-        throw InputFileException(std::format(
-            "Number of total simulation steps {} is smaller than the "
-            "number of temperature ramping steps {}",
-            TimingsSettings::getNumberOfSteps(),
-            steps
-        ));
 
     _engine.getThermostat().setTemperatureRampingSteps(steps);
 
     const auto frequency = ThermostatSettings::getTemperatureRampFrequency();
-
-    if (frequency > steps)
-        throw InputFileException(std::format(
-            "Temperature ramp frequency {} is larger than the number of "
-            "ramping steps {}",
-            frequency,
-            steps
-        ));
 
     const auto targetTemp   = ThermostatSettings::getTargetTemperature();
     const auto tempDelta    = targetTemp - startTemp;

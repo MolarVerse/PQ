@@ -31,8 +31,7 @@ using settings::RingPolymerSettings;
  */
 void RingPolymerSettings::setNumberOfBeads(const size_t numberOfBeads)
 {
-    _numberOfBeads    = numberOfBeads;
-    _numberOfBeadsSet = true;
+    _numberOfBeads = numberOfBeads;
 }
 
 /**
@@ -41,10 +40,3 @@ void RingPolymerSettings::setNumberOfBeads(const size_t numberOfBeads)
  * @return size_t
  */
 size_t RingPolymerSettings::getNumberOfBeads() { return _numberOfBeads; }
-
-/**
- * @brief check if number of beads for ring polymer md is set
- *
- * @return bool
- */
-bool RingPolymerSettings::isNumberOfBeadsSet() { return _numberOfBeadsSet; }

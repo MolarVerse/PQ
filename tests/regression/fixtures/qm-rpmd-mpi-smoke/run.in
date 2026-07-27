@@ -1,0 +1,14 @@
+jobtype = qm-rpmd;
+rpmd_n_replica = 2;
+nstep = 1;
+timestep = 0.1;
+output_freq = 1;
+init_velocities = false;
+thermostat = none;
+temp = 298.15;
+integrator = v-verlet;
+virial = atomic;
+qm_prog = pyscf;
+qm_script_full_path = fake_qm.py;
+start_file = start.rst;
+file_prefix = mpi-smoke;

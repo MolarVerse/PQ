@@ -37,14 +37,12 @@ namespace settings
     class RingPolymerSettings
     {
        private:
-        static inline bool   _numberOfBeadsSet = false;
-        static inline size_t _numberOfBeads    = 0;
+        static inline size_t _numberOfBeads = 0;
 
        public:
         static void setNumberOfBeads(const size_t numberOfBeads);
 
         [[nodiscard]] static size_t getNumberOfBeads();
-        [[nodiscard]] static bool   isNumberOfBeadsSet();
     };
 }   // namespace settings
 

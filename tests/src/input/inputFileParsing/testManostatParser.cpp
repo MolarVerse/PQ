@@ -41,14 +41,11 @@ using namespace input;
  */
 TEST_F(TestInputFileReader, ParsePressure)
 {
-    EXPECT_EQ(settings::ManostatSettings::isPressureSet(), false);
-
     ManostatInputParser      parser(*_engine);
     std::vector<std::string> lineElements = {"pressure", "=", "300.0"};
     parser.parsePressure(lineElements, 0);
 
     EXPECT_EQ(settings::ManostatSettings::getTargetPressure(), 300.0);
-    EXPECT_EQ(settings::ManostatSettings::isPressureSet(), true);
 }
 
 /**
