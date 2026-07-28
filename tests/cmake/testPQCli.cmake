@@ -10,6 +10,29 @@ function(run_pq output_var error_var result_var)
     set(${result_var} "${result}" PARENT_SCOPE)
 endfunction()
 
+function(assert_input_array field expected_items)
+    string(JSON actual_count LENGTH "${output}" input "${field}")
+    list(LENGTH expected_items expected_count)
+    if(NOT actual_count EQUAL expected_count)
+        message(
+            FATAL_ERROR
+            "Unexpected ${field} count: ${actual_count}; expected ${expected_count}"
+        )
+    endif()
+
+    math(EXPR last_index "${expected_count} - 1")
+    foreach(index RANGE 0 ${last_index})
+        string(JSON actual_item GET "${output}" input "${field}" ${index})
+        list(GET expected_items ${index} expected_item)
+        if(NOT actual_item STREQUAL expected_item)
+            message(
+                FATAL_ERROR
+                "Unexpected ${field}[${index}]: ${actual_item}; expected ${expected_item}"
+            )
+        endif()
+    endforeach()
+endfunction()
+
 run_pq(output error result --help)
 if(NOT result EQUAL 0)
     message(FATAL_ERROR "PQ --help returned ${result}: ${error}")
@@ -33,6 +56,77 @@ if(NOT output STREQUAL "PQ ${EXPECTED_VERSION}\n")
 endif()
 if(NOT error STREQUAL "")
     message(FATAL_ERROR "PQ --version wrote to stderr: ${error}")
+endif()
+
+run_pq(output error result --capabilities=json)
+if(NOT result EQUAL 0)
+    message(FATAL_ERROR "PQ --capabilities=json returned ${result}: ${error}")
+endif()
+if(NOT error STREQUAL "")
+    message(FATAL_ERROR "PQ --capabilities=json wrote to stderr: ${error}")
+endif()
+string(JSON schema GET "${output}" schema)
+string(JSON schema_version GET "${output}" schema_version)
+string(JSON version GET "${output}" version)
+string(JSON ase GET "${output}" build ase)
+string(JSON mpi GET "${output}" build mpi)
+string(JSON kokkos GET "${output}" build kokkos)
+string(JSON python_bindings GET "${output}" build python_bindings)
+string(JSON python_embedding GET "${output}" build python_embedding)
+string(JSON t_relaxation GET "${output}" input parameters t_relaxation default)
+string(JSON random_seed_max GET "${output}" input parameters random_seed maximum)
+if(NOT schema STREQUAL "pq.capabilities")
+    message(FATAL_ERROR "Unexpected capabilities schema: ${schema}")
+endif()
+if(NOT schema_version EQUAL 1)
+    message(FATAL_ERROR "Unexpected capabilities schema version: ${schema_version}")
+endif()
+if(NOT version STREQUAL "${EXPECTED_VERSION}")
+    message(FATAL_ERROR "Unexpected capabilities PQ version: ${version}")
+endif()
+if(NOT ase STREQUAL "${EXPECTED_ASE}")
+    message(FATAL_ERROR "Unexpected ASE capability: ${ase}")
+endif()
+if(NOT mpi STREQUAL "${EXPECTED_MPI}")
+    message(FATAL_ERROR "Unexpected MPI capability: ${mpi}")
+endif()
+if(NOT kokkos STREQUAL "${EXPECTED_KOKKOS}")
+    message(FATAL_ERROR "Unexpected Kokkos capability: ${kokkos}")
+endif()
+if(NOT python_bindings STREQUAL "${EXPECTED_PYTHON_BINDINGS}")
+    message(FATAL_ERROR "Unexpected Python bindings capability: ${python_bindings}")
+endif()
+if(NOT python_embedding STREQUAL "${EXPECTED_PYTHON_EMBEDDING}")
+    message(FATAL_ERROR "Unexpected Python embedding capability: ${python_embedding}")
+endif()
+
+assert_input_array(
+    job_types
+    "mm-md;mm-hessian;mm-opt;qm-md;qm-rpmd"
+)
+set(expected_qm_programs "dftbplus;pyscf;turbomole")
+if(EXPECTED_ASE)
+    list(
+        APPEND expected_qm_programs
+        ase_dftbplus ase_xtb fennol mace mace_mp mace_off
+    )
+endif()
+assert_input_array(qm_programs "${expected_qm_programs}")
+assert_input_array(
+    thermostats
+    "none;berendsen;velocity_rescaling;langevin;nh-chain"
+)
+assert_input_array(manostats "none;berendsen;stochastic_rescaling")
+assert_input_array(
+    pressure_isotropies
+    "isotropic;xy;xz;yz;anisotropic;full_anisotropic"
+)
+
+if(NOT t_relaxation EQUAL 0.1)
+    message(FATAL_ERROR "Unexpected t_relaxation default: ${t_relaxation}")
+endif()
+if(NOT random_seed_max EQUAL 4294967295)
+    message(FATAL_ERROR "Unexpected random seed maximum: ${random_seed_max}")
 endif()
 
 run_pq(output error result --unknown)

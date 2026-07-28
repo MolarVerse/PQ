@@ -20,42 +20,15 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _COMMAND_LINE_ARGS_HPP_
+#ifndef _CAPABILITIES_HPP_
 
-#define _COMMAND_LINE_ARGS_HPP_
+#define _CAPABILITIES_HPP_
 
-#include <string>
-#include <vector>
+#include <iosfwd>
 
-enum class CommandLineAction
+namespace cli
 {
-    RUN,
-    HELP,
-    VERSION,
-    CAPABILITIES
-};
+    void writeCapabilities(std::ostream &output);
+}
 
-/**
- * @class CommandLineArgs
- *
- * @brief Handles the command line arguments.
- *
- */
-class CommandLineArgs
-{
-   private:
-    int                      _argc;
-    std::vector<std::string> _argv;
-    std::string              _inputFileName;
-    CommandLineAction        _action = CommandLineAction::RUN;
-
-   public:
-    CommandLineArgs(const int argc, const std::vector<std::string> &argv);
-
-    void parse();
-
-    std::string       getInputFileName() const;
-    CommandLineAction getAction() const;
-};
-
-#endif   // _COMMAND_LINE_ARGS_HPP_
+#endif   // _CAPABILITIES_HPP_

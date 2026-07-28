@@ -74,6 +74,18 @@ TEST(TestCommandLineArgs, parse_version)
 }
 
 /**
+ * @brief tests parsing the machine-readable capabilities option
+ */
+TEST(TestCommandLineArgs, parse_capabilities)
+{
+    std::vector<std::string> args = {"program", "--capabilities=json"};
+    auto commandLineArgs          = CommandLineArgs(int(args.size()), args);
+
+    commandLineArgs.parse();
+    EXPECT_EQ(CommandLineAction::CAPABILITIES, commandLineArgs.getAction());
+}
+
+/**
  * @brief tests rejecting an unknown option
  */
 TEST(TestCommandLineArgs, parse_unknown_option)
