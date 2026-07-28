@@ -815,6 +815,8 @@ Temperature Ramp Frequency
 
 With the ``temp_ramp_frequency`` keyword the user can specify the frequency of the temperature ramping from the ``start_temp`` to the ``temp`` value. If no starting temperature is given the keyword will be ignored. If a starting temperature is given and this keyword is omitted the temperature ramping will be performed, so that each step the temperature is increased by the same value.
 
+If the ramp length is not divisible by this frequency, the temperature increments are scaled by the number of scheduled updates so that the final update reaches the requested target temperature exactly.
+
 .. centered:: *default value* = 1 step
 
 .. _thermostatKey:

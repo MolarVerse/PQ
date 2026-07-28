@@ -28,7 +28,9 @@
 #include "berendsenThermostat.hpp"           // for BerendsenThermostat
 #include "constants/conversionFactors.hpp"   // for _FS_TO_S_, _KG_TO_GRAM_
 #include "constants/natureConstants.hpp"     // for _UNIVERSAL_GAS_CONSTANT_
+#include "exceptions.hpp"                    // for InputFileException
 #include "gtest/gtest.h"              // for Message, TestPartResult
+#include "inputFileReader.hpp"        // for InputFileReader
 #include "langevinThermostat.hpp"     // for LangevinThermostat
 #include "noseHooverThermostat.hpp"   // for NoseHooverThermostat
 #include "testSetup.hpp"              // for TestSetup
@@ -103,15 +105,15 @@ TEST_F(TestSetup, setupThermostat_temp_ramping)
 
 TEST_F(TestSetup, temperatureRampReachesEndWithPartialFinalInterval)
 {
-    ThermostatSetup thermostatSetup(*_mdEngine);
+    ThermostatSetup        thermostatSetup(*_mdEngine);
+    input::InputFileReader reader("input.in", *_mdEngine);
 
-    settings::TimingsSettings::setNumberOfSteps(10);
-    settings::ThermostatSettings::setThermostatType("berendsen");
-    settings::ThermostatSettings::setTargetTemperature(300);
-    settings::ThermostatSettings::setStartTemperature(200);
-    settings::ThermostatSettings::setTemperatureRampSteps(10);
-    settings::ThermostatSettings::setTemperatureRampFrequency(3);
-    settings::ThermostatSettings::setEndTemperatureSet(false);
+    reader.process({"nstep", "=", "10"});
+    reader.process({"thermostat", "=", "berendsen"});
+    reader.process({"temp", "=", "300"});
+    reader.process({"start_temp", "=", "200"});
+    reader.process({"temp_ramp_steps", "=", "10"});
+    reader.process({"temp_ramp_frequency", "=", "3"});
 
     thermostatSetup.setup();
 
@@ -127,6 +129,39 @@ TEST_F(TestSetup, temperatureRampReachesEndWithPartialFinalInterval)
         thermostatSetup.getEngine().getThermostat().getTargetTemperature(),
         300.0
     );
+
+    settings::ThermostatSettings::setTemperatureRampSteps(0);
+    settings::ThermostatSettings::setTemperatureRampFrequency(1);
+}
+
+TEST_F(TestSetup, rejectsEmptyTemperatureRamp)
+{
+    ThermostatSetup thermostatSetup(*_mdEngine);
+
+    settings::TimingsSettings::setNumberOfSteps(0);
+    settings::ThermostatSettings::setThermostatType("berendsen");
+    settings::ThermostatSettings::setTargetTemperature(300);
+    settings::ThermostatSettings::setStartTemperature(200);
+    settings::ThermostatSettings::setTemperatureRampSteps(0);
+
+    EXPECT_THROW(thermostatSetup.setup(), customException::InputFileException);
+}
+
+TEST_F(TestSetup, rejectsZeroTemperatureRampFrequency)
+{
+    ThermostatSetup thermostatSetup(*_mdEngine);
+
+    settings::TimingsSettings::setNumberOfSteps(10);
+    settings::ThermostatSettings::setThermostatType("berendsen");
+    settings::ThermostatSettings::setTargetTemperature(300);
+    settings::ThermostatSettings::setStartTemperature(200);
+    settings::ThermostatSettings::setTemperatureRampSteps(10);
+    settings::ThermostatSettings::setTemperatureRampFrequency(0);
+
+    EXPECT_THROW(thermostatSetup.setup(), customException::InputFileException);
+
+    settings::ThermostatSettings::setTemperatureRampSteps(0);
+    settings::ThermostatSettings::setTemperatureRampFrequency(1);
 }
 
 TEST_F(TestSetup, setupThermostat_only_end_temp_defined)
