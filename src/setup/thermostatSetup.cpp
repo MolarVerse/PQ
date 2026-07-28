@@ -251,7 +251,8 @@ void ThermostatSetup::setupTemperatureRamp()
 
     const auto targetTemp   = ThermostatSettings::getTargetTemperature();
     const auto tempDelta    = targetTemp - startTemp;
-    const auto tempIncrease = tempDelta / double(steps) * frequency;
+    const auto updates      = (steps + frequency - 1) / frequency;
+    const auto tempIncrease = tempDelta / double(updates);
 
     _engine.getThermostat().setTemperatureIncrease(tempIncrease);
     _engine.getThermostat().setTemperatureRampingFrequency(frequency);
