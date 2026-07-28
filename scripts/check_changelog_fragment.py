@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Require one audience-qualified changelog fragment in a regular PR."""
+"""Require audience-qualified changelog fragments in a regular PR."""
 
 import subprocess
 import sys
@@ -66,10 +66,9 @@ def validate_pr_changes(changes, root=ROOT):
         path for status, path in fragment_changes if status == "A"
     ]
 
-    if len(added_fragments) != 1:
+    if not added_fragments:
         errors.append(
-            "regular pull requests must add exactly one changelog fragment; "
-            f"found {len(added_fragments)}"
+            "regular pull requests must add at least one changelog fragment"
         )
 
     non_added = [
@@ -83,8 +82,7 @@ def validate_pr_changes(changes, root=ROOT):
             + ", ".join(non_added)
         )
 
-    if len(added_fragments) == 1:
-        relative_path = added_fragments[0]
+    for relative_path in added_fragments:
         name = Path(relative_path).name
         if not FRAGMENT_RE.match(name):
             errors.append(
@@ -116,7 +114,7 @@ def main():
     if errors:
         sys.exit("\n".join(f"- {error}" for error in errors))
 
-    print("pull request contains one valid changelog fragment")
+    print("pull request contains valid changelog fragments")
 
 
 if __name__ == "__main__":

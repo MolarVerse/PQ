@@ -1,1 +1,1 @@
-- Require every regular pull request to classify one changelog entry as user-facing or developer-facing.
+- Require regular pull requests to add audience-qualified changelog entries.
