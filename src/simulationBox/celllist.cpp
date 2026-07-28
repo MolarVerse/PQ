@@ -313,7 +313,27 @@ Vec3Dul CellList::getCellIndexOfAtom(
  * @brief resize cells
  *
  */
-void CellList::resizeCells() { _cells.resize(prod(_nCells)); }
+void CellList::resizeCells()
+{
+    auto numberOfCells = size_t{1};
+
+    for (size_t dimension = 0; dimension < 3; ++dimension)
+    {
+        if (0 == _nCells[dimension])
+            throw CellListException(
+                "Number of cells must be positive"
+            );   // GCOVR_EXCL_BR_LINE
+
+        if (_nCells[dimension] > _cells.max_size() / numberOfCells)
+            throw CellListException(
+                "Number of cells exceeds the supported size"
+            );   // GCOVR_EXCL_BR_LINE
+
+        numberOfCells *= _nCells[dimension];
+    }
+
+    _cells.resize(numberOfCells);
+}
 
 /**
  * @brief add cell to cell list
