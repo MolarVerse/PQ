@@ -477,11 +477,13 @@ void QMInputParser::parseSlakosType(
     {
         QMSettings::setSlakosType(THREEOB);
         QMSettings::setHubbardDerivs(hubbardDerivMap3ob);
+        ReferencesOutput::addReferenceFile(_THREEOB_FILE_);
     }
 
     else if ("matsci" == slakos)
     {
         QMSettings::setSlakosType(MATSCI);
+        ReferencesOutput::addReferenceFile(_MATSCI_FILE_);
     }
 
     else if ("custom" == slakos)
