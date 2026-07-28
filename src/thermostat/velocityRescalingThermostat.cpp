@@ -24,15 +24,19 @@
 
 #include <cmath>    // for sqrt
 
+#include "exceptions.hpp"           // for UserInputException
+#include "mathUtilities.hpp"        // for isZero
 #include "physicalData.hpp"         // for PhysicalData
 #include "simulationBox.hpp"        // for SimulationBox
 #include "thermostatSettings.hpp"   // for ThermostatType
 #include "timingsSettings.hpp"      // for TimingsSettings
 
 using thermostat::VelocityRescalingThermostat;
+using namespace customException;
 using namespace settings;
 using namespace simulationBox;
 using namespace physicalData;
+using namespace utilities;
 
 /**
  * @brief Construct a new Velocity Rescaling Thermostat:: Velocity Rescaling
@@ -79,6 +83,18 @@ void VelocityRescalingThermostat::applyThermostat(
     physicalData.calculateTemperature(simulationBox);
 
     _temperature = physicalData.getTemperature();
+
+    if (isZero(_temperature))
+    {
+        stopTimingsSection("Velocity Rescaling");
+        if (isZero(_targetTemperature))
+            return;
+
+        throw UserInputException(
+            "Cannot apply velocity rescaling to a zero-temperature system "
+            "with a positive target temperature. Initialize velocities first."
+        );
+    }
 
     const auto timeStep  = TimingsSettings::getTimeStep();
     const auto tempRatio = _targetTemperature / _temperature;

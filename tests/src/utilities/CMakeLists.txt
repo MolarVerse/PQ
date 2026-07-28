@@ -2,6 +2,7 @@ set(source_files
     testStringUtilities.cpp
     testMathUtilities.cpp
     testCollectionUtilities.cpp
+    testProgressbar.cpp
 )
 
 foreach(source_file ${source_files})
@@ -9,6 +10,7 @@ foreach(source_file ${source_files})
     add_executable(${test_name} ${source_file})
     target_include_directories(${test_name}
         PRIVATE
+        ${PROJECT_SOURCE_DIR}/external/progressbar/include
         ${PROJECT_SOURCE_DIR}/tests/include/utilities
         ${PROJECT_SOURCE_DIR}/tests/include/macros
     )
