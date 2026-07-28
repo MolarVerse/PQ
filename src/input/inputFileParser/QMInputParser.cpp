@@ -50,8 +50,14 @@ using namespace constants;
  * <string>
  *
  * @param engine
+ * @param resolveBuiltInSlakosPath
  */
-QMInputParser::QMInputParser(Engine &engine) : InputFileParser(engine)
+QMInputParser::QMInputParser(
+    Engine    &engine,
+    const bool resolveBuiltInSlakosPath
+)
+    : InputFileParser(engine),
+      _resolveBuiltInSlakosPath(resolveBuiltInSlakosPath)
 {
     addKeyword(
         std::string("qm_prog"),
@@ -475,13 +481,13 @@ void QMInputParser::parseSlakosType(
 
     if ("3ob" == slakos)
     {
-        QMSettings::setSlakosType(THREEOB);
+        QMSettings::setSlakosType(THREEOB, _resolveBuiltInSlakosPath);
         QMSettings::setHubbardDerivs(hubbardDerivMap3ob);
     }
 
     else if ("matsci" == slakos)
     {
-        QMSettings::setSlakosType(MATSCI);
+        QMSettings::setSlakosType(MATSCI, _resolveBuiltInSlakosPath);
     }
 
     else if ("custom" == slakos)

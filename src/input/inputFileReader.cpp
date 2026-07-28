@@ -69,11 +69,14 @@ using std::make_unique;
  *
  * @param fileName
  * @param engine
+ * @param validateFilePaths
+ * @param resolveBuiltInSlakosPath
  */
 InputFileReader::InputFileReader(
     const std::string_view &fileName,
     engine::Engine         &engine,
-    const bool              validateFilePaths
+    const bool              validateFilePaths,
+    const bool              resolveBuiltInSlakosPath
 )
     : _fileName(fileName), _engine(engine)
 {
@@ -100,7 +103,9 @@ InputFileReader::InputFileReader(
 
     _parsers.push_back(make_unique<ConvInputParser>(_engine));
     _parsers.push_back(make_unique<OptInputParser>(_engine));
-    _parsers.push_back(make_unique<QMInputParser>(_engine));
+    _parsers.push_back(
+        make_unique<QMInputParser>(_engine, resolveBuiltInSlakosPath)
+    );
 
     addKeywords();
 }
