@@ -26,6 +26,7 @@
 
 #include <cstddef>
 #include <exception>
+#include <optional>
 #include <string>
 #include <string_view>
 
@@ -73,13 +74,19 @@ namespace customException
     class CustomException : public std::exception
     {
        protected:
-        std::string _message;
+        std::string           _message;
+        std::optional<size_t> _lineNumber;
 
        public:
-        explicit CustomException(const std::string_view message);
+        explicit CustomException(
+            const std::string_view message,
+            std::optional<size_t>  lineNumber = std::nullopt
+        );
 
         void colorfulOutput(const Color::Code, const std::string_view) const;
-        [[nodiscard]] const std::string &getMessage() const noexcept;
+        void setLineNumber(const size_t lineNumber) noexcept;
+        [[nodiscard]] const std::string    &getMessage() const noexcept;
+        [[nodiscard]] std::optional<size_t> getLineNumber() const noexcept;
     };
 
     /**

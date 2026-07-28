@@ -74,7 +74,11 @@ namespace input
         size_t _lineNumber = 1;
 
        public:
-        explicit InputFileReader(const std::string_view &, engine::Engine &);
+        explicit InputFileReader(
+            const std::string_view &,
+            engine::Engine &,
+            bool validateFilePaths = true
+        );
 
         void read();
         void addKeywords();

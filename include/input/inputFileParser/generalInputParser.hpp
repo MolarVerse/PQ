@@ -47,7 +47,11 @@ namespace input
         void parseFloatingPointType(const pq::strings &, const size_t);
         void parseRandomSeed(const pq::strings &, const size_t);
 
-        void parseJobTypeForEngine(const pq::strings &, const size_t, pq::UniqueEngine &);
+        static void parseJobTypeForEngine(
+            const pq::strings &,
+            const size_t,
+            pq::UniqueEngine &
+        );
     };
 
 }   // namespace input
