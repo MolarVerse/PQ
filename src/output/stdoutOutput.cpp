@@ -25,7 +25,6 @@
 #include <format>        // for format
 #include <iostream>      // for operator<<, char_traits, basic_ostream, cout
 #include <string>        // for operator<<
-#include <string_view>   // for string_view
 
 #include "exceptions.hpp"   // for UserInputExceptionWarning, customException
 #include "outputMessages.hpp"   // for initialMomentumMessage

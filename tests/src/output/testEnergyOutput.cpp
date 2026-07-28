@@ -30,7 +30,7 @@
 #include "manostatSettings.hpp"     // for ManostatSettings
 #include "settings.hpp"             // for Settings
 #include "thermostatSettings.hpp"   // for ThermostatSettings
-#include "vector3d.hpp"             // for Vector3D
+#include "vector3d.hpp"             // IWYU pragma: keep - for Vector3D
 
 using namespace settings;
 using namespace linearAlgebra;

@@ -27,9 +27,6 @@
 #include <gtest/gtest.h>   // for Test
 #include <stdio.h>         // for remove
 
-#include <memory>   // for allocator
-
-#include "logOutput.hpp"    // for LogOutput
 #include "qmSettings.hpp"   // for QMMethod, QMSettings
 #include "qmSetup.hpp"      // for QMSetup, setupQM
 #include "qmmdEngine.hpp"   // for QMMDEngine

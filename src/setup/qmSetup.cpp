@@ -24,10 +24,9 @@
 
 #include <string_view>   // for string_view
 
-#include "dftbplusRunner.hpp"      // for DFTBPlusRunner
 #include "exceptions.hpp"          // for InputFileException
+#include "externalQMRunner.hpp"    // for ExternalQMRunner
 #include "potentialSettings.hpp"   // for PotentialSettings
-#include "pyscfRunner.hpp"         // for PySCFRunner
 #include "qmSettings.hpp"          // for QMMethod, QMSettings
 #include "qmmdEngine.hpp"          // for QMMDEngine
 #include "references.hpp"          // for ReferencesOutput
@@ -35,7 +34,6 @@
 #include "settings.hpp"            // for Settings
 #include "stdoutOutput.hpp"        // for StdoutOutput
 #include "stringUtilities.hpp"     // for toLowerCopy
-#include "turbomoleRunner.hpp"     // for TurbomoleRunner
 
 using setup::QMSetup;
 using namespace settings;

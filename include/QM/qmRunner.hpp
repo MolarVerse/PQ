@@ -29,7 +29,6 @@
 #define STATIC_BUILD_ _STATIC_BUILD_
 
 #include <stop_token>
-#include <string>
 
 #include "timer.hpp"
 #include "typeAliases.hpp"

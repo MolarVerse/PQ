@@ -26,12 +26,10 @@
 #include <vector>   // for vector
 
 #include "constraintSettings.hpp"   // for ConstraintSettings
-#include "constraints.hpp"          // for Constraints
 #include "constraintsInputParser.hpp"
 #include "engine.hpp"                // for Engine
 #include "exceptions.hpp"            // for InputFileException
 #include "gtest/gtest.h"             // for Message, TestPartResult
-#include "inputFileParser.hpp"       // for readInput
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
 

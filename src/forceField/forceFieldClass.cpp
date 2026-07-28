@@ -24,9 +24,6 @@
 
 #include <algorithm>
 #include <format>       // for format
-#include <functional>   // for identity
-#include <ranges>       // for find_if, std::ranges::find_if
-#include <string>       // for string
 
 #include "exceptions.hpp"
 

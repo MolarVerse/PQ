@@ -25,7 +25,6 @@
 #include <string>   // for allocator, basic_string
 
 #include "constraintSettings.hpp"   // for getShakeMaxIter, getShakeTolerance, getRattleMaxIter, getRattleTolerance
-#include "constraints.hpp"        // for Constraints
 #include "constraintsSetup.hpp"   // for ConstraintsSetup, setupConstraints
 #include "engine.hpp"             // for Engine
 #include "gtest/gtest.h"          // for Message, TestPartResult

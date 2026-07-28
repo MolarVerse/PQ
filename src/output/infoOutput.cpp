@@ -23,18 +23,14 @@
 #include "infoOutput.hpp"
 
 #include <format>    // for format
-#include <ios>       // for ofstream
 #include <ostream>   // for operator<<, basic_ostream, char_traits
-#include <string>    // for operator<<
 
 #include "constraintSettings.hpp"   // for ConstraintSettings
 #include "forceFieldSettings.hpp"   // for ForceFieldSettings
 #include "manostatSettings.hpp"     // for ManostatSettings
 #include "physicalData.hpp"         // for PhysicalData
 #include "settings.hpp"             // for Settings
-#include "stlVector.hpp"            // for mean, max
 #include "thermostatSettings.hpp"   // for ThermostatSettings
-#include "vector3d.hpp"             // for norm
 
 using namespace output;
 using namespace physicalData;

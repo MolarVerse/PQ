@@ -28,6 +28,7 @@
 #include "constraintSettings.hpp"   // for ConstraintSettings
 #include "distanceKernels.hpp"      // for distVecAndDist2
 #include "mShakeReference.hpp"      // for MShakeReference
+#include "mShakeReference.hpp"      // for MShakeReference
 #include "mathUtilities.hpp"        // for dot
 #include "matrix.hpp"               // for Matrix
 #include "simulationBox.hpp"        // for SimulationBox

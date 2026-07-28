@@ -31,7 +31,6 @@
 #include "fileSettings.hpp"     // for FileSettings
 #include "mmmdEngine.hpp"       // for Engine
 #include "molecule.hpp"         // for Molecule
-#include "simulationBox.hpp"    // for SimulationBox
 #include "topologyReader.hpp"   // for TopologyReader
 
 /**

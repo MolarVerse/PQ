@@ -22,7 +22,6 @@
 
 #include <gtest/gtest.h>   // for Test, CmpHelperNE, TestInfo
 
-#include <cmath>     // for M_PI
 #include <cstddef>   // for size_t
 #include <memory>    // for shared_ptr, allocator
 #include <string>    // for operator+, to_string, char_traits
@@ -36,7 +35,7 @@
 #include "dihedralForceField.hpp"        // for DihedralForceField
 #include "dihedralType.hpp"              // for DihedralType
 #include "exceptions.hpp"                // for TopologyException
-#include "forceField.hpp"                // for correctLinker
+#include "forceField.hpp"                // IWYU pragma: keep - for correctLinker
 #include "forceFieldClass.hpp"           // for ForceField
 #include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
 #include "gtest/gtest.h"                 // for Message, TestPartResult
@@ -47,7 +46,6 @@
 #include "potentialSettings.hpp"         // for PotentialSettings
 #include "simulationBox.hpp"             // for SimulationBox
 #include "throwWithMessage.hpp"          // for EXPECT_THROW_MSG
-#include "vector3d.hpp"                  // for Vec3D
 
 namespace potential
 {

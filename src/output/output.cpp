@@ -22,7 +22,6 @@
 
 #include "output.hpp"
 
-#include <filesystem>   // for create_directory
 #include <fstream>      // for ifstream, ofstream, std
 
 #include "exceptions.hpp"           // for InputFileException, customException

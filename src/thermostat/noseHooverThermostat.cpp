@@ -24,7 +24,6 @@
 
 #include <algorithm>    // for __for_each_fn
 #include <cstddef>      // for size_t
-#include <functional>   // for identity
 
 #include "constants/conversionFactors.hpp"   // for _BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_, _FS_TO_S_
 #include "constants/internalConversionFactors.hpp"   // for _MOMENTUM_TO_FORCE_
@@ -32,7 +31,6 @@
 #include "simulationBox.hpp"                         // for SimulationBox
 #include "thermostatSettings.hpp"                    // for ThermostatType
 #include "timingsSettings.hpp"                       // for TimingsSettings
-#include "vector3d.hpp"                              // for operator*
 
 using thermostat::NoseHooverThermostat;
 using namespace constants;

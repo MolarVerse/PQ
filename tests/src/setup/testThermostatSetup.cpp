@@ -30,10 +30,8 @@
 #include "constants/natureConstants.hpp"     // for _UNIVERSAL_GAS_CONSTANT_
 #include "gtest/gtest.h"              // for Message, TestPartResult
 #include "langevinThermostat.hpp"     // for LangevinThermostat
-#include "mdEngine.hpp"               // for MDEngine
 #include "noseHooverThermostat.hpp"   // for NoseHooverThermostat
 #include "testSetup.hpp"              // for TestSetup
-#include "thermostat.hpp"             // for BerendsenThermostat, Thermostat
 #include "thermostatSettings.hpp"     // for ThermostatSettings
 #include "thermostatSetup.hpp"        // for ThermostatSetup, setupThermostat
 #include "timingsSettings.hpp"        // for TimingsSettings

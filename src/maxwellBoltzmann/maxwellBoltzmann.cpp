@@ -24,7 +24,6 @@
 
 #include <algorithm>    // for __for_each_fn
 #include <cmath>        // for sqrt
-#include <functional>   // for identity
 
 #include "constants/conversionFactors.hpp"           // for _AMU_TO_KG_
 #include "constants/internalConversionFactors.hpp"   // for _VELOCITY_UNIT_TO_SI_

@@ -22,13 +22,10 @@
 
 #include "testPhysicalData.hpp"
 
-#include <memory>   // for allocator
-
 #include "constants/conversionFactors.hpp"   // for _FS_TO_S_
 #include "constants/internalConversionFactors.hpp"   // for _KINETIC_ENERGY_FACTOR_, _TEMPERATURE_FACTOR_
 #include "gtest/gtest.h"   // for Message, TestPartResult, EXPECT_EQ, TEST_F, Test
-#include "staticMatrix.hpp"   // for tensorProduct, diagonalMatrix
-#include "vector3d.hpp"       // for operator*, Vector3D
+#include "vector3d.hpp"       // IWYU pragma: keep - for operator*, Vector3D
 
 /**
  * @brief tests makeAverages function

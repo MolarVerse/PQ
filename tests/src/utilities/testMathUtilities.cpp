@@ -27,7 +27,7 @@
 
 #include "gtest/gtest.h"       // for AssertionResult, Message, TestPartResult
 #include "mathUtilities.hpp"   // for compare, sign, utilities
-#include "vector3d.hpp"        // for Vec3D
+#include "vector3d.hpp"        // IWYU pragma: keep - for Vec3D
 
 using namespace utilities;
 

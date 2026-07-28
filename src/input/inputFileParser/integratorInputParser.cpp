@@ -27,7 +27,6 @@
 #include <functional>   // for _Bind_front_t, bind_front
 
 #include "exceptions.hpp"        // for InputFileException, customException
-#include "integrator.hpp"        // for VelocityVerlet, integrator
 #include "mdEngine.hpp"          // for Engine
 #include "settings.hpp"          // for Settings
 #include "references.hpp"         // for ReferencesOutput

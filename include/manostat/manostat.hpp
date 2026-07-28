@@ -24,8 +24,6 @@
 
 #define _MANOSTAT_HPP_
 
-#include "manostatSettings.hpp"
-#include "staticMatrix.hpp"   // for tensor3D
 #include "timer.hpp"          // for Timer
 #include "typeAliases.hpp"
 

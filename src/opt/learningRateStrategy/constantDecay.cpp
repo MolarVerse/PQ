@@ -22,8 +22,6 @@
 
 #include "constantDecay.hpp"
 
-#include <format>   // for std::format
-
 using namespace opt;
 
 /**

@@ -22,17 +22,14 @@
 
 #include <gtest/gtest.h>   // for InitGoogleTest, RUN_ALL_TESTS
 
-#include <iosfwd>   // for std
 #include <string>   // for string, allocator, basic_string
 #include <vector>   // for vector
 
 #include "engine.hpp"                // for Engine
 #include "exceptions.hpp"            // for InputFileException
 #include "gtest/gtest.h"             // for Message, TestPartResult, testing
-#include "inputFileParser.hpp"       // for readInput
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
-#include "virial.hpp"                // for Virial
 #include "virialInputParser.hpp"
 
 using namespace std;
