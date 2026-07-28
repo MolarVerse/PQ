@@ -58,6 +58,8 @@ void CommandLineArgs::parse()
         _action = CommandLineAction::HELP;
     else if ("--version" == argument || "-V" == argument)
         _action = CommandLineAction::VERSION;
+    else if ("--capabilities=json" == argument)
+        _action = CommandLineAction::CAPABILITIES;
     else if (argument.starts_with('-'))
         throw UserInputException(
             "Unknown option: " + argument + ". Use PQ --help for usage."
