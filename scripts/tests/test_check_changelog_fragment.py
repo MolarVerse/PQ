@@ -53,7 +53,7 @@ class ChangelogFragmentCheckTests(unittest.TestCase):
 
             self.assertEqual([], errors)
 
-    def test_validates_every_added_fragment(self):
+    def test_validates_every_changed_fragment(self):
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = Path(temporary_directory)
             changes = root / "changes"
@@ -94,14 +94,28 @@ class ChangelogFragmentCheckTests(unittest.TestCase):
                 any("must not edit" in error for error in errors)
             )
 
-    def test_rejects_modified_existing_fragments(self):
+    def test_accepts_modified_existing_fragments(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            path = root / "changes" / "existing.developer.internal.md"
+            path.parent.mkdir()
+            path.write_text(
+                "- Correct an unreleased changelog entry.\n",
+                encoding="utf-8",
+            )
+
+            errors = CHECK.validate_pr_changes(
+                [("M", "changes/existing.developer.internal.md")], root
+            )
+
+            self.assertEqual([], errors)
+
+    def test_rejects_deleted_existing_fragments(self):
         errors = CHECK.validate_pr_changes(
-            [("M", "changes/existing.developer.internal.md")]
+            [("D", "changes/existing.developer.internal.md")]
         )
 
-        self.assertTrue(
-            any("immutable" in error for error in errors)
-        )
+        self.assertTrue(any("must not delete" in error for error in errors))
 
 
 if __name__ == "__main__":

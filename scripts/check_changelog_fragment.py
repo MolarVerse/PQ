@@ -62,27 +62,29 @@ def validate_pr_changes(changes, root=ROOT):
         and path.endswith(".md")
         and path != "changes/README.md"
     ]
-    added_fragments = [
-        path for status, path in fragment_changes if status == "A"
+    editable_fragments = [
+        path for status, path in fragment_changes if status in {"A", "M"}
     ]
 
-    if not added_fragments:
+    if not fragment_changes:
         errors.append(
-            "regular pull requests must add at least one changelog fragment"
+            "regular pull requests must add or update at least one "
+            "changelog fragment"
         )
 
-    non_added = [
+    forbidden_changes = [
         f"{status} {path}"
         for status, path in fragment_changes
-        if status != "A"
+        if status not in {"A", "M"}
     ]
-    if non_added:
+    if forbidden_changes:
         errors.append(
-            "existing changelog fragments are immutable: "
-            + ", ".join(non_added)
+            "regular pull requests must not delete or replace changelog "
+            "fragments: "
+            + ", ".join(forbidden_changes)
         )
 
-    for relative_path in added_fragments:
+    for relative_path in editable_fragments:
         name = Path(relative_path).name
         if not FRAGMENT_RE.match(name):
             errors.append(

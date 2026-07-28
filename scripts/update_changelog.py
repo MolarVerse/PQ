@@ -28,7 +28,7 @@ CHANGES_DIR = ROOT / "changes"
 USER_CHANGELOG = ROOT / "CHANGELOG.md"
 DEV_CHANGELOG = ROOT / "DEV-CHANGELOG.md"
 
-USER_BULLET_RE = re.compile(r"^\s*-\s+\S")
+BULLET_RE = re.compile(r"^\s*-\s+\S")
 
 
 def split_next_release(lines, changelog):
@@ -109,9 +109,9 @@ def append_fragments(sections, fragments, audience):
             sections.setdefault(fragment.section, []).append(fragment.entry)
 
 
-def has_user_release_notes(body_lines):
-    """Return whether the user changelog contains at least one bullet."""
-    return any(USER_BULLET_RE.match(line) for line in body_lines)
+def has_release_notes(body_lines):
+    """Return whether a changelog body contains at least one bullet."""
+    return any(BULLET_RE.match(line) for line in body_lines)
 
 
 def trim_blank_lines(lines):
@@ -159,17 +159,27 @@ def load_changelog(path):
     return path.read_text(encoding="utf-8").splitlines()
 
 
-def check_user_changelog():
-    lines = load_changelog(USER_CHANGELOG)
-    _, body, _ = split_next_release(lines, USER_CHANGELOG.name)
-    sections = parse_subsections(body, USER_ORDER)
-    append_fragments(sections, read_all_fragments(), "user")
-    prospective_body = render_sections(sections, USER_ORDER)
-    if not has_user_release_notes(prospective_body):
-        sys.exit(
-            "the release needs at least one user-facing changelog entry"
-        )
-    print("the release contains user-facing changelog entries")
+def check_release_changelogs():
+    fragments = read_all_fragments()
+
+    user_lines = load_changelog(USER_CHANGELOG)
+    _, user_body, _ = split_next_release(
+        user_lines, USER_CHANGELOG.name
+    )
+    user_sections = parse_subsections(user_body, USER_ORDER)
+    append_fragments(user_sections, fragments, "user")
+
+    dev_lines = load_changelog(DEV_CHANGELOG)
+    _, dev_body, _ = split_next_release(dev_lines, DEV_CHANGELOG.name)
+    dev_sections = parse_subsections(dev_body, DEVELOPER_ORDER)
+    append_fragments(dev_sections, fragments, "developer")
+
+    user_notes = render_sections(user_sections, USER_ORDER)
+    dev_notes = render_sections(dev_sections, DEVELOPER_ORDER)
+    if not has_release_notes(user_notes) and not has_release_notes(dev_notes):
+        sys.exit("the release needs at least one changelog entry")
+
+    print("the release contains changelog entries")
 
 
 def update_changelogs(version):
@@ -192,31 +202,40 @@ def update_changelogs(version):
     append_fragments(dev_sections, fragments, "developer")
 
     rendered_user_sections = render_sections(user_sections, USER_ORDER)
-    if not has_user_release_notes(rendered_user_sections):
-        sys.exit("the release needs at least one user-facing changelog entry")
+    rendered_dev_sections = render_sections(dev_sections, DEVELOPER_ORDER)
+    has_user_notes = has_release_notes(rendered_user_sections)
+    has_dev_notes = has_release_notes(rendered_dev_sections)
+    if not has_user_notes and not has_dev_notes:
+        sys.exit("the release needs at least one changelog entry")
 
-    user_output = stamp_release(
-        user_head, rendered_user_sections, user_tail, version, repo
-    )
-    dev_output = stamp_release(
-        dev_head,
-        render_sections(dev_sections, DEVELOPER_ORDER),
-        dev_tail,
-        version,
-        repo,
-    )
+    stamped = []
+    if has_user_notes:
+        user_output = stamp_release(
+            user_head, rendered_user_sections, user_tail, version, repo
+        )
+        USER_CHANGELOG.write_text(
+            "\n".join(user_output) + "\n", encoding="utf-8"
+        )
+        stamped.append(USER_CHANGELOG.name)
 
-    USER_CHANGELOG.write_text(
-        "\n".join(user_output) + "\n", encoding="utf-8"
-    )
-    DEV_CHANGELOG.write_text(
-        "\n".join(dev_output) + "\n", encoding="utf-8"
-    )
+    if has_dev_notes:
+        dev_output = stamp_release(
+            dev_head,
+            rendered_dev_sections,
+            dev_tail,
+            version,
+            repo,
+        )
+        DEV_CHANGELOG.write_text(
+            "\n".join(dev_output) + "\n", encoding="utf-8"
+        )
+        stamped.append(DEV_CHANGELOG.name)
+
     for fragment in fragments:
         fragment.path.unlink()
 
     print(
-        f"stamped {USER_CHANGELOG.name} and {DEV_CHANGELOG.name}; "
+        f"stamped {' and '.join(stamped)}; "
         f"consumed {len(fragments)} changelog fragment(s)"
     )
 
@@ -227,7 +246,7 @@ def main():
 
     argument = sys.argv[1]
     if argument == "--check":
-        check_user_changelog()
+        check_release_changelogs()
         return
 
     update_changelogs(argument)

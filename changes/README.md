@@ -1,6 +1,6 @@
 # Changelog fragments
 
-Every regular pull request adds at least one fragment:
+Every regular pull request adds or updates at least one fragment:
 
 ```text
 <slug>.user.<category>.md
@@ -12,7 +12,9 @@ results, inputs, outputs, errors, compatibility, or runtime performance. Use
 `developer` for build tooling, CI, tests, refactors, and internal maintenance.
 
 Each fragment contains exactly one Markdown bullet of at most 240 characters.
-Pull requests may add multiple fragments and may use both audiences.
+Pull requests may change multiple fragments and may use both audiences.
+Unreleased fragments may be corrected by later pull requests, but regular pull
+requests do not delete them.
 Regular pull requests do not edit `CHANGELOG.md` or `DEV-CHANGELOG.md`
 directly.
 
@@ -37,4 +39,5 @@ Developer categories:
 - `documentation`
 
 The release workflow routes fragments into the matching changelog, preserves
-the released history, and removes consumed fragments.
+the released history, and removes consumed fragments. A release may contain
+entries for either audience or both.

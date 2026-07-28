@@ -14,14 +14,14 @@ SPEC.loader.exec_module(CHANGELOG)
 
 
 class ChangelogTests(unittest.TestCase):
-    def test_user_notes_require_a_bullet(self):
+    def test_release_notes_require_a_bullet(self):
         self.assertFalse(
-            CHANGELOG.has_user_release_notes(
+            CHANGELOG.has_release_notes(
                 ["", "### Bug Fixes", "", "No release notes yet."]
             )
         )
         self.assertTrue(
-            CHANGELOG.has_user_release_notes(
+            CHANGELOG.has_release_notes(
                 ["", "### Bug Fixes", "", "- Fix trajectory output."]
             )
         )
@@ -66,7 +66,7 @@ class ChangelogTests(unittest.TestCase):
             stamped[release_index:old_release_index],
         )
         self.assertFalse(
-            CHANGELOG.has_user_release_notes(
+            CHANGELOG.has_release_notes(
                 stamped[next_index + 1 : marker_index]
             )
         )
@@ -144,6 +144,55 @@ class ChangelogTests(unittest.TestCase):
             self.assertFalse(user_fragment.exists())
             self.assertFalse(developer_fragment.exists())
             self.assertFalse(legacy_fragment.exists())
+
+    def test_developer_only_release_leaves_user_changelog_unchanged(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            user_changelog = root / "CHANGELOG.md"
+            dev_changelog = root / "DEV-CHANGELOG.md"
+            changes_dir = root / "changes"
+            changes_dir.mkdir()
+
+            user_text = (
+                "# Changelog\n\n"
+                "## Next Release\n\n"
+                "<!-- insertion marker -->\n"
+                "## [v1.0.0](release-url) - 2025-01-01\n"
+            )
+            user_changelog.write_text(user_text, encoding="utf-8")
+            dev_changelog.write_text(
+                "# Developer Changelog\n\n"
+                "## Next Release\n\n"
+                "<!-- insertion marker -->\n"
+                "## [v1.0.0](release-url) - 2025-01-01\n",
+                encoding="utf-8",
+            )
+            developer_fragment = (
+                changes_dir / "workflow.developer.ci.md"
+            )
+            developer_fragment.write_text(
+                "- Enforce changelog audiences.\n", encoding="utf-8"
+            )
+
+            with (
+                mock.patch.object(
+                    CHANGELOG, "USER_CHANGELOG", user_changelog
+                ),
+                mock.patch.object(
+                    CHANGELOG, "DEV_CHANGELOG", dev_changelog
+                ),
+                mock.patch.object(CHANGELOG, "CHANGES_DIR", changes_dir),
+            ):
+                CHANGELOG.check_release_changelogs()
+                CHANGELOG.update_changelogs("v1.1.0")
+
+            self.assertEqual(
+                user_text, user_changelog.read_text(encoding="utf-8")
+            )
+            dev_text = dev_changelog.read_text(encoding="utf-8")
+            self.assertIn("## [v1.1.0]", dev_text)
+            self.assertIn("- Enforce changelog audiences.", dev_text)
+            self.assertFalse(developer_fragment.exists())
 
 
 if __name__ == "__main__":
