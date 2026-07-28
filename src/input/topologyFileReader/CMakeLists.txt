@@ -24,5 +24,5 @@ target_link_libraries(topologyFileReader
 )
 
 install(TARGETS topologyFileReader
-    DESTINATION lib
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

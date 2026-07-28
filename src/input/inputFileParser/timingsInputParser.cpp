@@ -26,14 +26,12 @@
 #include <string_view>   // for string_view
 
 #include "exceptions.hpp"        // for InputFileException
-#include "stringUtilities.hpp"   // for stringToFiniteDouble, stringToInt
 #include "timingsSettings.hpp"   // for TimingsSettings
 
 using namespace input;
 using namespace engine;
 using namespace customException;
 using namespace settings;
-using namespace utilities;
 
 /**
  * @brief Construct a new Input File Parser Timings object
@@ -70,14 +68,7 @@ void TimingsInputParser::parseTimeStep(
 )
 {
     checkCommand(lineElements, lineNumber);
-
-    const auto timeStep = stringToFiniteDouble(lineElements[2]);
-    if (timeStep <= 0.0)
-        throw InputFileException(
-            "Time step must be finite and greater than zero"
-        );
-
-    TimingsSettings::setTimeStep(timeStep);
+    TimingsSettings::setTimeStep(stod(lineElements[2]));
 }
 
 /**
@@ -94,10 +85,10 @@ void TimingsInputParser::parseNumberOfSteps(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto numberOfSteps = stringToInt(lineElements[2]);
+    const auto numberOfSteps = stoi(lineElements[2]);
 
-    if (numberOfSteps < 1)
-        throw InputFileException("Number of steps must be greater than zero");
+    if (numberOfSteps < 0)
+        throw InputFileException("Number of steps cannot be negative");
 
     TimingsSettings::setNumberOfSteps(size_t(numberOfSteps));
 }

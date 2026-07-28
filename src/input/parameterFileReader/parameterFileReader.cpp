@@ -68,8 +68,6 @@ ParameterFileReader::ParameterFileReader(
     _parameterFileSections.push_back(make_unique<NonCoulombicsSection>());
 }
 
-ParameterFileReader::~ParameterFileReader() = default;
-
 /**
  * @brief determines which section of the parameter file the header line belongs
  * to

@@ -19,5 +19,5 @@ target_link_libraries(virial
 )
 
 install(TARGETS virial
-    DESTINATION lib
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

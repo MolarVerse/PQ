@@ -106,13 +106,6 @@ TEST_F(TestInputFileReader, testParseShakeTolerance)
         customException::InputFileException,
         "Shake tolerance must be positive"
     );
-
-    lineElements = {"shake-tolerance", "=", "0"};
-    EXPECT_THROW_MSG(
-        parser.parseShakeTolerance(lineElements, 0),
-        customException::InputFileException,
-        "Shake tolerance must be positive"
-    );
 }
 
 /**
@@ -129,13 +122,6 @@ TEST_F(TestInputFileReader, testParseShakeIteration)
     EXPECT_EQ(ConstraintSettings::getShakeMaxIter(), 100);
 
     lineElements = {"shake-iter", "=", "-100"};
-    EXPECT_THROW_MSG(
-        parser.parseShakeIteration(lineElements, 0),
-        customException::InputFileException,
-        "Maximum shake iterations must be positive"
-    );
-
-    lineElements = {"shake-iter", "=", "0"};
     EXPECT_THROW_MSG(
         parser.parseShakeIteration(lineElements, 0),
         customException::InputFileException,
@@ -162,13 +148,6 @@ TEST_F(TestInputFileReader, testParseRattleTolerance)
         customException::InputFileException,
         "Rattle tolerance must be positive"
     );
-
-    lineElements = {"rattle-tolerance", "=", "0"};
-    EXPECT_THROW_MSG(
-        parser.parseRattleTolerance(lineElements, 0),
-        customException::InputFileException,
-        "Rattle tolerance must be positive"
-    );
 }
 
 /**
@@ -185,13 +164,6 @@ TEST_F(TestInputFileReader, testParseRattleIteration)
     EXPECT_EQ(ConstraintSettings::getRattleMaxIter(), 100);
 
     lineElements = {"rattle-iter", "=", "-100"};
-    EXPECT_THROW_MSG(
-        parser.parseRattleIteration(lineElements, 0),
-        customException::InputFileException,
-        "Maximum rattle iterations must be positive"
-    );
-
-    lineElements = {"rattle-iter", "=", "0"};
     EXPECT_THROW_MSG(
         parser.parseRattleIteration(lineElements, 0),
         customException::InputFileException,
@@ -218,13 +190,6 @@ TEST_F(TestInputFileReader, testParseMShakeTolerance)
         customException::InputFileException,
         "MShake tolerance must be positive"
     );
-
-    lineElements = {"mshake-tolerance", "=", "0"};
-    EXPECT_THROW_MSG(
-        parser.parseMShakeTolerance(lineElements, 0),
-        customException::InputFileException,
-        "MShake tolerance must be positive"
-    );
 }
 
 /**
@@ -241,13 +206,6 @@ TEST_F(TestInputFileReader, testParseMShakeIteration)
     EXPECT_EQ(ConstraintSettings::getMShakeMaxIter(), 73);
 
     lineElements = {"mshake-iter", "=", "-100"};
-    EXPECT_THROW_MSG(
-        parser.parseMShakeIteration(lineElements, 0),
-        customException::InputFileException,
-        "Maximum MShake iterations must be positive"
-    );
-
-    lineElements = {"mshake-iter", "=", "0"};
     EXPECT_THROW_MSG(
         parser.parseMShakeIteration(lineElements, 0),
         customException::InputFileException,

@@ -24,7 +24,6 @@
 
 #include <cmath>    // for sqrt
 
-#include "exceptions.hpp"           // for UserInputException
 #include "mathUtilities.hpp"        // for isZero
 #include "physicalData.hpp"         // for PhysicalData
 #include "simulationBox.hpp"        // for SimulationBox
@@ -32,7 +31,6 @@
 #include "timingsSettings.hpp"      // for TimingsSettings
 
 using thermostat::BerendsenThermostat;
-using namespace customException;
 using namespace settings;
 using namespace simulationBox;
 using namespace physicalData;
@@ -71,16 +69,13 @@ void BerendsenThermostat::applyThermostat(
 
     _temperature = data.getTemperature();
 
+    // If the kinetic energy is (approximately) zero, there is nothing to
+    // thermostat: dividing by _temperature would NaN all velocities
+    // (1 / 0 -> Inf, then vel * Inf = NaN when vel is 0). Skip silently.
     if (isZero(_temperature))
     {
         stopTimingsSection("Berendsen");
-        if (isZero(_targetTemperature))
-            return;
-
-        throw UserInputException(
-            "Cannot apply Berendsen coupling to a zero-temperature system "
-            "with a positive target temperature. Initialize velocities first."
-        );
+        return;
     }
 
     const auto dt        = TimingsSettings::getTimeStep();

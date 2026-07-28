@@ -41,6 +41,13 @@ target_link_libraries(inputFileParser
     references
 )
 
+if(BUILD_WITH_TESTS)
+    target_link_libraries(inputFileParser
+        PUBLIC
+        gtest
+    )
+endif()
+
 install(TARGETS inputFileParser
-    DESTINATION lib
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

@@ -52,7 +52,6 @@ namespace input::parameterFile
 
        public:
         ParameterFileReader(const std::string &filename, pq::Engine &engine);
-        ~ParameterFileReader();
 
         void read();
         void deleteSection(const pq::ParamFileSection *section);

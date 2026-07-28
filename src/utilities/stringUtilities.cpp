@@ -24,9 +24,8 @@
 
 #include <algorithm>   // for __for_each_fn
 #include <cctype>      // for isspace
-#include <cmath>       // for isfinite
+#include <cmath>       // for isnan, isinf
 #include <cstdint>     // for uint_fast32_t and UINT32_MAX
-#include <filesystem>   // for is_regular_file
 #include <format>      // for format
 #include <fstream>
 #include <ranges>   // for begin, end, operator|, views::split, views::transform
@@ -198,23 +197,6 @@ std::string utilities::firstLetterToUpperCaseCopy(std::string myString)
     return myString;
 }
 
-std::string utilities::shellQuote(const std::string_view argument)
-{
-    std::string quoted{"'"};
-    quoted.reserve(argument.size() + 2);
-
-    for (const auto character : argument)
-    {
-        if (character == '\'')
-            quoted += "'\"'\"'";
-        else
-            quoted += character;
-    }
-
-    quoted += '\'';
-    return quoted;
-}
-
 /**
  * @brief checks if a file exists and can be opened
  *
@@ -224,9 +206,6 @@ std::string utilities::shellQuote(const std::string_view argument)
  */
 bool utilities::fileExists(const std::string &filename)
 {
-    if (!std::filesystem::is_regular_file(filename))
-        return false;
-
     std::ifstream file(filename);
     return file.good();
 }
@@ -339,47 +318,6 @@ std::uint_fast32_t utilities::stringToUintFast32t(const std::string &str)
 }
 
 /**
- * @brief converts a complete string to an int
- *
- * @param str
- *
- * @throw invalid_argument if the complete string is not a valid integer
- * @throw out_of_range if number is out of range for an int
- */
-int utilities::stringToInt(const std::string &str)
-{
-    size_t parsedCharacters{};
-    int    value{};
-
-    try
-    {
-        value = std::stoi(str, &parsedCharacters);
-    }
-    catch (const std::invalid_argument &)
-    {
-        throw std::invalid_argument(
-            std::format("Invalid integer value '{}' encountered", str)
-        );
-    }
-    catch (const std::out_of_range &)
-    {
-        throw std::out_of_range(
-            std::format(
-                "Integer value '{}' exceeds the representable range for an int",
-                str
-            )
-        );
-    }
-
-    if (parsedCharacters != str.size())
-        throw std::invalid_argument(
-            std::format("Invalid integer value '{}' encountered", str)
-        );
-
-    return value;
-}
-
-/**
  * @brief converts a string to a non-Nan and non-Inf double
  *
  * @param str
@@ -389,12 +327,11 @@ int utilities::stringToInt(const std::string &str)
  */
 double utilities::stringToFiniteDouble(const std::string &str)
 {
-    size_t parsedCharacters{};
     double value{};
 
     try
     {
-        value = std::stod(str, &parsedCharacters);
+        value = std::stod(str);
     }
     catch (const std::invalid_argument &)
     {
@@ -413,7 +350,7 @@ double utilities::stringToFiniteDouble(const std::string &str)
         );
     }
 
-    if (parsedCharacters != str.size() || !std::isfinite(value))
+    if (std::isnan(value) || std::isinf(value))
         throw std::invalid_argument(
             std::format("Invalid floating-point value '{}' encountered", str)
         );

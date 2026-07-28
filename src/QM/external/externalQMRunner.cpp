@@ -23,10 +23,7 @@
 #include "externalQMRunner.hpp"
 
 #include <algorithm>    // for __for_each_fn, for_each
-#include <array>        // for array
 #include <cmath>        // for isnan, isinf
-#include <cstdlib>      // for system
-#include <filesystem>   // for is_regular_file, path
 #include <format>       // for format
 #include <fstream>      // for ofstream
 #include <string>       // for string
@@ -34,7 +31,6 @@
 
 #include "constants/conversionFactors.hpp"   // for _HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM_, _HARTREE_TO_KCAL_PER_MOL_
 #include "exceptions.hpp"                    // for InputFileException
-#include "executablePath.hpp"                // for executablePath
 #include "fileSettings.hpp"                  // for FileSettings
 #include "physicalData.hpp"                  // for PhysicalData
 #include "qmSettings.hpp"                    // for QMSettings
@@ -47,21 +43,6 @@ using namespace customException;
 using namespace settings;
 using namespace constants;
 
-std::string QM::bundledQMScriptPath(const std::string_view script)
-{
-    const auto executable = utilities::executablePath();
-    if (!executable.empty())
-    {
-        const auto installedPath = executable.parent_path().parent_path() /
-                                   "share" / "PQ" / "scripts" / script;
-        if (std::filesystem::is_regular_file(installedPath))
-            return installedPath.string();
-    }
-
-    const auto buildPath = std::filesystem::path(SCRIPT_PATH_) / script;
-    return buildPath.string();
-}
-
 /**
  * @brief run the qm engine
  *
@@ -70,13 +51,6 @@ std::string QM::bundledQMScriptPath(const std::string_view script)
 void ExternalQMRunner::run(SimulationBox &simBox, PhysicalData &physicalData)
 {
     writeCoordsFile(simBox);
-
-    const auto resultFiles = std::array{
-        FileSettings::getQMForcesTempFileName(),
-        FileSettings::getQMChargesTempFileName(),
-        FileSettings::getStressTensorTempFileName()
-    };
-    for (const auto &file : resultFiles) std::filesystem::remove(file);
 
     std::jthread timeoutThread{[this](const std::stop_token stopToken)
                                { throwAfterTimeout(stopToken); }};
@@ -90,31 +64,6 @@ void ExternalQMRunner::run(SimulationBox &simBox, PhysicalData &physicalData)
     readChargeFile(simBox);
 
     readStressTensor(simBox.getBox(), physicalData);
-}
-
-std::string ExternalQMRunner::resolveScriptPath(
-    const std::string_view script
-) const
-{
-    if (_scriptPath.empty())
-        return std::string(script);
-
-    if (_scriptPath == SCRIPT_PATH_)
-        return bundledQMScriptPath(script);
-
-    return _scriptPath + std::string(script);
-}
-
-void ExternalQMRunner::executeCommand(
-    const std::string_view command,
-    const std::string_view program
-) const
-{
-    const auto status = std::system(std::string(command).c_str());
-    if (status != EXIT_SUCCESS)
-        throw QMRunnerException(
-            std::format("{} command failed with status {}", program, status)
-        );
 }
 
 /**
@@ -157,23 +106,14 @@ void ExternalQMRunner::readForceFile(
 
     double energy = 0.0;
 
-    if (!(forceFile >> energy))
-        throw QMRunnerException(
-            std::format(
-                "Cannot read QM energy from {} force file \"{}\"",
-                string(QMSettings::getQMMethod()),
-                forceFileName
-            )
-        );
+    forceFile >> energy;
 
-    if (!std::isfinite(energy))
-        throw QMRunnerException(
-            std::format(
-                "Invalid QM energy (NaN/Inf) in {} force file \"{}\"",
-                string(QMSettings::getQMMethod()),
-                forceFileName
-            )
-        );
+    if (std::isnan(energy) || std::isinf(energy))
+        throw QMRunnerException(std::format(
+            "Invalid QM energy (NaN/Inf) in {} force file \"{}\"",
+            string(QMSettings::getQMMethod()),
+            forceFileName
+        ));
 
     physicalData.setQMEnergy(energy * _HARTREE_TO_KCAL_PER_MOL_);
 
@@ -181,25 +121,16 @@ void ExternalQMRunner::readForceFile(
     {
         auto grad = linearAlgebra::Vec3D();
 
-        if (!(forceFile >> grad[0] >> grad[1] >> grad[2]))
-            throw QMRunnerException(
-                std::format(
-                    "Incomplete {} force file \"{}\"",
-                    string(QMSettings::getQMMethod()),
-                    forceFileName
-                )
-            );
+        forceFile >> grad[0] >> grad[1] >> grad[2];
 
         for (size_t i = 0; i < 3; ++i)
-            if (!std::isfinite(grad[i]))
-                throw QMRunnerException(
-                    std::format(
-                        "Invalid QM force component (NaN/Inf) in {} force file "
-                        "\"{}\"",
-                        string(QMSettings::getQMMethod()),
-                        forceFileName
-                    )
-                );
+            if (std::isnan(grad[i]) || std::isinf(grad[i]))
+                throw QMRunnerException(std::format(
+                    "Invalid QM force component (NaN/Inf) in {} force file "
+                    "\"{}\"",
+                    string(QMSettings::getQMMethod()),
+                    forceFileName
+                ));
 
         atom->setForce(-grad * _HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM_);
     };
@@ -247,27 +178,12 @@ void ExternalQMRunner::readChargeFile(SimulationBox &box)
 
     box.resetQMCharges();
 
-    auto readCharges = [&chargeFile, &chargeFileName](auto &atom)
+    auto readCharges = [&chargeFile](auto &atom)
     {
         auto index  = 0;     // Read and discard the first column (index)
         auto charge = 0.0;   // Read the second column (charge value)
 
-        if (!(chargeFile >> index >> charge))
-            throw QMRunnerException(
-                std::format(
-                    "Incomplete {} charge file \"{}\"",
-                    string(QMSettings::getQMMethod()),
-                    chargeFileName
-                )
-            );
-        if (!std::isfinite(charge))
-            throw QMRunnerException(
-                std::format(
-                    "Invalid value in {} charge file \"{}\"",
-                    string(QMSettings::getQMMethod()),
-                    chargeFileName
-                )
-            );
+        chargeFile >> index >> charge;
 
         atom->setQMCharge(charge);
     };

@@ -27,27 +27,6 @@
 #include <string>
 #include <vector>
 
-enum class CommandLineAction
-{
-    RUN,
-    HELP,
-    VERSION,
-    CAPABILITIES,
-    VALIDATE
-};
-
-enum class CommandLineFormat
-{
-    TEXT,
-    JSON
-};
-
-enum class ValidationScope
-{
-    INSTALLED,
-    PORTABLE
-};
-
 /**
  * @class CommandLineArgs
  *
@@ -60,19 +39,13 @@ class CommandLineArgs
     int                      _argc;
     std::vector<std::string> _argv;
     std::string              _inputFileName;
-    CommandLineAction        _action          = CommandLineAction::RUN;
-    CommandLineFormat        _format          = CommandLineFormat::TEXT;
-    ValidationScope          _validationScope = ValidationScope::INSTALLED;
 
    public:
     CommandLineArgs(const int argc, const std::vector<std::string> &argv);
 
-    void parse();
+    void detectFlags();
 
-    std::string       getInputFileName() const;
-    CommandLineAction getAction() const;
-    CommandLineFormat getFormat() const;
-    ValidationScope   getValidationScope() const;
+    std::string getInputFileName() const;
 };
 
 #endif   // _COMMAND_LINE_ARGS_HPP_

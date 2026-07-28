@@ -35,5 +35,5 @@ target_include_directories(aseQM
 )
 
 install(TARGETS aseQM
-    DESTINATION lib
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

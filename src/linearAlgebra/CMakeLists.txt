@@ -20,5 +20,5 @@ target_link_libraries(linearAlgebra
 )
 
 install(TARGETS linearAlgebra
-    DESTINATION lib
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

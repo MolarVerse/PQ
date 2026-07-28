@@ -22,7 +22,8 @@
 
 #include "pyscfRunner.hpp"
 
-#include <cstddef>   // for size_t
+#include <stdlib.h>   // for system, size_t
+
 #include <format>    // for format
 #include <fstream>   // for ofstream, operator<<, basic_ostream
 #include <string>    // for allocator, string, operator+, operator<<
@@ -75,18 +76,15 @@ void PySCFRunner::writeCoordsFile(SimulationBox &box)
  */
 void PySCFRunner::execute()
 {
-    const auto scriptFileName = resolveScriptPath(QMSettings::getQMScript());
+    const auto scriptFileName = _scriptPath + QMSettings::getQMScript();
 
     if (!fileExists(scriptFileName))
-        throw InputFileException(
-            std::format(
-                "PySCF script file \"{}\" does not exist.",
-                scriptFileName
-            )
-        );
+        throw InputFileException(std::format(
+            "PySCF script file \"{}\" does not exist.",
+            scriptFileName
+        ));
 
-    const auto command =
-        std::format("python {} > pyscf.out", shellQuote(scriptFileName));
+    const auto command = std::format("python {} > pyscf.out", scriptFileName);
 
-    executeCommand(command, "PySCF");
+    ::system(command.c_str());
 }

@@ -92,5 +92,5 @@ if(BUILD_WITH_PYBIND11)
 endif()
 
 install(TARGETS engine
-    DESTINATION lib
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

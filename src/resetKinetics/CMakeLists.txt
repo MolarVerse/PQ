@@ -17,5 +17,5 @@ target_link_libraries(resetKinetics
 )
 
 install(TARGETS resetKinetics
-    DESTINATION lib
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

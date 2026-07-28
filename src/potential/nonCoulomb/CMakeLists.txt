@@ -24,5 +24,5 @@ target_link_libraries(nonCoulombPotential
 )
 
 install(TARGETS nonCoulombPotential
-    DESTINATION lib
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

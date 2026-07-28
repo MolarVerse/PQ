@@ -30,5 +30,5 @@ target_link_libraries(forceField
 )
 
 install(TARGETS forceField
-    DESTINATION lib
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

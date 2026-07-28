@@ -16,5 +16,5 @@ target_link_libraries(connectivity
 )
 
 install(TARGETS connectivity
-    DESTINATION lib
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

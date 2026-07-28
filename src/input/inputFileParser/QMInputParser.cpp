@@ -25,7 +25,6 @@
 #include <format>          // for format
 #include <functional>      // for _Bind_front_t, bind_front
 #include <sstream>         // for stringstream
-#include <stdexcept>       // for invalid_argument, out_of_range
 #include <unordered_map>   // for unordered_map
 
 #include "engine.hpp"             // for Engine
@@ -269,7 +268,7 @@ void QMInputParser::parseQMLoopTimeLimit(
 )
 {
     checkCommand(lineElements, lineNumber);
-    QMSettings::setQMLoopTimeLimit(stringToFiniteDouble(lineElements[2]));
+    QMSettings::setQMLoopTimeLimit(std::stod(lineElements[2]));
 }
 
 /**
@@ -478,13 +477,11 @@ void QMInputParser::parseSlakosType(
     {
         QMSettings::setSlakosType(THREEOB);
         QMSettings::setHubbardDerivs(hubbardDerivMap3ob);
-        ReferencesOutput::addReferenceFile(_THREEOB_FILE_);
     }
 
     else if ("matsci" == slakos)
     {
         QMSettings::setSlakosType(MATSCI);
-        ReferencesOutput::addReferenceFile(_MATSCI_FILE_);
     }
 
     else if ("custom" == slakos)
@@ -557,36 +554,14 @@ void QMInputParser::parseHubbardDerivs(
     std::string       item;
     while (std::getline(ss, item, ','))
     {
-        const auto separator = item.find(':');
-
-        if (separator == std::string::npos || 0 == separator ||
-            separator + 1 == item.size() ||
-            item.find(':', separator + 1) != std::string::npos)
+        std::stringstream pairStream(item);
+        std::string       element;
+        double            value;
+        if (std::getline(pairStream, element, ':') && pairStream >> value)
         {
-            throw InputFileException(
-                std::format(
-                    "Invalid hubbard_derivs format \"{}\" in input file.",
-                    derivs
-                )
-            );
+            hubbardDerivs[element] = value;
         }
-
-        const auto element = item.substr(0, separator);
-        try
-        {
-            hubbardDerivs[element] =
-                stringToFiniteDouble(item.substr(separator + 1));
-        }
-        catch (const std::invalid_argument &)
-        {
-            throw InputFileException(
-                std::format(
-                    "Invalid hubbard_derivs format \"{}\" in input file.",
-                    derivs
-                )
-            );
-        }
-        catch (const std::out_of_range &)
+        else
         {
             throw InputFileException(
                 std::format(
