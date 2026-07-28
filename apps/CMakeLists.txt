@@ -74,4 +74,15 @@ if(BUILD_WITH_TESTS)
       -P ${PROJECT_SOURCE_DIR}/tests/cmake/testPQValidation.cmake
   )
   set_property(TEST testPQValidation PROPERTY LABELS input)
+
+  add_test(
+    NAME testPQValidationWarnings
+    COMMAND
+      ${CMAKE_COMMAND}
+      -DPQ_EXECUTABLE=$<TARGET_FILE:PQ>
+      -DVALIDATION_FIXTURE_DIR=${PROJECT_SOURCE_DIR}/tests/regression/fixtures/mm-md-smoke
+      -DVALIDATION_WORK_DIR=${CMAKE_CURRENT_BINARY_DIR}/pq-validation-warnings
+      -P ${PROJECT_SOURCE_DIR}/tests/cmake/testPQValidationWarnings.cmake
+  )
+  set_property(TEST testPQValidationWarnings PROPERTY LABELS input)
 endif()
