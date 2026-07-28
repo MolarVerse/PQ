@@ -23,9 +23,12 @@
 #include "referencesOutput.hpp"
 
 #include <algorithm>    // for for_each
-#include <filesystem>   // for is_directory, path
+#include <filesystem>   // for is_directory, is_regular_file, path
+#include <format>       // for format
 #include <fstream>      // for fstream
+#include <stdexcept>    // for runtime_error
 #include <string>       // for string
+#include <vector>       // for vector
 
 #include "executablePath.hpp"       // for executablePath
 #include "outputFileSettings.hpp"   // for OutputFileSettings
@@ -47,7 +50,11 @@ namespace
                 return installedPath;
         }
 
-        return std::filesystem::path(REFERENCES_PATH_);
+        const auto buildPath = std::filesystem::path(REFERENCES_PATH_);
+        if (std::filesystem::is_directory(buildPath))
+            return buildPath;
+
+        throw std::runtime_error("PQ reference data could not be found");
     }
 }   // namespace
 
@@ -61,15 +68,61 @@ void ReferencesOutput::writeReferencesFile()
     const auto sourceDirectory = referenceFilesPath();
     const auto filename        = OutputFileSettings::getRefFileName();
 
+    auto referenceFileNames = std::vector<std::string>{_PQ_FILE_};
+    referenceFileNames.insert(
+        referenceFileNames.end(),
+        _referenceFileNames.begin(),
+        _referenceFileNames.end()
+    );
+    referenceFileNames.emplace_back(
+        static_cast<std::string>(_PQ_FILE_) + ".bib"
+    );
+    referenceFileNames.insert(
+        referenceFileNames.end(),
+        _bibtexFileNames.begin(),
+        _bibtexFileNames.end()
+    );
+
+    for (const auto &referenceFileName : referenceFileNames)
+    {
+        const auto path = sourceDirectory / referenceFileName;
+        if (!std::filesystem::is_regular_file(path))
+            throw std::runtime_error(
+                std::format(
+                    "PQ reference file \"{}\" could not be found",
+                    path.string()
+                )
+            );
+    }
+
     std::ofstream fp(filename);
+    if (!fp.is_open())
+        throw std::runtime_error(
+            std::format("Could not open reference output file \"{}\"", filename)
+        );
 
     auto printReference =
         [&fp, &sourceDirectory](const std::string &referenceFileName)
     {
         std::ifstream referenceFile(sourceDirectory / referenceFileName);
+        if (!referenceFile.is_open())
+            throw std::runtime_error(
+                std::format(
+                    "Could not open PQ reference file \"{}\"",
+                    (sourceDirectory / referenceFileName).string()
+                )
+            );
 
         std::string line;
         while (getline(referenceFile, line)) fp << line << '\n';
+
+        if (referenceFile.bad())
+            throw std::runtime_error(
+                std::format(
+                    "Could not read PQ reference file \"{}\"",
+                    (sourceDirectory / referenceFileName).string()
+                )
+            );
 
         fp << "\n\n";
         referenceFile.close();
@@ -101,6 +154,13 @@ void ReferencesOutput::writeReferencesFile()
     std::ranges::for_each(_bibtexFileNames, printReference);
 
     fp.close();
+    if (!fp)
+        throw std::runtime_error(
+            std::format(
+                "Could not write reference output file \"{}\"",
+                filename
+            )
+        );
 }
 
 /**
