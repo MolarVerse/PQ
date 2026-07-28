@@ -24,6 +24,9 @@
 
 #define _EXTERNAL_QM_RUNNER_HPP_
 
+#include <string>
+#include <string_view>
+
 #include "qmRunner.hpp"
 #include "typeAliases.hpp"
 
@@ -39,6 +42,11 @@ namespace QM
         std::string       _scriptPath  = SCRIPT_PATH_;
         const std::string _singularity = SINGULARITY_;
         const std::string _staticBuild = STATIC_BUILD_;
+
+        void executeCommand(
+            std::string_view command,
+            std::string_view program
+        ) const;
 
        public:
         ExternalQMRunner()           = default;

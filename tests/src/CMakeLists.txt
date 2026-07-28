@@ -1,4 +1,5 @@
 add_subdirectory(setup)
+add_subdirectory(QM)
 add_subdirectory(simulationBox)
 add_subdirectory(linearAlgebra)
 add_subdirectory(manostat)
