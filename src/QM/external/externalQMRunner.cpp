@@ -24,6 +24,7 @@
 
 #include <algorithm>    // for __for_each_fn, for_each
 #include <cmath>        // for isnan, isinf
+#include <filesystem>   // for is_regular_file, path
 #include <format>       // for format
 #include <fstream>      // for ofstream
 #include <string>       // for string
@@ -31,6 +32,7 @@
 
 #include "constants/conversionFactors.hpp"   // for _HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM_, _HARTREE_TO_KCAL_PER_MOL_
 #include "exceptions.hpp"                    // for InputFileException
+#include "executablePath.hpp"                // for executablePath
 #include "fileSettings.hpp"                  // for FileSettings
 #include "physicalData.hpp"                  // for PhysicalData
 #include "qmSettings.hpp"                    // for QMSettings
@@ -42,6 +44,20 @@ using namespace physicalData;
 using namespace customException;
 using namespace settings;
 using namespace constants;
+
+std::string QM::bundledQMScriptPath(const std::string_view script)
+{
+    const auto executable = utilities::executablePath();
+    if (!executable.empty())
+    {
+        const auto installedPath = executable.parent_path().parent_path() /
+                                   "share" / "PQ" / "scripts" / script;
+        if (std::filesystem::is_regular_file(installedPath))
+            return installedPath.string();
+    }
+
+    return (std::filesystem::path(SCRIPT_PATH_) / script).string();
+}
 
 /**
  * @brief run the qm engine
@@ -64,6 +80,19 @@ void ExternalQMRunner::run(SimulationBox &simBox, PhysicalData &physicalData)
     readChargeFile(simBox);
 
     readStressTensor(simBox.getBox(), physicalData);
+}
+
+std::string ExternalQMRunner::resolveScriptPath(
+    const std::string_view script
+) const
+{
+    if (_scriptPath.empty())
+        return std::string(script);
+
+    if (_scriptPath == SCRIPT_PATH_)
+        return bundledQMScriptPath(script);
+
+    return _scriptPath + std::string(script);
 }
 
 /**

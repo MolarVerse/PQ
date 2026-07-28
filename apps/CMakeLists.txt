@@ -47,4 +47,18 @@ if(BUILD_WITH_TESTS)
     testPQReferenceInstall
     PROPERTIES LABELS installation RUN_SERIAL TRUE
   )
+
+  add_test(
+    NAME testPQExternalQMScriptInstall
+    COMMAND
+      ${CMAKE_COMMAND}
+      -DBUILD_DIR=${CMAKE_BINARY_DIR}
+      -DSCRIPT_TEST_EXECUTABLE=$<TARGET_FILE:testQMSetup>
+      -DSTAGING_PREFIX=${CMAKE_CURRENT_BINARY_DIR}/pq-qm-script-install
+      -P ${PROJECT_SOURCE_DIR}/tests/cmake/testPQExternalQMScriptInstall.cmake
+  )
+  set_tests_properties(
+    testPQExternalQMScriptInstall
+    PROPERTIES LABELS installation RUN_SERIAL TRUE
+  )
 endif()
