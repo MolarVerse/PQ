@@ -139,11 +139,12 @@ void EngineOutput::writeMomentumFile(
  * @brief wrapper for xyz file output function
  *
  * @param simulationBox
+ * @param step
  */
-void EngineOutput::writeXyzFile(SimulationBox &simulationBox)
+void EngineOutput::writeXyzFile(SimulationBox &simulationBox, const size_t step)
 {
     startTimingsSection("TrajectoryOutput");
-    _xyzOutput->writeXyz(simulationBox);
+    _xyzOutput->writeXyz(simulationBox, step);
     stopTimingsSection("TrajectoryOutput");
 }
 
@@ -151,11 +152,12 @@ void EngineOutput::writeXyzFile(SimulationBox &simulationBox)
  * @brief wrapper for velocity file output function
  *
  * @param simulationBox
+ * @param step
  */
-void EngineOutput::writeVelFile(SimulationBox &simulationBox)
+void EngineOutput::writeVelFile(SimulationBox &simulationBox, const size_t step)
 {
     startTimingsSection("TrajectoryOutput");
-    _velOutput->writeVelocities(simulationBox);
+    _velOutput->writeVelocities(simulationBox, step);
     stopTimingsSection("TrajectoryOutput");
 }
 
@@ -163,11 +165,15 @@ void EngineOutput::writeVelFile(SimulationBox &simulationBox)
  * @brief wrapper for force file output function
  *
  * @param simulationBox
+ * @param step
  */
-void EngineOutput::writeForceFile(SimulationBox &simulationBox)
+void EngineOutput::writeForceFile(
+    SimulationBox &simulationBox,
+    const size_t   step
+)
 {
     startTimingsSection("TrajectoryOutput");
-    _forceOutput->writeForces(simulationBox);
+    _forceOutput->writeForces(simulationBox, step);
     stopTimingsSection("TrajectoryOutput");
 }
 
@@ -175,11 +181,15 @@ void EngineOutput::writeForceFile(SimulationBox &simulationBox)
  * @brief wrapper for charge file output function
  *
  * @param simulationBox
+ * @param step
  */
-void EngineOutput::writeChargeFile(SimulationBox &simulationBox)
+void EngineOutput::writeChargeFile(
+    SimulationBox &simulationBox,
+    const size_t   step
+)
 {
     startTimingsSection("TrajectoryOutput");
-    _chargeOutput->writeCharges(simulationBox);
+    _chargeOutput->writeCharges(simulationBox, step);
     stopTimingsSection("TrajectoryOutput");
 }
 
@@ -313,11 +323,15 @@ void EngineOutput::writeRingPolymerRstFile(
  * @brief wrapper for ring polymer xyz file output function
  *
  * @param beads
+ * @param step
  */
-void EngineOutput::writeRingPolymerXyzFile(std::vector<SimulationBox> &beads)
+void EngineOutput::writeRingPolymerXyzFile(
+    std::vector<SimulationBox> &beads,
+    const size_t                step
+)
 {
     startTimingsSection("RingPolymerTrajectoryOutput");
-    _rpmdXyzOutput->writeXyz(beads);
+    _rpmdXyzOutput->writeXyz(beads, step);
     stopTimingsSection("RingPolymerTrajectoryOutput");
 }
 
@@ -325,11 +339,15 @@ void EngineOutput::writeRingPolymerXyzFile(std::vector<SimulationBox> &beads)
  * @brief wrapper for ring polymer velocity file output function
  *
  * @param beads
+ * @param step
  */
-void EngineOutput::writeRingPolymerVelFile(std::vector<SimulationBox> &beads)
+void EngineOutput::writeRingPolymerVelFile(
+    std::vector<SimulationBox> &beads,
+    const size_t                step
+)
 {
     startTimingsSection("RingPolymerTrajectoryOutput");
-    _rpmdVelOutput->writeVelocities(beads);
+    _rpmdVelOutput->writeVelocities(beads, step);
     stopTimingsSection("RingPolymerTrajectoryOutput");
 }
 
@@ -337,11 +355,15 @@ void EngineOutput::writeRingPolymerVelFile(std::vector<SimulationBox> &beads)
  * @brief wrapper for ring polymer force file output function
  *
  * @param beads
+ * @param step
  */
-void EngineOutput::writeRingPolymerForceFile(std::vector<SimulationBox> &beads)
+void EngineOutput::writeRingPolymerForceFile(
+    std::vector<SimulationBox> &beads,
+    const size_t                step
+)
 {
     startTimingsSection("RingPolymerTrajectoryOutput");
-    _rpmdForceOutput->writeForces(beads);
+    _rpmdForceOutput->writeForces(beads, step);
     stopTimingsSection("RingPolymerTrajectoryOutput");
 }
 
@@ -349,11 +371,15 @@ void EngineOutput::writeRingPolymerForceFile(std::vector<SimulationBox> &beads)
  * @brief wrapper for ring polymer charge file output function
  *
  * @param beads
+ * @param step
  */
-void EngineOutput::writeRingPolymerChargeFile(std::vector<SimulationBox> &beads)
+void EngineOutput::writeRingPolymerChargeFile(
+    std::vector<SimulationBox> &beads,
+    const size_t                step
+)
 {
     startTimingsSection("RingPolymerTrajectoryOutput");
-    _rpmdChargeOutput->writeCharges(beads);
+    _rpmdChargeOutput->writeCharges(beads, step);
     stopTimingsSection("RingPolymerTrajectoryOutput");
 }
 

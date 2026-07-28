@@ -24,7 +24,8 @@
 
 #define _RING_POLYMER_TRAJECTORY_OUTPUT_HPP_
 
-#include <vector>   // for vector
+#include <cstddef>   // for size_t
+#include <vector>    // for vector
 
 #include "output.hpp"
 #include "typeAliases.hpp"
@@ -40,14 +41,18 @@ namespace output
      */
     class RingPolymerTrajectoryOutput : public Output
     {
+       private:
+        void writeComment(const size_t);
+        void writeForceComment(const size_t, const double);
+
        public:
         using Output::Output;
 
         void writeHeader(const pq::SimBox &);
-        void writeXyz(std::vector<pq::SimBox> &);
-        void writeVelocities(std::vector<pq::SimBox> &);
-        void writeForces(std::vector<pq::SimBox> &);
-        void writeCharges(std::vector<pq::SimBox> &);
+        void writeXyz(std::vector<pq::SimBox> &, const size_t);
+        void writeVelocities(std::vector<pq::SimBox> &, const size_t);
+        void writeForces(std::vector<pq::SimBox> &, const size_t);
+        void writeCharges(std::vector<pq::SimBox> &, const size_t);
     };
 }   // namespace output
 

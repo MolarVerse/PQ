@@ -184,8 +184,8 @@ void OptEngine::writeOutput()
 
     if (0 == _step % outputFreq)
     {
-        _engineOutput.writeXyzFile(*_simulationBox);
-        _engineOutput.writeForceFile(*_simulationBox);
+        _engineOutput.writeXyzFile(*_simulationBox, effStep);
+        _engineOutput.writeForceFile(*_simulationBox, effStep);
         _engineOutput.writeOptRstFile(*_simulationBox, effStep);
         _engineOutput.writeOptFile(_step, *_optimizer);
 
