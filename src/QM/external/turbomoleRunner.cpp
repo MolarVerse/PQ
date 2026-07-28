@@ -22,11 +22,10 @@
 
 #include "turbomoleRunner.hpp"
 
-#include <cstddef>      // for size_t
-#include <cstdlib>      // for system
-#include <format>       // for format
-#include <fstream>      // for ofstream
-#include <string>       // for string
+#include <cstddef>   // for size_t
+#include <format>    // for format
+#include <fstream>   // for ofstream
+#include <string>    // for string
 
 #include "atom.hpp"              // for Atom
 #include "constants.hpp"         // for constants
@@ -94,7 +93,7 @@ void TurbomoleRunner::execute()
     const auto reuseCharges = _isFirstExecution ? 1 : 0;
 
     const auto command = std::format("{} 0 {} 0 0 0", scriptFile, reuseCharges);
-    ::system(command.c_str());
+    executeCommand(command, "Turbomole");
 
     _isFirstExecution = false;
 }
