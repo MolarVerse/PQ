@@ -22,8 +22,7 @@
 
 #include "pyscfRunner.hpp"
 
-#include <stdlib.h>   // for system, size_t
-
+#include <cstddef>   // for size_t
 #include <format>    // for format
 #include <fstream>   // for ofstream, operator<<, basic_ostream
 #include <string>    // for allocator, string, operator+, operator<<
@@ -89,5 +88,5 @@ void PySCFRunner::execute()
     const auto command =
         std::format("python {} > pyscf.out", shellQuote(scriptFileName));
 
-    ::system(command.c_str());
+    executeCommand(command, "PySCF");
 }

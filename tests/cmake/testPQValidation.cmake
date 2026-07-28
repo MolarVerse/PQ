@@ -71,6 +71,40 @@ if(NOT diagnostic_count EQUAL 0)
     message(FATAL_ERROR "Valid input produced diagnostics: ${output}")
 endif()
 
+file(READ "${VALIDATION_FIXTURE_DIR}/run.in" zero_output_frequency_input)
+string(
+    REPLACE "output_freq = 1;" "output_freq = 0;"
+    zero_output_frequency_input "${zero_output_frequency_input}"
+)
+file(
+    WRITE "${VALIDATION_WORK_DIR}/zero-output-frequency.in"
+    "${zero_output_frequency_input}"
+)
+run_pq_in(
+    "${VALIDATION_WORK_DIR}"
+    output error result
+    --validate zero-output-frequency.in --format=json
+)
+if(NOT result EQUAL 0)
+    message(FATAL_ERROR "PQ rejected a zero output frequency: ${output}")
+endif()
+string(JSON zero_output_valid GET "${output}" valid)
+string(JSON zero_output_diagnostic_count LENGTH "${output}" diagnostics)
+if(NOT zero_output_valid OR NOT zero_output_diagnostic_count EQUAL 0)
+    message(FATAL_ERROR "Unexpected zero output frequency result: ${output}")
+endif()
+run_pq_in(
+    "${VALIDATION_WORK_DIR}"
+    output error result
+    zero-output-frequency.in
+)
+if(NOT result EQUAL 0 OR NOT error STREQUAL "")
+    message(FATAL_ERROR "PQ dry run failed: ${output} ${error}")
+endif()
+if(NOT output MATCHES "PQ ended normally")
+    message(FATAL_ERROR "PQ dry run did not finish normally: ${output}")
+endif()
+
 run_pq_in(
     "${VALIDATION_WORK_DIR}"
     capabilities_output capabilities_error capabilities_result
@@ -284,6 +318,100 @@ file(
     "${VALIDATION_FIXTURE_DIR}/start.rst"
     DESTINATION "${qm_without_descriptor_dir}"
 )
+set(failing_qm_dir "${qm_without_descriptor_dir}/failing-command")
+file(MAKE_DIRECTORY "${failing_qm_dir}")
+file(
+    COPY
+    "${VALIDATION_FIXTURE_DIR}/start.rst"
+    "${VALIDATION_FIXTURE_DIR}/moldescriptor.dat"
+    DESTINATION "${failing_qm_dir}"
+)
+set(failing_qm_script "${failing_qm_dir}/failing-qm")
+file(WRITE "${failing_qm_script}" "#!/bin/sh\nexit 17\n")
+file(
+    CHMOD "${failing_qm_script}"
+    PERMISSIONS
+    OWNER_READ OWNER_WRITE OWNER_EXECUTE
+    GROUP_READ GROUP_EXECUTE
+    WORLD_READ WORLD_EXECUTE
+)
+file(WRITE "${failing_qm_dir}/dftb.in" "")
+file(WRITE "${failing_qm_dir}/qm_forces" "0\n0 0 0\n0 0 0\n")
+file(WRITE "${failing_qm_dir}/qm_charges" "1 0\n2 0\n")
+file(WRITE "${failing_qm_dir}/stress_tensor" "0 0 0\n0 0 0\n0 0 0\n")
+file(
+    WRITE "${failing_qm_dir}/failing-qm.in"
+    "jobtype = qm-md;\n"
+    "nstep = 1;\n"
+    "timestep = 0.5;\n"
+    "output_freq = 0;\n"
+    "init_velocities = false;\n"
+    "virial = atomic;\n"
+    "qm_prog = dftbplus;\n"
+    "qm_script_full_path = ${failing_qm_script};\n"
+    "dftb_file = dftb.in;\n"
+    "start_file = start.rst;\n"
+    "file_prefix = failing-qm;\n"
+)
+run_pq_in(
+    "${failing_qm_dir}"
+    output error result
+    failing-qm.in
+)
+if(result EQUAL 0)
+    message(FATAL_ERROR "PQ ignored an external QM command failure")
+endif()
+if(NOT error MATCHES "DFTB\\+ command failed")
+    message(FATAL_ERROR "Unexpected external QM failure: ${output} ${error}")
+endif()
+if(
+    EXISTS "${failing_qm_dir}/qm_forces"
+    OR EXISTS "${failing_qm_dir}/qm_charges"
+    OR EXISTS "${failing_qm_dir}/stress_tensor"
+)
+    message(FATAL_ERROR "PQ reused stale external QM result files")
+endif()
+set(incomplete_qm_script "${failing_qm_dir}/incomplete-qm")
+file(
+    WRITE "${incomplete_qm_script}"
+    "#!/bin/sh\n"
+    "printf '0\\n0 0 0\\n' > qm_forces\n"
+    "printf '1 0\\n2 0\\n' > qm_charges\n"
+    "printf '0 0 0\\n0 0 0\\n0 0 0\\n' > stress_tensor\n"
+)
+file(
+    CHMOD "${incomplete_qm_script}"
+    PERMISSIONS
+    OWNER_READ OWNER_WRITE OWNER_EXECUTE
+    GROUP_READ GROUP_EXECUTE
+    WORLD_READ WORLD_EXECUTE
+)
+file(
+    WRITE "${failing_qm_dir}/incomplete-qm.in"
+    "jobtype = qm-md;\n"
+    "nstep = 1;\n"
+    "timestep = 0.5;\n"
+    "output_freq = 0;\n"
+    "init_velocities = false;\n"
+    "virial = atomic;\n"
+    "qm_prog = dftbplus;\n"
+    "qm_script_full_path = ${incomplete_qm_script};\n"
+    "dftb_file = dftb.in;\n"
+    "start_file = start.rst;\n"
+    "file_prefix = incomplete-qm;\n"
+)
+run_pq_in(
+    "${failing_qm_dir}"
+    output error result
+    incomplete-qm.in
+)
+if(result EQUAL 0)
+    message(FATAL_ERROR "PQ accepted incomplete external QM results")
+endif()
+if(NOT error MATCHES "Incomplete .* force file")
+    message(FATAL_ERROR "Unexpected incomplete QM result error: ${output} ${error}")
+endif()
+
 if(EXPECTED_SHARED AND NOT EXPECTED_SINGULARITY)
     set(qm_script_setting "qm_script = dftbplus_periodic_stress;")
 else()

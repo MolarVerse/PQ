@@ -48,6 +48,10 @@ namespace QM
         [[nodiscard]] std::string resolveScriptPath(
             std::string_view script
         ) const;
+        void executeCommand(
+            std::string_view command,
+            std::string_view program
+        ) const;
 
        public:
         ExternalQMRunner()           = default;
