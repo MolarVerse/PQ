@@ -28,5 +28,5 @@ if(BUILD_WITH_TESTS)
 endif()
 
 install(TARGETS restartFileReader
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+    DESTINATION lib
 )

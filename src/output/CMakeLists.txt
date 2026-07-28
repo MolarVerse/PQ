@@ -47,7 +47,7 @@ if(BUILD_WITH_TESTS)
 endif()
 
 install(TARGETS output
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+    DESTINATION lib
 )
 
 add_subdirectory(references)

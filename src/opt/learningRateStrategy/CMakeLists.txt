@@ -18,5 +18,5 @@ target_link_libraries(learningRateStrategy
 )
 
 install(TARGETS learningRateStrategy
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+    DESTINATION lib
 )
