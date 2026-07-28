@@ -405,6 +405,18 @@ TEST_F(TestInputFileReader, parseHubbardDerivs)
         InputFileException,
         "Invalid hubbard_derivs format \"H:1.0,He\" in input file."
     )
+
+    ASSERT_THROW_MSG(
+        parser.parseHubbardDerivs({"hubbard_derivs", "=", "H:0.1junk"}, 0),
+        InputFileException,
+        "Invalid hubbard_derivs format \"H:0.1junk\" in input file."
+    )
+
+    ASSERT_THROW_MSG(
+        parser.parseHubbardDerivs({"hubbard_derivs", "=", "H:nan"}, 0),
+        InputFileException,
+        "Invalid hubbard_derivs format \"H:nan\" in input file."
+    )
 }
 
 TEST_F(TestInputFileReader, parseXtbMethod)
