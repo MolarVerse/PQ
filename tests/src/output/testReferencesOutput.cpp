@@ -87,4 +87,7 @@ TEST(TestReferencesOutput, rejectsMissingReferenceFiles)
 
     EXPECT_THROW(ReferencesOutput::writeReferencesFile(), std::runtime_error);
     EXPECT_FALSE(std::ifstream(path).good());
+
+    ReferencesOutput::_referenceFileNames.erase("nonexistent.ref");
+    ReferencesOutput::_bibtexFileNames.erase("nonexistent.ref.bib");
 }

@@ -30,6 +30,8 @@
 
 #include "typeAliases.hpp"
 
+class TestReferencesOutput_rejectsMissingReferenceFiles_Test;
+
 namespace references
 {
     /**
@@ -43,6 +45,10 @@ namespace references
        private:
         static inline pq::stringSet _referenceFileNames = pq::stringSet();
         static inline pq::stringSet _bibtexFileNames    = pq::stringSet();
+
+#ifdef WITH_TESTS
+        friend class ::TestReferencesOutput_rejectsMissingReferenceFiles_Test;
+#endif
 
        public:
         static void writeReferencesFile();
