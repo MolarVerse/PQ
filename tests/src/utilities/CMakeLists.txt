@@ -2,6 +2,7 @@ set(source_files
     testStringUtilities.cpp
     testMathUtilities.cpp
     testCollectionUtilities.cpp
+    testProgressbar.cpp
 )
 
 foreach(source_file ${source_files})
@@ -26,6 +27,11 @@ foreach(source_file ${source_files})
     )
     set_property(TEST ${test_name} PROPERTY LABELS utilties)
 endforeach()
+
+target_include_directories(testProgressbar
+    PRIVATE
+    ${PROJECT_SOURCE_DIR}/external/progressbar/include
+)
 
 if(${BUILD_WITH_GCOVR})
     include(CodeCoverage)
