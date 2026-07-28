@@ -37,8 +37,10 @@
 #include "fileSettings.hpp"
 #include "forceFieldSettings.hpp"
 #include "inputFileReader.hpp"
+#include "manostatSettings.hpp"
 #include "qmSettings.hpp"
 #include "settings.hpp"
+#include "thermostatSettings.hpp"
 
 namespace
 {
@@ -146,10 +148,42 @@ namespace
         cli::ValidationResult        &result
     )
     {
+        using settings::ManostatSettings;
+        using settings::ManostatType;
+        using settings::ThermostatSettings;
+        using settings::ThermostatType;
+
         if (reader.getKeywordSet("mace_model_size"))
             result.diagnostics.push_back(
                 {cli::ValidationSeverity::WARNING,
                  "\"mace_model_size\" is deprecated; use \"mace_model\"",
+                 std::nullopt}
+            );
+
+        if (ThermostatSettings::getThermostatType() ==
+                ThermostatType::NOSE_HOOVER &&
+            ThermostatSettings::getNoseHooverCouplingFrequency() == 0.0)
+            result.diagnostics.push_back(
+                {cli::ValidationSeverity::WARNING,
+                 "A zero Nose-Hoover coupling frequency disables thermostat "
+                 "coupling",
+                 std::nullopt}
+            );
+
+        if (ThermostatSettings::getThermostatType() ==
+                ThermostatType::LANGEVIN &&
+            ThermostatSettings::getFriction() == 0.0)
+            result.diagnostics.push_back(
+                {cli::ValidationSeverity::WARNING,
+                 "A zero Langevin friction disables thermostat coupling",
+                 std::nullopt}
+            );
+
+        if (ManostatSettings::getManostatType() != ManostatType::NONE &&
+            ManostatSettings::getCompressibility() == 0.0)
+            result.diagnostics.push_back(
+                {cli::ValidationSeverity::WARNING,
+                 "A zero compressibility disables cell response",
                  std::nullopt}
             );
     }
