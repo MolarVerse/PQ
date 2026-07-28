@@ -87,17 +87,20 @@ void TurbomoleRunner::writeCoordsFile(SimulationBox &simBox)
  */
 void TurbomoleRunner::execute()
 {
-    const auto scriptFile = _scriptPath + QMSettings::getQMScript();
+    const auto scriptFile = resolveScriptPath(QMSettings::getQMScript());
 
     if (!fileExists(scriptFile))
-        throw InputFileException(std::format(
-            "Turbomole script file \"{}\" does not exist.",
-            scriptFile
-        ));
+        throw InputFileException(
+            std::format(
+                "Turbomole script file \"{}\" does not exist.",
+                scriptFile
+            )
+        );
 
     const auto reuseCharges = _isFirstExecution ? 1 : 0;
 
-    const auto command = std::format("{} 0 {} 0 0 0", scriptFile, reuseCharges);
+    const auto command =
+        std::format("{} 0 {} 0 0 0", shellQuote(scriptFile), reuseCharges);
     ::system(command.c_str());
 
     _isFirstExecution = false;

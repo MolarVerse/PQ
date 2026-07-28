@@ -85,7 +85,7 @@ void SimulationBoxInputParser::parseCoulombRadius(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto cutOff = stod(lineElements[2]);
+    const auto cutOff = stringToFiniteDouble(lineElements[2]);
 
     if (cutOff < 0.0)
         throw InputFileException(format(
@@ -115,9 +115,9 @@ void SimulationBoxInputParser::parseDensity(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto density = stod(lineElements[2]);
+    const auto density = stringToFiniteDouble(lineElements[2]);
 
-    if (density < 0.0)
+    if (density <= 0.0)
         throw InputFileException(
             std::format("Density must be positive - density = {}", density)
         );
@@ -158,11 +158,14 @@ void SimulationBoxInputParser::parseInitializeVelocities(
         SimulationBoxSettings::setInitializeVelocities(FORCE);
 
     else
-        throw InputFileException(std::format(
-            "Invalid value for initialize velocities - \"{}\" at line {} in "
-            "input file.\n"
-            "Possible options are: true, false, force",
-            lineElements[2],
-            lineNumber
-        ));
+        throw InputFileException(
+            std::format(
+                "Invalid value for initialize velocities - \"{}\" at line {} "
+                "in "
+                "input file.\n"
+                "Possible options are: true, false, force",
+                lineElements[2],
+                lineNumber
+            )
+        );
 }

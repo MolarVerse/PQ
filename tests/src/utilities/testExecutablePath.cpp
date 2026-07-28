@@ -20,37 +20,17 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _REFERENCES_OUTPUT_HPP_
+#include <gtest/gtest.h>
 
-#define _REFERENCES_OUTPUT_HPP_
+#include <filesystem>
 
-#define REFERENCES_PATH_ _REFERENCES_PATH_
+#include "executablePath.hpp"
 
-#include <set>      // for set
-#include <string>   // for string
-
-#include "typeAliases.hpp"
-
-namespace references
+TEST(ExecutablePathTest, resolvesRunningExecutable)
 {
-    /**
-     * @class ReferencesOutput
-     *
-     * @brief class to print references file
-     *
-     */
-    class ReferencesOutput
-    {
-       private:
-        static inline pq::stringSet _referenceFileNames = pq::stringSet();
-        static inline pq::stringSet _bibtexFileNames    = pq::stringSet();
+    const auto executable = utilities::executablePath();
 
-       public:
-        static void writeReferencesFile();
-
-        static void addReferenceFile(const std::string &referenceFileName);
-    };
-
-}   // namespace references
-
-#endif   // _REFERENCES_OUTPUT_HPP_
+    EXPECT_FALSE(executable.empty());
+    EXPECT_TRUE(std::filesystem::is_regular_file(executable));
+    EXPECT_EQ(executable.stem(), "testExecutablePath");
+}

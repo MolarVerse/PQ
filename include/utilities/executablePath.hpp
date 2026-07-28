@@ -20,37 +20,15 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _REFERENCES_OUTPUT_HPP_
+#ifndef _EXECUTABLE_PATH_HPP_
 
-#define _REFERENCES_OUTPUT_HPP_
+#define _EXECUTABLE_PATH_HPP_
 
-#define REFERENCES_PATH_ _REFERENCES_PATH_
+#include <filesystem>
 
-#include <set>      // for set
-#include <string>   // for string
-
-#include "typeAliases.hpp"
-
-namespace references
+namespace utilities
 {
-    /**
-     * @class ReferencesOutput
-     *
-     * @brief class to print references file
-     *
-     */
-    class ReferencesOutput
-    {
-       private:
-        static inline pq::stringSet _referenceFileNames = pq::stringSet();
-        static inline pq::stringSet _bibtexFileNames    = pq::stringSet();
+    [[nodiscard]] std::filesystem::path executablePath();
+}   // namespace utilities
 
-       public:
-        static void writeReferencesFile();
-
-        static void addReferenceFile(const std::string &referenceFileName);
-    };
-
-}   // namespace references
-
-#endif   // _REFERENCES_OUTPUT_HPP_
+#endif   // _EXECUTABLE_PATH_HPP_

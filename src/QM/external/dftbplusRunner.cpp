@@ -134,7 +134,7 @@ void DFTBPlusRunner::writeCoordsFile(SimulationBox &box)
  */
 void DFTBPlusRunner::execute()
 {
-    const auto scriptFile = _scriptPath + QMSettings::getQMScript();
+    const auto scriptFile = resolveScriptPath(QMSettings::getQMScript());
 
     if (!fileExists(scriptFile))
         throw InputFileException(
@@ -145,9 +145,9 @@ void DFTBPlusRunner::execute()
 
     const auto command = std::format(
         "{} 0 {} 0 0 0 {}",
-        scriptFile,
+        shellQuote(scriptFile),
         reuseCharges,
-        FileSettings::getDFTBFileName()
+        shellQuote(FileSettings::getDFTBFileName())
     );
     ::system(command.c_str());
 

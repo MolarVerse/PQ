@@ -30,12 +30,12 @@
 #include <limits>       // for numeric_limits
 #include <stdexcept>    // for out_of_range and invalid_argument
 
-#include "engine.hpp"       // for Engine
-#include "exceptions.hpp"   // for InputFileException, customException
+#include "engine.hpp"          // for Engine
+#include "exceptions.hpp"      // for InputFileException, customException
 #include "hessianEngine.hpp"   // for HessianEngine
-#include "mmmdEngine.hpp"   // for MMMDEngine
-#include "optEngine.hpp"    // for MMOptEngine
-#include "qmmdEngine.hpp"   // for QMMDEngine
+#include "mmmdEngine.hpp"      // for MMMDEngine
+#include "optEngine.hpp"       // for MMOptEngine
+#include "qmmdEngine.hpp"      // for QMMDEngine
 #include "ringPolymerqmmdEngine.hpp"   // for RingPolymerQMMDEngine
 #include "settings.hpp"                // for Settings
 #include "stringUtilities.hpp"         // for toLowerCopy
@@ -179,7 +179,7 @@ void GeneralInputParser::parseDimensionality(
 
     std::erase(dimensionalityString, 'd');
 
-    const auto dimensionality = std::stoi(dimensionalityString);
+    const auto dimensionality = stringToInt(dimensionalityString);
 
     if (dimensionality == 3)
         Settings::setDimensionality(size_t(dimensionality));

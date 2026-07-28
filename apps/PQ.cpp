@@ -35,6 +35,7 @@
 #include "inputFileReader.hpp"   // for readJobType
 #include "setup.hpp"             // for setupSimulation
 #include "systemInfo.hpp"        // for _VERSION_
+#include "validation.hpp"        // for validation
 
 #ifdef WITH_MPI
 #include <mpi.h>   // for MPI_Abort, MPI_COMM_WORLD, MPI_Finalize
@@ -68,16 +69,26 @@ static int run(const std::string &inputFileName)
 
 static void printHelp()
 {
-    std::cout << "Usage: PQ <input_file>\n"
-              << "       PQ --help\n"
-              << "       PQ --version\n"
-              << "       PQ --capabilities=json\n\n"
-              << "Run a PQ simulation from an input file.\n\n"
-              << "Options:\n"
-              << "  -h, --help     Show this help message.\n"
-              << "  -V, --version  Show the PQ version.\n"
-              << "  --capabilities=json\n"
-              << "                  Show compiled capabilities as JSON.\n";
+    std::cout
+        << "Usage: PQ <input_file>\n"
+        << "       PQ --help\n"
+        << "       PQ --version\n"
+        << "       PQ --capabilities=json\n"
+        << "       PQ --validate <input_file> [--format=text|json] "
+           "[--scope=installed|portable]\n\n"
+        << "Run a PQ simulation from an input file.\n\n"
+        << "Options:\n"
+        << "  -h, --help       Show this help message.\n"
+        << "  -V, --version    Show the PQ version.\n"
+        << "  --capabilities=json\n"
+        << "                    Show compiled capabilities as JSON.\n"
+        << "  --validate <input_file>\n"
+        << "                    Check input without running a simulation.\n"
+        << "  --format=text     Return readable validation (default).\n"
+        << "  --format=json     Return machine-readable validation.\n"
+        << "  --scope=installed Check this build and referenced files "
+           "(default).\n"
+        << "  --scope=portable  Check portable input semantics only.\n";
 }
 
 // main wrapper
@@ -118,6 +129,30 @@ int main(int argc, char *argv[])
     {
         cli::writeCapabilities(std::cout);
         return EXIT_SUCCESS;
+    }
+
+    if (CommandLineAction::VALIDATE == commandLineArgs.getAction())
+    {
+        try
+        {
+            const auto result = cli::validateInputFile(
+                commandLineArgs.getInputFileName(),
+                commandLineArgs.getValidationScope()
+            );
+
+            if (CommandLineFormat::JSON == commandLineArgs.getFormat())
+                cli::writeValidationJson(result, std::cout);
+            else
+                cli::writeValidationText(result, std::cout, std::cerr);
+
+            return result.valid ? EXIT_SUCCESS : EXIT_FAILURE;
+        }
+        catch (const std::exception &e)
+        {
+            std::cerr << "Validation failed: " << e.what() << '\n'
+                      << std::flush;
+            return 2;
+        }
     }
 
 #ifdef WITH_MPI

@@ -145,7 +145,6 @@ TEST(QMSettingsTest, SetMaceModelTypeTest)
 
 TEST(QMSettingsTest, SetSlakosTypeTest)
 {
-#ifdef WITH_ASE
     QMSettings::setSlakosType("3ob");
     EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::THREEOB);
 
@@ -157,7 +156,6 @@ TEST(QMSettingsTest, SetSlakosTypeTest)
 
     QMSettings::setSlakosType(SlakosType::MATSCI);
     EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::MATSCI);
-#endif
 
     QMSettings::setSlakosType("custom");
     EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::CUSTOM);
@@ -177,27 +175,6 @@ TEST(QMSettingsTest, SetSlakosTypeTest)
         "Slakos notASlakosType not recognized"
     );
 }
-
-#ifndef WITH_ASE
-TEST(QMSettingsTest, SetBuiltInSlakosTypeRequiresAse)
-{
-    ASSERT_THROW_MSG(
-        QMSettings::setSlakosType("3ob"),
-        InputFileException,
-        "Built-in SLAKOS sets (3ob/matsci) require building PQ with "
-        "-DBUILD_WITH_ASE=On"
-    );
-
-    ASSERT_THROW_MSG(
-        QMSettings::setSlakosType("matsci"),
-        InputFileException,
-        "Built-in SLAKOS sets (3ob/matsci) require building PQ with "
-        "-DBUILD_WITH_ASE=On"
-    );
-
-    QMSettings::setSlakosType("none");
-}
-#endif
 
 TEST(QMSettingsTest, SetSlakosPathTest)
 {

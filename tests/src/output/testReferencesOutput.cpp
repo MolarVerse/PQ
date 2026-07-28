@@ -25,6 +25,7 @@
 #include <cstdio>
 #include <fstream>
 #include <sstream>
+#include <stdexcept>
 #include <string>
 
 #include "outputFileSettings.hpp"
@@ -67,21 +68,12 @@ TEST(TestReferencesOutput, writeReferencesFileEmitsHeaderAndBibtexBanner)
 
 TEST(TestReferencesOutput, addReferenceFileExtendsBothReferenceAndBibtexLists)
 {
-    // Sanity-check the static accessor is exposed at all; we can only observe
-    // the side effect through the rendered output file, which won't contain
-    // the new entry's body (the .ref file doesn't exist on disk) but the call
-    // itself must not throw and must remain idempotent for duplicates.
     EXPECT_NO_THROW(ReferencesOutput::addReferenceFile("nonexistent.ref"));
     EXPECT_NO_THROW(ReferencesOutput::addReferenceFile("nonexistent.ref"));
 
     const std::string path = "default.refs.test";
     OutputFileSettings::setRefFileName(path);
-    ReferencesOutput::writeReferencesFile();
-
-    // Even with a non-existent reference file in the registered set, the
-    // overall write succeeds and the file exists with at least the headers.
-    const auto content = slurp(path);
-    EXPECT_FALSE(content.empty());
+    EXPECT_THROW(ReferencesOutput::writeReferencesFile(), std::runtime_error);
 
     ::remove(path.c_str());
 }

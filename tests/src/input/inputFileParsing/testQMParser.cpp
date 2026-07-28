@@ -22,19 +22,25 @@
 
 #include <gtest/gtest.h>   // for TEST_F, EXPECT_EQ, RUN_ALL_TESTS
 
-#include <string>   // for string, allocator
+#include <cstdio>
+#include <fstream>
+#include <sstream>
+#include <string>
 
-#include "QMInputParser.hpp"         // for InputFileParserQM
-#include "exceptions.hpp"            // for InputFileException, customException
-#include "gtest/gtest.h"             // for Message, TestPartResult
-#include "inputFileParser.hpp"       // for readInput
-#include "qmSettings.hpp"            // for QMSettings
+#include "QMInputParser.hpp"     // for InputFileParserQM
+#include "exceptions.hpp"        // for InputFileException, customException
+#include "gtest/gtest.h"         // for Message, TestPartResult
+#include "inputFileParser.hpp"   // for readInput
+#include "outputFileSettings.hpp"
+#include "qmSettings.hpp"   // for QMSettings
+#include "referencesOutput.hpp"
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "throwWithMessage.hpp"      // for ASSERT_THROW_MSG
 
 using namespace input;
 using namespace settings;
 using namespace customException;
+using references::ReferencesOutput;
 
 TEST_F(TestInputFileReader, parseQMMethod)
 {
@@ -290,31 +296,44 @@ TEST_F(TestInputFileReader, parseMaceModelPath)
 
 TEST_F(TestInputFileReader, parseSlakosType)
 {
-    using enum QMMethod;
-
     auto parser = QMInputParser(*_engine);
 
-#ifdef WITH_ASE
     parser.parseSlakosType({"slakos", "=", "3ob"}, 0);
     EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::THREEOB);
 
     parser.parseSlakosType({"slakos", "=", "matsci"}, 0);
     EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::MATSCI);
-#else
-    ASSERT_THROW_MSG(
-        parser.parseSlakosType({"slakos", "=", "3ob"}, 0),
-        InputFileException,
-        "Built-in SLAKOS sets (3ob/matsci) require building PQ with "
-        "-DBUILD_WITH_ASE=On"
-    );
 
-    ASSERT_THROW_MSG(
-        parser.parseSlakosType({"slakos", "=", "matsci"}, 0),
-        InputFileException,
-        "Built-in SLAKOS sets (3ob/matsci) require building PQ with "
-        "-DBUILD_WITH_ASE=On"
+    const std::string referencePath = "slakos.refs.test";
+    OutputFileSettings::setRefFileName(referencePath);
+    ReferencesOutput::writeReferencesFile();
+
+    std::ifstream     referenceFile(referencePath);
+    std::stringstream referenceBuffer;
+    referenceBuffer << referenceFile.rdbuf();
+    const auto references = referenceBuffer.str();
+    EXPECT_NE(
+        references.find("3ob Slater-Koster Parameter Set"),
+        std::string::npos
     );
-#endif
+    EXPECT_NE(
+        references.find("matsci Slater-Koster Parameter Set"),
+        std::string::npos
+    );
+    for (const auto reference : {
+             "10.1021/ct300849w",
+             "10.1021/ct401002w",
+             "10.1021/jp506557r",
+             "10.1021/ct5009137",
+             "10.1002/zaac.200500051",
+             "10.1021/nn700184k",
+             "10.1016/j.susc.2008.01.035",
+             "10.1021/jp8110343",
+             "10.3139/146.110337",
+             "Jardillier2006Matsci",
+         })
+        EXPECT_NE(references.find(reference), std::string::npos);
+    ::remove(referencePath.c_str());
 
     parser.parseSlakosType({"slakos", "=", "custom"}, 0);
     EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::CUSTOM);
@@ -405,6 +424,18 @@ TEST_F(TestInputFileReader, parseHubbardDerivs)
         parser.parseHubbardDerivs({"hubbard_derivs", "=", "H:1.0,He"}, 0),
         InputFileException,
         "Invalid hubbard_derivs format \"H:1.0,He\" in input file."
+    )
+
+    ASSERT_THROW_MSG(
+        parser.parseHubbardDerivs({"hubbard_derivs", "=", "H:0.1junk"}, 0),
+        InputFileException,
+        "Invalid hubbard_derivs format \"H:0.1junk\" in input file."
+    )
+
+    ASSERT_THROW_MSG(
+        parser.parseHubbardDerivs({"hubbard_derivs", "=", "H:nan"}, 0),
+        InputFileException,
+        "Invalid hubbard_derivs format \"H:nan\" in input file."
     )
 }
 

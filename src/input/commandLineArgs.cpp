@@ -54,6 +54,53 @@ void CommandLineArgs::parse()
 
     const auto &argument = _argv[1];
 
+    if ("--validate" == argument)
+    {
+        _action = CommandLineAction::VALIDATE;
+
+        if (_argc < 3 || _argv[2].starts_with('-'))
+            throw UserInputException(
+                "No input file specified. Usage: PQ --validate <input_file>"
+            );
+
+        _inputFileName = _argv[2];
+
+        auto formatSet = false;
+        auto scopeSet  = false;
+        for (auto index = 3; index < _argc; ++index)
+        {
+            const auto &option = _argv[size_t(index)];
+
+            if ("--format=json" == option && !formatSet)
+            {
+                _format   = CommandLineFormat::JSON;
+                formatSet = true;
+            }
+            else if ("--format=text" == option && !formatSet)
+            {
+                _format   = CommandLineFormat::TEXT;
+                formatSet = true;
+            }
+            else if ("--scope=installed" == option && !scopeSet)
+            {
+                _validationScope = ValidationScope::INSTALLED;
+                scopeSet         = true;
+            }
+            else if ("--scope=portable" == option && !scopeSet)
+            {
+                _validationScope = ValidationScope::PORTABLE;
+                scopeSet         = true;
+            }
+            else
+                throw UserInputException(
+                    "Unexpected argument: " + option +
+                    ". Use PQ --help for usage."
+                );
+        }
+
+        return;
+    }
+
     if ("--help" == argument || "-h" == argument)
         _action = CommandLineAction::HELP;
     else if ("--version" == argument || "-V" == argument)
@@ -86,3 +133,20 @@ std::string CommandLineArgs::getInputFileName() const { return _inputFileName; }
  * @return CommandLineAction
  */
 CommandLineAction CommandLineArgs::getAction() const { return _action; }
+
+/**
+ * @brief get the requested output format
+ *
+ * @return CommandLineFormat
+ */
+CommandLineFormat CommandLineArgs::getFormat() const { return _format; }
+
+/**
+ * @brief get the requested validation scope
+ *
+ * @return ValidationScope
+ */
+ValidationScope CommandLineArgs::getValidationScope() const
+{
+    return _validationScope;
+}

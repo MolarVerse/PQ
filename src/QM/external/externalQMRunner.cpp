@@ -25,14 +25,15 @@
 #include <algorithm>    // for __for_each_fn, for_each
 #include <chrono>       // for seconds
 #include <cmath>        // for isnan, isinf
+#include <filesystem>   // for is_regular_file, path
 #include <format>       // for format
 #include <fstream>      // for ofstream
 #include <functional>   // for identity
 #include <string>       // for string
 #include <thread>       // for sleep_for
-#include <vector>       // for vector
 
 #include "constants/conversionFactors.hpp"   // for _HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM_, _HARTREE_TO_KCAL_PER_MOL_
+#include "executablePath.hpp"                // for executablePath
 #include "exceptions.hpp"                    // for InputFileException
 #include "fileSettings.hpp"                  // for FileSettings
 #include "physicalData.hpp"                  // for PhysicalData
@@ -46,6 +47,21 @@ using namespace physicalData;
 using namespace customException;
 using namespace settings;
 using namespace constants;
+
+std::string QM::bundledQMScriptPath(const std::string_view script)
+{
+    const auto executable = utilities::executablePath();
+    if (!executable.empty())
+    {
+        const auto installedPath = executable.parent_path().parent_path() /
+                                   "share" / "PQ" / "scripts" / script;
+        if (std::filesystem::is_regular_file(installedPath))
+            return installedPath.string();
+    }
+
+    const auto buildPath = std::filesystem::path(SCRIPT_PATH_) / script;
+    return buildPath.string();
+}
 
 /**
  * @brief run the qm engine
@@ -68,6 +84,19 @@ void ExternalQMRunner::run(SimulationBox &simBox, PhysicalData &physicalData)
     readChargeFile(simBox);
 
     readStressTensor(simBox.getBox(), physicalData);
+}
+
+std::string ExternalQMRunner::resolveScriptPath(
+    const std::string_view script
+) const
+{
+    if (_scriptPath.empty())
+        return std::string(script);
+
+    if (_scriptPath == SCRIPT_PATH_)
+        return bundledQMScriptPath(script);
+
+    return _scriptPath + std::string(script);
 }
 
 /**
@@ -113,11 +142,13 @@ void ExternalQMRunner::readForceFile(
     forceFile >> energy;
 
     if (std::isnan(energy) || std::isinf(energy))
-        throw QMRunnerException(std::format(
-            "Invalid QM energy (NaN/Inf) in {} force file \"{}\"",
-            string(QMSettings::getQMMethod()),
-            forceFileName
-        ));
+        throw QMRunnerException(
+            std::format(
+                "Invalid QM energy (NaN/Inf) in {} force file \"{}\"",
+                string(QMSettings::getQMMethod()),
+                forceFileName
+            )
+        );
 
     physicalData.setQMEnergy(energy * _HARTREE_TO_KCAL_PER_MOL_);
 
@@ -129,12 +160,14 @@ void ExternalQMRunner::readForceFile(
 
         for (size_t i = 0; i < 3; ++i)
             if (std::isnan(grad[i]) || std::isinf(grad[i]))
-                throw QMRunnerException(std::format(
-                    "Invalid QM force component (NaN/Inf) in {} force file "
-                    "\"{}\"",
-                    string(QMSettings::getQMMethod()),
-                    forceFileName
-                ));
+                throw QMRunnerException(
+                    std::format(
+                        "Invalid QM force component (NaN/Inf) in {} force file "
+                        "\"{}\"",
+                        string(QMSettings::getQMMethod()),
+                        forceFileName
+                    )
+                );
 
         atom->setForce(-grad * _HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM_);
     };

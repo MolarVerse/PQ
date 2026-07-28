@@ -22,7 +22,9 @@
 
 #include <gtest/gtest.h>   // for TestInfo (ptr only), InitGoogleTest, RUN_ALL_TESTS, EXPECT_EQ
 
+#include <format>   // for format
 #include <iosfwd>   // for std
+#include <stdexcept>
 #include <string>   // for string, allocator, basic_string
 #include <vector>   // for vector
 
@@ -48,6 +50,26 @@ TEST_F(TestInputFileReader, testParseTimestep)
     vector<string>     lineElements = {"timestep", "=", "1"};
     parser.parseTimeStep(lineElements, 0);
     EXPECT_EQ(settings::TimingsSettings::getTimeStep(), 1.0);
+
+    lineElements = {"timestep", "=", "0"};
+    EXPECT_THROW_MSG(
+        parser.parseTimeStep(lineElements, 0),
+        customException::InputFileException,
+        "Time step must be finite and greater than zero"
+    );
+
+    for (const auto &invalid : {"nan", "inf"})
+    {
+        lineElements = {"timestep", "=", invalid};
+        EXPECT_THROW_MSG(
+            parser.parseTimeStep(lineElements, 0),
+            std::invalid_argument,
+            std::format(
+                "Invalid floating-point value '{}' encountered",
+                invalid
+            )
+        );
+    }
 }
 
 /**
@@ -67,6 +89,13 @@ TEST_F(TestInputFileReader, testParseNumberOfSteps)
     EXPECT_THROW_MSG(
         parser.parseNumberOfSteps(lineElements, 0),
         customException::InputFileException,
-        "Number of steps cannot be negative"
+        "Number of steps must be greater than zero"
+    );
+
+    lineElements = {"nsteps", "=", "0"};
+    EXPECT_THROW_MSG(
+        parser.parseNumberOfSteps(lineElements, 0),
+        customException::InputFileException,
+        "Number of steps must be greater than zero"
     );
 }
