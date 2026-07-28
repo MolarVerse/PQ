@@ -19,7 +19,3 @@ if(BUILD_WITH_KOKKOS)
         ${Kokkos_INCLUDE_DIRS_RET}
     )
 endif()
-
-install(TARGETS pq_test_main
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
-)

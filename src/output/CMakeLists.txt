@@ -39,13 +39,6 @@ target_link_libraries(output
     thermostat
 )
 
-if(BUILD_WITH_TESTS)
-    target_link_libraries(output
-        PUBLIC
-        gtest
-    )
-endif()
-
 install(TARGETS output
     DESTINATION lib
 )
