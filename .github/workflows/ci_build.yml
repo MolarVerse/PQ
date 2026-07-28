@@ -12,6 +12,8 @@ on:
       - 'src/**'
       - 'integration_tests/**'
       - 'tests/**'
+      - 'benchmarks/CMakeLists.txt'
+      - 'benchmarks/src/**'
       - 'CMakeLists.txt'
   push:
     branches:
@@ -25,6 +27,8 @@ on:
       - 'src/**'
       - 'integration_tests/**'
       - 'tests/**'
+      - 'benchmarks/CMakeLists.txt'
+      - 'benchmarks/src/**'
       - 'CMakeLists.txt'
   workflow_dispatch:
 
@@ -130,6 +134,36 @@ jobs:
         if: ${{matrix.build == 'Release' }}
         run: |
           conda run -n test-env pytest integration_tests -v
+
+  benchmark:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: install gcc13
+        run: |
+          sudo apt update
+          sudo apt install gcc-13 g++-13
+        shell: bash
+
+      - name: Build benchmark suite
+        run: |
+          cmake -S . -B build-benchmark \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_WITH_BENCHMARKING=On \
+            -DBUILD_WITH_TESTS=Off \
+            -DBUILD_WITH_ASE=Off \
+            -DBUILD_WITH_DOCS=Off \
+            -DBUILD_WITH_NATIVE=Off
+          cmake --build build-benchmark --target google_benchmarks -j$(nproc)
+        env:
+          CC: gcc-13
+          CXX: g++-13
+
+      - name: Run benchmark smoke tests
+        run: |
+          ctest --test-dir build-benchmark -L benchmark --output-on-failure
 
   build-static-lto:
     runs-on: ubuntu-24.04

@@ -129,6 +129,42 @@ To run these tests, ensure the following Python packages are installed:
 In addition, the `DFTB+ <https://dftbplus.org/index.html>`__ program package has to be installed.
 You can then run the integration tests with the command ``pytest PQ/integration_tests``.
 
+======================
+Performance Benchmarks
+======================
+
+The Google Benchmark suite contains local wall-clock benchmarks for core
+algorithms. It is separate from the fixed-work performance checks in
+``benchmarks/perf``.
+
+Configure and build the suite from the repository root:
+
+    .. code:: bash
+
+        $ cmake -S . -B build-benchmark -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_BENCHMARKING=ON -DBUILD_WITH_TESTS=OFF -DBUILD_WITH_ASE=OFF
+        $ cmake --build build-benchmark --target google_benchmarks
+
+Run a short smoke test:
+
+    .. code:: bash
+
+        $ ctest --test-dir build-benchmark -L benchmark --output-on-failure
+
+Run the full local suite and write JSON results to ``benchmark-results``:
+
+    .. code:: bash
+
+        $ ./benchmarks/run_benchmarks.sh build-benchmark
+
+The benchmarks are standalone executables in
+``build-benchmark/benchmarks/src``. For example:
+
+    .. code:: bash
+
+        $ ./build-benchmark/benchmarks/src/benchmark_forceCalculation
+
+See ``benchmarks/README.md`` for filtering, output, and sampling-time options.
+
 ==============
 GitHub Actions
 ==============

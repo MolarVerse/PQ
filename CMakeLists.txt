@@ -19,7 +19,9 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/.cmake)
 # includes
 # ********
 include(config) # include default settins
-include(getGitVersion) # include get git version
+# Avoid colliding with Google Benchmark's GetGitVersion.cmake on
+# case-insensitive filesystems.
+include(pqGitVersion) # include get git version
 
 # **************
 # check compiler
@@ -184,5 +186,7 @@ if(BUILD_WITH_IWYU)
 endif()
 
 if(BUILD_WITH_BENCHMARKING)
-    include(benchmark)
+    include(benchmarking)
+    enable_testing()
+    add_subdirectory(benchmarks)
 endif()
