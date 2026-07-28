@@ -26,8 +26,9 @@
 #include <fstream>     // for fstream
 #include <string>      // for string
 
-#include "references.hpp"           // for ReferencesOutput
+#include "executablePath.hpp"       // for executablePath
 #include "outputFileSettings.hpp"   // for OutputFileSettings
+#include "references.hpp"           // for ReferencesOutput
 
 using references::ReferencesOutput;
 using namespace settings;

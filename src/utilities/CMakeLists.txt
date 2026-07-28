@@ -1,4 +1,5 @@
 add_library(utilities
+    executablePath.cpp
     stringUtilities.cpp
     mathUtilities.cpp
 )
