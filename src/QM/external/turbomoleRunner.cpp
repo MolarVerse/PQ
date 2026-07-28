@@ -135,12 +135,12 @@ void TurbomoleRunner::execute(SimulationBox &box)
 
     const auto command = std::format(
         "{} {} {} {} {} {}",
-        scriptFile,
+        shellQuote(scriptFile),
         charge,
         runTMDefine,
         usePointCharges,
-        FileSettings::getTMFileName(),
-        FileSettings::getPointChargeFileName()
+        shellQuote(FileSettings::getTMFileName()),
+        shellQuote(FileSettings::getPointChargeFileName())
     );
     executeCommand(command, "Turbomole");
 

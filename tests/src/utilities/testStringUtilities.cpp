@@ -167,6 +167,16 @@ TEST(TestStringUtilities, firstLetterToUpperCaseCopy)
     EXPECT_EQ("Test", utilities::firstLetterToUpperCaseCopy(line));
 }
 
+TEST(TestStringUtilities, shellQuote)
+{
+    EXPECT_EQ("''", utilities::shellQuote(""));
+    EXPECT_EQ("'path with spaces'", utilities::shellQuote("path with spaces"));
+    EXPECT_EQ(
+        "'a'\"'\"'b; touch nope'",
+        utilities::shellQuote("a'b; touch nope")
+    );
+}
+
 /**
  * @brief test check if file exists
  *

@@ -25,6 +25,7 @@
 
 #include <chrono>
 #include <filesystem>
+#include <format>
 #include <fstream>
 #include <memory>
 #include <string>
@@ -36,9 +37,12 @@
 #include "externalQMRunner.hpp"
 #include "fileSettings.hpp"
 #include "physicalData.hpp"
+#include "pyscfRunner.hpp"
 #include "qmSettings.hpp"
 #include "settings.hpp"
 #include "simulationBox.hpp"
+#include "stringUtilities.hpp"
+#include "turbomoleRunner.hpp"
 
 using customException::QMRunnerException;
 using physicalData::PhysicalData;
@@ -94,6 +98,25 @@ namespace
         [[nodiscard]] bool sawStaleResults() const { return _sawStaleResults; }
     };
 
+    template <class Runner>
+    class CommandCaptureRunner : public Runner
+    {
+       private:
+        mutable std::string _command;
+
+       protected:
+        void executeCommand(
+            const std::string_view command,
+            const std::string_view
+        ) const override
+        {
+            _command = command;
+        }
+
+       public:
+        [[nodiscard]] const std::string &getCommand() const { return _command; }
+    };
+
     class ExternalQMRunnerTest : public testing::Test
     {
        protected:
@@ -104,10 +127,12 @@ namespace
         ExternalQMRunnerHarness _runner;
         QM::DFTBPlusRunner      _dftbRunner;
 
-        QMMethod _qmMethod;
-        JobType  _jobType;
-        bool     _removeNetForce;
-        double   _timeLimit;
+        QMMethod    _qmMethod;
+        JobType     _jobType;
+        bool        _removeNetForce;
+        double      _timeLimit;
+        std::string _qmScript;
+        std::string _dftbFile;
 
         void SetUp() override
         {
@@ -115,12 +140,14 @@ namespace
             _jobType        = Settings::getJobtype();
             _removeNetForce = QMSettings::getRemoveNetForce();
             _timeLimit      = QMSettings::getQMLoopTimeLimit();
+            _qmScript       = QMSettings::getQMScript();
+            _dftbFile       = FileSettings::getDFTBFileName();
             _originalPath   = std::filesystem::current_path();
 
             const auto stamp =
                 std::chrono::steady_clock::now().time_since_epoch().count();
             _workPath = std::filesystem::temp_directory_path() /
-                        ("pq-external-qm-" + std::to_string(stamp));
+                        ("pq external qm; " + std::to_string(stamp));
             ASSERT_TRUE(std::filesystem::create_directory(_workPath));
             std::filesystem::current_path(_workPath);
 
@@ -141,12 +168,32 @@ namespace
             QMSettings::setQMMethod(_qmMethod);
             QMSettings::setRemoveNetForce(_removeNetForce);
             QMSettings::setQMLoopTimeLimit(_timeLimit);
+            QMSettings::setQMScript(_qmScript);
+            FileSettings::setDFTBFileName(_dftbFile);
             Settings::setJobtype(_jobType);
 
             std::filesystem::current_path(_originalPath);
             std::error_code error;
             std::filesystem::remove_all(_workPath, error);
             EXPECT_FALSE(error);
+        }
+
+        std::filesystem::path configureQuotedScript(
+            QM::ExternalQMRunner &runner
+        ) const
+        {
+            const auto scriptDirectory =
+                _workPath / "working path; $(touch qm-injected)";
+            std::filesystem::create_directory(scriptDirectory);
+
+            const auto scriptName = "runner's script; touch qm-injected; #";
+            const auto scriptFile = scriptDirectory / scriptName;
+            writeFile(scriptFile.string(), "");
+
+            runner.setScriptPath(scriptDirectory.string() + '/');
+            QMSettings::setQMScript(scriptName);
+
+            return scriptFile;
         }
     };
 }   // namespace
@@ -164,6 +211,66 @@ TEST_F(ExternalQMRunnerTest, propagatesCommandFailure)
     {
         EXPECT_THAT(error.what(), HasSubstr("External QM command failed"));
     }
+}
+
+TEST_F(ExternalQMRunnerTest, quotesDftbCommandArguments)
+{
+    auto       runner    = CommandCaptureRunner<QM::DFTBPlusRunner>();
+    const auto path      = configureQuotedScript(runner);
+    const auto inputFile = std::string("input file; touch qm-injected");
+    FileSettings::setDFTBFileName(inputFile);
+
+    runner.execute(_simulationBox);
+
+    EXPECT_EQ(
+        std::format(
+            "{} {} 0 0 {} {}",
+            utilities::shellQuote(path.string()),
+            _simulationBox.calcActiveMolCharge(),
+            utilities::shellQuote(inputFile),
+            utilities::shellQuote(FileSettings::getPointChargeFileName())
+        ),
+        runner.getCommand()
+    );
+    EXPECT_FALSE(std::filesystem::exists(_workPath / "qm-injected"));
+}
+
+TEST_F(ExternalQMRunnerTest, quotesPyscfCommandArguments)
+{
+    auto       runner = CommandCaptureRunner<QM::PySCFRunner>();
+    const auto path   = configureQuotedScript(runner);
+
+    runner.execute(_simulationBox);
+
+    EXPECT_EQ(
+        std::format(
+            "python {} > {}",
+            utilities::shellQuote(path.string()),
+            utilities::shellQuote("pyscf.out")
+        ),
+        runner.getCommand()
+    );
+    EXPECT_FALSE(std::filesystem::exists(_workPath / "qm-injected"));
+}
+
+TEST_F(ExternalQMRunnerTest, quotesTurbomoleCommandArguments)
+{
+    auto       runner = CommandCaptureRunner<QM::TurbomoleRunner>();
+    const auto path   = configureQuotedScript(runner);
+
+    runner.execute(_simulationBox);
+
+    EXPECT_EQ(
+        std::format(
+            "{} {} 1 0 {} {}",
+            utilities::shellQuote(path.string()),
+            _simulationBox.calcActiveMolCharge(),
+            utilities::shellQuote(FileSettings::getTMFileName()),
+            utilities::shellQuote(FileSettings::getPointChargeFileName())
+        ),
+        runner.getCommand()
+    );
+    EXPECT_FALSE(std::filesystem::exists(_workPath / "qm-injected"));
 }
 
 TEST_F(ExternalQMRunnerTest, removesStaleResultsBeforeExecution)
@@ -219,7 +326,7 @@ TEST_F(ExternalQMRunnerTest, rejectsIncompleteCharges)
 
 TEST_F(ExternalQMRunnerTest, rejectsNonFiniteCharges)
 {
-    writeFile(FileSettings::getQMChargesTempFileName(), "1 nan\n");
+    writeFile(FileSettings::getQMChargesTempFileName(), "nan\n");
 
     EXPECT_THROW(_runner.readChargeFile(_simulationBox), QMRunnerException);
 }

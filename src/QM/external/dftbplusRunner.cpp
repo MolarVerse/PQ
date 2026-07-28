@@ -201,12 +201,12 @@ void DFTBPlusRunner::execute(SimulationBox &box)
 
     const auto command = std::format(
         "{} {} {} {} {} {}",
-        scriptFile,
+        shellQuote(scriptFile),
         charge,
         readChargesBin,
         usePointCharges,
-        FileSettings::getDFTBFileName(),
-        FileSettings::getPointChargeFileName()
+        shellQuote(FileSettings::getDFTBFileName()),
+        shellQuote(FileSettings::getPointChargeFileName())
     );
     executeCommand(command, "DFTB+");
 

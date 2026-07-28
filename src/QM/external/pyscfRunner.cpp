@@ -80,7 +80,11 @@ void PySCFRunner::execute(SimulationBox &)
             )
         );
 
-    const auto command = std::format("python {} > pyscf.out", scriptFileName);
+    const auto command = std::format(
+        "python {} > {}",
+        shellQuote(scriptFileName),
+        shellQuote("pyscf.out")
+    );
 
     executeCommand(command, "PySCF");
 }
