@@ -28,6 +28,7 @@
 #include <string>       // for string, char_traits
 #include <vector>       // for vector
 
+#include "capabilities.hpp"      // for writeCapabilities
 #include "commandLineArgs.hpp"   // for CommandLineArgs
 #include "engine.hpp"            // for Engine
 #include "exceptions.hpp"        // for CustomException
@@ -69,11 +70,14 @@ static void printHelp()
 {
     std::cout << "Usage: PQ <input_file>\n"
               << "       PQ --help\n"
-              << "       PQ --version\n\n"
+              << "       PQ --version\n"
+              << "       PQ --capabilities=json\n\n"
               << "Run a PQ simulation from an input file.\n\n"
               << "Options:\n"
               << "  -h, --help     Show this help message.\n"
-              << "  -V, --version  Show the PQ version.\n";
+              << "  -V, --version  Show the PQ version.\n"
+              << "  --capabilities=json\n"
+              << "                  Show compiled capabilities as JSON.\n";
 }
 
 // main wrapper
@@ -107,6 +111,12 @@ int main(int argc, char *argv[])
     if (CommandLineAction::VERSION == commandLineArgs.getAction())
     {
         std::cout << "PQ " << sysinfo::_VERSION_ << '\n';
+        return EXIT_SUCCESS;
+    }
+
+    if (CommandLineAction::CAPABILITIES == commandLineArgs.getAction())
+    {
+        cli::writeCapabilities(std::cout);
         return EXIT_SUCCESS;
     }
 
