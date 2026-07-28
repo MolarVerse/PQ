@@ -22,15 +22,34 @@
 
 #include "referencesOutput.hpp"
 
-#include <algorithm>   // for for_each
-#include <fstream>     // for fstream
-#include <string>      // for string
+#include <algorithm>    // for for_each
+#include <filesystem>   // for is_directory, path
+#include <fstream>      // for fstream
+#include <string>       // for string
 
+#include "executablePath.hpp"       // for executablePath
 #include "references.hpp"           // for ReferencesOutput
 #include "outputFileSettings.hpp"   // for OutputFileSettings
 
 using references::ReferencesOutput;
 using namespace settings;
+
+namespace
+{
+    std::filesystem::path referenceFilesPath()
+    {
+        const auto executable = utilities::executablePath();
+        if (!executable.empty())
+        {
+            const auto installedPath = executable.parent_path().parent_path() /
+                                       "share" / "PQ" / "references";
+            if (std::filesystem::is_directory(installedPath))
+                return installedPath;
+        }
+
+        return std::filesystem::path(REFERENCES_PATH_);
+    }
+}   // namespace
 
 /**
  * @brief writes the references file
@@ -39,14 +58,15 @@ using namespace settings;
  */
 void ReferencesOutput::writeReferencesFile()
 {
-    const auto filename = OutputFileSettings::getRefFileName();
+    const auto sourceDirectory = referenceFilesPath();
+    const auto filename        = OutputFileSettings::getRefFileName();
 
     std::ofstream fp(filename);
 
-    auto printReference = [&fp](const std::string &referenceFileName)
+    auto printReference =
+        [&fp, &sourceDirectory](const std::string &referenceFileName)
     {
-        const auto    filepath = _referenceFilesPath + "/" + referenceFileName;
-        std::ifstream referenceFile(filepath);
+        std::ifstream referenceFile(sourceDirectory / referenceFileName);
 
         std::string line;
         while (getline(referenceFile, line)) fp << line << '\n';

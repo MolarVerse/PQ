@@ -32,3 +32,19 @@ endif()
 install(TARGETS PQ
   DESTINATION bin
 )
+
+if(BUILD_WITH_TESTS)
+  add_test(
+    NAME testPQReferenceInstall
+    COMMAND
+      ${CMAKE_COMMAND}
+      -DBUILD_DIR=${CMAKE_BINARY_DIR}
+      -DREFERENCE_TEST_EXECUTABLE=$<TARGET_FILE:testReferencesOutput>
+      -DSTAGING_PREFIX=${CMAKE_CURRENT_BINARY_DIR}/pq-reference-install
+      -P ${PROJECT_SOURCE_DIR}/tests/cmake/testPQReferenceInstall.cmake
+  )
+  set_tests_properties(
+    testPQReferenceInstall
+    PROPERTIES LABELS installation RUN_SERIAL TRUE
+  )
+endif()
