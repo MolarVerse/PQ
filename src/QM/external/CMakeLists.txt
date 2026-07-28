@@ -43,5 +43,11 @@ add_custom_command(TARGET externalQM POST_BUILD
 )
 
 install(TARGETS externalQM
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+    DESTINATION lib
+)
+
+install(
+    DIRECTORY ${CMAKE_SOURCE_DIR}/src/QM/scripts/
+    DESTINATION share/PQ/scripts
+    USE_SOURCE_PERMISSIONS
 )

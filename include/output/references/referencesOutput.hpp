@@ -41,8 +41,6 @@ namespace references
     class ReferencesOutput
     {
        private:
-        static inline std::string _referenceFilesPath = REFERENCES_PATH_;
-
         static inline pq::stringSet _referenceFileNames = pq::stringSet();
         static inline pq::stringSet _bibtexFileNames    = pq::stringSet();
 

@@ -27,6 +27,8 @@
 #include <cstddef>      // for size_t
 
 #include "constants/conversionFactors.hpp"   // for _FS_TO_S_, _S_TO_FS_
+#include "exceptions.hpp"                    // for UserInputException
+#include "mathUtilities.hpp"                 // for isZero
 #include "physicalData.hpp"                  // for PhysicalData
 #include "simulationBox.hpp"                 // for SimulationBox
 #include "staticMatrix.hpp"                  // for operator*, operator+=
@@ -38,7 +40,9 @@ using namespace linearAlgebra;
 using namespace physicalData;
 using namespace simulationBox;
 using namespace constants;
+using namespace customException;
 using namespace settings;
+using namespace utilities;
 
 /**
  * @brief Construct a new Reset Kinetics:: Reset Kinetics object
@@ -129,7 +133,27 @@ void ResetKinetics::reset(
 void ResetKinetics::resetTemperature(SimulationBox &simBox)
 {
     const auto targetTemp = ThermostatSettings::getActualTargetTemperature();
-    const auto lambda     = ::sqrt(targetTemp / _temperature);
+
+    if (isZero(targetTemp))
+    {
+        std::ranges::for_each(
+            simBox.getAtoms(),
+            [](auto &atom) { atom->scaleVelocity(0.0); }
+        );
+
+        _temperature     = simBox.calculateTemperature();
+        _momentum        = simBox.calculateMomentum();
+        _angularMomentum = simBox.calculateAngularMomentum(_momentum);
+        return;
+    }
+
+    if (isZero(_temperature))
+        throw UserInputException(
+            "Cannot rescale a zero-temperature system to a positive target "
+            "temperature. Initialize velocities first."
+        );
+
+    const auto lambda = ::sqrt(targetTemp / _temperature);
 
     std::ranges::for_each(
         simBox.getAtoms(),

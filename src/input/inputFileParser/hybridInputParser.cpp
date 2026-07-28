@@ -149,11 +149,13 @@ void HybridInputParser::parseUseQMCharges(
         HybridSettings::setUseQMCharges(false);
 
     else
-        throw InputFileException(std::format(
-            "Invalid qm_charges \"{}\" in input file\n"
-            "Possible values are: qm, mm",
-            lineElements[2]
-        ));
+        throw InputFileException(
+            std::format(
+                "Invalid qm_charges \"{}\" in input file\n"
+                "Possible values are: qm, mm",
+                lineElements[2]
+            )
+        );
 
     throw UserInputException("Not implemented");
 }
@@ -171,14 +173,16 @@ void HybridInputParser::parseCoreRadius(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto coreRadius = std::stod(lineElements[2]);
+    const auto coreRadius = stringToFiniteDouble(lineElements[2]);
 
     if (coreRadius < 0.0)
-        throw InputFileException(std::format(
-            "Invalid {} {} in input file - must be a positive number",
-            lineElements[0],
-            lineElements[2]
-        ));
+        throw InputFileException(
+            std::format(
+                "Invalid {} {} in input file - must be a positive number",
+                lineElements[0],
+                lineElements[2]
+            )
+        );
 
     HybridSettings::setCoreRadius(coreRadius);
 
@@ -198,14 +202,16 @@ void HybridInputParser::parseLayerRadius(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto layerRadius = std::stod(lineElements[2]);
+    const auto layerRadius = stringToFiniteDouble(lineElements[2]);
 
     if (layerRadius < 0.0)
-        throw InputFileException(std::format(
-            "Invalid {} {} in input file - must be a positive number",
-            lineElements[0],
-            lineElements[2]
-        ));
+        throw InputFileException(
+            std::format(
+                "Invalid {} {} in input file - must be a positive number",
+                lineElements[0],
+                lineElements[2]
+            )
+        );
 
     HybridSettings::setLayerRadius(layerRadius);
 
@@ -225,14 +231,16 @@ void HybridInputParser::parseSmoothingRadius(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto smoothingRadius = std::stod(lineElements[2]);
+    const auto smoothingRadius = stringToFiniteDouble(lineElements[2]);
 
     if (smoothingRadius < 0.0)
-        throw InputFileException(std::format(
-            "Invalid {} {} in input file - must be a positive number",
-            lineElements[0],
-            lineElements[2]
-        ));
+        throw InputFileException(
+            std::format(
+                "Invalid {} {} in input file - must be a positive number",
+                lineElements[0],
+                lineElements[2]
+            )
+        );
 
     HybridSettings::setSmoothingRadius(smoothingRadius);
 
