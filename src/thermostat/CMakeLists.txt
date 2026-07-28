@@ -22,5 +22,5 @@ target_link_libraries(thermostat
 )
 
 install(TARGETS thermostat
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+    DESTINATION lib
 )

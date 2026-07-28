@@ -17,5 +17,5 @@ target_link_libraries(convergence
 )
 
 install(TARGETS convergence
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+    DESTINATION lib
 )

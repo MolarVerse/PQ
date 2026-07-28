@@ -24,5 +24,5 @@ target_link_libraries(optimizer
 )
 
 install(TARGETS optimizer
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+    DESTINATION lib
 )

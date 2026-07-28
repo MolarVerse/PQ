@@ -48,7 +48,7 @@ if(BUILD_WITH_PYBIND11)
 endif()
 
 install(TARGETS PQ
-  DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+  DESTINATION bin
 )
 
 if(BUILD_WITH_TESTS)
@@ -83,4 +83,18 @@ if(BUILD_WITH_TESTS)
   )
   set_property(TEST testPQValidation PROPERTY LABELS input)
 
+  if(BUILD_WITH_ASE)
+    add_test(
+      NAME testPQSlakosInstall
+      COMMAND
+        ${CMAKE_COMMAND}
+        -DPQ_EXECUTABLE=$<TARGET_FILE:PQ>
+        -DBUILD_DIR=${CMAKE_BINARY_DIR}
+        -DSLAKOS_SOURCE_DIR=${SLAKOS_SOURCE_DIR}
+        -DSTAGING_PREFIX=${CMAKE_CURRENT_BINARY_DIR}/pq-slakos-install
+        -DMM_FIXTURE_DIR=${PROJECT_SOURCE_DIR}/tests/regression/fixtures/mm-md-smoke
+        -P ${PROJECT_SOURCE_DIR}/tests/cmake/testPQSlakosInstall.cmake
+    )
+    set_property(TEST testPQSlakosInstall PROPERTY LABELS input)
+  endif()
 endif()

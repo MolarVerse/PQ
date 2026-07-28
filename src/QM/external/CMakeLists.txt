@@ -43,7 +43,7 @@ add_custom_command(TARGET externalQM POST_BUILD
 )
 
 install(TARGETS externalQM
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+    DESTINATION lib
 )
 
 install(
