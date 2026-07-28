@@ -114,9 +114,11 @@ namespace input
          ******************************/
 
         void validateTimings() const;
+        void validateOptimizer() const;
         void validateQM() const;
         void validateThermostat() const;
         void validateManostat() const;
+        void validateCellList() const;
         void validateReactionFieldCoulomb() const;
         void validateRingPolymer() const;
     };
