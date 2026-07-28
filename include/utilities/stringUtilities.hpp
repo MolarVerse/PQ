@@ -46,6 +46,7 @@ namespace utilities
     std::string toLowerAndReplaceDashesCopy(std::string);
     std::string toLowerAndReplaceDashesCopy(std::string_view);
     std::string firstLetterToUpperCaseCopy(std::string);
+    std::string shellQuote(std::string_view);
 
     void addSpaces(std::string &, const std::string &, const size_t);
 

@@ -143,9 +143,9 @@ void DFTBPlusRunner::execute()
 
     const auto command = std::format(
         "{} 0 {} 0 0 0 {}",
-        scriptFile,
+        shellQuote(scriptFile),
         reuseCharges,
-        FileSettings::getDFTBFileName()
+        shellQuote(FileSettings::getDFTBFileName())
     );
     executeCommand(command, "DFTB+");
 
