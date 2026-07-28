@@ -22,9 +22,11 @@
 
 #include "qmSettings.hpp"
 
+#include <filesystem>
 #include <format>   // for std::format
 
 #include "exceptions.hpp"        // for customException
+#include "executablePath.hpp"
 #include "stringUtilities.hpp"   // for toLowerCopy
 
 using settings::MaceMode;
@@ -156,14 +158,26 @@ std::string settings::string(const SlakosType slakos)
 /**
  * @brief builds the file path for a built-in SLAKOS set (3ob/matsci)
  *
- * @details __SLAKOS_DIR__ is only defined when building with ASE support (see
- * .cmake/slakos.cmake). In a build without ASE, requesting a built-in set is
- * reported as a user input error instead of failing to compile.
+ * @details installed data next to the executable is preferred. The fetched
+ * build-tree data is used while running an uninstalled ASE build.
  */
 static std::string builtinSlakosPath([[maybe_unused]] const SlakosType type)
 {
 #ifdef __SLAKOS_DIR__
-    return __SLAKOS_DIR__ + settings::string(type) + "/skfiles/";
+    const auto executable = utilities::executablePath();
+    if (!executable.empty())
+    {
+        const auto installedPath = executable.parent_path().parent_path() /
+                                   "share" / "PQ" / "slakos" /
+                                   settings::string(type) / "skfiles";
+        if (std::filesystem::is_directory(installedPath))
+            return installedPath.string() +
+                   std::filesystem::path::preferred_separator;
+    }
+
+    const auto buildPath = std::filesystem::path(__SLAKOS_DIR__) /
+                           settings::string(type) / "skfiles";
+    return buildPath.string() + std::filesystem::path::preferred_separator;
 #else
     throw InputFileException(
         "Built-in SLAKOS sets (3ob/matsci) require building PQ with "

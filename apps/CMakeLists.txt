@@ -61,4 +61,21 @@ if(BUILD_WITH_TESTS)
     testPQExternalQMScriptInstall
     PROPERTIES LABELS installation RUN_SERIAL TRUE
   )
+
+  if(BUILD_WITH_ASE)
+    add_test(
+      NAME testPQSlakosInstall
+      COMMAND
+        ${CMAKE_COMMAND}
+        -DBUILD_DIR=${CMAKE_BINARY_DIR}
+        -DSLAKOS_SOURCE_DIR=${SLAKOS_SOURCE_DIR}
+        -DSLAKOS_TEST_EXECUTABLE=$<TARGET_FILE:testQMSettings>
+        -DSTAGING_PREFIX=${CMAKE_CURRENT_BINARY_DIR}/pq-slakos-install
+        -P ${PROJECT_SOURCE_DIR}/tests/cmake/testPQSlakosInstall.cmake
+    )
+    set_tests_properties(
+      testPQSlakosInstall
+      PROPERTIES LABELS installation RUN_SERIAL TRUE
+    )
+  endif()
 endif()
