@@ -25,16 +25,17 @@
 #include <cmath>    // for sqrt
 #include <memory>   // for allocator
 
-#include "berendsenThermostat.hpp"                    // for BerendsenThermostat
-#include "constants/internalConversionFactors.hpp"    // for _TEMPERATURE_FACTOR_
-#include "gtest/gtest.h"                              // for InitGoogleTest
-#include "langevinThermostat.hpp"                     // for LangevinThermostat
-#include "noseHooverThermostat.hpp"                   // for NoseHooverThermostat
-#include "physicalData.hpp"                           // for PhysicalData
-#include "simulationBox.hpp"                          // for SimulationBox
-#include "thermostatSettings.hpp"                     // for ThermostatType
-#include "timingsSettings.hpp"                        // for TimingsSettings
-#include "velocityRescalingThermostat.hpp"            // for VelocityRescalingThermostat
+#include "berendsenThermostat.hpp"                   // for BerendsenThermostat
+#include "constants/internalConversionFactors.hpp"   // for _TEMPERATURE_FACTOR_
+#include "exceptions.hpp"                            // for UserInputException
+#include "gtest/gtest.h"                             // for InitGoogleTest
+#include "langevinThermostat.hpp"                    // for LangevinThermostat
+#include "noseHooverThermostat.hpp"                  // for NoseHooverThermostat
+#include "physicalData.hpp"                          // for PhysicalData
+#include "simulationBox.hpp"                         // for SimulationBox
+#include "thermostatSettings.hpp"                    // for ThermostatType
+#include "timingsSettings.hpp"                       // for TimingsSettings
+#include "velocityRescalingThermostat.hpp"   // for VelocityRescalingThermostat
 
 TEST_F(TestThermostat, calculateTemperature)
 {
@@ -175,7 +176,10 @@ TEST_F(TestThermostat, velocityRescaling_tauSetterGetter)
 TEST_F(TestThermostat, velocityRescaling_thermostatType)
 {
     auto vr = thermostat::VelocityRescalingThermostat(300.0, 100.0);
-    EXPECT_EQ(vr.getThermostatType(), settings::ThermostatType::VELOCITY_RESCALING);
+    EXPECT_EQ(
+        vr.getThermostatType(),
+        settings::ThermostatType::VELOCITY_RESCALING
+    );
 }
 
 TEST_F(TestThermostat, velocityRescaling_applyDoesNotNaN)
@@ -196,11 +200,39 @@ TEST_F(TestThermostat, velocityRescaling_applyDoesNotNaN)
         }
 }
 
-// Regression test: starting from zero kinetic energy (T == 0) used to
-// produce NaN velocities, because tempRatio = T_target / 0 = Inf and
-// the velocity scaling 0 * Inf = NaN. The guard skips the scaling and
-// leaves velocities at zero.
-TEST_F(TestThermostat, applyBerendsen_zeroTemperatureNoNaN)
+TEST_F(TestThermostat, velocityRescalingZeroTemperatureDoesNotNaN)
+{
+    delete _thermostat;
+    _thermostat = new thermostat::VelocityRescalingThermostat(0.0, 100.0);
+    settings::TimingsSettings::setTimeStep(0.1);
+
+    for (auto &atom : _simulationBox->getAtoms())
+        atom->setVelocity({0.0, 0.0, 0.0});
+
+    _thermostat->applyThermostat(*_simulationBox, *_data);
+
+    EXPECT_TRUE(std::isfinite(_data->getTemperature()));
+    for (const auto &atom : _simulationBox->getAtoms())
+        for (size_t dimension = 0; dimension < 3; ++dimension)
+            EXPECT_TRUE(std::isfinite(atom->getVelocity()[dimension]));
+}
+
+TEST_F(TestThermostat, velocityRescalingRejectsPositiveTargetFromZero)
+{
+    delete _thermostat;
+    _thermostat = new thermostat::VelocityRescalingThermostat(300.0, 100.0);
+    settings::TimingsSettings::setTimeStep(0.1);
+
+    for (auto &atom : _simulationBox->getAtoms())
+        atom->setVelocity({0.0, 0.0, 0.0});
+
+    EXPECT_THROW(
+        _thermostat->applyThermostat(*_simulationBox, *_data),
+        customException::UserInputException
+    );
+}
+
+TEST_F(TestThermostat, berendsenRejectsPositiveTargetFromZero)
 {
     delete _thermostat;
     _thermostat = new thermostat::BerendsenThermostat(300.0, 100.0);
@@ -209,16 +241,10 @@ TEST_F(TestThermostat, applyBerendsen_zeroTemperatureNoNaN)
     for (auto &atom : _simulationBox->getAtoms())
         atom->setVelocity({0.0, 0.0, 0.0});
 
-    _thermostat->applyThermostat(*_simulationBox, *_data);
-
-    EXPECT_FALSE(std::isnan(_data->getTemperature()));
-    EXPECT_FALSE(std::isinf(_data->getTemperature()));
-    for (const auto &atom : _simulationBox->getAtoms())
-        for (size_t i = 0; i < 3; ++i)
-        {
-            EXPECT_FALSE(std::isnan(atom->getVelocity()[i]));
-            EXPECT_FALSE(std::isinf(atom->getVelocity()[i]));
-        }
+    EXPECT_THROW(
+        _thermostat->applyThermostat(*_simulationBox, *_data),
+        customException::UserInputException
+    );
 }
 
 /* ---------- LangevinThermostat ---------- */

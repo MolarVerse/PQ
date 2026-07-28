@@ -144,7 +144,7 @@ void CellList::addNeighbouringCells(const double coulombCutoff)
 {
     _nNeighbourCells = Vec3Dul(ceil(coulombCutoff / _cellSize));
 
-    const auto requiredCells = _nNeighbourCells * 2 + 1;
+    const auto     requiredCells = _nNeighbourCells * 2 + 1;
     constexpr auto axisNames = std::array<std::string_view, 3>{"x", "y", "z"};
 
     for (size_t i = 0; i < axisNames.size(); ++i)
@@ -298,8 +298,10 @@ void CellList::addMoleculesToCells(SimulationBox &simulationBox)
  * @param position
  * @return Vec3Dul
  */
-Vec3Dul CellList::getCellIndexOfAtom(const Vec3D &box, const Vec3D &position)
-    const
+Vec3Dul CellList::getCellIndexOfAtom(
+    const Vec3D &box,
+    const Vec3D &position
+) const
 {
     auto cellIndex = Vec3Dul(floor((position + box / 2.0) / _cellSize));
 
@@ -312,7 +314,25 @@ Vec3Dul CellList::getCellIndexOfAtom(const Vec3D &box, const Vec3D &position)
  * @brief resize cells
  *
  */
-void CellList::resizeCells() { _cells.resize(prod(_nCells)); }
+void CellList::resizeCells()
+{
+    auto numberOfCells = size_t{1};
+
+    for (size_t dimension = 0; dimension < 3; ++dimension)
+    {
+        if (0 == _nCells[dimension])
+            throw CellListException("Number of cells must be positive");
+
+        if (_nCells[dimension] > _cells.max_size() / numberOfCells)
+            throw CellListException(
+                "Number of cells exceeds the supported size"
+            );
+
+        numberOfCells *= _nCells[dimension];
+    }
+
+    _cells.resize(numberOfCells);
+}
 
 /**
  * @brief add cell to cell list

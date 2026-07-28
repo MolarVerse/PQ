@@ -28,15 +28,15 @@
 #include "berendsenThermostat.hpp"           // for BerendsenThermostat
 #include "constants/conversionFactors.hpp"   // for _FS_TO_S_, _KG_TO_GRAM_
 #include "constants/natureConstants.hpp"     // for _UNIVERSAL_GAS_CONSTANT_
-#include "gtest/gtest.h"              // for Message, TestPartResult
-#include "langevinThermostat.hpp"     // for LangevinThermostat
-#include "mdEngine.hpp"               // for MDEngine
-#include "noseHooverThermostat.hpp"   // for NoseHooverThermostat
-#include "testSetup.hpp"              // for TestSetup
-#include "thermostat.hpp"             // for BerendsenThermostat, Thermostat
-#include "thermostatSettings.hpp"     // for ThermostatSettings
-#include "thermostatSetup.hpp"        // for ThermostatSetup, setupThermostat
-#include "timingsSettings.hpp"        // for TimingsSettings
+#include "gtest/gtest.h"                     // for Message, TestPartResult
+#include "langevinThermostat.hpp"            // for LangevinThermostat
+#include "mdEngine.hpp"                      // for MDEngine
+#include "noseHooverThermostat.hpp"          // for NoseHooverThermostat
+#include "testSetup.hpp"                     // for TestSetup
+#include "thermostat.hpp"           // for BerendsenThermostat, Thermostat
+#include "thermostatSettings.hpp"   // for ThermostatSettings
+#include "thermostatSetup.hpp"      // for ThermostatSetup, setupThermostat
+#include "timingsSettings.hpp"      // for TimingsSettings
 #include "velocityRescalingThermostat.hpp"   // for VelocityRescalingThermostat
 
 using namespace setup;
@@ -101,7 +101,33 @@ TEST_F(TestSetup, setupThermostat_temp_ramping)
         thermostatSetup.getEngine().getThermostat().getRampingFrequency(),
         2
     );
+}
 
+TEST_F(TestSetup, temperatureRampReachesEndWithPartialFinalInterval)
+{
+    ThermostatSetup thermostatSetup(*_mdEngine);
+
+    settings::TimingsSettings::setNumberOfSteps(10);
+    settings::ThermostatSettings::setThermostatType("berendsen");
+    settings::ThermostatSettings::setTargetTemperature(300);
+    settings::ThermostatSettings::setStartTemperature(200);
+    settings::ThermostatSettings::setTemperatureRampSteps(10);
+    settings::ThermostatSettings::setTemperatureRampFrequency(3);
+
+    thermostatSetup.setup();
+
+    EXPECT_DOUBLE_EQ(
+        thermostatSetup.getEngine().getThermostat().getTemperatureIncrease(),
+        25.0
+    );
+
+    for (size_t step = 0; step < 10; ++step)
+        thermostatSetup.getEngine().getThermostat().applyTemperatureRamping();
+
+    EXPECT_DOUBLE_EQ(
+        thermostatSetup.getEngine().getThermostat().getTargetTemperature(),
+        300.0
+    );
 }
 
 TEST_F(TestSetup, setupThermostat_only_end_temp_defined)
@@ -190,8 +216,7 @@ TEST_F(TestSetup, setupThermostat_langevin)
     EXPECT_EQ(langevinThermostat.getFriction(), 1.0e11);
 
     const auto conversionFactor =
-        constants::_UNIVERSAL_GAS_CONSTANT_ *
-        constants::_M2_TO_ANGSTROM2_ *
+        constants::_UNIVERSAL_GAS_CONSTANT_ * constants::_M2_TO_ANGSTROM2_ *
         constants::_KG_TO_GRAM_ / constants::_FS_TO_S_;
     const auto sigma = std::sqrt(
         4.0 * langevinThermostat.getFriction() * conversionFactor *

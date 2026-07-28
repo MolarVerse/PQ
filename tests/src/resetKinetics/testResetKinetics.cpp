@@ -26,6 +26,7 @@
 #include <memory>
 
 #include "atom.hpp"
+#include "exceptions.hpp"
 #include "gtest/gtest.h"
 #include "molecule.hpp"
 #include "physicalData.hpp"
@@ -120,6 +121,44 @@ TEST(TestResetKinetics, resetTemperatureRescalesVelocitiesAndStaysFinite)
 
     EXPECT_FALSE(std::isnan(T_after));
     EXPECT_FALSE(std::isinf(T_after));
+
+    delete box;
+}
+
+TEST(TestResetKinetics, resetTemperatureSupportsZeroKelvin)
+{
+    auto                        *box = makeBox();
+    resetKinetics::ResetKinetics resetKinetics;
+
+    settings::ThermostatSettings::setTargetTemperature(0.0);
+
+    auto data = physicalData::PhysicalData();
+    data.calculateTemperature(*box);
+    resetKinetics.setTemperature(data.getTemperature());
+    resetKinetics.resetTemperature(*box);
+
+    data.calculateTemperature(*box);
+    EXPECT_DOUBLE_EQ(data.getTemperature(), 0.0);
+    for (const auto &atom : box->getAtoms())
+        EXPECT_EQ(atom->getVelocity(), linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+
+    delete box;
+}
+
+TEST(TestResetKinetics, rejectsPositiveTargetFromZeroTemperature)
+{
+    auto                        *box = makeBox();
+    resetKinetics::ResetKinetics resetKinetics;
+
+    for (const auto &atom : box->getAtoms()) atom->setVelocity({0.0, 0.0, 0.0});
+
+    settings::ThermostatSettings::setTargetTemperature(300.0);
+    resetKinetics.setTemperature(0.0);
+
+    EXPECT_THROW(
+        resetKinetics.resetTemperature(*box),
+        customException::UserInputException
+    );
 
     delete box;
 }
