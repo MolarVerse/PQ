@@ -521,10 +521,22 @@ void QMSettings::setSlakosType(const std::string_view &slakos)
 /**
  * @brief sets the slakosType to enum in settings
  *
- * @param model
+ * @param slakos
+ * @param resolveBuiltInPath
  */
-void QMSettings::setSlakosType(const SlakosType slakos)
+void QMSettings::setSlakosType(
+    const SlakosType slakos,
+    const bool       resolveBuiltInPath
+)
 {
+    if (!resolveBuiltInPath &&
+        (slakos == SlakosType::THREEOB || slakos == SlakosType::MATSCI))
+    {
+        _slakosType = slakos;
+        _slakosPath.clear();
+        return;
+    }
+
     setSlakosType(string(slakos));
 }
 

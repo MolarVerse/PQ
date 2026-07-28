@@ -178,7 +178,10 @@ namespace settings
         static void setQMScriptFullPath(const std::string_view &script);
 
         static void setSlakosType(const std::string_view &slakos);
-        static void setSlakosType(const SlakosType slakos);
+        static void setSlakosType(
+            const SlakosType slakos,
+            bool             resolveBuiltInPath = true
+        );
         static void setSlakosPath(const std::string_view &path);
 
         static void setUseDispersionCorrection(const bool use);

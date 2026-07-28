@@ -77,7 +77,8 @@ namespace input
         explicit InputFileReader(
             const std::string_view &,
             engine::Engine &,
-            bool validateFilePaths = true
+            bool validateFilePaths        = true,
+            bool resolveBuiltInSlakosPath = true
         );
 
         void read();
