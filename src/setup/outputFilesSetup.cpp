@@ -40,6 +40,7 @@
 #include "rstFileOutput.hpp"                  // for RstFileOutput
 #include "settings.hpp"                       // for Settings
 #include "stdoutOutput.hpp"                   // for StdoutOutput
+#include "timingsSettings.hpp"                // for TimingsSettings
 #include "trajectoryOutput.hpp"               // for TrajectoryOutput
 
 using setup::OutputFilesSetup;
@@ -118,6 +119,14 @@ void OutputFilesSetup::setup()
         mdEngine.getVirialOutput().setFilename(virialFile);
         mdEngine.getStressOutput().setFilename(stressFile);
         mdEngine.getBoxFileOutput().setFilename(boxFile);
+
+        if (OutputFileSettings::getIncludeOutputMetadata() &&
+            TimingsSettings::isTimeStepSet())
+        {
+            const auto timeStep = TimingsSettings::getTimeStep();
+            _engine.getEnergyOutput().writeHeader(timeStep);
+            mdEngine.getInstantEnergyOutput().writeHeader(timeStep);
+        }
 
         if (Settings::isRingPolymerMDActivated())
         {
