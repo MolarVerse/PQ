@@ -78,4 +78,14 @@ if(BUILD_WITH_TESTS)
       PROPERTIES LABELS installation RUN_SERIAL TRUE
     )
   endif()
+
+  add_test(
+    NAME testPQCli
+    COMMAND
+      ${CMAKE_COMMAND}
+      -DPQ_EXECUTABLE=$<TARGET_FILE:PQ>
+      -DEXPECTED_VERSION=${GIT_VERSION}
+      -P ${PROJECT_SOURCE_DIR}/tests/cmake/testPQCli.cmake
+  )
+  set_property(TEST testPQCli PROPERTY LABELS input)
 endif()

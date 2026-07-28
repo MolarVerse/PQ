@@ -31,32 +31,60 @@
 #include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
 
 /**
- * @brief tests detecting flags and input file name via console input
- *
+ * @brief tests parsing an input file name
  */
-TEST(TestCommandLineArgs, detectFlags)
+TEST(TestCommandLineArgs, parse_input_file)
 {
     std::vector<std::string> args = {"program", "input.in"};
     auto commandLineArgs          = CommandLineArgs(int(args.size()), args);
 
-    commandLineArgs.detectFlags();
+    commandLineArgs.parse();
     EXPECT_EQ("input.in", commandLineArgs.getInputFileName());
+    EXPECT_EQ(CommandLineAction::RUN, commandLineArgs.getAction());
 }
 
 /**
- * @brief tests detecting flags and input file name via console input
- *
- * @TODO: no flags implemented at the moment
+ * @brief tests parsing the help option
  */
-TEST(TestCommandLineArgs, detectFlags_flag_given)
+TEST(TestCommandLineArgs, parse_help)
 {
-    std::vector<std::string> args = {"program", "-i", "input.in"};
+    for (const auto &option : {"-h", "--help"})
+    {
+        std::vector<std::string> args = {"program", option};
+        auto commandLineArgs          = CommandLineArgs(int(args.size()), args);
+
+        commandLineArgs.parse();
+        EXPECT_EQ(CommandLineAction::HELP, commandLineArgs.getAction());
+    }
+}
+
+/**
+ * @brief tests parsing the version option
+ */
+TEST(TestCommandLineArgs, parse_version)
+{
+    for (const auto &option : {"-V", "--version"})
+    {
+        std::vector<std::string> args = {"program", option};
+        auto commandLineArgs          = CommandLineArgs(int(args.size()), args);
+
+        commandLineArgs.parse();
+        EXPECT_EQ(CommandLineAction::VERSION, commandLineArgs.getAction());
+    }
+}
+
+/**
+ * @brief tests rejecting an unknown option
+ */
+TEST(TestCommandLineArgs, parse_unknown_option)
+{
+    std::vector<std::string> args = {"program", "--unknown"};
     auto commandLineArgs          = CommandLineArgs(int(args.size()), args);
 
     EXPECT_THROW_MSG(
-        commandLineArgs.detectFlags(),
+        commandLineArgs.parse(),
         customException::UserInputException,
-        "Invalid flag: " + args[1] + " Flags are not yet implemented."
+        "Unknown option: --unknown. Use PQ --help for usage."
     );
 }
 
@@ -64,14 +92,29 @@ TEST(TestCommandLineArgs, detectFlags_flag_given)
  * @brief tests throwing exception if no input file name is given
  *
  */
-TEST(TestCommandLineArgs, detectFlags_missing_input_file)
+TEST(TestCommandLineArgs, parse_missing_input_file)
 {
     std::vector<std::string> args = {"program"};
     auto commandLineArgs          = CommandLineArgs(int(args.size()), args);
 
     EXPECT_THROW_MSG(
-        commandLineArgs.detectFlags(),
+        commandLineArgs.parse(),
         customException::UserInputException,
         "No input file specified. Usage: PQ <input_file>"
+    );
+}
+
+/**
+ * @brief tests rejecting extra positional arguments
+ */
+TEST(TestCommandLineArgs, parse_extra_argument)
+{
+    std::vector<std::string> args = {"program", "input.in", "extra"};
+    auto commandLineArgs          = CommandLineArgs(int(args.size()), args);
+
+    EXPECT_THROW_MSG(
+        commandLineArgs.parse(),
+        customException::UserInputException,
+        "Unexpected argument: extra. Use PQ --help for usage."
     );
 }
