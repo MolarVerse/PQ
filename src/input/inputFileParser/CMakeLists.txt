@@ -49,5 +49,5 @@ if(BUILD_WITH_TESTS)
 endif()
 
 install(TARGETS inputFileParser
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+    DESTINATION lib
 )

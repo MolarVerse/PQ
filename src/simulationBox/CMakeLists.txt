@@ -60,5 +60,5 @@ target_link_libraries(simulationBox
 )
 
 install(TARGETS simulationBox
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+    DESTINATION lib
 )

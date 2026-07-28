@@ -23,5 +23,5 @@ add_custom_command(TARGET references POST_BUILD
     ${CMAKE_SOURCE_DIR}/include/output/references/referenceFiles $<TARGET_FILE_DIR:references>/referenceFiles)
 
 install(TARGETS references
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+    DESTINATION lib
 )

@@ -17,5 +17,5 @@ target_link_libraries(ringPolymerRestartFileReader
 )
 
 install(TARGETS ringPolymerRestartFileReader
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+    DESTINATION lib
 )

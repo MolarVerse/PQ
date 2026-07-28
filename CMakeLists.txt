@@ -48,9 +48,11 @@ else()
     # *****************
     # set install rpath
     # *****************
-    SET(CMAKE_INSTALL_RPATH
-        "${CMAKE_INSTALL_PREFIX}/lib/;${CMAKE_INSTALL_PREFIX}/lib/tools/;"
-    )
+    if(APPLE)
+        set(CMAKE_INSTALL_RPATH "@loader_path/../lib;@loader_path")
+    else()
+        set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib;$ORIGIN")
+    endif()
     set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 endif()
 

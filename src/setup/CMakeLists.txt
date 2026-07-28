@@ -76,5 +76,5 @@ if(BUILD_WITH_PYTHON_BINDINGS)
 endif()
 
 install(TARGETS setup
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+    DESTINATION lib
 )
