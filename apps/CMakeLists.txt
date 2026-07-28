@@ -1,6 +1,7 @@
 add_executable(PQ
   PQ.cpp
   capabilities.cpp
+  validation.cpp
 )
 
 target_include_directories(PQ
@@ -107,4 +108,15 @@ if(BUILD_WITH_TESTS)
       -P ${PROJECT_SOURCE_DIR}/tests/cmake/testPQCli.cmake
   )
   set_property(TEST testPQCli PROPERTY LABELS input)
+
+  add_test(
+    NAME testPQValidation
+    COMMAND
+      ${CMAKE_COMMAND}
+      -DPQ_EXECUTABLE=$<TARGET_FILE:PQ>
+      -DVALIDATION_FIXTURE_DIR=${PROJECT_SOURCE_DIR}/tests/regression/fixtures/mm-md-smoke
+      -DVALIDATION_WORK_DIR=${CMAKE_CURRENT_BINARY_DIR}/pq-cli-validation
+      -P ${PROJECT_SOURCE_DIR}/tests/cmake/testPQValidation.cmake
+  )
+  set_property(TEST testPQValidation PROPERTY LABELS input)
 endif()

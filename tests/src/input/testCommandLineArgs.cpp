@@ -86,6 +86,156 @@ TEST(TestCommandLineArgs, parse_capabilities)
 }
 
 /**
+ * @brief tests parsing input validation
+ */
+TEST(TestCommandLineArgs, parse_validation)
+{
+    std::vector<std::string> args = {"program", "--validate", "input.in"};
+    auto commandLineArgs          = CommandLineArgs(int(args.size()), args);
+
+    commandLineArgs.parse();
+    EXPECT_EQ(CommandLineAction::VALIDATE, commandLineArgs.getAction());
+    EXPECT_EQ(CommandLineFormat::TEXT, commandLineArgs.getFormat());
+    EXPECT_EQ(ValidationScope::INSTALLED, commandLineArgs.getValidationScope());
+    EXPECT_EQ("input.in", commandLineArgs.getInputFileName());
+}
+
+TEST(TestCommandLineArgs, parse_portable_json_validation)
+{
+    std::vector<std::string> args = {
+        "program",
+        "--validate",
+        "input.in",
+        "--scope=portable",
+        "--format=json"
+    };
+    auto commandLineArgs = CommandLineArgs(int(args.size()), args);
+
+    commandLineArgs.parse();
+    EXPECT_EQ(CommandLineFormat::JSON, commandLineArgs.getFormat());
+    EXPECT_EQ(ValidationScope::PORTABLE, commandLineArgs.getValidationScope());
+}
+
+TEST(TestCommandLineArgs, parse_validation_options_in_either_order)
+{
+    std::vector<std::string> args = {
+        "program",
+        "--validate",
+        "input.in",
+        "--format=json",
+        "--scope=portable"
+    };
+    auto commandLineArgs = CommandLineArgs(int(args.size()), args);
+
+    EXPECT_NO_THROW(commandLineArgs.parse());
+    EXPECT_EQ(CommandLineFormat::JSON, commandLineArgs.getFormat());
+    EXPECT_EQ(ValidationScope::PORTABLE, commandLineArgs.getValidationScope());
+}
+
+/**
+ * @brief tests parsing machine-readable input validation
+ */
+TEST(TestCommandLineArgs, parse_json_validation)
+{
+    std::vector<std::string> args =
+        {"program", "--validate", "input.in", "--format=json"};
+    auto commandLineArgs = CommandLineArgs(int(args.size()), args);
+
+    commandLineArgs.parse();
+    EXPECT_EQ(CommandLineAction::VALIDATE, commandLineArgs.getAction());
+    EXPECT_EQ(CommandLineFormat::JSON, commandLineArgs.getFormat());
+    EXPECT_EQ("input.in", commandLineArgs.getInputFileName());
+}
+
+TEST(TestCommandLineArgs, parse_explicit_text_validation)
+{
+    std::vector<std::string> args = {
+        "program",
+        "--validate",
+        "input.in",
+        "--format=text",
+        "--scope=installed"
+    };
+    auto commandLineArgs = CommandLineArgs(int(args.size()), args);
+
+    commandLineArgs.parse();
+    EXPECT_EQ(CommandLineFormat::TEXT, commandLineArgs.getFormat());
+    EXPECT_EQ(ValidationScope::INSTALLED, commandLineArgs.getValidationScope());
+}
+
+TEST(TestCommandLineArgs, reject_duplicate_validation_format)
+{
+    std::vector<std::string> args =
+        {"program", "--validate", "input.in", "--format=text", "--format=json"};
+    auto commandLineArgs = CommandLineArgs(int(args.size()), args);
+
+    EXPECT_THROW_MSG(
+        commandLineArgs.parse(),
+        customException::UserInputException,
+        "Unexpected argument: --format=json. Use PQ --help for usage."
+    );
+}
+
+/**
+ * @brief tests rejecting validation without an input file
+ */
+TEST(TestCommandLineArgs, parse_validation_without_input)
+{
+    std::vector<std::string> args = {"program", "--validate"};
+    auto commandLineArgs          = CommandLineArgs(int(args.size()), args);
+
+    EXPECT_THROW_MSG(
+        commandLineArgs.parse(),
+        customException::UserInputException,
+        "No input file specified. Usage: PQ --validate <input_file>"
+    );
+}
+
+/**
+ * @brief tests rejecting a validation format without an input file
+ */
+TEST(TestCommandLineArgs, parse_validation_format_without_input)
+{
+    std::vector<std::string> args = {"program", "--validate", "--format=json"};
+    auto commandLineArgs          = CommandLineArgs(int(args.size()), args);
+
+    EXPECT_THROW_MSG(
+        commandLineArgs.parse(),
+        customException::UserInputException,
+        "No input file specified. Usage: PQ --validate <input_file>"
+    );
+}
+
+/**
+ * @brief tests rejecting unsupported validation formats
+ */
+TEST(TestCommandLineArgs, parse_validation_unknown_format)
+{
+    std::vector<std::string> args =
+        {"program", "--validate", "input.in", "--format=yaml"};
+    auto commandLineArgs = CommandLineArgs(int(args.size()), args);
+
+    EXPECT_THROW_MSG(
+        commandLineArgs.parse(),
+        customException::UserInputException,
+        "Unexpected argument: --format=yaml. Use PQ --help for usage."
+    );
+}
+
+TEST(TestCommandLineArgs, parse_validation_unknown_scope)
+{
+    std::vector<std::string> args =
+        {"program", "--validate", "input.in", "--scope=project"};
+    auto commandLineArgs = CommandLineArgs(int(args.size()), args);
+
+    EXPECT_THROW_MSG(
+        commandLineArgs.parse(),
+        customException::UserInputException,
+        "Unexpected argument: --scope=project. Use PQ --help for usage."
+    );
+}
+
+/**
  * @brief tests rejecting an unknown option
  */
 TEST(TestCommandLineArgs, parse_unknown_option)

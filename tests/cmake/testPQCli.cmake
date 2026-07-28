@@ -73,6 +73,22 @@ string(JSON mpi GET "${output}" build mpi)
 string(JSON kokkos GET "${output}" build kokkos)
 string(JSON python_bindings GET "${output}" build python_bindings)
 string(JSON python_embedding GET "${output}" build python_embedding)
+string(
+    JSON validation_schema
+    GET "${output}" cli input_validation schema
+)
+string(
+    JSON validation_schema_version
+    GET "${output}" cli input_validation schema_version
+)
+string(
+    JSON validation_formats
+    GET "${output}" cli input_validation formats
+)
+string(
+    JSON validation_scopes
+    GET "${output}" cli input_validation scopes
+)
 string(JSON t_relaxation GET "${output}" input parameters t_relaxation default)
 string(JSON random_seed_max GET "${output}" input parameters random_seed maximum)
 if(NOT schema STREQUAL "pq.capabilities")
@@ -98,6 +114,24 @@ if(NOT python_bindings STREQUAL "${EXPECTED_PYTHON_BINDINGS}")
 endif()
 if(NOT python_embedding STREQUAL "${EXPECTED_PYTHON_EMBEDDING}")
     message(FATAL_ERROR "Unexpected Python embedding capability: ${python_embedding}")
+endif()
+if(NOT validation_schema STREQUAL "pq.validation")
+    message(FATAL_ERROR "Unexpected validation schema: ${validation_schema}")
+endif()
+if(NOT validation_schema_version EQUAL 1)
+    message(
+        FATAL_ERROR
+        "Unexpected validation schema version: ${validation_schema_version}"
+    )
+endif()
+if(NOT validation_formats MATCHES "json")
+    message(FATAL_ERROR "JSON validation format is not advertised")
+endif()
+if(
+    NOT validation_scopes MATCHES "portable"
+    OR NOT validation_scopes MATCHES "installed"
+)
+    message(FATAL_ERROR "Validation scopes are incomplete")
 endif()
 
 assert_input_array(
