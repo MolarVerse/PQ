@@ -82,6 +82,11 @@ if(BUILD_WITH_TESTS)
       -P ${PROJECT_SOURCE_DIR}/tests/cmake/testPQValidation.cmake
   )
   set_property(TEST testPQValidation PROPERTY LABELS input)
+  set_property(
+    TEST testPQValidation
+    PROPERTY ENVIRONMENT
+             "GMON_OUT_PREFIX=${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/pq-validation-gmon"
+  )
 
   if(BUILD_WITH_ASE)
     add_test(

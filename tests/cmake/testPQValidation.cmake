@@ -52,7 +52,12 @@ if(NOT error STREQUAL "")
     message(FATAL_ERROR "JSON validation wrote to stderr: ${error}")
 endif()
 if(NOT before_validation STREQUAL after_validation)
-    message(FATAL_ERROR "Input validation changed files")
+    message(
+        FATAL_ERROR
+        "Input validation changed files\n"
+        "Before:\n${before_validation}"
+        "After:\n${after_validation}"
+    )
 endif()
 string(JSON validation_schema GET "${output}" schema)
 string(JSON validation_valid GET "${output}" valid)
