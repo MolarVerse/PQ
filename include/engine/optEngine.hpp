@@ -79,7 +79,7 @@ namespace engine
         [[nodiscard]] std::shared_ptr<opt::Optimizer> getSharedOptimizer();
         [[nodiscard]] std::shared_ptr<opt::LearningRateStrategy> getSharedLearningRate();
         [[nodiscard]] std::shared_ptr<opt::Evaluator> getSharedEvaluator();
-        
+
         [[nodiscard]] physicalData::PhysicalData &getPhysicalDataOld();
         [[nodiscard]] std::shared_ptr<physicalData::PhysicalData> getSharedPhysicalDataOld();
         // clang-format on

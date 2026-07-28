@@ -74,7 +74,11 @@ namespace input
         size_t _lineNumber = 1;
 
        public:
-        explicit InputFileReader(const std::string_view &, engine::Engine &);
+        explicit InputFileReader(
+            const std::string_view &,
+            engine::Engine &,
+            bool validateFilePaths = true
+        );
 
         void read();
         void addKeywords();
@@ -110,9 +114,11 @@ namespace input
          ******************************/
 
         void validateTimings() const;
+        void validateOptimizer() const;
         void validateQM() const;
         void validateThermostat() const;
         void validateManostat() const;
+        void validateCellList() const;
         void validateReactionFieldCoulomb() const;
         void validateRingPolymer() const;
     };

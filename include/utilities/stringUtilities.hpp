@@ -46,10 +46,12 @@ namespace utilities
     std::string toLowerAndReplaceDashesCopy(std::string);
     std::string toLowerAndReplaceDashesCopy(std::string_view);
     std::string firstLetterToUpperCaseCopy(std::string);
+    std::string shellQuote(std::string_view);
 
     void addSpaces(std::string &, const std::string &, const size_t);
 
     std::uint_fast32_t stringToUintFast32t(const std::string &);
+    int                stringToInt(const std::string &);
     double             stringToFiniteDouble(const std::string &);
 
     bool fileExists(const std::string &);

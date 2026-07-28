@@ -22,11 +22,13 @@
 
 #include <gtest/gtest.h>   // for Test, TestInfo (ptr only), EXPECT_EQ
 
-#include <cstdint>     // for UINT32_MAX
-#include <cstdio>      // for remove
-#include <fstream>     // for ofstream
-#include <stdexcept>   // for out_of_range and invalid_argument
-#include <string>      // for string, allocator
+#include <climits>      // for INT_MAX, INT_MIN
+#include <cstdint>      // for UINT32_MAX
+#include <cstdio>       // for remove
+#include <filesystem>   // for create_directory
+#include <fstream>      // for ofstream
+#include <stdexcept>    // for out_of_range and invalid_argument
+#include <string>       // for string, allocator
 
 #include "exceptions.hpp"        // for InputFileException
 #include "gmock/gmock.h"         // for ElementsAre, MakePredicateFormatter
@@ -164,18 +166,32 @@ TEST(TestStringUtilities, firstLetterToUpperCaseCopy)
     EXPECT_EQ("Test", utilities::firstLetterToUpperCaseCopy(line));
 }
 
+TEST(TestStringUtilities, shellQuote)
+{
+    EXPECT_EQ("''", utilities::shellQuote(""));
+    EXPECT_EQ("'path with spaces'", utilities::shellQuote("path with spaces"));
+    EXPECT_EQ(
+        "'a'\"'\"'b; touch nope'",
+        utilities::shellQuote("a'b; touch nope")
+    );
+}
+
 /**
  * @brief test check if file exists
  *
  */
 TEST(TestStringUtilities, fileExists)
 {
-    std::string   file = "testFile.txt";
+    std::string   file      = "testFile.txt";
+    std::string   directory = "testDirectory";
     std::ofstream out(file);
     out.close();
+    std::filesystem::create_directory(directory);
     EXPECT_TRUE(utilities::fileExists(file));
     EXPECT_FALSE(utilities::fileExists("testFile2.txt"));
+    EXPECT_FALSE(utilities::fileExists(directory));
     std::remove(file.c_str());
+    std::filesystem::remove(directory);
 }
 
 /**
@@ -261,6 +277,36 @@ TEST(TestStringUtilities, stringToUintFast32t)
 }
 
 /**
+ * @brief test stringToInt function
+ *
+ */
+TEST(TestStringUtilities, stringToInt)
+{
+    EXPECT_EQ(0, utilities::stringToInt("0"));
+    EXPECT_EQ(43, utilities::stringToInt("+43"));
+    EXPECT_EQ(-43, utilities::stringToInt("-43"));
+    EXPECT_EQ(INT_MAX, utilities::stringToInt(std::to_string(INT_MAX)));
+    EXPECT_EQ(INT_MIN, utilities::stringToInt(std::to_string(INT_MIN)));
+
+    for (const std::string invalid : {"", "3.14", "12steps", "1e3"})
+        EXPECT_THROW_MSG(
+            utilities::stringToInt(invalid),
+            std::invalid_argument,
+            std::format("Invalid integer value '{}' encountered", invalid)
+        );
+
+    const auto outOfRange = std::to_string(static_cast<long long>(INT_MAX) + 1);
+    EXPECT_THROW_MSG(
+        utilities::stringToInt(outOfRange),
+        std::out_of_range,
+        std::format(
+            "Integer value '{}' exceeds the representable range for an int",
+            outOfRange
+        )
+    );
+}
+
+/**
  * @brief test stringToFiniteDouble function
  *
  */
@@ -284,6 +330,13 @@ TEST(TestStringUtilities, stringToFiniteDouble)
     EXPECT_EQ(-maxValue, utilities::stringToFiniteDouble(str));
 
     str = "abc";
+    EXPECT_THROW_MSG(
+        utilities::stringToFiniteDouble(str),
+        std::invalid_argument,
+        std::format("Invalid floating-point value '{}' encountered", str)
+    );
+
+    str = "1.5fs";
     EXPECT_THROW_MSG(
         utilities::stringToFiniteDouble(str),
         std::invalid_argument,

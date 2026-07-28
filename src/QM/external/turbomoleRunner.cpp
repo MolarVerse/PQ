@@ -22,11 +22,10 @@
 
 #include "turbomoleRunner.hpp"
 
-#include <cstddef>      // for size_t
-#include <cstdlib>      // for system
-#include <format>       // for format
-#include <fstream>      // for ofstream
-#include <string>       // for string
+#include <cstddef>   // for size_t
+#include <format>    // for format
+#include <fstream>   // for ofstream
+#include <string>    // for string
 
 #include "atom.hpp"              // for Atom
 #include "constants.hpp"         // for constants
@@ -83,18 +82,21 @@ void TurbomoleRunner::writeCoordsFile(SimulationBox &simBox)
  */
 void TurbomoleRunner::execute()
 {
-    const auto scriptFile = _scriptPath + QMSettings::getQMScript();
+    const auto scriptFile = resolveScriptPath(QMSettings::getQMScript());
 
     if (!fileExists(scriptFile))
-        throw InputFileException(std::format(
-            "Turbomole script file \"{}\" does not exist.",
-            scriptFile
-        ));
+        throw InputFileException(
+            std::format(
+                "Turbomole script file \"{}\" does not exist.",
+                scriptFile
+            )
+        );
 
     const auto reuseCharges = _isFirstExecution ? 1 : 0;
 
-    const auto command = std::format("{} 0 {} 0 0 0", scriptFile, reuseCharges);
-    ::system(command.c_str());
+    const auto command =
+        std::format("{} 0 {} 0 0 0", shellQuote(scriptFile), reuseCharges);
+    executeCommand(command, "Turbomole");
 
     _isFirstExecution = false;
 }

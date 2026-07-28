@@ -99,7 +99,33 @@ TEST_F(TestSetup, setupThermostat_temp_ramping)
         thermostatSetup.getEngine().getThermostat().getRampingFrequency(),
         2
     );
+}
 
+TEST_F(TestSetup, temperatureRampReachesEndWithPartialFinalInterval)
+{
+    ThermostatSetup thermostatSetup(*_mdEngine);
+
+    settings::TimingsSettings::setNumberOfSteps(10);
+    settings::ThermostatSettings::setThermostatType("berendsen");
+    settings::ThermostatSettings::setTargetTemperature(300);
+    settings::ThermostatSettings::setStartTemperature(200);
+    settings::ThermostatSettings::setTemperatureRampSteps(10);
+    settings::ThermostatSettings::setTemperatureRampFrequency(3);
+
+    thermostatSetup.setup();
+
+    EXPECT_DOUBLE_EQ(
+        thermostatSetup.getEngine().getThermostat().getTemperatureIncrease(),
+        25.0
+    );
+
+    for (size_t step = 0; step < 10; ++step)
+        thermostatSetup.getEngine().getThermostat().applyTemperatureRamping();
+
+    EXPECT_DOUBLE_EQ(
+        thermostatSetup.getEngine().getThermostat().getTargetTemperature(),
+        300.0
+    );
 }
 
 TEST_F(TestSetup, setupThermostat_only_end_temp_defined)
@@ -188,8 +214,7 @@ TEST_F(TestSetup, setupThermostat_langevin)
     EXPECT_EQ(langevinThermostat.getFriction(), 1.0e11);
 
     const auto conversionFactor =
-        constants::_UNIVERSAL_GAS_CONSTANT_ *
-        constants::_M2_TO_ANGSTROM2_ *
+        constants::_UNIVERSAL_GAS_CONSTANT_ * constants::_M2_TO_ANGSTROM2_ *
         constants::_KG_TO_GRAM_ / constants::_FS_TO_S_;
     const auto sigma = std::sqrt(
         4.0 * langevinThermostat.getFriction() * conversionFactor *
