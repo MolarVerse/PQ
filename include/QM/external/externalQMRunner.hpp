@@ -49,6 +49,11 @@ namespace QM
             std::string_view script
         ) const;
 
+        virtual void executeCommand(
+            std::string_view command,
+            std::string_view program
+        ) const;
+
        public:
         ExternalQMRunner()           = default;
         ~ExternalQMRunner() override = default;

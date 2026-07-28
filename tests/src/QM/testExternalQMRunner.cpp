@@ -1,0 +1,248 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PQ
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
+
+#include <chrono>
+#include <filesystem>
+#include <fstream>
+#include <memory>
+#include <string>
+#include <string_view>
+
+#include "atom.hpp"
+#include "dftbplusRunner.hpp"
+#include "exceptions.hpp"
+#include "externalQMRunner.hpp"
+#include "fileSettings.hpp"
+#include "physicalData.hpp"
+#include "qmSettings.hpp"
+#include "settings.hpp"
+#include "simulationBox.hpp"
+
+using customException::QMRunnerException;
+using physicalData::PhysicalData;
+using settings::FileSettings;
+using settings::JobType;
+using settings::QMMethod;
+using settings::QMSettings;
+using settings::Settings;
+using simulationBox::Atom;
+using simulationBox::SimulationBox;
+using testing::HasSubstr;
+
+namespace
+{
+    void writeFile(const std::string_view fileName, const std::string_view text)
+    {
+        auto file = std::ofstream(std::string(fileName));
+        file << text;
+    }
+
+    class ExternalQMRunnerHarness : public QM::ExternalQMRunner
+    {
+       private:
+        bool _sawStaleResults = false;
+
+       public:
+        void writeCoordsFile(SimulationBox &) override {}
+
+        void execute(SimulationBox &) override
+        {
+            _sawStaleResults = std::filesystem::exists(
+                                   FileSettings::getQMForcesTempFileName()
+                               ) ||
+                               std::filesystem::exists(
+                                   FileSettings::getQMChargesTempFileName()
+                               ) ||
+                               std::filesystem::exists(
+                                   FileSettings::getStressTensorTempFileName()
+                               );
+
+            writeFile(FileSettings::getQMForcesTempFileName(), "0\n0 0 0\n");
+            writeFile(FileSettings::getQMChargesTempFileName(), "0\n");
+        }
+
+        void runCommand(
+            const std::string_view command,
+            const std::string_view program
+        ) const
+        {
+            executeCommand(command, program);
+        }
+
+        [[nodiscard]] bool sawStaleResults() const { return _sawStaleResults; }
+    };
+
+    class ExternalQMRunnerTest : public testing::Test
+    {
+       protected:
+        std::filesystem::path   _originalPath;
+        std::filesystem::path   _workPath;
+        SimulationBox           _simulationBox;
+        PhysicalData            _physicalData;
+        ExternalQMRunnerHarness _runner;
+        QM::DFTBPlusRunner      _dftbRunner;
+
+        QMMethod _qmMethod;
+        JobType  _jobType;
+        bool     _removeNetForce;
+        double   _timeLimit;
+
+        void SetUp() override
+        {
+            _qmMethod       = QMSettings::getQMMethod();
+            _jobType        = Settings::getJobtype();
+            _removeNetForce = QMSettings::getRemoveNetForce();
+            _timeLimit      = QMSettings::getQMLoopTimeLimit();
+            _originalPath   = std::filesystem::current_path();
+
+            const auto stamp =
+                std::chrono::steady_clock::now().time_since_epoch().count();
+            _workPath = std::filesystem::temp_directory_path() /
+                        ("pq-external-qm-" + std::to_string(stamp));
+            ASSERT_TRUE(std::filesystem::create_directory(_workPath));
+            std::filesystem::current_path(_workPath);
+
+            QMSettings::setQMMethod(QMMethod::DFTBPLUS);
+            QMSettings::setRemoveNetForce(false);
+            QMSettings::setQMLoopTimeLimit(0.0);
+            Settings::setJobtype(JobType::QM_MD);
+
+            auto atom = std::make_shared<Atom>();
+            atom->setName("H");
+            _simulationBox.addAtom(atom);
+            _simulationBox.addQMAtom(atom);
+            _simulationBox.setBoxDimensions({10.0, 10.0, 10.0});
+        }
+
+        void TearDown() override
+        {
+            QMSettings::setQMMethod(_qmMethod);
+            QMSettings::setRemoveNetForce(_removeNetForce);
+            QMSettings::setQMLoopTimeLimit(_timeLimit);
+            Settings::setJobtype(_jobType);
+
+            std::filesystem::current_path(_originalPath);
+            std::error_code error;
+            std::filesystem::remove_all(_workPath, error);
+            EXPECT_FALSE(error);
+        }
+    };
+}   // namespace
+
+TEST_F(ExternalQMRunnerTest, propagatesCommandFailure)
+{
+    EXPECT_NO_THROW(_runner.runCommand("true", "External QM"));
+
+    try
+    {
+        _runner.runCommand("false", "External QM");
+        FAIL() << "Expected the failed command to throw";
+    }
+    catch (const QMRunnerException &error)
+    {
+        EXPECT_THAT(error.what(), HasSubstr("External QM command failed"));
+    }
+}
+
+TEST_F(ExternalQMRunnerTest, removesStaleResultsBeforeExecution)
+{
+    writeFile(FileSettings::getQMForcesTempFileName(), "stale");
+    writeFile(FileSettings::getQMChargesTempFileName(), "stale");
+    writeFile(FileSettings::getStressTensorTempFileName(), "stale");
+
+    EXPECT_NO_THROW(
+        _runner.run(
+            _simulationBox,
+            _physicalData,
+            simulationBox::Periodicity::NON_PERIODIC
+        )
+    );
+    EXPECT_FALSE(_runner.sawStaleResults());
+    EXPECT_FALSE(
+        std::filesystem::exists(FileSettings::getStressTensorTempFileName())
+    );
+}
+
+TEST_F(ExternalQMRunnerTest, rejectsIncompleteForces)
+{
+    writeFile(FileSettings::getQMForcesTempFileName(), "0\n0 0\n");
+
+    EXPECT_THROW(
+        _runner.readForceFile(_simulationBox, _physicalData),
+        QMRunnerException
+    );
+}
+
+TEST_F(ExternalQMRunnerTest, rejectsNonFiniteForces)
+{
+    writeFile(FileSettings::getQMForcesTempFileName(), "0\nnan 0 0\n");
+
+    EXPECT_THROW(
+        _runner.readForceFile(_simulationBox, _physicalData),
+        QMRunnerException
+    );
+}
+
+TEST_F(ExternalQMRunnerTest, rejectsIncompleteCharges)
+{
+    auto atom = std::make_shared<Atom>();
+    atom->setName("H");
+    _simulationBox.addAtom(atom);
+    _simulationBox.addQMAtom(atom);
+
+    writeFile(FileSettings::getQMChargesTempFileName(), "0\n");
+
+    EXPECT_THROW(_runner.readChargeFile(_simulationBox), QMRunnerException);
+}
+
+TEST_F(ExternalQMRunnerTest, rejectsNonFiniteCharges)
+{
+    writeFile(FileSettings::getQMChargesTempFileName(), "1 nan\n");
+
+    EXPECT_THROW(_runner.readChargeFile(_simulationBox), QMRunnerException);
+}
+
+TEST_F(ExternalQMRunnerTest, rejectsIncompleteStressTensor)
+{
+    writeFile(FileSettings::getStressTensorTempFileName(), "0 0 0\n0 0 0\n");
+
+    EXPECT_THROW(
+        _dftbRunner.readStressTensor(_simulationBox.getBox(), _physicalData),
+        QMRunnerException
+    );
+}
+
+TEST_F(ExternalQMRunnerTest, rejectsNonFiniteStressTensor)
+{
+    writeFile(
+        FileSettings::getStressTensorTempFileName(),
+        "nan 0 0\n0 0 0\n0 0 0\n"
+    );
+
+    EXPECT_THROW(
+        _dftbRunner.readStressTensor(_simulationBox.getBox(), _physicalData),
+        QMRunnerException
+    );
+}

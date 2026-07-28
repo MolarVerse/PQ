@@ -22,7 +22,6 @@
 
 #include "turbomoleRunner.hpp"
 
-#include <cstdlib>      // for system
 #include <filesystem>   // for remove
 #include <format>       // for format
 #include <fstream>      // for ofstream
@@ -143,7 +142,7 @@ void TurbomoleRunner::execute(SimulationBox &box)
         FileSettings::getTMFileName(),
         FileSettings::getPointChargeFileName()
     );
-    ::system(command.c_str());
+    executeCommand(command, "Turbomole");
 
     _isFirstExecution = false;
     _usePointCharges  = false;
