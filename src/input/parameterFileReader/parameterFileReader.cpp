@@ -22,9 +22,6 @@
 
 #include "parameterFileReader.hpp"
 
-#include <functional>   // for identity
-#include <ranges>       // for __find_if_fn, find_if
-
 #include "angleSection.hpp"      // for AngleSection
 #include "bondSection.hpp"       // for BondSection
 #include "dihedralSection.hpp"   // for DihedralSection

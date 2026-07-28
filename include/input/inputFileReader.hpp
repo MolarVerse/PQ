@@ -25,7 +25,6 @@
 #define _INPUT_FILE_READER_HPP_
 
 #include <cstddef>       // for size_t
-#include <functional>    // for function
 #include <map>           // for map
 #include <memory>        // for unique_ptr
 #include <string>        // for string, operator<=>

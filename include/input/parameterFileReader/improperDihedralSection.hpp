@@ -25,7 +25,6 @@
 #define _IMPROPER_DIHEDRAL_SECTION_HPP_
 
 #include <string>   // for allocator, string
-#include <vector>   // for vector
 
 #include "parameterFileSection.hpp"   // for ParameterFileSection
 #include "typeAliases.hpp"

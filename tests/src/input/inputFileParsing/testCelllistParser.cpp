@@ -26,14 +26,11 @@
 #include <vector>   // for vector
 
 #include "cellListInputParser.hpp"   // for CellListInputParser
-#include "celllist.hpp"              // for CellList
 #include "engine.hpp"                // for Engine
 #include "exceptions.hpp"            // for InputFileException
 #include "gtest/gtest.h"             // for Message, AssertionResult
-#include "inputFileParser.hpp"       // for readInput
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
-#include "vector3d.hpp"              // for Vec3Dul
 
 using namespace input;
 

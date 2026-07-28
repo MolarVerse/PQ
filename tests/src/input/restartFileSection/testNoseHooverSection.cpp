@@ -22,10 +22,6 @@
 
 #include <gtest/gtest.h>   // for TestInfo (ptr only), TEST_F, InitG...
 
-#include "restartFileSection.hpp"   // for RstFileSection, readInput
-
-using namespace input;
-
 // TEST_F(TestNoseHooverSection, testKeyword) { EXPECT_EQ(_section->keyword(),
 // "chi"); }
 

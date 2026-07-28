@@ -31,12 +31,10 @@
 
 #include "atom.hpp"              // for Atom
 #include "box.hpp"               // for Box
-#include "defaults.hpp"          // for _COULOMB_CUT_OFF_DEFAULT_
 #include "exceptions.hpp"        // for ExceptionType
 #include "molecule.hpp"          // for Molecule
 #include "moleculeType.hpp"      // for MoleculeType
 #include "orthorhombicBox.hpp"   // for OrthorhombicBox
-#include "triclinicBox.hpp"      // for TriclinicBox
 #include "typeAliases.hpp"       // for pq::Vec3D
 
 /**
@@ -252,6 +250,8 @@ namespace simulationBox
 
 }   // namespace simulationBox
 
-#include "simulationBox.tpp.hpp"   // DO NOT MOVE THIS LINE
+#ifndef _SIMULATION_BOX_TPP_
+#include "simulationBox.tpp.hpp"   // IWYU pragma: keep - DO NOT MOVE THIS LINE
+#endif
 
 #endif   // _SIMULATION_BOX_HPP_

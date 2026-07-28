@@ -21,28 +21,23 @@
 ******************************************************************************/
 
 #include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ
-#include <stddef.h>        // for size_t
 
-#include <memory>   // for make_shared
-#include <string>   // for allocator, basic_string
+#include <cstddef>   // for size_t
+#include <memory>    // for make_shared
+#include <string>    // for allocator, basic_string
 
-#include "coulombPotential.hpp"          // for CoulombPotential
 #include "coulombReactionField.hpp"      // for CoulombReactionField
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
 #include "coulombWolf.hpp"               // for CoulombWolf
 #include "engine.hpp"                    // for Engine
 #include "exceptions.hpp"                // for ParameterFileException
-#include "forceFieldClass.hpp"           // for ForceField
 #include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
 #include "gtest/gtest.h"                 // for Message, TestPartResult
 #include "guffNonCoulomb.hpp"            // for GuffNonCoulomb
 #include "lennardJonesPair.hpp"          // for LennardJonesPair
 #include "moleculeType.hpp"              // for MoleculeType
-#include "nonCoulombPotential.hpp"       // for NonCoulombPotential
-#include "potential.hpp"                 // for Potential
 #include "potentialSettings.hpp"         // for PotentialSettings
 #include "potentialSetup.hpp"            // for PotentialSetup, setupPotential
-#include "simulationBox.hpp"             // for SimulationBox
 #include "testSetup.hpp"                 // for TestSetup
 #include "throwWithMessage.hpp"          // for EXPECT_THROW_MSG
 

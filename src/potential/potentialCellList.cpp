@@ -23,7 +23,6 @@
 #include "potentialCellList.hpp"   // for PotentialCellList
 
 #include <cstddef>   // for size_t
-#include <vector>    // for vector
 
 #include "cell.hpp"            // for Cell, simulationBox
 #include "celllist.hpp"        // for CellList

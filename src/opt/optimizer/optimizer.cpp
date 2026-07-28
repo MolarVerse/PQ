@@ -22,13 +22,11 @@
 
 #include "optimizer.hpp"
 
-#include <iostream>   // for std::cout
 #include <memory>     // for std::shared_ptr
 
 #include "exceptions.hpp"      // for OptException
 #include "physicalData.hpp"    // for PhysicalData
 #include "simulationBox.hpp"   // for SimulationBox
-#include "vector3d.hpp"        // for max, rms
 
 using namespace opt;
 using namespace physicalData;

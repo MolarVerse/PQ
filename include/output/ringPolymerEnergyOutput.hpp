@@ -25,7 +25,6 @@
 #define _RING_POLYMER_ENERGY_OUTPUT_HPP_
 
 #include <cstddef>   // for size_t
-#include <vector>    // for vector
 
 #include "output.hpp"        // for Output
 #include "typeAliases.hpp"   // for VecPhysicalData

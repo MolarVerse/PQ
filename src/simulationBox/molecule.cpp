@@ -22,13 +22,12 @@
 
 #include "molecule.hpp"
 
-#include <algorithm>   // for std::ranges::for_each, ranges::transform
-#include <iterator>    // for back_inserter
+#include <algorithm>
+#include <iterator>
 
-#include "box.hpp"                // for Box
+#include "box.hpp"   // for Box
 #include "collectionUtilities.hpp"
 #include "manostatSettings.hpp"   // for ManostatSettings
-#include "vector3d.hpp"           // for Vec3D
 
 using namespace simulationBox;
 using namespace linearAlgebra;
@@ -39,14 +38,14 @@ using namespace settings;
  *
  * @param name
  */
-Molecule::Molecule(const std::string_view name) : _name(name){};
+Molecule::Molecule(const std::string_view name) : _name(name) {}
 
 /**
  * @brief Construct a new Molecule:: Molecule object
  *
  * @param moltype
  */
-Molecule::Molecule(const size_t moltype) : _moltype(moltype){};
+Molecule::Molecule(const size_t moltype) : _moltype(moltype) {}
 
 /**
  * @brief finds number of different atom types in molecule
@@ -107,8 +106,8 @@ void Molecule::reconstructAtomsAroundCenterOfMass(const Box &box)
 {
     auto reconstructAtom = [&box, this](auto atom)
     {
-        auto position = atom->getPosition();
-        position -= box.calcShiftVector(position - _centerOfMass);
+        auto position  = atom->getPosition();
+        position      -= box.calcShiftVector(position - _centerOfMass);
         atom->setPosition(position);
     };
 
@@ -179,8 +178,7 @@ void Molecule::scaleVelocity(const tensor3D &scalingTensor, const Box &box)
     scaledCenterOfMassVelocity = scalingTensor * scaledCenterOfMassVelocity;
 
     if (ManostatSettings::getIsotropy() != Isotropy::FULL_ANISOTROPIC)
-        scaledCenterOfMassVelocity =
-            box.toSimSpace(scaledCenterOfMassVelocity);
+        scaledCenterOfMassVelocity = box.toSimSpace(scaledCenterOfMassVelocity);
 
     const auto velocityShift =
         scaledCenterOfMassVelocity - centerOfMassVelocity;

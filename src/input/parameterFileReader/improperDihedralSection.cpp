@@ -28,7 +28,6 @@
 #include "dihedralType.hpp"                  // for DihedralType
 #include "engine.hpp"                        // for Engine
 #include "exceptions.hpp"                    // for ParameterFileException
-#include "forceFieldClass.hpp"               // for ForceField
 
 using namespace input::parameterFile;
 using namespace engine;

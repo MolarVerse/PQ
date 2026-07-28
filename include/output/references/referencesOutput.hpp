@@ -26,7 +26,6 @@
 
 #define REFERENCES_PATH_ _REFERENCES_PATH_
 
-#include <set>      // for set
 #include <string>   // for string
 
 #include "typeAliases.hpp"

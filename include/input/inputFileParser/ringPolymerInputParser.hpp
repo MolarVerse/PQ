@@ -25,8 +25,6 @@
 #define _RING_POLYMER_INPUT_PARSER_HPP_
 
 #include <cstddef>   // for size_t
-#include <string>    // for string
-#include <vector>    // for vector
 
 #include "inputFileParser.hpp"   // for InputFileParser
 #include "typeAliases.hpp"       // for pq::strings

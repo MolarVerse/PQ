@@ -41,7 +41,6 @@
 #include "simulationBoxSettings.hpp"   // for SimulationBoxSettings
 #include "simulationBoxSetup.hpp"   // for SimulationBoxSetup, setupSimulationBox
 #include "testSetup.hpp"            // for TestSetup
-#include "vector3d.hpp"             // for Vec3D
 
 using setup::simulationBox::SimulationBoxSetup;
 

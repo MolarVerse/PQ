@@ -22,8 +22,6 @@
 
 #include "timingsSection.hpp"
 
-#include <chrono>   // IWYU pragma: keep for time_point, milliseconds, nanoseconds
-
 using namespace timings;
 using namespace std::chrono;
 

@@ -33,7 +33,6 @@
 #include "qmSettings.hpp"        // for QMSettings
 #include "simulationBox.hpp"     // for SimulationBox
 #include "stringUtilities.hpp"   // for fileExists
-#include "vector3d.hpp"          // for Vec3D
 
 using QM::PySCFRunner;
 using namespace simulationBox;

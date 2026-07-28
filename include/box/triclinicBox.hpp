@@ -25,7 +25,6 @@
 #define _TRICLINIC_BOX_HPP_
 
 #include "box.hpp"           // for Box
-#include "constants.hpp"     // for _DEG_TO_RAD_
 #include "typeAliases.hpp"   // for tensor3D, Vec3D
 
 namespace simulationBox
