@@ -26,6 +26,8 @@
 #include "convergence.hpp"
 #include "convergenceSettings.hpp"
 #include "exceptions.hpp"
+#include "hessianEngine.hpp"
+#include "hessianSettings.hpp"
 #include "optEngine.hpp"
 #include "optimizerSettings.hpp"
 #include "optimizerSetup.hpp"
@@ -47,6 +49,7 @@ namespace
         OptimizerSettings::setLearningRateStrategy(LREnum::CONSTANT);
         OptimizerSettings::setInitialLearningRate(0.01);
         OptimizerSettings::setMinLearningRate(0.0);
+        OptimizerSettings::setMaxLearningRate(1.0);
         OptimizerSettings::setLRUpdateFrequency(1);
     }
 }   // namespace
@@ -250,4 +253,33 @@ TEST_F(TestSetup, setupWiresOptimizerAndLearningRateAndEvaluator)
 
     OptimizerSetup s(dynamic_cast<engine::OptEngine &>(*_engine));
     EXPECT_NO_THROW(s.setup());
+}
+
+/* ---------- Hessian optimization ---------- */
+
+TEST_F(TestSetup, hessianOptimizationValidatesLearningRateStrategy)
+{
+    resetOptimizerSettings();
+    Settings::setJobtype(JobType::MM_HESSIAN);
+    HessianSettings::setOptimizeBeforeHessian(true);
+    OptimizerSettings::setLearningRateStrategy(LREnum::NONE);
+
+    engine::HessianEngine hessianEngine;
+    EXPECT_THROW(hessianEngine.run(), UserInputException);
+
+    HessianSettings::setOptimizeBeforeHessian(false);
+}
+
+TEST_F(TestSetup, hessianOptimizationValidatesLearningRateBounds)
+{
+    resetOptimizerSettings();
+    Settings::setJobtype(JobType::MM_HESSIAN);
+    HessianSettings::setOptimizeBeforeHessian(true);
+    OptimizerSettings::setMinLearningRate(0.5);
+    OptimizerSettings::setMaxLearningRate(0.5);
+
+    engine::HessianEngine hessianEngine;
+    EXPECT_THROW(hessianEngine.run(), UserInputException);
+
+    HessianSettings::setOptimizeBeforeHessian(false);
 }

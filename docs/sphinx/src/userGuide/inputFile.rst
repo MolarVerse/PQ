@@ -1586,6 +1586,7 @@ ASE-DFTB+ Approach
     slakos = {string}
 
 With the ``slakos`` keyword the user can specify the type of the ``ase-dftbplus`` approach for DFTB+ calculations.
+It is required when ``qm_prog = ase-dftbplus``.
 
 Possible options are:
 
