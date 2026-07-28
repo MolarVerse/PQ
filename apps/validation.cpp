@@ -23,7 +23,6 @@
 #include "validation.hpp"
 
 #include <algorithm>
-#include <cstdint>
 #include <filesystem>
 #include <format>
 #include <iomanip>
@@ -34,23 +33,16 @@
 #include <streambuf>
 #include <string>
 #include <string_view>
-#include <vector>
-
-#if defined(_WIN32)
-#include <windows.h>
-#elif defined(__APPLE__)
-#include <mach-o/dyld.h>
-#elif defined(__linux__)
-#include <unistd.h>
-#endif
 
 #include "engine.hpp"
 #include "exceptions.hpp"
+#include "executablePath.hpp"
 #include "externalQMScripts.hpp"
 #include "fileSettings.hpp"
 #include "forceFieldSettings.hpp"
 #include "inputFileReader.hpp"
 #include "manostatSettings.hpp"
+#include "mathUtilities.hpp"
 #include "qmSettings.hpp"
 #include "settings.hpp"
 #include "thermostatSettings.hpp"
@@ -126,56 +118,12 @@ namespace
         return value.starts_with("https://") || value.starts_with("http://");
     }
 
-    std::filesystem::path executablePath()
-    {
-#if defined(_WIN32)
-        auto buffer = std::vector<wchar_t>(1024);
-        while (true)
-        {
-            const auto length = GetModuleFileNameW(
-                nullptr,
-                buffer.data(),
-                static_cast<DWORD>(buffer.size())
-            );
-            if (length == 0)
-                break;
-            if (length < buffer.size() - 1)
-                return std::filesystem::weakly_canonical(buffer.data());
-            buffer.resize(buffer.size() * 2);
-        }
-#elif defined(__APPLE__)
-        auto size = uint32_t{0};
-        _NSGetExecutablePath(nullptr, &size);
-        auto buffer = std::vector<char>(size);
-        if (_NSGetExecutablePath(buffer.data(), &size) == 0)
-            return std::filesystem::weakly_canonical(buffer.data());
-#elif defined(__linux__)
-        auto buffer = std::vector<char>(1024);
-        while (true)
-        {
-            const auto length =
-                readlink("/proc/self/exe", buffer.data(), buffer.size());
-            if (length < 0)
-                break;
-            if (static_cast<size_t>(length) < buffer.size())
-                return std::filesystem::weakly_canonical(
-                    std::filesystem::path(
-                        std::string(buffer.data(), static_cast<size_t>(length))
-                    )
-                );
-            buffer.resize(buffer.size() * 2);
-        }
-#endif
-
-        return {};
-    }
-
     std::filesystem::path runtimeAssetPath(
         const std::filesystem::path &installedRelativePath,
         const std::filesystem::path &buildPath
     )
     {
-        const auto executable = executablePath();
+        const auto executable = utilities::executablePath();
         if (executable.empty())
             return buildPath;
 
@@ -431,7 +379,9 @@ namespace
 
         if (ThermostatSettings::getThermostatType() ==
                 ThermostatType::NOSE_HOOVER &&
-            ThermostatSettings::getNoseHooverCouplingFrequency() == 0.0)
+            utilities::isZero(
+                ThermostatSettings::getNoseHooverCouplingFrequency()
+            ))
             result.diagnostics.push_back(
                 {cli::ValidationSeverity::WARNING,
                  "A zero Nose-Hoover coupling frequency disables thermostat "
@@ -441,7 +391,7 @@ namespace
 
         if (ThermostatSettings::getThermostatType() ==
                 ThermostatType::LANGEVIN &&
-            ThermostatSettings::getFriction() == 0.0)
+            utilities::isZero(ThermostatSettings::getFriction()))
             result.diagnostics.push_back(
                 {cli::ValidationSeverity::WARNING,
                  "A zero Langevin friction disables thermostat coupling",
@@ -449,7 +399,7 @@ namespace
             );
 
         if (ManostatSettings::getManostatType() != ManostatType::NONE &&
-            ManostatSettings::getCompressibility() == 0.0)
+            utilities::isZero(ManostatSettings::getCompressibility()))
             result.diagnostics.push_back(
                 {cli::ValidationSeverity::WARNING,
                  "A zero compressibility disables cell response",
