@@ -52,13 +52,6 @@ target_link_libraries(setup
     optimization
 )
 
-if(BUILD_WITH_TESTS)
-    target_link_libraries(setup
-        PUBLIC
-        gtest
-    )
-endif()
-
 if(BUILD_WITH_MPI)
     target_link_libraries(setup
         PRIVATE
