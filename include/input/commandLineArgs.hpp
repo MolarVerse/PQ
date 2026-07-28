@@ -27,6 +27,13 @@
 #include <string>
 #include <vector>
 
+enum class CommandLineAction
+{
+    RUN,
+    HELP,
+    VERSION
+};
+
 /**
  * @class CommandLineArgs
  *
@@ -39,13 +46,15 @@ class CommandLineArgs
     int                      _argc;
     std::vector<std::string> _argv;
     std::string              _inputFileName;
+    CommandLineAction        _action = CommandLineAction::RUN;
 
    public:
     CommandLineArgs(const int argc, const std::vector<std::string> &argv);
 
-    void detectFlags();
+    void parse();
 
-    std::string getInputFileName() const;
+    std::string       getInputFileName() const;
+    CommandLineAction getAction() const;
 };
 
 #endif   // _COMMAND_LINE_ARGS_HPP_

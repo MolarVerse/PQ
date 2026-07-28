@@ -37,6 +37,16 @@ CustomException::CustomException(const std::string_view message)
 }
 
 /**
+ * @brief Returns the exception message without producing output.
+ *
+ * @return const std::string&
+ */
+const std::string &CustomException::getMessage() const noexcept
+{
+    return _message;
+}
+
+/**
  * @brief Prints the exceptionMsg type in color.
  *
  * @param color
