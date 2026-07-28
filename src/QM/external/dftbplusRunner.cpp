@@ -132,7 +132,7 @@ void DFTBPlusRunner::writeCoordsFile(SimulationBox &box)
  */
 void DFTBPlusRunner::execute()
 {
-    const auto scriptFile = _scriptPath + QMSettings::getQMScript();
+    const auto scriptFile = resolveScriptPath(QMSettings::getQMScript());
 
     if (!fileExists(scriptFile))
         throw InputFileException(
