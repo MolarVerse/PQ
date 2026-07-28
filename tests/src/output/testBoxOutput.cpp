@@ -29,7 +29,7 @@
 
 #include "boxOutput.hpp"
 #include "orthorhombicBox.hpp"
-#include "vector3d.hpp"
+#include "vector3d.hpp"   // IWYU pragma: keep
 
 using namespace output;
 using simulationBox::OrthorhombicBox;

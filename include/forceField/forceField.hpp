@@ -25,14 +25,11 @@
 #define _FORCE_FIELD_HPP_
 
 #include <cstddef>   // for size_t
-#include <memory>    // for __shared_ptr_access, shared_ptr
 
 #include "coulombPotential.hpp"      // for CoulombPotential
 #include "molecule.hpp"              // for Molecule
-#include "nonCoulombPair.hpp"        // for NonCoulombPair
 #include "nonCoulombPotential.hpp"   // for NonCoulombPotential
 #include "physicalData.hpp"          // for PhysicalData
-#include "potentialSettings.hpp"     // for PotentialSettings
 
 namespace forceField
 {
@@ -49,6 +46,8 @@ namespace forceField
     );
 }   // namespace forceField
 
-#include "forcefield.tpp.hpp"   // DO NOT MOVE THIS LINE
+#ifndef _FORCE_FIELD_TPP_
+#include "forcefield.tpp.hpp"   // IWYU pragma: keep - DO NOT MOVE THIS LINE
+#endif
 
 #endif   // _FORCE_FIELD_HPP_

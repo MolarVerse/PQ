@@ -25,7 +25,6 @@
 #include <algorithm>     // for ranges::for_each
 #include <array>         // for array
 #include <format>        // for format
-#include <functional>    // for identity
 #include <map>           // for map
 #include <string_view>   // for string_view
 

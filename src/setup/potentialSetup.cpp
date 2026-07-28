@@ -23,23 +23,17 @@
 #include "potentialSetup.hpp"
 
 #include <algorithm>     // for __for_each_fn, __sort_fn
-#include <functional>    // for identity
-#include <memory>        // for swap, shared_ptr, __shared_ptr_access
 #include <string>        // for operator==
 #include <string_view>   // for string_view
 #include <vector>        // for vector
 
-#include "angleForceField.hpp"           // for potential
 #include "coulombReactionField.hpp"      // for CoulombReactionField
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
 #include "coulombWolf.hpp"               // for CoulombWolf
 #include "engine.hpp"                    // for Engine
 #include "exceptions.hpp"                // for ParameterFileException
-#include "forceFieldClass.hpp"           // for ForceField
 #include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
 #include "guffNonCoulomb.hpp"            // for GuffNonCoulomb
-#include "nonCoulombPair.hpp"            // IWYU pragma: keep for NonCoulombPair
-#include "nonCoulombPotential.hpp"       // for NonCoulombPotential
 #include "potential.hpp"                 // for Potential
 #include "potentialSettings.hpp"         // for PotentialSettings
 #include "simulationBox.hpp"             // for SimulationBox

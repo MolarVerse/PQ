@@ -32,8 +32,6 @@
 #include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
 #include "lennardJonesPair.hpp"       // for LennardJonesPair
 #include "morsePair.hpp"              // for MorsePair
-#include "nonCoulombPotential.hpp"    // for NonCoulombPotential
-#include "potential.hpp"              // for Potential
 #include "potentialSettings.hpp"      // for PotentialSettings
 #include "stringUtilities.hpp"        // for toLowerCopy
 

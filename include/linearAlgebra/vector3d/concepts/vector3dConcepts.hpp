@@ -26,7 +26,7 @@
 
 #include <concepts>
 
-#include "concepts.hpp"
+#include "../../../concepts/concepts.hpp"
 #include "vector3dDepth.hpp"
 
 namespace linearAlgebra

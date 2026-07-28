@@ -25,8 +25,6 @@
 #include <algorithm>    // for __for_each_fn, for_each
 #include <cstddef>      // for size_t
 #include <format>       // for format
-#include <functional>   // for identity
-#include <map>          // for map, operator==
 #include <string>       // for string
 #include <vector>       // for vector
 
@@ -36,7 +34,6 @@
 #include "langevinThermostat.hpp"            // for LangevinThermostat
 #include "mdEngine.hpp"                      // for Engine
 #include "noseHooverThermostat.hpp"          // for NoseHooverThermostat
-#include "settings.hpp"                      // for Settings
 #include "thermostat.hpp"                    // for Thermostat
 #include "thermostatSettings.hpp"   // for ThermostatSettings, ThermostatType
 #include "timingsSettings.hpp"      // for TimingsSettings

@@ -28,9 +28,7 @@
 #include "engine.hpp"                     // for Engine
 #include "exceptions.hpp"                 // for InputFileException
 #include "gtest/gtest.h"                  // for Message, TestPartResult
-#include "inputFileParser.hpp"            // for readInput
 #include "potentialSettings.hpp"          // for PotentialSettings
-#include "simulationBox.hpp"              // for SimulationBox
 #include "simulationBoxInputParser.hpp"   // for InputFileParserSimulationBox
 #include "simulationBoxSettings.hpp"      // for SimulationBoxSettings
 #include "testInputFileReader.hpp"        // for TestInputFileReader

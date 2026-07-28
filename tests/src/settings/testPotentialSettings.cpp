@@ -22,8 +22,6 @@
 
 #include <gtest/gtest.h>   // for EXPECT_EQ, Test, TestInfo (ptr only)
 
-#include <memory>   // for allocator
-
 #include "gtest/gtest.h"           // for Message, TestPartResult
 #include "potentialSettings.hpp"   // for string, PotentialSettings, NonCoulo
 

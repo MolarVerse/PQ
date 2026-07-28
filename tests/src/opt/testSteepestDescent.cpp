@@ -27,7 +27,7 @@
 #include "atom.hpp"
 #include "simulationBox.hpp"
 #include "steepestDescent.hpp"
-#include "vector3d.hpp"
+#include "vector3d.hpp"   // IWYU pragma: keep
 
 using namespace opt;
 using simulationBox::Atom;

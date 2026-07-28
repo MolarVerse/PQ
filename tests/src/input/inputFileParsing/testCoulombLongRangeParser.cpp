@@ -23,12 +23,10 @@
 #include <gtest/gtest.h>   // for TestInfo (ptr only)
 
 #include <string>   // for string, allocator
-#include <vector>   // for vector
 
 #include "coulombLongRangeInputParser.hpp"
 #include "exceptions.hpp"            // for InputFileException
 #include "gtest/gtest.h"             // for Message, TestPartResult
-#include "inputFileParser.hpp"       // for readInput
 #include "potentialSettings.hpp"     // for PotentialSettings
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG

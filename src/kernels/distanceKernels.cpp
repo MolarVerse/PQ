@@ -22,10 +22,7 @@
 
 #include "distanceKernels.hpp"
 
-#include <tuple>
-
 #include "simulationBox.hpp"
-#include "vector3d.hpp"
 
 using namespace linearAlgebra;
 using namespace simulationBox;

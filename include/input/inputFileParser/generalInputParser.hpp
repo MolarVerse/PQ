@@ -25,9 +25,6 @@
 #define _GENERAL_INPUT_PARSER_HPP_
 
 #include <cstddef>   // for size_t
-#include <memory>    // for unique_ptr
-#include <string>    // for string
-#include <vector>    // for vector
 
 #include "inputFileParser.hpp"   // for InputFileParser
 #include "typeAliases.hpp"       // for pq::strings, pq::Engine

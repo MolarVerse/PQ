@@ -29,7 +29,6 @@
 #include <fstream>      // for ofstream
 #include <stdexcept>    // for out_of_range and invalid_argument
 #include <string>       // for string, allocator
-#include <vector>       // for vector
 
 #include "exceptions.hpp"        // for InputFileException
 #include "gmock/gmock.h"         // for ElementsAre, MakePredicateFormatter

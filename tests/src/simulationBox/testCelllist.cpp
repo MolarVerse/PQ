@@ -35,7 +35,7 @@
 #include "potentialSettings.hpp"   // for PotentialSettings
 #include "simulationBox.hpp"       // for SimulationBox
 #include "throwWithMessage.hpp"    // for EXPECT_THROW_MSG
-#include "vector3d.hpp"            // for Vec3Dul, Vec3D, Vector3D
+#include "vector3d.hpp"            // IWYU pragma: keep - for Vec3Dul, Vec3D, Vector3D
 
 TEST_F(TestCellList, determineCellSize)
 {

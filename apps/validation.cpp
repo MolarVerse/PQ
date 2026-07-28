@@ -36,8 +36,8 @@
 
 #include "engine.hpp"
 #include "exceptions.hpp"
-#include "externalQMScripts.hpp"
 #include "externalQMRunner.hpp"
+#include "externalQMScripts.hpp"
 #include "fileSettings.hpp"
 #include "forceFieldSettings.hpp"
 #include "inputFileReader.hpp"
@@ -251,14 +251,12 @@ namespace
         if (Settings::isQMActivated() &&
             settings::QMSettings::getQMMethod() ==
                 settings::QMMethod::ASEDFTBPLUS &&
-            settings::QMSettings::getSlakosType() !=
-                settings::SlakosType::NONE)
+            settings::QMSettings::getSlakosType() != settings::SlakosType::NONE)
         {
-            const auto description =
-                settings::QMSettings::getSlakosType() ==
-                        settings::SlakosType::CUSTOM
-                    ? "Slater-Koster directory"
-                    : "Built-in Slater-Koster directory";
+            const auto description = settings::QMSettings::getSlakosType() ==
+                                             settings::SlakosType::CUSTOM
+                                         ? "Slater-Koster directory"
+                                         : "Built-in Slater-Koster directory";
             requireDirectory(
                 settings::QMSettings::getSlakosPath(),
                 description
@@ -274,8 +272,7 @@ namespace
 
         if (Settings::isQMActivated() &&
             settings::QMSettings::getQMMethod() == settings::QMMethod::MACE &&
-            settings::QMSettings::getMaceModel() ==
-                settings::MaceModel::CUSTOM)
+            settings::QMSettings::getMaceModel() == settings::MaceModel::CUSTOM)
         {
             const auto modelPath = settings::QMSettings::getMaceModelPath();
             if (!isRemoteResource(modelPath))

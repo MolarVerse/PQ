@@ -29,7 +29,6 @@
 
 #include "gtest/gtest.h"        // for AssertionResult, Message, TestPartResult
 #include "morsePair.hpp"        // for MorsePair
-#include "nonCoulombPair.hpp"   // for potential
 
 using namespace potential;
 

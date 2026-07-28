@@ -26,13 +26,9 @@
 #include <format>    // for format
 #include <ostream>   // for ofstream, basic_ostream, operator<<
 #include <sstream>   // for ostringstream
-#include <string>    // for operator<<
-#include <vector>    // for vector
 
 #include "molecule.hpp"                // for Molecule
 #include "simulationBox.hpp"           // for SimulationBox
-#include "simulationBoxSettings.hpp"   // for SimulationBoxSettings
-#include "vector3d.hpp"                // for Vec3D
 
 using namespace output;
 using namespace settings;

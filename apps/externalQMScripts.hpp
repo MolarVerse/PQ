@@ -40,24 +40,22 @@ namespace cli
         std::string_view requiredWorkingFile;
     };
 
-    inline constexpr auto _DFTBPLUS_SCRIPTS_ =
-        std::array{ExternalQMScriptInfo{
-            "dftbplus_periodic_stress",
-            "DFTB+ periodic stress",
-            "dftb_file",
-            ""
-        }};
-    inline constexpr auto _PYSCF_SCRIPTS_ = std::array{
+    inline constexpr auto _DFTBPLUS_SCRIPTS_ = std::array{ExternalQMScriptInfo{
+        "dftbplus_periodic_stress",
+        "DFTB+ periodic stress",
+        "dftb_file",
+        ""
+    }};
+    inline constexpr auto _PYSCF_SCRIPTS_    = std::array{
         ExternalQMScriptInfo{"pyscf_hf.py", "UHF / STO-3G", "", ""},
         ExternalQMScriptInfo{"pyscf_mp2.py", "UMP2 / 6-311++G**", "", ""}
     };
-    inline constexpr auto _TURBOMOLE_SCRIPTS_ =
-        std::array{ExternalQMScriptInfo{
-            "turbomole_rimp2",
-            "RI-MP2",
-            "",
-            "tm_define.template"
-        }};
+    inline constexpr auto _TURBOMOLE_SCRIPTS_ = std::array{ExternalQMScriptInfo{
+        "turbomole_rimp2",
+        "RI-MP2",
+        "",
+        "tm_define.template"
+    }};
 
     inline constexpr auto _EXTERNAL_QM_METHODS_ = std::array{
         settings::QMMethod::DFTBPLUS,
@@ -139,8 +137,7 @@ namespace cli
         const auto scripts = externalQMScripts(method);
         return std::ranges::any_of(
             scripts,
-            [script](const auto &candidate)
-            { return candidate.name == script; }
+            [script](const auto &candidate) { return candidate.name == script; }
         );
     }
 }   // namespace cli

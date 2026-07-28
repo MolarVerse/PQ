@@ -22,6 +22,8 @@
 
 #include "lennardJones_kokkos.hpp"
 
+#include "lennardJonesPair.hpp"
+
 using namespace potential;
 using namespace Kokkos;
 using namespace linearAlgebra;

@@ -24,8 +24,6 @@
 
 #include <algorithm>     // for __for_each_fn, for_each
 #include <cstddef>       // for size_t
-#include <functional>    // for identity
-#include <iostream>      // for operator<<, endl, basic_ostream, cout
 #include <string_view>   // for string_view
 
 #include "exceptions.hpp"                     // for InputFileException

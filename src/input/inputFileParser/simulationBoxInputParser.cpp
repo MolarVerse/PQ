@@ -29,7 +29,6 @@
 #include "engine.hpp"              // for Engine
 #include "exceptions.hpp"          // for InputFileException, customException
 #include "potentialSettings.hpp"   // for PotentialSettings
-#include "simulationBox.hpp"       // for SimulationBox
 #include "simulationBoxSettings.hpp"   // for setDensitySet
 #include "stringUtilities.hpp"         // for toLowerCopy
 

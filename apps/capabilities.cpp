@@ -110,8 +110,8 @@ namespace
                     output << ']';
                 }
 
-                output << '}' << (scriptIndex + 1 == scripts.size() ? "\n"
-                                                                    : ",\n");
+                output << '}'
+                       << (scriptIndex + 1 == scripts.size() ? "\n" : ",\n");
             }
 
             output << "          ]\n"

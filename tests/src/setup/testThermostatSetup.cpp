@@ -28,15 +28,13 @@
 #include "berendsenThermostat.hpp"           // for BerendsenThermostat
 #include "constants/conversionFactors.hpp"   // for _FS_TO_S_, _KG_TO_GRAM_
 #include "constants/natureConstants.hpp"     // for _UNIVERSAL_GAS_CONSTANT_
-#include "gtest/gtest.h"                     // for Message, TestPartResult
-#include "langevinThermostat.hpp"            // for LangevinThermostat
-#include "mdEngine.hpp"                      // for MDEngine
-#include "noseHooverThermostat.hpp"          // for NoseHooverThermostat
-#include "testSetup.hpp"                     // for TestSetup
-#include "thermostat.hpp"           // for BerendsenThermostat, Thermostat
-#include "thermostatSettings.hpp"   // for ThermostatSettings
-#include "thermostatSetup.hpp"      // for ThermostatSetup, setupThermostat
-#include "timingsSettings.hpp"      // for TimingsSettings
+#include "gtest/gtest.h"              // for Message, TestPartResult
+#include "langevinThermostat.hpp"     // for LangevinThermostat
+#include "noseHooverThermostat.hpp"   // for NoseHooverThermostat
+#include "testSetup.hpp"              // for TestSetup
+#include "thermostatSettings.hpp"     // for ThermostatSettings
+#include "thermostatSetup.hpp"        // for ThermostatSetup, setupThermostat
+#include "timingsSettings.hpp"        // for TimingsSettings
 #include "velocityRescalingThermostat.hpp"   // for VelocityRescalingThermostat
 
 using namespace setup;

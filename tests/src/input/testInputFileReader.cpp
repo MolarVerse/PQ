@@ -30,13 +30,12 @@
 #include <sstream>   // for basic_istringstream
 #include <vector>    // for vector, _Bit_iterator, _Bit_reference
 
-#include "exceptions.hpp"          // for InputFileException, customException
-#include "gtest/gtest.h"           // for Message, TestPartResult
-#include "inputFileParser.hpp"     // for readInput
-#include "mmmdEngine.hpp"          // for MMMDEngine
-#include "potentialSettings.hpp"   // for PotentialSettings
-#include "settings.hpp"            // for Settings
-#include "throwWithMessage.hpp"    // for throwWithMessage
+#include "exceptions.hpp"
+#include "gtest/gtest.h"
+#include "mmmdEngine.hpp"
+#include "potentialSettings.hpp"
+#include "settings.hpp"
+#include "throwWithMessage.hpp"
 
 using namespace input;
 using namespace settings;

@@ -24,14 +24,9 @@
 
 #define _FORCE_FIELD_NON_COULOMB_HPP_
 
-#include <algorithm>   // for copy, max
-#include <cstddef>     // for size_t
-#include <map>         // for map
-#include <memory>      // for shared_ptr
-#include <optional>    // for optional
-#include <vector>      // for vector
+#include <cstddef>   // for size_t
+#include <map>       // for map
 
-#include "matrix.hpp"
 #include "nonCoulombPotential.hpp"
 #include "typeAliases.hpp"
 
@@ -86,6 +81,8 @@ namespace potential
 
 }   // namespace potential
 
-#include "forceFieldNonCoulomb.tpp.hpp"   // DO NOT MOVE THIS LINE
+#ifndef _FORCE_FIELD_NON_COULOMB_TPP_
+#include "forceFieldNonCoulomb.tpp.hpp"   // IWYU pragma: keep - DO NOT MOVE THIS LINE
+#endif
 
 #endif   // _FORCE_FIELD_NON_COULOMB_HPP_

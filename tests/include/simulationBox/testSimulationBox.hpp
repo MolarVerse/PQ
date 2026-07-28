@@ -32,7 +32,6 @@
 #include "molecule.hpp"        // for Molecule
 #include "moleculeType.hpp"    // for MoleculeType
 #include "simulationBox.hpp"   // for SimulationBox
-#include "vector3d.hpp"        // for Vec3D
 
 class TestSimulationBox : public ::testing::Test
 {

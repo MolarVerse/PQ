@@ -24,7 +24,6 @@
 #include "exceptions.hpp"               // for RstFileException, customException
 #include "restartFileSection.hpp"       // for RstFileSection, readInput
 #include "settings.hpp"                 // for Settings
-#include "simulationBox.hpp"            // for SimulationBox
 #include "simulationBoxSettings.hpp"    // for SimulationBoxSettings
 #include "testRestartFileSection.hpp"   // for TestBoxSection
 

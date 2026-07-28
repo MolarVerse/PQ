@@ -22,17 +22,17 @@
 
 #include "referencesOutput.hpp"
 
-#include <algorithm>   // for for_each
-#include <filesystem>
-#include <format>
-#include <fstream>
-#include <stdexcept>
-#include <string>
-#include <vector>
+#include <algorithm>    // for for_each
+#include <filesystem>   // for path, is_directory, is_regular_file
+#include <format>       // for format
+#include <fstream>      // for fstream
+#include <stdexcept>    // for runtime_error
+#include <string>       // for string
+#include <vector>       // for vector
 
-#include "executablePath.hpp"
-#include "references.hpp"           // for ReferencesOutput
+#include "executablePath.hpp"       // for executablePath
 #include "outputFileSettings.hpp"   // for OutputFileSettings
+#include "references.hpp"           // for ReferencesOutput
 
 using references::ReferencesOutput;
 using namespace settings;
@@ -44,9 +44,8 @@ namespace
         const auto executable = utilities::executablePath();
         if (!executable.empty())
         {
-            const auto installedPath =
-                executable.parent_path().parent_path() / "share" / "PQ" /
-                "references";
+            const auto installedPath = executable.parent_path().parent_path() /
+                                       "share" / "PQ" / "references";
             if (std::filesystem::is_directory(installedPath))
                 return installedPath;
         }
@@ -142,7 +141,10 @@ void ReferencesOutput::writeReferencesFile()
     fp.close();
     if (!fp)
         throw std::runtime_error(
-            std::format("Could not write reference output file \"{}\"", filename)
+            std::format(
+                "Could not write reference output file \"{}\"",
+                filename
+            )
         );
 }
 

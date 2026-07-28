@@ -23,10 +23,7 @@
 #include "velocityRescalingThermostat.hpp"
 
 #include <cmath>    // for sqrt
-#include <memory>   // for __shared_ptr_access, shared_ptr
-#include <vector>   // for vector
 
-#include "atom.hpp"                 // for Atom
 #include "exceptions.hpp"           // for UserInputException
 #include "mathUtilities.hpp"        // for isZero
 #include "physicalData.hpp"         // for PhysicalData

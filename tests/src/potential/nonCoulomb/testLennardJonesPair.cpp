@@ -29,7 +29,6 @@
 
 #include "gtest/gtest.h"   // for AssertionResult, Message, TestPartResult
 #include "lennardJonesPair.hpp"   // for LennardJonesPair
-#include "nonCoulombPair.hpp"     // for potential
 
 using namespace potential;
 

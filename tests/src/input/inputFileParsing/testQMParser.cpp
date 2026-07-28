@@ -27,12 +27,11 @@
 #include <sstream>
 #include <string>
 
-#include "QMInputParser.hpp"     // for InputFileParserQM
-#include "exceptions.hpp"        // for InputFileException, customException
-#include "gtest/gtest.h"         // for Message, TestPartResult
-#include "inputFileParser.hpp"   // for readInput
+#include "QMInputParser.hpp"         // for InputFileParserQM
+#include "exceptions.hpp"            // for InputFileException, customException
+#include "gtest/gtest.h"             // for Message, TestPartResult
 #include "outputFileSettings.hpp"
-#include "qmSettings.hpp"   // for QMSettings
+#include "qmSettings.hpp"            // for QMSettings
 #include "referencesOutput.hpp"
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "throwWithMessage.hpp"      // for ASSERT_THROW_MSG

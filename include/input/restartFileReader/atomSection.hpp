@@ -24,9 +24,7 @@
 
 #define _ATOM_SECTION_HPP_
 
-#include <memory>   // for shared_pointer
 #include <string>   // for string
-#include <vector>   // for vector
 
 #include "restartFileSection.hpp"   // for RestartFileSection
 #include "typeAliases.hpp"          // for strings

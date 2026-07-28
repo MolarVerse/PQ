@@ -11,7 +11,7 @@ target_include_directories(evaluator
 )
 
 target_link_libraries(evaluator
-    PRIVATE
+    PUBLIC
     linearAlgebra
     potential
     constraints

@@ -24,8 +24,6 @@
 
 #include <cmath>   // for pow, sqrt
 
-#include "simulationBox.hpp"
-
 using namespace opt;
 
 /**

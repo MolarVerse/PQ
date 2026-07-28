@@ -22,7 +22,6 @@
 
 #include "QMInputParser.hpp"
 
-#include <algorithm>       // for remove
 #include <format>          // for format
 #include <functional>      // for _Bind_front_t, bind_front
 #include <sstream>         // for stringstream

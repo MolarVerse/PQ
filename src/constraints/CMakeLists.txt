@@ -14,6 +14,7 @@ target_include_directories(constraints
 target_link_libraries(constraints
     PUBLIC
     physicalData
+    Eigen3::Eigen
 
     PRIVATE
     connectivity
@@ -23,7 +24,6 @@ target_link_libraries(constraints
     timings
     kernels
 
-    Eigen3::Eigen
 )
 
 install(TARGETS constraints

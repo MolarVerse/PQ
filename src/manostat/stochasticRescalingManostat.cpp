@@ -22,19 +22,17 @@
 
 #include "stochasticRescalingManostat.hpp"
 
-#include <algorithm>    // for __for_each_fn
-#include <cmath>        // for exp, pow, sqrt
-#include <functional>   // for identity
+#include <algorithm>   // for __for_each_fn
+#include <cmath>       // for exp, pow, sqrt
 
 #include "constants/conversionFactors.hpp"   // for _BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_
 #include "constants/internalConversionFactors.hpp"   // for _PRESSURE_FACTOR_
 #include "exceptions.hpp"                            // for ExceptionType
-#include "physicalData.hpp"                          // for PhysicalData
-#include "simulationBox.hpp"                         // for SimulationBox
-#include "staticMatrix.hpp"         // for diagonal, diagonalMatrix
+#include "manostatSettings.hpp"     // for ManostatType, Isotropy
+#include "physicalData.hpp"         // for PhysicalData
+#include "simulationBox.hpp"        // for SimulationBox
 #include "thermostatSettings.hpp"   // for ThermostatSettings
 #include "timingsSettings.hpp"      // for TimingsSettings
-#include "vector3d.hpp"             // for Vec3D, operator/
 
 using namespace linearAlgebra;
 using namespace manostat;

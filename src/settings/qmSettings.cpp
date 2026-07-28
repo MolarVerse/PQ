@@ -25,8 +25,8 @@
 #include <filesystem>
 #include <format>   // for std::format
 
+#include "exceptions.hpp"   // for customException
 #include "executablePath.hpp"
-#include "exceptions.hpp"        // for customException
 #include "stringUtilities.hpp"   // for toLowerCopy
 
 using settings::MaceMode;
@@ -167,17 +167,16 @@ static std::string builtinSlakosPath([[maybe_unused]] const SlakosType type)
     const auto executable = utilities::executablePath();
     if (!executable.empty())
     {
-        const auto installedPath =
-            executable.parent_path().parent_path() / "share" / "PQ" /
-            "slakos" / settings::string(type) / "skfiles";
+        const auto installedPath = executable.parent_path().parent_path() /
+                                   "share" / "PQ" / "slakos" /
+                                   settings::string(type) / "skfiles";
         if (std::filesystem::is_directory(installedPath))
             return installedPath.string() +
                    std::filesystem::path::preferred_separator;
     }
 
-    const auto buildPath =
-        std::filesystem::path(__SLAKOS_DIR__) / settings::string(type) /
-        "skfiles";
+    const auto buildPath = std::filesystem::path(__SLAKOS_DIR__) /
+                           settings::string(type) / "skfiles";
     return buildPath.string() + std::filesystem::path::preferred_separator;
 #else
     return "";

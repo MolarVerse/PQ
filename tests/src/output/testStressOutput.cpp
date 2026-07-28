@@ -29,7 +29,7 @@
 
 #include "physicalData.hpp"
 #include "stressOutput.hpp"
-#include "vector3d.hpp"
+#include "vector3d.hpp"   // IWYU pragma: keep
 
 using namespace output;
 using physicalData::PhysicalData;
