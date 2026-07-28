@@ -20,7 +20,7 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <cstdlib>      // for EXIT_SUCCESS
+#include <cstdlib>      // for EXIT_FAILURE, EXIT_SUCCESS
 #include <exception>    // for exception
 #include <filesystem>   // for remove_all
 #include <iostream>     // for operator<<
@@ -30,8 +30,10 @@
 
 #include "commandLineArgs.hpp"   // for CommandLineArgs
 #include "engine.hpp"            // for Engine
+#include "exceptions.hpp"        // for CustomException
 #include "inputFileReader.hpp"   // for readJobType
 #include "setup.hpp"             // for setupSimulation
+#include "systemInfo.hpp"        // for _VERSION_
 
 #ifdef WITH_MPI
 #include <mpi.h>   // for MPI_Abort, MPI_COMM_WORLD, MPI_Finalize
@@ -43,15 +45,12 @@
 #include <pybind11/embed.h>   // for scoped_interpreter
 #endif
 
-static int PQ(int argc, const std::vector<std::string> &arguments)
+static int run(const std::string &inputFileName)
 {
-    auto commandLineArgs = CommandLineArgs(argc, arguments);
-    commandLineArgs.detectFlags();
-
     auto engine = std::unique_ptr<engine::Engine>();
-    input::readJobType(commandLineArgs.getInputFileName(), engine);
+    input::readJobType(inputFileName, engine);
 
-    setup::setupRequestedJob(commandLineArgs.getInputFileName(), *engine);
+    setup::setupRequestedJob(inputFileName, *engine);
 
     /*
         HERE STARTS THE MAIN LOOP
@@ -66,9 +65,51 @@ static int PQ(int argc, const std::vector<std::string> &arguments)
     return EXIT_SUCCESS;
 }
 
+static void printHelp()
+{
+    std::cout << "Usage: PQ <input_file>\n"
+              << "       PQ --help\n"
+              << "       PQ --version\n\n"
+              << "Run a PQ simulation from an input file.\n\n"
+              << "Options:\n"
+              << "  -h, --help     Show this help message.\n"
+              << "  -V, --version  Show the PQ version.\n";
+}
+
 // main wrapper
 int main(int argc, char *argv[])
 {
+    auto exitCode        = EXIT_SUCCESS;
+    auto arguments       = std::vector<std::string>(argv, argv + argc);
+    auto commandLineArgs = CommandLineArgs(argc, arguments);
+
+    try
+    {
+        commandLineArgs.parse();
+    }
+    catch (const customException::CustomException &e)
+    {
+        std::cerr << "Error: " << e.getMessage() << '\n' << std::flush;
+        return EXIT_FAILURE;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "Error: " << e.what() << '\n' << std::flush;
+        return EXIT_FAILURE;
+    }
+
+    if (CommandLineAction::HELP == commandLineArgs.getAction())
+    {
+        printHelp();
+        return EXIT_SUCCESS;
+    }
+
+    if (CommandLineAction::VERSION == commandLineArgs.getAction())
+    {
+        std::cout << "PQ " << sysinfo::_VERSION_ << '\n';
+        return EXIT_SUCCESS;
+    }
+
 #ifdef WITH_MPI
     mpi::MPI::init(&argc, &argv);
 #endif
@@ -83,12 +124,21 @@ int main(int argc, char *argv[])
 
     try
     {
-        auto arguments = std::vector<std::string>(argv, argv + argc);
-        ::PQ(argc, arguments);
+        exitCode = run(commandLineArgs.getInputFileName());
+    }
+    catch (const customException::CustomException &e)
+    {
+        std::cerr << "Error: " << e.getMessage() << '\n' << std::flush;
+        exitCode = EXIT_FAILURE;
+
+#ifdef WITH_MPI
+        ::MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
+#endif
     }
     catch (const std::exception &e)
     {
-        std::cout << "Exception: " << e.what() << '\n' << std::flush;
+        std::cerr << "Error: " << e.what() << '\n' << std::flush;
+        exitCode = EXIT_FAILURE;
 
 #ifdef WITH_MPI
         ::MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
@@ -103,5 +153,5 @@ int main(int argc, char *argv[])
     mpi::MPI::finalize();
 #endif
 
-    return EXIT_SUCCESS;
+    return exitCode;
 }

@@ -79,6 +79,7 @@ namespace customException
         explicit CustomException(const std::string_view message);
 
         void colorfulOutput(const Color::Code, const std::string_view) const;
+        [[nodiscard]] const std::string &getMessage() const noexcept;
     };
 
     /**
