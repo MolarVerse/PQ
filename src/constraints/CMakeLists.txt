@@ -27,5 +27,5 @@ target_link_libraries(constraints
 )
 
 install(TARGETS constraints
-    DESTINATION lib
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

@@ -26,7 +26,6 @@
 #include <format>      // for format
 #include <fstream>     // for ifstream, basic_istream
 #include <map>         // for map, operator==
-#include <stdexcept>   // for invalid_argument, out_of_range
 #include <string>      // for char_traits, string
 #include <vector>      // for vector
 
@@ -72,17 +71,14 @@ using std::make_unique;
  */
 InputFileReader::InputFileReader(
     const std::string_view &fileName,
-    engine::Engine         &engine,
-    const bool              validateFilePaths
+    engine::Engine         &engine
 )
     : _fileName(fileName), _engine(engine)
 {
     _parsers.push_back(make_unique<CellListInputParser>(_engine));
     _parsers.push_back(make_unique<ConstraintsInputParser>(_engine));
     _parsers.push_back(make_unique<CoulombLongRangeInputParser>(_engine));
-    _parsers.push_back(
-        make_unique<FilesInputParser>(_engine, validateFilePaths)
-    );
+    _parsers.push_back(make_unique<FilesInputParser>(_engine));
     _parsers.push_back(make_unique<ForceFieldInputParser>(_engine));
     _parsers.push_back(make_unique<GeneralInputParser>(_engine));
     _parsers.push_back(make_unique<HessianInputParser>(_engine));
@@ -149,50 +145,17 @@ void InputFileReader::addKeywords()
 void InputFileReader::process(const std::vector<std::string> &lineElements)
 {
     const auto original_keyword = lineElements[0];
-    const auto keyword          = toLowerAndReplaceDashesCopy(original_keyword);
+    const auto keyword = toLowerAndReplaceDashesCopy(original_keyword);
 
     if (!_keywordFuncMap.contains(keyword))
-        throw InputFileException(
-            std::format(
-                "Invalid keyword \"{}\" at line {}",
-                original_keyword,
-                _lineNumber
-            )
-        );
+        throw InputFileException(std::format(
+            "Invalid keyword \"{}\" at line {}",
+            original_keyword,
+            _lineNumber
+        ));
 
     pq::ParseFunc parserFunc = _keywordFuncMap[keyword];
-
-    try
-    {
-        parserFunc(lineElements, _lineNumber);
-    }
-    catch (CustomException &exception)
-    {
-        exception.setLineNumber(_lineNumber);
-        throw;
-    }
-    catch (const std::invalid_argument &)
-    {
-        throw InputFileException(
-            std::format(
-                "Invalid value \"{}\" for keyword \"{}\"",
-                lineElements[2],
-                original_keyword
-            ),
-            _lineNumber
-        );
-    }
-    catch (const std::out_of_range &)
-    {
-        throw InputFileException(
-            std::format(
-                "Value \"{}\" for keyword \"{}\" is out of range",
-                lineElements[2],
-                original_keyword
-            ),
-            _lineNumber
-        );
-    }
+    parserFunc(lineElements, _lineNumber);
 
     ++_keywordCountMap[keyword];
     _keywordSetMap[keyword] = true;
@@ -238,18 +201,10 @@ void InputFileReader::read()
                 process(lineElements);
         };
 
-        try
-        {
-            std::ranges::for_each(
-                getLineCommands(line, _lineNumber),
-                processInputCommand
-            );
-        }
-        catch (CustomException &exception)
-        {
-            exception.setLineNumber(_lineNumber);
-            throw;
-        }
+        std::ranges::for_each(
+            getLineCommands(line, _lineNumber),
+            processInputCommand
+        );
 
         ++_lineNumber;
     }
@@ -297,27 +252,16 @@ void input::readJobType(
             const auto lineElements = splitString(command);
             if (!lineElements.empty() && "jobtype" == lineElements[0])
             {
-                GeneralInputParser::parseJobTypeForEngine(
-                    lineElements,
-                    lineNumber,
-                    engine
-                );
+                auto parser = GeneralInputParser(*engine);
+                parser.parseJobTypeForEngine(lineElements, lineNumber, engine);
                 jobtypeFound = true;
             }
         };
 
-        try
-        {
-            std::ranges::for_each(
-                getLineCommands(line, lineNumber),
-                processInputCommand
-            );
-        }
-        catch (CustomException &exception)
-        {
-            exception.setLineNumber(lineNumber);
-            throw;
-        }
+        std::ranges::for_each(
+            getLineCommands(line, lineNumber),
+            processInputCommand
+        );
 
         ++lineNumber;
     }
@@ -391,13 +335,11 @@ void input::processEqualSign(std::string &command, const size_t lineNumber)
         command.replace(equalSignPos, 1, " = ");
 
     else
-        throw InputFileException(
-            std::format(
-                "Missing equal sign in command \"{}\" in line {}",
-                command,
-                lineNumber
-            )
-        );
+        throw InputFileException(std::format(
+            "Missing equal sign in command \"{}\" in line {}",
+            command,
+            lineNumber
+        ));
 }
 
 /***************************

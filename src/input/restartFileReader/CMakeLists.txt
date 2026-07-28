@@ -20,6 +20,13 @@ target_link_libraries(restartFileReader
     linearAlgebra
 )
 
+if(BUILD_WITH_TESTS)
+    target_link_libraries(restartFileReader
+        PUBLIC
+        gtest
+    )
+endif()
+
 install(TARGETS restartFileReader
-    DESTINATION lib
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

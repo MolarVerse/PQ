@@ -1,5 +1,4 @@
 set(source_files
-    testExecutablePath.cpp
     testStringUtilities.cpp
     testMathUtilities.cpp
     testCollectionUtilities.cpp

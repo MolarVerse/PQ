@@ -39,11 +39,8 @@ namespace input
      */
     class FilesInputParser : public InputFileParser
     {
-       private:
-        bool _validateFilePaths;
-
        public:
-        explicit FilesInputParser(pq::Engine &, bool validateFilePaths = true);
+        explicit FilesInputParser(pq::Engine &);
 
         void parseIntraNonBondedFile(const pq::strings &, const size_t);
         void parseTopologyFilename(const pq::strings &, const size_t);

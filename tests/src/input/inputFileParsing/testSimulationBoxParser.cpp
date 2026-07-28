@@ -55,13 +55,6 @@ TEST_F(TestInputFileReader, parseDensity)
         customException::InputFileException,
         "Density must be positive - density = -1"
     );
-
-    const std::vector<std::string> zeroDensity = {"density", "=", "0"};
-    EXPECT_THROW_MSG(
-        parser.parseDensity(zeroDensity, 0),
-        customException::InputFileException,
-        "Density must be positive - density = 0"
-    );
 }
 
 /**

@@ -67,7 +67,7 @@ void setup::setupThermostat(Engine &engine)
  *
  * @param engine
  */
-ThermostatSetup::ThermostatSetup(MDEngine &engine) : _engine(engine) {}
+ThermostatSetup::ThermostatSetup(MDEngine &engine) : _engine(engine){};
 
 /**
  * @brief setup thermostat
@@ -188,14 +188,12 @@ void ThermostatSetup::setupNoseHooverThermostat()
     auto fillChi = [&thermostat, nhChainLength](const auto pair)
     {
         if (pair.first > nhChainLength)
-            throw InputFileException(
-                std::format(
-                    "Chi index {} is larger than the number of nose hoover "
-                    "chains {}",
-                    pair.first,
-                    nhChainLength
-                )
-            );
+            throw InputFileException(std::format(
+                "Chi index {} is larger than the number of nose hoover "
+                "chains {}",
+                pair.first,
+                nhChainLength
+            ));
 
         thermostat.setChi(size_t(pair.first - 1), pair.second);
     };
@@ -253,8 +251,7 @@ void ThermostatSetup::setupTemperatureRamp()
 
     const auto targetTemp   = ThermostatSettings::getTargetTemperature();
     const auto tempDelta    = targetTemp - startTemp;
-    const auto updates      = (steps + frequency - 1) / frequency;
-    const auto tempIncrease = tempDelta / double(updates);
+    const auto tempIncrease = tempDelta / double(steps) * frequency;
 
     _engine.getThermostat().setTemperatureIncrease(tempIncrease);
     _engine.getThermostat().setTemperatureRampingFrequency(frequency);

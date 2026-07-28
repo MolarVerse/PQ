@@ -24,5 +24,5 @@ target_link_libraries(parameterFileReader
 )
 
 install(TARGETS parameterFileReader
-    DESTINATION lib
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

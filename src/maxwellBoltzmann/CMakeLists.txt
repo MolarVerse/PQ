@@ -24,5 +24,5 @@ target_link_libraries(maxwellBoltzmann
 )
 
 install(TARGETS maxwellBoltzmann
-    DESTINATION lib
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

@@ -13,5 +13,5 @@ target_link_libraries(randomNumberGenerator
 )
 
 install(TARGETS randomNumberGenerator
-    DESTINATION lib
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

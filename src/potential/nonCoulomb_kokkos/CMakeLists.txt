@@ -19,5 +19,5 @@ target_link_libraries(nonCoulombPotential_kokkos
 )
 
 install(TARGETS nonCoulombPotential_kokkos
-    DESTINATION lib
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

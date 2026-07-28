@@ -103,13 +103,6 @@ namespace settings
         static void setMaxLearningRate(const double);
         static void setMinLearningRate(const double);
 
-        /******************************
-         * validation helper methods *
-         ******************************/
-
-        static void validateLearningRateStrategy();
-        static void validateLearningRateBounds();
-
         /***************************
          * standard getter methods *
          ***************************/

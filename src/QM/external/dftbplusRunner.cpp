@@ -22,8 +22,8 @@
 
 #include "dftbplusRunner.hpp"
 
-#include <cmath>     // for isfinite
 #include <cstddef>   // for size_t
+#include <cstdlib>   // for system
 #include <format>    // for format
 #include <fstream>   // for ofstream
 #include <string>    // for string
@@ -132,7 +132,7 @@ void DFTBPlusRunner::writeCoordsFile(SimulationBox &box)
  */
 void DFTBPlusRunner::execute()
 {
-    const auto scriptFile = resolveScriptPath(QMSettings::getQMScript());
+    const auto scriptFile = _scriptPath + QMSettings::getQMScript();
 
     if (!fileExists(scriptFile))
         throw InputFileException(
@@ -143,11 +143,11 @@ void DFTBPlusRunner::execute()
 
     const auto command = std::format(
         "{} 0 {} 0 0 0 {}",
-        shellQuote(scriptFile),
+        scriptFile,
         reuseCharges,
-        shellQuote(FileSettings::getDFTBFileName())
+        FileSettings::getDFTBFileName()
     );
-    executeCommand(command, "DFTB+");
+    ::system(command.c_str());
 
     _isFirstExecution = false;
 }
@@ -178,27 +178,9 @@ void DFTBPlusRunner::readStressTensor(Box &box, PhysicalData &data)
 
     StaticMatrix3x3<double> stress;
 
-    if (!(stressFile >> stress[0][0] >> stress[0][1] >> stress[0][2] >>
-          stress[1][0] >> stress[1][1] >> stress[1][2] >> stress[2][0] >>
-          stress[2][1] >> stress[2][2]))
-        throw QMRunnerException(
-            std::format(
-                "Incomplete {} stress tensor \"{}\"",
-                string(QMSettings::getQMMethod()),
-                stressFileName
-            )
-        );
-
-    for (size_t row = 0; row < 3; ++row)
-        for (size_t column = 0; column < 3; ++column)
-            if (!std::isfinite(stress[row][column]))
-                throw QMRunnerException(
-                    std::format(
-                        "Invalid value in {} stress tensor \"{}\"",
-                        string(QMSettings::getQMMethod()),
-                        stressFileName
-                    )
-                );
+    stressFile >> stress[0][0] >> stress[0][1] >> stress[0][2];
+    stressFile >> stress[1][0] >> stress[1][1] >> stress[1][2];
+    stressFile >> stress[2][0] >> stress[2][1] >> stress[2][2];
 
     const auto conversion = _HARTREE_PER_BOHR3_TO_KCAL_PER_MOL_PER_ANGSTROM3_;
     stress                = stress * conversion;

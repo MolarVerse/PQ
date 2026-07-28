@@ -43,5 +43,5 @@ if(BUILD_WITH_KOKKOS)
 endif()
 
 install(TARGETS integrator
-    DESTINATION lib
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

@@ -22,5 +22,5 @@ target_link_libraries(manostat
 )
 
 install(TARGETS manostat
-    DESTINATION lib
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

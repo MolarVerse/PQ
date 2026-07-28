@@ -8,5 +8,5 @@ target_include_directories(exceptions
 )
 
 install(TARGETS exceptions
-    DESTINATION lib
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )
