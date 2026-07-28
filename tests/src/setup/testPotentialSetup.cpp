@@ -26,6 +26,7 @@
 #include <memory>    // for make_shared
 #include <string>    // for allocator, basic_string
 
+#include "coulombReactionField.hpp"      // for CoulombReactionField
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
 #include "coulombWolf.hpp"               // for CoulombWolf
 #include "engine.hpp"                    // for Engine
@@ -43,6 +44,24 @@
 using namespace setup;
 using namespace settings;
 using namespace potential;
+
+/**
+ * @brief setup the reaction-field Coulomb potential
+ */
+TEST_F(TestSetup, setupReactionFieldPotential)
+{
+    PotentialSettings::setCoulombLongRangeType("reaction-field");
+    PotentialSetup potentialSetup(*_engine);
+
+    PotentialSettings::setReactionFieldEpsilon(80.0);
+    EXPECT_NO_THROW(potentialSetup.setup());
+    EXPECT_EQ(
+        typeid(_engine->getPotential().getCoulombPotential()),
+        typeid(CoulombReactionField)
+    );
+
+    PotentialSettings::setCoulombLongRangeType("shifted");
+}
 
 /**
  * @brief setup the coulomb potential

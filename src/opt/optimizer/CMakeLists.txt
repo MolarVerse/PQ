@@ -14,6 +14,9 @@ target_include_directories(optimizer
 )
 
 target_link_libraries(optimizer
+    PUBLIC
+    convergence
+
     PRIVATE
     linearAlgebra
     PUBLIC

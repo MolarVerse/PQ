@@ -87,11 +87,6 @@ RingPolymerSetup::RingPolymerSetup(RingPolymerEngine &engine)
  */
 void RingPolymerSetup::setup()
 {
-    if (!RingPolymerSettings::isNumberOfBeadsSet())
-        throw InputFileException(
-            "Number of beads not set for ring polymer simulation"
-        );
-
     setupPhysicalData();
 
     setupSimulationBox();

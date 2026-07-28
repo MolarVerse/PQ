@@ -1,51 +1,16 @@
-# Changelog fragments
+# Changelog fragments (deprecated)
 
-Each PR adds one small file here describing its change. The release flow
-(`scripts/update_changelog.py`, run by `.github/workflows/create-tag.yml`)
-collates them into `CHANGELOG.md` and deletes them.
+Regular pull requests do not edit `CHANGELOG.md`, `DEV-CHANGELOG.md`, or add
+changelog fragments.
 
-This removes the per-PR merge conflicts that happened when every PR
-edited the same `## Next Release` section in `CHANGELOG.md`.
+For a release:
 
-## Format
+1. Curate the user-visible changes under `## Next Release` in `CHANGELOG.md`.
+2. Open the release pull request. Its release check requires at least one
+   user-facing bullet.
+3. After merge, `scripts/update_changelog.py` stamps the curated user notes and
+   generates `DEV-CHANGELOG.md` from conventional commits.
 
-File name: `<slug>.<type>.md` — e.g. `231.internal.md`, or
-`changelog-fragments.ci.md` if no PR number is yet known. Any unique
-slug works; using the PR number once known is recommended.
-
-Supported types and the section they render under:
-
-| Type          | Section          |
-|---------------|------------------|
-| `bugfix`      | Bug Fixes        |
-| `build`       | Build            |
-| `ci`          | CI               |
-| `internal`    | Internal         |
-| `test`        | Tests            |
-| `enhancement` | Enhancements     |
-| `doc`         | Documentation    |
-
-Content: one or more bullets (`- ...`), no leading section header.
-Multi-line bullets are fine; keep them readable.
-
-## Example
-
-`changes/231.internal.md`:
-
-```markdown
-- `CellList::getCells()` and `Cell::getNeighbourCells()` now return by
-  `const &` instead of by value, and `VelocityVerlet::secondStep` no longer
-  copies the per-atom `shared_ptr` into its lambda parameter
-```
-
-## CI gate
-
-The `Check Changelog` workflow accepts either a new file under `changes/`
-or (transitional) a change above the `<!-- insertion marker -->` in
-`CHANGELOG.md`. The `skip-changelog` label still bypasses both.
-
-## At release time
-
-`scripts/update_changelog.py <version>` consumes all fragments, inserts
-them under the new version section in `CHANGELOG.md`, and deletes the
-fragments. The release workflow commits all changes together.
+The release script still accepts old `<slug>.<type>.md` fragments from branches
+created before this workflow. Those fragments are included only in the
+developer changelog and removed after release.

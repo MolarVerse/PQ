@@ -1,0 +1,8 @@
+jobtype = mm-md;
+nstep = 1; timestep = 0.5;
+output_freq = 1;
+integrator = v-verlet;
+force-field = off;
+rcoulomb = 9.0;
+start_file = start.rst;
+file_prefix = smoke;

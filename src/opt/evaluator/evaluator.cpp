@@ -22,6 +22,8 @@
 
 #include "evaluator.hpp"
 
+#include "exceptions.hpp"
+
 #include "celllist.hpp"
 #include "constraints.hpp"
 #include "forceFieldClass.hpp"
@@ -39,6 +41,16 @@ using namespace forceField;
 using namespace intraNonBonded;
 using namespace virial;
 using namespace constraints;
+using namespace customException;
+
+bool Evaluator::supportsAnalyticHessian() const { return false; }
+
+pq::HessianMatrix Evaluator::calculateAnalyticHessian()
+{
+    throw UserInputException(
+        "The selected evaluator does not support analytic Hessian generation."
+    );
+}
 
 /***************************
  * standard setter methods *

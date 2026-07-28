@@ -51,6 +51,9 @@ Energy File
 
 **File Type:** ``.en``
 
+If :ref:`includeoutputmetadatakey` is enabled, the file starts with a
+``# timestep = <value> fs`` comment. By default, the first line remains numeric.
+
 Stores information about the energy and various other quantities of the system for every frame in the following format:
 
     step_number *T* *P* *E*:sub:`tot` *E*:sub:`QM` *N*:sub:`QM-atoms` *E*:sub:`kin` *E*:sub:`intra` *E*:sub:`Coulomb` *E*:sub:`non-Coulomb` *E*:sub:`bond` *E*:sub:`angle` *E*:sub:`dihedral` *E*:sub:`improper` *V* *ρ* *E*:sub:`p-NH` *E*:sub:`χ-NH` *r*:sub:`lower` *r*:sub:`upper` *p* looptime
@@ -113,6 +116,26 @@ Info File
 Stores information about various quantities of the system and their units for the last frame calculated. The quantities are identical 
 to those in the ``.en`` file (described under section :ref:`energyFile`), except the first entry which is the total simulation time 
 in ps instead of the step number. Entries in the ``.info`` file are read from left to right and top to bottom.
+
+.. _hessianFile:
+
+************
+Hessian File
+************
+
+**File Type:** ``.hessian`` or user-defined
+
+Stores the Cartesian Hessian matrix written by ``mm-hessian``. The matrix is written as whitespace-separated floating point values with one matrix row per line. For finite-difference force builders, the Hessian is defined as ``-dF_i/dx_j`` and the default unit is :math:`\frac{\text{kcal}}{\text{mol Å}^2}`.
+
+.. _hessianInfoFile:
+
+*****************
+Hessian Info File
+*****************
+
+**File Type:** ``.hessian.info`` or user-defined
+
+Stores metadata for a generated Hessian, including the matrix filename, Hessian builder, optimization flag, finite-difference displacement, sign convention, unit and matrix dimensions. The file starts with ``format = pq-hessian-info-v1`` so downstream tools can identify the metadata format.
 
 .. _instantEnergyFile:
 

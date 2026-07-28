@@ -53,7 +53,7 @@ TimingsInputParser::TimingsInputParser(Engine &engine) : InputFileParser(engine)
     addKeyword(
         std::string("nstep"),
         bind_front(&TimingsInputParser::parseNumberOfSteps, this),
-        true
+        false
     );
 }
 

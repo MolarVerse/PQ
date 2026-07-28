@@ -130,6 +130,8 @@ TEST_F(TestSetup, setupLearningRateStrategyNoneThrows)
 {
     resetOptimizerSettings();
     OptimizerSettings::setLearningRateStrategy(LREnum::NONE);
+    EXPECT_EQ(string(LREnum::NONE), "none");
+
     OptimizerSetup s(dynamic_cast<engine::OptEngine &>(*_engine));
     EXPECT_THROW(s.setupLearningRateStrategy(), UserInputException);
 }

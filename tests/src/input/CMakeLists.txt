@@ -3,6 +3,7 @@ set(source_files
     testMoldescriptorReader.cpp
     testGuffDatReader.cpp
     testInputFileReader.cpp
+    testInputValidation.cpp
     testIntraNonBondedReader.cpp
     testCommandLineArgs.cpp
     testMShakeReader.cpp

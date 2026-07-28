@@ -19,6 +19,7 @@ The concept of the input file is based on the definition of so-called "commands"
 
 .. Note::
     The semicolon at the end of both command definitions is necessary, while the number of whitespaces can be arbitrary at any position of the command as long as key and value are not split in parts.
+    Input keys and string options are case-insensitive. Dashes and underscores are treated equivalently where both spellings are supported.
 
 Command definition 1. represents a single value command, whereas definition 2. can be considered as a list of input values which will always be represented with ``[]``.
 
@@ -64,7 +65,7 @@ In the following sections the types of the input values will be denoted *via* ``
 .. _selectionType:
 
 .. Note::
-    The ``{selection}`` type is used to select a specific atom or group of atoms. If the PQ software package was build including ``python3.12`` dependencies, the user can apply the selection grammar defined in the `PQAnalysis package <https://molarverse.github.io/PQAnalysis/code/PQAnalysis.topology.selection.html>`__. However, if PQ was compiled without these dependencies it is possible to index *via* the atomic indices starting from 0. If more than one atom index should be selected, the user can give a list of indices like ``{0, 1, 2}``. If a range of atom indices should be selected the user can use the following syntax ``{0-5, 10-15}`` or ``{0..5, 10-15}`` or ``{0..5, 10..15}``, where all would be equivalent to ``{0, 1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15}``.
+    The ``{selection}`` type is used to select a specific atom or group of atoms. If the PQ software package was built with the ``python3.12`` dependencies, the user can apply the selection grammar defined in the `PQAnalysis package <https://molarverse.github.io/PQAnalysis/code/PQAnalysis.topology.selection.html>`__. However, if PQ was compiled without these dependencies it is possible to index *via* the atomic indices starting from 0. If more than one atom index should be selected, the user can give a list of indices like ``{0, 1, 2}``. If a range of atom indices should be selected the user can use the following syntax ``{0-5, 10-15}`` or ``{0..5, 10-15}`` or ``{0..5, 10..15}``, where all would be equivalent to ``{0, 1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15}``.
 
 Input Keys
 ==========
@@ -100,6 +101,8 @@ Possible options are:
 
    5. **mm-opt** - represents a geometry optimization calculation using molecular mechanics.
 
+   6. **mm-hessian** - represents a molecular mechanics Hessian calculation. By default, the geometry is optimized first and the Hessian is built at the optimized structure. Set ``optimize_before_hessian = false`` to calculate the Hessian directly at the input geometry.
+
 .. _timestepKey:
 
 Timestep
@@ -122,7 +125,7 @@ NStep
 
     nstep* = {uint+}
 
-The ``nstep`` keyword sets the total number of MD steps to be performed within this simulation run.
+The ``nstep`` keyword sets the total number of MD steps or optimization epochs to be performed within this simulation run. It is required for MD job types, optimization job types and ``mm-hessian`` runs with ``optimize_before_hessian = true``. It is not required for ``mm-hessian`` runs with ``optimize_before_hessian = false``.
 
 .. _floatingpointtypeKey:
 
@@ -250,6 +253,22 @@ Overwrite Output Files
     overwrite_output = {bool} -> false
 
 The ``overwrite_output`` keyword allows the user to overwrite any existing output files.
+
+.. centered:: *default value* = false
+
+.. _includeoutputmetadatakey:
+
+Output Metadata
+===============
+
+.. admonition:: Key
+    :class: tip
+
+    include_output_metadata = {bool} -> false
+
+When enabled, ``include_output_metadata`` adds a comment header containing the
+simulation timestep to the averaged and instantaneous MD energy files. It is
+disabled by default to preserve the existing numeric file format.
 
 .. centered:: *default value* = false
 
@@ -585,9 +604,16 @@ Setup File Keys
 In order to set up certain calculations additional input files have to be used. The names of these setup files have to be specified in the 
 input file. Further information about the individual files can be found in the :ref:`setupFiles` section.
 
+.. Note::
+
+    ``topology_file`` becomes mandatory when :ref:`force-field <forcefieldKey>`
+    is set to ``on`` or ``bonded``, or when :ref:`shake <shakeKey>` is set to
+    ``on`` or ``shake``. ``parameter_file`` becomes mandatory when
+    :ref:`force-field <forcefieldKey>` is set to ``on`` or ``bonded``.
+
 .. _moldescriptorfileKey:
 
-Moldesctiptor File
+Moldescriptor File
 ==================
 
 .. admonition:: Key
@@ -641,8 +667,8 @@ Parameter File
 
     parameter_file = {file}
 
-MSHake_File
-===========
+M-SHAKE File
+============
 
 .. admonition:: Key
     :class: tip
@@ -795,7 +821,6 @@ With the ``temp_ramp_frequency`` keyword the user can specify the frequency of t
 
 Thermostat
 ==========
-.. TODO: reference manual
 
 .. admonition:: Key
     :class: tip
@@ -818,7 +843,7 @@ Possible options are:
         .. math:: \zeta = \sqrt{1 + \frac{\Delta t}{\tau} \left( \frac{T_0}{T} - 1 +2 \sqrt{\frac{T_0}{T} \frac{\Delta t}{\tau} \frac{1}{df}} dW \right)}
             :label: BussiDonadioParrinelloThermostatEquation
 
-   4. **langevin** - temperature coupling *via* stochastic Langevin dynamics. Based on modifying the force of each individual particle :math:`F_{\text i}` *via* a friction force :math:`\gamma \cdot p_{\text i}` and a random force :math:`\xi`, equation :eq:`LangevinThermostatEquation`. The friction coefficient :math:`\gamma` can be set with the :ref:`frictionKey` keyword. Enforces a canonical kinetic energy distribution. However, the Langevin thermostat is unable to conserve the total momentum of the system, which may lead to critical erros in the resulting dynamical data.
+   4. **langevin** - temperature coupling *via* stochastic Langevin dynamics. Based on modifying the force of each individual particle :math:`F_{\text i}` *via* a friction force :math:`\gamma \cdot p_{\text i}` and a random force :math:`\xi`, equation :eq:`LangevinThermostatEquation`. The friction coefficient :math:`\gamma` can be set with the :ref:`frictionKey` keyword. Enforces a canonical kinetic energy distribution. However, the Langevin thermostat is unable to conserve the total momentum of the system, which may lead to critical errors in the resulting dynamical data.
 
         .. math:: m_{\text i} \dot{v}_{\text i} = F_{\text i} - \gamma \cdot p_{\text i} + \xi
             :label: LangevinThermostatEquation
@@ -908,7 +933,6 @@ With the ``pressure`` keyword the target pressure in ``bar`` of the system can b
 
 Manostat
 ========
-.. TODO: reference manual
 
 .. admonition:: Key
     :class: tip
@@ -1091,6 +1115,22 @@ With the ``freset_angular`` keyword the user can specify the frequency ``f`` at 
 
 .. centered:: *special case* = 0 -> nstep + 1 
 
+.. _fresetforcesKey:
+
+FReset Forces
+=============
+
+.. admonition:: Key
+    :class: tip
+
+    freset_forces = {uint} -> nstep + 1
+
+With the ``freset_forces`` keyword the user can specify the frequency ``f`` at which the total force of the system is reset. At each reset step the average force vector is subtracted from every atom, so that the summed force over all atoms is zero.
+
+.. centered:: *default value* = nstep + 1 (*i.e.* never)
+
+.. centered:: *special case* = 0 -> nstep + 1
+
 .. _constraintsKeys:
 
 ****************
@@ -1113,11 +1153,9 @@ Possible options are:
 
    1. **off** (default) - no shake will be applied
 
-   2. **on** - SHAKE for bond constraints defined in the :ref:`topologyFile` will be applied.
+   2. **on** or **shake** - SHAKE for bond constraints defined in the :ref:`topologyFile` will be applied.
 
-   3. **shake** - SHAKE for bond constraints defined in the :ref:`topologyFile` will be applied.
-
-   4. **mshake** - M-SHAKE for bond constraints defined in a special :ref:`mshakeFile` will be applied. As the M-SHAKE algorithm is designed for the treatment of rigid body molecular units the general shake algorithm will be activated automatically along with the M-SHAKE algorithm. The shake bonds can be defined as usual in the :ref:`topologyFile` and if no SHAKE bonds are defined only the M-SHAKE algorithm will be applied (without any overhead)
+   3. **mshake** - M-SHAKE for bond constraints defined in a special :ref:`mshakeFile` will be applied. As the M-SHAKE algorithm is designed for the treatment of rigid body molecular units the general shake algorithm will be activated automatically along with the M-SHAKE algorithm. The shake bonds can be defined as usual in the :ref:`topologyFile` and if no SHAKE bonds are defined only the M-SHAKE algorithm will be applied (without any overhead)
 
 .. _shaketoleranceKey:
 
@@ -1261,7 +1299,7 @@ Force Field
 
     force-field = {string} -> "off"
 
-With the ``force-field`` keyword the user can switch from the GUFF formalism to a force field type simulation (For details see Reference Manual).
+With the ``force-field`` keyword the user can switch from the GUFF formalism to a force field type simulation. Force field setup files are described in the :ref:`setupFiles` section.
 
 Possible options are:
 
@@ -1293,20 +1331,37 @@ Possible options are:
 
    1. **none** (default) - no long range correction
 
-   2. **wolf** - Wolf summation
+   2. **reaction-field** - reaction field
 
-.. _wolfParameterKey:
+   3. **wolf** - Wolf summation
 
-Wolf Parameter
-==============
-.. TODO: add unit and description
+.. _reactionFieldEpsilonKey:
+
+Reaction Field Epsilon
+======================
 
 .. admonition:: Key
     :class: tip
 
-    wolf_param = {double} -> 0.25 
+    rf_epsilon = {double}
 
-.. centered:: *default value* = 0.25
+With the ``rf_epsilon`` keyword the user can set the static relative permittivity :math:`\epsilon` used by the reaction field Coulomb correction. The value must be greater than 1.0.
+
+.. Note::
+
+    This keyword has no default value and is therefore mandatory if the :ref:`long_range <longrangeKey>` keyword is set to ``reaction-field``.
+
+Wolf Parameter
+==============
+
+.. admonition:: Key
+    :class: tip
+
+    wolf_param = {double} Å⁻¹ -> 0.25 Å⁻¹
+
+With the ``wolf_param`` keyword the user can set the damping parameter :math:`\kappa` used by the Wolf summation Coulomb correction. The value must be non-negative and is only used if ``long_range`` is set to ``wolf``.
+
+.. centered:: *default value* = 0.25 Å⁻¹
 
 .. _qmKeys:
 
@@ -1357,7 +1412,7 @@ QM Script
 
     qm_script = {file}
 
-With the ``qm_script`` keyword the external executable to run the QM engine and to parse its output is chosen. All possible scripts can be found under `<https://github.com/MolarVerse/PQ/tree/main/src/QM/scripts>`__. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.
+With the ``qm_script`` keyword the external executable to run the QM engine and to parse its output is chosen. All possible scripts can be found under `<https://github.com/MolarVerse/PQ/tree/main/src/QM/scripts>`__. The script name should match the selected QM engine and input format.
 
 .. _qmscriptfullpathKey:
 
@@ -1372,7 +1427,7 @@ QM Script Full Path
 .. attention::
    This keyword can not be used in conjunction with the ``qm_script`` keyword! Furthermore, this keyword needs to be used in combination with any singularity or static build of PQ. For further details regarding the compilation/installation please refer to the :ref:`userG_installation` section.
 
-With the ``qm_script_full_path`` keyword the user can specify the full path to the external executable to run the QM engine and to parse its output. All possible scripts can be found under `<https://github.com/MolarVerse/PQ/tree/main/src/QM/scripts>`__. Already the naming of the executables should hopefully be self-explanatory in order to choose the correct input executable name.
+With the ``qm_script_full_path`` keyword the user can specify the full path to the external executable to run the QM engine and to parse its output. All possible scripts can be found under `<https://github.com/MolarVerse/PQ/tree/main/src/QM/scripts>`__. The script name should match the selected QM engine and input format.
 
 .. _qmlooptimelimitKey:
 
@@ -1663,7 +1718,7 @@ QM Only List
 
     qm_only_list = {selection}
 
-With the ``qm_only_list`` keyword the user can specify a list of atoms which should be treated as QM atoms only. This means that these atoms can not leave the QM region during the simulation. For more information see the reference manual. For more information about the selection grammar see the `selectionType`_ section. By default no atoms are selected.
+With the ``qm_only_list`` keyword the user can specify a list of atoms which should be treated as QM atoms only. This means that these atoms can not leave the QM region during the simulation. For more information about the selection grammar see the `selectionType`_ section. By default no atoms are selected.
 
 .. _mmonlylistKey:
 
@@ -1675,7 +1730,7 @@ MM Only List
 
     mm_only_list = {selection}
 
-With the ``mm_only_list`` keyword the user can specify a list of atoms which should be treated as MM atoms only. This means that these atoms can not enter the QM region during the simulation. For more information see the reference manual. For more information about the selection grammar see the `selectionType`_ section. By default no atoms are selected.
+With the ``mm_only_list`` keyword the user can specify a list of atoms which should be treated as MM atoms only. This means that these atoms can not enter the QM region during the simulation. For more information about the selection grammar see the `selectionType`_ section. By default no atoms are selected.
 
 .. _qmchargesKey:
 
@@ -2003,3 +2058,91 @@ RMS Force Convergence Threshold
 With the ``rms-force-conv`` keyword the user can specify the root mean square force convergence threshold for all kind of optimization jobs. This keyword overrides the ``force-conv`` keyword.
 
 .. centered:: *default value* = 1e-6
+
+.. _hessianKeys:
+
+************
+Hessian Keys
+************
+
+The Hessian keys configure ``mm-hessian`` runs. The generated Hessian can be analyzed with the PQAnalysis ``vibrations`` input-file command.
+
+.. _hessianfilekey:
+
+Hessian File
+============
+
+.. admonition:: Key
+    :class: tip
+
+    hessian_file = {file} -> "default.hessian"
+
+The ``hessian_file`` keyword sets the plain text matrix output file for the Cartesian Hessian.
+
+.. centered:: *default value* = "default.hessian"
+
+.. _hessianinfofilekey:
+
+Hessian Info File
+=================
+
+.. admonition:: Key
+    :class: tip
+
+    hessian_info_file = {file} -> "default.hessian.info"
+
+The ``hessian_info_file`` keyword sets the metadata output file for the Hessian run. The file records the Hessian builder, displacement, unit, sign convention, matrix dimensions and whether the geometry was optimized before the Hessian was calculated.
+
+.. centered:: *default value* = "default.hessian.info"
+
+.. _hessiandisplacementkey:
+
+Hessian Displacement
+====================
+
+.. admonition:: Key
+    :class: tip
+
+    hessian_displacement = {double} -> 1.0e-3
+
+The ``hessian_displacement`` keyword sets the Cartesian displacement used by finite-difference Hessian builders. The value must be greater than zero.
+
+.. centered:: *default value* = 1.0e-3
+
+.. _optimizebeforehessiankey:
+
+Optimize Before Hessian
+=======================
+
+.. admonition:: Key
+    :class: tip
+
+    optimize_before_hessian = {bool} -> true
+
+The ``optimize_before_hessian`` keyword controls whether ``mm-hessian`` first performs a geometry optimization using the normal :ref:`optimizationKeys` and :ref:`convergenceKeys`. The default is ``true`` because vibrational frequencies are meaningful at stationary points. Set it to ``false`` for a Hessian at the input geometry, for example when the geometry was optimized in a previous run or by an external program.
+
+.. centered:: *default value* = true
+
+.. _hessianbuilderkey:
+
+Hessian Builder
+===============
+
+.. admonition:: Key
+    :class: tip
+
+    hessian_builder = {string} -> "central"
+
+The ``hessian_builder`` keyword selects how the Hessian is generated.
+
+Possible options are:
+
+   1. **central** (default) - central finite differences of forces
+
+   2. **forward** - forward finite differences of forces
+
+   3. **five-point** - five-point finite differences of forces
+
+   4. **analytic** - analytic Hessian evaluator hook, available only for evaluators that implement it
+
+.. centered:: *default value* = "central"

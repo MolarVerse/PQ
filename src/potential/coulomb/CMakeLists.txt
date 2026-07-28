@@ -1,5 +1,6 @@
 add_library(coulombPotential
     coulombPotential.cpp
+    coulombReactionField.cpp
     coulombShiftedPotential.cpp
     coulombWolf.cpp
 )

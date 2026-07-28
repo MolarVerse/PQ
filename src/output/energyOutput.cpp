@@ -37,6 +37,16 @@ using namespace physicalData;
 using namespace settings;
 
 /**
+ * @brief Write energy file metadata
+ *
+ * @param timeStep simulation timestep in fs
+ */
+void EnergyOutput::writeHeader(const double timeStep)
+{
+    _fp << std::format("# timestep = {} fs\n", timeStep);
+}
+
+/**
  * @brief Write the energy output
  *
  * @details

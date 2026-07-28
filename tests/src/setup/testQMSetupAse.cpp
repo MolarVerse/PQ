@@ -34,6 +34,7 @@
 
 #include "gtest/gtest.h"          // for Message, TestPartResult
 
+#ifdef WITH_ASE
 TEST_F(TestQMSetupAse, setupAseDftbplus3OB)
 {
     QMSettings::setSlakosType("3ob");
@@ -153,6 +154,7 @@ TEST_F(TestQMSetupAse, setupAseDftbplusMatsci)
     getline(file, line);
     EXPECT_EQ(line, "         3rd order is turned:  off");
 }
+#endif
 
 TEST_F(TestQMSetupAse, setupAseDftbplusCustom)
 {

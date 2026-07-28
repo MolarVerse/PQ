@@ -1,0 +1,92 @@
+# git-cliff configuration for PQ's developer changelog.
+#
+# Generates the DEV-CHANGELOG.md release section from conventional commits
+# since the last tag. CHANGELOG.md is curated separately for users in the
+# release PR. Regular PRs do not edit either file.
+#
+# Developer-changelog verbosity is kept under control by:
+#
+#   * skipping merge commits and trivial types (chore/style/format),
+#   * grouping all commits under stable developer sections so a
+#     20-commit release renders as ~6 short sections rather than one
+#     long wall of bullets,
+#   * keeping each entry to the commit subject only (no body),
+#   * de-duplicating identical entries.
+#
+# The generated output is the technical record; user-facing release notes are
+# reviewed separately in CHANGELOG.md.
+
+[changelog]
+header = ""
+# One section per type group, each rendering as:
+#   ### <Section>
+#
+#   - <commit subject>
+# Identical subjects within a section are de-duplicated so a noisy
+# series of "fix: typo" commits doesn't blow the section up.
+body = """
+{%- set sections = [
+  "Breaking Changes",
+  "Enhancements",
+  "Bug Fixes",
+  "Performance",
+  "Build",
+  "CI",
+  "Tests",
+  "Internal",
+  "Documentation"
+] -%}
+{%- for section in sections -%}
+{%- set section_commits = commits | filter(attribute="group", value=section) -%}
+{%- if section_commits | length > 0 %}
+### {{ section }}
+
+{% for commit in section_commits | unique(attribute="message") -%}
+- {{ commit.message | upper_first | trim_end }}
+{% endfor %}
+{% endif -%}
+{%- endfor %}
+"""
+footer = ""
+trim = true
+
+[git]
+# Use the conventional-commit prefix enforced by .githooks/commit-msg.
+# With this on, commit.message in the template is already the description
+# without the type/scope prefix, so each bullet stays terse and the
+# section heading carries the type information.
+conventional_commits = true
+# Drop anything that isn't conventional (matches the hook policy).
+filter_unconventional = true
+split_commits = false
+protect_breaking_commits = false
+tag_pattern = "v[0-9]+\\.[0-9]+\\.[0-9]+"
+ignore_tags = ""
+topo_order = false
+sort_commits = "newest"
+
+# Map every prefix the commit-msg hook accepts to a developer changelog
+# section, plus skip rules for the noisy ones.
+commit_parsers = [
+  # Skip merge commits, GitHub release PR bodies, and revert markers.
+  { message = "^[Mm]erge ", skip = true },
+  { message = "^[Rr]evert ", skip = true },
+  # Skip explicit opt-outs.
+  { message = "\\[skip changelog\\]", skip = true },
+
+  # Map prefixes to sections.
+  { message = "^(feat|feature)(\\(.+\\))?:", group = "Enhancements" },
+  { message = "^breaking(\\(.+\\))?:", group = "Breaking Changes" },
+  { message = "^(fix|bugfix)(\\(.+\\))?:", group = "Bug Fixes" },
+  { message = "^(perf|performance)(\\(.+\\))?:", group = "Performance" },
+  { message = "^(build|cmake|deps)(\\(.+\\))?:", group = "Build" },
+  { message = "^(ci|workflow|flow)(\\(.+\\))?:", group = "CI" },
+  { message = "^(test|tests)(\\(.+\\))?:", group = "Tests" },
+  { message = "^(doc|docs|documentation)(\\(.+\\))?:", group = "Documentation" },
+  { message = "^(refactor|ref|cleanup|clean)(\\(.+\\))?:", group = "Internal" },
+  { message = "^internal(\\(.+\\))?:", group = "Internal" },
+
+  # Drop pure-formatting / housekeeping noise from the changelog.
+  { message = "^(style|format)(\\(.+\\))?:", skip = true },
+  { message = "^(chore|admin|example)(\\(.+\\))?:", skip = true },
+]

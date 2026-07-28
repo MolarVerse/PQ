@@ -36,9 +36,16 @@ mshake-iter                 false
 distance-constraints        false
 
 long_range                  false
+rf_epsilon                  false
 wolf_param                  false
 
 force-field                 false
+
+hessian_file                false
+hessian_info_file           false
+hessian_displacement        false
+optimize_before_hessian     false
+hessian_builder             false
 
 start_file                  true
 rpmd_start_file             false
@@ -73,6 +80,7 @@ coupling_frequency          false
 noncoulomb                  false
 
 overwrite_output            false
+include_output_metadata     false
 output_freq                 false
 file_prefix                 false
 output_file                 false
@@ -112,7 +120,7 @@ density                     false
 init_velocities             false
 
 timestep                    false
-nstep                       true
+nstep                       false
 
 virial                      false
 

@@ -9,6 +9,7 @@ set(source_files
     testFilesParser.cpp
     testForceFieldParser.cpp
     testGeneralParser.cpp
+    testHessianParser.cpp
     testIntegratorParser.cpp
     testManostatParser.cpp
     testNonCoulombParser.cpp

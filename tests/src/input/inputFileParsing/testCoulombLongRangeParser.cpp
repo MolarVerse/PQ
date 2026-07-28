@@ -53,6 +53,10 @@ TEST_F(TestInputFileReader, testParseCoulombLongRange)
     parser.parseCoulombLongRange(lineElements, 0);
     EXPECT_EQ(PotentialSettings::getCoulombLongRangeType(), SHIFTED);
 
+    lineElements = {"long-range", "=", "reaction-field"};
+    parser.parseCoulombLongRange(lineElements, 0);
+    EXPECT_EQ(PotentialSettings::getCoulombLongRangeType(), REACTION_FIELD);
+
     lineElements = {"long-range", "=", "wolf"};
     parser.parseCoulombLongRange(lineElements, 0);
     EXPECT_EQ(PotentialSettings::getCoulombLongRangeType(), WOLF);
@@ -62,7 +66,8 @@ TEST_F(TestInputFileReader, testParseCoulombLongRange)
         parser.parseCoulombLongRange(lineElements, 0),
         InputFileException,
         "Invalid long-range type for coulomb correction \"notValid\" at line 0 "
-        "in input file\nPossible options are: none, shifted, wolf"
+        "in input file\nPossible options are: none, shifted, reaction-field, "
+        "wolf"
     );
 }
 
@@ -85,5 +90,34 @@ TEST_F(TestInputFileReader, testParseWolfParameter)
         parser.parseWolfParameter(lineElements, 0),
         InputFileException,
         "Wolf parameter cannot be negative"
+    );
+}
+
+/**
+ * @brief tests parsing the "rf_epsilon" command
+ *
+ */
+TEST_F(TestInputFileReader, testParseReactionFieldEpsilon)
+{
+    CoulombLongRangeInputParser parser(*_engine);
+
+    pq::strings lineElements = {"rf-epsilon", "=", "1.0"};
+    parser.parseReactionFieldEpsilon(lineElements, 0);
+    EXPECT_EQ(PotentialSettings::getReactionFieldEpsilon(), 1.0);
+
+    lineElements = {"rf-epsilon", "=", "0.999999"};
+    EXPECT_THROW_MSG(
+        parser.parseReactionFieldEpsilon(lineElements, 0),
+        InputFileException,
+        "Static relative permittivity \"rf_epsilon\" cannot be lower than "
+        "1.0"
+    );
+
+    lineElements = {"rf-epsilon", "=", "-1.0"};
+    EXPECT_THROW_MSG(
+        parser.parseReactionFieldEpsilon(lineElements, 0),
+        InputFileException,
+        "Static relative permittivity \"rf_epsilon\" cannot be lower than "
+        "1.0"
     );
 }

@@ -25,6 +25,20 @@
 #include "convergenceSettings.hpp"
 #include "gtest/gtest.h"
 
+TEST(ConvSettingsTest, StrategyToString)
+{
+    using enum settings::ConvStrategy;
+
+    EXPECT_EQ(settings::string(RIGOROUS), "RIGOROUS");
+    EXPECT_EQ(settings::string(LOOSE), "LOOSE");
+    EXPECT_EQ(settings::string(ABSOLUTE), "ABSOLUTE");
+    EXPECT_EQ(settings::string(RELATIVE), "RELATIVE");
+    EXPECT_EQ(
+        settings::string(static_cast<settings::ConvStrategy>(-1)),
+        "none"
+    );
+}
+
 TEST(ConvSettingsTest, EnergyConvSettersAndOptionalGetters)
 {
     settings::ConvSettings::setEnergyConv(1.0e-6);

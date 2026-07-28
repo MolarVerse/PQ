@@ -39,8 +39,10 @@ std::string settings::string(const ManostatType &manostatType)
 
         case ManostatType::STOCHASTIC_RESCALING: return "stochastic_rescaling";
 
-        default: return "none";
+        case ManostatType::NONE: break;
     }
+
+    return "none";
 }
 
 /**
@@ -59,8 +61,10 @@ std::string settings::string(const Isotropy &isotropy)
         case ANISOTROPIC: return "anisotropic";
         case FULL_ANISOTROPIC: return "full_anisotropic";
 
-        default: return "isotropic";
+        case NONE: break;
     }
+
+    return "isotropic";
 }
 
 /***************************
@@ -136,16 +140,6 @@ void ManostatSettings::setIsotropy(const Isotropy &isotropy)
 }
 
 /**
- * @brief sets the pressureSet to bool in settings
- *
- * @param pressureSet
- */
-void ManostatSettings::setPressureSet(const bool pressureSet)
-{
-    _isPressureSet = pressureSet;
-}
-
-/**
  * @brief sets the targetPressure to double in settings
  *
  * @param target
@@ -200,13 +194,6 @@ void ManostatSettings::set2DAnisotropicAxis(const size_t index)
  * standard getter methods *
  *                         *
  ***************************/
-
-/**
- * @brief get if pressure is set
- *
- * @return bool
- */
-bool ManostatSettings::isPressureSet() { return _isPressureSet; }
 
 /**
  * @brief get if manostat is Berendsen based

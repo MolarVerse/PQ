@@ -447,6 +447,16 @@ void OutputFileSettings::setOverwriteOutputFiles(const bool overwrite)
     _overwriteOutputFiles = overwrite;
 }
 
+/**
+ * @brief sets if output files should include metadata
+ *
+ * @param includeMetadata
+ */
+void OutputFileSettings::setIncludeOutputMetadata(const bool includeMetadata)
+{
+    _includeOutputMetadata = includeMetadata;
+}
+
 /***************************
  *                         *
  * standard getter methods *
@@ -654,4 +664,14 @@ std::string OutputFileSettings::getTimingsFileName() { return _timeFile; }
 bool OutputFileSettings::getOverwriteOutputFiles()
 {
     return _overwriteOutputFiles;
+}
+
+/**
+ * @brief returns if output files should include metadata
+ *
+ * @return bool
+ */
+bool OutputFileSettings::getIncludeOutputMetadata()
+{
+    return _includeOutputMetadata;
 }

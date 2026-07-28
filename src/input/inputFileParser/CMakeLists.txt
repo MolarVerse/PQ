@@ -9,6 +9,7 @@ add_library(inputFileParser
     filesInputParser.cpp
     forceFieldInputParser.cpp
     generalInputParser.cpp
+    hessianInputParser.cpp
     hybridInputParser.cpp
     integratorInputParser.cpp
     manostatInputParser.cpp

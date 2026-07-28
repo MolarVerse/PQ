@@ -293,11 +293,27 @@ TEST_F(TestInputFileReader, parseSlakosType)
 
     auto parser = QMInputParser(*_engine);
 
+#ifdef WITH_ASE
     parser.parseSlakosType({"slakos", "=", "3ob"}, 0);
     EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::THREEOB);
 
     parser.parseSlakosType({"slakos", "=", "matsci"}, 0);
     EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::MATSCI);
+#else
+    ASSERT_THROW_MSG(
+        parser.parseSlakosType({"slakos", "=", "3ob"}, 0),
+        InputFileException,
+        "Built-in SLAKOS sets (3ob/matsci) require building PQ with "
+        "-DBUILD_WITH_ASE=On"
+    );
+
+    ASSERT_THROW_MSG(
+        parser.parseSlakosType({"slakos", "=", "matsci"}, 0),
+        InputFileException,
+        "Built-in SLAKOS sets (3ob/matsci) require building PQ with "
+        "-DBUILD_WITH_ASE=On"
+    );
+#endif
 
     parser.parseSlakosType({"slakos", "=", "custom"}, 0);
     EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::CUSTOM);
@@ -310,6 +326,7 @@ TEST_F(TestInputFileReader, parseSlakosType)
     )
 }
 
+#ifdef WITH_ASE
 TEST_F(TestInputFileReader, parseSlakosTypeThirdOrder)
 {
     using enum QMMethod;
@@ -327,6 +344,7 @@ TEST_F(TestInputFileReader, parseSlakosTypeThirdOrder)
     EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::THREEOB);
     EXPECT_FALSE(QMSettings::useThirdOrderDftb());
 }
+#endif
 
 TEST_F(TestInputFileReader, parseSlakosPath)
 {

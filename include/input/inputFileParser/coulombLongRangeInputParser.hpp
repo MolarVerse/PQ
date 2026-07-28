@@ -43,6 +43,7 @@ namespace input
         explicit CoulombLongRangeInputParser(pq::Engine &);
 
         void parseCoulombLongRange(const pq::strings &, const size_t);
+        void parseReactionFieldEpsilon(const pq::strings &, const size_t);
         void parseWolfParameter(const pq::strings &, const size_t);
     };
 

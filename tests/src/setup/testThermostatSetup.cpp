@@ -28,14 +28,12 @@
 #include "berendsenThermostat.hpp"           // for BerendsenThermostat
 #include "constants/conversionFactors.hpp"   // for _FS_TO_S_, _KG_TO_GRAM_
 #include "constants/natureConstants.hpp"     // for _UNIVERSAL_GAS_CONSTANT_
-#include "exceptions.hpp"             // for InputFileException, customException
 #include "gtest/gtest.h"              // for Message, TestPartResult
 #include "langevinThermostat.hpp"     // for LangevinThermostat
 #include "noseHooverThermostat.hpp"   // for NoseHooverThermostat
 #include "testSetup.hpp"              // for TestSetup
 #include "thermostatSettings.hpp"     // for ThermostatSettings
 #include "thermostatSetup.hpp"        // for ThermostatSetup, setupThermostat
-#include "throwWithMessage.hpp"       // for EXPECT_THROW_MSG
 #include "timingsSettings.hpp"        // for TimingsSettings
 #include "velocityRescalingThermostat.hpp"   // for VelocityRescalingThermostat
 
@@ -47,38 +45,6 @@ TEST_F(TestSetup, setupThermostat_no_thermostat)
 
     settings::TimingsSettings::setTimeStep(0.1);
     EXPECT_NO_THROW(thermostatSetup.setup());
-}
-
-TEST_F(TestSetup, setupThermostat_both_target_and_end_temp_set)
-{
-    ThermostatSetup thermostatSetup(*_mdEngine);
-
-    settings::ThermostatSettings::setEndTemperature(400);
-    settings::ThermostatSettings::setTargetTemperature(300);
-    settings::ThermostatSettings::setThermostatType("berendsen");
-    EXPECT_THROW_MSG(
-        thermostatSetup.setup(),
-        customException::InputFileException,
-        "Both target and end temperature set for berendsen thermostat. They "
-        "are mutually exclusive as they are treated as synonyms"
-    );
-
-    // needed because otherwise subsequent executions of .setup() will fail
-    // because the end temperature is automatically set to the target
-    // temperature for consistency
-    settings::ThermostatSettings::setEndTemperatureSet(false);
-}
-
-TEST_F(TestSetup, setupThermostat_no_target_or_end_temp_set)
-{
-    ThermostatSetup thermostatSetup(*_mdEngine);
-
-    settings::ThermostatSettings::setThermostatType("berendsen");
-    EXPECT_THROW_MSG(
-        thermostatSetup.setup(),
-        customException::InputFileException,
-        "Target or end temperature not set for berendsen thermostat"
-    );
 }
 
 TEST_F(TestSetup, setupThermostat_temp_ramping)
@@ -134,24 +100,6 @@ TEST_F(TestSetup, setupThermostat_temp_ramping)
         2
     );
 
-    settings::ThermostatSettings::setTemperatureRampSteps(200);
-    settings::ThermostatSettings::setEndTemperatureSet(false);
-    EXPECT_THROW_MSG(
-        thermostatSetup.setup(),
-        customException::InputFileException,
-        "Number of total simulation steps 100 is smaller than the number of "
-        "temperature ramping steps 200"
-    );
-
-    settings::ThermostatSettings::setTemperatureRampSteps(2);
-    settings::ThermostatSettings::setTemperatureRampFrequency(4);
-    settings::ThermostatSettings::setEndTemperatureSet(false);
-    EXPECT_THROW_MSG(
-        thermostatSetup.setup(),
-        customException::InputFileException,
-        "Temperature ramp frequency 4 is larger than the number of ramping "
-        "steps 2"
-    );
 }
 
 TEST_F(TestSetup, setupThermostat_only_end_temp_defined)

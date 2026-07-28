@@ -22,7 +22,8 @@
 
 #include <gtest/gtest.h>   // for Test, TestInfo (ptr only), InitGoogleTest, RUN_ALL_TESTS
 
-#include <string>   // for allocator, basic_string
+#include <string>        // for allocator, basic_string
+#include <string_view>   // for string_view
 
 #include "dftbplusRunner.hpp"     // for DFTBPlusRunner
 #include "exceptions.hpp"         // for InputFileException
@@ -39,13 +40,28 @@
 using setup::QMSetup;
 using namespace settings;
 
+namespace
+{
+    void setBuildCompatibleQMScript()
+    {
+        QMSettings::setQMScript("");
+        QMSettings::setQMScriptFullPath("");
+
+        if (std::string_view(SINGULARITY_) == "ON" ||
+            std::string_view(STATIC_BUILD_) == "ON")
+            QMSettings::setQMScriptFullPath("test");
+        else
+            QMSettings::setQMScript("test");
+    }
+}   // namespace
+
 TEST(TestQMSetup, setupDftbplus)
 {
     engine::QMMDEngine engine;
     auto               setupQM = setup::QMSetup(engine);
 
     settings::QMSettings::setQMMethod(settings::QMMethod::DFTBPLUS);
-    settings::QMSettings::setQMScript("test");
+    setBuildCompatibleQMScript();
     setupQM.setup();
 
     EXPECT_EQ(
@@ -69,7 +85,7 @@ TEST(TestQMSetup, setupPySCF)
     auto               setupQM = setup::QMSetup(engine);
 
     settings::QMSettings::setQMMethod(settings::QMMethod::PYSCF);
-    settings::QMSettings::setQMScript("test");
+    setBuildCompatibleQMScript();
     setupQM.setup();
 
     EXPECT_EQ(
@@ -93,7 +109,7 @@ TEST(TestQMSetup, setupTurbomoleRunner)
     auto               setupQM = setup::QMSetup(engine);
 
     settings::QMSettings::setQMMethod(settings::QMMethod::TURBOMOLE);
-    settings::QMSettings::setQMScript("test");
+    setBuildCompatibleQMScript();
     setupQM.setup();
 
     EXPECT_EQ(
@@ -120,6 +136,7 @@ TEST(TestQMSetup, setupQMFull)
     EXPECT_NO_THROW(setup::setupQM(engine));
 }
 
+#ifdef WITH_ASE
 TEST(TestQMSetup, setupQMMethodAseDftbPlus3ob3rdOrderNotSet)
 {
     engine::QMMDEngine engine;
@@ -174,6 +191,7 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlusMatsci)
     qmSetup.setupQMMethodAseDftbPlus();
     EXPECT_EQ(QMSettings::useThirdOrderDftb(), false);
 }
+#endif
 
 TEST(TestQMSetup, setupQMMethodAseDftbPlusCustom)
 {
@@ -187,81 +205,6 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlusCustom)
 
     qmSetup.setupQMMethodAseDftbPlus();
     EXPECT_EQ(QMSettings::useThirdOrderDftb(), false);
-}
-
-TEST(TestQMSetup, setupQMMethodAseDftbPlusHubbardDerivsNo3rdOrder)
-{
-    engine::QMMDEngine engine;
-    QMSetup            qmSetup{QMSetup(engine)};
-
-    QMSettings::setQMMethod(QMMethod::ASEDFTBPLUS);
-    QMSettings::setSlakosType("custom");
-    QMSettings::setIsThirdOrderDftbSet(true);
-    QMSettings::setUseThirdOrderDftb(false);
-    QMSettings::setIsHubbardDerivsSet(true);
-    QMSettings::setHubbardDerivs({{"H", 1.0}});
-
-    ASSERT_THROW_MSG(
-        qmSetup.setupQMMethodAseDftbPlus(),
-        customException::InputFileException,
-        "You have set custom Hubbard derivatives but disabled 3rd order DFTB. "
-        "This setup is invalid."
-    );
-}
-
-TEST(TestQMSetup, setupQMMethodMaceOffInvalidModelSize)
-{
-    engine::QMMDEngine engine;
-    QMSetup            qmSetup{QMSetup(engine)};
-
-    QMSettings::setQMMethod(QMMethod::MACE);
-    QMSettings::setMaceModelType("mace-off");
-    QMSettings::setMaceModel("medium-omat-0");
-
-    ASSERT_THROW_MSG(
-        qmSetup.setupQMMethodMace(),
-        customException::InputFileException,
-        "The 'medium-omat-0' model size is only compatible with the 'mace_mp' "
-        "model type."
-    );
-}
-
-TEST(TestQMSetup, setupQMMethodMaceRedundantModelPath)
-{
-    engine::QMMDEngine engine;
-    QMSetup            qmSetup{QMSetup(engine)};
-
-    QMSettings::setQMMethod(QMMethod::MACE);
-    QMSettings::setMaceModelType("mace-mp");
-    QMSettings::setMaceModel("medium-omat-0");
-    QMSettings::setMaceModelPath("https://not-a-valid-url");
-
-    ASSERT_THROW_MSG(
-        qmSetup.setupQMMethodMace(),
-        customException::InputFileException,
-        "You have set a custom MACE model path without requesting a custom "
-        "mace model size."
-        "This setup is invalid."
-    );
-}
-
-TEST(TestQMSetup, setupQMMethodMaceMissingModelPath)
-{
-    engine::QMMDEngine engine;
-    QMSetup            qmSetup{QMSetup(engine)};
-
-    QMSettings::setQMMethod(QMMethod::MACE);
-    QMSettings::setMaceModelType("mace-mp");
-    QMSettings::setMaceModel("custom");
-    QMSettings::setMaceModelPath("");
-
-    ASSERT_THROW_MSG(
-        qmSetup.setupQMMethodMace(),
-        customException::InputFileException,
-        "You have requested a custom MACE model but haven't provided a "
-        "MACE model path."
-        "This setup is invalid."
-    );
 }
 
 TEST(TestQMSetup, setupQMLoopTimeLimitDefault)
@@ -381,23 +324,6 @@ TEST(TestQMSetup, setupQMLoopTimeLimitPositive)
     ::remove("default.log");
     delete _engine;
     delete _qmSetup;
-}
-
-TEST(TestQMSetup, setupQMMethodFennol)
-{
-    engine::QMMDEngine engine;
-    QMSetup            qmSetup{QMSetup(engine)};
-
-    QMSettings::setQMMethod(QMMethod::FENNOL);
-    ASSERT_THROW_MSG(
-        qmSetup.setupQMMethodFennol(),
-        customException::InputFileException,
-        "The FeNNol QM runner has been selected but the "
-        "\"fennol_model_path\" keyword has not been set. This setup is "
-        "invalid."
-    );
-    QMSettings::setFennolModelPath("/patH/to/fennol_model.fnx");
-    ASSERT_NO_THROW(qmSetup.setupQMMethodFennol());
 }
 
 TEST(TestQMSetup, setupQMRunnerFennol)

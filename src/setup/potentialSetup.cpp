@@ -27,6 +27,7 @@
 #include <string_view>   // for string_view
 #include <vector>        // for vector
 
+#include "coulombReactionField.hpp"      // for CoulombReactionField
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
 #include "coulombWolf.hpp"               // for CoulombWolf
 #include "engine.hpp"                    // for Engine
@@ -62,7 +63,7 @@ void setup::setupPotential(Engine &engine)
  *
  * @param engine
  */
-PotentialSetup::PotentialSetup(Engine &engine) : _engine(engine){};
+PotentialSetup::PotentialSetup(Engine &engine) : _engine(engine) {}
 
 /**
  * @brief sets all nonBonded potential types
@@ -76,10 +77,8 @@ void PotentialSetup::setup()
     setupCoulomb();
     setupNonCoulomb();
 
-    if (!_engine.isForceFieldNonCoulombicsActivated())
-        return;
-
-    setupNonCoulombicPairs();
+    if (_engine.isForceFieldNonCoulombicsActivated())
+        setupNonCoulombicPairs();
 
     writeSetupInfo();
 }
@@ -89,7 +88,8 @@ void PotentialSetup::setup()
  *
  * @details possible types are:
  * 1) none (shifted coulomb potential)
- * 2) wolf (wolf long range correction)
+ * 2) reaction field long range correction
+ * 2) wolf long range correction
  *
  * @param coulombType
  */
@@ -97,20 +97,27 @@ void PotentialSetup::setupCoulomb()
 {
     const auto coulRCut  = PotentialSettings::getCoulombRadiusCutOff();
     const auto wolfParam = PotentialSettings::getWolfParameter();
+    const auto rfEpsilon = PotentialSettings::getReactionFieldEpsilon();
     auto      &potential = _engine.getPotential();
 
     switch (PotentialSettings::getCoulombLongRangeType())
     {
         using enum CoulombLongRangeType;
 
+        case REACTION_FIELD:
+            potential.makeCoulombPotential(
+                CoulombReactionField(coulRCut, rfEpsilon)
+            );
+            return;
+
         case WOLF:
             potential.makeCoulombPotential(CoulombWolf(coulRCut, wolfParam));
-            break;
+            return;
 
-        case SHIFTED:
-        default:
-            potential.makeCoulombPotential(CoulombShiftedPotential(coulRCut));
+        case SHIFTED: break;
     }
+
+    potential.makeCoulombPotential(CoulombShiftedPotential(coulRCut));
 }
 
 /**
@@ -162,8 +169,8 @@ void PotentialSetup::setupNonCoulombicPairs()
     simBox.setupExternalToInternalGlobalVdwTypesMap();
     nonCoulPot.determineInternalGlobalVdwTypes(extToIntVDWTypes);
 
-    const auto nGlobalVdwTypes = simBox.getExternalGlobalVdwTypes().size();
-    auto selfNonCoulPairs = nonCoulPot.getSelfInteractionNonCoulPairs();
+    const auto nGlobalVdwTypes  = simBox.getExternalGlobalVdwTypes().size();
+    auto       selfNonCoulPairs = nonCoulPot.getSelfInteractionNonCoulPairs();
 
     if (selfNonCoulPairs.size() != nGlobalVdwTypes)
         throw ParameterFileException(
@@ -212,19 +219,31 @@ void PotentialSetup::writeCoulombInfo() const
 
     const auto coulRCut  = PotentialSettings::getCoulombRadiusCutOff();
     auto       wolfParam = 0.0;
+    auto       rfEpsilon = 0.0;
 
     if (coulLRType == CoulombLongRangeType::WOLF)
         wolfParam = PotentialSettings::getWolfParameter();
 
+    if (coulLRType == CoulombLongRangeType::REACTION_FIELD)
+        rfEpsilon = PotentialSettings::getReactionFieldEpsilon();
+
     // clang-format off
     const auto coulRCutStr  = std::format("Coulomb radius cut-off: {}", coulRCut);
-    const auto wolfParamStr = std::format("Wolf parameter:         {}", wolfParam);
-    // clang-format on
-
     log.writeSetupInfo(coulRCutStr);
+
     if (coulLRType == CoulombLongRangeType::WOLF)
+    {
+        const auto wolfParamStr = std::format("Wolf parameter:         {}", wolfParam);
         log.writeSetupInfo(wolfParamStr);
+    }
+    else if (coulLRType == CoulombLongRangeType::REACTION_FIELD)
+    {
+        const auto rfEpsilonStr = std::format("Reaction-field static relative permittivity: {}", rfEpsilon);
+        log.writeSetupInfo(rfEpsilonStr);
+    }
+
     log.writeEmptyLine();
+    // clang-format on
 }
 
 /**

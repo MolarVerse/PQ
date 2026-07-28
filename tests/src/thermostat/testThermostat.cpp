@@ -230,6 +230,14 @@ TEST_F(TestThermostat, langevin_constructorComputesSigma)
     EXPECT_DOUBLE_EQ(langevin.getFriction(), 0.1);
 }
 
+TEST_F(TestThermostat, langevin_zeroFrictionHasZeroSigma)
+{
+    const auto langevin = thermostat::LangevinThermostat(300.0, 0.0);
+
+    EXPECT_DOUBLE_EQ(langevin.getSigma(), 0.0);
+    EXPECT_DOUBLE_EQ(langevin.getFriction(), 0.0);
+}
+
 TEST_F(TestThermostat, langevin_settersAndGetters)
 {
     auto langevin = thermostat::LangevinThermostat(300.0, 0.1);
@@ -254,6 +262,19 @@ TEST_F(TestThermostat, langevin_setTargetTemperatureRecomputesSigma)
     // Langevin Gaussian-noise amplitude scales with sqrt(kBT)).
     EXPECT_NE(sigmaAt300, sigmaAt600);
     EXPECT_GT(sigmaAt600, sigmaAt300);
+}
+
+TEST_F(TestThermostat, langevin_setFrictionRecomputesSigma)
+{
+    auto langevin = thermostat::LangevinThermostat(300.0, 0.1);
+    settings::TimingsSettings::setTimeStep(0.1);
+    const auto sigmaAtFrictionPointOne = langevin.getSigma();
+
+    langevin.setFriction(0.5);
+    const auto sigmaAtFrictionPointFive = langevin.getSigma();
+
+    EXPECT_NE(sigmaAtFrictionPointOne, sigmaAtFrictionPointFive);
+    EXPECT_GT(sigmaAtFrictionPointFive, sigmaAtFrictionPointOne);
 }
 
 TEST_F(TestThermostat, langevin_thermostatType)

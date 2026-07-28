@@ -130,11 +130,13 @@ pq::SharedOptimizer OptimizerSetup::setupEmptyOptimizer()
             break;
         }
 
-        default:
-            throw UserInputException(
-                std::format("Unknown optimizer type {}", string(optimizerType))
-            );
+        case NONE: break;
     }
+
+    if (!optimizer)
+        throw UserInputException(
+            std::format("Unknown optimizer type {}", string(optimizerType))
+        );
 
     optimizer->setSimulationBox(_optEngine.getSharedSimulationBox());
     optimizer->setPhysicalData(_optEngine.getSharedPhysicalData());
@@ -206,14 +208,13 @@ pq::SharedLearningRate OptimizerSetup::setupLearningRateStrategy()
             );
         }
 
-        default:
-        {
-            throw UserInputException(
-                std::format("In order to run the optimizer, you need to "
-                            "specify a learning rate strategy.")
-            );
-        }
+        case NONE: break;
     }
+
+    throw UserInputException(
+        "In order to run the optimizer, you need to specify a learning rate "
+        "strategy."
+    );
 }
 
 /**

@@ -24,18 +24,21 @@
 
 #include <gtest/gtest.h>   // for Message, TestPartResult
 
+#include <fstream>   // for ofstream
 #include <map>       // for map
 #include <memory>    // for unique_ptr
 #include <sstream>   // for basic_istringstream
 #include <vector>    // for vector, _Bit_iterator, _Bit_reference
 
-#include "exceptions.hpp"         // for InputFileException, customException
-#include "gtest/gtest.h"          // for Message, TestPartResult
-#include "mmmdEngine.hpp"         // for MMMDEngine
-#include "settings.hpp"           // for Settings
-#include "throwWithMessage.hpp"   // for throwWithMessage
+#include "exceptions.hpp"
+#include "gtest/gtest.h"
+#include "mmmdEngine.hpp"
+#include "potentialSettings.hpp"
+#include "settings.hpp"
+#include "throwWithMessage.hpp"
 
 using namespace input;
+using namespace settings;
 
 static void readKeywordList(
     const std::string        &filename,
@@ -89,6 +92,7 @@ TEST_F(TestInputFileReader, testAddKeyword)
         bool        required = requiredRef[i];
 
         EXPECT_EQ(_inputFileReader->getKeywordCount(keyword), 0);
+        EXPECT_FALSE(_inputFileReader->getKeywordSet(keyword));
         EXPECT_EQ(_inputFileReader->getKeywordRequired(keyword), required);
     }
 }
@@ -107,6 +111,18 @@ TEST_F(TestInputFileReader, testProcess)
     auto lineElements = std::vector<std::string>{"nstep", "=", "1000"};
     _inputFileReader->process(lineElements);
     EXPECT_EQ(_inputFileReader->getKeywordCount(lineElements[0]), 1);
+    EXPECT_TRUE(_inputFileReader->getKeywordSet(lineElements[0]));
+}
+
+TEST_F(TestInputFileReader, testGetKeywordSetFromSetKeywordCount)
+{
+    const auto keyword = std::string("input_keyword");
+
+    _inputFileReader->setKeywordCount(keyword, 0);
+    EXPECT_FALSE(_inputFileReader->getKeywordSet(keyword));
+
+    _inputFileReader->setKeywordCount(keyword, 2);
+    EXPECT_TRUE(_inputFileReader->getKeywordSet(keyword));
 }
 
 TEST_F(TestInputFileReader, testRead)
@@ -127,6 +143,52 @@ TEST_F(TestInputFileReader, testReadInputFileFunction)
 {
     std::string filename = "data/inputFileReader/inputFile.txt";
     ASSERT_NO_THROW(readInputFile(filename, *_mdEngine));
+}
+
+TEST_F(TestInputFileReader, testReadInputFileReactionFieldMissingEpsilon)
+{
+    _fileName = "input_rf_missing_epsilon.in";
+    {
+        std::ofstream inputFile(_fileName);
+        inputFile << "jobtype = mm-md;\n";
+        inputFile << "integrator = v-verlet;\n";
+        inputFile << "nstep = 1;\n";
+        inputFile << "timestep = 0.2;\n";
+        inputFile << "start_file = data/atomSection/testProcess.rst;\n";
+        inputFile << "rcoulomb = 9.0;\n";
+        inputFile << "long_range = reaction-field;\n";
+    }
+
+    ASSERT_THROW_MSG(
+        readInputFile(_fileName, *_mdEngine),
+        customException::InputFileException,
+        "Missing required keyword \"rf_epsilon\" in input file: it must be "
+        "set when the Coulomb long-range correction is set to "
+        "\"reaction-field\"."
+    );
+}
+
+TEST_F(TestInputFileReader, testReadInputFileReactionFieldWithEpsilon)
+{
+    _fileName = "input_rf_with_epsilon.in";
+    {
+        std::ofstream inputFile(_fileName);
+        inputFile << "jobtype = mm-md;\n";
+        inputFile << "integrator = v-verlet;\n";
+        inputFile << "nstep = 1;\n";
+        inputFile << "timestep = 0.2;\n";
+        inputFile << "start_file = data/atomSection/testProcess.rst;\n";
+        inputFile << "rcoulomb = 9.0;\n";
+        inputFile << "long_range = reaction-field;\n";
+        inputFile << "rf_epsilon = 80.0;\n";
+    }
+
+    ASSERT_NO_THROW(readInputFile(_fileName, *_mdEngine));
+    EXPECT_EQ(
+        PotentialSettings::getCoulombLongRangeType(),
+        CoulombLongRangeType::REACTION_FIELD
+    );
+    EXPECT_EQ(PotentialSettings::getReactionFieldEpsilon(), 80.0);
 }
 
 TEST_F(TestInputFileReader, testPostProcessRequiredFail)

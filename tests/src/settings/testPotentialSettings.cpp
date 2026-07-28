@@ -40,6 +40,18 @@ TEST(TestPotentialSettings, string_nonCoulombType)
 }
 
 /**
+ * @brief tests string conversion of Coulomb long-range types
+ */
+TEST(TestPotentialSettings, string_coulombLongRangeType)
+{
+    using enum settings::CoulombLongRangeType;
+
+    EXPECT_EQ(settings::string(SHIFTED), "shifted");
+    EXPECT_EQ(settings::string(REACTION_FIELD), "reaction-field");
+    EXPECT_EQ(settings::string(WOLF), "wolf");
+}
+
+/**
  * @brief tests setNonCoulombType function
  *
  */
@@ -79,5 +91,25 @@ TEST(TestPotentialSettings, setNonCoulombType)
     EXPECT_EQ(
         settings::PotentialSettings::getNonCoulombType(),
         settings::NonCoulombType::NONE
+    );
+}
+
+/**
+ * @brief tests reaction-field settings
+ */
+TEST(TestPotentialSettings, reactionFieldSettings)
+{
+    using enum settings::CoulombLongRangeType;
+
+    settings::PotentialSettings::setCoulombLongRangeType("reaction-field");
+    EXPECT_EQ(
+        settings::PotentialSettings::getCoulombLongRangeType(),
+        REACTION_FIELD
+    );
+
+    settings::PotentialSettings::setReactionFieldEpsilon(80.0);
+    EXPECT_DOUBLE_EQ(
+        settings::PotentialSettings::getReactionFieldEpsilon(),
+        80.0
     );
 }

@@ -47,6 +47,7 @@ namespace potential
         inline static double _coulombRadiusCutOff;
         inline static double _coulombEnergyCutOff;
         inline static double _coulombForceCutOff;
+        inline static double _coulombCutOffCubedInverse;
 
        public:
         virtual ~CoulombPotential() = default;

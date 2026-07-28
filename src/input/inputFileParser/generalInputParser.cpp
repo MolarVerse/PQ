@@ -30,6 +30,7 @@
 
 #include "engine.hpp"       // for Engine
 #include "exceptions.hpp"   // for InputFileException, customException
+#include "hessianEngine.hpp"   // for HessianEngine
 #include "mmmdEngine.hpp"   // for MMMDEngine
 #include "optEngine.hpp"    // for MMOptEngine
 #include "qmmdEngine.hpp"   // for QMMDEngine
@@ -121,6 +122,11 @@ void GeneralInputParser::parseJobTypeForEngine(
         Settings::setJobtype(MM_OPT);
         engine.reset(new OptEngine());
     }
+    else if (jobtype == "mm_hessian")
+    {
+        Settings::setJobtype(MM_HESSIAN);
+        engine.reset(new HessianEngine());
+    }
     else if (jobtype == "mm_md")
     {
         Settings::setJobtype(MM_MD);
@@ -140,6 +146,7 @@ void GeneralInputParser::parseJobTypeForEngine(
         throw InputFileException(format(
             "Invalid jobtype \"{}\" in input file - possible values are:\n"
             "- mm-opt\n"
+            "- mm-hessian\n"
             "- mm-md\n"
             "- qm-md\n"
             "- qm-rpmd\n",
