@@ -32,7 +32,6 @@
 #include "forceFieldClass.hpp"        // for ForceField
 #include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
 #include "forceFieldSettings.hpp"     // for ForceFieldSettings
-#include "interWater.hpp"             // for interWater models
 #include "mTRIntraWater.hpp"          // for MTRIntraWater models
 #include "potential.hpp"              // for Potential
 #include "potentialSettings.hpp"      // for PotentialSettings

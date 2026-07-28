@@ -100,7 +100,13 @@ void HybridSetup::validateQMMethod()
         case DFTBPLUS:
         case TURBOMOLE: 
             break;
-        default: throw(InputFileException(errorMsg));
+        case PYSCF:
+        case ASEDFTBPLUS:
+        case ASEXTB:
+        case MACE:
+        case FENNOL:
+        case NONE:
+            throw(InputFileException(errorMsg));
     }
     // clang-format on
 }

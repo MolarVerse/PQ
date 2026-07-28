@@ -23,15 +23,15 @@
 #include <gtest/gtest.h>
 
 #include <cstdio>
+#include <fstream>
 #include <string>
 #include <vector>
 
-#include "mdEngine.hpp"
-#include "optEngine.hpp"
 #include "outputFileSettings.hpp"
 #include "outputFilesSetup.hpp"
 #include "settings.hpp"
 #include "testSetup.hpp"
+#include "timingsSettings.hpp"
 
 using namespace setup;
 using namespace settings;
@@ -80,16 +80,56 @@ TEST_F(TestSetup, setupOutputFilesOptJobReplaceDefaultsAndAssignsOptFile)
     cleanupPrefix();
 }
 
-TEST_F(TestSetup, setupOutputFilesMDPathRunsWithoutThrowing)
+TEST_F(TestSetup, setupOutputFilesMDPathPreservesLegacyEnergyFormatByDefault)
 {
     cleanupPrefix();
     Settings::setJobtype(JobType::MM_MD);
     Settings::setIsRingPolymerMDActivated(false);
     OutputFileSettings::setFilePrefix(_PREFIX);
+    OutputFileSettings::setIncludeOutputMetadata(false);
+    TimingsSettings::setTimeStep(0.5);
 
     OutputFilesSetup s(*_mdEngine);
     EXPECT_NO_THROW(s.setup());
 
+    _mdEngine->getEnergyOutput().close();
+    _mdEngine->getInstantEnergyOutput().close();
+
+    std::ifstream energyFile(std::string(_PREFIX) + ".en");
+    std::ifstream instantEnergyFile(std::string(_PREFIX) + ".instant_en");
+    std::string   line;
+
+    EXPECT_FALSE(static_cast<bool>(std::getline(energyFile, line)));
+    EXPECT_FALSE(static_cast<bool>(std::getline(instantEnergyFile, line)));
+
+    cleanupPrefix();
+}
+
+TEST_F(TestSetup, setupOutputFilesMDPathWritesEnabledMetadata)
+{
+    cleanupPrefix();
+    Settings::setJobtype(JobType::MM_MD);
+    Settings::setIsRingPolymerMDActivated(false);
+    OutputFileSettings::setFilePrefix(_PREFIX);
+    OutputFileSettings::setIncludeOutputMetadata(true);
+    TimingsSettings::setTimeStep(0.5);
+
+    OutputFilesSetup s(*_mdEngine);
+    EXPECT_NO_THROW(s.setup());
+
+    _mdEngine->getEnergyOutput().close();
+    _mdEngine->getInstantEnergyOutput().close();
+
+    std::ifstream energyFile(std::string(_PREFIX) + ".en");
+    std::ifstream instantEnergyFile(std::string(_PREFIX) + ".instant_en");
+    std::string   line;
+
+    std::getline(energyFile, line);
+    EXPECT_EQ(line, "# timestep = 0.5 fs");
+    std::getline(instantEnergyFile, line);
+    EXPECT_EQ(line, "# timestep = 0.5 fs");
+
+    OutputFileSettings::setIncludeOutputMetadata(false);
     cleanupPrefix();
 }
 

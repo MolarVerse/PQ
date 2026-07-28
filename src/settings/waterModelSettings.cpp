@@ -209,8 +209,7 @@ std::string settings::string(const WaterIntraModel &waterIntraModel)
         case OPC3: return "OPC3";
         case SPC_MTR: return "SPC-mTR";
         case TIP3P_MTR: return "TIP3P-mTR";
-
-        default: return "none";
+        case NONE: return "none";
     }
 }
 
@@ -239,7 +238,6 @@ std::string settings::string(const WaterInterModel &waterInterModel)
         case OPC3: return "OPC3";
         case SPC_MTR: return "SPC-mTR";
         case TIP3P_MTR: return "TIP3P-mTR";
-
-        default: return "none";
+        case NONE: return "none";
     }
 }

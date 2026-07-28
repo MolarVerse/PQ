@@ -22,16 +22,12 @@
 
 #include "turbomoleRunner.hpp"
 
-#include <cstddef>      // for size_t
 #include <cstdlib>      // for system
 #include <filesystem>   // for remove
 #include <format>       // for format
 #include <fstream>      // for ofstream
-#include <functional>   // for identity
 #include <string>       // for string
-#include <vector>       // for vector
 
-#include "atom.hpp"                 // for Atom
 #include "constants.hpp"            // for constants
 #include "exceptions.hpp"           // for InputFileException
 #include "fileSettings.hpp"         // for FileSettings
@@ -40,7 +36,6 @@
 #include "qmSettings.hpp"           // for QMSettings
 #include "simulationBox.hpp"        // for SimulationBox
 #include "stringUtilities.hpp"      // for fileExists
-#include "vector3d.hpp"             // for Vec3D
 
 using QM::TurbomoleRunner;
 

@@ -25,8 +25,8 @@
 #include <thread>
 
 #include "box.hpp"   // for simulationBox::Periodicity
+#include "constants.hpp"   // for _DEG_TO_RAD_
 #include "physicalData.hpp"
-#include "pybind11/embed.h"
 #include "qmSettings.hpp"   // for QMSettings
 #include "simulationBox.hpp"
 

@@ -8,6 +8,7 @@ testOutputFileSettings.cpp
     testConstraintSettings.cpp
     testFileSettings.cpp
     testConvergenceSettings.cpp
+    testHessianSettings.cpp
 )
 
 foreach(source_file ${source_files})

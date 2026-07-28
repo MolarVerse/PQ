@@ -96,12 +96,10 @@ void Cell::assignMoleculeHybridZoneIndices()
         const bool isCore     = (hybridZone == CORE);
         const auto isActive   = _molecules[mol]->isActive();
 
-        switch (hybridZone)
-        {
-            case CORE: _coreMoleculeIndices.push_back(mol); break;
-            case SMOOTHING: _smoothingMoleculeIndices.push_back(mol); break;
-            default: break;
-        }
+        if (hybridZone == CORE)
+            _coreMoleculeIndices.push_back(mol);
+        else if (hybridZone == SMOOTHING)
+            _smoothingMoleculeIndices.push_back(mol);
 
         if (hybridZone != SMOOTHING)
             _nonSmoothingMoleculeIndices.push_back(mol);
@@ -183,7 +181,6 @@ const Vec3D &Cell::getUpperBoundary() const { return _upperBoundary; }
  * @return const Vec3Dul&
  */
 const Vec3Dul &Cell::getCellIndex() const { return _cellIndex; }
-
 
 /**
  * @brief returns the molecules vector

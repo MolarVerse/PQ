@@ -90,8 +90,7 @@ StaticMatrix3x3<double> Box::getBoxMatrix(const Periodicity per) const
         case YZ:
             boxMatrix[0][0] = _VACUUM_BOX_DIMENSION_;   // X dimension
             break;
-            // default also handles case Periodicity::XYZ
-        default: break;
+        case XYZ: break;
     }
 
     return boxMatrix;

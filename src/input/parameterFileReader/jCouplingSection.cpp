@@ -27,7 +27,6 @@
 #include "constants/conversionFactors.hpp"   // for _DEG_TO_RAD_
 #include "engine.hpp"                        // for Engine
 #include "exceptions.hpp"                    // for ParameterFileException
-#include "forceFieldClass.hpp"               // for ForceField
 #include "jCouplingType.hpp"                 // for JCouplingType
 
 using namespace input::parameterFile;

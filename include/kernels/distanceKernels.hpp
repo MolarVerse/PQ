@@ -25,7 +25,6 @@
 #define _DISTANCE_KERNELS_HPP_
 
 #include "typeAliases.hpp"
-#include "vector3d.hpp"
 
 namespace kernel
 {

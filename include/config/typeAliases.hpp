@@ -34,9 +34,9 @@
 #include <string>       // for std::string
 #include <vector>       // for std::vector
 
-#include "matrix.hpp"
-#include "staticMatrix.hpp"
-#include "vector3d.hpp"
+#include "../linearAlgebra/matrix.hpp"         // IWYU pragma: export
+#include "../linearAlgebra/staticMatrix.hpp"   // IWYU pragma: export
+#include "../linearAlgebra/vector3d.hpp"       // IWYU pragma: export
 
 namespace simulationBox
 {
@@ -107,6 +107,7 @@ namespace opt
 
     class Evaluator;
     class MMEvaluator;
+    class HessianBuilder;
 
     class Optimizer;
     class SteepestDescent;
@@ -141,6 +142,7 @@ namespace engine
     class Engine;              // forward declaration
     class MDEngine;            // forward declaration
     class OptEngine;           // forward declaration
+    class HessianEngine;       // forward declaration
     class QMMDEngine;          // forward declaration
     class QMMMMDEngine;        // forward declaration
     class RingPolymerEngine;   // forward declaration
@@ -309,11 +311,16 @@ namespace pq
     using Engine            = engine::Engine;
     using MDEngine          = engine::MDEngine;
     using OptEngine         = engine::OptEngine;
+    using HessianEngine     = engine::HessianEngine;
     using QMMDEngine        = engine::QMMDEngine;
     using QMMMMDEngine      = engine::QMMMMDEngine;
     using RingPolymerEngine = engine::RingPolymerEngine;
 
     using UniqueEngine = std::unique_ptr<Engine>;
+
+    using HessianMatrix = std::vector<std::vector<double>>;
+    using HessianBuilder = opt::HessianBuilder;
+    using SharedHessianBuilder = std::shared_ptr<opt::HessianBuilder>;
 
     /***********************
      * potential namespace *

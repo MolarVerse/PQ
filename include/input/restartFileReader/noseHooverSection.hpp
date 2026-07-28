@@ -25,7 +25,6 @@
 #define _NOSE_HOOVER_SECTION_HPP_
 
 #include <string>   // for string
-#include <vector>   // for vector
 
 #include "restartFileSection.hpp"   // for RestartFileSection
 #include "typeAliases.hpp"

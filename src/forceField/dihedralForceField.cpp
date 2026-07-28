@@ -25,12 +25,11 @@
 #include <cmath>   // for cos, sin
 
 #include "coulombPotential.hpp"   // for CoulombPotential
-#include "forceField.hpp"         // for correctLinker
+#include "forceField.hpp"         // IWYU pragma: keep - for correctLinker
 #include "hybridSettings.hpp"     // for HybridSettings
 #include "molecule.hpp"           // for Molecule
 #include "physicalData.hpp"       // for PhysicalData
 #include "simulationBox.hpp"      // for SimulationBox
-#include "vector3d.hpp"           // for operator*, Vector3D, dot, cross, norm
 
 using namespace forceField;
 using namespace connectivity;

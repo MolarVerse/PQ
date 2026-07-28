@@ -1,4 +1,5 @@
 add_subdirectory(simulationBox)
+add_subdirectory(config)
 add_subdirectory(engine)
 add_subdirectory(utilities)
 add_subdirectory(output)

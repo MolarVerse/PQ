@@ -20,15 +20,17 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "celllist.hpp"        // for CellList
+#include <gtest/gtest.h>   // for InitGoogleTest, RUN_ALL_TESTS, EXPECT_EQ
+
+#include <string>   // for allocator, basic_string
+
 #include "celllistSetup.hpp"   // for CellListSetup, setupCellList, setup
 #include "engine.hpp"          // for Engine
-#include "potential.hpp"       // for PotentialBruteForce, PotentialCellList
-#include "testSetup.hpp"       // for TestSetup
-
-#include "gtest/gtest.h"   // for Message, TestPartResult
-#include <gtest/gtest.h>   // for InitGoogleTest, RUN_ALL_TESTS, EXPECT_EQ
-#include <string>          // for allocator, basic_string
+#include "gtest/gtest.h"       // for Message, TestPartResult
+#include "potentialBruteForce.hpp"
+#include "potentialCellList.hpp"   // for PotentialCellList
+#include "potentialSettings.hpp"
+#include "testSetup.hpp"   // for TestSetup
 
 using namespace setup;
 
@@ -41,12 +43,21 @@ TEST_F(TestSetup, setupCellList)
     CellListSetup cellListSetup(*_engine);
     cellListSetup.setup();
 
-    EXPECT_EQ(typeid((_engine->getPotential())), typeid(potential::PotentialBruteForce));
+    EXPECT_EQ(
+        typeid((_engine->getPotential())),
+        typeid(potential::PotentialBruteForce)
+    );
 
+    settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
+    _engine->getSimulationBox().setBoxDimensions({15.0, 15.0, 15.0});
+    _engine->getCellList().setNumberOfCells(3);
     _engine->getCellList().activate();
     cellListSetup.setup();
 
-    EXPECT_EQ(typeid((_engine->getPotential())), typeid(potential::PotentialCellList));
+    EXPECT_EQ(
+        typeid((_engine->getPotential())),
+        typeid(potential::PotentialCellList)
+    );
 
     EXPECT_NO_THROW(setupCellList(*_engine));
 }

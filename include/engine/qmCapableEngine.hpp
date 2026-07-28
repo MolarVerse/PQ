@@ -27,9 +27,7 @@
 #include <memory>
 
 #include "qmRunner.hpp"
-#include "qmRunnerManager.hpp"
 #include "qmSettings.hpp"
-#include "typeAliases.hpp"
 
 namespace engine
 {

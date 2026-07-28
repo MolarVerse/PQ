@@ -22,6 +22,7 @@
 
 #include "triclinicBox.hpp"
 
+#include "box.hpp"
 #include "constants.hpp"          // for constants
 #include "manostatSettings.hpp"   // for ManostatSettings
 
@@ -129,10 +130,10 @@ void TriclinicBox::applyPBC(Vec3D &position) const
                 for (int k = -1; k <= 1; ++k)
                 {
                     const auto shift = _boxMatrix * Vec3D{
-                        static_cast<double>(i),
-                        static_cast<double>(j),
-                        static_cast<double>(k),
-                    };
+                                                        static_cast<double>(i),
+                                                        static_cast<double>(j),
+                                                        static_cast<double>(k),
+                                                    };
 
                     const auto newPosition = originalPosition + shift;
 
@@ -434,8 +435,7 @@ tensor3D TriclinicBox::getBoxMatrix(Periodicity per) const
             boxMatrix[1][0] = 0.0;                      // Clear YX cross term
             boxMatrix[2][0] = 0.0;                      // Clear ZX cross term
             break;
-        // default also handles case Periodicity::XYZ
-        default: break;
+        case Periodicity::XYZ: break;
     }
 
     return boxMatrix;

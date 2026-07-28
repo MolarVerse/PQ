@@ -24,13 +24,8 @@
 
 #define _QM_MD_ENGINE_HPP_
 
-#include <memory>   // for unique_ptr
-
 #include "mdEngine.hpp"          // for Engine
 #include "qmCapableEngine.hpp"   // for QMCapableEngine
-#include "qmRunner.hpp"          // for QMRunner
-#include "qmRunnerManager.hpp"   // for QMRunnerManager
-#include "qmSettings.hpp"        // for QMSettings
 
 namespace engine
 {

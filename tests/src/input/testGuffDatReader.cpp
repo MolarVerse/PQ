@@ -25,7 +25,6 @@
 #include <gtest/gtest.h>   // for EXPECT_EQ, TestInfo (ptr only)
 
 #include <cmath>     // for pow, exp
-#include <cstddef>   // for size_t
 #include <format>    // for format
 #include <memory>    // for allocator, shared_ptr
 #include <string>    // for string, basic_string, char_traits
@@ -36,14 +35,11 @@
 #include "defaults.hpp"              // for _NUMBER_OF_GUFF_ENTRIES_
 #include "engine.hpp"                // for Engine
 #include "exceptions.hpp"            // for GuffDatException, UserInputException
-#include "forceFieldClass.hpp"       // for ForceField
 #include "gmock/gmock.h"             // for ElementsAre, MakePredicateFormatter
 #include "gtest/gtest.h"             // for Message, TestPartResult
 #include "guffPair.hpp"              // for GuffPair
 #include "lennardJonesPair.hpp"      // for LennardJonesPair
 #include "morsePair.hpp"             // for MorsePair
-#include "nonCoulombPair.hpp"        // for NonCoulombPair
-#include "nonCoulombPotential.hpp"   // for NonCoulombPotential
 #include "potentialSettings.hpp"     // for PotentialSettings, string
 #include "settings.hpp"              // for Settings
 #include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG

@@ -47,8 +47,10 @@ std::string settings::string(const NonCoulombType nonCoulombType)
         case MORSE: return "morse";
         case GUFF: return "guff";
 
-        default: return "none";
+        case NONE: break;
     }
+
+    return "none";
 }
 
 /**
@@ -65,10 +67,10 @@ std::string settings::string(const CoulombLongRangeType coulombLongRangeType)
 
         case REACTION_FIELD: return "reaction-field";
         case WOLF: return "wolf";
-        case SHIFTED: return "shifted";
-
-        default: return "shifted";
+        case SHIFTED: break;
     }
+
+    return "shifted";
 }
 
 /********************

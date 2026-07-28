@@ -1,5 +1,6 @@
 add_library(evaluator
     evaluator.cpp
+    hessianBuilder.cpp
 
     mmEvaluator.cpp
 )
@@ -10,7 +11,7 @@ target_include_directories(evaluator
 )
 
 target_link_libraries(evaluator
-    PRIVATE
+    PUBLIC
     linearAlgebra
     potential
     constraints

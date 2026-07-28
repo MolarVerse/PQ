@@ -39,6 +39,12 @@ long_range                  false
 rf_epsilon                  false
 wolf_param                  false
 
+hessian_file                false
+hessian_info_file           false
+hessian_displacement        false
+optimize_before_hessian     false
+hessian_builder             false
+
 start_file                  true
 rpmd_start_file             false
 moldescriptor_file          false
@@ -76,6 +82,7 @@ water_intra                 false
 water_inter                 false
 
 overwrite_output            false
+include_output_metadata     false
 output_freq                 false
 file_prefix                 false
 output_file                 false
@@ -116,7 +123,7 @@ density                     false
 init_velocities             false
 
 timestep                    false
-nstep                       true
+nstep                       false
 
 virial                      false
 

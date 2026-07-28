@@ -24,7 +24,6 @@
 
 #include <format>   // for format
 #include <string>   // for string
-#include <vector>   // for vector
 
 #include "exceptions.hpp"           // for RstFileException
 #include "thermostatSettings.hpp"   // for ThermostatSettings

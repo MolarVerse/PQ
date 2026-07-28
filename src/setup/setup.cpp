@@ -22,8 +22,6 @@
 
 #include "setup.hpp"
 
-#include <iostream>   // for operator<<, basic_ostream, cout
-
 #include "celllistSetup.hpp"                // for setupCellList
 #include "constraintsSetup.hpp"             // for setupConstraints
 #include "engine.hpp"                       // for Engine
@@ -34,7 +32,6 @@
 #include "inputFileReader.hpp"              // for readInputFile
 #include "intraNonBondedReader.hpp"         // for readIntraNonBondedFile
 #include "intraNonBondedSetup.hpp"          // for setupIntraNonBonded
-#include "kokkosSetup.hpp"                  // for setupKokkos
 #include "manostatSetup.hpp"                // for setupManostat
 #include "moldescriptorReader.hpp"          // for readMolDescriptor
 #include "optimizerSetup.hpp"               // for setupOptimizer
@@ -42,26 +39,26 @@
 #include "parameterFileReader.hpp"          // for readParameterFile
 #include "potentialSetup.hpp"               // for setupPotential
 #include "qmSetup.hpp"                      // for setupQM
-#include "qmmdEngine.hpp"                   // for QMMDEngine
 #include "randomNumberGeneratorSetup.hpp"   // for setupRandomNumberGenerator
 #include "resetKineticsSetup.hpp"           // for setupResetKinetics
 #include "restartFileReader.hpp"            // for readRestartFile
-#include "ringPolymerEngine.hpp"            // for RingPolymerEngine
 #include "ringPolymerSetup.hpp"             // for setupRingPolymer
 #include "settings.hpp"                     // for Settings
 #include "simulationBoxSetup.hpp"           // for setupSimulationBox
 #include "thermostatSetup.hpp"              // for setupThermostat
 #include "timer.hpp"                        // for Timings
-#include "timingsSettings.hpp"              // for TimingsSettings
 #include "topologyReader.hpp"               // for readTopologyFile
 #include "waterModelSettings.hpp"           // for WaterModelSettings
 #include "waterModelSetup.hpp"              // for setupWaterModel
+
+#ifdef WITH_KOKKOS
+#include "kokkosSetup.hpp"   // for setupKokkos
+#endif
 
 using namespace engine;
 using namespace input;
 using namespace timings;
 using namespace settings;
-using namespace customException;
 using namespace guffdat;
 using namespace molDescriptor;
 using namespace restartFile;
@@ -85,16 +82,6 @@ void setup::setupRequestedJob(const std::string &inputFileName, Engine &engine)
     startSetup(simulationTimer, setupTimer, engine);
 
     readInputFile(inputFileName, engine);
-
-    if (!TimingsSettings::isTimeStepSet())
-        if (Settings::isMDJobType())
-            throw UserInputException(
-                std::format(
-                    "Molecular Dynamics job type {} selected. Please set the "
-                    "time step in the input file.",
-                    string(Settings::getJobtype())
-                )
-            );
 
     setupOutputFiles(engine);
 

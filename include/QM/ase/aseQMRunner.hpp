@@ -29,8 +29,6 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
-#include <string>   // for std::string
-
 #include "qmRunner.hpp"
 #include "typeAliases.hpp"
 

@@ -7,6 +7,7 @@
 build*
 _build*
 .build*
+benchmark-results/
 
 install/
 

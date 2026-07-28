@@ -1,16 +1,16 @@
 # Changelog fragments (deprecated)
 
-> **Note:** as of the auto-changelog migration, PRs no longer need to add
-> a changelog fragment or edit `CHANGELOG.md`. The Next Release section
-> is generated from your conventional-commit subjects (`fix:`, `feat:`,
-> `build:`, `ci:`, `test:`, `refactor:`, `perf:`, …) at release time by
-> `git-cliff`, configured in `cliff.toml` at the repo root.
->
-> Write a clean commit subject and you're done; the release script does
-> the rest.
+Regular pull requests do not edit `CHANGELOG.md`, `DEV-CHANGELOG.md`, or add
+changelog fragments.
 
-This directory is kept only so any legacy `<slug>.<type>.md` fragments
-opened before the migration still get folded into the next release
-(`scripts/update_changelog.py` reads them on its way through).
+For a release:
 
-You can safely ignore this directory in new PRs.
+1. Curate the user-visible changes under `## Next Release` in `CHANGELOG.md`.
+2. Open the release pull request. Its release check requires at least one
+   user-facing bullet.
+3. After merge, `scripts/update_changelog.py` stamps the curated user notes and
+   generates `DEV-CHANGELOG.md` from conventional commits.
+
+The release script still accepts old `<slug>.<type>.md` fragments from branches
+created before this workflow. Those fragments are included only in the
+developer changelog and removed after release.

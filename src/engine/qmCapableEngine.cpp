@@ -22,6 +22,8 @@
 
 #include "qmCapableEngine.hpp"
 
+#include "qmRunnerManager.hpp"
+
 using namespace engine;
 using namespace settings;
 using namespace QM;

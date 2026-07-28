@@ -8,6 +8,7 @@ add_library(inputFileParser
     coulombLongRangeInputParser.cpp
     filesInputParser.cpp
     generalInputParser.cpp
+    hessianInputParser.cpp
     hybridInputParser.cpp
     integratorInputParser.cpp
     manostatInputParser.cpp

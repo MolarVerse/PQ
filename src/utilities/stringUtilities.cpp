@@ -22,16 +22,15 @@
 
 #include "stringUtilities.hpp"
 
-#include <algorithm>    // for __for_each_fn
-#include <cctype>       // for isspace
-#include <cmath>        // for isnan, isinf
-#include <cstdint>      // for uint_fast32_t and UINT32_MAX
-#include <format>       // for format
-#include <fstream>      // IWYU pragma: keep for basic_istream, ifstream
-#include <functional>   // for identity
+#include <algorithm>   // for __for_each_fn
+#include <cctype>      // for isspace
+#include <cmath>       // for isnan, isinf
+#include <cstdint>     // for uint_fast32_t and UINT32_MAX
+#include <format>      // for format
+#include <fstream>
 #include <limits>
 #include <ranges>   // for begin, end, operator|, views::split, views::transform
-#include <sstream>       // IWYU pragma: keep for basic_stringstream
+#include <sstream>
 #include <stdexcept>     // for out_of_range and invalid_argument
 #include <string>        // for string
 #include <string_view>   // for string_view

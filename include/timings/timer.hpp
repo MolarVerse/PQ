@@ -24,7 +24,7 @@
 
 #define _TIMER_HPP_
 
-#include <chrono>   // IWYU pragma: keep for time_point, milliseconds, nanoseconds
+
 #include <cstddef>   // for size_t
 #include <string>    // for string
 

@@ -25,6 +25,7 @@
 #define _VECTOR3D_TPP_
 
 #include <algorithm>
+#include <ostream>
 
 #include "concepts/vector3dConcepts.hpp"
 #include "vector3d.hpp"

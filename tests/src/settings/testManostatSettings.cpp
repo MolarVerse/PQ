@@ -131,4 +131,5 @@ TEST(ManostatSettingsTest, StringRoundTripForIsotropy)
         settings::string(settings::Isotropy::FULL_ANISOTROPIC),
         "full_anisotropic"
     );
+    EXPECT_EQ(settings::string(settings::Isotropy::NONE), "isotropic");
 }

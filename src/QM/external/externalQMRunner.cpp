@@ -22,23 +22,20 @@
 
 #include "externalQMRunner.hpp"
 
-#include <algorithm>    // for __for_each_fn, for_each
-#include <chrono>       // for seconds
-#include <cmath>        // for isnan, isinf
-#include <format>       // for format
-#include <fstream>      // for ofstream
-#include <functional>   // for identity
-#include <string>       // for string
-#include <thread>       // for sleep_for
-#include <vector>       // for vector
+#include <algorithm>   // for __for_each_fn, for_each
+#include <cmath>       // for isnan, isinf
+#include <format>      // for format
+#include <fstream>     // for ofstream
+#include <string>      // for string
+#include <thread>      // for sleep_for
 
 #include "constants/conversionFactors.hpp"   // for _HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM_, _HARTREE_TO_KCAL_PER_MOL_
 #include "exceptions.hpp"                    // for InputFileException
 #include "fileSettings.hpp"                  // for FileSettings
 #include "physicalData.hpp"                  // for PhysicalData
 #include "qmSettings.hpp"                    // for QMSettings
-#include "simulationBox.hpp"                 // for SimulationBox
-#include "vector3d.hpp"                      // for Vec3D
+#include "settings.hpp"
+#include "simulationBox.hpp"   // for SimulationBox
 
 using QM::ExternalQMRunner;
 using enum simulationBox::Periodicity;
@@ -133,11 +130,13 @@ void ExternalQMRunner::readForceFile(
     forceFile >> energy;
 
     if (std::isnan(energy) || std::isinf(energy))
-        throw QMRunnerException(std::format(
-            "Invalid QM energy (NaN/Inf) in {} force file \"{}\"",
-            string(QMSettings::getQMMethod()),
-            forceFileName
-        ));
+        throw QMRunnerException(
+            std::format(
+                "Invalid QM energy (NaN/Inf) in {} force file \"{}\"",
+                string(QMSettings::getQMMethod()),
+                forceFileName
+            )
+        );
 
     physicalData.setQMEnergy(energy * _HARTREE_TO_KCAL_PER_MOL_);
 
@@ -149,12 +148,14 @@ void ExternalQMRunner::readForceFile(
 
         for (size_t i = 0; i < 3; ++i)
             if (std::isnan(grad[i]) || std::isinf(grad[i]))
-                throw QMRunnerException(std::format(
-                    "Invalid QM force component (NaN/Inf) in {} force file "
-                    "\"{}\"",
-                    string(QMSettings::getQMMethod()),
-                    forceFileName
-                ));
+                throw QMRunnerException(
+                    std::format(
+                        "Invalid QM force component (NaN/Inf) in {} force file "
+                        "\"{}\"",
+                        string(QMSettings::getQMMethod()),
+                        forceFileName
+                    )
+                );
 
         atom->setForce(-grad * _HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM_);
     };

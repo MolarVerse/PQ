@@ -28,7 +28,6 @@
 #include "atom.hpp"             // for Atom
 #include "exceptions.hpp"       // for HybridConfiguratorException
 #include "hybridSettings.hpp"   // for HybridSettings
-#include "simulationBox.hpp"    // for SimulationBox
 
 using enum simulationBox::HybridZone;
 

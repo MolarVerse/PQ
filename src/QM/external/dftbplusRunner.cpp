@@ -28,24 +28,20 @@
 #include <filesystem>   // for remove
 #include <format>       // for format
 #include <fstream>      // for ofstream
-#include <functional>   // for identity
 #include <iterator>     // for std::ranges::distance
 #include <set>          // for set
 #include <string>       // for string
-#include <vector>       // for vector
 
-#include "atom.hpp"                 // for Atom
-#include "box.hpp"                  // for simulationBox::Periodicity
+#include "box.hpp"   // for simulationBox::Periodicity
+#include "constants.hpp"
 #include "exceptions.hpp"           // for InputFileException
 #include "fileSettings.hpp"         // for FileSettings
 #include "hybridConfigurator.hpp"   // for HybridConfigurator
 #include "hybridSettings.hpp"       // for SmoothingMethod
 #include "physicalData.hpp"         // for PhysicalData
 #include "qmSettings.hpp"           // for QMSettings
-#include "settings.hpp"             // for Settings
 #include "simulationBox.hpp"        // for SimulationBox
 #include "stringUtilities.hpp"      // for fileExists
-#include "vector3d.hpp"             // for Vec3D
 
 using QM::DFTBPlusRunner;
 using enum simulationBox::Periodicity;

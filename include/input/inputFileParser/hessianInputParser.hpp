@@ -19,3 +19,30 @@
 
 <GPL_HEADER>
 ******************************************************************************/
+
+#ifndef _HESSIAN_INPUT_PARSER_HPP_
+
+#define _HESSIAN_INPUT_PARSER_HPP_
+
+#include <cstddef>
+
+#include "inputFileParser.hpp"
+#include "typeAliases.hpp"
+
+namespace input
+{
+    class HessianInputParser : public InputFileParser
+    {
+       public:
+        explicit HessianInputParser(pq::Engine &);
+
+        void parseHessianFile(const pq::strings &, const size_t);
+        void parseHessianInfoFile(const pq::strings &, const size_t);
+        void parseDisplacement(const pq::strings &, const size_t);
+        void parseOptimizeBeforeHessian(const pq::strings &, const size_t);
+        void parseBuilder(const pq::strings &, const size_t);
+    };
+
+}   // namespace input
+
+#endif   // _HESSIAN_INPUT_PARSER_HPP_

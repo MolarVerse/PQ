@@ -25,9 +25,8 @@
 #include <cstddef>   // for size_t
 #include <fstream>   // for ifstream, std
 #include <memory>    // for shared_ptr, __shared_ptr_access
-#include <ranges>
-#include <string>   // for string, stod, allocator, basic_string
-#include <vector>   // for vector
+#include <string>    // for string, stod, allocator, basic_string
+#include <vector>    // for vector
 
 #include "atom.hpp"                 // for Atom
 #include "atomSection.hpp"          // for AtomSection
@@ -38,7 +37,7 @@
 #include "molecule.hpp"             // for Molecule
 #include "moleculeType.hpp"         // for MoleculeType
 #include "restartFileSection.hpp"   // for RstFileSection, AtomSection
-#include "simulationBox.hpp"        // for SimulationBox
+#include "settings.hpp"
 #include "testRestartFileSection.hpp"   // for TestAtomSection
 #include "throwWithMessage.hpp"         // for ASSERT_THROW_MSG
 

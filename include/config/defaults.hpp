@@ -64,6 +64,13 @@ namespace defaults
     static constexpr char _RPMD_CHARGE_FILE_DEFAULT_[] = "default.rpmd.charge";
     static constexpr char _RPMD_ENERGY_FILE_DEFAULT_[] = "default.rpmd.en";
 
+    static constexpr char   _HESSIAN_FILE_DEFAULT_[] = "default.hessian";
+    static constexpr char   _HESSIAN_INFO_FILE_DEFAULT_[] =
+        "default.hessian.info";
+    static constexpr double _HESSIAN_DISPLACEMENT_DEFAULT_ = 1.0e-3;
+    static constexpr bool   _HESSIAN_OPTIMIZE_DEFAULT_     = true;
+    static constexpr char   _HESSIAN_BUILDER_DEFAULT_[]    = "central";
+
     static constexpr char _QM_FORCES_TEMP_FILE_DEFAULT_[]     = "qm_forces";
     static constexpr char _QM_CHARGES_TEMP_FILE_DEFAULT_[]    = "qm_charges";
     static constexpr char _STRESS_TENSOR_TEMP_FILE_DEFAULT_[] = "stress_tensor";

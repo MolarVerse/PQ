@@ -38,7 +38,6 @@
 #include "physicalData.hpp"              // for PhysicalData
 #include "potentialSettings.hpp"         // for PotentialSettings
 #include "simulationBox.hpp"             // for SimulationBox
-#include "vector3d.hpp"                  // for Vec3D
 
 namespace potential
 {

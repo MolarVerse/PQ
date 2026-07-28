@@ -24,7 +24,6 @@
 
 #include <algorithm>    // for __for_each_fn, for_each
 #include <cmath>        // for sqrt
-#include <functional>   // for identity
 
 #include "constants/conversionFactors.hpp"   // for _FS_TO_S_, _KG_TO_GRAM_
 #include "constants/natureConstants.hpp"     // for _UNIVERSAL_GAS_CONSTANT_
@@ -32,7 +31,6 @@
 #include "simulationBox.hpp"                 // for SimulationBox
 #include "thermostatSettings.hpp"            // for ThermostatType
 #include "timingsSettings.hpp"               // for TimingsSettings
-#include "vector3d.hpp"                      // for operator*, Vec3D
 
 using thermostat::LangevinThermostat;
 using namespace constants;
@@ -184,6 +182,7 @@ void LangevinThermostat::setTargetTemperature(const double targetTemperature)
 void LangevinThermostat::setFriction(const double friction)
 {
     _friction = friction;
+    calculateSigma(friction, _targetTemperature);
 }
 
 /**

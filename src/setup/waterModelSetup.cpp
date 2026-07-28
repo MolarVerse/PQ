@@ -36,10 +36,10 @@
 #include "fileSettings.hpp"       // for FileSettings
 #include "interWater.hpp"         // for InterWater
 #include "mdEngine.hpp"           // for MDEngine
-#include "molecule.hpp"           // for Molecule
 #include "references.hpp"         // for References
 #include "referencesOutput.hpp"   // for ReferencesOutput
 #include "rigidWaterGeometry.hpp"
+#include "settings.hpp"
 #include "waterModelSettings.hpp"   // for WaterModelSettings
 
 using namespace constants;
@@ -295,7 +295,12 @@ std::optional<RigidWaterGeometry> WaterModelSetup::getRigidWaterGeometry(
         case H2O_DC: return RigidWaterGeometry{_H2O_DC_OH_DIST_, _H2O_DC_HH_DIST_};
         case TIP3P: return RigidWaterGeometry{_TIP3P_OH_DIST_, _TIP3P_HH_DIST_};
         case OPC3: return RigidWaterGeometry{_OPC3_OH_DIST_, _OPC3_HH_DIST_};
-        default: return std::nullopt;
+        case SPC_FW:
+        case QSPC_FW:
+        case SPC_MTR:
+        case TIP3P_MTR:
+        case NONE: 
+            return std::nullopt;
     }
     // clang-format on
 }
@@ -366,7 +371,7 @@ void WaterModelSetup::makeInterWater()
         case OPC3: state = makeInterWaterState<OPC3InterParam>(); break;
         case SPC_MTR: state = makeInterWaterState<SPCmTRInterParam>(); break;
         case TIP3P_MTR: state = makeInterWaterState<SPCmTRInterParam>(); break;
-        default: break;
+        case NONE: break;
     }
 
     checkMoldescriptorWaterCharge(state);
@@ -410,7 +415,7 @@ void WaterModelSetup::addReferences()
         case OPC3: ReferencesOutput::addReferenceFile(_OPC3_FILE_); break;
         case SPC_MTR: ReferencesOutput::addReferenceFile(_SPC_MTR_FILE_); break;
         case TIP3P_MTR: ReferencesOutput::addReferenceFile(_TIP3P_MTR_FILE_); break;
-        default: break;
+        case NONE: break;
     }
 
     switch (interModel)
@@ -426,7 +431,7 @@ void WaterModelSetup::addReferences()
         case OPC3: ReferencesOutput::addReferenceFile(_OPC3_FILE_); break;
         case SPC_MTR: ReferencesOutput::addReferenceFile(_SPC_MTR_FILE_); break;
         case TIP3P_MTR: ReferencesOutput::addReferenceFile(_TIP3P_MTR_FILE_); break;
-        default: break;
+        case NONE: break;
     }
     //clang-format on
 }

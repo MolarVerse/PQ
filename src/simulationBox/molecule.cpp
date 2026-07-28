@@ -22,14 +22,13 @@
 
 #include "molecule.hpp"
 
-#include <algorithm>   // for std::ranges::for_each, ranges::transform
-#include <iterator>    // for back_inserter
+#include <algorithm>
+#include <iterator>
 
-#include "box.hpp"                // for Box
+#include "box.hpp"   // for Box
 #include "collectionUtilities.hpp"
 #include "manostatSettings.hpp"   // for ManostatSettings
 #include "settings.hpp"           // for Settings
-#include "vector3d.hpp"           // for Vec3D
 
 using namespace simulationBox;
 using namespace linearAlgebra;
@@ -94,6 +93,29 @@ void Molecule::calculateCenterOfMass(const Box &box)
 }
 
 /**
+ * @brief reconstructs atom positions around the current center-of-mass image
+ *
+ * @details Molecules cut by the periodic box carry raw coordinate jumps from
+ * the current box. Before a manostat changes the box, these jumps have to be
+ * converted back to molecular internal vectors around the cached molecular
+ * center of mass, otherwise the old box length leaks into constrained
+ * intramolecular distances after the resize.
+ *
+ * @param box current simulation box
+ */
+void Molecule::reconstructAtomsAroundCenterOfMass(const Box &box)
+{
+    auto reconstructAtom = [&box, this](auto atom)
+    {
+        auto position  = atom->getPosition();
+        position      -= box.calcShiftVector(position - _centerOfMass);
+        atom->setPosition(position);
+    };
+
+    std::ranges::for_each(_atoms, reconstructAtom);
+}
+
+/**
  * @brief scales the positions of the molecule by shifting the center of mass
  *
  * @details scaling has to be done in orthogonal space since pressure scaling is
@@ -122,10 +144,50 @@ void Molecule::scale(const tensor3D &shiftTensor, const Box &box)
         if (ManostatSettings::getIsotropy() != Isotropy::FULL_ANISOTROPIC)
             position = box.toSimSpace(position);
 
+        box.applyPBC(position);
+
         atom->setPosition(position);
     };
 
     std::ranges::for_each(_atoms, scaleAtomPosition);
+}
+
+/**
+ * @brief scales the center-of-mass velocity of the molecule
+ *
+ * @details pressure scaling moves molecules by their center of mass. The
+ * matching velocity scaling must not change the internal molecular velocities.
+ *
+ * @param scalingTensor
+ * @param box
+ */
+void Molecule::scaleVelocity(const tensor3D &scalingTensor, const Box &box)
+{
+    auto centerOfMassVelocity = Vec3D(0.0);
+
+    for (const auto &atom : _atoms)
+        centerOfMassVelocity += atom->getMass() * atom->getVelocity();
+
+    centerOfMassVelocity /= getMolMass();
+
+    auto scaledCenterOfMassVelocity = centerOfMassVelocity;
+
+    if (ManostatSettings::getIsotropy() != Isotropy::FULL_ANISOTROPIC)
+        scaledCenterOfMassVelocity =
+            box.toOrthoSpace(scaledCenterOfMassVelocity);
+
+    scaledCenterOfMassVelocity = scalingTensor * scaledCenterOfMassVelocity;
+
+    if (ManostatSettings::getIsotropy() != Isotropy::FULL_ANISOTROPIC)
+        scaledCenterOfMassVelocity = box.toSimSpace(scaledCenterOfMassVelocity);
+
+    const auto velocityShift =
+        scaledCenterOfMassVelocity - centerOfMassVelocity;
+
+    auto shiftAtomVelocity = [velocityShift](auto atom)
+    { atom->addVelocity(velocityShift); };
+
+    std::ranges::for_each(_atoms, shiftAtomVelocity);
 }
 
 /**
@@ -483,7 +545,6 @@ std::string Molecule::getAtomName(const size_t index) const
  *                         *
  ***************************/
 
-
 /**
  * @brief returns the number of atoms in the molecule
  *
@@ -533,7 +594,6 @@ Vec3D Molecule::getCenterOfMass() const { return _centerOfMass; }
  * @return HybridZone
  */
 HybridZone Molecule::getHybridZone() const { return _hybridZone; }
-
 
 /**
  * @brief return the smoothing factor of the molecule for hybrid calculations

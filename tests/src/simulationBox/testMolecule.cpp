@@ -23,9 +23,10 @@
 #include "testMolecule.hpp"
 
 #include "gtest/gtest.h"         // for Message, TestPartResult
+#include "manostatSettings.hpp"  // for ManostatSettings
+#include "mathUtilities.hpp"     // for compare
 #include "moleculeType.hpp"      // for MoleculeType
 #include "orthorhombicBox.hpp"   // for OrthorhombicBox
-#include "staticMatrix.hpp"      // for diagonalMatrix
 
 TEST_F(TestMolecule, calculateCenterOfMass)
 {
@@ -60,6 +61,83 @@ TEST_F(TestMolecule, scaleAtoms)
     EXPECT_EQ(_molecule->getAtomPosition(0), atomPosition1 + shift);
     EXPECT_EQ(_molecule->getAtomPosition(1), atomPosition2 + shift);
     EXPECT_EQ(_molecule->getAtomPosition(2), atomPosition3 + shift);
+}
+
+TEST_F(TestMolecule, scaleAtomsWrapsIntoBox)
+{
+    const linearAlgebra::tensor3D scale =
+        diagonalMatrix(linearAlgebra::Vec3D{0.5, 0.5, 0.5});
+
+    simulationBox::OrthorhombicBox box;
+    box.setBoxDimensions({2.0, 2.0, 2.0});
+
+    _molecule->setAtomPosition(0, {0.9, 0.0, 0.0});
+    _molecule->setAtomPosition(1, {-0.9, 0.0, 0.0});
+    _molecule->setAtomPosition(2, {0.9, 0.1, 0.0});
+    _molecule->calculateCenterOfMass(box);
+
+    const auto centerOfMassBeforeScaling = _molecule->getCenterOfMass();
+    const auto shift = centerOfMassBeforeScaling * (diagonal(scale) - 1.0);
+
+    box.scaleBox(scale);
+    _molecule->scale(scale, box);
+
+    auto expectedPosition0 = linearAlgebra::Vec3D{0.9, 0.0, 0.0} + shift;
+    auto expectedPosition1 = linearAlgebra::Vec3D{-0.9, 0.0, 0.0} + shift;
+    auto expectedPosition2 = linearAlgebra::Vec3D{0.9, 0.1, 0.0} + shift;
+    box.applyPBC(expectedPosition0);
+    box.applyPBC(expectedPosition1);
+    box.applyPBC(expectedPosition2);
+
+    EXPECT_EQ(_molecule->getAtomPosition(0), expectedPosition0);
+    EXPECT_EQ(_molecule->getAtomPosition(1), expectedPosition1);
+    EXPECT_EQ(_molecule->getAtomPosition(2), expectedPosition2);
+}
+
+TEST_F(TestMolecule, scaleVelocityPreservesInternalVelocities)
+{
+    settings::ManostatSettings::setIsotropy(settings::Isotropy::ISOTROPIC);
+
+    const linearAlgebra::tensor3D scale =
+        diagonalMatrix(linearAlgebra::Vec3D{0.5, 0.25, 2.0});
+
+    simulationBox::OrthorhombicBox box;
+    box.setBoxDimensions({10.0, 10.0, 10.0});
+
+    const auto relativeVelocity10 =
+        _molecule->getAtomVelocity(1) - _molecule->getAtomVelocity(0);
+    const auto relativeVelocity20 =
+        _molecule->getAtomVelocity(2) - _molecule->getAtomVelocity(0);
+
+    const auto centerOfMassVelocity =
+        (1.0 * _molecule->getAtomVelocity(0) +
+         2.0 * _molecule->getAtomVelocity(1) +
+         3.0 * _molecule->getAtomVelocity(2)) /
+        6.0;
+
+    _molecule->scaleVelocity(scale, box);
+
+    const auto scaledCenterOfMassVelocity =
+        (1.0 * _molecule->getAtomVelocity(0) +
+         2.0 * _molecule->getAtomVelocity(1) +
+         3.0 * _molecule->getAtomVelocity(2)) /
+        6.0;
+
+    EXPECT_TRUE(utilities::compare(
+        scaledCenterOfMassVelocity,
+        scale * centerOfMassVelocity,
+        1e-12
+    ));
+    EXPECT_TRUE(utilities::compare(
+        _molecule->getAtomVelocity(1) - _molecule->getAtomVelocity(0),
+        relativeVelocity10,
+        1e-12
+    ));
+    EXPECT_TRUE(utilities::compare(
+        _molecule->getAtomVelocity(2) - _molecule->getAtomVelocity(0),
+        relativeVelocity20,
+        1e-12
+    ));
 }
 
 TEST_F(TestMolecule, setAtomForceToZero)

@@ -1,0 +1,10 @@
+jobtype = mm-hessian;
+force-field = off;
+rcoulomb = 9.0;
+start_file = start.rst;
+file_prefix = oh-no-opt;
+hessian_file = oh-no-opt.hessian;
+hessian_info_file = oh-no-opt.hessian.info;
+hessian_displacement = 0.001;
+optimize_before_hessian = false;
+hessian_builder = central;

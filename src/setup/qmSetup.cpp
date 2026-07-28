@@ -24,11 +24,10 @@
 
 #include <string_view>   // for string_view
 
-#include "dftbplusRunner.hpp"      // for DFTBPlusRunner
 #include "engine.hpp"              // for Engine
 #include "exceptions.hpp"          // for InputFileException
+#include "externalQMRunner.hpp"    // for ExternalQMRunner
 #include "potentialSettings.hpp"   // for PotentialSettings
-#include "pyscfRunner.hpp"         // for PySCFRunner
 #include "qmCapableEngine.hpp"     // for QMCapableEngine
 #include "qmSettings.hpp"          // for QMMethod, QMSettings
 #include "references.hpp"          // for ReferencesOutput
@@ -36,7 +35,6 @@
 #include "settings.hpp"            // for Settings
 #include "stdoutOutput.hpp"        // for StdoutOutput
 #include "stringUtilities.hpp"     // for toLowerCopy
-#include "turbomoleRunner.hpp"     // for TurbomoleRunner
 
 using setup::QMSetup;
 using namespace settings;
@@ -91,10 +89,6 @@ void setup::setupQM(Engine &engine)
  */
 void QMSetup::setup()
 {
-    setupQMMethodFennol();
-
-    setupQMMethodMace();
-
     setupQMMethod();
 
     setupQMMethodAseDftbPlus();
@@ -131,70 +125,6 @@ void QMSetup::setupQMMethodAseDftbPlus()
         !QMSettings::isThirdOrderDftbSet())
         QMSettings::setUseThirdOrderDftb(true);
 
-    if (!QMSettings::useThirdOrderDftb() && QMSettings::isHubbardDerivsSet())
-        throw InputFileException(
-            "You have set custom Hubbard derivatives but disabled 3rd order "
-            "DFTB. "
-            "This setup is invalid."
-        );
-}
-
-/**
- * @brief setup the FeNNol method of the system
- *
- */
-void QMSetup::setupQMMethodFennol()
-{
-    if (QMSettings::getQMMethod() != QMMethod::FENNOL)
-        return;
-
-    if (QMSettings::getFennolModelPath() == "")
-        throw InputFileException(
-            "The FeNNol QM runner has been selected but the "
-            "\"fennol_model_path\" keyword has not been set. This setup is "
-            "invalid."
-        );
-}
-
-/**
- * @brief setup the MACE method of the system
- *
- */
-void QMSetup::setupQMMethodMace()
-{
-    if (QMSettings::getQMMethod() != QMMethod::MACE)
-        return;
-
-    if (QMSettings::getMaceModelType() != MaceModelType::MACE_MP)
-    {
-        const auto modelSize = QMSettings::getMaceModel();
-        if (modelSize != MaceModel::SMALL && modelSize != MaceModel::MEDIUM &&
-            modelSize != MaceModel::LARGE)
-            throw InputFileException(
-                std::format(
-                    "The '{}' model size is only compatible with the '{}' "
-                    "model type.",
-                    string(modelSize),
-                    string(MaceModelType::MACE_MP)
-                )
-            );
-    }
-
-    if (QMSettings::getMaceModel() == MaceModel::CUSTOM &&
-        QMSettings::getMaceModelPath().empty())
-        throw InputFileException(
-            "You have requested a custom MACE model but haven't provided a "
-            "MACE model path."
-            "This setup is invalid."
-        );
-
-    if (QMSettings::getMaceModel() != MaceModel::CUSTOM &&
-        !QMSettings::getMaceModelPath().empty())
-        throw InputFileException(
-            "You have set a custom MACE model path without requesting a custom "
-            "mace model size."
-            "This setup is invalid."
-        );
 }
 
 /**

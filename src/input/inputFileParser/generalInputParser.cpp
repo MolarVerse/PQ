@@ -22,20 +22,18 @@
 
 #include "generalInputParser.hpp"
 
-#include <algorithm>    // for ranges::remove
-#include <cctype>       // for std::isdigit
 #include <cstdint>      // for uint_fast32_t and UINT32_MAX
 #include <format>       // for format
 #include <functional>   // for _Bind_front_t, bind_front
-#include <limits>       // for numeric_limits
 #include <stdexcept>    // for out_of_range and invalid_argument
 
-#include "engine.hpp"         // for Engine
-#include "exceptions.hpp"     // for InputFileException, customException
-#include "mmmdEngine.hpp"     // for MMMDEngine
-#include "optEngine.hpp"      // for MMOptEngine
-#include "qmmdEngine.hpp"     // for QMMDEngine
-#include "qmmmMDEngine.hpp"   // for QMMMMDEngine
+#include "engine.hpp"          // for Engine
+#include "exceptions.hpp"      // for InputFileException, customException
+#include "hessianEngine.hpp"   // for HessianEngine
+#include "mmmdEngine.hpp"      // for MMMDEngine
+#include "optEngine.hpp"       // for MMOptEngine
+#include "qmmdEngine.hpp"      // for QMMDEngine
+#include "qmmmMDEngine.hpp"    // for QMMMMDEngine
 #include "ringPolymerqmmdEngine.hpp"   // for RingPolymerQMMDEngine
 #include "settings.hpp"                // for Settings
 #include "stringUtilities.hpp"         // for toLowerCopy
@@ -124,6 +122,11 @@ void GeneralInputParser::parseJobTypeForEngine(
         Settings::setJobtype(MM_OPT);
         engine.reset(new OptEngine());
     }
+    else if (jobtype == "mm_hessian")
+    {
+        Settings::setJobtype(MM_HESSIAN);
+        engine.reset(new HessianEngine());
+    }
     else if (jobtype == "mm_md")
     {
         Settings::setJobtype(MM_MD);
@@ -148,6 +151,7 @@ void GeneralInputParser::parseJobTypeForEngine(
         throw InputFileException(format(
             "Invalid jobtype \"{}\" in input file - possible values are:\n"
             "- mm-opt\n"
+            "- mm-hessian\n"
             "- mm-md\n"
             "- qm-md\n"
             "- qm-rpmd\n"

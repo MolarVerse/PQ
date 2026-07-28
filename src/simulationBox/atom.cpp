@@ -28,7 +28,6 @@
 #include "manostatSettings.hpp"   // for ManostatSettings
 #include "settings.hpp"           // for Settings
 #include "stringUtilities.hpp"    // for toLowerCopy
-#include "vector3d.hpp"           // for Vec3D
 
 using namespace simulationBox;
 using namespace utilities;

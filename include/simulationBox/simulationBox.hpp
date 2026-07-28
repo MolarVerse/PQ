@@ -26,20 +26,16 @@
 
 #include <map>        // for map
 #include <optional>   // for optional
-#include <ranges>     // for ranges::filter_view
 #include <string>     // for string
 #include <vector>     // for vector
 
 #include "atom.hpp"                // for Atom
 #include "box.hpp"                 // for Box
-#include "defaults.hpp"            // for _COULOMB_CUT_OFF_DEFAULT_
 #include "exceptions.hpp"          // for ExceptionType
 #include "molecule.hpp"            // for Molecule
 #include "moleculeType.hpp"        // for MoleculeType
 #include "orthorhombicBox.hpp"     // for OrthorhombicBox
-#include "settings.hpp"            // for Settings, JobType
 #include "simulationBoxView.hpp"   // for SimulationBoxView
-#include "triclinicBox.hpp"        // for TriclinicBox
 #include "typeAliases.hpp"         // for pq::Vec3D
 
 /**
@@ -130,13 +126,11 @@ namespace simulationBox
         [[nodiscard]] pq::Vec3D calculateMomentum();
         [[nodiscard]] pq::Vec3D calculateAngularMomentum(const pq::Vec3D&);
         [[nodiscard]] pq::Vec3D calcBoxDimFromDensity() const;
-        [[nodiscard]] pq::Vec3D calcShiftVector(
-            const pq::Vec3D &position
-        ) const
+        [[nodiscard]] pq::Vec3D calcShiftVector(const pq::Vec3D& position) const
         {
             return _box->calcShiftVector(position);
         }
-        [[nodiscard]] int       calcActiveMolCharge() const;
+        [[nodiscard]] int calcActiveMolCharge() const;
 
         [[nodiscard]] bool moleculeTypeExists(const size_t) const;
 
@@ -262,6 +256,8 @@ namespace simulationBox
 
 }   // namespace simulationBox
 
-#include "simulationBox.tpp.hpp"   // IWYU pragma: export # Do not move this line
+#ifndef _SIMULATION_BOX_TPP_
+#include "simulationBox.tpp.hpp"   // IWYU pragma: keep - DO NOT MOVE THIS LINE
+#endif
 
 #endif   // _SIMULATION_BOX_HPP_

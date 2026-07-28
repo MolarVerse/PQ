@@ -22,8 +22,6 @@
 
 #include "qmmdEngine.hpp"
 
-#include "qmRunnerManager.hpp"   // for QMRunnerManager
-
 using engine::QMMDEngine;
 using namespace QM;
 

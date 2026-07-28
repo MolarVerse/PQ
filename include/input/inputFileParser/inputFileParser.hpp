@@ -25,11 +25,9 @@
 #define _INPUT_FILE_PARSER_HPP_
 
 #include <cstddef>       // for size_t
-#include <functional>    // for function
 #include <map>           // for map
 #include <string>        // for string
 #include <string_view>   // for string_view
-#include <vector>        // for vector
 
 #include "typeAliases.hpp"   // for strings. ParseFunc
 

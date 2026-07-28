@@ -16,6 +16,7 @@ add_library(settings
     optimizerSettings.cpp
     convergenceSettings.cpp
     waterModelSettings.cpp
+    hessianSettings.cpp
 )
 
 target_include_directories(settings

@@ -25,8 +25,6 @@
 #define _OUTPUT_INPUT_PARSER_HPP_
 
 #include <cstddef>   // for size_t
-#include <string>    // for string
-#include <vector>    // for vector
 
 #include "inputFileParser.hpp"   // for InputFileParser
 #include "typeAliases.hpp"       // for pq::strings
@@ -45,6 +43,7 @@ namespace input
         explicit OutputInputParser(pq::Engine &);
 
         void parseOverwriteOutput(const pq::strings &, const size_t);
+        void parseIncludeOutputMetadata(const pq::strings &, const size_t);
 
         void parseOutputFreq(const pq::strings &, const size_t);
         void parseFilePrefix(const pq::strings &, const size_t);

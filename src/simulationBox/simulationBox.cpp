@@ -25,7 +25,6 @@
 #include <algorithm>   // for sort, unique
 #include <format>      // for format
 #include <numeric>     // for accumulate
-#include <random>      // for random_device, mt19937
 
 #include "constants.hpp"           // for _TEMPERATURE_FACTOR_
 #include "exceptions.hpp"          // for RstFileException, UserInputException

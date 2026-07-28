@@ -8,6 +8,7 @@ set(source_files
     testCoulombLongRangeParser.cpp
     testFilesParser.cpp
     testGeneralParser.cpp
+    testHessianParser.cpp
     testIntegratorParser.cpp
     testManostatParser.cpp
     testMMParser.cpp

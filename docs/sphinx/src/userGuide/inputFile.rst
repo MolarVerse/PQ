@@ -101,6 +101,8 @@ Possible options are:
 
    5. **mm-opt** - represents a geometry optimization calculation using molecular mechanics.
 
+   6. **mm-hessian** - represents a molecular mechanics Hessian calculation. By default, the geometry is optimized first and the Hessian is built at the optimized structure. Set ``optimize_before_hessian = false`` to calculate the Hessian directly at the input geometry.
+
 .. _timestepKey:
 
 Timestep
@@ -123,7 +125,7 @@ NStep
 
     nstep* = {uint+}
 
-The ``nstep`` keyword sets the total number of MD steps to be performed within this simulation run.
+The ``nstep`` keyword sets the total number of MD steps or optimization epochs to be performed within this simulation run. It is required for MD job types, optimization job types and ``mm-hessian`` runs with ``optimize_before_hessian = true``. It is not required for ``mm-hessian`` runs with ``optimize_before_hessian = false``.
 
 .. _floatingpointtypeKey:
 
@@ -251,6 +253,22 @@ Overwrite Output Files
     overwrite_output = {bool} -> false
 
 The ``overwrite_output`` keyword allows the user to overwrite any existing output files.
+
+.. centered:: *default value* = false
+
+.. _includeoutputmetadatakey:
+
+Output Metadata
+===============
+
+.. admonition:: Key
+    :class: tip
+
+    include_output_metadata = {bool} -> false
+
+When enabled, ``include_output_metadata`` adds a comment header containing the
+simulation timestep to the averaged and instantaneous MD energy files. It is
+disabled by default to preserve the existing numeric file format.
 
 .. centered:: *default value* = false
 
@@ -2198,3 +2216,91 @@ RMS Force Convergence Threshold
 With the ``rms-force-conv`` keyword the user can specify the root mean square force convergence threshold for all kind of optimization jobs. This keyword overrides the ``force-conv`` keyword.
 
 .. centered:: *default value* = 1e-6
+
+.. _hessianKeys:
+
+************
+Hessian Keys
+************
+
+The Hessian keys configure ``mm-hessian`` runs. The generated Hessian can be analyzed with the PQAnalysis ``vibrations`` input-file command.
+
+.. _hessianfilekey:
+
+Hessian File
+============
+
+.. admonition:: Key
+    :class: tip
+
+    hessian_file = {file} -> "default.hessian"
+
+The ``hessian_file`` keyword sets the plain text matrix output file for the Cartesian Hessian.
+
+.. centered:: *default value* = "default.hessian"
+
+.. _hessianinfofilekey:
+
+Hessian Info File
+=================
+
+.. admonition:: Key
+    :class: tip
+
+    hessian_info_file = {file} -> "default.hessian.info"
+
+The ``hessian_info_file`` keyword sets the metadata output file for the Hessian run. The file records the Hessian builder, displacement, unit, sign convention, matrix dimensions and whether the geometry was optimized before the Hessian was calculated.
+
+.. centered:: *default value* = "default.hessian.info"
+
+.. _hessiandisplacementkey:
+
+Hessian Displacement
+====================
+
+.. admonition:: Key
+    :class: tip
+
+    hessian_displacement = {double} -> 1.0e-3
+
+The ``hessian_displacement`` keyword sets the Cartesian displacement used by finite-difference Hessian builders. The value must be greater than zero.
+
+.. centered:: *default value* = 1.0e-3
+
+.. _optimizebeforehessiankey:
+
+Optimize Before Hessian
+=======================
+
+.. admonition:: Key
+    :class: tip
+
+    optimize_before_hessian = {bool} -> true
+
+The ``optimize_before_hessian`` keyword controls whether ``mm-hessian`` first performs a geometry optimization using the normal :ref:`optimizationKeys` and :ref:`convergenceKeys`. The default is ``true`` because vibrational frequencies are meaningful at stationary points. Set it to ``false`` for a Hessian at the input geometry, for example when the geometry was optimized in a previous run or by an external program.
+
+.. centered:: *default value* = true
+
+.. _hessianbuilderkey:
+
+Hessian Builder
+===============
+
+.. admonition:: Key
+    :class: tip
+
+    hessian_builder = {string} -> "central"
+
+The ``hessian_builder`` keyword selects how the Hessian is generated.
+
+Possible options are:
+
+   1. **central** (default) - central finite differences of forces
+
+   2. **forward** - forward finite differences of forces
+
+   3. **five-point** - five-point finite differences of forces
+
+   4. **analytic** - analytic Hessian evaluator hook, available only for evaluators that implement it
+
+.. centered:: *default value* = "central"

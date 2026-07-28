@@ -44,6 +44,7 @@ namespace settings
         QMMM_MD,
         RING_POLYMER_QM_MD,
         MM_OPT,
+        MM_HESSIAN,
         NONE
     };
 

@@ -22,7 +22,6 @@
 
 #include <gtest/gtest.h>   // for Test, EXPECT_EQ, TestInfo
 
-#include <algorithm>   // for max
 #include <cstddef>     // for size_t
 #include <map>         // for map
 #include <memory>      // for make_shared, shared_ptr

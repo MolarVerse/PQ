@@ -24,8 +24,6 @@
 
 #define _INTRA_WATER_HPP_
 
-#include "physicalData.hpp"    // for PhysicalData
-#include "simulationBox.hpp"   // for SimulationBox
 #include "typeAliases.hpp"
 
 namespace waterModel

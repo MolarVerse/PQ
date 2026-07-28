@@ -26,7 +26,6 @@
 
 #include <string>   // for string
 
-#include "staticMatrix.hpp"   // for StaticMatrix3x3
 #include "timer.hpp"          // for Timer
 #include "typeAliases.hpp"
 

@@ -27,10 +27,8 @@
 #include <functional>   // for _Bind_front_t, bind_front, function
 #include <vector>       // for vector
 
-#include "staticMatrix.hpp"   // for StaticMatrix3x3
-#include "timer.hpp"          // for Timer
+#include "timer.hpp"   // for Timer
 #include "typeAliases.hpp"
-#include "vector3d.hpp"   // for Vec3D
 
 namespace physicalData
 {

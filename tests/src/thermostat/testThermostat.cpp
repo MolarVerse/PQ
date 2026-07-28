@@ -23,7 +23,6 @@
 #include "testThermostat.hpp"
 
 #include <cmath>    // for sqrt
-#include <memory>   // for allocator
 
 #include "berendsenThermostat.hpp"                    // for BerendsenThermostat
 #include "constants/internalConversionFactors.hpp"    // for _TEMPERATURE_FACTOR_
@@ -263,6 +262,19 @@ TEST_F(TestThermostat, langevin_setTargetTemperatureRecomputesSigma)
     // Langevin Gaussian-noise amplitude scales with sqrt(kBT)).
     EXPECT_NE(sigmaAt300, sigmaAt600);
     EXPECT_GT(sigmaAt600, sigmaAt300);
+}
+
+TEST_F(TestThermostat, langevin_setFrictionRecomputesSigma)
+{
+    auto langevin = thermostat::LangevinThermostat(300.0, 0.1);
+    settings::TimingsSettings::setTimeStep(0.1);
+    const auto sigmaAtFrictionPointOne = langevin.getSigma();
+
+    langevin.setFriction(0.5);
+    const auto sigmaAtFrictionPointFive = langevin.getSigma();
+
+    EXPECT_NE(sigmaAtFrictionPointOne, sigmaAtFrictionPointFive);
+    EXPECT_GT(sigmaAtFrictionPointFive, sigmaAtFrictionPointOne);
 }
 
 TEST_F(TestThermostat, langevin_thermostatType)

@@ -22,19 +22,17 @@
 
 #include "stochasticRescalingManostat.hpp"
 
-#include <algorithm>    // for __for_each_fn
-#include <cmath>        // for exp, pow, sqrt
-#include <functional>   // for identity
+#include <algorithm>   // for __for_each_fn
+#include <cmath>       // for exp, pow, sqrt
 
 #include "constants/conversionFactors.hpp"   // for _BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_
 #include "constants/internalConversionFactors.hpp"   // for _PRESSURE_FACTOR_
 #include "exceptions.hpp"                            // for ExceptionType
-#include "physicalData.hpp"                          // for PhysicalData
-#include "simulationBox.hpp"                         // for SimulationBox
-#include "staticMatrix.hpp"         // for diagonal, diagonalMatrix
+#include "manostatSettings.hpp"     // for ManostatType, Isotropy
+#include "physicalData.hpp"         // for PhysicalData
+#include "simulationBox.hpp"        // for SimulationBox
 #include "thermostatSettings.hpp"   // for ThermostatSettings
 #include "timingsSettings.hpp"      // for TimingsSettings
-#include "vector3d.hpp"             // for Vec3D, operator/
 
 using namespace linearAlgebra;
 using namespace manostat;
@@ -119,6 +117,13 @@ void StochasticRescalingManostat::applyManostat(
 
     const auto mu = calculateMu(simBox.getVolume());
 
+    // Reconstruction temporarily unwraps atoms. Molecule::scale() below wraps
+    // every position into the resized box.
+    auto reconstructMolecule = [&simBox](auto &molecule)
+    { molecule.reconstructAtomsAroundCenterOfMass(simBox.getBox()); };
+
+    std::ranges::for_each(simBox.getMolecules(), reconstructMolecule);
+
     simBox.scaleBox(mu);
 
     physicalData.setVolume(simBox.getVolume());
@@ -129,11 +134,11 @@ void StochasticRescalingManostat::applyManostat(
     auto scalePositions = [&mu, &simBox](auto &molecule)
     { molecule.scale(mu, simBox.getBox()); };
 
-    auto scaleVelocities = [&mu, &simBox](auto &atom)
-    { atom->scaleVelocityOrthogonalSpace(inverse(mu), simBox.getBox()); };
+    auto scaleVelocities = [&mu, &simBox](auto &molecule)
+    { molecule.scaleVelocity(inverse(mu), simBox.getBox()); };
 
     std::ranges::for_each(simBox.getMolecules(), scalePositions);
-    std::ranges::for_each(simBox.getAtoms(), scaleVelocities);
+    std::ranges::for_each(simBox.getMolecules(), scaleVelocities);
 
     stopTimingsSection("Stochastic Rescaling");
 }
@@ -159,7 +164,7 @@ tensor3D StochasticRescalingManostat::calculateMu(const double volume)
 
     const auto deltaP = _targetPressure - _pressure;
 
-    return diagonalMatrix(::exp(-compress * (deltaP) + stochasticFactor / 3.0));
+    return diagonalMatrix(::exp((-compress * deltaP + stochasticFactor) / 3.0));
 }
 
 /**

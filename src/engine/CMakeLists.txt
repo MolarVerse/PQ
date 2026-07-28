@@ -2,6 +2,7 @@ set(engine_source_files
     engine.cpp
 
     optEngine.cpp
+    hessianEngine.cpp
     mdEngine.cpp
 
     mmmdEngine.cpp

@@ -25,7 +25,6 @@
 #define _POTENTIAL_HPP_
 
 #include <cstddef>   // for size_t
-#include <memory>    // for shared_ptr, __shared_ptr_access, make_shared
 #include <utility>   // for pair
 
 #include "atom.hpp"
@@ -156,6 +155,8 @@ namespace potential
 
 }   // namespace potential
 
-#include "potential.tpp.hpp"   // DO NOT MOVE THIS LINE
+#ifndef _POTENTIAL_TPP_
+#include "potential.tpp.hpp"   // IWYU pragma: keep - DO NOT MOVE THIS LINE
+#endif
 
 #endif   // _POTENTIAL_HPP_

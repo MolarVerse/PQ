@@ -50,8 +50,9 @@ namespace engine
         static std::shared_ptr<QM::QMRunner> createQMRunner(
             const settings::QMMethod method
         );
-        static std::shared_ptr<QM::QMRunner> createMaceQMRunner();
         static std::shared_ptr<QM::QMRunner> createAseDftbRunner();
+        static std::shared_ptr<QM::QMRunner> createAseFennolRunner();
+        static std::shared_ptr<QM::QMRunner> createAseMaceRunner();
         static std::shared_ptr<QM::QMRunner> createAseXtbRunner();
     };
 

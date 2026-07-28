@@ -29,7 +29,6 @@
 
 #include "buckinghamPair.hpp"   // for BuckinghamPair
 #include "gtest/gtest.h"        // for AssertionResult, Message, TestPartResult
-#include "nonCoulombPair.hpp"   // for potential
 
 using namespace potential;
 

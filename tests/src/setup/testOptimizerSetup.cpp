@@ -23,20 +23,15 @@
 #include <gtest/gtest.h>
 
 #include "adam.hpp"
-#include "constant.hpp"
-#include "constantDecay.hpp"
 #include "convergence.hpp"
 #include "convergenceSettings.hpp"
 #include "exceptions.hpp"
-#include "expDecay.hpp"
-#include "mmEvaluator.hpp"
 #include "optEngine.hpp"
 #include "optimizerSettings.hpp"
 #include "optimizerSetup.hpp"
 #include "settings.hpp"
 #include "steepestDescent.hpp"
 #include "testSetup.hpp"
-#include "throwWithMessage.hpp"
 
 using namespace setup;
 using namespace settings;
@@ -135,6 +130,8 @@ TEST_F(TestSetup, setupLearningRateStrategyNoneThrows)
 {
     resetOptimizerSettings();
     OptimizerSettings::setLearningRateStrategy(LREnum::NONE);
+    EXPECT_EQ(string(LREnum::NONE), "none");
+
     OptimizerSetup s(dynamic_cast<engine::OptEngine &>(*_engine));
     EXPECT_THROW(s.setupLearningRateStrategy(), UserInputException);
 }

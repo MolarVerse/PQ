@@ -22,7 +22,6 @@
 
 #include "potential.hpp"
 
-#include "box.hpp"                   // for Box
 #include "coulombPotential.hpp"      // for CoulombPotential
 #include "nonCoulombPotential.hpp"   // for NonCoulombPotential
 

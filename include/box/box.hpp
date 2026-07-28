@@ -24,9 +24,7 @@
 
 #define _BOX_HPP_
 
-#include "staticMatrix.hpp"   // for StaticMatrix3x3
-#include "typeAliases.hpp"    // for diagonalMatrix
-#include "vector3d.hpp"       // for Vec3D
+#include "typeAliases.hpp"   // for diagonalMatrix
 
 namespace simulationBox
 {
