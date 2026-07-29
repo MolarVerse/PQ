@@ -27,6 +27,7 @@
 #include <utility>
 #include <vector>
 
+#include "timer.hpp"
 #include "typeAliases.hpp"
 
 namespace waterModel
@@ -126,7 +127,7 @@ namespace waterModel
         double getPartialCharge(pq::Atom &atom) const;
     };
 
-    class InterWater
+    class InterWater : public timings::Timer
     {
        public:
         InterWater();

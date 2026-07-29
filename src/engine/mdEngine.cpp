@@ -97,6 +97,12 @@ void MDEngine::run()
     _resetKinetics.setTimerName("Reset Kinetics");
     _timer.addTimer(_resetKinetics.getTimer());
 
+    _intraWater->setTimerName("Water Intra Potential");
+    _timer.addTimer(_intraWater->getTimer());
+
+    _interWater->setTimerName("Water Inter Potential");
+    _timer.addTimer(_interWater->getTimer());
+
     if (Settings::isQMActivated())
     {
         dynamic_cast<QMCapableEngine *>(this)->getQMRunner()->setTimerName(

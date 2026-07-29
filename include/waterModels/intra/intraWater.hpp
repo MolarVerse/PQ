@@ -24,11 +24,12 @@
 
 #define _INTRA_WATER_HPP_
 
+#include "timer.hpp"
 #include "typeAliases.hpp"
 
 namespace waterModel
 {
-    class IntraWater
+    class IntraWater : public timings::Timer
     {
        public:
         virtual ~IntraWater() = default;
