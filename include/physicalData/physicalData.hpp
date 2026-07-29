@@ -24,8 +24,7 @@
 
 #define _PHYSICAL_DATA_HPP_
 
-#include <functional>   // for _Bind_front_t, bind_front, function
-#include <vector>       // for vector
+#include <vector>   // for vector
 
 #include "timer.hpp"   // for Timer
 #include "typeAliases.hpp"
@@ -33,6 +32,23 @@
 namespace physicalData
 {
     pq::PhysicalData mean(std::vector<pq::PhysicalData> &physicalDataVector);
+
+    /**
+     * @struct KineticEnergyVirialTensor
+     *
+     * @brief KineticEnergyVirialTensor is a struct for storing kinetic energy
+     * and virial tensors
+     *
+     */
+    struct KineticEnergyVirialTensor
+    {
+        pq::tensor3D atomic;
+        pq::tensor3D molecular;
+
+        bool isAtomic = false;
+
+        const pq::tensor3D &getVirialTensor() const;
+    };
 
     /**
      * @class PhysicalData
@@ -70,10 +86,10 @@ namespace physicalData
         double _lowerDistanceConstraints = 0.0;
         double _upperDistanceConstraints = 0.0;
 
-        pq::Vec3D    _momentum;
-        pq::Vec3D    _angularMomentum;
-        pq::tensor3D _kineticEnergyAtomicTensor;
-        pq::tensor3D _kinEnergyMolTensor;
+        pq::Vec3D _momentum;
+        pq::Vec3D _angularMomentum;
+
+        KineticEnergyVirialTensor _kinEnergyVirialTensor;
 
         pq::tensor3D _virial;
         pq::tensor3D _stressTensor;
@@ -84,9 +100,6 @@ namespace physicalData
         void calculateTemperature(pq::SimBox &);
         void calculateKinetics(pq::SimBox &);
         void changeKineticVirialToAtomic();
-
-        std::function<pq::tensor3D()> getKinEnergyVirialTensor =
-            std::bind_front(&PhysicalData::getKinEnergyMolTensor, this);
 
         std::shared_ptr<PhysicalData> clone() const;
 
@@ -191,10 +204,11 @@ namespace physicalData
 
         [[nodiscard]] double getRingPolymerEnergy() const;
 
-        [[nodiscard]] pq::tensor3D getKinEnergyAtomTensor() const;
-        [[nodiscard]] pq::tensor3D getKinEnergyMolTensor() const;
-        [[nodiscard]] pq::tensor3D getVirial() const;
-        [[nodiscard]] pq::tensor3D getStressTensor() const;
+        [[nodiscard]] pq::tensor3D        getKinEnergyAtomTensor() const;
+        [[nodiscard]] pq::tensor3D        getKinEnergyMolTensor() const;
+        [[nodiscard]] const pq::tensor3D &getKinEnergyVirialTensor() const;
+        [[nodiscard]] pq::tensor3D        getVirial() const;
+        [[nodiscard]] pq::tensor3D        getStressTensor() const;
 
         [[nodiscard]] pq::Vec3D getMomentum() const;
         [[nodiscard]] pq::Vec3D getAngularMomentum() const;
