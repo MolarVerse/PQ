@@ -26,10 +26,7 @@
 #include <cstdlib>      // for system
 #include <format>       // for format
 #include <fstream>      // for ofstream
-#include <functional>   // for identity
-#include <ranges>       // for borrowed_iterator_t, __distance_fn
 #include <string>       // for string
-#include <vector>       // for vector
 
 #include "atom.hpp"              // for Atom
 #include "constants.hpp"         // for constants
@@ -37,7 +34,6 @@
 #include "qmSettings.hpp"        // for QMSettings
 #include "simulationBox.hpp"     // for SimulationBox
 #include "stringUtilities.hpp"   // for fileExists
-#include "vector3d.hpp"          // for Vec3D
 
 using QM::TurbomoleRunner;
 

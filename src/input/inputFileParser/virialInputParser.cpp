@@ -29,9 +29,7 @@
 #include "engine.hpp"            // for Engine
 #include "exceptions.hpp"        // for InputFileException, customException
 #include "molecularVirial.hpp"   // for VirialMolecular
-#include "physicalData.hpp"      // for PhysicalData
 #include "stringUtilities.hpp"   // for toLowerCopy
-#include "virial.hpp"            // for Virial
 
 using namespace input;
 using namespace virial;

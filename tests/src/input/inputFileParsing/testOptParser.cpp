@@ -26,7 +26,6 @@
 
 #include "exceptions.hpp"            // for InputFileException, customException
 #include "gtest/gtest.h"             // for Message, TestPartResult
-#include "inputFileParser.hpp"       // for readInput
 #include "optInputParser.hpp"        // for InputFileParserOptimizer
 #include "optimizerSettings.hpp"     // for OptimizerSettings
 #include "testInputFileReader.hpp"   // for TestInputFileReader

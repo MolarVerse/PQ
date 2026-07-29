@@ -24,11 +24,10 @@
 
 #define _NON_COULOMB_POTENTIAL_HPP_
 
-#include <any>       // for any
 #include <cstddef>   // for size_t
-#include <memory>    // for shared_ptr
 #include <vector>    // for vector
 
+#include "nonCoulombPair.hpp"
 #include "typeAliases.hpp"
 
 namespace potential
@@ -61,7 +60,7 @@ namespace potential
        public:
         virtual ~NonCoulombPotential() = default;
 
-        [[nodiscard]] virtual pq::SharedNonCoulPair getNonCoulPair(
+        [[nodiscard]] virtual std::shared_ptr<potential::NonCoulombPair> getNonCoulPair(
             const std::vector<size_t> &indices
         ) = 0;
 

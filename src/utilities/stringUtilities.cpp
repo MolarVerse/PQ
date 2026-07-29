@@ -26,11 +26,11 @@
 #include <cctype>       // for isspace
 #include <cmath>        // for isnan, isinf
 #include <cstdint>      // for uint_fast32_t and UINT32_MAX
+#include <filesystem>   // for is_regular_file
 #include <format>       // for format
-#include <fstream>      // IWYU pragma: keep for basic_istream, ifstream
-#include <functional>   // for identity
+#include <fstream>
 #include <ranges>   // for begin, end, operator|, views::split, views::transform
-#include <sstream>       // IWYU pragma: keep for basic_stringstream
+#include <sstream>
 #include <stdexcept>     // for out_of_range and invalid_argument
 #include <string>        // for string
 #include <string_view>   // for string_view
@@ -207,6 +207,9 @@ std::string utilities::firstLetterToUpperCaseCopy(std::string myString)
  */
 bool utilities::fileExists(const std::string &filename)
 {
+    if (!std::filesystem::is_regular_file(filename))
+        return false;
+
     std::ifstream file(filename);
     return file.good();
 }

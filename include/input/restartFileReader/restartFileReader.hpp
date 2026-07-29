@@ -27,7 +27,6 @@
 #include <fstream>   // for ifstream
 #include <memory>    // for unique_ptr, make_unique
 #include <string>    // for string
-#include <vector>    // for vector
 
 #include "atomSection.hpp"          // for AtomSection
 #include "restartFileSection.hpp"   // for RstFileSection

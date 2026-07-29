@@ -24,6 +24,6 @@
 
 #define _MATRIX_HPP_
 
-#include "matrixClass.hpp"
+#include "matrixClass.hpp"   // IWYU pragma: export
 
-#endif // _MATRIX_HPP_
+#endif   // _MATRIX_HPP_

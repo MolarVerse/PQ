@@ -25,8 +25,9 @@
 #include <functional>   // for function
 
 #include "constants/internalConversionFactors.hpp"   // for _PRESSURE_FACTOR_
-#include "physicalData.hpp"                          // for PhysicalData
-#include "simulationBox.hpp"                         // for SimulationBox
+#include "manostatSettings.hpp"   // for ManostatType, Isotropy
+#include "physicalData.hpp"       // for PhysicalData
+#include "simulationBox.hpp"      // for SimulationBox
 
 using namespace manostat;
 using namespace simulationBox;

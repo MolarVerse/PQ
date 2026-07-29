@@ -22,8 +22,6 @@
 
 #include <gtest/gtest.h>   // for Test, EXPECT_EQ, TestInfo (pt...
 
-#include <memory>   // for allocator
-
 #include "coulombPotential.hpp"          // for CoulombPotential, potential
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
 #include "gtest/gtest.h"                 // for Message, TestPartResult

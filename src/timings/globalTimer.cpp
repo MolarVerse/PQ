@@ -23,7 +23,6 @@
 #include "globalTimer.hpp"
 
 #include <algorithm>   // for ranges::sort
-#include <ranges>      // for ranges::sort
 
 #include "timer.hpp"
 

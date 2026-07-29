@@ -22,7 +22,6 @@
 
 #include "testSimulationBox.hpp"
 
-#include <algorithm>   // for copy
 #include <cstddef>     // for size_t, std
 #include <map>         // for map
 #include <optional>    // for optional
@@ -33,7 +32,6 @@
 #include "gtest/gtest.h"    // for Message, TestPartResult, AssertionRe...
 #include "potentialSettings.hpp"   // for PotentialSettings
 #include "throwWithMessage.hpp"    // for throwWithMessage
-#include "vector3d.hpp"            // for Vec3D
 #include "vectorNear.hpp"          // for EXPECT_VECTOR_NEAR
 
 /**

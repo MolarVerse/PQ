@@ -30,21 +30,20 @@
 #include "berendsenManostat.hpp"                     // for BerendsenManostat
 #include "constants/internalConversionFactors.hpp"   // for _PRESSURE_FACTOR_
 #include "exceptions.hpp"                            // for ManostatException
-#include "gtest/gtest.h"           // for Message, TestPartResult
-#include "manostatSettings.hpp"    // for ManostatSettings
-#include "mathUtilities.hpp"       // for compare
-#include "molecule.hpp"            // for Molecule
-#include "potentialSettings.hpp"   // for PotentialSettings
+#include "gtest/gtest.h"                     // for Message, TestPartResult
+#include "manostatSettings.hpp"              // for ManostatType, Isotropy
+#include "mathUtilities.hpp"                 // for compare
+#include "molecule.hpp"                      // for Molecule
+#include "potentialSettings.hpp"             // for PotentialSettings
 #include "stochasticRescalingManostat.hpp"   // for StochasticRescalingManostat
 #include "thermostatSettings.hpp"            // for ThermostatSettings
-#include "throwWithMessage.hpp"    // for EXPECT_THROW_MSG
-#include "timingsSettings.hpp"     // for TimingsSettings
-#include "vector3d.hpp"            // for Vector3D, Vec3D
+#include "throwWithMessage.hpp"              // for EXPECT_THROW_MSG
+#include "timingsSettings.hpp"               // for TimingsSettings
 
 class TestableStochasticRescalingManostat
     : public manostat::StochasticRescalingManostat
 {
-  public:
+   public:
     using StochasticRescalingManostat::StochasticRescalingManostat;
 
     void setPressure(const double pressure) { _pressure = pressure; }
@@ -189,10 +188,12 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
     settings::TimingsSettings::setTimeStep(0.5);
     _manostat = new manostat::BerendsenManostat(1.0, 0.1, 4.5);
 
-    const auto scaleFactors = linearAlgebra::Vec3D(::pow(
-        1.0 - 4.5 * 0.5 / 0.1 * (1.0 - 3.0 * constants::_PRESSURE_FACTOR_),
-        1.0 / 3.0
-    ));
+    const auto scaleFactors = linearAlgebra::Vec3D(
+        ::pow(
+            1.0 - 4.5 * 0.5 / 0.1 * (1.0 - 3.0 * constants::_PRESSURE_FACTOR_),
+            1.0 / 3.0
+        )
+    );
 
     _manostat->applyManostat(*_box, *_data);
     auto boxNew = _box->getBoxDimensions();
@@ -201,11 +202,13 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
     EXPECT_NEAR(boxNew[0], (boxOld * scaleFactors)[0], 1e-8);
     EXPECT_NEAR(boxNew[1], (boxOld * scaleFactors)[1], 1e-8);
     EXPECT_NEAR(boxNew[2], (boxOld * scaleFactors)[2], 1e-8);
-    EXPECT_TRUE(utilities::compare(
-        _box->getMolecule(0).getAtomPosition(0),
-        linearAlgebra::Vec3D(1.0, 0.0, 0.0) * scaleFactors,
-        1e-9
-    ));
+    EXPECT_TRUE(
+        utilities::compare(
+            _box->getMolecule(0).getAtomPosition(0),
+            linearAlgebra::Vec3D(1.0, 0.0, 0.0) * scaleFactors,
+            1e-9
+        )
+    );
 }
 
 /**
@@ -328,9 +331,8 @@ TEST_F(TestManostat, stochasticRescalingMuUsesLengthScaling)
     auto manostat = TestableStochasticRescalingManostat(7.0, 0.25, 0.12);
     manostat.setPressure(1.0);
 
-    const auto mu = manostat.calculateMu(10.0);
-    const auto expected =
-        ::exp(-(0.12 * 0.5 / 0.25) * (7.0 - 1.0) / 3.0);
+    const auto mu       = manostat.calculateMu(10.0);
+    const auto expected = ::exp(-(0.12 * 0.5 / 0.25) * (7.0 - 1.0) / 3.0);
 
     EXPECT_DOUBLE_EQ(mu[0][0], expected);
     EXPECT_DOUBLE_EQ(mu[1][1], expected);
@@ -354,11 +356,10 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
     molecule.setNumberOfAtoms(2);
     molecule.setMolMass(2.0);
 
-    const auto addAtom =
-        [this, &molecule](
-            const linearAlgebra::Vec3D &position,
-            const linearAlgebra::Vec3D &velocity
-        )
+    const auto addAtom = [this, &molecule](
+                             const linearAlgebra::Vec3D &position,
+                             const linearAlgebra::Vec3D &velocity
+                         )
     {
         auto atom = std::make_shared<simulationBox::Atom>();
         atom->setMass(1.0);
@@ -376,29 +377,31 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
 
     _manostat = new manostat::StochasticRescalingManostat(7.0, 0.25, 0.12);
 
-    const auto mu =
-        ::exp(-(0.12 * 0.5 / 0.25) * (7.0 - 0.0) / 3.0);
+    const auto mu = ::exp(-(0.12 * 0.5 / 0.25) * (7.0 - 0.0) / 3.0);
     const auto expectedCenterOfMassVelocity =
         linearAlgebra::Vec3D(3.0 / mu, 0.0, 0.0);
-    const auto expectedRelativeVelocity =
-        linearAlgebra::Vec3D(2.0, 0.0, 0.0);
+    const auto expectedRelativeVelocity = linearAlgebra::Vec3D(2.0, 0.0, 0.0);
 
     _manostat->applyManostat(*_box, *_data);
 
-    const auto velocity0 = _box->getMolecule(0).getAtomVelocity(0);
-    const auto velocity1 = _box->getMolecule(0).getAtomVelocity(1);
+    const auto velocity0            = _box->getMolecule(0).getAtomVelocity(0);
+    const auto velocity1            = _box->getMolecule(0).getAtomVelocity(1);
     const auto centerOfMassVelocity = (velocity0 + velocity1) / 2.0;
 
-    EXPECT_TRUE(utilities::compare(
-        centerOfMassVelocity,
-        expectedCenterOfMassVelocity,
-        1e-12
-    ));
-    EXPECT_TRUE(utilities::compare(
-        velocity1 - velocity0,
-        expectedRelativeVelocity,
-        1e-12
-    ));
+    EXPECT_TRUE(
+        utilities::compare(
+            centerOfMassVelocity,
+            expectedCenterOfMassVelocity,
+            1e-12
+        )
+    );
+    EXPECT_TRUE(
+        utilities::compare(
+            velocity1 - velocity0,
+            expectedRelativeVelocity,
+            1e-12
+        )
+    );
 }
 
 /**
@@ -448,7 +451,11 @@ TEST_F(TestManostat, berendsen_isotropy)
 TEST_F(TestManostat, semiIsotropicBerendsen_isotropy)
 {
     auto bm = manostat::SemiIsotropicBerendsenManostat(
-        1.0, 0.1, 4.5, 2u, std::vector<size_t>{0u, 1u}
+        1.0,
+        0.1,
+        4.5,
+        2u,
+        std::vector<size_t>{0u, 1u}
     );
     EXPECT_EQ(bm.getIsotropy(), settings::Isotropy::SEMI_ISOTROPIC);
     EXPECT_EQ(bm.getManostatType(), settings::ManostatType::BERENDSEN);

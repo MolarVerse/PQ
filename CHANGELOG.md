@@ -18,6 +18,10 @@ implementation changes are documented in
   forces.
 - Add `mshake-iter` and `mshake-tolerance` for controlling M-SHAKE convergence.
 
+### Cleanup
+
+- Clean include directives - IWYU
+
 ### Changes
 
 - Rename `mace_model_size` to `mace_model`; the old keyword remains available

@@ -23,15 +23,12 @@
 #include "mdEngine.hpp"
 
 #include "constants/conversionFactors.hpp"   // for _FS_TO_PS_
-#include "logOutput.hpp"                     // for LogOutput
 #include "outputFileSettings.hpp"            // for OutputFileSettings
 #include "progressbar.hpp"                   // for progressbar
 #include "qmmdEngine.hpp"                    // for QMMDEngine
 #include "referencesOutput.hpp"              // for ReferencesOutput
 #include "settings.hpp"                      // for Settings
-#include "stdoutOutput.hpp"                  // for StdoutOutput
 #include "timingsSettings.hpp"               // for TimingsSettings
-#include "vector3d.hpp"                      // for norm
 
 using namespace engine;
 using namespace output;

@@ -27,7 +27,6 @@
 #include <cstddef>   // for size_t
 #include <fstream>   // for ifstream
 #include <string>    // for string
-#include <vector>    // for vector
 
 #include "typeAliases.hpp"
 

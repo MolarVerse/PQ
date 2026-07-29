@@ -24,7 +24,6 @@
 
 #define _TIMINGS_SECTION_HPP_
 
-#include <chrono>   // IWYU pragma: keep for time_point, milliseconds, nanoseconds
 #include <cstddef>   // for size_t
 
 #include "typeAliases.hpp"

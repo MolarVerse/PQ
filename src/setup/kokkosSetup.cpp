@@ -24,17 +24,14 @@
 
 #include <iostream>
 
-#include "constants/conversionFactors.hpp"
+#include "constants.hpp"
 #include "coulombWolf.hpp"
 #include "engine.hpp"
 #include "exceptions.hpp"
 #include "forceFieldNonCoulomb.hpp"
-#include "mdEngine.hpp"
-#include "nonCoulombPotential.hpp"
 #include "potentialSettings.hpp"
 #include "settings.hpp"
 #include "simulationBox_kokkos.hpp"
-#include "timingsSettings.hpp"
 #include "typeAliases.hpp"
 
 using namespace setup;

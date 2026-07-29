@@ -33,7 +33,6 @@
 #include "molecule.hpp"          // for Molecule
 #include "simulationBox.hpp"     // for SimulationBox
 #include "timingsSettings.hpp"   // for TimingsSettings
-#include "vector3d.hpp"          // for Vec3D
 #include "velocityVerlet.hpp"    // for VelocityVerlet
 
 /**

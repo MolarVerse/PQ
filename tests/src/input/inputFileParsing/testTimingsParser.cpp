@@ -22,13 +22,11 @@
 
 #include <gtest/gtest.h>   // for TestInfo (ptr only), InitGoogleTest, RUN_ALL_TESTS, EXPECT_EQ
 
-#include <iosfwd>   // for std
 #include <string>   // for string, allocator, basic_string
 #include <vector>   // for vector
 
 #include "exceptions.hpp"            // for InputFileException
 #include "gtest/gtest.h"             // for Message, TestPartResult, testing
-#include "inputFileParser.hpp"       // for readInput
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
 #include "timingsInputParser.hpp"
