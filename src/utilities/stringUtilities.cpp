@@ -22,11 +22,12 @@
 
 #include "stringUtilities.hpp"
 
-#include <algorithm>   // for __for_each_fn
-#include <cctype>      // for isspace
-#include <cmath>       // for isnan, isinf
-#include <cstdint>     // for uint_fast32_t and UINT32_MAX
-#include <format>      // for format
+#include <algorithm>    // for __for_each_fn
+#include <cctype>       // for isspace
+#include <cmath>        // for isnan, isinf
+#include <cstdint>      // for uint_fast32_t and UINT32_MAX
+#include <filesystem>   // for is_regular_file
+#include <format>       // for format
 #include <fstream>
 #include <limits>
 #include <ranges>   // for begin, end, operator|, views::split, views::transform
@@ -207,6 +208,9 @@ std::string utilities::firstLetterToUpperCaseCopy(std::string myString)
  */
 bool utilities::fileExists(const std::string &filename)
 {
+    if (!std::filesystem::is_regular_file(filename))
+        return false;
+
     std::ifstream file(filename);
     return file.good();
 }
