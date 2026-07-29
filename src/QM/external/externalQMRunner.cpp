@@ -67,23 +67,23 @@ void ExternalQMRunner::run(
 
     _periodicity = per;
 
-    startTimingsSection("Write coordinates");
+    startTimingsSection("Write Coordinates");
     writeCoordsFile(simBox);
-    stopTimingsSection("Write coordinates");
+    stopTimingsSection("Write Coordinates");
 
     if (Settings::isHybridJobtype())
     {
-        startTimingsSection("Write pointcharges");
+        startTimingsSection("Write Pointcharges");
         writePointChargeFile(simBox);
-        stopTimingsSection("Write pointcharges");
+        stopTimingsSection("Write Pointcharges");
     }
 
     std::jthread timeoutThread{[this](const std::stop_token stopToken)
                                { throwAfterTimeout(stopToken); }};
 
-    startTimingsSection("Execute external QM Runner");
+    startTimingsSection("Execute External QM Runner");
     execute(simBox);
-    stopTimingsSection("Execute external QM Runner");
+    stopTimingsSection("Execute External QM Runner");
 
     timeoutThread.request_stop();
 

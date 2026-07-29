@@ -454,6 +454,8 @@ void PotentialCellList::calculateOuterToOuterForces(
     CellList      &cellList
 )
 {
+    startTimingsSection("InterNonBondedOuterToOuter");
+
     const auto box             = simBox.getBoxPtr();
     const auto isWaterMolecule = [](const std::vector<size_t> &waterMolecules,
                                     const size_t               molIndex) -> bool
@@ -555,6 +557,8 @@ void PotentialCellList::calculateOuterToOuterForces(
 
     physicalData.addCoulombEnergy(totalCoulombEnergy);
     physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
+
+    stopTimingsSection("InterNonBondedOuterToOuter");
 }
 
 void PotentialCellList::calculateHotspotSmoothingMMForces(
