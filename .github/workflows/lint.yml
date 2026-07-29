@@ -1,0 +1,62 @@
+name: LINT
+
+on:
+  pull_request:
+    branches:
+      - '*'
+    paths:
+      - '.github/workflows/ci_lint.yml'
+      - '.cmake/**'
+      - 'apps/**'
+      - 'include/**'
+      - 'src/**'
+      - 'CMakeLists.txt'
+  push:
+    branches:
+      - dev
+      - main
+    paths:
+      - '.github/workflows/ci_lint.yml'
+      - '.cmake/**'
+      - 'apps/**'
+      - 'include/**'
+      - 'src/**'
+      - 'CMakeLists.txt'
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build tools
+        run: |
+          sudo apt update
+          sudo apt install -y gcc-13 g++-13 mold ninja-build clangd-20
+          sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-20 100
+        shell: bash
+
+      - name: Setup python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.12'
+
+      - name: Install clangd-tidy
+        run: python -m pip install clangd-tidy
+        shell: bash
+
+      - name: Configure (generate compile_commands.json)
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+            -DBUILD_WITH_NATIVE=Off
+        env:
+          CC: gcc-13
+          CXX: g++-13
+
+      - name: Run clangd-tidy
+        run: |
+          clangd-tidy $(find src/ apps/ include/ -name "*.cpp" ! -name "moc_*.cpp" 2>/dev/null) -p=build
