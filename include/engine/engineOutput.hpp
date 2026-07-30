@@ -90,12 +90,18 @@ namespace engine
         EngineOutput();
 
         void writeEnergyFile(const size_t step, const pq::PhysicalData &);
-        void writeInstantEnergyFile(const size_t step, const pq::PhysicalData &);
+        void writeInstantEnergyFile(
+            const size_t step,
+            const pq::PhysicalData &
+        );
         void writeXyzFile(pq::SimBox &);
         void writeVelFile(pq::SimBox &);
         void writeForceFile(pq::SimBox &);
         void writeChargeFile(pq::SimBox &);
-        void writeInfoFile(const double simulationTime, const pq::PhysicalData &);
+        void writeInfoFile(
+            const double simulationTime,
+            const pq::PhysicalData &
+        );
         void writeRstFile(pq::SimBox &, const pq::Thermostat &, const size_t);
         void writeOptRstFile(pq::SimBox &, const size_t);
 
@@ -105,12 +111,15 @@ namespace engine
         void writeBoxFile(const size_t, const pq::Box &);
         void writeOptFile(const size_t, const pq::Optimizer &);
 
-        void writeRingPolymerRstFile(std::vector<pq::SimBox> &, const size_t);
+        void writeRingPolymerRstFile(std::vector<pq::SimBox> &);
         void writeRingPolymerXyzFile(std::vector<pq::SimBox> &);
         void writeRingPolymerVelFile(std::vector<pq::SimBox> &);
         void writeRingPolymerForceFile(std::vector<pq::SimBox> &);
         void writeRingPolymerChargeFile(std::vector<pq::SimBox> &);
-        void writeRingPolymerEnergyFile(const size_t, const std::vector<pq::PhysicalData> &);
+        void writeRingPolymerEnergyFile(
+            const size_t,
+            const std::vector<pq::PhysicalData> &
+        );
 
         void writeTimingsFile(timings::GlobalTimer &);
 
