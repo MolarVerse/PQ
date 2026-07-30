@@ -1,0 +1,1 @@
+- Zero-temperature rescaling remains finite and rejects positive targets that cannot be reached from zero kinetic energy.
