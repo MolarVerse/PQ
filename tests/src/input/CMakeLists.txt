@@ -27,6 +27,7 @@ foreach(source_file ${source_files})
         gtest
         gmock
         pq_test_main
+        testUtils
     )
     add_test(
         NAME ${test_name}
