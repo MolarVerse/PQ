@@ -37,6 +37,11 @@ namespace test
         const std::unique_ptr<engine::Engine>& engine,
         const std::type_info&                  expectedType
     );
+
+    void checkPotentialType(
+        const potential::Potential* potential,
+        const std::type_info&       expectedType
+    );
 }   // namespace test
 
 #endif   // _TEST_UTILS_HPP_

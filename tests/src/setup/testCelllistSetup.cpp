@@ -29,6 +29,7 @@
 #include "potentialCellList.hpp"   // for PotentialCellList
 #include "potentialSettings.hpp"
 #include "testSetup.hpp"   // for TestSetup
+#include "testUtils.hpp"   // for checkPotentialType
 
 using namespace setup;
 
@@ -41,8 +42,8 @@ TEST_F(TestSetup, setupCellList)
     CellListSetup cellListSetup(*_engine);
     cellListSetup.setup();
 
-    EXPECT_EQ(
-        typeid((_engine->getPotential())),
+    test::checkPotentialType(
+        &_engine->getPotential(),
         typeid(potential::PotentialBruteForce)
     );
 
@@ -52,8 +53,8 @@ TEST_F(TestSetup, setupCellList)
     _engine->getCellList().activate();
     cellListSetup.setup();
 
-    EXPECT_EQ(
-        typeid((_engine->getPotential())),
+    test::checkPotentialType(
+        &_engine->getPotential(),
         typeid(potential::PotentialCellList)
     );
 

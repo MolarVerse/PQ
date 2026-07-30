@@ -43,4 +43,19 @@ namespace test
         const auto& engineRef = *engine;
         EXPECT_EQ(typeid(engineRef), expectedType);
     }
+
+    /**
+     * @brief check if potential is of expected type
+     *
+     * @param potential
+     * @param expectedType
+     */
+    void checkPotentialType(
+        const potential::Potential* potential,
+        const std::type_info&       expectedType
+    )
+    {
+        ASSERT_NE(potential, nullptr);
+        EXPECT_EQ(typeid(*potential), expectedType);
+    }
 }   // namespace test
