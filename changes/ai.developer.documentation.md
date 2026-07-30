@@ -1,0 +1,1 @@
+- add claude code and AI agents instructions
