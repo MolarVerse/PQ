@@ -43,6 +43,11 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: install python dependencies
+        run: |
+          python -m pip install numpy
+        shell: bash
+
       - name: Install clangd-tidy
         run: python -m pip install clangd-tidy
         shell: bash
