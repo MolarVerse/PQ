@@ -1,35 +1,58 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -o pipefail
 
-# scripts/clangd_tidy.sh
-#
-# Runs clangd-tidy either on all source files, or only on files changed
-# relative to HEAD.
-#
-# Usage:
-#   scripts/clangd_tidy.sh          # only changed .cpp files
-#   scripts/clangd_tidy.sh --all    # all .cpp files under src/
+LOGFILE="clangd-tidy-report.log"
+# Only stdout goes to the log file; stderr (where --tqdm draws its
+# progress bar via carriage returns) stays on the terminal only, so
+# the log file doesn't fill up with \r-based redraw noise.
+exec > >(tee "$LOGFILE")
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
-BUILD_DIR="${ROOT_DIR}/.build"
+echo "Clangd-Tidy:"
 
-cd "${ROOT_DIR}"
+all_files=false
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+    --all)
+        all_files=true
+        shift
+        ;;
+    *)
+        echo "Unknown option: $1"
+        exit 1
+        ;;
+    esac
+done
 
-MODE="changed"
-if [[ "${1:-}" == "--all" ]]; then
-    MODE="all"
-fi
-
-if [[ "${MODE}" == "all" ]]; then
-    mapfile -t FILES < <(find "${ROOT_DIR}/src" -name '*.cpp' ! -name 'moc_*.cpp')
+files=()
+if $all_files; then
+    echo "  Mode: all tracked C++ files"
+    while IFS= read -r f; do
+        [[ -f "$f" ]] && files+=("$f")
+    done < <(git ls-files '*.cpp' '*.cxx' '*.cc' '*.c' '*.h' '*.hpp' '*.hxx' -- ':!external')
 else
-    mapfile -t FILES < <(git diff --name-only --diff-filter=ACMR HEAD -- '*.cpp' ':!*moc_*.cpp')
+    echo "  Mode: changed files since origin/dev"
+    while IFS=$'\t' read -r status old new; do
+        case "$status" in
+        D) ;;
+        R*) [[ -f "$new" ]] && files+=("$new") ;;
+        *) [[ -f "$old" ]] && files+=("$old") ;;
+        esac
+    done < <(git diff --name-status "$(git merge-base HEAD origin/dev)")
+
+    # Filter to C++ files only (changed mode may include non-source files)
+    # and exclude anything under external/
+    cpp_files=()
+    for f in "${files[@]}"; do
+        [[ "$f" == external/* ]] && continue
+        [[ "$f" =~ \.(cpp|cxx|cc|c|h|hpp|hxx)$ ]] && cpp_files+=("$f")
+    done
+    files=("${cpp_files[@]}")
 fi
 
-if [[ ${#FILES[@]} -eq 0 ]]; then
-    echo "No files to lint."
+if [[ ${#files[@]} -eq 0 ]]; then
+    echo "  No files to check."
     exit 0
 fi
 
-clangd-tidy "${FILES[@]}" -p="${BUILD_DIR}" --tqdm
+echo "  Files: ${#files[@]}"
+clangd-tidy "${files[@]}" -p=. --tqdm -j3

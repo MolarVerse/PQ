@@ -24,10 +24,10 @@
 
 #include <memory>
 
-#include "coulombPotential.hpp"
-#include "engine.hpp"
-#include "nonCoulombPotential.hpp"
-#include "qmRunner.hpp"
+#include "coulombPotential.hpp"   // IWYU pragma: keep -- needed for explicit template instantiation
+#include "engine.hpp"   // IWYU pragma: keep -- needed for explicit template instantiation
+#include "nonCoulombPotential.hpp"   // IWYU pragma: keep -- needed for explicit template instantiation
+#include "qmRunner.hpp"   // IWYU pragma: keep -- needed for explicit template instantiation
 
 namespace test
 {
