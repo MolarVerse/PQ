@@ -44,10 +44,9 @@
 #include "progressbar.hpp"
 #include "referencesOutput.hpp"
 #include "settings.hpp"
-#include "steepestDescent.hpp"
 #include "stdoutOutput.hpp"
+#include "steepestDescent.hpp"
 #include "timingsSettings.hpp"
-#include "timingsOutput.hpp"
 
 using namespace engine;
 using namespace opt;
@@ -66,7 +65,7 @@ void HessianEngine::run()
         runOptimization();
     }
 
-    auto builder   = setupHessianBuilder();
+    auto builder = setupHessianBuilder();
 
     const auto hessian = builder->build(*evaluator, *_simulationBox);
 
@@ -121,7 +120,7 @@ pq::SharedHessianBuilder HessianEngine::setupHessianBuilder() const
 
 void HessianEngine::setupOptimization(const pq::SharedEvaluator &evaluator)
 {
-    _evaluator             = evaluator;
+    _evaluator            = evaluator;
     _learningRateStrategy = setupLearningRateStrategy();
     _optimizer            = setupEmptyOptimizer();
 
@@ -162,10 +161,12 @@ void HessianEngine::runOptimization()
     }
 
     if (!_converged)
-        throw OptException(std::format(
-            "Optimizer did not converge after {} epochs.",
-            _optimizer->getNEpochs()
-        ));
+        throw OptException(
+            std::format(
+                "Optimizer did not converge after {} epochs.",
+                _optimizer->getNEpochs()
+            )
+        );
 
     if (_optStopped)
     {
@@ -420,12 +421,14 @@ void HessianEngine::setupMinMaxLearningRate(
     const auto maxLR = OptimizerSettings::getMaxLearningRate();
 
     if (maxLR.has_value() && minLR >= maxLR.value())
-        throw UserInputException(std::format(
-            "The minimum learning rate {} is greater or equal to the "
-            "maximum learning rate {}, which is not allowed.",
-            minLR,
-            maxLR.value()
-        ));
+        throw UserInputException(
+            std::format(
+                "The minimum learning rate {} is greater or equal to the "
+                "maximum learning rate {}, which is not allowed.",
+                minLR,
+                maxLR.value()
+            )
+        );
 
     learningRate->setMinLearningRate(minLR);
     learningRate->setMaxLearningRate(maxLR);
@@ -433,18 +436,24 @@ void HessianEngine::setupMinMaxLearningRate(
 
 void HessianEngine::writeOptimizationSetupInfo()
 {
-    _engineOutput.getLogOutput().writeSetupInfo(std::format(
-        "Optimize before Hessian:    {}",
-        HessianSettings::optimizeBeforeHessian() ? "true" : "false"
-    ));
-    _engineOutput.getLogOutput().writeSetupInfo(std::format(
-        "Optimizer:                  {}",
-        string(OptimizerSettings::getOptimizer())
-    ));
-    _engineOutput.getLogOutput().writeSetupInfo(std::format(
-        "Learning rate strategy:     {}",
-        string(OptimizerSettings::getLearningRateStrategy())
-    ));
+    _engineOutput.getLogOutput().writeSetupInfo(
+        std::format(
+            "Optimize before Hessian:    {}",
+            HessianSettings::optimizeBeforeHessian() ? "true" : "false"
+        )
+    );
+    _engineOutput.getLogOutput().writeSetupInfo(
+        std::format(
+            "Optimizer:                  {}",
+            string(OptimizerSettings::getOptimizer())
+        )
+    );
+    _engineOutput.getLogOutput().writeSetupInfo(
+        std::format(
+            "Learning rate strategy:     {}",
+            string(OptimizerSettings::getLearningRateStrategy())
+        )
+    );
     _engineOutput.getLogOutput().writeEmptyLine();
 }
 
@@ -453,9 +462,7 @@ void HessianEngine::writeHessian(const pq::HessianMatrix &hessian) const
     std::ofstream file(HessianSettings::getHessianFile());
 
     if (file.fail())
-        throw UserInputException(
-            "Could not open Hessian file for writing."
-        );
+        throw UserInputException("Could not open Hessian file for writing.");
 
     file << std::scientific << std::setprecision(16);
 
