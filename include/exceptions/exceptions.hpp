@@ -375,6 +375,19 @@ namespace customException
         const char *what() const throw() override;
     };
 
+    /**
+     * @class PhysicalDataException inherits from CustomException
+     *
+     * @brief Exception for physical data errors
+     */
+    class PhysicalDataException : public CustomException
+    {
+       public:
+        using CustomException::CustomException;
+
+        const char *what() const throw() override;
+    };
+
 }   // namespace customException
 
 #endif   // _EXCEPTIONS_HPP_
