@@ -1,0 +1,1 @@
+- Require regular pull requests to add audience-qualified changelog entries.
