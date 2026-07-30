@@ -111,7 +111,7 @@ namespace engine
         void writeBoxFile(const size_t, const pq::Box &);
         void writeOptFile(const size_t, const pq::Optimizer &);
 
-        void writeRingPolymerRstFile(std::vector<pq::SimBox> &, const size_t);
+        void writeRingPolymerRstFile(std::vector<pq::SimBox> &);
         void writeRingPolymerXyzFile(std::vector<pq::SimBox> &);
         void writeRingPolymerVelFile(std::vector<pq::SimBox> &);
         void writeRingPolymerForceFile(std::vector<pq::SimBox> &);

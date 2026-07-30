@@ -299,13 +299,10 @@ void EngineOutput::writeOptFile(
  * @param simulationBox
  * @param step
  */
-void EngineOutput::writeRingPolymerRstFile(
-    std::vector<SimulationBox> &beads,
-    const size_t                step
-)
+void EngineOutput::writeRingPolymerRstFile(std::vector<SimulationBox> &beads)
 {
     startTimingsSection("RingPolymerRestartFileOutput");
-    _rpmdRstFileOutput->write(beads, step);
+    _rpmdRstFileOutput->write(beads);
     stopTimingsSection("RingPolymerRestartFileOutput");
 }
 

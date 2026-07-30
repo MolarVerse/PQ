@@ -41,17 +41,12 @@ using namespace settings;
  * @param simBox
  * @param step
  */
-void RingPolymerRestartFileOutput::write(
-    std::vector<SimulationBox> &beads,
-    const size_t                step
-)
+void RingPolymerRestartFileOutput::write(std::vector<SimulationBox> &beads)
 {
     std::ostringstream buffer;
 
     _fp.close();
     _fp.open(_fileName);
-
-    buffer << "Step " << step << '\n';
 
     const auto nBeads = RingPolymerSettings::getNumberOfBeads();
 
