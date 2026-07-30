@@ -5,22 +5,30 @@ on:
     branches:
       - '*'
     paths:
-      - '.github/workflows/ci_lint.yml'
+      - '.github/workflows/ci_build.yml'
       - '.cmake/**'
       - 'apps/**'
       - 'include/**'
       - 'src/**'
+      - 'integration_tests/**'
+      - 'tests/**'
+      - 'benchmarks/CMakeLists.txt'
+      - 'benchmarks/src/**'
       - 'CMakeLists.txt'
   push:
     branches:
       - dev
       - main
     paths:
-      - '.github/workflows/ci_lint.yml'
+      - '.github/workflows/ci_build.yml'
       - '.cmake/**'
       - 'apps/**'
       - 'include/**'
       - 'src/**'
+      - 'integration_tests/**'
+      - 'tests/**'
+      - 'benchmarks/CMakeLists.txt'
+      - 'benchmarks/src/**'
       - 'CMakeLists.txt'
   workflow_dispatch:
 
