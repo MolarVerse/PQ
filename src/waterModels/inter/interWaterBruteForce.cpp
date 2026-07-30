@@ -20,15 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <utility>
-#include <vector>
-
-#include "atom.hpp"               // for Atom
-#include "coulombPotential.hpp"   // for CoulombPotential
-#include "interWater.hpp"         // for InterWater
-#include "physicalData.hpp"       // for PhysicalData
-#include "potential.hpp"          // for ChargeTag
-#include "simulationBox.hpp"      // for SimulationBox
+#include "interWater.hpp"   // for InterWater
+#include "physicalData.hpp"
+#include "potential.hpp"   // for ChargeTag
 #include "typeAliases.hpp"
 
 using namespace potential;
@@ -44,10 +38,10 @@ using enum simulationBox::HybridZone;
  * and non-Coulomb contributions, and adds forces directly to the atoms.
  */
 void InterWaterStrategyBruteForce::calculate(
-    const InterWaterState  &state,
-    SimBox                 &simBox,
-    PhysicalData           &physicalData,
-    const SharedCoulombPot &coulombPotential,
+    const InterWaterState      &state,
+    SimBox                     &simBox,
+    physicalData::PhysicalData &physicalData,
+    const SharedCoulombPot     &coulombPotential,
     CellList &
 )
 {

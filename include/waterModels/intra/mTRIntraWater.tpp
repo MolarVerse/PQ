@@ -20,9 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MTR_INTRA_WATER_TPP_HPP_
+#ifndef _MTR_INTRA_WATER_TPP_
 
-#define _MTR_INTRA_WATER_TPP_HPP_
+#define _MTR_INTRA_WATER_TPP_
 
 #include <cmath>
 
@@ -30,11 +30,10 @@
 #include "mTRIntraWater.hpp"    // for MTRIntraWater
 #include "physicalData.hpp"     // for PhysicalData
 #include "simulationBox.hpp"    // for SimulationBox
-#include "vector3d.hpp"         // for norm
 
 void waterModel::MTRIntraWater::calculate(
-    pq::SimBox&       box,
-    pq::PhysicalData& physicalData
+    simulationBox::SimulationBox& box,
+    physicalData::PhysicalData&   physicalData
 )
 {
     startTimingsSection("Calculate Potential");
@@ -130,4 +129,4 @@ void waterModel::MTRIntraWater::calculate(
     stopTimingsSection("Calculate Potential");
 }
 
-#endif   //  _MTR_INTRA_WATER_TPP_HPP_
+#endif   //  _MTR_INTRA_WATER_TPP_

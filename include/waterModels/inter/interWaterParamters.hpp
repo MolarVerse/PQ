@@ -20,14 +20,15 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INTER_WATER_PARAMETERS_TPP_HPP_
+#ifndef _INTER_WATER_PARAMETERS_HPP_
 
-#define _INTER_WATER_PARAMETERS_TPP_HPP_
+#define _INTER_WATER_PARAMETERS_HPP_
 
 #include <concepts>
 #include <memory>
 #include <type_traits>
 
+#include "defaults.hpp"
 #include "guffCoefficients.hpp"   // for Guff coefficients
 #include "interWater.hpp"         // for InterWater
 #include "lennardJonesPair.hpp"   // for LennardJonesPair
@@ -240,4 +241,4 @@ namespace waterModel
 
 }   // namespace waterModel
 
-#endif   //  _INTER_WATER_PARAMETERS_TPP_HPP_
+#endif   //  _INTER_WATER_PARAMETERS_HPP_

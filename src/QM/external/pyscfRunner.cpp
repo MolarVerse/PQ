@@ -28,7 +28,6 @@
 #include <fstream>   // for ofstream, operator<<, basic_ostream
 #include <string>    // for allocator, string, operator+, operator<<
 
-#include "atom.hpp"              // for Atom
 #include "exceptions.hpp"        // for InputFileException
 #include "qmSettings.hpp"        // for QMSettings
 #include "simulationBox.hpp"     // for SimulationBox
@@ -70,7 +69,7 @@ void PySCFRunner::writeCoordsFile(SimulationBox &box)
  * @brief executes the qm script of the external program
  *
  */
-void PySCFRunner::execute(SimulationBox &box)
+void PySCFRunner::execute(SimulationBox &)
 {
     const auto scriptFileName = _scriptPath + QMSettings::getQMScript();
 

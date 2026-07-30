@@ -23,11 +23,9 @@
 #include "qmmmMDEngine.hpp"
 
 #include <format>   // for format
-#include <ranges>   // for distance
 
 #include "exceptions.hpp"         // for HybridMDEngineException
 #include "hybridSettings.hpp"     // for HybridSettings
-#include "manostatSettings.hpp"   // for ManostatType
 
 using namespace pq;
 using namespace customException;

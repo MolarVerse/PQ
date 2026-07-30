@@ -24,9 +24,6 @@
 
 #define _INTER_WATER_HPP_
 
-#include <utility>
-#include <vector>
-
 #include "timer.hpp"
 #include "typeAliases.hpp"
 
@@ -315,7 +312,12 @@ namespace waterModel
 
 }   // namespace waterModel
 
-#include "interWater.tpp.hpp"        // DO NOT MOVE THIS LINE
-#include "interWaterParamters.hpp"   // DO NOT MOVE THIS LINE
+#ifndef _INTER_WATER_TPP_
+#include "interWater.tpp"   // DO NOT MOVE THIS LINE
+#endif
+
+#ifndef _INTER_WATER_PARAMETERS_HPP_
+#include "interWaterParamters.hpp"   // IWYU pragma: export - DO NOT MOVE THIS LINE
+#endif
 
 #endif   //  _INTER_WATER_HPP_

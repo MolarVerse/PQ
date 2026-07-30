@@ -28,6 +28,7 @@
 #include "atom.hpp"             // for Atom
 #include "exceptions.hpp"       // for HybridConfiguratorException
 #include "hybridSettings.hpp"   // for HybridSettings
+#include "simulationBox.hpp"
 
 using enum simulationBox::HybridZone;
 
@@ -49,7 +50,9 @@ using namespace simulationBox;
  * @throw HybridConfiguratorException if no center atoms are specified (empty
  * indices list)
  */
-void HybridConfigurator::calculateInnerRegionCenter(SimBox& simBox)
+void HybridConfigurator::calculateInnerRegionCenter(
+    simulationBox::SimulationBox& simBox
+)
 {
     const auto& indices = simBox.getInnerRegionCenterAtomIndices();
 
@@ -163,7 +166,7 @@ void HybridConfigurator::assignHybridZones(SimBox& simBox)
     _molChangedZone = false;
 
     // Helper lambda to set zone and track changes
-    auto setZone = [this](auto& mol, HybridZone newZone)
+    auto setZone = [](auto& mol, HybridZone newZone)
     {
         if (mol.getHybridZone() != newZone)
         {

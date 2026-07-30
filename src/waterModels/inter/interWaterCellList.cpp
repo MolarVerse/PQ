@@ -20,17 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <utility>
 #include <vector>
 
 #include "atom.hpp"   // for Atom
 #include "atomNumberMap.hpp"
-#include "celllist.hpp"           // for CellList
-#include "coulombPotential.hpp"   // for CoulombPotential
-#include "interWater.hpp"         // for InterWater
-#include "physicalData.hpp"       // for PhysicalData
-#include "potential.hpp"          // for ChargeTag
-#include "simulationBox.hpp"      // for SimulationBox
+#include "celllist.hpp"     // for CellList
+#include "interWater.hpp"   // for InterWater
+#include "physicalData.hpp"
+#include "potential.hpp"   // for ChargeTag
 #include "typeAliases.hpp"
 
 using namespace constants;
@@ -48,11 +45,11 @@ namespace
  *
  */
 void InterWaterStrategyCellList::calculate(
-    const InterWaterState  &state,
-    SimBox                 &simBox,
-    PhysicalData           &physicalData,
-    const SharedCoulombPot &coulombPotential,
-    CellList               &cellList
+    const InterWaterState      &state,
+    SimBox                     &simBox,
+    physicalData::PhysicalData &physicalData,
+    const SharedCoulombPot     &coulombPotential,
+    simulationBox::CellList    &cellList
 )
 {
     const auto rCut        = CoulombPot::getCoulombRadiusCutOff();
@@ -164,8 +161,8 @@ void InterWaterStrategyCellList::calculate(
 
                         for (auto *atom_j : cell_j->getAtoms(mol_j))
                         {
-                            const bool isAtom_j_O = atom_j->getAtomicNumber() ==
-                                                    oxygenAtomicNumber;
+                            const bool isAtom_j_O =
+                                atom_j->getAtomicNumber() == oxygenAtomicNumber;
 
                             // O-H interaction (different atom types)
                             if (isAtom_i_O != isAtom_j_O)
@@ -209,10 +206,10 @@ void InterWaterStrategyCellList::calculate(
  */
 void InterWaterStrategyCellList::calculateCoreToOuterForces(
     const InterWaterState &,
-    SimBox                 &simBox,
-    PhysicalData           &physicalData,
-    const SharedCoulombPot &coulombPotential,
-    CellList               &cellList
+    SimBox                  &simBox,
+    PhysicalData            &physicalData,
+    const SharedCoulombPot  &coulombPotential,
+    simulationBox::CellList &cellList
 )
 {
     const auto rCut        = CoulombPot::getCoulombRadiusCutOff();
@@ -305,8 +302,8 @@ void InterWaterStrategyCellList::calculateCoreToOuterForces(
 
                         for (auto *atom_j : cell_j->getAtoms(mol_j))
                         {
-                            const bool isAtom_j_O = atom_j->getAtomicNumber() ==
-                                                    oxygenAtomicNumber;
+                            const bool isAtom_j_O =
+                                atom_j->getAtomicNumber() == oxygenAtomicNumber;
 
                             // O-H interaction (different atom types)
                             if (isAtom_i_O != isAtom_j_O)
@@ -348,8 +345,8 @@ void InterWaterStrategyCellList::calculateCoreToOuterForces(
 
                         for (auto *atom_j : cell_i.getAtoms(mol_j))
                         {
-                            const bool isAtom_j_O = atom_j->getAtomicNumber() ==
-                                                    oxygenAtomicNumber;
+                            const bool isAtom_j_O =
+                                atom_j->getAtomicNumber() == oxygenAtomicNumber;
 
                             // O-H interaction (different atom types)
                             if (isAtom_i_O != isAtom_j_O)
@@ -379,11 +376,11 @@ void InterWaterStrategyCellList::calculateCoreToOuterForces(
  * @param cellList Cell list structure used for neighbor searching.
  */
 void InterWaterStrategyCellList::calculateLayerToOuterForces(
-    const InterWaterState  &state,
-    SimBox                 &simBox,
-    PhysicalData           &physicalData,
-    const SharedCoulombPot &coulombPotential,
-    CellList               &cellList
+    const InterWaterState   &state,
+    SimBox                  &simBox,
+    PhysicalData            &physicalData,
+    const SharedCoulombPot  &coulombPotential,
+    simulationBox::CellList &cellList
 )
 {
     const auto rCut        = CoulombPot::getCoulombRadiusCutOff();
@@ -493,8 +490,8 @@ void InterWaterStrategyCellList::calculateLayerToOuterForces(
 
                         for (auto *atom_j : cell_j->getAtoms(mol_j))
                         {
-                            const bool isAtom_j_O = atom_j->getAtomicNumber() ==
-                                                    oxygenAtomicNumber;
+                            const bool isAtom_j_O =
+                                atom_j->getAtomicNumber() == oxygenAtomicNumber;
 
                             // O-H interaction (different atom types)
                             if (isAtom_i_O != isAtom_j_O)
@@ -548,8 +545,8 @@ void InterWaterStrategyCellList::calculateLayerToOuterForces(
 
                         for (auto *atom_j : cell_i.getAtoms(mol_j))
                         {
-                            const bool isAtom_j_O = atom_j->getAtomicNumber() ==
-                                                    oxygenAtomicNumber;
+                            const bool isAtom_j_O =
+                                atom_j->getAtomicNumber() == oxygenAtomicNumber;
 
                             // O-H interaction (different atom types)
                             if (isAtom_i_O != isAtom_j_O)
@@ -592,11 +589,11 @@ void InterWaterStrategyCellList::calculateLayerToOuterForces(
  * @param cellList Cell list structure used for neighbor searching.
  */
 void InterWaterStrategyCellList::calculateOuterToOuterForces(
-    const InterWaterState  &state,
-    SimBox                 &simBox,
-    PhysicalData           &physicalData,
-    const SharedCoulombPot &coulombPotential,
-    CellList               &cellList
+    const InterWaterState   &state,
+    SimBox                  &simBox,
+    PhysicalData            &physicalData,
+    const SharedCoulombPot  &coulombPotential,
+    simulationBox::CellList &cellList
 )
 {
     const auto rCut        = CoulombPot::getCoulombRadiusCutOff();
@@ -716,8 +713,8 @@ void InterWaterStrategyCellList::calculateOuterToOuterForces(
 
                         for (auto *atom_j : cell_j->getAtoms(mol_j))
                         {
-                            const bool isAtom_j_O = atom_j->getAtomicNumber() ==
-                                                    oxygenAtomicNumber;
+                            const bool isAtom_j_O =
+                                atom_j->getAtomicNumber() == oxygenAtomicNumber;
 
                             // O-H interaction (different atom types)
                             if (isAtom_i_O != isAtom_j_O)
@@ -760,11 +757,11 @@ void InterWaterStrategyCellList::calculateOuterToOuterForces(
  * @param cellList Cell list structure used for neighbor searching.
  */
 void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
-    const InterWaterState  &state,
-    SimBox                 &simBox,
-    PhysicalData           &physicalData,
-    const SharedCoulombPot &coulombPotential,
-    CellList               &cellList
+    const InterWaterState   &state,
+    SimBox                  &simBox,
+    PhysicalData            &physicalData,
+    const SharedCoulombPot  &coulombPotential,
+    simulationBox::CellList &cellList
 )
 {
     const auto rCut        = CoulombPot::getCoulombRadiusCutOff();
@@ -891,8 +888,8 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
 
                         for (auto *atom_j : cell_j->getAtoms(mol_j))
                         {
-                            const bool isAtom_j_O = atom_j->getAtomicNumber() ==
-                                                    oxygenAtomicNumber;
+                            const bool isAtom_j_O =
+                                atom_j->getAtomicNumber() == oxygenAtomicNumber;
 
                             // O-H interaction (different atom types)
                             if (isAtom_i_O != isAtom_j_O)
@@ -947,8 +944,8 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
 
                         for (auto *atom_j : cell_i.getAtoms(mol_j))
                         {
-                            const bool isAtom_j_O = atom_j->getAtomicNumber() ==
-                                                    oxygenAtomicNumber;
+                            const bool isAtom_j_O =
+                                atom_j->getAtomicNumber() == oxygenAtomicNumber;
 
                             // O-H interaction (different atom types)
                             if (isAtom_i_O != isAtom_j_O)
@@ -1063,8 +1060,8 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
 
                         for (auto *atom_j : cell_j->getAtoms(mol_j))
                         {
-                            const bool isAtom_j_O = atom_j->getAtomicNumber() ==
-                                                    oxygenAtomicNumber;
+                            const bool isAtom_j_O =
+                                atom_j->getAtomicNumber() == oxygenAtomicNumber;
 
                             // O-H interaction (different atom types)
                             if (isAtom_i_O != isAtom_j_O)
@@ -1126,8 +1123,8 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
 
                         for (auto *atom_j : cell_i.getAtoms(mol_j))
                         {
-                            const bool isAtom_j_O = atom_j->getAtomicNumber() ==
-                                                    oxygenAtomicNumber;
+                            const bool isAtom_j_O =
+                                atom_j->getAtomicNumber() == oxygenAtomicNumber;
 
                             // O-H interaction (different atom types)
                             if (isAtom_i_O != isAtom_j_O)

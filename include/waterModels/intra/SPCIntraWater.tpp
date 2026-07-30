@@ -20,9 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SPC_INTRA_WATER_TPP_HPP_
+#ifndef _SPC_INTRA_WATER_TPP_
 
-#define _SPC_INTRA_WATER_TPP_HPP_
+#define _SPC_INTRA_WATER_TPP_
 
 #include <cmath>   // for sin
 
@@ -30,7 +30,6 @@
 #include "hybridSettings.hpp"   // for HybridSettings
 #include "physicalData.hpp"     // for PhysicalData
 #include "simulationBox.hpp"    // for SimulationBox
-#include "vector3d.hpp"         // for Vector3D, norm, operator*, Vec3D
 
 /**
  * @brief Calculate intramolecular SPC water interactions for all water
@@ -53,8 +52,8 @@
  * @note Inactive molecules are skipped.
  */
 void waterModel::SPCIntraWater::calculate(
-    pq::SimBox&       box,
-    pq::PhysicalData& physicalData
+    simulationBox::SimulationBox& box,
+    physicalData::PhysicalData&   physicalData
 )
 {
     startTimingsSection("Calculate Potential");
@@ -148,4 +147,4 @@ void waterModel::SPCIntraWater::calculate(
     stopTimingsSection("Calculate Potential");
 }
 
-#endif   //  _SPC_INTRA_WATER_TPP_HPP_
+#endif   //  _SPC_INTRA_WATER_TPP_
