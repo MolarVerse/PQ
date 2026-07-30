@@ -1,0 +1,1 @@
+- PQ now rejects invalid temperature ramps and handles zero-temperature, cell-list, and single-step simulation edge cases safely.
