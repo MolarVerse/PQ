@@ -328,3 +328,13 @@ const char *CompileTimeException::what() const throw()
     colorfulOutput(Color::FG_RED, "CompileTimeError");
     return _message.c_str();
 }
+/**
+ * @brief return the exception message for PhysicalDataException
+ *
+ * @param message
+ */
+const char *PhysicalDataException::what() const throw()
+{
+    colorfulOutput(Color::FG_RED, "PhysicalDataError");
+    return _message.c_str();
+}

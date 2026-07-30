@@ -65,10 +65,12 @@ TEST(TestQMSetup, resolvesBundledQMScript)
     EXPECT_TRUE(std::filesystem::is_regular_file(script));
 
     if (const auto *expected = std::getenv("PQ_TEST_EXPECTED_SCRIPT_DIR"))
+    {
         EXPECT_EQ(
             std::filesystem::path(script).parent_path(),
             std::filesystem::path(expected)
         );
+    }
 }
 
 TEST(TestQMSetup, setupDftbplus)

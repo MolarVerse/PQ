@@ -22,10 +22,12 @@
 
 #include "testPhysicalData.hpp"
 
-#include "constants/conversionFactors.hpp"   // for _FS_TO_S_
-#include "constants/internalConversionFactors.hpp"   // for _KINETIC_ENERGY_FACTOR_, _TEMPERATURE_FACTOR_
-#include "gtest/gtest.h"   // for Message, TestPartResult, EXPECT_EQ, TEST_F, Test
-#include "vector3d.hpp"       // IWYU pragma: keep - for operator*, Vector3D
+#include "constants/conversionFactors.hpp"
+#include "constants/internalConversionFactors.hpp"
+#include "gtest/gtest.h"
+#include "physicalData.hpp"
+#include "throwWithMessage.hpp"
+#include "vector3d.hpp"
 
 /**
  * @brief tests makeAverages function
@@ -46,6 +48,33 @@ TEST_F(TestPhysicalData, makeAverages)
 }
 
 /**
+ * @brief tests copy function
+ *
+ */
+TEST_F(TestPhysicalData, copy)
+{
+    physicalData::PhysicalData physicalData2;
+    physicalData2.copy(*_physicalData);
+    EXPECT_EQ(physicalData2.getCoulombEnergy(), 1.0);
+    EXPECT_EQ(physicalData2.getNonCoulombEnergy(), 2.0);
+    EXPECT_EQ(physicalData2.getTemperature(), 3.0);
+    EXPECT_EQ(physicalData2.getMomentum(), linearAlgebra::Vec3D(4.0));
+    EXPECT_EQ(physicalData2.getKineticEnergy(), 5.0);
+    EXPECT_EQ(physicalData2.getVolume(), 6.0);
+    EXPECT_EQ(physicalData2.getDensity(), 7.0);
+    EXPECT_EQ(physicalData2.getPressure(), 8.0);
+    EXPECT_EQ(physicalData2.getQMEnergy(), 9.0);
+    EXPECT_EQ(physicalData2.isKinEnergyVirialAtomic(), false);
+
+    physicalData2.changeKineticVirialToAtomic();
+    EXPECT_EQ(physicalData2.isKinEnergyVirialAtomic(), true);
+
+    physicalData::PhysicalData physicalData3;
+    physicalData3.copy(physicalData2);
+    EXPECT_EQ(physicalData3.isKinEnergyVirialAtomic(), true);
+}
+
+/**
  * @brief tests updateAverages function
  *
  */
@@ -63,6 +92,14 @@ TEST_F(TestPhysicalData, updateAverages)
     EXPECT_EQ(_physicalData->getDensity(), 14.0);
     EXPECT_EQ(_physicalData->getPressure(), 16.0);
     EXPECT_EQ(_physicalData->getQMEnergy(), 18.0);
+
+    const physicalData::PhysicalData physicalData3 = *_physicalData;
+    _physicalData->changeKineticVirialToAtomic();
+    EXPECT_THROW_MSG(
+        _physicalData->updateAverages(physicalData3),
+        customException::PhysicalDataException,
+        "Inconsistent isAtomic flag in PhysicalData::updateAverages"
+    );
 }
 
 /**
@@ -201,6 +238,14 @@ TEST_F(TestPhysicalData, reset)
     EXPECT_EQ(_physicalData->getPressure(), 0.0);
     EXPECT_EQ(_physicalData->getVirial(), linearAlgebra::tensor3D(0.0));
     EXPECT_EQ(_physicalData->getQMEnergy(), 0.0);
+    EXPECT_EQ(_physicalData->isKinEnergyVirialAtomic(), false);
+
+    _physicalData->changeKineticVirialToAtomic();
+    _physicalData->reset();
+
+    // needs to be true, because the isAtomic flag is not reset in the reset
+    // function
+    EXPECT_EQ(_physicalData->isKinEnergyVirialAtomic(), true);
 }
 
 /**
