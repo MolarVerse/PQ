@@ -37,8 +37,8 @@
 #include "ringPolymerqmmdEngine.hpp"   // for RingPolymerQMMDEngine
 #include "settings.hpp"                // for Settings
 #include "testInputFileReader.hpp"     // for TestInputFileReader
-#include "testUtils.hpp"               // for checkEngineType
-#include "throwWithMessage.hpp"        // for EXPECT_THROW_MSG
+#include "testUtils.hpp"
+#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
 
 using namespace input;
 using namespace settings;
@@ -58,33 +58,33 @@ TEST_F(TestInputFileReader, JobType)
     parser.parseJobTypeForEngine(lineElements, 0, engine);
     EXPECT_EQ(Settings::getJobtype(), JobType::MM_MD);
     EXPECT_EQ(Settings::isMMActivated(), true);
-    test::checkEngineType(engine, typeid(engine::MMMDEngine));
+    test::checkType(engine, typeid(engine::MMMDEngine));
 
     lineElements = {"jobtype", "=", "qm-md"};
     parser.parseJobTypeForEngine(lineElements, 0, engine);
     EXPECT_EQ(Settings::getJobtype(), JobType::QM_MD);
     EXPECT_EQ(Settings::isQMActivated(), true);
-    test::checkEngineType(engine, typeid(engine::QMMDEngine));
+    test::checkType(engine, typeid(engine::QMMDEngine));
 
     lineElements = {"jobtype", "=", "qm-rpmd"};
     parser.parseJobTypeForEngine(lineElements, 0, engine);
     EXPECT_EQ(Settings::getJobtype(), JobType::RING_POLYMER_QM_MD);
     EXPECT_EQ(Settings::isQMActivated(), true);
     EXPECT_EQ(Settings::isRingPolymerMDActivated(), true);
-    test::checkEngineType(engine, typeid(engine::RingPolymerQMMDEngine));
+    test::checkType(engine, typeid(engine::RingPolymerQMMDEngine));
 
     lineElements = {"jobtype", "=", "mm-opt"};
     parser.parseJobTypeForEngine(lineElements, 0, engine);
     EXPECT_EQ(Settings::getJobtype(), JobType::MM_OPT);
     EXPECT_EQ(Settings::isOptJobType(), true);
     EXPECT_EQ(Settings::isMMActivated(), true);
-    test::checkEngineType(engine, typeid(engine::OptEngine));
+    test::checkType(engine, typeid(engine::OptEngine));
 
     lineElements = {"jobtype", "=", "mm-hessian"};
     parser.parseJobTypeForEngine(lineElements, 0, engine);
     EXPECT_EQ(Settings::getJobtype(), JobType::MM_HESSIAN);
     EXPECT_EQ(Settings::isMMActivated(), true);
-    test::checkEngineType(engine, typeid(engine::HessianEngine));
+    test::checkType(engine, typeid(engine::HessianEngine));
 
     lineElements = {"jobtype", "=", "notValid"};
     EXPECT_THROW_MSG(

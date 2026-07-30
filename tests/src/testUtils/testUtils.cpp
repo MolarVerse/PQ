@@ -24,38 +24,54 @@
 
 #include <memory>
 
+#include "coulombPotential.hpp"
 #include "engine.hpp"
+#include "nonCoulombPotential.hpp"
+#include "qmRunner.hpp"
 
 namespace test
 {
     /**
-     * @brief check if engine is of expected type
+     * @brief check that the dynamic type of obj matches expectedType
      *
-     * @param engine
+     * @details Works for raw pointers, smart pointers, and plain
+     * references alike — dereferences anything pointer-like before
+     * comparing typeid, so typeid always reflects the pointee's
+     * actual (polymorphic) type rather than the pointer/wrapper type.
+     *
+     * @tparam T
+     * @param obj
      * @param expectedType
      */
-    void checkEngineType(
-        const std::unique_ptr<engine::Engine>& engine,
-        const std::type_info&                  expectedType
-    )
+    template <typename T>
+    void checkType(const T& obj, const std::type_info& expectedType)
     {
-        ASSERT_NE(engine, nullptr);
-        const auto& engineRef = *engine;
-        EXPECT_EQ(typeid(engineRef), expectedType);
+        if constexpr (requires { *obj; })
+            EXPECT_EQ(typeid(*obj), expectedType);
+        else
+            EXPECT_EQ(typeid(obj), expectedType);
     }
 
-    /**
-     * @brief check if potential is of expected type
-     *
-     * @param potential
-     * @param expectedType
-     */
-    void checkPotentialType(
-        const potential::Potential* potential,
-        const std::type_info&       expectedType
-    )
-    {
-        ASSERT_NE(potential, nullptr);
-        EXPECT_EQ(typeid(*potential), expectedType);
-    }
+    // explicit instantiations
+    template void checkType<std::unique_ptr<engine::Engine>>(
+        const std::unique_ptr<engine::Engine>& engine,
+        const std::type_info&                  expectedType
+    );
+    template void checkType<potential::Potential*>(
+        potential::Potential* const& potential,
+        const std::type_info&        expectedType
+    );
+    template void checkType<potential::CoulombPotential*>(
+        potential::CoulombPotential* const& potential,
+        const std::type_info&               expectedType
+    );
+    template void checkType<potential::NonCoulombPotential*>(
+        potential::NonCoulombPotential* const& potential,
+        const std::type_info&                  expectedType
+    );
+    template void checkType<QM::QMRunner*>(
+        QM::QMRunner* const&  runner,
+        const std::type_info& expectedType
+    );
+
 }   // namespace test

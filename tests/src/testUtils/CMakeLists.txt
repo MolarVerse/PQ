@@ -11,6 +11,9 @@ target_include_directories(testUtils
 target_link_libraries(testUtils
     PUBLIC
     engine
+    potential
+    coulombPotential
+    nonCoulombPotential
 )
 
 install(TARGETS testUtils

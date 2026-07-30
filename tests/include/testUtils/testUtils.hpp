@@ -26,22 +26,12 @@
 
 #include <gtest/gtest.h>
 
-#include <memory>
 #include <typeinfo>
-
-#include "typeAliases.hpp"
 
 namespace test
 {
-    void checkEngineType(
-        const std::unique_ptr<engine::Engine>& engine,
-        const std::type_info&                  expectedType
-    );
-
-    void checkPotentialType(
-        const potential::Potential* potential,
-        const std::type_info&       expectedType
-    );
+    template <typename T>
+    void checkType(const T& obj, const std::type_info& expectedType);
 }   // namespace test
 
 #endif   // _TEST_UTILS_HPP_
