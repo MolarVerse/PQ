@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
-"""Stamp user and developer changelogs for a release.
+"""Build and stamp user and developer changelogs for a release.
 
-`CHANGELOG.md` is curated in the release pull request and contains only
-user-visible changes. `DEV-CHANGELOG.md` is generated from conventional
-commits at release time and contains the complete technical record.
-
-Regular pull requests do not edit either file. This keeps changelog curation
-out of the normal merge path while still requiring reviewed user release notes.
+Regular pull requests add one audience-qualified fragment instead of editing
+the shared changelog files. Release processing routes each fragment into the
+matching changelog and preserves existing unreleased and released entries.
 
 Usage:
     update_changelog.py --check
@@ -15,73 +12,23 @@ Usage:
 
 import os
 import re
-import subprocess
 import sys
 from datetime import date
 from pathlib import Path
 
-# Fragment type -> developer changelog section. Fragments are deprecated, but
-# this keeps fragments from older branches from being lost when they merge.
-SECTIONS = {
-    "bugfix": "Bug Fixes",
-    "build": "Build",
-    "ci": "CI",
-    "internal": "Internal",
-    "test": "Tests",
-    "enhancement": "Enhancements",
-    "doc": "Documentation",
-}
-
-ORDER = [
-    "Breaking Changes",
-    "Enhancements",
-    "Bug Fixes",
-    "Performance",
-    "Build",
-    "CI",
-    "Tests",
-    "Internal",
-    "Documentation",
-]
+from changelog_fragments import (
+    DEVELOPER_ORDER,
+    USER_ORDER,
+    FragmentError,
+    load_fragments,
+)
 
 ROOT = Path(__file__).resolve().parent.parent
 CHANGES_DIR = ROOT / "changes"
 USER_CHANGELOG = ROOT / "CHANGELOG.md"
 DEV_CHANGELOG = ROOT / "DEV-CHANGELOG.md"
-CLIFF_TOML = ROOT / "cliff.toml"
 
-FRAGMENT_RE = re.compile(r"^([^.]+)\.([^.]+)\.md$")
-USER_BULLET_RE = re.compile(r"^\s*-\s+\S")
-
-
-def read_fragments():
-    """Group legacy fragment bodies by developer changelog section."""
-    if not CHANGES_DIR.is_dir():
-        return {section: [] for section in ORDER}, []
-
-    grouped = {section: [] for section in ORDER}
-    consumed = []
-    for path in sorted(CHANGES_DIR.glob("*.md")):
-        if path.name == "README.md":
-            continue
-
-        match = FRAGMENT_RE.match(path.name)
-        if not match:
-            sys.exit(f"unexpected fragment name: {path.name}")
-
-        _, kind = match.groups()
-        if kind not in SECTIONS:
-            sys.exit(
-                f"unknown fragment type '{kind}' in {path.name}; "
-                f"allowed: {sorted(SECTIONS)}"
-            )
-
-        grouped[SECTIONS[kind]].append(
-            path.read_text(encoding="utf-8").rstrip()
-        )
-        consumed.append(path)
-
-    return grouped, consumed
+BULLET_RE = re.compile(r"^\s*-\s+\S")
 
 
 def split_next_release(lines, changelog):
@@ -110,9 +57,9 @@ def split_next_release(lines, changelog):
     )
 
 
-def parse_subsections(body_lines):
+def parse_subsections(body_lines, order):
     """Parse `###` sections into a mapping of headings to bullet lines."""
-    sections = {section: [] for section in ORDER}
+    sections = {section: [] for section in order}
     current = None
 
     for raw in body_lines:
@@ -127,18 +74,18 @@ def parse_subsections(body_lines):
     return sections
 
 
-def render_sections(sections):
-    """Render developer changelog sections in a stable order."""
+def render_sections(sections, order):
+    """Render changelog sections in a stable order."""
     output = []
 
-    for section in ORDER:
+    for section in order:
         bullets = [line for line in sections.get(section, []) if line.strip()]
         if not bullets:
             continue
         output.extend([f"### {section}", "", *bullets, ""])
 
     for section, bullets in sections.items():
-        if section in ORDER:
+        if section in order:
             continue
         bullets = [line for line in bullets if line.strip()]
         if not bullets:
@@ -148,37 +95,23 @@ def render_sections(sections):
     return output
 
 
-def run_git_cliff():
-    """Generate developer sections from commits since the latest tag."""
-    if not CLIFF_TOML.is_file():
-        sys.exit(f"cliff.toml not found at {CLIFF_TOML}")
-
-    result = subprocess.run(
-        [
-            "git-cliff",
-            "--unreleased",
-            "--strip",
-            "all",
-            "--config",
-            str(CLIFF_TOML),
-        ],
-        capture_output=True,
-        text=True,
-        cwd=ROOT,
-        check=False,
-    )
-    if result.returncode != 0:
-        sys.exit(
-            "git-cliff failed (exit "
-            f"{result.returncode}): {result.stderr.strip()}"
-        )
-
-    return parse_subsections(result.stdout.splitlines())
+def read_all_fragments():
+    try:
+        return load_fragments(CHANGES_DIR)
+    except FragmentError as error:
+        sys.exit(str(error))
 
 
-def has_user_release_notes(body_lines):
-    """Return whether the user changelog contains at least one bullet."""
-    return any(USER_BULLET_RE.match(line) for line in body_lines)
+def append_fragments(sections, fragments, audience):
+    """Append fragments for one audience to parsed changelog sections."""
+    for fragment in fragments:
+        if fragment.audience == audience:
+            sections.setdefault(fragment.section, []).append(fragment.entry)
+
+
+def has_release_notes(body_lines):
+    """Return whether a changelog body contains at least one bullet."""
+    return any(BULLET_RE.match(line) for line in body_lines)
 
 
 def trim_blank_lines(lines):
@@ -226,15 +159,27 @@ def load_changelog(path):
     return path.read_text(encoding="utf-8").splitlines()
 
 
-def check_user_changelog():
-    lines = load_changelog(USER_CHANGELOG)
-    _, body, _ = split_next_release(lines, USER_CHANGELOG.name)
-    if not has_user_release_notes(body):
-        sys.exit(
-            "CHANGELOG.md needs at least one user-facing bullet under "
-            "'## Next Release' before release"
-        )
-    print("CHANGELOG.md contains curated user release notes")
+def check_release_changelogs():
+    fragments = read_all_fragments()
+
+    user_lines = load_changelog(USER_CHANGELOG)
+    _, user_body, _ = split_next_release(
+        user_lines, USER_CHANGELOG.name
+    )
+    user_sections = parse_subsections(user_body, USER_ORDER)
+    append_fragments(user_sections, fragments, "user")
+
+    dev_lines = load_changelog(DEV_CHANGELOG)
+    _, dev_body, _ = split_next_release(dev_lines, DEV_CHANGELOG.name)
+    dev_sections = parse_subsections(dev_body, DEVELOPER_ORDER)
+    append_fragments(dev_sections, fragments, "developer")
+
+    user_notes = render_sections(user_sections, USER_ORDER)
+    dev_notes = render_sections(dev_sections, DEVELOPER_ORDER)
+    if not has_release_notes(user_notes) and not has_release_notes(dev_notes):
+        sys.exit("the release needs at least one changelog entry")
+
+    print("the release contains changelog entries")
 
 
 def update_changelogs(version):
@@ -244,45 +189,54 @@ def update_changelogs(version):
     user_head, user_body, user_tail = split_next_release(
         user_lines, USER_CHANGELOG.name
     )
-    if not has_user_release_notes(user_body):
-        sys.exit(
-            "CHANGELOG.md needs curated user release notes before release"
-        )
 
     dev_lines = load_changelog(DEV_CHANGELOG)
-    dev_head, _, dev_tail = split_next_release(
+    dev_head, dev_body, dev_tail = split_next_release(
         dev_lines, DEV_CHANGELOG.name
     )
 
-    dev_sections = run_git_cliff()
-    fragment_sections, consumed_fragments = read_fragments()
-    for section, bullets in fragment_sections.items():
-        dev_sections.setdefault(section, []).extend(bullets)
+    fragments = read_all_fragments()
+    user_sections = parse_subsections(user_body, USER_ORDER)
+    dev_sections = parse_subsections(dev_body, DEVELOPER_ORDER)
+    append_fragments(user_sections, fragments, "user")
+    append_fragments(dev_sections, fragments, "developer")
 
-    user_output = stamp_release(
-        user_head, user_body, user_tail, version, repo
-    )
-    dev_output = stamp_release(
-        dev_head,
-        render_sections(dev_sections),
-        dev_tail,
-        version,
-        repo,
-    )
+    rendered_user_sections = render_sections(user_sections, USER_ORDER)
+    rendered_dev_sections = render_sections(dev_sections, DEVELOPER_ORDER)
+    has_user_notes = has_release_notes(rendered_user_sections)
+    has_dev_notes = has_release_notes(rendered_dev_sections)
+    if not has_user_notes and not has_dev_notes:
+        sys.exit("the release needs at least one changelog entry")
 
-    USER_CHANGELOG.write_text(
-        "\n".join(user_output) + "\n", encoding="utf-8"
-    )
-    DEV_CHANGELOG.write_text(
-        "\n".join(dev_output) + "\n", encoding="utf-8"
-    )
-    for path in consumed_fragments:
-        path.unlink()
+    stamped = []
+    if has_user_notes:
+        user_output = stamp_release(
+            user_head, rendered_user_sections, user_tail, version, repo
+        )
+        USER_CHANGELOG.write_text(
+            "\n".join(user_output) + "\n", encoding="utf-8"
+        )
+        stamped.append(USER_CHANGELOG.name)
+
+    if has_dev_notes:
+        dev_output = stamp_release(
+            dev_head,
+            rendered_dev_sections,
+            dev_tail,
+            version,
+            repo,
+        )
+        DEV_CHANGELOG.write_text(
+            "\n".join(dev_output) + "\n", encoding="utf-8"
+        )
+        stamped.append(DEV_CHANGELOG.name)
+
+    for fragment in fragments:
+        fragment.path.unlink()
 
     print(
-        f"stamped {USER_CHANGELOG.name} from curated release notes and "
-        f"{DEV_CHANGELOG.name} from conventional commits; consumed "
-        f"{len(consumed_fragments)} legacy fragment(s)"
+        f"stamped {' and '.join(stamped)}; "
+        f"consumed {len(fragments)} changelog fragment(s)"
     )
 
 
@@ -292,7 +246,7 @@ def main():
 
     argument = sys.argv[1]
     if argument == "--check":
-        check_user_changelog()
+        check_release_changelogs()
         return
 
     update_changelogs(argument)
