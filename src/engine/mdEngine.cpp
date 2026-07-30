@@ -25,7 +25,7 @@
 #include "constants/conversionFactors.hpp"   // for _FS_TO_PS_
 #include "outputFileSettings.hpp"            // for OutputFileSettings
 #include "progressbar.hpp"                   // for progressbar
-#include "qmmdEngine.hpp"                    // for QMMDEngine
+#include "qmCapableEngine.hpp"               // for QMCapableEngine
 #include "referencesOutput.hpp"              // for ReferencesOutput
 #include "settings.hpp"                      // for Settings
 #include "timingsSettings.hpp"               // for TimingsSettings

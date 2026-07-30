@@ -24,8 +24,6 @@
 
 #define _QM_MM_MD_ENGINE_HPP_
 
-#include <unordered_set>   // for unordered_set
-
 #include "hybridMDEngine.hpp"
 #include "typeAliases.hpp"
 

@@ -26,7 +26,6 @@
 
 #include <unordered_set>   // for unordered_set
 
-#include "simulationBox.hpp"
 #include "typeAliases.hpp"
 
 namespace configurator

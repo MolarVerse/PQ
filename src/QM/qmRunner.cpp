@@ -25,7 +25,6 @@
 #include <cmath>    // for ceil
 #include <thread>   // for sleep_for
 
-#include "defaults.hpp"   // for _DIMENSIONALITY_DEFAULT_
 #include "exceptions.hpp"
 #include "qmSettings.hpp"
 
