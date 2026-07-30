@@ -1,0 +1,1 @@
+- Invalid or overflowing cell-list dimensions are rejected before storage is allocated.
