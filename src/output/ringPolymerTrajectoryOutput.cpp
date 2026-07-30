@@ -77,17 +77,7 @@ void RingPolymerTrajectoryOutput::writeForceComment(
     const double totalForce
 )
 {
-    if (OutputFileSettings::getIncludeOutputMetadata())
-        _fp << std::format(
-            "# step = {}; Total force = {:.5e} kcal/mol/Angstrom\n",
-            step,
-            totalForce
-        );
-    else
-        _fp << std::format(
-            "# Total force = {:.5e} kcal/mol/Angstrom\n",
-            totalForce
-        );
+    _fp << formatForceComment(step, totalForce);
 }
 
 /**
