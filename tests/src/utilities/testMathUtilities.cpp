@@ -23,7 +23,6 @@
 #include <gtest/gtest.h>   // for Test, TestInfo (ptr only), EXPECT_EQ
 
 #include <limits>   // for numeric_limits
-#include <string>   // for allocator, string
 
 #include "gtest/gtest.h"       // for AssertionResult, Message, TestPartResult
 #include "mathUtilities.hpp"   // for compare, sign, utilities
