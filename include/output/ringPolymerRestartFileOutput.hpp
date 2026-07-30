@@ -43,7 +43,7 @@ namespace output
        public:
         using Output::Output;
 
-        void write(std::vector<pq::SimBox> &, const size_t);
+        void write(std::vector<pq::SimBox> &);
     };
 
 }   // namespace output
