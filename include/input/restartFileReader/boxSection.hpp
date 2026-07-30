@@ -25,7 +25,6 @@
 #define _BOX_SECTION_HPP_
 
 #include <string>   // for string
-#include <vector>   // for vector
 
 #include "restartFileSection.hpp"
 #include "typeAliases.hpp"

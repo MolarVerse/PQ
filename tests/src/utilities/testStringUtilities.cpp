@@ -22,12 +22,12 @@
 
 #include <gtest/gtest.h>   // for Test, TestInfo (ptr only), EXPECT_EQ
 
-#include <cstdint>     // for UINT32_MAX
-#include <cstdio>      // for remove
-#include <fstream>     // for ofstream
-#include <stdexcept>   // for out_of_range and invalid_argument
-#include <string>      // for string, allocator
-#include <vector>      // for vector
+#include <cstdint>      // for UINT32_MAX
+#include <cstdio>       // for remove
+#include <filesystem>   // for create_directory
+#include <fstream>      // for ofstream
+#include <stdexcept>    // for out_of_range and invalid_argument
+#include <string>       // for string, allocator
 
 #include "exceptions.hpp"        // for InputFileException
 #include "gmock/gmock.h"         // for ElementsAre, MakePredicateFormatter
@@ -171,12 +171,16 @@ TEST(TestStringUtilities, firstLetterToUpperCaseCopy)
  */
 TEST(TestStringUtilities, fileExists)
 {
-    std::string   file = "testFile.txt";
+    std::string   file      = "testFile.txt";
+    std::string   directory = "testDirectory";
     std::ofstream out(file);
     out.close();
+    std::filesystem::create_directory(directory);
     EXPECT_TRUE(utilities::fileExists(file));
     EXPECT_FALSE(utilities::fileExists("testFile2.txt"));
+    EXPECT_FALSE(utilities::fileExists(directory));
     std::remove(file.c_str());
+    std::filesystem::remove(directory);
 }
 
 /**

@@ -31,7 +31,6 @@
 
 #include "mmmdEngine.hpp"      // for Engine
 #include "molecule.hpp"        // for Molecule
-#include "simulationBox.hpp"   // for SimulationBox
 
 /**
  * @class TestTopologySection

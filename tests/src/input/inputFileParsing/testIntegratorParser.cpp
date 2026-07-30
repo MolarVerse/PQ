@@ -27,8 +27,6 @@
 
 #include "exceptions.hpp"        // for InputFileException, customException
 #include "gtest/gtest.h"         // for Message, TestPartResult
-#include "inputFileParser.hpp"   // for readInput
-#include "integrator.hpp"        // for Integrator
 #include "integratorInputParser.hpp"
 #include "mdEngine.hpp"              // for Engine
 #include "testInputFileReader.hpp"   // for TestInputFileReader

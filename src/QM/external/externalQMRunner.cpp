@@ -23,14 +23,11 @@
 #include "externalQMRunner.hpp"
 
 #include <algorithm>    // for __for_each_fn, for_each
-#include <chrono>       // for seconds
 #include <cmath>        // for isnan, isinf
 #include <format>       // for format
 #include <fstream>      // for ofstream
-#include <functional>   // for identity
 #include <string>       // for string
 #include <thread>       // for sleep_for
-#include <vector>       // for vector
 
 #include "constants/conversionFactors.hpp"   // for _HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM_, _HARTREE_TO_KCAL_PER_MOL_
 #include "exceptions.hpp"                    // for InputFileException
@@ -38,7 +35,6 @@
 #include "physicalData.hpp"                  // for PhysicalData
 #include "qmSettings.hpp"                    // for QMSettings
 #include "simulationBox.hpp"                 // for SimulationBox
-#include "vector3d.hpp"                      // for Vec3D
 
 using QM::ExternalQMRunner;
 using namespace simulationBox;

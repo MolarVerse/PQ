@@ -29,7 +29,6 @@
 #include "bondForceField.hpp"    // for BondForceField
 #include "engine.hpp"            // for Engine
 #include "exceptions.hpp"        // for TopologyException
-#include "forceFieldClass.hpp"   // for ForceField
 #include "simulationBox.hpp"     // for SimulationBox
 
 using namespace input::topology;

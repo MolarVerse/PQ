@@ -29,7 +29,6 @@
 #include "physicalData.hpp"    // for PhysicalData
 #include "simulationBox.hpp"   // for SimulationBox
 #include "thermostat.hpp"      // for Thermostat
-#include "vector3d.hpp"        // for Vec3D
 
 #include <gtest/gtest.h>   // for Test
 #include <memory>          // for make_shared, __shared_ptr_access, shared_ptr

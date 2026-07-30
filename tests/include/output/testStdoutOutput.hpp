@@ -27,7 +27,6 @@
 #include "stdoutOutput.hpp"   // for StdoutOutput
 
 #include <gtest/gtest.h>   // for Test
-#include <memory>          // for allocator
 
 /**
  * @class TestStdoutOutput

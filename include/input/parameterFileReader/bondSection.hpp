@@ -25,7 +25,6 @@
 #define _BOND_SECTION_HPP_
 
 #include <string>   // for allocator, string
-#include <vector>   // for vector
 
 #include "parameterFileSection.hpp"
 #include "typeAliases.hpp"

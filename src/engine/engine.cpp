@@ -23,17 +23,14 @@
 #include "engine.hpp"
 
 #include <filesystem>   // for remove
+#include <memory>
 
-#include "constants/conversionFactors.hpp"   // for _FS_TO_PS_
-#include "fileSettings.hpp"                  // for FileSettings
-#include "logOutput.hpp"                     // for LogOutput
-#include "outputFileSettings.hpp"            // for OutputFileSettings
-#include "progressbar.hpp"                   // for progressbar
-#include "referencesOutput.hpp"              // for ReferencesOutput
-#include "settings.hpp"                      // for Settings
-#include "stdoutOutput.hpp"                  // for StdoutOutput
-#include "timingsSettings.hpp"               // for TimingsSettings
-#include "vector3d.hpp"                      // for norm
+#include "fileSettings.hpp"   // for FileSettings
+#include "logOutput.hpp"      // for LogOutput
+#include "molecularVirial.hpp"
+#include "potentialBruteForce.hpp"
+#include "stdoutOutput.hpp"      // for StdoutOutput
+#include "timingsSettings.hpp"   // for TimingsSettings
 
 using namespace engine;
 using namespace simulationBox;
@@ -46,6 +43,24 @@ using namespace constraints;
 using namespace output;
 using namespace timings;
 using namespace settings;
+
+/**
+ * @brief Construct an Engine object with default simulation components.
+ *
+ * @details Initializes virial, potential, physical data, simulation box,
+ * cell list, intra-non-bonded handler, force field, and constraints.
+ */
+Engine::Engine()
+    : _virial{std::make_shared<virial::MolecularVirial>()},
+      _potential{std::make_shared<potential::PotentialBruteForce>()},
+      _physicalData{std::make_shared<physicalData::PhysicalData>()},
+      _simulationBox{std::make_shared<simulationBox::SimulationBox>()},
+      _cellList{std::make_shared<simulationBox::CellList>()},
+      _intraNonBonded{std::make_shared<intraNonBonded::IntraNonBonded>()},
+      _forceField{std::make_shared<forceField::ForceField>()},
+      _constraints{std::make_shared<constraints::Constraints>()}
+{
+}
 
 /**
  * @brief Adds a timings section to the timingsSection vector.

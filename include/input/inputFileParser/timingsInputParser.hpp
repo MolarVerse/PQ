@@ -25,8 +25,6 @@
 #define _TIMINGS_INPUT_PARSER_HPP_
 
 #include <cstddef>   // for size_t
-#include <string>    // for string
-#include <vector>    // for vector
 
 #include "inputFileParser.hpp"
 #include "typeAliases.hpp"

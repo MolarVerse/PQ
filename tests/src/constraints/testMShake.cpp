@@ -34,7 +34,6 @@
 #include "moleculeType.hpp"
 #include "simulationBox.hpp"
 #include "timingsSettings.hpp"
-#include "vector3d.hpp"
 
 using namespace constraints;
 using namespace linearAlgebra;

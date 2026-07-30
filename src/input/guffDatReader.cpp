@@ -27,7 +27,6 @@
 #include <exception>    // for exception
 #include <format>       // for format
 #include <fstream>      // for basic_istream, std::ifstream, std
-#include <functional>   // for idestd::ntity
 #include <memory>       // for make_shared
 #include <ranges>       // for views::drop, for_each, ranges
 
@@ -37,15 +36,12 @@
 #include "engine.hpp"                // for Engine
 #include "exceptions.hpp"            // for GuffDatException, InputFileException
 #include "fileSettings.hpp"          // for FileSettings
-#include "forceFieldClass.hpp"       // for ForceField
 #include "guffNonCoulomb.hpp"        // for GuffNonCoulomb
 #include "guffPair.hpp"              // for GuffPair
 #include "lennardJonesPair.hpp"      // for LennardJonesPair
 #include "mathUtilities.hpp"         // for sign, utilities
 #include "molecule.hpp"              // for Molecule
 #include "morsePair.hpp"             // for MorsePair
-#include "nonCoulombPotential.hpp"   // for NonCoulombPotential
-#include "potential.hpp"             // for Potential
 #include "potentialSettings.hpp"     // for PotentialSettings
 #include "settings.hpp"              // for settings
 #include "simulationBox.hpp"         // for SimulationBox

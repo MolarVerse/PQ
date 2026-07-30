@@ -25,7 +25,6 @@
 #define _DISTANCE_CONSTRAINTS_SECTION_HPP_
 
 #include <string>   // for allocator, string
-#include <vector>   // for vector
 
 #include "topologySection.hpp"   // for TopologySection
 #include "typeAliases.hpp"

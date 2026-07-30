@@ -25,7 +25,6 @@
 #include <algorithm>    // for __for_each_fn, for_each
 #include <cmath>        // for sqrt
 #include <cstddef>      // for size_t
-#include <functional>   // for identity
 
 #include "constants/conversionFactors.hpp"   // for _FS_TO_S_, _S_TO_FS_
 #include "physicalData.hpp"                  // for PhysicalData

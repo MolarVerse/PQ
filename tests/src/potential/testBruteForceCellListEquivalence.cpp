@@ -24,7 +24,6 @@
 
 #include <cstddef>
 #include <memory>
-#include <utility>
 #include <vector>
 
 #include "atom.hpp"
@@ -36,12 +35,10 @@
 #include "molecule.hpp"
 #include "moleculeType.hpp"
 #include "physicalData.hpp"
-#include "potential.hpp"
 #include "potentialBruteForce.hpp"
 #include "potentialCellList.hpp"
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
-#include "vector3d.hpp"
 
 using simulationBox::Atom;
 using simulationBox::CellList;

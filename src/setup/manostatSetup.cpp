@@ -31,7 +31,7 @@
 #include "manostatSettings.hpp"   // for ManostatSettings
 #include "mdEngine.hpp"           // for Engine
 #include "settings.hpp"           // for IsMDJobType
-#include "stochasticRescalingManostat.hpp"   // for StochasticRescalingManostat
+#include "stochasticRescalingManostat.hpp"
 #include "typeAliases.hpp"
 
 using namespace setup;
@@ -62,7 +62,7 @@ void setup::setupManostat(Engine &engine)
  *
  * @param engine
  */
-ManostatSetup::ManostatSetup(MDEngine &engine) : _engine(engine){};
+ManostatSetup::ManostatSetup(MDEngine &engine) : _engine(engine) {}
 
 /**
  * @brief setup manostat
@@ -163,7 +163,7 @@ void ManostatSetup::setupStochasticRescalingManostat()
 
         case NONE: // fall through
         case ISOTROPIC:
-            _engine.makeManostat(pq::StochasticManostat(pTarget, tau, compress));
+            _engine.makeManostat(manostat::StochasticRescalingManostat(pTarget, tau, compress));
 
             // clang-format on
     }

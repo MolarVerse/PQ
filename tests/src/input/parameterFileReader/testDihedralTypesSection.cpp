@@ -22,11 +22,8 @@
 
 #include "constants/conversionFactors.hpp"   // for _DEG_TO_RAD_
 #include "dihedralSection.hpp"               // for DihedralSection
-#include "dihedralType.hpp"                  // for DihedralType
 #include "engine.hpp"                        // for Engine
 #include "exceptions.hpp"                    // for ParameterFileException
-#include "forceFieldClass.hpp"               // for ForceField
-#include "parameterFileSection.hpp"          // for parameterFile
 #include "testParameterFileSection.hpp"      // for TestParameterFileSection
 #include "throwWithMessage.hpp"              // for ASSERT_THROW_MSG
 

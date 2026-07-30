@@ -29,7 +29,6 @@
 #include "constraints.hpp"      // for Constraints
 #include "molecule.hpp"         // for Molecule
 #include "simulationBox.hpp"    // for SimulationBox
-#include "vector3d.hpp"         // for Vec3D
 
 #include <gtest/gtest.h>   // for Test
 #include <memory>          // for make_shared, __shared_ptr_access, shared_ptr

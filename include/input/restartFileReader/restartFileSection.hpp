@@ -26,7 +26,6 @@
 
 #include <fstream>   // for ifstream
 #include <string>    // for string, allocator
-#include <vector>    // for vector
 
 #include "typeAliases.hpp"
 
