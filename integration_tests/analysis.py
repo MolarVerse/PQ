@@ -29,7 +29,13 @@ import numpy as np
 from PQAnalysis.io import read_trajectory, EnergyFileReader
 
 
-def check_pq_output(base_name, folder_name, ref_folder="ref_data"):
+def check_pq_output(
+    base_name,
+    folder_name,
+    ref_folder="ref_data",
+    force_rtol=1e-9,
+    force_atol=0.0,
+):
 
     ref_path = Path("..") / folder_name / ref_folder
 
@@ -48,7 +54,7 @@ def check_pq_output(base_name, folder_name, ref_folder="ref_data"):
     ref_traj = read_trajectory(
         str(ref_path / (base_name + ".force")), traj_format="force")
 
-    assert traj.isclose(ref_traj)
+    assert traj.isclose(ref_traj, rtol=force_rtol, atol=force_atol)
 
     traj = read_trajectory(base_name + ".chrg", traj_format="charge")
     ref_traj = read_trajectory(
