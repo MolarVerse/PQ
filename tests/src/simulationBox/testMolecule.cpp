@@ -27,7 +27,6 @@
 #include "mathUtilities.hpp"     // for compare
 #include "moleculeType.hpp"      // for MoleculeType
 #include "orthorhombicBox.hpp"   // for OrthorhombicBox
-#include "staticMatrix.hpp"      // for diagonalMatrix
 
 TEST_F(TestMolecule, calculateCenterOfMass)
 {

@@ -28,7 +28,6 @@
 #include <string>       // for allocator, operator==, string
 #include <vector>       // for vector
 
-#include "celllist.hpp"          // for CellList
 #include "engine.hpp"            // for Engine
 #include "exceptions.hpp"        // for InputFileException
 #include "inputFileParser.hpp"   // for checkCommand, InputFileParser

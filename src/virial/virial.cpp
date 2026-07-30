@@ -23,7 +23,6 @@
 #include "virial.hpp"
 
 #include <cstddef>   // for size_t
-#include <vector>    // for vector
 
 #include "molecule.hpp"        // for Molecule
 #include "physicalData.hpp"    // for PhysicalData, physicalData, simulationBox

@@ -23,7 +23,6 @@
 #include <gtest/gtest.h>   // for Test, TestInfo
 
 #include <cmath>    // for M_PI
-#include <memory>   // for allocator
 
 #include "constants/conversionFactors.hpp"           // for _ANGSTROM_TO_METER_
 #include "constants/internalConversionFactors.hpp"   // for _FORCE_UNIT_TO_SI_, ...

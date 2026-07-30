@@ -26,10 +26,7 @@
 
 #include <vector>   // for vector
 
-#include "mShakeReference.hpp"   // for MShakeReference
-#include "matrix.hpp"            // for Matrix
-#include "typeAliases.hpp"       // for SimBox, Vec3D, MShakeRef
-#include "vector3d.hpp"          // for Vec3D
+#include "typeAliases.hpp"   // for SimBox, Vec3D, MShakeRef
 
 namespace constraints
 {

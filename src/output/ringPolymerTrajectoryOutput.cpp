@@ -25,16 +25,13 @@
 #include <algorithm>    // for __for_each_fn, for_each
 #include <cstddef>      // for size_t
 #include <format>       // for format
-#include <functional>   // for identity
 #include <ostream>      // for basic_ostream, ofstream, operator<<
 #include <sstream>      // for ostringstream
-#include <string>       // for operator<<, char_traits
 
 #include "molecule.hpp"              // for Molecule
 #include "outputFileSettings.hpp"    // for OutputFileSettings
 #include "ringPolymerSettings.hpp"   // for RingPolymerSettings
 #include "simulationBox.hpp"         // for SimulationBox
-#include "vector3d.hpp"              // for Vec3D, operator<<
 
 using output::RingPolymerTrajectoryOutput;
 using namespace settings;

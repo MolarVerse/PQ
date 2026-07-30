@@ -24,7 +24,6 @@
 
 #include <format>   // for format
 
-#include "constraints.hpp"          // for Constraints
 #include "distanceConstraint.hpp"   // for DistanceConstraint
 #include "engine.hpp"               // for Engine
 #include "exceptions.hpp"           // for TopologyException

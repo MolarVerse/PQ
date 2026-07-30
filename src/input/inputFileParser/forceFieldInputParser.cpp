@@ -28,10 +28,8 @@
 
 #include "engine.hpp"                 // for Engine
 #include "exceptions.hpp"             // for InputFileException, customException
-#include "forceFieldClass.hpp"        // for ForceField
 #include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
 #include "forceFieldSettings.hpp"     // for ForceFieldSettings
-#include "potential.hpp"              // for Potential
 #include "stringUtilities.hpp"        // for toLowerCopy
 
 using namespace input;

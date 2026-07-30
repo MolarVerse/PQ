@@ -27,7 +27,6 @@
 
 #include "angleSection.hpp"                 // for AngleSection
 #include "bondSection.hpp"                  // for BondSection
-#include "constraints.hpp"                  // for Constraints
 #include "dihedralSection.hpp"              // for DihedralSection
 #include "distanceConstraintsSection.hpp"   // for DistanceConstraintsSection
 #include "engine.hpp"                       // for Engine

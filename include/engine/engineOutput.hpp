@@ -40,7 +40,7 @@
 #include "rstFileOutput.hpp"
 #include "stdoutOutput.hpp"
 #include "stressOutput.hpp"
-#include "timer.hpp"   // for Timer
+#include "timer.hpp"
 #include "timingsOutput.hpp"
 #include "trajectoryOutput.hpp"
 #include "typeAliases.hpp"
@@ -121,33 +121,35 @@ namespace engine
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] pq::EnergyOutput     &getEnergyOutput();
-        [[nodiscard]] pq::EnergyOutput     &getInstantEnergyOutput();
-        [[nodiscard]] pq::TrajectoryOutput &getXyzOutput();
-        [[nodiscard]] pq::TrajectoryOutput &getVelOutput();
-        [[nodiscard]] pq::TrajectoryOutput &getForceOutput();
-        [[nodiscard]] pq::TrajectoryOutput &getChargeOutput();
-        [[nodiscard]] pq::RstFileOutput    &getRstFileOutput();
-        [[nodiscard]] pq::InfoOutput       &getInfoOutput();
+        [[nodiscard]] output::EnergyOutput     &getEnergyOutput();
+        [[nodiscard]] output::EnergyOutput     &getInstantEnergyOutput();
+        [[nodiscard]] output::TrajectoryOutput &getXyzOutput();
+        [[nodiscard]] output::TrajectoryOutput &getVelOutput();
+        [[nodiscard]] output::TrajectoryOutput &getForceOutput();
+        [[nodiscard]] output::TrajectoryOutput &getChargeOutput();
+        [[nodiscard]] output::RstFileOutput    &getRstFileOutput();
+        [[nodiscard]] output::InfoOutput       &getInfoOutput();
 
-        [[nodiscard]] pq::LogOutput    &getLogOutput();
-        [[nodiscard]] pq::StdoutOutput &getStdoutOutput();
+        [[nodiscard]] output::LogOutput    &getLogOutput();
+        [[nodiscard]] output::StdoutOutput &getStdoutOutput();
 
-        [[nodiscard]] pq::MomentumOutput &getMomentumOutput();
-        [[nodiscard]] pq::VirialOutput   &getVirialOutput();
-        [[nodiscard]] pq::StressOutput   &getStressOutput();
-        [[nodiscard]] pq::BoxFileOutput  &getBoxFileOutput();
+        [[nodiscard]] output::MomentumOutput &getMomentumOutput();
+        [[nodiscard]] output::VirialOutput   &getVirialOutput();
+        [[nodiscard]] output::StressOutput   &getStressOutput();
+        [[nodiscard]] output::BoxFileOutput  &getBoxFileOutput();
 
-        [[nodiscard]] pq::OptOutput &getOptOutput();
+        [[nodiscard]] output::OptOutput &getOptOutput();
 
-        [[nodiscard]] pq::RPMDRstFileOutput &getRingPolymerRstFileOutput();
-        [[nodiscard]] pq::RPMDTrajOutput    &getRingPolymerXyzOutput();
-        [[nodiscard]] pq::RPMDTrajOutput    &getRingPolymerVelOutput();
-        [[nodiscard]] pq::RPMDTrajOutput    &getRingPolymerForceOutput();
-        [[nodiscard]] pq::RPMDTrajOutput    &getRingPolymerChargeOutput();
-        [[nodiscard]] pq::RPMDEnergyOutput  &getRingPolymerEnergyOutput();
+        // clang-format off
+        [[nodiscard]] output::RingPolymerRestartFileOutput &getRingPolymerRstFileOutput();
+        [[nodiscard]] output::RingPolymerTrajectoryOutput &getRingPolymerXyzOutput();
+        [[nodiscard]] output::RingPolymerTrajectoryOutput &getRingPolymerVelOutput();
+        [[nodiscard]] output::RingPolymerTrajectoryOutput &getRingPolymerForceOutput();
+        [[nodiscard]] output::RingPolymerTrajectoryOutput &getRingPolymerChargeOutput();
+        [[nodiscard]] output::RingPolymerEnergyOutput &getRingPolymerEnergyOutput();
+        // clang-format on
 
-        [[nodiscard]] pq::TimingsOutput &getTimingsOutput();
+        [[nodiscard]] output::TimingsOutput &getTimingsOutput();
     };
 
 }   // namespace engine

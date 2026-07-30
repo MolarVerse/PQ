@@ -23,10 +23,8 @@
 #include "timer.hpp"
 
 #include <algorithm>   // for ranges::sort
-#include <ranges>      // for ranges::sort
 
 #include "exceptions.hpp"
-#include "timingsSettings.hpp"
 
 using namespace timings;
 using namespace customException;

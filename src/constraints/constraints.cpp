@@ -24,12 +24,10 @@
 
 #include <algorithm>    // for ranges::for_each
 #include <format>       // for format
-#include <functional>   // for identity
-#include <string>       // for string
 #include <vector>       // for vector
 
 #include "exceptions.hpp"      // for ShakeException
-#include "mathUtilities.hpp"   // for kroneckerDelta
+#include "physicalData.hpp"    // for PhysicalData
 #include "simulationBox.hpp"   // for SimulationBox
 
 using namespace constraints;

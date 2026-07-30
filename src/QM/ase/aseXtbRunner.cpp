@@ -22,11 +22,7 @@
 
 #include "aseXtbRunner.hpp"
 
-#include "hubbardDerivMap.hpp"
-#include "pybind11/embed.h"
-
 using QM::AseXtbRunner;
-using namespace constants;
 
 /**
  * @brief Construct a new AseDftbRunner::AseDftbRunner object

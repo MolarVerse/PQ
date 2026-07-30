@@ -22,9 +22,8 @@
 
 #include "ringPolymerEngine.hpp"
 
-#include <algorithm>    // for __for_each_fn
-#include <cstddef>      // for size_t
-#include <functional>   // for identity
+#include <algorithm>   // for __for_each_fn
+#include <cstddef>     // for size_t
 
 #include "atom.hpp"                                  // for Atom
 #include "constants/internalConversionFactors.hpp"   // for _RPMD_PREFACTOR_
@@ -33,9 +32,7 @@
 #include "physicalData.hpp"                          // for PhysicalData
 #include "ringPolymerSettings.hpp"                   // for RingPolymerSettings
 #include "thermostatSettings.hpp"                    // for ThermostatSettings
-#include "timer.hpp"                                 // for Timings
 #include "timingsSettings.hpp"                       // for TimingsSettings
-#include "vector3d.hpp"   // for Vector3D, normSquared
 
 using engine::Engine;
 using engine::RingPolymerEngine;

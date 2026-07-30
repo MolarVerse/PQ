@@ -30,7 +30,6 @@
 
 #include "intraNonBondedContainer.hpp"   // for IntraNonBondedContainer
 #include "typeAliases.hpp"
-#include "vector3d.hpp"   // for Vec3D
 
 namespace intraNonBonded
 {

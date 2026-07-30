@@ -27,9 +27,7 @@
 
 #include "engine.hpp"
 #include "exceptions.hpp"
-#include "forceFieldClass.hpp"
 #include "jCouplingSection.hpp"
-#include "simulationBox.hpp"
 #include "testTopologySection.hpp"
 
 using input::topology::JCouplingSection;

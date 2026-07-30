@@ -25,7 +25,6 @@
 #define _KOKKOS_COULOMB_WOLF_HPP_
 
 #include <Kokkos_DualView.hpp>
-#include <utility>   // for pair
 
 namespace potential
 {

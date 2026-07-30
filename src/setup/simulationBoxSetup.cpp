@@ -25,7 +25,6 @@
 #include <algorithm>     // for __for_each_fn, for_each
 #include <cstddef>       // for size_t
 #include <format>        // for format
-#include <functional>    // for identity
 #include <map>           // for map
 #include <numeric>       // for accumulate
 #include <string>        // for string, allocator, operator+
@@ -33,20 +32,16 @@
 #include <vector>        // for vector
 
 #include "atom.hpp"            // for Atom, simulationBox
-#include "atomMassMap.hpp"     // for atomMassMap
 #include "atomNumberMap.hpp"   // for atomNumberMap
 #include "constants/conversionFactors.hpp"   // for _AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_
 #include "engine.hpp"                        // for Engine
 #include "exceptions.hpp"              // for MolDescriptorException
 #include "fileSettings.hpp"            // for FileSettings
-#include "forceFieldSettings.hpp"      // for ForceFieldSettings
 #include "logOutput.hpp"               // for LogOutput
 #include "maxwellBoltzmann.hpp"        // for MaxwellBoltzmann
 #include "molecule.hpp"                // for Molecule
 #include "outputMessages.hpp"          // for _ANGSTROM_
-#include "physicalData.hpp"            // for PhysicalData
 #include "potentialSettings.hpp"       // for PotentialSettings
-#include "settings.hpp"                // for Settings
 #include "simulationBox.hpp"           // for SimulationBox
 #include "simulationBoxSettings.hpp"   // for SimulationBoxSettings
 #include "stdoutOutput.hpp"            // for StdoutOutput

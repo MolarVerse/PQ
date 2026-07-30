@@ -24,9 +24,6 @@
 
 #define _OPTIMIZER_SETUP_HPP_
 
-#include <memory>     // for shared_ptr
-#include <optional>   // for optional
-
 #include "typeAliases.hpp"
 
 namespace setup

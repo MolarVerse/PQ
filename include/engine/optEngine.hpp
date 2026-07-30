@@ -26,13 +26,10 @@
 
 #include <memory>   // for unique_ptr
 
-#include "constant.hpp"               // for ConstantLearningRateStrategy
-#include "engine.hpp"                 // for Engine
-#include "evaluator.hpp"              // for Evaluator
-#include "learningRateStrategy.hpp"   // for learningRateStrategy
-#include "mmEvaluator.hpp"            // for MMEvaluator
-#include "optimizer.hpp"              // for Optimizer
-#include "steepestDescent.hpp"        // for SteepestDescent
+#include "engine.hpp"
+#include "evaluator.hpp"
+#include "learningRateStrategy.hpp"
+#include "optimizer.hpp"
 #include "typeAliases.hpp"
 
 namespace engine
@@ -51,7 +48,7 @@ namespace engine
         pq::SharedEvaluator    _evaluator;
 
         pq::SharedPhysicalData _physicalDataOld =
-            std::make_shared<pq::PhysicalData>();
+            std::make_shared<physicalData::PhysicalData>();
 
         bool _converged  = false;
         bool _optStopped = false;
@@ -73,17 +70,19 @@ namespace engine
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] pq::Optimizer    &getOptimizer();
-        [[nodiscard]] pq::LearningRate &getLearningRate();
-        [[nodiscard]] pq::Evaluator    &getEvaluator();
-        [[nodiscard]] pq::Convergence  &getConvergence();
+        [[nodiscard]] opt::Optimizer            &getOptimizer();
+        [[nodiscard]] opt::LearningRateStrategy &getLearningRate();
+        [[nodiscard]] opt::Evaluator            &getEvaluator();
+        [[nodiscard]] opt::Convergence          &getConvergence();
 
-        [[nodiscard]] std::shared_ptr<pq::Optimizer>    getSharedOptimizer();
-        [[nodiscard]] std::shared_ptr<pq::LearningRate> getSharedLearningRate();
-        [[nodiscard]] std::shared_ptr<pq::Evaluator>    getSharedEvaluator();
-
-        [[nodiscard]] pq::PhysicalData      &getPhysicalDataOld();
-        [[nodiscard]] pq::SharedPhysicalData getSharedPhysicalDataOld();
+        // clang-format off
+        [[nodiscard]] std::shared_ptr<opt::Optimizer> getSharedOptimizer();
+        [[nodiscard]] std::shared_ptr<opt::LearningRateStrategy> getSharedLearningRate();
+        [[nodiscard]] std::shared_ptr<opt::Evaluator> getSharedEvaluator();
+        
+        [[nodiscard]] physicalData::PhysicalData &getPhysicalDataOld();
+        [[nodiscard]] std::shared_ptr<physicalData::PhysicalData> getSharedPhysicalDataOld();
+        // clang-format on
 
         [[nodiscard]] output::OptOutput &getOptOutput();
     };

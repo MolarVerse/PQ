@@ -31,7 +31,7 @@
 #include "defaults.hpp"             // for defaults
 #include "distanceConstraint.hpp"   // for DistanceConstraint
 #include "mShake.hpp"               // for MShake
-#include "physicalData.hpp"         // for PhysicalData
+#include "mShakeReference.hpp"      // for MShakeReference
 #include "timer.hpp"                // for Timer
 #include "typeAliases.hpp"
 

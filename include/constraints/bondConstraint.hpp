@@ -28,7 +28,6 @@
 
 #include "bond.hpp"
 #include "typeAliases.hpp"
-#include "vector3d.hpp"
 
 namespace constraints
 {
