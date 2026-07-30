@@ -41,7 +41,7 @@ Hamiltonian = DFTB {
   }
 
   SlaterKosterFiles = Type2FileNames {
-    Prefix = "/home/ape/sk_files/3ob/"
+    Prefix = "../../build/external/slakos/3ob/skfiles/"
     Separator = "-"
     Suffix = ".skf"
     LowerCaseTypeName = No
