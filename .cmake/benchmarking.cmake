@@ -13,7 +13,7 @@ FetchContent_Declare(
 
 # Keep project warning policy from being applied to third-party sources.
 set(_CMAKE_CXX_FLAGS_BACKUP "${CMAKE_CXX_FLAGS}")
-foreach(flag IN ITEMS "-Wswitch-enum" "-Werror=switch-enum")
+foreach(flag IN ITEMS "-Wswitch-enum" "-Werror=switch-enum" "-Werror" "-Wundef")
     string(REPLACE "${flag}" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 endforeach()
 
