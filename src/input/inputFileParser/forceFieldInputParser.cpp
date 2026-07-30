@@ -22,15 +22,15 @@
 
 #include "forceFieldInputParser.hpp"
 
-#include <cstddef>      // for size_t
-#include <format>       // for format
-#include <functional>   // for _Bind_front_t, bind_front
+#include <cstddef>   // for size_t
+#include <format>    // for format
 
 #include "engine.hpp"                 // for Engine
 #include "exceptions.hpp"             // for InputFileException, customException
 #include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
 #include "forceFieldSettings.hpp"     // for ForceFieldSettings
-#include "stringUtilities.hpp"        // for toLowerCopy
+#include "parserUtils.hpp"
+#include "stringUtilities.hpp"   // for toLowerCopy
 
 using namespace input;
 using namespace engine;
@@ -53,7 +53,7 @@ ForceFieldInputParser::ForceFieldInputParser(Engine &engine)
 {
     addKeyword(
         std::string("force-field"),
-        bind_front(&ForceFieldInputParser::parseForceFieldType, this),
+        bindMember(&ForceFieldInputParser::parseForceFieldType, this),
         false
     );
 }
