@@ -54,8 +54,13 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
           git add CHANGELOG.md DEV-CHANGELOG.md changes/
-          git commit -m "docs: update changelogs for $version"
-          git push origin HEAD:main
+
+          if git diff --cached --quiet; then
+            echo "ℹ️ No changelog changes to commit."
+          else
+            git commit -m "docs: update changelogs for $version"
+            git push origin HEAD:main
+          fi
 
       - name: Create Git tag
         id: create_tag
@@ -81,9 +86,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Merge main back into dev
+      - name: Create PR to sync main into dev
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git fetch origin dev
-          git checkout dev
-          git merge origin/main --no-edit
-          git push origin dev
+          version="${{ steps.extract_version.outputs.version }}"
+
+          gh pr create --base dev --head main \
+            --title "Sync main → dev after release $version" \
+            --body "Automated sync PR from \`main\` after releasing \`$version\`. Please review and approve to merge." || echo "ℹ️ PR may already exist, skipping."

@@ -24,14 +24,13 @@
 
 #include <cstdint>
 #include <string>
+#include <system_error>
 #include <vector>
 
 #if defined(_WIN32)
 #include <windows.h>
 #elif defined(__APPLE__)
 #include <mach-o/dyld.h>
-#elif defined(__linux__)
-#include <unistd.h>
 #endif
 
 std::filesystem::path utilities::executablePath()
@@ -60,21 +59,8 @@ std::filesystem::path utilities::executablePath()
     if (_NSGetExecutablePath(buffer.data(), &size) == 0)
         return std::filesystem::weakly_canonical(buffer.data());
 #elif defined(__linux__)
-    auto buffer = std::vector<char>(1024);
-    while (true)
-    {
-        const auto length =
-            readlink("/proc/self/exe", buffer.data(), buffer.size());
-        if (length < 0)
-            break;
-        if (static_cast<size_t>(length) < buffer.size())
-            return std::filesystem::weakly_canonical(
-                std::filesystem::path(
-                    std::string(buffer.data(), static_cast<size_t>(length))
-                )
-            );
-        buffer.resize(buffer.size() * 2);
-    }
+    auto error = std::error_code{};
+    return std::filesystem::canonical("/proc/self/exe", error);
 #endif
 
     return {};
