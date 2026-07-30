@@ -207,6 +207,7 @@ namespace physicalData
         [[nodiscard]] pq::tensor3D        getKinEnergyAtomTensor() const;
         [[nodiscard]] pq::tensor3D        getKinEnergyMolTensor() const;
         [[nodiscard]] const pq::tensor3D &getKinEnergyVirialTensor() const;
+        [[nodiscard]] bool                isKinEnergyVirialAtomic() const;
         [[nodiscard]] pq::tensor3D        getVirial() const;
         [[nodiscard]] pq::tensor3D        getStressTensor() const;
 

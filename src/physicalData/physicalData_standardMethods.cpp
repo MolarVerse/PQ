@@ -598,6 +598,16 @@ const pq::tensor3D &PhysicalData::getKinEnergyVirialTensor() const
 }
 
 /**
+ * @brief get the kinetic energy virial tensor is atomic
+ *
+ * @return bool
+ */
+bool PhysicalData::isKinEnergyVirialAtomic() const
+{
+    return _kinEnergyVirialTensor.isAtomic;
+}
+
+/**
  * @brief get the virial
  *
  * @return linearAlgebra::tensor3D
