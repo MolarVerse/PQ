@@ -42,13 +42,6 @@ jobs:
           echo "✅ Found release version: $version"
           echo "version=$version" >> $GITHUB_OUTPUT
 
-      # git-cliff generates the developer changelog from conventional commits.
-      # CHANGELOG.md is curated for users in the release pull request.
-      - name: Install git-cliff
-        uses: taiki-e/install-action@v2
-        with:
-          tool: git-cliff
-
       - name: Update changelogs
         run: |
           version="${{ steps.extract_version.outputs.version }}"
