@@ -23,15 +23,9 @@
 #include "interWater.hpp"   // for InterWater
 
 #include <utility>
-#include <vector>
 
-#include "atom.hpp"                // for Atom
-#include "coulombPotential.hpp"    // for CoulombPotential
-#include "physicalData.hpp"        // for PhysicalData
 #include "potentialSettings.hpp"   // for PotentialSettings
-#include "simulationBox.hpp"       // for SimulationBox
 #include "typeAliases.hpp"
-#include "vector3d.hpp"   // for normSquared
 
 using namespace potential;
 using namespace pq;

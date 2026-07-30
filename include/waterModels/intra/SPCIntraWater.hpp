@@ -26,8 +26,6 @@
 
 #include "constants/conversionFactors.hpp"   // for constants
 #include "intraWater.hpp"                    // for IntraWater
-#include "physicalData.hpp"                  // for PhysicalData
-#include "simulationBox.hpp"                 // for SimulationBox
 #include "typeAliases.hpp"
 
 using namespace constants;
@@ -83,6 +81,8 @@ namespace waterModel
 
 }   // namespace waterModel
 
-#include "SPCIntraWater.tpp.hpp"   // DO NOT MOVE THIS LINE
+#ifndef _SPC_INTRA_WATER_TPP_
+#include "SPCIntraWater.tpp"   // IWYU pragma: export - DO NOT MOVE THIS LINE
+#endif
 
 #endif   //  _SPC_INTRA_WATER_HPP_

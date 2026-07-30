@@ -236,16 +236,16 @@ void WaterModelSetup::checkMoldescriptorWaterCharge(
     const InterWaterState &state
 )
 {
-    const auto modelName = string(WaterModelSettings::getWaterInterModel());
-    constexpr double tol = 1e-8;
-    const auto       checkCharge = [tol, &modelName](
+    const auto modelName   = string(WaterModelSettings::getWaterInterModel());
+    const auto checkCharge = [&modelName](
                                  const pq::Molecule &water,
                                  const size_t        atomIndex,
                                  const double        expected,
                                  const std::string  &atomName
                              )
     {
-        const auto actual = water.getPartialCharge(atomIndex);
+        constexpr double tol    = 1e-8;
+        const auto       actual = water.getPartialCharge(atomIndex);
         if (std::abs(actual - expected) > tol)
             throw(UserInputException(
                 std::format(
