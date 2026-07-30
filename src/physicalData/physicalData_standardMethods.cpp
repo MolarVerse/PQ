@@ -230,7 +230,7 @@ void PhysicalData::setKineticEnergyAtomicVector(
     const linearAlgebra::tensor3D &vec
 )
 {
-    _kineticEnergyAtomicTensor = vec;
+    _kinEnergyVirialTensor.atomic = vec;
 }
 
 /**
@@ -242,7 +242,7 @@ void PhysicalData::setKineticEnergyMolecularVector(
     const linearAlgebra::tensor3D &vec
 )
 {
-    _kinEnergyMolTensor = vec;
+    _kinEnergyVirialTensor.molecular = vec;
 }
 
 /**
@@ -574,7 +574,7 @@ double PhysicalData::getRingPolymerEnergy() const { return _ringPolymerEnergy; }
  */
 linearAlgebra::tensor3D PhysicalData::getKinEnergyAtomTensor() const
 {
-    return _kineticEnergyAtomicTensor;
+    return _kinEnergyVirialTensor.atomic;
 }
 
 /**
@@ -584,7 +584,27 @@ linearAlgebra::tensor3D PhysicalData::getKinEnergyAtomTensor() const
  */
 linearAlgebra::tensor3D PhysicalData::getKinEnergyMolTensor() const
 {
-    return _kinEnergyMolTensor;
+    return _kinEnergyVirialTensor.molecular;
+}
+
+/**
+ * @brief get the kinetic energy virial tensor
+ *
+ * @return const pq::tensor3D&
+ */
+const pq::tensor3D &PhysicalData::getKinEnergyVirialTensor() const
+{
+    return _kinEnergyVirialTensor.getVirialTensor();
+}
+
+/**
+ * @brief get the kinetic energy virial tensor is atomic
+ *
+ * @return bool
+ */
+bool PhysicalData::isKinEnergyVirialAtomic() const
+{
+    return _kinEnergyVirialTensor.isAtomic;
 }
 
 /**

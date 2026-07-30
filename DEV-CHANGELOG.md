@@ -57,6 +57,7 @@ in `CHANGELOG.md`.
 - Cache the integration-test environment.
 - Build portable binaries for reusable compiler caches.
 - Fix integration-test environment setup.
+- After a realease is triggered due to the new branch protection rule we don't merge main directly into dev but make a PR that needs approval
 
 ### Tests
 
