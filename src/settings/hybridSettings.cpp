@@ -140,6 +140,16 @@ void HybridSettings::setSmoothingMethod(const SmoothingMethod method)
     _smoothing = method;
 }
 
+/**
+ * @brief set the type of QM force distribtion in hotspot smoothing
+ *
+ * @param method
+ */
+void HybridSettings::setQMForceDist(const QMForceDist method)
+{
+    _qmForceDist = method;
+}
+
 /********************
  *                  *
  * standard getters *
@@ -226,3 +236,10 @@ settings::SmoothingMethod HybridSettings::getSmoothingMethod()
 {
     return _smoothing;
 }
+
+/**
+ * @brief get the type of QM force distribution in hotspot smoothing
+ *
+ * @return QMForceDist
+ */
+settings::QMForceDist HybridSettings::getQMForceDist() { return _qmForceDist; }

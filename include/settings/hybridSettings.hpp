@@ -24,8 +24,8 @@
 
 #define _HYBRID_SETTINGS_HPP_
 
-#include <optional>      // for optional
-#include <vector>        // for vector
+#include <optional>   // for optional
+#include <vector>     // for vector
 
 namespace settings
 {
@@ -40,6 +40,20 @@ namespace settings
         NONE,
         HOTSPOT,
         EXACT
+    };
+
+    /**
+     * @enum QMForceDist
+     *
+     * @brief enum class to store the type of force distribution of the QM
+     * method in hotspot smoothing
+     *
+     */
+    enum class QMForceDist
+    {
+        NONE,
+        EQUAL,
+        RANDOM
     };
 
     /**
@@ -62,7 +76,8 @@ namespace settings
         static inline double _smoothingRegionThickness = 0.0;
         static inline double _pointChargeThickness     = 0.0;
 
-        static inline SmoothingMethod _smoothing = SmoothingMethod::NONE;
+        static inline SmoothingMethod _smoothing   = SmoothingMethod::NONE;
+        static inline QMForceDist     _qmForceDist = QMForceDist::NONE;
 
        public:
         /********************
@@ -81,6 +96,7 @@ namespace settings
         static void setPointChargeThickness(const double radius);
 
         static void setSmoothingMethod(const SmoothingMethod method);
+        static void setQMForceDist(const QMForceDist method);
 
         /********************
          * standard getters *
@@ -99,6 +115,7 @@ namespace settings
         [[nodiscard]] static double getPointChargeThickness();
 
         [[nodiscard]] static SmoothingMethod getSmoothingMethod();
+        [[nodiscard]] static QMForceDist     getQMForceDist();
     };
 }   // namespace settings
 

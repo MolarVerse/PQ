@@ -51,6 +51,7 @@ namespace input
         void parseSmoothingRegionThickness(const pq::strings &, const size_t);
         void parsePointChargeThickness(const pq::strings &, const size_t);
         void parseSmoothingMethod(const pq::strings &, const size_t);
+        void parseQMForceDistribution(const pq::strings &, const size_t);
 
         std::vector<int> parseSelection(
             const std::string &,
