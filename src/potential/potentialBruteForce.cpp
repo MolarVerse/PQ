@@ -255,24 +255,50 @@ void PotentialBruteForce::calculateHotspotSmoothingMMForces(
     double totalCoulombEnergy    = 0.0;
     double totalNonCoulombEnergy = 0.0;
 
+    std::vector<Molecule *> coreRecipients;
+    std::vector<Molecule *> nonCoreRecipients;
+
+    for (auto &mol2 : simBox.getMoleculesOutsideZone(SMOOTHING))
+    {
+        if (mol2.getHybridZone() == CORE)
+            coreRecipients.push_back(&mol2);
+        else
+            nonCoreRecipients.push_back(&mol2);
+    }
+
     for (auto &mol1 : simBox.getMoleculesInsideZone(SMOOTHING))
     {
         const auto isMol1Water = mol1.getMoltype() == waterTypeValue;
 
-        for (auto &mol2 : simBox.getMoleculesOutsideZone(SMOOTHING))
+        // CORE recipients: evaluate Coulomb term only.
+        for (auto *mol2 : coreRecipients)
         {
             if (isWaterInterModelSet && isMol1Water &&
-                mol2.getMoltype() == waterTypeValue)
+                mol2->getMoltype() == waterTypeValue)
                 continue;
 
             for (auto &atom1 : mol1.getAtoms())
-                for (auto &atom2 : mol2.getAtoms())
+                for (auto &atom2 : mol2->getAtoms())
+                    totalCoulombEnergy += calculateSingleCoulombInteraction<
+                        MMChargeTag,
+                        QMChargeTag>(*box, *atom1, *atom2);
+        }
+
+        // Non-CORE recipients: evaluate full interaction.
+        for (auto *mol2 : nonCoreRecipients)
+        {
+            if (isWaterInterModelSet && isMol1Water &&
+                mol2->getMoltype() == waterTypeValue)
+                continue;
+
+            for (auto &atom1 : mol1.getAtoms())
+                for (auto &atom2 : mol2->getAtoms())
                 {
                     const auto [coulombEnergy, nonCoulombEnergy] =
                         calculateSingleInteraction<MMChargeTag, QMChargeTag>(
                             *box,
                             mol1,
-                            mol2,
+                            *mol2,
                             *atom1,
                             *atom2
                         );
