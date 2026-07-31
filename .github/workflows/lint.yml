@@ -15,6 +15,9 @@ on:
       - 'benchmarks/CMakeLists.txt'
       - 'benchmarks/src/**'
       - 'CMakeLists.txt'
+      - '.clang-tidy'
+      - 'scripts/clang_tidy.sh'
+      - '.github/workflows/lint.yml'
   push:
     branches:
       - dev
@@ -26,8 +29,10 @@ on:
       - 'include/**'
       - 'src/**'
       - 'integration_tests/**'
-      - 'tests/**'
-      - 'benchmarks/CMakeLists.txt'
+      - 'CMakeLists.txt'
+      - '.clang-tidy'
+      - 'scripts/clang_tidy.sh'
+      - '.github/workflows/lint.yml'
       - 'benchmarks/src/**'
       - 'CMakeLists.txt'
   workflow_dispatch:
@@ -72,4 +77,4 @@ jobs:
 
       - name: Run clangd-tidy
         run: |
-          clangd-tidy $(find src/ apps/ include/ -name "*.cpp" ! -name "moc_*.cpp" 2>/dev/null) -p=build
+          clangd-tidy $(find src/ apps/ include/ -name "*.cpp" -o -name "*.hpp" -o -name "*.tpp" 2>/dev/null) -p=build
