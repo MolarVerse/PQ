@@ -34,3 +34,13 @@ TEST(ExecutablePathTest, resolvesRunningExecutable)
     EXPECT_TRUE(std::filesystem::is_regular_file(executable));
     EXPECT_EQ(executable.stem(), "testExecutablePath");
 }
+
+TEST(ExecutablePathTest, resolvesInstalledDataRelativeToExecutable)
+{
+    const auto executable = utilities::executablePath();
+
+    EXPECT_EQ(
+        utilities::installedDataPath("references"),
+        executable.parent_path().parent_path() / "share" / "PQ" / "references"
+    );
+}

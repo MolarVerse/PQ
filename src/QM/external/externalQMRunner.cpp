@@ -47,14 +47,11 @@ using namespace constants;
 
 std::string QM::bundledQMScriptPath(const std::string_view script)
 {
-    const auto executable = utilities::executablePath();
-    if (!executable.empty())
-    {
-        const auto installedPath = executable.parent_path().parent_path() /
-                                   "share" / "PQ" / "scripts" / script;
-        if (std::filesystem::is_regular_file(installedPath))
-            return installedPath.string();
-    }
+    const auto installedPath = utilities::installedDataPath(
+        std::filesystem::path("scripts") / script
+    );
+    if (std::filesystem::is_regular_file(installedPath))
+        return installedPath.string();
 
     return (std::filesystem::path(SCRIPT_PATH_) / script).string();
 }
