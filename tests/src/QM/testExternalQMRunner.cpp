@@ -200,6 +200,17 @@ namespace
 
 TEST_F(ExternalQMRunnerTest, propagatesCommandFailure)
 {
+#if defined(_WIN32)
+    try
+    {
+        _runner.runCommand("true", "External QM");
+        FAIL() << "Expected command execution to be rejected on Windows";
+    }
+    catch (const QMRunnerException &error)
+    {
+        EXPECT_THAT(error.what(), HasSubstr("not supported on Windows"));
+    }
+#else
     EXPECT_NO_THROW(_runner.runCommand("true", "External QM"));
 
     try
@@ -211,6 +222,7 @@ TEST_F(ExternalQMRunnerTest, propagatesCommandFailure)
     {
         EXPECT_THAT(error.what(), HasSubstr("External QM command failed"));
     }
+#endif
 }
 
 TEST_F(ExternalQMRunnerTest, quotesDftbCommandArguments)
