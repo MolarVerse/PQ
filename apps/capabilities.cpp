@@ -25,9 +25,9 @@
 #include <cstdint>
 #include <iomanip>
 #include <ostream>
-#include <string_view>
 
 #include "defaults.hpp"
+#include "jsonOutput.hpp"
 #include "systemInfo.hpp"
 
 namespace
@@ -38,17 +38,6 @@ namespace
     constexpr bool _WITH_PYTHON_BINDINGS_  = PQ_BUILD_WITH_PYTHON_BINDINGS;
     constexpr bool _WITH_PYTHON_EMBEDDING_ = PQ_BUILD_WITH_PYTHON_EMBEDDING;
 
-    void writeJsonString(std::ostream &output, const std::string_view value)
-    {
-        output << '"';
-        for (const auto character : value)
-        {
-            if ('"' == character || '\\' == character)
-                output << '\\';
-            output << character;
-        }
-        output << '"';
-    }
 }   // namespace
 
 /**

@@ -1,6 +1,7 @@
 add_executable(PQ
   PQ.cpp
   capabilities.cpp
+  jsonOutput.cpp
 )
 
 target_include_directories(PQ
