@@ -47,9 +47,8 @@ using namespace constants;
 
 std::string QM::bundledQMScriptPath(const std::string_view script)
 {
-    const auto installedPath = utilities::installedDataPath(
-        std::filesystem::path("scripts") / script
-    );
+    const auto installedPath =
+        utilities::installedDataPath(std::filesystem::path("scripts") / script);
     if (std::filesystem::is_regular_file(installedPath))
         return installedPath.string();
 
