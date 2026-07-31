@@ -81,11 +81,18 @@ void ExternalQMRunner::executeCommand(
     const std::string_view program
 ) const
 {
+#if defined(_WIN32)
+    static_cast<void>(command);
+    throw QMRunnerException(
+        std::format("{} command execution is not supported on Windows", program)
+    );
+#else
     const auto status = std::system(std::string(command).c_str());
     if (status != EXIT_SUCCESS)
         throw QMRunnerException(
             std::format("{} command failed with status {}", program, status)
         );
+#endif
 }
 
 /**
