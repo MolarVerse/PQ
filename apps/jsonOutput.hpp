@@ -20,27 +20,16 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>
+#ifndef _JSON_OUTPUT_HPP_
 
-#include <filesystem>
+#define _JSON_OUTPUT_HPP_
 
-#include "executablePath.hpp"
+#include <iosfwd>
+#include <string_view>
 
-TEST(ExecutablePathTest, resolvesRunningExecutable)
+namespace cli
 {
-    const auto executable = utilities::executablePath();
-
-    EXPECT_FALSE(executable.empty());
-    EXPECT_TRUE(std::filesystem::is_regular_file(executable));
-    EXPECT_EQ(executable.stem(), "testExecutablePath");
+    void writeJsonString(std::ostream &output, std::string_view value);
 }
 
-TEST(ExecutablePathTest, resolvesInstalledDataRelativeToExecutable)
-{
-    const auto executable = utilities::executablePath();
-
-    EXPECT_EQ(
-        utilities::installedDataPath("references"),
-        executable.parent_path().parent_path() / "share" / "PQ" / "references"
-    );
-}
+#endif   // _JSON_OUTPUT_HPP_

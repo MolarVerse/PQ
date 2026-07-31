@@ -1,1 +1,1 @@
-- PQ setup tools now validate input ranges, cross-setting constraints, resource paths, and disabled couplings before a simulation starts.
+- PQ setup tools now expose bundled external-QM scripts and validate input ranges, setting constraints, resource paths, and disabled couplings.

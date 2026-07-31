@@ -25,7 +25,6 @@
 #include <algorithm>
 #include <filesystem>
 #include <format>
-#include <iomanip>
 #include <iostream>
 #include <memory>
 #include <ostream>
@@ -41,6 +40,7 @@
 #include "fileSettings.hpp"
 #include "forceFieldSettings.hpp"
 #include "inputFileReader.hpp"
+#include "jsonOutput.hpp"
 #include "manostatSettings.hpp"
 #include "mathUtilities.hpp"
 #include "qmSettings.hpp"
@@ -134,8 +134,7 @@ namespace
         if (!error && executable.parent_path() == buildExecutableDirectory)
             return buildPath;
 
-        return executable.parent_path().parent_path() / "share" / "PQ" /
-               installedRelativePath;
+        return utilities::installedDataPath(installedRelativePath);
     }
 
     std::filesystem::path bundledQMScriptPath(const std::string_view script)
@@ -405,42 +404,6 @@ namespace
                  "A zero compressibility disables cell response",
                  std::nullopt}
             );
-    }
-
-    void writeJsonString(std::ostream &output, const std::string_view value)
-    {
-        output << '"';
-
-        for (const auto character : value)
-        {
-            switch (character)
-            {
-                case '"': output << "\\\""; break;
-                case '\\': output << "\\\\"; break;
-                case '\b': output << "\\b"; break;
-                case '\f': output << "\\f"; break;
-                case '\n': output << "\\n"; break;
-                case '\r': output << "\\r"; break;
-                case '\t': output << "\\t"; break;
-                default:
-                    if (static_cast<unsigned char>(character) < 0x20)
-                    {
-                        const auto flags = output.flags();
-                        const auto fill  = output.fill();
-                        output << "\\u" << std::hex << std::setw(4)
-                               << std::setfill('0')
-                               << static_cast<unsigned int>(
-                                      static_cast<unsigned char>(character)
-                                  );
-                        output.flags(flags);
-                        output.fill(fill);
-                    }
-                    else
-                        output << character;
-            }
-        }
-
-        output << '"';
     }
 
     std::string_view string(const cli::ValidationSeverity severity)

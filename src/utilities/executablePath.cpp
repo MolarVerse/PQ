@@ -65,3 +65,15 @@ std::filesystem::path utilities::executablePath()
 
     return {};
 }
+
+std::filesystem::path utilities::installedDataPath(
+    const std::filesystem::path &relativePath
+)
+{
+    const auto executable = executablePath();
+    if (executable.empty())
+        return {};
+
+    return executable.parent_path().parent_path() / "share" / "PQ" /
+           relativePath;
+}

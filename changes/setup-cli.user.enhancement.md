@@ -1,1 +1,1 @@
-- The `PQ` executable now exposes version, help, compiled capabilities, and bundled external-QM script information for setup tools.
+- The `PQ` executable now exposes version, help, and compiled capabilities for setup tools.

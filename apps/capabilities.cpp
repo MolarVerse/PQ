@@ -29,11 +29,11 @@
 #include <iomanip>
 #include <limits>
 #include <ostream>
-#include <string_view>
 
 #include "constants/conversionFactors.hpp"
 #include "defaults.hpp"
 #include "externalQMScripts.hpp"
+#include "jsonOutput.hpp"
 #include "systemInfo.hpp"
 
 namespace
@@ -46,18 +46,6 @@ namespace
     constexpr bool _SHARED_                = PQ_BUILD_SHARED;
     constexpr bool _STATIC_                = PQ_BUILD_STATIC;
     constexpr bool _WITH_SINGULARITY_      = PQ_BUILD_WITH_SINGULARITY;
-
-    void writeJsonString(std::ostream &output, const std::string_view value)
-    {
-        output << '"';
-        for (const auto character : value)
-        {
-            if ('"' == character || '\\' == character)
-                output << '\\';
-            output << character;
-        }
-        output << '"';
-    }
 
     void writeExternalQMCapabilities(std::ostream &output)
     {
@@ -74,7 +62,7 @@ namespace
         {
             const auto method = cli::externalQMMethods[methodIndex];
             output << "        ";
-            writeJsonString(output, cli::externalQMProgramName(method));
+            cli::writeJsonString(output, cli::externalQMProgramName(method));
             output << ": {\n"
                    << "          \"recommended_script\": ";
 
@@ -82,7 +70,7 @@ namespace
             if (recommended.empty())
                 output << "null";
             else
-                writeJsonString(output, recommended);
+                cli::writeJsonString(output, recommended);
 
             output << ",\n"
                    << "          \"scripts\": [\n";
@@ -93,21 +81,21 @@ namespace
             {
                 const auto &script = scripts[scriptIndex];
                 output << "            {\"name\": ";
-                writeJsonString(output, script.name);
+                cli::writeJsonString(output, script.name);
                 output << ", \"label\": ";
-                writeJsonString(output, script.label);
+                cli::writeJsonString(output, script.label);
 
                 if (!script.requiredFileKeyword.empty())
                 {
                     output << ", \"required_file_keywords\": [";
-                    writeJsonString(output, script.requiredFileKeyword);
+                    cli::writeJsonString(output, script.requiredFileKeyword);
                     output << ']';
                 }
 
                 if (!script.requiredWorkingFile.empty())
                 {
                     output << ", \"required_working_files\": [";
-                    writeJsonString(output, script.requiredWorkingFile);
+                    cli::writeJsonString(output, script.requiredWorkingFile);
                     output << ']';
                 }
 
