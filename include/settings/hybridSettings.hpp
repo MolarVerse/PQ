@@ -53,7 +53,8 @@ namespace settings
     {
         NONE,
         EQUAL,
-        RANDOM
+        RANDOM,
+        DISTANCE_WEIGHTED
     };
 
     /**

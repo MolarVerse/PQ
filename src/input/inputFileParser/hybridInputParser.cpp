@@ -374,11 +374,15 @@ void HybridInputParser::parseQMForceDistribution(
     else if (method == "random")
         HybridSettings::setQMForceDist(RANDOM);
 
+    else if (method == "distance_weighted")
+        HybridSettings::setQMForceDist(DISTANCE_WEIGHTED);
+
     else
         throw InputFileException(
             std::format(
                 "Invalid qm force distribution method \"{}\" in input file\n"
-                "Possible options are: none, equal and random",
+                "Possible options are: none, equal, random and "
+                "distance-weighted",
                 lineElements[2]
             )
         );

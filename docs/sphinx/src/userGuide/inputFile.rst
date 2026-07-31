@@ -1968,6 +1968,11 @@ Possible options are:
 
    3. **random** - Deficient smoothing molecule forces are distributed randomly among all non-smoothing QM molecules.
 
+   4. **distance-weighted** - For each smoothing molecule, its deficient force
+        is distributed to CORE/LAYER molecules using switched-polynomial
+        center-of-mass distance weights. Each recipient molecule then
+        distributes its received share to its atoms proportional to atom masses.
+
 .. image:: hybrid_zones.png
     :width: 600
     :align: center

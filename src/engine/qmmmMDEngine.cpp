@@ -22,6 +22,7 @@
 
 #include "qmmmMDEngine.hpp"
 
+#include <cmath>    // for abs
 #include <format>   // for format
 #include <limits>   // for numeric_limits
 #include <vector>   // for vector
@@ -407,6 +408,8 @@ namespace engine
      * - NONE: scale smoothing-zone forces by smF only.
      * - EQUAL: redistribute the removed force equally to CORE/LAYER atoms.
      * - RANDOM: randomly redistribute the removed force to CORE/LAYER atoms.
+     * - DISTANCE_WEIGHTED: redistribute per smoothing molecule using
+     *   switched-polynomial COM distance weights.
      */
     void QMMMMDEngine::distributeSmoothingMolInnerForces()
     {
@@ -419,6 +422,9 @@ namespace engine
             case NONE: scaleSmoothingMoleculeForcesInner(); break;
             case EQUAL: distributeSmoothingMolInnerForcesEqually(); break;
             case RANDOM: distributeSmoothingMolInnerForcesRandom(); break;
+            case DISTANCE_WEIGHTED:
+                distributeSmoothingMolInnerForcesDistanceWeighted();
+                break;
         }
     }
 
@@ -544,6 +550,119 @@ namespace engine
             targetAtoms[i]->setForce(
                 force + deficitForce * redistributionFactor
             );
+        }
+    }
+
+    /**
+     * @brief Redistribute removed smoothing-zone inner force using
+     * distance-weighted molecule contributions.
+     *
+     * @details For each smoothing molecule, the removed force
+     * F * (1 - smF) is accumulated while scaling that smoothing molecule's
+     * atoms by smF. This deficient force is then distributed onto CORE/LAYER
+     * molecules using switched-polynomial weights based on center-of-mass
+     * distance between the current smoothing molecule and each recipient
+     * molecule. Finally, each recipient molecule distributes its received
+     * force to its atoms proportional to atomic masses.
+     *
+     * @note The weighting radius is set to 2 * layer_radius to cover all
+     * CORE/LAYER molecules.
+     *
+     * @throws HybridMDEngineException if no CORE/LAYER molecules are available
+     * for redistribution.
+     */
+    void QMMMMDEngine::distributeSmoothingMolInnerForcesDistanceWeighted()
+    {
+        std::vector<Molecule*> recipientMolecules;
+
+        for (auto& mol : _simulationBox->getMoleculesInsideZone(CORE))
+            recipientMolecules.push_back(&mol);
+
+        for (auto& mol : _simulationBox->getMoleculesInsideZone(LAYER))
+            recipientMolecules.push_back(&mol);
+
+        if (recipientMolecules.empty())
+            throw HybridMDEngineException(
+                "Cannot redistribute smoothing inner force: no CORE/LAYER "
+                "molecules available."
+            );
+
+        const auto weightingRadius = 2.0 * HybridSettings::getLayerRadius();
+
+        for (auto& smoothingMol :
+             _simulationBox->getMoleculesInsideZone(SMOOTHING))
+        {
+            const auto smF = smoothingMol.getSmoothingFactor();
+
+            auto deficitForce = Vec3D{0.0};
+            for (auto& atom : smoothingMol.getAtoms())
+            {
+                deficitForce += atom->getForce() * (1 - smF);
+                atom->scaleForce(smF);
+            }
+
+            std::vector<double> rawWeights(recipientMolecules.size(), 0.0);
+            auto                weightSum = 0.0;
+
+            const auto smoothingCOM = smoothingMol.getCenterOfMass();
+
+            for (size_t i = 0; i < recipientMolecules.size(); ++i)
+            {
+                const auto delta =
+                    recipientMolecules[i]->getCenterOfMass() - smoothingCOM;
+
+                const auto distance = linearAlgebra::norm(delta);
+
+                auto switchedWeight = 0.0;
+                if (weightingRadius > 0.0)
+                {
+                    const auto x = distance / weightingRadius;
+
+                    if (x < 1.0)
+                    {
+                        const auto x3 = x * x * x;
+                        const auto x4 = x3 * x;
+                        const auto x5 = x4 * x;
+
+                        switchedWeight = 1.0 - 10.0 * x3 + 15.0 * x4 - 6.0 * x5;
+                    }
+                }
+
+                rawWeights[i]  = switchedWeight;
+                weightSum     += switchedWeight;
+            }
+
+            if (std::abs(weightSum) <= std::numeric_limits<double>::epsilon())
+            {
+                for (auto& weight : rawWeights) weight = 1.0;
+                weightSum = static_cast<double>(rawWeights.size());
+            }
+
+            for (size_t i = 0; i < recipientMolecules.size(); ++i)
+            {
+                const auto molShare =
+                    deficitForce * (rawWeights[i] / weightSum);
+
+                auto&      recipientMol = *recipientMolecules[i];
+                const auto molMass      = recipientMol.getMolMass();
+
+                if (molMass > 0.0)
+                {
+                    for (auto& atom : recipientMol.getAtoms())
+                    {
+                        const auto massFraction = atom->getMass() / molMass;
+                        atom->addForce(molShare * massFraction);
+                    }
+                }
+                else
+                {
+                    const auto nAtoms = recipientMol.getNumberOfAtoms();
+                    const auto perAtomShare =
+                        molShare / static_cast<double>(nAtoms);
+                    for (auto& atom : recipientMol.getAtoms())
+                        atom->addForce(perAtomShare);
+                }
+            }
         }
     }
 

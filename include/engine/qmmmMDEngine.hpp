@@ -61,6 +61,7 @@ namespace engine
         void distributeSmoothingMolInnerForces();
         void distributeSmoothingMolInnerForcesEqually();
         void distributeSmoothingMolInnerForcesRandom();
+        void distributeSmoothingMolInnerForcesDistanceWeighted();
     };
 
 }   // namespace engine
