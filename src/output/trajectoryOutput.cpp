@@ -27,9 +27,8 @@
 #include <ostream>   // for ofstream, basic_ostream, operator<<
 #include <sstream>   // for ostringstream
 
-#include "molecule.hpp"                // for Molecule
-#include "outputFileSettings.hpp"      // for OutputFileSettings
-#include "simulationBox.hpp"           // for SimulationBox
+#include "molecule.hpp"        // for Molecule
+#include "simulationBox.hpp"   // for SimulationBox
 
 using namespace output;
 using namespace settings;
@@ -47,33 +46,6 @@ void TrajectoryOutput::writeHeader(const SimulationBox &simBox)
     const auto &boxAngles = simBox.getBoxAngles();
 
     _fp << nAtoms << "  " << boxDims << "  " << boxAngles << '\n';
-}
-
-/**
- * @brief Write the trajectory frame comment
- *
- * @param step simulation step
- */
-void TrajectoryOutput::writeComment(const size_t step)
-{
-    if (OutputFileSettings::getIncludeOutputMetadata())
-        _fp << std::format("# step = {}\n", step);
-    else
-        _fp << '\n';
-}
-
-/**
- * @brief Write the force frame comment
- *
- * @param step simulation step
- * @param totalForce total force acting on the system
- */
-void TrajectoryOutput::writeForceComment(
-    const size_t step,
-    const double totalForce
-)
-{
-    _fp << formatForceComment(step, totalForce);
 }
 
 /**

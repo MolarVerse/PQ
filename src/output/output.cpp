@@ -77,6 +77,30 @@ void Output::openFile()
 }
 
 /**
+ * @brief Write the shared trajectory frame comment
+ *
+ * @param step simulation step
+ */
+void Output::writeComment(const size_t step)
+{
+    if (OutputFileSettings::getIncludeOutputMetadata())
+        _fp << format("# step = {}\n", step);
+    else
+        _fp << '\n';
+}
+
+/**
+ * @brief Write the shared trajectory force comment
+ *
+ * @param step simulation step
+ * @param totalForce total force acting on the system
+ */
+void Output::writeForceComment(const size_t step, const double totalForce)
+{
+    _fp << formatForceComment(step, totalForce);
+}
+
+/**
  * @brief Formats the shared trajectory force comment
  *
  * @param step simulation step

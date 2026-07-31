@@ -29,7 +29,6 @@
 #include <sstream>      // for ostringstream
 
 #include "molecule.hpp"              // for Molecule
-#include "outputFileSettings.hpp"    // for OutputFileSettings
 #include "ringPolymerSettings.hpp"   // for RingPolymerSettings
 #include "simulationBox.hpp"         // for SimulationBox
 
@@ -51,33 +50,6 @@ void RingPolymerTrajectoryOutput::writeHeader(const SimulationBox &simBox)
 
     _fp << simBox.getNumberOfAtoms() * nBeads << "  ";
     _fp << simBox.getBoxDimensions() << "  " << simBox.getBoxAngles() << '\n';
-}
-
-/**
- * @brief write the ring polymer trajectory frame comment
- *
- * @param step simulation step
- */
-void RingPolymerTrajectoryOutput::writeComment(const size_t step)
-{
-    if (OutputFileSettings::getIncludeOutputMetadata())
-        _fp << std::format("# step = {}\n", step);
-    else
-        _fp << '\n';
-}
-
-/**
- * @brief write the ring polymer force frame comment
- *
- * @param step simulation step
- * @param totalForce total force acting on all beads
- */
-void RingPolymerTrajectoryOutput::writeForceComment(
-    const size_t step,
-    const double totalForce
-)
-{
-    _fp << formatForceComment(step, totalForce);
 }
 
 /**

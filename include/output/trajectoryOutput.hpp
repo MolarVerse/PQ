@@ -39,10 +39,6 @@ namespace output
      */
     class TrajectoryOutput : public Output
     {
-       private:
-        void writeComment(const size_t);
-        void writeForceComment(const size_t, const double);
-
        public:
         using Output::Output;
 

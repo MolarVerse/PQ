@@ -51,6 +51,8 @@ namespace output
         int           _rank;
 
         void openFile();
+        void writeComment(std::size_t);
+        void writeForceComment(std::size_t, double);
         static std::string formatForceComment(std::size_t, double);
 
        public:
