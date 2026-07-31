@@ -1955,7 +1955,8 @@ QM Force Distribution
 
     qm_force_distribution = {string} -> "none"
 
-With the ``qm_force_distribution`` keyword the user can specify how the missing QM forces from smoothing molecules are distributed among non-smoothing molecule QM atoms.
+With the ``qm_force_distribution`` keyword the user can specify how the missing QM forces from smoothing molecules are distributed among non-smoothing QM molecules.
+Each recipient QM molecule then distributes its received share to its atoms proportional to atom masses.
 
 .. Note::
     This keyword is only relevant if the :ref:`smoothing_method <smoothingMethodKey>` keyword is set to ``hotspot``.
@@ -1968,10 +1969,7 @@ Possible options are:
 
    3. **random** - Deficient smoothing molecule forces are distributed randomly among all non-smoothing QM molecules.
 
-   4. **distance-weighted** - For each smoothing molecule, its deficient force
-        is distributed to CORE/LAYER molecules using switched-polynomial
-        center-of-mass distance weights. Each recipient molecule then
-        distributes its received share to its atoms proportional to atom masses.
+   4. **distance-weighted** - Deficient smoothing molecule forces are distributed distance-weighted among all non-smoothing QM molecules.
 
 .. image:: hybrid_zones.png
     :width: 600

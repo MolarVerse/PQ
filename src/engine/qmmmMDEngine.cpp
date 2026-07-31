@@ -230,7 +230,7 @@ namespace engine
 
         _qmRunner->run(*_simulationBox, *_physicalData, NON_PERIODIC);
 
-        distributeSmoothingMolInnerForces();
+        distributeSmoothingMolQMForces();
         virial += _virial->calculateQMVirial(*_simulationBox);
         virial += _virial->intraMolecularVirialCorrection(*_simulationBox);
         addCurrentForcesToInnerAndReset(atoms);
@@ -411,7 +411,7 @@ namespace engine
      * - DISTANCE_WEIGHTED: redistribute per smoothing molecule using
      *   switched-polynomial COM distance weights.
      */
-    void QMMMMDEngine::distributeSmoothingMolInnerForces()
+    void QMMMMDEngine::distributeSmoothingMolQMForces()
     {
         const auto type = HybridSettings::getQMForceDist();
 
@@ -420,136 +420,165 @@ namespace engine
         switch (type)
         {
             case NONE: scaleSmoothingMoleculeForcesInner(); break;
-            case EQUAL: distributeSmoothingMolInnerForcesEqually(); break;
-            case RANDOM: distributeSmoothingMolInnerForcesRandom(); break;
+            case EQUAL: distributeSmoothingMolQMForcesEqually(); break;
+            case RANDOM: distributeSmoothingMolQMForcesRandom(); break;
             case DISTANCE_WEIGHTED:
-                distributeSmoothingMolInnerForcesDistanceWeighted();
+                distributeSmoothingMolQMForcesDistanceWeighted();
                 break;
         }
     }
 
     /**
      * @brief Redistribute removed smoothing-zone inner force equally over
-     * CORE and LAYER atoms.
+     * CORE and LAYER molecules.
      *
-     * @details First, smoothing-zone atomic forces are scaled by their
-     * molecule smoothing factor smF, and the removed force component
-     * F * (1 - smF) is accumulated. The accumulated deficit is then added
-     * uniformly per atom to all atoms in CORE and LAYER.
+     * @details The smoothing-zone force deficit is computed per smoothing
+     * molecule: smoothing atom forces are scaled by smF and the removed force
+     * F * (1 - smF) of that smoothing molecule is accumulated. This deficit
+     * is then distributed equally across all CORE/LAYER molecules. Each
+     * recipient molecule distributes its received share to its atoms
+     * proportional to atomic masses.
      *
-     * @throws HybridMDEngineException if no CORE/LAYER atoms are available for
+     * @throws HybridMDEngineException if no CORE/LAYER molecules are available
      * redistribution.
      */
-    void QMMMMDEngine::distributeSmoothingMolInnerForcesEqually()
+    void QMMMMDEngine::distributeSmoothingMolQMForcesEqually()
     {
-        auto deficitForce = Vec3D{0.0};
+        std::vector<Molecule*> recipientMolecules;
 
-        for (auto& mol : _simulationBox->getMoleculesInsideZone(SMOOTHING))
+        for (auto& mol : _simulationBox->getMoleculesInsideZone(CORE))
+            recipientMolecules.push_back(&mol);
+
+        for (auto& mol : _simulationBox->getMoleculesInsideZone(LAYER))
+            recipientMolecules.push_back(&mol);
+
+        if (recipientMolecules.empty())
+            throw HybridMDEngineException(
+                "Cannot redistribute smoothing inner force: no CORE/LAYER "
+                "molecules available."
+            );
+
+        const auto nRecipients = static_cast<double>(recipientMolecules.size());
+
+        for (auto& smoothingMol :
+             _simulationBox->getMoleculesInsideZone(SMOOTHING))
         {
-            const auto smF = mol.getSmoothingFactor();
-            for (auto& atom : mol.getAtoms())
+            const auto smF = smoothingMol.getSmoothingFactor();
+
+            auto deficitForce = Vec3D{0.0};
+            for (auto& atom : smoothingMol.getAtoms())
             {
                 deficitForce += atom->getForce() * (1 - smF);
                 atom->scaleForce(smF);
             }
-        }
 
-        size_t nQMNonSMAtoms = 0;
+            const auto molShare = deficitForce / nRecipients;
 
-        for (const auto& mol : _simulationBox->getMoleculesInsideZone(CORE))
-            nQMNonSMAtoms += mol.getNumberOfAtoms();
-
-        for (const auto& mol : _simulationBox->getMoleculesInsideZone(LAYER))
-            nQMNonSMAtoms += mol.getNumberOfAtoms();
-
-        if (nQMNonSMAtoms == 0)
-            throw HybridMDEngineException(
-                "Cannot redistribute smoothing inner force: no CORE/LAYER "
-                "atoms available."
-            );
-
-        const auto deficitForcePerAtom = deficitForce / nQMNonSMAtoms;
-
-        for (auto& mol : _simulationBox->getMoleculesInsideZone(CORE))
-        {
-            for (auto& atom : mol.getAtoms())
+            for (auto* recipientMol : recipientMolecules)
             {
-                const auto force = atom->getForce();
-                atom->setForce(force + deficitForcePerAtom);
-            }
-        }
+                const auto molMass = recipientMol->getMolMass();
 
-        for (auto& mol : _simulationBox->getMoleculesInsideZone(LAYER))
-        {
-            for (auto& atom : mol.getAtoms())
-            {
-                const auto force = atom->getForce();
-                atom->setForce(force + deficitForcePerAtom);
+                if (molMass > 0.0)
+                {
+                    for (auto& atom : recipientMol->getAtoms())
+                    {
+                        const auto massFraction = atom->getMass() / molMass;
+                        atom->addForce(molShare * massFraction);
+                    }
+                }
+                else
+                {
+                    const auto nAtoms = recipientMol->getNumberOfAtoms();
+                    const auto perAtomShare =
+                        molShare / static_cast<double>(nAtoms);
+                    for (auto& atom : recipientMol->getAtoms())
+                        atom->addForce(perAtomShare);
+                }
             }
         }
     }
 
     /**
      * @brief Redistribute removed smoothing-zone inner force randomly over
-     * CORE and LAYER atoms.
+     * CORE and LAYER molecules.
      *
      * @details The smoothing-zone force deficit is computed identically to the
-     * equal strategy: smoothing atom forces are scaled by smF and the removed
-     * force F * (1 - smF) is accumulated. The accumulated deficit is then
-     * distributed to CORE/LAYER atoms using random positive weights that are
-     * normalized to sum to 1, conserving the total redistributed force.
+     * equal strategy, but per smoothing molecule: smoothing atom forces are
+     * scaled by smF and the removed force F * (1 - smF) of that smoothing
+     * molecule is accumulated. This deficit is then distributed onto
+     * CORE/LAYER molecules using random positive molecule weights normalized
+     * to sum to 1. Each recipient molecule distributes its received share to
+     * its atoms proportional to atomic masses.
      *
-     * @throws HybridMDEngineException if no CORE/LAYER atoms are available for
+     * @throws HybridMDEngineException if no CORE/LAYER molecules are available
      * redistribution.
      */
-    void QMMMMDEngine::distributeSmoothingMolInnerForcesRandom()
+    void QMMMMDEngine::distributeSmoothingMolQMForcesRandom()
     {
-        auto deficitForce = Vec3D{0.0};
+        std::vector<Molecule*> recipientMolecules;
 
-        for (auto& mol : _simulationBox->getMoleculesInsideZone(SMOOTHING))
+        for (auto& mol : _simulationBox->getMoleculesInsideZone(CORE))
+            recipientMolecules.push_back(&mol);
+
+        for (auto& mol : _simulationBox->getMoleculesInsideZone(LAYER))
+            recipientMolecules.push_back(&mol);
+
+        if (recipientMolecules.empty())
+            throw HybridMDEngineException(
+                "Cannot redistribute smoothing inner force: no CORE/LAYER "
+                "molecules available."
+            );
+
+        for (auto& smoothingMol :
+             _simulationBox->getMoleculesInsideZone(SMOOTHING))
         {
-            const auto smF = mol.getSmoothingFactor();
-            for (auto& atom : mol.getAtoms())
+            const auto smF = smoothingMol.getSmoothingFactor();
+
+            auto deficitForce = Vec3D{0.0};
+            for (auto& atom : smoothingMol.getAtoms())
             {
                 deficitForce += atom->getForce() * (1 - smF);
                 atom->scaleForce(smF);
             }
-        }
 
-        std::vector<Atom*> targetAtoms;
+            std::vector<double> randomWeights(recipientMolecules.size(), 0.0);
+            auto                weightSum = 0.0;
 
-        for (auto& mol : _simulationBox->getMoleculesInsideZone(CORE))
-            for (auto& atom : mol.getAtoms()) targetAtoms.push_back(atom.get());
+            for (auto& weight : randomWeights)
+            {
+                weight =
+                    _randomNumberGenerator.getUniformRealDistribution(0.0, 1.0);
+                if (weight == 0.0)
+                    weight = std::numeric_limits<double>::min();
 
-        for (auto& mol : _simulationBox->getMoleculesInsideZone(LAYER))
-            for (auto& atom : mol.getAtoms()) targetAtoms.push_back(atom.get());
+                weightSum += weight;
+            }
 
-        if (targetAtoms.empty())
-            throw HybridMDEngineException(
-                "Cannot redistribute smoothing inner force: no CORE/LAYER "
-                "atoms available."
-            );
+            for (size_t i = 0; i < recipientMolecules.size(); ++i)
+            {
+                const auto molShare =
+                    deficitForce * (randomWeights[i] / weightSum);
 
-        std::vector<double> randomWeights(targetAtoms.size(), 0.0);
-        auto                weightSum = 0.0;
+                auto&      recipientMol = *recipientMolecules[i];
+                const auto molMass      = recipientMol.getMolMass();
 
-        for (auto& weight : randomWeights)
-        {
-            weight =
-                _randomNumberGenerator.getUniformRealDistribution(0.0, 1.0);
-            if (weight == 0.0)
-                weight = std::numeric_limits<double>::min();
-
-            weightSum += weight;
-        }
-
-        for (size_t i = 0; i < targetAtoms.size(); ++i)
-        {
-            const auto redistributionFactor = randomWeights[i] / weightSum;
-            const auto force                = targetAtoms[i]->getForce();
-            targetAtoms[i]->setForce(
-                force + deficitForce * redistributionFactor
-            );
+                if (molMass > 0.0)
+                {
+                    for (auto& atom : recipientMol.getAtoms())
+                    {
+                        const auto massFraction = atom->getMass() / molMass;
+                        atom->addForce(molShare * massFraction);
+                    }
+                }
+                else
+                {
+                    const auto nAtoms = recipientMol.getNumberOfAtoms();
+                    const auto perAtomShare =
+                        molShare / static_cast<double>(nAtoms);
+                    for (auto& atom : recipientMol.getAtoms())
+                        atom->addForce(perAtomShare);
+                }
+            }
         }
     }
 
@@ -571,7 +600,7 @@ namespace engine
      * @throws HybridMDEngineException if no CORE/LAYER molecules are available
      * for redistribution.
      */
-    void QMMMMDEngine::distributeSmoothingMolInnerForcesDistanceWeighted()
+    void QMMMMDEngine::distributeSmoothingMolQMForcesDistanceWeighted()
     {
         std::vector<Molecule*> recipientMolecules;
 

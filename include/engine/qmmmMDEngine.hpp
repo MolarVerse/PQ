@@ -58,10 +58,10 @@ namespace engine
 
         void scaleAndAccumulateEnergies(const double globalSmF);
         void moveEnergiesToPhysicalData();
-        void distributeSmoothingMolInnerForces();
-        void distributeSmoothingMolInnerForcesEqually();
-        void distributeSmoothingMolInnerForcesRandom();
-        void distributeSmoothingMolInnerForcesDistanceWeighted();
+        void distributeSmoothingMolQMForces();
+        void distributeSmoothingMolQMForcesEqually();
+        void distributeSmoothingMolQMForcesRandom();
+        void distributeSmoothingMolQMForcesDistanceWeighted();
     };
 
 }   // namespace engine
