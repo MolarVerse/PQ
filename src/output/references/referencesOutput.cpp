@@ -40,14 +40,10 @@ namespace
 {
     std::filesystem::path referenceFilesPath()
     {
-        const auto executable = utilities::executablePath();
-        if (!executable.empty())
-        {
-            const auto installedPath = executable.parent_path().parent_path() /
-                                       "share" / "PQ" / "references";
-            if (std::filesystem::is_directory(installedPath))
-                return installedPath;
-        }
+        const auto installedPath =
+            utilities::installedDataPath("references");
+        if (std::filesystem::is_directory(installedPath))
+            return installedPath;
 
         const auto buildPath = std::filesystem::path(REFERENCES_PATH_);
         if (std::filesystem::is_directory(buildPath))

@@ -29,6 +29,9 @@
 namespace utilities
 {
     [[nodiscard]] std::filesystem::path executablePath();
+    [[nodiscard]] std::filesystem::path installedDataPath(
+        const std::filesystem::path &relativePath
+    );
 }   // namespace utilities
 
 #endif   // _EXECUTABLE_PATH_HPP_
