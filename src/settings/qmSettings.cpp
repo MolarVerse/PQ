@@ -164,16 +164,12 @@ std::string settings::string(const SlakosType slakos)
 static std::string builtinSlakosPath([[maybe_unused]] const SlakosType type)
 {
 #ifdef __SLAKOS_DIR__
-    const auto executable = utilities::executablePath();
-    if (!executable.empty())
-    {
-        const auto installedPath = executable.parent_path().parent_path() /
-                                   "share" / "PQ" / "slakos" /
-                                   settings::string(type) / "skfiles";
-        if (std::filesystem::is_directory(installedPath))
-            return installedPath.string() +
-                   std::filesystem::path::preferred_separator;
-    }
+    const auto installedPath = utilities::installedDataPath(
+        std::filesystem::path("slakos") / settings::string(type) / "skfiles"
+    );
+    if (std::filesystem::is_directory(installedPath))
+        return installedPath.string() +
+               std::filesystem::path::preferred_separator;
 
     const auto buildPath = std::filesystem::path(__SLAKOS_DIR__) /
                            settings::string(type) / "skfiles";
