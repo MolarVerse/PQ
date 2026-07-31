@@ -401,15 +401,18 @@ namespace engine
     }
 
     /**
-     * @brief Dispatch inner-force treatment for smoothing-zone molecules.
+     * @brief Dispatch QM-force redistribution for smoothing-zone molecules.
      *
      * @details Selects the redistribution strategy configured via
-     * HybridSettings::getInnerForceDist().
+     * HybridSettings::getQMForceDist().
      * - NONE: scale smoothing-zone forces by smF only.
-     * - EQUAL: redistribute the removed force equally to CORE/LAYER atoms.
-     * - RANDOM: randomly redistribute the removed force to CORE/LAYER atoms.
-     * - DISTANCE_WEIGHTED: redistribute per smoothing molecule using
-     *   switched-polynomial COM distance weights.
+     * - EQUAL: redistribute each smoothing-molecule deficit equally to
+     *   CORE/LAYER molecules, then split by atomic mass within each molecule.
+     * - RANDOM: redistribute each smoothing-molecule deficit randomly to
+     *   CORE/LAYER molecules, then split by atomic mass within each molecule.
+     * - DISTANCE_WEIGHTED: redistribute each smoothing-molecule deficit using
+     *   switched-polynomial COM distance weights, then split by atomic mass
+     *   within each recipient molecule.
      */
     void QMMMMDEngine::distributeSmoothingMolQMForces()
     {
@@ -429,7 +432,7 @@ namespace engine
     }
 
     /**
-     * @brief Redistribute removed smoothing-zone inner force equally over
+     * @brief Redistribute removed smoothing-zone QM force equally over
      * CORE and LAYER molecules.
      *
      * @details The smoothing-zone force deficit is computed per smoothing
@@ -440,7 +443,7 @@ namespace engine
      * proportional to atomic masses.
      *
      * @throws HybridMDEngineException if no CORE/LAYER molecules are available
-     * redistribution.
+     * for redistribution.
      */
     void QMMMMDEngine::distributeSmoothingMolQMForcesEqually()
     {
@@ -499,7 +502,7 @@ namespace engine
     }
 
     /**
-     * @brief Redistribute removed smoothing-zone inner force randomly over
+     * @brief Redistribute removed smoothing-zone QM force randomly over
      * CORE and LAYER molecules.
      *
      * @details The smoothing-zone force deficit is computed identically to the
@@ -511,7 +514,7 @@ namespace engine
      * its atoms proportional to atomic masses.
      *
      * @throws HybridMDEngineException if no CORE/LAYER molecules are available
-     * redistribution.
+     * for redistribution.
      */
     void QMMMMDEngine::distributeSmoothingMolQMForcesRandom()
     {
@@ -583,7 +586,7 @@ namespace engine
     }
 
     /**
-     * @brief Redistribute removed smoothing-zone inner force using
+     * @brief Redistribute removed smoothing-zone QM force using
      * distance-weighted molecule contributions.
      *
      * @details For each smoothing molecule, the removed force
