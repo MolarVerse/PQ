@@ -1,0 +1,1 @@
+- Reject non-finite energies and forces from external QM calculations instead of propagating them into a trajectory.

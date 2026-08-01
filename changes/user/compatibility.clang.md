@@ -1,0 +1,1 @@
+- Add support for Clang and Apple Clang.

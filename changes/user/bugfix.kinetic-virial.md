@@ -1,0 +1,1 @@
+- Fix the virial mode used after copying physical data with atomic virial enabled.
