@@ -33,7 +33,6 @@
 
 #include "orthorhombicBox.hpp"
 #include "triclinicBox.hpp"
-#include "vector3d.hpp"
 
 static constexpr long ITERATIONS = 20000;
 

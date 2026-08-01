@@ -27,7 +27,6 @@
 #include "atom.hpp"
 #include "evaluator.hpp"
 #include "exceptions.hpp"
-#include "simulationBox.hpp"
 
 using namespace opt;
 using namespace settings;
@@ -41,10 +40,10 @@ ForceDifferenceHessianBuilder::ForceDifferenceHessianBuilder(
 }
 
 std::vector<double> ForceDifferenceHessianBuilder::evaluateForces(
-    Evaluator         &evaluator,
-    pq::SimBox        &simulationBox,
-    const size_t       coordinateIndex,
-    const double       displacement
+    Evaluator   &evaluator,
+    pq::SimBox  &simulationBox,
+    const size_t coordinateIndex,
+    const double displacement
 ) const
 {
     displaceCoordinate(simulationBox, coordinateIndex, displacement);
@@ -65,15 +64,15 @@ void ForceDifferenceHessianBuilder::restorePositions(
 }
 
 void ForceDifferenceHessianBuilder::displaceCoordinate(
-    pq::SimBox        &simulationBox,
-    const size_t       coordinateIndex,
-    const double       displacement
+    pq::SimBox  &simulationBox,
+    const size_t coordinateIndex,
+    const double displacement
 )
 {
     const auto atomIndex = coordinateIndex / 3;
     const auto dimension = coordinateIndex % 3;
 
-    auto position = simulationBox.getAtom(atomIndex).getPosition();
+    auto position        = simulationBox.getAtom(atomIndex).getPosition();
     position[dimension] += displacement;
 
     simulationBox.getAtom(atomIndex).setPosition(position);
@@ -101,19 +100,19 @@ void ForceDifferenceHessianBuilder::symmetrize(pq::HessianMatrix &hessian)
     for (size_t row = 0; row < hessian.size(); ++row)
         for (size_t col = row + 1; col < hessian.size(); ++col)
         {
-            const auto value = 0.5 * (hessian[row][col] + hessian[col][row]);
+            const auto value  = 0.5 * (hessian[row][col] + hessian[col][row]);
             hessian[row][col] = value;
             hessian[col][row] = value;
         }
 }
 
 pq::HessianMatrix CentralForceDifferenceHessianBuilder::build(
-    Evaluator         &evaluator,
-    pq::SimBox        &simulationBox
+    Evaluator  &evaluator,
+    pq::SimBox &simulationBox
 ) const
 {
     const auto numberOfCoordinates = 3 * simulationBox.getNumberOfAtoms();
-    auto hessian = pq::HessianMatrix(
+    auto       hessian             = pq::HessianMatrix(
         numberOfCoordinates,
         std::vector<double>(numberOfCoordinates, 0.0)
     );
@@ -128,8 +127,8 @@ pq::HessianMatrix CentralForceDifferenceHessianBuilder::build(
             evaluateForces(evaluator, simulationBox, col, -_displacement);
 
         for (size_t row = 0; row < numberOfCoordinates; ++row)
-            hessian[row][col] = -(fPlus[row] - fMinus[row]) /
-                                (2.0 * _displacement);
+            hessian[row][col] =
+                -(fPlus[row] - fMinus[row]) / (2.0 * _displacement);
 
         restorePositions(simulationBox, originalPositions);
     }
@@ -141,12 +140,12 @@ pq::HessianMatrix CentralForceDifferenceHessianBuilder::build(
 }
 
 pq::HessianMatrix ForwardForceDifferenceHessianBuilder::build(
-    Evaluator         &evaluator,
-    pq::SimBox        &simulationBox
+    Evaluator  &evaluator,
+    pq::SimBox &simulationBox
 ) const
 {
     const auto numberOfCoordinates = 3 * simulationBox.getNumberOfAtoms();
-    auto hessian = pq::HessianMatrix(
+    auto       hessian             = pq::HessianMatrix(
         numberOfCoordinates,
         std::vector<double>(numberOfCoordinates, 0.0)
     );
@@ -173,12 +172,12 @@ pq::HessianMatrix ForwardForceDifferenceHessianBuilder::build(
 }
 
 pq::HessianMatrix FivePointForceDifferenceHessianBuilder::build(
-    Evaluator         &evaluator,
-    pq::SimBox        &simulationBox
+    Evaluator  &evaluator,
+    pq::SimBox &simulationBox
 ) const
 {
     const auto numberOfCoordinates = 3 * simulationBox.getNumberOfAtoms();
-    auto hessian = pq::HessianMatrix(
+    auto       hessian             = pq::HessianMatrix(
         numberOfCoordinates,
         std::vector<double>(numberOfCoordinates, 0.0)
     );
@@ -198,10 +197,9 @@ pq::HessianMatrix FivePointForceDifferenceHessianBuilder::build(
 
         for (size_t row = 0; row < numberOfCoordinates; ++row)
         {
-            const auto derivative = (
-                -fPlus2[row] + 8.0 * fPlus[row] - 8.0 * fMinus[row] +
-                fMinus2[row]
-            ) / (12.0 * _displacement);
+            const auto derivative = (-fPlus2[row] + 8.0 * fPlus[row] -
+                                     8.0 * fMinus[row] + fMinus2[row]) /
+                                    (12.0 * _displacement);
 
             hessian[row][col] = -derivative;
         }
@@ -216,8 +214,8 @@ pq::HessianMatrix FivePointForceDifferenceHessianBuilder::build(
 }
 
 pq::HessianMatrix AnalyticHessianBuilder::build(
-    Evaluator         &evaluator,
-    pq::SimBox       &
+    Evaluator &evaluator,
+    pq::SimBox &
 ) const
 {
     if (!evaluator.supportsAnalyticHessian())

@@ -24,6 +24,8 @@
 
 #define _KOKKOS_LENNARD_JONES_PAIR_HPP_
 
+#ifdef WITH_KOKKOS
+
 #include <Kokkos_DualView.hpp>
 
 #include "matrix.hpp"
@@ -90,5 +92,7 @@ namespace potential
         ) const;
     };
 }   // namespace potential
+
+#endif   // WITH_KOKKOS
 
 #endif   // _KOKKOS_LENNARD_JONES_PAIR_HPP_

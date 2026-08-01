@@ -28,6 +28,7 @@ add_subdirectory(opt)
 add_subdirectory(randomNumberGenerator)
 
 if(BUILD_WITH_PYTHON_BINDINGS)
+    add_definitions(-DWITH_WITH_PYTHON_BINDINGS)
     add_subdirectory(python)
 endif()
 
