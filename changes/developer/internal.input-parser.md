@@ -1,1 +1,1 @@
-- make input parser bind_front approach clangd compliant
+- Make the input parser's `bind_front` approach clangd-compliant.

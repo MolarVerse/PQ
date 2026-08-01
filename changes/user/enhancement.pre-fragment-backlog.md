@@ -1,6 +1,0 @@
-- Add the `mm-hessian` job for molecular-mechanics Hessian calculations, with optional geometry optimization.
-- Add Reaction Field as a long-range electrostatics method.
-- Add FeNNol as an ASE-based QM runner.
-- Add `mace_mode` to choose between accurate and accelerated MACE execution; accelerated mode requires matching cuequivariance packages.
-- Add `remove_net_force` for removing the total net force from imported QM forces.
-- Add `mshake-iter` and `mshake-tolerance` for controlling M-SHAKE convergence.

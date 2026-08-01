@@ -1,0 +1,1 @@
+- Recompute Langevin noise when the friction setting changes.

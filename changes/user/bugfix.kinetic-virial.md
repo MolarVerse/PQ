@@ -1,1 +1,1 @@
-- fix wrong virial mode when using atomic virial after copying physical data
+- Fix the virial mode used after copying physical data with atomic virial enabled.

@@ -1,1 +1,1 @@
-- Subsection timeshare of total time in percent now correctly displayed in .timings output file
+- Display subsection percentages of total time correctly in the `.timings` output file.

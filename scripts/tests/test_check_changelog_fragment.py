@@ -2,6 +2,7 @@ import importlib.util
 import sys
 import tempfile
 import unittest
+from collections import Counter
 from pathlib import Path
 
 
@@ -133,6 +134,52 @@ class ChangelogFragmentCheckTests(unittest.TestCase):
         )
 
         self.assertTrue(any("must not delete" in error for error in errors))
+
+    def test_accepts_entry_preserving_fragment_reorganization(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            changes = root / "changes" / "developer"
+            changes.mkdir(parents=True)
+            (changes / "test.first.md").write_text(
+                "- First test entry.\n", encoding="utf-8"
+            )
+            (changes / "test.second.md").write_text(
+                "- Second test entry.\n", encoding="utf-8"
+            )
+
+            errors = CHECK.validate_pr_changes(
+                [
+                    ("D", "changes/developer/test.pre-fragment-backlog.md"),
+                    ("A", "changes/developer/test.first.md"),
+                    ("A", "changes/developer/test.second.md"),
+                ],
+                root,
+                Counter({("developer", "Tests"): 2}),
+            )
+
+            self.assertEqual([], errors)
+
+    def test_rejects_fragment_reorganization_that_loses_entries(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            changes = root / "changes" / "developer"
+            changes.mkdir(parents=True)
+            (changes / "test.first.md").write_text(
+                "- Only one entry remains.\n", encoding="utf-8"
+            )
+
+            errors = CHECK.validate_pr_changes(
+                [
+                    ("D", "changes/developer/test.pre-fragment-backlog.md"),
+                    ("A", "changes/developer/test.first.md"),
+                ],
+                root,
+                Counter({("developer", "Tests"): 2}),
+            )
+
+            self.assertTrue(
+                any("missing developer/Tests: 1" in error for error in errors)
+            )
 
     def test_ignores_unrelated_changes_directory_paths(self):
         errors = CHECK.validate_pr_changes(

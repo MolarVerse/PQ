@@ -1,1 +1,1 @@
-- add `.tpp` extension to addLicense.sh script
+- Add the `.tpp` extension to `addLicense.sh`.

@@ -1,1 +1,1 @@
-- remove integrator kokkos version as it is not used anywhere
+- Remove the unused Kokkos integrator implementation.
