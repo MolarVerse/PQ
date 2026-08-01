@@ -1,0 +1,3 @@
+- Add support for Clang and Apple Clang.
+- Allow builds without ASE even when built-in SLAKOS data is unavailable.
+- Make native optimizations and link-time optimization configurable, and use available compiler caches and faster linkers automatically.

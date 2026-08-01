@@ -1,0 +1,10 @@
+- Add explicit coverage for enum sentinels.
+- Add Reaction Field unit and long-range-correction tests.
+- Add the math and algorithm regression suite.
+- Cover the renamed ASE MACE runner.
+- Add M-SHAKE keyword, convergence, unit, loop-bound, and state tests.
+- Add FeNNol parser and runner tests.
+- Add Hessian-builder tests.
+- Add brute-force and cell-list force-equivalence tests.
+- Expand coverage for reset kinetics, output writers, optimizers, evaluators, settings, force fields, thermostats, manostats, cell lists, and setup paths.
+- Add fixed-work performance benchmarks for force kernels, pair potentials, linear algebra, box transforms, integration, kinetics, and constraints.
