@@ -24,6 +24,8 @@
 
 #define _KOKKOS_SIMULATION_BOX_HPP_
 
+#ifdef WITH_KOKKOS
+
 #include <Kokkos_DualView.hpp>
 
 #include "typeAliases.hpp"
@@ -61,7 +63,11 @@ namespace simulationBox
         KokkosSimulationBox()  = default;
         ~KokkosSimulationBox() = default;
 
-        KOKKOS_FUNCTION static void calcShiftVector(const double*, Kokkos::View<double*>, double*);
+        KOKKOS_FUNCTION static void calcShiftVector(
+            const double*,
+            Kokkos::View<double*>,
+            double*
+        );
 
         void initKokkosSimulationBox(pq::SimBox& simBox);
         void initForces();
@@ -102,5 +108,7 @@ namespace simulationBox
         [[nodiscard]] Kokkos::DualView<double*>  getBoxDimensions();
     };
 }   // namespace simulationBox
+
+#endif   // WITH_KOKKOS
 
 #endif   // _KOKKOS_SIMULATION_BOX_HPP_

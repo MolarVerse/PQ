@@ -37,7 +37,6 @@
 #include "matrix.hpp"
 #include "molecule.hpp"
 #include "simulationBox.hpp"
-#include "vector3d.hpp"
 
 namespace potential
 {
@@ -72,7 +71,9 @@ namespace benchSetup
                 0.25 * d
             };
             atom->setPosition(pos);
-            atom->setPositionOld(pos);   // at-rest start (stable for constraints)
+            atom->setPositionOld(
+                pos
+            );   // at-rest start (stable for constraints)
             atom->setVelocity({0.01 * (d + 1.0), -0.015, 0.02});
             atom->setForce({0.1, -0.2, 0.05});
             atom->setShiftForce({0.0, 0.0, 0.0});
@@ -94,11 +95,19 @@ namespace benchSetup
     {
         auto nonCoulomb = potential::ForceFieldNonCoulomb();
         nonCoulomb.setNonCoulombPairsMatrix(
-            linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(2, 2)
+            linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(
+                2,
+                2
+            )
         );
 
-        auto pair =
-            potential::LennardJonesPair(std::size_t(0), std::size_t(1), 12.0, 2.0, 3.0);
+        auto pair = potential::LennardJonesPair(
+            std::size_t(0),
+            std::size_t(1),
+            12.0,
+            2.0,
+            3.0
+        );
         nonCoulomb.setNonCoulombPairsMatrix(0, 1, pair);
         nonCoulomb.setNonCoulombPairsMatrix(1, 0, pair);
 
@@ -118,10 +127,12 @@ namespace benchSetup
 
         for (std::size_t m = 0; m < nMolecules; ++m)
         {
-            auto molecule = makeMolecule(nAtomsPerMol, 3.0 * static_cast<double>(m));
+            auto molecule =
+                makeMolecule(nAtomsPerMol, 3.0 * static_cast<double>(m));
 
             for (std::size_t i = 0; i < nAtomsPerMol; ++i)
-                box.addAtom(molecule.getAtoms()[i]);   // share the atom pointers
+                box.addAtom(molecule.getAtoms()[i]
+                );   // share the atom pointers
 
             box.addMolecule(molecule);
         }

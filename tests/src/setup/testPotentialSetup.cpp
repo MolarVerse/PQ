@@ -24,7 +24,6 @@
 
 #include <cstddef>   // for size_t
 #include <memory>    // for make_shared
-#include <string>    // for allocator, basic_string
 
 #include "coulombReactionField.hpp"      // for CoulombReactionField
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
@@ -39,7 +38,8 @@
 #include "potentialSettings.hpp"         // for PotentialSettings
 #include "potentialSetup.hpp"            // for PotentialSetup, setupPotential
 #include "testSetup.hpp"                 // for TestSetup
-#include "throwWithMessage.hpp"          // for EXPECT_THROW_MSG
+#include "testUtils.hpp"
+#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
 
 using namespace setup;
 using namespace settings;
@@ -55,8 +55,8 @@ TEST_F(TestSetup, setupReactionFieldPotential)
 
     PotentialSettings::setReactionFieldEpsilon(80.0);
     EXPECT_NO_THROW(potentialSetup.setup());
-    EXPECT_EQ(
-        typeid(_engine->getPotential().getCoulombPotential()),
+    test::checkType(
+        &(_engine->getPotential().getCoulombPotential()),
         typeid(CoulombReactionField)
     );
 
@@ -72,8 +72,8 @@ TEST_F(TestSetup, setupCoulombPotential)
     PotentialSetup potentialSetup(*_engine);
     potentialSetup.setupCoulomb();
 
-    EXPECT_EQ(
-        typeid(_engine->getPotential().getCoulombPotential()),
+    test::checkType(
+        &_engine->getPotential().getCoulombPotential(),
         typeid(CoulombShiftedPotential)
     );
 
@@ -81,8 +81,8 @@ TEST_F(TestSetup, setupCoulombPotential)
     PotentialSetup potentialSetup2(*_engine);
     potentialSetup2.setup();
 
-    EXPECT_EQ(
-        typeid(_engine->getPotential().getCoulombPotential()),
+    test::checkType(
+        &_engine->getPotential().getCoulombPotential(),
         typeid(CoulombWolf)
     );
     const auto &wolfCoulomb = dynamic_cast<CoulombWolf &>(
@@ -101,8 +101,8 @@ TEST_F(TestSetup, setupNonCoulombPotential)
     PotentialSetup potentialSetup(*_engine);
     potentialSetup.setupNonCoulomb();
 
-    EXPECT_EQ(
-        typeid(_engine->getPotential().getNonCoulombPotential()),
+    test::checkType(
+        &_engine->getPotential().getNonCoulombPotential(),
         typeid(ForceFieldNonCoulomb)
     );
 
@@ -110,8 +110,8 @@ TEST_F(TestSetup, setupNonCoulombPotential)
     PotentialSetup potentialSetup2(*_engine);
     potentialSetup2.setupNonCoulomb();
 
-    EXPECT_EQ(
-        typeid(_engine->getPotential().getNonCoulombPotential()),
+    test::checkType(
+        &_engine->getPotential().getNonCoulombPotential(),
         typeid(GuffNonCoulomb)
     );
 }
