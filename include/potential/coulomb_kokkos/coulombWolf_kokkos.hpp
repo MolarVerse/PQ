@@ -24,6 +24,8 @@
 
 #define _KOKKOS_COULOMB_WOLF_HPP_
 
+#ifdef WITH_KOKKOS
+
 #include <Kokkos_DualView.hpp>
 
 namespace potential
@@ -60,12 +62,18 @@ namespace potential
         KokkosCoulombWolf()  = default;
         ~KokkosCoulombWolf() = default;
 
-        KOKKOS_FUNCTION double calculate(const double, const double, const double, double&)
-            const;
+        KOKKOS_FUNCTION double calculate(
+            const double,
+            const double,
+            const double,
+            double&
+        ) const;
 
         [[nodiscard]] Kokkos::View<double> getCoulombRadiusCutOff() const;
     };
 
 }   // namespace potential
+
+#endif   // WITH_KOKKOS
 
 #endif   // _KOKKOS_COULOMB_WOLF_HPP_

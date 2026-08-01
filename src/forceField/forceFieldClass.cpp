@@ -298,8 +298,8 @@ void ForceField::calculateImproperDihedralInteractions(
  * @param physicalData
  */
 void ForceField::calculateJCouplingInteractions(
-    const SimulationBox &box,
-    PhysicalData        &physicalData
+    const SimulationBox & /*box*/,
+    PhysicalData & /*physicalData*/
 )
 {
     if (!_jCouplings.empty())

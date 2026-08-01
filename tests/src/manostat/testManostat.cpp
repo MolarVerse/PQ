@@ -24,7 +24,6 @@
 
 #include <cmath>    // for pow
 #include <memory>   // for make_shared, __shared_ptr_access
-#include <string>   // for string, allocator
 
 #include "atom.hpp"                                  // for Atom
 #include "berendsenManostat.hpp"                     // for BerendsenManostat

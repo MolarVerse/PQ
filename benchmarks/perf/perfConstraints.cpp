@@ -33,13 +33,11 @@
 #define CALLGRIND_ZERO_STATS
 #endif
 
-#include "perfBenchSetup.hpp"
 #include "bondConstraint.hpp"
 #include "constraints.hpp"
-#include "molecule.hpp"
+#include "perfBenchSetup.hpp"
 #include "simulationBox.hpp"
 #include "timingsSettings.hpp"
-#include "vector3d.hpp"
 
 static constexpr long ITERATIONS = 1000;
 
@@ -59,7 +57,13 @@ int main()
 
     for (std::size_t m = 0; m < molecules.size(); ++m)
         constr.addBondConstraint(
-            constraints::BondConstraint(&molecules[m], &molecules[m], 0, 1, 0.85)
+            constraints::BondConstraint(
+                &molecules[m],
+                &molecules[m],
+                0,
+                1,
+                0.85
+            )
         );
 
     constr.calculateConstraintBondRefs(box);

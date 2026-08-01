@@ -22,8 +22,6 @@
 
 #include "testBondConstraint.hpp"
 
-#include <string>   // for string
-
 #include "constants/conversionFactors.hpp"
 #include "gtest/gtest.h"   // for AssertionResult, Message, TestPartResult
 #include "timingsSettings.hpp"
