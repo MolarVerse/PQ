@@ -22,15 +22,15 @@
 
 #include "executablePath.hpp"
 
-#include <cstdint>
-#include <string>
-#include <system_error>
-#include <vector>
-
 #if defined(_WIN32)
+#include <vector>
 #include <windows.h>
 #elif defined(__APPLE__)
+#include <cstdint>
+#include <vector>
 #include <mach-o/dyld.h>
+#elif defined(__linux__)
+#include <system_error>
 #endif
 
 std::filesystem::path utilities::executablePath()
