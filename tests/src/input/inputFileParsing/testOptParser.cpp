@@ -22,8 +22,6 @@
 
 #include <gtest/gtest.h>   // for TEST_F, EXPECT_EQ, RUN_ALL_TESTS
 
-#include <string>   // for string, allocator
-
 #include "exceptions.hpp"            // for InputFileException, customException
 #include "gtest/gtest.h"             // for Message, TestPartResult
 #include "optInputParser.hpp"        // for InputFileParserOptimizer

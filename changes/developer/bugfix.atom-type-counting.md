@@ -1,0 +1,1 @@
+- Count non-adjacent atom types correctly.

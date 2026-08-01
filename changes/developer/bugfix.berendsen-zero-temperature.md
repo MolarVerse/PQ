@@ -1,0 +1,1 @@
+- Guard the Berendsen thermostat against zero-temperature invalid values.

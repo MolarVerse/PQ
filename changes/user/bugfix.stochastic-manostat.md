@@ -1,0 +1,1 @@
+- Preserve molecular geometry and wrap positions correctly during stochastic cell rescaling.

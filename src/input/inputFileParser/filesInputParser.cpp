@@ -22,12 +22,12 @@
 
 #include "filesInputParser.hpp"
 
-#include <cstddef>       // for size_t
-#include <functional>    // for _Bind_front_t, bind_front
+#include <cstddef>   // for size_t
 
-#include "engine.hpp"            // for Engine
-#include "exceptions.hpp"        // for InputFileException
-#include "fileSettings.hpp"      // for FileSettings
+#include "engine.hpp"         // for Engine
+#include "exceptions.hpp"     // for InputFileException
+#include "fileSettings.hpp"   // for FileSettings
+#include "parserUtils.hpp"
 #include "stringUtilities.hpp"   // for fileExists
 
 using namespace input;
@@ -43,7 +43,7 @@ using namespace utilities;
  * @details following keywords are added to the _keywordFuncMap,
  * _keywordRequiredMap and _keywordCountMap: 1) intra-nonBonded_file <string> 2)
  * topology_file <string> 3) parameter_file <string> 4) start_file <string>
- * (required) 5) rpmd_start_file <string> 6) moldescriptor_file <string> 
+ * (required) 5) rpmd_start_file <string> 6) moldescriptor_file <string>
  * 7) guff_path <string> (deprecated) 8) guff_file <string>
  * 9) mshake_file <string> 10) dftb_file <string>
  *
@@ -53,61 +53,61 @@ FilesInputParser::FilesInputParser(Engine &engine) : InputFileParser(engine)
 {
     addKeyword(
         std::string("intra-nonBonded_file"),
-        bind_front(&FilesInputParser::parseIntraNonBondedFile, this),
+        bindMember(&FilesInputParser::parseIntraNonBondedFile, this),
         false
     );
 
     addKeyword(
         std::string("topology_file"),
-        bind_front(&FilesInputParser::parseTopologyFilename, this),
+        bindMember(&FilesInputParser::parseTopologyFilename, this),
         false
     );
 
     addKeyword(
         std::string("parameter_file"),
-        bind_front(&FilesInputParser::parseParameterFilename, this),
+        bindMember(&FilesInputParser::parseParameterFilename, this),
         false
     );
 
     addKeyword(
         std::string("start_file"),
-        bind_front(&FilesInputParser::parseStartFilename, this),
+        bindMember(&FilesInputParser::parseStartFilename, this),
         true
     );
 
     addKeyword(
         std::string("rpmd_start_file"),
-        bind_front(&FilesInputParser::parseRingPolymerStartFilename, this),
+        bindMember(&FilesInputParser::parseRingPolymerStartFilename, this),
         false
     );
 
     addKeyword(
         std::string("moldescriptor_file"),
-        bind_front(&FilesInputParser::parseMoldescriptorFilename, this),
+        bindMember(&FilesInputParser::parseMoldescriptorFilename, this),
         false
     );
 
     addKeyword(
         std::string("guff_path"),
-        bind_front(&FilesInputParser::parseGuffPath, this),
+        bindMember(&FilesInputParser::parseGuffPath, this),
         false
     );
 
     addKeyword(
         std::string("guff_file"),
-        bind_front(&FilesInputParser::parseGuffDatFilename, this),
+        bindMember(&FilesInputParser::parseGuffDatFilename, this),
         false
     );
 
     addKeyword(
         std::string("mshake_file"),
-        bind_front(&FilesInputParser::parseMShakeFilename, this),
+        bindMember(&FilesInputParser::parseMShakeFilename, this),
         false
     );
 
     addKeyword(
         std::string("dftb_file"),
-        bind_front(&FilesInputParser::parseDFTBFilename, this),
+        bindMember(&FilesInputParser::parseDFTBFilename, this),
         false
     );
 }
@@ -235,10 +235,12 @@ void FilesInputParser::parseRingPolymerStartFilename(
     const auto &filename = lineElements[2];
 
     if (!fileExists(filename))
-        throw InputFileException(std::format(
-            "Cannot open ring polymer start file - filename = {}",
-            filename
-        ));
+        throw InputFileException(
+            std::format(
+                "Cannot open ring polymer start file - filename = {}",
+                filename
+            )
+        );
 
     FileSettings::setRingPolymerStartFileName(filename);
     FileSettings::setIsRingPolymerStartFileNameSet();
@@ -263,11 +265,13 @@ void FilesInputParser::parseMoldescriptorFilename(
     const auto &filename = lineElements[2];
 
     if (!fileExists(filename))
-        throw InputFileException(std::format(
-            "Cannot open moldescriptor file - filename = \"{}\" - file not "
-            "found",
-            filename
-        ));
+        throw InputFileException(
+            std::format(
+                "Cannot open moldescriptor file - filename = \"{}\" - file not "
+                "found",
+                filename
+            )
+        );
 
     FileSettings::setMolDescriptorFileName(filename);
 }
@@ -282,10 +286,13 @@ void FilesInputParser::parseGuffPath(
     const size_t
 )
 {
-    throw InputFileException(std::format(
-        "The \"guff_path\" keyword id deprecated. Please use \"guffdat_file\" "
-        "instead."
-    ));
+    throw InputFileException(
+        std::format(
+            "The \"guff_path\" keyword id deprecated. Please use "
+            "\"guffdat_file\" "
+            "instead."
+        )
+    );
 }
 
 /**
