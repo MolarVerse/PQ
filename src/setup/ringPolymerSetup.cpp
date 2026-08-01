@@ -22,11 +22,9 @@
 
 #include "ringPolymerSetup.hpp"
 
-#include <algorithm>     // for __for_each_fn, for_each
-#include <cstddef>       // for size_t
-#include <string_view>   // for string_view
+#include <algorithm>   // for __for_each_fn, for_each
+#include <cstddef>     // for size_t
 
-#include "exceptions.hpp"                     // for InputFileException
 #include "fileSettings.hpp"                   // for FileSettings
 #include "maxwellBoltzmann.hpp"               // for MaxwellBoltzmann
 #include "ringPolymerEngine.hpp"              // for RingPolymerEngine
@@ -78,8 +76,9 @@ void setup::setupRingPolymer(Engine &engine)
  *
  * @param engine
  */
-RingPolymerSetup::RingPolymerSetup(RingPolymerEngine &engine)
-    : _engine(engine){};
+RingPolymerSetup::RingPolymerSetup(RingPolymerEngine &engine) : _engine(engine)
+{
+}
 
 /**
  * @brief setup a ring polymer simulation

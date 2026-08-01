@@ -24,7 +24,6 @@
 
 #define _TYPE_ALIASES_HPP_
 
-#include <chrono>       // for std::chrono
 #include <cstddef>      // for size_t
 #include <deque>        // for std::queue
 #include <functional>   // for std::function
@@ -208,9 +207,6 @@ namespace input
 
 namespace pq
 {
-    using Time = std::chrono::time_point<std::chrono::high_resolution_clock>;
-    using Duration = std::chrono::duration<double>;
-
     using strings   = std::vector<std::string>;
     using stringSet = std::set<std::string>;
 
