@@ -24,6 +24,7 @@
 
 #include <cstdio>
 #include <cstdlib>
+#include <filesystem>
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
@@ -46,7 +47,17 @@ namespace
     }
 }   // namespace
 
-TEST(TestReferencesOutput, writeReferencesFileEmitsHeaderAndBibtexBanner)
+class ReferencesOutputTest : public ::testing::Test
+{
+   protected:
+    static void removeReferenceFile(const std::string &path)
+    {
+        ReferencesOutput::_referenceFileNames.erase(path);
+        ReferencesOutput::_bibtexFileNames.erase(path + ".bib");
+    }
+};
+
+TEST_F(ReferencesOutputTest, writeReferencesFileEmitsHeaderAndBibtexBanner)
 {
     const std::string path = "default.refs.test";
     OutputFileSettings::setRefFileName(path);
@@ -72,24 +83,89 @@ TEST(TestReferencesOutput, writeReferencesFileEmitsHeaderAndBibtexBanner)
     ::remove(path.c_str());
 }
 
-TEST(TestReferencesOutput, rejectsUnwritableOutput)
+TEST_F(ReferencesOutputTest, rejectsUnwritableOutput)
 {
     OutputFileSettings::setRefFileName(".");
 
     EXPECT_THROW(ReferencesOutput::writeReferencesFile(), std::runtime_error);
 }
 
-TEST(TestReferencesOutput, rejectsMissingReferenceFiles)
+#if defined(__linux__)
+TEST_F(ReferencesOutputTest, rejectsFailedOutputWrites)
 {
-    EXPECT_NO_THROW(ReferencesOutput::addReferenceFile("nonexistent.ref"));
-    EXPECT_NO_THROW(ReferencesOutput::addReferenceFile("nonexistent.ref"));
-
-    const std::string path = "default.refs.test";
-    OutputFileSettings::setRefFileName(path);
+    OutputFileSettings::setRefFileName("/dev/full");
 
     EXPECT_THROW(ReferencesOutput::writeReferencesFile(), std::runtime_error);
-    EXPECT_FALSE(std::ifstream(path).good());
+}
+#endif
 
-    ReferencesOutput::_referenceFileNames.erase("nonexistent.ref");
-    ReferencesOutput::_bibtexFileNames.erase("nonexistent.ref.bib");
+TEST_F(ReferencesOutputTest, rendersAdditionalReferenceFiles)
+{
+    const auto referencePath =
+        std::filesystem::absolute("additional-reference.ref.test");
+    const auto bibtexPath =
+        std::filesystem::path(referencePath.string() + ".bib");
+    const std::string outputPath = "default.refs.test";
+
+    std::ofstream(referencePath) << "ADDITIONAL REFERENCE\n";
+    std::ofstream(bibtexPath) << "ADDITIONAL BIBTEX\n";
+    ReferencesOutput::addReferenceFile(referencePath.string());
+    OutputFileSettings::setRefFileName(outputPath);
+
+    EXPECT_NO_THROW(ReferencesOutput::writeReferencesFile());
+    const auto content = slurp(outputPath);
+    EXPECT_NE(content.find("ADDITIONAL REFERENCE"), std::string::npos);
+    EXPECT_NE(content.find("ADDITIONAL BIBTEX"), std::string::npos);
+
+    removeReferenceFile(referencePath.string());
+    std::filesystem::remove(referencePath);
+    std::filesystem::remove(bibtexPath);
+    std::filesystem::remove(outputPath);
+}
+
+#if !defined(_WIN32)
+TEST_F(ReferencesOutputTest, rejectsUnreadableReferenceFiles)
+{
+    const auto unreadablePath =
+        std::filesystem::absolute("unreadable-reference.ref.test");
+    const std::string outputPath = "default.refs.test";
+    std::ofstream(unreadablePath) << "UNREADABLE REFERENCE\n";
+    std::filesystem::permissions(unreadablePath, std::filesystem::perms::none);
+
+    if (std::ifstream(unreadablePath).is_open())
+    {
+        std::filesystem::permissions(
+            unreadablePath,
+            std::filesystem::perms::owner_all
+        );
+        std::filesystem::remove(unreadablePath);
+        GTEST_SKIP() << "The current user can read files without permissions";
+    }
+
+    ReferencesOutput::addReferenceFile(unreadablePath.string());
+    OutputFileSettings::setRefFileName(outputPath);
+    EXPECT_THROW(ReferencesOutput::writeReferencesFile(), std::runtime_error);
+    removeReferenceFile(unreadablePath.string());
+
+    std::filesystem::permissions(
+        unreadablePath,
+        std::filesystem::perms::owner_all
+    );
+    std::filesystem::remove(unreadablePath);
+}
+#endif
+
+TEST_F(ReferencesOutputTest, rejectsMissingReferenceFiles)
+{
+    const std::string outputPath = "default.refs.test";
+
+    EXPECT_NO_THROW(ReferencesOutput::addReferenceFile("nonexistent.ref"));
+    EXPECT_NO_THROW(ReferencesOutput::addReferenceFile("nonexistent.ref"));
+
+    OutputFileSettings::setRefFileName(outputPath);
+
+    EXPECT_THROW(ReferencesOutput::writeReferencesFile(), std::runtime_error);
+    EXPECT_FALSE(std::ifstream(outputPath).good());
+
+    removeReferenceFile("nonexistent.ref");
 }

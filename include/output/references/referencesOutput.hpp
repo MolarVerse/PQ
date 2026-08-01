@@ -30,7 +30,7 @@
 
 #include "typeAliases.hpp"
 
-class TestReferencesOutput_rejectsMissingReferenceFiles_Test;
+class ReferencesOutputTest;
 
 namespace references
 {
@@ -47,7 +47,7 @@ namespace references
         static inline pq::stringSet _bibtexFileNames    = pq::stringSet();
 
 #ifdef WITH_TESTS
-        friend class ::TestReferencesOutput_rejectsMissingReferenceFiles_Test;
+        friend class ::ReferencesOutputTest;
 #endif
 
        public:
