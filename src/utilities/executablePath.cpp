@@ -23,12 +23,14 @@
 #include "executablePath.hpp"
 
 #if defined(_WIN32)
-#include <vector>
 #include <windows.h>
+
+#include <vector>
 #elif defined(__APPLE__)
+#include <mach-o/dyld.h>
+
 #include <cstdint>
 #include <vector>
-#include <mach-o/dyld.h>
 #elif defined(__linux__)
 #include <system_error>
 #endif
