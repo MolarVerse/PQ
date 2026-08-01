@@ -1,8 +1,0 @@
-- Remove default branches from enum switches and share sentinel fallbacks.
-- Move input validation into the engine configuration path.
-- Prefix performance benchmark filenames.
-- Add language-server configuration.
-- Rename the ASE-based MACE runner classes consistently.
-- Return cell and neighbor collections by constant reference.
-- Avoid a temporary vector during cell-list rebuilds.
-- Inline Coulomb cutoff getters.

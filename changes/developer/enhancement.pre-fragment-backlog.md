@@ -1,6 +1,0 @@
-- Implement Reaction Field long-range correction.
-- Add `mace_mode` for selecting accurate or accelerated MACE execution.
-- Add `mshake-iter` and `mshake-tolerance`.
-- Add FeNNol references and its QM runner.
-- Add the MM Hessian workflow.
-- Add net-force removal for imported QM forces.

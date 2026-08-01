@@ -1,1 +1,1 @@
-- add claude code and AI agents instructions
+- Add Claude Code and AI-agent instructions.

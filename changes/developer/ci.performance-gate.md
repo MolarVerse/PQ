@@ -1,0 +1,4 @@
+- Cache base-branch performance instruction counts.
+- Run the performance gate only for relevant changes.
+- Post performance results as a persistent pull-request comment.
+- Add the callgrind instruction-count regression gate.
