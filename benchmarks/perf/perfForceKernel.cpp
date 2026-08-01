@@ -24,7 +24,6 @@
 // (Coulomb + non-Coulomb pair evaluation, the per-pair getNonCoulPair lookup
 // and force accumulation), so callgrind yields a stable instruction count.
 
-#include <cstddef>
 #include <cstdio>
 
 #ifdef PQ_WITH_CALLGRIND
@@ -33,10 +32,10 @@
 #define CALLGRIND_ZERO_STATS
 #endif
 
-#include "perfBenchSetup.hpp"
 #include "coulombShiftedPotential.hpp"
 #include "intraNonBondedContainer.hpp"
 #include "intraNonBondedMap.hpp"
+#include "perfBenchSetup.hpp"
 #include "physicalData.hpp"
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"

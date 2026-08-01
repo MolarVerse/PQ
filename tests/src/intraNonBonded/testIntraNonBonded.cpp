@@ -25,7 +25,6 @@
 #include <cstddef>   // for size_t
 #include <format>    // for format
 #include <memory>    // for shared_ptr, allocator, make_shared
-#include <string>    // for basic_string
 #include <vector>    // for vector
 
 #include "atom.hpp"                      // for Atom

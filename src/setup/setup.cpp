@@ -32,7 +32,6 @@
 #include "inputFileReader.hpp"              // for readInputFile
 #include "intraNonBondedReader.hpp"         // for readIntraNonBondedFile
 #include "intraNonBondedSetup.hpp"          // for setupIntraNonBonded
-#include "kokkosSetup.hpp"                  // for setupKokkos
 #include "manostatSetup.hpp"                // for setupManostat
 #include "moldescriptorReader.hpp"          // for readMolDescriptor
 #include "optimizerSetup.hpp"               // for setupOptimizer
@@ -49,6 +48,10 @@
 #include "thermostatSetup.hpp"              // for setupThermostat
 #include "timer.hpp"                        // for Timings
 #include "topologyReader.hpp"               // for readTopologyFile
+
+#ifdef WITH_KOKKOS
+#include "kokkosSetup.hpp"   // for setupKokkos
+#endif
 
 using namespace engine;
 using namespace input;

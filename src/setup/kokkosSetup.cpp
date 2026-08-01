@@ -20,6 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#ifdef WITH_KOKKOS
+
 #include "kokkosSetup.hpp"
 
 #include <iostream>
@@ -58,7 +60,7 @@ void setup::setupKokkos(Engine &engine)
  *
  * @param engine
  */
-KokkosSetup::KokkosSetup(Engine &engine) : _engine(engine){};
+KokkosSetup::KokkosSetup(Engine &engine) : _engine(engine) {}
 
 /**
  * @brief setup Kokkos
@@ -136,3 +138,5 @@ void KokkosSetup::setup()
         _COULOMB_PREFACTOR_
     );
 }
+
+#endif   // WITH_KOKKOS

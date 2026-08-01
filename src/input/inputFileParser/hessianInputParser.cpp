@@ -23,10 +23,10 @@
 #include "hessianInputParser.hpp"
 
 #include <format>
-#include <functional>
 
 #include "exceptions.hpp"
 #include "hessianSettings.hpp"
+#include "parserUtils.hpp"
 #include "stringUtilities.hpp"
 
 using namespace input;
@@ -39,30 +39,27 @@ HessianInputParser::HessianInputParser(pq::Engine &engine)
 {
     addKeyword(
         std::string("hessian_file"),
-        std::bind_front(&HessianInputParser::parseHessianFile, this),
+        bindMember(&HessianInputParser::parseHessianFile, this),
         false
     );
     addKeyword(
         std::string("hessian_info_file"),
-        std::bind_front(&HessianInputParser::parseHessianInfoFile, this),
+        bindMember(&HessianInputParser::parseHessianInfoFile, this),
         false
     );
     addKeyword(
         std::string("hessian_displacement"),
-        std::bind_front(&HessianInputParser::parseDisplacement, this),
+        bindMember(&HessianInputParser::parseDisplacement, this),
         false
     );
     addKeyword(
         std::string("optimize_before_hessian"),
-        std::bind_front(
-            &HessianInputParser::parseOptimizeBeforeHessian,
-            this
-        ),
+        bindMember(&HessianInputParser::parseOptimizeBeforeHessian, this),
         false
     );
     addKeyword(
         std::string("hessian_builder"),
-        std::bind_front(&HessianInputParser::parseBuilder, this),
+        bindMember(&HessianInputParser::parseBuilder, this),
         false
     );
 }
@@ -95,11 +92,13 @@ void HessianInputParser::parseDisplacement(
     const auto displacement = std::stod(lineElements[2]);
 
     if (displacement <= 0.0)
-        throw InputFileException(std::format(
-            "Hessian displacement must be greater than 0 in input file "
-            "at line {}",
-            lineNumber
-        ));
+        throw InputFileException(
+            std::format(
+                "Hessian displacement must be greater than 0 in input file "
+                "at line {}",
+                lineNumber
+            )
+        );
 
     HessianSettings::setDisplacement(displacement);
 }
@@ -124,10 +123,12 @@ void HessianInputParser::parseBuilder(
     HessianSettings::setBuilder(lineElements[2]);
 
     if (HessianSettings::getBuilder() == NONE)
-        throw InputFileException(std::format(
-            "Invalid hessian_builder \"{}\" in input file at line {} - "
-            "possible values are: central, forward, five-point, analytic",
-            lineElements[2],
-            lineNumber
-        ));
+        throw InputFileException(
+            std::format(
+                "Invalid hessian_builder \"{}\" in input file at line {} - "
+                "possible values are: central, forward, five-point, analytic",
+                lineElements[2],
+                lineNumber
+            )
+        );
 }
