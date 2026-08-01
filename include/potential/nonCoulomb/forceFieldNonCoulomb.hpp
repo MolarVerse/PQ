@@ -27,6 +27,7 @@
 #include <cstddef>   // for size_t
 #include <map>       // for map
 
+#include "matrix/matrixClass.hpp"
 #include "nonCoulombPotential.hpp"
 #include "typeAliases.hpp"
 
@@ -35,8 +36,8 @@ namespace potential
     class ForceFieldNonCoulomb : public NonCoulombPotential
     {
        private:
-        pq::SharedNonCoulPairVec _nonCoulPairsVec;
-        pq::SharedNonCoulPairMat _nonCoulPairsMat;
+        pq::SharedNonCoulPairVec                     _nonCoulPairsVec;
+        linearAlgebra::Matrix<pq::SharedNonCoulPair> _nonCoulPairsMat;
 
        public:
         void setupNonCoulombicCutoffs();
@@ -66,14 +67,20 @@ namespace potential
         [[nodiscard]] size_t getGlobalVdwType1(const pq::stlVectorUL &) const;
         [[nodiscard]] size_t getGlobalVdwType2(const pq::stlVectorUL &) const;
         [[nodiscard]] pq::SharedNonCoulPairVec &getNonCoulombPairsVector();
-        [[nodiscard]] pq::SharedNonCoulPairMat &getNonCoulombPairsMatrix();
+
+        [[nodiscard]]
+        linearAlgebra::Matrix<pq::SharedNonCoulPair> &getNonCoulombPairsMatrix(
+        );
 
         /***************************
          * standard setter methods *
          ***************************/
 
         void setNonCoulombPairsVector(const pq::SharedNonCoulPairVec &vec);
-        void setNonCoulombPairsMatrix(const pq::SharedNonCoulPairMat &mat);
+
+        void setNonCoulombPairsMatrix(
+            const linearAlgebra::Matrix<pq::SharedNonCoulPair> &mat
+        );
 
         template <typename T>
         void setNonCoulombPairsMatrix(const size_t, const size_t, T &);

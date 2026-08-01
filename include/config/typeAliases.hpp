@@ -34,7 +34,6 @@
 #include <string>       // for std::string
 #include <vector>       // for std::vector
 
-#include "../linearAlgebra/matrix.hpp"         // IWYU pragma: export
 #include "../linearAlgebra/staticMatrix.hpp"   // IWYU pragma: export
 #include "../linearAlgebra/vector3d.hpp"       // IWYU pragma: export
 
@@ -342,7 +341,6 @@ namespace pq
     using SharedNonCoulPairVec2d = std::vector<SharedNonCoulPairVec>;
     using SharedNonCoulPairVec3d = std::vector<SharedNonCoulPairVec2d>;
     using SharedNonCoulPairVec4d = std::vector<SharedNonCoulPairVec3d>;
-    using SharedNonCoulPairMat   = linearAlgebra::Matrix<SharedNonCoulPair>;
 
     /**************************
      * constraints namespace *
