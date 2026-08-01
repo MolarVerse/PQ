@@ -6,10 +6,11 @@ import sys
 from pathlib import Path
 
 from changelog_fragments import (
+    AUDIENCE_SECTIONS,
     FRAGMENT_RE,
     FragmentError,
     parse_fragment_name,
-    read_fragment_entry,
+    read_fragment_entries,
 )
 
 
@@ -42,6 +43,18 @@ def changed_files(base, head):
     return changes
 
 
+def fragment_audience(relative_path):
+    """Return the audience for a changes/<audience>/<file>.md path, if any."""
+    parts = Path(relative_path).parts
+    if len(parts) != 3 or parts[0] != "changes":
+        return None
+    if parts[1] not in AUDIENCE_SECTIONS:
+        return None
+    if not parts[2].endswith(".md") or parts[2] == "README.md":
+        return None
+    return parts[1]
+
+
 def validate_pr_changes(changes, root=ROOT):
     """Return validation errors for a regular pull request."""
     errors = []
@@ -58,18 +71,18 @@ def validate_pr_changes(changes, root=ROOT):
     fragment_changes = [
         (status, path)
         for status, path in changes
-        if path.startswith("changes/")
-        and path.endswith(".md")
-        and path != "changes/README.md"
+        if fragment_audience(path) is not None
     ]
     editable_fragments = [
-        path for status, path in fragment_changes if status in {"A", "M"}
+        (status, path)
+        for status, path in fragment_changes
+        if status in {"A", "M"}
     ]
 
     if not fragment_changes:
         errors.append(
             "regular pull requests must add or update at least one "
-            "changelog fragment"
+            "changelog fragment under changes/user/ or changes/developer/"
         )
 
     forbidden_changes = [
@@ -84,19 +97,20 @@ def validate_pr_changes(changes, root=ROOT):
             + ", ".join(forbidden_changes)
         )
 
-    for relative_path in editable_fragments:
+    for _, relative_path in editable_fragments:
+        audience = fragment_audience(relative_path)
         name = Path(relative_path).name
         if not FRAGMENT_RE.match(name):
             errors.append(
                 f"invalid fragment name '{name}'; expected "
-                "<slug>.<user|developer>.<category>.md"
+                "<category>.<slug>.md"
             )
-        else:
-            try:
-                parse_fragment_name(name)
-                read_fragment_entry(root / relative_path)
-            except (FragmentError, OSError) as error:
-                errors.append(str(error))
+            continue
+        try:
+            parse_fragment_name(name, audience)
+            read_fragment_entries(root / relative_path)
+        except (FragmentError, OSError) as error:
+            errors.append(str(error))
 
     return errors
 

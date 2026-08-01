@@ -106,7 +106,7 @@ def append_fragments(sections, fragments, audience):
     """Append fragments for one audience to parsed changelog sections."""
     for fragment in fragments:
         if fragment.audience == audience:
-            sections.setdefault(fragment.section, []).append(fragment.entry)
+            sections.setdefault(fragment.section, []).extend(fragment.entries)
 
 
 def has_release_notes(body_lines):

@@ -1,0 +1,8 @@
+- Fix M-SHAKE convergence, iteration limits, previous-position handling, and velocity corrections for constrained molecules.
+- Prevent undefined forces for collinear angle configurations, including linear equilibrium geometries such as CO2.
+- Prevent the Berendsen thermostat from producing invalid velocities when the kinetic energy is zero.
+- Reject non-finite energies and forces from external QM calculations instead of propagating them into a trajectory.
+- Count non-adjacent duplicate atom types correctly.
+- Reject periodic cell-list layouts in which neighbor offsets refer to the same cell more than once.
+- Recompute Langevin noise when the friction setting changes.
+- Preserve molecular geometry and wrap positions correctly during stochastic cell rescaling.

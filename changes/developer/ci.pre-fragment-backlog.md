@@ -1,0 +1,11 @@
+- Split user and developer changelogs and require curated user notes in release pull requests.
+- Replace per-PR changelog edits with release-time generation.
+- Cache base-branch performance instruction counts.
+- Run the performance gate only for relevant changes.
+- Post performance results as a persistent pull-request comment.
+- Add the callgrind instruction-count regression gate.
+- Warm build caches from `dev` and `main`.
+- Cache the integration-test environment.
+- Build portable binaries for reusable compiler caches.
+- Fix integration-test environment setup.
+- After a realease is triggered due to the new branch protection rule we don't merge main directly into dev but make a PR that needs approval

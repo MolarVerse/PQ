@@ -1,0 +1,2 @@
+- Move changelog fragments into `changes/user/` and `changes/developer/` directories with `<category>.<title>.md` naming, and allow a fragment to hold multiple bullets.
+- Document the changelog fragment workflow in the Sphinx developer guide.
