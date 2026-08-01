@@ -317,19 +317,19 @@ void CellList::resizeCells()
 {
     auto numberOfCells = size_t{1};
 
-    for (size_t dimension = 0; dimension < 3; ++dimension)
+    for (const auto numberOfCellsInDimension : _nCells)
     {
-        if (0 == _nCells[dimension])
+        if (0 == numberOfCellsInDimension)
             throw CellListException(
                 "Number of cells must be positive"
             );   // GCOVR_EXCL_BR_LINE
 
-        if (_nCells[dimension] > _cells.max_size() / numberOfCells)
+        if (numberOfCellsInDimension > _cells.max_size() / numberOfCells)
             throw CellListException(
                 "Number of cells exceeds the supported size"
             );   // GCOVR_EXCL_BR_LINE
 
-        numberOfCells *= _nCells[dimension];
+        numberOfCells *= numberOfCellsInDimension;
     }
 
     _cells.resize(numberOfCells);
