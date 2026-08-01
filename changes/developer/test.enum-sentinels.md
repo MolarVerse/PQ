@@ -1,0 +1,1 @@
+- Add explicit coverage for enum sentinels.
