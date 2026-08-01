@@ -27,7 +27,7 @@
 #include <cstddef>   // for size_t
 #include <map>       // for map
 
-#include "matrix/matrixClass.hpp"
+#include "matrix.hpp"
 #include "nonCoulombPotential.hpp"
 #include "typeAliases.hpp"
 
