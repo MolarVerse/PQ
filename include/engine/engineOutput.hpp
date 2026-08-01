@@ -57,45 +57,52 @@ namespace engine
     class EngineOutput : public timings::Timer
     {
        private:
-        std::unique_ptr<pq::EnergyOutput> _energyOutput;
-        std::unique_ptr<pq::EnergyOutput> _instantEnergyOutput;
-        std::unique_ptr<pq::InfoOutput>   _infoOutput;
+        std::unique_ptr<output::EnergyOutput> _energyOutput;
+        std::unique_ptr<output::EnergyOutput> _instantEnergyOutput;
+        std::unique_ptr<output::InfoOutput>   _infoOutput;
 
-        std::unique_ptr<pq::TrajectoryOutput> _xyzOutput;
-        std::unique_ptr<pq::TrajectoryOutput> _velOutput;
-        std::unique_ptr<pq::TrajectoryOutput> _forceOutput;
-        std::unique_ptr<pq::TrajectoryOutput> _chargeOutput;
-        std::unique_ptr<pq::RstFileOutput>    _rstFileOutput;
+        std::unique_ptr<output::TrajectoryOutput> _xyzOutput;
+        std::unique_ptr<output::TrajectoryOutput> _velOutput;
+        std::unique_ptr<output::TrajectoryOutput> _forceOutput;
+        std::unique_ptr<output::TrajectoryOutput> _chargeOutput;
+        std::unique_ptr<output::RstFileOutput>    _rstFileOutput;
 
-        std::unique_ptr<pq::LogOutput>    _logOutput;
-        std::unique_ptr<pq::StdoutOutput> _stdoutOutput;
+        std::unique_ptr<output::LogOutput>    _logOutput;
+        std::unique_ptr<output::StdoutOutput> _stdoutOutput;
 
-        std::unique_ptr<pq::MomentumOutput> _momentumOutput;
-        std::unique_ptr<pq::VirialOutput>   _virialOutput;
-        std::unique_ptr<pq::StressOutput>   _stressOutput;
-        std::unique_ptr<pq::BoxFileOutput>  _boxFileOutput;
+        std::unique_ptr<output::MomentumOutput> _momentumOutput;
+        std::unique_ptr<output::VirialOutput>   _virialOutput;
+        std::unique_ptr<output::StressOutput>   _stressOutput;
+        std::unique_ptr<output::BoxFileOutput>  _boxFileOutput;
 
-        std::unique_ptr<pq::OptOutput> _optOutput;
+        std::unique_ptr<output::OptOutput> _optOutput;
 
-        pq::UniqueRPMDRstFileOutput _rpmdRstFileOutput;
-        pq::UniqueRPMDTrajOutput    _rpmdXyzOutput;
-        pq::UniqueRPMDTrajOutput    _rpmdVelOutput;
-        pq::UniqueRPMDTrajOutput    _rpmdForceOutput;
-        pq::UniqueRPMDTrajOutput    _rpmdChargeOutput;
-        pq::UniqueRPMDEnergyOutput  _rpmdEnergyOutput;
+        std::unique_ptr<output::RingPolymerRestartFileOutput>
+                                                             _rpmdRstFileOutput;
+        std::unique_ptr<output::RingPolymerTrajectoryOutput> _rpmdXyzOutput;
+        std::unique_ptr<output::RingPolymerTrajectoryOutput> _rpmdVelOutput;
+        std::unique_ptr<output::RingPolymerTrajectoryOutput> _rpmdForceOutput;
+        std::unique_ptr<output::RingPolymerTrajectoryOutput> _rpmdChargeOutput;
+        std::unique_ptr<output::RingPolymerEnergyOutput>     _rpmdEnergyOutput;
 
-        std::unique_ptr<pq::TimingsOutput> _timingsOutput;
+        std::unique_ptr<output::TimingsOutput> _timingsOutput;
 
        public:
         EngineOutput();
 
         void writeEnergyFile(const size_t step, const pq::PhysicalData &);
-        void writeInstantEnergyFile(const size_t step, const pq::PhysicalData &);
+        void writeInstantEnergyFile(
+            const size_t step,
+            const pq::PhysicalData &
+        );
         void writeXyzFile(pq::SimBox &);
         void writeVelFile(pq::SimBox &);
         void writeForceFile(pq::SimBox &);
         void writeChargeFile(pq::SimBox &);
-        void writeInfoFile(const double simulationTime, const pq::PhysicalData &);
+        void writeInfoFile(
+            const double simulationTime,
+            const pq::PhysicalData &
+        );
         void writeRstFile(pq::SimBox &, const pq::Thermostat &, const size_t);
         void writeOptRstFile(pq::SimBox &, const size_t);
 
@@ -110,7 +117,10 @@ namespace engine
         void writeRingPolymerVelFile(std::vector<pq::SimBox> &);
         void writeRingPolymerForceFile(std::vector<pq::SimBox> &);
         void writeRingPolymerChargeFile(std::vector<pq::SimBox> &);
-        void writeRingPolymerEnergyFile(const size_t, const std::vector<pq::PhysicalData> &);
+        void writeRingPolymerEnergyFile(
+            const size_t,
+            const std::vector<pq::PhysicalData> &
+        );
 
         void writeTimingsFile(timings::GlobalTimer &);
 
