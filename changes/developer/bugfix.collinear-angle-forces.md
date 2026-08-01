@@ -1,0 +1,1 @@
+- Guard angle-force division for collinear configurations.

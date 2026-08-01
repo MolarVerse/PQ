@@ -36,23 +36,10 @@ DEVELOPER_ORDER = [
     *DEVELOPER_SECTIONS.values(),
 ]
 
-LEGACY_SECTIONS = {
-    "bugfix": "Bug Fixes",
-    "build": "Build",
-    "ci": "CI",
-    "internal": "Internal",
-    "test": "Tests",
-    "enhancement": "Enhancements",
-    "doc": "Documentation",
-}
-
+# <category>.<slug>.md, living under changes/<user|developer>/. The audience
+# is carried by the parent directory, not the filename.
 FRAGMENT_RE = re.compile(
-    r"^(?P<slug>[a-z0-9][a-z0-9-]*)\."
-    r"(?P<audience>user|developer)\."
-    r"(?P<category>[a-z]+)\.md$"
-)
-LEGACY_FRAGMENT_RE = re.compile(
-    r"^(?P<slug>[^.]+)\.(?P<category>[^.]+)\.md$"
+    r"^(?P<category>[a-z]+)\.(?P<slug>[a-z0-9][a-z0-9-]*)\.md$"
 )
 MAX_ENTRY_LENGTH = 240
 
@@ -66,19 +53,17 @@ class Fragment:
     path: Path
     audience: str
     section: str
-    entry: str
+    entries: list
 
 
-def parse_fragment_name(name):
-    """Return audience and section encoded by a fragment filename."""
+def parse_fragment_name(name, audience):
+    """Return the changelog section encoded by a fragment filename."""
     match = FRAGMENT_RE.match(name)
     if not match:
         raise FragmentError(
-            f"invalid fragment name '{name}'; expected "
-            "<slug>.<user|developer>.<category>.md"
+            f"invalid fragment name '{name}'; expected <category>.<slug>.md"
         )
 
-    audience = match.group("audience")
     category = match.group("category")
     sections = AUDIENCE_SECTIONS[audience]
     if category not in sections:
@@ -88,60 +73,50 @@ def parse_fragment_name(name):
             f"allowed: {allowed}"
         )
 
-    return audience, sections[category]
+    return sections[category]
 
 
-def read_fragment_entry(path):
-    """Read one concise Markdown bullet from a new-style fragment."""
+def read_fragment_entries(path):
+    """Read one or more concise Markdown bullets from a fragment."""
     text = path.read_text(encoding="utf-8")
-    lines = text.splitlines()
-
-    if len(lines) != 1 or not lines[0].startswith("- ") or not lines[0][2:].strip():
-        raise FragmentError(
-            f"{path.name} must contain exactly one non-empty Markdown bullet"
-        )
-    if len(lines[0]) > MAX_ENTRY_LENGTH:
-        raise FragmentError(
-            f"{path.name} exceeds the {MAX_ENTRY_LENGTH}-character limit"
-        )
     if not text.endswith("\n"):
         raise FragmentError(f"{path.name} must end with a newline")
 
-    return lines[0]
+    lines = text.rstrip("\n").split("\n")
+    entries = []
+    for line in lines:
+        if not line.startswith("- ") or not line[2:].strip():
+            raise FragmentError(
+                f"{path.name} must contain only Markdown bullets ('- ...'), "
+                "with no blank lines"
+            )
+        if len(line) > MAX_ENTRY_LENGTH:
+            raise FragmentError(
+                f"{path.name} has a bullet exceeding the "
+                f"{MAX_ENTRY_LENGTH}-character limit"
+            )
+        entries.append(line)
+
+    if not entries:
+        raise FragmentError(f"{path.name} must contain at least one bullet")
+
+    return entries
 
 
 def load_fragments(changes_dir):
-    """Load new audience fragments and compatible legacy fragments."""
-    if not changes_dir.is_dir():
-        return []
-
+    """Load fragments from changes/user/ and changes/developer/."""
     fragments = []
-    for path in sorted(changes_dir.glob("*.md")):
-        if path.name == "README.md":
+    for audience in AUDIENCE_SECTIONS:
+        audience_dir = changes_dir / audience
+        if not audience_dir.is_dir():
             continue
 
-        if FRAGMENT_RE.match(path.name):
-            audience, section = parse_fragment_name(path.name)
-            entry = read_fragment_entry(path)
-        else:
-            match = LEGACY_FRAGMENT_RE.match(path.name)
-            if not match:
-                raise FragmentError(f"unexpected fragment name: {path.name}")
+        for path in sorted(audience_dir.glob("*.md")):
+            if path.name == "README.md":
+                continue
 
-            category = match.group("category")
-            if category not in LEGACY_SECTIONS:
-                allowed = ", ".join(sorted(LEGACY_SECTIONS))
-                raise FragmentError(
-                    f"unknown legacy category '{category}' in {path.name}; "
-                    f"allowed: {allowed}"
-                )
-
-            audience = "developer"
-            section = LEGACY_SECTIONS[category]
-            entry = path.read_text(encoding="utf-8").rstrip()
-            if not entry:
-                raise FragmentError(f"{path.name} must not be empty")
-
-        fragments.append(Fragment(path, audience, section, entry))
+            section = parse_fragment_name(path.name, audience)
+            entries = read_fragment_entries(path)
+            fragments.append(Fragment(path, audience, section, entries))
 
     return fragments
