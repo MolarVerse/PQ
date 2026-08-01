@@ -75,7 +75,7 @@ void RingPolymerEngine::writeOutput()
         _engineOutput.writeChargeFile(*_simulationBox, effStep);
         _engineOutput.writeRstFile(*_simulationBox, *_thermostat, effStep);
 
-        _engineOutput.writeRingPolymerRstFile(_ringPolymerBeads, effStep);
+        _engineOutput.writeRingPolymerRstFile(_ringPolymerBeads);
         _engineOutput.writeRingPolymerXyzFile(_ringPolymerBeads, effStep);
         _engineOutput.writeRingPolymerVelFile(_ringPolymerBeads, effStep);
         _engineOutput.writeRingPolymerForceFile(_ringPolymerBeads, effStep);
