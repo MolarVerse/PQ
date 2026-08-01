@@ -30,3 +30,5 @@ endif()
 install(TARGETS restartFileReader
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )
+
+target_precompile_headers(restartFileReader REUSE_FROM pq_pch)

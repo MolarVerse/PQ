@@ -19,3 +19,5 @@ target_link_libraries(ringPolymerRestartFileReader
 install(TARGETS ringPolymerRestartFileReader
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )
+
+target_precompile_headers(ringPolymerRestartFileReader REUSE_FROM pq_pch)
