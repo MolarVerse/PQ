@@ -22,11 +22,10 @@
 
 #include "capabilities.hpp"
 
-#include <array>
 #include <cstdint>
 #include <iomanip>
+#include <initializer_list>
 #include <ostream>
-#include <span>
 #include <string_view>
 
 #include "defaults.hpp"
@@ -41,56 +40,31 @@ namespace
     constexpr bool _WITH_PYTHON_BINDINGS_  = PQ_BUILD_WITH_PYTHON_BINDINGS;
     constexpr bool _WITH_PYTHON_EMBEDDING_ = PQ_BUILD_WITH_PYTHON_EMBEDDING;
 
-    constexpr auto _JOB_TYPES_ = std::array<std::string_view, 5>{
-        "mm-md",
-        "mm-hessian",
-        "mm-opt",
-        "qm-md",
-        "qm-rpmd"
-    };
-    constexpr auto _QM_PROGRAMS_ = std::array<std::string_view, 3>{
-        "dftbplus",
-        "pyscf",
-        "turbomole"
-    };
-    constexpr auto _ASE_QM_PROGRAMS_ = std::array<std::string_view, 6>{
-        "ase_dftbplus",
-        "ase_xtb",
-        "fennol",
-        "mace",
-        "mace_mp",
-        "mace_off"
-    };
-    constexpr auto _THERMOSTATS_ = std::array<std::string_view, 5>{
-        "none",
-        "berendsen",
-        "velocity_rescaling",
-        "langevin",
-        "nh-chain"
-    };
-    constexpr auto _MANOSTATS_ = std::array<std::string_view, 3>{
-        "none",
-        "berendsen",
-        "stochastic_rescaling"
-    };
-    constexpr auto _PRESSURE_ISOTROPIES_ = std::array<std::string_view, 6>{
-        "isotropic",
-        "xy",
-        "xz",
-        "yz",
-        "anisotropic",
-        "full_anisotropic"
-    };
-
     void writeStringArray(
-        cli::JsonWriter                         &json,
-        const std::string_view                   key,
-        const std::span<const std::string_view> values
+        cli::JsonWriter                                  &json,
+        const std::string_view                            key,
+        const std::initializer_list<std::string_view> values
     )
     {
         json.beginArray(key);
         for (const auto value : values) json.value(value);
         json.endArray();
+    }
+
+    template <typename T>
+    void writeParameter(
+        cli::JsonWriter       &json,
+        const std::string_view name,
+        const std::string_view type,
+        const std::string_view unit,
+        const T                defaultValue
+    )
+    {
+        json.beginObject(name);
+        json.value("type", type);
+        if (!unit.empty()) json.value("unit", unit);
+        json.value("default", defaultValue);
+        json.endObject();
     }
 
     void writeParameters(cli::JsonWriter &json)
@@ -103,49 +77,55 @@ namespace
         json.value("maximum", UINT32_MAX);
         json.endObject();
 
-        json.beginObject("t_relaxation");
-        json.value("type", "number");
-        json.value("unit", "ps");
-        json.value("default", defaults::_BERENDSEN_THERMOSTAT_RELAX_TIME_);
-        json.endObject();
-
-        json.beginObject("friction");
-        json.value("type", "number");
-        json.value("unit", "ps^-1");
-        json.value(
-            "default",
+        writeParameter(
+            json,
+            "t_relaxation",
+            "number",
+            "ps",
+            defaults::_BERENDSEN_THERMOSTAT_RELAX_TIME_
+        );
+        writeParameter(
+            json,
+            "friction",
+            "number",
+            "ps^-1",
             defaults::_LANGEVIN_THERMOSTAT_FRICTION_ / 1.0e12
         );
-        json.endObject();
-
-        json.beginObject("nh-chain_length");
-        json.value("type", "integer");
-        json.value("default", defaults::_NH_CHAIN_LENGTH_DEFAULT_);
-        json.endObject();
-
-        json.beginObject("coupling_frequency");
-        json.value("type", "number");
-        json.value("unit", "cm^-1");
-        json.value("default", defaults::_NH_COUPLING_FREQ_);
-        json.endObject();
-
-        json.beginObject("p_relaxation");
-        json.value("type", "number");
-        json.value("unit", "ps");
-        json.value("default", defaults::_BERENDSEN_MANOSTAT_RELAX_TIME_);
-        json.endObject();
-
-        json.beginObject("compressibility");
-        json.value("type", "number");
-        json.value("unit", "bar^-1");
-        json.value("default", defaults::_COMPRESSIBILITY_WATER_DEFAULT_);
-        json.endObject();
-
-        json.beginObject("rcoulomb");
-        json.value("type", "number");
-        json.value("unit", "angstrom");
-        json.value("default", defaults::_COULOMB_CUT_OFF_DEFAULT_);
-        json.endObject();
+        writeParameter(
+            json,
+            "nh-chain_length",
+            "integer",
+            "",
+            defaults::_NH_CHAIN_LENGTH_DEFAULT_
+        );
+        writeParameter(
+            json,
+            "coupling_frequency",
+            "number",
+            "cm^-1",
+            defaults::_NH_COUPLING_FREQ_
+        );
+        writeParameter(
+            json,
+            "p_relaxation",
+            "number",
+            "ps",
+            defaults::_BERENDSEN_MANOSTAT_RELAX_TIME_
+        );
+        writeParameter(
+            json,
+            "compressibility",
+            "number",
+            "bar^-1",
+            defaults::_COMPRESSIBILITY_WATER_DEFAULT_
+        );
+        writeParameter(
+            json,
+            "rcoulomb",
+            "number",
+            "angstrom",
+            defaults::_COULOMB_CUT_OFF_DEFAULT_
+        );
 
         json.endObject();
     }
@@ -177,17 +157,42 @@ void cli::writeCapabilities(std::ostream &output)
     json.endObject();
 
     json.beginObject("input");
-    writeStringArray(json, "job_types", _JOB_TYPES_);
+    writeStringArray(
+        json,
+        "job_types",
+        {"mm-md", "mm-hessian", "mm-opt", "qm-md", "qm-rpmd"}
+    );
 
     json.beginArray("qm_programs");
-    for (const auto program : _QM_PROGRAMS_) json.value(program);
+    for (const auto program : {"dftbplus", "pyscf", "turbomole"})
+        json.value(program);
     if (_WITH_ASE_)
-        for (const auto program : _ASE_QM_PROGRAMS_) json.value(program);
+        for (const auto program : {
+                 "ase_dftbplus",
+                 "ase_xtb",
+                 "fennol",
+                 "mace",
+                 "mace_mp",
+                 "mace_off"
+             })
+            json.value(program);
     json.endArray();
 
-    writeStringArray(json, "thermostats", _THERMOSTATS_);
-    writeStringArray(json, "manostats", _MANOSTATS_);
-    writeStringArray(json, "pressure_isotropies", _PRESSURE_ISOTROPIES_);
+    writeStringArray(
+        json,
+        "thermostats",
+        {"none", "berendsen", "velocity_rescaling", "langevin", "nh-chain"}
+    );
+    writeStringArray(
+        json,
+        "manostats",
+        {"none", "berendsen", "stochastic_rescaling"}
+    );
+    writeStringArray(
+        json,
+        "pressure_isotropies",
+        {"isotropic", "xy", "xz", "yz", "anisotropic", "full_anisotropic"}
+    );
     writeParameters(json);
     json.endObject();
     json.endObject();

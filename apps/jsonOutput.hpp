@@ -38,32 +38,16 @@ namespace cli
     class JsonWriter
     {
        private:
-        enum class ContainerType
-        {
-            OBJECT,
-            ARRAY
-        };
-
-        struct Context
-        {
-            ContainerType type;
-            bool          empty = true;
-        };
-
-        std::ostream        &_output;
-        std::vector<Context> _contexts;
-        bool                 _wroteRoot = false;
+        std::ostream    &_output;
+        std::size_t      _depth = 0;
+        std::vector<bool> _firstValues;
 
         void indent() const;
         void beforeValue();
         void beforeMember(std::string_view key);
-        void beginContainer(ContainerType type, char opening);
-        void beginContainer(
-            std::string_view key,
-            ContainerType   type,
-            char            opening
-        );
-        void endContainer(ContainerType type, char closing);
+        void beginContainer(char opening);
+        void beginContainer(std::string_view key, char opening);
+        void endContainer(char closing);
 
        public:
         explicit JsonWriter(std::ostream &output);

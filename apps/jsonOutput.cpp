@@ -24,7 +24,6 @@
 
 #include <iomanip>
 #include <ostream>
-#include <stdexcept>
 #include <string>
 
 void cli::writeJsonString(std::ostream &output, const std::string_view value)
@@ -67,75 +66,49 @@ cli::JsonWriter::JsonWriter(std::ostream &output) : _output(output) {}
 
 void cli::JsonWriter::indent() const
 {
-    _output << std::string(_contexts.size() * 2, ' ');
+    _output << std::string(_depth * 2, ' ');
 }
 
 void cli::JsonWriter::beforeValue()
 {
-    if (_contexts.empty())
-    {
-        if (_wroteRoot)
-            throw std::logic_error("JSON output already has a root value");
-
-        _wroteRoot = true;
-        return;
-    }
-
-    auto &context = _contexts.back();
-    if (ContainerType::ARRAY != context.type)
-        throw std::logic_error("JSON object values require a key");
-
-    if (!context.empty) _output << ',';
+    if (_firstValues.empty()) return;
+    if (!_firstValues.back()) _output << ',';
     _output << '\n';
     indent();
-    context.empty = false;
+    _firstValues.back() = false;
 }
 
 void cli::JsonWriter::beforeMember(const std::string_view key)
 {
-    if (_contexts.empty() || ContainerType::OBJECT != _contexts.back().type)
-        throw std::logic_error("JSON members require an object");
-
-    auto &context = _contexts.back();
-    if (!context.empty) _output << ',';
-    _output << '\n';
-    indent();
+    beforeValue();
     writeJsonString(_output, key);
     _output << ": ";
-    context.empty = false;
 }
 
-void cli::JsonWriter::beginContainer(
-    const ContainerType type,
-    const char          opening
-)
+void cli::JsonWriter::beginContainer(const char opening)
 {
     beforeValue();
     _output << opening;
-    _contexts.emplace_back(type);
+    ++_depth;
+    _firstValues.push_back(true);
 }
 
 void cli::JsonWriter::beginContainer(
     const std::string_view key,
-    const ContainerType   type,
     const char            opening
 )
 {
     beforeMember(key);
     _output << opening;
-    _contexts.emplace_back(type);
+    ++_depth;
+    _firstValues.push_back(true);
 }
 
-void cli::JsonWriter::endContainer(
-    const ContainerType type,
-    const char          closing
-)
+void cli::JsonWriter::endContainer(const char closing)
 {
-    if (_contexts.empty() || type != _contexts.back().type)
-        throw std::logic_error("Mismatched JSON container");
-
-    const auto empty = _contexts.back().empty;
-    _contexts.pop_back();
+    const auto empty = _firstValues.back();
+    _firstValues.pop_back();
+    --_depth;
 
     if (!empty)
     {
@@ -148,32 +121,32 @@ void cli::JsonWriter::endContainer(
 
 void cli::JsonWriter::beginObject()
 {
-    beginContainer(ContainerType::OBJECT, '{');
+    beginContainer('{');
 }
 
 void cli::JsonWriter::beginObject(const std::string_view key)
 {
-    beginContainer(key, ContainerType::OBJECT, '{');
+    beginContainer(key, '{');
 }
 
 void cli::JsonWriter::endObject()
 {
-    endContainer(ContainerType::OBJECT, '}');
+    endContainer('}');
 }
 
 void cli::JsonWriter::beginArray()
 {
-    beginContainer(ContainerType::ARRAY, '[');
+    beginContainer('[');
 }
 
 void cli::JsonWriter::beginArray(const std::string_view key)
 {
-    beginContainer(key, ContainerType::ARRAY, '[');
+    beginContainer(key, '[');
 }
 
 void cli::JsonWriter::endArray()
 {
-    endContainer(ContainerType::ARRAY, ']');
+    endContainer(']');
 }
 
 void cli::JsonWriter::value(const std::string_view value)
