@@ -27,15 +27,16 @@
 #include <string>        // for allocator, basic_string
 #include <string_view>   // for string_view
 
-#include "dftbplusRunner.hpp"     // for DFTBPlusRunner
-#include "exceptions.hpp"         // for InputFileException
-#include "gtest/gtest.h"          // for Message, TestPartResult
-#include "pyscfRunner.hpp"        // for PySCFRunner
-#include "qmSettings.hpp"         // for QMMethod, QMSettings
-#include "qmSetup.hpp"            // for QMSetup, setupQM
-#include "qmSetup.hpp"            // for QMSetup
-#include "qmmdEngine.hpp"         // for QMMDEngine
-#include "settings.hpp"           // for Settings
+#include "dftbplusRunner.hpp"   // for DFTBPlusRunner
+#include "exceptions.hpp"       // for InputFileException
+#include "gtest/gtest.h"        // for Message, TestPartResult
+#include "pyscfRunner.hpp"      // for PySCFRunner
+#include "qmSettings.hpp"       // for QMMethod, QMSettings
+#include "qmSetup.hpp"          // for QMSetup, setupQM
+#include "qmSetup.hpp"          // for QMSetup
+#include "qmmdEngine.hpp"       // for QMMDEngine
+#include "settings.hpp"         // for Settings
+#include "testUtils.hpp"
 #include "throwWithMessage.hpp"   // for ASSERT_THROW_MSG
 #include "turbomoleRunner.hpp"    // for TurbomoleRunner
 
@@ -82,10 +83,7 @@ TEST(TestQMSetup, setupDftbplus)
     setBuildCompatibleQMScript();
     setupQM.setup();
 
-    EXPECT_EQ(
-        typeid(dynamic_cast<QM::DFTBPlusRunner &>(*engine.getQMRunner())),
-        typeid(QM::DFTBPlusRunner)
-    );
+    test::checkType(engine.getQMRunner(), typeid(QM::DFTBPlusRunner));
 
     settings::QMSettings::setQMMethod(settings::QMMethod::NONE);
 
@@ -106,10 +104,7 @@ TEST(TestQMSetup, setupPySCF)
     setBuildCompatibleQMScript();
     setupQM.setup();
 
-    EXPECT_EQ(
-        typeid(dynamic_cast<QM::PySCFRunner &>(*engine.getQMRunner())),
-        typeid(QM::PySCFRunner)
-    );
+    test::checkType(engine.getQMRunner(), typeid(QM::PySCFRunner));
 
     settings::QMSettings::setQMMethod(settings::QMMethod::NONE);
 
@@ -130,10 +125,7 @@ TEST(TestQMSetup, setupTurbomoleRunner)
     setBuildCompatibleQMScript();
     setupQM.setup();
 
-    EXPECT_EQ(
-        typeid(dynamic_cast<QM::TurbomoleRunner &>(*engine.getQMRunner())),
-        typeid(QM::TurbomoleRunner)
-    );
+    test::checkType(engine.getQMRunner(), typeid(QM::TurbomoleRunner));
 
     settings::QMSettings::setQMMethod(settings::QMMethod::NONE);
 

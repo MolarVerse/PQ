@@ -22,8 +22,6 @@
 
 #include <gtest/gtest.h>   // for InitGoogleTest, RUN_ALL_TESTS, EXPECT_EQ
 
-#include <string>   // for allocator, basic_string
-
 #include "celllistSetup.hpp"   // for CellListSetup, setupCellList, setup
 #include "engine.hpp"          // for Engine
 #include "gtest/gtest.h"       // for Message, TestPartResult
@@ -31,6 +29,7 @@
 #include "potentialCellList.hpp"   // for PotentialCellList
 #include "potentialSettings.hpp"
 #include "testSetup.hpp"   // for TestSetup
+#include "testUtils.hpp"
 
 using namespace setup;
 
@@ -43,8 +42,8 @@ TEST_F(TestSetup, setupCellList)
     CellListSetup cellListSetup(*_engine);
     cellListSetup.setup();
 
-    EXPECT_EQ(
-        typeid((_engine->getPotential())),
+    test::checkType(
+        &_engine->getPotential(),
         typeid(potential::PotentialBruteForce)
     );
 
@@ -54,8 +53,8 @@ TEST_F(TestSetup, setupCellList)
     _engine->getCellList().activate();
     cellListSetup.setup();
 
-    EXPECT_EQ(
-        typeid((_engine->getPotential())),
+    test::checkType(
+        &_engine->getPotential(),
         typeid(potential::PotentialCellList)
     );
 

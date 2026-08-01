@@ -269,11 +269,65 @@ In order to contribute to the project, please follow these steps:
 
 
     #. Commit your changes to your feature branch and publish your feature branch:
-    
+
         .. code:: bash
 
             $ git add <files>
             $ git commit -m "commit message"
             $ git flow feature publish <feature_branch_name>
-    
+
+    #. Add a changelog fragment describing your change (see `Changelog Fragments`_ below).
+
     #. Create a pull request on GitHub.
+
+===================
+Changelog Fragments
+===================
+
+**PQ** does not accumulate changelog entries by hand-editing ``CHANGELOG.md``
+or ``DEV-CHANGELOG.md``. Instead, every regular pull request adds a small
+Markdown file, a *fragment*, under ``PQ/changes/``, and a CI check
+(``changelog.yml``) fails the pull request if none is present. At release
+time, ``scripts/update_changelog.py`` routes every fragment into the right
+changelog section, stamps a release header, and deletes the fragments it
+consumed.
+
+Fragments live in one of two audience directories:
+
+    - ``changes/user/`` --- for changes an installed-PQ user would notice:
+      behavior, results, inputs, outputs, errors, compatibility, or runtime
+      performance.
+    - ``changes/developer/`` --- for build tooling, CI, tests, refactors, and
+      other internal maintenance.
+
+Within either directory, a fragment is named:
+
+    .. code:: text
+
+        <category>.<title>.md
+
+``<category>`` selects the changelog section the entry is rendered under and
+must be one of the fixed categories for that audience (see
+``changes/README.md`` for the full list, e.g. ``bugfix``, ``enhancement``,
+``performance``, ``build``, ``ci``, ``test``, ``internal``,
+``documentation``). ``<title>`` is a short, free-text, lowercase-with-hyphens
+slug identifying the change; it is only used to keep filenames unique and
+does not appear in the rendered changelog.
+
+A fragment's body is one or more Markdown bullets, one per line, with no
+blank lines in between. Each bullet becomes its own line in the changelog:
+
+    .. code:: markdown
+
+        - Fix wrong virial mode when using atomic virial after copying physical data.
+
+    .. code:: markdown
+
+        - First point about this change.
+        - Second, related point about the same change.
+
+If your pull request extends a change that already has an unreleased
+fragment, append another bullet to that existing file instead of creating a
+new one. A pull request may add new fragments, append to existing ones, or
+both, and may touch both audiences, but it must not delete unreleased
+fragments or edit ``CHANGELOG.md`` / ``DEV-CHANGELOG.md`` directly.

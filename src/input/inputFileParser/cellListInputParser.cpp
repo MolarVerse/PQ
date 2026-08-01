@@ -22,15 +22,15 @@
 
 #include "cellListInputParser.hpp"
 
-#include <cstddef>      // for size_t
-#include <format>       // for format
-#include <functional>   // for _Bind_front_t, bind_front
-#include <string>       // for allocator, operator==, string
-#include <vector>       // for vector
+#include <cstddef>   // for size_t
+#include <format>    // for format
+#include <string>    // for allocator, operator==, string
+#include <vector>    // for vector
 
 #include "engine.hpp"            // for Engine
 #include "exceptions.hpp"        // for InputFileException
 #include "inputFileParser.hpp"   // for checkCommand, InputFileParser
+#include "parserUtils.hpp"
 #include "stringUtilities.hpp"   // for toLowerCopy
 
 using namespace input;
@@ -53,12 +53,12 @@ CellListInputParser::CellListInputParser(Engine &engine)
 {
     addKeyword(
         std::string("cell-list"),
-        bind_front(&CellListInputParser::parseCellListActivated, this),
+        bindMember(&CellListInputParser::parseCellListActivated, this),
         false
     );
     addKeyword(
         std::string("cell-number"),
-        bind_front(&CellListInputParser::parseNumberOfCells, this),
+        bindMember(&CellListInputParser::parseNumberOfCells, this),
         false
     );
 }
@@ -91,13 +91,15 @@ void CellListInputParser::parseCellListActivated(
         _engine.getCellList().deactivate();
 
     else
-        throw InputFileException(std::format(
-            "Invalid cell-list keyword \"{}\" "
-            "at line {} in input file\n"
-            "Possible keywords are \"on\" and \"off\"",
-            lineElements[2],
-            lineNumber
-        ));
+        throw InputFileException(
+            std::format(
+                "Invalid cell-list keyword \"{}\" "
+                "at line {} in input file\n"
+                "Possible keywords are \"on\" and \"off\"",
+                lineElements[2],
+                lineNumber
+            )
+        );
 }
 
 /**

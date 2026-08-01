@@ -1,0 +1,74 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "clangd-tidy (changed)",
+            "type": "shell",
+            "command": "bash",
+            "args": [
+                "-c",
+                "scripts/clang_tidy.sh"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                {
+                    "owner": "clangd-tidy",
+                    "fileLocation": [
+                        "absolute"
+                    ],
+                    "pattern": {
+                        "regexp": "^(.*?):(\\d+):(\\d+):\\s*(warning|error|note):\\s*(.*)$",
+                        "file": 1,
+                        "line": 2,
+                        "column": 3,
+                        "severity": 4,
+                        "message": 5
+                    }
+                }
+            ],
+            "group": "build"
+        },
+        {
+            "label": "clangd-tidy (all)",
+            "type": "shell",
+            "command": "bash",
+            "args": [
+                "-c",
+                "scripts/clang_tidy.sh --all"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                {
+                    "owner": "clangd-tidy",
+                    "fileLocation": [
+                        "absolute"
+                    ],
+                    "pattern": {
+                        "regexp": "^(.*?):(\\d+):(\\d+):\\s*(warning|error|note):\\s*(.*)$",
+                        "file": 1,
+                        "line": 2,
+                        "column": 3,
+                        "severity": 4,
+                        "message": 5
+                    }
+                }
+            ],
+            "group": "build"
+        },
+        {
+            "type": "cmake",
+            "label": "CMake: build",
+            "command": "build",
+            "targets": [
+                "all"
+            ],
+            "group": "build",
+            "problemMatcher": [],
+            "detail": "CMake template build task"
+        }
+    ]
+}

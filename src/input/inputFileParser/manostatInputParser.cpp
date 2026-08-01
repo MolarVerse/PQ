@@ -24,11 +24,11 @@
 
 #include <cstddef>       // for size_t
 #include <format>        // for format
-#include <functional>    // for _Bind_front_t, bind_front
 #include <string_view>   // for string_view
 
 #include "exceptions.hpp"         // for InputFileException, customException
 #include "manostatSettings.hpp"   // for ManostatSettings
+#include "parserUtils.hpp"
 #include "references.hpp"         // for ReferencesOutput
 #include "referencesOutput.hpp"   // for ReferencesOutput
 #include "stringUtilities.hpp"    // for toLowerCopy
@@ -56,31 +56,31 @@ ManostatInputParser::ManostatInputParser(Engine &engine)
 {
     addKeyword(
         std::string("manostat"),
-        bind_front(&ManostatInputParser::parseManostat, this),
+        bindMember(&ManostatInputParser::parseManostat, this),
         false
     );
 
     addKeyword(
         std::string("pressure"),
-        bind_front(&ManostatInputParser::parsePressure, this),
+        bindMember(&ManostatInputParser::parsePressure, this),
         false
     );
 
     addKeyword(
         std::string("p_relaxation"),
-        bind_front(&ManostatInputParser::parseManostatRelaxationTime, this),
+        bindMember(&ManostatInputParser::parseManostatRelaxationTime, this),
         false
     );
 
     addKeyword(
         std::string("compressibility"),
-        bind_front(&ManostatInputParser::parseCompressibility, this),
+        bindMember(&ManostatInputParser::parseCompressibility, this),
         false
     );
 
     addKeyword(
         std::string("isotropy"),
-        bind_front(&ManostatInputParser::parseIsotropy, this),
+        bindMember(&ManostatInputParser::parseIsotropy, this),
         false
     );
 }
@@ -125,12 +125,15 @@ void ManostatInputParser::parseManostat(
     }
 
     else
-        throw InputFileException(std::format(
-            "Invalid manostat \"{}\" at line {} in input file.\n"
-            "Possible options are: berendsen, stochastic_rescaling and none",
-            lineElements[2],
-            lineNumber
-        ));
+        throw InputFileException(
+            std::format(
+                "Invalid manostat \"{}\" at line {} in input file.\n"
+                "Possible options are: berendsen, stochastic_rescaling and "
+                "none",
+                lineElements[2],
+                lineNumber
+            )
+        );
 }
 
 /**
@@ -254,11 +257,13 @@ void ManostatInputParser::parseIsotropy(
         ManostatSettings::setIsotropy(FULL_ANISOTROPIC);
 
     else
-        throw InputFileException(std::format(
-            "Invalid isotropy \"{}\" at line {} in input file.\n"
-            "Possible options are: isotropic, xy, xz, yz, "
-            "anisotropic and full_anisotropic",
-            lineElements[2],
-            lineNumber
-        ));
+        throw InputFileException(
+            std::format(
+                "Invalid isotropy \"{}\" at line {} in input file.\n"
+                "Possible options are: isotropic, xy, xz, yz, "
+                "anisotropic and full_anisotropic",
+                lineElements[2],
+                lineNumber
+            )
+        );
 }

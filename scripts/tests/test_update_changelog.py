@@ -97,23 +97,22 @@ class ChangelogTests(unittest.TestCase):
                 "## [v1.0.0](release-url) - 2025-01-01\n",
                 encoding="utf-8",
             )
+            (changes_dir / "user").mkdir()
+            (changes_dir / "developer").mkdir()
             user_fragment = (
-                changes_dir / "trajectory.user.enhancement.md"
+                changes_dir / "user" / "enhancement.trajectory.md"
             )
             user_fragment.write_text(
                 "- Add effective step metadata to trajectory output.\n",
                 encoding="utf-8",
             )
             developer_fragment = (
-                changes_dir / "parser.developer.test.md"
+                changes_dir / "developer" / "test.parser.md"
             )
             developer_fragment.write_text(
-                "- Cover changelog fragment parsing.\n",
+                "- Cover changelog fragment parsing.\n"
+                "- Add a regression fixture.\n",
                 encoding="utf-8",
-            )
-            legacy_fragment = changes_dir / "legacy.internal.md"
-            legacy_fragment.write_text(
-                "- Preserve a legacy fragment.\n", encoding="utf-8"
             )
 
             with (
@@ -139,11 +138,10 @@ class ChangelogTests(unittest.TestCase):
             self.assertNotIn("Cover changelog fragment parsing", user_text)
             self.assertIn("- Existing developer note.", dev_text)
             self.assertIn("- Cover changelog fragment parsing.", dev_text)
-            self.assertIn("- Preserve a legacy fragment.", dev_text)
+            self.assertIn("- Add a regression fixture.", dev_text)
             self.assertNotIn("effective step metadata", dev_text)
             self.assertFalse(user_fragment.exists())
             self.assertFalse(developer_fragment.exists())
-            self.assertFalse(legacy_fragment.exists())
 
     def test_developer_only_release_leaves_user_changelog_unchanged(self):
         with tempfile.TemporaryDirectory() as temporary_directory:
@@ -167,8 +165,9 @@ class ChangelogTests(unittest.TestCase):
                 "## [v1.0.0](release-url) - 2025-01-01\n",
                 encoding="utf-8",
             )
+            (changes_dir / "developer").mkdir()
             developer_fragment = (
-                changes_dir / "workflow.developer.ci.md"
+                changes_dir / "developer" / "ci.workflow.md"
             )
             developer_fragment.write_text(
                 "- Enforce changelog audiences.\n", encoding="utf-8"
