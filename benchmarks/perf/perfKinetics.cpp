@@ -32,7 +32,6 @@
 #endif
 
 #include "perfBenchSetup.hpp"
-#include "vector3d.hpp"
 
 static constexpr long ITERATIONS = 1000;
 

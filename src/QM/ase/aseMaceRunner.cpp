@@ -22,9 +22,7 @@
 
 #include "aseMaceRunner.hpp"
 
-#include <cstdio>   // for fprintf, stderr
-
-#include "pybind11/embed.h"
+#include <cstdio>
 
 using QM::AseMaceRunner;
 
