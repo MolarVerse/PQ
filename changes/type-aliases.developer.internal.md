@@ -1,0 +1,2 @@
+- remove type alias for output namespace from pq namespace
+- add DefaultsFile class for default file names and use it also in `EnergyOutput` to avoid manually repeating the default file names

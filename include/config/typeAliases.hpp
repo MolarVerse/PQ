@@ -312,8 +312,8 @@ namespace pq
 
     using UniqueEngine = std::unique_ptr<Engine>;
 
-    using HessianMatrix = std::vector<std::vector<double>>;
-    using HessianBuilder = opt::HessianBuilder;
+    using HessianMatrix        = std::vector<std::vector<double>>;
+    using HessianBuilder       = opt::HessianBuilder;
     using SharedHessianBuilder = std::shared_ptr<opt::HessianBuilder>;
 
     /***********************
@@ -404,31 +404,6 @@ namespace pq
     using SharedOptimizer = std::shared_ptr<opt::Optimizer>;
 
     using Convergence = opt::Convergence;
-
-    /********************
-     * output namespace *
-     ********************/
-
-    using EnergyOutput     = output::EnergyOutput;
-    using InfoOutput       = output::InfoOutput;
-    using LogOutput        = output::LogOutput;
-    using RstFileOutput    = output::RstFileOutput;
-    using StdoutOutput     = output::StdoutOutput;
-    using TrajectoryOutput = output::TrajectoryOutput;
-    using MomentumOutput   = output::MomentumOutput;
-    using VirialOutput     = output::VirialOutput;
-    using StressOutput     = output::StressOutput;
-    using BoxFileOutput    = output::BoxFileOutput;
-    using TimingsOutput    = output::TimingsOutput;
-    using OptOutput        = output::OptOutput;
-
-    using RPMDRstFileOutput = output::RingPolymerRestartFileOutput;
-    using RPMDTrajOutput    = output::RingPolymerTrajectoryOutput;
-    using RPMDEnergyOutput  = output::RingPolymerEnergyOutput;
-
-    using UniqueRPMDRstFileOutput = std::unique_ptr<RPMDRstFileOutput>;
-    using UniqueRPMDTrajOutput    = std::unique_ptr<RPMDTrajOutput>;
-    using UniqueRPMDEnergyOutput  = std::unique_ptr<RPMDEnergyOutput>;
 
 }   // namespace pq
 
