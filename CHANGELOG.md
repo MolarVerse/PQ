@@ -6,60 +6,6 @@ implementation changes are documented in
 
 ## Next Release
 
-### New Features
-
-- Add the `mm-hessian` job for molecular-mechanics Hessian calculations, with
-  optional geometry optimization.
-- Add Reaction Field as a long-range electrostatics method.
-- Add FeNNol as an ASE-based QM runner.
-- Add `mace_mode` to choose between accurate and accelerated MACE execution;
-  accelerated mode requires matching cuequivariance packages.
-- Add `remove_net_force` for removing the total net force from imported QM
-  forces.
-- Add `mshake-iter` and `mshake-tolerance` for controlling M-SHAKE convergence.
-
-### Cleanup
-
-- Clean include directives - IWYU
-
-### Changes
-
-- Rename `mace_model_size` to `mace_model`; the old keyword remains available
-  with a deprecation warning.
-
-### Bug Fixes
-
-- Fix M-SHAKE convergence, iteration limits, previous-position handling, and
-  velocity corrections for constrained molecules.
-- Prevent undefined forces for collinear angle configurations, including
-  linear equilibrium geometries such as CO2.
-- Prevent the Berendsen thermostat from producing invalid velocities when the
-  kinetic energy is zero.
-- Reject non-finite energies and forces from external QM calculations instead
-  of propagating them into a trajectory.
-- Count non-adjacent duplicate atom types correctly.
-- Reject periodic cell-list layouts in which neighbor offsets refer to the same
-  cell more than once.
-- Recompute Langevin noise when the friction setting changes.
-- Preserve molecular geometry and wrap positions correctly during stochastic
-  cell rescaling.
-
-### Performance
-
-- Skip inactive terms in Guff pair-potential calculations.
-
-### Build and Compatibility
-
-- Add support for Clang and Apple Clang.
-- Allow builds without ASE even when built-in SLAKOS data is unavailable.
-- Make native optimizations and link-time optimization configurable, and use
-  available compiler caches and faster linkers automatically.
-
-### Documentation
-
-- Rework the quick start, examples, troubleshooting, setup-file guidance, and
-  reference manual.
-
 <!-- insertion marker -->
 ## [v0.6.4](https://github.com/MolarVerse/PQ/releases/tag/v0.6.4) - 2026-03-31
 

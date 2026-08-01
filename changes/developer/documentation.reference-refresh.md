@@ -1,0 +1,3 @@
+- Update the feature list and PQ reference.
+- Document Reaction Field, M-SHAKE, and FeNNol.
+- Refresh the reference manual, quick start, examples, and troubleshooting.

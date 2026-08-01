@@ -1,0 +1,1 @@
+- Define `ParameterFileReader` destruction where `ParameterFileSection` is complete so AppleClang builds succeed.

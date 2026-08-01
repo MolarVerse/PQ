@@ -48,34 +48,34 @@ namespace settings
         static inline bool        _filePrefixSet         = false;
         static inline std::string _filePrefix;
 
-        static inline std::string _energyFile = defaults::_ENERGY_FILE_DEFAULT_;
-        static inline std::string _instEnFile = defaults::_INSTEN_FILE_DEFAULT_;
-        static inline std::string _rstFile  = defaults::_RESTART_FILE_DEFAULT_;
-        static inline std::string _momFile  = defaults::_MOMENTUM_FILE_DEFAULT_;
-        static inline std::string _trajFile = defaults::_TRAJ_FILE_DEFAULT_;
-        static inline std::string _velFile  = defaults::_VEL_FILE_DEFAULT_;
-        static inline std::string _forceFile  = defaults::_FORCE_FILE_DEFAULT_;
-        static inline std::string _chargeFile = defaults::_CHARGE_FILE_DEFAULT_;
-        static inline std::string _logFile    = defaults::_LOG_FILE_DEFAULT_;
-        static inline std::string _refFile    = defaults::_REF_FILE_DEFAULT_;
-        static inline std::string _infoFile   = defaults::_INFO_FILE_DEFAULT_;
+        static inline std::string _energyFile = DefaultFiles::energyFile;
+        static inline std::string _instEnFile = DefaultFiles::instEnFile;
+        static inline std::string _rstFile    = DefaultFiles::restartFile;
+        static inline std::string _momFile    = DefaultFiles::momentumFile;
+        static inline std::string _trajFile   = DefaultFiles::trajFile;
+        static inline std::string _velFile    = DefaultFiles::velFile;
+        static inline std::string _forceFile  = DefaultFiles::forceFile;
+        static inline std::string _chargeFile = DefaultFiles::chargeFile;
+        static inline std::string _logFile    = DefaultFiles::logFile;
+        static inline std::string _refFile    = DefaultFiles::refFile;
+        static inline std::string _infoFile   = DefaultFiles::infoFile;
 
-        static inline std::string _virialFile = defaults::_VIRIAL_FILE_DEFAULT_;
-        static inline std::string _stressFile = defaults::_STRESS_FILE_DEFAULT_;
-        static inline std::string _boxFile    = defaults::_BOX_FILE_DEFAULT_;
+        static inline std::string _virialFile = DefaultFiles::virialFile;
+        static inline std::string _stressFile = DefaultFiles::stressFile;
+        static inline std::string _boxFile    = DefaultFiles::boxFile;
 
-        static inline std::string _optFile = defaults::_OPT_FILE_DEFAULT_;
+        static inline std::string _optFile = DefaultFiles::optFile;
 
         // clang-format off
-        static inline std::string _rpmdRstFile    = defaults::_RPMD_RST_FILE_DEFAULT_;
-        static inline std::string _rpmdTrajFile   = defaults::_RPMD_TRAJ_FILE_DEFAULT_;
-        static inline std::string _rpmdVelFile    = defaults::_RPMD_VEL_FILE_DEFAULT_;
-        static inline std::string _rpmdForceFile  = defaults::_RPMD_FORCE_FILE_DEFAULT_;
-        static inline std::string _rpmdChargeFile = defaults::_RPMD_CHARGE_FILE_DEFAULT_;
-        static inline std::string _rpmdEnergyFile = defaults::_RPMD_ENERGY_FILE_DEFAULT_;
+        static inline std::string _rpmdRstFile    = DefaultFiles::rpmdRstFile;
+        static inline std::string _rpmdTrajFile   = DefaultFiles::rpmdTrajFile;
+        static inline std::string _rpmdVelFile    = DefaultFiles::rpmdVelFile;
+        static inline std::string _rpmdForceFile  = DefaultFiles::rpmdForceFile;
+        static inline std::string _rpmdChargeFile = DefaultFiles::rpmdChargeFile;
+        static inline std::string _rpmdEnergyFile = DefaultFiles::rpmdEnergyFile;
         // clang-format on
 
-        static inline std::string _timeFile = defaults::_TIMINGS_FILE_DEFAULT_;
+        static inline std::string _timeFile = DefaultFiles::timingsFile;
 
        public:
         OutputFileSettings()  = default;

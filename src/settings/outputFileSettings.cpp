@@ -27,6 +27,8 @@
 #include <string>      // for string, allocator
 #include <vector>      // for vector
 
+#include "defaults.hpp"
+
 using settings::OutputFileSettings;
 using namespace defaults;
 
@@ -68,78 +70,78 @@ void OutputFileSettings::setFilePrefix(const std::string_view prefix)
  */
 void OutputFileSettings::replaceDefaultValues(const std::string &prefix)
 {
-    if (_RESTART_FILE_DEFAULT_ == _rstFile)
+    if (DefaultFiles::restartFile == _rstFile)
         _rstFile = prefix + ".rst";
 
-    if (_LOG_FILE_DEFAULT_ == _logFile)
+    if (DefaultFiles::logFile == _logFile)
         _logFile = prefix + ".log";
 
-    if (_REF_FILE_DEFAULT_ == _refFile)
+    if (DefaultFiles::refFile == _refFile)
         _refFile = prefix + ".ref";
 
-    if (_TRAJ_FILE_DEFAULT_ == _trajFile)
+    if (DefaultFiles::trajFile == _trajFile)
         _trajFile = prefix + ".xyz";
 
-    if (_ENERGY_FILE_DEFAULT_ == _energyFile)
+    if (DefaultFiles::energyFile == _energyFile)
         _energyFile = prefix + ".en";
 
-    if (_INSTEN_FILE_DEFAULT_ == _instEnFile)
+    if (DefaultFiles::instEnFile == _instEnFile)
         _instEnFile = prefix + ".instant_en";
 
-    if (_FORCE_FILE_DEFAULT_ == _forceFile)
+    if (DefaultFiles::forceFile == _forceFile)
         _forceFile = prefix + ".force";
 
-    if (_VEL_FILE_DEFAULT_ == _velFile)
+    if (DefaultFiles::velFile == _velFile)
         _velFile = prefix + ".vel";
 
-    if (_CHARGE_FILE_DEFAULT_ == _chargeFile)
+    if (DefaultFiles::chargeFile == _chargeFile)
         _chargeFile = prefix + ".chrg";
 
-    if (_INFO_FILE_DEFAULT_ == _infoFile)
+    if (DefaultFiles::infoFile == _infoFile)
         _infoFile = prefix + ".info";
 
-    if (_MOMENTUM_FILE_DEFAULT_ == _momFile)
+    if (DefaultFiles::momentumFile == _momFile)
         _momFile = prefix + ".mom";
 
-    if (_VIRIAL_FILE_DEFAULT_ == _virialFile)
+    if (DefaultFiles::virialFile == _virialFile)
         _virialFile = prefix + ".vir";
 
-    if (_STRESS_FILE_DEFAULT_ == _stressFile)
+    if (DefaultFiles::stressFile == _stressFile)
         _stressFile = prefix + ".stress";
 
-    if (_BOX_FILE_DEFAULT_ == _boxFile)
+    if (DefaultFiles::boxFile == _boxFile)
         _boxFile = prefix + ".box";
 
-    if (_OPT_FILE_DEFAULT_ == _optFile)
+    if (DefaultFiles::optFile == _optFile)
         _optFile = prefix + ".opt";
 
     /*****************************
      * ring polymer output files *
      *****************************/
 
-    if (_RPMD_RST_FILE_DEFAULT_ == _rpmdRstFile)
+    if (DefaultFiles::rpmdRstFile == _rpmdRstFile)
         _rpmdRstFile = prefix + ".rpmd.rst";
 
-    if (_RPMD_TRAJ_FILE_DEFAULT_ == _rpmdTrajFile)
+    if (DefaultFiles::rpmdTrajFile == _rpmdTrajFile)
         _rpmdTrajFile = prefix + ".rpmd.xyz";
 
-    if (_RPMD_VEL_FILE_DEFAULT_ == _rpmdVelFile)
+    if (DefaultFiles::rpmdVelFile == _rpmdVelFile)
         _rpmdVelFile = prefix + ".rpmd.vel";
 
-    if (_RPMD_FORCE_FILE_DEFAULT_ == _rpmdForceFile)
+    if (DefaultFiles::rpmdForceFile == _rpmdForceFile)
         _rpmdForceFile = prefix + ".rpmd.force";
 
-    if (_RPMD_CHARGE_FILE_DEFAULT_ == _rpmdChargeFile)
+    if (DefaultFiles::rpmdChargeFile == _rpmdChargeFile)
         _rpmdChargeFile = prefix + ".rpmd.chrg";
 
-    if (_RPMD_ENERGY_FILE_DEFAULT_ == _rpmdEnergyFile)
+    if (DefaultFiles::rpmdEnergyFile == _rpmdEnergyFile)
         _rpmdEnergyFile = prefix + ".rpmd.en";
 
     /********************
      * the timings file *
      ********************/
 
-    if (_TIMINGS_FILE_DEFAULT_ == _timeFile)
+    if (DefaultFiles::timingsFile == _timeFile)
         _timeFile = prefix + ".timings";
 }
 
@@ -397,7 +399,8 @@ void OutputFileSettings::setRingPolymerVelocityFileName(
  *
  * @param name
  */
-void OutputFileSettings::setRingPolymerForceFileName(const std::string_view name
+void OutputFileSettings::setRingPolymerForceFileName(
+    const std::string_view name
 )
 {
     _rpmdForceFile = name;

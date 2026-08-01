@@ -24,7 +24,6 @@
 
 #include <limits>   // for numeric_limits
 #include <memory>   // for make_shared, __shared_ptr_access
-#include <string>   // for allocator, basic_string
 #include <vector>   // for vector
 
 #include "atom.hpp"                // for Atom
@@ -35,7 +34,7 @@
 #include "potentialSettings.hpp"   // for PotentialSettings
 #include "simulationBox.hpp"       // for SimulationBox
 #include "throwWithMessage.hpp"    // for EXPECT_THROW_MSG
-#include "vector3d.hpp"            // IWYU pragma: keep - for Vec3Dul, Vec3D, Vector3D
+#include "vector3d.hpp"   // IWYU pragma: keep - for Vec3Dul, Vec3D, Vector3D
 
 TEST_F(TestCellList, determineCellSize)
 {
@@ -243,10 +242,10 @@ TEST_F(TestCellList, checkCoulombCutoff)
 {
     _simulationBox->setBoxDimensions(linearAlgebra::Vec3D(50.0, 50.0, 50.0));
     _cellList->determineCellSize(_simulationBox->getBoxDimensions());
-    EXPECT_NO_THROW(_cellList->checkCoulombCutoff({200.0}));
+    EXPECT_NO_THROW(_cellList->checkCoulombCutoff(200.0));
 
     EXPECT_THROW_MSG(
-        _cellList->checkCoulombCutoff({0.1}),
+        _cellList->checkCoulombCutoff(0.1),
         customException::CellListException,
         "Coulomb cutoff is smaller than half of the largest cell size."
     );

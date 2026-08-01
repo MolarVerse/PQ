@@ -1,0 +1,1 @@
+- Rename `mace_model_size` to `mace_model`; the old keyword remains available with a deprecation warning.
