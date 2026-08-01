@@ -10,6 +10,7 @@ target_include_directories(testUtils
 
 target_link_libraries(testUtils
     PUBLIC
+    gtest
     engine
     potential
     coulombPotential
