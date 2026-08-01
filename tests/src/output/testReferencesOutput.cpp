@@ -65,7 +65,9 @@ TEST(TestReferencesOutput, writeReferencesFileEmitsHeaderAndBibtexBanner)
     EXPECT_NE(content.find("BIBTEX ENTRIES"), std::string::npos);
 
     if (const char *marker = std::getenv("PQ_TEST_EXPECTED_REFERENCE_MARKER"))
+    {
         EXPECT_NE(content.find(marker), std::string::npos);
+    }
 
     ::remove(path.c_str());
 }
