@@ -27,40 +27,49 @@
 #include <cstddef>   // for size_t
 
 /**
+ * @brief struct containing all default file names
+ *
+ */
+struct DefaultFiles
+{
+    static constexpr auto restartFile  = "default.rst";
+    static constexpr auto energyFile   = "default.en";
+    static constexpr auto instEnFile   = "default.instant_en";
+    static constexpr auto momentumFile = "default.mom";
+    static constexpr auto trajFile     = "default.xyz";
+    static constexpr auto velFile      = "default.vel";
+    static constexpr auto forceFile    = "default.force";
+    static constexpr auto chargeFile   = "default.charge";
+    static constexpr auto logFile      = "default.log";
+    static constexpr auto stdoutFile   = "default.stdout";
+    static constexpr auto refFile      = "default.ref";
+    static constexpr auto infoFile     = "default.info";
+    static constexpr auto virialFile   = "default.vir";
+    static constexpr auto stressFile   = "default.stress";
+    static constexpr auto boxFile      = "default.box";
+    static constexpr auto optFile      = "default.opt";
+    static constexpr auto timingsFile  = "default.timings";
+
+    static constexpr auto rpmdRstFile    = "default.rpmd.rst";
+    static constexpr auto rpmdTrajFile   = "default.rpmd.xyz";
+    static constexpr auto rpmdVelFile    = "default.rpmd.vel";
+    static constexpr auto rpmdForceFile  = "default.rpmd.force";
+    static constexpr auto rpmdChargeFile = "default.rpmd.charge";
+    static constexpr auto rpmdEnergyFile = "default.rpmd.en";
+};
+
+/**
  * @brief namespace containing all default values
  *
  */
 namespace defaults
 {
+
     // clang-format off
     static constexpr char   _MOLDESCRIPTOR_FILE_DEFAULT_[] = "moldescriptor.dat";
     static constexpr char   _GUFF_FILE_DEFAULT_[]          = "guff.dat";
     static constexpr char   _DFTB_FILE_DEFAULT_[]          = "dftb_in.template";
     static constexpr size_t _NUMBER_OF_GUFF_ENTRIES_       = 28;
-
-    static constexpr char _RESTART_FILE_DEFAULT_[]  = "default.rst";
-    static constexpr char _ENERGY_FILE_DEFAULT_[]   = "default.en";
-    static constexpr char _INSTEN_FILE_DEFAULT_[]   = "default.instant_en";
-    static constexpr char _MOMENTUM_FILE_DEFAULT_[] = "default.mom";
-    static constexpr char _TRAJ_FILE_DEFAULT_[]     = "default.xyz";
-    static constexpr char _VEL_FILE_DEFAULT_[]      = "default.vel";
-    static constexpr char _FORCE_FILE_DEFAULT_[]    = "default.force";
-    static constexpr char _CHARGE_FILE_DEFAULT_[]   = "default.charge";
-    static constexpr char _LOG_FILE_DEFAULT_[]      = "default.log";
-    static constexpr char _REF_FILE_DEFAULT_[]      = "default.ref";
-    static constexpr char _INFO_FILE_DEFAULT_[]     = "default.info";
-    static constexpr char _VIRIAL_FILE_DEFAULT_[]   = "default.vir";
-    static constexpr char _STRESS_FILE_DEFAULT_[]   = "default.stress";
-    static constexpr char _BOX_FILE_DEFAULT_[]      = "default.box";
-    static constexpr char _OPT_FILE_DEFAULT_[]      = "default.opt";
-    static constexpr char _TIMINGS_FILE_DEFAULT_[]  = "default.timings";
-
-    static constexpr char _RPMD_RST_FILE_DEFAULT_[]    = "default.rpmd.rst";
-    static constexpr char _RPMD_TRAJ_FILE_DEFAULT_[]   = "default.rpmd.xyz";
-    static constexpr char _RPMD_VEL_FILE_DEFAULT_[]    = "default.rpmd.vel";
-    static constexpr char _RPMD_FORCE_FILE_DEFAULT_[]  = "default.rpmd.force";
-    static constexpr char _RPMD_CHARGE_FILE_DEFAULT_[] = "default.rpmd.charge";
-    static constexpr char _RPMD_ENERGY_FILE_DEFAULT_[] = "default.rpmd.en";
 
     static constexpr char   _HESSIAN_FILE_DEFAULT_[] = "default.hessian";
     static constexpr char   _HESSIAN_INFO_FILE_DEFAULT_[] =

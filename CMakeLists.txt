@@ -31,12 +31,25 @@ include(pqGitVersion) # include get git version
 # **************
 # check compiler
 # **************
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+set(PQ_COMPILER_IS_GNU FALSE)
+set(PQ_COMPILER_IS_CLANG FALSE)
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    set(PQ_COMPILER_IS_GNU TRUE)
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    set(PQ_COMPILER_IS_CLANG TRUE)
+endif()
+
+if(PQ_COMPILER_IS_GNU)
     if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 13.0)
         message(FATAL_ERROR "Insufficient gcc version (need >= 13.0)")
     endif()
+elseif(PQ_COMPILER_IS_CLANG)
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 16.0)
+        message(FATAL_ERROR "Insufficient clang version (need >= 16.0)")
+    endif()
 else()
-    message(WARNING "You are using an unsupported compiler! Compilation has only been tested with GNU.")
+    message(WARNING "You are using an unsupported compiler! Compilation has only been tested with GNU and Clang.")
 endif()
 
 if(WIN32)
@@ -64,7 +77,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # set default flags
 string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra")
 
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+if(PQ_COMPILER_IS_GNU)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wswitch-enum -Werror=switch-enum")
 endif()
 
@@ -100,14 +113,14 @@ elseif(CMAKE_BUILD_TYPE MATCHES "^[Rr]el[Ww]ith[Dd]ebug")
     message("\n   Release with Debug build   \n")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -g -coverage -fprofile-arcs -ftest-coverage")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -Wshadow -Wdouble-promotion -Wformat=2 -Wundef")
-    if(UNIX AND NOT APPLE)
+    if(PQ_COMPILER_IS_GNU)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg")
     endif()
 elseif(CMAKE_BUILD_TYPE MATCHES "^[Dd]ebug")
     message("\n   Debug build   \n")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Og -coverage -fprofile-arcs -ftest-coverage")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -Wshadow -Wdouble-promotion -Wformat=2 -Wundef")
-    if(UNIX AND NOT APPLE)
+    if(PQ_COMPILER_IS_GNU)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg")
     endif()
 else()
