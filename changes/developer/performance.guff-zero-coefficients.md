@@ -1,0 +1,1 @@
+- Skip zero-coefficient terms in `GuffPair::calculate`.

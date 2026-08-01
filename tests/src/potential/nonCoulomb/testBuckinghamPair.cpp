@@ -24,7 +24,6 @@
 
 #include <cmath>     // for pow, exp
 #include <cstddef>   // for size_t
-#include <string>    // for string
 #include <vector>    // for vector
 
 #include "buckinghamPair.hpp"   // for BuckinghamPair

@@ -1,0 +1,1 @@
+- Reject non-finite external QM energies and forces.

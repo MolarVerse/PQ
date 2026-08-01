@@ -27,15 +27,15 @@
 #include <string>    // for string, stod, allocator, basic_string
 #include <vector>    // for vector
 
-#include "atom.hpp"                 // for Atom
-#include "atomSection.hpp"          // for AtomSection
-#include "engine.hpp"               // for Engine
-#include "exceptions.hpp"           // for RstFileException, customException
-#include "gmock/gmock.h"            // for ElementsAre, MakePredicateFormatter
-#include "gtest/gtest.h"            // for Message, TestPartResult
-#include "molecule.hpp"             // for Molecule
-#include "moleculeType.hpp"         // for MoleculeType
-#include "restartFileSection.hpp"   // for RstFileSection, AtomSection
+#include "atom.hpp"           // for Atom
+#include "engine.hpp"         // for Engine
+#include "exceptions.hpp"     // for RstFileException, customException
+#include "gmock/gmock.h"      // for ElementsAre, MakePredicateFormatter
+#include "gtest/gtest.h"      // for Message, TestPartResult
+#include "molecule.hpp"       // for Molecule
+#include "moleculeType.hpp"   // for MoleculeType
+#include "restartFileReader/atomSection.hpp"
+#include "restartFileReader/restartFileSection.hpp"
 #include "testRestartFileSection.hpp"   // for TestAtomSection
 #include "throwWithMessage.hpp"         // for ASSERT_THROW_MSG
 

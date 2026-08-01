@@ -22,8 +22,6 @@
 
 #include <gtest/gtest.h>   // for EXPECT_EQ, EXPECT_NO_THROW, InitGoog...
 
-#include <string>   // for allocator, basic_string
-
 #include "berendsenManostat.hpp"   // for BerendsenManostat
 #include "gtest/gtest.h"           // for Message, TestPartResult
 #include "manostat.hpp"            // for BerendsenManostat, Manostat
@@ -88,8 +86,8 @@ TEST_F(TestSetup, setupManostatNoneIsotropyDefaultsToIsotropic)
     ManostatSetup manostatSetup(*_mdEngine);
     EXPECT_NO_THROW(manostatSetup.setup());
 
-    const auto &manostat = _mdEngine->getManostat();
-    const auto berendsen = dynamic_cast<const BerendsenManostat &>(manostat);
+    const auto &manostat  = _mdEngine->getManostat();
+    const auto  berendsen = dynamic_cast<const BerendsenManostat &>(manostat);
     EXPECT_EQ(berendsen.getIsotropy(), Isotropy::ISOTROPIC);
 }
 

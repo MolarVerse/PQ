@@ -20,13 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <cstdlib>      // for EXIT_SUCCESS
-#include <exception>    // for exception
-#include <filesystem>   // for remove_all
-#include <iostream>     // for operator<<
-#include <memory>       // for unique_ptr
-#include <string>       // for string, char_traits
-#include <vector>       // for vector
+#include <cstdlib>     // for EXIT_SUCCESS
+#include <exception>   // for exception
+#include <iostream>    // for operator<<
+#include <memory>      // for unique_ptr
+#include <string>      // for string, char_traits
+#include <vector>      // for vector
 
 #include "commandLineArgs.hpp"   // for CommandLineArgs
 #include "engine.hpp"            // for Engine

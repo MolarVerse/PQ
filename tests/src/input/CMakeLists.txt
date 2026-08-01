@@ -14,6 +14,7 @@ foreach(source_file ${source_files})
     add_executable(${test_name} ${source_file})
     target_include_directories(${test_name}
         PRIVATE
+        ${PROJECT_SOURCE_DIR}/include/input/
         ${PROJECT_SOURCE_DIR}/tests/include/input
         ${PROJECT_SOURCE_DIR}/tests/include/macros
     )
@@ -26,6 +27,7 @@ foreach(source_file ${source_files})
         gtest
         gmock
         pq_test_main
+        testUtils
     )
     add_test(
         NAME ${test_name}

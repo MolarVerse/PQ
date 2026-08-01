@@ -22,8 +22,6 @@
 
 #include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ, Init...
 
-#include <string>   // for allocator, basic_string
-
 #include "constraintSettings.hpp"   // for getShakeMaxIter, getShakeTolerance, getRattleMaxIter, getRattleTolerance
 #include "constraintsSetup.hpp"   // for ConstraintsSetup, setupConstraints
 #include "engine.hpp"             // for Engine
