@@ -31,7 +31,7 @@ using QM::AseFennolRunner;
  * @param gpuPreprocessing
  * @param useFloat64
  *
- * @throw py::error_already_set if the import of the fennol module fails
+ * @throw pybind11::error_already_set if the import of the fennol module fails
  */
 AseFennolRunner::AseFennolRunner(
     const std::string &modelPath,
@@ -42,17 +42,19 @@ AseFennolRunner::AseFennolRunner(
 {
     try
     {
-        const py::module_ calculators = py::module_::import("fennol.ase");
+        const pybind11::module_ calculators =
+            pybind11::module_::import("fennol.ase");
 
-        const py::dict calculatorArgs;
+        const pybind11::dict calculatorArgs;
 
         calculatorArgs["model"]             = modelPath.c_str();
         calculatorArgs["gpu_preprocessing"] = pybind11::bool_(gpuPreprocessing);
         calculatorArgs["use_float64"]       = pybind11::bool_(useFloat64);
 
-        _calculator = calculators.attr("FENNIXCalculator")(**calculatorArgs);
+        setAseCalculator(calculators.attr("FENNIXCalculator")(**calculatorArgs)
+        );
     }
-    catch (const py::error_already_set &)
+    catch (const pybind11::error_already_set &)
     {
         ::PyErr_Print();
         throw;
