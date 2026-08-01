@@ -19,14 +19,14 @@ add_library(pq_test_pch OBJECT dummy.cpp)
 target_precompile_headers(pq_test_pch PRIVATE ${PQ_TEST_PCH_HEADERS})
 
 target_link_libraries(pq_test_pch
-        PRIVATE
+        PUBLIC
         gtest
         gmock
 )
 
 if(BUILD_WITH_ASE)
     target_link_libraries(pq_test_pch
-        PRIVATE
+        PUBLIC
         pybind11::embed
         pybind11::module
     )
