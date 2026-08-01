@@ -182,11 +182,9 @@ namespace
 }   // namespace
 
 /**
- * @brief Throw a QMRunnerException if the ASE QM calculation takes too long
+ * @class AseQMRunner::AseInterface
  *
- * @param stopToken
- *
- * @throw QMRunnerException if the ASE QM calculation takes too long
+ * @brief PIMPL Interface to the ASE QM calculator
  */
 struct __attribute__((visibility("default"))) AseQMRunner::AseInterface
 {
