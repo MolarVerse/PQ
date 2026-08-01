@@ -1,1 +1,0 @@
-- Add possibility to compile with clang++ 
