@@ -20,6 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#ifdef WITH_KOKKOS
+
 #include "potential_kokkos.hpp"
 
 #include <cstddef>   // for size_t
@@ -189,3 +191,5 @@ void KokkosPotential::calculateForces(
 
     stopTimingsSection("InterNonBonded - Transfer");
 }
+
+#endif   // WITH_KOKKOS

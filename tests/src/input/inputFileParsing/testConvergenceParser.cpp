@@ -22,8 +22,6 @@
 
 #include <gtest/gtest.h>   // for TEST_F, EXPECT_EQ, RUN_ALL_TESTS
 
-#include <string>   // for string, allocator
-
 #include "convergenceInputParser.hpp"   // for InputFileParserOptimizer
 #include "convergenceSettings.hpp"      // for ConvSettings
 #include "exceptions.hpp"            // for InputFileException, customException

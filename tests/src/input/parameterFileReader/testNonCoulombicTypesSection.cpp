@@ -22,8 +22,6 @@
 
 #include <gtest/gtest.h>   // for EXPECT_EQ, TestInfo (ptr only)
 
-#include <string>   // for string, basic_string
-
 #include "buckinghamPair.hpp"             // for BuckinghamPair
 #include "engine.hpp"                     // for Engine
 #include "exceptions.hpp"                 // for ParameterFileException
@@ -203,27 +201,33 @@ TEST_F(TestParameterFileSection, processSectionNonCoulombics)
     PotentialSettings::setNonCoulombType(NonCoulombType::LJ);
     nonCoulombicsSection.processSection(lineElements, *_engine);
     EXPECT_EQ(potential.getNonCoulombPairsVector().size(), 1);
-    EXPECT_NO_THROW(dynamic_cast<const LennardJonesPair *>(
-        potential.getNonCoulombPairsVector()[0].get()
-    ));
+    EXPECT_NO_THROW(
+        [[maybe_unused]] auto ret = dynamic_cast<const LennardJonesPair *>(
+            potential.getNonCoulombPairsVector()[0].get()
+        )
+    );
 
     lineElements = {"0", "1", "1.22", "234.3", "324.3"};
     PotentialSettings::setNonCoulombType(NonCoulombType::BUCKINGHAM);
     EXPECT_NO_THROW(nonCoulombicsSection.processSection(lineElements, *_engine)
     );
     EXPECT_EQ(potential.getNonCoulombPairsVector().size(), 2);
-    EXPECT_NO_THROW(dynamic_cast<const BuckinghamPair *>(
-        potential.getNonCoulombPairsVector()[0].get()
-    ));
+    EXPECT_NO_THROW(
+        [[maybe_unused]] auto ret = dynamic_cast<const BuckinghamPair *>(
+            potential.getNonCoulombPairsVector()[0].get()
+        )
+    );
 
     lineElements = {"0", "1", "1.22", "234.3", "324.3"};
     PotentialSettings::setNonCoulombType(NonCoulombType::MORSE);
     EXPECT_NO_THROW(nonCoulombicsSection.processSection(lineElements, *_engine)
     );
     EXPECT_EQ(potential.getNonCoulombPairsVector().size(), 3);
-    EXPECT_NO_THROW(dynamic_cast<const MorsePair *>(
-        potential.getNonCoulombPairsVector()[0].get()
-    ));
+    EXPECT_NO_THROW(
+        [[maybe_unused]] auto ret = dynamic_cast<const MorsePair *>(
+            potential.getNonCoulombPairsVector()[0].get()
+        )
+    );
 
     lineElements = {"0", "1", "1.22", "234.3", "324.3"};
     PotentialSettings::setNonCoulombType(NonCoulombType::LJ_9_12);

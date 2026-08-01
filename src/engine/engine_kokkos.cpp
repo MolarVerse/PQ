@@ -20,13 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#ifdef WITH_KOKKOS
+
 #include "engine.hpp"
 
 using namespace engine;
 using namespace simulationBox;
 using namespace potential;
-
-#ifdef WITH_KOKKOS
 
 /**
  * @brief get reference to KokkosSimulationBox

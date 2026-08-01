@@ -20,6 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#ifdef WITH_KOKKOS
+
 #include "simulationBox_kokkos.hpp"
 
 #include "simulationBox.hpp"   // for SimulationBox
@@ -298,7 +300,8 @@ void KokkosSimulationBox::transferBoxDimensionsFromSimulationBox(
 /**
  * @brief transfer positions to simulation box
  */
-void KokkosSimulationBox::transferPositionsToSimulationBox(SimulationBox& simBox
+void KokkosSimulationBox::transferPositionsToSimulationBox(
+    SimulationBox& simBox
 )
 {
     // copy positions back to host
@@ -494,3 +497,5 @@ DualView<double*> KokkosSimulationBox::getBoxDimensions()
 {
     return _boxDimensions;
 }
+
+#endif   // WITH_KOKKOS
