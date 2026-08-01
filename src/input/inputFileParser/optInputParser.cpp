@@ -27,7 +27,8 @@
 
 #include "exceptions.hpp"          // for InputFileException
 #include "optimizerSettings.hpp"   // for OptimizerSettings
-#include "stringUtilities.hpp"     // for toLowerCopy
+#include "parserUtils.hpp"
+#include "stringUtilities.hpp"   // for toLowerCopy
 
 using namespace input;
 using namespace settings;
@@ -50,43 +51,43 @@ OptInputParser::OptInputParser(Engine &engine) : InputFileParser(engine)
 {
     addKeyword(
         "optimizer",
-        bind_front(&OptInputParser::parseOptimizer, this),
+        bindMember(&OptInputParser::parseOptimizer, this),
         false
     );
 
     addKeyword(
         "learning-rate-strategy",
-        bind_front(&OptInputParser::parseLearningRateStrategy, this),
+        bindMember(&OptInputParser::parseLearningRateStrategy, this),
         false
     );
 
     addKeyword(
         "initial-learning-rate",
-        bind_front(&OptInputParser::parseInitialLearningRate, this),
+        bindMember(&OptInputParser::parseInitialLearningRate, this),
         false
     );
 
     addKeyword(
         "learning-rate-decay",
-        bind_front(&OptInputParser::parseLearningRateDecay, this),
+        bindMember(&OptInputParser::parseLearningRateDecay, this),
         false
     );
 
     addKeyword(
         "learning-rate-update-freq",
-        bind_front(&OptInputParser::parseLearningRateUpdateFreq, this),
+        bindMember(&OptInputParser::parseLearningRateUpdateFreq, this),
         false
     );
 
     addKeyword(
         "min-learning-rate",
-        bind_front(&OptInputParser::parseMinLearningRate, this),
+        bindMember(&OptInputParser::parseMinLearningRate, this),
         false
     );
 
     addKeyword(
         "max-learning-rate",
-        bind_front(&OptInputParser::parseMaxLearningRate, this),
+        bindMember(&OptInputParser::parseMaxLearningRate, this),
         false
     );
 }

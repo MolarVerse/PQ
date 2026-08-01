@@ -472,54 +472,31 @@ void cli::writeValidationJson(
     std::ostream           &output
 )
 {
-    const auto flags = output.flags();
+    auto json = JsonWriter(output);
+    json.beginObject();
+    json.value("schema", "pq.validation");
+    json.value("schema_version", 1);
+    json.value("valid", result.valid);
+    json.value("input", result.inputFile);
+    json.value("scope", string(result.scope));
+    json.beginArray("diagnostics");
 
-    output << "{\n"
-           << "  \"schema\": \"pq.validation\",\n"
-           << "  \"schema_version\": 1,\n"
-           << "  \"valid\": " << std::boolalpha << result.valid << ",\n"
-           << "  \"input\": ";
-    writeJsonString(output, result.inputFile);
-    output << ",\n"
-           << "  \"scope\": ";
-    writeJsonString(output, string(result.scope));
-    output << ",\n"
-           << "  \"diagnostics\": [";
-
-    if (result.diagnostics.empty())
+    for (const auto &diagnostic : result.diagnostics)
     {
-        output << "]\n"
-               << "}\n";
-        output.flags(flags);
-        return;
-    }
-
-    for (size_t index = 0; index < result.diagnostics.size(); ++index)
-    {
-        const auto &diagnostic = result.diagnostics[index];
-        output << (index == 0 ? "\n" : ",\n") << "    {\n"
-               << "      \"severity\": ";
-        writeJsonString(output, string(diagnostic.severity));
-        output << ",\n"
-               << "      \"message\": ";
-        writeJsonString(output, diagnostic.message);
-        output << ",\n"
-               << "      \"file\": ";
-        writeJsonString(output, result.inputFile);
-        output << ",\n"
-               << "      \"line\": ";
+        json.beginObject();
+        json.value("severity", string(diagnostic.severity));
+        json.value("message", diagnostic.message);
+        json.value("file", result.inputFile);
         if (diagnostic.lineNumber.has_value())
-            output << diagnostic.lineNumber.value();
+            json.value("line", diagnostic.lineNumber.value());
         else
-            output << "null";
-        output << "\n"
-               << "    }";
+            json.value("line", nullptr);
+        json.endObject();
     }
 
-    output << '\n'
-           << "  ]\n"
-           << "}\n";
-    output.flags(flags);
+    json.endArray();
+    json.endObject();
+    output << '\n';
 }
 
 void cli::writeValidationText(

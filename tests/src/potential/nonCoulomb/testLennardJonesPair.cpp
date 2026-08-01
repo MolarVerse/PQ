@@ -24,7 +24,6 @@
 
 #include <cmath>     // for pow
 #include <cstddef>   // for size_t
-#include <string>    // for string
 #include <vector>    // for vector
 
 #include "gtest/gtest.h"   // for AssertionResult, Message, TestPartResult

@@ -22,12 +22,12 @@
 
 #include "filesInputParser.hpp"
 
-#include <cstddef>       // for size_t
-#include <functional>    // for _Bind_front_t, bind_front
+#include <cstddef>   // for size_t
 
-#include "engine.hpp"            // for Engine
-#include "exceptions.hpp"        // for InputFileException
-#include "fileSettings.hpp"      // for FileSettings
+#include "engine.hpp"         // for Engine
+#include "exceptions.hpp"     // for InputFileException
+#include "fileSettings.hpp"   // for FileSettings
+#include "parserUtils.hpp"
 #include "stringUtilities.hpp"   // for fileExists
 
 using namespace input;
@@ -54,61 +54,61 @@ FilesInputParser::FilesInputParser(Engine &engine, const bool validateFilePaths)
 {
     addKeyword(
         std::string("intra-nonBonded_file"),
-        bind_front(&FilesInputParser::parseIntraNonBondedFile, this),
+        bindMember(&FilesInputParser::parseIntraNonBondedFile, this),
         false
     );
 
     addKeyword(
         std::string("topology_file"),
-        bind_front(&FilesInputParser::parseTopologyFilename, this),
+        bindMember(&FilesInputParser::parseTopologyFilename, this),
         false
     );
 
     addKeyword(
         std::string("parameter_file"),
-        bind_front(&FilesInputParser::parseParameterFilename, this),
+        bindMember(&FilesInputParser::parseParameterFilename, this),
         false
     );
 
     addKeyword(
         std::string("start_file"),
-        bind_front(&FilesInputParser::parseStartFilename, this),
+        bindMember(&FilesInputParser::parseStartFilename, this),
         true
     );
 
     addKeyword(
         std::string("rpmd_start_file"),
-        bind_front(&FilesInputParser::parseRingPolymerStartFilename, this),
+        bindMember(&FilesInputParser::parseRingPolymerStartFilename, this),
         false
     );
 
     addKeyword(
         std::string("moldescriptor_file"),
-        bind_front(&FilesInputParser::parseMoldescriptorFilename, this),
+        bindMember(&FilesInputParser::parseMoldescriptorFilename, this),
         false
     );
 
     addKeyword(
         std::string("guff_path"),
-        bind_front(&FilesInputParser::parseGuffPath, this),
+        bindMember(&FilesInputParser::parseGuffPath, this),
         false
     );
 
     addKeyword(
         std::string("guff_file"),
-        bind_front(&FilesInputParser::parseGuffDatFilename, this),
+        bindMember(&FilesInputParser::parseGuffDatFilename, this),
         false
     );
 
     addKeyword(
         std::string("mshake_file"),
-        bind_front(&FilesInputParser::parseMShakeFilename, this),
+        bindMember(&FilesInputParser::parseMShakeFilename, this),
         false
     );
 
     addKeyword(
         std::string("dftb_file"),
-        bind_front(&FilesInputParser::parseDFTBFilename, this),
+        bindMember(&FilesInputParser::parseDFTBFilename, this),
         false
     );
 }

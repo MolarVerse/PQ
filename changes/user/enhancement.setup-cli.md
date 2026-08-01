@@ -1,1 +1,2 @@
+- The `PQ` executable now exposes version, help, and compiled capabilities for setup tools.
 - PQ setup tools now expose bundled external-QM scripts and validate input ranges, setting constraints, resource paths, and disabled couplings.

@@ -27,7 +27,8 @@
 
 #include "convergenceSettings.hpp"   // for ConvSettings
 #include "exceptions.hpp"            // for InputFileException
-#include "stringUtilities.hpp"       // for toLowerCopy
+#include "parserUtils.hpp"
+#include "stringUtilities.hpp"   // for toLowerCopy
 
 using namespace input;
 using namespace settings;
@@ -60,67 +61,67 @@ ConvInputParser::ConvInputParser(Engine &engine) : InputFileParser(engine)
 {
     addKeyword(
         "energy-conv-strategy",
-        bind_front(&ConvInputParser::parseEnergyConvergenceStrategy, this),
+        bindMember(&ConvInputParser::parseEnergyConvergenceStrategy, this),
         false
     );
 
     addKeyword(
         "use-energy-conv",
-        bind_front(&ConvInputParser::parseUseEnergyConvergence, this),
+        bindMember(&ConvInputParser::parseUseEnergyConvergence, this),
         false
     );
 
     addKeyword(
         "use-force-conv",
-        bind_front(&ConvInputParser::parseUseForceConvergence, this),
+        bindMember(&ConvInputParser::parseUseForceConvergence, this),
         false
     );
 
     addKeyword(
         "use-max-force-conv",
-        bind_front(&ConvInputParser::parseUseMaxForceConvergence, this),
+        bindMember(&ConvInputParser::parseUseMaxForceConvergence, this),
         false
     );
 
     addKeyword(
         "use-rms-force-conv",
-        bind_front(&ConvInputParser::parseUseRMSForceConvergence, this),
+        bindMember(&ConvInputParser::parseUseRMSForceConvergence, this),
         false
     );
 
     addKeyword(
         "energy-conv",
-        bind_front(&ConvInputParser::parseEnergyConvergence, this),
+        bindMember(&ConvInputParser::parseEnergyConvergence, this),
         false
     );
 
     addKeyword(
         "rel-energy-conv",
-        bind_front(&ConvInputParser::parseRelativeEnergyConvergence, this),
+        bindMember(&ConvInputParser::parseRelativeEnergyConvergence, this),
         false
     );
 
     addKeyword(
         "abs-energy-conv",
-        bind_front(&ConvInputParser::parseAbsoluteEnergyConvergence, this),
+        bindMember(&ConvInputParser::parseAbsoluteEnergyConvergence, this),
         false
     );
 
     addKeyword(
         "force-conv",
-        bind_front(&ConvInputParser::parseForceConvergence, this),
+        bindMember(&ConvInputParser::parseForceConvergence, this),
         false
     );
 
     addKeyword(
         "max-force-conv",
-        bind_front(&ConvInputParser::parseMaxForceConvergence, this),
+        bindMember(&ConvInputParser::parseMaxForceConvergence, this),
         false
     );
 
     addKeyword(
         "rms-force-conv",
-        bind_front(&ConvInputParser::parseRMSForceConvergence, this),
+        bindMember(&ConvInputParser::parseRMSForceConvergence, this),
         false
     );
 }

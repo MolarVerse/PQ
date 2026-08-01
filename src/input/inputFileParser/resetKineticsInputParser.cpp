@@ -23,10 +23,10 @@
 #include "resetKineticsInputParser.hpp"
 
 #include <cstddef>       // for size_t, std
-#include <functional>    // for _Bind_front_t, bind_front
 #include <string_view>   // for string_view
 
 #include "exceptions.hpp"   // for InputFileException, customException
+#include "parserUtils.hpp"
 #include "resetKineticsSettings.hpp"   // for ResetKineticsSettings
 #include "stringUtilities.hpp"         // for stringToInt
 
@@ -50,37 +50,37 @@ ResetKineticsInputParser::ResetKineticsInputParser(Engine &engine)
 {
     addKeyword(
         std::string("nscale"),
-        bind_front(&ResetKineticsInputParser::parseNScale, this),
+        bindMember(&ResetKineticsInputParser::parseNScale, this),
         false
     );
     addKeyword(
         std::string("fscale"),
-        bind_front(&ResetKineticsInputParser::parseFScale, this),
+        bindMember(&ResetKineticsInputParser::parseFScale, this),
         false
     );
     addKeyword(
         std::string("nreset"),
-        bind_front(&ResetKineticsInputParser::parseNReset, this),
+        bindMember(&ResetKineticsInputParser::parseNReset, this),
         false
     );
     addKeyword(
         std::string("freset"),
-        bind_front(&ResetKineticsInputParser::parseFReset, this),
+        bindMember(&ResetKineticsInputParser::parseFReset, this),
         false
     );
     addKeyword(
         std::string("nreset_angular"),
-        bind_front(&ResetKineticsInputParser::parseNResetAngular, this),
+        bindMember(&ResetKineticsInputParser::parseNResetAngular, this),
         false
     );
     addKeyword(
         std::string("freset_angular"),
-        bind_front(&ResetKineticsInputParser::parseFResetAngular, this),
+        bindMember(&ResetKineticsInputParser::parseFResetAngular, this),
         false
     );
     addKeyword(
         std::string("freset_forces"),
-        bind_front(&ResetKineticsInputParser::parseFResetForces, this),
+        bindMember(&ResetKineticsInputParser::parseFResetForces, this),
         false
     );
 }

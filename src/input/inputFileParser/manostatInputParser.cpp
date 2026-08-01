@@ -24,13 +24,13 @@
 
 #include <cstddef>       // for size_t
 #include <format>        // for format
-#include <functional>    // for _Bind_front_t, bind_front
 #include <limits>        // for numeric_limits
 #include <string_view>   // for string_view
 
 #include "constants/conversionFactors.hpp"
 #include "exceptions.hpp"         // for InputFileException, customException
 #include "manostatSettings.hpp"   // for ManostatSettings
+#include "parserUtils.hpp"
 #include "references.hpp"         // for ReferencesOutput
 #include "referencesOutput.hpp"   // for ReferencesOutput
 #include "stringUtilities.hpp"    // for toLowerCopy
@@ -59,31 +59,31 @@ ManostatInputParser::ManostatInputParser(Engine &engine)
 {
     addKeyword(
         std::string("manostat"),
-        bind_front(&ManostatInputParser::parseManostat, this),
+        bindMember(&ManostatInputParser::parseManostat, this),
         false
     );
 
     addKeyword(
         std::string("pressure"),
-        bind_front(&ManostatInputParser::parsePressure, this),
+        bindMember(&ManostatInputParser::parsePressure, this),
         false
     );
 
     addKeyword(
         std::string("p_relaxation"),
-        bind_front(&ManostatInputParser::parseManostatRelaxationTime, this),
+        bindMember(&ManostatInputParser::parseManostatRelaxationTime, this),
         false
     );
 
     addKeyword(
         std::string("compressibility"),
-        bind_front(&ManostatInputParser::parseCompressibility, this),
+        bindMember(&ManostatInputParser::parseCompressibility, this),
         false
     );
 
     addKeyword(
         std::string("isotropy"),
-        bind_front(&ManostatInputParser::parseIsotropy, this),
+        bindMember(&ManostatInputParser::parseIsotropy, this),
         false
     );
 }

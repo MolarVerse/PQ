@@ -22,10 +22,10 @@
 
 #include "timingsInputParser.hpp"
 
-#include <functional>    // for _Bind_front_t, bind_front
 #include <string_view>   // for string_view
 
 #include "exceptions.hpp"        // for InputFileException
+#include "parserUtils.hpp"
 #include "stringUtilities.hpp"   // for stringToFiniteDouble, stringToInt
 #include "timingsSettings.hpp"   // for TimingsSettings
 
@@ -48,13 +48,13 @@ TimingsInputParser::TimingsInputParser(Engine &engine) : InputFileParser(engine)
 {
     addKeyword(
         std::string("timestep"),
-        bind_front(&TimingsInputParser::parseTimeStep, this),
+        bindMember(&TimingsInputParser::parseTimeStep, this),
         false
     );
 
     addKeyword(
         std::string("nstep"),
-        bind_front(&TimingsInputParser::parseNumberOfSteps, this),
+        bindMember(&TimingsInputParser::parseNumberOfSteps, this),
         false
     );
 }

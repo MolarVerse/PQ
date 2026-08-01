@@ -25,12 +25,12 @@
 #include <cmath>         // for sqrt
 #include <cstddef>       // for size_t, std
 #include <format>        // for format
-#include <functional>    // for _Bind_front_t, bind_front
 #include <limits>        // for numeric_limits
 #include <string_view>   // for string_view
 
 #include "constants/conversionFactors.hpp"
 #include "exceptions.hpp"           // for InputFileException, customException
+#include "parserUtils.hpp"
 #include "references.hpp"           // for References
 #include "referencesOutput.hpp"     // for ReferencesOutput
 #include "stringUtilities.hpp"      // for toLowerCopy
@@ -60,52 +60,52 @@ ThermostatInputParser::ThermostatInputParser(Engine &engine)
 {
     addKeyword(
         std::string("thermostat"),
-        bind_front(&ThermostatInputParser::parseThermostat, this),
+        bindMember(&ThermostatInputParser::parseThermostat, this),
         false
     );
     addKeyword(
         std::string("temp"),
-        bind_front(&ThermostatInputParser::parseTemperature, this),
+        bindMember(&ThermostatInputParser::parseTemperature, this),
         false
     );
     addKeyword(
         std::string("start_temp"),
-        bind_front(&ThermostatInputParser::parseStartTemperature, this),
+        bindMember(&ThermostatInputParser::parseStartTemperature, this),
         false
     );
     addKeyword(
         std::string("end_temp"),
-        bind_front(&ThermostatInputParser::parseEndTemperature, this),
+        bindMember(&ThermostatInputParser::parseEndTemperature, this),
         false
     );
     addKeyword(
         std::string("temp_ramp_steps"),
-        bind_front(&ThermostatInputParser::parseTemperatureRampSteps, this),
+        bindMember(&ThermostatInputParser::parseTemperatureRampSteps, this),
         false
     );
     addKeyword(
         std::string("temp_ramp_frequency"),
-        bind_front(&ThermostatInputParser::parseTemperatureRampFrequency, this),
+        bindMember(&ThermostatInputParser::parseTemperatureRampFrequency, this),
         false
     );
     addKeyword(
         std::string("t_relaxation"),
-        bind_front(&ThermostatInputParser::parseThermostatRelaxationTime, this),
+        bindMember(&ThermostatInputParser::parseThermostatRelaxationTime, this),
         false
     );
     addKeyword(
         std::string("friction"),
-        bind_front(&ThermostatInputParser::parseThermostatFriction, this),
+        bindMember(&ThermostatInputParser::parseThermostatFriction, this),
         false
     );
     addKeyword(
         std::string("nh-chain_length"),
-        bind_front(&ThermostatInputParser::parseThermostatChainLength, this),
+        bindMember(&ThermostatInputParser::parseThermostatChainLength, this),
         false
     );
     addKeyword(
         std::string("coupling_frequency"),
-        bind_front(
+        bindMember(
             &ThermostatInputParser::parseThermostatCouplingFrequency,
             this
         ),

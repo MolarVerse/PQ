@@ -23,10 +23,10 @@
 #include "hessianInputParser.hpp"
 
 #include <format>
-#include <functional>
 
 #include "exceptions.hpp"
 #include "hessianSettings.hpp"
+#include "parserUtils.hpp"
 #include "stringUtilities.hpp"
 
 using namespace input;
@@ -39,27 +39,27 @@ HessianInputParser::HessianInputParser(pq::Engine &engine)
 {
     addKeyword(
         std::string("hessian_file"),
-        std::bind_front(&HessianInputParser::parseHessianFile, this),
+        bindMember(&HessianInputParser::parseHessianFile, this),
         false
     );
     addKeyword(
         std::string("hessian_info_file"),
-        std::bind_front(&HessianInputParser::parseHessianInfoFile, this),
+        bindMember(&HessianInputParser::parseHessianInfoFile, this),
         false
     );
     addKeyword(
         std::string("hessian_displacement"),
-        std::bind_front(&HessianInputParser::parseDisplacement, this),
+        bindMember(&HessianInputParser::parseDisplacement, this),
         false
     );
     addKeyword(
         std::string("optimize_before_hessian"),
-        std::bind_front(&HessianInputParser::parseOptimizeBeforeHessian, this),
+        bindMember(&HessianInputParser::parseOptimizeBeforeHessian, this),
         false
     );
     addKeyword(
         std::string("hessian_builder"),
-        std::bind_front(&HessianInputParser::parseBuilder, this),
+        bindMember(&HessianInputParser::parseBuilder, this),
         false
     );
 }

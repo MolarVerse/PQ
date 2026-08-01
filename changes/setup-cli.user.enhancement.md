@@ -1,1 +1,0 @@
-- The `PQ` executable now exposes version, help, and compiled capabilities for setup tools.

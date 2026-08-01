@@ -22,7 +22,6 @@
 
 #include <cstdlib>      // for EXIT_FAILURE, EXIT_SUCCESS
 #include <exception>    // for exception
-#include <filesystem>   // for remove_all
 #include <iostream>     // for operator<<
 #include <memory>       // for unique_ptr
 #include <string>       // for string, char_traits

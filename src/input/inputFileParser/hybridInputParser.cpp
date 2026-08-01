@@ -22,11 +22,11 @@
 
 #include "hybridInputParser.hpp"
 
-#include <format>       // for format
-#include <functional>   // for _Bind_front_t, bind_front
+#include <format>   // for format
 
-#include "exceptions.hpp"        // for InputFileException, customException
-#include "hybridSettings.hpp"    // for HybridSettings
+#include "exceptions.hpp"       // for InputFileException, customException
+#include "hybridSettings.hpp"   // for HybridSettings
+#include "parserUtils.hpp"
 #include "stringUtilities.hpp"   // for toLowerCopy
 
 using namespace input;
@@ -48,37 +48,37 @@ HybridInputParser::HybridInputParser(Engine &engine) : InputFileParser(engine)
 {
     addKeyword(
         std::string("core_center"),
-        bind_front(&HybridInputParser::parseCoreCenter, this),
+        bindMember(&HybridInputParser::parseCoreCenter, this),
         false
     );
     addKeyword(
         std::string("core_only_list"),
-        bind_front(&HybridInputParser::parseCoreOnlyList, this),
+        bindMember(&HybridInputParser::parseCoreOnlyList, this),
         false
     );
     addKeyword(
         std::string("non_core_only_list"),
-        bind_front(&HybridInputParser::parseNonCoreOnlyList, this),
+        bindMember(&HybridInputParser::parseNonCoreOnlyList, this),
         false
     );
     addKeyword(
         std::string("qm_charges"),
-        bind_front(&HybridInputParser::parseUseQMCharges, this),
+        bindMember(&HybridInputParser::parseUseQMCharges, this),
         false
     );
     addKeyword(
         std::string("core_radius"),
-        bind_front(&HybridInputParser::parseCoreRadius, this),
+        bindMember(&HybridInputParser::parseCoreRadius, this),
         false
     );
     addKeyword(
         std::string("layer_radius"),
-        bind_front(&HybridInputParser::parseLayerRadius, this),
+        bindMember(&HybridInputParser::parseLayerRadius, this),
         false
     );
     addKeyword(
         std::string("smoothing_radius"),
-        bind_front(&HybridInputParser::parseSmoothingRadius, this),
+        bindMember(&HybridInputParser::parseSmoothingRadius, this),
         false
     );
 }

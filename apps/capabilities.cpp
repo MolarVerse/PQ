@@ -24,11 +24,12 @@
 
 #include <climits>
 #include <cmath>
-#include <cstddef>
 #include <cstdint>
 #include <iomanip>
+#include <initializer_list>
 #include <limits>
 #include <ostream>
+#include <string_view>
 
 #include "constants/conversionFactors.hpp"
 #include "defaults.hpp"
@@ -47,71 +48,259 @@ namespace
     constexpr bool _STATIC_                = PQ_BUILD_STATIC;
     constexpr bool _WITH_SINGULARITY_      = PQ_BUILD_WITH_SINGULARITY;
 
-    void writeExternalQMCapabilities(std::ostream &output)
+    void writeStringArray(
+        cli::JsonWriter &json,
+        const std::string_view key,
+        const std::initializer_list<std::string_view> values
+    )
     {
-        output << "    \"external_qm\": {\n"
-               << "      \"script_mode\": \""
-               << ((_STATIC_ || _WITH_SINGULARITY_) ? "full_path_only"
-                                                    : "bundled_or_full_path")
-               << "\",\n"
-               << "      \"programs\": {\n";
+        json.beginArray(key);
+        for (const auto value : values) json.value(value);
+        json.endArray();
+    }
 
-        for (std::size_t methodIndex = 0;
-             methodIndex < cli::externalQMMethods.size();
-             ++methodIndex)
+    void beginParameter(
+        cli::JsonWriter       &json,
+        const std::string_view name,
+        const std::string_view type,
+        const std::string_view unit = ""
+    )
+    {
+        json.beginObject(name);
+        json.value("type", type);
+        if (!unit.empty()) json.value("unit", unit);
+    }
+
+    void writeBuildCapabilities(cli::JsonWriter &json)
+    {
+        json.beginObject("build");
+        json.value("ase", _WITH_ASE_);
+        json.value("mpi", _WITH_MPI_);
+        json.value("kokkos", _WITH_KOKKOS_);
+        json.value("python_bindings", _WITH_PYTHON_BINDINGS_);
+        json.value("python_embedding", _WITH_PYTHON_EMBEDDING_);
+        json.value("shared", _SHARED_);
+        json.value("static", _STATIC_);
+        json.value("singularity", _WITH_SINGULARITY_);
+        json.endObject();
+    }
+
+    void writeCliCapabilities(cli::JsonWriter &json)
+    {
+        json.beginObject("cli");
+        json.beginObject("input_validation");
+        json.value("schema", "pq.validation");
+        json.value("schema_version", 1);
+        writeStringArray(json, "formats", {"text", "json"});
+        writeStringArray(json, "scopes", {"portable", "installed"});
+        json.endObject();
+        json.endObject();
+    }
+
+    void writeExternalQMCapabilities(cli::JsonWriter &json)
+    {
+        json.beginObject("external_qm");
+        json.value(
+            "script_mode",
+            (_STATIC_ || _WITH_SINGULARITY_) ? "full_path_only"
+                                             : "bundled_or_full_path"
+        );
+        json.beginObject("programs");
+
+        for (const auto method : cli::externalQMMethods)
         {
-            const auto method = cli::externalQMMethods[methodIndex];
-            output << "        ";
-            cli::writeJsonString(output, cli::externalQMProgramName(method));
-            output << ": {\n"
-                   << "          \"recommended_script\": ";
+            json.beginObject(cli::externalQMProgramName(method));
 
             const auto recommended = cli::recommendedExternalQMScript(method);
             if (recommended.empty())
-                output << "null";
+                json.value("recommended_script", nullptr);
             else
-                cli::writeJsonString(output, recommended);
+                json.value("recommended_script", recommended);
 
-            output << ",\n"
-                   << "          \"scripts\": [\n";
-
-            const auto scripts = cli::externalQMScripts(method);
-            for (std::size_t scriptIndex = 0; scriptIndex < scripts.size();
-                 ++scriptIndex)
+            json.beginArray("scripts");
+            for (const auto &script : cli::externalQMScripts(method))
             {
-                const auto &script = scripts[scriptIndex];
-                output << "            {\"name\": ";
-                cli::writeJsonString(output, script.name);
-                output << ", \"label\": ";
-                cli::writeJsonString(output, script.label);
+                json.beginObject();
+                json.value("name", script.name);
+                json.value("label", script.label);
 
                 if (!script.requiredFileKeyword.empty())
-                {
-                    output << ", \"required_file_keywords\": [";
-                    cli::writeJsonString(output, script.requiredFileKeyword);
-                    output << ']';
-                }
+                    writeStringArray(
+                        json,
+                        "required_file_keywords",
+                        {script.requiredFileKeyword}
+                    );
 
                 if (!script.requiredWorkingFile.empty())
-                {
-                    output << ", \"required_working_files\": [";
-                    cli::writeJsonString(output, script.requiredWorkingFile);
-                    output << ']';
-                }
+                    writeStringArray(
+                        json,
+                        "required_working_files",
+                        {script.requiredWorkingFile}
+                    );
 
-                output << '}'
-                       << (scriptIndex + 1 == scripts.size() ? "\n" : ",\n");
+                json.endObject();
             }
-
-            output << "          ]\n"
-                   << "        }"
-                   << (methodIndex + 1 == cli::externalQMMethods.size()
-                           ? "\n"
-                           : ",\n");
+            json.endArray();
+            json.endObject();
         }
 
-        output << "      }\n"
-               << "    }";
+        json.endObject();
+        json.endObject();
+    }
+
+    void writeParameters(cli::JsonWriter &json)
+    {
+        json.beginObject("parameters");
+
+        beginParameter(json, "nstep", "integer");
+        json.value("minimum", 1);
+        json.value("maximum", INT_MAX);
+        json.endObject();
+
+        beginParameter(json, "timestep", "number", "fs");
+        json.value("exclusive_minimum", 0);
+        json.endObject();
+
+        beginParameter(json, "output_freq", "integer");
+        json.value("minimum", 0);
+        json.value("maximum", INT_MAX);
+        json.endObject();
+
+        beginParameter(json, "random_seed", "integer");
+        json.value("minimum", 0);
+        json.value("maximum", UINT32_MAX);
+        json.endObject();
+
+        for (const auto name : {"temp", "start_temp", "end_temp"})
+        {
+            beginParameter(json, name, "number", "K");
+            json.value("minimum", 0);
+            json.endObject();
+        }
+
+        beginParameter(json, "temp_ramp_steps", "integer");
+        json.value("minimum", 0);
+        json.value("maximum", INT_MAX);
+        json.endObject();
+
+        beginParameter(json, "temp_ramp_frequency", "integer");
+        json.value("minimum", 1);
+        json.value("maximum", INT_MAX);
+        json.endObject();
+
+        beginParameter(json, "t_relaxation", "number", "ps");
+        json.value("exclusive_minimum", 0);
+        json.value(
+            "maximum",
+            std::numeric_limits<double>::max() / constants::_PS_TO_FS_
+        );
+        json.beginObject("minimum_from");
+        json.value("parameter", "timestep");
+        json.value("factor", 0.001);
+        json.endObject();
+        json.value("default", defaults::_BERENDSEN_THERMOSTAT_RELAX_TIME_);
+        json.endObject();
+
+        beginParameter(json, "friction", "number", "ps^-1");
+        json.value("minimum", 0);
+        json.value("maximum", std::numeric_limits<double>::max() / 1.0e12);
+        json.value(
+            "default",
+            defaults::_LANGEVIN_THERMOSTAT_FRICTION_ / 1.0e12
+        );
+        json.endObject();
+
+        beginParameter(json, "nh-chain_length", "integer");
+        json.value("minimum", 1);
+        json.value("maximum", INT_MAX);
+        json.value("default", defaults::_NH_CHAIN_LENGTH_DEFAULT_);
+        json.endObject();
+
+        beginParameter(json, "coupling_frequency", "number", "cm^-1");
+        json.value("minimum", 0);
+        json.value(
+            "maximum",
+            std::sqrt(std::numeric_limits<double>::max()) /
+                constants::_PER_CM_TO_HZ_
+        );
+        json.value("default", defaults::_NH_COUPLING_FREQ_);
+        json.endObject();
+
+        beginParameter(json, "pressure", "number", "bar");
+        json.endObject();
+
+        beginParameter(json, "p_relaxation", "number", "ps");
+        json.value("exclusive_minimum", 0);
+        json.value(
+            "maximum",
+            std::numeric_limits<double>::max() / constants::_PS_TO_FS_
+        );
+        json.beginObject("minimum_from");
+        json.value("parameter", "timestep");
+        json.value("factor", 0.001);
+        json.endObject();
+        json.value("default", defaults::_BERENDSEN_MANOSTAT_RELAX_TIME_);
+        json.endObject();
+
+        beginParameter(json, "compressibility", "number", "bar^-1");
+        json.value("minimum", 0);
+        json.value("default", defaults::_COMPRESSIBILITY_WATER_DEFAULT_);
+        json.endObject();
+
+        beginParameter(json, "density", "number", "kg/L");
+        json.value("exclusive_minimum", 0);
+        json.endObject();
+
+        beginParameter(json, "rcoulomb", "number", "angstrom");
+        json.value("minimum", 0);
+        json.value("default", defaults::_COULOMB_CUT_OFF_DEFAULT_);
+        json.endObject();
+
+        json.endObject();
+    }
+
+    void writeInputCapabilities(cli::JsonWriter &json)
+    {
+        json.beginObject("input");
+        writeStringArray(
+            json,
+            "job_types",
+            {"mm-md", "mm-hessian", "mm-opt", "qm-md", "qm-rpmd"}
+        );
+
+        json.beginArray("qm_programs");
+        for (const auto program : {"dftbplus", "pyscf", "turbomole"})
+            json.value(program);
+        if (_WITH_ASE_)
+            for (const auto program : {
+                     "ase_dftbplus",
+                     "ase_xtb",
+                     "fennol",
+                     "mace",
+                     "mace_mp",
+                     "mace_off"
+                 })
+                json.value(program);
+        json.endArray();
+
+        writeExternalQMCapabilities(json);
+        writeStringArray(
+            json,
+            "thermostats",
+            {"none", "berendsen", "velocity_rescaling", "langevin", "nh-chain"}
+        );
+        writeStringArray(
+            json,
+            "manostats",
+            {"none", "berendsen", "stochastic_rescaling"}
+        );
+        writeStringArray(
+            json,
+            "pressure_isotropies",
+            {"isotropic", "xy", "xz", "yz", "anisotropic", "full_anisotropic"}
+        );
+        writeParameters(json);
+        json.endObject();
     }
 }   // namespace
 
@@ -124,150 +313,18 @@ void cli::writeCapabilities(std::ostream &output)
 {
     const auto flags     = output.flags();
     const auto precision = output.precision();
-    output << std::boolalpha
-           << std::setprecision(std::numeric_limits<double>::max_digits10);
+    output << std::setprecision(std::numeric_limits<double>::max_digits10);
 
-    output << "{\n"
-           << "  \"schema\": \"pq.capabilities\",\n"
-           << "  \"schema_version\": 1,\n"
-           << "  \"version\": ";
-    writeJsonString(output, sysinfo::_VERSION_);
-    output << ",\n"
-           << "  \"build\": {\n"
-           << "    \"ase\": " << _WITH_ASE_ << ",\n"
-           << "    \"mpi\": " << _WITH_MPI_ << ",\n"
-           << "    \"kokkos\": " << _WITH_KOKKOS_ << ",\n"
-           << "    \"python_bindings\": " << _WITH_PYTHON_BINDINGS_ << ",\n"
-           << "    \"python_embedding\": " << _WITH_PYTHON_EMBEDDING_ << ",\n"
-           << "    \"shared\": " << _SHARED_ << ",\n"
-           << "    \"static\": " << _STATIC_ << ",\n"
-           << "    \"singularity\": " << _WITH_SINGULARITY_ << "\n"
-           << "  },\n"
-           << "  \"cli\": {\n"
-           << "    \"input_validation\": {\n"
-           << "      \"schema\": \"pq.validation\",\n"
-           << "      \"schema_version\": 1,\n"
-           << "      \"formats\": [\"text\", \"json\"],\n"
-           << "      \"scopes\": [\"portable\", \"installed\"]\n"
-           << "    }\n"
-           << "  },\n"
-           << "  \"input\": {\n"
-           << "    \"job_types\": [\n"
-           << "      \"mm-md\", \"mm-hessian\", \"mm-opt\", \"qm-md\", "
-              "\"qm-rpmd\"\n"
-           << "    ],\n"
-           << "    \"qm_programs\": [\n"
-           << "      \"dftbplus\", \"pyscf\", \"turbomole\"";
-    if (_WITH_ASE_)
-        output << ", \"ase_dftbplus\", \"ase_xtb\", \"fennol\", \"mace\", "
-                  "\"mace_mp\", \"mace_off\"";
-    output << "\n"
-           << "    ],\n";
-    writeExternalQMCapabilities(output);
-    output << ",\n"
-           << "    \"thermostats\": [\n"
-           << "      \"none\", \"berendsen\", \"velocity_rescaling\", "
-              "\"langevin\", \"nh-chain\"\n"
-           << "    ],\n"
-           << "    \"manostats\": [\n"
-           << "      \"none\", \"berendsen\", \"stochastic_rescaling\"\n"
-           << "    ],\n"
-           << "    \"pressure_isotropies\": [\n"
-           << "      \"isotropic\", \"xy\", \"xz\", \"yz\", "
-              "\"anisotropic\", \"full_anisotropic\"\n"
-           << "    ],\n"
-           << "    \"parameters\": {\n"
-           << "      \"nstep\": {\n"
-           << "        \"type\": \"integer\", \"minimum\": 1, \"maximum\": "
-           << INT_MAX << "\n"
-           << "      },\n"
-           << "      \"timestep\": {\n"
-           << "        \"type\": \"number\", \"unit\": \"fs\", "
-              "\"exclusive_minimum\": 0\n"
-           << "      },\n"
-           << "      \"output_freq\": {\n"
-           << "        \"type\": \"integer\", \"minimum\": 0, \"maximum\": "
-           << INT_MAX << "\n"
-           << "      },\n"
-           << "      \"random_seed\": {\n"
-           << "        \"type\": \"integer\", \"minimum\": 0, "
-              "\"maximum\": "
-           << UINT32_MAX << "\n"
-           << "      },\n"
-           << "      \"temp\": {\n"
-           << "        \"type\": \"number\", \"unit\": \"K\", "
-              "\"minimum\": 0\n"
-           << "      },\n"
-           << "      \"start_temp\": {\n"
-           << "        \"type\": \"number\", \"unit\": \"K\", "
-              "\"minimum\": 0\n"
-           << "      },\n"
-           << "      \"end_temp\": {\n"
-           << "        \"type\": \"number\", \"unit\": \"K\", "
-              "\"minimum\": 0\n"
-           << "      },\n"
-           << "      \"temp_ramp_steps\": {\n"
-           << "        \"type\": \"integer\", \"minimum\": 0, \"maximum\": "
-           << INT_MAX << "\n"
-           << "      },\n"
-           << "      \"temp_ramp_frequency\": {\n"
-           << "        \"type\": \"integer\", \"minimum\": 1, \"maximum\": "
-           << INT_MAX << "\n"
-           << "      },\n"
-           << "      \"t_relaxation\": {\n"
-           << "        \"type\": \"number\", \"unit\": \"ps\", "
-              "\"exclusive_minimum\": 0, \"maximum\": "
-           << std::numeric_limits<double>::max() / constants::_PS_TO_FS_
-           << ", \"minimum_from\": {\"parameter\": \"timestep\", "
-              "\"factor\": 0.001}, \"default\": "
-           << defaults::_BERENDSEN_THERMOSTAT_RELAX_TIME_ << "\n"
-           << "      },\n"
-           << "      \"friction\": {\n"
-           << "        \"type\": \"number\", \"unit\": \"ps^-1\", "
-              "\"minimum\": 0, \"maximum\": "
-           << std::numeric_limits<double>::max() / 1.0e12 << ", \"default\": "
-           << defaults::_LANGEVIN_THERMOSTAT_FRICTION_ / 1.0e12 << "\n"
-           << "      },\n"
-           << "      \"nh-chain_length\": {\n"
-           << "        \"type\": \"integer\", \"minimum\": 1, \"maximum\": "
-           << INT_MAX
-           << ", \"default\": " << defaults::_NH_CHAIN_LENGTH_DEFAULT_ << "\n"
-           << "      },\n"
-           << "      \"coupling_frequency\": {\n"
-           << "        \"type\": \"number\", \"unit\": \"cm^-1\", "
-              "\"minimum\": 0, \"maximum\": "
-           << std::sqrt(std::numeric_limits<double>::max()) /
-                  constants::_PER_CM_TO_HZ_
-           << ", \"default\": " << defaults::_NH_COUPLING_FREQ_ << "\n"
-           << "      },\n"
-           << "      \"pressure\": {\n"
-           << "        \"type\": \"number\", \"unit\": \"bar\"\n"
-           << "      },\n"
-           << "      \"p_relaxation\": {\n"
-           << "        \"type\": \"number\", \"unit\": \"ps\", "
-              "\"exclusive_minimum\": 0, \"maximum\": "
-           << std::numeric_limits<double>::max() / constants::_PS_TO_FS_
-           << ", \"minimum_from\": {\"parameter\": \"timestep\", "
-              "\"factor\": 0.001}, \"default\": "
-           << defaults::_BERENDSEN_MANOSTAT_RELAX_TIME_ << "\n"
-           << "      },\n"
-           << "      \"compressibility\": {\n"
-           << "        \"type\": \"number\", \"unit\": \"bar^-1\", "
-              "\"minimum\": 0, \"default\": "
-           << defaults::_COMPRESSIBILITY_WATER_DEFAULT_ << "\n"
-           << "      },\n"
-           << "      \"density\": {\n"
-           << "        \"type\": \"number\", \"unit\": \"kg/L\", "
-              "\"exclusive_minimum\": 0\n"
-           << "      },\n"
-           << "      \"rcoulomb\": {\n"
-           << "        \"type\": \"number\", \"unit\": \"angstrom\", "
-              "\"minimum\": 0, \"default\": "
-           << defaults::_COULOMB_CUT_OFF_DEFAULT_ << "\n"
-           << "      }\n"
-           << "    }\n"
-           << "  }\n"
-           << "}\n";
+    auto json = JsonWriter(output);
+    json.beginObject();
+    json.value("schema", "pq.capabilities");
+    json.value("schema_version", 1);
+    json.value("version", sysinfo::_VERSION_);
+    writeBuildCapabilities(json);
+    writeCliCapabilities(json);
+    writeInputCapabilities(json);
+    json.endObject();
+    output << '\n';
 
     output.flags(flags);
     output.precision(precision);

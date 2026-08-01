@@ -1,0 +1,1 @@
+- Make native optimizations and link-time optimization configurable, and use available compiler caches and faster linkers automatically.

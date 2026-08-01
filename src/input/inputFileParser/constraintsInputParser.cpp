@@ -24,13 +24,13 @@
 
 #include <cstddef>       // for size_t
 #include <format>        // for format
-#include <functional>    // for _Bind_front_t, bind_front
 #include <string_view>   // for string_view
 
 #include "constraintSettings.hpp"   // for ConstraintSettings
 #include "constraints.hpp"          // for Constraints
 #include "engine.hpp"               // for Engine
 #include "exceptions.hpp"           // for InputFileException
+#include "parserUtils.hpp"
 #include "references.hpp"           // for ReferencesOutput
 #include "referencesOutput.hpp"     // for ReferencesOutput
 #include "stringUtilities.hpp"      // for stringToFiniteDouble, stringToInt
@@ -57,43 +57,43 @@ ConstraintsInputParser::ConstraintsInputParser(Engine &engine)
 {
     addKeyword(
         std::string("shake"),
-        bind_front(&ConstraintsInputParser::parseShakeActivated, this),
+        bindMember(&ConstraintsInputParser::parseShakeActivated, this),
         false
     );
     addKeyword(
         std::string("shake-tolerance"),
-        bind_front(&ConstraintsInputParser::parseShakeTolerance, this),
+        bindMember(&ConstraintsInputParser::parseShakeTolerance, this),
         false
     );
     addKeyword(
         std::string("shake-iter"),
-        bind_front(&ConstraintsInputParser::parseShakeIteration, this),
+        bindMember(&ConstraintsInputParser::parseShakeIteration, this),
         false
     );
     addKeyword(
         std::string("rattle-iter"),
-        bind_front(&ConstraintsInputParser::parseRattleIteration, this),
+        bindMember(&ConstraintsInputParser::parseRattleIteration, this),
         false
     );
     addKeyword(
         std::string("rattle-tolerance"),
-        bind_front(&ConstraintsInputParser::parseRattleTolerance, this),
+        bindMember(&ConstraintsInputParser::parseRattleTolerance, this),
         false
     );
     addKeyword(
         std::string("mshake-tolerance"),
-        bind_front(&ConstraintsInputParser::parseMShakeTolerance, this),
+        bindMember(&ConstraintsInputParser::parseMShakeTolerance, this),
         false
     );
     addKeyword(
         std::string("mshake-iter"),
-        bind_front(&ConstraintsInputParser::parseMShakeIteration, this),
+        bindMember(&ConstraintsInputParser::parseMShakeIteration, this),
         false
     );
 
     addKeyword(
         std::string("distance-constraints"),
-        bind_front(
+        bindMember(
             &ConstraintsInputParser::parseDistanceConstraintActivated,
             this
         ),

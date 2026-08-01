@@ -23,14 +23,14 @@
 #include "QMInputParser.hpp"
 
 #include <format>          // for format
-#include <functional>      // for _Bind_front_t, bind_front
 #include <sstream>         // for stringstream
 #include <stdexcept>       // for invalid_argument, out_of_range
 #include <unordered_map>   // for unordered_map
 
-#include "engine.hpp"             // for Engine
-#include "exceptions.hpp"         // for InputFileException, customException
-#include "hubbardDerivMap.hpp"    // for hubbardDerivMap3ob
+#include "engine.hpp"            // for Engine
+#include "exceptions.hpp"        // for InputFileException, customException
+#include "hubbardDerivMap.hpp"   // for hubbardDerivMap3ob
+#include "parserUtils.hpp"
 #include "qmSettings.hpp"         // for Settings
 #include "references.hpp"         // for ReferencesOutput
 #include "referencesOutput.hpp"   // for ReferencesOutput
@@ -43,6 +43,7 @@ using namespace customException;
 using namespace engine;
 using namespace references;
 using namespace constants;
+
 /**
  * @brief Construct a new QMInputParser:: QMInputParser object
  *
@@ -62,103 +63,103 @@ QMInputParser::QMInputParser(
 {
     addKeyword(
         std::string("qm_prog"),
-        bind_front(&QMInputParser::parseQMMethod, this),
+        bindMember(&QMInputParser::parseQMMethod, this),
         false
     );
 
     addKeyword(
         std::string("qm_script"),
-        bind_front(&QMInputParser::parseQMScript, this),
+        bindMember(&QMInputParser::parseQMScript, this),
         false
     );
 
     addKeyword(
         std::string("qm_script_full_path"),
-        bind_front(&QMInputParser::parseQMScriptFullPath, this),
+        bindMember(&QMInputParser::parseQMScriptFullPath, this),
         false
     );
 
     addKeyword(
         std::string("qm_loop_time_limit"),
-        bind_front(&QMInputParser::parseQMLoopTimeLimit, this),
+        bindMember(&QMInputParser::parseQMLoopTimeLimit, this),
         false
     );
 
     addKeyword(
         std::string("dispersion"),
-        bind_front(&QMInputParser::parseDispersion, this),
+        bindMember(&QMInputParser::parseDispersion, this),
         false
     );
 
     addKeyword(
         std::string("remove_net_force"),
-        bind_front(&QMInputParser::parseRemoveNetForce, this),
+        bindMember(&QMInputParser::parseRemoveNetForce, this),
         false
     );
 
     addKeyword(
         std::string("mace_model_size"),
-        bind_front(&QMInputParser::parseMaceModel, this),
+        bindMember(&QMInputParser::parseMaceModel, this),
         false
     );
 
     addKeyword(
         std::string("mace_model"),
-        bind_front(&QMInputParser::parseMaceModel, this),
+        bindMember(&QMInputParser::parseMaceModel, this),
         false
     );
 
     addKeyword(
         std::string("mace_mode"),
-        bind_front(&QMInputParser::parseMaceMode, this),
+        bindMember(&QMInputParser::parseMaceMode, this),
         false
     );
 
     addKeyword(
         std::string("mace_model_path"),
-        bind_front(&QMInputParser::parseMaceModelPath, this),
+        bindMember(&QMInputParser::parseMaceModelPath, this),
         false
     );
 
     addKeyword(
         std::string("slakos"),
-        bind_front(&QMInputParser::parseSlakosType, this),
+        bindMember(&QMInputParser::parseSlakosType, this),
         false
     );
 
     addKeyword(
         std::string("slakos_path"),
-        bind_front(&QMInputParser::parseSlakosPath, this),
+        bindMember(&QMInputParser::parseSlakosPath, this),
         false
     );
 
     addKeyword(
         std::string("third_order"),
-        bind_front(&QMInputParser::parseThirdOrder, this),
+        bindMember(&QMInputParser::parseThirdOrder, this),
         false
     );
 
     addKeyword(
         std::string("hubbard_derivs"),
-        bind_front(&QMInputParser::parseHubbardDerivs, this),
+        bindMember(&QMInputParser::parseHubbardDerivs, this),
         false
     );
 
     addKeyword(
         std::string("xtb_method"),
-        bind_front(&QMInputParser::parseXtbMethod, this),
+        bindMember(&QMInputParser::parseXtbMethod, this),
         false
     );
 
     addKeyword(
         std::string("fennol_model_path"),
-        bind_front(&QMInputParser::parseFennolModelPath, this),
+        bindMember(&QMInputParser::parseFennolModelPath, this),
         false
     );
 
     addKeyword(
         std::string("gpu_preprocessing"),
-        bind_front(&QMInputParser::parseGPUPreprocessing, this),
+        bindMember(&QMInputParser::parseGPUPreprocessing, this),
         false
     );
 }

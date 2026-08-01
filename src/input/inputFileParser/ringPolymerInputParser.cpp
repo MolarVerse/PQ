@@ -22,10 +22,10 @@
 
 #include "ringPolymerInputParser.hpp"
 
-#include <format>       // for format
-#include <functional>   // for _Bind_front_t, bind_front
+#include <format>   // for format
 
-#include "exceptions.hpp"            // for InputFileException, customException
+#include "exceptions.hpp"   // for InputFileException, customException
+#include "parserUtils.hpp"
 #include "ringPolymerSettings.hpp"   // for RingPolymerSettings
 #include "stringUtilities.hpp"       // for stringToInt
 
@@ -48,7 +48,7 @@ RingPolymerInputParser::RingPolymerInputParser(Engine &engine)
 {
     addKeyword(
         std::string("rpmd_n_replica"),
-        bind_front(&RingPolymerInputParser::parseNumberOfBeads, this),
+        bindMember(&RingPolymerInputParser::parseNumberOfBeads, this),
         false
     );
 }
