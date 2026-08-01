@@ -24,12 +24,86 @@
 
 #define _JSON_OUTPUT_HPP_
 
-#include <iosfwd>
+#include <concepts>
+#include <cstddef>
+#include <ostream>
 #include <string_view>
+#include <type_traits>
+#include <vector>
 
 namespace cli
 {
     void writeJsonString(std::ostream &output, std::string_view value);
+
+    class JsonWriter
+    {
+       private:
+        enum class ContainerType
+        {
+            OBJECT,
+            ARRAY
+        };
+
+        struct Context
+        {
+            ContainerType type;
+            bool          empty = true;
+        };
+
+        std::ostream        &_output;
+        std::vector<Context> _contexts;
+        bool                 _wroteRoot = false;
+
+        void indent() const;
+        void beforeValue();
+        void beforeMember(std::string_view key);
+        void beginContainer(ContainerType type, char opening);
+        void beginContainer(
+            std::string_view key,
+            ContainerType   type,
+            char            opening
+        );
+        void endContainer(ContainerType type, char closing);
+
+       public:
+        explicit JsonWriter(std::ostream &output);
+
+        void beginObject();
+        void beginObject(std::string_view key);
+        void endObject();
+
+        void beginArray();
+        void beginArray(std::string_view key);
+        void endArray();
+
+        void value(std::string_view value);
+        void value(const char *value);
+        void value(bool value);
+        void value(double value);
+        void value(std::nullptr_t);
+
+        void value(std::string_view key, std::string_view value);
+        void value(std::string_view key, const char *value);
+        void value(std::string_view key, bool value);
+        void value(std::string_view key, double value);
+        void value(std::string_view key, std::nullptr_t);
+
+        template <std::integral T>
+        requires(!std::same_as<std::remove_cv_t<T>, bool>)
+        void value(const T value)
+        {
+            beforeValue();
+            _output << value;
+        }
+
+        template <std::integral T>
+        requires(!std::same_as<std::remove_cv_t<T>, bool>)
+        void value(const std::string_view key, const T value)
+        {
+            beforeMember(key);
+            _output << value;
+        }
+    };
 }
 
 #endif   // _JSON_OUTPUT_HPP_

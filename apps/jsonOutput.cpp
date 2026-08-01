@@ -24,6 +24,8 @@
 
 #include <iomanip>
 #include <ostream>
+#include <stdexcept>
+#include <string>
 
 void cli::writeJsonString(std::ostream &output, const std::string_view value)
 {
@@ -59,4 +61,178 @@ void cli::writeJsonString(std::ostream &output, const std::string_view value)
     }
 
     output << '"';
+}
+
+cli::JsonWriter::JsonWriter(std::ostream &output) : _output(output) {}
+
+void cli::JsonWriter::indent() const
+{
+    _output << std::string(_contexts.size() * 2, ' ');
+}
+
+void cli::JsonWriter::beforeValue()
+{
+    if (_contexts.empty())
+    {
+        if (_wroteRoot)
+            throw std::logic_error("JSON output already has a root value");
+
+        _wroteRoot = true;
+        return;
+    }
+
+    auto &context = _contexts.back();
+    if (ContainerType::ARRAY != context.type)
+        throw std::logic_error("JSON object values require a key");
+
+    if (!context.empty) _output << ',';
+    _output << '\n';
+    indent();
+    context.empty = false;
+}
+
+void cli::JsonWriter::beforeMember(const std::string_view key)
+{
+    if (_contexts.empty() || ContainerType::OBJECT != _contexts.back().type)
+        throw std::logic_error("JSON members require an object");
+
+    auto &context = _contexts.back();
+    if (!context.empty) _output << ',';
+    _output << '\n';
+    indent();
+    writeJsonString(_output, key);
+    _output << ": ";
+    context.empty = false;
+}
+
+void cli::JsonWriter::beginContainer(
+    const ContainerType type,
+    const char          opening
+)
+{
+    beforeValue();
+    _output << opening;
+    _contexts.emplace_back(type);
+}
+
+void cli::JsonWriter::beginContainer(
+    const std::string_view key,
+    const ContainerType   type,
+    const char            opening
+)
+{
+    beforeMember(key);
+    _output << opening;
+    _contexts.emplace_back(type);
+}
+
+void cli::JsonWriter::endContainer(
+    const ContainerType type,
+    const char          closing
+)
+{
+    if (_contexts.empty() || type != _contexts.back().type)
+        throw std::logic_error("Mismatched JSON container");
+
+    const auto empty = _contexts.back().empty;
+    _contexts.pop_back();
+
+    if (!empty)
+    {
+        _output << '\n';
+        indent();
+    }
+
+    _output << closing;
+}
+
+void cli::JsonWriter::beginObject()
+{
+    beginContainer(ContainerType::OBJECT, '{');
+}
+
+void cli::JsonWriter::beginObject(const std::string_view key)
+{
+    beginContainer(key, ContainerType::OBJECT, '{');
+}
+
+void cli::JsonWriter::endObject()
+{
+    endContainer(ContainerType::OBJECT, '}');
+}
+
+void cli::JsonWriter::beginArray()
+{
+    beginContainer(ContainerType::ARRAY, '[');
+}
+
+void cli::JsonWriter::beginArray(const std::string_view key)
+{
+    beginContainer(key, ContainerType::ARRAY, '[');
+}
+
+void cli::JsonWriter::endArray()
+{
+    endContainer(ContainerType::ARRAY, ']');
+}
+
+void cli::JsonWriter::value(const std::string_view value)
+{
+    beforeValue();
+    writeJsonString(_output, value);
+}
+
+void cli::JsonWriter::value(const char *value)
+{
+    this->value(std::string_view(value));
+}
+
+void cli::JsonWriter::value(const bool value)
+{
+    beforeValue();
+    _output << (value ? "true" : "false");
+}
+
+void cli::JsonWriter::value(const double value)
+{
+    beforeValue();
+    _output << value;
+}
+
+void cli::JsonWriter::value(std::nullptr_t)
+{
+    beforeValue();
+    _output << "null";
+}
+
+void cli::JsonWriter::value(
+    const std::string_view key,
+    const std::string_view value
+)
+{
+    beforeMember(key);
+    writeJsonString(_output, value);
+}
+
+void cli::JsonWriter::value(const std::string_view key, const char *value)
+{
+    this->value(key, std::string_view(value));
+}
+
+void cli::JsonWriter::value(const std::string_view key, const bool value)
+{
+    beforeMember(key);
+    _output << (value ? "true" : "false");
+}
+
+void cli::JsonWriter::value(const std::string_view key, const double value)
+{
+    beforeMember(key);
+    _output << value;
+}
+
+void cli::JsonWriter::value(const std::string_view key, std::nullptr_t)
+{
+    beforeMember(key);
+    _output << "null";
 }
