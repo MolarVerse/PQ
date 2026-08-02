@@ -28,8 +28,8 @@
 
 #include <memory>   // for __shared_ptr_access, shared_ptr, make_shared
 
-#include "atom.hpp"              // for Atom
-#include "integrator.hpp"        // for Integrator, VelocityVerlet
+#include "atom.hpp"   // for Atom
+#include "integrator.hpp"
 #include "molecule.hpp"          // for Molecule
 #include "simulationBox.hpp"     // for SimulationBox
 #include "timingsSettings.hpp"   // for TimingsSettings
