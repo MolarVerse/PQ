@@ -141,7 +141,7 @@ void OptimizerSettings::setLearningRateStrategy(const std::string_view &method)
  */
 void OptimizerSettings::setLearningRateStrategy(const LREnum method)
 {
-    _LRStrategy = method;
+    _lRStrategy = method;
 }
 
 /**
@@ -161,7 +161,7 @@ void OptimizerSettings::setNumberOfEpochs(const size_t nEpochs)
  */
 void OptimizerSettings::setLRUpdateFrequency(const size_t frequency)
 {
-    _LRupdateFrequency = frequency;
+    _lRupdateFrequency = frequency;
 }
 
 /**
@@ -222,7 +222,7 @@ settings::OptimizerType OptimizerSettings::getOptimizer() { return _optimizer; }
  *
  * @return LearningRateStrategy
  */
-LREnum OptimizerSettings::getLearningRateStrategy() { return _LRStrategy; }
+LREnum OptimizerSettings::getLearningRateStrategy() { return _lRStrategy; }
 
 /**
  * @brief returns the number of epochs
@@ -236,7 +236,7 @@ size_t OptimizerSettings::getNumberOfEpochs() { return _nEpochs; }
  *
  * @return size_t
  */
-size_t OptimizerSettings::getLRUpdateFrequency() { return _LRupdateFrequency; }
+size_t OptimizerSettings::getLRUpdateFrequency() { return _lRupdateFrequency; }
 
 /**
  * @brief returns the initial learning rate

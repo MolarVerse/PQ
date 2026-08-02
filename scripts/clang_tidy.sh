@@ -2,6 +2,12 @@
 set -o pipefail
 
 LOGFILE="clangd-tidy-report.log"
+
+# check if log file exists and make a backup if it does
+if [[ -f "$LOGFILE" ]]; then
+    mv "$LOGFILE" "${LOGFILE}.bak"
+fi
+
 # Only stdout goes to the log file; stderr (where --tqdm draws its
 # progress bar via carriage returns) stays on the terminal only, so
 # the log file doesn't fill up with \r-based redraw noise.
@@ -55,4 +61,4 @@ if [[ ${#files[@]} -eq 0 ]]; then
 fi
 
 echo "  Files: ${#files[@]}"
-clangd-tidy "${files[@]}" -p=. --tqdm -j3
+clangd-tidy "${files[@]}" -p=. --tqdm -j1

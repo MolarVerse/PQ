@@ -28,7 +28,6 @@
 #include "constraintSettings.hpp"   // for ConstraintSettings
 #include "distanceKernels.hpp"      // for distVecAndDist2
 #include "mShakeReference.hpp"      // for MShakeReference
-#include "mShakeReference.hpp"      // for MShakeReference
 #include "mathUtilities.hpp"        // for dot
 #include "matrix.hpp"               // for Matrix
 #include "simulationBox.hpp"        // for SimulationBox
@@ -138,7 +137,7 @@ void MShake::applyMShake(SimulationBox &simBox)
     const auto mShakeTolerance = ConstraintSettings::getMShakeTolerance();
     auto      &molecules       = simBox.getMolecules();
 
-    const auto dt          = TimingsSettings::getTimeStep() * _FS_TO_S_;
+    const auto dt          = TimingsSettings::getTimeStep() * FS_TO_S;
     const auto timeFactor  = 4.0 * dt * dt;
     const auto shakeFactor = 2.0 * dt * dt;
 

@@ -183,11 +183,13 @@ void SimulationBox::setupMMOnlyAtoms(const std::vector<int>& atomIndices)
         auto it = std::ranges::find(_qmAtoms, _atoms[(size_t) index]);
 
         if (it != _qmAtoms.end())
-            throw UserInputException(std::format(
-                "Ambiguous atom index {} - atom is already in QM only list "
-                "- cannot be in MM only list",
-                index
-            ));
+            throw UserInputException(
+                std::format(
+                    "Ambiguous atom index {} - atom is already in QM only list "
+                    "- cannot be in MM only list",
+                    index
+                )
+            );
     }
 }
 
@@ -284,11 +286,13 @@ std::pair<Molecule*, size_t> SimulationBox::findMoleculeByAtomIndex(
         }
     }
 
-    throw UserInputException(std::format(
-        "Atom index {} out of range - total number of atoms: {}",
-        atomIndex,
-        sum
-    ));
+    throw UserInputException(
+        std::format(
+            "Atom index {} out of range - total number of atoms: {}",
+            atomIndex,
+            sum
+        )
+    );
 }
 
 /**
@@ -340,10 +344,12 @@ void SimulationBox::setPartialChargesOfMoleculesFromMoleculeTypes()
             molecule.setPartialCharges(molType->getPartialCharges());
 
         else if (molecule.getMoltype() != 0)
-            throw UserInputException(std::format(
-                "Molecule type {} not found in molecule types",
-                molecule.getMoltype()
-            ));
+            throw UserInputException(
+                std::format(
+                    "Molecule type {} not found in molecule types",
+                    molecule.getMoltype()
+                )
+            );
     };
 
     std::ranges::for_each(_molecules, setPartialCharges);
@@ -600,7 +606,7 @@ double SimulationBox::calculateTemperature()
 
     std::ranges::for_each(_atoms, accumulateTemperature);
 
-    temperature *= _TEMPERATURE_FACTOR_ / double(_degreesOfFreedom);
+    temperature *= TEMPERATURE_FACTOR / double(_degreesOfFreedom);
 
     return temperature;
 }
@@ -612,7 +618,8 @@ double SimulationBox::calculateTemperature()
  * @throw UserInputException if coulomb radius cut off is larger than half of
  * the minimal box dimension
  */
-void SimulationBox::checkCoulRadiusCutOff(const ExceptionType exceptionType
+void SimulationBox::checkCoulRadiusCutOff(
+    const ExceptionType exceptionType
 ) const
 {
     const auto coulRadiusCutOff = PotentialSettings::getCoulombRadiusCutOff();
@@ -659,7 +666,7 @@ std::vector<std::string> SimulationBox::getUniqueQMAtomNames()
 void SimulationBox::calculateDensity()
 {
     const auto volume = _box->calculateVolume();
-    _density          = _totalMass / volume * _AMU_PER_ANGSTROM3_TO_KG_PER_L_;
+    _density          = _totalMass / volume * AMU_PER_ANGSTROM3_TO_KG_PER_L;
 }
 
 /**

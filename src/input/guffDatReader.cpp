@@ -22,29 +22,29 @@
 
 #include "guffDatReader.hpp"
 
-#include <algorithm>    // for __for_each_fn, for_each
-#include <cmath>        // for sqrt
-#include <exception>    // for exception
-#include <format>       // for format
-#include <fstream>      // for basic_istream, std::ifstream, std
-#include <memory>       // for make_shared
-#include <ranges>       // for views::drop, for_each, ranges
+#include <algorithm>   // for __for_each_fn, for_each
+#include <cmath>       // for sqrt
+#include <exception>   // for exception
+#include <format>      // for format
+#include <fstream>     // for basic_istream, std::ifstream, std
+#include <memory>      // for make_shared
+#include <ranges>      // for views::drop, for_each, ranges
 
-#include "buckinghamPair.hpp"        // for BuckinghamPair
-#include "constants.hpp"             // for _COULOMB_PREFACTOR_
-#include "defaults.hpp"              // for _NUMBER_OF_GUFF_ENTRIES_
-#include "engine.hpp"                // for Engine
-#include "exceptions.hpp"            // for GuffDatException, InputFileException
-#include "fileSettings.hpp"          // for FileSettings
-#include "guffNonCoulomb.hpp"        // for GuffNonCoulomb
-#include "guffPair.hpp"              // for GuffPair
-#include "lennardJonesPair.hpp"      // for LennardJonesPair
-#include "mathUtilities.hpp"         // for sign, utilities
-#include "molecule.hpp"              // for Molecule
-#include "morsePair.hpp"             // for MorsePair
-#include "potentialSettings.hpp"     // for PotentialSettings
-#include "settings.hpp"              // for settings
-#include "simulationBox.hpp"         // for SimulationBox
+#include "buckinghamPair.hpp"      // for BuckinghamPair
+#include "constants.hpp"           // for _COULOMB_PREFACTOR_
+#include "defaults.hpp"            // for _NUMBER_OF_GUFF_ENTRIES_
+#include "engine.hpp"              // for Engine
+#include "exceptions.hpp"          // for GuffDatException, InputFileException
+#include "fileSettings.hpp"        // for FileSettings
+#include "guffNonCoulomb.hpp"      // for GuffNonCoulomb
+#include "guffPair.hpp"            // for GuffPair
+#include "lennardJonesPair.hpp"    // for LennardJonesPair
+#include "mathUtilities.hpp"       // for sign, utilities
+#include "molecule.hpp"            // for Molecule
+#include "morsePair.hpp"           // for MorsePair
+#include "potentialSettings.hpp"   // for PotentialSettings
+#include "settings.hpp"            // for settings
+#include "simulationBox.hpp"       // for SimulationBox
 #include "stringUtilities.hpp"   // for fileExists, getLineCommands, removeComments, splitString
 
 using namespace input::guffdat;
@@ -142,13 +142,13 @@ void GuffDatReader::read()
 
         auto lineCommands = getLineCommands(line, _lineNumber);
 
-        if (lineCommands.size() != _NUMBER_OF_GUFF_ENTRIES_)
+        if (lineCommands.size() != NUMBER_OF_GUFF_ENTRIES)
         {
             const auto message = std::format(
                 "Invalid number of commands ({}) in line {} - {} are allowed",
                 lineCommands.size(),
                 _lineNumber,
-                _NUMBER_OF_GUFF_ENTRIES_
+                NUMBER_OF_GUFF_ENTRIES
             );
             throw GuffDatException(message);
         }
@@ -378,10 +378,12 @@ void GuffDatReader::addNonCoulombPair(
         case LJ_9_12:
         case NONE:
         {
-            throw UserInputException(std::format(
-                "Invalid nonCoulombic type {} given",
-                string(PotentialSettings::getNonCoulombType())
-            ));
+            throw UserInputException(
+                std::format(
+                    "Invalid nonCoulombic type {} given",
+                    string(PotentialSettings::getNonCoulombType())
+                )
+            );
         }
     }
 }
@@ -644,7 +646,7 @@ void GuffDatReader::calculatePartialCharges()
             const auto coulombCoeff = _guffCoulombCoeffs[i][i][atomType][atomType];
             // clang-format on
 
-            const auto prefactor     = coulombCoeff / _COULOMB_PREFACTOR_;
+            const auto prefactor     = coulombCoeff / COULOMB_PREFACTOR;
             const auto prefactorSqrt = ::sqrt(prefactor);
             const auto prefactorSign = sign(moleculeType->getPartialCharge(j));
             const auto partialCharge = prefactorSqrt * prefactorSign;
@@ -707,23 +709,25 @@ void GuffDatReader::checkPartialCharges()
 
                     const auto coeff         = _guffCoulombCoeffs[i][j][k][l];
                     const auto chargeSquared = partialCharge1 * partialCharge2;
-                    const auto prefactor = chargeSquared * _COULOMB_PREFACTOR_;
+                    const auto prefactor = chargeSquared * COULOMB_PREFACTOR;
 
                     if (!compare(prefactor, coeff, 1e-6))
-                        throw GuffDatException(std::format(
-                            "Invalid coulomb coefficient guff file for "
-                            "molecule "
-                            "types {} and {} and the {}. and the {}. atom "
-                            "type. The coulomb "
-                            "coefficient should "
-                            "be {} but is {}",
-                            i + 1,
-                            j + 1,
-                            k + 1,
-                            l + 1,
-                            prefactor,
-                            coeff
-                        ));
+                        throw GuffDatException(
+                            std::format(
+                                "Invalid coulomb coefficient guff file for "
+                                "molecule "
+                                "types {} and {} and the {}. and the {}. atom "
+                                "type. The coulomb "
+                                "coefficient should "
+                                "be {} but is {}",
+                                i + 1,
+                                j + 1,
+                                k + 1,
+                                l + 1,
+                                prefactor,
+                                coeff
+                            )
+                        );
                 }
             }
         }
@@ -759,15 +763,18 @@ void GuffDatReader::checkNecessaryGuffPairs()
                                        [moleculeType1.getAtomType(atomIndex1)]
                                        [moleculeType2.getAtomType(atomIndex2)])
 
-                        throw GuffDatException(std::format(
-                            "No guff pair set for molecule types {} and {} and "
-                            "atom types {} and "
-                            "the {}",
-                            moleculeType1.getMoltype(),
-                            moleculeType2.getMoltype(),
-                            moleculeType1.getExternalAtomType(atomIndex1),
-                            moleculeType2.getExternalAtomType(atomIndex2)
-                        ));
+                        throw GuffDatException(
+                            std::format(
+                                "No guff pair set for molecule types {} and {} "
+                                "and "
+                                "atom types {} and "
+                                "the {}",
+                                moleculeType1.getMoltype(),
+                                moleculeType2.getMoltype(),
+                                moleculeType1.getExternalAtomType(atomIndex1),
+                                moleculeType2.getExternalAtomType(atomIndex2)
+                            )
+                        );
             }
         }
 }

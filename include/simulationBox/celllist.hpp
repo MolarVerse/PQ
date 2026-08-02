@@ -42,13 +42,13 @@ namespace simulationBox
     class CellList : public timings::Timer
     {
        private:
-        bool _activated = defaults::_CELL_LIST_IS_ACTIVE_DEFAULT_;
+        bool _activated = defaults::CELL_LIST_IS_ACTIVE_DEFAULT;
 
         std::vector<Cell> _cells;
 
         pq::Vec3D   _cellSize;
         pq::Vec3Dul _nNeighbourCells{0, 0, 0};
-        pq::Vec3Dul _nCells{defaults::_NUMBER_OF_CELLS_DEFAULT_};   // 7x7x7
+        pq::Vec3Dul _nCells{defaults::NUMBER_OF_CELLS_DEFAULT};   // 7x7x7
 
        public:
         [[nodiscard]] std::shared_ptr<CellList> clone() const;
@@ -65,8 +65,10 @@ namespace simulationBox
         void addMoleculesToCells(SimulationBox &simulationBox);
 
         [[nodiscard]] size_t getCellIndex(const pq::Vec3Dul &cellIndices) const;
-        [[nodiscard]] pq::Vec3Dul getCellIndexOfAtom(const pq::Vec3D &, const pq::Vec3D &)
-            const;
+        [[nodiscard]] pq::Vec3Dul getCellIndexOfAtom(
+            const pq::Vec3D &,
+            const pq::Vec3D &
+        ) const;
 
         void resizeCells();
         void addCell(const Cell &cell);
@@ -83,11 +85,11 @@ namespace simulationBox
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] pq::Vec3Dul       getNumberOfCells() const;
-        [[nodiscard]] pq::Vec3Dul       getNumberOfNeighbourCells() const;
-        [[nodiscard]] pq::Vec3D         getCellSize() const;
+        [[nodiscard]] pq::Vec3Dul getNumberOfCells() const;
+        [[nodiscard]] pq::Vec3Dul getNumberOfNeighbourCells() const;
+        [[nodiscard]] pq::Vec3D   getCellSize() const;
         [[nodiscard]] const std::vector<Cell> &getCells() const;
-        [[nodiscard]] Cell             &getCell(const size_t index);
+        [[nodiscard]] Cell                    &getCell(const size_t index);
 
         /***************************
          * standard setter methods *

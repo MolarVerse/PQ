@@ -38,7 +38,7 @@ std::pair<double, double> CoulombReactionField::calculate(
     const double chargeProduct
 ) const
 {
-    const auto coulombPrefactor = chargeProduct * _COULOMB_PREFACTOR_;
+    const auto coulombPrefactor = chargeProduct * COULOMB_PREFACTOR;
     const auto dInv             = 1.0 / dist;
     const auto deltaCutOff      = _coulombRadiusCutOff - dist;
     const auto rCutEnergy       = _coulombEnergyCutOff;
