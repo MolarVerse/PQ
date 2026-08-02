@@ -53,13 +53,13 @@ namespace timings
 
        public:
         explicit Timer(const std::string_view);
+        Timer() = default;
 
-        Timer()  = default;
-        ~Timer() = default;
+        [[nodiscard]]
+        const std::vector<TimingsSection>& getTimingDetails() const;
 
-        [[nodiscard]] std::vector<TimingsSection> getTimingDetails() const;
-        [[nodiscard]] double                      calculateElapsedTime() const;
-        [[nodiscard]] double                      calculateLoopTime() const;
+        [[nodiscard]] double calculateElapsedTime() const;
+        [[nodiscard]] double calculateLoopTime() const;
 
         [[nodiscard]] size_t findTimingsSectionIndex(
             const std::string_view name

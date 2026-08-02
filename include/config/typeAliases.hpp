@@ -24,7 +24,6 @@
 
 #define _TYPE_ALIASES_HPP_
 
-#include <chrono>       // for std::chrono
 #include <cstddef>      // for size_t
 #include <deque>        // for std::queue
 #include <functional>   // for std::function
@@ -34,7 +33,6 @@
 #include <string>       // for std::string
 #include <vector>       // for std::vector
 
-#include "../linearAlgebra/matrix.hpp"         // IWYU pragma: export
 #include "../linearAlgebra/staticMatrix.hpp"   // IWYU pragma: export
 #include "../linearAlgebra/vector3d.hpp"       // IWYU pragma: export
 
@@ -208,9 +206,6 @@ namespace input
 
 namespace pq
 {
-    using Time = std::chrono::time_point<std::chrono::high_resolution_clock>;
-    using Duration = std::chrono::duration<double>;
-
     using strings   = std::vector<std::string>;
     using stringSet = std::set<std::string>;
 
@@ -342,7 +337,6 @@ namespace pq
     using SharedNonCoulPairVec2d = std::vector<SharedNonCoulPairVec>;
     using SharedNonCoulPairVec3d = std::vector<SharedNonCoulPairVec2d>;
     using SharedNonCoulPairVec4d = std::vector<SharedNonCoulPairVec3d>;
-    using SharedNonCoulPairMat   = linearAlgebra::Matrix<SharedNonCoulPair>;
 
     /**************************
      * constraints namespace *

@@ -22,6 +22,7 @@
 
 #include "optimizerSetup.hpp"
 
+#include <format>
 #include <memory>
 
 #include "adam.hpp"
