@@ -1,1 +1,2 @@
+- remove `<chrono>` transient header from timer as it was included in every single TU at the moment
 - remove transient pybind headers from `AseRunners` to decrease compilation parsing time by about 5-6% (total speedup approx. 4%)

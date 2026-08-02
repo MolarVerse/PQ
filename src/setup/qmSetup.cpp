@@ -22,6 +22,7 @@
 
 #include "qmSetup.hpp"
 
+#include <format>        // for format
 #include <string_view>   // for string_view
 
 #include "exceptions.hpp"          // for InputFileException
@@ -108,7 +109,6 @@ void QMSetup::setupQMMethodAseDftbPlus()
     if (QMSettings::getSlakosType() == SlakosType::THREEOB &&
         !QMSettings::isThirdOrderDftbSet())
         QMSettings::setUseThirdOrderDftb(true);
-
 }
 
 /**
@@ -289,11 +289,14 @@ void QMSetup::setupWriteInfo() const
         logOutput.writeSetupInfo(modeMsg);
 
         if (maceMode == MaceMode::FAST)
-            logOutput.writeSetupInfo(std::format(
-                "                       cuequivariance-accelerated kernels; "
-                "results are not bit-identical to the e3nn reference "
-                "(use mace_mode = accurate for the exact reference)"
-            ));
+            logOutput.writeSetupInfo(
+                std::format(
+                    "                       cuequivariance-accelerated "
+                    "kernels; "
+                    "results are not bit-identical to the e3nn reference "
+                    "(use mace_mode = accurate for the exact reference)"
+                )
+            );
     }
 
     if (qmMethod == FENNOL)
