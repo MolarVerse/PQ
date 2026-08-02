@@ -92,7 +92,7 @@ TEST_F(TestIntegrator, firstStep)
     EXPECT_EQ(molecule.getAtomVelocity(0), linearAlgebra::Vec3D(0.0, 0.0, 0.0));
 
     auto velocities  = linearAlgebra::Vec3D(1.0, 2.0, 3.0);
-    velocities      += 0.1 * linearAlgebra::Vec3D(0.5, 1.5, 2.5) *
+    velocities       += 0.1 * linearAlgebra::Vec3D(0.5, 1.5, 2.5) *
                   constants::V_VERLET_VELOCITY_FACTOR;
 
     EXPECT_DOUBLE_EQ(molecule.getAtomVelocity(1)[0], velocities[0]);

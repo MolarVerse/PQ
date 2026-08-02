@@ -56,7 +56,7 @@ void setup::setupConstraints(Engine &engine)
  *
  * @param engine
  */
-ConstraintsSetup::ConstraintsSetup(Engine &engine) : _engine(engine){};
+ConstraintsSetup::ConstraintsSetup(Engine &engine) : _engine(engine) {}
 
 /**
  * @brief sets constraints data in constraints object
