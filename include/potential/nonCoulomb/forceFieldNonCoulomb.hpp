@@ -32,6 +32,11 @@
 
 class TestNonCoulombPotentialFF;   // forward declaration
 
+namespace benchSetup
+{
+    struct BenchNonCoulombFFPot;   // forward declaration
+}
+
 namespace potential
 {
     class ForceFieldNonCoulomb : public NonCoulombPotential
@@ -80,6 +85,7 @@ namespace potential
         [[nodiscard]] pq::SharedNonCoulPairVec &getNonCoulombPairsVector();
 
         friend class ::TestNonCoulombPotentialFF;
+        friend struct benchSetup::BenchNonCoulombFFPot;
 
         /***************************
          * standard setter methods *
