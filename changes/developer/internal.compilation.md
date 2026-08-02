@@ -1,2 +1,4 @@
 - remove `<chrono>` transient header from timer as it was included in every single TU at the moment
 - remove transient pybind headers from `AseRunners` to decrease compilation parsing time by about 5-6% (total speedup approx. 4%)
+- remove `matrix.hpp` dependency from `ForceFieldNonCoulomb` class as it was again included transitively in many many TUs
+- remove some useless public API functions from `ForceFieldNonCoulomb` class for easier maintainance as they were only used for testing

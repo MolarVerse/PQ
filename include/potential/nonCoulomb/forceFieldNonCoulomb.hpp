@@ -27,19 +27,30 @@
 #include <cstddef>   // for size_t
 #include <map>       // for map
 
-#include "matrix.hpp"
 #include "nonCoulombPotential.hpp"
 #include "typeAliases.hpp"
+
+class TestNonCoulombPotentialFF;   // forward declaration
 
 namespace potential
 {
     class ForceFieldNonCoulomb : public NonCoulombPotential
     {
        private:
-        pq::SharedNonCoulPairVec                     _nonCoulPairsVec;
-        linearAlgebra::Matrix<pq::SharedNonCoulPair> _nonCoulPairsMat;
+        pq::SharedNonCoulPairVec _nonCoulPairsVec;
+
+        struct matrix;
+        std::unique_ptr<matrix> _nonCoulPairsMatPtr;
 
        public:
+        ForceFieldNonCoulomb();
+        ~ForceFieldNonCoulomb() override;
+
+        ForceFieldNonCoulomb(const ForceFieldNonCoulomb &);
+        ForceFieldNonCoulomb &operator=(const ForceFieldNonCoulomb &);
+        ForceFieldNonCoulomb(ForceFieldNonCoulomb &&);
+        ForceFieldNonCoulomb &operator=(ForceFieldNonCoulomb &&);
+
         void setupNonCoulombicCutoffs();
         void determineInternalGlobalVdwTypes(const std::map<size_t, size_t> &);
         void fillDiagOfNonCoulPairsMatrix(pq::SharedNonCoulPairVec &);
@@ -68,28 +79,15 @@ namespace potential
         [[nodiscard]] size_t getGlobalVdwType2(const pq::stlVectorUL &) const;
         [[nodiscard]] pq::SharedNonCoulPairVec &getNonCoulombPairsVector();
 
-        [[nodiscard]]
-        linearAlgebra::Matrix<pq::SharedNonCoulPair> &getNonCoulombPairsMatrix(
-        );
+        friend class ::TestNonCoulombPotentialFF;
 
         /***************************
          * standard setter methods *
          ***************************/
 
         void setNonCoulombPairsVector(const pq::SharedNonCoulPairVec &vec);
-
-        void setNonCoulombPairsMatrix(
-            const linearAlgebra::Matrix<pq::SharedNonCoulPair> &mat
-        );
-
-        template <typename T>
-        void setNonCoulombPairsMatrix(const size_t, const size_t, T &);
     };
 
 }   // namespace potential
-
-#ifndef _FORCE_FIELD_NON_COULOMB_TPP_
-#include "forceFieldNonCoulomb.tpp.hpp"   // IWYU pragma: keep - DO NOT MOVE THIS LINE
-#endif
 
 #endif   // _FORCE_FIELD_NON_COULOMB_HPP_
