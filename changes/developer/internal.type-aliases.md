@@ -1,3 +1,4 @@
 - remove type alias for output namespace from pq namespace
 - add `DefaultFile` class for default file names and use it also in `EnergyOutput` to avoid manually repeating the default file names
 - remove `matrix.hpp` header from `typeAliases.hpp` as this way the `Eigen` library get included everywhere
+- remove `opt` namespace entries of `typeAliases.hpp`

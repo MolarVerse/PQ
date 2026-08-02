@@ -110,7 +110,7 @@ namespace engine
         void writeVirialFile(const size_t, const pq::PhysicalData &);
         void writeStressFile(const size_t, const pq::PhysicalData &);
         void writeBoxFile(const size_t, const pq::Box &);
-        void writeOptFile(const size_t, const pq::Optimizer &);
+        void writeOptFile(const size_t, const opt::Optimizer &);
 
         void writeRingPolymerRstFile(std::vector<pq::SimBox> &);
         void writeRingPolymerXyzFile(std::vector<pq::SimBox> &);

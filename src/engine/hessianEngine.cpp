@@ -26,18 +26,21 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <memory>
 
 #include "adam.hpp"
 #include "constant.hpp"
 #include "constantDecay.hpp"
 #include "convergenceSettings.hpp"
 #include "defaults.hpp"
+#include "evaluator.hpp"
 #include "exceptions.hpp"
 #include "expDecay.hpp"
 #include "hessianBuilder.hpp"
 #include "hessianSettings.hpp"
 #include "logOutput.hpp"
 #include "mmEvaluator.hpp"
+#include "optimizer.hpp"
 #include "optimizerSettings.hpp"
 #include "outputFileSettings.hpp"
 #include "physicalData.hpp"
@@ -85,9 +88,9 @@ void HessianEngine::run()
 
 void HessianEngine::writeOutput() {}
 
-pq::SharedEvaluator HessianEngine::setupEvaluator()
+std::shared_ptr<Evaluator> HessianEngine::setupEvaluator()
 {
-    pq::SharedEvaluator evaluator;
+    std::shared_ptr<Evaluator> evaluator;
 
     if (Settings::getJobtype() == JobType::MM_HESSIAN)
         evaluator = std::make_shared<MMEvaluator>();
@@ -110,7 +113,7 @@ pq::SharedEvaluator HessianEngine::setupEvaluator()
     return evaluator;
 }
 
-pq::SharedHessianBuilder HessianEngine::setupHessianBuilder() const
+std::shared_ptr<opt::HessianBuilder> HessianEngine::setupHessianBuilder() const
 {
     return makeHessianBuilder(
         HessianSettings::getBuilder(),
@@ -118,7 +121,9 @@ pq::SharedHessianBuilder HessianEngine::setupHessianBuilder() const
     );
 }
 
-void HessianEngine::setupOptimization(const pq::SharedEvaluator &evaluator)
+void HessianEngine::setupOptimization(
+    const std::shared_ptr<Evaluator> &evaluator
+)
 {
     _evaluator            = evaluator;
     _learningRateStrategy = setupLearningRateStrategy();
@@ -267,12 +272,12 @@ void HessianEngine::writeOptimizationOutput()
     _physicalData->reset();
 }
 
-pq::SharedOptimizer HessianEngine::setupEmptyOptimizer()
+std::shared_ptr<Optimizer> HessianEngine::setupEmptyOptimizer()
 {
     const auto nEpochs       = TimingsSettings::getNumberOfSteps();
     const auto optimizerType = OptimizerSettings::getOptimizer();
 
-    pq::SharedOptimizer optimizer;
+    std::shared_ptr<Optimizer> optimizer;
 
     switch (optimizerType)
     {
@@ -306,7 +311,7 @@ pq::SharedOptimizer HessianEngine::setupEmptyOptimizer()
     return optimizer;
 }
 
-pq::SharedLearningRate HessianEngine::setupLearningRateStrategy()
+std::shared_ptr<LearningRateStrategy> HessianEngine::setupLearningRateStrategy()
 {
     const auto alpha0     = OptimizerSettings::getInitialLearningRate();
     const auto lrStrategy = OptimizerSettings::getLearningRateStrategy();
@@ -370,7 +375,7 @@ pq::SharedLearningRate HessianEngine::setupLearningRateStrategy()
     );
 }
 
-void HessianEngine::setupConvergence(pq::SharedOptimizer &optimizer)
+void HessianEngine::setupConvergence(std::shared_ptr<opt::Optimizer> &optimizer)
 {
     const auto strategyOptional = ConvSettings::getEnConvStrategy();
     const auto defaultStrategy  = ConvSettings::getDefaultEnergyConvStrategy();
@@ -414,7 +419,7 @@ void HessianEngine::setupConvergence(pq::SharedOptimizer &optimizer)
 }
 
 void HessianEngine::setupMinMaxLearningRate(
-    pq::SharedLearningRate &learningRate
+    std::shared_ptr<LearningRateStrategy> &learningRate
 )
 {
     const auto minLR = OptimizerSettings::getMinLearningRate();
@@ -457,7 +462,7 @@ void HessianEngine::writeOptimizationSetupInfo()
     _engineOutput.getLogOutput().writeEmptyLine();
 }
 
-void HessianEngine::writeHessian(const pq::HessianMatrix &hessian) const
+void HessianEngine::writeHessian(const HessianMatrix &hessian) const
 {
     std::ofstream file(HessianSettings::getHessianFile());
 
@@ -480,7 +485,7 @@ void HessianEngine::writeHessian(const pq::HessianMatrix &hessian) const
     }
 }
 
-void HessianEngine::writeHessianInfo(const pq::HessianMatrix &hessian) const
+void HessianEngine::writeHessianInfo(const HessianMatrix &hessian) const
 {
     std::ofstream file(HessianSettings::getHessianInfoFile());
 
