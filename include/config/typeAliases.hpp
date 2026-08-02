@@ -69,13 +69,6 @@ namespace potential
 
 }   // namespace potential
 
-namespace virial
-{
-    class Virial;            // forward declaration
-    class MolecularVirial;   // forward declaration
-
-}   // namespace virial
-
 namespace intraNonBonded
 {
     class IntraNonBonded;   // forward declaration
@@ -268,15 +261,6 @@ namespace pq
     using NoseHoover = thermostat::NoseHoover;
 
     using UniqueThermostat = std::unique_ptr<Thermostat>;
-
-    /********************
-     * virial namespace *
-     ********************/
-
-    using Virial          = virial::Virial;
-    using MolecularVirial = virial::MolecularVirial;
-
-    using SharedVirial = std::shared_ptr<virial::Virial>;
 
     /**********************
      * manostat namespace *
