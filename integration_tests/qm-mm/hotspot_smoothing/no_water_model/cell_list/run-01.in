@@ -2,7 +2,7 @@
 
 # General Keywords
 jobtype = qmmm-md;
-nstep = 5;
+nstep = 2;
 timestep = 0.5;
 
 # Thermostat
