@@ -44,7 +44,7 @@ namespace input::molDescriptor
     {
        private:
         int           _lineNumber;
-        std::string   _fileName = defaults::_MOLDESCRIPTOR_FILE_DEFAULT_;
+        std::string   _fileName = defaults::MOLDESCRIPTOR_FILE_DEFAULT;
         std::ifstream _fp;
 
         pq::Engine &_engine;

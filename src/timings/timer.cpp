@@ -40,7 +40,7 @@ Timer::Timer(const std::string_view name) : _name(name) {}
  * @brief get timings details
  *
  */
-std::vector<TimingsSection> Timer::getTimingDetails() const
+const std::vector<TimingsSection>& Timer::getTimingDetails() const
 {
     return _timingDetails;
 }

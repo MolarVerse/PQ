@@ -45,8 +45,8 @@ namespace opt
         SteepestDescent()  = default;
         ~SteepestDescent() = default;
 
-        [[nodiscard]] pq::SharedOptimizer clone() const;
-        [[nodiscard]] size_t              maxHistoryLength() const;
+        [[nodiscard]] std::shared_ptr<Optimizer> clone() const;
+        [[nodiscard]] size_t                     maxHistoryLength() const;
 
         void update(const double learningRate, const size_t step);
     };

@@ -74,10 +74,9 @@ using namespace setup::resetKinetics;
  */
 void setup::setupRequestedJob(const std::string &inputFileName, Engine &engine)
 {
-    auto simulationTimer = Timer("Simulation");
-    auto setupTimer      = Timer("Setup");
+    auto setupTimer = Timer("Setup");
 
-    startSetup(simulationTimer, setupTimer, engine);
+    startSetup(setupTimer, engine);
 
     readInputFile(inputFileName, engine);
 
@@ -94,7 +93,7 @@ void setup::setupRequestedJob(const std::string &inputFileName, Engine &engine)
     setupKokkos(engine);
 #endif
 
-    endSetup(simulationTimer, setupTimer, engine);
+    endSetup(setupTimer, engine);
 }
 
 /**
@@ -102,13 +101,8 @@ void setup::setupRequestedJob(const std::string &inputFileName, Engine &engine)
  *
  * @param engine
  */
-void setup::startSetup(
-    Timer  &simulationTimer,
-    Timer  &setupTimer,
-    Engine &engine
-)
+void setup::startSetup(Timer &setupTimer, Engine &engine)
 {
-    simulationTimer.startTimingsSection();
     setupTimer.startTimingsSection("TotalSetup");
 
     engine.getStdoutOutput().writeHeader();
@@ -119,17 +113,12 @@ void setup::startSetup(
  *
  * @param engine
  */
-void setup::endSetup(
-    const Timer &simulationTimer,
-    Timer       &setupTimer,
-    Engine      &engine
-)
+void setup::endSetup(Timer &setupTimer, Engine &engine)
 {
     engine.getStdoutOutput().writeSetupCompleted();
     engine.getLogOutput().writeSetupCompleted();
 
     setupTimer.stopTimingsSection("TotalSetup");
-    engine.getTimer().addSimulationTimer(simulationTimer);
     engine.addTimer(setupTimer);
 }
 

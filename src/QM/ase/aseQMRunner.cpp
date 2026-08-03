@@ -319,9 +319,9 @@ void AseQMRunner::collectForces(SimulationBox &simBox) const
 
         for (size_t i = 0; i < nAtoms; ++i)
             simBox.getAtoms()[i]->setForce(
-                {forces(i, 0) * _EV_TO_KCAL_PER_MOL_,
-                 forces(i, 1) * _EV_TO_KCAL_PER_MOL_,
-                 forces(i, 2) * _EV_TO_KCAL_PER_MOL_}
+                {forces(i, 0) * EV_TO_KCAL_PER_MOL,
+                 forces(i, 1) * EV_TO_KCAL_PER_MOL,
+                 forces(i, 2) * EV_TO_KCAL_PER_MOL}
             );
     }
     catch (const pybind11::error_already_set &)
@@ -341,7 +341,7 @@ void AseQMRunner::collectForces(SimulationBox &simBox) const
  */
 void AseQMRunner::collectEnergy(PhysicalData &physicalData) const
 {
-    physicalData.setQMEnergy(_energy * _EV_TO_KCAL_PER_MOL_);
+    physicalData.setQMEnergy(_energy * EV_TO_KCAL_PER_MOL);
 }
 
 /**
@@ -372,7 +372,7 @@ void AseQMRunner::collectStress(
         throw;
     }
 
-    stress_ = stress_ * _EV_TO_KCAL_PER_MOL_;
+    stress_ = stress_ * EV_TO_KCAL_PER_MOL;
 
     const auto virial = stress_ * simBox.getVolume();
 

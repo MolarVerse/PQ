@@ -464,7 +464,7 @@ TEST_F(TestGuffDatReader, read_errorNumberOfLineArguments)
         _guffDatReader->read(),
         GuffDatException,
         "Invalid number of commands (5) in line 3 - " +
-            std::to_string(defaults::_NUMBER_OF_GUFF_ENTRIES_) + " are allowed"
+            std::to_string(defaults::NUMBER_OF_GUFF_ENTRIES) + " are allowed"
     );
 }
 
@@ -486,33 +486,28 @@ TEST_F(TestGuffDatReader, checkPartialCharges_NotMatchingCoefficients)
 TEST_F(TestGuffDatReader, checkPartialCharges)
 {
     _guffDatReader->setupGuffMaps();
-    _guffDatReader->setGuffCoulombCoefficients(
-        0,
-        0,
-        0,
-        0,
-        _COULOMB_PREFACTOR_ * 0.5 * 0.5
-    );
+    _guffDatReader
+        ->setGuffCoulombCoefficients(0, 0, 0, 0, COULOMB_PREFACTOR * 0.5 * 0.5);
     _guffDatReader->setGuffCoulombCoefficients(
         0,
         0,
         1,
         0,
-        -_COULOMB_PREFACTOR_ * 0.5 * 0.25
+        -COULOMB_PREFACTOR * 0.5 * 0.25
     );
     _guffDatReader->setGuffCoulombCoefficients(
         0,
         0,
         0,
         1,
-        -_COULOMB_PREFACTOR_ * 0.5 * 0.25
+        -COULOMB_PREFACTOR * 0.5 * 0.25
     );
     _guffDatReader->setGuffCoulombCoefficients(
         0,
         0,
         1,
         1,
-        _COULOMB_PREFACTOR_ * 0.25 * 0.25
+        COULOMB_PREFACTOR * 0.25 * 0.25
     );
 
     EXPECT_NO_THROW(_guffDatReader->checkPartialCharges());
@@ -601,19 +596,14 @@ TEST_F(TestGuffDatReader, calculatePartialCharges)
 {
     _guffDatReader->setupGuffMaps();
 
-    _guffDatReader->setGuffCoulombCoefficients(
-        0,
-        0,
-        0,
-        0,
-        _COULOMB_PREFACTOR_ * 0.5 * 0.5
-    );
+    _guffDatReader
+        ->setGuffCoulombCoefficients(0, 0, 0, 0, COULOMB_PREFACTOR * 0.5 * 0.5);
     _guffDatReader->setGuffCoulombCoefficients(
         0,
         0,
         1,
         1,
-        _COULOMB_PREFACTOR_ * 0.25 * 0.25
+        COULOMB_PREFACTOR * 0.25 * 0.25
     );
 
     _guffDatReader->calculatePartialCharges();

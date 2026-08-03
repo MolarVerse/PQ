@@ -22,9 +22,9 @@
 
 #include "resetKinetics.hpp"
 
-#include <algorithm>    // for __for_each_fn, for_each
-#include <cmath>        // for sqrt
-#include <cstddef>      // for size_t
+#include <algorithm>   // for __for_each_fn, for_each
+#include <cmath>       // for sqrt
+#include <cstddef>     // for size_t
 
 #include "constants/conversionFactors.hpp"   // for _FS_TO_S_, _S_TO_FS_
 #include "physicalData.hpp"                  // for PhysicalData
@@ -84,8 +84,8 @@ void ResetKinetics::reset(
 {
     startTimingsSection("Reset Kinetics");
 
-    _momentum        = data.getMomentum() * _S_TO_FS_;
-    _angularMomentum = data.getAngularMomentum() * _S_TO_FS_;
+    _momentum        = data.getMomentum() * S_TO_FS;
+    _angularMomentum = data.getAngularMomentum() * S_TO_FS;
     _temperature     = data.getTemperature();
 
     auto resetTemp = (step <= _nStepsTemperatureReset);
@@ -111,8 +111,8 @@ void ResetKinetics::reset(
         ResetKinetics::resetAngularMomentum(simBox);
 
     data.setTemperature(_temperature);
-    data.setMomentum(_momentum * _FS_TO_S_);
-    data.setAngularMomentum(_angularMomentum * _FS_TO_S_);
+    data.setMomentum(_momentum * FS_TO_S);
+    data.setAngularMomentum(_angularMomentum * FS_TO_S);
 
     stopTimingsSection("Reset Kinetics");
 }
