@@ -51,7 +51,7 @@ const std::vector<TimingsSection>& Timer::getTimingDetails() const
  */
 double Timer::calculateElapsedTime() const
 {
-    auto elapsedTime = 0;
+    double elapsedTime = 0;
 
     for (const auto& timing : _timingDetails)
         elapsedTime += timing.calculateElapsedTime();

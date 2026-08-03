@@ -100,10 +100,11 @@ bool input::guffdat::isNeeded(engine::Engine &engine)
 {
     if (!Settings::isMMActivated())
         return false;
-    else if (engine.getForceFieldPtr()->isNonCoulombicActivated())
+
+    if (engine.getForceFieldPtr()->isNonCoulombicActivated())
         return false;
-    else
-        return true;
+
+    return true;
 }
 
 /**

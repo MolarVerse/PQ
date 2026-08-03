@@ -363,7 +363,7 @@ PhysicalData physicalData::mean(std::vector<PhysicalData> &dataVec)
         { meanData.updateAverages(physicalData); }
     );
 
-    meanData.makeAverages(dataVec.size());
+    meanData.makeAverages(static_cast<double>(dataVec.size()));
 
     return meanData;
 }
