@@ -22,11 +22,11 @@
 
 #include "ringPolymerTrajectoryOutput.hpp"
 
-#include <algorithm>    // for __for_each_fn, for_each
-#include <cstddef>      // for size_t
-#include <format>       // for format
-#include <ostream>      // for basic_ostream, ofstream, operator<<
-#include <sstream>      // for ostringstream
+#include <algorithm>   // for __for_each_fn, for_each
+#include <cstddef>     // for size_t
+#include <format>      // for format
+#include <ostream>     // for basic_ostream, ofstream, operator<<
+#include <sstream>     // for ostringstream
 
 #include "molecule.hpp"              // for Molecule
 #include "ringPolymerSettings.hpp"   // for RingPolymerSettings
@@ -184,7 +184,8 @@ void RingPolymerTrajectoryOutput::writeForces(std::vector<SimulationBox> &beads)
  *
  * @param beads
  */
-void RingPolymerTrajectoryOutput::writeCharges(std::vector<SimulationBox> &beads
+void RingPolymerTrajectoryOutput::writeCharges(
+    std::vector<SimulationBox> &beads
 )
 {
     std::ostringstream buffer;

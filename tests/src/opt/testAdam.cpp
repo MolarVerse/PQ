@@ -86,7 +86,8 @@ TEST(TestAdam, updateAtStepOneReducesToLearningRateTimesSignOfForce)
     // Adam-step-1 with momentum1=0, momentum2=0 simplifies analytically to
     //   m1_hat = -force, m2_hat = force²
     //   pos_new ≈ pos + lr * force / sqrt(force² + eps²)
-    // For force >> eps, sqrt(force² + eps²) ≈ |force|, so pos_new ≈ pos + lr * sign(force).
+    // For force >> eps, sqrt(force² + eps²) ≈ |force|, so pos_new ≈ pos + lr *
+    // sign(force).
     auto box = makeBoxWithOneAtom({0.0, 0.0, 0.0}, {2.0, -3.0, 0.5});
 
     Adam adam(1u, /*nAtoms=*/1u);

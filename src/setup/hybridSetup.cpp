@@ -67,7 +67,7 @@ void setup::setupHybrid(Engine &engine)
  *
  * @param engine
  */
-HybridSetup::HybridSetup(Engine &engine) : _engine(engine){};
+HybridSetup::HybridSetup(Engine &engine) : _engine(engine) {}
 
 /**
  * @brief setup QMMM-MD
@@ -169,19 +169,25 @@ std::vector<int> HybridSetup::parseSelection(
     // check if string contains any characters that are not digits or commas
     if (needsPython)
     {
-        throw InputFileException(std::format(
-            "The value of key {} - {} contains characters that are not digits, "
-            "\"-\" or commas. The current build of PQ was compiled without "
-            "Python bindings, so the {} string must be a comma-separated list "
-            "of integers, representing the atom indices in the restart file "
-            "that should be treated as the {}. In order to use the full "
-            "selection parser power of the PQAnalysis Python package, the PQ "
-            "build must be compiled with Python bindings.",
-            key,
-            selection,
-            key,
-            key
-        ));
+        throw InputFileException(
+            std::format(
+                "The value of key {} - {} contains characters that are not "
+                "digits, "
+                "\"-\" or commas. The current build of PQ was compiled without "
+                "Python bindings, so the {} string must be a comma-separated "
+                "list "
+                "of integers, representing the atom indices in the restart "
+                "file "
+                "that should be treated as the {}. In order to use the full "
+                "selection parser power of the PQAnalysis Python package, the "
+                "PQ "
+                "build must be compiled with Python bindings.",
+                key,
+                selection,
+                key,
+                key
+            )
+        );
     }
 #endif
 
@@ -255,16 +261,21 @@ std::vector<int> HybridSetup::parseSelectionNoPython(
     // check if the selection vector is empty or contains duplicates
     if (selectionVec.empty())
     {
-        throw customException::InputFileException(std::format(
-            "The value of key {} - {} is an empty list. The {} string must be "
-            "a comma-separated list of integers or ranges, representing the "
-            "atom indices in the restart file that should be treated as the "
-            "{}.",
-            key,
-            selection,
-            key,
-            key
-        ));
+        throw customException::InputFileException(
+            std::format(
+                "The value of key {} - {} is an empty list. The {} string must "
+                "be "
+                "a comma-separated list of integers or ranges, representing "
+                "the "
+                "atom indices in the restart file that should be treated as "
+                "the "
+                "{}.",
+                key,
+                selection,
+                key,
+                key
+            )
+        );
     }
 
     return selectionVec;

@@ -22,7 +22,7 @@
 
 #include "optimizer.hpp"
 
-#include <memory>     // for std::shared_ptr
+#include <memory>   // for std::shared_ptr
 
 #include "exceptions.hpp"      // for OptException
 #include "physicalData.hpp"    // for PhysicalData
@@ -121,7 +121,8 @@ void Optimizer::setSimulationBox(
  *
  * @param physicalData
  */
-void Optimizer::setPhysicalData(const std::shared_ptr<PhysicalData> physicalData
+void Optimizer::setPhysicalData(
+    const std::shared_ptr<PhysicalData> physicalData
 )
 {
     _physicalData = physicalData;
@@ -269,7 +270,8 @@ std::vector<linearAlgebra::Vec3D> Optimizer::getPositions() const
  * @param offset
  *
  */
-std::vector<linearAlgebra::Vec3D> Optimizer::getPositions(const int offset
+std::vector<linearAlgebra::Vec3D> Optimizer::getPositions(
+    const int offset
 ) const
 {
     const auto index = getHistoryIndex(offset);
