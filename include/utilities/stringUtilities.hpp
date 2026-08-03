@@ -37,9 +37,9 @@ namespace utilities
 {
     std::string removeComments(std::string &, const std::string_view &);
 
-    pq::strings getLineCommands(const std::string &, const size_t);
+    std::vector<std::string> getLineCommands(const std::string &, const size_t);
 
-    pq::strings splitString(const std::string &);
+    std::vector<std::string> splitString(const std::string &);
 
     std::string toLowerCopy(std::string);
     std::string toLowerCopy(std::string_view);
@@ -53,7 +53,7 @@ namespace utilities
     double             stringToFiniteDouble(const std::string &);
 
     bool fileExists(const std::string &);
-    bool keywordToBool(const pq::strings &);
+    bool keywordToBool(const std::vector<std::string> &);
 
 }   // namespace utilities
 

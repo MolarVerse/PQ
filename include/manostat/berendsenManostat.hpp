@@ -28,7 +28,6 @@
 #include <vector>    // for vector
 
 #include "manostat.hpp"   // for Manostat
-#include "typeAliases.hpp"
 
 namespace manostat
 {
@@ -48,9 +47,12 @@ namespace manostat
        public:
         explicit BerendsenManostat(const double, const double, const double);
 
-        void applyManostat(pq::SimBox &, pq::PhysicalData &) override;
+        void applyManostat(
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &
+        ) override;
 
-        [[nodiscard]] virtual pq::tensor3D calculateMu() const;
+        [[nodiscard]] virtual linearAlgebra::tensor3D calculateMu() const;
 
         /********************
          * standard getters *
@@ -59,8 +61,8 @@ namespace manostat
         [[nodiscard]] double getTau() const;
         [[nodiscard]] double getCompressibility() const;
 
-        [[nodiscard]] pq::ManostatType getManostatType() const final;
-        [[nodiscard]] pq::Isotropy     getIsotropy() const override;
+        [[nodiscard]] settings::ManostatType getManostatType() const final;
+        [[nodiscard]] settings::Isotropy     getIsotropy() const override;
     };
 
     /**
@@ -76,11 +78,17 @@ namespace manostat
         std::vector<size_t> _2DIsotropicAxes;
 
        public:
-        SemiIsotropicBerendsenManostat(const double, const double, const double, const size_t, const std::vector<size_t> &);
+        SemiIsotropicBerendsenManostat(
+            const double,
+            const double,
+            const double,
+            const size_t,
+            const std::vector<size_t> &
+        );
 
-        [[nodiscard]] pq::tensor3D calculateMu() const override;
+        [[nodiscard]] linearAlgebra::tensor3D calculateMu() const override;
 
-        [[nodiscard]] pq::Isotropy getIsotropy() const final;
+        [[nodiscard]] settings::Isotropy getIsotropy() const final;
     };
 
     /**
@@ -94,9 +102,9 @@ namespace manostat
        public:
         using BerendsenManostat::BerendsenManostat;
 
-        [[nodiscard]] pq::tensor3D calculateMu() const override;
+        [[nodiscard]] linearAlgebra::tensor3D calculateMu() const override;
 
-        [[nodiscard]] pq::Isotropy getIsotropy() const final;
+        [[nodiscard]] settings::Isotropy getIsotropy() const final;
     };
 
     /**
@@ -113,9 +121,9 @@ namespace manostat
        public:
         using BerendsenManostat::BerendsenManostat;
 
-        [[nodiscard]] pq::tensor3D calculateMu() const override;
+        [[nodiscard]] linearAlgebra::tensor3D calculateMu() const override;
 
-        [[nodiscard]] pq::Isotropy getIsotropy() const final;
+        [[nodiscard]] settings::Isotropy getIsotropy() const final;
     };
 
 }   // namespace manostat

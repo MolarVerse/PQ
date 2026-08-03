@@ -25,7 +25,7 @@
 #define _OPT_INPUT_PARSER_HPP_
 
 #include "inputFileParser.hpp"   // for InputFileParser
-#include "typeAliases.hpp"       // for pq::strings, pq::Engine
+#include "typeAliases.hpp"       // for std::vector<std::string>, pq::Engine
 
 namespace input
 {
@@ -40,15 +40,33 @@ namespace input
        public:
         explicit OptInputParser(pq::Engine &);
 
-        void parseOptimizer(const pq::strings &, const size_t);
+        void parseOptimizer(const std::vector<std::string> &, const size_t);
 
-        void parseLearningRateStrategy(const pq::strings &, const size_t);
-        void parseInitialLearningRate(const pq::strings &, const size_t);
-        void parseLearningRateUpdateFreq(const pq::strings &, const size_t);
-        void parseMinLearningRate(const pq::strings &, const size_t);
-        void parseMaxLearningRate(const pq::strings &, const size_t);
+        void parseLearningRateStrategy(
+            const std::vector<std::string> &,
+            const size_t
+        );
+        void parseInitialLearningRate(
+            const std::vector<std::string> &,
+            const size_t
+        );
+        void parseLearningRateUpdateFreq(
+            const std::vector<std::string> &,
+            const size_t
+        );
+        void parseMinLearningRate(
+            const std::vector<std::string> &,
+            const size_t
+        );
+        void parseMaxLearningRate(
+            const std::vector<std::string> &,
+            const size_t
+        );
 
-        void parseLearningRateDecay(const pq::strings &, const size_t);
+        void parseLearningRateDecay(
+            const std::vector<std::string> &,
+            const size_t
+        );
     };
 
 }   // namespace input

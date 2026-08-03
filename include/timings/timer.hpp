@@ -26,9 +26,9 @@
 
 #include <cstddef>   // for size_t
 #include <string>    // for string
+#include <vector>    // for vector
 
 #include "timingsSection.hpp"   // for TimingsManager
-#include "typeAliases.hpp"
 
 namespace timings
 {

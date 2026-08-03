@@ -42,16 +42,46 @@ namespace input
        public:
         explicit FilesInputParser(pq::Engine &);
 
-        void parseIntraNonBondedFile(const pq::strings &, const size_t);
-        void parseTopologyFilename(const pq::strings &, const size_t);
-        void parseParameterFilename(const pq::strings &, const size_t);
-        void parseStartFilename(const pq::strings &, const size_t);
-        void parseRingPolymerStartFilename(const pq::strings &, const size_t);
-        void parseMoldescriptorFilename(const pq::strings &, const size_t);
-        void parseGuffDatFilename(const pq::strings &, const size_t);
-        void parseGuffPath(const pq::strings &, const size_t);
-        void parseMShakeFilename(const pq::strings &, const size_t);
-        void parseDFTBFilename(const pq::strings &, const size_t);
+        void parseIntraNonBondedFile(
+            const std::vector<std::string> &,
+            const size_t
+        );
+
+        void parseTopologyFilename(
+            const std::vector<std::string> &,
+            const size_t
+        );
+
+        void parseParameterFilename(
+            const std::vector<std::string> &,
+            const size_t
+        );
+
+        void parseStartFilename(const std::vector<std::string> &, const size_t);
+
+        void parseRingPolymerStartFilename(
+            const std::vector<std::string> &,
+            const size_t
+        );
+
+        void parseMoldescriptorFilename(
+            const std::vector<std::string> &,
+            const size_t
+        );
+
+        void parseGuffDatFilename(
+            const std::vector<std::string> &,
+            const size_t
+        );
+
+        void parseGuffPath(const std::vector<std::string> &, const size_t);
+
+        void parseMShakeFilename(
+            const std::vector<std::string> &,
+            const size_t
+        );
+
+        void parseDFTBFilename(const std::vector<std::string> &, const size_t);
     };
 
 }   // namespace input

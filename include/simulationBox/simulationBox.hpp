@@ -24,7 +24,8 @@
 
 #define _SIMULATION_BOX_HPP_
 
-#include <map>        // for map
+#include <map>   // for map
+#include <memory>
 #include <optional>   // for optional
 #include <string>     // for string
 #include <vector>     // for vector
@@ -35,7 +36,6 @@
 #include "molecule.hpp"          // for Molecule
 #include "moleculeType.hpp"      // for MoleculeType
 #include "orthorhombicBox.hpp"   // for OrthorhombicBox
-#include "typeAliases.hpp"       // for pq::Vec3D
 
 /**
  * @namespace simulationBox
@@ -79,12 +79,12 @@ namespace simulationBox
 
         std::shared_ptr<Box> _box = std::make_shared<OrthorhombicBox>();
 
-        pq::Vec3D                 _centerOfMass = {0.0, 0.0, 0.0};
-        pq::SharedAtomVec         _atoms;
-        pq::SharedAtomVec         _qmAtoms;
-        pq::SharedAtomVec         _qmCenterAtoms;
-        std::vector<Molecule>     _molecules;
-        std::vector<MoleculeType> _moleculeTypes;
+        linearAlgebra::Vec3D               _centerOfMass = {0.0, 0.0, 0.0};
+        std::vector<std::shared_ptr<Atom>> _atoms;
+        std::vector<std::shared_ptr<Atom>> _qmAtoms;
+        std::vector<std::shared_ptr<Atom>> _qmCenterAtoms;
+        std::vector<Molecule>              _molecules;
+        std::vector<MoleculeType>          _moleculeTypes;
 
         std::vector<size_t>      _externalGlobalVdwTypes;
         std::map<size_t, size_t> _externalToInternalGlobalVDWTypes;
@@ -113,17 +113,21 @@ namespace simulationBox
         void setPartialChargesOfMoleculesFromMoleculeTypes();
         void initPositions(const double displacement);
 
-        [[nodiscard]] double    calculateTemperature();
-        [[nodiscard]] double    calculateTotalForce();
-        [[nodiscard]] pq::Vec3D calculateTotalForceVector();
-        [[nodiscard]] double    calculateRMSForce() const;
-        [[nodiscard]] double    calculateMaxForce() const;
-        [[nodiscard]] double    calculateRMSForceOld() const;
-        [[nodiscard]] double    calculateMaxForceOld() const;
-        [[nodiscard]] pq::Vec3D calculateMomentum();
-        [[nodiscard]] pq::Vec3D calculateAngularMomentum(const pq::Vec3D&);
-        [[nodiscard]] pq::Vec3D calcBoxDimFromDensity() const;
-        [[nodiscard]] pq::Vec3D calcShiftVector(const pq::Vec3D&) const;
+        [[nodiscard]] double               calculateTemperature();
+        [[nodiscard]] double               calculateTotalForce();
+        [[nodiscard]] linearAlgebra::Vec3D calculateTotalForceVector();
+        [[nodiscard]] double               calculateRMSForce() const;
+        [[nodiscard]] double               calculateMaxForce() const;
+        [[nodiscard]] double               calculateRMSForceOld() const;
+        [[nodiscard]] double               calculateMaxForceOld() const;
+        [[nodiscard]] linearAlgebra::Vec3D calculateMomentum();
+        [[nodiscard]] linearAlgebra::Vec3D calculateAngularMomentum(
+            const linearAlgebra::Vec3D&
+        );
+        [[nodiscard]] linearAlgebra::Vec3D calcBoxDimFromDensity() const;
+        [[nodiscard]] linearAlgebra::Vec3D calcShiftVector(
+            const linearAlgebra::Vec3D&
+        ) const;
 
         [[nodiscard]] bool moleculeTypeExists(const size_t) const;
         [[nodiscard]] std::vector<std::string> getUniqueQMAtomNames();
@@ -165,8 +169,8 @@ namespace simulationBox
          * standard add methods *
          ************************/
 
-        void addAtom(const pq::SharedAtom atom);
-        void addQMAtom(const pq::SharedAtom atom);
+        void addAtom(const std::shared_ptr<Atom> atom);
+        void addQMAtom(const std::shared_ptr<Atom> atom);
         void addMolecule(const Molecule& molecule);
         void addMoleculeType(const MoleculeType& molecule);
 
@@ -174,16 +178,16 @@ namespace simulationBox
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] int        getWaterType() const;
-        [[nodiscard]] int        getAmmoniaType() const;
-        [[nodiscard]] size_t     getNumberOfMolecules() const;
-        [[nodiscard]] size_t     getDegreesOfFreedom() const;
-        [[nodiscard]] size_t     getNumberOfAtoms() const;
-        [[nodiscard]] size_t     getNumberOfQMAtoms() const;
-        [[nodiscard]] double     getTotalMass() const;
-        [[nodiscard]] double     getTotalCharge() const;
-        [[nodiscard]] double     getDensity() const;
-        [[nodiscard]] pq::Vec3D& getCenterOfMass();
+        [[nodiscard]] int                   getWaterType() const;
+        [[nodiscard]] int                   getAmmoniaType() const;
+        [[nodiscard]] size_t                getNumberOfMolecules() const;
+        [[nodiscard]] size_t                getDegreesOfFreedom() const;
+        [[nodiscard]] size_t                getNumberOfAtoms() const;
+        [[nodiscard]] size_t                getNumberOfQMAtoms() const;
+        [[nodiscard]] double                getTotalMass() const;
+        [[nodiscard]] double                getTotalCharge() const;
+        [[nodiscard]] double                getDensity() const;
+        [[nodiscard]] linearAlgebra::Vec3D& getCenterOfMass();
 
         [[nodiscard]] Atom&         getAtom(const size_t index);
         [[nodiscard]] Atom&         getQMAtom(const size_t index);
@@ -193,25 +197,25 @@ namespace simulationBox
         [[nodiscard]] std::vector<double> getAtomicScalarForces() const;
         [[nodiscard]] std::vector<double> getAtomicScalarForcesOld() const;
 
-        [[nodiscard]] pq::SharedAtomVec&         getAtoms();
-        [[nodiscard]] pq::SharedAtomVec&         getQMAtoms();
-        [[nodiscard]] std::vector<Molecule>&     getMolecules();
-        [[nodiscard]] std::vector<MoleculeType>& getMoleculeTypes();
+        [[nodiscard]] std::vector<std::shared_ptr<Atom>>& getAtoms();
+        [[nodiscard]] std::vector<std::shared_ptr<Atom>>& getQMAtoms();
+        [[nodiscard]] std::vector<Molecule>&              getMolecules();
+        [[nodiscard]] std::vector<MoleculeType>&          getMoleculeTypes();
 
         [[nodiscard]] std::vector<size_t>& getExternalGlobalVdwTypes();
         [[nodiscard]] std::map<size_t, size_t>& getExternalToInternalGlobalVDWTypes(
         );
 
-        [[nodiscard]] Box&          getBox();
-        [[nodiscard]] Box&          getBox() const;
-        [[nodiscard]] pq::SharedBox getBoxPtr();
-        [[nodiscard]] pq::SharedBox getBoxPtr() const;
+        [[nodiscard]] Box&                 getBox();
+        [[nodiscard]] Box&                 getBox() const;
+        [[nodiscard]] std::shared_ptr<Box> getBoxPtr();
+        [[nodiscard]] std::shared_ptr<Box> getBoxPtr() const;
 
-        [[nodiscard]] std::vector<pq::Vec3D> getPositions() const;
-        [[nodiscard]] std::vector<pq::Vec3D> getVelocities() const;
-        [[nodiscard]] std::vector<pq::Vec3D> getForces() const;
-        [[nodiscard]] std::vector<int>       getAtomicNumbers() const;
-        [[nodiscard]] std::vector<double>    flattenPositions() const;
+        [[nodiscard]] std::vector<linearAlgebra::Vec3D> getPositions() const;
+        [[nodiscard]] std::vector<linearAlgebra::Vec3D> getVelocities() const;
+        [[nodiscard]] std::vector<linearAlgebra::Vec3D> getForces() const;
+        [[nodiscard]] std::vector<int>    getAtomicNumbers() const;
+        [[nodiscard]] std::vector<double> flattenPositions() const;
 
         /***************************
          * standard setter methods *
@@ -231,8 +235,8 @@ namespace simulationBox
          * Forwards the box methods to the box object *
          **********************************************/
 
-        void applyPBC(pq::Vec3D& position) const;
-        void scaleBox(const pq::tensor3D& scalingTensor);
+        void applyPBC(linearAlgebra::Vec3D& position) const;
+        void scaleBox(const linearAlgebra::tensor3D& scalingTensor);
 
         [[nodiscard]] double calculateVolume() const;
         [[nodiscard]] double getMinimalBoxDimension() const;
@@ -240,18 +244,18 @@ namespace simulationBox
 
         [[nodiscard]] bool getBoxSizeHasChanged() const;
 
-        [[nodiscard]] pq::Vec3D getBoxDimensions() const;
-        [[nodiscard]] pq::Vec3D getBoxAngles() const;
+        [[nodiscard]] linearAlgebra::Vec3D getBoxDimensions() const;
+        [[nodiscard]] linearAlgebra::Vec3D getBoxAngles() const;
 
         void setVolume(const double volume) const;
-        void setBoxDimensions(const pq::Vec3D& boxDimensions) const;
+        void setBoxDimensions(const linearAlgebra::Vec3D& boxDimensions) const;
         void setBoxSizeHasChanged(const bool boxSizeHasChanged) const;
     };
 
 }   // namespace simulationBox
 
 #ifndef _SIMULATION_BOX_TPP_
-#include "simulationBox.tpp.hpp"   // IWYU pragma: keep - DO NOT MOVE THIS LINE
+#include "simulationBox.tpp.hpp"   // IWYU pragma: export
 #endif
 
 #endif   // _SIMULATION_BOX_HPP_

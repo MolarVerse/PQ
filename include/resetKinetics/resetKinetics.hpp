@@ -27,7 +27,17 @@
 #include <cstddef>   // for size_t
 
 #include "timer.hpp"   // for Timer
-#include "typeAliases.hpp"
+#include "vector3d.hpp"
+
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}
+
+namespace simulationBox
+{
+    class SimulationBox;   // forward declaration
+}
 
 namespace resetKinetics
 {
@@ -49,9 +59,9 @@ namespace resetKinetics
         size_t _frequencyAngularReset;
         size_t _nStepsForcesReset;
 
-        double    _temperature = 0.0;
-        pq::Vec3D _momentum;
-        pq::Vec3D _angularMomentum;
+        double               _temperature = 0.0;
+        linearAlgebra::Vec3D _momentum;
+        linearAlgebra::Vec3D _angularMomentum;
 
        public:
         ResetKinetics() = default;
@@ -65,19 +75,23 @@ namespace resetKinetics
             const size_t nStepsForcesReset
         );
 
-        void reset(const size_t step, pq::PhysicalData &, pq::SimBox &);
-        void resetTemperature(pq::SimBox &);
-        void resetMomentum(pq::SimBox &);
-        void resetAngularMomentum(pq::SimBox &);
-        void resetForces(const size_t step, pq::SimBox &);
+        void reset(
+            const size_t step,
+            physicalData::PhysicalData &,
+            simulationBox::SimulationBox &
+        );
+        void resetTemperature(simulationBox::SimulationBox &);
+        void resetMomentum(simulationBox::SimulationBox &);
+        void resetAngularMomentum(simulationBox::SimulationBox &);
+        void resetForces(const size_t step, simulationBox::SimulationBox &);
 
         /********************
          * standard setters *
          *******************/
 
         void setTemperature(const double temperature);
-        void setMomentum(const pq::Vec3D &momentum);
-        void setAngularMomentum(const pq::Vec3D &angularMomentum);
+        void setMomentum(const linearAlgebra::Vec3D &momentum);
+        void setAngularMomentum(const linearAlgebra::Vec3D &angularMomentum);
 
         /********************
          * standard getters *

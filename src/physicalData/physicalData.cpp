@@ -39,9 +39,10 @@ using namespace constants;
  * @brief get the virial tensor, either atomic or molecular depending on the
  * isAtomic flag
  *
- * @return const pq::tensor3D&
+ * @return const linearAlgebra::tensor3D&
  */
-const pq::tensor3D &KineticEnergyVirialTensor::getVirialTensor() const
+const linearAlgebra::tensor3D &KineticEnergyVirialTensor::getVirialTensor(
+) const
 {
     if (isAtomic)
         return atomic;
@@ -94,7 +95,7 @@ void PhysicalData::calculateKinetics(SimulationBox &simulationBox)
     _kineticEnergy = trace(kineticEnergyAtomicTensor);
 
     _angularMomentum  = simulationBox.calculateAngularMomentum(_momentum);
-    _angularMomentum  *= FS_TO_S;
+    _angularMomentum *= FS_TO_S;
 
     _momentum *= FS_TO_S;
 

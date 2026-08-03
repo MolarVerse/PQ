@@ -53,7 +53,7 @@ namespace input::molDescriptor
         explicit MoldescriptorReader(pq::Engine &engine);
 
         void read();
-        void processMolecule(pq::strings &lineElements);
+        void processMolecule(std::vector<std::string> &lineElements);
         void convertExternalToInternalAtomTypes(pq::MoleculeType &) const;
     };
 
