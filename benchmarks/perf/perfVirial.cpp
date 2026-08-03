@@ -30,15 +30,16 @@
 #define CALLGRIND_ZERO_STATS
 #endif
 
-#include "perfBenchSetup.hpp"
 #include "molecularVirial.hpp"
+#include "perfBenchSetup.hpp"
 #include "physicalData.hpp"
 
 static constexpr long ITERATIONS = 1000;
 
 int main()
 {
-    auto box          = benchSetup::makePopulatedBox(20, 3);
+    auto box =
+        benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
     auto physicalData = physicalData::PhysicalData();
     auto virial       = virial::MolecularVirial();
 

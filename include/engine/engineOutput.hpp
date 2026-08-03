@@ -103,7 +103,11 @@ namespace engine
             const double simulationTime,
             const pq::PhysicalData &
         );
-        void writeRstFile(pq::SimBox &, const pq::Thermostat &, const size_t);
+        void writeRstFile(
+            pq::SimBox &,
+            const thermostat::Thermostat &,
+            const size_t
+        );
         void writeOptRstFile(pq::SimBox &, const size_t);
 
         void writeMomentumFile(const size_t step, const pq::PhysicalData &);

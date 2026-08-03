@@ -298,10 +298,10 @@ void OptimizerSetup::setupConvergence(std::shared_ptr<Optimizer> &optimizer)
     const auto maxForceOptional  = ConvSettings::getMaxForceConv();
     const auto rmsForceOptional  = ConvSettings::getRMSForceConv();
 
-    const auto defaultRelEnergy = _REL_ENERGY_CONV_DEFAULT_;
-    const auto defaultAbsEnergy = _ABS_ENERGY_CONV_DEFAULT_;
-    const auto defaultMaxForce  = _MAX_FORCE_CONV_DEFAULT_;
-    const auto defaultRMSForce  = _RMS_FORCE_CONV_DEFAULT_;
+    const auto defaultRelEnergy = REL_ENERGY_CONV_DEFAULT;
+    const auto defaultAbsEnergy = ABS_ENERGY_CONV_DEFAULT;
+    const auto defaultMaxForce  = MAX_FORCE_CONV_DEFAULT;
+    const auto defaultRMSForce  = RMS_FORCE_CONV_DEFAULT;
 
     auto relEnergy = energyOptional.value_or(defaultRelEnergy);
     auto absEnergy = energyOptional.value_or(defaultAbsEnergy);

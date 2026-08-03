@@ -39,6 +39,7 @@ namespace integrator
     {
        public:
         explicit VelocityVerlet();
+        ~VelocityVerlet() override = default;
 
         void firstStep(pq::SimBox &) override;
         void secondStep(pq::SimBox &) override;

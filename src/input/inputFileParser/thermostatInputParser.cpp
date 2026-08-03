@@ -140,25 +140,25 @@ void ThermostatInputParser::parseThermostat(
     else if (thermostat == "berendsen")
     {
         ThermostatSettings::setThermostatType(BERENDSEN);
-        ReferencesOutput::addReferenceFile(_BERENDSEN_FILE_);
+        ReferencesOutput::addReferenceFile(BERENDSEN_FILE);
     }
 
     else if (thermostat == "velocity_rescaling" || thermostat == "rescale")
     {
         ThermostatSettings::setThermostatType(VELOCITY_RESCALING);
-        ReferencesOutput::addReferenceFile(_VELOCITY_RESCALING_FILE_);
+        ReferencesOutput::addReferenceFile(VELOCITY_RESCALING_FILE);
     }
 
     else if (thermostat == "langevin")
     {
         ThermostatSettings::setThermostatType(LANGEVIN);
-        ReferencesOutput::addReferenceFile(_LANGEVIN_FILE_);
+        ReferencesOutput::addReferenceFile(LANGEVIN_FILE);
     }
 
     else if (thermostat == "nh_chain")
     {
         ThermostatSettings::setThermostatType(NOSE_HOOVER);
-        ReferencesOutput::addReferenceFile(_NOSE_HOOVER_CHAIN_FILE_);
+        ReferencesOutput::addReferenceFile(NOSE_HOOVER_CHAIN_FILE);
     }
 
     else

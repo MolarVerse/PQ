@@ -28,8 +28,12 @@
 #include <ranges>        // for __find_if_fn, find_if
 #include <string_view>   // for string_view
 
-#include "exceptions.hpp"       // for ParameterFileException
+#include "exceptions.hpp"   // for ParameterFileException
+#include "forceFieldNonCoulombImpl.hpp"
+#include "lennardJonesPair.hpp"   // IWYU pragma: keep -- for template instantiation
+#include "matrix.hpp"
 #include "nonCoulombPair.hpp"   // for NonCoulombPair
+#include "typeAliases.hpp"
 
 using namespace potential;
 using namespace customException;
@@ -37,6 +41,51 @@ using namespace linearAlgebra;
 
 using std::ranges::adjacent_find;
 using std::ranges::find_if;
+
+/**
+ * @brief constructor
+ *
+ **/
+ForceFieldNonCoulomb::ForceFieldNonCoulomb()
+    : _nonCoulPairsVec(pq::SharedNonCoulPairVec()),
+      _nonCoulPairsMatPtr(std::make_unique<matrix>())
+{
+}
+
+ForceFieldNonCoulomb::~ForceFieldNonCoulomb()                       = default;
+ForceFieldNonCoulomb::ForceFieldNonCoulomb(ForceFieldNonCoulomb &&) = default;
+ForceFieldNonCoulomb &ForceFieldNonCoulomb::operator=(ForceFieldNonCoulomb &&
+)                                                                   = default;
+
+/**
+ * @brief copy constructor
+ *
+ * @param other
+ */
+ForceFieldNonCoulomb::ForceFieldNonCoulomb(const ForceFieldNonCoulomb &other)
+    : _nonCoulPairsVec(other._nonCoulPairsVec),
+      _nonCoulPairsMatPtr(std::make_unique<matrix>(*other._nonCoulPairsMatPtr))
+{
+}
+
+/**
+ * @brief copy assignment operator
+ *
+ * @param other
+ * @return ForceFieldNonCoulomb&
+ */
+ForceFieldNonCoulomb &ForceFieldNonCoulomb::operator=(
+    const ForceFieldNonCoulomb &other
+)
+{
+    if (this != &other)
+    {
+        _nonCoulPairsVec = other._nonCoulPairsVec;
+        _nonCoulPairsMatPtr =
+            std::make_unique<matrix>(*other._nonCoulPairsMatPtr);
+    }
+    return *this;
+}
 
 /**
  * @brief calculates and sets energy and force cutoff for all non-coulombic
@@ -139,11 +188,13 @@ void ForceFieldNonCoulomb::fillDiagOfNonCoulPairsMatrix(
 {
     sortNonCoulombicsPairs(diag);
 
-    _nonCoulPairsMat = Matrix<std::shared_ptr<NonCoulombPair>>(diag.size());
+    _nonCoulPairsMatPtr->matrix =
+        Matrix<std::shared_ptr<NonCoulombPair>>(diag.size());
 
     const auto nDiagElements = diag.size();
 
-    for (size_t i = 0; i < nDiagElements; ++i) _nonCoulPairsMat(i, i) = diag[i];
+    for (size_t i = 0; i < nDiagElements; ++i)
+        _nonCoulPairsMatPtr->matrix(i, i) = diag[i];
 }
 
 /**
@@ -205,18 +256,18 @@ void ForceFieldNonCoulomb::setOffDiagonalElement(
             );
         }
 
-        _nonCoulPairsMat(atomType1, atomType2) = *nonCoulPair1;
-        _nonCoulPairsMat(atomType2, atomType1) = *nonCoulPair1;
+        _nonCoulPairsMatPtr->matrix(atomType1, atomType2) = *nonCoulPair1;
+        _nonCoulPairsMatPtr->matrix(atomType2, atomType1) = *nonCoulPair1;
     }
     else if (nonCoulPair1 != std::nullopt)
     {
-        _nonCoulPairsMat(atomType1, atomType2) = *nonCoulPair1;
-        _nonCoulPairsMat(atomType2, atomType1) = *nonCoulPair1;
+        _nonCoulPairsMatPtr->matrix(atomType1, atomType2) = *nonCoulPair1;
+        _nonCoulPairsMatPtr->matrix(atomType2, atomType1) = *nonCoulPair1;
     }
     else
     {
-        _nonCoulPairsMat(atomType1, atomType2) = *nonCoulPair2;
-        _nonCoulPairsMat(atomType2, atomType1) = *nonCoulPair2;
+        _nonCoulPairsMatPtr->matrix(atomType1, atomType2) = *nonCoulPair2;
+        _nonCoulPairsMatPtr->matrix(atomType2, atomType1) = *nonCoulPair2;
     }
 }
 
@@ -226,7 +277,7 @@ void ForceFieldNonCoulomb::setOffDiagonalElement(
  */
 void ForceFieldNonCoulomb::fillOffDiagOfNonCoulPairsMatrix()
 {
-    const auto &[rows, cols] = _nonCoulPairsMat.shape();
+    const auto &[rows, cols] = _nonCoulPairsMatPtr->matrix.shape();
 
     for (size_t i = 0; i < rows; ++i)
         for (size_t j = i + 1; j < cols; ++j) setOffDiagonalElement(i, j);
@@ -351,7 +402,7 @@ std::shared_ptr<NonCoulombPair> ForceFieldNonCoulomb::getNonCoulPair(
     const auto idx1 = getGlobalVdwType1(indices);
     const auto idx2 = getGlobalVdwType2(indices);
 
-    return _nonCoulPairsMat(idx1, idx2);
+    return _nonCoulPairsMatPtr->matrix(idx1, idx2);
 }
 
 /**
@@ -391,17 +442,6 @@ std::vector<std::shared_ptr<NonCoulombPair>> &ForceFieldNonCoulomb::
     return _nonCoulPairsVec;
 }
 
-/**
- * @brief Get the Non Coulomb Pairs Matrix object
- *
- * @return Matrix<std::shared_ptr<NonCoulombPair>>&
- */
-Matrix<std::shared_ptr<NonCoulombPair>> &ForceFieldNonCoulomb::
-    getNonCoulombPairsMatrix()
-{
-    return _nonCoulPairsMat;
-}
-
 /***************************
  *                         *
  * standard setter methods *
@@ -418,16 +458,4 @@ void ForceFieldNonCoulomb::setNonCoulombPairsVector(
 )
 {
     _nonCoulPairsVec = vec;
-}
-
-/**
- * @brief set the non-coulombic pairs matrix
- *
- * @param mat
- */
-void ForceFieldNonCoulomb::setNonCoulombPairsMatrix(
-    const Matrix<std::shared_ptr<NonCoulombPair>> &mat
-)
-{
-    _nonCoulPairsMat = mat;
 }
