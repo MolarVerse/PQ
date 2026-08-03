@@ -30,7 +30,6 @@
 #include "bondConstraint.hpp"       // for BondConstraint
 #include "defaults.hpp"             // for defaults
 #include "distanceConstraint.hpp"   // for DistanceConstraint
-#include "mShake.hpp"               // for MShake
 #include "mShakeReference.hpp"      // for MShakeReference
 #include "timer.hpp"                // for Timer
 #include "typeAliases.hpp"
@@ -40,6 +39,8 @@
  */
 namespace constraints
 {
+    class MShake;   // forward declaration
+
     /**
      * @class Constraints
      *
@@ -51,7 +52,7 @@ namespace constraints
     class Constraints : public timings::Timer
     {
        private:
-        MShake _mShake;
+        std::unique_ptr<MShake> _mShake;
 
         bool _shakeActivated         = defaults::_CONSTRAINTS_ACTIVE_DEFAULT_;
         bool _mShakeActivated        = defaults::_CONSTRAINTS_ACTIVE_DEFAULT_;
@@ -68,7 +69,8 @@ namespace constraints
         std::vector<DistanceConstraint> _distanceConstraints;
 
        public:
-        std::shared_ptr<Constraints> clone() const;
+        Constraints();
+        ~Constraints();
 
         void calculateConstraintBondRefs(const pq::SimBox &simulationBox);
 

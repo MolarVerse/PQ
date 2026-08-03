@@ -1,2 +1,3 @@
 - remove `<chrono>` transient header from timer as it was included in every single TU at the moment
 - remove transient pybind headers from `AseRunners` to decrease compilation parsing time by about 5-6% (total speedup approx. 4%)
+- remove more `matrix.hpp` header inclusions -- until now `mShake.hpp` exposed the header in its public API and therefore it ended up via `constraints.hpp` in `engine.hpp` and therefore almost everywhere, included `Eigen`
