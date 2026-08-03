@@ -4,3 +4,4 @@
 - remove `matrix.hpp` dependency from `ForceFieldNonCoulomb` class as it was again included transitively in many many TUs
 - remove some useless public API functions from `ForceFieldNonCoulomb` class for easier maintainance as they were only used for testing
 - add pre-compiled-headers (pchs) to speedup compilation time ~20%
+- zero-initialize kinetic-energy accumulator tensors exposed by PCH-enabled builds

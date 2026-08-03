@@ -59,8 +59,8 @@ void PhysicalData::calculateKinetics(SimulationBox &simulationBox)
     startTimingsSection("Calc Kinetics");
 
     _momentum = Vec3D();
-    tensor3D kineticEnergyAtomicTensor;
-    tensor3D kineticEnergyMolecularTensor;
+    tensor3D kineticEnergyAtomicTensor{};
+    tensor3D kineticEnergyMolecularTensor{};
 
     auto kinEnergyAndMomOfMol = [&kineticEnergyAtomicTensor,
                                  &kineticEnergyMolecularTensor,

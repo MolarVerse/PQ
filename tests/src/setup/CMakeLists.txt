@@ -40,7 +40,7 @@ foreach(source_file ${source_files})
         COMMAND ${test_name}
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/tests
     )
-    target_precompile_headers(${test_name} 
+    target_precompile_headers(${test_name}
         REUSE_FROM pq_test_pch
     )
 
