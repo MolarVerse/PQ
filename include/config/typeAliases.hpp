@@ -165,13 +165,6 @@ namespace timings
 
 }   // namespace timings
 
-namespace thermostat
-{
-    class Thermostat;   // forward declaration
-    class NoseHoover;   // forward declaration
-
-}   // namespace thermostat
-
 namespace settings
 {
     enum class ThermostatType;   // forward declaration
@@ -259,15 +252,6 @@ namespace pq
     using ThermostatType = settings::ThermostatType;
     using Isotropy       = settings::Isotropy;
     using ManostatType   = settings::ManostatType;
-
-    /************************
-     * thermostat namespace *
-     ************************/
-
-    using Thermostat = thermostat::Thermostat;
-    using NoseHoover = thermostat::NoseHoover;
-
-    using UniqueThermostat = std::unique_ptr<Thermostat>;
 
     /********************
      * virial namespace *
