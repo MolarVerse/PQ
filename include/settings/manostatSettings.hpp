@@ -78,8 +78,8 @@ namespace settings
         static inline double _targetPressure;
 
         // clang-format off
-        static inline double _tauManostat     = defaults::_BERENDSEN_MANOSTAT_RELAX_TIME_;
-        static inline double _compressibility = defaults::_COMPRESSIBILITY_WATER_DEFAULT_;
+        static inline double _tauManostat     = defaults::BERENDSEN_MANOSTAT_RELAX_TIME;
+        static inline double _compressibility = defaults::COMPRESSIBILITY_WATER_DEFAULT;
         // clang-format on
 
         static inline std::vector<size_t> _2DIsotropicAxes;

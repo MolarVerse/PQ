@@ -45,7 +45,8 @@ int main()
 {
     settings::TimingsSettings::setTimeStep(0.001);
 
-    auto  box       = benchSetup::makePopulatedBox(20, 3);
+    auto box =
+        benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
     auto &molecules = box.getMolecules();
 
     auto constr = constraints::Constraints();

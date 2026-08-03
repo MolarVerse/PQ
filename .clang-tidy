@@ -1,7 +1,16 @@
+# Checks to be ignored:
+# altera-unroll-loops: does not affect the code for non FPGA targets -- gets interesting for OpenCL kernels
+# altera-struct-pack-align: does not affect the code for non FPGA targets -- gets interesting for OpenCL kernels
+# boost-use-ranges: we do not want to use boost at all, to not increase our dependencies even more!!!
 ---
 Checks:          
   '
-  abseil-cleanup-ctad
+  abseil-*,
+  altera-*,
+  android-*,
+  bugprone-reserved-identifier,
+  -altera-struct-pack-align,
+  -altera-unroll-loops
   '
 WarningsAsErrors: ''
 HeaderFileExtensions:
@@ -49,44 +58,6 @@ FormatStyle:     google
 ...
 
 ### TO BE INCLUDED IN THE FUTURE
-# abseil-duration-addition,
-  # abseil-duration-comparison,
-  # abseil-duration-conversion-cast,
-  # abseil-duration-division,
-  # abseil-duration-factory-float,
-  # abseil-duration-factory-scale,
-  # abseil-duration-subtraction,
-  # abseil-duration-unnecessary-conversion,
-  # abseil-faster-strsplit-delimiter,
-  # abseil-no-internal-dependencies,
-  # abseil-no-namespace,
-  # abseil-redundant-strcat-calls,
-  # abseil-str-cat-append,
-  # abseil-string-find-startswith,
-  # abseil-string-find-str-contains,
-  # abseil-time-comparison,
-  # abseil-time-subtraction,
-  # abseil-upgrade-duration-conversions,
-  # altera-id-dependent-backward-branch,
-  # altera-kernel-name-restriction,
-  # altera-single-work-item-barrier,
-  # altera-struct-pack-align,
-  # altera-unroll-loops,
-  # android-cloexec-accept,
-  # android-cloexec-accept4,
-  # android-cloexec-creat,
-  # android-cloexec-dup,
-  # android-cloexec-epoll-create,
-  # android-cloexec-epoll-create1,
-  # android-cloexec-fopen,
-  # android-cloexec-inotify-init,
-  # android-cloexec-inotify-init1,
-  # android-cloexec-memfd-create,
-  # android-cloexec-open,
-  # android-cloexec-pipe,
-  # android-cloexec-pipe2,
-  # android-cloexec-socket,
-  # android-comparison-in-temp-failure-retry,
   # boost-use-to-string,
   # bugprone-argument-comment,
   # bugprone-assert-side-effect,
@@ -131,7 +102,6 @@ FormatStyle:     google
   # bugprone-parent-virtual-call,
   # bugprone-posix-return,
   # bugprone-redundant-branch-condition,
-  # bugprone-reserved-identifier,
   # bugprone-shared-ptr-array-mismatch,
   # bugprone-signal-handler,
   # bugprone-signed-char-misuse,

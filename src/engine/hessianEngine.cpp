@@ -387,14 +387,14 @@ void HessianEngine::setupConvergence(pq::SharedOptimizer &optimizer)
     const auto maxForceOptional  = ConvSettings::getMaxForceConv();
     const auto rmsForceOptional  = ConvSettings::getRMSForceConv();
 
-    auto relEnergy = energyOptional.value_or(_REL_ENERGY_CONV_DEFAULT_);
-    auto absEnergy = energyOptional.value_or(_ABS_ENERGY_CONV_DEFAULT_);
+    auto relEnergy = energyOptional.value_or(REL_ENERGY_CONV_DEFAULT);
+    auto absEnergy = energyOptional.value_or(ABS_ENERGY_CONV_DEFAULT);
 
     relEnergy = relEnergyOptional.value_or(relEnergy);
     absEnergy = absEnergyOptional.value_or(absEnergy);
 
-    auto maxForce = forceOptional.value_or(_MAX_FORCE_CONV_DEFAULT_);
-    auto rmsForce = forceOptional.value_or(_RMS_FORCE_CONV_DEFAULT_);
+    auto maxForce = forceOptional.value_or(MAX_FORCE_CONV_DEFAULT);
+    auto rmsForce = forceOptional.value_or(RMS_FORCE_CONV_DEFAULT);
 
     maxForce = maxForceOptional.value_or(maxForce);
     rmsForce = rmsForceOptional.value_or(rmsForce);
