@@ -178,7 +178,7 @@ void ThermostatSetup::setupNoseHooverThermostat()
     const auto nhChainLength = ThermostatSettings::getNoseHooverChainLength();
 
     auto nhCouplFreq  = ThermostatSettings::getNoseHooverCouplingFrequency();
-    nhCouplFreq       *= PER_CM_TO_HZ;
+    nhCouplFreq      *= PER_CM_TO_HZ;
 
     const auto chi  = std::vector<double>(nhChainLength + 1, 0.0);
     const auto zeta = std::vector<double>(nhChainLength + 1, 0.0);
@@ -251,9 +251,10 @@ void ThermostatSetup::setupTemperatureRamp()
 
     const auto frequency = ThermostatSettings::getTemperatureRampFrequency();
 
-    const auto targetTemp   = ThermostatSettings::getTargetTemperature();
-    const auto tempDelta    = targetTemp - startTemp;
-    const auto tempIncrease = tempDelta / double(steps) * frequency;
+    const auto targetTemp = ThermostatSettings::getTargetTemperature();
+    const auto tempDelta  = targetTemp - startTemp;
+    const auto tempIncrease =
+        tempDelta / double(steps) * static_cast<double>(frequency);
 
     _engine.getThermostat().setTemperatureIncrease(tempIncrease);
     _engine.getThermostat().setTemperatureRampingFrequency(frequency);

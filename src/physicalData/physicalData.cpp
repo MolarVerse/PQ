@@ -94,7 +94,7 @@ void PhysicalData::calculateKinetics(SimulationBox &simulationBox)
     _kineticEnergy = trace(kineticEnergyAtomicTensor);
 
     _angularMomentum  = simulationBox.calculateAngularMomentum(_momentum);
-    _angularMomentum  *= FS_TO_S;
+    _angularMomentum *= FS_TO_S;
 
     _momentum *= FS_TO_S;
 
@@ -363,7 +363,7 @@ PhysicalData physicalData::mean(std::vector<PhysicalData> &dataVec)
         { meanData.updateAverages(physicalData); }
     );
 
-    meanData.makeAverages(dataVec.size());
+    meanData.makeAverages(static_cast<double>(dataVec.size()));
 
     return meanData;
 }

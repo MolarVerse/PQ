@@ -74,12 +74,13 @@ void NoseHooverThermostat::applyThermostatOnForces(SimulationBox &simBox)
     const auto kB        = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
     const auto kT_target = kB * _targetTemperature;
 
-    const double degreesOfFreedom    = simBox.getDegreesOfFreedom();
-    const auto   couplingFreqSquared = _couplingFrequency * _couplingFrequency;
+    const double degreesOfFreedom =
+        static_cast<double>(simBox.getDegreesOfFreedom());
+    const auto couplingFreqSquared = _couplingFrequency * _couplingFrequency;
 
     auto factor  = _chi[0] * couplingFreqSquared;
     factor      /= (kT_target * degreesOfFreedom);
-    factor       *= MOMENTUM_TO_FORCE;
+    factor      *= MOMENTUM_TO_FORCE;
 
     auto applyNoseHoover = [factor](auto &atom)
     { atom->addForce(-factor * atom->getVelocity() * atom->getMass()); };
