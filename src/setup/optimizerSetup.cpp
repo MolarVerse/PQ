@@ -386,8 +386,8 @@ void OptimizerSetup::writeSetupInfo() const
 
     if (lrStrategy == CONSTANT_DECAY || lrStrategy == EXPONENTIAL_DECAY)
     {
-        const auto decay         = OptimizerSettings::getLearningRateDecay();
-        const auto alphaDecayStr = std::format("{:.2e}", decay.value());
+        const auto decay = OptimizerSettings::getLearningRateDecay();
+        decayLRStr       = std::format("{:.2e}", decay.value());
     }
 
     // clang-format off
