@@ -53,7 +53,7 @@ namespace benchSetup
         void setNonCoulombPairsMatrix(
             const std::size_t                  i,
             const std::size_t                  j,
-            const potential::LennardJonesPair &pair
+            const potential::LennardJonesPair& pair
         )
         {
             nonCoulomb._nonCoulPairsMatPtr->matrix(i, j) =
@@ -62,7 +62,7 @@ namespace benchSetup
 
         void setNonCoulombPairsMatrix(
             const linearAlgebra::Matrix<
-                std::shared_ptr<potential::NonCoulombPair>> &matrix
+                std::shared_ptr<potential::NonCoulombPair>>& matrix
         )
         {
             nonCoulomb._nonCoulPairsMatPtr->matrix = matrix;
