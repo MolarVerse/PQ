@@ -97,23 +97,6 @@ namespace constraints
 
 }   // namespace constraints
 
-namespace opt
-{
-    class LearningRateStrategy;
-    class ConstantLRStrategy;
-    class ConstantDecayLRStrategy;
-
-    class Evaluator;
-    class MMEvaluator;
-    class HessianBuilder;
-
-    class Optimizer;
-    class SteepestDescent;
-
-    class Convergence;
-
-}   // namespace opt
-
 namespace output
 {
     class EnergyOutput;       // forward declaration
@@ -291,10 +274,6 @@ namespace pq
 
     using UniqueEngine = std::unique_ptr<Engine>;
 
-    using HessianMatrix        = std::vector<std::vector<double>>;
-    using HessianBuilder       = opt::HessianBuilder;
-    using SharedHessianBuilder = std::shared_ptr<opt::HessianBuilder>;
-
     /***********************
      * potential namespace *
      ***********************/
@@ -363,25 +342,6 @@ namespace pq
     using PhysicalData       = physicalData::PhysicalData;
     using VecPhysicalData    = std::vector<PhysicalData>;
     using SharedPhysicalData = std::shared_ptr<physicalData::PhysicalData>;
-
-    /*****************
-     * opt namespace *
-     *****************/
-
-    using Evaluator       = opt::Evaluator;
-    using MMEvaluator     = opt::MMEvaluator;
-    using SharedEvaluator = std::shared_ptr<opt::Evaluator>;
-
-    using LearningRate       = opt::LearningRateStrategy;
-    using ConstantLR         = opt::ConstantLRStrategy;
-    using ConstantDecayLR    = opt::ConstantDecayLRStrategy;
-    using SharedLearningRate = std::shared_ptr<opt::LearningRateStrategy>;
-
-    using Optimizer       = opt::Optimizer;
-    using SteepestDescent = opt::SteepestDescent;
-    using SharedOptimizer = std::shared_ptr<opt::Optimizer>;
-
-    using Convergence = opt::Convergence;
 
 }   // namespace pq
 
