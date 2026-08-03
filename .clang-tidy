@@ -61,21 +61,6 @@ FormatStyle:     google
 ...
 
 ### TO BE INCLUDED IN THE FUTURE
-  # bugprone-terminating-continue,
-  # bugprone-throw-keyword-missing,
-  # bugprone-too-small-loop-variable,
-  # bugprone-unchecked-optional-access,
-  # bugprone-undefined-memory-manipulation,
-  # bugprone-undelegated-constructor,
-  # bugprone-unhandled-exception-at-new,
-  # bugprone-unhandled-self-assignment,
-  # bugprone-unique-ptr-array-mismatch,
-  # bugprone-unsafe-functions,
-  # bugprone-unused-local-non-trivial-variable,
-  # bugprone-unused-raii,
-  # bugprone-unused-return-value,
-  # bugprone-use-after-move,
-  # bugprone-virtual-near-miss,
   # cert-con36-c,
   # cert-con54-cpp,
   # cert-dcl03-c,
