@@ -42,14 +42,29 @@ class TestNonCoulombPotentialFF : public ::testing::Test
     linearAlgebra::Matrix<pq::SharedNonCoulPair> getNonCoulombPairsMatrix(
     ) const
     {
-        return _nonCoulombPotential->_nonCoulPairsMatPtr->matrix;
+        return getNonCoulombPairsMatrix(*_nonCoulombPotential);
+    }
+
+    [[nodiscard]] static linearAlgebra::Matrix<pq::SharedNonCoulPair> getNonCoulombPairsMatrix(
+        const potential::ForceFieldNonCoulomb &potential
+    )
+    {
+        return potential._nonCoulPairsMatPtr->matrix;
     }
 
     void setNonCoulombPairsMatrix(
         const linearAlgebra::Matrix<pq::SharedNonCoulPair> &matrix
     )
     {
-        _nonCoulombPotential->_nonCoulPairsMatPtr->matrix = matrix;
+        setNonCoulombPairsMatrix(*_nonCoulombPotential, matrix);
+    }
+
+    static void setNonCoulombPairsMatrix(
+        potential::ForceFieldNonCoulomb                    &potential,
+        const linearAlgebra::Matrix<pq::SharedNonCoulPair> &matrix
+    )
+    {
+        potential._nonCoulPairsMatPtr->matrix = matrix;
     }
 
     void setNonCoulombPairsMatrix(
@@ -58,7 +73,17 @@ class TestNonCoulombPotentialFF : public ::testing::Test
         const potential::LennardJonesPair &pair
     )
     {
-        _nonCoulombPotential->_nonCoulPairsMatPtr->matrix(row, col) =
+        setNonCoulombPairsMatrix(*_nonCoulombPotential, row, col, pair);
+    }
+
+    static void setNonCoulombPairsMatrix(
+        potential::ForceFieldNonCoulomb   &potential,
+        const size_t                       row,
+        const size_t                       col,
+        const potential::LennardJonesPair &pair
+    )
+    {
+        potential._nonCoulPairsMatPtr->matrix(row, col) =
             std::make_shared<potential::LennardJonesPair>(pair);
     }
 

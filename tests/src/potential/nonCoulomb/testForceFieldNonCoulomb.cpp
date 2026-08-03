@@ -28,6 +28,7 @@
 #include <map>        // for map
 #include <memory>     // for make_shared, shared_ptr
 #include <optional>   // for optional, nullopt
+#include <utility>    // for move
 #include <vector>     // for vector
 
 #include "exceptions.hpp"             // for ParameterFileException
@@ -37,6 +38,65 @@
 #include "matrix.hpp"                 // for Matrix
 #include "nonCoulombPair.hpp"         // for NonCoulombPair
 #include "throwWithMessage.hpp"       // for EXPECT_THROW_MSG
+
+TEST_F(TestNonCoulombPotentialFF, copyConstructorCopiesOwnedMatrix)
+{
+    setNonCoulombPairsMatrix(linearAlgebra::Matrix<pq::SharedNonCoulPair>(1));
+    const auto pair =
+        potential::LennardJonesPair(size_t(1), size_t(1), 2.0, 1.0, 1.0);
+    setNonCoulombPairsMatrix(0, 0, pair);
+    _nonCoulombPotential->setNonCoulombPairsVector(
+        {std::make_shared<potential::LennardJonesPair>(pair)}
+    );
+
+    auto copy = potential::ForceFieldNonCoulomb(*_nonCoulombPotential);
+
+    EXPECT_EQ(copy.getNonCoulombPairsVector().size(), 1);
+    EXPECT_EQ(
+        getNonCoulombPairsMatrix(copy)(0, 0),
+        getNonCoulombPairsMatrix()(0, 0)
+    );
+
+    const auto replacement =
+        potential::LennardJonesPair(size_t(1), size_t(1), 3.0, 2.0, 1.0);
+    setNonCoulombPairsMatrix(*_nonCoulombPotential, 0, 0, replacement);
+    EXPECT_NE(
+        getNonCoulombPairsMatrix(copy)(0, 0),
+        getNonCoulombPairsMatrix()(0, 0)
+    );
+}
+
+TEST_F(TestNonCoulombPotentialFF, copyAssignmentCopiesOwnedMatrix)
+{
+    setNonCoulombPairsMatrix(linearAlgebra::Matrix<pq::SharedNonCoulPair>(1));
+    const auto pair =
+        potential::LennardJonesPair(size_t(1), size_t(1), 2.0, 1.0, 1.0);
+    setNonCoulombPairsMatrix(0, 0, pair);
+
+    auto copy = potential::ForceFieldNonCoulomb();
+    copy      = *_nonCoulombPotential;
+
+    const auto  matrixElement = getNonCoulombPairsMatrix(copy)(0, 0);
+    const auto *self          = &copy;
+    copy                      = *self;
+    EXPECT_EQ(getNonCoulombPairsMatrix(copy)(0, 0), matrixElement);
+}
+
+TEST_F(TestNonCoulombPotentialFF, moveOperationsTransferOwnedMatrix)
+{
+    setNonCoulombPairsMatrix(linearAlgebra::Matrix<pq::SharedNonCoulPair>(1));
+    const auto pair =
+        potential::LennardJonesPair(size_t(1), size_t(1), 2.0, 1.0, 1.0);
+    setNonCoulombPairsMatrix(0, 0, pair);
+
+    auto moved =
+        potential::ForceFieldNonCoulomb(std::move(*_nonCoulombPotential));
+    EXPECT_NE(getNonCoulombPairsMatrix(moved)(0, 0), nullptr);
+
+    auto assigned = potential::ForceFieldNonCoulomb();
+    assigned      = std::move(moved);
+    EXPECT_NE(getNonCoulombPairsMatrix(assigned)(0, 0), nullptr);
+}
 
 /**
  * @brief tests determineInternalGlobalVdwTypes function
