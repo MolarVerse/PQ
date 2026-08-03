@@ -30,10 +30,6 @@ from analysis import check_pq_output
 from conftest import execute_pq
 
 
-FORCE_RTOL = 1e-6
-FORCE_ATOL = 1e-8
-
-
 @pytest.mark.parametrize(
     "example_dir",
     ["qm-mm/exact_smoothing/no_water_model/cell_list/"],
@@ -50,6 +46,4 @@ def test_qmmm_exact_cell(test_with_data_dir):
     check_pq_output(
         "output-md-01",
         "qm-mm/exact_smoothing/no_water_model/cell_list",
-        force_rtol=FORCE_RTOL,
-        force_atol=FORCE_ATOL,
     )
