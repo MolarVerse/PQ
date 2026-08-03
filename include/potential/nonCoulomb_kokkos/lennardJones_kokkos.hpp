@@ -28,6 +28,7 @@
 
 #include <Kokkos_DualView.hpp>
 
+#include "matrix.hpp"
 #include "typeAliases.hpp"
 
 namespace potential
@@ -52,7 +53,9 @@ namespace potential
         KokkosLennardJones()  = default;
         ~KokkosLennardJones() = default;
 
-        void transferFromNonCoulombPairMatrix(pq::SharedNonCoulPairMat &);
+        void transferFromNonCoulombPairMatrix(
+            linearAlgebra::Matrix<pq::SharedNonCoulPair> &
+        );
 
         KOKKOS_FUNCTION double calculate(
             const double distance,

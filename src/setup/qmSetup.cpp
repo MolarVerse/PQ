@@ -22,6 +22,7 @@
 
 #include "qmSetup.hpp"
 
+#include <format>        // for format
 #include <string_view>   // for string_view
 
 #include "exceptions.hpp"          // for InputFileException

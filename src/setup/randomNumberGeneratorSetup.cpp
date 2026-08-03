@@ -22,6 +22,8 @@
 
 #include "randomNumberGeneratorSetup.hpp"
 
+#include <format>
+
 #include "engine.hpp"     // for Engine
 #include "settings.hpp"   // for Settings
 

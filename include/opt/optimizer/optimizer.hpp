@@ -62,12 +62,14 @@ namespace opt
         Optimizer()          = default;
         virtual ~Optimizer() = default;
 
-        virtual pq::SharedOptimizer clone() const                      = 0;
-        virtual void                update(const double, const size_t) = 0;
-        virtual size_t              maxHistoryLength() const           = 0;
+        [[nodiscard]]
+        virtual std::shared_ptr<Optimizer> clone() const = 0;
+        virtual void update(const double, const size_t)  = 0;
+        [[nodiscard]]
+        virtual size_t maxHistoryLength() const = 0;
 
-        void updateHistory();
-        bool hasConverged();
+        void               updateHistory();
+        [[nodiscard]] bool hasConverged();
 
         /***************************
          * standard setter methods *

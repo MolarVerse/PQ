@@ -25,9 +25,10 @@
 #include <cstdint>      // for UINT32_MAX
 #include <cstdio>       // for remove
 #include <filesystem>   // for create_directory
-#include <fstream>      // for ofstream
-#include <stdexcept>    // for out_of_range and invalid_argument
-#include <string>       // for string, allocator
+#include <format>
+#include <fstream>     // for ofstream
+#include <stdexcept>   // for out_of_range and invalid_argument
+#include <string>      // for string, allocator
 
 #include "exceptions.hpp"        // for InputFileException
 #include "gmock/gmock.h"         // for ElementsAre, MakePredicateFormatter

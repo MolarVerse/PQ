@@ -42,6 +42,24 @@ using namespace settings;
 using namespace simulationBox;
 
 /**
+ * @brief struct to hold the mShake matrices and their inverses
+ *
+ */
+struct MShake::MShakeMatrices
+{
+    std::vector<Matrix<double>> mShakeMatrices;
+    std::vector<Matrix<double>> mShakeInvMatrices;
+};
+
+/**
+ * @brief constructor
+ *
+ **/
+MShake::MShake() : _mShakeMatrices(std::make_unique<MShakeMatrices>()) {}
+
+MShake::~MShake() = default;
+
+/**
  * @brief init M - Shake
  *
  **/
@@ -120,8 +138,8 @@ void MShake::initMShakeReferences()
          * size equal to the number of m-shake molecule types  *
          *******************************************************/
         _mShakeRSquaredRefs.push_back(rSquaredRefs);
-        _mShakeMatrices.push_back(mShakeMatrix);
-        _mShakeInvMatrices.push_back(invMatrix);
+        _mShakeMatrices->mShakeMatrices.push_back(mShakeMatrix);
+        _mShakeMatrices->mShakeInvMatrices.push_back(invMatrix);
     }
 }
 
@@ -152,8 +170,9 @@ void MShake::applyMShake(SimulationBox &simBox)
         const auto mShakeIndex  = findMShakeReferenceIndex(moltype);
         const auto mShakeR2Refs = _mShakeRSquaredRefs[mShakeIndex];
         const auto nAtoms       = molecule.getNumberOfAtoms();
-        const auto nBonds       = _mShakeInvMatrices[mShakeIndex].rows();
-        auto      &atoms        = molecule.getAtoms();
+        const auto nBonds =
+            _mShakeMatrices->mShakeInvMatrices[mShakeIndex].rows();
+        auto &atoms = molecule.getAtoms();
 
         std::vector<Vec3D>  bondsUnconstrained(nBonds);
         std::vector<Vec3D>  bondsPrevious(nBonds);
@@ -380,9 +399,9 @@ void MShake::applyMRattle(SimulationBox &simulationBox)
 
         const auto mShakeIndex  = findMShakeReferenceIndex(moltype);
         const auto mShakeR2Refs = _mShakeRSquaredRefs[mShakeIndex];
-        auto       mShakeMatrix = _mShakeInvMatrices[mShakeIndex];
-        const auto nAtoms       = molecule.getNumberOfAtoms();
-        const auto nBonds       = mShakeMatrix.rows();
+        auto mShakeMatrix = _mShakeMatrices->mShakeInvMatrices[mShakeIndex];
+        const auto nAtoms = molecule.getNumberOfAtoms();
+        const auto nBonds = mShakeMatrix.rows();
 
         auto &atoms = molecule.getAtoms();
 

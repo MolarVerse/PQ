@@ -22,6 +22,8 @@
 
 #include "resetKineticsSetup.hpp"
 
+#include <format>   // for format
+
 #include "engine.hpp"          // for Engine
 #include "mdEngine.hpp"        // for MDEngine
 #include "resetKinetics.hpp"   // for ResetMomentum, ResetTemperature, resetK...

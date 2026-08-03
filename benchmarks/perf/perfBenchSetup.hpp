@@ -33,6 +33,7 @@
 
 #include "atom.hpp"
 #include "forceFieldNonCoulomb.hpp"
+#include "forceFieldNonCoulombImpl.hpp"
 #include "lennardJonesPair.hpp"
 #include "matrix.hpp"
 #include "molecule.hpp"
@@ -45,6 +46,29 @@ namespace potential
 
 namespace benchSetup
 {
+    struct BenchNonCoulombFFPot
+    {
+        potential::ForceFieldNonCoulomb nonCoulomb;
+
+        void setNonCoulombPairsMatrix(
+            const std::size_t                  i,
+            const std::size_t                  j,
+            const potential::LennardJonesPair& pair
+        )
+        {
+            nonCoulomb._nonCoulPairsMatPtr->matrix(i, j) =
+                std::make_shared<potential::LennardJonesPair>(pair);
+        }
+
+        void setNonCoulombPairsMatrix(
+            const linearAlgebra::Matrix<
+                std::shared_ptr<potential::NonCoulombPair>>& matrix
+        )
+        {
+            nonCoulomb._nonCoulPairsMatPtr->matrix = matrix;
+        }
+    };
+
     /**
      * @brief Parameters for a molecule to be constructed by makeMolecule().
      */
@@ -99,8 +123,8 @@ namespace benchSetup
     // A ForceFieldNonCoulomb with a Lennard-Jones pair for the 0/1 vdW types.
     inline potential::ForceFieldNonCoulomb makeNonCoulomb()
     {
-        auto nonCoulomb = potential::ForceFieldNonCoulomb();
-        nonCoulomb.setNonCoulombPairsMatrix(
+        benchSetup::BenchNonCoulombFFPot potential;
+        potential.setNonCoulombPairsMatrix(
             linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(
                 2,
                 2
@@ -114,10 +138,10 @@ namespace benchSetup
             2.0,
             3.0
         );
-        nonCoulomb.setNonCoulombPairsMatrix(0, 1, pair);
-        nonCoulomb.setNonCoulombPairsMatrix(1, 0, pair);
+        potential.setNonCoulombPairsMatrix(0, 1, pair);
+        potential.setNonCoulombPairsMatrix(1, 0, pair);
 
-        return nonCoulomb;
+        return potential.nonCoulomb;
     }
 
     /**

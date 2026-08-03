@@ -22,6 +22,8 @@
 
 #include "constraintsSetup.hpp"
 
+#include <format>
+
 #include "constraintSettings.hpp"   // for getShakeMaxIter, getShakeTolerance, getRattleMaxIter, getRattleTolerance
 #include "constraints.hpp"    // for Constraints
 #include "engine.hpp"         // for Engine
