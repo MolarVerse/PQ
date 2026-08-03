@@ -26,3 +26,5 @@ target_link_libraries(parameterFileReader
 install(TARGETS parameterFileReader
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )
+
+target_precompile_headers(parameterFileReader REUSE_FROM pq_pch)

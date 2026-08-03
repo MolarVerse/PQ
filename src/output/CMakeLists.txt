@@ -46,6 +46,8 @@ if(BUILD_WITH_TESTS)
     )
 endif()
 
+target_precompile_headers(output REUSE_FROM pq_pch)
+
 install(TARGETS output
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

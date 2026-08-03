@@ -26,6 +26,8 @@ target_link_libraries(constraints
 
 )
 
+target_precompile_headers(constraints REUSE_FROM pq_pch)
+
 install(TARGETS constraints
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

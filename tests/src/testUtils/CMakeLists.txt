@@ -15,7 +15,3 @@ target_link_libraries(testUtils
     coulombPotential
     nonCoulombPotential
 )
-
-install(TARGETS testUtils
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
-)
