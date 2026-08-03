@@ -256,57 +256,38 @@ void PotentialBruteForce::calculateHotspotSmoothingMMForces(
     double totalCoulombEnergy    = 0.0;
     double totalNonCoulombEnergy = 0.0;
 
-    std::vector<std::reference_wrapper<Molecule>> coreRecipients;
-    std::vector<std::reference_wrapper<Molecule>> nonCoreRecipients;
-
-    for (auto &mol2 : simBox.getMoleculesOutsideZone(SMOOTHING))
-    {
-        if (mol2.getHybridZone() == CORE)
-            coreRecipients.push_back(mol2);
-        else
-            nonCoreRecipients.push_back(mol2);
-    }
-
     for (auto &mol1 : simBox.getMoleculesInsideZone(SMOOTHING))
     {
         const auto isMol1Water = mol1.getMoltype() == waterTypeValue;
 
-        // CORE recipients: evaluate Coulomb term only.
-        for (auto mol2 : coreRecipients)
+        for (auto &mol2 : simBox.getMoleculesOutsideZone(SMOOTHING))
         {
             if (isWaterInterModelSet && isMol1Water &&
-                mol2.get().getMoltype() == waterTypeValue)
+                mol2.getMoltype() == waterTypeValue)
                 continue;
 
-            for (auto &atom1 : mol1.getAtoms())
-                for (auto &atom2 : mol2.get().getAtoms())
-                    totalCoulombEnergy += calculateSingleCoulombInteraction<
-                        MMChargeTag,
-                        QMChargeTag>(*box, *atom1, *atom2);
-        }
+            const auto isMol2Core = mol2.getHybridZone() == CORE;
 
-        // Non-CORE recipients: evaluate full interaction.
-        for (auto mol2 : nonCoreRecipients)
-        {
-            if (isWaterInterModelSet && isMol1Water &&
-                mol2.get().getMoltype() == waterTypeValue)
-                continue;
+            // SMOOTHING-CORE interaction: evaluate Coulomb term only
+            if (isMol2Core)
+                for (auto &atom1 : mol1.getAtoms())
+                    for (auto &atom2 : mol2.getAtoms())
+                        totalCoulombEnergy += calculateSingleCoulombInteraction<
+                            MMChargeTag,
+                            QMChargeTag>(*box, *atom1, *atom2);
+            // SMOOTHING-nonCORE: evaluate full interaction
+            else
+                for (auto &atom1 : mol1.getAtoms())
+                    for (auto &atom2 : mol2.getAtoms())
+                    {
+                        const auto [coulombEnergy, nonCoulombEnergy] =
+                            calculateSingleInteraction<
+                                MMChargeTag,
+                                QMChargeTag>(*box, mol1, mol2, *atom1, *atom2);
 
-            for (auto &atom1 : mol1.getAtoms())
-                for (auto &atom2 : mol2.get().getAtoms())
-                {
-                    const auto [coulombEnergy, nonCoulombEnergy] =
-                        calculateSingleInteraction<MMChargeTag, QMChargeTag>(
-                            *box,
-                            mol1,
-                            mol2,
-                            *atom1,
-                            *atom2
-                        );
-
-                    totalCoulombEnergy    += coulombEnergy;
-                    totalNonCoulombEnergy += nonCoulombEnergy;
-                }
+                        totalCoulombEnergy    += coulombEnergy;
+                        totalNonCoulombEnergy += nonCoulombEnergy;
+                    }
         }
     }
 
