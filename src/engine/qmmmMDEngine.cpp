@@ -22,10 +22,11 @@
 
 #include "qmmmMDEngine.hpp"
 
-#include <cmath>    // for abs
-#include <format>   // for format
-#include <limits>   // for numeric_limits
-#include <vector>   // for vector
+#include <cstdlib>      // for abs
+#include <format>       // for format
+#include <functional>   // for reference_wrapper
+#include <limits>       // for numeric_limits
+#include <vector>       // for vector
 
 #include "exceptions.hpp"       // for HybridMDEngineException
 #include "hybridSettings.hpp"   // for HybridSettings
@@ -81,7 +82,7 @@ namespace engine
     {
         using enum SmoothingMethod;
 
-        const auto& smoothingMethod = HybridSettings::getSmoothingMethod();
+        const auto &smoothingMethod = HybridSettings::getSmoothingMethod();
 
         if (smoothingMethod == HOTSPOT)
             applyHotspotSmoothing();
@@ -107,7 +108,7 @@ namespace engine
 
         tensor3D   virial     = {0.0};
         auto       numQMAtoms = 0.0;
-        auto&      atoms      = _simulationBox->getAtoms();
+        auto      &atoms      = _simulationBox->getAtoms();
         const auto nSmMol =
             distance(_simulationBox->getMoleculesInsideZone(SMOOTHING));
 
@@ -134,7 +135,7 @@ namespace engine
             numQMAtoms += _simulationBox->getNumberOfQMAtoms() * globalSmF;
 
             // to not carry over qm_charges of atoms which are not qm anymore
-            for (auto& atom : _simulationBox->getAtoms())
+            for (auto &atom : _simulationBox->getAtoms())
                 atom->getQMCharge().reset();
 
             _qmRunner->run(*_simulationBox, *_physicalData, NON_PERIODIC);
@@ -217,7 +218,7 @@ namespace engine
     {
         using enum Periodicity;
 
-        auto&    atoms  = _simulationBox->getAtoms();
+        auto    &atoms  = _simulationBox->getAtoms();
         tensor3D virial = {0.0};
 
         // Set number of QM atoms in physical data for output purposes
@@ -230,7 +231,11 @@ namespace engine
 
         _qmRunner->run(*_simulationBox, *_physicalData, NON_PERIODIC);
 
-        distributeSmoothingMolQMForces();
+        if (HybridSettings::getQMForceDist() == QMForceDist::NONE)
+            scaleSmoothingMoleculeForcesInner();
+        else
+            distributeSmoothingMolQMForces();
+
         virial += _virial->calculateQMVirial(*_simulationBox);
         virial += _virial->intraMolecularVirialCorrection(*_simulationBox);
         addCurrentForcesToInnerAndReset(atoms);
@@ -342,7 +347,7 @@ namespace engine
     void QMMMMDEngine::moltypeCheck()
     {
         size_t count = 0;
-        for (const auto& mol : _simulationBox->getMolecules())
+        for (const auto &mol : _simulationBox->getMolecules())
         {
             if (mol.getMoltype() == 0 && mol.getHybridZone() != CORE)
                 throw(HybridMDEngineException(
@@ -413,47 +418,23 @@ namespace engine
      * - DISTANCE_WEIGHTED: redistribute each smoothing-molecule deficit using
      *   switched-polynomial COM distance weights, then split by atomic mass
      *   within each recipient molecule.
+     *
+     * @note For each smoothing molecule, the current atom forces are first
+     * scaled by smF and only the force deficit F*(1-smF) is redistributed.
+     *
+     * @throws HybridMDEngineException if no CORE/LAYER recipient molecules are
+     * available for redistribution.
      */
     void QMMMMDEngine::distributeSmoothingMolQMForces()
     {
         const auto type = HybridSettings::getQMForceDist();
+        std::vector<std::reference_wrapper<Molecule>> recipientMolecules;
 
-        using enum QMForceDist;
+        for (auto &mol : _simulationBox->getMoleculesInsideZone(CORE))
+            recipientMolecules.push_back(mol);
 
-        switch (type)
-        {
-            case NONE: scaleSmoothingMoleculeForcesInner(); break;
-            case EQUAL: distributeSmoothingMolQMForcesEqually(); break;
-            case RANDOM: distributeSmoothingMolQMForcesRandom(); break;
-            case DISTANCE_WEIGHTED:
-                distributeSmoothingMolQMForcesDistanceWeighted();
-                break;
-        }
-    }
-
-    /**
-     * @brief Redistribute removed smoothing-zone QM force equally over
-     * CORE and LAYER molecules.
-     *
-     * @details The smoothing-zone force deficit is computed per smoothing
-     * molecule: smoothing atom forces are scaled by smF and the removed force
-     * F * (1 - smF) of that smoothing molecule is accumulated. This deficit
-     * is then distributed equally across all CORE/LAYER molecules. Each
-     * recipient molecule distributes its received share to its atoms
-     * proportional to atomic masses.
-     *
-     * @throws HybridMDEngineException if no CORE/LAYER molecules are available
-     * for redistribution.
-     */
-    void QMMMMDEngine::distributeSmoothingMolQMForcesEqually()
-    {
-        std::vector<Molecule*> recipientMolecules;
-
-        for (auto& mol : _simulationBox->getMoleculesInsideZone(CORE))
-            recipientMolecules.push_back(&mol);
-
-        for (auto& mol : _simulationBox->getMoleculesInsideZone(LAYER))
-            recipientMolecules.push_back(&mol);
+        for (auto &mol : _simulationBox->getMoleculesInsideZone(LAYER))
+            recipientMolecules.push_back(mol);
 
         if (recipientMolecules.empty())
             throw HybridMDEngineException(
@@ -461,241 +442,135 @@ namespace engine
                 "molecules available."
             );
 
-        const auto nRecipients = static_cast<double>(recipientMolecules.size());
-
-        for (auto& smoothingMol :
+        for (auto &smoothingMol :
              _simulationBox->getMoleculesInsideZone(SMOOTHING))
         {
             const auto smF = smoothingMol.getSmoothingFactor();
 
             auto deficitForce = Vec3D{0.0};
-            for (auto& atom : smoothingMol.getAtoms())
+            for (auto &atom : smoothingMol.getAtoms())
             {
                 deficitForce += atom->getForce() * (1 - smF);
                 atom->scaleForce(smF);
             }
 
-            const auto molShare = deficitForce / nRecipients;
+            auto weights = std::vector<double>(recipientMolecules.size(), 0.0);
 
-            for (auto* recipientMol : recipientMolecules)
+            // clang-format off
+            switch (type)
             {
-                const auto molMass = recipientMol->getMolMass();
+                using enum QMForceDist;
 
-                if (molMass > 0.0)
-                {
-                    for (auto& atom : recipientMol->getAtoms())
-                    {
-                        const auto massFraction = atom->getMass() / molMass;
-                        atom->addForce(molShare * massFraction);
-                    }
-                }
-                else
-                {
-                    const auto nAtoms = recipientMol->getNumberOfAtoms();
-                    const auto perAtomShare =
-                        molShare / static_cast<double>(nAtoms);
-                    for (auto& atom : recipientMol->getAtoms())
-                        atom->addForce(perAtomShare);
-                }
+                case NONE: continue;
+                case EQUAL: weights = std::vector<double>(recipientMolecules.size(), 1.0); break;
+                case RANDOM: weights = getRandomWeights(recipientMolecules); break;
+                case DISTANCE_WEIGHTED: weights = getDistanceWeights(smoothingMol, recipientMolecules); break;
             }
-        }
-    }
+            // clang-format on
 
-    /**
-     * @brief Redistribute removed smoothing-zone QM force randomly over
-     * CORE and LAYER molecules.
-     *
-     * @details The smoothing-zone force deficit is computed identically to the
-     * equal strategy, but per smoothing molecule: smoothing atom forces are
-     * scaled by smF and the removed force F * (1 - smF) of that smoothing
-     * molecule is accumulated. This deficit is then distributed onto
-     * CORE/LAYER molecules using random positive molecule weights normalized
-     * to sum to 1. Each recipient molecule distributes its received share to
-     * its atoms proportional to atomic masses.
-     *
-     * @throws HybridMDEngineException if no CORE/LAYER molecules are available
-     * for redistribution.
-     */
-    void QMMMMDEngine::distributeSmoothingMolQMForcesRandom()
-    {
-        std::vector<Molecule*> recipientMolecules;
-
-        for (auto& mol : _simulationBox->getMoleculesInsideZone(CORE))
-            recipientMolecules.push_back(&mol);
-
-        for (auto& mol : _simulationBox->getMoleculesInsideZone(LAYER))
-            recipientMolecules.push_back(&mol);
-
-        if (recipientMolecules.empty())
-            throw HybridMDEngineException(
-                "Cannot redistribute smoothing inner force: no CORE/LAYER "
-                "molecules available."
-            );
-
-        for (auto& smoothingMol :
-             _simulationBox->getMoleculesInsideZone(SMOOTHING))
-        {
-            const auto smF = smoothingMol.getSmoothingFactor();
-
-            auto deficitForce = Vec3D{0.0};
-            for (auto& atom : smoothingMol.getAtoms())
-            {
-                deficitForce += atom->getForce() * (1 - smF);
-                atom->scaleForce(smF);
-            }
-
-            std::vector<double> randomWeights(recipientMolecules.size(), 0.0);
-            auto                weightSum = 0.0;
-
-            for (auto& weight : randomWeights)
-            {
-                weight =
-                    _randomNumberGenerator.getUniformRealDistribution(0.0, 1.0);
-                if (weight == 0.0)
-                    weight = std::numeric_limits<double>::min();
-
-                weightSum += weight;
-            }
-
-            for (size_t i = 0; i < recipientMolecules.size(); ++i)
-            {
-                const auto molShare =
-                    deficitForce * (randomWeights[i] / weightSum);
-
-                auto&      recipientMol = *recipientMolecules[i];
-                const auto molMass      = recipientMol.getMolMass();
-
-                if (molMass > 0.0)
-                {
-                    for (auto& atom : recipientMol.getAtoms())
-                    {
-                        const auto massFraction = atom->getMass() / molMass;
-                        atom->addForce(molShare * massFraction);
-                    }
-                }
-                else
-                {
-                    const auto nAtoms = recipientMol.getNumberOfAtoms();
-                    const auto perAtomShare =
-                        molShare / static_cast<double>(nAtoms);
-                    for (auto& atom : recipientMol.getAtoms())
-                        atom->addForce(perAtomShare);
-                }
-            }
-        }
-    }
-
-    /**
-     * @brief Redistribute removed smoothing-zone QM force using
-     * distance-weighted molecule contributions.
-     *
-     * @details For each smoothing molecule, the removed force
-     * F * (1 - smF) is accumulated while scaling that smoothing molecule's
-     * atoms by smF. This deficient force is then distributed onto CORE/LAYER
-     * molecules using switched-polynomial weights based on center-of-mass
-     * distance between the current smoothing molecule and each recipient
-     * molecule. Finally, each recipient molecule distributes its received
-     * force to its atoms proportional to atomic masses.
-     *
-     * @note The weighting radius is set to 2 * layer_radius to cover all
-     * CORE/LAYER molecules.
-     *
-     * @throws HybridMDEngineException if no CORE/LAYER molecules are available
-     * for redistribution.
-     */
-    void QMMMMDEngine::distributeSmoothingMolQMForcesDistanceWeighted()
-    {
-        std::vector<Molecule*> recipientMolecules;
-
-        for (auto& mol : _simulationBox->getMoleculesInsideZone(CORE))
-            recipientMolecules.push_back(&mol);
-
-        for (auto& mol : _simulationBox->getMoleculesInsideZone(LAYER))
-            recipientMolecules.push_back(&mol);
-
-        if (recipientMolecules.empty())
-            throw HybridMDEngineException(
-                "Cannot redistribute smoothing inner force: no CORE/LAYER "
-                "molecules available."
-            );
-
-        const auto weightingRadius = 2.0 * HybridSettings::getLayerRadius();
-
-        for (auto& smoothingMol :
-             _simulationBox->getMoleculesInsideZone(SMOOTHING))
-        {
-            const auto smF = smoothingMol.getSmoothingFactor();
-
-            auto deficitForce = Vec3D{0.0};
-            for (auto& atom : smoothingMol.getAtoms())
-            {
-                deficitForce += atom->getForce() * (1 - smF);
-                atom->scaleForce(smF);
-            }
-
-            std::vector<double> rawWeights(recipientMolecules.size(), 0.0);
-            auto                weightSum = 0.0;
-
-            const auto smoothingCOM = smoothingMol.getCenterOfMass();
-
-            for (size_t i = 0; i < recipientMolecules.size(); ++i)
-            {
-                const auto delta =
-                    recipientMolecules[i]->getCenterOfMass() - smoothingCOM;
-
-                const auto distance = linearAlgebra::norm(delta);
-
-                auto switchedWeight = 0.0;
-                if (weightingRadius > 0.0)
-                {
-                    const auto x = distance / weightingRadius;
-
-                    if (x < 1.0)
-                    {
-                        const auto x3 = x * x * x;
-                        const auto x4 = x3 * x;
-                        const auto x5 = x4 * x;
-
-                        switchedWeight = 1.0 - 10.0 * x3 + 15.0 * x4 - 6.0 * x5;
-                    }
-                }
-
-                rawWeights[i]  = switchedWeight;
-                weightSum     += switchedWeight;
-            }
+            // normalize weights to sum to 1
+            auto weightSum = 0.0;
+            for (const auto weight : weights) weightSum += weight;
 
             if (std::abs(weightSum) <= std::numeric_limits<double>::epsilon())
             {
-                for (auto& weight : rawWeights) weight = 1.0;
-                weightSum = static_cast<double>(rawWeights.size());
+                // fallback: equal distribution
+                const auto equal = 1.0 / static_cast<double>(weights.size());
+                for (auto &w : weights) w = equal;
+            }
+            else
+            {
+                for (auto &w : weights) w /= weightSum;
             }
 
             for (size_t i = 0; i < recipientMolecules.size(); ++i)
             {
-                const auto molShare =
-                    deficitForce * (rawWeights[i] / weightSum);
-
-                auto&      recipientMol = *recipientMolecules[i];
+                const auto molShare     = deficitForce * weights[i];
+                auto      &recipientMol = recipientMolecules[i].get();
                 const auto molMass      = recipientMol.getMolMass();
 
-                if (molMass > 0.0)
+                for (auto &atom : recipientMol.getAtoms())
                 {
-                    for (auto& atom : recipientMol.getAtoms())
-                    {
-                        const auto massFraction = atom->getMass() / molMass;
-                        atom->addForce(molShare * massFraction);
-                    }
-                }
-                else
-                {
-                    const auto nAtoms = recipientMol.getNumberOfAtoms();
-                    const auto perAtomShare =
-                        molShare / static_cast<double>(nAtoms);
-                    for (auto& atom : recipientMol.getAtoms())
-                        atom->addForce(perAtomShare);
+                    const auto massFraction = atom->getMass() / molMass;
+                    atom->addForce(molShare * massFraction);
                 }
             }
         }
+    }
+
+    /**
+     * @brief Generate random, unnormalized molecule weights.
+     *
+     * @param recipientMolecules Recipient CORE/LAYER molecules.
+     *
+     * @return A vector with one random value in [0, 1] per recipient molecule.
+     *
+     * @details The returned values are intentionally unnormalized. The caller
+     * performs normalization and handles zero-sum fallback logic.
+     */
+    std::vector<double> QMMMMDEngine::getRandomWeights(
+        const std::vector<std::reference_wrapper<Molecule>> &recipientMolecules
+    )
+    {
+        std::vector<double> randomWeights(recipientMolecules.size(), 0.0);
+
+        for (auto &weight : randomWeights)
+            weight = _rng.getUniformRealDistribution(0.0, 1.0);
+
+        return randomWeights;
+    }
+
+    /**
+     * @brief Generate distance-based, unnormalized molecule weights.
+     *
+     * @param smoothingMol The smoothing molecule whose force deficit is being
+     * redistributed.
+     * @param recipientMolecules Recipient CORE/LAYER molecules.
+     *
+     * @return A vector with one switched-polynomial weight per recipient
+     * molecule.
+     *
+     * @details Weights are computed from center-of-mass distance using
+     * weightingRadius = 2 * HybridSettings::getLayerRadius(). For x = d/R and
+     * x < 1, the switch is S(x)=1-10x^3+15x^4-6x^5; otherwise the weight is 0.
+     * The returned values are unnormalized and normalized by the caller.
+     */
+    std::vector<double> QMMMMDEngine::getDistanceWeights(
+        const Molecule                                      &smoothingMol,
+        const std::vector<std::reference_wrapper<Molecule>> &recipientMolecules
+    )
+    {
+        const auto weightingRadius = 2.0 * HybridSettings::getLayerRadius();
+        std::vector<double> weights(recipientMolecules.size(), 0.0);
+
+        const auto smoothingCOM = smoothingMol.getCenterOfMass();
+
+        for (size_t i = 0; i < recipientMolecules.size(); ++i)
+        {
+            const auto delta =
+                recipientMolecules[i].get().getCenterOfMass() - smoothingCOM;
+
+            const auto distance = linearAlgebra::norm(delta);
+
+            auto switchedWeight = 0.0;
+            if (weightingRadius > 0.0)
+            {
+                const auto x = distance / weightingRadius;
+
+                if (x < 1.0)
+                {
+                    const auto x3 = x * x * x;
+                    const auto x4 = x3 * x;
+                    const auto x5 = x4 * x;
+
+                    switchedWeight = 1.0 - 10.0 * x3 + 15.0 * x4 - 6.0 * x5;
+                }
+            }
+
+            weights[i] = switchedWeight;
+        }
+
+        return weights;
     }
 
 }   // namespace engine
