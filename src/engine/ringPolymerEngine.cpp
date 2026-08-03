@@ -107,7 +107,7 @@ void RingPolymerEngine::writeOutput()
 
         const auto dt            = TimingsSettings::getTimeStep();
         const auto effStepDouble = static_cast<double>(effStep);
-        const auto simTime       = effStepDouble * dt * _FS_TO_PS_;
+        const auto simTime       = effStepDouble * dt * FS_TO_PS;
 
         _engineOutput.writeEnergyFile(effStep, _averagePhysicalData);
         _engineOutput.writeInstantEnergyFile(effStep, *_physicalData);
@@ -137,7 +137,7 @@ void RingPolymerEngine::coupleRingPolymerBeads()
     const auto nBeads      = RingPolymerSettings::getNumberOfBeads();
     const auto nAtoms      = _ringPolymerBeads[0].getNumberOfAtoms();
     const auto temp        = ThermostatSettings::getActualTargetTemperature();
-    const auto rpmd_factor = _RPMD_PREFACTOR_ * nBeads * nBeads * temp * temp;
+    const auto rpmd_factor = RPMD_PREFACTOR * nBeads * nBeads * temp * temp;
 
     for (size_t i = 0; i < nBeads; ++i)
     {

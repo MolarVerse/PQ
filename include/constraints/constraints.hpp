@@ -30,7 +30,6 @@
 #include "bondConstraint.hpp"       // for BondConstraint
 #include "defaults.hpp"             // for defaults
 #include "distanceConstraint.hpp"   // for DistanceConstraint
-#include "mShake.hpp"               // for MShake
 #include "mShakeReference.hpp"      // for MShakeReference
 #include "timer.hpp"                // for Timer
 #include "typeAliases.hpp"
@@ -40,6 +39,8 @@
  */
 namespace constraints
 {
+    class MShake;   // forward declaration
+
     /**
      * @class Constraints
      *
@@ -51,24 +52,25 @@ namespace constraints
     class Constraints : public timings::Timer
     {
        private:
-        MShake _mShake;
+        std::unique_ptr<MShake> _mShake;
 
-        bool _shakeActivated         = defaults::_CONSTRAINTS_ACTIVE_DEFAULT_;
-        bool _mShakeActivated        = defaults::_CONSTRAINTS_ACTIVE_DEFAULT_;
-        bool _distanceConstActivated = defaults::_CONSTRAINTS_ACTIVE_DEFAULT_;
+        bool _shakeActivated         = defaults::CONSTRAINTS_ACTIVE_DEFAULT;
+        bool _mShakeActivated        = defaults::CONSTRAINTS_ACTIVE_DEFAULT;
+        bool _distanceConstActivated = defaults::CONSTRAINTS_ACTIVE_DEFAULT;
 
-        size_t _shakeMaxIter  = defaults::_SHAKE_MAX_ITER_DEFAULT_;
-        size_t _rattleMaxIter = defaults::_RATTLE_MAX_ITER_DEFAULT_;
+        size_t _shakeMaxIter  = defaults::SHAKE_MAX_ITER_DEFAULT;
+        size_t _rattleMaxIter = defaults::RATTLE_MAX_ITER_DEFAULT;
 
-        double _shakeTolerance  = defaults::_SHAKE_TOLERANCE_DEFAULT_;
-        double _rattleTolerance = defaults::_RATTLE_TOLERANCE_DEFAULT_;
+        double _shakeTolerance  = defaults::SHAKE_TOLERANCE_DEFAULT;
+        double _rattleTolerance = defaults::RATTLE_TOLERANCE_DEFAULT;
         double _startTime       = 0.0;
 
         std::vector<BondConstraint>     _bondConstraints;
         std::vector<DistanceConstraint> _distanceConstraints;
 
        public:
-        std::shared_ptr<Constraints> clone() const;
+        Constraints();
+        ~Constraints();
 
         void calculateConstraintBondRefs(const pq::SimBox &simulationBox);
 

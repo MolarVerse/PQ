@@ -44,7 +44,7 @@ static constexpr long ITERATIONS = 20000;
 
 int main()
 {
-    auto molecule            = benchSetup::makeMolecule(2);
+    auto molecule            = benchSetup::makeMolecule({.nAtoms = 2});
     auto nonCoulombPotential = benchSetup::makeNonCoulomb();
     auto coulombPotential    = potential::CoulombShiftedPotential(10.0);
 

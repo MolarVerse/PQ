@@ -185,9 +185,9 @@ TEST_F(TestSetup, setupThermostat_langevin)
         );
     EXPECT_EQ(langevinThermostat.getFriction(), 1.0e11);
 
-    const auto conversionFactor =
-        constants::_UNIVERSAL_GAS_CONSTANT_ * constants::_M2_TO_ANGSTROM2_ *
-        constants::_KG_TO_GRAM_ / constants::_FS_TO_S_;
+    const auto conversionFactor = constants::UNIVERSAL_GAS_CONSTANT *
+                                  constants::M2_TO_ANGSTROM2 *
+                                  constants::KG_TO_GRAM / constants::FS_TO_S;
     const auto sigma = std::sqrt(
         4.0 * langevinThermostat.getFriction() * conversionFactor *
         settings::ThermostatSettings::getTargetTemperature() /

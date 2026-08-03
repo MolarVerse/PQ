@@ -46,7 +46,6 @@ namespace potential
 
 namespace benchSetup
 {
-
     struct BenchNonCoulombFFPot
     {
         potential::ForceFieldNonCoulomb nonCoulomb;
@@ -70,20 +69,26 @@ namespace benchSetup
         }
     };
 
+    /**
+     * @brief Parameters for a molecule to be constructed by makeMolecule().
+     */
+    struct MoleculeParams
+    {
+        std::size_t nAtoms;
+        double      origin = 0.0;
+    };
+
     // A molecule of nAtoms on a compact lattice with mass / velocity / force /
     // shift-force / charge / atom-type / vdW-type set. Atom types alternate
     // 0/1 and charges +/-0.4.
-    inline simulationBox::Molecule makeMolecule(
-        const std::size_t nAtoms,
-        const double      origin = 0.0
-    )
+    inline simulationBox::Molecule makeMolecule(const MoleculeParams& params)
     {
         auto molecule = simulationBox::Molecule();
         molecule.setMoltype(1);
-        molecule.setNumberOfAtoms(nAtoms);
+        molecule.setNumberOfAtoms(params.nAtoms);
 
         double molMass = 0.0;
-        for (std::size_t i = 0; i < nAtoms; ++i)
+        for (std::size_t i = 0; i < params.nAtoms; ++i)
         {
             auto atom = std::make_shared<simulationBox::Atom>();
 
@@ -91,7 +96,7 @@ namespace benchSetup
             // Quadratic y-term keeps atoms non-collinear so the bend-force
             // and dihedral kernels exercise their hot path (sin(alpha) != 0).
             const linearAlgebra::Vec3D pos{
-                origin + 1.0 + 0.7 * d,
+                params.origin + 1.0 + 0.7 * d,
                 0.4 * d + 0.1 * d * d,
                 0.25 * d
             };
@@ -139,23 +144,34 @@ namespace benchSetup
         return potential.nonCoulomb;
     }
 
+    /**
+     * @brief Parameters for a populated SimulationBox to be constructed by
+     * makePopulatedBox().
+     */
+    struct BoxParams
+    {
+        std::size_t nMolecules;
+        std::size_t nAtomsPerMol;
+    };
+
     // A SimulationBox populated with nMolecules of nAtomsPerMol. Both the flat
     // atom list (used by integrator/kinetics) and the molecule list (used by
     // center-of-mass/virial) are filled, and the box totals are computed.
     inline simulationBox::SimulationBox makePopulatedBox(
-        const std::size_t nMolecules,
-        const std::size_t nAtomsPerMol
+        const BoxParams& params
     )
     {
         auto box = simulationBox::SimulationBox();
         box.setBoxDimensions({30.0, 30.0, 30.0});
 
-        for (std::size_t m = 0; m < nMolecules; ++m)
+        for (std::size_t m = 0; m < params.nMolecules; ++m)
         {
-            auto molecule =
-                makeMolecule(nAtomsPerMol, 3.0 * static_cast<double>(m));
+            auto molecule = makeMolecule(
+                {.nAtoms = params.nAtomsPerMol,
+                 .origin = 3.0 * static_cast<double>(m)}
+            );
 
-            for (std::size_t i = 0; i < nAtomsPerMol; ++i)
+            for (std::size_t i = 0; i < params.nAtomsPerMol; ++i)
                 box.addAtom(molecule.getAtoms()[i]
                 );   // share the atom pointers
 

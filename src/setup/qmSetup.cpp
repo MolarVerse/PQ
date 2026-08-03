@@ -121,13 +121,13 @@ void QMSetup::setupQMMethodAseXtb()
         return;
 
     if (QMSettings::getXtbMethod() == XtbMethod::GFN1)
-        ReferencesOutput::addReferenceFile(_GFN1_FILE_);
+        ReferencesOutput::addReferenceFile(GFN1_FILE);
 
     else if (QMSettings::getXtbMethod() == XtbMethod::GFN2)
-        ReferencesOutput::addReferenceFile(_GFN2_FILE_);
+        ReferencesOutput::addReferenceFile(GFN2_FILE);
 
     else if (QMSettings::getXtbMethod() == XtbMethod::IPEA1)
-        ReferencesOutput::addReferenceFile(_IPEA1_FILE_);
+        ReferencesOutput::addReferenceFile(IPEA1_FILE);
 }
 
 /**
