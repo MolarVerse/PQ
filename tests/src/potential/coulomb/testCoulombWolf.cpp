@@ -22,7 +22,7 @@
 
 #include <gtest/gtest.h>   // for Test, CmpHelperFloatingPointEQ, Init...
 
-#include <cmath>    // for erfc, exp, sqrt, M_PI
+#include <cmath>   // for erfc, exp, sqrt, M_PI
 
 #include "constants/internalConversionFactors.hpp"   // for _COULOMB_PREFACTOR_
 #include "coulombWolf.hpp"                           // for CoulombWolf
@@ -55,13 +55,13 @@ TEST(TestCoulombWolf, calculate)
 
     EXPECT_DOUBLE_EQ(
         energy,
-        chargeProduct * constants::_COULOMB_PREFACTOR_ *
+        chargeProduct * constants::COULOMB_PREFACTOR *
             (param1 / distance - constParam1 +
              constParam3 * (distance - rcCutoff))
     );
     EXPECT_DOUBLE_EQ(
         force,
-        chargeProduct * constants::_COULOMB_PREFACTOR_ *
+        chargeProduct * constants::COULOMB_PREFACTOR *
             (param1 / (distance * distance) +
              constParam2 * ::exp(-kappa * kappa * distance * distance) /
                  distance -

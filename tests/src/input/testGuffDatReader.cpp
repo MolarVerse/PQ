@@ -24,25 +24,25 @@
 
 #include <gtest/gtest.h>   // for EXPECT_EQ, TestInfo (ptr only)
 
-#include <cmath>     // for pow, exp
-#include <format>    // for format
-#include <memory>    // for allocator, shared_ptr
-#include <string>    // for string, basic_string, char_traits
-#include <vector>    // for vector
+#include <cmath>    // for pow, exp
+#include <format>   // for format
+#include <memory>   // for allocator, shared_ptr
+#include <string>   // for string, basic_string, char_traits
+#include <vector>   // for vector
 
 #include "buckinghamPair.hpp"                        // for BuckinghamPair
 #include "constants/internalConversionFactors.hpp"   // for _COULOMB_PREFACTOR_
-#include "defaults.hpp"              // for _NUMBER_OF_GUFF_ENTRIES_
-#include "engine.hpp"                // for Engine
-#include "exceptions.hpp"            // for GuffDatException, UserInputException
-#include "gmock/gmock.h"             // for ElementsAre, MakePredicateFormatter
-#include "gtest/gtest.h"             // for Message, TestPartResult
-#include "guffPair.hpp"              // for GuffPair
-#include "lennardJonesPair.hpp"      // for LennardJonesPair
-#include "morsePair.hpp"             // for MorsePair
-#include "potentialSettings.hpp"     // for PotentialSettings, string
-#include "settings.hpp"              // for Settings
-#include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
+#include "defaults.hpp"            // for _NUMBER_OF_GUFF_ENTRIES_
+#include "engine.hpp"              // for Engine
+#include "exceptions.hpp"          // for GuffDatException, UserInputException
+#include "gmock/gmock.h"           // for ElementsAre, MakePredicateFormatter
+#include "gtest/gtest.h"           // for Message, TestPartResult
+#include "guffPair.hpp"            // for GuffPair
+#include "lennardJonesPair.hpp"    // for LennardJonesPair
+#include "morsePair.hpp"           // for MorsePair
+#include "potentialSettings.hpp"   // for PotentialSettings, string
+#include "settings.hpp"            // for Settings
+#include "throwWithMessage.hpp"    // for EXPECT_THROW_MSG
 
 using namespace input::guffdat;
 using namespace potential;
@@ -457,7 +457,7 @@ TEST_F(TestGuffDatReader, read_errorNumberOfLineArguments)
         _guffDatReader->read(),
         GuffDatException,
         "Invalid number of commands (5) in line 3 - " +
-            std::to_string(defaults::_NUMBER_OF_GUFF_ENTRIES_) + " are allowed"
+            std::to_string(defaults::NUMBER_OF_GUFF_ENTRIES) + " are allowed"
     );
 }
 
@@ -479,33 +479,28 @@ TEST_F(TestGuffDatReader, checkPartialCharges_NotMatchingCoefficients)
 TEST_F(TestGuffDatReader, checkPartialCharges)
 {
     _guffDatReader->setupGuffMaps();
-    _guffDatReader->setGuffCoulombCoefficients(
-        0,
-        0,
-        0,
-        0,
-        _COULOMB_PREFACTOR_ * 0.5 * 0.5
-    );
+    _guffDatReader
+        ->setGuffCoulombCoefficients(0, 0, 0, 0, COULOMB_PREFACTOR * 0.5 * 0.5);
     _guffDatReader->setGuffCoulombCoefficients(
         0,
         0,
         1,
         0,
-        -_COULOMB_PREFACTOR_ * 0.5 * 0.25
+        -COULOMB_PREFACTOR * 0.5 * 0.25
     );
     _guffDatReader->setGuffCoulombCoefficients(
         0,
         0,
         0,
         1,
-        -_COULOMB_PREFACTOR_ * 0.5 * 0.25
+        -COULOMB_PREFACTOR * 0.5 * 0.25
     );
     _guffDatReader->setGuffCoulombCoefficients(
         0,
         0,
         1,
         1,
-        _COULOMB_PREFACTOR_ * 0.25 * 0.25
+        COULOMB_PREFACTOR * 0.25 * 0.25
     );
 
     EXPECT_NO_THROW(_guffDatReader->checkPartialCharges());
@@ -594,19 +589,14 @@ TEST_F(TestGuffDatReader, calculatePartialCharges)
 {
     _guffDatReader->setupGuffMaps();
 
-    _guffDatReader->setGuffCoulombCoefficients(
-        0,
-        0,
-        0,
-        0,
-        _COULOMB_PREFACTOR_ * 0.5 * 0.5
-    );
+    _guffDatReader
+        ->setGuffCoulombCoefficients(0, 0, 0, 0, COULOMB_PREFACTOR * 0.5 * 0.5);
     _guffDatReader->setGuffCoulombCoefficients(
         0,
         0,
         1,
         1,
-        _COULOMB_PREFACTOR_ * 0.25 * 0.25
+        COULOMB_PREFACTOR * 0.25 * 0.25
     );
 
     _guffDatReader->calculatePartialCharges();

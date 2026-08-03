@@ -95,7 +95,7 @@ std::vector<double> ForceDifferenceHessianBuilder::flattenForces(
     return flattenedForces;
 }
 
-void ForceDifferenceHessianBuilder::symmetrize(pq::HessianMatrix &hessian)
+void ForceDifferenceHessianBuilder::symmetrize(HessianMatrix &hessian)
 {
     for (size_t row = 0; row < hessian.size(); ++row)
         for (size_t col = row + 1; col < hessian.size(); ++col)
@@ -106,13 +106,13 @@ void ForceDifferenceHessianBuilder::symmetrize(pq::HessianMatrix &hessian)
         }
 }
 
-pq::HessianMatrix CentralForceDifferenceHessianBuilder::build(
+HessianMatrix CentralForceDifferenceHessianBuilder::build(
     Evaluator  &evaluator,
     pq::SimBox &simulationBox
 ) const
 {
     const auto numberOfCoordinates = 3 * simulationBox.getNumberOfAtoms();
-    auto       hessian             = pq::HessianMatrix(
+    auto       hessian             = HessianMatrix(
         numberOfCoordinates,
         std::vector<double>(numberOfCoordinates, 0.0)
     );
@@ -139,13 +139,13 @@ pq::HessianMatrix CentralForceDifferenceHessianBuilder::build(
     return hessian;
 }
 
-pq::HessianMatrix ForwardForceDifferenceHessianBuilder::build(
+HessianMatrix ForwardForceDifferenceHessianBuilder::build(
     Evaluator  &evaluator,
     pq::SimBox &simulationBox
 ) const
 {
     const auto numberOfCoordinates = 3 * simulationBox.getNumberOfAtoms();
-    auto       hessian             = pq::HessianMatrix(
+    auto       hessian             = HessianMatrix(
         numberOfCoordinates,
         std::vector<double>(numberOfCoordinates, 0.0)
     );
@@ -171,13 +171,13 @@ pq::HessianMatrix ForwardForceDifferenceHessianBuilder::build(
     return hessian;
 }
 
-pq::HessianMatrix FivePointForceDifferenceHessianBuilder::build(
+HessianMatrix FivePointForceDifferenceHessianBuilder::build(
     Evaluator  &evaluator,
     pq::SimBox &simulationBox
 ) const
 {
     const auto numberOfCoordinates = 3 * simulationBox.getNumberOfAtoms();
-    auto       hessian             = pq::HessianMatrix(
+    auto       hessian             = HessianMatrix(
         numberOfCoordinates,
         std::vector<double>(numberOfCoordinates, 0.0)
     );
@@ -213,7 +213,7 @@ pq::HessianMatrix FivePointForceDifferenceHessianBuilder::build(
     return hessian;
 }
 
-pq::HessianMatrix AnalyticHessianBuilder::build(
+HessianMatrix AnalyticHessianBuilder::build(
     Evaluator &evaluator,
     pq::SimBox &
 ) const

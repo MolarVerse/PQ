@@ -47,7 +47,7 @@ namespace input::guffdat
     {
        private:
         size_t      _lineNumber = 1;
-        std::string _fileName   = defaults::_GUFF_FILE_DEFAULT_;
+        std::string _fileName   = defaults::GUFF_FILE_DEFAULT;
 
         pq::stlVector4d     _guffCoulombCoeffs;
         pq::stlVector4dBool _isGuffPairSet;

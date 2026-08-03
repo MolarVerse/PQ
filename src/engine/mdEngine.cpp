@@ -241,7 +241,7 @@ void MDEngine::writeOutput()
 
         const auto dt            = TimingsSettings::getTimeStep();
         const auto effStepDouble = static_cast<double>(effStep);
-        const auto simTime       = effStepDouble * dt * _FS_TO_PS_;
+        const auto simTime       = effStepDouble * dt * FS_TO_PS;
 
         _engineOutput.writeEnergyFile(effStep, _averagePhysicalData);
         _engineOutput.writeInstantEnergyFile(effStep, *_physicalData);

@@ -85,8 +85,8 @@ void PhysicalData::calculateKinetics(SimulationBox &simulationBox)
 
     std::ranges::for_each(simulationBox.getMolecules(), kinEnergyAndMomOfMol);
 
-    kineticEnergyAtomicTensor    *= _KINETIC_ENERGY_FACTOR_;
-    kineticEnergyMolecularTensor *= _KINETIC_ENERGY_FACTOR_;
+    kineticEnergyAtomicTensor    *= KINETIC_ENERGY_FACTOR;
+    kineticEnergyMolecularTensor *= KINETIC_ENERGY_FACTOR;
 
     _kinEnergyVirialTensor.atomic    = kineticEnergyAtomicTensor;
     _kinEnergyVirialTensor.molecular = kineticEnergyMolecularTensor;
@@ -94,9 +94,9 @@ void PhysicalData::calculateKinetics(SimulationBox &simulationBox)
     _kineticEnergy = trace(kineticEnergyAtomicTensor);
 
     _angularMomentum  = simulationBox.calculateAngularMomentum(_momentum);
-    _angularMomentum *= _FS_TO_S_;
+    _angularMomentum  *= FS_TO_S;
 
-    _momentum *= _FS_TO_S_;
+    _momentum *= FS_TO_S;
 
     stopTimingsSection("Calc Kinetics");
 }

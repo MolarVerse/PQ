@@ -81,7 +81,7 @@ namespace settings
         static inline bool _isRingPolymerMDActivated = false;
 
         // clang-format off
-        static inline size_t _dimensionality = defaults::_DIMENSIONALITY_DEFAULT_;
+        static inline size_t _dimensionality = defaults::DIMENSIONALITY_DEFAULT;
         // clang-format on
 
        public:
