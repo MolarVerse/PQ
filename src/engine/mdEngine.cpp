@@ -172,7 +172,9 @@ void MDEngine::takeStepAfterForces()
 
     if (Settings::isQMActivated())
     {
-        _physicalData->setNumberOfQMAtoms(_simulationBox->getNumberOfQMAtoms());
+        _physicalData->setNumberOfQMAtoms(
+            static_cast<double>(_simulationBox->getNumberOfQMAtoms())
+        );
     }
 }
 

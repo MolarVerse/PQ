@@ -115,6 +115,8 @@ void ManostatSettings::setIsotropy(const std::string_view &isotropy)
     const auto isotropyToLower =
         utilities::toLowerAndReplaceDashesCopy(isotropy);
 
+    _isotropy = ISOTROPIC;
+
     if (isotropyToLower == "isotropic")
         _isotropy = ISOTROPIC;
 
@@ -126,9 +128,6 @@ void ManostatSettings::setIsotropy(const std::string_view &isotropy)
 
     else if (isotropyToLower == "full_anisotropic")
         _isotropy = FULL_ANISOTROPIC;
-
-    else
-        _isotropy = ISOTROPIC;
 }
 
 /**

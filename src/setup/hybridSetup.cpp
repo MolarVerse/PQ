@@ -32,12 +32,12 @@
 
 #include "engine.hpp"           // for QMMMMDEngine
 #include "exceptions.hpp"       // for InputFileException
-#include "fileSettings.hpp"     // for FileSettings
 #include "hybridSettings.hpp"   // for HybridSettings
 #include "settings.hpp"         // for Settings
 
 #ifdef PYTHON_ENABLED
-#include "selection.hpp"   // for select
+#include "fileSettings.hpp"   // for FileSettings
+#include "selection.hpp"      // for select
 #endif
 
 using setup::HybridSetup;
@@ -149,9 +149,6 @@ std::vector<int> HybridSetup::parseSelection(
     const std::string &key
 )
 {
-    std::string restartFile = FileSettings::getStartFileName();
-    std::string moldescFile = FileSettings::getMolDescriptorFileName();
-
     std::vector<int> selectionVec;
 
     if (selection.empty())
@@ -163,7 +160,11 @@ std::vector<int> HybridSetup::parseSelection(
 
 #ifdef PYTHON_ENABLED
     if (needsPython)
+    {
+        std::string restartFile = FileSettings::getStartFileName();
+        std::string moldescFile = FileSettings::getMolDescriptorFileName();
         selectionVec = pq_python::select(selection, restartFile, moldescFile);
+    }
 #else
 
     // check if string contains any characters that are not digits or commas
@@ -263,13 +264,10 @@ std::vector<int> HybridSetup::parseSelectionNoPython(
     {
         throw customException::InputFileException(
             std::format(
-                "The value of key {} - {} is an empty list. The {} string must "
-                "be "
-                "a comma-separated list of integers or ranges, representing "
-                "the "
-                "atom indices in the restart file that should be treated as "
-                "the "
-                "{}.",
+                "The value of key {} - {} is an empty list. The {} string "
+                "must be a comma-separated list of integers or ranges, "
+                "representing the atom indices in the restart file that should "
+                "be treated as the {}.",
                 key,
                 selection,
                 key,

@@ -134,7 +134,7 @@ TEST(TestAdam, updateAppliesPBCToNewPosition)
 
     Adam adam(1u, 1u);
     adam.setSimulationBox(box);
-    adam.update(/*lr=*/0.5, /*step=*/1u);
+    adam.update(/*learningRate=*/0.5, /*step=*/1u);
 
     // After step pos[0] ≈ 9.99 + 0.5 ≈ 10.49 → wraps to ≈ 0.49.
     EXPECT_LT(box->getAtoms()[0]->getPosition()[0], 1.0);

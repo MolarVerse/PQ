@@ -165,8 +165,7 @@ void RingPolymerTrajectoryOutput::writeForces(std::vector<SimulationBox> &beads)
                 const auto fy       = molecule.getAtomForce(j)[1];
                 const auto fz       = molecule.getAtomForce(j)[2];
 
-                buffer
-                    << std::format("{:>5}{}\t", molecule.getAtomName(j), i + 1);
+                buffer << std::format("{:>5}{}\t", atomName, i + 1);
 
                 buffer << std::format("{:15.8f}\t", fx);
                 buffer << std::format("{:15.8f}\t", fy);

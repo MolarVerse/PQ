@@ -165,8 +165,8 @@ size_t Optimizer::getHistoryIndex(const int offset) const
             "Offset must be negative to access history in the past"
         );
 
-    const auto size  = int(_energyHistory.size());
-    const auto index = size_t(size + offset);
+    const auto size  = _energyHistory.size();
+    const auto index = size + offset;
 
     return index;
 }

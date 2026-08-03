@@ -134,10 +134,14 @@ void RingPolymerEngine::writeOutput()
  */
 void RingPolymerEngine::coupleRingPolymerBeads()
 {
-    const auto nBeads      = RingPolymerSettings::getNumberOfBeads();
-    const auto nAtoms      = _ringPolymerBeads[0].getNumberOfAtoms();
-    const auto temp        = ThermostatSettings::getActualTargetTemperature();
-    const auto rpmd_factor = RPMD_PREFACTOR * nBeads * nBeads * temp * temp;
+    const auto nBeads = RingPolymerSettings::getNumberOfBeads();
+    const auto nAtoms = _ringPolymerBeads[0].getNumberOfAtoms();
+    const auto temp   = ThermostatSettings::getActualTargetTemperature();
+
+    // to silence narrowing conversion warning -- here not a problem
+    const auto nBeads_ = static_cast<double>(nBeads);
+
+    const auto rpmd_factor = RPMD_PREFACTOR * nBeads_ * nBeads_ * temp * temp;
 
     for (size_t i = 0; i < nBeads; ++i)
     {

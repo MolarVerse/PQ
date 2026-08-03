@@ -63,7 +63,8 @@ ForceFieldNonCoulomb &ForceFieldNonCoulomb::operator=(ForceFieldNonCoulomb &&
  * @param other
  */
 ForceFieldNonCoulomb::ForceFieldNonCoulomb(const ForceFieldNonCoulomb &other)
-    : _nonCoulPairsVec(other._nonCoulPairsVec),
+    : NonCoulombPotential(other),
+      _nonCoulPairsVec(other._nonCoulPairsVec),
       _nonCoulPairsMatPtr(std::make_unique<matrix>(*other._nonCoulPairsMatPtr))
 {
 }

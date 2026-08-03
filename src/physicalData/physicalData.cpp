@@ -60,8 +60,8 @@ void PhysicalData::calculateKinetics(SimulationBox &simulationBox)
     startTimingsSection("Calc Kinetics");
 
     _momentum = Vec3D();
-    tensor3D kineticEnergyAtomicTensor;
-    tensor3D kineticEnergyMolecularTensor;
+    tensor3D kineticEnergyAtomicTensor{};
+    tensor3D kineticEnergyMolecularTensor{};
 
     auto kinEnergyAndMomOfMol = [&kineticEnergyAtomicTensor,
                                  &kineticEnergyMolecularTensor,
@@ -364,7 +364,7 @@ PhysicalData physicalData::mean(std::vector<PhysicalData> &dataVec)
         { meanData.updateAverages(physicalData); }
     );
 
-    meanData.makeAverages(dataVec.size());
+    meanData.makeAverages(static_cast<double>(dataVec.size()));
 
     return meanData;
 }
