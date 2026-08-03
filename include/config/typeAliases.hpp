@@ -69,13 +69,6 @@ namespace potential
 
 }   // namespace potential
 
-namespace virial
-{
-    class Virial;            // forward declaration
-    class MolecularVirial;   // forward declaration
-
-}   // namespace virial
-
 namespace intraNonBonded
 {
     class IntraNonBonded;   // forward declaration
@@ -235,15 +228,6 @@ namespace pq
     using ThermostatType = settings::ThermostatType;
     using Isotropy       = settings::Isotropy;
     using ManostatType   = settings::ManostatType;
-
-    /********************
-     * virial namespace *
-     ********************/
-
-    using Virial          = virial::Virial;
-    using MolecularVirial = virial::MolecularVirial;
-
-    using SharedVirial = std::shared_ptr<virial::Virial>;
 
     /**********************
      * manostat namespace *

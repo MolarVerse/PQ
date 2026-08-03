@@ -3,3 +3,4 @@
 - remove `matrix.hpp` header from `typeAliases.hpp` as this way the `Eigen` library get included everywhere
 - remove `thermostat` namespace from `typeAliases.hpp`
 - remove `opt` namespace entries of `typeAliases.hpp`
+- remove `virial` namespace types for `typeAliases.hpp`
