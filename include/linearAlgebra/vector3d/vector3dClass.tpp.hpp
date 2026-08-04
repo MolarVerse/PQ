@@ -49,6 +49,9 @@ namespace linearAlgebra
     template <class T>
     Vector3D<T> &Vector3D<T>::operator=(Vector3D<T> &rhs)
     {
+        if (this == &rhs)
+            return *this;
+
         _x = rhs._x;
         _y = rhs._y;
         _z = rhs._z;
@@ -65,6 +68,9 @@ namespace linearAlgebra
     template <class T>
     Vector3D<T> &Vector3D<T>::operator=(const Vector3D<T> &rhs)
     {
+        if (this == &rhs)
+            return *this;
+
         _x = rhs._x;
         _y = rhs._y;
         _z = rhs._z;

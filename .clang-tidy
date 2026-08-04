@@ -20,6 +20,7 @@ Checks:
   cert-e*,
   cert-f*,
   cert-m*,
+  cert-o*,
   -bugprone-easily-swappable-parameters,
   -cert-env33-c,
   -cert-err58-cpp,
@@ -73,10 +74,6 @@ FormatStyle:     google
 ...
 
 ### TO BE INCLUDED IN THE FUTURE
-  # cert-oop11-cpp,
-  # cert-oop54-cpp,
-  # cert-oop57-cpp,
-  # cert-oop58-cpp,
   # cert-pos44-c,
   # cert-pos47-c,
   # cert-sig30-c,
