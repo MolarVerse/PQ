@@ -96,7 +96,12 @@ void TurbomoleRunner::execute()
     const auto reuseCharges = _isFirstExecution ? 1 : 0;
 
     const auto command = std::format("{} 0 {} 0 0 0", scriptFile, reuseCharges);
-    ::system(command.c_str());
+    const auto status  = ::system(command.c_str());
+
+    if (status != 0)
+        throw QMRunnerException(
+            std::format("Turbomole runner failed with exit status {}.", status)
+        );
 
     _isFirstExecution = false;
 }
