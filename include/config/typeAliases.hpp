@@ -55,12 +55,6 @@ namespace potential
 
 }   // namespace potential
 
-namespace intraNonBonded
-{
-    class IntraNonBonded;   // forward declaration
-
-}   // namespace intraNonBonded
-
 namespace constraints
 {
     class Constraints;          // forward declaration
@@ -118,12 +112,10 @@ namespace input
 
 namespace pq
 {
-    using IntraNonBond = intraNonBonded::IntraNonBonded;
-    using Timer        = timings::Timer;
-    using GlobalTimer  = timings::GlobalTimer;
+    using Timer       = timings::Timer;
+    using GlobalTimer = timings::GlobalTimer;
 
-    using SharedIntraNonBond = std::shared_ptr<intraNonBonded::IntraNonBonded>;
-    using SharedConstraints  = std::shared_ptr<constraints::Constraints>;
+    using SharedConstraints = std::shared_ptr<constraints::Constraints>;
 
     using ParamFileSection       = input::parameterFile::ParameterFileSection;
     using UniqueParamFileSection = std::unique_ptr<ParamFileSection>;

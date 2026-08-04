@@ -85,7 +85,9 @@ namespace opt
 
         void setForceField(const std::shared_ptr<forceField::ForceField>);
         void setVirial(const std::shared_ptr<virial::Virial>);
-        void setIntraNonBonded(const pq::SharedIntraNonBond);
+        void setIntraNonBonded(
+            const std::shared_ptr<intraNonBonded::IntraNonBonded>
+        );
     };
 
 }   // namespace opt
