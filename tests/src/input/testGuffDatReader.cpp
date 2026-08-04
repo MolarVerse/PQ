@@ -108,47 +108,54 @@ TEST_F(TestGuffDatReader, setupGuffMaps)
 
     const auto &potential = dynamic_cast<GuffNonCoulomb &>(pot);
 
-    EXPECT_EQ(potential.getNonCoulombPairs().size(), 2);
-    EXPECT_EQ(potential.getNonCoulombPairs()[0].size(), 2);
-    EXPECT_EQ(potential.getNonCoulombPairs()[0].size(), 2);
-    EXPECT_EQ(potential.getNonCoulombPairs()[0][0].size(), 2);
-    EXPECT_EQ(potential.getNonCoulombPairs()[0][1].size(), 2);
-    EXPECT_EQ(potential.getNonCoulombPairs()[1][0].size(), 1);
-    EXPECT_EQ(potential.getNonCoulombPairs()[1][1].size(), 1);
-    EXPECT_EQ(potential.getNonCoulombPairs()[0][0][0].size(), 2);
-    EXPECT_EQ(potential.getNonCoulombPairs()[0][0][1].size(), 2);
-    EXPECT_EQ(potential.getNonCoulombPairs()[0][1][0].size(), 1);
-    EXPECT_EQ(potential.getNonCoulombPairs()[0][1][1].size(), 1);
-    EXPECT_EQ(potential.getNonCoulombPairs()[1][0][0].size(), 2);
-    EXPECT_EQ(potential.getNonCoulombPairs()[1][1][0].size(), 1);
+    const auto &nonCoulombPairs = potential.getNonCoulombPairs();
 
-    EXPECT_EQ(_guffDatReader->getGuffCoulombCoefficients().size(), 2);
-    EXPECT_EQ(_guffDatReader->getGuffCoulombCoefficients()[0].size(), 2);
-    EXPECT_EQ(_guffDatReader->getGuffCoulombCoefficients()[1].size(), 2);
-    EXPECT_EQ(_guffDatReader->getGuffCoulombCoefficients()[0][0].size(), 2);
-    EXPECT_EQ(_guffDatReader->getGuffCoulombCoefficients()[0][1].size(), 2);
-    EXPECT_EQ(_guffDatReader->getGuffCoulombCoefficients()[1][0].size(), 1);
-    EXPECT_EQ(_guffDatReader->getGuffCoulombCoefficients()[1][1].size(), 1);
-    EXPECT_EQ(_guffDatReader->getGuffCoulombCoefficients()[0][0][0].size(), 2);
-    EXPECT_EQ(_guffDatReader->getGuffCoulombCoefficients()[0][0][1].size(), 2);
-    EXPECT_EQ(_guffDatReader->getGuffCoulombCoefficients()[0][1][0].size(), 1);
-    EXPECT_EQ(_guffDatReader->getGuffCoulombCoefficients()[0][1][1].size(), 1);
-    EXPECT_EQ(_guffDatReader->getGuffCoulombCoefficients()[1][0][0].size(), 2);
-    EXPECT_EQ(_guffDatReader->getGuffCoulombCoefficients()[1][1][0].size(), 1);
+    EXPECT_EQ(nonCoulombPairs.size(), 2);
+    EXPECT_EQ(nonCoulombPairs[0].size(), 2);
+    EXPECT_EQ(nonCoulombPairs[0].size(), 2);
+    EXPECT_EQ(nonCoulombPairs[0][0].size(), 2);
+    EXPECT_EQ(nonCoulombPairs[0][1].size(), 2);
+    EXPECT_EQ(nonCoulombPairs[1][0].size(), 1);
+    EXPECT_EQ(nonCoulombPairs[1][1].size(), 1);
+    EXPECT_EQ(nonCoulombPairs[0][0][0].size(), 2);
+    EXPECT_EQ(nonCoulombPairs[0][0][1].size(), 2);
+    EXPECT_EQ(nonCoulombPairs[0][1][0].size(), 1);
+    EXPECT_EQ(nonCoulombPairs[0][1][1].size(), 1);
+    EXPECT_EQ(nonCoulombPairs[1][0][0].size(), 2);
+    EXPECT_EQ(nonCoulombPairs[1][1][0].size(), 1);
 
-    EXPECT_EQ(_guffDatReader->getIsGuffPairSet().size(), 2);
-    EXPECT_EQ(_guffDatReader->getIsGuffPairSet()[0].size(), 2);
-    EXPECT_EQ(_guffDatReader->getIsGuffPairSet()[1].size(), 2);
-    EXPECT_EQ(_guffDatReader->getIsGuffPairSet()[0][0].size(), 2);
-    EXPECT_EQ(_guffDatReader->getIsGuffPairSet()[0][1].size(), 2);
-    EXPECT_EQ(_guffDatReader->getIsGuffPairSet()[1][0].size(), 1);
-    EXPECT_EQ(_guffDatReader->getIsGuffPairSet()[1][1].size(), 1);
-    EXPECT_EQ(_guffDatReader->getIsGuffPairSet()[0][0][0].size(), 2);
-    EXPECT_EQ(_guffDatReader->getIsGuffPairSet()[0][0][1].size(), 2);
-    EXPECT_EQ(_guffDatReader->getIsGuffPairSet()[0][1][0].size(), 1);
-    EXPECT_EQ(_guffDatReader->getIsGuffPairSet()[0][1][1].size(), 1);
-    EXPECT_EQ(_guffDatReader->getIsGuffPairSet()[1][0][0].size(), 2);
-    EXPECT_EQ(_guffDatReader->getIsGuffPairSet()[1][1][0].size(), 1);
+    const auto &coulombCoefficients =
+        _guffDatReader->getGuffCoulombCoefficients();
+
+    EXPECT_EQ(coulombCoefficients.size(), 2);
+    EXPECT_EQ(coulombCoefficients[0].size(), 2);
+    EXPECT_EQ(coulombCoefficients[1].size(), 2);
+    EXPECT_EQ(coulombCoefficients[0][0].size(), 2);
+    EXPECT_EQ(coulombCoefficients[0][1].size(), 2);
+    EXPECT_EQ(coulombCoefficients[1][0].size(), 1);
+    EXPECT_EQ(coulombCoefficients[1][1].size(), 1);
+    EXPECT_EQ(coulombCoefficients[0][0][0].size(), 2);
+    EXPECT_EQ(coulombCoefficients[0][0][1].size(), 2);
+    EXPECT_EQ(coulombCoefficients[0][1][0].size(), 1);
+    EXPECT_EQ(coulombCoefficients[0][1][1].size(), 1);
+    EXPECT_EQ(coulombCoefficients[1][0][0].size(), 2);
+    EXPECT_EQ(coulombCoefficients[1][1][0].size(), 1);
+
+    const auto &isGuffPairSet = _guffDatReader->getIsGuffPairSet();
+
+    EXPECT_EQ(isGuffPairSet.size(), 2);
+    EXPECT_EQ(isGuffPairSet[0].size(), 2);
+    EXPECT_EQ(isGuffPairSet[1].size(), 2);
+    EXPECT_EQ(isGuffPairSet[0][0].size(), 2);
+    EXPECT_EQ(isGuffPairSet[0][1].size(), 2);
+    EXPECT_EQ(isGuffPairSet[1][0].size(), 1);
+    EXPECT_EQ(isGuffPairSet[1][1].size(), 1);
+    EXPECT_EQ(isGuffPairSet[0][0][0].size(), 2);
+    EXPECT_EQ(isGuffPairSet[0][0][1].size(), 2);
+    EXPECT_EQ(isGuffPairSet[0][1][0].size(), 1);
+    EXPECT_EQ(isGuffPairSet[0][1][1].size(), 1);
+    EXPECT_EQ(isGuffPairSet[1][0][0].size(), 2);
+    EXPECT_EQ(isGuffPairSet[1][1][0].size(), 1);
 }
 
 /**
