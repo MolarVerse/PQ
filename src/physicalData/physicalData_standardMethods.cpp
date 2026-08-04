@@ -591,21 +591,16 @@ linearAlgebra::tensor3D PhysicalData::getKinEnergyMolTensor() const
 /**
  * @brief get the kinetic energy virial tensor
  *
- * @return const pq::tensor3D&
- */
-const pq::tensor3D &PhysicalData::getKinEnergyVirialTensor() const
-{
-    return _kinEnergyVirialTensor.getVirialTensor();
-}
-
-/**
- * @brief get the kinetic energy virial type
+ * @param virialType - the virial type to get the kinetic energy virial tensor
+ * for
  *
- * @return std::optional<settings::VirialType>
+ * @return const linearAlgebra::tensor3D&
  */
-std::optional<settings::VirialType> PhysicalData::getKinEnergyVirialType() const
+const linearAlgebra::tensor3D &PhysicalData::getKinEnergyVirialTensor(
+    settings::VirialType virialType
+) const
 {
-    return _kinEnergyVirialTensor.virialType;
+    return _kinEnergyVirialTensor.getVirialTensor(virialType);
 }
 
 /**

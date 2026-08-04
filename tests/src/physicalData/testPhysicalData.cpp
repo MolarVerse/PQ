@@ -22,14 +22,10 @@
 
 #include "testPhysicalData.hpp"
 
-#include <optional>
-
 #include "constants/conversionFactors.hpp"
 #include "constants/internalConversionFactors.hpp"
 #include "gtest/gtest.h"
 #include "physicalData.hpp"
-#include "settings.hpp"
-#include "throwWithMessage.hpp"
 #include "vector3d.hpp"
 
 /**
@@ -57,10 +53,6 @@ TEST_F(TestPhysicalData, makeAverages)
 TEST_F(TestPhysicalData, copy)
 {
     physicalData::PhysicalData physicalData2;
-    EXPECT_EQ(physicalData2.getKinEnergyVirialType(), std::nullopt);
-    EXPECT_EQ(_physicalData->getKinEnergyVirialType(), std::nullopt);
-    _physicalData->setKineticVirialType(settings::VirialType::MOLECULAR);
-
     physicalData2.copy(*_physicalData);
     EXPECT_EQ(physicalData2.getCoulombEnergy(), 1.0);
     EXPECT_EQ(physicalData2.getNonCoulombEnergy(), 2.0);
@@ -71,34 +63,6 @@ TEST_F(TestPhysicalData, copy)
     EXPECT_EQ(physicalData2.getDensity(), 7.0);
     EXPECT_EQ(physicalData2.getPressure(), 8.0);
     EXPECT_EQ(physicalData2.getQMEnergy(), 9.0);
-    EXPECT_EQ(
-        physicalData2.getKinEnergyVirialType(),
-        settings::VirialType::MOLECULAR
-    );
-    EXPECT_EQ(
-        _physicalData->getKinEnergyVirialType(),
-        settings::VirialType::MOLECULAR
-    );
-
-    _physicalData->setKineticVirialType(settings::VirialType::ATOMIC);
-    physicalData2.copy(*_physicalData);
-    EXPECT_EQ(
-        physicalData2.getKinEnergyVirialType(),
-        settings::VirialType::ATOMIC
-    );
-    EXPECT_EQ(
-        _physicalData->getKinEnergyVirialType(),
-        settings::VirialType::ATOMIC
-    );
-
-    // other direction of copying
-    physicalData::PhysicalData physicalData3;
-    EXPECT_EQ(physicalData3.getKinEnergyVirialType(), std::nullopt);
-    physicalData3.copy(physicalData2);
-    EXPECT_EQ(
-        physicalData3.getKinEnergyVirialType(),
-        settings::VirialType::ATOMIC
-    );
 }
 
 /**
@@ -107,7 +71,6 @@ TEST_F(TestPhysicalData, copy)
  */
 TEST_F(TestPhysicalData, updateAverages)
 {
-    _physicalData->setKineticVirialType(settings::VirialType::ATOMIC);
     const physicalData::PhysicalData physicalData2 = *_physicalData;
 
     _physicalData->updateAverages(physicalData2);
@@ -120,14 +83,6 @@ TEST_F(TestPhysicalData, updateAverages)
     EXPECT_EQ(_physicalData->getDensity(), 14.0);
     EXPECT_EQ(_physicalData->getPressure(), 16.0);
     EXPECT_EQ(_physicalData->getQMEnergy(), 18.0);
-
-    const physicalData::PhysicalData physicalData3 = *_physicalData;
-    _physicalData->setKineticVirialType(settings::VirialType::MOLECULAR);
-    EXPECT_THROW_MSG(
-        _physicalData->updateAverages(physicalData3),
-        customException::PhysicalDataException,
-        "Inconsistent isAtomic flag in PhysicalData::updateAverages"
-    );
 }
 
 /**
@@ -265,17 +220,6 @@ TEST_F(TestPhysicalData, reset)
     EXPECT_EQ(_physicalData->getPressure(), 0.0);
     EXPECT_EQ(_physicalData->getVirial(), linearAlgebra::tensor3D(0.0));
     EXPECT_EQ(_physicalData->getQMEnergy(), 0.0);
-    EXPECT_EQ(_physicalData->getKinEnergyVirialType(), std::nullopt);
-
-    _physicalData->setKineticVirialType(settings::VirialType::ATOMIC);
-    _physicalData->reset();
-
-    // needs to be true, because the virial type is not reset in the reset
-    // function
-    EXPECT_EQ(
-        _physicalData->getKinEnergyVirialType(),
-        settings::VirialType::ATOMIC
-    );
 }
 
 /**

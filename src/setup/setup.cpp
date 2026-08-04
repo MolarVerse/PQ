@@ -50,7 +50,6 @@
 #include "thermostatSetup.hpp"              // for setupThermostat
 #include "timer.hpp"                        // for Timings
 #include "topologyReader.hpp"               // for readTopologyFile
-#include "virial.hpp"
 
 #ifdef WITH_KOKKOS
 #include "kokkosSetup.hpp"   // for setupKokkos
@@ -196,15 +195,9 @@ void setup::setupEngine(Engine &engine)
     {
         case VirialType::ATOMIC:
             engine.makeVirial(virial::AtomicVirial());
-            engine.getPhysicalData().setKineticVirialType(
-                settings::VirialType::ATOMIC
-            );
             break;
         case VirialType::MOLECULAR:
             engine.makeVirial(virial::MolecularVirial());
-            engine.getPhysicalData().setKineticVirialType(
-                settings::VirialType::MOLECULAR
-            );
             break;
     }
 

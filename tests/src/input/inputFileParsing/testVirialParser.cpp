@@ -25,7 +25,6 @@
 #include <string>   // for string, allocator, basic_string
 #include <vector>   // for vector
 
-#include "engine.hpp"                // for Engine
 #include "exceptions.hpp"            // for InputFileException
 #include "gtest/gtest.h"             // for Message, TestPartResult, testing
 #include "testInputFileReader.hpp"   // for TestInputFileReader

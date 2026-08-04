@@ -24,10 +24,8 @@
 
 #include <format>   // for format
 
-#include "atomicVirial.hpp"      // for VirialAtomic
-#include "engine.hpp"            // for Engine
-#include "exceptions.hpp"        // for InputFileException, customException
-#include "molecularVirial.hpp"   // for VirialMolecular
+#include "engine.hpp"       // for Engine
+#include "exceptions.hpp"   // for InputFileException, customException
 #include "parserUtils.hpp"
 #include "settings.hpp"
 #include "stringUtilities.hpp"   // for toLowerCopy
