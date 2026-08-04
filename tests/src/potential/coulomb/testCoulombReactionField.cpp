@@ -39,20 +39,18 @@ TEST(TestCoulombReactionField, calculate)
 
     const auto potential = CoulombReactionField(cutoff, epsilon);
 
-    const auto reactionFieldPrefactor =
-        (epsilon - 1.0) / (2.0 * epsilon + 1.0);
-    const auto cutoffEnergy       = 1.0 / cutoff;
-    const auto cutoffForce        = 1.0 / (cutoff * cutoff);
-    const auto cutoffCubedInverse = 1.0 / (cutoff * cutoff * cutoff);
-    const auto deltaCutoff        = cutoff - distance;
-    const auto coulombPrefactor =
-        chargeProduct * constants::_COULOMB_PREFACTOR_;
+    const auto reactionFieldPrefactor = (epsilon - 1.0) / (2.0 * epsilon + 1.0);
+    const auto cutoffEnergy           = 1.0 / cutoff;
+    const auto cutoffForce            = 1.0 / (cutoff * cutoff);
+    const auto cutoffCubedInverse     = 1.0 / (cutoff * cutoff * cutoff);
+    const auto deltaCutoff            = cutoff - distance;
+    const auto coulombPrefactor = chargeProduct * constants::COULOMB_PREFACTOR;
 
     const auto expectedEnergy =
         coulombPrefactor *
         (1.0 / distance - 2.0 * cutoffEnergy + distance * cutoffForce +
-         reactionFieldPrefactor * cutoffCubedInverse * deltaCutoff *
-             deltaCutoff);
+         reactionFieldPrefactor * cutoffCubedInverse * deltaCutoff * deltaCutoff
+        );
     const auto expectedForce =
         coulombPrefactor *
         (1.0 / (distance * distance) - cutoffForce +

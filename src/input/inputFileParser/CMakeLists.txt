@@ -44,3 +44,5 @@ target_link_libraries(inputFileParser
 install(TARGETS inputFileParser
     DESTINATION lib
 )
+
+target_precompile_headers(inputFileParser REUSE_FROM pq_pch)

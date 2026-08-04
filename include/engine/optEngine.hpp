@@ -30,7 +30,6 @@
 #include "evaluator.hpp"
 #include "learningRateStrategy.hpp"
 #include "optimizer.hpp"
-#include "typeAliases.hpp"
 
 namespace engine
 {
@@ -43,11 +42,11 @@ namespace engine
     class OptEngine : public Engine
     {
        private:
-        pq::SharedOptimizer    _optimizer;
-        pq::SharedLearningRate _learningRateStrategy;
-        pq::SharedEvaluator    _evaluator;
+        std::shared_ptr<opt::Optimizer>            _optimizer;
+        std::shared_ptr<opt::LearningRateStrategy> _learningRateStrategy;
+        std::shared_ptr<opt::Evaluator>            _evaluator;
 
-        pq::SharedPhysicalData _physicalDataOld =
+        std::shared_ptr<physicalData::PhysicalData> _physicalDataOld =
             std::make_shared<physicalData::PhysicalData>();
 
         bool _converged  = false;
@@ -62,9 +61,11 @@ namespace engine
          * standard setter methods *
          ***************************/
 
-        void setOptimizer(const std::shared_ptr<pq::Optimizer>);
-        void setLearningRateStrategy(const std::shared_ptr<pq::LearningRate>);
-        void setEvaluator(const std::shared_ptr<pq::Evaluator>);
+        void setOptimizer(const std::shared_ptr<opt::Optimizer>);
+        void setLearningRateStrategy(
+            const std::shared_ptr<opt::LearningRateStrategy>
+        );
+        void setEvaluator(const std::shared_ptr<opt::Evaluator>);
 
         /***************************
          * standard getter methods *

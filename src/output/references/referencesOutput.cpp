@@ -109,7 +109,7 @@ void ReferencesOutput::writeReferencesFile()
     rendered << '\n';
     // clang-format on
 
-    renderReferenceFile(sourceDirectory / _PQ_FILE_, rendered);
+    renderReferenceFile(sourceDirectory / PQ_FILE, rendered);
     for (const auto &referenceFileName : _referenceFileNames)
         renderReferenceFile(sourceDirectory / referenceFileName, rendered);
 
@@ -124,7 +124,7 @@ void ReferencesOutput::writeReferencesFile()
     // clang-format on
 
     renderReferenceFile(
-        sourceDirectory / (static_cast<std::string>(_PQ_FILE_) + ".bib"),
+        sourceDirectory / (static_cast<std::string>(PQ_FILE) + ".bib"),
         rendered
     );
     for (const auto &referenceFileName : _bibtexFileNames)

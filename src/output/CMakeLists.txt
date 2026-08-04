@@ -39,6 +39,8 @@ target_link_libraries(output
     thermostat
 )
 
+target_precompile_headers(output REUSE_FROM pq_pch)
+
 install(TARGETS output
     DESTINATION lib
 )

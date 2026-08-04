@@ -40,7 +40,7 @@ Timer::Timer(const std::string_view name) : _name(name) {}
  * @brief get timings details
  *
  */
-std::vector<TimingsSection> Timer::getTimingDetails() const
+const std::vector<TimingsSection>& Timer::getTimingDetails() const
 {
     return _timingDetails;
 }
@@ -51,7 +51,7 @@ std::vector<TimingsSection> Timer::getTimingDetails() const
  */
 double Timer::calculateElapsedTime() const
 {
-    auto elapsedTime = 0;
+    double elapsedTime = 0;
 
     for (const auto& timing : _timingDetails)
         elapsedTime += timing.calculateElapsedTime();

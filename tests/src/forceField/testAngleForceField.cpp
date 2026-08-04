@@ -26,6 +26,7 @@
 #include <cstddef>   // for size_t
 #include <memory>    // for shared_ptr, allocator
 
+#include "../potential/nonCoulomb/testForceFieldNonCoulomb.hpp"
 #include "angleForceField.hpp"           // for BondForceField
 #include "atom.hpp"                      // for Atom
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
@@ -43,21 +44,24 @@ namespace potential
     class NonCoulombPair;   // forward declaration
 }
 
-TEST(TestAngleForceField, calculateEnergyAndForces)
+class TestAngleForceField : public TestNonCoulombPotentialFF
+{
+};
+
+TEST_F(TestAngleForceField, calculateEnergyAndForces)
 {
     auto box = simulationBox::SimulationBox();
     box.setBoxDimensions({10.0, 10.0, 10.0});
 
-    auto physicalData        = physicalData::PhysicalData();
-    auto coulombPotential    = potential::CoulombShiftedPotential(10.0);
-    auto nonCoulombPotential = potential::ForceFieldNonCoulomb();
+    auto physicalData     = physicalData::PhysicalData();
+    auto coulombPotential = potential::CoulombShiftedPotential(10.0);
 
     auto nonCoulombPair =
         potential::LennardJonesPair(size_t(1), size_t(1), 5.0, 2.0, 4.0);
-    nonCoulombPotential.setNonCoulombPairsMatrix(
+    setNonCoulombPairsMatrix(
         linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(2, 2)
     );
-    nonCoulombPotential.setNonCoulombPairsMatrix(1, 1, nonCoulombPair);
+    setNonCoulombPairsMatrix(1, 1, nonCoulombPair);
 
     auto molecule = simulationBox::Molecule();
 
@@ -105,7 +109,7 @@ TEST(TestAngleForceField, calculateEnergyAndForces)
         box,
         physicalData,
         coulombPotential,
-        nonCoulombPotential
+        *_nonCoulombPotential
     );
 
     EXPECT_NEAR(physicalData.getAngleEnergy(), 2.0999420826401303, 1e-6);
@@ -140,7 +144,7 @@ TEST(TestAngleForceField, calculateEnergyAndForces)
         box,
         physicalData,
         coulombPotential,
-        nonCoulombPotential
+        *_nonCoulombPotential
     );
 
     EXPECT_NEAR(physicalData.getAngleEnergy(), 2.0999420826401303, 1e-6);
@@ -171,14 +175,13 @@ TEST(TestAngleForceField, calculateEnergyAndForces)
  * just that block; the energy contribution and the linker correction
  * (when enabled) still run, and no force component is NaN/Inf.
  */
-TEST(TestAngleForceField, collinearAngleProducesFiniteForces)
+TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
 {
     auto box = simulationBox::SimulationBox();
     box.setBoxDimensions({100.0, 100.0, 100.0});
 
-    auto physicalData        = physicalData::PhysicalData();
-    auto coulombPotential    = potential::CoulombShiftedPotential(10.0);
-    auto nonCoulombPotential = potential::ForceFieldNonCoulomb();
+    auto physicalData     = physicalData::PhysicalData();
+    auto coulombPotential = potential::CoulombShiftedPotential(10.0);
 
     auto molecule = simulationBox::Molecule();
     molecule.setMoltype(0);
@@ -215,7 +218,7 @@ TEST(TestAngleForceField, collinearAngleProducesFiniteForces)
         box,
         physicalData,
         coulombPotential,
-        nonCoulombPotential
+        *_nonCoulombPotential
     );
 
     // Energy is finite at the singular angle (harmonic, deltaAngle ~ 0).

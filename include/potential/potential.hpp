@@ -74,7 +74,7 @@ namespace potential
         void makeCoulombPotential(T p);
 
         template <typename T>
-        void makeNonCoulombPotential(T nonCoulombPot);
+        void makeNonCoulombPotential(const T &nonCoulombPot);
 
         /***************************
          * standard setter methods *

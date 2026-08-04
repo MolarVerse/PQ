@@ -18,4 +18,5 @@ if(BUILD_WITH_KOKKOS)
         PUBLIC
         ${Kokkos_INCLUDE_DIRS_RET}
     )
+    target_precompile_headers(pq_test_main REUSE_FROM pq_test_pch)
 endif()
