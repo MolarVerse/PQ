@@ -22,6 +22,8 @@
 
 #include "outputInputParser.hpp"
 
+#include <format>   // for format
+
 #include "exceptions.hpp"           // for InputFileException
 #include "outputFileSettings.hpp"   // for OutputFileSettings
 #include "parserUtils.hpp"

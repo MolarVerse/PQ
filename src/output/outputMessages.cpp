@@ -57,18 +57,18 @@ std::string output::header()
 )";
 
     header_title << '\n';
-    header_title << _OUTPUT_ << "Author:        " << _AUTHOR_ << '\n';
-    header_title << _OUTPUT_ << "Email:         " << _EMAIL_ << '\n';
+    header_title << OUTPUT << "Author:        " << AUTHOR << '\n';
+    header_title << OUTPUT << "Email:         " << EMAIL << '\n';
 
     header_title << '\n';
-    header_title << _OUTPUT_ << "Testing:       " << _JOSEF_ << '\n';
-    header_title << _OUTPUT_ << "               " << _ARMIN_ << '\n';
-    header_title << _OUTPUT_ << "               " << _STEFAN_ << '\n';
-    header_title << _OUTPUT_ << "               " << _BENJAMIN_ << '\n';
+    header_title << OUTPUT << "Testing:       " << JOSEF << '\n';
+    header_title << OUTPUT << "               " << ARMIN << '\n';
+    header_title << OUTPUT << "               " << STEFAN << '\n';
+    header_title << OUTPUT << "               " << BENJAMIN << '\n';
 
     header_title << '\n';
-    header_title << _OUTPUT_ << "Version:       " << _VERSION_ << '\n';
-    header_title << _OUTPUT_ << "Compile date:  " << _COMPILE_DATE_ << '\n';
+    header_title << OUTPUT << "Version:       " << VERSION << '\n';
+    header_title << OUTPUT << "Compile date:  " << COMPILE_DATE << '\n';
 
     return header_title.str();
 }
@@ -90,7 +90,7 @@ std::string output::endedNormally()
 *                                                                       *
 *************************************************************************
 )",
-_INFO_);
+INFO);
     // clang-format on
 
     return endedNormally_message;
@@ -104,11 +104,7 @@ _INFO_);
  */
 std::string output::elapsedTimeMessage(const double elapsedTime)
 {
-    return std::format(
-        "\n\n{}Elapsed time = {:.5f} s\n",
-        _OUTPUT_,
-        elapsedTime
-    );
+    return std::format("\n\n{}Elapsed time = {:.5f} s\n", OUTPUT, elapsedTime);
 }
 
 /**
@@ -119,7 +115,7 @@ std::string output::elapsedTimeMessage(const double elapsedTime)
  */
 std::string output::setupMessage(const std::string &setup)
 {
-    return std::format("{}Setup of {}\n", _INFO_, setup);
+    return std::format("{}Setup of {}\n", INFO, setup);
 }
 
 /**
@@ -145,5 +141,5 @@ std::string output::readMessage(
     const std::string &file
 )
 {
-    return std::format("{}Reading {} \"{}\"\n", _INFO_, message, file);
+    return std::format("{}Reading {} \"{}\"\n", INFO, message, file);
 }

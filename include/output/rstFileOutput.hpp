@@ -27,7 +27,16 @@
 #include <cstddef>   // for size_t
 
 #include "output.hpp"
-#include "typeAliases.hpp"
+
+namespace thermostat
+{
+    class Thermostat;   // forward declaration
+}   // namespace thermostat
+
+namespace simulationBox
+{
+    class SimulationBox;   // forward declaration
+}   // namespace simulationBox
 
 namespace output
 {
@@ -42,8 +51,12 @@ namespace output
        public:
         using Output::Output;
 
-        void write(pq::SimBox &, const pq::Thermostat &, const size_t);
-        void writeNHChain(const pq::Thermostat &, std::ostringstream &);
+        void write(
+            simulationBox::SimulationBox &,
+            const thermostat::Thermostat &,
+            const size_t
+        );
+        void writeNHChain(const thermostat::Thermostat &, std::ostringstream &);
     };
 
 }   // namespace output

@@ -22,8 +22,8 @@
 
 #include "maxwellBoltzmann.hpp"
 
-#include <algorithm>    // for __for_each_fn
-#include <cmath>        // for sqrt
+#include <algorithm>   // for __for_each_fn
+#include <cmath>       // for sqrt
 
 #include "constants/conversionFactors.hpp"           // for _AMU_TO_KG_
 #include "constants/internalConversionFactors.hpp"   // for _VELOCITY_UNIT_TO_SI_
@@ -57,11 +57,11 @@ void MaxwellBoltzmann::initializeVelocities(SimulationBox &simBox)
 {
     auto generateVelocities = [this](auto &atom)
     {
-        const auto mass = atom->getMass() * _AMU_TO_KG_;
-        const auto kb   = _BOLTZMANN_CONSTANT_;
+        const auto mass = atom->getMass() * AMU_TO_KG;
+        const auto kb   = BOLTZMANN_CONSTANT;
         const auto temp = ThermostatSettings::getActualTargetTemperature();
 
-        const auto stddev = ::sqrt(kb * temp / mass) / _VELOCITY_UNIT_TO_SI_;
+        const auto stddev = ::sqrt(kb * temp / mass) / VELOCITY_UNIT_TO_SI;
 
         atom->setVelocity(
             {_randomNumberGenerator.getNormalDistribution(0.0, stddev),

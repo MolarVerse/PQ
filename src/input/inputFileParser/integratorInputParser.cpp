@@ -89,7 +89,7 @@ void IntegratorInputParser::parseIntegrator(
     {
         auto &mdEngine = dynamic_cast<MDEngine &>(_engine);
         mdEngine.makeIntegrator(VelocityVerlet());
-        ReferencesOutput::addReferenceFile(_VELOCITY_VERLET_FILE_);
+        ReferencesOutput::addReferenceFile(VELOCITY_VERLET_FILE);
     }
 
     else

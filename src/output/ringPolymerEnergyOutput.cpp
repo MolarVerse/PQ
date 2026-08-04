@@ -57,7 +57,8 @@ void RingPolymerEnergyOutput::write(
 
     _fp << std::format(
         "{:20.12f}\t",
-        sumOfRingPolymerEnergies(dataVector) / dataVector.size()
+        sumOfRingPolymerEnergies(dataVector) /
+            static_cast<double>(dataVector.size())
     );
 
     std::ranges::for_each(

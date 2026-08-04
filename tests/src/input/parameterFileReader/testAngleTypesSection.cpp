@@ -48,7 +48,7 @@ TEST_F(TestParameterFileSection, processSectionAngle)
     EXPECT_EQ(_engine->getForceField().getAngleTypes()[0].getId(), 0);
     EXPECT_EQ(
         _engine->getForceField().getAngleTypes()[0].getEquilibriumAngle(),
-        1.22 * constants::_DEG_TO_RAD_
+        1.22 * constants::DEG_TO_RAD
     );
     EXPECT_EQ(
         _engine->getForceField().getAngleTypes()[0].getForceConstant(),
