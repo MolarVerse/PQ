@@ -28,10 +28,6 @@
 #include <string>        // for string
 #include <string_view>   // for string_view
 
-#ifdef WITH_TESTS
-#include <gtest/gtest_prod.h>   // for FRIEND_TEST
-#endif
-
 class TestOutput_testSpecialSetFilename_Test;   // Friend test class
 
 namespace output
@@ -58,7 +54,7 @@ namespace output
         void close();
 
 #ifdef WITH_TESTS
-        FRIEND_TEST(::TestOutput, testSpecialSetFilename);
+        friend class ::TestOutput_testSpecialSetFilename_Test;
 #endif
 
         /***************************

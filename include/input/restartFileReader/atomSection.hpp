@@ -29,12 +29,8 @@
 #include "restartFileSection.hpp"   // for RestartFileSection
 #include "typeAliases.hpp"          // for strings
 
-#ifdef WITH_TESTS
-#include <gtest/gtest_prod.h>   // for FRIEND_TEST
-
 class TestAtomSection_testProcessAtomLine_Test;     // Friend test class
 class TestAtomSection_testProcessQMAtomLine_Test;   // Friend test class
-#endif
 
 namespace input::restartFile
 {
@@ -54,8 +50,8 @@ namespace input::restartFile
         void setAtomPropertyVectors(pq::strings &, pq::SharedAtom &) const;
 
 #ifdef WITH_TESTS
-        FRIEND_TEST(::TestAtomSection, testProcessAtomLine);
-        FRIEND_TEST(::TestAtomSection, testProcessQMAtomLine);
+        friend class ::TestAtomSection_testProcessAtomLine_Test;
+        friend class ::TestAtomSection_testProcessQMAtomLine_Test;
 #endif
 
        public:
