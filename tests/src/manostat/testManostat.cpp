@@ -29,11 +29,12 @@
 #include "berendsenManostat.hpp"                     // for BerendsenManostat
 #include "constants/internalConversionFactors.hpp"   // for _PRESSURE_FACTOR_
 #include "exceptions.hpp"                            // for ManostatException
-#include "gtest/gtest.h"                     // for Message, TestPartResult
-#include "manostatSettings.hpp"              // for ManostatType, Isotropy
-#include "mathUtilities.hpp"                 // for compare
-#include "molecule.hpp"                      // for Molecule
-#include "potentialSettings.hpp"             // for PotentialSettings
+#include "gtest/gtest.h"           // for Message, TestPartResult
+#include "manostatSettings.hpp"    // for ManostatType, Isotropy
+#include "mathUtilities.hpp"       // for compare
+#include "molecule.hpp"            // for Molecule
+#include "potentialSettings.hpp"   // for PotentialSettings
+#include "settings.hpp"
 #include "stochasticRescalingManostat.hpp"   // for StochasticRescalingManostat
 #include "thermostatSettings.hpp"            // for ThermostatSettings
 #include "throwWithMessage.hpp"              // for EXPECT_THROW_MSG
@@ -158,11 +159,13 @@ TEST_F(TestManostat, CalculatePressure)
  */
 TEST_F(TestManostat, ChangeVirialToAtomic)
 {
-    _data->setKineticVirialType(settings::VirialType::ATOMIC);
-
+    settings::Settings::setVirialType(settings::VirialType::ATOMIC);
     _manostat->calculatePressure(*_box, *_data);
 
     EXPECT_DOUBLE_EQ(_data->getPressure(), 2.0 * constants::PRESSURE_FACTOR);
+
+    // set virial type back to molecular for other tests
+    settings::Settings::setVirialType(settings::VirialType::MOLECULAR);
 }
 
 /**

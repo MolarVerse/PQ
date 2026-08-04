@@ -52,7 +52,6 @@ class TestManostat : public ::testing::Test
         _data->setKineticEnergyAtomicVector(
             diagonalMatrix(linearAlgebra::Vec3D(1.0, 1.0, 1.0))
         );
-        _data->setKineticVirialType(settings::VirialType::MOLECULAR);
 
         _box = new simulationBox::SimulationBox();
         _box->setVolume(2.0);

@@ -24,8 +24,6 @@
 
 #define _VIRIAL_HPP_
 
-#include <string>   // for string
-
 #include "settings.hpp"
 #include "timer.hpp"   // for Timer
 #include "typeAliases.hpp"
