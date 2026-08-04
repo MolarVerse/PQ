@@ -37,25 +37,25 @@ namespace constants
      * @brief Conversion factors to SI units
      */
     // clang-format off
-    static constexpr double _FORCE_UNIT_TO_SI_    = _KCAL_TO_J_ / _AVOGADRO_NUMBER_ / _ANGSTROM_TO_M_;
-    static constexpr double _MASS_UNIT_TO_SI_     = _AMU_TO_KG_;
-    static constexpr double _TIME_UNIT_TO_SI_     = _FS_TO_S_;
-    static constexpr double _VELOCITY_UNIT_TO_SI_ = _ANGSTROM_TO_M_;
-    static constexpr double _ENERGY_UNIT_TO_SI_   = _KCAL_TO_J_ / _AVOGADRO_NUMBER_;
-    static constexpr double _VOLUME_UNIT_TO_SI_   = _ANGSTROM3_TO_M3;
-    static constexpr double _PRESSURE_UNIT_TO_SI_ = _BAR_TO_P_;
-    static constexpr double _LENGTH_UNIT_TO_SI_   = _ANGSTROM_TO_M_;
-    static constexpr double _MOMENTUM_UNIT_TO_SI_ = _G_TO_KG_ * _ANGSTROM_TO_M_ / _AVOGADRO_NUMBER_;
+    static constexpr double FORCE_UNIT_TO_SI    = KCAL_TO_J / AVOGADRO_NUMBER / ANGSTROM_TO_M;
+    static constexpr double MASS_UNIT_TO_SI     = AMU_TO_KG;
+    static constexpr double TIME_UNIT_TO_SI     = FS_TO_S;
+    static constexpr double VELOCITY_UNIT_TO_SI = ANGSTROM_TO_M;
+    static constexpr double ENERGY_UNIT_TO_SI   = KCAL_TO_J / AVOGADRO_NUMBER;
+    static constexpr double VOLUME_UNIT_TO_SI   = ANGSTROM3_TO_M3;
+    static constexpr double PRESSURE_UNIT_TO_SI = BAR_TO_P;
+    static constexpr double LENGTH_UNIT_TO_SI   = ANGSTROM_TO_M;
+    static constexpr double MOMENTUM_UNIT_TO_SI = G_TO_KG * ANGSTROM_TO_M / AVOGADRO_NUMBER;
     // clang-format on
 
     /**
      * @brief Conversion factors to internal units
      */
-    static constexpr double _SI_TO_VELOCITY_UNIT_ = 1.0 / _VELOCITY_UNIT_TO_SI_;
-    static constexpr double _SI_TO_ENERGY_UNIT_   = 1.0 / _ENERGY_UNIT_TO_SI_;
-    static constexpr double _SI_TO_PRESSURE_UNIT_ = 1.0 / _PRESSURE_UNIT_TO_SI_;
-    static constexpr double _SI_TO_LENGTH_UNIT_   = 1.0 / _LENGTH_UNIT_TO_SI_;
-    static constexpr double _SI_TO_FORCE_UNIT_    = 1.0 / _FORCE_UNIT_TO_SI_;
+    static constexpr double SI_TO_VELOCITY_UNIT = 1.0 / VELOCITY_UNIT_TO_SI;
+    static constexpr double SI_TO_ENERGY_UNIT   = 1.0 / ENERGY_UNIT_TO_SI;
+    static constexpr double SI_TO_PRESSURE_UNIT = 1.0 / PRESSURE_UNIT_TO_SI;
+    static constexpr double SI_TO_LENGTH_UNIT   = 1.0 / LENGTH_UNIT_TO_SI;
+    static constexpr double SI_TO_FORCE_UNIT    = 1.0 / FORCE_UNIT_TO_SI;
 
     /**
      * @brief Conversion factor for velocity verlet integrator
@@ -67,9 +67,9 @@ namespace constants
      * [dt] = fs
      * [m] = g mol⁻¹
      */
-    static constexpr double _V_VERLET_VELOCITY_FACTOR_ =
-        0.5 * (_FORCE_UNIT_TO_SI_ / _MASS_UNIT_TO_SI_) * _TIME_UNIT_TO_SI_ *
-        _SI_TO_VELOCITY_UNIT_;
+    static constexpr double V_VERLET_VELOCITY_FACTOR =
+        0.5 * (FORCE_UNIT_TO_SI / MASS_UNIT_TO_SI) * TIME_UNIT_TO_SI *
+        SI_TO_VELOCITY_UNIT;
 
     /**
      * @brief Conversion factors for temperature calculation
@@ -81,9 +81,9 @@ namespace constants
      * [v]  = A s⁻¹
      * [kb] = J K⁻¹
      */
-    static constexpr double _TEMPERATURE_FACTOR_ =
-        _VELOCITY_UNIT_TO_SI_ * _VELOCITY_UNIT_TO_SI_ * _MASS_UNIT_TO_SI_ /
-        _BOLTZMANN_CONSTANT_;
+    static constexpr double TEMPERATURE_FACTOR =
+        VELOCITY_UNIT_TO_SI * VELOCITY_UNIT_TO_SI * MASS_UNIT_TO_SI /
+        BOLTZMANN_CONSTANT;
 
     /**
      * @brief Conversion factors kinetic energy
@@ -94,9 +94,9 @@ namespace constants
      * [m] = g mol⁻¹
      * [v] = A s⁻¹
      */
-    static constexpr double _KINETIC_ENERGY_FACTOR_ =
-        0.5 * _MASS_UNIT_TO_SI_ * _VELOCITY_UNIT_TO_SI_ *
-        _VELOCITY_UNIT_TO_SI_ * _SI_TO_ENERGY_UNIT_;
+    static constexpr double KINETIC_ENERGY_FACTOR =
+        0.5 * MASS_UNIT_TO_SI * VELOCITY_UNIT_TO_SI * VELOCITY_UNIT_TO_SI *
+        SI_TO_ENERGY_UNIT;
 
     /**
      * @brief Conversion factors for pressure calculation
@@ -107,8 +107,8 @@ namespace constants
      * [E] = kcal mol⁻¹
      * [V] = A³
      */
-    static constexpr double _PRESSURE_FACTOR_ =
-        _ENERGY_UNIT_TO_SI_ / _VOLUME_UNIT_TO_SI_ * _SI_TO_PRESSURE_UNIT_;
+    static constexpr double PRESSURE_FACTOR =
+        ENERGY_UNIT_TO_SI / VOLUME_UNIT_TO_SI * SI_TO_PRESSURE_UNIT;
 
     /**
      * @brief Conversion factors for coulomb preFactor
@@ -119,18 +119,18 @@ namespace constants
      * [factor] = kcal mol⁻¹ A e²
      * [eps0]   = F m⁻¹
      */
-    static constexpr double _COULOMB_PREFACTOR_ =
-        1 / (4 * M_PI * _PERMITTIVITY_VACUUM_) * _ELECTRON_CHARGE2_ *
-        _SI_TO_ENERGY_UNIT_ * _SI_TO_LENGTH_UNIT_;
+    static constexpr double COULOMB_PREFACTOR =
+        1 / (4 * M_PI * PERMITTIVITY_VACUUM) * ELECTRON_CHARGE2 *
+        SI_TO_ENERGY_UNIT * SI_TO_LENGTH_UNIT;
 
     /**
      * @brief ring polymer molecular dynamics
      *
      * @TODO: add details
      */
-    static constexpr double _RPMD_PREFACTOR_ =
-        _BOLTZMANN_CONSTANT2_ / _REDUCED_PLANCK_CONSTANT2_ / _M2_TO_ANGSTROM2_ *
-        _G_TO_KG_ * _J_TO_KCAL_;
+    static constexpr double RPMD_PREFACTOR =
+        BOLTZMANN_CONSTANT2 / REDUCED_PLANCK_CONSTANT2 / M2_TO_ANGSTROM2 *
+        G_TO_KG * J_TO_KCAL;
 
     /**
      * @brief conversion factor for the momentum factor to force * s
@@ -141,8 +141,8 @@ namespace constants
      * [p] = g mol⁻¹ A s⁻¹
      * [dt] = s
      */
-    static constexpr double _MOMENTUM_TO_FORCE_ =
-        _MOMENTUM_UNIT_TO_SI_ * _SI_TO_FORCE_UNIT_;
+    static constexpr double MOMENTUM_TO_FORCE =
+        MOMENTUM_UNIT_TO_SI * SI_TO_FORCE_UNIT;
 
 }   // namespace constants
 

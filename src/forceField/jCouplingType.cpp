@@ -47,7 +47,7 @@ JCouplingType::JCouplingType(
     const double phaseShift
 )
     : _id(id),
-      _J0(J0),
+      _j0(J0),
       _forceConstant(forceConstant),
       _a(a),
       _b(b),
@@ -75,7 +75,7 @@ bool forceField::operator==(
     const auto other_phi = other._phaseShift;
 
     auto isEqual = self._id == other._id;
-    isEqual      = isEqual && utilities::compare(self._J0, other._J0);
+    isEqual      = isEqual && utilities::compare(self._j0, other._j0);
     isEqual      = isEqual && utilities::compare(k, other_k);
     isEqual      = isEqual && utilities::compare(self._a, other._a);
     isEqual      = isEqual && utilities::compare(self._b, other._b);
@@ -103,7 +103,7 @@ size_t JCouplingType::getId() const { return _id; }
  *
  * @return double
  */
-double JCouplingType::getJ0() const { return _J0; }
+double JCouplingType::getJ0() const { return _j0; }
 
 /**
  * @brief get the force constant
