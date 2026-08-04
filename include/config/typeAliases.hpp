@@ -76,13 +76,6 @@ namespace engine
 
 }   // namespace engine
 
-namespace timings
-{
-    class Timer;
-    class GlobalTimer;
-
-}   // namespace timings
-
 namespace settings
 {
     enum class ThermostatType;   // forward declaration
@@ -112,9 +105,6 @@ namespace input
 
 namespace pq
 {
-    using Timer       = timings::Timer;
-    using GlobalTimer = timings::GlobalTimer;
-
     using SharedConstraints = std::shared_ptr<constraints::Constraints>;
 
     using ParamFileSection       = input::parameterFile::ParameterFileSection;

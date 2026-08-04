@@ -28,6 +28,11 @@
 
 #include "typeAliases.hpp"
 
+namespace timings
+{
+    class Timer;   // forward declaration
+}   // namespace timings
+
 /**
  * @namespace setup
  *
@@ -41,8 +46,8 @@ namespace setup
 {
     void setupRequestedJob(const std::string &inputFileName, pq::Engine &);
 
-    void startSetup(pq::Timer &, pq::Engine &);
-    void endSetup(pq::Timer &, pq::Engine &);
+    void startSetup(timings::Timer &, pq::Engine &);
+    void endSetup(timings::Timer &, pq::Engine &);
 
     void readFiles(pq::Engine &);
     void setupEngine(pq::Engine &);
