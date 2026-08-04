@@ -1,1 +1,0 @@
-- Add integration test for molecular virial correction in integration_tests/cgo/

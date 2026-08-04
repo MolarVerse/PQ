@@ -22,8 +22,8 @@
                         Stefan Seiwald
                         Benjamin Reitmair
 
-         Version:       v0.6.4-109a355e
-         Compile date:  Aug  4 2026 10:13:08
+         Version:       v0.6.4
+         Compile date:  Apr 14 2026 16:52:01
 
 INFO:    Reading Moldescriptor File "moldescriptor.dat"
 
@@ -76,13 +76,6 @@ INFO:    Setup of Manostat
 
 INFO:    Setup of MM potential
 
-         Coulomb long range type: wolf
-
-         Coulomb radius cut-off: 10
-         Wolf parameter:         0.22
-
-         Non-coulombic potential: Guff
-
 INFO:    Reading Guffdat File "guff.dat"
 
 
@@ -92,7 +85,7 @@ INFO:    Reading Guffdat File "guff.dat"
 INFO:    Initial momentum = 1.10133e-13 Å*amu/fs
 
 
-         Elapsed time = 0.41331 s
+         Elapsed time = 0.44400 s
 
 
 INFO:    For citation please refer to the ".ref" file.

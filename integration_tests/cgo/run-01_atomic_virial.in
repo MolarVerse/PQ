@@ -20,7 +20,7 @@ t_relaxation = 0.1;
 manostat = berendsen;
 pressure = 1.013;
 p_relaxation = 1.0;
-virial= molecular;
+virial= atomic;
 
 # Files
 start_file   = cgo-mm-00.rst;
