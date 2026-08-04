@@ -28,7 +28,6 @@
 #include "potentialSettings.hpp"     // for PotentialSettings
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
-#include "typeAliases.hpp"
 
 using namespace input;
 using namespace settings;

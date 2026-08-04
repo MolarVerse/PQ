@@ -24,11 +24,11 @@
 
 #define _STRING_UTILITIES_HPP_
 
-#include <cstddef>       // for size_t
+#include <cstddef>   // for size_t
+#include <cstdint>
 #include <string>        // for string
 #include <string_view>   // for string_view
-
-#include "typeAliases.hpp"
+#include <vector>
 
 /**
  * @brief utilities is a namespace for all utility functions
