@@ -24,6 +24,8 @@
 
 #define _TRAJECTORY_OUTPUT_HPP_
 
+#include <cstddef>   // for size_t
+
 #include "output.hpp"   // for Output
 #include "typeAliases.hpp"
 
@@ -41,10 +43,10 @@ namespace output
         using Output::Output;
 
         void writeHeader(const pq::SimBox &);
-        void writeXyz(pq::SimBox &);
-        void writeVelocities(pq::SimBox &);
-        void writeForces(pq::SimBox &);
-        void writeCharges(pq::SimBox &);
+        void writeXyz(pq::SimBox &, const size_t);
+        void writeVelocities(pq::SimBox &, const size_t);
+        void writeForces(pq::SimBox &, const size_t);
+        void writeCharges(pq::SimBox &, const size_t);
     };
 
 }   // namespace output
