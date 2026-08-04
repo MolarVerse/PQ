@@ -37,7 +37,6 @@ namespace settings
      */
     enum class SmoothingMethod
     {
-        NONE,
         HOTSPOT,
         EXACT
     };
@@ -62,7 +61,7 @@ namespace settings
         static inline double _smoothingRegionThickness = 0.0;
         static inline double _pointChargeThickness     = 0.0;
 
-        static inline SmoothingMethod _smoothing = SmoothingMethod::NONE;
+        static inline SmoothingMethod _smoothing = SmoothingMethod::HOTSPOT;
 
        public:
         /********************
