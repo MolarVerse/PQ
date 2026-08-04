@@ -177,13 +177,14 @@ void HybridConfigurator::assignHybridZones(SimBox& simBox)
 
     for (auto& mol : simBox.getMolecules())
     {
+        mol.calculateCenterOfMass(simBox.getBox());
+
         if (mol.isForcedInner())
         {
             setZone(mol, CORE);
             continue;
         }
 
-        mol.calculateCenterOfMass(simBox.getBox());
         const auto com = norm(mol.getCenterOfMass());
 
         if (mol.isForcedOuter())
