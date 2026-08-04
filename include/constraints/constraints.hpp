@@ -34,6 +34,11 @@
 #include "timer.hpp"                // for Timer
 #include "typeAliases.hpp"
 
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}   // namespace physicalData
+
 /**
  * @brief namespace for all constraints
  */
@@ -86,7 +91,7 @@ namespace constraints
 
         void applyDistanceConstraints(
             const pq::SimBox &,
-            pq::PhysicalData &,
+            physicalData::PhysicalData &,
             const double
         );
 

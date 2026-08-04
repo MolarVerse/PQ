@@ -30,6 +30,11 @@
 #include "timer.hpp"
 #include "typeAliases.hpp"
 
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}   // namespace physicalData
+
 namespace potential
 {
     /**
@@ -57,7 +62,7 @@ namespace potential
 
         virtual void calculateForces(
             pq::SimBox &,
-            pq::PhysicalData &,
+            physicalData::PhysicalData &,
             pq::CellList &
         )                                         = 0;
         virtual pq::SharedPotential clone() const = 0;

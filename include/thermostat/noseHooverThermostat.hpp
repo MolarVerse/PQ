@@ -54,7 +54,11 @@ namespace thermostat
             const double               couplingFrequency
         );
 
-        void applyThermostat(pq::SimBox &, pq::PhysicalData &) override;
+        void applyThermostat(
+            pq::SimBox &,
+            physicalData::PhysicalData &
+        ) override;
+
         void applyThermostatOnForces(pq::SimBox &simBox) override;
 
         /***************************

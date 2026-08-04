@@ -33,6 +33,11 @@
 #include "timer.hpp"
 #include "typeAliases.hpp"
 
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}   // namespace physicalData
+
 namespace QM
 {
     /**
@@ -46,8 +51,8 @@ namespace QM
        public:
         virtual ~QMRunner() = default;
 
-        void throwAfterTimeout(const std::stop_token stopToken) const;
-        virtual void run(pq::SimBox &, pq::PhysicalData &) = 0;
+        void         throwAfterTimeout(const std::stop_token stopToken) const;
+        virtual void run(pq::SimBox &, physicalData::PhysicalData &) = 0;
     };
 }   // namespace QM
 

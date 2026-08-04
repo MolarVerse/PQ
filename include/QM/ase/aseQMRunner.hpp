@@ -50,14 +50,17 @@ namespace QM
         AseQMRunner();
         ~AseQMRunner() override;
 
-        void run(pq::SimBox &, pq::PhysicalData &) override;
+        void run(pq::SimBox &, physicalData::PhysicalData &) override;
         void buildAseAtoms(const pq::SimBox &);
         void execute();
 
-        void collectData(pq::SimBox &, pq::PhysicalData &) const;
+        void collectData(pq::SimBox &, physicalData::PhysicalData &) const;
         void collectForces(pq::SimBox &) const;
-        void collectEnergy(pq::PhysicalData &) const;
-        void collectStress(const pq::SimBox &, pq::PhysicalData &) const;
+        void collectEnergy(physicalData::PhysicalData &) const;
+        void collectStress(
+            const pq::SimBox &,
+            physicalData::PhysicalData &
+        ) const;
 
        protected:
         void setAseCalculator(const pybind11::object &calculator);

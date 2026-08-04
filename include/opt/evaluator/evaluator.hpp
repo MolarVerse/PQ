@@ -77,8 +77,12 @@ namespace opt
         void setCellList(const pq::SharedCellList);
         void setSimulationBox(const pq::SharedSimBox);
         void setConstraints(const pq::SharedConstraints);
-        void setPhysicalData(const pq::SharedPhysicalData);
-        void setPhysicalDataOld(const pq::SharedPhysicalData);
+
+        void setPhysicalData(const std::shared_ptr<physicalData::PhysicalData>);
+        void setPhysicalDataOld(
+            const std::shared_ptr<physicalData::PhysicalData>
+        );
+
         void setForceField(const std::shared_ptr<forceField::ForceField>);
         void setVirial(const std::shared_ptr<virial::Virial>);
         void setIntraNonBonded(const pq::SharedIntraNonBond);

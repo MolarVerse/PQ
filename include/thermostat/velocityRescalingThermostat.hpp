@@ -49,7 +49,10 @@ namespace thermostat
         VelocityRescalingThermostat(const VelocityRescalingThermostat &);
         explicit VelocityRescalingThermostat(const double, const double);
 
-        void applyThermostat(pq::SimBox &, pq::PhysicalData &) override;
+        void applyThermostat(
+            pq::SimBox &,
+            physicalData::PhysicalData &
+        ) override;
 
         void setTau(const double tau);
 

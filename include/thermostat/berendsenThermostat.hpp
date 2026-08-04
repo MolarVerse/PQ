@@ -46,7 +46,10 @@ namespace thermostat
         explicit BerendsenThermostat(const double targetTemp, const double tau);
         BerendsenThermostat() = default;
 
-        void applyThermostat(pq::SimBox &, pq::PhysicalData &) override;
+        void applyThermostat(
+            pq::SimBox &,
+            physicalData::PhysicalData &
+        ) override;
 
         void setTau(const double tau);
 

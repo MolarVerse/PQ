@@ -40,12 +40,6 @@ namespace simulationBox
 
 }   // namespace simulationBox
 
-namespace physicalData
-{
-    class PhysicalData;   // forward declaration
-
-}   // namespace physicalData
-
 namespace potential
 {
     class Potential;              // forward declaration
@@ -230,14 +224,6 @@ namespace pq
     using SharedBox      = std::shared_ptr<simulationBox::Box>;
 
     using SharedAtomVec = std::vector<SharedAtom>;
-
-    /**************************
-     * physicalData namespace *
-     **************************/
-
-    using PhysicalData       = physicalData::PhysicalData;
-    using VecPhysicalData    = std::vector<PhysicalData>;
-    using SharedPhysicalData = std::shared_ptr<physicalData::PhysicalData>;
 
 }   // namespace pq
 

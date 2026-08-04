@@ -36,6 +36,7 @@
 #include "dihedralType.hpp"
 #include "jCouplingForceField.hpp"
 #include "jCouplingType.hpp"
+#include "physicalData.hpp"
 #include "typeAliases.hpp"
 
 namespace forceField
@@ -69,12 +70,35 @@ namespace forceField
        public:
         std::shared_ptr<ForceField> clone() const;
 
-        void calculateBondedInteractions(const pq::SimBox &, pq::PhysicalData &);
-        void calculateBondInteractions(const pq::SimBox &, pq::PhysicalData &);
-        void calculateAngleInteractions(const pq::SimBox &, pq::PhysicalData &);
-        void calculateDihedralInteractions(const pq::SimBox &, pq::PhysicalData &);
-        void calculateImproperDihedralInteractions(const pq::SimBox &, pq::PhysicalData &);
-        void calculateJCouplingInteractions(const pq::SimBox &, pq::PhysicalData &);
+        void calculateBondedInteractions(
+            const pq::SimBox &,
+            physicalData::PhysicalData &
+        );
+
+        void calculateBondInteractions(
+            const pq::SimBox &,
+            physicalData::PhysicalData &
+        );
+
+        void calculateAngleInteractions(
+            const pq::SimBox &,
+            physicalData::PhysicalData &
+        );
+
+        void calculateDihedralInteractions(
+            const pq::SimBox &,
+            physicalData::PhysicalData &
+        );
+
+        void calculateImproperDihedralInteractions(
+            const pq::SimBox &,
+            physicalData::PhysicalData &
+        );
+
+        void calculateJCouplingInteractions(
+            const pq::SimBox &,
+            physicalData::PhysicalData &
+        );
 
         const BondType      &findBondTypeById(size_t id) const;
         const AngleType     &findAngleTypeById(size_t id) const;

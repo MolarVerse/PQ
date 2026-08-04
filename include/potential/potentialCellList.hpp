@@ -27,6 +27,11 @@
 #include "potential.hpp"
 #include "typeAliases.hpp"
 
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}   // namespace physicalData
+
 namespace potential
 {
     /**
@@ -40,8 +45,11 @@ namespace potential
        public:
         ~PotentialCellList() override;
 
-        void calculateForces(pq::SimBox &, pq::PhysicalData &, pq::CellList &)
-            override;
+        void calculateForces(
+            pq::SimBox &,
+            physicalData::PhysicalData &,
+            pq::CellList &
+        ) override;
 
         pq::SharedPotential clone() const override;
     };

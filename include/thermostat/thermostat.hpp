@@ -29,6 +29,11 @@
 #include "timer.hpp"   // for Timer
 #include "typeAliases.hpp"
 
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}   // namespace physicalData
+
 namespace thermostat
 {
     /**
@@ -58,10 +63,19 @@ namespace thermostat
 
         void applyTemperatureRamping();
 
-        virtual void applyThermostat(pq::SimBox &, pq::PhysicalData &);
-        virtual void applyThermostatOnForces(pq::SimBox &) {};
-        virtual void applyThermostatHalfStep(pq::SimBox &, pq::PhysicalData &) {
-        };
+        virtual void applyThermostat(
+            pq::SimBox &,
+            physicalData::PhysicalData &
+        );
+
+        virtual void applyThermostatOnForces(pq::SimBox &) {}
+
+        virtual void applyThermostatHalfStep(
+            pq::SimBox &,
+            physicalData::PhysicalData &
+        )
+        {
+        }
 
         /***************************
          * standard setter methods *

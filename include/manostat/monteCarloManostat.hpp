@@ -26,7 +26,7 @@
 
 #include "manostat.hpp"                // for Manostat
 #include "randomNumberGenerator.hpp"   // for RandomNumberGenerator
-#include "typeAliases.hpp"             // for PhysicalData, SimulationBox
+#include "typeAliases.hpp"             // for SimulationBox
 
 namespace manostat
 {
@@ -38,7 +38,9 @@ namespace manostat
        public:
         explicit MonteCarloManostat() = default;
 
-        void applyManostat(pq::SimBox &, pq::PhysicalData &) override {}
+        void applyManostat(pq::SimBox &, physicalData::PhysicalData &) override
+        {
+        }
     };
 }   // namespace manostat
 

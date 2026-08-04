@@ -30,6 +30,11 @@
 #include "dihedral.hpp"
 #include "typeAliases.hpp"
 
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}   // namespace physicalData
+
 namespace forceField
 {
     /**
@@ -59,7 +64,11 @@ namespace forceField
             const size_t                       type
         );
 
-        void calculateEnergyAndForces(const pq::SimBox &, pq::PhysicalData &) {
+        void calculateEnergyAndForces(
+            const pq::SimBox &,
+            physicalData::PhysicalData &
+        )
+        {
         }   // TODO: implement
 
         /***************************

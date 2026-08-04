@@ -28,6 +28,11 @@
 #include "thermostat.hpp"
 #include "typeAliases.hpp"
 
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}   // namespace physicalData
+
 namespace thermostat
 {
 
@@ -47,8 +52,16 @@ namespace thermostat
         void calculateSigma(const double, const double);
 
         void applyLangevin(pq::SimBox &);
-        void applyThermostat(pq::SimBox &, pq::PhysicalData &) override;
-        void applyThermostatHalfStep(pq::SimBox &, pq::PhysicalData &) override;
+
+        void applyThermostat(
+            pq::SimBox &,
+            physicalData::PhysicalData &
+        ) override;
+
+        void applyThermostatHalfStep(
+            pq::SimBox &,
+            physicalData::PhysicalData &
+        ) override;
 
         /***************************
          * standard setter methods *

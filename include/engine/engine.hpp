@@ -67,14 +67,14 @@ namespace engine
 
         physicalData::PhysicalData _averagePhysicalData;
 
-        std::shared_ptr<virial::Virial>         _virial;
-        pq::SharedPotential                     _potential;
-        pq::SharedPhysicalData                  _physicalData;
-        pq::SharedSimBox                        _simulationBox;
-        pq::SharedCellList                      _cellList;
-        pq::SharedIntraNonBond                  _intraNonBonded;
-        std::shared_ptr<forceField::ForceField> _forceField;
-        pq::SharedConstraints                   _constraints;
+        std::shared_ptr<virial::Virial>             _virial;
+        pq::SharedPotential                         _potential;
+        std::shared_ptr<physicalData::PhysicalData> _physicalData;
+        pq::SharedSimBox                            _simulationBox;
+        pq::SharedCellList                          _cellList;
+        pq::SharedIntraNonBond                      _intraNonBonded;
+        std::shared_ptr<forceField::ForceField>     _forceField;
+        pq::SharedConstraints                       _constraints;
 
 #ifdef WITH_KOKKOS
         simulationBox::KokkosSimulationBox _kokkosSimulationBox;
@@ -154,10 +154,12 @@ namespace engine
         [[nodiscard]]
         std::shared_ptr<forceField::ForceField> getSharedForceField() const;
         [[nodiscard]] pq::SharedSimBox          getSharedSimulationBox() const;
-        [[nodiscard]] pq::SharedPhysicalData    getSharedPhysicalData() const;
-        [[nodiscard]] pq::SharedCellList        getSharedCellList() const;
-        [[nodiscard]] pq::SharedConstraints     getSharedConstraints() const;
-        [[nodiscard]] pq::SharedIntraNonBond    getSharedIntraNonBonded() const;
+        [[nodiscard]]
+        std::shared_ptr<physicalData::PhysicalData> getSharedPhysicalData(
+        ) const;
+        [[nodiscard]] pq::SharedCellList     getSharedCellList() const;
+        [[nodiscard]] pq::SharedConstraints  getSharedConstraints() const;
+        [[nodiscard]] pq::SharedIntraNonBond getSharedIntraNonBonded() const;
         [[nodiscard]] std::shared_ptr<virial::Virial> getSharedVirial() const;
         [[nodiscard]] pq::SharedPotential getSharedPotential() const;
 

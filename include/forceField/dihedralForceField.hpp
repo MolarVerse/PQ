@@ -30,6 +30,11 @@
 #include "dihedral.hpp"
 #include "typeAliases.hpp"
 
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}   // namespace physicalData
+
 namespace forceField
 {
     /**
@@ -56,11 +61,11 @@ namespace forceField
         );
 
         void calculateEnergyAndForces(
-            const pq::SimBox     &simBox,
-            pq::PhysicalData     &data,
-            const bool            isImproperDihedral,
-            const pq::CoulombPot &coulombPot,
-            pq::NonCoulombPot    &nonCoulombPot
+            const pq::SimBox           &simBox,
+            physicalData::PhysicalData &data,
+            const bool                  isImproperDihedral,
+            const pq::CoulombPot       &coulombPot,
+            pq::NonCoulombPot          &nonCoulombPot
         );
 
         /***************************
