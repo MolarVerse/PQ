@@ -24,8 +24,8 @@
 
 #include <format>   // for format
 
-#include "exceptions.hpp"         // for HybridMDEngineException
-#include "hybridSettings.hpp"     // for HybridSettings
+#include "exceptions.hpp"       // for HybridMDEngineException
+#include "hybridSettings.hpp"   // for HybridSettings
 
 using namespace pq;
 using namespace customException;
@@ -185,9 +185,11 @@ namespace engine
                       globalSmF;
             addScaledCurrentForcesToOuterAndReset(atoms, globalSmF);
 
-            // STEP 4: Scale and accumulate hybrid energies
+            // STEP 4: Scale and accumulate hybrid energies and delete temp
+            // files --> following configs cannot continue if the QM calc fails
             scaleAndAccumulateEnergies(globalSmF);
             _physicalData->resetEnergies();
+            deleteTmpFiles();
         }
 
         // STEP 5: Set energies, virial and numQMAtoms to accumulated values
