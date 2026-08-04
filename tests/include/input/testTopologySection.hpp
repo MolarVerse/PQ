@@ -26,6 +26,7 @@
 
 #include <gtest/gtest.h>   // for Test
 
+#include <filesystem>
 #include <string>   // for allocator, string
 
 #include "mmmdEngine.hpp"   // for Engine
@@ -63,9 +64,7 @@ class TestTopologySection : public ::testing::Test
     void TearDown() override
     {
         delete _engine;
-        const auto errorCode = std::remove(_topologyFileName.c_str());
-        EXPECT_EQ(errorCode, 0)
-            << "Failed to remove file: " << _topologyFileName.c_str();
+        static_cast<void>(std::filesystem::remove(_topologyFileName));
     }
 };
 

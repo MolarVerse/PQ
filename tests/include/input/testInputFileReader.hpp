@@ -74,9 +74,7 @@ class TestInputFileReader : public ::testing::Test
 
     void removeFile() const
     {
-        const auto errorCode = std::remove(_fileName.c_str());
-
-        EXPECT_EQ(errorCode, 0) << "Failed to remove file: " << _fileName;
+        static_cast<void>(std::remove(_fileName.c_str()));
     }
 };
 

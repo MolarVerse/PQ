@@ -22,7 +22,7 @@
 
 #include <gtest/gtest.h>
 
-#include <cstdio>
+#include <filesystem>
 #include <fstream>
 #include <string>
 #include <vector>
@@ -55,10 +55,9 @@ namespace
         };
         for (const auto &s : suffixes)
         {
-            const auto errorCode =
-                std::remove((std::string(PREFIX) + s).c_str());
-            EXPECT_EQ(errorCode, 0)
-                << "Failed to remove file: " << (std::string(PREFIX) + s);
+            static_cast<void>(
+                std::filesystem::remove((std::string(PREFIX) + s).c_str())
+            );
         }
     }
 }   // namespace

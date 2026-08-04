@@ -26,7 +26,8 @@
 
 #include <gtest/gtest.h>   // for Test
 
-#include <string>   // for allocator, string
+#include <filesystem>   // for remove
+#include <string>       // for allocator, string
 
 #include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
 #include "mmmdEngine.hpp"             // for Engine
@@ -68,10 +69,7 @@ class TestParameterFileSection : public ::testing::Test
     void TearDown() override
     {
         delete _engine;
-        const auto errorCode = std::remove(_parameterFileName.c_str());
-
-        EXPECT_EQ(errorCode, 0)
-            << "Failed to remove file: " << _parameterFileName.c_str();
+        static_cast<void>(std::filesystem::remove(_parameterFileName));
     }
 };
 

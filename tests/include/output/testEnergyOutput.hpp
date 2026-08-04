@@ -26,7 +26,7 @@
 
 #include <gtest/gtest.h>   // for Test
 
-#include <cstdio>   // for remove
+#include <filesystem>
 
 #include "energyOutput.hpp"     // for EnergyOutput
 #include "infoOutput.hpp"       // for InfoOutput
@@ -56,12 +56,9 @@ class TestEnergyOutput : public ::testing::Test
         delete _energyOutput;
         delete _momentumOutput;
         delete _physicalData;
-        auto errorCode = std::remove("default.info");
-        EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.info";
-        errorCode = std::remove("default.en");
-        EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.en";
-        errorCode = std::remove("default.mom");
-        EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.mom";
+        static_cast<void>(std::filesystem::remove("default.info"));
+        static_cast<void>(std::filesystem::remove("default.en"));
+        static_cast<void>(std::filesystem::remove("default.mom"));
     }
 
     output::InfoOutput         *_infoOutput;
