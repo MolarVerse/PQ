@@ -56,11 +56,6 @@ void OptOutput::write(const size_t step, const Optimizer& optimizer)
 
     const auto convStrategy = conv.getEnConvStrategy();
 
-    auto relEnConvStr    = format("{:3d}", 0);
-    auto absEnConvStr    = format("{:3d}", 0);
-    auto maxForceConvStr = format("{:3d}", 0);
-    auto rmsForceConvStr = format("{:3d}", 0);
-
     const auto isEnergyConvEnabled   = conv.isEnergyConvEnabled();
     const auto isMaxForceConvEnabled = conv.isMaxForceConvEnabled();
     const auto isRMSForceConvEnabled = conv.isRMSForceConvEnabled();

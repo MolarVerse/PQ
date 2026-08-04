@@ -178,13 +178,13 @@ void QMInputParser::parseQMMethod(
     if ("dftbplus" == method)
     {
         QMSettings::setQMMethod(DFTBPLUS);
-        ReferencesOutput::addReferenceFile(_DFTBPLUS_FILE_);
+        ReferencesOutput::addReferenceFile(DFTBPLUS_FILE);
     }
 
     else if ("ase_dftbplus" == method)
     {
         QMSettings::setQMMethod(ASEDFTBPLUS);
-        ReferencesOutput::addReferenceFile(_DFTBPLUS_FILE_);
+        ReferencesOutput::addReferenceFile(DFTBPLUS_FILE);
     }
 
     else if ("ase_xtb" == method)
@@ -193,19 +193,19 @@ void QMInputParser::parseQMMethod(
     else if ("pyscf" == method)
     {
         QMSettings::setQMMethod(PYSCF);
-        ReferencesOutput::addReferenceFile(_PYSCF_FILE_);
+        ReferencesOutput::addReferenceFile(PYSCF_FILE);
     }
 
     else if ("turbomole" == method)
     {
         QMSettings::setQMMethod(TURBOMOLE);
-        ReferencesOutput::addReferenceFile(_TURBOMOLE_FILE_);
+        ReferencesOutput::addReferenceFile(TURBOMOLE_FILE);
     }
 
     else if ("fennol" == method)
     {
         QMSettings::setQMMethod(method);
-        ReferencesOutput::addReferenceFile(_FENNOL_FILE_);
+        ReferencesOutput::addReferenceFile(FENNOL_FILE);
     }
 
     else if (method.starts_with("mace"))
@@ -426,13 +426,13 @@ void QMInputParser::parseMaceQMMethod(const std::string_view &model)
     if ("mace" == model || "mace_mp" == model)
     {
         QMSettings::setMaceModelType(MACE_MP);
-        ReferencesOutput::addReferenceFile(_MACEMP_FILE_);
+        ReferencesOutput::addReferenceFile(MACEMP_FILE);
     }
 
     else if ("mace_off" == model)
     {
         QMSettings::setMaceModelType(MACE_OFF);
-        ReferencesOutput::addReferenceFile(_MACEOFF_FILE_);
+        ReferencesOutput::addReferenceFile(MACEOFF_FILE);
     }
 
     else if ("mace_anicc" == model || "mace_ani" == model)
@@ -478,13 +478,13 @@ void QMInputParser::parseSlakosType(
     {
         QMSettings::setSlakosType(THREEOB);
         QMSettings::setHubbardDerivs(hubbardDerivMap3ob);
-        ReferencesOutput::addReferenceFile(_THREEOB_FILE_);
+        ReferencesOutput::addReferenceFile(THREEOB_FILE);
     }
 
     else if ("matsci" == slakos)
     {
         QMSettings::setSlakosType(MATSCI);
-        ReferencesOutput::addReferenceFile(_MATSCI_FILE_);
+        ReferencesOutput::addReferenceFile(MATSCI_FILE);
     }
 
     else if ("custom" == slakos)

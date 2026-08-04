@@ -301,8 +301,8 @@ void EngineOutput::writeBoxFile(const size_t step, const Box &simulationBox)
  * @param optimizer
  */
 void EngineOutput::writeOptFile(
-    const size_t         step,
-    const pq::Optimizer &optimizer
+    const size_t          step,
+    const opt::Optimizer &optimizer
 )
 {
     startTimingsSection("OptOutput");

@@ -134,7 +134,7 @@ TEST_F(TestInputFileReader, parserInitialLearningRate)
 {
     EXPECT_EQ(
         OptimizerSettings::getInitialLearningRate(),
-        _INITIAL_LEARNING_RATE_DEFAULT_
+        INITIAL_LEARNING_RATE_DEFAULT
     );
 
     OptimizerSettings::setInitialLearningRate(0.0);
@@ -211,7 +211,7 @@ TEST_F(TestInputFileReader, parserLRUpdateFrequency)
 {
     EXPECT_EQ(
         OptimizerSettings::getLRUpdateFrequency(),
-        _LR_UPDATE_FREQUENCY_DEFAULT_
+        LR_UPDATE_FREQUENCY_DEFAULT
     );
 
     OptimizerSettings::setLRUpdateFrequency(0);
@@ -241,7 +241,7 @@ TEST_F(TestInputFileReader, parserMinLearningRate)
 {
     EXPECT_EQ(
         OptimizerSettings::getMinLearningRate(),
-        _MIN_LEARNING_RATE_DEFAULT_
+        MIN_LEARNING_RATE_DEFAULT
     );
 
     OptimizerSettings::setMinLearningRate(0.0);

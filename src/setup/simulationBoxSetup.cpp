@@ -354,7 +354,7 @@ void SimulationBoxSetup::checkBoxSettings()
     {
         const auto volume = simBox.calculateVolume();
         const auto density =
-            simBox.getTotalMass() / volume * _AMU_PER_ANGSTROM3_TO_KG_PER_L_;
+            simBox.getTotalMass() / volume * AMU_PER_ANGSTROM3_TO_KG_PER_L;
 
         simBox.setVolume(volume);
         simBox.setDensity(density);
@@ -362,7 +362,7 @@ void SimulationBoxSetup::checkBoxSettings()
     else
     {
         const auto volume     = simBox.calculateVolume();
-        const auto convFactor = _AMU_PER_ANGSTROM3_TO_KG_PER_L_;
+        const auto convFactor = AMU_PER_ANGSTROM3_TO_KG_PER_L;
         const auto density    = simBox.getTotalMass() / volume * convFactor;
 
         simBox.setVolume(volume);
@@ -466,7 +466,7 @@ void SimulationBoxSetup::writeSetupInfo() const
 
     const auto density   = simBox.getDensity();
     const auto volume    = simBox.getVolume();
-    const auto volumeStr = std::format("{:14.5f} {}³", volume, _ANGSTROM_);
+    const auto volumeStr = std::format("{:14.5f} {}³", volume, ANGSTROM);
 
     log.writeSetupInfo(std::format("density:         {:14.5f} kg/L", density));
     log.writeSetupInfo(std::format("volume:          {}", volumeStr));
@@ -476,9 +476,9 @@ void SimulationBoxSetup::writeSetupInfo() const
     const auto boxB = simBox.getBoxDimensions()[1];
     const auto boxC = simBox.getBoxDimensions()[2];
 
-    const auto boxAstr = std::format("{:14.5f} {}", boxA, _ANGSTROM_);
-    const auto boxBstr = std::format("{:14.5f} {}", boxB, _ANGSTROM_);
-    const auto boxCstr = std::format("{:14.5f} {}", boxC, _ANGSTROM_);
+    const auto boxAstr = std::format("{:14.5f} {}", boxA, ANGSTROM);
+    const auto boxBstr = std::format("{:14.5f} {}", boxB, ANGSTROM);
+    const auto boxCstr = std::format("{:14.5f} {}", boxC, ANGSTROM);
 
     const auto alpha = simBox.getBoxAngles()[0];
     const auto beta  = simBox.getBoxAngles()[1];
@@ -495,7 +495,7 @@ void SimulationBoxSetup::writeSetupInfo() const
     // clang-format on
 
     const auto rc    = PotentialSettings::getCoulombRadiusCutOff();
-    const auto rcStr = std::format("{:14.5f} {}", rc, _ANGSTROM_);
+    const auto rcStr = std::format("{:14.5f} {}", rc, ANGSTROM);
 
     log.writeSetupInfo(std::format("coulomb cutoff:  {}", rcStr));
     log.writeEmptyLine();

@@ -79,7 +79,7 @@ void ReferencesOutput::writeReferencesFile()
     fp << '\n';
     // clang-format on
 
-    printReference(_PQ_FILE_);
+    printReference(PQ_FILE);
     std::ranges::for_each(_referenceFileNames, printReference);
 
     // clang-format off
@@ -92,7 +92,7 @@ void ReferencesOutput::writeReferencesFile()
     fp << '\n';
     // clang-format on
 
-    printReference(static_cast<std::string>(_PQ_FILE_) + ".bib");
+    printReference(static_cast<std::string>(PQ_FILE) + ".bib");
     std::ranges::for_each(_bibtexFileNames, printReference);
 
     fp.close();

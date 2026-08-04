@@ -24,7 +24,6 @@
 
 #define _TYPE_ALIASES_HPP_
 
-#include <chrono>       // for std::chrono
 #include <cstddef>      // for size_t
 #include <deque>        // for std::queue
 #include <functional>   // for std::function
@@ -34,7 +33,6 @@
 #include <string>       // for std::string
 #include <vector>       // for std::vector
 
-#include "../linearAlgebra/matrix.hpp"         // IWYU pragma: export
 #include "../linearAlgebra/staticMatrix.hpp"   // IWYU pragma: export
 #include "../linearAlgebra/vector3d.hpp"       // IWYU pragma: export
 
@@ -71,13 +69,6 @@ namespace potential
 
 }   // namespace potential
 
-namespace virial
-{
-    class Virial;            // forward declaration
-    class MolecularVirial;   // forward declaration
-
-}   // namespace virial
-
 namespace intraNonBonded
 {
     class IntraNonBonded;   // forward declaration
@@ -98,23 +89,6 @@ namespace constraints
     class MShakeReference;      // forward declaration
 
 }   // namespace constraints
-
-namespace opt
-{
-    class LearningRateStrategy;
-    class ConstantLRStrategy;
-    class ConstantDecayLRStrategy;
-
-    class Evaluator;
-    class MMEvaluator;
-    class HessianBuilder;
-
-    class Optimizer;
-    class SteepestDescent;
-
-    class Convergence;
-
-}   // namespace opt
 
 namespace output
 {
@@ -167,13 +141,6 @@ namespace timings
 
 }   // namespace timings
 
-namespace thermostat
-{
-    class Thermostat;   // forward declaration
-    class NoseHoover;   // forward declaration
-
-}   // namespace thermostat
-
 namespace settings
 {
     enum class ThermostatType;   // forward declaration
@@ -208,9 +175,6 @@ namespace input
 
 namespace pq
 {
-    using Time = std::chrono::time_point<std::chrono::high_resolution_clock>;
-    using Duration = std::chrono::duration<double>;
-
     using strings   = std::vector<std::string>;
     using stringSet = std::set<std::string>;
 
@@ -265,24 +229,6 @@ namespace pq
     using Isotropy       = settings::Isotropy;
     using ManostatType   = settings::ManostatType;
 
-    /************************
-     * thermostat namespace *
-     ************************/
-
-    using Thermostat = thermostat::Thermostat;
-    using NoseHoover = thermostat::NoseHoover;
-
-    using UniqueThermostat = std::unique_ptr<Thermostat>;
-
-    /********************
-     * virial namespace *
-     ********************/
-
-    using Virial          = virial::Virial;
-    using MolecularVirial = virial::MolecularVirial;
-
-    using SharedVirial = std::shared_ptr<virial::Virial>;
-
     /**********************
      * manostat namespace *
      **********************/
@@ -312,10 +258,6 @@ namespace pq
 
     using UniqueEngine = std::unique_ptr<Engine>;
 
-    using HessianMatrix        = std::vector<std::vector<double>>;
-    using HessianBuilder       = opt::HessianBuilder;
-    using SharedHessianBuilder = std::shared_ptr<opt::HessianBuilder>;
-
     /***********************
      * potential namespace *
      ***********************/
@@ -342,7 +284,6 @@ namespace pq
     using SharedNonCoulPairVec2d = std::vector<SharedNonCoulPairVec>;
     using SharedNonCoulPairVec3d = std::vector<SharedNonCoulPairVec2d>;
     using SharedNonCoulPairVec4d = std::vector<SharedNonCoulPairVec3d>;
-    using SharedNonCoulPairMat   = linearAlgebra::Matrix<SharedNonCoulPair>;
 
     /**************************
      * constraints namespace *
@@ -385,25 +326,6 @@ namespace pq
     using PhysicalData       = physicalData::PhysicalData;
     using VecPhysicalData    = std::vector<PhysicalData>;
     using SharedPhysicalData = std::shared_ptr<physicalData::PhysicalData>;
-
-    /*****************
-     * opt namespace *
-     *****************/
-
-    using Evaluator       = opt::Evaluator;
-    using MMEvaluator     = opt::MMEvaluator;
-    using SharedEvaluator = std::shared_ptr<opt::Evaluator>;
-
-    using LearningRate       = opt::LearningRateStrategy;
-    using ConstantLR         = opt::ConstantLRStrategy;
-    using ConstantDecayLR    = opt::ConstantDecayLRStrategy;
-    using SharedLearningRate = std::shared_ptr<opt::LearningRateStrategy>;
-
-    using Optimizer       = opt::Optimizer;
-    using SteepestDescent = opt::SteepestDescent;
-    using SharedOptimizer = std::shared_ptr<opt::Optimizer>;
-
-    using Convergence = opt::Convergence;
 
 }   // namespace pq
 

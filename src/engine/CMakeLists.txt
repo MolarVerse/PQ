@@ -94,3 +94,5 @@ endif()
 install(TARGETS engine
     DESTINATION lib
 )
+
+target_precompile_headers(engine REUSE_FROM pq_pch)
