@@ -22,11 +22,11 @@
 
 #include "turbomoleRunner.hpp"
 
-#include <cstddef>      // for size_t
-#include <cstdlib>      // for system
-#include <format>       // for format
-#include <fstream>      // for ofstream
-#include <string>       // for string
+#include <cstddef>   // for size_t
+#include <cstdlib>   // for system
+#include <format>    // for format
+#include <fstream>   // for ofstream
+#include <string>    // for string
 
 #include "atom.hpp"              // for Atom
 #include "constants.hpp"         // for constants
@@ -60,7 +60,7 @@ void TurbomoleRunner::writeCoordsFile(SimulationBox &simBox)
     for (size_t i = 0; i < nAtoms; ++i)
     {
         const auto &atom = simBox.getQMAtom(i);
-        const auto  pos  = atom.getPosition() * _ANGSTROM_TO_BOHR_;
+        const auto  pos  = atom.getPosition() * ANGSTROM_TO_BOHR;
 
         // turbomole does not support tabs in the coord file
         coordsFile << std::format(
@@ -86,10 +86,12 @@ void TurbomoleRunner::execute()
     const auto scriptFile = _scriptPath + QMSettings::getQMScript();
 
     if (!fileExists(scriptFile))
-        throw InputFileException(std::format(
-            "Turbomole script file \"{}\" does not exist.",
-            scriptFile
-        ));
+        throw InputFileException(
+            std::format(
+                "Turbomole script file \"{}\" does not exist.",
+                scriptFile
+            )
+        );
 
     const auto reuseCharges = _isFirstExecution ? 1 : 0;
 

@@ -103,14 +103,18 @@ namespace engine
             const double simulationTime,
             const pq::PhysicalData &
         );
-        void writeRstFile(pq::SimBox &, const pq::Thermostat &, const size_t);
+        void writeRstFile(
+            pq::SimBox &,
+            const thermostat::Thermostat &,
+            const size_t
+        );
         void writeOptRstFile(pq::SimBox &, const size_t);
 
         void writeMomentumFile(const size_t step, const pq::PhysicalData &);
         void writeVirialFile(const size_t, const pq::PhysicalData &);
         void writeStressFile(const size_t, const pq::PhysicalData &);
         void writeBoxFile(const size_t, const pq::Box &);
-        void writeOptFile(const size_t, const pq::Optimizer &);
+        void writeOptFile(const size_t, const opt::Optimizer &);
 
         void writeRingPolymerRstFile(std::vector<pq::SimBox> &);
         void writeRingPolymerXyzFile(std::vector<pq::SimBox> &, const size_t);
