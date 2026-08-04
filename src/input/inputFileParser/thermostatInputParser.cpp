@@ -29,7 +29,7 @@
 #include <string_view>   // for string_view
 
 #include "constants/conversionFactors.hpp"
-#include "exceptions.hpp"           // for InputFileException, customException
+#include "exceptions.hpp"   // for InputFileException, customException
 #include "parserUtils.hpp"
 #include "references.hpp"           // for References
 #include "referencesOutput.hpp"     // for ReferencesOutput

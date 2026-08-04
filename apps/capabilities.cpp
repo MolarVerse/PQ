@@ -25,8 +25,8 @@
 #include <climits>
 #include <cmath>
 #include <cstdint>
-#include <iomanip>
 #include <initializer_list>
+#include <iomanip>
 #include <limits>
 #include <ostream>
 #include <string_view>
@@ -39,18 +39,18 @@
 
 namespace
 {
-    constexpr bool _WITH_ASE_              = PQ_BUILD_WITH_ASE;
-    constexpr bool _WITH_MPI_              = PQ_BUILD_WITH_MPI;
-    constexpr bool _WITH_KOKKOS_           = PQ_BUILD_WITH_KOKKOS;
-    constexpr bool _WITH_PYTHON_BINDINGS_  = PQ_BUILD_WITH_PYTHON_BINDINGS;
-    constexpr bool _WITH_PYTHON_EMBEDDING_ = PQ_BUILD_WITH_PYTHON_EMBEDDING;
-    constexpr bool _SHARED_                = PQ_BUILD_SHARED;
-    constexpr bool _STATIC_                = PQ_BUILD_STATIC;
-    constexpr bool _WITH_SINGULARITY_      = PQ_BUILD_WITH_SINGULARITY;
+    constexpr bool withAse             = PQ_BUILD_WITH_ASE;
+    constexpr bool withMpi             = PQ_BUILD_WITH_MPI;
+    constexpr bool withKokkos          = PQ_BUILD_WITH_KOKKOS;
+    constexpr bool withPythonBindings  = PQ_BUILD_WITH_PYTHON_BINDINGS;
+    constexpr bool withPythonEmbedding = PQ_BUILD_WITH_PYTHON_EMBEDDING;
+    constexpr bool sharedBuild         = PQ_BUILD_SHARED;
+    constexpr bool staticBuild         = PQ_BUILD_STATIC;
+    constexpr bool withSingularity     = PQ_BUILD_WITH_SINGULARITY;
 
     void writeStringArray(
-        cli::JsonWriter &json,
-        const std::string_view key,
+        cli::JsonWriter                              &json,
+        const std::string_view                        key,
         const std::initializer_list<std::string_view> values
     )
     {
@@ -68,20 +68,21 @@ namespace
     {
         json.beginObject(name);
         json.value("type", type);
-        if (!unit.empty()) json.value("unit", unit);
+        if (!unit.empty())
+            json.value("unit", unit);
     }
 
     void writeBuildCapabilities(cli::JsonWriter &json)
     {
         json.beginObject("build");
-        json.value("ase", _WITH_ASE_);
-        json.value("mpi", _WITH_MPI_);
-        json.value("kokkos", _WITH_KOKKOS_);
-        json.value("python_bindings", _WITH_PYTHON_BINDINGS_);
-        json.value("python_embedding", _WITH_PYTHON_EMBEDDING_);
-        json.value("shared", _SHARED_);
-        json.value("static", _STATIC_);
-        json.value("singularity", _WITH_SINGULARITY_);
+        json.value("ase", withAse);
+        json.value("mpi", withMpi);
+        json.value("kokkos", withKokkos);
+        json.value("python_bindings", withPythonBindings);
+        json.value("python_embedding", withPythonEmbedding);
+        json.value("shared", sharedBuild);
+        json.value("static", staticBuild);
+        json.value("singularity", withSingularity);
         json.endObject();
     }
 
@@ -102,7 +103,7 @@ namespace
         json.beginObject("external_qm");
         json.value(
             "script_mode",
-            (_STATIC_ || _WITH_SINGULARITY_) ? "full_path_only"
+            (staticBuild || withSingularity) ? "full_path_only"
                                              : "bundled_or_full_path"
         );
         json.beginObject("programs");
@@ -204,10 +205,7 @@ namespace
         beginParameter(json, "friction", "number", "ps^-1");
         json.value("minimum", 0);
         json.value("maximum", std::numeric_limits<double>::max() / 1.0e12);
-        json.value(
-            "default",
-            defaults::LANGEVIN_THERMOSTAT_FRICTION / 1.0e12
-        );
+        json.value("default", defaults::LANGEVIN_THERMOSTAT_FRICTION / 1.0e12);
         json.endObject();
 
         beginParameter(json, "nh-chain_length", "integer");
@@ -271,15 +269,14 @@ namespace
         json.beginArray("qm_programs");
         for (const auto program : {"dftbplus", "pyscf", "turbomole"})
             json.value(program);
-        if (_WITH_ASE_)
-            for (const auto program : {
-                     "ase_dftbplus",
-                     "ase_xtb",
-                     "fennol",
-                     "mace",
-                     "mace_mp",
-                     "mace_off"
-                 })
+        if (withAse)
+            for (const auto program :
+                 {"ase_dftbplus",
+                  "ase_xtb",
+                  "fennol",
+                  "mace",
+                  "mace_mp",
+                  "mace_off"})
                 json.value(program);
         json.endArray();
 

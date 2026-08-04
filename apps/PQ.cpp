@@ -20,12 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <cstdlib>      // for EXIT_FAILURE, EXIT_SUCCESS
-#include <exception>    // for exception
-#include <iostream>     // for operator<<
-#include <memory>       // for unique_ptr
-#include <string>       // for string, char_traits
-#include <vector>       // for vector
+#include <cstdlib>     // for EXIT_FAILURE, EXIT_SUCCESS
+#include <exception>   // for exception
+#include <iostream>    // for operator<<
+#include <memory>      // for unique_ptr
+#include <string>      // for string, char_traits
+#include <vector>      // for vector
 
 #include "capabilities.hpp"      // for writeCapabilities
 #include "commandLineArgs.hpp"   // for CommandLineArgs

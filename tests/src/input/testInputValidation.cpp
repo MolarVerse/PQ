@@ -75,9 +75,7 @@ class TestInputValidation : public ::testing::Test
         ThermostatSettings::setRelaxationTime(
             defaults::BERENDSEN_THERMOSTAT_RELAX_TIME
         );
-        ThermostatSettings::setFriction(
-            defaults::LANGEVIN_THERMOSTAT_FRICTION
-        );
+        ThermostatSettings::setFriction(defaults::LANGEVIN_THERMOSTAT_FRICTION);
         SimulationBoxSettings::setInitializeVelocities(InitVelocities::FALSE);
 
         PotentialSettings::setCoulombLongRangeType(

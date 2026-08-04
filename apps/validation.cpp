@@ -449,9 +449,10 @@ cli::ValidationResult cli::validateInputFile(
         }
 
         auto result = ValidationResult{
-            .valid     = true,
-            .inputFile = std::string(inputFile),
-            .scope     = scope
+            .valid       = true,
+            .inputFile   = std::string(inputFile),
+            .scope       = scope,
+            .diagnostics = {}
         };
         appendWarnings(reader, result);
         return result;

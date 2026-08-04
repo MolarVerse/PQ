@@ -31,9 +31,9 @@
 #include "engine.hpp"               // for Engine
 #include "exceptions.hpp"           // for InputFileException
 #include "parserUtils.hpp"
-#include "references.hpp"           // for ReferencesOutput
-#include "referencesOutput.hpp"     // for ReferencesOutput
-#include "stringUtilities.hpp"      // for stringToFiniteDouble, stringToInt
+#include "references.hpp"         // for ReferencesOutput
+#include "referencesOutput.hpp"   // for ReferencesOutput
+#include "stringUtilities.hpp"    // for stringToFiniteDouble, stringToInt
 
 using namespace input;
 using namespace engine;

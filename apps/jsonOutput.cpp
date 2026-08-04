@@ -71,8 +71,10 @@ void cli::JsonWriter::indent() const
 
 void cli::JsonWriter::beforeValue()
 {
-    if (_firstValues.empty()) return;
-    if (!_firstValues.back()) _output << ',';
+    if (_firstValues.empty())
+        return;
+    if (!_firstValues.back())
+        _output << ',';
     _output << '\n';
     indent();
     _firstValues.back() = false;
@@ -95,7 +97,7 @@ void cli::JsonWriter::beginContainer(const char opening)
 
 void cli::JsonWriter::beginContainer(
     const std::string_view key,
-    const char            opening
+    const char             opening
 )
 {
     beforeMember(key);
@@ -119,35 +121,23 @@ void cli::JsonWriter::endContainer(const char closing)
     _output << closing;
 }
 
-void cli::JsonWriter::beginObject()
-{
-    beginContainer('{');
-}
+void cli::JsonWriter::beginObject() { beginContainer('{'); }
 
 void cli::JsonWriter::beginObject(const std::string_view key)
 {
     beginContainer(key, '{');
 }
 
-void cli::JsonWriter::endObject()
-{
-    endContainer('}');
-}
+void cli::JsonWriter::endObject() { endContainer('}'); }
 
-void cli::JsonWriter::beginArray()
-{
-    beginContainer('[');
-}
+void cli::JsonWriter::beginArray() { beginContainer('['); }
 
 void cli::JsonWriter::beginArray(const std::string_view key)
 {
     beginContainer(key, '[');
 }
 
-void cli::JsonWriter::endArray()
-{
-    endContainer(']');
-}
+void cli::JsonWriter::endArray() { endContainer(']'); }
 
 void cli::JsonWriter::value(const std::string_view value)
 {

@@ -24,7 +24,7 @@
 
 #include <string_view>   // for string_view
 
-#include "exceptions.hpp"        // for InputFileException
+#include "exceptions.hpp"   // for InputFileException
 #include "parserUtils.hpp"
 #include "stringUtilities.hpp"   // for stringToFiniteDouble, stringToInt
 #include "timingsSettings.hpp"   // for TimingsSettings

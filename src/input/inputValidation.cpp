@@ -261,8 +261,7 @@ void InputFileReader::validateThermostat() const
             );
 
         const auto unitConversion = constants::M2_TO_ANGSTROM2 *
-                                    constants::KG_TO_GRAM /
-                                    constants::FS_TO_S;
+                                    constants::KG_TO_GRAM / constants::FS_TO_S;
         const auto conversionFactor =
             constants::UNIVERSAL_GAS_CONSTANT * unitConversion;
         const auto sigmaSquared = 4.0 * ThermostatSettings::getFriction() *

@@ -38,8 +38,8 @@ namespace cli
     class JsonWriter
     {
        private:
-        std::ostream    &_output;
-        std::size_t      _depth = 0;
+        std::ostream     &_output;
+        std::size_t       _depth = 0;
         std::vector<bool> _firstValues;
 
         void indent() const;
@@ -88,6 +88,6 @@ namespace cli
             _output << value;
         }
     };
-}
+}   // namespace cli
 
 #endif   // _JSON_OUTPUT_HPP_

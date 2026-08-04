@@ -1,3 +1,5 @@
+cmake_policy(SET CMP0054 NEW)
+
 function(run_pq_in working_directory output_var error_var result_var)
     execute_process(
         COMMAND "${PQ_EXECUTABLE}" ${ARGN}
