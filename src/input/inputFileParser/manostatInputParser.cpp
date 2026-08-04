@@ -24,8 +24,10 @@
 
 #include <cstddef>       // for size_t
 #include <format>        // for format
+#include <limits>        // for numeric_limits
 #include <string_view>   // for string_view
 
+#include "constants/conversionFactors.hpp"
 #include "exceptions.hpp"         // for InputFileException, customException
 #include "manostatSettings.hpp"   // for ManostatSettings
 #include "parserUtils.hpp"
@@ -39,6 +41,7 @@ using namespace settings;
 using namespace customException;
 using namespace references;
 using namespace utilities;
+using namespace constants;
 
 /**
  * @brief Construct a new Input File Parser Manostat:: Input File Parser
@@ -150,7 +153,9 @@ void ManostatInputParser::parsePressure(
 {
     checkCommand(lineElements, lineNumber);
 
-    ManostatSettings::setTargetPressure(stod(lineElements[2]));
+    const auto pressure = stringToFiniteDouble(lineElements[2]);
+
+    ManostatSettings::setTargetPressure(pressure);
 }
 
 /**
@@ -168,11 +173,17 @@ void ManostatInputParser::parseManostatRelaxationTime(
 )
 {
     checkCommand(lineElements, lineNumber);
-    const auto relaxationTime = stod(lineElements[2]);
+    const auto relaxationTime = stringToFiniteDouble(lineElements[2]);
 
-    if (relaxationTime < 0)
+    if (relaxationTime <= 0.0)
         throw InputFileException(
-            "Relaxation time of manostat cannot be negative"
+            "Relaxation time of manostat must be finite and greater than zero"
+        );
+
+    if (relaxationTime > std::numeric_limits<double>::max() / PS_TO_FS)
+        throw InputFileException(
+            "Relaxation time of manostat is too large to represent in "
+            "femtoseconds"
         );
 
     ManostatSettings::setTauManostat(relaxationTime);
@@ -194,10 +205,12 @@ void ManostatInputParser::parseCompressibility(
 )
 {
     checkCommand(lineElements, lineNumber);
-    const auto compressibility = stod(lineElements[2]);
+    const auto compressibility = stringToFiniteDouble(lineElements[2]);
 
     if (compressibility < 0.0)
-        throw InputFileException("Compressibility cannot be negative");
+        throw InputFileException(
+            "Compressibility must be finite and non-negative"
+        );
 
     ManostatSettings::setCompressibility(compressibility);
 }

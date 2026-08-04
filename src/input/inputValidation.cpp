@@ -20,18 +20,23 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#include <algorithm>   // for max
+#include <cmath>       // for isfinite
+#include <format>      // for format
+
+#include "constants/conversionFactors.hpp"
+#include "engine.hpp"            // for Engine
+#include "exceptions.hpp"        // for InputFileException
+#include "hessianSettings.hpp"   // for HessianSettings
 #include "inputFileReader.hpp"
-
-#include <format>   // for format
-
-#include "exceptions.hpp"            // for InputFileException
-#include "hessianSettings.hpp"       // for HessianSettings
-#include "manostatSettings.hpp"      // for ManostatSettings
-#include "potentialSettings.hpp"     // for PotentialSettings
-#include "qmSettings.hpp"            // for QMSettings
-#include "settings.hpp"              // for Settings
-#include "thermostatSettings.hpp"    // for ThermostatSettings
-#include "timingsSettings.hpp"       // for TimingsSettings
+#include "manostatSettings.hpp"        // for ManostatSettings
+#include "optimizerSettings.hpp"       // for OptimizerSettings
+#include "potentialSettings.hpp"       // for PotentialSettings
+#include "qmSettings.hpp"              // for QMSettings
+#include "settings.hpp"                // for Settings
+#include "simulationBoxSettings.hpp"   // for SimulationBoxSettings
+#include "thermostatSettings.hpp"      // for ThermostatSettings
+#include "timingsSettings.hpp"         // for TimingsSettings
 
 using namespace input;
 using namespace settings;
@@ -46,9 +51,11 @@ using namespace customException;
 void InputFileReader::validateInputConfiguration() const
 {
     validateTimings();
+    validateOptimizer();
     validateQM();
     validateThermostat();
     validateManostat();
+    validateCellList();
     validateReactionFieldCoulomb();
     validateRingPolymer();
 }
@@ -83,6 +90,26 @@ void InputFileReader::validateTimings() const
 }
 
 /**
+ * @brief validates settings used by active optimization jobs
+ *
+ * @throws UserInputException if the learning-rate strategy or bounds are
+ * invalid
+ */
+void InputFileReader::validateOptimizer() const
+{
+    const auto optimizerActive =
+        Settings::isOptJobType() ||
+        (Settings::getJobtype() == JobType::MM_HESSIAN &&
+         HessianSettings::optimizeBeforeHessian());
+
+    if (!optimizerActive)
+        return;
+
+    OptimizerSettings::validateLearningRateStrategy();
+    OptimizerSettings::validateLearningRateBounds();
+}
+
+/**
  * @brief validates QM keyword dependencies
  *
  * @throws InputFileException if selected QM settings require missing or
@@ -93,10 +120,27 @@ void InputFileReader::validateQM() const
     if (!Settings::isQMActivated())
         return;
 
+    if (!getKeywordSet("qm_prog"))
+        throw InputFileException(
+            "QM job selected but the \"qm_prog\" keyword has not been set"
+        );
+
     const auto qmMethod = QMSettings::getQMMethod();
 
     if (qmMethod == QMMethod::ASEDFTBPLUS)
     {
+        if (QMSettings::getSlakosType() == SlakosType::NONE)
+            throw InputFileException(
+                "ASE-DFTB+ requires slakos to be 3ob, matsci, or custom"
+            );
+
+        if (QMSettings::getSlakosType() == SlakosType::CUSTOM &&
+            !getKeywordSet("slakos_path"))
+            throw InputFileException(
+                "Custom Slater-Koster parameters require the "
+                "\"slakos_path\" keyword"
+            );
+
         auto useThirdOrder = QMSettings::useThirdOrderDftb();
 
         if (QMSettings::getSlakosType() == SlakosType::THREEOB &&
@@ -155,13 +199,13 @@ void InputFileReader::validateQM() const
  */
 void InputFileReader::validateThermostat() const
 {
-    const auto thermostatType = ThermostatSettings::getThermostatType();
+    const auto thermostatType    = ThermostatSettings::getThermostatType();
+    const auto targetTempDefined = getKeywordSet("temp");
+    const auto startTempDefined  = getKeywordSet("start_temp");
+    const auto endTempDefined    = getKeywordSet("end_temp");
 
     if (thermostatType != ThermostatType::NONE)
     {
-        const auto targetTempDefined = getKeywordSet("temp");
-        const auto endTempDefined    = getKeywordSet("end_temp");
-
         if (!targetTempDefined && !endTempDefined)
             throw InputFileException(std::format(
                 "Target or end temperature not set for {} thermostat",
@@ -176,7 +220,83 @@ void InputFileReader::validateThermostat() const
             ));
     }
 
-    if (!getKeywordSet("start_temp"))
+    if (SimulationBoxSettings::getInitializeVelocities() !=
+            InitVelocities::FALSE &&
+        !targetTempDefined && !startTempDefined && !endTempDefined)
+        throw InputFileException(
+            "Initializing velocities requires temp, start_temp, or end_temp"
+        );
+
+    if (Settings::isMDJobType() &&
+        (thermostatType == ThermostatType::BERENDSEN ||
+         thermostatType == ThermostatType::VELOCITY_RESCALING))
+    {
+        const auto relaxationTime =
+            ThermostatSettings::getRelaxationTime() * constants::PS_TO_FS;
+
+        if (TimingsSettings::getTimeStep() > relaxationTime)
+            throw InputFileException(
+                "The timestep must not exceed the thermostat relaxation time"
+            );
+    }
+
+    if (thermostatType == ThermostatType::LANGEVIN)
+    {
+        auto maxTemperature = 0.0;
+
+        if (targetTempDefined)
+            maxTemperature = std::max(
+                maxTemperature,
+                ThermostatSettings::getTargetTemperature()
+            );
+        if (startTempDefined)
+            maxTemperature = std::max(
+                maxTemperature,
+                ThermostatSettings::getStartTemperature()
+            );
+        if (endTempDefined)
+            maxTemperature = std::max(
+                maxTemperature,
+                ThermostatSettings::getEndTemperature()
+            );
+
+        const auto unitConversion = constants::M2_TO_ANGSTROM2 *
+                                    constants::KG_TO_GRAM /
+                                    constants::FS_TO_S;
+        const auto conversionFactor =
+            constants::UNIVERSAL_GAS_CONSTANT * unitConversion;
+        const auto sigmaSquared = 4.0 * ThermostatSettings::getFriction() *
+                                  conversionFactor * maxTemperature /
+                                  TimingsSettings::getTimeStep();
+
+        if (!std::isfinite(sigmaSquared))
+            throw InputFileException(
+                "Langevin thermostat parameters produce a non-finite "
+                "random-force scale"
+            );
+    }
+
+    if (thermostatType == ThermostatType::NOSE_HOOVER)
+    {
+        if (targetTempDefined &&
+            ThermostatSettings::getTargetTemperature() <= 0.0)
+            throw InputFileException(
+                "Nose-Hoover target temperature must be greater than zero"
+            );
+
+        if (endTempDefined && ThermostatSettings::getEndTemperature() <= 0.0)
+            throw InputFileException(
+                "Nose-Hoover end temperature must be greater than zero"
+            );
+
+        if (startTempDefined &&
+            ThermostatSettings::getStartTemperature() <= 0.0)
+            throw InputFileException(
+                "Nose-Hoover start temperature must be greater than zero"
+            );
+    }
+
+    if (!startTempDefined)
         return;
 
     const auto totalSteps = TimingsSettings::getNumberOfSteps();
@@ -212,11 +332,44 @@ void InputFileReader::validateManostat() const
 {
     const auto manostatType = ManostatSettings::getManostatType();
 
-    if (manostatType != ManostatType::NONE && !getKeywordSet("pressure"))
+    if (manostatType == ManostatType::NONE)
+        return;
+
+    if (!getKeywordSet("pressure"))
         throw InputFileException(std::format(
             "Pressure not set for {} manostat",
             string(manostatType)
         ));
+
+    const auto relaxationTime =
+        ManostatSettings::getTauManostat() * constants::PS_TO_FS;
+
+    if (TimingsSettings::getTimeStep() > relaxationTime)
+        throw InputFileException(
+            "The timestep must not exceed the manostat relaxation time"
+        );
+}
+
+/**
+ * @brief validates cell-list dependencies
+ *
+ * @throws InputFileException if an active cell list is incompatible with the
+ * selected potential
+ */
+void InputFileReader::validateCellList() const
+{
+    if (!_engine.isCellListActivated())
+        return;
+
+    if (Settings::isQMOnlyActivated())
+        throw InputFileException(
+            "Cell lists are not available for pure QM simulations"
+        );
+
+    if (PotentialSettings::getCoulombRadiusCutOff() <= 0.0)
+        throw InputFileException(
+            "An active cell list requires rcoulomb to be greater than zero"
+        );
 }
 
 /**

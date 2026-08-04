@@ -173,7 +173,7 @@ void HybridInputParser::parseCoreRadius(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto coreRadius = std::stod(lineElements[2]);
+    const auto coreRadius = stringToFiniteDouble(lineElements[2]);
 
     if (coreRadius < 0.0)
         throw InputFileException(
@@ -202,7 +202,7 @@ void HybridInputParser::parseLayerRadius(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto layerRadius = std::stod(lineElements[2]);
+    const auto layerRadius = stringToFiniteDouble(lineElements[2]);
 
     if (layerRadius < 0.0)
         throw InputFileException(
@@ -231,7 +231,7 @@ void HybridInputParser::parseSmoothingRadius(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto smoothingRadius = std::stod(lineElements[2]);
+    const auto smoothingRadius = stringToFiniteDouble(lineElements[2]);
 
     if (smoothingRadius < 0.0)
         throw InputFileException(
