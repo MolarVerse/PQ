@@ -25,7 +25,6 @@
 #define _TEST_PARAMETER_FILE_SECTION_HPP_
 
 #include <gtest/gtest.h>   // for Test
-#include <stdio.h>         // for remove
 
 #include <string>   // for allocator, string
 
@@ -69,7 +68,10 @@ class TestParameterFileSection : public ::testing::Test
     void TearDown() override
     {
         delete _engine;
-        ::remove(_parameterFileName.c_str());
+        const auto errorCode = std::remove(_parameterFileName.c_str());
+
+        EXPECT_EQ(errorCode, 0)
+            << "Failed to remove file: " << _parameterFileName.c_str();
     }
 };
 

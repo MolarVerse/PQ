@@ -180,7 +180,7 @@ TEST(TestStringUtilities, fileExists)
     EXPECT_TRUE(utilities::fileExists(file));
     EXPECT_FALSE(utilities::fileExists("testFile2.txt"));
     EXPECT_FALSE(utilities::fileExists(directory));
-    std::remove(file.c_str());
+    std::filesystem::remove(file);
     std::filesystem::remove(directory);
 }
 

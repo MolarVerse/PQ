@@ -192,9 +192,9 @@ bool FileSettings::isDFTBFileNameSet() { return _isDFTBFileSet; }
  *
  * @param name
  */
-void FileSettings::setMolDescriptorFileName(const std::string_view name)
+void FileSettings::setMolDescriptorFileName(const std::string& name)
 {
-    FileSettings::_molDescriptorFile = name;
+    _molDescriptorFile = name;
 }
 
 /**
@@ -202,9 +202,9 @@ void FileSettings::setMolDescriptorFileName(const std::string_view name)
  *
  * @param name
  */
-void FileSettings::setGuffDatFileName(const std::string_view name)
+void FileSettings::setGuffDatFileName(const std::string& name)
 {
-    FileSettings::_guffDatFile = name;
+    _guffDatFile = name;
 }
 
 /**
@@ -272,9 +272,9 @@ void FileSettings::setMShakeFileName(const std::string_view name)
  *
  * @param name
  */
-void FileSettings::setDFTBFileName(const std::string_view name)
+void FileSettings::setDFTBFileName(const std::string& name)
 {
-    FileSettings::_dftbFile = name;
+    _dftbFile = name;
 }
 
 /**

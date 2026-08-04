@@ -54,7 +54,12 @@ namespace
             ".opt",      ".ref"
         };
         for (const auto &s : suffixes)
-            ::remove((std::string(PREFIX) + s).c_str());
+        {
+            const auto errorCode =
+                std::remove((std::string(PREFIX) + s).c_str());
+            EXPECT_EQ(errorCode, 0)
+                << "Failed to remove file: " << (std::string(PREFIX) + s);
+        }
     }
 }   // namespace
 

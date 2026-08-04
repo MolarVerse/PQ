@@ -157,6 +157,7 @@ namespace
         }
     }
 
+    // NOLINTBEGIN(cert-err58-cpp)
     BENCHMARK(BM_OrthorhombicShiftVector);
     BENCHMARK(BM_TriclinicShiftVector);
     BENCHMARK(BM_OrthorhombicWrapPosition);
@@ -165,4 +166,6 @@ namespace
     BENCHMARK(BM_TriclinicToOrthoSpace);
     BENCHMARK(BM_TriclinicToSimSpace);
     BENCHMARK(BM_TriclinicTensorRoundTrip);
+    // NOLINTEND(cert-err58-cpp)
+
 }   // namespace

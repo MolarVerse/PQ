@@ -184,6 +184,7 @@ namespace
         }
     }
 
+    // NOLINTBEGIN(cert-err58-cpp)
     BENCHMARK(BM_VectorArithmetic);
     BENCHMARK(BM_DotProduct);
     BENCHMARK(BM_CrossProduct);
@@ -194,4 +195,5 @@ namespace
     BENCHMARK(BM_MatrixProduct);
     BENCHMARK(BM_MatrixTranspose);
     BENCHMARK(BM_MatrixDeterminant);
+    // NOLINTEND(cert-err58-cpp)
 }   // namespace

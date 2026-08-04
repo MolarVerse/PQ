@@ -3,6 +3,11 @@
 # altera-struct-pack-align: does not affect the code for non FPGA targets -- gets interesting for OpenCL kernels
 # boost-use-ranges: we do not want to use boost at all, to not increase our dependencies even more!!!
 # bugprone-suspicious-include: flags more or less only false positives
+
+# Checks to be absolutely enabled:
+# cert-env33-c: ::system is not available on all platforms, and we do not want to use it anyway
+# cert-err58-cpp: needs a generalized implementation fix
+# bugprone-easily-swappable-parameters: we need to adopt the code base to it
 ---
 Checks:          
   '
@@ -11,7 +16,20 @@ Checks:
   android-*,
   bugprone-*,
   cert-con36-c,
+  cert-con54-cpp,
+  cert-dcl03-c,
+  cert-dcl16-c,
+  cert-dcl21-cpp,
+  cert-dcl37-c,
+  cert-dcl50-cpp,
+  cert-dcl51-cpp,
+  cert-dcl54-cpp,
+  cert-dcl58-cpp,
+  cert-dcl59-cpp,
+  cert-e*,
   -bugprone-easily-swappable-parameters,
+  -cert-env33-c,
+  -cert-err58-cpp,
   -altera-struct-pack-align,
   -altera-unroll-loops,
   -bugprone-suspicious-include
@@ -62,25 +80,6 @@ FormatStyle:     google
 ...
 
 ### TO BE INCLUDED IN THE FUTURE
-  # cert-con54-cpp,
-  # cert-dcl03-c,
-  # cert-dcl16-c,
-  # cert-dcl21-cpp,
-  # cert-dcl37-c,
-  # cert-dcl50-cpp,
-  # cert-dcl51-cpp,
-  # cert-dcl54-cpp,
-  # cert-dcl58-cpp,
-  # cert-dcl59-cpp,
-  # cert-env33-c,
-  # cert-err09-cpp,
-  # cert-err33-c,
-  # cert-err34-c,
-  # cert-err52-cpp,
-  # cert-err58-cpp,
-  # cert-err60-cpp,
-  # cert-err61-cpp,
-  # cert-exp42-c,
   # cert-fio38-c,
   # cert-flp30-c,
   # cert-flp37-c,

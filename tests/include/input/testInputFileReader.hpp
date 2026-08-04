@@ -72,7 +72,12 @@ class TestInputFileReader : public ::testing::Test
     engine::MDEngine       *_mdEngine;
     input::InputFileReader *_inputFileReader_mdEngine;
 
-    void removeFile() const { std::remove(_fileName.c_str()); }
+    void removeFile() const
+    {
+        const auto errorCode = std::remove(_fileName.c_str());
+
+        EXPECT_EQ(errorCode, 0) << "Failed to remove file: " << _fileName;
+    }
 };
 
 #endif

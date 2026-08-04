@@ -62,7 +62,8 @@ TEST(TestReferencesOutput, writeReferencesFileEmitsHeaderAndBibtexBanner)
     // Bibtex section banner.
     EXPECT_NE(content.find("BIBTEX ENTRIES"), std::string::npos);
 
-    ::remove(path.c_str());
+    const auto errorCode = std::remove(path.c_str());
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: " << path;
 }
 
 TEST(TestReferencesOutput, addReferenceFileExtendsBothReferenceAndBibtexLists)
@@ -83,5 +84,6 @@ TEST(TestReferencesOutput, addReferenceFileExtendsBothReferenceAndBibtexLists)
     const auto content = slurp(path);
     EXPECT_FALSE(content.empty());
 
-    ::remove(path.c_str());
+    const auto errorCode = std::remove(path.c_str());
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: " << path;
 }
