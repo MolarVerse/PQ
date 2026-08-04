@@ -38,7 +38,6 @@
 #include "thermostat.hpp"
 #include "trajectoryOutput.hpp"
 #include "typeAliases.hpp"
-#include "velocityVerlet.hpp"
 #include "virialOutput.hpp"
 
 namespace engine
@@ -53,14 +52,12 @@ namespace engine
        protected:
         resetKinetics::ResetKinetics _resetKinetics;
 
-        // clang-format off
-        pq::UniqueIntegrator _integrator = std::make_unique<integrator::VelocityVerlet>();
-        std::unique_ptr<thermostat::Thermostat> _thermostat = std::make_unique<thermostat::Thermostat>();
-        pq::UniqueManostat   _manostat   = std::make_unique<manostat::Manostat>();
-        // clang-format on
+        pq::UniqueIntegrator                    _integrator;
+        std::unique_ptr<thermostat::Thermostat> _thermostat;
+        std::unique_ptr<manostat::Manostat>     _manostat;
 
        public:
-        MDEngine()           = default;
+        MDEngine();
         ~MDEngine() override = default;
 
         void         run() override;

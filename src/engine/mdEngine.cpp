@@ -29,12 +29,25 @@
 #include "referencesOutput.hpp"              // for ReferencesOutput
 #include "settings.hpp"                      // for Settings
 #include "timingsSettings.hpp"               // for TimingsSettings
+#include "velocityVerlet.hpp"
 
 using namespace engine;
 using namespace output;
 using namespace settings;
 using namespace constants;
 using namespace physicalData;
+
+/**
+ * @brief Constructor for MDEngine
+ *
+ * @details This constructor initializes the MDEngine with default settings.
+ */
+MDEngine::MDEngine()
+    : _integrator(std::make_unique<integrator::VelocityVerlet>()),
+      _thermostat(std::make_unique<thermostat::Thermostat>()),
+      _manostat(std::make_unique<manostat::Manostat>())
+{
+}
 
 /**
  * @brief Run the simulation for numberOfSteps steps.

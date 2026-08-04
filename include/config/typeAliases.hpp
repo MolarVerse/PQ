@@ -94,17 +94,6 @@ namespace engine
 
 }   // namespace engine
 
-namespace manostat
-{
-    class Manostat;   // forward declaration
-
-    class StochasticRescalingManostat;                  // forward declaration
-    class SemiIsotropicStochasticRescalingManostat;     // forward declaration
-    class AnisotropicStochasticRescalingManostat;       // forward declaration
-    class FullAnisotropicStochasticRescalingManostat;   // forward declaration
-
-}   // namespace manostat
-
 namespace timings
 {
     class Timer;
@@ -174,21 +163,6 @@ namespace pq
     using ThermostatType = settings::ThermostatType;
     using Isotropy       = settings::Isotropy;
     using ManostatType   = settings::ManostatType;
-
-    /**********************
-     * manostat namespace *
-     **********************/
-
-    using Manostat = manostat::Manostat;
-
-    using UniqueManostat = std::unique_ptr<Manostat>;
-
-    // clang-format off
-    using StochasticManostat          = manostat::StochasticRescalingManostat;
-    using SemiIsoStochasticManostat   = manostat::SemiIsotropicStochasticRescalingManostat;
-    using AnisoStochasticManostat     = manostat::AnisotropicStochasticRescalingManostat;
-    using FullAnisoStochasticManostat = manostat::FullAnisotropicStochasticRescalingManostat;
-    // clang-format on
 
     /********************
      * engine namespace *
