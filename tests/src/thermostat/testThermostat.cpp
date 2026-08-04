@@ -24,17 +24,17 @@
 
 #include <cmath>   // for sqrt
 
-#include "berendsenThermostat.hpp"                    // for BerendsenThermostat
-#include "constants/internalConversionFactors.hpp"    // for _TEMPERATURE_FACTOR_
-#include "exceptions.hpp"                             // for UserInputException
-#include "gtest/gtest.h"                              // for InitGoogleTest
-#include "langevinThermostat.hpp"                     // for LangevinThermostat
-#include "noseHooverThermostat.hpp"                   // for NoseHooverThermostat
-#include "physicalData.hpp"                           // for PhysicalData
-#include "simulationBox.hpp"                          // for SimulationBox
-#include "thermostatSettings.hpp"                     // for ThermostatType
-#include "timingsSettings.hpp"                        // for TimingsSettings
-#include "velocityRescalingThermostat.hpp"            // for VelocityRescalingThermostat
+#include "berendsenThermostat.hpp"                   // for BerendsenThermostat
+#include "constants/internalConversionFactors.hpp"   // for _TEMPERATURE_FACTOR_
+#include "exceptions.hpp"                            // for UserInputException
+#include "gtest/gtest.h"                             // for InitGoogleTest
+#include "langevinThermostat.hpp"                    // for LangevinThermostat
+#include "noseHooverThermostat.hpp"                  // for NoseHooverThermostat
+#include "physicalData.hpp"                          // for PhysicalData
+#include "simulationBox.hpp"                         // for SimulationBox
+#include "thermostatSettings.hpp"                    // for ThermostatType
+#include "timingsSettings.hpp"                       // for TimingsSettings
+#include "velocityRescalingThermostat.hpp"   // for VelocityRescalingThermostat
 
 TEST_F(TestThermostat, calculateTemperature)
 {
