@@ -82,49 +82,49 @@ namespace
             "t_relaxation",
             "number",
             "ps",
-            defaults::_BERENDSEN_THERMOSTAT_RELAX_TIME_
+            defaults::BERENDSEN_THERMOSTAT_RELAX_TIME
         );
         writeParameter(
             json,
             "friction",
             "number",
             "ps^-1",
-            defaults::_LANGEVIN_THERMOSTAT_FRICTION_ / 1.0e12
+            defaults::LANGEVIN_THERMOSTAT_FRICTION / 1.0e12
         );
         writeParameter(
             json,
             "nh-chain_length",
             "integer",
             "",
-            defaults::_NH_CHAIN_LENGTH_DEFAULT_
+            defaults::NH_CHAIN_LENGTH_DEFAULT
         );
         writeParameter(
             json,
             "coupling_frequency",
             "number",
             "cm^-1",
-            defaults::_NH_COUPLING_FREQ_
+            defaults::NH_COUPLING_FREQ
         );
         writeParameter(
             json,
             "p_relaxation",
             "number",
             "ps",
-            defaults::_BERENDSEN_MANOSTAT_RELAX_TIME_
+            defaults::BERENDSEN_MANOSTAT_RELAX_TIME
         );
         writeParameter(
             json,
             "compressibility",
             "number",
             "bar^-1",
-            defaults::_COMPRESSIBILITY_WATER_DEFAULT_
+            defaults::COMPRESSIBILITY_WATER_DEFAULT
         );
         writeParameter(
             json,
             "rcoulomb",
             "number",
             "angstrom",
-            defaults::_COULOMB_CUT_OFF_DEFAULT_
+            defaults::COULOMB_CUT_OFF_DEFAULT
         );
 
         json.endObject();
@@ -146,7 +146,7 @@ void cli::writeCapabilities(std::ostream &output)
     json.beginObject();
     json.value("schema", "pq.capabilities");
     json.value("schema_version", 1);
-    json.value("version", sysinfo::_VERSION_);
+    json.value("version", sysinfo::VERSION);
 
     json.beginObject("build");
     json.value("ase", _WITH_ASE_);
