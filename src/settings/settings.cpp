@@ -23,6 +23,7 @@
 #include "settings.hpp"
 
 #include <string>   // for operator==, string
+#include <utility>
 
 #include "stringUtilities.hpp"   // for toLowerCopy
 
@@ -105,11 +106,11 @@ void Settings::setJobtype(const JobType jobtype)
 
         case MM_OPT:       // fallthrough
         case MM_HESSIAN:   // fallthrough
-        case MM_MD: deactivateRingPolymerMD(); break;
-        case QM_MD: deactivateRingPolymerMD(); break;
-        case RING_POLYMER_QM_MD: activateRingPolymerMD(); break;
-        case QMMM_MD: deactivateRingPolymerMD(); break;
+        case MM_MD:        // fallthrough
+        case QM_MD:        // fallthrough
+        case QMMM_MD:      // fallthrough
         case NONE: deactivateRingPolymerMD(); break;
+        case RING_POLYMER_QM_MD: activateRingPolymerMD(); break;
     }
 }
 
@@ -249,14 +250,18 @@ bool Settings::isQMOnly()
 {
     using enum JobType;
 
-    if (_jobtype == QM_MD)
-        return true;
+    switch (_jobtype)
+    {
+        case MM_MD:
+        case QMMM_MD:
+        case MM_OPT:
+        case MM_HESSIAN:
+        case NONE: return false;
+        case QM_MD:
+        case RING_POLYMER_QM_MD: return true;
+    }
 
-    else if (_jobtype == RING_POLYMER_QM_MD)
-        return true;
-
-    else
-        return false;
+    std::unreachable();
 }
 
 /**

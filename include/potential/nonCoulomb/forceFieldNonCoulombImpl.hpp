@@ -20,32 +20,24 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _FORCE_FIELD_NON_COULOMB_TPP_
-
-#define _FORCE_FIELD_NON_COULOMB_TPP_
+#ifndef _FORCE_FIELD_NON_COULOMB_PIMPL_HPP_
+#define _FORCE_FIELD_NON_COULOMB_PIMPL_HPP_
 
 #include "forceFieldNonCoulomb.hpp"
+#include "matrix.hpp"
 
 namespace potential
 {
-    /**
-     * @brief template function to set the nonCoulombPairsMatrix
-     *
-     * @tparam T
-     * @param index1
-     * @param index2
-     * @param value
-     */
-    template <typename T>
-    void ForceFieldNonCoulomb::setNonCoulombPairsMatrix(
-        const size_t index1,
-        const size_t index2,
-        T           &value
-    )
-    {
-        _nonCoulPairsMat(index1, index2) = std::make_shared<T>(value);
-    }
+    class NonCoulombPair;   // forward declaration
+}
 
-}   // namespace potential
+/**
+ * @brief struct to hold the non-coulombic pairs matrix
+ *
+ */
+struct potential::ForceFieldNonCoulomb::matrix
+{
+    linearAlgebra::Matrix<std::shared_ptr<NonCoulombPair>> matrix;
+};
 
-#endif   // _FORCE_FIELD_NON_COULOMB_TPP_
+#endif   // _FORCE_FIELD_NON_COULOMB_PIMPL_HPP_

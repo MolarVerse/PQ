@@ -182,7 +182,7 @@ void DFTBPlusRunner::readStressTensor(Box &box, PhysicalData &data)
     stressFile >> stress[1][0] >> stress[1][1] >> stress[1][2];
     stressFile >> stress[2][0] >> stress[2][1] >> stress[2][2];
 
-    const auto conversion = _HARTREE_PER_BOHR3_TO_KCAL_PER_MOL_PER_ANGSTROM3_;
+    const auto conversion = HARTREE_PER_BOHR3_TO_KCAL_PER_MOL_PER_ANGSTROM3;
     stress                = stress * conversion;
     const auto virial     = stress * box.getVolume();
 

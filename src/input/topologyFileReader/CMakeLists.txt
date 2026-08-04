@@ -26,3 +26,5 @@ target_link_libraries(topologyFileReader
 install(TARGETS topologyFileReader
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )
+
+target_precompile_headers(topologyFileReader REUSE_FROM pq_pch)

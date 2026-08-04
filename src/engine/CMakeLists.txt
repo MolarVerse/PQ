@@ -94,3 +94,5 @@ endif()
 install(TARGETS engine
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )
+
+target_precompile_headers(engine REUSE_FROM pq_pch)

@@ -1,3 +1,12 @@
+add_library(pq_pch OBJECT dummy.cpp)
+target_precompile_headers(pq_pch PRIVATE
+    <format>
+    <memory>
+)
+set_target_properties(pq_pch PROPERTIES
+    POSITION_INDEPENDENT_CODE ON
+)
+
 add_subdirectory(simulationBox)
 add_subdirectory(config)
 add_subdirectory(engine)

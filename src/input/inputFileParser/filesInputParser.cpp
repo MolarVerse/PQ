@@ -23,6 +23,7 @@
 #include "filesInputParser.hpp"
 
 #include <cstddef>   // for size_t
+#include <format>    // for format
 
 #include "engine.hpp"         // for Engine
 #include "exceptions.hpp"     // for InputFileException
