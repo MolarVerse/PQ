@@ -84,12 +84,6 @@ namespace settings
 
 }   // namespace settings
 
-namespace integrator
-{
-    class Integrator;       // forward declaration
-    class VelocityVerlet;   // forward declaration
-}   // namespace integrator
-
 namespace input
 {
     namespace parameterFile
@@ -114,15 +108,6 @@ namespace pq
     using RestartSection          = input::restartFile::RestartFileSection;
     using UniqueRestartSection    = std::unique_ptr<RestartSection>;
     using UniqueRestartSectionVec = std::vector<UniqueRestartSection>;
-
-    /************************
-     * integrator namespace *
-     ************************/
-
-    using Integrator     = integrator::Integrator;
-    using VelocityVerlet = integrator::VelocityVerlet;
-
-    using UniqueIntegrator = std::unique_ptr<Integrator>;
 
     /**********************
      * settings namespace *
