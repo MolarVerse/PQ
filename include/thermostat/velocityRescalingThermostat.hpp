@@ -56,8 +56,10 @@ namespace thermostat
 
         void setTau(const double tau);
 
-        [[nodiscard]] pq::ThermostatType getThermostatType() const override;
-        [[nodiscard]] double             getTau() const;
+        [[nodiscard]]
+        settings::ThermostatType getThermostatType() const override;
+
+        [[nodiscard]] double getTau() const;
     };
 }   // namespace thermostat
 

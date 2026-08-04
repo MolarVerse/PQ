@@ -76,14 +76,6 @@ namespace engine
 
 }   // namespace engine
 
-namespace settings
-{
-    enum class ThermostatType;   // forward declaration
-    enum class ManostatType;     // forward declaration
-    enum class Isotropy;         // forward declaration
-
-}   // namespace settings
-
 namespace input
 {
     namespace parameterFile
@@ -108,14 +100,6 @@ namespace pq
     using RestartSection          = input::restartFile::RestartFileSection;
     using UniqueRestartSection    = std::unique_ptr<RestartSection>;
     using UniqueRestartSectionVec = std::vector<UniqueRestartSection>;
-
-    /**********************
-     * settings namespace *
-     **********************/
-
-    using ThermostatType = settings::ThermostatType;
-    using Isotropy       = settings::Isotropy;
-    using ManostatType   = settings::ManostatType;
 
     /********************
      * engine namespace *

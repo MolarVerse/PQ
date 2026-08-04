@@ -27,11 +27,10 @@
 #include <ostream>   // for ofstream, basic_ostream, operator<<
 #include <sstream>   // for ostringstream
 
-#include "molecule.hpp"                // for Molecule
-#include "simulationBox.hpp"           // for SimulationBox
+#include "molecule.hpp"        // for Molecule
+#include "simulationBox.hpp"   // for SimulationBox
 
 using namespace output;
-using namespace settings;
 using namespace simulationBox;
 
 /**

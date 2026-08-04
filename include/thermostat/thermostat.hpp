@@ -26,6 +26,7 @@
 
 #include <cstddef>   // for size_t
 
+#include "thermostatSettings.hpp"
 #include "timer.hpp"   // for Timer
 #include "typeAliases.hpp"
 
@@ -97,7 +98,8 @@ namespace thermostat
         [[nodiscard]] size_t getRampingStepsLeft() const;
         [[nodiscard]] size_t getRampingFrequency() const;
 
-        [[nodiscard]] virtual pq::ThermostatType getThermostatType() const;
+        [[nodiscard]]
+        virtual settings::ThermostatType getThermostatType() const;
     };
 
 }   // namespace thermostat
