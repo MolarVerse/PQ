@@ -5,8 +5,8 @@
 ########################################################################
 
 PQ Software
-    Gamper, J., Gallmetzer, J. M., Penz, A., Weiss, A. K. H.,
-    Hofer, T. S. PQ: An Open-Source Platform
+    Gamper, J., Gallmetzer, J. M., Weiss, A. K. H.,
+    Hofer, T. S. (2024). PQ: An Open-Source Platform
     for Advanced Molecular Dynamics Simulations. Zenodo.
     https://doi.org/10.5281/zenodo.14185071
 
@@ -40,12 +40,15 @@ Velocity Verlet Algorithm
 % PQ Software %
 %%%%%%%%%%%%%%%
 
-@software{gamper_pq,
-  author       = {Gamper, Jakob and Gallmetzer, Josef Maria and Penz, Armin and Weiss, Alexander K. H. and Hofer, Thomas S.},
+@software{gamper_2024_14185072,
+  author       = {Gamper, Jakob and Gallmetzer, Josef Maria and Weiss, Alexander K. H. and Hofer, Thomas S.},
   title        = {PQ: An Open-Source Platform for Advanced Molecular Dynamics Simulations},
+  month        = nov,
+  year         = 2024,
   publisher    = {Zenodo},
-  doi          = {10.5281/zenodo.14185071},
-  url          = {https://doi.org/10.5281/zenodo.14185071},
+  version      = {0.5.0},
+  doi          = {10.5281/zenodo.14185072},
+  url          = {https://doi.org/10.5281/zenodo.14185072},
 }
 
 
