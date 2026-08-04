@@ -33,10 +33,10 @@
 #endif
 
 #include "angleForceField.hpp"
-#include "perfBenchSetup.hpp"
 #include "bondForceField.hpp"
 #include "coulombShiftedPotential.hpp"
 #include "dihedralForceField.hpp"
+#include "perfBenchSetup.hpp"
 #include "physicalData.hpp"
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
@@ -52,7 +52,7 @@ int main()
     auto coulombPotential    = potential::CoulombShiftedPotential(20.0);
     auto nonCoulombPotential = benchSetup::makeNonCoulomb();
 
-    auto molecule = benchSetup::makeMolecule(4);
+    auto molecule = benchSetup::makeMolecule({.nAtoms = 4});
 
     settings::PotentialSettings::setScale14Coulomb(0.75);
     settings::PotentialSettings::setScale14VanDerWaals(0.5);

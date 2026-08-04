@@ -158,10 +158,7 @@ void OptInputParser::parseLearningRateStrategy(
     else if ("exponential_decay" == strategy)
         OptimizerSettings::setLearningRateStrategy(EXPONENTIAL_DECAY);
 
-    else if ("linesearch_wolfe" == strategy)
-        OptimizerSettings::setLearningRateStrategy(LINESEARCH_WOLFE);
-
-    else if ("linesearch" == strategy)
+    else if ("linesearch_wolfe" == strategy || "linesearch" == strategy)
         OptimizerSettings::setLearningRateStrategy(LINESEARCH_WOLFE);
 
     else

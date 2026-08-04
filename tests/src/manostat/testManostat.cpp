@@ -149,7 +149,7 @@ TEST_F(TestManostat, CalculatePressure)
 {
     _manostat->calculatePressure(*_box, *_data);
 
-    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * constants::_PRESSURE_FACTOR_);
+    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * constants::PRESSURE_FACTOR);
 }
 
 /**
@@ -162,7 +162,7 @@ TEST_F(TestManostat, ChangeVirialToAtomic)
 
     _manostat->calculatePressure(*_box, *_data);
 
-    EXPECT_DOUBLE_EQ(_data->getPressure(), 2.0 * constants::_PRESSURE_FACTOR_);
+    EXPECT_DOUBLE_EQ(_data->getPressure(), 2.0 * constants::PRESSURE_FACTOR);
 }
 
 /**
@@ -189,7 +189,7 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
 
     const auto scaleFactors = linearAlgebra::Vec3D(
         ::pow(
-            1.0 - 4.5 * 0.5 / 0.1 * (1.0 - 3.0 * constants::_PRESSURE_FACTOR_),
+            1.0 - 4.5 * 0.5 / 0.1 * (1.0 - 3.0 * constants::PRESSURE_FACTOR),
             1.0 / 3.0
         )
     );
@@ -197,7 +197,7 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
     _manostat->applyManostat(*_box, *_data);
     auto boxNew = _box->getBoxDimensions();
 
-    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * constants::_PRESSURE_FACTOR_);
+    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * constants::PRESSURE_FACTOR);
     EXPECT_NEAR(boxNew[0], (boxOld * scaleFactors)[0], 1e-8);
     EXPECT_NEAR(boxNew[1], (boxOld * scaleFactors)[1], 1e-8);
     EXPECT_NEAR(boxNew[2], (boxOld * scaleFactors)[2], 1e-8);
@@ -298,7 +298,7 @@ TEST_F(
 
     settings::TimingsSettings::setTimeStep(0.5);
     _manostat = new manostat::BerendsenManostat(
-        3.0 * constants::_PRESSURE_FACTOR_,
+        3.0 * constants::PRESSURE_FACTOR,
         0.1,
         4.5
     );
@@ -319,7 +319,7 @@ TEST_F(TestManostat, applyNoneManostat)
 {
     _manostat->applyManostat(*_box, *_data);
 
-    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * constants::_PRESSURE_FACTOR_);
+    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * constants::PRESSURE_FACTOR);
 }
 
 TEST_F(TestManostat, stochasticRescalingMuUsesLengthScaling)

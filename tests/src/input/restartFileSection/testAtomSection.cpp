@@ -212,7 +212,11 @@ TEST_F(TestAtomSection, testProcessAtomLine)
 
     auto line = std::vector<std::string>(21);
     line[0]   = "Ar";
-    for (size_t i = 3; i < 21; ++i) line[i] = std::to_string(i + i / 10.0);
+    for (size_t i = 3; i < 21; ++i)
+    {
+        const auto i2 = static_cast<double>(i);
+        line[i]       = std::to_string(i2 + i2 / 10.0);
+    }
 
     dynamic_cast<AtomSection *>(_section)
         ->processAtomLine(line, _engine->getSimulationBox(), molecule);
@@ -237,7 +241,11 @@ TEST_F(TestAtomSection, testProcessQMAtomLine)
 {
     auto line = std::vector<std::string>(21);
     line[0]   = "Ar";
-    for (size_t i = 3; i < 21; ++i) line[i] = std::to_string(i + i / 10.0);
+    for (size_t i = 3; i < 21; ++i)
+    {
+        const auto i2 = static_cast<double>(i);
+        line[i]       = std::to_string(i2 + i2 / 10.0);
+    }
 
     dynamic_cast<AtomSection *>(_section)->processQMAtomLine(
         line,

@@ -37,7 +37,8 @@ static constexpr long ITERATIONS = 1000;
 
 int main()
 {
-    auto box = benchSetup::makePopulatedBox(20, 3);
+    auto box =
+        benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
 
     CALLGRIND_ZERO_STATS;
 

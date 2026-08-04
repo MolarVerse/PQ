@@ -45,14 +45,13 @@ namespace settings
     class HessianSettings
     {
        private:
-        static inline std::string _hessianFile =
-            defaults::_HESSIAN_FILE_DEFAULT_;
+        static inline std::string _hessianFile = defaults::HESSIAN_FILE_DEFAULT;
         static inline std::string _hessianInfoFile =
-            defaults::_HESSIAN_INFO_FILE_DEFAULT_;
+            defaults::HESSIAN_INFO_FILE_DEFAULT;
         static inline double _displacement =
-            defaults::_HESSIAN_DISPLACEMENT_DEFAULT_;
+            defaults::HESSIAN_DISPLACEMENT_DEFAULT;
         static inline bool _optimizeBeforeHessian =
-            defaults::_HESSIAN_OPTIMIZE_DEFAULT_;
+            defaults::HESSIAN_OPTIMIZE_DEFAULT;
         static inline HessianBuilderType _builder =
             HessianBuilderType::FINITE_DIFFERENCE_FORCES_CENTRAL;
 

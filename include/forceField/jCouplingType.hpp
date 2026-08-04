@@ -48,7 +48,7 @@ namespace forceField
         bool   _upperSymmetry = true;
         bool   _lowerSymmetry = true;
 
-        double _J0;
+        double _j0;
         double _forceConstant;
         double _a;
         double _b;

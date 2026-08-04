@@ -54,18 +54,20 @@ namespace
         {
         }
 
-        pq::SharedEvaluator clone() const override
+        std::shared_ptr<Evaluator> clone() const override
         {
             return std::make_shared<HarmonicEvaluator>(*this);
         }
 
         void evaluate() override
         {
-            for (size_t atomIndex = 0; atomIndex < _simulationBox->getNumberOfAtoms();
+            for (size_t atomIndex = 0;
+                 atomIndex < _simulationBox->getNumberOfAtoms();
                  ++atomIndex)
             {
-                const auto position = _simulationBox->getAtom(atomIndex).getPosition();
-                const auto offset   = 3 * atomIndex;
+                const auto position =
+                    _simulationBox->getAtom(atomIndex).getPosition();
+                const auto offset = 3 * atomIndex;
                 _simulationBox->getAtom(atomIndex).setForce(
                     {-_forceConstants[offset] * position[0],
                      -_forceConstants[offset + 1] * position[1],
@@ -79,7 +81,7 @@ namespace
             return _analyticSupported;
         }
 
-        [[nodiscard]] pq::HessianMatrix calculateAnalyticHessian() override
+        [[nodiscard]] HessianMatrix calculateAnalyticHessian() override
         {
             return {{2.0, 4.0}, {6.0, 8.0}};
         }
@@ -102,7 +104,7 @@ namespace
     }
 
     void expectDiagonalHessian(
-        const pq::HessianMatrix  &hessian,
+        const HessianMatrix       &hessian,
         const std::vector<double> &diagonal
     )
     {
@@ -122,8 +124,14 @@ namespace
 
     void expectPositionsRestored(SimulationBox &box)
     {
-        EXPECT_EQ(box.getAtom(0).getPosition(), linearAlgebra::Vec3D(1.0, -2.0, 3.0));
-        EXPECT_EQ(box.getAtom(1).getPosition(), linearAlgebra::Vec3D(-4.0, 5.0, -6.0));
+        EXPECT_EQ(
+            box.getAtom(0).getPosition(),
+            linearAlgebra::Vec3D(1.0, -2.0, 3.0)
+        );
+        EXPECT_EQ(
+            box.getAtom(1).getPosition(),
+            linearAlgebra::Vec3D(-4.0, 5.0, -6.0)
+        );
     }
 }   // namespace
 
@@ -139,7 +147,8 @@ TEST(TestHessianBuilder, forceDifferenceBuildersRecoverHarmonicHessian)
                  std::make_shared<ForwardForceDifferenceHessianBuilder>(1.0e-4)
              ),
              std::shared_ptr<HessianBuilder>(
-                 std::make_shared<FivePointForceDifferenceHessianBuilder>(1.0e-4)
+                 std::make_shared<FivePointForceDifferenceHessianBuilder>(1.0e-4
+                 )
              ),
          })
     {
@@ -151,8 +160,14 @@ TEST(TestHessianBuilder, forceDifferenceBuildersRecoverHarmonicHessian)
 
         expectDiagonalHessian(hessian, diagonal);
         expectPositionsRestored(*box);
-        EXPECT_EQ(box->getAtom(0).getForce(), linearAlgebra::Vec3D(-1.0, 4.0, -9.0));
-        EXPECT_EQ(box->getAtom(1).getForce(), linearAlgebra::Vec3D(16.0, -25.0, 36.0));
+        EXPECT_EQ(
+            box->getAtom(0).getForce(),
+            linearAlgebra::Vec3D(-1.0, 4.0, -9.0)
+        );
+        EXPECT_EQ(
+            box->getAtom(1).getForce(),
+            linearAlgebra::Vec3D(16.0, -25.0, 36.0)
+        );
     }
 }
 
@@ -164,7 +179,7 @@ TEST(TestHessianBuilder, analyticBuilderRequiresEvaluatorSupport)
     AnalyticHessianBuilder builder;
 
     EXPECT_THROW(
-        (void)builder.build(evaluator, *box),
+        (void) builder.build(evaluator, *box),
         customException::UserInputException
     );
 }
@@ -216,7 +231,7 @@ TEST(TestHessianBuilder, makeHessianBuilderSelectsConcreteStrategies)
     );
 
     EXPECT_THROW(
-        (void)makeHessianBuilder(settings::HessianBuilderType::NONE, 1.0e-3),
+        (void) makeHessianBuilder(settings::HessianBuilderType::NONE, 1.0e-3),
         customException::UserInputException
     );
 }

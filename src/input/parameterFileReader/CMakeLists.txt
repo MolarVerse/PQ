@@ -26,3 +26,5 @@ target_link_libraries(parameterFileReader
 install(TARGETS parameterFileReader
     DESTINATION lib
 )
+
+target_precompile_headers(parameterFileReader REUSE_FROM pq_pch)

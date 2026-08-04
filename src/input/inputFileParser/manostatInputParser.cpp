@@ -118,13 +118,13 @@ void ManostatInputParser::parseManostat(
     else if (manostat == "berendsen")
     {
         ManostatSettings::setManostatType(BERENDSEN);
-        ReferencesOutput::addReferenceFile(_BERENDSEN_FILE_);
+        ReferencesOutput::addReferenceFile(BERENDSEN_FILE);
     }
 
     else if (manostat == "stochastic_rescaling")
     {
         ManostatSettings::setManostatType(STOCHASTIC_RESCALING);
-        ReferencesOutput::addReferenceFile(_STOCHASTIC_RESCALING_FILE_);
+        ReferencesOutput::addReferenceFile(STOCHASTIC_RESCALING_FILE);
     }
 
     else
@@ -180,7 +180,7 @@ void ManostatInputParser::parseManostatRelaxationTime(
             "Relaxation time of manostat must be finite and greater than zero"
         );
 
-    if (relaxationTime > std::numeric_limits<double>::max() / _PS_TO_FS_)
+    if (relaxationTime > std::numeric_limits<double>::max() / PS_TO_FS)
         throw InputFileException(
             "Relaxation time of manostat is too large to represent in "
             "femtoseconds"

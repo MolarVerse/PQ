@@ -22,7 +22,8 @@
 
 #include "forceFieldSetup.hpp"
 
-#include <algorithm>    // for __for_each_fn, for_each
+#include <algorithm>
+#include <format>
 
 #include "engine.hpp"               // for Engine
 #include "forceFieldClass.hpp"      // for ForceField
@@ -58,7 +59,7 @@ void setup::setupForceField(Engine &engine)
  *
  * @param engine
  */
-ForceFieldSetup::ForceFieldSetup(Engine &engine) : _engine(engine){};
+ForceFieldSetup::ForceFieldSetup(Engine &engine) : _engine(engine) {}
 
 /**
  * @brief setup force field

@@ -29,6 +29,7 @@
 #include "celllist.hpp"
 #include "constraints.hpp"
 #include "forceFieldClass.hpp"
+#include "hessianBuilder.hpp"
 #include "intraNonBonded.hpp"
 #include "physicalData.hpp"
 #include "potential.hpp"
@@ -62,11 +63,11 @@ namespace opt
         Evaluator()          = default;
         virtual ~Evaluator() = default;
 
-        virtual pq::SharedEvaluator clone() const = 0;
-        virtual void                evaluate()    = 0;
+        virtual std::shared_ptr<Evaluator> clone() const = 0;
+        virtual void                       evaluate()    = 0;
 
-        [[nodiscard]] virtual bool              supportsAnalyticHessian() const;
-        [[nodiscard]] virtual pq::HessianMatrix calculateAnalyticHessian();
+        [[nodiscard]] virtual bool          supportsAnalyticHessian() const;
+        [[nodiscard]] virtual HessianMatrix calculateAnalyticHessian();
 
         /***************************
          * standard setter methods *
@@ -79,7 +80,7 @@ namespace opt
         void setPhysicalData(const pq::SharedPhysicalData);
         void setPhysicalDataOld(const pq::SharedPhysicalData);
         void setForceField(const pq::SharedForceField);
-        void setVirial(const pq::SharedVirial);
+        void setVirial(const std::shared_ptr<virial::Virial>);
         void setIntraNonBonded(const pq::SharedIntraNonBond);
     };
 

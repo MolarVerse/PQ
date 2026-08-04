@@ -232,7 +232,7 @@ void InputFileReader::validateThermostat() const
          thermostatType == ThermostatType::VELOCITY_RESCALING))
     {
         const auto relaxationTime =
-            ThermostatSettings::getRelaxationTime() * constants::_PS_TO_FS_;
+            ThermostatSettings::getRelaxationTime() * constants::PS_TO_FS;
 
         if (TimingsSettings::getTimeStep() > relaxationTime)
             throw InputFileException(
@@ -260,11 +260,11 @@ void InputFileReader::validateThermostat() const
                 ThermostatSettings::getEndTemperature()
             );
 
-        const auto unitConversion = constants::_M2_TO_ANGSTROM2_ *
-                                    constants::_KG_TO_GRAM_ /
-                                    constants::_FS_TO_S_;
+        const auto unitConversion = constants::M2_TO_ANGSTROM2 *
+                                    constants::KG_TO_GRAM /
+                                    constants::FS_TO_S;
         const auto conversionFactor =
-            constants::_UNIVERSAL_GAS_CONSTANT_ * unitConversion;
+            constants::UNIVERSAL_GAS_CONSTANT * unitConversion;
         const auto sigmaSquared = 4.0 * ThermostatSettings::getFriction() *
                                   conversionFactor * maxTemperature /
                                   TimingsSettings::getTimeStep();
@@ -342,7 +342,7 @@ void InputFileReader::validateManostat() const
         ));
 
     const auto relaxationTime =
-        ManostatSettings::getTauManostat() * constants::_PS_TO_FS_;
+        ManostatSettings::getTauManostat() * constants::PS_TO_FS;
 
     if (TimingsSettings::getTimeStep() > relaxationTime)
         throw InputFileException(

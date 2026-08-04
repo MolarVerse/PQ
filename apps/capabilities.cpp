@@ -192,13 +192,13 @@ namespace
         json.value("exclusive_minimum", 0);
         json.value(
             "maximum",
-            std::numeric_limits<double>::max() / constants::_PS_TO_FS_
+            std::numeric_limits<double>::max() / constants::PS_TO_FS
         );
         json.beginObject("minimum_from");
         json.value("parameter", "timestep");
         json.value("factor", 0.001);
         json.endObject();
-        json.value("default", defaults::_BERENDSEN_THERMOSTAT_RELAX_TIME_);
+        json.value("default", defaults::BERENDSEN_THERMOSTAT_RELAX_TIME);
         json.endObject();
 
         beginParameter(json, "friction", "number", "ps^-1");
@@ -206,14 +206,14 @@ namespace
         json.value("maximum", std::numeric_limits<double>::max() / 1.0e12);
         json.value(
             "default",
-            defaults::_LANGEVIN_THERMOSTAT_FRICTION_ / 1.0e12
+            defaults::LANGEVIN_THERMOSTAT_FRICTION / 1.0e12
         );
         json.endObject();
 
         beginParameter(json, "nh-chain_length", "integer");
         json.value("minimum", 1);
         json.value("maximum", INT_MAX);
-        json.value("default", defaults::_NH_CHAIN_LENGTH_DEFAULT_);
+        json.value("default", defaults::NH_CHAIN_LENGTH_DEFAULT);
         json.endObject();
 
         beginParameter(json, "coupling_frequency", "number", "cm^-1");
@@ -221,9 +221,9 @@ namespace
         json.value(
             "maximum",
             std::sqrt(std::numeric_limits<double>::max()) /
-                constants::_PER_CM_TO_HZ_
+                constants::PER_CM_TO_HZ
         );
-        json.value("default", defaults::_NH_COUPLING_FREQ_);
+        json.value("default", defaults::NH_COUPLING_FREQ);
         json.endObject();
 
         beginParameter(json, "pressure", "number", "bar");
@@ -233,18 +233,18 @@ namespace
         json.value("exclusive_minimum", 0);
         json.value(
             "maximum",
-            std::numeric_limits<double>::max() / constants::_PS_TO_FS_
+            std::numeric_limits<double>::max() / constants::PS_TO_FS
         );
         json.beginObject("minimum_from");
         json.value("parameter", "timestep");
         json.value("factor", 0.001);
         json.endObject();
-        json.value("default", defaults::_BERENDSEN_MANOSTAT_RELAX_TIME_);
+        json.value("default", defaults::BERENDSEN_MANOSTAT_RELAX_TIME);
         json.endObject();
 
         beginParameter(json, "compressibility", "number", "bar^-1");
         json.value("minimum", 0);
-        json.value("default", defaults::_COMPRESSIBILITY_WATER_DEFAULT_);
+        json.value("default", defaults::COMPRESSIBILITY_WATER_DEFAULT);
         json.endObject();
 
         beginParameter(json, "density", "number", "kg/L");
@@ -253,7 +253,7 @@ namespace
 
         beginParameter(json, "rcoulomb", "number", "angstrom");
         json.value("minimum", 0);
-        json.value("default", defaults::_COULOMB_CUT_OFF_DEFAULT_);
+        json.value("default", defaults::COULOMB_CUT_OFF_DEFAULT);
         json.endObject();
 
         json.endObject();
@@ -319,7 +319,7 @@ void cli::writeCapabilities(std::ostream &output)
     json.beginObject();
     json.value("schema", "pq.capabilities");
     json.value("schema_version", 1);
-    json.value("version", sysinfo::_VERSION_);
+    json.value("version", sysinfo::VERSION);
     writeBuildCapabilities(json);
     writeCliCapabilities(json);
     writeInputCapabilities(json);

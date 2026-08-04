@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
 
     if (CommandLineAction::VERSION == commandLineArgs.getAction())
     {
-        std::cout << "PQ " << sysinfo::_VERSION_ << '\n';
+        std::cout << "PQ " << sysinfo::VERSION << '\n';
         return EXIT_SUCCESS;
     }
 

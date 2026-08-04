@@ -427,7 +427,7 @@ TEST_F(TestSetup, noDensity)
     EXPECT_DOUBLE_EQ(_engine->getSimulationBox().getVolume(), 6000.0);
     EXPECT_DOUBLE_EQ(
         _engine->getSimulationBox().getDensity(),
-        constants::_AMU_PER_ANGSTROM3_TO_KG_PER_L_
+        constants::AMU_PER_ANGSTROM3_TO_KG_PER_L
     );
 }
 
@@ -435,7 +435,7 @@ TEST_F(TestSetup, testNoBox)
 {
     _engine->getSimulationBox().setTotalMass(6000);
     _engine->getSimulationBox().setDensity(
-        constants::_AMU_PER_ANGSTROM3_TO_KG_PER_L_
+        constants::AMU_PER_ANGSTROM3_TO_KG_PER_L
     );
     settings::SimulationBoxSettings::setBoxSet(false);
     settings::SimulationBoxSettings::setDensitySet(true);
@@ -452,7 +452,8 @@ TEST_F(TestSetup, testNoBox)
 TEST_F(TestSetup, testBoxAndDensitySet)
 {
     _engine->getSimulationBox().setTotalMass(6000);
-    _engine->getSimulationBox().setDensity(12341243.1234
+    _engine->getSimulationBox().setDensity(
+        12341243.1234
     );   // this should be ignored
     _engine->getSimulationBox().setBoxDimensions({10.0, 20.0, 30.0});
     settings::SimulationBoxSettings::setDensitySet(true);
@@ -463,7 +464,7 @@ TEST_F(TestSetup, testBoxAndDensitySet)
     EXPECT_DOUBLE_EQ(_engine->getSimulationBox().getVolume(), 6000.0);
     EXPECT_DOUBLE_EQ(
         _engine->getSimulationBox().getDensity(),
-        constants::_AMU_PER_ANGSTROM3_TO_KG_PER_L_
+        constants::AMU_PER_ANGSTROM3_TO_KG_PER_L
     );
 }
 
@@ -583,7 +584,8 @@ TEST_F(TestSetup, testFullSetup)
     _engine->getSimulationBox().addMoleculeType(moleculeType2);
 
     _engine->getSimulationBox().setTotalMass(33.0);
-    _engine->getSimulationBox().setDensity(12341243.1234
+    _engine->getSimulationBox().setDensity(
+        12341243.1234
     );   // this should be ignored
     _engine->getSimulationBox().setBoxDimensions({10.0, 20.0, 30.0});
     settings::PotentialSettings::setCoulombRadiusCutOff(4.0);

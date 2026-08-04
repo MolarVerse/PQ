@@ -60,7 +60,7 @@ class TestInputValidation : public ::testing::Test
 
         ManostatSettings::setManostatType(ManostatType::NONE);
         ManostatSettings::setTauManostat(
-            defaults::_BERENDSEN_MANOSTAT_RELAX_TIME_
+            defaults::BERENDSEN_MANOSTAT_RELAX_TIME
         );
 
         ThermostatSettings::setThermostatType(ThermostatType::NONE);
@@ -73,10 +73,10 @@ class TestInputValidation : public ::testing::Test
         ThermostatSettings::setTemperatureRampSteps(0);
         ThermostatSettings::setTemperatureRampFrequency(1);
         ThermostatSettings::setRelaxationTime(
-            defaults::_BERENDSEN_THERMOSTAT_RELAX_TIME_
+            defaults::BERENDSEN_THERMOSTAT_RELAX_TIME
         );
         ThermostatSettings::setFriction(
-            defaults::_LANGEVIN_THERMOSTAT_FRICTION_
+            defaults::LANGEVIN_THERMOSTAT_FRICTION
         );
         SimulationBoxSettings::setInitializeVelocities(InitVelocities::FALSE);
 
@@ -84,7 +84,7 @@ class TestInputValidation : public ::testing::Test
             CoulombLongRangeType::SHIFTED
         );
         PotentialSettings::setCoulombRadiusCutOff(
-            defaults::_COULOMB_CUT_OFF_DEFAULT_
+            defaults::COULOMB_CUT_OFF_DEFAULT
         );
         TimingsSettings::setTimeStep(0.5);
 

@@ -126,7 +126,7 @@ void ConstraintsInputParser::parseShakeActivated(
     {
         constraints.activateShake();
         ConstraintSettings::activateShake();
-        ReferencesOutput::addReferenceFile(_RATTLE_FILE_);
+        ReferencesOutput::addReferenceFile(RATTLE_FILE);
     }
     else if (lineElements[2] == "off")
     {

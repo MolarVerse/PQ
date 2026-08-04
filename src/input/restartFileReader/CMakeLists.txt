@@ -30,3 +30,5 @@ endif()
 install(TARGETS restartFileReader
     DESTINATION lib
 )
+
+target_precompile_headers(restartFileReader REUSE_FROM pq_pch)

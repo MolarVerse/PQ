@@ -153,7 +153,7 @@ namespace settings
         static inline std::unordered_map<std::string, double> _hubbardDerivs;
 
         // clang-format off
-        static inline double _qmLoopTimeLimit = defaults::_QM_LOOP_TIME_LIMIT_DEFAULT_;
+        static inline double _qmLoopTimeLimit = defaults::QM_LOOP_TIME_LIMIT_DEFAULT;
         // clang-format on
 
        public:
