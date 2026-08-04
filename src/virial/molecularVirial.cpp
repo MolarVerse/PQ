@@ -34,7 +34,10 @@ using namespace linearAlgebra;
  * @brief Construct a new Virial Molecular:: Virial Molecular object
  *
  */
-MolecularVirial::MolecularVirial() : Virial() { _virialType = "molecular"; }
+MolecularVirial::MolecularVirial() : Virial()
+{
+    _virialType = settings::VirialType::MOLECULAR;
+}
 
 /**
  * @brief clones the molecular virial object

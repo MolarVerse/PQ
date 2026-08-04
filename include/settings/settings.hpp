@@ -60,6 +60,18 @@ namespace settings
         DOUBLE
     };
 
+    enum class VirialType
+    {
+        ATOMIC,
+        MOLECULAR
+    };
+
+    [[nodiscard]] std::string string(const FPType fpType);
+    [[nodiscard]] std::string string(const VirialType virialType);
+    [[nodiscard]] std::string string(const JobType jobtype);
+    [[nodiscard]] JobType     jobtypeFromString(const std::string_view jobtype);
+    [[nodiscard]] FPType      fpTypeFromString(const std::string_view fpType);
+
     [[nodiscard]] std::string string(const JobType jobtype);
 
     /**
@@ -84,6 +96,8 @@ namespace settings
         static inline size_t _dimensionality = defaults::DIMENSIONALITY_DEFAULT;
         // clang-format on
 
+        static inline VirialType _virial = VirialType::MOLECULAR;
+
        public:
         Settings()  = default;
         ~Settings() = default;
@@ -104,6 +118,8 @@ namespace settings
         static void setIsRingPolymerMDActivated(const bool isRingPolymerMD);
         static void setDimensionality(const size_t dimensionality);
 
+        static void setVirialType(const VirialType virialType);
+
         /***************************
          * standard getter methods *
          ***************************/
@@ -117,6 +133,8 @@ namespace settings
         [[nodiscard]] static bool          isRandomSeedSet();
 
         [[nodiscard]] static size_t getDimensionality();
+
+        [[nodiscard]] static VirialType getVirialType();
 
         /******************************
          * standard is-active methods *

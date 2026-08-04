@@ -21,6 +21,7 @@
 ******************************************************************************/
 
 #include "physicalData.hpp"
+#include "settings.hpp"
 
 using namespace physicalData;
 
@@ -598,13 +599,13 @@ const pq::tensor3D &PhysicalData::getKinEnergyVirialTensor() const
 }
 
 /**
- * @brief get the kinetic energy virial tensor is atomic
+ * @brief get the kinetic energy virial type
  *
- * @return bool
+ * @return std::optional<settings::VirialType>
  */
-bool PhysicalData::isKinEnergyVirialAtomic() const
+std::optional<settings::VirialType> PhysicalData::getKinEnergyVirialType() const
 {
-    return _kinEnergyVirialTensor.isAtomic;
+    return _kinEnergyVirialTensor.virialType;
 }
 
 /**

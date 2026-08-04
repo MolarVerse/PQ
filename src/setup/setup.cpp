@@ -22,18 +22,20 @@
 
 #include "setup.hpp"
 
-#include "celllistSetup.hpp"                // for setupCellList
-#include "constraintsSetup.hpp"             // for setupConstraints
-#include "engine.hpp"                       // for Engine
-#include "forceFieldSettings.hpp"           // for ForceFieldSettings
-#include "forceFieldSetup.hpp"              // for setupForceField
-#include "guffDatReader.hpp"                // for readGuffDat, readInput
-#include "hybridSetup.hpp"                  // for setupQMMM
-#include "inputFileReader.hpp"              // for readInputFile
-#include "intraNonBondedReader.hpp"         // for readIntraNonBondedFile
-#include "intraNonBondedSetup.hpp"          // for setupIntraNonBonded
-#include "manostatSetup.hpp"                // for setupManostat
-#include "moldescriptorReader.hpp"          // for readMolDescriptor
+#include "atomicVirial.hpp"
+#include "celllistSetup.hpp"          // for setupCellList
+#include "constraintsSetup.hpp"       // for setupConstraints
+#include "engine.hpp"                 // for Engine
+#include "forceFieldSettings.hpp"     // for ForceFieldSettings
+#include "forceFieldSetup.hpp"        // for setupForceField
+#include "guffDatReader.hpp"          // for readGuffDat, readInput
+#include "hybridSetup.hpp"            // for setupQMMM
+#include "inputFileReader.hpp"        // for readInputFile
+#include "intraNonBondedReader.hpp"   // for readIntraNonBondedFile
+#include "intraNonBondedSetup.hpp"    // for setupIntraNonBonded
+#include "manostatSetup.hpp"          // for setupManostat
+#include "moldescriptorReader.hpp"    // for readMolDescriptor
+#include "molecularVirial.hpp"
 #include "optimizerSetup.hpp"               // for setupOptimizer
 #include "outputFilesSetup.hpp"             // for setupOutputFiles
 #include "parameterFileReader.hpp"          // for readParameterFile
@@ -48,6 +50,7 @@
 #include "thermostatSetup.hpp"              // for setupThermostat
 #include "timer.hpp"                        // for Timings
 #include "topologyReader.hpp"               // for readTopologyFile
+#include "virial.hpp"
 
 #ifdef WITH_KOKKOS
 #include "kokkosSetup.hpp"   // for setupKokkos
@@ -188,6 +191,22 @@ void setup::setupEngine(Engine &engine)
 
     if (Settings::isOptJobType())
         setupOptimizer(engine);
+
+    switch (Settings::getVirialType())
+    {
+        case VirialType::ATOMIC:
+            engine.makeVirial(virial::AtomicVirial());
+            engine.getPhysicalData().setKineticVirialType(
+                settings::VirialType::ATOMIC
+            );
+            break;
+        case VirialType::MOLECULAR:
+            engine.makeVirial(virial::MolecularVirial());
+            engine.getPhysicalData().setKineticVirialType(
+                settings::VirialType::MOLECULAR
+            );
+            break;
+    }
 
     engine.getLogOutput().flushQueuedWarnings();
 }

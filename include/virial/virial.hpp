@@ -26,7 +26,8 @@
 
 #include <string>   // for string
 
-#include "timer.hpp"          // for Timer
+#include "settings.hpp"
+#include "timer.hpp"   // for Timer
 #include "typeAliases.hpp"
 
 namespace virial
@@ -42,7 +43,7 @@ namespace virial
     class Virial : public timings::Timer
     {
        protected:
-        std::string _virialType;   // TODO: make this an enum
+        settings::VirialType _virialType;
 
         pq::tensor3D _virial;
 
@@ -52,13 +53,17 @@ namespace virial
         virtual std::shared_ptr<Virial> clone() const = 0;
 
         virtual void calculateVirial(pq::SimBox &, pq::PhysicalData &);
-        virtual void intraMolecularVirialCorrection(pq::SimBox &, pq::PhysicalData &) {
-        };
+        virtual void intraMolecularVirialCorrection(
+            pq::SimBox &,
+            pq::PhysicalData &
+        )
+        {
+        }
 
         void setVirial(const pq::tensor3D &virial);
 
-        [[nodiscard]] pq::tensor3D getVirial() const;
-        [[nodiscard]] std::string  getVirialType() const;
+        [[nodiscard]] pq::tensor3D         getVirial() const;
+        [[nodiscard]] settings::VirialType getVirialType() const;
     };
 }   // namespace virial
 

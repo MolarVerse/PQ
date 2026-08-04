@@ -158,7 +158,7 @@ TEST_F(TestManostat, CalculatePressure)
  */
 TEST_F(TestManostat, ChangeVirialToAtomic)
 {
-    _data->changeKineticVirialToAtomic();
+    _data->setKineticVirialType(settings::VirialType::ATOMIC);
 
     _manostat->calculatePressure(*_box, *_data);
 

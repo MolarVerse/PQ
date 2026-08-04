@@ -26,6 +26,7 @@
 
 #include <vector>   // for vector
 
+#include "settings.hpp"
 #include "staticMatrix.hpp"
 #include "timer.hpp"   // for Timer
 #include "typeAliases.hpp"
@@ -46,7 +47,7 @@ namespace physicalData
         linearAlgebra::tensor3D atomic;
         linearAlgebra::tensor3D molecular;
 
-        bool isAtomic = false;
+        std::optional<settings::VirialType> virialType = std::nullopt;
 
         const linearAlgebra::tensor3D &getVirialTensor() const;
     };
@@ -100,7 +101,7 @@ namespace physicalData
        public:
         void calculateTemperature(pq::SimBox &);
         void calculateKinetics(pq::SimBox &);
-        void changeKineticVirialToAtomic();
+        void setKineticVirialType(settings::VirialType virialType);
 
         std::shared_ptr<PhysicalData> clone() const;
 
@@ -209,9 +210,12 @@ namespace physicalData
 
         [[nodiscard]] linearAlgebra::tensor3D getKinEnergyAtomTensor() const;
         [[nodiscard]] linearAlgebra::tensor3D getKinEnergyMolTensor() const;
-        [[nodiscard]] const linearAlgebra::tensor3D &getKinEnergyVirialTensor(
-        ) const;
-        [[nodiscard]] bool                    isKinEnergyVirialAtomic() const;
+
+        [[nodiscard]]
+        const linearAlgebra::tensor3D &getKinEnergyVirialTensor() const;
+        [[nodiscard]]
+        std::optional<settings::VirialType> getKinEnergyVirialType() const;
+
         [[nodiscard]] linearAlgebra::tensor3D getVirial() const;
         [[nodiscard]] linearAlgebra::tensor3D getStressTensor() const;
 

@@ -24,6 +24,7 @@
 
 #include <algorithm>   // for __for_each_fn
 #include <cstddef>     // for size_t
+#include <utility>
 
 #include "constants/conversionFactors.hpp"           // for _FS_TO_S_
 #include "constants/internalConversionFactors.hpp"   // for _KINETIC_ENERGY_FACTOR_
@@ -43,10 +44,21 @@ using namespace constants;
  */
 const pq::tensor3D &KineticEnergyVirialTensor::getVirialTensor() const
 {
-    if (isAtomic)
-        return atomic;
+    if (!virialType.has_value())
+    {
+        throw customException::PhysicalDataException(
+            "KineticEnergyVirialTensor::getVirialTensor: "
+            "virialType is not set"
+        );
+    }
 
-    return molecular;
+    switch (virialType.value())
+    {
+        case settings::VirialType::ATOMIC: return atomic;
+        case settings::VirialType::MOLECULAR: return molecular;
+    }
+
+    std::unreachable();
 }
 
 /**
@@ -94,7 +106,7 @@ void PhysicalData::calculateKinetics(SimulationBox &simulationBox)
     _kineticEnergy = trace(kineticEnergyAtomicTensor);
 
     _angularMomentum  = simulationBox.calculateAngularMomentum(_momentum);
-    _angularMomentum  *= FS_TO_S;
+    _angularMomentum *= FS_TO_S;
 
     _momentum *= FS_TO_S;
 
@@ -122,7 +134,9 @@ void PhysicalData::copy(const PhysicalData &data)
 
     // update kinetic energy virial tensor mode to not have any problems when
     // updating averages for inconsistent isAtomic flags
-    _kinEnergyVirialTensor.isAtomic = data._kinEnergyVirialTensor.isAtomic;
+    if (data._kinEnergyVirialTensor.virialType.has_value())
+        _kinEnergyVirialTensor.virialType =
+            data._kinEnergyVirialTensor.virialType;
 
     updateAverages(data);
 }
@@ -169,7 +183,11 @@ void PhysicalData::updateAverages(const PhysicalData &physicalData)
 
     const auto &kinEnergyVirialTensor = physicalData._kinEnergyVirialTensor;
 
-    if (kinEnergyVirialTensor.isAtomic != _kinEnergyVirialTensor.isAtomic)
+    const auto thisVirial  = _kinEnergyVirialTensor.virialType;
+    const auto otherVirial = kinEnergyVirialTensor.virialType;
+
+    if (otherVirial.has_value() && thisVirial.has_value() &&
+        otherVirial.value() != thisVirial.value())
     {
         throw customException::PhysicalDataException(
             "Inconsistent isAtomic flag in PhysicalData::updateAverages"
@@ -181,7 +199,8 @@ void PhysicalData::updateAverages(const PhysicalData &physicalData)
     _kinEnergyVirialTensor.atomic    += kinEnergyVirialTensor.atomic;
     _kinEnergyVirialTensor.molecular += kinEnergyVirialTensor.molecular;
 
-    _kinEnergyVirialTensor.isAtomic = kinEnergyVirialTensor.isAtomic;
+    if (kinEnergyVirialTensor.virialType.has_value())
+        _kinEnergyVirialTensor.virialType = kinEnergyVirialTensor.virialType;
 }
 
 /**
@@ -336,15 +355,14 @@ void PhysicalData::addIntraNonCoulombEnergy(const double intraNonCoulombEnergy)
 }
 
 /**
- * @brief change kinetic virial to atomic
+ * @brief set kinetic virial type
  *
- * @details This function is used to change the kinetic virial from molecular to
- * atomic via a function pointer
+ * @details This function is used to set the kinetic virial type
  *
  */
-void PhysicalData::changeKineticVirialToAtomic()
+void PhysicalData::setKineticVirialType(settings::VirialType virialType)
 {
-    _kinEnergyVirialTensor.isAtomic = true;
+    _kinEnergyVirialTensor.virialType = virialType;
 }
 
 /**

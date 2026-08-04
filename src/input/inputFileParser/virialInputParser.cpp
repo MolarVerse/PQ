@@ -29,6 +29,7 @@
 #include "exceptions.hpp"        // for InputFileException, customException
 #include "molecularVirial.hpp"   // for VirialMolecular
 #include "parserUtils.hpp"
+#include "settings.hpp"
 #include "stringUtilities.hpp"   // for toLowerCopy
 
 using namespace input;
@@ -77,13 +78,11 @@ void VirialInputParser::parseVirial(
     const auto virial = toLowerCopy(lineElements[2]);
 
     if (virial == "molecular")
-        _engine.makeVirial(MolecularVirial());
+        settings::Settings::setVirialType(settings::VirialType::MOLECULAR);
 
     else if (virial == "atomic")
-    {
-        _engine.makeVirial(AtomicVirial());
-        _engine.getPhysicalData().changeKineticVirialToAtomic();
-    }
+        settings::Settings::setVirialType(settings::VirialType::ATOMIC);
+
     else
         throw InputFileException(format(
             "Invalid virial setting \"{}\" at line {} in input file.\n"
