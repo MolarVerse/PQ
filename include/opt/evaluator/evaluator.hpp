@@ -79,7 +79,7 @@ namespace opt
         void setConstraints(const pq::SharedConstraints);
         void setPhysicalData(const pq::SharedPhysicalData);
         void setPhysicalDataOld(const pq::SharedPhysicalData);
-        void setForceField(const pq::SharedForceField);
+        void setForceField(const std::shared_ptr<forceField::ForceField>);
         void setVirial(const std::shared_ptr<virial::Virial>);
         void setIntraNonBonded(const pq::SharedIntraNonBond);
     };

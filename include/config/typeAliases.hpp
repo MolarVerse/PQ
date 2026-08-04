@@ -67,12 +67,6 @@ namespace intraNonBonded
 
 }   // namespace intraNonBonded
 
-namespace forceField
-{
-    class ForceField;   // forward declaration
-
-}   // namespace forceField
-
 namespace constraints
 {
     class Constraints;          // forward declaration
@@ -131,12 +125,10 @@ namespace input
 namespace pq
 {
     using IntraNonBond = intraNonBonded::IntraNonBonded;
-    using ForceField   = forceField::ForceField;
     using Timer        = timings::Timer;
     using GlobalTimer  = timings::GlobalTimer;
 
     using SharedIntraNonBond = std::shared_ptr<intraNonBonded::IntraNonBonded>;
-    using SharedForceField   = std::shared_ptr<forceField::ForceField>;
     using SharedConstraints  = std::shared_ptr<constraints::Constraints>;
 
     using ParamFileSection       = input::parameterFile::ParameterFileSection;
