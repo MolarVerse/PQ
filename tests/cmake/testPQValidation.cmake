@@ -2,7 +2,10 @@ cmake_policy(SET CMP0054 NEW)
 
 function(run_pq_in working_directory output_var error_var result_var)
     execute_process(
-        COMMAND "${PQ_EXECUTABLE}" ${ARGN}
+        COMMAND
+            "${CMAKE_COMMAND}" -E env
+            "GMON_OUT_PREFIX=${VALIDATION_GMON_PREFIX}"
+            "${PQ_EXECUTABLE}" ${ARGN}
         WORKING_DIRECTORY "${working_directory}"
         RESULT_VARIABLE result
         OUTPUT_VARIABLE output
@@ -28,6 +31,11 @@ function(snapshot_directory directory output_var)
 
     set(${output_var} "${snapshot}" PARENT_SCOPE)
 endfunction()
+
+set(validation_gmon_directory "${VALIDATION_WORK_DIR}-gmon")
+set(VALIDATION_GMON_PREFIX "${validation_gmon_directory}/gmon")
+file(REMOVE_RECURSE "${validation_gmon_directory}")
+file(MAKE_DIRECTORY "${validation_gmon_directory}")
 
 file(REMOVE_RECURSE "${VALIDATION_WORK_DIR}")
 file(MAKE_DIRECTORY "${VALIDATION_WORK_DIR}")
