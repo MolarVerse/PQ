@@ -35,7 +35,7 @@ using QM::AseMaceRunner;
  * @param dispersion
  * @param enableCueq
  *
- * @throw py::error_already_set if the import of the mace module fails
+ * @throw pybind11::error_already_set if the import of the mace module fails
  */
 AseMaceRunner::AseMaceRunner(
     const std::string &modelType,
@@ -48,9 +48,10 @@ AseMaceRunner::AseMaceRunner(
 {
     try
     {
-        const py::module_ calculators = py::module_::import("mace.calculators");
+        const pybind11::module_ calculators =
+            pybind11::module_::import("mace.calculators");
 
-        const py::dict calculatorArgs;
+        const pybind11::dict calculatorArgs;
 
         calculatorArgs["model"]         = model.c_str();
         calculatorArgs["dispersion"]    = pybind11::bool_(dispersion);
@@ -58,9 +59,9 @@ AseMaceRunner::AseMaceRunner(
         calculatorArgs["default_dtype"] = fpType.c_str();
         calculatorArgs["device"]        = pybind11::str("cuda");
 
-        _calculator = calculators.attr(modelType.c_str())(**calculatorArgs);
+        setAseCalculator(calculators.attr(modelType.c_str())(**calculatorArgs));
     }
-    catch (const py::error_already_set &)
+    catch (const pybind11::error_already_set &)
     {
         ::PyErr_Print();
         if (enableCueq)

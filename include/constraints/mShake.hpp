@@ -24,9 +24,11 @@
 
 #define _M_SHAKE_HPP_
 
+#include <memory>   // for unique_ptr
 #include <vector>   // for vector
 
 #include "typeAliases.hpp"   // for SimBox, Vec3D, MShakeRef
+#include "vector3d.hpp"      // for Vec3D
 
 namespace constraints
 {
@@ -44,12 +46,12 @@ namespace constraints
         pq::MShakeRefVec                 _mShakeReferences;
         std::vector<std::vector<double>> _mShakeRSquaredRefs;
 
-        std::vector<linearAlgebra::Matrix<double>> _mShakeMatrices;
-        std::vector<linearAlgebra::Matrix<double>> _mShakeInvMatrices;
+        struct MShakeMatrices;
+        std::unique_ptr<MShakeMatrices> _mShakeMatrices;
 
        public:
-        MShake()  = default;
-        ~MShake() = default;
+        MShake();
+        ~MShake();
 
         void initMShake();
         void initMShakeReferences();
@@ -61,7 +63,7 @@ namespace constraints
         [[nodiscard]] double calcMatrixElement(
             const std::tuple<size_t, size_t, size_t, size_t> &indices,
             const std::pair<double, double>                  &masses,
-            const std::pair<pq::Vec3D, pq::Vec3D>            &pos
+            const std::pair<linearAlgebra::Vec3D, linearAlgebra::Vec3D> &pos
         ) const;
 
         [[nodiscard]] bool   isMShakeType(const size_t moltype) const;

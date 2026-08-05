@@ -63,14 +63,17 @@ void AngleSection::processSection(
 )
 {
     if (lineElements.size() != 3)
-        throw ParameterFileException(std::format(
-            "Wrong number of arguments in parameter file angle section at line "
-            "{} - number of elements has to be 3!",
-            _lineNumber
-        ));
+        throw ParameterFileException(
+            std::format(
+                "Wrong number of arguments in parameter file angle section at "
+                "line "
+                "{} - number of elements has to be 3!",
+                _lineNumber
+            )
+        );
 
     auto id               = stoul(lineElements[0]);
-    auto equilibriumAngle = stod(lineElements[1]) * _DEG_TO_RAD_;
+    auto equilibriumAngle = stod(lineElements[1]) * DEG_TO_RAD;
     auto forceConstant    = stod(lineElements[2]);
 
     auto angleType = AngleType(id, equilibriumAngle, forceConstant);

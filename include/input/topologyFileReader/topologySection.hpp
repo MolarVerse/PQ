@@ -46,11 +46,16 @@ namespace input::topology
        public:
         virtual ~TopologySection() = default;
 
-        void process(pq::strings &, pq::Engine &);
+        void process(std::vector<std::string> &, pq::Engine &);
 
-        virtual std::string keyword()                                   = 0;
-        virtual void        processSection(pq::strings &, pq::Engine &) = 0;
-        virtual void        endedNormally(const bool) const             = 0;
+        virtual std::string keyword() = 0;
+
+        virtual void processSection(
+            std::vector<std::string> &,
+            pq::Engine &
+        ) = 0;
+
+        virtual void endedNormally(const bool) const = 0;
 
         void setLineNumber(const int lineNumber);
         void setFp(std::ifstream *fp);

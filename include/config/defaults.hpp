@@ -27,96 +27,127 @@
 #include <cstddef>   // for size_t
 
 /**
+ * @brief struct containing all default file names
+ *
+ */
+struct DefaultFiles
+{
+    static constexpr auto restartFile  = "default.rst";
+    static constexpr auto energyFile   = "default.en";
+    static constexpr auto instEnFile   = "default.instant_en";
+    static constexpr auto momentumFile = "default.mom";
+    static constexpr auto trajFile     = "default.xyz";
+    static constexpr auto velFile      = "default.vel";
+    static constexpr auto forceFile    = "default.force";
+    static constexpr auto chargeFile   = "default.charge";
+    static constexpr auto logFile      = "default.log";
+    static constexpr auto stdoutFile   = "default.stdout";
+    static constexpr auto refFile      = "default.ref";
+    static constexpr auto infoFile     = "default.info";
+    static constexpr auto virialFile   = "default.vir";
+    static constexpr auto stressFile   = "default.stress";
+    static constexpr auto boxFile      = "default.box";
+    static constexpr auto optFile      = "default.opt";
+    static constexpr auto timingsFile  = "default.timings";
+
+    static constexpr auto rpmdRstFile    = "default.rpmd.rst";
+    static constexpr auto rpmdTrajFile   = "default.rpmd.xyz";
+    static constexpr auto rpmdVelFile    = "default.rpmd.vel";
+    static constexpr auto rpmdForceFile  = "default.rpmd.force";
+    static constexpr auto rpmdChargeFile = "default.rpmd.charge";
+    static constexpr auto rpmdEnergyFile = "default.rpmd.en";
+};
+
+/**
  * @brief namespace containing all default values
  *
  */
 namespace defaults
 {
+
     // clang-format off
-    static constexpr char   _MOLDESCRIPTOR_FILE_DEFAULT_[] = "moldescriptor.dat";
-    static constexpr char   _GUFF_FILE_DEFAULT_[]          = "guff.dat";
-    static constexpr char   _DFTB_FILE_DEFAULT_[]          = "dftb_in.template";
-    static constexpr char   _TM_FILE_DEFAULT_[]            = "tm_define.template";
-    static constexpr char   _POINTCHARGE_FILE_DEFAULT_[]   = "pointcharges";
-    static constexpr size_t _NUMBER_OF_GUFF_ENTRIES_       = 28;
+    static constexpr char   MOLDESCRIPTOR_FILE_DEFAULT[] = "moldescriptor.dat";
+    static constexpr char   GUFF_FILE_DEFAULT[]          = "guff.dat";
+    static constexpr char   DFTB_FILE_DEFAULT[]          = "dftb_in.template";
+    static constexpr char   TM_FILE_DEFAULT[]            = "tm_define.template";
+    static constexpr char   POINTCHARGE_FILE_DEFAULT[]   = "pointcharges";
+    static constexpr size_t NUMBER_OF_GUFF_ENTRIES       = 28;
 
-    static constexpr char _RESTART_FILE_DEFAULT_[]  = "default.rst";
-    static constexpr char _ENERGY_FILE_DEFAULT_[]   = "default.en";
-    static constexpr char _INSTEN_FILE_DEFAULT_[]   = "default.instant_en";
-    static constexpr char _MOMENTUM_FILE_DEFAULT_[] = "default.mom";
-    static constexpr char _TRAJ_FILE_DEFAULT_[]     = "default.xyz";
-    static constexpr char _VEL_FILE_DEFAULT_[]      = "default.vel";
-    static constexpr char _FORCE_FILE_DEFAULT_[]    = "default.force";
-    static constexpr char _CHARGE_FILE_DEFAULT_[]   = "default.charge";
-    static constexpr char _LOG_FILE_DEFAULT_[]      = "default.log";
-    static constexpr char _REF_FILE_DEFAULT_[]      = "default.ref";
-    static constexpr char _INFO_FILE_DEFAULT_[]     = "default.info";
-    static constexpr char _VIRIAL_FILE_DEFAULT_[]   = "default.vir";
-    static constexpr char _STRESS_FILE_DEFAULT_[]   = "default.stress";
-    static constexpr char _BOX_FILE_DEFAULT_[]      = "default.box";
-    static constexpr char _OPT_FILE_DEFAULT_[]      = "default.opt";
-    static constexpr char _TIMINGS_FILE_DEFAULT_[]  = "default.timings";
+    static constexpr char RESTART_FILE_DEFAULT[]  = "default.rst";
+    static constexpr char ENERGY_FILE_DEFAULT[]   = "default.en";
+    static constexpr char INSTEN_FILE_DEFAULT[]   = "default.instant_en";
+    static constexpr char MOMENTUM_FILE_DEFAULT[] = "default.mom";
+    static constexpr char TRAJ_FILE_DEFAULT[]     = "default.xyz";
+    static constexpr char VEL_FILE_DEFAULT[]      = "default.vel";
+    static constexpr char FORCE_FILE_DEFAULT[]    = "default.force";
+    static constexpr char CHARGE_FILE_DEFAULT[]   = "default.charge";
+    static constexpr char LOG_FILE_DEFAULT[]      = "default.log";
+    static constexpr char REF_FILE_DEFAULT[]      = "default.ref";
+    static constexpr char INFO_FILE_DEFAULT[]     = "default.info";
+    static constexpr char VIRIAL_FILE_DEFAULT[]   = "default.vir";
+    static constexpr char STRESS_FILE_DEFAULT[]   = "default.stress";
+    static constexpr char BOX_FILE_DEFAULT[]      = "default.box";
+    static constexpr char OPT_FILE_DEFAULT[]      = "default.opt";
+    static constexpr char TIMINGS_FILE_DEFAULT[]  = "default.timings";
 
-    static constexpr char _RPMD_RST_FILE_DEFAULT_[]    = "default.rpmd.rst";
-    static constexpr char _RPMD_TRAJ_FILE_DEFAULT_[]   = "default.rpmd.xyz";
-    static constexpr char _RPMD_VEL_FILE_DEFAULT_[]    = "default.rpmd.vel";
-    static constexpr char _RPMD_FORCE_FILE_DEFAULT_[]  = "default.rpmd.force";
-    static constexpr char _RPMD_CHARGE_FILE_DEFAULT_[] = "default.rpmd.charge";
-    static constexpr char _RPMD_ENERGY_FILE_DEFAULT_[] = "default.rpmd.en";
+    static constexpr char RPMD_RST_FILE_DEFAULT[]    = "default.rpmd.rst";
+    static constexpr char RPMD_TRAJ_FILE_DEFAULT[]   = "default.rpmd.xyz";
+    static constexpr char RPMD_VEL_FILE_DEFAULT[]    = "default.rpmd.vel";
+    static constexpr char RPMD_FORCE_FILE_DEFAULT[]  = "default.rpmd.force";
+    static constexpr char RPMD_CHARGE_FILE_DEFAULT[] = "default.rpmd.charge";
+    static constexpr char RPMD_ENERGY_FILE_DEFAULT[] = "default.rpmd.en";
 
-    static constexpr char   _HESSIAN_FILE_DEFAULT_[] = "default.hessian";
-    static constexpr char   _HESSIAN_INFO_FILE_DEFAULT_[] =
-        "default.hessian.info";
-    static constexpr double _HESSIAN_DISPLACEMENT_DEFAULT_ = 1.0e-3;
-    static constexpr bool   _HESSIAN_OPTIMIZE_DEFAULT_     = true;
-    static constexpr char   _HESSIAN_BUILDER_DEFAULT_[]    = "central";
+    static constexpr char   HESSIAN_FILE_DEFAULT[]       = "default.hessian";
+    static constexpr char   HESSIAN_INFO_FILE_DEFAULT[]  = "default.hessian.info";
+    static constexpr double HESSIAN_DISPLACEMENT_DEFAULT = 1.0e-3;
+    static constexpr bool   HESSIAN_OPTIMIZE_DEFAULT     = true;
+    static constexpr char   HESSIAN_BUILDER_DEFAULT[]    = "central";
 
-    static constexpr char _QM_FORCES_TEMP_FILE_DEFAULT_[]     = "qm_forces";
-    static constexpr char _QM_CHARGES_TEMP_FILE_DEFAULT_[]    = "qm_charges";
-    static constexpr char _STRESS_TENSOR_TEMP_FILE_DEFAULT_[] = "stress_tensor";
+    static constexpr char QM_FORCES_TEMP_FILE_DEFAULT[]     = "qm_forces";
+    static constexpr char QM_CHARGES_TEMP_FILE_DEFAULT[]    = "qm_charges";
+    static constexpr char STRESS_TENSOR_TEMP_FILE_DEFAULT[] = "stress_tensor";
 
-    static constexpr double _COULOMB_CUT_OFF_DEFAULT_           = 12.5;   // in Angstrom
-    static constexpr double _SCALE_14_COULOMB_DEFAULT_          = 1.0;
-    static constexpr double _SCALE_14_VAN_DER_WAALS_DEFAULT_    = 1.0;
-    static constexpr double _WOLF_PARAM_DEFAULT_            = 0.25;     // TODO: add unit
+    static constexpr double COULOMB_CUT_OFF_DEFAULT           = 12.5; // in Angstrom
+    static constexpr double SCALE_14_COULOMB_DEFAULT          = 1.0;
+    static constexpr double SCALE_14_VAN_DER_WAALS_DEFAULT    = 1.0;
+    static constexpr double WOLF_PARAM_DEFAULT                = 0.25; // TODO: add unit
 
-    static constexpr bool   _CONSTRAINTS_ACTIVE_DEFAULT_ = false;
-    static constexpr size_t _SHAKE_MAX_ITER_DEFAULT_     = 20;
-    static constexpr size_t _RATTLE_MAX_ITER_DEFAULT_    = 20;
-    static constexpr size_t _MSHAKE_MAX_ITER_DEFAULT_    = 20;
-    static constexpr double _SHAKE_TOLERANCE_DEFAULT_    = 1e-8;
-    static constexpr double _RATTLE_TOLERANCE_DEFAULT_   = 1e-8 * 1e12;
-    static constexpr double _MSHAKE_TOLERANCE_DEFAULT_   = 1e-8;
+    static constexpr bool   CONSTRAINTS_ACTIVE_DEFAULT = false;
+    static constexpr size_t SHAKE_MAX_ITER_DEFAULT     = 20;
+    static constexpr size_t RATTLE_MAX_ITER_DEFAULT    = 20;
+    static constexpr size_t MSHAKE_MAX_ITER_DEFAULT    = 20;
+    static constexpr double SHAKE_TOLERANCE_DEFAULT    = 1e-8;
+    static constexpr double RATTLE_TOLERANCE_DEFAULT   = 1e-8 * 1e12;
+    static constexpr double MSHAKE_TOLERANCE_DEFAULT   = 1e-8;
 
-    static constexpr bool   _CELL_LIST_IS_ACTIVE_DEFAULT_ = false;   // default is brute force routine
-    static constexpr size_t _NUMBER_OF_CELLS_DEFAULT_     = 7;       // for each dimension
+    static constexpr bool   CELL_LIST_IS_ACTIVE_DEFAULT = false;   // default is brute force routine
+    static constexpr size_t NUMBER_OF_CELLS_DEFAULT     = 7;       // for each dimension
 
-    static constexpr size_t _NH_CHAIN_LENGTH_DEFAULT_     = 3;       // default value for nose hoover chain length
-    static constexpr double _BERENDSEN_THERMOSTAT_RELAX_TIME_ = 0.1;     // in ps
-    static constexpr double _LANGEVIN_THERMOSTAT_FRICTION_         = 1.0e11;  // in s^-1
-    static constexpr double _NH_COUPLING_FREQ_       = 1.0e3;   // in cm^-1
+    static constexpr size_t NH_CHAIN_LENGTH_DEFAULT         = 3;       // default value for nose hoover chain length
+    static constexpr double BERENDSEN_THERMOSTAT_RELAX_TIME = 0.1;     // in ps
+    static constexpr double LANGEVIN_THERMOSTAT_FRICTION    = 1.0e11;  // in s^-1
+    static constexpr double NH_COUPLING_FREQ                = 1.0e3;   // in cm^-1
 
-    static constexpr double _BERENDSEN_MANOSTAT_RELAX_TIME_ = 1.0;        // in ps
-    static constexpr double _COMPRESSIBILITY_WATER_DEFAULT_ = 4.591e-5;   // in bar^-1 default value for berendsen manostat
+    static constexpr double BERENDSEN_MANOSTAT_RELAX_TIME = 1.0;        // in ps
+    static constexpr double COMPRESSIBILITY_WATER_DEFAULT = 4.591e-5;   // in bar^-1 default value for berendsen manostat
 
-    static constexpr size_t _DIMENSIONALITY_DEFAULT_ = 3;
+    static constexpr size_t DIMENSIONALITY_DEFAULT = 3;
 
-    static constexpr double _QM_LOOP_TIME_LIMIT_DEFAULT_ = 3600;   // in s
-    static constexpr double _VACUUM_BOX_DIMENSION_       = 1000;   // in Å
+    static constexpr double QM_LOOP_TIME_LIMIT_DEFAULT = 3600;   // in s
+    static constexpr double VACUUM_BOX_DIMENSION       = 1000;   // in Å
 
-    static constexpr char   _OPTIMIZER_DEFAULT_[]           = "gradient-descent";
-    static constexpr size_t _N_EPOCHS_DEFAULT_              = 100;
-    static constexpr size_t _LR_UPDATE_FREQUENCY_DEFAULT_   = 1;
-    static constexpr double _INITIAL_LEARNING_RATE_DEFAULT_ = 1.0e-4;
-    static constexpr double _MIN_LEARNING_RATE_DEFAULT_     = 1e-15;
+    static constexpr char   OPTIMIZER_DEFAULT[]           = "gradient-descent";
+    static constexpr size_t N_EPOCHS_DEFAULT              = 100;
+    static constexpr size_t LR_UPDATE_FREQUENCY_DEFAULT   = 1;
+    static constexpr double INITIAL_LEARNING_RATE_DEFAULT = 1.0e-4;
+    static constexpr double MIN_LEARNING_RATE_DEFAULT     = 1e-15;
 
-    static constexpr char   _EN_CONV_STRATEGY_DEFAULT_[] = "rigorous";
-    static constexpr char   _FORCE_CONV_STRATEGY_DEFAULT_[]  = "rigorous";
-    static constexpr double _REL_ENERGY_CONV_DEFAULT_        = 1.0e-6;
-    static constexpr double _ABS_ENERGY_CONV_DEFAULT_        = 1.0e-6;
-    static constexpr double _MAX_FORCE_CONV_DEFAULT_         = 1.0e-6;
-    static constexpr double _RMS_FORCE_CONV_DEFAULT_         = 1.0e-6;
-
+    static constexpr char   EN_CONV_STRATEGY_DEFAULT[]     = "rigorous";
+    static constexpr char   FORCE_CONV_STRATEGY_DEFAULT[]  = "rigorous";
+    static constexpr double REL_ENERGY_CONV_DEFAULT        = 1.0e-6;
+    static constexpr double ABS_ENERGY_CONV_DEFAULT        = 1.0e-6;
+    static constexpr double MAX_FORCE_CONV_DEFAULT         = 1.0e-6;
+    static constexpr double RMS_FORCE_CONV_DEFAULT         = 1.0e-6;
     // clang-format on
 
 }   // namespace defaults

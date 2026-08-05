@@ -101,10 +101,10 @@ namespace engine
         using enum Periodicity;
         using std::ranges::distance;
 
-        tensor3D   virial     = {0.0};
-        auto       numQMAtoms = 0.0;
-        auto&      atoms      = _simulationBox->getAtoms();
-        const auto nSmMol =
+        linearAlgebra::tensor3D virial     = {0.0};
+        auto                    numQMAtoms = 0.0;
+        auto&                   atoms      = _simulationBox->getAtoms();
+        const auto              nSmMol =
             distance(_simulationBox->getMoleculesInsideZone(SMOOTHING));
 
         // Loop over all combinations of smoothing molecules
@@ -215,8 +215,8 @@ namespace engine
     {
         using enum Periodicity;
 
-        auto&    atoms  = _simulationBox->getAtoms();
-        tensor3D virial = {0.0};
+        auto&                   atoms  = _simulationBox->getAtoms();
+        linearAlgebra::tensor3D virial = {0.0};
 
         // Set number of QM atoms in physical data for output purposes
         setNumberOfQMAtoms();

@@ -144,7 +144,7 @@ std::string FileSettings::getQMChargesTempFileName()
  */
 std::string FileSettings::getStressTensorTempFileName()
 {
-    return _StressTensorTempFile;
+    return _stressTensorTempFile;
 }
 
 /**

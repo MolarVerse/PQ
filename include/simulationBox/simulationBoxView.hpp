@@ -25,6 +25,7 @@
 #define _SIMULATION_BOX_VIEW_HPP_
 
 #include "views.hpp"
+#include "molecule.hpp"
 
 namespace simulationBox
 {

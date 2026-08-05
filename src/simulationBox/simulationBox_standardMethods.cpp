@@ -22,9 +22,7 @@
 
 #include <algorithm>   // for std::ranges:find
 #include <optional>    // for optional
-#include <ranges>      // for views::filter
 
-#include "settings.hpp"   // for Settings::getJobtype, JobType
 #include "simulationBox.hpp"
 
 using namespace simulationBox;
@@ -124,9 +122,9 @@ size_t SimulationBox::getNumberOfQMAtoms() const
  *
  * @return set<string>
  */
-pq::stringSet SimulationBox::getUniqueQMAtomNames() const
+std::set<std::string> SimulationBox::getUniqueQMAtomNames() const
 {
-    pq::stringSet uniqueQMAtomNames;
+    std::set<std::string> uniqueQMAtomNames;
     for (const auto &atom : getQMAtoms())
         uniqueQMAtomNames.insert(atom->getName());
     return uniqueQMAtomNames;
@@ -363,6 +361,21 @@ std::vector<linearAlgebra::Vec3D> SimulationBox::getForces() const
     for (const auto &atom : _atoms) forces.push_back(atom->getForce());
 
     return forces;
+}
+
+/**
+ * @brief get all atomic numbers of all atoms
+ *
+ * @return std::vector<int>
+ */
+std::vector<int> SimulationBox::getAtomicNumbers() const
+{
+    std::vector<int> atomicNumbers;
+
+    for (const auto &atom : _atoms)
+        atomicNumbers.push_back(atom->getAtomicNumber());
+
+    return atomicNumbers;
 }
 
 /**

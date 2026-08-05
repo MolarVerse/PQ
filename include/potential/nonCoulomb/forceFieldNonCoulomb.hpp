@@ -30,15 +30,32 @@
 #include "nonCoulombPotential.hpp"
 #include "typeAliases.hpp"
 
+class TestNonCoulombPotentialFF;   // forward declaration
+
+namespace benchSetup
+{
+    struct BenchNonCoulombFFPot;   // forward declaration
+}
+
 namespace potential
 {
     class ForceFieldNonCoulomb : public NonCoulombPotential
     {
        private:
         pq::SharedNonCoulPairVec _nonCoulPairsVec;
-        pq::SharedNonCoulPairMat _nonCoulPairsMat;
+
+        struct matrix;
+        std::unique_ptr<matrix> _nonCoulPairsMatPtr;
 
        public:
+        ForceFieldNonCoulomb();
+        ~ForceFieldNonCoulomb() override;
+
+        ForceFieldNonCoulomb(const ForceFieldNonCoulomb &);
+        ForceFieldNonCoulomb &operator=(const ForceFieldNonCoulomb &);
+        ForceFieldNonCoulomb(ForceFieldNonCoulomb &&);
+        ForceFieldNonCoulomb &operator=(ForceFieldNonCoulomb &&);
+
         void setupNonCoulombicCutoffs();
         void determineInternalGlobalVdwTypes(const std::map<size_t, size_t> &);
         void fillDiagOfNonCoulPairsMatrix(pq::SharedNonCoulPairVec &);
@@ -59,30 +76,28 @@ namespace potential
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] pq::SharedNonCoulPair getNonCoulPair(
-            const pq::stlVectorUL &indices
+        [[nodiscard]]
+        pq::SharedNonCoulPair getNonCoulPair(
+            const std::vector<size_t> &indices
         ) override;
 
-        [[nodiscard]] size_t getGlobalVdwType1(const pq::stlVectorUL &) const;
-        [[nodiscard]] size_t getGlobalVdwType2(const pq::stlVectorUL &) const;
+        [[nodiscard]]
+        size_t getGlobalVdwType1(const std::vector<size_t> &) const;
+        [[nodiscard]]
+        size_t getGlobalVdwType2(const std::vector<size_t> &) const;
+
         [[nodiscard]] pq::SharedNonCoulPairVec &getNonCoulombPairsVector();
-        [[nodiscard]] pq::SharedNonCoulPairMat &getNonCoulombPairsMatrix();
+
+        friend class ::TestNonCoulombPotentialFF;
+        friend struct benchSetup::BenchNonCoulombFFPot;
 
         /***************************
          * standard setter methods *
          ***************************/
 
         void setNonCoulombPairsVector(const pq::SharedNonCoulPairVec &vec);
-        void setNonCoulombPairsMatrix(const pq::SharedNonCoulPairMat &mat);
-
-        template <typename T>
-        void setNonCoulombPairsMatrix(const size_t, const size_t, T &);
     };
 
 }   // namespace potential
-
-#ifndef _FORCE_FIELD_NON_COULOMB_TPP_
-#include "forceFieldNonCoulomb.tpp.hpp"   // IWYU pragma: keep - DO NOT MOVE THIS LINE
-#endif
 
 #endif   // _FORCE_FIELD_NON_COULOMB_HPP_

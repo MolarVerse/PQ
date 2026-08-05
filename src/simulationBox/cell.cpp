@@ -68,7 +68,7 @@ void Cell::addNeighbourCell(Cell *cell) { _neighbourCells.push_back(cell); }
  *
  * @param lowerBoundary
  */
-void Cell::addAtoms(const std::vector<pq::Atom *> &atomPointers)
+void Cell::addAtoms(const std::vector<Atom *> &atomPointers)
 {
     _atoms.push_back(atomPointers);
 }

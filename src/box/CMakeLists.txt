@@ -18,5 +18,5 @@ target_link_libraries(box
 )
 
 install(TARGETS box
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+    DESTINATION lib
 )

@@ -49,7 +49,7 @@ double TriclinicBox::calculateVolume() { return det(_boxMatrix); }
  */
 void TriclinicBox::setBoxAngles(const Vec3D &boxAngles)
 {
-    _boxAngles = boxAngles * _DEG_TO_RAD_;
+    _boxAngles = boxAngles * DEG_TO_RAD;
 
     calculateTransformationMatrix();
     calculateBoxMatrix();
@@ -287,7 +287,7 @@ std::pair<Vec3D, Vec3D> simulationBox::calcBoxDimAndAnglesFromBoxMatrix(
 
     return std::make_pair(
         Vec3D{box_x, box_y, box_z},
-        Vec3D{alpha, beta, gamma} * constants::_RAD_TO_DEG_
+        Vec3D{alpha, beta, gamma} * constants::RAD_TO_DEG
     );
 }
 
@@ -350,7 +350,7 @@ double TriclinicBox::sinGamma() const { return ::sin(_boxAngles[2]); }
  */
 Vec3D TriclinicBox::getBoxAngles() const
 {
-    return _boxAngles * constants::_RAD_TO_DEG_;
+    return _boxAngles * constants::RAD_TO_DEG;
 }
 
 /**
@@ -374,9 +374,9 @@ tensor3D TriclinicBox::getBoxMatrix(Periodicity per) const
     switch (per)
     {
         case Periodicity::NON_PERIODIC:
-            boxMatrix[0][0] = _VACUUM_BOX_DIMENSION_;   // X dimension
-            boxMatrix[1][1] = _VACUUM_BOX_DIMENSION_;   // Y dimension
-            boxMatrix[2][2] = _VACUUM_BOX_DIMENSION_;   // Z dimension
+            boxMatrix[0][0] = VACUUM_BOX_DIMENSION;   // X dimension
+            boxMatrix[1][1] = VACUUM_BOX_DIMENSION;   // Y dimension
+            boxMatrix[2][2] = VACUUM_BOX_DIMENSION;   // Z dimension
             boxMatrix[0][1] = 0.0;                      // Clear XY cross term
             boxMatrix[0][2] = 0.0;                      // Clear XZ cross term
             boxMatrix[1][0] = 0.0;                      // Clear YX cross term
@@ -385,8 +385,8 @@ tensor3D TriclinicBox::getBoxMatrix(Periodicity per) const
             boxMatrix[2][1] = 0.0;                      // Clear ZY cross term
             break;
         case Periodicity::X:
-            boxMatrix[1][1] = _VACUUM_BOX_DIMENSION_;   // Y dimension
-            boxMatrix[2][2] = _VACUUM_BOX_DIMENSION_;   // Z dimension
+            boxMatrix[1][1] = VACUUM_BOX_DIMENSION;   // Y dimension
+            boxMatrix[2][2] = VACUUM_BOX_DIMENSION;   // Z dimension
             boxMatrix[0][1] = 0.0;                      // Clear XY cross term
             boxMatrix[0][2] = 0.0;                      // Clear XZ cross term
             boxMatrix[1][0] = 0.0;                      // Clear YX cross term
@@ -395,8 +395,8 @@ tensor3D TriclinicBox::getBoxMatrix(Periodicity per) const
             boxMatrix[2][1] = 0.0;                      // Clear ZY cross term
             break;
         case Periodicity::Y:
-            boxMatrix[0][0] = _VACUUM_BOX_DIMENSION_;   // X dimension
-            boxMatrix[2][2] = _VACUUM_BOX_DIMENSION_;   // Z dimension
+            boxMatrix[0][0] = VACUUM_BOX_DIMENSION;   // X dimension
+            boxMatrix[2][2] = VACUUM_BOX_DIMENSION;   // Z dimension
             boxMatrix[0][1] = 0.0;                      // Clear XY cross term
             boxMatrix[0][2] = 0.0;                      // Clear XZ cross term
             boxMatrix[1][0] = 0.0;                      // Clear YX cross term
@@ -405,8 +405,8 @@ tensor3D TriclinicBox::getBoxMatrix(Periodicity per) const
             boxMatrix[2][1] = 0.0;                      // Clear ZY cross term
             break;
         case Periodicity::Z:
-            boxMatrix[0][0] = _VACUUM_BOX_DIMENSION_;   // X dimension
-            boxMatrix[1][1] = _VACUUM_BOX_DIMENSION_;   // Y dimension
+            boxMatrix[0][0] = VACUUM_BOX_DIMENSION;   // X dimension
+            boxMatrix[1][1] = VACUUM_BOX_DIMENSION;   // Y dimension
             boxMatrix[0][1] = 0.0;                      // Clear XY cross term
             boxMatrix[0][2] = 0.0;                      // Clear XZ cross term
             boxMatrix[1][0] = 0.0;                      // Clear YX cross term
@@ -415,21 +415,21 @@ tensor3D TriclinicBox::getBoxMatrix(Periodicity per) const
             boxMatrix[2][1] = 0.0;                      // Clear ZY cross term
             break;
         case Periodicity::XY:
-            boxMatrix[2][2] = _VACUUM_BOX_DIMENSION_;   // Z dimension
+            boxMatrix[2][2] = VACUUM_BOX_DIMENSION;   // Z dimension
             boxMatrix[0][2] = 0.0;                      // Clear XZ cross term
             boxMatrix[1][2] = 0.0;                      // Clear YZ cross term
             boxMatrix[2][0] = 0.0;                      // Clear ZX cross term
             boxMatrix[2][1] = 0.0;                      // Clear ZY cross term
             break;
         case Periodicity::XZ:
-            boxMatrix[1][1] = _VACUUM_BOX_DIMENSION_;   // Y dimension
+            boxMatrix[1][1] = VACUUM_BOX_DIMENSION;   // Y dimension
             boxMatrix[0][1] = 0.0;                      // Clear XY cross term
             boxMatrix[1][0] = 0.0;                      // Clear YX cross term
             boxMatrix[1][2] = 0.0;                      // Clear YZ cross term
             boxMatrix[2][1] = 0.0;                      // Clear ZY cross term
             break;
         case Periodicity::YZ:
-            boxMatrix[0][0] = _VACUUM_BOX_DIMENSION_;   // X dimension
+            boxMatrix[0][0] = VACUUM_BOX_DIMENSION;   // X dimension
             boxMatrix[0][1] = 0.0;                      // Clear XY cross term
             boxMatrix[0][2] = 0.0;                      // Clear XZ cross term
             boxMatrix[1][0] = 0.0;                      // Clear YX cross term

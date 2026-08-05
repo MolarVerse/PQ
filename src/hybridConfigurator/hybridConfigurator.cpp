@@ -61,8 +61,8 @@ void HybridConfigurator::calculateInnerRegionCenter(
             "Cannot calculate inner region center: no center atoms specified"
         ));
 
-    Vec3D      center        = {0.0, 0.0, 0.0};
-    double     total_mass    = 0.0;
+    linearAlgebra::Vec3D center     = {0.0, 0.0, 0.0};
+    double               total_mass = 0.0;
     const auto positionAtom1 = simBox.getAtom(indices.at(0)).getPosition();
 
     for (const auto index : indices)
@@ -349,7 +349,7 @@ void HybridConfigurator::calculateSmoothingFactors(pq::SimBox& simBox)
  *
  * @return pq::Vec3D innerRegionCenter
  */
-Vec3D HybridConfigurator::getInnerRegionCenter() const
+linearAlgebra::Vec3D HybridConfigurator::getInnerRegionCenter() const
 {
     return _innerRegionCenter;
 }

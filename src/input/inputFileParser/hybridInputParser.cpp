@@ -25,21 +25,21 @@
 #include <algorithm>     // for min, unique
 #include <cstddef>       // for size_t
 #include <format>        // for format
-#include <functional>    // for _Bind_front_t, bind_front
 #include <ranges>        // for sort
 #include <string>        // for string
 #include <string_view>   // for string_view
 #include <vector>        // for vector
 
-#include "exceptions.hpp"   // for InputFileException, customException
-#include "fileSettings.hpp"
+#include "exceptions.hpp"        // for InputFileException, customException
 #include "hybridSettings.hpp"    // for HybridSettings
 #include "inputFileParser.hpp"   // for InputFileParser
+#include "parserUtils.hpp"
 #include "stringUtilities.hpp"   // for toLowerCopy
 #include "typeAliases.hpp"       // for pq::strings
 
 #ifdef PYTHON_ENABLED
-#include "selection.hpp"   // for parseSelection
+#include "fileSettings.hpp"   // for FileSettings
+#include "selection.hpp"      // for parseSelection
 #endif
 
 using namespace input;
@@ -61,47 +61,47 @@ HybridInputParser::HybridInputParser(Engine &engine) : InputFileParser(engine)
 {
     addKeyword(
         std::string("inner_region_center"),
-        bind_front(&HybridInputParser::parseInnerRegionCenter, this),
+        bindMember(&HybridInputParser::parseInnerRegionCenter, this),
         false
     );
     addKeyword(
         std::string("forced_inner_list"),
-        bind_front(&HybridInputParser::parseForcedInnerList, this),
+        bindMember(&HybridInputParser::parseForcedInnerList, this),
         false
     );
     addKeyword(
         std::string("forced_outer_list"),
-        bind_front(&HybridInputParser::parseForcedOuterList, this),
+        bindMember(&HybridInputParser::parseForcedOuterList, this),
         false
     );
     addKeyword(
         std::string("qm_charges"),
-        bind_front(&HybridInputParser::parseUseQMCharges, this),
+        bindMember(&HybridInputParser::parseUseQMCharges, this),
         false
     );
     addKeyword(
         std::string("core_radius"),
-        bind_front(&HybridInputParser::parseCoreRadius, this),
+        bindMember(&HybridInputParser::parseCoreRadius, this),
         false
     );
     addKeyword(
         std::string("layer_radius"),
-        bind_front(&HybridInputParser::parseLayerRadius, this),
+        bindMember(&HybridInputParser::parseLayerRadius, this),
         false
     );
     addKeyword(
         std::string("smoothing_region_thickness"),
-        bind_front(&HybridInputParser::parseSmoothingRegionThickness, this),
+        bindMember(&HybridInputParser::parseSmoothingRegionThickness, this),
         false
     );
     addKeyword(
         std::string("point_charge_thickness"),
-        bind_front(&HybridInputParser::parsePointChargeThickness, this),
+        bindMember(&HybridInputParser::parsePointChargeThickness, this),
         false
     );
     addKeyword(
         std::string("smoothing_method"),
-        bind_front(&HybridInputParser::parseSmoothingMethod, this),
+        bindMember(&HybridInputParser::parseSmoothingMethod, this),
         false
     );
 }
@@ -204,7 +204,7 @@ void HybridInputParser::parseCoreRadius(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto coreRadius = std::stod(lineElements[2]);
+    const auto coreRadius = stringToFiniteDouble(lineElements[2]);
 
     if (coreRadius < 0.0)
         throw InputFileException(
@@ -233,7 +233,7 @@ void HybridInputParser::parseLayerRadius(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto layerRadius = std::stod(lineElements[2]);
+    const auto layerRadius = stringToFiniteDouble(lineElements[2]);
 
     if (layerRadius < 0.0)
         throw InputFileException(
@@ -318,6 +318,8 @@ void HybridInputParser::parseSmoothingMethod(
     const size_t                    lineNumber
 )
 {
+    checkCommand(lineElements, lineNumber);
+
     const auto method = toLowerAndReplaceDashesCopy(lineElements[2]);
 
     using enum settings::SmoothingMethod;
@@ -364,9 +366,6 @@ std::vector<int> HybridInputParser::parseSelection(
     const std::string &key
 )
 {
-    std::string restartFile = FileSettings::getStartFileName();
-    std::string moldescFile = FileSettings::getMolDescriptorFileName();
-
     std::vector<int> selectionVec;
 
     if (selection.empty())
@@ -377,6 +376,9 @@ std::vector<int> HybridInputParser::parseSelection(
         needsPython = true;
 
 #ifdef PYTHON_ENABLED
+    std::string restartFile = FileSettings::getStartFileName();
+    std::string moldescFile = FileSettings::getMolDescriptorFileName();
+
     if (needsPython)
         selectionVec = pq_python::select(selection, restartFile, moldescFile);
 #else

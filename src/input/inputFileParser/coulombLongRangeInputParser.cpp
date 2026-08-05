@@ -22,12 +22,11 @@
 
 #include "coulombLongRangeInputParser.hpp"
 
-#include <cstddef>       // for size_t, std
-#include <format>        // for format
-#include <functional>    // for _Bind_front_t, bind_front
-#include <string_view>   // for string_view
+#include <cstddef>   // for size_t, std
+#include <format>    // for format
 
-#include "exceptions.hpp"          // for InputFileException, customException
+#include "exceptions.hpp"   // for InputFileException, customException
+#include "parserUtils.hpp"
 #include "potentialSettings.hpp"   // for PotentialSettings
 #include "stringUtilities.hpp"     // for toLowerCopy
 
@@ -52,19 +51,19 @@ CoulombLongRangeInputParser::CoulombLongRangeInputParser(Engine &engine)
 {
     addKeyword(
         std::string("long_range"),
-        bind_front(&CoulombLongRangeInputParser::parseCoulombLongRange, this),
+        bindMember(&CoulombLongRangeInputParser::parseCoulombLongRange, this),
         false
     );
 
     addKeyword(
         std::string("wolf_param"),
-        bind_front(&CoulombLongRangeInputParser::parseWolfParameter, this),
+        bindMember(&CoulombLongRangeInputParser::parseWolfParameter, this),
         false
     );
 
     addKeyword(
         std::string("rf_epsilon"),
-        bind_front(
+        bindMember(
             &CoulombLongRangeInputParser::parseReactionFieldEpsilon,
             this
         ),
@@ -131,7 +130,7 @@ void CoulombLongRangeInputParser::parseWolfParameter(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto wolfParameter = stod(lineElements[2]);
+    const auto wolfParameter = stringToFiniteDouble(lineElements[2]);
 
     if (wolfParameter < 0.0)
         throw InputFileException("Wolf parameter cannot be negative");
@@ -153,7 +152,7 @@ void CoulombLongRangeInputParser::parseReactionFieldEpsilon(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto epsilon = stod(lineElements[2]);
+    const auto epsilon = stringToFiniteDouble(lineElements[2]);
 
     if (epsilon < 1.0)
         throw InputFileException(

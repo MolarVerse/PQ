@@ -22,18 +22,21 @@
 
 #include <gtest/gtest.h>   // for Test, TestInfo (ptr only), InitGoogleTest, RUN_ALL_TESTS
 
+#include <cstdlib>
+#include <filesystem>
 #include <string>        // for allocator, basic_string
 #include <string_view>   // for string_view
 
-#include "dftbplusRunner.hpp"     // for DFTBPlusRunner
-#include "exceptions.hpp"         // for InputFileException
-#include "gtest/gtest.h"          // for Message, TestPartResult
-#include "pyscfRunner.hpp"        // for PySCFRunner
-#include "qmSettings.hpp"         // for QMMethod, QMSettings
-#include "qmSetup.hpp"            // for QMSetup, setupQM
-#include "qmSetup.hpp"            // for QMSetup
-#include "qmmdEngine.hpp"         // for QMMDEngine
-#include "settings.hpp"           // for Settings
+#include "dftbplusRunner.hpp"   // for DFTBPlusRunner
+#include "exceptions.hpp"       // for InputFileException
+#include "gtest/gtest.h"        // for Message, TestPartResult
+#include "pyscfRunner.hpp"      // for PySCFRunner
+#include "qmSettings.hpp"       // for QMMethod, QMSettings
+#include "qmSetup.hpp"          // for QMSetup, setupQM
+#include "qmSetup.hpp"          // for QMSetup
+#include "qmmdEngine.hpp"       // for QMMDEngine
+#include "settings.hpp"         // for Settings
+#include "testUtils.hpp"
 #include "throwWithMessage.hpp"   // for ASSERT_THROW_MSG
 #include "turbomoleRunner.hpp"    // for TurbomoleRunner
 
@@ -54,6 +57,22 @@ namespace
             QMSettings::setQMScript("test");
     }
 }   // namespace
+
+TEST(TestQMSetup, resolvesBundledQMScript)
+{
+    const auto script = QM::bundledQMScriptPath("pyscf_hf.py");
+
+    EXPECT_EQ(std::filesystem::path(script).filename(), "pyscf_hf.py");
+    EXPECT_TRUE(std::filesystem::is_regular_file(script));
+
+    if (const auto *expected = std::getenv("PQ_TEST_EXPECTED_SCRIPT_DIR"))
+    {
+        EXPECT_EQ(
+            std::filesystem::path(script).parent_path(),
+            std::filesystem::path(expected)
+        );
+    }
+}
 
 TEST(TestQMSetup, setupDftbplus)
 {

@@ -333,7 +333,7 @@ namespace linearAlgebra
 }   // namespace linearAlgebra
 
 #ifndef _VECTOR3D_TPP_
-#include "vector3d.tpp.hpp"   // DO NOT MOVE THIS LINE
+#include "vector3d.tpp.hpp"   // IWYU pragma: export
 #endif
 
 #endif   // _VECTOR3d_HPP_

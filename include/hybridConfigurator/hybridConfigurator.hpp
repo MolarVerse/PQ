@@ -27,6 +27,7 @@
 #include <unordered_set>   // for unordered_set
 
 #include "typeAliases.hpp"
+#include "vector3d.hpp"
 
 namespace configurator
 {
@@ -34,8 +35,8 @@ namespace configurator
     class HybridConfigurator
     {
        private:
-        pq::Vec3D          _innerRegionCenter = {0.0};
-        static inline bool _molChangedZone    = false;
+        linearAlgebra::Vec3D _innerRegionCenter = {0.0};
+        static inline bool   _molChangedZone    = false;
 
        public:
         void calculateInnerRegionCenter(pq::SimBox &);
@@ -56,8 +57,8 @@ namespace configurator
          * standard getters and setters *
          ********************************/
 
-        [[nodiscard]] pq::Vec3D   getInnerRegionCenter() const;
-        [[nodiscard]] static bool getMoleculeChangedZone();
+        [[nodiscard]] linearAlgebra::Vec3D getInnerRegionCenter() const;
+        [[nodiscard]] static bool          getMoleculeChangedZone();
 
         static void setMoleculeChangedZone(bool);
     };

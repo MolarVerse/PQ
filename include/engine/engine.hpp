@@ -25,6 +25,7 @@
 #define _ENGINE_HPP_
 
 #include <cstddef>   // for size_t
+#include <memory>
 
 #include "celllist.hpp"
 #include "constraints.hpp"
@@ -68,14 +69,14 @@ namespace engine
 
         physicalData::PhysicalData _averagePhysicalData;
 
-        pq::SharedVirial       _virial;
-        pq::SharedPotential    _potential;
-        pq::SharedPhysicalData _physicalData;
-        pq::SharedSimBox       _simulationBox;
-        pq::SharedCellList     _cellList;
-        pq::SharedIntraNonBond _intraNonBonded;
-        pq::SharedForceField   _forceField;
-        pq::SharedConstraints  _constraints;
+        std::shared_ptr<virial::Virial> _virial;
+        pq::SharedPotential             _potential;
+        pq::SharedPhysicalData          _physicalData;
+        pq::SharedSimBox                _simulationBox;
+        pq::SharedCellList              _cellList;
+        pq::SharedIntraNonBond          _intraNonBonded;
+        pq::SharedForceField            _forceField;
+        pq::SharedConstraints           _constraints;
 
         pq::UniqueIntraWater _intraWater =
             std::make_unique<waterModel::IntraWater>();
@@ -163,8 +164,8 @@ namespace engine
         [[nodiscard]] pq::SharedCellList     getSharedCellList() const;
         [[nodiscard]] pq::SharedConstraints  getSharedConstraints() const;
         [[nodiscard]] pq::SharedIntraNonBond getSharedIntraNonBonded() const;
-        [[nodiscard]] pq::SharedVirial       getSharedVirial() const;
-        [[nodiscard]] pq::SharedPotential    getSharedPotential() const;
+        [[nodiscard]] std::shared_ptr<virial::Virial> getSharedVirial() const;
+        [[nodiscard]] pq::SharedPotential getSharedPotential() const;
 
         /***************************
          * make unique_ptr methods *

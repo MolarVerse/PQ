@@ -27,7 +27,7 @@
 #include <cstddef>   // for size_t
 
 #include "inputFileParser.hpp"   // for InputFileParser
-#include "typeAliases.hpp"       // for pq::strings
+#include "typeAliases.hpp"       // for std::vector<std::string>
 
 namespace input
 {
@@ -42,10 +42,22 @@ namespace input
        public:
         explicit MMInputParser(pq::Engine &);
 
-        void parseForceFieldType(const pq::strings &, const size_t);
-        void parseNonCoulombType(const pq::strings &, const size_t);
-        void parseWaterIntraModel(const pq::strings &, const size_t);
-        void parseWaterInterModel(const pq::strings &, const size_t);
+        void parseForceFieldType(
+            const std::vector<std::string> &,
+            const size_t
+        );
+        void parseNonCoulombType(
+            const std::vector<std::string> &,
+            const size_t
+        );
+        void parseWaterIntraModel(
+            const std::vector<std::string> &,
+            const size_t
+        );
+        void parseWaterInterModel(
+            const std::vector<std::string> &,
+            const size_t
+        );
     };
 
 }   // namespace input

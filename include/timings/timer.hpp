@@ -24,12 +24,11 @@
 
 #define _TIMER_HPP_
 
-
 #include <cstddef>   // for size_t
 #include <string>    // for string
+#include <vector>    // for vector
 
 #include "timingsSection.hpp"   // for TimingsManager
-#include "typeAliases.hpp"
 
 namespace timings
 {
@@ -54,15 +53,16 @@ namespace timings
 
        public:
         explicit Timer(const std::string_view);
+        Timer() = default;
 
-        Timer()  = default;
-        ~Timer() = default;
+        [[nodiscard]]
+        const std::vector<TimingsSection>& getTimingDetails() const;
 
-        [[nodiscard]] std::vector<TimingsSection> getTimingDetails() const;
-        [[nodiscard]] double                      calculateElapsedTime() const;
-        [[nodiscard]] double                      calculateLoopTime() const;
+        [[nodiscard]] double calculateElapsedTime() const;
+        [[nodiscard]] double calculateLoopTime() const;
 
-        [[nodiscard]] size_t findTimingsSectionIndex(const std::string_view name
+        [[nodiscard]] size_t findTimingsSectionIndex(
+            const std::string_view name
         ) const;
 
         void startTimingsSection();
@@ -82,7 +82,8 @@ namespace timings
          * standard getters *
          ********************/
 
-        [[nodiscard]] TimingsSection getTimingsSection(const std::string_view
+        [[nodiscard]] TimingsSection getTimingsSection(
+            const std::string_view
         ) const;
 
         [[nodiscard]] std::string getTimerName() const;

@@ -45,12 +45,24 @@ namespace input::parameterFile
        public:
         virtual ~ParameterFileSection() = default;
 
-        virtual void process(pq::strings &lineElements, pq::Engine &);
-        void         endedNormally(const bool);
+        virtual void process(
+            std::vector<std::string> &lineElements,
+            pq::Engine &
+        );
+
+        void endedNormally(const bool);
 
         virtual std::string keyword() = 0;
-        virtual void processSection(pq::strings &lineElements, pq::Engine &) = 0;
-        virtual void processHeader(pq::strings &lineElements, pq::Engine &) = 0;
+
+        virtual void processSection(
+            std::vector<std::string> &lineElements,
+            pq::Engine &
+        ) = 0;
+
+        virtual void processHeader(
+            std::vector<std::string> &lineElements,
+            pq::Engine &
+        ) = 0;
 
         void setLineNumber(const int lineNumber);
         void setFp(std::ifstream *fp);

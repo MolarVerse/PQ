@@ -104,7 +104,7 @@ void WaterModelSetup::setup()
         _engine.getSimulationBox().findMoleculeType(waterType.value());
 
     // water atoms have to be in this order for calculation
-    if (water.getAtomNames() != pq::strings{"O", "H", "H"})
+    if (water.getAtomNames() != std::vector<std::string>{"O", "H", "H"})
         throw(MolDescriptorException(
             "Water molecule type must have exactly 3 atoms in the following "
             "order: O (oxygen), H (hydrogen), H (hydrogen)."

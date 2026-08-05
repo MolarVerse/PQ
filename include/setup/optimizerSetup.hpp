@@ -24,6 +24,8 @@
 
 #define _OPTIMIZER_SETUP_HPP_
 
+#include "learningRateStrategy.hpp"
+#include "optimizer.hpp"
 #include "typeAliases.hpp"
 
 namespace setup
@@ -47,12 +49,12 @@ namespace setup
         void setup();
         void writeSetupInfo() const;
 
-        void setupConvergence(pq::SharedOptimizer &);
-        void setupMinMaxLR(pq::SharedLearningRate &);
+        void setupConvergence(std::shared_ptr<opt::Optimizer> &);
+        void setupMinMaxLR(std::shared_ptr<opt::LearningRateStrategy> &);
 
-        pq::SharedOptimizer    setupEmptyOptimizer();
-        pq::SharedLearningRate setupLearningRateStrategy();
-        pq::SharedEvaluator    setupEvaluator();
+        std::shared_ptr<opt::Optimizer>            setupEmptyOptimizer();
+        std::shared_ptr<opt::LearningRateStrategy> setupLearningRateStrategy();
+        std::shared_ptr<opt::Evaluator>            setupEvaluator();
     };
 
 }   // namespace setup
