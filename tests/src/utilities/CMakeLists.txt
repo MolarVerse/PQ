@@ -12,6 +12,8 @@ foreach(source_file ${source_files})
         PRIVATE
         ${PROJECT_SOURCE_DIR}/tests/include/utilities
         ${PROJECT_SOURCE_DIR}/tests/include/macros
+        PRIVATE
+        ${PROJECT_SOURCE_DIR}/external/progressbar/include
     )
     target_link_libraries(${test_name}
         PRIVATE
