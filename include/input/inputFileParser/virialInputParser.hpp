@@ -27,7 +27,7 @@
 #include <cstddef>   // for size_t
 
 #include "inputFileParser.hpp"   // for InputFileParser
-#include "typeAliases.hpp"       // for pq::strings
+#include "typeAliases.hpp"       // for std::vector<std::string>
 
 namespace input
 {
@@ -42,7 +42,7 @@ namespace input
        public:
         explicit VirialInputParser(pq::Engine &);
 
-        void parseVirial(const pq::strings &, const size_t);
+        void parseVirial(const std::vector<std::string> &, const size_t);
     };
 
 }   // namespace input

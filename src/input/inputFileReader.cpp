@@ -165,7 +165,7 @@ void InputFileReader::process(const std::vector<std::string> &lineElements)
             )
         );
 
-    pq::ParseFunc parserFunc = _keywordFuncMap[keyword];
+    InputFileParser::ParseFunc parserFunc = _keywordFuncMap[keyword];
 
     try
     {
@@ -517,9 +517,10 @@ std::map<std::string, bool> InputFileReader::getKeywordRequiredMap() const
 /**
  * @brief get the keyword function map
  *
- * @return std::map<std::string, pq::ParseFunc>
+ * @return std::map<std::string, InputFileParser::ParseFunc>
  */
-std::map<std::string, pq::ParseFunc> InputFileReader::getKeywordFuncMap() const
+std::map<std::string, InputFileParser::ParseFunc> InputFileReader::
+    getKeywordFuncMap() const
 {
     return _keywordFuncMap;
 }

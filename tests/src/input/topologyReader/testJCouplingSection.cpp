@@ -52,7 +52,18 @@ TEST_F(TestTopologySection, jCouplingSectionProcessFiveElements)
     // atom1, atom2, atom3, atom4, type
     std::vector<std::string> lineElements = {"1", "2", "3", "4", "9"};
     section.processSection(lineElements, *_engine);
-    EXPECT_EQ(_engine->getForceField().getJCouplings().size(), 1u);
+
+    const auto &jCouplings = _engine->getForceField().getJCouplings();
+    ASSERT_EQ(jCouplings.size(), 1u);
+
+    const auto molecules = jCouplings.front().getMolecules();
+    ASSERT_EQ(molecules.size(), 4u);
+
+    auto &simBox = _engine->getSimulationBox();
+    EXPECT_EQ(molecules[0], &simBox.getMolecule(0));
+    EXPECT_EQ(molecules[1], &simBox.getMolecule(1));
+    EXPECT_EQ(molecules[2], &simBox.getMolecule(1));
+    EXPECT_EQ(molecules[3], &simBox.getMolecule(1));
 }
 
 TEST_F(TestTopologySection, jCouplingSectionThrowsOnWrongElementCount)

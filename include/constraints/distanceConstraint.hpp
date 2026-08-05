@@ -28,6 +28,7 @@
 
 #include "bond.hpp"
 #include "typeAliases.hpp"
+#include "vector3d.hpp"
 
 namespace constraints
 {
@@ -48,9 +49,9 @@ namespace constraints
         double _springConstant;
         double _dSpringConstantDt;
 
-        double    _lowerEnergy = 0.0;
-        double    _upperEnergy = 0.0;
-        pq::Vec3D _force;
+        double               _lowerEnergy = 0.0;
+        double               _upperEnergy = 0.0;
+        linearAlgebra::Vec3D _force;
 
        public:
         DistanceConstraint(

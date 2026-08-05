@@ -102,10 +102,13 @@ std::vector<std::string> utilities::getLineCommands(
 
     auto splitView = line | split(delim) | transform(transformView);
 
-    pq::strings lineCommands;
+    std::vector<std::string> lineCommands;
     for (auto it : splitView) lineCommands.emplace_back(it);
 
-    return pq::strings(lineCommands.begin(), lineCommands.end() - 1);
+    return std::vector<std::string>(
+        lineCommands.begin(),
+        lineCommands.end() - 1
+    );
 }
 
 /**
@@ -116,8 +119,8 @@ std::vector<std::string> utilities::getLineCommands(
  */
 std::vector<std::string> utilities::splitString(const std::string &line)
 {
-    std::string word;
-    pq::strings lineElements = {};
+    std::string              word;
+    std::vector<std::string> lineElements = {};
 
     std::stringstream ss(line);
 
@@ -224,7 +227,7 @@ bool utilities::fileExists(const std::string &filename)
  *
  * @throw InputFileException if none of these strings is matched
  */
-bool utilities::keywordToBool(const pq::strings &lineElements)
+bool utilities::keywordToBool(const std::vector<std::string> &lineElements)
 {
     const auto option = toLowerCopy(lineElements[2]);
 

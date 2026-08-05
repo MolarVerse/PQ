@@ -56,7 +56,9 @@ namespace input::restartFile
         RestartFileReader(const std::string &, pq::Engine &);
 
         void                read();
-        RestartFileSection *determineSection(pq::strings &lineElements);
+        RestartFileSection *determineSection(
+            std::vector<std::string> &lineElements
+        );
     };
 
 }   // namespace input::restartFile

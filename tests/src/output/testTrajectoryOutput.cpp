@@ -26,6 +26,7 @@
 #include <string>   // for getline, allocator, string
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
+#include "outputFileSettings.hpp"
 
 /**
  * @brief Test the writeXyz method
@@ -34,7 +35,7 @@
 TEST_F(TestTrajectoryOutput, writeXyz)
 {
     _trajectoryOutput->setFilename("default.xyz");
-    _trajectoryOutput->writeXyz(*_simulationBox);
+    _trajectoryOutput->writeXyz(*_simulationBox, 1);
     _trajectoryOutput->close();
     std::ifstream file("default.xyz");
     std::string   line;
@@ -51,13 +52,33 @@ TEST_F(TestTrajectoryOutput, writeXyz)
 }
 
 /**
+ * @brief Test optional step metadata in the xyz comment line
+ *
+ */
+TEST_F(TestTrajectoryOutput, writeXyzMetadata)
+{
+    settings::OutputFileSettings::setIncludeOutputMetadata(true);
+
+    _trajectoryOutput->setFilename("default.xyz");
+    _trajectoryOutput->writeXyz(*_simulationBox, 42);
+    _trajectoryOutput->close();
+    settings::OutputFileSettings::setIncludeOutputMetadata(false);
+
+    std::ifstream file("default.xyz");
+    std::string   line;
+    getline(file, line);
+    getline(file, line);
+    EXPECT_EQ(line, "# step = 42");
+}
+
+/**
  * @brief Test the writeVelocities method
  *
  */
 TEST_F(TestTrajectoryOutput, writeVelocities)
 {
     _trajectoryOutput->setFilename("default.xyz");
-    _trajectoryOutput->writeVelocities(*_simulationBox);
+    _trajectoryOutput->writeVelocities(*_simulationBox, 1);
     _trajectoryOutput->close();
     std::ifstream file("default.xyz");
     std::string   line;
@@ -92,7 +113,7 @@ TEST_F(TestTrajectoryOutput, writeVelocities)
 TEST_F(TestTrajectoryOutput, writeForces)
 {
     _trajectoryOutput->setFilename("default.xyz");
-    _trajectoryOutput->writeForces(*_simulationBox);
+    _trajectoryOutput->writeForces(*_simulationBox, 1);
     _trajectoryOutput->close();
     std::ifstream file("default.xyz");
     std::string   line;
@@ -109,13 +130,33 @@ TEST_F(TestTrajectoryOutput, writeForces)
 }
 
 /**
+ * @brief Test optional step metadata in the force comment line
+ *
+ */
+TEST_F(TestTrajectoryOutput, writeForcesMetadata)
+{
+    settings::OutputFileSettings::setIncludeOutputMetadata(true);
+
+    _trajectoryOutput->setFilename("default.xyz");
+    _trajectoryOutput->writeForces(*_simulationBox, 42);
+    _trajectoryOutput->close();
+    settings::OutputFileSettings::setIncludeOutputMetadata(false);
+
+    std::ifstream file("default.xyz");
+    std::string   line;
+    getline(file, line);
+    getline(file, line);
+    EXPECT_EQ(line, "# step = 42; Total force = 8.77496e+00 kcal/mol/Angstrom");
+}
+
+/**
  * @brief Test the writeXyz method
  *
  */
 TEST_F(TestTrajectoryOutput, writeCharges)
 {
     _trajectoryOutput->setFilename("default.xyz");
-    _trajectoryOutput->writeCharges(*_simulationBox);
+    _trajectoryOutput->writeCharges(*_simulationBox, 1);
     _trajectoryOutput->close();
     std::ifstream file("default.xyz");
     std::string   line;

@@ -267,8 +267,10 @@ Output Metadata
     include_output_metadata = {bool} -> false
 
 When enabled, ``include_output_metadata`` adds a comment header containing the
-simulation timestep to the averaged and instantaneous MD energy files. It is
-disabled by default to preserve the existing numeric file format.
+simulation timestep to the averaged and instantaneous MD energy files. It also
+adds the effective simulation step to the comment line of trajectory, velocity,
+force, and charge frames, including their ring-polymer variants. It is disabled
+by default to preserve the existing file formats.
 
 .. centered:: *default value* = false
 

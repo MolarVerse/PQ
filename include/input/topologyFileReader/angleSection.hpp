@@ -40,7 +40,7 @@ namespace input::topology
     class AngleSection : public TopologySection
     {
        public:
-        void processSection(pq::strings &, pq::Engine &) override;
+        void processSection(std::vector<std::string> &, pq::Engine &) override;
 
         [[nodiscard]] std::string keyword() override;
         void                      endedNormally(bool) const override;

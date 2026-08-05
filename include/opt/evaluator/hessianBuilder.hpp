@@ -29,6 +29,7 @@
 
 #include "hessianSettings.hpp"
 #include "typeAliases.hpp"
+#include "vector3d.hpp"
 
 namespace opt
 {
@@ -63,8 +64,8 @@ namespace opt
         ) const;
 
         static void restorePositions(
-            pq::SimBox                   &simulationBox,
-            const std::vector<pq::Vec3D> &positions
+            pq::SimBox                              &simulationBox,
+            const std::vector<linearAlgebra::Vec3D> &positions
         );
 
         static void displaceCoordinate(

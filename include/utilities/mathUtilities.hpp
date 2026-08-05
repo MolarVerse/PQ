@@ -28,7 +28,12 @@
 #include <cstdlib>   // for abs
 #include <limits>    // for numeric_limits
 
-#include "typeAliases.hpp"
+namespace linearAlgebra
+{
+    template <typename T>
+    class Vector3D;   // forward declaration
+
+}   // namespace linearAlgebra
 
 namespace utilities
 {
@@ -49,9 +54,9 @@ namespace utilities
     }
 
     [[nodiscard]] bool compare(
-        const pq::Vec3D &a,
-        const pq::Vec3D &b,
-        const double    &tol
+        const linearAlgebra::Vector3D<double> &a,
+        const linearAlgebra::Vector3D<double> &b,
+        const double                          &tol
     );
 
     /**
@@ -69,7 +74,10 @@ namespace utilities
         return std::fabs(a - b) < std::numeric_limits<T>::epsilon();
     }
 
-    [[nodiscard]] bool compare(const pq::Vec3D &a, const pq::Vec3D &b);
+    [[nodiscard]] bool compare(
+        const linearAlgebra::Vector3D<double> &a,
+        const linearAlgebra::Vector3D<double> &b
+    );
 
     /**
      * @brief check whether a number is exactly zero
