@@ -172,7 +172,9 @@ void MDEngine::takeStepAfterForces()
 
     if (Settings::isQMActivated())
     {
-        _physicalData->setNumberOfQMAtoms(_simulationBox->getNumberOfQMAtoms());
+        _physicalData->setNumberOfQMAtoms(
+            static_cast<double>(_simulationBox->getNumberOfQMAtoms())
+        );
     }
 }
 
@@ -204,10 +206,10 @@ void MDEngine::writeOutput()
 
     if (0 == _step % outputFreq)
     {
-        _engineOutput.writeXyzFile(*_simulationBox);
-        _engineOutput.writeVelFile(*_simulationBox);
-        _engineOutput.writeForceFile(*_simulationBox);
-        _engineOutput.writeChargeFile(*_simulationBox);
+        _engineOutput.writeXyzFile(*_simulationBox, effStep);
+        _engineOutput.writeVelFile(*_simulationBox, effStep);
+        _engineOutput.writeForceFile(*_simulationBox, effStep);
+        _engineOutput.writeChargeFile(*_simulationBox, effStep);
         _engineOutput.writeRstFile(*_simulationBox, *_thermostat, effStep);
 
         _engineOutput.writeVirialFile(
@@ -241,7 +243,7 @@ void MDEngine::writeOutput()
 
         const auto dt            = TimingsSettings::getTimeStep();
         const auto effStepDouble = static_cast<double>(effStep);
-        const auto simTime       = effStepDouble * dt * _FS_TO_PS_;
+        const auto simTime       = effStepDouble * dt * FS_TO_PS;
 
         _engineOutput.writeEnergyFile(effStep, _averagePhysicalData);
         _engineOutput.writeInstantEnergyFile(effStep, *_physicalData);

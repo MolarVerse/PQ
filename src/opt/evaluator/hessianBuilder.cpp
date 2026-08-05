@@ -27,12 +27,17 @@
 #include "atom.hpp"
 #include "evaluator.hpp"
 #include "exceptions.hpp"
-#include "simulationBox.hpp"
 
 using namespace opt;
 using namespace settings;
 using namespace customException;
 
+/**
+ * @brief Construct a new Force Difference Hessian Builder:: Force Difference
+ * Hessian Builder object
+ *
+ * @param displacement
+ */
 ForceDifferenceHessianBuilder::ForceDifferenceHessianBuilder(
     const double displacement
 )
@@ -40,11 +45,17 @@ ForceDifferenceHessianBuilder::ForceDifferenceHessianBuilder(
 {
 }
 
+/**
+ * @brief Construct a new Central Force Difference Hessian Builder:: Central
+ * Force Difference Hessian Builder object
+ *
+ * @param displacement
+ */
 std::vector<double> ForceDifferenceHessianBuilder::evaluateForces(
-    Evaluator         &evaluator,
-    pq::SimBox        &simulationBox,
-    const size_t       coordinateIndex,
-    const double       displacement
+    Evaluator   &evaluator,
+    pq::SimBox  &simulationBox,
+    const size_t coordinateIndex,
+    const double displacement
 ) const
 {
     displaceCoordinate(simulationBox, coordinateIndex, displacement);
@@ -55,30 +66,49 @@ std::vector<double> ForceDifferenceHessianBuilder::evaluateForces(
     return forces;
 }
 
+/**
+ * @brief restore the original positions of the atoms in the simulation box
+ *
+ * @param simulationBox
+ * @param positions
+ */
 void ForceDifferenceHessianBuilder::restorePositions(
-    pq::SimBox                   &simulationBox,
-    const std::vector<pq::Vec3D> &positions
+    pq::SimBox                              &simulationBox,
+    const std::vector<linearAlgebra::Vec3D> &positions
 )
 {
     for (size_t atomIndex = 0; atomIndex < positions.size(); ++atomIndex)
         simulationBox.getAtom(atomIndex).setPosition(positions[atomIndex]);
 }
 
+/**
+ * @brief displace a specific coordinate of the simulation box
+ *
+ * @param simulationBox
+ * @param coordinateIndex
+ * @param displacement
+ */
 void ForceDifferenceHessianBuilder::displaceCoordinate(
-    pq::SimBox        &simulationBox,
-    const size_t       coordinateIndex,
-    const double       displacement
+    pq::SimBox  &simulationBox,
+    const size_t coordinateIndex,
+    const double displacement
 )
 {
     const auto atomIndex = coordinateIndex / 3;
     const auto dimension = coordinateIndex % 3;
 
-    auto position = simulationBox.getAtom(atomIndex).getPosition();
+    auto position        = simulationBox.getAtom(atomIndex).getPosition();
     position[dimension] += displacement;
 
     simulationBox.getAtom(atomIndex).setPosition(position);
 }
 
+/**
+ * @brief flatten the forces of the simulation box into a 1D vector
+ *
+ * @param simulationBox
+ * @return std::vector<double>
+ */
 std::vector<double> ForceDifferenceHessianBuilder::flattenForces(
     const pq::SimBox &simulationBox
 )
@@ -96,24 +126,35 @@ std::vector<double> ForceDifferenceHessianBuilder::flattenForces(
     return flattenedForces;
 }
 
-void ForceDifferenceHessianBuilder::symmetrize(pq::HessianMatrix &hessian)
+/**
+ * @brief symmetrize the Hessian matrix
+ *
+ * @param hessian
+ */
+void ForceDifferenceHessianBuilder::symmetrize(HessianMatrix &hessian)
 {
     for (size_t row = 0; row < hessian.size(); ++row)
         for (size_t col = row + 1; col < hessian.size(); ++col)
         {
-            const auto value = 0.5 * (hessian[row][col] + hessian[col][row]);
+            const auto value  = 0.5 * (hessian[row][col] + hessian[col][row]);
             hessian[row][col] = value;
             hessian[col][row] = value;
         }
 }
 
-pq::HessianMatrix CentralForceDifferenceHessianBuilder::build(
-    Evaluator         &evaluator,
-    pq::SimBox        &simulationBox
+/**
+ * @brief Construct a new Central Force Difference Hessian Builder:: Central
+ * Force Difference Hessian Builder object
+ *
+ * @param displacement
+ */
+HessianMatrix CentralForceDifferenceHessianBuilder::build(
+    Evaluator  &evaluator,
+    pq::SimBox &simulationBox
 ) const
 {
     const auto numberOfCoordinates = 3 * simulationBox.getNumberOfAtoms();
-    auto hessian = pq::HessianMatrix(
+    auto       hessian             = HessianMatrix(
         numberOfCoordinates,
         std::vector<double>(numberOfCoordinates, 0.0)
     );
@@ -128,8 +169,8 @@ pq::HessianMatrix CentralForceDifferenceHessianBuilder::build(
             evaluateForces(evaluator, simulationBox, col, -_displacement);
 
         for (size_t row = 0; row < numberOfCoordinates; ++row)
-            hessian[row][col] = -(fPlus[row] - fMinus[row]) /
-                                (2.0 * _displacement);
+            hessian[row][col] =
+                -(fPlus[row] - fMinus[row]) / (2.0 * _displacement);
 
         restorePositions(simulationBox, originalPositions);
     }
@@ -140,13 +181,19 @@ pq::HessianMatrix CentralForceDifferenceHessianBuilder::build(
     return hessian;
 }
 
-pq::HessianMatrix ForwardForceDifferenceHessianBuilder::build(
-    Evaluator         &evaluator,
-    pq::SimBox        &simulationBox
+/**
+ * @brief Construct a new Forward Force Difference Hessian Builder:: Forward
+ * Force Difference Hessian Builder object
+ *
+ * @param displacement
+ */
+HessianMatrix ForwardForceDifferenceHessianBuilder::build(
+    Evaluator  &evaluator,
+    pq::SimBox &simulationBox
 ) const
 {
     const auto numberOfCoordinates = 3 * simulationBox.getNumberOfAtoms();
-    auto hessian = pq::HessianMatrix(
+    auto       hessian             = HessianMatrix(
         numberOfCoordinates,
         std::vector<double>(numberOfCoordinates, 0.0)
     );
@@ -172,13 +219,19 @@ pq::HessianMatrix ForwardForceDifferenceHessianBuilder::build(
     return hessian;
 }
 
-pq::HessianMatrix FivePointForceDifferenceHessianBuilder::build(
-    Evaluator         &evaluator,
-    pq::SimBox        &simulationBox
+/**
+ * @brief Construct a new Five Point Force Difference Hessian Builder:: Five
+ * Point Force Difference Hessian Builder object
+ *
+ * @param displacement
+ */
+HessianMatrix FivePointForceDifferenceHessianBuilder::build(
+    Evaluator  &evaluator,
+    pq::SimBox &simulationBox
 ) const
 {
     const auto numberOfCoordinates = 3 * simulationBox.getNumberOfAtoms();
-    auto hessian = pq::HessianMatrix(
+    auto       hessian             = HessianMatrix(
         numberOfCoordinates,
         std::vector<double>(numberOfCoordinates, 0.0)
     );
@@ -198,10 +251,9 @@ pq::HessianMatrix FivePointForceDifferenceHessianBuilder::build(
 
         for (size_t row = 0; row < numberOfCoordinates; ++row)
         {
-            const auto derivative = (
-                -fPlus2[row] + 8.0 * fPlus[row] - 8.0 * fMinus[row] +
-                fMinus2[row]
-            ) / (12.0 * _displacement);
+            const auto derivative = (-fPlus2[row] + 8.0 * fPlus[row] -
+                                     8.0 * fMinus[row] + fMinus2[row]) /
+                                    (12.0 * _displacement);
 
             hessian[row][col] = -derivative;
         }
@@ -215,9 +267,13 @@ pq::HessianMatrix FivePointForceDifferenceHessianBuilder::build(
     return hessian;
 }
 
-pq::HessianMatrix AnalyticHessianBuilder::build(
-    Evaluator         &evaluator,
-    pq::SimBox       &
+/**
+ * @brief Construct a new Analytic Hessian Builder:: Analytic Hessian Builder
+ * object
+ */
+HessianMatrix AnalyticHessianBuilder::build(
+    Evaluator &evaluator,
+    pq::SimBox &
 ) const
 {
     if (!evaluator.supportsAnalyticHessian())
@@ -231,6 +287,14 @@ pq::HessianMatrix AnalyticHessianBuilder::build(
     return hessian;
 }
 
+/**
+ * @brief factory function to create a HessianBuilder object based on the
+ * HessianBuilderType
+ *
+ * @param builder
+ * @param displacement
+ * @return std::shared_ptr<HessianBuilder>
+ */
 std::shared_ptr<HessianBuilder> opt::makeHessianBuilder(
     const HessianBuilderType builder,
     const double             displacement
@@ -238,6 +302,7 @@ std::shared_ptr<HessianBuilder> opt::makeHessianBuilder(
 {
     using enum HessianBuilderType;
 
+    // TODO: use switch statement
     if (builder == FINITE_DIFFERENCE_FORCES_CENTRAL)
         return std::make_shared<CentralForceDifferenceHessianBuilder>(
             displacement

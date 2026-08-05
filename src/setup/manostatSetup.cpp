@@ -98,7 +98,7 @@ void ManostatSetup::setupBerendsenManostat()
 {
     const auto isotropy = ManostatSettings::getIsotropy();
     const auto pTarget  = ManostatSettings::getTargetPressure();
-    const auto tau      = ManostatSettings::getTauManostat() * _PS_TO_FS_;
+    const auto tau      = ManostatSettings::getTauManostat() * PS_TO_FS;
     const auto compress = ManostatSettings::getCompressibility();
     const auto aniso    = ManostatSettings::get2DAnisotropicAxis();
     const auto iso      = ManostatSettings::get2DIsotropicAxes();
@@ -138,7 +138,7 @@ void ManostatSetup::setupStochasticRescalingManostat()
 {
     const auto isotropy = ManostatSettings::getIsotropy();
     const auto pTarget  = ManostatSettings::getTargetPressure();
-    const auto tau      = ManostatSettings::getTauManostat() * _PS_TO_FS_;
+    const auto tau      = ManostatSettings::getTauManostat() * PS_TO_FS;
     const auto compress = ManostatSettings::getCompressibility();
     const auto aniso    = ManostatSettings::get2DAnisotropicAxis();
     const auto iso      = ManostatSettings::get2DIsotropicAxes();

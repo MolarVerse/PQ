@@ -33,7 +33,6 @@
 
 #include "orthorhombicBox.hpp"
 #include "triclinicBox.hpp"
-#include "vector3d.hpp"
 
 static constexpr long ITERATIONS = 20000;
 
@@ -53,7 +52,7 @@ int main()
     double sink = 0.0;
     for (long i = 0; i < ITERATIONS; ++i)
     {
-        const double x = (i & 127) * 0.3 - 19.0;
+        const double x = static_cast<double>(i & 127) * 0.3 - 19.0;
         const Vec3D  v(x, 0.5 * x, -x);
 
         sink += norm(ortho.wrapPositionIntoBox(v));

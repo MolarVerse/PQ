@@ -39,7 +39,9 @@ using namespace constants;
  * @param integratorType
  */
 Integrator::Integrator(const std::string_view integratorType)
-    : _integratorType(integratorType){};
+    : _integratorType(integratorType)
+{
+}
 
 /**
  * @brief integrates the velocities of a single atom
@@ -54,7 +56,7 @@ void Integrator::integrateVelocities(Atom *atom) const
     const auto mass     = atom->getMass();
     const auto dt       = TimingsSettings::getTimeStep();
 
-    velocity += dt * force / mass * _V_VERLET_VELOCITY_FACTOR_;
+    velocity += dt * force / mass * V_VERLET_VELOCITY_FACTOR;
 
     atom->setVelocity(velocity);
 }
@@ -66,13 +68,15 @@ void Integrator::integrateVelocities(Atom *atom) const
  * @param index
  * @param simBox
  */
-void Integrator::integratePositions(Atom *atom, const SimulationBox &simBox)
-    const
+void Integrator::integratePositions(
+    Atom                *atom,
+    const SimulationBox &simBox
+) const
 {
     auto       position = atom->getPosition();
     const auto velocity = atom->getVelocity();
 
-    position += TimingsSettings::getTimeStep() * velocity * _FS_TO_S_;
+    position += TimingsSettings::getTimeStep() * velocity * FS_TO_S;
 
     simBox.applyPBC(position);
 

@@ -23,13 +23,14 @@
 #include "QMInputParser.hpp"
 
 #include <format>          // for format
-#include <functional>      // for _Bind_front_t, bind_front
 #include <sstream>         // for stringstream
+#include <stdexcept>       // for invalid_argument, out_of_range
 #include <unordered_map>   // for unordered_map
 
-#include "engine.hpp"             // for Engine
-#include "exceptions.hpp"         // for InputFileException, customException
-#include "hubbardDerivMap.hpp"    // for hubbardDerivMap3ob
+#include "engine.hpp"            // for Engine
+#include "exceptions.hpp"        // for InputFileException, customException
+#include "hubbardDerivMap.hpp"   // for hubbardDerivMap3ob
+#include "parserUtils.hpp"
 #include "qmSettings.hpp"         // for Settings
 #include "references.hpp"         // for ReferencesOutput
 #include "referencesOutput.hpp"   // for ReferencesOutput
@@ -42,6 +43,7 @@ using namespace customException;
 using namespace engine;
 using namespace references;
 using namespace constants;
+
 /**
  * @brief Construct a new QMInputParser:: QMInputParser object
  *
@@ -50,108 +52,114 @@ using namespace constants;
  * <string>
  *
  * @param engine
+ * @param resolveBuiltInSlakosPath
  */
-QMInputParser::QMInputParser(Engine &engine) : InputFileParser(engine)
+QMInputParser::QMInputParser(
+    Engine    &engine,
+    const bool resolveBuiltInSlakosPath
+)
+    : InputFileParser(engine),
+      _resolveBuiltInSlakosPath(resolveBuiltInSlakosPath)
 {
     addKeyword(
         std::string("qm_prog"),
-        bind_front(&QMInputParser::parseQMMethod, this),
+        bindMember(&QMInputParser::parseQMMethod, this),
         false
     );
 
     addKeyword(
         std::string("qm_script"),
-        bind_front(&QMInputParser::parseQMScript, this),
+        bindMember(&QMInputParser::parseQMScript, this),
         false
     );
 
     addKeyword(
         std::string("qm_script_full_path"),
-        bind_front(&QMInputParser::parseQMScriptFullPath, this),
+        bindMember(&QMInputParser::parseQMScriptFullPath, this),
         false
     );
 
     addKeyword(
         std::string("qm_loop_time_limit"),
-        bind_front(&QMInputParser::parseQMLoopTimeLimit, this),
+        bindMember(&QMInputParser::parseQMLoopTimeLimit, this),
         false
     );
 
     addKeyword(
         std::string("dispersion"),
-        bind_front(&QMInputParser::parseDispersion, this),
+        bindMember(&QMInputParser::parseDispersion, this),
         false
     );
 
     addKeyword(
         std::string("remove_net_force"),
-        bind_front(&QMInputParser::parseRemoveNetForce, this),
+        bindMember(&QMInputParser::parseRemoveNetForce, this),
         false
     );
 
     addKeyword(
         std::string("mace_model_size"),
-        bind_front(&QMInputParser::parseMaceModel, this),
+        bindMember(&QMInputParser::parseMaceModel, this),
         false
     );
 
     addKeyword(
         std::string("mace_model"),
-        bind_front(&QMInputParser::parseMaceModel, this),
+        bindMember(&QMInputParser::parseMaceModel, this),
         false
     );
 
     addKeyword(
         std::string("mace_mode"),
-        bind_front(&QMInputParser::parseMaceMode, this),
+        bindMember(&QMInputParser::parseMaceMode, this),
         false
     );
 
     addKeyword(
         std::string("mace_model_path"),
-        bind_front(&QMInputParser::parseMaceModelPath, this),
+        bindMember(&QMInputParser::parseMaceModelPath, this),
         false
     );
 
     addKeyword(
         std::string("slakos"),
-        bind_front(&QMInputParser::parseSlakosType, this),
+        bindMember(&QMInputParser::parseSlakosType, this),
         false
     );
 
     addKeyword(
         std::string("slakos_path"),
-        bind_front(&QMInputParser::parseSlakosPath, this),
+        bindMember(&QMInputParser::parseSlakosPath, this),
         false
     );
 
     addKeyword(
         std::string("third_order"),
-        bind_front(&QMInputParser::parseThirdOrder, this),
+        bindMember(&QMInputParser::parseThirdOrder, this),
         false
     );
 
     addKeyword(
         std::string("hubbard_derivs"),
-        bind_front(&QMInputParser::parseHubbardDerivs, this),
+        bindMember(&QMInputParser::parseHubbardDerivs, this),
         false
     );
 
     addKeyword(
         std::string("xtb_method"),
-        bind_front(&QMInputParser::parseXtbMethod, this),
+        bindMember(&QMInputParser::parseXtbMethod, this),
         false
     );
 
     addKeyword(
         std::string("fennol_model_path"),
-        bind_front(&QMInputParser::parseFennolModelPath, this),
+        bindMember(&QMInputParser::parseFennolModelPath, this),
         false
     );
 
     addKeyword(
         std::string("gpu_preprocessing"),
-        bind_front(&QMInputParser::parseGPUPreprocessing, this),
+        bindMember(&QMInputParser::parseGPUPreprocessing, this),
         false
     );
 }
@@ -177,13 +185,13 @@ void QMInputParser::parseQMMethod(
     if ("dftbplus" == method)
     {
         QMSettings::setQMMethod(DFTBPLUS);
-        ReferencesOutput::addReferenceFile(_DFTBPLUS_FILE_);
+        ReferencesOutput::addReferenceFile(DFTBPLUS_FILE);
     }
 
     else if ("ase_dftbplus" == method)
     {
         QMSettings::setQMMethod(ASEDFTBPLUS);
-        ReferencesOutput::addReferenceFile(_DFTBPLUS_FILE_);
+        ReferencesOutput::addReferenceFile(DFTBPLUS_FILE);
     }
 
     else if ("ase_xtb" == method)
@@ -192,19 +200,19 @@ void QMInputParser::parseQMMethod(
     else if ("pyscf" == method)
     {
         QMSettings::setQMMethod(PYSCF);
-        ReferencesOutput::addReferenceFile(_PYSCF_FILE_);
+        ReferencesOutput::addReferenceFile(PYSCF_FILE);
     }
 
     else if ("turbomole" == method)
     {
         QMSettings::setQMMethod(TURBOMOLE);
-        ReferencesOutput::addReferenceFile(_TURBOMOLE_FILE_);
+        ReferencesOutput::addReferenceFile(TURBOMOLE_FILE);
     }
 
     else if ("fennol" == method)
     {
         QMSettings::setQMMethod(method);
-        ReferencesOutput::addReferenceFile(_FENNOL_FILE_);
+        ReferencesOutput::addReferenceFile(FENNOL_FILE);
     }
 
     else if (method.starts_with("mace"))
@@ -268,7 +276,7 @@ void QMInputParser::parseQMLoopTimeLimit(
 )
 {
     checkCommand(lineElements, lineNumber);
-    QMSettings::setQMLoopTimeLimit(std::stod(lineElements[2]));
+    QMSettings::setQMLoopTimeLimit(stringToFiniteDouble(lineElements[2]));
 }
 
 /**
@@ -425,13 +433,13 @@ void QMInputParser::parseMaceQMMethod(const std::string_view &model)
     if ("mace" == model || "mace_mp" == model)
     {
         QMSettings::setMaceModelType(MACE_MP);
-        ReferencesOutput::addReferenceFile(_MACEMP_FILE_);
+        ReferencesOutput::addReferenceFile(MACEMP_FILE);
     }
 
     else if ("mace_off" == model)
     {
         QMSettings::setMaceModelType(MACE_OFF);
-        ReferencesOutput::addReferenceFile(_MACEOFF_FILE_);
+        ReferencesOutput::addReferenceFile(MACEOFF_FILE);
     }
 
     else if ("mace_anicc" == model || "mace_ani" == model)
@@ -475,13 +483,15 @@ void QMInputParser::parseSlakosType(
 
     if ("3ob" == slakos)
     {
-        QMSettings::setSlakosType(THREEOB);
+        QMSettings::setSlakosType(THREEOB, _resolveBuiltInSlakosPath);
         QMSettings::setHubbardDerivs(hubbardDerivMap3ob);
+        ReferencesOutput::addReferenceFile(THREEOB_FILE);
     }
 
     else if ("matsci" == slakos)
     {
-        QMSettings::setSlakosType(MATSCI);
+        QMSettings::setSlakosType(MATSCI, _resolveBuiltInSlakosPath);
+        ReferencesOutput::addReferenceFile(MATSCI_FILE);
     }
 
     else if ("custom" == slakos)
@@ -554,14 +564,36 @@ void QMInputParser::parseHubbardDerivs(
     std::string       item;
     while (std::getline(ss, item, ','))
     {
-        std::stringstream pairStream(item);
-        std::string       element;
-        double            value;
-        if (std::getline(pairStream, element, ':') && pairStream >> value)
+        const auto separator = item.find(':');
+
+        if (separator == std::string::npos || 0 == separator ||
+            separator + 1 == item.size() ||
+            item.find(':', separator + 1) != std::string::npos)
         {
-            hubbardDerivs[element] = value;
+            throw InputFileException(
+                std::format(
+                    "Invalid hubbard_derivs format \"{}\" in input file.",
+                    derivs
+                )
+            );
         }
-        else
+
+        const auto element = item.substr(0, separator);
+        try
+        {
+            hubbardDerivs[element] =
+                stringToFiniteDouble(item.substr(separator + 1));
+        }
+        catch (const std::invalid_argument &)
+        {
+            throw InputFileException(
+                std::format(
+                    "Invalid hubbard_derivs format \"{}\" in input file.",
+                    derivs
+                )
+            );
+        }
+        catch (const std::out_of_range &)
         {
             throw InputFileException(
                 std::format(

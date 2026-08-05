@@ -7,6 +7,7 @@ function(add_pq_benchmark target source)
     target_link_libraries(${target}
         PRIVATE
         benchmark::benchmark_main
+        simulationBox
         ${ARGN}
     )
 

@@ -52,12 +52,13 @@ namespace input::parameterFile
 
        public:
         ParameterFileReader(const std::string &filename, pq::Engine &engine);
+        ~ParameterFileReader();
 
         void read();
         void deleteSection(const pq::ParamFileSection *section);
 
         [[nodiscard]] pq::ParamFileSection *determineSection(
-            const pq::strings &lineElements
+            const std::vector<std::string> &lineElements
         );
 
         /**************************************

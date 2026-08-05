@@ -59,7 +59,7 @@ void TurbomoleRunner::writeCoordsFile(SimulationBox &simBox)
     for (size_t i = 0; i < nAtoms; ++i)
     {
         const auto &atom = simBox.getQMAtom(i);
-        const auto  pos  = atom.getPosition() * _ANGSTROM_TO_BOHR_;
+        const auto  pos  = atom.getPosition() * ANGSTROM_TO_BOHR;
 
         // turbomole does not support tabs in the coord file
         coordsFile << std::format(
@@ -82,13 +82,15 @@ void TurbomoleRunner::writeCoordsFile(SimulationBox &simBox)
  */
 void TurbomoleRunner::execute()
 {
-    const auto scriptFile = _scriptPath + QMSettings::getQMScript();
+    const auto scriptFile = resolveScriptPath(QMSettings::getQMScript());
 
     if (!fileExists(scriptFile))
-        throw InputFileException(std::format(
-            "Turbomole script file \"{}\" does not exist.",
-            scriptFile
-        ));
+        throw InputFileException(
+            std::format(
+                "Turbomole script file \"{}\" does not exist.",
+                scriptFile
+            )
+        );
 
     const auto reuseCharges = _isFirstExecution ? 1 : 0;
 

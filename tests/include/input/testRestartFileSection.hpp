@@ -22,12 +22,12 @@
 
 #include <gtest/gtest.h>
 
-#include "atomSection.hpp"
-#include "boxSection.hpp"
 #include "mmmdEngine.hpp"
-#include "noseHooverSection.hpp"
-#include "restartFileSection.hpp"
-#include "stepCountSection.hpp"
+#include "restartFileReader/atomSection.hpp"
+#include "restartFileReader/boxSection.hpp"
+#include "restartFileReader/noseHooverSection.hpp"
+#include "restartFileReader/restartFileSection.hpp"
+#include "restartFileReader/stepCountSection.hpp"
 
 /**
  * @class TestBoxSection

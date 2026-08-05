@@ -28,31 +28,33 @@ namespace references
 {
     // clang-format off
     // PQ Software
-    static constexpr char _PQ_FILE_[] = "pq.ref";
+    static constexpr char PQ_FILE[] = "pq.ref";
 
     // Time Integrators
-    static constexpr char _VELOCITY_VERLET_FILE_[] = "velocity_verlet.ref";
+    static constexpr char VELOCITY_VERLET_FILE[] = "velocity_verlet.ref";
 
     // Thermostats and Manostats
-    static constexpr char _BERENDSEN_FILE_[]            = "berendsen.ref";
-    static constexpr char _VELOCITY_RESCALING_FILE_[]   = "velocity_rescaling.ref";
-    static constexpr char _NOSE_HOOVER_CHAIN_FILE_[]    = "nose_hoover_chain.ref";
-    static constexpr char _LANGEVIN_FILE_[]             = "langevin.ref";
-    static constexpr char _STOCHASTIC_RESCALING_FILE_[] = "stochastic_rescaling.ref";
+    static constexpr char BERENDSEN_FILE[]            = "berendsen.ref";
+    static constexpr char VELOCITY_RESCALING_FILE[]   = "velocity_rescaling.ref";
+    static constexpr char NOSE_HOOVER_CHAIN_FILE[]    = "nose_hoover_chain.ref";
+    static constexpr char LANGEVIN_FILE[]             = "langevin.ref";
+    static constexpr char STOCHASTIC_RESCALING_FILE[] = "stochastic_rescaling.ref";
 
     // QM Programs
-    static constexpr char _DFTBPLUS_FILE_[]  = "dftbplus.ref";
-    static constexpr char _GFN1_FILE_[]      = "gfn1.ref";
-    static constexpr char _GFN2_FILE_[]      = "gfn2.ref";
-    static constexpr char _IPEA1_FILE_[]     = "ipea1.ref";
-    static constexpr char _PYSCF_FILE_[]     = "pyscf.ref";
-    static constexpr char _TURBOMOLE_FILE_[] = "turbomole.ref";
-    static constexpr char _MACEMP_FILE_[]    = "macemp.ref";
-    static constexpr char _MACEOFF_FILE_[]   = "maceoff.ref";
-    static constexpr char _FENNOL_FILE_[]    = "fennol.ref";
+    static constexpr char DFTBPLUS_FILE[]  = "dftbplus.ref";
+    static constexpr char THREEOB_FILE[]   = "3ob.ref";
+    static constexpr char MATSCI_FILE[]    = "matsci.ref";
+    static constexpr char GFN1_FILE[]      = "gfn1.ref";
+    static constexpr char GFN2_FILE[]      = "gfn2.ref";
+    static constexpr char IPEA1_FILE[]     = "ipea1.ref";
+    static constexpr char PYSCF_FILE[]     = "pyscf.ref";
+    static constexpr char TURBOMOLE_FILE[] = "turbomole.ref";
+    static constexpr char MACEMP_FILE[]    = "macemp.ref";
+    static constexpr char MACEOFF_FILE[]   = "maceoff.ref";
+    static constexpr char FENNOL_FILE[]    = "fennol.ref";
 
     // Constraint Dynamics
-    static constexpr char _RATTLE_FILE_[] = "rattle.ref";
+    static constexpr char RATTLE_FILE[] = "rattle.ref";
 
     // clang-format on
 

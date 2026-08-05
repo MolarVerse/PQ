@@ -72,7 +72,7 @@ void JCouplingForceField::setLowerSymmetry(const bool boolean)
  *
  * @param J0
  */
-void JCouplingForceField::setJ0(const double J0) { _J0 = J0; }
+void JCouplingForceField::setJ0(const double J0) { _j0 = J0; }
 
 /**
  * @brief Set the force constant
@@ -144,7 +144,7 @@ bool JCouplingForceField::getLowerSymmetry() const { return _lowerSymmetry; }
  *
  * @return double
  */
-double JCouplingForceField::getJ0() const { return _J0; }
+double JCouplingForceField::getJ0() const { return _j0; }
 
 /**
  * @brief get the force constant

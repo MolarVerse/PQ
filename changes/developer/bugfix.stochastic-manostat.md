@@ -1,0 +1,1 @@
+- Preserve molecular geometry during manostat scaling.

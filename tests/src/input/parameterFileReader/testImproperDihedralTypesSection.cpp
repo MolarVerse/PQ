@@ -56,7 +56,7 @@ TEST_F(TestParameterFileSection, processSectionImproperDihedral)
     );
     EXPECT_EQ(
         _engine->getForceField().getImproperTypes()[0].getPhaseShift(),
-        324.3 * constants::_DEG_TO_RAD_
+        324.3 * constants::DEG_TO_RAD
     );
 
     lineElements = {"1", "2", "1.0", "0", "2"};

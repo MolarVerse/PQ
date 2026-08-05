@@ -1,0 +1,1 @@
+- Add integration test for atomic virial correction in integration_tests/cgo/

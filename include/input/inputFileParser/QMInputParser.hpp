@@ -27,7 +27,7 @@
 #include <cstddef>   // for size_t
 
 #include "inputFileParser.hpp"   // for InputFileParser
-#include "typeAliases.hpp"       // for pq::strings
+#include "typeAliases.hpp"       // for std::vector<std::string>
 
 namespace input
 {
@@ -39,31 +39,52 @@ namespace input
      */
     class QMInputParser : public InputFileParser
     {
+       private:
+        bool _resolveBuiltInSlakosPath;
+
        public:
-        explicit QMInputParser(pq::Engine &);
+        explicit QMInputParser(
+            pq::Engine &,
+            bool resolveBuiltInSlakosPath = true
+        );
 
-        void parseQMMethod(const pq::strings &, const size_t);
-        void parseQMScript(const pq::strings &, const size_t);
-        void parseQMScriptFullPath(const pq::strings &, const size_t);
-        void parseQMLoopTimeLimit(const pq::strings &, const size_t);
+        void parseQMMethod(const std::vector<std::string> &, const size_t);
+        void parseQMScript(const std::vector<std::string> &, const size_t);
+        void parseQMScriptFullPath(
+            const std::vector<std::string> &,
+            const size_t
+        );
+        void parseQMLoopTimeLimit(
+            const std::vector<std::string> &,
+            const size_t
+        );
 
-        void parseDispersion(const pq::strings &, const size_t);
-        void parseRemoveNetForce(const pq::strings &, const size_t);
+        void parseDispersion(const std::vector<std::string> &, const size_t);
+        void parseRemoveNetForce(
+            const std::vector<std::string> &,
+            const size_t
+        );
 
-        void parseMaceModel(const pq::strings &, const size_t);
-        void parseMaceMode(const pq::strings &, const size_t);
-        void parseMaceModelPath(const pq::strings &, const size_t);
+        void parseMaceModel(const std::vector<std::string> &, const size_t);
+        void parseMaceMode(const std::vector<std::string> &, const size_t);
+        void parseMaceModelPath(const std::vector<std::string> &, const size_t);
         void parseMaceQMMethod(const std::string_view &);
 
-        void parseSlakosType(const pq::strings &, const size_t);
-        void parseSlakosPath(const pq::strings &, const size_t);
-        void parseThirdOrder(const pq::strings &, const size_t);
-        void parseHubbardDerivs(const pq::strings &, const size_t);
+        void parseSlakosType(const std::vector<std::string> &, const size_t);
+        void parseSlakosPath(const std::vector<std::string> &, const size_t);
+        void parseThirdOrder(const std::vector<std::string> &, const size_t);
+        void parseHubbardDerivs(const std::vector<std::string> &, const size_t);
 
-        void parseXtbMethod(const pq::strings &, const size_t);
+        void parseXtbMethod(const std::vector<std::string> &, const size_t);
 
-        void parseFennolModelPath(const pq::strings &, const size_t);
-        void parseGPUPreprocessing(const pq::strings &, const size_t);
+        void parseFennolModelPath(
+            const std::vector<std::string> &,
+            const size_t
+        );
+        void parseGPUPreprocessing(
+            const std::vector<std::string> &,
+            const size_t
+        );
     };
 
 }   // namespace input

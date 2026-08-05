@@ -10,6 +10,7 @@ set(source_files
     testForceFieldParser.cpp
     testGeneralParser.cpp
     testHessianParser.cpp
+    testHybridParser.cpp
     testIntegratorParser.cpp
     testManostatParser.cpp
     testNonCoulombParser.cpp
@@ -38,12 +39,15 @@ foreach(source_file ${source_files})
         gtest
         gmock
         pq_test_main
+        testUtils
     )
     add_test(
         NAME ${test_name}
         COMMAND ${test_name}
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/tests
     )
+    target_precompile_headers(${test_name} REUSE_FROM pq_test_pch)
+    target_link_libraries(${test_name} PRIVATE pq_test_pch)
 
     set_property(TEST ${test_name} PROPERTY LABELS inputFileParser)
 endforeach()

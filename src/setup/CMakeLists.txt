@@ -52,13 +52,6 @@ target_link_libraries(setup
     optimization
 )
 
-if(BUILD_WITH_TESTS)
-    target_link_libraries(setup
-        PUBLIC
-        gtest
-    )
-endif()
-
 if(BUILD_WITH_MPI)
     target_link_libraries(setup
         PRIVATE
@@ -76,5 +69,5 @@ if(BUILD_WITH_PYTHON_BINDINGS)
 endif()
 
 install(TARGETS setup
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+    DESTINATION lib
 )

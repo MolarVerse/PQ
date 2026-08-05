@@ -68,6 +68,8 @@ ParameterFileReader::ParameterFileReader(
     _parameterFileSections.push_back(make_unique<NonCoulombicsSection>());
 }
 
+ParameterFileReader::~ParameterFileReader() = default;
+
 /**
  * @brief determines which section of the parameter file the header line belongs
  * to
@@ -86,7 +88,8 @@ ParameterFileSection *ParameterFileReader::determineSection(
     const auto iterEnd   = _parameterFileSections.end();
 
     for (auto section = iterStart; section != iterEnd; ++section)
-        if ((*section)->keyword() == toLowerAndReplaceDashesCopy(lineElements[0]))
+        if ((*section)->keyword() ==
+            toLowerAndReplaceDashesCopy(lineElements[0]))
             return (*section).get();
 
     throw ParameterFileException(

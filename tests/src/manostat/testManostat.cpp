@@ -24,17 +24,17 @@
 
 #include <cmath>    // for pow
 #include <memory>   // for make_shared, __shared_ptr_access
-#include <string>   // for string, allocator
 
 #include "atom.hpp"                                  // for Atom
 #include "berendsenManostat.hpp"                     // for BerendsenManostat
 #include "constants/internalConversionFactors.hpp"   // for _PRESSURE_FACTOR_
 #include "exceptions.hpp"                            // for ManostatException
-#include "gtest/gtest.h"                     // for Message, TestPartResult
-#include "manostatSettings.hpp"              // for ManostatType, Isotropy
-#include "mathUtilities.hpp"                 // for compare
-#include "molecule.hpp"                      // for Molecule
-#include "potentialSettings.hpp"             // for PotentialSettings
+#include "gtest/gtest.h"           // for Message, TestPartResult
+#include "manostatSettings.hpp"    // for ManostatType, Isotropy
+#include "mathUtilities.hpp"       // for compare
+#include "molecule.hpp"            // for Molecule
+#include "potentialSettings.hpp"   // for PotentialSettings
+#include "settings.hpp"
 #include "stochasticRescalingManostat.hpp"   // for StochasticRescalingManostat
 #include "thermostatSettings.hpp"            // for ThermostatSettings
 #include "throwWithMessage.hpp"              // for EXPECT_THROW_MSG
@@ -52,8 +52,8 @@ class TestableStochasticRescalingManostat
 namespace
 {
     void setupCutMolecule(
-        simulationBox::SimulationBox &box,
-        physicalData::PhysicalData   &data
+        simulationBox::SimulationBox& box,
+        physicalData::PhysicalData&   data
     )
     {
         settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
@@ -92,7 +92,7 @@ namespace
     }
 
     linearAlgebra::Vec3D getMinimumImageDistance(
-        simulationBox::SimulationBox &box
+        simulationBox::SimulationBox& box
     )
     {
         auto dPosition = box.getMolecule(0).getAtomPosition(1) -
@@ -102,7 +102,7 @@ namespace
         return dPosition;
     }
 
-    void expectCutMoleculeScaled(simulationBox::SimulationBox &box)
+    void expectCutMoleculeScaled(simulationBox::SimulationBox& box)
     {
         const auto dPosition = getMinimumImageDistance(box);
 
@@ -130,7 +130,7 @@ namespace
     }
 
     double getMinimumImageDistance(
-        simulationBox::SimulationBox &box,
+        simulationBox::SimulationBox& box,
         const size_t                  moleculeIndex
     )
     {
@@ -150,7 +150,7 @@ TEST_F(TestManostat, CalculatePressure)
 {
     _manostat->calculatePressure(*_box, *_data);
 
-    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * constants::_PRESSURE_FACTOR_);
+    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * constants::PRESSURE_FACTOR);
 }
 
 /**
@@ -159,11 +159,13 @@ TEST_F(TestManostat, CalculatePressure)
  */
 TEST_F(TestManostat, ChangeVirialToAtomic)
 {
-    _data->changeKineticVirialToAtomic();
-
+    settings::Settings::setVirialType(settings::VirialType::ATOMIC);
     _manostat->calculatePressure(*_box, *_data);
 
-    EXPECT_DOUBLE_EQ(_data->getPressure(), 2.0 * constants::_PRESSURE_FACTOR_);
+    EXPECT_DOUBLE_EQ(_data->getPressure(), 2.0 * constants::PRESSURE_FACTOR);
+
+    // set virial type back to molecular for other tests
+    settings::Settings::setVirialType(settings::VirialType::MOLECULAR);
 }
 
 /**
@@ -190,7 +192,7 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
 
     const auto scaleFactors = linearAlgebra::Vec3D(
         ::pow(
-            1.0 - 4.5 * 0.5 / 0.1 * (1.0 - 3.0 * constants::_PRESSURE_FACTOR_),
+            1.0 - 4.5 * 0.5 / 0.1 * (1.0 - 3.0 * constants::PRESSURE_FACTOR),
             1.0 / 3.0
         )
     );
@@ -198,7 +200,7 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
     _manostat->applyManostat(*_box, *_data);
     auto boxNew = _box->getBoxDimensions();
 
-    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * constants::_PRESSURE_FACTOR_);
+    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * constants::PRESSURE_FACTOR);
     EXPECT_NEAR(boxNew[0], (boxOld * scaleFactors)[0], 1e-8);
     EXPECT_NEAR(boxNew[1], (boxOld * scaleFactors)[1], 1e-8);
     EXPECT_NEAR(boxNew[2], (boxOld * scaleFactors)[2], 1e-8);
@@ -299,7 +301,7 @@ TEST_F(
 
     settings::TimingsSettings::setTimeStep(0.5);
     _manostat = new manostat::BerendsenManostat(
-        3.0 * constants::_PRESSURE_FACTOR_,
+        3.0 * constants::PRESSURE_FACTOR,
         0.1,
         4.5
     );
@@ -320,7 +322,7 @@ TEST_F(TestManostat, applyNoneManostat)
 {
     _manostat->applyManostat(*_box, *_data);
 
-    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * constants::_PRESSURE_FACTOR_);
+    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * constants::PRESSURE_FACTOR);
 }
 
 TEST_F(TestManostat, stochasticRescalingMuUsesLengthScaling)
@@ -357,8 +359,8 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
     molecule.setMolMass(2.0);
 
     const auto addAtom = [this, &molecule](
-                             const linearAlgebra::Vec3D &position,
-                             const linearAlgebra::Vec3D &velocity
+                             const linearAlgebra::Vec3D& position,
+                             const linearAlgebra::Vec3D& velocity
                          )
     {
         auto atom = std::make_shared<simulationBox::Atom>();

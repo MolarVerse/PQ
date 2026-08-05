@@ -22,7 +22,7 @@
 
 #include <gtest/gtest.h>   // for Test, TestInfo
 
-#include <cmath>    // for M_PI
+#include <cmath>   // for M_PI
 
 #include "constants/conversionFactors.hpp"           // for _ANGSTROM_TO_METER_
 #include "constants/internalConversionFactors.hpp"   // for _FORCE_UNIT_TO_SI_, ...
@@ -35,22 +35,22 @@
 
 TEST(TestConstants, avogadroNumber)
 {
-    EXPECT_NEAR(constants::_AVOGADRO_NUMBER_ / 6.02214076e23, 1.0, 1e-9);
+    EXPECT_NEAR(constants::AVOGADRO_NUMBER / 6.02214076e23, 1.0, 1e-9);
 }
 
 TEST(TestConstants, bohrRadius)
 {
-    EXPECT_NEAR(constants::_BOHR_RADIUS_ / 5.29177210903e-11, 1.0, 1e-9);
+    EXPECT_NEAR(constants::BOHR_RADIUS / 5.29177210903e-11, 1.0, 1e-9);
 }
 
 TEST(TestConstants, planckConstant)
 {
-    EXPECT_NEAR(constants::_PLANCK_CONSTANT_ / 6.62607015e-34, 1.0, 1e-9);
+    EXPECT_NEAR(constants::PLANCK_CONSTANT / 6.62607015e-34, 1.0, 1e-9);
 }
 TEST(TestConstants, reducedPlanckConstant)
 {
     EXPECT_NEAR(
-        constants::_REDUCED_PLANCK_CONSTANT_ / 1.054571817e-34,
+        constants::REDUCED_PLANCK_CONSTANT / 1.054571817e-34,
         1.0,
         1e-9
     );
@@ -58,12 +58,12 @@ TEST(TestConstants, reducedPlanckConstant)
 
 TEST(TestConstants, boltzmannConstant)
 {
-    EXPECT_NEAR(constants::_BOLTZMANN_CONSTANT_ / 1.380649e-23, 1.0, 1e-9);
+    EXPECT_NEAR(constants::BOLTZMANN_CONSTANT / 1.380649e-23, 1.0, 1e-9);
 }
 TEST(TestConstants, universalGasConstant)
 {
     EXPECT_NEAR(
-        constants::_UNIVERSAL_GAS_CONSTANT_ / 8.3144626181532395,
+        constants::UNIVERSAL_GAS_CONSTANT / 8.3144626181532395,
         1.0,
         1e-9
     );
@@ -71,13 +71,13 @@ TEST(TestConstants, universalGasConstant)
 
 TEST(TestConstants, electronCharge)
 {
-    EXPECT_NEAR(constants::_ELECTRON_CHARGE_ / 1.602176634e-19, 1.0, 1e-9);
+    EXPECT_NEAR(constants::ELECTRON_CHARGE / 1.602176634e-19, 1.0, 1e-9);
 }
 TEST(TestConstants, electronChargeSquared)
 {
     EXPECT_NEAR(
-        constants::_ELECTRON_CHARGE2_ /
-            (constants::_ELECTRON_CHARGE_ * constants::_ELECTRON_CHARGE_),
+        constants::ELECTRON_CHARGE2 /
+            (constants::ELECTRON_CHARGE * constants::ELECTRON_CHARGE),
         1.0,
         1e-9
     );
@@ -85,17 +85,17 @@ TEST(TestConstants, electronChargeSquared)
 
 TEST(TestConstants, electronMass)
 {
-    EXPECT_NEAR(constants::_ELECTRON_MASS_ / 9.109389754e-31, 1.0, 1e-9);
+    EXPECT_NEAR(constants::ELECTRON_MASS / 9.109389754e-31, 1.0, 1e-9);
 }
 
 TEST(TestConstants, permittivityVacuum)
 {
-    EXPECT_NEAR(constants::_PERMITTIVITY_VACUUM_ / 8.8541878128e-12, 1.0, 1e-9);
+    EXPECT_NEAR(constants::PERMITTIVITY_VACUUM / 8.8541878128e-12, 1.0, 1e-9);
 }
 
 TEST(TestConstants, speedOfLight)
 {
-    EXPECT_NEAR(constants::_SPEED_OF_LIGHT_ / 299792458.0, 1.0, 1e-9);
+    EXPECT_NEAR(constants::SPEED_OF_LIGHT / 299792458.0, 1.0, 1e-9);
 }
 
 /**********************
@@ -105,53 +105,53 @@ TEST(TestConstants, speedOfLight)
 // for degree units
 TEST(TestConstants, degreesToRadians)
 {
-    EXPECT_NEAR(constants::_DEG_TO_RAD_ / (M_PI / 180.0), 1.0, 1e-9);
+    EXPECT_NEAR(constants::DEG_TO_RAD / (M_PI / 180.0), 1.0, 1e-9);
 }
 TEST(TestConstants, radiansToDegrees)
 {
-    EXPECT_NEAR(constants::_RAD_TO_DEG_ / (180.0 / M_PI), 1.0, 1e-9);
+    EXPECT_NEAR(constants::RAD_TO_DEG / (180.0 / M_PI), 1.0, 1e-9);
 }
 
 // for mass units
 TEST(TestConstants, gramToKilogram)
 {
-    EXPECT_NEAR(constants::_G_TO_KG_ / 1.0e-3, 1.0, 1e-9);
+    EXPECT_NEAR(constants::G_TO_KG / 1.0e-3, 1.0, 1e-9);
 }
 TEST(TestConstants, kilogramToGram)
 {
-    EXPECT_NEAR(constants::_KG_TO_GRAM_ / 1.0e3, 1.0, 1e-9);
+    EXPECT_NEAR(constants::KG_TO_GRAM / 1.0e3, 1.0, 1e-9);
 }
 TEST(TestConstants, amuToKilogram)
 {
-    EXPECT_NEAR(constants::_AMU_TO_KG_ / 1.6605402e-27, 1.0, 1e-6);
+    EXPECT_NEAR(constants::AMU_TO_KG / 1.6605402e-27, 1.0, 1e-6);
 }
 TEST(TestConstants, kilogramToAmu)
 {
-    EXPECT_NEAR(constants::_KG_TO_AMU_ * constants::_AMU_TO_KG_, 1.0, 1e-9);
+    EXPECT_NEAR(constants::KG_TO_AMU * constants::AMU_TO_KG, 1.0, 1e-9);
 }
 
 // for length units
 TEST(TestConstants, angstromToMeter)
 {
-    EXPECT_NEAR(constants::_ANGSTROM_TO_M_ / 1.0e-10, 1.0, 1e-9);
+    EXPECT_NEAR(constants::ANGSTROM_TO_M / 1.0e-10, 1.0, 1e-9);
 }
 TEST(TestConstants, meterToAngstrom)
 {
-    EXPECT_NEAR(constants::_M_TO_ANGSTROM_ / 1.0e10, 1.0, 1e-9);
+    EXPECT_NEAR(constants::M_TO_ANGSTROM / 1.0e10, 1.0, 1e-9);
 }
 TEST(TestConstants, bohrRadiusToMeter)
 {
-    EXPECT_NEAR(constants::_BOHR_TO_M_ / constants::_BOHR_RADIUS_, 1.0, 1e-9);
+    EXPECT_NEAR(constants::BOHR_TO_M / constants::BOHR_RADIUS, 1.0, 1e-9);
 }
 TEST(TestConstants, meterToBohrRadius)
 {
-    EXPECT_NEAR(constants::_M_TO_BOHR_ * constants::_BOHR_RADIUS_, 1.0, 1e-9);
+    EXPECT_NEAR(constants::M_TO_BOHR * constants::BOHR_RADIUS, 1.0, 1e-9);
 }
 TEST(TestConstants, angstromToBohrRadius)
 {
     EXPECT_NEAR(
-        constants::_ANGSTROM_TO_BOHR_ /
-            (constants::_ANGSTROM_TO_M_ / constants::_BOHR_RADIUS_),
+        constants::ANGSTROM_TO_BOHR /
+            (constants::ANGSTROM_TO_M / constants::BOHR_RADIUS),
         1.0,
         1e-9
     );
@@ -159,8 +159,8 @@ TEST(TestConstants, angstromToBohrRadius)
 TEST(TestConstants, bohrRadiusToAngstrom)
 {
     EXPECT_NEAR(
-        constants::_BOHR_TO_ANGSTROM_ *
-            (constants::_ANGSTROM_TO_M_ / constants::_BOHR_RADIUS_),
+        constants::BOHR_TO_ANGSTROM *
+            (constants::ANGSTROM_TO_M / constants::BOHR_RADIUS),
         1.0,
         1e-9
     );
@@ -170,8 +170,8 @@ TEST(TestConstants, bohrRadiusToAngstrom)
 TEST(TestConstants, angstromSquaredToMeterSquared)
 {
     EXPECT_NEAR(
-        constants::_ANGSTROM2_TO_M2_ /
-            (constants::_ANGSTROM_TO_M_ * constants::_ANGSTROM_TO_M_),
+        constants::ANGSTROM2_TO_M2 /
+            (constants::ANGSTROM_TO_M * constants::ANGSTROM_TO_M),
         1.0,
         1e-9
     );
@@ -179,8 +179,8 @@ TEST(TestConstants, angstromSquaredToMeterSquared)
 TEST(TestConstants, meterSquaredToAngstromSquared)
 {
     EXPECT_NEAR(
-        constants::_M2_TO_ANGSTROM2_ *
-            (constants::_ANGSTROM_TO_M_ * constants::_ANGSTROM_TO_M_),
+        constants::M2_TO_ANGSTROM2 *
+            (constants::ANGSTROM_TO_M * constants::ANGSTROM_TO_M),
         1.0,
         1e-9
     );
@@ -190,9 +190,9 @@ TEST(TestConstants, meterSquaredToAngstromSquared)
 TEST(TestConstants, angstromCubicToMeterCubic)
 {
     EXPECT_NEAR(
-        constants::_ANGSTROM3_TO_M3 /
-            (constants::_ANGSTROM_TO_M_ * constants::_ANGSTROM_TO_M_ *
-             constants::_ANGSTROM_TO_M_),
+        constants::ANGSTROM3_TO_M3 /
+            (constants::ANGSTROM_TO_M * constants::ANGSTROM_TO_M *
+             constants::ANGSTROM_TO_M),
         1.0,
         1e-9
     );
@@ -200,9 +200,9 @@ TEST(TestConstants, angstromCubicToMeterCubic)
 TEST(TestConstants, meterCubicToAngstromCubic)
 {
     EXPECT_NEAR(
-        constants::_M3_TO_ANGSTROM3_ *
-            (constants::_ANGSTROM_TO_M_ * constants::_ANGSTROM_TO_M_ *
-             constants::_ANGSTROM_TO_M_),
+        constants::M3_TO_ANGSTROM3 *
+            (constants::ANGSTROM_TO_M * constants::ANGSTROM_TO_M *
+             constants::ANGSTROM_TO_M),
         1.0,
         1e-9
     );
@@ -210,9 +210,9 @@ TEST(TestConstants, meterCubicToAngstromCubic)
 TEST(TestConstants, angstromCubicToLiter)
 {
     EXPECT_NEAR(
-        constants::_ANGSTROM3_TO_L_ /
-            (constants::_ANGSTROM_TO_M_ * constants::_ANGSTROM_TO_M_ *
-             constants::_ANGSTROM_TO_M_ * 1.0e3),
+        constants::ANGSTROM3_TO_L /
+            (constants::ANGSTROM_TO_M * constants::ANGSTROM_TO_M *
+             constants::ANGSTROM_TO_M * 1.0e3),
         1.0,
         1e-9
     );
@@ -220,9 +220,9 @@ TEST(TestConstants, angstromCubicToLiter)
 TEST(TestConstants, literToAngstromCubic)
 {
     EXPECT_NEAR(
-        constants::_L_TO_ANGSTROM3_ *
-            (constants::_ANGSTROM_TO_M_ * constants::_ANGSTROM_TO_M_ *
-             constants::_ANGSTROM_TO_M_ * 1.0e3),
+        constants::L_TO_ANGSTROM3 *
+            (constants::ANGSTROM_TO_M * constants::ANGSTROM_TO_M *
+             constants::ANGSTROM_TO_M * 1.0e3),
         1.0,
         1e-9
     );
@@ -230,9 +230,9 @@ TEST(TestConstants, literToAngstromCubic)
 TEST(TestConstants, bohrRadiusCubicToAngstromCubic)
 {
     EXPECT_NEAR(
-        constants::_BOHR3_TO_ANGSTROM3_ /
-            (constants::_BOHR_TO_ANGSTROM_ * constants::_BOHR_TO_ANGSTROM_ *
-             constants::_BOHR_TO_ANGSTROM_),
+        constants::BOHR3_TO_ANGSTROM3 /
+            (constants::BOHR_TO_ANGSTROM * constants::BOHR_TO_ANGSTROM *
+             constants::BOHR_TO_ANGSTROM),
         1.0,
         1e-9
     );
@@ -242,8 +242,8 @@ TEST(TestConstants, bohrRadiusCubicToAngstromCubic)
 TEST(TestConstants, kgPerLiterToAmuPerAngstromCubic)
 {
     EXPECT_NEAR(
-        constants::_KG_PER_L_TO_AMU_PER_ANGSTROM3_ /
-            (constants::_KG_TO_AMU_ / constants::_L_TO_ANGSTROM3_),
+        constants::KG_PER_L_TO_AMU_PER_ANGSTROM3 /
+            (constants::KG_TO_AMU / constants::L_TO_ANGSTROM3),
         1.0,
         1e-9
     );
@@ -251,8 +251,8 @@ TEST(TestConstants, kgPerLiterToAmuPerAngstromCubic)
 TEST(TestConstants, amuPerAngstromCubicToKgPerLiter)
 {
     EXPECT_NEAR(
-        constants::_AMU_PER_ANGSTROM3_TO_KG_PER_L_ *
-            constants::_KG_PER_L_TO_AMU_PER_ANGSTROM3_,
+        constants::AMU_PER_ANGSTROM3_TO_KG_PER_L *
+            constants::KG_PER_L_TO_AMU_PER_ANGSTROM3,
         1.0,
         1e-9
     );
@@ -261,17 +261,17 @@ TEST(TestConstants, amuPerAngstromCubicToKgPerLiter)
 // for energy units
 TEST(TestConstants, kcalToJoule)
 {
-    EXPECT_NEAR(constants::_KCAL_TO_J_ / 4184.0, 1.0, 1e-9);
+    EXPECT_NEAR(constants::KCAL_TO_J / 4184.0, 1.0, 1e-9);
 }
 TEST(TestConstants, jouleToKcal)
 {
-    EXPECT_NEAR(constants::_J_TO_KCAL_ * 4184.0, 1.0, 1e-9);
+    EXPECT_NEAR(constants::J_TO_KCAL * 4184.0, 1.0, 1e-9);
 }
 TEST(TestConstants, jouleToKcalPerMol)
 {
     EXPECT_NEAR(
-        constants::_J_TO_KCAL_PER_MOL_ / constants::_J_TO_KCAL_ /
-            constants::_AVOGADRO_NUMBER_,
+        constants::J_TO_KCAL_PER_MOL / constants::J_TO_KCAL /
+            constants::AVOGADRO_NUMBER,
         1.0,
         1e-9
     );
@@ -279,8 +279,8 @@ TEST(TestConstants, jouleToKcalPerMol)
 TEST(TestConstants, kcalPerMolToJoule)
 {
     EXPECT_NEAR(
-        constants::_KCAL_PER_MOL_TO_J_ * constants::_J_TO_KCAL_ *
-            constants::_AVOGADRO_NUMBER_,
+        constants::KCAL_PER_MOL_TO_J * constants::J_TO_KCAL *
+            constants::AVOGADRO_NUMBER,
         1.0,
         1e-9
     );
@@ -288,7 +288,7 @@ TEST(TestConstants, kcalPerMolToJoule)
 TEST(TestConstants, hartreeToKcalPerMol)
 {
     EXPECT_NEAR(
-        constants::_HARTREE_TO_KCAL_PER_MOL_ / 627.5096080305927,
+        constants::HARTREE_TO_KCAL_PER_MOL / 627.5096080305927,
         1.0,
         1e-9
     );
@@ -296,8 +296,8 @@ TEST(TestConstants, hartreeToKcalPerMol)
 TEST(TestConstants, boltzmannConstantInKcalPerMol)
 {
     EXPECT_NEAR(
-        constants::_BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_ /
-            constants::_BOLTZMANN_CONSTANT_ / constants::_J_TO_KCAL_PER_MOL_,
+        constants::BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL /
+            constants::BOLTZMANN_CONSTANT / constants::J_TO_KCAL_PER_MOL,
         1.0,
         1e-9
     );
@@ -307,8 +307,8 @@ TEST(TestConstants, boltzmannConstantInKcalPerMol)
 TEST(TestConstants, boltzmannConstantSquared)
 {
     EXPECT_NEAR(
-        constants::_BOLTZMANN_CONSTANT2_ / constants::_BOLTZMANN_CONSTANT_ /
-            constants::_BOLTZMANN_CONSTANT_,
+        constants::BOLTZMANN_CONSTANT2 / constants::BOLTZMANN_CONSTANT /
+            constants::BOLTZMANN_CONSTANT,
         1.0,
         1e-9
     );
@@ -316,9 +316,9 @@ TEST(TestConstants, boltzmannConstantSquared)
 TEST(TestConstants, reducedPlanckConstantSquared)
 {
     EXPECT_NEAR(
-        constants::_REDUCED_PLANCK_CONSTANT2_ /
-            constants::_REDUCED_PLANCK_CONSTANT_ /
-            constants::_REDUCED_PLANCK_CONSTANT_,
+        constants::REDUCED_PLANCK_CONSTANT2 /
+            constants::REDUCED_PLANCK_CONSTANT /
+            constants::REDUCED_PLANCK_CONSTANT,
         1.0,
         1e-9
     );
@@ -328,9 +328,8 @@ TEST(TestConstants, reducedPlanckConstantSquared)
 TEST(TestConstants, hartreePerBohrToKcalPerMolPerAngstrom)
 {
     EXPECT_NEAR(
-        constants::_HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM_ /
-            (constants::_HARTREE_TO_KCAL_PER_MOL_ /
-             constants::_BOHR_TO_ANGSTROM_),
+        constants::HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM /
+            (constants::HARTREE_TO_KCAL_PER_MOL / constants::BOHR_TO_ANGSTROM),
         1.0,
         1e-9
     );
@@ -340,10 +339,9 @@ TEST(TestConstants, hartreePerBohrToKcalPerMolPerAngstrom)
 TEST(TestConstants, hartreePerBohrCubicToKcalPerMolPerAngstromCubic)
 {
     EXPECT_NEAR(
-        constants::_HARTREE_PER_BOHR3_TO_KCAL_PER_MOL_PER_ANGSTROM3_ /
-            (constants::_HARTREE_TO_KCAL_PER_MOL_ /
-             constants::_BOHR_TO_ANGSTROM_ / constants::_BOHR_TO_ANGSTROM_ /
-             constants::_BOHR_TO_ANGSTROM_),
+        constants::HARTREE_PER_BOHR3_TO_KCAL_PER_MOL_PER_ANGSTROM3 /
+            (constants::HARTREE_TO_KCAL_PER_MOL / constants::BOHR_TO_ANGSTROM /
+             constants::BOHR_TO_ANGSTROM / constants::BOHR_TO_ANGSTROM),
         1.0,
         1e-9
     );
@@ -352,41 +350,41 @@ TEST(TestConstants, hartreePerBohrCubicToKcalPerMolPerAngstromCubic)
 // for time units
 TEST(TestConstants, femtosecondToSecond)
 {
-    EXPECT_NEAR(constants::_FS_TO_S_ / 1.0e-15, 1.0, 1e-9);
+    EXPECT_NEAR(constants::FS_TO_S / 1.0e-15, 1.0, 1e-9);
 }
 TEST(TestConstants, secondToFemtosecond)
 {
-    EXPECT_NEAR(constants::_S_TO_FS_ / 1.0e15, 1.0, 1e-9);
+    EXPECT_NEAR(constants::S_TO_FS / 1.0e15, 1.0, 1e-9);
 }
 TEST(TestConstants, picosecondToFemtosecond)
 {
-    EXPECT_NEAR(constants::_PS_TO_FS_ / 1.0e3, 1.0, 1e-9);
+    EXPECT_NEAR(constants::PS_TO_FS / 1.0e3, 1.0, 1e-9);
 }
 TEST(TestConstants, femtosecondToPicosecond)
 {
-    EXPECT_NEAR(constants::_FS_TO_PS_ / 1.0e-3, 1.0, 1e-9);
+    EXPECT_NEAR(constants::FS_TO_PS / 1.0e-3, 1.0, 1e-9);
 }
 
 // for pressure units
 TEST(TestConstants, barToPascal)
 {
-    EXPECT_NEAR(constants::_BAR_TO_P_ / 1.0e5, 1.0, 1e-9);
+    EXPECT_NEAR(constants::BAR_TO_P / 1.0e5, 1.0, 1e-9);
 }
 TEST(TestConstants, pascalToBar)
 {
-    EXPECT_NEAR(constants::_P_TO_BAR_ * 1.0e5, 1.0, 1e-9);
+    EXPECT_NEAR(constants::P_TO_BAR * 1.0e5, 1.0, 1e-9);
 }
 
 // for velocity units
 TEST(TestConstants, meterPerSecondToCentimeterPerPicosecond)
 {
-    EXPECT_NEAR(constants::_M_PER_S_TO_CM_PER_S_ / 1.0e2, 1.0, 1e-9);
+    EXPECT_NEAR(constants::M_PER_S_TO_CM_PER_S / 1.0e2, 1.0, 1e-9);
 }
 TEST(TestConstants, speedOfLightInCentimeterPerSecond)
 {
     EXPECT_NEAR(
-        constants::_SPEED_OF_LIGHT_IN_CM_PER_S_ /
-            (constants::_SPEED_OF_LIGHT_ * constants::_M_PER_S_TO_CM_PER_S_),
+        constants::SPEED_OF_LIGHT_IN_CM_PER_S /
+            (constants::SPEED_OF_LIGHT * constants::M_PER_S_TO_CM_PER_S),
         1.0,
         1e-9
     );
@@ -396,7 +394,7 @@ TEST(TestConstants, speedOfLightInCentimeterPerSecond)
 TEST(TestConstants, perCentiMeterToHertz)
 {
     EXPECT_NEAR(
-        constants::_PER_CM_TO_HZ_ / constants::_SPEED_OF_LIGHT_IN_CM_PER_S_,
+        constants::PER_CM_TO_HZ / constants::SPEED_OF_LIGHT_IN_CM_PER_S,
         1.0,
         1e-9
     );
@@ -410,28 +408,24 @@ TEST(TestConstants, perCentiMeterToHertz)
 TEST(TestConstants, forceUnitToSI)
 {
     EXPECT_NEAR(
-        constants::_FORCE_UNIT_TO_SI_ /
-            (constants::_KCAL_PER_MOL_TO_J_ / constants::_ANGSTROM_TO_M_),
+        constants::FORCE_UNIT_TO_SI /
+            (constants::KCAL_PER_MOL_TO_J / constants::ANGSTROM_TO_M),
         1.0,
         1e-9
     );
 }
 TEST(TestConstants, massUnitToSI)
 {
-    EXPECT_NEAR(
-        constants::_MASS_UNIT_TO_SI_ / constants::_AMU_TO_KG_,
-        1.0,
-        1e-9
-    );
+    EXPECT_NEAR(constants::MASS_UNIT_TO_SI / constants::AMU_TO_KG, 1.0, 1e-9);
 }
 TEST(TestConstants, timeUnitToSI)
 {
-    EXPECT_NEAR(constants::_TIME_UNIT_TO_SI_ / constants::_FS_TO_S_, 1.0, 1e-9);
+    EXPECT_NEAR(constants::TIME_UNIT_TO_SI / constants::FS_TO_S, 1.0, 1e-9);
 }
 TEST(TestConstants, velocityUnitToSI)
 {
     EXPECT_NEAR(
-        constants::_VELOCITY_UNIT_TO_SI_ / constants::_ANGSTROM_TO_M_,
+        constants::VELOCITY_UNIT_TO_SI / constants::ANGSTROM_TO_M,
         1.0,
         1e-9
     );
@@ -439,8 +433,8 @@ TEST(TestConstants, velocityUnitToSI)
 TEST(TestConstants, energyUnitToSI)
 {
     EXPECT_NEAR(
-        constants::_ENERGY_UNIT_TO_SI_ /
-            (constants::_KCAL_TO_J_ / constants::_AVOGADRO_NUMBER_),
+        constants::ENERGY_UNIT_TO_SI /
+            (constants::KCAL_TO_J / constants::AVOGADRO_NUMBER),
         1.0,
         1e-9
     );
@@ -448,7 +442,7 @@ TEST(TestConstants, energyUnitToSI)
 TEST(TestConstants, volumeUnitToSI)
 {
     EXPECT_NEAR(
-        constants::_VOLUME_UNIT_TO_SI_ / (constants::_ANGSTROM3_TO_M3),
+        constants::VOLUME_UNIT_TO_SI / (constants::ANGSTROM3_TO_M3),
         1.0,
         1e-9
     );
@@ -456,7 +450,7 @@ TEST(TestConstants, volumeUnitToSI)
 TEST(TestConstants, pressureUnitToSI)
 {
     EXPECT_NEAR(
-        constants::_PRESSURE_UNIT_TO_SI_ / constants::_BAR_TO_P_,
+        constants::PRESSURE_UNIT_TO_SI / constants::BAR_TO_P,
         1.0,
         1e-9
     );
@@ -464,7 +458,7 @@ TEST(TestConstants, pressureUnitToSI)
 TEST(TestConstants, lengthUnitToSI)
 {
     EXPECT_NEAR(
-        constants::_LENGTH_UNIT_TO_SI_ / constants::_ANGSTROM_TO_M_,
+        constants::LENGTH_UNIT_TO_SI / constants::ANGSTROM_TO_M,
         1.0,
         1e-9
     );
@@ -472,9 +466,9 @@ TEST(TestConstants, lengthUnitToSI)
 TEST(TestConstants, momentumUnitToSI)
 {
     EXPECT_NEAR(
-        constants::_MOMENTUM_UNIT_TO_SI_ /
-            (constants::_G_TO_KG_ * constants::_ANGSTROM_TO_M_ /
-             constants::_AVOGADRO_NUMBER_),
+        constants::MOMENTUM_UNIT_TO_SI /
+            (constants::G_TO_KG * constants::ANGSTROM_TO_M /
+             constants::AVOGADRO_NUMBER),
         1.0,
         1e-9
     );
@@ -484,7 +478,7 @@ TEST(TestConstants, momentumUnitToSI)
 TEST(TestConstants, siToVelocityUnit)
 {
     EXPECT_NEAR(
-        constants::_SI_TO_VELOCITY_UNIT_ * constants::_VELOCITY_UNIT_TO_SI_,
+        constants::SI_TO_VELOCITY_UNIT * constants::VELOCITY_UNIT_TO_SI,
         1.0,
         1e-9
     );
@@ -492,7 +486,7 @@ TEST(TestConstants, siToVelocityUnit)
 TEST(TestConstants, siToEnergyUnit)
 {
     EXPECT_NEAR(
-        constants::_SI_TO_ENERGY_UNIT_ * constants::_ENERGY_UNIT_TO_SI_,
+        constants::SI_TO_ENERGY_UNIT * constants::ENERGY_UNIT_TO_SI,
         1.0,
         1e-9
     );
@@ -500,7 +494,7 @@ TEST(TestConstants, siToEnergyUnit)
 TEST(TestConstants, siToPressureUnit)
 {
     EXPECT_NEAR(
-        constants::_SI_TO_PRESSURE_UNIT_ * constants::_PRESSURE_UNIT_TO_SI_,
+        constants::SI_TO_PRESSURE_UNIT * constants::PRESSURE_UNIT_TO_SI,
         1.0,
         1e-9
     );
@@ -508,7 +502,7 @@ TEST(TestConstants, siToPressureUnit)
 TEST(TestConstants, siToLengthUnit)
 {
     EXPECT_NEAR(
-        constants::_SI_TO_LENGTH_UNIT_ * constants::_LENGTH_UNIT_TO_SI_,
+        constants::SI_TO_LENGTH_UNIT * constants::LENGTH_UNIT_TO_SI,
         1.0,
         1e-9
     );
@@ -516,7 +510,7 @@ TEST(TestConstants, siToLengthUnit)
 TEST(TestConstants, siToForceUnit)
 {
     EXPECT_NEAR(
-        constants::_SI_TO_FORCE_UNIT_ * constants::_FORCE_UNIT_TO_SI_,
+        constants::SI_TO_FORCE_UNIT * constants::FORCE_UNIT_TO_SI,
         1.0,
         1e-9
     );
@@ -526,10 +520,9 @@ TEST(TestConstants, siToForceUnit)
 TEST(TestConstants, vVerletVelocityFactor)
 {
     EXPECT_NEAR(
-        constants::_V_VERLET_VELOCITY_FACTOR_ /
-            (0.5 *
-             (constants::_FORCE_UNIT_TO_SI_ / constants::_MASS_UNIT_TO_SI_) *
-             constants::_TIME_UNIT_TO_SI_ * constants::_SI_TO_VELOCITY_UNIT_),
+        constants::V_VERLET_VELOCITY_FACTOR /
+            (0.5 * (constants::FORCE_UNIT_TO_SI / constants::MASS_UNIT_TO_SI) *
+             constants::TIME_UNIT_TO_SI * constants::SI_TO_VELOCITY_UNIT),
         1.0,
         1e-9
     );
@@ -539,10 +532,9 @@ TEST(TestConstants, vVerletVelocityFactor)
 TEST(TestConstants, temperatureFactor)
 {
     EXPECT_NEAR(
-        constants::_TEMPERATURE_FACTOR_ /
-            (constants::_VELOCITY_UNIT_TO_SI_ *
-             constants::_VELOCITY_UNIT_TO_SI_ * constants::_MASS_UNIT_TO_SI_ /
-             constants::_BOLTZMANN_CONSTANT_),
+        constants::TEMPERATURE_FACTOR /
+            (constants::VELOCITY_UNIT_TO_SI * constants::VELOCITY_UNIT_TO_SI *
+             constants::MASS_UNIT_TO_SI / constants::BOLTZMANN_CONSTANT),
         1.0,
         1e-9
     );
@@ -552,10 +544,9 @@ TEST(TestConstants, temperatureFactor)
 TEST(TestConstants, kineticEnergyFactor)
 {
     EXPECT_NEAR(
-        constants::_KINETIC_ENERGY_FACTOR_ /
-            (0.5 * constants::_MASS_UNIT_TO_SI_ *
-             constants::_VELOCITY_UNIT_TO_SI_ *
-             constants::_VELOCITY_UNIT_TO_SI_ * constants::_SI_TO_ENERGY_UNIT_),
+        constants::KINETIC_ENERGY_FACTOR /
+            (0.5 * constants::MASS_UNIT_TO_SI * constants::VELOCITY_UNIT_TO_SI *
+             constants::VELOCITY_UNIT_TO_SI * constants::SI_TO_ENERGY_UNIT),
         1.0,
         1e-9
     );
@@ -565,9 +556,9 @@ TEST(TestConstants, kineticEnergyFactor)
 TEST(TestConstants, pressureFactor)
 {
     EXPECT_NEAR(
-        constants::_PRESSURE_FACTOR_ /
-            (constants::_ENERGY_UNIT_TO_SI_ / constants::_VOLUME_UNIT_TO_SI_ *
-             constants::_SI_TO_PRESSURE_UNIT_),
+        constants::PRESSURE_FACTOR /
+            (constants::ENERGY_UNIT_TO_SI / constants::VOLUME_UNIT_TO_SI *
+             constants::SI_TO_PRESSURE_UNIT),
         1.0,
         1e-9
     );
@@ -577,10 +568,10 @@ TEST(TestConstants, pressureFactor)
 TEST(TestConstants, coulombPrefactor)
 {
     EXPECT_NEAR(
-        constants::_COULOMB_PREFACTOR_ /
-            (constants::_ELECTRON_CHARGE_ * constants::_ELECTRON_CHARGE_ *
-             constants::_SI_TO_LENGTH_UNIT_ * constants::_SI_TO_ENERGY_UNIT_) *
-            constants::_PERMITTIVITY_VACUUM_ * 4 * M_PI,
+        constants::COULOMB_PREFACTOR /
+            (constants::ELECTRON_CHARGE * constants::ELECTRON_CHARGE *
+             constants::SI_TO_LENGTH_UNIT * constants::SI_TO_ENERGY_UNIT) *
+            constants::PERMITTIVITY_VACUUM * 4 * M_PI,
         1.0,
         1e-9
     );
@@ -590,11 +581,10 @@ TEST(TestConstants, coulombPrefactor)
 TEST(TestConstants, ringPolymerMolecularDynamics)
 {
     EXPECT_NEAR(
-        constants::_RPMD_PREFACTOR_ /
-            (constants::_BOLTZMANN_CONSTANT2_ /
-             constants::_REDUCED_PLANCK_CONSTANT2_ /
-             constants::_M2_TO_ANGSTROM2_ * constants::_G_TO_KG_ *
-             constants::_J_TO_KCAL_),
+        constants::RPMD_PREFACTOR /
+            (constants::BOLTZMANN_CONSTANT2 /
+             constants::REDUCED_PLANCK_CONSTANT2 / constants::M2_TO_ANGSTROM2 *
+             constants::G_TO_KG * constants::J_TO_KCAL),
         1.0,
         1e-9
     );
@@ -604,9 +594,9 @@ TEST(TestConstants, ringPolymerMolecularDynamics)
 TEST(TestConstants, momentumToForce)
 {
     EXPECT_NEAR(
-        constants::_MOMENTUM_TO_FORCE_ /
-            (constants::_MASS_UNIT_TO_SI_ * constants::_VELOCITY_UNIT_TO_SI_ *
-             constants::_SI_TO_FORCE_UNIT_),
+        constants::MOMENTUM_TO_FORCE /
+            (constants::MASS_UNIT_TO_SI * constants::VELOCITY_UNIT_TO_SI *
+             constants::SI_TO_FORCE_UNIT),
         1.0,
         1e-9
     );
