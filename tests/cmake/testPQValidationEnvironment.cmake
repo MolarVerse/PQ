@@ -232,7 +232,7 @@ file(
     "nstep = 1;\n"
     "timestep = 0.5;\n"
     "qm_prog = turbomole;\n"
-    "qm_script = turbomole_rimp2;\n"
+    "qm_script = turbomole_ricc2;\n"
     "start_file = start.rst;\n"
 )
 assert_valid("turbomole.in" portable)

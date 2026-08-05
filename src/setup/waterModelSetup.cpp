@@ -370,7 +370,9 @@ void WaterModelSetup::makeInterWater()
         case TIP3P: state = makeInterWaterState<TIP3PInterParam>(); break;
         case OPC3: state = makeInterWaterState<OPC3InterParam>(); break;
         case SPC_MTR: state = makeInterWaterState<SPCmTRInterParam>(); break;
-        case TIP3P_MTR: state = makeInterWaterState<SPCmTRInterParam>(); break;
+        case TIP3P_MTR:
+            state = makeInterWaterState<TIP3PmTRInterParam>();
+            break;
         case NONE: break;
     }
 

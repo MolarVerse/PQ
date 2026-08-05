@@ -599,50 +599,21 @@ void PotentialCellList::calculateHotspotSmoothingMMForces(
 
                 auto *molecule_j = cell_i.getMolecule(mol_j);
 
-                for (auto *atom_i : cell_i.getAtoms(mol_i))
-                    for (auto *atom_j : cell_i.getAtoms(mol_j))
-                    {
-                        const auto [coulombEnergy, nonCoulombEnergy] =
-                            calculateSingleInteraction<
-                                MMChargeTag,
-                                QMChargeTag>(
-                                *box,
-                                *molecule_i,
-                                *molecule_j,
-                                *atom_i,
-                                *atom_j
-                            );
+                const auto isMolJCore = molecule_j->getHybridZone() == CORE;
 
-                        totalCoulombEnergy    += coulombEnergy;
-                        totalNonCoulombEnergy += nonCoulombEnergy;
-                    }
-            }
-        }
-    }
-
-    for (const auto &cell_i : cellList.getCells())
-    {
-        const auto &waterMolecules_i = cell_i.getWaterMoleculeIndices();
-
-        for (const auto *cell_j : cell_i.getNeighbourCells())
-        {
-            const auto &waterMolecules_j = cell_j->getWaterMoleculeIndices();
-
-            for (const auto mol_i : cell_i.getSmoothingMoleculeIndices())
-            {
-                auto *molecule_i = cell_i.getMolecule(mol_i);
-
-                for (const auto mol_j :
-                     cell_j->getNonSmoothingMoleculeIndices())
+                if (isMolJCore)
                 {
-                    if (isWaterMolecule(waterMolecules_i, mol_i) &&
-                        isWaterMolecule(waterMolecules_j, mol_j))
-                        continue;
-
-                    auto *molecule_j = cell_j->getMolecule(mol_j);
-
                     for (auto *atom_i : cell_i.getAtoms(mol_i))
-                        for (auto *atom_j : cell_j->getAtoms(mol_j))
+                        for (auto *atom_j : cell_i.getAtoms(mol_j))
+                            totalCoulombEnergy +=
+                                calculateSingleCoulombInteraction<
+                                    MMChargeTag,
+                                    QMChargeTag>(*box, *atom_i, *atom_j);
+                }
+                else
+                {
+                    for (auto *atom_i : cell_i.getAtoms(mol_i))
+                        for (auto *atom_j : cell_i.getAtoms(mol_j))
                         {
                             const auto [coulombEnergy, nonCoulombEnergy] =
                                 calculateSingleInteraction<
@@ -671,6 +642,63 @@ void PotentialCellList::calculateHotspotSmoothingMMForces(
         {
             const auto &waterMolecules_j = cell_j->getWaterMoleculeIndices();
 
+            for (const auto mol_i : cell_i.getSmoothingMoleculeIndices())
+            {
+                auto *molecule_i = cell_i.getMolecule(mol_i);
+
+                for (const auto mol_j :
+                     cell_j->getNonSmoothingMoleculeIndices())
+                {
+                    if (isWaterMolecule(waterMolecules_i, mol_i) &&
+                        isWaterMolecule(waterMolecules_j, mol_j))
+                        continue;
+
+                    auto *molecule_j = cell_j->getMolecule(mol_j);
+
+                    const auto isMolJCore = molecule_j->getHybridZone() == CORE;
+
+                    if (isMolJCore)
+                    {
+                        for (auto *atom_i : cell_i.getAtoms(mol_i))
+                            for (auto *atom_j : cell_j->getAtoms(mol_j))
+                                totalCoulombEnergy +=
+                                    calculateSingleCoulombInteraction<
+                                        MMChargeTag,
+                                        QMChargeTag>(*box, *atom_i, *atom_j);
+                    }
+                    else
+                    {
+                        for (auto *atom_i : cell_i.getAtoms(mol_i))
+                            for (auto *atom_j : cell_j->getAtoms(mol_j))
+                            {
+                                const auto [coulombEnergy, nonCoulombEnergy] =
+                                    calculateSingleInteraction<
+                                        MMChargeTag,
+                                        QMChargeTag>(
+                                        *box,
+                                        *molecule_i,
+                                        *molecule_j,
+                                        *atom_i,
+                                        *atom_j
+                                    );
+
+                                totalCoulombEnergy    += coulombEnergy;
+                                totalNonCoulombEnergy += nonCoulombEnergy;
+                            }
+                    }
+                }
+            }
+        }
+    }
+
+    for (const auto &cell_i : cellList.getCells())
+    {
+        const auto &waterMolecules_i = cell_i.getWaterMoleculeIndices();
+
+        for (const auto *cell_j : cell_i.getNeighbourCells())
+        {
+            const auto &waterMolecules_j = cell_j->getWaterMoleculeIndices();
+
             for (const auto mol_i : cell_j->getSmoothingMoleculeIndices())
             {
                 auto *molecule_i = cell_j->getMolecule(mol_i);
@@ -683,23 +711,37 @@ void PotentialCellList::calculateHotspotSmoothingMMForces(
 
                     auto *molecule_j = cell_i.getMolecule(mol_j);
 
-                    for (auto *atom_i : cell_j->getAtoms(mol_i))
-                        for (auto *atom_j : cell_i.getAtoms(mol_j))
-                        {
-                            const auto [coulombEnergy, nonCoulombEnergy] =
-                                calculateSingleInteraction<
-                                    MMChargeTag,
-                                    QMChargeTag>(
-                                    *box,
-                                    *molecule_i,
-                                    *molecule_j,
-                                    *atom_i,
-                                    *atom_j
-                                );
+                    const auto isMolJCore = molecule_j->getHybridZone() == CORE;
 
-                            totalCoulombEnergy    += coulombEnergy;
-                            totalNonCoulombEnergy += nonCoulombEnergy;
-                        }
+                    if (isMolJCore)
+                    {
+                        for (auto *atom_i : cell_j->getAtoms(mol_i))
+                            for (auto *atom_j : cell_i.getAtoms(mol_j))
+                                totalCoulombEnergy +=
+                                    calculateSingleCoulombInteraction<
+                                        MMChargeTag,
+                                        QMChargeTag>(*box, *atom_i, *atom_j);
+                    }
+                    else
+                    {
+                        for (auto *atom_i : cell_j->getAtoms(mol_i))
+                            for (auto *atom_j : cell_i.getAtoms(mol_j))
+                            {
+                                const auto [coulombEnergy, nonCoulombEnergy] =
+                                    calculateSingleInteraction<
+                                        MMChargeTag,
+                                        QMChargeTag>(
+                                        *box,
+                                        *molecule_i,
+                                        *molecule_j,
+                                        *atom_i,
+                                        *atom_j
+                                    );
+
+                                totalCoulombEnergy    += coulombEnergy;
+                                totalNonCoulombEnergy += nonCoulombEnergy;
+                            }
+                    }
                 }
             }
         }

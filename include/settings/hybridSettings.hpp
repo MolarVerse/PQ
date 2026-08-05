@@ -24,8 +24,9 @@
 
 #define _HYBRID_SETTINGS_HPP_
 
-#include <optional>      // for optional
-#include <vector>        // for vector
+#include <optional>   // for optional
+#include <string>     // for string
+#include <vector>     // for vector
 
 namespace settings
 {
@@ -37,10 +38,11 @@ namespace settings
      */
     enum class SmoothingMethod
     {
-        NONE,
         HOTSPOT,
         EXACT
     };
+
+    [[nodiscard]] std::string string(const SmoothingMethod method);
 
     /**
      * @class HybridSettings
@@ -62,7 +64,7 @@ namespace settings
         static inline double _smoothingRegionThickness = 0.0;
         static inline double _pointChargeThickness     = 0.0;
 
-        static inline SmoothingMethod _smoothing = SmoothingMethod::NONE;
+        static inline SmoothingMethod _smoothing = SmoothingMethod::HOTSPOT;
 
        public:
         /********************
