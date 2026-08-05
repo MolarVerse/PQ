@@ -79,12 +79,11 @@ namespace engine
 
         const auto& smoothingMethod = HybridSettings::getSmoothingMethod();
 
-        if (smoothingMethod == HOTSPOT)
-            applyHotspotSmoothing();
-        else if (smoothingMethod == EXACT)
-            applyExactSmoothing();
-        else
-            throw HybridMDEngineException("Unknown smoothing method requested");
+        switch (smoothingMethod)
+        {
+            case HOTSPOT: applyHotspotSmoothing(); break;
+            case EXACT: applyExactSmoothing(); break;
+        }
     }
 
     /**
