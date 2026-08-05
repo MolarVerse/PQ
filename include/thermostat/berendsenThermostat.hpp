@@ -25,7 +25,6 @@
 #define _BERENDSEN_THERMOSTAT_HPP_
 
 #include "thermostat.hpp"
-#include "typeAliases.hpp"
 
 namespace thermostat
 {

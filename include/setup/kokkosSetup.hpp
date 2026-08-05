@@ -24,8 +24,6 @@
 
 #define _KOKKOS_SETUP_HPP_
 
-#include "typeAliases.hpp"
-
 namespace setup
 {
     void setupKokkos(engine::Engine &);

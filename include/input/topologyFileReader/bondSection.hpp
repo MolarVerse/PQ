@@ -27,7 +27,6 @@
 #include <string>   // for allocator, string
 
 #include "topologySection.hpp"   // for TopologySection
-#include "typeAliases.hpp"
 
 namespace input::topology
 {

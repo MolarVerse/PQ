@@ -34,7 +34,6 @@
 #include "physicalData.hpp"
 #include "potential.hpp"
 #include "simulationBox.hpp"
-#include "typeAliases.hpp"
 #include "virial.hpp"
 
 namespace opt

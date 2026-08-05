@@ -25,7 +25,6 @@
 #define _CONVERGENCE_INPUT_PARSER_HPP_
 
 #include "inputFileParser.hpp"   // for InputFileParser
-#include "typeAliases.hpp"
 
 namespace input
 {

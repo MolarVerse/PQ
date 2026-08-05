@@ -27,7 +27,6 @@
 #include <vector>   // for std::vector
 
 #include "thermostat.hpp"
-#include "typeAliases.hpp"
 
 namespace thermostat
 {

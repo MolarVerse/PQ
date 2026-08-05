@@ -28,7 +28,6 @@
 #include <vector>
 
 #include "parameterFileSection.hpp"   // for ParameterFileSection
-#include "typeAliases.hpp"
 
 namespace input::parameterFile
 {

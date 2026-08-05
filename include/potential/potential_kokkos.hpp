@@ -27,7 +27,6 @@
 #ifdef WITH_KOKKOS
 
 #include "timer.hpp"   // for Timer
-#include "typeAliases.hpp"
 
 namespace potential
 {

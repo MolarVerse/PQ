@@ -28,7 +28,6 @@
 #include <vector>    // for vector
 
 #include "angle.hpp"
-#include "typeAliases.hpp"
 
 namespace physicalData
 {
@@ -40,6 +39,12 @@ namespace simulationBox
     class Molecule;        // forward declaration
     class SimulationBox;   // forward declaration
 }   // namespace simulationBox
+
+namespace potential
+{
+    class CoulombPotential;      // forward declaration
+    class NonCoulombPotential;   // forward declaration
+}   // namespace potential
 
 namespace forceField
 {
@@ -68,8 +73,8 @@ namespace forceField
         void calculateEnergyAndForces(
             const simulationBox::SimulationBox &simBox,
             physicalData::PhysicalData         &data,
-            const pq::CoulombPot               &coulombPot,
-            pq::NonCoulombPot                  &nonCoulombPot
+            const potential::CoulombPotential  &coulombPot,
+            potential::NonCoulombPotential     &nonCoulombPot
         );
 
         /***************************

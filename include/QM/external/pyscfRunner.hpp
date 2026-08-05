@@ -25,7 +25,6 @@
 #define _PYSCF_RUNNER_HPP_
 
 #include "externalQMRunner.hpp"   // for ExternalQMRunner
-#include "typeAliases.hpp"
 
 namespace QM
 {

@@ -27,7 +27,6 @@
 #include <string>   // for string
 
 #include "restartFileSection.hpp"
-#include "typeAliases.hpp"
 
 namespace input::restartFile
 {

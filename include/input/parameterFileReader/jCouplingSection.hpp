@@ -27,7 +27,6 @@
 #include <string>   // for allocator, string
 
 #include "parameterFileSection.hpp"   // for ParameterFileSection
-#include "typeAliases.hpp"
 
 namespace input::parameterFile
 {

@@ -32,7 +32,6 @@
 #include "mdEngine.hpp"           // for Engine
 #include "settings.hpp"           // for IsMDJobType
 #include "stochasticRescalingManostat.hpp"
-#include "typeAliases.hpp"
 
 using namespace setup;
 using namespace engine;

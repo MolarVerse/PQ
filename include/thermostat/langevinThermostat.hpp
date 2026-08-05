@@ -27,7 +27,6 @@
 #include "randomNumberGenerator.hpp"   // for RandomNumberGenerator
 #include "thermostat.hpp"
 #include "thermostatSettings.hpp"
-#include "typeAliases.hpp"
 
 namespace physicalData
 {

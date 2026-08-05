@@ -36,7 +36,6 @@
 #include "physicalData.hpp"
 #include "potential.hpp"
 #include "simulationBox.hpp"
-#include "typeAliases.hpp"
 #include "virial.hpp"
 
 #ifdef WITH_KOKKOS
@@ -166,7 +165,8 @@ namespace engine
         std::shared_ptr<intraNonBonded::IntraNonBonded> getSharedIntraNonBonded(
         ) const;
         [[nodiscard]] std::shared_ptr<virial::Virial> getSharedVirial() const;
-        [[nodiscard]] pq::SharedPotential getSharedPotential() const;
+        [[nodiscard]] std::shared_ptr<potential::Potential> getSharedPotential(
+        ) const;
 
         /***************************
          * make unique_ptr methods *

@@ -25,7 +25,6 @@
 #define _POTENTIAL_BRUTE_FORCE_HPP_
 
 #include "potential.hpp"
-#include "typeAliases.hpp"
 
 namespace potential
 {
@@ -46,7 +45,7 @@ namespace potential
             simulationBox::CellList &
         ) override;
 
-        pq::SharedPotential clone() const override;
+        std::shared_ptr<Potential> clone() const override;
     };
 }   // namespace potential
 

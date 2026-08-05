@@ -1,8 +1,6 @@
-add_library(config_headers
-    typeAliases.cpp
-)
+add_library(config_headers INTERFACE)
 
 target_link_libraries(config_headers
-    PUBLIC
+    INTERFACE
     linearAlgebra
 )

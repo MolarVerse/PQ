@@ -25,7 +25,6 @@
 #define _ASE_QM_RUNNER_HPP_
 
 #include "qmRunner.hpp"
-#include "typeAliases.hpp"
 
 namespace pybind11
 {

@@ -34,7 +34,6 @@
 #include "potentialSettings.hpp"
 #include "settings.hpp"
 #include "simulationBox_kokkos.hpp"
-#include "typeAliases.hpp"
 
 using namespace setup;
 using namespace engine;
@@ -110,7 +109,8 @@ void KokkosSetup::setup()
     auto kokkosSimulationBox = _engine.getKokkosSimulationBox();
     kokkosSimulationBox.initKokkosSimulationBox(simBox);
 
-    auto ffNonCoulomb = dynamic_cast<const pq::FFNonCoulomb &>(nonCoulombPot);
+    auto ffNonCoulomb =
+        dynamic_cast<const potential::ForceFieldNonCoulomb &>(nonCoulombPot);
 
     /************************************
      * Initialize Kokkos Lennard Jones  *

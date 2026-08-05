@@ -27,7 +27,6 @@
 #include <cstddef>
 
 #include "inputFileParser.hpp"
-#include "typeAliases.hpp"
 
 namespace input
 {

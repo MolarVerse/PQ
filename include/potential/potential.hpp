@@ -25,10 +25,12 @@
 #define _POTENTIAL_HPP_
 
 #include <cstddef>   // for size_t
+#include <memory>    // for shared_ptr
 #include <utility>   // for pair
 
+#include "coulombPotential.hpp"
+#include "nonCoulombPotential.hpp"
 #include "timer.hpp"
-#include "typeAliases.hpp"
 
 namespace physicalData
 {
@@ -62,8 +64,8 @@ namespace potential
     class Potential : public timings::Timer
     {
        protected:
-        pq::SharedCoulombPot    _coulombPotential;
-        pq::SharedNonCoulombPot _nonCoulombPot;
+        std::shared_ptr<CoulombPotential>    _coulombPotential;
+        std::shared_ptr<NonCoulombPotential> _nonCoulombPot;
 
        public:
         virtual ~Potential() = default;
@@ -72,8 +74,9 @@ namespace potential
             simulationBox::SimulationBox &,
             physicalData::PhysicalData &,
             simulationBox::CellList &
-        )                                         = 0;
-        virtual pq::SharedPotential clone() const = 0;
+        ) = 0;
+
+        virtual std::shared_ptr<Potential> clone() const = 0;
 
         std::pair<double, double> calculateSingleInteraction(
             const simulationBox::Box &,
@@ -93,16 +96,20 @@ namespace potential
          * standard setter methods *
          ***************************/
 
-        void setNonCoulombPotential(const pq::SharedNonCoulombPot);
+        void setNonCoulombPotential(
+            const std::shared_ptr<NonCoulombPotential> pot
+        );
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] pq::CoulombPot         &getCoulombPotential() const;
-        [[nodiscard]] pq::NonCoulombPot      &getNonCoulombPotential() const;
-        [[nodiscard]] pq::SharedCoulombPot    getCoulombPotSharedPtr() const;
-        [[nodiscard]] pq::SharedNonCoulombPot getNonCoulombPotSharedPtr() const;
+        [[nodiscard]] CoulombPotential    &getCoulombPotential() const;
+        [[nodiscard]] NonCoulombPotential &getNonCoulombPotential() const;
+        [[nodiscard]]
+        std::shared_ptr<CoulombPotential> getCoulombPotSharedPtr() const;
+        [[nodiscard]]
+        std::shared_ptr<NonCoulombPotential> getNonCoulombPotSharedPtr() const;
     };
 
 }   // namespace potential

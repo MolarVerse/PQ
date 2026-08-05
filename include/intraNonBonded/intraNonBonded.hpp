@@ -28,10 +28,10 @@
 #include <memory>    // for shared_ptr
 #include <vector>    // for vector
 
+#include "coulombPotential.hpp"
 #include "intraNonBondedContainer.hpp"   // for IntraNonBondedContainer
 #include "intraNonBondedMap.hpp"         // for IntraNonBondedMap
 #include "timer.hpp"                     // for Timer
-#include "typeAliases.hpp"
 
 namespace intraNonBonded
 {
@@ -58,9 +58,9 @@ namespace intraNonBonded
         IntraNonBondedType _intraNonBondedType = IntraNonBondedType::NONE;
         bool               _isActivated        = false;
 
-        std::shared_ptr<pq::NonCoulombPot> _nonCoulombPot;
-        std::shared_ptr<pq::CoulombPot>    _coulombPotential;
-        std::vector<IntraNonBondedMap>     _intraNonBondedMaps;
+        std::shared_ptr<potential::NonCoulombPotential> _nonCoulombPot;
+        std::shared_ptr<potential::CoulombPotential>    _coulombPotential;
+        std::vector<IntraNonBondedMap>                  _intraNonBondedMaps;
 
         std::vector<IntraNonBondedContainer> _intraNonBondedContainers;
 
@@ -96,8 +96,12 @@ namespace intraNonBonded
          * standard setter methods *
          ***************************/
 
-        void setNonCoulombPotential(const pq::SharedNonCoulombPot &pot);
-        void setCoulombPotential(const pq::SharedCoulombPot &pot);
+        void setNonCoulombPotential(
+            const std::shared_ptr<potential::NonCoulombPotential> &pot
+        );
+        void setCoulombPotential(
+            const std::shared_ptr<potential::CoulombPotential> &pot
+        );
 
         /***************************
          * standard getter methods *

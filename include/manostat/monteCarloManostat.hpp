@@ -26,7 +26,6 @@
 
 #include "manostat.hpp"                // for Manostat
 #include "randomNumberGenerator.hpp"   // for RandomNumberGenerator
-#include "typeAliases.hpp"             // for SimulationBox
 
 namespace manostat
 {

@@ -25,7 +25,6 @@
 #define _VELOCITY_VERLET_HPP_
 
 #include "integrator.hpp"
-#include "typeAliases.hpp"
 
 namespace integrator
 {

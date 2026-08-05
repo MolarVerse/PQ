@@ -27,7 +27,6 @@
 #include <cstddef>
 
 #include "connectivityElement.hpp"
-#include "typeAliases.hpp"
 
 namespace connectivity
 {

@@ -43,7 +43,6 @@
 #include "timer.hpp"
 #include "timingsOutput.hpp"
 #include "trajectoryOutput.hpp"
-#include "typeAliases.hpp"
 #include "virialOutput.hpp"
 
 namespace engine

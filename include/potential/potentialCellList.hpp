@@ -25,7 +25,6 @@
 #define _POTENTIAL_CELL_LIST_HPP_
 
 #include "potential.hpp"
-#include "typeAliases.hpp"
 
 namespace physicalData
 {
@@ -56,7 +55,7 @@ namespace potential
             simulationBox::CellList &
         ) override;
 
-        pq::SharedPotential clone() const override;
+        std::shared_ptr<Potential> clone() const override;
     };
 
 }   // namespace potential

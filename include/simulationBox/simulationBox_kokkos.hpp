@@ -28,8 +28,6 @@
 
 #include <Kokkos_DualView.hpp>
 
-#include "typeAliases.hpp"
-
 /**
  * @namespace simulationBox
  */

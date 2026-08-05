@@ -32,12 +32,13 @@
 #include "angleType.hpp"
 #include "bondForceField.hpp"
 #include "bondType.hpp"
+#include "coulombPotential.hpp"
 #include "dihedralForceField.hpp"
 #include "dihedralType.hpp"
 #include "jCouplingForceField.hpp"
 #include "jCouplingType.hpp"
+#include "nonCoulombPotential.hpp"
 #include "physicalData.hpp"
-#include "typeAliases.hpp"
 
 namespace forceField
 {
@@ -64,8 +65,8 @@ namespace forceField
         std::vector<DihedralType>  _improperDihedralTypes;
         std::vector<JCouplingType> _jCouplingTypes;
 
-        std::shared_ptr<pq::NonCoulombPot> _nonCoulombPot;
-        std::shared_ptr<pq::CoulombPot>    _coulombPotential;
+        std::shared_ptr<potential::NonCoulombPotential> _nonCoulombPot;
+        std::shared_ptr<potential::CoulombPotential>    _coulombPotential;
 
        public:
         std::shared_ptr<ForceField> clone() const;
@@ -149,8 +150,12 @@ namespace forceField
          * standard setters *
          ********************/
 
-        void setNonCoulombPotential(const pq::SharedNonCoulombPot &pot);
-        void setCoulombPotential(const pq::SharedCoulombPot &pot);
+        void setNonCoulombPotential(
+            const std::shared_ptr<potential::NonCoulombPotential> &pot
+        );
+        void setCoulombPotential(
+            const std::shared_ptr<potential::CoulombPotential> &pot
+        );
 
         /********************
          * standard getters *

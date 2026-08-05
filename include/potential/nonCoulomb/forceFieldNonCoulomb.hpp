@@ -28,7 +28,6 @@
 #include <map>       // for map
 
 #include "nonCoulombPotential.hpp"
-#include "typeAliases.hpp"
 
 class TestNonCoulombPotentialFF;   // forward declaration
 
@@ -42,7 +41,7 @@ namespace potential
     class ForceFieldNonCoulomb : public NonCoulombPotential
     {
        private:
-        pq::SharedNonCoulPairVec _nonCoulPairsVec;
+        std::vector<std::shared_ptr<NonCoulombPair>> _nonCoulPairsVec;
 
         struct matrix;
         std::unique_ptr<matrix> _nonCoulPairsMatPtr;
@@ -58,26 +57,34 @@ namespace potential
 
         void setupNonCoulombicCutoffs();
         void determineInternalGlobalVdwTypes(const std::map<size_t, size_t> &);
-        void fillDiagOfNonCoulPairsMatrix(pq::SharedNonCoulPairVec &);
+        void fillDiagOfNonCoulPairsMatrix(
+            std::vector<std::shared_ptr<NonCoulombPair>> &
+        );
         void fillOffDiagOfNonCoulPairsMatrix();
-        void sortNonCoulombicsPairs(pq::SharedNonCoulPairVec &diagonalElements);
+        void sortNonCoulombicsPairs(
+            std::vector<std::shared_ptr<NonCoulombPair>> &diagonalElements
+        );
         void setOffDiagonalElement(const size_t, const size_t);
 
-        [[nodiscard]] pq::SharedNonCoulPairVec getSelfInteractionNonCoulPairs(
-        ) const;
-        [[nodiscard]] pq::OptSharedNonCoulPair findNonCoulPairByInternalTypes(
-            const size_t,
-            const size_t
-        ) const;
+        [[nodiscard]]
+        std::vector<std::shared_ptr<
+            NonCoulombPair>> getSelfInteractionNonCoulPairs() const;
 
-        void addNonCoulombicPair(const pq::SharedNonCoulPair &pair);
+        [[nodiscard]]
+        std::
+            optional<std::shared_ptr<NonCoulombPair>> findNonCoulPairByInternalTypes(
+                const size_t,
+                const size_t
+            ) const;
+
+        void addNonCoulombicPair(const std::shared_ptr<NonCoulombPair> &pair);
 
         /***************************
          * standard getter methods *
          ***************************/
 
         [[nodiscard]]
-        pq::SharedNonCoulPair getNonCoulPair(
+        std::shared_ptr<NonCoulombPair> getNonCoulPair(
             const std::vector<size_t> &indices
         ) override;
 
@@ -86,7 +93,9 @@ namespace potential
         [[nodiscard]]
         size_t getGlobalVdwType2(const std::vector<size_t> &) const;
 
-        [[nodiscard]] pq::SharedNonCoulPairVec &getNonCoulombPairsVector();
+        [[nodiscard]]
+        std::vector<std::shared_ptr<NonCoulombPair>> &getNonCoulombPairsVector(
+        );
 
         friend class ::TestNonCoulombPotentialFF;
         friend struct benchSetup::BenchNonCoulombFFPot;
@@ -95,7 +104,9 @@ namespace potential
          * standard setter methods *
          ***************************/
 
-        void setNonCoulombPairsVector(const pq::SharedNonCoulPairVec &vec);
+        void setNonCoulombPairsVector(
+            const std::vector<std::shared_ptr<NonCoulombPair>> &vec
+        );
     };
 
 }   // namespace potential

@@ -31,7 +31,6 @@
 #include <vector>        // for vector
 
 #include "topologySection.hpp"
-#include "typeAliases.hpp"
 
 namespace input::topology
 {
