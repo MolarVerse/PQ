@@ -74,7 +74,7 @@ namespace engine
         pq::SharedCellList                              _cellList;
         std::shared_ptr<intraNonBonded::IntraNonBonded> _intraNonBonded;
         std::shared_ptr<forceField::ForceField>         _forceField;
-        pq::SharedConstraints                           _constraints;
+        std::shared_ptr<constraints::Constraints>       _constraints;
 
 #ifdef WITH_KOKKOS
         simulationBox::KokkosSimulationBox _kokkosSimulationBox;
@@ -157,9 +157,11 @@ namespace engine
         [[nodiscard]]
         std::shared_ptr<physicalData::PhysicalData> getSharedPhysicalData(
         ) const;
-        [[nodiscard]] pq::SharedCellList    getSharedCellList() const;
-        [[nodiscard]] pq::SharedConstraints getSharedConstraints() const;
-        [[nodiscard]] std::shared_ptr<intraNonBonded::IntraNonBonded> getSharedIntraNonBonded(
+        [[nodiscard]] pq::SharedCellList getSharedCellList() const;
+        [[nodiscard]]
+        std::shared_ptr<constraints::Constraints> getSharedConstraints() const;
+        [[nodiscard]]
+        std::shared_ptr<intraNonBonded::IntraNonBonded> getSharedIntraNonBonded(
         ) const;
         [[nodiscard]] std::shared_ptr<virial::Virial> getSharedVirial() const;
         [[nodiscard]] pq::SharedPotential getSharedPotential() const;

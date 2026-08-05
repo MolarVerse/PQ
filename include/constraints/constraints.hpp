@@ -124,9 +124,12 @@ namespace constraints
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] const pq::BondConstraintsVec &getBondConstraints() const;
-        [[nodiscard]] const pq::DistConstraintsVec &getDistConstraints() const;
-        [[nodiscard]] const pq::MShakeReferenceVec &getMShakeReferences() const;
+        [[nodiscard]]
+        const std::vector<BondConstraint> &getBondConstraints() const;
+        [[nodiscard]]
+        const std::vector<DistanceConstraint> &getDistConstraints() const;
+        [[nodiscard]]
+        const std::vector<MShakeReference> &getMShakeReferences() const;
 
         [[nodiscard]] size_t getNumberOfBondConstraints() const;
         [[nodiscard]] size_t getNumberOfMShakeConstraints(pq::SimBox &) const;

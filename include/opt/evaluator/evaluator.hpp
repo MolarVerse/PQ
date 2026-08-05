@@ -76,7 +76,7 @@ namespace opt
         void setPotential(const pq::SharedPotential);
         void setCellList(const pq::SharedCellList);
         void setSimulationBox(const pq::SharedSimBox);
-        void setConstraints(const pq::SharedConstraints);
+        void setConstraints(const std::shared_ptr<constraints::Constraints>);
 
         void setPhysicalData(const std::shared_ptr<physicalData::PhysicalData>);
         void setPhysicalDataOld(

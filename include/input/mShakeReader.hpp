@@ -27,8 +27,12 @@
 #include <cstddef>   // for size_t
 #include <fstream>   // for ifstream
 #include <string>    // for string
+#include <vector>
 
-#include "typeAliases.hpp"   // for MShakeRef
+namespace constraints
+{
+    class MShakeReference;   // forward declaration
+}   // namespace constraints
 
 namespace engine
 {
@@ -58,10 +62,13 @@ namespace input::mShake
         explicit MShakeReader(engine::Engine &engine);
 
         void read();
-        void processCommentLine(std::string &line, pq::MShakeRef &mShakeRef);
+        void processCommentLine(
+            std::string                  &line,
+            constraints::MShakeReference &mShakeRef
+        );
         void processAtomLines(
-            std::vector<std::string> &lines,
-            pq::MShakeRef            &mShakeRef
+            std::vector<std::string>     &lines,
+            constraints::MShakeReference &mShakeRef
         );
 
         [[nodiscard]] std::string getFileName() const;

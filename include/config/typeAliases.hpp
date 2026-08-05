@@ -55,15 +55,6 @@ namespace potential
 
 }   // namespace potential
 
-namespace constraints
-{
-    class Constraints;          // forward declaration
-    class BondConstraint;       // forward declaration
-    class DistanceConstraint;   // forward declaration
-    class MShakeReference;      // forward declaration
-
-}   // namespace constraints
-
 namespace input
 {
     namespace parameterFile
@@ -79,7 +70,6 @@ namespace input
 
 namespace pq
 {
-    using SharedConstraints = std::shared_ptr<constraints::Constraints>;
 
     using ParamFileSection       = input::parameterFile::ParameterFileSection;
     using UniqueParamFileSection = std::unique_ptr<ParamFileSection>;
@@ -115,21 +105,6 @@ namespace pq
     using SharedNonCoulPairVec2d = std::vector<SharedNonCoulPairVec>;
     using SharedNonCoulPairVec3d = std::vector<SharedNonCoulPairVec2d>;
     using SharedNonCoulPairVec4d = std::vector<SharedNonCoulPairVec3d>;
-
-    /**************************
-     * constraints namespace *
-     **************************/
-
-    using Constraints        = constraints::Constraints;
-    using BondConstraint     = constraints::BondConstraint;
-    using MShakeReference    = constraints::MShakeReference;
-    using MShakeRef          = constraints::MShakeReference;
-    using DistanceConstraint = constraints::DistanceConstraint;
-
-    using BondConstraintsVec = std::vector<BondConstraint>;
-    using MShakeReferenceVec = std::vector<MShakeReference>;
-    using MShakeRefVec       = std::vector<MShakeReference>;
-    using DistConstraintsVec = std::vector<DistanceConstraint>;
 
     /***************************
      * simulationBox namespace *

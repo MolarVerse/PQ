@@ -27,6 +27,7 @@
 #include <memory>   // for unique_ptr
 #include <vector>   // for vector
 
+#include "mShakeReference.hpp"
 #include "typeAliases.hpp"   // for SimBox, Vec3D, MShakeRef
 #include "vector3d.hpp"      // for Vec3D
 
@@ -43,7 +44,7 @@ namespace constraints
     class MShake
     {
        private:
-        pq::MShakeRefVec                 _mShakeReferences;
+        std::vector<MShakeReference>     _mShakeReferences;
         std::vector<std::vector<double>> _mShakeRSquaredRefs;
 
         struct MShakeMatrices;
@@ -68,10 +69,11 @@ namespace constraints
 
         [[nodiscard]] bool   isMShakeType(const size_t moltype) const;
         [[nodiscard]] size_t findMShakeReferenceIndex(const size_t) const;
-        [[nodiscard]] const pq::MShakeRef    &findMShakeRef(const size_t) const;
-        [[nodiscard]] const pq::MShakeRefVec &getMShakeReferences() const;
+        [[nodiscard]] const MShakeReference &findMShakeRef(const size_t) const;
+        [[nodiscard]]
+        const std::vector<MShakeReference> &getMShakeReferences() const;
 
-        void addMShakeReference(const pq::MShakeRef &mShakeReference);
+        void addMShakeReference(const MShakeReference &mShakeReference);
     };
 }   // namespace constraints
 
