@@ -315,7 +315,7 @@ void ConvInputParser::parseEnergyConvergence(
 {
     checkCommandArray(lineElements, lineNumber);
 
-    const auto energyConvergence = std::stod(lineElements[2]);
+    const auto energyConvergence = stringToFiniteDouble(lineElements[2]);
 
     if (energyConvergence <= 0.0)
         throw InputFileException(
@@ -345,7 +345,8 @@ void ConvInputParser::parseRelativeEnergyConvergence(
 {
     checkCommandArray(lineElements, lineNumber);
 
-    const auto relativeEnergyConvergence = std::stod(lineElements[2]);
+    const auto relativeEnergyConvergence =
+        stringToFiniteDouble(lineElements[2]);
 
     if (relativeEnergyConvergence <= 0.0)
         throw InputFileException(
@@ -376,7 +377,8 @@ void ConvInputParser::parseAbsoluteEnergyConvergence(
 {
     checkCommandArray(lineElements, lineNumber);
 
-    const auto absoluteEnergyConvergence = std::stod(lineElements[2]);
+    const auto absoluteEnergyConvergence =
+        stringToFiniteDouble(lineElements[2]);
 
     if (absoluteEnergyConvergence <= 0.0)
         throw InputFileException(
@@ -407,7 +409,7 @@ void ConvInputParser::parseForceConvergence(
 {
     checkCommandArray(lineElements, lineNumber);
 
-    const auto forceConvergence = std::stod(lineElements[2]);
+    const auto forceConvergence = stringToFiniteDouble(lineElements[2]);
 
     if (forceConvergence <= 0.0)
         throw InputFileException(
@@ -437,7 +439,7 @@ void ConvInputParser::parseMaxForceConvergence(
 {
     checkCommandArray(lineElements, lineNumber);
 
-    const auto maxForceConvergence = std::stod(lineElements[2]);
+    const auto maxForceConvergence = stringToFiniteDouble(lineElements[2]);
 
     if (maxForceConvergence <= 0.0)
         throw InputFileException(
@@ -467,7 +469,7 @@ void ConvInputParser::parseRMSForceConvergence(
 {
     checkCommandArray(lineElements, lineNumber);
 
-    const auto rmsForceConvergence = std::stod(lineElements[2]);
+    const auto rmsForceConvergence = stringToFiniteDouble(lineElements[2]);
 
     if (rmsForceConvergence <= 0.0)
         throw InputFileException(

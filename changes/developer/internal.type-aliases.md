@@ -4,3 +4,5 @@
 - remove `thermostat` namespace from `typeAliases.hpp`
 - remove `opt` namespace entries of `typeAliases.hpp`
 - remove `virial` namespace types for `typeAliases.hpp`
+- remove all `std` aliases from `typeaAliases.hpp`
+- remove `resetKinetics` from `typeAliases.hpp`

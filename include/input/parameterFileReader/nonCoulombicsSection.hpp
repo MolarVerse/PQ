@@ -42,11 +42,11 @@ namespace input::parameterFile
        public:
         [[nodiscard]] std::string keyword() override;
 
-        void processSection(pq::strings &, pq::Engine &) override;
-        void processHeader(pq::strings &, pq::Engine &) override;
-        void processLJ(pq::strings &, pq::Engine &) const;
-        void processBuckingham(pq::strings &, pq::Engine &) const;
-        void processMorse(pq::strings &, pq::Engine &) const;
+        void processSection(std::vector<std::string> &, pq::Engine &) override;
+        void processHeader(std::vector<std::string> &, pq::Engine &) override;
+        void processLJ(std::vector<std::string> &, pq::Engine &) const;
+        void processBuckingham(std::vector<std::string> &, pq::Engine &) const;
+        void processMorse(std::vector<std::string> &, pq::Engine &) const;
     };
 
 }   // namespace input::parameterFile

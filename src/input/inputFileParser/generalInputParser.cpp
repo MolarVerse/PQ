@@ -177,7 +177,7 @@ void GeneralInputParser::parseDimensionality(
 
     std::erase(dimensionalityString, 'd');
 
-    const auto dimensionality = std::stoi(dimensionalityString);
+    const auto dimensionality = stringToInt(dimensionalityString);
 
     if (dimensionality == 3)
         Settings::setDimensionality(size_t(dimensionality));

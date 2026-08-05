@@ -245,8 +245,8 @@ void HessianEngine::writeOptimizationOutput()
 
     if (0 == _step % outputFreq)
     {
-        _engineOutput.writeXyzFile(*_simulationBox);
-        _engineOutput.writeForceFile(*_simulationBox);
+        _engineOutput.writeXyzFile(*_simulationBox, effStep);
+        _engineOutput.writeForceFile(*_simulationBox, effStep);
         _engineOutput.writeOptRstFile(*_simulationBox, effStep);
         _engineOutput.writeOptFile(_step, *_optimizer);
     }
@@ -316,6 +316,8 @@ std::shared_ptr<LearningRateStrategy> HessianEngine::setupLearningRateStrategy()
     const auto alpha0     = OptimizerSettings::getInitialLearningRate();
     const auto lrStrategy = OptimizerSettings::getLearningRateStrategy();
 
+    OptimizerSettings::validateLearningRateStrategy();
+
     switch (lrStrategy)
     {
         using enum LREnum;
@@ -324,48 +326,27 @@ std::shared_ptr<LearningRateStrategy> HessianEngine::setupLearningRateStrategy()
 
         case CONSTANT_DECAY:
         {
-            const auto alphaDecay = OptimizerSettings::getLearningRateDecay();
-
-            if (!alphaDecay.has_value())
-                throw UserInputException(
-                    "You need to specify a learning rate decay factor for the "
-                    "constant decay learning rate strategy"
-                );
-
             const auto alphaFreq = OptimizerSettings::getLRUpdateFrequency();
 
             return std::make_shared<ConstantDecayLRStrategy>(
                 alpha0,
-                alphaDecay.value(),
+                OptimizerSettings::getLearningRateDecay().value(),
                 alphaFreq
             );
         }
 
         case EXPONENTIAL_DECAY:
         {
-            const auto alphaDecay = OptimizerSettings::getLearningRateDecay();
-
-            if (!alphaDecay.has_value())
-                throw UserInputException(
-                    "You need to specify a learning rate decay factor for the "
-                    "exponential decay learning rate strategy"
-                );
-
             const auto alphaFreq = OptimizerSettings::getLRUpdateFrequency();
 
             return std::make_shared<ExpDecayLR>(
                 alpha0,
-                alphaDecay.value(),
+                OptimizerSettings::getLearningRateDecay().value(),
                 alphaFreq
             );
         }
 
         case LINESEARCH_WOLFE:
-            throw UserInputException(
-                "The Wolfe line search learning rate strategy is not yet "
-                "implemented"
-            );
-
         case NONE: break;
     }
 
@@ -425,15 +406,7 @@ void HessianEngine::setupMinMaxLearningRate(
     const auto minLR = OptimizerSettings::getMinLearningRate();
     const auto maxLR = OptimizerSettings::getMaxLearningRate();
 
-    if (maxLR.has_value() && minLR >= maxLR.value())
-        throw UserInputException(
-            std::format(
-                "The minimum learning rate {} is greater or equal to the "
-                "maximum learning rate {}, which is not allowed.",
-                minLR,
-                maxLR.value()
-            )
-        );
+    OptimizerSettings::validateLearningRateBounds();
 
     learningRate->setMinLearningRate(minLR);
     learningRate->setMaxLearningRate(maxLR);

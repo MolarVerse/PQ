@@ -58,7 +58,7 @@ namespace input::parameterFile
         void deleteSection(const pq::ParamFileSection *section);
 
         [[nodiscard]] pq::ParamFileSection *determineSection(
-            const pq::strings &lineElements
+            const std::vector<std::string> &lineElements
         );
 
         /**************************************

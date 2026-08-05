@@ -25,9 +25,9 @@
 #define _LOG_OUTPUT_HPP_
 
 #include <string>
+#include <vector>
 
 #include "output.hpp"
-#include "typeAliases.hpp"
 
 namespace output
 {
@@ -63,7 +63,7 @@ namespace output
         void flushQueuedWarnings();
 
        private:
-        pq::strings _pendingWarnings;
+        std::vector<std::string> _pendingWarnings;
     };
 
 }   // namespace output

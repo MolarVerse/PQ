@@ -37,7 +37,7 @@ using namespace constants;
 
 /**
  * @brief get the virial tensor, either atomic or molecular depending on the
- * isAtomic flag
+ * configured virial type
  *
  * @param virialType - the virial type to get the virial tensor for
  *

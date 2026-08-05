@@ -265,15 +265,9 @@ std::vector<int> HybridSetup::parseSelectionNoPython(
         throw customException::InputFileException(
             std::format(
                 "The value of key {} - {} is an empty list. The {} string "
-                "must "
-                "be "
-                "a comma-separated list of integers or ranges, "
-                "representing "
-                "the "
-                "atom indices in the restart file that should be treated "
-                "as "
-                "the "
-                "{}.",
+                "must be a comma-separated list of integers or ranges, "
+                "representing the atom indices in the restart file that should "
+                "be treated as the {}.",
                 key,
                 selection,
                 key,

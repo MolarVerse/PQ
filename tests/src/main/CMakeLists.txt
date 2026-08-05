@@ -20,7 +20,3 @@ if(BUILD_WITH_KOKKOS)
     )
     target_precompile_headers(pq_test_main REUSE_FROM pq_test_pch)
 endif()
-
-install(TARGETS pq_test_main
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
-)

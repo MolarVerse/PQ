@@ -50,7 +50,8 @@ using namespace utilities;
  *
  * @param engine
  */
-FilesInputParser::FilesInputParser(Engine &engine) : InputFileParser(engine)
+FilesInputParser::FilesInputParser(Engine &engine, const bool validateFilePaths)
+    : InputFileParser(engine), _validateFilePaths(validateFilePaths)
 {
     addKeyword(
         std::string("intra-nonBonded_file"),
@@ -132,7 +133,7 @@ void FilesInputParser::parseIntraNonBondedFile(
 
     const auto &fileName = lineElements[2];
 
-    if (!fileExists(fileName))
+    if (_validateFilePaths && !fileExists(fileName))
         throw InputFileException(
             std::format("Intra non bonded file \"{}\" File not found", fileName)
         );
@@ -161,7 +162,7 @@ void FilesInputParser::parseTopologyFilename(
 
     const auto &filename = lineElements[2];
 
-    if (!fileExists(filename))
+    if (_validateFilePaths && !fileExists(filename))
         throw InputFileException(
             std::format("Cannot open topology file - filename = {}", filename)
         );
@@ -188,7 +189,7 @@ void FilesInputParser::parseParameterFilename(
 
     const auto &filename = lineElements[2];
 
-    if (!fileExists(filename))
+    if (_validateFilePaths && !fileExists(filename))
         throw InputFileException(
             std::format("Cannot open parameter file - filename = {}", filename)
         );
@@ -212,7 +213,7 @@ void FilesInputParser::parseStartFilename(
 
     const auto &filename = lineElements[2];
 
-    if (!fileExists(filename))
+    if (_validateFilePaths && !fileExists(filename))
         throw InputFileException(
             std::format("Cannot open start file - filename = {}", filename)
         );
@@ -235,7 +236,7 @@ void FilesInputParser::parseRingPolymerStartFilename(
 
     const auto &filename = lineElements[2];
 
-    if (!fileExists(filename))
+    if (_validateFilePaths && !fileExists(filename))
         throw InputFileException(
             std::format(
                 "Cannot open ring polymer start file - filename = {}",
@@ -265,7 +266,7 @@ void FilesInputParser::parseMoldescriptorFilename(
 
     const auto &filename = lineElements[2];
 
-    if (!fileExists(filename))
+    if (_validateFilePaths && !fileExists(filename))
         throw InputFileException(
             std::format(
                 "Cannot open moldescriptor file - filename = \"{}\" - file not "
@@ -314,7 +315,7 @@ void FilesInputParser::parseGuffDatFilename(
 
     const auto &filename = lineElements[2];
 
-    if (!fileExists(filename))
+    if (_validateFilePaths && !fileExists(filename))
         throw InputFileException(
             std::format("Cannot open guff file - filename = {}", filename)
         );
@@ -338,7 +339,7 @@ void FilesInputParser::parseMShakeFilename(
 
     const auto &filename = lineElements[2];
 
-    if (!fileExists(filename))
+    if (_validateFilePaths && !fileExists(filename))
         throw InputFileException(
             std::format("Cannot open mshake file - filename = {}", filename)
         );
@@ -362,7 +363,7 @@ void FilesInputParser::parseDFTBFilename(
 
     const auto &filename = lineElements[2];
 
-    if (!fileExists(filename))
+    if (_validateFilePaths && !fileExists(filename))
         throw InputFileException(
             std::format("Cannot open DFTB setup file - filename = {}", filename)
         );

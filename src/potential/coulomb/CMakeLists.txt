@@ -12,5 +12,5 @@ target_include_directories(coulombPotential
 )
 
 install(TARGETS coulombPotential
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+    DESTINATION lib
 )

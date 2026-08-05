@@ -22,6 +22,7 @@
 
 #include "physicalData.hpp"
 #include "settings.hpp"
+#include "staticMatrix/staticMatrix3x3Class.hpp"
 
 using namespace physicalData;
 

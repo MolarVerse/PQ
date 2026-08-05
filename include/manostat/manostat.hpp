@@ -24,8 +24,19 @@
 
 #define _MANOSTAT_HPP_
 
-#include "timer.hpp"          // for Timer
-#include "typeAliases.hpp"
+#include "manostatSettings.hpp"
+#include "staticMatrix.hpp"
+#include "timer.hpp"   // for Timer
+
+namespace simulationBox
+{
+    class SimulationBox;   // forward declaration
+}
+
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}
 
 namespace manostat
 {
@@ -38,22 +49,28 @@ namespace manostat
     class Manostat : public timings::Timer
     {
        protected:
-        pq::tensor3D _pressureTensor = {0.0};
-        double       _pressure;
-        double       _targetPressure;   // no default value, must be set
+        linearAlgebra::tensor3D _pressureTensor = {0.0};
+        double                  _pressure;
+        double _targetPressure;   // no default value, must be set
 
        public:
         explicit Manostat(const double targetPressure);
         Manostat()          = default;
         virtual ~Manostat() = default;
 
-        void         calculatePressure(const pq::SimBox &, pq::PhysicalData &);
-        virtual void applyManostat(pq::SimBox &, pq::PhysicalData &);
-        
+        void calculatePressure(
+            const simulationBox::SimulationBox &,
+            physicalData::PhysicalData &
+        );
+        virtual void applyManostat(
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &
+        );
+
         void rotateMu(linearAlgebra::tensor3D &mu) const;
 
-        virtual pq::ManostatType getManostatType() const;
-        virtual pq::Isotropy     getIsotropy() const;
+        virtual settings::ManostatType getManostatType() const;
+        virtual settings::Isotropy     getIsotropy() const;
     };
 
 }   // namespace manostat

@@ -845,9 +845,10 @@ void GuffDatReader::setIsGuffPairSet(
 /**
  * @brief Get the Guff Coulomb Coefficients object
  *
- * @return pq::stlVector4d&
+ * @return std::vector<std::vector<std::vector<std::vector<double>>>>&
  */
-pq::stlVector4d &GuffDatReader::getGuffCoulombCoefficients()
+std::vector<std::vector<std::vector<std::vector<double>>>> &GuffDatReader::
+    getGuffCoulombCoefficients()
 {
     return _guffCoulombCoeffs;
 }
@@ -855,9 +856,10 @@ pq::stlVector4d &GuffDatReader::getGuffCoulombCoefficients()
 /**
  * @brief Get the Is Guff Pair Set object
  *
- * @return pq::stlVector4dBool&
+ * @return std::vector<std::vector<std::vector<std::vector<bool>>>>&
  */
-pq::stlVector4dBool &GuffDatReader::getIsGuffPairSet()
+std::vector<std::vector<std::vector<std::vector<bool>>>> &GuffDatReader::
+    getIsGuffPairSet()
 {
     return _isGuffPairSet;
 }
