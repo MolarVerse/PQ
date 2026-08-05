@@ -24,6 +24,7 @@
 
 #define _OUTPUT_HPP_
 
+#include <cstddef>       // for size_t
 #include <fstream>       // for ofstream
 #include <string>        // for string
 #include <string_view>   // for string_view
@@ -50,6 +51,9 @@ namespace output
         int           _rank;
 
         void openFile();
+        void               writeComment(std::size_t);
+        void               writeForceComment(std::size_t, double);
+        static std::string formatForceComment(std::size_t, double);
 
        public:
         explicit Output(const std::string &filename) : _fileName(filename){};

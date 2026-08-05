@@ -20,33 +20,19 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _IMPROPER_DIHEDRAL_SECTION_HPP_
+#include <gtest/gtest.h>
 
-#define _IMPROPER_DIHEDRAL_SECTION_HPP_
+#include <sstream>
+#include <string>
 
-#include <string>   // for allocator, string
+#include "progressbar.hpp"
 
-#include "parameterFileSection.hpp"   // for ParameterFileSection
-#include "typeAliases.hpp"
-
-namespace input::parameterFile
+TEST(TestProgressbar, singleIterationCompletes)
 {
-    /**
-     * @class ImproperDihedralSection
-     *
-     * @brief reads improper dihedral section of parameter file
-     *
-     */
-    class ImproperDihedralSection : public ParameterFileSection
-    {
-       public:
-        [[nodiscard]] std::string keyword() override;
+    auto output = std::ostringstream();
+    auto bar    = progressbar(1, true, output);
 
-        void processSection(std::vector<std::string> &, pq::Engine &) override;
-        void processHeader(std::vector<std::string> &, pq::Engine &) override {}
-        // TODO: implement processHeader
-    };
+    bar.update();
 
-}   // namespace input::parameterFile
-
-#endif   // _IMPROPER_DIHEDRAL_SECTION_HPP_
+    EXPECT_NE(output.str().find("100%"), std::string::npos);
+}

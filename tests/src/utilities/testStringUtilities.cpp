@@ -125,7 +125,7 @@ TEST(TestStringUtilities, toLowerAndReplaceDashesCopy)
  */
 TEST(TestStringUtilities, keywordToBool)
 {
-    pq::strings line = {"keyword", "=", "oN"};
+    std::vector<std::string> line = {"keyword", "=", "oN"};
     EXPECT_TRUE(utilities::keywordToBool(line));
 
     line = {"keyword", "=", "YES"};

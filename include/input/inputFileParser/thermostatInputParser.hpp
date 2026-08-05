@@ -27,7 +27,7 @@
 #include <cstddef>   // for size_t
 
 #include "inputFileParser.hpp"   // for InputFileParser
-#include "typeAliases.hpp"       // for pq::strings
+#include "typeAliases.hpp"       // for std::vector<std::string>
 
 namespace input
 {
@@ -42,17 +42,38 @@ namespace input
        public:
         explicit ThermostatInputParser(pq::Engine &);
 
-        void parseThermostat(const pq::strings &, const size_t);
-        void parseTemperature(const pq::strings &, const size_t);
-        void parseStartTemperature(const pq::strings &, const size_t);
-        void parseEndTemperature(const pq::strings &, const size_t);
-        void parseTemperatureRampSteps(const pq::strings &, const size_t);
-        void parseTemperatureRampFrequency(const pq::strings &, const size_t);
-        void parseThermostatRelaxationTime(const pq::strings &, const size_t);
-        void parseThermostatFriction(const pq::strings &, const size_t);
-        void parseThermostatChainLength(const pq::strings &, const size_t);
+        void parseThermostat(const std::vector<std::string> &, const size_t);
+        void parseTemperature(const std::vector<std::string> &, const size_t);
+        void parseStartTemperature(
+            const std::vector<std::string> &,
+            const size_t
+        );
+        void parseEndTemperature(
+            const std::vector<std::string> &,
+            const size_t
+        );
+        void parseTemperatureRampSteps(
+            const std::vector<std::string> &,
+            const size_t
+        );
+        void parseTemperatureRampFrequency(
+            const std::vector<std::string> &,
+            const size_t
+        );
+        void parseThermostatRelaxationTime(
+            const std::vector<std::string> &,
+            const size_t
+        );
+        void parseThermostatFriction(
+            const std::vector<std::string> &,
+            const size_t
+        );
+        void parseThermostatChainLength(
+            const std::vector<std::string> &,
+            const size_t
+        );
         void parseThermostatCouplingFrequency(
-            const pq::strings &,
+            const std::vector<std::string> &,
             const size_t
         );
     };

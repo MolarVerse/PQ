@@ -51,7 +51,7 @@ namespace engine
     class MDEngine : public Engine
     {
        protected:
-        pq::ResetKinetics _resetKinetics;
+        resetKinetics::ResetKinetics _resetKinetics;
 
         // clang-format off
         pq::UniqueIntegrator _integrator = std::make_unique<integrator::VelocityVerlet>();
