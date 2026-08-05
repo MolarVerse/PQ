@@ -24,8 +24,9 @@
 
 #define _HYBRID_SETTINGS_HPP_
 
-#include <optional>      // for optional
-#include <vector>        // for vector
+#include <optional>   // for optional
+#include <string>     // for string
+#include <vector>     // for vector
 
 namespace settings
 {
@@ -41,6 +42,8 @@ namespace settings
         HOTSPOT,
         EXACT
     };
+
+    [[nodiscard]] std::string string(const SmoothingMethod method);
 
     /**
      * @class HybridSettings

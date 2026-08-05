@@ -47,8 +47,8 @@ void setup::setupHybrid(Engine &engine)
     if (!Settings::isHybridJobtype())
         return;
 
-    engine.getStdoutOutput().writeSetup("Hybrid setup");
-    engine.getLogOutput().writeSetup("Hybrid setup");
+    engine.getStdoutOutput().writeSetup("Hybrid Configuration");
+    engine.getLogOutput().writeSetup("Hybrid Configuration");
 
     HybridSetup hybridSetup(engine);
     hybridSetup.setup();
@@ -73,6 +73,8 @@ void HybridSetup::setup()
     setupForcedOuterList();
     validateQMChargeSettings();
     checkZoneRadii();
+
+    setupWriteInfo();
 }
 
 /**
@@ -245,4 +247,76 @@ void HybridSetup::validateQMChargeSettings()
             "system. Either set \"qm_charges = qm\" or ensure all atoms have a"
             "non-zero moltype."
         ));
+}
+
+/**
+ * @brief write info about the hybrid setup
+ *
+ */
+void HybridSetup::setupWriteInfo() const
+{
+    auto &logOutput = _engine.getLogOutput();
+
+    const auto jobtype         = Settings::getJobtype();
+    const auto smoothingMethod = HybridSettings::getSmoothingMethod();
+    const auto innerRegionCenterSettings =
+        HybridSettings::getInnerRegionCenter();
+    const auto innerRegionCenter =
+        innerRegionCenterSettings.value_or(std::vector<int>{0});
+    const auto forcedInnerList = HybridSettings::getForcedInnerList();
+    const auto forcedOuterList = HybridSettings::getForcedOuterList();
+    const auto useQMCharges    = HybridSettings::getUseQMCharges();
+    const auto coreRadius      = HybridSettings::getCoreRadius();
+    const auto layerRadius     = HybridSettings::getLayerRadius();
+    const auto smoothingRegionThickness =
+        HybridSettings::getSmoothingRegionThickness();
+    const auto pointChargeThickness = HybridSettings::getPointChargeThickness();
+
+    const auto formatIndexList = [](const std::vector<int> &indices)
+    {
+        if (indices.empty())
+            return std::string("none");
+
+        auto formatted = std::to_string(indices.front());
+
+        for (size_t i = 1; i < indices.size(); ++i)
+            formatted += std::format(", {}", indices[i]);
+
+        return formatted;
+    };
+
+    if (jobtype == JobType::QMMM_MD)
+    {
+        // clang-format off
+        const auto jobtypeMsg =                 "Hybrid type:                 QM/MM";
+        // clang-format on
+
+        logOutput.writeSetupInfo(jobtypeMsg);
+    }
+
+    // clang-format off
+    const auto smoothingMethodMsg          = std::format("Smoothing method:            {}", string(smoothingMethod));
+    const auto innerRegionCenterMsg        = std::format("Inner region center atoms:   {}", formatIndexList(innerRegionCenter));
+    const auto forcedInnerListMsg          = std::format("Forced inner molecules:      {}", formatIndexList(forcedInnerList));
+    const auto forcedOuterListMsg          = std::format("Forced outer molecules:      {}", formatIndexList(forcedOuterList));
+    const auto qmChargesSourceMsg          = std::format("QM charge source:            {}", useQMCharges ? "qm" : "mm");
+    const auto coreRadiusMsg               = std::format("Core radius:                 {} Å", coreRadius);
+    const auto layerRadiusMsg              = std::format("Layer radius:                {} Å", layerRadius);
+    const auto smoothingRegionThicknessMsg = std::format("Smoothing region thickness:  {} Å", smoothingRegionThickness);
+    const auto pointChargeThicknessMsg     = std::format("Point charge thickness:      {} Å", pointChargeThickness);
+    // clang-format on
+
+    logOutput.writeSetupInfo(smoothingMethodMsg);
+    logOutput.writeSetupInfo(innerRegionCenterMsg);
+    logOutput.writeSetupInfo(forcedInnerListMsg);
+    logOutput.writeSetupInfo(forcedOuterListMsg);
+    logOutput.writeSetupInfo(qmChargesSourceMsg);
+    logOutput.writeEmptyLine();
+
+    logOutput.writeSetupInfo(coreRadiusMsg);
+    logOutput.writeSetupInfo(layerRadiusMsg);
+    logOutput.writeSetupInfo(smoothingRegionThicknessMsg);
+    logOutput.writeSetupInfo(pointChargeThicknessMsg);
+
+    logOutput.writeEmptyLine();
 }
