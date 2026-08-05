@@ -27,10 +27,7 @@
 #include <fstream>   // for ifstream
 #include <memory>    // for unique_ptr, make_unique
 #include <string>    // for string
-
-#include "atomSection.hpp"          // for AtomSection
-#include "restartFileSection.hpp"   // for RstFileSection
-#include "typeAliases.hpp"
+#include <vector>
 
 namespace engine
 {
@@ -39,6 +36,8 @@ namespace engine
 
 namespace input::restartFile
 {
+    class RestartFileSection;   // forward declaration
+
     void readRestartFile(engine::Engine &);
 
     /**
@@ -54,8 +53,8 @@ namespace input::restartFile
         std::ifstream     _fp;
         engine::Engine   &_engine;
 
-        pq::UniqueRestartSection _atomSection = std::make_unique<AtomSection>();
-        pq::UniqueRestartSectionVec _sections;
+        std::unique_ptr<RestartFileSection>              _atomSection;
+        std::vector<std::unique_ptr<RestartFileSection>> _sections;
 
        public:
         RestartFileReader(const std::string &, engine::Engine &);

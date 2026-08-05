@@ -55,29 +55,8 @@ namespace potential
 
 }   // namespace potential
 
-namespace input
-{
-    namespace parameterFile
-    {
-        class ParameterFileSection;   // forward declaration
-    }
-
-    namespace restartFile
-    {
-        class RestartFileSection;   // forward declaration
-    }
-}   // namespace input
-
 namespace pq
 {
-
-    using ParamFileSection       = input::parameterFile::ParameterFileSection;
-    using UniqueParamFileSection = std::unique_ptr<ParamFileSection>;
-    using UniqueParamFileSectionVec = std::vector<UniqueParamFileSection>;
-
-    using RestartSection          = input::restartFile::RestartFileSection;
-    using UniqueRestartSection    = std::unique_ptr<RestartSection>;
-    using UniqueRestartSectionVec = std::vector<UniqueRestartSection>;
 
     /***********************
      * potential namespace *
