@@ -47,10 +47,11 @@ namespace input::guffdat
     {
        private:
         size_t      _lineNumber = 1;
-        std::string _fileName   = defaults::_GUFF_FILE_DEFAULT_;
+        std::string _fileName   = defaults::GUFF_FILE_DEFAULT;
 
-        pq::stlVector4d     _guffCoulombCoeffs;
-        pq::stlVector4dBool _isGuffPairSet;
+        std::vector<std::vector<std::vector<std::vector<double>>>>
+            _guffCoulombCoeffs;
+        std::vector<std::vector<std::vector<std::vector<bool>>>> _isGuffPairSet;
 
         pq::Engine &_engine;
 
@@ -58,7 +59,7 @@ namespace input::guffdat
         explicit GuffDatReader(pq::Engine &engine);
 
         void setupGuffMaps();
-        void parseLine(const pq::strings &lineCommands);
+        void parseLine(const std::vector<std::string> &lineCommands);
         void read();
         void postProcessSetup();
         void calculatePartialCharges();
@@ -133,8 +134,12 @@ namespace input::guffdat
          * standard getters *
          ********************/
 
-        [[nodiscard]] pq::stlVector4d     &getGuffCoulombCoefficients();
-        [[nodiscard]] pq::stlVector4dBool &getIsGuffPairSet();
+        [[nodiscard]]
+        std::vector<std::vector<
+            std::vector<std::vector<double>>>> &getGuffCoulombCoefficients();
+        [[nodiscard]]
+        std::vector<
+            std::vector<std::vector<std::vector<bool>>>> &getIsGuffPairSet();
     };
 
 }   // namespace input::guffdat

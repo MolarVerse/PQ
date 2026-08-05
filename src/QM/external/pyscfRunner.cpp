@@ -71,7 +71,7 @@ void PySCFRunner::writeCoordsFile(SimulationBox &box)
  */
 void PySCFRunner::execute(SimulationBox &)
 {
-    const auto scriptFileName = _scriptPath + QMSettings::getQMScript();
+    const auto scriptFileName = resolveScriptPath(QMSettings::getQMScript());
 
     if (!fileExists(scriptFileName))
         throw InputFileException(

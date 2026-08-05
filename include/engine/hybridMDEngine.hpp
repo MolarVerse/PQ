@@ -25,7 +25,7 @@
 #define _HYBRID_MD_ENGINE_HPP_
 
 #include "hybridConfigurator.hpp"
-#include "mmmdEngine.hpp"
+#include "mdEngine.hpp"
 #include "qmCapableEngine.hpp"
 
 namespace engine

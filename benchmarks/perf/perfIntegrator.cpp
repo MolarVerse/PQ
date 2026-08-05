@@ -40,7 +40,8 @@ int main()
 {
     settings::TimingsSettings::setTimeStep(0.001);
 
-    auto box        = benchSetup::makePopulatedBox(20, 3);
+    auto box =
+        benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
     auto integrator = integrator::VelocityVerlet();
 
     CALLGRIND_ZERO_STATS;

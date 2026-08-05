@@ -116,15 +116,9 @@ TEST_F(TestLogOutput, writeHeader)
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
-    EXPECT_EQ(
-        line,
-        std::format("         Author:        {}", sysinfo::_AUTHOR_)
-    );
+    EXPECT_EQ(line, std::format("         Author:        {}", sysinfo::AUTHOR));
     getline(file, line);
-    EXPECT_EQ(
-        line,
-        std::format("         Email:         {}", sysinfo::_EMAIL_)
-    );
+    EXPECT_EQ(line, std::format("         Email:         {}", sysinfo::EMAIL));
 }
 
 /**
@@ -214,7 +208,7 @@ TEST_F(TestLogOutput, writeInitialMomentum)
         line,
         std::format(
             "INFO:    Initial momentum = 1.00000e-01 {}*amu/fs",
-            output::_ANGSTROM_
+            output::ANGSTROM
         )
     );
 }

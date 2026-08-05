@@ -123,19 +123,21 @@ void OutputFilesSetup::setup()
 
         if (Settings::isRingPolymerMDActivated())
         {
-            const auto RstFile = OutputFileSettings::getRPMDRestartFileName();
-            const auto xyzFile = OutputFileSettings::getRPMDTrajFileName();
-            const auto velFile = OutputFileSettings::getRPMDVelocityFileName();
-            const auto forceFile  = OutputFileSettings::getRPMDForceFileName();
-            const auto chargeFile = OutputFileSettings::getRPMDChargeFileName();
-            const auto energyFile = OutputFileSettings::getRPMDEnergyFileName();
+            const auto rstFile_ = OutputFileSettings::getRPMDRestartFileName();
+            const auto xyzFile_ = OutputFileSettings::getRPMDTrajFileName();
+            const auto velFile_ = OutputFileSettings::getRPMDVelocityFileName();
+            const auto forceFile_ = OutputFileSettings::getRPMDForceFileName();
+            const auto chargeFile_ =
+                OutputFileSettings::getRPMDChargeFileName();
+            const auto energyFile_ =
+                OutputFileSettings::getRPMDEnergyFileName();
 
-            mdEngine.getRingPolymerRstFileOutput().setFilename(RstFile);
-            mdEngine.getRingPolymerXyzOutput().setFilename(xyzFile);
-            mdEngine.getRingPolymerVelOutput().setFilename(velFile);
-            mdEngine.getRingPolymerForceOutput().setFilename(forceFile);
-            mdEngine.getRingPolymerChargeOutput().setFilename(chargeFile);
-            mdEngine.getRingPolymerEnergyOutput().setFilename(energyFile);
+            mdEngine.getRingPolymerRstFileOutput().setFilename(rstFile_);
+            mdEngine.getRingPolymerXyzOutput().setFilename(xyzFile_);
+            mdEngine.getRingPolymerVelOutput().setFilename(velFile_);
+            mdEngine.getRingPolymerForceOutput().setFilename(forceFile_);
+            mdEngine.getRingPolymerChargeOutput().setFilename(chargeFile_);
+            mdEngine.getRingPolymerEnergyOutput().setFilename(energyFile_);
         }
     }
 

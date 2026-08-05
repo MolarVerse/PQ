@@ -22,13 +22,13 @@
 
 #include "virialInputParser.hpp"
 
-#include <format>       // for format
-#include <functional>   // for _Bind_front_t, bind_front
+#include <format>   // for format
 
 #include "atomicVirial.hpp"      // for VirialAtomic
 #include "engine.hpp"            // for Engine
 #include "exceptions.hpp"        // for InputFileException, customException
 #include "molecularVirial.hpp"   // for VirialMolecular
+#include "parserUtils.hpp"
 #include "stringUtilities.hpp"   // for toLowerCopy
 
 using namespace input;
@@ -50,7 +50,7 @@ VirialInputParser::VirialInputParser(Engine &engine) : InputFileParser(engine)
 {
     addKeyword(
         std::string("virial"),
-        bind_front(&VirialInputParser::parseVirial, this),
+        bindMember(&VirialInputParser::parseVirial, this),
         false
     );
 }

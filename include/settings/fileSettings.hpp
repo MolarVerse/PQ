@@ -41,24 +41,25 @@ namespace settings
     {
        private:
         // clang-format off
-        static inline std::string _molDescriptorFile = defaults::_MOLDESCRIPTOR_FILE_DEFAULT_;
-        
-        static inline std::string _guffDatFile = defaults::_GUFF_FILE_DEFAULT_;
-        
+        static inline std::string _molDescriptorFile = defaults::MOLDESCRIPTOR_FILE_DEFAULT;
+        // clang-format on
+
+        static inline std::string _guffDatFile = defaults::GUFF_FILE_DEFAULT;
+
         static inline std::string _topologyFile;
         static inline std::string _parameterFile;
         static inline std::string _intraNonBondedFile;
         static inline std::string _startFile;
         static inline std::string _rpmdStartFile;
         static inline std::string _mShakeFile;
-        static inline std::string _dftbFile = defaults::_DFTB_FILE_DEFAULT_;
-        static inline std::string _tmFile = defaults::_TM_FILE_DEFAULT_;
-        static inline std::string _pointChargeFile = defaults::_POINTCHARGE_FILE_DEFAULT_;
+        static inline std::string _dftbFile = defaults::DFTB_FILE_DEFAULT;
+        static inline std::string _tmFile = defaults::TM_FILE_DEFAULT;
+        static inline std::string _pointChargeFile = defaults::POINTCHARGE_FILE_DEFAULT;
 
         // clang-format off
-        static inline std::string _qmForcesTempFile     = defaults::_QM_FORCES_TEMP_FILE_DEFAULT_;
-        static inline std::string _qmChargesTempFile    = defaults::_QM_CHARGES_TEMP_FILE_DEFAULT_;
-        static inline std::string _StressTensorTempFile = defaults::_STRESS_TENSOR_TEMP_FILE_DEFAULT_;
+        static inline std::string _qmForcesTempFile     = defaults::QM_FORCES_TEMP_FILE_DEFAULT;
+        static inline std::string _qmChargesTempFile    = defaults::QM_CHARGES_TEMP_FILE_DEFAULT;
+        static inline std::string _stressTensorTempFile = defaults::STRESS_TENSOR_TEMP_FILE_DEFAULT;
         // clang-format on
 
         static bool inline _isTopologyFileSet       = false;

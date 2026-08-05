@@ -24,19 +24,9 @@
 
 #define _TYPE_ALIASES_HPP_
 
-#include <chrono>       // for std::chrono
-#include <cstddef>      // for size_t
-#include <deque>        // for std::queue
-#include <functional>   // for std::function
-#include <memory>       // for std::shared_ptr
-#include <optional>     // for std::optional
-#include <set>          // for std::set
-#include <string>       // for std::string
-#include <vector>       // for std::vector
-
-#include "../linearAlgebra/matrix.hpp"         // IWYU pragma: export
-#include "../linearAlgebra/staticMatrix.hpp"   // IWYU pragma: export
-#include "../linearAlgebra/vector3d.hpp"       // IWYU pragma: export
+#include <memory>     // for std::shared_ptr
+#include <optional>   // for std::optional
+#include <vector>     // for std::vector
 
 namespace simulationBox
 {
@@ -71,13 +61,6 @@ namespace potential
 
 }   // namespace potential
 
-namespace virial
-{
-    class Virial;            // forward declaration
-    class MolecularVirial;   // forward declaration
-
-}   // namespace virial
-
 namespace intraNonBonded
 {
     class IntraNonBonded;   // forward declaration
@@ -98,44 +81,6 @@ namespace constraints
     class MShakeReference;      // forward declaration
 
 }   // namespace constraints
-
-namespace opt
-{
-    class LearningRateStrategy;
-    class ConstantLRStrategy;
-    class ConstantDecayLRStrategy;
-
-    class Evaluator;
-    class MMEvaluator;
-    class HessianBuilder;
-
-    class Optimizer;
-    class SteepestDescent;
-
-    class Convergence;
-
-}   // namespace opt
-
-namespace output
-{
-    class EnergyOutput;       // forward declaration
-    class InfoOutput;         // forward declaration
-    class LogOutput;          // forward declaration
-    class RstFileOutput;      // forward declaration
-    class StdoutOutput;       // forward declaration
-    class TrajectoryOutput;   // forward declaration
-    class MomentumOutput;     // forward declaration
-    class VirialOutput;       // forward declaration
-    class StressOutput;       // forward declaration
-    class BoxFileOutput;      // forward declaration
-    class TimingsOutput;      // forward declaration
-    class OptOutput;          // forward declaration
-
-    class RingPolymerRestartFileOutput;   // forward declaration
-    class RingPolymerTrajectoryOutput;    // forward declaration
-    class RingPolymerEnergyOutput;        // forward declaration
-
-}   // namespace output
 
 namespace engine
 {
@@ -167,13 +112,6 @@ namespace timings
 
 }   // namespace timings
 
-namespace thermostat
-{
-    class Thermostat;   // forward declaration
-    class NoseHoover;   // forward declaration
-
-}   // namespace thermostat
-
 namespace settings
 {
     enum class ThermostatType;   // forward declaration
@@ -187,11 +125,6 @@ namespace integrator
     class Integrator;       // forward declaration
     class VelocityVerlet;   // forward declaration
 }   // namespace integrator
-
-namespace resetKinetics
-{
-    class ResetKinetics;   // forward declaration
-}   // namespace resetKinetics
 
 namespace input
 {
@@ -214,27 +147,6 @@ namespace waterModel
 
 namespace pq
 {
-    using Time = std::chrono::time_point<std::chrono::high_resolution_clock>;
-    using Duration = std::chrono::duration<double>;
-
-    using strings   = std::vector<std::string>;
-    using stringSet = std::set<std::string>;
-
-    using stlVectorUL     = std::vector<size_t>;
-    using stlVector3d     = std::vector<std::vector<std::vector<double>>>;
-    using stlVector4d     = std::vector<stlVector3d>;
-    using stlVector3dBool = std::vector<std::vector<std::vector<bool>>>;
-    using stlVector4dBool = std::vector<stlVector3dBool>;
-
-    using ParseFunc = std::function<void(const strings &, const size_t)>;
-
-    using Vec3D         = linearAlgebra::Vec3D;
-    using Vec3Dul       = linearAlgebra::Vec3Dul;
-    using Vec3DPair     = std::pair<Vec3D, Vec3D>;
-    using Vec3DVec      = std::vector<Vec3D>;
-    using Vec3DVecDeque = std::deque<std::vector<Vec3D>>;
-    using tensor3D      = linearAlgebra::tensor3D;
-
     using IntraNonBond = intraNonBonded::IntraNonBonded;
     using ForceField   = forceField::ForceField;
     using Timer        = timings::Timer;
@@ -252,8 +164,6 @@ namespace pq
     using UniqueRestartSection    = std::unique_ptr<RestartSection>;
     using UniqueRestartSectionVec = std::vector<UniqueRestartSection>;
 
-    using ResetKinetics = resetKinetics::ResetKinetics;
-
     /************************
      * integrator namespace *
      ************************/
@@ -270,24 +180,6 @@ namespace pq
     using ThermostatType = settings::ThermostatType;
     using Isotropy       = settings::Isotropy;
     using ManostatType   = settings::ManostatType;
-
-    /************************
-     * thermostat namespace *
-     ************************/
-
-    using Thermostat = thermostat::Thermostat;
-    using NoseHoover = thermostat::NoseHoover;
-
-    using UniqueThermostat = std::unique_ptr<Thermostat>;
-
-    /********************
-     * virial namespace *
-     ********************/
-
-    using Virial          = virial::Virial;
-    using MolecularVirial = virial::MolecularVirial;
-
-    using SharedVirial = std::shared_ptr<virial::Virial>;
 
     /**********************
      * manostat namespace *
@@ -318,10 +210,6 @@ namespace pq
 
     using UniqueEngine = std::unique_ptr<Engine>;
 
-    using HessianMatrix = std::vector<std::vector<double>>;
-    using HessianBuilder = opt::HessianBuilder;
-    using SharedHessianBuilder = std::shared_ptr<opt::HessianBuilder>;
-
     /***********************
      * potential namespace *
      ***********************/
@@ -348,7 +236,6 @@ namespace pq
     using SharedNonCoulPairVec2d = std::vector<SharedNonCoulPairVec>;
     using SharedNonCoulPairVec3d = std::vector<SharedNonCoulPairVec2d>;
     using SharedNonCoulPairVec4d = std::vector<SharedNonCoulPairVec3d>;
-    using SharedNonCoulPairMat   = linearAlgebra::Matrix<SharedNonCoulPair>;
 
     /**************************
      * constraints namespace *
@@ -391,50 +278,6 @@ namespace pq
     using PhysicalData       = physicalData::PhysicalData;
     using VecPhysicalData    = std::vector<PhysicalData>;
     using SharedPhysicalData = std::shared_ptr<physicalData::PhysicalData>;
-
-    /*****************
-     * opt namespace *
-     *****************/
-
-    using Evaluator       = opt::Evaluator;
-    using MMEvaluator     = opt::MMEvaluator;
-    using SharedEvaluator = std::shared_ptr<opt::Evaluator>;
-
-    using LearningRate       = opt::LearningRateStrategy;
-    using ConstantLR         = opt::ConstantLRStrategy;
-    using ConstantDecayLR    = opt::ConstantDecayLRStrategy;
-    using SharedLearningRate = std::shared_ptr<opt::LearningRateStrategy>;
-
-    using Optimizer       = opt::Optimizer;
-    using SteepestDescent = opt::SteepestDescent;
-    using SharedOptimizer = std::shared_ptr<opt::Optimizer>;
-
-    using Convergence = opt::Convergence;
-
-    /********************
-     * output namespace *
-     ********************/
-
-    using EnergyOutput     = output::EnergyOutput;
-    using InfoOutput       = output::InfoOutput;
-    using LogOutput        = output::LogOutput;
-    using RstFileOutput    = output::RstFileOutput;
-    using StdoutOutput     = output::StdoutOutput;
-    using TrajectoryOutput = output::TrajectoryOutput;
-    using MomentumOutput   = output::MomentumOutput;
-    using VirialOutput     = output::VirialOutput;
-    using StressOutput     = output::StressOutput;
-    using BoxFileOutput    = output::BoxFileOutput;
-    using TimingsOutput    = output::TimingsOutput;
-    using OptOutput        = output::OptOutput;
-
-    using RPMDRstFileOutput = output::RingPolymerRestartFileOutput;
-    using RPMDTrajOutput    = output::RingPolymerTrajectoryOutput;
-    using RPMDEnergyOutput  = output::RingPolymerEnergyOutput;
-
-    using UniqueRPMDRstFileOutput = std::unique_ptr<RPMDRstFileOutput>;
-    using UniqueRPMDTrajOutput    = std::unique_ptr<RPMDTrajOutput>;
-    using UniqueRPMDEnergyOutput  = std::unique_ptr<RPMDEnergyOutput>;
 
     /*************************
      * water model namespace *

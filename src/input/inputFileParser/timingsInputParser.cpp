@@ -22,16 +22,18 @@
 
 #include "timingsInputParser.hpp"
 
-#include <functional>    // for _Bind_front_t, bind_front
 #include <string_view>   // for string_view
 
-#include "exceptions.hpp"        // for InputFileException
+#include "exceptions.hpp"   // for InputFileException
+#include "parserUtils.hpp"
+#include "stringUtilities.hpp"   // for stringToFiniteDouble, stringToInt
 #include "timingsSettings.hpp"   // for TimingsSettings
 
 using namespace input;
 using namespace engine;
 using namespace customException;
 using namespace settings;
+using namespace utilities;
 
 /**
  * @brief Construct a new Input File Parser Timings object
@@ -46,13 +48,13 @@ TimingsInputParser::TimingsInputParser(Engine &engine) : InputFileParser(engine)
 {
     addKeyword(
         std::string("timestep"),
-        bind_front(&TimingsInputParser::parseTimeStep, this),
+        bindMember(&TimingsInputParser::parseTimeStep, this),
         false
     );
 
     addKeyword(
         std::string("nstep"),
-        bind_front(&TimingsInputParser::parseNumberOfSteps, this),
+        bindMember(&TimingsInputParser::parseNumberOfSteps, this),
         false
     );
 }
@@ -68,7 +70,14 @@ void TimingsInputParser::parseTimeStep(
 )
 {
     checkCommand(lineElements, lineNumber);
-    TimingsSettings::setTimeStep(stod(lineElements[2]));
+
+    const auto timeStep = stringToFiniteDouble(lineElements[2]);
+    if (timeStep <= 0.0)
+        throw InputFileException(
+            "Time step must be finite and greater than zero"
+        );
+
+    TimingsSettings::setTimeStep(timeStep);
 }
 
 /**
@@ -85,10 +94,10 @@ void TimingsInputParser::parseNumberOfSteps(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto numberOfSteps = stoi(lineElements[2]);
+    const auto numberOfSteps = stringToInt(lineElements[2]);
 
-    if (numberOfSteps < 0)
-        throw InputFileException("Number of steps cannot be negative");
+    if (numberOfSteps < 1)
+        throw InputFileException("Number of steps must be greater than zero");
 
     TimingsSettings::setNumberOfSteps(size_t(numberOfSteps));
 }

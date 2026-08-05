@@ -24,15 +24,15 @@
 
 #define _ASE_QM_RUNNER_HPP_
 
-#include <pybind11/embed.h>
 #include <pybind11/numpy.h>
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
 
 #include "qmRunner.hpp"
 #include "typeAliases.hpp"
 
-namespace py = pybind11;
+namespace pybind11
+{
+    class object;
+}
 
 namespace QM
 {
@@ -40,22 +40,23 @@ namespace QM
      * @brief AseQMRunner inherits from QMRunner
      *
      */
-    class __attribute__((visibility("default"))) AseQMRunner : public QMRunner
+    class AseQMRunner : public QMRunner
     {
        protected:
-        double           _energy;
-        pybind11::object _calculator;
-        pybind11::object _atomsModule;
-        pybind11::object _atoms;
+        double _energy;
 
-        pybind11::array_t<double> _forces;
-        pybind11::array_t<double> _stress;
+        struct AseInterface;
+        std::unique_ptr<AseInterface> _ase;
 
        public:
         AseQMRunner();
-        ~AseQMRunner() override = default;
+        ~AseQMRunner() override;
 
-        void run(pq::SimBox &, pq::PhysicalData &, simulationBox::Periodicity per) override;
+        void run(
+            pq::SimBox &,
+            pq::PhysicalData &,
+            simulationBox::Periodicity per
+        ) override;
         void buildAseAtoms(const pq::SimBox &);
         void execute();
 
@@ -65,11 +66,13 @@ namespace QM
         void collectStress(const pq::SimBox &, pq::PhysicalData &) const;
 
         // clang-format off
-        [[nodiscard]] py::array           asePositions(const pq::SimBox &) const;
-        [[nodiscard]] py::array_t<double> aseCell(const pq::SimBox &) const;
-        [[nodiscard]] py::array_t<bool>   asePBC() const;
-        [[nodiscard]] py::array_t<int>    aseAtomicNumbers(const pq::SimBox &) const;
+        [[nodiscard]] pybind11::array           asePositions(const pq::SimBox &) const;
+        [[nodiscard]] pybind11::array_t<double> aseCell(const pq::SimBox &) const;
+        [[nodiscard]] pybind11::array_t<bool>   asePBC() const;
+        [[nodiscard]] pybind11::array_t<int>    aseAtomicNumbers(const pq::SimBox &) const;
         // clang-format on
+       protected:
+        void setAseCalculator(const pybind11::object &calculator);
     };
 
 }   // namespace QM

@@ -34,7 +34,7 @@ namespace opt
      * @class Adam
      *
      */
-    class Adam : public Optimizer
+    class Adam final : public Optimizer
     {
        private:
         constexpr static size_t _maxHistoryLength = 2;
@@ -49,13 +49,13 @@ namespace opt
         explicit Adam(const size_t nEpochs, const size_t nAtoms);
         explicit Adam(const size_t, const double, const double, const size_t);
 
-        Adam()        = default;
-        ~Adam() final = default;
+        Adam()  = default;
+        ~Adam() = default;
 
-        [[nodiscard]] pq::SharedOptimizer clone() const final;
-        [[nodiscard]] size_t              maxHistoryLength() const final;
+        [[nodiscard]] std::shared_ptr<Optimizer> clone() const;
+        [[nodiscard]] size_t                     maxHistoryLength() const;
 
-        void update(const double learningRate, const size_t step) final;
+        void update(const double learningRate, const size_t step);
     };
 }   // namespace opt
 

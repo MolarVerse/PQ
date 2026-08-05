@@ -98,5 +98,7 @@ if(BUILD_WITH_PYBIND11)
 endif()
 
 install(TARGETS engine
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+    DESTINATION lib
 )
+
+target_precompile_headers(engine REUSE_FROM pq_pch)

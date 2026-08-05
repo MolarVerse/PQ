@@ -22,8 +22,6 @@
 
 #include "manostat.hpp"
 
-#include <functional>   // for function
-
 #include "constants/internalConversionFactors.hpp"   // for _PRESSURE_FACTOR_
 #include "manostatSettings.hpp"   // for ManostatType, Isotropy
 #include "physicalData.hpp"       // for PhysicalData
@@ -61,7 +59,7 @@ void Manostat::calculatePressure(const SimulationBox &box, PhysicalData &data)
     forceVirial = box.getBox().toOrthoSpace(forceVirial);
 
     _pressureTensor  = (2.0 * ekinVirial + forceVirial) / volume;
-    _pressureTensor *= _PRESSURE_FACTOR_;
+    _pressureTensor  *= PRESSURE_FACTOR;
 
     _pressure = trace(_pressureTensor) / 3.0;
 
@@ -72,7 +70,8 @@ void Manostat::calculatePressure(const SimulationBox &box, PhysicalData &data)
  * @brief rotate mu back into upper diagonal space
  *
  * @details first order approximation of mu rotation according to gromacs
- * @link https://manual.gromacs.org/current/reference-manual/algorithms/molecular-dynamics.html
+ * @link
+ * https://manual.gromacs.org/current/reference-manual/algorithms/molecular-dynamics.html
  *
  * @param mu
  */

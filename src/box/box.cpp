@@ -65,30 +65,30 @@ StaticMatrix3x3<double> Box::getBoxMatrix(const Periodicity per) const
     switch (per)
     {
         case NON_PERIODIC:
-            boxMatrix[0][0] = _VACUUM_BOX_DIMENSION_;   // X dimension
-            boxMatrix[1][1] = _VACUUM_BOX_DIMENSION_;   // Y dimension
-            boxMatrix[2][2] = _VACUUM_BOX_DIMENSION_;   // Z dimension
+            boxMatrix[0][0] = VACUUM_BOX_DIMENSION;   // X dimension
+            boxMatrix[1][1] = VACUUM_BOX_DIMENSION;   // Y dimension
+            boxMatrix[2][2] = VACUUM_BOX_DIMENSION;   // Z dimension
             break;
         case X:
-            boxMatrix[1][1] = _VACUUM_BOX_DIMENSION_;   // Y dimension
-            boxMatrix[2][2] = _VACUUM_BOX_DIMENSION_;   // Z dimension
+            boxMatrix[1][1] = VACUUM_BOX_DIMENSION;   // Y dimension
+            boxMatrix[2][2] = VACUUM_BOX_DIMENSION;   // Z dimension
             break;
         case Y:
-            boxMatrix[0][0] = _VACUUM_BOX_DIMENSION_;   // X dimension
-            boxMatrix[2][2] = _VACUUM_BOX_DIMENSION_;   // Z dimension
+            boxMatrix[0][0] = VACUUM_BOX_DIMENSION;   // X dimension
+            boxMatrix[2][2] = VACUUM_BOX_DIMENSION;   // Z dimension
             break;
         case Z:
-            boxMatrix[0][0] = _VACUUM_BOX_DIMENSION_;   // X dimension
-            boxMatrix[1][1] = _VACUUM_BOX_DIMENSION_;   // Y dimension
+            boxMatrix[0][0] = VACUUM_BOX_DIMENSION;   // X dimension
+            boxMatrix[1][1] = VACUUM_BOX_DIMENSION;   // Y dimension
             break;
         case XY:
-            boxMatrix[2][2] = _VACUUM_BOX_DIMENSION_;   // Z dimension
+            boxMatrix[2][2] = VACUUM_BOX_DIMENSION;   // Z dimension
             break;
         case XZ:
-            boxMatrix[1][1] = _VACUUM_BOX_DIMENSION_;   // Y dimension
+            boxMatrix[1][1] = VACUUM_BOX_DIMENSION;   // Y dimension
             break;
         case YZ:
-            boxMatrix[0][0] = _VACUUM_BOX_DIMENSION_;   // X dimension
+            boxMatrix[0][0] = VACUUM_BOX_DIMENSION;   // X dimension
             break;
         case XYZ: break;
     }

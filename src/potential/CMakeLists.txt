@@ -50,7 +50,7 @@ if(BUILD_WITH_KOKKOS)
 endif()
 
 install(TARGETS potential
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+    DESTINATION lib
 )
 
 add_subdirectory(coulomb)

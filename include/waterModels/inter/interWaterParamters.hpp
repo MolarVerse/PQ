@@ -76,7 +76,7 @@ namespace waterModel
         static constexpr bool    _oxygenOnlyNonCoulomb = true;
         inline static const auto _nonCoulombPairOO =
             potential::LennardJonesPair(
-                defaults::_COULOMB_CUT_OFF_DEFAULT_,
+                defaults::COULOMB_CUT_OFF_DEFAULT,
                 constants::_SPC_LJ_C6_OO_,
                 constants::_SPC_LJ_C12_OO_
             );
@@ -93,7 +93,7 @@ namespace waterModel
         static constexpr bool    _oxygenOnlyNonCoulomb = true;
         inline static const auto _nonCoulombPairOO =
             potential::LennardJonesPair(
-                defaults::_COULOMB_CUT_OFF_DEFAULT_,
+                defaults::COULOMB_CUT_OFF_DEFAULT,
                 constants::_SPC_E_LJ_C6_OO_,
                 constants::_SPC_E_LJ_C12_OO_
             );
@@ -110,7 +110,7 @@ namespace waterModel
         static constexpr bool    _oxygenOnlyNonCoulomb = true;
         inline static const auto _nonCoulombPairOO =
             potential::LennardJonesPair(
-                defaults::_COULOMB_CUT_OFF_DEFAULT_,
+                defaults::COULOMB_CUT_OFF_DEFAULT,
                 constants::_SPC_FW_LJ_C6_OO_,
                 constants::_SPC_FW_LJ_C12_OO_
             );
@@ -127,7 +127,7 @@ namespace waterModel
         static constexpr bool    _oxygenOnlyNonCoulomb = true;
         inline static const auto _nonCoulombPairOO =
             potential::LennardJonesPair(
-                defaults::_COULOMB_CUT_OFF_DEFAULT_,
+                defaults::COULOMB_CUT_OFF_DEFAULT,
                 constants::_QSPC_FW_LJ_C6_OO_,
                 constants::_QSPC_FW_LJ_C12_OO_
             );
@@ -144,7 +144,7 @@ namespace waterModel
         static constexpr bool    _oxygenOnlyNonCoulomb = true;
         inline static const auto _nonCoulombPairOO =
             potential::LennardJonesPair(
-                defaults::_COULOMB_CUT_OFF_DEFAULT_,
+                defaults::COULOMB_CUT_OFF_DEFAULT,
                 constants::_H2O_DC_LJ_C6_OO_,
                 constants::_H2O_DC_LJ_C12_OO_
             );
@@ -161,7 +161,7 @@ namespace waterModel
         static constexpr bool    _oxygenOnlyNonCoulomb = true;
         inline static const auto _nonCoulombPairOO =
             potential::LennardJonesPair(
-                defaults::_COULOMB_CUT_OFF_DEFAULT_,
+                defaults::COULOMB_CUT_OFF_DEFAULT,
                 constants::_H2O_DC_LJ_C6_OO_,
                 constants::_H2O_DC_LJ_C12_OO_
             );
@@ -178,7 +178,7 @@ namespace waterModel
         static constexpr bool    _oxygenOnlyNonCoulomb = true;
         inline static const auto _nonCoulombPairOO =
             potential::LennardJonesPair(
-                defaults::_COULOMB_CUT_OFF_DEFAULT_,
+                defaults::COULOMB_CUT_OFF_DEFAULT,
                 constants::_TIP3P_LJ_C6_OO_,
                 constants::_TIP3P_LJ_C12_OO_
             );
@@ -195,7 +195,7 @@ namespace waterModel
         static constexpr bool    _oxygenOnlyNonCoulomb = true;
         inline static const auto _nonCoulombPairOO =
             potential::LennardJonesPair(
-                defaults::_COULOMB_CUT_OFF_DEFAULT_,
+                defaults::COULOMB_CUT_OFF_DEFAULT,
                 constants::_OPC3_LJ_C6_OO_,
                 constants::_OPC3_LJ_C12_OO_
             );
@@ -212,7 +212,7 @@ namespace waterModel
         static constexpr bool    _oxygenOnlyNonCoulomb = true;
         inline static const auto _nonCoulombPairOO =
             potential::LennardJonesPair(
-                defaults::_COULOMB_CUT_OFF_DEFAULT_,
+                defaults::COULOMB_CUT_OFF_DEFAULT,
                 constants::_SPC_MTR_LJ_C6_OO_,
                 constants::_SPC_MTR_LJ_C12_OO_
             );
@@ -229,7 +229,7 @@ namespace waterModel
         static constexpr bool    _oxygenOnlyNonCoulomb = true;
         inline static const auto _nonCoulombPairOO =
             potential::LennardJonesPair(
-                defaults::_COULOMB_CUT_OFF_DEFAULT_,
+                defaults::COULOMB_CUT_OFF_DEFAULT,
                 constants::_TIP3P_MTR_LJ_C6_OO_,
                 constants::_TIP3P_MTR_LJ_C12_OO_
             );

@@ -22,8 +22,6 @@
 
 #include "testConstraints.hpp"
 
-#include <string>   // for basic_string
-
 #include "exceptions.hpp"         // for ShakeException
 #include "gmock/gmock.h"          // for DoubleNear, ElementsAre, MakePredica...
 #include "gtest/gtest.h"          // for Message, TestPartResult, InitGoogleTest

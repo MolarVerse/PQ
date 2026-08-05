@@ -57,5 +57,7 @@ if(BUILD_WITH_PYTHON_BINDINGS)
 endif()
 
 install(TARGETS inputFileParser
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+    DESTINATION lib
 )
+
+target_precompile_headers(inputFileParser REUSE_FROM pq_pch)

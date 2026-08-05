@@ -22,19 +22,18 @@
 
 #include <gtest/gtest.h>   // for EXPECT_EQ, EXPECT_NO_THROW, InitGo...
 
-#include <cmath>    // for sqrt
-#include <string>   // for allocator, basic_string
+#include <cmath>   // for sqrt
 
 #include "berendsenThermostat.hpp"           // for BerendsenThermostat
 #include "constants/conversionFactors.hpp"   // for _FS_TO_S_, _KG_TO_GRAM_
 #include "constants/natureConstants.hpp"     // for _UNIVERSAL_GAS_CONSTANT_
-#include "gtest/gtest.h"              // for Message, TestPartResult
-#include "langevinThermostat.hpp"     // for LangevinThermostat
-#include "noseHooverThermostat.hpp"   // for NoseHooverThermostat
-#include "testSetup.hpp"              // for TestSetup
-#include "thermostatSettings.hpp"     // for ThermostatSettings
-#include "thermostatSetup.hpp"        // for ThermostatSetup, setupThermostat
-#include "timingsSettings.hpp"        // for TimingsSettings
+#include "gtest/gtest.h"                     // for Message, TestPartResult
+#include "langevinThermostat.hpp"            // for LangevinThermostat
+#include "noseHooverThermostat.hpp"          // for NoseHooverThermostat
+#include "testSetup.hpp"                     // for TestSetup
+#include "thermostatSettings.hpp"            // for ThermostatSettings
+#include "thermostatSetup.hpp"   // for ThermostatSetup, setupThermostat
+#include "timingsSettings.hpp"   // for TimingsSettings
 #include "velocityRescalingThermostat.hpp"   // for VelocityRescalingThermostat
 
 using namespace setup;
@@ -99,7 +98,6 @@ TEST_F(TestSetup, setupThermostat_temp_ramping)
         thermostatSetup.getEngine().getThermostat().getRampingFrequency(),
         2
     );
-
 }
 
 TEST_F(TestSetup, setupThermostat_only_end_temp_defined)
@@ -187,10 +185,9 @@ TEST_F(TestSetup, setupThermostat_langevin)
         );
     EXPECT_EQ(langevinThermostat.getFriction(), 1.0e11);
 
-    const auto conversionFactor =
-        constants::_UNIVERSAL_GAS_CONSTANT_ *
-        constants::_M2_TO_ANGSTROM2_ *
-        constants::_KG_TO_GRAM_ / constants::_FS_TO_S_;
+    const auto conversionFactor = constants::UNIVERSAL_GAS_CONSTANT *
+                                  constants::M2_TO_ANGSTROM2 *
+                                  constants::KG_TO_GRAM / constants::FS_TO_S;
     const auto sigma = std::sqrt(
         4.0 * langevinThermostat.getFriction() * conversionFactor *
         settings::ThermostatSettings::getTargetTemperature() /

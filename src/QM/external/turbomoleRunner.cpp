@@ -60,7 +60,7 @@ void TurbomoleRunner::writeCoordsFile(SimulationBox &box)
 
     for (const auto &atom : box.getQMAtoms())
     {
-        const auto pos = atom->getPosition() * _ANGSTROM_TO_BOHR_;
+        const auto pos = atom->getPosition() * ANGSTROM_TO_BOHR;
 
         coordsFile << std::format(
             "   {:16.12f}   {:16.12f}   {:16.12f}   {}\n",
@@ -89,7 +89,7 @@ void TurbomoleRunner::writePointChargeFile(pq::SimBox &box)
         if (zone == SMOOTHING || zone == POINT_CHARGE)
             for (const auto &atom : mol.getAtoms())
             {
-                const auto pos = atom->getPosition() * _ANGSTROM_TO_BOHR_;
+                const auto pos = atom->getPosition() * ANGSTROM_TO_BOHR;
                 pcFile << std::format(
                     "{:16.12f}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
                     pos[0],
@@ -114,7 +114,7 @@ void TurbomoleRunner::execute(SimulationBox &box)
 {
     using enum settings::SmoothingMethod;
 
-    const auto scriptFile = _scriptPath + QMSettings::getQMScript();
+    const auto scriptFile = resolveScriptPath(QMSettings::getQMScript());
 
     if (!fileExists(scriptFile))
         throw InputFileException(

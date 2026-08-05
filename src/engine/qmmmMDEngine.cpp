@@ -24,8 +24,8 @@
 
 #include <format>   // for format
 
-#include "exceptions.hpp"         // for HybridMDEngineException
-#include "hybridSettings.hpp"     // for HybridSettings
+#include "exceptions.hpp"       // for HybridMDEngineException
+#include "hybridSettings.hpp"   // for HybridSettings
 
 using namespace pq;
 using namespace customException;
@@ -79,12 +79,11 @@ namespace engine
 
         const auto& smoothingMethod = HybridSettings::getSmoothingMethod();
 
-        if (smoothingMethod == HOTSPOT)
-            applyHotspotSmoothing();
-        else if (smoothingMethod == EXACT)
-            applyExactSmoothing();
-        else
-            throw HybridMDEngineException("Unknown smoothing method requested");
+        switch (smoothingMethod)
+        {
+            case HOTSPOT: applyHotspotSmoothing(); break;
+            case EXACT: applyExactSmoothing(); break;
+        }
     }
 
     /**
@@ -101,10 +100,10 @@ namespace engine
         using enum Periodicity;
         using std::ranges::distance;
 
-        tensor3D   virial     = {0.0};
-        auto       numQMAtoms = 0.0;
-        auto&      atoms      = _simulationBox->getAtoms();
-        const auto nSmMol =
+        linearAlgebra::tensor3D virial     = {0.0};
+        auto                    numQMAtoms = 0.0;
+        auto&                   atoms      = _simulationBox->getAtoms();
+        const auto              nSmMol =
             distance(_simulationBox->getMoleculesInsideZone(SMOOTHING));
 
         // Loop over all combinations of smoothing molecules
@@ -185,9 +184,11 @@ namespace engine
                       globalSmF;
             addScaledCurrentForcesToOuterAndReset(atoms, globalSmF);
 
-            // STEP 4: Scale and accumulate hybrid energies
+            // STEP 4: Scale and accumulate hybrid energies and delete temp
+            // files --> following configs cannot continue if the QM calc fails
             scaleAndAccumulateEnergies(globalSmF);
             _physicalData->resetEnergies();
+            deleteTmpFiles();
         }
 
         // STEP 5: Set energies, virial and numQMAtoms to accumulated values
@@ -213,8 +214,8 @@ namespace engine
     {
         using enum Periodicity;
 
-        auto&    atoms  = _simulationBox->getAtoms();
-        tensor3D virial = {0.0};
+        auto&                   atoms  = _simulationBox->getAtoms();
+        linearAlgebra::tensor3D virial = {0.0};
 
         // Set number of QM atoms in physical data for output purposes
         setNumberOfQMAtoms();

@@ -77,9 +77,9 @@ TEST(TestTriclinicBox, setBoxAngles)
 
     box.setBoxAngles({30.0, 60.0, 45.0});
 
-    const auto alpha = 30.0 * constants::_DEG_TO_RAD_;
-    const auto beta  = 60.0 * constants::_DEG_TO_RAD_;
-    const auto gamma = 45.0 * constants::_DEG_TO_RAD_;
+    const auto alpha = 30.0 * constants::DEG_TO_RAD;
+    const auto beta  = 60.0 * constants::DEG_TO_RAD;
+    const auto gamma = 45.0 * constants::DEG_TO_RAD;
 
     EXPECT_MATRIX_NEAR(
         box.getTransformationMatrix(),
@@ -112,9 +112,9 @@ TEST(TestTriclinicBox, calculateVolume)
     box.setBoxDimensions({1.0, 2.0, 3.0});
     box.setBoxAngles({30.0, 60.0, 45.0});
 
-    const auto alpha = 30.0 * constants::_DEG_TO_RAD_;
-    const auto beta  = 60.0 * constants::_DEG_TO_RAD_;
-    const auto gamma = 45.0 * constants::_DEG_TO_RAD_;
+    const auto alpha = 30.0 * constants::DEG_TO_RAD;
+    const auto beta  = 60.0 * constants::DEG_TO_RAD;
+    const auto gamma = 45.0 * constants::DEG_TO_RAD;
 
     const auto volume =
         1.0 * 2.0 * 3.0 *

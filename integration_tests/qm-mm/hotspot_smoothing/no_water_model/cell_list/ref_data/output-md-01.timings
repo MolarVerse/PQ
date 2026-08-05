@@ -1,0 +1,87 @@
+Section                       	  Time [s]	  Time [%]
+------------------------------	----------	----------
+
+Total                         	     0.713	   100.000
+
+QM Engine                     	     0.311	    43.619
+Potential                     	     0.273	    38.289
+Setup                         	     0.068	     9.537
+Output                        	     0.048	     6.732
+Thermostat                    	     0.000	     0.000
+Integrator                    	     0.000	     0.000
+Constraints                   	     0.000	     0.000
+Cell List                     	     0.000	     0.000
+IntraNonBonded                	     0.000	     0.000
+Virial                        	     0.000	     0.000
+Physical Data                 	     0.000	     0.000
+Manostat                      	     0.000	     0.000
+Reset Kinetics                	     0.000	     0.000
+Water Intra Potential         	     0.000	     0.000
+Water Inter Potential         	     0.000	     0.000
+
+
+
+
+Section                       	  Time [s]	  Time [%]	  RelT [%]
+------------------------------	----------	----------	----------
+
+Total                         	     0.713	   100.000	   100.000
+
+QM Engine                     	     0.311	    43.619	   100.000
+Execute External QM Runner    	     0.309	    43.316	    99.306
+Write Pointcharges            	     0.003	     0.426	     0.976
+Read Forces                   	     0.000	     0.057	     0.130
+Write Coordinates             	     0.000	     0.047	     0.108
+Read Charges                  	     0.000	     0.026	     0.059
+
+Potential                     	     0.273	    38.289	   100.000
+InterNonBondedOuterToOuter    	     0.270	    37.864	    98.889
+InterNonBondedLayerToOuter    	     0.004	     0.554	     1.448
+InterNonBondedSmoothingMM     	     0.001	     0.172	     0.450
+InterNonBondedCoreToOuter     	     0.000	     0.049	     0.127
+
+Setup                         	     0.068	     9.537	   100.000
+TotalSetup                    	     0.068	     9.582	   100.475
+
+Output                        	     0.048	     6.732	   100.000
+TrajectoryOutput              	     0.027	     3.827	    56.843
+RstFileOutput                 	     0.021	     2.990	    44.414
+InfoOutput                    	     0.000	     0.015	     0.230
+EnergyOutput                  	     0.000	     0.006	     0.083
+VirialOutput                  	     0.000	     0.003	     0.045
+InstantEnergyOutput           	     0.000	     0.002	     0.036
+MomentumOutput                	     0.000	     0.002	     0.034
+StressOutput                  	     0.000	     0.002	     0.032
+BoxFileOutput                 	     0.000	     0.002	     0.030
+
+Thermostat                    	     0.000	     0.000	   100.000
+Berendsen                     	     0.000	     0.013	       inf
+
+Integrator                    	     0.000	     0.000	   100.000
+Velocity Verlet - First Step  	     0.000	     0.067	       inf
+Velocity Verlet - Second Step 	     0.000	     0.017	       inf
+
+Constraints                   	     0.000	     0.000	   100.000
+Reference Bond Data           	     0.000	     0.000	       inf
+
+Cell List                     	     0.000	     0.000	   100.000
+Update                        	     0.001	     0.120	       inf
+
+IntraNonBonded                	     0.000	     0.000	   100.000
+IntraNonBonded                	     0.000	     0.000	       inf
+
+Physical Data                 	     0.000	     0.000	   100.000
+Calc Kinetics                 	     0.001	     0.110	       inf
+
+Manostat                      	     0.000	     0.000	   100.000
+Calc Pressure                 	     0.000	     0.001	       inf
+
+Reset Kinetics                	     0.000	     0.000	   100.000
+Reset Kinetics                	     0.000	     0.001	       inf
+
+Water Inter Potential         	     0.000	     0.000	   100.000
+QM/MM Core to Outer           	     0.000	     0.000	       inf
+QM/MM Smoothing MM            	     0.000	     0.000	       inf
+QM/MM Outer to Outer          	     0.000	     0.000	       inf
+QM/MM Layer to Outer          	     0.000	     0.000	       inf
+

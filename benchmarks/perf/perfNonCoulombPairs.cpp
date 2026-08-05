@@ -48,7 +48,8 @@ int main()
     double sink = 0.0;
     for (long i = 0; i < ITERATIONS; ++i)
     {
-        const double distance = 1.0 + (i & 255) * 0.03;   // within cutoff
+        const double distance =
+            1.0 + static_cast<double>(i & 255) * 0.03;   // within cutoff
 
         const auto [eLj, fLj]       = lj.calculate(distance);
         const auto [eBuck, fBuck]   = buck.calculate(distance);

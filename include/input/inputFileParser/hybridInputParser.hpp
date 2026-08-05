@@ -27,7 +27,7 @@
 #include <cstddef>   // for size_t
 
 #include "inputFileParser.hpp"   // for InputFileParser
-#include "typeAliases.hpp"       // for pq::strings
+#include "typeAliases.hpp"       // for std::vector<std::string>
 
 namespace input
 {
@@ -42,15 +42,33 @@ namespace input
        public:
         explicit HybridInputParser(pq::Engine &);
 
-        void parseInnerRegionCenter(const pq::strings &, const size_t);
-        void parseForcedInnerList(const pq::strings &, const size_t);
-        void parseForcedOuterList(const pq::strings &, const size_t);
-        void parseUseQMCharges(const pq::strings &, const size_t);
-        void parseCoreRadius(const pq::strings &, const size_t);
-        void parseLayerRadius(const pq::strings &, const size_t);
-        void parseSmoothingRegionThickness(const pq::strings &, const size_t);
-        void parsePointChargeThickness(const pq::strings &, const size_t);
-        void parseSmoothingMethod(const pq::strings &, const size_t);
+        void parseInnerRegionCenter(
+            const std::vector<std::string> &,
+            const size_t
+        );
+        void parseForcedInnerList(
+            const std::vector<std::string> &,
+            const size_t
+        );
+        void parseForcedOuterList(
+            const std::vector<std::string> &,
+            const size_t
+        );
+        void parseUseQMCharges(const std::vector<std::string> &, const size_t);
+        void parseCoreRadius(const std::vector<std::string> &, const size_t);
+        void parseLayerRadius(const std::vector<std::string> &, const size_t);
+        void parseSmoothingRegionThickness(
+            const std::vector<std::string> &,
+            const size_t
+        );
+        void parsePointChargeThickness(
+            const std::vector<std::string> &,
+            const size_t
+        );
+        void parseSmoothingMethod(
+            const std::vector<std::string> &,
+            const size_t
+        );
 
         std::vector<int> parseSelection(
             const std::string &,

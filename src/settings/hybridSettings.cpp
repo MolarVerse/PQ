@@ -26,6 +26,25 @@
 
 using settings::HybridSettings;
 
+/**
+ * @brief convert smoothing method to string representation
+ *
+ * @param method
+ */
+std::string settings::string(const SmoothingMethod method)
+{
+    switch (method)
+    {
+        using enum SmoothingMethod;
+
+        case HOTSPOT: return "Hotspot";
+        case EXACT: return "Exact";
+        case NONE: break;
+    }
+
+    return "NONE";
+}
+
 /********************
  *                  *
  * standard setters *

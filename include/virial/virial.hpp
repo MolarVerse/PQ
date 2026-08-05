@@ -24,10 +24,20 @@
 
 #define _VIRIAL_HPP_
 
-#include <string>   // for string
+#include <string>
 
-#include "timer.hpp"          // for Timer
-#include "typeAliases.hpp"
+#include "staticMatrix.hpp"
+#include "timer.hpp"
+
+namespace simulationBox
+{
+    class SimulationBox;   // forward declaration
+}
+
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}
 
 namespace virial
 {
@@ -44,32 +54,41 @@ namespace virial
        protected:
         std::string _virialType;   // TODO: make this an enum
 
-        pq::tensor3D _virial;
+        linearAlgebra::tensor3D _virial;
 
        public:
         virtual ~Virial() = default;
 
         virtual std::shared_ptr<Virial> clone() const = 0;
 
-        virtual pq::tensor3D calculateVirial(pq::SimBox &) const;
-        virtual pq::tensor3D calculateQMVirial(pq::SimBox &) const;
+        virtual linearAlgebra::tensor3D calculateVirial(
+            simulationBox::SimulationBox &
+        ) const;
+        virtual linearAlgebra::tensor3D calculateQMVirial(
+            simulationBox::SimulationBox &
+        ) const;
 
-        virtual void calculateVirial(pq::SimBox &, pq::PhysicalData &);
+        virtual void calculateVirial(
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &
+        );
         virtual void intraMolecularVirialCorrection(
-            pq::SimBox &,
-            pq::PhysicalData &
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &
         )
         {
         }
-        virtual pq::tensor3D intraMolecularVirialCorrection(pq::SimBox &) const
+        virtual linearAlgebra::tensor3D intraMolecularVirialCorrection(
+            simulationBox::SimulationBox &
+        ) const
         {
-            return pq::tensor3D{0.0};
+            return linearAlgebra::tensor3D{0.0};
         }
 
-        void setVirial(const pq::tensor3D &virial);
+        void setVirial(const linearAlgebra::tensor3D &virial);
 
-        [[nodiscard]] pq::tensor3D getVirial() const;
-        [[nodiscard]] std::string  getVirialType() const;
+        [[nodiscard]] linearAlgebra::tensor3D getVirial() const;
+        [[nodiscard]] std::string             getVirialType() const;
     };
 }   // namespace virial
 

@@ -620,7 +620,7 @@ double SimulationBox::calculateTemperature()
 
     std::ranges::for_each(_atoms, accumulateTemperature);
 
-    temperature *= _TEMPERATURE_FACTOR_ / double(_degreesOfFreedom);
+    temperature *= TEMPERATURE_FACTOR / double(_degreesOfFreedom);
 
     return temperature;
 }
@@ -658,7 +658,7 @@ void SimulationBox::checkCoulRadiusCutOff(
 void SimulationBox::calculateDensity()
 {
     const auto volume = _box->calculateVolume();
-    _density          = _totalMass / volume * _AMU_PER_ANGSTROM3_TO_KG_PER_L_;
+    _density          = _totalMass / volume * AMU_PER_ANGSTROM3_TO_KG_PER_L;
 }
 
 /**
