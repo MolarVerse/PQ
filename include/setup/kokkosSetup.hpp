@@ -24,6 +24,11 @@
 
 #define _KOKKOS_SETUP_HPP_
 
+namespace engine
+{
+    class Engine;
+}   // namespace engine
+
 namespace setup
 {
     void setupKokkos(engine::Engine &);

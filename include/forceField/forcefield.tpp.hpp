@@ -25,7 +25,6 @@
 #define _FORCE_FIELD_TPP_
 
 #include "forceField.hpp"
-#include "nonCoulombPair.hpp"
 #include "potentialSettings.hpp"
 
 namespace forceField
