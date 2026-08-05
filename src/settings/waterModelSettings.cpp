@@ -22,6 +22,8 @@
 
 #include "waterModelSettings.hpp"
 
+#include <format>
+
 #include "exceptions.hpp"        // for customException
 #include "stringUtilities.hpp"   // for toLowerCopy
 

@@ -39,7 +39,6 @@ std::string settings::string(const SmoothingMethod method)
 
         case HOTSPOT: return "Hotspot";
         case EXACT: return "Exact";
-        case NONE: break;
     }
 
     return "NONE";
