@@ -6,3 +6,4 @@
 - remove `virial` namespace types for `typeAliases.hpp`
 - remove all `std` aliases from `typeaAliases.hpp`
 - remove `resetKinetics` from `typeAliases.hpp`
+- remove `engine`, `integrator`, `manostat`, `intranonbonded`, `opt` from `typeAliases.hpp`
