@@ -159,7 +159,6 @@ namespace
             auto atom = std::make_shared<Atom>();
             atom->setName("H");
             _simulationBox.addAtom(atom);
-            _simulationBox.addQMAtom(atom);
             _simulationBox.setBoxDimensions({10.0, 10.0, 10.0});
         }
 
@@ -329,7 +328,6 @@ TEST_F(ExternalQMRunnerTest, rejectsIncompleteCharges)
     auto atom = std::make_shared<Atom>();
     atom->setName("H");
     _simulationBox.addAtom(atom);
-    _simulationBox.addQMAtom(atom);
 
     writeFile(FileSettings::getQMChargesTempFileName(), "0\n");
 
