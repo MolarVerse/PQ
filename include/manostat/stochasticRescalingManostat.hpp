@@ -26,7 +26,6 @@
 
 #include "manostat.hpp"                // for Manostat
 #include "randomNumberGenerator.hpp"   // for RandomNumberGenerator
-#include "typeAliases.hpp"             // for PhysicalData, SimulationBox
 
 namespace manostat
 {
@@ -54,12 +53,15 @@ namespace manostat
             const double compressibility
         );
 
-        void applyManostat(pq::SimBox &, pq::PhysicalData &) override;
+        void applyManostat(
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &
+        ) override;
 
-        [[nodiscard]] virtual pq::tensor3D calculateMu(const double);
+        [[nodiscard]] virtual linearAlgebra::tensor3D calculateMu(const double);
 
-        [[nodiscard]] pq::ManostatType getManostatType() const override;
-        [[nodiscard]] pq::Isotropy     getIsotropy() const override;
+        [[nodiscard]] settings::ManostatType getManostatType() const override;
+        [[nodiscard]] settings::Isotropy     getIsotropy() const override;
 
         [[nodiscard]] double getTau() const;
         [[nodiscard]] double getCompressibility() const;
@@ -87,8 +89,10 @@ namespace manostat
             const std::vector<size_t> &isotropicAxes
         );
 
-        [[nodiscard]] pq::tensor3D calculateMu(const double volume) override;
-        [[nodiscard]] pq::Isotropy getIsotropy() const final;
+        [[nodiscard]]
+        linearAlgebra::tensor3D calculateMu(const double volume) override;
+
+        [[nodiscard]] settings::Isotropy getIsotropy() const final;
     };
 
     /**
@@ -103,8 +107,10 @@ namespace manostat
        public:
         using StochasticRescalingManostat::StochasticRescalingManostat;
 
-        [[nodiscard]] pq::tensor3D calculateMu(const double volume) override;
-        [[nodiscard]] pq::Isotropy getIsotropy() const final;
+        [[nodiscard]]
+        linearAlgebra::tensor3D calculateMu(const double volume) override;
+
+        [[nodiscard]] settings::Isotropy getIsotropy() const final;
     };
 
     /**
@@ -119,8 +125,10 @@ namespace manostat
        public:
         using StochasticRescalingManostat::StochasticRescalingManostat;
 
-        [[nodiscard]] pq::tensor3D calculateMu(const double volume) override;
-        [[nodiscard]] pq::Isotropy getIsotropy() const final;
+        [[nodiscard]]
+        linearAlgebra::tensor3D calculateMu(const double volume) override;
+
+        [[nodiscard]] settings::Isotropy getIsotropy() const final;
     };
 
 }   // namespace manostat

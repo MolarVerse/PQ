@@ -28,6 +28,7 @@
 #include <vector>   // for vector
 
 #include "typeAliases.hpp"   // for SimBox, Vec3D, MShakeRef
+#include "vector3d.hpp"      // for Vec3D
 
 namespace constraints
 {
@@ -62,7 +63,7 @@ namespace constraints
         [[nodiscard]] double calcMatrixElement(
             const std::tuple<size_t, size_t, size_t, size_t> &indices,
             const std::pair<double, double>                  &masses,
-            const std::pair<pq::Vec3D, pq::Vec3D>            &pos
+            const std::pair<linearAlgebra::Vec3D, linearAlgebra::Vec3D> &pos
         ) const;
 
         [[nodiscard]] bool   isMShakeType(const size_t moltype) const;

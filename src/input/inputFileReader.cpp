@@ -145,16 +145,18 @@ void InputFileReader::addKeywords()
 void InputFileReader::process(const std::vector<std::string> &lineElements)
 {
     const auto original_keyword = lineElements[0];
-    const auto keyword = toLowerAndReplaceDashesCopy(original_keyword);
+    const auto keyword          = toLowerAndReplaceDashesCopy(original_keyword);
 
     if (!_keywordFuncMap.contains(keyword))
-        throw InputFileException(std::format(
-            "Invalid keyword \"{}\" at line {}",
-            original_keyword,
-            _lineNumber
-        ));
+        throw InputFileException(
+            std::format(
+                "Invalid keyword \"{}\" at line {}",
+                original_keyword,
+                _lineNumber
+            )
+        );
 
-    pq::ParseFunc parserFunc = _keywordFuncMap[keyword];
+    InputFileParser::ParseFunc parserFunc = _keywordFuncMap[keyword];
     parserFunc(lineElements, _lineNumber);
 
     ++_keywordCountMap[keyword];
@@ -335,11 +337,13 @@ void input::processEqualSign(std::string &command, const size_t lineNumber)
         command.replace(equalSignPos, 1, " = ");
 
     else
-        throw InputFileException(std::format(
-            "Missing equal sign in command \"{}\" in line {}",
-            command,
-            lineNumber
-        ));
+        throw InputFileException(
+            std::format(
+                "Missing equal sign in command \"{}\" in line {}",
+                command,
+                lineNumber
+            )
+        );
 }
 
 /***************************
@@ -454,9 +458,10 @@ std::map<std::string, bool> InputFileReader::getKeywordRequiredMap() const
 /**
  * @brief get the keyword function map
  *
- * @return std::map<std::string, pq::ParseFunc>
+ * @return std::map<std::string, InputFileParser::ParseFunc>
  */
-std::map<std::string, pq::ParseFunc> InputFileReader::getKeywordFuncMap() const
+std::map<std::string, InputFileParser::ParseFunc> InputFileReader::
+    getKeywordFuncMap() const
 {
     return _keywordFuncMap;
 }

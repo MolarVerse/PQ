@@ -21,6 +21,7 @@
 ******************************************************************************/
 
 #include "physicalData.hpp"
+#include "staticMatrix/staticMatrix3x3Class.hpp"
 
 using namespace physicalData;
 
@@ -590,9 +591,9 @@ linearAlgebra::tensor3D PhysicalData::getKinEnergyMolTensor() const
 /**
  * @brief get the kinetic energy virial tensor
  *
- * @return const pq::tensor3D&
+ * @return const linearAlgebra::tensor3D&
  */
-const pq::tensor3D &PhysicalData::getKinEnergyVirialTensor() const
+const linearAlgebra::tensor3D &PhysicalData::getKinEnergyVirialTensor() const
 {
     return _kinEnergyVirialTensor.getVirialTensor();
 }

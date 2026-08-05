@@ -254,7 +254,7 @@ void ResetKinetics::setTemperature(const double temperature)
  *
  * @param momentum
  */
-void ResetKinetics::setMomentum(const pq::Vec3D &momentum)
+void ResetKinetics::setMomentum(const linearAlgebra::Vec3D &momentum)
 {
     _momentum = momentum;
 }
@@ -264,7 +264,9 @@ void ResetKinetics::setMomentum(const pq::Vec3D &momentum)
  *
  * @param angularMomentum
  */
-void ResetKinetics::setAngularMomentum(const pq::Vec3D &angularMomentum)
+void ResetKinetics::setAngularMomentum(
+    const linearAlgebra::Vec3D &angularMomentum
+)
 {
     _angularMomentum = angularMomentum;
 }
