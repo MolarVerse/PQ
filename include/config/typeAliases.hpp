@@ -64,18 +64,6 @@ namespace constraints
 
 }   // namespace constraints
 
-namespace engine
-{
-    class Engine;              // forward declaration
-    class MDEngine;            // forward declaration
-    class OptEngine;           // forward declaration
-    class HessianEngine;       // forward declaration
-    class QMMDEngine;          // forward declaration
-    class QMMMMDEngine;        // forward declaration
-    class RingPolymerEngine;   // forward declaration
-
-}   // namespace engine
-
 namespace input
 {
     namespace parameterFile
@@ -100,20 +88,6 @@ namespace pq
     using RestartSection          = input::restartFile::RestartFileSection;
     using UniqueRestartSection    = std::unique_ptr<RestartSection>;
     using UniqueRestartSectionVec = std::vector<UniqueRestartSection>;
-
-    /********************
-     * engine namespace *
-     ********************/
-
-    using Engine            = engine::Engine;
-    using MDEngine          = engine::MDEngine;
-    using OptEngine         = engine::OptEngine;
-    using HessianEngine     = engine::HessianEngine;
-    using QMMDEngine        = engine::QMMDEngine;
-    using QMMMMDEngine      = engine::QMMMMDEngine;
-    using RingPolymerEngine = engine::RingPolymerEngine;
-
-    using UniqueEngine = std::unique_ptr<Engine>;
 
     /***********************
      * potential namespace *

@@ -29,6 +29,11 @@
 
 #include "typeAliases.hpp"
 
+namespace engine
+{
+    class Engine;   // forward declaration
+}   // namespace engine
+
 namespace input::restartFile
 {
     /**
@@ -48,7 +53,7 @@ namespace input::restartFile
         virtual bool        isHeader() = 0;
         virtual void        process(
                    std::vector<std::string> &lineElements,
-                   pq::Engine &
+                   engine::Engine &
                ) = 0;
     };
 

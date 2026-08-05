@@ -28,11 +28,16 @@
 #include <fstream>   // for ifstream
 #include <string>    // for string
 
-#include "typeAliases.hpp"
+#include "typeAliases.hpp"   // for MShakeRef
+
+namespace engine
+{
+    class Engine;   // forward declaration
+}   // namespace engine
 
 namespace input::mShake
 {
-    void readMShake(pq::Engine &engine);
+    void readMShake(engine::Engine &engine);
 
     /**
      * @class MShakeReader
@@ -47,10 +52,10 @@ namespace input::mShake
         std::string   _fileName;
         std::ifstream _fp;
 
-        pq::Engine &_engine;
+        engine::Engine &_engine;
 
        public:
-        explicit MShakeReader(pq::Engine &engine);
+        explicit MShakeReader(engine::Engine &engine);
 
         void read();
         void processCommentLine(std::string &line, pq::MShakeRef &mShakeRef);

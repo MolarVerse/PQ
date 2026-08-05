@@ -30,9 +30,14 @@
 
 #include "typeAliases.hpp"
 
+namespace engine
+{
+    class Engine;   // forward declaration
+}   // namespace engine
+
 namespace input::parameterFile
 {
-    void               readParameterFile(pq::Engine &);
+    void               readParameterFile(engine::Engine &);
     [[nodiscard]] bool isNeeded();
 
     /**
@@ -44,14 +49,17 @@ namespace input::parameterFile
     class ParameterFileReader
     {
        private:
-        std::string   _fileName;
-        std::ifstream _fp;
-        pq::Engine   &_engine;
+        std::string     _fileName;
+        std::ifstream   _fp;
+        engine::Engine &_engine;
 
         pq::UniqueParamFileSectionVec _parameterFileSections;
 
        public:
-        ParameterFileReader(const std::string &filename, pq::Engine &engine);
+        ParameterFileReader(
+            const std::string &filename,
+            engine::Engine    &engine
+        );
         ~ParameterFileReader();
 
         void read();

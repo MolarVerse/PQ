@@ -40,7 +40,10 @@ namespace input::topology
     class ShakeSection : public TopologySection
     {
        public:
-        void processSection(std::vector<std::string> &, pq::Engine &) override;
+        void processSection(
+            std::vector<std::string> &,
+            engine::Engine &
+        ) override;
 
         [[nodiscard]] std::string keyword() override;
         void                      endedNormally(const bool) const override;

@@ -27,11 +27,14 @@
 #include <string>   // for string
 #include <vector>   // for vector
 
-#include "typeAliases.hpp"
+namespace engine
+{
+    class Engine;   // forward declaration
+}   // namespace engine
 
 namespace setup
 {
-    void setupHybrid(pq::Engine &);
+    void setupHybrid(engine::Engine &);
 
     /**
      * @class HybridSetup
@@ -42,18 +45,24 @@ namespace setup
     class HybridSetup
     {
        private:
-        pq::Engine &_engine;
+        engine::Engine &_engine;
 
        public:
-        explicit HybridSetup(pq::Engine &engine);
+        explicit HybridSetup(engine::Engine &engine);
 
         void setup();
         void setupQMCenter();
         void setupQMOnlyList();
         void setupMMOnlyList();
 
-        std::vector<int> parseSelection(const std::string &, const std::string &);
-        std::vector<int> parseSelectionNoPython(const std::string &, const std::string &);
+        std::vector<int> parseSelection(
+            const std::string &,
+            const std::string &
+        );
+        std::vector<int> parseSelectionNoPython(
+            const std::string &,
+            const std::string &
+        );
     };
 
 }   // namespace setup

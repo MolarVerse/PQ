@@ -34,7 +34,7 @@ namespace input
     class HessianInputParser : public InputFileParser
     {
        public:
-        explicit HessianInputParser(pq::Engine &);
+        explicit HessianInputParser(engine::Engine &);
 
         void parseHessianFile(const std::vector<std::string> &, const size_t);
         void parseHessianInfoFile(

@@ -36,6 +36,11 @@ class TestAtomSection_testProcessAtomLine_Test;     // Friend test class
 class TestAtomSection_testProcessQMAtomLine_Test;   // Friend test class
 #endif
 
+namespace engine
+{
+    class Engine;   // forward declaration
+}   // namespace engine
+
 namespace input::restartFile
 {
     /**
@@ -75,7 +80,7 @@ namespace input::restartFile
         void checkNumberOfLineArguments(std::vector<std::string> &) const;
         void process(
             std::vector<std::string> &lineElements,
-            pq::Engine &
+            engine::Engine &
         ) override;
 
         [[nodiscard]] std::string keyword() override;

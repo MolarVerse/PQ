@@ -40,7 +40,7 @@ namespace input
     class HybridInputParser : public InputFileParser
     {
        public:
-        explicit HybridInputParser(pq::Engine &);
+        explicit HybridInputParser(engine::Engine &);
 
         void parseCoreCenter(const std::vector<std::string> &, const size_t);
 

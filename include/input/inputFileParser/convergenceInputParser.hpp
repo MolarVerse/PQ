@@ -38,7 +38,7 @@ namespace input
     class ConvInputParser : public InputFileParser
     {
        public:
-        explicit ConvInputParser(pq::Engine &);
+        explicit ConvInputParser(engine::Engine &);
 
         void parseEnergyConvergenceStrategy(
             const std::vector<std::string> &,

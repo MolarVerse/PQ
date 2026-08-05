@@ -27,7 +27,6 @@
 #include <cstddef>   // for size_t
 
 #include "inputFileParser.hpp"   // for InputFileParser
-#include "typeAliases.hpp"       // for std::vector<std::string>
 
 namespace input
 {
@@ -40,7 +39,7 @@ namespace input
     class SimulationBoxInputParser : public InputFileParser
     {
        public:
-        explicit SimulationBoxInputParser(pq::Engine &);
+        explicit SimulationBoxInputParser(engine::Engine &);
 
         void parseCoulombRadius(const std::vector<std::string> &, const size_t);
         void parseDensity(const std::vector<std::string> &, const size_t);

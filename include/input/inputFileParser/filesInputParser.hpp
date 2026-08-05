@@ -40,7 +40,7 @@ namespace input
     class FilesInputParser : public InputFileParser
     {
        public:
-        explicit FilesInputParser(pq::Engine &);
+        explicit FilesInputParser(engine::Engine &);
 
         void parseIntraNonBondedFile(
             const std::vector<std::string> &,

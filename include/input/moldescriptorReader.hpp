@@ -30,9 +30,14 @@
 #include "defaults.hpp"
 #include "typeAliases.hpp"
 
+namespace engine
+{
+    class Engine;   // forward declaration
+}   // namespace engine
+
 namespace input::molDescriptor
 {
-    void readMolDescriptor(pq::Engine &);
+    void readMolDescriptor(engine::Engine &);
 
     /**
      * @class MoldescriptorReader
@@ -47,10 +52,10 @@ namespace input::molDescriptor
         std::string   _fileName = defaults::MOLDESCRIPTOR_FILE_DEFAULT;
         std::ifstream _fp;
 
-        pq::Engine &_engine;
+        engine::Engine &_engine;
 
        public:
-        explicit MoldescriptorReader(pq::Engine &engine);
+        explicit MoldescriptorReader(engine::Engine &engine);
 
         void read();
         void processMolecule(std::vector<std::string> &lineElements);

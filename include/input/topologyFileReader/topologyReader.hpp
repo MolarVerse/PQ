@@ -54,7 +54,7 @@ namespace input::topology
         std::vector<std::unique_ptr<TopologySection>> _topologySections;
 
        public:
-        TopologyReader(const std::string &filename, pq::Engine &engine);
+        TopologyReader(const std::string &filename, engine::Engine &engine);
 
         void                           read();
         [[nodiscard]] TopologySection *determineSection(

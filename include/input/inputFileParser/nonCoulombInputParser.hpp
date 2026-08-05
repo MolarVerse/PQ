@@ -40,7 +40,7 @@ namespace input
     class NonCoulombInputParser : public InputFileParser
     {
        public:
-        explicit NonCoulombInputParser(pq::Engine &);
+        explicit NonCoulombInputParser(engine::Engine &);
 
         void parseNonCoulombType(
             const std::vector<std::string> &,

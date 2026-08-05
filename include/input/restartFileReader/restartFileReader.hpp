@@ -32,9 +32,14 @@
 #include "restartFileSection.hpp"   // for RstFileSection
 #include "typeAliases.hpp"
 
+namespace engine
+{
+    class Engine;   // forward declaration
+}   // namespace engine
+
 namespace input::restartFile
 {
-    void readRestartFile(pq::Engine &);
+    void readRestartFile(engine::Engine &);
 
     /**
      * @class RestartFileReader
@@ -47,13 +52,13 @@ namespace input::restartFile
        private:
         const std::string _fileName;
         std::ifstream     _fp;
-        pq::Engine       &_engine;
+        engine::Engine   &_engine;
 
         pq::UniqueRestartSection _atomSection = std::make_unique<AtomSection>();
         pq::UniqueRestartSectionVec _sections;
 
        public:
-        RestartFileReader(const std::string &, pq::Engine &);
+        RestartFileReader(const std::string &, engine::Engine &);
 
         void                read();
         RestartFileSection *determineSection(
