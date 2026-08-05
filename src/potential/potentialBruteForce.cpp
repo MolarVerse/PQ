@@ -23,6 +23,7 @@
 #include "potentialBruteForce.hpp"   // for PotentialBruteForce
 
 #include <cstddef>   // for size_t
+#include <functional>
 
 #include "molecule.hpp"             // for Molecule
 #include "physicalData.hpp"         // for PhysicalData
@@ -265,21 +266,28 @@ void PotentialBruteForce::calculateHotspotSmoothingMMForces(
                 mol2.getMoltype() == waterTypeValue)
                 continue;
 
-            for (auto &atom1 : mol1.getAtoms())
-                for (auto &atom2 : mol2.getAtoms())
-                {
-                    const auto [coulombEnergy, nonCoulombEnergy] =
-                        calculateSingleInteraction<MMChargeTag, QMChargeTag>(
-                            *box,
-                            mol1,
-                            mol2,
-                            *atom1,
-                            *atom2
-                        );
+            const auto isMol2Core = mol2.getHybridZone() == CORE;
 
-                    totalCoulombEnergy    += coulombEnergy;
-                    totalNonCoulombEnergy += nonCoulombEnergy;
-                }
+            // SMOOTHING-CORE interaction: evaluate Coulomb term only
+            if (isMol2Core)
+                for (auto &atom1 : mol1.getAtoms())
+                    for (auto &atom2 : mol2.getAtoms())
+                        totalCoulombEnergy += calculateSingleCoulombInteraction<
+                            MMChargeTag,
+                            QMChargeTag>(*box, *atom1, *atom2);
+            // SMOOTHING-nonCORE: evaluate full interaction
+            else
+                for (auto &atom1 : mol1.getAtoms())
+                    for (auto &atom2 : mol2.getAtoms())
+                    {
+                        const auto [coulombEnergy, nonCoulombEnergy] =
+                            calculateSingleInteraction<
+                                MMChargeTag,
+                                QMChargeTag>(*box, mol1, mol2, *atom1, *atom2);
+
+                        totalCoulombEnergy    += coulombEnergy;
+                        totalNonCoulombEnergy += nonCoulombEnergy;
+                    }
         }
     }
 
