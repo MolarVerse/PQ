@@ -268,7 +268,7 @@ if(
 )
     message(FATAL_ERROR "Unexpected PySCF script catalog")
 endif()
-if(NOT turbomole_script STREQUAL "turbomole_rimp2")
+if(NOT turbomole_script STREQUAL "turbomole_ricc2")
     message(FATAL_ERROR "Unexpected Turbomole script: ${turbomole_script}")
 endif()
 if(NOT turbomole_required_file STREQUAL "tm_define.template")

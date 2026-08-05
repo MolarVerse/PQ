@@ -1,0 +1,1 @@
+- Fix the bundled Turbomole script name offered by validation and setup tools.
