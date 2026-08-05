@@ -1,0 +1,89 @@
+Section                       	  Time [s]	  Time [%]
+------------------------------	----------	----------
+
+Total                         	     0.660	   100.000
+
+QM Engine                     	     0.339	    51.364
+Water Inter Potential         	     0.187	    28.333
+Output                        	     0.048	     7.273
+Constraints                   	     0.029	     4.394
+Potential                     	     0.021	     3.182
+Setup                         	     0.020	     3.030
+Thermostat                    	     0.000	     0.000
+Integrator                    	     0.000	     0.000
+Cell List                     	     0.000	     0.000
+IntraNonBonded                	     0.000	     0.000
+Virial                        	     0.000	     0.000
+Physical Data                 	     0.000	     0.000
+Manostat                      	     0.000	     0.000
+Reset Kinetics                	     0.000	     0.000
+Water Intra Potential         	     0.000	     0.000
+
+
+
+
+Section                       	  Time [s]	  Time [%]	  RelT [%]
+------------------------------	----------	----------	----------
+
+Total                         	     0.660	   100.000	   100.000
+
+QM Engine                     	     0.339	    51.364	   100.000
+Execute External QM Runner    	     0.336	    50.954	    99.203
+Write Pointcharges            	     0.003	     0.460	     0.896
+Write Coordinates             	     0.000	     0.050	     0.097
+Read Forces                   	     0.000	     0.047	     0.092
+Read Charges                  	     0.000	     0.024	     0.047
+
+Water Inter Potential         	     0.187	    28.333	   100.000
+QM/MM Outer to Outer          	     0.185	    28.006	    98.845
+QM/MM Layer to Outer          	     0.003	     0.408	     1.439
+QM/MM Smoothing MM            	     0.001	     0.173	     0.611
+QM/MM Core to Outer           	     0.000	     0.047	     0.166
+
+Output                        	     0.048	     7.273	   100.000
+TrajectoryOutput              	     0.027	     4.120	    56.650
+RstFileOutput                 	     0.022	     3.281	    45.112
+InfoOutput                    	     0.000	     0.018	     0.247
+EnergyOutput                  	     0.000	     0.006	     0.078
+VirialOutput                  	     0.000	     0.003	     0.048
+MomentumOutput                	     0.000	     0.002	     0.034
+InstantEnergyOutput           	     0.000	     0.002	     0.034
+StressOutput                  	     0.000	     0.002	     0.033
+BoxFileOutput                 	     0.000	     0.002	     0.031
+
+Constraints                   	     0.029	     4.394	   100.000
+Rattle                        	     0.016	     2.394	    54.490
+Shake                         	     0.014	     2.190	    49.844
+Reference Bond Data           	     0.000	     0.059	     1.351
+
+Potential                     	     0.021	     3.182	   100.000
+InterNonBondedOuterToOuter    	     0.022	     3.306	   103.913
+InterNonBondedLayerToOuter    	     0.001	     0.135	     4.252
+InterNonBondedSmoothingMM     	     0.001	     0.108	     3.379
+InterNonBondedCoreToOuter     	     0.000	     0.046	     1.432
+
+Setup                         	     0.020	     3.030	   100.000
+TotalSetup                    	     0.021	     3.111	   102.659
+
+Thermostat                    	     0.000	     0.000	   100.000
+Berendsen                     	     0.000	     0.015	       inf
+
+Integrator                    	     0.000	     0.000	   100.000
+Velocity Verlet - First Step  	     0.000	     0.073	       inf
+Velocity Verlet - Second Step 	     0.000	     0.015	       inf
+
+Cell List                     	     0.000	     0.000	   100.000
+Update                        	     0.001	     0.121	       inf
+
+IntraNonBonded                	     0.000	     0.000	   100.000
+IntraNonBonded                	     0.000	     0.000	       inf
+
+Physical Data                 	     0.000	     0.000	   100.000
+Calc Kinetics                 	     0.001	     0.118	       inf
+
+Manostat                      	     0.000	     0.000	   100.000
+Calc Pressure                 	     0.000	     0.001	       inf
+
+Reset Kinetics                	     0.000	     0.000	   100.000
+Reset Kinetics                	     0.000	     0.001	       inf
+
