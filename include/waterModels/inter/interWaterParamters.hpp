@@ -145,8 +145,8 @@ namespace waterModel
         inline static const auto _nonCoulombPairOO =
             potential::LennardJonesPair(
                 defaults::COULOMB_CUT_OFF_DEFAULT,
-                constants::_H2O_DC_LJ_C6_OO_,
-                constants::_H2O_DC_LJ_C12_OO_
+                constants::_SPC_DC_LJ_C6_OO_,
+                constants::_SPC_DC_LJ_C12_OO_
             );
         inline static const auto _nonCoulombPairOH =
             potential::LennardJonesPair(0.01, 0.0, 0.0);
