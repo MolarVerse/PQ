@@ -97,10 +97,10 @@ namespace engine
             const size_t step,
             const physicalData::PhysicalData &
         );
-        void writeXyzFile(simulationBox::SimulationBox &);
-        void writeVelFile(simulationBox::SimulationBox &);
-        void writeForceFile(simulationBox::SimulationBox &);
-        void writeChargeFile(simulationBox::SimulationBox &);
+        void writeXyzFile(simulationBox::SimulationBox &, const size_t);
+        void writeVelFile(simulationBox::SimulationBox &, const size_t);
+        void writeForceFile(simulationBox::SimulationBox &, const size_t);
+        void writeChargeFile(simulationBox::SimulationBox &, const size_t);
         void writeInfoFile(
             const double simulationTime,
             const physicalData::PhysicalData &
@@ -125,16 +125,20 @@ namespace engine
             std::vector<simulationBox::SimulationBox> &
         );
         void writeRingPolymerXyzFile(
-            std::vector<simulationBox::SimulationBox> &
+            std::vector<simulationBox::SimulationBox> &,
+            const size_t
         );
         void writeRingPolymerVelFile(
-            std::vector<simulationBox::SimulationBox> &
+            std::vector<simulationBox::SimulationBox> &,
+            const size_t
         );
         void writeRingPolymerForceFile(
-            std::vector<simulationBox::SimulationBox> &
+            std::vector<simulationBox::SimulationBox> &,
+            const size_t
         );
         void writeRingPolymerChargeFile(
-            std::vector<simulationBox::SimulationBox> &
+            std::vector<simulationBox::SimulationBox> &,
+            const size_t
         );
         void writeRingPolymerEnergyFile(
             const size_t,

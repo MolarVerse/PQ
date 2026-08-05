@@ -1,0 +1,26 @@
+3ob Slater-Koster Parameter Set (3ob-3-1)
+    © 2017 Marcus Elstner, Karlsruhe Institute of Technology.
+    Licensed under CC BY-SA 4.0.
+
+    M. Gaus, A. Goez, and M. Elstner
+    Parametrization and Benchmark of DFTB3 for Organic Molecules.
+    J. Chem. Theory Comput. 2013, 9, 338-354.
+    https://doi.org/10.1021/ct300849w
+
+    M. Gaus, X. Lu, M. Elstner, and Q. Cui
+    Parameterization of DFTB3/3OB for Sulfur and Phosphorus for
+    Chemical and Biological Applications.
+    J. Chem. Theory Comput. 2014, 10, 1518-1537.
+    https://doi.org/10.1021/ct401002w
+
+    X. Lu, M. Gaus, M. Elstner, and Q. Cui
+    Parametrization of DFTB3/3OB for Magnesium and Zinc for
+    Chemical and Biological Applications.
+    J. Phys. Chem. B 2015, 119, 1062-1082.
+    https://doi.org/10.1021/jp506557r
+
+    M. Kubillus, T. Kubař, M. Gaus, J. Řezáč, and M. Elstner
+    Parameterization of the DFTB3 Method for Br, Ca, Cl, F, I, K,
+    and Na in Organic and Biological Systems.
+    J. Chem. Theory Comput. 2015, 11, 332-342.
+    https://doi.org/10.1021/ct5009137

@@ -23,5 +23,5 @@ target_link_libraries(evaluator
 )
 
 install(TARGETS evaluator
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+    DESTINATION lib
 )

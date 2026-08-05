@@ -130,7 +130,7 @@ void CoulombLongRangeInputParser::parseWolfParameter(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto wolfParameter = stod(lineElements[2]);
+    const auto wolfParameter = stringToFiniteDouble(lineElements[2]);
 
     if (wolfParameter < 0.0)
         throw InputFileException("Wolf parameter cannot be negative");
@@ -152,7 +152,7 @@ void CoulombLongRangeInputParser::parseReactionFieldEpsilon(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto epsilon = stod(lineElements[2]);
+    const auto epsilon = stringToFiniteDouble(lineElements[2]);
 
     if (epsilon < 1.0)
         throw InputFileException(

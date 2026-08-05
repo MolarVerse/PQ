@@ -38,8 +38,14 @@ namespace input
      */
     class QMInputParser : public InputFileParser
     {
+       private:
+        bool _resolveBuiltInSlakosPath;
+
        public:
-        explicit QMInputParser(engine::Engine &);
+        explicit QMInputParser(
+            engine::Engine &,
+            bool resolveBuiltInSlakosPath = true
+        );
 
         void parseQMMethod(const std::vector<std::string> &, const size_t);
         void parseQMScript(const std::vector<std::string> &, const size_t);

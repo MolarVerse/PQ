@@ -24,7 +24,8 @@
 
 #define _RING_POLYMER_TRAJECTORY_OUTPUT_HPP_
 
-#include <vector>   // for vector
+#include <cstddef>   // for size_t
+#include <vector>    // for vector
 
 #include "output.hpp"
 
@@ -48,10 +49,22 @@ namespace output
         using Output::Output;
 
         void writeHeader(const simulationBox::SimulationBox &);
-        void writeXyz(std::vector<simulationBox::SimulationBox> &);
-        void writeVelocities(std::vector<simulationBox::SimulationBox> &);
-        void writeForces(std::vector<simulationBox::SimulationBox> &);
-        void writeCharges(std::vector<simulationBox::SimulationBox> &);
+        void writeXyz(
+            std::vector<simulationBox::SimulationBox> &,
+            const size_t
+        );
+        void writeVelocities(
+            std::vector<simulationBox::SimulationBox> &,
+            const size_t
+        );
+        void writeForces(
+            std::vector<simulationBox::SimulationBox> &,
+            const size_t
+        );
+        void writeCharges(
+            std::vector<simulationBox::SimulationBox> &,
+            const size_t
+        );
     };
 }   // namespace output
 

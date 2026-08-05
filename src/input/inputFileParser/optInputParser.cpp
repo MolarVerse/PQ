@@ -190,7 +190,7 @@ void OptInputParser::parseInitialLearningRate(
 {
     checkCommandArray(lineElements, lineNumber);
 
-    const auto initialLearningRate = std::stod(lineElements[2]);
+    const auto initialLearningRate = stringToFiniteDouble(lineElements[2]);
 
     if (initialLearningRate <= 0.0)
         throw InputFileException(
@@ -220,7 +220,7 @@ void OptInputParser::parseLearningRateUpdateFreq(
 {
     checkCommandArray(lineElements, lineNumber);
 
-    const auto frequency = std::stoi(lineElements[2]);
+    const auto frequency = stringToInt(lineElements[2]);
 
     if (frequency <= 0)
         throw InputFileException(
@@ -251,7 +251,7 @@ void OptInputParser::parseMinLearningRate(
 {
     checkCommandArray(lineElements, lineNumber);
 
-    const auto minLearningRate = std::stod(lineElements[2]);
+    const auto minLearningRate = stringToFiniteDouble(lineElements[2]);
 
     if (minLearningRate <= 0.0)
         throw InputFileException(
@@ -281,7 +281,7 @@ void OptInputParser::parseMaxLearningRate(
 {
     checkCommandArray(lineElements, lineNumber);
 
-    const auto maxLearningRate = std::stod(lineElements[2]);
+    const auto maxLearningRate = stringToFiniteDouble(lineElements[2]);
 
     if (maxLearningRate <= 0.0)
         throw InputFileException(
@@ -311,7 +311,7 @@ void OptInputParser::parseLearningRateDecay(
 {
     checkCommandArray(lineElements, lineNumber);
 
-    const auto decay = std::stod(lineElements[2]);
+    const auto decay = stringToFiniteDouble(lineElements[2]);
 
     if (decay <= 0.0)
         throw InputFileException(

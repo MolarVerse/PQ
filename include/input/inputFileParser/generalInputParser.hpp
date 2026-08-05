@@ -27,6 +27,7 @@
 #include <cstddef>   // for size_t
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "engine.hpp"
 #include "inputFileParser.hpp"   // for InputFileParser
@@ -58,7 +59,7 @@ namespace input
 
         void parseRandomSeed(const std::vector<std::string> &, const size_t);
 
-        void parseJobTypeForEngine(
+        static void parseJobTypeForEngine(
             const std::vector<std::string> &,
             const size_t,
             std::unique_ptr<engine::Engine> &

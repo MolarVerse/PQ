@@ -24,6 +24,9 @@
 
 #define _EXTERNAL_QM_RUNNER_HPP_
 
+#include <string>
+#include <string_view>
+
 #include "qmRunner.hpp"
 
 namespace physicalData
@@ -39,6 +42,8 @@ namespace simulationBox
 
 namespace QM
 {
+    [[nodiscard]] std::string bundledQMScriptPath(std::string_view script);
+
     /**
      * @brief ExternalQMRunner inherits from QMRunner
      *
@@ -49,6 +54,10 @@ namespace QM
         std::string       _scriptPath  = SCRIPT_PATH_;
         const std::string _singularity = SINGULARITY_;
         const std::string _staticBuild = STATIC_BUILD_;
+
+        [[nodiscard]] std::string resolveScriptPath(
+            std::string_view script
+        ) const;
 
        public:
         ExternalQMRunner()           = default;

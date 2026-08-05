@@ -24,8 +24,7 @@
 
 #define _VIRIAL_HPP_
 
-#include <string>
-
+#include "settings.hpp"
 #include "staticMatrix.hpp"
 #include "timer.hpp"
 
@@ -52,7 +51,7 @@ namespace virial
     class Virial : public timings::Timer
     {
        protected:
-        std::string _virialType;   // TODO: make this an enum
+        settings::VirialType _virialType;
 
         linearAlgebra::tensor3D _virial;
 
@@ -62,20 +61,20 @@ namespace virial
         virtual std::shared_ptr<Virial> clone() const = 0;
 
         virtual void calculateVirial(
-            simulationBox::SimulationBox &,
-            physicalData::PhysicalData &
+            simulationBox::SimulationBox&,
+            physicalData::PhysicalData&
         );
         virtual void intraMolecularVirialCorrection(
-            simulationBox::SimulationBox &,
-            physicalData::PhysicalData &
+            simulationBox::SimulationBox&,
+            physicalData::PhysicalData&
         )
         {
         }
 
-        void setVirial(const linearAlgebra::tensor3D &virial);
+        void setVirial(const linearAlgebra::tensor3D& virial);
 
         [[nodiscard]] linearAlgebra::tensor3D getVirial() const;
-        [[nodiscard]] std::string             getVirialType() const;
+        [[nodiscard]] settings::VirialType    getVirialType() const;
     };
 }   // namespace virial
 

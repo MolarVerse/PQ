@@ -27,6 +27,7 @@
 #include "exceptions.hpp"   // for InputFileException, customException
 #include "parserUtils.hpp"
 #include "ringPolymerSettings.hpp"   // for RingPolymerSettings
+#include "stringUtilities.hpp"       // for stringToInt
 
 using namespace input;
 using namespace engine;
@@ -65,7 +66,7 @@ void RingPolymerInputParser::parseNumberOfBeads(
 {
     checkCommand(lineElements, lineNumber);
 
-    auto numberOfBeads = stoi(lineElements[2]);
+    auto numberOfBeads = utilities::stringToInt(lineElements[2]);
 
     if (numberOfBeads < 2)
         throw InputFileException(

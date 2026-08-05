@@ -24,6 +24,8 @@
 
 #define _TRAJECTORY_OUTPUT_HPP_
 
+#include <cstddef>   // for size_t
+
 #include "output.hpp"   // for Output
 
 namespace simulationBox
@@ -45,10 +47,10 @@ namespace output
         using Output::Output;
 
         void writeHeader(const simulationBox::SimulationBox &);
-        void writeXyz(simulationBox::SimulationBox &);
-        void writeVelocities(simulationBox::SimulationBox &);
-        void writeForces(simulationBox::SimulationBox &);
-        void writeCharges(simulationBox::SimulationBox &);
+        void writeXyz(simulationBox::SimulationBox &, const size_t);
+        void writeVelocities(simulationBox::SimulationBox &, const size_t);
+        void writeForces(simulationBox::SimulationBox &, const size_t);
+        void writeCharges(simulationBox::SimulationBox &, const size_t);
     };
 
 }   // namespace output

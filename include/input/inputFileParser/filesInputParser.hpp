@@ -38,8 +38,14 @@ namespace input
      */
     class FilesInputParser : public InputFileParser
     {
+       private:
+        bool _validateFilePaths;
+
        public:
-        explicit FilesInputParser(engine::Engine &);
+        explicit FilesInputParser(
+            engine::Engine &,
+            bool validateFilePaths = true
+        );
 
         void parseIntraNonBondedFile(
             const std::vector<std::string> &,

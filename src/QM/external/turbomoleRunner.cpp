@@ -83,7 +83,7 @@ void TurbomoleRunner::writeCoordsFile(SimulationBox &simBox)
  */
 void TurbomoleRunner::execute()
 {
-    const auto scriptFile = _scriptPath + QMSettings::getQMScript();
+    const auto scriptFile = resolveScriptPath(QMSettings::getQMScript());
 
     if (!fileExists(scriptFile))
         throw InputFileException(

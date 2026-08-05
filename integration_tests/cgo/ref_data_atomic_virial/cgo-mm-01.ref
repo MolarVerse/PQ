@@ -1,0 +1,94 @@
+########################################################################
+#                                                                      #
+#  This file contains all references to the software and theory used.  #
+#                                                                      #
+########################################################################
+
+PQ Software
+    Gamper, J., Gallmetzer, J. M., Weiss, A. K. H.,
+    Hofer, T. S. (2024). PQ: An Open-Source Platform
+    for Advanced Molecular Dynamics Simulations. Zenodo.
+    https://doi.org/10.5281/zenodo.14185071
+
+
+Berendsen Thermostat and/or Manostat:
+    Berendsen, H. J. C., Postma, J. P. M., van Gunsteren, W. F.,
+    DiNola, A., & Haak, J. R. (1984).
+    Molecular dynamics with coupling to an external bath.
+    The Journal of Chemical Physics, 81(8), 3684–3690.
+    https://doi.org/10.1063/1.448118
+
+
+Velocity Verlet Algorithm
+    William C. Swope, Hans C. Andersen, Peter H. Berens,
+    Kent R. Wilson; A computer simulation method for the
+    calculation of equilibrium constants for the formation
+    of physical clusters of molecules: Application to
+    small water clusters. J. Chem. Phys. 1 January 1982;
+    76 (1): 637–649.
+    https://doi.org/10.1063/1.442716
+
+
+
+########################################################################
+#                                                                      #
+#                            BIBTEX ENTRIES                            #
+#                                                                      #
+########################################################################
+
+%%%%%%%%%%%%%%%
+% PQ Software %
+%%%%%%%%%%%%%%%
+
+@software{gamper_2024_14185072,
+  author       = {Gamper, Jakob and Gallmetzer, Josef Maria and Weiss, Alexander K. H. and Hofer, Thomas S.},
+  title        = {PQ: An Open-Source Platform for Advanced Molecular Dynamics Simulations},
+  month        = nov,
+  year         = 2024,
+  publisher    = {Zenodo},
+  version      = {0.5.0},
+  doi          = {10.5281/zenodo.14185072},
+  url          = {https://doi.org/10.5281/zenodo.14185072},
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Berendsen Thermostat and/or Manostat %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+@article{Berendsen1984,
+  doi = {10.1063/1.448118},
+  url = {https://doi.org/10.1063/1.448118},
+  year = {1984},
+  month = oct,
+  publisher = {{AIP} Publishing},
+  volume = {81},
+  number = {8},
+  pages = {3684--3690},
+  author = {H. J. C. Berendsen and J. P. M. Postma and W. F. van Gunsteren and A. DiNola and J. R. Haak},
+  title = {Molecular dynamics with coupling to an external bath},
+  journal = {The Journal of Chemical Physics}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Velocity Verlet Algorithm %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+@article{10.1063/1.442716,
+    author = {Swope, William C. and Andersen, Hans C. and Berens, Peter H. and Wilson, Kent R.},
+    title = {A computer simulation method for the calculation of equilibrium constants for the formation of physical clusters of molecules: Application to small water clusters},
+    journal = {The Journal of Chemical Physics},
+    volume = {76},
+    number = {1},
+    pages = {637-649},
+    year = {1982},
+    month = {01},
+    abstract = {We present a molecular dynamics computer simulation method for calculating equilibrium constants for the formation of physical clusters of molecules. The method is based on Hill’s formal theory of physical clusters. In the method, a molecular dynamics calculation is used to calculate the average potential energy of a cluster of molecules as a function of temperature, and the equilibrium constants are calculated from the integral of the energy with respect to reciprocal temperature. The method is illustrated by calculations of the equilibrium constants for the formation of clusters of two to five water molecules that interact with each other by an intermolecular potential devised by Watts. The method is compared with other procedures for calculating the thermodynamic properties of clusters.},
+    issn = {0021-9606},
+    doi = {10.1063/1.442716},
+    url = {https://doi.org/10.1063/1.442716},
+    eprint = {https://pubs.aip.org/aip/jcp/article-pdf/76/1/637/18934474/637\_1\_online.pdf},
+}
+
+

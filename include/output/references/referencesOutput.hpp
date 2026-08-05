@@ -29,6 +29,8 @@
 
 #define REFERENCES_PATH_ _REFERENCES_PATH_
 
+class ReferencesOutputTest;
+
 namespace references
 {
     /**
@@ -40,10 +42,12 @@ namespace references
     class ReferencesOutput
     {
        private:
-        static inline std::string _referenceFilesPath = REFERENCES_PATH_;
-
         static inline std::unordered_set<std::string> _referenceFileNames;
         static inline std::unordered_set<std::string> _bibtexFileNames;
+
+#ifdef WITH_TESTS
+        friend class ::ReferencesOutputTest;
+#endif
 
        public:
         static void writeReferencesFile();
