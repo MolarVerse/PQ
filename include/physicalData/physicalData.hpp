@@ -33,7 +33,7 @@
 
 namespace physicalData
 {
-    pq::PhysicalData mean(std::vector<pq::PhysicalData> &physicalDataVector);
+    pq::PhysicalData mean(std::vector<pq::PhysicalData>& physicalDataVector);
 
     /**
      * @struct KineticEnergyVirialTensor
@@ -48,7 +48,7 @@ namespace physicalData
         linearAlgebra::tensor3D molecular;
 
         [[nodiscard]]
-        const linearAlgebra::tensor3D &getVirialTensor(
+        const linearAlgebra::tensor3D& getVirialTensor(
             settings::VirialType virialType
         ) const;
     };
@@ -100,13 +100,13 @@ namespace physicalData
         double _ringPolymerEnergy = 0.0;
 
        public:
-        void calculateTemperature(pq::SimBox &);
-        void calculateKinetics(pq::SimBox &);
+        void calculateTemperature(pq::SimBox&);
+        void calculateKinetics(pq::SimBox&);
 
         std::shared_ptr<PhysicalData> clone() const;
 
-        void copy(const PhysicalData &);
-        void updateAverages(const PhysicalData &);
+        void copy(const PhysicalData&);
+        void updateAverages(const PhysicalData&);
         void makeAverages(const double);
         void reset();
 
@@ -119,7 +119,7 @@ namespace physicalData
          * standard add methods  *
          *************************/
 
-        void addVirial(const linearAlgebra::tensor3D &virial);
+        void addVirial(const linearAlgebra::tensor3D& virial);
         void addCoulombEnergy(const double coulombEnergy);
         void addNonCoulombEnergy(const double nonCoulombEnergy);
 
@@ -142,16 +142,16 @@ namespace physicalData
         void setTemperature(const double temperature);
         void setPressure(const double pressure);
 
-        void setVirial(const linearAlgebra::tensor3D &virial);
-        void setStressTensor(const linearAlgebra::tensor3D &stressTensor);
+        void setVirial(const linearAlgebra::tensor3D& virial);
+        void setStressTensor(const linearAlgebra::tensor3D& stressTensor);
 
-        void setMomentum(const pq::Vec3D &vec);
-        void setAngularMomentum(const pq::Vec3D &vec);
+        void setMomentum(const pq::Vec3D& vec);
+        void setAngularMomentum(const pq::Vec3D& vec);
 
         void setKineticEnergy(const double kineticEnergy);
-        void setKineticEnergyAtomicVector(const linearAlgebra::tensor3D &vec);
+        void setKineticEnergyAtomicVector(const linearAlgebra::tensor3D& vec);
         void setKineticEnergyMolecularVector(
-            const linearAlgebra::tensor3D &vec
+            const linearAlgebra::tensor3D& vec
         );
 
         void setCoulombEnergy(const double coulombEnergy);
@@ -212,7 +212,7 @@ namespace physicalData
         [[nodiscard]] linearAlgebra::tensor3D getKinEnergyMolTensor() const;
 
         [[nodiscard]]
-        const linearAlgebra::tensor3D &getKinEnergyVirialTensor(
+        const linearAlgebra::tensor3D& getKinEnergyVirialTensor(
             settings::VirialType virialType
         ) const;
 

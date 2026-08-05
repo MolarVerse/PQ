@@ -42,13 +42,13 @@ using namespace linearAlgebra;
  * @param simBox
  * @param data
  */
-void Virial::calculateVirial(SimulationBox &simBox, PhysicalData &data)
+void Virial::calculateVirial(SimulationBox& simBox, PhysicalData& data)
 {
     startTimingsSection("Virial");
 
     _virial = {0.0};
 
-    for (auto &molecule : simBox.getMolecules())
+    for (auto& molecule : simBox.getMolecules())
     {
         const size_t numberOfAtoms = molecule.getNumberOfAtoms();
 
@@ -76,7 +76,7 @@ void Virial::calculateVirial(SimulationBox &simBox, PhysicalData &data)
  *
  * @param virial
  */
-void Virial::setVirial(const tensor3D &virial) { _virial = virial; }
+void Virial::setVirial(const tensor3D& virial) { _virial = virial; }
 
 /**
  * @brief get the virial

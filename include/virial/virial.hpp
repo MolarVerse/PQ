@@ -50,15 +50,15 @@ namespace virial
 
         virtual std::shared_ptr<Virial> clone() const = 0;
 
-        virtual void calculateVirial(pq::SimBox &, pq::PhysicalData &);
+        virtual void calculateVirial(pq::SimBox&, pq::PhysicalData&);
         virtual void intraMolecularVirialCorrection(
-            pq::SimBox &,
-            pq::PhysicalData &
+            pq::SimBox&,
+            pq::PhysicalData&
         )
         {
         }
 
-        void setVirial(const pq::tensor3D &virial);
+        void setVirial(const pq::tensor3D& virial);
 
         [[nodiscard]] pq::tensor3D         getVirial() const;
         [[nodiscard]] settings::VirialType getVirialType() const;

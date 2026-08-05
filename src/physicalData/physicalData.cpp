@@ -43,7 +43,7 @@ using namespace constants;
  *
  * @return const linearAlgebra::tensor3D&
  */
-const linearAlgebra::tensor3D &KineticEnergyVirialTensor::getVirialTensor(
+const linearAlgebra::tensor3D& KineticEnergyVirialTensor::getVirialTensor(
     settings::VirialType virialType
 ) const
 {
@@ -61,7 +61,7 @@ const linearAlgebra::tensor3D &KineticEnergyVirialTensor::getVirialTensor(
  *
  * @param simulationBox
  */
-void PhysicalData::calculateKinetics(SimulationBox &simulationBox)
+void PhysicalData::calculateKinetics(SimulationBox& simulationBox)
 {
     startTimingsSection("Calc Kinetics");
 
@@ -71,7 +71,7 @@ void PhysicalData::calculateKinetics(SimulationBox &simulationBox)
 
     auto kinEnergyAndMomOfMol = [&kineticEnergyAtomicTensor,
                                  &kineticEnergyMolecularTensor,
-                                 this](auto &molecule)
+                                 this](auto& molecule)
     {
         const auto numberOfAtoms   = molecule.getNumberOfAtoms();
         auto       momentumSquared = tensor3D();
@@ -123,7 +123,7 @@ std::shared_ptr<PhysicalData> PhysicalData::clone() const
  *
  * @param data - physicalData to copy from
  */
-void PhysicalData::copy(const PhysicalData &data)
+void PhysicalData::copy(const PhysicalData& data)
 {
     reset();
 
@@ -135,7 +135,7 @@ void PhysicalData::copy(const PhysicalData &data)
  *
  * @param physicalData
  */
-void PhysicalData::updateAverages(const PhysicalData &physicalData)
+void PhysicalData::updateAverages(const PhysicalData& physicalData)
 {
     _numberOfQMAtoms += physicalData.getNumberOfQMAtoms();
     _loopTime        += physicalData.getLoopTime();
@@ -170,7 +170,7 @@ void PhysicalData::updateAverages(const PhysicalData &physicalData)
 
     _ringPolymerEnergy += physicalData.getRingPolymerEnergy();
 
-    const auto &kinEnergyVirialTensor = physicalData._kinEnergyVirialTensor;
+    const auto& kinEnergyVirialTensor = physicalData._kinEnergyVirialTensor;
 
     _kinEnergyVirialTensor.atomic    += kinEnergyVirialTensor.atomic;
     _kinEnergyVirialTensor.molecular += kinEnergyVirialTensor.molecular;
@@ -270,7 +270,7 @@ void PhysicalData::reset()
  *
  * @param simulationBox
  */
-void PhysicalData::calculateTemperature(SimulationBox &simulationBox)
+void PhysicalData::calculateTemperature(SimulationBox& simulationBox)
 {
     _temperature = simulationBox.calculateTemperature();
 }
@@ -333,13 +333,13 @@ void PhysicalData::addIntraNonCoulombEnergy(const double intraNonCoulombEnergy)
  * @param dataVec - vector of physicalData
  * @return PhysicalData
  */
-PhysicalData physicalData::mean(std::vector<PhysicalData> &dataVec)
+PhysicalData physicalData::mean(std::vector<PhysicalData>& dataVec)
 {
     PhysicalData meanData;
 
     std::ranges::for_each(
         dataVec,
-        [&meanData](auto &physicalData)
+        [&meanData](auto& physicalData)
         { meanData.updateAverages(physicalData); }
     );
 

@@ -196,7 +196,8 @@ TEST_F(TestPhysicalData, reset)
     _physicalData->setVolume(1.0);
     _physicalData->setDensity(1.0);
     _physicalData->setPressure(1.0);
-    _physicalData->setVirial(diagonalMatrix(linearAlgebra::Vec3D(1.0, 1.0, 1.0))
+    _physicalData->setVirial(
+        diagonalMatrix(linearAlgebra::Vec3D(1.0, 1.0, 1.0))
     );
     _physicalData->setQMEnergy(1.0);
 

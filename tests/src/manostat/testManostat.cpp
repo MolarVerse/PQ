@@ -52,8 +52,8 @@ class TestableStochasticRescalingManostat
 namespace
 {
     void setupCutMolecule(
-        simulationBox::SimulationBox &box,
-        physicalData::PhysicalData   &data
+        simulationBox::SimulationBox& box,
+        physicalData::PhysicalData&   data
     )
     {
         settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
@@ -92,7 +92,7 @@ namespace
     }
 
     linearAlgebra::Vec3D getMinimumImageDistance(
-        simulationBox::SimulationBox &box
+        simulationBox::SimulationBox& box
     )
     {
         auto dPosition = box.getMolecule(0).getAtomPosition(1) -
@@ -102,7 +102,7 @@ namespace
         return dPosition;
     }
 
-    void expectCutMoleculeScaled(simulationBox::SimulationBox &box)
+    void expectCutMoleculeScaled(simulationBox::SimulationBox& box)
     {
         const auto dPosition = getMinimumImageDistance(box);
 
@@ -130,7 +130,7 @@ namespace
     }
 
     double getMinimumImageDistance(
-        simulationBox::SimulationBox &box,
+        simulationBox::SimulationBox& box,
         const size_t                  moleculeIndex
     )
     {
@@ -359,8 +359,8 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
     molecule.setMolMass(2.0);
 
     const auto addAtom = [this, &molecule](
-                             const linearAlgebra::Vec3D &position,
-                             const linearAlgebra::Vec3D &velocity
+                             const linearAlgebra::Vec3D& position,
+                             const linearAlgebra::Vec3D& velocity
                          )
     {
         auto atom = std::make_shared<simulationBox::Atom>();

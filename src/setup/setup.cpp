@@ -74,7 +74,7 @@ using namespace setup::resetKinetics;
  * @param inputFileName
  * @param engine
  */
-void setup::setupRequestedJob(const std::string &inputFileName, Engine &engine)
+void setup::setupRequestedJob(const std::string& inputFileName, Engine& engine)
 {
     auto setupTimer = Timer("Setup");
 
@@ -103,7 +103,7 @@ void setup::setupRequestedJob(const std::string &inputFileName, Engine &engine)
  *
  * @param engine
  */
-void setup::startSetup(Timer &setupTimer, Engine &engine)
+void setup::startSetup(Timer& setupTimer, Engine& engine)
 {
     setupTimer.startTimingsSection("TotalSetup");
 
@@ -115,7 +115,7 @@ void setup::startSetup(Timer &setupTimer, Engine &engine)
  *
  * @param engine
  */
-void setup::endSetup(Timer &setupTimer, Engine &engine)
+void setup::endSetup(Timer& setupTimer, Engine& engine)
 {
     engine.getStdoutOutput().writeSetupCompleted();
     engine.getLogOutput().writeSetupCompleted();
@@ -130,7 +130,7 @@ void setup::endSetup(Timer &setupTimer, Engine &engine)
  * @param inputFileName
  * @param engine
  */
-void setup::readFiles(Engine &engine)
+void setup::readFiles(Engine& engine)
 {
     readMolDescriptor(engine);
 
@@ -148,7 +148,7 @@ void setup::readFiles(Engine &engine)
  *
  * @param engine
  */
-void setup::setupEngine(Engine &engine)
+void setup::setupEngine(Engine& engine)
 {
     if (Settings::isQMActivated())
         setupQM(engine);

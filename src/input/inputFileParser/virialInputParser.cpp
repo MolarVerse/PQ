@@ -45,7 +45,7 @@ using namespace utilities;
  *
  * @param engine
  */
-VirialInputParser::VirialInputParser(Engine &engine) : InputFileParser(engine)
+VirialInputParser::VirialInputParser(Engine& engine) : InputFileParser(engine)
 {
     addKeyword(
         std::string("virial"),
@@ -67,7 +67,7 @@ VirialInputParser::VirialInputParser(Engine &engine) : InputFileParser(engine)
  * @throws InputFileException if invalid virial keyword
  */
 void VirialInputParser::parseVirial(
-    const std::vector<std::string> &lineElements,
+    const std::vector<std::string>& lineElements,
     const size_t                    lineNumber
 )
 {

@@ -64,9 +64,9 @@ class TestManostat : public ::testing::Test
         delete _manostat;
     }
 
-    physicalData::PhysicalData   *_data;
-    simulationBox::SimulationBox *_box;
-    manostat::Manostat           *_manostat;
+    physicalData::PhysicalData*   _data;
+    simulationBox::SimulationBox* _box;
+    manostat::Manostat*           _manostat;
 };
 
 #endif
