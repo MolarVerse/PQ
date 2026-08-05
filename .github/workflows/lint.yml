@@ -77,4 +77,19 @@ jobs:
 
       - name: Run clangd-tidy
         run: |
-          clangd-tidy $(find src/ apps/ include/ -name "*.cpp" -o -name "*.hpp" -o -name "*.tpp" 2>/dev/null) -p=build
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            base=HEAD^1
+          else
+            base=HEAD^
+          fi
+
+          mapfile -t files < <(
+            git diff --name-only "$base" HEAD -- src apps include |
+              grep -E '\.(cpp|hpp|tpp)$' || true
+          )
+
+          if ((${#files[@]})); then
+            clangd-tidy "${files[@]}" -p=build
+          else
+            echo "No C++ files changed."
+          fi

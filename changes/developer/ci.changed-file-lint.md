@@ -1,0 +1,1 @@
+- Limit pull-request linting to changed C++ source files.
