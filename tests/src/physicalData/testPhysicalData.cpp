@@ -26,7 +26,6 @@
 #include "constants/internalConversionFactors.hpp"
 #include "gtest/gtest.h"
 #include "physicalData.hpp"
-#include "throwWithMessage.hpp"
 #include "vector3d.hpp"
 
 /**
@@ -64,14 +63,6 @@ TEST_F(TestPhysicalData, copy)
     EXPECT_EQ(physicalData2.getDensity(), 7.0);
     EXPECT_EQ(physicalData2.getPressure(), 8.0);
     EXPECT_EQ(physicalData2.getQMEnergy(), 9.0);
-    EXPECT_EQ(physicalData2.isKinEnergyVirialAtomic(), false);
-
-    physicalData2.changeKineticVirialToAtomic();
-    EXPECT_EQ(physicalData2.isKinEnergyVirialAtomic(), true);
-
-    physicalData::PhysicalData physicalData3;
-    physicalData3.copy(physicalData2);
-    EXPECT_EQ(physicalData3.isKinEnergyVirialAtomic(), true);
 }
 
 /**
@@ -92,14 +83,6 @@ TEST_F(TestPhysicalData, updateAverages)
     EXPECT_EQ(_physicalData->getDensity(), 14.0);
     EXPECT_EQ(_physicalData->getPressure(), 16.0);
     EXPECT_EQ(_physicalData->getQMEnergy(), 18.0);
-
-    const physicalData::PhysicalData physicalData3 = *_physicalData;
-    _physicalData->changeKineticVirialToAtomic();
-    EXPECT_THROW_MSG(
-        _physicalData->updateAverages(physicalData3),
-        customException::PhysicalDataException,
-        "Inconsistent isAtomic flag in PhysicalData::updateAverages"
-    );
 }
 
 /**
@@ -213,7 +196,8 @@ TEST_F(TestPhysicalData, reset)
     _physicalData->setVolume(1.0);
     _physicalData->setDensity(1.0);
     _physicalData->setPressure(1.0);
-    _physicalData->setVirial(diagonalMatrix(linearAlgebra::Vec3D(1.0, 1.0, 1.0))
+    _physicalData->setVirial(
+        diagonalMatrix(linearAlgebra::Vec3D(1.0, 1.0, 1.0))
     );
     _physicalData->setQMEnergy(1.0);
 
@@ -237,14 +221,6 @@ TEST_F(TestPhysicalData, reset)
     EXPECT_EQ(_physicalData->getPressure(), 0.0);
     EXPECT_EQ(_physicalData->getVirial(), linearAlgebra::tensor3D(0.0));
     EXPECT_EQ(_physicalData->getQMEnergy(), 0.0);
-    EXPECT_EQ(_physicalData->isKinEnergyVirialAtomic(), false);
-
-    _physicalData->changeKineticVirialToAtomic();
-    _physicalData->reset();
-
-    // needs to be true, because the isAtomic flag is not reset in the reset
-    // function
-    EXPECT_EQ(_physicalData->isKinEnergyVirialAtomic(), true);
 }
 
 /**
