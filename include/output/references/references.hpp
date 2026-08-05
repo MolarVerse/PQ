@@ -42,6 +42,8 @@ namespace references
 
     // QM Programs
     static constexpr char DFTBPLUS_FILE[]  = "dftbplus.ref";
+    static constexpr char THREEOB_FILE[]   = "3ob.ref";
+    static constexpr char MATSCI_FILE[]    = "matsci.ref";
     static constexpr char GFN1_FILE[]      = "gfn1.ref";
     static constexpr char GFN2_FILE[]      = "gfn2.ref";
     static constexpr char IPEA1_FILE[]     = "ipea1.ref";

@@ -39,8 +39,11 @@ namespace input
      */
     class FilesInputParser : public InputFileParser
     {
+       private:
+        bool _validateFilePaths;
+
        public:
-        explicit FilesInputParser(pq::Engine &);
+        explicit FilesInputParser(pq::Engine &, bool validateFilePaths = true);
 
         void parseIntraNonBondedFile(
             const std::vector<std::string> &,

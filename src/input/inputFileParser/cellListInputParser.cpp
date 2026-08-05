@@ -119,7 +119,7 @@ void CellListInputParser::parseNumberOfCells(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto cellNumber = stoi(lineElements[2]);
+    const auto cellNumber = stringToInt(lineElements[2]);
 
     if (cellNumber <= 0)
         throw InputFileException(

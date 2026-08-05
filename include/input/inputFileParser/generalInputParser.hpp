@@ -26,6 +26,7 @@
 
 #include <cstddef>   // for size_t
 #include <string>
+#include <vector>
 
 #include "inputFileParser.hpp"   // for InputFileParser
 #include "typeAliases.hpp"       // pq::Engine
@@ -57,7 +58,7 @@ namespace input
 
         void parseRandomSeed(const std::vector<std::string> &, const size_t);
 
-        void parseJobTypeForEngine(
+        static void parseJobTypeForEngine(
             const std::vector<std::string> &,
             const size_t,
             pq::UniqueEngine &

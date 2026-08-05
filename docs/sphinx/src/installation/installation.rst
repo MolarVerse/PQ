@@ -69,6 +69,9 @@ Common CMake options are listed below. Boolean options are set with ``On`` or
     * - ``BUILD_WITH_ASE``
       - ``On``
       - Build ASE-based QM runners and built-in Slater-Koster setup.
+    * - ``PQ_SLAKOS_SOURCE_DIR``
+      - unset
+      - Use preseeded ``3ob`` and ``matsci`` directories instead of cloning them.
     * - ``BUILD_WITH_PYTHON_BINDINGS``
       - ``Off``
       - Build Python bindings.
@@ -84,6 +87,14 @@ Example MPI build:
 .. code-block:: bash
 
     $ cmake ../ -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_MPI=On
+
+For a network-restricted ASE build, prepare a directory containing ``3ob`` and
+``matsci`` checkouts, then configure with:
+
+.. code-block:: bash
+
+    $ cmake ../ -DCMAKE_BUILD_TYPE=Release \
+        -DPQ_SLAKOS_SOURCE_DIR=/path/to/slakos
 
 .. _singularity:
 

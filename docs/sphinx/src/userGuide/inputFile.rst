@@ -866,7 +866,7 @@ This keyword is used in combination with the Berendsen and velocity rescaling th
 
 With the ``t_relaxation`` keyword the relaxation time in ``ps`` (*i.e.* :math:`\tau`) of the Berendsen or stochastic velocity rescaling thermostat is set, see equations :eq:`BerendsenThermostatEquation` and :eq:`BussiDonadioParrinelloThermostatEquation`.
 
-.. centered:: *default value* = 0.1 ps
+.. centered:: *default value* = 1.0 ps
 
 .. _frictionKey:
 
@@ -961,7 +961,7 @@ This keyword is used in combination with the Berendsen and stochastic cell resca
 .. admonition:: Key
     :class: tip
 
-    p_relaxation = {double} ps -> 0.1 ps
+    p_relaxation = {double} ps -> 1.0 ps
 
 With the ``p_relaxation`` keyword the relaxation time in ``ps`` (*i.e.* :math:`\tau`) of the Berendsen or stochastic cell rescaling manostat is set.
 
@@ -1588,6 +1588,7 @@ ASE-DFTB+ Approach
     slakos = {string}
 
 With the ``slakos`` keyword the user can specify the type of the ``ase-dftbplus`` approach for DFTB+ calculations.
+It is required when ``qm_prog = ase-dftbplus``.
 
 Possible options are:
 

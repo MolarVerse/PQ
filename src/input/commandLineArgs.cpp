@@ -22,8 +22,6 @@
 
 #include "commandLineArgs.hpp"
 
-#include <string_view>   // for string_view
-
 #include "exceptions.hpp"   // for UserInputException
 
 using namespace customException;
@@ -38,29 +36,88 @@ CommandLineArgs::CommandLineArgs(
     const int                       argc,
     const std::vector<std::string> &argv
 )
-    : _argc(argc), _argv(argv){};
+    : _argc(argc), _argv(argv)
+{
+}
 
 /**
- * @brief Detects flags in the command line arguments. First argument is the
- * input file name.
+ * @brief Parses the command line arguments.
  *
- * @throw UserInputException if a flag is detected (not yet implemented)
- * @throw UserInputException if no input file is specified
+ * @throw UserInputException if the command line is invalid
  */
-void CommandLineArgs::detectFlags()
+void CommandLineArgs::parse()
 {
-    for (const auto &arg : _argv)
-        if ('-' == arg[0])
-            throw UserInputException(
-                "Invalid flag: " + arg + " Flags are not yet implemented."
-            );
-
     if (_argc < 2)
         throw UserInputException(
             "No input file specified. Usage: PQ <input_file>"
         );
 
-    _inputFileName = _argv[1];
+    const auto &argument = _argv[1];
+
+    if ("--validate" == argument)
+    {
+        _action = CommandLineAction::VALIDATE;
+
+        if (_argc < 3 || _argv[2].starts_with('-'))
+            throw UserInputException(
+                "No input file specified. Usage: PQ --validate <input_file>"
+            );
+
+        _inputFileName = _argv[2];
+
+        auto formatSet = false;
+        auto scopeSet  = false;
+        for (auto index = 3; index < _argc; ++index)
+        {
+            const auto &option = _argv[size_t(index)];
+
+            if ("--format=json" == option && !formatSet)
+            {
+                _format   = CommandLineFormat::JSON;
+                formatSet = true;
+            }
+            else if ("--format=text" == option && !formatSet)
+            {
+                _format   = CommandLineFormat::TEXT;
+                formatSet = true;
+            }
+            else if ("--scope=installed" == option && !scopeSet)
+            {
+                _validationScope = ValidationScope::INSTALLED;
+                scopeSet         = true;
+            }
+            else if ("--scope=portable" == option && !scopeSet)
+            {
+                _validationScope = ValidationScope::PORTABLE;
+                scopeSet         = true;
+            }
+            else
+                throw UserInputException(
+                    "Unexpected argument: " + option +
+                    ". Use PQ --help for usage."
+                );
+        }
+
+        return;
+    }
+
+    if ("--help" == argument || "-h" == argument)
+        _action = CommandLineAction::HELP;
+    else if ("--version" == argument || "-V" == argument)
+        _action = CommandLineAction::VERSION;
+    else if ("--capabilities=json" == argument)
+        _action = CommandLineAction::CAPABILITIES;
+    else if (argument.starts_with('-'))
+        throw UserInputException(
+            "Unknown option: " + argument + ". Use PQ --help for usage."
+        );
+    else
+        _inputFileName = argument;
+
+    if (_argc > 2)
+        throw UserInputException(
+            "Unexpected argument: " + _argv[2] + ". Use PQ --help for usage."
+        );
 }
 
 /**
@@ -69,3 +126,27 @@ void CommandLineArgs::detectFlags()
  * @return std::string
  */
 std::string CommandLineArgs::getInputFileName() const { return _inputFileName; }
+
+/**
+ * @brief get the requested command line action
+ *
+ * @return CommandLineAction
+ */
+CommandLineAction CommandLineArgs::getAction() const { return _action; }
+
+/**
+ * @brief get the requested output format
+ *
+ * @return CommandLineFormat
+ */
+CommandLineFormat CommandLineArgs::getFormat() const { return _format; }
+
+/**
+ * @brief get the requested validation scope
+ *
+ * @return ValidationScope
+ */
+ValidationScope CommandLineArgs::getValidationScope() const
+{
+    return _validationScope;
+}
