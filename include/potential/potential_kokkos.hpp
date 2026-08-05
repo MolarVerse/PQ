@@ -41,11 +41,11 @@ namespace potential
     {
        public:
         void calculateForces(
-            pq::SimBox           &simBox,
-            pq::KokkosSimBox     &kokkosSimBox,
-            pq::PhysicalData     &data,
-            const pq::KokkosLJ   &lj,
-            const pq::KokkosWolf &wolf
+            simulationBox::SimulationBox &simBox,
+            pq::KokkosSimBox             &kokkosSimBox,
+            pq::PhysicalData             &data,
+            const pq::KokkosLJ           &lj,
+            const pq::KokkosWolf         &wolf
         );
     };
 

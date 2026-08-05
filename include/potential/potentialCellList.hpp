@@ -32,6 +32,11 @@ namespace physicalData
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
 
+namespace simulationBox
+{
+    class CellList;   // forward declaration
+}   // namespace simulationBox
+
 namespace potential
 {
     /**
@@ -46,9 +51,9 @@ namespace potential
         ~PotentialCellList() override;
 
         void calculateForces(
-            pq::SimBox &,
+            simulationBox::SimulationBox &,
             physicalData::PhysicalData &,
-            pq::CellList &
+            simulationBox::CellList &
         ) override;
 
         pq::SharedPotential clone() const override;

@@ -41,7 +41,7 @@ namespace QM
         bool _isFirstExecution = true;
 
        public:
-        void writeCoordsFile(pq::SimBox &) override;
+        void writeCoordsFile(simulationBox::SimulationBox &) override;
         void execute() override;
     };
 

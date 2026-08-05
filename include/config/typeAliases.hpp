@@ -28,18 +28,6 @@
 #include <optional>   // for std::optional
 #include <vector>     // for std::vector
 
-namespace simulationBox
-{
-    class Molecule;              // forward declaration
-    class MoleculeType;          // forward declaration
-    class Atom;                  // forward declaration
-    class CellList;              // forward declaration
-    class Box;                   // forward declaration
-    class SimulationBox;         // forward declaration
-    class KokkosSimulationBox;   // forward declaration
-
-}   // namespace simulationBox
-
 namespace potential
 {
     class Potential;              // forward declaration
@@ -84,25 +72,6 @@ namespace pq
     using SharedNonCoulPairVec2d = std::vector<SharedNonCoulPairVec>;
     using SharedNonCoulPairVec3d = std::vector<SharedNonCoulPairVec2d>;
     using SharedNonCoulPairVec4d = std::vector<SharedNonCoulPairVec3d>;
-
-    /***************************
-     * simulationBox namespace *
-     ***************************/
-
-    using SimBox       = simulationBox::SimulationBox;
-    using KokkosSimBox = simulationBox::KokkosSimulationBox;
-    using CellList     = simulationBox::CellList;
-    using Molecule     = simulationBox::Molecule;
-    using MoleculeType = simulationBox::MoleculeType;
-    using Atom         = simulationBox::Atom;
-    using Box          = simulationBox::Box;
-
-    using SharedAtom     = std::shared_ptr<simulationBox::Atom>;
-    using SharedSimBox   = std::shared_ptr<simulationBox::SimulationBox>;
-    using SharedCellList = std::shared_ptr<simulationBox::CellList>;
-    using SharedBox      = std::shared_ptr<simulationBox::Box>;
-
-    using SharedAtomVec = std::vector<SharedAtom>;
 
 }   // namespace pq
 

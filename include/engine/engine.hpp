@@ -68,10 +68,10 @@ namespace engine
         physicalData::PhysicalData _averagePhysicalData;
 
         std::shared_ptr<virial::Virial>                 _virial;
-        pq::SharedPotential                             _potential;
+        std::shared_ptr<potential::Potential>           _potential;
         std::shared_ptr<physicalData::PhysicalData>     _physicalData;
-        pq::SharedSimBox                                _simulationBox;
-        pq::SharedCellList                              _cellList;
+        std::shared_ptr<simulationBox::SimulationBox>   _simulationBox;
+        std::shared_ptr<simulationBox::CellList>        _cellList;
         std::shared_ptr<intraNonBonded::IntraNonBonded> _intraNonBonded;
         std::shared_ptr<forceField::ForceField>         _forceField;
         std::shared_ptr<constraints::Constraints>       _constraints;
@@ -153,11 +153,13 @@ namespace engine
 
         [[nodiscard]]
         std::shared_ptr<forceField::ForceField> getSharedForceField() const;
-        [[nodiscard]] pq::SharedSimBox          getSharedSimulationBox() const;
+        [[nodiscard]] std::shared_ptr<simulationBox::SimulationBox> getSharedSimulationBox(
+        ) const;
         [[nodiscard]]
         std::shared_ptr<physicalData::PhysicalData> getSharedPhysicalData(
         ) const;
-        [[nodiscard]] pq::SharedCellList getSharedCellList() const;
+        [[nodiscard]] std::shared_ptr<simulationBox::CellList> getSharedCellList(
+        ) const;
         [[nodiscard]]
         std::shared_ptr<constraints::Constraints> getSharedConstraints() const;
         [[nodiscard]]

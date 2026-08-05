@@ -26,7 +26,11 @@
 
 #include "randomNumberGenerator.hpp"   // for RandomNumberGenerator
 #include "thermostat.hpp"
-#include "typeAliases.hpp"
+
+namespace simulationBox
+{
+    class SimulationBox;   // forward declaration
+}   // namespace simulationBox
 
 namespace thermostat
 {
@@ -50,7 +54,7 @@ namespace thermostat
         explicit VelocityRescalingThermostat(const double, const double);
 
         void applyThermostat(
-            pq::SimBox &,
+            simulationBox::SimulationBox &,
             physicalData::PhysicalData &
         ) override;
 

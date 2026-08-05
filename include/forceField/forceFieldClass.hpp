@@ -71,32 +71,32 @@ namespace forceField
         std::shared_ptr<ForceField> clone() const;
 
         void calculateBondedInteractions(
-            const pq::SimBox &,
+            const simulationBox::SimulationBox &,
             physicalData::PhysicalData &
         );
 
         void calculateBondInteractions(
-            const pq::SimBox &,
+            const simulationBox::SimulationBox &,
             physicalData::PhysicalData &
         );
 
         void calculateAngleInteractions(
-            const pq::SimBox &,
+            const simulationBox::SimulationBox &,
             physicalData::PhysicalData &
         );
 
         void calculateDihedralInteractions(
-            const pq::SimBox &,
+            const simulationBox::SimulationBox &,
             physicalData::PhysicalData &
         );
 
         void calculateImproperDihedralInteractions(
-            const pq::SimBox &,
+            const simulationBox::SimulationBox &,
             physicalData::PhysicalData &
         );
 
         void calculateJCouplingInteractions(
-            const pq::SimBox &,
+            const simulationBox::SimulationBox &,
             physicalData::PhysicalData &
         );
 

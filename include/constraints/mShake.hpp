@@ -28,8 +28,12 @@
 #include <vector>   // for vector
 
 #include "mShakeReference.hpp"
-#include "typeAliases.hpp"   // for SimBox, Vec3D, MShakeRef
-#include "vector3d.hpp"      // for Vec3D
+#include "vector3d.hpp"   // for Vec3D
+
+namespace simulationBox
+{
+    class SimulationBox;   // forward declaration
+}   // namespace simulationBox
 
 namespace constraints
 {
@@ -56,12 +60,19 @@ namespace constraints
 
         void initMShake();
         void initMShakeReferences();
-        void applyMShake(pq::SimBox &simBox);
-        void applyMRattle(pq::SimBox &);
+        void applyMShake(simulationBox::SimulationBox &simBox);
+        void applyMRattle(simulationBox::SimulationBox &);
 
-        [[nodiscard]] size_t calcNumberOfMShakeMolecules(pq::SimBox &) const;
-        [[nodiscard]] size_t calcNumberOfBondConstraints(pq::SimBox &) const;
-        [[nodiscard]] double calcMatrixElement(
+        [[nodiscard]]
+        size_t calcNumberOfMShakeMolecules(
+            simulationBox::SimulationBox &
+        ) const;
+        [[nodiscard]]
+        size_t calcNumberOfBondConstraints(
+            simulationBox::SimulationBox &
+        ) const;
+        [[nodiscard]]
+        double calcMatrixElement(
             const std::tuple<size_t, size_t, size_t, size_t> &indices,
             const std::pair<double, double>                  &masses,
             const std::pair<linearAlgebra::Vec3D, linearAlgebra::Vec3D> &pos

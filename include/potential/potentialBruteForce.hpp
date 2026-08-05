@@ -41,9 +41,9 @@ namespace potential
         ~PotentialBruteForce() override;
 
         void calculateForces(
-            pq::SimBox &,
+            simulationBox::SimulationBox &,
             physicalData::PhysicalData &,
-            pq::CellList &
+            simulationBox::CellList &
         ) override;
 
         pq::SharedPotential clone() const override;

@@ -35,6 +35,14 @@ namespace physicalData
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
 
+namespace simulationBox
+{
+    class Box;             // forward declaration
+    class Molecule;        // forward declaration
+    class CellList;        // forward declaration
+    class SimulationBox;   // forward declaration
+}   // namespace simulationBox
+
 namespace potential
 {
     /**
@@ -61,16 +69,16 @@ namespace potential
         virtual ~Potential() = default;
 
         virtual void calculateForces(
-            pq::SimBox &,
+            simulationBox::SimulationBox &,
             physicalData::PhysicalData &,
-            pq::CellList &
+            simulationBox::CellList &
         )                                         = 0;
         virtual pq::SharedPotential clone() const = 0;
 
         std::pair<double, double> calculateSingleInteraction(
-            const pq::Box &,
-            pq::Molecule &,
-            pq::Molecule &,
+            const simulationBox::Box &,
+            simulationBox::Molecule &,
+            simulationBox::Molecule &,
             const size_t,
             const size_t
         ) const;

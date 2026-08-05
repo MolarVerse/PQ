@@ -55,11 +55,13 @@ namespace thermostat
         );
 
         void applyThermostat(
-            pq::SimBox &,
+            simulationBox::SimulationBox &,
             physicalData::PhysicalData &
         ) override;
 
-        void applyThermostatOnForces(pq::SimBox &simBox) override;
+        void applyThermostatOnForces(
+            simulationBox::SimulationBox &simBox
+        ) override;
 
         /***************************
          * standard getter methods *

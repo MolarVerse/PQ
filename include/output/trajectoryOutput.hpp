@@ -25,7 +25,11 @@
 #define _TRAJECTORY_OUTPUT_HPP_
 
 #include "output.hpp"   // for Output
-#include "typeAliases.hpp"
+
+namespace simulationBox
+{
+    class SimulationBox;   // forward declaration
+}   // namespace simulationBox
 
 namespace output
 {
@@ -40,11 +44,11 @@ namespace output
        public:
         using Output::Output;
 
-        void writeHeader(const pq::SimBox &);
-        void writeXyz(pq::SimBox &);
-        void writeVelocities(pq::SimBox &);
-        void writeForces(pq::SimBox &);
-        void writeCharges(pq::SimBox &);
+        void writeHeader(const simulationBox::SimulationBox &);
+        void writeXyz(simulationBox::SimulationBox &);
+        void writeVelocities(simulationBox::SimulationBox &);
+        void writeForces(simulationBox::SimulationBox &);
+        void writeCharges(simulationBox::SimulationBox &);
     };
 
 }   // namespace output

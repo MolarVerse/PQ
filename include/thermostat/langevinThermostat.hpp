@@ -52,15 +52,15 @@ namespace thermostat
 
         void calculateSigma(const double, const double);
 
-        void applyLangevin(pq::SimBox &);
+        void applyLangevin(simulationBox::SimulationBox &);
 
         void applyThermostat(
-            pq::SimBox &,
+            simulationBox::SimulationBox &,
             physicalData::PhysicalData &
         ) override;
 
         void applyThermostatHalfStep(
-            pq::SimBox &,
+            simulationBox::SimulationBox &,
             physicalData::PhysicalData &
         ) override;
 

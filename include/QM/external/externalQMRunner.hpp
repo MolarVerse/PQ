@@ -25,7 +25,17 @@
 #define _EXTERNAL_QM_RUNNER_HPP_
 
 #include "qmRunner.hpp"
-#include "typeAliases.hpp"
+
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}   // namespace physicalData
+
+namespace simulationBox
+{
+    class Box;             // forward declaration
+    class SimulationBox;   // forward declaration
+}   // namespace simulationBox
 
 namespace QM
 {
@@ -44,18 +54,27 @@ namespace QM
         ExternalQMRunner()           = default;
         ~ExternalQMRunner() override = default;
 
-        void run(pq::SimBox &, physicalData::PhysicalData &) override;
+        void run(
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &
+        ) override;
 
         virtual void execute() = 0;
 
-        virtual void writeCoordsFile(pq::SimBox &) = 0;
+        virtual void writeCoordsFile(simulationBox::SimulationBox &) = 0;
 
-        virtual void readStressTensor(pq::Box &, physicalData::PhysicalData &)
+        virtual void readStressTensor(
+            simulationBox::Box &,
+            physicalData::PhysicalData &
+        )
         {
         }
 
-        void readForceFile(pq::SimBox &, physicalData::PhysicalData &);
-        void readChargeFile(pq::SimBox &);
+        void readForceFile(
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &
+        );
+        void readChargeFile(simulationBox::SimulationBox &);
 
         /*******************************
          * standard getter and setters *

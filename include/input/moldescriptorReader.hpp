@@ -26,14 +26,19 @@
 
 #include <fstream>   // for ifstream
 #include <string>    // for string
+#include <vector>    // for vector
 
 #include "defaults.hpp"
-#include "typeAliases.hpp"
 
 namespace engine
 {
     class Engine;   // forward declaration
 }   // namespace engine
+
+namespace simulationBox
+{
+    class MoleculeType;   // forward declaration
+}   // namespace simulationBox
 
 namespace input::molDescriptor
 {
@@ -59,7 +64,9 @@ namespace input::molDescriptor
 
         void read();
         void processMolecule(std::vector<std::string> &lineElements);
-        void convertExternalToInternalAtomTypes(pq::MoleculeType &) const;
+        void convertExternalToInternalAtomTypes(
+            simulationBox::MoleculeType &
+        ) const;
     };
 
 }   // namespace input::molDescriptor

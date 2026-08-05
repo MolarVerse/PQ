@@ -34,6 +34,12 @@ namespace physicalData
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
 
+namespace simulationBox
+{
+    class Molecule;        // forward declaration
+    class SimulationBox;   // forward declaration
+}   // namespace simulationBox
+
 namespace forceField
 {
     /**
@@ -53,18 +59,18 @@ namespace forceField
 
        public:
         BondForceField(
-            pq::Molecule *molecule1,
-            pq::Molecule *molecule2,
-            const size_t  atomIndex1,
-            const size_t  atomIndex2,
-            const size_t  type
+            simulationBox::Molecule *molecule1,
+            simulationBox::Molecule *molecule2,
+            const size_t             atomIndex1,
+            const size_t             atomIndex2,
+            const size_t             type
         );
 
         void calculateEnergyAndForces(
-            const pq::SimBox           &simBox,
-            physicalData::PhysicalData &data,
-            const pq::CoulombPot       &coulombPot,
-            pq::NonCoulombPot          &nonCoulombPot
+            const simulationBox::SimulationBox &simBox,
+            physicalData::PhysicalData         &data,
+            const pq::CoulombPot               &coulombPot,
+            pq::NonCoulombPot                  &nonCoulombPot
         );
 
         /***************************

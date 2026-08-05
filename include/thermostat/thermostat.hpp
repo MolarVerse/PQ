@@ -28,12 +28,16 @@
 
 #include "thermostatSettings.hpp"
 #include "timer.hpp"   // for Timer
-#include "typeAliases.hpp"
 
 namespace physicalData
 {
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
+
+namespace simulationBox
+{
+    class SimulationBox;   // forward declaration
+}   // namespace simulationBox
 
 namespace thermostat
 {
@@ -65,14 +69,14 @@ namespace thermostat
         void applyTemperatureRamping();
 
         virtual void applyThermostat(
-            pq::SimBox &,
+            simulationBox::SimulationBox &,
             physicalData::PhysicalData &
         );
 
-        virtual void applyThermostatOnForces(pq::SimBox &) {}
+        virtual void applyThermostatOnForces(simulationBox::SimulationBox &) {}
 
         virtual void applyThermostatHalfStep(
-            pq::SimBox &,
+            simulationBox::SimulationBox &,
             physicalData::PhysicalData &
         )
         {
