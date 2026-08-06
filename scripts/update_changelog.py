@@ -7,6 +7,7 @@ matching changelog and preserves existing unreleased and released entries.
 
 Usage:
     update_changelog.py --check
+    update_changelog.py --check-prepared <version>
     update_changelog.py <version>
 """
 
@@ -182,6 +183,34 @@ def check_release_changelogs():
     print("the release contains changelog entries")
 
 
+def check_prepared_changelogs(version):
+    """Check that a release is stamped and no fragments remain."""
+    header_prefix = f"## [{version}]("
+    user_lines = load_changelog(USER_CHANGELOG)
+    dev_lines = load_changelog(DEV_CHANGELOG)
+
+    if not any(line.startswith(header_prefix) for line in user_lines) and not any(
+        line.startswith(header_prefix) for line in dev_lines
+    ):
+        sys.exit(
+            f"release changelogs are not prepared for {version}; "
+            f"run scripts/update_changelog.py {version}"
+        )
+
+    remaining = sorted(
+        path
+        for path in CHANGES_DIR.rglob("*.md")
+        if path.name != "README.md"
+    )
+    if remaining:
+        names = ", ".join(
+            str(path.relative_to(CHANGES_DIR)) for path in remaining
+        )
+        sys.exit(f"release contains unprocessed changelog fragments: {names}")
+
+    print(f"release changelogs are prepared for {version}")
+
+
 def update_changelogs(version):
     repo = os.getenv("GITHUB_REPOSITORY", "MolarVerse/PQ")
 
@@ -241,8 +270,15 @@ def update_changelogs(version):
 
 
 def main():
+    if len(sys.argv) == 3 and sys.argv[1] == "--check-prepared":
+        check_prepared_changelogs(sys.argv[2])
+        return
+
     if len(sys.argv) != 2:
-        sys.exit(f"usage: {sys.argv[0]} --check | <version>")
+        sys.exit(
+            f"usage: {sys.argv[0]} --check | "
+            "--check-prepared <version> | <version>"
+        )
 
     argument = sys.argv[1]
     if argument == "--check":
