@@ -1,2 +1,3 @@
 - Keep automated release tags consistent with the existing v-prefixed version format.
 - Limit changed-file formatting checks to pull requests targeting dev.
+- Pass release PR metadata safely into shell validation.

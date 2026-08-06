@@ -15,9 +15,12 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Check PR Title or Description
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
         run: |
-          title="${{ github.event.pull_request.title }}"
-          body="${{ github.event.pull_request.body }}"
+          title="$PR_TITLE"
+          body="$PR_BODY"
           echo "Checking PR title: $title"
           echo "Checking PR body: $body"
 

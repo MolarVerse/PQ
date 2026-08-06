@@ -24,9 +24,12 @@ jobs:
 
       - name: Extract release version from PR
         id: extract_version
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
         run: |
-          title="${{ github.event.pull_request.title }}"
-          body="${{ github.event.pull_request.body }}"
+          title="$PR_TITLE"
+          body="$PR_BODY"
 
           regex='[Rr][Ee][Ll][Ee][Aa][Ss][Ee]-([0-9]+\.[0-9]+\.[0-9]+)'
 
