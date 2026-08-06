@@ -1,1 +1,0 @@
-- Return cell and neighbor collections by constant reference.

@@ -1,1 +1,0 @@
-- Refresh the Langevin noise amplitude after friction changes.

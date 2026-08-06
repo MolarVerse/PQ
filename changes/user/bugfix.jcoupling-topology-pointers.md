@@ -1,1 +1,0 @@
-- J-coupling topology references now remain valid throughout a simulation, preventing incorrect molecule data.

@@ -1,1 +1,0 @@
-- Inline Coulomb cutoff getters.
