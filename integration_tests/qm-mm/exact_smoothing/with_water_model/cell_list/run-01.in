@@ -15,8 +15,8 @@ force-field = off;
 rcoulomb = 10.0;
 cell_list = on;
 cell_number = 7;
-water_intra = tip3p-mtr;
-water_inter = tip3p-mtr;
+water_intra = spc-mtr;
+water_inter = spc-mtr;
 
 # QM Keywords
 qm_prog = dftbplus;

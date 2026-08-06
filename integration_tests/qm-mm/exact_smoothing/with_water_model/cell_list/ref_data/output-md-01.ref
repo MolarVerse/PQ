@@ -11,12 +11,13 @@ PQ Software
     https://doi.org/10.5281/zenodo.14185071
 
 
-Berendsen Thermostat and/or Manostat:
-    Berendsen, H. J. C., Postma, J. P. M., van Gunsteren, W. F.,
-    DiNola, A., & Haak, J. R. (1984).
-    Molecular dynamics with coupling to an external bath.
-    The Journal of Chemical Physics, 81(8), 3684–3690.
-    https://doi.org/10.1063/1.448118
+SPC-mTR Water Model
+    Chee Chin Liew, Hiroshi Inomata, Kunio Arai;
+    Flexible molecular models for molecular dynamics
+    study of near and supercritical water.
+    Fluid Phase Equilibria, Volume 144, Issues 1–2, 1998,
+    Pages 287-298, ISSN 0378-3812,
+    https://doi.org/10.1016/S0378-3812(97)00271-9.
 
 
 DFTB+ Software
@@ -35,13 +36,12 @@ DFTB+ Software
     https://doi.org/10.1063/1.5143190
 
 
-TIP3P-mTR Water Model
-    Chee Chin Liew, Hiroshi Inomata, Kunio Arai;
-    Flexible molecular models for molecular dynamics
-    study of near and supercritical water.
-    Fluid Phase Equilibria, Volume 144, Issues 1–2, 1998,
-    Pages 287-298, ISSN 0378-3812,
-    https://doi.org/10.1016/S0378-3812(97)00271-9.
+Berendsen Thermostat and/or Manostat:
+    Berendsen, H. J. C., Postma, J. P. M., van Gunsteren, W. F.,
+    DiNola, A., & Haak, J. R. (1984).
+    Molecular dynamics with coupling to an external bath.
+    The Journal of Chemical Physics, 81(8), 3684–3690.
+    https://doi.org/10.1063/1.448118
 
 
 
@@ -64,22 +64,21 @@ TIP3P-mTR Water Model
 }
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Berendsen Thermostat and/or Manostat %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%
+% SPC-mTR Water Model %
+%%%%%%%%%%%%%%%%%%%%%%%
 
-@article{Berendsen1984,
-  doi = {10.1063/1.448118},
-  url = {https://doi.org/10.1063/1.448118},
-  year = {1984},
-  month = oct,
-  publisher = {{AIP} Publishing},
-  volume = {81},
-  number = {8},
-  pages = {3684--3690},
-  author = {H. J. C. Berendsen and J. P. M. Postma and W. F. van Gunsteren and A. DiNola and J. R. Haak},
-  title = {Molecular dynamics with coupling to an external bath},
-  journal = {The Journal of Chemical Physics}
+@article{LIEW1998287,
+title = {Flexible molecular models for molecular dynamics study of near and supercritical water},
+journal = {Fluid Phase Equilibria},
+volume = {144},
+number = {1},
+pages = {287-298},
+year = {1998},
+issn = {0378-3812},
+doi = {https://doi.org/10.1016/S0378-3812(97)00271-9},
+url = {https://www.sciencedirect.com/science/article/pii/S0378381297002719},
+author = {Chee Chin Liew and Hiroshi Inomata and Kunio Arai},
 }
 
 
@@ -103,21 +102,22 @@ TIP3P-mTR Water Model
 }
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%
-% TIP3P-mTR Water Model %
-%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Berendsen Thermostat and/or Manostat %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-@article{LIEW1998287,
-title = {Flexible molecular models for molecular dynamics study of near and supercritical water},
-journal = {Fluid Phase Equilibria},
-volume = {144},
-number = {1},
-pages = {287-298},
-year = {1998},
-issn = {0378-3812},
-doi = {https://doi.org/10.1016/S0378-3812(97)00271-9},
-url = {https://www.sciencedirect.com/science/article/pii/S0378381297002719},
-author = {Chee Chin Liew and Hiroshi Inomata and Kunio Arai},
+@article{Berendsen1984,
+  doi = {10.1063/1.448118},
+  url = {https://doi.org/10.1063/1.448118},
+  year = {1984},
+  month = oct,
+  publisher = {{AIP} Publishing},
+  volume = {81},
+  number = {8},
+  pages = {3684--3690},
+  author = {H. J. C. Berendsen and J. P. M. Postma and W. F. van Gunsteren and A. DiNola and J. R. Haak},
+  title = {Molecular dynamics with coupling to an external bath},
+  journal = {The Journal of Chemical Physics}
 }
 
 
