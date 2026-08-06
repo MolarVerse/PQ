@@ -1,18 +1,18 @@
 Section                       	  Time [s]	  Time [%]
 ------------------------------	----------	----------
 
-Total                         	     2.306	   100.000
+Total                         	     2.330	   100.000
 
-QM Engine                     	     1.351	    58.597
-Water Inter Potential         	     0.769	    33.332
-Potential                     	     0.102	     4.439
-Output                        	     0.048	     2.098
-Setup                         	     0.017	     0.754
+QM Engine                     	     1.357	    58.234
+Water Inter Potential         	     0.787	    33.780
+Potential                     	     0.100	     4.288
+Output                        	     0.047	     2.030
+Setup                         	     0.022	     0.925
 Water Intra Potential         	     0.002	     0.081
 Cell List                     	     0.001	     0.046
-Physical Data                 	     0.001	     0.037
-Integrator                    	     0.001	     0.030
-Thermostat                    	     0.000	     0.004
+Physical Data                 	     0.001	     0.034
+Integrator                    	     0.001	     0.028
+Thermostat                    	     0.000	     0.005
 Manostat                      	     0.000	     0.000
 Reset Kinetics                	     0.000	     0.000
 IntraNonBonded                	     0.000	     0.000
@@ -25,38 +25,38 @@ Virial                        	     0.000	     0.000
 Section                       	  Time [s]	  Time [%]	  RelT [%]
 ------------------------------	----------	----------	----------
 
-Total                         	     2.306	   100.000	   100.000
+Total                         	     2.330	   100.000	   100.000
 
-QM Engine                     	     1.351	    58.597	   100.000
-Execute External QM Runner    	     1.335	    57.878	    98.773
-Write Pointcharges            	     0.013	     0.559	     0.953
-Read Forces                   	     0.002	     0.065	     0.111
-Write Coordinates             	     0.001	     0.064	     0.108
-Read Charges                  	     0.001	     0.032	     0.054
+QM Engine                     	     1.357	    58.234	   100.000
+Execute External QM Runner    	     1.340	    57.503	    98.745
+Write Pointcharges            	     0.013	     0.577	     0.991
+Write Coordinates             	     0.001	     0.062	     0.107
+Read Forces                   	     0.001	     0.062	     0.106
+Read Charges                  	     0.001	     0.029	     0.050
 
-Water Inter Potential         	     0.769	    33.332	   100.000
-QM/MM Outer to Outer          	     0.757	    32.807	    98.422
-QM/MM Layer to Outer          	     0.011	     0.472	     1.417
-QM/MM Core to Outer           	     0.001	     0.054	     0.161
+Water Inter Potential         	     0.787	    33.780	   100.000
+QM/MM Outer to Outer          	     0.775	    33.271	    98.492
+QM/MM Layer to Outer          	     0.011	     0.459	     1.360
+QM/MM Core to Outer           	     0.001	     0.050	     0.149
 
-Potential                     	     0.102	     4.439	   100.000
-InterNonBondedOuterToOuter    	     0.097	     4.207	    94.781
-InterNonBondedLayerToOuter    	     0.004	     0.174	     3.928
-InterNonBondedCoreToOuter     	     0.001	     0.057	     1.291
+Potential                     	     0.100	     4.288	   100.000
+InterNonBondedOuterToOuter    	     0.095	     4.065	    94.813
+InterNonBondedLayerToOuter    	     0.004	     0.165	     3.843
+InterNonBondedCoreToOuter     	     0.001	     0.058	     1.344
 
-Output                        	     0.048	     2.098	   100.000
-TrajectoryOutput              	     0.027	     1.183	    56.403
-RstFileOutput                 	     0.021	     0.905	    43.124
-InfoOutput                    	     0.000	     0.004	     0.191
-EnergyOutput                  	     0.000	     0.002	     0.076
-VirialOutput                  	     0.000	     0.001	     0.058
-StressOutput                  	     0.000	     0.001	     0.039
-InstantEnergyOutput           	     0.000	     0.001	     0.038
-BoxFileOutput                 	     0.000	     0.001	     0.037
+Output                        	     0.047	     2.030	   100.000
+TrajectoryOutput              	     0.026	     1.133	    55.787
+RstFileOutput                 	     0.021	     0.888	    43.742
+InfoOutput                    	     0.000	     0.004	     0.221
+EnergyOutput                  	     0.000	     0.001	     0.071
+VirialOutput                  	     0.000	     0.001	     0.047
+BoxFileOutput                 	     0.000	     0.001	     0.034
+StressOutput                  	     0.000	     0.001	     0.033
 MomentumOutput                	     0.000	     0.001	     0.033
+InstantEnergyOutput           	     0.000	     0.001	     0.032
 
-Setup                         	     0.017	     0.754	   100.000
-TotalSetup                    	     0.017	     0.754	   100.000
+Setup                         	     0.022	     0.925	   100.000
+TotalSetup                    	     0.022	     0.925	   100.000
 
 Water Intra Potential         	     0.002	     0.081	   100.000
 Calculate Potential           	     0.002	     0.081	   100.000
@@ -64,15 +64,15 @@ Calculate Potential           	     0.002	     0.081	   100.000
 Cell List                     	     0.001	     0.046	   100.000
 Update                        	     0.001	     0.046	   100.000
 
-Physical Data                 	     0.001	     0.037	   100.000
-Calc Kinetics                 	     0.001	     0.037	   100.000
+Physical Data                 	     0.001	     0.034	   100.000
+Calc Kinetics                 	     0.001	     0.034	   100.000
 
-Integrator                    	     0.001	     0.030	   100.000
-Velocity Verlet - First Step  	     0.001	     0.025	    83.849
-Velocity Verlet - Second Step 	     0.000	     0.005	    16.151
+Integrator                    	     0.001	     0.028	   100.000
+Velocity Verlet - First Step  	     0.001	     0.023	    84.528
+Velocity Verlet - Second Step 	     0.000	     0.004	    15.472
 
-Thermostat                    	     0.000	     0.004	   100.000
-Berendsen                     	     0.000	     0.004	   100.000
+Thermostat                    	     0.000	     0.005	   100.000
+Berendsen                     	     0.000	     0.005	   100.000
 
 Manostat                      	     0.000	     0.000	   100.000
 Calc Pressure                 	     0.000	     0.000	   100.000

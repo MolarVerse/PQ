@@ -11,7 +11,7 @@ PQ Software
     https://doi.org/10.5281/zenodo.14185071
 
 
-TIP3P-mTR Water Model
+SPC-mTR Water Model
     Chee Chin Liew, Hiroshi Inomata, Kunio Arai;
     Flexible molecular models for molecular dynamics
     study of near and supercritical water.
@@ -64,9 +64,9 @@ Berendsen Thermostat and/or Manostat:
 }
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%
-% TIP3P-mTR Water Model %
-%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%
+% SPC-mTR Water Model %
+%%%%%%%%%%%%%%%%%%%%%%%
 
 @article{LIEW1998287,
 title = {Flexible molecular models for molecular dynamics study of near and supercritical water},

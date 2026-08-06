@@ -22,8 +22,8 @@
                         Stefan Seiwald
                         Benjamin Reitmair
 
-         Version:       v0.6.4-d9829fd3
-         Compile date:  Aug  6 2026 08:41:34
+         Version:       v0.6.4-f73ba694
+         Compile date:  Aug  6 2026 13:38:25
 
 INFO:    Reading Moldescriptor File "moldescriptor.dat"
 
@@ -88,8 +88,8 @@ INFO:    Setup of MM potential
 
 INFO:    Setup of Water model
 
-         Intramolecular water model: TIP3P-mTR
-         Intermolecular water model: TIP3P-mTR
+         Intramolecular water model: SPC-mTR
+         Intermolecular water model: SPC-mTR
 
 INFO:    Setup of Hybrid Configuration
 
@@ -114,7 +114,7 @@ INFO:    Reading Guffdat File "guff.dat"
 INFO:    Initial momentum = 7.91874e-09 Å*amu/fs
 
 
-         Elapsed time = 2.30604 s
+         Elapsed time = 2.32954 s
 
 
 INFO:    For citation please refer to the ".ref" file.
