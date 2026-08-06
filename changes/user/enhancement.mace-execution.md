@@ -1,1 +1,0 @@
-- Add `mace_mode` to choose between accurate and accelerated MACE execution; accelerated mode requires matching cuequivariance packages.

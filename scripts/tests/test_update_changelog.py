@@ -193,6 +193,49 @@ class ChangelogTests(unittest.TestCase):
             self.assertIn("- Enforce changelog audiences.", dev_text)
             self.assertFalse(developer_fragment.exists())
 
+    def test_prepared_release_requires_stamp_and_no_fragments(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            user_changelog = root / "CHANGELOG.md"
+            dev_changelog = root / "DEV-CHANGELOG.md"
+            changes_dir = root / "changes"
+            changes_dir.mkdir()
+
+            user_changelog.write_text(
+                "# Changelog\n\n## Next Release\n",
+                encoding="utf-8",
+            )
+            dev_changelog.write_text(
+                "# Developer Changelog\n\n"
+                "## Next Release\n\n"
+                "## [v1.1.0](release-url) - 2025-02-01\n",
+                encoding="utf-8",
+            )
+
+            with (
+                mock.patch.object(
+                    CHANGELOG, "USER_CHANGELOG", user_changelog
+                ),
+                mock.patch.object(
+                    CHANGELOG, "DEV_CHANGELOG", dev_changelog
+                ),
+                mock.patch.object(CHANGELOG, "CHANGES_DIR", changes_dir),
+            ):
+                CHANGELOG.check_prepared_changelogs("v1.1.0")
+
+                legacy_fragment = changes_dir / "legacy.internal.md"
+                legacy_fragment.write_text(
+                    "- Legacy fragment.\n", encoding="utf-8"
+                )
+                with self.assertRaisesRegex(
+                    SystemExit, "unprocessed changelog fragments"
+                ):
+                    CHANGELOG.check_prepared_changelogs("v1.1.0")
+
+                legacy_fragment.unlink()
+                with self.assertRaisesRegex(SystemExit, "not prepared"):
+                    CHANGELOG.check_prepared_changelogs("v1.2.0")
+
 
 if __name__ == "__main__":
     unittest.main()

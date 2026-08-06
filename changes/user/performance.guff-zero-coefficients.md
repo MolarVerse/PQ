@@ -1,1 +1,0 @@
-- Skip inactive terms in Guff pair-potential calculations.
