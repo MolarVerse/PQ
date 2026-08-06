@@ -27,7 +27,6 @@
 
 #include "exceptions.hpp"        // for InputFileException
 #include "gtest/gtest.h"         // for Message, TestPartResult
-#include "inputFileParser.hpp"   // for readInput
 #include "ringPolymerInputParser.hpp"
 #include "ringPolymerSettings.hpp"   // for RingPolymerSettings
 #include "testInputFileReader.hpp"   // for TestInputFileReader

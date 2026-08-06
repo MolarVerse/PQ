@@ -22,16 +22,15 @@
 
 #include "dftbplusRunner.hpp"
 
-#include <cstddef>      // for size_t
-#include <cstdlib>      // for system
-#include <format>       // for format
-#include <fstream>      // for ofstream
-#include <functional>   // for identity
-#include <ranges>       // for borrowed_iterator_t, __distance_fn
-#include <string>       // for string
-#include <vector>       // for vector
+#include <cstddef>   // for size_t
+#include <cstdlib>   // for system
+#include <format>    // for format
+#include <fstream>   // for ofstream
+#include <string>    // for string
+#include <vector>    // for vector
 
-#include "atom.hpp"              // for Atom
+#include "atom.hpp"   // for Atom
+#include "constants.hpp"
 #include "exceptions.hpp"        // for InputFileException
 #include "fileSettings.hpp"      // for FileSettings
 #include "physicalData.hpp"      // for PhysicalData
@@ -39,7 +38,6 @@
 #include "settings.hpp"          // for Settings
 #include "simulationBox.hpp"     // for SimulationBox
 #include "stringUtilities.hpp"   // for fileExists
-#include "vector3d.hpp"          // for Vec3D
 
 using QM::DFTBPlusRunner;
 
@@ -134,7 +132,7 @@ void DFTBPlusRunner::writeCoordsFile(SimulationBox &box)
  */
 void DFTBPlusRunner::execute()
 {
-    const auto scriptFile = _scriptPath + QMSettings::getQMScript();
+    const auto scriptFile = resolveScriptPath(QMSettings::getQMScript());
 
     if (!fileExists(scriptFile))
         throw InputFileException(
@@ -184,7 +182,7 @@ void DFTBPlusRunner::readStressTensor(Box &box, PhysicalData &data)
     stressFile >> stress[1][0] >> stress[1][1] >> stress[1][2];
     stressFile >> stress[2][0] >> stress[2][1] >> stress[2][2];
 
-    const auto conversion = _HARTREE_PER_BOHR3_TO_KCAL_PER_MOL_PER_ANGSTROM3_;
+    const auto conversion = HARTREE_PER_BOHR3_TO_KCAL_PER_MOL_PER_ANGSTROM3;
     stress                = stress * conversion;
     const auto virial     = stress * box.getVolume();
 

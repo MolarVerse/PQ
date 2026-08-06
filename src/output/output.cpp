@@ -22,7 +22,7 @@
 
 #include "output.hpp"
 
-#include <filesystem>   // for create_directory
+#include <format>       // for format
 #include <fstream>      // for ifstream, ofstream, std
 
 #include "exceptions.hpp"           // for InputFileException, customException
@@ -74,6 +74,50 @@ void Output::openFile()
         throw InputFileException(
             "Could not open file - filename = " + _fileName
         );
+}
+
+/**
+ * @brief Write the shared trajectory frame comment
+ *
+ * @param step simulation step
+ */
+void Output::writeComment(const size_t step)
+{
+    if (OutputFileSettings::getIncludeOutputMetadata())
+        _fp << format("# step = {}\n", step);
+    else
+        _fp << '\n';
+}
+
+/**
+ * @brief Write the shared trajectory force comment
+ *
+ * @param step simulation step
+ * @param totalForce total force acting on the system
+ */
+void Output::writeForceComment(const size_t step, const double totalForce)
+{
+    _fp << formatForceComment(step, totalForce);
+}
+
+/**
+ * @brief Formats the shared trajectory force comment
+ *
+ * @param step simulation step
+ * @param totalForce total force acting on the system
+ * @return formatted force comment
+ */
+string Output::formatForceComment(const size_t step, const double totalForce)
+{
+    const auto stepMetadata = OutputFileSettings::getIncludeOutputMetadata()
+                                  ? format("step = {}; ", step)
+                                  : "";
+
+    return format(
+        "# {}Total force = {:.5e} kcal/mol/Angstrom\n",
+        stepMetadata,
+        totalForce
+    );
 }
 
 /**

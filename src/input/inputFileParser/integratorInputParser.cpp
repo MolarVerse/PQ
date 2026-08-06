@@ -22,17 +22,16 @@
 
 #include "integratorInputParser.hpp"
 
-#include <cstddef>      // for size_t
-#include <format>       // for format
-#include <functional>   // for _Bind_front_t, bind_front
+#include <cstddef>   // for size_t
+#include <format>    // for format
 
-#include "exceptions.hpp"        // for InputFileException, customException
-#include "integrator.hpp"        // for VelocityVerlet, integrator
-#include "mdEngine.hpp"          // for Engine
-#include "settings.hpp"          // for Settings
+#include "exceptions.hpp"   // for InputFileException, customException
+#include "mdEngine.hpp"     // for Engine
+#include "parserUtils.hpp"
 #include "references.hpp"         // for ReferencesOutput
 #include "referencesOutput.hpp"   // for ReferencesOutput
-#include "stringUtilities.hpp"   // for toLowerCopy
+#include "settings.hpp"           // for Settings
+#include "stringUtilities.hpp"    // for toLowerCopy
 
 using namespace input;
 using namespace engine;
@@ -56,7 +55,7 @@ IntegratorInputParser::IntegratorInputParser(Engine &engine)
 {
     addKeyword(
         std::string("integrator"),
-        bind_front(&IntegratorInputParser::parseIntegrator, this),
+        bindMember(&IntegratorInputParser::parseIntegrator, this),
         false
     );
 }
@@ -90,13 +89,15 @@ void IntegratorInputParser::parseIntegrator(
     {
         auto &mdEngine = dynamic_cast<MDEngine &>(_engine);
         mdEngine.makeIntegrator(VelocityVerlet());
-        ReferencesOutput::addReferenceFile(_VELOCITY_VERLET_FILE_);
+        ReferencesOutput::addReferenceFile(VELOCITY_VERLET_FILE);
     }
 
     else
-        throw InputFileException(std::format(
-            "Invalid integrator \"{}\" at line {} in input file",
-            lineElements[2],
-            lineNumber
-        ));
+        throw InputFileException(
+            std::format(
+                "Invalid integrator \"{}\" at line {} in input file",
+                lineElements[2],
+                lineNumber
+            )
+        );
 }

@@ -1,0 +1,1 @@
+- Fix M-SHAKE convergence, iteration limits, previous-position handling, and velocity corrections for constrained molecules.

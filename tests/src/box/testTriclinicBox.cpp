@@ -20,14 +20,10 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <memory>   // for allocator
-
 #include "constants/conversionFactors.hpp"   // for _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_
 #include "gtest/gtest.h"                     // for Message, TestPartResult
 #include "matrixNear.hpp"                    // for EXPECT_MATRIX_NEAR
-#include "staticMatrix.hpp"                  // for StaticMatrix3x3
 #include "triclinicBox.hpp"                  // for TriclinicBox
-#include "vector3d.hpp"                      // for Vec3D
 #include "vectorNear.hpp"                    // for EXPECT_VECTOR_NEAR
 
 using namespace simulationBox;
@@ -81,9 +77,9 @@ TEST(TestTriclinicBox, setBoxAngles)
 
     box.setBoxAngles({30.0, 60.0, 45.0});
 
-    const auto alpha = 30.0 * constants::_DEG_TO_RAD_;
-    const auto beta  = 60.0 * constants::_DEG_TO_RAD_;
-    const auto gamma = 45.0 * constants::_DEG_TO_RAD_;
+    const auto alpha = 30.0 * constants::DEG_TO_RAD;
+    const auto beta  = 60.0 * constants::DEG_TO_RAD;
+    const auto gamma = 45.0 * constants::DEG_TO_RAD;
 
     EXPECT_MATRIX_NEAR(
         box.getTransformationMatrix(),
@@ -116,9 +112,9 @@ TEST(TestTriclinicBox, calculateVolume)
     box.setBoxDimensions({1.0, 2.0, 3.0});
     box.setBoxAngles({30.0, 60.0, 45.0});
 
-    const auto alpha = 30.0 * constants::_DEG_TO_RAD_;
-    const auto beta  = 60.0 * constants::_DEG_TO_RAD_;
-    const auto gamma = 45.0 * constants::_DEG_TO_RAD_;
+    const auto alpha = 30.0 * constants::DEG_TO_RAD;
+    const auto beta  = 60.0 * constants::DEG_TO_RAD;
+    const auto gamma = 45.0 * constants::DEG_TO_RAD;
 
     const auto volume =
         1.0 * 2.0 * 3.0 *

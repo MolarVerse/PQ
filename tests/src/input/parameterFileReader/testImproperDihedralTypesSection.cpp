@@ -26,13 +26,10 @@
 #include <vector>   // for vector
 
 #include "constants/conversionFactors.hpp"   // for _DEG_TO_RAD_
-#include "dihedralType.hpp"                  // for DihedralType
 #include "engine.hpp"                        // for Engine
 #include "exceptions.hpp"                    // for ParameterFileException
-#include "forceFieldClass.hpp"               // for ForceField
 #include "gtest/gtest.h"                     // for Message, TestPartResult
 #include "improperDihedralSection.hpp"       // for ImproperDihedralSection
-#include "parameterFileSection.hpp"          // for parameterFile
 #include "testParameterFileSection.hpp"      // for TestParameterFileSection
 #include "throwWithMessage.hpp"              // for ASSERT_THROW_MSG
 
@@ -59,7 +56,7 @@ TEST_F(TestParameterFileSection, processSectionImproperDihedral)
     );
     EXPECT_EQ(
         _engine->getForceField().getImproperTypes()[0].getPhaseShift(),
-        324.3 * constants::_DEG_TO_RAD_
+        324.3 * constants::DEG_TO_RAD
     );
 
     lineElements = {"1", "2", "1.0", "0", "2"};

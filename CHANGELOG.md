@@ -1,6 +1,8 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+User-visible changes to PQ are documented here. Build, CI, test, and
+implementation changes are documented in
+[DEV-CHANGELOG.md](DEV-CHANGELOG.md).
 
 ## Next Release
 

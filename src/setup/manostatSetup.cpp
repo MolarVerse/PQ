@@ -27,19 +27,17 @@
 
 #include "berendsenManostat.hpp"             // for BerendsenManostat
 #include "constants/conversionFactors.hpp"   // for _PS_TO_FS_
-#include "exceptions.hpp"         // for InputFileException, customException
 #include "manostat.hpp"           // for BerendsenManostat, Manostat, manostat
 #include "manostatSettings.hpp"   // for ManostatSettings
 #include "mdEngine.hpp"           // for Engine
 #include "settings.hpp"           // for IsMDJobType
-#include "stochasticRescalingManostat.hpp"   // for StochasticRescalingManostat
+#include "stochasticRescalingManostat.hpp"
 #include "typeAliases.hpp"
 
 using namespace setup;
 using namespace engine;
 using namespace settings;
 using namespace manostat;
-using namespace customException;
 using namespace constants;
 
 /**
@@ -64,29 +62,19 @@ void setup::setupManostat(Engine &engine)
  *
  * @param engine
  */
-ManostatSetup::ManostatSetup(MDEngine &engine) : _engine(engine){};
+ManostatSetup::ManostatSetup(MDEngine &engine) : _engine(engine) {}
 
 /**
  * @brief setup manostat
  *
- * @details checks if a manostat was set in the input file,
- * If a manostat was selected than the user has to provide a target pressure for
- * the manostat.
- *
  * @note the base class manostat does not apply any pressure coupling to the
  * system and therefore it represents the none manostat.
- *
- * @throws InputFileException if no pressure was set for the manostat
- *
  */
 void ManostatSetup::setup()
 {
     using enum ManostatType;
 
     const auto manostatType = ManostatSettings::getManostatType();
-
-    if (manostatType != NONE)
-        isPressureSet();
 
     if (manostatType == BERENDSEN)
         setupBerendsenManostat();
@@ -101,21 +89,6 @@ void ManostatSetup::setup()
 }
 
 /**
- * @brief check if pressure is set for the manostat
- *
- * @throws InputFileException if no pressure was set for the manostat
- *
- */
-void ManostatSetup::isPressureSet() const
-{
-    if (!ManostatSettings::isPressureSet())
-        throw InputFileException(std::format(
-            "Pressure not set for {} manostat",
-            string(ManostatSettings::getManostatType())
-        ));
-}
-
-/**
  * @brief setup berendsen manostat
  *
  * @details constructs a berendsen manostat and adds it to the engine
@@ -125,7 +98,7 @@ void ManostatSetup::setupBerendsenManostat()
 {
     const auto isotropy = ManostatSettings::getIsotropy();
     const auto pTarget  = ManostatSettings::getTargetPressure();
-    const auto tau      = ManostatSettings::getTauManostat() * _PS_TO_FS_;
+    const auto tau      = ManostatSettings::getTauManostat() * PS_TO_FS;
     const auto compress = ManostatSettings::getCompressibility();
     const auto aniso    = ManostatSettings::get2DAnisotropicAxis();
     const auto iso      = ManostatSettings::get2DIsotropicAxes();
@@ -147,8 +120,8 @@ void ManostatSetup::setupBerendsenManostat()
             _engine.makeManostat(FullAnisotropicBerendsenManostat(pTarget, tau, compress));
             break;
 
-        case ISOTROPIC: // fall through
-        default:
+        case NONE: // fall through
+        case ISOTROPIC:
             _engine.makeManostat(BerendsenManostat(pTarget, tau, compress));
 
             // clang-format on
@@ -165,7 +138,7 @@ void ManostatSetup::setupStochasticRescalingManostat()
 {
     const auto isotropy = ManostatSettings::getIsotropy();
     const auto pTarget  = ManostatSettings::getTargetPressure();
-    const auto tau      = ManostatSettings::getTauManostat() * _PS_TO_FS_;
+    const auto tau      = ManostatSettings::getTauManostat() * PS_TO_FS;
     const auto compress = ManostatSettings::getCompressibility();
     const auto aniso    = ManostatSettings::get2DAnisotropicAxis();
     const auto iso      = ManostatSettings::get2DIsotropicAxes();
@@ -188,9 +161,9 @@ void ManostatSetup::setupStochasticRescalingManostat()
             _engine.makeManostat(pq::FullAnisoStochasticManostat(pTarget, tau, compress));
             break;
 
-        case ISOTROPIC: // fall through
-        default:
-            _engine.makeManostat(pq::StochasticManostat(pTarget, tau, compress));
+        case NONE: // fall through
+        case ISOTROPIC:
+            _engine.makeManostat(manostat::StochasticRescalingManostat(pTarget, tau, compress));
 
             // clang-format on
     }
@@ -231,7 +204,7 @@ void ManostatSetup::writeManostatSelection() const
             logOutput.writeSetupInfo("Stochastic rescaling manostat selected");
             break;
 
-        default: logOutput.writeSetupInfo("No manostat selected");
+        case NONE: logOutput.writeSetupInfo("No manostat selected");
     }
 
     logOutput.writeEmptyLine();
@@ -309,7 +282,7 @@ void ManostatSetup::writeIsotropy() const
             logOutput.writeSetupInfo("Isotropy: full anisotropic");
             break;
 
-        default: logOutput.writeSetupInfo("Isotropy: isotropic");
+        case NONE: logOutput.writeSetupInfo("Isotropy: isotropic");
     }
 
     logOutput.writeEmptyLine();

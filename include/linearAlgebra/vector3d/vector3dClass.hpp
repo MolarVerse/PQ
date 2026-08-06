@@ -24,12 +24,9 @@
 
 #define _VECTOR3D_CLASS_HPP_
 
-#include <array>         // for array
-#include <cmath>         // for ceil, fabs, floor, rint, sqrt
-#include <cstddef>       // for size_t
-#include <iostream>      // for ostream
-#include <type_traits>   // for is_fundamental_v
-#include <vector>        // for vector
+#include <array>     // for array
+#include <cstddef>   // for size_t
+#include <vector>    // for vector
 
 #include "concepts/vector3dConcepts.hpp"
 
@@ -74,9 +71,9 @@ namespace linearAlgebra
         ~Vector3D() = default;
 
         Vector3D() = default;
-        Vector3D(const T x, const T y, const T z) : _x(x), _y(y), _z(z){};
-        Vector3D(const Vector3D<T> &xyz) : _xyz(xyz._xyz){};
-        Vector3D(const T xyz) : _x(xyz), _y(xyz), _z(xyz){};
+        Vector3D(const T x, const T y, const T z) : _x(x), _y(y), _z(z) {}
+        Vector3D(const Vector3D<T> &xyz) : _xyz(xyz._xyz) {}
+        Vector3D(const T xyz) : _x(xyz), _y(xyz), _z(xyz) {}
 
         using value_type = T;
 
@@ -90,28 +87,28 @@ namespace linearAlgebra
 
         // += operators
         void operator+=(const Vector3D<T> &)
-        requires(pq::ArithmeticVector3D<T> || pq::Arithmetic<T>);
+        requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>;
 
         Vector3D &operator+=(const T)
         requires pq::Arithmetic<T>;
 
         // -= operators
         Vector3D &operator-=(const Vector3D<T> &)
-        requires(pq::ArithmeticVector3D<T> || pq::Arithmetic<T>);
+        requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>;
 
         Vector3D &operator-=(const T)
         requires pq::Arithmetic<T>;
 
         // *= operators
         Vector3D &operator*=(const Vector3D<T> &)
-        requires(pq::ArithmeticVector3D<T> || pq::Arithmetic<T>);
+        requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>;
 
         Vector3D &operator*=(const T)
         requires pq::Arithmetic<T>;
 
         // /= operators
         Vector3D &operator/=(const Vector3D<T> &)
-        requires(pq::ArithmeticVector3D<T> || pq::Arithmetic<T>);
+        requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>;
 
         Vector3D &operator/=(const T)
         requires pq::Arithmetic<T>;
@@ -149,6 +146,8 @@ namespace linearAlgebra
 
 }   // namespace linearAlgebra
 
-#include "vector3dClass.tpp.hpp"   // DO NOT MOVE THIS LINE
+#ifndef _VECTOR3D_CLASS_TPP_
+#include "vector3dClass.tpp.hpp"   // IWYU pragma: export
+#endif
 
 #endif   // _VECTOR3D_CLASS_HPP_

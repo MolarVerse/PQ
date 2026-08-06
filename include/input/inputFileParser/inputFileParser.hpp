@@ -24,20 +24,19 @@
 
 #define _INPUT_FILE_PARSER_HPP_
 
-#include <cstddef>       // for size_t
-#include <functional>    // for function
+#include <cstddef>   // for size_t
+#include <functional>
 #include <map>           // for map
 #include <string>        // for string
 #include <string_view>   // for string_view
-#include <vector>        // for vector
 
 #include "typeAliases.hpp"   // for strings. ParseFunc
 
 namespace input
 {
     void checkEqualSign(const std::string_view &, const size_t);
-    void checkCommand(const pq::strings &, const size_t);
-    void checkCommandArray(const pq::strings &, const size_t);
+    void checkCommand(const std::vector<std::string> &, const size_t);
+    void checkCommandArray(const std::vector<std::string> &, const size_t);
 
     /**
      * @class InputFileParser
@@ -47,21 +46,25 @@ namespace input
      */
     class InputFileParser
     {
+       public:
+        using ParseFunc =
+            std::function<void(const std::vector<std::string> &, const size_t)>;
+
        protected:
         pq::Engine &_engine;
 
-        std::map<std::string, pq::ParseFunc> _keywordFuncMap;
-        std::map<std::string, bool>          _keywordRequiredMap;
-        std::map<std::string, int>           _keywordCountMap;
+        std::map<std::string, ParseFunc> _keywordFuncMap;
+        std::map<std::string, bool>      _keywordRequiredMap;
+        std::map<std::string, int>       _keywordCountMap;
 
        public:
-        explicit InputFileParser(pq::Engine &engine) : _engine(engine){};
+        explicit InputFileParser(pq::Engine &engine) : _engine(engine) {}
 
-        void addKeyword(const std::string &, pq::ParseFunc, bool);
+        void addKeyword(const std::string &, ParseFunc, bool);
 
         [[nodiscard]] std::map<std::string, bool> getKeywordRequiredMap() const;
         [[nodiscard]] std::map<std::string, int>  getKeywordCountMap() const;
-        [[nodiscard]] std::map<std::string, pq::ParseFunc> getKeywordFuncMap(
+        [[nodiscard]] std::map<std::string, ParseFunc> getKeywordFuncMap(
         ) const;
     };
 

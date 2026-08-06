@@ -17,5 +17,5 @@ target_link_libraries(timings
 )
 
 install(TARGETS timings
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+    DESTINATION lib
 )

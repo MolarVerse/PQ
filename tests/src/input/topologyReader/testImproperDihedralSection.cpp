@@ -20,12 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "dihedralForceField.hpp"        // for DihedralForceField
 #include "engine.hpp"                    // for Engine
 #include "exceptions.hpp"                // for TopologyException
-#include "forceFieldClass.hpp"           // for ForceField
 #include "improperDihedralSection.hpp"   // for ImproperDihedralSection
-#include "simulationBox.hpp"             // for SimulationBox
 #include "testTopologySection.hpp"       // for TestTopologySection
 
 #include "gtest/gtest.h"   // for Message, TestPartResult

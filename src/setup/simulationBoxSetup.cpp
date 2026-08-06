@@ -25,7 +25,6 @@
 #include <algorithm>     // for __for_each_fn, for_each
 #include <cstddef>       // for size_t
 #include <format>        // for format
-#include <functional>    // for identity
 #include <map>           // for map
 #include <numeric>       // for accumulate
 #include <string>        // for string, allocator, operator+
@@ -33,20 +32,16 @@
 #include <vector>        // for vector
 
 #include "atom.hpp"            // for Atom, simulationBox
-#include "atomMassMap.hpp"     // for atomMassMap
 #include "atomNumberMap.hpp"   // for atomNumberMap
 #include "constants/conversionFactors.hpp"   // for _AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_
 #include "engine.hpp"                        // for Engine
 #include "exceptions.hpp"              // for MolDescriptorException
 #include "fileSettings.hpp"            // for FileSettings
-#include "forceFieldSettings.hpp"      // for ForceFieldSettings
 #include "logOutput.hpp"               // for LogOutput
 #include "maxwellBoltzmann.hpp"        // for MaxwellBoltzmann
 #include "molecule.hpp"                // for Molecule
 #include "outputMessages.hpp"          // for _ANGSTROM_
-#include "physicalData.hpp"            // for PhysicalData
 #include "potentialSettings.hpp"       // for PotentialSettings
-#include "settings.hpp"                // for Settings
 #include "simulationBox.hpp"           // for SimulationBox
 #include "simulationBoxSettings.hpp"   // for SimulationBoxSettings
 #include "stdoutOutput.hpp"            // for StdoutOutput
@@ -123,7 +118,7 @@ void SimulationBoxSetup::setAtomNames()
 {
     auto &simBox = _engine.getSimulationBox();
 
-    auto setAtomNamesOfMolecule = [this, &simBox](auto &molecule)
+    auto setAtomNamesOfMolecule = [&simBox](auto &molecule)
     {
         const auto &molType = molecule.getMoltype();
         if (molType == 0)
@@ -154,7 +149,7 @@ void SimulationBoxSetup::setAtomTypes()
 {
     auto &simBox = _engine.getSimulationBox();
 
-    auto setAtomTypesOfMolecule = [this, &simBox](auto &molecule)
+    auto setAtomTypesOfMolecule = [&simBox](auto &molecule)
     {
         const auto &molType = molecule.getMoltype();
 
@@ -183,7 +178,7 @@ void SimulationBoxSetup::setExternalVDWTypes()
 {
     auto &simBox = _engine.getSimulationBox();
 
-    auto setExternalVDWTypesOfMolecule = [this, &simBox](auto &molecule)
+    auto setExternalVDWTypesOfMolecule = [&simBox](auto &molecule)
     {
         const auto &molType = molecule.getMoltype();
 
@@ -228,7 +223,7 @@ void SimulationBoxSetup::setPartialCharges()
 {
     auto &simBox = _engine.getSimulationBox();
 
-    auto setPartialChargesOfMolecule = [this, &simBox](auto &molecule)
+    auto setPartialChargesOfMolecule = [&simBox](auto &molecule)
     {
         const auto &molType = molecule.getMoltype();
 
@@ -359,7 +354,7 @@ void SimulationBoxSetup::checkBoxSettings()
     {
         const auto volume = simBox.calculateVolume();
         const auto density =
-            simBox.getTotalMass() / volume * _AMU_PER_ANGSTROM3_TO_KG_PER_L_;
+            simBox.getTotalMass() / volume * AMU_PER_ANGSTROM3_TO_KG_PER_L;
 
         simBox.setVolume(volume);
         simBox.setDensity(density);
@@ -367,7 +362,7 @@ void SimulationBoxSetup::checkBoxSettings()
     else
     {
         const auto volume     = simBox.calculateVolume();
-        const auto convFactor = _AMU_PER_ANGSTROM3_TO_KG_PER_L_;
+        const auto convFactor = AMU_PER_ANGSTROM3_TO_KG_PER_L;
         const auto density    = simBox.getTotalMass() / volume * convFactor;
 
         simBox.setVolume(volume);
@@ -471,7 +466,7 @@ void SimulationBoxSetup::writeSetupInfo() const
 
     const auto density   = simBox.getDensity();
     const auto volume    = simBox.getVolume();
-    const auto volumeStr = std::format("{:14.5f} {}³", volume, _ANGSTROM_);
+    const auto volumeStr = std::format("{:14.5f} {}³", volume, ANGSTROM);
 
     log.writeSetupInfo(std::format("density:         {:14.5f} kg/L", density));
     log.writeSetupInfo(std::format("volume:          {}", volumeStr));
@@ -481,9 +476,9 @@ void SimulationBoxSetup::writeSetupInfo() const
     const auto boxB = simBox.getBoxDimensions()[1];
     const auto boxC = simBox.getBoxDimensions()[2];
 
-    const auto boxAstr = std::format("{:14.5f} {}", boxA, _ANGSTROM_);
-    const auto boxBstr = std::format("{:14.5f} {}", boxB, _ANGSTROM_);
-    const auto boxCstr = std::format("{:14.5f} {}", boxC, _ANGSTROM_);
+    const auto boxAstr = std::format("{:14.5f} {}", boxA, ANGSTROM);
+    const auto boxBstr = std::format("{:14.5f} {}", boxB, ANGSTROM);
+    const auto boxCstr = std::format("{:14.5f} {}", boxC, ANGSTROM);
 
     const auto alpha = simBox.getBoxAngles()[0];
     const auto beta  = simBox.getBoxAngles()[1];
@@ -500,7 +495,7 @@ void SimulationBoxSetup::writeSetupInfo() const
     // clang-format on
 
     const auto rc    = PotentialSettings::getCoulombRadiusCutOff();
-    const auto rcStr = std::format("{:14.5f} {}", rc, _ANGSTROM_);
+    const auto rcStr = std::format("{:14.5f} {}", rc, ANGSTROM);
 
     log.writeSetupInfo(std::format("coulomb cutoff:  {}", rcStr));
     log.writeEmptyLine();

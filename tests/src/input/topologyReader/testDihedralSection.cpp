@@ -25,13 +25,10 @@
 #include <string>   // for string, allocator, basic_string
 #include <vector>   // for vector
 
-#include "dihedralForceField.hpp"    // for DihedralForceField
 #include "dihedralSection.hpp"       // for DihedralSection
 #include "engine.hpp"                // for Engine
 #include "exceptions.hpp"            // for TopologyException
-#include "forceFieldClass.hpp"       // for ForceField
 #include "gtest/gtest.h"             // for Message, TestPartResult
-#include "simulationBox.hpp"         // for SimulationBox
 #include "testTopologySection.hpp"   // for TestTopologySection
 
 /**

@@ -24,6 +24,7 @@
 
 #define _MOLECULAR_VIRIAL_HPP_
 
+#include "simulationBox.hpp"
 #include "virial.hpp"
 
 namespace virial
@@ -43,9 +44,15 @@ namespace virial
 
         std::shared_ptr<Virial> clone() const override;
 
-        void calculateVirial(pq::SimBox &, pq::PhysicalData &) override;
-        void intraMolecularVirialCorrection(pq::SimBox &, pq::PhysicalData &)
-            override;
+        void calculateVirial(
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &
+        ) override;
+
+        void intraMolecularVirialCorrection(
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &
+        ) override;
     };
 
 }   // namespace virial

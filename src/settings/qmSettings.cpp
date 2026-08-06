@@ -22,12 +22,15 @@
 
 #include "qmSettings.hpp"
 
+#include <filesystem>
 #include <format>   // for std::format
 
 #include "exceptions.hpp"        // for customException
+#include "executablePath.hpp"
 #include "stringUtilities.hpp"   // for toLowerCopy
 
-using settings::MaceModelSize;
+using settings::MaceMode;
+using settings::MaceModel;
 using settings::MaceModelType;
 using settings::QMMethod;
 using settings::QMSettings;
@@ -54,9 +57,12 @@ std::string settings::string(const QMMethod method)
         case PYSCF: return "PYSCF";
         case TURBOMOLE: return "TURBOMOLE";
         case MACE: return "MACE";
+        case FENNOL: return "FeNNol";
 
-        default: return "none";
+        case NONE: break;
     }
+
+    return "none";
 }
 
 /**
@@ -65,11 +71,11 @@ std::string settings::string(const QMMethod method)
  * @param model
  * @return std::string
  */
-std::string settings::string(const MaceModelSize model)
+std::string settings::string(const MaceModel model)
 {
     switch (model)
     {
-        using enum MaceModelSize;
+        using enum MaceModel;
 
         case SMALL: return "small";
         case MEDIUM: return "medium";
@@ -83,9 +89,9 @@ std::string settings::string(const MaceModelSize model)
         case MEDIUMMPA0: return "medium-mpa-0";
         case MEDIUMOMAT0: return "medium-omat-0";
         case CUSTOM: return "custom";
-
-        default: return "none";
     }
+
+    return "none";
 }
 
 /**
@@ -103,9 +109,28 @@ std::string settings::string(const MaceModelType model)
         case MACE_MP: return "mace_mp";
         case MACE_OFF: return "mace_off";
         case MACE_ANICC: return "mace_anicc";
-
-        default: return "none";
     }
+
+    return "none";
+}
+
+/**
+ * @brief returns the maceMode as string
+ *
+ * @param mode
+ * @return std::string
+ */
+std::string settings::string(const MaceMode mode)
+{
+    switch (mode)
+    {
+        using enum MaceMode;
+
+        case ACCURATE: return "accurate";
+        case FAST: return "fast";
+    }
+
+    return "unknown mode";
 }
 
 /**
@@ -124,8 +149,37 @@ std::string settings::string(const SlakosType slakos)
         case MATSCI: return "matsci";
         case CUSTOM: return "custom";
 
-        default: return "none";
+        case NONE: break;
     }
+
+    return "none";
+}
+
+/**
+ * @brief builds the file path for a built-in SLAKOS set (3ob/matsci)
+ *
+ * @details installed data next to the executable is preferred. The fetched
+ * build-tree data is used while running an uninstalled ASE build.
+ */
+static std::string builtinSlakosPath([[maybe_unused]] const SlakosType type)
+{
+#ifdef __SLAKOS_DIR__
+    const auto installedPath = utilities::installedDataPath(
+        std::filesystem::path("slakos") / settings::string(type) / "skfiles"
+    );
+    if (std::filesystem::is_directory(installedPath))
+        return installedPath.string() +
+               std::filesystem::path::preferred_separator;
+
+    const auto buildPath = std::filesystem::path(__SLAKOS_DIR__) /
+                           settings::string(type) / "skfiles";
+    return buildPath.string() + std::filesystem::path::preferred_separator;
+#else
+    throw InputFileException(
+        "Built-in SLAKOS sets (3ob/matsci) require building PQ with "
+        "-DBUILD_WITH_ASE=On"
+    );
+#endif
 }
 
 /**
@@ -143,9 +197,9 @@ std::string settings::string(const XtbMethod method)
         case GFN1: return "GFN1-xTB";
         case GFN2: return "GFN2-xTB";
         case IPEA1: return "IPEA1-xTB";
-
-        default: return "none";
     }
+
+    return "none";
 }
 
 /**
@@ -222,6 +276,9 @@ void QMSettings::setQMMethod(const std::string_view &method)
     else if ("ase_xtb" == methodToLowerAndReplaceDashes)
         _qmMethod = ASEXTB;
 
+    else if ("fennol" == methodToLowerAndReplaceDashes)
+        _qmMethod = FENNOL;
+
     else
         _qmMethod = NONE;
 }
@@ -238,47 +295,47 @@ void QMSettings::setQMMethod(const QMMethod method) { _qmMethod = method; }
  *
  * @param model
  */
-void QMSettings::setMaceModelSize(const std::string_view &model)
+void QMSettings::setMaceModel(const std::string_view &model)
 {
-    using enum MaceModelSize;
+    using enum MaceModel;
     const auto modelToLowerAndReplaceDashes =
         toLowerAndReplaceDashesCopy(model);
 
     if ("small" == modelToLowerAndReplaceDashes)
-        _maceModelSize = SMALL;
+        _maceModel = SMALL;
 
     else if ("medium" == modelToLowerAndReplaceDashes)
-        _maceModelSize = MEDIUM;
+        _maceModel = MEDIUM;
 
     else if ("large" == modelToLowerAndReplaceDashes)
-        _maceModelSize = LARGE;
+        _maceModel = LARGE;
 
     else if ("small_0b" == modelToLowerAndReplaceDashes)
-        _maceModelSize = SMALL0B;
+        _maceModel = SMALL0B;
 
     else if ("medium_0b" == modelToLowerAndReplaceDashes)
-        _maceModelSize = MEDIUM0B;
+        _maceModel = MEDIUM0B;
 
     else if ("small_0b2" == modelToLowerAndReplaceDashes)
-        _maceModelSize = SMALL0B2;
+        _maceModel = SMALL0B2;
 
     else if ("medium_0b2" == modelToLowerAndReplaceDashes)
-        _maceModelSize = MEDIUM0B2;
+        _maceModel = MEDIUM0B2;
 
     else if ("large_0b2" == modelToLowerAndReplaceDashes)
-        _maceModelSize = LARGE0B2;
+        _maceModel = LARGE0B2;
 
     else if ("medium_0b3" == modelToLowerAndReplaceDashes)
-        _maceModelSize = MEDIUM0B3;
+        _maceModel = MEDIUM0B3;
 
     else if ("medium_mpa_0" == modelToLowerAndReplaceDashes)
-        _maceModelSize = MEDIUMMPA0;
+        _maceModel = MEDIUMMPA0;
 
     else if ("medium_omat_0" == modelToLowerAndReplaceDashes)
-        _maceModelSize = MEDIUMOMAT0;
+        _maceModel = MEDIUMOMAT0;
 
     else if ("custom" == modelToLowerAndReplaceDashes)
-        _maceModelSize = CUSTOM;
+        _maceModel = CUSTOM;
 
     else
         throw UserInputException(
@@ -291,10 +348,7 @@ void QMSettings::setMaceModelSize(const std::string_view &model)
  *
  * @param model
  */
-void QMSettings::setMaceModelSize(const MaceModelSize model)
-{
-    _maceModelSize = model;
-}
+void QMSettings::setMaceModel(const MaceModel model) { _maceModel = model; }
 
 /**
  * @brief sets the maceModelType to enum in settings
@@ -330,6 +384,37 @@ void QMSettings::setMaceModelType(const MaceModelType model)
 {
     _maceModelType = model;
 }
+
+/**
+ * @brief sets the maceMode to enum in settings
+ *
+ * @param mode
+ */
+void QMSettings::setMaceMode(const std::string_view &mode)
+{
+    using enum MaceMode;
+    const auto modeToLower = toLowerAndReplaceDashesCopy(mode);
+
+    if ("accurate" == modeToLower)
+        _maceMode = ACCURATE;
+
+    else if ("fast" == modeToLower)
+        _maceMode = FAST;
+
+    else
+        throw UserInputException(std::format(
+            "Unknown mace_mode \"{}\". Valid values are \"accurate\" (exact "
+            "e3nn reference) or \"fast\" (cuequivariance-accelerated).",
+            mode
+        ));
+}
+
+/**
+ * @brief sets the maceMode to enum in settings
+ *
+ * @param mode
+ */
+void QMSettings::setMaceMode(const MaceMode mode) { _maceMode = mode; }
 
 /**
  * @brief set the mace model path
@@ -405,13 +490,13 @@ void QMSettings::setSlakosType(const std::string_view &slakos)
     if ("3ob" == slakosType)
     {
         _slakosType = THREEOB;
-        _slakosPath = __SLAKOS_DIR__ + string(_slakosType) + "/skfiles/";
+        _slakosPath = builtinSlakosPath(_slakosType);
     }
 
     else if ("matsci" == slakosType)
     {
         _slakosType = MATSCI;
-        _slakosPath = __SLAKOS_DIR__ + string(_slakosType) + "/skfiles/";
+        _slakosPath = builtinSlakosPath(_slakosType);
     }
 
     else if ("custom" == slakosType)
@@ -424,17 +509,30 @@ void QMSettings::setSlakosType(const std::string_view &slakos)
     }
 
     else
-        throw UserInputException(std::format("Slakos {} not recognized", slakos)
+        throw UserInputException(
+            std::format("Slakos {} not recognized", slakos)
         );
 }
 
 /**
  * @brief sets the slakosType to enum in settings
  *
- * @param model
+ * @param slakos
+ * @param resolveBuiltInPath
  */
-void QMSettings::setSlakosType(const SlakosType slakos)
+void QMSettings::setSlakosType(
+    const SlakosType slakos,
+    const bool       resolveBuiltInPath
+)
 {
+    if (!resolveBuiltInPath &&
+        (slakos == SlakosType::THREEOB || slakos == SlakosType::MATSCI))
+    {
+        _slakosType = slakos;
+        _slakosPath.clear();
+        return;
+    }
+
     setSlakosType(string(slakos));
 }
 
@@ -455,10 +553,12 @@ void QMSettings::setSlakosPath(const std::string_view &path)
 
     else
     {
-        throw UserInputException(std::format(
-            "Slakos path cannot be set for slakos type: {}",
-            string(_slakosType)
-        ));
+        throw UserInputException(
+            std::format(
+                "Slakos path cannot be set for slakos type: {}",
+                string(_slakosType)
+            )
+        );
     }
 }
 
@@ -510,6 +610,15 @@ void QMSettings::setUseDispersionCorrection(const bool useDispersionCorr)
 }
 
 /**
+ * @brief sets if the net force should be removed after reading in the QM forces
+ *
+ */
+void QMSettings::setRemoveNetForce(const bool removeNetForce)
+{
+    _removeNetForce = removeNetForce;
+}
+
+/**
  * @brief sets the qmLoopTimeLimit in settings
  *
  * @param time
@@ -517,6 +626,25 @@ void QMSettings::setUseDispersionCorrection(const bool useDispersionCorr)
 void QMSettings::setQMLoopTimeLimit(const double time)
 {
     _qmLoopTimeLimit = time;
+}
+
+/**
+ * @brief sets the FeNNol model path
+ *
+ * @param script
+ */
+void QMSettings::setFennolModelPath(const std::string_view &path)
+{
+    _fennolModelPath = path;
+}
+
+/**
+ * @brief sets if the GPU pre-processing should be enabled for FeNNol
+ *
+ */
+void QMSettings::setUseGPUPreprocessing(const bool useGPUPreprocessing)
+{
+    _useGPUPreprocessing = useGPUPreprocessing;
 }
 
 /***************************
@@ -535,11 +663,18 @@ QMMethod QMSettings::getQMMethod() { return _qmMethod; }
 /**
  * @brief returns the maceModel
  *
- * @return MaceModelSize
+ * @return MaceModel
  */
-MaceModelSize QMSettings::getMaceModelSize() { return _maceModelSize; }
+MaceModel QMSettings::getMaceModel() { return _maceModel; }
 
 MaceModelType QMSettings::getMaceModelType() { return _maceModelType; }
+
+/**
+ * @brief returns the maceMode
+ *
+ * @return MaceMode
+ */
+MaceMode QMSettings::getMaceMode() { return _maceMode; }
 
 /**
  * @brief returns the maceModelPath
@@ -615,6 +750,14 @@ std::unordered_map<std::string, double> QMSettings::getHubbardDerivs()
 bool QMSettings::useDispersionCorr() { return _useDispersionCorrection; }
 
 /**
+ * @brief returns if the net force should be removed after reading in the QM
+ * forces
+ *
+ * @return bool
+ */
+bool QMSettings::getRemoveNetForce() { return _removeNetForce; }
+
+/**
  * @brief returns the xTBMethod
  *
  * @return XtbMethod
@@ -627,3 +770,17 @@ XtbMethod QMSettings::getXtbMethod() { return _xtbMethod; }
  * @return double
  */
 double QMSettings::getQMLoopTimeLimit() { return _qmLoopTimeLimit; }
+
+/**
+ * @brief returns the FeNNol model path
+ *
+ * @return std::string
+ */
+std::string QMSettings::getFennolModelPath() { return _fennolModelPath; }
+
+/**
+ * @brief returns if GPU pre-processing should be used for FeNNol
+ *
+ * @return bool
+ */
+bool QMSettings::useGPUPreprocessing() { return _useGPUPreprocessing; }

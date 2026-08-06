@@ -22,44 +22,43 @@
 
 #include "setup.hpp"
 
-#include <iostream>   // for operator<<, basic_ostream, cout
-
-#include "celllistSetup.hpp"                // for setupCellList
-#include "constraintsSetup.hpp"             // for setupConstraints
-#include "engine.hpp"                       // for Engine
-#include "forceFieldSettings.hpp"           // for ForceFieldSettings
-#include "forceFieldSetup.hpp"              // for setupForceField
-#include "guffDatReader.hpp"                // for readGuffDat, readInput
-#include "hybridSetup.hpp"                  // for setupQMMM
-#include "inputFileReader.hpp"              // for readInputFile
-#include "intraNonBondedReader.hpp"         // for readIntraNonBondedFile
-#include "intraNonBondedSetup.hpp"          // for setupIntraNonBonded
-#include "kokkosSetup.hpp"                  // for setupKokkos
-#include "manostatSetup.hpp"                // for setupManostat
-#include "moldescriptorReader.hpp"          // for readMolDescriptor
+#include "atomicVirial.hpp"
+#include "celllistSetup.hpp"          // for setupCellList
+#include "constraintsSetup.hpp"       // for setupConstraints
+#include "engine.hpp"                 // for Engine
+#include "forceFieldSettings.hpp"     // for ForceFieldSettings
+#include "forceFieldSetup.hpp"        // for setupForceField
+#include "guffDatReader.hpp"          // for readGuffDat, readInput
+#include "hybridSetup.hpp"            // for setupQMMM
+#include "inputFileReader.hpp"        // for readInputFile
+#include "intraNonBondedReader.hpp"   // for readIntraNonBondedFile
+#include "intraNonBondedSetup.hpp"    // for setupIntraNonBonded
+#include "manostatSetup.hpp"          // for setupManostat
+#include "moldescriptorReader.hpp"    // for readMolDescriptor
+#include "molecularVirial.hpp"
 #include "optimizerSetup.hpp"               // for setupOptimizer
 #include "outputFilesSetup.hpp"             // for setupOutputFiles
 #include "parameterFileReader.hpp"          // for readParameterFile
 #include "potentialSetup.hpp"               // for setupPotential
 #include "qmSetup.hpp"                      // for setupQM
-#include "qmmdEngine.hpp"                   // for QMMDEngine
 #include "randomNumberGeneratorSetup.hpp"   // for setupRandomNumberGenerator
 #include "resetKineticsSetup.hpp"           // for setupResetKinetics
 #include "restartFileReader.hpp"            // for readRestartFile
-#include "ringPolymerEngine.hpp"            // for RingPolymerEngine
 #include "ringPolymerSetup.hpp"             // for setupRingPolymer
 #include "settings.hpp"                     // for Settings
 #include "simulationBoxSetup.hpp"           // for setupSimulationBox
 #include "thermostatSetup.hpp"              // for setupThermostat
 #include "timer.hpp"                        // for Timings
-#include "timingsSettings.hpp"              // for TimingsSettings
 #include "topologyReader.hpp"               // for readTopologyFile
+
+#ifdef WITH_KOKKOS
+#include "kokkosSetup.hpp"   // for setupKokkos
+#endif
 
 using namespace engine;
 using namespace input;
 using namespace timings;
 using namespace settings;
-using namespace customException;
 using namespace guffdat;
 using namespace molDescriptor;
 using namespace restartFile;
@@ -75,22 +74,13 @@ using namespace setup::resetKinetics;
  * @param inputFileName
  * @param engine
  */
-void setup::setupRequestedJob(const std::string &inputFileName, Engine &engine)
+void setup::setupRequestedJob(const std::string& inputFileName, Engine& engine)
 {
-    auto simulationTimer = Timer("Simulation");
-    auto setupTimer      = Timer("Setup");
+    auto setupTimer = Timer("Setup");
 
-    startSetup(simulationTimer, setupTimer, engine);
+    startSetup(setupTimer, engine);
 
     readInputFile(inputFileName, engine);
-
-    if (!TimingsSettings::isTimeStepSet())
-        if (Settings::isMDJobType())
-            throw UserInputException(std::format(
-                "Molecular Dynamics job type {} selected. Please set the "
-                "time step in the input file.",
-                string(Settings::getJobtype())
-            ));
 
     setupOutputFiles(engine);
 
@@ -105,7 +95,7 @@ void setup::setupRequestedJob(const std::string &inputFileName, Engine &engine)
     setupKokkos(engine);
 #endif
 
-    endSetup(simulationTimer, setupTimer, engine);
+    endSetup(setupTimer, engine);
 }
 
 /**
@@ -113,13 +103,8 @@ void setup::setupRequestedJob(const std::string &inputFileName, Engine &engine)
  *
  * @param engine
  */
-void setup::startSetup(
-    Timer  &simulationTimer,
-    Timer  &setupTimer,
-    Engine &engine
-)
+void setup::startSetup(Timer& setupTimer, Engine& engine)
 {
-    simulationTimer.startTimingsSection();
     setupTimer.startTimingsSection("TotalSetup");
 
     engine.getStdoutOutput().writeHeader();
@@ -130,17 +115,12 @@ void setup::startSetup(
  *
  * @param engine
  */
-void setup::endSetup(
-    const Timer &simulationTimer,
-    Timer       &setupTimer,
-    Engine      &engine
-)
+void setup::endSetup(Timer& setupTimer, Engine& engine)
 {
     engine.getStdoutOutput().writeSetupCompleted();
     engine.getLogOutput().writeSetupCompleted();
 
     setupTimer.stopTimingsSection("TotalSetup");
-    engine.getTimer().addSimulationTimer(simulationTimer);
     engine.addTimer(setupTimer);
 }
 
@@ -150,7 +130,7 @@ void setup::endSetup(
  * @param inputFileName
  * @param engine
  */
-void setup::readFiles(Engine &engine)
+void setup::readFiles(Engine& engine)
 {
     readMolDescriptor(engine);
 
@@ -168,7 +148,7 @@ void setup::readFiles(Engine &engine)
  *
  * @param engine
  */
-void setup::setupEngine(Engine &engine)
+void setup::setupEngine(Engine& engine)
 {
     if (Settings::isQMActivated())
         setupQM(engine);
@@ -210,4 +190,16 @@ void setup::setupEngine(Engine &engine)
 
     if (Settings::isOptJobType())
         setupOptimizer(engine);
+
+    switch (Settings::getVirialType())
+    {
+        case VirialType::ATOMIC:
+            engine.makeVirial(virial::AtomicVirial());
+            break;
+        case VirialType::MOLECULAR:
+            engine.makeVirial(virial::MolecularVirial());
+            break;
+    }
+
+    engine.getLogOutput().flushQueuedWarnings();
 }

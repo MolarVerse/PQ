@@ -22,10 +22,6 @@
 
 #include <gtest/gtest.h>   // for EXPECT_EQ, TestInfo (ptr only)
 
-#include <memory>   // for allocator, shared_ptr
-#include <string>   // for string, basic_string
-#include <vector>   // for vector
-
 #include "buckinghamPair.hpp"             // for BuckinghamPair
 #include "engine.hpp"                     // for Engine
 #include "exceptions.hpp"                 // for ParameterFileException
@@ -33,15 +29,11 @@
 #include "gtest/gtest.h"                  // for Message, TestPartResult, tes...
 #include "lennardJonesPair.hpp"           // for LennardJonesPair
 #include "morsePair.hpp"                  // for MorsePair
-#include "nonCoulombPair.hpp"             // for NonCoulombPair
-#include "nonCoulombPotential.hpp"        // for NonCoulombType, NonCoulombPo...
 #include "nonCoulombicsSection.hpp"       // for NonCoulombicsSection
-#include "parameterFileSection.hpp"       // for NonCoulombicsSection, parame...
-#include "potential.hpp"                  // for Potential
 #include "potentialSettings.hpp"          // for PotentialSettings
 #include "testParameterFileSection.hpp"   // for TestParameterFileSection
 #include "throwWithMessage.hpp"           // for ASSERT_THROW_MSG
-#include "typeAliases.hpp"                // for pq::strings
+#include "typeAliases.hpp"                // for std::vector<std::string>
 
 using namespace input::parameterFile;
 using namespace potential;
@@ -54,7 +46,8 @@ TEST_F(TestParameterFileSection, processSectionLennardJones)
         _engine->getPotential().getNonCoulombPotential()
     );
 
-    pq::strings          lineElements = {"0", "1", "1.22", "234.3", "324.3"};
+    std::vector<std::string> lineElements =
+        {"0", "1", "1.22", "234.3", "324.3"};
     NonCoulombicsSection nonCoulombicsSection;
     nonCoulombicsSection.processLJ(lineElements, *_engine);
     EXPECT_EQ(potential.getNonCoulombPairsVector().size(), 1);
@@ -92,7 +85,8 @@ TEST_F(TestParameterFileSection, processSectionBuckingham)
         _engine->getPotential().getNonCoulombPotential()
     );
 
-    pq::strings lineElements = {"0", "1", "1.22", "234.3", "324.3", "435"};
+    std::vector<std::string> lineElements =
+        {"0", "1", "1.22", "234.3", "324.3", "435"};
     NonCoulombicsSection nonCoulombicsSection;
     nonCoulombicsSection.processBuckingham(lineElements, *_engine);
     EXPECT_EQ(potential.getNonCoulombPairsVector().size(), 1);
@@ -132,7 +126,8 @@ TEST_F(TestParameterFileSection, processSectionMorse)
         _engine->getPotential().getNonCoulombPotential()
     );
 
-    pq::strings lineElements = {"0", "1", "1.22", "234.3", "324.3", "435"};
+    std::vector<std::string> lineElements =
+        {"0", "1", "1.22", "234.3", "324.3", "435"};
     NonCoulombicsSection nonCoulombicsSection;
     nonCoulombicsSection.processMorse(lineElements, *_engine);
     EXPECT_EQ(potential.getNonCoulombPairsVector().size(), 1);
@@ -168,8 +163,8 @@ TEST_F(TestParameterFileSection, processSectionMorse)
 
 TEST_F(TestParameterFileSection, processHeader)
 {
-    pq::strings          lineElements = {"noncoulombics"};
-    NonCoulombicsSection nonCoulombicsSection;
+    std::vector<std::string> lineElements = {"noncoulombics"};
+    NonCoulombicsSection     nonCoulombicsSection;
     nonCoulombicsSection.processHeader(lineElements, *_engine);
     EXPECT_EQ(PotentialSettings::getNonCoulombType(), NonCoulombType::LJ);
 
@@ -204,32 +199,39 @@ TEST_F(TestParameterFileSection, processSectionNonCoulombics)
         _engine->getPotential().getNonCoulombPotential()
     );
 
-    pq::strings          lineElements = {"0", "1", "1.22", "234.3", "324.3"};
+    std::vector<std::string> lineElements =
+        {"0", "1", "1.22", "234.3", "324.3"};
     NonCoulombicsSection nonCoulombicsSection;
     PotentialSettings::setNonCoulombType(NonCoulombType::LJ);
     nonCoulombicsSection.processSection(lineElements, *_engine);
     EXPECT_EQ(potential.getNonCoulombPairsVector().size(), 1);
-    EXPECT_NO_THROW(dynamic_cast<const LennardJonesPair *>(
-        potential.getNonCoulombPairsVector()[0].get()
-    ));
+    EXPECT_NO_THROW(
+        [[maybe_unused]] auto ret = dynamic_cast<const LennardJonesPair *>(
+            potential.getNonCoulombPairsVector()[0].get()
+        )
+    );
 
     lineElements = {"0", "1", "1.22", "234.3", "324.3"};
     PotentialSettings::setNonCoulombType(NonCoulombType::BUCKINGHAM);
     EXPECT_NO_THROW(nonCoulombicsSection.processSection(lineElements, *_engine)
     );
     EXPECT_EQ(potential.getNonCoulombPairsVector().size(), 2);
-    EXPECT_NO_THROW(dynamic_cast<const BuckinghamPair *>(
-        potential.getNonCoulombPairsVector()[0].get()
-    ));
+    EXPECT_NO_THROW(
+        [[maybe_unused]] auto ret = dynamic_cast<const BuckinghamPair *>(
+            potential.getNonCoulombPairsVector()[0].get()
+        )
+    );
 
     lineElements = {"0", "1", "1.22", "234.3", "324.3"};
     PotentialSettings::setNonCoulombType(NonCoulombType::MORSE);
     EXPECT_NO_THROW(nonCoulombicsSection.processSection(lineElements, *_engine)
     );
     EXPECT_EQ(potential.getNonCoulombPairsVector().size(), 3);
-    EXPECT_NO_THROW(dynamic_cast<const MorsePair *>(
-        potential.getNonCoulombPairsVector()[0].get()
-    ));
+    EXPECT_NO_THROW(
+        [[maybe_unused]] auto ret = dynamic_cast<const MorsePair *>(
+            potential.getNonCoulombPairsVector()[0].get()
+        )
+    );
 
     lineElements = {"0", "1", "1.22", "234.3", "324.3"};
     PotentialSettings::setNonCoulombType(NonCoulombType::LJ_9_12);

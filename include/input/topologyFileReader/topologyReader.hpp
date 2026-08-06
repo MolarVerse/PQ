@@ -57,7 +57,9 @@ namespace input::topology
         TopologyReader(const std::string &filename, pq::Engine &engine);
 
         void                           read();
-        [[nodiscard]] TopologySection *determineSection(const pq::strings &);
+        [[nodiscard]] TopologySection *determineSection(
+            const std::vector<std::string> &
+        );
 
         void setFilename(const std::string_view &filename);
     };

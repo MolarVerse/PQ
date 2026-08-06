@@ -25,7 +25,6 @@
 #include <algorithm>   // for sort, unique
 #include <format>      // for format
 #include <numeric>     // for accumulate
-#include <random>      // for random_device, mt19937
 
 #include "constants.hpp"           // for _TEMPERATURE_FACTOR_
 #include "exceptions.hpp"          // for RstFileException, UserInputException
@@ -184,11 +183,13 @@ void SimulationBox::setupMMOnlyAtoms(const std::vector<int>& atomIndices)
         auto it = std::ranges::find(_qmAtoms, _atoms[(size_t) index]);
 
         if (it != _qmAtoms.end())
-            throw UserInputException(std::format(
-                "Ambiguous atom index {} - atom is already in QM only list "
-                "- cannot be in MM only list",
-                index
-            ));
+            throw UserInputException(
+                std::format(
+                    "Ambiguous atom index {} - atom is already in QM only list "
+                    "- cannot be in MM only list",
+                    index
+                )
+            );
     }
 }
 
@@ -285,11 +286,13 @@ std::pair<Molecule*, size_t> SimulationBox::findMoleculeByAtomIndex(
         }
     }
 
-    throw UserInputException(std::format(
-        "Atom index {} out of range - total number of atoms: {}",
-        atomIndex,
-        sum
-    ));
+    throw UserInputException(
+        std::format(
+            "Atom index {} out of range - total number of atoms: {}",
+            atomIndex,
+            sum
+        )
+    );
 }
 
 /**
@@ -341,10 +344,12 @@ void SimulationBox::setPartialChargesOfMoleculesFromMoleculeTypes()
             molecule.setPartialCharges(molType->getPartialCharges());
 
         else if (molecule.getMoltype() != 0)
-            throw UserInputException(std::format(
-                "Molecule type {} not found in molecule types",
-                molecule.getMoltype()
-            ));
+            throw UserInputException(
+                std::format(
+                    "Molecule type {} not found in molecule types",
+                    molecule.getMoltype()
+                )
+            );
     };
 
     std::ranges::for_each(_molecules, setPartialCharges);
@@ -601,7 +606,7 @@ double SimulationBox::calculateTemperature()
 
     std::ranges::for_each(_atoms, accumulateTemperature);
 
-    temperature *= _TEMPERATURE_FACTOR_ / double(_degreesOfFreedom);
+    temperature *= TEMPERATURE_FACTOR / double(_degreesOfFreedom);
 
     return temperature;
 }
@@ -613,7 +618,8 @@ double SimulationBox::calculateTemperature()
  * @throw UserInputException if coulomb radius cut off is larger than half of
  * the minimal box dimension
  */
-void SimulationBox::checkCoulRadiusCutOff(const ExceptionType exceptionType
+void SimulationBox::checkCoulRadiusCutOff(
+    const ExceptionType exceptionType
 ) const
 {
     const auto coulRadiusCutOff = PotentialSettings::getCoulombRadiusCutOff();
@@ -660,7 +666,7 @@ std::vector<std::string> SimulationBox::getUniqueQMAtomNames()
 void SimulationBox::calculateDensity()
 {
     const auto volume = _box->calculateVolume();
-    _density          = _totalMass / volume * _AMU_PER_ANGSTROM3_TO_KG_PER_L_;
+    _density          = _totalMass / volume * AMU_PER_ANGSTROM3_TO_KG_PER_L;
 }
 
 /**
@@ -770,4 +776,23 @@ void SimulationBox::resetQMCharges()
     auto reset = [](const auto& atom) { atom->resetQMCharge(); };
 
     std::ranges::for_each(_atoms, reset);
+}
+
+/**
+ * @brief Remove net force from the system
+ *
+ * @details Computes the total force vector, distributes the opposite mean
+ * force equally to all atoms, and thereby enforces zero total force.
+ */
+void SimulationBox::removeNetForce()
+{
+    const auto nAtoms = getNumberOfAtoms();
+
+    if (nAtoms == 0)
+        return;
+
+    const auto correctionForce =
+        -calculateTotalForceVector() / static_cast<double>(nAtoms);
+
+    for (auto& atom : getAtoms()) atom->addForce(correctionForce);
 }

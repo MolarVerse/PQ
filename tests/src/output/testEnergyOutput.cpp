@@ -30,10 +30,26 @@
 #include "manostatSettings.hpp"     // for ManostatSettings
 #include "settings.hpp"             // for Settings
 #include "thermostatSettings.hpp"   // for ThermostatSettings
-#include "vector3d.hpp"             // for Vector3D
+#include "vector3d.hpp"             // IWYU pragma: keep - for Vector3D
 
 using namespace settings;
 using namespace linearAlgebra;
+
+/**
+ * @brief tests writing timestep metadata
+ *
+ */
+TEST_F(TestEnergyOutput, writeHeader)
+{
+    _energyOutput->setFilename("default.en");
+    _energyOutput->writeHeader(0.5);
+    _energyOutput->close();
+
+    std::ifstream file("default.en");
+    std::string   line;
+    std::getline(file, line);
+    EXPECT_EQ(line, "# timestep = 0.5 fs");
+}
 
 /**
  * @brief tests writing energy output file

@@ -22,19 +22,18 @@
 
 #include "generalInputParser.hpp"
 
-#include <algorithm>    // for ranges::remove
-#include <cctype>       // for std::isdigit
-#include <cstdint>      // for uint_fast32_t and UINT32_MAX
-#include <format>       // for format
-#include <functional>   // for _Bind_front_t, bind_front
-#include <limits>       // for numeric_limits
-#include <stdexcept>    // for out_of_range and invalid_argument
+#include <cctype>      // for std::isdigit
+#include <cstdint>     // for uint_fast32_t and UINT32_MAX
+#include <format>      // for format
+#include <stdexcept>   // for out_of_range and invalid_argument
 
-#include "engine.hpp"       // for Engine
-#include "exceptions.hpp"   // for InputFileException, customException
-#include "mmmdEngine.hpp"   // for MMMDEngine
-#include "optEngine.hpp"    // for MMOptEngine
-#include "qmmdEngine.hpp"   // for QMMDEngine
+#include "engine.hpp"          // for Engine
+#include "exceptions.hpp"      // for InputFileException, customException
+#include "hessianEngine.hpp"   // for HessianEngine
+#include "mmmdEngine.hpp"      // for MMMDEngine
+#include "optEngine.hpp"       // for MMOptEngine
+#include "parserUtils.hpp"
+#include "qmmdEngine.hpp"              // for QMMDEngine
 #include "ringPolymerqmmdEngine.hpp"   // for RingPolymerQMMDEngine
 #include "settings.hpp"                // for Settings
 #include "stringUtilities.hpp"         // for toLowerCopy
@@ -59,25 +58,25 @@ GeneralInputParser::GeneralInputParser(Engine &engine) : InputFileParser(engine)
 {
     addKeyword(
         std::string("jobtype"),
-        bind_front(&GeneralInputParser::parseJobType, this),
+        bindMember(&GeneralInputParser::parseJobType, this),
         true
     );
 
     addKeyword(
         std::string("dim"),
-        bind_front(&GeneralInputParser::parseDimensionality, this),
+        bindMember(&GeneralInputParser::parseDimensionality, this),
         false
     );
 
     addKeyword(
         std::string("floating_point_type"),
-        bind_front(&GeneralInputParser::parseFloatingPointType, this),
+        bindMember(&GeneralInputParser::parseFloatingPointType, this),
         false
     );
 
     addKeyword(
         std::string("random_seed"),
-        bind_front(&GeneralInputParser::parseRandomSeed, this),
+        bindMember(&GeneralInputParser::parseRandomSeed, this),
         false
     );
 }
@@ -123,6 +122,11 @@ void GeneralInputParser::parseJobTypeForEngine(
         Settings::setJobtype(MM_OPT);
         engine.reset(new OptEngine());
     }
+    else if (jobtype == "mm_hessian")
+    {
+        Settings::setJobtype(MM_HESSIAN);
+        engine.reset(new HessianEngine());
+    }
     else if (jobtype == "mm_md")
     {
         Settings::setJobtype(MM_MD);
@@ -142,6 +146,7 @@ void GeneralInputParser::parseJobTypeForEngine(
         throw InputFileException(format(
             "Invalid jobtype \"{}\" in input file - possible values are:\n"
             "- mm-opt\n"
+            "- mm-hessian\n"
             "- mm-md\n"
             "- qm-md\n"
             "- qm-rpmd\n",
@@ -172,7 +177,7 @@ void GeneralInputParser::parseDimensionality(
 
     std::erase(dimensionalityString, 'd');
 
-    const auto dimensionality = std::stoi(dimensionalityString);
+    const auto dimensionality = stringToInt(dimensionalityString);
 
     if (dimensionality == 3)
         Settings::setDimensionality(size_t(dimensionality));

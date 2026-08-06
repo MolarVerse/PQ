@@ -71,13 +71,13 @@ namespace settings
        private:
         // clang-format off
         static inline OptimizerType _optimizer = OptimizerType::STEEPEST_DESCENT;
-        static inline LREnum _LRStrategy   = LREnum::EXPONENTIAL_DECAY;
+        static inline LREnum _lRStrategy   = LREnum::EXPONENTIAL_DECAY;
 
-        static inline size_t _nEpochs           = defaults::_N_EPOCHS_DEFAULT_;
-        static inline size_t _LRupdateFrequency = defaults::_LR_UPDATE_FREQUENCY_DEFAULT_;
+        static inline size_t _nEpochs           = defaults::N_EPOCHS_DEFAULT;
+        static inline size_t _lRupdateFrequency = defaults::LR_UPDATE_FREQUENCY_DEFAULT;
 
-        static inline double _initialLearningRate = defaults::_INITIAL_LEARNING_RATE_DEFAULT_;
-        static inline double _minLearningRate     = defaults::_MIN_LEARNING_RATE_DEFAULT_;
+        static inline double _initialLearningRate = defaults::INITIAL_LEARNING_RATE_DEFAULT;
+        static inline double _minLearningRate     = defaults::MIN_LEARNING_RATE_DEFAULT;
         // clang-format on
 
         static inline std::optional<double> _learningRateDecay;
@@ -102,6 +102,13 @@ namespace settings
 
         static void setMaxLearningRate(const double);
         static void setMinLearningRate(const double);
+
+        /******************************
+         * validation helper methods *
+         ******************************/
+
+        static void validateLearningRateStrategy();
+        static void validateLearningRateBounds();
 
         /***************************
          * standard getter methods *

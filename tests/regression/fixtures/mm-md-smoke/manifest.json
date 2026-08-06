@@ -1,0 +1,36 @@
+{
+  "input": "run.in",
+  "timeout_seconds": 30,
+  "stdout_contains": [
+    "PQ ended normally"
+  ],
+  "stdout_rejects": [
+    "Exception:"
+  ],
+  "expected_files": [
+    "smoke.en",
+    "smoke.rst",
+    "smoke.info",
+    "smoke.log",
+    "smoke.ref"
+  ],
+  "file_contains": {
+    "smoke.en": [
+      "         1"
+    ],
+    "smoke.rst": [
+      "Step 1",
+      "Box   20 20 20"
+    ]
+  },
+  "file_rejects": {
+    "smoke.en": [
+      "inf",
+      "nan"
+    ],
+    "smoke.rst": [
+      "inf",
+      "nan"
+    ]
+  }
+}

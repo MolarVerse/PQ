@@ -25,12 +25,9 @@
 #define _CONSTRAINTS_INPUT_PARSER_HPP_
 
 #include <cstddef>   // for size_t
-#include <string>    // for string
-#include <vector>    // for vector
 
 #include "inputFileParser.hpp"   // for InputFileParser
-#include "typeAliases.hpp"       // for pq::strings
-
+#include "typeAliases.hpp"       // for std::vector<std::string>
 
 namespace input
 {
@@ -45,13 +42,45 @@ namespace input
        public:
         explicit ConstraintsInputParser(pq::Engine &);
 
-        void parseShakeActivated(const pq::strings &, const size_t);
-        void parseShakeTolerance(const pq::strings &, const size_t);
-        void parseShakeIteration(const pq::strings &, const size_t);
-        void parseRattleTolerance(const pq::strings &, const size_t);
-        void parseRattleIteration(const pq::strings &, const size_t);
+        void parseShakeActivated(
+            const std::vector<std::string> &,
+            const size_t
+        );
 
-        void parseDistanceConstraintActivated(const pq::strings &, const size_t);
+        void parseShakeTolerance(
+            const std::vector<std::string> &,
+            const size_t
+        );
+
+        void parseShakeIteration(
+            const std::vector<std::string> &,
+            const size_t
+        );
+
+        void parseRattleTolerance(
+            const std::vector<std::string> &,
+            const size_t
+        );
+
+        void parseRattleIteration(
+            const std::vector<std::string> &,
+            const size_t
+        );
+
+        void parseMShakeTolerance(
+            const std::vector<std::string> &,
+            const size_t
+        );
+
+        void parseMShakeIteration(
+            const std::vector<std::string> &,
+            const size_t
+        );
+
+        void parseDistanceConstraintActivated(
+            const std::vector<std::string> &,
+            const size_t
+        );
     };
 
 }   // namespace input

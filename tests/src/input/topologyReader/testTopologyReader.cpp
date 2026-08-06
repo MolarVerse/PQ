@@ -22,7 +22,6 @@
 
 #include "testTopologyReader.hpp"
 
-#include "constraints.hpp"          // for Constraints
 #include "exceptions.hpp"           // for InputFileException, TopologyException
 #include "fileSettings.hpp"         // for FileSettings
 #include "forceFieldSettings.hpp"   // for ForceFieldSettings
