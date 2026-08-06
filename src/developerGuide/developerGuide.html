@@ -58,15 +58,20 @@
 <li class="toctree-l2"><a class="reference internal" href="#software-tests">Software Tests</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#unit-testing">Unit Testing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#integration-testing">Integration Testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#performance-benchmarks">Performance Benchmarks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#github-actions">GitHub Actions</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#coding-style">Coding Style</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#sphinx">Sphinx</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#doxygen">Doxygen</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#how-to-contribute">How to Contribute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-contribute">How to Contribute</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#changelog-fragments">Changelog Fragments</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -229,11 +234,50 @@ To run these tests, ensure the following Python packages are installed:</p>
 <p>In addition, the <a class="reference external" href="https://dftbplus.org/index.html">DFTB+</a> program package has to be installed.
 You can then run the integration tests with the command <code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">PQ/integration_tests</span></code>.</p>
 </section>
+<section id="performance-benchmarks">
+<h3>Performance Benchmarks<a class="headerlink" href="#performance-benchmarks" title="Link to this heading"></a></h3>
+<p>The Google Benchmark suite contains local wall-clock benchmarks for core
+algorithms. It is separate from the fixed-work performance checks in
+<code class="docutils literal notranslate"><span class="pre">benchmarks/perf</span></code>.</p>
+<p>Configure and build the suite from the repository root:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cmake<span class="w"> </span>-S<span class="w"> </span>.<span class="w"> </span>-B<span class="w"> </span>build-benchmark<span class="w"> </span>-DCMAKE_BUILD_TYPE<span class="o">=</span>Release<span class="w"> </span>-DBUILD_WITH_BENCHMARKING<span class="o">=</span>ON<span class="w"> </span>-DBUILD_WITH_TESTS<span class="o">=</span>OFF<span class="w"> </span>-DBUILD_WITH_ASE<span class="o">=</span>OFF
+$<span class="w"> </span>cmake<span class="w"> </span>--build<span class="w"> </span>build-benchmark<span class="w"> </span>--target<span class="w"> </span>google_benchmarks
+</pre></div>
+</div>
+</div></blockquote>
+<p>Run a short smoke test:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>ctest<span class="w"> </span>--test-dir<span class="w"> </span>build-benchmark<span class="w"> </span>-L<span class="w"> </span>benchmark<span class="w"> </span>--output-on-failure
+</pre></div>
+</div>
+</div></blockquote>
+<p>Run the full local suite and write JSON results to <code class="docutils literal notranslate"><span class="pre">benchmark-results</span></code>:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>./benchmarks/run_benchmarks.sh<span class="w"> </span>build-benchmark
+</pre></div>
+</div>
+</div></blockquote>
+<p>The benchmarks are standalone executables in
+<code class="docutils literal notranslate"><span class="pre">build-benchmark/benchmarks/src</span></code>. For example:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>./build-benchmark/benchmarks/src/benchmark_forceCalculation
+</pre></div>
+</div>
+</div></blockquote>
+<p>See <code class="docutils literal notranslate"><span class="pre">benchmarks/README.md</span></code> for filtering, output, and sampling-time options.</p>
+</section>
 <section id="github-actions">
 <h3>GitHub Actions<a class="headerlink" href="#github-actions" title="Link to this heading"></a></h3>
 <p>The software workflow — from building the project to running unit and integration tests — is validated by continuous integration (CI) using GitHub Actions.
 The corresponding workflow configuration files are located in the <code class="docutils literal notranslate"><span class="pre">PQ/.github/workflows/</span></code> directory.</p>
 </section>
+</section>
+<section id="coding-style">
+<h2>Coding Style<a class="headerlink" href="#coding-style" title="Link to this heading"></a></h2>
+<p>The C++ source code is formatted with <a class="reference external" href="https://clang.llvm.org/docs/ClangFormat.html">clang-format</a> using the project configuration in <code class="docutils literal notranslate"><span class="pre">PQ/.clang-format</span></code>.
+Use clang-format version 16 or newer. Older versions do not support all options used in the current configuration, and different clang-format versions can produce different formatting.
+When changing C++ files, format the touched files before committing them.</p>
 </section>
 <section id="documentation">
 <h2>Documentation<a class="headerlink" href="#documentation" title="Link to this heading"></a></h2>
@@ -278,7 +322,7 @@ The documentation can be built as follows:</p>
 </li>
 <li><p>View the documentation:</p>
 <blockquote>
-<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>favorite_browser<span class="w"> </span>build/docs/html/index.html
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>&lt;browser&gt;<span class="w"> </span>build/docs/html/index.html
 </pre></div>
 </div>
 </div></blockquote>
@@ -336,9 +380,59 @@ $<span class="w"> </span>git<span class="w"> </span>flow<span class="w"> </span>
 </div>
 </div></blockquote>
 </li>
+<li><p>Add a changelog fragment describing your change (see <a class="reference internal" href="#changelog-fragments">Changelog Fragments</a> below).</p></li>
 <li><p>Create a pull request on GitHub.</p></li>
 </ol>
 </div></blockquote>
+<section id="changelog-fragments">
+<h3>Changelog Fragments<a class="headerlink" href="#changelog-fragments" title="Link to this heading"></a></h3>
+<p><strong>PQ</strong> does not accumulate changelog entries by hand-editing <code class="docutils literal notranslate"><span class="pre">CHANGELOG.md</span></code>
+or <code class="docutils literal notranslate"><span class="pre">DEV-CHANGELOG.md</span></code>. Instead, every regular pull request adds a small
+Markdown file, a <em>fragment</em>, under <code class="docutils literal notranslate"><span class="pre">PQ/changes/</span></code>, and a CI check
+(<code class="docutils literal notranslate"><span class="pre">changelog.yml</span></code>) fails the pull request if none is present. At release
+time, <code class="docutils literal notranslate"><span class="pre">scripts/update_changelog.py</span></code> routes every fragment into the right
+changelog section, stamps a release header, and deletes the fragments it
+consumed.</p>
+<p>Fragments live in one of two audience directories:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">changes/user/</span></code> — for changes an installed-PQ user would notice:
+behavior, results, inputs, outputs, errors, compatibility, or runtime
+performance.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">changes/developer/</span></code> — for build tooling, CI, tests, refactors, and
+other internal maintenance.</p></li>
+</ul>
+</div></blockquote>
+<p>Within either directory, a fragment is named:</p>
+<blockquote>
+<div><div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;category&gt;.&lt;title&gt;.md
+</pre></div>
+</div>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">&lt;category&gt;</span></code> selects the changelog section the entry is rendered under and
+must be one of the fixed categories for that audience (see
+<code class="docutils literal notranslate"><span class="pre">changes/README.md</span></code> for the full list, e.g. <code class="docutils literal notranslate"><span class="pre">bugfix</span></code>, <code class="docutils literal notranslate"><span class="pre">enhancement</span></code>,
+<code class="docutils literal notranslate"><span class="pre">performance</span></code>, <code class="docutils literal notranslate"><span class="pre">build</span></code>, <code class="docutils literal notranslate"><span class="pre">ci</span></code>, <code class="docutils literal notranslate"><span class="pre">test</span></code>, <code class="docutils literal notranslate"><span class="pre">internal</span></code>,
+<code class="docutils literal notranslate"><span class="pre">documentation</span></code>). <code class="docutils literal notranslate"><span class="pre">&lt;title&gt;</span></code> is a short, free-text, lowercase-with-hyphens
+slug identifying the change; it is only used to keep filenames unique and
+does not appear in the rendered changelog.</p>
+<p>A fragment’s body is one or more Markdown bullets, one per line, with no
+blank lines in between. Each bullet becomes its own line in the changelog:</p>
+<blockquote>
+<div><div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span><span class="k">-</span><span class="w"> </span>Fix wrong virial mode when using atomic virial after copying physical data.
+</pre></div>
+</div>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span><span class="k">-</span><span class="w"> </span>First point about this change.
+<span class="k">-</span><span class="w"> </span>Second, related point about the same change.
+</pre></div>
+</div>
+</div></blockquote>
+<p>If your pull request extends a change that already has an unreleased
+fragment, append another bullet to that existing file instead of creating a
+new one. A pull request may add new fragments, append to existing ones, or
+both, and may touch both audiences, but it must not delete unreleased
+fragments or edit <code class="docutils literal notranslate"><span class="pre">CHANGELOG.md</span></code> / <code class="docutils literal notranslate"><span class="pre">DEV-CHANGELOG.md</span></code> directly.</p>
+</section>
 </section>
 </section>
 
