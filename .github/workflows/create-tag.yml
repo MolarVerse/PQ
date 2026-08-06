@@ -31,9 +31,9 @@ jobs:
           regex='[Rr][Ee][Ll][Ee][Aa][Ss][Ee]-([0-9]+\.[0-9]+\.[0-9]+)'
 
           if [[ "$title" =~ $regex ]]; then
-            version="${BASH_REMATCH[1]}"
+            version="v${BASH_REMATCH[1]}"
           elif [[ "$body" =~ $regex ]]; then
-            version="${BASH_REMATCH[1]}"
+            version="v${BASH_REMATCH[1]}"
           else
             echo "❌ No valid release version found in PR title or description."
             exit 1

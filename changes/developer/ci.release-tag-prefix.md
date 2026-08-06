@@ -1,0 +1,1 @@
+- Keep automated release tags consistent with the existing v-prefixed version format.
