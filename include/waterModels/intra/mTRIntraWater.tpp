@@ -91,11 +91,11 @@ void waterModel::MTRIntraWater::calculate(
         angleEnergy      *= gaussianFactor;
 
         auto fOH1  = 2.0 * DOH * alpha * morseFactorOH1 * expFactorOH1;
-        fOH1      += gaussianFactor * (Lrr * deltaOH2 + Lrt * deltaHH -
-                                  2.0 * beta * deltaOH1 * angleEnergy);
+        fOH1      += gaussianFactor * (Lrr * deltaOH2 + Lrt * deltaHH) -
+                2.0 * beta * deltaOH1 * angleEnergy;
         auto fOH2  = 2.0 * DOH * alpha * morseFactorOH2 * expFactorOH2;
-        fOH2      += gaussianFactor * (Lrr * deltaOH1 + Lrt * deltaHH -
-                                  2.0 * beta * deltaOH2 * angleEnergy);
+        fOH2      += gaussianFactor * (Lrr * deltaOH1 + Lrt * deltaHH) -
+                2.0 * beta * deltaOH2 * angleEnergy;
         const auto fAngle =
             gaussianFactor * (Lrt * (deltaOH1 + deltaOH2) + Ltt * deltaHH);
 
