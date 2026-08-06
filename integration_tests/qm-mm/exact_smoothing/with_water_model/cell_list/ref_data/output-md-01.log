@@ -22,8 +22,8 @@
                         Stefan Seiwald
                         Benjamin Reitmair
 
-         Version:       v0.6.4-b2985140
-         Compile date:  Aug  3 2026 08:54:31
+         Version:       v0.6.4-f73ba694
+         Compile date:  Aug  6 2026 13:38:25
 
 INFO:    Reading Moldescriptor File "moldescriptor.dat"
 
@@ -88,10 +88,22 @@ INFO:    Setup of MM potential
 
 INFO:    Setup of Water model
 
-         Intramolecular water model: TIP3P-mTR
-         Intermolecular water model: TIP3P-mTR
+         Intramolecular water model: SPC-mTR
+         Intermolecular water model: SPC-mTR
 
-INFO:    Setup of Hybrid setup
+INFO:    Setup of Hybrid Configuration
+
+         Hybrid type:                 QM/MM
+         Smoothing method:            Exact
+         Inner region center atoms:   0
+         Forced inner molecules:      none
+         Forced outer molecules:      none
+         QM charge source:            qm
+
+         Core radius:                 0 Å
+         Layer radius:                3.8 Å
+         Smoothing region thickness:  0.2 Å
+         Point charge thickness:      15 Å
 
 INFO:    Reading Guffdat File "guff.dat"
 
@@ -102,7 +114,7 @@ INFO:    Reading Guffdat File "guff.dat"
 INFO:    Initial momentum = 7.91874e-09 Å*amu/fs
 
 
-         Elapsed time = 2.25800 s
+         Elapsed time = 2.32954 s
 
 
 INFO:    For citation please refer to the ".ref" file.
