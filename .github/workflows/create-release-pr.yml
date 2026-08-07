@@ -135,4 +135,6 @@ jobs:
             --head "$BRANCH" \
             --title "Release-$NUMBER" \
             --body "Release $VERSION." \
-            --label release
+            --label release \
+            --reviewer 97gamjak \
+            --reviewer ape33
