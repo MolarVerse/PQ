@@ -130,11 +130,28 @@ jobs:
           NUMBER: ${{ steps.release.outputs.number }}
           VERSION: ${{ steps.release.outputs.version }}
         run: |
-          gh pr create \
+          release_notes="$(gh api --method POST \
+            "repos/$GITHUB_REPOSITORY/releases/generate-notes" \
+            -f tag_name="$VERSION" \
+            -f target_commitish="$BRANCH" \
+            --jq .body)"
+
+          pr_url="$(gh pr create \
             --base main \
             --head "$BRANCH" \
             --title "Release-$NUMBER" \
             --body "Release $VERSION." \
-            --label release \
-            --reviewer 97gamjak \
-            --reviewer ape33
+            --label release)"
+          echo "Created release pull request: $pr_url"
+
+          pr_number="$(gh pr view "$pr_url" --json number --jq .number)"
+          while IFS= read -r reviewer; do
+            if ! gh api --method POST \
+              "repos/$GITHUB_REPOSITORY/pulls/$pr_number/requested_reviewers" \
+              -f "reviewers[]=$reviewer" >/dev/null; then
+              echo "::warning::Could not request review from @$reviewer."
+            fi
+          done < <(
+            printf '%s\n' "$release_notes" |
+              python3 scripts/release_reviewers.py "$GITHUB_REPOSITORY"
+          )

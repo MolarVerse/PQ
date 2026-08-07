@@ -1,1 +1,1 @@
-- Generate standard GitHub release notes and streamline release and post-release pull requests.
+- Generate standard release notes and request release contributors on generated release and sync pull requests.
