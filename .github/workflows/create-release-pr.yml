@@ -92,6 +92,7 @@ jobs:
           APP_USER_NAME: ${{ steps.app-user.outputs.name }}
           BRANCH: ${{ steps.release.outputs.branch }}
           RESTORE_COMMIT: ${{ inputs.restore }}
+          VERSION: ${{ steps.release.outputs.version }}
         run: |
           git fetch origin main dev
           git config user.name "$APP_USER_NAME"
@@ -125,7 +126,11 @@ jobs:
               GIT_EDITOR=true git revert --continue
             fi
 
-            git merge --no-edit origin/dev
+            git commit --amend \
+              -m "revert: restore $VERSION release changes" \
+              -m "Reapplies changes removed by $RESTORE_COMMIT."
+            git merge --no-edit \
+              -m "merge: update $VERSION release from dev" origin/dev
           fi
 
           git push --set-upstream origin "$BRANCH"
