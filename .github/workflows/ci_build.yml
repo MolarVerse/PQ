@@ -30,10 +30,13 @@ on:
       - 'benchmarks/CMakeLists.txt'
       - 'benchmarks/src/**'
       - 'CMakeLists.txt'
+  schedule:
+    - cron: '0 2 * * *'
   workflow_dispatch:
 
 jobs:
   build:
+    if: github.event_name != 'schedule'
     strategy:
       matrix:
         os: [ubuntu-24.04, ubuntu-24.04-arm]
@@ -136,6 +139,7 @@ jobs:
           conda run -n test-env pytest integration_tests -v
 
   benchmark:
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-24.04
 
     steps:
@@ -166,6 +170,7 @@ jobs:
           ctest --test-dir build-benchmark -L benchmark --output-on-failure
 
   build-static-lto:
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-24.04
 
     steps:
@@ -190,7 +195,44 @@ jobs:
           CC: gcc-13
           CXX: g++-13
 
+  static-singularity-build:
+    if: >-
+      github.event_name == 'schedule' ||
+      github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt update
+          sudo apt install gcc-13 g++-13 mold
+
+      - name: Setup ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: static-singularity
+
+      - name: Build project
+        run: |
+          cmake -S . -B build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_SHARED_LIBS=OFF \
+            -DBUILD_WITH_SINGULARITY=ON \
+            -DBUILD_WITH_TESTS=ON \
+            -DBUILD_WITH_ASE=OFF \
+            -DBUILD_WITH_NATIVE=OFF
+          cmake --build build --parallel "$(nproc)"
+        env:
+          CC: gcc-13
+          CXX: g++-13
+
+      - name: Run tests
+        run: ctest --test-dir build --output-on-failure -j1
+
   mpi-build:
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-24.04
 
     steps:
