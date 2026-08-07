@@ -25,6 +25,7 @@
 
 #include <cmath>
 #include <cstdio>
+#include <iostream>
 
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
@@ -105,8 +106,8 @@ int main()
     }
 
     // read state so the loop cannot be optimized away
-    std::printf(
-        "%.6f\n",
+    std::cout << std::format(
+        "{:.6f}\n",
         physicalData.getBondEnergy() + physicalData.getAngleEnergy() +
             physicalData.getDihedralEnergy() + molecule.getAtomForce(0)[0]
     );

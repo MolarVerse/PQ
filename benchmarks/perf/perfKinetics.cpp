@@ -24,6 +24,7 @@
 // (temperature, momentum, angular momentum, total force).
 
 #include <cstdio>
+#include <iostream>
 
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
@@ -51,6 +52,6 @@ int main()
         sink += box.calculateTotalForce();
     }
 
-    std::printf("%.6f\n", sink);
+    std::cout << std::format("{:.6f}\n", sink);
     return 0;
 }

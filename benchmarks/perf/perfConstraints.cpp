@@ -26,6 +26,7 @@
 
 #include <cstddef>
 #include <cstdio>
+#include <iostream>
 
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
@@ -78,6 +79,6 @@ int main()
     }
 
     // read state so the loop cannot be optimized away
-    std::printf("%.6f\n", box.calculateMomentum()[0]);
+    std::cout << std::format("{:.6f}\n", box.calculateMomentum()[0]);
     return 0;
 }

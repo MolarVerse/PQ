@@ -24,6 +24,7 @@
 // 3x3 tensor) that underlie every force/energy kernel.
 
 #include <cstdio>
+#include <iostream>
 
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
@@ -67,6 +68,6 @@ int main()
         sink += norm(matrixVec) + det(matrixSq) + det(inverse(matrix));
     }
 
-    std::printf("%.6f\n", sink);
+    std::cout << std::format("{:.6f}\n", sink);
     return 0;
 }
