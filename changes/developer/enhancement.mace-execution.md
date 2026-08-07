@@ -1,0 +1,1 @@
+- Add `mace_mode` for selecting accurate or accelerated MACE execution.
