@@ -557,7 +557,7 @@ void QMInputParser::parseHubbardDerivs(
     {
         std::stringstream pairStream(item);
         std::string       element;
-        double            value;
+        double            value = 0.0;
         if (std::getline(pairStream, element, ':') && pairStream >> value)
         {
             hubbardDerivs[element] = value;

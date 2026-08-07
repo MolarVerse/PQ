@@ -51,13 +51,13 @@ namespace opt
         explicit Adam(const size_t nEpochs, const size_t nAtoms);
         explicit Adam(const size_t, const double, const double, const size_t);
 
-        Adam()  = default;
-        ~Adam() = default;
+        Adam()           = default;
+        ~Adam() override = default;
 
-        [[nodiscard]] std::shared_ptr<Optimizer> clone() const;
-        [[nodiscard]] size_t                     maxHistoryLength() const;
+        [[nodiscard]] std::shared_ptr<Optimizer> clone() const override;
+        [[nodiscard]] size_t maxHistoryLength() const override;
 
-        void update(const double learningRate, const size_t step);
+        void update(const double learningRate, const size_t step) override;
     };
 }   // namespace opt
 

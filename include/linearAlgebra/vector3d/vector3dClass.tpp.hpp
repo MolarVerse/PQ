@@ -47,7 +47,7 @@ namespace linearAlgebra
      * @return Vector3D<T>&
      */
     template <class T>
-    Vector3D<T> &Vector3D<T>::operator=(Vector3D<T> &rhs)
+    Vector3D<T> &Vector3D<T>::operator=(Vector3D<T> &&rhs)
     {
         if (this == &rhs)
             return *this;

@@ -36,7 +36,7 @@
 class TestSimulationBox : public ::testing::Test
 {
    protected:
-    virtual void SetUp()
+    void SetUp() override
     {
         _simulationBox = new simulationBox::SimulationBox();
 
@@ -98,7 +98,7 @@ class TestSimulationBox : public ::testing::Test
         _simulationBox->setBoxDimensions({10.0, 10.0, 10.0});
     }
 
-    virtual void TearDown() { delete _simulationBox; }
+    void TearDown() override { delete _simulationBox; }
 
     simulationBox::SimulationBox *_simulationBox;
 };
