@@ -25,7 +25,6 @@
 #define _STEP_COUNT_SECTION_HPP_
 
 #include <string>   // for string
-#include <vector>   // for vector
 
 #include "restartFileSection.hpp"   // for RestartFileSection
 #include "typeAliases.hpp"
@@ -41,7 +40,10 @@ namespace input::restartFile
     class StepCountSection : public RestartFileSection
     {
        public:
-        void process(pq::strings &lineElements, pq::Engine &) override;
+        void process(
+            std::vector<std::string> &lineElements,
+            pq::Engine &
+        ) override;
 
         [[nodiscard]] std::string keyword() override;
         [[nodiscard]] bool        isHeader() override;

@@ -69,10 +69,12 @@ void input::checkCommandArray(
 )
 {
     if (lineElements.size() < 3)
-        throw InputFileException(std::format(
-            "Invalid number of arguments at line {} in input file",
-            lineNumber
-        ));
+        throw InputFileException(
+            std::format(
+                "Invalid number of arguments at line {} in input file",
+                lineNumber
+            )
+        );
 
     checkEqualSign(lineElements[1], lineNumber);
 }
@@ -92,10 +94,12 @@ void input::checkCommand(
 )
 {
     if (lineElements.size() != 3)
-        throw InputFileException(std::format(
-            "Invalid number of arguments at line {} in input file",
-            lineNumber
-        ));
+        throw InputFileException(
+            std::format(
+                "Invalid number of arguments at line {} in input file",
+                lineNumber
+            )
+        );
 
     checkEqualSign(lineElements[1], lineNumber);
 }
@@ -117,7 +121,7 @@ void input::checkCommand(
  */
 void InputFileParser::addKeyword(
     const std::string &keyword,
-    pq::ParseFunc      parserFunc,
+    ParseFunc          parserFunc,
     bool               required
 )
 {
@@ -132,7 +136,8 @@ void InputFileParser::addKeyword(
  *
  * @return the keyword function map
  */
-std::map<std::string, pq::ParseFunc> InputFileParser::getKeywordFuncMap() const
+std::map<std::string, InputFileParser::ParseFunc> InputFileParser::
+    getKeywordFuncMap() const
 {
     return _keywordFuncMap;
 }

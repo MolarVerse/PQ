@@ -12,11 +12,31 @@ on:
       - 'src/**'
       - 'integration_tests/**'
       - 'tests/**'
+      - 'benchmarks/CMakeLists.txt'
+      - 'benchmarks/src/**'
       - 'CMakeLists.txt'
+  push:
+    branches:
+      - dev
+      - main
+    paths:
+      - '.github/workflows/ci_build.yml'
+      - '.cmake/**'
+      - 'apps/**'
+      - 'include/**'
+      - 'src/**'
+      - 'integration_tests/**'
+      - 'tests/**'
+      - 'benchmarks/CMakeLists.txt'
+      - 'benchmarks/src/**'
+      - 'CMakeLists.txt'
+  schedule:
+    - cron: '0 2 * * *'
   workflow_dispatch:
 
 jobs:
   build:
+    if: github.event_name != 'schedule'
     strategy:
       matrix:
         os: [ubuntu-24.04, ubuntu-24.04-arm]
@@ -29,8 +49,14 @@ jobs:
       - name: install gcc13
         run: |
           sudo apt update
-          sudo apt install gcc-13 g++-13
+          sudo apt install gcc-13 g++-13 mold
         shell: bash
+
+      # safe because CI builds with -DBUILD_WITH_NATIVE=Off (portable objects)
+      - name: setup ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: ${{ matrix.os }}-${{ matrix.build }}
 
       - name: setup python ubuntu
         uses: actions/setup-python@v3
@@ -54,8 +80,8 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=${{ matrix.build }} ..
-          make -j2
+          cmake -DCMAKE_BUILD_TYPE=${{ matrix.build }} -DBUILD_WITH_NATIVE=Off ..
+          make -j$(nproc)
           make test
         env:
           CC: gcc-13
@@ -66,8 +92,8 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_WITH_GCOVR=ON ..
-          make -j
+          cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_WITH_GCOVR=ON -DBUILD_WITH_NATIVE=Off ..
+          make -j$(nproc)
           make coverage_xml
         env:
           CC: gcc-13
@@ -93,20 +119,153 @@ jobs:
           channels: default, conda-forge
           auto-activate-base: false
 
-      - name: Install Integration Test Dependencies in Conda Env
+      - name: Cache conda env
         if: ${{matrix.build == 'Release'}}
-        shell: bash -l {0}
+        id: cache-conda-env
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.CONDA }}/envs/test-env
+          key: conda-env-${{ matrix.os }}-${{ hashFiles('.github/workflows/ci_build.yml') }}
+
+      - name: Install Integration Test Dependencies in Conda Env
+        if: ${{matrix.build == 'Release' && steps.cache-conda-env.outputs.cache-hit != 'true'}}
         run: |
-          pip install pytest
-          pip install pytest-cov
-          pip install pqanalysis
-          pip install ase
-          pip install pyscf==2.9.0
-          conda install conda-forge::dftbplus
+          conda install -n test-env -y pip conda-forge::dftbplus conda-forge::xtb
+          conda run -n test-env python -m pip install pytest pytest-cov pqanalysis ase pyscf==2.9.0
 
       - name: Integration Tests
         if: ${{matrix.build == 'Release' }}
-        shell: bash -l {0}
         run: |
-            pytest integration_tests
+          conda run -n test-env pytest integration_tests -v
 
+  benchmark:
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: install gcc13
+        run: |
+          sudo apt update
+          sudo apt install gcc-13 g++-13
+        shell: bash
+
+      - name: Build benchmark suite
+        run: |
+          cmake -S . -B build-benchmark \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_WITH_BENCHMARKING=On \
+            -DBUILD_WITH_TESTS=Off \
+            -DBUILD_WITH_ASE=Off \
+            -DBUILD_WITH_DOCS=Off \
+            -DBUILD_WITH_NATIVE=Off
+          cmake --build build-benchmark --target google_benchmarks -j$(nproc)
+        env:
+          CC: gcc-13
+          CXX: g++-13
+
+      - name: Run benchmark smoke tests
+        run: |
+          ctest --test-dir build-benchmark -L benchmark --output-on-failure
+
+  build-static-lto:
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install GCC 13
+        run: |
+          sudo apt update
+          sudo apt install gcc-13 g++-13 mold ninja-build
+
+      - name: Build and test static LTO
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_SHARED_LIBS=OFF \
+            -DBUILD_WITH_ASE=OFF \
+            -DBUILD_WITH_LTO=ON \
+            -DBUILD_WITH_NATIVE=OFF
+          cmake --build build --parallel
+          ctest --test-dir build --output-on-failure -j1
+        env:
+          CC: gcc-13
+          CXX: g++-13
+
+  static-singularity-build:
+    if: >-
+      github.event_name == 'schedule' ||
+      github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt update
+          sudo apt install gcc-13 g++-13 mold
+
+      - name: Setup ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: static-singularity
+
+      - name: Build project
+        run: |
+          cmake -S . -B build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_SHARED_LIBS=OFF \
+            -DBUILD_WITH_SINGULARITY=ON \
+            -DBUILD_WITH_TESTS=ON \
+            -DBUILD_WITH_ASE=OFF \
+            -DBUILD_WITH_NATIVE=OFF
+          cmake --build build --parallel "$(nproc)"
+        env:
+          CC: gcc-13
+          CXX: g++-13
+
+      - name: Run tests
+        run: ctest --test-dir build --output-on-failure -j1
+
+  mpi-build:
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt update
+          sudo apt install \
+            gcc-13 \
+            g++-13 \
+            mold \
+            openmpi-bin \
+            libopenmpi-dev \
+            python-is-python3
+
+      - name: Setup ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: mpi-release
+
+      - name: Build project
+        run: |
+          cmake -S . -B build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_WITH_MPI=ON \
+            -DBUILD_WITH_ASE=OFF \
+            -DBUILD_WITH_NATIVE=OFF \
+            -DBUILD_WITH_TESTS=ON
+          cmake --build build --parallel "$(nproc)"
+        env:
+          CC: gcc-13
+          CXX: g++-13
+
+      - name: Run tests
+        run: ctest --test-dir build --output-on-failure -j1

@@ -24,21 +24,18 @@
 
 #include <string>   // for string
 
-#include "boxOutput.hpp"                      // for BoxFileOutput
-#include "energyOutput.hpp"                   // for EnergyOutput
-#include "engine.hpp"                         // for Engine
-#include "infoOutput.hpp"                     // for InfoOutput
-#include "logOutput.hpp"                      // for LogOutput
-#include "mdEngine.hpp"                       // for MDEngine
-#include "momentumOutput.hpp"                 // for MomentumOutput
-#include "optEngine.hpp"                      // for OptEngine
-#include "outputFileSettings.hpp"             // for OutputFileSettings
-#include "ringPolymerRestartFileOutput.hpp"   // for RingPolymerRestartFileOutput
-#include "ringPolymerTrajectoryOutput.hpp"    // for RingPolymerTrajectoryOutput
-#include "rstFileOutput.hpp"                  // for RstFileOutput
-#include "settings.hpp"                       // for Settings
-#include "stdoutOutput.hpp"                   // for StdoutOutput
-#include "trajectoryOutput.hpp"               // for TrajectoryOutput
+#include "engine.hpp"               // for Engine
+#include "hessianEngine.hpp"        // for HessianEngine
+#include "hessianSettings.hpp"      // for HessianSettings
+#include "infoOutput.hpp"           // for InfoOutput
+#include "logOutput.hpp"            // for LogOutput
+#include "mdEngine.hpp"             // for MDEngine
+#include "optEngine.hpp"            // for OptEngine
+#include "outputFileSettings.hpp"   // for OutputFileSettings
+#include "settings.hpp"             // for Settings
+#include "stdoutOutput.hpp"         // for StdoutOutput
+#include "timingsSettings.hpp"      // for TimingsSettings
+#include "trajectoryOutput.hpp"     // for TrajectoryOutput
 
 using setup::OutputFilesSetup;
 using namespace settings;
@@ -63,7 +60,7 @@ void setup::setupOutputFiles(Engine &engine)
  *
  * @param engine
  */
-OutputFilesSetup::OutputFilesSetup(Engine &engine) : _engine(engine){};
+OutputFilesSetup::OutputFilesSetup(Engine &engine) : _engine(engine) {}
 
 /**
  * @brief setup output files
@@ -117,21 +114,30 @@ void OutputFilesSetup::setup()
         mdEngine.getStressOutput().setFilename(stressFile);
         mdEngine.getBoxFileOutput().setFilename(boxFile);
 
+        if (OutputFileSettings::getIncludeOutputMetadata())
+        {
+            const auto timeStep = TimingsSettings::getTimeStep();
+            _engine.getEnergyOutput().writeHeader(timeStep);
+            mdEngine.getInstantEnergyOutput().writeHeader(timeStep);
+        }
+
         if (Settings::isRingPolymerMDActivated())
         {
-            const auto RstFile = OutputFileSettings::getRPMDRestartFileName();
-            const auto xyzFile = OutputFileSettings::getRPMDTrajFileName();
-            const auto velFile = OutputFileSettings::getRPMDVelocityFileName();
-            const auto forceFile  = OutputFileSettings::getRPMDForceFileName();
-            const auto chargeFile = OutputFileSettings::getRPMDChargeFileName();
-            const auto energyFile = OutputFileSettings::getRPMDEnergyFileName();
+            const auto rstFile_ = OutputFileSettings::getRPMDRestartFileName();
+            const auto xyzFile_ = OutputFileSettings::getRPMDTrajFileName();
+            const auto velFile_ = OutputFileSettings::getRPMDVelocityFileName();
+            const auto forceFile_ = OutputFileSettings::getRPMDForceFileName();
+            const auto chargeFile_ =
+                OutputFileSettings::getRPMDChargeFileName();
+            const auto energyFile_ =
+                OutputFileSettings::getRPMDEnergyFileName();
 
-            mdEngine.getRingPolymerRstFileOutput().setFilename(RstFile);
-            mdEngine.getRingPolymerXyzOutput().setFilename(xyzFile);
-            mdEngine.getRingPolymerVelOutput().setFilename(velFile);
-            mdEngine.getRingPolymerForceOutput().setFilename(forceFile);
-            mdEngine.getRingPolymerChargeOutput().setFilename(chargeFile);
-            mdEngine.getRingPolymerEnergyOutput().setFilename(energyFile);
+            mdEngine.getRingPolymerRstFileOutput().setFilename(rstFile_);
+            mdEngine.getRingPolymerXyzOutput().setFilename(xyzFile_);
+            mdEngine.getRingPolymerVelOutput().setFilename(velFile_);
+            mdEngine.getRingPolymerForceOutput().setFilename(forceFile_);
+            mdEngine.getRingPolymerChargeOutput().setFilename(chargeFile_);
+            mdEngine.getRingPolymerEnergyOutput().setFilename(energyFile_);
         }
     }
 
@@ -142,5 +148,15 @@ void OutputFilesSetup::setup()
         const auto optFileName = OutputFileSettings::getOptFileName();
 
         optEngine.getOptOutput().setFilename(optFileName);
+    }
+
+    if (Settings::getJobtype() == JobType::MM_HESSIAN &&
+        HessianSettings::optimizeBeforeHessian())
+    {
+        auto &hessianEngine = dynamic_cast<HessianEngine &>(_engine);
+
+        const auto optFileName = OutputFileSettings::getOptFileName();
+
+        hessianEngine.getOptOutput().setFilename(optFileName);
     }
 }

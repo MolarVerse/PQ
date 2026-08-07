@@ -24,10 +24,10 @@
 
 #include <algorithm>   // for for_each
 #include <format>      // for format
-#include <vector>      // for vector
+#include <numeric>
+#include <vector>   // for vector
 
 #include "physicalData.hpp"   // for PhysicalData
-#include "stlVector.hpp"      // for sum
 
 using namespace output;
 using namespace physicalData;
@@ -57,7 +57,8 @@ void RingPolymerEnergyOutput::write(
 
     _fp << std::format(
         "{:20.12f}\t",
-        sumOfRingPolymerEnergies(dataVector) / dataVector.size()
+        sumOfRingPolymerEnergies(dataVector) /
+            static_cast<double>(dataVector.size())
     );
 
     std::ranges::for_each(

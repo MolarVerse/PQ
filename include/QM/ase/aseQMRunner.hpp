@@ -24,38 +24,31 @@
 
 #define _ASE_QM_RUNNER_HPP_
 
-#include <pybind11/embed.h>
-#include <pybind11/numpy.h>
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-
-#include <string>   // for std::string
-
 #include "qmRunner.hpp"
 #include "typeAliases.hpp"
 
-namespace py = pybind11;
+namespace pybind11
+{
+    class object;
+}
 
 namespace QM
 {
     /**
-     * @brief ASEQMRunner inherits from QMRunner
+     * @brief AseQMRunner inherits from QMRunner
      *
      */
-    class __attribute__((visibility("default"))) ASEQMRunner : public QMRunner
+    class AseQMRunner : public QMRunner
     {
        protected:
-        double           _energy;
-        pybind11::object _calculator;
-        pybind11::object _atomsModule;
-        pybind11::object _atoms;
+        double _energy;
 
-        pybind11::array_t<double> _forces;
-        pybind11::array_t<double> _stress;
+        struct AseInterface;
+        std::unique_ptr<AseInterface> _ase;
 
        public:
-        ASEQMRunner();
-        ~ASEQMRunner() override = default;
+        AseQMRunner();
+        ~AseQMRunner() override;
 
         void run(pq::SimBox &, pq::PhysicalData &) override;
         void buildAseAtoms(const pq::SimBox &);
@@ -66,12 +59,8 @@ namespace QM
         void collectEnergy(pq::PhysicalData &) const;
         void collectStress(const pq::SimBox &, pq::PhysicalData &) const;
 
-        // clang-format off
-        [[nodiscard]] py::array           asePositions(const pq::SimBox &) const;
-        [[nodiscard]] py::array_t<double> aseCell(const pq::SimBox &) const;
-        [[nodiscard]] py::array_t<bool>   asePBC(const pq::SimBox &) const;
-        [[nodiscard]] py::array_t<int>    aseAtomicNumbers(const pq::SimBox &) const;
-        // clang-format on
+       protected:
+        void setAseCalculator(const pybind11::object &calculator);
     };
 
 }   // namespace QM

@@ -22,14 +22,13 @@
 
 #include "constraints.hpp"
 
-#include <algorithm>    // for ranges::for_each
-#include <format>       // for format
-#include <functional>   // for identity
-#include <string>       // for string
-#include <vector>       // for vector
+#include <algorithm>   // for ranges::for_each
+#include <format>      // for format
+#include <vector>      // for vector
 
-#include "exceptions.hpp"      // for ShakeException
-#include "mathUtilities.hpp"   // for kroneckerDelta
+#include "exceptions.hpp"   // for ShakeException
+#include "mShake.hpp"
+#include "physicalData.hpp"    // for PhysicalData
 #include "simulationBox.hpp"   // for SimulationBox
 
 using namespace constraints;
@@ -37,14 +36,12 @@ using namespace simulationBox;
 using namespace customException;
 
 /**
- * @brief clone constraints
+ * @brief constructor
  *
- * @return std::shared_ptr<Constraints>
- */
-std::shared_ptr<Constraints> Constraints::clone() const
-{
-    return std::make_shared<Constraints>(*this);
-}
+ **/
+Constraints::Constraints() : _mShake(std::make_unique<MShake>()) {}
+
+Constraints::~Constraints() = default;
 
 /**
  * @brief init M-Shake from M-Shake references
@@ -52,7 +49,7 @@ std::shared_ptr<Constraints> Constraints::clone() const
  * @param simulationBox
  *
  */
-void Constraints::initMShake() { _mShake.initMShake(); }
+void Constraints::initMShake() { _mShake->initMShake(); }
 
 /**
  * @brief calculates the reference bond data of all bond constraints
@@ -60,7 +57,8 @@ void Constraints::initMShake() { _mShake.initMShake(); }
  * @param simulationBox
  *
  */
-void Constraints::calculateConstraintBondRefs(const SimulationBox &simulationBox
+void Constraints::calculateConstraintBondRefs(
+    const SimulationBox &simulationBox
 )
 {
     startTimingsSection("Reference Bond Data");
@@ -113,11 +111,12 @@ void Constraints::_applyShake(SimulationBox &simBox)
         convergedVector.clear();
 
         auto applyShakeSingleBond =
-            [&simBox, &convergedVector, this](auto &bondConst) {
-                convergedVector.push_back(
-                    bondConst.applyShake(simBox, _shakeTolerance)
-                );
-            };
+            [&simBox, &convergedVector, this](auto &bondConst)
+        {
+            convergedVector.push_back(
+                bondConst.applyShake(simBox, _shakeTolerance)
+            );
+        };
 
         std::ranges::for_each(_bondConstraints, applyShakeSingleBond);
 
@@ -130,10 +129,12 @@ void Constraints::_applyShake(SimulationBox &simBox)
     }
 
     if (!converged)
-        throw ShakeException(std::format(
-            "Shake algorithm did not converge for {} bonds.",
-            std::ranges::count(convergedVector, false)
-        ));
+        throw ShakeException(
+            std::format(
+                "Shake algorithm did not converge for {} bonds.",
+                std::ranges::count(convergedVector, false)
+            )
+        );
 
     stopTimingsSection("Shake");
 }
@@ -147,7 +148,7 @@ void Constraints::_applyShake(SimulationBox &simBox)
 void Constraints::_applyMShake(SimulationBox &simulationBox)
 {
     startTimingsSection("MShake - Shake");
-    _mShake.applyMShake(_shakeTolerance, simulationBox);
+    _mShake->applyMShake(simulationBox);
     stopTimingsSection("MShake - Shake");
 }
 
@@ -188,8 +189,9 @@ void Constraints::_applyRattle()
     {
         convergedVector.clear();
 
-        auto applyRattleForSingleBond = [&convergedVector,
-                                         this](auto &bondConstraint) {
+        auto applyRattleForSingleBond =
+            [&convergedVector, this](auto &bondConstraint)
+        {
             convergedVector.push_back(
                 bondConstraint.applyRattle(_rattleTolerance)
             );
@@ -206,10 +208,12 @@ void Constraints::_applyRattle()
     }
 
     if (!converged)
-        throw ShakeException(std::format(
-            "Rattle algorithm did not converge for {} bonds.",
-            std::ranges::count(convergedVector, false)
-        ));
+        throw ShakeException(
+            std::format(
+                "Rattle algorithm did not converge for {} bonds.",
+                std::ranges::count(convergedVector, false)
+            )
+        );
 
     stopTimingsSection("Rattle");
 }
@@ -222,7 +226,7 @@ void Constraints::_applyRattle()
 void Constraints::_applyMRattle(SimulationBox &simulationBox)
 {
     startTimingsSection("MShake - Rattle");
-    _mShake.applyMRattle(simulationBox);
+    _mShake->applyMRattle(simulationBox);
     stopTimingsSection("MShake - Rattle");
 }
 
@@ -248,7 +252,8 @@ void Constraints::applyDistanceConstraints(
 
     std::ranges::for_each(
         _distanceConstraints,
-        [&simulationBox, effective_time](auto &distanceConstraint) {
+        [&simulationBox, effective_time](auto &distanceConstraint)
+        {
             distanceConstraint.applyDistanceConstraint(
                 simulationBox,
                 effective_time
@@ -383,7 +388,7 @@ void Constraints::addDistanceConstraint(
  */
 void Constraints::addMShakeReference(const MShakeReference &mShakeReference)
 {
-    _mShake.addMShakeReference(mShakeReference);
+    _mShake->addMShakeReference(mShakeReference);
 }
 
 /***************************
@@ -419,7 +424,7 @@ const std::vector<DistanceConstraint> &Constraints::getDistConstraints() const
  */
 const std::vector<MShakeReference> &Constraints::getMShakeReferences() const
 {
-    return _mShake.getMShakeReferences();
+    return _mShake->getMShakeReferences();
 }
 
 /**
@@ -439,7 +444,7 @@ size_t Constraints::getNumberOfBondConstraints() const
  */
 size_t Constraints::getNumberOfMShakeConstraints(SimulationBox &simBox) const
 {
-    return _mShake.calcNumberOfBondConstraints(simBox);
+    return _mShake->calcNumberOfBondConstraints(simBox);
 }
 
 /**

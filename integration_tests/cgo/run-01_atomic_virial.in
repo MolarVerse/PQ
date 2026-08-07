@@ -1,0 +1,28 @@
+# General
+jobtype = mm-md;
+nstep = 10;
+timestep = 2.0;
+output_freq = 2;
+integrator = v-verlet;
+
+# MM
+rcoulomb = 10.0;
+long_range = wolf;
+wolf_param = 0.22;
+noncoulomb = buck;
+
+# Thermostat
+thermostat = berendsen;
+temp = 998.15;
+t_relaxation = 0.1;
+
+# Manostat
+manostat = berendsen;
+pressure = 1.013;
+p_relaxation = 1.0;
+virial= atomic;
+
+# Files
+start_file   = cgo-mm-00.rst;
+file_prefix  = cgo-mm-01;
+

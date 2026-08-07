@@ -7,6 +7,7 @@ set(source_files
     testDihedralTypesSection.cpp
     testImproperDihedralTypesSection.cpp
     testNonCoulombicTypesSection.cpp
+    testJCouplingTypesSection.cpp
 )
 
 foreach(source_file ${source_files})
@@ -29,6 +30,8 @@ foreach(source_file ${source_files})
         COMMAND ${test_name}
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/tests
     )
+    target_precompile_headers(${test_name} REUSE_FROM pq_test_pch)
+    target_link_libraries(${test_name} PRIVATE pq_test_pch)
 
     set_property(TEST ${test_name} PROPERTY LABELS parameterFileReader)
 endforeach()

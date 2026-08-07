@@ -1,8 +1,9 @@
 add_library(aseQM
     aseQMRunner.cpp
-    maceRunner.cpp
+    aseMaceRunner.cpp
     aseDftbRunner.cpp
     aseXtbRunner.cpp
+    aseFennolRunner.cpp
 )
 
 target_include_directories(aseQM
@@ -33,6 +34,13 @@ target_include_directories(aseQM
     ${pybind11_INCLUDE_DIRS}
 )
 
+target_precompile_headers(aseQM PRIVATE
+    <pybind11/embed.h>
+    <pybind11/numpy.h>
+    <pybind11/pybind11.h>
+    <pybind11/stl.h>
+)
+
 install(TARGETS aseQM
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+    DESTINATION lib
 )

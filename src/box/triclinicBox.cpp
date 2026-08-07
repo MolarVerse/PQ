@@ -48,7 +48,7 @@ double TriclinicBox::calculateVolume() { return det(_boxMatrix); }
  */
 void TriclinicBox::setBoxAngles(const Vec3D &boxAngles)
 {
-    _boxAngles = boxAngles * _DEG_TO_RAD_;
+    _boxAngles = boxAngles * DEG_TO_RAD;
 
     calculateTransformationMatrix();
     calculateBoxMatrix();
@@ -128,7 +128,11 @@ void TriclinicBox::applyPBC(Vec3D &position) const
             for (int j = -1; j <= 1; ++j)
                 for (int k = -1; k <= 1; ++k)
                 {
-                    const auto shift = _boxMatrix * Vec3D{i, j, k};
+                    const auto shift = _boxMatrix * Vec3D{
+                                                        static_cast<double>(i),
+                                                        static_cast<double>(j),
+                                                        static_cast<double>(k),
+                                                    };
 
                     const auto newPosition = originalPosition + shift;
 
@@ -282,7 +286,7 @@ std::pair<Vec3D, Vec3D> simulationBox::calcBoxDimAndAnglesFromBoxMatrix(
 
     return std::make_pair(
         Vec3D{box_x, box_y, box_z},
-        Vec3D{alpha, beta, gamma} * constants::_RAD_TO_DEG_
+        Vec3D{alpha, beta, gamma} * constants::RAD_TO_DEG
     );
 }
 
@@ -345,7 +349,7 @@ double TriclinicBox::sinGamma() const { return ::sin(_boxAngles[2]); }
  */
 Vec3D TriclinicBox::getBoxAngles() const
 {
-    return _boxAngles * constants::_RAD_TO_DEG_;
+    return _boxAngles * constants::RAD_TO_DEG;
 }
 
 /**

@@ -11,16 +11,14 @@ target_include_directories(linearAlgebra
     ${PROJECT_SOURCE_DIR}/include/linearAlgebra
     ${PROJECT_SOURCE_DIR}/include/concepts
     ${PROJECT_SOURCE_DIR}/include/config
-    ${eigen_SOURCE_DIR}
 )
 
 target_link_libraries(linearAlgebra
     PUBLIC
     exceptions
-    PRIVATE
     Eigen3::Eigen
 )
 
 install(TARGETS linearAlgebra
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+    DESTINATION lib
 )

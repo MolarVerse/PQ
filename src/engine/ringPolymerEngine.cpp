@@ -22,9 +22,8 @@
 
 #include "ringPolymerEngine.hpp"
 
-#include <algorithm>    // for __for_each_fn
-#include <cstddef>      // for size_t
-#include <functional>   // for identity
+#include <algorithm>   // for __for_each_fn
+#include <cstddef>     // for size_t
 
 #include "atom.hpp"                                  // for Atom
 #include "constants/internalConversionFactors.hpp"   // for _RPMD_PREFACTOR_
@@ -33,9 +32,7 @@
 #include "physicalData.hpp"                          // for PhysicalData
 #include "ringPolymerSettings.hpp"                   // for RingPolymerSettings
 #include "thermostatSettings.hpp"                    // for ThermostatSettings
-#include "timer.hpp"                                 // for Timings
 #include "timingsSettings.hpp"                       // for TimingsSettings
-#include "vector3d.hpp"   // for Vector3D, normSquared
 
 using engine::Engine;
 using engine::RingPolymerEngine;
@@ -72,17 +69,17 @@ void RingPolymerEngine::writeOutput()
 
     if (0 == _step % outputFreq)
     {
-        _engineOutput.writeXyzFile(*_simulationBox);
-        _engineOutput.writeVelFile(*_simulationBox);
-        _engineOutput.writeForceFile(*_simulationBox);
-        _engineOutput.writeChargeFile(*_simulationBox);
+        _engineOutput.writeXyzFile(*_simulationBox, effStep);
+        _engineOutput.writeVelFile(*_simulationBox, effStep);
+        _engineOutput.writeForceFile(*_simulationBox, effStep);
+        _engineOutput.writeChargeFile(*_simulationBox, effStep);
         _engineOutput.writeRstFile(*_simulationBox, *_thermostat, effStep);
 
-        _engineOutput.writeRingPolymerRstFile(_ringPolymerBeads, effStep);
-        _engineOutput.writeRingPolymerXyzFile(_ringPolymerBeads);
-        _engineOutput.writeRingPolymerVelFile(_ringPolymerBeads);
-        _engineOutput.writeRingPolymerForceFile(_ringPolymerBeads);
-        _engineOutput.writeRingPolymerChargeFile(_ringPolymerBeads);
+        _engineOutput.writeRingPolymerRstFile(_ringPolymerBeads);
+        _engineOutput.writeRingPolymerXyzFile(_ringPolymerBeads, effStep);
+        _engineOutput.writeRingPolymerVelFile(_ringPolymerBeads, effStep);
+        _engineOutput.writeRingPolymerForceFile(_ringPolymerBeads, effStep);
+        _engineOutput.writeRingPolymerChargeFile(_ringPolymerBeads, effStep);
     }
 
     // NOTE:
@@ -110,7 +107,7 @@ void RingPolymerEngine::writeOutput()
 
         const auto dt            = TimingsSettings::getTimeStep();
         const auto effStepDouble = static_cast<double>(effStep);
-        const auto simTime       = effStepDouble * dt * _FS_TO_PS_;
+        const auto simTime       = effStepDouble * dt * FS_TO_PS;
 
         _engineOutput.writeEnergyFile(effStep, _averagePhysicalData);
         _engineOutput.writeInstantEnergyFile(effStep, *_physicalData);
@@ -137,10 +134,14 @@ void RingPolymerEngine::writeOutput()
  */
 void RingPolymerEngine::coupleRingPolymerBeads()
 {
-    const auto nBeads      = RingPolymerSettings::getNumberOfBeads();
-    const auto nAtoms      = _ringPolymerBeads[0].getNumberOfAtoms();
-    const auto temp        = ThermostatSettings::getActualTargetTemperature();
-    const auto rpmd_factor = _RPMD_PREFACTOR_ * nBeads * nBeads * temp * temp;
+    const auto nBeads = RingPolymerSettings::getNumberOfBeads();
+    const auto nAtoms = _ringPolymerBeads[0].getNumberOfAtoms();
+    const auto temp   = ThermostatSettings::getActualTargetTemperature();
+
+    // to silence narrowing conversion warning -- here not a problem
+    const auto nBeads_ = static_cast<double>(nBeads);
+
+    const auto rpmd_factor = RPMD_PREFACTOR * nBeads_ * nBeads_ * temp * temp;
 
     for (size_t i = 0; i < nBeads; ++i)
     {

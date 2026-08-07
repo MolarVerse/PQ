@@ -33,7 +33,7 @@
 #include "settings.hpp"             // for Settings
 #include "testEnergyOutput.hpp"     // for TestEnergyOutput
 #include "thermostatSettings.hpp"   // for ThermostatSettings
-#include "vector3d.hpp"             // for Vec3D
+#include "vector3d.hpp"             // IWYU pragma: keep - for Vec3D
 
 using namespace settings;
 using namespace linearAlgebra;

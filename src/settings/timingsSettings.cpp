@@ -37,8 +37,7 @@ using settings::TimingsSettings;
  */
 void TimingsSettings::setTimeStep(const double timeStep)
 {
-    _timeStep      = timeStep;
-    _isTimeStepSet = true;
+    _timeStep = timeStep;
 }
 
 /**
@@ -87,10 +86,3 @@ size_t TimingsSettings::getStepCount() { return _stepCount; }
  * @return size_t
  */
 size_t TimingsSettings::getNumberOfSteps() { return _numberOfSteps; }
-
-/**
- * @brief check if the time step is set
- *
- * @return bool
- */
-bool TimingsSettings::isTimeStepSet() { return _isTimeStepSet; }

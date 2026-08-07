@@ -24,11 +24,7 @@
 
 #define _COULOMB_POTENTIAL_HPP_
 
-#include <cstddef>   // for size_t
 #include <utility>   // for pair
-#include <vector>    // for vector
-
-#include "defaults.hpp"   // for _COULOMB_CUT_OFF_DEFAULT_
 
 namespace potential
 {
@@ -51,6 +47,7 @@ namespace potential
         inline static double _coulombRadiusCutOff;
         inline static double _coulombEnergyCutOff;
         inline static double _coulombForceCutOff;
+        inline static double _coulombCutOffCubedInverse;
 
        public:
         virtual ~CoulombPotential() = default;
@@ -71,9 +68,18 @@ namespace potential
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] static double getCoulombRadiusCutOff();
-        [[nodiscard]] static double getCoulombEnergyCutOff();
-        [[nodiscard]] static double getCoulombForceCutOff();
+        [[nodiscard]] inline static double getCoulombRadiusCutOff()
+        {
+            return _coulombRadiusCutOff;
+        }
+        [[nodiscard]] inline static double getCoulombEnergyCutOff()
+        {
+            return _coulombEnergyCutOff;
+        }
+        [[nodiscard]] inline static double getCoulombForceCutOff()
+        {
+            return _coulombForceCutOff;
+        }
     };
 
 }   // namespace potential

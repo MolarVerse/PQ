@@ -1,0 +1,17 @@
+jobtype = mm-hessian;
+force-field = off;
+rcoulomb = 9.0;
+start_file = start.rst;
+file_prefix = oh-opt;
+nstep = 1;
+optimizer = steepest-descent;
+learning-rate-strategy = constant;
+initial-learning-rate = 0.001;
+energy-conv-strategy = absolute;
+energy-conv = 1.0e10;
+force-conv = 1.0e10;
+hessian_file = oh-opt.hessian;
+hessian_info_file = oh-opt.hessian.info;
+hessian_displacement = 0.001;
+optimize_before_hessian = true;
+hessian_builder = central;

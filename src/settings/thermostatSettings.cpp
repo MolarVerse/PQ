@@ -44,8 +44,10 @@ std::string settings::string(const ThermostatType &thermostatType)
         case LANGEVIN: return "langevin";
         case NOSE_HOOVER: return "nh-chain";
 
-        default: return "none";
+        case NONE: break;
     }
+
+    return "none";
 }
 
 /**

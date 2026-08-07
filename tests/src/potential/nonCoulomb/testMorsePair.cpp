@@ -24,12 +24,10 @@
 
 #include <cmath>     // for exp, pow
 #include <cstddef>   // for size_t
-#include <string>    // for string
 #include <vector>    // for vector
 
-#include "gtest/gtest.h"        // for AssertionResult, Message, TestPartResult
-#include "morsePair.hpp"        // for MorsePair
-#include "nonCoulombPair.hpp"   // for potential
+#include "gtest/gtest.h"   // for AssertionResult, Message, TestPartResult
+#include "morsePair.hpp"   // for MorsePair
 
 using namespace potential;
 

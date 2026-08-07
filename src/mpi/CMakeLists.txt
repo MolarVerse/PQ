@@ -15,5 +15,5 @@ if(BUILD_WITH_MPI)
 endif()
 
 install(TARGETS PQ_mpi
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+    DESTINATION lib
 )

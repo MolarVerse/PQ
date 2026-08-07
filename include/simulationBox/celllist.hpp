@@ -30,26 +30,28 @@
 #include "cell.hpp"       // for Cell
 #include "defaults.hpp"   // for _NUMBER_OF_CELLS_DEFAULT_, _CELL_LIST_IS_ACT...
 #include "timer.hpp"      // for Timer
-#include "typeAliases.hpp"
-#include "vector3d.hpp"   // for Vec3Dul, Vec3D
+#include "vector3d.hpp"
 
 namespace simulationBox
-{ /**
-   * @class CellList
-   *
-   * @brief CellList is a class for cell list
-   *
-   */
+{
+    class SimulationBox;   // forward declaration
+
+    /**
+     * @class CellList
+     *
+     * @brief CellList is a class for cell list
+     *
+     */
     class CellList : public timings::Timer
     {
        private:
-        bool _activated = defaults::_CELL_LIST_IS_ACTIVE_DEFAULT_;
+        bool _activated = defaults::CELL_LIST_IS_ACTIVE_DEFAULT;
 
         std::vector<Cell> _cells;
 
-        pq::Vec3D   _cellSize;
-        pq::Vec3Dul _nNeighbourCells{0, 0, 0};
-        pq::Vec3Dul _nCells{defaults::_NUMBER_OF_CELLS_DEFAULT_};   // 7x7x7
+        linearAlgebra::Vec3D   _cellSize;
+        linearAlgebra::Vec3Dul _nNeighbourCells{0, 0, 0};
+        linearAlgebra::Vec3Dul _nCells{defaults::NUMBER_OF_CELLS_DEFAULT};
 
        public:
         [[nodiscard]] std::shared_ptr<CellList> clone() const;
@@ -65,9 +67,13 @@ namespace simulationBox
         void addNeighbouringCellPointers(Cell &);
         void addMoleculesToCells(SimulationBox &simulationBox);
 
-        [[nodiscard]] size_t getCellIndex(const pq::Vec3Dul &cellIndices) const;
-        [[nodiscard]] pq::Vec3Dul getCellIndexOfAtom(const pq::Vec3D &, const pq::Vec3D &)
-            const;
+        [[nodiscard]] size_t getCellIndex(
+            const linearAlgebra::Vec3Dul &cellIndices
+        ) const;
+        [[nodiscard]] linearAlgebra::Vec3Dul getCellIndexOfAtom(
+            const linearAlgebra::Vec3D &,
+            const linearAlgebra::Vec3D &
+        ) const;
 
         void resizeCells();
         void addCell(const Cell &cell);
@@ -84,11 +90,11 @@ namespace simulationBox
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] pq::Vec3Dul       getNumberOfCells() const;
-        [[nodiscard]] pq::Vec3Dul       getNumberOfNeighbourCells() const;
-        [[nodiscard]] pq::Vec3D         getCellSize() const;
-        [[nodiscard]] std::vector<Cell> getCells() const;
-        [[nodiscard]] Cell             &getCell(const size_t index);
+        [[nodiscard]] linearAlgebra::Vec3Dul getNumberOfCells() const;
+        [[nodiscard]] linearAlgebra::Vec3Dul getNumberOfNeighbourCells() const;
+        [[nodiscard]] linearAlgebra::Vec3D   getCellSize() const;
+        [[nodiscard]] const std::vector<Cell> &getCells() const;
+        [[nodiscard]] Cell                    &getCell(const size_t index);
 
         /***************************
          * standard setter methods *

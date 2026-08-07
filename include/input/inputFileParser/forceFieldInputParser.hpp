@@ -25,11 +25,9 @@
 #define _FORCE_FIELD_INPUT_PARSER_HPP_
 
 #include <cstddef>   // for size_t
-#include <string>    // for string
-#include <vector>    // for vector
 
 #include "inputFileParser.hpp"   // for InputFileParser
-#include "typeAliases.hpp"       // for pq::strings
+#include "typeAliases.hpp"       // for std::vector<std::string>
 
 namespace input
 {
@@ -44,7 +42,10 @@ namespace input
        public:
         explicit ForceFieldInputParser(pq::Engine &);
 
-        void parseForceFieldType(const pq::strings &, const size_t);
+        void parseForceFieldType(
+            const std::vector<std::string> &,
+            const size_t
+        );
     };
 
 }   // namespace input

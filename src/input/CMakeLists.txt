@@ -2,6 +2,7 @@
 add_library(PQ_input
     guffDatReader.cpp
     inputFileReader.cpp
+    inputValidation.cpp
     intraNonBondedReader.cpp
     moldescriptorReader.cpp
     mShakeReader.cpp
@@ -20,8 +21,9 @@ target_link_libraries(PQ_input
 )
 
 install(TARGETS PQ_input
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+    DESTINATION lib
 )
+target_precompile_headers(PQ_input REUSE_FROM pq_pch)
 
 add_subdirectory(inputFileParser)
 add_subdirectory(topologyFileReader)

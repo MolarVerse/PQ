@@ -21,33 +21,47 @@
 ******************************************************************************/
 
 #include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ
-#include <stddef.h>        // for size_t
 
-#include <memory>   // for make_shared
-#include <string>   // for allocator, basic_string
+#include <cstddef>   // for size_t
+#include <memory>    // for make_shared
 
-#include "coulombPotential.hpp"          // for CoulombPotential
+#include "coulombReactionField.hpp"      // for CoulombReactionField
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
 #include "coulombWolf.hpp"               // for CoulombWolf
 #include "engine.hpp"                    // for Engine
 #include "exceptions.hpp"                // for ParameterFileException
-#include "forceFieldClass.hpp"           // for ForceField
 #include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
 #include "gtest/gtest.h"                 // for Message, TestPartResult
 #include "guffNonCoulomb.hpp"            // for GuffNonCoulomb
 #include "lennardJonesPair.hpp"          // for LennardJonesPair
 #include "moleculeType.hpp"              // for MoleculeType
-#include "nonCoulombPotential.hpp"       // for NonCoulombPotential
-#include "potential.hpp"                 // for Potential
 #include "potentialSettings.hpp"         // for PotentialSettings
 #include "potentialSetup.hpp"            // for PotentialSetup, setupPotential
-#include "simulationBox.hpp"             // for SimulationBox
 #include "testSetup.hpp"                 // for TestSetup
-#include "throwWithMessage.hpp"          // for EXPECT_THROW_MSG
+#include "testUtils.hpp"
+#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
 
 using namespace setup;
 using namespace settings;
 using namespace potential;
+
+/**
+ * @brief setup the reaction-field Coulomb potential
+ */
+TEST_F(TestSetup, setupReactionFieldPotential)
+{
+    PotentialSettings::setCoulombLongRangeType("reaction-field");
+    PotentialSetup potentialSetup(*_engine);
+
+    PotentialSettings::setReactionFieldEpsilon(80.0);
+    EXPECT_NO_THROW(potentialSetup.setup());
+    test::checkType(
+        &(_engine->getPotential().getCoulombPotential()),
+        typeid(CoulombReactionField)
+    );
+
+    PotentialSettings::setCoulombLongRangeType("shifted");
+}
 
 /**
  * @brief setup the coulomb potential
@@ -58,8 +72,8 @@ TEST_F(TestSetup, setupCoulombPotential)
     PotentialSetup potentialSetup(*_engine);
     potentialSetup.setupCoulomb();
 
-    EXPECT_EQ(
-        typeid(_engine->getPotential().getCoulombPotential()),
+    test::checkType(
+        &_engine->getPotential().getCoulombPotential(),
         typeid(CoulombShiftedPotential)
     );
 
@@ -67,8 +81,8 @@ TEST_F(TestSetup, setupCoulombPotential)
     PotentialSetup potentialSetup2(*_engine);
     potentialSetup2.setup();
 
-    EXPECT_EQ(
-        typeid(_engine->getPotential().getCoulombPotential()),
+    test::checkType(
+        &_engine->getPotential().getCoulombPotential(),
         typeid(CoulombWolf)
     );
     const auto &wolfCoulomb = dynamic_cast<CoulombWolf &>(
@@ -87,8 +101,8 @@ TEST_F(TestSetup, setupNonCoulombPotential)
     PotentialSetup potentialSetup(*_engine);
     potentialSetup.setupNonCoulomb();
 
-    EXPECT_EQ(
-        typeid(_engine->getPotential().getNonCoulombPotential()),
+    test::checkType(
+        &_engine->getPotential().getNonCoulombPotential(),
         typeid(ForceFieldNonCoulomb)
     );
 
@@ -96,8 +110,8 @@ TEST_F(TestSetup, setupNonCoulombPotential)
     PotentialSetup potentialSetup2(*_engine);
     potentialSetup2.setupNonCoulomb();
 
-    EXPECT_EQ(
-        typeid(_engine->getPotential().getNonCoulombPotential()),
+    test::checkType(
+        &_engine->getPotential().getNonCoulombPotential(),
         typeid(GuffNonCoulomb)
     );
 }

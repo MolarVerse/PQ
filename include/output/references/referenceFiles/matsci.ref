@@ -1,0 +1,40 @@
+matsci Slater-Koster Parameter Set (matsci-0-3)
+    © 2016 Gotthard Seifert, TU Dresden.
+    Licensed under CC BY-SA 4.0.
+
+    J. Frenzel, A. F. Oliveira, N. Jardillier, T. Heine, and G. Seifert
+    Semi-relativistic, self-consistent charge Slater-Koster tables for
+    density-functional based tight-binding (DFTB) for materials science
+    simulations.
+    TU Dresden, 2004-2009.
+
+    J. Frenzel, A. F. Oliveira, H. A. Duarte, T. Heine, and G. Seifert
+    Structural and Electronic Properties of Bulk Gibbsite and Gibbsite
+    Surfaces. Z. Anorg. Allg. Chem. 2005, 631, 1267-1271.
+    https://doi.org/10.1002/zaac.200500051
+
+    L. Guimarães, A. N. Enyashin, J. Frenzel, T. Heine, H. A. Duarte,
+    and G. Seifert
+    Imogolite Nanotubes: Stability, Electronic, and Mechanical Properties.
+    ACS Nano 2007, 1, 362-368.
+    https://doi.org/10.1021/nn700184k
+
+    R. Luschtinetz, A. F. Oliveira, J. Frenzel, J.-O. Joswig,
+    G. Seifert, and H. A. Duarte
+    Adsorption of phosphonic and ethylphosphonic acid on aluminum oxide
+    surfaces. Surf. Sci. 2008, 602, 1347-1359.
+    https://doi.org/10.1016/j.susc.2008.01.035
+
+    R. Luschtinetz, J. Frenzel, T. Milek, and G. Seifert
+    Adsorption of Phosphonic Acid at the TiO2 Anatase (101) and
+    Rutile (110) Surfaces. J. Phys. Chem. C 2009, 113, 5730-5740.
+    https://doi.org/10.1021/jp8110343
+
+    S. Gemming, A. N. Enyashin, J. Frenzel, and G. Seifert
+    Adsorption of nucleotides on the rutile (110) surface.
+    Int. J. Mater. Res. 2010, 101, 758-764.
+    https://doi.org/10.3139/146.110337
+
+    N. Jardillier
+    PhD thesis, Université Montpellier II, 2006.
+    http://nicolas.jardillier.free.fr

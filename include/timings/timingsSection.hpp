@@ -24,10 +24,9 @@
 
 #define _TIMINGS_SECTION_HPP_
 
-#include <chrono>   // IWYU pragma: keep for time_point, milliseconds, nanoseconds
 #include <cstddef>   // for size_t
-
-#include "typeAliases.hpp"
+#include <memory>    // for unique_ptr
+#include <string>    // for string, allocator, basic_string
 
 namespace timings
 {
@@ -48,13 +47,17 @@ namespace timings
         std::string _name;
         size_t      _steps = 0;
 
-        pq::Time     _start;
-        pq::Time     _end;
-        pq::Duration _totalTime    = pq::Duration::zero();
-        pq::Duration _lastStepTime = pq::Duration::zero();
+        struct Timings;
+        std::unique_ptr<Timings> _time;
 
        public:
         explicit TimingsSection(const std::string_view name);
+        ~TimingsSection();
+
+        TimingsSection(const TimingsSection&);
+        TimingsSection& operator=(const TimingsSection&);
+        TimingsSection(TimingsSection&&);
+        TimingsSection& operator=(TimingsSection&&);
 
         void beginTimer();
         void endTimer();

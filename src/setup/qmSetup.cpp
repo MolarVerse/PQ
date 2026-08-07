@@ -22,12 +22,12 @@
 
 #include "qmSetup.hpp"
 
+#include <format>        // for format
 #include <string_view>   // for string_view
 
-#include "dftbplusRunner.hpp"      // for DFTBPlusRunner
 #include "exceptions.hpp"          // for InputFileException
+#include "externalQMRunner.hpp"    // for ExternalQMRunner
 #include "potentialSettings.hpp"   // for PotentialSettings
-#include "pyscfRunner.hpp"         // for PySCFRunner
 #include "qmSettings.hpp"          // for QMMethod, QMSettings
 #include "qmmdEngine.hpp"          // for QMMDEngine
 #include "references.hpp"          // for ReferencesOutput
@@ -35,7 +35,6 @@
 #include "settings.hpp"            // for Settings
 #include "stdoutOutput.hpp"        // for StdoutOutput
 #include "stringUtilities.hpp"     // for toLowerCopy
-#include "turbomoleRunner.hpp"     // for TurbomoleRunner
 
 using setup::QMSetup;
 using namespace settings;
@@ -75,8 +74,6 @@ QMSetup::QMSetup(QMMDEngine &engine) : _engine(engine) {}
  */
 void QMSetup::setup()
 {
-    setupQMMethodMace();
-
     setupQMMethod();
 
     setupQMMethodAseDftbPlus();
@@ -112,53 +109,6 @@ void QMSetup::setupQMMethodAseDftbPlus()
     if (QMSettings::getSlakosType() == SlakosType::THREEOB &&
         !QMSettings::isThirdOrderDftbSet())
         QMSettings::setUseThirdOrderDftb(true);
-
-    if (!QMSettings::useThirdOrderDftb() && QMSettings::isHubbardDerivsSet())
-        throw InputFileException(
-            "You have set custom Hubbard derivatives but disabled 3rd order "
-            "DFTB. "
-            "This setup is invalid."
-        );
-}
-
-/**
- * @brief setup the MACE method of the system
- *
- */
-void QMSetup::setupQMMethodMace()
-{
-    if (QMSettings::getQMMethod() != QMMethod::MACE)
-        return;
-
-    if (QMSettings::getMaceModelType() != MaceModelType::MACE_MP)
-    {
-        const auto modelSize = QMSettings::getMaceModelSize();
-        if (modelSize != MaceModelSize::SMALL &&
-            modelSize != MaceModelSize::MEDIUM &&
-            modelSize != MaceModelSize::LARGE)
-            throw InputFileException(std::format(
-                "The '{}' model size is only compatible with the '{}' "
-                "model type.",
-                string(modelSize),
-                string(MaceModelType::MACE_MP)
-            ));
-    }
-
-    if (QMSettings::getMaceModelSize() == MaceModelSize::CUSTOM &&
-        QMSettings::getMaceModelPath().empty())
-        throw InputFileException(
-            "You have requested a custom MACE model but haven't provided a "
-            "MACE model path."
-            "This setup is invalid."
-        );
-
-    if (QMSettings::getMaceModelSize() != MaceModelSize::CUSTOM &&
-        !QMSettings::getMaceModelPath().empty())
-        throw InputFileException(
-            "You have set a custom MACE model path without requesting a custom "
-            "mace model size."
-            "This setup is invalid."
-        );
 }
 
 /**
@@ -171,13 +121,13 @@ void QMSetup::setupQMMethodAseXtb()
         return;
 
     if (QMSettings::getXtbMethod() == XtbMethod::GFN1)
-        ReferencesOutput::addReferenceFile(_GFN1_FILE_);
+        ReferencesOutput::addReferenceFile(GFN1_FILE);
 
     else if (QMSettings::getXtbMethod() == XtbMethod::GFN2)
-        ReferencesOutput::addReferenceFile(_GFN2_FILE_);
+        ReferencesOutput::addReferenceFile(GFN2_FILE);
 
     else if (QMSettings::getXtbMethod() == XtbMethod::IPEA1)
-        ReferencesOutput::addReferenceFile(_IPEA1_FILE_);
+        ReferencesOutput::addReferenceFile(IPEA1_FILE);
 }
 
 /**
@@ -313,10 +263,11 @@ void QMSetup::setupWriteInfo() const
     if (qmMethod == MACE)
     {
         const auto modelType = QMSettings::getMaceModelType();
-        const auto modelSize = QMSettings::getMaceModelSize();
+        const auto modelSize = QMSettings::getMaceModel();
         const auto modelPath = QMSettings::getMaceModelPath();
         const auto fp        = Settings::getFloatingPointPybindString();
         const auto useDisp   = QMSettings::useDispersionCorr() ? "on" : "off";
+        const auto maceMode  = QMSettings::getMaceMode();
 
         // clang-format off
         const auto modelTypeMsg = std::format("Model type:            {}", string(modelType));
@@ -324,16 +275,47 @@ void QMSetup::setupWriteInfo() const
         const auto modelPathMsg = std::format("Model path:            {}", modelPath);
         const auto fpMsg        = std::format("Floating point type:   {}", fp);
         const auto dispCorrMsg  = std::format("Dispersion Correction: {}", useDisp);
+        const auto modeMsg      = std::format("Evaluation mode:       {}", string(maceMode));
         // clang-format on
 
         logOutput.writeSetupInfo(modelTypeMsg);
         logOutput.writeSetupInfo(modelSizeMsg);
 
-        if (modelSize == MaceModelSize::CUSTOM)
+        if (modelSize == MaceModel::CUSTOM)
             logOutput.writeSetupInfo(modelPathMsg);
 
         logOutput.writeSetupInfo(fpMsg);
         logOutput.writeSetupInfo(dispCorrMsg);
+        logOutput.writeSetupInfo(modeMsg);
+
+        if (maceMode == MaceMode::FAST)
+            logOutput.writeSetupInfo(
+                std::format(
+                    "                       cuequivariance-accelerated "
+                    "kernels; "
+                    "results are not bit-identical to the e3nn reference "
+                    "(use mace_mode = accurate for the exact reference)"
+                )
+            );
+    }
+
+    if (qmMethod == FENNOL)
+    {
+        using enum FPType;
+
+        const auto modelPath           = QMSettings::getFennolModelPath();
+        const auto useGPUPreprocessing = QMSettings::useGPUPreprocessing();
+        const bool useFloat64 = Settings::getFloatingPointType() == DOUBLE;
+
+        // clang-format off
+        const auto modelPathMsg  = std::format("Model path:               {}", modelPath);
+        const auto gpuPreprocMsg = std::format("Using GPU pre-processing: {}", useGPUPreprocessing);
+        const auto fpMsg         = std::format("Using float64:            {}", useFloat64);
+        // clang-format on
+
+        logOutput.writeSetupInfo(modelPathMsg);
+        logOutput.writeSetupInfo(gpuPreprocMsg);
+        logOutput.writeSetupInfo(fpMsg);
     }
 
     if (qmMethod == ASEDFTBPLUS)

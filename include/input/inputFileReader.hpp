@@ -25,7 +25,6 @@
 #define _INPUT_FILE_READER_HPP_
 
 #include <cstddef>       // for size_t
-#include <functional>    // for function
 #include <map>           // for map
 #include <memory>        // for unique_ptr
 #include <string>        // for string, operator<=>
@@ -47,7 +46,10 @@ namespace engine
 namespace input
 {
     void readInputFile(const std::string_view &fileName, engine::Engine &);
-    void readJobType(const std::string &fileName, std::unique_ptr<engine::Engine> &);
+    void readJobType(
+        const std::string &fileName,
+        std::unique_ptr<engine::Engine> &
+    );
     void processEqualSign(std::string &command, const size_t lineNumber);
 
     /**
@@ -62,21 +64,28 @@ namespace input
         std::string     _fileName;
         engine::Engine &_engine;
 
-        std::map<std::string, pq::ParseFunc> _keywordFuncMap;
-        std::map<std::string, size_t>        _keywordCountMap;
-        std::map<std::string, bool>          _keywordRequiredMap;
+        std::map<std::string, InputFileParser::ParseFunc> _keywordFuncMap;
+        std::map<std::string, size_t>                     _keywordCountMap;
+        std::map<std::string, bool>                       _keywordRequiredMap;
+        std::map<std::string, bool>                       _keywordSetMap;
 
         std::vector<std::unique_ptr<InputFileParser>> _parsers;
 
         size_t _lineNumber = 1;
 
        public:
-        explicit InputFileReader(const std::string_view &, engine::Engine &);
+        explicit InputFileReader(
+            const std::string_view &,
+            engine::Engine &,
+            bool validateFilePaths        = true,
+            bool resolveBuiltInSlakosPath = true
+        );
 
         void read();
         void addKeywords();
-        void process(const pq::strings &lineElements);
+        void process(const std::vector<std::string> &lineElements);
         void postProcess();
+        void validateInputConfiguration() const;
 
         /***************************
          * standard setter methods *
@@ -89,14 +98,30 @@ namespace input
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] size_t getKeywordCount(const std::string &keyword);
-        [[nodiscard]] bool   getKeywordRequired(const std::string &keyword);
+        [[nodiscard]] size_t getKeywordCount(const std::string &keyword) const;
+        [[nodiscard]] bool   getKeywordSet(const std::string &keyword) const;
+        [[nodiscard]] bool getKeywordRequired(const std::string &keyword) const;
 
         // clang-format off
         [[nodiscard]] std::map<std::string, size_t> getKeywordCountMap() const;
+        [[nodiscard]] std::map<std::string, bool> getKeywordSetMap() const;
         [[nodiscard]] std::map<std::string, bool> getKeywordRequiredMap() const;
-        [[nodiscard]] std::map<std::string, pq::ParseFunc> getKeywordFuncMap() const;
+        [[nodiscard]] std::map<std::string, InputFileParser::ParseFunc> getKeywordFuncMap() const;
         // clang-format on
+
+       private:
+        /******************************
+         * input validation functions *
+         ******************************/
+
+        void validateTimings() const;
+        void validateOptimizer() const;
+        void validateQM() const;
+        void validateThermostat() const;
+        void validateManostat() const;
+        void validateCellList() const;
+        void validateReactionFieldCoulomb() const;
+        void validateRingPolymer() const;
     };
 
 }   // namespace input

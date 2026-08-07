@@ -111,8 +111,7 @@ jobs:
               fi
             fi
 
-            git restore --source=origin/dev --staged --worktree -- .
-            git add --all
+            git read-tree --reset -u origin/dev
             git commit -m "revert: restore $VERSION release from dev"
 
             if [[ "$(git rev-parse HEAD^{tree})" != \

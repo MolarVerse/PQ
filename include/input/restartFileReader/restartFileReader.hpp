@@ -27,7 +27,6 @@
 #include <fstream>   // for ifstream
 #include <memory>    // for unique_ptr, make_unique
 #include <string>    // for string
-#include <vector>    // for vector
 
 #include "atomSection.hpp"          // for AtomSection
 #include "restartFileSection.hpp"   // for RstFileSection
@@ -57,7 +56,9 @@ namespace input::restartFile
         RestartFileReader(const std::string &, pq::Engine &);
 
         void                read();
-        RestartFileSection *determineSection(pq::strings &lineElements);
+        RestartFileSection *determineSection(
+            std::vector<std::string> &lineElements
+        );
     };
 
 }   // namespace input::restartFile

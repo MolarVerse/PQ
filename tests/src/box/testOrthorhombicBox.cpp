@@ -20,12 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <memory>   // for allocator
-
 #include "constants/conversionFactors.hpp"   // for _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_
 #include "gtest/gtest.h"                     // for Message, TestPartResult
 #include "orthorhombicBox.hpp"               // for OrthorhombicBox
-#include "vector3d.hpp"                      // for Vec3D
 #include "vectorNear.hpp"                    // for EXPECT_VECTOR_NEAR
 
 using namespace simulationBox;
@@ -41,7 +38,7 @@ TEST(TestOrthoRhombicBox, setBoxDimensions)
 TEST(TestOrthoRhombicBox, calcBoxDimFromDensity)
 {
     auto         box       = OrthorhombicBox();
-    const double density   = 1.0 / constants::_KG_PER_L_TO_AMU_PER_ANGSTROM3_;
+    const double density   = 1.0 / constants::KG_PER_L_TO_AMU_PER_ANGSTROM3;
     const double totalMass = 1.0;
     const linearAlgebra::Vec3D boxDimensions = {1.0, 1.0, 1.0};
     EXPECT_EQ(box.calcBoxDimFromDensity(totalMass, density), boxDimensions);

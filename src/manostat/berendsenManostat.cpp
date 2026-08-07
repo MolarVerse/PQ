@@ -22,16 +22,14 @@
 
 #include "berendsenManostat.hpp"
 
-#include <algorithm>    // for __for_each_fn, for_each
-#include <cmath>        // for cbrt
-#include <functional>   // for identity
+#include <algorithm>   // for __for_each_fn, for_each
+#include <cmath>       // for cbrt
 
-#include "exceptions.hpp"        // for ExceptionType
-#include "physicalData.hpp"      // for PhysicalData
-#include "simulationBox.hpp"     // for SimulationBox
-#include "staticMatrix.hpp"      // for diagonal, diagonalMatrix, trace
-#include "timingsSettings.hpp"   // for TimingsSettings
-#include "vector3d.hpp"          // for Vec3D
+#include "exceptions.hpp"         // for ExceptionType
+#include "manostatSettings.hpp"   // for ManostatType, Isotropy
+#include "physicalData.hpp"       // for PhysicalData
+#include "simulationBox.hpp"      // for SimulationBox
+#include "timingsSettings.hpp"    // for TimingsSettings
 
 using namespace linearAlgebra;
 using namespace settings;
@@ -91,6 +89,13 @@ void BerendsenManostat::applyManostat(
     calculatePressure(simBox, physicalData);
 
     const auto mu = calculateMu();
+
+    // Reconstruction temporarily unwraps atoms. Molecule::scale() below wraps
+    // every position into the resized box.
+    auto reconstructMolecule = [&simBox](auto &molecule)
+    { molecule.reconstructAtomsAroundCenterOfMass(simBox.getBox()); };
+
+    std::ranges::for_each(simBox.getMolecules(), reconstructMolecule);
 
     simBox.scaleBox(mu);
 

@@ -26,6 +26,7 @@
 #include <cstddef>   // for size_t
 #include <memory>    // for shared_ptr, allocator
 
+#include "../potential/nonCoulomb/testForceFieldNonCoulomb.hpp"
 #include "atom.hpp"                      // for Atom
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
 #include "dihedralForceField.hpp"        // for BondForceField
@@ -38,28 +39,30 @@
 #include "physicalData.hpp"              // for PhysicalData
 #include "potentialSettings.hpp"         // for PotentialSettings
 #include "simulationBox.hpp"             // for SimulationBox
-#include "vector3d.hpp"                  // for Vector3D, Vec3D, operator*
 
 namespace potential
 {
     class NonCoulombPair;   // forward declaration
 }
 
-TEST(TestDihedralForceField, calculateEnergyAndForces)
+class TestDihedralForceField : public TestNonCoulombPotentialFF
+{
+};
+
+TEST_F(TestDihedralForceField, calculateEnergyAndForces)
 {
     auto box = simulationBox::SimulationBox();
     box.setBoxDimensions({10.0, 10.0, 10.0});
 
-    auto physicalData        = physicalData::PhysicalData();
-    auto coulombPotential    = potential::CoulombShiftedPotential(20.0);
-    auto nonCoulombPotential = potential::ForceFieldNonCoulomb();
+    auto physicalData     = physicalData::PhysicalData();
+    auto coulombPotential = potential::CoulombShiftedPotential(20.0);
 
     auto nonCoulombPair =
         potential::LennardJonesPair(size_t(0), size_t(1), 15.0, 2.0, 4.0);
-    nonCoulombPotential.setNonCoulombPairsMatrix(
+    setNonCoulombPairsMatrix(
         linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(2, 2)
     );
-    nonCoulombPotential.setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
+    setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
 
     auto molecule = simulationBox::Molecule();
 
@@ -119,7 +122,7 @@ TEST(TestDihedralForceField, calculateEnergyAndForces)
         physicalData,
         false,
         coulombPotential,
-        nonCoulombPotential
+        *_nonCoulombPotential
     );
 
     EXPECT_NEAR(physicalData.getDihedralEnergy(), 3.9128709291752739, 1e-6);
@@ -160,7 +163,7 @@ TEST(TestDihedralForceField, calculateEnergyAndForces)
         physicalData,
         true,
         coulombPotential,
-        nonCoulombPotential
+        *_nonCoulombPotential
     );
 
     EXPECT_NEAR(physicalData.getImproperEnergy(), 3.9128709291752739, 1e-6);
@@ -201,7 +204,7 @@ TEST(TestDihedralForceField, calculateEnergyAndForces)
         physicalData,
         false,
         coulombPotential,
-        nonCoulombPotential
+        *_nonCoulombPotential
     );
 
     EXPECT_NEAR(physicalData.getDihedralEnergy(), 3.9128709291752739, 1e-6);

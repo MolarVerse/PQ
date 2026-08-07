@@ -15,5 +15,5 @@ target_link_libraries(pq_python
 )
 
 install(TARGETS pq_python
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+    DESTINATION lib
 )

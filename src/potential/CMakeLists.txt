@@ -1,5 +1,6 @@
 set(potential_source_files
     potential.cpp
+    potential.tpp.cpp
     potentialBruteForce.cpp
     potentialCellList.cpp
 )
@@ -49,7 +50,7 @@ if(BUILD_WITH_KOKKOS)
 endif()
 
 install(TARGETS potential
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+    DESTINATION lib
 )
 
 add_subdirectory(coulomb)

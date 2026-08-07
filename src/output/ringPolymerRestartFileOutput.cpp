@@ -25,13 +25,11 @@
 #include <format>    // for format
 #include <ostream>   // for basic_ostream, operator<<, flush, std
 #include <sstream>   // for ostringstream
-#include <string>    // for char_traits, operator<<
 #include <vector>    // for vector
 
 #include "molecule.hpp"              // for Molecule
 #include "ringPolymerSettings.hpp"   // for RingPolymerSettings
 #include "simulationBox.hpp"         // for SimulationBox
-#include "vector3d.hpp"              // for operator<<
 
 using output::RingPolymerRestartFileOutput;
 using namespace simulationBox;
@@ -43,10 +41,7 @@ using namespace settings;
  * @param simBox
  * @param step
  */
-void RingPolymerRestartFileOutput::write(
-    std::vector<SimulationBox> &beads,
-    const size_t                step
-)
+void RingPolymerRestartFileOutput::write(std::vector<SimulationBox> &beads)
 {
     std::ostringstream buffer;
 

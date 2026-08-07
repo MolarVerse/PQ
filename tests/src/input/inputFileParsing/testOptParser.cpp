@@ -22,11 +22,8 @@
 
 #include <gtest/gtest.h>   // for TEST_F, EXPECT_EQ, RUN_ALL_TESTS
 
-#include <string>   // for string, allocator
-
 #include "exceptions.hpp"            // for InputFileException, customException
 #include "gtest/gtest.h"             // for Message, TestPartResult
-#include "inputFileParser.hpp"       // for readInput
 #include "optInputParser.hpp"        // for InputFileParserOptimizer
 #include "optimizerSettings.hpp"     // for OptimizerSettings
 #include "testInputFileReader.hpp"   // for TestInputFileReader
@@ -137,7 +134,7 @@ TEST_F(TestInputFileReader, parserInitialLearningRate)
 {
     EXPECT_EQ(
         OptimizerSettings::getInitialLearningRate(),
-        _INITIAL_LEARNING_RATE_DEFAULT_
+        INITIAL_LEARNING_RATE_DEFAULT
     );
 
     OptimizerSettings::setInitialLearningRate(0.0);
@@ -214,7 +211,7 @@ TEST_F(TestInputFileReader, parserLRUpdateFrequency)
 {
     EXPECT_EQ(
         OptimizerSettings::getLRUpdateFrequency(),
-        _LR_UPDATE_FREQUENCY_DEFAULT_
+        LR_UPDATE_FREQUENCY_DEFAULT
     );
 
     OptimizerSettings::setLRUpdateFrequency(0);
@@ -244,7 +241,7 @@ TEST_F(TestInputFileReader, parserMinLearningRate)
 {
     EXPECT_EQ(
         OptimizerSettings::getMinLearningRate(),
-        _MIN_LEARNING_RATE_DEFAULT_
+        MIN_LEARNING_RATE_DEFAULT
     );
 
     OptimizerSettings::setMinLearningRate(0.0);
