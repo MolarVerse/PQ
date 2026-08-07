@@ -25,10 +25,13 @@
 #include <string>   // for string, allocator, basic_string
 #include <vector>   // for vector
 
+#include "constraints.hpp"                  // for Constraints
+#include "distanceConstraint.hpp"           // for DistanceConstraint
 #include "distanceConstraintsSection.hpp"   // for DistanceConstraintsSection
 #include "engine.hpp"                       // for Engine
 #include "exceptions.hpp"                   // for TopologyException
 #include "gtest/gtest.h"                    // for Message, TestPartResult
+#include "simulationBox.hpp"                // for SimulationBox
 #include "testTopologySection.hpp"          // for TestTopologySection
 
 /*

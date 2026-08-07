@@ -22,10 +22,9 @@
 
 #include "randomNumberGeneratorSetup.hpp"
 
-#include <format>
-
-#include "engine.hpp"     // for Engine
-#include "settings.hpp"   // for Settings
+#include "engine.hpp"            // for Engine
+#include "settings.hpp"          // for Settings
+#include "stringUtilities.hpp"   // for toLowerCopy
 
 using ::setup::RandomNumberGeneratorSetup;
 using namespace settings;

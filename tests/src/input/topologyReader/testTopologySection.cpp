@@ -25,9 +25,12 @@
 #include <ostream>   // for operator<<, basic_ostream, ofstream
 #include <vector>    // for vector
 
+#include "bondConstraint.hpp"    // for BondConstraint
+#include "constraints.hpp"       // for Constraints
 #include "exceptions.hpp"        // for TopologyException
 #include "gtest/gtest.h"         // for Message, TestPartResult
 #include "shakeSection.hpp"      // for ShakeSection
+#include "topologySection.hpp"   // for topology
 
 using namespace input::topology;
 

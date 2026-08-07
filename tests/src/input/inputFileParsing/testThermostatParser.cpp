@@ -27,6 +27,7 @@
 
 #include "exceptions.hpp"            // for InputFileException
 #include "gtest/gtest.h"             // for Message, TestPartResult
+#include "inputFileParser.hpp"       // for readInput
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "thermostatInputParser.hpp"
 #include "thermostatSettings.hpp"   // for ThermostatSettings
@@ -55,11 +56,8 @@ TEST_F(TestInputFileReader, testParseTemperature)
     EXPECT_THROW_MSG(
         parser.parseTemperature(lineElements, 0),
         customException::InputFileException,
-        "Temperature must be finite and non-negative"
+        "Temperature cannot be negative"
     );
-
-    lineElements = {"temp", "=", "0"};
-    EXPECT_NO_THROW(parser.parseTemperature(lineElements, 0));
 }
 
 /**
@@ -80,22 +78,7 @@ TEST_F(TestInputFileReader, testParseRelaxationTime)
     EXPECT_THROW_MSG(
         parser.parseThermostatRelaxationTime(lineElements, 0),
         customException::InputFileException,
-        "Relaxation time of thermostat must be finite and greater than zero"
-    );
-
-    lineElements = {"t_relaxation", "=", "1e308"};
-    EXPECT_THROW_MSG(
-        parser.parseThermostatRelaxationTime(lineElements, 0),
-        customException::InputFileException,
-        "Relaxation time of thermostat is too large to represent in "
-        "femtoseconds"
-    );
-
-    lineElements = {"t_relaxation", "=", "0"};
-    EXPECT_THROW_MSG(
-        parser.parseThermostatRelaxationTime(lineElements, 0),
-        customException::InputFileException,
-        "Relaxation time of thermostat must be finite and greater than zero"
+        "Relaxation time of thermostat cannot be negative"
     );
 }
 
@@ -176,14 +159,7 @@ TEST_F(TestInputFileReader, testParseFriction)
     EXPECT_THROW_MSG(
         parser.parseThermostatFriction(lineElements, 0),
         customException::InputFileException,
-        "Friction of thermostat must be finite and non-negative"
-    );
-
-    lineElements = {"friction", "=", "1e308"};
-    EXPECT_THROW_MSG(
-        parser.parseThermostatFriction(lineElements, 0),
-        customException::InputFileException,
-        "Friction of thermostat is too large to represent in inverse seconds"
+        "Friction of thermostat cannot be negative"
     );
 }
 
@@ -204,14 +180,7 @@ TEST_F(TestInputFileReader, testParseChainLength)
     EXPECT_THROW_MSG(
         parser.parseThermostatChainLength(lineElements, 0),
         customException::InputFileException,
-        "Chain length of thermostat must be greater than zero"
-    );
-
-    lineElements = {"nh-chain-length", "=", "0"};
-    EXPECT_THROW_MSG(
-        parser.parseThermostatChainLength(lineElements, 0),
-        customException::InputFileException,
-        "Chain length of thermostat must be greater than zero"
+        "Chain length of thermostat cannot be negative"
     );
 }
 
@@ -233,14 +202,7 @@ TEST_F(TestInputFileReader, testParseCouplingFrequency)
     EXPECT_THROW_MSG(
         parser.parseThermostatCouplingFrequency(lineElements, 0),
         customException::InputFileException,
-        "Coupling frequency of thermostat must be finite and non-negative"
-    );
-
-    lineElements = {"coupling_frequency", "=", "1e308"};
-    EXPECT_THROW_MSG(
-        parser.parseThermostatCouplingFrequency(lineElements, 0),
-        customException::InputFileException,
-        "Coupling frequency of thermostat is too large to represent in hertz"
+        "Coupling frequency of thermostat cannot be negative"
     );
 }
 
@@ -282,14 +244,7 @@ TEST_F(TestInputFileReader, testParseTemperatureRampFrequency)
     EXPECT_THROW_MSG(
         parser.parseTemperatureRampFrequency(lineElements, 0),
         customException::InputFileException,
-        "Temperature ramp frequency must be greater than zero"
-    );
-
-    lineElements = {"temp_ramp_frequency", "=", "0"};
-    EXPECT_THROW_MSG(
-        parser.parseTemperatureRampFrequency(lineElements, 0),
-        customException::InputFileException,
-        "Temperature ramp frequency must be greater than zero"
+        "Temperature ramp frequency cannot be negative"
     );
 }
 
@@ -310,11 +265,8 @@ TEST_F(TestInputFileReader, testParseStartTemperature)
     EXPECT_THROW_MSG(
         parser.parseStartTemperature(lineElements, 0),
         customException::InputFileException,
-        "Start temperature must be finite and non-negative"
+        "Start temperature cannot be negative"
     );
-
-    lineElements = {"start_temp", "=", "0"};
-    EXPECT_NO_THROW(parser.parseStartTemperature(lineElements, 0));
 }
 
 /**
@@ -334,9 +286,6 @@ TEST_F(TestInputFileReader, testParseEndTemperature)
     EXPECT_THROW_MSG(
         parser.parseEndTemperature(lineElements, 0),
         customException::InputFileException,
-        "End temperature must be finite and non-negative"
+        "End temperature cannot be negative"
     );
-
-    lineElements = {"end_temp", "=", "0"};
-    EXPECT_NO_THROW(parser.parseEndTemperature(lineElements, 0));
 }

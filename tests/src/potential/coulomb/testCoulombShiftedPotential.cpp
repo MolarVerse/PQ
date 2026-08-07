@@ -22,7 +22,10 @@
 
 #include <gtest/gtest.h>   // for Test, CmpHelperFloatingPointEQ
 
+#include <memory>   // for allocator
+
 #include "constants/internalConversionFactors.hpp"   // for _COULOMB_PREFACTOR_
+#include "coulombPotential.hpp"                      // for potential
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
 #include "gtest/gtest.h"                 // for Message, TestPartResult
 
@@ -47,12 +50,12 @@ TEST(TestCoulombShiftedPotential, calculate)
 
     EXPECT_DOUBLE_EQ(
         energy,
-        chargeProduct * constants::COULOMB_PREFACTOR *
+        chargeProduct * constants::_COULOMB_PREFACTOR_ *
             (1 / distance - energyCutOff - forceCutoff * (rcCutoff - distance))
     );
     EXPECT_DOUBLE_EQ(
         force,
-        chargeProduct * constants::COULOMB_PREFACTOR *
+        chargeProduct * constants::_COULOMB_PREFACTOR_ *
             (1 / (distance * distance) - forceCutoff)
     );
 }

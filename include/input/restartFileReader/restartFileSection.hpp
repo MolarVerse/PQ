@@ -26,6 +26,7 @@
 
 #include <fstream>   // for ifstream
 #include <string>    // for string, allocator
+#include <vector>    // for vector
 
 #include "typeAliases.hpp"
 
@@ -44,12 +45,9 @@ namespace input::restartFile
         int            _lineNumber;
         std::ifstream *_fp;
 
-        virtual std::string keyword()  = 0;
-        virtual bool        isHeader() = 0;
-        virtual void        process(
-                   std::vector<std::string> &lineElements,
-                   pq::Engine &
-               ) = 0;
+        virtual std::string keyword()                                 = 0;
+        virtual bool        isHeader()                                = 0;
+        virtual void process(pq::strings &lineElements, pq::Engine &) = 0;
     };
 
 }   // namespace input::restartFile

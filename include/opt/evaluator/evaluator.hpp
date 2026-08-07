@@ -24,18 +24,9 @@
 
 #define _EVALUATOR_HPP_
 
-#include <memory>
+#include <memory>   // for shared_ptr
 
-#include "celllist.hpp"
-#include "constraints.hpp"
-#include "forceFieldClass.hpp"
-#include "hessianBuilder.hpp"
-#include "intraNonBonded.hpp"
-#include "physicalData.hpp"
-#include "potential.hpp"
-#include "simulationBox.hpp"
 #include "typeAliases.hpp"
-#include "virial.hpp"
 
 namespace opt
 {
@@ -49,25 +40,22 @@ namespace opt
     class Evaluator
     {
        protected:
-        std::shared_ptr<potential::Potential>           _potential;
-        std::shared_ptr<simulationBox::SimulationBox>   _simulationBox;
-        std::shared_ptr<constraints::Constraints>       _constraints;
-        std::shared_ptr<simulationBox::CellList>        _cellList;
-        std::shared_ptr<forceField::ForceField>         _forceField;
-        std::shared_ptr<physicalData::PhysicalData>     _physicalData;
-        std::shared_ptr<physicalData::PhysicalData>     _physicalDataOld;
-        std::shared_ptr<virial::Virial>                 _virial;
-        std::shared_ptr<intraNonBonded::IntraNonBonded> _intraNonBonded;
+        pq::SharedPotential    _potential;
+        pq::SharedSimBox       _simulationBox;
+        pq::SharedConstraints  _constraints;
+        pq::SharedCellList     _cellList;
+        pq::SharedForceField   _forceField;
+        pq::SharedPhysicalData _physicalData;
+        pq::SharedPhysicalData _physicalDataOld;
+        pq::SharedVirial       _virial;
+        pq::SharedIntraNonBond _intraNonBonded;
 
        public:
         Evaluator()          = default;
         virtual ~Evaluator() = default;
 
-        virtual std::shared_ptr<Evaluator> clone() const = 0;
-        virtual void                       evaluate()    = 0;
-
-        [[nodiscard]] virtual bool          supportsAnalyticHessian() const;
-        [[nodiscard]] virtual HessianMatrix calculateAnalyticHessian();
+        virtual pq::SharedEvaluator clone() const = 0;
+        virtual void                evaluate()    = 0;
 
         /***************************
          * standard setter methods *
@@ -80,7 +68,7 @@ namespace opt
         void setPhysicalData(const pq::SharedPhysicalData);
         void setPhysicalDataOld(const pq::SharedPhysicalData);
         void setForceField(const pq::SharedForceField);
-        void setVirial(const std::shared_ptr<virial::Virial>);
+        void setVirial(const pq::SharedVirial);
         void setIntraNonBonded(const pq::SharedIntraNonBond);
     };
 

@@ -20,4 +20,4 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "staticMatrix.hpp"   // IWYU pragma: keep
+#include "staticMatrix.hpp"

@@ -67,14 +67,14 @@ namespace constraints
          * standard setter methods *
          ***************************/
 
-        void setShakeDistanceRef(const linearAlgebra::Vec3D &shakeDistanceRef);
+        void setShakeDistanceRef(const pq::Vec3D &shakeDistanceRef);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] double               getTargetBondLength() const;
-        [[nodiscard]] linearAlgebra::Vec3D getShakeDistanceRef() const;
+        [[nodiscard]] double    getTargetBondLength() const;
+        [[nodiscard]] pq::Vec3D getShakeDistanceRef() const;
     };
 
 }   // namespace constraints

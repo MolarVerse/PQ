@@ -67,7 +67,7 @@ namespace settings
         static inline bool _isEndTemperatureSet   = false;
 
         // clang-format off
-        static inline size_t _nhChainLength            = defaults::NH_CHAIN_LENGTH_DEFAULT;
+        static inline size_t _nhChainLength            = defaults::_NH_CHAIN_LENGTH_DEFAULT_;
         static inline size_t _temperatureRampSteps     = 0;
         static inline size_t _temperatureRampFrequency = 1;
         // clang-format on
@@ -78,9 +78,9 @@ namespace settings
         static inline double _endTemperature;
 
         // clang-format off
-        static inline double _relaxationTime = defaults::BERENDSEN_THERMOSTAT_RELAX_TIME;
-        static inline double _friction       = defaults::LANGEVIN_THERMOSTAT_FRICTION;
-        static inline double _nhCouplingFreq = defaults::NH_COUPLING_FREQ;
+        static inline double _relaxationTime = defaults::_BERENDSEN_THERMOSTAT_RELAX_TIME_;
+        static inline double _friction       = defaults::_LANGEVIN_THERMOSTAT_FRICTION_;
+        static inline double _nhCouplingFreq = defaults::_NH_COUPLING_FREQ_;
         // clang-format on
 
         static inline std::map<size_t, double> _chi;

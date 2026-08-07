@@ -22,57 +22,22 @@
 
 #include <gtest/gtest.h>   // for Test, TestInfo (ptr only), InitGoogleTest, RUN_ALL_TESTS
 
-#include <cstdlib>
-#include <filesystem>
-#include <string>        // for allocator, basic_string
-#include <string_view>   // for string_view
+#include <string>   // for allocator, basic_string
 
-#include "dftbplusRunner.hpp"   // for DFTBPlusRunner
-#include "exceptions.hpp"       // for InputFileException
-#include "gtest/gtest.h"        // for Message, TestPartResult
-#include "pyscfRunner.hpp"      // for PySCFRunner
-#include "qmSettings.hpp"       // for QMMethod, QMSettings
-#include "qmSetup.hpp"          // for QMSetup, setupQM
-#include "qmSetup.hpp"          // for QMSetup
-#include "qmmdEngine.hpp"       // for QMMDEngine
-#include "settings.hpp"         // for Settings
-#include "testUtils.hpp"
+#include "dftbplusRunner.hpp"     // for DFTBPlusRunner
+#include "exceptions.hpp"         // for InputFileException
+#include "gtest/gtest.h"          // for Message, TestPartResult
+#include "pyscfRunner.hpp"        // for PySCFRunner
+#include "qmRunner.hpp"           // for QMRunner
+#include "qmSettings.hpp"         // for QMMethod, QMSettings
+#include "qmSetup.hpp"            // for QMSetup, setupQM
+#include "qmSetup.hpp"            // for QMSetup
+#include "qmmdEngine.hpp"         // for QMMDEngine
 #include "throwWithMessage.hpp"   // for ASSERT_THROW_MSG
 #include "turbomoleRunner.hpp"    // for TurbomoleRunner
 
 using setup::QMSetup;
 using namespace settings;
-
-namespace
-{
-    void setBuildCompatibleQMScript()
-    {
-        QMSettings::setQMScript("");
-        QMSettings::setQMScriptFullPath("");
-
-        if (std::string_view(SINGULARITY_) == "ON" ||
-            std::string_view(STATIC_BUILD_) == "ON")
-            QMSettings::setQMScriptFullPath("test");
-        else
-            QMSettings::setQMScript("test");
-    }
-}   // namespace
-
-TEST(TestQMSetup, resolvesBundledQMScript)
-{
-    const auto script = QM::bundledQMScriptPath("pyscf_hf.py");
-
-    EXPECT_EQ(std::filesystem::path(script).filename(), "pyscf_hf.py");
-    EXPECT_TRUE(std::filesystem::is_regular_file(script));
-
-    if (const auto *expected = std::getenv("PQ_TEST_EXPECTED_SCRIPT_DIR"))
-    {
-        EXPECT_EQ(
-            std::filesystem::path(script).parent_path(),
-            std::filesystem::path(expected)
-        );
-    }
-}
 
 TEST(TestQMSetup, setupDftbplus)
 {
@@ -80,10 +45,13 @@ TEST(TestQMSetup, setupDftbplus)
     auto               setupQM = setup::QMSetup(engine);
 
     settings::QMSettings::setQMMethod(settings::QMMethod::DFTBPLUS);
-    setBuildCompatibleQMScript();
+    settings::QMSettings::setQMScript("test");
     setupQM.setup();
 
-    test::checkType(engine.getQMRunner(), typeid(QM::DFTBPlusRunner));
+    EXPECT_EQ(
+        typeid(dynamic_cast<QM::DFTBPlusRunner &>(*engine.getQMRunner())),
+        typeid(QM::DFTBPlusRunner)
+    );
 
     settings::QMSettings::setQMMethod(settings::QMMethod::NONE);
 
@@ -101,10 +69,13 @@ TEST(TestQMSetup, setupPySCF)
     auto               setupQM = setup::QMSetup(engine);
 
     settings::QMSettings::setQMMethod(settings::QMMethod::PYSCF);
-    setBuildCompatibleQMScript();
+    settings::QMSettings::setQMScript("test");
     setupQM.setup();
 
-    test::checkType(engine.getQMRunner(), typeid(QM::PySCFRunner));
+    EXPECT_EQ(
+        typeid(dynamic_cast<QM::PySCFRunner &>(*engine.getQMRunner())),
+        typeid(QM::PySCFRunner)
+    );
 
     settings::QMSettings::setQMMethod(settings::QMMethod::NONE);
 
@@ -122,10 +93,13 @@ TEST(TestQMSetup, setupTurbomoleRunner)
     auto               setupQM = setup::QMSetup(engine);
 
     settings::QMSettings::setQMMethod(settings::QMMethod::TURBOMOLE);
-    setBuildCompatibleQMScript();
+    settings::QMSettings::setQMScript("test");
     setupQM.setup();
 
-    test::checkType(engine.getQMRunner(), typeid(QM::TurbomoleRunner));
+    EXPECT_EQ(
+        typeid(dynamic_cast<QM::TurbomoleRunner &>(*engine.getQMRunner())),
+        typeid(QM::TurbomoleRunner)
+    );
 
     settings::QMSettings::setQMMethod(settings::QMMethod::NONE);
 
@@ -146,7 +120,6 @@ TEST(TestQMSetup, setupQMFull)
     EXPECT_NO_THROW(setup::setupQM(engine));
 }
 
-#ifdef WITH_ASE
 TEST(TestQMSetup, setupQMMethodAseDftbPlus3ob3rdOrderNotSet)
 {
     engine::QMMDEngine engine;
@@ -201,7 +174,6 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlusMatsci)
     qmSetup.setupQMMethodAseDftbPlus();
     EXPECT_EQ(QMSettings::useThirdOrderDftb(), false);
 }
-#endif
 
 TEST(TestQMSetup, setupQMMethodAseDftbPlusCustom)
 {
@@ -215,6 +187,81 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlusCustom)
 
     qmSetup.setupQMMethodAseDftbPlus();
     EXPECT_EQ(QMSettings::useThirdOrderDftb(), false);
+}
+
+TEST(TestQMSetup, setupQMMethodAseDftbPlusHubbardDerivsNo3rdOrder)
+{
+    engine::QMMDEngine engine;
+    QMSetup            qmSetup{QMSetup(engine)};
+
+    QMSettings::setQMMethod(QMMethod::ASEDFTBPLUS);
+    QMSettings::setSlakosType("custom");
+    QMSettings::setIsThirdOrderDftbSet(true);
+    QMSettings::setUseThirdOrderDftb(false);
+    QMSettings::setIsHubbardDerivsSet(true);
+    QMSettings::setHubbardDerivs({{"H", 1.0}});
+
+    ASSERT_THROW_MSG(
+        qmSetup.setupQMMethodAseDftbPlus(),
+        customException::InputFileException,
+        "You have set custom Hubbard derivatives but disabled 3rd order DFTB. "
+        "This setup is invalid."
+    );
+}
+
+TEST(TestQMSetup, setupQMMethodMaceOffInvalidModelSize)
+{
+    engine::QMMDEngine engine;
+    QMSetup            qmSetup{QMSetup(engine)};
+
+    QMSettings::setQMMethod(QMMethod::MACE);
+    QMSettings::setMaceModelType("mace-off");
+    QMSettings::setMaceModelSize("medium-omat-0");
+
+    ASSERT_THROW_MSG(
+        qmSetup.setupQMMethodMace(),
+        customException::InputFileException,
+        "The 'medium-omat-0' model size is only compatible with the 'mace_mp' "
+        "model type."
+    );
+}
+
+TEST(TestQMSetup, setupQMMethodMaceRedundantModelPath)
+{
+    engine::QMMDEngine engine;
+    QMSetup            qmSetup{QMSetup(engine)};
+
+    QMSettings::setQMMethod(QMMethod::MACE);
+    QMSettings::setMaceModelType("mace-mp");
+    QMSettings::setMaceModelSize("medium-omat-0");
+    QMSettings::setMaceModelPath("https://not-a-valid-url");
+
+    ASSERT_THROW_MSG(
+        qmSetup.setupQMMethodMace(),
+        customException::InputFileException,
+        "You have set a custom MACE model path without requesting a custom "
+        "mace model size."
+        "This setup is invalid."
+    );
+}
+
+TEST(TestQMSetup, setupQMMethodMaceMissingModelPath)
+{
+    engine::QMMDEngine engine;
+    QMSetup            qmSetup{QMSetup(engine)};
+
+    QMSettings::setQMMethod(QMMethod::MACE);
+    QMSettings::setMaceModelType("mace-mp");
+    QMSettings::setMaceModelSize("custom");
+    QMSettings::setMaceModelPath("");
+
+    ASSERT_THROW_MSG(
+        qmSetup.setupQMMethodMace(),
+        customException::InputFileException,
+        "You have requested a custom MACE model but haven't provided a "
+        "MACE model path."
+        "This setup is invalid."
+    );
 }
 
 TEST(TestQMSetup, setupQMLoopTimeLimitDefault)
@@ -330,39 +377,6 @@ TEST(TestQMSetup, setupQMLoopTimeLimitPositive)
     EXPECT_EQ(line, "");
     getline(file, line);
     EXPECT_EQ(line, "         QM looptime limit: 3.14 s");
-
-    ::remove("default.log");
-    delete _engine;
-    delete _qmSetup;
-}
-
-TEST(TestQMSetup, setupQMRunnerFennol)
-{
-    auto _engine  = new engine::QMMDEngine();
-    auto _qmSetup = new QMSetup(*_engine);
-
-    _engine->getEngineOutput().getLogOutput().setFilename("default.log");
-    QMSettings::setQMMethod(QMMethod::FENNOL);
-    QMSettings::setFennolModelPath("path/To/fennol_model.fnx");
-    QMSettings::setUseGPUPreprocessing(false);
-    Settings::setFloatingPointType(FPType::FLOAT);
-
-    _qmSetup->setupWriteInfo();
-
-    // clang-format off
-    std::ifstream file("default.log");
-    std::string   line;
-    getline(file, line);
-    EXPECT_EQ(line, "         QM runner: FeNNol");
-    getline(file, line);
-    EXPECT_EQ(line, "");
-    getline(file, line);
-    EXPECT_EQ(line, "         Model path:               path/To/fennol_model.fnx");
-    getline(file, line);
-    EXPECT_EQ(line, "         Using GPU pre-processing: false");
-    getline(file, line);
-    EXPECT_EQ(line, "         Using float64:            false");
-    // clang-format on
 
     ::remove("default.log");
     delete _engine;

@@ -22,12 +22,11 @@
 
 #include "ringPolymerInputParser.hpp"
 
-#include <format>   // for format
+#include <format>       // for format
+#include <functional>   // for _Bind_front_t, bind_front
 
-#include "exceptions.hpp"   // for InputFileException, customException
-#include "parserUtils.hpp"
+#include "exceptions.hpp"            // for InputFileException, customException
 #include "ringPolymerSettings.hpp"   // for RingPolymerSettings
-#include "stringUtilities.hpp"       // for stringToInt
 
 using namespace input;
 using namespace engine;
@@ -48,7 +47,7 @@ RingPolymerInputParser::RingPolymerInputParser(Engine &engine)
 {
     addKeyword(
         std::string("rpmd_n_replica"),
-        bindMember(&RingPolymerInputParser::parseNumberOfBeads, this),
+        bind_front(&RingPolymerInputParser::parseNumberOfBeads, this),
         false
     );
 }
@@ -66,15 +65,13 @@ void RingPolymerInputParser::parseNumberOfBeads(
 {
     checkCommand(lineElements, lineNumber);
 
-    auto numberOfBeads = utilities::stringToInt(lineElements[2]);
+    auto numberOfBeads = stoi(lineElements[2]);
 
     if (numberOfBeads < 2)
-        throw InputFileException(
-            std::format(
-                "Number of beads must be at least 2 - in input file in line {}",
-                lineNumber
-            )
-        );
+        throw InputFileException(std::format(
+            "Number of beads must be at least 2 - in input file in line {}",
+            lineNumber
+        ));
 
     RingPolymerSettings::setNumberOfBeads(size_t(numberOfBeads));
 }

@@ -20,8 +20,6 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifdef WITH_KOKKOS
-
 #include "coulombWolf_kokkos.hpp"
 
 using namespace potential;
@@ -123,5 +121,3 @@ View<double> KokkosCoulombWolf::getCoulombRadiusCutOff() const
 {
     return _coulombRadiusCutOff.d_view;
 }
-
-#endif   // WITH_KOKKOS

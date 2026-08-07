@@ -25,10 +25,13 @@
 #include <string>   // for string, allocator, basic_string
 #include <vector>   // for vector
 
+#include "angleForceField.hpp"       // for AngleForceField
 #include "angleSection.hpp"          // for AngleSection
 #include "engine.hpp"                // for Engine
 #include "exceptions.hpp"            // for TopologyException
+#include "forceFieldClass.hpp"       // for ForceField
 #include "gtest/gtest.h"             // for Message, TestPartResult
+#include "simulationBox.hpp"         // for SimulationBox
 #include "testTopologySection.hpp"   // for TestTopologySection
 
 /**

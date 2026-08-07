@@ -117,9 +117,15 @@ TEST_F(TestStdoutOutput, writeHeader)
     getline(sstream, line);
     EXPECT_EQ(line, "");
     getline(sstream, line);
-    EXPECT_EQ(line, std::format("         Author:        {}", sysinfo::AUTHOR));
+    EXPECT_EQ(
+        line,
+        std::format("         Author:        {}", sysinfo::_AUTHOR_)
+    );
     getline(sstream, line);
-    EXPECT_EQ(line, std::format("         Email:         {}", sysinfo::EMAIL));
+    EXPECT_EQ(
+        line,
+        std::format("         Email:         {}", sysinfo::_EMAIL_)
+    );
 }
 
 /**
@@ -190,8 +196,8 @@ TEST_F(TestStdoutOutput, writeDensityWarning)
         std::format(
             "{}\x1B[33mUserInputWarning\x1B[39m\n{}Density and box dimensions "
             "set. Density will be ignored.\n\n",
-            output::OUTPUT,
-            output::OUTPUT
+            output::_OUTPUT_,
+            output::_OUTPUT_
         )
     );
 }

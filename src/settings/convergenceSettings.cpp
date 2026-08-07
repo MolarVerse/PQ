@@ -43,9 +43,9 @@ std::string settings::string(const ConvStrategy strategy)
         case LOOSE: return "LOOSE";
         case ABSOLUTE: return "ABSOLUTE";
         case RELATIVE: return "RELATIVE";
-    }
 
-    return "none";
+        default: return "none";
+    }
 }
 
 /**

@@ -22,11 +22,14 @@
 
 #include "turbomoleRunner.hpp"
 
-#include <cstddef>   // for size_t
-#include <cstdlib>   // for system
-#include <format>    // for format
-#include <fstream>   // for ofstream
-#include <string>    // for string
+#include <cstddef>      // for size_t
+#include <cstdlib>      // for system
+#include <format>       // for format
+#include <fstream>      // for ofstream
+#include <functional>   // for identity
+#include <ranges>       // for borrowed_iterator_t, __distance_fn
+#include <string>       // for string
+#include <vector>       // for vector
 
 #include "atom.hpp"              // for Atom
 #include "constants.hpp"         // for constants
@@ -34,6 +37,7 @@
 #include "qmSettings.hpp"        // for QMSettings
 #include "simulationBox.hpp"     // for SimulationBox
 #include "stringUtilities.hpp"   // for fileExists
+#include "vector3d.hpp"          // for Vec3D
 
 using QM::TurbomoleRunner;
 
@@ -60,7 +64,7 @@ void TurbomoleRunner::writeCoordsFile(SimulationBox &simBox)
     for (size_t i = 0; i < nAtoms; ++i)
     {
         const auto &atom = simBox.getQMAtom(i);
-        const auto  pos  = atom.getPosition() * ANGSTROM_TO_BOHR;
+        const auto  pos  = atom.getPosition() * _ANGSTROM_TO_BOHR_;
 
         // turbomole does not support tabs in the coord file
         coordsFile << std::format(
@@ -83,15 +87,13 @@ void TurbomoleRunner::writeCoordsFile(SimulationBox &simBox)
  */
 void TurbomoleRunner::execute()
 {
-    const auto scriptFile = resolveScriptPath(QMSettings::getQMScript());
+    const auto scriptFile = _scriptPath + QMSettings::getQMScript();
 
     if (!fileExists(scriptFile))
-        throw InputFileException(
-            std::format(
-                "Turbomole script file \"{}\" does not exist.",
-                scriptFile
-            )
-        );
+        throw InputFileException(std::format(
+            "Turbomole script file \"{}\" does not exist.",
+            scriptFile
+        ));
 
     const auto reuseCharges = _isFirstExecution ? 1 : 0;
 

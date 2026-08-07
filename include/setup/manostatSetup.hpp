@@ -46,6 +46,7 @@ namespace setup
 
         void setup();
 
+        void isPressureSet() const;
         void setupBerendsenManostat();
         void setupStochasticRescalingManostat();
 

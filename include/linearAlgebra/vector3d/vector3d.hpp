@@ -25,7 +25,6 @@
 #define _VECTOR3d_HPP_
 
 #include <cmath>
-#include <ostream>
 
 #include "concepts/vector3dConcepts.hpp"
 #include "vector3dClass.hpp"
@@ -322,8 +321,6 @@ namespace linearAlgebra
 
 }   // namespace linearAlgebra
 
-#ifndef _VECTOR3D_TPP_
-#include "vector3d.tpp.hpp"   // IWYU pragma: export
-#endif
+#include "vector3d.tpp.hpp"   // DO NOT MOVE THIS LINE
 
 #endif   // _VECTOR3d_HPP_

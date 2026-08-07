@@ -24,19 +24,11 @@
 
 #define _VIRIAL_HPP_
 
-#include "settings.hpp"
-#include "staticMatrix.hpp"
-#include "timer.hpp"
+#include <string>   // for string
 
-namespace simulationBox
-{
-    class SimulationBox;   // forward declaration
-}
-
-namespace physicalData
-{
-    class PhysicalData;   // forward declaration
-}
+#include "staticMatrix.hpp"   // for StaticMatrix3x3
+#include "timer.hpp"          // for Timer
+#include "typeAliases.hpp"
 
 namespace virial
 {
@@ -51,30 +43,23 @@ namespace virial
     class Virial : public timings::Timer
     {
        protected:
-        settings::VirialType _virialType;
+        std::string _virialType;   // TODO: make this an enum
 
-        linearAlgebra::tensor3D _virial;
+        pq::tensor3D _virial;
 
        public:
         virtual ~Virial() = default;
 
         virtual std::shared_ptr<Virial> clone() const = 0;
 
-        virtual void calculateVirial(
-            simulationBox::SimulationBox&,
-            physicalData::PhysicalData&
-        );
-        virtual void intraMolecularVirialCorrection(
-            simulationBox::SimulationBox&,
-            physicalData::PhysicalData&
-        )
-        {
-        }
+        virtual void calculateVirial(pq::SimBox &, pq::PhysicalData &);
+        virtual void intraMolecularVirialCorrection(pq::SimBox &, pq::PhysicalData &) {
+        };
 
-        void setVirial(const linearAlgebra::tensor3D& virial);
+        void setVirial(const pq::tensor3D &virial);
 
-        [[nodiscard]] linearAlgebra::tensor3D getVirial() const;
-        [[nodiscard]] settings::VirialType    getVirialType() const;
+        [[nodiscard]] pq::tensor3D getVirial() const;
+        [[nodiscard]] std::string  getVirialType() const;
     };
 }   // namespace virial
 

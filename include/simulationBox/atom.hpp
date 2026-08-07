@@ -29,14 +29,10 @@
 #include <string>        // for string
 #include <string_view>   // for string_view
 
-#include "staticMatrix.hpp"
-#include "vector3d.hpp"
+#include "typeAliases.hpp"
 
 namespace simulationBox
 {
-
-    class Box;   // forward declaration
-
     /**
      * @class Atom
      *
@@ -62,15 +58,15 @@ namespace simulationBox
         double                _partialCharge;
         std::optional<double> _qmCharge;
 
-        linearAlgebra::Vec3D _position;
-        linearAlgebra::Vec3D _positionOld;
+        pq::Vec3D _position;
+        pq::Vec3D _positionOld;
 
-        linearAlgebra::Vec3D _velocity;
-        linearAlgebra::Vec3D _velocityOld;
+        pq::Vec3D _velocity;
+        pq::Vec3D _velocityOld;
 
-        linearAlgebra::Vec3D _force;
-        linearAlgebra::Vec3D _forceOld;
-        linearAlgebra::Vec3D _shiftForce;
+        pq::Vec3D _force;
+        pq::Vec3D _forceOld;
+        pq::Vec3D _shiftForce;
 
        public:
         Atom() = default;
@@ -86,21 +82,18 @@ namespace simulationBox
          *******************/
 
         void scaleVelocity(const double scaleFactor);
-        void scaleVelocity(const linearAlgebra::Vec3D &scaleFactor);
-        void scaleVelocityOrthogonalSpace(
-            const linearAlgebra::tensor3D &,
-            const Box &
-        );
+        void scaleVelocity(const pq::Vec3D &scaleFactor);
+        void scaleVelocityOrthogonalSpace(const pq::tensor3D &, const Box &);
 
         /**************************
          * standard adder methods *
          **************************/
 
-        void addPosition(const linearAlgebra::Vec3D &position);
-        void addVelocity(const linearAlgebra::Vec3D &velocity);
-        void addForce(const linearAlgebra::Vec3D &force);
+        void addPosition(const pq::Vec3D &position);
+        void addVelocity(const pq::Vec3D &velocity);
+        void addForce(const pq::Vec3D &force);
         void addForce(const double, const double, const double);
-        void addShiftForce(const linearAlgebra::Vec3D &shiftForce);
+        void addShiftForce(const pq::Vec3D &shiftForce);
 
         /***************************
          * standard getter methods *
@@ -123,12 +116,12 @@ namespace simulationBox
         [[nodiscard]] double                getPartialCharge() const;
         [[nodiscard]] std::optional<double> getQMCharge() const;
 
-        [[nodiscard]] linearAlgebra::Vec3D getPosition() const;
-        [[nodiscard]] linearAlgebra::Vec3D getPositionOld() const;
-        [[nodiscard]] linearAlgebra::Vec3D getVelocity() const;
-        [[nodiscard]] linearAlgebra::Vec3D getForce() const;
-        [[nodiscard]] linearAlgebra::Vec3D getForceOld() const;
-        [[nodiscard]] linearAlgebra::Vec3D getShiftForce() const;
+        [[nodiscard]] pq::Vec3D getPosition() const;
+        [[nodiscard]] pq::Vec3D getPositionOld() const;
+        [[nodiscard]] pq::Vec3D getVelocity() const;
+        [[nodiscard]] pq::Vec3D getForce() const;
+        [[nodiscard]] pq::Vec3D getForceOld() const;
+        [[nodiscard]] pq::Vec3D getShiftForce() const;
 
         /***************************
          * standard setter methods *
@@ -150,14 +143,14 @@ namespace simulationBox
         void setExternalGlobalVDWType(const size_t externalGlobalVDWType);
         void setInternalGlobalVDWType(const size_t internalGlobalVDWType);
 
-        void setPosition(const linearAlgebra::Vec3D &position);
-        void setVelocity(const linearAlgebra::Vec3D &velocity);
-        void setForce(const linearAlgebra::Vec3D &force);
-        void setShiftForce(const linearAlgebra::Vec3D &shiftForce);
+        void setPosition(const pq::Vec3D &position);
+        void setVelocity(const pq::Vec3D &velocity);
+        void setForce(const pq::Vec3D &force);
+        void setShiftForce(const pq::Vec3D &shiftForce);
 
-        void setPositionOld(const linearAlgebra::Vec3D &positionOld);
-        void setVelocityOld(const linearAlgebra::Vec3D &velocityOld);
-        void setForceOld(const linearAlgebra::Vec3D &forceOld);
+        void setPositionOld(const pq::Vec3D &positionOld);
+        void setVelocityOld(const pq::Vec3D &velocityOld);
+        void setForceOld(const pq::Vec3D &forceOld);
 
         void setForceToZero();
         void resetQMCharge();

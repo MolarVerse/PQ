@@ -22,6 +22,8 @@
 
 #include "testVirial.hpp"
 
+#include <memory>   // for allocator
+
 #include "gtest/gtest.h"         // for Message, TestPartResult
 #include "molecularVirial.hpp"   // for MolecularVirial
 

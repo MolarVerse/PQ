@@ -24,18 +24,20 @@
 
 #include <cstddef>   // for size_t
 #include <fstream>   // for ifstream, std
+#include <memory>    // for shared_ptr, __shared_ptr_access
 #include <string>    // for string, stod, allocator, basic_string
 #include <vector>    // for vector
 
-#include "atom.hpp"           // for Atom
-#include "engine.hpp"         // for Engine
-#include "exceptions.hpp"     // for RstFileException, customException
-#include "gmock/gmock.h"      // for ElementsAre, MakePredicateFormatter
-#include "gtest/gtest.h"      // for Message, TestPartResult
-#include "molecule.hpp"       // for Molecule
-#include "moleculeType.hpp"   // for MoleculeType
-#include "restartFileReader/atomSection.hpp"
-#include "restartFileReader/restartFileSection.hpp"
+#include "atom.hpp"                 // for Atom
+#include "atomSection.hpp"          // for AtomSection
+#include "engine.hpp"               // for Engine
+#include "exceptions.hpp"           // for RstFileException, customException
+#include "gmock/gmock.h"            // for ElementsAre, MakePredicateFormatter
+#include "gtest/gtest.h"            // for Message, TestPartResult
+#include "molecule.hpp"             // for Molecule
+#include "moleculeType.hpp"         // for MoleculeType
+#include "restartFileSection.hpp"   // for RstFileSection, AtomSection
+#include "simulationBox.hpp"        // for SimulationBox
 #include "testRestartFileSection.hpp"   // for TestAtomSection
 #include "throwWithMessage.hpp"         // for ASSERT_THROW_MSG
 
@@ -212,11 +214,7 @@ TEST_F(TestAtomSection, testProcessAtomLine)
 
     auto line = std::vector<std::string>(21);
     line[0]   = "Ar";
-    for (size_t i = 3; i < 21; ++i)
-    {
-        const auto i2 = static_cast<double>(i);
-        line[i]       = std::to_string(i2 + i2 / 10.0);
-    }
+    for (size_t i = 3; i < 21; ++i) line[i] = std::to_string(i + i / 10.0);
 
     dynamic_cast<AtomSection *>(_section)
         ->processAtomLine(line, _engine->getSimulationBox(), molecule);
@@ -241,11 +239,7 @@ TEST_F(TestAtomSection, testProcessQMAtomLine)
 {
     auto line = std::vector<std::string>(21);
     line[0]   = "Ar";
-    for (size_t i = 3; i < 21; ++i)
-    {
-        const auto i2 = static_cast<double>(i);
-        line[i]       = std::to_string(i2 + i2 / 10.0);
-    }
+    for (size_t i = 3; i < 21; ++i) line[i] = std::to_string(i + i / 10.0);
 
     dynamic_cast<AtomSection *>(_section)->processQMAtomLine(
         line,

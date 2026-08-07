@@ -23,12 +23,11 @@
 #include "resetKineticsInputParser.hpp"
 
 #include <cstddef>       // for size_t, std
+#include <functional>    // for _Bind_front_t, bind_front
 #include <string_view>   // for string_view
 
 #include "exceptions.hpp"   // for InputFileException, customException
-#include "parserUtils.hpp"
 #include "resetKineticsSettings.hpp"   // for ResetKineticsSettings
-#include "stringUtilities.hpp"         // for stringToInt
 
 using namespace input;
 using namespace engine;
@@ -50,37 +49,37 @@ ResetKineticsInputParser::ResetKineticsInputParser(Engine &engine)
 {
     addKeyword(
         std::string("nscale"),
-        bindMember(&ResetKineticsInputParser::parseNScale, this),
+        bind_front(&ResetKineticsInputParser::parseNScale, this),
         false
     );
     addKeyword(
         std::string("fscale"),
-        bindMember(&ResetKineticsInputParser::parseFScale, this),
+        bind_front(&ResetKineticsInputParser::parseFScale, this),
         false
     );
     addKeyword(
         std::string("nreset"),
-        bindMember(&ResetKineticsInputParser::parseNReset, this),
+        bind_front(&ResetKineticsInputParser::parseNReset, this),
         false
     );
     addKeyword(
         std::string("freset"),
-        bindMember(&ResetKineticsInputParser::parseFReset, this),
+        bind_front(&ResetKineticsInputParser::parseFReset, this),
         false
     );
     addKeyword(
         std::string("nreset_angular"),
-        bindMember(&ResetKineticsInputParser::parseNResetAngular, this),
+        bind_front(&ResetKineticsInputParser::parseNResetAngular, this),
         false
     );
     addKeyword(
         std::string("freset_angular"),
-        bindMember(&ResetKineticsInputParser::parseFResetAngular, this),
+        bind_front(&ResetKineticsInputParser::parseFResetAngular, this),
         false
     );
     addKeyword(
         std::string("freset_forces"),
-        bindMember(&ResetKineticsInputParser::parseFResetForces, this),
+        bind_front(&ResetKineticsInputParser::parseFResetForces, this),
         false
     );
 }
@@ -102,7 +101,7 @@ void ResetKineticsInputParser::parseNScale(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto nScale = utilities::stringToInt(lineElements[2]);
+    const auto nScale = stoi(lineElements[2]);
 
     if (nScale < 0)
         throw InputFileException("Nscale must be positive");
@@ -127,7 +126,7 @@ void ResetKineticsInputParser::parseFScale(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto fScale = utilities::stringToInt(lineElements[2]);
+    const auto fScale = stoi(lineElements[2]);
 
     if (fScale < 0)
         throw InputFileException("Fscale must be positive");
@@ -152,7 +151,7 @@ void ResetKineticsInputParser::parseNReset(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto nReset = utilities::stringToInt(lineElements[2]);
+    const auto nReset = stoi(lineElements[2]);
 
     if (nReset < 0)
         throw InputFileException("Nreset must be positive");
@@ -177,7 +176,7 @@ void ResetKineticsInputParser::parseFReset(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto fReset = utilities::stringToInt(lineElements[2]);
+    const auto fReset = stoi(lineElements[2]);
 
     if (fReset < 0)
         throw InputFileException("Freset must be positive");
@@ -202,7 +201,7 @@ void ResetKineticsInputParser::parseNResetAngular(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto nResetAngular = utilities::stringToInt(lineElements[2]);
+    const auto nResetAngular = stoi(lineElements[2]);
 
     if (nResetAngular < 0)
         throw InputFileException("Nreset_angular must be positive");
@@ -227,7 +226,7 @@ void ResetKineticsInputParser::parseFResetAngular(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto fResetAngular = utilities::stringToInt(lineElements[2]);
+    const auto fResetAngular = stoi(lineElements[2]);
 
     if (fResetAngular < 0)
         throw InputFileException("Freset_angular must be positive");
@@ -252,7 +251,7 @@ void ResetKineticsInputParser::parseFResetForces(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto fResetForces = utilities::stringToInt(lineElements[2]);
+    const auto fResetForces = stoi(lineElements[2]);
 
     if (fResetForces < 0)
         throw InputFileException("Freset_force must be positive");

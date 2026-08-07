@@ -1,6 +1,5 @@
 add_library(coulombPotential
     coulombPotential.cpp
-    coulombReactionField.cpp
     coulombShiftedPotential.cpp
     coulombWolf.cpp
 )
@@ -12,5 +11,5 @@ target_include_directories(coulombPotential
 )
 
 install(TARGETS coulombPotential
-    DESTINATION lib
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

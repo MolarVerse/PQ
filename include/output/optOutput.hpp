@@ -26,12 +26,8 @@
 
 #include <cstddef>   // for size_t
 
-#include "output.hpp"   // for Output
-
-namespace opt
-{
-    class Optimizer;   // forward declaration
-}
+#include "output.hpp"        // for Output
+#include "typeAliases.hpp"   // for Optimizer
 
 namespace output
 {
@@ -46,7 +42,7 @@ namespace output
        public:
         using Output::Output;
 
-        void write(const size_t step, const opt::Optimizer& optimizer);
+        void write(const size_t step, const pq::Optimizer& optimizer);
     };
 
 }   // namespace output

@@ -22,7 +22,6 @@
 
 #include "optimizerSetup.hpp"
 
-#include <format>
 #include <memory>
 
 #include "adam.hpp"
@@ -106,13 +105,13 @@ void OptimizerSetup::setup()
  * @brief Setup an empty optimizer
  *
  */
-std::shared_ptr<Optimizer> OptimizerSetup::setupEmptyOptimizer()
+pq::SharedOptimizer OptimizerSetup::setupEmptyOptimizer()
 {
     const auto nEpochs       = TimingsSettings::getNumberOfSteps();
     const auto simBox        = _optEngine.getSimulationBox();
     const auto optimizerType = OptimizerSettings::getOptimizer();
 
-    std::shared_ptr<Optimizer> optimizer;
+    pq::SharedOptimizer optimizer;
 
     switch (optimizerType)
     {
@@ -131,13 +130,11 @@ std::shared_ptr<Optimizer> OptimizerSetup::setupEmptyOptimizer()
             break;
         }
 
-        case NONE: break;
+        default:
+            throw UserInputException(
+                std::format("Unknown optimizer type {}", string(optimizerType))
+            );
     }
-
-    if (!optimizer)
-        throw UserInputException(
-            std::format("Unknown optimizer type {}", string(optimizerType))
-        );
 
     optimizer->setSimulationBox(_optEngine.getSharedSimulationBox());
     optimizer->setPhysicalData(_optEngine.getSharedPhysicalData());
@@ -150,13 +147,10 @@ std::shared_ptr<Optimizer> OptimizerSetup::setupEmptyOptimizer()
  * @brief Setup the learning rate strategy
  *
  */
-std::shared_ptr<LearningRateStrategy> OptimizerSetup::setupLearningRateStrategy(
-)
+pq::SharedLearningRate OptimizerSetup::setupLearningRateStrategy()
 {
     const auto alpha_0    = OptimizerSettings::getInitialLearningRate();
     const auto lrStrategy = OptimizerSettings::getLearningRateStrategy();
-
-    OptimizerSettings::validateLearningRateStrategy();
 
     switch (lrStrategy)
     {
@@ -166,8 +160,15 @@ std::shared_ptr<LearningRateStrategy> OptimizerSetup::setupLearningRateStrategy(
 
         case CONSTANT_DECAY:
         {
-            const auto alphaDecayValue =
-                OptimizerSettings::getLearningRateDecay().value();
+            const auto alphaDecay = OptimizerSettings::getLearningRateDecay();
+
+            if (!alphaDecay.has_value())
+                throw UserInputException(
+                    "You need to specify a learning rate decay factor for the "
+                    "constant decay learning rate strategy"
+                );
+
+            const auto alphaDecayValue = alphaDecay.value();
             const auto alphaFreq = OptimizerSettings::getLRUpdateFrequency();
 
             return std::make_shared<ConstantDecayLRStrategy>(
@@ -179,8 +180,15 @@ std::shared_ptr<LearningRateStrategy> OptimizerSetup::setupLearningRateStrategy(
 
         case EXPONENTIAL_DECAY:
         {
-            const auto alphaDecayValue =
-                OptimizerSettings::getLearningRateDecay().value();
+            const auto alphaDecay = OptimizerSettings::getLearningRateDecay();
+
+            if (!alphaDecay.has_value())
+                throw UserInputException(
+                    "You need to specify a learning rate decay factor for the "
+                    "constant decay learning rate strategy"
+                );
+
+            const auto alphaDecayValue = alphaDecay.value();
             const auto alphaFreq = OptimizerSettings::getLRUpdateFrequency();
 
             return std::make_shared<ExpDecayLR>(
@@ -191,13 +199,21 @@ std::shared_ptr<LearningRateStrategy> OptimizerSetup::setupLearningRateStrategy(
         }
 
         case LINESEARCH_WOLFE:
-        case NONE: break;
-    }
+        {
+            throw UserInputException(
+                "The Wolfe line search learning rate strategy is not yet "
+                "implemented"
+            );
+        }
 
-    throw UserInputException(
-        "In order to run the optimizer, you need to specify a learning rate "
-        "strategy."
-    );
+        default:
+        {
+            throw UserInputException(
+                std::format("In order to run the optimizer, you need to "
+                            "specify a learning rate strategy.")
+            );
+        }
+    }
 }
 
 /**
@@ -205,14 +221,18 @@ std::shared_ptr<LearningRateStrategy> OptimizerSetup::setupLearningRateStrategy(
  *
  * @param learningRateStrategy as shared pointer reference
  */
-void OptimizerSetup::setupMinMaxLR(
-    std::shared_ptr<LearningRateStrategy> &lrStrategy
-)
+void OptimizerSetup::setupMinMaxLR(pq::SharedLearningRate &lrStrategy)
 {
     const auto minLR = OptimizerSettings::getMinLearningRate();
     const auto maxLR = OptimizerSettings::getMaxLearningRate();
 
-    OptimizerSettings::validateLearningRateBounds();
+    if (maxLR.has_value() && minLR >= maxLR.value())
+        throw UserInputException(std::format(
+            "The minimum learning rate {} is greater or equal to the "
+            "maximum learning rate {}, which is not allowed.",
+            minLR,
+            maxLR.value()
+        ));
 
     lrStrategy->setMinLearningRate(minLR);
     lrStrategy->setMaxLearningRate(maxLR);
@@ -222,9 +242,9 @@ void OptimizerSetup::setupMinMaxLR(
  * @brief Setup the evaluator
  *
  */
-std::shared_ptr<Evaluator> OptimizerSetup::setupEvaluator()
+pq::SharedEvaluator OptimizerSetup::setupEvaluator()
 {
-    std::shared_ptr<Evaluator> evaluator;
+    pq::SharedEvaluator evaluator;
 
     if (Settings::getJobtype() == JobType::MM_OPT)
         evaluator = std::make_shared<MMEvaluator>();
@@ -254,7 +274,7 @@ std::shared_ptr<Evaluator> OptimizerSetup::setupEvaluator()
  *
  * @param optimizer as shared pointer reference
  */
-void OptimizerSetup::setupConvergence(std::shared_ptr<Optimizer> &optimizer)
+void OptimizerSetup::setupConvergence(pq::SharedOptimizer &optimizer)
 {
     const auto strategyOptional = ConvSettings::getEnConvStrategy();
     const auto defaultStrategy  = ConvSettings::getDefaultEnergyConvStrategy();
@@ -271,10 +291,10 @@ void OptimizerSetup::setupConvergence(std::shared_ptr<Optimizer> &optimizer)
     const auto maxForceOptional  = ConvSettings::getMaxForceConv();
     const auto rmsForceOptional  = ConvSettings::getRMSForceConv();
 
-    const auto defaultRelEnergy = REL_ENERGY_CONV_DEFAULT;
-    const auto defaultAbsEnergy = ABS_ENERGY_CONV_DEFAULT;
-    const auto defaultMaxForce  = MAX_FORCE_CONV_DEFAULT;
-    const auto defaultRMSForce  = RMS_FORCE_CONV_DEFAULT;
+    const auto defaultRelEnergy = _REL_ENERGY_CONV_DEFAULT_;
+    const auto defaultAbsEnergy = _ABS_ENERGY_CONV_DEFAULT_;
+    const auto defaultMaxForce  = _MAX_FORCE_CONV_DEFAULT_;
+    const auto defaultRMSForce  = _RMS_FORCE_CONV_DEFAULT_;
 
     auto relEnergy = energyOptional.value_or(defaultRelEnergy);
     auto absEnergy = energyOptional.value_or(defaultAbsEnergy);
@@ -359,8 +379,8 @@ void OptimizerSetup::writeSetupInfo() const
 
     if (lrStrategy == CONSTANT_DECAY || lrStrategy == EXPONENTIAL_DECAY)
     {
-        const auto decay = OptimizerSettings::getLearningRateDecay();
-        decayLRStr       = std::format("{:.2e}", decay.value());
+        const auto decay         = OptimizerSettings::getLearningRateDecay();
+        const auto alphaDecayStr = std::format("{:.2e}", decay.value());
     }
 
     // clang-format off

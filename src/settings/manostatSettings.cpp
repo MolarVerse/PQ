@@ -39,10 +39,8 @@ std::string settings::string(const ManostatType &manostatType)
 
         case ManostatType::STOCHASTIC_RESCALING: return "stochastic_rescaling";
 
-        case ManostatType::NONE: break;
+        default: return "none";
     }
-
-    return "none";
 }
 
 /**
@@ -61,10 +59,8 @@ std::string settings::string(const Isotropy &isotropy)
         case ANISOTROPIC: return "anisotropic";
         case FULL_ANISOTROPIC: return "full_anisotropic";
 
-        case NONE: break;
+        default: return "isotropic";
     }
-
-    return "isotropic";
 }
 
 /***************************
@@ -81,8 +77,7 @@ std::string settings::string(const Isotropy &isotropy)
 void ManostatSettings::setManostatType(const std::string_view &manostatType)
 {
     using enum ManostatType;
-    const auto manostatTypeToLower =
-        utilities::toLowerAndReplaceDashesCopy(manostatType);
+    const auto manostatTypeToLower = utilities::toLowerAndReplaceDashesCopy(manostatType);
 
     if (manostatTypeToLower == "berendsen")
         _manostatType = BERENDSEN;
@@ -112,10 +107,7 @@ void ManostatSettings::setManostatType(const ManostatType &manostatType)
 void ManostatSettings::setIsotropy(const std::string_view &isotropy)
 {
     using enum Isotropy;
-    const auto isotropyToLower =
-        utilities::toLowerAndReplaceDashesCopy(isotropy);
-
-    _isotropy = ISOTROPIC;
+    const auto isotropyToLower = utilities::toLowerAndReplaceDashesCopy(isotropy);
 
     if (isotropyToLower == "isotropic")
         _isotropy = ISOTROPIC;
@@ -128,6 +120,9 @@ void ManostatSettings::setIsotropy(const std::string_view &isotropy)
 
     else if (isotropyToLower == "full_anisotropic")
         _isotropy = FULL_ANISOTROPIC;
+
+    else
+        _isotropy = ISOTROPIC;
 }
 
 /**
@@ -138,6 +133,16 @@ void ManostatSettings::setIsotropy(const std::string_view &isotropy)
 void ManostatSettings::setIsotropy(const Isotropy &isotropy)
 {
     _isotropy = isotropy;
+}
+
+/**
+ * @brief sets the pressureSet to bool in settings
+ *
+ * @param pressureSet
+ */
+void ManostatSettings::setPressureSet(const bool pressureSet)
+{
+    _isPressureSet = pressureSet;
 }
 
 /**
@@ -195,6 +200,13 @@ void ManostatSettings::set2DAnisotropicAxis(const size_t index)
  * standard getter methods *
  *                         *
  ***************************/
+
+/**
+ * @brief get if pressure is set
+ *
+ * @return bool
+ */
+bool ManostatSettings::isPressureSet() { return _isPressureSet; }
 
 /**
  * @brief get if manostat is Berendsen based

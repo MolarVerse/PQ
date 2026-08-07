@@ -25,10 +25,11 @@
 #include <vector>   // for vector
 
 #include "coulombPotential.hpp"   // for CoulombPotential
-#include "forceField.hpp"         // IWYU pragma: keep - for correctLinker
+#include "forceField.hpp"         // for correctLinker
 #include "molecule.hpp"           // for Molecule
 #include "physicalData.hpp"       // for PhysicalData
 #include "simulationBox.hpp"      // for SimulationBox
+#include "vector3d.hpp"           // for Vector3D, norm, operator*, Vec3D
 
 using namespace forceField;
 using namespace simulationBox;

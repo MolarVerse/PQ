@@ -70,7 +70,7 @@ void VelocityVerlet::secondStep(SimulationBox &simBox)
 
     std::ranges::for_each(
         simBox.getAtoms(),
-        [this](const auto &atom) { integrateVelocities(atom.get()); }
+        [this](auto atom) { integrateVelocities(atom.get()); }
     );
 
     stopTimingsSection("Velocity Verlet - Second Step");

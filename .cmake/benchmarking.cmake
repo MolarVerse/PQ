@@ -1,22 +1,15 @@
 # Disable the Google Benchmark requirement on Google Test
-set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "" FORCE)
-set(BENCHMARK_ENABLE_INSTALL OFF CACHE BOOL "" FORCE)
+set(BENCHMARK_ENABLE_TESTING NO)
 
 include(FetchContent)
 
 FetchContent_Declare(
     googlebenchmark
     GIT_REPOSITORY https://github.com/google/benchmark.git
-    GIT_TAG v1.9.5
-    GIT_SHALLOW TRUE
+    GIT_TAG main
 )
 
-# Keep project warning policy from being applied to third-party sources.
-set(_CMAKE_CXX_FLAGS_BACKUP "${CMAKE_CXX_FLAGS}")
-foreach(flag IN ITEMS "-Wswitch-enum" "-Werror=switch-enum" "-Werror" "-Wundef")
-    string(REPLACE "${flag}" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-endforeach()
+set(googlebenchmark_have_std_regex ON CACHE INTERNAL "")
+set(googlebenchmark_run_have_std_regex ON CACHE INTERNAL "")
 
 FetchContent_MakeAvailable(googlebenchmark)
-
-set(CMAKE_CXX_FLAGS "${_CMAKE_CXX_FLAGS_BACKUP}")

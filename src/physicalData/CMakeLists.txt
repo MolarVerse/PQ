@@ -18,5 +18,5 @@ target_link_libraries(physicalData
 )
 
 install(TARGETS physicalData
-    DESTINATION lib
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

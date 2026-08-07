@@ -24,7 +24,6 @@
 
 #include <algorithm>   // for __for_each_fn
 #include <cstddef>     // for size_t
-#include <utility>
 
 #include "constants/conversionFactors.hpp"           // for _FS_TO_S_
 #include "constants/internalConversionFactors.hpp"   // for _KINETIC_ENERGY_FACTOR_
@@ -36,42 +35,19 @@ using namespace linearAlgebra;
 using namespace constants;
 
 /**
- * @brief get the virial tensor, either atomic or molecular depending on the
- * configured virial type
- *
- * @param virialType - the virial type to get the virial tensor for
- *
- * @return const linearAlgebra::tensor3D&
- */
-const linearAlgebra::tensor3D& KineticEnergyVirialTensor::getVirialTensor(
-    settings::VirialType virialType
-) const
-{
-    switch (virialType)
-    {
-        case settings::VirialType::ATOMIC: return atomic;
-        case settings::VirialType::MOLECULAR: return molecular;
-    }
-
-    std::unreachable();
-}
-
-/**
  * @brief Calculates kinetic energy and momentum of the system
  *
  * @param simulationBox
  */
-void PhysicalData::calculateKinetics(SimulationBox& simulationBox)
+void PhysicalData::calculateKinetics(SimulationBox &simulationBox)
 {
     startTimingsSection("Calc Kinetics");
 
-    _momentum = Vec3D();
-    tensor3D kineticEnergyAtomicTensor{};
-    tensor3D kineticEnergyMolecularTensor{};
+    _momentum                  = Vec3D();
+    _kineticEnergyAtomicTensor = tensor3D();
+    _kinEnergyMolTensor        = tensor3D();
 
-    auto kinEnergyAndMomOfMol = [&kineticEnergyAtomicTensor,
-                                 &kineticEnergyMolecularTensor,
-                                 this](auto& molecule)
+    auto kinEnergyAndMomOfMol = [this](auto &molecule)
     {
         const auto numberOfAtoms   = molecule.getNumberOfAtoms();
         auto       momentumSquared = tensor3D();
@@ -82,28 +58,24 @@ void PhysicalData::calculateKinetics(SimulationBox& simulationBox)
 
             const auto momentum = velocities * molecule.getAtomMass(i);
 
-            _momentum                 += momentum;
-            kineticEnergyAtomicTensor += tensorProduct(momentum, velocities);
-            momentumSquared           += tensorProduct(momentum, momentum);
+            _momentum                  += momentum;
+            _kineticEnergyAtomicTensor += tensorProduct(momentum, velocities);
+            momentumSquared            += tensorProduct(momentum, momentum);
         }
 
-        kineticEnergyMolecularTensor += momentumSquared / molecule.getMolMass();
+        _kinEnergyMolTensor += momentumSquared / molecule.getMolMass();
     };
 
     std::ranges::for_each(simulationBox.getMolecules(), kinEnergyAndMomOfMol);
 
-    kineticEnergyAtomicTensor    *= KINETIC_ENERGY_FACTOR;
-    kineticEnergyMolecularTensor *= KINETIC_ENERGY_FACTOR;
-
-    _kinEnergyVirialTensor.atomic    = kineticEnergyAtomicTensor;
-    _kinEnergyVirialTensor.molecular = kineticEnergyMolecularTensor;
-
-    _kineticEnergy = trace(kineticEnergyAtomicTensor);
+    _kineticEnergyAtomicTensor *= _KINETIC_ENERGY_FACTOR_;
+    _kinEnergyMolTensor        *= _KINETIC_ENERGY_FACTOR_;
+    _kineticEnergy              = trace(_kineticEnergyAtomicTensor);
 
     _angularMomentum  = simulationBox.calculateAngularMomentum(_momentum);
-    _angularMomentum *= FS_TO_S;
+    _angularMomentum *= _FS_TO_S_;
 
-    _momentum *= FS_TO_S;
+    _momentum *= _FS_TO_S_;
 
     stopTimingsSection("Calc Kinetics");
 }
@@ -121,13 +93,12 @@ std::shared_ptr<PhysicalData> PhysicalData::clone() const
 /**
  * @brief copies one physicalData to another
  *
- * @param data - physicalData to copy from
+ * @param physicalData
  */
-void PhysicalData::copy(const PhysicalData& data)
+void PhysicalData::copy(const PhysicalData &physicalData)
 {
     reset();
-
-    updateAverages(data);
+    updateAverages(physicalData);
 }
 
 /**
@@ -135,7 +106,7 @@ void PhysicalData::copy(const PhysicalData& data)
  *
  * @param physicalData
  */
-void PhysicalData::updateAverages(const PhysicalData& physicalData)
+void PhysicalData::updateAverages(const PhysicalData &physicalData)
 {
     _numberOfQMAtoms += physicalData.getNumberOfQMAtoms();
     _loopTime        += physicalData.getLoopTime();
@@ -169,11 +140,6 @@ void PhysicalData::updateAverages(const PhysicalData& physicalData)
     _upperDistanceConstraints += physicalData.getUpperDistanceConstraints();
 
     _ringPolymerEnergy += physicalData.getRingPolymerEnergy();
-
-    const auto& kinEnergyVirialTensor = physicalData._kinEnergyVirialTensor;
-
-    _kinEnergyVirialTensor.atomic    += kinEnergyVirialTensor.atomic;
-    _kinEnergyVirialTensor.molecular += kinEnergyVirialTensor.molecular;
 }
 
 /**
@@ -215,9 +181,6 @@ void PhysicalData::makeAverages(const double outputFrequency)
     _upperDistanceConstraints /= outputFrequency;
 
     _ringPolymerEnergy /= outputFrequency;
-
-    _kinEnergyVirialTensor.atomic    /= outputFrequency;
-    _kinEnergyVirialTensor.molecular /= outputFrequency;
 }
 
 /**
@@ -258,11 +221,6 @@ void PhysicalData::reset()
     _upperDistanceConstraints = 0.0;
 
     _ringPolymerEnergy = 0.0;
-
-    // reset kinetic energy virial tensor, but make sure to keep the
-    // isVirialAtomic flag as it is
-    _kinEnergyVirialTensor.atomic    = {0.0};
-    _kinEnergyVirialTensor.molecular = {0.0};
 }
 
 /**
@@ -270,7 +228,7 @@ void PhysicalData::reset()
  *
  * @param simulationBox
  */
-void PhysicalData::calculateTemperature(SimulationBox& simulationBox)
+void PhysicalData::calculateTemperature(SimulationBox &simulationBox)
 {
     _temperature = simulationBox.calculateTemperature();
 }
@@ -328,22 +286,35 @@ void PhysicalData::addIntraNonCoulombEnergy(const double intraNonCoulombEnergy)
 }
 
 /**
+ * @brief change kinetic virial to atomic
+ *
+ * @details This function is used to change the kinetic virial from molecular to
+ * atomic via a function pointer
+ *
+ */
+void PhysicalData::changeKineticVirialToAtomic()
+{
+    getKinEnergyVirialTensor =
+        std::bind_front(&PhysicalData::getKinEnergyAtomTensor, this);
+}
+
+/**
  * @brief calculate the mean of a vector of physicalData
  *
  * @param dataVec - vector of physicalData
  * @return PhysicalData
  */
-PhysicalData physicalData::mean(std::vector<PhysicalData>& dataVec)
+PhysicalData physicalData::mean(std::vector<PhysicalData> &dataVec)
 {
     PhysicalData meanData;
 
     std::ranges::for_each(
         dataVec,
-        [&meanData](auto& physicalData)
+        [&meanData](auto &physicalData)
         { meanData.updateAverages(physicalData); }
     );
 
-    meanData.makeAverages(static_cast<double>(dataVec.size()));
+    meanData.makeAverages(dataVec.size());
 
     return meanData;
 }

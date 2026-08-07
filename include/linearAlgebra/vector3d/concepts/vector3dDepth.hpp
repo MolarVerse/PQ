@@ -24,6 +24,10 @@
 
 #define _VECTOR3D_DEPTH_HPP_
 
+#include <concepts>
+
+#include "concepts.hpp"
+
 namespace linearAlgebra
 {
     template <class T>

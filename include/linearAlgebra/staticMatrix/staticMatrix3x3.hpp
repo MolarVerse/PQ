@@ -24,9 +24,11 @@
 
 #define _STATIC_MATRIX_3X3_HPP_
 
+#include <cstddef>   // for size_t
 #include <ostream>   // for operator<<, ostream
 
 #include "staticMatrix3x3Class.hpp"   // for StaticMatrix3x3
+#include "vector3d.hpp"               // for Vector3D
 
 namespace linearAlgebra
 {
@@ -131,8 +133,6 @@ namespace linearAlgebra
 
 }   // namespace linearAlgebra
 
-#ifndef _STATIC_MATRIX_3X3_TPP_
-#include "staticMatrix3x3.tpp.hpp"   // IWYU pragma: keep - DO NOT MOVE THIS LINE
-#endif
+#include "staticMatrix3x3.tpp.hpp"   // DO NOT MOVE THIS LINE
 
 #endif   // _STATIC_MATRIX_3X3_HPP_

@@ -22,17 +22,19 @@
 
 #include "stochasticRescalingManostat.hpp"
 
-#include <algorithm>   // for __for_each_fn
-#include <cmath>       // for exp, pow, sqrt
+#include <algorithm>    // for __for_each_fn
+#include <cmath>        // for exp, pow, sqrt
+#include <functional>   // for identity
 
 #include "constants/conversionFactors.hpp"   // for _BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_
 #include "constants/internalConversionFactors.hpp"   // for _PRESSURE_FACTOR_
 #include "exceptions.hpp"                            // for ExceptionType
-#include "manostatSettings.hpp"     // for ManostatType, Isotropy
-#include "physicalData.hpp"         // for PhysicalData
-#include "simulationBox.hpp"        // for SimulationBox
+#include "physicalData.hpp"                          // for PhysicalData
+#include "simulationBox.hpp"                         // for SimulationBox
+#include "staticMatrix.hpp"         // for diagonal, diagonalMatrix
 #include "thermostatSettings.hpp"   // for ThermostatSettings
 #include "timingsSettings.hpp"      // for TimingsSettings
+#include "vector3d.hpp"             // for Vec3D, operator/
 
 using namespace linearAlgebra;
 using namespace manostat;
@@ -117,13 +119,6 @@ void StochasticRescalingManostat::applyManostat(
 
     const auto mu = calculateMu(simBox.getVolume());
 
-    // Reconstruction temporarily unwraps atoms. Molecule::scale() below wraps
-    // every position into the resized box.
-    auto reconstructMolecule = [&simBox](auto &molecule)
-    { molecule.reconstructAtomsAroundCenterOfMass(simBox.getBox()); };
-
-    std::ranges::for_each(simBox.getMolecules(), reconstructMolecule);
-
     simBox.scaleBox(mu);
 
     physicalData.setVolume(simBox.getVolume());
@@ -134,11 +129,11 @@ void StochasticRescalingManostat::applyManostat(
     auto scalePositions = [&mu, &simBox](auto &molecule)
     { molecule.scale(mu, simBox.getBox()); };
 
-    auto scaleVelocities = [&mu, &simBox](auto &molecule)
-    { molecule.scaleVelocity(inverse(mu), simBox.getBox()); };
+    auto scaleVelocities = [&mu, &simBox](auto &atom)
+    { atom->scaleVelocityOrthogonalSpace(inverse(mu), simBox.getBox()); };
 
     std::ranges::for_each(simBox.getMolecules(), scalePositions);
-    std::ranges::for_each(simBox.getMolecules(), scaleVelocities);
+    std::ranges::for_each(simBox.getAtoms(), scaleVelocities);
 
     stopTimingsSection("Stochastic Rescaling");
 }
@@ -153,18 +148,18 @@ void StochasticRescalingManostat::applyManostat(
 tensor3D StochasticRescalingManostat::calculateMu(const double volume)
 {
     const auto compress = _compressibility * _dt / _tau;
-    const auto kb       = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
+    const auto kb       = _BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_;
 
     const auto kT     = kb * ThermostatSettings::getActualTargetTemperature();
     const auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
 
     auto stochasticFactor  = 2.0 * kT * compress / volume;
-    stochasticFactor       *= PRESSURE_FACTOR;
+    stochasticFactor      *= _PRESSURE_FACTOR_;
     stochasticFactor       = ::sqrt(stochasticFactor) * random;
 
     const auto deltaP = _targetPressure - _pressure;
 
-    return diagonalMatrix(::exp((-compress * deltaP + stochasticFactor) / 3.0));
+    return diagonalMatrix(::exp(-compress * (deltaP) + stochasticFactor / 3.0));
 }
 
 /**
@@ -179,13 +174,13 @@ tensor3D SemiIsotropicStochasticRescalingManostat::calculateMu(
 )
 {
     const auto compress = _compressibility * _dt / _tau;
-    const auto kb       = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
+    const auto kb       = _BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_;
 
     const auto kT     = kb * ThermostatSettings::getActualTargetTemperature();
     const auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
 
     auto stochasticFactor  = 1 / 3.0 * kT * compress / volume;
-    stochasticFactor       *= PRESSURE_FACTOR;
+    stochasticFactor      *= _PRESSURE_FACTOR_;
 
     const auto stochasticFactor_xy = ::sqrt(4.0 * stochasticFactor) * random;
     const auto stochasticFactor_z  = ::sqrt(2.0 * stochasticFactor) * random;
@@ -220,18 +215,17 @@ tensor3D SemiIsotropicStochasticRescalingManostat::calculateMu(
  * @param volume
  * @return Vec3D
  */
-tensor3D AnisotropicStochasticRescalingManostat::calculateMu(
-    const double volume
+tensor3D AnisotropicStochasticRescalingManostat::calculateMu(const double volume
 )
 {
     const auto compress = _compressibility * _dt / _tau;
-    const auto kb       = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
+    const auto kb       = _BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_;
 
     const auto kT     = kb * ThermostatSettings::getActualTargetTemperature();
     const auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
 
     auto stochasticFactor  = 2.0 / 3.0 * kT * compress / volume;
-    stochasticFactor       *= PRESSURE_FACTOR;
+    stochasticFactor      *= _PRESSURE_FACTOR_;
     stochasticFactor       = ::sqrt(stochasticFactor) * random;
 
     const auto deltaP = _targetPressure - diagonal(_pressureTensor);
@@ -251,13 +245,13 @@ tensor3D FullAnisotropicStochasticRescalingManostat::calculateMu(
 )
 {
     const auto compress = _compressibility * _dt / _tau;
-    const auto kb       = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
+    const auto kb       = _BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_;
 
     const auto kT     = kb * ThermostatSettings::getActualTargetTemperature();
     const auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
 
     auto stochasticFactor  = 2.0 / 3.0 * kT * compress / volume;
-    stochasticFactor       *= PRESSURE_FACTOR;
+    stochasticFactor      *= _PRESSURE_FACTOR_;
     stochasticFactor       = ::sqrt(stochasticFactor) * random;
 
     const auto deltaP = diagonalMatrix(_targetPressure) - _pressureTensor;

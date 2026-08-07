@@ -24,41 +24,20 @@
 
 #include <format>   // for std::format
 
-#include "constants.hpp"            // for constants
-#include "constraintSettings.hpp"   // for ConstraintSettings
-#include "distanceKernels.hpp"      // for distVecAndDist2
-#include "mShakeReference.hpp"      // for MShakeReference
-#include "mathUtilities.hpp"        // for dot
-#include "matrix.hpp"               // for Matrix
-#include "simulationBox.hpp"        // for SimulationBox
-#include "stlVector.hpp"            // for dot
-#include "timingsSettings.hpp"      // for settings
-#include "vector3d.hpp"
+#include "constants.hpp"         // for constants
+#include "distanceKernels.hpp"   // for distVecAndDist2
+#include "mShakeReference.hpp"   // for MShakeReference
+#include "mathUtilities.hpp"     // for dot
+#include "matrix.hpp"            // for Matrix
+#include "simulationBox.hpp"     // for SimulationBox
+#include "stlVector.hpp"         // for dot
+#include "timingsSettings.hpp"   // for settings
 
-using namespace constants;
 using namespace constraints;
 using namespace kernel;
 using namespace linearAlgebra;
 using namespace settings;
 using namespace simulationBox;
-
-/**
- * @brief struct to hold the mShake matrices and their inverses
- *
- */
-struct MShake::MShakeMatrices
-{
-    std::vector<Matrix<double>> mShakeMatrices;
-    std::vector<Matrix<double>> mShakeInvMatrices;
-};
-
-/**
- * @brief constructor
- *
- **/
-MShake::MShake() : _mShakeMatrices(std::make_unique<MShakeMatrices>()) {}
-
-MShake::~MShake() = default;
 
 /**
  * @brief init M - Shake
@@ -139,8 +118,8 @@ void MShake::initMShakeReferences()
          * size equal to the number of m-shake molecule types  *
          *******************************************************/
         _mShakeRSquaredRefs.push_back(rSquaredRefs);
-        _mShakeMatrices->mShakeMatrices.push_back(mShakeMatrix);
-        _mShakeMatrices->mShakeInvMatrices.push_back(invMatrix);
+        _mShakeMatrices.push_back(mShakeMatrix);
+        _mShakeInvMatrices.push_back(invMatrix);
     }
 }
 
@@ -150,13 +129,11 @@ void MShake::initMShakeReferences()
  * @param simBox
  *
  */
-void MShake::applyMShake(SimulationBox &simBox)
+void MShake::applyMShake(const double shakeTolerance, SimulationBox &simBox)
 {
-    const auto mShakeMaxIter   = ConstraintSettings::getMShakeMaxIter();
-    const auto mShakeTolerance = ConstraintSettings::getMShakeTolerance();
-    auto      &molecules       = simBox.getMolecules();
+    auto &molecules = simBox.getMolecules();
 
-    const auto dt          = TimingsSettings::getTimeStep() * FS_TO_S;
+    const auto dt          = TimingsSettings::getTimeStep();
     const auto timeFactor  = 4.0 * dt * dt;
     const auto shakeFactor = 2.0 * dt * dt;
 
@@ -171,9 +148,8 @@ void MShake::applyMShake(SimulationBox &simBox)
         const auto mShakeIndex  = findMShakeReferenceIndex(moltype);
         const auto mShakeR2Refs = _mShakeRSquaredRefs[mShakeIndex];
         const auto nAtoms       = molecule.getNumberOfAtoms();
-        const auto nBonds =
-            _mShakeMatrices->mShakeInvMatrices[mShakeIndex].rows();
-        auto &atoms = molecule.getAtoms();
+        const auto nBonds       = _mShakeInvMatrices[mShakeIndex].rows();
+        auto      &atoms        = molecule.getAtoms();
 
         std::vector<Vec3D>  bondsUnconstrained(nBonds);
         std::vector<Vec3D>  bondsPrevious(nBonds);
@@ -236,14 +212,10 @@ void MShake::applyMShake(SimulationBox &simBox)
                 ++index_ij;
             }
 
-        size_t iteration = 0;
-
         while (true)
         {
             auto converged = true;
             index_ij       = 0;
-
-            ++iteration;
 
             /*****************************************
              * fill (nBonds x nBonds) m-Shake matrix *
@@ -260,7 +232,7 @@ void MShake::applyMShake(SimulationBox &simBox)
 
                     for (size_t k = 0; k < nAtoms - 1; ++k)
                     {
-                        for (size_t l = k + 1; l < nAtoms; ++l)
+                        for (size_t l = 0; l < nAtoms - 1; ++l)
                         {
                             const auto mShakeElement = calcMatrixElement(
                                 {i, j, k, l},
@@ -352,25 +324,15 @@ void MShake::applyMShake(SimulationBox &simBox)
                      * reference value is larger than the tolerance value *
                      ******************************************************/
 
-                    if (::abs(r2Deviation) / (2.0 * r2Ref) > mShakeTolerance)
+                    if (::abs(r2Deviation) / (2.0 * r2Ref) > shakeTolerance)
                         converged = false;
 
                     ++index_ij;
                 }
             }
 
-            if (converged)
+            if (!converged)
                 break;
-
-            if (iteration >= mShakeMaxIter)
-                throw customException::MShakeException(
-                    std::format(
-                        "M-Shake did not converge within {} iterations for "
-                        "molecule type {}",
-                        mShakeMaxIter,
-                        moltype
-                    )
-                );
         }
 
         for (size_t i = 0; i < nAtoms; ++i)
@@ -383,6 +345,7 @@ void MShake::applyMShake(SimulationBox &simBox)
 /**
  * @brief apply M - Rattle to correct velocities
  *
+ * @param shakeTolerance
  * @param simulationBox
  *
  */
@@ -400,9 +363,9 @@ void MShake::applyMRattle(SimulationBox &simulationBox)
 
         const auto mShakeIndex  = findMShakeReferenceIndex(moltype);
         const auto mShakeR2Refs = _mShakeRSquaredRefs[mShakeIndex];
-        auto mShakeMatrix = _mShakeMatrices->mShakeInvMatrices[mShakeIndex];
-        const auto nAtoms = molecule.getNumberOfAtoms();
-        const auto nBonds = mShakeMatrix.rows();
+        auto       mShakeMatrix = _mShakeInvMatrices[mShakeIndex];
+        const auto nAtoms       = molecule.getNumberOfAtoms();
+        const auto nBonds       = mShakeMatrix.rows();
 
         auto &atoms = molecule.getAtoms();
 
@@ -613,12 +576,10 @@ double MShake::calcMatrixElement(
     const auto k = std::get<2>(indices);
     const auto l = std::get<3>(indices);
 
-    // Cast to double: kroneckerDelta returns size_t, so subtractions
-    // like (ik - il) underflow to SIZE_T_MAX when the first operand is 0.
-    const auto ik = static_cast<double>(utilities::kroneckerDelta(i, k));
-    const auto il = static_cast<double>(utilities::kroneckerDelta(i, l));
-    const auto jk = static_cast<double>(utilities::kroneckerDelta(j, k));
-    const auto jl = static_cast<double>(utilities::kroneckerDelta(j, l));
+    const auto ik = utilities::kroneckerDelta(i, k);
+    const auto il = utilities::kroneckerDelta(i, l);
+    const auto jk = utilities::kroneckerDelta(j, k);
+    const auto jl = utilities::kroneckerDelta(j, l);
 
     const auto mass_i = masses.first;
     const auto mass_j = masses.second;

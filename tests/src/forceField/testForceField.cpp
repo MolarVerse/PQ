@@ -22,11 +22,11 @@
 
 #include <gtest/gtest.h>   // for Test, CmpHelperNE, TestInfo
 
+#include <cmath>     // for M_PI
 #include <cstddef>   // for size_t
 #include <memory>    // for shared_ptr, allocator
 #include <string>    // for operator+, to_string, char_traits
 
-#include "../potential/nonCoulomb/testForceFieldNonCoulomb.hpp"
 #include "angleForceField.hpp"           // for AngleForceField
 #include "angleType.hpp"                 // for AngleType
 #include "atom.hpp"                      // for Atom
@@ -36,32 +36,29 @@
 #include "dihedralForceField.hpp"        // for DihedralForceField
 #include "dihedralType.hpp"              // for DihedralType
 #include "exceptions.hpp"                // for TopologyException
-#include "forceField.hpp"             // IWYU pragma: keep - for correctLinker
-#include "forceFieldClass.hpp"        // for ForceField
-#include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
-#include "gtest/gtest.h"              // for Message, TestPartResult
-#include "lennardJonesPair.hpp"       // for LennardJonesPair
-#include "matrix.hpp"                 // for Matrix
-#include "molecule.hpp"               // for Molecule
-#include "physicalData.hpp"           // for PhysicalData
-#include "potentialSettings.hpp"      // for PotentialSettings
-#include "simulationBox.hpp"          // for SimulationBox
-#include "throwWithMessage.hpp"       // for EXPECT_THROW_MSG
+#include "forceField.hpp"                // for correctLinker
+#include "forceFieldClass.hpp"           // for ForceField
+#include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
+#include "gtest/gtest.h"                 // for Message, TestPartResult
+#include "lennardJonesPair.hpp"          // for LennardJonesPair
+#include "matrix.hpp"                    // for Matrix
+#include "molecule.hpp"                  // for Molecule
+#include "physicalData.hpp"              // for PhysicalData
+#include "potentialSettings.hpp"         // for PotentialSettings
+#include "simulationBox.hpp"             // for SimulationBox
+#include "throwWithMessage.hpp"          // for EXPECT_THROW_MSG
+#include "vector3d.hpp"                  // for Vec3D
 
 namespace potential
 {
     class NonCoulombPair;   // forward declaration
 }
 
-class TestForceField : public TestNonCoulombPotentialFF
-{
-};
-
 /**
  * @brief tests findBondTypeById function
  *
  */
-TEST_F(TestForceField, findBondTypeById)
+TEST(TestForceField, findBondTypeById)
 {
     auto       forceField = forceField::ForceField();
     const auto bondType   = forceField::BondType(0, 1.0, 1.0);
@@ -75,7 +72,7 @@ TEST_F(TestForceField, findBondTypeById)
  * @brief tests findBondTypeById function for not found error
  *
  */
-TEST_F(TestForceField, findBondTypeById_notFoundError)
+TEST(TestForceField, findBondTypeById_notFoundError)
 {
     auto forceField = forceField::ForceField();
 
@@ -90,7 +87,7 @@ TEST_F(TestForceField, findBondTypeById_notFoundError)
  * @brief tests findAngleTypeById function
  *
  */
-TEST_F(TestForceField, findAngleTypeById)
+TEST(TestForceField, findAngleTypeById)
 {
     auto forceField = forceField::ForceField();
     auto angleType  = forceField::AngleType(0, 1.0, 1.0);
@@ -104,7 +101,7 @@ TEST_F(TestForceField, findAngleTypeById)
  * @brief tests findAngleTypeById function for not found error
  *
  */
-TEST_F(TestForceField, findAngleTypeById_notFoundError)
+TEST(TestForceField, findAngleTypeById_notFoundError)
 {
     auto forceField = forceField::ForceField();
 
@@ -119,7 +116,7 @@ TEST_F(TestForceField, findAngleTypeById_notFoundError)
  * @brief tests findDihedralTypeById function
  *
  */
-TEST_F(TestForceField, findDihedralTypeById)
+TEST(TestForceField, findDihedralTypeById)
 {
     auto forceField   = forceField::ForceField();
     auto dihedralType = forceField::DihedralType(0, 1.0, 1.0, 1.0);
@@ -133,7 +130,7 @@ TEST_F(TestForceField, findDihedralTypeById)
  * @brief tests findDihedralTypeById function for not found error
  *
  */
-TEST_F(TestForceField, findDihedralTypeById_notFoundError)
+TEST(TestForceField, findDihedralTypeById_notFoundError)
 {
     auto forceField = forceField::ForceField();
 
@@ -148,7 +145,7 @@ TEST_F(TestForceField, findDihedralTypeById_notFoundError)
  * @brief tests findImproperTypeById function
  *
  */
-TEST_F(TestForceField, findImproperTypeById)
+TEST(TestForceField, findImproperTypeById)
 {
     auto forceField           = forceField::ForceField();
     auto improperDihedralType = forceField::DihedralType(0, 1.0, 1.0, 1.0);
@@ -162,7 +159,7 @@ TEST_F(TestForceField, findImproperTypeById)
  * @brief tests findImproperTypeById function for not found error
  *
  */
-TEST_F(TestForceField, findImproperDihedralTypeById_notFoundError)
+TEST(TestForceField, findImproperDihedralTypeById_notFoundError)
 {
     auto forceField = forceField::ForceField();
 
@@ -180,20 +177,21 @@ TEST_F(TestForceField, findImproperDihedralTypeById_notFoundError)
  * respective test files
  *
  */
-TEST_F(TestForceField, calculateBondedInteractions)
+TEST(TestForceField, calculateBondedInteractions)
 {
     auto box = simulationBox::SimulationBox();
     box.setBoxDimensions({10.0, 10.0, 10.0});
 
-    auto physicalData     = physicalData::PhysicalData();
-    auto coulombPotential = potential::CoulombShiftedPotential(20.0);
+    auto physicalData        = physicalData::PhysicalData();
+    auto coulombPotential    = potential::CoulombShiftedPotential(20.0);
+    auto nonCoulombPotential = potential::ForceFieldNonCoulomb();
 
     auto nonCoulombPair =
         potential::LennardJonesPair(size_t(0), size_t(1), 15.0, 2.0, 4.0);
-    setNonCoulombPairsMatrix(
+    nonCoulombPotential.setNonCoulombPairsMatrix(
         linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(2, 2)
     );
-    setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
+    nonCoulombPotential.setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
 
     auto molecule = simulationBox::Molecule();
 
@@ -282,7 +280,7 @@ TEST_F(TestForceField, calculateBondedInteractions)
         std::make_shared<potential::CoulombShiftedPotential>(coulombPotential)
     );
     forceField.setNonCoulombPotential(
-        std::make_shared<potential::ForceFieldNonCoulomb>(*_nonCoulombPotential)
+        std::make_shared<potential::ForceFieldNonCoulomb>(nonCoulombPotential)
     );
 
     forceField.calculateBondedInteractions(box, physicalData);
@@ -300,16 +298,17 @@ TEST_F(TestForceField, calculateBondedInteractions)
  * @brief test correctLinker
  *
  */
-TEST_F(TestForceField, correctLinker)
+TEST(TestForceField, correctLinker)
 {
-    auto coulombPotential = potential::CoulombShiftedPotential(10.0);
+    auto coulombPotential    = potential::CoulombShiftedPotential(10.0);
+    auto nonCoulombPotential = potential::ForceFieldNonCoulomb();
 
     auto nonCoulombPair =
         potential::LennardJonesPair(size_t(0), size_t(1), 5.0, 2.0, 4.0);
-    setNonCoulombPairsMatrix(
+    nonCoulombPotential.setNonCoulombPairsMatrix(
         linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(2, 2)
     );
-    setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
+    nonCoulombPotential.setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
 
     auto molecule = simulationBox::Molecule();
 
@@ -332,7 +331,7 @@ TEST_F(TestForceField, correctLinker)
 
     const auto force = forceField::correctLinker<forceField::BondForceField>(
         coulombPotential,
-        *_nonCoulombPotential,
+        nonCoulombPotential,
         physicalData,
         &molecule,
         &molecule,
@@ -353,7 +352,7 @@ TEST_F(TestForceField, correctLinker)
     const auto forceScaled =
         forceField::correctLinker<forceField::DihedralForceField>(
             coulombPotential,
-            *_nonCoulombPotential,
+            nonCoulombPotential,
             physicalData,
             &molecule,
             &molecule,

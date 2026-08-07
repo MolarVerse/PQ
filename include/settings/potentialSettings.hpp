@@ -56,9 +56,8 @@ namespace settings
      */
     enum class CoulombLongRangeType : size_t
     {
-        SHIFTED,
-        REACTION_FIELD,
-        WOLF
+        WOLF,
+        SHIFTED
     };
 
     // TODO: implement long range type as enum
@@ -79,13 +78,12 @@ namespace settings
         static inline CoulombLongRangeType _coulombLRType  = CoulombLongRangeType::SHIFTED;
         static inline NonCoulombType       _nonCoulombType = NonCoulombType::GUFF;
 
-        static inline double _coulombRadiusCutOff = defaults::COULOMB_CUT_OFF_DEFAULT;
-        static inline double _scale14Coulomb      = defaults::SCALE_14_COULOMB_DEFAULT;
-        static inline double _scale14VanDerWaals  = defaults::SCALE_14_VAN_DER_WAALS_DEFAULT;
+        static inline double _coulombRadiusCutOff = defaults::_COULOMB_CUT_OFF_DEFAULT_;
+        static inline double _scale14Coulomb      = defaults::_SCALE_14_COULOMB_DEFAULT_;
+        static inline double _scale14VanDerWaals  = defaults::_SCALE_14_VAN_DER_WAALS_DEFAULT_;
         // clang-format on
 
-        static inline double _wolfParameter = defaults::WOLF_PARAM_DEFAULT;
-        static inline double _reactionFieldEpsilon;
+        static inline double _wolfParameter = defaults::_WOLF_PARAM_DEFAULT_;
 
        public:
         PotentialSettings()  = default;
@@ -103,7 +101,6 @@ namespace settings
         static void setCoulombRadiusCutOff(const double coulombRadiusCutOff);
         static void setScale14Coulomb(const double scale14Coulomb);
         static void setScale14VanDerWaals(const double scale14VanDerWaals);
-        static void setReactionFieldEpsilon(const double epsilon);
         static void setWolfParameter(const double wolfParameter);
 
         /********************
@@ -116,7 +113,6 @@ namespace settings
         [[nodiscard]] static double getCoulombRadiusCutOff();
         [[nodiscard]] static double getScale14Coulomb();
         [[nodiscard]] static double getScale14VDW();
-        [[nodiscard]] static double getReactionFieldEpsilon();
         [[nodiscard]] static double getWolfParameter();
     };
 

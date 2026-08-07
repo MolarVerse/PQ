@@ -25,13 +25,11 @@
 #define _OPTIMIZER_HPP_
 
 #include <cstddef>   // for size_t
-#include <deque>
-#include <memory>
+#include <memory>    // for shared_ptr
 
-#include "convergence.hpp"   // for Convergence
-#include "physicalData.hpp"
-#include "simulationBox.hpp"
-#include "vector3d.hpp"
+#include "convergence.hpp"           // for Convergence
+#include "convergenceSettings.hpp"   // for ConvergenceSettings
+#include "typeAliases.hpp"           // for SharedSimulationBox
 
 namespace opt
 {
@@ -48,18 +46,15 @@ namespace opt
 
         opt::Convergence _convergence;
 
-        std::shared_ptr<simulationBox::SimulationBox>
-            _simulationBox;   // TODO(97gamjak): remove this via pimpl
-        std::shared_ptr<physicalData::PhysicalData>
-            _physicalData;   // TODO(97gamjak): remove this via pimpl
-        std::shared_ptr<physicalData::PhysicalData>
-            _physicalDataOld;   // TODO(97gamjak): remove this via pimpl
+        pq::SharedSimBox       _simulationBox;
+        pq::SharedPhysicalData _physicalData;
+        pq::SharedPhysicalData _physicalDataOld;
 
-        std::deque<double>                            _energyHistory;
-        std::deque<double>                            _maxForceHistory;
-        std::deque<double>                            _rmsForceHistory;
-        std::deque<std::vector<linearAlgebra::Vec3D>> _forceHistory;
-        std::deque<std::vector<linearAlgebra::Vec3D>> _positionHistory;
+        std::deque<double> _energyHistory;
+        std::deque<double> _maxForceHistory;
+        std::deque<double> _rmsForceHistory;
+        pq::Vec3DVecDeque  _forceHistory;
+        pq::Vec3DVecDeque  _positionHistory;
 
        public:
         explicit Optimizer(const size_t);
@@ -67,14 +62,12 @@ namespace opt
         Optimizer()          = default;
         virtual ~Optimizer() = default;
 
-        [[nodiscard]]
-        virtual std::shared_ptr<Optimizer> clone() const = 0;
-        virtual void update(const double, const size_t)  = 0;
-        [[nodiscard]]
-        virtual size_t maxHistoryLength() const = 0;
+        virtual pq::SharedOptimizer clone() const                      = 0;
+        virtual void                update(const double, const size_t) = 0;
+        virtual size_t              maxHistoryLength() const           = 0;
 
-        void               updateHistory();
-        [[nodiscard]] bool hasConverged();
+        void updateHistory();
+        bool hasConverged();
 
         /***************************
          * standard setter methods *
@@ -82,15 +75,9 @@ namespace opt
 
         void setConvergence(const opt::Convergence);
 
-        void setSimulationBox(
-            const std::shared_ptr<simulationBox::SimulationBox>
-        );
-
-        void setPhysicalData(const std::shared_ptr<physicalData::PhysicalData>);
-
-        void setPhysicalDataOld(
-            const std::shared_ptr<physicalData::PhysicalData>
-        );
+        void setSimulationBox(const pq::SharedSimBox);
+        void setPhysicalData(const pq::SharedPhysicalData);
+        void setPhysicalDataOld(const pq::SharedPhysicalData);
 
         /***************************
          * standard getter methods *
@@ -109,15 +96,11 @@ namespace opt
         [[nodiscard]] double getMaxForce() const;
         [[nodiscard]] double getMaxForce(const int) const;
 
-        [[nodiscard]]
-        std::vector<linearAlgebra::Vec3D> getForces() const;
-        [[nodiscard]]
-        std::vector<linearAlgebra::Vec3D> getForces(const int) const;
+        [[nodiscard]] pq::Vec3DVec getForces() const;
+        [[nodiscard]] pq::Vec3DVec getForces(const int) const;
 
-        [[nodiscard]]
-        std::vector<linearAlgebra::Vec3D> getPositions() const;
-        [[nodiscard]]
-        std::vector<linearAlgebra::Vec3D> getPositions(const int) const;
+        [[nodiscard]] pq::Vec3DVec getPositions() const;
+        [[nodiscard]] pq::Vec3DVec getPositions(const int) const;
 
         [[nodiscard]] opt::Convergence &getConvergence();
         [[nodiscard]] opt::Convergence  getConvergence() const;

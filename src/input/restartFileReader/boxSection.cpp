@@ -24,6 +24,7 @@
 
 #include <algorithm>     // for __any_of_fn, any_of
 #include <format>        // for format
+#include <functional>    // for identity
 #include <string>        // for stod, string
 #include <string_view>   // for string_view
 #include <vector>        // for vector
@@ -32,8 +33,9 @@
 #include "exceptions.hpp"              // for RstFileException
 #include "mathUtilities.hpp"           // for compare
 #include "settings.hpp"                // for Settings
+#include "simulationBox.hpp"           // for SimulationBox
 #include "simulationBoxSettings.hpp"   // for SimulationBoxSettings
-#include "triclinicBox.hpp"            // for TriclinicBox
+#include "vector3d.hpp"                // for Vec3D
 
 using namespace input::restartFile;
 using namespace customException;

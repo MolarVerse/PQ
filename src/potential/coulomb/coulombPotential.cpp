@@ -36,7 +36,9 @@ using namespace potential;
  */
 CoulombPotential::CoulombPotential(const double coulombRadiusCutOff)
 {
-    setCoulombRadiusCutOff(coulombRadiusCutOff);
+    _coulombRadiusCutOff = coulombRadiusCutOff;
+    _coulombEnergyCutOff = 1 / _coulombRadiusCutOff;
+    _coulombForceCutOff  = 1 / (_coulombRadiusCutOff * _coulombRadiusCutOff);
 }
 
 /***************************
@@ -58,9 +60,6 @@ void CoulombPotential::setCoulombRadiusCutOff(const double coulombRadiusCutOff)
     _coulombRadiusCutOff = coulombRadiusCutOff;
     _coulombEnergyCutOff = 1 / _coulombRadiusCutOff;
     _coulombForceCutOff  = 1 / (_coulombRadiusCutOff * _coulombRadiusCutOff);
-    _coulombCutOffCubedInverse =
-        1 /
-        (_coulombRadiusCutOff * _coulombRadiusCutOff * _coulombRadiusCutOff);
 }
 
 /**
@@ -83,5 +82,35 @@ void CoulombPotential::setCoulombForceCutOff(const double coulombForceCutOff)
     _coulombForceCutOff = coulombForceCutOff;
 }
 
-// Coulomb cutoff getters are inline in the header so the per-pair call
-// in Potential::calculateSingleInteraction can be elided without LTO.
+/***************************
+ *                         *
+ * standard getter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief get the coulombRadiusCutOff
+ *
+ * @return double
+ */
+double CoulombPotential::getCoulombRadiusCutOff()
+{
+    return _coulombRadiusCutOff;
+}
+
+/**
+ * @brief get the coulombEnergyCutOff
+ *
+ * @return double
+ */
+double CoulombPotential::getCoulombEnergyCutOff()
+{
+    return _coulombEnergyCutOff;
+}
+
+/**
+ * @brief get the coulombForceCutOff
+ *
+ * @return double
+ */
+double CoulombPotential::getCoulombForceCutOff() { return _coulombForceCutOff; }

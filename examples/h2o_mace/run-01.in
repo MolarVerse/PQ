@@ -12,7 +12,7 @@
 
 # Mace Calculation Setup Keywords
       qm_prog = mace_mp;
-      mace_model = medium;
+      mace_model_size = medium;
       floating_point_type = float;
 
 # Files

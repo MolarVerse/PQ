@@ -22,10 +22,9 @@
 
 #include "celllistSetup.hpp"
 
-#include "engine.hpp"      // for Engine
+#include "celllist.hpp"   // for CellList
+#include "engine.hpp"     // for Engine
 #include "potential.hpp"   // for PotentialBruteForce, PotentialCellList, Potential
-#include "potentialBruteForce.hpp"
-#include "potentialCellList.hpp"   // for PotentialCellList
 
 using namespace setup;
 using namespace engine;
@@ -53,7 +52,7 @@ void setup::setupCellList(Engine &engine)
  *
  * @param engine
  */
-CellListSetup::CellListSetup(Engine &engine) : _engine(engine) {}
+CellListSetup::CellListSetup(Engine &engine) : _engine(engine){};
 
 /**
  * @brief setup cell list

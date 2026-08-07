@@ -144,12 +144,9 @@ Cell *Cell::getNeighbourCell(const size_t index) const
 /**
  * @brief returns the neighbour cells vector
  *
- * @return const std::vector<Cell*>&
+ * @return std::vector<Cell*>
  */
-const std::vector<Cell *> &Cell::getNeighbourCells() const
-{
-    return _neighbourCells;
-}
+std::vector<Cell *> Cell::getNeighbourCells() const { return _neighbourCells; }
 
 /**
  * @brief returns the atom indices at the given index

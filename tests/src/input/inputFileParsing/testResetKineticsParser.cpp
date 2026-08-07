@@ -27,6 +27,7 @@
 
 #include "exceptions.hpp"        // for InputFileException
 #include "gtest/gtest.h"         // for Message, TestPartResult
+#include "inputFileParser.hpp"   // for readInput
 #include "resetKineticsInputParser.hpp"
 #include "resetKineticsSettings.hpp"   // for ResetKineticsSettings
 #include "testInputFileReader.hpp"     // for TestInputFileReader

@@ -23,8 +23,10 @@
 #include "timer.hpp"
 
 #include <algorithm>   // for ranges::sort
+#include <ranges>      // for ranges::sort
 
 #include "exceptions.hpp"
+#include "timingsSettings.hpp"
 
 using namespace timings;
 using namespace customException;
@@ -40,7 +42,7 @@ Timer::Timer(const std::string_view name) : _name(name) {}
  * @brief get timings details
  *
  */
-const std::vector<TimingsSection>& Timer::getTimingDetails() const
+std::vector<TimingsSection> Timer::getTimingDetails() const
 {
     return _timingDetails;
 }
@@ -51,7 +53,7 @@ const std::vector<TimingsSection>& Timer::getTimingDetails() const
  */
 double Timer::calculateElapsedTime() const
 {
-    double elapsedTime = 0;
+    auto elapsedTime = 0;
 
     for (const auto& timing : _timingDetails)
         elapsedTime += timing.calculateElapsedTime();

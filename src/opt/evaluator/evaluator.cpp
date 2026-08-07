@@ -24,7 +24,6 @@
 
 #include "celllist.hpp"
 #include "constraints.hpp"
-#include "exceptions.hpp"
 #include "forceFieldClass.hpp"
 #include "intraNonBonded.hpp"
 #include "physicalData.hpp"
@@ -40,16 +39,6 @@ using namespace forceField;
 using namespace intraNonBonded;
 using namespace virial;
 using namespace constraints;
-using namespace customException;
-
-bool Evaluator::supportsAnalyticHessian() const { return false; }
-
-HessianMatrix Evaluator::calculateAnalyticHessian()
-{
-    throw UserInputException(
-        "The selected evaluator does not support analytic Hessian generation."
-    );
-}
 
 /***************************
  * standard setter methods *
@@ -102,8 +91,7 @@ void Evaluator::setConstraints(const std::shared_ptr<Constraints> constraints)
  *
  * @param physicalData - std::shared_ptr<PhysicalData>
  */
-void Evaluator::setPhysicalData(
-    const std::shared_ptr<PhysicalData> physicalData
+void Evaluator::setPhysicalData(const std::shared_ptr<PhysicalData> physicalData
 )
 {
     _physicalData = physicalData;

@@ -22,5 +22,5 @@ target_link_libraries(intraNonBonded
 )
 
 install(TARGETS intraNonBonded
-    DESTINATION lib
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

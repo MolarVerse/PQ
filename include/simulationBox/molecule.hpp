@@ -32,6 +32,9 @@
 #include <vector>        // for vector
 
 #include "atom.hpp"   // for Atom
+#include "box.hpp"    // for Box
+#include "typeAliases.hpp"
+#include "vector3d.hpp"   // for Vec3D
 
 namespace simulationBox
 {
@@ -52,10 +55,10 @@ namespace simulationBox
         double _charge;   // set via molDescriptor not sum of partial charges!!!
         double _molMass;
 
-        linearAlgebra::Vec3D _centerOfMass{0.0, 0.0, 0.0};
+        pq::Vec3D _centerOfMass = pq::Vec3D(0.0, 0.0, 0.0);
 
-        std::map<size_t, size_t>           _externalToInternalAtomTypes;
-        std::vector<std::shared_ptr<Atom>> _atoms;
+        std::map<size_t, size_t> _externalToInternalAtomTypes;
+        pq::SharedAtomVec        _atoms;
 
        public:
         Molecule() = default;
@@ -63,9 +66,7 @@ namespace simulationBox
         explicit Molecule(const size_t moltype);
 
         void calculateCenterOfMass(const Box &);
-        void reconstructAtomsAroundCenterOfMass(const Box &);
-        void scale(const linearAlgebra::tensor3D &, const Box &);
-        void scaleVelocity(const linearAlgebra::tensor3D &, const Box &);
+        void scale(const pq::tensor3D &, const Box &);
 
         [[nodiscard]] size_t              getNumberOfAtomTypes();
         [[nodiscard]] std::vector<size_t> getExternalGlobalVDWTypes() const;
@@ -81,62 +82,29 @@ namespace simulationBox
          *****************************************/
 
         void addAtom(const std::shared_ptr<Atom> atom);
-        void addAtomPosition(
-            const size_t                index,
-            const linearAlgebra::Vec3D &position
-        );
-        void addAtomVelocity(
-            const size_t                index,
-            const linearAlgebra::Vec3D &velocity
-        );
-        void addAtomForce(
-            const size_t                index,
-            const linearAlgebra::Vec3D &force
-        );
-        void addAtomShiftForce(
-            const size_t                index,
-            const linearAlgebra::Vec3D &shiftForce
-        );
+        void addAtomPosition(const size_t index, const pq::Vec3D &position);
+        void addAtomVelocity(const size_t index, const pq::Vec3D &velocity);
+        void addAtomForce(const size_t index, const pq::Vec3D &force);
+        void addAtomShiftForce(const size_t index, const pq::Vec3D &shiftForce);
 
         /*****************************************
          * standard setter methods for atom data *
          ****************************************/
 
-        void setAtomPosition(
-            const size_t                index,
-            const linearAlgebra::Vec3D &position
-        );
-        void setAtomVelocity(
-            const size_t                index,
-            const linearAlgebra::Vec3D &velocity
-        );
-        void setAtomForce(
-            const size_t                index,
-            const linearAlgebra::Vec3D &force
-        );
-        void setAtomShiftForce(
-            const size_t                index,
-            const linearAlgebra::Vec3D &shiftForce
-        );
+        void setAtomPosition(const size_t index, const pq::Vec3D &position);
+        void setAtomVelocity(const size_t index, const pq::Vec3D &velocity);
+        void setAtomForce(const size_t index, const pq::Vec3D &force);
+        void setAtomShiftForce(const size_t index, const pq::Vec3D &shiftForce);
 
         /****************************************
          * standard getters for atom properties *
          *****************************************/
 
-        [[nodiscard]] linearAlgebra::Vec3D getAtomPosition(
-            const size_t index
-        ) const;
-        [[nodiscard]] std::vector<linearAlgebra::Vec3D> getAtomPositions(
-        ) const;
-        [[nodiscard]] linearAlgebra::Vec3D getAtomVelocity(
-            const size_t index
-        ) const;
-        [[nodiscard]] linearAlgebra::Vec3D getAtomForce(
-            const size_t index
-        ) const;
-        [[nodiscard]] linearAlgebra::Vec3D getAtomShiftForce(
-            const size_t index
-        ) const;
+        [[nodiscard]] pq::Vec3D getAtomPosition(const size_t index) const;
+        [[nodiscard]] std::vector<pq::Vec3D> getAtomPositions() const;
+        [[nodiscard]] pq::Vec3D getAtomVelocity(const size_t index) const;
+        [[nodiscard]] pq::Vec3D getAtomForce(const size_t index) const;
+        [[nodiscard]] pq::Vec3D getAtomShiftForce(const size_t index) const;
 
         [[nodiscard]] int    getAtomicNumber(const size_t index) const;
         [[nodiscard]] double getAtomMass(const size_t index) const;
@@ -160,10 +128,10 @@ namespace simulationBox
 
         [[nodiscard]] std::string getName() const;
 
-        [[nodiscard]] linearAlgebra::Vec3D getCenterOfMass() const;
+        [[nodiscard]] pq::Vec3D getCenterOfMass() const;
 
-        [[nodiscard]] Atom &getAtom(const size_t index);
-        [[nodiscard]] std::vector<std::shared_ptr<Atom>> &getAtoms();
+        [[nodiscard]] Atom              &getAtom(const size_t index);
+        [[nodiscard]] pq::SharedAtomVec &getAtoms();
 
         /***************************
          * standard setter methods *
@@ -177,7 +145,7 @@ namespace simulationBox
 
         void setCharge(const double charge);
         void setMolMass(const double molMass);
-        void setCenterOfMass(const linearAlgebra::Vec3D &centerOfMass);
+        void setCenterOfMass(const pq::Vec3D &centerOfMass);
     };
 
 }   // namespace simulationBox

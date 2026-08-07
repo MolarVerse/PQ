@@ -32,6 +32,8 @@
 #include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
 #include "mmmdEngine.hpp"             // for Engine
 #include "molecule.hpp"               // for Molecule
+#include "potential.hpp"              // for Potential
+#include "simulationBox.hpp"          // for SimulationBox
 
 /**
  * @class TestParameterFileSection

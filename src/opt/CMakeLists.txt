@@ -18,7 +18,7 @@ target_link_libraries(optimization
 )
 
 install(TARGETS optimization
-    DESTINATION lib
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )
 
 add_subdirectory(learningRateStrategy)

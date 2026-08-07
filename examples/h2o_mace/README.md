@@ -18,5 +18,5 @@ The input file `run-01.in` contains the following settings:
 
 - `jobtype = qm-md`: QM-MD simulation.
 - `qm_prog = mace_mp`: MACE-MP-0 model for the "QM" calculation.
-- `mace_model = medium`: Medium MACE model.
+- `mace_model_size = medium`: Large model size.
 - `floating_point_type = float`: Single precision.

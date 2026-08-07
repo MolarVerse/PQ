@@ -26,9 +26,10 @@
 #include <string>    // for string, allocator, basic_string
 #include <vector>    // for vector
 
-#include "exceptions.hpp"   // for RstFileException, customException
-#include "gtest/gtest.h"    // for AssertionResult, Message, TestPart...
-#include "restartFileReader/restartFileSection.hpp"   // for RstFileSection, readInput
+#include "engine.hpp"               // for Engine
+#include "exceptions.hpp"           // for RstFileException, customException
+#include "gtest/gtest.h"            // for AssertionResult, Message, TestPart...
+#include "restartFileSection.hpp"   // for RstFileSection, readInput
 #include "testRestartFileSection.hpp"   // for TestStepCountSection
 #include "timingsSettings.hpp"          // for TimingsSettings
 

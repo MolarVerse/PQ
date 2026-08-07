@@ -26,10 +26,14 @@
 
 #include <memory>   // for unique_ptr
 
-#include "engine.hpp"
-#include "evaluator.hpp"
-#include "learningRateStrategy.hpp"
-#include "optimizer.hpp"
+#include "constant.hpp"               // for ConstantLearningRateStrategy
+#include "engine.hpp"                 // for Engine
+#include "evaluator.hpp"              // for Evaluator
+#include "learningRateStrategy.hpp"   // for learningRateStrategy
+#include "mmEvaluator.hpp"            // for MMEvaluator
+#include "optimizer.hpp"              // for Optimizer
+#include "steepestDescent.hpp"        // for SteepestDescent
+#include "typeAliases.hpp"
 
 namespace engine
 {
@@ -42,12 +46,12 @@ namespace engine
     class OptEngine : public Engine
     {
        private:
-        std::shared_ptr<opt::Optimizer>            _optimizer;
-        std::shared_ptr<opt::LearningRateStrategy> _learningRateStrategy;
-        std::shared_ptr<opt::Evaluator>            _evaluator;
+        pq::SharedOptimizer    _optimizer;
+        pq::SharedLearningRate _learningRateStrategy;
+        pq::SharedEvaluator    _evaluator;
 
-        std::shared_ptr<physicalData::PhysicalData> _physicalDataOld =
-            std::make_shared<physicalData::PhysicalData>();
+        pq::SharedPhysicalData _physicalDataOld =
+            std::make_shared<pq::PhysicalData>();
 
         bool _converged  = false;
         bool _optStopped = false;
@@ -61,29 +65,25 @@ namespace engine
          * standard setter methods *
          ***************************/
 
-        void setOptimizer(const std::shared_ptr<opt::Optimizer>);
-        void setLearningRateStrategy(
-            const std::shared_ptr<opt::LearningRateStrategy>
-        );
-        void setEvaluator(const std::shared_ptr<opt::Evaluator>);
+        void setOptimizer(const std::shared_ptr<pq::Optimizer>);
+        void setLearningRateStrategy(const std::shared_ptr<pq::LearningRate>);
+        void setEvaluator(const std::shared_ptr<pq::Evaluator>);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] opt::Optimizer            &getOptimizer();
-        [[nodiscard]] opt::LearningRateStrategy &getLearningRate();
-        [[nodiscard]] opt::Evaluator            &getEvaluator();
-        [[nodiscard]] opt::Convergence          &getConvergence();
+        [[nodiscard]] pq::Optimizer    &getOptimizer();
+        [[nodiscard]] pq::LearningRate &getLearningRate();
+        [[nodiscard]] pq::Evaluator    &getEvaluator();
+        [[nodiscard]] pq::Convergence  &getConvergence();
 
-        // clang-format off
-        [[nodiscard]] std::shared_ptr<opt::Optimizer> getSharedOptimizer();
-        [[nodiscard]] std::shared_ptr<opt::LearningRateStrategy> getSharedLearningRate();
-        [[nodiscard]] std::shared_ptr<opt::Evaluator> getSharedEvaluator();
-        
-        [[nodiscard]] physicalData::PhysicalData &getPhysicalDataOld();
-        [[nodiscard]] std::shared_ptr<physicalData::PhysicalData> getSharedPhysicalDataOld();
-        // clang-format on
+        [[nodiscard]] std::shared_ptr<pq::Optimizer>    getSharedOptimizer();
+        [[nodiscard]] std::shared_ptr<pq::LearningRate> getSharedLearningRate();
+        [[nodiscard]] std::shared_ptr<pq::Evaluator>    getSharedEvaluator();
+
+        [[nodiscard]] pq::PhysicalData      &getPhysicalDataOld();
+        [[nodiscard]] pq::SharedPhysicalData getSharedPhysicalDataOld();
 
         [[nodiscard]] output::OptOutput &getOptOutput();
     };

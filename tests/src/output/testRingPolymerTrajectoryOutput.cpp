@@ -26,7 +26,6 @@
 #include <string>   // for getline, allocator, string
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
-#include "outputFileSettings.hpp"
 
 /**
  * @brief Test the writeXyz method
@@ -35,7 +34,7 @@
 TEST_F(TestRingPolymerTrajectoryOutput, writeXyz)
 {
     _trajectoryOutput->setFilename("default.rpmd.xyz");
-    _trajectoryOutput->writeXyz(_beads, 1);
+    _trajectoryOutput->writeXyz(_beads);
     _trajectoryOutput->close();
     std::ifstream file("default.rpmd.xyz");
     std::string   line;
@@ -76,33 +75,13 @@ TEST_F(TestRingPolymerTrajectoryOutput, writeXyz)
 }
 
 /**
- * @brief Test optional step metadata in the xyz comment line
- *
- */
-TEST_F(TestRingPolymerTrajectoryOutput, writeXyzMetadata)
-{
-    settings::OutputFileSettings::setIncludeOutputMetadata(true);
-
-    _trajectoryOutput->setFilename("default.rpmd.xyz");
-    _trajectoryOutput->writeXyz(_beads, 42);
-    _trajectoryOutput->close();
-    settings::OutputFileSettings::setIncludeOutputMetadata(false);
-
-    std::ifstream file("default.rpmd.xyz");
-    std::string   line;
-    getline(file, line);
-    getline(file, line);
-    EXPECT_EQ(line, "# step = 42");
-}
-
-/**
  * @brief Test the writeVelocities method
  *
  */
 TEST_F(TestRingPolymerTrajectoryOutput, writeVelocities)
 {
     _trajectoryOutput->setFilename("default.rpmd.xyz");
-    _trajectoryOutput->writeVelocities(_beads, 1);
+    _trajectoryOutput->writeVelocities(_beads);
     _trajectoryOutput->close();
     std::ifstream file("default.rpmd.xyz");
     std::string   line;
@@ -155,7 +134,7 @@ TEST_F(TestRingPolymerTrajectoryOutput, writeVelocities)
 TEST_F(TestRingPolymerTrajectoryOutput, writeForces)
 {
     _trajectoryOutput->setFilename("default.rpmd.xyz");
-    _trajectoryOutput->writeForces(_beads, 1);
+    _trajectoryOutput->writeForces(_beads);
     _trajectoryOutput->close();
     std::ifstream file("default.rpmd.xyz");
     std::string   line;
@@ -196,33 +175,13 @@ TEST_F(TestRingPolymerTrajectoryOutput, writeForces)
 }
 
 /**
- * @brief Test optional step metadata in the force comment line
- *
- */
-TEST_F(TestRingPolymerTrajectoryOutput, writeForcesMetadata)
-{
-    settings::OutputFileSettings::setIncludeOutputMetadata(true);
-
-    _trajectoryOutput->setFilename("default.rpmd.xyz");
-    _trajectoryOutput->writeForces(_beads, 42);
-    _trajectoryOutput->close();
-    settings::OutputFileSettings::setIncludeOutputMetadata(false);
-
-    std::ifstream file("default.rpmd.xyz");
-    std::string   line;
-    getline(file, line);
-    getline(file, line);
-    EXPECT_EQ(line, "# step = 42; Total force = 2.27034e+01 kcal/mol/Angstrom");
-}
-
-/**
  * @brief Test the writeXyz method
  *
  */
 TEST_F(TestRingPolymerTrajectoryOutput, writeCharges)
 {
     _trajectoryOutput->setFilename("default.rpmd.xyz");
-    _trajectoryOutput->writeCharges(_beads, 1);
+    _trajectoryOutput->writeCharges(_beads);
     _trajectoryOutput->close();
     std::ifstream file("default.rpmd.xyz");
     std::string   line;

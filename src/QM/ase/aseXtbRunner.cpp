@@ -22,23 +22,27 @@
 
 #include "aseXtbRunner.hpp"
 
+#include "hubbardDerivMap.hpp"
+#include "pybind11/embed.h"
+
 using QM::AseXtbRunner;
+using namespace constants;
 
 /**
- * @brief Construct a new AseXtbRunner::AseXtbRunner object
+ * @brief Construct a new AseDftbRunner::AseDftbRunner object
  *
  * @param slakos
  *
- * @throw pybind11::error_already_set if the import of the mace module fails
+ * @throw py::error_already_set if the import of the mace module fails
  */
-AseXtbRunner::AseXtbRunner(const std::string &method) : AseQMRunner()
+AseXtbRunner::AseXtbRunner(const std::string &method) : ASEQMRunner()
 {
     try
     {
-        const pybind11::module_ calculator =
-            pybind11::module_::import("ase.calculators.dftb");
+        const py::module_ calculator =
+            py::module_::import("ase.calculators.dftb");
 
-        const pybind11::dict calculatorArgs;
+        const py::dict calculatorArgs;
 
         calculatorArgs["Hamiltonian_"]       = "xTB";
         calculatorArgs["Hamiltonian_Method"] = method;
@@ -49,10 +53,10 @@ AseXtbRunner::AseXtbRunner(const std::string &method) : AseQMRunner()
         calculatorArgs["Hamiltonian_SCC"]              = "Yes";
         calculatorArgs["Hamiltonian_SCCTolerance"]     = "1e-6";
         calculatorArgs["Hamiltonian_MaxSCCIterations"] = "250";
-        calculatorArgs["kpts"] = pybind11::make_tuple(1, 1, 1);
-        setAseCalculator(calculator.attr("Dftb")(**calculatorArgs));
+        calculatorArgs["kpts"] = py::make_tuple(1, 1, 1);
+        _calculator            = calculator.attr("Dftb")(**calculatorArgs);
     }
-    catch (const pybind11::error_already_set &)
+    catch (const py::error_already_set &)
     {
         ::PyErr_Print();
         throw;

@@ -23,12 +23,15 @@
 #include "mdEngine.hpp"
 
 #include "constants/conversionFactors.hpp"   // for _FS_TO_PS_
+#include "logOutput.hpp"                     // for LogOutput
 #include "outputFileSettings.hpp"            // for OutputFileSettings
 #include "progressbar.hpp"                   // for progressbar
 #include "qmmdEngine.hpp"                    // for QMMDEngine
 #include "referencesOutput.hpp"              // for ReferencesOutput
 #include "settings.hpp"                      // for Settings
+#include "stdoutOutput.hpp"                  // for StdoutOutput
 #include "timingsSettings.hpp"               // for TimingsSettings
+#include "vector3d.hpp"                      // for norm
 
 using namespace engine;
 using namespace output;
@@ -128,9 +131,6 @@ void MDEngine::takeStepBeforeForces()
 {
     _thermostat->applyThermostatHalfStep(*_simulationBox, *_physicalData);
 
-    if (_constraints->isMShakeActive())
-        _simulationBox->updateOldPositions();
-
     _integrator->firstStep(*_simulationBox);
 
     _constraints->applyShake(*_simulationBox);
@@ -172,9 +172,7 @@ void MDEngine::takeStepAfterForces()
 
     if (Settings::isQMActivated())
     {
-        _physicalData->setNumberOfQMAtoms(
-            static_cast<double>(_simulationBox->getNumberOfQMAtoms())
-        );
+        _physicalData->setNumberOfQMAtoms(_simulationBox->getNumberOfQMAtoms());
     }
 }
 
@@ -206,10 +204,10 @@ void MDEngine::writeOutput()
 
     if (0 == _step % outputFreq)
     {
-        _engineOutput.writeXyzFile(*_simulationBox, effStep);
-        _engineOutput.writeVelFile(*_simulationBox, effStep);
-        _engineOutput.writeForceFile(*_simulationBox, effStep);
-        _engineOutput.writeChargeFile(*_simulationBox, effStep);
+        _engineOutput.writeXyzFile(*_simulationBox);
+        _engineOutput.writeVelFile(*_simulationBox);
+        _engineOutput.writeForceFile(*_simulationBox);
+        _engineOutput.writeChargeFile(*_simulationBox);
         _engineOutput.writeRstFile(*_simulationBox, *_thermostat, effStep);
 
         _engineOutput.writeVirialFile(
@@ -243,7 +241,7 @@ void MDEngine::writeOutput()
 
         const auto dt            = TimingsSettings::getTimeStep();
         const auto effStepDouble = static_cast<double>(effStep);
-        const auto simTime       = effStepDouble * dt * FS_TO_PS;
+        const auto simTime       = effStepDouble * dt * _FS_TO_PS_;
 
         _engineOutput.writeEnergyFile(effStep, _averagePhysicalData);
         _engineOutput.writeInstantEnergyFile(effStep, *_physicalData);

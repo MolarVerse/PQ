@@ -1,6 +1,5 @@
 add_library(evaluator
     evaluator.cpp
-    hessianBuilder.cpp
 
     mmEvaluator.cpp
 )
@@ -11,7 +10,7 @@ target_include_directories(evaluator
 )
 
 target_link_libraries(evaluator
-    PUBLIC
+    PRIVATE
     linearAlgebra
     potential
     constraints
@@ -23,5 +22,5 @@ target_link_libraries(evaluator
 )
 
 install(TARGETS evaluator
-    DESTINATION lib
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

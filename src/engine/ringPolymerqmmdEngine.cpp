@@ -22,12 +22,18 @@
 
 #include "ringPolymerqmmdEngine.hpp"
 
-#include <algorithm>   // for __for_each_fn, for_each
-#include <memory>      // for unique_ptr
+#include <algorithm>    // for __for_each_fn, for_each
+#include <functional>   // for identity
+#include <memory>       // for unique_ptr
 
-#include "integrator.hpp"   // for Integrator
-#include "manostat.hpp"     // for Manostat
-#include "thermostat.hpp"   // for Thermostat
+#include "integrator.hpp"      // for Integrator
+#include "manostat.hpp"        // for Manostat
+#include "physicalData.hpp"    // for PhysicalData
+#include "qmRunner.hpp"        // for QMRunner
+#include "resetKinetics.hpp"   // for ResetKinetics
+#include "staticMatrix.hpp"    // for StaticMatrix3x3
+#include "thermostat.hpp"      // for Thermostat
+#include "vector3d.hpp"        // for Vec3D
 
 #ifdef WITH_MPI
 #include <mpi.h>   // for MPI_Bcast, MPI_DOUBLE, MPI_COMM_WORLD
@@ -135,8 +141,8 @@ void RingPolymerQMMDEngine::qmCalculation()
         auto forces   = _ringPolymerBeads[i].flattenForces();
         auto qmEnergy = _ringPolymerBeadsPhysicalData[i].getQMEnergy();
 
-        auto virial =
-            _ringPolymerBeadsPhysicalData[i].getVirial().toStdVector();
+        auto &virialMatrix = _ringPolymerBeadsPhysicalData[i].getVirial();
+        auto  virial       = virialMatrix.toStdVector();
 
         ::MPI_Bcast(
             forces.data(),
@@ -163,7 +169,9 @@ void RingPolymerQMMDEngine::qmCalculation()
 
         _ringPolymerBeads[i].deFlattenForces(forces);
         _ringPolymerBeadsPhysicalData[i].setQMEnergy(qmEnergy);
-        _ringPolymerBeadsPhysicalData[i].setVirial(StaticMatrix3x3(virial));
+
+        const auto virialMatrix = StaticMatrix3x3(virial);
+        _ringPolymerBeadsPhysicalData[i].setVirial(virialMatrix);
     }
 }
 #else
@@ -376,11 +384,7 @@ void RingPolymerQMMDEngine::applyManostat()
             MPI_COMM_WORLD
         );
 
-        const auto boxDimensionsVec = Vec3D(
-            boxDimensions[0],
-            boxDimensions[1],
-            boxDimensions[2]
-        );
+        const auto boxDimensionsVec = Vec3D(boxDimensions);
 
         _ringPolymerBeads[i].deFlattenVelocities(velocities);
         _ringPolymerBeads[i].deFlattenPositions(positions);

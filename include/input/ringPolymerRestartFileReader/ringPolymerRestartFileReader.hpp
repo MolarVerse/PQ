@@ -24,7 +24,7 @@
 
 #define _RING_POLYMER_RESTART_FILE_READER_HPP_
 
-#include <fstream>
+#include <fstream>   // IWYU pragma: keep
 #include <string>    // for string
 
 #include "typeAliases.hpp"

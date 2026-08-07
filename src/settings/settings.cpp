@@ -23,7 +23,6 @@
 #include "settings.hpp"
 
 #include <string>   // for operator==, string
-#include <utility>
 
 #include "stringUtilities.hpp"   // for toLowerCopy
 
@@ -46,11 +45,10 @@ std::string settings::string(const JobType jobtype)
         case QMMM_MD: return "QMMM_MD";
         case RING_POLYMER_QM_MD: return "RING_POLYMER_QM_MD";
         case MM_OPT: return "MM_OPT";
-        case MM_HESSIAN: return "MM_HESSIAN";
-        case NONE: break;
-    }
+        case NONE: return "NONE";
 
-    return "NONE";
+        default: return "NONE";
+    }
 }
 
 /***************************
@@ -84,9 +82,6 @@ void Settings::setJobtype(const std::string_view jobtype)
     else if (jobtypeToLower == "mmopt")
         setJobtype(MM_OPT);
 
-    else if (jobtypeToLower == "mmhessian")
-        setJobtype(MM_HESSIAN);
-
     else
         setJobtype(NONE);
 }
@@ -104,13 +99,14 @@ void Settings::setJobtype(const JobType jobtype)
     {
         using enum JobType;
 
-        case MM_OPT:       // fallthrough
-        case MM_HESSIAN:   // fallthrough
-        case MM_MD:        // fallthrough
-        case QM_MD:        // fallthrough
-        case QMMM_MD:      // fallthrough
-        case NONE: deactivateRingPolymerMD(); break;
+        case MM_OPT:   // fallthrough
+        case MM_MD: deactivateRingPolymerMD(); break;
+        case QM_MD: deactivateRingPolymerMD(); break;
         case RING_POLYMER_QM_MD: activateRingPolymerMD(); break;
+        case QMMM_MD: deactivateRingPolymerMD(); break;
+
+        // case NONE: fallthrough
+        default: deactivateRingPolymerMD(); break;
     }
 }
 
@@ -181,16 +177,6 @@ void Settings::setDimensionality(const size_t dimensionality)
     _dimensionality = dimensionality;
 }
 
-/**
- * @brief sets the virial type
- *
- * @param virialType
- */
-void Settings::setVirialType(const VirialType virialType)
-{
-    _virial = virialType;
-}
-
 /***************************
  *                         *
  * standard getter methods *
@@ -244,13 +230,6 @@ bool Settings::isRandomSeedSet() { return _isRandomSeedset; }
  */
 size_t Settings::getDimensionality() { return _dimensionality; }
 
-/**
- * @brief get the virial type
- *
- * @return VirialType
- */
-VirialType Settings::getVirialType() { return _virial; }
-
 /******************************
  *                            *
  * standard is-active methods *
@@ -267,18 +246,14 @@ bool Settings::isQMOnly()
 {
     using enum JobType;
 
-    switch (_jobtype)
-    {
-        case MM_MD:
-        case QMMM_MD:
-        case MM_OPT:
-        case MM_HESSIAN:
-        case NONE: return false;
-        case QM_MD:
-        case RING_POLYMER_QM_MD: return true;
-    }
+    if (_jobtype == QM_MD)
+        return true;
 
-    std::unreachable();
+    else if (_jobtype == RING_POLYMER_QM_MD)
+        return true;
+
+    else
+        return false;
 }
 
 /**
@@ -323,7 +298,6 @@ bool Settings::isMMActivated()
     isMM = isMM || _jobtype == MM_MD;
     isMM = isMM || _jobtype == QMMM_MD;
     isMM = isMM || _jobtype == MM_OPT;
-    isMM = isMM || _jobtype == MM_HESSIAN;
 
     return isMM;
 }

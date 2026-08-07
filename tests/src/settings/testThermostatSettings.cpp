@@ -22,6 +22,8 @@
 
 #include <gtest/gtest.h>   // for Test, InitGoogleTest, RUN_ALL_TESTS, EXPECT_EQ
 
+#include <memory>   // for allocator
+
 #include "gtest/gtest.h"            // for Message, TestPartResult
 #include "thermostatSettings.hpp"   // for ThermostatSettings, ThermostatType
 

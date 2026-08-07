@@ -25,9 +25,9 @@
 #include <cstddef>   // for size_t
 #include <format>    // for format
 #include <memory>    // for shared_ptr, allocator, make_shared
+#include <string>    // for basic_string
 #include <vector>    // for vector
 
-#include "../potential/nonCoulomb/testForceFieldNonCoulomb.hpp"
 #include "atom.hpp"                      // for Atom
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
 #include "exceptions.hpp"                // for IntraNonBondedException
@@ -49,14 +49,10 @@ namespace potential
     class NonCoulombPair;   // forward declaration
 }
 
-class TestIntraNonBonded : public TestNonCoulombPotentialFF
-{
-};
-
 /**
  * @brief test findIntraNonBondedContainerByMolType method
  */
-TEST_F(TestIntraNonBonded, findIntraNonBondedContainerByMolType)
+TEST(testIntraNonBonded, findIntraNonBondedContainerByMolType)
 {
     const auto intraNonBondedContainer1 =
         intraNonBonded::IntraNonBondedContainer(0, {{-1}});
@@ -93,7 +89,7 @@ TEST_F(TestIntraNonBonded, findIntraNonBondedContainerByMolType)
 /**
  * @brief test fillIntraNonBondedMaps method
  */
-TEST_F(TestIntraNonBonded, fillIntraNonBondedMaps)
+TEST(testIntraNonBonded, fillIntraNonBondedMaps)
 {
     const auto intraNonBondedContainer1 =
         intraNonBonded::IntraNonBondedContainer(0, {{-1}});
@@ -170,7 +166,7 @@ TEST_F(TestIntraNonBonded, fillIntraNonBondedMaps)
  *
  * @details only wrapper for calculate method of IntraNonBondedMap class
  */
-TEST_F(TestIntraNonBonded, calculate)
+TEST(TestIntraNonBonded, calculate)
 {
     auto molecule = simulationBox::Molecule(0);
     molecule.setNumberOfAtoms(2);
@@ -200,15 +196,16 @@ TEST_F(TestIntraNonBonded, calculate)
     auto intraNonBondedMap =
         intraNonBonded::IntraNonBondedMap(&molecule, &intraNonBondedType);
 
-    auto coulombPotential = potential::CoulombShiftedPotential(10.0);
-    setNonCoulombPairsMatrix(
+    auto coulombPotential    = potential::CoulombShiftedPotential(10.0);
+    auto nonCoulombPotential = potential::ForceFieldNonCoulomb();
+    nonCoulombPotential.setNonCoulombPairsMatrix(
         linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(2, 2)
     );
 
     auto nonCoulombPair =
         potential::LennardJonesPair(size_t(0), size_t(1), 10.0, 2.0, 3.0);
-    setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
-    setNonCoulombPairsMatrix(1, 0, nonCoulombPair);
+    nonCoulombPotential.setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
+    nonCoulombPotential.setNonCoulombPairsMatrix(1, 0, nonCoulombPair);
 
     auto simulationBox = simulationBox::SimulationBox();
     simulationBox.setBoxDimensions({10.0, 10.0, 10.0});
@@ -222,7 +219,7 @@ TEST_F(TestIntraNonBonded, calculate)
         std::make_shared<potential::CoulombShiftedPotential>(coulombPotential)
     );
     intraNonBonded.setNonCoulombPotential(
-        std::make_shared<potential::ForceFieldNonCoulomb>(*_nonCoulombPotential)
+        std::make_shared<potential::ForceFieldNonCoulomb>(nonCoulombPotential)
     );
     EXPECT_NO_THROW(intraNonBonded.calculate(simulationBox, physicalData));
 }

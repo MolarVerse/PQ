@@ -25,6 +25,7 @@
 #define _J_COUPLING_SECTION_HPP_
 
 #include <string>   // for allocator, string
+#include <vector>   // for vector
 
 #include "parameterFileSection.hpp"   // for ParameterFileSection
 #include "typeAliases.hpp"
@@ -42,8 +43,8 @@ namespace input::parameterFile
        public:
         [[nodiscard]] std::string keyword() override;
 
-        void processSection(std::vector<std::string> &, pq::Engine &) override;
-        void processHeader(std::vector<std::string> &, pq::Engine &) override {}
+        void processSection(pq::strings &, pq::Engine &) override;
+        void processHeader(pq::strings &, pq::Engine &) override {};
         // TODO: implement processHeader
     };
 

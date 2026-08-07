@@ -27,8 +27,6 @@
 #include <string>      // for string, allocator
 #include <vector>      // for vector
 
-#include "defaults.hpp"
-
 using settings::OutputFileSettings;
 using namespace defaults;
 
@@ -70,78 +68,78 @@ void OutputFileSettings::setFilePrefix(const std::string_view prefix)
  */
 void OutputFileSettings::replaceDefaultValues(const std::string &prefix)
 {
-    if (DefaultFiles::restartFile == _rstFile)
+    if (_RESTART_FILE_DEFAULT_ == _rstFile)
         _rstFile = prefix + ".rst";
 
-    if (DefaultFiles::logFile == _logFile)
+    if (_LOG_FILE_DEFAULT_ == _logFile)
         _logFile = prefix + ".log";
 
-    if (DefaultFiles::refFile == _refFile)
+    if (_REF_FILE_DEFAULT_ == _refFile)
         _refFile = prefix + ".ref";
 
-    if (DefaultFiles::trajFile == _trajFile)
+    if (_TRAJ_FILE_DEFAULT_ == _trajFile)
         _trajFile = prefix + ".xyz";
 
-    if (DefaultFiles::energyFile == _energyFile)
+    if (_ENERGY_FILE_DEFAULT_ == _energyFile)
         _energyFile = prefix + ".en";
 
-    if (DefaultFiles::instEnFile == _instEnFile)
+    if (_INSTEN_FILE_DEFAULT_ == _instEnFile)
         _instEnFile = prefix + ".instant_en";
 
-    if (DefaultFiles::forceFile == _forceFile)
+    if (_FORCE_FILE_DEFAULT_ == _forceFile)
         _forceFile = prefix + ".force";
 
-    if (DefaultFiles::velFile == _velFile)
+    if (_VEL_FILE_DEFAULT_ == _velFile)
         _velFile = prefix + ".vel";
 
-    if (DefaultFiles::chargeFile == _chargeFile)
+    if (_CHARGE_FILE_DEFAULT_ == _chargeFile)
         _chargeFile = prefix + ".chrg";
 
-    if (DefaultFiles::infoFile == _infoFile)
+    if (_INFO_FILE_DEFAULT_ == _infoFile)
         _infoFile = prefix + ".info";
 
-    if (DefaultFiles::momentumFile == _momFile)
+    if (_MOMENTUM_FILE_DEFAULT_ == _momFile)
         _momFile = prefix + ".mom";
 
-    if (DefaultFiles::virialFile == _virialFile)
+    if (_VIRIAL_FILE_DEFAULT_ == _virialFile)
         _virialFile = prefix + ".vir";
 
-    if (DefaultFiles::stressFile == _stressFile)
+    if (_STRESS_FILE_DEFAULT_ == _stressFile)
         _stressFile = prefix + ".stress";
 
-    if (DefaultFiles::boxFile == _boxFile)
+    if (_BOX_FILE_DEFAULT_ == _boxFile)
         _boxFile = prefix + ".box";
 
-    if (DefaultFiles::optFile == _optFile)
+    if (_OPT_FILE_DEFAULT_ == _optFile)
         _optFile = prefix + ".opt";
 
     /*****************************
      * ring polymer output files *
      *****************************/
 
-    if (DefaultFiles::rpmdRstFile == _rpmdRstFile)
+    if (_RPMD_RST_FILE_DEFAULT_ == _rpmdRstFile)
         _rpmdRstFile = prefix + ".rpmd.rst";
 
-    if (DefaultFiles::rpmdTrajFile == _rpmdTrajFile)
+    if (_RPMD_TRAJ_FILE_DEFAULT_ == _rpmdTrajFile)
         _rpmdTrajFile = prefix + ".rpmd.xyz";
 
-    if (DefaultFiles::rpmdVelFile == _rpmdVelFile)
+    if (_RPMD_VEL_FILE_DEFAULT_ == _rpmdVelFile)
         _rpmdVelFile = prefix + ".rpmd.vel";
 
-    if (DefaultFiles::rpmdForceFile == _rpmdForceFile)
+    if (_RPMD_FORCE_FILE_DEFAULT_ == _rpmdForceFile)
         _rpmdForceFile = prefix + ".rpmd.force";
 
-    if (DefaultFiles::rpmdChargeFile == _rpmdChargeFile)
+    if (_RPMD_CHARGE_FILE_DEFAULT_ == _rpmdChargeFile)
         _rpmdChargeFile = prefix + ".rpmd.chrg";
 
-    if (DefaultFiles::rpmdEnergyFile == _rpmdEnergyFile)
+    if (_RPMD_ENERGY_FILE_DEFAULT_ == _rpmdEnergyFile)
         _rpmdEnergyFile = prefix + ".rpmd.en";
 
     /********************
      * the timings file *
      ********************/
 
-    if (DefaultFiles::timingsFile == _timeFile)
+    if (_TIMINGS_FILE_DEFAULT_ == _timeFile)
         _timeFile = prefix + ".timings";
 }
 
@@ -181,7 +179,7 @@ std::string OutputFileSettings::determineMostCommonPrefix()
     uniqueFileNames.erase(first, last);
 
     std::string mostCommonPrefix = "default";
-    auto        count            = 0;
+    int         count            = 0;
 
     auto getHighestOccurrence =
         [&fileNames, &mostCommonPrefix, &count](const std::string &fileName)
@@ -189,12 +187,12 @@ std::string OutputFileSettings::determineMostCommonPrefix()
         if (fileName == "default")
             return;
 
-        const auto occurrence = std::ranges::count(fileNames, fileName);
+        const int occurrence = std::ranges::count(fileNames, fileName);
 
         if (occurrence > count)
         {
             mostCommonPrefix = fileName;
-            count            = static_cast<int>(occurrence);
+            count            = occurrence;
         }
     };
 
@@ -399,8 +397,7 @@ void OutputFileSettings::setRingPolymerVelocityFileName(
  *
  * @param name
  */
-void OutputFileSettings::setRingPolymerForceFileName(
-    const std::string_view name
+void OutputFileSettings::setRingPolymerForceFileName(const std::string_view name
 )
 {
     _rpmdForceFile = name;
@@ -448,16 +445,6 @@ void OutputFileSettings::setTimingsFileName(const std::string_view name)
 void OutputFileSettings::setOverwriteOutputFiles(const bool overwrite)
 {
     _overwriteOutputFiles = overwrite;
-}
-
-/**
- * @brief sets if output files should include metadata
- *
- * @param includeMetadata
- */
-void OutputFileSettings::setIncludeOutputMetadata(const bool includeMetadata)
-{
-    _includeOutputMetadata = includeMetadata;
 }
 
 /***************************
@@ -667,14 +654,4 @@ std::string OutputFileSettings::getTimingsFileName() { return _timeFile; }
 bool OutputFileSettings::getOverwriteOutputFiles()
 {
     return _overwriteOutputFiles;
-}
-
-/**
- * @brief returns if output files should include metadata
- *
- * @return bool
- */
-bool OutputFileSettings::getIncludeOutputMetadata()
-{
-    return _includeOutputMetadata;
 }

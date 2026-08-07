@@ -24,10 +24,12 @@
 
 #include <cmath>     // for pow, exp
 #include <cstddef>   // for size_t
+#include <string>    // for string
 #include <vector>    // for vector
 
 #include "buckinghamPair.hpp"   // for BuckinghamPair
 #include "gtest/gtest.h"        // for AssertionResult, Message, TestPartResult
+#include "nonCoulombPair.hpp"   // for potential
 
 using namespace potential;
 

@@ -20,20 +20,21 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifdef WITH_KOKKOS
-
 #include "kokkosSetup.hpp"
 
 #include <iostream>
 
-#include "constants.hpp"
+#include "constants/conversionFactors.hpp"
 #include "coulombWolf.hpp"
 #include "engine.hpp"
 #include "exceptions.hpp"
 #include "forceFieldNonCoulomb.hpp"
+#include "mdEngine.hpp"
+#include "nonCoulombPotential.hpp"
 #include "potentialSettings.hpp"
 #include "settings.hpp"
 #include "simulationBox_kokkos.hpp"
+#include "timingsSettings.hpp"
 #include "typeAliases.hpp"
 
 using namespace setup;
@@ -60,7 +61,7 @@ void setup::setupKokkos(Engine &engine)
  *
  * @param engine
  */
-KokkosSetup::KokkosSetup(Engine &engine) : _engine(engine) {}
+KokkosSetup::KokkosSetup(Engine &engine) : _engine(engine){};
 
 /**
  * @brief setup Kokkos
@@ -138,5 +139,3 @@ void KokkosSetup::setup()
         _COULOMB_PREFACTOR_
     );
 }
-
-#endif   // WITH_KOKKOS

@@ -34,10 +34,7 @@ using namespace linearAlgebra;
  * @brief Construct a new Virial Molecular:: Virial Molecular object
  *
  */
-MolecularVirial::MolecularVirial() : Virial()
-{
-    _virialType = settings::VirialType::MOLECULAR;
-}
+MolecularVirial::MolecularVirial() : Virial() { _virialType = "molecular"; }
 
 /**
  * @brief clones the molecular virial object
@@ -60,8 +57,8 @@ std::shared_ptr<Virial> MolecularVirial::clone() const
  * @param physicalData
  */
 void MolecularVirial::calculateVirial(
-    SimulationBox& simulationBox,
-    PhysicalData&  physicalData
+    SimulationBox &simulationBox,
+    PhysicalData  &physicalData
 )
 {
     Virial::calculateVirial(simulationBox, physicalData);
@@ -78,15 +75,15 @@ void MolecularVirial::calculateVirial(
  * @param data
  */
 void MolecularVirial::intraMolecularVirialCorrection(
-    SimulationBox& simBox,
-    PhysicalData&  data
+    SimulationBox &simBox,
+    PhysicalData  &data
 )
 {
     startTimingsSection("IntraMolecular Correction");
 
     _virial = {0.0};
 
-    for (const auto& molecule : simBox.getMolecules())
+    for (const auto &molecule : simBox.getMolecules())
     {
         const auto   centerOfMass  = molecule.getCenterOfMass();
         const size_t numberOfAtoms = molecule.getNumberOfAtoms();

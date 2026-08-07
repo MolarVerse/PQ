@@ -22,6 +22,8 @@
 
 #include "testBondConstraint.hpp"
 
+#include <string>   // for string
+
 #include "constants/conversionFactors.hpp"
 #include "gtest/gtest.h"   // for AssertionResult, Message, TestPartResult
 #include "timingsSettings.hpp"
@@ -80,7 +82,7 @@ TEST_F(TestBondConstraint, applyShake)
         linearAlgebra::Vec3D(1.0, 2.0, 3.0) - 0.5 * dPos
     );
 
-    const auto expectedDeltaVel = dPos / (timestep * constants::FS_TO_S);
+    const auto expectedDeltaVel = dPos / (timestep * constants::_FS_TO_S_);
     EXPECT_EQ(
         _box->getMolecules()[0].getAtomVelocity(0),
         linearAlgebra::Vec3D(0.0, 0.0, 0.0) + expectedDeltaVel

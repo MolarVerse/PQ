@@ -72,7 +72,7 @@ namespace settings
         static inline std::optional<ConvStrategy> _energyConvStrategy;
 
         // clang-format off
-        static inline std::string _defaultEnergyConvStrategy = defaults::EN_CONV_STRATEGY_DEFAULT;
+        static inline std::string _defaultEnergyConvStrategy = defaults::_EN_CONV_STRATEGY_DEFAULT_;
         // clang-format on
 
        public:

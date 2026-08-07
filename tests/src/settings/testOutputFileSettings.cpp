@@ -23,6 +23,8 @@
 #include <gtest/gtest.h>   // for Test, InitGoogleTest, RUN_ALL_TESTS
 #include <stdint.h>        // for UINT64_MAX
 
+#include <memory>   // for allocator
+
 #include "gtest/gtest.h"            // for Message, TestPartResult
 #include "outputFileSettings.hpp"   // for OutputFileSettings
 
@@ -34,18 +36,4 @@ TEST(TestOutputSettings, setSpecialOutputFrequency)
 {
     settings::OutputFileSettings::setOutputFrequency(0);
     EXPECT_EQ(settings::OutputFileSettings::getOutputFrequency(), UINT64_MAX);
-}
-
-/**
- * @brief tests that output metadata is opt-in
- *
- */
-TEST(TestOutputSettings, includeOutputMetadataDefaultsToFalse)
-{
-    EXPECT_FALSE(settings::OutputFileSettings::getIncludeOutputMetadata());
-
-    settings::OutputFileSettings::setIncludeOutputMetadata(true);
-    EXPECT_TRUE(settings::OutputFileSettings::getIncludeOutputMetadata());
-
-    settings::OutputFileSettings::setIncludeOutputMetadata(false);
 }

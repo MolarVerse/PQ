@@ -23,6 +23,7 @@
 #include "steepestDescent.hpp"
 
 #include "optimizer.hpp"
+#include "simulationBox.hpp"
 
 using namespace opt;
 

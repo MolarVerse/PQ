@@ -24,6 +24,8 @@
 
 #include <cmath>   // for pow, sqrt
 
+#include "simulationBox.hpp"
+
 using namespace opt;
 
 /**
@@ -60,9 +62,9 @@ Adam::Adam(
 /**
  * @brief clone the optimizer
  *
- * @return std::shared_ptr<Optimizer>
+ * @return pq::SharedOptimizer
  */
-std::shared_ptr<Optimizer> Adam::clone() const
+pq::SharedOptimizer Adam::clone() const
 {
     return std::make_shared<Adam>(*this);
 }

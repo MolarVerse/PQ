@@ -28,12 +28,7 @@
 #include <cstdlib>   // for abs
 #include <limits>    // for numeric_limits
 
-namespace linearAlgebra
-{
-    template <typename T>
-    class Vector3D;   // forward declaration
-
-}   // namespace linearAlgebra
+#include "typeAliases.hpp"
 
 namespace utilities
 {
@@ -54,9 +49,9 @@ namespace utilities
     }
 
     [[nodiscard]] bool compare(
-        const linearAlgebra::Vector3D<double> &a,
-        const linearAlgebra::Vector3D<double> &b,
-        const double                          &tol
+        const pq::Vec3D &a,
+        const pq::Vec3D &b,
+        const double    &tol
     );
 
     /**
@@ -74,28 +69,7 @@ namespace utilities
         return std::fabs(a - b) < std::numeric_limits<T>::epsilon();
     }
 
-    [[nodiscard]] bool compare(
-        const linearAlgebra::Vector3D<double> &a,
-        const linearAlgebra::Vector3D<double> &b
-    );
-
-    /**
-     * @brief check whether a number is exactly zero
-     *
-     * @details Uses exact equality (`a == T(0)`) rather than an epsilon
-     * comparison: callers that guard against division-by-zero or `0 * Inf`
-     * NaN propagation only need to catch literal zero. Use the explicit
-     * `compare(a, T(0), tol)` overload when a tolerance is wanted.
-     *
-     * @tparam T
-     * @param a
-     * @return true if a == T(0), false otherwise
-     */
-    template <typename T>
-    [[nodiscard]] bool isZero(const T &a)
-    {
-        return a == T(0);
-    }
+    [[nodiscard]] bool compare(const pq::Vec3D &a, const pq::Vec3D &b);
 
     /**
      * @brief calculates the sign of a number

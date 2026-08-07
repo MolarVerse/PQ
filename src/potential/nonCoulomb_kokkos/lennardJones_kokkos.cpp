@@ -20,11 +20,7 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifdef WITH_KOKKOS
-
 #include "lennardJones_kokkos.hpp"
-
-#include "lennardJonesPair.hpp"
 
 using namespace potential;
 using namespace Kokkos;
@@ -228,5 +224,3 @@ double KokkosLennardJones::getC12(const size_t i, const size_t j) const
 {
     return _c12.d_view(i, j);
 }
-
-#endif   // WITH_KOKKOS

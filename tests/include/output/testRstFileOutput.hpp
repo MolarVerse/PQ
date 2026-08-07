@@ -28,6 +28,7 @@
 #include "molecule.hpp"        // for Molecule
 #include "rstFileOutput.hpp"   // for RstFileOutput
 #include "simulationBox.hpp"   // for SimulationBox
+#include "vector3d.hpp"        // for Vec3D
 
 #include <gtest/gtest.h>   // for Test
 #include <memory>          // for allocator

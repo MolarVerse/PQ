@@ -24,6 +24,8 @@
 
 #define __TIMINGS_OUTPUT_HPP__
 
+#include <string_view>   // for string_view
+
 #include "output.hpp"   // for Output
 #include "typeAliases.hpp"
 
