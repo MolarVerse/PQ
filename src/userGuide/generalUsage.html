@@ -21,8 +21,8 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="The Input File" href="inputFile.html" />
-    <link rel="prev" title="User Guide" href="userGuide.html" /> 
+    <link rel="next" title="Examples" href="examples.html" />
+    <link rel="prev" title="Quick Start" href="quickStart.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -48,10 +48,14 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../featureList/featureList.html">Feature List</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="userGuide.html">User Guide</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">General Usage</a></li>
-<li class="toctree-l2"><a class="reference internal" href="inputFile.html">The Input File</a></li>
-<li class="toctree-l2"><a class="reference internal" href="setupFiles.html">Setup Files</a></li>
-<li class="toctree-l2"><a class="reference internal" href="outputFiles.html">Output Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickStart.html">Quick Start</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">General Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#inspect-and-validate">Inspect and Validate</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="referenceManual.html">Reference Manual</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../installation/installation.html">Installation</a></li>
@@ -90,15 +94,42 @@ file <code class="docutils literal notranslate"><span class="pre">PQ.in</span></
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>PQ<span class="w"> </span>PQ.in
 </pre></div>
 </div>
-<p>For details on the general file structure of an input file and additional setup files please refer to section <a class="reference internal" href="inputFile.html#inputfile"><span class="std std-ref">The Input File</span></a> and <a class="reference internal" href="setupFiles.html#setupfiles"><span class="std std-ref">Setup Files</span></a>.</p>
+<p>Run <strong>PQ</strong> from the directory that contains the input file and any setup files
+referenced with relative paths. The input file selects the job type, physical
+model, output names and required setup files.</p>
+<p>For a first complete run, see <a class="reference internal" href="quickStart.html#quickstart"><span class="std std-ref">Quick Start</span></a>. For the full input syntax and
+file formats, see <a class="reference internal" href="referenceManual.html#referencemanual"><span class="std std-ref">Reference Manual</span></a>.</p>
+<section id="inspect-and-validate">
+<h2>Inspect and Validate<a class="headerlink" href="#inspect-and-validate" title="Link to this heading"></a></h2>
+<p>Use the command-line metadata to check the installed PQ build:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>PQ<span class="w"> </span>--version
+$<span class="w"> </span>PQ<span class="w"> </span>--capabilities<span class="o">=</span>json
+</pre></div>
+</div>
+<p>Before starting a simulation, validate the input from its working directory:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>PQ<span class="w"> </span>--validate<span class="w"> </span>PQ.in
+$<span class="w"> </span>PQ<span class="w"> </span>--validate<span class="w"> </span>PQ.in<span class="w"> </span>--format<span class="o">=</span>json
+$<span class="w"> </span>PQ<span class="w"> </span>--validate<span class="w"> </span>PQ.in<span class="w"> </span>--scope<span class="o">=</span>portable<span class="w"> </span>--format<span class="o">=</span>json
+</pre></div>
+</div>
+<p>The default <code class="docutils literal notranslate"><span class="pre">installed</span></code> scope checks input syntax, setting dependencies,
+compiled capabilities and required files. The <code class="docutils literal notranslate"><span class="pre">portable</span></code> scope checks syntax
+and setting dependencies without requiring the target build or local files.
+This is useful for input generators and setup packages. Validation does not
+start a simulation or create output. Referenced file contents are checked when
+the simulation starts.</p>
+<p>Exit status <code class="docutils literal notranslate"><span class="pre">0</span></code> means the input is valid, including inputs with warnings.
+Status <code class="docutils literal notranslate"><span class="pre">1</span></code> means the input is invalid. Operational validation failures use
+status <code class="docutils literal notranslate"><span class="pre">2</span></code>.</p>
+</section>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="userGuide.html" class="btn btn-neutral float-left" title="User Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="inputFile.html" class="btn btn-neutral float-right" title="The Input File" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="quickStart.html" class="btn btn-neutral float-left" title="Quick Start" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="examples.html" class="btn btn-neutral float-right" title="Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
