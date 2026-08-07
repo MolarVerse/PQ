@@ -116,15 +116,9 @@ TEST_F(TestLogOutput, writeHeader)
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
-    EXPECT_EQ(
-        line,
-        std::format("         Author:        {}", sysinfo::_AUTHOR_)
-    );
+    EXPECT_EQ(line, std::format("         Author:        {}", sysinfo::AUTHOR));
     getline(file, line);
-    EXPECT_EQ(
-        line,
-        std::format("         Email:         {}", sysinfo::_EMAIL_)
-    );
+    EXPECT_EQ(line, std::format("         Email:         {}", sysinfo::EMAIL));
 }
 
 /**
@@ -214,7 +208,7 @@ TEST_F(TestLogOutput, writeInitialMomentum)
         line,
         std::format(
             "INFO:    Initial momentum = 1.00000e-01 {}*amu/fs",
-            output::_ANGSTROM_
+            output::ANGSTROM
         )
     );
 }
@@ -231,8 +225,32 @@ TEST_F(TestLogOutput, TestwriteSetupWarning)
     std::ifstream file("default.log");
     std::string   line;
     getline(file, line);
-    EXPECT_EQ(
-        line,
-        std::format("WARNING: This is a warning message.")
-    );
+    EXPECT_EQ(line, std::format("WARNING: This is a warning message."));
+}
+
+/**
+ * @brief tests adding warnings to the queue and then flushing them to the log
+ * file
+ *
+ */
+TEST_F(TestLogOutput, TestAddAndFlushQueuedWarnings)
+{
+    _logOutput->queueWarning("This keyword is deprecated and will be removed.");
+    _logOutput->queueWarning("Combining these two methods is discouraged.");
+
+    _logOutput->setFilename("default.log");
+    _logOutput->flushQueuedWarnings();
+    _logOutput->close();
+    std::ifstream file("default.log");
+    std::string   line;
+    // clang-format off
+    getline(file, line);
+    EXPECT_EQ(line, std::format("WARNING: This keyword is deprecated and will be removed."));
+    getline(file, line);
+    EXPECT_EQ(line, std::format(""));
+    getline(file, line);
+    EXPECT_EQ(line, std::format("WARNING: Combining these two methods is discouraged."));
+    getline(file, line);
+    EXPECT_EQ(line, std::format(""));
+    // clang-format on
 }

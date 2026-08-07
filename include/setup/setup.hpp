@@ -41,8 +41,8 @@ namespace setup
 {
     void setupRequestedJob(const std::string &inputFileName, pq::Engine &);
 
-    void startSetup(pq::Timer &, pq::Timer &, pq::Engine &);
-    void endSetup(const pq::Timer &, pq::Timer &, pq::Engine &);
+    void startSetup(pq::Timer &, pq::Engine &);
+    void endSetup(pq::Timer &, pq::Engine &);
 
     void readFiles(pq::Engine &);
     void setupEngine(pq::Engine &);

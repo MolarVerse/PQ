@@ -26,6 +26,7 @@
 #include <format>      // for format
 #include <fstream>     // for ifstream, basic_istream
 #include <map>         // for map, operator==
+#include <stdexcept>   // for invalid_argument, out_of_range
 #include <string>      // for char_traits, string
 #include <vector>      // for vector
 
@@ -39,6 +40,7 @@
 #include "filesInputParser.hpp"              // for InputFileParserFiles
 #include "forceFieldInputParser.hpp"         // for InputFileParserForceField
 #include "generalInputParser.hpp"            // for InputFileParserGeneral
+#include "hessianInputParser.hpp"            // for HessianInputParser
 #include "hybridInputParser.hpp"             // for InputFileParserQMMM
 #include "integratorInputParser.hpp"         // for InputFileParserIntegrator
 #include "manostatInputParser.hpp"           // for InputFileParserManostat
@@ -67,19 +69,26 @@ using std::make_unique;
  *
  * @param fileName
  * @param engine
+ * @param validateFilePaths
+ * @param resolveBuiltInSlakosPath
  */
 InputFileReader::InputFileReader(
     const std::string_view &fileName,
-    engine::Engine         &engine
+    engine::Engine         &engine,
+    const bool              validateFilePaths,
+    const bool              resolveBuiltInSlakosPath
 )
     : _fileName(fileName), _engine(engine)
 {
     _parsers.push_back(make_unique<CellListInputParser>(_engine));
     _parsers.push_back(make_unique<ConstraintsInputParser>(_engine));
     _parsers.push_back(make_unique<CoulombLongRangeInputParser>(_engine));
-    _parsers.push_back(make_unique<FilesInputParser>(_engine));
+    _parsers.push_back(
+        make_unique<FilesInputParser>(_engine, validateFilePaths)
+    );
     _parsers.push_back(make_unique<ForceFieldInputParser>(_engine));
     _parsers.push_back(make_unique<GeneralInputParser>(_engine));
+    _parsers.push_back(make_unique<HessianInputParser>(_engine));
     _parsers.push_back(make_unique<IntegratorInputParser>(_engine));
     _parsers.push_back(make_unique<ManostatInputParser>(_engine));
     _parsers.push_back(make_unique<NonCoulombInputParser>(_engine));
@@ -94,7 +103,9 @@ InputFileReader::InputFileReader(
 
     _parsers.push_back(make_unique<ConvInputParser>(_engine));
     _parsers.push_back(make_unique<OptInputParser>(_engine));
-    _parsers.push_back(make_unique<QMInputParser>(_engine));
+    _parsers.push_back(
+        make_unique<QMInputParser>(_engine, resolveBuiltInSlakosPath)
+    );
 
     addKeywords();
 }
@@ -122,6 +133,9 @@ void InputFileReader::addKeywords()
 
         _keywordFuncMap.insert(keywordFuncMap.begin(), keywordFuncMap.end());
         _keywordCountMap.insert(keywordCountMap.begin(), keywordCountMap.end());
+
+        for (const auto &[keyword, _] : keywordCountMap)
+            _keywordSetMap[keyword] = false;
     };
 
     std::ranges::for_each(_parsers, addKeyword);
@@ -140,19 +154,53 @@ void InputFileReader::addKeywords()
 void InputFileReader::process(const std::vector<std::string> &lineElements)
 {
     const auto original_keyword = lineElements[0];
-    const auto keyword = toLowerAndReplaceDashesCopy(original_keyword);
+    const auto keyword          = toLowerAndReplaceDashesCopy(original_keyword);
 
     if (!_keywordFuncMap.contains(keyword))
-        throw InputFileException(std::format(
-            "Invalid keyword \"{}\" at line {}",
-            original_keyword,
-            _lineNumber
-        ));
+        throw InputFileException(
+            std::format(
+                "Invalid keyword \"{}\" at line {}",
+                original_keyword,
+                _lineNumber
+            )
+        );
 
-    pq::ParseFunc parserFunc = _keywordFuncMap[keyword];
-    parserFunc(lineElements, _lineNumber);
+    InputFileParser::ParseFunc parserFunc = _keywordFuncMap[keyword];
+
+    try
+    {
+        parserFunc(lineElements, _lineNumber);
+    }
+    catch (CustomException &exception)
+    {
+        exception.setLineNumber(_lineNumber);
+        throw;
+    }
+    catch (const std::invalid_argument &)
+    {
+        throw InputFileException(
+            std::format(
+                "Invalid value \"{}\" for keyword \"{}\"",
+                lineElements[2],
+                original_keyword
+            ),
+            _lineNumber
+        );
+    }
+    catch (const std::out_of_range &)
+    {
+        throw InputFileException(
+            std::format(
+                "Value \"{}\" for keyword \"{}\" is out of range",
+                lineElements[2],
+                original_keyword
+            ),
+            _lineNumber
+        );
+    }
 
     ++_keywordCountMap[keyword];
+    _keywordSetMap[keyword] = true;
 }
 
 /**
@@ -195,10 +243,18 @@ void InputFileReader::read()
                 process(lineElements);
         };
 
-        std::ranges::for_each(
-            getLineCommands(line, _lineNumber),
-            processInputCommand
-        );
+        try
+        {
+            std::ranges::for_each(
+                getLineCommands(line, _lineNumber),
+                processInputCommand
+            );
+        }
+        catch (CustomException &exception)
+        {
+            exception.setLineNumber(_lineNumber);
+            throw;
+        }
 
         ++_lineNumber;
     }
@@ -246,16 +302,27 @@ void input::readJobType(
             const auto lineElements = splitString(command);
             if (!lineElements.empty() && "jobtype" == lineElements[0])
             {
-                auto parser = GeneralInputParser(*engine);
-                parser.parseJobTypeForEngine(lineElements, lineNumber, engine);
+                GeneralInputParser::parseJobTypeForEngine(
+                    lineElements,
+                    lineNumber,
+                    engine
+                );
                 jobtypeFound = true;
             }
         };
 
-        std::ranges::for_each(
-            getLineCommands(line, lineNumber),
-            processInputCommand
-        );
+        try
+        {
+            std::ranges::for_each(
+                getLineCommands(line, lineNumber),
+                processInputCommand
+            );
+        }
+        catch (CustomException &exception)
+        {
+            exception.setLineNumber(lineNumber);
+            throw;
+        }
 
         ++lineNumber;
     }
@@ -282,6 +349,7 @@ void input::readInputFile(
     InputFileReader inputFileReader(fileName, engine);
     inputFileReader.read();
     inputFileReader.postProcess();
+    inputFileReader.validateInputConfiguration();
 }
 
 /**
@@ -328,11 +396,13 @@ void input::processEqualSign(std::string &command, const size_t lineNumber)
         command.replace(equalSignPos, 1, " = ");
 
     else
-        throw InputFileException(std::format(
-            "Missing equal sign in command \"{}\" in line {}",
-            command,
-            lineNumber
-        ));
+        throw InputFileException(
+            std::format(
+                "Missing equal sign in command \"{}\" in line {}",
+                command,
+                lineNumber
+            )
+        );
 }
 
 /***************************
@@ -363,6 +433,7 @@ void InputFileReader::setKeywordCount(
 )
 {
     _keywordCountMap[keyword] = count;
+    _keywordSetMap[keyword]   = (count > 0);
 }
 
 /***************************
@@ -377,9 +448,26 @@ void InputFileReader::setKeywordCount(
  * @param keyword
  * @return size_t
  */
-size_t InputFileReader::getKeywordCount(const std::string &keyword)
+size_t InputFileReader::getKeywordCount(const std::string &keyword) const
 {
-    return _keywordCountMap[keyword];
+    if (!_keywordCountMap.contains(keyword))
+        return 0;
+
+    return _keywordCountMap.at(keyword);
+}
+
+/**
+ * @brief get whether the keyword has been set in input
+ *
+ * @param keyword
+ * @return bool
+ */
+bool InputFileReader::getKeywordSet(const std::string &keyword) const
+{
+    if (!_keywordSetMap.contains(keyword))
+        return false;
+
+    return _keywordSetMap.at(keyword);
 }
 
 /**
@@ -388,9 +476,12 @@ size_t InputFileReader::getKeywordCount(const std::string &keyword)
  * @param keyword
  * @return bool
  */
-bool InputFileReader::getKeywordRequired(const std::string &keyword)
+bool InputFileReader::getKeywordRequired(const std::string &keyword) const
 {
-    return _keywordRequiredMap[keyword];
+    if (!_keywordRequiredMap.contains(keyword))
+        return false;
+
+    return _keywordRequiredMap.at(keyword);
 }
 
 /**
@@ -401,6 +492,16 @@ bool InputFileReader::getKeywordRequired(const std::string &keyword)
 std::map<std::string, size_t> InputFileReader::getKeywordCountMap() const
 {
     return _keywordCountMap;
+}
+
+/**
+ * @brief get the keyword set map
+ *
+ * @return std::map<std::string, bool>
+ */
+std::map<std::string, bool> InputFileReader::getKeywordSetMap() const
+{
+    return _keywordSetMap;
 }
 
 /**
@@ -416,9 +517,10 @@ std::map<std::string, bool> InputFileReader::getKeywordRequiredMap() const
 /**
  * @brief get the keyword function map
  *
- * @return std::map<std::string, pq::ParseFunc>
+ * @return std::map<std::string, InputFileParser::ParseFunc>
  */
-std::map<std::string, pq::ParseFunc> InputFileReader::getKeywordFuncMap() const
+std::map<std::string, InputFileParser::ParseFunc> InputFileReader::
+    getKeywordFuncMap() const
 {
     return _keywordFuncMap;
 }

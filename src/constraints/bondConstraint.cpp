@@ -30,7 +30,6 @@
 #include "molecule.hpp"
 #include "simulationBox.hpp"
 #include "timingsSettings.hpp"
-#include "vector3d.hpp"
 
 using namespace constraints;
 using namespace simulationBox;
@@ -128,7 +127,7 @@ bool BondConstraint::applyShake(
         _molecules[0]->addAtomPosition(_atomIndices[0], +invMass1 * dPosition);
         _molecules[1]->addAtomPosition(_atomIndices[1], -invMass2 * dPosition);
 
-        const auto timeStep  = TimingsSettings::getTimeStep() * _FS_TO_S_;
+        const auto timeStep  = TimingsSettings::getTimeStep() * FS_TO_S;
         const auto dVelocity = dPosition / timeStep;
 
         _molecules[0]->addAtomVelocity(_atomIndices[0], +invMass1 * dVelocity);
@@ -198,7 +197,9 @@ bool BondConstraint::applyRattle(const double tolerance)
  *
  * @param shakeDistanceRef
  */
-void BondConstraint::setShakeDistanceRef(const pq::Vec3D &shakeDistanceRef)
+void BondConstraint::setShakeDistanceRef(
+    const linearAlgebra::Vec3D &shakeDistanceRef
+)
 {
     _shakeDistanceRef = shakeDistanceRef;
 }
@@ -224,7 +225,7 @@ double BondConstraint::getTargetBondLength() const
  * @return shake distance reference
  */
 [[nodiscard]]
-pq::Vec3D BondConstraint::getShakeDistanceRef() const
+linearAlgebra::Vec3D BondConstraint::getShakeDistanceRef() const
 {
     return _shakeDistanceRef;
 }

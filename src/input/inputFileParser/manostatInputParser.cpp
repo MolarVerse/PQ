@@ -24,11 +24,13 @@
 
 #include <cstddef>       // for size_t
 #include <format>        // for format
-#include <functional>    // for _Bind_front_t, bind_front
+#include <limits>        // for numeric_limits
 #include <string_view>   // for string_view
 
+#include "constants/conversionFactors.hpp"
 #include "exceptions.hpp"         // for InputFileException, customException
 #include "manostatSettings.hpp"   // for ManostatSettings
+#include "parserUtils.hpp"
 #include "references.hpp"         // for ReferencesOutput
 #include "referencesOutput.hpp"   // for ReferencesOutput
 #include "stringUtilities.hpp"    // for toLowerCopy
@@ -39,6 +41,7 @@ using namespace settings;
 using namespace customException;
 using namespace references;
 using namespace utilities;
+using namespace constants;
 
 /**
  * @brief Construct a new Input File Parser Manostat:: Input File Parser
@@ -56,31 +59,31 @@ ManostatInputParser::ManostatInputParser(Engine &engine)
 {
     addKeyword(
         std::string("manostat"),
-        bind_front(&ManostatInputParser::parseManostat, this),
+        bindMember(&ManostatInputParser::parseManostat, this),
         false
     );
 
     addKeyword(
         std::string("pressure"),
-        bind_front(&ManostatInputParser::parsePressure, this),
+        bindMember(&ManostatInputParser::parsePressure, this),
         false
     );
 
     addKeyword(
         std::string("p_relaxation"),
-        bind_front(&ManostatInputParser::parseManostatRelaxationTime, this),
+        bindMember(&ManostatInputParser::parseManostatRelaxationTime, this),
         false
     );
 
     addKeyword(
         std::string("compressibility"),
-        bind_front(&ManostatInputParser::parseCompressibility, this),
+        bindMember(&ManostatInputParser::parseCompressibility, this),
         false
     );
 
     addKeyword(
         std::string("isotropy"),
-        bind_front(&ManostatInputParser::parseIsotropy, this),
+        bindMember(&ManostatInputParser::parseIsotropy, this),
         false
     );
 }
@@ -115,22 +118,25 @@ void ManostatInputParser::parseManostat(
     else if (manostat == "berendsen")
     {
         ManostatSettings::setManostatType(BERENDSEN);
-        ReferencesOutput::addReferenceFile(_BERENDSEN_FILE_);
+        ReferencesOutput::addReferenceFile(BERENDSEN_FILE);
     }
 
     else if (manostat == "stochastic_rescaling")
     {
         ManostatSettings::setManostatType(STOCHASTIC_RESCALING);
-        ReferencesOutput::addReferenceFile(_STOCHASTIC_RESCALING_FILE_);
+        ReferencesOutput::addReferenceFile(STOCHASTIC_RESCALING_FILE);
     }
 
     else
-        throw InputFileException(std::format(
-            "Invalid manostat \"{}\" at line {} in input file.\n"
-            "Possible options are: berendsen, stochastic_rescaling and none",
-            lineElements[2],
-            lineNumber
-        ));
+        throw InputFileException(
+            std::format(
+                "Invalid manostat \"{}\" at line {} in input file.\n"
+                "Possible options are: berendsen, stochastic_rescaling and "
+                "none",
+                lineElements[2],
+                lineNumber
+            )
+        );
 }
 
 /**
@@ -147,8 +153,9 @@ void ManostatInputParser::parsePressure(
 {
     checkCommand(lineElements, lineNumber);
 
-    ManostatSettings::setTargetPressure(stod(lineElements[2]));
-    ManostatSettings::setPressureSet(true);
+    const auto pressure = stringToFiniteDouble(lineElements[2]);
+
+    ManostatSettings::setTargetPressure(pressure);
 }
 
 /**
@@ -166,11 +173,17 @@ void ManostatInputParser::parseManostatRelaxationTime(
 )
 {
     checkCommand(lineElements, lineNumber);
-    const auto relaxationTime = stod(lineElements[2]);
+    const auto relaxationTime = stringToFiniteDouble(lineElements[2]);
 
-    if (relaxationTime < 0)
+    if (relaxationTime <= 0.0)
         throw InputFileException(
-            "Relaxation time of manostat cannot be negative"
+            "Relaxation time of manostat must be finite and greater than zero"
+        );
+
+    if (relaxationTime > std::numeric_limits<double>::max() / PS_TO_FS)
+        throw InputFileException(
+            "Relaxation time of manostat is too large to represent in "
+            "femtoseconds"
         );
 
     ManostatSettings::setTauManostat(relaxationTime);
@@ -192,10 +205,12 @@ void ManostatInputParser::parseCompressibility(
 )
 {
     checkCommand(lineElements, lineNumber);
-    const auto compressibility = stod(lineElements[2]);
+    const auto compressibility = stringToFiniteDouble(lineElements[2]);
 
     if (compressibility < 0.0)
-        throw InputFileException("Compressibility cannot be negative");
+        throw InputFileException(
+            "Compressibility must be finite and non-negative"
+        );
 
     ManostatSettings::setCompressibility(compressibility);
 }
@@ -255,11 +270,13 @@ void ManostatInputParser::parseIsotropy(
         ManostatSettings::setIsotropy(FULL_ANISOTROPIC);
 
     else
-        throw InputFileException(std::format(
-            "Invalid isotropy \"{}\" at line {} in input file.\n"
-            "Possible options are: isotropic, xy, xz, yz, "
-            "anisotropic and full_anisotropic",
-            lineElements[2],
-            lineNumber
-        ));
+        throw InputFileException(
+            std::format(
+                "Invalid isotropy \"{}\" at line {} in input file.\n"
+                "Possible options are: isotropic, xy, xz, yz, "
+                "anisotropic and full_anisotropic",
+                lineElements[2],
+                lineNumber
+            )
+        );
 }

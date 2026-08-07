@@ -24,20 +24,27 @@
 
 #include <format>    // for format
 #include <ostream>   // for basic_ostream, ofstream
-#include <string>    // for operator<<
 
 #include "constraintSettings.hpp"   // for ConstraintSettings
 #include "forceFieldSettings.hpp"   // for ForceFieldSettings
 #include "manostatSettings.hpp"     // for ManostatSettings
 #include "physicalData.hpp"         // for PhysicalData
 #include "settings.hpp"             // for Settings
-#include "stlVector.hpp"            // for mean, max
 #include "thermostatSettings.hpp"   // for ThermostatSettings
-#include "vector3d.hpp"             // for norm
 
 using namespace output;
 using namespace physicalData;
 using namespace settings;
+
+/**
+ * @brief Write energy file metadata
+ *
+ * @param timeStep simulation timestep in fs
+ */
+void EnergyOutput::writeHeader(const double timeStep)
+{
+    _fp << std::format("# timestep = {} fs\n", timeStep);
+}
 
 /**
  * @brief Write the energy output

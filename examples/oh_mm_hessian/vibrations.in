@@ -1,0 +1,13 @@
+structure_file = start.rst
+hessian_file = oh-no-opt.hessian
+moldescriptor_file = moldescriptor.dat
+out_file = wavenumbers.dat
+normal_modes_file = normal_modes.dat
+modes_prefix = mode
+modes_file = modes.xyz
+modes = all
+modes_frames = 30
+modes_amplitude = 0.25
+modes_threshold = 1.0e-6
+unit = kcal
+hessian_sign = auto

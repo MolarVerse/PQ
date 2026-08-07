@@ -1,0 +1,7 @@
+- remove `<chrono>` transient header from timer as it was included in every single TU at the moment
+- remove transient pybind headers from `AseRunners` to decrease compilation parsing time by about 5-6% (total speedup approx. 4%)
+- remove more `matrix.hpp` header inclusions -- until now `mShake.hpp` exposed the header in its public API and therefore it ended up via `constraints.hpp` in `engine.hpp` and therefore almost everywhere, included `Eigen`
+- remove `matrix.hpp` dependency from `ForceFieldNonCoulomb` class as it was again included transitively in many many TUs
+- remove some useless public API functions from `ForceFieldNonCoulomb` class for easier maintainance as they were only used for testing
+- add pre-compiled-headers (pchs) to speedup compilation time ~20%
+- zero-initialize kinetic-energy accumulator tensors exposed by PCH-enabled builds

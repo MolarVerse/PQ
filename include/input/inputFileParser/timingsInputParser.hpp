@@ -25,8 +25,6 @@
 #define _TIMINGS_INPUT_PARSER_HPP_
 
 #include <cstddef>   // for size_t
-#include <string>    // for string
-#include <vector>    // for vector
 
 #include "inputFileParser.hpp"
 #include "typeAliases.hpp"
@@ -44,8 +42,8 @@ namespace input
        public:
         explicit TimingsInputParser(pq::Engine &);
 
-        void parseTimeStep(const pq::strings &, const size_t);
-        void parseNumberOfSteps(const pq::strings &, const size_t);
+        void parseTimeStep(const std::vector<std::string> &, const size_t);
+        void parseNumberOfSteps(const std::vector<std::string> &, const size_t);
     };
 
 }   // namespace input

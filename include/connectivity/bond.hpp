@@ -25,7 +25,6 @@
 #define _BOND_HPP_
 
 #include <cstddef>
-#include <vector>
 
 #include "connectivityElement.hpp"
 #include "typeAliases.hpp"

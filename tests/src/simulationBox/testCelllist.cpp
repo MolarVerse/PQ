@@ -23,7 +23,6 @@
 #include "testCelllist.hpp"
 
 #include <memory>   // for make_shared, __shared_ptr_access
-#include <string>   // for allocator, basic_string
 #include <vector>   // for vector
 
 #include "atom.hpp"                // for Atom
@@ -34,7 +33,7 @@
 #include "potentialSettings.hpp"   // for PotentialSettings
 #include "simulationBox.hpp"       // for SimulationBox
 #include "throwWithMessage.hpp"    // for EXPECT_THROW_MSG
-#include "vector3d.hpp"            // for Vec3Dul, Vec3D, Vector3D
+#include "vector3d.hpp"   // IWYU pragma: keep - for Vec3Dul, Vec3D, Vector3D
 
 TEST_F(TestCellList, determineCellSize)
 {
@@ -48,7 +47,7 @@ TEST_F(TestCellList, determineCellBoundaries)
     _cellList->resizeCells();
     _cellList->determineCellBoundaries(_simulationBox->getBoxDimensions());
 
-    auto cells = _cellList->getCells();
+    const auto &cells = _cellList->getCells();
 
     const auto box = _simulationBox->getBoxDimensions();
     auto index     = static_cast<linearAlgebra::Vec3D>(cells[0].getCellIndex());
@@ -99,6 +98,35 @@ TEST_F(TestCellList, getCellIndexOfAtom)
     );
 }
 
+TEST_F(TestCellList, getCellIndexOfAtom_wrapsPeriodicBoundaryCoordinates)
+{
+    _simulationBox->setBoxDimensions(linearAlgebra::Vec3D(10.0, 10.0, 10.0));
+    _cellList->setNumberOfCells(2);
+    _cellList->determineCellSize(_simulationBox->getBoxDimensions());
+
+    EXPECT_EQ(
+        _cellList->getCellIndexOfAtom(
+            _simulationBox->getBoxDimensions(),
+            linearAlgebra::Vec3D(-5.0, -5.0, -5.0)
+        ),
+        linearAlgebra::Vec3Dul(0, 0, 0)
+    );
+    EXPECT_EQ(
+        _cellList->getCellIndexOfAtom(
+            _simulationBox->getBoxDimensions(),
+            linearAlgebra::Vec3D(0.0, 0.0, 0.0)
+        ),
+        linearAlgebra::Vec3Dul(1, 1, 1)
+    );
+    EXPECT_EQ(
+        _cellList->getCellIndexOfAtom(
+            _simulationBox->getBoxDimensions(),
+            linearAlgebra::Vec3D(5.0, 5.0, 5.0)
+        ),
+        linearAlgebra::Vec3Dul(0, 0, 0)
+    );
+}
+
 TEST_F(TestCellList, addNeighbouringCellPointers)
 {
     auto cell = simulationBox::Cell();
@@ -110,7 +138,7 @@ TEST_F(TestCellList, addNeighbouringCellPointers)
     _cellList->determineCellBoundaries(_simulationBox->getBoxDimensions());
     _cellList->addNeighbouringCellPointers(cell);
 
-    const auto neighbourCells = cell.getNeighbourCells();
+    const auto &neighbourCells = cell.getNeighbourCells();
 
     EXPECT_EQ(neighbourCells.size(), 13);
     EXPECT_EQ(
@@ -179,13 +207,29 @@ TEST_F(TestCellList, addNeighbouringCells)
 
     for (const auto &cell : _cellList->getCells())
     {
-        const auto neighbourCells = cell.getNeighbourCells();
+        const auto &neighbourCells = cell.getNeighbourCells();
         EXPECT_EQ(neighbourCells.size(), 62);
     }
 
     EXPECT_EQ(
         _cellList->getNumberOfNeighbourCells(),
         linearAlgebra::Vec3Dul(2, 2, 2)
+    );
+}
+
+TEST_F(TestCellList, addNeighbouringCellsRejectsAliasedPeriodicOffsets)
+{
+    _cellList->setNumberOfCells(2);
+    _cellList->determineCellSize(_simulationBox->getBoxDimensions());
+    _cellList->resizeCells();
+    _cellList->determineCellBoundaries(_simulationBox->getBoxDimensions());
+
+    EXPECT_THROW_MSG(
+        _cellList->addNeighbouringCells(4.0),
+        customException::CellListException,
+        "Invalid cell-list layout for x dimension: cell-number must be at "
+        "least 2 * neighbour cells + 1 (required 3, configured 2). Decrease "
+        "coulomb radius cutoff or increase cell-number."
     );
 }
 
@@ -197,13 +241,46 @@ TEST_F(TestCellList, checkCoulombCutoff)
 {
     _simulationBox->setBoxDimensions(linearAlgebra::Vec3D(50.0, 50.0, 50.0));
     _cellList->determineCellSize(_simulationBox->getBoxDimensions());
-    EXPECT_NO_THROW(_cellList->checkCoulombCutoff({200.0}));
+    EXPECT_NO_THROW(_cellList->checkCoulombCutoff(200.0));
 
     EXPECT_THROW_MSG(
-        _cellList->checkCoulombCutoff({0.1}),
+        _cellList->checkCoulombCutoff(0.1),
         customException::CellListException,
         "Coulomb cutoff is smaller than half of the largest cell size."
     );
+}
+
+/* ---------- activate / deactivate / isActive ---------- */
+
+TEST_F(TestCellList, activateDeactivateToggles_isActive)
+{
+    _cellList->activate();
+    EXPECT_TRUE(_cellList->isActive());
+
+    _cellList->deactivate();
+    EXPECT_FALSE(_cellList->isActive());
+
+    _cellList->activate();
+    EXPECT_TRUE(_cellList->isActive());
+}
+
+/* ---------- clone() copies the configured cell counts ---------- */
+
+TEST_F(TestCellList, clone_preservesNumberOfCellsAndNeighbourCells)
+{
+    _cellList->setNumberOfCells(4);
+    _cellList->setNumberOfNeighbourCells(2);
+    _cellList->activate();
+
+    const auto cloned = _cellList->clone();
+
+    ASSERT_NE(cloned, nullptr);
+    EXPECT_EQ(cloned->getNumberOfCells(), _cellList->getNumberOfCells());
+    EXPECT_EQ(
+        cloned->getNumberOfNeighbourCells(),
+        _cellList->getNumberOfNeighbourCells()
+    );
+    EXPECT_EQ(cloned->isActive(), _cellList->isActive());
 }
 
 /**
@@ -214,7 +291,10 @@ TEST_F(TestCellList, checkCoulombCutoff)
  */
 TEST_F(TestCellList, updateCellList)
 {
-    settings::PotentialSettings::setCoulombRadiusCutOff(22.0);
+    settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
+    _cellList->setNumberOfCells(11);
+    _cellList->resizeCells();
+
     EXPECT_NO_THROW(_cellList->updateCellList(*_simulationBox));
     _cellList->activate();
 

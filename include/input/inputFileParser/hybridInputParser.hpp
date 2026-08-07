@@ -25,11 +25,9 @@
 #define _HYBRID_INPUT_PARSER_HPP_
 
 #include <cstddef>   // for size_t
-#include <string>    // for string
-#include <vector>    // for vector
 
 #include "inputFileParser.hpp"   // for InputFileParser
-#include "typeAliases.hpp"       // for pq::strings
+#include "typeAliases.hpp"       // for std::vector<std::string>
 
 namespace input
 {
@@ -44,13 +42,25 @@ namespace input
        public:
         explicit HybridInputParser(pq::Engine &);
 
-        void parseCoreCenter(const pq::strings &, const size_t);
-        void parseCoreOnlyList(const pq::strings &, const size_t);
-        void parseNonCoreOnlyList(const pq::strings &, const size_t);
-        void parseUseQMCharges(const pq::strings &, const size_t);
-        void parseCoreRadius(const pq::strings &, const size_t);
-        void parseLayerRadius(const pq::strings &, const size_t);
-        void parseSmoothingRadius(const pq::strings &, const size_t);
+        void parseCoreCenter(const std::vector<std::string> &, const size_t);
+
+        void parseCoreOnlyList(const std::vector<std::string> &, const size_t);
+
+        void parseNonCoreOnlyList(
+            const std::vector<std::string> &,
+            const size_t
+        );
+
+        void parseUseQMCharges(const std::vector<std::string> &, const size_t);
+
+        void parseCoreRadius(const std::vector<std::string> &, const size_t);
+
+        void parseLayerRadius(const std::vector<std::string> &, const size_t);
+
+        void parseSmoothingRadius(
+            const std::vector<std::string> &,
+            const size_t
+        );
     };
 
 }   // namespace input

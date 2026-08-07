@@ -24,8 +24,8 @@
 
 #define _CONSTANTS_HPP_
 
-#include "constants/conversionFactors.hpp"
-#include "constants/internalConversionFactors.hpp"
-#include "constants/natureConstants.hpp"
+#include "constants/conversionFactors.hpp"           // IWYU pragma: export
+#include "constants/internalConversionFactors.hpp"   // IWYU pragma: export
+#include "constants/natureConstants.hpp"             // IWYU pragma: export
 
 #endif   // _CONSTANTS_HPP_

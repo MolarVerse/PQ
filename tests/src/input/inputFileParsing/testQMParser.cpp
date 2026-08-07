@@ -27,7 +27,6 @@
 #include "QMInputParser.hpp"         // for InputFileParserQM
 #include "exceptions.hpp"            // for InputFileException, customException
 #include "gtest/gtest.h"             // for Message, TestPartResult
-#include "inputFileParser.hpp"       // for readInput
 #include "qmSettings.hpp"            // for QMSettings
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "throwWithMessage.hpp"      // for ASSERT_THROW_MSG
@@ -60,6 +59,9 @@ TEST_F(TestInputFileReader, parseQMMethod)
     parser.parseQMMethod({"qm_prog", "=", "ase_xtb"}, 0);
     EXPECT_EQ(QMSettings::getQMMethod(), ASEXTB);
 
+    parser.parseQMMethod({"qm_prog", "=", "fennol"}, 0);
+    EXPECT_EQ(QMSettings::getQMMethod(), FENNOL);
+
     // the more detailed mace parser is tested in TestMaceParser
 
     ASSERT_THROW_MSG(
@@ -67,7 +69,7 @@ TEST_F(TestInputFileReader, parseQMMethod)
         InputFileException,
         "Invalid qm_prog \"notAMethod\" in input file.\n"
         "Possible values are: dftbplus, ase_dftbplus, ase_xtb, pyscf, "
-        "turbomole, mace, mace_mp, mace_off"
+        "turbomole, fennol, mace, mace_mp, mace_off"
     )
 }
 
@@ -130,6 +132,38 @@ TEST_F(TestInputFileReader, parseDispersion)
     )
 }
 
+TEST_F(TestInputFileReader, parseRemoveNetForce)
+{
+    EXPECT_FALSE(QMSettings::getRemoveNetForce());
+
+    auto parser = QMInputParser(*_engine);
+    parser.parseRemoveNetForce({"remove_net_force", "=", "true"}, 0);
+    EXPECT_TRUE(QMSettings::getRemoveNetForce());
+
+    parser.parseRemoveNetForce({"remove_net_force", "=", "yes"}, 0);
+    EXPECT_TRUE(QMSettings::getRemoveNetForce());
+
+    parser.parseRemoveNetForce({"remove_net_force", "=", "on"}, 0);
+    EXPECT_TRUE(QMSettings::getRemoveNetForce());
+
+    parser.parseRemoveNetForce({"remove_net_force", "=", "false"}, 0);
+    EXPECT_FALSE(QMSettings::getRemoveNetForce());
+
+    parser.parseRemoveNetForce({"remove_net_force", "=", "no"}, 0);
+    EXPECT_FALSE(QMSettings::getRemoveNetForce());
+
+    parser.parseRemoveNetForce({"remove_net_force", "=", "off"}, 0);
+    EXPECT_FALSE(QMSettings::getRemoveNetForce());
+
+    ASSERT_THROW_MSG(
+        parser.parseRemoveNetForce({"remove_net_force", "=", "notABool"}, 0),
+        InputFileException,
+        "Invalid boolean option \"notABool\" for keyword \"remove_net_force\" "
+        "in input file.\n"
+        "Possible values are: on, yes, true, off, no, false."
+    )
+}
+
 TEST_F(TestInputFileReader, parseMaceQMMethod)
 {
     using enum QMMethod;
@@ -169,55 +203,88 @@ TEST_F(TestInputFileReader, parseMaceQMMethod)
     )
 }
 
-TEST_F(TestInputFileReader, parseMaceModelSize)
+TEST_F(TestInputFileReader, parseMaceModel)
 {
-    using enum MaceModelSize;
+    using enum MaceModel;
 
     auto parser = QMInputParser(*_engine);
-    parser.parseMaceModelSize({"mace_model_size", "=", "small"}, 0);
-    EXPECT_EQ(QMSettings::getMaceModelSize(), SMALL);
+    parser.parseMaceModel({"mace_model", "=", "small"}, 0);
+    EXPECT_EQ(QMSettings::getMaceModel(), SMALL);
 
-    parser.parseMaceModelSize({"mace_model_size", "=", "medium"}, 0);
-    EXPECT_EQ(QMSettings::getMaceModelSize(), MEDIUM);
+    parser.parseMaceModel({"mace_model", "=", "medium"}, 0);
+    EXPECT_EQ(QMSettings::getMaceModel(), MEDIUM);
 
-    parser.parseMaceModelSize({"mace_model_size", "=", "large"}, 0);
-    EXPECT_EQ(QMSettings::getMaceModelSize(), LARGE);
+    parser.parseMaceModel({"mace_model", "=", "large"}, 0);
+    EXPECT_EQ(QMSettings::getMaceModel(), LARGE);
 
-    parser.parseMaceModelSize({"mace_model_size", "=", "small_0b"}, 0);
-    EXPECT_EQ(QMSettings::getMaceModelSize(), SMALL0B);
+    parser.parseMaceModel({"mace_model", "=", "small_0b"}, 0);
+    EXPECT_EQ(QMSettings::getMaceModel(), SMALL0B);
 
-    parser.parseMaceModelSize({"mace_model_size", "=", "medium_0b"}, 0);
-    EXPECT_EQ(QMSettings::getMaceModelSize(), MEDIUM0B);
+    parser.parseMaceModel({"mace_model", "=", "medium_0b"}, 0);
+    EXPECT_EQ(QMSettings::getMaceModel(), MEDIUM0B);
 
-    parser.parseMaceModelSize({"mace_model_size", "=", "small_0b2"}, 0);
-    EXPECT_EQ(QMSettings::getMaceModelSize(), SMALL0B2);
+    parser.parseMaceModel({"mace_model", "=", "small_0b2"}, 0);
+    EXPECT_EQ(QMSettings::getMaceModel(), SMALL0B2);
 
-    parser.parseMaceModelSize({"mace_model_size", "=", "medium_0b2"}, 0);
-    EXPECT_EQ(QMSettings::getMaceModelSize(), MEDIUM0B2);
+    parser.parseMaceModel({"mace_model", "=", "medium_0b2"}, 0);
+    EXPECT_EQ(QMSettings::getMaceModel(), MEDIUM0B2);
 
-    parser.parseMaceModelSize({"mace_model_size", "=", "large_0b2"}, 0);
-    EXPECT_EQ(QMSettings::getMaceModelSize(), LARGE0B2);
+    parser.parseMaceModel({"mace_model", "=", "large_0b2"}, 0);
+    EXPECT_EQ(QMSettings::getMaceModel(), LARGE0B2);
 
-    parser.parseMaceModelSize({"mace_model_size", "=", "medium_0b3"}, 0);
-    EXPECT_EQ(QMSettings::getMaceModelSize(), MEDIUM0B3);
+    parser.parseMaceModel({"mace_model", "=", "medium_0b3"}, 0);
+    EXPECT_EQ(QMSettings::getMaceModel(), MEDIUM0B3);
 
-    parser.parseMaceModelSize({"mace_model_size", "=", "medium_mpa_0"}, 0);
-    EXPECT_EQ(QMSettings::getMaceModelSize(), MEDIUMMPA0);
+    parser.parseMaceModel({"mace_model", "=", "medium_mpa_0"}, 0);
+    EXPECT_EQ(QMSettings::getMaceModel(), MEDIUMMPA0);
 
-    parser.parseMaceModelSize({"mace_model_size", "=", "medium_omat_0"}, 0);
-    EXPECT_EQ(QMSettings::getMaceModelSize(), MEDIUMOMAT0);
+    parser.parseMaceModel({"mace_model", "=", "medium_omat_0"}, 0);
+    EXPECT_EQ(QMSettings::getMaceModel(), MEDIUMOMAT0);
 
-    parser.parseMaceModelSize({"mace_model_size", "=", "custom"}, 0);
-    EXPECT_EQ(QMSettings::getMaceModelSize(), CUSTOM);
+    parser.parseMaceModel({"mace_model", "=", "custom"}, 0);
+    EXPECT_EQ(QMSettings::getMaceModel(), CUSTOM);
 
     ASSERT_THROW_MSG(
-        parser.parseMaceModelSize({"mace_model_size", "=", "notASize"}, 0),
+        parser.parseMaceModel({"mace_model", "=", "notASize"}, 0),
         InputFileException,
-        "Invalid mace_model_size \"notASize\" in input file.\n"
+        "Invalid mace_model \"notASize\" in input file.\n"
         "Possible values are: small, medium, large, small-0b,\n"
         "medium-0b, small-0b2, medium-0b2, large-0b2, medium-0b3,\n"
         "medium-mpa-0, medium-omat-0, custom"
     )
+}
+
+TEST_F(TestInputFileReader, parseMaceMode)
+{
+    using enum MaceMode;
+
+    auto parser = QMInputParser(*_engine);
+
+    parser.parseMaceMode({"mace_mode", "=", "accurate"}, 0);
+    EXPECT_EQ(QMSettings::getMaceMode(), ACCURATE);
+
+    parser.parseMaceMode({"mace_mode", "=", "fast"}, 0);
+    EXPECT_EQ(QMSettings::getMaceMode(), FAST);
+
+    ASSERT_THROW_MSG(
+        parser.parseMaceMode({"mace_mode", "=", "notAMode"}, 0),
+        UserInputException,
+        "Unknown mace_mode \"notAMode\". Valid values are \"accurate\" (exact "
+        "e3nn reference) or \"fast\" (cuequivariance-accelerated)."
+    )
+}
+
+TEST_F(TestInputFileReader, parseMaceModelPath)
+{
+    auto parser = QMInputParser(*_engine);
+
+    QMSettings::setMaceModelPath("");
+    EXPECT_EQ(QMSettings::getMaceModelPath(), "");
+    parser.parseMaceModelPath(
+        {"mace_model_path", "=", "/pAth/to/mace.model"},
+        0
+    );
+    EXPECT_EQ(QMSettings::getMaceModelPath(), "/pAth/to/mace.model");
 }
 
 TEST_F(TestInputFileReader, parseSlakosType)
@@ -226,11 +293,27 @@ TEST_F(TestInputFileReader, parseSlakosType)
 
     auto parser = QMInputParser(*_engine);
 
+#ifdef WITH_ASE
     parser.parseSlakosType({"slakos", "=", "3ob"}, 0);
     EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::THREEOB);
 
     parser.parseSlakosType({"slakos", "=", "matsci"}, 0);
     EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::MATSCI);
+#else
+    ASSERT_THROW_MSG(
+        parser.parseSlakosType({"slakos", "=", "3ob"}, 0),
+        InputFileException,
+        "Built-in SLAKOS sets (3ob/matsci) require building PQ with "
+        "-DBUILD_WITH_ASE=On"
+    );
+
+    ASSERT_THROW_MSG(
+        parser.parseSlakosType({"slakos", "=", "matsci"}, 0),
+        InputFileException,
+        "Built-in SLAKOS sets (3ob/matsci) require building PQ with "
+        "-DBUILD_WITH_ASE=On"
+    );
+#endif
 
     parser.parseSlakosType({"slakos", "=", "custom"}, 0);
     EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::CUSTOM);
@@ -243,6 +326,7 @@ TEST_F(TestInputFileReader, parseSlakosType)
     )
 }
 
+#ifdef WITH_ASE
 TEST_F(TestInputFileReader, parseSlakosTypeThirdOrder)
 {
     using enum QMMethod;
@@ -260,6 +344,7 @@ TEST_F(TestInputFileReader, parseSlakosTypeThirdOrder)
     EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::THREEOB);
     EXPECT_FALSE(QMSettings::useThirdOrderDftb());
 }
+#endif
 
 TEST_F(TestInputFileReader, parseSlakosPath)
 {
@@ -320,6 +405,18 @@ TEST_F(TestInputFileReader, parseHubbardDerivs)
         InputFileException,
         "Invalid hubbard_derivs format \"H:1.0,He\" in input file."
     )
+
+    ASSERT_THROW_MSG(
+        parser.parseHubbardDerivs({"hubbard_derivs", "=", "H:0.1junk"}, 0),
+        InputFileException,
+        "Invalid hubbard_derivs format \"H:0.1junk\" in input file."
+    )
+
+    ASSERT_THROW_MSG(
+        parser.parseHubbardDerivs({"hubbard_derivs", "=", "H:nan"}, 0),
+        InputFileException,
+        "Invalid hubbard_derivs format \"H:nan\" in input file."
+    )
 }
 
 TEST_F(TestInputFileReader, parseXtbMethod)
@@ -343,4 +440,59 @@ TEST_F(TestInputFileReader, parseXtbMethod)
         "Invalid xTB method \"notAnXtbMethod\" in input file.\n"
         "Possible values are: GFN1-xTB, GFN2-xTB, IPEA1-xTB"
     )
+}
+
+TEST_F(TestInputFileReader, parseFennolModelPath)
+{
+    using enum QMMethod;
+
+    auto parser = QMInputParser(*_engine);
+
+    // clang-format off
+    EXPECT_EQ(QMSettings::getFennolModelPath(), "");
+    parser.parseFennolModelPath({"fennol_model_path", "=", "/pAth/to/fennol_model.fnx"}, 0);
+    EXPECT_EQ(QMSettings::getFennolModelPath(), "/pAth/to/fennol_model.fnx");
+    // clang-format on
+
+    ASSERT_THROW_MSG(
+        parser.parseFennolModelPath(
+            {"fennol_model_path", "=", "/path/to/model.fnx", "extra"},
+            42
+        ),
+        InputFileException,
+        "Invalid number of arguments at line 42 in input file"
+    )
+}
+
+TEST_F(TestInputFileReader, parseGPUPreprocessing)
+{
+    using enum QMMethod;
+
+    auto parser = QMInputParser(*_engine);
+
+    EXPECT_EQ(QMSettings::useGPUPreprocessing(), true);
+    parser.parseGPUPreprocessing({"GPU-Preprocessing", "=", "false"}, 0);
+    EXPECT_EQ(QMSettings::useGPUPreprocessing(), false);
+
+    parser.parseGPUPreprocessing({"gpu_preprocessing", "=", "on"}, 0);
+    EXPECT_EQ(QMSettings::useGPUPreprocessing(), true);
+
+    ASSERT_THROW_MSG(
+        parser.parseGPUPreprocessing({"gpu_preprocessing", "=", "notABool"}, 0),
+        InputFileException,
+        "Invalid boolean option \"notABool\" for keyword \"gpu_preprocessing\" "
+        "in input file.\n"
+        "Possible values are: on, yes, true, off, no, false."
+    )
+}
+
+TEST_F(TestInputFileReader, processFennolKeywords)
+{
+    _inputFileReader->process({"fennol-model-path", "=", "model.fnx"});
+    EXPECT_EQ(QMSettings::getFennolModelPath(), "model.fnx");
+    EXPECT_EQ(_inputFileReader->getKeywordCount("fennol_model_path"), 1);
+
+    _inputFileReader->process({"GPU-Preprocessing", "=", "off"});
+    EXPECT_EQ(QMSettings::useGPUPreprocessing(), false);
+    EXPECT_EQ(_inputFileReader->getKeywordCount("gpu_preprocessing"), 1);
 }

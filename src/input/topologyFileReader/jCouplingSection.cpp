@@ -84,7 +84,7 @@ void JCouplingSection::processSection(
             _lineNumber
         ));
 
-    auto simBox = engine.getSimulationBox();
+    auto &simBox = engine.getSimulationBox();
 
     const auto [molecule1, idx1] = simBox.findMoleculeByAtomIndex(atom1);
     const auto [molecule2, idx2] = simBox.findMoleculeByAtomIndex(atom2);

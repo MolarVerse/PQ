@@ -26,6 +26,7 @@
 #include <cstddef>   // for size_t
 #include <memory>    // for shared_ptr, allocator
 
+#include "../potential/nonCoulomb/testForceFieldNonCoulomb.hpp"
 #include "angleForceField.hpp"           // for BondForceField
 #include "atom.hpp"                      // for Atom
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
@@ -37,28 +38,30 @@
 #include "molecule.hpp"                  // for Molecule
 #include "physicalData.hpp"              // for PhysicalData
 #include "simulationBox.hpp"             // for SimulationBox
-#include "vector3d.hpp"                  // for Vector3D, Vec3D, operator*
 
 namespace potential
 {
     class NonCoulombPair;   // forward declaration
 }
 
-TEST(TestAngleForceField, calculateEnergyAndForces)
+class TestAngleForceField : public TestNonCoulombPotentialFF
+{
+};
+
+TEST_F(TestAngleForceField, calculateEnergyAndForces)
 {
     auto box = simulationBox::SimulationBox();
     box.setBoxDimensions({10.0, 10.0, 10.0});
 
-    auto physicalData        = physicalData::PhysicalData();
-    auto coulombPotential    = potential::CoulombShiftedPotential(10.0);
-    auto nonCoulombPotential = potential::ForceFieldNonCoulomb();
+    auto physicalData     = physicalData::PhysicalData();
+    auto coulombPotential = potential::CoulombShiftedPotential(10.0);
 
     auto nonCoulombPair =
         potential::LennardJonesPair(size_t(1), size_t(1), 5.0, 2.0, 4.0);
-    nonCoulombPotential.setNonCoulombPairsMatrix(
+    setNonCoulombPairsMatrix(
         linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(2, 2)
     );
-    nonCoulombPotential.setNonCoulombPairsMatrix(1, 1, nonCoulombPair);
+    setNonCoulombPairsMatrix(1, 1, nonCoulombPair);
 
     auto molecule = simulationBox::Molecule();
 
@@ -106,7 +109,7 @@ TEST(TestAngleForceField, calculateEnergyAndForces)
         box,
         physicalData,
         coulombPotential,
-        nonCoulombPotential
+        *_nonCoulombPotential
     );
 
     EXPECT_NEAR(physicalData.getAngleEnergy(), 2.0999420826401303, 1e-6);
@@ -141,7 +144,7 @@ TEST(TestAngleForceField, calculateEnergyAndForces)
         box,
         physicalData,
         coulombPotential,
-        nonCoulombPotential
+        *_nonCoulombPotential
     );
 
     EXPECT_NEAR(physicalData.getAngleEnergy(), 2.0999420826401303, 1e-6);
@@ -163,4 +166,71 @@ TEST(TestAngleForceField, calculateEnergyAndForces)
     EXPECT_NEAR(physicalData.getVirial()[0][0], 0.0, 1e-6);
     EXPECT_NEAR(physicalData.getVirial()[1][1], -7.0737262359370403, 1e-6);
     EXPECT_NEAR(physicalData.getVirial()[2][2], -28.294904943748161, 1e-6);
+}
+
+/**
+ * @brief regression test for the sin(alpha) guard: a strictly collinear
+ * arrangement (alpha == pi) used to produce NaN forces via division by
+ * sin(alpha) in the cross-product force decomposition. The guard skips
+ * just that block; the energy contribution and the linker correction
+ * (when enabled) still run, and no force component is NaN/Inf.
+ */
+TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
+{
+    auto box = simulationBox::SimulationBox();
+    box.setBoxDimensions({100.0, 100.0, 100.0});
+
+    auto physicalData     = physicalData::PhysicalData();
+    auto coulombPotential = potential::CoulombShiftedPotential(10.0);
+
+    auto molecule = simulationBox::Molecule();
+    molecule.setMoltype(0);
+    molecule.setNumberOfAtoms(3);
+
+    auto atom1 = std::make_shared<simulationBox::Atom>();
+    auto atom2 = std::make_shared<simulationBox::Atom>();
+    auto atom3 = std::make_shared<simulationBox::Atom>();
+
+    // Strictly collinear: atom2 is the central atom, atom1 and atom3 are
+    // 180 degrees apart along the x axis. alpha = pi -> sin(alpha) = 0.
+    atom1->setPosition({1.0, 0.0, 0.0});
+    atom2->setPosition({0.0, 0.0, 0.0});
+    atom3->setPosition({-1.0, 0.0, 0.0});
+
+    atom1->setForce({0.0, 0.0, 0.0});
+    atom2->setForce({0.0, 0.0, 0.0});
+    atom3->setForce({0.0, 0.0, 0.0});
+
+    molecule.addAtom(atom1);
+    molecule.addAtom(atom2);
+    molecule.addAtom(atom3);
+
+    auto angleForceField = forceField::AngleForceField(
+        {&molecule, &molecule, &molecule},
+        {0, 1, 2},
+        0
+    );
+    angleForceField.setEquilibriumAngle(M_PI);   // linear equilibrium
+    angleForceField.setForceConstant(3.0);
+    angleForceField.setIsLinker(false);
+
+    angleForceField.calculateEnergyAndForces(
+        box,
+        physicalData,
+        coulombPotential,
+        *_nonCoulombPotential
+    );
+
+    // Energy is finite at the singular angle (harmonic, deltaAngle ~ 0).
+    EXPECT_FALSE(std::isnan(physicalData.getAngleEnergy()));
+    EXPECT_FALSE(std::isinf(physicalData.getAngleEnergy()));
+
+    // All per-atom forces must be finite. Without the guard these would
+    // be NaN from dividing by sin(pi) == 0 in the cross-product block.
+    for (size_t a = 0; a < 3; ++a)
+        for (size_t i = 0; i < 3; ++i)
+        {
+            EXPECT_FALSE(std::isnan(molecule.getAtomForce(a)[i]));
+            EXPECT_FALSE(std::isinf(molecule.getAtomForce(a)[i]));
+        }
 }

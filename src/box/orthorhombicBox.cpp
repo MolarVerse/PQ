@@ -71,7 +71,7 @@ Vec3D OrthorhombicBox::calcBoxDimFromDensity(
     const double density
 )
 {
-    _volume = totalMass / (density * _KG_PER_L_TO_AMU_PER_ANGSTROM3_);
+    _volume = totalMass / (density * KG_PER_L_TO_AMU_PER_ANGSTROM3);
 
     return Vec3D(::cbrt(_volume));
 }

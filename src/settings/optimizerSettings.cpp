@@ -22,10 +22,14 @@
 
 #include "optimizerSettings.hpp"
 
+#include <format>
+
+#include "exceptions.hpp"
 #include "stringUtilities.hpp"   // for toLowerCopy
 
 using namespace settings;
 using namespace utilities;
+using namespace customException;
 
 /**
  * @brief returns the optimizer as string
@@ -42,8 +46,10 @@ std::string settings::string(const OptimizerType method)
         case STEEPEST_DESCENT: return "STEEPEST-DESCENT";
         case ADAM: return "ADAM";
 
-        default: return "none";
+        case NONE: break;
     }
+
+    return "none";
 }
 
 /**
@@ -63,8 +69,10 @@ std::string settings::string(const LREnum method)
         case EXPONENTIAL_DECAY: return "EXPONENTIAL-DECAY";
         case LINESEARCH_WOLFE: return "LINESEARCH-WOLFE";
 
-        default: return "none";
+        case NONE: break;
     }
+
+    return "none";
 }
 
 /***************************
@@ -137,7 +145,7 @@ void OptimizerSettings::setLearningRateStrategy(const std::string_view &method)
  */
 void OptimizerSettings::setLearningRateStrategy(const LREnum method)
 {
-    _LRStrategy = method;
+    _lRStrategy = method;
 }
 
 /**
@@ -157,7 +165,7 @@ void OptimizerSettings::setNumberOfEpochs(const size_t nEpochs)
  */
 void OptimizerSettings::setLRUpdateFrequency(const size_t frequency)
 {
-    _LRupdateFrequency = frequency;
+    _lRupdateFrequency = frequency;
 }
 
 /**
@@ -200,6 +208,63 @@ void OptimizerSettings::setMaxLearningRate(const double maxLearningRate)
     _maxLearningRate = maxLearningRate;
 }
 
+/*****************************
+ *                           *
+ * validation helper methods *
+ *                           *
+ *****************************/
+
+/**
+ * @brief validates the selected learning-rate strategy
+ */
+void OptimizerSettings::validateLearningRateStrategy()
+{
+    const auto strategy = getLearningRateStrategy();
+
+    if (strategy == LREnum::LINESEARCH_WOLFE)
+        throw UserInputException(
+            "The Wolfe line search learning rate strategy is not yet "
+            "implemented"
+        );
+
+    if (strategy == LREnum::NONE)
+        throw UserInputException(
+            "In order to run the optimizer, you need to specify a learning "
+            "rate strategy."
+        );
+
+    const auto needsDecay = strategy == LREnum::CONSTANT_DECAY ||
+                            strategy == LREnum::EXPONENTIAL_DECAY;
+
+    if (needsDecay && !getLearningRateDecay().has_value())
+        throw UserInputException(
+            std::format(
+                "The {} learning rate strategy requires learning-rate-decay.",
+                strategy == LREnum::CONSTANT_DECAY ? "constant-decay"
+                                                   : "exponential-decay"
+            )
+        );
+}
+
+/**
+ * @brief validates the configured learning-rate bounds
+ */
+void OptimizerSettings::validateLearningRateBounds()
+{
+    const auto minLR = getMinLearningRate();
+    const auto maxLR = getMaxLearningRate();
+
+    if (maxLR.has_value() && minLR >= maxLR.value())
+        throw UserInputException(
+            std::format(
+                "The minimum learning rate {} is greater or equal to the "
+                "maximum learning rate {}, which is not allowed.",
+                minLR,
+                maxLR.value()
+            )
+        );
+}
+
 /***************************
  *                         *
  * standard getter methods *
@@ -218,7 +283,7 @@ settings::OptimizerType OptimizerSettings::getOptimizer() { return _optimizer; }
  *
  * @return LearningRateStrategy
  */
-LREnum OptimizerSettings::getLearningRateStrategy() { return _LRStrategy; }
+LREnum OptimizerSettings::getLearningRateStrategy() { return _lRStrategy; }
 
 /**
  * @brief returns the number of epochs
@@ -232,7 +297,7 @@ size_t OptimizerSettings::getNumberOfEpochs() { return _nEpochs; }
  *
  * @return size_t
  */
-size_t OptimizerSettings::getLRUpdateFrequency() { return _LRupdateFrequency; }
+size_t OptimizerSettings::getLRUpdateFrequency() { return _lRupdateFrequency; }
 
 /**
  * @brief returns the initial learning rate

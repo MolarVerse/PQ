@@ -22,6 +22,8 @@
 
 #include "convergence.hpp"
 
+#include <cmath>   // for abs
+
 #include "convergenceSettings.hpp"
 
 using namespace opt;
@@ -84,8 +86,6 @@ bool Convergence::checkConvergence() const
         case ABSOLUTE: isEnergyConverged = _isAbsEnergyConv; break;
 
         case RELATIVE: isEnergyConverged = _isRelEnergyConv; break;
-
-        default: break;
     }
 
     return isEnergyConverged && _isAbsMaxForceConv && _isAbsRMSForceConv;

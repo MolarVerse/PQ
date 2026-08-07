@@ -28,7 +28,6 @@
 #include "dihedralType.hpp"                  // for DihedralType
 #include "engine.hpp"                        // for Engine
 #include "exceptions.hpp"                    // for ParameterFileException
-#include "forceFieldClass.hpp"               // for ForceField
 
 using namespace input::parameterFile;
 using namespace engine;
@@ -68,23 +67,29 @@ void ImproperDihedralSection::processSection(
 )
 {
     if (lineElements.size() != 4)
-        throw ParameterFileException(std::format(
-            "Wrong number of arguments in parameter file improper section at "
-            "line {} - number of elements has to be 4!",
-            _lineNumber
-        ));
+        throw ParameterFileException(
+            std::format(
+                "Wrong number of arguments in parameter file improper section "
+                "at "
+                "line {} - number of elements has to be 4!",
+                _lineNumber
+            )
+        );
 
     auto id            = stoul(lineElements[0]);
     auto forceConstant = stod(lineElements[1]);
     auto periodicity   = stod(lineElements[2]);
-    auto phase         = stod(lineElements[3]) * _DEG_TO_RAD_;
+    auto phase         = stod(lineElements[3]) * DEG_TO_RAD;
 
     if (periodicity < 0.0)
-        throw ParameterFileException(std::format(
-            "Parameter file improper section at line {} - periodicity has to "
-            "be positive!",
-            _lineNumber
-        ));
+        throw ParameterFileException(
+            std::format(
+                "Parameter file improper section at line {} - periodicity has "
+                "to "
+                "be positive!",
+                _lineNumber
+            )
+        );
 
     auto improperType = DihedralType(id, forceConstant, periodicity, phase);
 

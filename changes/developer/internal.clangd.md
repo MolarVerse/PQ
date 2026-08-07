@@ -1,0 +1,2 @@
+- Add first version of CI for static analysis via clangd and clang-tidy (all clangd-tidy checks for now disabled apart a test check)
+- fix all `bugprone-*` apart from `bugprone-easily-swappable-parameters` warnings of code base

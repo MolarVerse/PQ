@@ -22,13 +22,11 @@
 
 #include "testPhysicalData.hpp"
 
-#include <memory>   // for allocator
-
-#include "constants/conversionFactors.hpp"   // for _FS_TO_S_
-#include "constants/internalConversionFactors.hpp"   // for _KINETIC_ENERGY_FACTOR_, _TEMPERATURE_FACTOR_
-#include "gtest/gtest.h"   // for Message, TestPartResult, EXPECT_EQ, TEST_F, Test
-#include "staticMatrix.hpp"   // for tensorProduct, diagonalMatrix
-#include "vector3d.hpp"       // for operator*, Vector3D
+#include "constants/conversionFactors.hpp"
+#include "constants/internalConversionFactors.hpp"
+#include "gtest/gtest.h"
+#include "physicalData.hpp"
+#include "vector3d.hpp"
 
 /**
  * @brief tests makeAverages function
@@ -46,6 +44,25 @@ TEST_F(TestPhysicalData, makeAverages)
     EXPECT_EQ(_physicalData->getDensity(), 3.5);
     EXPECT_EQ(_physicalData->getPressure(), 4.0);
     EXPECT_EQ(_physicalData->getQMEnergy(), 4.5);
+}
+
+/**
+ * @brief tests copy function
+ *
+ */
+TEST_F(TestPhysicalData, copy)
+{
+    physicalData::PhysicalData physicalData2;
+    physicalData2.copy(*_physicalData);
+    EXPECT_EQ(physicalData2.getCoulombEnergy(), 1.0);
+    EXPECT_EQ(physicalData2.getNonCoulombEnergy(), 2.0);
+    EXPECT_EQ(physicalData2.getTemperature(), 3.0);
+    EXPECT_EQ(physicalData2.getMomentum(), linearAlgebra::Vec3D(4.0));
+    EXPECT_EQ(physicalData2.getKineticEnergy(), 5.0);
+    EXPECT_EQ(physicalData2.getVolume(), 6.0);
+    EXPECT_EQ(physicalData2.getDensity(), 7.0);
+    EXPECT_EQ(physicalData2.getPressure(), 8.0);
+    EXPECT_EQ(physicalData2.getQMEnergy(), 9.0);
 }
 
 /**
@@ -108,19 +125,19 @@ TEST_F(TestPhysicalData, calculateKinetics)
 
     EXPECT_EQ(
         _physicalData->getMomentum(),
-        momentumVector * constants::_FS_TO_S_
+        momentumVector * constants::FS_TO_S
     );
     EXPECT_EQ(
         diagonal(_physicalData->getKinEnergyAtomTensor()),
-        kineticEnergyAtomicVector * constants::_KINETIC_ENERGY_FACTOR_
+        kineticEnergyAtomicVector * constants::KINETIC_ENERGY_FACTOR
     );
     EXPECT_EQ(
         diagonal(_physicalData->getKinEnergyMolTensor()),
-        kineticEnergyMolecularVector * constants::_KINETIC_ENERGY_FACTOR_
+        kineticEnergyMolecularVector * constants::KINETIC_ENERGY_FACTOR
     );
     EXPECT_EQ(
         _physicalData->getKineticEnergy(),
-        sum(kineticEnergyAtomicVector) * constants::_KINETIC_ENERGY_FACTOR_
+        sum(kineticEnergyAtomicVector) * constants::KINETIC_ENERGY_FACTOR
     );
 }
 
@@ -152,8 +169,7 @@ TEST_F(TestPhysicalData, calculateTemperature)
 
     EXPECT_NEAR(
         _physicalData->getTemperature(),
-        sum(kineticEnergyAtomicVector) * constants::_TEMPERATURE_FACTOR_ /
-            (nDOF),
+        sum(kineticEnergyAtomicVector) * constants::TEMPERATURE_FACTOR / (nDOF),
         1e-15
     );
 }
@@ -180,7 +196,8 @@ TEST_F(TestPhysicalData, reset)
     _physicalData->setVolume(1.0);
     _physicalData->setDensity(1.0);
     _physicalData->setPressure(1.0);
-    _physicalData->setVirial(diagonalMatrix(linearAlgebra::Vec3D(1.0, 1.0, 1.0))
+    _physicalData->setVirial(
+        diagonalMatrix(linearAlgebra::Vec3D(1.0, 1.0, 1.0))
     );
     _physicalData->setQMEnergy(1.0);
 
@@ -256,4 +273,68 @@ TEST_F(TestPhysicalData, addIntraNonCoulombEnergy)
 
     EXPECT_EQ(_physicalData->getIntraNonCoulombEnergy(), 1.0);
     EXPECT_EQ(_physicalData->getNonCoulombEnergy(), 1.0);
+}
+
+/* ---------- Energy accumulators (add… functions) ---------- */
+
+TEST_F(TestPhysicalData, addCoulombEnergy_accumulates)
+{
+    _physicalData->setCoulombEnergy(2.0);
+    _physicalData->addCoulombEnergy(3.5);
+    EXPECT_DOUBLE_EQ(_physicalData->getCoulombEnergy(), 5.5);
+}
+
+TEST_F(TestPhysicalData, addNonCoulombEnergy_accumulates)
+{
+    _physicalData->setNonCoulombEnergy(1.0);
+    _physicalData->addNonCoulombEnergy(0.25);
+    _physicalData->addNonCoulombEnergy(0.25);
+    EXPECT_DOUBLE_EQ(_physicalData->getNonCoulombEnergy(), 1.5);
+}
+
+TEST_F(TestPhysicalData, addBondEnergy_accumulates)
+{
+    _physicalData->setBondEnergy(0.0);
+    _physicalData->addBondEnergy(1.0);
+    _physicalData->addBondEnergy(2.0);
+    EXPECT_DOUBLE_EQ(_physicalData->getBondEnergy(), 3.0);
+}
+
+TEST_F(TestPhysicalData, addAngleEnergy_accumulates)
+{
+    _physicalData->setAngleEnergy(0.0);
+    _physicalData->addAngleEnergy(1.0);
+    _physicalData->addAngleEnergy(-0.5);
+    EXPECT_DOUBLE_EQ(_physicalData->getAngleEnergy(), 0.5);
+}
+
+TEST_F(TestPhysicalData, addDihedralEnergy_accumulates)
+{
+    _physicalData->setDihedralEnergy(0.0);
+    _physicalData->addDihedralEnergy(1.0);
+    EXPECT_DOUBLE_EQ(_physicalData->getDihedralEnergy(), 1.0);
+}
+
+TEST_F(TestPhysicalData, addImproperEnergy_accumulates)
+{
+    _physicalData->setImproperEnergy(0.0);
+    _physicalData->addImproperEnergy(1.5);
+    EXPECT_DOUBLE_EQ(_physicalData->getImproperEnergy(), 1.5);
+}
+
+TEST_F(TestPhysicalData, addRingPolymerEnergy_accumulates)
+{
+    _physicalData->setRingPolymerEnergy(0.0);
+    _physicalData->addRingPolymerEnergy(2.0);
+    _physicalData->addRingPolymerEnergy(3.0);
+    EXPECT_DOUBLE_EQ(_physicalData->getRingPolymerEnergy(), 5.0);
+}
+
+TEST_F(TestPhysicalData, addVirial_accumulates)
+{
+    const auto v0 = diagonalMatrix(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+    const auto v1 = diagonalMatrix(linearAlgebra::Vec3D(0.5, 0.5, 0.5));
+    _physicalData->setVirial(v0);
+    _physicalData->addVirial(v1);
+    EXPECT_EQ(_physicalData->getVirial(), v0 + v1);
 }

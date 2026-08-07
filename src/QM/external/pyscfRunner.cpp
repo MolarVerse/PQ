@@ -33,7 +33,6 @@
 #include "qmSettings.hpp"        // for QMSettings
 #include "simulationBox.hpp"     // for SimulationBox
 #include "stringUtilities.hpp"   // for fileExists
-#include "vector3d.hpp"          // for Vec3D
 
 using QM::PySCFRunner;
 using namespace simulationBox;
@@ -77,7 +76,7 @@ void PySCFRunner::writeCoordsFile(SimulationBox &box)
  */
 void PySCFRunner::execute()
 {
-    const auto scriptFileName = _scriptPath + QMSettings::getQMScript();
+    const auto scriptFileName = resolveScriptPath(QMSettings::getQMScript());
 
     if (!fileExists(scriptFileName))
         throw InputFileException(std::format(

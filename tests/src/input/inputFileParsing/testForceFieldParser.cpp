@@ -27,11 +27,9 @@
 
 #include "engine.hpp"            // for Engine
 #include "exceptions.hpp"        // for InputFileException, customException
-#include "forceFieldClass.hpp"   // for ForceField
 #include "forceFieldInputParser.hpp"
 #include "forceFieldSettings.hpp"    // for ForceFieldSettings
 #include "gtest/gtest.h"             // for AssertionResult, Message
-#include "inputFileParser.hpp"       // for readInput
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "throwWithMessage.hpp"      // for ASSERT_THROW_MSG
 

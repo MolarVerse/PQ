@@ -25,7 +25,6 @@
 #define _GUFF_NON_COULOMB_HPP_
 
 #include <cstddef>   // size_t
-#include <memory>    // shared_ptr
 #include <vector>    // vector
 
 #include "nonCoulombPotential.hpp"
@@ -54,14 +53,18 @@ namespace potential
          * standard setter methods *
          ***************************/
 
-        void setGuffNonCoulPair(const std::vector<size_t> &, const pq::SharedNonCoulPair &);
+        void setGuffNonCoulPair(
+            const std::vector<size_t> &,
+            const pq::SharedNonCoulPair &
+        );
 
         /***************************
          * standard setter methods *
          ***************************/
 
-        [[nodiscard]] pq::SharedNonCoulPair getNonCoulPair(
-            const pq::stlVectorUL &indices
+        [[nodiscard]]
+        pq::SharedNonCoulPair getNonCoulPair(
+            const std::vector<size_t> &indices
         ) override;
 
         [[nodiscard]] pq::SharedNonCoulPairVec4d getNonCoulombPairs() const;

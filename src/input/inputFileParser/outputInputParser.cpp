@@ -22,12 +22,12 @@
 
 #include "outputInputParser.hpp"
 
-#include <format>       // for format
-#include <functional>   // for bind_front, _Bind_front_t
+#include <format>   // for format
 
 #include "exceptions.hpp"           // for InputFileException
 #include "outputFileSettings.hpp"   // for OutputFileSettings
-#include "stringUtilities.hpp"      // for toLowerCopy
+#include "parserUtils.hpp"
+#include "stringUtilities.hpp"   // for toLowerCopy
 
 using namespace input;
 using namespace engine;
@@ -65,6 +65,7 @@ using namespace settings;
  * 22) rpmd_force_file <string>
  * 23) rpmd_charge_file <string>
  * 24) rpmd_energy_file <string>
+ * 25) include_output_metadata <bool>
  *
  * @param engine
  */
@@ -72,127 +73,132 @@ OutputInputParser::OutputInputParser(Engine &engine) : InputFileParser(engine)
 {
     addKeyword(
         std::string("output_freq"),
-        bind_front(&OutputInputParser::parseOutputFreq, this),
+        bindMember(&OutputInputParser::parseOutputFreq, this),
         false
     );
     addKeyword(
         std::string("file_prefix"),
-        bind_front(&OutputInputParser::parseFilePrefix, this),
+        bindMember(&OutputInputParser::parseFilePrefix, this),
         false
     );
     addKeyword(
         std::string("output_file"),
-        bind_front(&OutputInputParser::parseLogFilename, this),
+        bindMember(&OutputInputParser::parseLogFilename, this),
         false
     );
     addKeyword(
         std::string("reference_file"),
-        bind_front(&OutputInputParser::parseRefFilename, this),
+        bindMember(&OutputInputParser::parseRefFilename, this),
         false
     );
     addKeyword(
         std::string("info_file"),
-        bind_front(&OutputInputParser::parseInfoFilename, this),
+        bindMember(&OutputInputParser::parseInfoFilename, this),
         false
     );
     addKeyword(
         std::string("energy_file"),
-        bind_front(&OutputInputParser::parseEnergyFilename, this),
+        bindMember(&OutputInputParser::parseEnergyFilename, this),
         false
     );
     addKeyword(
         std::string("instant_energy_file"),
-        bind_front(&OutputInputParser::parseInstantEnergyFilename, this),
+        bindMember(&OutputInputParser::parseInstantEnergyFilename, this),
         false
     );
     addKeyword(
         std::string("traj_file"),
-        bind_front(&OutputInputParser::parseTrajectoryFilename, this),
+        bindMember(&OutputInputParser::parseTrajectoryFilename, this),
         false
     );
     addKeyword(
         std::string("vel_file"),
-        bind_front(&OutputInputParser::parseVelocityFilename, this),
+        bindMember(&OutputInputParser::parseVelocityFilename, this),
         false
     );
     addKeyword(
         std::string("force_file"),
-        bind_front(&OutputInputParser::parseForceFilename, this),
+        bindMember(&OutputInputParser::parseForceFilename, this),
         false
     );
     addKeyword(
         std::string("restart_file"),
-        bind_front(&OutputInputParser::parseRestartFilename, this),
+        bindMember(&OutputInputParser::parseRestartFilename, this),
         false
     );
     addKeyword(
         std::string("charge_file"),
-        bind_front(&OutputInputParser::parseChargeFilename, this),
+        bindMember(&OutputInputParser::parseChargeFilename, this),
         false
     );
     addKeyword(
         std::string("momentum_file"),
-        bind_front(&OutputInputParser::parseMomentumFilename, this),
+        bindMember(&OutputInputParser::parseMomentumFilename, this),
         false
     );
     addKeyword(
         std::string("virial_file"),
-        bind_front(&OutputInputParser::parseVirialFilename, this),
+        bindMember(&OutputInputParser::parseVirialFilename, this),
         false
     );
     addKeyword(
         std::string("stress_file"),
-        bind_front(&OutputInputParser::parseStressFilename, this),
+        bindMember(&OutputInputParser::parseStressFilename, this),
         false
     );
     addKeyword(
         std::string("box_file"),
-        bind_front(&OutputInputParser::parseBoxFilename, this),
+        bindMember(&OutputInputParser::parseBoxFilename, this),
         false
     );
     addKeyword(
         std::string("timings_file"),
-        bind_front(&OutputInputParser::parseTimingsFilename, this),
+        bindMember(&OutputInputParser::parseTimingsFilename, this),
         false
     );
     addKeyword(
         std::string("opt_file"),
-        bind_front(&OutputInputParser::parseOptFilename, this),
+        bindMember(&OutputInputParser::parseOptFilename, this),
         false
     );
     addKeyword(
         std::string("rpmd_restart_file"),
-        bind_front(&OutputInputParser::parseRPMDRestartFilename, this),
+        bindMember(&OutputInputParser::parseRPMDRestartFilename, this),
         false
     );
     addKeyword(
         std::string("rpmd_traj_file"),
-        bind_front(&OutputInputParser::parseRPMDTrajectoryFilename, this),
+        bindMember(&OutputInputParser::parseRPMDTrajectoryFilename, this),
         false
     );
     addKeyword(
         std::string("rpmd_vel_file"),
-        bind_front(&OutputInputParser::parseRPMDVelocityFilename, this),
+        bindMember(&OutputInputParser::parseRPMDVelocityFilename, this),
         false
     );
     addKeyword(
         std::string("rpmd_force_file"),
-        bind_front(&OutputInputParser::parseRPMDForceFilename, this),
+        bindMember(&OutputInputParser::parseRPMDForceFilename, this),
         false
     );
     addKeyword(
         std::string("rpmd_charge_file"),
-        bind_front(&OutputInputParser::parseRPMDChargeFilename, this),
+        bindMember(&OutputInputParser::parseRPMDChargeFilename, this),
         false
     );
     addKeyword(
         std::string("rpmd_energy_file"),
-        bind_front(&OutputInputParser::parseRPMDEnergyFilename, this),
+        bindMember(&OutputInputParser::parseRPMDEnergyFilename, this),
         false
     );
     addKeyword(
         std::string("overwrite_output"),
-        bind_front(&OutputInputParser::parseOverwriteOutput, this),
+        bindMember(&OutputInputParser::parseOverwriteOutput, this),
+        false
+    );
+    addKeyword(
+        std::string("include_output_metadata"),
+        bindMember(&OutputInputParser::parseIncludeOutputMetadata, this),
         false
     );
 }
@@ -213,7 +219,7 @@ void OutputInputParser::parseOutputFreq(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto outputFrequency = stoi(lineElements[2]);
+    const auto outputFrequency = stringToInt(lineElements[2]);
     if (outputFrequency < 0)
         throw InputFileException(format(
             "Output frequency cannot be negative - \"{}\" at line {} in input "
@@ -607,4 +613,20 @@ void OutputInputParser::parseOverwriteOutput(
     checkCommand(lineElements, lineNumber);
 
     OutputFileSettings::setOverwriteOutputFiles(keywordToBool(lineElements));
+}
+
+/**
+ * @brief parse if output files should include metadata
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
+void OutputInputParser::parseIncludeOutputMetadata(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+
+    OutputFileSettings::setIncludeOutputMetadata(keywordToBool(lineElements));
 }

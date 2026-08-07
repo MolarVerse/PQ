@@ -46,7 +46,7 @@ namespace setup
 
         void setup();
 
-        void isTargetTemperatureSet() const;
+        void setupTargetTemperature() const;
         void setupTemperatureRamp();
         void setupBerendsenThermostat();
         void setupLangevinThermostat();

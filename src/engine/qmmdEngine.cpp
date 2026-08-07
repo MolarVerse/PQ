@@ -23,20 +23,15 @@
 #include "qmmdEngine.hpp"
 
 #include "dftbplusRunner.hpp"    // for DFTBPlusRunner
-#include "integrator.hpp"        // for Integrator
-#include "manostat.hpp"          // for Manostat
-#include "physicalData.hpp"      // for PhysicalData
 #include "pyscfRunner.hpp"       // for PySCFRunner
-#include "resetKinetics.hpp"     // for ResetKinetics
 #include "settings.hpp"          // for Settings
-#include "thermostat.hpp"        // for Thermostat
-#include "timingsSettings.hpp"   // for TimingsSettings
 #include "turbomoleRunner.hpp"   // for TurbomoleRunner
 
 #ifdef WITH_ASE
-#include "aseDftbRunner.hpp"   // for aseDftbRunner
-#include "aseXtbRunner.hpp"    // for aseXtbRunner
-#include "maceRunner.hpp"      // for MaceRunner
+#include "aseDftbRunner.hpp"     // for aseDftbRunner
+#include "aseFennolRunner.hpp"   // for AseFennolRunner
+#include "aseMaceRunner.hpp"     // for AseMaceRunner
+#include "aseXtbRunner.hpp"      // for aseXtbRunner
 #endif
 
 using engine::QMMDEngine;
@@ -81,6 +76,9 @@ void QMMDEngine::setQMRunner(const QMMethod method)
     else if (method == MACE)
         setMaceQMRunner();
 
+    else if (method == FENNOL)
+        setAseFennolRunner();
+
     else
         throw InputFileException(
             "A qm based jobtype was requested but no external "
@@ -102,17 +100,46 @@ void QMMDEngine::setMaceQMRunner()
     const auto modelPath = QMSettings::getMaceModelPath();
     const auto useDFTD   = QMSettings::useDispersionCorr();
     const auto fpType    = Settings::getFloatingPointPybindString();
+    const auto useCueq   = QMSettings::getMaceMode() == MaceMode::FAST;
 
-    auto maceModel = string(QMSettings::getMaceModelSize());
+    auto maceModel = string(QMSettings::getMaceModel());
 
     if (!modelPath.empty())
         maceModel = modelPath;
 
-    _qmRunner = make_shared<MaceRunner>(modelType, maceModel, fpType, useDFTD);
+    _qmRunner =
+        make_shared<AseMaceRunner>(modelType, maceModel, fpType, useDFTD, useCueq);
 #else
     throw CompileTimeException(
         "A mace type qm method was requested but ASE was not enabled at "
         "compile time. Please recompile with ASE enabled to use mace type "
+        "qm methods using: -DBUILD_WITH_ASE=ON"
+    );
+#endif
+}
+
+/**
+ * @brief sets the QMRunner object for fennol type qm methods.
+ *
+ * @throws InputFileException if ASE was not enabled at compile
+ * time.
+ *
+ */
+void QMMDEngine::setAseFennolRunner()
+{
+#ifdef WITH_ASE
+    using enum FPType;
+
+    const auto modelPath        = QMSettings::getFennolModelPath();
+    const auto gpuPreprocessing = QMSettings::useGPUPreprocessing();
+    const bool useFloat64       = Settings::getFloatingPointType() == DOUBLE;
+
+    _qmRunner =
+        make_shared<AseFennolRunner>(modelPath, gpuPreprocessing, useFloat64);
+#else
+    throw CompileTimeException(
+        "A fennol type qm method was requested but ASE was not enabled at "
+        "compile time. Please recompile with ASE enabled to use fennol type "
         "qm methods using: -DBUILD_WITH_ASE=ON"
     );
 #endif

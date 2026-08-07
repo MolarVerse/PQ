@@ -70,8 +70,8 @@ void LogOutput::writeEndedNormally(const double elapsedTime)
  */
 void LogOutput::writeDensityWarning()
 {
-    _fp << _WARNING_
-        << "Density and box dimensions set. Density will be ignored." << "\n\n"
+    _fp << WARNING << "Density and box dimensions set. Density will be ignored."
+        << "\n\n"
         << std::flush;
 }
 
@@ -83,7 +83,7 @@ void LogOutput::writeDensityWarning()
  */
 void LogOutput::writeOptWarning(const std::string &message)
 {
-    _fp << _WARNING_ << message << "\n\n" << std::flush;
+    _fp << WARNING << message << "\n\n" << std::flush;
 }
 
 /**
@@ -97,9 +97,9 @@ void LogOutput::writeInitialMomentum(const double momentum)
 
     _fp << std::format(
         "{}Initial momentum = {:.5e} {}*amu/fs\n",
-        _INFO_,
+        INFO,
         momentum,
-        _ANGSTROM_
+        ANGSTROM
     );
 
     _fp << std::flush;
@@ -120,7 +120,7 @@ void LogOutput::writeSetup(const std::string &setup)
  */
 void LogOutput::writeSetupInfo(const std::string &setupInfo)
 {
-    _fp << _OUTPUT_ << setupInfo << '\n' << std::flush;
+    _fp << OUTPUT << setupInfo << '\n' << std::flush;
 }
 
 /**
@@ -129,7 +129,7 @@ void LogOutput::writeSetupInfo(const std::string &setupInfo)
  */
 void LogOutput::writeSetupWarning(const std::string &setupWarning)
 {
-    _fp << _WARNING_ << setupWarning << '\n' << std::flush;
+    _fp << WARNING << setupWarning << '\n' << std::flush;
 }
 
 /**
@@ -149,4 +149,29 @@ void LogOutput::writeSetupCompleted()
 void LogOutput::writeRead(const std::string &message, const std::string &file)
 {
     _fp << readMessage(message, file) << '\n' << std::flush;
+}
+
+/**
+ * @brief add a warning message that will be printed after the output file has
+ * been created
+ *
+ */
+void LogOutput::queueWarning(const std::string &warning)
+{
+    _pendingWarnings.push_back(warning);
+}
+
+/**
+ * @brief flush pending warning messages to the output file
+ *
+ */
+void LogOutput::flushQueuedWarnings()
+{
+    for (const auto &message : _pendingWarnings)
+    {
+        writeSetupWarning(message);
+        writeEmptyLine();
+    }
+
+    _pendingWarnings.clear();
 }

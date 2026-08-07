@@ -2,6 +2,7 @@ set(engine_source_files
     engine.cpp
 
     optEngine.cpp
+    hessianEngine.cpp
     mdEngine.cpp
 
     mmmdEngine.cpp
@@ -91,5 +92,7 @@ if(BUILD_WITH_PYBIND11)
 endif()
 
 install(TARGETS engine
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+    DESTINATION lib
 )
+
+target_precompile_headers(engine REUSE_FROM pq_pch)

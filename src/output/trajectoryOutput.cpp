@@ -26,13 +26,9 @@
 #include <format>    // for format
 #include <ostream>   // for ofstream, basic_ostream, operator<<
 #include <sstream>   // for ostringstream
-#include <string>    // for operator<<
-#include <vector>    // for vector
 
-#include "molecule.hpp"                // for Molecule
-#include "simulationBox.hpp"           // for SimulationBox
-#include "simulationBoxSettings.hpp"   // for SimulationBoxSettings
-#include "vector3d.hpp"                // for Vec3D
+#include "molecule.hpp"        // for Molecule
+#include "simulationBox.hpp"   // for SimulationBox
 
 using namespace output;
 using namespace settings;
@@ -56,13 +52,14 @@ void TrajectoryOutput::writeHeader(const SimulationBox &simBox)
  * @brief Write xyz file
  *
  * @param simBox
+ * @param step
  */
-void TrajectoryOutput::writeXyz(SimulationBox &simBox)
+void TrajectoryOutput::writeXyz(SimulationBox &simBox, const size_t step)
 {
     std::ostringstream buffer;
 
     writeHeader(simBox);
-    buffer << '\n';
+    writeComment(step);
 
     for (const auto &atom : simBox.getAtoms())
     {
@@ -85,13 +82,14 @@ void TrajectoryOutput::writeXyz(SimulationBox &simBox)
  * @brief Write velocities file
  *
  * @param simBox
+ * @param step
  */
-void TrajectoryOutput::writeVelocities(SimulationBox &simBox)
+void TrajectoryOutput::writeVelocities(SimulationBox &simBox, const size_t step)
 {
     std::ostringstream buffer;
 
     writeHeader(simBox);
-    buffer << '\n';
+    writeComment(step);
 
     for (const auto &molecule : simBox.getMolecules())
     {
@@ -118,16 +116,14 @@ void TrajectoryOutput::writeVelocities(SimulationBox &simBox)
  * @brief Write forces file
  *
  * @param simBox
+ * @param step
  */
-void TrajectoryOutput::writeForces(SimulationBox &simBox)
+void TrajectoryOutput::writeForces(SimulationBox &simBox, const size_t step)
 {
     std::ostringstream buffer;
 
     writeHeader(simBox);
-    buffer << std::format(
-        "# Total force = {:.5e} kcal/mol/Angstrom\n",
-        simBox.calculateTotalForce()
-    );
+    writeForceComment(step, simBox.calculateTotalForce());
 
     for (const auto &molecule : simBox.getMolecules())
     {
@@ -154,13 +150,14 @@ void TrajectoryOutput::writeForces(SimulationBox &simBox)
  * @brief Write charges file
  *
  * @param simBox
+ * @param step
  */
-void TrajectoryOutput::writeCharges(SimulationBox &simBox)
+void TrajectoryOutput::writeCharges(SimulationBox &simBox, const size_t step)
 {
     std::ostringstream buffer;
 
     writeHeader(simBox);
-    buffer << '\n';
+    writeComment(step);
 
     for (const auto &atom : simBox.getAtoms())
     {
