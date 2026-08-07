@@ -1,1 +1,0 @@
-- Display subsection percentages of total time correctly in the `.timings` output file.

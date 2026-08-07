@@ -1,1 +1,0 @@
-- Consolidate scheduled checks into BUILD and remove the incorrect target-branch ancestry workflow.

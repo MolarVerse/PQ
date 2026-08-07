@@ -1,1 +1,0 @@
-- Single-step simulations now complete their progress indicator without dividing by zero.

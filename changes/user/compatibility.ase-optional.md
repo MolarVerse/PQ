@@ -1,1 +1,0 @@
-- Allow builds without ASE even when built-in SLAKOS data is unavailable.
