@@ -6,115 +6,142 @@
 Feature List
 ############
 
-This page summarizes the main features supported by **PQ**. Planned items are
-listed separately so they are not confused with currently available run modes.
+This is a hopefully up to date list of the features implemented in the current release version of the code.
 
-*********
-Run Modes
-*********
+If the features are marked in red, they are not yet implemented but are planned for the future. There exist
+three main categories of not yet implemented features:
 
-The supported :ref:`jobtype <jobtype>` values are:
+1) Features that are planned but not yet implemented (Planned)
+2) Features that have a high priority but are not yet implemented (Coming Soon)
+3) Features that are in the pipeline but are not yet implemented (In development)
 
-* ``mm-md`` - molecular-mechanics molecular dynamics
-* ``qm-md`` - quantum-mechanics molecular dynamics
-* ``qm-rpmd`` - quantum-mechanics ring-polymer molecular dynamics
-* ``mm-opt`` - molecular-mechanics geometry optimization
 
-*******************
-Molecular Mechanics
-*******************
+*******
+Runners
+*******
 
-**Force-field models**
+1) Molecular Mechanics (MM)
 
-* :ref:`GUFF <guffdatFile>` (Grand Unified Force Field)
-* AMBER-type force fields with :ref:`force-field <forcefieldKey>`
-* Lennard-Jones, Buckingham and Morse :ref:`non-Coulombic interactions <noncoulombKey>`
+    - Classical Molecular Dynamics (MD)
+    - :red:`Ring Polymer Molecular Dynamcis (RPMD) - Coming Soon`
+    - :red:`Geometry Optimisation (OPT) - In development`
+    - :red:`Guffcheck - Coming soon`
+    
 
-**Force evaluation**
+2) Quantum Mechanics (QM)
 
-* brute-force pair evaluation
-* :ref:`cell-list <celllistKeys>` pair evaluation
-* optional Kokkos acceleration for supported MM Lennard-Jones/Wolf setups
+    - Classical Molecular Dynamics (MD)
+    - Ring Polymer Molecular Dynamcis (RPMD)
 
-**Long-range corrections**
+3) :red:`Hybrid QM/MM - Planned`
 
-* no correction
-* :ref:`Reaction field <longrangeKey>`
-* :ref:`Wolf summation <longrangeKey>`
+    - Classical Molecular Dynamics (MD)
+    - Ring Polymer Molecular Dynamcis (RPMD)
+
+************************
+Molecular Mechanics (MM)
+************************
+
+At the moment the program supports two different types of force fields
+with some further specializations or extensions:
+
+    a) Guff (General Unified Force Field)
+
+        - full Guff equation
+        - Lennard Jones quick routine
+        - Buckingham quick routine
+        - Morse quick routine
+        
+    b) AMBER type force fields
+
+        - standard AMBER force field with (Lennard Jones non-bonded interactions)
+        - Buckingham non-bonded interactions
+        - Morse non-bonded interactions
+
+Evaluation Scheme
+=================
+
+The evaluation of the forces can be performed *via* the following schemes
+
+1) Brute Force Evaluation
+2) Cell List Evaluation
+3) :red:`Verlet List with Cell List Evaluation - Coming Soon`
+
+Long Range Corrections
+======================
+
+Following long range corrections are implemented:
+
+1) :red:`Ewald Summation - Planned`
+2) Wolf Summation
+3) :red:`Reaction Field - Coming Soon`
+
+4) :red:`Range separation for non Coulombic interactions - Planned`
+
+Special Moltypes
+================
+
+1) :red:`Water - Coming Soon`
 
 *****************
 Quantum Mechanics
 *****************
 
-**Supported QM runners**
+At the moment the evaluation of quantum mechanical forces is implemented
+for the following QM-engines:
 
-* :ref:`DFTB+ <qmprogamKey>`
-* :ref:`Turbomole <qmprogamKey>`
-* :ref:`PySCF <qmprogamKey>`
-* :ref:`FeNNol <qmprogamKey>`
-* :ref:`MACE-MP and MACE-OFF <qmprogamKey>`
-* :ref:`ASE-DFTB+ <qmprogamKey>`
-* :ref:`ASE-xTB <qmprogamKey>`
+1) DFTB+
+2) Turbomole
+3) PySCF
+4) MACE
 
 ******************
 Molecular Dynamics
 ******************
 
-**Integrator**
+Integrators
+===========
 
-* Velocity Verlet
+1) Velocity Verlet
 
-**Thermostats**
+Thermostats
+===========
 
-* :ref:`Langevin <thermostatKey>`
-* :ref:`Berendsen <thermostatKey>`
-* :ref:`stochastic velocity rescaling <thermostatKey>`
-* :ref:`Nose-Hoover chain <thermostatKey>`
+1) Langevin Thermostat
+2) Berendsen Thermostat
+3) Velocity Rescaling Thermostat
+4) Nose-Hoover Thermostat
 
-**Manostats**
+Manostats
+=========
 
-* :ref:`Berendsen <manostatKey>`
-* :ref:`stochastic cell rescaling <manostatKey>`
+1) Berendsen Manostat
+2) Stochastic Rescaling Manostat
 
-**Cell coupling modes**
+Isotropicity
+============
 
-* :ref:`isotropic <isotropyKey>`
-* :ref:`semi-isotropic <isotropyKey>`
-* :ref:`anisotropic cell lengths <isotropyKey>`
-* :ref:`full anisotropic cell lengths and angles <isotropyKey>`
+All calculation schemes of any MD runner can be performed with triclinic cells
 
-**Constraints**
+1) Isotropic
+2) Semi-Isotropic
+3) Anisotropic (only cell lengths)
+4) Full Anisotropic (cell lengths and angles)
 
-* :ref:`SHAKE/RATTLE <shakeKey>`
-* :ref:`M-SHAKE <shakeKey>`
-* :ref:`distance constraints <distanceConstraintsKey>`
+Constraints
+===========
 
-************
-Optimization
-************
-
-Geometry optimization is available for molecular-mechanics calculations. The
-supported :ref:`optimizers <optimizerKey>` are:
-
-* steepest descent
-* ADAM
+1) Shake/Rattle
+2) :red:`Lincs - Planned`
+3) :red:`M-Shake - Planned`
 
 ***
 MPI
 ***
 
-MPI support is used for QM-RPMD, where individual ring-polymer beads can be
-distributed across ranks. Force evaluation itself remains local to each rank,
-except for external QM programs that provide their own parallel execution.
+At the moment only Ring Polymer Molecular Dynamics (RPMD) is implemented in parallel.
+Meaning that each ring polymer can be calculated on a different rank, but the calculation of 
+the forces is still performed on a single rank. The only exceptions are the QM-engines, which
+are called as external programs and can be run in parallel.
 
-*************
-Planned Items
-*************
 
-The following items are planned for future releases:
-
-* hybrid QM/MM job type
-* MM-RPMD
-* Verlet-list force evaluation
-* Ewald summation
-* LINCS constraints

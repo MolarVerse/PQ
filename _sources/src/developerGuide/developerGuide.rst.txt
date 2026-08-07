@@ -129,56 +129,12 @@ To run these tests, ensure the following Python packages are installed:
 In addition, the `DFTB+ <https://dftbplus.org/index.html>`__ program package has to be installed.
 You can then run the integration tests with the command ``pytest PQ/integration_tests``.
 
-======================
-Performance Benchmarks
-======================
-
-The Google Benchmark suite contains local wall-clock benchmarks for core
-algorithms. It is separate from the fixed-work performance checks in
-``benchmarks/perf``.
-
-Configure and build the suite from the repository root:
-
-    .. code:: bash
-
-        $ cmake -S . -B build-benchmark -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_BENCHMARKING=ON -DBUILD_WITH_TESTS=OFF -DBUILD_WITH_ASE=OFF
-        $ cmake --build build-benchmark --target google_benchmarks
-
-Run a short smoke test:
-
-    .. code:: bash
-
-        $ ctest --test-dir build-benchmark -L benchmark --output-on-failure
-
-Run the full local suite and write JSON results to ``benchmark-results``:
-
-    .. code:: bash
-
-        $ ./benchmarks/run_benchmarks.sh build-benchmark
-
-The benchmarks are standalone executables in
-``build-benchmark/benchmarks/src``. For example:
-
-    .. code:: bash
-
-        $ ./build-benchmark/benchmarks/src/benchmark_forceCalculation
-
-See ``benchmarks/README.md`` for filtering, output, and sampling-time options.
-
 ==============
 GitHub Actions
 ==============
 
 The software workflow --- from building the project to running unit and integration tests --- is validated by continuous integration (CI) using GitHub Actions.
 The corresponding workflow configuration files are located in the ``PQ/.github/workflows/`` directory.
-
-************
-Coding Style
-************
-
-The C++ source code is formatted with `clang-format <https://clang.llvm.org/docs/ClangFormat.html>`__ using the project configuration in ``PQ/.clang-format``.
-Use clang-format version 16 or newer. Older versions do not support all options used in the current configuration, and different clang-format versions can produce different formatting.
-When changing C++ files, format the touched files before committing them.
 
 *************
 Documentation
@@ -226,7 +182,7 @@ The documentation can be built as follows:
 
         .. code:: bash
 
-            $ <browser> build/docs/html/index.html
+            $ favorite_browser build/docs/html/index.html
 
 *****************
 How to Contribute
@@ -269,65 +225,11 @@ In order to contribute to the project, please follow these steps:
 
 
     #. Commit your changes to your feature branch and publish your feature branch:
-
+    
         .. code:: bash
 
             $ git add <files>
             $ git commit -m "commit message"
             $ git flow feature publish <feature_branch_name>
-
-    #. Add a changelog fragment describing your change (see `Changelog Fragments`_ below).
-
+    
     #. Create a pull request on GitHub.
-
-===================
-Changelog Fragments
-===================
-
-**PQ** does not accumulate changelog entries by hand-editing ``CHANGELOG.md``
-or ``DEV-CHANGELOG.md``. Instead, every regular pull request adds a small
-Markdown file, a *fragment*, under ``PQ/changes/``, and a CI check
-(``changelog.yml``) fails the pull request if none is present. At release
-time, ``scripts/update_changelog.py`` routes every fragment into the right
-changelog section, stamps a release header, and deletes the fragments it
-consumed.
-
-Fragments live in one of two audience directories:
-
-    - ``changes/user/`` --- for changes an installed-PQ user would notice:
-      behavior, results, inputs, outputs, errors, compatibility, or runtime
-      performance.
-    - ``changes/developer/`` --- for build tooling, CI, tests, refactors, and
-      other internal maintenance.
-
-Within either directory, a fragment is named:
-
-    .. code:: text
-
-        <category>.<title>.md
-
-``<category>`` selects the changelog section the entry is rendered under and
-must be one of the fixed categories for that audience (see
-``changes/README.md`` for the full list, e.g. ``bugfix``, ``enhancement``,
-``performance``, ``build``, ``ci``, ``test``, ``internal``,
-``documentation``). ``<title>`` is a short, free-text, lowercase-with-hyphens
-slug identifying the change; it is only used to keep filenames unique and
-does not appear in the rendered changelog.
-
-A fragment's body is one or more Markdown bullets, one per line, with no
-blank lines in between. Each bullet becomes its own line in the changelog:
-
-    .. code:: markdown
-
-        - Fix wrong virial mode when using atomic virial after copying physical data.
-
-    .. code:: markdown
-
-        - First point about this change.
-        - Second, related point about the same change.
-
-If your pull request extends a change that already has an unreleased
-fragment, append another bullet to that existing file instead of creating a
-new one. A pull request may add new fragments, append to existing ones, or
-both, and may touch both audiences, but it must not delete unreleased
-fragments or edit ``CHANGELOG.md`` / ``DEV-CHANGELOG.md`` directly.

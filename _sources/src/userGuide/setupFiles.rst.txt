@@ -99,116 +99,14 @@ If the ``__GUESS__`` flag is included, the charges will be read for an initial g
 Topology File
 *************
 
-The topology file defines bonded force-field terms and distance constraints by
-global atom index. It is a section-based file. A section starts with a section
-keyword and ends with ``END``. Lines starting with ``#`` are ignored.
-
-The accepted section keywords are ``SHAKE``, ``BONDS``, ``ANGLES``,
-``DIHEDRALS``, ``IMPROPERS``, ``DIST_CONSTRAINTS`` and ``J_COUPLINGS``. Section
-keywords are case-insensitive, and dashes in the keyword are treated like
-underscores.
-
-The topology line formats are:
-
-    | ``SHAKE``: atom_1 atom_2 distance [unused_fourth_field]
-    | ``BONDS``: atom_1 atom_2 bond_type [``*``]
-    | ``ANGLES``: atom_1 atom_2 atom_3 angle_type [``*``]
-    | ``DIHEDRALS``: atom_1 atom_2 atom_3 atom_4 dihedral_type [``*``]
-    | ``IMPROPERS``: atom_1 atom_2 atom_3 atom_4 improper_type
-    | ``DIST_CONSTRAINTS``: atom_1 atom_2 lower_distance upper_distance force_constant dforce_constant_dt
-    | ``J_COUPLINGS``: atom_1 atom_2 atom_3 atom_4 j_coupling_type
-
-The optional fourth field in ``SHAKE`` entries is accepted for legacy input
-files but is not used by the reader. The optional ``*`` marker in the bonded
-sections marks a linker interaction. Topology atom indices are global atom
-indices from the current structure.
-
-.. code-block:: text
-
-    SHAKE
-    1 2 1.0
-    END
-
-    BONDS
-    1 2 1
-    END
-
-.. Note::
-
-    ``topology_file`` is mandatory when :ref:`force-field <forcefieldKey>`
-    is set to ``on`` or ``bonded``, or when :ref:`shake <shakeKey>` is set to
-    ``on`` or ``shake``.
-
 .. _parameterFile:
 
 **************
 Parameter File
 **************
 
-The parameter file defines the parameters used by the force-field sections in
-the :ref:`topologyFile`. Like the topology file, it is a section-based file and
-every section is terminated with ``END``. Lines starting with ``#`` are ignored.
-
-The accepted section keywords are ``TYPES``, ``BONDS``, ``ANGLES``,
-``DIHEDRALS``, ``IMPROPERS``, ``J_COUPLINGS`` and ``NONCOULOMBICS``. Section
-keywords are case-insensitive, and dashes in the keyword are treated like
-underscores.
-
-The parameter line formats are:
-
-    | ``TYPES``: dummy dummy dummy dummy dummy dummy scale_14_coulomb scale_14_vdw
-    | ``BONDS``: bond_type equilibrium_distance force_constant
-    | ``ANGLES``: angle_type equilibrium_angle force_constant
-    | ``DIHEDRALS``: dihedral_type force_constant periodicity phase
-    | ``IMPROPERS``: improper_type force_constant periodicity phase
-    | ``J_COUPLINGS``: j_coupling_type j_0 force_constant a b c phase [symmetry]
-
-The ``NONCOULOMBICS`` header may be followed by ``LJ``, ``BUCKINGHAM`` or
-``MORSE``. If no type is given, ``LJ`` is used.
-
-    | ``NONCOULOMBICS LJ``: atom_type_1 atom_type_2 c6 c12 [cutoff]
-    | ``NONCOULOMBICS BUCKINGHAM``: atom_type_1 atom_type_2 a d_rho c6 [cutoff]
-    | ``NONCOULOMBICS MORSE``: atom_type_1 atom_type_2 dissociation_energy well_width equilibrium_distance [cutoff]
-
-If the optional non-Coulombic cutoff is omitted or set to a negative value, the
-global Coulomb cutoff is used. Angle and phase values in the parameter file are
-read in degrees.
-
-.. code-block:: text
-
-    BONDS
-    1 1.2 1.3
-    END
-
-    NONCOULOMBICS LJ
-    1 2 0.1 1.2 12.0
-    END
-
-.. Note::
-
-    ``parameter_file`` is mandatory when :ref:`force-field <forcefieldKey>`
-    is set to ``on`` or ``bonded``.
-
 .. _mshakeFile:
 
 ************
 M-SHAKE File
 ************
-
-The M-SHAKE file defines one reference geometry per molecule type for the
-``mshake`` constraint mode. It uses repeated extended-XYZ-like blocks:
-
-.. code-block:: text
-
-    3
-    moltype = 1;
-    H 0.0 0.0 0.0
-    O 1.0 1.0 1.0
-    H 2.0 2.0 2.0
-
-The first line of each block is the number of atoms in the reference geometry.
-The second line must contain ``moltype = <id>;`` and is parsed with the same
-command syntax as the input file. The ``moltype`` value is the molecule type
-defined in the :ref:`moldescriptorFile`. It is followed by one atom line per
-reference atom: atom name and Cartesian coordinates. The atom names must match
-the atom names of the referenced molecule type.

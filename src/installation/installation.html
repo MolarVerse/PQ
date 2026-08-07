@@ -22,7 +22,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Developer Guide" href="../developerGuide/developerGuide.html" />
-    <link rel="prev" title="Troubleshooting" href="../userGuide/troubleshooting.html" /> 
+    <link rel="prev" title="Output Files" href="../userGuide/outputFiles.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -49,10 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../featureList/featureList.html">Feature List</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../userGuide/userGuide.html">User Guide</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#building-from-source">Building from Source</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#build-options">Build Options</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#building-from-source">Building from Source</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#singularity">Singularity</a></li>
 </ul>
 </li>
@@ -102,97 +99,34 @@ $<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>PQ
 $<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>build
 </pre></div>
 </div>
-<p>Within this directory configure CMake:</p>
+<p>Within this directory configure cmake:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cmake<span class="w"> </span>../<span class="w"> </span>-DCMAKE_BUILD_TYPE<span class="o">=</span>Release
 </pre></div>
 </div>
-<p>Then compile the project:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span>-j<span class="w"> </span>&lt;number_of_processors&gt;
-</pre></div>
-</div>
-<p>The executable is written to <code class="docutils literal notranslate"><span class="pre">build/apps/PQ</span></code>.</p>
-<section id="build-options">
-<h3>Build Options<a class="headerlink" href="#build-options" title="Link to this heading"></a></h3>
-<p>Common CMake options are listed below. Boolean options are set with <code class="docutils literal notranslate"><span class="pre">On</span></code> or
-<code class="docutils literal notranslate"><span class="pre">Off</span></code>.</p>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 28.0%" />
-<col style="width: 14.0%" />
-<col style="width: 58.0%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Option</p></th>
-<th class="head"><p>Default</p></th>
-<th class="head"><p>Purpose</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">CMAKE_BUILD_TYPE</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">RelWithDebug</span></code></p></td>
-<td><p>Build type. Supported values are <code class="docutils literal notranslate"><span class="pre">Debug</span></code>, <code class="docutils literal notranslate"><span class="pre">RelWithDebug</span></code> and <code class="docutils literal notranslate"><span class="pre">Release</span></code>.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">BUILD_WITH_TESTS</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">On</span></code></p></td>
-<td><p>Build the C++ unit tests.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">BUILD_WITH_MPI</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Off</span></code></p></td>
-<td><p>Enable MPI support, mainly used for ring-polymer QM-MD.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">BUILD_WITH_KOKKOS</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Off</span></code></p></td>
-<td><p>Enable the Kokkos-accelerated MM path where supported.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">BUILD_WITH_ASE</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">On</span></code></p></td>
-<td><p>Build ASE-based QM runners and built-in Slater-Koster setup.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">PQ_SLAKOS_SOURCE_DIR</span></code></p></td>
-<td><p>unset</p></td>
-<td><p>Use preseeded <code class="docutils literal notranslate"><span class="pre">3ob</span></code> and <code class="docutils literal notranslate"><span class="pre">matsci</span></code> directories instead of cloning them.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">BUILD_WITH_PYTHON_BINDINGS</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Off</span></code></p></td>
-<td><p>Build Python bindings.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">BUILD_WITH_NATIVE</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">On</span></code></p></td>
-<td><p>Optimize release builds for the local CPU. Disable for portable binaries.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">BUILD_WITH_LTO</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Off</span></code></p></td>
-<td><p>Enable link-time optimization for release builds without Kokkos.</p></td>
-</tr>
-</tbody>
-</table>
-<p>Example MPI build:</p>
+<p>Optionally it is also possible to enable MPI for Ring Polymer MD</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cmake<span class="w"> </span>../<span class="w"> </span>-DCMAKE_BUILD_TYPE<span class="o">=</span>Release<span class="w"> </span>-DBUILD_WITH_MPI<span class="o">=</span>On
 </pre></div>
 </div>
-<p>For a network-restricted ASE build, prepare a directory containing <code class="docutils literal notranslate"><span class="pre">3ob</span></code> and
-<code class="docutils literal notranslate"><span class="pre">matsci</span></code> checkouts, then configure with:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cmake<span class="w"> </span>../<span class="w"> </span>-DCMAKE_BUILD_TYPE<span class="o">=</span>Release<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-DPQ_SLAKOS_SOURCE_DIR<span class="o">=</span>/path/to/slakos
+<p>For compilation then type:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span>-j<span class="w"> </span>&lt;number_of_processors&gt;
 </pre></div>
 </div>
-</section>
 </section>
 <section id="singularity">
 <span id="id1"></span><h2>Singularity<a class="headerlink" href="#singularity" title="Link to this heading"></a></h2>
 <p>Singularity is a containerization tool that allows to run applications in a container. This is especially useful
 for running applications on HPC systems where the user does not have root access. Singularity is available on most
-HPC systems. The PQ software package provides three Singularity definition
-files in <code class="docutils literal notranslate"><span class="pre">PQ/scripts/</span></code>.</p>
+HPC systems. The PQ software package provides three (hopefully) useful singularity definition files, which can be
+found in the <a class="reference external" href="https://github.com/MolarVerse/PQ">https://github.com/MolarVerse/PQ</a>.</p>
 <p>The file <code class="docutils literal notranslate"><span class="pre">PQ.def</span></code> represents a definition file to build a singularity container based on a fully sequential build
 of the latest release of PQ. The file <code class="docutils literal notranslate"><span class="pre">PQ_openmpi.def</span></code> is an extension of the previously mentioned definition
-file - including the OpenMPI library of choice and therefore compiled with MPI support. As MPI applications are highly
+file - including the OpenMPI library of choice and therefore compiled with MPI support. As MPI application are highly
 restricted regarding the applied MPI version, before building the container the __VERSION__ in the definition file
 has to be substituted with the desired OpenMPI version. Therefore, a small and simple bash script <code class="docutils literal notranslate"><span class="pre">inferOpenMpiVersion.sh</span></code>
 is provided, which automatically substitutes the __VERSION__ with the desired OpenMPI version when given as command
 line argument or if no CLI argument is given it tries to infer the needed OpenMPI variable from the environment variable <code class="docutils literal notranslate"><span class="pre">$PATH</span></code>.</p>
 <p>In order to build both containers from the singularity file the following command can be used:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>singularity<span class="w"> </span>build<span class="w"> </span>--fakeroot<span class="w"> </span>&lt;name_of_container&gt;.sif<span class="w"> </span>&lt;name_of_definition_file&gt;.def
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>singularity<span class="w"> </span>build<span class="w"> </span>--fakeroot<span class="w"> </span>&lt;name_of_container&gt;.sif<span class="w"> </span>&lt;name_of_definiton_file&gt;.def
 </pre></div>
 </div>
 <p>In order to execute the program <em>via</em> the singularity container two possible commands are shown below:</p>
@@ -202,11 +136,11 @@ line argument or if no CLI argument is given it tries to infer the needed OpenMP
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>singularity<span class="w"> </span>run<span class="w"> </span>--env<span class="w"> </span><span class="nv">MYPATH</span><span class="o">=</span><span class="nv">$PATH</span><span class="w"> </span>&lt;name_of_container&gt;.sif<span class="w"> </span>&lt;name_of_input_file&gt;
 </pre></div>
 </div>
-<p>Depending on the directory structure of the host system it might be necessary to bind/mount the directory containing the
+<p>Depending on the directory structure of the host system it might be necessary to bind/mound the directory containing the
 input file to the container. This can be achieved by adding <code class="docutils literal notranslate"><span class="pre">--bind</span> <span class="pre">$PWD</span></code> to the singularity command.</p>
-<p>The third definition file is experimental at the moment as it is used in combination with a miniconda environment in the
+<p>The third definiton file is only experimental at the moment as it is used in combination with a miniconda environment in the
 container. This should make it possible in future releases to build the singularity container based on an environment.yml file.
-This definition file is called <code class="docutils literal notranslate"><span class="pre">PQ_conda.def</span></code>.</p>
+This definiton file is called <code class="docutils literal notranslate"><span class="pre">PQ_conda.def</span></code>.</p>
 </section>
 </section>
 
@@ -214,7 +148,7 @@ This definition file is called <code class="docutils literal notranslate"><span 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../userGuide/troubleshooting.html" class="btn btn-neutral float-left" title="Troubleshooting" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../userGuide/outputFiles.html" class="btn btn-neutral float-left" title="Output Files" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="../developerGuide/developerGuide.html" class="btn btn-neutral float-right" title="Developer Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

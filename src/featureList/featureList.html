@@ -47,13 +47,23 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Feature List</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#run-modes">Run Modes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#molecular-mechanics">Molecular Mechanics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#runners">Runners</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#molecular-mechanics-mm">Molecular Mechanics (MM)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#evaluation-scheme">Evaluation Scheme</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#long-range-corrections">Long Range Corrections</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#special-moltypes">Special Moltypes</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#quantum-mechanics">Quantum Mechanics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#molecular-dynamics">Molecular Dynamics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#optimization">Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#molecular-dynamics">Molecular Dynamics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#integrators">Integrators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#thermostats">Thermostats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#manostats">Manostats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#isotropicity">Isotropicity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#constraints">Constraints</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#mpi">MPI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#planned-items">Planned Items</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../userGuide/userGuide.html">User Guide</a></li>
@@ -87,109 +97,158 @@
              
   <section id="feature-list">
 <span id="featurelist"></span><h1>Feature List<a class="headerlink" href="#feature-list" title="Link to this heading"></a></h1>
-<p>This page summarizes the main features supported by <strong>PQ</strong>. Planned items are
-listed separately so they are not confused with currently available run modes.</p>
-<section id="run-modes">
-<h2>Run Modes<a class="headerlink" href="#run-modes" title="Link to this heading"></a></h2>
-<p>The supported <a class="reference internal" href="../userGuide/inputFile.html#jobtype"><span class="std std-ref">jobtype</span></a> values are:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">mm-md</span></code> - molecular-mechanics molecular dynamics</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">qm-md</span></code> - quantum-mechanics molecular dynamics</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">qm-rpmd</span></code> - quantum-mechanics ring-polymer molecular dynamics</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">mm-opt</span></code> - molecular-mechanics geometry optimization</p></li>
+<p>This is a hopefully up to date list of the features implemented in the current release version of the code.</p>
+<p>If the features are marked in red, they are not yet implemented but are planned for the future. There exist
+three main categories of not yet implemented features:</p>
+<ol class="arabic simple">
+<li><p>Features that are planned but not yet implemented (Planned)</p></li>
+<li><p>Features that have a high priority but are not yet implemented (Coming Soon)</p></li>
+<li><p>Features that are in the pipeline but are not yet implemented (In development)</p></li>
+</ol>
+<section id="runners">
+<h2>Runners<a class="headerlink" href="#runners" title="Link to this heading"></a></h2>
+<ol class="arabic">
+<li><p>Molecular Mechanics (MM)</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Classical Molecular Dynamics (MD)</p></li>
+<li><p><span class="red">Ring Polymer Molecular Dynamcis (RPMD) - Coming Soon</span></p></li>
+<li><p><span class="red">Geometry Optimisation (OPT) - In development</span></p></li>
+<li><p><span class="red">Guffcheck - Coming soon</span></p></li>
 </ul>
+</div></blockquote>
+</li>
+<li><p>Quantum Mechanics (QM)</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Classical Molecular Dynamics (MD)</p></li>
+<li><p>Ring Polymer Molecular Dynamcis (RPMD)</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><span class="red">Hybrid QM/MM - Planned</span></p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Classical Molecular Dynamics (MD)</p></li>
+<li><p>Ring Polymer Molecular Dynamcis (RPMD)</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ol>
 </section>
-<section id="molecular-mechanics">
-<h2>Molecular Mechanics<a class="headerlink" href="#molecular-mechanics" title="Link to this heading"></a></h2>
-<p><strong>Force-field models</strong></p>
-<ul class="simple">
-<li><p><a class="reference internal" href="../userGuide/setupFiles.html#guffdatfile"><span class="std std-ref">GUFF</span></a> (Grand Unified Force Field)</p></li>
-<li><p>AMBER-type force fields with <a class="reference internal" href="../userGuide/inputFile.html#forcefieldkey"><span class="std std-ref">force-field</span></a></p></li>
-<li><p>Lennard-Jones, Buckingham and Morse <a class="reference internal" href="../userGuide/inputFile.html#noncoulombkey"><span class="std std-ref">non-Coulombic interactions</span></a></p></li>
+<section id="molecular-mechanics-mm">
+<h2>Molecular Mechanics (MM)<a class="headerlink" href="#molecular-mechanics-mm" title="Link to this heading"></a></h2>
+<p>At the moment the program supports two different types of force fields
+with some further specializations or extensions:</p>
+<blockquote>
+<div><ol class="loweralpha">
+<li><p>Guff (General Unified Force Field)</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>full Guff equation</p></li>
+<li><p>Lennard Jones quick routine</p></li>
+<li><p>Buckingham quick routine</p></li>
+<li><p>Morse quick routine</p></li>
 </ul>
-<p><strong>Force evaluation</strong></p>
-<ul class="simple">
-<li><p>brute-force pair evaluation</p></li>
-<li><p><a class="reference internal" href="../userGuide/inputFile.html#celllistkeys"><span class="std std-ref">cell-list</span></a> pair evaluation</p></li>
-<li><p>optional Kokkos acceleration for supported MM Lennard-Jones/Wolf setups</p></li>
+</div></blockquote>
+</li>
+<li><p>AMBER type force fields</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>standard AMBER force field with (Lennard Jones non-bonded interactions)</p></li>
+<li><p>Buckingham non-bonded interactions</p></li>
+<li><p>Morse non-bonded interactions</p></li>
 </ul>
-<p><strong>Long-range corrections</strong></p>
-<ul class="simple">
-<li><p>no correction</p></li>
-<li><p><a class="reference internal" href="../userGuide/inputFile.html#longrangekey"><span class="std std-ref">Reaction field</span></a></p></li>
-<li><p><a class="reference internal" href="../userGuide/inputFile.html#longrangekey"><span class="std std-ref">Wolf summation</span></a></p></li>
-</ul>
+</div></blockquote>
+</li>
+</ol>
+</div></blockquote>
+<section id="evaluation-scheme">
+<h3>Evaluation Scheme<a class="headerlink" href="#evaluation-scheme" title="Link to this heading"></a></h3>
+<p>The evaluation of the forces can be performed <em>via</em> the following schemes</p>
+<ol class="arabic simple">
+<li><p>Brute Force Evaluation</p></li>
+<li><p>Cell List Evaluation</p></li>
+<li><p><span class="red">Verlet List with Cell List Evaluation - Coming Soon</span></p></li>
+</ol>
+</section>
+<section id="long-range-corrections">
+<h3>Long Range Corrections<a class="headerlink" href="#long-range-corrections" title="Link to this heading"></a></h3>
+<p>Following long range corrections are implemented:</p>
+<ol class="arabic simple">
+<li><p><span class="red">Ewald Summation - Planned</span></p></li>
+<li><p>Wolf Summation</p></li>
+<li><p><span class="red">Reaction Field - Coming Soon</span></p></li>
+<li><p><span class="red">Range separation for non Coulombic interactions - Planned</span></p></li>
+</ol>
+</section>
+<section id="special-moltypes">
+<h3>Special Moltypes<a class="headerlink" href="#special-moltypes" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><span class="red">Water - Coming Soon</span></p></li>
+</ol>
+</section>
 </section>
 <section id="quantum-mechanics">
 <h2>Quantum Mechanics<a class="headerlink" href="#quantum-mechanics" title="Link to this heading"></a></h2>
-<p><strong>Supported QM runners</strong></p>
-<ul class="simple">
-<li><p><a class="reference internal" href="../userGuide/inputFile.html#qmprogamkey"><span class="std std-ref">DFTB+</span></a></p></li>
-<li><p><a class="reference internal" href="../userGuide/inputFile.html#qmprogamkey"><span class="std std-ref">Turbomole</span></a></p></li>
-<li><p><a class="reference internal" href="../userGuide/inputFile.html#qmprogamkey"><span class="std std-ref">PySCF</span></a></p></li>
-<li><p><a class="reference internal" href="../userGuide/inputFile.html#qmprogamkey"><span class="std std-ref">FeNNol</span></a></p></li>
-<li><p><a class="reference internal" href="../userGuide/inputFile.html#qmprogamkey"><span class="std std-ref">MACE-MP and MACE-OFF</span></a></p></li>
-<li><p><a class="reference internal" href="../userGuide/inputFile.html#qmprogamkey"><span class="std std-ref">ASE-DFTB+</span></a></p></li>
-<li><p><a class="reference internal" href="../userGuide/inputFile.html#qmprogamkey"><span class="std std-ref">ASE-xTB</span></a></p></li>
-</ul>
+<p>At the moment the evaluation of quantum mechanical forces is implemented
+for the following QM-engines:</p>
+<ol class="arabic simple">
+<li><p>DFTB+</p></li>
+<li><p>Turbomole</p></li>
+<li><p>PySCF</p></li>
+<li><p>MACE</p></li>
+</ol>
 </section>
 <section id="molecular-dynamics">
 <h2>Molecular Dynamics<a class="headerlink" href="#molecular-dynamics" title="Link to this heading"></a></h2>
-<p><strong>Integrator</strong></p>
-<ul class="simple">
+<section id="integrators">
+<h3>Integrators<a class="headerlink" href="#integrators" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
 <li><p>Velocity Verlet</p></li>
-</ul>
-<p><strong>Thermostats</strong></p>
-<ul class="simple">
-<li><p><a class="reference internal" href="../userGuide/inputFile.html#thermostatkey"><span class="std std-ref">Langevin</span></a></p></li>
-<li><p><a class="reference internal" href="../userGuide/inputFile.html#thermostatkey"><span class="std std-ref">Berendsen</span></a></p></li>
-<li><p><a class="reference internal" href="../userGuide/inputFile.html#thermostatkey"><span class="std std-ref">stochastic velocity rescaling</span></a></p></li>
-<li><p><a class="reference internal" href="../userGuide/inputFile.html#thermostatkey"><span class="std std-ref">Nose-Hoover chain</span></a></p></li>
-</ul>
-<p><strong>Manostats</strong></p>
-<ul class="simple">
-<li><p><a class="reference internal" href="../userGuide/inputFile.html#manostatkey"><span class="std std-ref">Berendsen</span></a></p></li>
-<li><p><a class="reference internal" href="../userGuide/inputFile.html#manostatkey"><span class="std std-ref">stochastic cell rescaling</span></a></p></li>
-</ul>
-<p><strong>Cell coupling modes</strong></p>
-<ul class="simple">
-<li><p><a class="reference internal" href="../userGuide/inputFile.html#isotropykey"><span class="std std-ref">isotropic</span></a></p></li>
-<li><p><a class="reference internal" href="../userGuide/inputFile.html#isotropykey"><span class="std std-ref">semi-isotropic</span></a></p></li>
-<li><p><a class="reference internal" href="../userGuide/inputFile.html#isotropykey"><span class="std std-ref">anisotropic cell lengths</span></a></p></li>
-<li><p><a class="reference internal" href="../userGuide/inputFile.html#isotropykey"><span class="std std-ref">full anisotropic cell lengths and angles</span></a></p></li>
-</ul>
-<p><strong>Constraints</strong></p>
-<ul class="simple">
-<li><p><a class="reference internal" href="../userGuide/inputFile.html#shakekey"><span class="std std-ref">SHAKE/RATTLE</span></a></p></li>
-<li><p><a class="reference internal" href="../userGuide/inputFile.html#shakekey"><span class="std std-ref">M-SHAKE</span></a></p></li>
-<li><p><a class="reference internal" href="../userGuide/inputFile.html#distanceconstraintskey"><span class="std std-ref">distance constraints</span></a></p></li>
-</ul>
+</ol>
 </section>
-<section id="optimization">
-<h2>Optimization<a class="headerlink" href="#optimization" title="Link to this heading"></a></h2>
-<p>Geometry optimization is available for molecular-mechanics calculations. The
-supported <a class="reference internal" href="../userGuide/inputFile.html#optimizerkey"><span class="std std-ref">optimizers</span></a> are:</p>
-<ul class="simple">
-<li><p>steepest descent</p></li>
-<li><p>ADAM</p></li>
-</ul>
+<section id="thermostats">
+<h3>Thermostats<a class="headerlink" href="#thermostats" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Langevin Thermostat</p></li>
+<li><p>Berendsen Thermostat</p></li>
+<li><p>Velocity Rescaling Thermostat</p></li>
+<li><p>Nose-Hoover Thermostat</p></li>
+</ol>
+</section>
+<section id="manostats">
+<h3>Manostats<a class="headerlink" href="#manostats" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Berendsen Manostat</p></li>
+<li><p>Stochastic Rescaling Manostat</p></li>
+</ol>
+</section>
+<section id="isotropicity">
+<h3>Isotropicity<a class="headerlink" href="#isotropicity" title="Link to this heading"></a></h3>
+<p>All calculation schemes of any MD runner can be performed with triclinic cells</p>
+<ol class="arabic simple">
+<li><p>Isotropic</p></li>
+<li><p>Semi-Isotropic</p></li>
+<li><p>Anisotropic (only cell lengths)</p></li>
+<li><p>Full Anisotropic (cell lengths and angles)</p></li>
+</ol>
+</section>
+<section id="constraints">
+<h3>Constraints<a class="headerlink" href="#constraints" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Shake/Rattle</p></li>
+<li><p><span class="red">Lincs - Planned</span></p></li>
+<li><p><span class="red">M-Shake - Planned</span></p></li>
+</ol>
+</section>
 </section>
 <section id="mpi">
 <h2>MPI<a class="headerlink" href="#mpi" title="Link to this heading"></a></h2>
-<p>MPI support is used for QM-RPMD, where individual ring-polymer beads can be
-distributed across ranks. Force evaluation itself remains local to each rank,
-except for external QM programs that provide their own parallel execution.</p>
-</section>
-<section id="planned-items">
-<h2>Planned Items<a class="headerlink" href="#planned-items" title="Link to this heading"></a></h2>
-<p>The following items are planned for future releases:</p>
-<ul class="simple">
-<li><p>hybrid QM/MM job type</p></li>
-<li><p>MM-RPMD</p></li>
-<li><p>Verlet-list force evaluation</p></li>
-<li><p>Ewald summation</p></li>
-<li><p>LINCS constraints</p></li>
-</ul>
+<p>At the moment only Ring Polymer Molecular Dynamics (RPMD) is implemented in parallel.
+Meaning that each ring polymer can be calculated on a different rank, but the calculation of
+the forces is still performed on a single rank. The only exceptions are the QM-engines, which
+are called as external programs and can be run in parallel.</p>
 </section>
 </section>
 
