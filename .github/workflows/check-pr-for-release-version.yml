@@ -1,4 +1,4 @@
-name: Release Pattern Check
+name: Release PR Check
 
 on:
   pull_request:
@@ -6,25 +6,55 @@ on:
       - main
     types: [opened, edited, reopened, synchronize]
 
+permissions:
+  contents: read
+
 jobs:
-  check-release-pattern:
+  check-release:
+    if: startsWith(github.event.pull_request.head.ref, 'release/')
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check PR Title or Description
+      - name: Read release version
+        id: release
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
         run: |
-          title="${{ github.event.pull_request.title }}"
-          body="${{ github.event.pull_request.body }}"
-          echo "Checking PR title: $title"
-          echo "Checking PR body: $body"
-
-          # Regex: Release-x.y.z (case-insensitive, numeric x, y, z of variable length)
-          regex='[Rr][Ee][Ll][Ee][Aa][Ss][Ee]-[0-9]+\.[0-9]+\.[0-9]+'
-
-          if [[ "$title" =~ $regex ]] || [[ "$body" =~ $regex ]]; then
-            echo "✅ Found valid Release pattern in title or description."
-            exit 0
+          if [[ "$HEAD_REF" =~ ^release/(v[0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
+            version="${BASH_REMATCH[1]}"
           else
-            echo "❌ Invalid PR. Title or description must contain: Release-x.y.z (e.g., Release-1.2.3)"
+            echo "Release branches must be named release/vX.Y.Z."
+            exit 1
+          fi
+
+          if [[ "$PR_TITLE" != "Release-${version#v}" ]]; then
+            echo "Release PR title must be Release-${version#v}."
+            exit 1
+          fi
+
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout pull request
+        uses: actions/checkout@v4
+
+      - name: Test changelog tooling
+        run: python3 -m unittest discover -s scripts/tests -p 'test_*.py'
+
+      - name: Verify prepared changelogs
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          if ! grep -Fq "## [$VERSION](" CHANGELOG.md && \
+             ! grep -Fq "## [$VERSION](" DEV-CHANGELOG.md; then
+            echo "Changelogs are not prepared for $VERSION."
+            exit 1
+          fi
+
+          remaining="$(find changes -type f -name '*.md' \
+            ! -name 'README.md' -print)"
+          if [[ -n "$remaining" ]]; then
+            echo "Unprocessed changelog fragments:"
+            echo "$remaining"
             exit 1
           fi
