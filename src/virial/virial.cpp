@@ -148,6 +148,6 @@ tensor3D Virial::getVirial() const { return _virial; }
 /**
  * @brief get the virial type
  *
- * @return std::string
+ * @return settings::VirialType
  */
-std::string Virial::getVirialType() const { return _virialType; }
+settings::VirialType Virial::getVirialType() const { return _virialType; }

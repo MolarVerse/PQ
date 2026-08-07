@@ -181,6 +181,16 @@ void Settings::setDimensionality(const size_t dimensionality)
     _dimensionality = dimensionality;
 }
 
+/**
+ * @brief sets the virial type
+ *
+ * @param virialType
+ */
+void Settings::setVirialType(const VirialType virialType)
+{
+    _virial = virialType;
+}
+
 /***************************
  *                         *
  * standard getter methods *
@@ -233,6 +243,13 @@ bool Settings::isRandomSeedSet() { return _isRandomSeedset; }
  * @return size_t
  */
 size_t Settings::getDimensionality() { return _dimensionality; }
+
+/**
+ * @brief get the virial type
+ *
+ * @return VirialType
+ */
+VirialType Settings::getVirialType() { return _virial; }
 
 /******************************
  *                            *

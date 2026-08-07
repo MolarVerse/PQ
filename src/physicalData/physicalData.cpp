@@ -24,11 +24,11 @@
 
 #include <algorithm>   // for __for_each_fn
 #include <cstddef>     // for size_t
+#include <utility>
 
 #include "constants/conversionFactors.hpp"           // for _FS_TO_S_
 #include "constants/internalConversionFactors.hpp"   // for _KINETIC_ENERGY_FACTOR_
-#include "exceptions.hpp"
-#include "simulationBox.hpp"   // for SimulationBox
+#include "simulationBox.hpp"                         // for SimulationBox
 
 using namespace physicalData;
 using namespace simulationBox;
@@ -37,17 +37,23 @@ using namespace constants;
 
 /**
  * @brief get the virial tensor, either atomic or molecular depending on the
- * isAtomic flag
+ * configured virial type
+ *
+ * @param virialType - the virial type to get the virial tensor for
  *
  * @return const linearAlgebra::tensor3D&
  */
-const linearAlgebra::tensor3D &KineticEnergyVirialTensor::getVirialTensor(
+const linearAlgebra::tensor3D& KineticEnergyVirialTensor::getVirialTensor(
+    settings::VirialType virialType
 ) const
 {
-    if (isAtomic)
-        return atomic;
+    switch (virialType)
+    {
+        case settings::VirialType::ATOMIC: return atomic;
+        case settings::VirialType::MOLECULAR: return molecular;
+    }
 
-    return molecular;
+    std::unreachable();
 }
 
 /**
@@ -55,7 +61,7 @@ const linearAlgebra::tensor3D &KineticEnergyVirialTensor::getVirialTensor(
  *
  * @param simulationBox
  */
-void PhysicalData::calculateKinetics(SimulationBox &simulationBox)
+void PhysicalData::calculateKinetics(SimulationBox& simulationBox)
 {
     startTimingsSection("Calc Kinetics");
 
@@ -65,7 +71,7 @@ void PhysicalData::calculateKinetics(SimulationBox &simulationBox)
 
     auto kinEnergyAndMomOfMol = [&kineticEnergyAtomicTensor,
                                  &kineticEnergyMolecularTensor,
-                                 this](auto &molecule)
+                                 this](auto& molecule)
     {
         const auto numberOfAtoms   = molecule.getNumberOfAtoms();
         auto       momentumSquared = tensor3D();
@@ -95,7 +101,7 @@ void PhysicalData::calculateKinetics(SimulationBox &simulationBox)
     _kineticEnergy = trace(kineticEnergyAtomicTensor);
 
     _angularMomentum  = simulationBox.calculateAngularMomentum(_momentum);
-    _angularMomentum  *= FS_TO_S;
+    _angularMomentum *= FS_TO_S;
 
     _momentum *= FS_TO_S;
 
@@ -117,13 +123,9 @@ std::shared_ptr<PhysicalData> PhysicalData::clone() const
  *
  * @param data - physicalData to copy from
  */
-void PhysicalData::copy(const PhysicalData &data)
+void PhysicalData::copy(const PhysicalData& data)
 {
     reset();
-
-    // update kinetic energy virial tensor mode to not have any problems when
-    // updating averages for inconsistent isAtomic flags
-    _kinEnergyVirialTensor.isAtomic = data._kinEnergyVirialTensor.isAtomic;
 
     updateAverages(data);
 }
@@ -133,7 +135,7 @@ void PhysicalData::copy(const PhysicalData &data)
  *
  * @param physicalData
  */
-void PhysicalData::updateAverages(const PhysicalData &physicalData)
+void PhysicalData::updateAverages(const PhysicalData& physicalData)
 {
     _numberOfQMAtoms += physicalData.getNumberOfQMAtoms();
     _loopTime        += physicalData.getLoopTime();
@@ -170,21 +172,10 @@ void PhysicalData::updateAverages(const PhysicalData &physicalData)
 
     _ringPolymerEnergy += physicalData.getRingPolymerEnergy();
 
-    const auto &kinEnergyVirialTensor = physicalData._kinEnergyVirialTensor;
+    const auto& kinEnergyVirialTensor = physicalData._kinEnergyVirialTensor;
 
-    if (kinEnergyVirialTensor.isAtomic != _kinEnergyVirialTensor.isAtomic)
-    {
-        throw customException::PhysicalDataException(
-            "Inconsistent isAtomic flag in PhysicalData::updateAverages"
-        );
-    }
-
-    // although this value should usually be treated as a static value, there is
-    // no need in leaving this to chance
     _kinEnergyVirialTensor.atomic    += kinEnergyVirialTensor.atomic;
     _kinEnergyVirialTensor.molecular += kinEnergyVirialTensor.molecular;
-
-    _kinEnergyVirialTensor.isAtomic = kinEnergyVirialTensor.isAtomic;
 }
 
 /**
@@ -313,7 +304,7 @@ void PhysicalData::resetEnergies()
  *
  * @param simulationBox
  */
-void PhysicalData::calculateTemperature(SimulationBox &simulationBox)
+void PhysicalData::calculateTemperature(SimulationBox& simulationBox)
 {
     _temperature = simulationBox.calculateTemperature();
 }
@@ -371,30 +362,18 @@ void PhysicalData::addIntraNonCoulombEnergy(const double intraNonCoulombEnergy)
 }
 
 /**
- * @brief change kinetic virial to atomic
- *
- * @details This function is used to change the kinetic virial from molecular to
- * atomic via a function pointer
- *
- */
-void PhysicalData::changeKineticVirialToAtomic()
-{
-    _kinEnergyVirialTensor.isAtomic = true;
-}
-
-/**
  * @brief calculate the mean of a vector of physicalData
  *
  * @param dataVec - vector of physicalData
  * @return PhysicalData
  */
-PhysicalData physicalData::mean(std::vector<PhysicalData> &dataVec)
+PhysicalData physicalData::mean(std::vector<PhysicalData>& dataVec)
 {
     PhysicalData meanData;
 
     std::ranges::for_each(
         dataVec,
-        [&meanData](auto &physicalData)
+        [&meanData](auto& physicalData)
         { meanData.updateAverages(physicalData); }
     );
 

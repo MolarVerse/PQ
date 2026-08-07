@@ -1,1 +1,0 @@
-- Reference output is validated before writing, preventing partial files when a referenced file cannot be read.

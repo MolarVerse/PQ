@@ -49,9 +49,10 @@ Manostat::Manostat(const double targetPressure)
  *
  * @param data
  */
-void Manostat::calculatePressure(const SimulationBox &box, PhysicalData &data)
+void Manostat::calculatePressure(const SimulationBox& box, PhysicalData& data)
 {
-    auto       ekinVirial  = data.getKinEnergyVirialTensor();
+    auto ekinVirial =
+        data.getKinEnergyVirialTensor(settings::Settings::getVirialType());
     auto       forceVirial = data.getVirial();
     const auto volume      = box.getVolume();
 
@@ -59,7 +60,7 @@ void Manostat::calculatePressure(const SimulationBox &box, PhysicalData &data)
     forceVirial = box.getBox().toOrthoSpace(forceVirial);
 
     _pressureTensor  = (2.0 * ekinVirial + forceVirial) / volume;
-    _pressureTensor  *= PRESSURE_FACTOR;
+    _pressureTensor *= PRESSURE_FACTOR;
 
     _pressure = trace(_pressureTensor) / 3.0;
 
@@ -75,7 +76,7 @@ void Manostat::calculatePressure(const SimulationBox &box, PhysicalData &data)
  *
  * @param mu
  */
-void Manostat::rotateMu(tensor3D &mu) const
+void Manostat::rotateMu(tensor3D& mu) const
 {
     mu[0][1] += mu[1][0];
     mu[0][2] += mu[2][0];
@@ -91,7 +92,7 @@ void Manostat::rotateMu(tensor3D &mu) const
  *
  * @param data
  */
-void Manostat::applyManostat(SimulationBox &box, PhysicalData &data)
+void Manostat::applyManostat(SimulationBox& box, PhysicalData& data)
 {
     startTimingsSection("Calc Pressure");
 

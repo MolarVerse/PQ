@@ -1,1 +1,0 @@
-- Remove default branches from enum switches and share sentinel fallbacks.
