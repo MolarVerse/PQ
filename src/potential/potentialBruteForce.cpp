@@ -23,7 +23,6 @@
 #include "potentialBruteForce.hpp"   // for PotentialBruteForce
 
 #include <cstddef>   // for size_t
-#include <functional>
 
 #include "molecule.hpp"             // for Molecule
 #include "physicalData.hpp"         // for PhysicalData

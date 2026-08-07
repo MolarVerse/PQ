@@ -27,12 +27,11 @@
 #include <cmath>     // for sqrt
 #include <cstdlib>   // for abort
 
-#include "box.hpp"                   // for Box
-#include "coulombPotential.hpp"      // for CoulombPotential
-#include "hybridSettings.hpp"        // for HybridSettings
-#include "molecule.hpp"              // for Molecule
-#include "nonCoulombPair.hpp"        // for NonCoulombPair
-#include "nonCoulombPotential.hpp"   // for NonCoulombPotential
+#include "atom.hpp"
+#include "box.hpp"
+#include "coulombPotential.hpp"   // for CoulombPotential
+#include "hybridSettings.hpp"     // for HybridSettings
+#include "molecule.hpp"
 #include "potential.hpp"
 
 namespace potential
@@ -60,11 +59,11 @@ namespace potential
      */
     template <typename ChargeTag1, typename ChargeTag2>
     std::pair<double, double> Potential::calculateSingleInteraction(
-        const pq::Box &box,
-        pq::Molecule  &mol1,
-        pq::Molecule  &mol2,
-        pq::Atom      &atom1,
-        pq::Atom      &atom2
+        const simulationBox::Box &box,
+        simulationBox::Molecule  &mol1,
+        simulationBox::Molecule  &mol2,
+        simulationBox::Atom      &atom1,
+        simulationBox::Atom      &atom2
     ) const
     {
         auto coulombEnergy    = 0.0;
@@ -324,7 +323,7 @@ namespace potential
      * @param nonCoulombPotential
      */
     template <typename T>
-    void Potential::makeNonCoulombPotential(const T& nonCoulombPotential)
+    void Potential::makeNonCoulombPotential(const T &nonCoulombPotential)
     {
         _nonCoulombPot = std::make_shared<T>(nonCoulombPotential);
     }
@@ -344,7 +343,7 @@ namespace potential
      * @throws std::abort() Always aborts as this should never be called
      */
     template <typename T>
-    double Potential::getPartialCharge(pq::Atom &atom) const
+    double Potential::getPartialCharge(pq::Atom & /*atom*/) const
     {
         std::abort();
     }

@@ -24,13 +24,10 @@
 
 #define _POTENTIAL_HPP_
 
-#include <cstddef>   // for size_t
 #include <utility>   // for pair
 
-#include "atom.hpp"
-#include "molecule.hpp"
+#include "nonCoulombPotential.hpp"
 #include "timer.hpp"
-#include "typeAliases.hpp"
 
 namespace potential
 {
@@ -59,8 +56,8 @@ namespace potential
     class Potential : public timings::Timer
     {
        protected:
-        pq::SharedCoulombPot    _coulombPotential;
-        pq::SharedNonCoulombPot _nonCoulombPot;
+        std::shared_ptr<CoulombPotential>    _coulombPotential;
+        std::shared_ptr<NonCoulombPotential> _nonCoulombPot;
 
        public:
         virtual ~Potential() = default;

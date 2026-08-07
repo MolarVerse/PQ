@@ -26,23 +26,23 @@
 
 namespace constants
 {
-    static constexpr double _SPC_OH_DIST_ = 1.0;           // Angström
-    static constexpr double _SPC_HH_DIST_ = 1.632993162;   // Angström
+    static constexpr double SPC_OH_DIST = 1.0;           // Angström
+    static constexpr double SPC_HH_DIST = 1.632993162;   // Angström
 
-    static constexpr double _SPC_E_OH_DIST_ = _SPC_OH_DIST_;   // Angström
-    static constexpr double _SPC_E_HH_DIST_ = _SPC_HH_DIST_;   // Angström
+    static constexpr double SPC_E_OH_DIST = SPC_OH_DIST;   // Angström
+    static constexpr double SPC_E_HH_DIST = SPC_HH_DIST;   // Angström
 
-    static constexpr double _SPC_DC_OH_DIST_ = _SPC_OH_DIST_;   // Angström
-    static constexpr double _SPC_DC_HH_DIST_ = _SPC_HH_DIST_;   // Angström
+    static constexpr double SPC_DC_OH_DIST = SPC_OH_DIST;   // Angström
+    static constexpr double SPC_DC_HH_DIST = SPC_HH_DIST;   // Angström
 
-    static constexpr double _H2O_DC_OH_DIST_ = 0.958;     // Angström
-    static constexpr double _H2O_DC_HH_DIST_ = 1.56441;   // Angström
+    static constexpr double H2O_DC_OH_DIST = 0.958;     // Angström
+    static constexpr double H2O_DC_HH_DIST = 1.56441;   // Angström
 
-    static constexpr double _TIP3P_OH_DIST_ = 0.9572;   // Angström
-    static constexpr double _TIP3P_HH_DIST_ = 1.5139;   // Angström
+    static constexpr double TIP3P_OH_DIST = 0.9572;   // Angström
+    static constexpr double TIP3P_HH_DIST = 1.5139;   // Angström
 
-    static constexpr double _OPC3_OH_DIST_ = 0.97888;       // Angström
-    static constexpr double _OPC3_HH_DIST_ = 1.598492306;   // Angström
+    static constexpr double OPC3_OH_DIST = 0.97888;       // Angström
+    static constexpr double OPC3_HH_DIST = 1.598492306;   // Angström
 
 }   // namespace constants
 

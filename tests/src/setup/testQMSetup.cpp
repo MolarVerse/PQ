@@ -83,10 +83,7 @@ TEST(TestQMSetup, setupDftbplus)
     setBuildCompatibleQMScript();
     setupQM.setup();
 
-    EXPECT_EQ(
-        typeid(dynamic_cast<QM::DFTBPlusRunner &>(*engine.getQMRunner())),
-        typeid(QM::DFTBPlusRunner)
-    );
+    test::checkType(*engine.getQMRunner(), typeid(QM::DFTBPlusRunner));
 
     settings::QMSettings::setQMMethod(settings::QMMethod::NONE);
 
@@ -107,10 +104,7 @@ TEST(TestQMSetup, setupPySCF)
     setBuildCompatibleQMScript();
     setupQM.setup();
 
-    EXPECT_EQ(
-        typeid(dynamic_cast<QM::PySCFRunner &>(*engine.getQMRunner())),
-        typeid(QM::PySCFRunner)
-    );
+    test::checkType(*engine.getQMRunner(), typeid(QM::PySCFRunner));
 
     settings::QMSettings::setQMMethod(settings::QMMethod::NONE);
 
@@ -131,10 +125,7 @@ TEST(TestQMSetup, setupTurbomoleRunner)
     setBuildCompatibleQMScript();
     setupQM.setup();
 
-    EXPECT_EQ(
-        typeid(dynamic_cast<QM::TurbomoleRunner &>(*engine.getQMRunner())),
-        typeid(QM::TurbomoleRunner)
-    );
+    test::checkType(*engine.getQMRunner(), typeid(QM::TurbomoleRunner));
 
     settings::QMSettings::setQMMethod(settings::QMMethod::NONE);
 

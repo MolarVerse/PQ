@@ -115,7 +115,7 @@ FilesInputParser::FilesInputParser(Engine &engine, const bool validateFilePaths)
 
     addKeyword(
         std::string("turbomole_file"),
-        bind_front(&FilesInputParser::parseTMFilename, this),
+        bindMember(&FilesInputParser::parseTMFilename, this),
         false
     );
 }

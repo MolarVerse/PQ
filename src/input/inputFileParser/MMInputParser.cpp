@@ -22,9 +22,8 @@
 
 #include "MMInputParser.hpp"
 
-#include <cstddef>      // for size_t
-#include <format>       // for format
-#include <functional>   // for _Bind_front_t, bind_front
+#include <cstddef>   // for size_t
+#include <format>    // for format
 
 #include "SPCIntraWater.hpp"          // for SPCIntraWater models
 #include "engine.hpp"                 // for Engine
@@ -33,10 +32,11 @@
 #include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
 #include "forceFieldSettings.hpp"     // for ForceFieldSettings
 #include "mTRIntraWater.hpp"          // for MTRIntraWater models
-#include "potential.hpp"              // for Potential
-#include "potentialSettings.hpp"      // for PotentialSettings
-#include "stringUtilities.hpp"        // for toLowerCopy
-#include "waterModelSettings.hpp"     // for WaterModelSettings
+#include "parserUtils.hpp"
+#include "potential.hpp"            // for Potential
+#include "potentialSettings.hpp"    // for PotentialSettings
+#include "stringUtilities.hpp"      // for toLowerCopy
+#include "waterModelSettings.hpp"   // for WaterModelSettings
 
 using namespace input;
 using namespace engine;
@@ -59,22 +59,22 @@ MMInputParser::MMInputParser(Engine &engine) : InputFileParser(engine)
 {
     addKeyword(
         std::string("force-field"),
-        bind_front(&MMInputParser::parseForceFieldType, this),
+        bindMember(&MMInputParser::parseForceFieldType, this),
         false
     );
     addKeyword(
         std::string("noncoulomb"),
-        bind_front(&MMInputParser::parseNonCoulombType, this),
+        bindMember(&MMInputParser::parseNonCoulombType, this),
         false
     );
     addKeyword(
         std::string("water_intra"),
-        bind_front(&MMInputParser::parseWaterIntraModel, this),
+        bindMember(&MMInputParser::parseWaterIntraModel, this),
         false
     );
     addKeyword(
         std::string("water_inter"),
-        bind_front(&MMInputParser::parseWaterInterModel, this),
+        bindMember(&MMInputParser::parseWaterInterModel, this),
         false
     );
 }

@@ -34,7 +34,6 @@
 #include "exceptions.hpp"        // for RstFileException
 #include "molecule.hpp"          // for Molecule
 #include "moleculeType.hpp"      // for MoleculeType
-#include "settings.hpp"          // for Settings
 #include "simulationBox.hpp"     // for SimulationBox
 #include "stringUtilities.hpp"   // for removeComments, splitString
 

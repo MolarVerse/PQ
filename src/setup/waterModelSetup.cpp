@@ -289,12 +289,12 @@ std::optional<RigidWaterGeometry> WaterModelSetup::getRigidWaterGeometry(
     // clang-format off
     switch (intraModel)
     {
-        case SPC: return RigidWaterGeometry{_SPC_OH_DIST_, _SPC_HH_DIST_};
-        case SPC_E: return RigidWaterGeometry{_SPC_E_OH_DIST_, _SPC_E_HH_DIST_};
-        case SPC_DC: return RigidWaterGeometry{_SPC_DC_OH_DIST_, _SPC_DC_HH_DIST_};
-        case H2O_DC: return RigidWaterGeometry{_H2O_DC_OH_DIST_, _H2O_DC_HH_DIST_};
-        case TIP3P: return RigidWaterGeometry{_TIP3P_OH_DIST_, _TIP3P_HH_DIST_};
-        case OPC3: return RigidWaterGeometry{_OPC3_OH_DIST_, _OPC3_HH_DIST_};
+        case SPC: return RigidWaterGeometry{SPC_OH_DIST, SPC_HH_DIST};
+        case SPC_E: return RigidWaterGeometry{SPC_E_OH_DIST, SPC_E_HH_DIST};
+        case SPC_DC: return RigidWaterGeometry{SPC_DC_OH_DIST, SPC_DC_HH_DIST};
+        case H2O_DC: return RigidWaterGeometry{H2O_DC_OH_DIST, H2O_DC_HH_DIST};
+        case TIP3P: return RigidWaterGeometry{TIP3P_OH_DIST, TIP3P_HH_DIST};
+        case OPC3: return RigidWaterGeometry{OPC3_OH_DIST, OPC3_HH_DIST};
         case SPC_FW:
         case QSPC_FW:
         case SPC_MTR:
@@ -407,32 +407,32 @@ void WaterModelSetup::addReferences()
     switch (intraModel)
     {
         using enum WaterIntraModel;
-        case SPC: ReferencesOutput::addReferenceFile(_SPC_FILE_); break;
-        case SPC_E: ReferencesOutput::addReferenceFile(_SPC_E_FILE_); break;
-        case SPC_FW: ReferencesOutput::addReferenceFile(_SPC_FW_FILE_); break;
-        case QSPC_FW: ReferencesOutput::addReferenceFile(_QSPC_FW_FILE_); break;
-        case SPC_DC: ReferencesOutput::addReferenceFile(_SPC_DC_FILE_); break;
-        case H2O_DC: ReferencesOutput::addReferenceFile(_H2O_DC_FILE_); break;
-        case TIP3P: ReferencesOutput::addReferenceFile(_TIP3P_FILE_); break;
-        case OPC3: ReferencesOutput::addReferenceFile(_OPC3_FILE_); break;
-        case SPC_MTR: ReferencesOutput::addReferenceFile(_SPC_MTR_FILE_); break;
-        case TIP3P_MTR: ReferencesOutput::addReferenceFile(_TIP3P_MTR_FILE_); break;
+        case SPC: ReferencesOutput::addReferenceFile(SPC_FILE); break;
+        case SPC_E: ReferencesOutput::addReferenceFile(SPC_E_FILE); break;
+        case SPC_FW: ReferencesOutput::addReferenceFile(SPC_FW_FILE); break;
+        case QSPC_FW: ReferencesOutput::addReferenceFile(QSPC_FW_FILE); break;
+        case SPC_DC: ReferencesOutput::addReferenceFile(SPC_DC_FILE); break;
+        case H2O_DC: ReferencesOutput::addReferenceFile(H2O_DC_FILE); break;
+        case TIP3P: ReferencesOutput::addReferenceFile(TIP3P_FILE); break;
+        case OPC3: ReferencesOutput::addReferenceFile(OPC3_FILE); break;
+        case SPC_MTR: ReferencesOutput::addReferenceFile(SPC_MTR_FILE); break;
+        case TIP3P_MTR: ReferencesOutput::addReferenceFile(TIP3P_MTR_FILE); break;
         case NONE: break;
     }
 
     switch (interModel)
     {
         using enum WaterInterModel;
-        case SPC: ReferencesOutput::addReferenceFile(_SPC_FILE_); break;
-        case SPC_E: ReferencesOutput::addReferenceFile(_SPC_E_FILE_); break;
-        case SPC_FW: ReferencesOutput::addReferenceFile(_SPC_FW_FILE_); break;
-        case QSPC_FW: ReferencesOutput::addReferenceFile(_QSPC_FW_FILE_); break;
-        case SPC_DC: ReferencesOutput::addReferenceFile(_SPC_DC_FILE_); break;
-        case H2O_DC: ReferencesOutput::addReferenceFile(_H2O_DC_FILE_); break;
-        case TIP3P: ReferencesOutput::addReferenceFile(_TIP3P_FILE_); break;
-        case OPC3: ReferencesOutput::addReferenceFile(_OPC3_FILE_); break;
-        case SPC_MTR: ReferencesOutput::addReferenceFile(_SPC_MTR_FILE_); break;
-        case TIP3P_MTR: ReferencesOutput::addReferenceFile(_TIP3P_MTR_FILE_); break;
+        case SPC: ReferencesOutput::addReferenceFile(SPC_FILE); break;
+        case SPC_E: ReferencesOutput::addReferenceFile(SPC_E_FILE); break;
+        case SPC_FW: ReferencesOutput::addReferenceFile(SPC_FW_FILE); break;
+        case QSPC_FW: ReferencesOutput::addReferenceFile(QSPC_FW_FILE); break;
+        case SPC_DC: ReferencesOutput::addReferenceFile(SPC_DC_FILE); break;
+        case H2O_DC: ReferencesOutput::addReferenceFile(H2O_DC_FILE); break;
+        case TIP3P: ReferencesOutput::addReferenceFile(TIP3P_FILE); break;
+        case OPC3: ReferencesOutput::addReferenceFile(OPC3_FILE); break;
+        case SPC_MTR: ReferencesOutput::addReferenceFile(SPC_MTR_FILE); break;
+        case TIP3P_MTR: ReferencesOutput::addReferenceFile(TIP3P_MTR_FILE); break;
         case NONE: break;
     }
     //clang-format on

@@ -49,9 +49,9 @@ namespace engine
         _configurator.calculateSmoothingFactors(*_simulationBox);
         _cellList->updateCellList(*_simulationBox);
         _physicalData->setNumberOfSmoothingMolecules(
-            std::ranges::distance(
+            static_cast<double>(std::ranges::distance(
                 _simulationBox->getMoleculesInsideZone(SMOOTHING)
-            )
+            ))
         );
 
         applySmoothing();
@@ -126,7 +126,9 @@ namespace engine
                 *_simulationBox
             );
 
-            numQMAtoms += _simulationBox->getNumberOfQMAtoms() * globalSmF;
+            numQMAtoms +=
+                static_cast<double>(_simulationBox->getNumberOfQMAtoms()) *
+                globalSmF;
 
             // to not carry over qm_charges of atoms which are not qm anymore
             for (auto& atom : _simulationBox->getAtoms())
@@ -324,7 +326,8 @@ namespace engine
     {
         _configurator.activateMolecules(*_simulationBox);
         _configurator.deactivateOuterMolecules(*_simulationBox);
-        _physicalData->setNumberOfQMAtoms(_simulationBox->getNumberOfQMAtoms());
+        const auto nQMAtoms = _simulationBox->getNumberOfQMAtoms();
+        _physicalData->setNumberOfQMAtoms(static_cast<double>(nQMAtoms));
         _configurator.activateMolecules(*_simulationBox);
     }
 

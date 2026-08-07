@@ -58,7 +58,7 @@ SimulationBoxInputParser::SimulationBoxInputParser(Engine &engine)
     );
     addKeyword(
         std::string("rnoncoulomb"),
-        bind_front(&SimulationBoxInputParser::parseNonCoulombRadius, this),
+        bindMember(&SimulationBoxInputParser::parseNonCoulombRadius, this),
         false
     );
     addKeyword(

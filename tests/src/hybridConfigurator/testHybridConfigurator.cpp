@@ -44,8 +44,8 @@ using namespace simulationBox;
 
 TEST(testHybridConfigurator, calculateInnerRegionCenterAndShiftAtoms)
 {
-    HybridConfigurator hybridConfigurator;
-    SimBox             simBox;
+    HybridConfigurator           hybridConfigurator;
+    simulationBox::SimulationBox simBox;
 
     EXPECT_THROW_MSG(
         hybridConfigurator.calculateInnerRegionCenter(simBox),
@@ -140,8 +140,8 @@ TEST(testHybridConfigurator, calculateInnerRegionCenterAndShiftAtoms)
 
 TEST(testHybridConfigurator, assignHybridZones)
 {
-    HybridConfigurator hybridConfigurator;
-    SimBox             simBox;
+    HybridConfigurator           hybridConfigurator;
+    simulationBox::SimulationBox simBox;
 
     simBox.setBoxDimensions({100.0, 100.0, 100.0});
 
@@ -221,8 +221,8 @@ TEST(testHybridConfigurator, assignHybridZones)
 
 TEST(testHybridConfigurator, assignHybridZonesCoreZero)
 {
-    HybridConfigurator hybridConfigurator;
-    SimBox             simBox;
+    HybridConfigurator           hybridConfigurator;
+    simulationBox::SimulationBox simBox;
 
     simBox.setBoxDimensions({100.0, 100.0, 100.0});
 
@@ -254,8 +254,8 @@ TEST(testHybridConfigurator, assignHybridZonesCoreZero)
 
 TEST(testHybridConfigurator, activateDeactivateMolecules)
 {
-    HybridConfigurator hybridConfigurator;
-    SimBox             simBox;
+    HybridConfigurator           hybridConfigurator;
+    simulationBox::SimulationBox simBox;
 
     using enum simulationBox::HybridZone;
 
@@ -338,8 +338,8 @@ TEST(testHybridConfigurator, activateDeactivateMolecules)
 
 TEST(testHybridConfigurator, calculateSmoothingFactors)
 {
-    HybridConfigurator hybridConfigurator;
-    SimBox             simBox;
+    HybridConfigurator           hybridConfigurator;
+    simulationBox::SimulationBox simBox;
 
     simBox.setBoxDimensions({100.0, 100.0, 100.0});
 
