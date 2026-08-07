@@ -59,13 +59,17 @@ void ImproperDihedralSection::processSection(
     Engine                   &engine
 )
 {
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
     if (lineElements.size() != 5)
-        throw TopologyException(std::format(
-            "Wrong number of arguments in topology file improper dihedral "
-            "section at "
-            "line {} - number of elements has to be 5!",
-            _lineNumber
-        ));
+        throw TopologyException(
+            std::format(
+                "Wrong number of arguments in topology file improper dihedral "
+                "section at "
+                "line {} - number of elements has to be 5!",
+                _lineNumber
+            )
+        );
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
     auto atom1                = stoul(lineElements[0]);
     auto atom2                = stoul(lineElements[1]);
@@ -79,11 +83,14 @@ void ImproperDihedralSection::processSection(
     atoms.erase(it, end);
 
     if (4 != atoms.size())
-        throw TopologyException(std::format(
-            "Topology file improper dihedral section at line {} - atoms cannot "
-            "be the same!",
-            _lineNumber
-        ));
+        throw TopologyException(
+            std::format(
+                "Topology file improper dihedral section at line {} - atoms "
+                "cannot "
+                "be the same!",
+                _lineNumber
+            )
+        );
 
     auto &simBox = engine.getSimulationBox();
 
@@ -117,9 +124,12 @@ std::string ImproperDihedralSection::keyword() { return "impropers"; }
 void ImproperDihedralSection::endedNormally(const bool endedNormal) const
 {
     if (!endedNormal)
-        throw TopologyException(std::format(
-            "Topology file improper dihedral section at line {} - no end of "
-            "section found!",
-            _lineNumber
-        ));
+        throw TopologyException(
+            std::format(
+                "Topology file improper dihedral section at line {} - no end "
+                "of "
+                "section found!",
+                _lineNumber
+            )
+        );
 }

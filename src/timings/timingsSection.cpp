@@ -24,6 +24,8 @@
 
 #include <chrono>
 
+#include "constants/conversionFactors.hpp"
+
 using namespace timings;
 
 using Time     = std::chrono::time_point<std::chrono::high_resolution_clock>;
@@ -115,13 +117,14 @@ void TimingsSection::endTimer()
  */
 double TimingsSection::calculateElapsedTime() const
 {
-    return double(duration_cast<ns>(_time->totalTime).count()) * 1.0e-6;
+    return double(duration_cast<ns>(_time->totalTime).count()) *
+           constants::NS_TO_MS;
 }
 
 double TimingsSection::calculateAverageLoopTime() const
 {
     auto time = double(duration_cast<ns>(_time->totalTime).count());
-    time      = time * 1.0e-9 / double(_steps);
+    time      = time * constants::NS_TO_S / double(_steps);
 
     return time;
 }
@@ -133,7 +136,7 @@ double TimingsSection::calculateAverageLoopTime() const
 double TimingsSection::calculateLoopTime() const
 {
     auto time = double(duration_cast<ns>(_time->lastStepTime).count());
-    time      = time * 1e-9;
+    time      = time * constants::NS_TO_S;
 
     return time;
 }

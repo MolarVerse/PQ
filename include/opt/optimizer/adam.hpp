@@ -38,9 +38,11 @@ namespace opt
     {
        private:
         constexpr static size_t _maxHistoryLength = 2;
+        constexpr static auto   _defaultBeta1     = 0.9;
+        constexpr static auto   _defaultBeta2     = 0.999;
 
-        double _beta1 = 0.9;
-        double _beta2 = 0.999;
+        double _beta1 = _defaultBeta1;
+        double _beta2 = _defaultBeta2;
 
         std::vector<linearAlgebra::Vec3D> _momentum1;
         std::vector<linearAlgebra::Vec3D> _momentum2;

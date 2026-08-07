@@ -26,6 +26,7 @@
 #include <format>        // for format
 #include <string_view>   // for string_view
 
+#include "constants.hpp"
 #include "exceptions.hpp"   // for InputFileException, customException
 #include "parserUtils.hpp"
 #include "references.hpp"           // for References
@@ -344,7 +345,9 @@ void ThermostatInputParser::parseThermostatFriction(
     if (friction < 0)
         throw InputFileException("Friction of thermostat cannot be negative");
 
-    ThermostatSettings::setFriction(friction * 1.0e12);
+    ThermostatSettings::setFriction(
+        friction * constants::NOSE_HOVER_FRICTION_INPUT_TO_INTERNAL
+    );
 }
 
 /**

@@ -25,6 +25,7 @@
 #include <cmath>    // for ceil
 #include <thread>   // for sleep_for
 
+#include "constants.hpp"
 #include "exceptions.hpp"
 #include "qmSettings.hpp"
 
@@ -52,7 +53,7 @@ void QMRunner::throwAfterTimeout(const std::stop_token stopToken) const
 
     const auto timeout = int(::ceil(qmLoopTimeLimit));
 
-    for (int i = 0; i < timeout * 1000; ++i)
+    for (int i = 0; i < timeout * constants::S_TO_MS; ++i)
     {
         if (stopToken.stop_requested())
             return;

@@ -36,9 +36,9 @@ namespace QM
     class ExternalQMRunner : public QMRunner
     {
        protected:
-        std::string       _scriptPath  = SCRIPT_PATH_;
-        const std::string _singularity = SINGULARITY_;
-        const std::string _staticBuild = STATIC_BUILD_;
+        std::string                     _scriptPath  = SCRIPT_PATH_;
+        const static inline std::string _singularity = SINGULARITY_;
+        const static inline std::string _staticBuild = STATIC_BUILD_;
 
        public:
         ExternalQMRunner()           = default;
