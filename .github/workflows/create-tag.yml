@@ -1,97 +1,149 @@
-name: Create Release Tag
+name: Publish Release
 
 on:
   pull_request:
     types: [closed]
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Release version in vX.Y.Z format
+        required: true
+        type: string
+      commit:
+        description: Commit or branch to release
+        required: true
+        default: main
+        type: string
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 
 jobs:
-  create-tag:
-    if: github.event.pull_request.merged == true
+  publish-release:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.pull_request.merged == true &&
+      startsWith(github.event.pull_request.head.ref, 'release/'))
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          submodules: recursive
-
-      - name: Extract release version from PR
-        id: extract_version
+      - name: Resolve release inputs
+        id: release
+        env:
+          DISPATCH_COMMIT: ${{ inputs.commit }}
+          DISPATCH_VERSION: ${{ inputs.version }}
+          EVENT_NAME: ${{ github.event_name }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          MERGE_COMMIT: ${{ github.event.pull_request.merge_commit_sha }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
-          title="${{ github.event.pull_request.title }}"
-          body="${{ github.event.pull_request.body }}"
-
-          regex='[Rr][Ee][Ll][Ee][Aa][Ss][Ee]-([0-9]+\.[0-9]+\.[0-9]+)'
-
-          if [[ "$title" =~ $regex ]]; then
+          if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            version="$DISPATCH_VERSION"
+            commit="$DISPATCH_COMMIT"
+            source="manual retry"
+          elif [[ "$HEAD_REF" =~ ^release/(v[0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
             version="${BASH_REMATCH[1]}"
-          elif [[ "$body" =~ $regex ]]; then
-            version="${BASH_REMATCH[1]}"
+            commit="$MERGE_COMMIT"
+            source="PR #$PR_NUMBER"
           else
-            echo "❌ No valid release version found in PR title or description."
+            echo "Release branches must be named release/vX.Y.Z."
             exit 1
           fi
 
-          echo "✅ Found release version: $version"
-          echo "version=$version" >> $GITHUB_OUTPUT
-
-      - name: Update changelogs
-        run: |
-          version="${{ steps.extract_version.outputs.version }}"
-          python3 scripts/update_changelog.py "$version"
-
-      - name: Commit and push changelog updates
-        run: |
-          version="${{ steps.extract_version.outputs.version }}"
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          git add CHANGELOG.md DEV-CHANGELOG.md changes/
-
-          if git diff --cached --quiet; then
-            echo "ℹ️ No changelog changes to commit."
-          else
-            git commit -m "docs: update changelogs for $version"
-            git push origin HEAD:main
+          if [[ ! "$version" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Version must use vX.Y.Z format."
+            exit 1
           fi
 
-      - name: Create Git tag
-        id: create_tag
-        run: |
-          version="${{ steps.extract_version.outputs.version }}"
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          echo "commit=$commit" >> "$GITHUB_OUTPUT"
+          echo "source=$source" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
 
-          git tag "$version"
-          git push origin "$version"
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+      - name: Mint release bot token
+        id: app-token
+        uses: actions/create-github-app-token@v1
         with:
-          tag_name: ${{ steps.extract_version.outputs.version }}
-          name: Release ${{ steps.extract_version.outputs.version }}
-          body: |
-            🚀 **Automatic release:** `${{ steps.extract_version.outputs.version }}`
-            - Created from PR: #${{ github.event.pull_request.number }}
-            - Commit: `${{ github.sha }}`
-          draft: false
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          app-id: ${{ secrets.PQ_RELEASE_BOT_APP_ID }}
+          private-key: ${{ secrets.PQ_RELEASE_BOT_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
 
-      - name: Create PR to sync main into dev
+      - name: Checkout release commit
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ steps.release.outputs.commit }}
+          submodules: recursive
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Verify prepared changelogs
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.release.outputs.version }}
         run: |
-          version="${{ steps.extract_version.outputs.version }}"
+          if ! grep -Fq "## [$VERSION](" CHANGELOG.md && \
+             ! grep -Fq "## [$VERSION](" DEV-CHANGELOG.md; then
+            echo "Changelogs are not prepared for $VERSION."
+            exit 1
+          fi
 
-          gh pr create --base dev --head main \
-            --title "Sync main → dev after release $version" \
-            --body "Automated sync PR from \`main\` after releasing \`$version\`. Please review and approve to merge." || echo "ℹ️ PR may already exist, skipping."
+          remaining="$(find changes -type f -name '*.md' \
+            ! -name 'README.md' -print)"
+          if [[ -n "$remaining" ]]; then
+            echo "Unprocessed changelog fragments:"
+            echo "$remaining"
+            exit 1
+          fi
+
+      - name: Create release tag
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          target="$(git rev-parse HEAD)"
+          remote_target="$(git ls-remote --tags origin \
+            "refs/tags/$VERSION" | awk '{print $1}')"
+
+          if [[ -n "$remote_target" && "$remote_target" != "$target" ]]; then
+            echo "$VERSION already points to another commit."
+            exit 1
+          fi
+
+          if [[ -z "$remote_target" ]]; then
+            git tag "$VERSION" "$target"
+            git push origin "$VERSION"
+          fi
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          RELEASE_SOURCE: ${{ steps.release.outputs.source }}
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          if gh release view "$VERSION" >/dev/null 2>&1; then
+            echo "Release $VERSION already exists."
+            exit 0
+          fi
+
+          gh release create "$VERSION" \
+            --verify-tag \
+            --title "Release $VERSION" \
+            --notes "Released from $RELEASE_SOURCE. See CHANGELOG.md and DEV-CHANGELOG.md for details."
+
+      - name: Open main to dev sync pull request
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          existing="$(gh pr list --state open --base dev --head main \
+            --json url --jq '.[0].url // empty')"
+          if [[ -n "$existing" ]]; then
+            echo "Sync pull request already exists: $existing"
+            exit 0
+          fi
+
+          gh pr create \
+            --base dev \
+            --head main \
+            --title "Sync main into dev after $VERSION" \
+            --body "Sync release $VERSION back into dev."
