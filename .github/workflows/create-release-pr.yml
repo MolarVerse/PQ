@@ -8,9 +8,10 @@ on:
         required: true
         type: string
       restore:
-        description: Revert commit to undo before retrying a rolled-back release
+        description: Restore this release from dev after a rollback
         required: false
-        type: string
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -91,7 +92,7 @@ jobs:
           APP_USER_ID: ${{ steps.app-user.outputs.id }}
           APP_USER_NAME: ${{ steps.app-user.outputs.name }}
           BRANCH: ${{ steps.release.outputs.branch }}
-          RESTORE_COMMIT: ${{ inputs.restore }}
+          RESTORE_RELEASE: ${{ inputs.restore }}
           VERSION: ${{ steps.release.outputs.version }}
         run: |
           git fetch origin main dev
@@ -99,38 +100,26 @@ jobs:
           git config user.email \
             "$APP_USER_ID+$APP_USER_NAME@users.noreply.github.com"
 
-          if [[ -z "$RESTORE_COMMIT" ]]; then
+          if [[ "$RESTORE_RELEASE" != "true" ]]; then
             git switch -c "$BRANCH" origin/dev
           else
             git switch -c "$BRANCH" origin/main
-            if ! git merge-base --is-ancestor "$RESTORE_COMMIT" HEAD; then
-              echo "$RESTORE_COMMIT is not part of main."
-              exit 1
-            fi
-
-            if ! git revert --no-edit "$RESTORE_COMMIT"; then
-              conflicts="$(git diff --name-only --diff-filter=U)"
-              expected=".github/workflows/check-pr-for-release-version.yml"$'\n'".github/workflows/create-tag.yml"
-              if [[ "$conflicts" != "$expected" ]]; then
-                echo "Unexpected conflicts while restoring the release:"
-                echo "$conflicts"
+            if ! git merge --no-commit --no-ff origin/dev; then
+              if [[ ! -f "$(git rev-parse --git-path MERGE_HEAD)" ]]; then
+                echo "Could not start the release recovery merge."
                 exit 1
               fi
-
-              git checkout --ours -- \
-                .github/workflows/check-pr-for-release-version.yml \
-                .github/workflows/create-tag.yml
-              git add \
-                .github/workflows/check-pr-for-release-version.yml \
-                .github/workflows/create-tag.yml
-              GIT_EDITOR=true git revert --continue
             fi
 
-            git commit --amend \
-              -m "revert: restore $VERSION release changes" \
-              -m "Reapplies changes removed by $RESTORE_COMMIT."
-            git merge --no-edit \
-              -m "merge: update $VERSION release from dev" origin/dev
+            git restore --source=origin/dev --staged --worktree -- .
+            git add --all
+            git commit -m "revert: restore $VERSION release from dev"
+
+            if [[ "$(git rev-parse HEAD^{tree})" != \
+                  "$(git rev-parse origin/dev^{tree})" ]]; then
+              echo "Recovered release tree does not match dev."
+              exit 1
+            fi
           fi
 
           git push --set-upstream origin "$BRANCH"
