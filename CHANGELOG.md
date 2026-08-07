@@ -7,57 +7,6 @@ implementation changes are documented in
 ## Next Release
 
 <!-- insertion marker -->
-## [v0.7.0](https://github.com/MolarVerse/PQ/releases/tag/v0.7.0) - 2026-08-06
-
-### New Features
-
-- Add FeNNol as an ASE-based QM runner.
-- Add `mace_mode` to choose between accurate and accelerated MACE execution; accelerated mode requires matching cuequivariance packages.
-- Add the `mm-hessian` job for molecular-mechanics Hessian calculations, with optional geometry optimization.
-- Add `mshake-iter` and `mshake-tolerance` for controlling M-SHAKE convergence.
-- Add `remove_net_force` for removing the total net force from imported QM forces.
-- Add Reaction Field as a long-range electrostatics method.
-- The `PQ` executable now exposes version, help, and compiled capabilities for setup tools.
-- PQ setup tools now expose bundled external-QM scripts and validate input ranges, setting constraints, resource paths, and disabled couplings.
-- Trajectory comments can include the effective simulation step when `include_output_metadata` is enabled.
-
-### Changes
-
-- Clean include directives with IWYU.
-- Rename `mace_model_size` to `mace_model`; the old keyword remains available with a deprecation warning.
-
-### Bug Fixes
-
-- Count non-adjacent duplicate atom types correctly.
-- Prevent the Berendsen thermostat from producing invalid velocities when the kinetic energy is zero.
-- Reject periodic cell-list layouts in which neighbor offsets refer to the same cell more than once.
-- Prevent undefined forces for collinear angle configurations, including linear equilibrium geometries such as CO2.
-- Reject non-finite energies and forces from external QM calculations instead of propagating them into a trajectory.
-- J-coupling topology references now remain valid throughout a simulation, preventing incorrect molecule data.
-- Correct kinetic-virial handling when physical data is copied, including molecular virial calculations.
-- Recompute Langevin noise when the friction setting changes.
-- Fix M-SHAKE convergence, iteration limits, previous-position handling, and velocity corrections for constrained molecules.
-- Reference output is validated before writing, preventing partial files when a referenced file cannot be read.
-- Single-step simulations now complete their progress indicator without dividing by zero.
-- Preserve molecular geometry and wrap positions correctly during stochastic cell rescaling.
-- Display subsection percentages of total time correctly in the `.timings` output file.
-
-### Performance
-
-- Skip inactive terms in Guff pair-potential calculations.
-
-### Build and Compatibility
-
-- Allow builds without ASE even when built-in SLAKOS data is unavailable.
-- Make native optimizations and link-time optimization configurable, and use available compiler caches and faster linkers automatically.
-- Add support for Clang and Apple Clang.
-- Add support for building Debug mode with Clang
-- Installed PQ now resolves reference data, external-QM scripts, and Slakos files relative to its installation prefix.
-
-### Documentation
-
-- Rework the quick start, examples, troubleshooting, setup-file guidance, and reference manual.
-
 ## [v0.6.4](https://github.com/MolarVerse/PQ/releases/tag/v0.6.4) - 2026-03-31
 
 ### Bug Fixes

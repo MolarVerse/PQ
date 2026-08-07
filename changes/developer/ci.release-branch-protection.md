@@ -1,0 +1,1 @@
+- After a release is triggered, open a pull request from `main` to `dev` for approval instead of merging directly under the branch-protection rules.

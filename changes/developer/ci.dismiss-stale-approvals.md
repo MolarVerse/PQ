@@ -1,0 +1,1 @@
+- Add a workflow that dismisses stale PR approvals on real code changes but keeps them when a push only merges dev's tip into the PR branch.

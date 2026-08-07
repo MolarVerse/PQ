@@ -45,10 +45,25 @@ jobs:
           echo "✅ Found release version: $version"
           echo "version=$version" >> $GITHUB_OUTPUT
 
-      - name: Verify release changelogs
-        run: >-
-          python3 scripts/update_changelog.py --check-prepared
-          "${{ steps.extract_version.outputs.version }}"
+      - name: Update changelogs
+        run: |
+          version="${{ steps.extract_version.outputs.version }}"
+          python3 scripts/update_changelog.py "$version"
+
+      - name: Commit and push changelog updates
+        run: |
+          version="${{ steps.extract_version.outputs.version }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add CHANGELOG.md DEV-CHANGELOG.md changes/
+
+          if git diff --cached --quiet; then
+            echo "ℹ️ No changelog changes to commit."
+          else
+            git commit -m "docs: update changelogs for $version"
+            git push origin HEAD:main
+          fi
 
       - name: Create Git tag
         id: create_tag
