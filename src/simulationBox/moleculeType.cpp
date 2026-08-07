@@ -22,7 +22,9 @@
 
 #include "moleculeType.hpp"
 
-#include "collectionUtilities.hpp"
+#include <algorithm>   // for sort, unique
+#include <iterator>    // for std::ranges::size
+#include <ranges>      // for ranges::size, ranges::unique
 
 using namespace simulationBox;
 
@@ -43,11 +45,15 @@ MoleculeType::MoleculeType(const std::string_view &name) : _name(name){};
 /**
  * @brief finds number of different atom types in molecule
  *
+ * @note This function cannot be const due to std::ranges::unique
+ *
  * @return int
  */
 size_t MoleculeType::MoleculeType::getNumberOfAtomTypes()
 {
-    return utilities::getUniqueElements(_atomTypes).size();
+    const auto nUnique = std::ranges::size(std::ranges::unique(_atomTypes));
+
+    return _externalAtomTypes.size() - nUnique;
 }
 
 /**************************

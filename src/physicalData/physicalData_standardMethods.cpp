@@ -21,8 +21,6 @@
 ******************************************************************************/
 
 #include "physicalData.hpp"
-#include "settings.hpp"
-#include "staticMatrix/staticMatrix3x3Class.hpp"
 
 using namespace physicalData;
 
@@ -37,7 +35,7 @@ using namespace physicalData;
  *
  * @param virial
  */
-void PhysicalData::addVirial(const linearAlgebra::tensor3D& virial)
+void PhysicalData::addVirial(const linearAlgebra::tensor3D &virial)
 {
     _virial += virial;
 }
@@ -176,7 +174,7 @@ void PhysicalData::setPressure(const double pressure) { _pressure = pressure; }
  *
  * @param virial
  */
-void PhysicalData::setVirial(const linearAlgebra::tensor3D& virial)
+void PhysicalData::setVirial(const linearAlgebra::tensor3D &virial)
 {
     _virial = virial;
 }
@@ -186,7 +184,7 @@ void PhysicalData::setVirial(const linearAlgebra::tensor3D& virial)
  *
  * @param stressTensor
  */
-void PhysicalData::setStressTensor(const linearAlgebra::tensor3D& stressTensor)
+void PhysicalData::setStressTensor(const linearAlgebra::tensor3D &stressTensor)
 {
     _stressTensor = stressTensor;
 }
@@ -196,7 +194,7 @@ void PhysicalData::setStressTensor(const linearAlgebra::tensor3D& stressTensor)
  *
  * @param momentum
  */
-void PhysicalData::setMomentum(const linearAlgebra::Vec3D& momentum)
+void PhysicalData::setMomentum(const linearAlgebra::Vec3D &momentum)
 {
     _momentum = momentum;
 }
@@ -207,7 +205,7 @@ void PhysicalData::setMomentum(const linearAlgebra::Vec3D& momentum)
  * @param vec
  */
 void PhysicalData::setAngularMomentum(
-    const linearAlgebra::Vec3D& angularMomentum
+    const linearAlgebra::Vec3D &angularMomentum
 )
 {
     _angularMomentum = angularMomentum;
@@ -229,10 +227,10 @@ void PhysicalData::setKineticEnergy(const double kineticEnergy)
  * @param vec
  */
 void PhysicalData::setKineticEnergyAtomicVector(
-    const linearAlgebra::tensor3D& vec
+    const linearAlgebra::tensor3D &vec
 )
 {
-    _kinEnergyVirialTensor.atomic = vec;
+    _kineticEnergyAtomicTensor = vec;
 }
 
 /**
@@ -241,10 +239,10 @@ void PhysicalData::setKineticEnergyAtomicVector(
  * @param vec
  */
 void PhysicalData::setKineticEnergyMolecularVector(
-    const linearAlgebra::tensor3D& vec
+    const linearAlgebra::tensor3D &vec
 )
 {
-    _kinEnergyVirialTensor.molecular = vec;
+    _kinEnergyMolTensor = vec;
 }
 
 /**
@@ -576,7 +574,7 @@ double PhysicalData::getRingPolymerEnergy() const { return _ringPolymerEnergy; }
  */
 linearAlgebra::tensor3D PhysicalData::getKinEnergyAtomTensor() const
 {
-    return _kinEnergyVirialTensor.atomic;
+    return _kineticEnergyAtomicTensor;
 }
 
 /**
@@ -586,22 +584,7 @@ linearAlgebra::tensor3D PhysicalData::getKinEnergyAtomTensor() const
  */
 linearAlgebra::tensor3D PhysicalData::getKinEnergyMolTensor() const
 {
-    return _kinEnergyVirialTensor.molecular;
-}
-
-/**
- * @brief get the kinetic energy virial tensor
- *
- * @param virialType - the virial type to get the kinetic energy virial tensor
- * for
- *
- * @return const linearAlgebra::tensor3D&
- */
-const linearAlgebra::tensor3D& PhysicalData::getKinEnergyVirialTensor(
-    settings::VirialType virialType
-) const
-{
-    return _kinEnergyVirialTensor.getVirialTensor(virialType);
+    return _kinEnergyMolTensor;
 }
 
 /**

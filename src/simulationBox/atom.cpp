@@ -27,6 +27,7 @@
 #include "exceptions.hpp"         // for MolDescriptorException
 #include "manostatSettings.hpp"   // for ManostatSettings
 #include "stringUtilities.hpp"    // for toLowerCopy
+#include "vector3d.hpp"           // for Vec3D
 
 using namespace simulationBox;
 using namespace utilities;

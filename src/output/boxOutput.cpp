@@ -25,8 +25,11 @@
 #include <cstddef>   // for size_t
 #include <format>    // for format
 #include <ostream>   // for ofstream, basic_ostream, operator<<
+#include <string>    // for operator<<
+#include <vector>    // for vector
 
 #include "box.hpp"        // for SimulationBox
+#include "vector3d.hpp"   // for Vec3D
 
 using output::BoxFileOutput;
 using namespace simulationBox;

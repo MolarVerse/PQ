@@ -23,10 +23,12 @@
 #include <gtest/gtest.h>   // for Test, TestInfo (ptr only), TEST
 
 #include <iosfwd>   // for stringstream, ostream
+#include <memory>   // for allocator
 
 #include "gtest/gtest.h"      // for Message, TestPartResult
 #include "matrixNear.hpp"     // for EXPECT_MATRIX_NEAR
-#include "staticMatrix.hpp"   // IWYU pragma: keep - for diagonalMatrix, inverse, operator*
+#include "staticMatrix.hpp"   // for diagonalMatrix, inverse, operator*
+#include "vector3d.hpp"       // for Vec3D, linearAlgebra
 
 using namespace linearAlgebra;
 

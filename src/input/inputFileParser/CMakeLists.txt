@@ -9,7 +9,6 @@ add_library(inputFileParser
     filesInputParser.cpp
     forceFieldInputParser.cpp
     generalInputParser.cpp
-    hessianInputParser.cpp
     hybridInputParser.cpp
     integratorInputParser.cpp
     manostatInputParser.cpp
@@ -41,8 +40,13 @@ target_link_libraries(inputFileParser
     references
 )
 
-install(TARGETS inputFileParser
-    DESTINATION lib
-)
+if(BUILD_WITH_TESTS)
+    target_link_libraries(inputFileParser
+        PUBLIC
+        gtest
+    )
+endif()
 
-target_precompile_headers(inputFileParser REUSE_FROM pq_pch)
+install(TARGETS inputFileParser
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+)

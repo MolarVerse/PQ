@@ -105,43 +105,8 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         continue-on-error: true
 
-  static-singularity-build:
-    runs-on: ubuntu-24.04
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Install system dependencies
-        run: |
-          sudo apt update
-          sudo apt install gcc-13 g++-13 mold
-        shell: bash
-
-      - name: Setup ccache
-        uses: hendrikmuhs/ccache-action@v1.2
-        with:
-          key: static-singularity
-
-      - name: Build project
-        run: |
-          cmake -S . -B build \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DBUILD_SHARED_LIBS=OFF \
-            -DBUILD_WITH_SINGULARITY=ON \
-            -DBUILD_WITH_TESTS=ON \
-            -DBUILD_WITH_ASE=OFF \
-            -DBUILD_WITH_NATIVE=OFF
-          cmake --build build --parallel "$(nproc)"
-        env:
-          CC: gcc-13
-          CXX: g++-13
-
-      - name: Run tests
-        run: ctest --test-dir build --output-on-failure -j1
-
   notification:
-    needs: [daily-build-and-test, static-singularity-build]
+    needs: daily-build-and-test
     runs-on: ubuntu-latest
     if: always() # Run even if previous jobs fail
     
@@ -150,10 +115,8 @@ jobs:
         run: |
           echo "Daily CI Results:"
           echo "Build jobs status: ${{ needs.daily-build-and-test.result }}"
-          echo "Static Singularity build status: ${{ needs.static-singularity-build.result }}"
           
-          if [[ "${{ needs.daily-build-and-test.result }}" != "success" ||
-                "${{ needs.static-singularity-build.result }}" != "success" ]]; then
+          if [[ "${{ needs.daily-build-and-test.result }}" != "success" ]]; then
             echo "❌ Some daily CI jobs failed. Check the workflow logs for details."
             exit 1
           else

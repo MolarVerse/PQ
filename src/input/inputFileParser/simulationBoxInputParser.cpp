@@ -22,13 +22,14 @@
 
 #include "simulationBoxInputParser.hpp"
 
-#include <cstddef>   // for size_t
-#include <format>    // for format
+#include <cstddef>      // for size_t
+#include <format>       // for format
+#include <functional>   // for _Bind_front_t, bind_front
 
-#include "engine.hpp"       // for Engine
-#include "exceptions.hpp"   // for InputFileException, customException
-#include "parserUtils.hpp"
-#include "potentialSettings.hpp"       // for PotentialSettings
+#include "engine.hpp"              // for Engine
+#include "exceptions.hpp"          // for InputFileException, customException
+#include "potentialSettings.hpp"   // for PotentialSettings
+#include "simulationBox.hpp"       // for SimulationBox
 #include "simulationBoxSettings.hpp"   // for setDensitySet
 #include "stringUtilities.hpp"         // for toLowerCopy
 
@@ -53,17 +54,17 @@ SimulationBoxInputParser::SimulationBoxInputParser(Engine &engine)
 {
     addKeyword(
         std::string("rcoulomb"),
-        bindMember(&SimulationBoxInputParser::parseCoulombRadius, this),
+        bind_front(&SimulationBoxInputParser::parseCoulombRadius, this),
         false
     );
     addKeyword(
         std::string("density"),
-        bindMember(&SimulationBoxInputParser::parseDensity, this),
+        bind_front(&SimulationBoxInputParser::parseDensity, this),
         false
     );
     addKeyword(
         std::string("init_velocities"),
-        bindMember(&SimulationBoxInputParser::parseInitializeVelocities, this),
+        bind_front(&SimulationBoxInputParser::parseInitializeVelocities, this),
         false
     );
 }
@@ -84,7 +85,7 @@ void SimulationBoxInputParser::parseCoulombRadius(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto cutOff = stringToFiniteDouble(lineElements[2]);
+    const auto cutOff = stod(lineElements[2]);
 
     if (cutOff < 0.0)
         throw InputFileException(format(
@@ -114,9 +115,9 @@ void SimulationBoxInputParser::parseDensity(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto density = stringToFiniteDouble(lineElements[2]);
+    const auto density = stod(lineElements[2]);
 
-    if (density <= 0.0)
+    if (density < 0.0)
         throw InputFileException(
             std::format("Density must be positive - density = {}", density)
         );
@@ -157,14 +158,11 @@ void SimulationBoxInputParser::parseInitializeVelocities(
         SimulationBoxSettings::setInitializeVelocities(FORCE);
 
     else
-        throw InputFileException(
-            std::format(
-                "Invalid value for initialize velocities - \"{}\" at line {} "
-                "in "
-                "input file.\n"
-                "Possible options are: true, false, force",
-                lineElements[2],
-                lineNumber
-            )
-        );
+        throw InputFileException(std::format(
+            "Invalid value for initialize velocities - \"{}\" at line {} in "
+            "input file.\n"
+            "Possible options are: true, false, force",
+            lineElements[2],
+            lineNumber
+        ));
 }

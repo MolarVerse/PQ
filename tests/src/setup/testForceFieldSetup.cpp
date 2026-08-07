@@ -22,6 +22,7 @@
 
 #include <gtest/gtest.h>   // for EXPECT_EQ, TestInfo (ptr only)
 
+#include <cstddef>   // for size_t
 #include <vector>    // for vector, allocator
 
 #include "angleForceField.hpp"      // for AngleForceField
@@ -31,10 +32,12 @@
 #include "dihedralForceField.hpp"   // for DihedralForceField
 #include "dihedralType.hpp"         // for DihedralType
 #include "engine.hpp"               // for Engine
+#include "forceFieldClass.hpp"      // for ForceField
 #include "forceFieldSettings.hpp"   // for ForceFieldSettings
 #include "forceFieldSetup.hpp"      // for ForceFieldSetup, setupForceField
 #include "gtest/gtest.h"            // for Message, TestPartResult
 #include "molecule.hpp"             // for Molecule
+#include "simulationBox.hpp"        // for SimulationBox
 #include "testSetup.hpp"            // for TestSetup
 
 /**

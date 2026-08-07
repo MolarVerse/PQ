@@ -22,11 +22,13 @@
 
 #include "optimizer.hpp"
 
-#include <memory>   // for std::shared_ptr
+#include <iostream>   // for std::cout
+#include <memory>     // for std::shared_ptr
 
 #include "exceptions.hpp"      // for OptException
 #include "physicalData.hpp"    // for PhysicalData
 #include "simulationBox.hpp"   // for SimulationBox
+#include "vector3d.hpp"        // for max, rms
 
 using namespace opt;
 using namespace physicalData;
@@ -121,8 +123,7 @@ void Optimizer::setSimulationBox(
  *
  * @param physicalData
  */
-void Optimizer::setPhysicalData(
-    const std::shared_ptr<PhysicalData> physicalData
+void Optimizer::setPhysicalData(const std::shared_ptr<PhysicalData> physicalData
 )
 {
     _physicalData = physicalData;
@@ -165,8 +166,8 @@ size_t Optimizer::getHistoryIndex(const int offset) const
             "Offset must be negative to access history in the past"
         );
 
-    const auto size  = _energyHistory.size();
-    const auto index = size + offset;
+    const auto size  = int(_energyHistory.size());
+    const auto index = size_t(size + offset);
 
     return index;
 }
@@ -270,8 +271,7 @@ std::vector<linearAlgebra::Vec3D> Optimizer::getPositions() const
  * @param offset
  *
  */
-std::vector<linearAlgebra::Vec3D> Optimizer::getPositions(
-    const int offset
+std::vector<linearAlgebra::Vec3D> Optimizer::getPositions(const int offset
 ) const
 {
     const auto index = getHistoryIndex(offset);

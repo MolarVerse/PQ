@@ -21,9 +21,11 @@
 ******************************************************************************/
 
 #include "engine.hpp"                    // for Engine
+#include "intraNonBonded.hpp"            // for IntraNonBonded
 #include "intraNonBondedContainer.hpp"   // for IntraNonBondedContainer
 #include "intraNonBondedSetup.hpp"       // for setupIntraNonBonded
 #include "molecule.hpp"                  // for Molecule
+#include "simulationBox.hpp"             // for SimulationBox
 #include "testSetup.hpp"                 // for TestSetup
 
 #include "gtest/gtest.h"   // for Message, TestPartResult

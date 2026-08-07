@@ -23,6 +23,8 @@
 #include "stressOutput.hpp"
 
 #include <format>    // for format
+#include <fstream>   // for basic_ostream, ofstream
+#include <string>    // for operator<<
 
 #include "physicalData.hpp"   // for PhysicalData
 

@@ -24,7 +24,8 @@
 
 #define _RING_POLYMER_RESTART_FILE_OUTPUT_HPP_
 
-#include <vector>   // for vector
+#include <cstddef>   // for size_t
+#include <vector>    // for vector
 
 #include "output.hpp"
 #include "typeAliases.hpp"
@@ -42,7 +43,7 @@ namespace output
        public:
         using Output::Output;
 
-        void write(std::vector<pq::SimBox> &);
+        void write(std::vector<pq::SimBox> &, const size_t);
     };
 
 }   // namespace output

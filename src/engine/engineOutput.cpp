@@ -22,10 +22,7 @@
 
 #include "engineOutput.hpp"
 
-#include <memory>
-
 #include "boxOutput.hpp"
-#include "defaults.hpp"
 #include "energyOutput.hpp"
 #include "infoOutput.hpp"
 #include "logOutput.hpp"
@@ -52,57 +49,43 @@ namespace simulationBox
 }
 
 using namespace engine;
+using namespace output;
 using namespace simulationBox;
 using namespace physicalData;
 using namespace thermostat;
 
-using output::BoxFileOutput;
-using output::EnergyOutput;
-using output::InfoOutput;
-using output::LogOutput;
-using output::MomentumOutput;
-using output::OptOutput;
-using output::RingPolymerEnergyOutput;
-using output::RingPolymerRestartFileOutput;
-using output::RingPolymerTrajectoryOutput;
-using output::RstFileOutput;
-using output::StdoutOutput;
-using output::StressOutput;
-using output::TimingsOutput;
-using output::TrajectoryOutput;
-using output::VirialOutput;
+using std::make_unique;
 
-// clang-format off
 /**
  * @brief constructor
  */
 EngineOutput::EngineOutput()
-    : _energyOutput(std::make_unique<EnergyOutput>(DefaultFiles::energyFile)), 
-      _instantEnergyOutput(std::make_unique<EnergyOutput>(DefaultFiles::instEnFile)),
-      _infoOutput(std::make_unique<InfoOutput>(DefaultFiles::infoFile)),
-      _xyzOutput(std::make_unique<TrajectoryOutput>(DefaultFiles::trajFile)),
-      _velOutput(std::make_unique<TrajectoryOutput>(DefaultFiles::velFile)),
-      _forceOutput(std::make_unique<TrajectoryOutput>(DefaultFiles::forceFile)),
-      _chargeOutput(std::make_unique<TrajectoryOutput>(DefaultFiles::chargeFile)),
-      _rstFileOutput(std::make_unique<RstFileOutput>(DefaultFiles::restartFile)),
-      _logOutput(std::make_unique<LogOutput>(DefaultFiles::logFile)),
-      _stdoutOutput(std::make_unique<StdoutOutput>(DefaultFiles::stdoutFile)),
-      _momentumOutput(std::make_unique<MomentumOutput>(DefaultFiles::momentumFile)),
-      _virialOutput(std::make_unique<VirialOutput>(DefaultFiles::virialFile)),
-      _stressOutput(std::make_unique<StressOutput>(DefaultFiles::stressFile)),
-      _boxFileOutput(std::make_unique<BoxFileOutput>(DefaultFiles::boxFile)),
-      _optOutput(std::make_unique<OptOutput>(DefaultFiles::optFile)),
-      _rpmdRstFileOutput(std::make_unique<RingPolymerRestartFileOutput>(DefaultFiles::rpmdRstFile)),
-      _rpmdXyzOutput(std::make_unique<RingPolymerTrajectoryOutput>(DefaultFiles::rpmdTrajFile)),
-      _rpmdVelOutput(std::make_unique<RingPolymerTrajectoryOutput>(DefaultFiles::rpmdVelFile)),
-      _rpmdForceOutput(std::make_unique<RingPolymerTrajectoryOutput>(DefaultFiles::rpmdForceFile)),
-      _rpmdChargeOutput(std::make_unique<RingPolymerTrajectoryOutput>(DefaultFiles::rpmdChargeFile)),
-      _rpmdEnergyOutput(std::make_unique<RingPolymerEnergyOutput>(DefaultFiles::rpmdEnergyFile)),
-      _timingsOutput(std::make_unique<TimingsOutput>(DefaultFiles::timingsFile))
-
 {
+    _energyOutput        = make_unique<EnergyOutput>("default.en");
+    _instantEnergyOutput = make_unique<EnergyOutput>("default.instant_en");
+    _momentumOutput      = make_unique<MomentumOutput>("default.mom");
+    _xyzOutput           = make_unique<TrajectoryOutput>("default.xyz");
+    _velOutput           = make_unique<TrajectoryOutput>("default.vel");
+    _forceOutput         = make_unique<TrajectoryOutput>("default.force");
+    _chargeOutput        = make_unique<TrajectoryOutput>("default.chg");
+    _logOutput           = make_unique<LogOutput>("default.log");
+    _stdoutOutput        = make_unique<StdoutOutput>("stdout");
+    _rstFileOutput       = make_unique<RstFileOutput>("default.rst");
+    _infoOutput          = make_unique<InfoOutput>("default.info");
+    _virialOutput        = make_unique<VirialOutput>("default.vir");
+    _stressOutput        = make_unique<StressOutput>("default.stress");
+    _boxFileOutput       = make_unique<BoxFileOutput>("default.box");
+    _optOutput           = make_unique<OptOutput>("default.opt");
+
+    _rpmdRstFileOutput = make_unique<pq::RPMDRstFileOutput>("default.rpmd.rst");
+    _rpmdXyzOutput     = make_unique<pq::RPMDTrajOutput>("default.rpmd.xyz");
+    _rpmdVelOutput     = make_unique<pq::RPMDTrajOutput>("default.rpmd.vel");
+    _rpmdForceOutput   = make_unique<pq::RPMDTrajOutput>("default.rpmd.force");
+    _rpmdChargeOutput  = make_unique<pq::RPMDTrajOutput>("default.rpmd.chg");
+    _rpmdEnergyOutput  = make_unique<pq::RPMDEnergyOutput>("default.rpmd.en");
+
+    _timingsOutput = make_unique<TimingsOutput>("default.timings");
 }
-// clang-format on
 
 /**
  * @brief wrapper for energy file output function
@@ -156,12 +139,11 @@ void EngineOutput::writeMomentumFile(
  * @brief wrapper for xyz file output function
  *
  * @param simulationBox
- * @param step
  */
-void EngineOutput::writeXyzFile(SimulationBox &simulationBox, const size_t step)
+void EngineOutput::writeXyzFile(SimulationBox &simulationBox)
 {
     startTimingsSection("TrajectoryOutput");
-    _xyzOutput->writeXyz(simulationBox, step);
+    _xyzOutput->writeXyz(simulationBox);
     stopTimingsSection("TrajectoryOutput");
 }
 
@@ -169,12 +151,11 @@ void EngineOutput::writeXyzFile(SimulationBox &simulationBox, const size_t step)
  * @brief wrapper for velocity file output function
  *
  * @param simulationBox
- * @param step
  */
-void EngineOutput::writeVelFile(SimulationBox &simulationBox, const size_t step)
+void EngineOutput::writeVelFile(SimulationBox &simulationBox)
 {
     startTimingsSection("TrajectoryOutput");
-    _velOutput->writeVelocities(simulationBox, step);
+    _velOutput->writeVelocities(simulationBox);
     stopTimingsSection("TrajectoryOutput");
 }
 
@@ -182,15 +163,11 @@ void EngineOutput::writeVelFile(SimulationBox &simulationBox, const size_t step)
  * @brief wrapper for force file output function
  *
  * @param simulationBox
- * @param step
  */
-void EngineOutput::writeForceFile(
-    SimulationBox &simulationBox,
-    const size_t   step
-)
+void EngineOutput::writeForceFile(SimulationBox &simulationBox)
 {
     startTimingsSection("TrajectoryOutput");
-    _forceOutput->writeForces(simulationBox, step);
+    _forceOutput->writeForces(simulationBox);
     stopTimingsSection("TrajectoryOutput");
 }
 
@@ -198,15 +175,11 @@ void EngineOutput::writeForceFile(
  * @brief wrapper for charge file output function
  *
  * @param simulationBox
- * @param step
  */
-void EngineOutput::writeChargeFile(
-    SimulationBox &simulationBox,
-    const size_t   step
-)
+void EngineOutput::writeChargeFile(SimulationBox &simulationBox)
 {
     startTimingsSection("TrajectoryOutput");
-    _chargeOutput->writeCharges(simulationBox, step);
+    _chargeOutput->writeCharges(simulationBox);
     stopTimingsSection("TrajectoryOutput");
 }
 
@@ -311,8 +284,8 @@ void EngineOutput::writeBoxFile(const size_t step, const Box &simulationBox)
  * @param optimizer
  */
 void EngineOutput::writeOptFile(
-    const size_t          step,
-    const opt::Optimizer &optimizer
+    const size_t         step,
+    const pq::Optimizer &optimizer
 )
 {
     startTimingsSection("OptOutput");
@@ -326,10 +299,13 @@ void EngineOutput::writeOptFile(
  * @param simulationBox
  * @param step
  */
-void EngineOutput::writeRingPolymerRstFile(std::vector<SimulationBox> &beads)
+void EngineOutput::writeRingPolymerRstFile(
+    std::vector<SimulationBox> &beads,
+    const size_t                step
+)
 {
     startTimingsSection("RingPolymerRestartFileOutput");
-    _rpmdRstFileOutput->write(beads);
+    _rpmdRstFileOutput->write(beads, step);
     stopTimingsSection("RingPolymerRestartFileOutput");
 }
 
@@ -337,15 +313,11 @@ void EngineOutput::writeRingPolymerRstFile(std::vector<SimulationBox> &beads)
  * @brief wrapper for ring polymer xyz file output function
  *
  * @param beads
- * @param step
  */
-void EngineOutput::writeRingPolymerXyzFile(
-    std::vector<SimulationBox> &beads,
-    const size_t                step
-)
+void EngineOutput::writeRingPolymerXyzFile(std::vector<SimulationBox> &beads)
 {
     startTimingsSection("RingPolymerTrajectoryOutput");
-    _rpmdXyzOutput->writeXyz(beads, step);
+    _rpmdXyzOutput->writeXyz(beads);
     stopTimingsSection("RingPolymerTrajectoryOutput");
 }
 
@@ -353,15 +325,11 @@ void EngineOutput::writeRingPolymerXyzFile(
  * @brief wrapper for ring polymer velocity file output function
  *
  * @param beads
- * @param step
  */
-void EngineOutput::writeRingPolymerVelFile(
-    std::vector<SimulationBox> &beads,
-    const size_t                step
-)
+void EngineOutput::writeRingPolymerVelFile(std::vector<SimulationBox> &beads)
 {
     startTimingsSection("RingPolymerTrajectoryOutput");
-    _rpmdVelOutput->writeVelocities(beads, step);
+    _rpmdVelOutput->writeVelocities(beads);
     stopTimingsSection("RingPolymerTrajectoryOutput");
 }
 
@@ -369,15 +337,11 @@ void EngineOutput::writeRingPolymerVelFile(
  * @brief wrapper for ring polymer force file output function
  *
  * @param beads
- * @param step
  */
-void EngineOutput::writeRingPolymerForceFile(
-    std::vector<SimulationBox> &beads,
-    const size_t                step
-)
+void EngineOutput::writeRingPolymerForceFile(std::vector<SimulationBox> &beads)
 {
     startTimingsSection("RingPolymerTrajectoryOutput");
-    _rpmdForceOutput->writeForces(beads, step);
+    _rpmdForceOutput->writeForces(beads);
     stopTimingsSection("RingPolymerTrajectoryOutput");
 }
 
@@ -385,15 +349,11 @@ void EngineOutput::writeRingPolymerForceFile(
  * @brief wrapper for ring polymer charge file output function
  *
  * @param beads
- * @param step
  */
-void EngineOutput::writeRingPolymerChargeFile(
-    std::vector<SimulationBox> &beads,
-    const size_t                step
-)
+void EngineOutput::writeRingPolymerChargeFile(std::vector<SimulationBox> &beads)
 {
     startTimingsSection("RingPolymerTrajectoryOutput");
-    _rpmdChargeOutput->writeCharges(beads, step);
+    _rpmdChargeOutput->writeCharges(beads);
     stopTimingsSection("RingPolymerTrajectoryOutput");
 }
 

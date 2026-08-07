@@ -24,8 +24,10 @@
 
 #include <memory>   // for make_shared
 
-#include "atom.hpp"           // for Atom
-#include "moleculeType.hpp"   // for MoleculeType
+#include "atom.hpp"            // for Atom
+#include "exceptions.hpp"      // for MShakeFileException
+#include "moleculeType.hpp"    // for MoleculeType
+#include "simulationBox.hpp"   // for SimulationBox
 
 using namespace constraints;
 using namespace simulationBox;

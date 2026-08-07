@@ -1,5 +1,4 @@
 add_library(utilities
-    executablePath.cpp
     stringUtilities.cpp
     mathUtilities.cpp
 )
@@ -17,5 +16,5 @@ target_link_libraries(utilities
 )
 
 install(TARGETS utilities
-    DESTINATION lib
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

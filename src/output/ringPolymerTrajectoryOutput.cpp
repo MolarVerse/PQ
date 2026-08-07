@@ -22,15 +22,18 @@
 
 #include "ringPolymerTrajectoryOutput.hpp"
 
-#include <algorithm>   // for __for_each_fn, for_each
-#include <cstddef>     // for size_t
-#include <format>      // for format
-#include <ostream>     // for basic_ostream, ofstream, operator<<
-#include <sstream>     // for ostringstream
+#include <algorithm>    // for __for_each_fn, for_each
+#include <cstddef>      // for size_t
+#include <format>       // for format
+#include <functional>   // for identity
+#include <ostream>      // for basic_ostream, ofstream, operator<<
+#include <sstream>      // for ostringstream
+#include <string>       // for operator<<, char_traits
 
 #include "molecule.hpp"              // for Molecule
 #include "ringPolymerSettings.hpp"   // for RingPolymerSettings
 #include "simulationBox.hpp"         // for SimulationBox
+#include "vector3d.hpp"              // for Vec3D, operator<<
 
 using output::RingPolymerTrajectoryOutput;
 using namespace settings;
@@ -56,17 +59,13 @@ void RingPolymerTrajectoryOutput::writeHeader(const SimulationBox &simBox)
  * @brief write the xyz file for all beads
  *
  * @param beads
- * @param step
  */
-void RingPolymerTrajectoryOutput::writeXyz(
-    std::vector<SimulationBox> &beads,
-    const size_t                step
-)
+void RingPolymerTrajectoryOutput::writeXyz(std::vector<SimulationBox> &beads)
 {
     std::ostringstream buffer;
 
     writeHeader(beads[0]);
-    writeComment(step);
+    buffer << '\n';
 
     const auto nBeads = RingPolymerSettings::getNumberOfBeads();
 
@@ -98,17 +97,15 @@ void RingPolymerTrajectoryOutput::writeXyz(
  * @brief write the velocity file for all beads
  *
  * @param beads
- * @param step
  */
 void RingPolymerTrajectoryOutput::writeVelocities(
-    std::vector<SimulationBox> &beads,
-    const size_t                step
+    std::vector<SimulationBox> &beads
 )
 {
     std::ostringstream buffer;
 
     writeHeader(beads[0]);
-    writeComment(step);
+    buffer << '\n';
 
     const auto nBeads = RingPolymerSettings::getNumberOfBeads();
 
@@ -141,12 +138,8 @@ void RingPolymerTrajectoryOutput::writeVelocities(
  * @brief write the force file for all beads
  *
  * @param beads
- * @param step
  */
-void RingPolymerTrajectoryOutput::writeForces(
-    std::vector<SimulationBox> &beads,
-    const size_t                step
-)
+void RingPolymerTrajectoryOutput::writeForces(std::vector<SimulationBox> &beads)
 {
     std::ostringstream buffer;
 
@@ -158,7 +151,10 @@ void RingPolymerTrajectoryOutput::writeForces(
         [&totalForce](auto &bead) { totalForce += bead.calculateTotalForce(); }
     );
 
-    writeForceComment(step, totalForce);
+    buffer << std::format(
+        "# Total force = {:.5e} kcal/mol/Angstrom\n",
+        totalForce
+    );
 
     for (size_t i = 0; i < RingPolymerSettings::getNumberOfBeads(); ++i)
         for (const auto &molecule : beads[i].getMolecules())
@@ -172,7 +168,8 @@ void RingPolymerTrajectoryOutput::writeForces(
                 const auto fy       = molecule.getAtomForce(j)[1];
                 const auto fz       = molecule.getAtomForce(j)[2];
 
-                buffer << std::format("{:>5}{}\t", atomName, i + 1);
+                buffer
+                    << std::format("{:>5}{}\t", molecule.getAtomName(j), i + 1);
 
                 buffer << std::format("{:15.8f}\t", fx);
                 buffer << std::format("{:15.8f}\t", fy);
@@ -189,17 +186,14 @@ void RingPolymerTrajectoryOutput::writeForces(
  * @brief write the charge file for all beads
  *
  * @param beads
- * @param step
  */
-void RingPolymerTrajectoryOutput::writeCharges(
-    std::vector<SimulationBox> &beads,
-    const size_t                step
+void RingPolymerTrajectoryOutput::writeCharges(std::vector<SimulationBox> &beads
 )
 {
     std::ostringstream buffer;
 
     writeHeader(beads[0]);
-    writeComment(step);
+    buffer << '\n';
 
     for (size_t i = 0; i < RingPolymerSettings::getNumberOfBeads(); ++i)
         for (const auto &molecule : beads[i].getMolecules())

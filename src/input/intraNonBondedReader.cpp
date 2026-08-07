@@ -24,7 +24,9 @@
 
 #include <algorithm>     // for for_each
 #include <cstdlib>       // for abs, size_t
+#include <filesystem>    // for exists
 #include <format>        // for format
+#include <istream>       // for basic_istream, ifstream, std
 #include <optional>      // for operator==, optional, nullopt
 #include <ranges>        // for drop
 #include <string_view>   // for string_view
@@ -36,6 +38,8 @@
 #include "intraNonBonded.hpp"            // for IntraNonBonded
 #include "intraNonBondedContainer.hpp"   // for IntraNonBondedContainer
 #include "mathUtilities.hpp"             // for sign, utilities
+#include "molecule.hpp"                  // for Molecule
+#include "settings.hpp"                  // for Settings
 #include "simulationBox.hpp"             // for SimulationBox
 #include "stringUtilities.hpp"           // for removeComments, splitString
 

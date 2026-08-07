@@ -25,6 +25,8 @@
 #define _FILES_INPUT_PARSER_HPP_
 
 #include <cstddef>   // for size_t
+#include <string>    // for string
+#include <vector>    // for vector
 
 #include "inputFileParser.hpp"   // for InputFileParser
 #include "typeAliases.hpp"
@@ -39,52 +41,19 @@ namespace input
      */
     class FilesInputParser : public InputFileParser
     {
-       private:
-        bool _validateFilePaths;
-
        public:
-        explicit FilesInputParser(pq::Engine &, bool validateFilePaths = true);
+        explicit FilesInputParser(pq::Engine &);
 
-        void parseIntraNonBondedFile(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseTopologyFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseParameterFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseStartFilename(const std::vector<std::string> &, const size_t);
-
-        void parseRingPolymerStartFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseMoldescriptorFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseGuffDatFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseGuffPath(const std::vector<std::string> &, const size_t);
-
-        void parseMShakeFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseDFTBFilename(const std::vector<std::string> &, const size_t);
+        void parseIntraNonBondedFile(const pq::strings &, const size_t);
+        void parseTopologyFilename(const pq::strings &, const size_t);
+        void parseParameterFilename(const pq::strings &, const size_t);
+        void parseStartFilename(const pq::strings &, const size_t);
+        void parseRingPolymerStartFilename(const pq::strings &, const size_t);
+        void parseMoldescriptorFilename(const pq::strings &, const size_t);
+        void parseGuffDatFilename(const pq::strings &, const size_t);
+        void parseGuffPath(const pq::strings &, const size_t);
+        void parseMShakeFilename(const pq::strings &, const size_t);
+        void parseDFTBFilename(const pq::strings &, const size_t);
     };
 
 }   // namespace input

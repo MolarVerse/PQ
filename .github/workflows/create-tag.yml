@@ -24,19 +24,16 @@ jobs:
 
       - name: Extract release version from PR
         id: extract_version
-        env:
-          PR_BODY: ${{ github.event.pull_request.body }}
-          PR_TITLE: ${{ github.event.pull_request.title }}
         run: |
-          title="$PR_TITLE"
-          body="$PR_BODY"
+          title="${{ github.event.pull_request.title }}"
+          body="${{ github.event.pull_request.body }}"
 
           regex='[Rr][Ee][Ll][Ee][Aa][Ss][Ee]-([0-9]+\.[0-9]+\.[0-9]+)'
 
           if [[ "$title" =~ $regex ]]; then
-            version="v${BASH_REMATCH[1]}"
+            version="${BASH_REMATCH[1]}"
           elif [[ "$body" =~ $regex ]]; then
-            version="v${BASH_REMATCH[1]}"
+            version="${BASH_REMATCH[1]}"
           else
             echo "❌ No valid release version found in PR title or description."
             exit 1
@@ -45,25 +42,20 @@ jobs:
           echo "✅ Found release version: $version"
           echo "version=$version" >> $GITHUB_OUTPUT
 
-      - name: Update changelogs
+      - name: Update CHANGELOG.md
         run: |
           version="${{ steps.extract_version.outputs.version }}"
           python3 scripts/update_changelog.py "$version"
 
-      - name: Commit and push changelog updates
+      - name: Commit and push changelog update
         run: |
           version="${{ steps.extract_version.outputs.version }}"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          git add CHANGELOG.md DEV-CHANGELOG.md changes/
-
-          if git diff --cached --quiet; then
-            echo "ℹ️ No changelog changes to commit."
-          else
-            git commit -m "docs: update changelogs for $version"
-            git push origin HEAD:main
-          fi
+          git add CHANGELOG.md
+          git commit -m "docs: update changelog for $version"
+          git push origin HEAD:main
 
       - name: Create Git tag
         id: create_tag
@@ -89,12 +81,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create PR to sync main into dev
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Merge main back into dev
         run: |
-          version="${{ steps.extract_version.outputs.version }}"
-
-          gh pr create --base dev --head main \
-            --title "Sync main → dev after release $version" \
-            --body "Automated sync PR from \`main\` after releasing \`$version\`. Please review and approve to merge." || echo "ℹ️ PR may already exist, skipping."
+          git fetch origin dev
+          git checkout dev
+          git merge origin/main --no-edit
+          git push origin dev

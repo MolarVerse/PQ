@@ -22,29 +22,22 @@
 
 #include <gtest/gtest.h>   // for EXPECT_EQ, EXPECT_NO_THROW, InitGoog...
 
+#include <string>   // for allocator, basic_string
+
 #include "berendsenManostat.hpp"   // for BerendsenManostat
+#include "exceptions.hpp"          // for InputFileException, customException
 #include "gtest/gtest.h"           // for Message, TestPartResult
 #include "manostat.hpp"            // for BerendsenManostat, Manostat
 #include "manostatSettings.hpp"    // for ManostatSettings
 #include "manostatSetup.hpp"       // for ManostatSetup, setupManostat, setup
 #include "mdEngine.hpp"            // for MDEngine
-#include "settings.hpp"            // for JobType, Settings
 #include "stochasticRescalingManostat.hpp"   // for StochasticRescalingManostat
 #include "testSetup.hpp"                     // for TestSetup
+#include "throwWithMessage.hpp"              // for throwWithMessage
 
 using namespace setup;
 using namespace settings;
 using namespace manostat;
-
-TEST_F(TestSetup, setupManostatSkipsNonMDJobs)
-{
-    const auto jobType = Settings::getJobtype();
-    Settings::setJobtype(JobType::MM_OPT);
-
-    EXPECT_NO_THROW(setupManostat(*_engine));
-
-    Settings::setJobtype(jobType);
-}
 
 TEST_F(TestSetup, setupManostatNone)
 {
@@ -56,10 +49,23 @@ TEST_F(TestSetup, setupManostatNone)
     EXPECT_EQ(manostat.getIsotropy(), Isotropy::NONE);
 }
 
+TEST_F(TestSetup, setupManostatPressureMissing)
+{
+    ManostatSetup manostatSetup(*_mdEngine);
+
+    ManostatSettings::setManostatType("berendsen");
+    EXPECT_THROW_MSG(
+        manostatSetup.setup(),
+        customException::InputFileException,
+        "Pressure not set for berendsen manostat"
+    );
+}
+
 TEST_F(TestSetup, setupManostatBerendsen)
 {
     ManostatSettings::setManostatType("berendsen");
     ManostatSettings::setIsotropy("isotropic");
+    ManostatSettings::setPressureSet(true);
     ManostatSettings::setTargetPressure(300.0);
     ManostatSettings::setTauManostat(0.2);
     ManostatSettings::setCompressibility(4.0);
@@ -75,26 +81,11 @@ TEST_F(TestSetup, setupManostatBerendsen)
     EXPECT_EQ(berendsen.getCompressibility(), 4.0);
 }
 
-TEST_F(TestSetup, setupManostatNoneIsotropyDefaultsToIsotropic)
-{
-    ManostatSettings::setManostatType(ManostatType::BERENDSEN);
-    ManostatSettings::setIsotropy(Isotropy::NONE);
-    ManostatSettings::setTargetPressure(300.0);
-    ManostatSettings::setTauManostat(0.2);
-    ManostatSettings::setCompressibility(4.0);
-
-    ManostatSetup manostatSetup(*_mdEngine);
-    EXPECT_NO_THROW(manostatSetup.setup());
-
-    const auto &manostat  = _mdEngine->getManostat();
-    const auto  berendsen = dynamic_cast<const BerendsenManostat &>(manostat);
-    EXPECT_EQ(berendsen.getIsotropy(), Isotropy::ISOTROPIC);
-}
-
 TEST_F(TestSetup, setupManostatSemiIsotropicBerendsen)
 {
     ManostatSettings::setManostatType("berendsen");
     ManostatSettings::setIsotropy("semi_isotropic");
+    ManostatSettings::setPressureSet(true);
     ManostatSettings::setTargetPressure(300.0);
     ManostatSettings::setTauManostat(0.2);
     ManostatSettings::setCompressibility(4.0);
@@ -115,6 +106,7 @@ TEST_F(TestSetup, setupManostatAnisotropicBerendsen)
 {
     ManostatSettings::setManostatType("berendsen");
     ManostatSettings::setIsotropy("anisotropic");
+    ManostatSettings::setPressureSet(true);
     ManostatSettings::setTargetPressure(300.0);
     ManostatSettings::setTauManostat(0.2);
     ManostatSettings::setCompressibility(4.0);
@@ -135,6 +127,7 @@ TEST_F(TestSetup, setupManostatFullAnisotropicBerendsen)
 {
     ManostatSettings::setManostatType("berendsen");
     ManostatSettings::setIsotropy("full_anisotropic");
+    ManostatSettings::setPressureSet(true);
     ManostatSettings::setTargetPressure(300.0);
     ManostatSettings::setTauManostat(0.2);
     ManostatSettings::setCompressibility(4.0);
@@ -155,6 +148,7 @@ TEST_F(TestSetup, setupManostatSStochasticRescaling)
 {
     ManostatSettings::setManostatType(ManostatType::STOCHASTIC_RESCALING);
     ManostatSettings::setIsotropy("isotropic");
+    ManostatSettings::setPressureSet(true);
     ManostatSettings::setTargetPressure(300.0);
     ManostatSettings::setTauManostat(0.2);
     ManostatSettings::setCompressibility(4.0);
@@ -175,6 +169,7 @@ TEST_F(TestSetup, setupManostatSemiIsotropicSStochasticRescaling)
 {
     ManostatSettings::setManostatType(ManostatType::STOCHASTIC_RESCALING);
     ManostatSettings::setIsotropy("semi_isotropic");
+    ManostatSettings::setPressureSet(true);
     ManostatSettings::setTargetPressure(300.0);
     ManostatSettings::setTauManostat(0.2);
     ManostatSettings::setCompressibility(4.0);
@@ -195,6 +190,7 @@ TEST_F(TestSetup, setupManostatAnisotropicSStochasticRescaling)
 {
     ManostatSettings::setManostatType(ManostatType::STOCHASTIC_RESCALING);
     ManostatSettings::setIsotropy("anisotropic");
+    ManostatSettings::setPressureSet(true);
     ManostatSettings::setTargetPressure(300.0);
     ManostatSettings::setTauManostat(0.2);
     ManostatSettings::setCompressibility(4.0);
@@ -215,6 +211,7 @@ TEST_F(TestSetup, setupManostatFullAnisotropicSStochasticRescaling)
 {
     ManostatSettings::setManostatType(ManostatType::STOCHASTIC_RESCALING);
     ManostatSettings::setIsotropy("full_anisotropic");
+    ManostatSettings::setPressureSet(true);
     ManostatSettings::setTargetPressure(300.0);
     ManostatSettings::setTauManostat(0.2);
     ManostatSettings::setCompressibility(4.0);

@@ -71,7 +71,7 @@ std::pair<double, double> CoulombWolf::calculate(
     const double chargeProduct
 ) const
 {
-    const auto coulombPrefactor = chargeProduct * COULOMB_PREFACTOR;
+    const auto coulombPrefactor = chargeProduct * _COULOMB_PREFACTOR_;
 
     const auto kappaDistance = _kappa * distance;
     const auto erfcFactor    = ::erfc(kappaDistance);

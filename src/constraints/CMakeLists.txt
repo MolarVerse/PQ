@@ -14,7 +14,6 @@ target_include_directories(constraints
 target_link_libraries(constraints
     PUBLIC
     physicalData
-    Eigen3::Eigen
 
     PRIVATE
     connectivity
@@ -24,10 +23,9 @@ target_link_libraries(constraints
     timings
     kernels
 
+    Eigen3::Eigen
 )
 
-target_precompile_headers(constraints REUSE_FROM pq_pch)
-
 install(TARGETS constraints
-    DESTINATION lib
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

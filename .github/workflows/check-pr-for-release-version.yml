@@ -11,16 +11,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
       - name: Check PR Title or Description
-        env:
-          PR_BODY: ${{ github.event.pull_request.body }}
-          PR_TITLE: ${{ github.event.pull_request.title }}
         run: |
-          title="$PR_TITLE"
-          body="$PR_BODY"
+          title="${{ github.event.pull_request.title }}"
+          body="${{ github.event.pull_request.body }}"
           echo "Checking PR title: $title"
           echo "Checking PR body: $body"
 
@@ -34,9 +28,3 @@ jobs:
             echo "❌ Invalid PR. Title or description must contain: Release-x.y.z (e.g., Release-1.2.3)"
             exit 1
           fi
-
-      - name: Test changelog tooling
-        run: python3 -m unittest discover -s scripts/tests -p 'test_*.py'
-
-      - name: Check release changelog entries
-        run: python3 scripts/update_changelog.py --check

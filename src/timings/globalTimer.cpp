@@ -23,18 +23,20 @@
 #include "globalTimer.hpp"
 
 #include <algorithm>   // for ranges::sort
+#include <ranges>      // for ranges::sort
 
 #include "timer.hpp"
 
 using namespace timings;
 
 /**
- * @brief Construct a new Global Timer:: Global Timer object
+ * @brief adds a simulation timer
  *
+ * @param simulationTimer
  */
-GlobalTimer::GlobalTimer() : _simulationTimer("Simulation")
+void GlobalTimer::addSimulationTimer(const Timer& simulationTimer)
 {
-    _simulationTimer.startTimingsSection();
+    _simulationTimer = simulationTimer;
 }
 
 /**

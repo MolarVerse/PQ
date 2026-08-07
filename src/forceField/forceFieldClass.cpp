@@ -23,7 +23,10 @@
 #include "forceFieldClass.hpp"
 
 #include <algorithm>
-#include <format>   // for format
+#include <format>       // for format
+#include <functional>   // for identity
+#include <ranges>       // for find_if, std::ranges::find_if
+#include <string>       // for string
 
 #include "exceptions.hpp"
 
@@ -298,8 +301,8 @@ void ForceField::calculateImproperDihedralInteractions(
  * @param physicalData
  */
 void ForceField::calculateJCouplingInteractions(
-    const SimulationBox & /*box*/,
-    PhysicalData & /*physicalData*/
+    const SimulationBox &box,
+    PhysicalData        &physicalData
 )
 {
     if (!_jCouplings.empty())

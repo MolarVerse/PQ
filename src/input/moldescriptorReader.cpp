@@ -30,6 +30,7 @@
 #include "engine.hpp"            // for Engine
 #include "exceptions.hpp"        // for MolDescriptorException
 #include "fileSettings.hpp"      // for FileSettings
+#include "forceFieldClass.hpp"   // for ForceField
 #include "moleculeType.hpp"      // for Molecule
 #include "simulationBox.hpp"     // for SimulationBox
 #include "stringUtilities.hpp"   // for removeComments, splitString

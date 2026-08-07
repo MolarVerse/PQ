@@ -24,11 +24,12 @@
 
 #define _STRING_UTILITIES_HPP_
 
-#include <cstddef>   // for size_t
-#include <cstdint>
+#include <cstddef>       // for size_t
 #include <string>        // for string
 #include <string_view>   // for string_view
-#include <vector>
+#include <vector>        // for vector
+
+#include "typeAliases.hpp"
 
 /**
  * @brief utilities is a namespace for all utility functions
@@ -37,23 +38,23 @@ namespace utilities
 {
     std::string removeComments(std::string &, const std::string_view &);
 
-    std::vector<std::string> getLineCommands(const std::string &, const size_t);
+    pq::strings getLineCommands(const std::string &, const size_t);
 
-    std::vector<std::string> splitString(const std::string &);
+    pq::strings splitString(const std::string &);
 
     std::string toLowerCopy(std::string);
     std::string toLowerCopy(std::string_view);
     std::string toLowerAndReplaceDashesCopy(std::string);
     std::string toLowerAndReplaceDashesCopy(std::string_view);
     std::string firstLetterToUpperCaseCopy(std::string);
+
     void addSpaces(std::string &, const std::string &, const size_t);
 
     std::uint_fast32_t stringToUintFast32t(const std::string &);
-    int                stringToInt(const std::string &);
     double             stringToFiniteDouble(const std::string &);
 
     bool fileExists(const std::string &);
-    bool keywordToBool(const std::vector<std::string> &);
+    bool keywordToBool(const pq::strings &);
 
 }   // namespace utilities
 

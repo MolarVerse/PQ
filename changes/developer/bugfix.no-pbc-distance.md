@@ -1,1 +1,0 @@
-- Correct the no-PBC squared-distance calculation.

@@ -24,7 +24,8 @@
 
 #define _BOX_HPP_
 
-#include "staticMatrix.hpp"   // for tensor3D
+#include "staticMatrix.hpp"   // for StaticMatrix3x3
+#include "typeAliases.hpp"    // for diagonalMatrix
 #include "vector3d.hpp"       // for Vec3D
 
 namespace simulationBox
@@ -38,7 +39,7 @@ namespace simulationBox
     class Box
     {
        protected:
-        linearAlgebra::Vec3D _boxDimensions;
+        pq::Vec3D _boxDimensions;
 
         bool   _boxSizeHasChanged = false;
         double _volume;
@@ -46,60 +47,40 @@ namespace simulationBox
        public:
         virtual ~Box() = default;
 
-        virtual void applyPBC(linearAlgebra::Vec3D &position) const = 0;
-
-        virtual linearAlgebra::Vec3D wrapPositionIntoBox(
-            const linearAlgebra::Vec3D &
-        ) const = 0;
-
-        virtual void scaleBox(
-            const linearAlgebra::tensor3D &scalingFactors
-        ) = 0;
-
-        virtual double calculateVolume() = 0;
-
-        virtual linearAlgebra::Vec3D calcShiftVector(
-            const linearAlgebra::Vec3D &
-        ) const = 0;
+        virtual void      applyPBC(pq::Vec3D &position) const          = 0;
+        virtual pq::Vec3D wrapPositionIntoBox(const pq::Vec3D &) const = 0;
+        virtual void      scaleBox(const pq::tensor3D &scalingFactors) = 0;
+        virtual double    calculateVolume()                            = 0;
+        virtual pq::Vec3D calcShiftVector(const pq::Vec3D &) const     = 0;
 
         /*****************************************************
          * virtual methods that are overriden in triclinicBox *
          ******************************************************/
 
-        virtual void setBoxDimensions(
-            const linearAlgebra::Vec3D &boxDimensions
-        );
+        virtual void setBoxDimensions(const pq::Vec3D &boxDimensions);
 
         [[nodiscard]] virtual double getMinimalBoxDimension() const;
 
-        [[nodiscard]] virtual linearAlgebra::Vec3D    getBoxAngles() const;
-        [[nodiscard]] virtual linearAlgebra::tensor3D getBoxMatrix() const;
+        [[nodiscard]] virtual pq::Vec3D    getBoxAngles() const;
+        [[nodiscard]] virtual pq::tensor3D getBoxMatrix() const;
 
-        [[nodiscard]]
-        virtual linearAlgebra::Vec3D toOrthoSpace(
-            const linearAlgebra::Vec3D &
-        ) const;
-        [[nodiscard]]
-        virtual linearAlgebra::tensor3D toOrthoSpace(
-            const linearAlgebra::tensor3D &
+        [[nodiscard]] virtual pq::Vec3D toOrthoSpace(const pq::Vec3D &) const;
+        [[nodiscard]] virtual pq::tensor3D toOrthoSpace(
+            const pq::tensor3D &
         ) const;
 
-        [[nodiscard]]
-        virtual linearAlgebra::Vec3D toSimSpace(
-            const linearAlgebra::Vec3D &
-        ) const;
-        [[nodiscard]]
-        virtual linearAlgebra::tensor3D toSimSpace(
-            const linearAlgebra::tensor3D &
+        [[nodiscard]] virtual pq::Vec3D    toSimSpace(const pq::Vec3D &) const;
+        [[nodiscard]] virtual pq::tensor3D toSimSpace(
+            const pq::tensor3D &
         ) const;
 
         /********************
          * standard getters *
          ********************/
 
-        [[nodiscard]] bool                 getBoxSizeHasChanged() const;
-        [[nodiscard]] double               getVolume() const;
-        [[nodiscard]] linearAlgebra::Vec3D getBoxDimensions() const;
+        [[nodiscard]] bool      getBoxSizeHasChanged() const;
+        [[nodiscard]] double    getVolume() const;
+        [[nodiscard]] pq::Vec3D getBoxDimensions() const;
 
         /********************
          * standard setters *

@@ -22,8 +22,6 @@
 
 #include "constraintsSetup.hpp"
 
-#include <format>
-
 #include "constraintSettings.hpp"   // for getShakeMaxIter, getShakeTolerance, getRattleMaxIter, getRattleTolerance
 #include "constraints.hpp"    // for Constraints
 #include "engine.hpp"         // for Engine
@@ -58,7 +56,7 @@ void setup::setupConstraints(Engine &engine)
  *
  * @param engine
  */
-ConstraintsSetup::ConstraintsSetup(Engine &engine) : _engine(engine) {}
+ConstraintsSetup::ConstraintsSetup(Engine &engine) : _engine(engine){};
 
 /**
  * @brief sets constraints data in constraints object

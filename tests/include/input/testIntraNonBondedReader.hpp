@@ -29,9 +29,11 @@
 #include <string>   // for allocator
 
 #include "fileSettings.hpp"           // for FileSettings
+#include "intraNonBonded.hpp"         // for IntraNonBonded
 #include "intraNonBondedReader.hpp"   // for IntraNonBondedReader
 #include "mmmdEngine.hpp"             // for Engine
 #include "moleculeType.hpp"           // for MoleculeType
+#include "simulationBox.hpp"          // for SimulationBox
 
 /**
  * @class TestIntraNonBondedReader

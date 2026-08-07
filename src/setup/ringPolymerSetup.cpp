@@ -22,9 +22,13 @@
 
 #include "ringPolymerSetup.hpp"
 
-#include <algorithm>   // for __for_each_fn, for_each
-#include <cstddef>     // for size_t
+#include <algorithm>     // for __for_each_fn, for_each
+#include <cstddef>       // for size_t
+#include <functional>    // for identity
+#include <iostream>      // for operator<<, endl, basic_ostream, cout
+#include <string_view>   // for string_view
 
+#include "exceptions.hpp"                     // for InputFileException
 #include "fileSettings.hpp"                   // for FileSettings
 #include "maxwellBoltzmann.hpp"               // for MaxwellBoltzmann
 #include "ringPolymerEngine.hpp"              // for RingPolymerEngine
@@ -76,9 +80,8 @@ void setup::setupRingPolymer(Engine &engine)
  *
  * @param engine
  */
-RingPolymerSetup::RingPolymerSetup(RingPolymerEngine &engine) : _engine(engine)
-{
-}
+RingPolymerSetup::RingPolymerSetup(RingPolymerEngine &engine)
+    : _engine(engine){};
 
 /**
  * @brief setup a ring polymer simulation
@@ -86,6 +89,11 @@ RingPolymerSetup::RingPolymerSetup(RingPolymerEngine &engine) : _engine(engine)
  */
 void RingPolymerSetup::setup()
 {
+    if (!RingPolymerSettings::isNumberOfBeadsSet())
+        throw InputFileException(
+            "Number of beads not set for ring polymer simulation"
+        );
+
     setupPhysicalData();
 
     setupSimulationBox();

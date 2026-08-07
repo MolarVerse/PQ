@@ -22,11 +22,11 @@
 
 #include "nonCoulombInputParser.hpp"
 
-#include <cstddef>   // for size_t
-#include <format>    // for format
+#include <cstddef>      // for size_t
+#include <format>       // for format
+#include <functional>   // for _Bind_front_t, bind_front
 
-#include "exceptions.hpp"   // for InputFileException, customException
-#include "parserUtils.hpp"
+#include "exceptions.hpp"          // for InputFileException, customException
 #include "potentialSettings.hpp"   // for PotentialSettings
 #include "stringUtilities.hpp"     // for toLowerCopy
 
@@ -50,7 +50,7 @@ NonCoulombInputParser::NonCoulombInputParser(Engine &engine)
 {
     addKeyword(
         std::string("noncoulomb"),
-        bindMember(&NonCoulombInputParser::parseNonCoulombType, this),
+        bind_front(&NonCoulombInputParser::parseNonCoulombType, this),
         false
     );
 }

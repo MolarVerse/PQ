@@ -24,7 +24,6 @@
 
 #define _STATIC_MATRIX_INTERFACE_HPP_
 
-#include "staticMatrix/staticMatrix3x3.hpp"        // IWYU pragma: export
-#include "staticMatrix/staticMatrix3x3Class.hpp"   // IWYU pragma: export
+#include "staticMatrix/staticMatrix3x3.hpp"
 
-#endif   // _STATIC_MATRIX_INTERFACE_HPP_
+#endif // _STATIC_MATRIX_INTERFACE_HPP_ 

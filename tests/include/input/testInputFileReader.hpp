@@ -44,13 +44,14 @@ class TestInputFileReader : public ::testing::Test
    protected:
     void SetUp() override
     {
+        _inputFileReader = new input::InputFileReader("input.in", *_engine);
+
         // NOTE: here the MMOPTEngine is used as dummy engine
         //       for testing the InputFileReader class
         //       The mdEngine is used only for special cases
         //       where optEngine is not supported
-        _engine          = new engine::OptEngine();
-        _mdEngine        = new engine::MMMDEngine();
-        _inputFileReader = new input::InputFileReader("input.in", *_engine);
+        _engine   = new engine::OptEngine();
+        _mdEngine = new engine::MMMDEngine();
         _inputFileReader_mdEngine =
             new input::InputFileReader("input.in", *_mdEngine);
     }
@@ -58,9 +59,6 @@ class TestInputFileReader : public ::testing::Test
     void TearDown() override
     {
         delete _inputFileReader;
-        delete _inputFileReader_mdEngine;
-        delete _engine;
-        delete _mdEngine;
         removeFile();
     }
 

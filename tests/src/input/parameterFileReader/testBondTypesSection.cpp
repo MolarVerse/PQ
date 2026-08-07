@@ -26,9 +26,12 @@
 #include <vector>   // for vector
 
 #include "bondSection.hpp"                // for BondSection
+#include "bondType.hpp"                   // for BondType
 #include "engine.hpp"                     // for Engine
 #include "exceptions.hpp"                 // for ParameterFileException
+#include "forceFieldClass.hpp"            // for ForceField
 #include "gtest/gtest.h"                  // for Message, TestPartResult
+#include "parameterFileSection.hpp"       // for parameterFile
 #include "testParameterFileSection.hpp"   // for TestParameterFileSection
 #include "throwWithMessage.hpp"           // for ASSERT_THROW_MSG
 

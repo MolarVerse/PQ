@@ -25,11 +25,13 @@
 #include <fstream>   // for ifstream
 #include <string>    // for getline, allocator, string
 
+#include "forceFieldSettings.hpp"   // for ForceFieldSettings
 #include "gtest/gtest.h"   // for Test, TestInfo (ptr only), TEST, InitGoogleTest, RUN_ALL_TESTS
 #include "momentumOutput.hpp"     // for MomentumOutput
 #include "physicalData.hpp"       // for PhysicalData
+#include "settings.hpp"           // for Settings
 #include "testEnergyOutput.hpp"   // for TestEnergyOutput
-#include "vector3d.hpp"           // IWYU pragma: keep - for Vec3D
+#include "vector3d.hpp"           // for Vec3D
 
 using namespace linearAlgebra;
 

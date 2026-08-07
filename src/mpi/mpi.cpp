@@ -20,8 +20,6 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifdef WITH_MPI
-
 #include "mpi.hpp"
 
 #include <mpi.h>   // for MPI_Comm_rank, MPI_Comm_size, MPI_Init, MPI_Finalize
@@ -148,5 +146,3 @@ size_t MPI::getRank() { return _rank; }
  * @return size_t
  */
 size_t MPI::getSize() { return _size; }
-
-#endif   // WITH_MPI

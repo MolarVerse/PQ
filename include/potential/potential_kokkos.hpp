@@ -24,8 +24,6 @@
 
 #define _KOKKOS_POTENTIAL_HPP_
 
-#ifdef WITH_KOKKOS
-
 #include "timer.hpp"   // for Timer
 #include "typeAliases.hpp"
 
@@ -50,7 +48,5 @@ namespace potential
     };
 
 }   // namespace potential
-
-#endif   // WITH_KOKKOS
 
 #endif   // _KOKKOS_POTENTIAL_HPP_

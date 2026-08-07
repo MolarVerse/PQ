@@ -22,6 +22,7 @@
 
 #include "testParameterFileReader.hpp"
 
+#include <vector>   // for vector
 
 #include "angleSection.hpp"      // for AngleSection
 #include "bondSection.hpp"       // for BondSection
@@ -35,6 +36,7 @@
 #include "jCouplingSection.hpp"          // for JCouplingSection
 #include "nonCoulombicsSection.hpp"      // for NonCoulombicsSection
 #include "parameterFileReader.hpp"       // for ParameterFileReader
+#include "potential.hpp"                 // for Potential
 #include "throwWithMessage.hpp"          // for EXPECT_THROW_MSG
 #include "typesSection.hpp"              // for TypesSection
 

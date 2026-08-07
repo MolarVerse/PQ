@@ -20,16 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "nonCoulomb/testForceFieldNonCoulomb.hpp"
-
 #include <gtest/gtest.h>   // for Test, EXPECT_EQ, TestInfo
 
-#include <cstddef>    // for size_t
-#include <map>        // for map
-#include <memory>     // for make_shared, shared_ptr
-#include <optional>   // for optional, nullopt
-#include <utility>    // for move
-#include <vector>     // for vector
+#include <algorithm>   // for max
+#include <cstddef>     // for size_t
+#include <map>         // for map
+#include <memory>      // for make_shared, shared_ptr
+#include <optional>    // for optional, nullopt
+#include <vector>      // for vector
 
 #include "exceptions.hpp"             // for ParameterFileException
 #include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
@@ -39,110 +37,46 @@
 #include "nonCoulombPair.hpp"         // for NonCoulombPair
 #include "throwWithMessage.hpp"       // for EXPECT_THROW_MSG
 
-TEST_F(TestNonCoulombPotentialFF, copyConstructorCopiesOwnedMatrix)
-{
-    setNonCoulombPairsMatrix(linearAlgebra::Matrix<pq::SharedNonCoulPair>(1));
-    const auto pair =
-        potential::LennardJonesPair(size_t(1), size_t(1), 2.0, 1.0, 1.0);
-    setNonCoulombPairsMatrix(0, 0, pair);
-    _nonCoulombPotential->setNonCoulombPairsVector(
-        {std::make_shared<potential::LennardJonesPair>(pair)}
-    );
-
-    auto copy = potential::ForceFieldNonCoulomb(*_nonCoulombPotential);
-
-    EXPECT_EQ(copy.getNonCoulombPairsVector().size(), 1);
-    EXPECT_EQ(
-        getNonCoulombPairsMatrix(copy)(0, 0),
-        getNonCoulombPairsMatrix()(0, 0)
-    );
-
-    const auto replacement =
-        potential::LennardJonesPair(size_t(1), size_t(1), 3.0, 2.0, 1.0);
-    setNonCoulombPairsMatrix(*_nonCoulombPotential, 0, 0, replacement);
-    EXPECT_NE(
-        getNonCoulombPairsMatrix(copy)(0, 0),
-        getNonCoulombPairsMatrix()(0, 0)
-    );
-}
-
-TEST_F(TestNonCoulombPotentialFF, copyAssignmentCopiesOwnedMatrix)
-{
-    setNonCoulombPairsMatrix(linearAlgebra::Matrix<pq::SharedNonCoulPair>(1));
-    const auto pair =
-        potential::LennardJonesPair(size_t(1), size_t(1), 2.0, 1.0, 1.0);
-    setNonCoulombPairsMatrix(0, 0, pair);
-
-    auto copy = potential::ForceFieldNonCoulomb();
-    copy      = *_nonCoulombPotential;
-
-    const auto  matrixElement = getNonCoulombPairsMatrix(copy)(0, 0);
-    const auto *self          = &copy;
-    copy                      = *self;
-    EXPECT_EQ(getNonCoulombPairsMatrix(copy)(0, 0), matrixElement);
-}
-
-TEST_F(TestNonCoulombPotentialFF, moveOperationsTransferOwnedMatrix)
-{
-    setNonCoulombPairsMatrix(linearAlgebra::Matrix<pq::SharedNonCoulPair>(1));
-    const auto pair =
-        potential::LennardJonesPair(size_t(1), size_t(1), 2.0, 1.0, 1.0);
-    setNonCoulombPairsMatrix(0, 0, pair);
-
-    auto moved =
-        potential::ForceFieldNonCoulomb(std::move(*_nonCoulombPotential));
-    EXPECT_NE(getNonCoulombPairsMatrix(moved)(0, 0), nullptr);
-
-    auto assigned = potential::ForceFieldNonCoulomb();
-    assigned      = std::move(moved);
-    EXPECT_NE(getNonCoulombPairsMatrix(assigned)(0, 0), nullptr);
-}
-
 /**
  * @brief tests determineInternalGlobalVdwTypes function
  *
  */
-TEST_F(TestNonCoulombPotentialFF, determineInternalGlobalVdwTypes)
+TEST(TestPotential, determineInternalGlobalVdwTypes)
 {
-    _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(1), size_t(5), 2.0, 1.0, 1.0)
-    );
-    _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(1), size_t(2), 2.0, 1.0, 1.0)
-    );
+    auto potential = potential::ForceFieldNonCoulomb();
+
+    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
+        size_t(1),
+        size_t(5),
+        2.0,
+        1.0,
+        1.0
+    ));
+    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
+        size_t(1),
+        size_t(2),
+        2.0,
+        1.0,
+        1.0
+    ));
 
     std::map<size_t, size_t> externalToInternalTypes({{1, 0}, {2, 1}, {5, 2}});
 
-    _nonCoulombPotential->determineInternalGlobalVdwTypes(
-        externalToInternalTypes
-    );
+    potential.determineInternalGlobalVdwTypes(externalToInternalTypes);
 
-    EXPECT_EQ(
-        _nonCoulombPotential->getNonCoulombPairsVector()[0]->getInternalType1(),
-        0
-    );
-    EXPECT_EQ(
-        _nonCoulombPotential->getNonCoulombPairsVector()[0]->getInternalType2(),
-        2
-    );
-    EXPECT_EQ(
-        _nonCoulombPotential->getNonCoulombPairsVector()[1]->getInternalType1(),
-        0
-    );
-    EXPECT_EQ(
-        _nonCoulombPotential->getNonCoulombPairsVector()[1]->getInternalType2(),
-        1
-    );
+    EXPECT_EQ(potential.getNonCoulombPairsVector()[0]->getInternalType1(), 0);
+    EXPECT_EQ(potential.getNonCoulombPairsVector()[0]->getInternalType2(), 2);
+    EXPECT_EQ(potential.getNonCoulombPairsVector()[1]->getInternalType1(), 0);
+    EXPECT_EQ(potential.getNonCoulombPairsVector()[1]->getInternalType2(), 1);
 }
 
 /**
  * @brief tests fillDiagOfNonCoulPairsMatrix function
  *
  */
-TEST_F(TestNonCoulombPotentialFF, fillDiagOfNonCoulPairsMatrix)
+TEST(TestPotential, fillDiagOfNonCoulPairsMatrix)
 {
+    auto potential = potential::ForceFieldNonCoulomb();
     auto nonCoulombicPair1 =
         potential::LennardJonesPair(size_t(1), size_t(1), 2.0, 1.0, 1.0);
     nonCoulombicPair1.setInternalType1(0);
@@ -157,14 +91,26 @@ TEST_F(TestNonCoulombPotentialFF, fillDiagOfNonCoulPairsMatrix)
         std::make_shared<potential::LennardJonesPair>(nonCoulombicPair2)
     };
 
-    _nonCoulombPotential->fillDiagOfNonCoulPairsMatrix(diagonalElements);
+    potential.fillDiagOfNonCoulPairsMatrix(diagonalElements);
 
-    EXPECT_EQ(getNonCoulombPairsMatrix().rows(), 2);
-    EXPECT_EQ(getNonCoulombPairsMatrix().cols(), 2);
-    EXPECT_EQ(getNonCoulombPairsMatrix()(0, 0)->getInternalType1(), 0);
-    EXPECT_EQ(getNonCoulombPairsMatrix()(0, 0)->getInternalType2(), 0);
-    EXPECT_EQ(getNonCoulombPairsMatrix()(1, 1)->getInternalType1(), 9);
-    EXPECT_EQ(getNonCoulombPairsMatrix()(1, 1)->getInternalType2(), 9);
+    EXPECT_EQ(potential.getNonCoulombPairsMatrix().rows(), 2);
+    EXPECT_EQ(potential.getNonCoulombPairsMatrix().cols(), 2);
+    EXPECT_EQ(
+        potential.getNonCoulombPairsMatrix()(0, 0)->getInternalType1(),
+        0
+    );
+    EXPECT_EQ(
+        potential.getNonCoulombPairsMatrix()(0, 0)->getInternalType2(),
+        0
+    );
+    EXPECT_EQ(
+        potential.getNonCoulombPairsMatrix()(1, 1)->getInternalType1(),
+        9
+    );
+    EXPECT_EQ(
+        potential.getNonCoulombPairsMatrix()(1, 1)->getInternalType2(),
+        9
+    );
 }
 
 /**
@@ -172,29 +118,31 @@ TEST_F(TestNonCoulombPotentialFF, fillDiagOfNonCoulPairsMatrix)
  * one type is found
  *
  */
-TEST_F(
-    TestNonCoulombPotentialFF,
-    findNonCoulombicPairByInternalTypes_findOneType
-)
+TEST(TestPotential, findNonCoulombicPairByInternalTypes_findOneType)
 {
-    _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(1), size_t(5), 2.0, 1.0, 1.0)
-    );
-    _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(1), size_t(2), 2.0, 1.0, 1.0)
-    );
+    auto potential = potential::ForceFieldNonCoulomb();
+
+    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
+        size_t(1),
+        size_t(5),
+        2.0,
+        1.0,
+        1.0
+    ));
+    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
+        size_t(1),
+        size_t(2),
+        2.0,
+        1.0,
+        1.0
+    ));
 
     // these two lines were already tested in
     // TestPotential_determineInternalGlobalVdwTypes
     std::map<size_t, size_t> externalToInternalTypes({{1, 0}, {2, 1}, {5, 2}});
-    _nonCoulombPotential->determineInternalGlobalVdwTypes(
-        externalToInternalTypes
-    );
+    potential.determineInternalGlobalVdwTypes(externalToInternalTypes);
 
-    auto nonCoulombicPair =
-        _nonCoulombPotential->findNonCoulPairByInternalTypes(0, 2);
+    auto nonCoulombicPair = potential.findNonCoulPairByInternalTypes(0, 2);
     EXPECT_EQ((*nonCoulombicPair)->getInternalType1(), 0);
     EXPECT_EQ((*nonCoulombicPair)->getInternalType2(), 2);
 }
@@ -204,29 +152,31 @@ TEST_F(
  * type is found
  *
  */
-TEST_F(
-    TestNonCoulombPotentialFF,
-    findNonCoulombicPairByInternalTypes_findNothing
-)
+TEST(TestPotential, findNonCoulombicPairByInternalTypes_findNothing)
 {
-    _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(1), size_t(5), 2.0, 1.0, 1.0)
-    );
-    _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(1), size_t(2), 2.0, 1.0, 1.0)
-    );
+    auto potential = potential::ForceFieldNonCoulomb();
+
+    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
+        size_t(1),
+        size_t(5),
+        2.0,
+        1.0,
+        1.0
+    ));
+    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
+        size_t(1),
+        size_t(2),
+        2.0,
+        1.0,
+        1.0
+    ));
 
     // these two lines were already tested in
     // TestPotential_determineInternalGlobalVdwTypes
     std::map<size_t, size_t> externalToInternalTypes({{1, 0}, {2, 1}, {5, 2}});
-    _nonCoulombPotential->determineInternalGlobalVdwTypes(
-        externalToInternalTypes
-    );
+    potential.determineInternalGlobalVdwTypes(externalToInternalTypes);
 
-    auto nonCoulombicPair =
-        _nonCoulombPotential->findNonCoulPairByInternalTypes(0, 3);
+    auto nonCoulombicPair = potential.findNonCoulPairByInternalTypes(0, 3);
     EXPECT_EQ(nonCoulombicPair, std::nullopt);
 }
 
@@ -235,34 +185,40 @@ TEST_F(
  * multiple types are found
  *
  */
-TEST_F(
-    TestNonCoulombPotentialFF,
-    findNonCoulombicPairByInternalTypes_findMultipleTypes
-)
+TEST(TestPotential, findNonCoulombicPairByInternalTypes_findMultipleTypes)
 {
-    _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(1), size_t(5), 2.0, 1.0, 1.0)
-    );
-    _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(1), size_t(5), 2.0, 5.0, 1.0)
-    );
-    _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(1), size_t(2), 2.0, 1.0, 1.0)
-    );
+    auto potential = potential::ForceFieldNonCoulomb();
+
+    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
+        size_t(1),
+        size_t(5),
+        2.0,
+        1.0,
+        1.0
+    ));
+    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
+        size_t(1),
+        size_t(5),
+        2.0,
+        5.0,
+        1.0
+    ));
+    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
+        size_t(1),
+        size_t(2),
+        2.0,
+        1.0,
+        1.0
+    ));
 
     // these two lines were already tested in
     // TestPotential_determineInternalGlobalVdwTypes
     std::map<size_t, size_t> externalToInternalTypes({{1, 0}, {2, 1}, {5, 2}});
-    _nonCoulombPotential->determineInternalGlobalVdwTypes(
-        externalToInternalTypes
-    );
+    potential.determineInternalGlobalVdwTypes(externalToInternalTypes);
 
     EXPECT_THROW_MSG(
         [[maybe_unused]] const auto dummy =
-            _nonCoulombPotential->findNonCoulPairByInternalTypes(0, 2),
+            potential.findNonCoulPairByInternalTypes(0, 2),
         customException::ParameterFileException,
         "Non coulombic pair with global van der waals types 1 and 5 is defined "
         "twice in the parameter file."
@@ -274,28 +230,31 @@ TEST_F(
  * element is not found
  *
  */
-TEST_F(
-    TestNonCoulombPotentialFF,
+TEST(
+    TestPotential,
     fillOffDiagonalElementsOfNonCoulombicPairsMatrix_ElementNotFound
 )
 {
-    _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(1), size_t(5), 2.0, 1.0, 1.0)
-    );
+    auto potential = potential::ForceFieldNonCoulomb();
+
+    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
+        size_t(1),
+        size_t(5),
+        2.0,
+        1.0,
+        1.0
+    ));
 
     // these two lines were already tested in
     // TestPotential_determineInternalGlobalVdwTypes
     std::map<size_t, size_t> externalToInternalTypes({{1, 0}, {2, 1}, {5, 2}});
-    _nonCoulombPotential->determineInternalGlobalVdwTypes(
-        externalToInternalTypes
-    );
-    setNonCoulombPairsMatrix(
+    potential.determineInternalGlobalVdwTypes(externalToInternalTypes);
+    potential.setNonCoulombPairsMatrix(
         linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(3)
     );
 
     EXPECT_THROW_MSG(
-        _nonCoulombPotential->fillOffDiagOfNonCoulPairsMatrix(),
+        potential.fillOffDiagOfNonCoulPairsMatrix(),
         customException::ParameterFileException,
         "Not all combinations of global van der Waals types are defined in the "
         "parameter file - and no mixing rules were chosen"
@@ -307,39 +266,60 @@ TEST_F(
  * element is found with lower index first
  *
  */
-TEST_F(
-    TestNonCoulombPotentialFF,
+TEST(
+    TestPotential,
     fillOffDiagonalElementsOfNonCoulombicPairsMatrix_foundOnlyPairWithLowerIndexFirst
 )
 {
-    _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(1), size_t(2), 2.0, 1.0, 1.0)
-    );
-    _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(1), size_t(5), 2.0, 1.0, 1.0)
-    );
-    _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(2), size_t(5), 2.0, 1.0, 1.0)
-    );
+    auto potential = potential::ForceFieldNonCoulomb();
+
+    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
+        size_t(1),
+        size_t(2),
+        2.0,
+        1.0,
+        1.0
+    ));
+    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
+        size_t(1),
+        size_t(5),
+        2.0,
+        1.0,
+        1.0
+    ));
+    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
+        size_t(2),
+        size_t(5),
+        2.0,
+        1.0,
+        1.0
+    ));
 
     // these two lines were already tested in
     // TestPotential_determineInternalGlobalVdwTypes
     std::map<size_t, size_t> externalToInternalTypes({{1, 0}, {2, 1}, {5, 2}});
-    _nonCoulombPotential->determineInternalGlobalVdwTypes(
-        externalToInternalTypes
-    );
-    setNonCoulombPairsMatrix(
+    potential.determineInternalGlobalVdwTypes(externalToInternalTypes);
+    potential.setNonCoulombPairsMatrix(
         linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(3)
     );
-    _nonCoulombPotential->fillOffDiagOfNonCoulPairsMatrix();
+    potential.fillOffDiagOfNonCoulPairsMatrix();
 
-    EXPECT_EQ(getNonCoulombPairsMatrix()(0, 1)->getInternalType1(), 0);
-    EXPECT_EQ(getNonCoulombPairsMatrix()(0, 1)->getInternalType2(), 1);
-    EXPECT_EQ(getNonCoulombPairsMatrix()(1, 0)->getInternalType1(), 0);
-    EXPECT_EQ(getNonCoulombPairsMatrix()(1, 0)->getInternalType2(), 1);
+    EXPECT_EQ(
+        potential.getNonCoulombPairsMatrix()(0, 1)->getInternalType1(),
+        0
+    );
+    EXPECT_EQ(
+        potential.getNonCoulombPairsMatrix()(0, 1)->getInternalType2(),
+        1
+    );
+    EXPECT_EQ(
+        potential.getNonCoulombPairsMatrix()(1, 0)->getInternalType1(),
+        0
+    );
+    EXPECT_EQ(
+        potential.getNonCoulombPairsMatrix()(1, 0)->getInternalType2(),
+        1
+    );
 }
 
 /**
@@ -347,39 +327,60 @@ TEST_F(
  * element is found with higher index first
  *
  */
-TEST_F(
-    TestNonCoulombPotentialFF,
+TEST(
+    TestPotential,
     fillOffDiagonalElementsOfNonCoulombicPairsMatrix_foundOnlyPairWithHigherIndexFirst
 )
 {
-    _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(2), size_t(1), 2.0, 1.0, 1.0)
-    );
-    _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(5), size_t(1), 2.0, 1.0, 1.0)
-    );
-    _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(5), size_t(2), 2.0, 1.0, 1.0)
-    );
+    auto potential = potential::ForceFieldNonCoulomb();
+
+    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
+        size_t(2),
+        size_t(1),
+        2.0,
+        1.0,
+        1.0
+    ));
+    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
+        size_t(5),
+        size_t(1),
+        2.0,
+        1.0,
+        1.0
+    ));
+    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
+        size_t(5),
+        size_t(2),
+        2.0,
+        1.0,
+        1.0
+    ));
 
     // these two lines were already tested in
     // TestPotential_determineInternalGlobalVdwTypes
     std::map<size_t, size_t> externalToInternalTypes({{1, 0}, {2, 1}, {5, 2}});
-    _nonCoulombPotential->determineInternalGlobalVdwTypes(
-        externalToInternalTypes
-    );
-    setNonCoulombPairsMatrix(
+    potential.determineInternalGlobalVdwTypes(externalToInternalTypes);
+    potential.setNonCoulombPairsMatrix(
         linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(3)
     );
-    _nonCoulombPotential->fillOffDiagOfNonCoulPairsMatrix();
+    potential.fillOffDiagOfNonCoulPairsMatrix();
 
-    EXPECT_EQ(getNonCoulombPairsMatrix()(0, 1)->getInternalType1(), 1);
-    EXPECT_EQ(getNonCoulombPairsMatrix()(0, 1)->getInternalType2(), 0);
-    EXPECT_EQ(getNonCoulombPairsMatrix()(1, 0)->getInternalType1(), 1);
-    EXPECT_EQ(getNonCoulombPairsMatrix()(1, 0)->getInternalType2(), 0);
+    EXPECT_EQ(
+        potential.getNonCoulombPairsMatrix()(0, 1)->getInternalType1(),
+        1
+    );
+    EXPECT_EQ(
+        potential.getNonCoulombPairsMatrix()(0, 1)->getInternalType2(),
+        0
+    );
+    EXPECT_EQ(
+        potential.getNonCoulombPairsMatrix()(1, 0)->getInternalType1(),
+        1
+    );
+    EXPECT_EQ(
+        potential.getNonCoulombPairsMatrix()(1, 0)->getInternalType2(),
+        0
+    );
 }
 
 /**
@@ -387,43 +388,67 @@ TEST_F(
  * element is found for both index combinations with same parameters
  *
  */
-TEST_F(
-    TestNonCoulombPotentialFF,
+TEST(
+    TestPotential,
     fillOffDiagonalElementsOfNonCoulombicPairsMatrix_foundBothPairs_withSameParams
 )
 {
-    _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(2), size_t(1), 2.0, 1.0, 1.0)
-    );
-    _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(1), size_t(2), 2.0, 1.0, 1.0)
-    );
-    _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(1), size_t(5), 2.0, 1.0, 1.0)
-    );
-    _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(2), size_t(5), 2.0, 1.0, 1.0)
-    );
+    auto potential = potential::ForceFieldNonCoulomb();
+
+    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
+        size_t(2),
+        size_t(1),
+        2.0,
+        1.0,
+        1.0
+    ));
+    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
+        size_t(1),
+        size_t(2),
+        2.0,
+        1.0,
+        1.0
+    ));
+    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
+        size_t(1),
+        size_t(5),
+        2.0,
+        1.0,
+        1.0
+    ));
+    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
+        size_t(2),
+        size_t(5),
+        2.0,
+        1.0,
+        1.0
+    ));
 
     // these two lines were already tested in
     // TestPotential_determineInternalGlobalVdwTypes
     std::map<size_t, size_t> externalToInternalTypes({{1, 0}, {2, 1}, {5, 2}});
-    _nonCoulombPotential->determineInternalGlobalVdwTypes(
-        externalToInternalTypes
-    );
-    setNonCoulombPairsMatrix(
+    potential.determineInternalGlobalVdwTypes(externalToInternalTypes);
+    potential.setNonCoulombPairsMatrix(
         linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(3)
     );
-    _nonCoulombPotential->fillOffDiagOfNonCoulPairsMatrix();
+    potential.fillOffDiagOfNonCoulPairsMatrix();
 
-    EXPECT_EQ(getNonCoulombPairsMatrix()(0, 1)->getInternalType1(), 0);
-    EXPECT_EQ(getNonCoulombPairsMatrix()(0, 1)->getInternalType2(), 1);
-    EXPECT_EQ(getNonCoulombPairsMatrix()(1, 0)->getInternalType1(), 0);
-    EXPECT_EQ(getNonCoulombPairsMatrix()(1, 0)->getInternalType2(), 1);
+    EXPECT_EQ(
+        potential.getNonCoulombPairsMatrix()(0, 1)->getInternalType1(),
+        0
+    );
+    EXPECT_EQ(
+        potential.getNonCoulombPairsMatrix()(0, 1)->getInternalType2(),
+        1
+    );
+    EXPECT_EQ(
+        potential.getNonCoulombPairsMatrix()(1, 0)->getInternalType1(),
+        0
+    );
+    EXPECT_EQ(
+        potential.getNonCoulombPairsMatrix()(1, 0)->getInternalType2(),
+        1
+    );
 }
 
 /**
@@ -431,32 +456,38 @@ TEST_F(
  * element is found for both index combinations with different parameters
  *
  */
-TEST_F(
-    TestNonCoulombPotentialFF,
+TEST(
+    TestPotential,
     fillOffDiagonalElementsOfNonCoulombicPairsMatrix_foundBothPairs_withDifferentParams
 )
 {
-    _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(1), size_t(2), 2.0, 1.0, 1.0)
-    );
-    _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(2), size_t(1), 5.0, 1.0, 1.0)
-    );
+    auto potential = potential::ForceFieldNonCoulomb();
+
+    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
+        size_t(1),
+        size_t(2),
+        2.0,
+        1.0,
+        1.0
+    ));
+    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
+        size_t(2),
+        size_t(1),
+        5.0,
+        1.0,
+        1.0
+    ));
 
     // these two lines were already tested in
     // TestPotential_determineInternalGlobalVdwTypes
     std::map<size_t, size_t> externalToInternalTypes({{1, 0}, {2, 1}, {5, 2}});
-    _nonCoulombPotential->determineInternalGlobalVdwTypes(
-        externalToInternalTypes
-    );
-    setNonCoulombPairsMatrix(
+    potential.determineInternalGlobalVdwTypes(externalToInternalTypes);
+    potential.setNonCoulombPairsMatrix(
         linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(3)
     );
 
     EXPECT_THROW_MSG(
-        _nonCoulombPotential->fillOffDiagOfNonCoulPairsMatrix(),
+        potential.fillOffDiagOfNonCoulPairsMatrix(),
         customException::ParameterFileException,
         "Non-coulombic pairs with global van der Waals types 1, 2 and 2, 1 in "
         "the parameter file have different parameters"
@@ -467,34 +498,46 @@ TEST_F(
  * @brief tests getSelfInteractionNonCoulPairs function
  *
  */
-TEST_F(TestNonCoulombPotentialFF, getSelfInteractionNonCoulPairs)
+TEST(TestPotential, getSelfInteractionNonCoulPairs)
 {
-    _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(1), size_t(5), 2.0, 1.0, 1.0)
-    );
-    _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(1), size_t(2), 2.0, 1.0, 1.0)
-    );
-    _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(2), size_t(2), 2.0, 1.0, 1.0)
-    );
-    _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(5), size_t(5), 2.0, 1.0, 1.0)
-    );
+    auto potential = potential::ForceFieldNonCoulomb();
+
+    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
+        size_t(1),
+        size_t(5),
+        2.0,
+        1.0,
+        1.0
+    ));
+    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
+        size_t(1),
+        size_t(2),
+        2.0,
+        1.0,
+        1.0
+    ));
+    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
+        size_t(2),
+        size_t(2),
+        2.0,
+        1.0,
+        1.0
+    ));
+    potential.addNonCoulombicPair(std::make_shared<potential::LennardJonesPair>(
+        size_t(5),
+        size_t(5),
+        2.0,
+        1.0,
+        1.0
+    ));
 
     // these two lines were already tested in
     // TestPotential_determineInternalGlobalVdwTypes
     std::map<size_t, size_t> externalToInternalTypes({{1, 0}, {2, 1}, {5, 2}});
-    _nonCoulombPotential->determineInternalGlobalVdwTypes(
-        externalToInternalTypes
-    );
+    potential.determineInternalGlobalVdwTypes(externalToInternalTypes);
 
     auto selfInteractionNonCoulombicPairs =
-        _nonCoulombPotential->getSelfInteractionNonCoulPairs();
+        potential.getSelfInteractionNonCoulPairs();
 
     EXPECT_EQ(selfInteractionNonCoulombicPairs.size(), 2);
 }
@@ -503,8 +546,10 @@ TEST_F(TestNonCoulombPotentialFF, getSelfInteractionNonCoulPairs)
  * @brief tests sortNonCoulombicsPairs
  *
  */
-TEST_F(TestNonCoulombPotentialFF, sortNonCoulombicsPairs)
+TEST(TestPotential, sortNonCoulombicsPairs)
 {
+    auto potential = potential::ForceFieldNonCoulomb();
+
     auto vector = std::vector<std::shared_ptr<potential::NonCoulombPair>>();
 
     auto pair1 = std::make_shared<potential::LennardJonesPair>(
@@ -548,7 +593,7 @@ TEST_F(TestNonCoulombPotentialFF, sortNonCoulombicsPairs)
     pair4->setInternalType2(4);
     vector.push_back(pair4);
 
-    _nonCoulombPotential->sortNonCoulombicsPairs(vector);
+    potential.sortNonCoulombicsPairs(vector);
 
     EXPECT_EQ(vector[0]->getInternalType1(), 1);
     EXPECT_EQ(vector[0]->getInternalType2(), 4);
@@ -571,7 +616,7 @@ TEST_F(TestNonCoulombPotentialFF, sortNonCoulombicsPairs)
     vector.push_back(pair5);
 
     EXPECT_THROW_MSG(
-        _nonCoulombPotential->sortNonCoulombicsPairs(vector),
+        potential.sortNonCoulombicsPairs(vector),
         customException::ParameterFileException,
         "Non-coulombic pairs with global van der Waals types 1 and 1 in the "
         "parameter file are defined twice"

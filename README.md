@@ -23,8 +23,7 @@ PQ is designed for researchers in computational chemistry and materials science 
 
 Comprehensive documentation is available on the [PQ documentation website](https://MolarVerse.github.io/PQ/), covering:
 
-- **Quick Start and Examples**: First local run and overview of checked-in example systems
-- **User Guide and Reference Manual**: Input file structure, setup files, output files and keyword defaults
+- **User Guide**: Detailed instructions on input file structure, necessary setup files and generated output files
 - **Installation Guide**: Step-by-step building instructions, including Singularity containers
 - **Feature List**: Complete overview of implemented features
 - **Developer Guide**: Project architecture, software testing and contributing guidelines
@@ -60,19 +59,20 @@ Within this directory configure CMake:
 
     cmake ../ -DCMAKE_BUILD_TYPE=Release
 
+Optionally it is also possible to enable MPI for Ring Polymer MD
+
+    cmake ../ -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_MPI=On
+
 For compilation then type:
 
-    make -j <number_of_processors>
+    make -j<#procs>
 
 The executable binary is then found in the subfolder named "apps" inside the build directory.
-
-For optional build settings such as MPI, ASE support, Kokkos, native CPU tuning
-and LTO, see the Installation Guide.
 
 ## Citation
 
 If you use PQ in your research, please cite:
 
-- Gamper, J., Gallmetzer, J. M., Penz, A., Weiss, A. K. H., & Hofer, T. S. PQ: An Open-Source Platform for Advanced Molecular Dynamics Simulations. Zenodo. <https://doi.org/10.5281/zenodo.14185071>
+- Gamper, J., Gallmetzer, J. M., Weiss, A. K. H., & Hofer, T. S. (2025). PQ: An Open-Source Platform for Advanced Molecular Dynamics Simulations. Zenodo. <https://doi.org/10.5281/zenodo.14185071>
 
-- Gamper, J., Gallmetzer, J. M., Weiss, A. K. H., & Hofer, T. S. PQAnalysis. Zenodo. <https://doi.org/10.5281/zenodo.11322103>
+- Gamper, J., Gallmetzer, J. M., Weiss, A. K. H., & Hofer, T. S. (2024). PQAnalysis (1.2.1). Zenodo. <https://doi.org/10.5281/zenodo.11322103>

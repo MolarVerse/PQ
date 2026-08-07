@@ -19,7 +19,7 @@
       qm_prog             = mace-mp;
       dispersion          = on;
       floating_point_type = float;
-      mace_model          = custom;
+      mace_model_size     = custom;
       mace_model_path     = https://github.com/ACEsuit/mace-foundations/releases/download/mace_matpes_0/MACE-matpes-pbe-omat-ft.model;
 
 

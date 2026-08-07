@@ -25,7 +25,6 @@
 #define _COLOR_HPP_
 
 #include <ostream>
-
 namespace Color
 {
     /**

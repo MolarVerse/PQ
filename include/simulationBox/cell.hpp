@@ -27,7 +27,7 @@
 #include <cstddef>   // for size_t
 #include <vector>    // for vector
 
-#include "molecule.hpp"   // for Molecule
+#include "typeAliases.hpp"
 
 namespace simulationBox
 {
@@ -40,20 +40,20 @@ namespace simulationBox
     class Cell
     {
        private:
-        std::vector<Molecule *>          _molecules;
+        std::vector<pq::Molecule *>      _molecules;
         std::vector<std::vector<size_t>> _atomIndices;
         std::vector<Cell *>              _neighbourCells;
 
-        linearAlgebra::Vec3D   _lowerBoundary = {0, 0, 0};
-        linearAlgebra::Vec3D   _upperBoundary = {0, 0, 0};
-        linearAlgebra::Vec3Dul _cellIndex     = {0, 0, 0};
+        pq::Vec3D   _lowerBoundary = {0, 0, 0};
+        pq::Vec3D   _upperBoundary = {0, 0, 0};
+        pq::Vec3Dul _cellIndex     = {0, 0, 0};
 
        public:
         void clearMolecules();
         void clearAtomIndices();
 
-        void addMolecule(Molecule &molecule);
-        void addMolecule(Molecule *molecule);
+        void addMolecule(pq::Molecule &molecule);
+        void addMolecule(pq::Molecule *molecule);
         void addNeighbourCell(Cell *cell);
         void addAtomIndices(const std::vector<size_t> &atomIndices);
 
@@ -61,17 +61,17 @@ namespace simulationBox
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] size_t getNumberOfMolecules() const;
-        [[nodiscard]] size_t getNumberOfNeighbourCells() const;
-        [[nodiscard]] const linearAlgebra::Vec3D   &getLowerBoundary() const;
-        [[nodiscard]] const linearAlgebra::Vec3D   &getUpperBoundary() const;
-        [[nodiscard]] const linearAlgebra::Vec3Dul &getCellIndex() const;
+        [[nodiscard]] size_t             getNumberOfMolecules() const;
+        [[nodiscard]] size_t             getNumberOfNeighbourCells() const;
+        [[nodiscard]] const pq::Vec3D   &getLowerBoundary() const;
+        [[nodiscard]] const pq::Vec3D   &getUpperBoundary() const;
+        [[nodiscard]] const pq::Vec3Dul &getCellIndex() const;
 
-        [[nodiscard]] Molecule *getMolecule(const size_t index) const;
+        [[nodiscard]] pq::Molecule *getMolecule(const size_t index) const;
         [[nodiscard]] std::vector<Molecule *> getMolecules() const;
 
         [[nodiscard]] Cell *getNeighbourCell(const size_t index) const;
-        [[nodiscard]] const std::vector<Cell *> &getNeighbourCells() const;
+        [[nodiscard]] std::vector<Cell *> getNeighbourCells() const;
 
         [[nodiscard]] const std::vector<size_t> &getAtomIndices(
             const size_t index
@@ -81,9 +81,9 @@ namespace simulationBox
          * standard setter methods *
          ***************************/
 
-        void setLowerBoundary(const linearAlgebra::Vec3D &lowerBoundary);
-        void setUpperBoundary(const linearAlgebra::Vec3D &upperBoundary);
-        void setCellIndex(const linearAlgebra::Vec3Dul &cellIndex);
+        void setLowerBoundary(const pq::Vec3D &lowerBoundary);
+        void setUpperBoundary(const pq::Vec3D &upperBoundary);
+        void setCellIndex(const pq::Vec3Dul &cellIndex);
     };
 
 }   // namespace simulationBox

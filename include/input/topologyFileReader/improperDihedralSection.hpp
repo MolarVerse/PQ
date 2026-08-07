@@ -26,7 +26,6 @@
 
 #include "topologySection.hpp"
 #include "typeAliases.hpp"
-
 namespace input::topology
 {
     /**
@@ -38,7 +37,7 @@ namespace input::topology
     class ImproperDihedralSection : public TopologySection
     {
        public:
-        void processSection(std::vector<std::string> &, pq::Engine &) override;
+        void processSection(pq::strings &, pq::Engine &) override;
 
         [[nodiscard]] std::string keyword() override;
         void                      endedNormally(const bool) const override;

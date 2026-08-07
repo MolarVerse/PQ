@@ -26,10 +26,13 @@
 #include <vector>   // for vector
 
 #include "angleSection.hpp"                  // for AngleSection
+#include "angleType.hpp"                     // for AngleType
 #include "constants/conversionFactors.hpp"   // for _DEG_TO_RAD_
 #include "engine.hpp"                        // for Engine
 #include "exceptions.hpp"                    // for ParameterFileException
+#include "forceFieldClass.hpp"               // for ForceField
 #include "gtest/gtest.h"                     // for Message, TestPartResult
+#include "parameterFileSection.hpp"          // for parameterFile
 #include "testParameterFileSection.hpp"      // for TestParameterFileSection
 #include "throwWithMessage.hpp"              // for ASSERT_THROW_MSG
 
@@ -48,7 +51,7 @@ TEST_F(TestParameterFileSection, processSectionAngle)
     EXPECT_EQ(_engine->getForceField().getAngleTypes()[0].getId(), 0);
     EXPECT_EQ(
         _engine->getForceField().getAngleTypes()[0].getEquilibriumAngle(),
-        1.22 * constants::DEG_TO_RAD
+        1.22 * constants::_DEG_TO_RAD_
     );
     EXPECT_EQ(
         _engine->getForceField().getAngleTypes()[0].getForceConstant(),

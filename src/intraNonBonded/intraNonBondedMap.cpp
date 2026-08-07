@@ -23,12 +23,16 @@
 #include "intraNonBondedMap.hpp"
 
 #include <cstdlib>   // for abs, size_t
+#include <memory>    // for __shared_ptr_access, shared_ptr
 
 #include "coulombPotential.hpp"      // for CoulombPotential
+#include "molecule.hpp"              // for Molecule
+#include "nonCoulombPair.hpp"        // for NonCoulombPair
 #include "nonCoulombPotential.hpp"   // for NonCoulombPotential
 #include "physicalData.hpp"          // for PhysicalData
 #include "potentialSettings.hpp"     // for PotentialSettings
 #include "simulationBox.hpp"         // for SimulationBox
+#include "vector3d.hpp"              // for norm, operator*, Vector3D
 
 using namespace intraNonBonded;
 using namespace potential;
@@ -47,9 +51,7 @@ IntraNonBondedMap::IntraNonBondedMap(
     pq::Molecule            *molecule,
     IntraNonBondedContainer *intraNonBondedType
 )
-    : _molecule(molecule), _intraNonBondedContainer(intraNonBondedType)
-{
-}
+    : _molecule(molecule), _intraNonBondedContainer(intraNonBondedType){};
 
 /**
  * @brief calculate the intra non bonded interactions for a single

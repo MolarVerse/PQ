@@ -18,11 +18,9 @@ endif()
 
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
-# Suppress project warning policy for googletest library
+# Suppress double promotion warnings for googletest library
 set(_CMAKE_CXX_FLAGS_BACKUP "${CMAKE_CXX_FLAGS}")
-foreach(flag IN ITEMS "-Wdouble-promotion" "-Wswitch-enum" "-Werror=switch-enum")
-    string(REPLACE "${flag}" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-endforeach()
+string(REPLACE "-Wdouble-promotion" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
 add_subdirectory(external/googletest EXCLUDE_FROM_ALL)
 

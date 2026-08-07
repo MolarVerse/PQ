@@ -27,6 +27,7 @@
 
 #include "exceptions.hpp"        // for InputFileException
 #include "gtest/gtest.h"         // for Message, TestPartResult
+#include "inputFileParser.hpp"   // for readInput
 #include "nonCoulombInputParser.hpp"
 #include "potentialSettings.hpp"     // for PotentialSettings
 #include "testInputFileReader.hpp"   // for TestInputFileReader

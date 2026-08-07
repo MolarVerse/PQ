@@ -22,80 +22,26 @@
 
 #include "timingsSection.hpp"
 
-#include <chrono>
+#include <chrono>   // IWYU pragma: keep for time_point, milliseconds, nanoseconds
 
 using namespace timings;
+using namespace std::chrono;
 
-using Time     = std::chrono::time_point<std::chrono::high_resolution_clock>;
-using Duration = std::chrono::duration<double>;
-using std::chrono::duration_cast;
-
-using ms = std::chrono::milliseconds;
-using ns = std::chrono::nanoseconds;
-
-/**
- * @brief Timings struct to store timing information
- *
- */
-struct TimingsSection::Timings
-{
-    Time     start;
-    Time     end;
-    Duration totalTime    = Duration::zero();
-    Duration lastStepTime = Duration::zero();
-};
+using ms = milliseconds;
+using ns = nanoseconds;
 
 /**
  * @brief Construct a new Timings Section:: Timings Section object
  *
  * @param name
  */
-TimingsSection::TimingsSection(const std::string_view name)
-    : _name(name), _time(std::make_unique<Timings>())
-{
-}
-
-/**
- * @brief Copy constructor for TimingsSection
- *
- * @param other
- */
-TimingsSection::TimingsSection(const TimingsSection& other)
-    : _name(other._name),
-      _steps(other._steps),
-      _time(other._time ? std::make_unique<Timings>(*other._time) : nullptr)
-{
-}
-
-/**
- * @brief Copy assignment operator for TimingsSection
- *
- * @param other
- * @return TimingsSection&
- */
-TimingsSection& TimingsSection::operator=(const TimingsSection& other)
-{
-    if (this != &other)
-    {
-        _time = other._time ? std::make_unique<Timings>(*other._time) : nullptr;
-        _name = other._name;
-        _steps = other._steps;
-    }
-    return *this;
-}
-
-TimingsSection::~TimingsSection()                           = default;
-TimingsSection::TimingsSection(TimingsSection&&)            = default;
-TimingsSection& TimingsSection::operator=(TimingsSection&&) = default;
+TimingsSection::TimingsSection(const std::string_view name) : _name(name) {}
 
 /**
  * @brief
  *
  */
-void TimingsSection::beginTimer()
-{
-    _time->start = std::chrono::high_resolution_clock::now();
-}
+void TimingsSection::beginTimer() { _start = high_resolution_clock::now(); }
 
 /**
  * @brief end the timer
@@ -103,10 +49,10 @@ void TimingsSection::beginTimer()
  */
 void TimingsSection::endTimer()
 {
-    _time->end           = std::chrono::high_resolution_clock::now();
-    _steps               = _steps + 1;
-    _time->totalTime    += _time->end - _time->start;
-    _time->lastStepTime  = _time->end - _time->start;
+    _end           = high_resolution_clock::now();
+    _steps         = _steps + 1;
+    _totalTime    += _end - _start;
+    _lastStepTime  = _end - _start;
 }
 
 /**
@@ -115,12 +61,12 @@ void TimingsSection::endTimer()
  */
 double TimingsSection::calculateElapsedTime() const
 {
-    return double(duration_cast<ns>(_time->totalTime).count()) * 1.0e-6;
+    return double(duration_cast<ns>(_totalTime).count()) * 1.0e-6;
 }
 
 double TimingsSection::calculateAverageLoopTime() const
 {
-    auto time = double(duration_cast<ns>(_time->totalTime).count());
+    auto time = double(duration_cast<ns>(_totalTime).count());
     time      = time * 1.0e-9 / double(_steps);
 
     return time;
@@ -132,7 +78,7 @@ double TimingsSection::calculateAverageLoopTime() const
  */
 double TimingsSection::calculateLoopTime() const
 {
-    auto time = double(duration_cast<ns>(_time->lastStepTime).count());
+    auto time = double(duration_cast<ns>(_lastStepTime).count());
     time      = time * 1e-9;
 
     return time;

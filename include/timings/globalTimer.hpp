@@ -36,7 +36,7 @@ namespace timings
         std::vector<Timer> _timers;
 
        public:
-        GlobalTimer();
+        void addSimulationTimer(const Timer &simulationTimer);
 
         [[nodiscard]] double calculateLoopTime() const;
         [[nodiscard]] double calculateElapsedTime() const;

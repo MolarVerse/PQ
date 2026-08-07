@@ -1,27 +1,78 @@
-name: Changelog Fragment Check
-
+name: Check Changelog
 on:
   pull_request:
     branches:
+      - main
       - dev
-    types: [opened, reopened, synchronize]
-
+  workflow_dispatch:
+  
 jobs:
-  check-changelog-fragment:
+  check-changelog:
     runs-on: ubuntu-latest
-
+    if: github.ref_name != 'main'
     steps:
-      - name: Checkout pull request
-        uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v3
         with:
-          fetch-depth: 0
-          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0  # Fetch all history for accurate comparison
 
-      - name: Test changelog tooling
-        run: python3 -m unittest discover -s scripts/tests -p 'test_*.py'
+      - name: Check PR labels for changelog skip
+        id: check-skip
+        run: |
+          # Check if PR has the skip-changelog label
+          labels="${{ join(github.event.pull_request.labels.*.name, ' ') }}"
+          echo "PR labels: $labels"
+          
+          if [[ "$labels" == *"skip-changelog"* ]]; then
+            echo "Found 'skip-changelog' label - skipping changelog check"
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "No 'skip-changelog' label found - proceeding with changelog check"
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
 
-      - name: Check changelog fragment
-        run: >-
-          python3 scripts/check_changelog_fragment.py
-          ${{ github.event.pull_request.base.sha }}
-          ${{ github.event.pull_request.head.sha }}
+      - name: Fetch target branch
+        if: steps.check-skip.outputs.skip != 'true'
+        run: |
+          git fetch origin ${{ github.event.pull_request.base.ref }}:refs/remotes/origin/${{ github.event.pull_request.base.ref }}
+
+      - name: Extract content above insertion marker from target branch
+        if: steps.check-skip.outputs.skip != 'true'
+        id: extract-target
+        run: |
+          marker="<!-- insertion marker -->"
+          # Extract content above the marker in the target branch
+          git show origin/${{ github.event.pull_request.base.ref }}:CHANGELOG.md | awk -v marker="$marker" '
+            BEGIN { found=0 }
+            $0 ~ marker { found=1; exit }
+            { if (!found) print }
+          ' | sed '/^\s*$/d' > target_above_marker.txt
+
+      - name: Extract content above insertion marker from PR branch
+        if: steps.check-skip.outputs.skip != 'true'
+        id: extract-pr
+        run: |
+          marker="<!-- insertion marker -->"
+          # Extract content above the marker in the PR branch
+          cat CHANGELOG.md | awk -v marker="$marker" '
+            BEGIN { found=0 }
+            $0 ~ marker { found=1; exit }
+            { if (!found) print }
+          ' | sed '/^\s*$/d' > pr_above_marker.txt
+
+      - name: Compare content above insertion marker
+        if: steps.check-skip.outputs.skip != 'true'
+        id: compare
+        run: |
+          if ! diff -q target_above_marker.txt pr_above_marker.txt > /dev/null; then
+            echo "Differences detected above the insertion marker in CHANGELOG.md."
+            exit 0
+          else
+            echo "No differences detected above the insertion marker."
+            exit 1
+          fi
+
+      - name: Skip changelog check
+        if: steps.check-skip.outputs.skip == 'true'
+        run: |
+          echo "Changelog check skipped due to PR label"

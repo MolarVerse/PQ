@@ -22,15 +22,16 @@
 
 #include "cellListInputParser.hpp"
 
-#include <cstddef>   // for size_t
-#include <format>    // for format
-#include <string>    // for allocator, operator==, string
-#include <vector>    // for vector
+#include <cstddef>      // for size_t
+#include <format>       // for format
+#include <functional>   // for _Bind_front_t, bind_front
+#include <string>       // for allocator, operator==, string
+#include <vector>       // for vector
 
+#include "celllist.hpp"          // for CellList
 #include "engine.hpp"            // for Engine
 #include "exceptions.hpp"        // for InputFileException
 #include "inputFileParser.hpp"   // for checkCommand, InputFileParser
-#include "parserUtils.hpp"
 #include "stringUtilities.hpp"   // for toLowerCopy
 
 using namespace input;
@@ -53,12 +54,12 @@ CellListInputParser::CellListInputParser(Engine &engine)
 {
     addKeyword(
         std::string("cell-list"),
-        bindMember(&CellListInputParser::parseCellListActivated, this),
+        bind_front(&CellListInputParser::parseCellListActivated, this),
         false
     );
     addKeyword(
         std::string("cell-number"),
-        bindMember(&CellListInputParser::parseNumberOfCells, this),
+        bind_front(&CellListInputParser::parseNumberOfCells, this),
         false
     );
 }
@@ -91,15 +92,13 @@ void CellListInputParser::parseCellListActivated(
         _engine.getCellList().deactivate();
 
     else
-        throw InputFileException(
-            std::format(
-                "Invalid cell-list keyword \"{}\" "
-                "at line {} in input file\n"
-                "Possible keywords are \"on\" and \"off\"",
-                lineElements[2],
-                lineNumber
-            )
-        );
+        throw InputFileException(std::format(
+            "Invalid cell-list keyword \"{}\" "
+            "at line {} in input file\n"
+            "Possible keywords are \"on\" and \"off\"",
+            lineElements[2],
+            lineNumber
+        ));
 }
 
 /**
@@ -119,7 +118,7 @@ void CellListInputParser::parseNumberOfCells(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto cellNumber = stringToInt(lineElements[2]);
+    const auto cellNumber = stoi(lineElements[2]);
 
     if (cellNumber <= 0)
         throw InputFileException(

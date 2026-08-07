@@ -22,9 +22,10 @@
 
 #include "stdoutOutput.hpp"
 
-#include <format>     // for format
-#include <iostream>   // for operator<<, char_traits, basic_ostream, cout
-#include <string>     // for operator<<
+#include <format>        // for format
+#include <iostream>      // for operator<<, char_traits, basic_ostream, cout
+#include <string>        // for operator<<
+#include <string_view>   // for string_view
 
 #include "exceptions.hpp"   // for UserInputExceptionWarning, customException
 #include "outputMessages.hpp"   // for initialMomentumMessage
@@ -72,16 +73,14 @@ void StdoutOutput::writeDensityWarning() const
 {
     try
     {
-        throw UserInputExceptionWarning(
-            std::format(
-                "{}Density and box dimensions set. Density will be ignored.",
-                OUTPUT
-            )
-        );
+        throw UserInputExceptionWarning(std::format(
+            "{}Density and box dimensions set. Density will be ignored.",
+            _OUTPUT_
+        ));
     }
     catch (const UserInputExceptionWarning &e)
     {
-        std::cout << OUTPUT << e.what() << "\n\n" << std::flush;
+        std::cout << _OUTPUT_ << e.what() << "\n\n" << std::flush;
     }
 }
 
@@ -95,7 +94,7 @@ void StdoutOutput::writeOptWarning(const std::string &msg) const
 {
     try
     {
-        throw UserInputExceptionWarning(std::format("{}{}", WARNING, msg));
+        throw UserInputExceptionWarning(std::format("{}{}", _WARNING_, msg));
     }
     catch (const UserInputExceptionWarning &e)
     {
@@ -120,7 +119,7 @@ void StdoutOutput::writeSetup(const std::string &setup) const
  */
 void StdoutOutput::writeSetupWarning(const std::string &warning) const
 {
-    std::cout << WARNING << (warning) << "\n\n" << std::flush;
+    std::cout << _WARNING_ << (warning) << "\n\n" << std::flush;
 }
 
 /**

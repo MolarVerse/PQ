@@ -22,8 +22,7 @@
 
 #include <gtest/gtest.h>   // for Test, InitGoogleTest, RUN_ALL_TESTS, EXPECT_EQ
 
-#include <cstdlib>
-#include <filesystem>
+#include <memory>   // for allocator
 
 #include "exceptions.hpp"         // for UserInputException
 #include "gtest/gtest.h"          // for Message, TestPartResult
@@ -57,72 +56,48 @@ TEST(QMSettingsTest, SetQMMethodTest)
     EXPECT_EQ(QMSettings::getQMMethod(), QMMethod::NONE);
 }
 
-TEST(QMSettingsTest, SetMaceModelTest)
+TEST(QMSettingsTest, SetMaceModelSizeTest)
 {
-    QMSettings::setMaceModel("small");
-    EXPECT_EQ(QMSettings::getMaceModel(), MaceModel::SMALL);
+    QMSettings::setMaceModelSize("small");
+    EXPECT_EQ(QMSettings::getMaceModelSize(), MaceModelSize::SMALL);
 
-    QMSettings::setMaceModel("medium");
-    EXPECT_EQ(QMSettings::getMaceModel(), MaceModel::MEDIUM);
+    QMSettings::setMaceModelSize("medium");
+    EXPECT_EQ(QMSettings::getMaceModelSize(), MaceModelSize::MEDIUM);
 
-    QMSettings::setMaceModel("large");
-    EXPECT_EQ(QMSettings::getMaceModel(), MaceModel::LARGE);
+    QMSettings::setMaceModelSize("large");
+    EXPECT_EQ(QMSettings::getMaceModelSize(), MaceModelSize::LARGE);
 
-    QMSettings::setMaceModel("small-0b");
-    EXPECT_EQ(QMSettings::getMaceModel(), MaceModel::SMALL0B);
+    QMSettings::setMaceModelSize("small-0b");
+    EXPECT_EQ(QMSettings::getMaceModelSize(), MaceModelSize::SMALL0B);
 
-    QMSettings::setMaceModel("medium-0b");
-    EXPECT_EQ(QMSettings::getMaceModel(), MaceModel::MEDIUM0B);
+    QMSettings::setMaceModelSize("medium-0b");
+    EXPECT_EQ(QMSettings::getMaceModelSize(), MaceModelSize::MEDIUM0B);
 
-    QMSettings::setMaceModel("small-0b2");
-    EXPECT_EQ(QMSettings::getMaceModel(), MaceModel::SMALL0B2);
+    QMSettings::setMaceModelSize("small-0b2");
+    EXPECT_EQ(QMSettings::getMaceModelSize(), MaceModelSize::SMALL0B2);
 
-    QMSettings::setMaceModel("medium-0b2");
-    EXPECT_EQ(QMSettings::getMaceModel(), MaceModel::MEDIUM0B2);
+    QMSettings::setMaceModelSize("medium-0b2");
+    EXPECT_EQ(QMSettings::getMaceModelSize(), MaceModelSize::MEDIUM0B2);
 
-    QMSettings::setMaceModel("large-0b2");
-    EXPECT_EQ(QMSettings::getMaceModel(), MaceModel::LARGE0B2);
+    QMSettings::setMaceModelSize("large-0b2");
+    EXPECT_EQ(QMSettings::getMaceModelSize(), MaceModelSize::LARGE0B2);
 
-    QMSettings::setMaceModel("medium-0b3");
-    EXPECT_EQ(QMSettings::getMaceModel(), MaceModel::MEDIUM0B3);
+    QMSettings::setMaceModelSize("medium-0b3");
+    EXPECT_EQ(QMSettings::getMaceModelSize(), MaceModelSize::MEDIUM0B3);
 
-    QMSettings::setMaceModel("medium-mpa-0");
-    EXPECT_EQ(QMSettings::getMaceModel(), MaceModel::MEDIUMMPA0);
+    QMSettings::setMaceModelSize("medium-mpa-0");
+    EXPECT_EQ(QMSettings::getMaceModelSize(), MaceModelSize::MEDIUMMPA0);
 
-    QMSettings::setMaceModel("medium-omat-0");
-    EXPECT_EQ(QMSettings::getMaceModel(), MaceModel::MEDIUMOMAT0);
+    QMSettings::setMaceModelSize("medium-omat-0");
+    EXPECT_EQ(QMSettings::getMaceModelSize(), MaceModelSize::MEDIUMOMAT0);
 
-    QMSettings::setMaceModel("custom");
-    EXPECT_EQ(QMSettings::getMaceModel(), MaceModel::CUSTOM);
+    QMSettings::setMaceModelSize("custom");
+    EXPECT_EQ(QMSettings::getMaceModelSize(), MaceModelSize::CUSTOM);
 
     ASSERT_THROW_MSG(
-        QMSettings::setMaceModel("notAMaceModel"),
+        QMSettings::setMaceModelSize("notAMaceModelSize"),
         UserInputException,
-        "Mace model size notAMaceModel not recognized"
-    );
-}
-
-TEST(QMSettingsTest, SetMaceModeTest)
-{
-    using enum MaceMode;
-
-    QMSettings::setMaceMode("accurate");
-    EXPECT_EQ(QMSettings::getMaceMode(), ACCURATE);
-
-    QMSettings::setMaceMode("fast");
-    EXPECT_EQ(QMSettings::getMaceMode(), FAST);
-
-    QMSettings::setMaceMode(ACCURATE);
-    EXPECT_EQ(QMSettings::getMaceMode(), ACCURATE);
-
-    EXPECT_EQ(string(ACCURATE), "accurate");
-    EXPECT_EQ(string(FAST), "fast");
-
-    ASSERT_THROW_MSG(
-        QMSettings::setMaceMode("notAMode"),
-        UserInputException,
-        "Unknown mace_mode \"notAMode\". Valid values are \"accurate\" (exact "
-        "e3nn reference) or \"fast\" (cuequivariance-accelerated)."
+        "Mace model size notAMaceModelSize not recognized"
     );
 }
 
@@ -146,25 +121,23 @@ TEST(QMSettingsTest, SetMaceModelTypeTest)
 
 TEST(QMSettingsTest, SetSlakosTypeTest)
 {
-#ifdef WITH_ASE
     QMSettings::setSlakosType("3ob");
     EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::THREEOB);
 
     QMSettings::setSlakosType("matsci");
     EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::MATSCI);
 
-    QMSettings::setSlakosType(SlakosType::THREEOB);
-    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::THREEOB);
-
-    QMSettings::setSlakosType(SlakosType::MATSCI);
-    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::MATSCI);
-#endif
-
     QMSettings::setSlakosType("custom");
     EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::CUSTOM);
 
     QMSettings::setSlakosType("none");
     EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::NONE);
+
+    QMSettings::setSlakosType(SlakosType::THREEOB);
+    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::THREEOB);
+
+    QMSettings::setSlakosType(SlakosType::MATSCI);
+    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::MATSCI);
 
     QMSettings::setSlakosType(SlakosType::CUSTOM);
     EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::CUSTOM);
@@ -179,50 +152,6 @@ TEST(QMSettingsTest, SetSlakosTypeTest)
     );
 }
 
-#ifdef WITH_ASE
-TEST(QMSettingsTest, ResolvesBundledSlakos)
-{
-    const auto *expectedRoot = std::getenv("PQ_TEST_EXPECTED_SLAKOS_ROOT");
-
-    for (const auto *slakos : {"3ob", "matsci"})
-    {
-        QMSettings::setSlakosType(slakos);
-        const auto path =
-            std::filesystem::weakly_canonical(QMSettings::getSlakosPath());
-
-        EXPECT_TRUE(std::filesystem::is_directory(path));
-        if (expectedRoot)
-            EXPECT_EQ(
-                path,
-                std::filesystem::weakly_canonical(
-                    std::filesystem::path(expectedRoot) / slakos / "skfiles"
-                )
-            );
-    }
-}
-#endif
-
-#ifndef WITH_ASE
-TEST(QMSettingsTest, SetBuiltInSlakosTypeRequiresAse)
-{
-    ASSERT_THROW_MSG(
-        QMSettings::setSlakosType("3ob"),
-        InputFileException,
-        "Built-in SLAKOS sets (3ob/matsci) require building PQ with "
-        "-DBUILD_WITH_ASE=On"
-    );
-
-    ASSERT_THROW_MSG(
-        QMSettings::setSlakosType("matsci"),
-        InputFileException,
-        "Built-in SLAKOS sets (3ob/matsci) require building PQ with "
-        "-DBUILD_WITH_ASE=On"
-    );
-
-    QMSettings::setSlakosType("none");
-}
-#endif
-
 TEST(QMSettingsTest, SetSlakosPathTest)
 {
     QMSettings::setSlakosType("none");
@@ -236,7 +165,6 @@ TEST(QMSettingsTest, SetSlakosPathTest)
     QMSettings::setSlakosPath("/path/to/slakos");
     EXPECT_EQ(QMSettings::getSlakosPath(), "/path/to/slakos");
 
-#ifdef WITH_ASE
     QMSettings::setSlakosType("3ob");
     ASSERT_THROW_MSG(
         QMSettings::setSlakosPath("/path/to/slakos"),
@@ -250,7 +178,6 @@ TEST(QMSettingsTest, SetSlakosPathTest)
         UserInputException,
         "Slakos path cannot be set for slakos type: matsci"
     );
-#endif
 }
 
 TEST(QMSettingsTest, SetXtbMethodTest)
@@ -288,7 +215,6 @@ TEST(QMSettingsTest, ReturnQMMethodTest)
     EXPECT_EQ(string(QMMethod::PYSCF), "PYSCF");
     EXPECT_EQ(string(QMMethod::TURBOMOLE), "TURBOMOLE");
     EXPECT_EQ(string(QMMethod::MACE), "MACE");
-    EXPECT_EQ(string(QMMethod::FENNOL), "FeNNol");
     EXPECT_EQ(string(QMMethod::NONE), "none");
 }
 
@@ -305,31 +231,22 @@ TEST(QMSettingsTest, ReturnMaceModelTypeTest)
     EXPECT_EQ(string(MaceModelType::MACE_MP), "mace_mp");
     EXPECT_EQ(string(MaceModelType::MACE_OFF), "mace_off");
     EXPECT_EQ(string(MaceModelType::MACE_ANICC), "mace_anicc");
-    EXPECT_EQ(string(static_cast<MaceModelType>(-1)), "none");
 }
 
-TEST(QMSettingsTest, ReturnMaceModelTest)
+TEST(QMSettingsTest, ReturnMaceModelSizeTest)
 {
-    EXPECT_EQ(string(MaceModel::SMALL), "small");
-    EXPECT_EQ(string(MaceModel::MEDIUM), "medium");
-    EXPECT_EQ(string(MaceModel::LARGE), "large");
-    EXPECT_EQ(string(MaceModel::SMALL0B), "small-0b");
-    EXPECT_EQ(string(MaceModel::MEDIUM0B), "medium-0b");
-    EXPECT_EQ(string(MaceModel::SMALL0B2), "small-0b2");
-    EXPECT_EQ(string(MaceModel::MEDIUM0B2), "medium-0b2");
-    EXPECT_EQ(string(MaceModel::LARGE0B2), "large-0b2");
-    EXPECT_EQ(string(MaceModel::MEDIUM0B3), "medium-0b3");
-    EXPECT_EQ(string(MaceModel::MEDIUMMPA0), "medium-mpa-0");
-    EXPECT_EQ(string(MaceModel::MEDIUMOMAT0), "medium-omat-0");
-    EXPECT_EQ(string(MaceModel::CUSTOM), "custom");
-    EXPECT_EQ(string(static_cast<MaceModel>(-1)), "none");
-}
-
-TEST(QMSettingsTest, ReturnMaceModeTest)
-{
-    EXPECT_EQ(string(MaceMode::ACCURATE), "accurate");
-    EXPECT_EQ(string(MaceMode::FAST), "fast");
-    EXPECT_EQ(string(static_cast<MaceMode>(-1)), "unknown mode");
+    EXPECT_EQ(string(MaceModelSize::SMALL), "small");
+    EXPECT_EQ(string(MaceModelSize::MEDIUM), "medium");
+    EXPECT_EQ(string(MaceModelSize::LARGE), "large");
+    EXPECT_EQ(string(MaceModelSize::SMALL0B), "small-0b");
+    EXPECT_EQ(string(MaceModelSize::MEDIUM0B), "medium-0b");
+    EXPECT_EQ(string(MaceModelSize::SMALL0B2), "small-0b2");
+    EXPECT_EQ(string(MaceModelSize::MEDIUM0B2), "medium-0b2");
+    EXPECT_EQ(string(MaceModelSize::LARGE0B2), "large-0b2");
+    EXPECT_EQ(string(MaceModelSize::MEDIUM0B3), "medium-0b3");
+    EXPECT_EQ(string(MaceModelSize::MEDIUMMPA0), "medium-mpa-0");
+    EXPECT_EQ(string(MaceModelSize::MEDIUMOMAT0), "medium-omat-0");
+    EXPECT_EQ(string(MaceModelSize::CUSTOM), "custom");
 }
 
 TEST(QMSettingsTest, ReturnXtbMethodTest)
@@ -337,19 +254,4 @@ TEST(QMSettingsTest, ReturnXtbMethodTest)
     EXPECT_EQ(string(XtbMethod::GFN1), "GFN1-xTB");
     EXPECT_EQ(string(XtbMethod::GFN2), "GFN2-xTB");
     EXPECT_EQ(string(XtbMethod::IPEA1), "IPEA1-xTB");
-    EXPECT_EQ(string(static_cast<XtbMethod>(-1)), "none");
-}
-
-TEST(QMSettingsTest, SetFennolModelPath)
-{
-    QMSettings::setFennolModelPath("/paTh/to/fennol_model.fnx");
-    EXPECT_EQ(QMSettings::getFennolModelPath(), "/paTh/to/fennol_model.fnx");
-}
-
-TEST(QMSettingsTest, SetGPUPreprocessing)
-{
-    QMSettings::setUseGPUPreprocessing(false);
-    EXPECT_EQ(QMSettings::useGPUPreprocessing(), false);
-    QMSettings::setUseGPUPreprocessing(true);
-    EXPECT_EQ(QMSettings::useGPUPreprocessing(), true);
 }

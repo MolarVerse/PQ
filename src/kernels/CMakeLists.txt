@@ -15,5 +15,5 @@ target_link_libraries(kernels
 )
 
 install(TARGETS kernels
-    DESTINATION lib
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

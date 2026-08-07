@@ -130,7 +130,7 @@ std::string FileSettings::getQMChargesTempFileName()
  */
 std::string FileSettings::getStressTensorTempFileName()
 {
-    return _stressTensorTempFile;
+    return _StressTensorTempFile;
 }
 
 /**

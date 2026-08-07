@@ -24,7 +24,6 @@
 
 #include <gtest/gtest.h>
 
-#include <format>
 #include <string>
 
 #include "exceptions.hpp"

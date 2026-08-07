@@ -15,7 +15,6 @@ add_library(settings
     outputFileSettings.cpp
     optimizerSettings.cpp
     convergenceSettings.cpp
-    hessianSettings.cpp
 )
 
 target_include_directories(settings
@@ -30,5 +29,5 @@ target_link_libraries(settings
 )
 
 install(TARGETS settings
-    DESTINATION lib
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

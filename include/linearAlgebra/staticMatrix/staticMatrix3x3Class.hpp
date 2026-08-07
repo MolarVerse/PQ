@@ -24,7 +24,7 @@
 
 #define _STATIC_MATRIX_CLASS_3X3_HPP_
 
-#include "vector3d.hpp"   // IWYU pragma: keep
+#include "vector3d.hpp"
 
 namespace linearAlgebra
 {
@@ -67,8 +67,6 @@ namespace linearAlgebra
     };
 }   // namespace linearAlgebra
 
-#ifndef _STATIC_MATRIX_CLASS_3x3_TPP_
-#include "staticMatrix3x3Class.tpp.hpp"   // IWYU pragma: keep - DO NOT MOVE THIS LINE
-#endif
+#include "staticMatrix3x3Class.tpp.hpp"   // DO NOT MOVE THIS LINE
 
 #endif   // _STATIC_MATRIX_CLASS_3X3_HPP_

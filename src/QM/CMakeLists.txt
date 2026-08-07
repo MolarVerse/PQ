@@ -24,7 +24,7 @@ else()
 endif()
 
 install(TARGETS QM
-    DESTINATION lib
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )
 
 add_subdirectory(external)

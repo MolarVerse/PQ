@@ -33,6 +33,7 @@
 #include "molecule.hpp"        // for Molecule
 #include "physicalData.hpp"    // for PhysicalData
 #include "simulationBox.hpp"   // for SimulationBox
+#include "vector3d.hpp"        // for Vec3D
 #include "virial.hpp"          // for Virial
 
 class TestVirial : public ::testing::Test

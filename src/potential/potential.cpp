@@ -27,6 +27,7 @@
 #include "box.hpp"                   // for Box
 #include "coulombPotential.hpp"      // for CoulombPotential
 #include "molecule.hpp"              // for Molecule
+#include "nonCoulombPair.hpp"        // for NonCoulombPair
 #include "nonCoulombPotential.hpp"   // for NonCoulombPotential
 
 using namespace potential;

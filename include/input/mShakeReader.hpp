@@ -27,6 +27,7 @@
 #include <cstddef>   // for size_t
 #include <fstream>   // for ifstream
 #include <string>    // for string
+#include <vector>    // for vector
 
 #include "typeAliases.hpp"
 
@@ -54,10 +55,7 @@ namespace input::mShake
 
         void read();
         void processCommentLine(std::string &line, pq::MShakeRef &mShakeRef);
-        void processAtomLines(
-            std::vector<std::string> &lines,
-            pq::MShakeRef            &mShakeRef
-        );
+        void processAtomLines(pq::strings &lines, pq::MShakeRef &mShakeRef);
 
         [[nodiscard]] std::string getFileName() const;
     };

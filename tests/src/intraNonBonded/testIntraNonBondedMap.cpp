@@ -26,7 +26,6 @@
 #include <memory>    // for shared_ptr, allocator
 #include <vector>    // for vector
 
-#include "../potential/nonCoulomb/testForceFieldNonCoulomb.hpp"
 #include "atom.hpp"                      // for Atom
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
 #include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
@@ -39,20 +38,17 @@
 #include "physicalData.hpp"              // for PhysicalData
 #include "potentialSettings.hpp"         // for PotentialSettings
 #include "simulationBox.hpp"             // for SimulationBox
+#include "vector3d.hpp"                  // for Vec3D
 
 namespace potential
 {
     class NonCoulombPair;   // forward declaration
 }
 
-class TestIntraNonBondedMap : public TestNonCoulombPotentialFF
-{
-};
-
 /**
  * @brief Test fixture class for the IntraNonBondedMap class
  */
-TEST_F(TestIntraNonBondedMap, calculateSingleInteraction_AND_calculate)
+TEST(testIntraNonBondedMap, calculateSingleInteraction_AND_calculate)
 {
     auto molecule = simulationBox::Molecule(0);
     molecule.setNumberOfAtoms(2);
@@ -82,15 +78,16 @@ TEST_F(TestIntraNonBondedMap, calculateSingleInteraction_AND_calculate)
     auto intraNonBondedMap =
         intraNonBonded::IntraNonBondedMap(&molecule, &intraNonBondedType);
 
-    auto coulombPotential = potential::CoulombShiftedPotential(10.0);
-    setNonCoulombPairsMatrix(
+    auto coulombPotential    = potential::CoulombShiftedPotential(10.0);
+    auto nonCoulombPotential = potential::ForceFieldNonCoulomb();
+    nonCoulombPotential.setNonCoulombPairsMatrix(
         linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(2, 2)
     );
 
     auto nonCoulombPair =
         potential::LennardJonesPair(size_t(0), size_t(1), 10.0, 2.0, 3.0);
-    setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
-    setNonCoulombPairsMatrix(1, 0, nonCoulombPair);
+    nonCoulombPotential.setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
+    nonCoulombPotential.setNonCoulombPairsMatrix(1, 0, nonCoulombPair);
 
     auto simulationBox = simulationBox::SimulationBox();
     simulationBox.setBoxDimensions({10.0, 10.0, 10.0});
@@ -104,7 +101,7 @@ TEST_F(TestIntraNonBondedMap, calculateSingleInteraction_AND_calculate)
             simulationBox.getBoxDimensions(),
             physicalData,
             &coulombPotential,
-            _nonCoulombPotential
+            &nonCoulombPotential
         );
 
     EXPECT_NEAR(coulombEnergy, -67.242901903583757 * 0.75, 1e-6);
@@ -133,7 +130,7 @@ TEST_F(TestIntraNonBondedMap, calculateSingleInteraction_AND_calculate)
 
     intraNonBondedMap.calculate(
         &coulombPotential,
-        _nonCoulombPotential,
+        &nonCoulombPotential,
         simulationBox,
         physicalData
     );

@@ -39,7 +39,7 @@ TEST_F(TestRingPolymerRestartFileOutput, write)
     settings::RingPolymerSettings::setNumberOfBeads(_beads.size());
 
     _rstFileOutput->setFilename("default.rpmd.rst");
-    _rstFileOutput->write(_beads);
+    _rstFileOutput->write(_beads, 10);
     _rstFileOutput->close();
     std::ifstream file("default.rpmd.rst");
     std::string   line;

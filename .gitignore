@@ -7,7 +7,6 @@
 build*
 _build*
 .build*
-benchmark-results/
 
 install/
 
@@ -64,6 +63,7 @@ examples/**/tm.out
 examples/**/traj2box
 examples/**/*.cao
 
+
 *.gcov
 
 googletest
@@ -77,10 +77,3 @@ venv
 env
 .env
 
-# local clangd output for checks for ci -- not to be committed
-clangd-tidy-report.log*
-
-# sometimes useful to make a syslink into the main dir from the build dir, but not to be committed
-compile_commands.json
-
-CMakePresets.json

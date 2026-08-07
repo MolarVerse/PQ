@@ -38,7 +38,7 @@ std::pair<double, double> CoulombShiftedPotential::calculate(
     const double chargeProduct
 ) const
 {
-    const auto coulombPrefactor    = chargeProduct * COULOMB_PREFACTOR;
+    const auto coulombPrefactor    = chargeProduct * _COULOMB_PREFACTOR_;
     const auto dInv                = 1 / distance;
     const auto deltaCutOff         = _coulombRadiusCutOff - distance;
     const auto forceCutOffIntegral = _coulombForceCutOff * deltaCutOff;

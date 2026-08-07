@@ -22,6 +22,14 @@
 
 #include "mmEvaluator.hpp"
 
+#include "celllist.hpp"
+#include "constraints.hpp"
+#include "forceFieldClass.hpp"
+#include "intraNonBonded.hpp"
+#include "potential.hpp"
+#include "simulationBox.hpp"
+#include "virial.hpp"
+
 using namespace opt;
 
 /**

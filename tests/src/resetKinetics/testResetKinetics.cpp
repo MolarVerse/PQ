@@ -20,172 +20,485 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>
+// #include "testResetKinetics.hpp"
 
-#include <cmath>
-#include <memory>
+// #include "gtest/gtest.h"   // for Message, TestPartResult
+// #include <cmath>           // for sqrt
+// #include <string>          // for allocator, basic_string
 
-#include "atom.hpp"
-#include "gtest/gtest.h"
-#include "molecule.hpp"
-#include "physicalData.hpp"
-#include "resetKinetics.hpp"
-#include "simulationBox.hpp"
-#include "thermostatSettings.hpp"
-#include "vector3d.hpp"   // IWYU pragma: keep
+// /**
+//  * @brief tests the resetTemperature method
+//  *
+//  */
+// TEST_F(TestResetKinetics, resetTemperature)
+// {
+//     const auto velocity_mol1_atom1_old =
+//     _simulationBox->getMolecule(0).getAtomVelocity(0); const auto
+//     velocity_mol1_atom2_old =
+//     _simulationBox->getMolecule(0).getAtomVelocity(1); const auto
+//     velocity_mol2_atom1_old =
+//     _simulationBox->getMolecule(1).getAtomVelocity(0);
 
-namespace
-{
-    // Build a fresh 3-atom SimBox the tests can share: 2 atoms in mol1,
-    // 1 atom in mol2, all mass 1, deterministic velocities.
-    simulationBox::SimulationBox *makeBox()
-    {
-        auto *box      = new simulationBox::SimulationBox();
-        auto  molecule = simulationBox::Molecule();
-        molecule.setNumberOfAtoms(2);
+//     _data->setTemperature(100.0);
+//     _resetKinetics->resetTemperature(*_data, *_simulationBox);
 
-        auto a1 = std::make_shared<simulationBox::Atom>();
-        auto a2 = std::make_shared<simulationBox::Atom>();
-        a1->setMass(1.0);
-        a2->setMass(1.0);
-        a1->setPosition(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-        a2->setPosition(linearAlgebra::Vec3D(1.0, 0.0, 0.0));
-        a1->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        a2->setVelocity(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
-        molecule.setMolMass(2.0);
-        molecule.addAtom(a1);
-        molecule.addAtom(a2);
+//     const auto velocity_mol1_atom1_new =
+//     _simulationBox->getMolecule(0).getAtomVelocity(0); const auto
+//     velocity_mol1_atom2_new =
+//     _simulationBox->getMolecule(0).getAtomVelocity(1); const auto
+//     velocity_mol2_atom1_new =
+//     _simulationBox->getMolecule(1).getAtomVelocity(0);
 
-        auto molecule2 = simulationBox::Molecule();
-        molecule2.setNumberOfAtoms(1);
-        auto a3 = std::make_shared<simulationBox::Atom>();
-        a3->setMass(1.0);
-        a3->setPosition(linearAlgebra::Vec3D(0.0, 1.0, 0.0));
-        a3->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        molecule2.setMolMass(1.0);
-        molecule2.addAtom(a3);
+//     EXPECT_DOUBLE_EQ(velocity_mol1_atom1_new[0] / velocity_mol1_atom1_old[0],
+//     sqrt(3.0)); EXPECT_DOUBLE_EQ(velocity_mol1_atom1_new[1] /
+//     velocity_mol1_atom1_old[1], sqrt(3.0));
+//     EXPECT_DOUBLE_EQ(velocity_mol1_atom1_new[2] / velocity_mol1_atom1_old[2],
+//     sqrt(3.0)); EXPECT_DOUBLE_EQ(velocity_mol1_atom2_new[0] /
+//     velocity_mol1_atom2_old[0], sqrt(3.0));
+//     EXPECT_DOUBLE_EQ(velocity_mol1_atom2_new[1] / velocity_mol1_atom2_old[1],
+//     sqrt(3.0)); EXPECT_DOUBLE_EQ(velocity_mol1_atom2_new[2] /
+//     velocity_mol1_atom2_old[2], sqrt(3.0));
+//     EXPECT_DOUBLE_EQ(velocity_mol2_atom1_new[0] / velocity_mol2_atom1_old[0],
+//     sqrt(3.0)); EXPECT_DOUBLE_EQ(velocity_mol2_atom1_new[1] /
+//     velocity_mol2_atom1_old[1], sqrt(3.0));
+//     EXPECT_DOUBLE_EQ(velocity_mol2_atom1_new[2] / velocity_mol2_atom1_old[2],
+//     sqrt(3.0));
+// }
 
-        box->addMolecule(molecule);
-        box->addMolecule(molecule2);
-        box->addAtom(a1);
-        box->addAtom(a2);
-        box->addAtom(a3);
-        box->setTotalMass(3.0);
-        box->calculateDegreesOfFreedom();
+// /**
+//  * @brief tests the resetMomentum method
+//  *
+//  */
+// TEST_F(TestResetKinetics, resetMomentum)
+// {
+//     _data->setMomentum(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+//     _resetKinetics->resetMomentum(*_data, *_simulationBox);
 
-        return box;
-    }
-}   // namespace
+//     const auto velocity_mol1_atom1 =
+//         _simulationBox->getMolecule(0).getAtomVelocity(0) -
+//         linearAlgebra::Vec3D(1.0, 2.0, 3.0) / 3.0;
+//     const auto velocity_mol1_atom2 =
+//         _simulationBox->getMolecule(0).getAtomVelocity(1) -
+//         linearAlgebra::Vec3D(1.0, 2.0, 3.0) / 3.0;
+//     const auto velocity_mol2_atom1 =
+//         _simulationBox->getMolecule(1).getAtomVelocity(0) -
+//         linearAlgebra::Vec3D(1.0, 2.0, 3.0) / 3.0;
 
-TEST(TestResetKinetics, constructorStoresStepAndFrequencyParameters)
-{
-    resetKinetics::ResetKinetics rk(1u, 2u, 3u, 4u, 50u, 100u, 11u);
-    EXPECT_EQ(rk.getNStepsTemperatureReset(), 1u);
-    EXPECT_EQ(rk.getFrequencyTemperatureReset(), 2u);
-    EXPECT_EQ(rk.getNStepsMomentumReset(), 3u);
-    EXPECT_EQ(rk.getFrequencyMomentumReset(), 4u);
-    EXPECT_EQ(rk.getNStepsForcesReset(), 11u);
-}
+//     EXPECT_NEAR(_simulationBox->getMolecule(0).getAtomVelocity(0)[0],
+//     velocity_mol1_atom1[0], 10.0);
+//     EXPECT_NEAR(_simulationBox->getMolecule(0).getAtomVelocity(0)[1],
+//     velocity_mol1_atom1[1], 10.0);
+//     EXPECT_NEAR(_simulationBox->getMolecule(0).getAtomVelocity(0)[2],
+//     velocity_mol1_atom1[2], 10.0);
+//     EXPECT_NEAR(_simulationBox->getMolecule(0).getAtomVelocity(1)[0],
+//     velocity_mol1_atom2[0], 10.0);
+//     EXPECT_NEAR(_simulationBox->getMolecule(0).getAtomVelocity(1)[1],
+//     velocity_mol1_atom2[1], 10.0);
+//     EXPECT_NEAR(_simulationBox->getMolecule(0).getAtomVelocity(1)[2],
+//     velocity_mol1_atom2[2], 10.0);
+//     EXPECT_NEAR(_simulationBox->getMolecule(1).getAtomVelocity(0)[0],
+//     velocity_mol2_atom1[0], 10.0);
+//     EXPECT_NEAR(_simulationBox->getMolecule(1).getAtomVelocity(0)[1],
+//     velocity_mol2_atom1[1], 10.0);
+//     EXPECT_NEAR(_simulationBox->getMolecule(1).getAtomVelocity(0)[2],
+//     velocity_mol2_atom1[2], 10.0);
+// }
 
-TEST(TestResetKinetics, settersAcceptValuesWithoutThrowing)
-{
-    resetKinetics::ResetKinetics rk;
+// /**
+//  * @brief tests the reset method with no reset
+//  *
+//  */
+// TEST_F(TestResetKinetics, noReset) {
+// EXPECT_NO_THROW(_resetKinetics->reset(10, *_data, *_simulationBox)); }
 
-    rk.setTemperature(300.0);
-    rk.setMomentum(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
-    rk.setAngularMomentum(linearAlgebra::Vec3D(0.5, -0.5, 0.0));
+// /**
+//  * @brief tests the reset method with nscale
+//  *
+//  */
+// TEST_F(TestResetKinetics, resetTemperatureNscale)
+// {
+//     _resetKinetics = new resetKinetics::ResetTemperature(10, 11, 0, 11, 0,
+//     11);
 
-    SUCCEED();
-}
+//     const auto velocity_mol1_atom1_old =
+//     _simulationBox->getMolecule(0).getAtomVelocity(0); const auto
+//     velocity_mol1_atom2_old =
+//     _simulationBox->getMolecule(0).getAtomVelocity(1); const auto
+//     velocity_mol2_atom1_old =
+//     _simulationBox->getMolecule(1).getAtomVelocity(0);
 
-TEST(TestResetKinetics, resetTemperatureRescalesVelocitiesAndStaysFinite)
-{
-    auto                        *box  = makeBox();
-    auto                         data = physicalData::PhysicalData();
-    resetKinetics::ResetKinetics rk;
+//     _data->setTemperature(100.0);
 
-    settings::ThermostatSettings::setTargetTemperature(300.0);
+//     _resetKinetics->reset(9, *_data, *_simulationBox);
 
-    // resetTemperature uses _temperature internally as sqrt(target /
-    // _temperature). The public reset() entry seeds _temperature from
-    // data.getTemperature(); when calling resetTemperature directly the
-    // setter must do the same.
-    data.calculateTemperature(*box);
-    rk.setTemperature(data.getTemperature());
+//     const auto velocity_mol1_atom1_new =
+//     _simulationBox->getMolecule(0).getAtomVelocity(0); const auto
+//     velocity_mol1_atom2_new =
+//     _simulationBox->getMolecule(0).getAtomVelocity(1); const auto
+//     velocity_mol2_atom1_new =
+//     _simulationBox->getMolecule(1).getAtomVelocity(0);
 
-    rk.resetTemperature(*box);
+//     EXPECT_NE(velocity_mol1_atom1_new[0], velocity_mol1_atom1_old[0]);
+//     EXPECT_NE(velocity_mol1_atom1_new[1], velocity_mol1_atom1_old[1]);
+//     EXPECT_NE(velocity_mol1_atom1_new[2], velocity_mol1_atom1_old[2]);
+//     EXPECT_NE(velocity_mol1_atom2_new[0], velocity_mol1_atom2_old[0]);
+//     EXPECT_NE(velocity_mol1_atom2_new[1], velocity_mol1_atom2_old[1]);
+//     EXPECT_NE(velocity_mol1_atom2_new[2], velocity_mol1_atom2_old[2]);
+//     EXPECT_NE(velocity_mol2_atom1_new[0], velocity_mol2_atom1_old[0]);
+//     EXPECT_NE(velocity_mol2_atom1_new[1], velocity_mol2_atom1_old[1]);
+//     EXPECT_NE(velocity_mol2_atom1_new[2], velocity_mol2_atom1_old[2]);
 
-    data.calculateTemperature(*box);
-    const auto T_after = data.getTemperature();
+//     _resetKinetics->reset(15, *_data, *_simulationBox);
 
-    EXPECT_FALSE(std::isnan(T_after));
-    EXPECT_FALSE(std::isinf(T_after));
+//     const auto velocity_mol1_atom1_new2 =
+//     _simulationBox->getMolecule(0).getAtomVelocity(0); const auto
+//     velocity_mol1_atom2_new2 =
+//     _simulationBox->getMolecule(0).getAtomVelocity(1); const auto
+//     velocity_mol2_atom1_new2 =
+//     _simulationBox->getMolecule(1).getAtomVelocity(0);
 
-    delete box;
-}
+//     EXPECT_NEAR(velocity_mol1_atom1_new2[0],
+//     velocity_mol1_atom1_new[0], 10.0);
+//     EXPECT_NEAR(velocity_mol1_atom1_new2[1],
+//     velocity_mol1_atom1_new[1], 10.0);
+//     EXPECT_NEAR(velocity_mol1_atom1_new2[2],
+//     velocity_mol1_atom1_new[2], 10.0);
+//     EXPECT_NEAR(velocity_mol1_atom2_new2[0],
+//     velocity_mol1_atom2_new[0], 10.0);
+//     EXPECT_NEAR(velocity_mol1_atom2_new2[1],
+//     velocity_mol1_atom2_new[1], 10.0);
+//     EXPECT_NEAR(velocity_mol1_atom2_new2[2],
+//     velocity_mol1_atom2_new[2], 10.0);
+//     EXPECT_NEAR(velocity_mol2_atom1_new2[0],
+//     velocity_mol2_atom1_new[0], 10.0);
+//     EXPECT_NEAR(velocity_mol2_atom1_new2[1],
+//     velocity_mol2_atom1_new[1], 10.0);
+//     EXPECT_NEAR(velocity_mol2_atom1_new2[2],
+//     velocity_mol2_atom1_new[2], 10.0);
+// }
 
-TEST(TestResetKinetics, resetMomentumZerosTotalLinearMomentum)
-{
-    auto                        *box = makeBox();
-    resetKinetics::ResetKinetics rk;
+// /**
+//  * @brief tests the reset method with fscale
+//  *
+//  */
+// TEST_F(TestResetKinetics, resetTemperatureFscale)
+// {
+//     _resetKinetics = new resetKinetics::ResetTemperature(0, 9, 0, 11, 0, 11);
 
-    // resetMomentum subtracts (_momentum / totalMass) from every atom's
-    // velocity; for the total to land at zero we have to seed _momentum
-    // with the current total p = sum m_i v_i first (the reset() entry
-    // does this from data.getMomentum()).
-    linearAlgebra::Vec3D totalP{0.0, 0.0, 0.0};
-    for (const auto &atom : box->getAtoms())
-        totalP += atom->getMass() * atom->getVelocity();
-    rk.setMomentum(totalP);
+//     const auto velocity_mol1_atom1_old =
+//     _simulationBox->getMolecule(0).getAtomVelocity(0); const auto
+//     velocity_mol1_atom2_old =
+//     _simulationBox->getMolecule(0).getAtomVelocity(1); const auto
+//     velocity_mol2_atom1_old =
+//     _simulationBox->getMolecule(1).getAtomVelocity(0);
 
-    rk.resetMomentum(*box);
+//     _data->setTemperature(100.0);
 
-    linearAlgebra::Vec3D totalPAfter{0.0, 0.0, 0.0};
-    for (const auto &atom : box->getAtoms())
-        totalPAfter += atom->getMass() * atom->getVelocity();
+//     _resetKinetics->reset(9, *_data, *_simulationBox);
 
-    EXPECT_NEAR(totalPAfter[0], 0.0, 1e-12);
-    EXPECT_NEAR(totalPAfter[1], 0.0, 1e-12);
-    EXPECT_NEAR(totalPAfter[2], 0.0, 1e-12);
+//     const auto velocity_mol1_atom1_new =
+//     _simulationBox->getMolecule(0).getAtomVelocity(0); const auto
+//     velocity_mol1_atom2_new =
+//     _simulationBox->getMolecule(0).getAtomVelocity(1); const auto
+//     velocity_mol2_atom1_new =
+//     _simulationBox->getMolecule(1).getAtomVelocity(0);
 
-    delete box;
-}
+//     EXPECT_NE(velocity_mol1_atom1_new[0], velocity_mol1_atom1_old[0]);
+//     EXPECT_NE(velocity_mol1_atom1_new[1], velocity_mol1_atom1_old[1]);
+//     EXPECT_NE(velocity_mol1_atom1_new[2], velocity_mol1_atom1_old[2]);
+//     EXPECT_NE(velocity_mol1_atom2_new[0], velocity_mol1_atom2_old[0]);
+//     EXPECT_NE(velocity_mol1_atom2_new[1], velocity_mol1_atom2_old[1]);
+//     EXPECT_NE(velocity_mol1_atom2_new[2], velocity_mol1_atom2_old[2]);
+//     EXPECT_NE(velocity_mol2_atom1_new[0], velocity_mol2_atom1_old[0]);
+//     EXPECT_NE(velocity_mol2_atom1_new[1], velocity_mol2_atom1_old[1]);
+//     EXPECT_NE(velocity_mol2_atom1_new[2], velocity_mol2_atom1_old[2]);
 
-TEST(TestResetKinetics, resetAngularMomentumLeavesVelocitiesFinite)
-{
-    auto                        *box = makeBox();
-    resetKinetics::ResetKinetics rk;
+//     _resetKinetics->reset(15, *_data, *_simulationBox);
 
-    // Seed _angularMomentum the same way reset() does, so the routine
-    // has well-defined input.
-    rk.setAngularMomentum(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+//     const auto velocity_mol1_atom1_new2 =
+//     _simulationBox->getMolecule(0).getAtomVelocity(0); const auto
+//     velocity_mol1_atom2_new2 =
+//     _simulationBox->getMolecule(0).getAtomVelocity(1); const auto
+//     velocity_mol2_atom1_new2 =
+//     _simulationBox->getMolecule(1).getAtomVelocity(0);
 
-    rk.resetAngularMomentum(*box);
+//     EXPECT_NEAR(velocity_mol1_atom1_new2[0],
+//     velocity_mol1_atom1_new[0], 10.0);
+//     EXPECT_NEAR(velocity_mol1_atom1_new2[1],
+//     velocity_mol1_atom1_new[1], 10.0);
+//     EXPECT_NEAR(velocity_mol1_atom1_new2[2],
+//     velocity_mol1_atom1_new[2], 10.0);
+//     EXPECT_NEAR(velocity_mol1_atom2_new2[0],
+//     velocity_mol1_atom2_new[0], 10.0);
+//     EXPECT_NEAR(velocity_mol1_atom2_new2[1],
+//     velocity_mol1_atom2_new[1], 10.0);
+//     EXPECT_NEAR(velocity_mol1_atom2_new2[2],
+//     velocity_mol1_atom2_new[2], 10.0);
+//     EXPECT_NEAR(velocity_mol2_atom1_new2[0],
+//     velocity_mol2_atom1_new[0], 10.0);
+//     EXPECT_NEAR(velocity_mol2_atom1_new2[1],
+//     velocity_mol2_atom1_new[1], 10.0);
+//     EXPECT_NEAR(velocity_mol2_atom1_new2[2],
+//     velocity_mol2_atom1_new[2], 10.0);
+// }
 
-    for (const auto &atom : box->getAtoms())
-        for (size_t i = 0; i < 3; ++i)
-        {
-            EXPECT_FALSE(std::isnan(atom->getVelocity()[i]));
-            EXPECT_FALSE(std::isinf(atom->getVelocity()[i]));
-        }
+// /**
+//  * @brief tests the reset momentum method with nreset
+//  *
+//  */
+// TEST_F(TestResetKinetics, resetMomentumNreset)
+// {
+//     _resetKinetics = new resetKinetics::ResetMomentum(0, 11, 10, 11, 0, 11);
 
-    delete box;
-}
+//     const auto velocity_mol1_atom1_old =
+//     _simulationBox->getMolecule(0).getAtomVelocity(0); const auto
+//     velocity_mol1_atom2_old =
+//     _simulationBox->getMolecule(0).getAtomVelocity(1); const auto
+//     velocity_mol2_atom1_old =
+//     _simulationBox->getMolecule(1).getAtomVelocity(0);
 
-TEST(TestResetKinetics, resetForcesZerosForcesEachStep)
-{
-    auto                        *box = makeBox();
-    resetKinetics::ResetKinetics rk(0u, 0u, 0u, 0u, 0u, 0u, 1u);
+//     _data->setMomentum(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
 
-    // Seed atom forces with non-zero values.
-    for (auto &atom : box->getAtoms())
-        atom->setForce(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+//     _resetKinetics->reset(9, *_data, *_simulationBox);
 
-    rk.resetForces(0u, *box);
+//     const auto velocity_mol1_atom1_new =
+//     _simulationBox->getMolecule(0).getAtomVelocity(0); const auto
+//     velocity_mol1_atom2_new =
+//     _simulationBox->getMolecule(0).getAtomVelocity(1); const auto
+//     velocity_mol2_atom1_new =
+//     _simulationBox->getMolecule(1).getAtomVelocity(0);
 
-    for (const auto &atom : box->getAtoms())
-        for (size_t i = 0; i < 3; ++i)
-            EXPECT_DOUBLE_EQ(atom->getForce()[i], 0.0);
+//     EXPECT_NE(velocity_mol1_atom1_new[0], velocity_mol1_atom1_old[0]);
+//     EXPECT_NE(velocity_mol1_atom1_new[1], velocity_mol1_atom1_old[1]);
+//     EXPECT_NE(velocity_mol1_atom1_new[2], velocity_mol1_atom1_old[2]);
+//     EXPECT_NE(velocity_mol1_atom2_new[0], velocity_mol1_atom2_old[0]);
+//     EXPECT_NE(velocity_mol1_atom2_new[1], velocity_mol1_atom2_old[1]);
+//     EXPECT_NE(velocity_mol1_atom2_new[2], velocity_mol1_atom2_old[2]);
+//     EXPECT_NE(velocity_mol2_atom1_new[0], velocity_mol2_atom1_old[0]);
+//     EXPECT_NE(velocity_mol2_atom1_new[1], velocity_mol2_atom1_old[1]);
+//     EXPECT_NE(velocity_mol2_atom1_new[2], velocity_mol2_atom1_old[2]);
 
-    delete box;
-}
+//     _resetKinetics->reset(15, *_data, *_simulationBox);
+
+//     const auto velocity_mol1_atom1_new2 =
+//     _simulationBox->getMolecule(0).getAtomVelocity(0); const auto
+//     velocity_mol1_atom2_new2 =
+//     _simulationBox->getMolecule(0).getAtomVelocity(1); const auto
+//     velocity_mol2_atom1_new2 =
+//     _simulationBox->getMolecule(1).getAtomVelocity(0);
+
+//     EXPECT_NEAR(velocity_mol1_atom1_new2[0],
+//     velocity_mol1_atom1_new[0], 10.0);
+//     EXPECT_NEAR(velocity_mol1_atom1_new2[1],
+//     velocity_mol1_atom1_new[1], 10.0);
+//     EXPECT_NEAR(velocity_mol1_atom1_new2[2],
+//     velocity_mol1_atom1_new[2], 10.0);
+//     EXPECT_NEAR(velocity_mol1_atom2_new2[0],
+//     velocity_mol1_atom2_new[0], 10.0);
+//     EXPECT_NEAR(velocity_mol1_atom2_new2[1],
+//     velocity_mol1_atom2_new[1], 10.0);
+//     EXPECT_NEAR(velocity_mol1_atom2_new2[2],
+//     velocity_mol1_atom2_new[2], 10.0);
+//     EXPECT_NEAR(velocity_mol2_atom1_new2[0],
+//     velocity_mol2_atom1_new[0], 10.0);
+//     EXPECT_NEAR(velocity_mol2_atom1_new2[1],
+//     velocity_mol2_atom1_new[1], 10.0);
+//     EXPECT_NEAR(velocity_mol2_atom1_new2[2],
+//     velocity_mol2_atom1_new[2], 10.0);
+// }
+
+// /**
+//  * @brief tests the reset temperature method with nreset
+//  *
+//  */
+// TEST_F(TestResetKinetics, resetTemperatureNreset)
+// {
+//     _resetKinetics = new resetKinetics::ResetTemperature(0, 11, 10, 11, 0,
+//     11);
+
+//     const auto velocity_mol1_atom1_old =
+//     _simulationBox->getMolecule(0).getAtomVelocity(0); const auto
+//     velocity_mol1_atom2_old =
+//     _simulationBox->getMolecule(0).getAtomVelocity(1); const auto
+//     velocity_mol2_atom1_old =
+//     _simulationBox->getMolecule(1).getAtomVelocity(0);
+
+//     _data->setMomentum(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+
+//     _resetKinetics->reset(9, *_data, *_simulationBox);
+
+//     const auto velocity_mol1_atom1_new =
+//     _simulationBox->getMolecule(0).getAtomVelocity(0); const auto
+//     velocity_mol1_atom2_new =
+//     _simulationBox->getMolecule(0).getAtomVelocity(1); const auto
+//     velocity_mol2_atom1_new =
+//     _simulationBox->getMolecule(1).getAtomVelocity(0);
+
+//     EXPECT_NE(velocity_mol1_atom1_new[0], velocity_mol1_atom1_old[0]);
+//     EXPECT_NE(velocity_mol1_atom1_new[1], velocity_mol1_atom1_old[1]);
+//     EXPECT_NE(velocity_mol1_atom1_new[2], velocity_mol1_atom1_old[2]);
+//     EXPECT_NE(velocity_mol1_atom2_new[0], velocity_mol1_atom2_old[0]);
+//     EXPECT_NE(velocity_mol1_atom2_new[1], velocity_mol1_atom2_old[1]);
+//     EXPECT_NE(velocity_mol1_atom2_new[2], velocity_mol1_atom2_old[2]);
+//     EXPECT_NE(velocity_mol2_atom1_new[0], velocity_mol2_atom1_old[0]);
+//     EXPECT_NE(velocity_mol2_atom1_new[1], velocity_mol2_atom1_old[1]);
+//     EXPECT_NE(velocity_mol2_atom1_new[2], velocity_mol2_atom1_old[2]);
+
+//     _resetKinetics->reset(15, *_data, *_simulationBox);
+
+//     const auto velocity_mol1_atom1_new2 =
+//     _simulationBox->getMolecule(0).getAtomVelocity(0); const auto
+//     velocity_mol1_atom2_new2 =
+//     _simulationBox->getMolecule(0).getAtomVelocity(1); const auto
+//     velocity_mol2_atom1_new2 =
+//     _simulationBox->getMolecule(1).getAtomVelocity(0);
+
+//     EXPECT_NEAR(velocity_mol1_atom1_new2[0],
+//     velocity_mol1_atom1_new[0], 10.0);
+//     EXPECT_NEAR(velocity_mol1_atom1_new2[1],
+//     velocity_mol1_atom1_new[1], 10.0);
+//     EXPECT_NEAR(velocity_mol1_atom1_new2[2],
+//     velocity_mol1_atom1_new[2], 10.0);
+//     EXPECT_NEAR(velocity_mol1_atom2_new2[0],
+//     velocity_mol1_atom2_new[0], 10.0);
+//     EXPECT_NEAR(velocity_mol1_atom2_new2[1],
+//     velocity_mol1_atom2_new[1], 10.0);
+//     EXPECT_NEAR(velocity_mol1_atom2_new2[2],
+//     velocity_mol1_atom2_new[2], 10.0);
+//     EXPECT_NEAR(velocity_mol2_atom1_new2[0],
+//     velocity_mol2_atom1_new[0], 10.0);
+//     EXPECT_NEAR(velocity_mol2_atom1_new2[1],
+//     velocity_mol2_atom1_new[1], 10.0);
+//     EXPECT_NEAR(velocity_mol2_atom1_new2[2],
+//     velocity_mol2_atom1_new[2], 10.0);
+// }
+
+// /**
+//  * @brief tests the reset temperature method with freset
+//  *
+//  */
+// TEST_F(TestResetKinetics, resetMomentumFreset)
+// {
+//     _resetKinetics = new resetKinetics::ResetMomentum(0, 11, 0, 9, 0, 11);
+
+//     const auto velocity_mol1_atom1_old =
+//     _simulationBox->getMolecule(0).getAtomVelocity(0); const auto
+//     velocity_mol1_atom2_old =
+//     _simulationBox->getMolecule(0).getAtomVelocity(1); const auto
+//     velocity_mol2_atom1_old =
+//     _simulationBox->getMolecule(1).getAtomVelocity(0);
+
+//     _data->setMomentum(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+
+//     _resetKinetics->reset(9, *_data, *_simulationBox);
+
+//     const auto velocity_mol1_atom1_new =
+//     _simulationBox->getMolecule(0).getAtomVelocity(0); const auto
+//     velocity_mol1_atom2_new =
+//     _simulationBox->getMolecule(0).getAtomVelocity(1); const auto
+//     velocity_mol2_atom1_new =
+//     _simulationBox->getMolecule(1).getAtomVelocity(0);
+
+//     EXPECT_NE(velocity_mol1_atom1_new[0], velocity_mol1_atom1_old[0]);
+//     EXPECT_NE(velocity_mol1_atom1_new[1], velocity_mol1_atom1_old[1]);
+//     EXPECT_NE(velocity_mol1_atom1_new[2], velocity_mol1_atom1_old[2]);
+//     EXPECT_NE(velocity_mol1_atom2_new[0], velocity_mol1_atom2_old[0]);
+//     EXPECT_NE(velocity_mol1_atom2_new[1], velocity_mol1_atom2_old[1]);
+//     EXPECT_NE(velocity_mol1_atom2_new[2], velocity_mol1_atom2_old[2]);
+//     EXPECT_NE(velocity_mol2_atom1_new[0], velocity_mol2_atom1_old[0]);
+//     EXPECT_NE(velocity_mol2_atom1_new[1], velocity_mol2_atom1_old[1]);
+//     EXPECT_NE(velocity_mol2_atom1_new[2], velocity_mol2_atom1_old[2]);
+
+//     _resetKinetics->reset(15, *_data, *_simulationBox);
+
+//     const auto velocity_mol1_atom1_new2 =
+//     _simulationBox->getMolecule(0).getAtomVelocity(0); const auto
+//     velocity_mol1_atom2_new2 =
+//     _simulationBox->getMolecule(0).getAtomVelocity(1); const auto
+//     velocity_mol2_atom1_new2 =
+//     _simulationBox->getMolecule(1).getAtomVelocity(0);
+
+//     EXPECT_NEAR(velocity_mol1_atom1_new2[0],
+//     velocity_mol1_atom1_new[0], 10.0);
+//     EXPECT_NEAR(velocity_mol1_atom1_new2[1],
+//     velocity_mol1_atom1_new[1], 10.0);
+//     EXPECT_NEAR(velocity_mol1_atom1_new2[2],
+//     velocity_mol1_atom1_new[2], 10.0);
+//     EXPECT_NEAR(velocity_mol1_atom2_new2[0],
+//     velocity_mol1_atom2_new[0], 10.0);
+//     EXPECT_NEAR(velocity_mol1_atom2_new2[1],
+//     velocity_mol1_atom2_new[1], 10.0);
+//     EXPECT_NEAR(velocity_mol1_atom2_new2[2],
+//     velocity_mol1_atom2_new[2], 10.0);
+//     EXPECT_NEAR(velocity_mol2_atom1_new2[0],
+//     velocity_mol2_atom1_new[0], 10.0);
+//     EXPECT_NEAR(velocity_mol2_atom1_new2[1],
+//     velocity_mol2_atom1_new[1], 10.0);
+//     EXPECT_NEAR(velocity_mol2_atom1_new2[2],
+//     velocity_mol2_atom1_new[2], 10.0);
+// }
+
+// /**
+//  * @brief tests the reset temperature method with freset
+//  *
+//  */
+// TEST_F(TestResetKinetics, resetTemperatureFreset)
+// {
+//     _resetKinetics = new resetKinetics::ResetTemperature(0, 11, 0, 9, 0, 11);
+
+//     const auto velocity_mol1_atom1_old =
+//     _simulationBox->getMolecule(0).getAtomVelocity(0); const auto
+//     velocity_mol1_atom2_old =
+//     _simulationBox->getMolecule(0).getAtomVelocity(1); const auto
+//     velocity_mol2_atom1_old =
+//     _simulationBox->getMolecule(1).getAtomVelocity(0);
+
+//     _data->setMomentum(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+
+//     _resetKinetics->reset(9, *_data, *_simulationBox);
+
+//     const auto velocity_mol1_atom1_new =
+//     _simulationBox->getMolecule(0).getAtomVelocity(0); const auto
+//     velocity_mol1_atom2_new =
+//     _simulationBox->getMolecule(0).getAtomVelocity(1); const auto
+//     velocity_mol2_atom1_new =
+//     _simulationBox->getMolecule(1).getAtomVelocity(0);
+
+//     EXPECT_NE(velocity_mol1_atom1_new[0], velocity_mol1_atom1_old[0]);
+//     EXPECT_NE(velocity_mol1_atom1_new[1], velocity_mol1_atom1_old[1]);
+//     EXPECT_NE(velocity_mol1_atom1_new[2], velocity_mol1_atom1_old[2]);
+//     EXPECT_NE(velocity_mol1_atom2_new[0], velocity_mol1_atom2_old[0]);
+//     EXPECT_NE(velocity_mol1_atom2_new[1], velocity_mol1_atom2_old[1]);
+//     EXPECT_NE(velocity_mol1_atom2_new[2], velocity_mol1_atom2_old[2]);
+//     EXPECT_NE(velocity_mol2_atom1_new[0], velocity_mol2_atom1_old[0]);
+//     EXPECT_NE(velocity_mol2_atom1_new[1], velocity_mol2_atom1_old[1]);
+//     EXPECT_NE(velocity_mol2_atom1_new[2], velocity_mol2_atom1_old[2]);
+
+//     _resetKinetics->reset(15, *_data, *_simulationBox);
+
+//     const auto velocity_mol1_atom1_new2 =
+//     _simulationBox->getMolecule(0).getAtomVelocity(0); const auto
+//     velocity_mol1_atom2_new2 =
+//     _simulationBox->getMolecule(0).getAtomVelocity(1); const auto
+//     velocity_mol2_atom1_new2 =
+//     _simulationBox->getMolecule(1).getAtomVelocity(0);
+
+//     EXPECT_NEAR(velocity_mol1_atom1_new2[0],
+//     velocity_mol1_atom1_new[0], 10.0);
+//     EXPECT_NEAR(velocity_mol1_atom1_new2[1],
+//     velocity_mol1_atom1_new[1], 10.0);
+//     EXPECT_NEAR(velocity_mol1_atom1_new2[2],
+//     velocity_mol1_atom1_new[2], 10.0);
+//     EXPECT_NEAR(velocity_mol1_atom2_new2[0],
+//     velocity_mol1_atom2_new[0], 10.0);
+//     EXPECT_NEAR(velocity_mol1_atom2_new2[1],
+//     velocity_mol1_atom2_new[1], 10.0);
+//     EXPECT_NEAR(velocity_mol1_atom2_new2[2],
+//     velocity_mol1_atom2_new[2], 10.0);
+//     EXPECT_NEAR(velocity_mol2_atom1_new2[0],
+//     velocity_mol2_atom1_new[0], 10.0);
+//     EXPECT_NEAR(velocity_mol2_atom1_new2[1],
+//     velocity_mol2_atom1_new[1], 10.0);
+//     EXPECT_NEAR(velocity_mol2_atom1_new2[2],
+//     velocity_mol2_atom1_new[2], 10.0);
+// }

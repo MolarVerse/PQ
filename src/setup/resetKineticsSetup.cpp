@@ -22,8 +22,6 @@
 
 #include "resetKineticsSetup.hpp"
 
-#include <format>   // for format
-
 #include "engine.hpp"          // for Engine
 #include "mdEngine.hpp"        // for MDEngine
 #include "resetKinetics.hpp"   // for ResetMomentum, ResetTemperature, resetK...
@@ -109,12 +107,10 @@ void ResetKineticsSetup::writeSetupInfo() const
     const auto _fResetAngular = ResetKineticsSettings::getFResetAngular();
     const auto _fResetForces  = ResetKineticsSettings::getFResetForces();
 
-    const int fScale = _fScale == 0 ? -1 : static_cast<int>(_fScale);
-    const int fReset = _fReset == 0 ? -1 : static_cast<int>(_fReset);
-    const int fResetAngular =
-        _fResetAngular == 0 ? -1 : static_cast<int>(_fResetAngular);
-    const int fResetForces =
-        _fResetForces == 0 ? -1 : static_cast<int>(_fResetForces);
+    const int fScale        = _fScale == 0 ? -1 : _fScale;
+    const int fReset        = _fReset == 0 ? -1 : _fReset;
+    const int fResetAngular = _fResetAngular == 0 ? -1 : _fResetAngular;
+    const int fResetForces  = _fResetForces == 0 ? -1 : _fResetForces;
 
     const auto nScale        = ResetKineticsSettings::getNScale();
     const auto nReset        = ResetKineticsSettings::getNReset();

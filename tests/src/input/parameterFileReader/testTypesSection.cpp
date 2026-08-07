@@ -27,6 +27,7 @@
 
 #include "exceptions.hpp"                 // for ParameterFileException
 #include "gtest/gtest.h"                  // for Message, TestPartResult, tes...
+#include "parameterFileSection.hpp"       // for parameterFile
 #include "potentialSettings.hpp"          // for PotentialSettings
 #include "testParameterFileSection.hpp"   // for TestParameterFileSection
 #include "throwWithMessage.hpp"           // for ASSERT_THROW_MSG

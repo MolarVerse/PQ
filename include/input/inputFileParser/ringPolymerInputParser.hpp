@@ -25,9 +25,11 @@
 #define _RING_POLYMER_INPUT_PARSER_HPP_
 
 #include <cstddef>   // for size_t
+#include <string>    // for string
+#include <vector>    // for vector
 
 #include "inputFileParser.hpp"   // for InputFileParser
-#include "typeAliases.hpp"       // for std::vector<std::string>
+#include "typeAliases.hpp"       // for pq::strings
 
 namespace input
 {
@@ -42,7 +44,7 @@ namespace input
        public:
         explicit RingPolymerInputParser(pq::Engine &);
 
-        void parseNumberOfBeads(const std::vector<std::string> &, const size_t);
+        void parseNumberOfBeads(const pq::strings &, const size_t);
     };
 
 }   // namespace input

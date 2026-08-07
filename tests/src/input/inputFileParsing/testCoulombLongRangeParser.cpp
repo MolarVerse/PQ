@@ -22,12 +22,17 @@
 
 #include <gtest/gtest.h>   // for TestInfo (ptr only)
 
+#include <string>   // for string, allocator
+#include <vector>   // for vector
+
 #include "coulombLongRangeInputParser.hpp"
 #include "exceptions.hpp"            // for InputFileException
 #include "gtest/gtest.h"             // for Message, TestPartResult
+#include "inputFileParser.hpp"       // for readInput
 #include "potentialSettings.hpp"     // for PotentialSettings
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
+#include "typeAliases.hpp"
 
 using namespace input;
 using namespace settings;
@@ -46,13 +51,9 @@ TEST_F(TestInputFileReader, testParseCoulombLongRange)
 
     CoulombLongRangeInputParser parser(*_engine);
 
-    std::vector<std::string> lineElements = {"long-range", "=", "none"};
+    pq::strings lineElements = {"long-range", "=", "none"};
     parser.parseCoulombLongRange(lineElements, 0);
     EXPECT_EQ(PotentialSettings::getCoulombLongRangeType(), SHIFTED);
-
-    lineElements = {"long-range", "=", "reaction-field"};
-    parser.parseCoulombLongRange(lineElements, 0);
-    EXPECT_EQ(PotentialSettings::getCoulombLongRangeType(), REACTION_FIELD);
 
     lineElements = {"long-range", "=", "wolf"};
     parser.parseCoulombLongRange(lineElements, 0);
@@ -63,8 +64,7 @@ TEST_F(TestInputFileReader, testParseCoulombLongRange)
         parser.parseCoulombLongRange(lineElements, 0),
         InputFileException,
         "Invalid long-range type for coulomb correction \"notValid\" at line 0 "
-        "in input file\nPossible options are: none, shifted, reaction-field, "
-        "wolf"
+        "in input file\nPossible options are: none, shifted, wolf"
     );
 }
 
@@ -78,7 +78,7 @@ TEST_F(TestInputFileReader, testParseWolfParameter)
 {
     CoulombLongRangeInputParser parser(*_engine);
 
-    std::vector<std::string> lineElements = {"wolf_param", "=", "1.0"};
+    pq::strings lineElements = {"wolf_param", "=", "1.0"};
     parser.parseWolfParameter(lineElements, 0);
     EXPECT_EQ(PotentialSettings::getWolfParameter(), 1.0);
 
@@ -87,34 +87,5 @@ TEST_F(TestInputFileReader, testParseWolfParameter)
         parser.parseWolfParameter(lineElements, 0),
         InputFileException,
         "Wolf parameter cannot be negative"
-    );
-}
-
-/**
- * @brief tests parsing the "rf_epsilon" command
- *
- */
-TEST_F(TestInputFileReader, testParseReactionFieldEpsilon)
-{
-    CoulombLongRangeInputParser parser(*_engine);
-
-    std::vector<std::string> lineElements = {"rf-epsilon", "=", "1.0"};
-    parser.parseReactionFieldEpsilon(lineElements, 0);
-    EXPECT_EQ(PotentialSettings::getReactionFieldEpsilon(), 1.0);
-
-    lineElements = {"rf-epsilon", "=", "0.999999"};
-    EXPECT_THROW_MSG(
-        parser.parseReactionFieldEpsilon(lineElements, 0),
-        InputFileException,
-        "Static relative permittivity \"rf_epsilon\" cannot be lower than "
-        "1.0"
-    );
-
-    lineElements = {"rf-epsilon", "=", "-1.0"};
-    EXPECT_THROW_MSG(
-        parser.parseReactionFieldEpsilon(lineElements, 0),
-        InputFileException,
-        "Static relative permittivity \"rf_epsilon\" cannot be lower than "
-        "1.0"
     );
 }

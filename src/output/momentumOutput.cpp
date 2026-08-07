@@ -23,8 +23,11 @@
 #include "momentumOutput.hpp"
 
 #include <format>    // for format
+#include <fstream>   // for basic_ostream, ofstream
+#include <string>    // for operator<<
 
 #include "physicalData.hpp"   // for PhysicalData
+#include "vector3d.hpp"       // for Vec3D, norm
 
 using output::MomentumOutput;
 using namespace physicalData;

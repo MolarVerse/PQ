@@ -24,6 +24,7 @@
 
 #include <format>   // for format
 #include <string>   // for string
+#include <vector>   // for vector
 
 #include "exceptions.hpp"           // for RstFileException
 #include "thermostatSettings.hpp"   // for ThermostatSettings
@@ -41,20 +42,14 @@ using namespace settings;
  * @throws RstFileException if the number of arguments is not
  * correct
  */
-void NoseHooverSection::process(
-    std::vector<std::string> &lineElements,
-    Engine &
-)
+void NoseHooverSection::process(pq::strings &lineElements, Engine &)
 {
     if (4 != lineElements.size())
-        throw RstFileException(
-            std::format(
-                "Error not enough arguments in line {} for a chi entry of the "
-                "nose "
-                "hoover thermostat",
-                _lineNumber
-            )
-        );
+        throw RstFileException(std::format(
+            "Error not enough arguments in line {} for a chi entry of the nose "
+            "hoover thermostat",
+            _lineNumber
+        ));
 
     const auto idx  = stoul(lineElements[1]);
     const auto chi  = stod(lineElements[2]);
@@ -64,13 +59,11 @@ void NoseHooverSection::process(
     auto [iterZeta, zetaIsInserted] = ThermostatSettings::addZeta(idx, zeta);
 
     if (!chiIsInserted || !zetaIsInserted)
-        throw RstFileException(
-            std::format(
-                "Error in line {} in restart file; chi or zeta entry already "
-                "exists",
-                _lineNumber
-            )
-        );
+        throw RstFileException(std::format(
+            "Error in line {} in restart file; chi or zeta entry already "
+            "exists",
+            _lineNumber
+        ));
 }
 
 /**

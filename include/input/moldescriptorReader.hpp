@@ -26,6 +26,7 @@
 
 #include <fstream>   // for ifstream
 #include <string>    // for string
+#include <vector>    // for vector
 
 #include "defaults.hpp"
 #include "typeAliases.hpp"
@@ -44,7 +45,7 @@ namespace input::molDescriptor
     {
        private:
         int           _lineNumber;
-        std::string   _fileName = defaults::MOLDESCRIPTOR_FILE_DEFAULT;
+        std::string   _fileName = defaults::_MOLDESCRIPTOR_FILE_DEFAULT_;
         std::ifstream _fp;
 
         pq::Engine &_engine;
@@ -53,7 +54,7 @@ namespace input::molDescriptor
         explicit MoldescriptorReader(pq::Engine &engine);
 
         void read();
-        void processMolecule(std::vector<std::string> &lineElements);
+        void processMolecule(pq::strings &lineElements);
         void convertExternalToInternalAtomTypes(pq::MoleculeType &) const;
     };
 

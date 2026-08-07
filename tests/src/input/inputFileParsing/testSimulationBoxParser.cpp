@@ -28,7 +28,9 @@
 #include "engine.hpp"                     // for Engine
 #include "exceptions.hpp"                 // for InputFileException
 #include "gtest/gtest.h"                  // for Message, TestPartResult
+#include "inputFileParser.hpp"            // for readInput
 #include "potentialSettings.hpp"          // for PotentialSettings
+#include "simulationBox.hpp"              // for SimulationBox
 #include "simulationBoxInputParser.hpp"   // for InputFileParserSimulationBox
 #include "simulationBoxSettings.hpp"      // for SimulationBoxSettings
 #include "testInputFileReader.hpp"        // for TestInputFileReader
@@ -54,13 +56,6 @@ TEST_F(TestInputFileReader, parseDensity)
         parser.parseDensity(lineElements2, 0),
         customException::InputFileException,
         "Density must be positive - density = -1"
-    );
-
-    const std::vector<std::string> zeroDensity = {"density", "=", "0"};
-    EXPECT_THROW_MSG(
-        parser.parseDensity(zeroDensity, 0),
-        customException::InputFileException,
-        "Density must be positive - density = 0"
     );
 }
 

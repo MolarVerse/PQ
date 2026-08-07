@@ -25,10 +25,11 @@
 #include <cmath>   // for sqrt, sin
 
 #include "coulombPotential.hpp"   // for CoulombPotential
-#include "forceField.hpp"         // IWYU pragma: keep - for correctLinker
+#include "forceField.hpp"         // for correctLinker
 #include "molecule.hpp"           // for Molecule
 #include "physicalData.hpp"       // for PhysicalData
 #include "simulationBox.hpp"      // for SimulationBox
+#include "vector3d.hpp"           // for Vector3D, cross, operator*, normSquared
 
 using namespace forceField;
 using namespace simulationBox;
@@ -91,29 +92,22 @@ void AngleForceField::calculateEnergyAndForces(
 
     physicalData.addAngleEnergy(-forceMagnitude * deltaAngle / 2.0);
 
-    auto forcexyz = linearAlgebra::Vec3D{0.0, 0.0, 0.0};
+    const auto normalDistance = distance12 * distance13 * ::sin(alpha);
 
-    // Guard against near-collinear angles where division by sin(alpha) is unstable.
-    const auto sinAlpha = ::sin(alpha);
-    if (std::fabs(sinAlpha) >= 1.0e-10)
-    {
-        const auto normalDistance = distance12 * distance13 * sinAlpha;
+    auto normalPosition  = cross(dPosition13, dPosition12);
+    normalPosition      /= normalDistance;
 
-        auto normalPosition  = cross(dPosition13, dPosition12);
-        normalPosition      /= normalDistance;
+    auto force    = forceMagnitude / distance12Squared;
+    auto forcexyz = force * cross(dPosition12, normalPosition);
 
-        auto force = forceMagnitude / distance12Squared;
-        forcexyz   = force * cross(dPosition12, normalPosition);
+    _molecules[0]->addAtomForce(_atomIndices[0], -forcexyz);
+    _molecules[1]->addAtomForce(_atomIndices[1], forcexyz);
 
-        _molecules[0]->addAtomForce(_atomIndices[0], -forcexyz);
-        _molecules[1]->addAtomForce(_atomIndices[1], forcexyz);
+    force    = forceMagnitude / distance13Squared;
+    forcexyz = force * cross(normalPosition, dPosition13);
 
-        force    = forceMagnitude / distance13Squared;
-        forcexyz = force * cross(normalPosition, dPosition13);
-
-        _molecules[0]->addAtomForce(_atomIndices[0], -forcexyz);
-        _molecules[2]->addAtomForce(_atomIndices[2], forcexyz);
-    }
+    _molecules[0]->addAtomForce(_atomIndices[0], -forcexyz);
+    _molecules[2]->addAtomForce(_atomIndices[2], forcexyz);
 
     if (_isLinker)
     {

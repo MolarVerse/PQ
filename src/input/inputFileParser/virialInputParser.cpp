@@ -22,13 +22,16 @@
 
 #include "virialInputParser.hpp"
 
-#include <format>   // for format
+#include <format>       // for format
+#include <functional>   // for _Bind_front_t, bind_front
 
-#include "engine.hpp"       // for Engine
-#include "exceptions.hpp"   // for InputFileException, customException
-#include "parserUtils.hpp"
-#include "settings.hpp"
+#include "atomicVirial.hpp"      // for VirialAtomic
+#include "engine.hpp"            // for Engine
+#include "exceptions.hpp"        // for InputFileException, customException
+#include "molecularVirial.hpp"   // for VirialMolecular
+#include "physicalData.hpp"      // for PhysicalData
 #include "stringUtilities.hpp"   // for toLowerCopy
+#include "virial.hpp"            // for Virial
 
 using namespace input;
 using namespace virial;
@@ -45,11 +48,11 @@ using namespace utilities;
  *
  * @param engine
  */
-VirialInputParser::VirialInputParser(Engine& engine) : InputFileParser(engine)
+VirialInputParser::VirialInputParser(Engine &engine) : InputFileParser(engine)
 {
     addKeyword(
         std::string("virial"),
-        bindMember(&VirialInputParser::parseVirial, this),
+        bind_front(&VirialInputParser::parseVirial, this),
         false
     );
 }
@@ -67,7 +70,7 @@ VirialInputParser::VirialInputParser(Engine& engine) : InputFileParser(engine)
  * @throws InputFileException if invalid virial keyword
  */
 void VirialInputParser::parseVirial(
-    const std::vector<std::string>& lineElements,
+    const std::vector<std::string> &lineElements,
     const size_t                    lineNumber
 )
 {
@@ -76,11 +79,13 @@ void VirialInputParser::parseVirial(
     const auto virial = toLowerCopy(lineElements[2]);
 
     if (virial == "molecular")
-        settings::Settings::setVirialType(settings::VirialType::MOLECULAR);
+        _engine.makeVirial(MolecularVirial());
 
     else if (virial == "atomic")
-        settings::Settings::setVirialType(settings::VirialType::ATOMIC);
-
+    {
+        _engine.makeVirial(AtomicVirial());
+        _engine.getPhysicalData().changeKineticVirialToAtomic();
+    }
     else
         throw InputFileException(format(
             "Invalid virial setting \"{}\" at line {} in input file.\n"

@@ -28,10 +28,7 @@ using namespace virial;
  * @brief Construct a new Virial Atomic:: Virial Atomic object
  *
  */
-AtomicVirial::AtomicVirial() : Virial()
-{
-    _virialType = settings::VirialType::ATOMIC;
-}
+AtomicVirial::AtomicVirial() : Virial() { _virialType = "atomic"; }
 
 /**
  * @brief clones the atomic virial object

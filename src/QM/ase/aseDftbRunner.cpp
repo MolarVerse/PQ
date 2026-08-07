@@ -22,16 +22,18 @@
 
 #include "aseDftbRunner.hpp"
 
-#include <pybind11/embed.h>
+#include "hubbardDerivMap.hpp"
+#include "pybind11/embed.h"
 
 using QM::AseDftbRunner;
+using namespace constants;
 
 /**
  * @brief Construct a new AseDftbRunner::AseDftbRunner object
  *
  * @param slakos
  *
- * @throw pybind11::error_already_set if the import of the mace module fails
+ * @throw py::error_already_set if the import of the mace module fails
  */
 AseDftbRunner::AseDftbRunner(
     const std::string                             &slakosPath,
@@ -39,14 +41,14 @@ AseDftbRunner::AseDftbRunner(
     const std::unordered_map<std::string, double> &hubbardDerivs,
     const bool                                     dispersion
 )
-    : AseQMRunner()
+    : ASEQMRunner()
 {
     try
     {
-        const pybind11::module_ calculator =
-            pybind11::module_::import("ase.calculators.dftb");
+        const py::module_ calculator =
+            py::module_::import("ase.calculators.dftb");
 
-        const pybind11::dict calculatorArgs;
+        const py::dict calculatorArgs;
 
         calculatorArgs["slako_dir"] = slakosPath.c_str();
 
@@ -78,10 +80,10 @@ AseDftbRunner::AseDftbRunner(
         calculatorArgs["Hamiltonian_SCC"]              = "Yes";
         calculatorArgs["Hamiltonian_SCCTolerance"]     = "1e-6";
         calculatorArgs["Hamiltonian_MaxSCCIterations"] = "250";
-        calculatorArgs["kpts"] = pybind11::make_tuple(1, 1, 1);
-        setAseCalculator(calculator.attr("Dftb")(**calculatorArgs));
+        calculatorArgs["kpts"] = py::make_tuple(1, 1, 1);
+        _calculator            = calculator.attr("Dftb")(**calculatorArgs);
     }
-    catch (const pybind11::error_already_set &)
+    catch (const py::error_already_set &)
     {
         ::PyErr_Print();
         throw;

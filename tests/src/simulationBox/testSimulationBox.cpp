@@ -22,6 +22,7 @@
 
 #include "testSimulationBox.hpp"
 
+#include <algorithm>   // for copy
 #include <cstddef>     // for size_t, std
 #include <map>         // for map
 #include <optional>    // for optional
@@ -32,7 +33,6 @@
 #include "gtest/gtest.h"    // for Message, TestPartResult, AssertionRe...
 #include "potentialSettings.hpp"   // for PotentialSettings
 #include "throwWithMessage.hpp"    // for throwWithMessage
-#include "vectorNear.hpp"          // for EXPECT_VECTOR_NEAR
 
 /**
  * @brief tests numberOfAtoms function
@@ -381,77 +381,4 @@ TEST_F(
         customException::UserInputException,
         "Molecule type 1 not found in molecule types"
     );
-}
-
-/**
- * @brief tests SimulationBox::removeNetForce()
- *
- */
-TEST_F(TestSimulationBox, removeNetForce)
-{
-    using namespace simulationBox;
-    using namespace linearAlgebra;
-
-    SimulationBox simBox;
-    auto          atom1 = Atom();
-    auto          atom2 = Atom();
-    auto          atom3 = Atom();
-
-    atom1.setForce({3.0, 1.0, 0.0});
-    atom2.setForce({2.0, 4.0, -2.0});
-    atom3.setForce({1.0, 4.0, 2.0});
-
-    simBox.addAtom(std::make_shared<Atom>(atom1));
-    simBox.addAtom(std::make_shared<Atom>(atom2));
-    simBox.addAtom(std::make_shared<Atom>(atom3));
-
-    EXPECT_VECTOR_NEAR(
-        simBox.calculateTotalForceVector(),
-        Vec3D({6.0, 9.0, 0.0}),
-        1e-10
-    );
-
-    simBox.removeNetForce();
-
-    EXPECT_VECTOR_NEAR(
-        simBox.calculateTotalForceVector(),
-        Vec3D({0.0, 0.0, 0.0}),
-        1e-10
-    );
-
-    EXPECT_VECTOR_NEAR(
-        simBox.getAtom(0).getForce(),
-        Vec3D({1.0, -2.0, 0.0}),
-        1e-10
-    );
-    EXPECT_VECTOR_NEAR(
-        simBox.getAtom(1).getForce(),
-        Vec3D({0.0, 1.0, -2.0}),
-        1e-10
-    );
-    EXPECT_VECTOR_NEAR(
-        simBox.getAtom(2).getForce(),
-        Vec3D({-1.0, 1.0, 2.0}),
-        1e-10
-    );
-}
-
-/**
- * @brief tests SimulationBox::updateOldPositions()
- *
- */
-TEST_F(TestSimulationBox, updateOldPositions)
-{
-    using namespace simulationBox;
-    using namespace linearAlgebra;
-
-    _simulationBox->getAtoms()[0]->setPositionOld({9.0, 9.0, 9.0});
-    _simulationBox->getAtoms()[1]->setPositionOld({9.0, 9.0, 9.0});
-
-    _simulationBox->updateOldPositions();
-
-    for (const auto &atom : _simulationBox->getAtoms())
-    {
-        EXPECT_VECTOR_NEAR(atom->getPositionOld(), atom->getPosition(), 1e-10);
-    }
 }

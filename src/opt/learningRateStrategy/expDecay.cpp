@@ -22,7 +22,10 @@
 
 #include "expDecay.hpp"
 
+#include "optimizerSettings.hpp"
+
 using namespace opt;
+using namespace settings;
 
 /**
  * @brief Construct a new Exp Decay L R Strategy:: Exp Decay L R Strategy object

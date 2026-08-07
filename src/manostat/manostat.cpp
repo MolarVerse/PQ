@@ -22,10 +22,11 @@
 
 #include "manostat.hpp"
 
+#include <functional>   // for function
+
 #include "constants/internalConversionFactors.hpp"   // for _PRESSURE_FACTOR_
-#include "manostatSettings.hpp"   // for ManostatType, Isotropy
-#include "physicalData.hpp"       // for PhysicalData
-#include "simulationBox.hpp"      // for SimulationBox
+#include "physicalData.hpp"                          // for PhysicalData
+#include "simulationBox.hpp"                         // for SimulationBox
 
 using namespace manostat;
 using namespace simulationBox;
@@ -49,10 +50,9 @@ Manostat::Manostat(const double targetPressure)
  *
  * @param data
  */
-void Manostat::calculatePressure(const SimulationBox& box, PhysicalData& data)
+void Manostat::calculatePressure(const SimulationBox &box, PhysicalData &data)
 {
-    auto ekinVirial =
-        data.getKinEnergyVirialTensor(settings::Settings::getVirialType());
+    auto       ekinVirial  = data.getKinEnergyVirialTensor();
     auto       forceVirial = data.getVirial();
     const auto volume      = box.getVolume();
 
@@ -60,7 +60,7 @@ void Manostat::calculatePressure(const SimulationBox& box, PhysicalData& data)
     forceVirial = box.getBox().toOrthoSpace(forceVirial);
 
     _pressureTensor  = (2.0 * ekinVirial + forceVirial) / volume;
-    _pressureTensor *= PRESSURE_FACTOR;
+    _pressureTensor *= _PRESSURE_FACTOR_;
 
     _pressure = trace(_pressureTensor) / 3.0;
 
@@ -71,12 +71,11 @@ void Manostat::calculatePressure(const SimulationBox& box, PhysicalData& data)
  * @brief rotate mu back into upper diagonal space
  *
  * @details first order approximation of mu rotation according to gromacs
- * @link
- * https://manual.gromacs.org/current/reference-manual/algorithms/molecular-dynamics.html
+ * @link https://manual.gromacs.org/current/reference-manual/algorithms/molecular-dynamics.html
  *
  * @param mu
  */
-void Manostat::rotateMu(tensor3D& mu) const
+void Manostat::rotateMu(tensor3D &mu) const
 {
     mu[0][1] += mu[1][0];
     mu[0][2] += mu[2][0];
@@ -92,7 +91,7 @@ void Manostat::rotateMu(tensor3D& mu) const
  *
  * @param data
  */
-void Manostat::applyManostat(SimulationBox& box, PhysicalData& data)
+void Manostat::applyManostat(SimulationBox &box, PhysicalData &data)
 {
     startTimingsSection("Calc Pressure");
 

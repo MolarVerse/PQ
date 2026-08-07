@@ -24,13 +24,13 @@
 
 #include <algorithm>    // for __for_each_fn
 #include <cctype>       // for isspace
-#include <cmath>        // for isfinite
+#include <cmath>        // for isnan, isinf
 #include <cstdint>      // for uint_fast32_t and UINT32_MAX
-#include <filesystem>   // for is_regular_file
 #include <format>       // for format
-#include <fstream>
+#include <fstream>      // IWYU pragma: keep for basic_istream, ifstream
+#include <functional>   // for identity
 #include <ranges>   // for begin, end, operator|, views::split, views::transform
-#include <sstream>
+#include <sstream>       // IWYU pragma: keep for basic_stringstream
 #include <stdexcept>     // for out_of_range and invalid_argument
 #include <string>        // for string
 #include <string_view>   // for string_view
@@ -102,13 +102,10 @@ std::vector<std::string> utilities::getLineCommands(
 
     auto splitView = line | split(delim) | transform(transformView);
 
-    std::vector<std::string> lineCommands;
+    pq::strings lineCommands;
     for (auto it : splitView) lineCommands.emplace_back(it);
 
-    return std::vector<std::string>(
-        lineCommands.begin(),
-        lineCommands.end() - 1
-    );
+    return pq::strings(lineCommands.begin(), lineCommands.end() - 1);
 }
 
 /**
@@ -119,8 +116,8 @@ std::vector<std::string> utilities::getLineCommands(
  */
 std::vector<std::string> utilities::splitString(const std::string &line)
 {
-    std::string              word;
-    std::vector<std::string> lineElements = {};
+    std::string word;
+    pq::strings lineElements = {};
 
     std::stringstream ss(line);
 
@@ -210,9 +207,6 @@ std::string utilities::firstLetterToUpperCaseCopy(std::string myString)
  */
 bool utilities::fileExists(const std::string &filename)
 {
-    if (!std::filesystem::is_regular_file(filename))
-        return false;
-
     std::ifstream file(filename);
     return file.good();
 }
@@ -227,7 +221,7 @@ bool utilities::fileExists(const std::string &filename)
  *
  * @throw InputFileException if none of these strings is matched
  */
-bool utilities::keywordToBool(const std::vector<std::string> &lineElements)
+bool utilities::keywordToBool(const pq::strings &lineElements)
 {
     const auto option = toLowerCopy(lineElements[2]);
 
@@ -325,47 +319,6 @@ std::uint_fast32_t utilities::stringToUintFast32t(const std::string &str)
 }
 
 /**
- * @brief converts a complete string to an int
- *
- * @param str
- *
- * @throw invalid_argument if the complete string is not a valid integer
- * @throw out_of_range if number is out of range for an int
- */
-int utilities::stringToInt(const std::string &str)
-{
-    size_t parsedCharacters{};
-    int    value{};
-
-    try
-    {
-        value = std::stoi(str, &parsedCharacters);
-    }
-    catch (const std::invalid_argument &)
-    {
-        throw std::invalid_argument(
-            std::format("Invalid integer value '{}' encountered", str)
-        );
-    }
-    catch (const std::out_of_range &)
-    {
-        throw std::out_of_range(
-            std::format(
-                "Integer value '{}' exceeds the representable range for an int",
-                str
-            )
-        );
-    }
-
-    if (parsedCharacters != str.size())
-        throw std::invalid_argument(
-            std::format("Invalid integer value '{}' encountered", str)
-        );
-
-    return value;
-}
-
-/**
  * @brief converts a string to a non-Nan and non-Inf double
  *
  * @param str
@@ -375,12 +328,11 @@ int utilities::stringToInt(const std::string &str)
  */
 double utilities::stringToFiniteDouble(const std::string &str)
 {
-    size_t parsedCharacters{};
     double value{};
 
     try
     {
-        value = std::stod(str, &parsedCharacters);
+        value = std::stod(str);
     }
     catch (const std::invalid_argument &)
     {
@@ -399,7 +351,7 @@ double utilities::stringToFiniteDouble(const std::string &str)
         );
     }
 
-    if (parsedCharacters != str.size() || !std::isfinite(value))
+    if (std::isnan(value) || std::isinf(value))
         throw std::invalid_argument(
             std::format("Invalid floating-point value '{}' encountered", str)
         );

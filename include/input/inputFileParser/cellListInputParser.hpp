@@ -24,7 +24,11 @@
 
 #define _CELL_LIST_INPUT_PARSER_HPP_
 
+#include <string>
+#include <vector>
+
 #include "inputFileParser.hpp"
+#include "typeAliases.hpp"
 
 namespace input
 {
@@ -39,12 +43,8 @@ namespace input
        public:
         explicit CellListInputParser(pq::Engine &);
 
-        void parseCellListActivated(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseNumberOfCells(const std::vector<std::string> &, const size_t);
+        void parseCellListActivated(const pq::strings &, const size_t);
+        void parseNumberOfCells(const pq::strings &, const size_t);
     };
 
 }   // namespace input

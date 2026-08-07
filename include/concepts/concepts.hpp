@@ -24,7 +24,7 @@
 
 #define _CONCEPTS_HPP_
 
-#include "base.hpp"        // IWYU pragma: export
-#include "innerType.hpp"   // IWYU pragma: export
+#include "base.hpp"
+#include "innerType.hpp"
 
 #endif   // _CONCEPTS_HPP_

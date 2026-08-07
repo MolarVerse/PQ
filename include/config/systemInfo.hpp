@@ -28,15 +28,15 @@
 
 namespace sysinfo
 {
-    static constexpr char AUTHOR[]   = "Jakob Gamper";
-    static constexpr char JOSEF[]    = "Josef M. Gallmetzer";
-    static constexpr char STEFAN[]   = "Stefan Seiwald";
-    static constexpr char BENJAMIN[] = "Benjamin Reitmair";
-    static constexpr char ARMIN[]    = "Armin Penz";
+    static constexpr char _AUTHOR_[]   = "Jakob Gamper";
+    static constexpr char _JOSEF_[]    = "Josef M. Gallmetzer";
+    static constexpr char _STEFAN_[]   = "Stefan Seiwald";
+    static constexpr char _BENJAMIN_[] = "Benjamin Reitmair";
+    static constexpr char _ARMIN_[]    = "Armin Penz";
 
-    static constexpr char EMAIL[]        = "97gamjak@gmail.com";
-    static constexpr char COMPILE_DATE[] = __DATE__ " " __TIME__;
-    static constexpr char VERSION[]      = COMPILE_VERSION_;
+    static constexpr char _EMAIL_[]        = "97gamjak@gmail.com";
+    static constexpr char _COMPILE_DATE_[] = __DATE__ " " __TIME__;
+    static constexpr char _VERSION_[]      = COMPILE_VERSION_;
 
 }   // namespace sysinfo
 

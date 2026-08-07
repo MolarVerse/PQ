@@ -22,15 +22,15 @@
 
 #include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ
 
-#include <map>      // for map
-#include <string>   // for string, allocator, basic_string
-#include <vector>   // for vector
+#include <functional>   // for _Bind_front_t, bind_front
+#include <map>          // for map
+#include <string>       // for string, allocator, basic_string
+#include <vector>       // for vector
 
-#include "exceptions.hpp"           // for InputFileException
-#include "generalInputParser.hpp"   // for InputFileParserGeneral
-#include "gtest/gtest.h"            // for Message, TestPartResult
-#include "inputFileParser.hpp"      // for ParseFunc, checkCommand
-#include "parserUtils.hpp"
+#include "exceptions.hpp"            // for InputFileException
+#include "generalInputParser.hpp"    // for InputFileParserGeneral
+#include "gtest/gtest.h"             // for Message, TestPartResult
+#include "inputFileParser.hpp"       // for ParseFunc, checkCommand
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "throwWithMessage.hpp"      // for ASSERT_THROW_MSG
 
@@ -114,7 +114,7 @@ TEST_F(TestInputFileReader, addKeyword)
 
     parser.addKeyword(
         "test",
-        input::bindMember(&GeneralInputParser::parseJobType, &parser),
+        bind_front(&GeneralInputParser::parseJobType, parser),
         true
     );
 

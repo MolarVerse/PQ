@@ -20,8 +20,13 @@ target_link_libraries(restartFileReader
     linearAlgebra
 )
 
-install(TARGETS restartFileReader
-    DESTINATION lib
-)
+if(BUILD_WITH_TESTS)
+    target_link_libraries(restartFileReader
+        PUBLIC
+        gtest
+    )
+endif()
 
-target_precompile_headers(restartFileReader REUSE_FROM pq_pch)
+install(TARGETS restartFileReader
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+)

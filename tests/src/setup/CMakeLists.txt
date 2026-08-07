@@ -12,10 +12,6 @@ set(source_files
     testQMSetup.cpp
     testQMSetupAse.cpp
     testRandomNumberGeneratorSetup.cpp
-    testOptimizerSetup.cpp
-    testHybridSetup.cpp
-    testOutputFilesSetup.cpp
-    testRingPolymerSetup.cpp
 )
 
 foreach(source_file ${source_files})
@@ -33,15 +29,11 @@ foreach(source_file ${source_files})
         gtest
         gmock
         pq_test_main
-        testUtils
     )
     add_test(
         NAME ${test_name}
         COMMAND ${test_name}
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/tests
-    )
-    target_precompile_headers(${test_name}
-        REUSE_FROM pq_test_pch
     )
 
     set_property(TEST ${test_name} PROPERTY LABELS setup)

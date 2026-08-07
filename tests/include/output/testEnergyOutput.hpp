@@ -31,6 +31,7 @@
 
 #include <cstdio>          // for remove
 #include <gtest/gtest.h>   // for Test
+#include <memory>          // for allocator
 
 /**
  * @class TestEnergyOutput

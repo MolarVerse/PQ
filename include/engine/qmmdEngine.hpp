@@ -51,7 +51,6 @@ namespace engine
 
         void setQMRunner(const settings::QMMethod method);
         void setMaceQMRunner();
-        void setAseFennolRunner();
         void setAseDftbRunner();
         void setAseXtbRunner();
 

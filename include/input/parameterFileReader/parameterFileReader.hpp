@@ -25,9 +25,12 @@
 #define _PARAMETER_FILE_READER_HPP_
 
 #include <fstream>   // for ifstream
+#include <memory>    // for unique_ptr
 #include <string>
 #include <string_view>   // for string_view
+#include <vector>        // for vector
 
+#include "parameterFileSection.hpp"
 #include "typeAliases.hpp"
 
 namespace input::parameterFile
@@ -52,13 +55,12 @@ namespace input::parameterFile
 
        public:
         ParameterFileReader(const std::string &filename, pq::Engine &engine);
-        ~ParameterFileReader();
 
         void read();
         void deleteSection(const pq::ParamFileSection *section);
 
         [[nodiscard]] pq::ParamFileSection *determineSection(
-            const std::vector<std::string> &lineElements
+            const pq::strings &lineElements
         );
 
         /**************************************

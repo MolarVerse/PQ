@@ -24,13 +24,13 @@
 
 #define _TRICLINIC_BOX_HPP_
 
-#include "box.hpp"   // for Box
+#include "box.hpp"           // for Box
+#include "constants.hpp"     // for _DEG_TO_RAD_
+#include "typeAliases.hpp"   // for tensor3D, Vec3D
 
 namespace simulationBox
 {
-    std::pair<linearAlgebra::Vec3D, linearAlgebra::Vec3D> calcBoxDimAndAnglesFromBoxMatrix(
-        const linearAlgebra::tensor3D &
-    );
+    pq::Vec3DPair calcBoxDimAndAnglesFromBoxMatrix(const pq::tensor3D &);
 
     /**
      * @class TriclinicBox
@@ -41,40 +41,34 @@ namespace simulationBox
     class TriclinicBox : public Box
     {
        private:
-        linearAlgebra::Vec3D    _boxAngles;
-        linearAlgebra::tensor3D _boxMatrix{0.0};
-        linearAlgebra::tensor3D _transformationMatrix{0.0};
+        pq::Vec3D    _boxAngles;
+        pq::tensor3D _boxMatrix{0.0};
+        pq::tensor3D _transformationMatrix{0.0};
 
         void calculateBoxMatrix();
         void calculateTransformationMatrix();
 
        public:
-        [[nodiscard]] double               calculateVolume() override;
-        [[nodiscard]] linearAlgebra::Vec3D calcShiftVector(
-            const linearAlgebra::Vec3D &
+        [[nodiscard]] double    calculateVolume() override;
+        [[nodiscard]] pq::Vec3D calcShiftVector(
+            const pq::Vec3D &
         ) const override;
 
-        [[nodiscard]] linearAlgebra::Vec3D toOrthoSpace(
-            const linearAlgebra::Vec3D &
-        ) const override;
-        [[nodiscard]] linearAlgebra::tensor3D toOrthoSpace(
-            const linearAlgebra::tensor3D &
+        [[nodiscard]] pq::Vec3D toOrthoSpace(const pq::Vec3D &) const override;
+        [[nodiscard]] pq::tensor3D toOrthoSpace(
+            const pq::tensor3D &
         ) const override;
 
-        [[nodiscard]] linearAlgebra::Vec3D toSimSpace(
-            const linearAlgebra::Vec3D &
-        ) const override;
-        [[nodiscard]] linearAlgebra::tensor3D toSimSpace(
-            const linearAlgebra::tensor3D &
+        [[nodiscard]] pq::Vec3D    toSimSpace(const pq::Vec3D &) const override;
+        [[nodiscard]] pq::tensor3D toSimSpace(
+            const pq::tensor3D &
         ) const override;
 
-        void applyPBC(linearAlgebra::Vec3D &position) const override;
-        void scaleBox(const linearAlgebra::tensor3D &scalingTensor) override;
+        void applyPBC(pq::Vec3D &position) const override;
+        void scaleBox(const pq::tensor3D &scalingTensor) override;
 
-        void setBoxAngles(const linearAlgebra::Vec3D &boxAngles);
-        void setBoxDimensions(
-            const linearAlgebra::Vec3D &boxDimensions
-        ) override;
+        void setBoxAngles(const pq::Vec3D &boxAngles);
+        void setBoxDimensions(const pq::Vec3D &boxDimensions) override;
 
         [[nodiscard]] double getMinimalBoxDimension() const override;
 
@@ -85,11 +79,11 @@ namespace simulationBox
         [[nodiscard]] double sinBeta() const;
         [[nodiscard]] double sinGamma() const;
 
-        [[nodiscard]] linearAlgebra::Vec3D    getBoxAngles() const override;
-        [[nodiscard]] linearAlgebra::tensor3D getBoxMatrix() const override;
-        [[nodiscard]] linearAlgebra::tensor3D getTransformationMatrix() const;
-        [[nodiscard]] linearAlgebra::Vec3D    wrapPositionIntoBox(
-               const linearAlgebra::Vec3D &
+        [[nodiscard]] pq::Vec3D    getBoxAngles() const override;
+        [[nodiscard]] pq::tensor3D getBoxMatrix() const override;
+        [[nodiscard]] pq::tensor3D getTransformationMatrix() const;
+        [[nodiscard]] pq::Vec3D    wrapPositionIntoBox(
+               const pq::Vec3D &
            ) const override;
     };
 

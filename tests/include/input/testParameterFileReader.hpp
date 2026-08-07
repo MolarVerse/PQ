@@ -32,6 +32,7 @@
 #include "mmmdEngine.hpp"            // for Engine
 #include "molecule.hpp"              // for Molecule
 #include "parameterFileReader.hpp"   // for ParameterFileReader
+#include "simulationBox.hpp"         // for SimulationBox
 
 /**
  * @class TestParameterFileReader

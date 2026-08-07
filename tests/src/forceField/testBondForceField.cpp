@@ -26,7 +26,6 @@
 #include <cstddef>   // for size_t
 #include <memory>    // for shared_ptr, allocator
 
-#include "../potential/nonCoulomb/testForceFieldNonCoulomb.hpp"
 #include "atom.hpp"                      // for Atom
 #include "bondForceField.hpp"            // for BondForceField
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
@@ -38,30 +37,28 @@
 #include "molecule.hpp"                  // for Molecule
 #include "physicalData.hpp"              // for PhysicalData
 #include "simulationBox.hpp"             // for SimulationBox
+#include "vector3d.hpp"                  // for Vector3D, Vec3D, operator*
 
 namespace potential
 {
     class NonCoulombPair;   // forward declaration
 }
 
-class TestBondForceField : public TestNonCoulombPotentialFF
-{
-};
-
-TEST_F(TestBondForceField, calculateEnergyAndForces)
+TEST(TestBondForceField, calculateEnergyAndForces)
 {
     auto box = simulationBox::SimulationBox();
     box.setBoxDimensions({10.0, 10.0, 10.0});
 
-    auto physicalData     = physicalData::PhysicalData();
-    auto coulombPotential = potential::CoulombShiftedPotential(10.0);
+    auto physicalData        = physicalData::PhysicalData();
+    auto coulombPotential    = potential::CoulombShiftedPotential(10.0);
+    auto nonCoulombPotential = potential::ForceFieldNonCoulomb();
 
     auto nonCoulombPair =
         potential::LennardJonesPair(size_t(0), size_t(1), 5.0, 2.0, 4.0);
-    setNonCoulombPairsMatrix(
+    nonCoulombPotential.setNonCoulombPairsMatrix(
         linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(2, 2)
     );
-    setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
+    nonCoulombPotential.setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
 
     auto molecule = simulationBox::Molecule();
 
@@ -95,7 +92,7 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
         box,
         physicalData,
         coulombPotential,
-        *_nonCoulombPotential
+        nonCoulombPotential
     );
 
     auto force = (::sqrt(14) - 1.2) * 3.0 / ::sqrt(14) *
@@ -135,7 +132,7 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
         box,
         physicalData,
         coulombPotential,
-        *_nonCoulombPotential
+        nonCoulombPotential
     );
 
     force = {-0.68765171383567736, -1.3753034276713547, -2.062955141507032};

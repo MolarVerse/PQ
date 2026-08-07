@@ -20,8 +20,6 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifdef WITH_KOKKOS
-
 #include "potential_kokkos.hpp"
 
 #include <cstddef>   // for size_t
@@ -29,7 +27,6 @@
 #include "coulombWolf_kokkos.hpp"   // for CoulombWolf implementation with Kokkos
 #include "lennardJones_kokkos.hpp"   // for LennardJones implementation with Kokkos
 #include "physicalData.hpp"          // for PhysicalData
-#include "simulationBox.hpp"         // for SimulationBox
 #include "simulationBox_kokkos.hpp"   // for SimulationBox implementation with Kokkos
 
 using namespace potential;
@@ -191,5 +188,3 @@ void KokkosPotential::calculateForces(
 
     stopTimingsSection("InterNonBonded - Transfer");
 }
-
-#endif   // WITH_KOKKOS
