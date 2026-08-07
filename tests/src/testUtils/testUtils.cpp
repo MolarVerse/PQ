@@ -74,21 +74,21 @@ namespace test
     );
 
     // QM runners
-    template void checkType<QM::QMRunner*>(
-        QM::QMRunner* const&  runner,
+    template void checkType<QM::QMRunner>(
+        QM::QMRunner const&   runner,
         const std::type_info& expectedType
     );
-    template void checkType<QM::DFTBPlusRunner*>(
-        QM::DFTBPlusRunner* const& runner,
+    template void checkType<QM::DFTBPlusRunner>(
+        QM::DFTBPlusRunner const& runner,
+        const std::type_info&     expectedTypech
+    );
+    template void checkType<QM::PySCFRunner>(
+        QM::PySCFRunner const& runner,
+        const std::type_info&  expectedType
+    );
+    template void checkType<QM::TurbomoleRunner>(
+        QM::TurbomoleRunner const& runner,
         const std::type_info&      expectedType
-    );
-    template void checkType<QM::PySCFRunner*>(
-        QM::PySCFRunner* const& runner,
-        const std::type_info&   expectedType
-    );
-    template void checkType<QM::TurbomoleRunner*>(
-        QM::TurbomoleRunner* const& runner,
-        const std::type_info&       expectedType
     );
 
 }   // namespace test
