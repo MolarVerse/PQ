@@ -1,1 +1,0 @@
-- Fix release recovery when main and dev contain deleted or conflicted files.

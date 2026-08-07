@@ -1,1 +1,0 @@
-- Automate release PR creation, changelog preparation, publishing, and sync PRs with PQ Release Bot.

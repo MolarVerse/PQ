@@ -1,1 +1,0 @@
-- Prevent undefined forces for collinear angle configurations, including linear equilibrium geometries such as CO2.
