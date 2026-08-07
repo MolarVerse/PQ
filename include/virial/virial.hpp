@@ -61,10 +61,10 @@ namespace virial
         virtual std::shared_ptr<Virial> clone() const = 0;
 
         virtual linearAlgebra::tensor3D calculateVirial(
-            simulationBox::SimulationBox &
+            simulationBox::SimulationBox&
         ) const;
         virtual linearAlgebra::tensor3D calculateQMVirial(
-            simulationBox::SimulationBox &
+            simulationBox::SimulationBox&
         ) const;
 
         virtual void calculateVirial(
@@ -78,7 +78,7 @@ namespace virial
         {
         }
         virtual linearAlgebra::tensor3D intraMolecularVirialCorrection(
-            simulationBox::SimulationBox &
+            simulationBox::SimulationBox&
         ) const
         {
             return linearAlgebra::tensor3D{0.0};

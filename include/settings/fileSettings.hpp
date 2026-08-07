@@ -53,8 +53,9 @@ namespace settings
         static inline std::string _rpmdStartFile;
         static inline std::string _mShakeFile;
         static inline std::string _dftbFile = defaults::DFTB_FILE_DEFAULT;
-        static inline std::string _tmFile = defaults::TM_FILE_DEFAULT;
-        static inline std::string _pointChargeFile = defaults::POINTCHARGE_FILE_DEFAULT;
+        static inline std::string _tmFile   = defaults::TM_FILE_DEFAULT;
+        static inline std::string _pointChargeFile =
+            defaults::POINTCHARGE_FILE_DEFAULT;
 
         // clang-format off
         static inline std::string _qmForcesTempFile     = defaults::QM_FORCES_TEMP_FILE_DEFAULT;

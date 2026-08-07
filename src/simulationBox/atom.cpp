@@ -175,7 +175,6 @@ void Atom::addForceInner(const Vec3D &force) { _forceInner += force; }
  */
 void Atom::addForceOuter(const Vec3D &force) { _forceOuter += force; }
 
-
 /***************************
  *                         *
  * standard getter methods *
@@ -281,7 +280,6 @@ size_t Atom::getInternalGlobalVDWType() const { return _internalGlobalVDWType; }
  * @return double
  */
 double Atom::getMass() const { return _mass; }
-
 
 /*
  * @brief return the qm charge of the atom

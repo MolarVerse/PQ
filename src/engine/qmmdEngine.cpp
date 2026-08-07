@@ -29,4 +29,7 @@ using namespace QM;
  * @brief calculate QM forces
  *
  */
-void QMMDEngine::calculateForces() { _qmRunner->run(*_simulationBox, *_physicalData); }
+void QMMDEngine::calculateForces()
+{
+    _qmRunner->run(*_simulationBox, *_physicalData);
+}

@@ -52,7 +52,11 @@ namespace QM
 
         void         throwAfterTimeout(const std::stop_token stopToken) const;
         void         run(pq::SimBox &, pq::PhysicalData &);
-        virtual void run(pq::SimBox &, pq::PhysicalData &, simulationBox::Periodicity per) = 0;
+        virtual void run(
+            pq::SimBox &,
+            pq::PhysicalData &,
+            simulationBox::Periodicity per
+        ) = 0;
     };
 }   // namespace QM
 

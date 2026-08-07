@@ -26,7 +26,7 @@
 #include <memory>
 
 #include "fileSettings.hpp"   // for FileSettings
-#include "logOutput.hpp"   // for LogOutput
+#include "logOutput.hpp"      // for LogOutput
 #include "molecularVirial.hpp"
 #include "potentialBruteForce.hpp"
 #include "stdoutOutput.hpp"      // for StdoutOutput

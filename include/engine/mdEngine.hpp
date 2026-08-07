@@ -70,7 +70,7 @@ namespace engine
         void takeStepBeforeForces();
         void takeStepAfterForces();
 
-        void calculateForcesWrapper();
+        void         calculateForcesWrapper();
         virtual void calculateForces() = 0;
 
         /***************************
