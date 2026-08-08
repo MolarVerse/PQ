@@ -1,1 +1,1 @@
-- Add first version of QMMM implementation for PQ
+- Add QM/MM hybrid type calculations with two smoothing options (hotspot, exact)
