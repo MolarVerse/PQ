@@ -40,8 +40,8 @@ namespace input::topology
     class TopologySection
     {
        protected:
-        int            _lineNumber;
-        std::ifstream *_fp;
+        int            _lineNumber = 0;
+        std::ifstream *_fp         = nullptr;
 
        public:
         virtual ~TopologySection() = default;
