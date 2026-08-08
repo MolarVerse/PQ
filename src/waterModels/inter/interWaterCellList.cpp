@@ -255,25 +255,8 @@ void InterWaterStrategyCellList::calculateCoreToOuterForces(
                     continue;
 
                 for (auto *atom_i : cell_i.getAtoms(mol_i))
-                {
-                    const bool isAtom_i_O =
-                        atom_i->getAtomicNumber() == oxygenAtomicNumber;
                     for (auto *atom_j : cell_i.getAtoms(mol_j))
-                    {
-                        const bool isAtom_j_O =
-                            atom_j->getAtomicNumber() == oxygenAtomicNumber;
-
-                        // O-H interaction (different atom types)
-                        if (isAtom_i_O != isAtom_j_O)
-                            singleCoulombInteraction(*atom_i, *atom_j);
-                        // O-O interaction
-                        else if (isAtom_i_O)
-                            singleCoulombInteraction(*atom_i, *atom_j);
-                        // H-H interaction
-                        else
-                            singleCoulombInteraction(*atom_i, *atom_j);
-                    }
-                }
+                        singleCoulombInteraction(*atom_i, *atom_j);
             }
         }
     }
@@ -292,31 +275,14 @@ void InterWaterStrategyCellList::calculateCoreToOuterForces(
                     continue;
 
                 for (auto *atom_i : cell_i.getAtoms(mol_i))
-                {
-                    const bool isAtom_i_O =
-                        atom_i->getAtomicNumber() == oxygenAtomicNumber;
                     for (const auto mol_j : cell_j->getActiveMoleculeIndices())
                     {
                         if (isNonWaterMolecule(waterMolecules_j, mol_j))
                             continue;
 
                         for (auto *atom_j : cell_j->getAtoms(mol_j))
-                        {
-                            const bool isAtom_j_O =
-                                atom_j->getAtomicNumber() == oxygenAtomicNumber;
-
-                            // O-H interaction (different atom types)
-                            if (isAtom_i_O != isAtom_j_O)
-                                singleCoulombInteraction(*atom_i, *atom_j);
-                            // O-O interaction
-                            else if (isAtom_i_O)
-                                singleCoulombInteraction(*atom_i, *atom_j);
-                            // H-H interaction
-                            else
-                                singleCoulombInteraction(*atom_i, *atom_j);
-                        }
+                            singleCoulombInteraction(*atom_i, *atom_j);
                     }
-                }
             }
         }
     }
@@ -335,31 +301,14 @@ void InterWaterStrategyCellList::calculateCoreToOuterForces(
                     continue;
 
                 for (auto *atom_i : cell_j->getAtoms(mol_i))
-                {
-                    const bool isAtom_i_O =
-                        atom_i->getAtomicNumber() == oxygenAtomicNumber;
                     for (const auto mol_j : cell_i.getActiveMoleculeIndices())
                     {
                         if (isNonWaterMolecule(waterMolecules_i, mol_j))
                             continue;
 
                         for (auto *atom_j : cell_i.getAtoms(mol_j))
-                        {
-                            const bool isAtom_j_O =
-                                atom_j->getAtomicNumber() == oxygenAtomicNumber;
-
-                            // O-H interaction (different atom types)
-                            if (isAtom_i_O != isAtom_j_O)
-                                singleCoulombInteraction(*atom_i, *atom_j);
-                            // O-O interaction
-                            else if (isAtom_i_O)
-                                singleCoulombInteraction(*atom_i, *atom_j);
-                            // H-H interaction
-                            else
-                                singleCoulombInteraction(*atom_i, *atom_j);
-                        }
+                            singleCoulombInteraction(*atom_i, *atom_j);
                     }
-                }
             }
         }
     }
