@@ -24,8 +24,6 @@
 
 #define _ASE_QM_RUNNER_HPP_
 
-#include <pybind11/numpy.h>
-
 #include "qmRunner.hpp"
 #include "typeAliases.hpp"
 
@@ -65,12 +63,6 @@ namespace QM
         void collectEnergy(pq::PhysicalData &) const;
         void collectStress(const pq::SimBox &, pq::PhysicalData &) const;
 
-        // clang-format off
-        [[nodiscard]] pybind11::array           asePositions(const pq::SimBox &) const;
-        [[nodiscard]] pybind11::array_t<double> aseCell(const pq::SimBox &) const;
-        [[nodiscard]] pybind11::array_t<bool>   asePBC() const;
-        [[nodiscard]] pybind11::array_t<int>    aseAtomicNumbers(const pq::SimBox &) const;
-        // clang-format on
        protected:
         void setAseCalculator(const pybind11::object &calculator);
     };
