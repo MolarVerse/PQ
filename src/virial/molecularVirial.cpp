@@ -82,7 +82,7 @@ void MolecularVirial::intraMolecularVirialCorrection(
     PhysicalData&  data
 )
 {
-    startTimingsSection("IntraMolecular Correction");
+    auto _ = scoped("IntraMolecular Correction");
 
     _virial = {0.0};
 
@@ -105,6 +105,4 @@ void MolecularVirial::intraMolecularVirialCorrection(
     }
 
     data.addVirial(_virial);
-
-    stopTimingsSection("IntraMolecular Correction");
 }

@@ -29,6 +29,7 @@
 #include <vector>    // for vector
 
 #include "timingsSection.hpp"   // for TimingsManager
+#include "timingsSectionGuard.hpp"
 
 namespace timings
 {
@@ -66,9 +67,7 @@ namespace timings
         ) const;
 
         void startTimingsSection();
-        void startTimingsSection(const std::string_view name);
         void stopTimingsSection();
-        void stopTimingsSection(const std::string_view name);
 
         void sortTimingsSections();
 
@@ -88,6 +87,14 @@ namespace timings
 
         [[nodiscard]] std::string getTimerName() const;
         [[nodiscard]] Timer       getTimer() const;
+
+        [[nodiscard]] TimingsSectionGuard scoped(const std::string_view name);
+
+       private:
+        friend class TimingsSectionGuard;
+
+        void startTimingsSection(const std::string_view name);
+        void stopTimingsSection(const std::string_view name);
     };
 
 }   // namespace timings

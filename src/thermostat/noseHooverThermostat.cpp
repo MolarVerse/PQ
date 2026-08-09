@@ -69,7 +69,7 @@ NoseHooverThermostat::NoseHooverThermostat(
  */
 void NoseHooverThermostat::applyThermostatOnForces(SimulationBox &simBox)
 {
-    startTimingsSection("Nose-Hoover - Forces");
+    auto _ = scoped("Nose-Hoover - Forces");
 
     const auto kB        = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
     const auto kT_target = kB * _targetTemperature;
@@ -80,14 +80,12 @@ void NoseHooverThermostat::applyThermostatOnForces(SimulationBox &simBox)
 
     auto factor  = _chi[0] * couplingFreqSquared;
     factor      /= (kT_target * degreesOfFreedom);
-    factor       *= MOMENTUM_TO_FORCE;
+    factor      *= MOMENTUM_TO_FORCE;
 
     auto applyNoseHoover = [factor](auto &atom)
     { atom->addForce(-factor * atom->getVelocity() * atom->getMass()); };
 
     std::ranges::for_each(simBox.getAtoms(), applyNoseHoover);
-
-    stopTimingsSection("Nose-Hoover - Forces");
 }
 
 /**
@@ -104,7 +102,7 @@ void NoseHooverThermostat::applyThermostat(
     PhysicalData  &physicalData
 )
 {
-    startTimingsSection("Nose-Hoover - Velocities");
+    auto _ = scoped("Nose-Hoover - Velocities");
 
     physicalData.calculateTemperature(simBox);
 
@@ -151,8 +149,6 @@ void NoseHooverThermostat::applyThermostat(
 
     physicalData.setNoseHooverMomentumEnergy(energyMomentum);
     physicalData.setNoseHooverFrictionEnergy(energyFriction);
-
-    stopTimingsSection("Nose-Hoover - Velocities");
 }
 
 /***************************

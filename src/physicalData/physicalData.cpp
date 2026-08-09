@@ -63,7 +63,7 @@ const linearAlgebra::tensor3D& KineticEnergyVirialTensor::getVirialTensor(
  */
 void PhysicalData::calculateKinetics(SimulationBox& simulationBox)
 {
-    startTimingsSection("Calc Kinetics");
+    auto _ = scoped("Calc Kinetics");
 
     _momentum = Vec3D();
     tensor3D kineticEnergyAtomicTensor{};
@@ -104,8 +104,6 @@ void PhysicalData::calculateKinetics(SimulationBox& simulationBox)
     _angularMomentum *= FS_TO_S;
 
     _momentum *= FS_TO_S;
-
-    stopTimingsSection("Calc Kinetics");
 }
 
 /**

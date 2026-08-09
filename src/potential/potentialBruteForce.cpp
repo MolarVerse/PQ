@@ -45,10 +45,13 @@ PotentialBruteForce::~PotentialBruteForce() = default;
  * @param simBox
  * @param physicalData
  */
-void PotentialBruteForce::
-    calculateForces(SimulationBox &simBox, PhysicalData &physicalData, CellList &)
+void PotentialBruteForce::calculateForces(
+    SimulationBox &simBox,
+    PhysicalData  &physicalData,
+    CellList &
+)
 {
-    startTimingsSection("InterNonBonded");
+    auto _ = scoped("InterNonBonded");
 
     const auto box = simBox.getBoxPtr();
 
@@ -90,8 +93,6 @@ void PotentialBruteForce::
 
     physicalData.setCoulombEnergy(totalCoulombEnergy);
     physicalData.setNonCoulombEnergy(totalNonCoulombEnergy);
-
-    stopTimingsSection("InterNonBonded");
 }
 
 /**

@@ -94,11 +94,9 @@ void Manostat::rotateMu(tensor3D& mu) const
  */
 void Manostat::applyManostat(SimulationBox& box, PhysicalData& data)
 {
-    startTimingsSection("Calc Pressure");
+    auto _ = scoped("Calc Pressure");
 
     calculatePressure(box, data);
-
-    stopTimingsSection("Calc Pressure");
 }
 
 /**
