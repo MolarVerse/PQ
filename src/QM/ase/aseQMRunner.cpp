@@ -107,7 +107,8 @@ namespace
         const auto boxDimension = simBox.getBoxDimensions();
         const auto boxAngles    = simBox.getBoxAngles();
 
-        std::array<double, 6> box_array = {
+        constexpr auto                   boxArraySize = 6;
+        std::array<double, boxArraySize> box_array    = {
             boxDimension[0],
             boxDimension[1],
             boxDimension[2],

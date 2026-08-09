@@ -24,6 +24,7 @@
 // the box, and triclinic <-> orthogonal space conversions.
 
 #include <cstdio>
+#include <format>
 #include <iostream>
 
 #ifdef PQ_WITH_CALLGRIND
