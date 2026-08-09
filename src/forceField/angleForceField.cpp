@@ -26,6 +26,7 @@
 
 #include "coulombPotential.hpp"   // for CoulombPotential
 #include "forceField.hpp"         // IWYU pragma: keep - for correctLinker
+#include "hybridSettings.hpp"     // for HybridSettings
 #include "molecule.hpp"           // for Molecule
 #include "physicalData.hpp"       // for PhysicalData
 #include "simulationBox.hpp"      // for SimulationBox
@@ -36,6 +37,9 @@ using namespace connectivity;
 using namespace linearAlgebra;
 using namespace physicalData;
 using namespace potential;
+using namespace settings;
+
+using enum HybridZone;
 
 /**
  * @brief constructor
@@ -49,7 +53,9 @@ AngleForceField::AngleForceField(
     const std::vector<size_t>     &atomIndices,
     const size_t                   type
 )
-    : Angle(molecules, atomIndices), _type(type){};
+    : Angle(molecules, atomIndices), _type(type)
+{
+}
 
 /**
  * @brief calculate energy and forces for a single alpha
@@ -67,6 +73,13 @@ void AngleForceField::calculateEnergyAndForces(
     NonCoulombPotential    &nonCoulombPotential
 )
 {
+    const bool allInactive = !_molecules[0]->isActive() &&
+                             !_molecules[1]->isActive() &&
+                             !_molecules[2]->isActive();
+
+    if (allInactive)
+        return;
+
     // central position of alpha
     const auto position1 = _molecules[0]->getAtomPosition(_atomIndices[0]);
     const auto position2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
@@ -93,7 +106,8 @@ void AngleForceField::calculateEnergyAndForces(
 
     auto forcexyz = linearAlgebra::Vec3D{0.0, 0.0, 0.0};
 
-    // Guard against near-collinear angles where division by sin(alpha) is unstable.
+    // Guard against near-collinear angles where division by sin(alpha) is
+    // unstable.
     const auto sinAlpha = ::sin(alpha);
     if (std::fabs(sinAlpha) >= 1.0e-10)
     {
@@ -139,7 +153,18 @@ void AngleForceField::calculateEnergyAndForces(
 
             forcexyz = forceMagnitude * dPosition23;
 
-            physicalData.addVirial(tensorProduct(dPosition23, forcexyz));
+            using enum SmoothingMethod;
+
+            auto       smF       = 0.0;
+            const auto smoothing = HybridSettings::getSmoothingMethod();
+
+            if (smoothing == HOTSPOT &&
+                _molecules[0]->getHybridZone() == SMOOTHING)
+                smF = _molecules[0]->getSmoothingFactor();
+
+            physicalData.addVirial(
+                tensorProduct(dPosition23, forcexyz) * (1 - smF)
+            );
 
             _molecules[1]->addAtomForce(_atomIndices[1], forcexyz);
             _molecules[2]->addAtomForce(_atomIndices[2], -forcexyz);

@@ -7,6 +7,8 @@ set(engine_source_files
 
     mmmdEngine.cpp
     qmmdEngine.cpp
+    qmCapableEngine.cpp
+    qmRunnerManager.cpp
     ringPolymerEngine.cpp
     ringPolymerqmmdEngine.cpp
 
@@ -30,6 +32,8 @@ add_library(engine
 target_include_directories(engine
     PUBLIC
     ${PROJECT_SOURCE_DIR}/include/engine
+    ${PROJECT_SOURCE_DIR}/include/waterModels/intra
+    ${PROJECT_SOURCE_DIR}/include/waterModels/inter
     PRIVATE
     ${PROJECT_SOURCE_DIR}/external/progressbar/include
 )
@@ -58,7 +62,9 @@ target_link_libraries(engine
     virial
     forceField
     intraNonBonded
+    interWater
     references
+    hybridConfigurator
 
     optimization
     QM

@@ -34,7 +34,6 @@
 #include "exceptions.hpp"        // for RstFileException
 #include "molecule.hpp"          // for Molecule
 #include "moleculeType.hpp"      // for MoleculeType
-#include "settings.hpp"          // for Settings
 #include "simulationBox.hpp"     // for SimulationBox
 #include "stringUtilities.hpp"   // for removeComments, splitString
 
@@ -181,13 +180,10 @@ void AtomSection::processAtomLine(
 
     simBox.addAtom(atom);
     molecule.addAtom(atom);
-
-    if (Settings::isQMOnly())
-        simBox.addQMAtom(atom);
 }
 
 /**
- * @brief adds a single atom with moltype 0 to the simulation box _qmAtoms
+ * @brief adds a single atom with moltype 0 to the simulation box
  *
  * @details for details how the line looks like see processAtomLine
  *
@@ -210,13 +206,9 @@ void AtomSection::processQMAtomLine(
 
     setAtomPropertyVectors(lineElements, atom);
 
-    atom->setQMOnly(true);
-    molecule->setQMOnly(true);
-
     molecule->addAtom(atom);
 
     simBox.addAtom(atom);
-    simBox.addQMAtom(atom);
     simBox.addMolecule(*molecule);
 }
 

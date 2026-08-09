@@ -1,0 +1,34 @@
+#
+
+# General Keywords
+jobtype = qmmm-md;
+nstep = 2;
+timestep = 0.5;
+
+# Thermostat
+thermostat = berendsen;
+t_relaxation = 0.1;
+temp = 298.15;
+
+# MM Keywords
+force-field = bonded;
+rcoulomb = 10.0;
+
+# QM Keywords
+qm_prog = dftbplus;
+qm_script = dftbplus_periodic_stress;
+
+# Hybrid MD Keywords
+smoothing_method = exact;
+core_radius = 0.0;
+layer_radius = 3.8;
+smoothing_region_thickness = 0.2;
+point_charge_thickness = 15.0;
+
+# File Keywords
+overwrite_output = on;
+start_file       = input.rst;
+file_prefix      = output-md-01;
+topology_file    = topology.top;
+parameter_file   = qmcfc.param;
+

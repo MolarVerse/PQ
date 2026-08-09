@@ -139,6 +139,12 @@ namespace input
     }
 }   // namespace input
 
+namespace waterModel
+{
+    class IntraWater;   // forward declaration
+    class InterWater;   // forward declaration
+}   // namespace waterModel
+
 namespace pq
 {
     using IntraNonBond = intraNonBonded::IntraNonBonded;
@@ -272,6 +278,16 @@ namespace pq
     using PhysicalData       = physicalData::PhysicalData;
     using VecPhysicalData    = std::vector<PhysicalData>;
     using SharedPhysicalData = std::shared_ptr<physicalData::PhysicalData>;
+
+    /*************************
+     * water model namespace *
+     *************************/
+
+    using IntraWater = waterModel::IntraWater;
+    using InterWater = waterModel::InterWater;
+
+    using UniqueIntraWater = std::unique_ptr<IntraWater>;
+    using UniqueInterWater = std::unique_ptr<InterWater>;
 
 }   // namespace pq
 

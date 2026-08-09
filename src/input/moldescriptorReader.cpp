@@ -106,19 +106,22 @@ void MoldescriptorReader::read()
             auto &simBox = _engine.getSimulationBox();
 
             if ("water_type" == toLowerAndReplaceDashesCopy(lineElements[0]))
-                simBox.setWaterType(std::stoi(lineElements[1]));
+                simBox.setWaterType(stringToULL(lineElements[1]));
 
-            else if ("ammonia_type" == toLowerAndReplaceDashesCopy(lineElements[0]))
-                simBox.setAmmoniaType(std::stoi(lineElements[1]));
+            else if ("ammonia_type" ==
+                     toLowerAndReplaceDashesCopy(lineElements[0]))
+                simBox.setAmmoniaType(stringToULL(lineElements[1]));
 
             else
                 processMolecule(lineElements);
         }
         else
-            throw MolDescriptorException(std::format(
-                "Error in moldescriptor file at line {}",
-                _lineNumber
-            ));
+            throw MolDescriptorException(
+                std::format(
+                    "Error in moldescriptor file at line {}",
+                    _lineNumber
+                )
+            );
     }
 }
 
@@ -144,20 +147,44 @@ void MoldescriptorReader::read()
  * @throws MolDescriptorException if noncoulombics is activated
  * but no global van der Waals parameter
  */
-void MoldescriptorReader::processMolecule(std::vector<std::string> &lineElements
+void MoldescriptorReader::processMolecule(
+    std::vector<std::string> &lineElements
 )
 {
     if (lineElements.size() < 3)
-        throw MolDescriptorException(std::format(
-            "Not enough arguments in moldescriptor file at line {}",
-            _lineNumber
-        ));
+        throw MolDescriptorException(
+            std::format(
+                "Not enough arguments in moldescriptor file at line {}",
+                _lineNumber
+            )
+        );
 
     auto        &simBox = _engine.getSimulationBox();
     MoleculeType molecule(lineElements[0]);
 
     molecule.setNumberOfAtoms(stoul(lineElements[1]));
-    molecule.setCharge(stod(lineElements[2]));
+
+    try
+    {
+        molecule.setCharge(stoi(lineElements[2]));
+    }
+    catch (const std::invalid_argument &)
+    {
+        throw MolDescriptorException(format(
+            "Invalid molecular charge \"{}\" at line \"{}\".\n",
+            lineElements[2],
+            _lineNumber
+        ));
+    }
+    catch (const std::out_of_range &)
+    {
+        throw MolDescriptorException(format(
+            "Invalid molecular charge \"{}\" at line \"{}\".\n",
+            lineElements[2],
+            _lineNumber
+        ));
+    }
+
     molecule.setMoltype(simBox.getMoleculeTypes().size() + 1);
 
     std::string line;
@@ -190,21 +217,26 @@ void MoldescriptorReader::processMolecule(std::vector<std::string> &lineElements
         }
 
         else
-            throw MolDescriptorException(std::format(
-                "Atom line in moldescriptor file at line {} has to have 3 or 4 "
-                "elements",
-                _lineNumber
-            ));
+            throw MolDescriptorException(
+                std::format(
+                    "Atom line in moldescriptor file at line {} has to have 3 "
+                    "or 4 "
+                    "elements",
+                    _lineNumber
+                )
+            );
 
         if (_engine.getForceFieldPtr()->isNonCoulombicActivated())
         {
             if (lineElements.size() != 4)
-                throw MolDescriptorException(std::format(
-                    "Error in moldescriptor file at line {} - force field "
-                    "noncoulombics is "
-                    "activated but no global van der Waals parameter given",
-                    _lineNumber
-                ));
+                throw MolDescriptorException(
+                    std::format(
+                        "Error in moldescriptor file at line {} - force field "
+                        "noncoulombics is "
+                        "activated but no global van der Waals parameter given",
+                        _lineNumber
+                    )
+                );
 
             molecule.addExternalGlobalVDWType(stoul(lineElements[3]));
         }

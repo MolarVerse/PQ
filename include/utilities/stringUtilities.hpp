@@ -46,9 +46,10 @@ namespace utilities
     std::string toLowerAndReplaceDashesCopy(std::string);
     std::string toLowerAndReplaceDashesCopy(std::string_view);
     std::string firstLetterToUpperCaseCopy(std::string);
-    void addSpaces(std::string &, const std::string &, const size_t);
+    void        addSpaces(std::string &, const std::string &, const size_t);
 
     std::uint_fast32_t stringToUintFast32t(const std::string &);
+    unsigned long long stringToULL(const std::string &str);
     int                stringToInt(const std::string &);
     double             stringToFiniteDouble(const std::string &);
 

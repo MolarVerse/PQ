@@ -46,6 +46,7 @@ namespace output
         void writeLeftScientific(const double, const std::string_view &, const std::string_view &);
         void writeLeftInteger(const double, const std::string_view &, const std::string_view &);
         void writeRight(const double, const std::string_view &, const std::string_view &);
+        void writeRight();
 
        public:
         using Output::Output;

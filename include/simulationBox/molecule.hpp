@@ -36,6 +36,39 @@
 namespace simulationBox
 {
     /**
+     * @enum HybridZone
+     * @brief Defines the zones for hybrid type calculations
+     *
+     * @details This enum categorizes molecules based on their distance from
+     * the center of mass in hybrid calculations. The zones are assigned
+     * concentrically based on radial distance thresholds.
+     */
+    enum class HybridZone : size_t
+    {
+        /** Default, molecule not assigned to any hybrid zone */
+        NOT_HYBRID,
+
+        /** Innermost region (distance ≤ core radius) */
+        CORE,
+
+        /** Inner zone layer region (core radius < distance ≤ layer radius -
+           smoothing thickness) */
+        LAYER,
+
+        /** Transition region between inner and outer region (layer radius -
+           smoothing thickness < distance ≤ layer radius) */
+        SMOOTHING,
+
+        /** Point charge region surrounding the inner region (layer radius <
+           distance ≤ layer radius + point charge thickness) */
+        POINT_CHARGE,
+
+        /** Outer region beyond point charges (distance > layer radius + point
+           charge thickness) */
+        OUTER
+    };
+
+    /**
      * @class Molecule
      *
      * @brief containing all information about a molecule
@@ -47,15 +80,23 @@ namespace simulationBox
         size_t      _moltype;
         size_t      _numberOfAtoms;
 
-        bool _isQMOnly = false;
+        // set via molDescriptor not sum of partial charges!!!
+        // 0 (neutral) as default when molecule has no moltype
+        int _charge = 0;
 
-        double _charge;   // set via molDescriptor not sum of partial charges!!!
         double _molMass;
 
         linearAlgebra::Vec3D _centerOfMass{0.0, 0.0, 0.0};
 
         std::map<size_t, size_t>           _externalToInternalAtomTypes;
         std::vector<std::shared_ptr<Atom>> _atoms;
+
+        // hybrid calculation related member variables
+        HybridZone _hybridZone = HybridZone::NOT_HYBRID;
+        bool       _isActive   = true;
+        double     _smoothingFactor;
+        bool       _isForcedInner = false;
+        bool       _isForcedOuter = false;
 
        public:
         Molecule() = default;
@@ -73,8 +114,12 @@ namespace simulationBox
         [[nodiscard]] std::vector<double> getAtomMasses() const;
         [[nodiscard]] std::vector<double> getPartialCharges() const;
 
+        [[nodiscard]] bool isMMMolecule() const;
+
         void setPartialCharges(const std::vector<double> &partialCharges);
         void setAtomForcesToZero();
+        void activateMolecule();
+        void deactivateMolecule();
 
         /****************************************
          * standard adder methods for atom data *
@@ -149,35 +194,45 @@ namespace simulationBox
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] size_t getMoltype() const;
+        [[nodiscard]] size_t getMoltype() const { return _moltype; }
         [[nodiscard]] size_t getNumberOfAtoms() const;
         [[nodiscard]] size_t getDegreesOfFreedom() const;
 
-        [[nodiscard]] bool isQMOnly() const;
-
-        [[nodiscard]] double getCharge() const;
+        [[nodiscard]] int    getCharge() const;
         [[nodiscard]] double getMolMass() const;
 
         [[nodiscard]] std::string getName() const;
 
         [[nodiscard]] linearAlgebra::Vec3D getCenterOfMass() const;
+        [[nodiscard]] HybridZone           getHybridZone() const;
+        [[nodiscard]] bool   isActive() const { return _isActive; }
+        [[nodiscard]] double getSmoothingFactor() const;
 
         [[nodiscard]] Atom &getAtom(const size_t index);
-        [[nodiscard]] std::vector<std::shared_ptr<Atom>> &getAtoms();
+        [[nodiscard]] std::vector<std::shared_ptr<Atom>>       &getAtoms();
+        [[nodiscard]] const std::vector<std::shared_ptr<Atom>> &getAtoms(
+        ) const;
+
+        [[nodiscard]] bool isForcedInner() const;
+        [[nodiscard]] bool isForcedOuter() const;
 
         /***************************
          * standard setter methods *
          ***************************/
 
         void setName(const std::string_view name);
-        void setQMOnly(const bool isQMOnly);
 
         void setNumberOfAtoms(const size_t numberOfAtoms);
         void setMoltype(const size_t moltype);
 
-        void setCharge(const double charge);
+        void setCharge(const int charge);
         void setMolMass(const double molMass);
         void setCenterOfMass(const linearAlgebra::Vec3D &centerOfMass);
+        void setHybridZone(const HybridZone hybridZone);
+        void setSmoothingFactor(const double factor);
+
+        void setForcedInner(const bool isForcedInner);
+        void setForcedOuter(const bool isForcedOuter);
     };
 
 }   // namespace simulationBox

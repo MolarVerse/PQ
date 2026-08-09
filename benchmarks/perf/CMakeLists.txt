@@ -2,6 +2,7 @@
 # To add one: drop a perf<Name>.cpp here and add it to the list below. The CI
 # gate (.github/workflows/perf.yml) auto-discovers every perf_* target.
 set(perf_benchmarks
+    perfInterWater.cpp
     perfForceKernel.cpp
     perfCoulombKernel.cpp
     perfNonCoulombPairs.cpp
@@ -43,6 +44,8 @@ foreach(perf_source ${perf_benchmarks})
         constraints
         simulationBox
         potential
+        interWater
+        settings
         physicalData
         box
         linearAlgebra

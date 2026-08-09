@@ -25,6 +25,7 @@
 #define _QM_MM_MD_ENGINE_HPP_
 
 #include "hybridMDEngine.hpp"
+#include "typeAliases.hpp"
 
 namespace engine
 {
@@ -38,10 +39,23 @@ namespace engine
     class QMMMMDEngine : public HybridMDEngine
     {
        public:
-        QMMMMDEngine()  = default;
-        ~QMMMMDEngine() = default;
+        QMMMMDEngine()           = default;
+        ~QMMMMDEngine() override = default;
 
-        void calculateForces() override {};   // TODO: implement
+        void calculateForces() override;
+
+       private:
+        pq::PhysicalData _qmmmPhysicalData{};
+
+        void applySmoothing();
+        void applyExactSmoothing();
+        void applyHotspotSmoothing();
+
+        void moltypeCheck();
+        void setNumberOfQMAtoms();
+
+        void scaleAndAccumulateEnergies(const double globalSmF);
+        void moveEnergiesToPhysicalData();
     };
 
 }   // namespace engine

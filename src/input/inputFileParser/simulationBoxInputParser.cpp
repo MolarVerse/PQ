@@ -57,6 +57,11 @@ SimulationBoxInputParser::SimulationBoxInputParser(Engine &engine)
         false
     );
     addKeyword(
+        std::string("rnoncoulomb"),
+        bindMember(&SimulationBoxInputParser::parseNonCoulombRadius, this),
+        false
+    );
+    addKeyword(
         std::string("density"),
         bindMember(&SimulationBoxInputParser::parseDensity, this),
         false
@@ -95,6 +100,33 @@ void SimulationBoxInputParser::parseCoulombRadius(
         ));
 
     PotentialSettings::setCoulombRadiusCutOff(cutOff);
+}
+
+/**
+ * @brief parses the non-coulomb cutoff radius
+ *
+ * @param lineElements
+ *
+ * @throw InputFileException if the cutoff radius is negative
+ */
+void SimulationBoxInputParser::parseNonCoulombRadius(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+
+    const auto cutOff = stod(lineElements[2]);
+
+    if (cutOff < 0.0)
+        throw InputFileException(format(
+            "Non-Coulomb radius cutoff must be positive - \"{}\" at line {} in "
+            "input file",
+            lineElements[2],
+            lineNumber
+        ));
+
+    PotentialSettings::setNonCoulombRadiusCutOff(cutOff);
 }
 
 /**

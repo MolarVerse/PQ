@@ -87,6 +87,9 @@ namespace simulationBox
 
         [[nodiscard]] linearAlgebra::Vec3D    getBoxAngles() const override;
         [[nodiscard]] linearAlgebra::tensor3D getBoxMatrix() const override;
+        [[nodiscard]] linearAlgebra::tensor3D getBoxMatrix(
+            Periodicity per
+        ) const override;
         [[nodiscard]] linearAlgebra::tensor3D getTransformationMatrix() const;
         [[nodiscard]] linearAlgebra::Vec3D    wrapPositionIntoBox(
                const linearAlgebra::Vec3D &
