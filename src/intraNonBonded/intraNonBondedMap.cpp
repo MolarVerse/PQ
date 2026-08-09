@@ -120,6 +120,9 @@ std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(
     NonCoulombPotential    *nonCoulPot
 ) const
 {
+    if (!_molecule->isActive())
+        return {0.0, 0.0};
+
     auto coulombEnergy    = 0.0;
     auto nonCoulombEnergy = 0.0;
 

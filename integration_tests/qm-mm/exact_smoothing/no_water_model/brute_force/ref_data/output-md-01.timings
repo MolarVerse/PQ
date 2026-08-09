@@ -1,0 +1,82 @@
+Section                       	  Time [s]	  Time [%]
+------------------------------	----------	----------
+
+Total                         	     3.565	   100.000
+
+Potential                     	     2.048	    57.447
+QM Engine                     	     1.383	    38.794
+Setup                         	     0.064	     1.795
+Output                        	     0.048	     1.346
+Thermostat                    	     0.000	     0.000
+Integrator                    	     0.000	     0.000
+Constraints                   	     0.000	     0.000
+Cell List                     	     0.000	     0.000
+IntraNonBonded                	     0.000	     0.000
+Virial                        	     0.000	     0.000
+Physical Data                 	     0.000	     0.000
+Manostat                      	     0.000	     0.000
+Reset Kinetics                	     0.000	     0.000
+Water Intra Potential         	     0.000	     0.000
+Water Inter Potential         	     0.000	     0.000
+
+
+
+
+Section                       	  Time [s]	  Time [%]	  RelT [%]
+------------------------------	----------	----------	----------
+
+Total                         	     3.565	   100.000	   100.000
+
+Potential                     	     2.048	    57.447	   100.000
+InterNonBonded                	     2.025	    56.792	    98.859
+InterNonBondedLayerToOuter    	     0.025	     0.698	     1.215
+InterNonBondedCoreToOuter     	     0.000	     0.002	     0.003
+
+QM Engine                     	     1.383	    38.794	   100.000
+Execute External QM Runner    	     1.369	    38.403	    98.993
+Write Pointcharges            	     0.013	     0.358	     0.924
+Write Coordinates             	     0.001	     0.040	     0.103
+Read Forces                   	     0.001	     0.037	     0.095
+Read Charges                  	     0.001	     0.023	     0.058
+
+Setup                         	     0.064	     1.795	   100.000
+TotalSetup                    	     0.064	     1.804	   100.511
+
+Output                        	     0.048	     1.346	   100.000
+TrajectoryOutput              	     0.027	     0.765	    56.826
+RstFileOutput                 	     0.022	     0.611	    45.410
+InfoOutput                    	     0.000	     0.002	     0.178
+EnergyOutput                  	     0.000	     0.001	     0.076
+VirialOutput                  	     0.000	     0.001	     0.050
+InstantEnergyOutput           	     0.000	     0.000	     0.036
+BoxFileOutput                 	     0.000	     0.000	     0.035
+StressOutput                  	     0.000	     0.000	     0.034
+MomentumOutput                	     0.000	     0.000	     0.034
+
+Thermostat                    	     0.000	     0.000	   100.000
+Berendsen                     	     0.000	     0.003	       inf
+
+Integrator                    	     0.000	     0.000	   100.000
+Velocity Verlet - First Step  	     0.000	     0.014	       inf
+Velocity Verlet - Second Step 	     0.000	     0.003	       inf
+
+Constraints                   	     0.000	     0.000	   100.000
+Reference Bond Data           	     0.000	     0.000	       inf
+
+IntraNonBonded                	     0.000	     0.000	   100.000
+IntraNonBonded                	     0.000	     0.000	       inf
+
+Physical Data                 	     0.000	     0.000	   100.000
+Calc Kinetics                 	     0.001	     0.022	       inf
+
+Manostat                      	     0.000	     0.000	   100.000
+Calc Pressure                 	     0.000	     0.000	       inf
+
+Reset Kinetics                	     0.000	     0.000	   100.000
+Reset Kinetics                	     0.000	     0.000	       inf
+
+Water Inter Potential         	     0.000	     0.000	   100.000
+QM/MM Core to Outer           	     0.000	     0.000	       inf
+QM/MM Outer to Outer          	     0.000	     0.000	       inf
+QM/MM Layer to Outer          	     0.000	     0.000	       inf
+

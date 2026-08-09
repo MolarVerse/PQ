@@ -22,7 +22,7 @@
 
 #include "aseMaceRunner.hpp"
 
-#include <cstdio>
+#include <cstdio>   // for fprintf, stderr
 
 using QM::AseMaceRunner;
 

@@ -25,7 +25,7 @@
 #include "constants/conversionFactors.hpp"   // for _FS_TO_PS_
 #include "outputFileSettings.hpp"            // for OutputFileSettings
 #include "progressbar.hpp"                   // for progressbar
-#include "qmmdEngine.hpp"                    // for QMMDEngine
+#include "qmCapableEngine.hpp"               // for QMCapableEngine
 #include "referencesOutput.hpp"              // for ReferencesOutput
 #include "settings.hpp"                      // for Settings
 #include "timingsSettings.hpp"               // for TimingsSettings
@@ -70,7 +70,7 @@ void MDEngine::run()
         takeStep();
 
         writeOutput();
-        deleteTempFiles();
+        deleteTmpFiles();
     }
 
     _timer.stopSimulationTimer();
@@ -110,13 +110,19 @@ void MDEngine::run()
     _resetKinetics.setTimerName("Reset Kinetics");
     _timer.addTimer(_resetKinetics.getTimer());
 
+    _intraWater->setTimerName("Water Intra Potential");
+    _timer.addTimer(_intraWater->getTimer());
+
+    _interWater->setTimerName("Water Inter Potential");
+    _timer.addTimer(_interWater->getTimer());
+
     if (Settings::isQMActivated())
     {
-        dynamic_cast<QMMDEngine *>(this)->getQMRunner()->setTimerName(
+        dynamic_cast<QMCapableEngine *>(this)->getQMRunner()->setTimerName(
             "QM Engine"
         );
         _timer.addTimer(
-            dynamic_cast<QMMDEngine *>(this)->getQMRunner()->getTimer()
+            dynamic_cast<QMCapableEngine *>(this)->getQMRunner()->getTimer()
         );
     }
 
@@ -165,7 +171,11 @@ void MDEngine::takeStepAfterForces()
 
     _constraints->calculateConstraintBondRefs(*_simulationBox);
 
-    _virial->intraMolecularVirialCorrection(*_simulationBox, *_physicalData);
+    if (!Settings::isHybridJobtype())
+        _virial->intraMolecularVirialCorrection(
+            *_simulationBox,
+            *_physicalData
+        );
 
     _thermostat->applyThermostatOnForces(*_simulationBox);
 
@@ -183,12 +193,17 @@ void MDEngine::takeStepAfterForces()
 
     _thermostat->applyTemperatureRamping();
 
-    if (Settings::isQMActivated())
+    if (Settings::isQMOnlyJobtype())
     {
-        _physicalData->setNumberOfQMAtoms(
-            static_cast<double>(_simulationBox->getNumberOfQMAtoms())
-        );
+        const auto nQMAtoms = _simulationBox->getNumberOfQMAtoms();
+        _physicalData->setNumberOfQMAtoms(static_cast<double>(nQMAtoms));
     }
+}
+
+void MDEngine::calculateForcesWrapper()
+{
+    _simulationBox->resetAllForces();
+    calculateForces();
 }
 
 /**
@@ -199,7 +214,7 @@ void MDEngine::takeStep()
 {
     takeStepBeforeForces();
 
-    calculateForces();
+    calculateForcesWrapper();
 
     takeStepAfterForces();
 }

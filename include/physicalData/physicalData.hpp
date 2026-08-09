@@ -90,6 +90,8 @@ namespace physicalData
 
         double _qmEnergy = 0.0;
 
+        double _numberOfSmoothingMol = 0.0;
+
         double _noseHooverMomentumEnergy = 0.0;
         double _noseHooverFrictionEnergy = 0.0;
 
@@ -116,6 +118,7 @@ namespace physicalData
         void updateAverages(const PhysicalData&);
         void makeAverages(const double);
         void reset();
+        void resetEnergies();
 
         void addIntraCoulombEnergy(const double intraCoulombEnergy);
         void addIntraNonCoulombEnergy(const double intraNonCoulombEnergy);
@@ -127,6 +130,7 @@ namespace physicalData
          *************************/
 
         void addVirial(const linearAlgebra::tensor3D& virial);
+        void addQMEnergy(const double qmEnergy);
         void addCoulombEnergy(const double coulombEnergy);
         void addNonCoulombEnergy(const double nonCoulombEnergy);
 
@@ -173,6 +177,8 @@ namespace physicalData
 
         void setQMEnergy(const double qmEnergy);
 
+        void setNumberOfSmoothingMolecules(const double numberSmMol);
+
         void setNoseHooverMomentumEnergy(const double momentumEnergy);
         void setNoseHooverFrictionEnergy(const double frictionEnergy);
 
@@ -206,6 +212,8 @@ namespace physicalData
         [[nodiscard]] double getImproperEnergy() const;
 
         [[nodiscard]] double getQMEnergy() const;
+
+        [[nodiscard]] double getNumberOfSmoothingMolecules() const;
 
         [[nodiscard]] double getNoseHooverMomentumEnergy() const;
         [[nodiscard]] double getNoseHooverFrictionEnergy() const;

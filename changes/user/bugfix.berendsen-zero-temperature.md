@@ -1,1 +1,0 @@
-- Prevent the Berendsen thermostat from producing invalid velocities when the kinetic energy is zero.

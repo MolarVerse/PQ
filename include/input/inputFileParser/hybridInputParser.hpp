@@ -41,24 +41,41 @@ namespace input
        public:
         explicit HybridInputParser(engine::Engine &);
 
-        void parseCoreCenter(const std::vector<std::string> &, const size_t);
-
-        void parseCoreOnlyList(const std::vector<std::string> &, const size_t);
-
-        void parseNonCoreOnlyList(
+        void parseInnerRegionCenter(
+            const std::vector<std::string> &,
+            const size_t
+        );
+        void parseForcedInnerList(
+            const std::vector<std::string> &,
+            const size_t
+        );
+        void parseForcedOuterList(
+            const std::vector<std::string> &,
+            const size_t
+        );
+        void parseUseQMCharges(const std::vector<std::string> &, const size_t);
+        void parseCoreRadius(const std::vector<std::string> &, const size_t);
+        void parseLayerRadius(const std::vector<std::string> &, const size_t);
+        void parseSmoothingRegionThickness(
+            const std::vector<std::string> &,
+            const size_t
+        );
+        void parsePointChargeThickness(
+            const std::vector<std::string> &,
+            const size_t
+        );
+        void parseSmoothingMethod(
             const std::vector<std::string> &,
             const size_t
         );
 
-        void parseUseQMCharges(const std::vector<std::string> &, const size_t);
-
-        void parseCoreRadius(const std::vector<std::string> &, const size_t);
-
-        void parseLayerRadius(const std::vector<std::string> &, const size_t);
-
-        void parseSmoothingRadius(
-            const std::vector<std::string> &,
-            const size_t
+        std::vector<int> parseSelection(
+            const std::string &,
+            const std::string &
+        );
+        std::vector<int> parseSelectionNoPython(
+            const std::string &,
+            const std::string &
         );
     };
 

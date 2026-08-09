@@ -30,6 +30,7 @@
 
 #include <stop_token>
 
+#include "box.hpp"
 #include "timer.hpp"
 
 namespace physicalData
@@ -52,13 +53,18 @@ namespace QM
      */
     class QMRunner : public timings::Timer
     {
+       protected:
+        simulationBox::Periodicity _periodicity;
+
        public:
         virtual ~QMRunner() = default;
 
-        void         throwAfterTimeout(const std::stop_token stopToken) const;
+        void throwAfterTimeout(const std::stop_token stopToken) const;
+        void run(simulationBox::SimulationBox &, physicalData::PhysicalData &);
         virtual void run(
-            simulationBox::SimulationBox &,
-            physicalData::PhysicalData &
+            pq::SimBox &,
+            pq::PhysicalData &,
+            simulationBox::Periodicity per
         ) = 0;
     };
 }   // namespace QM

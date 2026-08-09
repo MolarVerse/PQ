@@ -66,6 +66,7 @@ namespace engine
         void takeStepBeforeForces();
         void takeStepAfterForces();
 
+        void         calculateForcesWrapper();
         virtual void calculateForces() = 0;
 
         /***************************

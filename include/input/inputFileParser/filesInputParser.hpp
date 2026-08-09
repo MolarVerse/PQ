@@ -87,6 +87,8 @@ namespace input
         );
 
         void parseDFTBFilename(const std::vector<std::string> &, const size_t);
+
+        void parseTMFilename(const std::vector<std::string> &, const size_t);
     };
 
 }   // namespace input

@@ -41,7 +41,7 @@ namespace QM
 
        public:
         void writeCoordsFile(simulationBox::SimulationBox &) override;
-        void execute() override;
+        void execute(pq::SimBox &) override;
     };
 
 }   // namespace QM

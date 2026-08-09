@@ -1,0 +1,13 @@
+Water_Type 1
+# Molecule 1
+  H2O_SPC/Fw     3   0
+  O              0  -0.82
+  H              1   0.41
+  H              1   0.41
+
+# Molecule 2
+  Potassium(I)   1   1
+  K              0   1.0
+
+
+

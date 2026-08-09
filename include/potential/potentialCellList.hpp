@@ -50,9 +50,33 @@ namespace potential
         ~PotentialCellList() override;
 
         void calculateForces(
-            simulationBox::SimulationBox &,
-            physicalData::PhysicalData &,
-            simulationBox::CellList &
+            pq::SimBox &,
+            pq::PhysicalData &,
+            pq::CellList &
+        ) override;
+
+        void calculateCoreToOuterForces(
+            pq::SimBox &,
+            pq::PhysicalData &,
+            pq::CellList &
+        ) override;
+
+        void calculateLayerToOuterForces(
+            pq::SimBox &,
+            pq::PhysicalData &,
+            pq::CellList &
+        ) override;
+
+        void calculateOuterToOuterForces(
+            pq::SimBox &,
+            pq::PhysicalData &,
+            pq::CellList &
+        ) override;
+
+        void calculateHotspotSmoothingMMForces(
+            pq::SimBox &,
+            pq::PhysicalData &,
+            pq::CellList &
         ) override;
 
         std::shared_ptr<Potential> clone() const override;

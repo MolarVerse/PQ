@@ -59,7 +59,7 @@ TEST(ExternalQMScriptsTest, describesBundledScripts)
 
     const auto turbomole = cli::externalQMScripts(QMMethod::TURBOMOLE);
     ASSERT_EQ(turbomole.size(), 1);
-    EXPECT_EQ(turbomole.front().name, "turbomole_rimp2");
+    EXPECT_EQ(turbomole.front().name, "turbomole_ricc2");
     EXPECT_EQ(turbomole.front().requiredWorkingFile, "tm_define.template");
 }
 

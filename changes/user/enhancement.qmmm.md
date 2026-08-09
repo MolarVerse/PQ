@@ -1,0 +1,1 @@
+- Add QM/MM hybrid type calculations with two smoothing options (hotspot, exact)

@@ -38,10 +38,12 @@ namespace QM
     {
        private:
         bool _isFirstExecution = true;
+        bool _usePointCharges  = false;
 
        public:
         void writeCoordsFile(simulationBox::SimulationBox &) override;
-        void execute() override;
+        void writePointChargeFile(pq::SimBox &) override;
+        void execute(pq::SimBox &) override;
     };
 }   // namespace QM
 

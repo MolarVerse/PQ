@@ -162,7 +162,7 @@ void HessianEngine::runOptimization()
             break;
 
         writeOptimizationOutput();
-        deleteTempFiles();
+        deleteTmpFiles();
     }
 
     if (!_converged)

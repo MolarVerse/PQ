@@ -51,18 +51,13 @@ namespace setup
         explicit HybridSetup(engine::Engine &engine);
 
         void setup();
-        void setupQMCenter();
-        void setupQMOnlyList();
-        void setupMMOnlyList();
-
-        std::vector<int> parseSelection(
-            const std::string &,
-            const std::string &
-        );
-        std::vector<int> parseSelectionNoPython(
-            const std::string &,
-            const std::string &
-        );
+        void validateQMMethod();
+        void setupInnerRegionCenter();
+        void setupForcedInnerList();
+        void setupForcedOuterList();
+        void checkZoneRadii();
+        void validateQMChargeSettings();
+        void setupWriteInfo() const;
     };
 
 }   // namespace setup

@@ -66,6 +66,7 @@ namespace output
             const std::string_view &,
             const std::string_view &
         );
+        void writeRight();
 
        public:
         using Output::Output;

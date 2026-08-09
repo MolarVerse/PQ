@@ -32,7 +32,9 @@
 #include "engineOutput.hpp"
 #include "forceFieldClass.hpp"
 #include "globalTimer.hpp"
+#include "interWater.hpp"
 #include "intraNonBonded.hpp"
+#include "intraWater.hpp"
 #include "physicalData.hpp"
 #include "potential.hpp"
 #include "simulationBox.hpp"
@@ -75,6 +77,11 @@ namespace engine
         std::shared_ptr<forceField::ForceField>         _forceField;
         std::shared_ptr<constraints::Constraints>       _constraints;
 
+        pq::UniqueIntraWater _intraWater =
+            std::make_unique<waterModel::IntraWater>();
+        pq::UniqueInterWater _interWater =
+            std::make_unique<waterModel::InterWater>();
+
 #ifdef WITH_KOKKOS
         simulationBox::KokkosSimulationBox _kokkosSimulationBox;
         potential::KokkosLennardJones      _kokkosLennardJones;
@@ -88,7 +95,7 @@ namespace engine
 
         virtual void run()         = 0;
         virtual void writeOutput() = 0;
-        void         deleteTempFiles();
+        void         deleteTmpFiles();
 
         void addTimer(const timings::Timer &timings);
 
@@ -176,6 +183,8 @@ namespace engine
         void makePotential(T);
         template <typename T>
         void makeVirial(T virial);
+        template <typename T>
+        void makeIntraWater(T &&);
 
         /********************************
          * standard getters and setters *
@@ -185,6 +194,7 @@ namespace engine
         [[nodiscard]] timings::GlobalTimer &getTimer() { return _timer; }
 
         void setTimer(const timings::GlobalTimer &timer) { _timer = timer; }
+        void setInterWater(pq::UniqueInterWater interWater);
 
 #ifdef WITH_KOKKOS
         [[nodiscard]] simulationBox::KokkosSimulationBox &getKokkosSimulationBox(
