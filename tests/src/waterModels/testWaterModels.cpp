@@ -278,13 +278,37 @@ namespace
         addWater(simBox, {-5.8, -5.5, -5.5}, geometry, HybridZone::CORE, false);
         addWater(
             simBox,
+            {-5.2, -3.5, -5.5},
+            geometry,
+            HybridZone::CORE,
+            false,
+            2
+        );
+        addWater(
+            simBox,
             {-4.2, -5.2, -5.2},
             geometry,
             HybridZone::LAYER,
             false
         );
+        addWater(
+            simBox,
+            {-3.8, -3.2, -5.2},
+            geometry,
+            HybridZone::LAYER,
+            false,
+            2
+        );
         addWater(simBox, {-1.8, -5.0, -5.0}, geometry, HybridZone::SMOOTHING);
         addWater(simBox, {-0.2, -4.8, -4.8}, geometry, HybridZone::SMOOTHING);
+        addWater(
+            simBox,
+            {-1.0, -3.0, -5.0},
+            geometry,
+            HybridZone::SMOOTHING,
+            true,
+            2
+        );
         addWater(simBox, {1.5, -4.6, -4.6}, geometry, HybridZone::OUTER);
         addWater(
             simBox,
@@ -453,6 +477,52 @@ TEST(InterWater, DefaultStrategyIsInert)
 
     EXPECT_DOUBLE_EQ(data.getCoulombEnergy(), 0.0);
     EXPECT_DOUBLE_EQ(data.getNonCoulombEnergy(), 0.0);
+}
+
+TEST(InterWater, NonOxygenOnlyStateInitializesEveryPair)
+{
+    PotentialSettings::setCoulombRadiusCutOff(kCutOff);
+    PotentialSettings::setNonCoulombRadiusCutOff(kCutOff);
+
+    auto oxygenOxygen = std::make_unique<LennardJonesPair>(kCutOff, -1.0, 1.0);
+    auto oxygenHydrogen =
+        std::make_unique<LennardJonesPair>(kCutOff, -1.0, 1.0);
+    auto hydrogenHydrogen =
+        std::make_unique<LennardJonesPair>(kCutOff, -1.0, 1.0);
+    const auto *oxygenOxygenView     = oxygenOxygen.get();
+    const auto *oxygenHydrogenView   = oxygenHydrogen.get();
+    const auto *hydrogenHydrogenView = hydrogenHydrogen.get();
+
+    InterWaterState state;
+    state._oxygenOnlyNonCoulomb = false;
+    state._nonCoulombPairOO     = std::move(oxygenOxygen);
+    state._nonCoulombPairOH     = std::move(oxygenHydrogen);
+    state._nonCoulombPairHH     = std::move(hydrogenHydrogen);
+
+    InterWater interWater(
+        std::move(state),
+        std::make_unique<waterModel::InterWaterStrategyNull>()
+    );
+    InterWater nullPairs(
+        InterWaterState{},
+        std::make_unique<waterModel::InterWaterStrategyNull>()
+    );
+    SimulationBox simBox;
+    PhysicalData  physicalData;
+    CellList      cellList;
+    const auto    coulomb = std::make_shared<CoulombShiftedPotential>(kCutOff);
+
+    interWater.calculate(simBox, physicalData, coulomb, cellList);
+    nullPairs.calculate(simBox, physicalData, coulomb, cellList);
+
+    EXPECT_DOUBLE_EQ(oxygenOxygenView->getRadialCutOff(), kCutOff);
+    EXPECT_DOUBLE_EQ(oxygenHydrogenView->getRadialCutOff(), kCutOff);
+    EXPECT_DOUBLE_EQ(hydrogenHydrogenView->getRadialCutOff(), kCutOff);
+    EXPECT_TRUE(std::isfinite(oxygenOxygenView->getEnergyCutOff()));
+    EXPECT_TRUE(std::isfinite(oxygenHydrogenView->getEnergyCutOff()));
+    EXPECT_TRUE(std::isfinite(hydrogenHydrogenView->getEnergyCutOff()));
+    EXPECT_DOUBLE_EQ(physicalData.getCoulombEnergy(), 0.0);
+    EXPECT_DOUBLE_EQ(physicalData.getNonCoulombEnergy(), 0.0);
 }
 
 TEST(InterWater, BruteForceAndCellListStrategiesExerciseHybridWaterRegions)
