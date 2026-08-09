@@ -61,10 +61,9 @@ void InterWater::calculate(
     if (_strategy == nullptr)
         return;
 
-    startTimingsSection("Calculate");
+    auto _ = scoped("Calculate");
     _strategy
         ->calculate(_state, simBox, physicalData, sharedCoulombPot, cellList);
-    stopTimingsSection("Calculate");
 }
 
 /**
@@ -85,35 +84,49 @@ void InterWater::calculateQMMMForces(
     if (_strategy == nullptr)
         return;
 
-    startTimingsSection("QM/MM Core to Outer");
-    _strategy->calculateCoreToOuterForces(
-        _state,
-        simBox,
-        physicalData,
-        sharedCoulombPot,
-        cellList
-    );
-    stopTimingsSection("QM/MM Core to Outer");
+    {
+        auto _ = scoped("QM/MM Core to Outer");
+        _strategy->calculateCoreToOuterForces(
+            _state,
+            simBox,
+            physicalData,
+            sharedCoulombPot,
+            cellList
+        );
+    }
 
-    startTimingsSection("QM/MM Layer to Outer");
-    _strategy->calculateLayerToOuterForces(
-        _state,
-        simBox,
-        physicalData,
-        sharedCoulombPot,
-        cellList
-    );
-    stopTimingsSection("QM/MM Layer to Outer");
+    {
+        auto _ = scoped("QM/MM Layer to Outer");
+        _strategy->calculateLayerToOuterForces(
+            _state,
+            simBox,
+            physicalData,
+            sharedCoulombPot,
+            cellList
+        );
+    }
 
-    startTimingsSection("QM/MM Outer to Outer");
-    _strategy->calculateOuterToOuterForces(
-        _state,
-        simBox,
-        physicalData,
-        sharedCoulombPot,
-        cellList
-    );
-    stopTimingsSection("QM/MM Outer to Outer");
+    {
+        auto _ = scoped("QM/MM Outer to Outer");
+        _strategy->calculateOuterToOuterForces(
+            _state,
+            simBox,
+            physicalData,
+            sharedCoulombPot,
+            cellList
+        );
+    }
+
+    {
+        auto _ = scoped("QM/MM Outer to Outer");
+        _strategy->calculateOuterToOuterForces(
+            _state,
+            simBox,
+            physicalData,
+            sharedCoulombPot,
+            cellList
+        );
+    }
 }
 
 /**
@@ -134,7 +147,7 @@ void InterWater::calculateHotspotSmoothingMMForces(
     if (_strategy == nullptr)
         return;
 
-    startTimingsSection("QM/MM Smoothing MM");
+    auto _ = scoped("QM/MM Smoothing MM");
     _strategy->calculateHotspotSmoothingMMForces(
         _state,
         simBox,
@@ -142,7 +155,6 @@ void InterWater::calculateHotspotSmoothingMMForces(
         sharedCoulombPot,
         cellList
     );
-    stopTimingsSection("QM/MM Smoothing MM");
 }
 
 /**

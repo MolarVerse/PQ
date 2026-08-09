@@ -194,7 +194,7 @@ void PotentialCellList::calculateCoreToOuterForces(
     CellList      &cellList
 )
 {
-    startTimingsSection("InterNonBondedCoreToOuter");
+    auto _ = scoped("InterNonBondedCoreToOuter");
 
     const auto box             = simBox.getBoxPtr();
     const auto isWaterMolecule = [](const std::vector<size_t> &waterMolecules,
@@ -279,8 +279,6 @@ void PotentialCellList::calculateCoreToOuterForces(
     }
 
     physicalData.addCoulombEnergy(totalCoulombEnergy);
-
-    stopTimingsSection("InterNonBondedCoreToOuter");
 }
 
 /**
@@ -303,7 +301,7 @@ void PotentialCellList::calculateLayerToOuterForces(
     CellList      &cellList
 )
 {
-    startTimingsSection("InterNonBondedLayerToOuter");
+    auto _ = scoped("InterNonBondedLayerToOuter");
 
     const auto box             = simBox.getBoxPtr();
     const auto isWaterMolecule = [](const std::vector<size_t> &waterMolecules,
@@ -442,8 +440,6 @@ void PotentialCellList::calculateLayerToOuterForces(
 
     physicalData.addCoulombEnergy(totalCoulombEnergy);
     physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
-
-    stopTimingsSection("InterNonBondedLayerToOuter");
 }
 
 void PotentialCellList::calculateOuterToOuterForces(
@@ -452,7 +448,7 @@ void PotentialCellList::calculateOuterToOuterForces(
     CellList      &cellList
 )
 {
-    startTimingsSection("InterNonBondedOuterToOuter");
+    auto _ = scoped("InterNonBondedOuterToOuter");
 
     const auto box             = simBox.getBoxPtr();
     const auto isWaterMolecule = [](const std::vector<size_t> &waterMolecules,
@@ -555,8 +551,6 @@ void PotentialCellList::calculateOuterToOuterForces(
 
     physicalData.addCoulombEnergy(totalCoulombEnergy);
     physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
-
-    stopTimingsSection("InterNonBondedOuterToOuter");
 }
 
 void PotentialCellList::calculateHotspotSmoothingMMForces(
@@ -565,7 +559,7 @@ void PotentialCellList::calculateHotspotSmoothingMMForces(
     CellList      &cellList
 )
 {
-    startTimingsSection("InterNonBondedSmoothingMM");
+    auto _ = scoped("InterNonBondedSmoothingMM");
 
     const auto box             = simBox.getBoxPtr();
     const auto isWaterMolecule = [](const std::vector<size_t> &waterMolecules,
@@ -877,8 +871,6 @@ void PotentialCellList::calculateHotspotSmoothingMMForces(
 
     physicalData.addCoulombEnergy(totalCoulombEnergy);
     physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
-
-    stopTimingsSection("InterNonBondedSmoothingMM");
 }
 
 /**

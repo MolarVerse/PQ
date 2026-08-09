@@ -36,7 +36,7 @@ void waterModel::MTRIntraWater::calculate(
     physicalData::PhysicalData&   physicalData
 )
 {
-    startTimingsSection("Calculate Potential");
+    auto _ = scoped("Calculate Potential");
 
     const auto eqOHDistance = getEqOHDistance();
     const auto eqHHDistance = getEqHHDistance();
@@ -125,8 +125,6 @@ void waterModel::MTRIntraWater::calculate(
         physicalData.addBondEnergy(bondEnergy);
         physicalData.addAngleEnergy(angleEnergy);
     }
-
-    stopTimingsSection("Calculate Potential");
 }
 
 #endif   //  _MTR_INTRA_WATER_TPP_

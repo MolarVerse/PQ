@@ -122,7 +122,7 @@ void PotentialBruteForce::calculateCoreToOuterForces(
     CellList &
 )
 {
-    startTimingsSection("InterNonBondedCoreToOuter");
+    auto _ = scoped("InterNonBondedCoreToOuter");
 
     const auto box = simBox.getBoxPtr();
 
@@ -151,8 +151,6 @@ void PotentialBruteForce::calculateCoreToOuterForces(
     }
 
     physicalData.addCoulombEnergy(totalCoulombEnergy);
-
-    stopTimingsSection("InterNonBondedCoreToOuter");
 }
 
 /**
@@ -168,7 +166,7 @@ void PotentialBruteForce::calculateLayerToOuterForces(
     CellList &
 )
 {
-    startTimingsSection("InterNonBondedLayerToOuter");
+    auto _ = scoped("InterNonBondedLayerToOuter");
 
     const auto box            = simBox.getBoxPtr();
     const auto waterTypeValue = simBox.getWaterType().value_or(size_t{0});
@@ -210,8 +208,6 @@ void PotentialBruteForce::calculateLayerToOuterForces(
     }
     physicalData.addCoulombEnergy(totalCoulombEnergy);
     physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
-
-    stopTimingsSection("InterNonBondedLayerToOuter");
 }
 
 /**
@@ -243,7 +239,7 @@ void PotentialBruteForce::calculateHotspotSmoothingMMForces(
     CellList &
 )
 {
-    startTimingsSection("InterNonBondedSmoothingMM");
+    auto _ = scoped("InterNonBondedSmoothingMM");
 
     const auto box            = simBox.getBoxPtr();
     const auto waterTypeValue = simBox.getWaterType().value_or(size_t{0});
@@ -327,8 +323,6 @@ void PotentialBruteForce::calculateHotspotSmoothingMMForces(
 
     physicalData.addCoulombEnergy(totalCoulombEnergy);
     physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
-
-    stopTimingsSection("InterNonBondedSmoothingMM");
 }
 
 /**
