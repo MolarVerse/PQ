@@ -25,6 +25,7 @@
 // and force accumulation), so callgrind yields a stable instruction count.
 
 #include <cstdio>
+#include <format>
 #include <iostream>
 
 #ifdef PQ_WITH_CALLGRIND
