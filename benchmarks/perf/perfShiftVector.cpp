@@ -24,6 +24,7 @@
 // computation for orthorhombic and triclinic boxes (called per atom pair).
 
 #include <cstdio>
+#include <format>
 #include <iostream>
 
 #ifdef PQ_WITH_CALLGRIND
