@@ -26,6 +26,7 @@
 
 #include <cstddef>   // for size_t
 #include <map>       // for map
+#include <optional>
 
 #include "nonCoulombPotential.hpp"
 
