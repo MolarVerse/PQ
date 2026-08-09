@@ -29,13 +29,17 @@
 
 #include "dftbplusRunner.hpp"   // for DFTBPlusRunner
 #include "exceptions.hpp"       // for InputFileException
-#include "gtest/gtest.h"        // for Message, TestPartResult
-#include "pyscfRunner.hpp"      // for PySCFRunner
-#include "qmSettings.hpp"       // for QMMethod, QMSettings
-#include "qmSetup.hpp"          // for QMSetup, setupQM
-#include "qmSetup.hpp"          // for QMSetup
-#include "qmmdEngine.hpp"       // for QMMDEngine
-#include "settings.hpp"         // for Settings
+#include "externalQMRunner.hpp"
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include "orthorhombicBox.hpp"
+#include "physicalData.hpp"
+#include "pyscfRunner.hpp"   // for PySCFRunner
+#include "qmSettings.hpp"    // for QMMethod, QMSettings
+#include "qmSetup.hpp"       // for QMSetup, setupQM
+#include "qmSetup.hpp"       // for QMSetup
+#include "qmmdEngine.hpp"    // for QMMDEngine
+#include "settings.hpp"      // for Settings
+#include "simulationBox.hpp"
 #include "testUtils.hpp"
 #include "throwWithMessage.hpp"   // for ASSERT_THROW_MSG
 #include "turbomoleRunner.hpp"    // for TurbomoleRunner
@@ -45,6 +49,13 @@ using namespace settings;
 
 namespace
 {
+    class DefaultExternalQMRunner final : public QM::ExternalQMRunner
+    {
+       public:
+        void execute(pq::SimBox &) override {}
+        void writeCoordsFile(pq::SimBox &) override {}
+    };
+
     void setBuildCompatibleQMScript()
     {
         QMSettings::setQMScript("");
@@ -57,6 +68,18 @@ namespace
             QMSettings::setQMScript("test");
     }
 }   // namespace
+
+TEST(TestQMSetup, defaultExternalRunnerHooksAreOptional)
+{
+    DefaultExternalQMRunner        runner;
+    simulationBox::SimulationBox   simBox;
+    simulationBox::OrthorhombicBox box;
+    physicalData::PhysicalData     physicalData;
+    QM::ExternalQMRunner *volatile baseRunner = &runner;
+
+    EXPECT_NO_THROW(baseRunner->writePointChargeFile(simBox));
+    EXPECT_NO_THROW(baseRunner->readStressTensor(box, physicalData));
+}
 
 TEST(TestQMSetup, resolvesBundledQMScript)
 {

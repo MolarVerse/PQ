@@ -223,3 +223,21 @@ TEST(TestExceptions, qmRunnerException)
         "test"
     );
 }
+
+TEST(TestExceptions, hybridConfiguratorException)
+{
+    EXPECT_THROW_MSG(
+        throw customException::HybridConfiguratorException("test"),
+        customException::HybridConfiguratorException,
+        "test"
+    );
+}
+
+TEST(TestExceptions, hybridMDEngineException)
+{
+    EXPECT_THROW_MSG(
+        throw customException::HybridMDEngineException("test"),
+        customException::HybridMDEngineException,
+        "test"
+    );
+}
