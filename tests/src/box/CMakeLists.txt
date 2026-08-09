@@ -15,6 +15,7 @@ foreach(source_file ${source_files})
         PRIVATE
         box
         linearAlgebra
+        settings
         gtest
         gmock
         pq_test_main

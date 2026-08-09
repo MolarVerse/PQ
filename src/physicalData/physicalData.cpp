@@ -157,6 +157,8 @@ void PhysicalData::updateAverages(const PhysicalData& physicalData)
 
     _qmEnergy += physicalData.getQMEnergy();
 
+    _numberOfSmoothingMol += physicalData.getNumberOfSmoothingMolecules();
+
     _momentum        += physicalData.getMomentum();
     _angularMomentum += physicalData.getAngularMomentum();
 
@@ -203,6 +205,8 @@ void PhysicalData::makeAverages(const double outputFrequency)
 
     _qmEnergy /= outputFrequency;
 
+    _numberOfSmoothingMol /= outputFrequency;
+
     _momentum        /= outputFrequency;
     _angularMomentum /= outputFrequency;
 
@@ -227,6 +231,11 @@ void PhysicalData::reset()
     _numberOfQMAtoms = 0.0;
     _loopTime        = 0.0;
 
+    _volume      = 0.0;
+    _density     = 0.0;
+    _temperature = 0.0;
+    _pressure    = 0.0;
+
     _kineticEnergy         = 0.0;
     _coulombEnergy         = 0.0;
     _nonCoulombEnergy      = 0.0;
@@ -238,13 +247,9 @@ void PhysicalData::reset()
     _dihedralEnergy = 0.0;
     _improperEnergy = 0.0;
 
-    _temperature = 0.0;
-    _volume      = 0.0;
-    _density     = 0.0;
-    _pressure    = 0.0;
-    _virial      = {0.0};
-
     _qmEnergy = 0.0;
+
+    _numberOfSmoothingMol = 0.0;
 
     _momentum        = {0.0, 0.0, 0.0};
     _angularMomentum = {0.0, 0.0, 0.0};
@@ -255,10 +260,39 @@ void PhysicalData::reset()
     _lowerDistanceConstraints = 0.0;
     _upperDistanceConstraints = 0.0;
 
+    _momentum        = {0.0, 0.0, 0.0};
+    _angularMomentum = {0.0, 0.0, 0.0};
+
+    _virial       = {0.0};
+    _stressTensor = {0.0};
+
     _ringPolymerEnergy = 0.0;
 
     // reset kinetic energy virial tensor, but make sure to keep the
     // isVirialAtomic flag as it is
+    _kinEnergyVirialTensor.atomic    = {0.0};
+    _kinEnergyVirialTensor.molecular = {0.0};
+}
+
+/**
+ * @brief Clear all energies in PhysicalData. Used in QM/MM exact smoothing.
+ *
+ */
+void PhysicalData::resetEnergies()
+{
+    _kineticEnergy         = 0.0;
+    _coulombEnergy         = 0.0;
+    _nonCoulombEnergy      = 0.0;
+    _intraCoulombEnergy    = 0.0;
+    _intraNonCoulombEnergy = 0.0;
+
+    _bondEnergy     = 0.0;
+    _angleEnergy    = 0.0;
+    _dihedralEnergy = 0.0;
+    _improperEnergy = 0.0;
+
+    _qmEnergy = 0.0;
+
     _kinEnergyVirialTensor.atomic    = {0.0};
     _kinEnergyVirialTensor.molecular = {0.0};
 }
@@ -274,27 +308,27 @@ void PhysicalData::calculateTemperature(SimulationBox& simulationBox)
 }
 
 /**
- * @brief calculate potential energy
+ * @brief calculate total energy
  *
  * @return double
  */
 double PhysicalData::getTotalEnergy() const
 {
-    auto potentialEnergy = 0.0;
+    auto totalEnergy = 0.0;
 
-    potentialEnergy += _bondEnergy;
-    potentialEnergy += _angleEnergy;
-    potentialEnergy += _dihedralEnergy;
-    potentialEnergy += _improperEnergy;
+    totalEnergy += _bondEnergy;
+    totalEnergy += _angleEnergy;
+    totalEnergy += _dihedralEnergy;
+    totalEnergy += _improperEnergy;
 
-    potentialEnergy += _coulombEnergy;      // intra + inter
-    potentialEnergy += _nonCoulombEnergy;   // intra + inter
+    totalEnergy += _coulombEnergy;      // intra + inter
+    totalEnergy += _nonCoulombEnergy;   // intra + inter
 
-    potentialEnergy += _kineticEnergy;
+    totalEnergy += _kineticEnergy;
 
-    potentialEnergy += _qmEnergy;
+    totalEnergy += _qmEnergy;
 
-    return potentialEnergy;
+    return totalEnergy;
 }
 
 /**

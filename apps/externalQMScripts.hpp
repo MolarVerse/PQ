@@ -54,7 +54,7 @@ namespace cli
     };
 
     inline constexpr auto turbomoleScripts = std::array{ExternalQMScriptInfo{
-        "turbomole_rimp2",
+        "turbomole_ricc2",
         "RI-MP2",
         "",
         "tm_define.template"

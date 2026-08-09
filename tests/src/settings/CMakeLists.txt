@@ -1,6 +1,7 @@
 set(source_files
     testPotentialSettings.cpp
     testQMSettings.cpp
+    testSettings.cpp
     testExternalQMScripts.cpp
     testOutputFileSettings.cpp
     testThermostatSettings.cpp
@@ -9,6 +10,7 @@ set(source_files
     testFileSettings.cpp
     testConvergenceSettings.cpp
     testHessianSettings.cpp
+    testWaterModelSettings.cpp
 )
 
 foreach(source_file ${source_files})

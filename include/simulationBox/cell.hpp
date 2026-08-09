@@ -28,6 +28,7 @@
 #include <vector>    // for vector
 
 #include "molecule.hpp"   // for Molecule
+#include "simulationBox.hpp"
 
 namespace simulationBox
 {
@@ -41,8 +42,14 @@ namespace simulationBox
     {
        private:
         std::vector<Molecule *>          _molecules;
-        std::vector<std::vector<size_t>> _atomIndices;
+        std::vector<std::vector<Atom *>> _atoms;
         std::vector<Cell *>              _neighbourCells;
+        std::vector<size_t>              _coreMoleculeIndices;
+        std::vector<size_t>              _smoothingMoleculeIndices;
+        std::vector<size_t>              _nonSmoothingMoleculeIndices;
+        std::vector<size_t>              _activeMoleculeIndices;
+        std::vector<size_t>              _inactiveNonCoreMoleculeIndices;
+        std::vector<size_t>              _waterMoleculeIndices;
 
         linearAlgebra::Vec3D   _lowerBoundary = {0, 0, 0};
         linearAlgebra::Vec3D   _upperBoundary = {0, 0, 0};
@@ -50,12 +57,14 @@ namespace simulationBox
 
        public:
         void clearMolecules();
-        void clearAtomIndices();
+        void clearAtoms();
 
         void addMolecule(Molecule &molecule);
         void addMolecule(Molecule *molecule);
         void addNeighbourCell(Cell *cell);
-        void addAtomIndices(const std::vector<size_t> &atomIndices);
+        void addAtoms(const std::vector<Atom *> &atomPointers);
+        void assignMoleculeHybridZoneIndices();
+        void assignWaterMoleculeIndices(const simulationBox::SimulationBox &);
 
         /***************************
          * standard getter methods *
@@ -67,14 +76,33 @@ namespace simulationBox
         [[nodiscard]] const linearAlgebra::Vec3D   &getUpperBoundary() const;
         [[nodiscard]] const linearAlgebra::Vec3Dul &getCellIndex() const;
 
-        [[nodiscard]] Molecule *getMolecule(const size_t index) const;
-        [[nodiscard]] std::vector<Molecule *> getMolecules() const;
+        [[nodiscard]] Molecule *getMolecule(const size_t index) const
+        {
+            return _molecules[index];
+        }
+        [[nodiscard]] const std::vector<Molecule *> &getMolecules() const;
+        [[nodiscard]] std::vector<Molecule *>       &getMolecules();
 
         [[nodiscard]] Cell *getNeighbourCell(const size_t index) const;
         [[nodiscard]] const std::vector<Cell *> &getNeighbourCells() const;
 
-        [[nodiscard]] const std::vector<size_t> &getAtomIndices(
-            const size_t index
+        [[nodiscard]] const std::vector<Atom *> &getAtoms(
+            const size_t molIndex
+        ) const
+        {
+            return _atoms[molIndex];
+        }
+
+        [[nodiscard]] const std::vector<size_t> &getCoreMoleculeIndices() const;
+        [[nodiscard]] const std::vector<size_t> &getSmoothingMoleculeIndices(
+        ) const;
+        [[nodiscard]] const std::vector<size_t> &getNonSmoothingMoleculeIndices(
+        ) const;
+        [[nodiscard]] const std::vector<size_t> &getActiveMoleculeIndices(
+        ) const;
+        [[nodiscard]] const std::vector<size_t> &getInactiveNonCoreMoleculeIndices(
+        ) const;
+        [[nodiscard]] const std::vector<size_t> &getWaterMoleculeIndices(
         ) const;
 
         /***************************

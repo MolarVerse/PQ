@@ -66,6 +66,8 @@ namespace simulationBox
         void addNeighbouringCells(const double coulombCutoff);
         void addNeighbouringCellPointers(Cell &);
         void addMoleculesToCells(SimulationBox &simulationBox);
+        void assignMoleculeHybridZoneIndices();
+        void assignWaterMoleculeIndices(SimulationBox &);
 
         [[nodiscard]] size_t getCellIndex(
             const linearAlgebra::Vec3Dul &cellIndices

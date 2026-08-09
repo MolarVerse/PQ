@@ -50,6 +50,12 @@
 #include "thermostatSetup.hpp"              // for setupThermostat
 #include "timer.hpp"                        // for Timings
 #include "topologyReader.hpp"               // for readTopologyFile
+#include "waterModelSettings.hpp"           // for WaterModelSettings
+#include "waterModelSetup.hpp"              // for setupWaterModel
+
+#ifdef WITH_KOKKOS
+#include "kokkosSetup.hpp"   // for setupKokkos
+#endif
 
 #ifdef WITH_KOKKOS
 #include "kokkosSetup.hpp"   // for setupKokkos
@@ -178,12 +184,15 @@ void setup::setupEngine(Engine& engine)
     if (ForceFieldSettings::isActive())
         setupForceField(engine);
 
+    if (WaterModelSettings::isWaterModelSet())
+        setupWaterModel(engine);
+
     setupConstraints(engine);
 
     if (Settings::isMDJobType())
         setupRingPolymer(engine);
 
-    if (Settings::isQMMMActivated())
+    if (Settings::isHybridJobtype())
         setupHybrid(engine);
 
     if (Settings::isOptJobType())

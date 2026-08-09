@@ -24,14 +24,21 @@
 
 #define _POTENTIAL_HPP_
 
-#include <cstddef>   // for size_t
 #include <utility>   // for pair
 
+#include "nonCoulombPotential.hpp"
 #include "timer.hpp"
-#include "typeAliases.hpp"
 
 namespace potential
 {
+    struct QMChargeTag
+    {
+    };
+
+    struct MMChargeTag
+    {
+    };
+
     /**
      * @class Potential
      *
@@ -49,8 +56,8 @@ namespace potential
     class Potential : public timings::Timer
     {
        protected:
-        pq::SharedCoulombPot    _coulombPotential;
-        pq::SharedNonCoulombPot _nonCoulombPot;
+        std::shared_ptr<CoulombPotential>    _coulombPotential;
+        std::shared_ptr<NonCoulombPotential> _nonCoulombPot;
 
        public:
         virtual ~Potential() = default;
@@ -59,15 +66,63 @@ namespace potential
             pq::SimBox &,
             pq::PhysicalData &,
             pq::CellList &
-        )                                         = 0;
+        ) = 0;
+
+        void calculateQMMMForces(
+            pq::SimBox &,
+            pq::PhysicalData &,
+            pq::CellList &
+        );
+
+        virtual void calculateCoreToOuterForces(
+            pq::SimBox &,
+            pq::PhysicalData &,
+            pq::CellList &
+        ) = 0;
+
+        virtual void calculateLayerToOuterForces(
+            pq::SimBox &,
+            pq::PhysicalData &,
+            pq::CellList &
+        ) = 0;
+
+        virtual void calculateOuterToOuterForces(
+            pq::SimBox &,
+            pq::PhysicalData &,
+            pq::CellList &
+        ) = 0;
+
+        virtual void calculateHotspotSmoothingMMForces(
+            pq::SimBox &,
+            pq::PhysicalData &,
+            pq::CellList &
+        ) = 0;
+
         virtual pq::SharedPotential clone() const = 0;
 
+        template <typename ChargeTag1, typename ChargeTag2>
         std::pair<double, double> calculateSingleInteraction(
-            const pq::Box &,
-            pq::Molecule &,
-            pq::Molecule &,
-            const size_t,
-            const size_t
+            const pq::Box &box,
+            pq::Molecule  &mol1,
+            pq::Molecule  &mol2,
+            pq::Atom      &atom1,
+            pq::Atom      &atom2
+        ) const;
+
+        template <typename ChargeTag1, typename ChargeTag2>
+        double calculateSingleCoulombInteraction(
+            const pq::Box &box,
+            pq::Atom      &atom1,
+            pq::Atom      &atom2
+        ) const;
+
+        template <typename ChargeTag1, typename ChargeTag2>
+        std::pair<double, double> calculateSingleInteractionOneWay(
+            const pq::Box &box,
+            pq::Molecule  &mol1,
+            pq::Molecule  &mol2,
+            pq::Atom      &atom1,
+            pq::Atom      &atom2
         ) const;
 
         template <typename T>
@@ -75,6 +130,9 @@ namespace potential
 
         template <typename T>
         void makeNonCoulombPotential(const T &nonCoulombPot);
+
+        template <typename T>
+        double getPartialCharge(pq::Atom &atom) const;
 
         /***************************
          * standard setter methods *

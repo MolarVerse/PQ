@@ -1,0 +1,88 @@
+Section                       	  Time [s]	  Time [%]
+------------------------------	----------	----------
+
+Total                         	     2.454	   100.000
+
+QM Engine                     	     1.446	    58.928
+Water Inter Potential         	     0.803	    32.710
+Potential                     	     0.090	     3.681
+Output                        	     0.074	     3.025
+Setup                         	     0.023	     0.927
+Water Intra Potential         	     0.002	     0.079
+Cell List                     	     0.001	     0.045
+Physical Data                 	     0.001	     0.043
+Integrator                    	     0.001	     0.026
+Thermostat                    	     0.000	     0.003
+Manostat                      	     0.000	     0.000
+Reset Kinetics                	     0.000	     0.000
+IntraNonBonded                	     0.000	     0.000
+Constraints                   	     0.000	     0.000
+Virial                        	     0.000	     0.000
+
+
+
+
+Section                       	  Time [s]	  Time [%]	  RelT [%]
+------------------------------	----------	----------	----------
+
+Total                         	     2.454	   100.000	   100.000
+
+QM Engine                     	     1.446	    58.928	   100.000
+Execute External QM Runner    	     1.421	    57.917	    98.284
+Write Pointcharges            	     0.020	     0.827	     1.404
+Read Forces                   	     0.002	     0.087	     0.148
+Write Coordinates             	     0.002	     0.061	     0.104
+Read Charges                  	     0.001	     0.035	     0.060
+
+Water Inter Potential         	     0.803	    32.710	   100.000
+QM/MM Outer to Outer          	     0.791	    32.230	    98.534
+QM/MM Layer to Outer          	     0.010	     0.423	     1.292
+QM/MM Core to Outer           	     0.001	     0.057	     0.174
+
+Potential                     	     0.090	     3.681	   100.000
+InterNonBondedOuterToOuter    	     0.086	     3.488	    94.764
+InterNonBondedLayerToOuter    	     0.003	     0.137	     3.734
+InterNonBondedCoreToOuter     	     0.001	     0.055	     1.502
+
+Output                        	     0.074	     3.025	   100.000
+TrajectoryOutput              	     0.039	     1.593	    52.658
+RstFileOutput                 	     0.035	     1.421	    46.992
+InfoOutput                    	     0.000	     0.006	     0.195
+EnergyOutput                  	     0.000	     0.001	     0.039
+VirialOutput                  	     0.000	     0.001	     0.032
+InstantEnergyOutput           	     0.000	     0.001	     0.022
+MomentumOutput                	     0.000	     0.001	     0.022
+StressOutput                  	     0.000	     0.001	     0.020
+BoxFileOutput                 	     0.000	     0.001	     0.019
+
+Setup                         	     0.023	     0.927	   100.000
+TotalSetup                    	     0.023	     0.927	   100.000
+
+Water Intra Potential         	     0.002	     0.079	   100.000
+Calculate Potential           	     0.002	     0.079	   100.000
+
+Cell List                     	     0.001	     0.045	   100.000
+Update                        	     0.001	     0.045	   100.000
+
+Physical Data                 	     0.001	     0.043	   100.000
+Calc Kinetics                 	     0.001	     0.043	   100.000
+
+Integrator                    	     0.001	     0.026	   100.000
+Velocity Verlet - First Step  	     0.001	     0.021	    81.173
+Velocity Verlet - Second Step 	     0.000	     0.005	    18.827
+
+Thermostat                    	     0.000	     0.003	   100.000
+Berendsen                     	     0.000	     0.003	   100.000
+
+Manostat                      	     0.000	     0.000	   100.000
+Calc Pressure                 	     0.000	     0.000	   100.000
+
+Reset Kinetics                	     0.000	     0.000	   100.000
+Reset Kinetics                	     0.000	     0.000	   100.000
+
+IntraNonBonded                	     0.000	     0.000	   100.000
+IntraNonBonded                	     0.000	     0.000	   100.000
+
+Constraints                   	     0.000	     0.000	   100.000
+Reference Bond Data           	     0.000	     0.000	   100.000
+
