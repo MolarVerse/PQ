@@ -1,0 +1,293 @@
+name: Release Lifecycle
+
+on:
+  pull_request:
+    branches:
+      - main
+    types: [opened, edited, reopened, synchronize, closed]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Prepared release version in vX.Y.Z format
+        required: true
+        type: string
+      commit:
+        description: Commit or branch to publish
+        required: true
+        default: main
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  prepare-changelogs:
+    if: >-
+      github.event_name == 'pull_request' &&
+      (github.event.action == 'opened' ||
+      github.event.action == 'reopened') &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      startsWith(github.event.pull_request.head.ref, 'release/')
+    concurrency:
+      group: prepare-release-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Read release version
+        id: release
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        run: |
+          if [[ "$HEAD_REF" =~ ^release/(v[0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
+            echo "version=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
+          else
+            echo "Release branches must be named release/vX.Y.Z."
+            exit 1
+          fi
+
+      - name: Mint release bot token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.PQ_RELEASE_BOT_APP_ID }}
+          private-key: ${{ secrets.PQ_RELEASE_BOT_PRIVATE_KEY }}
+          permission-contents: write
+
+      - name: Checkout release branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
+          submodules: recursive
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Prepare changelogs
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          if grep -Fq "## [$VERSION](" CHANGELOG.md || \
+             grep -Fq "## [$VERSION](" DEV-CHANGELOG.md; then
+            echo "Changelogs are already prepared for $VERSION."
+          else
+            python3 scripts/update_changelog.py "$VERSION"
+          fi
+
+          remaining="$(find changes -type f -name '*.md' \
+            ! -name 'README.md' -print)"
+          if [[ -n "$remaining" ]]; then
+            echo "Unprocessed changelog fragments:"
+            echo "$remaining"
+            exit 1
+          fi
+
+      - name: Get release bot user ID
+        id: app-user
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          app_user="${{ steps.app-token.outputs.app-slug }}[bot]"
+          user_id="$(gh api "/users/$app_user" --jq .id)"
+          echo "id=$user_id" >> "$GITHUB_OUTPUT"
+          echo "name=$app_user" >> "$GITHUB_OUTPUT"
+
+      - name: Commit prepared changelogs
+        env:
+          APP_USER_ID: ${{ steps.app-user.outputs.id }}
+          APP_USER_NAME: ${{ steps.app-user.outputs.name }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          if git diff --quiet; then
+            echo "No changelog changes to commit."
+            exit 0
+          fi
+
+          git config user.name "$APP_USER_NAME"
+          git config user.email \
+            "$APP_USER_ID+$APP_USER_NAME@users.noreply.github.com"
+          git add CHANGELOG.md DEV-CHANGELOG.md changes/
+          git commit -m "docs: prepare changelogs for $VERSION"
+          git push origin "HEAD:$HEAD_REF"
+
+  check-release:
+    if: >-
+      github.event_name == 'pull_request' &&
+      startsWith(github.event.pull_request.head.ref, 'release/') &&
+      (github.event.action == 'edited' ||
+      github.event.action == 'synchronize')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Read release version
+        id: release
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          if [[ "$HEAD_REF" =~ ^release/(v[0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
+            version="${BASH_REMATCH[1]}"
+          else
+            echo "Release branches must be named release/vX.Y.Z."
+            exit 1
+          fi
+
+          if [[ "$PR_TITLE" != "Release-${version#v}" ]]; then
+            echo "Release PR title must be Release-${version#v}."
+            exit 1
+          fi
+
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout pull request
+        uses: actions/checkout@v4
+
+      - name: Test changelog tooling
+        run: python3 -m unittest discover -s scripts/tests -p 'test_*.py'
+
+      - name: Verify prepared changelogs
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          if ! grep -Fq "## [$VERSION](" CHANGELOG.md && \
+             ! grep -Fq "## [$VERSION](" DEV-CHANGELOG.md; then
+            echo "Changelogs are not prepared for $VERSION."
+            exit 1
+          fi
+
+          remaining="$(find changes -type f -name '*.md' \
+            ! -name 'README.md' -print)"
+          if [[ -n "$remaining" ]]; then
+            echo "Unprocessed changelog fragments:"
+            echo "$remaining"
+            exit 1
+          fi
+
+  publish-release:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request' &&
+      github.event.action == 'closed' &&
+      github.event.pull_request.merged == true &&
+      startsWith(github.event.pull_request.head.ref, 'release/'))
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Resolve release inputs
+        id: release
+        env:
+          DISPATCH_COMMIT: ${{ inputs.commit }}
+          DISPATCH_VERSION: ${{ inputs.version }}
+          EVENT_NAME: ${{ github.event_name }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          MERGE_COMMIT: ${{ github.event.pull_request.merge_commit_sha }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            version="$DISPATCH_VERSION"
+            commit="$DISPATCH_COMMIT"
+            source="manual retry"
+          elif [[ "$HEAD_REF" =~ ^release/(v[0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
+            version="${BASH_REMATCH[1]}"
+            commit="$MERGE_COMMIT"
+            source="PR #$PR_NUMBER"
+          else
+            echo "Release branches must be named release/vX.Y.Z."
+            exit 1
+          fi
+
+          if [[ ! "$version" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Version must use vX.Y.Z format."
+            exit 1
+          fi
+
+          echo "commit=$commit" >> "$GITHUB_OUTPUT"
+          echo "source=$source" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Mint release bot token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.PQ_RELEASE_BOT_APP_ID }}
+          private-key: ${{ secrets.PQ_RELEASE_BOT_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+
+      - name: Checkout release commit
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ steps.release.outputs.commit }}
+          submodules: recursive
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Verify prepared changelogs
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          if ! grep -Fq "## [$VERSION](" CHANGELOG.md && \
+             ! grep -Fq "## [$VERSION](" DEV-CHANGELOG.md; then
+            echo "Changelogs are not prepared for $VERSION."
+            exit 1
+          fi
+
+          remaining="$(find changes -type f -name '*.md' \
+            ! -name 'README.md' -print)"
+          if [[ -n "$remaining" ]]; then
+            echo "Unprocessed changelog fragments:"
+            echo "$remaining"
+            exit 1
+          fi
+
+      - name: Create release tag
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          target="$(git rev-parse HEAD)"
+          remote_target="$(git ls-remote --tags origin \
+            "refs/tags/$VERSION" | awk '{print $1}')"
+
+          if [[ -n "$remote_target" && "$remote_target" != "$target" ]]; then
+            echo "$VERSION already points to another commit."
+            exit 1
+          fi
+
+          if [[ -z "$remote_target" ]]; then
+            git tag "$VERSION" "$target"
+            git push origin "$VERSION"
+          fi
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          RELEASE_SOURCE: ${{ steps.release.outputs.source }}
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          if gh release view "$VERSION" >/dev/null 2>&1; then
+            echo "Release $VERSION already exists."
+            exit 0
+          fi
+
+          gh release create "$VERSION" \
+            --verify-tag \
+            --title "Release $VERSION" \
+            --notes "Released from $RELEASE_SOURCE. See CHANGELOG.md and DEV-CHANGELOG.md for details."
+
+      - name: Open main to dev sync pull request
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          existing="$(gh pr list --state open --base dev --head main \
+            --json url --jq '.[0].url // empty')"
+          if [[ -n "$existing" ]]; then
+            echo "Sync pull request already exists: $existing"
+            exit 0
+          fi
+
+          gh pr create \
+            --base dev \
+            --head main \
+            --title "Sync main into dev after $VERSION" \
+            --body "Sync release $VERSION back into dev."
