@@ -24,9 +24,6 @@
 
 #define _HYBRID_SETUP_HPP_
 
-#include <string>   // for string
-#include <vector>   // for vector
-
 namespace engine
 {
     class Engine;   // forward declaration
