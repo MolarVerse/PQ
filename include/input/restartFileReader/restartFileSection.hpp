@@ -39,7 +39,8 @@ namespace input::restartFile
      */
     class RestartFileSection
     {
-       protected:
+        // TODO: remove this public access
+       public:
         int            _lineNumber = 0;
         std::ifstream *_fp         = nullptr;
 
