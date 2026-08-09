@@ -64,15 +64,15 @@ namespace QM
         ~ExternalQMRunner() override = default;
 
         void run(
-            pq::SimBox &,
-            pq::PhysicalData &,
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &,
             simulationBox::Periodicity per
         ) override;
-        virtual void execute(pq::SimBox &) = 0;
+        virtual void execute(simulationBox::SimulationBox &) = 0;
 
         virtual void writeCoordsFile(simulationBox::SimulationBox &) = 0;
 
-        virtual void writePointChargeFile(pq::SimBox &) {}
+        virtual void writePointChargeFile(simulationBox::SimulationBox &) {}
         virtual void readStressTensor(
             simulationBox::Box &,
             physicalData::PhysicalData &

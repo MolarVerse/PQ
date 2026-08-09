@@ -40,6 +40,7 @@ namespace simulationBox
 {
     class Box;             // forward declaration
     class Molecule;        // forward declaration
+    class Atom;            // forward declaration
     class CellList;        // forward declaration
     class SimulationBox;   // forward declaration
 }   // namespace simulationBox
@@ -78,66 +79,66 @@ namespace potential
         virtual ~Potential() = default;
 
         virtual void calculateForces(
-            pq::SimBox &,
-            pq::PhysicalData &,
-            pq::CellList &
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &,
+            simulationBox::CellList &
         ) = 0;
 
         void calculateQMMMForces(
-            pq::SimBox &,
-            pq::PhysicalData &,
-            pq::CellList &
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &,
+            simulationBox::CellList &
         );
 
         virtual void calculateCoreToOuterForces(
-            pq::SimBox &,
-            pq::PhysicalData &,
-            pq::CellList &
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &,
+            simulationBox::CellList &
         ) = 0;
 
         virtual void calculateLayerToOuterForces(
-            pq::SimBox &,
-            pq::PhysicalData &,
-            pq::CellList &
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &,
+            simulationBox::CellList &
         ) = 0;
 
         virtual void calculateOuterToOuterForces(
-            pq::SimBox &,
-            pq::PhysicalData &,
-            pq::CellList &
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &,
+            simulationBox::CellList &
         ) = 0;
 
         virtual void calculateHotspotSmoothingMMForces(
-            pq::SimBox &,
-            pq::PhysicalData &,
-            pq::CellList &
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &,
+            simulationBox::CellList &
         ) = 0;
 
-        virtual pq::SharedPotential clone() const = 0;
+        virtual std::shared_ptr<Potential> clone() const = 0;
 
         template <typename ChargeTag1, typename ChargeTag2>
         std::pair<double, double> calculateSingleInteraction(
             const simulationBox::Box &box,
             simulationBox::Molecule  &mol1,
             simulationBox::Molecule  &mol2,
-            pq::Atom                 &atom1,
-            pq::Atom                 &atom2
+            simulationBox::Atom      &atom1,
+            simulationBox::Atom      &atom2
         ) const;
 
         template <typename ChargeTag1, typename ChargeTag2>
         double calculateSingleCoulombInteraction(
-            const pq::Box &box,
-            pq::Atom      &atom1,
-            pq::Atom      &atom2
+            const simulationBox::Box &box,
+            simulationBox::Atom      &atom1,
+            simulationBox::Atom      &atom2
         ) const;
 
         template <typename ChargeTag1, typename ChargeTag2>
         std::pair<double, double> calculateSingleInteractionOneWay(
-            const pq::Box &box,
-            pq::Molecule  &mol1,
-            pq::Molecule  &mol2,
-            pq::Atom      &atom1,
-            pq::Atom      &atom2
+            const simulationBox::Box &box,
+            simulationBox::Molecule  &mol1,
+            simulationBox::Molecule  &mol2,
+            simulationBox::Atom      &atom1,
+            simulationBox::Atom      &atom2
         ) const;
 
         template <typename T>
@@ -147,7 +148,7 @@ namespace potential
         void makeNonCoulombPotential(const T &nonCoulombPot);
 
         template <typename T>
-        double getPartialCharge(pq::Atom &atom) const;
+        double getPartialCharge(simulationBox::Atom &atom) const;
 
         /***************************
          * standard setter methods *

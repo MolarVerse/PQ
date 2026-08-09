@@ -71,10 +71,10 @@ namespace QM
         ) const;
 
         // clang-format off
-        [[nodiscard]] pybind11::array           asePositions(const pq::SimBox &) const;
-        [[nodiscard]] pybind11::array_t<double> aseCell(const pq::SimBox &) const;
+        [[nodiscard]] pybind11::array           asePositions(const simulationBox::SimulationBox &) const;
+        [[nodiscard]] pybind11::array_t<double> aseCell(const simulationBox::SimulationBox &) const;
         [[nodiscard]] pybind11::array_t<bool>   asePBC() const;
-        [[nodiscard]] pybind11::array_t<int>    aseAtomicNumbers(const pq::SimBox &) const;
+        [[nodiscard]] pybind11::array_t<int>    aseAtomicNumbers(const simulationBox::SimulationBox &) const;
         // clang-format on
        protected:
         void setAseCalculator(const pybind11::object &calculator);

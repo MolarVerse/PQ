@@ -42,7 +42,7 @@ namespace potential
         void calculateForces(
             simulationBox::SimulationBox &simBox,
             pq::KokkosSimBox             &kokkosSimBox,
-            pq::PhysicalData             &data,
+            physicalData::PhysicalData   &data,
             const pq::KokkosLJ           &lj,
             const pq::KokkosWolf         &wolf
         );

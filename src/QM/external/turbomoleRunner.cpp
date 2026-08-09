@@ -76,7 +76,7 @@ void TurbomoleRunner::writeCoordsFile(SimulationBox &box)
     coordsFile.close();
 }
 
-void TurbomoleRunner::writePointChargeFile(pq::SimBox &box)
+void TurbomoleRunner::writePointChargeFile(simulationBox::SimulationBox &box)
 {
     const std::string fileName = FileSettings::getPointChargeFileName();
     std::ofstream     pcFile(fileName);

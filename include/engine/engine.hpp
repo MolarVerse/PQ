@@ -77,9 +77,9 @@ namespace engine
         std::shared_ptr<forceField::ForceField>         _forceField;
         std::shared_ptr<constraints::Constraints>       _constraints;
 
-        pq::UniqueIntraWater _intraWater =
+        std::unique_ptr<waterModel::IntraWater> _intraWater =
             std::make_unique<waterModel::IntraWater>();
-        pq::UniqueInterWater _interWater =
+        std::unique_ptr<waterModel::InterWater> _interWater =
             std::make_unique<waterModel::InterWater>();
 
 #ifdef WITH_KOKKOS
@@ -194,7 +194,7 @@ namespace engine
         [[nodiscard]] timings::GlobalTimer &getTimer() { return _timer; }
 
         void setTimer(const timings::GlobalTimer &timer) { _timer = timer; }
-        void setInterWater(pq::UniqueInterWater interWater);
+        void setInterWater(std::unique_ptr<waterModel::InterWater> interWater);
 
 #ifdef WITH_KOKKOS
         [[nodiscard]] simulationBox::KokkosSimulationBox &getKokkosSimulationBox(
