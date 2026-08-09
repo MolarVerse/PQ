@@ -24,6 +24,7 @@
 // 3x3 tensor) that underlie every force/energy kernel.
 
 #include <cstdio>
+#include <format>
 #include <iostream>
 
 #ifdef PQ_WITH_CALLGRIND
