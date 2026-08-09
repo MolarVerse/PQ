@@ -16,6 +16,7 @@ set(setup_source_files
     outputFilesSetup.cpp
     optimizerSetup.cpp
     randomNumberGeneratorSetup.cpp
+    waterModelSetup.cpp
 )
 
 if(BUILD_WITH_KOKKOS)
@@ -43,6 +44,7 @@ target_link_libraries(setup
     ringPolymerRestartFileReader
 
     engine
+    settings
     utilities
     output
     potential
@@ -52,13 +54,6 @@ target_link_libraries(setup
     optimization
 )
 
-if(BUILD_WITH_TESTS)
-    target_link_libraries(setup
-        PUBLIC
-        gtest
-    )
-endif()
-
 if(BUILD_WITH_MPI)
     target_link_libraries(setup
         PRIVATE
@@ -66,15 +61,6 @@ if(BUILD_WITH_MPI)
     )
 endif()
 
-if(BUILD_WITH_PYTHON_BINDINGS)
-    add_definitions(-DPYTHON_ENABLED)
-
-    target_link_libraries(setup
-        PUBLIC
-        pq_python
-    )
-endif()
-
 install(TARGETS setup
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+    DESTINATION lib
 )

@@ -24,6 +24,7 @@
 
 #include <format>          // for format
 #include <sstream>         // for stringstream
+#include <stdexcept>       // for invalid_argument, out_of_range
 #include <unordered_map>   // for unordered_map
 
 #include "engine.hpp"            // for Engine
@@ -51,8 +52,14 @@ using namespace constants;
  * <string>
  *
  * @param engine
+ * @param resolveBuiltInSlakosPath
  */
-QMInputParser::QMInputParser(Engine &engine) : InputFileParser(engine)
+QMInputParser::QMInputParser(
+    Engine    &engine,
+    const bool resolveBuiltInSlakosPath
+)
+    : InputFileParser(engine),
+      _resolveBuiltInSlakosPath(resolveBuiltInSlakosPath)
 {
     addKeyword(
         std::string("qm_prog"),
@@ -269,7 +276,7 @@ void QMInputParser::parseQMLoopTimeLimit(
 )
 {
     checkCommand(lineElements, lineNumber);
-    QMSettings::setQMLoopTimeLimit(std::stod(lineElements[2]));
+    QMSettings::setQMLoopTimeLimit(stringToFiniteDouble(lineElements[2]));
 }
 
 /**
@@ -476,13 +483,15 @@ void QMInputParser::parseSlakosType(
 
     if ("3ob" == slakos)
     {
-        QMSettings::setSlakosType(THREEOB);
+        QMSettings::setSlakosType(THREEOB, _resolveBuiltInSlakosPath);
         QMSettings::setHubbardDerivs(hubbardDerivMap3ob);
+        ReferencesOutput::addReferenceFile(THREEOB_FILE);
     }
 
     else if ("matsci" == slakos)
     {
-        QMSettings::setSlakosType(MATSCI);
+        QMSettings::setSlakosType(MATSCI, _resolveBuiltInSlakosPath);
+        ReferencesOutput::addReferenceFile(MATSCI_FILE);
     }
 
     else if ("custom" == slakos)
@@ -555,14 +564,36 @@ void QMInputParser::parseHubbardDerivs(
     std::string       item;
     while (std::getline(ss, item, ','))
     {
-        std::stringstream pairStream(item);
-        std::string       element;
-        double            value = 0.0;
-        if (std::getline(pairStream, element, ':') && pairStream >> value)
+        const auto separator = item.find(':');
+
+        if (separator == std::string::npos || 0 == separator ||
+            separator + 1 == item.size() ||
+            item.find(':', separator + 1) != std::string::npos)
         {
-            hubbardDerivs[element] = value;
+            throw InputFileException(
+                std::format(
+                    "Invalid hubbard_derivs format \"{}\" in input file.",
+                    derivs
+                )
+            );
         }
-        else
+
+        const auto element = item.substr(0, separator);
+        try
+        {
+            hubbardDerivs[element] =
+                stringToFiniteDouble(item.substr(separator + 1));
+        }
+        catch (const std::invalid_argument &)
+        {
+            throw InputFileException(
+                std::format(
+                    "Invalid hubbard_derivs format \"{}\" in input file.",
+                    derivs
+                )
+            );
+        }
+        catch (const std::out_of_range &)
         {
             throw InputFileException(
                 std::format(

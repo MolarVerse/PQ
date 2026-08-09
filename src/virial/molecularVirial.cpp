@@ -34,7 +34,10 @@ using namespace linearAlgebra;
  * @brief Construct a new Virial Molecular:: Virial Molecular object
  *
  */
-MolecularVirial::MolecularVirial() : Virial() { _virialType = "molecular"; }
+MolecularVirial::MolecularVirial() : Virial()
+{
+    _virialType = settings::VirialType::MOLECULAR;
+}
 
 /**
  * @brief clones the molecular virial object
@@ -47,26 +50,6 @@ std::shared_ptr<Virial> MolecularVirial::clone() const
 }
 
 /**
- * @brief calculate virial for molecular systems
- *
- * @details it calls the general virial calculation and then corrects it for
- *          intramolecular interactions. Afterwards it sets the virial in the
- *          physicalData object
- *
- * @param simulationBox
- * @param physicalData
- */
-void MolecularVirial::calculateVirial(
-    SimulationBox &simulationBox,
-    PhysicalData  &physicalData
-)
-{
-    Virial::calculateVirial(simulationBox, physicalData);
-
-    physicalData.setVirial(_virial);
-}
-
-/**
  * @brief calculate intramolecular virial correction
  *
  * @note it directly corrects the virial member variable
@@ -75,15 +58,15 @@ void MolecularVirial::calculateVirial(
  * @param data
  */
 void MolecularVirial::intraMolecularVirialCorrection(
-    SimulationBox &simBox,
-    PhysicalData  &data
+    SimulationBox& simBox,
+    PhysicalData&  data
 )
 {
     startTimingsSection("IntraMolecular Correction");
 
     _virial = {0.0};
 
-    for (const auto &molecule : simBox.getMolecules())
+    for (const auto& molecule : simBox.getMolecules())
     {
         const auto   centerOfMass  = molecule.getCenterOfMass();
         const size_t numberOfAtoms = molecule.getNumberOfAtoms();
@@ -104,4 +87,43 @@ void MolecularVirial::intraMolecularVirialCorrection(
     data.addVirial(_virial);
 
     stopTimingsSection("IntraMolecular Correction");
+}
+
+/**
+ * @brief Calculate intramolecular virial correction tensor without side
+ * effects
+ *
+ * @details Computes the intramolecular virial correction from current atomic
+ * forces and positions relative to each molecule's center of mass. This
+ * function only returns the correction tensor and does not modify member state
+ * or PhysicalData.
+ *
+ * @param simBox Simulation box containing molecules
+ * @return tensor3D Intramolecular virial correction tensor
+ */
+tensor3D MolecularVirial::intraMolecularVirialCorrection(
+    SimulationBox& simBox
+) const
+{
+    tensor3D virial{0.0};
+
+    for (const auto& molecule : simBox.getMolecules())
+    {
+        const auto   centerOfMass  = molecule.getCenterOfMass();
+        const size_t numberOfAtoms = molecule.getNumberOfAtoms();
+
+        for (size_t i = 0; i < numberOfAtoms; ++i)
+        {
+            const auto forcexyz = molecule.getAtomForce(i);
+            const auto xyz      = molecule.getAtomPosition(i);
+
+            auto dxyz = xyz - centerOfMass;
+
+            simBox.applyPBC(dxyz);
+
+            virial -= tensorProduct(dxyz, forcexyz);
+        }
+    }
+
+    return virial;
 }

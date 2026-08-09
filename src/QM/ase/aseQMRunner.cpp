@@ -29,10 +29,13 @@
 
 #include <thread>
 
+#include "box.hpp"         // for simulationBox::Periodicity
 #include "constants.hpp"   // for _DEG_TO_RAD_
 #include "physicalData.hpp"
 #include "qmSettings.hpp"   // for QMSettings
 #include "simulationBox.hpp"
+
+using enum simulationBox::Periodicity;
 
 using QM::AseQMRunner;
 using namespace simulationBox;
@@ -238,8 +241,14 @@ AseQMRunner::~AseQMRunner() = default;
  *
  * @throw QMRunnerException if the calculation takes too long
  */
-void AseQMRunner::run(SimulationBox &simBox, PhysicalData &physicalData)
+void AseQMRunner::run(
+    SimulationBox &simBox,
+    PhysicalData  &physicalData,
+    Periodicity    per
+)
 {
+    _periodicity = per;
+
     std::jthread timeoutThread{[this](const std::stop_token stopToken)
                                { throwAfterTimeout(stopToken); }};
 
@@ -396,7 +405,7 @@ void AseQMRunner::buildAseAtoms(const SimulationBox &simBox)
     {
         const auto positions     = asePositions(simBox);
         const auto cell          = aseCell(simBox);
-        const auto pbc           = asePBC(simBox);
+        const auto pbc           = asePBC();
         const auto atomicNumbers = aseAtomicNumbers(simBox);
 
         _ase->atoms = _ase->atomsModule.attr("Atoms")(
@@ -405,6 +414,150 @@ void AseQMRunner::buildAseAtoms(const SimulationBox &simBox)
             pybind11::arg("cell")      = cell,
             pybind11::arg("pbc")       = pbc
         );
+    }
+    catch (const pybind11::error_already_set &)
+    {
+        ::PyErr_Print();
+        throw;
+    }
+}
+
+/**
+ * @brief get the positions of the atoms in the ASE Atoms object
+ *
+ * @param simBox
+ *
+ * @return py::array
+ *
+ * @throw py::error_already_set if the construction of the array fails
+ */
+pybind11::array AseQMRunner::asePositions(const SimulationBox &simBox) const
+{
+    const auto nAtoms = simBox.getNumberOfQMAtoms();
+    const auto pos    = simBox.getFlattenedQMPositions();
+
+    const auto shape      = std::vector<size_t>{nAtoms, 3};
+    const auto sizeDouble = sizeof(double);
+    const auto strides    = std::vector<size_t>{sizeDouble * 3, sizeDouble};
+
+    try
+    {
+        auto positions_array = array_d(ssize_t(nAtoms) * 3, &pos[0]);
+
+        const auto positions_array_reshaped = pybind11::array(
+            pybind11::buffer_info(
+                positions_array.mutable_data(),   // Pointer to data
+                sizeDouble,                       // Size of one scalar
+                pybind11::format_descriptor<double>::format(),   // Data type
+                2,        // Number of dimensions
+                shape,    // Shape (N, 3)
+                strides   // Strides
+            )
+        );
+
+        return positions_array_reshaped;
+    }
+    catch (const pybind11::error_already_set &)
+    {
+        ::PyErr_Print();
+        throw;
+    }
+}
+
+/**
+ * @brief get the cell of the ASE Atoms object
+ *
+ * @param simBox
+ *
+ * @return pybind11::array_t<double>
+ *
+ * @throw pybind11::error_already_set if the construction of the array fails
+ */
+pybind11::array_t<double> AseQMRunner::aseCell(
+    const SimulationBox &simBox
+) const
+{
+    const auto boxDimension = simBox.getBoxDimensions();
+    const auto boxAngles    = simBox.getBoxAngles();
+
+    std::array<double, 6> box_array = {
+        boxDimension[0],
+        boxDimension[1],
+        boxDimension[2],
+        boxAngles[0],
+        boxAngles[1],
+        boxAngles[2]
+    };
+
+    try
+    {
+        const auto box_array_ = array_d(6, &box_array[0]);
+
+        return box_array_;
+    }
+    catch (const pybind11::error_already_set &)
+    {
+        ::PyErr_Print();
+        throw;
+    }
+}
+
+/**
+ * @brief get the periodic boundary conditions of the ASE Atoms object
+ *
+ * @return pybind11::array_t<bool>
+ *
+ * @throw pybind11::error_already_set if the construction of the array fails
+ */
+pybind11::array_t<bool> AseQMRunner::asePBC() const
+{
+    std::array<bool, 3> pbc_array;
+
+    switch (_periodicity)
+    {
+        case NON_PERIODIC: pbc_array = {false, false, false}; break;
+        case X: pbc_array = {true, false, false}; break;
+        case Y: pbc_array = {false, true, false}; break;
+        case Z: pbc_array = {false, false, true}; break;
+        case XY: pbc_array = {true, true, false}; break;
+        case XZ: pbc_array = {true, false, true}; break;
+        case YZ: pbc_array = {false, true, true}; break;
+        case XYZ: pbc_array = {true, true, true}; break;
+        default: pbc_array = {false, false, false}; break;
+    }
+
+    try
+    {
+        return pybind11::array_t<bool>(3, pbc_array.data());
+    }
+    catch (const pybind11::error_already_set &)
+    {
+        ::PyErr_Print();
+        throw;
+    }
+}
+
+/**
+ * @brief get the atomic numbers of the atoms in the ASE Atoms object
+ *
+ * @param simBox
+ *
+ * @return pybind11::array_t<int>
+ *
+ * @throw pybind11::error_already_set if the construction of the array fails
+ */
+pybind11::array_t<int> AseQMRunner::aseAtomicNumbers(
+    const SimulationBox &simBox
+) const
+{
+    const auto atomicNumbers = simBox.getAtomicNumbers();
+    const auto nAtoms        = simBox.getNumberOfAtoms();
+
+    try
+    {
+        const auto atomicNumbers_ = array_i(ssize_t(nAtoms), &atomicNumbers[0]);
+
+        return atomicNumbers_;
     }
     catch (const pybind11::error_already_set &)
     {

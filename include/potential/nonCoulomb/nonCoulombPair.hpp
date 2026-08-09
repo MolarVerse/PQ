@@ -70,6 +70,7 @@ namespace potential
 
         void setInternalType1(const size_t internalType1);
         void setInternalType2(const size_t internalType2);
+        void setRadialCutOff(const double radialCutoff);
         void setEnergyCutOff(const double energyCutoff);
         void setForceCutOff(const double forceCutoff);
 
@@ -81,7 +82,7 @@ namespace potential
         [[nodiscard]] size_t getVanDerWaalsType2() const;
         [[nodiscard]] size_t getInternalType1() const;
         [[nodiscard]] size_t getInternalType2() const;
-        [[nodiscard]] double getRadialCutOff() const;
+        [[nodiscard]] double getRadialCutOff() const { return _radialCutOff; }
         [[nodiscard]] double getEnergyCutOff() const;
         [[nodiscard]] double getForceCutOff() const;
     };

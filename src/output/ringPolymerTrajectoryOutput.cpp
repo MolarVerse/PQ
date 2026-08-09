@@ -203,19 +203,15 @@ void RingPolymerTrajectoryOutput::writeCharges(
 
     for (size_t i = 0; i < RingPolymerSettings::getNumberOfBeads(); ++i)
         for (const auto &molecule : beads[i].getMolecules())
-        {
-            const auto nAtoms = molecule.getNumberOfAtoms();
-
-            for (size_t j = 0; j < nAtoms; ++j)
+            for (const auto &atom : molecule.getAtoms())
             {
-                const auto atomName = molecule.getAtomName(j);
-                const auto charge   = molecule.getPartialCharge(j);
+                const auto charge =
+                    atom->getQMCharge().value_or(atom->getPartialCharge());
 
-                buffer << std::format("{:>5}{}\t", atomName, i + 1);
+                buffer << std::format("{:>5}{}\t", atom->getName(), i + 1);
                 buffer << std::format("{:15.8f}\n", charge);
                 buffer << std::flush;
             }
-        }
 
     // Write the buffer to the file
     _fp << buffer.str();

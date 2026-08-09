@@ -27,15 +27,17 @@
 #include <map>   // for map
 #include <memory>
 #include <optional>   // for optional
-#include <string>     // for string
-#include <vector>     // for vector
+#include <set>
+#include <string>   // for string
+#include <vector>   // for vector
 
-#include "atom.hpp"              // for Atom
-#include "box.hpp"               // for Box
-#include "exceptions.hpp"        // for ExceptionType
-#include "molecule.hpp"          // for Molecule
-#include "moleculeType.hpp"      // for MoleculeType
-#include "orthorhombicBox.hpp"   // for OrthorhombicBox
+#include "atom.hpp"                // for Atom
+#include "box.hpp"                 // for Box
+#include "exceptions.hpp"          // for ExceptionType
+#include "molecule.hpp"            // for Molecule
+#include "moleculeType.hpp"        // for MoleculeType
+#include "orthorhombicBox.hpp"     // for OrthorhombicBox
+#include "simulationBoxView.hpp"   // for SimulationBoxView
 
 /**
  * @namespace simulationBox
@@ -65,11 +67,11 @@ namespace simulationBox
      * the SimulationBox class.
      *
      */
-    class SimulationBox
+    class SimulationBox : public SimulationBoxView<SimulationBox>
     {
        private:
-        int _waterType;
-        int _ammoniaType;
+        std::optional<size_t> _waterType;
+        std::optional<size_t> _ammoniaType;
 
         size_t _degreesOfFreedom = 0;
 
@@ -81,8 +83,7 @@ namespace simulationBox
 
         linearAlgebra::Vec3D               _centerOfMass = {0.0, 0.0, 0.0};
         std::vector<std::shared_ptr<Atom>> _atoms;
-        std::vector<std::shared_ptr<Atom>> _qmAtoms;
-        std::vector<std::shared_ptr<Atom>> _qmCenterAtoms;
+        std::vector<int>                   _innerRegionCenterAtomIndices;
         std::vector<Molecule>              _molecules;
         std::vector<MoleculeType>          _moleculeTypes;
 
@@ -106,7 +107,10 @@ namespace simulationBox
         void updateOldVelocities();
         void updateOldForces();
 
+        void resetAllForces();
         void resetForces();
+        void resetForcesInner();
+        void resetForcesOuter();
         void resetQMCharges();
         void removeNetForce();
 
@@ -126,11 +130,14 @@ namespace simulationBox
         );
         [[nodiscard]] linearAlgebra::Vec3D calcBoxDimFromDensity() const;
         [[nodiscard]] linearAlgebra::Vec3D calcShiftVector(
-            const linearAlgebra::Vec3D&
-        ) const;
+            const linearAlgebra::Vec3D& position
+        ) const
+        {
+            return _box->calcShiftVector(position);
+        }
+        [[nodiscard]] int calcActiveMolCharge() const;
 
         [[nodiscard]] bool moleculeTypeExists(const size_t) const;
-        [[nodiscard]] std::vector<std::string> getUniqueQMAtomNames();
 
         [[nodiscard]] std::optional<Molecule> findMolecule(const size_t);
         [[nodiscard]] MoleculeType& findMoleculeType(const size_t moleculeType);
@@ -161,16 +168,15 @@ namespace simulationBox
          * QMMM related methods *
          ************************/
 
-        void addQMCenterAtoms(const std::vector<int>& atomIndices);
-        void setupQMOnlyAtoms(const std::vector<int>& atomIndices);
-        void setupMMOnlyAtoms(const std::vector<int>& atomIndices);
+        void addInnerRegionCenterAtoms(const std::vector<int>& atomIndices);
+        void setupForcedInnerMolecules(const std::vector<int>& moleculeIndices);
+        void setupForcedOuterMolecules(const std::vector<int>& moleculeIndices);
 
         /************************
          * standard add methods *
          ************************/
 
         void addAtom(const std::shared_ptr<Atom> atom);
-        void addQMAtom(const std::shared_ptr<Atom> atom);
         void addMolecule(const Molecule& molecule);
         void addMoleculeType(const MoleculeType& molecule);
 
@@ -178,8 +184,8 @@ namespace simulationBox
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] int                   getWaterType() const;
-        [[nodiscard]] int                   getAmmoniaType() const;
+        [[nodiscard]] std::optional<size_t> getWaterType() const;
+        [[nodiscard]] std::optional<size_t> getAmmoniaType() const;
         [[nodiscard]] size_t                getNumberOfMolecules() const;
         [[nodiscard]] size_t                getDegreesOfFreedom() const;
         [[nodiscard]] size_t                getNumberOfAtoms() const;
@@ -188,19 +194,21 @@ namespace simulationBox
         [[nodiscard]] double                getTotalCharge() const;
         [[nodiscard]] double                getDensity() const;
         [[nodiscard]] linearAlgebra::Vec3D& getCenterOfMass();
+        [[nodiscard]] std::vector<int>      getInnerRegionCenterAtomIndices();
 
         [[nodiscard]] Atom&         getAtom(const size_t index);
-        [[nodiscard]] Atom&         getQMAtom(const size_t index);
         [[nodiscard]] Molecule&     getMolecule(const size_t index);
         [[nodiscard]] MoleculeType& getMoleculeType(const size_t index);
 
         [[nodiscard]] std::vector<double> getAtomicScalarForces() const;
         [[nodiscard]] std::vector<double> getAtomicScalarForcesOld() const;
 
-        [[nodiscard]] std::vector<std::shared_ptr<Atom>>& getAtoms();
-        [[nodiscard]] std::vector<std::shared_ptr<Atom>>& getQMAtoms();
-        [[nodiscard]] std::vector<Molecule>&              getMolecules();
-        [[nodiscard]] std::vector<MoleculeType>&          getMoleculeTypes();
+        [[nodiscard]] std::vector<std::shared_ptr<Atom>>&       getAtoms();
+        [[nodiscard]] const std::vector<std::shared_ptr<Atom>>& getAtoms(
+        ) const;
+        [[nodiscard]] std::vector<Molecule>&       getMolecules();
+        [[nodiscard]] const std::vector<Molecule>& getMolecules() const;
+        [[nodiscard]] std::vector<MoleculeType>&   getMoleculeTypes();
 
         [[nodiscard]] std::vector<size_t>& getExternalGlobalVdwTypes();
         [[nodiscard]] std::map<size_t, size_t>& getExternalToInternalGlobalVDWTypes(
@@ -214,15 +222,17 @@ namespace simulationBox
         [[nodiscard]] std::vector<linearAlgebra::Vec3D> getPositions() const;
         [[nodiscard]] std::vector<linearAlgebra::Vec3D> getVelocities() const;
         [[nodiscard]] std::vector<linearAlgebra::Vec3D> getForces() const;
-        [[nodiscard]] std::vector<int>    getAtomicNumbers() const;
-        [[nodiscard]] std::vector<double> flattenPositions() const;
+        [[nodiscard]] std::vector<int>      getAtomicNumbers() const;
+        [[nodiscard]] std::vector<double>   flattenPositions() const;
+        [[nodiscard]] std::set<std::string> getUniqueQMAtomNames() const;
+        [[nodiscard]] std::vector<double>   getFlattenedQMPositions() const;
 
         /***************************
          * standard setter methods *
          ***************************/
 
-        void setWaterType(const int waterType);
-        void setAmmoniaType(const int ammoniaType);
+        void setWaterType(const size_t waterType);
+        void setAmmoniaType(const size_t ammoniaType);
         void setTotalMass(const double totalMass);
         void setTotalCharge(const double totalCharge);
         void setDensity(const double density);

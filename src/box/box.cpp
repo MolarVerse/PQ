@@ -22,8 +22,13 @@
 
 #include "box.hpp"
 
+#include "defaults.hpp"
+
+using enum simulationBox::Periodicity;
+
 using namespace linearAlgebra;
 using namespace simulationBox;
+using namespace defaults;
 
 /******************************************************
  *                                                    *
@@ -50,6 +55,49 @@ Vec3D Box::getBoxAngles() const
 StaticMatrix3x3<double> Box::getBoxMatrix() const
 {
     return diagonalMatrix(_boxDimensions);
+}
+
+/**
+ * @brief get the box matrix
+ *
+ * @return StaticMatrix3x3<double>
+ */
+StaticMatrix3x3<double> Box::getBoxMatrix(const Periodicity per) const
+{
+    auto boxMatrix = getBoxMatrix();
+
+    switch (per)
+    {
+        case NON_PERIODIC:
+            boxMatrix[0][0] = VACUUM_BOX_DIMENSION;   // X dimension
+            boxMatrix[1][1] = VACUUM_BOX_DIMENSION;   // Y dimension
+            boxMatrix[2][2] = VACUUM_BOX_DIMENSION;   // Z dimension
+            break;
+        case X:
+            boxMatrix[1][1] = VACUUM_BOX_DIMENSION;   // Y dimension
+            boxMatrix[2][2] = VACUUM_BOX_DIMENSION;   // Z dimension
+            break;
+        case Y:
+            boxMatrix[0][0] = VACUUM_BOX_DIMENSION;   // X dimension
+            boxMatrix[2][2] = VACUUM_BOX_DIMENSION;   // Z dimension
+            break;
+        case Z:
+            boxMatrix[0][0] = VACUUM_BOX_DIMENSION;   // X dimension
+            boxMatrix[1][1] = VACUUM_BOX_DIMENSION;   // Y dimension
+            break;
+        case XY:
+            boxMatrix[2][2] = VACUUM_BOX_DIMENSION;   // Z dimension
+            break;
+        case XZ:
+            boxMatrix[1][1] = VACUUM_BOX_DIMENSION;   // Y dimension
+            break;
+        case YZ:
+            boxMatrix[0][0] = VACUUM_BOX_DIMENSION;   // X dimension
+            break;
+        case XYZ: break;
+    }
+
+    return boxMatrix;
 }
 
 /**

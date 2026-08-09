@@ -20,8 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#include <array>
+
 #include "constants/conversionFactors.hpp"   // for _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_
+#include "defaults.hpp"                      // for VACUUM_BOX_DIMENSION
 #include "gtest/gtest.h"                     // for Message, TestPartResult
+#include "manostatSettings.hpp"              // for ManostatSettings
 #include "matrixNear.hpp"                    // for EXPECT_MATRIX_NEAR
 #include "triclinicBox.hpp"                  // for TriclinicBox
 #include "vectorNear.hpp"                    // for EXPECT_VECTOR_NEAR
@@ -183,4 +187,89 @@ TEST(TestTriclinicBox, wrapPositionIntoBox)
         linearAlgebra::Vec3D(-25.0, 21.96152422706632, -0.1),
         1e-10
     );
+}
+
+TEST(TestTriclinicBox, transformsRoundTrip)
+{
+    TriclinicBox box;
+    box.setBoxDimensions({4.0, 5.0, 6.0});
+    box.setBoxAngles({80.0, 75.0, 70.0});
+
+    const linearAlgebra::Vec3D vector{1.0, 2.0, 3.0};
+    const auto                 tensor = linearAlgebra::tensor3D(
+        {1.0, 2.0, 3.0},
+        {4.0, 5.0, 6.0},
+        {7.0, 8.0, 9.0}
+    );
+
+    EXPECT_VECTOR_NEAR(
+        box.toSimSpace(box.toOrthoSpace(vector)),
+        vector,
+        1.0e-12
+    );
+    EXPECT_MATRIX_NEAR(
+        box.toSimSpace(box.toOrthoSpace(tensor)),
+        tensor,
+        1.0e-12
+    );
+    EXPECT_NEAR(box.cosAlpha(), std::cos(80.0 * constants::DEG_TO_RAD), 1e-15);
+    EXPECT_NEAR(box.cosBeta(), std::cos(75.0 * constants::DEG_TO_RAD), 1e-15);
+    EXPECT_NEAR(box.cosGamma(), std::cos(70.0 * constants::DEG_TO_RAD), 1e-15);
+    EXPECT_NEAR(box.sinAlpha(), std::sin(80.0 * constants::DEG_TO_RAD), 1e-15);
+    EXPECT_NEAR(box.sinBeta(), std::sin(75.0 * constants::DEG_TO_RAD), 1e-15);
+    EXPECT_NEAR(box.sinGamma(), std::sin(70.0 * constants::DEG_TO_RAD), 1e-15);
+    EXPECT_GT(box.getMinimalBoxDimension(), 0.0);
+}
+
+TEST(TestTriclinicBox, periodicityMasksBoxMatrix)
+{
+    TriclinicBox box;
+    box.setBoxDimensions({4.0, 5.0, 6.0});
+    box.setBoxAngles({80.0, 75.0, 70.0});
+
+    using enum Periodicity;
+    constexpr std::array periodicities{NON_PERIODIC, X, Y, Z, XY, XZ, YZ, XYZ};
+    for (const auto periodicity : periodicities)
+        EXPECT_TRUE(std::isfinite(box.getBoxMatrix(periodicity)[0][0]));
+
+    const auto nonPeriodic = box.getBoxMatrix(NON_PERIODIC);
+    EXPECT_DOUBLE_EQ(nonPeriodic[0][0], defaults::VACUUM_BOX_DIMENSION);
+    EXPECT_DOUBLE_EQ(nonPeriodic[1][1], defaults::VACUUM_BOX_DIMENSION);
+    EXPECT_DOUBLE_EQ(nonPeriodic[2][2], defaults::VACUUM_BOX_DIMENSION);
+    EXPECT_DOUBLE_EQ(nonPeriodic[0][1], 0.0);
+    EXPECT_DOUBLE_EQ(nonPeriodic[0][2], 0.0);
+    EXPECT_EQ(box.getBoxMatrix(XYZ), box.getBoxMatrix());
+}
+
+TEST(TestTriclinicBox, scalingPreservesConsistentDimensionsAndAngles)
+{
+    TriclinicBox box;
+    box.setBoxDimensions({4.0, 5.0, 6.0});
+    box.setBoxAngles({80.0, 75.0, 70.0});
+
+    settings::ManostatSettings::setIsotropy(settings::Isotropy::ISOTROPIC);
+    box.scaleBox(diagonalMatrix(linearAlgebra::Vec3D{2.0, 2.0, 2.0}));
+    EXPECT_VECTOR_NEAR(
+        box.getBoxDimensions(),
+        linearAlgebra::Vec3D(8.0, 10.0, 12.0),
+        1.0e-12
+    );
+    EXPECT_NEAR(box.getVolume(), box.calculateVolume(), 1.0e-12);
+
+    settings::ManostatSettings::setIsotropy(
+        settings::Isotropy::FULL_ANISOTROPIC
+    );
+    const auto originalAngles = box.getBoxAngles();
+    box.scaleBox(diagonalMatrix(linearAlgebra::Vec3D{0.5, 0.5, 0.5}));
+    EXPECT_VECTOR_NEAR(
+        box.getBoxDimensions(),
+        linearAlgebra::Vec3D(4.0, 5.0, 6.0),
+        1.0e-12
+    );
+    EXPECT_VECTOR_NEAR(box.getBoxAngles(), originalAngles, 1.0e-12);
+
+    const auto [dimensions, angles] =
+        calcBoxDimAndAnglesFromBoxMatrix(box.getBoxMatrix());
+    EXPECT_VECTOR_NEAR(dimensions, box.getBoxDimensions(), 1.0e-12);
+    EXPECT_VECTOR_NEAR(angles, box.getBoxAngles(), 1.0e-12);
 }

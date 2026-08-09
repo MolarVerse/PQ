@@ -42,5 +42,5 @@ target_precompile_headers(aseQM PRIVATE
 )
 
 install(TARGETS aseQM
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+    DESTINATION lib
 )

@@ -39,8 +39,6 @@ long_range                  false
 rf_epsilon                  false
 wolf_param                  false
 
-force-field                 false
-
 hessian_file                false
 hessian_info_file           false
 hessian_displacement        false
@@ -57,6 +55,7 @@ parameter_file              false
 intra-nonBonded_file        false
 mshake_file                 false
 dftb_file                   false
+turbomole_file              false
 
 integrator                  false
 
@@ -77,7 +76,10 @@ friction                    false
 nh-chain_length             false
 coupling_frequency          false
 
+force-field                 false
 noncoulomb                  false
+water_intra                 false
+water_inter                 false
 
 overwrite_output            false
 include_output_metadata     false
@@ -116,6 +118,7 @@ freset_angular              false
 freset_forces               false
 
 rcoulomb                    false
+rnoncoulomb                 false
 density                     false
 init_velocities             false
 
@@ -145,10 +148,12 @@ xtb_method                  false
 
 rpmd_n_replica              false
 
-center                      false
-core_only_list              false
-non_core_only_list          false
+inner_region_center         false
+forced_inner_list           false
+forced_outer_list           false
 qm_charges                  false
 core_radius                 false
 layer_radius                false
-smoothing_radius            false
+smoothing_region_thickness  false
+point_charge_thickness      false
+smoothing_method            false

@@ -24,11 +24,16 @@
 
 #define _EXTERNAL_QM_RUNNER_HPP_
 
+#include <string>
+#include <string_view>
+
 #include "qmRunner.hpp"
 #include "typeAliases.hpp"
 
 namespace QM
 {
+    [[nodiscard]] std::string bundledQMScriptPath(std::string_view script);
+
     /**
      * @brief ExternalQMRunner inherits from QMRunner
      *
@@ -40,14 +45,23 @@ namespace QM
         const static inline std::string _singularity = SINGULARITY_;
         const static inline std::string _staticBuild = STATIC_BUILD_;
 
+        [[nodiscard]] std::string resolveScriptPath(
+            std::string_view script
+        ) const;
+
        public:
         ExternalQMRunner()           = default;
         ~ExternalQMRunner() override = default;
 
-        void         run(pq::SimBox &, pq::PhysicalData &) override;
-        virtual void execute() = 0;
+        void run(
+            pq::SimBox &,
+            pq::PhysicalData &,
+            simulationBox::Periodicity per
+        ) override;
+        virtual void execute(pq::SimBox &) = 0;
 
         virtual void writeCoordsFile(pq::SimBox &) = 0;
+        virtual void writePointChargeFile(pq::SimBox &) {}
         virtual void readStressTensor(pq::Box &, pq::PhysicalData &) {}
 
         void readForceFile(pq::SimBox &, pq::PhysicalData &);

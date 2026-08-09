@@ -89,7 +89,7 @@ void HessianInputParser::parseDisplacement(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto displacement = std::stod(lineElements[2]);
+    const auto displacement = stringToFiniteDouble(lineElements[2]);
 
     if (displacement <= 0.0)
         throw InputFileException(

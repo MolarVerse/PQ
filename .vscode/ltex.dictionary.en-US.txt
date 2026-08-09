@@ -15,3 +15,5 @@ chem-ph
 PySCF
 WIREs
 TURBOMOLE
+moltype
+moltypes

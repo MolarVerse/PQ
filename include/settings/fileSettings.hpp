@@ -53,6 +53,9 @@ namespace settings
         static inline std::string _rpmdStartFile;
         static inline std::string _mShakeFile;
         static inline std::string _dftbFile = defaults::DFTB_FILE_DEFAULT;
+        static inline std::string _tmFile   = defaults::TM_FILE_DEFAULT;
+        static inline std::string _pointChargeFile =
+            defaults::POINTCHARGE_FILE_DEFAULT;
 
         // clang-format off
         static inline std::string _qmForcesTempFile     = defaults::QM_FORCES_TEMP_FILE_DEFAULT;
@@ -66,6 +69,7 @@ namespace settings
         static bool inline _isRPMDStartFileSet      = false;
         static bool inline _isMShakeFileSet         = false;
         static bool inline _isDFTBFileSet           = false;
+        // clang-format on
 
        public:
         FileSettings()  = default;
@@ -84,6 +88,8 @@ namespace settings
         [[nodiscard]] static std::string getRingPolymerStartFileName();
         [[nodiscard]] static std::string getMShakeFileName();
         [[nodiscard]] static std::string getDFTBFileName();
+        [[nodiscard]] static std::string getTMFileName();
+        [[nodiscard]] static std::string getPointChargeFileName();
 
         [[nodiscard]] static std::string getQMForcesTempFileName();
         [[nodiscard]] static std::string getQMChargesTempFileName();
@@ -100,15 +106,17 @@ namespace settings
          * standard setters *
          ********************/
 
-        static void setMolDescriptorFileName(const std::string& name);
-        static void setGuffDatFileName(const std::string& name);
-        static void setTopologyFileName(const std::string_view name);
-        static void setParameterFileName(const std::string_view name);
-        static void setIntraNonBondedFileName(const std::string_view name);
-        static void setStartFileName(const std::string_view name);
-        static void setRingPolymerStartFileName(const std::string_view name);
-        static void setMShakeFileName(const std::string_view name);
-        static void setDFTBFileName(const std::string& name);
+        static void setMolDescriptorFileName(const std::string_view& name);
+        static void setGuffDatFileName(const std::string_view& name);
+        static void setTopologyFileName(const std::string_view& name);
+        static void setParameterFileName(const std::string_view& name);
+        static void setIntraNonBondedFileName(const std::string_view& name);
+        static void setStartFileName(const std::string_view& name);
+        static void setRingPolymerStartFileName(const std::string_view& name);
+        static void setMShakeFileName(const std::string_view& name);
+        static void setDFTBFileName(const std::string_view& name);
+        static void setTMFileName(const std::string_view& name);
+        static void setPointChargeFileName(const std::string_view& name);
 
         static void setIsTopologyFileNameSet();
         static void setIsParameterFileNameSet();

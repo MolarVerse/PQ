@@ -60,6 +60,11 @@ TEST_F(TestVirial, calculateVirial)
     EXPECT_EQ(_simBox->getMolecule(1).getAtomShiftForce(0), Vec3D{0});
 }
 
+TEST_F(TestVirial, atomicVirialHasNoIntramolecularCorrection)
+{
+    EXPECT_EQ(_virial->intraMolecularVirialCorrection(*_simBox), tensor3D{0.0});
+}
+
 TEST_F(TestVirial, intramolecularCorrection)
 {
     auto *virialClass = new MolecularVirial();

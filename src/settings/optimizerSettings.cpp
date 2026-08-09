@@ -22,10 +22,14 @@
 
 #include "optimizerSettings.hpp"
 
+#include <format>
+
+#include "exceptions.hpp"
 #include "stringUtilities.hpp"   // for toLowerCopy
 
 using namespace settings;
 using namespace utilities;
+using namespace customException;
 
 /**
  * @brief returns the optimizer as string
@@ -202,6 +206,63 @@ void OptimizerSettings::setMinLearningRate(const double minLearningRate)
 void OptimizerSettings::setMaxLearningRate(const double maxLearningRate)
 {
     _maxLearningRate = maxLearningRate;
+}
+
+/*****************************
+ *                           *
+ * validation helper methods *
+ *                           *
+ *****************************/
+
+/**
+ * @brief validates the selected learning-rate strategy
+ */
+void OptimizerSettings::validateLearningRateStrategy()
+{
+    const auto strategy = getLearningRateStrategy();
+
+    if (strategy == LREnum::LINESEARCH_WOLFE)
+        throw UserInputException(
+            "The Wolfe line search learning rate strategy is not yet "
+            "implemented"
+        );
+
+    if (strategy == LREnum::NONE)
+        throw UserInputException(
+            "In order to run the optimizer, you need to specify a learning "
+            "rate strategy."
+        );
+
+    const auto needsDecay = strategy == LREnum::CONSTANT_DECAY ||
+                            strategy == LREnum::EXPONENTIAL_DECAY;
+
+    if (needsDecay && !getLearningRateDecay().has_value())
+        throw UserInputException(
+            std::format(
+                "The {} learning rate strategy requires learning-rate-decay.",
+                strategy == LREnum::CONSTANT_DECAY ? "constant-decay"
+                                                   : "exponential-decay"
+            )
+        );
+}
+
+/**
+ * @brief validates the configured learning-rate bounds
+ */
+void OptimizerSettings::validateLearningRateBounds()
+{
+    const auto minLR = getMinLearningRate();
+    const auto maxLR = getMaxLearningRate();
+
+    if (maxLR.has_value() && minLR >= maxLR.value())
+        throw UserInputException(
+            std::format(
+                "The minimum learning rate {} is greater or equal to the "
+                "maximum learning rate {}, which is not allowed.",
+                minLR,
+                maxLR.value()
+            )
+        );
 }
 
 /***************************

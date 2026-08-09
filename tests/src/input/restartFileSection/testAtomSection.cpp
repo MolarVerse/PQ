@@ -24,10 +24,12 @@
 
 #include <cstddef>   // for size_t
 #include <fstream>   // for ifstream, std
+#include <memory>    // for shared_ptr, __shared_ptr_access
 #include <string>    // for string, stod, allocator, basic_string
 #include <vector>    // for vector
 
 #include "atom.hpp"           // for Atom
+#include "atomSection.hpp"    // for AtomSection
 #include "engine.hpp"         // for Engine
 #include "exceptions.hpp"     // for RstFileException, customException
 #include "gmock/gmock.h"      // for ElementsAre, MakePredicateFormatter
@@ -36,6 +38,8 @@
 #include "moleculeType.hpp"   // for MoleculeType
 #include "restartFileReader/atomSection.hpp"
 #include "restartFileReader/restartFileSection.hpp"
+#include "restartFileSection.hpp"   // for RstFileSection, AtomSection
+#include "settings.hpp"
 #include "testRestartFileSection.hpp"   // for TestAtomSection
 #include "throwWithMessage.hpp"         // for ASSERT_THROW_MSG
 
@@ -177,6 +181,8 @@ TEST_F(TestAtomSection, testProcess)
 
     _section->process(line, *_engine);
 
+    settings::Settings::setJobtype(settings::JobType::QM_MD);
+
     EXPECT_EQ(_engine->getSimulationBox().getMolecules().size(), 3);
 
     EXPECT_EQ(_engine->getSimulationBox().getMolecules()[0].getMoltype(), 1);
@@ -197,13 +203,9 @@ TEST_F(TestAtomSection, testProcess)
         3
     );
 
-    line    = std::vector<std::string>(21);
-    line[2] = "0";
-    for (size_t i = 3; i < 21; ++i) line[i] = "1.0";
+    EXPECT_EQ(_engine->getSimulationBox().getNumberOfQMAtoms(), 10);
 
-    _section->process(line, *_engine);
-
-    EXPECT_EQ(_engine->getSimulationBox().getQMAtoms().size(), 1);
+    settings::Settings::setJobtype(settings::JobType::NONE);
 }
 
 TEST_F(TestAtomSection, testProcessAtomLine)
@@ -252,21 +254,25 @@ TEST_F(TestAtomSection, testProcessQMAtomLine)
         _engine->getSimulationBox()
     );
 
-    auto atoms = _engine->getSimulationBox().getQMAtoms();
+    settings::Settings::setJobtype(settings::JobType::QM_MD);
+    auto atoms      = _engine->getSimulationBox().getQMAtoms();
+    auto first_atom = *atoms.begin();
 
-    ASSERT_EQ(atoms.size(), 1);
+    ASSERT_EQ(_engine->getSimulationBox().getNumberOfQMAtoms(), 1);
     ASSERT_THAT(
-        atoms[0]->getPosition(),
+        first_atom->getPosition(),
         testing::ElementsAre(stod(line[3]), stod(line[4]), stod(line[5]))
     );
     ASSERT_THAT(
-        atoms[0]->getVelocity(),
+        first_atom->getVelocity(),
         testing::ElementsAre(stod(line[6]), stod(line[7]), stod(line[8]))
     );
     ASSERT_THAT(
-        atoms[0]->getForce(),
+        first_atom->getForce(),
         testing::ElementsAre(stod(line[9]), stod(line[10]), stod(line[11]))
     );
 
-    ASSERT_EQ(atoms[0]->getAtomTypeName(), line[0]);
+    ASSERT_EQ(first_atom->getAtomTypeName(), line[0]);
+
+    settings::Settings::setJobtype(settings::JobType::NONE);
 }

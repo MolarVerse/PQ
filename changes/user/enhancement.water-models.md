@@ -1,0 +1,1 @@
+- Add intra- and intermolecular water models (SPC, SPC_E, SPC_Fw, qSPC_Fw, SPC_DC, H2O-DC, TIP3P, OPC3, SPC-mTR, TIP3P-mTR)

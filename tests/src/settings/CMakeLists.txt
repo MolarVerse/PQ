@@ -1,6 +1,8 @@
 set(source_files
     testPotentialSettings.cpp
     testQMSettings.cpp
+    testSettings.cpp
+    testExternalQMScripts.cpp
     testOutputFileSettings.cpp
     testThermostatSettings.cpp
     testManostatSettings.cpp
@@ -8,6 +10,7 @@ set(source_files
     testFileSettings.cpp
     testConvergenceSettings.cpp
     testHessianSettings.cpp
+    testWaterModelSettings.cpp
 )
 
 foreach(source_file ${source_files})
@@ -34,6 +37,11 @@ foreach(source_file ${source_files})
 
     set_property(TEST ${test_name} PROPERTY LABELS settings)
 endforeach()
+
+target_include_directories(testExternalQMScripts
+    PRIVATE
+    ${PROJECT_SOURCE_DIR}/apps
+)
 
 if(${BUILD_WITH_GCOVR})
     include(CodeCoverage)

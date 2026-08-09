@@ -23,8 +23,11 @@
 #include <gtest/gtest.h>
 
 #include <cstdio>
+#include <cstdlib>
+#include <filesystem>
 #include <fstream>
 #include <sstream>
+#include <stdexcept>
 #include <string>
 
 #include "outputFileSettings.hpp"
@@ -44,7 +47,17 @@ namespace
     }
 }   // namespace
 
-TEST(TestReferencesOutput, writeReferencesFileEmitsHeaderAndBibtexBanner)
+class ReferencesOutputTest : public ::testing::Test
+{
+   protected:
+    static void removeReferenceFile(const std::string &path)
+    {
+        ReferencesOutput::_referenceFileNames.erase(path);
+        ReferencesOutput::_bibtexFileNames.erase(path + ".bib");
+    }
+};
+
+TEST_F(ReferencesOutputTest, writeReferencesFileEmitsHeaderAndBibtexBanner)
 {
     const std::string path = "default.refs.test";
     OutputFileSettings::setRefFileName(path);
@@ -62,28 +75,98 @@ TEST(TestReferencesOutput, writeReferencesFileEmitsHeaderAndBibtexBanner)
     // Bibtex section banner.
     EXPECT_NE(content.find("BIBTEX ENTRIES"), std::string::npos);
 
+    if (const char *marker = std::getenv("PQ_TEST_EXPECTED_REFERENCE_MARKER"))
+    {
+        EXPECT_NE(content.find(marker), std::string::npos);
+    }
+
     const auto errorCode = std::remove(path.c_str());
     EXPECT_EQ(errorCode, 0) << "Failed to remove file: " << path;
 }
 
-TEST(TestReferencesOutput, addReferenceFileExtendsBothReferenceAndBibtexLists)
+TEST_F(ReferencesOutputTest, rejectsUnwritableOutput)
 {
-    // Sanity-check the static accessor is exposed at all; we can only observe
-    // the side effect through the rendered output file, which won't contain
-    // the new entry's body (the .ref file doesn't exist on disk) but the call
-    // itself must not throw and must remain idempotent for duplicates.
+    OutputFileSettings::setRefFileName(".");
+
+    EXPECT_THROW(ReferencesOutput::writeReferencesFile(), std::runtime_error);
+}
+
+#if defined(__linux__)
+TEST_F(ReferencesOutputTest, rejectsFailedOutputWrites)
+{
+    OutputFileSettings::setRefFileName("/dev/full");
+
+    EXPECT_THROW(ReferencesOutput::writeReferencesFile(), std::runtime_error);
+}
+#endif
+
+TEST_F(ReferencesOutputTest, rendersAdditionalReferenceFiles)
+{
+    const auto referencePath =
+        std::filesystem::absolute("additional-reference.ref.test");
+    const auto bibtexPath =
+        std::filesystem::path(referencePath.string() + ".bib");
+    const std::string outputPath = "default.refs.test";
+
+    std::ofstream(referencePath) << "ADDITIONAL REFERENCE\n";
+    std::ofstream(bibtexPath) << "ADDITIONAL BIBTEX\n";
+    ReferencesOutput::addReferenceFile(referencePath.string());
+    OutputFileSettings::setRefFileName(outputPath);
+
+    EXPECT_NO_THROW(ReferencesOutput::writeReferencesFile());
+    const auto content = slurp(outputPath);
+    EXPECT_NE(content.find("ADDITIONAL REFERENCE"), std::string::npos);
+    EXPECT_NE(content.find("ADDITIONAL BIBTEX"), std::string::npos);
+
+    removeReferenceFile(referencePath.string());
+    std::filesystem::remove(referencePath);
+    std::filesystem::remove(bibtexPath);
+    std::filesystem::remove(outputPath);
+}
+
+#if !defined(_WIN32)
+TEST_F(ReferencesOutputTest, rejectsUnreadableReferenceFiles)
+{
+    const auto unreadablePath =
+        std::filesystem::absolute("unreadable-reference.ref.test");
+    const std::string outputPath = "default.refs.test";
+    std::ofstream(unreadablePath) << "UNREADABLE REFERENCE\n";
+    std::filesystem::permissions(unreadablePath, std::filesystem::perms::none);
+
+    if (std::ifstream(unreadablePath).is_open())
+    {
+        std::filesystem::permissions(
+            unreadablePath,
+            std::filesystem::perms::owner_all
+        );
+        std::filesystem::remove(unreadablePath);
+        GTEST_SKIP() << "The current user can read files without permissions";
+    }
+
+    ReferencesOutput::addReferenceFile(unreadablePath.string());
+    OutputFileSettings::setRefFileName(outputPath);
+    EXPECT_THROW(ReferencesOutput::writeReferencesFile(), std::runtime_error);
+    removeReferenceFile(unreadablePath.string());
+
+    std::filesystem::permissions(
+        unreadablePath,
+        std::filesystem::perms::owner_all
+    );
+    std::filesystem::remove(unreadablePath);
+}
+#endif
+
+TEST_F(ReferencesOutputTest, rejectsMissingReferenceFiles)
+{
+    const std::string outputPath = "default.refs.test";
+
     EXPECT_NO_THROW(ReferencesOutput::addReferenceFile("nonexistent.ref"));
     EXPECT_NO_THROW(ReferencesOutput::addReferenceFile("nonexistent.ref"));
 
-    const std::string path = "default.refs.test";
-    OutputFileSettings::setRefFileName(path);
-    ReferencesOutput::writeReferencesFile();
+    OutputFileSettings::setRefFileName(outputPath);
 
-    // Even with a non-existent reference file in the registered set, the
-    // overall write succeeds and the file exists with at least the headers.
-    const auto content = slurp(path);
-    EXPECT_FALSE(content.empty());
+    EXPECT_THROW(ReferencesOutput::writeReferencesFile(), std::runtime_error);
+    EXPECT_FALSE(std::ifstream(outputPath).good());
 
-    const auto errorCode = std::remove(path.c_str());
-    EXPECT_EQ(errorCode, 0) << "Failed to remove file: " << path;
+    removeReferenceFile("nonexistent.ref");
 }

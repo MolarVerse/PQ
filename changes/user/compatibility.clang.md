@@ -1,2 +1,0 @@
-- Add support for Clang and Apple Clang.
-- Add support for building Debug mode with Clang

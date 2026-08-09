@@ -46,6 +46,7 @@
 #include "settings.hpp"            // for settings
 #include "simulationBox.hpp"       // for SimulationBox
 #include "stringUtilities.hpp"   // for fileExists, getLineCommands, removeComments, splitString
+#include "waterModelSettings.hpp"   // for WaterModelSettings
 
 using namespace input::guffdat;
 using namespace settings;
@@ -236,15 +237,21 @@ void GuffDatReader::setupGuffMaps()
  */
 void GuffDatReader::parseLine(const std::vector<std::string> &lineCommands)
 {
-    MoleculeType molecule1;
-    MoleculeType molecule2;
+    const size_t moltype1 = stoul(lineCommands[0]);
+    const size_t moltype2 = stoul(lineCommands[2]);
 
     auto &simBox = _engine.getSimulationBox();
 
+    if (bothMoltypesAreWaterType(moltype1, moltype2))
+        return;
+
+    MoleculeType molecule1;
+    MoleculeType molecule2;
+
     try
     {
-        molecule1 = simBox.findMoleculeType(stoul(lineCommands[0]));
-        molecule2 = simBox.findMoleculeType(stoul(lineCommands[2]));
+        molecule1 = simBox.findMoleculeType(moltype1);
+        molecule2 = simBox.findMoleculeType(moltype2);
     }
     catch (const std::exception &)
     {
@@ -282,9 +289,6 @@ void GuffDatReader::parseLine(const std::vector<std::string> &lineCommands)
         [&guffCoefficients](const auto &entry)
         { guffCoefficients.push_back(stod(entry)); }
     );
-
-    const size_t moltype1 = stoul(lineCommands[0]);
-    const size_t moltype2 = stoul(lineCommands[2]);
 
     // clang-format off
     _guffCoulombCoeffs[moltype1 - 1][moltype2 - 1][atomType1][atomType2] = coulombCoeff;
@@ -635,9 +639,14 @@ void GuffDatReader::calculatePartialCharges()
 {
     auto      &simBox    = _engine.getSimulationBox();
     const auto nMolTypes = simBox.getMoleculeTypes().size();
+    const auto waterType = simBox.getWaterType();
 
     for (size_t i = 0; i < nMolTypes; ++i)
     {
+        // Skip water type molecules - their charges come from moldescriptor
+        if (waterType.has_value() && (i + 1) == waterType.value())
+            continue;
+
         auto      *moleculeType = &(simBox.findMoleculeType(i + 1));
         const auto nAtoms       = moleculeType->getNumberOfAtoms();
 
@@ -694,6 +703,12 @@ void GuffDatReader::checkPartialCharges()
             Molecule moleculeType2;
 
             if (moleculeType2Optional == std::nullopt)
+                continue;
+
+            if (bothMoltypesAreWaterType(
+                    moleculeType1.getMoltype(),
+                    moleculeType2Optional.value().getMoltype()
+                ))
                 continue;
 
             else
@@ -759,6 +774,12 @@ void GuffDatReader::checkNecessaryGuffPairs()
     for (const auto &moleculeType1 : necessaryMoleculeTypes)
         for (const auto &moleculeType2 : necessaryMoleculeTypes)
         {
+            if (bothMoltypesAreWaterType(
+                    moleculeType1.getMoltype(),
+                    moleculeType2.getMoltype()
+                ))
+                continue;
+
             const auto nAtoms1 = moleculeType1.getNumberOfAtoms();
             for (size_t atomIndex1 = 0; atomIndex1 < nAtoms1; ++atomIndex1)
             {
@@ -783,6 +804,33 @@ void GuffDatReader::checkNecessaryGuffPairs()
                         );
             }
         }
+}
+
+/**
+ * @brief Determine if both provided molecule types are of the
+ *        water molecule type.
+ *
+ * This helper checks whether the inter-water model is enabled and whether
+ * both molecule type indices match the simulation box's configured water
+ * type. Note that molecule type indices are expected to be 1-based in the
+ * surrounding code.
+ *
+ * @param molType1 1-based index of the first molecule type
+ * @param molType2 1-based index of the second molecule type
+ * @return true if the inter-water model is set and both indices equal the
+ *         configured water type; false otherwise
+ */
+bool GuffDatReader::bothMoltypesAreWaterType(
+    const size_t molType1,
+    const size_t molType2
+)
+{
+    auto      &simBox    = _engine.getSimulationBox();
+    const auto waterType = simBox.getWaterType();
+
+    return WaterModelSettings::isInterWaterModelSet() &&
+           waterType.has_value() && molType1 == waterType.value() &&
+           molType2 == waterType.value();
 }
 
 /********************

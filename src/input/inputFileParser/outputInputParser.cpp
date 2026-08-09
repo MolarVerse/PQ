@@ -219,7 +219,7 @@ void OutputInputParser::parseOutputFreq(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto outputFrequency = stoi(lineElements[2]);
+    const auto outputFrequency = stringToInt(lineElements[2]);
     if (outputFrequency < 0)
         throw InputFileException(format(
             "Output frequency cannot be negative - \"{}\" at line {} in input "
