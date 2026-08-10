@@ -104,6 +104,11 @@ HybridInputParser::HybridInputParser(Engine &engine) : InputFileParser(engine)
         bindMember(&HybridInputParser::parseSmoothingMethod, this),
         false
     );
+    addKeyword(
+        std::string("qm_force_distribution"),
+        bindMember(&HybridInputParser::parseQMForceDistribution, this),
+        false
+    );
 }
 
 /**
@@ -311,7 +316,7 @@ void HybridInputParser::parsePointChargeThickness(
  * @param lineElements
  * @param lineNumber
  *
- * @throws InputFileException if
+ * @throws InputFileException if no valid smoothing method has been selected
  */
 void HybridInputParser::parseSmoothingMethod(
     const std::vector<std::string> &lineElements,
@@ -329,11 +334,55 @@ void HybridInputParser::parseSmoothingMethod(
 
     else if (method == "exact")
         HybridSettings::setSmoothingMethod(EXACT);
+
     else
         throw InputFileException(
             std::format(
                 "Invalid smoothing method \"{}\" in input file\n"
                 "Possible values are: hotspot, exact",
+                lineElements[2]
+            )
+        );
+}
+
+/**
+ * @brief parse QM force distribution method in hotspot smoothing
+ *
+ * @param lineElements
+ * @param lineNumber
+ *
+ * @throws InputFileException if no valid qm force distribution method has been
+ * selected
+ */
+void HybridInputParser::parseQMForceDistribution(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+
+    const auto method = toLowerAndReplaceDashesCopy(lineElements[2]);
+
+    using enum settings::QMForceDist;
+
+    if (method == "none")
+        HybridSettings::setQMForceDist(NONE);
+
+    else if (method == "equal")
+        HybridSettings::setQMForceDist(EQUAL);
+
+    else if (method == "random")
+        HybridSettings::setQMForceDist(RANDOM);
+
+    else if (method == "distance_weighted")
+        HybridSettings::setQMForceDist(DISTANCE_WEIGHTED);
+
+    else
+        throw InputFileException(
+            std::format(
+                "Invalid qm force distribution method \"{}\" in input file\n"
+                "Possible options are: none, equal, random and "
+                "distance-weighted",
                 lineElements[2]
             )
         );
