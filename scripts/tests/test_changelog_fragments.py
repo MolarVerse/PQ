@@ -31,6 +31,18 @@ class ChangelogFragmentTests(unittest.TestCase):
         with self.assertRaisesRegex(fragments.FragmentError, "invalid fragment name"):
             fragments.parse_fragment_name("trajectory.user.bugfix.md", "user")
 
+    def test_name_error_explains_allowed_characters(self):
+        with self.assertRaises(fragments.FragmentError) as context:
+            fragments.parse_fragment_name("bugfix.Slug-nAme.md", "user")
+
+        self.assertEqual(
+            "invalid fragment name 'bugfix.Slug-nAme.md'; expected "
+            "<category>.<slug>.md, where <category> uses only lowercase "
+            "letters and <slug> starts with a lowercase letter or digit and "
+            "uses only lowercase letters, digits, and hyphens",
+            str(context.exception),
+        )
+
     def test_entry_must_be_one_or_more_bullets(self):
         with tempfile.TemporaryDirectory() as temporary_directory:
             path = Path(temporary_directory) / "change.entry.md"
