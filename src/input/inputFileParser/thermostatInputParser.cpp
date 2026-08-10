@@ -360,8 +360,8 @@ void ThermostatInputParser::parseThermostatFriction(
             "Friction of thermostat must be finite and non-negative"
         );
 
-    if (friction > std::numeric_limits<double>::max() /
-                       defaults::NH_MAX_FRICTION_CONVERSION)
+    if (friction >
+        std::numeric_limits<double>::max() / defaults::MAX_FRICTION_CONVERSION)
         throw InputFileException(
             "Friction of thermostat is too large to represent in inverse "
             "seconds"
