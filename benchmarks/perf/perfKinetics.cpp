@@ -24,6 +24,7 @@
 // (temperature, momentum, angular momentum, total force).
 
 #include <cstdio>
+#include <format>
 #include <iostream>
 
 #ifdef PQ_WITH_CALLGRIND
