@@ -35,7 +35,6 @@
 #include "inputFileParser.hpp"   // for InputFileParser
 #include "parserUtils.hpp"
 #include "stringUtilities.hpp"   // for toLowerCopy
-#include "typeAliases.hpp"       // for pq::strings
 
 #ifdef PYTHON_ENABLED
 #include "fileSettings.hpp"   // for FileSettings

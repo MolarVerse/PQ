@@ -27,7 +27,11 @@
 #include <cstddef>   // for size_t
 
 #include "output.hpp"   // for Output
-#include "typeAliases.hpp"
+
+namespace simulationBox
+{
+    class SimulationBox;   // forward declaration
+}   // namespace simulationBox
 
 namespace output
 {
@@ -42,11 +46,11 @@ namespace output
        public:
         using Output::Output;
 
-        void writeHeader(const pq::SimBox &);
-        void writeXyz(pq::SimBox &, const size_t);
-        void writeVelocities(pq::SimBox &, const size_t);
-        void writeForces(pq::SimBox &, const size_t);
-        void writeCharges(pq::SimBox &, const size_t);
+        void writeHeader(const simulationBox::SimulationBox &);
+        void writeXyz(simulationBox::SimulationBox &, const size_t);
+        void writeVelocities(simulationBox::SimulationBox &, const size_t);
+        void writeForces(simulationBox::SimulationBox &, const size_t);
+        void writeCharges(simulationBox::SimulationBox &, const size_t);
     };
 
 }   // namespace output

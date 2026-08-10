@@ -32,11 +32,13 @@
 #include "angleType.hpp"
 #include "bondForceField.hpp"
 #include "bondType.hpp"
+#include "coulombPotential.hpp"
 #include "dihedralForceField.hpp"
 #include "dihedralType.hpp"
 #include "jCouplingForceField.hpp"
 #include "jCouplingType.hpp"
-#include "typeAliases.hpp"
+#include "nonCoulombPotential.hpp"
+#include "physicalData.hpp"
 
 namespace forceField
 {
@@ -63,18 +65,41 @@ namespace forceField
         std::vector<DihedralType>  _improperDihedralTypes;
         std::vector<JCouplingType> _jCouplingTypes;
 
-        std::shared_ptr<pq::NonCoulombPot> _nonCoulombPot;
-        std::shared_ptr<pq::CoulombPot>    _coulombPotential;
+        std::shared_ptr<potential::NonCoulombPotential> _nonCoulombPot;
+        std::shared_ptr<potential::CoulombPotential>    _coulombPotential;
 
        public:
         std::shared_ptr<ForceField> clone() const;
 
-        void calculateBondedInteractions(const pq::SimBox &, pq::PhysicalData &);
-        void calculateBondInteractions(const pq::SimBox &, pq::PhysicalData &);
-        void calculateAngleInteractions(const pq::SimBox &, pq::PhysicalData &);
-        void calculateDihedralInteractions(const pq::SimBox &, pq::PhysicalData &);
-        void calculateImproperDihedralInteractions(const pq::SimBox &, pq::PhysicalData &);
-        void calculateJCouplingInteractions(const pq::SimBox &, pq::PhysicalData &);
+        void calculateBondedInteractions(
+            const simulationBox::SimulationBox &,
+            physicalData::PhysicalData &
+        );
+
+        void calculateBondInteractions(
+            const simulationBox::SimulationBox &,
+            physicalData::PhysicalData &
+        );
+
+        void calculateAngleInteractions(
+            const simulationBox::SimulationBox &,
+            physicalData::PhysicalData &
+        );
+
+        void calculateDihedralInteractions(
+            const simulationBox::SimulationBox &,
+            physicalData::PhysicalData &
+        );
+
+        void calculateImproperDihedralInteractions(
+            const simulationBox::SimulationBox &,
+            physicalData::PhysicalData &
+        );
+
+        void calculateJCouplingInteractions(
+            const simulationBox::SimulationBox &,
+            physicalData::PhysicalData &
+        );
 
         const BondType      &findBondTypeById(size_t id) const;
         const AngleType     &findAngleTypeById(size_t id) const;
@@ -125,8 +150,12 @@ namespace forceField
          * standard setters *
          ********************/
 
-        void setNonCoulombPotential(const pq::SharedNonCoulombPot &pot);
-        void setCoulombPotential(const pq::SharedCoulombPot &pot);
+        void setNonCoulombPotential(
+            const std::shared_ptr<potential::NonCoulombPotential> &pot
+        );
+        void setCoulombPotential(
+            const std::shared_ptr<potential::CoulombPotential> &pot
+        );
 
         /********************
          * standard getters *

@@ -26,7 +26,6 @@
 
 #include "forceField.hpp"
 #include "potentialSettings.hpp"
-#include "typeAliases.hpp"
 
 namespace forceField
 {
@@ -53,14 +52,14 @@ namespace forceField
      */
     template <typename T>
     double correctLinker(
-        const pq::CoulombPot &coulPot,
-        pq::NonCoulombPot    &nonCoulPot,
-        pq::PhysicalData     &physicalData,
-        const pq::Molecule   *molecule1,
-        const pq::Molecule   *molecule2,
-        const size_t          atomIndex1,
-        const size_t          atomIndex2,
-        const double          distance
+        const potential::CoulombPotential &coulPot,
+        potential::NonCoulombPotential    &nonCoulPot,
+        physicalData::PhysicalData        &physicalData,
+        const simulationBox::Molecule     *molecule1,
+        const simulationBox::Molecule     *molecule2,
+        const size_t                       atomIndex1,
+        const size_t                       atomIndex2,
+        const double                       distance
     )
     {
         const auto q1 = molecule1->getPartialCharge(atomIndex1);

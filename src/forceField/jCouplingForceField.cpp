@@ -33,9 +33,9 @@ using namespace connectivity;
  * @param type
  */
 JCouplingForceField::JCouplingForceField(
-    const std::vector<pq::Molecule *> &molecules,
-    const std::vector<size_t>         &atomIndices,
-    const size_t                       type
+    const std::vector<simulationBox::Molecule *> &molecules,
+    const std::vector<size_t>                    &atomIndices,
+    const size_t                                  type
 )
     : Dihedral(molecules, atomIndices), _type(type)
 {

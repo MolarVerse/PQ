@@ -25,7 +25,6 @@
 #include <utility>
 
 #include "potentialSettings.hpp"   // for PotentialSettings
-#include "typeAliases.hpp"
 
 using namespace potential;
 using namespace pq;
@@ -52,10 +51,10 @@ InterWater::InterWater()
  * @param cellList Cell list structure used for neighbor searching.
  */
 void InterWater::calculate(
-    pq::SimBox                 &simBox,
-    pq::PhysicalData           &physicalData,
-    const pq::SharedCoulombPot &sharedCoulombPot,
-    pq::CellList               &cellList
+    simulationBox::SimulationBox                       &simBox,
+    physicalData::PhysicalData                         &physicalData,
+    const std::shared_ptr<potential::CoulombPotential> &sharedCoulombPot,
+    simulationBox::CellList                            &cellList
 )
 {
     if (_strategy == nullptr)
@@ -75,10 +74,10 @@ void InterWater::calculate(
  * @param cellList Cell list structure used for neighbor searching.
  */
 void InterWater::calculateQMMMForces(
-    pq::SimBox                 &simBox,
-    pq::PhysicalData           &physicalData,
-    const pq::SharedCoulombPot &sharedCoulombPot,
-    pq::CellList               &cellList
+    simulationBox::SimulationBox                       &simBox,
+    physicalData::PhysicalData                         &physicalData,
+    const std::shared_ptr<potential::CoulombPotential> &sharedCoulombPot,
+    simulationBox::CellList                            &cellList
 )
 {
     if (_strategy == nullptr)
@@ -127,10 +126,10 @@ void InterWater::calculateQMMMForces(
  * @param cellList Cell list structure used for neighbor searching.
  */
 void InterWater::calculateHotspotSmoothingMMForces(
-    pq::SimBox                 &simBox,
-    pq::PhysicalData           &physicalData,
-    const pq::SharedCoulombPot &sharedCoulombPot,
-    pq::CellList               &cellList
+    simulationBox::SimulationBox                       &simBox,
+    physicalData::PhysicalData                         &physicalData,
+    const std::shared_ptr<potential::CoulombPotential> &sharedCoulombPot,
+    simulationBox::CellList                            &cellList
 )
 {
     if (_strategy == nullptr)

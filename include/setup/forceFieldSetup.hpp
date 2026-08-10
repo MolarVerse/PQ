@@ -24,11 +24,16 @@
 
 #define _FORCE_FIELD_SETUP_HPP_
 
-#include "typeAliases.hpp"
+#include <cstddef>
+
+namespace engine
+{
+    class Engine;   // forward declaration
+}   // namespace engine
 
 namespace setup
 {
-    void setupForceField(pq::Engine &);
+    void setupForceField(engine::Engine &);
 
     /**
      * @class ForceFieldSetup
@@ -39,7 +44,7 @@ namespace setup
     class ForceFieldSetup
     {
        private:
-        pq::Engine &_engine;
+        engine::Engine &_engine;
 
         size_t _nBondTypes     = 0;
         size_t _nAngleTypes    = 0;
@@ -47,7 +52,7 @@ namespace setup
         size_t _nImproperTypes = 0;
 
        public:
-        explicit ForceFieldSetup(pq::Engine &engine);
+        explicit ForceFieldSetup(engine::Engine &engine);
 
         void setup();
         void setupBonds();

@@ -28,7 +28,23 @@
 #include <vector>    // for vector
 
 #include "angle.hpp"
-#include "typeAliases.hpp"
+
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}   // namespace physicalData
+
+namespace simulationBox
+{
+    class Molecule;        // forward declaration
+    class SimulationBox;   // forward declaration
+}   // namespace simulationBox
+
+namespace potential
+{
+    class CoulombPotential;      // forward declaration
+    class NonCoulombPotential;   // forward declaration
+}   // namespace potential
 
 namespace forceField
 {
@@ -49,16 +65,16 @@ namespace forceField
 
        public:
         AngleForceField(
-            const std::vector<pq::Molecule *> &molecules,
-            const std::vector<size_t>         &atomIndices,
-            const size_t                       type
+            const std::vector<simulationBox::Molecule *> &molecules,
+            const std::vector<size_t>                    &atomIndices,
+            const size_t                                  type
         );
 
         void calculateEnergyAndForces(
-            const pq::SimBox     &simBox,
-            pq::PhysicalData     &data,
-            const pq::CoulombPot &coulombPot,
-            pq::NonCoulombPot    &nonCoulombPot
+            const simulationBox::SimulationBox &simBox,
+            physicalData::PhysicalData         &data,
+            const potential::CoulombPotential  &coulombPot,
+            potential::NonCoulombPotential     &nonCoulombPot
         );
 
         /***************************

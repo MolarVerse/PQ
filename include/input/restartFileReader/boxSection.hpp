@@ -27,7 +27,6 @@
 #include <string>   // for string
 
 #include "restartFileSection.hpp"
-#include "typeAliases.hpp"
 
 namespace input::restartFile
 {
@@ -42,7 +41,7 @@ namespace input::restartFile
        public:
         void process(
             std::vector<std::string> &lineElements,
-            pq::Engine &
+            engine::Engine &
         ) override;
 
         [[nodiscard]] std::string keyword() override;

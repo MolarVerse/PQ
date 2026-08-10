@@ -144,7 +144,7 @@ void DFTBPlusRunner::writeCoordsFile(SimulationBox &box)
  *
  * @param box Simulation box containing molecules and atoms.
  */
-void DFTBPlusRunner::writePointChargeFile(pq::SimBox &box)
+void DFTBPlusRunner::writePointChargeFile(simulationBox::SimulationBox &box)
 {
     const std::string fileName = FileSettings::getPointChargeFileName();
     std::ofstream     pcFile(fileName);

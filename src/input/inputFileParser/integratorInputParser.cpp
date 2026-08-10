@@ -32,6 +32,7 @@
 #include "referencesOutput.hpp"   // for ReferencesOutput
 #include "settings.hpp"           // for Settings
 #include "stringUtilities.hpp"    // for toLowerCopy
+#include "velocityVerlet.hpp"
 
 using namespace input;
 using namespace engine;

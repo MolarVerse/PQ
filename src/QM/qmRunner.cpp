@@ -72,7 +72,10 @@ void QMRunner::throwAfterTimeout(const std::stop_token stopToken) const
  * @param simBox SimulationBox reference
  * @param physicalData PhysicalData reference
  */
-void QMRunner::run(pq::SimBox &simBox, pq::PhysicalData &physicalData)
+void QMRunner::run(
+    simulationBox::SimulationBox &simBox,
+    physicalData::PhysicalData   &physicalData
+)
 {
     run(simBox, physicalData, XYZ);
 }

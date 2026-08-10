@@ -45,16 +45,20 @@ namespace engine
 
         void combineInnerOuterForces();
 
-        void addCurrentForcesToInnerAndReset(pq::SharedAtomVec& atoms);
+        void addCurrentForcesToInnerAndReset(
+            std::vector<std::shared_ptr<simulationBox::Atom>>& atoms
+        );
         void addScaledCurrentForcesToInnerAndReset(
-            pq::SharedAtomVec& atoms,
-            const double       globalSmF
+            std::vector<std::shared_ptr<simulationBox::Atom>>& atoms,
+            const double                                       globalSmF
         );
 
-        void addCurrentForcesToOuterAndReset(pq::SharedAtomVec& atoms);
+        void addCurrentForcesToOuterAndReset(
+            std::vector<std::shared_ptr<simulationBox::Atom>>& atoms
+        );
         void addScaledCurrentForcesToOuterAndReset(
-            pq::SharedAtomVec& atoms,
-            const double       globalSmF
+            std::vector<std::shared_ptr<simulationBox::Atom>>& atoms,
+            const double                                       globalSmF
         );
 
         void scaleSmoothingMoleculeForcesInner();
