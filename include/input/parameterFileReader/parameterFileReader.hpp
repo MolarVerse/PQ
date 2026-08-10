@@ -25,14 +25,21 @@
 #define _PARAMETER_FILE_READER_HPP_
 
 #include <fstream>   // for ifstream
+#include <memory>    // for unique_ptr
 #include <string>
 #include <string_view>   // for string_view
+#include <vector>
 
-#include "typeAliases.hpp"
+#include "parameterFileSection.hpp"
+
+namespace engine
+{
+    class Engine;   // forward declaration
+}   // namespace engine
 
 namespace input::parameterFile
 {
-    void               readParameterFile(pq::Engine &);
+    void               readParameterFile(engine::Engine &);
     [[nodiscard]] bool isNeeded();
 
     /**
@@ -44,20 +51,24 @@ namespace input::parameterFile
     class ParameterFileReader
     {
        private:
-        std::string   _fileName;
-        std::ifstream _fp;
-        pq::Engine   &_engine;
+        std::string     _fileName;
+        std::ifstream   _fp;
+        engine::Engine &_engine;
 
-        pq::UniqueParamFileSectionVec _parameterFileSections;
+        std::vector<std::unique_ptr<ParameterFileSection>>
+            _parameterFileSections;
 
        public:
-        ParameterFileReader(const std::string &filename, pq::Engine &engine);
+        ParameterFileReader(
+            const std::string &filename,
+            engine::Engine    &engine
+        );
         ~ParameterFileReader();
 
         void read();
-        void deleteSection(const pq::ParamFileSection *section);
+        void deleteSection(const ParameterFileSection *section);
 
-        [[nodiscard]] pq::ParamFileSection *determineSection(
+        [[nodiscard]] ParameterFileSection *determineSection(
             const std::vector<std::string> &lineElements
         );
 
@@ -67,8 +78,9 @@ namespace input::parameterFile
 
         void setFilename(const std::string_view &filename);
 
-        [[nodiscard]] pq::UniqueParamFileSectionVec &getParameterFileSections();
-        [[nodiscard]] const std::string             &getFilename() const;
+        [[nodiscard]] std::vector<std::unique_ptr<ParameterFileSection>> &getParameterFileSections(
+        );
+        [[nodiscard]] const std::string &getFilename() const;
     };
 
 }   // namespace input::parameterFile

@@ -27,8 +27,13 @@
 #include <cstddef>
 
 #include "bond.hpp"
-#include "typeAliases.hpp"
 #include "vector3d.hpp"
+
+namespace simulationBox
+{
+    class Molecule;        // forward declaration
+    class SimulationBox;   // forward declaration
+}   // namespace simulationBox
 
 namespace constraints
 {
@@ -48,19 +53,24 @@ namespace constraints
 
        public:
         BondConstraint(
-            pq::Molecule *molecule1,
-            pq::Molecule *molecule2,
-            const size_t  atomIndex1,
-            const size_t  atomIndex2,
-            const double  bondLength
+            simulationBox::Molecule *molecule1,
+            simulationBox::Molecule *molecule2,
+            const size_t             atomIndex1,
+            const size_t             atomIndex2,
+            const double             bondLength
         );
 
-        void calculateConstraintBondRef(const pq::SimBox &);
+        void calculateConstraintBondRef(const simulationBox::SimulationBox &);
 
-        [[nodiscard]] double calculateDistanceDelta(const pq::SimBox &) const;
+        [[nodiscard]] double calculateDistanceDelta(
+            const simulationBox::SimulationBox &
+        ) const;
         [[nodiscard]] double calculateVelocityDelta() const;
 
-        [[nodiscard]] bool applyShake(const pq::SimBox &, const double);
+        [[nodiscard]] bool applyShake(
+            const simulationBox::SimulationBox &,
+            const double
+        );
         [[nodiscard]] bool applyRattle(const double);
 
         /***************************

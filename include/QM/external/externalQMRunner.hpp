@@ -28,7 +28,17 @@
 #include <string_view>
 
 #include "qmRunner.hpp"
-#include "typeAliases.hpp"
+
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}   // namespace physicalData
+
+namespace simulationBox
+{
+    class Box;             // forward declaration
+    class SimulationBox;   // forward declaration
+}   // namespace simulationBox
 
 namespace QM
 {
@@ -54,18 +64,27 @@ namespace QM
         ~ExternalQMRunner() override = default;
 
         void run(
-            pq::SimBox &,
-            pq::PhysicalData &,
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &,
             simulationBox::Periodicity per
         ) override;
-        virtual void execute(pq::SimBox &) = 0;
+        virtual void execute(simulationBox::SimulationBox &) = 0;
 
-        virtual void writeCoordsFile(pq::SimBox &) = 0;
-        virtual void writePointChargeFile(pq::SimBox &) {}
-        virtual void readStressTensor(pq::Box &, pq::PhysicalData &) {}
+        virtual void writeCoordsFile(simulationBox::SimulationBox &) = 0;
 
-        void readForceFile(pq::SimBox &, pq::PhysicalData &);
-        void readChargeFile(pq::SimBox &);
+        virtual void writePointChargeFile(simulationBox::SimulationBox &) {}
+        virtual void readStressTensor(
+            simulationBox::Box &,
+            physicalData::PhysicalData &
+        )
+        {
+        }
+
+        void readForceFile(
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &
+        );
+        void readChargeFile(simulationBox::SimulationBox &);
 
         /*******************************
          * standard getter and setters *

@@ -25,7 +25,6 @@
 #define _CONVERGENCE_INPUT_PARSER_HPP_
 
 #include "inputFileParser.hpp"   // for InputFileParser
-#include "typeAliases.hpp"
 
 namespace input
 {
@@ -38,7 +37,7 @@ namespace input
     class ConvInputParser : public InputFileParser
     {
        public:
-        explicit ConvInputParser(pq::Engine &);
+        explicit ConvInputParser(engine::Engine &);
 
         void parseEnergyConvergenceStrategy(
             const std::vector<std::string> &,

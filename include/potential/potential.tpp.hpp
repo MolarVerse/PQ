@@ -157,9 +157,9 @@ namespace potential
      */
     template <typename ChargeTag1, typename ChargeTag2>
     double Potential::calculateSingleCoulombInteraction(
-        const pq::Box &box,
-        pq::Atom      &atom1,
-        pq::Atom      &atom2
+        const simulationBox::Box &box,
+        simulationBox::Atom      &atom1,
+        simulationBox::Atom      &atom2
     ) const
     {
         auto coulombEnergy = 0.0;
@@ -225,11 +225,11 @@ namespace potential
      */
     template <typename ChargeTag1, typename ChargeTag2>
     std::pair<double, double> Potential::calculateSingleInteractionOneWay(
-        const pq::Box &box,
-        pq::Molecule  &mol1,
-        pq::Molecule  &mol2,
-        pq::Atom      &atom1,
-        pq::Atom      &atom2
+        const simulationBox::Box &box,
+        simulationBox::Molecule  &mol1,
+        simulationBox::Molecule  &mol2,
+        simulationBox::Atom      &atom1,
+        simulationBox::Atom      &atom2
     ) const
     {
         auto coulombEnergy    = 0.0;
@@ -343,7 +343,7 @@ namespace potential
      * @throws std::abort() Always aborts as this should never be called
      */
     template <typename T>
-    double Potential::getPartialCharge(pq::Atom & /*atom*/) const
+    double Potential::getPartialCharge(simulationBox::Atom & /*atom*/) const
     {
         std::abort();
     }
@@ -361,7 +361,9 @@ namespace potential
      * charge
      */
     template <>
-    inline double Potential::getPartialCharge<QMChargeTag>(pq::Atom &atom) const
+    inline double Potential::getPartialCharge<QMChargeTag>(
+        simulationBox::Atom &atom
+    ) const
     {
         const auto useQMCharges = settings::HybridSettings::getUseQMCharges();
 
@@ -381,7 +383,9 @@ namespace potential
      * @return double The molecular mechanics partial charge
      */
     template <>
-    inline double Potential::getPartialCharge<MMChargeTag>(pq::Atom &atom) const
+    inline double Potential::getPartialCharge<MMChargeTag>(
+        simulationBox::Atom &atom
+    ) const
     {
         return atom.getPartialCharge();
     }

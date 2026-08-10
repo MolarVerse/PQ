@@ -23,11 +23,12 @@
 #include "interWater.hpp"   // for InterWater
 #include "physicalData.hpp"
 #include "potential.hpp"   // for ChargeTag
-#include "typeAliases.hpp"
 
 using namespace potential;
 using namespace pq;
 using namespace waterModel;
+using namespace physicalData;
+using namespace simulationBox;
 
 using enum simulationBox::HybridZone;
 
@@ -38,14 +39,14 @@ using enum simulationBox::HybridZone;
  * and non-Coulomb contributions, and adds forces directly to the atoms.
  */
 void InterWaterStrategyBruteForce::calculate(
-    const InterWaterState      &state,
-    SimBox                     &simBox,
-    physicalData::PhysicalData &physicalData,
-    const SharedCoulombPot     &coulombPotential,
+    const InterWaterState                              &state,
+    simulationBox::SimulationBox                       &simBox,
+    physicalData::PhysicalData                         &physicalData,
+    const std::shared_ptr<potential::CoulombPotential> &coulombPotential,
     CellList &
 )
 {
-    const auto rCut        = CoulombPot::getCoulombRadiusCutOff();
+    const auto rCut = potential::CoulombPotential::getCoulombRadiusCutOff();
     const auto rCutSquared = rCut * rCut;
 
     auto totalCoulombEnergy    = 0.0;
@@ -118,13 +119,13 @@ void InterWaterStrategyBruteForce::calculate(
  */
 void InterWaterStrategyBruteForce::calculateCoreToOuterForces(
     const InterWaterState &,
-    SimBox                 &simBox,
-    PhysicalData           &physicalData,
-    const SharedCoulombPot &coulombPotential,
+    simulationBox::SimulationBox                       &simBox,
+    PhysicalData                                       &physicalData,
+    const std::shared_ptr<potential::CoulombPotential> &coulombPotential,
     CellList &
 )
 {
-    const auto rCut        = CoulombPot::getCoulombRadiusCutOff();
+    const auto rCut = potential::CoulombPotential::getCoulombRadiusCutOff();
     const auto rCutSquared = rCut * rCut;
 
     auto totalCoulombEnergy = 0.0;
@@ -189,14 +190,14 @@ void InterWaterStrategyBruteForce::calculateCoreToOuterForces(
  * @param coulombPotential Coulomb potential evaluator.
  */
 void InterWaterStrategyBruteForce::calculateLayerToOuterForces(
-    const InterWaterState  &state,
-    SimBox                 &simBox,
-    PhysicalData           &physicalData,
-    const SharedCoulombPot &coulombPotential,
+    const InterWaterState                              &state,
+    simulationBox::SimulationBox                       &simBox,
+    PhysicalData                                       &physicalData,
+    const std::shared_ptr<potential::CoulombPotential> &coulombPotential,
     CellList &
 )
 {
-    const auto rCut        = CoulombPot::getCoulombRadiusCutOff();
+    const auto rCut = potential::CoulombPotential::getCoulombRadiusCutOff();
     const auto rCutSquared = rCut * rCut;
 
     auto totalCoulombEnergy    = 0.0;
@@ -271,11 +272,11 @@ void InterWaterStrategyBruteForce::calculateLayerToOuterForces(
  * @param cellList Cell list structure (unused).
  */
 void InterWaterStrategyBruteForce::calculateOuterToOuterForces(
-    const InterWaterState  &state,
-    SimBox                 &simBox,
-    PhysicalData           &physicalData,
-    const SharedCoulombPot &coulombPotential,
-    CellList               &cellList
+    const InterWaterState                              &state,
+    simulationBox::SimulationBox                       &simBox,
+    PhysicalData                                       &physicalData,
+    const std::shared_ptr<potential::CoulombPotential> &coulombPotential,
+    CellList                                           &cellList
 )
 {
     calculate(state, simBox, physicalData, coulombPotential, cellList);
@@ -290,14 +291,14 @@ void InterWaterStrategyBruteForce::calculateOuterToOuterForces(
  * @param coulombPotential Coulomb potential evaluator.
  */
 void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
-    const InterWaterState  &state,
-    SimBox                 &simBox,
-    PhysicalData           &physicalData,
-    const SharedCoulombPot &coulombPotential,
+    const InterWaterState                              &state,
+    simulationBox::SimulationBox                       &simBox,
+    PhysicalData                                       &physicalData,
+    const std::shared_ptr<potential::CoulombPotential> &coulombPotential,
     CellList &
 )
 {
-    const auto rCut        = CoulombPot::getCoulombRadiusCutOff();
+    const auto rCut = potential::CoulombPotential::getCoulombRadiusCutOff();
     const auto rCutSquared = rCut * rCut;
 
     auto totalCoulombEnergy    = 0.0;

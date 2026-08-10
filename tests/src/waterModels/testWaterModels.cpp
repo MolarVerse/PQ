@@ -220,7 +220,7 @@ namespace
             const InterWaterState &,
             SimulationBox &,
             PhysicalData &,
-            const pq::SharedCoulombPot &,
+            const std::shared_ptr<potential::CoulombPotential> &,
             CellList &
         ) final
         {
@@ -230,7 +230,7 @@ namespace
             const InterWaterState &,
             SimulationBox &,
             PhysicalData &,
-            const pq::SharedCoulombPot &,
+            const std::shared_ptr<potential::CoulombPotential> &,
             CellList &
         ) final
         {
@@ -240,7 +240,7 @@ namespace
             const InterWaterState &,
             SimulationBox &,
             PhysicalData &,
-            const pq::SharedCoulombPot &,
+            const std::shared_ptr<potential::CoulombPotential> &,
             CellList &
         ) final
         {
@@ -250,7 +250,7 @@ namespace
             const InterWaterState &,
             SimulationBox &,
             PhysicalData &,
-            const pq::SharedCoulombPot &,
+            const std::shared_ptr<potential::CoulombPotential> &,
             CellList &
         ) final
         {
@@ -260,7 +260,7 @@ namespace
             const InterWaterState &,
             SimulationBox &,
             PhysicalData &,
-            const pq::SharedCoulombPot &,
+            const std::shared_ptr<potential::CoulombPotential> &,
             CellList &
         ) final
         {

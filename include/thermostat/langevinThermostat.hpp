@@ -26,7 +26,12 @@
 
 #include "randomNumberGenerator.hpp"   // for RandomNumberGenerator
 #include "thermostat.hpp"
-#include "typeAliases.hpp"
+#include "thermostatSettings.hpp"
+
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}   // namespace physicalData
 
 namespace thermostat
 {
@@ -46,9 +51,17 @@ namespace thermostat
 
         void calculateSigma(const double, const double);
 
-        void applyLangevin(pq::SimBox &);
-        void applyThermostat(pq::SimBox &, pq::PhysicalData &) override;
-        void applyThermostatHalfStep(pq::SimBox &, pq::PhysicalData &) override;
+        void applyLangevin(simulationBox::SimulationBox &);
+
+        void applyThermostat(
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &
+        ) override;
+
+        void applyThermostatHalfStep(
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &
+        ) override;
 
         /***************************
          * standard setter methods *
@@ -63,9 +76,10 @@ namespace thermostat
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] double             getFriction() const;
-        [[nodiscard]] double             getSigma() const;
-        [[nodiscard]] pq::ThermostatType getThermostatType() const override;
+        [[nodiscard]] double getFriction() const;
+        [[nodiscard]] double getSigma() const;
+        [[nodiscard]]
+        settings::ThermostatType getThermostatType() const override;
     };
 
 }   // namespace thermostat

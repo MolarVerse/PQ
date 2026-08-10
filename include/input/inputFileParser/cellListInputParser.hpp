@@ -26,6 +26,11 @@
 
 #include "inputFileParser.hpp"
 
+namespace engine
+{
+    class Engine;   // forward declaration
+}   // namespace engine
+
 namespace input
 {
     /**
@@ -37,7 +42,7 @@ namespace input
     class CellListInputParser : public InputFileParser
     {
        public:
-        explicit CellListInputParser(pq::Engine &);
+        explicit CellListInputParser(engine::Engine &);
 
         void parseCellListActivated(
             const std::vector<std::string> &,

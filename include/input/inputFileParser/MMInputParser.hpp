@@ -27,7 +27,6 @@
 #include <cstddef>   // for size_t
 
 #include "inputFileParser.hpp"   // for InputFileParser
-#include "typeAliases.hpp"       // for std::vector<std::string>
 
 namespace input
 {
@@ -40,7 +39,7 @@ namespace input
     class MMInputParser : public InputFileParser
     {
        public:
-        explicit MMInputParser(pq::Engine &);
+        explicit MMInputParser(engine::Engine &);
 
         void parseForceFieldType(
             const std::vector<std::string> &,

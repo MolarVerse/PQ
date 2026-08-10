@@ -25,7 +25,16 @@
 #define _INTRA_WATER_HPP_
 
 #include "timer.hpp"
-#include "typeAliases.hpp"
+
+namespace simulationBox
+{
+    class SimulationBox;   // forward declaration
+}   // namespace simulationBox
+
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}   // namespace physicalData
 
 namespace waterModel
 {
@@ -34,7 +43,12 @@ namespace waterModel
        public:
         virtual ~IntraWater() = default;
 
-        virtual void calculate(pq::SimBox &, pq::PhysicalData &) {}
+        virtual void calculate(
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &
+        )
+        {
+        }
     };
 
 }   // namespace waterModel

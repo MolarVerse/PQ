@@ -27,7 +27,6 @@
 #include <cstddef>   // for size_t
 
 #include "inputFileParser.hpp"   // for InputFileParser
-#include "typeAliases.hpp"       // for std::vector<std::string>
 
 namespace input
 {
@@ -40,7 +39,7 @@ namespace input
     class ManostatInputParser : public InputFileParser
     {
        public:
-        explicit ManostatInputParser(pq::Engine &);
+        explicit ManostatInputParser(engine::Engine &);
 
         void parseManostat(const std::vector<std::string> &, const size_t);
 

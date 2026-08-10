@@ -37,8 +37,6 @@
 #include "stressOutput.hpp"
 #include "thermostat.hpp"
 #include "trajectoryOutput.hpp"
-#include "typeAliases.hpp"
-#include "velocityVerlet.hpp"
 #include "virialOutput.hpp"
 
 namespace engine
@@ -53,14 +51,12 @@ namespace engine
        protected:
         resetKinetics::ResetKinetics _resetKinetics;
 
-        // clang-format off
-        pq::UniqueIntegrator _integrator = std::make_unique<integrator::VelocityVerlet>();
-        std::unique_ptr<thermostat::Thermostat> _thermostat = std::make_unique<thermostat::Thermostat>();
-        pq::UniqueManostat   _manostat   = std::make_unique<manostat::Manostat>();
-        // clang-format on
+        std::unique_ptr<integrator::Integrator> _integrator;
+        std::unique_ptr<thermostat::Thermostat> _thermostat;
+        std::unique_ptr<manostat::Manostat>     _manostat;
 
        public:
-        MDEngine()           = default;
+        MDEngine();
         ~MDEngine() override = default;
 
         void         run() override;
@@ -77,7 +73,6 @@ namespace engine
          * standard getter methods *
          ***************************/
 
-        // clang-format off
         [[nodiscard]] resetKinetics::ResetKinetics &getResetKinetics();
         [[nodiscard]] integrator::Integrator       &getIntegrator();
         [[nodiscard]] thermostat::Thermostat       &getThermostat();
@@ -89,13 +84,19 @@ namespace engine
         [[nodiscard]] output::VirialOutput         &getVirialOutput();
         [[nodiscard]] output::StressOutput         &getStressOutput();
         [[nodiscard]] output::BoxFileOutput        &getBoxFileOutput();
-        [[nodiscard]] output::RingPolymerRestartFileOutput &getRingPolymerRstFileOutput();
-        [[nodiscard]] output::RingPolymerTrajectoryOutput    &getRingPolymerXyzOutput();
-        [[nodiscard]] output::RingPolymerTrajectoryOutput    &getRingPolymerVelOutput();
-        [[nodiscard]] output::RingPolymerTrajectoryOutput    &getRingPolymerForceOutput();
-        [[nodiscard]] output::RingPolymerTrajectoryOutput    &getRingPolymerChargeOutput();
-        [[nodiscard]] output::RingPolymerEnergyOutput  &getRingPolymerEnergyOutput();
-        // clang-format on
+
+        [[nodiscard]]
+        output::RingPolymerRestartFileOutput &getRingPolymerRstFileOutput();
+        [[nodiscard]]
+        output::RingPolymerTrajectoryOutput &getRingPolymerXyzOutput();
+        [[nodiscard]]
+        output::RingPolymerTrajectoryOutput &getRingPolymerVelOutput();
+        [[nodiscard]]
+        output::RingPolymerTrajectoryOutput &getRingPolymerForceOutput();
+        [[nodiscard]]
+        output::RingPolymerTrajectoryOutput &getRingPolymerChargeOutput();
+        [[nodiscard]]
+        output::RingPolymerEnergyOutput &getRingPolymerEnergyOutput();
 
         /***************************
          * make unique_ptr methods *

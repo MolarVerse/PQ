@@ -26,8 +26,18 @@
 
 #include <cstddef>   // for size_t
 
+#include "thermostatSettings.hpp"
 #include "timer.hpp"   // for Timer
-#include "typeAliases.hpp"
+
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}   // namespace physicalData
+
+namespace simulationBox
+{
+    class SimulationBox;   // forward declaration
+}   // namespace simulationBox
 
 namespace thermostat
 {
@@ -58,10 +68,19 @@ namespace thermostat
 
         void applyTemperatureRamping();
 
-        virtual void applyThermostat(pq::SimBox &, pq::PhysicalData &);
-        virtual void applyThermostatOnForces(pq::SimBox &) {};
-        virtual void applyThermostatHalfStep(pq::SimBox &, pq::PhysicalData &) {
-        };
+        virtual void applyThermostat(
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &
+        );
+
+        virtual void applyThermostatOnForces(simulationBox::SimulationBox &) {}
+
+        virtual void applyThermostatHalfStep(
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &
+        )
+        {
+        }
 
         /***************************
          * standard setter methods *
@@ -83,7 +102,8 @@ namespace thermostat
         [[nodiscard]] size_t getRampingStepsLeft() const;
         [[nodiscard]] size_t getRampingFrequency() const;
 
-        [[nodiscard]] virtual pq::ThermostatType getThermostatType() const;
+        [[nodiscard]]
+        virtual settings::ThermostatType getThermostatType() const;
     };
 
 }   // namespace thermostat

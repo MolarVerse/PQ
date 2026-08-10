@@ -24,11 +24,14 @@
 
 #define _HYBRID_SETUP_HPP_
 
-#include "typeAliases.hpp"
+namespace engine
+{
+    class Engine;   // forward declaration
+}   // namespace engine
 
 namespace setup
 {
-    void setupHybrid(pq::Engine &);
+    void setupHybrid(engine::Engine &);
 
     /**
      * @class HybridSetup
@@ -39,10 +42,10 @@ namespace setup
     class HybridSetup
     {
        private:
-        pq::Engine &_engine;
+        engine::Engine &_engine;
 
        public:
-        explicit HybridSetup(pq::Engine &engine);
+        explicit HybridSetup(engine::Engine &engine);
 
         void setup();
         void validateQMMethod();

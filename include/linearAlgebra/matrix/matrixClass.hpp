@@ -24,9 +24,8 @@
 
 #define _MATRIX_CLASS_HPP_
 
+#include <Eigen/Dense>
 #include <cstddef>
-
-#include "Eigen/Dense"
 
 namespace linearAlgebra
 {
