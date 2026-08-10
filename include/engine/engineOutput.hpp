@@ -43,7 +43,6 @@
 #include "timer.hpp"
 #include "timingsOutput.hpp"
 #include "trajectoryOutput.hpp"
-#include "typeAliases.hpp"
 #include "virialOutput.hpp"
 
 namespace engine
@@ -90,43 +89,60 @@ namespace engine
        public:
         EngineOutput();
 
-        void writeEnergyFile(const size_t step, const pq::PhysicalData &);
+        void writeEnergyFile(
+            const size_t step,
+            const physicalData::PhysicalData &
+        );
         void writeInstantEnergyFile(
             const size_t step,
-            const pq::PhysicalData &
+            const physicalData::PhysicalData &
         );
-        void writeXyzFile(pq::SimBox &, const size_t);
-        void writeVelFile(pq::SimBox &, const size_t);
-        void writeForceFile(pq::SimBox &, const size_t);
-        void writeChargeFile(pq::SimBox &, const size_t);
+        void writeXyzFile(simulationBox::SimulationBox &, const size_t);
+        void writeVelFile(simulationBox::SimulationBox &, const size_t);
+        void writeForceFile(simulationBox::SimulationBox &, const size_t);
+        void writeChargeFile(simulationBox::SimulationBox &, const size_t);
         void writeInfoFile(
             const double simulationTime,
-            const pq::PhysicalData &
+            const physicalData::PhysicalData &
         );
         void writeRstFile(
-            pq::SimBox &,
+            simulationBox::SimulationBox &,
             const thermostat::Thermostat &,
             const size_t
         );
-        void writeOptRstFile(pq::SimBox &, const size_t);
+        void writeOptRstFile(simulationBox::SimulationBox &, const size_t);
 
-        void writeMomentumFile(const size_t step, const pq::PhysicalData &);
-        void writeVirialFile(const size_t, const pq::PhysicalData &);
-        void writeStressFile(const size_t, const pq::PhysicalData &);
-        void writeBoxFile(const size_t, const pq::Box &);
+        void writeMomentumFile(
+            const size_t step,
+            const physicalData::PhysicalData &
+        );
+        void writeVirialFile(const size_t, const physicalData::PhysicalData &);
+        void writeStressFile(const size_t, const physicalData::PhysicalData &);
+        void writeBoxFile(const size_t, const simulationBox::Box &);
         void writeOptFile(const size_t, const opt::Optimizer &);
 
-        void writeRingPolymerRstFile(std::vector<pq::SimBox> &);
-        void writeRingPolymerXyzFile(std::vector<pq::SimBox> &, const size_t);
-        void writeRingPolymerVelFile(std::vector<pq::SimBox> &, const size_t);
-        void writeRingPolymerForceFile(std::vector<pq::SimBox> &, const size_t);
+        void writeRingPolymerRstFile(
+            std::vector<simulationBox::SimulationBox> &
+        );
+        void writeRingPolymerXyzFile(
+            std::vector<simulationBox::SimulationBox> &,
+            const size_t
+        );
+        void writeRingPolymerVelFile(
+            std::vector<simulationBox::SimulationBox> &,
+            const size_t
+        );
+        void writeRingPolymerForceFile(
+            std::vector<simulationBox::SimulationBox> &,
+            const size_t
+        );
         void writeRingPolymerChargeFile(
-            std::vector<pq::SimBox> &,
+            std::vector<simulationBox::SimulationBox> &,
             const size_t
         );
         void writeRingPolymerEnergyFile(
             const size_t,
-            const std::vector<pq::PhysicalData> &
+            const std::vector<physicalData::PhysicalData> &
         );
 
         void writeTimingsFile(timings::GlobalTimer &);

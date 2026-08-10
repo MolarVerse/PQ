@@ -277,7 +277,7 @@ IntraNonBonded *Engine::getIntraNonBondedPtr() { return _intraNonBonded.get(); }
  *
  * @param interWater The new inter-water handler to use
  */
-void Engine::setInterWater(pq::UniqueInterWater interWater)
+void Engine::setInterWater(std::unique_ptr<waterModel::InterWater> interWater)
 {
     _interWater = std::move(interWater);
 }

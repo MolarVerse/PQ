@@ -30,7 +30,6 @@
 #include "interWater.hpp"
 #include "potential.hpp"       // for ChargeTag
 #include "simulationBox.hpp"   // for SimulationBox
-#include "typeAliases.hpp"
 
 namespace waterModel
 {
@@ -42,14 +41,14 @@ namespace waterModel
      */
     template <typename ChargeTag1, typename ChargeTag2>
     void InterWaterStrategy::calculateSingleInteraction(
-        pq::Atom                           &atom1,
-        pq::Atom                           &atom2,
-        const pq::SharedCoulombPot         &coulombPotential,
-        const double                        rCutSquared,
-        const simulationBox::SimulationBox &simBox,
-        const pq::NonCoulPair              &nonCoulPair,
-        double                             &coulombEnergy,
-        double                             &nonCoulombEnergy
+        simulationBox::Atom                                &atom1,
+        simulationBox::Atom                                &atom2,
+        const std::shared_ptr<potential::CoulombPotential> &coulombPotential,
+        const double                                        rCutSquared,
+        const simulationBox::SimulationBox                 &simBox,
+        const potential::NonCoulombPair                    &nonCoulPair,
+        double                                             &coulombEnergy,
+        double                                             &nonCoulombEnergy
     )
     {
         const auto xyz_i = atom1.getPosition();
@@ -103,12 +102,12 @@ namespace waterModel
      */
     template <typename ChargeTag1, typename ChargeTag2>
     void InterWaterStrategy::calculateSingleCoulombInteraction(
-        pq::Atom                   &atom1,
-        pq::Atom                   &atom2,
-        const pq::SharedCoulombPot &coulombPotential,
-        const double                rCutSquared,
-        const pq::SimBox           &simBox,
-        double                     &coulombEnergy
+        simulationBox::Atom                                &atom1,
+        simulationBox::Atom                                &atom2,
+        const std::shared_ptr<potential::CoulombPotential> &coulombPotential,
+        const double                                        rCutSquared,
+        const simulationBox::SimulationBox                 &simBox,
+        double                                             &coulombEnergy
     )
     {
         const auto xyz_i = atom1.getPosition();
@@ -154,12 +153,12 @@ namespace waterModel
      */
     template <typename ChargeTag1, typename ChargeTag2>
     void InterWaterStrategy::calculateSingleInteractionOneWay(
-        pq::Atom                                           &atom1,
-        pq::Atom                                           &atom2,
+        simulationBox::Atom                                &atom1,
+        simulationBox::Atom                                &atom2,
         const std::shared_ptr<potential::CoulombPotential> &coulombPotential,
         const double                                        rCutSquared,
-        const pq::SimBox                                   &simBox,
-        const pq::NonCoulPair                              &nonCoulPair,
+        const simulationBox::SimulationBox                 &simBox,
+        const potential::NonCoulombPair                    &nonCoulPair,
         double                                             &coulombEnergy,
         double                                             &nonCoulombEnergy
     )
@@ -211,14 +210,14 @@ namespace waterModel
      * @tparam T Charge tag type.
      */
     template <typename T>
-    double InterWaterStrategy::getPartialCharge(pq::Atom &) const
+    double InterWaterStrategy::getPartialCharge(simulationBox::Atom &) const
     {
         std::abort();
     }
 
     template <>
     inline double InterWaterStrategy::getPartialCharge<potential::QMChargeTag>(
-        pq::Atom &atom
+        simulationBox::Atom &atom
     ) const
     {
         const auto useQMCharges = settings::HybridSettings::getUseQMCharges();
@@ -231,7 +230,7 @@ namespace waterModel
 
     template <>
     inline double InterWaterStrategy::getPartialCharge<potential::MMChargeTag>(
-        pq::Atom &atom
+        simulationBox::Atom &atom
     ) const
     {
         return atom.getPartialCharge();

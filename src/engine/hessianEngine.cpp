@@ -503,7 +503,8 @@ void HessianEngine::addTimers()
     _timer.addTimer(_physicalData->getTimer());
 }
 
-pq::SharedPhysicalData HessianEngine::getSharedPhysicalDataOld()
+std::shared_ptr<physicalData::PhysicalData> HessianEngine::
+    getSharedPhysicalDataOld()
 {
     return _physicalDataOld;
 }

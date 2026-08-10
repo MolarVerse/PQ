@@ -27,7 +27,7 @@
 #include <optional>
 
 #include "interWater.hpp"
-#include "typeAliases.hpp"
+#include "mdEngine.hpp"
 #include "waterModelSettings.hpp"
 
 namespace setup
@@ -38,7 +38,7 @@ namespace setup
         double dHH{0.0};
     };
 
-    void setupWaterModel(pq::Engine &);
+    void setupWaterModel(engine::Engine &);
 
     /**
      * @class WaterModelSetup
@@ -49,7 +49,7 @@ namespace setup
     class WaterModelSetup
     {
        private:
-        pq::MDEngine &_engine;
+        engine::Engine &_engine;
 
         void makeInterWater();
         void checkTopologyFile();
@@ -61,7 +61,7 @@ namespace setup
         void addReferences();
 
        public:
-        explicit WaterModelSetup(pq::MDEngine &engine);
+        explicit WaterModelSetup(engine::MDEngine &engine);
 
         void setup();
     };

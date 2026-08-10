@@ -34,7 +34,7 @@ using namespace settings;
 using namespace customException;
 using namespace utilities;
 
-HessianInputParser::HessianInputParser(pq::Engine &engine)
+HessianInputParser::HessianInputParser(engine::Engine &engine)
     : InputFileParser(engine)
 {
     addKeyword(

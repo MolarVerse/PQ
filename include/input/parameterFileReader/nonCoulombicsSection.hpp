@@ -25,9 +25,14 @@
 #define _NON_COULOMBICS_SECTION_HPP_
 
 #include <string>   // for allocator, string
+#include <vector>   // for vector
 
 #include "parameterFileSection.hpp"   // for ParameterFileSection
-#include "typeAliases.hpp"
+
+namespace engine
+{
+    class Engine;   // forward declaration
+}   // namespace engine
 
 namespace input::parameterFile
 {
@@ -42,11 +47,24 @@ namespace input::parameterFile
        public:
         [[nodiscard]] std::string keyword() override;
 
-        void processSection(std::vector<std::string> &, pq::Engine &) override;
-        void processHeader(std::vector<std::string> &, pq::Engine &) override;
-        void processLJ(std::vector<std::string> &, pq::Engine &) const;
-        void processBuckingham(std::vector<std::string> &, pq::Engine &) const;
-        void processMorse(std::vector<std::string> &, pq::Engine &) const;
+        void processSection(
+            std::vector<std::string> &,
+            engine::Engine &
+        ) override;
+
+        void processHeader(
+            std::vector<std::string> &,
+            engine::Engine &
+        ) override;
+
+        void processLJ(std::vector<std::string> &, engine::Engine &) const;
+
+        void processBuckingham(
+            std::vector<std::string> &,
+            engine::Engine &
+        ) const;
+
+        void processMorse(std::vector<std::string> &, engine::Engine &) const;
     };
 
 }   // namespace input::parameterFile

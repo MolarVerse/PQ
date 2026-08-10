@@ -26,16 +26,28 @@
 
 #include "constants/conversionFactors.hpp"   // for constants
 #include "intraWater.hpp"                    // for IntraWater
-#include "typeAliases.hpp"
 
 using namespace constants;
+
+namespace simulationBox
+{
+    class SimulationBox;   // forward declaration
+}   // namespace simulationBox
+
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}   // namespace physicalData
 
 namespace waterModel
 {
     class SPCIntraWater : public IntraWater
     {
        public:
-        void calculate(pq::SimBox &, pq::PhysicalData &) final;
+        void calculate(
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &
+        ) final;
 
         // clang-format off
         virtual double getEqOHDistance() const = 0;          // Angström

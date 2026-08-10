@@ -24,10 +24,14 @@
 
 #define _HYBRID_CONFIGURATOR_HPP_
 
-#include <unordered_set>   // for unordered_set
+#include <unordered_set>
 
-#include "typeAliases.hpp"
 #include "vector3d.hpp"
+
+namespace simulationBox
+{
+    class SimulationBox;   // forward declaration
+}   // namespace simulationBox
 
 namespace configurator
 {
@@ -39,19 +43,19 @@ namespace configurator
         static inline bool   _molChangedZone    = false;
 
        public:
-        void calculateInnerRegionCenter(pq::SimBox &);
-        void shiftAtomsToInnerRegionCenter(pq::SimBox &);
-        void shiftAtomsBackToInitialPositions(pq::SimBox &);
-        void assignHybridZones(pq::SimBox &);
-        void activateMolecules(pq::SimBox &);
-        void deactivateOuterMolecules(pq::SimBox &);
-        void activateSmoothingMolecules(pq::SimBox &);
+        void calculateInnerRegionCenter(simulationBox::SimulationBox &);
+        void shiftAtomsToInnerRegionCenter(simulationBox::SimulationBox &);
+        void shiftAtomsBackToInitialPositions(simulationBox::SimulationBox &);
+        void assignHybridZones(simulationBox::SimulationBox &);
+        void activateMolecules(simulationBox::SimulationBox &);
+        void deactivateOuterMolecules(simulationBox::SimulationBox &);
+        void activateSmoothingMolecules(simulationBox::SimulationBox &);
         void deactivateSmoothingMolecules(
             std::unordered_set<size_t> inactiveMolecules,
-            pq::SimBox &
+            simulationBox::SimulationBox &
         );
-        void toggleMoleculeActivation(pq::SimBox &);
-        void calculateSmoothingFactors(pq::SimBox &);
+        void toggleMoleculeActivation(simulationBox::SimulationBox &);
+        void calculateSmoothingFactors(simulationBox::SimulationBox &);
 
         /********************************
          * standard getters and setters *

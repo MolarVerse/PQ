@@ -6,7 +6,6 @@ set(setup_source_files
     manostatSetup.cpp
     resetKineticsSetup.cpp
     potentialSetup.cpp
-    integratorSetup.cpp
     constraintsSetup.cpp
     forceFieldSetup.cpp
     intraNonBondedSetup.cpp

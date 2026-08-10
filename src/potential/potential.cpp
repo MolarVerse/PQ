@@ -87,7 +87,7 @@ NonCoulombPotential &Potential::getNonCoulombPotential() const
 /**
  * @brief get the coulomb potential as a shared pointer
  *
- * @return SharedCoulombPot
+ * @return std::shared_ptr<potential::CoulombPotential>
  */
 std::shared_ptr<CoulombPotential> Potential::getCoulombPotSharedPtr() const
 {

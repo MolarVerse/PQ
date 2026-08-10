@@ -24,11 +24,15 @@
 
 #define _MANOSTAT_SETUP_HPP_
 
-#include "typeAliases.hpp"
+namespace engine
+{
+    class Engine;     // forward declaration
+    class MDEngine;   // forward declaration
+}   // namespace engine
 
 namespace setup
 {
-    void setupManostat(pq::Engine &);
+    void setupManostat(engine::Engine &);
 
     /**
      * @class ManostatSetup
@@ -39,10 +43,10 @@ namespace setup
     class ManostatSetup
     {
        private:
-        pq::MDEngine &_engine;
+        engine::MDEngine &_engine;
 
        public:
-        explicit ManostatSetup(pq::MDEngine &engine);
+        explicit ManostatSetup(engine::MDEngine &engine);
 
         void setup();
 
@@ -54,7 +58,7 @@ namespace setup
         void writeBerendsenSetup() const;
         void writeIsotropy() const;
 
-        [[nodiscard]] pq::MDEngine &getEngine() const;
+        [[nodiscard]] engine::MDEngine &getEngine() const;
     };
 
 }   // namespace setup

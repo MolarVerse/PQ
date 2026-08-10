@@ -52,10 +52,10 @@ ForceDifferenceHessianBuilder::ForceDifferenceHessianBuilder(
  * @param displacement
  */
 std::vector<double> ForceDifferenceHessianBuilder::evaluateForces(
-    Evaluator   &evaluator,
-    pq::SimBox  &simulationBox,
-    const size_t coordinateIndex,
-    const double displacement
+    Evaluator                    &evaluator,
+    simulationBox::SimulationBox &simulationBox,
+    const size_t                  coordinateIndex,
+    const double                  displacement
 ) const
 {
     displaceCoordinate(simulationBox, coordinateIndex, displacement);
@@ -73,7 +73,7 @@ std::vector<double> ForceDifferenceHessianBuilder::evaluateForces(
  * @param positions
  */
 void ForceDifferenceHessianBuilder::restorePositions(
-    pq::SimBox                              &simulationBox,
+    simulationBox::SimulationBox            &simulationBox,
     const std::vector<linearAlgebra::Vec3D> &positions
 )
 {
@@ -89,9 +89,9 @@ void ForceDifferenceHessianBuilder::restorePositions(
  * @param displacement
  */
 void ForceDifferenceHessianBuilder::displaceCoordinate(
-    pq::SimBox  &simulationBox,
-    const size_t coordinateIndex,
-    const double displacement
+    simulationBox::SimulationBox &simulationBox,
+    const size_t                  coordinateIndex,
+    const double                  displacement
 )
 {
     const auto atomIndex = coordinateIndex / 3;
@@ -110,7 +110,7 @@ void ForceDifferenceHessianBuilder::displaceCoordinate(
  * @return std::vector<double>
  */
 std::vector<double> ForceDifferenceHessianBuilder::flattenForces(
-    const pq::SimBox &simulationBox
+    const simulationBox::SimulationBox &simulationBox
 )
 {
     std::vector<double> flattenedForces;
@@ -149,8 +149,8 @@ void ForceDifferenceHessianBuilder::symmetrize(HessianMatrix &hessian)
  * @param displacement
  */
 HessianMatrix CentralForceDifferenceHessianBuilder::build(
-    Evaluator  &evaluator,
-    pq::SimBox &simulationBox
+    Evaluator                    &evaluator,
+    simulationBox::SimulationBox &simulationBox
 ) const
 {
     const auto numberOfCoordinates = 3 * simulationBox.getNumberOfAtoms();
@@ -188,8 +188,8 @@ HessianMatrix CentralForceDifferenceHessianBuilder::build(
  * @param displacement
  */
 HessianMatrix ForwardForceDifferenceHessianBuilder::build(
-    Evaluator  &evaluator,
-    pq::SimBox &simulationBox
+    Evaluator                    &evaluator,
+    simulationBox::SimulationBox &simulationBox
 ) const
 {
     const auto numberOfCoordinates = 3 * simulationBox.getNumberOfAtoms();
@@ -226,8 +226,8 @@ HessianMatrix ForwardForceDifferenceHessianBuilder::build(
  * @param displacement
  */
 HessianMatrix FivePointForceDifferenceHessianBuilder::build(
-    Evaluator  &evaluator,
-    pq::SimBox &simulationBox
+    Evaluator                    &evaluator,
+    simulationBox::SimulationBox &simulationBox
 ) const
 {
     const auto numberOfCoordinates = 3 * simulationBox.getNumberOfAtoms();
@@ -273,7 +273,7 @@ HessianMatrix FivePointForceDifferenceHessianBuilder::build(
  */
 HessianMatrix AnalyticHessianBuilder::build(
     Evaluator &evaluator,
-    pq::SimBox &
+    simulationBox::SimulationBox &
 ) const
 {
     if (!evaluator.supportsAnalyticHessian())

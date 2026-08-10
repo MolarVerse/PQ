@@ -25,7 +25,6 @@
 #define _QM_MM_MD_ENGINE_HPP_
 
 #include "hybridMDEngine.hpp"
-#include "typeAliases.hpp"
 
 namespace engine
 {
@@ -45,7 +44,7 @@ namespace engine
         void calculateForces() override;
 
        private:
-        pq::PhysicalData _qmmmPhysicalData{};
+        physicalData::PhysicalData _qmmmPhysicalData{};
 
         void applySmoothing();
         void applyExactSmoothing();

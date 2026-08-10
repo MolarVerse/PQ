@@ -31,7 +31,6 @@
 #include "simulationBox.hpp"   // for SimulationBox
 
 using namespace output;
-using namespace settings;
 using namespace simulationBox;
 
 /**

@@ -32,7 +32,16 @@
 #include "distanceConstraint.hpp"   // for DistanceConstraint
 #include "mShakeReference.hpp"      // for MShakeReference
 #include "timer.hpp"                // for Timer
-#include "typeAliases.hpp"
+
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}   // namespace physicalData
+
+namespace simulationBox
+{
+    class SimulationBox;   // forward declaration
+}   // namespace simulationBox
 
 /**
  * @brief namespace for all constraints
@@ -72,21 +81,23 @@ namespace constraints
         Constraints();
         ~Constraints();
 
-        void calculateConstraintBondRefs(const pq::SimBox &simulationBox);
+        void calculateConstraintBondRefs(
+            const simulationBox::SimulationBox &simulationBox
+        );
 
         void initMShake();
 
-        void applyShake(pq::SimBox &simulationBox);
-        void _applyShake(pq::SimBox &simulationBox);
-        void _applyMShake(pq::SimBox &simulationBox);
+        void applyShake(simulationBox::SimulationBox &simulationBox);
+        void _applyShake(simulationBox::SimulationBox &simulationBox);
+        void _applyMShake(simulationBox::SimulationBox &simulationBox);
 
-        void applyRattle(pq::SimBox &simulationBox);
+        void applyRattle(simulationBox::SimulationBox &simulationBox);
         void _applyRattle();
-        void _applyMRattle(pq::SimBox &simulationBox);
+        void _applyMRattle(simulationBox::SimulationBox &simulationBox);
 
         void applyDistanceConstraints(
-            const pq::SimBox &,
-            pq::PhysicalData &,
+            const simulationBox::SimulationBox &,
+            physicalData::PhysicalData &,
             const double
         );
 
@@ -119,12 +130,17 @@ namespace constraints
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] const pq::BondConstraintsVec &getBondConstraints() const;
-        [[nodiscard]] const pq::DistConstraintsVec &getDistConstraints() const;
-        [[nodiscard]] const pq::MShakeReferenceVec &getMShakeReferences() const;
+        [[nodiscard]]
+        const std::vector<BondConstraint> &getBondConstraints() const;
+        [[nodiscard]]
+        const std::vector<DistanceConstraint> &getDistConstraints() const;
+        [[nodiscard]]
+        const std::vector<MShakeReference> &getMShakeReferences() const;
 
         [[nodiscard]] size_t getNumberOfBondConstraints() const;
-        [[nodiscard]] size_t getNumberOfMShakeConstraints(pq::SimBox &) const;
+        [[nodiscard]] size_t getNumberOfMShakeConstraints(
+            simulationBox::SimulationBox &
+        ) const;
         [[nodiscard]] size_t getNumberOfDistanceConstraints() const;
 
         [[nodiscard]] size_t getShakeMaxIter() const;
