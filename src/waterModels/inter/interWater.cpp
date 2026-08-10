@@ -116,17 +116,6 @@ void InterWater::calculateQMMMForces(
             cellList
         );
     }
-
-    {
-        auto _ = scoped("QM/MM Outer to Outer");
-        _strategy->calculateOuterToOuterForces(
-            _state,
-            simBox,
-            physicalData,
-            sharedCoulombPot,
-            cellList
-        );
-    }
 }
 
 /**
