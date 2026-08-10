@@ -24,9 +24,6 @@
 
 #define _HYBRID_SETUP_HPP_
 
-#include <string>   // for string
-#include <vector>   // for vector
-
 #include "typeAliases.hpp"
 
 namespace setup
@@ -48,12 +45,13 @@ namespace setup
         explicit HybridSetup(pq::Engine &engine);
 
         void setup();
-        void setupQMCenter();
-        void setupQMOnlyList();
-        void setupMMOnlyList();
-
-        std::vector<int> parseSelection(const std::string &, const std::string &);
-        std::vector<int> parseSelectionNoPython(const std::string &, const std::string &);
+        void validateQMMethod();
+        void setupInnerRegionCenter();
+        void setupForcedInnerList();
+        void setupForcedOuterList();
+        void checkZoneRadii();
+        void validateQMChargeSettings();
+        void setupWriteInfo() const;
     };
 
 }   // namespace setup

@@ -26,6 +26,7 @@
 #include "box.hpp"                // for Box
 #include "exceptions.hpp"         // for MolDescriptorException
 #include "manostatSettings.hpp"   // for ManostatSettings
+#include "settings.hpp"           // for Settings
 #include "stringUtilities.hpp"    // for toLowerCopy
 
 using namespace simulationBox;
@@ -108,6 +109,20 @@ void Atom::scaleVelocityOrthogonalSpace(
         _velocity = box.toSimSpace(_velocity);
 }
 
+/**
+ * @brief scales the force of the atom
+ *
+ * @param scaleFactor double
+ */
+void Atom::scaleForce(const double scaleFactor) { _force *= scaleFactor; }
+
+/**
+ * @brief scales the force of the atom by a Vec3D elementwise
+ *
+ * @param scaleFactor Vec3D
+ */
+void Atom::scaleForce(const Vec3D &scaleFactor) { _force *= scaleFactor; }
+
 /**************************
  *                        *
  * standard adder methods *
@@ -129,13 +144,6 @@ void Atom::addPosition(const Vec3D &position) { _position += position; }
 void Atom::addVelocity(const Vec3D &velocity) { _velocity += velocity; }
 
 /**
- * @brief add a Vec3D to the current force of the atom
- *
- * @param force
- */
-void Atom::addForce(const Vec3D &force) { _force += force; }
-
-/**
  * @brief  add a force to the current force of the atom
  *
  * @param force_x
@@ -152,11 +160,20 @@ void Atom::addForce(
 }
 
 /**
- * @brief add a Vec3D to the current shift force of the atom
+ * @brief add a Vec3D to the current force of the atom calculated from the inner
+ * region method of the hybrid calculation
  *
- * @param shiftForce
+ * @param force
  */
-void Atom::addShiftForce(const Vec3D &shiftForce) { _shiftForce += shiftForce; }
+void Atom::addForceInner(const Vec3D &force) { _forceInner += force; }
+
+/**
+ * @brief add a Vec3D to the current force of the atom calculated from the outer
+ * region method of the hybrid calculation
+ *
+ * @param force
+ */
+void Atom::addForceOuter(const Vec3D &force) { _forceOuter += force; }
 
 /***************************
  *                         *
@@ -165,27 +182,62 @@ void Atom::addShiftForce(const Vec3D &shiftForce) { _shiftForce += shiftForce; }
  ***************************/
 
 /**
- * @brief return if the atom is QM only
+ * @brief return if the atom is active
  *
  * @return true
  * @return false
+ *
+ * @details currently only used for hybrid calculations
  */
-bool Atom::isQMOnly() const { return _isQMOnly; }
+bool Atom::isActive() const { return _isActive; }
 
 /**
- * @brief return if the atom is MM only
+ * @brief determine if an atom should be treated as QM
  *
- * @return true
- * @return false
+ * @return true if the atom should be treated as QM, false otherwise
+ *
+ * @details Checks if an atom qualifies as a QM atom based on:
+ *          - QM-only job types (all atoms are QM)
+ *          - MM-only job types (no atoms are MM)
+ *          - Atom is activated for hybrid calculation
  */
-bool Atom::isMMOnly() const { return _isMMOnly; }
+bool Atom::isQMAtom() const
+{
+    if (Settings::isQMOnlyJobtype())
+        return true;
+
+    if (Settings::isMMOnlyJobtype())
+        return false;
+
+    if (isActive())
+        return true;
+
+    return false;
+}
 
 /**
- * @brief return the name of the atom (element name)
+ * @brief determine if an atom should be treated as MM
  *
- * @return std::string
+ * @return true if the atom should be treated as MM, false otherwise
+ *
+ * @details Checks if an atom qualifies as a MM atom based on:
+ *          - MM-only job types (all atoms are MM)
+ *          - QM-only job types (no atoms are MM)
+ *          - Atom is activated for hybrid calculation
  */
-std::string Atom::getName() const { return _name; }
+bool Atom::isMMAtom() const
+{
+    if (Settings::isMMOnlyJobtype())
+        return true;
+
+    if (Settings::isQMOnlyJobtype())
+        return false;
+
+    if (isActive())
+        return true;
+
+    return false;
+}
 
 /**
  * @brief return the atom type name
@@ -223,39 +275,18 @@ size_t Atom::getExternalGlobalVDWType() const { return _externalGlobalVDWType; }
 size_t Atom::getInternalGlobalVDWType() const { return _internalGlobalVDWType; }
 
 /**
- * @brief return the atomic number of the atom
- *
- * @return int
- */
-int Atom::getAtomicNumber() const { return _atomicNumber; }
-
-/**
  * @brief return the mass of the atom
  *
  * @return double
  */
 double Atom::getMass() const { return _mass; }
 
-/**
- * @brief return the partial charge of the atom
- *
- * @return double
- */
-double Atom::getPartialCharge() const { return _partialCharge; }
-
-/**
+/*
  * @brief return the qm charge of the atom
  *
  * @return optional<double>
  */
 optional<double> Atom::getQMCharge() const { return _qmCharge; }
-
-/**
- * @brief return the position of the atom
- *
- * @return Vec3D
- */
-Vec3D Atom::getPosition() const { return _position; }
 
 /**
  * @brief return the old position of the atom
@@ -286,6 +317,22 @@ Vec3D Atom::getForce() const { return _force; }
 Vec3D Atom::getForceOld() const { return _forceOld; }
 
 /**
+ * @brief return the force of the atom calculated from the inner region method
+ * of the hybrid calculation
+ *
+ * @return Vec3D
+ */
+Vec3D Atom::getForceInner() const { return _forceInner; }
+
+/**
+ * @brief return the force of the atom calculated from the outer region method
+ * of the hybrid calculation
+ *
+ * @return Vec3D
+ */
+Vec3D Atom::getForceOuter() const { return _forceOuter; }
+
+/**
  * @brief return the shift force of the atom
  *
  * @return Vec3D
@@ -299,18 +346,11 @@ Vec3D Atom::getShiftForce() const { return _shiftForce; }
  ***************************/
 
 /**
- * @brief set if the atom is QM only
+ * @brief set if the atom is active
  *
- * @param position
+ * @param isActive
  */
-void Atom::setQMOnly(const bool isQMOnly) { _isQMOnly = isQMOnly; }
-
-/**
- * @brief set if the atom is MM only
- *
- * @param position
- */
-void Atom::setMMOnly(const bool isMMOnly) { _isMMOnly = isMMOnly; }
+void Atom::setActive(const bool isActive) { _isActive = isActive; }
 
 /**
  * @brief set the name of the atom (element name)
@@ -422,6 +462,20 @@ void Atom::setVelocity(const Vec3D &velocity) { _velocity = velocity; }
 void Atom::setForce(const Vec3D &force) { _force = force; }
 
 /**
+ * @brief set the force of the atom calculated from the inner region method of
+ * the hybrid calculation
+ * @param force
+ */
+void Atom::setForceInner(const Vec3D &force) { _forceInner = force; }
+
+/**
+ * @brief set the force of the atom calculated from the outer region method of
+ * the hybrid calculation
+ * @param force
+ */
+void Atom::setForceOuter(const Vec3D &force) { _forceOuter = force; }
+
+/**
  * @brief set the shift force of the atom
  *
  * @param shiftForce
@@ -432,6 +486,18 @@ void Atom::setShiftForce(const Vec3D &shiftForce) { _shiftForce = shiftForce; }
  * @brief set the force of the atom to zero
  */
 void Atom::setForceToZero() { _force = {0.0, 0.0, 0.0}; }
+
+/**
+ * @brief set the inner force of the atom calculated from the outer region
+ * method of the hybrid calculation to zero
+ */
+void Atom::setInnerForceToZero() { _forceInner = {0.0, 0.0, 0.0}; }
+
+/**
+ * @brief set the outer force of the atom calculated from the outer region
+ * method of the hybrid calculation to zero
+ */
+void Atom::setOuterForceToZero() { _forceOuter = {0.0, 0.0, 0.0}; }
 
 /**
  * @brief set the old position of the atom
@@ -454,7 +520,7 @@ void Atom::setVelocityOld(const Vec3D &velocity) { _velocityOld = velocity; }
  */
 void Atom::setForceOld(const Vec3D &force) { _forceOld = force; }
 
-/**
+/*
  * @brief reset the qm charge of the atom
  */
 void Atom::resetQMCharge() { _qmCharge.reset(); }

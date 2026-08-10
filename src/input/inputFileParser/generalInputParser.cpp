@@ -22,7 +22,6 @@
 
 #include "generalInputParser.hpp"
 
-#include <cctype>      // for std::isdigit
 #include <cstdint>     // for uint_fast32_t and UINT32_MAX
 #include <format>      // for format
 #include <stdexcept>   // for out_of_range and invalid_argument
@@ -34,6 +33,7 @@
 #include "optEngine.hpp"       // for MMOptEngine
 #include "parserUtils.hpp"
 #include "qmmdEngine.hpp"              // for QMMDEngine
+#include "qmmmMDEngine.hpp"            // for QMMMMDEngine
 #include "ringPolymerqmmdEngine.hpp"   // for RingPolymerQMMDEngine
 #include "settings.hpp"                // for Settings
 #include "stringUtilities.hpp"         // for toLowerCopy
@@ -142,6 +142,11 @@ void GeneralInputParser::parseJobTypeForEngine(
         Settings::setJobtype(RING_POLYMER_QM_MD);
         engine.reset(new RingPolymerQMMDEngine());
     }
+    else if (jobtype == "qmmm_md")
+    {
+        Settings::setJobtype(QMMM_MD);
+        engine.reset(new QMMMMDEngine());
+    }
     else
         throw InputFileException(format(
             "Invalid jobtype \"{}\" in input file - possible values are:\n"
@@ -149,7 +154,8 @@ void GeneralInputParser::parseJobTypeForEngine(
             "- mm-hessian\n"
             "- mm-md\n"
             "- qm-md\n"
-            "- qm-rpmd\n",
+            "- qm-rpmd\n"
+            "- qmmm-md\n",
             lineElements[2]
         ));
 }
@@ -177,10 +183,10 @@ void GeneralInputParser::parseDimensionality(
 
     std::erase(dimensionalityString, 'd');
 
-    const auto dimensionality = std::stoi(dimensionalityString);
+    const auto dimensionality = stringToInt(dimensionalityString);
 
     if (dimensionality == 3)
-        Settings::setDimensionality(size_t(dimensionality));
+        Settings::setDimensionality(static_cast<size_t>(dimensionality));
 
     else
         throw InputFileException(format(

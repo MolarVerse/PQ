@@ -40,7 +40,10 @@ namespace input::restartFile
     class StepCountSection : public RestartFileSection
     {
        public:
-        void process(pq::strings &lineElements, pq::Engine &) override;
+        void process(
+            std::vector<std::string> &lineElements,
+            pq::Engine &
+        ) override;
 
         [[nodiscard]] std::string keyword() override;
         [[nodiscard]] bool        isHeader() override;

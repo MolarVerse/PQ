@@ -76,12 +76,16 @@ namespace potential
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] pq::SharedNonCoulPair getNonCoulPair(
-            const pq::stlVectorUL &indices
+        [[nodiscard]]
+        pq::SharedNonCoulPair getNonCoulPair(
+            const std::vector<size_t> &indices
         ) override;
 
-        [[nodiscard]] size_t getGlobalVdwType1(const pq::stlVectorUL &) const;
-        [[nodiscard]] size_t getGlobalVdwType2(const pq::stlVectorUL &) const;
+        [[nodiscard]]
+        size_t getGlobalVdwType1(const std::vector<size_t> &) const;
+        [[nodiscard]]
+        size_t getGlobalVdwType2(const std::vector<size_t> &) const;
+
         [[nodiscard]] pq::SharedNonCoulPairVec &getNonCoulombPairsVector();
 
         friend class ::TestNonCoulombPotentialFF;

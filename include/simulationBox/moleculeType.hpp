@@ -44,7 +44,7 @@ namespace simulationBox
         size_t _moltype;
         size_t _numberOfAtoms;
 
-        double _charge;
+        int _charge;
 
         std::vector<std::string> _atomNames;
         std::vector<size_t>      _atomTypes;
@@ -82,7 +82,7 @@ namespace simulationBox
         void setNumberOfAtoms(const size_t numberOfAtoms);
         void setMoltype(const size_t moltype);
 
-        void setCharge(const double charge);
+        void setCharge(const int charge);
         void setPartialCharge(const size_t index, const double partialCharge);
         void setPartialCharges(const std::vector<double> &partialCharges);
 
@@ -96,13 +96,13 @@ namespace simulationBox
         [[nodiscard]] size_t getAtomType(const size_t index) const;
         [[nodiscard]] size_t getInternalAtomType(const size_t type) const;
 
-        [[nodiscard]] double getCharge() const;
+        [[nodiscard]] int    getCharge() const;
         [[nodiscard]] double getPartialCharge(const size_t index) const;
 
         [[nodiscard]] std::string getName() const;
         [[nodiscard]] std::string getAtomName(const size_t index) const;
 
-        [[nodiscard]] std::vector<std::string> &getAtomNames();
+        [[nodiscard]] std::vector<std::string>  getAtomNames() const;
         [[nodiscard]] std::vector<size_t>      &getExternalAtomTypes();
         [[nodiscard]] std::vector<size_t>      &getExternalGlobalVDWTypes();
         [[nodiscard]] std::vector<double>      &getPartialCharges();

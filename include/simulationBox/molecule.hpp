@@ -32,11 +32,42 @@
 #include <vector>        // for vector
 
 #include "atom.hpp"   // for Atom
-#include "box.hpp"    // for Box
-#include "typeAliases.hpp"
 
 namespace simulationBox
 {
+    /**
+     * @enum HybridZone
+     * @brief Defines the zones for hybrid type calculations
+     *
+     * @details This enum categorizes molecules based on their distance from
+     * the center of mass in hybrid calculations. The zones are assigned
+     * concentrically based on radial distance thresholds.
+     */
+    enum class HybridZone : size_t
+    {
+        /** Default, molecule not assigned to any hybrid zone */
+        NOT_HYBRID,
+
+        /** Innermost region (distance ≤ core radius) */
+        CORE,
+
+        /** Inner zone layer region (core radius < distance ≤ layer radius -
+           smoothing thickness) */
+        LAYER,
+
+        /** Transition region between inner and outer region (layer radius -
+           smoothing thickness < distance ≤ layer radius) */
+        SMOOTHING,
+
+        /** Point charge region surrounding the inner region (layer radius <
+           distance ≤ layer radius + point charge thickness) */
+        POINT_CHARGE,
+
+        /** Outer region beyond point charges (distance > layer radius + point
+           charge thickness) */
+        OUTER
+    };
+
     /**
      * @class Molecule
      *
@@ -49,15 +80,23 @@ namespace simulationBox
         size_t      _moltype;
         size_t      _numberOfAtoms;
 
-        bool _isQMOnly = false;
+        // set via molDescriptor not sum of partial charges!!!
+        // 0 (neutral) as default when molecule has no moltype
+        int _charge = 0;
 
-        double _charge;   // set via molDescriptor not sum of partial charges!!!
         double _molMass;
 
-        pq::Vec3D _centerOfMass = pq::Vec3D(0.0, 0.0, 0.0);
+        linearAlgebra::Vec3D _centerOfMass{0.0, 0.0, 0.0};
 
-        std::map<size_t, size_t> _externalToInternalAtomTypes;
-        pq::SharedAtomVec        _atoms;
+        std::map<size_t, size_t>           _externalToInternalAtomTypes;
+        std::vector<std::shared_ptr<Atom>> _atoms;
+
+        // hybrid calculation related member variables
+        HybridZone _hybridZone = HybridZone::NOT_HYBRID;
+        bool       _isActive   = true;
+        double     _smoothingFactor;
+        bool       _isForcedInner = false;
+        bool       _isForcedOuter = false;
 
        public:
         Molecule() = default;
@@ -66,8 +105,8 @@ namespace simulationBox
 
         void calculateCenterOfMass(const Box &);
         void reconstructAtomsAroundCenterOfMass(const Box &);
-        void scale(const pq::tensor3D &, const Box &);
-        void scaleVelocity(const pq::tensor3D &, const Box &);
+        void scale(const linearAlgebra::tensor3D &, const Box &);
+        void scaleVelocity(const linearAlgebra::tensor3D &, const Box &);
 
         [[nodiscard]] size_t              getNumberOfAtomTypes();
         [[nodiscard]] std::vector<size_t> getExternalGlobalVDWTypes() const;
@@ -75,37 +114,74 @@ namespace simulationBox
         [[nodiscard]] std::vector<double> getAtomMasses() const;
         [[nodiscard]] std::vector<double> getPartialCharges() const;
 
+        [[nodiscard]] bool isMMMolecule() const;
+
         void setPartialCharges(const std::vector<double> &partialCharges);
         void setAtomForcesToZero();
+        void activateMolecule();
+        void deactivateMolecule();
 
         /****************************************
          * standard adder methods for atom data *
          *****************************************/
 
         void addAtom(const std::shared_ptr<Atom> atom);
-        void addAtomPosition(const size_t index, const pq::Vec3D &position);
-        void addAtomVelocity(const size_t index, const pq::Vec3D &velocity);
-        void addAtomForce(const size_t index, const pq::Vec3D &force);
-        void addAtomShiftForce(const size_t index, const pq::Vec3D &shiftForce);
+        void addAtomPosition(
+            const size_t                index,
+            const linearAlgebra::Vec3D &position
+        );
+        void addAtomVelocity(
+            const size_t                index,
+            const linearAlgebra::Vec3D &velocity
+        );
+        void addAtomForce(
+            const size_t                index,
+            const linearAlgebra::Vec3D &force
+        );
+        void addAtomShiftForce(
+            const size_t                index,
+            const linearAlgebra::Vec3D &shiftForce
+        );
 
         /*****************************************
          * standard setter methods for atom data *
          ****************************************/
 
-        void setAtomPosition(const size_t index, const pq::Vec3D &position);
-        void setAtomVelocity(const size_t index, const pq::Vec3D &velocity);
-        void setAtomForce(const size_t index, const pq::Vec3D &force);
-        void setAtomShiftForce(const size_t index, const pq::Vec3D &shiftForce);
+        void setAtomPosition(
+            const size_t                index,
+            const linearAlgebra::Vec3D &position
+        );
+        void setAtomVelocity(
+            const size_t                index,
+            const linearAlgebra::Vec3D &velocity
+        );
+        void setAtomForce(
+            const size_t                index,
+            const linearAlgebra::Vec3D &force
+        );
+        void setAtomShiftForce(
+            const size_t                index,
+            const linearAlgebra::Vec3D &shiftForce
+        );
 
         /****************************************
          * standard getters for atom properties *
          *****************************************/
 
-        [[nodiscard]] pq::Vec3D getAtomPosition(const size_t index) const;
-        [[nodiscard]] std::vector<pq::Vec3D> getAtomPositions() const;
-        [[nodiscard]] pq::Vec3D getAtomVelocity(const size_t index) const;
-        [[nodiscard]] pq::Vec3D getAtomForce(const size_t index) const;
-        [[nodiscard]] pq::Vec3D getAtomShiftForce(const size_t index) const;
+        [[nodiscard]] linearAlgebra::Vec3D getAtomPosition(
+            const size_t index
+        ) const;
+        [[nodiscard]] std::vector<linearAlgebra::Vec3D> getAtomPositions(
+        ) const;
+        [[nodiscard]] linearAlgebra::Vec3D getAtomVelocity(
+            const size_t index
+        ) const;
+        [[nodiscard]] linearAlgebra::Vec3D getAtomForce(
+            const size_t index
+        ) const;
+        [[nodiscard]] linearAlgebra::Vec3D getAtomShiftForce(
+            const size_t index
+        ) const;
 
         [[nodiscard]] int    getAtomicNumber(const size_t index) const;
         [[nodiscard]] double getAtomMass(const size_t index) const;
@@ -118,35 +194,45 @@ namespace simulationBox
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] size_t getMoltype() const;
+        [[nodiscard]] size_t getMoltype() const { return _moltype; }
         [[nodiscard]] size_t getNumberOfAtoms() const;
         [[nodiscard]] size_t getDegreesOfFreedom() const;
 
-        [[nodiscard]] bool isQMOnly() const;
-
-        [[nodiscard]] double getCharge() const;
+        [[nodiscard]] int    getCharge() const;
         [[nodiscard]] double getMolMass() const;
 
         [[nodiscard]] std::string getName() const;
 
-        [[nodiscard]] pq::Vec3D getCenterOfMass() const;
+        [[nodiscard]] linearAlgebra::Vec3D getCenterOfMass() const;
+        [[nodiscard]] HybridZone           getHybridZone() const;
+        [[nodiscard]] bool   isActive() const { return _isActive; }
+        [[nodiscard]] double getSmoothingFactor() const;
 
-        [[nodiscard]] Atom              &getAtom(const size_t index);
-        [[nodiscard]] pq::SharedAtomVec &getAtoms();
+        [[nodiscard]] Atom &getAtom(const size_t index);
+        [[nodiscard]] std::vector<std::shared_ptr<Atom>>       &getAtoms();
+        [[nodiscard]] const std::vector<std::shared_ptr<Atom>> &getAtoms(
+        ) const;
+
+        [[nodiscard]] bool isForcedInner() const;
+        [[nodiscard]] bool isForcedOuter() const;
 
         /***************************
          * standard setter methods *
          ***************************/
 
         void setName(const std::string_view name);
-        void setQMOnly(const bool isQMOnly);
 
         void setNumberOfAtoms(const size_t numberOfAtoms);
         void setMoltype(const size_t moltype);
 
-        void setCharge(const double charge);
+        void setCharge(const int charge);
         void setMolMass(const double molMass);
-        void setCenterOfMass(const pq::Vec3D &centerOfMass);
+        void setCenterOfMass(const linearAlgebra::Vec3D &centerOfMass);
+        void setHybridZone(const HybridZone hybridZone);
+        void setSmoothingFactor(const double factor);
+
+        void setForcedInner(const bool isForcedInner);
+        void setForcedOuter(const bool isForcedOuter);
     };
 
 }   // namespace simulationBox

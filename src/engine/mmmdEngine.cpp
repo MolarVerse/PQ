@@ -44,9 +44,18 @@ void MMMDEngine::calculateForces()
     _potential->calculateForces(*_simulationBox, *_physicalData, *_cellList);
 #endif
 
+    _interWater->calculate(
+        *_simulationBox,
+        *_physicalData,
+        _potential->getCoulombPotSharedPtr(),
+        *_cellList
+    );
+
     _intraNonBonded->calculate(*_simulationBox, *_physicalData);
 
     _virial->calculateVirial(*_simulationBox, *_physicalData);
 
     _forceField->calculateBondedInteractions(*_simulationBox, *_physicalData);
+
+    _intraWater->calculate(*_simulationBox, *_physicalData);
 }

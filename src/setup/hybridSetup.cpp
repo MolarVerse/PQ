@@ -22,23 +22,15 @@
 
 #include "hybridSetup.hpp"
 
-#include <algorithm>     // for min, unique
-#include <cstddef>       // for size_t
-#include <format>        // for format
-#include <ranges>        // for sort
-#include <string>        // for string
-#include <string_view>   // for string_view
-#include <vector>        // for vector
+#include <format>   // for format
+#include <string>   // for string
+#include <vector>   // for vector
 
-#include "engine.hpp"           // for QMMMMDEngine
+#include "engine.hpp"           // for Engine
 #include "exceptions.hpp"       // for InputFileException
 #include "hybridSettings.hpp"   // for HybridSettings
+#include "qmSettings.hpp"       // for QMSettings
 #include "settings.hpp"         // for Settings
-
-#ifdef PYTHON_ENABLED
-#include "fileSettings.hpp"   // for FileSettings
-#include "selection.hpp"      // for select
-#endif
 
 using setup::HybridSetup;
 using namespace settings;
@@ -52,14 +44,14 @@ using namespace customException;
  */
 void setup::setupHybrid(Engine &engine)
 {
-    if (!Settings::isQMMMActivated())
+    if (!Settings::isHybridJobtype())
         return;
 
-    engine.getStdoutOutput().writeSetup("QMMM setup");
-    engine.getLogOutput().writeSetup("QMMM setup");
+    engine.getStdoutOutput().writeSetup("Hybrid Configuration");
+    engine.getLogOutput().writeSetup("Hybrid Configuration");
 
-    HybridSetup qmmmSetup(engine);
-    qmmmSetup.setup();
+    HybridSetup hybridSetup(engine);
+    hybridSetup.setup();
 }
 
 /**
@@ -70,217 +62,261 @@ void setup::setupHybrid(Engine &engine)
 HybridSetup::HybridSetup(Engine &engine) : _engine(engine) {}
 
 /**
- * @brief setup QMMM-MD
+ * @brief setup Hybrid-MD
  *
  */
 void HybridSetup::setup()
 {
-    setupQMCenter();
-    setupQMOnlyList();
-    setupMMOnlyList();
-    throw UserInputException("Not implemented yet");
+    validateQMMethod();
+    setupInnerRegionCenter();
+    setupForcedInnerList();
+    setupForcedOuterList();
+    validateQMChargeSettings();
+    checkZoneRadii();
+
+    setupWriteInfo();
 }
 
 /**
- * @brief setup QM center
+ * @brief Check if chosen QM method is available for hybrid type calculations
  *
- * @details This function determines the indices of the atoms that should be
- * treated as the QM center. The QM center is the region of the system that is
- * treated with QM methods. All atomIndices that are part of the QM center are
- * added to the QM center list in the simulation box.
- *
+ * @throws customException::InputFileException if the QM method is not supported
+ * for hybrid type calculations
  */
-void HybridSetup::setupQMCenter()
+void HybridSetup::validateQMMethod()
 {
-    const auto qmCenterString = HybridSettings::getCoreCenterString();
-    const auto qmCenter       = parseSelection(qmCenterString, "qm_center");
+    using enum QMMethod;
 
-    _engine.getSimulationBox().addQMCenterAtoms(qmCenter);
-}
+    const auto qmMethod = QMSettings::getQMMethod();
+    const auto errorMsg = std::format(
+        "QM method \"{}\" is not supported for hybrid type "
+        "calculations. Supported QM methods are \"dftbplus\" and "
+        "\"turbomole\".",
+        string(qmMethod)
 
-/**
- * @brief setup QM only list
- *
- */
-void HybridSetup::setupQMOnlyList()
-{
-    const auto qmOnlyListString = HybridSettings::getCoreOnlyListString();
-    const auto qmOnlyList = parseSelection(qmOnlyListString, "qm_only_list");
+    );
 
-    _engine.getSimulationBox().setupQMOnlyAtoms(qmOnlyList);
-}
-
-/**
- * @brief setup MM only list
- *
- */
-void HybridSetup::setupMMOnlyList()
-{
-    const auto mmOnlyListString = HybridSettings::getNonCoreOnlyListString();
-    const auto mmOnlyList = parseSelection(mmOnlyListString, "mm_only_list");
-
-    _engine.getSimulationBox().setupMMOnlyAtoms(mmOnlyList);
-}
-
-/**
- * @brief parse selection string
- *
- * @details This function parses a string that contains a selection of atoms.
- * The selection can be a list of atom indices or a selection string that is
- * understood by the PQAnalysis Python package. In order to use the full
- * selection parser power of the PQAnalysis Python package, the PQ build must be
- * compiled with Python bindings. If the PQ build is compiled without Python
- * bindings, the selection string must be a comma-separated list of integers or
- * a - separated range of indices, representing the atom indices in the restart
- * file that should be treated as the selection. If the selection is empty, the
- * function returns a vector with a single element, 0.
- *
- * @param selection The selection string
- * @param key The key of the selection string
- *
- * @return std::vector<int> The selection vector
- *
- * @throws customException::InputFileException if the selection string contains
- * characters that are not digits, "-" or commas and the PQ build is compiled
- * without Python bindings.
- */
-std::vector<int> HybridSetup::parseSelection(
-    const std::string &selection,
-    const std::string &key
-)
-{
-    std::vector<int> selectionVec;
-
-    if (selection.empty())
-        return {0};
-
-    auto needsPython = false;
-    if (selection.find_first_not_of("0123456789,-") != std::string::npos)
-        needsPython = true;
-
-#ifdef PYTHON_ENABLED
-    if (needsPython)
+    // clang-format off
+    switch (qmMethod)
     {
-        std::string restartFile = FileSettings::getStartFileName();
-        std::string moldescFile = FileSettings::getMolDescriptorFileName();
-        selectionVec = pq_python::select(selection, restartFile, moldescFile);
+        case DFTBPLUS:
+        case TURBOMOLE: 
+            break;
+        case PYSCF:
+        case ASEDFTBPLUS:
+        case ASEXTB:
+        case MACE:
+        case FENNOL:
+        case NONE:
+            throw(InputFileException(errorMsg));
     }
-#else
+    // clang-format on
+}
 
-    // check if string contains any characters that are not digits or commas
-    if (needsPython)
-    {
-        throw InputFileException(
+/**
+ * @brief setup inner region center
+ *
+ * @details This function determines the indices of the atoms that mark the
+ * center of the inner region of hybrid type calculations. If inner region
+ * center atoms are specified in the settings, those atom indices are used.
+ * If no inner region center is specified, atom 0 (e.g. the first atom) is used
+ * as the default center. All determined atom indices are added to the inner
+ * region center list in the simulation box.
+ *
+ */
+void HybridSetup::setupInnerRegionCenter()
+{
+    const auto innerRegionCenter = HybridSettings::getInnerRegionCenter();
+
+    _engine.getSimulationBox().addInnerRegionCenterAtoms(
+        innerRegionCenter ? innerRegionCenter.value() : std::vector<int>{0}
+    );
+}
+
+/**
+ * @brief setup forced inner list
+ *
+ */
+void HybridSetup::setupForcedInnerList()
+{
+    _engine.getSimulationBox().setupForcedInnerMolecules(
+        HybridSettings::getForcedInnerList()
+    );
+}
+
+/**
+ * @brief setup forced outer list
+ *
+ */
+void HybridSetup::setupForcedOuterList()
+{
+    _engine.getSimulationBox().setupForcedOuterMolecules(
+        HybridSettings::getForcedOuterList()
+    );
+}
+
+/**
+ * @brief Validate zone radii configuration for hybrid calculations
+ *
+ * @throws customException::InputFileException if the core radius is larger than
+ * the layer radius
+ * @throws customException::InputFileException if the smoothing region is too
+ * thick for the chosen combinatin of core and layer radius
+ * @throws customException::InputFileException if the layer radius exceeds one
+ quarter of the smallest box dimension (minimum image convention)
+ * @throws customException::InputFileException if the sum of layer radius and
+ point charge thickness exceeds three quarters of the smallest box dimension
+ (includes point charges from beyond immediate neighboring cells)
+ */
+void HybridSetup::checkZoneRadii()
+{
+    const auto coreRadius  = HybridSettings::getCoreRadius();
+    const auto layerRadius = HybridSettings::getLayerRadius();
+    const auto smoothingRegionThickness =
+        HybridSettings::getSmoothingRegionThickness();
+    const auto pointChargeThickness = HybridSettings::getPointChargeThickness();
+    const auto minimalBoxDimension =
+        _engine.getSimulationBox().getMinimalBoxDimension();
+
+    if (coreRadius > layerRadius)
+        throw(InputFileException(
             std::format(
-                "The value of key {} - {} contains characters that are not "
-                "digits, "
-                "\"-\" or commas. The current build of PQ was compiled without "
-                "Python bindings, so the {} string must be a comma-separated "
-                "list "
-                "of integers, representing the atom indices in the restart "
-                "file "
-                "that should be treated as the {}. In order to use the full "
-                "selection parser power of the PQAnalysis Python package, the "
-                "PQ "
-                "build must be compiled with Python bindings.",
-                key,
-                selection,
-                key,
-                key
+                "Core radius ({} Å) cannot be larger than layer radius ({} Å)",
+                coreRadius,
+                layerRadius
             )
-        );
-    }
-#endif
+        ));
 
-    if (!needsPython)
-        selectionVec = parseSelectionNoPython(selection, key);
+    if (coreRadius > (layerRadius - smoothingRegionThickness))
+        throw(InputFileException(
+            std::format(
+                "Smoothing region is too thick ({} Å) for the chosen "
+                "combination of core ({} Å) and layer radius ({} Å)",
+                smoothingRegionThickness,
+                coreRadius,
+                layerRadius
+            )
+        ));
 
-    std::ranges::sort(selectionVec);
-    auto ret = std::ranges::unique(selectionVec);
-    selectionVec.erase(ret.begin(), ret.end());
+    if (layerRadius > (minimalBoxDimension / 4))
+        throw(InputFileException(
+            std::format(
+                "Layer radius ({} Å) exceeds one quarter of the smallest box "
+                "dimension ({} Å). This configuration is not allowed to ensure "
+                "compliance with the minimum image convention.",
+                layerRadius,
+                minimalBoxDimension
+            )
+        ));
 
-    return selectionVec;
+    if ((layerRadius + pointChargeThickness) > (minimalBoxDimension * 3 / 2))
+        throw(InputFileException(
+            std::format(
+                "Layer radius ({} Å) plus point charge thickness ({} Å) "
+                "exceeds three halves of the smallest box dimension ({} Å). "
+                "This configuration is not allowed, as it would include point "
+                "charges from beyond the immediate neighboring cells.",
+                layerRadius,
+                pointChargeThickness,
+                minimalBoxDimension
+            )
+        ));
 }
 
 /**
- * @brief parse selection string without Python
+ * @brief Validate the compatibility between QM charge settings and moltype 0
+ * presence
  *
- * @param selection The selection string
- * @param key The key of the selection string
+ * @details This function checks for a configuration conflict in hybrid QM/MM
+ * calculations where MM charges are requested (qm_charges = mm) but QM atoms
+ * (moltype 0) are present in the system.
  *
- * @return std::vector<int> The selection vector
- *
- * @throws customException::InputFileException if the selection string is an
- * empty list
+ * @throws customException::InputFileException if MM charges are requested but
+ * atoms without moltype are present in the simulation box
  */
-std::vector<int> HybridSetup::parseSelectionNoPython(
-    const std::string &selection,
-    const std::string &key
-)
+void HybridSetup::validateQMChargeSettings()
 {
-    // parse the qm_center string
-    std::vector<int> selectionVec;
+    const auto mmChargesRequested = !HybridSettings::getUseQMCharges();
+    const auto qmAtomsPresent =
+        _engine.getSimulationBox().moleculeTypeExists(0);
 
-    size_t pos = 0;
-    while (pos < selection.size())
+    if (mmChargesRequested && qmAtomsPresent)
+        throw(InputFileException(
+            "Invalid configuration: MM charges requested (qm_charges = mm) in "
+            "input file but atoms with moltype \"0\" are present in the "
+            "system. Either set \"qm_charges = qm\" or ensure all atoms have a"
+            "non-zero moltype."
+        ));
+}
+
+/**
+ * @brief write info about the hybrid setup
+ *
+ */
+void HybridSetup::setupWriteInfo() const
+{
+    auto &logOutput = _engine.getLogOutput();
+
+    const auto jobtype         = Settings::getJobtype();
+    const auto smoothingMethod = HybridSettings::getSmoothingMethod();
+    const auto innerRegionCenterSettings =
+        HybridSettings::getInnerRegionCenter();
+    const auto innerRegionCenter =
+        innerRegionCenterSettings.value_or(std::vector<int>{0});
+    const auto forcedInnerList = HybridSettings::getForcedInnerList();
+    const auto forcedOuterList = HybridSettings::getForcedOuterList();
+    const auto useQMCharges    = HybridSettings::getUseQMCharges();
+    const auto coreRadius      = HybridSettings::getCoreRadius();
+    const auto layerRadius     = HybridSettings::getLayerRadius();
+    const auto smoothingRegionThickness =
+        HybridSettings::getSmoothingRegionThickness();
+    const auto pointChargeThickness = HybridSettings::getPointChargeThickness();
+
+    const auto formatIndexList = [](const std::vector<int> &indices)
     {
-        size_t nextPos = selection.find(',', pos);
-        if (nextPos == std::string::npos)
-            nextPos = selection.size();
+        if (indices.empty())
+            return std::string("none");
 
-        std::string_view atomIndexStr(selection.c_str() + pos, nextPos - pos);
+        auto formatted = std::to_string(indices.front());
 
-        // remove all whitespaces from the atom index string
-        atomIndexStr.remove_prefix(
-            std::min(atomIndexStr.find_first_not_of(" "), atomIndexStr.size())
-        );
-        const auto min = std::min(
-            atomIndexStr.find_last_not_of(" ") + 1,
-            atomIndexStr.size()
-        );
-        atomIndexStr.remove_suffix(atomIndexStr.size() - min);
+        for (size_t i = 1; i < indices.size(); ++i)
+            formatted += std::format(", {}", indices[i]);
 
-        // check if the atom index string is a range of indices
-        size_t rangePos = atomIndexStr.find('-');
-        if (rangePos != std::string::npos)
-        {
-            const auto startString = atomIndexStr.substr(0, rangePos);
-            const auto endString   = atomIndexStr.substr(rangePos + 1);
-            int        start       = std::stoi(std::string(startString));
-            int        end         = std::stoi(std::string(endString));
+        return formatted;
+    };
 
-            for (int i = start; i <= end; ++i) selectionVec.push_back(i);
+    if (jobtype == JobType::QMMM_MD)
+    {
+        // clang-format off
+        const auto jobtypeMsg =                 "Hybrid type:                 QM/MM";
+        // clang-format on
 
-            pos = nextPos + 1;
-            continue;
-        }
-
-        selectionVec.push_back(std::stoi(std::string(atomIndexStr)));
-        pos = nextPos + 1;
+        logOutput.writeSetupInfo(jobtypeMsg);
     }
 
-    // check if the selection vector is empty or contains duplicates
-    if (selectionVec.empty())
-    {
-        throw customException::InputFileException(
-            std::format(
-                "The value of key {} - {} is an empty list. The {} string "
-                "must "
-                "be "
-                "a comma-separated list of integers or ranges, "
-                "representing "
-                "the "
-                "atom indices in the restart file that should be treated "
-                "as "
-                "the "
-                "{}.",
-                key,
-                selection,
-                key,
-                key
-            )
-        );
-    }
+    // clang-format off
+    const auto smoothingMethodMsg          = std::format("Smoothing method:            {}", string(smoothingMethod));
+    const auto innerRegionCenterMsg        = std::format("Inner region center atoms:   {}", formatIndexList(innerRegionCenter));
+    const auto forcedInnerListMsg          = std::format("Forced inner molecules:      {}", formatIndexList(forcedInnerList));
+    const auto forcedOuterListMsg          = std::format("Forced outer molecules:      {}", formatIndexList(forcedOuterList));
+    const auto qmChargesSourceMsg          = std::format("QM charge source:            {}", useQMCharges ? "qm" : "mm");
+    const auto coreRadiusMsg               = std::format("Core radius:                 {} Å", coreRadius);
+    const auto layerRadiusMsg              = std::format("Layer radius:                {} Å", layerRadius);
+    const auto smoothingRegionThicknessMsg = std::format("Smoothing region thickness:  {} Å", smoothingRegionThickness);
+    const auto pointChargeThicknessMsg     = std::format("Point charge thickness:      {} Å", pointChargeThickness);
+    // clang-format on
 
-    return selectionVec;
+    logOutput.writeSetupInfo(smoothingMethodMsg);
+    logOutput.writeSetupInfo(innerRegionCenterMsg);
+    logOutput.writeSetupInfo(forcedInnerListMsg);
+    logOutput.writeSetupInfo(forcedOuterListMsg);
+    logOutput.writeSetupInfo(qmChargesSourceMsg);
+    logOutput.writeEmptyLine();
+
+    logOutput.writeSetupInfo(coreRadiusMsg);
+    logOutput.writeSetupInfo(layerRadiusMsg);
+    logOutput.writeSetupInfo(smoothingRegionThicknessMsg);
+    logOutput.writeSetupInfo(pointChargeThicknessMsg);
+
+    logOutput.writeEmptyLine();
 }

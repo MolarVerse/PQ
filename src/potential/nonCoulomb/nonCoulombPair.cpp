@@ -119,6 +119,16 @@ void NonCoulombPair::setInternalType2(const size_t internalType2)
 }
 
 /**
+ * @brief set radial cut off
+ *
+ * @param energyCutoff
+ */
+void NonCoulombPair::setRadialCutOff(const double radialCutoff)
+{
+    _radialCutOff = radialCutoff;
+}
+
+/**
  * @brief set energy cut off
  *
  * @param energyCutoff
@@ -171,13 +181,6 @@ size_t NonCoulombPair::getInternalType1() const { return _internalType1; }
  * @return size_t
  */
 size_t NonCoulombPair::getInternalType2() const { return _internalType2; }
-
-/**
- * @brief get radial cut off
- *
- * @return double
- */
-double NonCoulombPair::getRadialCutOff() const { return _radialCutOff; }
 
 /**
  * @brief get energy cut off

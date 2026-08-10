@@ -1,6 +1,7 @@
 {
     "files.associations": {
-        "*.tpp": "c",
+        "*.tpp": "cpp",
+        "*.tpp.hpp": "cpp",
         "*.tcc": "cpp",
         "fstream": "cpp",
         "iosfwd": "cpp",
@@ -110,7 +111,7 @@
         "__tuple": "cpp",
         "stack": "cpp",
         "__bit_reference": "cpp",
-        "engine.hpp": "c",
+        "engine.hpp": "cpp",
         "nnls": "cpp",
         "nonlinearoptimization": "cpp",
         "sparseextra": "cpp",
@@ -207,6 +208,7 @@
         "outputfreq",
         "PARAMETERFILEEXCEPTION",
         "pimd",
+        "pqviews",
         "PREFACTOR",
         "progressbar",
         "qmcf",
@@ -218,6 +220,7 @@
         "rpmd",
         "RSTFILEEXCEPTION",
         "RSTFILEOUTPUT",
+        "Seedset",
         "SHAKEEXCEPTION",
         "Slakos",
         "SLAKOS",

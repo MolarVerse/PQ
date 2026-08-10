@@ -22,6 +22,11 @@
 
 #include "cell.hpp"
 
+#include "molecule.hpp"             // for Molecule
+#include "simulationBox.hpp"        // for SimulationBox
+#include "waterModelSettings.hpp"   // for WaterModelSettings
+
+using namespace settings;
 using namespace simulationBox;
 using namespace linearAlgebra;
 
@@ -32,10 +37,10 @@ using namespace linearAlgebra;
 void Cell::clearMolecules() { _molecules.clear(); }
 
 /**
- * @brief clears the atomIndices vector
+ * @brief clears the atoms vector
  *
  */
-void Cell::clearAtomIndices() { _atomIndices.clear(); }
+void Cell::clearAtoms() { _atoms.clear(); }
 
 /**
  * @brief adds a molecule to the molecules vector
@@ -59,13 +64,78 @@ void Cell::addMolecule(Molecule *molecule) { _molecules.push_back(molecule); }
 void Cell::addNeighbourCell(Cell *cell) { _neighbourCells.push_back(cell); }
 
 /**
- * @brief adds atom indices to the atomIndices vector
+ * @brief adds atoms to the atoms vector
  *
  * @param lowerBoundary
  */
-void Cell::addAtomIndices(const std::vector<size_t> &atomIndices)
+void Cell::addAtoms(const std::vector<Atom *> &atomPointers)
 {
-    _atomIndices.push_back(atomIndices);
+    _atoms.push_back(atomPointers);
+}
+
+/**
+ * @brief Assign molecule indices to hybrid-zone and active/inactive buckets
+ *
+ * @details Uses the current `_molecules` order; call after molecules have been
+ * added and hybrid zone have been assigned
+ */
+void Cell::assignMoleculeHybridZoneIndices()
+{
+    _coreMoleculeIndices.clear();
+    _smoothingMoleculeIndices.clear();
+    _nonSmoothingMoleculeIndices.clear();
+    _activeMoleculeIndices.clear();
+    _inactiveNonCoreMoleculeIndices.clear();
+
+    using enum HybridZone;
+    const auto nMol = getNumberOfMolecules();
+
+    for (size_t mol = 0; mol < nMol; ++mol)
+    {
+        const auto hybridZone = _molecules[mol]->getHybridZone();
+        const bool isCore     = (hybridZone == CORE);
+        const auto isActive   = _molecules[mol]->isActive();
+
+        if (hybridZone == CORE)
+            _coreMoleculeIndices.push_back(mol);
+        else if (hybridZone == SMOOTHING)
+            _smoothingMoleculeIndices.push_back(mol);
+
+        if (hybridZone != SMOOTHING)
+            _nonSmoothingMoleculeIndices.push_back(mol);
+
+        if (isActive)
+            _activeMoleculeIndices.push_back(mol);
+        else if (!isCore)
+            _inactiveNonCoreMoleculeIndices.push_back(mol);
+    }
+}
+
+/**
+ * @brief assigns the indices of water molecules in the cell
+ *
+ * @param simBox
+ */
+void Cell::assignWaterMoleculeIndices(const SimulationBox &simBox)
+{
+    const auto isWaterInterModelSet =
+        WaterModelSettings::isInterWaterModelSet();
+
+    if (!isWaterInterModelSet)
+        return;
+
+    _waterMoleculeIndices.clear();
+
+    const auto nMol           = getNumberOfMolecules();
+    const auto waterTypeValue = simBox.getWaterType().value_or(size_t{0});
+
+    for (size_t mol = 0; mol < nMol; ++mol)
+    {
+        const auto moltype = _molecules[mol]->getMoltype();
+
+        if (moltype == waterTypeValue)
+            _waterMoleculeIndices.push_back(mol);
+    }
 }
 
 /***************************
@@ -113,22 +183,18 @@ const Vec3D &Cell::getUpperBoundary() const { return _upperBoundary; }
 const Vec3Dul &Cell::getCellIndex() const { return _cellIndex; }
 
 /**
- * @brief returns the molecule at the given index
+ * @brief returns the molecules vector
  *
- * @param index
- * @return Molecule*
+ * @return std::vector<Molecule*>&
  */
-Molecule *Cell::getMolecule(const size_t index) const
-{
-    return _molecules[index];
-}
+const std::vector<Molecule *> &Cell::getMolecules() const { return _molecules; }
 
 /**
  * @brief returns the molecules vector
  *
- * @return std::vector<Molecule*>
+ * @return std::vector<Molecule*>&
  */
-std::vector<Molecule *> Cell::getMolecules() const { return _molecules; }
+std::vector<Molecule *> &Cell::getMolecules() { return _molecules; }
 
 /**
  * @brief returns the neighbour cell at the given index
@@ -152,14 +218,63 @@ const std::vector<Cell *> &Cell::getNeighbourCells() const
 }
 
 /**
- * @brief returns the atom indices at the given index
+ * @brief returns the molecule indices in the core hybrid zone
  *
- * @param index
  * @return const std::vector<size_t>&
  */
-const std::vector<size_t> &Cell::getAtomIndices(const size_t index) const
+const std::vector<size_t> &Cell::getCoreMoleculeIndices() const
 {
-    return _atomIndices[index];
+    return _coreMoleculeIndices;
+}
+
+/**
+ * @brief returns the molecule indices in the smoothing hybrid zone
+ *
+ * @return const std::vector<size_t>&
+ */
+const std::vector<size_t> &Cell::getSmoothingMoleculeIndices() const
+{
+    return _smoothingMoleculeIndices;
+}
+
+/**
+ * @brief returns the molecule indices outside the smoothing hybrid zone
+ *
+ * @return const std::vector<size_t>&
+ */
+const std::vector<size_t> &Cell::getNonSmoothingMoleculeIndices() const
+{
+    return _nonSmoothingMoleculeIndices;
+}
+
+/**
+ * @brief returns the indices of the active molecules
+ *
+ * @return const std::vector<size_t>&
+ */
+const std::vector<size_t> &Cell::getActiveMoleculeIndices() const
+{
+    return _activeMoleculeIndices;
+}
+
+/**
+ * @brief returns the indices of the inactive molecules
+ *
+ * @return const std::vector<size_t>&
+ */
+const std::vector<size_t> &Cell::getInactiveNonCoreMoleculeIndices() const
+{
+    return _inactiveNonCoreMoleculeIndices;
+}
+
+/**
+ * @brief returns the indices of the water molecules
+ *
+ * @return const std::vector<size_t>&
+ */
+const std::vector<size_t> &Cell::getWaterMoleculeIndices() const
+{
+    return _waterMoleculeIndices;
 }
 
 /***************************

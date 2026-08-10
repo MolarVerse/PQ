@@ -81,6 +81,16 @@ namespace linearAlgebra
     requires std::three_way_comparable<U> && std::three_way_comparable<V>
     bool operator<=(const Vector3D<U> &lhs, const V &rhs);
 
+    /************************
+     * unary + / - operator *
+     ************************/
+
+    template <pq::ArithmeticVector3D U>
+    auto operator+(const U &vec) -> U;
+
+    template <pq::ArithmeticVector3D U>
+    auto operator-(const U &vec) -> Vector3D<decltype(-vec[0])>;
+
     /*********************
      * binary + operator *
      *********************/
@@ -323,7 +333,7 @@ namespace linearAlgebra
 }   // namespace linearAlgebra
 
 #ifndef _VECTOR3D_TPP_
-#include "vector3d.tpp.hpp"   // DO NOT MOVE THIS LINE
+#include "vector3d.tpp.hpp"   // IWYU pragma: export
 #endif
 
 #endif   // _VECTOR3d_HPP_

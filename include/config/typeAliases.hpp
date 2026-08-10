@@ -24,17 +24,9 @@
 
 #define _TYPE_ALIASES_HPP_
 
-#include <cstddef>      // for size_t
-#include <deque>        // for std::queue
-#include <functional>   // for std::function
-#include <memory>       // for std::shared_ptr
-#include <optional>     // for std::optional
-#include <set>          // for std::set
-#include <string>       // for std::string
-#include <vector>       // for std::vector
-
-#include "../linearAlgebra/staticMatrix.hpp"   // IWYU pragma: export
-#include "../linearAlgebra/vector3d.hpp"       // IWYU pragma: export
+#include <memory>     // for std::shared_ptr
+#include <optional>   // for std::optional
+#include <vector>     // for std::vector
 
 namespace simulationBox
 {
@@ -90,27 +82,6 @@ namespace constraints
 
 }   // namespace constraints
 
-namespace output
-{
-    class EnergyOutput;       // forward declaration
-    class InfoOutput;         // forward declaration
-    class LogOutput;          // forward declaration
-    class RstFileOutput;      // forward declaration
-    class StdoutOutput;       // forward declaration
-    class TrajectoryOutput;   // forward declaration
-    class MomentumOutput;     // forward declaration
-    class VirialOutput;       // forward declaration
-    class StressOutput;       // forward declaration
-    class BoxFileOutput;      // forward declaration
-    class TimingsOutput;      // forward declaration
-    class OptOutput;          // forward declaration
-
-    class RingPolymerRestartFileOutput;   // forward declaration
-    class RingPolymerTrajectoryOutput;    // forward declaration
-    class RingPolymerEnergyOutput;        // forward declaration
-
-}   // namespace output
-
 namespace engine
 {
     class Engine;              // forward declaration
@@ -155,11 +126,6 @@ namespace integrator
     class VelocityVerlet;   // forward declaration
 }   // namespace integrator
 
-namespace resetKinetics
-{
-    class ResetKinetics;   // forward declaration
-}   // namespace resetKinetics
-
 namespace input
 {
     namespace parameterFile
@@ -173,26 +139,14 @@ namespace input
     }
 }   // namespace input
 
+namespace waterModel
+{
+    class IntraWater;   // forward declaration
+    class InterWater;   // forward declaration
+}   // namespace waterModel
+
 namespace pq
 {
-    using strings   = std::vector<std::string>;
-    using stringSet = std::set<std::string>;
-
-    using stlVectorUL     = std::vector<size_t>;
-    using stlVector3d     = std::vector<std::vector<std::vector<double>>>;
-    using stlVector4d     = std::vector<stlVector3d>;
-    using stlVector3dBool = std::vector<std::vector<std::vector<bool>>>;
-    using stlVector4dBool = std::vector<stlVector3dBool>;
-
-    using ParseFunc = std::function<void(const strings &, const size_t)>;
-
-    using Vec3D         = linearAlgebra::Vec3D;
-    using Vec3Dul       = linearAlgebra::Vec3Dul;
-    using Vec3DPair     = std::pair<Vec3D, Vec3D>;
-    using Vec3DVec      = std::vector<Vec3D>;
-    using Vec3DVecDeque = std::deque<std::vector<Vec3D>>;
-    using tensor3D      = linearAlgebra::tensor3D;
-
     using IntraNonBond = intraNonBonded::IntraNonBonded;
     using ForceField   = forceField::ForceField;
     using Timer        = timings::Timer;
@@ -209,8 +163,6 @@ namespace pq
     using RestartSection          = input::restartFile::RestartFileSection;
     using UniqueRestartSection    = std::unique_ptr<RestartSection>;
     using UniqueRestartSectionVec = std::vector<UniqueRestartSection>;
-
-    using ResetKinetics = resetKinetics::ResetKinetics;
 
     /************************
      * integrator namespace *
@@ -326,6 +278,16 @@ namespace pq
     using PhysicalData       = physicalData::PhysicalData;
     using VecPhysicalData    = std::vector<PhysicalData>;
     using SharedPhysicalData = std::shared_ptr<physicalData::PhysicalData>;
+
+    /*************************
+     * water model namespace *
+     *************************/
+
+    using IntraWater = waterModel::IntraWater;
+    using InterWater = waterModel::InterWater;
+
+    using UniqueIntraWater = std::unique_ptr<IntraWater>;
+    using UniqueInterWater = std::unique_ptr<InterWater>;
 
 }   // namespace pq
 

@@ -1,1 +1,0 @@
-- Avoid a temporary vector during cell-list rebuilds.

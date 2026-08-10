@@ -162,6 +162,18 @@ void PotentialSettings::setCoulombRadiusCutOff(const double coulombRadiusCutOff)
 }
 
 /**
+ * @brief Set the non-Coulomb radius cut off in the PotentialSettings class
+ *
+ * @param coulombRadiusCutOff
+ */
+void PotentialSettings::setNonCoulombRadiusCutOff(
+    const double nonCoulombRadiusCutOff
+)
+{
+    _nonCoulombRadiusCutOff = nonCoulombRadiusCutOff;
+}
+
+/**
  * @brief Set the 1-4 Coulomb scaling factor in the PotentialSettings class
  *
  * @param scale14Coulomb
@@ -236,6 +248,16 @@ NonCoulombType PotentialSettings::getNonCoulombType()
 double PotentialSettings::getCoulombRadiusCutOff()
 {
     return _coulombRadiusCutOff;
+}
+
+/**
+ * @brief get the non-Coulomb radius cut off
+ *
+ * @return std::optional<double>
+ */
+std::optional<double> PotentialSettings::getNonCoulombRadiusCutOff()
+{
+    return _nonCoulombRadiusCutOff;
 }
 
 /**

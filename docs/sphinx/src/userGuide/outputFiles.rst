@@ -10,6 +10,12 @@ The following output files are printed by **PQ**. The individual file names can 
 
 All data blocks shown for a single simulation step or frame are concatenated without blank lines in the output files.
 
+If :ref:`includeoutputmetadatakey` is enabled, the comment line of each
+trajectory-style frame contains ``# step = <value>``. Force-file comments append
+the existing total-force value to that line. This applies to both standard and
+ring-polymer trajectory, velocity, force, and charge files. The comment lines
+remain unchanged by default.
+
 .. _boxFile:
 
 *********
@@ -36,11 +42,11 @@ Charge File
 Stores the charge of each atom for every frame of the simulation in the following format:
     
     | **line 1:** n_atoms *a* *b* *c* *α* *β* *γ*
-    | **line 2:** empty
+    | **line 2:** empty or "# step = step_number"
     | **line 3 to (n_atoms + 2):** atom_type_name charge
 
 The parameters n_atoms, *a*, *b*, *c*, *α*, *β*, and *γ* in the first line of every frame denote the number of atoms in the simulation 
-box and the respective box parameters in units of Å and degrees. The second line is left empty. The following lines contain the name 
+box and the respective box parameters in units of Å and degrees. The second line is left empty unless output metadata is enabled. The following lines contain the name
 of the atom type (as given in the :ref:`moldescriptorFile` file) and its charge in units of the elementary charge *e* for each atom in the system.
 
 .. _energyFile:
@@ -92,11 +98,11 @@ Force File
 Stores the force *F* acting on each atom for every frame of the simulation in the following format:
     
     | **line 1:** n_atoms *a* *b* *c* *α* *β* *γ*
-    | **line 2:** total_force
+    | **line 2:** total_force, optionally prefixed by "# step = step_number;"
     | **line 3 to (n_atoms + 2):** atom_type_name *F*:sub:`x` *F*:sub:`y` *F*:sub:`z`
 
 The parameters n_atoms, *a*, *b*, *c*, *α*, *β*, and *γ* in the first line of every frame denote the number of atoms in the simulation 
-box and the respective box parameters in units of Å and degrees. The second line gives the total force acting on the system in 
+box and the respective box parameters in units of Å and degrees. The second line gives the total force acting on the system in
 :math:`\frac{\text{kcal}}{\text{mol Å}}`. The following lines contain the name of the atom type (as given in the 
 :ref:`moldescriptorFile` file) and the associated forces acting along the x, y and z direction in 
 :math:`\frac{\text{kcal}}{\text{mol Å}}` for each atom in the system.
@@ -267,11 +273,11 @@ Trajectory File
 Stores the coordinates (*x*, *y*, *z*) of each atom for every frame of the simulation in the following format:
     
     | **line 1:** n_atoms *a* *b* *c* *α* *β* *γ*
-    | **line 2:** empty
+    | **line 2:** empty or "# step = step_number"
     | **line 3 to (n_atoms + 2):** atom_type_name *x* *y* *z*
 
 The parameters n_atoms, *a*, *b*, *c*, *α*, *β*, and *γ* in the first line of every frame denote the number of atoms in the simulation
-box and the respective box parameters in units of Å and degrees. The second line is left empty. The following lines contain the name 
+box and the respective box parameters in units of Å and degrees. The second line is left empty unless output metadata is enabled. The following lines contain the name
 of the atom type (as given in the :ref:`moldescriptorFile` file) and the associated Cartesian coordinates in Å for each atom in the system.
 
 .. _velocityFile:
@@ -285,11 +291,11 @@ Velocity File
 Stores the velocity *v* of each atom for every frame of the simulation in the following format:
     
     | **line 1:** n_atoms *a* *b* *c* *α* *β* *γ*
-    | **line 2:** empty
+    | **line 2:** empty or "# step = step_number"
     | **line 3 to (n_atoms + 2):** atom_type_name *v*:sub:`x` *v*:sub:`y` *v*:sub:`z`
 
 The parameters n_atoms, *a*, *b*, *c*, *α*, *β*, and *γ* in the first line of every frame denote the number of atoms in the simulation
-box and the respective box parameters in units of Å and degrees. The second line is left empty. The following lines contain the name 
+box and the respective box parameters in units of Å and degrees. The second line is left empty unless output metadata is enabled. The following lines contain the name
 of the atom type (as given in the :ref:`moldescriptorFile` file) and the associated velocities along the x, y and z direction in 
 :math:`\frac{\text{Å}}{\text{s}}` for each atom in the system.
 
