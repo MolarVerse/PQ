@@ -547,14 +547,15 @@ namespace engine
     )
     {
         const auto weightingRadius = 2.0 * HybridSettings::getLayerRadius();
-        std::vector<double> weights(recipientMolecules.size(), 0.0);
+        std::vector<double> weights;
+        weights.reserve(recipientMolecules.size());
 
         const auto smoothingCOM = smoothingMol.getCenterOfMass();
 
-        for (size_t i = 0; i < recipientMolecules.size(); ++i)
+        for (const auto &recipientMol : recipientMolecules)
         {
             const auto delta =
-                recipientMolecules[i].get().getCenterOfMass() - smoothingCOM;
+                recipientMol.get().getCenterOfMass() - smoothingCOM;
 
             const auto distance = linearAlgebra::norm(delta);
 
@@ -573,7 +574,7 @@ namespace engine
                 }
             }
 
-            weights[i] = switchedWeight;
+            weights.push_back(switchedWeight);
         }
 
         return weights;
