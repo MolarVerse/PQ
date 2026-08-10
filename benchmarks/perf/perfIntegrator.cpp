@@ -23,6 +23,7 @@
 // Fixed-work micro-benchmark of the velocity-Verlet integrator step.
 
 #include <cstdio>
+#include <format>
 #include <iostream>
 
 #ifdef PQ_WITH_CALLGRIND
