@@ -23,6 +23,7 @@
 // Fixed-work micro-benchmark of the molecular virial computation.
 
 #include <cstdio>
+#include <format>
 #include <iostream>
 
 #ifdef PQ_WITH_CALLGRIND
