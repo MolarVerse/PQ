@@ -99,6 +99,7 @@ namespace
         setItemsProcessed(state, simBox);
     }
 
+    // NOLINTBEGIN(cert-err58-cpp)
     BENCHMARK(BM_Temperature)
         ->ArgName("cells_per_side")
         ->Arg(5)
@@ -115,4 +116,5 @@ namespace
         ->Arg(5)
         ->Arg(8)
         ->Arg(12);
+    // NOLINTEND(cert-err58-cpp)
 }   // namespace

@@ -29,7 +29,6 @@
 #include <Kokkos_DualView.hpp>
 
 #include "matrix.hpp"
-#include "typeAliases.hpp"
 
 namespace potential
 {
@@ -54,7 +53,7 @@ namespace potential
         ~KokkosLennardJones() = default;
 
         void transferFromNonCoulombPairMatrix(
-            linearAlgebra::Matrix<pq::SharedNonCoulPair> &
+            linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>> &
         );
 
         KOKKOS_FUNCTION double calculate(

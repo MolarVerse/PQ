@@ -27,6 +27,21 @@
 using namespace randomNumberGenerator;
 using namespace settings;
 
+/**
+ * @brief constructor
+ *
+ * @details if random seed is set in settings, use it to seed the generator,
+ * otherwise use random device to seed the generator
+ *
+ * @details NOLINTNEXTLINE(cert-msc51-cpp, cert-msc32-c) because the random
+ * device is not a security issue, as we specifically check if we have a random
+ * seed set in the settings, and if not, we use the random device to seed the
+ * generator. This is not a security issue, as we are not using the random
+ * device for cryptographic purposes, but rather for generating random numbers
+ * for simulations.
+ *
+ */
+// NOLINTNEXTLINE(cert-msc51-cpp, cert-msc32-c)
 RandomNumberGenerator::RandomNumberGenerator()
 {
     if (Settings::isRandomSeedSet())

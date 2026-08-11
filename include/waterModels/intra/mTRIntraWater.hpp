@@ -25,14 +25,16 @@
 #define _MTR_INTRA_WATER_HPP_
 
 #include "intraWater.hpp"   // for IntraWater
-#include "typeAliases.hpp"
 
 namespace waterModel
 {
     class MTRIntraWater : public IntraWater
     {
        public:
-        void calculate(pq::SimBox &, pq::PhysicalData &) final;
+        void calculate(
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &
+        ) final;
 
         virtual double getEqOHDistance() const = 0;   // Angström
         virtual double getEqHHDistance() const = 0;   // Angström

@@ -24,6 +24,8 @@
 // computation for orthorhombic and triclinic boxes (called per atom pair).
 
 #include <cstdio>
+#include <format>
+#include <iostream>
 
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
@@ -58,6 +60,6 @@ int main()
         sink += norm(triclinic.calcShiftVector(v));
     }
 
-    std::printf("%.6f\n", sink);
+    std::cout << std::format("{:.6f}\n", sink);
     return 0;
 }

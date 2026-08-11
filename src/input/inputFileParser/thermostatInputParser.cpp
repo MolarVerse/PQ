@@ -28,7 +28,7 @@
 #include <limits>        // for numeric_limits
 #include <string_view>   // for string_view
 
-#include "constants/conversionFactors.hpp"
+#include "constants.hpp"
 #include "exceptions.hpp"   // for InputFileException, customException
 #include "parserUtils.hpp"
 #include "references.hpp"           // for References
@@ -360,13 +360,16 @@ void ThermostatInputParser::parseThermostatFriction(
             "Friction of thermostat must be finite and non-negative"
         );
 
-    if (friction > std::numeric_limits<double>::max() / 1.0e12)
+    if (friction >
+        std::numeric_limits<double>::max() / defaults::MAX_FRICTION_CONVERSION)
         throw InputFileException(
             "Friction of thermostat is too large to represent in inverse "
             "seconds"
         );
 
-    ThermostatSettings::setFriction(friction * 1.0e12);
+    ThermostatSettings::setFriction(
+        friction * constants::NOSE_HOVER_FRICTION_INPUT_TO_INTERNAL
+    );
 }
 
 /**

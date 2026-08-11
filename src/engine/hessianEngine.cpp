@@ -442,7 +442,8 @@ void HessianEngine::writeHessian(const HessianMatrix &hessian) const
     if (file.fail())
         throw UserInputException("Could not open Hessian file for writing.");
 
-    file << std::scientific << std::setprecision(16);
+    constexpr auto precision = 16;
+    file << std::scientific << std::setprecision(precision);
 
     for (const auto &row : hessian)
     {
@@ -503,7 +504,8 @@ void HessianEngine::addTimers()
     _timer.addTimer(_physicalData->getTimer());
 }
 
-pq::SharedPhysicalData HessianEngine::getSharedPhysicalDataOld()
+std::shared_ptr<physicalData::PhysicalData> HessianEngine::
+    getSharedPhysicalDataOld()
 {
     return _physicalDataOld;
 }

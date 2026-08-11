@@ -32,7 +32,6 @@
 #include <vector>        // for vector
 
 #include "inputFileParser.hpp"   // for InputFileParser
-#include "typeAliases.hpp"       // for pq::ParseFunc
 
 namespace engine
 {

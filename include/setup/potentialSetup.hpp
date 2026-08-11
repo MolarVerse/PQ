@@ -24,11 +24,14 @@
 
 #define _POTENTIAL_SETUP_HPP_
 
-#include "typeAliases.hpp"
+namespace engine
+{
+    class Engine;   // forward declaration
+}   // namespace engine
 
 namespace setup
 {
-    void setupPotential(pq::Engine &);
+    void setupPotential(engine::Engine &);
 
     /**
      * @class PotentialSetup
@@ -39,10 +42,10 @@ namespace setup
     class PotentialSetup
     {
        private:
-        pq::Engine &_engine;
+        engine::Engine &_engine;
 
        public:
-        explicit PotentialSetup(pq::Engine &engine);
+        explicit PotentialSetup(engine::Engine &engine);
 
         void setup();
         void setupCoulomb();

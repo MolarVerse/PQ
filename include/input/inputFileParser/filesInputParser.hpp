@@ -27,7 +27,6 @@
 #include <cstddef>   // for size_t
 
 #include "inputFileParser.hpp"   // for InputFileParser
-#include "typeAliases.hpp"
 
 namespace input
 {
@@ -43,7 +42,10 @@ namespace input
         bool _validateFilePaths;
 
        public:
-        explicit FilesInputParser(pq::Engine &, bool validateFilePaths = true);
+        explicit FilesInputParser(
+            engine::Engine &,
+            bool validateFilePaths = true
+        );
 
         void parseIntraNonBondedFile(
             const std::vector<std::string> &,

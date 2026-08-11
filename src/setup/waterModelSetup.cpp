@@ -159,7 +159,7 @@ void WaterModelSetup::setup()
  */
 void WaterModelSetup::checkTopologyFile()
 {
-    std::unordered_set<const pq::Molecule *> waterMolecules;
+    std::unordered_set<const simulationBox::Molecule *> waterMolecules;
     for (const auto &waterMol :
          _engine.getSimulationBox().getWaterTypeMolecules())
         waterMolecules.insert(&waterMol);
@@ -238,10 +238,10 @@ void WaterModelSetup::checkMoldescriptorWaterCharge(
 {
     const auto modelName   = string(WaterModelSettings::getWaterInterModel());
     const auto checkCharge = [&modelName](
-                                 const pq::Molecule &water,
-                                 const size_t        atomIndex,
-                                 const double        expected,
-                                 const std::string  &atomName
+                                 const simulationBox::Molecule &water,
+                                 const size_t                   atomIndex,
+                                 const double                   expected,
+                                 const std::string             &atomName
                              )
     {
         constexpr double tol    = 1e-8;
@@ -303,6 +303,8 @@ std::optional<RigidWaterGeometry> WaterModelSetup::getRigidWaterGeometry(
             return std::nullopt;
     }
     // clang-format on
+
+    std::unreachable();
 }
 
 /**

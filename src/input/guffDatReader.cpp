@@ -280,11 +280,12 @@ void GuffDatReader::parseLine(const std::vector<std::string> &lineCommands)
     if (rncCutOff < 0.0)
         rncCutOff = PotentialSettings::getCoulombRadiusCutOff();
 
-    const double        coulombCoeff = stod(lineCommands[5]);
+    constexpr auto      coulombCoeffIndex = 5;
+    const double        coulombCoeff = stod(lineCommands[coulombCoeffIndex]);
     std::vector<double> guffCoefficients;
 
     std::ranges::for_each(
-        lineCommands | std::views::drop(6),
+        lineCommands | std::views::drop(coulombCoeffIndex + 1),
         [&guffCoefficients](const auto &entry)
         { guffCoefficients.push_back(stod(entry)); }
     );
@@ -727,7 +728,11 @@ void GuffDatReader::checkPartialCharges()
                     const auto chargeSquared = partialCharge1 * partialCharge2;
                     const auto prefactor = chargeSquared * COULOMB_PREFACTOR;
 
-                    if (!compare(prefactor, coeff, 1e-6))
+                    if (!compare(
+                            prefactor,
+                            coeff,
+                            constants::GUFF_DAT_COULOMB_PREFACTOR_THRESHOLD
+                        ))
                         throw GuffDatException(
                             std::format(
                                 "Invalid coulomb coefficient guff file for "

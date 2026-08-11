@@ -33,7 +33,6 @@
 #include "lennardJonesPair.hpp"   // IWYU pragma: keep -- for template instantiation
 #include "matrix.hpp"
 #include "nonCoulombPair.hpp"   // for NonCoulombPair
-#include "typeAliases.hpp"
 
 using namespace potential;
 using namespace customException;
@@ -47,7 +46,7 @@ using std::ranges::find_if;
  *
  **/
 ForceFieldNonCoulomb::ForceFieldNonCoulomb()
-    : _nonCoulPairsVec(pq::SharedNonCoulPairVec()),
+    : _nonCoulPairsVec(std::vector<std::shared_ptr<NonCoulombPair>>()),
       _nonCoulPairsMatPtr(std::make_unique<matrix>())
 {
 }
@@ -416,7 +415,7 @@ size_t ForceFieldNonCoulomb::getGlobalVdwType1(
     const std::vector<size_t> &indices
 ) const
 {
-    return indices[4];
+    return indices[_globalVdwType1Index];
 }
 
 /**
@@ -429,7 +428,7 @@ size_t ForceFieldNonCoulomb::getGlobalVdwType2(
     const std::vector<size_t> &indices
 ) const
 {
-    return indices[5];
+    return indices[_globalVdwType2Index];
 }
 
 /**

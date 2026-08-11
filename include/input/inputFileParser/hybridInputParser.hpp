@@ -27,7 +27,6 @@
 #include <cstddef>   // for size_t
 
 #include "inputFileParser.hpp"   // for InputFileParser
-#include "typeAliases.hpp"       // for std::vector<std::string>
 
 namespace input
 {
@@ -40,7 +39,7 @@ namespace input
     class HybridInputParser : public InputFileParser
     {
        public:
-        explicit HybridInputParser(pq::Engine &);
+        explicit HybridInputParser(engine::Engine &);
 
         void parseInnerRegionCenter(
             const std::vector<std::string> &,

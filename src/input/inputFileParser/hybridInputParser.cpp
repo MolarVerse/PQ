@@ -35,7 +35,6 @@
 #include "inputFileParser.hpp"   // for InputFileParser
 #include "parserUtils.hpp"
 #include "stringUtilities.hpp"   // for toLowerCopy
-#include "typeAliases.hpp"       // for pq::strings
 
 #ifdef PYTHON_ENABLED
 #include "fileSettings.hpp"   // for FileSettings
@@ -508,7 +507,9 @@ std::vector<int> HybridInputParser::parseSelectionNoPython(
             const auto startString = atomIndexStr.substr(0, rangePos);
             const auto endString   = atomIndexStr.substr(rangePos + 1);
 
-            int start, end;
+            int start = -1;
+            int end   = -1;
+
             try
             {
                 start = std::stoi(std::string(startString));

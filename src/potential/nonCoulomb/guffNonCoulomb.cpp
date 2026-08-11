@@ -140,9 +140,11 @@ std::shared_ptr<NonCoulombPair> GuffNonCoulomb::getNonCoulPair(
  *         _guffNonCoulombPairs[m1][m2][a1][a2]
  *
  *
- * @return pq::SharedNonCoulPairVec4d
+ * @return
+ * std::vector<std::vector<std::vector<std::vector<std::shared_ptr<NonCoulombPair>>>>>>
  */
-pq::SharedNonCoulPairVec4d GuffNonCoulomb::getNonCoulombPairs() const
+std::vector<std::vector<std::vector<std::vector<std::shared_ptr<NonCoulombPair>>>>> GuffNonCoulomb::
+    getNonCoulombPairs() const
 {
     return _guffNonCoulombPairs;
 }

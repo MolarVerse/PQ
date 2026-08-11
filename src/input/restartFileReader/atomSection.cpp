@@ -264,6 +264,7 @@ void AtomSection::setAtomPropertyVectors(
 
         atom->setPosition({x, y, z});
 
+        // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
         if (lineElements.size() > 6)
         {
             const auto vx = stringToFiniteDouble(lineElements[6]);
@@ -308,6 +309,7 @@ void AtomSection::setAtomPropertyVectors(
 
             atom->setForceOld({oldFx, oldFy, oldFz});
         }
+        // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
     }
     catch (const std::exception &e)
     {
@@ -330,6 +332,7 @@ void AtomSection::checkNumberOfLineArguments(
 {
     const auto lineSize = lineElements.size();
 
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
     if (lineSize % 3 != 0 || lineSize < 6 || lineSize > 21)
         throw RstFileException(
             std::format(
@@ -338,6 +341,7 @@ void AtomSection::checkNumberOfLineArguments(
                 _lineNumber
             )
         );
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 }
 
 /**

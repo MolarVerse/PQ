@@ -38,7 +38,6 @@
 #include "physicalData.hpp"
 #include "potential.hpp"
 #include "simulationBox.hpp"
-#include "typeAliases.hpp"
 #include "virial.hpp"
 
 #ifdef WITH_KOKKOS
@@ -69,18 +68,18 @@ namespace engine
 
         physicalData::PhysicalData _averagePhysicalData;
 
-        std::shared_ptr<virial::Virial> _virial;
-        pq::SharedPotential             _potential;
-        pq::SharedPhysicalData          _physicalData;
-        pq::SharedSimBox                _simulationBox;
-        pq::SharedCellList              _cellList;
-        pq::SharedIntraNonBond          _intraNonBonded;
-        pq::SharedForceField            _forceField;
-        pq::SharedConstraints           _constraints;
+        std::shared_ptr<virial::Virial>                 _virial;
+        std::shared_ptr<potential::Potential>           _potential;
+        std::shared_ptr<physicalData::PhysicalData>     _physicalData;
+        std::shared_ptr<simulationBox::SimulationBox>   _simulationBox;
+        std::shared_ptr<simulationBox::CellList>        _cellList;
+        std::shared_ptr<intraNonBonded::IntraNonBonded> _intraNonBonded;
+        std::shared_ptr<forceField::ForceField>         _forceField;
+        std::shared_ptr<constraints::Constraints>       _constraints;
 
-        pq::UniqueIntraWater _intraWater =
+        std::unique_ptr<waterModel::IntraWater> _intraWater =
             std::make_unique<waterModel::IntraWater>();
-        pq::UniqueInterWater _interWater =
+        std::unique_ptr<waterModel::InterWater> _interWater =
             std::make_unique<waterModel::InterWater>();
 
 #ifdef WITH_KOKKOS
@@ -158,14 +157,23 @@ namespace engine
          * get shared pointer methods *
          ******************************/
 
-        [[nodiscard]] pq::SharedForceField   getSharedForceField() const;
-        [[nodiscard]] pq::SharedSimBox       getSharedSimulationBox() const;
-        [[nodiscard]] pq::SharedPhysicalData getSharedPhysicalData() const;
-        [[nodiscard]] pq::SharedCellList     getSharedCellList() const;
-        [[nodiscard]] pq::SharedConstraints  getSharedConstraints() const;
-        [[nodiscard]] pq::SharedIntraNonBond getSharedIntraNonBonded() const;
+        [[nodiscard]]
+        std::shared_ptr<forceField::ForceField> getSharedForceField() const;
+        [[nodiscard]] std::shared_ptr<simulationBox::SimulationBox> getSharedSimulationBox(
+        ) const;
+        [[nodiscard]]
+        std::shared_ptr<physicalData::PhysicalData> getSharedPhysicalData(
+        ) const;
+        [[nodiscard]] std::shared_ptr<simulationBox::CellList> getSharedCellList(
+        ) const;
+        [[nodiscard]]
+        std::shared_ptr<constraints::Constraints> getSharedConstraints() const;
+        [[nodiscard]]
+        std::shared_ptr<intraNonBonded::IntraNonBonded> getSharedIntraNonBonded(
+        ) const;
         [[nodiscard]] std::shared_ptr<virial::Virial> getSharedVirial() const;
-        [[nodiscard]] pq::SharedPotential getSharedPotential() const;
+        [[nodiscard]] std::shared_ptr<potential::Potential> getSharedPotential(
+        ) const;
 
         /***************************
          * make unique_ptr methods *
@@ -186,7 +194,7 @@ namespace engine
         [[nodiscard]] timings::GlobalTimer &getTimer() { return _timer; }
 
         void setTimer(const timings::GlobalTimer &timer) { _timer = timer; }
-        void setInterWater(pq::UniqueInterWater interWater);
+        void setInterWater(std::unique_ptr<waterModel::InterWater> interWater);
 
 #ifdef WITH_KOKKOS
         [[nodiscard]] simulationBox::KokkosSimulationBox &getKokkosSimulationBox(

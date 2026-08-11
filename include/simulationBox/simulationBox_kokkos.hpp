@@ -28,8 +28,6 @@
 
 #include <Kokkos_DualView.hpp>
 
-#include "typeAliases.hpp"
-
 /**
  * @namespace simulationBox
  */
@@ -69,25 +67,53 @@ namespace simulationBox
             double*
         );
 
-        void initKokkosSimulationBox(pq::SimBox& simBox);
+        void initKokkosSimulationBox(simulationBox::SimulationBox& simBox);
         void initForces();
 
-        void transferAtomTypesFromSimulationBox(pq::SimBox& simBox);
-        void transferMolTypesFromSimulationBox(pq::SimBox& simBox);
-        void transferMoleculeIndicesFromSimulationBox(pq::SimBox& simBox);
-        void transferInternalGlobalVDWTypesFromSimulationBox(pq::SimBox&);
+        void transferAtomTypesFromSimulationBox(
+            simulationBox::SimulationBox& simBox
+        );
+        void transferMolTypesFromSimulationBox(
+            simulationBox::SimulationBox& simBox
+        );
+        void transferMoleculeIndicesFromSimulationBox(
+            simulationBox::SimulationBox& simBox
+        );
+        void transferInternalGlobalVDWTypesFromSimulationBox(
+            simulationBox::SimulationBox&
+        );
 
-        void transferPositionsFromSimulationBox(pq::SimBox& simBox);
-        void transferVelocitiesFromSimulationBox(pq::SimBox& simBox);
-        void transferForcesFromSimulationBox(pq::SimBox& simBox);
-        void transferPartialChargesFromSimulationBox(pq::SimBox& simBox);
-        void transferMassesFromSimulationBox(pq::SimBox& simBox);
-        void transferBoxDimensionsFromSimulationBox(const pq::SimBox& simBox);
+        void transferPositionsFromSimulationBox(
+            simulationBox::SimulationBox& simBox
+        );
+        void transferVelocitiesFromSimulationBox(
+            simulationBox::SimulationBox& simBox
+        );
+        void transferForcesFromSimulationBox(
+            simulationBox::SimulationBox& simBox
+        );
+        void transferPartialChargesFromSimulationBox(
+            simulationBox::SimulationBox& simBox
+        );
+        void transferMassesFromSimulationBox(
+            simulationBox::SimulationBox& simBox
+        );
+        void transferBoxDimensionsFromSimulationBox(
+            const simulationBox::SimulationBox& simBox
+        );
 
-        void transferPositionsToSimulationBox(pq::SimBox& simBox);
-        void transferVelocitiesToSimulationBox(pq::SimBox& simBox);
-        void transferForcesToSimulationBox(pq::SimBox& simBox);
-        void transferShiftForcesToSimulationBox(pq::SimBox& simBox);
+        void transferPositionsToSimulationBox(
+            simulationBox::SimulationBox& simBox
+        );
+        void transferVelocitiesToSimulationBox(
+            simulationBox::SimulationBox& simBox
+        );
+        void transferForcesToSimulationBox(
+            simulationBox::SimulationBox& simBox
+        );
+        void transferShiftForcesToSimulationBox(
+            simulationBox::SimulationBox& simBox
+        );
 
         /***************************
          * standard getter methods *

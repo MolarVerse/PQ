@@ -28,12 +28,13 @@
 #include "interWater.hpp"   // for InterWater
 #include "physicalData.hpp"
 #include "potential.hpp"   // for ChargeTag
-#include "typeAliases.hpp"
 
 using namespace constants;
 using namespace potential;
 using namespace pq;
 using namespace waterModel;
+using namespace physicalData;
+using namespace simulationBox;
 
 namespace
 {
@@ -45,14 +46,14 @@ namespace
  *
  */
 void InterWaterStrategyCellList::calculate(
-    const InterWaterState      &state,
-    SimBox                     &simBox,
-    physicalData::PhysicalData &physicalData,
-    const SharedCoulombPot     &coulombPotential,
-    simulationBox::CellList    &cellList
+    const InterWaterState                              &state,
+    simulationBox::SimulationBox                       &simBox,
+    physicalData::PhysicalData                         &physicalData,
+    const std::shared_ptr<potential::CoulombPotential> &coulombPotential,
+    simulationBox::CellList                            &cellList
 )
 {
-    const auto rCut        = CoulombPot::getCoulombRadiusCutOff();
+    const auto rCut = potential::CoulombPotential::getCoulombRadiusCutOff();
     const auto rCutSquared = rCut * rCut;
 
     auto totalCoulombEnergy    = 0.0;
@@ -206,13 +207,13 @@ void InterWaterStrategyCellList::calculate(
  */
 void InterWaterStrategyCellList::calculateCoreToOuterForces(
     const InterWaterState &,
-    SimBox                  &simBox,
-    PhysicalData            &physicalData,
-    const SharedCoulombPot  &coulombPotential,
-    simulationBox::CellList &cellList
+    simulationBox::SimulationBox                       &simBox,
+    PhysicalData                                       &physicalData,
+    const std::shared_ptr<potential::CoulombPotential> &coulombPotential,
+    simulationBox::CellList                            &cellList
 )
 {
-    const auto rCut        = CoulombPot::getCoulombRadiusCutOff();
+    const auto rCut = potential::CoulombPotential::getCoulombRadiusCutOff();
     const auto rCutSquared = rCut * rCut;
 
     auto totalCoulombEnergy = 0.0;
@@ -325,14 +326,14 @@ void InterWaterStrategyCellList::calculateCoreToOuterForces(
  * @param cellList Cell list structure used for neighbor searching.
  */
 void InterWaterStrategyCellList::calculateLayerToOuterForces(
-    const InterWaterState   &state,
-    SimBox                  &simBox,
-    PhysicalData            &physicalData,
-    const SharedCoulombPot  &coulombPotential,
-    simulationBox::CellList &cellList
+    const InterWaterState                              &state,
+    simulationBox::SimulationBox                       &simBox,
+    PhysicalData                                       &physicalData,
+    const std::shared_ptr<potential::CoulombPotential> &coulombPotential,
+    simulationBox::CellList                            &cellList
 )
 {
-    const auto rCut        = CoulombPot::getCoulombRadiusCutOff();
+    const auto rCut = potential::CoulombPotential::getCoulombRadiusCutOff();
     const auto rCutSquared = rCut * rCut;
 
     auto totalCoulombEnergy    = 0.0;
@@ -538,14 +539,14 @@ void InterWaterStrategyCellList::calculateLayerToOuterForces(
  * @param cellList Cell list structure used for neighbor searching.
  */
 void InterWaterStrategyCellList::calculateOuterToOuterForces(
-    const InterWaterState   &state,
-    SimBox                  &simBox,
-    PhysicalData            &physicalData,
-    const SharedCoulombPot  &coulombPotential,
-    simulationBox::CellList &cellList
+    const InterWaterState                              &state,
+    simulationBox::SimulationBox                       &simBox,
+    physicalData::PhysicalData                         &physicalData,
+    const std::shared_ptr<potential::CoulombPotential> &coulombPotential,
+    simulationBox::CellList                            &cellList
 )
 {
-    const auto rCut        = CoulombPot::getCoulombRadiusCutOff();
+    const auto rCut = potential::CoulombPotential::getCoulombRadiusCutOff();
     const auto rCutSquared = rCut * rCut;
 
     auto totalCoulombEnergy    = 0.0;
@@ -706,14 +707,14 @@ void InterWaterStrategyCellList::calculateOuterToOuterForces(
  * @param cellList Cell list structure used for neighbor searching.
  */
 void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
-    const InterWaterState   &state,
-    SimBox                  &simBox,
-    PhysicalData            &physicalData,
-    const SharedCoulombPot  &coulombPotential,
-    simulationBox::CellList &cellList
+    const InterWaterState                              &state,
+    simulationBox::SimulationBox                       &simBox,
+    physicalData::PhysicalData                         &physicalData,
+    const std::shared_ptr<potential::CoulombPotential> &coulombPotential,
+    simulationBox::CellList                            &cellList
 )
 {
-    const auto rCut        = CoulombPot::getCoulombRadiusCutOff();
+    const auto rCut = potential::CoulombPotential::getCoulombRadiusCutOff();
     const auto rCutSquared = rCut * rCut;
 
     auto totalCoulombEnergy    = 0.0;

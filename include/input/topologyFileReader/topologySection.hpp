@@ -26,8 +26,12 @@
 
 #include <iosfwd>   // for ifstream
 #include <string>   // for string, allocator
+#include <vector>   // for vector
 
-#include "typeAliases.hpp"
+namespace engine
+{
+    class Engine;   // forward declaration
+}   // namespace engine
 
 namespace input::topology
 {
@@ -40,19 +44,19 @@ namespace input::topology
     class TopologySection
     {
        protected:
-        int            _lineNumber;
-        std::ifstream *_fp;
+        int            _lineNumber = 0;
+        std::ifstream *_fp         = nullptr;
 
        public:
         virtual ~TopologySection() = default;
 
-        void process(std::vector<std::string> &, pq::Engine &);
+        void process(std::vector<std::string> &, engine::Engine &);
 
         virtual std::string keyword() = 0;
 
         virtual void processSection(
             std::vector<std::string> &,
-            pq::Engine &
+            engine::Engine &
         ) = 0;
 
         virtual void endedNormally(const bool) const = 0;

@@ -123,7 +123,9 @@ void TriclinicBox::applyPBC(Vec3D &position) const
     Vec3D  analyticPosition   = position;
     double analyticalDistance = distance;
 
-    if (distance > 0.5 * getMinimalBoxDimension())
+    const auto minimalBoxDimensionHalf = getMinimalBoxDimension() / 2.0;
+
+    if (distance > minimalBoxDimensionHalf)
     {
         for (int i = -1; i <= 1; ++i)
             for (int j = -1; j <= 1; ++j)
@@ -166,7 +168,9 @@ Vec3D TriclinicBox::wrapPositionIntoBox(const Vec3D &position) const
 {
     auto fractionalPosition = inverse(_boxMatrix) * position;
 
-    fractionalPosition -= floor(fractionalPosition + 0.5);
+    constexpr auto shiftFraction = 0.5;
+
+    fractionalPosition -= floor(fractionalPosition + shiftFraction);
 
     return _boxMatrix * fractionalPosition;
 }

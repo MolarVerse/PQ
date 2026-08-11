@@ -22,3 +22,5 @@ target_link_libraries(linearAlgebra
 install(TARGETS linearAlgebra
     DESTINATION lib
 )
+
+target_precompile_headers(linearAlgebra REUSE_FROM pq_pch)

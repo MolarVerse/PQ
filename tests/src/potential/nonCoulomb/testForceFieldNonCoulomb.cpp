@@ -41,7 +41,9 @@
 
 TEST_F(TestNonCoulombPotentialFF, copyConstructorCopiesOwnedMatrix)
 {
-    setNonCoulombPairsMatrix(linearAlgebra::Matrix<pq::SharedNonCoulPair>(1));
+    setNonCoulombPairsMatrix(
+        linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(1)
+    );
     const auto pair =
         potential::LennardJonesPair(size_t(1), size_t(1), 2.0, 1.0, 1.0);
     setNonCoulombPairsMatrix(0, 0, pair);
@@ -68,7 +70,9 @@ TEST_F(TestNonCoulombPotentialFF, copyConstructorCopiesOwnedMatrix)
 
 TEST_F(TestNonCoulombPotentialFF, copyAssignmentCopiesOwnedMatrix)
 {
-    setNonCoulombPairsMatrix(linearAlgebra::Matrix<pq::SharedNonCoulPair>(1));
+    setNonCoulombPairsMatrix(
+        linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(1)
+    );
     const auto pair =
         potential::LennardJonesPair(size_t(1), size_t(1), 2.0, 1.0, 1.0);
     setNonCoulombPairsMatrix(0, 0, pair);
@@ -84,7 +88,9 @@ TEST_F(TestNonCoulombPotentialFF, copyAssignmentCopiesOwnedMatrix)
 
 TEST_F(TestNonCoulombPotentialFF, moveOperationsTransferOwnedMatrix)
 {
-    setNonCoulombPairsMatrix(linearAlgebra::Matrix<pq::SharedNonCoulPair>(1));
+    setNonCoulombPairsMatrix(
+        linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(1)
+    );
     const auto pair =
         potential::LennardJonesPair(size_t(1), size_t(1), 2.0, 1.0, 1.0);
     setNonCoulombPairsMatrix(0, 0, pair);

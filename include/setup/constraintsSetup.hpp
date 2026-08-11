@@ -24,11 +24,16 @@
 
 #define _CONSTRAINTS_SETUP_HPP_
 
-#include "typeAliases.hpp"
+#include <cstddef>
+
+namespace engine
+{
+    class Engine;   // forward declaration
+}   // namespace engine
 
 namespace setup
 {
-    void setupConstraints(pq::Engine &);
+    void setupConstraints(engine::Engine &);
 
     /**
      * @class ConstraintsSetup
@@ -39,7 +44,7 @@ namespace setup
     class ConstraintsSetup
     {
        private:
-        pq::Engine &_engine;
+        engine::Engine &_engine;
 
         size_t _shakeConstraints  = 0;
         size_t _mShakeConstraints = 0;
@@ -51,7 +56,7 @@ namespace setup
         double _rattleTolerance = 0.0;
 
        public:
-        explicit ConstraintsSetup(pq::Engine &engine);
+        explicit ConstraintsSetup(engine::Engine &engine);
 
         void setup();
 

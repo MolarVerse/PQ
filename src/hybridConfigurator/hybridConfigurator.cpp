@@ -92,7 +92,9 @@ void HybridConfigurator::calculateInnerRegionCenter(
  *
  * @note The inner region center must be calculated before calling this function
  */
-void HybridConfigurator::shiftAtomsToInnerRegionCenter(SimBox& simBox)
+void HybridConfigurator::shiftAtomsToInnerRegionCenter(
+    simulationBox::SimulationBox& simBox
+)
 {
     for (auto& atom : simBox.getAtoms())
     {
@@ -116,7 +118,9 @@ void HybridConfigurator::shiftAtomsToInnerRegionCenter(SimBox& simBox)
  * @note This function should be called after shiftAtomsToInnerRegionCenter()
  *       to restore the original atomic positions
  */
-void HybridConfigurator::shiftAtomsBackToInitialPositions(SimBox& simBox)
+void HybridConfigurator::shiftAtomsBackToInitialPositions(
+    simulationBox::SimulationBox& simBox
+)
 {
     for (auto& atom : simBox.getAtoms())
     {
@@ -153,7 +157,7 @@ void HybridConfigurator::shiftAtomsBackToInitialPositions(SimBox& simBox)
  *       shiftAtomsToInnerRegionCenter) before calling this function for
  *       accurate distance calculations
  */
-void HybridConfigurator::assignHybridZones(SimBox& simBox)
+void HybridConfigurator::assignHybridZones(simulationBox::SimulationBox& simBox)
 {
     const auto coreRadius  = HybridSettings::getCoreRadius();
     const auto layerRadius = HybridSettings::getLayerRadius();
@@ -219,7 +223,7 @@ void HybridConfigurator::assignHybridZones(SimBox& simBox)
  * zone assignment. This is typically used to reset the activation state before
  * applying selective activation/deactivation patterns.
  */
-void HybridConfigurator::activateMolecules(pq::SimBox& simBox)
+void HybridConfigurator::activateMolecules(simulationBox::SimulationBox& simBox)
 {
     for (auto& mol : simBox.getMolecules()) mol.activateMolecule();
 }
@@ -233,7 +237,9 @@ void HybridConfigurator::activateMolecules(pq::SimBox& simBox)
  * POINT_CHARGE and OUTER regions. This is typically used during inner
  * region calculations where only the inner molecules should be active.
  */
-void HybridConfigurator::deactivateOuterMolecules(pq::SimBox& simBox)
+void HybridConfigurator::deactivateOuterMolecules(
+    simulationBox::SimulationBox& simBox
+)
 {
     for (auto& mol : simBox.getMolecules())
     {
@@ -249,7 +255,9 @@ void HybridConfigurator::deactivateOuterMolecules(pq::SimBox& simBox)
  *
  * @param simBox The simulation box containing the molecules
  */
-void HybridConfigurator::activateSmoothingMolecules(pq::SimBox& simBox)
+void HybridConfigurator::activateSmoothingMolecules(
+    simulationBox::SimulationBox& simBox
+)
 {
     for (auto& mol : simBox.getMoleculesInsideZone(SMOOTHING))
         mol.activateMolecule();
@@ -267,8 +275,8 @@ void HybridConfigurator::activateSmoothingMolecules(pq::SimBox& simBox)
  * the smoothing zone, not the global molecule index.
  */
 void HybridConfigurator::deactivateSmoothingMolecules(
-    std::unordered_set<size_t> inactiveMolecules,
-    pq::SimBox&                simBox
+    std::unordered_set<size_t>    inactiveMolecules,
+    simulationBox::SimulationBox& simBox
 )
 {
     size_t count{0};
@@ -292,7 +300,9 @@ void HybridConfigurator::deactivateSmoothingMolecules(
  * activated. This operation is performed regardless of the molecules' hybrid
  * zone assignments and is useful for implementing complementary calculations.
  */
-void HybridConfigurator::toggleMoleculeActivation(pq::SimBox& simBox)
+void HybridConfigurator::toggleMoleculeActivation(
+    simulationBox::SimulationBox& simBox
+)
 {
     for (auto& mol : simBox.getMolecules())
         if (mol.isActive())
@@ -315,7 +325,9 @@ void HybridConfigurator::toggleMoleculeActivation(pq::SimBox& simBox)
  * @throw HybridConfiguratorException if a molecule is outside the smoothing
  * region
  */
-void HybridConfigurator::calculateSmoothingFactors(pq::SimBox& simBox)
+void HybridConfigurator::calculateSmoothingFactors(
+    simulationBox::SimulationBox& simBox
+)
 {
     const auto layer     = HybridSettings::getLayerRadius();
     const auto thickness = HybridSettings::getSmoothingRegionThickness();

@@ -54,11 +54,13 @@ TEST(TestStressOutput, writeEmitsStepAndAllNineTensorComponents)
 
     PhysicalData data;
     // Distinct values per row so we can locate them in the output.
-    data.setStressTensor(linearAlgebra::tensor3D{
-        linearAlgebra::Vec3D{1.1, 2.2, 3.3},
-        linearAlgebra::Vec3D{4.4, 5.5, 6.6},
-        linearAlgebra::Vec3D{7.7, 8.8, 9.9}
-    });
+    data.setStressTensor(
+        linearAlgebra::tensor3D{
+            linearAlgebra::Vec3D{1.1, 2.2, 3.3},
+            linearAlgebra::Vec3D{4.4, 5.5, 6.6},
+            linearAlgebra::Vec3D{7.7, 8.8, 9.9}
+        }
+    );
 
     out.write(11, data);
     out.close();
@@ -69,7 +71,8 @@ TEST(TestStressOutput, writeEmitsStepAndAllNineTensorComponents)
     EXPECT_NE(content.find("5.50000e+00"), std::string::npos);
     EXPECT_NE(content.find("9.90000e+00"), std::string::npos);
 
-    ::remove(path.c_str());
+    const auto errorCode = std::remove(path.c_str());
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: " << path;
 }
 
 TEST(TestStressOutput, writeEmitsOneLinePerCall)
@@ -85,11 +88,13 @@ TEST(TestStressOutput, writeEmitsOneLinePerCall)
     out.write(2, data);
     out.close();
 
-    const auto content = slurp(path);
+    const auto content  = slurp(path);
     size_t     newlines = 0;
     for (auto c : content)
-        if (c == '\n') ++newlines;
+        if (c == '\n')
+            ++newlines;
     EXPECT_EQ(newlines, 2u);
 
-    ::remove(path.c_str());
+    const auto errorCode = std::remove(path.c_str());
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: " << path;
 }

@@ -24,9 +24,8 @@
 
 #define _MATRIX_CLASS_HPP_
 
+#include <Eigen/Dense>
 #include <cstddef>
-
-#include "Eigen/Dense"
 
 namespace linearAlgebra
 {
@@ -38,8 +37,9 @@ namespace linearAlgebra
     class Matrix
     {
        protected:
-        size_t                                           _rows;
-        size_t                                           _cols;
+        size_t _rows = 0;
+        size_t _cols = 0;
+
         Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> _data;
 
        public:

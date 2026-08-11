@@ -56,7 +56,7 @@ namespace engine
      * simulation box to zero.
      */
     void HybridMDEngine::addCurrentForcesToInnerAndReset(
-        pq::SharedAtomVec& atoms
+        std::vector<std::shared_ptr<simulationBox::Atom>>& atoms
     )
     {
         for (auto& atom : atoms)
@@ -83,8 +83,8 @@ namespace engine
      * global smoothing factor.
      */
     void HybridMDEngine::addScaledCurrentForcesToInnerAndReset(
-        pq::SharedAtomVec& atoms,
-        const double       globalSmF
+        std::vector<std::shared_ptr<simulationBox::Atom>>& atoms,
+        const double                                       globalSmF
     )
     {
         for (auto& atom : atoms)
@@ -106,7 +106,7 @@ namespace engine
      * simulation box to zero.
      */
     void HybridMDEngine::addCurrentForcesToOuterAndReset(
-        pq::SharedAtomVec& atoms
+        std::vector<std::shared_ptr<simulationBox::Atom>>& atoms
     )
     {
         for (auto& atom : atoms)
@@ -133,8 +133,8 @@ namespace engine
      * global smoothing factor.
      */
     void HybridMDEngine::addScaledCurrentForcesToOuterAndReset(
-        pq::SharedAtomVec& atoms,
-        const double       globalSmF
+        std::vector<std::shared_ptr<simulationBox::Atom>>& atoms,
+        const double                                       globalSmF
     )
     {
         for (auto& atom : atoms)
