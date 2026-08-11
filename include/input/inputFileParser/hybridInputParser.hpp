@@ -68,6 +68,10 @@ namespace input
             const std::vector<std::string> &,
             const size_t
         );
+        void parseQMForceDistribution(
+            const std::vector<std::string> &,
+            const size_t
+        );
 
         std::vector<int> parseSelection(
             const std::string &,

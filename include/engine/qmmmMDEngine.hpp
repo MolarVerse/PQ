@@ -25,6 +25,7 @@
 #define _QM_MM_MD_ENGINE_HPP_
 
 #include "hybridMDEngine.hpp"
+#include "randomNumberGenerator.hpp"
 
 namespace engine
 {
@@ -44,7 +45,8 @@ namespace engine
         void calculateForces() override;
 
        private:
-        physicalData::PhysicalData _qmmmPhysicalData{};
+        randomNumberGenerator::RandomNumberGenerator _rng{};
+        physicalData::PhysicalData                   _qmmmPhysicalData{};
 
         void applySmoothing();
         void applyExactSmoothing();
@@ -55,6 +57,18 @@ namespace engine
 
         void scaleAndAccumulateEnergies(const double globalSmF);
         void moveEnergiesToPhysicalData();
+
+        void distributeSmoothingMolQMForces();
+
+        std::vector<double> getRandomWeights(
+            const std::vector<std::reference_wrapper<simulationBox::Molecule>>
+                &recipientMolecules
+        );
+        std::vector<double> getDistanceWeights(
+            const simulationBox::Molecule &smoothingMol,
+            const std::vector<std::reference_wrapper<simulationBox::Molecule>>
+                &recipientMolecules
+        );
     };
 
 }   // namespace engine
