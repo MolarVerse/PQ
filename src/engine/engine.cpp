@@ -154,13 +154,6 @@ bool Engine::isIntraNonBondedActivated() const
 }
 
 /**
- * @brief get the reference to the cell list
- *
- * @return CellList&
- */
-CellList &Engine::getCellList() { return *_cellList; }
-
-/**
  * @brief get the reference to the simulation box
  *
  * @return SimulationBox&
@@ -236,13 +229,6 @@ Potential *Engine::getPotentialPtr() { return _potential.get(); }
  * @return Virial*
  */
 Virial *Engine::getVirialPtr() { return _virial.get(); }
-
-/**
- * @brief get the pointer to the cell list
- *
- * @return CellList*
- */
-CellList *Engine::getCellListPtr() { return _cellList.get(); }
 
 /**
  * @brief get the pointer to the simulation box
@@ -444,4 +430,14 @@ std::shared_ptr<Virial> Engine::getSharedVirial() const { return _virial; }
 std::shared_ptr<Potential> Engine::getSharedPotential() const
 {
     return _potential;
+}
+
+/**
+ * @brief get the shared pointer to the cell list
+ *
+ * @return std::shared_ptr<CellList>
+ */
+const std::shared_ptr<simulationBox::CellList> &Engine::getCellList() const
+{
+    return _cellList;
 }
