@@ -24,6 +24,8 @@
 
 #define _STATIC_MATRIX_3X3_TPP_
 
+#include <concepts>
+
 #include "staticMatrix3x3.hpp"
 
 namespace linearAlgebra
@@ -235,8 +237,9 @@ namespace linearAlgebra
      * @param StaticMatrix3x3<T> mat, T t
      * @return StaticMatrix3x3<T>
      */
-    template <typename T>
-    StaticMatrix3x3<T> operator/(const StaticMatrix3x3<T> &mat, const T t)
+    template <typename T, typename U>
+    requires std::convertible_to<U, T>
+    StaticMatrix3x3<T> operator/(const StaticMatrix3x3<T> &mat, const U t)
     {
         return StaticMatrix3x3<T>(mat[0] / t, mat[1] / t, mat[2] / t);
     }
@@ -247,8 +250,9 @@ namespace linearAlgebra
      * @param StaticMatrix3x3<T> mat, T t
      * @return StaticMatrix3x3<T>
      */
-    template <typename T>
-    StaticMatrix3x3<T> operator/(const T t, const StaticMatrix3x3<T> &mat)
+    template <typename T, typename U>
+    requires std::convertible_to<U, T>
+    StaticMatrix3x3<T> operator/(const U t, const StaticMatrix3x3<T> &mat)
     {
         return StaticMatrix3x3<T>(t / mat[0], t / mat[1], t / mat[2]);
     }
@@ -480,8 +484,12 @@ namespace linearAlgebra
         auto mat2 = mat * mat;
         auto mat3 = mat2 * mat;
 
-        auto den = diagonalMatrix(1.0) - 0.5 * mat + 0.1 * mat2 - mat3 / 120.0;
-        auto num = diagonalMatrix(1.0) + 0.5 * mat + 0.1 * mat2 + mat3 / 120.0;
+        const auto padeMat  = mat / 2.0;
+        const auto padeMat2 = mat2 / 10.0;
+        const auto padeMat3 = mat3 / 120.0;
+
+        auto den = diagonalMatrix(1.0) - padeMat + padeMat2 - padeMat3;
+        auto num = diagonalMatrix(1.0) + padeMat + padeMat2 + padeMat3;
 
         result = inverse(den) * num;
 

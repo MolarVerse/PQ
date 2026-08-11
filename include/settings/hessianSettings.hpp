@@ -45,9 +45,9 @@ namespace settings
     class HessianSettings
     {
        private:
-        static inline std::string _hessianFile = defaults::HESSIAN_FILE_DEFAULT;
+        static inline std::string _hessianFile = DefaultFiles::hessianFile;
         static inline std::string _hessianInfoFile =
-            defaults::HESSIAN_INFO_FILE_DEFAULT;
+            DefaultFiles::hessianInfoFile;
         static inline double _displacement =
             defaults::HESSIAN_DISPLACEMENT_DEFAULT;
         static inline bool _optimizeBeforeHessian =

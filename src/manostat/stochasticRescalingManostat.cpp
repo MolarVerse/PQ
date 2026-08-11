@@ -164,7 +164,12 @@ tensor3D StochasticRescalingManostat::calculateMu(const double volume)
 
     const auto deltaP = _targetPressure - _pressure;
 
-    return diagonalMatrix(::exp((-compress * deltaP + stochasticFactor) / 3.0));
+    // TODO: check how to generalize this!
+    constexpr auto dimension = 3.0;
+
+    return diagonalMatrix(
+        ::exp((-compress * deltaP + stochasticFactor) / dimension)
+    );
 }
 
 /**
@@ -184,8 +189,8 @@ tensor3D SemiIsotropicStochasticRescalingManostat::calculateMu(
     const auto kT     = kb * ThermostatSettings::getActualTargetTemperature();
     const auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
 
-    auto stochasticFactor  = 1 / 3.0 * kT * compress / volume;
-    stochasticFactor       *= PRESSURE_FACTOR;
+    auto stochasticFactor = 1.0 / _pressureTensor.size * kT * compress / volume;
+    stochasticFactor *= PRESSURE_FACTOR;
 
     const auto stochasticFactor_xy = ::sqrt(4.0 * stochasticFactor) * random;
     const auto stochasticFactor_z  = ::sqrt(2.0 * stochasticFactor) * random;
@@ -230,13 +235,15 @@ tensor3D AnisotropicStochasticRescalingManostat::calculateMu(
     const auto kT     = kb * ThermostatSettings::getActualTargetTemperature();
     const auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
 
-    auto stochasticFactor  = 2.0 / 3.0 * kT * compress / volume;
-    stochasticFactor       *= PRESSURE_FACTOR;
-    stochasticFactor       = ::sqrt(stochasticFactor) * random;
+    auto stochasticFactor = 2.0 / _pressureTensor.size * kT * compress / volume;
+    stochasticFactor *= PRESSURE_FACTOR;
+    stochasticFactor  = ::sqrt(stochasticFactor) * random;
 
     const auto deltaP = _targetPressure - diagonal(_pressureTensor);
 
-    return diagonalMatrix(exp(-compress * (deltaP) / 3.0 + stochasticFactor));
+    return diagonalMatrix(
+        exp(-compress * (deltaP) / _pressureTensor.size + stochasticFactor)
+    );
 }
 
 /**
@@ -256,12 +263,13 @@ tensor3D FullAnisotropicStochasticRescalingManostat::calculateMu(
     const auto kT     = kb * ThermostatSettings::getActualTargetTemperature();
     const auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
 
-    auto stochasticFactor  = 2.0 / 3.0 * kT * compress / volume;
-    stochasticFactor       *= PRESSURE_FACTOR;
-    stochasticFactor       = ::sqrt(stochasticFactor) * random;
+    auto stochasticFactor = 2.0 / _pressureTensor.size * kT * compress / volume;
+    stochasticFactor *= PRESSURE_FACTOR;
+    stochasticFactor  = ::sqrt(stochasticFactor) * random;
 
     const auto deltaP = diagonalMatrix(_targetPressure) - _pressureTensor;
-    auto       mu     = expPade(-compress * deltaP / 3.0 + stochasticFactor);
+    auto       mu =
+        expPade(-compress * deltaP / _pressureTensor.size + stochasticFactor);
 
     rotateMu(mu);
 

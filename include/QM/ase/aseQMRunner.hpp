@@ -24,8 +24,6 @@
 
 #define _ASE_QM_RUNNER_HPP_
 
-#include <pybind11/numpy.h>
-
 #include "qmRunner.hpp"
 
 namespace pybind11
@@ -70,12 +68,6 @@ namespace QM
             physicalData::PhysicalData &
         ) const;
 
-        // clang-format off
-        [[nodiscard]] pybind11::array           asePositions(const simulationBox::SimulationBox &) const;
-        [[nodiscard]] pybind11::array_t<double> aseCell(const simulationBox::SimulationBox &) const;
-        [[nodiscard]] pybind11::array_t<bool>   asePBC() const;
-        [[nodiscard]] pybind11::array_t<int>    aseAtomicNumbers(const simulationBox::SimulationBox &) const;
-        // clang-format on
        protected:
         void setAseCalculator(const pybind11::object &calculator);
     };

@@ -101,6 +101,7 @@ namespace
         runCoulombBenchmark(state, potential);
     }
 
+    // NOLINTBEGIN(cert-err58-cpp)
     BENCHMARK(BM_LennardJones)
         ->ArgName("distance_milliangstrom")
         ->Arg(1500)
@@ -131,4 +132,5 @@ namespace
         ->Arg(1500)
         ->Arg(3000)
         ->Arg(6000);
+    // NOLINTEND(cert-err58-cpp)
 }   // namespace

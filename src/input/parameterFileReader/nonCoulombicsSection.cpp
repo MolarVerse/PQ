@@ -155,6 +155,7 @@ void NonCoulombicsSection::processLJ(
     Engine                   &engine
 ) const
 {
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
     if (lineElements.size() != 4 && lineElements.size() != 5)
         throw ParameterFileException(
             std::format(
@@ -171,6 +172,7 @@ void NonCoulombicsSection::processLJ(
     const auto   c12       = stod(lineElements[3]);
 
     auto cutOff = 5 == lineElements.size() ? stod(lineElements[4]) : -1.0;
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
     const auto coulombCutOff = PotentialSettings::getCoulombRadiusCutOff();
 
@@ -209,6 +211,7 @@ void NonCoulombicsSection::processBuckingham(
     Engine                   &engine
 ) const
 {
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
     if (lineElements.size() != 5 && lineElements.size() != 6)
         throw ParameterFileException(
             std::format(
@@ -226,6 +229,7 @@ void NonCoulombicsSection::processBuckingham(
     const auto   c6        = stod(lineElements[4]);
 
     auto cutOff = 6 == lineElements.size() ? stod(lineElements[5]) : -1.0;
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
     const auto coulombCutOff = PotentialSettings::getCoulombRadiusCutOff();
 
@@ -264,6 +268,7 @@ void NonCoulombicsSection::processMorse(
     Engine                   &engine
 ) const
 {
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
     if (lineElements.size() != 5 && lineElements.size() != 6)
         throw ParameterFileException(
             std::format(
@@ -281,6 +286,7 @@ void NonCoulombicsSection::processMorse(
     const auto   equilibriumDistance = stod(lineElements[4]);
 
     auto cutOff = 6 == lineElements.size() ? stod(lineElements[5]) : -1.0;
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
     const auto coulombCutOff = PotentialSettings::getCoulombRadiusCutOff();
 

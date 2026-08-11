@@ -23,6 +23,8 @@
 // Fixed-work micro-benchmark of the Coulomb pair kernels (shifted + Wolf).
 
 #include <cstdio>
+#include <format>
+#include <iostream>
 
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
@@ -56,6 +58,6 @@ int main()
         sink += eShift + fShift + eWolf + fWolf;
     }
 
-    std::printf("%.6f\n", sink);
+    std::cout << std::format("{:.6f}\n", sink);
     return 0;
 }

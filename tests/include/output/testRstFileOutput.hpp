@@ -24,14 +24,14 @@
 
 #define _TEST_RSTFILEOUTPUT_HPP_
 
+#include <gtest/gtest.h>   // for Test
+
+#include <memory>   // for allocator
+
 #include "atom.hpp"            // for Atom
 #include "molecule.hpp"        // for Molecule
 #include "rstFileOutput.hpp"   // for RstFileOutput
 #include "simulationBox.hpp"   // for SimulationBox
-
-#include <gtest/gtest.h>   // for Test
-#include <memory>          // for allocator
-#include <stdio.h>         // for remove
 
 /**
  * @class TestRstFileOutput
@@ -41,7 +41,7 @@
  */
 class TestRstFileOutput : public ::testing::Test
 {
-  protected:
+   protected:
     void SetUp() override
     {
         _rstFileOutput = new output::RstFileOutput("default.rst");
@@ -92,7 +92,8 @@ class TestRstFileOutput : public ::testing::Test
     {
         delete _rstFileOutput;
         delete _simulationBox;
-        ::remove("default.rst");
+        const auto errorCode = std::remove("default.rst");
+        EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.rst";
     }
 
     output::RstFileOutput        *_rstFileOutput;

@@ -42,7 +42,9 @@ void cli::writeJsonString(std::ostream &output, const std::string_view value)
             case '\r': output << "\\r"; break;
             case '\t': output << "\\t"; break;
             default:
-                if (static_cast<unsigned char>(character) < 0x20)
+            {
+                constexpr auto maxHex = 0x20;
+                if (static_cast<unsigned char>(character) < maxHex)
                 {
                     const auto flags = output.flags();
                     const auto fill  = output.fill();
@@ -56,6 +58,7 @@ void cli::writeJsonString(std::ostream &output, const std::string_view value)
                 }
                 else
                     output << character;
+            }
         }
     }
 

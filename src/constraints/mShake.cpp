@@ -440,7 +440,8 @@ void MShake::applyMRattle(SimulationBox &simulationBox)
             {
                 const auto mass_j = atoms[j]->getMass();
 
-                auto velConstraint = dot(mShakeMatrix(index_ij), rattleVector);
+                auto velConstraint =
+                    stl::dot(mShakeMatrix(index_ij), rattleVector);
 
                 const auto velAdjustment = velConstraint * bonds[index_ij];
 

@@ -92,14 +92,18 @@ namespace linearAlgebra
     template <typename T>
     StaticMatrix3x3<T>::StaticMatrix3x3(const std::vector<T> &vector)
     {
-        if (vector.size() != 9)
+        if (vector.size() != _nElements)
             throw customException::LinearAlgebraException(
-                "vector size must be 9"
+                "vector size must be " + std::to_string(_nElements)
             );
 
-        _data[0] = Vector3D<T>(vector[0], vector[1], vector[2]);
-        _data[1] = Vector3D<T>(vector[3], vector[4], vector[5]);
-        _data[2] = Vector3D<T>(vector[6], vector[7], vector[8]);
+        for (size_t i = 0; i < 3; ++i)
+        {
+            for (size_t j = 0; j < 3; ++j)
+            {
+                _data[i][j] = vector[i * 3 + j];
+            }
+        }
     }
 
     /**
@@ -151,7 +155,7 @@ namespace linearAlgebra
     std::vector<T> StaticMatrix3x3<T>::toStdVector() const
     {
         std::vector<T> result;
-        result.reserve(9);
+        result.reserve(_nElements);
         for (const auto &row : _data)
         {
             for (const auto &element : row)

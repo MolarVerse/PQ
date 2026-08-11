@@ -272,7 +272,7 @@ void GeneralInputParser::parseRandomSeed(
         ));
     };
 
-    std::uint_fast32_t randomSeed;
+    std::uint_fast32_t randomSeed = 0;
 
     try
     {

@@ -24,6 +24,7 @@
 
 #include <cmath>   // for sqrt, sin
 
+#include "constants.hpp"
 #include "coulombPotential.hpp"   // for CoulombPotential
 #include "forceField.hpp"         // IWYU pragma: keep - for correctLinker
 #include "hybridSettings.hpp"     // for HybridSettings
@@ -109,7 +110,7 @@ void AngleForceField::calculateEnergyAndForces(
     // Guard against near-collinear angles where division by sin(alpha) is
     // unstable.
     const auto sinAlpha = ::sin(alpha);
-    if (std::fabs(sinAlpha) >= 1.0e-10)
+    if (std::fabs(sinAlpha) >= constants::COLINEAR_SINALPHA_THRESHOLD)
     {
         const auto normalDistance = distance12 * distance13 * sinAlpha;
 

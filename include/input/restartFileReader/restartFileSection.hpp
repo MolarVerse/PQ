@@ -43,10 +43,13 @@ namespace input::restartFile
      */
     class RestartFileSection
     {
+        // TODO: remove this public access
+       public:
+        int            _lineNumber = 0;
+        std::ifstream *_fp         = nullptr;
+
        public:
         virtual ~RestartFileSection() = default;
-        int            _lineNumber;
-        std::ifstream *_fp;
 
         virtual std::string keyword()  = 0;
         virtual bool        isHeader() = 0;

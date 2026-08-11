@@ -197,15 +197,23 @@ namespace
         );
         json.beginObject("minimum_from");
         json.value("parameter", "timestep");
-        json.value("factor", 0.001);
+        json.value("factor", constants::FS_TO_PS);
         json.endObject();
         json.value("default", defaults::BERENDSEN_THERMOSTAT_RELAX_TIME);
         json.endObject();
 
         beginParameter(json, "friction", "number", "ps^-1");
         json.value("minimum", 0);
-        json.value("maximum", std::numeric_limits<double>::max() / 1.0e12);
-        json.value("default", defaults::LANGEVIN_THERMOSTAT_FRICTION / 1.0e12);
+        json.value(
+            "maximum",
+            std::numeric_limits<double>::max() /
+                defaults::MAX_FRICTION_CONVERSION
+        );
+        json.value(
+            "default",
+            defaults::LANGEVIN_THERMOSTAT_FRICTION /
+                defaults::MAX_FRICTION_CONVERSION
+        );
         json.endObject();
 
         beginParameter(json, "nh-chain_length", "integer");
@@ -235,7 +243,7 @@ namespace
         );
         json.beginObject("minimum_from");
         json.value("parameter", "timestep");
-        json.value("factor", 0.001);
+        json.value("factor", constants::FS_TO_PS);
         json.endObject();
         json.value("default", defaults::BERENDSEN_MANOSTAT_RELAX_TIME);
         json.endObject();

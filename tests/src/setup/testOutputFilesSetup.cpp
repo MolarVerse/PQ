@@ -22,7 +22,7 @@
 
 #include <gtest/gtest.h>
 
-#include <cstdio>
+#include <filesystem>
 #include <fstream>
 #include <string>
 #include <vector>
@@ -54,7 +54,11 @@ namespace
             ".opt",      ".ref"
         };
         for (const auto &s : suffixes)
-            ::remove((std::string(PREFIX) + s).c_str());
+        {
+            static_cast<void>(
+                std::filesystem::remove((std::string(PREFIX) + s).c_str())
+            );
+        }
     }
 }   // namespace
 

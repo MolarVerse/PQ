@@ -208,7 +208,7 @@ bool FileSettings::isDFTBFileNameSet() { return _isDFTBFileSet; }
  */
 void FileSettings::setMolDescriptorFileName(const std::string_view& name)
 {
-    FileSettings::_molDescriptorFile = name;
+    _molDescriptorFile = name;
 }
 
 /**
@@ -218,7 +218,7 @@ void FileSettings::setMolDescriptorFileName(const std::string_view& name)
  */
 void FileSettings::setGuffDatFileName(const std::string_view& name)
 {
-    FileSettings::_guffDatFile = name;
+    _guffDatFile = name;
 }
 
 /**

@@ -568,7 +568,7 @@ double SimulationBox::calculateRMSForce() const
 {
     const auto scalarForces = getAtomicScalarForces();
 
-    return rms(scalarForces);
+    return stl::rms(scalarForces);
 }
 
 /**
@@ -580,7 +580,7 @@ double SimulationBox::calculateMaxForce() const
 {
     const auto scalarForces = getAtomicScalarForces();
 
-    return max(scalarForces);
+    return stl::max(scalarForces);
 }
 
 /**
@@ -592,7 +592,7 @@ double SimulationBox::calculateRMSForceOld() const
 {
     const auto scalarForces = getAtomicScalarForcesOld();
 
-    return rms(scalarForces);
+    return stl::rms(scalarForces);
 }
 
 /**
@@ -604,7 +604,7 @@ double SimulationBox::calculateMaxForceOld() const
 {
     const auto scalarForces = getAtomicScalarForcesOld();
 
-    return max(scalarForces);
+    return stl::max(scalarForces);
 }
 
 /**

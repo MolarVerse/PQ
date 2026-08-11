@@ -25,7 +25,6 @@
 #define _TEST_QMSETUP_ASE_HPP_
 
 #include <gtest/gtest.h>   // for Test
-#include <stdio.h>         // for remove
 
 #include "qmSettings.hpp"   // for QMMethod, QMSettings
 #include "qmSetup.hpp"      // for QMSetup, setupQM
@@ -55,7 +54,8 @@ class TestQMSetupAse : public ::testing::Test
     {
         delete _engine;
         delete _qmSetup;
-        ::remove("default.log");
+        const auto errorCode = std::remove("default.log");
+        EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
         QMSettings::setQMMethod(QMMethod::NONE);
         QMSettings::setSlakosType("none");
         QMSettings::setUseDispersionCorrection(false);

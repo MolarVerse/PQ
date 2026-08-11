@@ -47,7 +47,7 @@ namespace
 
 TEST(TestRingPolymerEnergyOutput, sumOfRingPolymerEnergiesAddsAllReplicas)
 {
-    RingPolymerEnergyOutput out("dummy.rpe");
+    RingPolymerEnergyOutput   out("dummy.rpe");
     std::vector<PhysicalData> v(3);
     v[0].setRingPolymerEnergy(1.0);
     v[1].setRingPolymerEnergy(2.5);
@@ -57,7 +57,7 @@ TEST(TestRingPolymerEnergyOutput, sumOfRingPolymerEnergiesAddsAllReplicas)
 
 TEST(TestRingPolymerEnergyOutput, maxRingPolymerEnergyReturnsLargestEntry)
 {
-    RingPolymerEnergyOutput out("dummy.rpe");
+    RingPolymerEnergyOutput   out("dummy.rpe");
     std::vector<PhysicalData> v(3);
     v[0].setRingPolymerEnergy(1.0);
     v[1].setRingPolymerEnergy(9.0);
@@ -90,5 +90,6 @@ TEST(TestRingPolymerEnergyOutput, writeEmitsStepSumMaxMeanAndPerBeadEnergies)
     // Individual entries (1.0 and 3.0)
     EXPECT_NE(content.find("1.000000000000"), std::string::npos);
 
-    ::remove(path.c_str());
+    const auto errorCode = std::remove(path.c_str());
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: " << path;
 }

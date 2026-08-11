@@ -47,6 +47,9 @@ namespace potential
         struct matrix;
         std::unique_ptr<matrix> _nonCoulPairsMatPtr;
 
+        static constexpr auto _globalVdwType1Index = 4;
+        static constexpr auto _globalVdwType2Index = 5;
+
        public:
         ForceFieldNonCoulomb();
         ~ForceFieldNonCoulomb() override;

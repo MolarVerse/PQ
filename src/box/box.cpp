@@ -41,7 +41,11 @@ using namespace defaults;
  *
  * @return Vec3D
  */
-Vec3D Box::getBoxAngles() const { return Vec3D(90.0); }
+Vec3D Box::getBoxAngles() const
+{
+    constexpr auto ninetyDegrees = 90.0;
+    return Vec3D{ninetyDegrees};
+}
 
 /**
  * @brief get the box matrix

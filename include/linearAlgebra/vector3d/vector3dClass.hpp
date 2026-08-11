@@ -82,7 +82,7 @@ namespace linearAlgebra
          ********************/
 
         // = operators
-        Vector3D &operator=(Vector3D<T> &);
+        Vector3D &operator=(Vector3D<T> &&) noexcept;
         Vector3D &operator=(const Vector3D<T> &);
 
         // += operators

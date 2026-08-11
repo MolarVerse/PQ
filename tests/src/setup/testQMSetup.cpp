@@ -264,7 +264,8 @@ TEST(TestQMSetup, setupQMLoopTimeLimitDefault)
     getline(file, line);
     EXPECT_EQ(line, "         QM looptime limit: 3600 s");
 
-    ::remove("default.log");
+    const auto errorCode = std::remove("default.log");
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
     delete _engine;
     delete _qmSetup;
 }
@@ -294,7 +295,8 @@ TEST(TestQMSetup, setupQMLoopTimeLimitNegative)
     getline(file, line);
     EXPECT_EQ(line, "         QM looptime limit: unlimited");
 
-    ::remove("default.log");
+    const auto errorCode = std::remove("default.log");
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
     delete _engine;
     delete _qmSetup;
 }
@@ -324,7 +326,8 @@ TEST(TestQMSetup, setupQMLoopTimeLimitZero)
     getline(file, line);
     EXPECT_EQ(line, "         QM looptime limit: unlimited");
 
-    ::remove("default.log");
+    const auto errorCode = std::remove("default.log");
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
     delete _engine;
     delete _qmSetup;
 }
@@ -354,7 +357,8 @@ TEST(TestQMSetup, setupQMLoopTimeLimitPositive)
     getline(file, line);
     EXPECT_EQ(line, "         QM looptime limit: 3.14 s");
 
-    ::remove("default.log");
+    const auto errorCode = std::remove("default.log");
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
     delete _engine;
     delete _qmSetup;
 }
@@ -387,7 +391,8 @@ TEST(TestQMSetup, setupQMRunnerFennol)
     EXPECT_EQ(line, "         Using float64:            false");
     // clang-format on
 
-    ::remove("default.log");
+    const auto errorCode = std::remove("default.log");
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
     delete _engine;
     delete _qmSetup;
 }

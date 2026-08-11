@@ -648,7 +648,8 @@ TEST_F(TestSetup, testWriteSetupInfo)
     getline(file, line);
     EXPECT_EQ(line, "         velocities taken from start file \"input.rst\"");
 
-    ::remove("default.log");
+    const auto errorCode = std::remove("default.log");
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
 }
 
 TEST_F(TestSetup, testWriteSetupInfoMaxwellTrueNonZeroVelocities)
@@ -677,7 +678,8 @@ TEST_F(TestSetup, testWriteSetupInfoMaxwellTrueNonZeroVelocities)
     getline(file, line);
     EXPECT_EQ(line, "         velocities taken from start file \"input.rst\"");
 
-    ::remove("default.log");
+    const auto errorCode = std::remove("default.log");
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
 }
 
 TEST_F(TestSetup, testWriteSetupInfoMaxwellTrueZeroVelocities)
@@ -702,7 +704,8 @@ TEST_F(TestSetup, testWriteSetupInfoMaxwellTrueZeroVelocities)
         "         velocities initialized with Maxwell-Boltzmann distribution"
     );
 
-    ::remove("default.log");
+    const auto errorCode = std::remove("default.log");
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
 }
 
 TEST_F(TestSetup, testWriteSetupInfoMaxwellForceNonZeroVelocities)
@@ -727,5 +730,6 @@ TEST_F(TestSetup, testWriteSetupInfoMaxwellForceNonZeroVelocities)
         "         velocities initialized with Maxwell-Boltzmann distribution"
     );
 
-    ::remove("default.log");
+    const auto errorCode = std::remove("default.log");
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
 }

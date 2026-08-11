@@ -80,7 +80,8 @@ TEST_F(ReferencesOutputTest, writeReferencesFileEmitsHeaderAndBibtexBanner)
         EXPECT_NE(content.find(marker), std::string::npos);
     }
 
-    ::remove(path.c_str());
+    const auto errorCode = std::remove(path.c_str());
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: " << path;
 }
 
 TEST_F(ReferencesOutputTest, rejectsUnwritableOutput)

@@ -144,6 +144,8 @@ namespace constants
     static constexpr double MOMENTUM_TO_FORCE =
         MOMENTUM_UNIT_TO_SI * SI_TO_FORCE_UNIT;
 
+    static constexpr auto NOSE_HOVER_FRICTION_INPUT_TO_INTERNAL = 1.0e12;
+
 }   // namespace constants
 
 #endif   // _INTERNAL_CONVERSION_FACTORS_HPP_

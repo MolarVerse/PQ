@@ -415,7 +415,7 @@ size_t ForceFieldNonCoulomb::getGlobalVdwType1(
     const std::vector<size_t> &indices
 ) const
 {
-    return indices[4];
+    return indices[_globalVdwType1Index];
 }
 
 /**
@@ -428,7 +428,7 @@ size_t ForceFieldNonCoulomb::getGlobalVdwType2(
     const std::vector<size_t> &indices
 ) const
 {
-    return indices[5];
+    return indices[_globalVdwType2Index];
 }
 
 /**

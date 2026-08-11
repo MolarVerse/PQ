@@ -44,8 +44,8 @@ namespace input::parameterFile
     class ParameterFileSection
     {
        protected:
-        int            _lineNumber;
-        std::ifstream *_fp;
+        int            _lineNumber = 0;
+        std::ifstream *_fp         = nullptr;
 
        public:
         virtual ~ParameterFileSection() = default;
