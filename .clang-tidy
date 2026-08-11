@@ -43,6 +43,11 @@ Checks:
   cppcoreguidelines-pro-bounds-array-to-pointer-decay,
   cppcoreguidelines-pro-bounds-constant-array-index,
   cppcoreguidelines-pro-bounds-pointer-arithmetic,
+  cppcoreguidelines-pro-type-const-cast,
+  cppcoreguidelines-pro-type-cstyle-cast,
+  cppcoreguidelines-pro-type-reinterpret-cast,
+  cppcoreguidelines-pro-type-static-cast-downcast,
+  cppcoreguidelines-pro-type-vararg,
   -cppcoreguidelines-owning-memory,
   -cppcoreguidelines-pro-type-member-init,
   -cppcoreguidelines-pro-type-union-access,
@@ -106,11 +111,6 @@ CheckOptions:
 ...
 
 ### TO BE INCLUDED IN THE FUTURE
-  # cppcoreguidelines-pro-type-const-cast,
-  # cppcoreguidelines-pro-type-cstyle-cast,
-  # cppcoreguidelines-pro-type-reinterpret-cast,
-  # cppcoreguidelines-pro-type-static-cast-downcast,
-  # cppcoreguidelines-pro-type-vararg,
   # cppcoreguidelines-rvalue-reference-param-not-moved,
   # cppcoreguidelines-slicing,
   # cppcoreguidelines-special-member-functions,
