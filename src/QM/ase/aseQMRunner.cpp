@@ -263,17 +263,20 @@ void AseQMRunner::run(
     std::jthread timeoutThread{[this](const std::stop_token stopToken)
                                { throwAfterTimeout(stopToken); }};
 
-    startTimingsSection("Build ASE Atoms");
-    buildAseAtoms(simBox);
-    stopTimingsSection("Build ASE Atoms");
+    {
+        auto _ = scoped("Build ASE Atoms");
+        buildAseAtoms(simBox);
+    }
 
-    startTimingsSection("Execute ASE QM");
-    execute();
-    stopTimingsSection("Execute ASE QM");
+    {
+        auto _ = scoped("Execute ASE QM");
+        execute();
+    }
 
-    startTimingsSection("Collect ASE Data");
-    collectData(simBox, physicalData);
-    stopTimingsSection("Collect ASE Data");
+    {
+        auto _ = scoped("Collect ASE Data");
+        collectData(simBox, physicalData);
+    }
 
     timeoutThread.request_stop();
 }

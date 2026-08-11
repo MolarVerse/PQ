@@ -1,6 +1,7 @@
 add_library(timings
     timer.cpp
     timingsSection.cpp
+    timingsSectionGuard.cpp
     globalTimer.cpp
 )
 

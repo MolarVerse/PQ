@@ -82,9 +82,10 @@ TEST(TestTimingsOutput, writeListsRegisteredSubTimers)
     global.startSimulationTimer();
 
     Timer t("MySection");
-    t.startTimingsSection("inner");
-    std::this_thread::sleep_for(std::chrono::milliseconds(1));
-    t.stopTimingsSection("inner");
+    {
+        auto _ = t.scoped("inner");
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
 
     global.addTimer(t);
     std::this_thread::sleep_for(std::chrono::milliseconds(1));
