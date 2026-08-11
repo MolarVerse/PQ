@@ -271,7 +271,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            clangd-20 gcc-13 g++-13 mold ninja-build
+            clangd-20 gcc-13 g++-13 mold
           sudo update-alternatives \
             --install /usr/bin/clangd clangd /usr/bin/clangd-20 100
 
@@ -290,12 +290,13 @@ jobs:
 
       - name: Build tests and coverage
         run: |
-          cmake -S . -B build -G Ninja \
+          cmake -S . -B build \
             -DCMAKE_BUILD_TYPE=Debug \
             -DBUILD_WITH_DOCS=OFF \
             -DBUILD_WITH_GCOVR=ON \
             -DBUILD_WITH_NATIVE=OFF
-          cmake --build build --target coverage_xml --parallel "$(nproc)"
+          cmake --build build --parallel "$(nproc)"
+          cmake --build build --target coverage_xml
         env:
           CC: gcc-13
           CXX: g++-13
