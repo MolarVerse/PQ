@@ -22,6 +22,8 @@
 
 #include "mmmdEngine.hpp"
 
+#include "virial.hpp"
+
 using namespace engine;
 
 /**
@@ -53,7 +55,8 @@ void MMMDEngine::calculateForces()
 
     _intraNonBonded->calculate(*_simulationBox, *_physicalData);
 
-    _virial->calculateVirial(*_simulationBox, *_physicalData);
+    const auto virial = virial::Virial::calculateVirial(*_simulationBox);
+    _physicalData->setVirial(virial);
 
     _forceField->calculateBondedInteractions(*_simulationBox, *_physicalData);
 

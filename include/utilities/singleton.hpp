@@ -20,39 +20,35 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MOLECULAR_VIRIAL_HPP_
+#ifndef _SINGLETON_HPP_
+#define _SINGLETON_HPP_
 
-#define _MOLECULAR_VIRIAL_HPP_
-
-#include "simulationBox.hpp"
-#include "virial.hpp"
-
-namespace virial
+/**
+ * @brief Singleton class template.
+ *
+ * This header file defines a Singleton class template that provides a
+ * thread-safe implementation of the Singleton design pattern. It ensures that
+ * only one instance of the specified type T is created and provides global
+ * access to that instance.
+ *
+ * @tparam T The type of the singleton instance.
+ */
+template <typename T>
+class Singleton
 {
-    /**
-     * @class MolecularVirial
-     *
-     * @brief Class for virial calculation of molecular systems
-     *
-     * @details overrides calculateVirial() function to include intra-molecular
-     * virial correction
-     */
-    class MolecularVirial : public Virial
+   public:
+    static T& getInstance()
     {
-       public:
-        MolecularVirial();
+        static T instance;
+        return instance;
+    }
 
-        std::shared_ptr<Virial> clone() const override;
+    Singleton(const Singleton&)            = delete;
+    Singleton& operator=(const Singleton&) = delete;
 
-        void intraMolecularVirialCorrection(
-            simulationBox::SimulationBox &,
-            physicalData::PhysicalData &
-        ) override;
-        linearAlgebra::tensor3D intraMolecularVirialCorrection(
-            simulationBox::SimulationBox &
-        ) const override;
-    };
+   protected:
+    Singleton()  = default;
+    ~Singleton() = default;
+};
 
-}   // namespace virial
-
-#endif   // _MOLECULAR_VIRIAL_HPP_
+#endif   // _SINGLETON_HPP_

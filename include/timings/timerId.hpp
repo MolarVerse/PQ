@@ -20,31 +20,19 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _ATOMIC_VIRIAL_HPP_
+#ifndef _TIMER_ID_HPP_
+#define _TIMER_ID_HPP_
 
-#define _ATOMIC_VIRIAL_HPP_
+#include <cstdint>
+#include <mstd/enum.hpp>
 
-#include "virial.hpp"
+#define TIMER_ID_LIST(X) \
+    X(EngineOutput)      \
+    X(Constraints)       \
+    X(CellList)          \
+    X(PhysicalData)      \
+    X(Simulation)
 
-namespace virial
-{
-    /**
-     * @class AtomicVirial
-     *
-     * @brief Class for virial calculation of atomic systems
-     *
-     * @details dummy class for atomic systems, since no virial correction is
-     * needed
-     *
-     */
-    class AtomicVirial : public Virial
-    {
-       public:
-        AtomicVirial();
+MSTD_ENUM(TimerId, std::uint8_t, TIMER_ID_LIST);
 
-        std::shared_ptr<Virial> clone() const override;
-    };
-
-}   // namespace virial
-
-#endif   // _ATOMIC_VIRIAL_HPP_
+#endif   // _TIMER_ID_HPP_

@@ -68,7 +68,6 @@ namespace engine
 
         physicalData::PhysicalData _averagePhysicalData;
 
-        std::shared_ptr<virial::Virial>                 _virial;
         std::shared_ptr<potential::Potential>           _potential;
         std::shared_ptr<physicalData::PhysicalData>     _physicalData;
         std::shared_ptr<simulationBox::SimulationBox>   _simulationBox;
@@ -122,7 +121,6 @@ namespace engine
         [[nodiscard]] constraints::Constraints       &getConstraints();
         [[nodiscard]] forceField::ForceField         &getForceField();
         [[nodiscard]] intraNonBonded::IntraNonBonded &getIntraNonBonded();
-        [[nodiscard]] virial::Virial                 &getVirial();
         [[nodiscard]] potential::Potential           &getPotential();
 
         /*************************
@@ -146,7 +144,6 @@ namespace engine
 
         [[nodiscard]] forceField::ForceField         *getForceFieldPtr();
         [[nodiscard]] potential::Potential           *getPotentialPtr();
-        [[nodiscard]] virial::Virial                 *getVirialPtr();
         [[nodiscard]] simulationBox::CellList        *getCellListPtr();
         [[nodiscard]] simulationBox::SimulationBox   *getSimulationBoxPtr();
         [[nodiscard]] physicalData::PhysicalData     *getPhysicalDataPtr();
@@ -159,7 +156,8 @@ namespace engine
 
         [[nodiscard]]
         std::shared_ptr<forceField::ForceField> getSharedForceField() const;
-        [[nodiscard]] std::shared_ptr<simulationBox::SimulationBox> getSharedSimulationBox(
+        [[nodiscard]]
+        std::shared_ptr<simulationBox::SimulationBox> getSharedSimulationBox(
         ) const;
         [[nodiscard]]
         std::shared_ptr<physicalData::PhysicalData> getSharedPhysicalData(
@@ -171,9 +169,8 @@ namespace engine
         [[nodiscard]]
         std::shared_ptr<intraNonBonded::IntraNonBonded> getSharedIntraNonBonded(
         ) const;
-        [[nodiscard]] std::shared_ptr<virial::Virial> getSharedVirial() const;
-        [[nodiscard]] std::shared_ptr<potential::Potential> getSharedPotential(
-        ) const;
+        [[nodiscard]]
+        std::shared_ptr<potential::Potential> getSharedPotential() const;
 
         /***************************
          * make unique_ptr methods *
@@ -181,8 +178,6 @@ namespace engine
 
         template <typename T>
         void makePotential(T);
-        template <typename T>
-        void makeVirial(T virial);
         template <typename T>
         void makeIntraWater(T &&);
 

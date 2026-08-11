@@ -22,47 +22,13 @@
 
 #include "virial.hpp"
 
-#include "physicalData.hpp"    // for PhysicalData, physicalData, simulationBox
+#include "settings.hpp"
 #include "simulationBox.hpp"   // for SimulationBox
 
 using namespace virial;
 using namespace simulationBox;
-using namespace physicalData;
 using namespace linearAlgebra;
 using namespace pq;
-
-/**
- * @brief calculate virial for general systems
- *
- * @details It calculates the virial for all atoms in the simulation box without
- * any corrections. It already sets the virial in the physicalData object
- *
- * @param simBox
- * @param data
- */
-void Virial::calculateVirial(SimulationBox &simBox, PhysicalData &data)
-{
-    startTimingsSection("Virial");
-
-    _virial = {0.0};
-
-    for (auto &atom : simBox.getAtoms())
-    {
-        const auto forcexyz      = atom->getForce();
-        const auto shiftForcexyz = atom->getShiftForce();
-        const auto xyz           = atom->getPosition();
-
-        const auto tensor = tensorProduct(xyz, forcexyz);
-
-        _virial += tensor + diagonalMatrix(shiftForcexyz);
-
-        atom->setShiftForce(0.0);
-    }
-
-    data.setVirial(_virial);
-
-    stopTimingsSection("Virial");
-}
 
 /**
  * @brief Calculate virial tensor without modifying object state
@@ -78,7 +44,7 @@ void Virial::calculateVirial(SimulationBox &simBox, PhysicalData &data)
  * shift forces are reset to zero. This version is useful when you need the
  * virial value without side effects on the object state.
  */
-tensor3D Virial::calculateVirial(SimulationBox &simBox) const
+tensor3D Virial::calculateVirial(SimulationBox &simBox)
 {
     tensor3D virial = {0.0};
 
@@ -113,7 +79,7 @@ tensor3D Virial::calculateVirial(SimulationBox &simBox) const
  * @param simBox simulation box containing QM atoms
  * @return tensor3D virial tensor from QM atoms
  */
-tensor3D Virial::calculateQMVirial(SimulationBox &simBox) const
+tensor3D Virial::calculateQMVirial(const SimulationBox &simBox)
 {
     tensor3D virial = {0.0};
 
@@ -129,22 +95,41 @@ tensor3D Virial::calculateQMVirial(SimulationBox &simBox) const
 }
 
 /**
- * @brief set the virial
+ * @brief Calculate intramolecular virial correction tensor without side
+ * effects
  *
- * @param virial
+ * @details Computes the intramolecular virial correction from current atomic
+ * forces and positions relative to each molecule's center of mass. This
+ * function only returns the correction tensor and does not modify member state
+ * or PhysicalData.
+ *
+ * @param simBox Simulation box containing molecules
+ * @return tensor3D Intramolecular virial correction tensor
  */
-void Virial::setVirial(const tensor3D &virial) { _virial = virial; }
+tensor3D Virial::intraMolecularVirialCorrection(SimulationBox &simBox)
+{
+    tensor3D virial{0.0};
 
-/**
- * @brief get the virial
- *
- * @return tensor3D
- */
-tensor3D Virial::getVirial() const { return _virial; }
+    if (settings::Settings::getVirialType() == settings::VirialType::ATOMIC)
+        return virial;
 
-/**
- * @brief get the virial type
- *
- * @return settings::VirialType
- */
-settings::VirialType Virial::getVirialType() const { return _virialType; }
+    for (const auto &molecule : simBox.getMolecules())
+    {
+        const auto   centerOfMass  = molecule.getCenterOfMass();
+        const size_t numberOfAtoms = molecule.getNumberOfAtoms();
+
+        for (size_t i = 0; i < numberOfAtoms; ++i)
+        {
+            const auto forcexyz = molecule.getAtomForce(i);
+            const auto xyz      = molecule.getAtomPosition(i);
+
+            auto dxyz = xyz - centerOfMass;
+
+            simBox.applyPBC(dxyz);
+
+            virial -= tensorProduct(dxyz, forcexyz);
+        }
+    }
+
+    return virial;
+}

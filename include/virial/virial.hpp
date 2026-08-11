@@ -24,9 +24,7 @@
 
 #define _VIRIAL_HPP_
 
-#include "settings.hpp"
 #include "staticMatrix.hpp"
-#include "timer.hpp"
 
 namespace simulationBox
 {
@@ -43,51 +41,28 @@ namespace virial
     /**
      * @class Virial
      *
-     * @brief Base class for virial calculation
-     *
      * @details implements virial calculation, which is valid for both atomic
      * and molecular systems
      */
-    class Virial : public timings::Timer
+    class Virial
     {
-       protected:
-        settings::VirialType _virialType;
-
-        linearAlgebra::tensor3D _virial;
-
        public:
-        virtual ~Virial() = default;
+        Virial() = delete;
 
-        virtual std::shared_ptr<Virial> clone() const = 0;
-
-        virtual linearAlgebra::tensor3D calculateVirial(
-            simulationBox::SimulationBox&
-        ) const;
-        virtual linearAlgebra::tensor3D calculateQMVirial(
-            simulationBox::SimulationBox&
-        ) const;
-
-        virtual void calculateVirial(
-            simulationBox::SimulationBox&,
-            physicalData::PhysicalData&
+        [[nodiscard]]
+        static linearAlgebra::tensor3D calculateQMVirial(
+            const simulationBox::SimulationBox&
         );
-        virtual void intraMolecularVirialCorrection(
-            simulationBox::SimulationBox&,
-            physicalData::PhysicalData&
-        )
-        {
-        }
-        virtual linearAlgebra::tensor3D intraMolecularVirialCorrection(
+
+        [[nodiscard]]
+        static linearAlgebra::tensor3D calculateVirial(
             simulationBox::SimulationBox&
-        ) const
-        {
-            return linearAlgebra::tensor3D{0.0};
-        }
+        );
 
-        void setVirial(const linearAlgebra::tensor3D& virial);
-
-        [[nodiscard]] linearAlgebra::tensor3D getVirial() const;
-        [[nodiscard]] settings::VirialType    getVirialType() const;
+        [[nodiscard]]
+        static linearAlgebra::tensor3D intraMolecularVirialCorrection(
+            simulationBox::SimulationBox&
+        );
     };
 }   // namespace virial
 

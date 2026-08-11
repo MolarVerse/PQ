@@ -29,7 +29,6 @@
 #include <memory>   // for make_shared, __shared_ptr_access, shared_ptr
 
 #include "atom.hpp"            // for Atom
-#include "atomicVirial.hpp"    // for AtomicVirial
 #include "molecule.hpp"        // for Molecule
 #include "physicalData.hpp"    // for PhysicalData
 #include "simulationBox.hpp"   // for SimulationBox
@@ -40,10 +39,10 @@ class TestVirial : public ::testing::Test
    protected:
     void SetUp() override
     {
-        _virial = new virial::AtomicVirial();
-        _data   = new physicalData::PhysicalData();
+        _data = new physicalData::PhysicalData();
 
         _simBox = new simulationBox::SimulationBox();
+        settings::Settings::setVirialType(settings::VirialType::ATOMIC);
 
         auto molecule1 = simulationBox::Molecule();
 
