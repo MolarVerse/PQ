@@ -439,7 +439,8 @@ std::vector<int> HybridInputParser::parseSelectionNoPython(
         if (nextPos == std::string::npos)
             nextPos = selection.size();
 
-        std::string_view atomIndexStr(selection.c_str() + pos, nextPos - pos);
+        auto atomIndexStr =
+            std::string_view(selection).substr(pos, nextPos - pos);
 
         // remove all whitespaces from the atom index string
         atomIndexStr.remove_prefix(

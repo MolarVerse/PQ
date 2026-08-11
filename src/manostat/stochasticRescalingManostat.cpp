@@ -95,9 +95,11 @@ StochasticRescalingManostat::StochasticRescalingManostat(
     const double tau,
     const double compressibility
 )
-    : Manostat(targetPressure), _tau(tau), _compressibility(compressibility)
+    : Manostat(targetPressure),
+      _tau(tau),
+      _compressibility(compressibility),
+      _dt(TimingsSettings::getTimeStep())
 {
-    _dt = TimingsSettings::getTimeStep();
 }
 
 /**
@@ -159,7 +161,7 @@ tensor3D StochasticRescalingManostat::calculateMu(const double volume)
     const auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
 
     auto stochasticFactor  = 2.0 * kT * compress / volume;
-    stochasticFactor       *= PRESSURE_FACTOR;
+    stochasticFactor      *= PRESSURE_FACTOR;
     stochasticFactor       = ::sqrt(stochasticFactor) * random;
 
     const auto deltaP = _targetPressure - _pressure;

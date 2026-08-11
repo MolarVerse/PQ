@@ -177,7 +177,7 @@ TEST_F(TestSetup, waterModelSetupCoversAllIntramolecularModels)
 
     for (size_t i = 1; i < models.size(); ++i)
     {
-        WaterModelSettings::setWaterIntraModel(models[i]);
+        WaterModelSettings::setWaterIntraModel(models.at(i));
         WaterModelSetup(*_mdEngine).setup();
     }
 

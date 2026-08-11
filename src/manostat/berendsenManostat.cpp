@@ -50,9 +50,11 @@ BerendsenManostat::BerendsenManostat(
     const double tau,
     const double compressibility
 )
-    : Manostat(targetPressure), _tau(tau), _compressibility(compressibility)
+    : Manostat(targetPressure),
+      _tau(tau),
+      _compressibility(compressibility),
+      _dt(TimingsSettings::getTimeStep())
 {
-    _dt = TimingsSettings::getTimeStep();
 }
 
 /**
@@ -71,7 +73,9 @@ SemiIsotropicBerendsenManostat::SemiIsotropicBerendsenManostat(
 )
     : BerendsenManostat(targetPressure, tau, compressibility),
       _2DAnisotropicAxis(anisotropicAxis),
-      _2DIsotropicAxes(isotropicAxes) {};
+      _2DIsotropicAxes(isotropicAxes)
+{
+}
 
 /**
  * @brief apply Berendsen manostat for NPT ensemble

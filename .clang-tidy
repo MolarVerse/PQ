@@ -13,6 +13,7 @@
 # cppcoreguidelines-non-private-member-variables-in-classes: needs huge rework
 # cppcoreguidelines-pro-type-union-access: should be possible to avoid this warning for Vector3D, but needs a rework of the code base
 # cppcoreguidelines-pro-type-member-init: needs a rework of the code base, but should be possible to fix it for all classes
+# cppcoreguidelines-owning-memory: needs a rework of the code base, but should be possible to fix it for all classes
 ---
 Checks:          
   '
@@ -38,6 +39,11 @@ Checks:
   cppcoreguidelines-noexcept-destructor,
   cppcoreguidelines-noexcept-move-operations,
   cppcoreguidelines-noexcept-swap,
+  cppcoreguidelines-prefer-member-initializer,
+  cppcoreguidelines-pro-bounds-array-to-pointer-decay,
+  cppcoreguidelines-pro-bounds-constant-array-index,
+  cppcoreguidelines-pro-bounds-pointer-arithmetic,
+  -cppcoreguidelines-owning-memory,
   -cppcoreguidelines-pro-type-member-init,
   -cppcoreguidelines-pro-type-union-access,
   -cppcoreguidelines-non-private-member-variables-in-classes,
@@ -100,11 +106,6 @@ CheckOptions:
 ...
 
 ### TO BE INCLUDED IN THE FUTURE
-  # cppcoreguidelines-owning-memory,
-  # cppcoreguidelines-prefer-member-initializer,
-  # cppcoreguidelines-pro-bounds-array-to-pointer-decay,
-  # cppcoreguidelines-pro-bounds-constant-array-index,
-  # cppcoreguidelines-pro-bounds-pointer-arithmetic,
   # cppcoreguidelines-pro-type-const-cast,
   # cppcoreguidelines-pro-type-cstyle-cast,
   # cppcoreguidelines-pro-type-reinterpret-cast,
