@@ -122,7 +122,9 @@ jobs:
         if: steps.changes.outputs.workflow == 'true'
         uses: docker://rhysd/actionlint:1.7.12
         with:
-          args: -color -shellcheck=
+          args: >-
+            -color -shellcheck=
+            -ignore=runner.*codecov/codecov-action@v3.*too.old
 
       - name: Check changelog fragment
         if: >-
@@ -287,16 +289,17 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: python -m pip install clangd-tidy numpy
+        run: python -m pip install clangd-tidy coverage gcovr numpy
 
       - name: Build tests and coverage
         run: |
           cmake -S . -B build \
             -DCMAKE_BUILD_TYPE=Debug \
             -DBUILD_WITH_DOCS=OFF \
+            -DBUILD_WITH_GCOVR=ON \
             -DBUILD_WITH_NATIVE=OFF
           cmake --build build --parallel "$(nproc)"
-          ctest --test-dir build --output-on-failure
+          cmake --build build --target coverage_xml
         env:
           CC: gcc-13
           CXX: g++-13
@@ -311,11 +314,13 @@ jobs:
           --jobs 2
 
       - name: Upload coverage
-        uses: codecov/codecov-action@v7
+        uses: codecov/codecov-action@v3
         with:
           fail_ci_if_error: true
+          gcov: true
           gcov_executable: gcov-13
-          token: ${{ secrets.CODECOV_TOKEN }}
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   arm-release:
     name: ARM Release
