@@ -24,6 +24,7 @@
 
 #define _CELL_LIST_INPUT_PARSER_HPP_
 
+#include "celllist.hpp"
 #include "inputFileParser.hpp"
 
 namespace engine
@@ -41,8 +42,13 @@ namespace input
      */
     class CellListInputParser : public InputFileParser
     {
+        std::shared_ptr<simulationBox::CellList> _cellListPtr;
+
        public:
-        explicit CellListInputParser(engine::Engine &);
+        explicit CellListInputParser(
+            engine::Engine                          &engine,
+            std::shared_ptr<simulationBox::CellList> cellListPtr
+        );
 
         void parseCellListActivated(
             const std::vector<std::string> &,
