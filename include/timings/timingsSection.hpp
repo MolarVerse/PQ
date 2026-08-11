@@ -56,8 +56,8 @@ namespace timings
 
         TimingsSection(const TimingsSection&);
         TimingsSection& operator=(const TimingsSection&);
-        TimingsSection(TimingsSection&&);
-        TimingsSection& operator=(TimingsSection&&);
+        TimingsSection(TimingsSection&&) noexcept;
+        TimingsSection& operator=(TimingsSection&&) noexcept;
 
         void beginTimer();
         void endTimer();
