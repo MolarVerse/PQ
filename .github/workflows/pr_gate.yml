@@ -221,7 +221,7 @@ jobs:
             -DBUILD_WITH_DOCS=OFF \
             -DBUILD_WITH_NATIVE=OFF
           cmake --build build --parallel "$(nproc)"
-          ctest --test-dir build --output-on-failure --parallel "$(nproc)"
+          ctest --test-dir build --output-on-failure
         env:
           CC: gcc-13
           CXX: g++-13
@@ -353,7 +353,7 @@ jobs:
             -DBUILD_WITH_DOCS=OFF \
             -DBUILD_WITH_NATIVE=OFF
           cmake --build build --parallel "$(nproc)"
-          ctest --test-dir build --output-on-failure --parallel "$(nproc)"
+          ctest --test-dir build --output-on-failure
         env:
           CC: gcc-13
           CXX: g++-13
