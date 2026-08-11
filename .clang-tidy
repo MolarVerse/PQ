@@ -48,6 +48,11 @@ Checks:
   cppcoreguidelines-pro-type-reinterpret-cast,
   cppcoreguidelines-pro-type-static-cast-downcast,
   cppcoreguidelines-pro-type-vararg,
+  cppcoreguidelines-rvalue-reference-param-not-moved,
+  cppcoreguidelines-slicing,
+  cppcoreguidelines-special-member-functions,
+  cppcoreguidelines-use-default-member-init,
+  cppcoreguidelines-virtual-class-destructor,
   -cppcoreguidelines-owning-memory,
   -cppcoreguidelines-pro-type-member-init,
   -cppcoreguidelines-pro-type-union-access,
@@ -82,6 +87,8 @@ CheckOptions:
       value:           "0.5;2.0"
     - key:             cppcoreguidelines-avoid-magic-numbers.IgnoredFloatingPointValues
       value:           "0.5;2.0;1.0"
+    - key:             cppcoreguidelines-special-member-functions.AllowSoleDefaultDtor
+      value:           true
 #   - key:             llvmlibc-restrict-system-libc-headers.Includes
 #     value:           'cstdint'
 
@@ -111,11 +118,6 @@ CheckOptions:
 ...
 
 ### TO BE INCLUDED IN THE FUTURE
-  # cppcoreguidelines-rvalue-reference-param-not-moved,
-  # cppcoreguidelines-slicing,
-  # cppcoreguidelines-special-member-functions,
-  # cppcoreguidelines-use-default-member-init,
-  # cppcoreguidelines-virtual-class-destructor,
   # darwin-avoid-spinlock,
   # darwin-dispatch-once-nonstatic,
   # fuchsia-default-arguments-calls,

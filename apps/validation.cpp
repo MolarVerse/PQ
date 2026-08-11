@@ -61,6 +61,11 @@ namespace
         {
         }
 
+        ScopedStreamRedirect(const ScopedStreamRedirect &)            = delete;
+        ScopedStreamRedirect &operator=(const ScopedStreamRedirect &) = delete;
+        ScopedStreamRedirect(ScopedStreamRedirect &&)                 = delete;
+        ScopedStreamRedirect &operator=(ScopedStreamRedirect &&)      = delete;
+
         ~ScopedStreamRedirect() { _stream.rdbuf(_original); }
     };
 

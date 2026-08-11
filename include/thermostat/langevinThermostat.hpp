@@ -46,8 +46,15 @@ namespace thermostat
 
        public:
         explicit LangevinThermostat(const double, const double);
+        LangevinThermostat()  = default;
+        ~LangevinThermostat() = default;
+
+        // copy constructor and copy assignment needed for random number
+        // generator
         LangevinThermostat(const LangevinThermostat &);
-        LangevinThermostat() = default;
+        LangevinThermostat &operator=(const LangevinThermostat &);
+        LangevinThermostat(LangevinThermostat &&) noexcept            = delete;
+        LangevinThermostat &operator=(LangevinThermostat &&) noexcept = delete;
 
         void calculateSigma(const double, const double);
 

@@ -22,7 +22,7 @@
 
 #include "velocityRescalingThermostat.hpp"
 
-#include <cmath>    // for sqrt
+#include <cmath>   // for sqrt
 
 #include "physicalData.hpp"         // for PhysicalData
 #include "simulationBox.hpp"        // for SimulationBox
@@ -59,6 +59,24 @@ VelocityRescalingThermostat::VelocityRescalingThermostat(
 )
     : Thermostat(other), _tau(other._tau)
 {
+}
+
+/**
+ * @brief Copy assignment operator for Velocity Rescaling Thermostat
+ *
+ * @param other
+ * @return VelocityRescalingThermostat&
+ */
+VelocityRescalingThermostat &VelocityRescalingThermostat::operator=(
+    const VelocityRescalingThermostat &other
+)
+{
+    if (this != &other)
+    {
+        Thermostat::operator=(other);
+        _tau = other._tau;
+    }
+    return *this;
 }
 
 /**

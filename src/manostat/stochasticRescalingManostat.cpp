@@ -59,6 +59,26 @@ StochasticRescalingManostat::StochasticRescalingManostat(
 }
 
 /**
+ * @brief copy assignment operator for Stochastic Rescaling Manostat
+ *
+ * @param other
+ * @return StochasticRescalingManostat&
+ */
+StochasticRescalingManostat &StochasticRescalingManostat::operator=(
+    const StochasticRescalingManostat &other
+)
+{
+    if (this != &other)
+    {
+        Manostat::operator=(other);
+        _tau             = other._tau;
+        _compressibility = other._compressibility;
+        _dt              = other._dt;
+    }
+    return *this;
+}
+
+/**
  * @brief Construct a new Stochastic Rescaling Manostat:: Stochastic Rescaling
  *
  * @param targetPressure

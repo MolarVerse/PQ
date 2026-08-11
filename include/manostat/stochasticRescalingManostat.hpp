@@ -46,12 +46,23 @@ namespace manostat
 
        public:
         StochasticRescalingManostat() = default;
-        StochasticRescalingManostat(const StochasticRescalingManostat &other);
         explicit StochasticRescalingManostat(
             const double targetPressure,
             const double tau,
             const double compressibility
         );
+        ~StochasticRescalingManostat() = default;
+
+        // copy constructor and copy assignment needed for random number
+        // generator
+        StochasticRescalingManostat(const StochasticRescalingManostat &other);
+        StochasticRescalingManostat &operator=(
+            const StochasticRescalingManostat &other
+        );
+        StochasticRescalingManostat(StochasticRescalingManostat &&) noexcept =
+            delete;
+        StochasticRescalingManostat &operator=(StochasticRescalingManostat &&
+        ) noexcept = delete;
 
         void applyManostat(
             simulationBox::SimulationBox &,
