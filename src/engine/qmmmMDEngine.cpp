@@ -550,7 +550,10 @@ namespace engine
         std::vector<double> weights;
         weights.reserve(recipientMolecules.size());
 
-        const auto smoothingCOM = smoothingMol.getCenterOfMass();
+        const auto       smoothingCOM = smoothingMol.getCenterOfMass();
+        constexpr double x3Coeff      = 10.0;
+        constexpr double x4Coeff      = 15.0;
+        constexpr double x5Coeff      = 6.0;
 
         for (const auto &recipientMol : recipientMolecules)
         {
@@ -570,7 +573,8 @@ namespace engine
                     const auto x4 = x3 * x;
                     const auto x5 = x4 * x;
 
-                    switchedWeight = 1.0 - 10.0 * x3 + 15.0 * x4 - 6.0 * x5;
+                    switchedWeight =
+                        1.0 - x3Coeff * x3 + x4Coeff * x4 - x5Coeff * x5;
                 }
             }
 
