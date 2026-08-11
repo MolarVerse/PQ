@@ -111,7 +111,7 @@ void StochasticRescalingManostat::applyManostat(
     physicalData::PhysicalData   &physicalData
 )
 {
-    startTimingsSection("Stochastic Rescaling");
+    auto _ = scoped("Stochastic Rescaling");
 
     calculatePressure(simBox, physicalData);
 
@@ -139,8 +139,6 @@ void StochasticRescalingManostat::applyManostat(
 
     std::ranges::for_each(simBox.getMolecules(), scalePositions);
     std::ranges::for_each(simBox.getMolecules(), scaleVelocities);
-
-    stopTimingsSection("Stochastic Rescaling");
 }
 
 /**

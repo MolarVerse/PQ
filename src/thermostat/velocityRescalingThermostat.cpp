@@ -22,7 +22,7 @@
 
 #include "velocityRescalingThermostat.hpp"
 
-#include <cmath>    // for sqrt
+#include <cmath>   // for sqrt
 
 #include "physicalData.hpp"         // for PhysicalData
 #include "simulationBox.hpp"        // for SimulationBox
@@ -74,7 +74,7 @@ void VelocityRescalingThermostat::applyThermostat(
     PhysicalData  &physicalData
 )
 {
-    startTimingsSection("Velocity Rescaling");
+    auto _ = scoped("Velocity Rescaling");
 
     physicalData.calculateTemperature(simulationBox);
 
@@ -111,8 +111,6 @@ void VelocityRescalingThermostat::applyThermostat(
     const auto temperature = _temperature * berendsenFactor * berendsenFactor;
 
     physicalData.setTemperature(temperature);
-
-    stopTimingsSection("Velocity Rescaling");
 }
 
 /**

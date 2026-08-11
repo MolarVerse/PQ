@@ -1,0 +1,1 @@
+- add guarded RAII approach for starting and automatically stopping a timings section with its destructor

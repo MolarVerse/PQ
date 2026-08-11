@@ -131,12 +131,10 @@ void LangevinThermostat::applyThermostat(
     PhysicalData  &data
 )
 {
-    startTimingsSection("LangevinThermostat - Full Step");
+    auto _ = scoped("LangevinThermostat - Full Step");
 
     applyLangevin(simBox);
     data.calculateTemperature(simBox);
-
-    stopTimingsSection("LangevinThermostat - Full Step");
 }
 
 /**
@@ -152,11 +150,9 @@ void LangevinThermostat::applyThermostatHalfStep(
     PhysicalData &
 )
 {
-    startTimingsSection("LangevinThermostat - Half Step");
+    auto _ = scoped("LangevinThermostat - Half Step");
 
     applyLangevin(simBox);
-
-    stopTimingsSection("LangevinThermostat - Half Step");
 }
 
 /***************************

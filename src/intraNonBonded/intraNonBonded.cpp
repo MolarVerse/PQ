@@ -106,7 +106,7 @@ void IntraNonBonded::calculate(
     PhysicalData        &physicalData
 )
 {
-    startTimingsSection("IntraNonBonded");
+    auto _ = scoped("IntraNonBonded");
 
     auto calculateSingleContr = [this, &box, &physicalData](auto &intraMap)
     {
@@ -119,8 +119,6 @@ void IntraNonBonded::calculate(
     };
 
     std::ranges::for_each(_intraNonBondedMaps, calculateSingleContr);
-
-    stopTimingsSection("IntraNonBonded");
 }
 
 /*************************
