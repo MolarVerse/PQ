@@ -167,10 +167,11 @@ jobs:
           set -euo pipefail
 
           header_lines="$(wc -l < config/licenseHeader.txt)"
+          expected_header="$(cat config/licenseHeader.txt)"
           missing=()
           while IFS= read -r file; do
-            if ! cmp -s config/licenseHeader.txt \
-              <(head -n "$header_lines" "$file"); then
+            file_header="$(head -n "$header_lines" "$file")"
+            if [[ "$file_header" != "$expected_header" ]]; then
               missing+=("$file")
             fi
           done < <(
