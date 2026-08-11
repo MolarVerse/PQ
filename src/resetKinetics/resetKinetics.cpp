@@ -82,7 +82,7 @@ void ResetKinetics::reset(
     SimulationBox &simBox
 )
 {
-    startTimingsSection("Reset Kinetics");
+    auto _ = scoped("Reset Kinetics");
 
     _momentum        = data.getMomentum() * S_TO_FS;
     _angularMomentum = data.getAngularMomentum() * S_TO_FS;
@@ -113,8 +113,6 @@ void ResetKinetics::reset(
     data.setTemperature(_temperature);
     data.setMomentum(_momentum * FS_TO_S);
     data.setAngularMomentum(_angularMomentum * FS_TO_S);
-
-    stopTimingsSection("Reset Kinetics");
 }
 
 /**

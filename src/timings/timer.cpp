@@ -203,3 +203,14 @@ std::string Timer::getTimerName() const { return _name; }
  * @return Timer
  */
 Timer Timer::getTimer() const { return *this; }
+
+/**
+ * @brief get a timings section guard
+ *
+ * @param name
+ * @return TimingsSectionGuard
+ */
+TimingsSectionGuard Timer::scoped(const std::string_view name)
+{
+    return TimingsSectionGuard(*this, name);
+}

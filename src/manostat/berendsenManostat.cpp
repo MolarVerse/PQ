@@ -71,7 +71,9 @@ SemiIsotropicBerendsenManostat::SemiIsotropicBerendsenManostat(
 )
     : BerendsenManostat(targetPressure, tau, compressibility),
       _2DAnisotropicAxis(anisotropicAxis),
-      _2DIsotropicAxes(isotropicAxes) {};
+      _2DIsotropicAxes(isotropicAxes)
+{
+}
 
 /**
  * @brief apply Berendsen manostat for NPT ensemble
@@ -84,7 +86,7 @@ void BerendsenManostat::applyManostat(
     PhysicalData  &physicalData
 )
 {
-    startTimingsSection("Berendsen");
+    auto _ = scoped("Berendsen");
 
     calculatePressure(simBox, physicalData);
 
@@ -108,8 +110,6 @@ void BerendsenManostat::applyManostat(
     { molecule.scale(mu, simBox.getBox()); };
 
     std::ranges::for_each(simBox.getMolecules(), scaleMolecule);
-
-    stopTimingsSection("Berendsen");
 }
 
 /**
