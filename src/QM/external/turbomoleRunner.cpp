@@ -143,7 +143,12 @@ void TurbomoleRunner::execute(SimulationBox &box)
         FileSettings::getTMFileName(),
         FileSettings::getPointChargeFileName()
     );
-    ::system(command.c_str());
+    const auto status = ::system(command.c_str());
+
+    if (status != 0)
+        throw QMRunnerException(
+            std::format("Turbomole runner failed with exit status {}.", status)
+        );
 
     _isFirstExecution = false;
     _usePointCharges  = false;
