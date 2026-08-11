@@ -1,0 +1,2 @@
+- Consolidate pull-request checks into one cancellable gate and move exhaustive build variants to extended CI.
+- Update coverage and documentation workflows to supported action runtimes.

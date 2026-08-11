@@ -1,0 +1,5 @@
+ase
+pqanalysis
+pyscf==2.9.0
+pytest
+pytest-cov
