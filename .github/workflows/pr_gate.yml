@@ -24,6 +24,7 @@ jobs:
       base_sha: ${{ steps.changes.outputs.base_sha }}
       build: ${{ steps.changes.outputs.build }}
       head_sha: ${{ steps.changes.outputs.head_sha }}
+      lint_all: ${{ steps.changes.outputs.lint_all }}
       lto: ${{ steps.changes.outputs.lto }}
       perf: ${{ steps.changes.outputs.perf }}
 
@@ -50,6 +51,7 @@ jobs:
 
           build=false
           cpp=false
+          lint_all=false
           lto=false
           perf=false
           workflow=false
@@ -75,8 +77,14 @@ jobs:
             esac
 
             case "$path" in
-              .cmake/*|.github/ci/*|.gitmodules|apps/*|benchmarks/CMakeLists.txt|benchmarks/src/*|external/*|include/*|integration_tests/*|src/*|tests/*|CMakeLists.txt|scripts/clang_tidy.sh)
+              .clang-tidy|.cmake/*|.github/ci/*|.gitmodules|apps/*|benchmarks/CMakeLists.txt|benchmarks/src/*|external/*|include/*|integration_tests/*|src/*|tests/*|CMakeLists.txt|scripts/clang_tidy.sh)
                 build=true
+                ;;
+            esac
+
+            case "$path" in
+              .clang-tidy|scripts/clang_tidy.sh)
+                lint_all=true
                 ;;
             esac
 
@@ -87,7 +95,7 @@ jobs:
             esac
 
             case "$path" in
-              *.c|*.cc|*.cpp|*.cxx|*.h|*.hh|*.hpp|*.hxx|*.tpp|.clang-format|config/licenseHeader.txt)
+              *.c|*.cc|*.cpp|*.cxx|*.h|*.hh|*.hpp|*.hxx|*.tpp|.clang-format|config/licenseHeader.txt|scripts/addLicense.sh)
                 cpp=true
                 ;;
             esac
@@ -104,6 +112,7 @@ jobs:
             echo "build=$build"
             echo "cpp=$cpp"
             echo "head_sha=$head_sha"
+            echo "lint_all=$lint_all"
             echo "lto=$lto"
             echo "perf=$perf"
             echo "workflow=$workflow"
@@ -112,7 +121,7 @@ jobs:
           {
             echo "### Changed paths"
             echo
-            echo "build=$build, cpp=$cpp, lto=$lto, perf=$perf, workflow=$workflow"
+            echo "build=$build, cpp=$cpp, lint_all=$lint_all, lto=$lto, perf=$perf, workflow=$workflow"
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Test changelog tooling
@@ -307,11 +316,17 @@ jobs:
       - name: Lint changed C++ files
         env:
           BASE_SHA: ${{ needs.preflight.outputs.base_sha }}
-        run: >-
-          scripts/clang_tidy.sh
-          --base "$BASE_SHA"
-          --build-dir build
-          --jobs 2
+          LINT_ALL: ${{ needs.preflight.outputs.lint_all }}
+        run: |
+          set -euo pipefail
+          mode=(--base "$BASE_SHA")
+          if [[ "$LINT_ALL" == "true" ]]; then
+            mode=(--all)
+          fi
+          scripts/clang_tidy.sh \
+            "${mode[@]}" \
+            --build-dir build \
+            --jobs 2
 
       - name: Upload coverage
         uses: codecov/codecov-action@v3
