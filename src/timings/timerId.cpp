@@ -30,6 +30,9 @@
  */
 std::string toString(TimerId id)
 {
+    if (id == TimerId::DefaultTimings)
+        return "Default Timings";
+
     if (id == TimerId::CellList)
         return "Cell List";
 
