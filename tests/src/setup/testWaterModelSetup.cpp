@@ -146,7 +146,7 @@ TEST_F(TestSetup, waterModelSetupCoversAllIntermolecularModels)
         WaterInterModel::SPC_MTR
     );
 
-    _mdEngine->getCellList().activate();
+    _mdEngine->getCellList()->activate();
     setupInterModel<waterModel::TIP3PmTRInterParam>(
         *_mdEngine,
         WaterInterModel::TIP3P_MTR
@@ -177,12 +177,13 @@ TEST_F(TestSetup, waterModelSetupCoversAllIntramolecularModels)
 
     for (size_t i = 1; i < models.size(); ++i)
     {
-        WaterModelSettings::setWaterIntraModel(models[i]);
+        WaterModelSettings::setWaterIntraModel(models.at(i));
         WaterModelSetup(*_mdEngine).setup();
     }
 
-    EXPECT_TRUE(_mdEngine->getConstraints().isShakeActive());
-    EXPECT_EQ(_mdEngine->getConstraints().getNumberOfBondConstraints(), 18);
+    const auto &constraints = _mdEngine->getConstraints();
+    EXPECT_TRUE(constraints->isShakeActive());
+    EXPECT_EQ(constraints->getNumberOfBondConstraints(), 18);
 }
 
 TEST_F(TestSetup, waterModelSetupRejectsMissingWaterType)

@@ -154,13 +154,6 @@ bool Engine::isIntraNonBondedActivated() const
 }
 
 /**
- * @brief get the reference to the cell list
- *
- * @return CellList&
- */
-CellList &Engine::getCellList() { return *_cellList; }
-
-/**
  * @brief get the reference to the simulation box
  *
  * @return SimulationBox&
@@ -180,13 +173,6 @@ PhysicalData &Engine::getPhysicalData() { return *_physicalData; }
  * @return PhysicalData&
  */
 PhysicalData &Engine::getAveragePhysicalData() { return _averagePhysicalData; }
-
-/**
- * @brief get the reference to the Constraints
- *
- * @return timings::Timer&
- */
-Constraints &Engine::getConstraints() { return *_constraints; }
 
 /**
  * @brief get the reference to the force field
@@ -238,13 +224,6 @@ Potential *Engine::getPotentialPtr() { return _potential.get(); }
 Virial *Engine::getVirialPtr() { return _virial.get(); }
 
 /**
- * @brief get the pointer to the cell list
- *
- * @return CellList*
- */
-CellList *Engine::getCellListPtr() { return _cellList.get(); }
-
-/**
  * @brief get the pointer to the simulation box
  *
  * @return SimulationBox*
@@ -257,13 +236,6 @@ SimulationBox *Engine::getSimulationBoxPtr() { return _simulationBox.get(); }
  * @return PhysicalData*
  */
 PhysicalData *Engine::getPhysicalDataPtr() { return _physicalData.get(); }
-
-/**
- * @brief get the pointer to the constraints
- *
- * @return Constraints*
- */
-Constraints *Engine::getConstraintsPtr() { return _constraints.get(); }
 
 /**
  * @brief get the pointer to the intra non bonded interactions
@@ -402,9 +374,9 @@ std::shared_ptr<PhysicalData> Engine::getSharedPhysicalData() const
 /**
  * @brief get the shared pointer to the cell list
  *
- * @return std::shared_ptr<CellList>
+ * @return const std::shared_ptr<CellList>&
  */
-std::shared_ptr<CellList> Engine::getSharedCellList() const
+const std::shared_ptr<CellList> &Engine::getCellList() const
 {
     return _cellList;
 }
@@ -412,9 +384,9 @@ std::shared_ptr<CellList> Engine::getSharedCellList() const
 /**
  * @brief get the shared pointer to the constraints
  *
- * @return std::shared_ptr<Constraints>
+ * @return const std::shared_ptr<Constraints>&
  */
-std::shared_ptr<Constraints> Engine::getSharedConstraints() const
+const std::shared_ptr<Constraints> &Engine::getConstraints() const
 {
     return _constraints;
 }

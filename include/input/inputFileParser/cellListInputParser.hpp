@@ -31,6 +31,11 @@ namespace engine
     class Engine;   // forward declaration
 }   // namespace engine
 
+namespace simulationBox
+{
+    class CellList;   // forward declaration
+}   // namespace simulationBox
+
 namespace input
 {
     /**
@@ -41,8 +46,13 @@ namespace input
      */
     class CellListInputParser : public InputFileParser
     {
+        std::shared_ptr<simulationBox::CellList> _cellListPtr;
+
        public:
-        explicit CellListInputParser(engine::Engine &);
+        explicit CellListInputParser(
+            engine::Engine                          &engine,
+            std::shared_ptr<simulationBox::CellList> cellListPtr
+        );
 
         void parseCellListActivated(
             const std::vector<std::string> &,

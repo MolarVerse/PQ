@@ -326,6 +326,8 @@ void WaterModelSetup::shakeSetupForRigidWater(
     const size_t H1Index = 1;
     const size_t H2Index = 2;
 
+    const auto &constraints = _engine.getConstraints();
+
     for (auto &waterMol : _engine.getSimulationBox().getWaterTypeMolecules())
     {
         auto bondConstraintOH1 =
@@ -335,12 +337,12 @@ void WaterModelSetup::shakeSetupForRigidWater(
         auto bondConstraintHH =
             BondConstraint(&waterMol, &waterMol, H1Index, H2Index, dHH);
 
-        _engine.getConstraints().addBondConstraint(bondConstraintOH1);
-        _engine.getConstraints().addBondConstraint(bondConstraintOH2);
-        _engine.getConstraints().addBondConstraint(bondConstraintHH);
+        constraints->addBondConstraint(bondConstraintOH1);
+        constraints->addBondConstraint(bondConstraintOH2);
+        constraints->addBondConstraint(bondConstraintHH);
     }
 
-    _engine.getConstraints().activateShake();
+    constraints->activateShake();
 }
 
 /**
@@ -382,7 +384,7 @@ void WaterModelSetup::makeInterWater()
 
     std::unique_ptr<InterWaterStrategy> strategy;
 
-    auto isCellListActivated = _engine.getCellList().isActive();
+    auto isCellListActivated = _engine.getCellList()->isActive();
     if (isCellListActivated)
         strategy = std::make_unique<InterWaterStrategyCellList>();
     else

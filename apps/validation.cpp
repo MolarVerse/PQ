@@ -61,6 +61,11 @@ namespace
         {
         }
 
+        ScopedStreamRedirect(const ScopedStreamRedirect &)            = delete;
+        ScopedStreamRedirect &operator=(const ScopedStreamRedirect &) = delete;
+        ScopedStreamRedirect(ScopedStreamRedirect &&)                 = delete;
+        ScopedStreamRedirect &operator=(ScopedStreamRedirect &&)      = delete;
+
         ~ScopedStreamRedirect() { _stream.rdbuf(_original); }
     };
 
@@ -248,7 +253,7 @@ namespace
                 "Parameter file needed for requested simulation setup"
             );
 
-        if (engine.getConstraints().isMShakeActive() &&
+        if (engine.getConstraints()->isMShakeActive() &&
             FileSettings::getMShakeFileName().empty())
             throw customException::InputFileException(
                 "M-SHAKE file needed for requested simulation setup"
