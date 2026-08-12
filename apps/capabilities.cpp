@@ -41,7 +41,6 @@ namespace
 {
     constexpr bool withAse             = PQ_BUILD_WITH_ASE;
     constexpr bool withMpi             = PQ_BUILD_WITH_MPI;
-    constexpr bool withKokkos          = PQ_BUILD_WITH_KOKKOS;
     constexpr bool withPythonBindings  = PQ_BUILD_WITH_PYTHON_BINDINGS;
     constexpr bool withPythonEmbedding = PQ_BUILD_WITH_PYTHON_EMBEDDING;
     constexpr bool sharedBuild         = PQ_BUILD_SHARED;
@@ -77,7 +76,6 @@ namespace
         json.beginObject("build");
         json.value("ase", withAse);
         json.value("mpi", withMpi);
-        json.value("kokkos", withKokkos);
         json.value("python_bindings", withPythonBindings);
         json.value("python_embedding", withPythonEmbedding);
         json.value("shared", sharedBuild);
@@ -323,7 +321,7 @@ void cli::writeCapabilities(std::ostream &output)
     auto json = JsonWriter(output);
     json.beginObject();
     json.value("schema", "pq.capabilities");
-    json.value("schema_version", 1);
+    json.value("schema_version", 2);
     json.value("version", sysinfo::VERSION);
     writeBuildCapabilities(json);
     writeCliCapabilities(json);

@@ -40,13 +40,6 @@
 #include "simulationBox.hpp"
 #include "virial.hpp"
 
-#ifdef WITH_KOKKOS
-#include "coulombWolf_kokkos.hpp"
-#include "lennardJones_kokkos.hpp"
-#include "potential_kokkos.hpp"
-#include "simulationBox_kokkos.hpp"
-#endif
-
 namespace engine
 {
 
@@ -81,13 +74,6 @@ namespace engine
             std::make_unique<waterModel::IntraWater>();
         std::unique_ptr<waterModel::InterWater> _interWater =
             std::make_unique<waterModel::InterWater>();
-
-#ifdef WITH_KOKKOS
-        simulationBox::KokkosSimulationBox _kokkosSimulationBox;
-        potential::KokkosLennardJones      _kokkosLennardJones;
-        potential::KokkosCoulombWolf       _kokkosCoulombWolf;
-        potential::KokkosPotential         _kokkosPotential;
-#endif
 
        public:
         Engine();
@@ -192,25 +178,6 @@ namespace engine
 
         void setTimer(const timings::GlobalTimer &timer) { _timer = timer; }
         void setInterWater(std::unique_ptr<waterModel::InterWater> interWater);
-
-#ifdef WITH_KOKKOS
-        [[nodiscard]] simulationBox::KokkosSimulationBox &getKokkosSimulationBox(
-        );
-        [[nodiscard]] potential::KokkosLennardJones &getKokkosLennardJones();
-        [[nodiscard]] potential::KokkosCoulombWolf  &getKokkosCoulombWolf();
-        [[nodiscard]] potential::KokkosPotential    &getKokkosPotential();
-        void initKokkosSimulationBox(const size_t numAtoms);
-        void initKokkosLennardJones(const size_t numAtomTypes);
-        void initKokkosCoulombWolf(
-            const double coulombRadiusCutOff,
-            const double kappa,
-            const double wolfParameter1,
-            const double wolfParameter2,
-            const double wolfParameter3,
-            const double prefactor
-        );
-        void initKokkosPotential();
-#endif
     };
 }   // namespace engine
 

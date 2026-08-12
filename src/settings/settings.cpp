@@ -393,14 +393,6 @@ bool Settings::isMMOnlyActivated()
  */
 bool Settings::isRingPolymerMDActivated() { return _isRingPolymerMDActivated; }
 
-/**
- * @brief Returns true if Kokkos is activated
- *
- * @return true/false
- *
- */
-bool Settings::useKokkos() { return _useKokkos; }
-
 /*****************************
  *                           *
  * standard activate methods *
@@ -412,12 +404,6 @@ bool Settings::useKokkos() { return _useKokkos; }
  *
  */
 void Settings::activateRingPolymerMD() { _isRingPolymerMDActivated = true; }
-
-/**
- * @brief activate Kokkos
- *
- */
-void Settings::activateKokkos() { _useKokkos = true; }
 
 /**
  * @brief deactivate ring polymer MD simulations

@@ -34,7 +34,6 @@ Molecular Mechanics
 
 * brute-force pair evaluation
 * :ref:`cell-list <celllistKeys>` pair evaluation
-* optional Kokkos acceleration for supported MM Lennard-Jones/Wolf setups
 
 **Long-range corrections**
 
