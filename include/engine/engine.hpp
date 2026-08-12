@@ -114,7 +114,9 @@ namespace engine
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] simulationBox::CellList        &getCellList();
+        [[nodiscard]]
+        const std::shared_ptr<simulationBox::CellList> &getCellList() const;
+
         [[nodiscard]] simulationBox::SimulationBox   &getSimulationBox();
         [[nodiscard]] physicalData::PhysicalData     &getPhysicalData();
         [[nodiscard]] physicalData::PhysicalData     &getAveragePhysicalData();
@@ -144,7 +146,6 @@ namespace engine
 
         [[nodiscard]] forceField::ForceField         *getForceFieldPtr();
         [[nodiscard]] potential::Potential           *getPotentialPtr();
-        [[nodiscard]] simulationBox::CellList        *getCellListPtr();
         [[nodiscard]] simulationBox::SimulationBox   *getSimulationBoxPtr();
         [[nodiscard]] physicalData::PhysicalData     *getPhysicalDataPtr();
         [[nodiscard]] constraints::Constraints       *getConstraintsPtr();
