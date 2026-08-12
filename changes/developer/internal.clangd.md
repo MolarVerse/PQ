@@ -1,1 +1,2 @@
 - fix a lot of more small clang-tidy warnings (larger one will be handled in separate PRs)
+- address all cppcoreguidline clang-tidy checks and all darwin checks

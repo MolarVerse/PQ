@@ -51,7 +51,7 @@ namespace thermostat
        public:
         VelocityRescalingThermostat() = default;
         explicit VelocityRescalingThermostat(const double, const double);
-        ~VelocityRescalingThermostat() = default;
+        ~VelocityRescalingThermostat() override = default;
 
         // copy constructor and copy assignment needed for random number
         // generator

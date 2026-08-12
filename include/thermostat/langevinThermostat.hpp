@@ -46,8 +46,8 @@ namespace thermostat
 
        public:
         explicit LangevinThermostat(const double, const double);
-        LangevinThermostat()  = default;
-        ~LangevinThermostat() = default;
+        LangevinThermostat()           = default;
+        ~LangevinThermostat() override = default;
 
         // copy constructor and copy assignment needed for random number
         // generator

@@ -51,7 +51,7 @@ namespace manostat
             const double tau,
             const double compressibility
         );
-        ~StochasticRescalingManostat() = default;
+        ~StochasticRescalingManostat() override = default;
 
         // copy constructor and copy assignment needed for random number
         // generator
