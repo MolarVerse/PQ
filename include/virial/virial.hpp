@@ -31,11 +31,6 @@ namespace simulationBox
     class SimulationBox;   // forward declaration
 }
 
-namespace physicalData
-{
-    class PhysicalData;   // forward declaration
-}
-
 namespace virial
 {
     /**
@@ -47,7 +42,8 @@ namespace virial
     class Virial
     {
        public:
-        Virial() = delete;
+        Virial()  = delete;
+        ~Virial() = delete;
 
         [[nodiscard]]
         static linearAlgebra::tensor3D calculateQMVirial(
@@ -61,7 +57,7 @@ namespace virial
 
         [[nodiscard]]
         static linearAlgebra::tensor3D intraMolecularVirialCorrection(
-            simulationBox::SimulationBox&
+            const simulationBox::SimulationBox&
         );
     };
 }   // namespace virial

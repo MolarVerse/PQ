@@ -30,8 +30,12 @@ using namespace simulationBox;
 using namespace linearAlgebra;
 using namespace pq;
 
+using settings::Settings;
+using settings::VirialType;
+
 /**
- * @brief Calculate virial tensor without modifying object state
+ * @brief Calculate virial tensor and reset shift forces to zero in simulation
+ * box
  *
  * @param simBox simulation box containing all atoms
  * @return tensor3D calculated virial tensor
@@ -65,8 +69,7 @@ tensor3D Virial::calculateVirial(SimulationBox &simBox)
 }
 
 /**
- * @brief Calculate virial contribution from QM atoms only without modifying
- * object state
+ * @brief Calculate virial contribution from QM atoms only without side effects
  *
  * @details calculates the virial tensor for QM atoms using the tensor product
  * of atomic positions and forces. This is used in hybrid QM/MM simulations to
@@ -106,22 +109,21 @@ tensor3D Virial::calculateQMVirial(const SimulationBox &simBox)
  * @param simBox Simulation box containing molecules
  * @return tensor3D Intramolecular virial correction tensor
  */
-tensor3D Virial::intraMolecularVirialCorrection(SimulationBox &simBox)
+tensor3D Virial::intraMolecularVirialCorrection(const SimulationBox &simBox)
 {
     tensor3D virial{0.0};
 
-    if (settings::Settings::getVirialType() == settings::VirialType::ATOMIC)
+    if (Settings::getVirialType() == VirialType::ATOMIC)
         return virial;
 
     for (const auto &molecule : simBox.getMolecules())
     {
-        const auto   centerOfMass  = molecule.getCenterOfMass();
-        const size_t numberOfAtoms = molecule.getNumberOfAtoms();
+        const auto centerOfMass = molecule.getCenterOfMass();
 
-        for (size_t i = 0; i < numberOfAtoms; ++i)
+        for (const auto &atom : molecule.getAtoms())
         {
-            const auto forcexyz = molecule.getAtomForce(i);
-            const auto xyz      = molecule.getAtomPosition(i);
+            const auto forcexyz = atom->getForce();
+            const auto xyz      = atom->getPosition();
 
             auto dxyz = xyz - centerOfMass;
 
