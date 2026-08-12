@@ -51,10 +51,11 @@ ForceFieldNonCoulomb::ForceFieldNonCoulomb()
 {
 }
 
-ForceFieldNonCoulomb::~ForceFieldNonCoulomb()                       = default;
-ForceFieldNonCoulomb::ForceFieldNonCoulomb(ForceFieldNonCoulomb &&) = default;
+ForceFieldNonCoulomb::~ForceFieldNonCoulomb() = default;
+ForceFieldNonCoulomb::ForceFieldNonCoulomb(ForceFieldNonCoulomb &&) noexcept =
+    default;
 ForceFieldNonCoulomb &ForceFieldNonCoulomb::operator=(ForceFieldNonCoulomb &&
-)                                                                   = default;
+) noexcept = default;
 
 /**
  * @brief copy constructor

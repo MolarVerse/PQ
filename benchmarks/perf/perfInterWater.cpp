@@ -24,6 +24,8 @@
 
 #include <cmath>
 #include <cstdio>
+#include <iomanip>
+#include <iostream>
 #include <memory>
 
 #ifdef PQ_WITH_CALLGRIND
@@ -154,10 +156,8 @@ int main()
         interWater.calculate(simBox, physicalData, coulombPot, cellList);
 
     // read state so the loop cannot be optimized away
-    std::printf(
-        "%.6f %.6f\n",
-        physicalData.getCoulombEnergy(),
-        physicalData.getNonCoulombEnergy()
-    );
+    std::cout << std::fixed << std::setprecision(6)
+              << physicalData.getCoulombEnergy() << " "
+              << physicalData.getNonCoulombEnergy() << "\n";
     return 0;
 }

@@ -57,6 +57,12 @@ namespace settings
         SimulationBoxSettings()  = delete;
         ~SimulationBoxSettings() = delete;
 
+        SimulationBoxSettings(const SimulationBoxSettings &)       = delete;
+        SimulationBoxSettings(SimulationBoxSettings &&)            = delete;
+        SimulationBoxSettings &operator=(const SimulationBoxSettings &
+        )                                                          = delete;
+        SimulationBoxSettings &operator=(SimulationBoxSettings &&) = delete;
+
         /********************
          * standard setters *
          ********************/
