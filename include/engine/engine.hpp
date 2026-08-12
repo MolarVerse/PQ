@@ -117,11 +117,12 @@ namespace engine
 
         [[nodiscard]]
         const std::shared_ptr<simulationBox::CellList> &getCellList() const;
+        [[nodiscard]]
+        const std::shared_ptr<constraints::Constraints> &getConstraints() const;
 
         [[nodiscard]] simulationBox::SimulationBox   &getSimulationBox();
         [[nodiscard]] physicalData::PhysicalData     &getPhysicalData();
         [[nodiscard]] physicalData::PhysicalData     &getAveragePhysicalData();
-        [[nodiscard]] constraints::Constraints       &getConstraints();
         [[nodiscard]] forceField::ForceField         &getForceField();
         [[nodiscard]] intraNonBonded::IntraNonBonded &getIntraNonBonded();
         [[nodiscard]] virial::Virial                 &getVirial();
@@ -151,7 +152,6 @@ namespace engine
         [[nodiscard]] virial::Virial                 *getVirialPtr();
         [[nodiscard]] simulationBox::SimulationBox   *getSimulationBoxPtr();
         [[nodiscard]] physicalData::PhysicalData     *getPhysicalDataPtr();
-        [[nodiscard]] constraints::Constraints       *getConstraintsPtr();
         [[nodiscard]] intraNonBonded::IntraNonBonded *getIntraNonBondedPtr();
 
         /******************************
@@ -165,10 +165,6 @@ namespace engine
         [[nodiscard]]
         std::shared_ptr<physicalData::PhysicalData> getSharedPhysicalData(
         ) const;
-        [[nodiscard]] std::shared_ptr<simulationBox::CellList> getSharedCellList(
-        ) const;
-        [[nodiscard]]
-        std::shared_ptr<constraints::Constraints> getSharedConstraints() const;
         [[nodiscard]]
         std::shared_ptr<intraNonBonded::IntraNonBonded> getSharedIntraNonBonded(
         ) const;

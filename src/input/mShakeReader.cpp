@@ -96,7 +96,7 @@ void MShakeReader::read()
 
         processAtomLines(atomLines, mShakeReference);
 
-        _engine.getConstraints().addMShakeReference(mShakeReference);
+        _engine.getConstraints()->addMShakeReference(mShakeReference);
     }
 }
 
