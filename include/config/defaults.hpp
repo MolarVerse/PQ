@@ -32,23 +32,24 @@
  */
 struct DefaultFiles
 {
-    static constexpr auto restartFile  = "default.rst";
-    static constexpr auto energyFile   = "default.en";
-    static constexpr auto instEnFile   = "default.instant_en";
-    static constexpr auto momentumFile = "default.mom";
-    static constexpr auto trajFile     = "default.xyz";
-    static constexpr auto velFile      = "default.vel";
-    static constexpr auto forceFile    = "default.force";
-    static constexpr auto chargeFile   = "default.charge";
-    static constexpr auto logFile      = "default.log";
-    static constexpr auto stdoutFile   = "default.stdout";
-    static constexpr auto refFile      = "default.ref";
-    static constexpr auto infoFile     = "default.info";
-    static constexpr auto virialFile   = "default.vir";
-    static constexpr auto stressFile   = "default.stress";
-    static constexpr auto boxFile      = "default.box";
-    static constexpr auto optFile      = "default.opt";
-    static constexpr auto timingsFile  = "default.timings";
+    static constexpr auto restartFile      = "default.rst";
+    static constexpr auto energyFile       = "default.en";
+    static constexpr auto instEnFile       = "default.instant_en";
+    static constexpr auto momentumFile     = "default.mom";
+    static constexpr auto trajFile         = "default.xyz";
+    static constexpr auto hybridCenterFile = "default.center.xyz";
+    static constexpr auto velFile          = "default.vel";
+    static constexpr auto forceFile        = "default.force";
+    static constexpr auto chargeFile       = "default.charge";
+    static constexpr auto logFile          = "default.log";
+    static constexpr auto stdoutFile       = "default.stdout";
+    static constexpr auto refFile          = "default.ref";
+    static constexpr auto infoFile         = "default.info";
+    static constexpr auto virialFile       = "default.vir";
+    static constexpr auto stressFile       = "default.stress";
+    static constexpr auto boxFile          = "default.box";
+    static constexpr auto optFile          = "default.opt";
+    static constexpr auto timingsFile      = "default.timings";
 
     static constexpr auto rpmdRstFile    = "default.rpmd.rst";
     static constexpr auto rpmdTrajFile   = "default.rpmd.xyz";
