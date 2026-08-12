@@ -53,7 +53,6 @@ using SharedPotential      = std::shared_ptr<potential::Potential>;
 using SharedPhysicalData   = std::shared_ptr<physicalData::PhysicalData>;
 using SharedConstraints    = std::shared_ptr<constraints::Constraints>;
 using SharedIntraNonBonded = std::shared_ptr<intraNonBonded::IntraNonBonded>;
-using SharedVirial         = std::shared_ptr<virial::Virial>;
 
 /**
  * @brief Wrapper for the optimizer setup

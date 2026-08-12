@@ -37,6 +37,8 @@ using namespace settings;
 using namespace constants;
 using namespace physicalData;
 
+using virial::intraMolecularVirialCorrection;
+
 /**
  * @brief Constructor for MDEngine
  *
@@ -170,8 +172,7 @@ void MDEngine::takeStepAfterForces()
 
     if (!Settings::isHybridJobtype())
     {
-        const auto virial =
-            virial::Virial::intraMolecularVirialCorrection(*_simulationBox);
+        const auto virial = intraMolecularVirialCorrection(*_simulationBox);
         _physicalData->addVirial(virial);
     }
 

@@ -52,7 +52,7 @@ int main()
 
     for (long i = 0; i < ITERATIONS; ++i)
     {
-        result = virial::Virial::calculateVirial(box);
+        result = virial::calculateVirial(box);
         physicalData.setVirial(result);
     }
 

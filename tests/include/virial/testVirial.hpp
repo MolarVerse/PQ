@@ -39,8 +39,6 @@ class TestVirial : public ::testing::Test
    protected:
     void SetUp() override
     {
-        _data = new physicalData::PhysicalData();
-
         _simBox = new simulationBox::SimulationBox();
         settings::Settings::setVirialType(settings::VirialType::ATOMIC);
 
@@ -82,13 +80,8 @@ class TestVirial : public ::testing::Test
         _simBox->setBoxDimensions(linearAlgebra::Vec3D(10.0, 10.0, 10.0));
     }
 
-    void TearDown() override
-    {
-        delete _data;
-        delete _simBox;
-    }
+    void TearDown() override { delete _simBox; }
 
-    physicalData::PhysicalData   *_data;
     simulationBox::SimulationBox *_simBox;
 };
 

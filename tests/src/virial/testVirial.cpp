@@ -52,10 +52,8 @@ TEST_F(TestVirial, calculateVirial)
                         shiftForce_mol1_atom1 + shiftForce_mol1_atom2 +
                         shiftForce_mol2_atom1;
 
-    const auto virialCalc = virial::Virial::calculateVirial(*_simBox);
-    _data->setVirial(virialCalc);
-
-    EXPECT_EQ(diagonal(_data->getVirial()), virial);
+    const auto virialCalc = calculateVirial(*_simBox);
+    EXPECT_EQ(diagonal(virialCalc), virial);
     EXPECT_EQ(_simBox->getMolecule(0).getAtomShiftForce(0), Vec3D{0});
     EXPECT_EQ(_simBox->getMolecule(0).getAtomShiftForce(1), Vec3D{0});
     EXPECT_EQ(_simBox->getMolecule(1).getAtomShiftForce(0), Vec3D{0});
@@ -63,10 +61,7 @@ TEST_F(TestVirial, calculateVirial)
 
 TEST_F(TestVirial, atomicVirialHasNoIntramolecularCorrection)
 {
-    EXPECT_EQ(
-        virial::Virial::intraMolecularVirialCorrection(*_simBox),
-        tensor3D{0.0}
-    );
+    EXPECT_EQ(intraMolecularVirialCorrection(*_simBox), tensor3D{0.0});
 }
 
 TEST_F(TestVirial, intramolecularCorrection)
@@ -92,10 +87,9 @@ TEST_F(TestVirial, intramolecularCorrection)
                   shiftForce_mol1_atom1 + shiftForce_mol1_atom2 +
                   shiftForce_mol2_atom1;
 
-    const auto virialCalc = virial::Virial::calculateVirial(*_simBox);
-    _data->setVirial(virialCalc);
+    const auto virialCalc = calculateVirial(*_simBox);
 
-    EXPECT_EQ(diagonal(_data->getVirial()), virial);
+    EXPECT_EQ(diagonal(virialCalc), virial);
 }
 
 TEST_F(TestVirial, calculateMolecularVirial)
@@ -123,8 +117,7 @@ TEST_F(TestVirial, calculateMolecularVirial)
 
     PhysicalData physicalData;
 
-    const auto virialCalculated =
-        virial::Virial::intraMolecularVirialCorrection(*_simBox);
+    const auto virialCalculated = intraMolecularVirialCorrection(*_simBox);
 
     EXPECT_EQ(diagonal(virialCalculated), virial);
 }

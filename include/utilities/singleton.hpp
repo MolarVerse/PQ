@@ -20,31 +20,35 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _VIRIAL_HPP_
+#ifndef _SINGLETON_HPP_
+#define _SINGLETON_HPP_
 
-#define _VIRIAL_HPP_
-
-#include "staticMatrix.hpp"
-
-namespace simulationBox
+/**
+ * @brief Singleton class template.
+ *
+ * This header file defines a Singleton class template that provides a
+ * thread-safe implementation of the Singleton design pattern. It ensures that
+ * only one instance of the specified type T is created and provides global
+ * access to that instance.
+ *
+ * @tparam T The type of the singleton instance.
+ */
+template <typename T>
+class Singleton
 {
-    class SimulationBox;   // forward declaration
-}
+   public:
+    static T& getInstance()
+    {
+        static T instance;
+        return instance;
+    }
 
-namespace virial
-{
-    [[nodiscard]]
-    linearAlgebra::tensor3D calculateQMVirial(
-        const simulationBox::SimulationBox&
-    );
+    Singleton(const Singleton&)            = delete;
+    Singleton& operator=(const Singleton&) = delete;
 
-    [[nodiscard]]
-    linearAlgebra::tensor3D calculateVirial(simulationBox::SimulationBox&);
+   protected:
+    Singleton()  = default;
+    ~Singleton() = default;
+};
 
-    [[nodiscard]]
-    linearAlgebra::tensor3D intraMolecularVirialCorrection(
-        const simulationBox::SimulationBox&
-    );
-}   // namespace virial
-
-#endif   // _VIRIAL_HPP_
+#endif   // _SINGLETON_HPP_

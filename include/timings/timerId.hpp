@@ -20,31 +20,19 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _VIRIAL_HPP_
+#ifndef _TIMER_ID_HPP_
+#define _TIMER_ID_HPP_
 
-#define _VIRIAL_HPP_
+#include <cstdint>
+#include <mstd/enum.hpp>
 
-#include "staticMatrix.hpp"
+#define TIMER_ID_LIST(X) \
+    X(EngineOutput)      \
+    X(Constraints)       \
+    X(CellList)          \
+    X(PhysicalData)      \
+    X(Simulation)
 
-namespace simulationBox
-{
-    class SimulationBox;   // forward declaration
-}
+MSTD_ENUM(TimerId, std::uint8_t, TIMER_ID_LIST);
 
-namespace virial
-{
-    [[nodiscard]]
-    linearAlgebra::tensor3D calculateQMVirial(
-        const simulationBox::SimulationBox&
-    );
-
-    [[nodiscard]]
-    linearAlgebra::tensor3D calculateVirial(simulationBox::SimulationBox&);
-
-    [[nodiscard]]
-    linearAlgebra::tensor3D intraMolecularVirialCorrection(
-        const simulationBox::SimulationBox&
-    );
-}   // namespace virial
-
-#endif   // _VIRIAL_HPP_
+#endif   // _TIMER_ID_HPP_
