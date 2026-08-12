@@ -56,7 +56,7 @@ void waterModel::SPCIntraWater::calculate(
     physicalData::PhysicalData&   physicalData
 )
 {
-    startTimingsSection("Calculate Potential");
+    auto _ = scoped("Calculate Potential");
 
     const auto eqOHDistance = getEqOHDistance();
     const auto eqHOHAngle   = getEqHOHAngle();
@@ -143,8 +143,6 @@ void waterModel::SPCIntraWater::calculate(
         oxygen.addForce(-forcexyz);
         hydrogen2.addForce(forcexyz);
     }
-
-    stopTimingsSection("Calculate Potential");
 }
 
 #endif   //  _SPC_INTRA_WATER_TPP_

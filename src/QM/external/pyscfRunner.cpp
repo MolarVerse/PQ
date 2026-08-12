@@ -83,5 +83,10 @@ void PySCFRunner::execute(SimulationBox &)
 
     const auto command = std::format("python {} > pyscf.out", scriptFileName);
 
-    ::system(command.c_str());
+    const auto status = ::system(command.c_str());
+
+    if (status != 0)
+        throw QMRunnerException(
+            std::format("PySCF runner failed with exit status {}.", status)
+        );
 }

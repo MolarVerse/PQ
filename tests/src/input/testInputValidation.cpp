@@ -312,7 +312,7 @@ TEST_F(TestInputValidation, rejectsNonFiniteLangevinRampScale)
 TEST_F(TestInputValidation, rejectsCellListWithoutCoulombCutoff)
 {
     configureMDJob(JobType::MM_MD);
-    _engine->getCellList().activate();
+    _engine->getCellList()->activate();
     PotentialSettings::setCoulombRadiusCutOff(0.0);
 
     ASSERT_THROW_MSG(
@@ -326,7 +326,7 @@ TEST_F(TestInputValidation, rejectsCellListForPureQM)
 {
     configureMDJob(JobType::QM_MD);
     QMSettings::setQMMethod(QMMethod::DFTBPLUS);
-    _engine->getCellList().activate();
+    _engine->getCellList()->activate();
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(),

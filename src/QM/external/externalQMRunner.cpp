@@ -79,39 +79,41 @@ void ExternalQMRunner::run(
 
     _periodicity = per;
 
-    startTimingsSection("Write Coordinates");
-    writeCoordsFile(simBox);
-    stopTimingsSection("Write Coordinates");
+    {
+        auto _ = scoped("Write Coordinates");
+        writeCoordsFile(simBox);
+    }
 
     if (Settings::isHybridJobtype())
     {
-        startTimingsSection("Write Pointcharges");
+        auto _ = scoped("Write Pointcharges");
         writePointChargeFile(simBox);
-        stopTimingsSection("Write Pointcharges");
     }
 
     std::jthread timeoutThread{[this](const std::stop_token stopToken)
                                { throwAfterTimeout(stopToken); }};
 
-    startTimingsSection("Execute External QM Runner");
-    execute(simBox);
-    stopTimingsSection("Execute External QM Runner");
+    {
+        auto _ = scoped("Execute External QM Runner");
+        execute(simBox);
+    }
 
     timeoutThread.request_stop();
 
-    startTimingsSection("Read Forces");
-    readForceFile(simBox, physicalData);
-    stopTimingsSection("Read Forces");
+    {
+        auto _ = scoped("Read Forces");
+        readForceFile(simBox, physicalData);
+    }
 
-    startTimingsSection("Read Charges");
-    readChargeFile(simBox);
-    stopTimingsSection("Read Charges");
+    {
+        auto _ = scoped("Read Charges");
+        readChargeFile(simBox);
+    }
 
     if (per != NON_PERIODIC)
     {
-        startTimingsSection("Read Stress Tensor");
+        auto _ = scoped("Read Stress Tensor");
         readStressTensor(simBox.getBox(), physicalData);
-        stopTimingsSection("Read Stress Tensor");
     }
 }
 

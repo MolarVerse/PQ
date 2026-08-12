@@ -42,7 +42,7 @@ using namespace pq;
  */
 void Virial::calculateVirial(SimulationBox &simBox, PhysicalData &data)
 {
-    startTimingsSection("Virial");
+    auto _ = scoped("Virial");
 
     _virial = {0.0};
 
@@ -60,8 +60,6 @@ void Virial::calculateVirial(SimulationBox &simBox, PhysicalData &data)
     }
 
     data.setVirial(_virial);
-
-    stopTimingsSection("Virial");
 }
 
 /**

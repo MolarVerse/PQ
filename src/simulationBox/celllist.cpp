@@ -222,7 +222,7 @@ void CellList::updateCellList(SimulationBox &simulationBox)
     if (!_activated)
         return;
 
-    startTimingsSection("Update");
+    auto _ = scoped("Update");
 
     if (simulationBox.getBoxSizeHasChanged())
     {
@@ -240,8 +240,6 @@ void CellList::updateCellList(SimulationBox &simulationBox)
     std::ranges::for_each(_cells, clearMoleculesAndAtoms);
 
     addMoleculesToCells(simulationBox);
-
-    stopTimingsSection("Update");
 }
 
 /**

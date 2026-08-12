@@ -115,9 +115,8 @@ void EngineOutput::writeEnergyFile(
     const PhysicalData &physicalData
 )
 {
-    startTimingsSection("EnergyOutput");
+    auto _ = scoped("EnergyOutput");
     _energyOutput->write(step, physicalData);
-    stopTimingsSection("EnergyOutput");
 }
 
 /**
@@ -131,9 +130,8 @@ void EngineOutput::writeInstantEnergyFile(
     const PhysicalData &physicalData
 )
 {
-    startTimingsSection("InstantEnergyOutput");
+    auto _ = scoped("InstantEnergyOutput");
     _instantEnergyOutput->write(step, physicalData);
-    stopTimingsSection("InstantEnergyOutput");
 }
 
 /**
@@ -147,9 +145,8 @@ void EngineOutput::writeMomentumFile(
     const PhysicalData &physicalData
 )
 {
-    startTimingsSection("MomentumOutput");
+    auto _ = scoped("MomentumOutput");
     _momentumOutput->write(step, physicalData);
-    stopTimingsSection("MomentumOutput");
 }
 
 /**
@@ -160,9 +157,8 @@ void EngineOutput::writeMomentumFile(
  */
 void EngineOutput::writeXyzFile(SimulationBox &simulationBox, const size_t step)
 {
-    startTimingsSection("TrajectoryOutput");
+    auto _ = scoped("TrajectoryOutput");
     _xyzOutput->writeXyz(simulationBox, step);
-    stopTimingsSection("TrajectoryOutput");
 }
 
 /**
@@ -173,9 +169,8 @@ void EngineOutput::writeXyzFile(SimulationBox &simulationBox, const size_t step)
  */
 void EngineOutput::writeVelFile(SimulationBox &simulationBox, const size_t step)
 {
-    startTimingsSection("TrajectoryOutput");
+    auto _ = scoped("TrajectoryOutput");
     _velOutput->writeVelocities(simulationBox, step);
-    stopTimingsSection("TrajectoryOutput");
 }
 
 /**
@@ -189,9 +184,8 @@ void EngineOutput::writeForceFile(
     const size_t   step
 )
 {
-    startTimingsSection("TrajectoryOutput");
+    auto _ = scoped("TrajectoryOutput");
     _forceOutput->writeForces(simulationBox, step);
-    stopTimingsSection("TrajectoryOutput");
 }
 
 /**
@@ -205,9 +199,8 @@ void EngineOutput::writeChargeFile(
     const size_t   step
 )
 {
-    startTimingsSection("TrajectoryOutput");
+    auto _ = scoped("TrajectoryOutput");
     _chargeOutput->writeCharges(simulationBox, step);
-    stopTimingsSection("TrajectoryOutput");
 }
 
 /**
@@ -221,9 +214,8 @@ void EngineOutput::writeInfoFile(
     const PhysicalData &physicalData
 )
 {
-    startTimingsSection("InfoOutput");
+    auto _ = scoped("InfoOutput");
     _infoOutput->write(time, physicalData);
-    stopTimingsSection("InfoOutput");
 }
 
 /**
@@ -238,9 +230,8 @@ void EngineOutput::writeRstFile(
     const size_t      step
 )
 {
-    startTimingsSection("RstFileOutput");
+    auto _ = scoped("RstFileOutput");
     _rstFileOutput->write(simulationBox, thermostat, step);
-    stopTimingsSection("RstFileOutput");
 }
 
 /**
@@ -254,9 +245,8 @@ void EngineOutput::writeOptRstFile(
     const size_t   step
 )
 {
-    startTimingsSection("RstFileOutput");
+    auto _ = scoped("RstFileOutput");
     _rstFileOutput->write(simulationBox, Thermostat(), step);
-    stopTimingsSection("RstFileOutput");
 }
 
 /**
@@ -270,9 +260,8 @@ void EngineOutput::writeVirialFile(
     const PhysicalData &physicalData
 )
 {
-    startTimingsSection("VirialOutput");
+    auto _ = scoped("VirialOutput");
     _virialOutput->write(step, physicalData);
-    stopTimingsSection("VirialOutput");
 }
 
 /**
@@ -286,9 +275,8 @@ void EngineOutput::writeStressFile(
     const PhysicalData &physicalData
 )
 {
-    startTimingsSection("StressOutput");
+    auto _ = scoped("StressOutput");
     _stressOutput->write(step, physicalData);
-    stopTimingsSection("StressOutput");
 }
 
 /**
@@ -299,9 +287,8 @@ void EngineOutput::writeStressFile(
  */
 void EngineOutput::writeBoxFile(const size_t step, const Box &simulationBox)
 {
-    startTimingsSection("BoxFileOutput");
+    auto _ = scoped("BoxFileOutput");
     _boxFileOutput->write(step, simulationBox);
-    stopTimingsSection("BoxFileOutput");
 }
 
 /**
@@ -315,9 +302,8 @@ void EngineOutput::writeOptFile(
     const opt::Optimizer &optimizer
 )
 {
-    startTimingsSection("OptOutput");
+    auto _ = scoped("OptOutput");
     _optOutput->write(step, optimizer);
-    stopTimingsSection("OptOutput");
 }
 
 /**
@@ -328,9 +314,8 @@ void EngineOutput::writeOptFile(
  */
 void EngineOutput::writeRingPolymerRstFile(std::vector<SimulationBox> &beads)
 {
-    startTimingsSection("RingPolymerRestartFileOutput");
+    auto _ = scoped("RingPolymerRestartFileOutput");
     _rpmdRstFileOutput->write(beads);
-    stopTimingsSection("RingPolymerRestartFileOutput");
 }
 
 /**
@@ -344,9 +329,8 @@ void EngineOutput::writeRingPolymerXyzFile(
     const size_t                step
 )
 {
-    startTimingsSection("RingPolymerTrajectoryOutput");
+    auto _ = scoped("RingPolymerTrajectoryOutput");
     _rpmdXyzOutput->writeXyz(beads, step);
-    stopTimingsSection("RingPolymerTrajectoryOutput");
 }
 
 /**
@@ -360,9 +344,8 @@ void EngineOutput::writeRingPolymerVelFile(
     const size_t                step
 )
 {
-    startTimingsSection("RingPolymerTrajectoryOutput");
+    auto _ = scoped("RingPolymerTrajectoryOutput");
     _rpmdVelOutput->writeVelocities(beads, step);
-    stopTimingsSection("RingPolymerTrajectoryOutput");
 }
 
 /**
@@ -376,9 +359,8 @@ void EngineOutput::writeRingPolymerForceFile(
     const size_t                step
 )
 {
-    startTimingsSection("RingPolymerTrajectoryOutput");
+    auto _ = scoped("RingPolymerTrajectoryOutput");
     _rpmdForceOutput->writeForces(beads, step);
-    stopTimingsSection("RingPolymerTrajectoryOutput");
 }
 
 /**
@@ -392,9 +374,8 @@ void EngineOutput::writeRingPolymerChargeFile(
     const size_t                step
 )
 {
-    startTimingsSection("RingPolymerTrajectoryOutput");
+    auto _ = scoped("RingPolymerTrajectoryOutput");
     _rpmdChargeOutput->writeCharges(beads, step);
-    stopTimingsSection("RingPolymerTrajectoryOutput");
 }
 
 /**
@@ -408,9 +389,8 @@ void EngineOutput::writeRingPolymerEnergyFile(
     const std::vector<PhysicalData> &dataVector
 )
 {
-    startTimingsSection("RingPolymerEnergyOutput");
+    auto _ = scoped("RingPolymerEnergyOutput");
     _rpmdEnergyOutput->write(step, dataVector);
-    stopTimingsSection("RingPolymerEnergyOutput");
 }
 
 /**

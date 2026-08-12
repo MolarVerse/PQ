@@ -88,7 +88,7 @@ void BerendsenManostat::applyManostat(
     PhysicalData  &physicalData
 )
 {
-    startTimingsSection("Berendsen");
+    auto _ = scoped("Berendsen");
 
     calculatePressure(simBox, physicalData);
 
@@ -112,8 +112,6 @@ void BerendsenManostat::applyManostat(
     { molecule.scale(mu, simBox.getBox()); };
 
     std::ranges::for_each(simBox.getMolecules(), scaleMolecule);
-
-    stopTimingsSection("Berendsen");
 }
 
 /**

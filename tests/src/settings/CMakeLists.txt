@@ -1,4 +1,5 @@
 set(source_files
+    testHybridSettings.cpp
     testPotentialSettings.cpp
     testQMSettings.cpp
     testSettings.cpp

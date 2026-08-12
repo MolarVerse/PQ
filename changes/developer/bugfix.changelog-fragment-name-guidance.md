@@ -1,0 +1,1 @@
+- Explain the allowed characters when a changelog fragment filename is invalid.

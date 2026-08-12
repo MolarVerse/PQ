@@ -20,40 +20,34 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SETUP_HPP_
+#include "timingsSectionGuard.hpp"
 
-#define _SETUP_HPP_
-
-#include <string>   // for string
-
-namespace engine
-{
-    class Engine;   // forward declaration
-}   // namespace engine
+#include "timer.hpp"
 
 namespace timings
 {
-    class Timer;   // forward declaration
+    /**
+     * @brief Construct a new Timings Section Guard:: Timings Section Guard
+     * object
+     *
+     * @param timer
+     * @param name
+     */
+    TimingsSectionGuard::TimingsSectionGuard(
+        Timer&                 timer,
+        const std::string_view name
+    )
+        : _timer(timer), _name(name)
+    {
+        _timer.startTimingsSection(_name);
+    }
+
+    /**
+     * @brief Destroy the Timings Section Guard:: Timings Section Guard object
+     *
+     */
+    TimingsSectionGuard::~TimingsSectionGuard()
+    {
+        _timer.stopTimingsSection(_name);
+    }
 }   // namespace timings
-
-/**
- * @namespace setup
- *
- * @note
- *  This namespace contains all the functions that are used to setup the
- *  simulation. This includes reading the input file, the moldescriptor,
- *  the rst file, the guff.dat file, and post processing the setup.
- *
- */
-namespace setup
-{
-    void setupRequestedJob(const std::string &inputFileName, engine::Engine &);
-
-    void startSetup(engine::Engine &);
-    void endSetup(timings::Timer &, engine::Engine &);
-
-    void readFiles(engine::Engine &);
-    void setupEngine(engine::Engine &);
-}   // namespace setup
-
-#endif   // _SETUP_HPP_
