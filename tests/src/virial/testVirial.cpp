@@ -63,7 +63,10 @@ TEST_F(TestVirial, calculateVirial)
 
 TEST_F(TestVirial, atomicVirialHasNoIntramolecularCorrection)
 {
-    EXPECT_EQ(_virial->intraMolecularVirialCorrection(*_simBox), tensor3D{0.0});
+    EXPECT_EQ(
+        virial::Virial::intraMolecularVirialCorrection(*_simBox),
+        tensor3D{0.0}
+    );
 }
 
 TEST_F(TestVirial, intramolecularCorrection)
