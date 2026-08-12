@@ -11,7 +11,7 @@ usage() {
 Usage: scripts/clang_tidy.sh [options]
 
 Options:
-  --all                 Check every tracked C/C++ file outside external/.
+  --all                 Check every tracked production C/C++ file.
   --base <revision>     Compare HEAD with this revision (default: origin/dev).
   --build-dir <path>    Directory containing compile_commands.json (default: .).
   --jobs <count>        Number of concurrent clangd-tidy workers (default: 1).
@@ -74,15 +74,11 @@ echo "Clangd-Tidy:"
 
 files=()
 if $all_files; then
-    echo "  Mode: all tracked C++ files"
+    echo "  Mode: all tracked production C++ files"
     while IFS= read -r f; do
+        [[ "$f" =~ \.(c|cc|cpp|cxx|h|hh|hpp|hxx|tpp)$ ]] || continue
         [[ -f "$f" ]] && files+=("$f")
-    done < <(
-        git ls-files \
-            '*.cpp' '*.cxx' '*.cc' '*.c' \
-            '*.h' '*.hpp' '*.hxx' '*.tpp' \
-            -- ':!external/**'
-    )
+    done < <(git ls-files apps include src)
 else
     merge_base="$(git merge-base HEAD "$base_ref")"
     echo "  Mode: changed files since $base_ref"
@@ -94,12 +90,14 @@ else
         esac
     done < <(git diff --name-status --find-renames "$merge_base...HEAD")
 
-    # Filter to C++ files only (changed mode may include non-source files)
-    # and exclude anything under external/
+    # Match the full-lint scope: production C++ files only.
     cpp_files=()
     for f in "${files[@]}"; do
-        [[ "$f" == external/* ]] && continue
-        [[ "$f" =~ \.(cpp|cxx|cc|c|h|hpp|hxx|tpp)$ ]] && cpp_files+=("$f")
+        case "$f" in
+        apps/*|include/*|src/*) ;;
+        *) continue ;;
+        esac
+        [[ "$f" =~ \.(c|cc|cpp|cxx|h|hh|hpp|hxx|tpp)$ ]] && cpp_files+=("$f")
     done
     files=("${cpp_files[@]}")
 fi
