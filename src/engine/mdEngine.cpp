@@ -126,11 +126,6 @@ void MDEngine::run()
         );
     }
 
-#ifdef WITH_KOKKOS
-    _kokkosPotential.setTimerName("Kokkos Potential");
-    _timer.addTimer(_kokkosPotential.getTimer());
-#endif
-
     references::ReferencesOutput::writeReferencesFile();
 
     _engineOutput.writeTimingsFile(_timer);

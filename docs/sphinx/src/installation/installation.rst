@@ -63,9 +63,6 @@ Common CMake options are listed below. Boolean options are set with ``On`` or
     * - ``BUILD_WITH_MPI``
       - ``Off``
       - Enable MPI support, mainly used for ring-polymer QM-MD.
-    * - ``BUILD_WITH_KOKKOS``
-      - ``Off``
-      - Enable the Kokkos-accelerated MM path where supported.
     * - ``BUILD_WITH_ASE``
       - ``On``
       - Build ASE-based QM runners and built-in Slater-Koster setup.
@@ -80,7 +77,7 @@ Common CMake options are listed below. Boolean options are set with ``On`` or
       - Optimize release builds for the local CPU. Disable for portable binaries.
     * - ``BUILD_WITH_LTO``
       - ``Off``
-      - Enable link-time optimization for release builds without Kokkos.
+      - Enable link-time optimization for release builds.
 
 Example MPI build:
 
