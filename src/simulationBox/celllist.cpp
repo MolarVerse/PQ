@@ -154,7 +154,7 @@ void CellList::addNeighbouringCells(const double coulombCutoff)
                     "must be at least 2 * neighbour cells + 1 "
                     "(required {}, configured {}). Decrease coulomb radius "
                     "cutoff or increase cell-number.",
-                    axisNames[i],
+                    axisNames.at(i),
                     requiredCells[i],
                     _nCells[i]
                 )

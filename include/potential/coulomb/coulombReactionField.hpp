@@ -50,9 +50,10 @@ namespace potential
             const double coulombRadiusCutOff,
             const double epsilon
         )
-            : CoulombPotential{coulombRadiusCutOff}, _epsilon{epsilon}
+            : CoulombPotential{coulombRadiusCutOff},
+              _epsilon{epsilon},
+              _rfPrefactor{(epsilon - 1.0) / (2.0 * epsilon + 1.0)}
         {
-            _rfPrefactor = (epsilon - 1) / ((2 * epsilon) + 1);
         }
 
         [[nodiscard]] std::pair<double, double> calculate(

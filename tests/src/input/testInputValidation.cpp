@@ -26,6 +26,7 @@
 #include <memory>   // for make_unique, unique_ptr
 #include <string>   // for string
 
+#include "celllist.hpp"                // for CellList
 #include "defaults.hpp"                // for default settings
 #include "exceptions.hpp"              // for InputFileException
 #include "hessianSettings.hpp"         // for HessianSettings

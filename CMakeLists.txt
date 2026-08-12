@@ -99,7 +99,7 @@ if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease")
         endif()
     endif()
 
-    if(BUILD_WITH_LTO AND NOT BUILD_WITH_KOKKOS)
+    if(BUILD_WITH_LTO)
         include(CheckIPOSupported)
         check_ipo_supported(
             RESULT ltoSupported
@@ -169,10 +169,6 @@ include(eigen)
 
 if(BUILD_WITH_MPI)
     include(mpi)
-endif()
-
-if(BUILD_WITH_KOKKOS)
-    include(kokkos)
 endif()
 
 if(BUILD_WITH_PYTHON_BINDINGS)

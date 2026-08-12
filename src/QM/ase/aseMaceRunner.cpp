@@ -23,6 +23,8 @@
 #include "aseMaceRunner.hpp"
 
 #include <cstdio>   // for fprintf, stderr
+#include <format>
+#include <iostream>
 
 using QM::AseMaceRunner;
 
@@ -65,8 +67,7 @@ AseMaceRunner::AseMaceRunner(
     {
         ::PyErr_Print();
         if (enableCueq)
-            static_cast<void>(::fprintf(
-                stderr,
+            std::cerr << std::format(
                 "\nPQ: mace_mode = fast uses cuequivariance-accelerated MACE "
                 "kernels. These need 'cuequivariance', 'cuequivariance-torch' "
                 "and -- the piece pip does NOT pull in automatically -- the "
@@ -76,7 +77,7 @@ AseMaceRunner::AseMaceRunner(
                 "'pip install cuequivariance-ops-torch-cu13'). Install that to "
                 "use fast mode, or set mace_mode = accurate for the standard "
                 "e3nn evaluation.\n"
-            ));
+            );
         throw;
     }
 }

@@ -56,8 +56,8 @@ namespace potential
 
         ForceFieldNonCoulomb(const ForceFieldNonCoulomb &);
         ForceFieldNonCoulomb &operator=(const ForceFieldNonCoulomb &);
-        ForceFieldNonCoulomb(ForceFieldNonCoulomb &&);
-        ForceFieldNonCoulomb &operator=(ForceFieldNonCoulomb &&);
+        ForceFieldNonCoulomb(ForceFieldNonCoulomb &&) noexcept;
+        ForceFieldNonCoulomb &operator=(ForceFieldNonCoulomb &&) noexcept;
 
         void setupNonCoulombicCutoffs();
         void determineInternalGlobalVdwTypes(const std::map<size_t, size_t> &);

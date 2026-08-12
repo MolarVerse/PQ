@@ -86,9 +86,9 @@ TimingsSection& TimingsSection::operator=(const TimingsSection& other)
     return *this;
 }
 
-TimingsSection::~TimingsSection()                           = default;
-TimingsSection::TimingsSection(TimingsSection&&)            = default;
-TimingsSection& TimingsSection::operator=(TimingsSection&&) = default;
+TimingsSection::~TimingsSection()                                    = default;
+TimingsSection::TimingsSection(TimingsSection&&) noexcept            = default;
+TimingsSection& TimingsSection::operator=(TimingsSection&&) noexcept = default;
 
 /**
  * @brief
