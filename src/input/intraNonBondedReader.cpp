@@ -92,7 +92,9 @@ IntraNonBondedReader::IntraNonBondedReader(
     const std::string &fileName,
     Engine            &engine
 )
-    : _fileName(fileName), _fp(fileName), _engine(engine){};
+    : _fileName(fileName), _fp(fileName), _engine(engine)
+{
+}
 
 /**
  * @brief reads the intra non bonded interactions from the intraNonBonded file
@@ -285,7 +287,7 @@ void IntraNonBondedReader::processMolecule(const size_t moleculeType)
 
     const auto container = IntraNonBondedContainer(moleculeType, atomIndices);
 
-    _engine.getIntraNonBonded().addIntraNonBondedContainer(container);
+    _engine.getIntraNonBonded()->addIntraNonBondedContainer(container);
 }
 
 /**
@@ -297,8 +299,8 @@ void IntraNonBondedReader::processMolecule(const size_t moleculeType)
  */
 void IntraNonBondedReader::checkDuplicates() const
 {
-    auto      &intraNonBonded = _engine.getIntraNonBonded();
-    const auto nonBondedCont  = intraNonBonded.getIntraNonBondedContainers();
+    const auto &intraNonBonded = _engine.getIntraNonBonded();
+    const auto  nonBondedCont  = intraNonBonded->getIntraNonBondedContainers();
 
     auto transform = [](const auto &container)
     { return container.getMolType(); };

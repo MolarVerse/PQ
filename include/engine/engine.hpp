@@ -119,14 +119,16 @@ namespace engine
         const std::shared_ptr<simulationBox::CellList> &getCellList() const;
         [[nodiscard]]
         const std::shared_ptr<constraints::Constraints> &getConstraints() const;
+        [[nodiscard]]
+        const std::shared_ptr<
+            intraNonBonded::IntraNonBonded> &getIntraNonBonded() const;
 
-        [[nodiscard]] simulationBox::SimulationBox   &getSimulationBox();
-        [[nodiscard]] physicalData::PhysicalData     &getPhysicalData();
-        [[nodiscard]] physicalData::PhysicalData     &getAveragePhysicalData();
-        [[nodiscard]] forceField::ForceField         &getForceField();
-        [[nodiscard]] intraNonBonded::IntraNonBonded &getIntraNonBonded();
-        [[nodiscard]] virial::Virial                 &getVirial();
-        [[nodiscard]] potential::Potential           &getPotential();
+        [[nodiscard]] simulationBox::SimulationBox &getSimulationBox();
+        [[nodiscard]] physicalData::PhysicalData   &getPhysicalData();
+        [[nodiscard]] physicalData::PhysicalData   &getAveragePhysicalData();
+        [[nodiscard]] forceField::ForceField       &getForceField();
+        [[nodiscard]] virial::Virial               &getVirial();
+        [[nodiscard]] potential::Potential         &getPotential();
 
         /*************************
          * output getter methods *
@@ -147,12 +149,11 @@ namespace engine
          * get pointer methods *
          ***********************/
 
-        [[nodiscard]] forceField::ForceField         *getForceFieldPtr();
-        [[nodiscard]] potential::Potential           *getPotentialPtr();
-        [[nodiscard]] virial::Virial                 *getVirialPtr();
-        [[nodiscard]] simulationBox::SimulationBox   *getSimulationBoxPtr();
-        [[nodiscard]] physicalData::PhysicalData     *getPhysicalDataPtr();
-        [[nodiscard]] intraNonBonded::IntraNonBonded *getIntraNonBondedPtr();
+        [[nodiscard]] forceField::ForceField       *getForceFieldPtr();
+        [[nodiscard]] potential::Potential         *getPotentialPtr();
+        [[nodiscard]] virial::Virial               *getVirialPtr();
+        [[nodiscard]] simulationBox::SimulationBox *getSimulationBoxPtr();
+        [[nodiscard]] physicalData::PhysicalData   *getPhysicalDataPtr();
 
         /******************************
          * get shared pointer methods *
@@ -164,9 +165,6 @@ namespace engine
         ) const;
         [[nodiscard]]
         std::shared_ptr<physicalData::PhysicalData> getSharedPhysicalData(
-        ) const;
-        [[nodiscard]]
-        std::shared_ptr<intraNonBonded::IntraNonBonded> getSharedIntraNonBonded(
         ) const;
         [[nodiscard]] std::shared_ptr<virial::Virial> getSharedVirial() const;
         [[nodiscard]] std::shared_ptr<potential::Potential> getSharedPotential(

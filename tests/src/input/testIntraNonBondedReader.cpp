@@ -68,7 +68,7 @@ TEST_F(TestIntraNonBondedReader, noFileSetByUser)
 TEST_F(TestIntraNonBondedReader, readingNotNeeded)
 {
     _intraNonBondedReader->setFileName("");
-    _engine->getIntraNonBonded().deactivate();
+    _engine->getIntraNonBonded()->deactivate();
     EXPECT_NO_THROW(_intraNonBondedReader->read());
 }
 
@@ -137,7 +137,7 @@ TEST_F(TestIntraNonBondedReader, readIntraNonBondedFile)
     input::intraNonBondedReader::readIntraNonBondedFile(*_engine);
 
     const auto container =
-        _engine->getIntraNonBonded().getIntraNonBondedContainers()[0];
+        _engine->getIntraNonBonded()->getIntraNonBondedContainers()[0];
     EXPECT_EQ(container.getMolType(), 0);
     const auto &atomIndices = container.getAtomIndices();
 
