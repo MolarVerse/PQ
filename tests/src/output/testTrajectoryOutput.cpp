@@ -95,10 +95,7 @@ TEST_F(TestTrajectoryOutput, writeHybridCenterXyz)
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
-    EXPECT_EQ(
-        line,
-        "X    \t     1.00000000\t     2.00000000\t     3.00000000"
-    );
+    EXPECT_EQ(line, "X    \t     1.00000000\t     2.00000000\t     3.00000000");
 }
 
 /**
