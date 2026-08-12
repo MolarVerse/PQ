@@ -86,12 +86,10 @@ class TestVirial : public ::testing::Test
     {
         delete _data;
         delete _simBox;
-        delete _virial;
     }
 
     physicalData::PhysicalData   *_data;
     simulationBox::SimulationBox *_simBox;
-    virial::Virial               *_virial;
 };
 
 #endif
