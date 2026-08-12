@@ -28,6 +28,7 @@
 #include <string>    // for string
 #include <vector>    // for vector
 
+#include "timerId.hpp"
 #include "timingsSection.hpp"   // for TimingsManager
 #include "timingsSectionGuard.hpp"
 
@@ -48,12 +49,12 @@ namespace timings
     class Timer
     {
        protected:
-        std::string _name = "DefaultTimings";
+        TimerId _id = TimerId::DefaultTimings;
 
         std::vector<TimingsSection> _timingDetails;
 
        public:
-        explicit Timer(const std::string_view);
+        explicit Timer(TimerId id);
         Timer() = default;
 
         [[nodiscard]]
@@ -75,7 +76,7 @@ namespace timings
          * standard setters *
          ********************/
 
-        void setTimerName(const std::string_view name);
+        void setTimerId(TimerId id);
 
         /********************
          * standard getters *

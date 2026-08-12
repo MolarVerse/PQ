@@ -74,7 +74,7 @@ using namespace setup::resetKinetics;
  */
 void setup::setupRequestedJob(const std::string& inputFileName, Engine& engine)
 {
-    auto setupTimer = Timer("Setup");
+    auto setupTimer = Timer(TimerId::Setup);
 
     auto _ = setupTimer.scoped("TotalSetup");
 

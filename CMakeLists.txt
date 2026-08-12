@@ -184,6 +184,9 @@ if(BUILD_WITH_TESTS)
     include(testing)
 endif()
 
+add_library(mstd INTERFACE)
+target_include_directories(mstd INTERFACE ${PROJECT_SOURCE_DIR}/external/mstd/include)
+
 add_subdirectory(src)
 
 if(BUILD_WITH_TESTS)
