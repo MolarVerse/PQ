@@ -39,13 +39,15 @@ TEST_F(TestSetup, setupConstraintTolerances)
     settings::ConstraintSettings::setShakeTolerance(1e-6);
     settings::ConstraintSettings::setRattleTolerance(1e-6);
 
-    _engine->getConstraints().activateShake();
+    const auto &constraints = _engine->getConstraints();
+
+    constraints->activateShake();
 
     ConstraintsSetup constraintsSetup(*_engine);
     constraintsSetup.setup();
 
-    EXPECT_EQ(_engine->getConstraints().getShakeTolerance(), 1e-6);
-    EXPECT_EQ(_engine->getConstraints().getRattleTolerance(), 1e-6);
+    EXPECT_EQ(constraints->getShakeTolerance(), 1e-6);
+    EXPECT_EQ(constraints->getRattleTolerance(), 1e-6);
 }
 
 /**
@@ -57,13 +59,15 @@ TEST_F(TestSetup, setupConstraintMaxIter)
     settings::ConstraintSettings::setShakeMaxIter(100);
     settings::ConstraintSettings::setRattleMaxIter(100);
 
-    _engine->getConstraints().activateShake();
+    const auto &constraints = _engine->getConstraints();
+
+    constraints->activateShake();
 
     ConstraintsSetup constraintsSetup(*_engine);
     constraintsSetup.setup();
 
-    EXPECT_EQ(_engine->getConstraints().getShakeMaxIter(), 100);
-    EXPECT_EQ(_engine->getConstraints().getRattleMaxIter(), 100);
+    EXPECT_EQ(constraints->getShakeMaxIter(), 100);
+    EXPECT_EQ(constraints->getRattleMaxIter(), 100);
 }
 
 /**
@@ -74,15 +78,15 @@ TEST_F(TestSetup, setupConstraints)
 {
     settings::ConstraintSettings::setShakeTolerance(999.0);
 
-    _engine->getConstraints().deactivateShake();
-    EXPECT_NO_THROW(setupConstraints(*_engine));
-    const auto shakeToleranceDeactivated =
-        _engine->getConstraints().getShakeTolerance();
+    const auto &constraints = _engine->getConstraints();
 
-    _engine->getConstraints().activateShake();
+    constraints->deactivateShake();
     EXPECT_NO_THROW(setupConstraints(*_engine));
-    const auto shakeToleranceActivated =
-        _engine->getConstraints().getShakeTolerance();
+    const auto shakeToleranceDeactivated = constraints->getShakeTolerance();
+
+    constraints->activateShake();
+    EXPECT_NO_THROW(setupConstraints(*_engine));
+    const auto shakeToleranceActivated = constraints->getShakeTolerance();
 
     EXPECT_NE(shakeToleranceDeactivated, shakeToleranceActivated);
 }

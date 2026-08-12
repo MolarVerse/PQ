@@ -28,6 +28,11 @@
 
 #include "inputFileParser.hpp"   // for InputFileParser
 
+namespace constraints
+{
+    class Constraints;
+}   // namespace constraints
+
 namespace input
 {
     /**
@@ -38,8 +43,14 @@ namespace input
      */
     class ConstraintsInputParser : public InputFileParser
     {
+       private:
+        std::shared_ptr<constraints::Constraints> _constraints;
+
        public:
-        explicit ConstraintsInputParser(engine::Engine &);
+        explicit ConstraintsInputParser(
+            engine::Engine &,
+            std::shared_ptr<constraints::Constraints> constraints
+        );
 
         void parseShakeActivated(
             const std::vector<std::string> &,

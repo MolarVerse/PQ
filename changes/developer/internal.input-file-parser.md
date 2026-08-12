@@ -1,1 +1,2 @@
 - prepare celllist input file parser to remove engine dependency
+- prepare constraints input file parser to remove engine dependency

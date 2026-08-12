@@ -24,13 +24,17 @@
 
 #define _CELL_LIST_INPUT_PARSER_HPP_
 
-#include "celllist.hpp"
 #include "inputFileParser.hpp"
 
 namespace engine
 {
     class Engine;   // forward declaration
 }   // namespace engine
+
+namespace simulationBox
+{
+    class CellList;   // forward declaration
+}   // namespace simulationBox
 
 namespace input
 {

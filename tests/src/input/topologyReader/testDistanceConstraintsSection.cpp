@@ -40,40 +40,24 @@ TEST_F(TestTopologySection, processSectionShake)
     std::vector<std::string> lineElements = {"1", "2", "1.0", "2.0", "4", "6"};
     input::topology::DistanceConstraintsSection distanceConstraintsSection;
     distanceConstraintsSection.processSection(lineElements, *_engine);
-    EXPECT_EQ(_engine->getConstraints().getDistConstraints().size(), 1);
+
+    const auto& constraints = _engine->getConstraints();
+
+    EXPECT_EQ(constraints->getDistConstraints().size(), 1);
     EXPECT_EQ(
-        _engine->getConstraints().getDistConstraints()[0].getMolecule1(),
+        constraints->getDistConstraints()[0].getMolecule1(),
         &(_engine->getSimulationBox().getMolecules()[0])
     );
     EXPECT_EQ(
-        _engine->getConstraints().getDistConstraints()[0].getMolecule2(),
+        constraints->getDistConstraints()[0].getMolecule2(),
         &(_engine->getSimulationBox().getMolecules()[1])
     );
-    EXPECT_EQ(
-        _engine->getConstraints().getDistConstraints()[0].getAtomIndex1(),
-        0
-    );
-    EXPECT_EQ(
-        _engine->getConstraints().getDistConstraints()[0].getAtomIndex2(),
-        0
-    );
-    EXPECT_EQ(
-        _engine->getConstraints().getDistConstraints()[0].getLowerDistance(),
-        1.0
-    );
-    EXPECT_EQ(
-        _engine->getConstraints().getDistConstraints()[0].getUpperDistance(),
-        2.0
-    );
-    EXPECT_EQ(
-        _engine->getConstraints().getDistConstraints()[0].getSpringConstant(),
-        4.0
-    );
-    EXPECT_EQ(
-        _engine->getConstraints().getDistConstraints()[0].getDSpringConstantDt(
-        ),
-        6.0
-    );
+    EXPECT_EQ(constraints->getDistConstraints()[0].getAtomIndex1(), 0);
+    EXPECT_EQ(constraints->getDistConstraints()[0].getAtomIndex2(), 0);
+    EXPECT_EQ(constraints->getDistConstraints()[0].getLowerDistance(), 1.0);
+    EXPECT_EQ(constraints->getDistConstraints()[0].getUpperDistance(), 2.0);
+    EXPECT_EQ(constraints->getDistConstraints()[0].getSpringConstant(), 4.0);
+    EXPECT_EQ(constraints->getDistConstraints()[0].getDSpringConstantDt(), 6.0);
 
     // not enough elements
     lineElements = {"1", "1", "1.0", "2", "1"};

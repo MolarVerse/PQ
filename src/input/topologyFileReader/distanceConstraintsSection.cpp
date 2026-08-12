@@ -115,7 +115,7 @@ void DistanceConstraintsSection::processSection(
         dSpringConstantDt
     );
 
-    engine.getConstraints().addDistanceConstraint(distanceConstraint);
+    engine.getConstraints()->addDistanceConstraint(distanceConstraint);
 }
 
 /**
