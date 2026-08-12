@@ -33,7 +33,6 @@
 #include "engine.hpp"                    // for Engine
 #include "exceptions.hpp"                // for IntraNonBondedException
 #include "fileSettings.hpp"              // for FileSettings
-#include "intraNonBonded.hpp"            // for IntraNonBonded
 #include "intraNonBondedContainer.hpp"   // for IntraNonBondedContainer
 #include "mathUtilities.hpp"             // for sign, utilities
 #include "simulationBox.hpp"             // for SimulationBox
