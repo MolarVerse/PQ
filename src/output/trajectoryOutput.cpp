@@ -27,11 +27,13 @@
 #include <ostream>   // for ofstream, basic_ostream, operator<<
 #include <sstream>   // for ostringstream
 
+#include "defaults.hpp"
 #include "hybridConfigurator.hpp"
 #include "molecule.hpp"        // for Molecule
 #include "simulationBox.hpp"   // for SimulationBox
 
 using namespace output;
+using namespace defaults;
 using namespace configurator;
 using namespace simulationBox;
 
@@ -92,7 +94,7 @@ void TrajectoryOutput::writeHybridCenterXyz(
 {
     // one dummy atom is needed to mark the inner region center
     constexpr size_t numberOfCenterAtoms = 1;
-    constexpr char   centerAtomName      = 'X';
+    constexpr char   centerAtomName      = INNER_REGION_CENTER_ATOM_NAME;
 
     // header line
     _fp << numberOfCenterAtoms << '\n';
