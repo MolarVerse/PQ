@@ -272,7 +272,7 @@ jobs:
     if: ${{ needs.preflight.outputs.build == 'true' }}
     needs: preflight
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 20
 
     steps:
       - uses: actions/checkout@v4
@@ -316,17 +316,11 @@ jobs:
       - name: Lint changed C++ files
         env:
           BASE_SHA: ${{ needs.preflight.outputs.base_sha }}
-          LINT_ALL: ${{ needs.preflight.outputs.lint_all }}
-        run: |
-          set -euo pipefail
-          mode=(--base "$BASE_SHA")
-          if [[ "$LINT_ALL" == "true" ]]; then
-            mode=(--all)
-          fi
-          scripts/clang_tidy.sh \
-            "${mode[@]}" \
-            --build-dir build \
-            --jobs 2
+        run: >-
+          scripts/clang_tidy.sh
+          --base "$BASE_SHA"
+          --build-dir build
+          --jobs 2
 
       - name: Upload coverage
         uses: codecov/codecov-action@v3
@@ -336,6 +330,49 @@ jobs:
           gcov_executable: gcov-13
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  lint-config:
+    name: Full lint for lint configuration
+    if: ${{ needs.preflight.outputs.lint_all == 'true' }}
+    needs: preflight
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build and lint tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            clangd-20 gcc-13 g++-13 mold ninja-build
+          sudo update-alternatives \
+            --install /usr/bin/clangd clangd /usr/bin/clangd-20 100
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: python -m pip install clangd-tidy numpy tqdm
+
+      - name: Configure compile database
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DBUILD_WITH_DOCS=OFF \
+            -DBUILD_WITH_NATIVE=OFF
+        env:
+          CC: gcc-13
+          CXX: g++-13
+
+      - name: Lint all production C++ files
+        run: >-
+          scripts/clang_tidy.sh
+          --all
+          --build-dir build
+          --jobs 2
 
   arm-release:
     name: ARM Release
@@ -560,6 +597,7 @@ jobs:
       - preflight
       - release
       - debug-quality
+      - lint-config
       - arm-release
       - lto-smoke
       - performance
@@ -571,6 +609,7 @@ jobs:
         env:
           ARM_RELEASE: ${{ needs.arm-release.result }}
           DEBUG_QUALITY: ${{ needs.debug-quality.result }}
+          LINT_CONFIG: ${{ needs.lint-config.result }}
           LTO_SMOKE: ${{ needs.lto-smoke.result }}
           PERFORMANCE: ${{ needs.performance.result }}
           PREFLIGHT: ${{ needs.preflight.result }}
@@ -583,6 +622,7 @@ jobs:
             "preflight=$PREFLIGHT"
             "release=$RELEASE"
             "debug-quality=$DEBUG_QUALITY"
+            "lint-config=$LINT_CONFIG"
             "arm-release=$ARM_RELEASE"
             "lto-smoke=$LTO_SMOKE"
             "performance=$PERFORMANCE"
