@@ -50,6 +50,24 @@ using namespace utilities;
  *
  * @param engine
  */
+FilesInputParser::FilesInputParser(Engine &engine)
+    : FilesInputParser(engine, true)
+{
+}
+
+/**
+ * @brief Construct a new Input File Parser Non Coulomb Type:: Input File Parser
+ * Non Coulomb Type object
+ *
+ * @details following keywords are added to the _keywordFuncMap,
+ * _keywordRequiredMap and _keywordCountMap: 1) intra-nonBonded_file <string> 2)
+ * topology_file <string> 3) parameter_file <string> 4) start_file <string>
+ * (required) 5) rpmd_start_file <string> 6) moldescriptor_file <string>
+ * 7) guff_path <string> (deprecated) 8) guff_file <string>
+ * 9) mshake_file <string> 10) dftb_file <string> 11) turbomole_file <string>
+ *
+ * @param engine
+ */
 FilesInputParser::FilesInputParser(Engine &engine, const bool validateFilePaths)
     : InputFileParser(engine), _validateFilePaths(validateFilePaths)
 {

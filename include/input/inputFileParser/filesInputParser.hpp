@@ -42,10 +42,8 @@ namespace input
         bool _validateFilePaths;
 
        public:
-        explicit FilesInputParser(
-            engine::Engine &,
-            bool validateFilePaths = true
-        );
+        explicit FilesInputParser(engine::Engine &, bool validateFilePaths);
+        explicit FilesInputParser(engine::Engine &);
 
         void parseIntraNonBondedFile(
             const std::vector<std::string> &,
