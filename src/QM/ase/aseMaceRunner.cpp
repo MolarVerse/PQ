@@ -23,6 +23,7 @@
 #include "aseMaceRunner.hpp"
 
 #include <cstdio>   // for fprintf, stderr
+#include <format>
 #include <iostream>
 
 using QM::AseMaceRunner;
