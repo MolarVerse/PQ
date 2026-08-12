@@ -25,9 +25,8 @@
 #include "exceptions.hpp"           // for InputFileException, TopologyException
 #include "fileSettings.hpp"         // for FileSettings
 #include "forceFieldSettings.hpp"   // for ForceFieldSettings
-#include "topologyReader.hpp"       // for TopologyReader
-
-#include "gtest/gtest.h"   // for AssertionResult, Message, TestPartResult
+#include "gtest/gtest.h"        // for AssertionResult, Message, TestPartResult
+#include "topologyReader.hpp"   // for TopologyReader
 
 using namespace input::topology;
 
@@ -42,10 +41,12 @@ TEST_F(TestTopologyReader, isNeeded)
 {
     EXPECT_FALSE(isNeeded(*_engine));
 
-    _engine->getConstraints().activateShake();
+    const auto& constraints = _engine->getConstraints();
+
+    constraints->activateShake();
     EXPECT_TRUE(isNeeded(*_engine));
 
-    _engine->getConstraints().deactivateShake();
+    constraints->deactivateShake();
     settings::ForceFieldSettings::activate();
     EXPECT_TRUE(isNeeded(*_engine));
 }
@@ -56,9 +57,15 @@ TEST_F(TestTopologyReader, isNeeded)
  */
 TEST_F(TestTopologyReader, determineSection)
 {
-    EXPECT_NO_THROW([[maybe_unused]] const auto dummy = _topologyReader->determineSection({"shake"}));
-    EXPECT_THROW([[maybe_unused]] const auto dummy = _topologyReader->determineSection({"unknown"}),
-                 customException::TopologyException);
+    EXPECT_NO_THROW(
+        [[maybe_unused]] const auto dummy =
+            _topologyReader->determineSection({"shake"})
+    );
+    EXPECT_THROW(
+        [[maybe_unused]] const auto dummy =
+            _topologyReader->determineSection({"unknown"}),
+        customException::TopologyException
+    );
 }
 
 /**
@@ -68,7 +75,7 @@ TEST_F(TestTopologyReader, read)
 {
     EXPECT_NO_THROW(_topologyReader->read());
 
-    _engine->getConstraints().activateShake();
+    _engine->getConstraints()->activateShake();
     EXPECT_NO_THROW(_topologyReader->read());
 
     settings::FileSettings::unsetIsTopologyFileNameSet();

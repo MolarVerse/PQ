@@ -18,13 +18,6 @@ set(setup_source_files
     waterModelSetup.cpp
 )
 
-if(BUILD_WITH_KOKKOS)
-    set(setup_source_files
-        ${setup_source_files}
-        kokkosSetup.cpp
-    )
-endif()
-
 add_library(setup
     ${setup_source_files}
 )

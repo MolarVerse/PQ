@@ -88,8 +88,6 @@ namespace settings
         static inline uint_fast32_t _randomSeed;
         static inline bool          _isRandomSeedset = false;
 
-        static inline bool _useKokkos = false;
-
         static inline bool _isRingPolymerMDActivated = false;
 
         // clang-format off
@@ -140,7 +138,6 @@ namespace settings
          * standard is-active methods *
          ******************************/
 
-        static void activateKokkos();
         static void activateRingPolymerMD();
         static void deactivateRingPolymerMD();
 
@@ -154,7 +151,6 @@ namespace settings
         [[nodiscard]] static bool isRingPolymerMDActivated();
         [[nodiscard]] static bool isMDJobType();
         [[nodiscard]] static bool isOptJobType();
-        [[nodiscard]] static bool useKokkos();
     };
 
 }   // namespace settings

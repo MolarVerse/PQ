@@ -101,7 +101,9 @@ InputFileReader::InputFileReader(
     _parsers.push_back(
         make_unique<CellListInputParser>(_engine, _engine.getCellList())
     );
-    _parsers.push_back(make_unique<ConstraintsInputParser>(_engine));
+    _parsers.push_back(
+        make_unique<ConstraintsInputParser>(_engine, _engine.getConstraints())
+    );
     _parsers.push_back(make_unique<CoulombLongRangeInputParser>(_engine));
     _parsers.push_back(
         make_unique<FilesInputParser>(_engine, validateFilePaths)

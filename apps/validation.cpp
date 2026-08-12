@@ -253,7 +253,7 @@ namespace
                 "Parameter file needed for requested simulation setup"
             );
 
-        if (engine.getConstraints().isMShakeActive() &&
+        if (engine.getConstraints()->isMShakeActive() &&
             FileSettings::getMShakeFileName().empty())
             throw customException::InputFileException(
                 "M-SHAKE file needed for requested simulation setup"

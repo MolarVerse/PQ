@@ -7,7 +7,6 @@ manostat
 virial
 moldescriptor
 manostats
-Kokkos
 Manostats
 Logfile
 triclinic

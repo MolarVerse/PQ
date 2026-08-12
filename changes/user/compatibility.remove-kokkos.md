@@ -1,0 +1,1 @@
+- Remove the `BUILD_WITH_KOKKOS` option and Kokkos capability; PQ now uses the CPU MM implementation for all builds.
