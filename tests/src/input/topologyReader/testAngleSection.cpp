@@ -40,28 +40,28 @@ TEST_F(TestTopologySection, processSectionAngle)
     std::vector<std::string>      lineElements = {"2", "1", "3", "7"};
     input::topology::AngleSection angleSection;
     angleSection.processSection(lineElements, *_engine);
-    EXPECT_EQ(_engine->getForceField().getAngles().size(), 1);
+    EXPECT_EQ(_engine->getForceField()->getAngles().size(), 1);
     EXPECT_EQ(
-        _engine->getForceField().getAngles()[0].getMolecules()[0],
+        _engine->getForceField()->getAngles()[0].getMolecules()[0],
         &(_engine->getSimulationBox().getMolecules()[0])
     );
     EXPECT_EQ(
-        _engine->getForceField().getAngles()[0].getMolecules()[1],
+        _engine->getForceField()->getAngles()[0].getMolecules()[1],
         &(_engine->getSimulationBox().getMolecules()[1])
     );
     EXPECT_EQ(
-        _engine->getForceField().getAngles()[0].getMolecules()[2],
+        _engine->getForceField()->getAngles()[0].getMolecules()[2],
         &(_engine->getSimulationBox().getMolecules()[1])
     );
-    EXPECT_EQ(_engine->getForceField().getAngles()[0].getAtomIndices()[0], 0);
-    EXPECT_EQ(_engine->getForceField().getAngles()[0].getAtomIndices()[1], 0);
-    EXPECT_EQ(_engine->getForceField().getAngles()[0].getAtomIndices()[2], 1);
-    EXPECT_EQ(_engine->getForceField().getAngles()[0].getType(), 7);
-    EXPECT_EQ(_engine->getForceField().getAngles()[0].isLinker(), false);
+    EXPECT_EQ(_engine->getForceField()->getAngles()[0].getAtomIndices()[0], 0);
+    EXPECT_EQ(_engine->getForceField()->getAngles()[0].getAtomIndices()[1], 0);
+    EXPECT_EQ(_engine->getForceField()->getAngles()[0].getAtomIndices()[2], 1);
+    EXPECT_EQ(_engine->getForceField()->getAngles()[0].getType(), 7);
+    EXPECT_EQ(_engine->getForceField()->getAngles()[0].isLinker(), false);
 
     lineElements = {"2", "1", "3", "7", "*"};
     angleSection.processSection(lineElements, *_engine);
-    EXPECT_EQ(_engine->getForceField().getAngles()[1].isLinker(), true);
+    EXPECT_EQ(_engine->getForceField()->getAngles()[1].isLinker(), true);
 
     lineElements = {"1", "1", "2", "3"};
     EXPECT_THROW(

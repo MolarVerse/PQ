@@ -125,7 +125,7 @@ void DihedralSection::processSection(
     auto dihedralFF = DihedralForceField(mols, atomIdxs, dihedralType);
     dihedralFF.setIsLinker(isLinker);
 
-    engine.getForceField().addDihedral(dihedralFF);
+    engine.getForceField()->addDihedral(dihedralFF);
 }
 
 /**

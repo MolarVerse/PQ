@@ -24,9 +24,9 @@
 
 #include <format>   // for format
 
-#include "bondType.hpp"          // for BondType
-#include "engine.hpp"            // for Engine
-#include "exceptions.hpp"        // for ParameterFileException
+#include "bondType.hpp"     // for BondType
+#include "engine.hpp"       // for Engine
+#include "exceptions.hpp"   // for ParameterFileException
 
 using namespace input::parameterFile;
 using namespace customException;
@@ -63,24 +63,30 @@ void BondSection::processSection(
 )
 {
     if (lineElements.size() != 3)
-        throw ParameterFileException(std::format(
-            "Wrong number of arguments in parameter file bond section at line "
-            "{} - number of elements has to be 3!",
-            _lineNumber
-        ));
+        throw ParameterFileException(
+            std::format(
+                "Wrong number of arguments in parameter file bond section at "
+                "line "
+                "{} - number of elements has to be 3!",
+                _lineNumber
+            )
+        );
 
     auto id                  = stoul(lineElements[0]);
     auto equilibriumDistance = stod(lineElements[1]);
     auto forceConstant       = stod(lineElements[2]);
 
     if (equilibriumDistance < 0.0)
-        throw ParameterFileException(std::format(
-            "Parameter file bond section at line {} - equilibrium distance has "
-            "to be positive!",
-            _lineNumber
-        ));
+        throw ParameterFileException(
+            std::format(
+                "Parameter file bond section at line {} - equilibrium distance "
+                "has "
+                "to be positive!",
+                _lineNumber
+            )
+        );
 
     auto bondType = BondType(id, equilibriumDistance, forceConstant);
 
-    engine.getForceField().addBondType(bondType);
+    engine.getForceField()->addBondType(bondType);
 }

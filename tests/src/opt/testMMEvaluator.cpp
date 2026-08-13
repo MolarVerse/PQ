@@ -37,11 +37,11 @@
 #include "simulationBox.hpp"
 
 using namespace opt;
+using physicalData::PhysicalData;
 using simulationBox::Atom;
 using simulationBox::CellList;
 using simulationBox::Molecule;
 using simulationBox::SimulationBox;
-using physicalData::PhysicalData;
 
 namespace
 {
@@ -79,7 +79,9 @@ namespace
         eval.setPhysicalData(std::make_shared<PhysicalData>());
         eval.setPhysicalDataOld(std::make_shared<PhysicalData>());
         eval.setForceField(std::make_shared<forceField::ForceField>());
-        eval.setIntraNonBonded(std::make_shared<intraNonBonded::IntraNonBonded>());
+        eval.setIntraNonBonded(
+            std::make_shared<intraNonBonded::IntraNonBonded>()
+        );
         eval.setVirial(std::make_shared<virial::MolecularVirial>());
         eval.setConstraints(std::make_shared<constraints::Constraints>());
     }

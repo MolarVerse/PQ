@@ -154,7 +154,7 @@ TEST_F(TestMoldescriptorReader, toManyAtomsPerMoltype)
  */
 TEST_F(TestMoldescriptorReader, globalVdwTypes)
 {
-    _engine->getForceFieldPtr()->activateNonCoulombic();
+    _engine->getForceField()->activateNonCoulombic();
 
     settings::FileSettings::setMolDescriptorFileName(
         "data/moldescriptorReader/moldescriptor_withGlobalVdwTypes.dat"

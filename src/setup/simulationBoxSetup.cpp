@@ -85,7 +85,7 @@ void SimulationBoxSetup::setup()
 {
     setAtomNames();
     setAtomTypes();
-    if (_engine.getForceFieldPtr()->isNonCoulombicActivated())
+    if (_engine.getForceField()->isNonCoulombicActivated())
         setExternalVDWTypes();
     setPartialCharges();
 

@@ -99,16 +99,17 @@ class TestGuffDatReader : public ::testing::Test
         settings::PotentialSettings::setCoulombRadiusCutOff(12.5);
 
         _engine->makePotential(potential::PotentialBruteForce());
-        _engine->getPotential().makeNonCoulombPotential(
+        _engine->getPotential()->makeNonCoulombPotential(
             potential::GuffNonCoulomb()
         );
-        _engine->getPotential().makeCoulombPotential(
+        _engine->getPotential()->makeCoulombPotential(
             potential::CoulombShiftedPotential(
                 settings::PotentialSettings::getCoulombRadiusCutOff()
             )
         );
 
-        settings::FileSettings::setGuffDatFileName("data/guffDatReader/guff.dat"
+        settings::FileSettings::setGuffDatFileName(
+            "data/guffDatReader/guff.dat"
         );
         settings::PotentialSettings::setNonCoulombType("guff");
 
