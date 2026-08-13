@@ -50,8 +50,19 @@ namespace thermostat
 
        public:
         VelocityRescalingThermostat() = default;
-        VelocityRescalingThermostat(const VelocityRescalingThermostat &);
         explicit VelocityRescalingThermostat(const double, const double);
+        ~VelocityRescalingThermostat() override = default;
+
+        // copy constructor and copy assignment needed for random number
+        // generator
+        VelocityRescalingThermostat(const VelocityRescalingThermostat &);
+        VelocityRescalingThermostat &operator=(
+            const VelocityRescalingThermostat &
+        );
+        VelocityRescalingThermostat(VelocityRescalingThermostat &&) noexcept =
+            delete;
+        VelocityRescalingThermostat &operator=(VelocityRescalingThermostat &&
+        ) noexcept = delete;
 
         void applyThermostat(
             simulationBox::SimulationBox &,

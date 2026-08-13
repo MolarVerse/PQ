@@ -140,10 +140,10 @@ TEST(TestOrthoRhombicBox, periodicityMasksBoxDimensions)
 
     for (size_t i = 0; i < periodicities.size(); ++i)
     {
-        const auto matrix = box.getBoxMatrix(periodicities[i]);
+        const auto matrix = box.getBoxMatrix(periodicities.at(i));
         for (size_t axis = 0; axis < 3; ++axis)
         {
-            const auto expected = expectedPeriodicAxes[i][axis]
+            const auto expected = expectedPeriodicAxes.at(i).at(axis)
                                       ? box.getBoxDimensions()[axis]
                                       : defaults::VACUUM_BOX_DIMENSION;
             EXPECT_DOUBLE_EQ(matrix[axis][axis], expected);

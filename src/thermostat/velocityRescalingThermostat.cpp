@@ -62,6 +62,24 @@ VelocityRescalingThermostat::VelocityRescalingThermostat(
 }
 
 /**
+ * @brief Copy assignment operator for Velocity Rescaling Thermostat
+ *
+ * @param other
+ * @return VelocityRescalingThermostat&
+ */
+VelocityRescalingThermostat &VelocityRescalingThermostat::operator=(
+    const VelocityRescalingThermostat &other
+)
+{
+    if (this != &other)
+    {
+        Thermostat::operator=(other);
+        _tau = other._tau;
+    }
+    return *this;
+}
+
+/**
  * @brief apply thermostat - Velocity Rescaling
  *
  * @link https://doi.org/10.1063/1.2408420

@@ -27,6 +27,7 @@
 #include "boxOutput.hpp"
 #include "defaults.hpp"
 #include "energyOutput.hpp"
+#include "hybridConfigurator.hpp"
 #include "infoOutput.hpp"
 #include "logOutput.hpp"
 #include "momentumOutput.hpp"
@@ -55,6 +56,7 @@ using namespace engine;
 using namespace simulationBox;
 using namespace physicalData;
 using namespace thermostat;
+using namespace configurator;
 
 using output::BoxFileOutput;
 using output::EnergyOutput;
@@ -81,6 +83,7 @@ EngineOutput::EngineOutput()
       _instantEnergyOutput(std::make_unique<EnergyOutput>(DefaultFiles::instEnFile)),
       _infoOutput(std::make_unique<InfoOutput>(DefaultFiles::infoFile)),
       _xyzOutput(std::make_unique<TrajectoryOutput>(DefaultFiles::trajFile)),
+      _xyzHybridCenterOutput(std::make_unique<TrajectoryOutput>(DefaultFiles::hybridCenterFile)),
       _velOutput(std::make_unique<TrajectoryOutput>(DefaultFiles::velFile)),
       _forceOutput(std::make_unique<TrajectoryOutput>(DefaultFiles::forceFile)),
       _chargeOutput(std::make_unique<TrajectoryOutput>(DefaultFiles::chargeFile)),
@@ -159,6 +162,21 @@ void EngineOutput::writeXyzFile(SimulationBox &simulationBox, const size_t step)
 {
     auto _ = scoped("TrajectoryOutput");
     _xyzOutput->writeXyz(simulationBox, step);
+}
+
+/**
+ * @brief wrapper for hybrid center xyz file output function
+ *
+ * @param configurator
+ * @param step
+ */
+void EngineOutput::writeHybridCenterXyzFile(
+    const HybridConfigurator &configurator,
+    const size_t              step
+)
+{
+    auto _ = scoped("TrajectoryOutput");
+    _xyzHybridCenterOutput->writeHybridCenterXyz(configurator, step);
 }
 
 /**
@@ -442,6 +460,16 @@ MomentumOutput &EngineOutput::getMomentumOutput() { return *_momentumOutput; }
  * @return TrajectoryOutput
  */
 TrajectoryOutput &EngineOutput::getXyzOutput() { return *_xyzOutput; }
+
+/**
+ * @brief getter for hybrid center xyz output
+ *
+ * @return TrajectoryOutput
+ */
+TrajectoryOutput &EngineOutput::getXyzHybridCenterOutput()
+{
+    return *_xyzHybridCenterOutput;
+}
 
 /**
  * @brief getter for velocity output

@@ -39,11 +39,14 @@ namespace input
     class FilesInputParser : public InputFileParser
     {
        private:
+        std::shared_ptr<intraNonBonded::IntraNonBonded> _intraNonBonded;
+
         bool _validateFilePaths;
 
        public:
         explicit FilesInputParser(
             engine::Engine &,
+            std::shared_ptr<intraNonBonded::IntraNonBonded> intraNonBonded,
             bool validateFilePaths = true
         );
 

@@ -13,6 +13,7 @@
 # cppcoreguidelines-non-private-member-variables-in-classes: needs huge rework
 # cppcoreguidelines-pro-type-union-access: should be possible to avoid this warning for Vector3D, but needs a rework of the code base
 # cppcoreguidelines-pro-type-member-init: needs a rework of the code base, but should be possible to fix it for all classes
+# cppcoreguidelines-owning-memory: needs a rework of the code base, but should be possible to fix it for all classes
 ---
 Checks:          
   '
@@ -23,16 +24,9 @@ Checks:
   cert-*,
   clang*,
   concurrency*,
-  cppcoreguidelines-a*,
-  cppcoreguidelines-c-copy-assignment-signature,
-  cppcoreguidelines-explicit-virtual-functions,
-  cppcoreguidelines-init-variables,
-  cppcoreguidelines-interfaces-global-init,
-  cppcoreguidelines-macro-to-enum,
-  cppcoreguidelines-macro-usage,
-  cppcoreguidelines-misleading-capture-default-by-value,
-  cppcoreguidelines-missing-std-forward,
-  cppcoreguidelines-narrowing-conversions,
+  cppcoreguidelines*,
+  darwin*,
+  -cppcoreguidelines-owning-memory,
   -cppcoreguidelines-pro-type-member-init,
   -cppcoreguidelines-pro-type-union-access,
   -cppcoreguidelines-non-private-member-variables-in-classes,
@@ -66,6 +60,8 @@ CheckOptions:
       value:           "0.5;2.0"
     - key:             cppcoreguidelines-avoid-magic-numbers.IgnoredFloatingPointValues
       value:           "0.5;2.0;1.0"
+    - key:             cppcoreguidelines-special-member-functions.AllowSoleDefaultDtor
+      value:           true
 #   - key:             llvmlibc-restrict-system-libc-headers.Includes
 #     value:           'cstdint'
 
@@ -95,28 +91,6 @@ CheckOptions:
 ...
 
 ### TO BE INCLUDED IN THE FUTURE
-  # cppcoreguidelines-no-malloc,
-  # cppcoreguidelines-no-suspend-with-lock,
-  # cppcoreguidelines-noexcept-destructor,
-  # cppcoreguidelines-noexcept-move-operations,
-  # cppcoreguidelines-noexcept-swap,
-  # cppcoreguidelines-owning-memory,
-  # cppcoreguidelines-prefer-member-initializer,
-  # cppcoreguidelines-pro-bounds-array-to-pointer-decay,
-  # cppcoreguidelines-pro-bounds-constant-array-index,
-  # cppcoreguidelines-pro-bounds-pointer-arithmetic,
-  # cppcoreguidelines-pro-type-const-cast,
-  # cppcoreguidelines-pro-type-cstyle-cast,
-  # cppcoreguidelines-pro-type-reinterpret-cast,
-  # cppcoreguidelines-pro-type-static-cast-downcast,
-  # cppcoreguidelines-pro-type-vararg,
-  # cppcoreguidelines-rvalue-reference-param-not-moved,
-  # cppcoreguidelines-slicing,
-  # cppcoreguidelines-special-member-functions,
-  # cppcoreguidelines-use-default-member-init,
-  # cppcoreguidelines-virtual-class-destructor,
-  # darwin-avoid-spinlock,
-  # darwin-dispatch-once-nonstatic,
   # fuchsia-default-arguments-calls,
   # fuchsia-default-arguments-declarations,
   # fuchsia-header-anon-namespaces,

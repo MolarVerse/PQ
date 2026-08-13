@@ -112,6 +112,11 @@ OutputInputParser::OutputInputParser(Engine &engine) : InputFileParser(engine)
         false
     );
     addKeyword(
+        std::string("hybrid_center_file"),
+        bindMember(&OutputInputParser::parseHybridCenterFilename, this),
+        false
+    );
+    addKeyword(
         std::string("vel_file"),
         bindMember(&OutputInputParser::parseVelocityFilename, this),
         false
@@ -341,6 +346,22 @@ void OutputInputParser::parseTrajectoryFilename(
 {
     checkCommand(lineElements, lineNumber);
     OutputFileSettings::setTrajectoryFileName(lineElements[2]);
+}
+
+/**
+ * @brief parse hybrid center filename of simulation and add it to output
+ *
+ * @details default value is default.center.xyz
+ *
+ * @param lineElements
+ */
+void OutputInputParser::parseHybridCenterFilename(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+    OutputFileSettings::setHybridCenterFileName(lineElements[2]);
 }
 
 /**

@@ -51,14 +51,6 @@
 #include "waterModelSettings.hpp"           // for WaterModelSettings
 #include "waterModelSetup.hpp"              // for setupWaterModel
 
-#ifdef WITH_KOKKOS
-#include "kokkosSetup.hpp"   // for setupKokkos
-#endif
-
-#ifdef WITH_KOKKOS
-#include "kokkosSetup.hpp"   // for setupKokkos
-#endif
-
 using namespace engine;
 using namespace input;
 using namespace timings;
@@ -96,10 +88,6 @@ void setup::setupRequestedJob(const std::string& inputFileName, Engine& engine)
 
     // needs setup of engine before reading guff.dat
     readGuffDat(engine);
-
-#ifdef WITH_KOKKOS
-    setupKokkos(engine);
-#endif
 
     endSetup(setupTimer, engine);
 }

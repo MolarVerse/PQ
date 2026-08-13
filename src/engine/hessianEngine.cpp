@@ -100,12 +100,12 @@ std::shared_ptr<Evaluator> HessianEngine::setupEvaluator()
             "Unknown job type for Hessian evaluator setup."
         );
 
-    evaluator->setCellList(getSharedCellList());
+    evaluator->setCellList(getCellList());
     evaluator->setSimulationBox(getSharedSimulationBox());
     evaluator->setPotential(getSharedPotential());
     evaluator->setForceField(getSharedForceField());
-    evaluator->setConstraints(getSharedConstraints());
-    evaluator->setIntraNonBonded(getSharedIntraNonBonded());
+    evaluator->setConstraints(getConstraints());
+    evaluator->setIntraNonBonded(getIntraNonBonded());
     evaluator->setPhysicalData(getSharedPhysicalData());
     evaluator->setPhysicalDataOld(getSharedPhysicalDataOld());
 

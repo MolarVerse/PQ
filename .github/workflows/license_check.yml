@@ -4,30 +4,35 @@ on:
   pull_request:
     branches:
       - '*'
-    paths:
-      - '**/*.cpp'
-      - '**/*.hpp'
-      - '**/*.c'
-      - '**/*.h'
-      - '.github/workflows/license_check.yml'
-      - 'scripts/addLicense.sh'
-      - 'config/licenseHeader.txt'
   push:
     branches:
       - main
       - master
-    paths:
-      - '**/*.cpp'
-      - '**/*.hpp'
-      - '**/*.c'
-      - '**/*.h'
-      - '.github/workflows/license_check.yml'
-      - 'scripts/addLicense.sh'
-      - 'config/licenseHeader.txt'
   workflow_dispatch:
 
 jobs:
+  changes:
+    runs-on: ubuntu-24.04
+    outputs:
+      relevant: ${{ steps.filter.outputs.relevant }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            relevant:
+              - '**/*.cpp'
+              - '**/*.hpp'
+              - '**/*.c'
+              - '**/*.h'
+              - '.github/workflows/license_check.yml'
+              - 'scripts/addLicense.sh'
+              - 'config/licenseHeader.txt'
+
   license-check:
+    needs: changes
+    if: needs.changes.outputs.relevant == 'true'
     runs-on: ubuntu-latest
     name: Check License Headers
 
@@ -38,31 +43,31 @@ jobs:
       - name: Check for license headers in C++ files
         run: |
           echo "Checking for exact GPL license headers in C++ files..."
-          
+
           # Verify license header template exists
           if [ ! -f "config/licenseHeader.txt" ]; then
             echo "❌ License header template not found at config/licenseHeader.txt"
             exit 1
           fi
-          
+
           # Get the expected license header content
           license_header=$(cat config/licenseHeader.txt)
           header_line_count=$(wc -l < config/licenseHeader.txt)
-          
+
           echo "Expected license header has $header_line_count lines"
           echo ""
-          
+
           # Find all C++ files in the relevant directories (excluding external dependencies)
           missing_count=0
           total_files=0
-          
+
           find src/ tests/ include/ apps/ benchmarks/ -regex ".*\.\(hpp\|cpp\|c\|h\)$" -print0 2>/dev/null | while IFS= read -r -d '' file; do
             total_files=$((total_files + 1))
             echo "Checking: $file"
-            
+
             # Extract the first N lines from the file (where N = number of lines in license header)
             file_header=$(head -n "$header_line_count" "$file" 2>/dev/null)
-            
+
             # Compare the extracted header with the expected license header
             if [ "$file_header" = "$license_header" ]; then
               echo "✅ Exact license header match: $file"
@@ -71,22 +76,22 @@ jobs:
               echo "$file" >> /tmp/missing_files.txt
             fi
           done
-          
+
           # Count missing files
           if [ -f /tmp/missing_files.txt ]; then
             missing_count=$(wc -l < /tmp/missing_files.txt)
           else
             missing_count=0
           fi
-          
+
           # Get total file count
           total_files=$(find src/ tests/ include/ apps/ benchmarks/ -regex ".*\.\(hpp\|cpp\|c\|h\)$" 2>/dev/null | wc -l)
-          
+
           echo ""
           echo "=== License Check Summary ==="
           echo "Total files checked: $total_files"
           echo "Files with missing/invalid license headers: $missing_count"
-          
+
           if [ $missing_count -gt 0 ]; then
             echo ""
             echo "Files with incorrect license headers:"
@@ -113,3 +118,15 @@ jobs:
           cat config/licenseHeader.txt
           echo "=== End of Template ==="
         shell: bash
+
+  license-check-gate:
+    if: always()
+    needs: [changes, license-check]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check license-check result
+        run: |
+          if [[ "${{ needs.license-check.result }}" == "failure" ]]; then
+            exit 1
+          fi
+          echo "OK — license check passed or was skipped (no relevant paths changed)"

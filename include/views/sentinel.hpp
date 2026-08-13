@@ -84,12 +84,7 @@ namespace pqviews
         using difference_type = detail::difference_type_or_ptrdiff<Iter>;
 
         // make it default constructible, copyable, and movable
-        Sentinel()                           = default;
-        Sentinel(const Sentinel&)            = default;
-        Sentinel(Sentinel&&)                 = default;
-        Sentinel& operator=(const Sentinel&) = default;
-        Sentinel& operator=(Sentinel&&)      = default;
-
+        Sentinel() = default;
         // Required by std::sentinel_for
         explicit Sentinel(Iter end) : _end(end) {}
 

@@ -51,12 +51,7 @@ namespace pqviews
             typename std::iterator_traits<Iter>::difference_type;
 
         // make it default constructible, copyable, and movable
-        TransformIterator()                                    = default;
-        TransformIterator(const TransformIterator&)            = default;
-        TransformIterator(TransformIterator&&)                 = default;
-        TransformIterator& operator=(const TransformIterator&) = default;
-        TransformIterator& operator=(TransformIterator&&)      = default;
-
+        TransformIterator() = default;
         TransformIterator(Iter current, const Func* func);
 
         reference          operator*() const;

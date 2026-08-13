@@ -40,13 +40,6 @@
 #include "simulationBox.hpp"
 #include "virial.hpp"
 
-#ifdef WITH_KOKKOS
-#include "coulombWolf_kokkos.hpp"
-#include "lennardJones_kokkos.hpp"
-#include "potential_kokkos.hpp"
-#include "simulationBox_kokkos.hpp"
-#endif
-
 namespace engine
 {
 
@@ -81,13 +74,6 @@ namespace engine
         std::unique_ptr<waterModel::InterWater> _interWater =
             std::make_unique<waterModel::InterWater>();
 
-#ifdef WITH_KOKKOS
-        simulationBox::KokkosSimulationBox _kokkosSimulationBox;
-        potential::KokkosLennardJones      _kokkosLennardJones;
-        potential::KokkosCoulombWolf       _kokkosCoulombWolf;
-        potential::KokkosPotential         _kokkosPotential;
-#endif
-
        public:
         Engine();
         virtual ~Engine() = default;
@@ -116,14 +102,17 @@ namespace engine
 
         [[nodiscard]]
         const std::shared_ptr<simulationBox::CellList> &getCellList() const;
+        [[nodiscard]]
+        const std::shared_ptr<constraints::Constraints> &getConstraints() const;
+        [[nodiscard]]
+        const std::shared_ptr<
+            intraNonBonded::IntraNonBonded> &getIntraNonBonded() const;
 
-        [[nodiscard]] simulationBox::SimulationBox   &getSimulationBox();
-        [[nodiscard]] physicalData::PhysicalData     &getPhysicalData();
-        [[nodiscard]] physicalData::PhysicalData     &getAveragePhysicalData();
-        [[nodiscard]] constraints::Constraints       &getConstraints();
-        [[nodiscard]] forceField::ForceField         &getForceField();
-        [[nodiscard]] intraNonBonded::IntraNonBonded &getIntraNonBonded();
-        [[nodiscard]] potential::Potential           &getPotential();
+        [[nodiscard]] simulationBox::SimulationBox &getSimulationBox();
+        [[nodiscard]] physicalData::PhysicalData   &getPhysicalData();
+        [[nodiscard]] physicalData::PhysicalData   &getAveragePhysicalData();
+        [[nodiscard]] forceField::ForceField       &getForceField();
+        [[nodiscard]] potential::Potential         &getPotential();
 
         /*************************
          * output getter methods *
@@ -144,12 +133,10 @@ namespace engine
          * get pointer methods *
          ***********************/
 
-        [[nodiscard]] forceField::ForceField         *getForceFieldPtr();
-        [[nodiscard]] potential::Potential           *getPotentialPtr();
-        [[nodiscard]] simulationBox::SimulationBox   *getSimulationBoxPtr();
-        [[nodiscard]] physicalData::PhysicalData     *getPhysicalDataPtr();
-        [[nodiscard]] constraints::Constraints       *getConstraintsPtr();
-        [[nodiscard]] intraNonBonded::IntraNonBonded *getIntraNonBondedPtr();
+        [[nodiscard]] forceField::ForceField       *getForceFieldPtr();
+        [[nodiscard]] potential::Potential         *getPotentialPtr();
+        [[nodiscard]] simulationBox::SimulationBox *getSimulationBoxPtr();
+        [[nodiscard]] physicalData::PhysicalData   *getPhysicalDataPtr();
 
         /******************************
          * get shared pointer methods *
@@ -163,15 +150,8 @@ namespace engine
         [[nodiscard]]
         std::shared_ptr<physicalData::PhysicalData> getSharedPhysicalData(
         ) const;
-        [[nodiscard]] std::shared_ptr<simulationBox::CellList> getSharedCellList(
+        [[nodiscard]] std::shared_ptr<potential::Potential> getSharedPotential(
         ) const;
-        [[nodiscard]]
-        std::shared_ptr<constraints::Constraints> getSharedConstraints() const;
-        [[nodiscard]]
-        std::shared_ptr<intraNonBonded::IntraNonBonded> getSharedIntraNonBonded(
-        ) const;
-        [[nodiscard]]
-        std::shared_ptr<potential::Potential> getSharedPotential() const;
 
         /***************************
          * make unique_ptr methods *
@@ -191,25 +171,6 @@ namespace engine
 
         void setTimer(const timings::GlobalTimer &timer) { _timer = timer; }
         void setInterWater(std::unique_ptr<waterModel::InterWater> interWater);
-
-#ifdef WITH_KOKKOS
-        [[nodiscard]] simulationBox::KokkosSimulationBox &getKokkosSimulationBox(
-        );
-        [[nodiscard]] potential::KokkosLennardJones &getKokkosLennardJones();
-        [[nodiscard]] potential::KokkosCoulombWolf  &getKokkosCoulombWolf();
-        [[nodiscard]] potential::KokkosPotential    &getKokkosPotential();
-        void initKokkosSimulationBox(const size_t numAtoms);
-        void initKokkosLennardJones(const size_t numAtomTypes);
-        void initKokkosCoulombWolf(
-            const double coulombRadiusCutOff,
-            const double kappa,
-            const double wolfParameter1,
-            const double wolfParameter2,
-            const double wolfParameter3,
-            const double prefactor
-        );
-        void initKokkosPotential();
-#endif
     };
 }   // namespace engine
 

@@ -52,13 +52,7 @@ namespace pqviews
         using difference_type =
             typename std::iterator_traits<Iter>::difference_type;
 
-        // make it default constructible, copyable, and movable
-        FilterIterator()                                 = default;
-        FilterIterator(const FilterIterator&)            = default;
-        FilterIterator(FilterIterator&&)                 = default;
-        FilterIterator& operator=(const FilterIterator&) = default;
-        FilterIterator& operator=(FilterIterator&&)      = default;
-
+        FilterIterator() = default;
         FilterIterator(Iter current, Iter end, const Pred* pred);
 
         reference       operator*() const;

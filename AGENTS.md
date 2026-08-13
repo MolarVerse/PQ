@@ -6,7 +6,7 @@ This file documents the codebase structure, development workflows, and conventio
 
 ## Project Overview
 
-PQ is an open-source **C++23** molecular dynamics simulation engine (classical MM, QM, and QM-RPMD) built with **CMake**, with optional **Python bindings**, **MPI**, and **Kokkos** acceleration. It integrates with external QM engines (DFTB+, Turbomole, PySCF, MACE, FeNNol) via ASE. Licensed under GPLv3.
+PQ is an open-source **C++23** molecular dynamics simulation engine (classical MM, QM, and QM-RPMD) built with **CMake**, with optional **Python bindings** and **MPI**. It integrates with external QM engines (DFTB+, Turbomole, PySCF, MACE, FeNNol) via ASE. Licensed under GPLv3.
 
 ---
 
@@ -70,7 +70,7 @@ Example: `docs: add shared contributor guide`
 PQ/
 ├── .github/workflows/     # CI/CD pipelines (GitHub Actions)
 ├── .githooks/             # commit-msg hook (conventional-commit enforcement)
-├── .cmake/                # CMake helper modules (config, eigen, testing, mpi, kokkos, ...)
+├── .cmake/                # CMake helper modules (config, eigen, testing, mpi, ...)
 ├── apps/                  # Main application executable (PQ.cpp)
 ├── benchmarks/            # Google Benchmark suite + benchmarks/perf (CI perf gate)
 ├── config/                # licenseHeader.txt (mandatory GPL header template)
@@ -111,7 +111,6 @@ make -j<#procs>
 | Option                        | Default | Description                                    |
 | ----------------------------- | ------- | ----------------------------------------------- |
 | `BUILD_SHARED_LIBS`           | `ON`    | Build using shared libraries                    |
-| `BUILD_WITH_KOKKOS`           | `OFF`   | Build with Kokkos                               |
 | `BUILD_WITH_TESTS`            | `ON`    | Build GoogleTest unit tests                     |
 | `BUILD_WITH_MPI`              | `OFF`   | Build with MPI (needed for Ring Polymer MD)     |
 | `BUILD_WITH_PYTHON_BINDINGS`  | `OFF`   | Build Python bindings                           |
