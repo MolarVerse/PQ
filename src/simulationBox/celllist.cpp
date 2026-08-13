@@ -322,12 +322,12 @@ void CellList::resizeCells()
         if (0 == numberOfCellsInDimension)
             throw CellListException(
                 "Number of cells must be positive"
-            );   // GCOVR_EXCL_BR_LINE
+            );
 
         if (numberOfCellsInDimension > _cells.max_size() / numberOfCells)
             throw CellListException(
                 "Number of cells exceeds the supported size"
-            );   // GCOVR_EXCL_BR_LINE
+            );
 
         numberOfCells *= numberOfCellsInDimension;
     }
