@@ -47,8 +47,6 @@
     X(QMEngine)            \
     X(Setup)
 
-// TODO: fix this in mstd
-// NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-constant-array-index)
 MSTD_ENUM(TimerId, std::uint8_t, TIMER_ID_LIST);
 
 std::string toString(TimerId id);
