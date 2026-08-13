@@ -4,41 +4,41 @@ on:
   pull_request:
     branches:
       - '*'
-    paths:
-      - '.github/workflows/ci_build.yml'
-      - '.cmake/**'
-      - 'apps/**'
-      - 'include/**'
-      - 'src/**'
-      - 'integration_tests/**'
-      - 'tests/**'
-      - 'benchmarks/CMakeLists.txt'
-      - 'benchmarks/src/**'
-      - 'CMakeLists.txt'
-      - '.clang-tidy'
-      - 'scripts/clang_tidy.sh'
-      - '.github/workflows/lint.yml'
   push:
     branches:
       - dev
       - main
-    paths:
-      - '.github/workflows/ci_build.yml'
-      - '.cmake/**'
-      - 'apps/**'
-      - 'include/**'
-      - 'src/**'
-      - 'integration_tests/**'
-      - 'CMakeLists.txt'
-      - '.clang-tidy'
-      - 'scripts/clang_tidy.sh'
-      - '.github/workflows/lint.yml'
-      - 'benchmarks/src/**'
-      - 'CMakeLists.txt'
   workflow_dispatch:
 
 jobs:
+  changes:
+    runs-on: ubuntu-24.04
+    outputs:
+      relevant: ${{ steps.filter.outputs.relevant }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            relevant:
+              - '.github/workflows/ci_build.yml'
+              - '.cmake/**'
+              - 'apps/**'
+              - 'include/**'
+              - 'src/**'
+              - 'integration_tests/**'
+              - 'tests/**'
+              - 'benchmarks/CMakeLists.txt'
+              - 'benchmarks/src/**'
+              - 'CMakeLists.txt'
+              - '.clang-tidy'
+              - 'scripts/clang_tidy.sh'
+              - '.github/workflows/lint.yml'
+
   lint:
+    needs: changes
+    if: needs.changes.outputs.relevant == 'true'
     runs-on: ubuntu-24.04
 
     steps:
@@ -78,3 +78,15 @@ jobs:
       - name: Run clangd-tidy
         run: |
           clangd-tidy $(find src/ apps/ include/ -name "*.cpp" -o -name "*.hpp" -o -name "*.tpp" 2>/dev/null) -p=build
+
+  lint-gate:
+    if: always()
+    needs: [changes, lint]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check lint result
+        run: |
+          if [[ "${{ needs.lint.result }}" == "failure" ]]; then
+            exit 1
+          fi
+          echo "OK — lint passed or was skipped (no relevant paths changed)"
