@@ -184,9 +184,12 @@ ForceField &Engine::getForceField() { return *_forceField; }
 /**
  * @brief get the reference to the intra non bonded interactions
  *
- * @return IntraNonBonded&
+ * @return const std::shared_ptr<IntraNonBonded>&
  */
-IntraNonBonded &Engine::getIntraNonBonded() { return *_intraNonBonded; }
+const std::shared_ptr<IntraNonBonded> &Engine::getIntraNonBonded() const
+{
+    return _intraNonBonded;
+}
 
 /**
  * @brief get the reference to the virial
@@ -236,13 +239,6 @@ SimulationBox *Engine::getSimulationBoxPtr() { return _simulationBox.get(); }
  * @return PhysicalData*
  */
 PhysicalData *Engine::getPhysicalDataPtr() { return _physicalData.get(); }
-
-/**
- * @brief get the pointer to the intra non bonded interactions
- *
- * @return IntraNonBonded*
- */
-IntraNonBonded *Engine::getIntraNonBondedPtr() { return _intraNonBonded.get(); }
 
 /**
  * @brief set the inter-water interactions handler
@@ -389,16 +385,6 @@ const std::shared_ptr<CellList> &Engine::getCellList() const
 const std::shared_ptr<Constraints> &Engine::getConstraints() const
 {
     return _constraints;
-}
-
-/**
- * @brief get the shared pointer to the intra non bonded interactions
- *
- * @return std::shared_ptr<IntraNonBonded>
- */
-std::shared_ptr<IntraNonBonded> Engine::getSharedIntraNonBonded() const
-{
-    return _intraNonBonded;
 }
 
 /**
