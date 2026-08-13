@@ -27,7 +27,6 @@
 
 #include "fileSettings.hpp"   // for FileSettings
 #include "logOutput.hpp"      // for LogOutput
-#include "molecularVirial.hpp"
 #include "potentialBruteForce.hpp"
 #include "stdoutOutput.hpp"      // for StdoutOutput
 #include "timingsSettings.hpp"   // for TimingsSettings
@@ -51,8 +50,7 @@ using namespace settings;
  * cell list, intra-non-bonded handler, force field, and constraints.
  */
 Engine::Engine()
-    : _virial{std::make_shared<virial::MolecularVirial>()},
-      _potential{std::make_shared<potential::PotentialBruteForce>()},
+    : _potential{std::make_shared<potential::PotentialBruteForce>()},
       _physicalData{std::make_shared<physicalData::PhysicalData>()},
       _simulationBox{std::make_shared<simulationBox::SimulationBox>()},
       _cellList{std::make_shared<simulationBox::CellList>()},
@@ -192,13 +190,6 @@ const std::shared_ptr<IntraNonBonded> &Engine::getIntraNonBonded() const
 }
 
 /**
- * @brief get the reference to the virial
- *
- * @return Virial&
- */
-Virial &Engine::getVirial() { return *_virial; }
-
-/**
  * @brief get the reference to the potential
  *
  * @return Potential&
@@ -218,13 +209,6 @@ ForceField *Engine::getForceFieldPtr() { return _forceField.get(); }
  * @return Potential*
  */
 Potential *Engine::getPotentialPtr() { return _potential.get(); }
-
-/**
- * @brief get the pointer to the virial
- *
- * @return Virial*
- */
-Virial *Engine::getVirialPtr() { return _virial.get(); }
 
 /**
  * @brief get the pointer to the simulation box
@@ -386,13 +370,6 @@ const std::shared_ptr<Constraints> &Engine::getConstraints() const
 {
     return _constraints;
 }
-
-/**
- * @brief get the shared pointer to the virial
- *
- * @return std::shared_ptr<Virial>
- */
-std::shared_ptr<Virial> Engine::getSharedVirial() const { return _virial; }
 
 /**
  * @brief get the shared pointer to the potential
