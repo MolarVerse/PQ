@@ -1,3 +1,7 @@
 InheritParentConfig: true
-Checks: >
-  -cppcoreguidelines-avoid-magic-numbers
+Checks:
+  '
+  -cppcoreguidelines-avoid-magic-numbers,
+  -fuchsia-statically-constructed-objects,
+  -cert-err58-cpp
+  '

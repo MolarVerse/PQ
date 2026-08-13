@@ -47,7 +47,11 @@ namespace input
         explicit FilesInputParser(
             engine::Engine &,
             std::shared_ptr<intraNonBonded::IntraNonBonded> intraNonBonded,
-            bool validateFilePaths = true
+            bool                                            validateFilePaths
+        );
+        explicit FilesInputParser(
+            engine::Engine &,
+            std::shared_ptr<intraNonBonded::IntraNonBonded> intraNonBonded
         );
 
         void parseIntraNonBondedFile(

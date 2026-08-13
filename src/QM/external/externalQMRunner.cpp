@@ -279,22 +279,16 @@ const std::string &ExternalQMRunner::getScriptPath() const
 /**
  * @brief getter for the singularity path
  *
- * @return const std::string&
+ * @return std::string
  */
-const std::string &ExternalQMRunner::getSingularity() const
-{
-    return _singularity;
-}
+std::string ExternalQMRunner::getSingularity() const { return _singularity; }
 
 /**
  * @brief getter for the static build path
  *
- * @return const std::string&
+ * @return std::string
  */
-const std::string &ExternalQMRunner::getStaticBuild() const
-{
-    return _staticBuild;
-}
+std::string ExternalQMRunner::getStaticBuild() const { return _staticBuild; }
 
 /**
  * @brief setter for the script path

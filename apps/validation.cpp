@@ -423,6 +423,11 @@ namespace
     }
 }   // namespace
 
+cli::ValidationResult cli::validateInputFile(std::string_view inputFile)
+{
+    return validateInputFile(inputFile, ValidationScope::INSTALLED);
+}
+
 cli::ValidationResult cli::validateInputFile(
     const std::string_view inputFile,
     const ValidationScope  scope

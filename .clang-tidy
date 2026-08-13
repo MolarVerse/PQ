@@ -3,6 +3,9 @@
 # altera-struct-pack-align: does not affect the code for non FPGA targets -- gets interesting for OpenCL kernels
 # boost-use-ranges: we do not want to use boost at all, to not increase our dependencies even more!!!
 # bugprone-suspicious-include: flags more or less only false positives
+# fuchsia-default-arguments-calls: there is a second check that disallows default arguments in function definitions, which is more important to us than this check (this for example triggers for simple std::vector constructors)
+# fuchsia-overloaded-operator: we actually WANT to overload operators, so this check is not useful for us
+# fuchsia-trailing-return: we actually WANT to use trailing return types, very useful for template functions, so this check is not useful for us
 
 # Checks to be absolutely enabled:
 # cert-env33-c: ::system is not available on all platforms, and we do not want to use it anyway
@@ -14,6 +17,9 @@
 # cppcoreguidelines-pro-type-union-access: should be possible to avoid this warning for Vector3D, but needs a rework of the code base
 # cppcoreguidelines-pro-type-member-init: needs a rework of the code base, but should be possible to fix it for all classes
 # cppcoreguidelines-owning-memory: needs a rework of the code base, but should be possible to fix it for all classes
+# fuchsia-statically-constructed-objects: needs a rework of the global const maps like atomMassMap, atomNumberMap, hubbardDerivMap3ob, etc. to avoid this warning
+# fuchsia-virtual-inheritance: needs a huge rework of the engine code base, but should be possible to fix it for all classes
+# fuchsia-multiple-inheritance: needs a huge rework of the engine code base, but should be possible to fix it for all classes
 ---
 Checks:          
   '
@@ -26,6 +32,7 @@ Checks:
   concurrency*,
   cppcoreguidelines*,
   darwin*,
+  fuchsia*,
   -cppcoreguidelines-owning-memory,
   -cppcoreguidelines-pro-type-member-init,
   -cppcoreguidelines-pro-type-union-access,
@@ -35,9 +42,16 @@ Checks:
   -bugprone-easily-swappable-parameters,
   -cert-env33-c,
   -cert-err58-cpp,
+  -fuchsia-statically-constructed-objects,
+  -fuchsia-virtual-inheritance,
+  -fuchsia-multiple-inheritance,
   -altera-struct-pack-align,
   -altera-unroll-loops,
-  -bugprone-suspicious-include
+  -boost-use-ranges,
+  -bugprone-suspicious-include,
+  -fuchsia-default-arguments-calls,
+  -fuchsia-overloaded-operator,
+  -fuchsia-trailing-return,
   '
 WarningsAsErrors: ''
 HeaderFileExtensions:
@@ -91,14 +105,6 @@ CheckOptions:
 ...
 
 ### TO BE INCLUDED IN THE FUTURE
-  # fuchsia-default-arguments-calls,
-  # fuchsia-default-arguments-declarations,
-  # fuchsia-header-anon-namespaces,
-  # fuchsia-multiple-inheritance,
-  # fuchsia-overloaded-operator,
-  # fuchsia-statically-constructed-objects,
-  # fuchsia-trailing-return,
-  # fuchsia-virtual-inheritance,
   # google-build-explicit-make-pair,
   # google-build-namespaces,
   # google-build-using-namespace,
