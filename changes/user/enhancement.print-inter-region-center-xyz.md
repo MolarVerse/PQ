@@ -1,0 +1,1 @@
+- Print the inner region center of hybrid type calculations (e.g. QM/MM) to a separate output file with the file ending .center.xyz

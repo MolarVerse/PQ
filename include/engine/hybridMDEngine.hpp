@@ -24,7 +24,6 @@
 
 #define _HYBRID_MD_ENGINE_HPP_
 
-#include "hybridConfigurator.hpp"
 #include "mdEngine.hpp"
 #include "qmCapableEngine.hpp"
 
@@ -41,8 +40,6 @@ namespace engine
     class HybridMDEngine : virtual public MDEngine, public QMCapableEngine
     {
        protected:
-        configurator::HybridConfigurator _configurator{};
-
         void combineInnerOuterForces();
 
         void addCurrentForcesToInnerAndReset(

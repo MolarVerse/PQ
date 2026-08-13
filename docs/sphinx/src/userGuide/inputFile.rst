@@ -97,7 +97,7 @@ Possible options are:
 
    3. **qm-rpmd** - Represents a full quantum mechanics ring polymer molecular dynamics simulation. For more information see the :ref:`ringpolymermdKeys` section
 
-   4. **qmmm-md** - Represents a hybrid quantum mechanics - molecular mechanics molecular dynamics simulation. (Not implemented yet)
+   4. **qmmm-md** - Represents a hybrid quantum mechanics - molecular mechanics molecular dynamics simulation.
 
    5. **mm-opt** - represents a geometry optimization calculation using molecular mechanics.
 
@@ -475,6 +475,24 @@ Trajectory File
 The ``traj_file`` keyword sets the name for the :ref:`trajectoryFile`, which stores the atomic positions throughout the MD simulation.
 
 .. centered:: *default value* = "default.xyz"
+
+.. _hybridcenterfilekey:
+
+Hybrid Center File
+==================
+
+.. admonition:: Key
+    :class: tip
+
+    hybrid_center_file = {file} -> "default.center.xyz"
+
+The ``hybrid_center_file`` keyword sets the name for the :ref:`hybridCenterFile`, which stores the position of the inner region center in a hybrid type MD simulation.
+
+.. centered:: *default value* = "default.center.xyz"
+
+.. Note::
+
+    The ``hybrid_center_file`` keyword is ignored for non-hybrid-type calculations.
 
 .. _velocityfilekey:
 
