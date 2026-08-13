@@ -32,14 +32,14 @@
 #include "pybind11/embed.h"      // for scoped_interpreter
 #endif
 
-#include "gtest/gtest.h"          // for Message, TestPartResult
+#include "gtest/gtest.h"   // for Message, TestPartResult
 
 #ifdef WITH_ASE
 TEST_F(TestQMSetupAse, setupAseDftbplus3OB)
 {
-    QMSettings::setSlakosType("3ob");
-    QMSettings::setUseThirdOrderDftb(true);
-    QMSettings::setUseDispersionCorrection(true);
+    settings::QMSettings::setSlakosType("3ob");
+    settings::QMSettings::setUseThirdOrderDftb(true);
+    settings::QMSettings::setUseDispersionCorrection(true);
     _qmSetup->setupWriteInfo();
 
     std::ifstream file("default.log");
@@ -52,7 +52,7 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OB)
     EXPECT_EQ(line, "         DFTB approach:        3ob");
     getline(file, line);
     // clang-format off
-    std::string skPath {__SLAKOS_DIR__ + string(QMSettings::getSlakosType()) + "/skfiles/"};
+    std::string skPath {__SLAKOS_DIR__ + string(settings::QMSettings::getSlakosType()) + "/skfiles/"};
     EXPECT_EQ(line, "         sk file path:         " + skPath);
     // clang-format on
     getline(file, line);
@@ -63,9 +63,9 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OB)
 
 TEST_F(TestQMSetupAse, setupAseDftbplus3OBno3rdOrder)
 {
-    QMSettings::setUseThirdOrderDftb(false);
-    QMSettings::setIsThirdOrderDftbSet(true);
-    QMSettings::setSlakosType("3ob");
+    settings::QMSettings::setUseThirdOrderDftb(false);
+    settings::QMSettings::setIsThirdOrderDftbSet(true);
+    settings::QMSettings::setSlakosType("3ob");
     _qmSetup->setupWriteInfo();
 
     std::ifstream file("default.log");
@@ -78,7 +78,7 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OBno3rdOrder)
     EXPECT_EQ(line, "         DFTB approach:        3ob");
     getline(file, line);
     // clang-format off
-    std::string skPath {__SLAKOS_DIR__ + string(QMSettings::getSlakosType()) + "/skfiles/"};
+    std::string skPath {__SLAKOS_DIR__ + string(settings::QMSettings::getSlakosType()) + "/skfiles/"};
     EXPECT_EQ(line, "         sk file path:         " + skPath);
     // clang-format on
     getline(file, line);
@@ -95,10 +95,10 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OBno3rdOrder)
 
 TEST_F(TestQMSetupAse, setupAseDftbplus3OBCustomHubbardDerivs)
 {
-    QMSettings::setSlakosType("3ob");
-    QMSettings::setUseThirdOrderDftb(true);
-    QMSettings::setHubbardDerivs({{"H", -0.3}});
-    QMSettings::setIsHubbardDerivsSet(true);
+    settings::QMSettings::setSlakosType("3ob");
+    settings::QMSettings::setUseThirdOrderDftb(true);
+    settings::QMSettings::setHubbardDerivs({{"H", -0.3}});
+    settings::QMSettings::setIsHubbardDerivsSet(true);
     _qmSetup->setupWriteInfo();
 
     std::ifstream file("default.log");
@@ -111,7 +111,7 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OBCustomHubbardDerivs)
     EXPECT_EQ(line, "         DFTB approach:        3ob");
     getline(file, line);
     // clang-format off
-    std::string skPath {__SLAKOS_DIR__ + string(QMSettings::getSlakosType()) + "/skfiles/"};
+    std::string skPath {__SLAKOS_DIR__ + string(settings::QMSettings::getSlakosType()) + "/skfiles/"};
     EXPECT_EQ(line, "         sk file path:         " + skPath);
     // clang-format on
     getline(file, line);
@@ -132,8 +132,8 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OBCustomHubbardDerivs)
 
 TEST_F(TestQMSetupAse, setupAseDftbplusMatsci)
 {
-    QMSettings::setSlakosType("matsci");
-    QMSettings::setUseDispersionCorrection(true);
+    settings::QMSettings::setSlakosType("matsci");
+    settings::QMSettings::setUseDispersionCorrection(true);
     _qmSetup->setupWriteInfo();
 
     std::ifstream file("default.log");
@@ -146,7 +146,7 @@ TEST_F(TestQMSetupAse, setupAseDftbplusMatsci)
     EXPECT_EQ(line, "         DFTB approach:        matsci");
     getline(file, line);
     // clang-format off
-    std::string skPath {__SLAKOS_DIR__ + string(QMSettings::getSlakosType()) + "/skfiles/"};
+    std::string skPath {__SLAKOS_DIR__ + string(settings::QMSettings::getSlakosType()) + "/skfiles/"};
     EXPECT_EQ(line, "         sk file path:         " + skPath);
     // clang-format on
     getline(file, line);
@@ -158,8 +158,8 @@ TEST_F(TestQMSetupAse, setupAseDftbplusMatsci)
 
 TEST_F(TestQMSetupAse, setupAseDftbplusCustom)
 {
-    QMSettings::setSlakosType("custom");
-    QMSettings::setSlakosPath("custom/path/");
+    settings::QMSettings::setSlakosType("custom");
+    settings::QMSettings::setSlakosPath("custom/path/");
     _qmSetup->setupWriteInfo();
 
     std::ifstream file("default.log");
@@ -180,14 +180,14 @@ TEST_F(TestQMSetupAse, setupAseDftbplusCustom)
 
 TEST_F(TestQMSetupAse, setupAseDftbplusCustom3rdOrder)
 {
-    QMSettings::setSlakosType("custom");
-    QMSettings::setSlakosPath("custom/path/");
-    QMSettings::setUseDispersionCorrection(true);
-    QMSettings::setUseThirdOrderDftb(true);
-    QMSettings::setUseThirdOrderDftb(true);
-    QMSettings::setIsThirdOrderDftbSet(true);
-    QMSettings::setHubbardDerivs({{"H", -0.3}});
-    QMSettings::setIsHubbardDerivsSet(true);
+    settings::QMSettings::setSlakosType("custom");
+    settings::QMSettings::setSlakosPath("custom/path/");
+    settings::QMSettings::setUseDispersionCorrection(true);
+    settings::QMSettings::setUseThirdOrderDftb(true);
+    settings::QMSettings::setUseThirdOrderDftb(true);
+    settings::QMSettings::setIsThirdOrderDftbSet(true);
+    settings::QMSettings::setHubbardDerivs({{"H", -0.3}});
+    settings::QMSettings::setIsHubbardDerivsSet(true);
     _qmSetup->setupWriteInfo();
 
     std::ifstream file("default.log");
@@ -212,8 +212,8 @@ TEST_F(TestQMSetupAse, setupAseDftbplusCustom3rdOrder)
 TEST_F(TestQMSetupAse, setupAseFennolRunnerConstructsCalculator)
 {
     pybind11::scoped_interpreter guard{};
-    const auto                   types = pybind11::module_::import("types");
-    const auto                   sys   = pybind11::module_::import("sys");
+    const auto                   types   = pybind11::module_::import("types");
+    const auto                   sys     = pybind11::module_::import("sys");
     const auto                   modules = sys.attr("modules");
 
     auto aseModule       = types.attr("ModuleType")("ase");
@@ -245,7 +245,8 @@ class FENNIXCalculator:
 
     ASSERT_NO_THROW({ QM::AseFennolRunner runner("model.fnx", false, true); });
 
-    auto lastKwargs = fennolAseModule.attr("FENNIXCalculator").attr("last_kwargs")
+    auto lastKwargs = fennolAseModule.attr("FENNIXCalculator")
+                          .attr("last_kwargs")
                           .cast<pybind11::dict>();
 
     EXPECT_EQ(lastKwargs["model"].cast<std::string>(), "model.fnx");
@@ -295,12 +296,12 @@ class MACECalculator:
     modules["mace.calculators"] = calculatorsModule;
 
     ASSERT_NO_THROW({
-        QM::AseMaceRunner runner(
-            "MACECalculator", "model.model", "float64", true, false
-        );
+        QM::AseMaceRunner
+            runner("MACECalculator", "model.model", "float64", true, false);
     });
 
-    auto lastKwargs = calculatorsModule.attr("MACECalculator").attr("last_kwargs")
+    auto lastKwargs = calculatorsModule.attr("MACECalculator")
+                          .attr("last_kwargs")
                           .cast<pybind11::dict>();
 
     EXPECT_EQ(lastKwargs["model"].cast<std::string>(), "model.model");
@@ -317,8 +318,8 @@ class MACECalculator:
 
 TEST_F(TestQMSetupAse, setupAseMaceWriteInfoFast)
 {
-    QMSettings::setQMMethod(QMMethod::MACE);
-    QMSettings::setMaceMode("fast");
+    settings::QMSettings::setQMMethod(settings::QMMethod::MACE);
+    settings::QMSettings::setMaceMode("fast");
     _qmSetup->setupWriteInfo();
 
     std::ifstream file("default.log");

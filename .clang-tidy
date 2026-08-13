@@ -20,6 +20,7 @@
 # fuchsia-statically-constructed-objects: needs a rework of the global const maps like atomMassMap, atomNumberMap, hubbardDerivMap3ob, etc. to avoid this warning
 # fuchsia-virtual-inheritance: needs a huge rework of the engine code base, but should be possible to fix it for all classes
 # fuchsia-multiple-inheritance: needs a huge rework of the engine code base, but should be possible to fix it for all classes
+# google-build-using-namespace: definitely needed but needs a rework of the code base, maybe with a custom clang-tidy checker
 ---
 Checks:          
   '
@@ -33,6 +34,13 @@ Checks:
   cppcoreguidelines*,
   darwin*,
   fuchsia*,
+  google-a*,
+  google-b*,
+  google-c*,
+  google-d*,
+  google-e*,
+  google-f*,
+  google-g*,
   -cppcoreguidelines-owning-memory,
   -cppcoreguidelines-pro-type-member-init,
   -cppcoreguidelines-pro-type-union-access,
@@ -45,6 +53,7 @@ Checks:
   -fuchsia-statically-constructed-objects,
   -fuchsia-virtual-inheritance,
   -fuchsia-multiple-inheritance,
+  -google-build-using-namespace,
   -altera-struct-pack-align,
   -altera-unroll-loops,
   -boost-use-ranges,
@@ -105,12 +114,6 @@ CheckOptions:
 ...
 
 ### TO BE INCLUDED IN THE FUTURE
-  # google-build-explicit-make-pair,
-  # google-build-namespaces,
-  # google-build-using-namespace,
-  # google-default-arguments,
-  # google-explicit-constructor,
-  # google-global-names-in-headers,
   # google-objc-avoid-nsobject-new,
   # google-objc-avoid-throwing-exception,
   # google-objc-function-naming,

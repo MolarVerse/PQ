@@ -61,8 +61,9 @@ namespace linearAlgebra
             const Vector3D<T> &
         );
 
+        // NOLINTNEXTLINE(google-explicit-constructor)
         StaticMatrix3x3(const T t);
-        StaticMatrix3x3(const std::vector<T> &vector);
+        explicit StaticMatrix3x3(const std::vector<T> &vector);
 
         Vector3D<T>       &operator[](const size_t index);
         const Vector3D<T> &operator[](const size_t index) const;
