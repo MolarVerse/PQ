@@ -106,7 +106,11 @@ InputFileReader::InputFileReader(
     );
     _parsers.push_back(make_unique<CoulombLongRangeInputParser>(_engine));
     _parsers.push_back(
-        make_unique<FilesInputParser>(_engine, validateFilePaths)
+        make_unique<FilesInputParser>(
+            _engine,
+            _engine.getIntraNonBonded(),
+            validateFilePaths
+        )
     );
     _parsers.push_back(make_unique<MMInputParser>(_engine));
     _parsers.push_back(make_unique<GeneralInputParser>(_engine));

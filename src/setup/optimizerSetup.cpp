@@ -53,7 +53,6 @@ using SharedPotential      = std::shared_ptr<potential::Potential>;
 using SharedPhysicalData   = std::shared_ptr<physicalData::PhysicalData>;
 using SharedConstraints    = std::shared_ptr<constraints::Constraints>;
 using SharedIntraNonBonded = std::shared_ptr<intraNonBonded::IntraNonBonded>;
-using SharedVirial         = std::shared_ptr<virial::Virial>;
 
 /**
  * @brief Wrapper for the optimizer setup
@@ -240,8 +239,7 @@ std::shared_ptr<Evaluator> OptimizerSetup::setupEvaluator()
     evaluator->setPotential(_optEngine.getSharedPotential());
     evaluator->setForceField(_optEngine.getSharedForceField());
     evaluator->setConstraints(_optEngine.getConstraints());
-    evaluator->setIntraNonBonded(_optEngine.getSharedIntraNonBonded());
-    evaluator->setVirial(_optEngine.getSharedVirial());
+    evaluator->setIntraNonBonded(_optEngine.getIntraNonBonded());
     evaluator->setSimulationBox(_optEngine.getSharedSimulationBox());
     evaluator->setPhysicalData(_optEngine.getSharedPhysicalData());
     evaluator->setPhysicalDataOld(_optEngine.getSharedPhysicalDataOld());

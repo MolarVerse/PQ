@@ -69,3 +69,25 @@ TEST(TestOutputSettings, determinesMostCommonConfiguredPrefix)
     EXPECT_TRUE(OutputFileSettings::getOverwriteOutputFiles());
     EXPECT_EQ(OutputFileSettings::getOutputFrequency(), 5);
 }
+
+TEST(TestOutputSettings, setsHybridCenterFilename)
+{
+    settings::OutputFileSettings::setHybridCenterFileName("center.xyz");
+    EXPECT_EQ(
+        settings::OutputFileSettings::getHybridCenterFileName(),
+        "center.xyz"
+    );
+}
+
+TEST(TestOutputSettings, replacesDefaultHybridCenterFilenameWithPrefix)
+{
+    using settings::OutputFileSettings;
+
+    OutputFileSettings::setHybridCenterFileName(DefaultFiles::hybridCenterFile);
+    OutputFileSettings::replaceDefaultValues("centerPrefix");
+
+    EXPECT_EQ(
+        OutputFileSettings::getHybridCenterFileName(),
+        "centerPrefix.center.xyz"
+    );
+}

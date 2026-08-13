@@ -49,9 +49,13 @@ using namespace utilities;
  * 9) mshake_file <string> 10) dftb_file <string> 11) turbomole_file <string>
  *
  * @param engine
+ * @param intraNonBonded
  */
-FilesInputParser::FilesInputParser(Engine &engine)
-    : FilesInputParser(engine, true)
+FilesInputParser::FilesInputParser(
+    Engine                                         &engine,
+    std::shared_ptr<intraNonBonded::IntraNonBonded> intraNonBonded
+)
+    : FilesInputParser(engine, intraNonBonded, true)
 {
 }
 
@@ -68,8 +72,14 @@ FilesInputParser::FilesInputParser(Engine &engine)
  *
  * @param engine
  */
-FilesInputParser::FilesInputParser(Engine &engine, const bool validateFilePaths)
-    : InputFileParser(engine), _validateFilePaths(validateFilePaths)
+FilesInputParser::FilesInputParser(
+    Engine                                         &engine,
+    std::shared_ptr<intraNonBonded::IntraNonBonded> intraNonBonded,
+    const bool                                      validateFilePaths
+)
+    : InputFileParser(engine),
+      _intraNonBonded(intraNonBonded),
+      _validateFilePaths(validateFilePaths)
 {
     addKeyword(
         std::string("intra-nonBonded_file"),
@@ -162,7 +172,7 @@ void FilesInputParser::parseIntraNonBondedFile(
             std::format("Intra non bonded file \"{}\" File not found", fileName)
         );
 
-    _engine.getIntraNonBonded().activate();
+    _intraNonBonded->activate();
 
     FileSettings::setIntraNonBondedFileName(fileName);
     FileSettings::setIsIntraNonBondedFileNameSet();

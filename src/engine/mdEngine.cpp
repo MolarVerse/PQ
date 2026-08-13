@@ -37,6 +37,8 @@ using namespace settings;
 using namespace constants;
 using namespace physicalData;
 
+using virial::intraMolecularVirialCorrection;
+
 /**
  * @brief Constructor for MDEngine
  *
@@ -97,9 +99,6 @@ void MDEngine::run()
 
     _intraNonBonded->setTimerName("IntraNonBonded");
     _timer.addTimer(_intraNonBonded->getTimer());
-
-    _virial->setTimerName("Virial");
-    _timer.addTimer(_virial->getTimer());
 
     _physicalData->setTimerName("Physical Data");
     _timer.addTimer(_physicalData->getTimer());
@@ -167,10 +166,10 @@ void MDEngine::takeStepAfterForces()
     _constraints->calculateConstraintBondRefs(*_simulationBox);
 
     if (!Settings::isHybridJobtype())
-        _virial->intraMolecularVirialCorrection(
-            *_simulationBox,
-            *_physicalData
-        );
+    {
+        const auto virial = intraMolecularVirialCorrection(*_simulationBox);
+        _physicalData->addVirial(virial);
+    }
 
     _thermostat->applyThermostatOnForces(*_simulationBox);
 
@@ -246,6 +245,9 @@ void MDEngine::writeOutput()
         );   // use physicalData instead of averagePhysicalData
 
         _engineOutput.writeBoxFile(effStep, _simulationBox->getBox());
+
+        if (Settings::isHybridJobtype())
+            _engineOutput.writeHybridCenterXyzFile(_configurator, effStep);
     }
 
     // NOTE:
@@ -328,6 +330,16 @@ output::EnergyOutput &MDEngine::getInstantEnergyOutput()
 output::MomentumOutput &MDEngine::getMomentumOutput()
 {
     return _engineOutput.getMomentumOutput();
+}
+
+/**
+ * @brief get the reference to the xyz hybrid center output
+ *
+ * @return output::TrajectoryOutput&
+ */
+output::TrajectoryOutput &MDEngine::getXyzHybridCenterOutput()
+{
+    return _engineOutput.getXyzHybridCenterOutput();
 }
 
 /**

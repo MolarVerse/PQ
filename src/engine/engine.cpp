@@ -27,7 +27,6 @@
 
 #include "fileSettings.hpp"   // for FileSettings
 #include "logOutput.hpp"      // for LogOutput
-#include "molecularVirial.hpp"
 #include "potentialBruteForce.hpp"
 #include "stdoutOutput.hpp"      // for StdoutOutput
 #include "timingsSettings.hpp"   // for TimingsSettings
@@ -51,8 +50,7 @@ using namespace settings;
  * cell list, intra-non-bonded handler, force field, and constraints.
  */
 Engine::Engine()
-    : _virial{std::make_shared<virial::MolecularVirial>()},
-      _potential{std::make_shared<potential::PotentialBruteForce>()},
+    : _potential{std::make_shared<potential::PotentialBruteForce>()},
       _physicalData{std::make_shared<physicalData::PhysicalData>()},
       _simulationBox{std::make_shared<simulationBox::SimulationBox>()},
       _cellList{std::make_shared<simulationBox::CellList>()},
@@ -184,16 +182,12 @@ ForceField &Engine::getForceField() { return *_forceField; }
 /**
  * @brief get the reference to the intra non bonded interactions
  *
- * @return IntraNonBonded&
+ * @return const std::shared_ptr<IntraNonBonded>&
  */
-IntraNonBonded &Engine::getIntraNonBonded() { return *_intraNonBonded; }
-
-/**
- * @brief get the reference to the virial
- *
- * @return Virial&
- */
-Virial &Engine::getVirial() { return *_virial; }
+const std::shared_ptr<IntraNonBonded> &Engine::getIntraNonBonded() const
+{
+    return _intraNonBonded;
+}
 
 /**
  * @brief get the reference to the potential
@@ -217,13 +211,6 @@ ForceField *Engine::getForceFieldPtr() { return _forceField.get(); }
 Potential *Engine::getPotentialPtr() { return _potential.get(); }
 
 /**
- * @brief get the pointer to the virial
- *
- * @return Virial*
- */
-Virial *Engine::getVirialPtr() { return _virial.get(); }
-
-/**
  * @brief get the pointer to the simulation box
  *
  * @return SimulationBox*
@@ -236,13 +223,6 @@ SimulationBox *Engine::getSimulationBoxPtr() { return _simulationBox.get(); }
  * @return PhysicalData*
  */
 PhysicalData *Engine::getPhysicalDataPtr() { return _physicalData.get(); }
-
-/**
- * @brief get the pointer to the intra non bonded interactions
- *
- * @return IntraNonBonded*
- */
-IntraNonBonded *Engine::getIntraNonBondedPtr() { return _intraNonBonded.get(); }
 
 /**
  * @brief set the inter-water interactions handler
@@ -390,23 +370,6 @@ const std::shared_ptr<Constraints> &Engine::getConstraints() const
 {
     return _constraints;
 }
-
-/**
- * @brief get the shared pointer to the intra non bonded interactions
- *
- * @return std::shared_ptr<IntraNonBonded>
- */
-std::shared_ptr<IntraNonBonded> Engine::getSharedIntraNonBonded() const
-{
-    return _intraNonBonded;
-}
-
-/**
- * @brief get the shared pointer to the virial
- *
- * @return std::shared_ptr<Virial>
- */
-std::shared_ptr<Virial> Engine::getSharedVirial() const { return _virial; }
 
 /**
  * @brief get the shared pointer to the potential

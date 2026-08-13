@@ -32,6 +32,7 @@ target_include_directories(output
 target_link_libraries(output
     PUBLIC
     utilities
+    hybridConfigurator
     physicalData
     simulationBox
     optimization

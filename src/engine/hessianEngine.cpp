@@ -105,8 +105,7 @@ std::shared_ptr<Evaluator> HessianEngine::setupEvaluator()
     evaluator->setPotential(getSharedPotential());
     evaluator->setForceField(getSharedForceField());
     evaluator->setConstraints(getConstraints());
-    evaluator->setIntraNonBonded(getSharedIntraNonBonded());
-    evaluator->setVirial(getSharedVirial());
+    evaluator->setIntraNonBonded(getIntraNonBonded());
     evaluator->setPhysicalData(getSharedPhysicalData());
     evaluator->setPhysicalDataOld(getSharedPhysicalDataOld());
 
