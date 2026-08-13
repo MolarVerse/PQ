@@ -27,11 +27,14 @@
 #include <ostream>   // for ofstream, basic_ostream, operator<<
 #include <sstream>   // for ostringstream
 
-#include "molecule.hpp"                // for Molecule
-#include "simulationBox.hpp"           // for SimulationBox
+#include "defaults.hpp"
+#include "hybridConfigurator.hpp"
+#include "molecule.hpp"        // for Molecule
+#include "simulationBox.hpp"   // for SimulationBox
 
 using namespace output;
-using namespace settings;
+using namespace defaults;
+using namespace configurator;
 using namespace simulationBox;
 
 /**
@@ -52,13 +55,14 @@ void TrajectoryOutput::writeHeader(const SimulationBox &simBox)
  * @brief Write xyz file
  *
  * @param simBox
+ * @param step
  */
-void TrajectoryOutput::writeXyz(SimulationBox &simBox)
+void TrajectoryOutput::writeXyz(SimulationBox &simBox, const size_t step)
 {
     std::ostringstream buffer;
 
     writeHeader(simBox);
-    buffer << '\n';
+    writeComment(step);
 
     for (const auto &atom : simBox.getAtoms())
     {
@@ -78,16 +82,50 @@ void TrajectoryOutput::writeXyz(SimulationBox &simBox)
 }
 
 /**
+ * @brief Write hybrid center xyz file
+ *
+ * @param simBox
+ * @param step
+ */
+void TrajectoryOutput::writeHybridCenterXyz(
+    const HybridConfigurator &configurator,
+    const size_t              step
+)
+{
+    // one dummy atom is needed to mark the inner region center
+    constexpr size_t numberOfCenterAtoms = 1;
+    constexpr char   centerAtomName      = INNER_REGION_CENTER_ATOM_NAME;
+
+    // header line
+    _fp << numberOfCenterAtoms << '\n';
+    writeComment(step);
+
+    std::ostringstream buffer;
+    buffer << std::format("{:<5}\t", centerAtomName);
+
+    const auto &pos = configurator.getInnerRegionCenter();
+
+    buffer << std::format("{:15.8f}\t", pos[0]);
+    buffer << std::format("{:15.8f}\t", pos[1]);
+    buffer << std::format("{:15.8f}\n", pos[2]);
+
+    // Write the buffer to the file
+    _fp << buffer.str();
+    _fp << std::flush;
+}
+
+/**
  * @brief Write velocities file
  *
  * @param simBox
+ * @param step
  */
-void TrajectoryOutput::writeVelocities(SimulationBox &simBox)
+void TrajectoryOutput::writeVelocities(SimulationBox &simBox, const size_t step)
 {
     std::ostringstream buffer;
 
     writeHeader(simBox);
-    buffer << '\n';
+    writeComment(step);
 
     for (const auto &molecule : simBox.getMolecules())
     {
@@ -114,16 +152,14 @@ void TrajectoryOutput::writeVelocities(SimulationBox &simBox)
  * @brief Write forces file
  *
  * @param simBox
+ * @param step
  */
-void TrajectoryOutput::writeForces(SimulationBox &simBox)
+void TrajectoryOutput::writeForces(SimulationBox &simBox, const size_t step)
 {
     std::ostringstream buffer;
 
     writeHeader(simBox);
-    buffer << std::format(
-        "# Total force = {:.5e} kcal/mol/Angstrom\n",
-        simBox.calculateTotalForce()
-    );
+    writeForceComment(step, simBox.calculateTotalForce());
 
     for (const auto &molecule : simBox.getMolecules())
     {
@@ -150,13 +186,14 @@ void TrajectoryOutput::writeForces(SimulationBox &simBox)
  * @brief Write charges file
  *
  * @param simBox
+ * @param step
  */
-void TrajectoryOutput::writeCharges(SimulationBox &simBox)
+void TrajectoryOutput::writeCharges(SimulationBox &simBox, const size_t step)
 {
     std::ostringstream buffer;
 
     writeHeader(simBox);
-    buffer << '\n';
+    writeComment(step);
 
     for (const auto &atom : simBox.getAtoms())
     {

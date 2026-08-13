@@ -27,14 +27,21 @@
 #include <string>   // for string
 
 #include "restartFileSection.hpp"   // for RestartFileSection
-#include "typeAliases.hpp"          // for strings
-
-#ifdef WITH_TESTS
-#include <gtest/gtest_prod.h>   // for FRIEND_TEST
 
 class TestAtomSection_testProcessAtomLine_Test;     // Friend test class
 class TestAtomSection_testProcessQMAtomLine_Test;   // Friend test class
-#endif
+
+namespace engine
+{
+    class Engine;   // forward declaration
+}   // namespace engine
+
+namespace simulationBox
+{
+    class SimulationBox;   // forward declaration
+    class Molecule;        // forward declaration
+    class Atom;            // forward declaration
+}   // namespace simulationBox
 
 namespace input::restartFile
 {
@@ -47,20 +54,36 @@ namespace input::restartFile
     class AtomSection : public RestartFileSection
     {
        private:
-        void processQMAtomLine(pq::strings &lineElements, pq::SimBox &);
-        void processAtomLine(pq::strings &, pq::SimBox &, pq::Molecule &) const;
+        void processQMAtomLine(
+            std::vector<std::string> &lineElements,
+            simulationBox::SimulationBox &
+        );
+        void processAtomLine(
+            std::vector<std::string> &,
+            simulationBox::SimulationBox &,
+            simulationBox::Molecule &
+        ) const;
 
-        void checkAtomLine(pq::strings &lineElements, const pq::Molecule &);
-        void setAtomPropertyVectors(pq::strings &, pq::SharedAtom &) const;
+        void checkAtomLine(
+            std::vector<std::string> &lineElements,
+            const simulationBox::Molecule &
+        );
+        void setAtomPropertyVectors(
+            std::vector<std::string> &,
+            std::shared_ptr<simulationBox::Atom> &
+        ) const;
 
 #ifdef WITH_TESTS
-        FRIEND_TEST(::TestAtomSection, testProcessAtomLine);
-        FRIEND_TEST(::TestAtomSection, testProcessQMAtomLine);
+        friend class ::TestAtomSection_testProcessAtomLine_Test;
+        friend class ::TestAtomSection_testProcessQMAtomLine_Test;
 #endif
 
        public:
-        void checkNumberOfLineArguments(pq::strings &) const;
-        void process(pq::strings &lineElements, pq::Engine &) override;
+        void checkNumberOfLineArguments(std::vector<std::string> &) const;
+        void process(
+            std::vector<std::string> &lineElements,
+            engine::Engine &
+        ) override;
 
         [[nodiscard]] std::string keyword() override;
         [[nodiscard]] bool        isHeader() override;

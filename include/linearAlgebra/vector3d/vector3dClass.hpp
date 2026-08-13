@@ -24,9 +24,9 @@
 
 #define _VECTOR3D_CLASS_HPP_
 
-#include <array>         // for array
-#include <cstddef>       // for size_t
-#include <vector>        // for vector
+#include <array>     // for array
+#include <cstddef>   // for size_t
+#include <vector>    // for vector
 
 #include "concepts/vector3dConcepts.hpp"
 
@@ -71,9 +71,10 @@ namespace linearAlgebra
         ~Vector3D() = default;
 
         Vector3D() = default;
-        Vector3D(const T x, const T y, const T z) : _x(x), _y(y), _z(z){};
-        Vector3D(const Vector3D<T> &xyz) : _xyz(xyz._xyz){};
-        Vector3D(const T xyz) : _x(xyz), _y(xyz), _z(xyz){};
+        Vector3D(const T x, const T y, const T z) : _x(x), _y(y), _z(z) {}
+        Vector3D(const Vector3D<T> &xyz) : _xyz(xyz._xyz) {}
+        Vector3D(Vector3D<T> &&xyz) noexcept : _xyz(std::move(xyz._xyz)) {}
+        Vector3D(const T xyz) : _x(xyz), _y(xyz), _z(xyz) {}
 
         using value_type = T;
 
@@ -82,7 +83,7 @@ namespace linearAlgebra
          ********************/
 
         // = operators
-        Vector3D &operator=(Vector3D<T> &);
+        Vector3D &operator=(Vector3D<T> &&) noexcept;
         Vector3D &operator=(const Vector3D<T> &);
 
         // += operators
@@ -147,7 +148,7 @@ namespace linearAlgebra
 }   // namespace linearAlgebra
 
 #ifndef _VECTOR3D_CLASS_TPP_
-#include "vector3dClass.tpp.hpp"   // IWYU pragma: keep - DO NOT MOVE THIS LINE
+#include "vector3dClass.tpp.hpp"   // IWYU pragma: export
 #endif
 
 #endif   // _VECTOR3D_CLASS_HPP_

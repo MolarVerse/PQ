@@ -25,16 +25,29 @@
 #include "constants/conversionFactors.hpp"   // for _FS_TO_PS_
 #include "outputFileSettings.hpp"            // for OutputFileSettings
 #include "progressbar.hpp"                   // for progressbar
-#include "qmmdEngine.hpp"                    // for QMMDEngine
+#include "qmCapableEngine.hpp"               // for QMCapableEngine
 #include "referencesOutput.hpp"              // for ReferencesOutput
 #include "settings.hpp"                      // for Settings
 #include "timingsSettings.hpp"               // for TimingsSettings
+#include "velocityVerlet.hpp"
 
 using namespace engine;
 using namespace output;
 using namespace settings;
 using namespace constants;
 using namespace physicalData;
+
+/**
+ * @brief Constructor for MDEngine
+ *
+ * @details This constructor initializes the MDEngine with default settings.
+ */
+MDEngine::MDEngine()
+    : _integrator(std::make_unique<integrator::VelocityVerlet>()),
+      _thermostat(std::make_unique<thermostat::Thermostat>()),
+      _manostat(std::make_unique<manostat::Manostat>())
+{
+}
 
 /**
  * @brief Run the simulation for numberOfSteps steps.
@@ -57,7 +70,7 @@ void MDEngine::run()
         takeStep();
 
         writeOutput();
-        deleteTempFiles();
+        deleteTmpFiles();
     }
 
     _timer.stopSimulationTimer();
@@ -97,20 +110,21 @@ void MDEngine::run()
     _resetKinetics.setTimerName("Reset Kinetics");
     _timer.addTimer(_resetKinetics.getTimer());
 
+    _intraWater->setTimerName("Water Intra Potential");
+    _timer.addTimer(_intraWater->getTimer());
+
+    _interWater->setTimerName("Water Inter Potential");
+    _timer.addTimer(_interWater->getTimer());
+
     if (Settings::isQMActivated())
     {
-        dynamic_cast<QMMDEngine *>(this)->getQMRunner()->setTimerName(
+        dynamic_cast<QMCapableEngine *>(this)->getQMRunner()->setTimerName(
             "QM Engine"
         );
         _timer.addTimer(
-            dynamic_cast<QMMDEngine *>(this)->getQMRunner()->getTimer()
+            dynamic_cast<QMCapableEngine *>(this)->getQMRunner()->getTimer()
         );
     }
-
-#ifdef WITH_KOKKOS
-    _kokkosPotential.setTimerName("Kokkos Potential");
-    _timer.addTimer(_kokkosPotential.getTimer());
-#endif
 
     references::ReferencesOutput::writeReferencesFile();
 
@@ -152,7 +166,11 @@ void MDEngine::takeStepAfterForces()
 
     _constraints->calculateConstraintBondRefs(*_simulationBox);
 
-    _virial->intraMolecularVirialCorrection(*_simulationBox, *_physicalData);
+    if (!Settings::isHybridJobtype())
+        _virial->intraMolecularVirialCorrection(
+            *_simulationBox,
+            *_physicalData
+        );
 
     _thermostat->applyThermostatOnForces(*_simulationBox);
 
@@ -170,12 +188,17 @@ void MDEngine::takeStepAfterForces()
 
     _thermostat->applyTemperatureRamping();
 
-    if (Settings::isQMActivated())
+    if (Settings::isQMOnlyJobtype())
     {
-        _physicalData->setNumberOfQMAtoms(
-            static_cast<double>(_simulationBox->getNumberOfQMAtoms())
-        );
+        const auto nQMAtoms = _simulationBox->getNumberOfQMAtoms();
+        _physicalData->setNumberOfQMAtoms(static_cast<double>(nQMAtoms));
     }
+}
+
+void MDEngine::calculateForcesWrapper()
+{
+    _simulationBox->resetAllForces();
+    calculateForces();
 }
 
 /**
@@ -186,7 +209,7 @@ void MDEngine::takeStep()
 {
     takeStepBeforeForces();
 
-    calculateForces();
+    calculateForcesWrapper();
 
     takeStepAfterForces();
 }
@@ -206,10 +229,10 @@ void MDEngine::writeOutput()
 
     if (0 == _step % outputFreq)
     {
-        _engineOutput.writeXyzFile(*_simulationBox);
-        _engineOutput.writeVelFile(*_simulationBox);
-        _engineOutput.writeForceFile(*_simulationBox);
-        _engineOutput.writeChargeFile(*_simulationBox);
+        _engineOutput.writeXyzFile(*_simulationBox, effStep);
+        _engineOutput.writeVelFile(*_simulationBox, effStep);
+        _engineOutput.writeForceFile(*_simulationBox, effStep);
+        _engineOutput.writeChargeFile(*_simulationBox, effStep);
         _engineOutput.writeRstFile(*_simulationBox, *_thermostat, effStep);
 
         _engineOutput.writeVirialFile(
@@ -223,6 +246,9 @@ void MDEngine::writeOutput()
         );   // use physicalData instead of averagePhysicalData
 
         _engineOutput.writeBoxFile(effStep, _simulationBox->getBox());
+
+        if (Settings::isHybridJobtype())
+            _engineOutput.writeHybridCenterXyzFile(_configurator, effStep);
     }
 
     // NOTE:
@@ -305,6 +331,16 @@ output::EnergyOutput &MDEngine::getInstantEnergyOutput()
 output::MomentumOutput &MDEngine::getMomentumOutput()
 {
     return _engineOutput.getMomentumOutput();
+}
+
+/**
+ * @brief get the reference to the xyz hybrid center output
+ *
+ * @return output::TrajectoryOutput&
+ */
+output::TrajectoryOutput &MDEngine::getXyzHybridCenterOutput()
+{
+    return _engineOutput.getXyzHybridCenterOutput();
 }
 
 /**

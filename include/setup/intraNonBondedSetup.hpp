@@ -24,11 +24,14 @@
 
 #define _INTRA_NON_BONDED_SETUP_HPP_
 
-#include "typeAliases.hpp"
+namespace engine
+{
+    class Engine;   // forward declaration
+}   // namespace engine
 
 namespace setup
 {
-    void setupIntraNonBonded(pq::Engine &);
+    void setupIntraNonBonded(engine::Engine &);
 
     /**
      * @class IntraNonBondedSetup
@@ -39,10 +42,10 @@ namespace setup
     class IntraNonBondedSetup
     {
        private:
-        pq::Engine &_engine;
+        engine::Engine &_engine;
 
        public:
-        explicit IntraNonBondedSetup(pq::Engine &engine);
+        explicit IntraNonBondedSetup(engine::Engine &engine);
 
         void setup();
     };

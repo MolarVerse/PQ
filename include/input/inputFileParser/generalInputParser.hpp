@@ -25,9 +25,12 @@
 #define _GENERAL_INPUT_PARSER_HPP_
 
 #include <cstddef>   // for size_t
+#include <memory>
+#include <string>
+#include <vector>
 
+#include "engine.hpp"
 #include "inputFileParser.hpp"   // for InputFileParser
-#include "typeAliases.hpp"       // for pq::strings, pq::Engine
 
 namespace input
 {
@@ -40,14 +43,27 @@ namespace input
     class GeneralInputParser : public InputFileParser
     {
        public:
-        explicit GeneralInputParser(pq::Engine &);
+        explicit GeneralInputParser(engine::Engine &);
 
-        void parseJobType(const pq::strings &, const size_t);
-        void parseDimensionality(const pq::strings &, const size_t);
-        void parseFloatingPointType(const pq::strings &, const size_t);
-        void parseRandomSeed(const pq::strings &, const size_t);
+        void parseJobType(const std::vector<std::string> &, const size_t);
 
-        void parseJobTypeForEngine(const pq::strings &, const size_t, pq::UniqueEngine &);
+        void parseDimensionality(
+            const std::vector<std::string> &,
+            const size_t
+        );
+
+        void parseFloatingPointType(
+            const std::vector<std::string> &,
+            const size_t
+        );
+
+        void parseRandomSeed(const std::vector<std::string> &, const size_t);
+
+        static void parseJobTypeForEngine(
+            const std::vector<std::string> &,
+            const size_t,
+            std::unique_ptr<engine::Engine> &
+        );
     };
 
 }   // namespace input

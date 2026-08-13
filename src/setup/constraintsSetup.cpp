@@ -82,14 +82,14 @@ void ConstraintsSetup::setup()
  */
 void ConstraintsSetup::setupMShake()
 {
-    auto &constraints = _engine.getConstraints();
+    const auto &constraints = _engine.getConstraints();
 
-    if (!constraints.isMShakeActive())
+    if (!constraints->isMShakeActive())
         return;
 
     readMShake(_engine);
 
-    constraints.initMShake();
+    constraints->initMShake();
 }
 
 /**
@@ -101,10 +101,10 @@ void ConstraintsSetup::setupTolerances()
     _shakeTolerance  = ConstraintSettings::getShakeTolerance();
     _rattleTolerance = ConstraintSettings::getRattleTolerance();
 
-    auto &constraints = _engine.getConstraints();
+    const auto &constraints = _engine.getConstraints();
 
-    constraints.setShakeTolerance(_shakeTolerance);
-    constraints.setRattleTolerance(_rattleTolerance);
+    constraints->setShakeTolerance(_shakeTolerance);
+    constraints->setRattleTolerance(_rattleTolerance);
 }
 
 /**
@@ -116,10 +116,10 @@ void ConstraintsSetup::setupMaxIterations()
     _shakeMaxIter  = ConstraintSettings::getShakeMaxIter();
     _rattleMaxIter = ConstraintSettings::getRattleMaxIter();
 
-    auto &constraints = _engine.getConstraints();
+    const auto &constraints = _engine.getConstraints();
 
-    constraints.setShakeMaxIter(_shakeMaxIter);
-    constraints.setRattleMaxIter(_rattleMaxIter);
+    constraints->setShakeMaxIter(_shakeMaxIter);
+    constraints->setRattleMaxIter(_rattleMaxIter);
 }
 
 /**
@@ -128,10 +128,10 @@ void ConstraintsSetup::setupMaxIterations()
  */
 void ConstraintsSetup::setupRefBondLengths()
 {
-    auto       &constraints = _engine.getConstraints();
+    const auto &constraints = _engine.getConstraints();
     const auto &simBox      = _engine.getSimulationBox();
 
-    constraints.calculateConstraintBondRefs(simBox);
+    constraints->calculateConstraintBondRefs(simBox);
 }
 
 /**
@@ -143,8 +143,8 @@ void ConstraintsSetup::setupDegreesOfFreedom()
     auto       &simBox      = _engine.getSimulationBox();
     const auto &constraints = _engine.getConstraints();
 
-    _shakeConstraints  = constraints.getNumberOfBondConstraints();
-    _mShakeConstraints = constraints.getNumberOfMShakeConstraints(simBox);
+    _shakeConstraints  = constraints->getNumberOfBondConstraints();
+    _mShakeConstraints = constraints->getNumberOfMShakeConstraints(simBox);
 
     auto dof  = simBox.getDegreesOfFreedom();
     dof      -= _shakeConstraints;
@@ -163,13 +163,13 @@ void ConstraintsSetup::writeSetupInfo()
 
     writeEnabled();
 
-    if (constraints.isShakeLikeActive())
+    if (constraints->isShakeLikeActive())
     {
         writeNConstraintBonds();
         writeTolerance();
     }
 
-    if (constraints.isShakeActive())
+    if (constraints->isShakeActive())
         writeMaxIter();
 
     writeDof();
@@ -181,11 +181,11 @@ void ConstraintsSetup::writeSetupInfo()
  */
 void ConstraintsSetup::writeEnabled()
 {
-    auto &constraints = _engine.getConstraints();
+    const auto &constraints = _engine.getConstraints();
 
     // clang-format off
-    std::string shakeMsg  = constraints.isShakeActive() ? "enabled" : "disabled";
-    std::string mShakeMsg = constraints.isMShakeActive() ? "enabled" : "disabled";
+    std::string shakeMsg  = constraints->isShakeActive() ? "enabled" : "disabled";
+    std::string mShakeMsg = constraints->isMShakeActive() ? "enabled" : "disabled";
     // clang-format on
 
     shakeMsg  = std::format("SHAKE:   {}", shakeMsg);
@@ -267,9 +267,9 @@ void ConstraintsSetup::writeNConstraintBonds()
     const auto &constraints = _engine.getConstraints();
     auto       &simBox      = _engine.getSimulationBox();
 
-    const auto nShakeBonds  = constraints.getNumberOfBondConstraints();
-    const auto nMShakeTypes = constraints.getMShakeReferences().size();
-    const auto nMShakeMols  = constraints.getNumberOfMShakeConstraints(simBox);
+    const auto nShakeBonds  = constraints->getNumberOfBondConstraints();
+    const auto nMShakeTypes = constraints->getMShakeReferences().size();
+    const auto nMShakeMols  = constraints->getNumberOfMShakeConstraints(simBox);
 
     // clang-format off
     const auto nShakeBondsMsg  = std::format("Number of SHAKE bonds:       {}", nShakeBonds);

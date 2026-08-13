@@ -44,10 +44,12 @@ using namespace settings;
  * @param intraNonBondedType
  */
 IntraNonBondedMap::IntraNonBondedMap(
-    pq::Molecule            *molecule,
+    simulationBox::Molecule *molecule,
     IntraNonBondedContainer *intraNonBondedType
 )
-    : _molecule(molecule), _intraNonBondedContainer(intraNonBondedType){};
+    : _molecule(molecule), _intraNonBondedContainer(intraNonBondedType)
+{
+}
 
 /**
  * @brief calculate the intra non bonded interactions for a single
@@ -118,6 +120,9 @@ std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(
     NonCoulombPotential    *nonCoulPot
 ) const
 {
+    if (!_molecule->isActive())
+        return {0.0, 0.0};
+
     auto coulombEnergy    = 0.0;
     auto nonCoulombEnergy = 0.0;
 
@@ -222,9 +227,12 @@ IntraNonBondedContainer *IntraNonBondedMap::getIntraNonBondedType() const
 /**
  * @brief get the molecule pointer
  *
- * @return pq::Molecule*
+ * @return simulationBox::Molecule*
  */
-pq::Molecule *IntraNonBondedMap::getMolecule() const { return _molecule; }
+simulationBox::Molecule *IntraNonBondedMap::getMolecule() const
+{
+    return _molecule;
+}
 
 /**
  * @brief get the atom indices of the IntraNonBondedContainer object

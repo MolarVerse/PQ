@@ -86,7 +86,7 @@ void ResetKinetics::reset(
     SimulationBox &simBox
 )
 {
-    startTimingsSection("Reset Kinetics");
+    auto _ = scoped("Reset Kinetics");
 
     _momentum        = data.getMomentum() * S_TO_FS;
     _angularMomentum = data.getAngularMomentum() * S_TO_FS;
@@ -117,8 +117,6 @@ void ResetKinetics::reset(
     data.setTemperature(_temperature);
     data.setMomentum(_momentum * FS_TO_S);
     data.setAngularMomentum(_angularMomentum * FS_TO_S);
-
-    stopTimingsSection("Reset Kinetics");
 }
 
 /**
@@ -278,7 +276,7 @@ void ResetKinetics::setTemperature(const double temperature)
  *
  * @param momentum
  */
-void ResetKinetics::setMomentum(const pq::Vec3D &momentum)
+void ResetKinetics::setMomentum(const linearAlgebra::Vec3D &momentum)
 {
     _momentum = momentum;
 }
@@ -288,7 +286,9 @@ void ResetKinetics::setMomentum(const pq::Vec3D &momentum)
  *
  * @param angularMomentum
  */
-void ResetKinetics::setAngularMomentum(const pq::Vec3D &angularMomentum)
+void ResetKinetics::setAngularMomentum(
+    const linearAlgebra::Vec3D &angularMomentum
+)
 {
     _angularMomentum = angularMomentum;
 }

@@ -26,6 +26,7 @@
 
 #include <cstddef>
 #include <exception>
+#include <optional>
 #include <string>
 #include <string_view>
 
@@ -61,7 +62,8 @@ namespace customException
         LINEARALGEBRAEXCEPTION,
         OPTEXCEPTION,
         OPTWARNING,
-        COMPILETIMEEXCEPTION
+        COMPILETIMEEXCEPTION,
+        HYBRIDCONFIGURATOREXCEPTION
     };
 
     /**
@@ -73,12 +75,19 @@ namespace customException
     class CustomException : public std::exception
     {
        protected:
-        std::string _message;
+        std::string           _message;
+        std::optional<size_t> _lineNumber;
 
        public:
-        explicit CustomException(const std::string_view message);
+        explicit CustomException(
+            const std::string_view message,
+            std::optional<size_t>  lineNumber = std::nullopt
+        );
 
         void colorfulOutput(const Color::Code, const std::string_view) const;
+        void setLineNumber(const size_t lineNumber) noexcept;
+        [[nodiscard]] const std::string    &getMessage() const noexcept;
+        [[nodiscard]] std::optional<size_t> getLineNumber() const noexcept;
     };
 
     /**
@@ -368,6 +377,32 @@ namespace customException
      * @brief Exception for compile time errors
      */
     class CompileTimeException : public CustomException
+    {
+       public:
+        using CustomException::CustomException;
+
+        const char *what() const throw() override;
+    };
+
+    /**
+     * @class HybridConfiguratorException inherits from CustomException
+     *
+     * @brief Exception for hybrid configurator errors
+     */
+    class HybridConfiguratorException : public CustomException
+    {
+       public:
+        using CustomException::CustomException;
+
+        const char *what() const throw() override;
+    };
+
+    /**
+     * @class HybridMDEngineException inherits from CustomException
+     *
+     * @brief Exception for hybrid MD engine errors
+     */
+    class HybridMDEngineException : public CustomException
     {
        public:
         using CustomException::CustomException;

@@ -28,7 +28,12 @@
 #include <vector>
 
 #include "hessianSettings.hpp"
-#include "typeAliases.hpp"
+#include "vector3d.hpp"
+
+namespace simulationBox
+{
+    class SimulationBox;   // forward declaration
+}   // namespace simulationBox
 
 namespace opt
 {
@@ -44,8 +49,8 @@ namespace opt
 
         [[nodiscard]]
         virtual HessianMatrix build(
-            Evaluator  &evaluator,
-            pq::SimBox &simulationBox
+            Evaluator                    &evaluator,
+            simulationBox::SimulationBox &simulationBox
         ) const = 0;
     };
 
@@ -56,26 +61,26 @@ namespace opt
 
         [[nodiscard]]
         std::vector<double> evaluateForces(
-            Evaluator   &evaluator,
-            pq::SimBox  &simulationBox,
-            const size_t coordinateIndex,
-            const double displacement
+            Evaluator                    &evaluator,
+            simulationBox::SimulationBox &simulationBox,
+            const size_t                  coordinateIndex,
+            const double                  displacement
         ) const;
 
         static void restorePositions(
-            pq::SimBox                   &simulationBox,
-            const std::vector<pq::Vec3D> &positions
+            simulationBox::SimulationBox            &simulationBox,
+            const std::vector<linearAlgebra::Vec3D> &positions
         );
 
         static void displaceCoordinate(
-            pq::SimBox  &simulationBox,
-            const size_t coordinateIndex,
-            const double displacement
+            simulationBox::SimulationBox &simulationBox,
+            const size_t                  coordinateIndex,
+            const double                  displacement
         );
 
         [[nodiscard]]
         static std::vector<double> flattenForces(
-            const pq::SimBox &simulationBox
+            const simulationBox::SimulationBox &simulationBox
         );
 
        public:
@@ -92,8 +97,8 @@ namespace opt
 
         [[nodiscard]]
         HessianMatrix build(
-            Evaluator  &evaluator,
-            pq::SimBox &simulationBox
+            Evaluator                    &evaluator,
+            simulationBox::SimulationBox &simulationBox
         ) const override;
     };
 
@@ -105,8 +110,8 @@ namespace opt
 
         [[nodiscard]]
         HessianMatrix build(
-            Evaluator  &evaluator,
-            pq::SimBox &simulationBox
+            Evaluator                    &evaluator,
+            simulationBox::SimulationBox &simulationBox
         ) const override;
     };
 
@@ -118,8 +123,8 @@ namespace opt
 
         [[nodiscard]]
         HessianMatrix build(
-            Evaluator  &evaluator,
-            pq::SimBox &simulationBox
+            Evaluator                    &evaluator,
+            simulationBox::SimulationBox &simulationBox
         ) const override;
     };
 
@@ -128,8 +133,8 @@ namespace opt
        public:
         [[nodiscard]]
         HessianMatrix build(
-            Evaluator  &evaluator,
-            pq::SimBox &simulationBox
+            Evaluator                    &evaluator,
+            simulationBox::SimulationBox &simulationBox
         ) const override;
     };
 

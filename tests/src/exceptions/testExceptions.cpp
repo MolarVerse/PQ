@@ -22,6 +22,7 @@
 
 #include <gtest/gtest.h>   // for Test, TestInfo (ptr only), TEST, InitGoogleTest, RUN_ALL_TESTS
 
+#include <optional>      // for optional
 #include <string_view>   // for string_view
 
 #include "exceptions.hpp"         // for GuffDatException, InputFileException
@@ -39,6 +40,19 @@ TEST(TestExceptions, inputFileException)
         customException::InputFileException,
         "test"
     );
+}
+
+/**
+ * @brief tests structured source line metadata
+ */
+TEST(TestExceptions, sourceLine)
+{
+    auto exception = customException::InputFileException("test", 12);
+
+    EXPECT_EQ(exception.getLineNumber(), std::optional<size_t>(12));
+
+    exception.setLineNumber(13);
+    EXPECT_EQ(exception.getLineNumber(), std::optional<size_t>(12));
 }
 
 /**
@@ -206,6 +220,24 @@ TEST(TestExceptions, qmRunnerException)
     EXPECT_THROW_MSG(
         throw customException::QMRunnerException("test"),
         customException::QMRunnerException,
+        "test"
+    );
+}
+
+TEST(TestExceptions, hybridConfiguratorException)
+{
+    EXPECT_THROW_MSG(
+        throw customException::HybridConfiguratorException("test"),
+        customException::HybridConfiguratorException,
+        "test"
+    );
+}
+
+TEST(TestExceptions, hybridMDEngineException)
+{
+    EXPECT_THROW_MSG(
+        throw customException::HybridMDEngineException("test"),
+        customException::HybridMDEngineException,
         "test"
     );
 }

@@ -22,41 +22,47 @@
 *****************************************************************************
 """
 
+from pathlib import Path
+
 import numpy as np
 
 from PQAnalysis.io import read_trajectory, EnergyFileReader
 
 
-def check_pq_output(base_name, folder_name, ref_folder="ref_data"):
+def check_pq_output(
+    base_name,
+    folder_name,
+    ref_folder="ref_data",
+):
 
-    ref_path = "../" + folder_name + "/" + ref_folder + "/"
+    ref_path = Path("..") / folder_name / ref_folder
 
     traj = read_trajectory(base_name + ".xyz")
-    ref_traj = read_trajectory(ref_path + base_name + ".xyz")
+    ref_traj = read_trajectory(str(ref_path / (base_name + ".xyz")))
 
     assert traj.isclose(ref_traj)
 
     traj = read_trajectory(base_name + ".vel", traj_format="vel")
     ref_traj = read_trajectory(
-        ref_path + base_name + ".vel", traj_format="vel")
+        str(ref_path / (base_name + ".vel")), traj_format="vel")
 
     assert traj.isclose(ref_traj)
 
     traj = read_trajectory(base_name + ".force", traj_format="force")
     ref_traj = read_trajectory(
-        ref_path + base_name + ".force", traj_format="force")
+        str(ref_path / (base_name + ".force")), traj_format="force")
 
     assert traj.isclose(ref_traj)
 
     traj = read_trajectory(base_name + ".chrg", traj_format="charge")
     ref_traj = read_trajectory(
-        ref_path + base_name + ".chrg", traj_format="charge")
+        str(ref_path / (base_name + ".chrg")), traj_format="charge")
 
     assert traj.isclose(ref_traj)
 
     reader = EnergyFileReader(base_name + ".en")
     ref_reader = EnergyFileReader(
-        ref_path + base_name + ".en")
+        str(ref_path / (base_name + ".en")))
 
     energy = reader.read()
     ref_energy = ref_reader.read()

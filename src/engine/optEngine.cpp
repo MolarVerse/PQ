@@ -57,15 +57,17 @@ void OptEngine::run()
             break;
 
         writeOutput();
-        deleteTempFiles();
+        deleteTmpFiles();
     }
 
     if (!_converged)
     {
-        throw customException::OptException(std::format(
-            "Optimizer did not converge after {} epochs.",
-            _optimizer->getNEpochs()
-        ));
+        throw customException::OptException(
+            std::format(
+                "Optimizer did not converge after {} epochs.",
+                _optimizer->getNEpochs()
+            )
+        );
     }
 
     if (_optStopped)
@@ -181,8 +183,8 @@ void OptEngine::writeOutput()
 
     if (0 == _step % outputFreq)
     {
-        _engineOutput.writeXyzFile(*_simulationBox);
-        _engineOutput.writeForceFile(*_simulationBox);
+        _engineOutput.writeXyzFile(*_simulationBox, effStep);
+        _engineOutput.writeForceFile(*_simulationBox, effStep);
         _engineOutput.writeOptRstFile(*_simulationBox, effStep);
         _engineOutput.writeOptFile(_step, *_optimizer);
 

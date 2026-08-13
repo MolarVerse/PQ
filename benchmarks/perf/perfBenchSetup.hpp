@@ -74,7 +74,7 @@ namespace benchSetup
      */
     struct MoleculeParams
     {
-        std::size_t nAtoms;
+        std::size_t nAtoms = 0;
         double      origin = 0.0;
     };
 

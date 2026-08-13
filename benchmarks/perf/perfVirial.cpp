@@ -23,6 +23,8 @@
 // Fixed-work micro-benchmark of the molecular virial computation.
 
 #include <cstdio>
+#include <format>
+#include <iostream>
 
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
@@ -49,6 +51,10 @@ int main()
         virial.calculateVirial(box, physicalData);
 
     const auto result = virial.getVirial();
-    std::printf("%.6f\n", result[0][0] + result[1][1] + result[2][2]);
+
+    std::cout << std::format(
+        "{:.6f}\n",
+        result[0][0] + result[1][1] + result[2][2]
+    );
     return 0;
 }

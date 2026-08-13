@@ -25,7 +25,6 @@
 #include <string>   // for string, allocator, basic_string
 #include <vector>   // for vector
 
-#include "engine.hpp"                // for Engine
 #include "exceptions.hpp"            // for InputFileException
 #include "gtest/gtest.h"             // for Message, TestPartResult, testing
 #include "testInputFileReader.hpp"   // for TestInputFileReader
@@ -48,11 +47,17 @@ TEST_F(TestInputFileReader, testParseVirial)
     VirialInputParser        parser(*_engine);
     std::vector<std::string> lineElements = {"virial", "=", "atomic"};
     parser.parseVirial(lineElements, 0);
-    EXPECT_EQ(_engine->getVirial().getVirialType(), "atomic");
+    EXPECT_EQ(
+        settings::Settings::getVirialType(),
+        settings::VirialType::ATOMIC
+    );
 
     lineElements = {"virial", "=", "molecular"};
     parser.parseVirial(lineElements, 0);
-    EXPECT_EQ(_engine->getVirial().getVirialType(), "molecular");
+    EXPECT_EQ(
+        settings::Settings::getVirialType(),
+        settings::VirialType::MOLECULAR
+    );
 
     lineElements = {"virial", "=", "notValid"};
     EXPECT_THROW_MSG(

@@ -366,3 +366,29 @@ TEST_F(TestThermostat, noseHoover_setChiAtIndex)
     nh.setZeta(1u, 3.0);
     EXPECT_DOUBLE_EQ(nh.getZeta()[1], 3.0);
 }
+
+TEST_F(TestThermostat, noseHoover_appliesFiniteForceAndStateUpdates)
+{
+    auto nh = thermostat::NoseHooverThermostat(
+        300.0,
+        std::vector<double>{0.1, 0.2, 0.3},
+        std::vector<double>{0.0, 0.0, 0.0},
+        1.0
+    );
+    settings::TimingsSettings::setTimeStep(0.1);
+
+    nh.applyThermostatOnForces(*_simulationBox);
+    for (const auto &atom : _simulationBox->getAtoms())
+        for (size_t axis = 0; axis < 3; ++axis)
+            EXPECT_TRUE(std::isfinite(atom->getForce()[axis]));
+
+    const auto chiBefore  = nh.getChi();
+    const auto zetaBefore = nh.getZeta();
+    nh.applyThermostat(*_simulationBox, *_data);
+
+    EXPECT_TRUE(std::isfinite(_data->getTemperature()));
+    EXPECT_TRUE(std::isfinite(_data->getNoseHooverMomentumEnergy()));
+    EXPECT_TRUE(std::isfinite(_data->getNoseHooverFrictionEnergy()));
+    EXPECT_NE(nh.getChi(), chiBefore);
+    EXPECT_NE(nh.getZeta(), zetaBefore);
+}

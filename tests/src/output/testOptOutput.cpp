@@ -76,7 +76,8 @@ TEST(TestOptOutput, writeProducesStepAndAllConvergenceColumns)
     EXPECT_NE(content.find("42"), std::string::npos);
     EXPECT_NE(content.find("e-05"), std::string::npos);   // forces/energy
     EXPECT_NE(content.find("e-04"), std::string::npos);   // thresholds
-    ::remove(path.c_str());
+    const auto errorCode = std::remove(path.c_str());
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: " << path;
 }
 
 TEST(TestOptOutput, writeAbsoluteStrategyZeroesOutRelativeFlag)
@@ -108,7 +109,8 @@ TEST(TestOptOutput, writeAbsoluteStrategyZeroesOutRelativeFlag)
     // Expect a "  0" for the relative-energy convergence indicator column,
     // since ABSOLUTE strategy disables it.
     EXPECT_NE(content.find("  0\t"), std::string::npos);
-    ::remove(path.c_str());
+    const auto errorCode = std::remove(path.c_str());
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: " << path;
 }
 
 TEST(TestOptOutput, writeRelativeStrategyZeroesOutAbsoluteFlag)
@@ -138,7 +140,8 @@ TEST(TestOptOutput, writeRelativeStrategyZeroesOutAbsoluteFlag)
 
     const auto content = slurp(path);
     EXPECT_NE(content.find("  0\t"), std::string::npos);
-    ::remove(path.c_str());
+    const auto errorCode = std::remove(path.c_str());
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: " << path;
 }
 
 TEST(TestOptOutput, writeRespectsDisabledEnergyConv)
@@ -168,5 +171,6 @@ TEST(TestOptOutput, writeRespectsDisabledEnergyConv)
     const auto content = slurp(path);
     // With energy disabled, both energy-conv indicator columns are "  0".
     EXPECT_NE(content.find("  0\t  0\t"), std::string::npos);
-    ::remove(path.c_str());
+    const auto errorCode = std::remove(path.c_str());
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: " << path;
 }

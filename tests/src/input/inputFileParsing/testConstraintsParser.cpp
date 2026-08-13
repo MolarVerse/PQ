@@ -45,36 +45,37 @@ using namespace settings;
  */
 TEST_F(TestInputFileReader, testParseShakeActivated)
 {
-    ConstraintsInputParser   parser(*_engine);
+    const auto              &constraints = _engine->getConstraints();
+    ConstraintsInputParser   parser(*_engine, constraints);
     std::vector<std::string> lineElements = {"shake", "=", "off"};
     parser.parseShakeActivated(lineElements, 0);
-    EXPECT_FALSE(_engine->getConstraints().isActive());
-    EXPECT_FALSE(_engine->getConstraints().isShakeActive());
+    EXPECT_FALSE(constraints->isActive());
+    EXPECT_FALSE(constraints->isShakeActive());
     EXPECT_FALSE(ConstraintSettings::isShakeActivated());
 
     lineElements = {"shake", "=", "on"};
     parser.parseShakeActivated(lineElements, 0);
-    EXPECT_TRUE(_engine->getConstraints().isActive());
-    EXPECT_TRUE(_engine->getConstraints().isShakeActive());
+    EXPECT_TRUE(constraints->isActive());
+    EXPECT_TRUE(constraints->isShakeActive());
     EXPECT_TRUE(ConstraintSettings::isShakeActivated());
 
     ConstraintSettings::deactivateShake();
-    _engine->getConstraints().deactivateShake();
+    constraints->deactivateShake();
 
     lineElements = {"shake", "=", "shake"};
     parser.parseShakeActivated(lineElements, 0);
-    EXPECT_TRUE(_engine->getConstraints().isActive());
-    EXPECT_TRUE(_engine->getConstraints().isShakeActive());
+    EXPECT_TRUE(constraints->isActive());
+    EXPECT_TRUE(constraints->isShakeActive());
     EXPECT_TRUE(ConstraintSettings::isShakeActivated());
 
     ConstraintSettings::deactivateShake();
-    _engine->getConstraints().deactivateShake();
+    constraints->deactivateShake();
 
     lineElements = {"shake", "=", "mshake"};
     parser.parseShakeActivated(lineElements, 0);
-    EXPECT_TRUE(_engine->getConstraints().isActive());
-    EXPECT_TRUE(_engine->getConstraints().isMShakeActive());
-    EXPECT_TRUE(_engine->getConstraints().isShakeActive());
+    EXPECT_TRUE(constraints->isActive());
+    EXPECT_TRUE(constraints->isMShakeActive());
+    EXPECT_TRUE(constraints->isShakeActive());
     EXPECT_TRUE(ConstraintSettings::isShakeActivated());
     EXPECT_TRUE(ConstraintSettings::isMShakeActivated());
 
@@ -95,12 +96,19 @@ TEST_F(TestInputFileReader, testParseShakeActivated)
  */
 TEST_F(TestInputFileReader, testParseShakeTolerance)
 {
-    ConstraintsInputParser   parser(*_engine);
+    ConstraintsInputParser   parser(*_engine, _engine->getConstraints());
     std::vector<std::string> lineElements = {"shake-tolerance", "=", "0.0001"};
     parser.parseShakeTolerance(lineElements, 0);
     EXPECT_EQ(ConstraintSettings::getShakeTolerance(), 0.0001);
 
     lineElements = {"shake-tolerance", "=", "-0.0001"};
+    EXPECT_THROW_MSG(
+        parser.parseShakeTolerance(lineElements, 0),
+        customException::InputFileException,
+        "Shake tolerance must be positive"
+    );
+
+    lineElements = {"shake-tolerance", "=", "0"};
     EXPECT_THROW_MSG(
         parser.parseShakeTolerance(lineElements, 0),
         customException::InputFileException,
@@ -116,12 +124,19 @@ TEST_F(TestInputFileReader, testParseShakeTolerance)
  */
 TEST_F(TestInputFileReader, testParseShakeIteration)
 {
-    ConstraintsInputParser   parser(*_engine);
+    ConstraintsInputParser   parser(*_engine, _engine->getConstraints());
     std::vector<std::string> lineElements = {"shake-iter", "=", "100"};
     parser.parseShakeIteration(lineElements, 0);
     EXPECT_EQ(ConstraintSettings::getShakeMaxIter(), 100);
 
     lineElements = {"shake-iter", "=", "-100"};
+    EXPECT_THROW_MSG(
+        parser.parseShakeIteration(lineElements, 0),
+        customException::InputFileException,
+        "Maximum shake iterations must be positive"
+    );
+
+    lineElements = {"shake-iter", "=", "0"};
     EXPECT_THROW_MSG(
         parser.parseShakeIteration(lineElements, 0),
         customException::InputFileException,
@@ -137,12 +152,19 @@ TEST_F(TestInputFileReader, testParseShakeIteration)
  */
 TEST_F(TestInputFileReader, testParseRattleTolerance)
 {
-    ConstraintsInputParser   parser(*_engine);
+    ConstraintsInputParser   parser(*_engine, _engine->getConstraints());
     std::vector<std::string> lineElements = {"rattle-tolerance", "=", "0.0001"};
     parser.parseRattleTolerance(lineElements, 0);
     EXPECT_EQ(ConstraintSettings::getRattleTolerance(), 0.0001);
 
     lineElements = {"rattle-tolerance", "=", "-0.0001"};
+    EXPECT_THROW_MSG(
+        parser.parseRattleTolerance(lineElements, 0),
+        customException::InputFileException,
+        "Rattle tolerance must be positive"
+    );
+
+    lineElements = {"rattle-tolerance", "=", "0"};
     EXPECT_THROW_MSG(
         parser.parseRattleTolerance(lineElements, 0),
         customException::InputFileException,
@@ -158,12 +180,19 @@ TEST_F(TestInputFileReader, testParseRattleTolerance)
  */
 TEST_F(TestInputFileReader, testParseRattleIteration)
 {
-    ConstraintsInputParser   parser(*_engine);
+    ConstraintsInputParser   parser(*_engine, _engine->getConstraints());
     std::vector<std::string> lineElements = {"rattle-iter", "=", "100"};
     parser.parseRattleIteration(lineElements, 0);
     EXPECT_EQ(ConstraintSettings::getRattleMaxIter(), 100);
 
     lineElements = {"rattle-iter", "=", "-100"};
+    EXPECT_THROW_MSG(
+        parser.parseRattleIteration(lineElements, 0),
+        customException::InputFileException,
+        "Maximum rattle iterations must be positive"
+    );
+
+    lineElements = {"rattle-iter", "=", "0"};
     EXPECT_THROW_MSG(
         parser.parseRattleIteration(lineElements, 0),
         customException::InputFileException,
@@ -179,12 +208,19 @@ TEST_F(TestInputFileReader, testParseRattleIteration)
  */
 TEST_F(TestInputFileReader, testParseMShakeTolerance)
 {
-    ConstraintsInputParser   parser(*_engine);
+    ConstraintsInputParser   parser(*_engine, _engine->getConstraints());
     std::vector<std::string> lineElements = {"mshake-tolerance", "=", "0.01"};
     parser.parseMShakeTolerance(lineElements, 0);
     EXPECT_EQ(ConstraintSettings::getMShakeTolerance(), 0.01);
 
     lineElements = {"mshake-tolerance", "=", "-0.0001"};
+    EXPECT_THROW_MSG(
+        parser.parseMShakeTolerance(lineElements, 0),
+        customException::InputFileException,
+        "MShake tolerance must be positive"
+    );
+
+    lineElements = {"mshake-tolerance", "=", "0"};
     EXPECT_THROW_MSG(
         parser.parseMShakeTolerance(lineElements, 0),
         customException::InputFileException,
@@ -200,12 +236,19 @@ TEST_F(TestInputFileReader, testParseMShakeTolerance)
  */
 TEST_F(TestInputFileReader, testParseMShakeIteration)
 {
-    ConstraintsInputParser   parser(*_engine);
+    ConstraintsInputParser   parser(*_engine, _engine->getConstraints());
     std::vector<std::string> lineElements = {"mshake-iter", "=", "73"};
     parser.parseMShakeIteration(lineElements, 0);
     EXPECT_EQ(ConstraintSettings::getMShakeMaxIter(), 73);
 
     lineElements = {"mshake-iter", "=", "-100"};
+    EXPECT_THROW_MSG(
+        parser.parseMShakeIteration(lineElements, 0),
+        customException::InputFileException,
+        "Maximum MShake iterations must be positive"
+    );
+
+    lineElements = {"mshake-iter", "=", "0"};
     EXPECT_THROW_MSG(
         parser.parseMShakeIteration(lineElements, 0),
         customException::InputFileException,
@@ -219,17 +262,19 @@ TEST_F(TestInputFileReader, testParseMShakeIteration)
  */
 TEST_F(TestInputFileReader, testParseDistanceConstraintsActivated)
 {
-    ConstraintsInputParser   parser(*_engine);
+    const auto              &constraints = _engine->getConstraints();
+    ConstraintsInputParser   parser(*_engine, constraints);
     std::vector<std::string> lineElements = {"distance-constraints", "=", "on"};
     parser.parseDistanceConstraintActivated(lineElements, 0);
-    EXPECT_TRUE(_engine->getConstraints().isActive());
-    EXPECT_TRUE(_engine->getConstraints().isDistanceConstraintsActive());
+
+    EXPECT_TRUE(constraints->isActive());
+    EXPECT_TRUE(constraints->isDistanceConstraintsActive());
     EXPECT_TRUE(ConstraintSettings::isDistanceConstraintsActivated());
 
     lineElements = {"distance-constraints", "=", "off"};
     parser.parseDistanceConstraintActivated(lineElements, 0);
-    EXPECT_FALSE(_engine->getConstraints().isActive());
-    EXPECT_FALSE(_engine->getConstraints().isDistanceConstraintsActive());
+    EXPECT_FALSE(constraints->isActive());
+    EXPECT_FALSE(constraints->isDistanceConstraintsActive());
     EXPECT_FALSE(ConstraintSettings::isDistanceConstraintsActivated());
 
     lineElements = {"distance-constraints", "=", "1"};

@@ -147,6 +147,23 @@ TEST_F(TestInputFileReader, testParseTrajectoryFilename)
 }
 
 /**
+ * @brief tests parsing the "hybrid_center_file" command
+ *
+ */
+TEST_F(TestInputFileReader, testParseHybridCenterFilename)
+{
+    OutputInputParser parser(*_engine);
+    _fileName                                   = "center.xyz";
+    const std::vector<std::string> lineElements = {
+        "hybrid_center_file",
+        "=",
+        _fileName
+    };
+    parser.parseHybridCenterFilename(lineElements, 0);
+    EXPECT_EQ(OutputFileSettings::getHybridCenterFileName(), _fileName);
+}
+
+/**
  * @brief tests parsing the "velocity_file" command
  *
  */

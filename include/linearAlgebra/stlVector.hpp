@@ -29,7 +29,7 @@
 #include <numeric>     // for accumulate
 #include <vector>      // for vector
 
-namespace std
+namespace stl
 {
     /**
      * @brief Calculates the sum of all elements in a vector
@@ -97,6 +97,6 @@ namespace std
         return std::sqrt(dot(a, a) / a.size());
     }
 
-}   // namespace std
+}   // namespace stl
 
 #endif   // _STL_VECTOR_HPP_

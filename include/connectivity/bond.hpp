@@ -27,7 +27,6 @@
 #include <cstddef>
 
 #include "connectivityElement.hpp"
-#include "typeAliases.hpp"
 
 namespace connectivity
 {
@@ -42,17 +41,27 @@ namespace connectivity
        public:
         using ConnectivityElement::ConnectivityElement;
 
-        Bond(pq::Molecule *, pq::Molecule *, size_t, size_t);
-        Bond(pq::Molecule *, size_t, pq::Molecule *, size_t);
+        Bond(
+            simulationBox::Molecule *,
+            simulationBox::Molecule *,
+            size_t,
+            size_t
+        );
+        Bond(
+            simulationBox::Molecule *,
+            size_t,
+            simulationBox::Molecule *,
+            size_t
+        );
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] pq::Molecule *getMolecule1() const;
-        [[nodiscard]] pq::Molecule *getMolecule2() const;
-        [[nodiscard]] size_t        getAtomIndex1() const;
-        [[nodiscard]] size_t        getAtomIndex2() const;
+        [[nodiscard]] simulationBox::Molecule *getMolecule1() const;
+        [[nodiscard]] simulationBox::Molecule *getMolecule2() const;
+        [[nodiscard]] size_t                   getAtomIndex1() const;
+        [[nodiscard]] size_t                   getAtomIndex2() const;
     };
 
 }   // namespace connectivity

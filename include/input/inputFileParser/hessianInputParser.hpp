@@ -27,20 +27,25 @@
 #include <cstddef>
 
 #include "inputFileParser.hpp"
-#include "typeAliases.hpp"
 
 namespace input
 {
     class HessianInputParser : public InputFileParser
     {
        public:
-        explicit HessianInputParser(pq::Engine &);
+        explicit HessianInputParser(engine::Engine &);
 
-        void parseHessianFile(const pq::strings &, const size_t);
-        void parseHessianInfoFile(const pq::strings &, const size_t);
-        void parseDisplacement(const pq::strings &, const size_t);
-        void parseOptimizeBeforeHessian(const pq::strings &, const size_t);
-        void parseBuilder(const pq::strings &, const size_t);
+        void parseHessianFile(const std::vector<std::string> &, const size_t);
+        void parseHessianInfoFile(
+            const std::vector<std::string> &,
+            const size_t
+        );
+        void parseDisplacement(const std::vector<std::string> &, const size_t);
+        void parseOptimizeBeforeHessian(
+            const std::vector<std::string> &,
+            const size_t
+        );
+        void parseBuilder(const std::vector<std::string> &, const size_t);
     };
 
 }   // namespace input

@@ -16,6 +16,7 @@ set(source_files
     testHybridSetup.cpp
     testOutputFilesSetup.cpp
     testRingPolymerSetup.cpp
+    testWaterModelSetup.cpp
 )
 
 foreach(source_file ${source_files})

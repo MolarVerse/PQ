@@ -59,12 +59,15 @@ void JCouplingSection::processSection(
     Engine                   &engine
 )
 {
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
     if (lineElements.size() != 5)
-        throw TopologyException(std::format(
-            "Wrong number of arguments in topology file j-coupling "
-            "section at line {} - number of elements has to be 5!",
-            _lineNumber
-        ));
+        throw TopologyException(
+            std::format(
+                "Wrong number of arguments in topology file j-coupling "
+                "section at line {} - number of elements has to be 5!",
+                _lineNumber
+            )
+        );
 
     auto atom1        = stoul(lineElements[0]);
     auto atom2        = stoul(lineElements[1]);
@@ -78,13 +81,16 @@ void JCouplingSection::processSection(
     atoms.erase(it, end);
 
     if (4 != atoms.size())
-        throw TopologyException(std::format(
-            "Topology file dihedral section at line {} "
-            "- atoms cannot be the same!",
-            _lineNumber
-        ));
+        throw TopologyException(
+            std::format(
+                "Topology file dihedral section at line {} "
+                "- atoms cannot be the same!",
+                _lineNumber
+            )
+        );
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
-    auto simBox = engine.getSimulationBox();
+    auto &simBox = engine.getSimulationBox();
 
     const auto [molecule1, idx1] = simBox.findMoleculeByAtomIndex(atom1);
     const auto [molecule2, idx2] = simBox.findMoleculeByAtomIndex(atom2);
@@ -116,9 +122,11 @@ std::string JCouplingSection::keyword() { return "j_couplings"; }
 void JCouplingSection::endedNormally(const bool endedNormal) const
 {
     if (!endedNormal)
-        throw TopologyException(std::format(
-            "Topology file j-coupling section at line {} "
-            "- no end of section found!",
-            _lineNumber
-        ));
+        throw TopologyException(
+            std::format(
+                "Topology file j-coupling section at line {} "
+                "- no end of section found!",
+                _lineNumber
+            )
+        );
 }

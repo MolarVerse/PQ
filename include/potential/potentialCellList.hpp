@@ -25,7 +25,16 @@
 #define _POTENTIAL_CELL_LIST_HPP_
 
 #include "potential.hpp"
-#include "typeAliases.hpp"
+
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}   // namespace physicalData
+
+namespace simulationBox
+{
+    class CellList;   // forward declaration
+}   // namespace simulationBox
 
 namespace potential
 {
@@ -40,10 +49,37 @@ namespace potential
        public:
         ~PotentialCellList() override;
 
-        void calculateForces(pq::SimBox &, pq::PhysicalData &, pq::CellList &)
-            override;
+        void calculateForces(
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &,
+            simulationBox::CellList &
+        ) override;
 
-        pq::SharedPotential clone() const override;
+        void calculateCoreToOuterForces(
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &,
+            simulationBox::CellList &
+        ) override;
+
+        void calculateLayerToOuterForces(
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &,
+            simulationBox::CellList &
+        ) override;
+
+        void calculateOuterToOuterForces(
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &,
+            simulationBox::CellList &
+        ) override;
+
+        void calculateHotspotSmoothingMMForces(
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &,
+            simulationBox::CellList &
+        ) override;
+
+        std::shared_ptr<Potential> clone() const override;
     };
 
 }   // namespace potential

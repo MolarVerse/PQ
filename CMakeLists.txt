@@ -61,9 +61,11 @@ else()
     # *****************
     # set install rpath
     # *****************
-    SET(CMAKE_INSTALL_RPATH
-        "${CMAKE_INSTALL_PREFIX}/lib/;${CMAKE_INSTALL_PREFIX}/lib/tools/;"
-    )
+    if(APPLE)
+        set(CMAKE_INSTALL_RPATH "@loader_path/../lib;@loader_path")
+    else()
+        set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib;$ORIGIN")
+    endif()
     set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 endif()
 
@@ -97,7 +99,7 @@ if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease")
         endif()
     endif()
 
-    if(BUILD_WITH_LTO AND NOT BUILD_WITH_KOKKOS)
+    if(BUILD_WITH_LTO)
         include(CheckIPOSupported)
         check_ipo_supported(
             RESULT ltoSupported
@@ -167,10 +169,6 @@ include(eigen)
 
 if(BUILD_WITH_MPI)
     include(mpi)
-endif()
-
-if(BUILD_WITH_KOKKOS)
-    include(kokkos)
 endif()
 
 if(BUILD_WITH_PYTHON_BINDINGS)

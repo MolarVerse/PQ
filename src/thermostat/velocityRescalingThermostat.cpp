@@ -22,7 +22,7 @@
 
 #include "velocityRescalingThermostat.hpp"
 
-#include <cmath>    // for sqrt
+#include <cmath>   // for sqrt
 
 #include "exceptions.hpp"           // for UserInputException
 #include "mathUtilities.hpp"        // for isZero
@@ -66,6 +66,24 @@ VelocityRescalingThermostat::VelocityRescalingThermostat(
 }
 
 /**
+ * @brief Copy assignment operator for Velocity Rescaling Thermostat
+ *
+ * @param other
+ * @return VelocityRescalingThermostat&
+ */
+VelocityRescalingThermostat &VelocityRescalingThermostat::operator=(
+    const VelocityRescalingThermostat &other
+)
+{
+    if (this != &other)
+    {
+        Thermostat::operator=(other);
+        _tau = other._tau;
+    }
+    return *this;
+}
+
+/**
  * @brief apply thermostat - Velocity Rescaling
  *
  * @link https://doi.org/10.1063/1.2408420
@@ -78,7 +96,7 @@ void VelocityRescalingThermostat::applyThermostat(
     PhysicalData  &physicalData
 )
 {
-    startTimingsSection("Velocity Rescaling");
+    auto _ = scoped("Velocity Rescaling");
 
     physicalData.calculateTemperature(simulationBox);
 
@@ -86,7 +104,6 @@ void VelocityRescalingThermostat::applyThermostat(
 
     if (isZero(_temperature))
     {
-        stopTimingsSection("Velocity Rescaling");
         if (isZero(_targetTemperature))
             return;
 
@@ -127,8 +144,6 @@ void VelocityRescalingThermostat::applyThermostat(
     const auto temperature = _temperature * berendsenFactor * berendsenFactor;
 
     physicalData.setTemperature(temperature);
-
-    stopTimingsSection("Velocity Rescaling");
 }
 
 /**

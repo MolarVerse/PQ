@@ -50,7 +50,9 @@ BuckinghamPair::BuckinghamPair(
     : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff),
       _a(a),
       _dRho(dRho),
-      _c6(c6){};
+      _c6(c6)
+{
+}
 
 /**
  * @brief Construct a new Buckingham Pair:: Buckingham Pair object
@@ -66,7 +68,9 @@ BuckinghamPair::BuckinghamPair(
     const double dRho,
     const double c6
 )
-    : NonCoulombPair(cutOff), _a(a), _dRho(dRho), _c6(c6){};
+    : NonCoulombPair(cutOff), _a(a), _dRho(dRho), _c6(c6)
+{
+}
 
 /**
  * @brief Construct a new Buckingham Pair:: Buckingham Pair object
@@ -89,7 +93,9 @@ BuckinghamPair::BuckinghamPair(
     : NonCoulombPair(cutOff, energyCutoff, forceCutoff),
       _a(a),
       _dRho(dRho),
-      _c6(c6){};
+      _c6(c6)
+{
+}
 
 /**
  * @brief operator overload for the comparison of two BuckinghamPair objects
@@ -125,8 +131,10 @@ std::pair<double, double> BuckinghamPair::calculate(const double distance) const
     auto energy  = expTerm + _c6 / distanceSixth - _energyCutOff;
     energy      -= _forceCutOff * (_radialCutOff - distance);
 
-    auto force  = -_dRho * expTerm;
-    force      += 6.0 * _c6 / (distanceSixth * distance) - _forceCutOff;
+    auto force = -_dRho * expTerm;
+
+    // NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers)
+    force += 6.0 * _c6 / (distanceSixth * distance) - _forceCutOff;
 
     return {energy, force};
 }

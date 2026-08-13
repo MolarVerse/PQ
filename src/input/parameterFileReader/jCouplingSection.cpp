@@ -81,6 +81,7 @@ void JCouplingSection::processSection(
     Engine                   &engine
 )
 {
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
     if (lineElements.size() != 7 && lineElements.size() != 8)
         throw ParameterFileException(
             std::format(
@@ -115,6 +116,7 @@ void JCouplingSection::processSection(
         if (symmetry == "-")
             upperSymmetry = false;
     }
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
     auto jCouplingType = JCouplingType(id, J0, forceConstant, a, b, c, phase);
 

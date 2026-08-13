@@ -197,7 +197,9 @@ bool BondConstraint::applyRattle(const double tolerance)
  *
  * @param shakeDistanceRef
  */
-void BondConstraint::setShakeDistanceRef(const pq::Vec3D &shakeDistanceRef)
+void BondConstraint::setShakeDistanceRef(
+    const linearAlgebra::Vec3D &shakeDistanceRef
+)
 {
     _shakeDistanceRef = shakeDistanceRef;
 }
@@ -223,7 +225,7 @@ double BondConstraint::getTargetBondLength() const
  * @return shake distance reference
  */
 [[nodiscard]]
-pq::Vec3D BondConstraint::getShakeDistanceRef() const
+linearAlgebra::Vec3D BondConstraint::getShakeDistanceRef() const
 {
     return _shakeDistanceRef;
 }

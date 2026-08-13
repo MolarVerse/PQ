@@ -24,11 +24,14 @@
 
 #define _SIMULATION_BOX_SETUP_HPP_
 
-#include "typeAliases.hpp"
+namespace engine
+{
+    class Engine;   // forward declaration
+}   // namespace engine
 
 namespace setup::simulationBox
 {
-    void setupSimulationBox(pq::Engine &);
+    void setupSimulationBox(engine::Engine &);
 
     /**
      * @class SetupSimulationBox
@@ -39,11 +42,11 @@ namespace setup::simulationBox
     class SimulationBoxSetup
     {
        private:
-        pq::Engine        &_engine;
+        engine::Engine    &_engine;
         static inline bool _zeroVelocities = false;
 
        public:
-        explicit SimulationBoxSetup(pq::Engine &engine);
+        explicit SimulationBoxSetup(engine::Engine &engine);
 
         void setup();
 
@@ -77,7 +80,7 @@ namespace setup::simulationBox
          ***************************/
 
         [[nodiscard]] static bool getZeroVelocities();
-        };
+    };
 
 }   // namespace setup::simulationBox
 

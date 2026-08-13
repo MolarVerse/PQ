@@ -22,6 +22,7 @@
 
 #include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ
 
+#include <stdexcept>
 #include <string>   // for string, allocator, basic_string
 #include <vector>   // for vector
 
@@ -45,6 +46,13 @@ TEST_F(TestInputFileReader, ParsePressure)
     parser.parsePressure(lineElements, 0);
 
     EXPECT_EQ(settings::ManostatSettings::getTargetPressure(), 300.0);
+
+    lineElements = {"pressure", "=", "nan"};
+    EXPECT_THROW_MSG(
+        parser.parsePressure(lineElements, 0),
+        std::invalid_argument,
+        "Invalid floating-point value 'nan' encountered"
+    );
 }
 
 /**
@@ -65,7 +73,21 @@ TEST_F(TestInputFileReader, ParseRelaxationTimeManostat)
     EXPECT_THROW_MSG(
         parser.parseManostatRelaxationTime(lineElements, 0),
         customException::InputFileException,
-        "Relaxation time of manostat cannot be negative"
+        "Relaxation time of manostat must be finite and greater than zero"
+    );
+
+    lineElements = {"p_relaxation", "=", "0"};
+    EXPECT_THROW_MSG(
+        parser.parseManostatRelaxationTime(lineElements, 0),
+        customException::InputFileException,
+        "Relaxation time of manostat must be finite and greater than zero"
+    );
+
+    lineElements = {"p_relaxation", "=", "1e308"};
+    EXPECT_THROW_MSG(
+        parser.parseManostatRelaxationTime(lineElements, 0),
+        customException::InputFileException,
+        "Relaxation time of manostat is too large to represent in femtoseconds"
     );
 }
 
@@ -126,7 +148,14 @@ TEST_F(TestInputFileReader, ParseCompressibility)
     EXPECT_THROW_MSG(
         parser.parseCompressibility(lineElements, 0),
         customException::InputFileException,
-        "Compressibility cannot be negative"
+        "Compressibility must be finite and non-negative"
+    );
+
+    lineElements = {"compressibility", "=", "inf"};
+    EXPECT_THROW_MSG(
+        parser.parseCompressibility(lineElements, 0),
+        std::invalid_argument,
+        "Invalid floating-point value 'inf' encountered"
     );
 }
 

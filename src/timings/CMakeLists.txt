@@ -1,6 +1,7 @@
 add_library(timings
     timer.cpp
     timingsSection.cpp
+    timingsSectionGuard.cpp
     globalTimer.cpp
 )
 
@@ -17,5 +18,5 @@ target_link_libraries(timings
 )
 
 install(TARGETS timings
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+    DESTINATION lib
 )

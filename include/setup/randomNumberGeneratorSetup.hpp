@@ -24,11 +24,14 @@
 
 #define _RANDOM_NUMBER_GENERATOR_SETUP_HPP_
 
-#include "typeAliases.hpp"
+namespace engine
+{
+    class Engine;   // forward declaration
+}   // namespace engine
 
 namespace setup
 {
-    void setupRandomNumberGenerator(pq::Engine &);
+    void setupRandomNumberGenerator(engine::Engine &);
 
     /**
      * @class RandomNumberGeneratorSetup
@@ -39,10 +42,10 @@ namespace setup
     class RandomNumberGeneratorSetup
     {
        private:
-        pq::Engine &_engine;
+        engine::Engine &_engine;
 
        public:
-        explicit RandomNumberGeneratorSetup(pq::Engine &engine);
+        explicit RandomNumberGeneratorSetup(engine::Engine &engine);
 
         void setup();
         void setupWriteInfo() const;

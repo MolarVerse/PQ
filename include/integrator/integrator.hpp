@@ -28,7 +28,12 @@
 #include <string_view>   // for string_view
 
 #include "timer.hpp"   // for Timer
-#include "typeAliases.hpp"
+
+namespace simulationBox
+{
+    class Atom;            // forward declaration
+    class SimulationBox;   // forward declaration
+}   // namespace simulationBox
 
 namespace integrator
 {
@@ -48,11 +53,14 @@ namespace integrator
         Integrator()          = default;
         virtual ~Integrator() = default;
 
-        virtual void firstStep(pq::SimBox &)  = 0;
-        virtual void secondStep(pq::SimBox &) = 0;
+        virtual void firstStep(simulationBox::SimulationBox &)  = 0;
+        virtual void secondStep(simulationBox::SimulationBox &) = 0;
 
-        void integrateVelocities(pq::Atom *) const;
-        void integratePositions(pq::Atom *, const pq::SimBox &) const;
+        void integrateVelocities(simulationBox::Atom *) const;
+        void integratePositions(
+            simulationBox::Atom *,
+            const simulationBox::SimulationBox &
+        ) const;
 
         /********************************
          * standard getters and setters *

@@ -156,6 +156,8 @@ std::shared_ptr<LearningRateStrategy> OptimizerSetup::setupLearningRateStrategy(
     const auto alpha_0    = OptimizerSettings::getInitialLearningRate();
     const auto lrStrategy = OptimizerSettings::getLearningRateStrategy();
 
+    OptimizerSettings::validateLearningRateStrategy();
+
     switch (lrStrategy)
     {
         using enum LREnum;
@@ -164,15 +166,8 @@ std::shared_ptr<LearningRateStrategy> OptimizerSetup::setupLearningRateStrategy(
 
         case CONSTANT_DECAY:
         {
-            const auto alphaDecay = OptimizerSettings::getLearningRateDecay();
-
-            if (!alphaDecay.has_value())
-                throw UserInputException(
-                    "You need to specify a learning rate decay factor for the "
-                    "constant decay learning rate strategy"
-                );
-
-            const auto alphaDecayValue = alphaDecay.value();
+            const auto alphaDecayValue =
+                OptimizerSettings::getLearningRateDecay().value();
             const auto alphaFreq = OptimizerSettings::getLRUpdateFrequency();
 
             return std::make_shared<ConstantDecayLRStrategy>(
@@ -184,15 +179,8 @@ std::shared_ptr<LearningRateStrategy> OptimizerSetup::setupLearningRateStrategy(
 
         case EXPONENTIAL_DECAY:
         {
-            const auto alphaDecay = OptimizerSettings::getLearningRateDecay();
-
-            if (!alphaDecay.has_value())
-                throw UserInputException(
-                    "You need to specify a learning rate decay factor for the "
-                    "constant decay learning rate strategy"
-                );
-
-            const auto alphaDecayValue = alphaDecay.value();
+            const auto alphaDecayValue =
+                OptimizerSettings::getLearningRateDecay().value();
             const auto alphaFreq = OptimizerSettings::getLRUpdateFrequency();
 
             return std::make_shared<ExpDecayLR>(
@@ -203,13 +191,6 @@ std::shared_ptr<LearningRateStrategy> OptimizerSetup::setupLearningRateStrategy(
         }
 
         case LINESEARCH_WOLFE:
-        {
-            throw UserInputException(
-                "The Wolfe line search learning rate strategy is not yet "
-                "implemented"
-            );
-        }
-
         case NONE: break;
     }
 
@@ -231,15 +212,7 @@ void OptimizerSetup::setupMinMaxLR(
     const auto minLR = OptimizerSettings::getMinLearningRate();
     const auto maxLR = OptimizerSettings::getMaxLearningRate();
 
-    if (maxLR.has_value() && minLR >= maxLR.value())
-        throw UserInputException(
-            std::format(
-                "The minimum learning rate {} is greater or equal to the "
-                "maximum learning rate {}, which is not allowed.",
-                minLR,
-                maxLR.value()
-            )
-        );
+    OptimizerSettings::validateLearningRateBounds();
 
     lrStrategy->setMinLearningRate(minLR);
     lrStrategy->setMaxLearningRate(maxLR);
@@ -262,11 +235,11 @@ std::shared_ptr<Evaluator> OptimizerSetup::setupEvaluator()
             "evaluator"
         );
 
-    evaluator->setCellList(_optEngine.getSharedCellList());
+    evaluator->setCellList(_optEngine.getCellList());
     evaluator->setSimulationBox(_optEngine.getSharedSimulationBox());
     evaluator->setPotential(_optEngine.getSharedPotential());
     evaluator->setForceField(_optEngine.getSharedForceField());
-    evaluator->setConstraints(_optEngine.getSharedConstraints());
+    evaluator->setConstraints(_optEngine.getConstraints());
     evaluator->setIntraNonBonded(_optEngine.getSharedIntraNonBonded());
     evaluator->setVirial(_optEngine.getSharedVirial());
     evaluator->setSimulationBox(_optEngine.getSharedSimulationBox());

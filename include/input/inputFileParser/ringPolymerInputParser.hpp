@@ -27,7 +27,6 @@
 #include <cstddef>   // for size_t
 
 #include "inputFileParser.hpp"   // for InputFileParser
-#include "typeAliases.hpp"       // for pq::strings
 
 namespace input
 {
@@ -40,9 +39,9 @@ namespace input
     class RingPolymerInputParser : public InputFileParser
     {
        public:
-        explicit RingPolymerInputParser(pq::Engine &);
+        explicit RingPolymerInputParser(engine::Engine &);
 
-        void parseNumberOfBeads(const pq::strings &, const size_t);
+        void parseNumberOfBeads(const std::vector<std::string> &, const size_t);
     };
 
 }   // namespace input

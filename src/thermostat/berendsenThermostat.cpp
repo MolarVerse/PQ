@@ -22,7 +22,7 @@
 
 #include "berendsenThermostat.hpp"
 
-#include <cmath>    // for sqrt
+#include <cmath>   // for sqrt
 
 #include "exceptions.hpp"           // for UserInputException
 #include "mathUtilities.hpp"        // for isZero
@@ -65,7 +65,7 @@ void BerendsenThermostat::applyThermostat(
     PhysicalData  &data
 )
 {
-    startTimingsSection("Berendsen");
+    auto _ = scoped("Berendsen");
 
     data.calculateTemperature(simulationBox);
 
@@ -73,7 +73,6 @@ void BerendsenThermostat::applyThermostat(
 
     if (isZero(_temperature))
     {
-        stopTimingsSection("Berendsen");
         if (isZero(_targetTemperature))
             return;
 
@@ -92,8 +91,6 @@ void BerendsenThermostat::applyThermostat(
         atom->scaleVelocity(berendsenFactor);
 
     data.setTemperature(_temperature * berendsenFactor * berendsenFactor);
-
-    stopTimingsSection("Berendsen");
 }
 
 /**

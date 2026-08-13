@@ -22,11 +22,11 @@
 
 #include "testSimulationBox.hpp"
 
-#include <cstddef>     // for size_t, std
-#include <map>         // for map
-#include <optional>    // for optional
-#include <string>      // for string
-#include <vector>      // for vector
+#include <cstddef>    // for size_t, std
+#include <map>        // for map
+#include <optional>   // for optional
+#include <string>     // for string
+#include <vector>     // for vector
 
 #include "exceptions.hpp"   // for ManostatException, RstFileException
 #include "gtest/gtest.h"    // for Message, TestPartResult, AssertionRe...
@@ -454,4 +454,148 @@ TEST_F(TestSimulationBox, updateOldPositions)
     {
         EXPECT_VECTOR_NEAR(atom->getPositionOld(), atom->getPosition(), 1e-10);
     }
+}
+
+TEST_F(TestSimulationBox, copyOwnsIndependentAtoms)
+{
+    simulationBox::SimulationBox copied;
+    copied.copy(*_simulationBox);
+
+    ASSERT_EQ(copied.getNumberOfAtoms(), _simulationBox->getNumberOfAtoms());
+    ASSERT_EQ(
+        copied.getNumberOfMolecules(),
+        _simulationBox->getNumberOfMolecules()
+    );
+    EXPECT_NE(&copied.getAtom(0), &_simulationBox->getAtom(0));
+    EXPECT_EQ(&copied.getMolecule(0).getAtom(0), &copied.getAtom(0));
+
+    const auto cloned = _simulationBox->clone();
+    ASSERT_NE(cloned, nullptr);
+    EXPECT_EQ(cloned->getNumberOfAtoms(), _simulationBox->getNumberOfAtoms());
+}
+
+TEST_F(TestSimulationBox, validatesHybridIndexLists)
+{
+    _simulationBox->addInnerRegionCenterAtoms({0, 4});
+    EXPECT_EQ(
+        _simulationBox->getInnerRegionCenterAtomIndices(),
+        std::vector<int>({0, 4})
+    );
+    EXPECT_THROW(
+        _simulationBox->addInnerRegionCenterAtoms({-1}),
+        customException::UserInputException
+    );
+    EXPECT_THROW(
+        _simulationBox->addInnerRegionCenterAtoms({5}),
+        customException::UserInputException
+    );
+
+    _simulationBox->setupForcedOuterMolecules({0});
+    EXPECT_TRUE(_simulationBox->getMolecule(0).isForcedOuter());
+    EXPECT_THROW(
+        _simulationBox->setupForcedInnerMolecules({0}),
+        customException::UserInputException
+    );
+
+    _simulationBox->setupForcedInnerMolecules({1});
+    EXPECT_TRUE(_simulationBox->getMolecule(1).isForcedInner());
+    EXPECT_THROW(
+        _simulationBox->setupForcedOuterMolecules({1}),
+        customException::UserInputException
+    );
+    EXPECT_THROW(
+        _simulationBox->setupForcedInnerMolecules({2}),
+        customException::UserInputException
+    );
+    EXPECT_THROW(
+        _simulationBox->setupForcedOuterMolecules({-1}),
+        customException::UserInputException
+    );
+}
+
+TEST_F(TestSimulationBox, assignsInternalVdwTypesToAtoms)
+{
+    simulationBox::SimulationBox simBox;
+    simulationBox::MoleculeType  type(1);
+    type.addExternalGlobalVDWType(4);
+    type.addExternalGlobalVDWType(9);
+    simBox.addMoleculeType(type);
+
+    auto atom1 = std::make_shared<simulationBox::Atom>();
+    auto atom2 = std::make_shared<simulationBox::Atom>();
+    atom1->setExternalGlobalVDWType(4);
+    atom2->setExternalGlobalVDWType(9);
+
+    simulationBox::Molecule molecule(1);
+    molecule.setNumberOfAtoms(2);
+    molecule.addAtom(atom1);
+    molecule.addAtom(atom2);
+    simBox.addMolecule(molecule);
+
+    simBox.setupExternalToInternalGlobalVdwTypesMap();
+
+    EXPECT_EQ(simBox.getMolecule(0).getAtom(0).getInternalGlobalVDWType(), 0);
+    EXPECT_EQ(simBox.getMolecule(0).getAtom(1).getInternalGlobalVDWType(), 1);
+}
+
+TEST_F(TestSimulationBox, forceMetricsAndAtomStateUpdates)
+{
+    using linearAlgebra::Vec3D;
+
+    size_t index = 1;
+    for (auto &atom : _simulationBox->getAtoms())
+    {
+        const auto value = static_cast<double>(index++);
+        atom->setVelocity({value, 0.0, 0.0});
+        atom->setForce({value, -value, 0.0});
+        atom->setForceInner({value, 0.0, 0.0});
+        atom->setForceOuter({0.0, value, 0.0});
+        atom->setQMCharge(value);
+    }
+
+    _simulationBox->updateOldVelocities();
+    _simulationBox->updateOldForces();
+
+    EXPECT_GT(_simulationBox->calculateRMSForce(), 0.0);
+    EXPECT_GT(_simulationBox->calculateMaxForce(), 0.0);
+    EXPECT_GT(_simulationBox->calculateRMSForceOld(), 0.0);
+    EXPECT_GT(_simulationBox->calculateMaxForceOld(), 0.0);
+
+    _simulationBox->resetForcesInner();
+    _simulationBox->resetForcesOuter();
+    _simulationBox->resetQMCharges();
+    for (const auto &atom : _simulationBox->getAtoms())
+    {
+        EXPECT_EQ(atom->getForceInner(), Vec3D{});
+        EXPECT_EQ(atom->getForceOuter(), Vec3D{});
+        EXPECT_FALSE(atom->getQMCharge().has_value());
+    }
+
+    for (auto &atom : _simulationBox->getAtoms())
+    {
+        atom->setForceInner({1.0, 0.0, 0.0});
+        atom->setForceOuter({0.0, 1.0, 0.0});
+    }
+    _simulationBox->resetAllForces();
+    for (const auto &atom : _simulationBox->getAtoms())
+    {
+        EXPECT_EQ(atom->getForce(), Vec3D{});
+        EXPECT_EQ(atom->getForceInner(), Vec3D{});
+        EXPECT_EQ(atom->getForceOuter(), Vec3D{});
+    }
+
+    const auto firstPosition = _simulationBox->getAtom(0).getPosition();
+    _simulationBox->initPositions(0.0);
+    EXPECT_EQ(_simulationBox->getAtom(0).getPosition(), firstPosition);
+}
+
+TEST_F(TestSimulationBox, activeChargeAndEmptyForceRemoval)
+{
+    _simulationBox->getMolecule(0).setCharge(2);
+    _simulationBox->getMolecule(1).setCharge(-1);
+    _simulationBox->getMolecule(1).deactivateMolecule();
+    EXPECT_EQ(_simulationBox->calcActiveMolCharge(), 2);
+
+    simulationBox::SimulationBox empty;
+    EXPECT_NO_THROW(empty.removeNetForce());
 }

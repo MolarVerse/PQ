@@ -21,11 +21,6 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 endif()
 
 # *****************
-# BUILD WITH KOKKOS
-# *****************
-option(BUILD_WITH_KOKKOS "Build with Kokkos" OFF)
-
-# *****************
 # BUILD WITH TESTS
 # *****************
 option(BUILD_WITH_TESTS "Build tests" ON)

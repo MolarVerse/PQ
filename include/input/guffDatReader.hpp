@@ -30,12 +30,16 @@
 #include <vector>        // for vector
 
 #include "defaults.hpp"   // for _GUFF_FILENAME_DEFAULT_
-#include "typeAliases.hpp"
+
+namespace engine
+{
+    class Engine;   // forward declaration
+}   // namespace engine
 
 namespace input::guffdat
 {
-    void               readGuffDat(pq::Engine &);
-    [[nodiscard]] bool isNeeded(pq::Engine &);
+    void               readGuffDat(engine::Engine &);
+    [[nodiscard]] bool isNeeded(engine::Engine &);
 
     /**
      * @class GuffDatReader
@@ -49,21 +53,26 @@ namespace input::guffdat
         size_t      _lineNumber = 1;
         std::string _fileName   = defaults::GUFF_FILE_DEFAULT;
 
-        pq::stlVector4d     _guffCoulombCoeffs;
-        pq::stlVector4dBool _isGuffPairSet;
+        std::vector<std::vector<std::vector<std::vector<double>>>>
+            _guffCoulombCoeffs;
+        std::vector<std::vector<std::vector<std::vector<bool>>>> _isGuffPairSet;
 
-        pq::Engine &_engine;
+        engine::Engine &_engine;
 
        public:
-        explicit GuffDatReader(pq::Engine &engine);
+        explicit GuffDatReader(engine::Engine &engine);
 
         void setupGuffMaps();
-        void parseLine(const pq::strings &lineCommands);
+        void parseLine(const std::vector<std::string> &lineCommands);
         void read();
         void postProcessSetup();
         void calculatePartialCharges();
         void checkPartialCharges();
         void checkNecessaryGuffPairs();
+        bool bothMoltypesAreWaterType(
+            const size_t molType1,
+            const size_t molType2
+        );
         void addNonCoulombPair(
             const size_t               molType1,
             const size_t               molType2,
@@ -129,8 +138,12 @@ namespace input::guffdat
          * standard getters *
          ********************/
 
-        [[nodiscard]] pq::stlVector4d     &getGuffCoulombCoefficients();
-        [[nodiscard]] pq::stlVector4dBool &getIsGuffPairSet();
+        [[nodiscard]]
+        std::vector<std::vector<
+            std::vector<std::vector<double>>>> &getGuffCoulombCoefficients();
+        [[nodiscard]]
+        std::vector<
+            std::vector<std::vector<std::vector<bool>>>> &getIsGuffPairSet();
     };
 
 }   // namespace input::guffdat

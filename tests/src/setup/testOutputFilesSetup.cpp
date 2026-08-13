@@ -22,7 +22,7 @@
 
 #include <gtest/gtest.h>
 
-#include <cstdio>
+#include <filesystem>
 #include <fstream>
 #include <string>
 #include <vector>
@@ -47,14 +47,19 @@ namespace
     void cleanupPrefix()
     {
         const std::vector<std::string> suffixes = {
-            ".log",      ".info",     ".rst",        ".en",        ".xyz",
-            ".timings",  ".force",    ".instant_en", ".vel",       ".chrg",
-            ".mom",      ".vir",      ".stress",     ".box",       ".rpmd.rst",
-            ".rpmd.xyz", ".rpmd.vel", ".rpmd.force", ".rpmd.chrg", ".rpmd.en",
-            ".opt",      ".ref"
+            ".log",        ".info",       ".rst",        ".en",
+            ".xyz",        ".center.xyz", ".timings",    ".force",
+            ".instant_en", ".vel",        ".chrg",       ".mom",
+            ".vir",        ".stress",     ".box",        ".rpmd.rst",
+            ".rpmd.xyz",   ".rpmd.vel",   ".rpmd.force", ".rpmd.chrg",
+            ".rpmd.en",    ".opt",        ".ref"
         };
         for (const auto &s : suffixes)
-            ::remove((std::string(PREFIX) + s).c_str());
+        {
+            static_cast<void>(
+                std::filesystem::remove((std::string(PREFIX) + s).c_str())
+            );
+        }
     }
 }   // namespace
 
@@ -77,6 +82,25 @@ TEST_F(TestSetup, setupOutputFilesOptJobReplaceDefaultsAndAssignsOptFile)
         std::string(PREFIX) + ".opt"
     );
 
+    cleanupPrefix();
+}
+
+TEST_F(TestSetup, setupOutputFilesHybridPathAssignsCenterFile)
+{
+    cleanupPrefix();
+    Settings::setJobtype(JobType::QMMM_MD);
+    Settings::setIsRingPolymerMDActivated(false);
+    OutputFileSettings::setFilePrefix(PREFIX);
+
+    OutputFilesSetup s(*_mdEngine);
+    EXPECT_NO_THROW(s.setup());
+
+    EXPECT_EQ(
+        _mdEngine->getXyzHybridCenterOutput().getFilename(),
+        std::string(PREFIX) + ".center.xyz"
+    );
+
+    _mdEngine->getXyzHybridCenterOutput().close();
     cleanupPrefix();
 }
 

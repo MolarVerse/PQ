@@ -27,7 +27,6 @@
 #include <string>   // for allocator, string
 
 #include "topologySection.hpp"   // for TopologySection
-#include "typeAliases.hpp"
 
 namespace input::topology
 {
@@ -40,7 +39,10 @@ namespace input::topology
     class BondSection : public TopologySection
     {
        public:
-        void processSection(pq::strings &, pq::Engine &) override;
+        void processSection(
+            std::vector<std::string> &,
+            engine::Engine &
+        ) override;
 
         [[nodiscard]] std::string keyword() override;
         void                      endedNormally(const bool) const override;

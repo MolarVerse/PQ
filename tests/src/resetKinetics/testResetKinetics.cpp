@@ -37,8 +37,8 @@
 
 namespace
 {
-    // Build a fresh 3-atom SimBox the tests can share: 2 atoms in mol1,
-    // 1 atom in mol2, all mass 1, deterministic velocities.
+    // Build a fresh 3-atom simulationBox::SimulationBox the tests can share: 2
+    // atoms in mol1, 1 atom in mol2, all mass 1, deterministic velocities.
     simulationBox::SimulationBox *makeBox()
     {
         auto *box      = new simulationBox::SimulationBox();

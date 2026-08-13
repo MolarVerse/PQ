@@ -22,53 +22,117 @@
 
 #include "externalQMRunner.hpp"
 
-#include <algorithm>   // for __for_each_fn, for_each
-#include <cmath>       // for isnan, isinf
-#include <format>      // for format
-#include <fstream>     // for ofstream
-#include <string>      // for string
-#include <thread>      // for sleep_for
+#include <algorithm>    // for __for_each_fn, for_each
+#include <cmath>        // for isnan, isinf
+#include <filesystem>   // for is_regular_file, path
+#include <format>       // for format
+#include <fstream>      // for ofstream
+#include <string>       // for string
+#include <thread>       // for sleep_for
 
 #include "constants/conversionFactors.hpp"   // for _HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM_, _HARTREE_TO_KCAL_PER_MOL_
 #include "exceptions.hpp"                    // for InputFileException
+#include "executablePath.hpp"                // for executablePath
 #include "fileSettings.hpp"                  // for FileSettings
 #include "physicalData.hpp"                  // for PhysicalData
 #include "qmSettings.hpp"                    // for QMSettings
-#include "simulationBox.hpp"                 // for SimulationBox
+#include "settings.hpp"
+#include "simulationBox.hpp"   // for SimulationBox
 
 using QM::ExternalQMRunner;
+using enum simulationBox::Periodicity;
+
 using namespace simulationBox;
 using namespace physicalData;
 using namespace customException;
 using namespace settings;
 using namespace constants;
 
+std::string QM::bundledQMScriptPath(const std::string_view script)
+{
+    const auto installedPath =
+        utilities::installedDataPath(std::filesystem::path("scripts") / script);
+    if (std::filesystem::is_regular_file(installedPath))
+        return installedPath.string();
+
+    return (std::filesystem::path(SCRIPT_PATH_) / script).string();
+}
+
 /**
  * @brief run the qm engine
  *
- * @param simBox
+ * @param simBox SimulationBox reference
+ * @param physicalData PhysicalData reference
+ * @param per periodicity of the system
  */
-void ExternalQMRunner::run(SimulationBox &simBox, PhysicalData &physicalData)
+void ExternalQMRunner::run(
+    SimulationBox &simBox,
+    PhysicalData  &physicalData,
+    Periodicity    per
+)
 {
-    writeCoordsFile(simBox);
+    if (per != XYZ && per != NON_PERIODIC)
+        throw QMRunnerException(
+            "External QM runners only available for non- and 3D-periodic "
+            "calculations."
+        );
+
+    _periodicity = per;
+
+    {
+        auto _ = scoped("Write Coordinates");
+        writeCoordsFile(simBox);
+    }
+
+    if (Settings::isHybridJobtype())
+    {
+        auto _ = scoped("Write Pointcharges");
+        writePointChargeFile(simBox);
+    }
 
     std::jthread timeoutThread{[this](const std::stop_token stopToken)
                                { throwAfterTimeout(stopToken); }};
 
-    execute();
+    {
+        auto _ = scoped("Execute External QM Runner");
+        execute(simBox);
+    }
 
     timeoutThread.request_stop();
 
-    readForceFile(simBox, physicalData);
+    {
+        auto _ = scoped("Read Forces");
+        readForceFile(simBox, physicalData);
+    }
 
-    readChargeFile(simBox);
+    {
+        auto _ = scoped("Read Charges");
+        readChargeFile(simBox);
+    }
 
-    readStressTensor(simBox.getBox(), physicalData);
+    if (per != NON_PERIODIC)
+    {
+        auto _ = scoped("Read Stress Tensor");
+        readStressTensor(simBox.getBox(), physicalData);
+    }
+}
+
+std::string ExternalQMRunner::resolveScriptPath(
+    const std::string_view script
+) const
+{
+    if (_scriptPath.empty())
+        return std::string(script);
+
+    if (_scriptPath == SCRIPT_PATH_)
+        return bundledQMScriptPath(script);
+
+    return _scriptPath + std::string(script);
 }
 
 /**
- * @brief reads the force file (including qm energy) and sets the forces of the
- * atoms
+ * @brief reads the force file (including qm energy) and sets the forces of
+ * the atoms
  *
  * @param box
  * @param physicalData
@@ -184,10 +248,9 @@ void ExternalQMRunner::readChargeFile(SimulationBox &box)
 
     auto readCharges = [&chargeFile](auto &atom)
     {
-        auto index  = 0;     // Read and discard the first column (index)
-        auto charge = 0.0;   // Read the second column (charge value)
+        auto charge = 0.0;
 
-        chargeFile >> index >> charge;
+        chargeFile >> charge;
 
         atom->setQMCharge(charge);
     };
@@ -197,11 +260,11 @@ void ExternalQMRunner::readChargeFile(SimulationBox &box)
     chargeFile.close();
 }
 
-/*******************************
- *                             *
- * standard getter and setters *
- *                             *
- *******************************/
+/********************************
+ *                              *
+ * standard getters and setters *
+ *                              *
+ ********************************/
 
 /**
  * @brief getter for the script path

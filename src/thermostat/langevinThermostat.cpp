@@ -67,6 +67,25 @@ LangevinThermostat::LangevinThermostat(const LangevinThermostat &other)
 }
 
 /**
+ * @brief Copy assignment operator for Langevin Thermostat
+ *
+ * @param other
+ * @return LangevinThermostat&
+ */
+LangevinThermostat &LangevinThermostat::operator=(
+    const LangevinThermostat &other
+)
+{
+    if (this != &other)
+    {
+        Thermostat::operator=(other);
+        _friction = other._friction;
+        _sigma    = other._sigma;
+    }
+    return *this;
+}
+
+/**
  * @brief Calculate sigma for Langevin Thermostat
  *
  * @param friction
@@ -131,12 +150,10 @@ void LangevinThermostat::applyThermostat(
     PhysicalData  &data
 )
 {
-    startTimingsSection("LangevinThermostat - Full Step");
+    auto _ = scoped("LangevinThermostat - Full Step");
 
     applyLangevin(simBox);
     data.calculateTemperature(simBox);
-
-    stopTimingsSection("LangevinThermostat - Full Step");
 }
 
 /**
@@ -152,11 +169,9 @@ void LangevinThermostat::applyThermostatHalfStep(
     PhysicalData &
 )
 {
-    startTimingsSection("LangevinThermostat - Half Step");
+    auto _ = scoped("LangevinThermostat - Half Step");
 
     applyLangevin(simBox);
-
-    stopTimingsSection("LangevinThermostat - Half Step");
 }
 
 /***************************

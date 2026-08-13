@@ -34,7 +34,7 @@ using namespace settings;
 using namespace customException;
 using namespace utilities;
 
-HessianInputParser::HessianInputParser(pq::Engine &engine)
+HessianInputParser::HessianInputParser(engine::Engine &engine)
     : InputFileParser(engine)
 {
     addKeyword(
@@ -65,8 +65,8 @@ HessianInputParser::HessianInputParser(pq::Engine &engine)
 }
 
 void HessianInputParser::parseHessianFile(
-    const pq::strings &lineElements,
-    const size_t       lineNumber
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -74,8 +74,8 @@ void HessianInputParser::parseHessianFile(
 }
 
 void HessianInputParser::parseHessianInfoFile(
-    const pq::strings &lineElements,
-    const size_t       lineNumber
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -83,13 +83,13 @@ void HessianInputParser::parseHessianInfoFile(
 }
 
 void HessianInputParser::parseDisplacement(
-    const pq::strings &lineElements,
-    const size_t       lineNumber
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto displacement = std::stod(lineElements[2]);
+    const auto displacement = stringToFiniteDouble(lineElements[2]);
 
     if (displacement <= 0.0)
         throw InputFileException(
@@ -104,8 +104,8 @@ void HessianInputParser::parseDisplacement(
 }
 
 void HessianInputParser::parseOptimizeBeforeHessian(
-    const pq::strings &lineElements,
-    const size_t       lineNumber
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -113,8 +113,8 @@ void HessianInputParser::parseOptimizeBeforeHessian(
 }
 
 void HessianInputParser::parseBuilder(
-    const pq::strings &lineElements,
-    const size_t       lineNumber
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
 )
 {
     using enum HessianBuilderType;

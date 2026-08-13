@@ -24,15 +24,16 @@
 
 #define _TEST_RING_POLYMER_RESTART_FILE_OUTPUT_HPP_
 
+#include <gtest/gtest.h>   // for Test
+
+#include <cstdio>   // for remove
+#include <memory>   // for __shared_ptr_access, shared_ptr
+#include <vector>   // for vector
+
 #include "atom.hpp"                           // for Atom
 #include "molecule.hpp"                       // for Molecule
 #include "ringPolymerRestartFileOutput.hpp"   // for RingPolymerRestartFileOutput
 #include "simulationBox.hpp"                  // for SimulationBox
-
-#include <cstdio>          // for remove
-#include <gtest/gtest.h>   // for Test
-#include <memory>          // for __shared_ptr_access, shared_ptr
-#include <vector>          // for vector
 
 /**
  * @class TestRingPolymerRestartFileOutput
@@ -42,10 +43,11 @@
  */
 class TestRingPolymerRestartFileOutput : public ::testing::Test
 {
-  protected:
+   protected:
     void SetUp() override
     {
-        _rstFileOutput  = new output::RingPolymerRestartFileOutput("default.rpmd.rst");
+        _rstFileOutput =
+            new output::RingPolymerRestartFileOutput("default.rpmd.rst");
         _simulationBox1 = new simulationBox::SimulationBox();
         _simulationBox2 = new simulationBox::SimulationBox();
 
@@ -131,7 +133,8 @@ class TestRingPolymerRestartFileOutput : public ::testing::Test
         delete _rstFileOutput;
         delete _simulationBox1;
         delete _simulationBox2;
-        ::remove("default.rpmd.rst");
+        const auto errorCode = std::remove("default.rpmd.rst");
+        EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.rpmd.rst";
     }
 
     output::RingPolymerRestartFileOutput     *_rstFileOutput;

@@ -22,5 +22,5 @@ target_link_libraries(integrator
 )
 
 install(TARGETS integrator
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+    DESTINATION lib
 )

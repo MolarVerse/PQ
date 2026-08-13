@@ -24,24 +24,55 @@
 
 #define _HYBRID_MD_ENGINE_HPP_
 
-#include "mmmdEngine.hpp"
-#include "qmmdEngine.hpp"
+#include "mdEngine.hpp"
+#include "qmCapableEngine.hpp"
 
 namespace engine
 {
     /**
      * @brief HybridMDEngine
      *
-     * @details This class is a pure virtual class that inherits from MMMDEngine
-     * and QMMDEngine and is used to implement the Hybrid MD engine backbone
-     * that can run in general combinations of MM and QM engines.
+     * @details This class is a pure virtual class that inherits from MDEngine
+     * and QMCapableEngine and is used to implement the Hybrid MD engine
+     * backbone that can run in general combinations of MM and QM engines.
      *
      */
-    class HybridMDEngine : virtual public MMMDEngine, virtual public QMMDEngine
+    class HybridMDEngine : virtual public MDEngine, public QMCapableEngine
     {
+       protected:
+        void combineInnerOuterForces();
+
+        void addCurrentForcesToInnerAndReset(
+            std::vector<std::shared_ptr<simulationBox::Atom>>& atoms
+        );
+        void addScaledCurrentForcesToInnerAndReset(
+            std::vector<std::shared_ptr<simulationBox::Atom>>& atoms,
+            const double                                       globalSmF
+        );
+
+        void addCurrentForcesToOuterAndReset(
+            std::vector<std::shared_ptr<simulationBox::Atom>>& atoms
+        );
+        void addScaledCurrentForcesToOuterAndReset(
+            std::vector<std::shared_ptr<simulationBox::Atom>>& atoms,
+            const double                                       globalSmF
+        );
+
+        void scaleSmoothingMoleculeForcesInner();
+        void scaleSmoothingMoleculeForcesOuter();
+
+        [[nodiscard]] std::unordered_set<size_t> generateInactiveSmoothingMoleculeSet(
+            size_t bitPattern,
+            size_t totalMolecules
+        ) const;
+
+        [[nodiscard]] double calculateGlobalSmoothingFactor(
+            const std::unordered_set<size_t>& inactiveForInnerCalcMolecules
+        ) const;
+
        public:
-        HybridMDEngine()  = default;
-        ~HybridMDEngine() = default;
+        HybridMDEngine()           = default;
+        ~HybridMDEngine() override = default;
 
         void calculateForces() override = 0;
     };

@@ -27,7 +27,6 @@
 #include <string>   // for allocator, string
 
 #include "parameterFileSection.hpp"
-#include "typeAliases.hpp"
 
 namespace input::parameterFile
 {
@@ -42,9 +41,17 @@ namespace input::parameterFile
        public:
         [[nodiscard]] std::string keyword() override;
 
-        void process(pq::strings &, pq::Engine &) override;
-        void processSection(pq::strings &, pq::Engine &) override;
-        void processHeader(pq::strings &, pq::Engine &) override {};
+        void process(std::vector<std::string> &, engine::Engine &) override;
+        void processSection(
+            std::vector<std::string> &,
+            engine::Engine &
+        ) override;
+        void processHeader(
+            std::vector<std::string> &,
+            engine::Engine &
+        ) override
+        {
+        }
         // TODO: implement processHeader
     };
 

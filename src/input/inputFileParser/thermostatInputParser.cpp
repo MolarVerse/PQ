@@ -22,10 +22,13 @@
 
 #include "thermostatInputParser.hpp"
 
+#include <cmath>         // for sqrt
 #include <cstddef>       // for size_t, std
 #include <format>        // for format
+#include <limits>        // for numeric_limits
 #include <string_view>   // for string_view
 
+#include "constants.hpp"
 #include "exceptions.hpp"   // for InputFileException, customException
 #include "parserUtils.hpp"
 #include "references.hpp"           // for References
@@ -39,6 +42,7 @@ using namespace customException;
 using namespace settings;
 using namespace utilities;
 using namespace references;
+using namespace constants;
 
 /**
  * @brief Construct a new Input File Parser Thermostat:: Input File Parser
@@ -187,10 +191,10 @@ void ThermostatInputParser::parseTemperature(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto temperature = stod(lineElements[2]);
+    const auto temperature = stringToFiniteDouble(lineElements[2]);
 
-    if (temperature < 0)
-        throw InputFileException("Temperature cannot be negative");
+    if (temperature < 0.0)
+        throw InputFileException("Temperature must be finite and non-negative");
 
     ThermostatSettings::setTargetTemperature(temperature);
 }
@@ -211,10 +215,12 @@ void ThermostatInputParser::parseStartTemperature(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto startTemperature = stod(lineElements[2]);
+    const auto startTemperature = stringToFiniteDouble(lineElements[2]);
 
-    if (startTemperature < 0)
-        throw InputFileException("Start temperature cannot be negative");
+    if (startTemperature < 0.0)
+        throw InputFileException(
+            "Start temperature must be finite and non-negative"
+        );
 
     ThermostatSettings::setStartTemperature(startTemperature);
 }
@@ -235,10 +241,12 @@ void ThermostatInputParser::parseEndTemperature(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto endTemperature = stod(lineElements[2]);
+    const auto endTemperature = stringToFiniteDouble(lineElements[2]);
 
-    if (endTemperature < 0)
-        throw InputFileException("End temperature cannot be negative");
+    if (endTemperature < 0.0)
+        throw InputFileException(
+            "End temperature must be finite and non-negative"
+        );
 
     ThermostatSettings::setEndTemperature(endTemperature);
 }
@@ -262,7 +270,7 @@ void ThermostatInputParser::parseTemperatureRampSteps(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto temperatureRampSteps = stoi(lineElements[2]);
+    const auto temperatureRampSteps = stringToInt(lineElements[2]);
 
     if (temperatureRampSteps < 0)
         throw InputFileException("Temperature ramp steps cannot be negative");
@@ -287,11 +295,11 @@ void ThermostatInputParser::parseTemperatureRampFrequency(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto tempRampFreq = stoi(lineElements[2]);
+    const auto tempRampFreq = stringToInt(lineElements[2]);
 
-    if (tempRampFreq < 0)
+    if (tempRampFreq < 1)
         throw InputFileException(
-            "Temperature ramp frequency cannot be negative"
+            "Temperature ramp frequency must be greater than zero"
         );
 
     ThermostatSettings::setTemperatureRampFrequency(size_t(tempRampFreq));
@@ -313,11 +321,17 @@ void ThermostatInputParser::parseThermostatRelaxationTime(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto relaxationTime = stod(lineElements[2]);
+    const auto relaxationTime = stringToFiniteDouble(lineElements[2]);
 
-    if (relaxationTime < 0)
+    if (relaxationTime <= 0.0)
         throw InputFileException(
-            "Relaxation time of thermostat cannot be negative"
+            "Relaxation time of thermostat must be finite and greater than zero"
+        );
+
+    if (relaxationTime > std::numeric_limits<double>::max() / PS_TO_FS)
+        throw InputFileException(
+            "Relaxation time of thermostat is too large to represent in "
+            "femtoseconds"
         );
 
     ThermostatSettings::setRelaxationTime(relaxationTime);
@@ -339,12 +353,23 @@ void ThermostatInputParser::parseThermostatFriction(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto friction = stod(lineElements[2]);
+    const auto friction = stringToFiniteDouble(lineElements[2]);
 
-    if (friction < 0)
-        throw InputFileException("Friction of thermostat cannot be negative");
+    if (friction < 0.0)
+        throw InputFileException(
+            "Friction of thermostat must be finite and non-negative"
+        );
 
-    ThermostatSettings::setFriction(friction * 1.0e12);
+    if (friction >
+        std::numeric_limits<double>::max() / defaults::MAX_FRICTION_CONVERSION)
+        throw InputFileException(
+            "Friction of thermostat is too large to represent in inverse "
+            "seconds"
+        );
+
+    ThermostatSettings::setFriction(
+        friction * constants::NOSE_HOVER_FRICTION_INPUT_TO_INTERNAL
+    );
 }
 
 /**
@@ -363,11 +388,11 @@ void ThermostatInputParser::parseThermostatChainLength(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto chainLength = stoi(lineElements[2]);
+    const auto chainLength = stringToInt(lineElements[2]);
 
-    if (chainLength < 0)
+    if (chainLength < 1)
         throw InputFileException(
-            "Chain length of thermostat cannot be negative"
+            "Chain length of thermostat must be greater than zero"
         );
 
     ThermostatSettings::setNoseHooverChainLength(size_t(chainLength));
@@ -389,11 +414,18 @@ void ThermostatInputParser::parseThermostatCouplingFrequency(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto couplingFrequency = stod(lineElements[2]);
+    const auto couplingFrequency = stringToFiniteDouble(lineElements[2]);
 
-    if (couplingFrequency < 0)
+    if (couplingFrequency < 0.0)
         throw InputFileException(
-            "Coupling frequency of thermostat cannot be negative"
+            "Coupling frequency of thermostat must be finite and non-negative"
+        );
+
+    if (couplingFrequency >
+        std::sqrt(std::numeric_limits<double>::max()) / PER_CM_TO_HZ)
+        throw InputFileException(
+            "Coupling frequency of thermostat is too large to represent in "
+            "hertz"
         );
 
     ThermostatSettings::setNoseHooverCouplingFrequency(couplingFrequency);
