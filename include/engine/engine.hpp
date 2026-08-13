@@ -61,7 +61,6 @@ namespace engine
 
         physicalData::PhysicalData _averagePhysicalData;
 
-        std::shared_ptr<virial::Virial>                 _virial;
         std::shared_ptr<potential::Potential>           _potential;
         std::shared_ptr<physicalData::PhysicalData>     _physicalData;
         std::shared_ptr<simulationBox::SimulationBox>   _simulationBox;
@@ -116,7 +115,6 @@ namespace engine
         [[nodiscard]] simulationBox::SimulationBox &getSimulationBox();
         [[nodiscard]] physicalData::PhysicalData   &getPhysicalData();
         [[nodiscard]] physicalData::PhysicalData   &getAveragePhysicalData();
-        [[nodiscard]] virial::Virial               &getVirial();
 
         /*************************
          * output getter methods *
@@ -137,7 +135,6 @@ namespace engine
          * get pointer methods *
          ***********************/
 
-        [[nodiscard]] virial::Virial               *getVirialPtr();
         [[nodiscard]] simulationBox::SimulationBox *getSimulationBoxPtr();
         [[nodiscard]] physicalData::PhysicalData   *getPhysicalDataPtr();
 
@@ -145,12 +142,12 @@ namespace engine
          * get shared pointer methods *
          ******************************/
 
-        [[nodiscard]] std::shared_ptr<simulationBox::SimulationBox> getSharedSimulationBox(
+        [[nodiscard]]
+        std::shared_ptr<simulationBox::SimulationBox> getSharedSimulationBox(
         ) const;
         [[nodiscard]]
         std::shared_ptr<physicalData::PhysicalData> getSharedPhysicalData(
         ) const;
-        [[nodiscard]] std::shared_ptr<virial::Virial> getSharedVirial() const;
 
         /***************************
          * make unique_ptr methods *
@@ -158,8 +155,6 @@ namespace engine
 
         template <typename T>
         void makePotential(T);
-        template <typename T>
-        void makeVirial(T virial);
         template <typename T>
         void makeIntraWater(T &&);
 

@@ -37,6 +37,8 @@ using namespace settings;
 using namespace constants;
 using namespace physicalData;
 
+using virial::intraMolecularVirialCorrection;
+
 /**
  * @brief Constructor for MDEngine
  *
@@ -97,9 +99,6 @@ void MDEngine::run()
 
     _intraNonBonded->setTimerName("IntraNonBonded");
     _timer.addTimer(_intraNonBonded->getTimer());
-
-    _virial->setTimerName("Virial");
-    _timer.addTimer(_virial->getTimer());
 
     _physicalData->setTimerName("Physical Data");
     _timer.addTimer(_physicalData->getTimer());
@@ -167,10 +166,10 @@ void MDEngine::takeStepAfterForces()
     _constraints->calculateConstraintBondRefs(*_simulationBox);
 
     if (!Settings::isHybridJobtype())
-        _virial->intraMolecularVirialCorrection(
-            *_simulationBox,
-            *_physicalData
-        );
+    {
+        const auto virial = intraMolecularVirialCorrection(*_simulationBox);
+        _physicalData->addVirial(virial);
+    }
 
     _thermostat->applyThermostatOnForces(*_simulationBox);
 

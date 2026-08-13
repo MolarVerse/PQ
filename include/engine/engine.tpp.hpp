@@ -48,17 +48,6 @@ namespace engine
     }
 
     /**
-     * @brief make unique_ptr for virial
-     *
-     * @tparam T
-     */
-    template <typename T>
-    inline void Engine::makeVirial(T virial)
-    {
-        _virial = std::make_unique<T>(virial);
-    }
-
-    /**
      * @brief make unique_ptr for waterIntra
      *
      * @tparam T
