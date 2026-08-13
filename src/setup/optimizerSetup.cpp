@@ -240,7 +240,7 @@ std::shared_ptr<Evaluator> OptimizerSetup::setupEvaluator()
     evaluator->setPotential(_optEngine.getSharedPotential());
     evaluator->setForceField(_optEngine.getSharedForceField());
     evaluator->setConstraints(_optEngine.getConstraints());
-    evaluator->setIntraNonBonded(_optEngine.getSharedIntraNonBonded());
+    evaluator->setIntraNonBonded(_optEngine.getIntraNonBonded());
     evaluator->setVirial(_optEngine.getSharedVirial());
     evaluator->setSimulationBox(_optEngine.getSharedSimulationBox());
     evaluator->setPhysicalData(_optEngine.getSharedPhysicalData());

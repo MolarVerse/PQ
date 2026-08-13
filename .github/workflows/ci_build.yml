@@ -4,39 +4,41 @@ on:
   pull_request:
     branches:
       - '*'
-    paths:
-      - '.github/workflows/ci_build.yml'
-      - '.cmake/**'
-      - 'apps/**'
-      - 'include/**'
-      - 'src/**'
-      - 'integration_tests/**'
-      - 'tests/**'
-      - 'benchmarks/CMakeLists.txt'
-      - 'benchmarks/src/**'
-      - 'CMakeLists.txt'
   push:
     branches:
       - dev
       - main
-    paths:
-      - '.github/workflows/ci_build.yml'
-      - '.cmake/**'
-      - 'apps/**'
-      - 'include/**'
-      - 'src/**'
-      - 'integration_tests/**'
-      - 'tests/**'
-      - 'benchmarks/CMakeLists.txt'
-      - 'benchmarks/src/**'
-      - 'CMakeLists.txt'
   schedule:
     - cron: '0 2 * * *'
   workflow_dispatch:
 
 jobs:
-  build:
+  changes:
     if: github.event_name != 'schedule'
+    runs-on: ubuntu-24.04
+    outputs:
+      relevant: ${{ steps.filter.outputs.relevant }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            relevant:
+              - '.github/workflows/ci_build.yml'
+              - '.cmake/**'
+              - 'apps/**'
+              - 'include/**'
+              - 'src/**'
+              - 'integration_tests/**'
+              - 'tests/**'
+              - 'benchmarks/CMakeLists.txt'
+              - 'benchmarks/src/**'
+              - 'CMakeLists.txt'
+
+  build:
+    if: needs.changes.outputs.relevant == 'true' && github.event_name != 'schedule'
+    needs: changes
     strategy:
       matrix:
         os: [ubuntu-24.04, ubuntu-24.04-arm]
@@ -139,7 +141,8 @@ jobs:
           conda run -n test-env pytest integration_tests -v
 
   benchmark:
-    if: github.event_name != 'schedule'
+    if: needs.changes.outputs.relevant == 'true' && github.event_name != 'schedule'
+    needs: changes
     runs-on: ubuntu-24.04
 
     steps:
@@ -170,7 +173,8 @@ jobs:
           ctest --test-dir build-benchmark -L benchmark --output-on-failure
 
   build-static-lto:
-    if: github.event_name != 'schedule'
+    if: needs.changes.outputs.relevant == 'true' && github.event_name != 'schedule'
+    needs: changes
     runs-on: ubuntu-24.04
 
     steps:
@@ -232,7 +236,8 @@ jobs:
         run: ctest --test-dir build --output-on-failure -j1
 
   mpi-build:
-    if: github.event_name != 'schedule'
+    if: needs.changes.outputs.relevant == 'true' && github.event_name != 'schedule'
+    needs: changes
     runs-on: ubuntu-24.04
 
     steps:
@@ -269,3 +274,21 @@ jobs:
 
       - name: Run tests
         run: ctest --test-dir build --output-on-failure -j1
+
+  ci-build-gate:
+    if: always()
+    needs: [changes, build, benchmark, build-static-lto, mpi-build]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check CI build results
+        run: |
+          for result in \
+            "${{ needs.build.result }}" \
+            "${{ needs.benchmark.result }}" \
+            "${{ needs.build-static-lto.result }}" \
+            "${{ needs.mpi-build.result }}"; do
+            if [[ "$result" == "failure" ]]; then
+              exit 1
+            fi
+          done
+          echo "OK — all CI build jobs passed or were skipped (no relevant paths changed)"

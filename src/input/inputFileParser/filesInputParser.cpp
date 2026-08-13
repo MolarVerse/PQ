@@ -50,8 +50,14 @@ using namespace utilities;
  *
  * @param engine
  */
-FilesInputParser::FilesInputParser(Engine &engine, const bool validateFilePaths)
-    : InputFileParser(engine), _validateFilePaths(validateFilePaths)
+FilesInputParser::FilesInputParser(
+    Engine                                         &engine,
+    std::shared_ptr<intraNonBonded::IntraNonBonded> intraNonBonded,
+    const bool                                      validateFilePaths
+)
+    : InputFileParser(engine),
+      _intraNonBonded(intraNonBonded),
+      _validateFilePaths(validateFilePaths)
 {
     addKeyword(
         std::string("intra-nonBonded_file"),
@@ -144,7 +150,7 @@ void FilesInputParser::parseIntraNonBondedFile(
             std::format("Intra non bonded file \"{}\" File not found", fileName)
         );
 
-    _engine.getIntraNonBonded().activate();
+    _intraNonBonded->activate();
 
     FileSettings::setIntraNonBondedFileName(fileName);
     FileSettings::setIsIntraNonBondedFileNameSet();

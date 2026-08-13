@@ -26,12 +26,18 @@
 
 #include <cstddef>   // for size_t
 
+#include "hybridConfigurator.hpp"
 #include "output.hpp"   // for Output
 
 namespace simulationBox
 {
     class SimulationBox;   // forward declaration
 }   // namespace simulationBox
+
+namespace configurator
+{
+    class HybridConfigurator;   // forward declaration
+}   // namespace configurator
 
 namespace output
 {
@@ -48,6 +54,10 @@ namespace output
 
         void writeHeader(const simulationBox::SimulationBox &);
         void writeXyz(simulationBox::SimulationBox &, const size_t);
+        void writeHybridCenterXyz(
+            const configurator::HybridConfigurator &configurator,
+            const size_t                            step
+        );
         void writeVelocities(simulationBox::SimulationBox &, const size_t);
         void writeForces(simulationBox::SimulationBox &, const size_t);
         void writeCharges(simulationBox::SimulationBox &, const size_t);

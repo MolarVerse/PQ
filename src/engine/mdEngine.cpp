@@ -246,6 +246,9 @@ void MDEngine::writeOutput()
         );   // use physicalData instead of averagePhysicalData
 
         _engineOutput.writeBoxFile(effStep, _simulationBox->getBox());
+
+        if (Settings::isHybridJobtype())
+            _engineOutput.writeHybridCenterXyzFile(_configurator, effStep);
     }
 
     // NOTE:
@@ -328,6 +331,16 @@ output::EnergyOutput &MDEngine::getInstantEnergyOutput()
 output::MomentumOutput &MDEngine::getMomentumOutput()
 {
     return _engineOutput.getMomentumOutput();
+}
+
+/**
+ * @brief get the reference to the xyz hybrid center output
+ *
+ * @return output::TrajectoryOutput&
+ */
+output::TrajectoryOutput &MDEngine::getXyzHybridCenterOutput()
+{
+    return _engineOutput.getXyzHybridCenterOutput();
 }
 
 /**
