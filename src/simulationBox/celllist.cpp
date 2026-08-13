@@ -320,9 +320,7 @@ void CellList::resizeCells()
     for (const auto numberOfCellsInDimension : _nCells)
     {
         if (0 == numberOfCellsInDimension)
-            throw CellListException(
-                "Number of cells must be positive"
-            );
+            throw CellListException("Number of cells must be positive");
 
         if (numberOfCellsInDimension > _cells.max_size() / numberOfCells)
             throw CellListException(
