@@ -219,8 +219,7 @@ void ThermostatSetup::setupNoseHooverThermostat()
 void ThermostatSetup::setupTemperatureRamp()
 {
     /*************************************************************************
-     * If the start temperature is defined, the temperature ramp is enabled.
-     **
+     * If the start temperature is defined, the temperature ramp is enabled. *
      *************************************************************************/
 
     if (!ThermostatSettings::isStartTemperatureSet())
