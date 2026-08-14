@@ -43,7 +43,7 @@ TEST_F(TestSetup, setupCellList)
     cellListSetup.setup();
 
     test::checkType(
-        &_engine->getPotential(),
+        _engine->getPotential(),
         typeid(potential::PotentialBruteForce)
     );
 
@@ -54,7 +54,7 @@ TEST_F(TestSetup, setupCellList)
     cellListSetup.setup();
 
     test::checkType(
-        &_engine->getPotential(),
+        _engine->getPotential(),
         typeid(potential::PotentialCellList)
     );
 

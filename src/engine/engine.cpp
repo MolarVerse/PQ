@@ -175,9 +175,12 @@ PhysicalData &Engine::getAveragePhysicalData() { return _averagePhysicalData; }
 /**
  * @brief get the reference to the force field
  *
- * @return ForceField&
+ * @return const std::shared_ptr<forceField::ForceField>&
  */
-ForceField &Engine::getForceField() { return *_forceField; }
+const std::shared_ptr<forceField::ForceField> &Engine::getForceField() const
+{
+    return _forceField;
+}
 
 /**
  * @brief get the reference to the intra non bonded interactions
@@ -192,23 +195,12 @@ const std::shared_ptr<IntraNonBonded> &Engine::getIntraNonBonded() const
 /**
  * @brief get the reference to the potential
  *
- * @return Potential&
+ * @return const Potential&
  */
-Potential &Engine::getPotential() { return *_potential; }
-
-/**
- * @brief get the pointer to the force field
- *
- * @return ForceField*
- */
-ForceField *Engine::getForceFieldPtr() { return _forceField.get(); }
-
-/**
- * @brief get the pointer to the potential
- *
- * @return Potential*
- */
-Potential *Engine::getPotentialPtr() { return _potential.get(); }
+const std::shared_ptr<potential::Potential> &Engine::getPotential() const
+{
+    return _potential;
+}
 
 /**
  * @brief get the pointer to the simulation box
@@ -322,16 +314,6 @@ InfoOutput &Engine::getInfoOutput() { return _engineOutput.getInfoOutput(); }
  ******************************/
 
 /**
- * @brief get the shared pointer to the force field
- *
- * @return std::shared_ptr<ForceField>
- */
-std::shared_ptr<ForceField> Engine::getSharedForceField() const
-{
-    return _forceField;
-}
-
-/**
  * @brief get the shared pointer to the simulation box
  *
  * @return std::shared_ptr<SimulationBox>
@@ -369,14 +351,4 @@ const std::shared_ptr<CellList> &Engine::getCellList() const
 const std::shared_ptr<Constraints> &Engine::getConstraints() const
 {
     return _constraints;
-}
-
-/**
- * @brief get the shared pointer to the potential
- *
- * @return std::shared_ptr<Potential>
- */
-std::shared_ptr<Potential> Engine::getSharedPotential() const
-{
-    return _potential;
 }

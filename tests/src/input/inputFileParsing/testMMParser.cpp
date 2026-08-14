@@ -28,7 +28,6 @@
 #include "MMInputParser.hpp"
 #include "engine.hpp"                // for Engine
 #include "exceptions.hpp"            // for InputFileException, customException
-#include "forceFieldClass.hpp"       // for ForceField
 #include "forceFieldSettings.hpp"    // for ForceFieldSettings
 #include "gtest/gtest.h"             // for AssertionResult, Message
 #include "potentialSettings.hpp"     // for PotentialSettings
@@ -46,21 +45,25 @@ using namespace input;
  */
 TEST_F(TestInputFileReader, testParseForceField)
 {
-    MMInputParser            parser(*_engine);
+    MMInputParser parser(
+        *_engine,
+        _engine->getForceField(),
+        _engine->getPotential()
+    );
     std::vector<std::string> lineElements = {"force-field", "=", "on"};
     parser.parseForceFieldType(lineElements, 0);
     EXPECT_TRUE(settings::ForceFieldSettings::isActive());
-    EXPECT_TRUE(_engine->getForceFieldPtr()->isNonCoulombicActivated());
+    EXPECT_TRUE(_engine->getForceField()->isNonCoulombicActivated());
 
     lineElements = {"force-field", "=", "off"};
     parser.parseForceFieldType(lineElements, 0);
     EXPECT_FALSE(settings::ForceFieldSettings::isActive());
-    EXPECT_FALSE(_engine->getForceFieldPtr()->isNonCoulombicActivated());
+    EXPECT_FALSE(_engine->getForceField()->isNonCoulombicActivated());
 
     lineElements = {"force-field", "=", "bonded"};
     parser.parseForceFieldType(lineElements, 0);
     EXPECT_TRUE(settings::ForceFieldSettings::isActive());
-    EXPECT_FALSE(_engine->getForceFieldPtr()->isNonCoulombicActivated());
+    EXPECT_FALSE(_engine->getForceField()->isNonCoulombicActivated());
 
     lineElements = {"forceField", "=", "notValid"};
     ASSERT_THROW_MSG(
@@ -80,7 +83,11 @@ TEST_F(TestInputFileReader, testParseForceField)
  */
 TEST_F(TestInputFileReader, testParseNonCoulombType)
 {
-    MMInputParser            parser(*_engine);
+    MMInputParser parser(
+        *_engine,
+        _engine->getForceField(),
+        _engine->getPotential()
+    );
     std::vector<std::string> lineElements = {"noncoulomb", "=", "guff"};
     parser.parseNonCoulombType(lineElements, 0);
     EXPECT_EQ(

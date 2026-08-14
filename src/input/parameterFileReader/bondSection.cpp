@@ -65,12 +65,13 @@ void BondSection::processSection(
     if (lineElements.size() != 3)
     {
         throw ParameterFileException(
+
             std::format(
                 "Wrong number of arguments in parameter file bond section at "
-                "line "
-                "{} - number of elements has to be 3!",
+                "line {} - number of elements has to be 3!",
                 _lineNumber
             )
+
         );
     }
 
@@ -83,8 +84,7 @@ void BondSection::processSection(
         throw ParameterFileException(
             std::format(
                 "Parameter file bond section at line {} - equilibrium distance "
-                "has "
-                "to be positive!",
+                "has to be positive!",
                 _lineNumber
             )
         );
@@ -92,5 +92,5 @@ void BondSection::processSection(
 
     auto bondType = BondType(id, equilibriumDistance, forceConstant);
 
-    engine.getForceField().addBondType(bondType);
+    engine.getForceField()->addBondType(bondType);
 }

@@ -106,7 +106,7 @@ void JCouplingSection::processSection(
 
     auto jCouplingFF = JCouplingForceField(mols, atomIdxs, dihedralType);
 
-    engine.getForceField().addJCoupling(jCouplingFF);
+    engine.getForceField()->addJCoupling(jCouplingFF);
 }
 
 /**

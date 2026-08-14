@@ -42,7 +42,7 @@ using namespace settings;
 TEST_F(TestParameterFileSection, processSectionLennardJones)
 {
     auto &potential = dynamic_cast<ForceFieldNonCoulomb &>(
-        _engine->getPotential().getNonCoulombPotential()
+        _engine->getPotential()->getNonCoulombPotential()
     );
 
     std::vector<std::string> lineElements =
@@ -81,7 +81,7 @@ TEST_F(TestParameterFileSection, processSectionLennardJones)
 TEST_F(TestParameterFileSection, processSectionBuckingham)
 {
     auto &potential = dynamic_cast<ForceFieldNonCoulomb &>(
-        _engine->getPotential().getNonCoulombPotential()
+        _engine->getPotential()->getNonCoulombPotential()
     );
 
     std::vector<std::string> lineElements =
@@ -122,7 +122,7 @@ TEST_F(TestParameterFileSection, processSectionBuckingham)
 TEST_F(TestParameterFileSection, processSectionMorse)
 {
     auto &potential = dynamic_cast<ForceFieldNonCoulomb &>(
-        _engine->getPotential().getNonCoulombPotential()
+        _engine->getPotential()->getNonCoulombPotential()
     );
 
     std::vector<std::string> lineElements =
@@ -195,7 +195,7 @@ TEST_F(TestParameterFileSection, processHeader)
 TEST_F(TestParameterFileSection, processSectionNonCoulombics)
 {
     auto &potential = dynamic_cast<ForceFieldNonCoulomb &>(
-        _engine->getPotential().getNonCoulombPotential()
+        _engine->getPotential()->getNonCoulombPotential()
     );
 
     std::vector<std::string> lineElements =

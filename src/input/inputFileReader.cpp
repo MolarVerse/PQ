@@ -112,12 +112,17 @@ InputFileReader::InputFileReader(
             validateFilePaths
         )
     );
-    _parsers.push_back(make_unique<MMInputParser>(_engine));
+    _parsers.push_back(
+        make_unique<MMInputParser>(
+            _engine,
+            _engine.getForceField(),
+            _engine.getPotential()
+        )
+    );
     _parsers.push_back(make_unique<GeneralInputParser>(_engine));
     _parsers.push_back(make_unique<HessianInputParser>(_engine));
     _parsers.push_back(make_unique<IntegratorInputParser>(_engine));
     _parsers.push_back(make_unique<ManostatInputParser>(_engine));
-    _parsers.push_back(make_unique<MMInputParser>(_engine));
     _parsers.push_back(make_unique<OutputInputParser>(_engine));
     _parsers.push_back(make_unique<ResetKineticsInputParser>(_engine));
     _parsers.push_back(make_unique<SimulationBoxInputParser>(_engine));

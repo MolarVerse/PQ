@@ -27,7 +27,6 @@
 
 #include "engine.hpp"                    // for Engine
 #include "exceptions.hpp"                // for TopologyException
-#include "gtest/gtest.h"                 // for Message, TestPartResult
 #include "improperDihedralSection.hpp"   // for ImproperDihedralSection
 #include "testTopologySection.hpp"       // for TestTopologySection
 
@@ -40,40 +39,40 @@ TEST_F(TestTopologySection, processSectionImproperDihedral)
     std::vector<std::string> lineElements = {"1", "2", "3", "4", "7"};
     input::topology::ImproperDihedralSection improperDihedralSection;
     improperDihedralSection.processSection(lineElements, *_engine);
-    EXPECT_EQ(_engine->getForceField().getImproperDihedrals().size(), 1);
+    EXPECT_EQ(_engine->getForceField()->getImproperDihedrals().size(), 1);
     EXPECT_EQ(
-        _engine->getForceField().getImproperDihedrals()[0].getMolecules()[0],
+        _engine->getForceField()->getImproperDihedrals()[0].getMolecules()[0],
         &(_engine->getSimulationBox().getMolecules()[0])
     );
     EXPECT_EQ(
-        _engine->getForceField().getImproperDihedrals()[0].getMolecules()[1],
+        _engine->getForceField()->getImproperDihedrals()[0].getMolecules()[1],
         &(_engine->getSimulationBox().getMolecules()[1])
     );
     EXPECT_EQ(
-        _engine->getForceField().getImproperDihedrals()[0].getMolecules()[2],
+        _engine->getForceField()->getImproperDihedrals()[0].getMolecules()[2],
         &(_engine->getSimulationBox().getMolecules()[1])
     );
     EXPECT_EQ(
-        _engine->getForceField().getImproperDihedrals()[0].getMolecules()[3],
+        _engine->getForceField()->getImproperDihedrals()[0].getMolecules()[3],
         &(_engine->getSimulationBox().getMolecules()[1])
     );
     EXPECT_EQ(
-        _engine->getForceField().getImproperDihedrals()[0].getAtomIndices()[0],
+        _engine->getForceField()->getImproperDihedrals()[0].getAtomIndices()[0],
         0
     );
     EXPECT_EQ(
-        _engine->getForceField().getImproperDihedrals()[0].getAtomIndices()[1],
+        _engine->getForceField()->getImproperDihedrals()[0].getAtomIndices()[1],
         0
     );
     EXPECT_EQ(
-        _engine->getForceField().getImproperDihedrals()[0].getAtomIndices()[2],
+        _engine->getForceField()->getImproperDihedrals()[0].getAtomIndices()[2],
         1
     );
     EXPECT_EQ(
-        _engine->getForceField().getImproperDihedrals()[0].getAtomIndices()[3],
+        _engine->getForceField()->getImproperDihedrals()[0].getAtomIndices()[3],
         2
     );
-    EXPECT_EQ(_engine->getForceField().getImproperDihedrals()[0].getType(), 7);
+    EXPECT_EQ(_engine->getForceField()->getImproperDihedrals()[0].getType(), 7);
 
     lineElements = {"1", "1", "2", "3", "4"};
     EXPECT_THROW(

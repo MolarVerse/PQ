@@ -63,12 +63,13 @@ void BondSection::processSection(
     if (lineElements.size() != 3 && lineElements.size() != 4)
     {
         throw TopologyException(
+
             std::format(
                 "Wrong number of arguments in topology file bond section at "
-                "line "
-                "{} - number of elements has to be 3 or 4!",
+                "line {} - number of elements has to be 3 or 4!",
                 _lineNumber
             )
+
         );
     }
 
@@ -113,7 +114,7 @@ void BondSection::processSection(
     auto bondFF = BondForceField(mol1, mol2, atomIdx1, atomIdx2, bondType);
     bondFF.setIsLinker(isLinker);
 
-    engine.getForceField().addBond(bondFF);
+    engine.getForceField()->addBond(bondFF);
 }
 
 /**

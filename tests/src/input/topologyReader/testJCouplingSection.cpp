@@ -53,7 +53,7 @@ TEST_F(TestTopologySection, jCouplingSectionProcessFiveElements)
     std::vector<std::string> lineElements = {"1", "2", "3", "4", "9"};
     section.processSection(lineElements, *_engine);
 
-    const auto &jCouplings = _engine->getForceField().getJCouplings();
+    const auto &jCouplings = _engine->getForceField()->getJCouplings();
     ASSERT_EQ(jCouplings.size(), 1u);
 
     const auto molecules = jCouplings.front().getMolecules();

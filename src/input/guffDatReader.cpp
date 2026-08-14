@@ -102,7 +102,7 @@ bool input::guffdat::isNeeded(engine::Engine &engine)
     if (!Settings::isMMActivated())
         return false;
 
-    if (engine.getForceFieldPtr()->isNonCoulombicActivated())
+    if (engine.getForceField()->isNonCoulombicActivated())
         return false;
 
     return true;
@@ -175,7 +175,7 @@ void GuffDatReader::setupGuffMaps()
     const size_t nMolTypes = simBox.getMoleculeTypes().size();
 
     auto &guffNonCoulomb = dynamic_cast<GuffNonCoulomb &>(
-        _engine.getPotential().getNonCoulombPotential()
+        _engine.getPotential()->getNonCoulombPotential()
     );
 
     guffNonCoulomb.resizeGuff(nMolTypes);
@@ -420,7 +420,7 @@ void GuffDatReader::addLennardJonesPair(
 )
 {
     auto &guffNonCoulomb = dynamic_cast<GuffNonCoulomb &>(
-        _engine.getPotential().getNonCoulombPotential()
+        _engine.getPotential()->getNonCoulombPotential()
     );
 
     const auto LJPair =
@@ -473,7 +473,7 @@ void GuffDatReader::addBuckinghamPair(
 )
 {
     auto &guffNonCoulomb = dynamic_cast<GuffNonCoulomb &>(
-        _engine.getPotential().getNonCoulombPotential()
+        _engine.getPotential()->getNonCoulombPotential()
     );
 
     const auto buckPair = BuckinghamPair(
@@ -532,7 +532,7 @@ void GuffDatReader::addMorsePair(
 )
 {
     auto &guffNonCoulomb = dynamic_cast<GuffNonCoulomb &>(
-        _engine.getPotential().getNonCoulombPotential()
+        _engine.getPotential()->getNonCoulombPotential()
     );
 
     // clang-format off
@@ -590,7 +590,7 @@ void GuffDatReader::addGuffPair(
 )
 {
     auto &guffNonCoulomb = dynamic_cast<GuffNonCoulomb &>(
-        _engine.getPotential().getNonCoulombPotential()
+        _engine.getPotential()->getNonCoulombPotential()
     );
 
     const auto guffPair           = GuffPair(rncCutOff, coefficients);

@@ -234,7 +234,7 @@ void MoldescriptorReader::processMolecule(
             );
         }
 
-        if (_engine.getForceFieldPtr()->isNonCoulombicActivated())
+        if (_engine.getForceField()->isNonCoulombicActivated())
         {
             if (lineElements.size() != 4)
             {

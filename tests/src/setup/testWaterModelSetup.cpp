@@ -230,7 +230,7 @@ TEST_F(TestSetup, waterModelSetupRejectsWaterBondsInTopology)
     WaterModelSettings::setWaterIntraModel(WaterIntraModel::SPC_FW);
     addWaterSystem(*_mdEngine);
     auto *water = &_mdEngine->getSimulationBox().getMolecule(0);
-    _mdEngine->getForceField().addBond(
+    _mdEngine->getForceField()->addBond(
         forceField::BondForceField(water, water, 0, 1, 0)
     );
 
@@ -243,7 +243,7 @@ TEST_F(TestSetup, waterModelSetupRejectsWaterAnglesInTopology)
     WaterModelSettings::setWaterIntraModel(WaterIntraModel::SPC_FW);
     addWaterSystem(*_mdEngine);
     auto *water = &_mdEngine->getSimulationBox().getMolecule(0);
-    _mdEngine->getForceField().addAngle(
+    _mdEngine->getForceField()->addAngle(
         forceField::AngleForceField({water, water, water}, {0, 1, 2}, 0)
     );
 

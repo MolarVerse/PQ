@@ -80,5 +80,5 @@ void AngleSection::processSection(
 
     auto angleType = AngleType(id, equilibriumAngle, forceConstant);
 
-    engine.getForceField().addAngleType(angleType);
+    engine.getForceField()->addAngleType(angleType);
 }

@@ -95,5 +95,5 @@ void DihedralSection::processSection(
 
     auto dihedralType = DihedralType(id, forceConstant, periodicity, phase);
 
-    engine.getForceField().addDihedralType(dihedralType);
+    engine.getForceField()->addDihedralType(dihedralType);
 }

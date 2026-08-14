@@ -184,7 +184,7 @@ void NonCoulombicsSection::processLJ(
 
     cutOff = cutOff < 0.0 ? coulombCutOff : cutOff;
 
-    auto &pot       = engine.getPotential().getNonCoulombPotential();
+    auto &pot       = engine.getPotential()->getNonCoulombPotential();
     auto &potential = dynamic_cast<ForceFieldNonCoulomb &>(pot);
 
     potential.addNonCoulombicPair(
@@ -243,7 +243,7 @@ void NonCoulombicsSection::processBuckingham(
 
     cutOff = cutOff < 0.0 ? coulombCutOff : cutOff;
 
-    auto &pot       = engine.getPotential().getNonCoulombPotential();
+    auto &pot       = engine.getPotential()->getNonCoulombPotential();
     auto &potential = dynamic_cast<ForceFieldNonCoulomb &>(pot);
 
     potential.addNonCoulombicPair(
@@ -302,7 +302,7 @@ void NonCoulombicsSection::processMorse(
 
     cutOff = cutOff < 0.0 ? coulombCutOff : cutOff;
 
-    auto &pot       = engine.getPotential().getNonCoulombPotential();
+    auto &pot       = engine.getPotential()->getNonCoulombPotential();
     auto &potential = dynamic_cast<ForceFieldNonCoulomb &>(pot);
 
     potential.addNonCoulombicPair(

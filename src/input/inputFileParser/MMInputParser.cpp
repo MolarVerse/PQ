@@ -25,13 +25,11 @@
 #include <cstddef>   // for size_t
 #include <format>    // for format
 
-#include "SPCIntraWater.hpp"          // for SPCIntraWater models
 #include "engine.hpp"                 // for Engine
 #include "exceptions.hpp"             // for InputFileException, customException
 #include "forceFieldClass.hpp"        // for ForceField
 #include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
 #include "forceFieldSettings.hpp"     // for ForceFieldSettings
-#include "mTRIntraWater.hpp"          // for MTRIntraWater models
 #include "parserUtils.hpp"
 #include "potential.hpp"            // for Potential
 #include "potentialSettings.hpp"    // for PotentialSettings
@@ -54,8 +52,15 @@ using namespace waterModel;
  * _keywordRequiredMap and _keywordCountMap: 1) force-field <on/off/bonded>
  *
  * @param engine
+ * @param forceField
+ * @param potential
  */
-MMInputParser::MMInputParser(Engine &engine) : InputFileParser(engine)
+MMInputParser::MMInputParser(
+    Engine                                 &engine,
+    std::shared_ptr<forceField::ForceField> forceField,
+    std::shared_ptr<potential::Potential>   potential
+)
+    : InputFileParser(engine), _forceField(forceField), _potential(potential)
 {
     addKeyword(
         std::string("force-field"),
@@ -104,18 +109,18 @@ void MMInputParser::parseForceFieldType(
     if (forceFieldType == "on")
     {
         ForceFieldSettings::activate();
-        _engine.getForceFieldPtr()->activateNonCoulombic();
-        _engine.getPotential().makeNonCoulombPotential(ForceFieldNonCoulomb());
+        _forceField->activateNonCoulombic();
+        _potential->makeNonCoulombPotential(ForceFieldNonCoulomb());
     }
     else if (forceFieldType == "off")
     {
         ForceFieldSettings::deactivate();
-        _engine.getForceFieldPtr()->deactivateNonCoulombic();
+        _forceField->deactivateNonCoulombic();
     }
     else if (forceFieldType == "bonded")
     {
         ForceFieldSettings::activate();
-        _engine.getForceFieldPtr()->deactivateNonCoulombic();
+        _forceField->deactivateNonCoulombic();
     }
     else
     {
@@ -203,15 +208,9 @@ void MMInputParser::parseWaterIntraModel(
     else if (waterIntraModel == "spc_e")
         WaterModelSettings::setWaterIntraModel(SPC_E);
     else if (waterIntraModel == "spc_fw")
-    {
         WaterModelSettings::setWaterIntraModel(SPC_FW);
-        _engine.makeIntraWater(SPCFwIntraWater{});
-    }
     else if (waterIntraModel == "qspc_fw")
-    {
         WaterModelSettings::setWaterIntraModel(QSPC_FW);
-        _engine.makeIntraWater(qSPCFwIntraWater{});
-    }
     else if (waterIntraModel == "spc_dc")
     {
         WaterModelSettings::setWaterIntraModel(SPC_DC);
@@ -229,15 +228,9 @@ void MMInputParser::parseWaterIntraModel(
         WaterModelSettings::setWaterIntraModel(OPC3);
     }
     else if (waterIntraModel == "spc_mtr")
-    {
         WaterModelSettings::setWaterIntraModel(SPC_MTR);
-        _engine.makeIntraWater(SPCMTRIntraWater{});
-    }
     else if (waterIntraModel == "tip3p_mtr")
-    {
         WaterModelSettings::setWaterIntraModel(TIP3P_MTR);
-        _engine.makeIntraWater(TIP3PMTRIntraWater{});
-    }
     else
     {
         throw InputFileException(format(

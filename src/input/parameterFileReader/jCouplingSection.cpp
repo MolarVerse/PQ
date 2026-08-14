@@ -125,5 +125,5 @@ void JCouplingSection::processSection(
     jCouplingType.setUpperSymmetry(upperSymmetry);
     jCouplingType.setLowerSymmetry(lowerSymmetry);
 
-    engine.getForceField().addJCouplingType(jCouplingType);
+    engine.getForceField()->addJCouplingType(jCouplingType);
 }
