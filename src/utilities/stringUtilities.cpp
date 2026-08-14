@@ -323,8 +323,8 @@ std::uint_fast32_t utilities::stringToUintFast32t(const std::string &str)
         }
     }
 
-    long long      valueLL{std::stoll(str)};
-    constexpr auto maxValue = static_cast<long long>(UINT32_MAX);
+    std::int64_t   valueLL{std::stoll(str)};
+    constexpr auto maxValue = static_cast<std::int64_t>(UINT32_MAX);
 
     if (valueLL < 0 || valueLL > maxValue)
     {
@@ -350,7 +350,7 @@ std::uint_fast32_t utilities::stringToUintFast32t(const std::string &str)
  * @throw out_of_range if number to be converted is negative or greater than an
  * unsigned long long int
  */
-unsigned long long utilities::stringToULL(const std::string &str)
+std::uint64_t utilities::stringToULL(const std::string &str)
 {
     if (str.empty())
         throw std::invalid_argument(

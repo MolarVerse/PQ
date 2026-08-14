@@ -163,11 +163,13 @@ TEST(TestResetKinetics, resetAngularMomentumLeavesVelocitiesFinite)
     rk.resetAngularMomentum(*box);
 
     for (const auto &atom : box->getAtoms())
+    {
         for (size_t i = 0; i < 3; ++i)
         {
             EXPECT_FALSE(std::isnan(atom->getVelocity()[i]));
             EXPECT_FALSE(std::isinf(atom->getVelocity()[i]));
         }
+    }
 
     delete box;
 }

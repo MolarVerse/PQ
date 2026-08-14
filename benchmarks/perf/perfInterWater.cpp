@@ -52,11 +52,11 @@ using namespace potential;
 using namespace waterModel;
 using linearAlgebra::Vec3D;
 
-static constexpr long   ITERATIONS             = 50;
-static constexpr size_t WATER_TYPE             = 1;
-static constexpr double CUTOFF                 = 9.0;
-static constexpr int    HYDROGEN_ATOMIC_NUMBER = 1;
-static constexpr int    OXYGEN_ATOMIC_NUMBER   = 8;
+static constexpr std::uint64_t ITERATIONS             = 50;
+static constexpr size_t        WATER_TYPE             = 1;
+static constexpr double        CUTOFF                 = 9.0;
+static constexpr int           HYDROGEN_ATOMIC_NUMBER = 1;
+static constexpr int           OXYGEN_ATOMIC_NUMBER   = 8;
 
 int main()
 {
@@ -156,7 +156,7 @@ int main()
 
     CALLGRIND_ZERO_STATS;
 
-    for (long i = 0; i < ITERATIONS; ++i)
+    for (std::uint64_t i = 0; i < ITERATIONS; ++i)
         interWater.calculate(simBox, physicalData, coulombPot, cellList);
 
     // read state so the loop cannot be optimized away

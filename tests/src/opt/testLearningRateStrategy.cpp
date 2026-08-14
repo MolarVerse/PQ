@@ -93,16 +93,18 @@ TEST(TestExpDecayLR, matchesAnalyticalExpDecayFormula)
     for (auto step : {1u, 10u, 50u, 100u})
     {
         lr.updateLearningRate(step, nEpochs);
-        const auto expected =
-            initial * std::exp(-decay * double(step) / double(nEpochs));
+        const auto expected = initial * std::exp(
+                                            -decay * static_cast<double>(step) /
+                                            static_cast<double>(nEpochs)
+                                        );
         EXPECT_DOUBLE_EQ(lr.getLearningRate(), expected);
     }
 }
 
 TEST(TestExpDecayLR, learningRateMonotonicallyDecreasesWithStep)
 {
-    auto       lr        = ExpDecayLR(1.0, 1.0, 1u);
-    const auto nEpochs   = 100u;
+    auto       lr      = ExpDecayLR(1.0, 1.0, 1u);
+    const auto nEpochs = 100u;
 
     lr.updateLearningRate(1u, nEpochs);
     const auto lrAt1 = lr.getLearningRate();
@@ -119,10 +121,15 @@ TEST(TestExpDecayLR, learningRateMonotonicallyDecreasesWithStep)
 
 TEST(TestLearningRateStrategy, clampsToMaxAndAppendsWarning)
 {
-    auto lr = ConstantDecayLRStrategy(1.0, -10.0, 1u);   // negative "decay" → increase
+    auto lr = ConstantDecayLRStrategy(
+        1.0,
+        -10.0,
+        1u
+    );   // negative "decay" → increase
     lr.setMaxLearningRate(std::optional<double>{1.5});
 
-    // Step 1 would bring learning rate to 11.0; checkLearningRate clamps to 1.5.
+    // Step 1 would bring learning rate to 11.0; checkLearningRate clamps
+    // to 1.5.
     lr.updateLearningRate(1u, 100u);
     EXPECT_DOUBLE_EQ(lr.getLearningRate(), 1.5);
     EXPECT_FALSE(lr.getWarningMessages().empty());
@@ -130,10 +137,12 @@ TEST(TestLearningRateStrategy, clampsToMaxAndAppendsWarning)
 
 TEST(TestLearningRateStrategy, clampsToMinAndAppendsWarning)
 {
-    auto lr = ConstantDecayLRStrategy(0.1, 0.5, 1u);   // decay larger than initial
+    auto lr =
+        ConstantDecayLRStrategy(0.1, 0.5, 1u);   // decay larger than initial
     lr.setMinLearningRate(0.05);
 
-    // Step 1 would bring learning rate to -0.4; checkLearningRate clamps to 0.05.
+    // Step 1 would bring learning rate to -0.4; checkLearningRate clamps to
+    // 0.05.
     lr.updateLearningRate(1u, 100u);
     EXPECT_DOUBLE_EQ(lr.getLearningRate(), 0.05);
     EXPECT_FALSE(lr.getWarningMessages().empty());

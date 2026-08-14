@@ -202,7 +202,7 @@ TEST(TestStringUtilities, stringToUintFast32t)
 
     constexpr auto maxValue = UINT32_MAX;
 
-    str = std::to_string(static_cast<long long>(UINT32_MAX) + 1);
+    str = std::to_string(static_cast<std::int64_t>(UINT32_MAX) + 1);
     EXPECT_THROW_MSG(
         utilities::stringToUintFast32t(str),
         std::out_of_range,
@@ -286,7 +286,8 @@ TEST(TestStringUtilities, stringToInt)
             std::format("Invalid integer value '{}' encountered", invalid)
         );
 
-    const auto outOfRange = std::to_string(static_cast<long long>(INT_MAX) + 1);
+    const auto outOfRange =
+        std::to_string(static_cast<std::int64_t>(INT_MAX) + 1);
     EXPECT_THROW_MSG(
         utilities::stringToInt(outOfRange),
         std::out_of_range,

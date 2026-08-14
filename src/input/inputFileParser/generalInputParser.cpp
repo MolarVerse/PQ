@@ -256,7 +256,7 @@ void GeneralInputParser::parseRandomSeed(
 {
     checkCommand(lineElements, lineNumber);
 
-    constexpr auto maxRandomSeed = static_cast<long long>(UINT32_MAX);
+    constexpr auto maxRandomSeed = static_cast<std::int64_t>(UINT32_MAX);
 
     auto throwRangeError = [&maxRandomSeed](const auto &value)
     {

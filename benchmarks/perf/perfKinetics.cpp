@@ -35,7 +35,7 @@
 
 #include "perfBenchSetup.hpp"
 
-static constexpr long ITERATIONS = 1000;
+static constexpr std::uint64_t ITERATIONS = 1000;
 
 int main()
 {
@@ -45,7 +45,7 @@ int main()
     CALLGRIND_ZERO_STATS;
 
     double sink = 0.0;
-    for (long i = 0; i < ITERATIONS; ++i)
+    for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
         sink += box.calculateTemperature();
         sink += box.calculateMomentum()[0];

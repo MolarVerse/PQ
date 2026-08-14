@@ -161,7 +161,7 @@ TEST_F(TestThermostat, applyThermostatBerendsen)
 
 /* ---------- VelocityRescalingThermostat ---------- */
 
-TEST_F(TestThermostat, velocityRescaling_tauSetterGetter)
+TEST_F(TestThermostat, velocityRescalingTauSetterGetter)
 {
     auto vr = thermostat::VelocityRescalingThermostat(300.0, 100.0);
     EXPECT_DOUBLE_EQ(vr.getTau(), 100.0);
@@ -170,7 +170,7 @@ TEST_F(TestThermostat, velocityRescaling_tauSetterGetter)
     EXPECT_DOUBLE_EQ(vr.getTau(), 50.0);
 }
 
-TEST_F(TestThermostat, velocityRescaling_thermostatType)
+TEST_F(TestThermostat, velocityRescalingThermostatType)
 {
     auto vr = thermostat::VelocityRescalingThermostat(300.0, 100.0);
     EXPECT_EQ(
@@ -179,7 +179,7 @@ TEST_F(TestThermostat, velocityRescaling_thermostatType)
     );
 }
 
-TEST_F(TestThermostat, velocityRescaling_applyDoesNotNaN)
+TEST_F(TestThermostat, velocityRescalingApplyDoesNotNaN)
 {
     delete _thermostat;
     _thermostat = new thermostat::VelocityRescalingThermostat(300.0, 100.0);
@@ -190,18 +190,20 @@ TEST_F(TestThermostat, velocityRescaling_applyDoesNotNaN)
     EXPECT_FALSE(std::isnan(_data->getTemperature()));
     EXPECT_FALSE(std::isinf(_data->getTemperature()));
     for (const auto &atom : _simulationBox->getAtoms())
+    {
         for (size_t i = 0; i < 3; ++i)
         {
             EXPECT_FALSE(std::isnan(atom->getVelocity()[i]));
             EXPECT_FALSE(std::isinf(atom->getVelocity()[i]));
         }
+    }
 }
 
 // Regression test: starting from zero kinetic energy (T == 0) used to
 // produce NaN velocities, because tempRatio = T_target / 0 = Inf and
 // the velocity scaling 0 * Inf = NaN. The guard skips the scaling and
 // leaves velocities at zero.
-TEST_F(TestThermostat, applyBerendsen_zeroTemperatureNoNaN)
+TEST_F(TestThermostat, applyBerendsenZeroTemperatureNoNaN)
 {
     delete _thermostat;
     _thermostat = new thermostat::BerendsenThermostat(300.0, 100.0);
@@ -215,16 +217,18 @@ TEST_F(TestThermostat, applyBerendsen_zeroTemperatureNoNaN)
     EXPECT_FALSE(std::isnan(_data->getTemperature()));
     EXPECT_FALSE(std::isinf(_data->getTemperature()));
     for (const auto &atom : _simulationBox->getAtoms())
+    {
         for (size_t i = 0; i < 3; ++i)
         {
             EXPECT_FALSE(std::isnan(atom->getVelocity()[i]));
             EXPECT_FALSE(std::isinf(atom->getVelocity()[i]));
         }
+    }
 }
 
 /* ---------- LangevinThermostat ---------- */
 
-TEST_F(TestThermostat, langevin_constructorComputesSigma)
+TEST_F(TestThermostat, langevinConstructorComputesSigma)
 {
     // sigma > 0 once friction and targetTemp are non-zero.
     const auto langevin = thermostat::LangevinThermostat(300.0, 0.1);
@@ -232,7 +236,7 @@ TEST_F(TestThermostat, langevin_constructorComputesSigma)
     EXPECT_DOUBLE_EQ(langevin.getFriction(), 0.1);
 }
 
-TEST_F(TestThermostat, langevin_zeroFrictionHasZeroSigma)
+TEST_F(TestThermostat, langevinZeroFrictionHasZeroSigma)
 {
     const auto langevin = thermostat::LangevinThermostat(300.0, 0.0);
 
@@ -240,7 +244,7 @@ TEST_F(TestThermostat, langevin_zeroFrictionHasZeroSigma)
     EXPECT_DOUBLE_EQ(langevin.getFriction(), 0.0);
 }
 
-TEST_F(TestThermostat, langevin_settersAndGetters)
+TEST_F(TestThermostat, langevinSettersAndGetters)
 {
     auto langevin = thermostat::LangevinThermostat(300.0, 0.1);
 
@@ -251,7 +255,7 @@ TEST_F(TestThermostat, langevin_settersAndGetters)
     EXPECT_DOUBLE_EQ(langevin.getSigma(), 2.0);
 }
 
-TEST_F(TestThermostat, langevin_setTargetTemperatureRecomputesSigma)
+TEST_F(TestThermostat, langevinSetTargetTemperatureRecomputesSigma)
 {
     auto langevin = thermostat::LangevinThermostat(300.0, 0.1);
     settings::TimingsSettings::setTimeStep(0.1);
@@ -266,7 +270,7 @@ TEST_F(TestThermostat, langevin_setTargetTemperatureRecomputesSigma)
     EXPECT_GT(sigmaAt600, sigmaAt300);
 }
 
-TEST_F(TestThermostat, langevin_setFrictionRecomputesSigma)
+TEST_F(TestThermostat, langevinSetFrictionRecomputesSigma)
 {
     auto langevin = thermostat::LangevinThermostat(300.0, 0.1);
     settings::TimingsSettings::setTimeStep(0.1);
@@ -279,7 +283,7 @@ TEST_F(TestThermostat, langevin_setFrictionRecomputesSigma)
     EXPECT_GT(sigmaAtFrictionPointFive, sigmaAtFrictionPointOne);
 }
 
-TEST_F(TestThermostat, langevin_thermostatType)
+TEST_F(TestThermostat, langevinThermostatType)
 {
     auto langevin = thermostat::LangevinThermostat(300.0, 0.1);
     EXPECT_EQ(langevin.getThermostatType(), settings::ThermostatType::LANGEVIN);
@@ -287,7 +291,7 @@ TEST_F(TestThermostat, langevin_thermostatType)
 
 /* ---------- NoseHooverThermostat ---------- */
 
-TEST_F(TestThermostat, noseHoover_thermostatType)
+TEST_F(TestThermostat, noseHooverThermostatType)
 {
     auto nh = thermostat::NoseHooverThermostat(
         300.0,
@@ -298,7 +302,7 @@ TEST_F(TestThermostat, noseHoover_thermostatType)
     EXPECT_EQ(nh.getThermostatType(), settings::ThermostatType::NOSE_HOOVER);
 }
 
-TEST_F(TestThermostat, noseHoover_couplingFrequencySetterGetter)
+TEST_F(TestThermostat, noseHooverCouplingFrequencySetterGetter)
 {
     auto nh = thermostat::NoseHooverThermostat(
         300.0,
@@ -312,7 +316,7 @@ TEST_F(TestThermostat, noseHoover_couplingFrequencySetterGetter)
     EXPECT_DOUBLE_EQ(nh.getCouplingFrequency(), 5.0e12);
 }
 
-TEST_F(TestThermostat, noseHoover_setChiAtIndex)
+TEST_F(TestThermostat, noseHooverSetChiAtIndex)
 {
     auto nh = thermostat::NoseHooverThermostat(
         300.0,
@@ -327,7 +331,7 @@ TEST_F(TestThermostat, noseHoover_setChiAtIndex)
     EXPECT_DOUBLE_EQ(nh.getZeta()[1], 3.0);
 }
 
-TEST_F(TestThermostat, noseHoover_appliesFiniteForceAndStateUpdates)
+TEST_F(TestThermostat, noseHooverAppliesFiniteForceAndStateUpdates)
 {
     auto nh = thermostat::NoseHooverThermostat(
         300.0,

@@ -24,8 +24,8 @@
 
 #include <iosfwd>   // for stringstream, ostream
 
-#include "gtest/gtest.h"      // for Message, TestPartResult
-#include "matrixNear.hpp"     // for EXPECT_MATRIX_NEAR
+#include "gtest/gtest.h"    // for Message, TestPartResult
+#include "matrixNear.hpp"   // for EXPECT_MATRIX_NEAR
 #include "staticMatrix.hpp"   // IWYU pragma: keep - for diagonalMatrix, inverse, operator*
 
 using namespace linearAlgebra;
@@ -333,7 +333,7 @@ TEST(TestStaticMatrix3x3, trace)
     EXPECT_EQ(trace(mat), 12.0);
 }
 
-TEST(TestStaticMatrix3x3, multiplyAssignmentOperator_scalar)
+TEST(TestStaticMatrix3x3, multiplyAssignmentOperatorScalar)
 {
     StaticMatrix3x3<double> mat{
         {1.0, 2.0, 3.0},
@@ -353,7 +353,7 @@ TEST(TestStaticMatrix3x3, multiplyAssignmentOperator_scalar)
     );
 }
 
-TEST(TestStaticMatrix3x3, divideAssignmentOperator_scalar)
+TEST(TestStaticMatrix3x3, divideAssignmentOperatorScalar)
 {
     StaticMatrix3x3<double> mat{
         {2.0, 4.0, 6.0},
@@ -373,7 +373,7 @@ TEST(TestStaticMatrix3x3, divideAssignmentOperator_scalar)
     );
 }
 
-TEST(TestStaticMatrix3x3, subtractionAssignmentOperator_matrices)
+TEST(TestStaticMatrix3x3, subtractionAssignmentOperatorMatrices)
 {
     StaticMatrix3x3<double> lhs{
         {2.0, 4.0, 6.0},

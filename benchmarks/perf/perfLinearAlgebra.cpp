@@ -23,6 +23,7 @@
 // Fixed-work micro-benchmark of the linear-algebra primitives (Vec3D and the
 // 3x3 tensor) that underlie every force/energy kernel.
 
+#include <cstdint>
 #include <cstdio>
 #include <format>
 #include <iostream>
@@ -36,7 +37,7 @@
 #include "staticMatrix.hpp"
 #include "vector3d.hpp"
 
-static constexpr long ITERATIONS = 20000;
+static constexpr std::uint64_t ITERATIONS = 20000;
 
 int main()
 {
@@ -55,7 +56,7 @@ int main()
     CALLGRIND_ZERO_STATS;
 
     double sink = 0.0;
-    for (long i = 0; i < ITERATIONS; ++i)
+    for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
         const double scale = 1.0 + static_cast<double>(i & 255) * 0.01;
         const Vec3D  a     = v1 * scale;

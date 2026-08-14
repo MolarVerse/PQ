@@ -44,7 +44,7 @@ using namespace linearAlgebra;
  * @details basic info file
  *
  */
-TEST_F(TestEnergyOutput, writeInfo_forceFieldNotActive)
+TEST_F(TestEnergyOutput, writeInfoForceFieldNotActive)
 {
     _physicalData->setTemperature(1.0);
     _physicalData->setPressure(2.0);
@@ -127,7 +127,7 @@ TEST_F(TestEnergyOutput, writeInfo_forceFieldNotActive)
  * @details force field is active
  *
  */
-TEST_F(TestEnergyOutput, writeInfo_forceFieldActive)
+TEST_F(TestEnergyOutput, writeInfoForceFieldActive)
 {
     _physicalData->setTemperature(1.0);
     _physicalData->setPressure(2.0);
@@ -227,7 +227,7 @@ TEST_F(TestEnergyOutput, writeInfo_forceFieldActive)
  * @details manostat is active
  *
  */
-TEST_F(TestEnergyOutput, writeInfo_manostatIsActive)
+TEST_F(TestEnergyOutput, writeInfoManostatIsActive)
 {
     _physicalData->setTemperature(1.0);
     _physicalData->setPressure(2.0);
@@ -320,7 +320,7 @@ TEST_F(TestEnergyOutput, writeInfo_manostatIsActive)
  * @details qm is active
  *
  */
-TEST_F(TestEnergyOutput, writeInfo_qmIsActive)
+TEST_F(TestEnergyOutput, writeInfoQmIsActive)
 {
     _physicalData->reset();
 
@@ -409,7 +409,7 @@ TEST_F(TestEnergyOutput, writeInfo_qmIsActive)
  * @details nose hoover is active
  *
  */
-TEST_F(TestEnergyOutput, writeInfo_NoseHooverActive)
+TEST_F(TestEnergyOutput, writeInfoNoseHooverActive)
 {
     _physicalData->setTemperature(1.0);
     _physicalData->setPressure(2.0);

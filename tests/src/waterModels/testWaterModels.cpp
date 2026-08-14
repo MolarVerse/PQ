@@ -223,13 +223,21 @@ namespace
         );
 
         for (size_t mol1 = 1; mol1 <= 2; ++mol1)
+        {
             for (size_t mol2 = 1; mol2 <= 2; ++mol2)
+            {
                 for (size_t atom1 = 0; atom1 < 2; ++atom1)
+                {
                     for (size_t atom2 = 0; atom2 < 2; ++atom2)
+                    {
                         nonCoulomb->setGuffNonCoulPair(
                             {mol1, mol2, atom1, atom2},
                             pair
                         );
+                    }
+                }
+            }
+        }
 
         return nonCoulomb;
     }
