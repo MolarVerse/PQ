@@ -23,8 +23,10 @@
 #include "externalQMRunner.hpp"
 
 #include <algorithm>    // for __for_each_fn, for_each
-#include <cmath>        // for isnan, isinf
-#include <filesystem>   // for is_regular_file, path
+#include <array>        // for array
+#include <cmath>        // for isfinite
+#include <cstdlib>      // for system
+#include <filesystem>   // for is_regular_file, path, remove
 #include <format>       // for format
 #include <fstream>      // for ofstream
 #include <string>       // for string
@@ -90,6 +92,13 @@ void ExternalQMRunner::run(
         writePointChargeFile(simBox);
     }
 
+    const auto resultFiles = std::array{
+        FileSettings::getQMForcesTempFileName(),
+        FileSettings::getQMChargesTempFileName(),
+        FileSettings::getStressTensorTempFileName()
+    };
+    for (const auto &file : resultFiles) std::filesystem::remove(file);
+
     std::jthread timeoutThread{[this](const std::stop_token stopToken)
                                { throwAfterTimeout(stopToken); }};
 
@@ -128,6 +137,25 @@ std::string ExternalQMRunner::resolveScriptPath(
         return bundledQMScriptPath(script);
 
     return _scriptPath + std::string(script);
+}
+
+void ExternalQMRunner::executeCommand(
+    const std::string_view command,
+    const std::string_view program
+) const
+{
+#if defined(_WIN32)
+    static_cast<void>(command);
+    throw QMRunnerException(
+        std::format("{} command execution is not supported on Windows", program)
+    );
+#else
+    const auto status = std::system(std::string(command).c_str());
+    if (status != EXIT_SUCCESS)
+        throw QMRunnerException(
+            std::format("{} command failed with status {}", program, status)
+        );
+#endif
 }
 
 /**
@@ -170,9 +198,16 @@ void ExternalQMRunner::readForceFile(
 
     double energy = 0.0;
 
-    forceFile >> energy;
+    if (!(forceFile >> energy))
+        throw QMRunnerException(
+            std::format(
+                "Cannot read QM energy from {} force file \"{}\"",
+                string(QMSettings::getQMMethod()),
+                forceFileName
+            )
+        );
 
-    if (std::isnan(energy) || std::isinf(energy))
+    if (!std::isfinite(energy))
         throw QMRunnerException(
             std::format(
                 "Invalid QM energy (NaN/Inf) in {} force file \"{}\"",
@@ -187,10 +222,17 @@ void ExternalQMRunner::readForceFile(
     {
         auto grad = linearAlgebra::Vec3D();
 
-        forceFile >> grad[0] >> grad[1] >> grad[2];
+        if (!(forceFile >> grad[0] >> grad[1] >> grad[2]))
+            throw QMRunnerException(
+                std::format(
+                    "Incomplete {} force file \"{}\"",
+                    string(QMSettings::getQMMethod()),
+                    forceFileName
+                )
+            );
 
         for (size_t i = 0; i < 3; ++i)
-            if (std::isnan(grad[i]) || std::isinf(grad[i]))
+            if (!std::isfinite(grad[i]))
                 throw QMRunnerException(
                     std::format(
                         "Invalid QM force component (NaN/Inf) in {} force file "
@@ -246,11 +288,26 @@ void ExternalQMRunner::readChargeFile(SimulationBox &box)
 
     box.resetQMCharges();
 
-    auto readCharges = [&chargeFile](auto &atom)
+    auto readCharges = [&chargeFile, &chargeFileName](auto &atom)
     {
         auto charge = 0.0;
 
-        chargeFile >> charge;
+        if (!(chargeFile >> charge))
+            throw QMRunnerException(
+                std::format(
+                    "Incomplete {} charge file \"{}\"",
+                    string(QMSettings::getQMMethod()),
+                    chargeFileName
+                )
+            );
+        if (!std::isfinite(charge))
+            throw QMRunnerException(
+                std::format(
+                    "Invalid value in {} charge file \"{}\"",
+                    string(QMSettings::getQMMethod()),
+                    chargeFileName
+                )
+            );
 
         atom->setQMCharge(charge);
     };
