@@ -81,7 +81,7 @@ TEST(TestTimingsOutput, writeListsRegisteredSubTimers)
     GlobalTimer global;
     global.startSimulationTimer();
 
-    Timer t("MySection");
+    Timer t(TimerId::DefaultTimings);
     {
         auto _ = t.scoped("inner");
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
@@ -95,7 +95,10 @@ TEST(TestTimingsOutput, writeListsRegisteredSubTimers)
     out.close();
 
     const auto content = slurp(path);
-    EXPECT_NE(content.find("MySection"), std::string::npos);
+    EXPECT_NE(
+        content.find(toString(TimerId::DefaultTimings)),
+        std::string::npos
+    );
     EXPECT_NE(content.find("inner"), std::string::npos);
     const auto errorCode = std::remove(path.c_str());
     EXPECT_EQ(errorCode, 0) << "Failed to remove file: " << path;

@@ -81,8 +81,9 @@ namespace customException
        public:
         explicit CustomException(
             const std::string_view message,
-            std::optional<size_t>  lineNumber = std::nullopt
+            std::optional<size_t>  lineNumber
         );
+        explicit CustomException(const std::string_view message);
 
         void colorfulOutput(const Color::Code, const std::string_view) const;
         void setLineNumber(const size_t lineNumber) noexcept;

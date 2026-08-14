@@ -106,7 +106,6 @@ std::shared_ptr<Evaluator> HessianEngine::setupEvaluator()
     evaluator->setForceField(getSharedForceField());
     evaluator->setConstraints(getConstraints());
     evaluator->setIntraNonBonded(getIntraNonBonded());
-    evaluator->setVirial(getSharedVirial());
     evaluator->setPhysicalData(getSharedPhysicalData());
     evaluator->setPhysicalDataOld(getSharedPhysicalDataOld());
 
@@ -485,22 +484,22 @@ void HessianEngine::writeHessianInfo(const HessianMatrix &hessian) const
 
 void HessianEngine::addTimers()
 {
-    _engineOutput.setTimerName("Output");
+    _engineOutput.setTimerId(TimerId::Output);
     _timer.addTimer(_engineOutput.getTimer());
 
-    _constraints->setTimerName("Constraints");
+    _constraints->setTimerId(TimerId::Constraints);
     _timer.addTimer(_constraints->getTimer());
 
-    _cellList->setTimerName("Cell List");
+    _cellList->setTimerId(TimerId::CellList);
     _timer.addTimer(_cellList->getTimer());
 
-    _potential->setTimerName("Potential");
+    _potential->setTimerId(TimerId::Potential);
     _timer.addTimer(_potential->getTimer());
 
-    _intraNonBonded->setTimerName("IntraNonBonded");
+    _intraNonBonded->setTimerId(TimerId::IntraNonBonded);
     _timer.addTimer(_intraNonBonded->getTimer());
 
-    _physicalData->setTimerName("Physical Data");
+    _physicalData->setTimerId(TimerId::PhysicalData);
     _timer.addTimer(_physicalData->getTimer());
 }
 

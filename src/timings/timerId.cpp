@@ -20,31 +20,36 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _ATOMIC_VIRIAL_HPP_
+#include "timerId.hpp"
 
-#define _ATOMIC_VIRIAL_HPP_
-
-#include "virial.hpp"
-
-namespace virial
+/**
+ * @brief convert TimerId to string
+ *
+ * @param id
+ * @return std::string
+ */
+std::string toString(TimerId id)
 {
-    /**
-     * @class AtomicVirial
-     *
-     * @brief Class for virial calculation of atomic systems
-     *
-     * @details dummy class for atomic systems, since no virial correction is
-     * needed
-     *
-     */
-    class AtomicVirial : public Virial
-    {
-       public:
-        AtomicVirial();
+    if (id == TimerId::DefaultTimings)
+        return "Default Timings";
 
-        std::shared_ptr<Virial> clone() const override;
-    };
+    if (id == TimerId::CellList)
+        return "Cell List";
 
-}   // namespace virial
+    if (id == TimerId::PhysicalData)
+        return "Physical Data";
 
-#endif   // _ATOMIC_VIRIAL_HPP_
+    if (id == TimerId::ResetKinetics)
+        return "Reset Kinetics";
+
+    if (id == TimerId::WaterIntraPotential)
+        return "Water Intra Potential";
+
+    if (id == TimerId::WaterInterPotential)
+        return "Water Inter Potential";
+
+    if (id == TimerId::QMEngine)
+        return "QM Engine";
+
+    return TimerIdMeta::toString(id);
+}

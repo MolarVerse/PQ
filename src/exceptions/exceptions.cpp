@@ -40,6 +40,16 @@ CustomException::CustomException(
 }
 
 /**
+ * @brief Construct a new Custom Exception:: Custom Exception object
+ *
+ * @param message
+ */
+CustomException::CustomException(const std::string_view message)
+    : CustomException(message, std::nullopt)
+{
+}
+
+/**
  * @brief Adds a source line if the exception has no line yet.
  *
  * @param lineNumber

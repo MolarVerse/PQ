@@ -58,7 +58,11 @@ namespace cli
 
     [[nodiscard]] ValidationResult validateInputFile(
         std::string_view inputFile,
-        ValidationScope  scope = ValidationScope::INSTALLED
+        ValidationScope  scope
+    );
+
+    [[nodiscard]] ValidationResult validateInputFile(
+        std::string_view inputFile
     );
 
     void writeValidationJson(

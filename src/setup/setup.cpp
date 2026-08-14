@@ -22,20 +22,18 @@
 
 #include "setup.hpp"
 
-#include "atomicVirial.hpp"
-#include "celllistSetup.hpp"          // for setupCellList
-#include "constraintsSetup.hpp"       // for setupConstraints
-#include "engine.hpp"                 // for Engine
-#include "forceFieldSettings.hpp"     // for ForceFieldSettings
-#include "forceFieldSetup.hpp"        // for setupForceField
-#include "guffDatReader.hpp"          // for readGuffDat, readInput
-#include "hybridSetup.hpp"            // for setupQMMM
-#include "inputFileReader.hpp"        // for readInputFile
-#include "intraNonBondedReader.hpp"   // for readIntraNonBondedFile
-#include "intraNonBondedSetup.hpp"    // for setupIntraNonBonded
-#include "manostatSetup.hpp"          // for setupManostat
-#include "moldescriptorReader.hpp"    // for readMolDescriptor
-#include "molecularVirial.hpp"
+#include "celllistSetup.hpp"                // for setupCellList
+#include "constraintsSetup.hpp"             // for setupConstraints
+#include "engine.hpp"                       // for Engine
+#include "forceFieldSettings.hpp"           // for ForceFieldSettings
+#include "forceFieldSetup.hpp"              // for setupForceField
+#include "guffDatReader.hpp"                // for readGuffDat, readInput
+#include "hybridSetup.hpp"                  // for setupQMMM
+#include "inputFileReader.hpp"              // for readInputFile
+#include "intraNonBondedReader.hpp"         // for readIntraNonBondedFile
+#include "intraNonBondedSetup.hpp"          // for setupIntraNonBonded
+#include "manostatSetup.hpp"                // for setupManostat
+#include "moldescriptorReader.hpp"          // for readMolDescriptor
 #include "optimizerSetup.hpp"               // for setupOptimizer
 #include "outputFilesSetup.hpp"             // for setupOutputFiles
 #include "parameterFileReader.hpp"          // for readParameterFile
@@ -74,7 +72,7 @@ using namespace setup::resetKinetics;
  */
 void setup::setupRequestedJob(const std::string& inputFileName, Engine& engine)
 {
-    auto setupTimer = Timer("Setup");
+    auto setupTimer = Timer(TimerId::Setup);
 
     auto _ = setupTimer.scoped("TotalSetup");
 
@@ -185,16 +183,6 @@ void setup::setupEngine(Engine& engine)
 
     if (Settings::isOptJobType())
         setupOptimizer(engine);
-
-    switch (Settings::getVirialType())
-    {
-        case VirialType::ATOMIC:
-            engine.makeVirial(virial::AtomicVirial());
-            break;
-        case VirialType::MOLECULAR:
-            engine.makeVirial(virial::MolecularVirial());
-            break;
-    }
 
     engine.getLogOutput().flushQueuedWarnings();
 }

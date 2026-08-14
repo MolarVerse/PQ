@@ -37,6 +37,8 @@ using namespace settings;
 using namespace constants;
 using namespace physicalData;
 
+using virial::intraMolecularVirialCorrection;
+
 /**
  * @brief Constructor for MDEngine
  *
@@ -77,49 +79,46 @@ void MDEngine::run()
 
     const auto elapsedTime = double(_timer.calculateElapsedTime()) * 1e-3;
 
-    _engineOutput.setTimerName("Output");
+    _engineOutput.setTimerId(TimerId::Output);
     _timer.addTimer(_engineOutput.getTimer());
 
-    _thermostat->setTimerName("Thermostat");
+    _thermostat->setTimerId(TimerId::Thermostat);
     _timer.addTimer(_thermostat->getTimer());
 
-    _integrator->setTimerName("Integrator");
+    _integrator->setTimerId(TimerId::Integrator);
     _timer.addTimer(_integrator->getTimer());
 
-    _constraints->setTimerName("Constraints");
+    _constraints->setTimerId(TimerId::Constraints);
     _timer.addTimer(_constraints->getTimer());
 
-    _cellList->setTimerName("Cell List");
+    _cellList->setTimerId(TimerId::CellList);
     _timer.addTimer(_cellList->getTimer());
 
-    _potential->setTimerName("Potential");
+    _potential->setTimerId(TimerId::Potential);
     _timer.addTimer(_potential->getTimer());
 
-    _intraNonBonded->setTimerName("IntraNonBonded");
+    _intraNonBonded->setTimerId(TimerId::IntraNonBonded);
     _timer.addTimer(_intraNonBonded->getTimer());
 
-    _virial->setTimerName("Virial");
-    _timer.addTimer(_virial->getTimer());
-
-    _physicalData->setTimerName("Physical Data");
+    _physicalData->setTimerId(TimerId::PhysicalData);
     _timer.addTimer(_physicalData->getTimer());
 
-    _manostat->setTimerName("Manostat");
+    _manostat->setTimerId(TimerId::Manostat);
     _timer.addTimer(_manostat->getTimer());
 
-    _resetKinetics.setTimerName("Reset Kinetics");
+    _resetKinetics.setTimerId(TimerId::ResetKinetics);
     _timer.addTimer(_resetKinetics.getTimer());
 
-    _intraWater->setTimerName("Water Intra Potential");
+    _intraWater->setTimerId(TimerId::WaterIntraPotential);
     _timer.addTimer(_intraWater->getTimer());
 
-    _interWater->setTimerName("Water Inter Potential");
+    _interWater->setTimerId(TimerId::WaterInterPotential);
     _timer.addTimer(_interWater->getTimer());
 
     if (Settings::isQMActivated())
     {
-        dynamic_cast<QMCapableEngine *>(this)->getQMRunner()->setTimerName(
-            "QM Engine"
+        dynamic_cast<QMCapableEngine *>(this)->getQMRunner()->setTimerId(
+            TimerId::QMEngine
         );
         _timer.addTimer(
             dynamic_cast<QMCapableEngine *>(this)->getQMRunner()->getTimer()
@@ -167,10 +166,10 @@ void MDEngine::takeStepAfterForces()
     _constraints->calculateConstraintBondRefs(*_simulationBox);
 
     if (!Settings::isHybridJobtype())
-        _virial->intraMolecularVirialCorrection(
-            *_simulationBox,
-            *_physicalData
-        );
+    {
+        const auto virial = intraMolecularVirialCorrection(*_simulationBox);
+        _physicalData->addVirial(virial);
+    }
 
     _thermostat->applyThermostatOnForces(*_simulationBox);
 

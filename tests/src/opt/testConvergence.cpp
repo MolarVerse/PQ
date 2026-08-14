@@ -38,7 +38,7 @@ namespace
     constexpr double _maxThresh = 1.0e-3;
     constexpr double _rmsThresh = 1.0e-3;
 
-    Convergence makeConv(ConvStrategy strat = ConvStrategy::RIGOROUS)
+    Convergence makeConv(ConvStrategy strat)
     {
         return Convergence(
             _enableAll,
@@ -51,6 +51,8 @@ namespace
             strat
         );
     }
+
+    Convergence makeConv() { return makeConv(ConvStrategy::RIGOROUS); }
 }   // namespace
 
 /* ---------- constructor and getters ---------- */
