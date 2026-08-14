@@ -1,0 +1,1 @@
+- External-QM calculations now fail cleanly on process errors or incomplete result files, including when paths contain spaces.

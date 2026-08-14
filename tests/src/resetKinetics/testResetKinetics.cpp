@@ -26,12 +26,14 @@
 #include <memory>
 
 #include "atom.hpp"
+#include "exceptions.hpp"
 #include "gtest/gtest.h"
 #include "molecule.hpp"
 #include "physicalData.hpp"
 #include "resetKinetics.hpp"
 #include "simulationBox.hpp"
 #include "thermostatSettings.hpp"
+#include "throwWithMessage.hpp"
 #include "vector3d.hpp"   // IWYU pragma: keep
 
 namespace
@@ -120,6 +122,63 @@ TEST(TestResetKinetics, resetTemperatureRescalesVelocitiesAndStaysFinite)
 
     EXPECT_FALSE(std::isnan(T_after));
     EXPECT_FALSE(std::isinf(T_after));
+
+    delete box;
+}
+
+TEST(TestResetKinetics, resetTemperatureScalesFiniteTemperatureToZero)
+{
+    auto                        *box = makeBox();
+    resetKinetics::ResetKinetics resetKinetics;
+
+    auto data = physicalData::PhysicalData();
+    data.calculateTemperature(*box);
+    settings::ThermostatSettings::setTargetTemperature(0.0);
+    resetKinetics.setTemperature(data.getTemperature());
+    resetKinetics.resetTemperature(*box);
+
+    data.calculateTemperature(*box);
+    EXPECT_DOUBLE_EQ(data.getTemperature(), 0.0);
+    for (const auto &atom : box->getAtoms())
+        EXPECT_EQ(atom->getVelocity(), linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+
+    delete box;
+}
+
+TEST(TestResetKinetics, rejectsZeroTargetFromZeroTemperature)
+{
+    auto                        *box = makeBox();
+    resetKinetics::ResetKinetics resetKinetics;
+
+    for (const auto &atom : box->getAtoms()) atom->setVelocity({0.0, 0.0, 0.0});
+
+    settings::ThermostatSettings::setTargetTemperature(0.0);
+    resetKinetics.setTemperature(0.0);
+
+    EXPECT_THROW_MSG(
+        resetKinetics.resetTemperature(*box),
+        customException::UserInputException,
+        "Cannot rescale a zero-temperature system. Initialize velocities first."
+    );
+
+    delete box;
+}
+
+TEST(TestResetKinetics, rejectsPositiveTargetFromZeroTemperature)
+{
+    auto                        *box = makeBox();
+    resetKinetics::ResetKinetics resetKinetics;
+
+    for (const auto &atom : box->getAtoms()) atom->setVelocity({0.0, 0.0, 0.0});
+
+    settings::ThermostatSettings::setTargetTemperature(300.0);
+    resetKinetics.setTemperature(0.0);
+
+    EXPECT_THROW_MSG(
+        resetKinetics.resetTemperature(*box),
+        customException::UserInputException,
+        "Cannot rescale a zero-temperature system. Initialize velocities first."
+    );
 
     delete box;
 }

@@ -23,8 +23,8 @@
 #include "dftbplusRunner.hpp"
 
 #include <algorithm>    // for std::ranges:find
+#include <cmath>        // for isfinite
 #include <cstddef>      // for size_t
-#include <cstdlib>      // for system
 #include <filesystem>   // for remove
 #include <format>       // for format
 #include <fstream>      // for ofstream
@@ -201,19 +201,14 @@ void DFTBPlusRunner::execute(SimulationBox &box)
 
     const auto command = std::format(
         "{} {} {} {} {} {}",
-        scriptFile,
+        shellQuote(scriptFile),
         charge,
         readChargesBin,
         usePointCharges,
-        FileSettings::getDFTBFileName(),
-        FileSettings::getPointChargeFileName()
+        shellQuote(FileSettings::getDFTBFileName()),
+        shellQuote(FileSettings::getPointChargeFileName())
     );
-    const auto status = ::system(command.c_str());
-
-    if (status != 0)
-        throw QMRunnerException(
-            std::format("DFTB+ runner failed with exit status {}.", status)
-        );
+    executeCommand(command, "DFTB+");
 
     // set for next execution
     _isFirstExecution = false;
@@ -243,9 +238,27 @@ void DFTBPlusRunner::readStressTensor(Box &box, PhysicalData &data)
 
     StaticMatrix3x3<double> stress;
 
-    stressFile >> stress[0][0] >> stress[0][1] >> stress[0][2];
-    stressFile >> stress[1][0] >> stress[1][1] >> stress[1][2];
-    stressFile >> stress[2][0] >> stress[2][1] >> stress[2][2];
+    if (!(stressFile >> stress[0][0] >> stress[0][1] >> stress[0][2] >>
+          stress[1][0] >> stress[1][1] >> stress[1][2] >> stress[2][0] >>
+          stress[2][1] >> stress[2][2]))
+        throw QMRunnerException(
+            std::format(
+                "Incomplete {} stress tensor \"{}\"",
+                string(QMSettings::getQMMethod()),
+                stressFileName
+            )
+        );
+
+    for (size_t row = 0; row < 3; ++row)
+        for (size_t column = 0; column < 3; ++column)
+            if (!std::isfinite(stress[row][column]))
+                throw QMRunnerException(
+                    std::format(
+                        "Invalid value in {} stress tensor \"{}\"",
+                        string(QMSettings::getQMMethod()),
+                        stressFileName
+                    )
+                );
 
     const auto conversion = HARTREE_PER_BOHR3_TO_KCAL_PER_MOL_PER_ANGSTROM3;
     stress                = stress * conversion;
