@@ -22,7 +22,6 @@
 
 #include "pyscfRunner.hpp"
 
-#include <cstddef>   // for size_t
 #include <format>    // for format
 #include <fstream>   // for ofstream, operator<<, basic_ostream
 #include <string>    // for allocator, string, operator+, operator<<
