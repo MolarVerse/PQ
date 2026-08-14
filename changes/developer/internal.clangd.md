@@ -1,3 +1,4 @@
 - fix a lot of more small clang-tidy warnings (larger one will be handled in separate PRs)
 - address all cppcoreguidline clang-tidy checks and all darwin checks
 - add most important fuchsia clang-tidy warnings (especially no default arguments)
+- add most important google clang-tidy warnings
