@@ -64,8 +64,7 @@ void BondSection::processSection(
         throw TopologyException(
             std::format(
                 "Wrong number of arguments in topology file bond section at "
-                "line "
-                "{} - number of elements has to be 3 or 4!",
+                "line {} - number of elements has to be 3 or 4!",
                 _lineNumber
             )
         );
