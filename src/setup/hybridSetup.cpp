@@ -145,6 +145,17 @@ void HybridSetup::setupForcedCoreList()
 }
 
 /**
+ * @brief setup forced layer list
+ *
+ */
+void HybridSetup::setupForcedLayerList()
+{
+    _engine.getSimulationBox().setupForcedLayerMolecules(
+        HybridSettings::getForcedLayerList()
+    );
+}
+
+/**
  * @brief setup forced outer list
  *
  */

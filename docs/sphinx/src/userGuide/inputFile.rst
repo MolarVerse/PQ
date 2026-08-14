@@ -1861,6 +1861,20 @@ With the ``forced_core_list`` keyword the user can specify a list of molecules w
 For more information about the selection grammar see the `selectionType`_ section.
 By default, no molecules are selected.
 
+.. _forcedLayerListKey:
+
+Forced Layer List
+=================
+
+.. admonition:: Key
+    :class: tip
+
+    forced_layer_list = {selection}
+
+With the ``forced_layer_list`` keyword the user can specify a list of molecules which will always be part of the ``LAYER`` region of the hybrid system.
+For more information about the selection grammar see the `selectionType`_ section.
+By default, no molecules are selected.
+
 .. _forcedOuterListKey:
 
 Forced Outer List

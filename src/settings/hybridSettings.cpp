@@ -79,6 +79,19 @@ void HybridSettings::setForcedCoreList(const std::vector<int> &list)
 }
 
 /**
+ * @brief set the _forcedLayerList in the settings
+ *
+ * @details the forcedLayerList is a list of molecules which will always be
+ * part of the LAYER zone in hybrid calculation
+ *
+ * @param list
+ */
+void HybridSettings::setForcedLayerList(const std::vector<int> &list)
+{
+    _forcedLayerList = list;
+}
+
+/**
  * @brief set the _forcedOuterList in the settings
  *
  * @details the forcedOuterList is a list of molecules which will always be
@@ -190,6 +203,16 @@ std::optional<std::vector<int>> HybridSettings::getInnerRegionCenter()
  * @return vector<int>
  */
 std::vector<int> HybridSettings::getForcedCoreList() { return _forcedCoreList; }
+
+/**
+ * @brief get the forcedLayerList
+ *
+ * @return vector<int>
+ */
+std::vector<int> HybridSettings::getForcedLayerList()
+{
+    return _forcedLayerList;
+}
 
 /**
  * @brief get the forcedOuterList

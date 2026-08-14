@@ -69,6 +69,11 @@ HybridInputParser::HybridInputParser(Engine &engine) : InputFileParser(engine)
         false
     );
     addKeyword(
+        std::string("forced_layer_list"),
+        bindMember(&HybridInputParser::parseForcedLayerList, this),
+        false
+    );
+    addKeyword(
         std::string("forced_outer_list"),
         bindMember(&HybridInputParser::parseForcedOuterList, this),
         false
@@ -141,6 +146,24 @@ void HybridInputParser::parseForcedCoreList(
 {
     checkCommand(lineElements, lineNumber);
     HybridSettings::setForcedCoreList(
+        parseSelection(lineElements[2], lineElements[0])
+    );
+}
+
+/**
+ * @brief parse list of molecules which are forced to the LAYER region in hybrid
+ * calculations
+ *
+ * @param lineElements
+ * @param lineNumber
+ */
+void HybridInputParser::parseForcedLayerList(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+    HybridSettings::setForcedLayerList(
         parseSelection(lineElements[2], lineElements[0])
     );
 }

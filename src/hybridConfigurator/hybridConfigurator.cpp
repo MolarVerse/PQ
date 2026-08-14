@@ -188,6 +188,11 @@ void HybridConfigurator::assignHybridZones(simulationBox::SimulationBox& simBox)
             setZone(mol, CORE);
             continue;
         }
+        else if (mol.isForcedLayer())
+        {
+            setZone(mol, LAYER);
+            continue;
+        }
 
         const auto com = norm(mol.getCenterOfMass());
 

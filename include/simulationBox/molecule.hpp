@@ -96,6 +96,7 @@ namespace simulationBox
         bool       _isActive   = true;
         double     _smoothingFactor;
         bool       _isForcedCore  = false;
+        bool       _isForcedLayer = false;
         bool       _isForcedOuter = false;
 
        public:
@@ -214,6 +215,7 @@ namespace simulationBox
         ) const;
 
         [[nodiscard]] bool isForcedCore() const;
+        [[nodiscard]] bool isForcedLayer() const;
         [[nodiscard]] bool isForcedOuter() const;
 
         /***************************
@@ -232,6 +234,7 @@ namespace simulationBox
         void setSmoothingFactor(const double factor);
 
         void setForcedCore(const bool isForcedCore);
+        void setForcedLayer(const bool isForcedLayer);
         void setForcedOuter(const bool isForcedOuter);
     };
 

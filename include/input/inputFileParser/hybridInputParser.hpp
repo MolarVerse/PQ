@@ -49,6 +49,10 @@ namespace input
             const std::vector<std::string> &,
             const size_t
         );
+        void parseForcedLayerList(
+            const std::vector<std::string> &,
+            const size_t
+        );
         void parseForcedOuterList(
             const std::vector<std::string> &,
             const size_t
