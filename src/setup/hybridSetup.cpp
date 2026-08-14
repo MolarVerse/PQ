@@ -70,6 +70,7 @@ void HybridSetup::setup()
     validateQMMethod();
     setupInnerRegionCenter();
     setupForcedCoreList();
+    setupForcedLayerList();
     setupForcedOuterList();
     validateQMChargeSettings();
     checkZoneRadii();

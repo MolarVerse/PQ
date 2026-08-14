@@ -54,6 +54,12 @@ TEST(HybridSettingsTest, ForcedRegionListsRoundTrip)
     HybridSettings::setForcedCoreList({1, 3, 5});
     EXPECT_EQ(HybridSettings::getForcedCoreList(), std::vector<int>({1, 3, 5}));
 
+    HybridSettings::setForcedLayerList({7, 9, 11});
+    EXPECT_EQ(
+        HybridSettings::getForcedLayerList(),
+        std::vector<int>({7, 9, 11})
+    );
+
     HybridSettings::setForcedOuterList({2, 4, 6});
     EXPECT_EQ(
         HybridSettings::getForcedOuterList(),
