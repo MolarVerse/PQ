@@ -1847,17 +1847,31 @@ The ``inner_region_center`` if more than one atom is selected will be by default
 
 .. centered:: *default value* = 0
 
-.. _forcedinnerlistKey:
+.. _forcedCoreListKey:
 
-Forced Inner List
-==================
+Forced Core List
+=================
 
 .. admonition:: Key
     :class: tip
 
-    forced_inner_list = {selection}
+    forced_core_list = {selection}
 
-With the ``forced_inner_list`` keyword the user can specify a list of molecules which will always be treated with the method chosen for the inner region of the hybrid system.
+With the ``forced_core_list`` keyword the user can specify a list of molecules which will always be part of the ``CORE`` region of the hybrid system.
+For more information about the selection grammar see the `selectionType`_ section.
+By default, no molecules are selected.
+
+.. _forcedLayerListKey:
+
+Forced Layer List
+=================
+
+.. admonition:: Key
+    :class: tip
+
+    forced_layer_list = {selection}
+
+With the ``forced_layer_list`` keyword the user can specify a list of molecules which will always be part of the ``LAYER`` region of the hybrid system.
 For more information about the selection grammar see the `selectionType`_ section.
 By default, no molecules are selected.
 
@@ -1921,7 +1935,7 @@ Core Radius
     core_radius = {double} Å -> 0.0 Å
 
 With the ``core_radius`` keyword the user can specify the core radius in Å around the center of the inner region in hybrid type calculations.
-The default value is 0.0 Å, which means that the core radius is not set and only :ref:`forced_inner_list <forcedInnerListKey>` atoms are treated by the method chosen for the inner region.
+The default value is 0.0 Å, which means that the core radius is not set and only :ref:`forced_core_list <forcedCoreListKey>` molecules are part of the ``CORE`` region.
 
 .. centered:: *default value* = 0.0 Å
 

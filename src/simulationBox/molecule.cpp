@@ -628,13 +628,22 @@ const std::vector<std::shared_ptr<Atom>> &Molecule::getAtoms() const
 }
 
 /**
- * @brief return if the molecule is forced to be in the inner region for hybrid
+ * @brief return if the molecule is forced to be in the CORE region for hybrid
  * calculations
  *
  * @return true
  * @return false
  */
-bool Molecule::isForcedInner() const { return _isForcedInner; }
+bool Molecule::isForcedCore() const { return _isForcedCore; }
+
+/**
+ * @brief return if the molecule is forced to be in the LAYER region for hybrid
+ * calculations
+ *
+ * @return true
+ * @return false
+ */
+bool Molecule::isForcedLayer() const { return _isForcedLayer; }
 
 /**
  * @brief return if the molecule is forced to be in the outer region for hybrid
@@ -720,14 +729,25 @@ void Molecule::setSmoothingFactor(const double factor)
 }
 
 /**
- * @brief set if the molecule is forced to be in the inner region for hybrid
+ * @brief set if the molecule is forced to be in the CORE region for hybrid
  * calculations
  *
- * @param isForcedInner
+ * @param isForcedCore
  */
-void Molecule::setForcedInner(const bool isForcedInner)
+void Molecule::setForcedCore(const bool isForcedCore)
 {
-    _isForcedInner = isForcedInner;
+    _isForcedCore = isForcedCore;
+}
+
+/**
+ * @brief set if the molecule is forced to be in the LAYER region for hybrid
+ * calculations
+ *
+ * @param isForcedLayer
+ */
+void Molecule::setForcedLayer(const bool isForcedLayer)
+{
+    _isForcedLayer = isForcedLayer;
 }
 
 /**

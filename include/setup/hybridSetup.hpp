@@ -50,7 +50,8 @@ namespace setup
         void setup();
         void validateQMMethod();
         void setupInnerRegionCenter();
-        void setupForcedInnerList();
+        void setupForcedCoreList();
+        void setupForcedLayerList();
         void setupForcedOuterList();
         void checkZoneRadii();
         void validateQMChargeSettings();

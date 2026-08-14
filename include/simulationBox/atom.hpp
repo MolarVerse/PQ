@@ -54,9 +54,7 @@ namespace simulationBox
         size_t _externalAtomType;
         size_t _atomType;
 
-        bool _isActive      = true;
-        bool _isForcedInner = false;
-        bool _isForcedOuter = false;
+        bool _isActive = true;
 
         int                   _atomicNumber;
         double                _mass;

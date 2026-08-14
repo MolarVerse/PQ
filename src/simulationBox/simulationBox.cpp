@@ -138,15 +138,20 @@ void SimulationBox::addInnerRegionCenterAtoms(
 }
 
 /**
- * @brief assigns _isForcedInner to all molecules which are in the
- * moleculeIndices vector
+ * @brief marks molecules with the given indices as forced-core molecules
  *
- * @param moleculeIndices
+ * The forced-core, forced-layer, and forced-outer regions are mutually
+ * exclusive. A molecule that is already assigned to either of the other
+ * forced regions is rejected.
+ *
+ * @param moleculeIndices indices of molecules to assign to the forced-core
+ * region
  *
  * @throw UserInputException if molecule index is out of range
- * @throw UserInputException if molecule is already _isForcedOuter
+ * @throw UserInputException if the molecule is already assigned to the
+ * forced-layer or forced-outer region
  */
-void SimulationBox::setupForcedInnerMolecules(
+void SimulationBox::setupForcedCoreMolecules(
     const std::vector<int>& moleculeIndices
 )
 {
@@ -156,37 +161,89 @@ void SimulationBox::setupForcedInnerMolecules(
         {
             throw UserInputException(
                 std::format(
-                    "Forced inner region molecule index {} out of range",
+                    "Forced CORE region molecule index {} out of range",
                     index
                 )
             );
         }
 
-        if (_molecules[static_cast<size_t>(index)].isForcedOuter())
+        auto& molecule = _molecules[static_cast<size_t>(index)];
+
+        if (molecule.isForcedOuter() || molecule.isForcedLayer())
         {
             throw UserInputException(
                 std::format(
                     "Ambiguous molecule index {} - molecule cannot be in "
-                    "forced_inner_list AND forced_outer_list at the same time",
+                    "forced_core_list AND forced_layer_list/forced_outer_list "
+                    "at the same time",
                     index
                 )
             );
         }
         else
         {
-            _molecules[static_cast<size_t>(index)].setForcedInner(true);
+            molecule.setForcedCore(true);
         }
     }
 }
 
 /**
- * @brief assigns _isForcedOuter to all molecules which are in the
- * moleculeIndices vector
+ * @brief marks molecules with the given indices as forced-layer molecules
  *
- * @param moleculeIndices
+ * The forced-core, forced-layer, and forced-outer regions are mutually
+ * exclusive. A molecule that is already assigned to either of the other
+ * forced regions is rejected.
+ *
+ * @param moleculeIndices indices of molecules to assign to the forced-layer
+ * region
  *
  * @throw UserInputException if molecule index is out of range
- * @throw UserInputException if molecule is already _isForcedInner
+ * @throw UserInputException if the molecule is already assigned to the
+ * forced-core or forced-outer region
+ */
+void SimulationBox::setupForcedLayerMolecules(
+    const std::vector<int>& moleculeIndices
+)
+{
+    for (const auto index : moleculeIndices)
+    {
+        if (index < 0 || index >= static_cast<int>(_molecules.size()))
+            throw UserInputException(
+                std::format(
+                    "Forced Layer region molecule index {} out of range",
+                    index
+                )
+            );
+
+        auto& molecule = _molecules[static_cast<size_t>(index)];
+
+        if (molecule.isForcedCore() || molecule.isForcedOuter())
+            throw UserInputException(
+                std::format(
+                    "Ambiguous molecule index {} - molecule cannot be in "
+                    "forced_layer_list AND forced_core_list/forced_outer_list "
+                    "at the same time",
+                    index
+                )
+            );
+        else
+            molecule.setForcedLayer(true);
+    }
+}
+
+/**
+ * @brief marks molecules with the given indices as forced-outer molecules
+ *
+ * The forced-core, forced-layer, and forced-outer regions are mutually
+ * exclusive. A molecule that is already assigned to either of the other
+ * forced regions is rejected.
+ *
+ * @param moleculeIndices indices of molecules to assign to the forced-outer
+ * region
+ *
+ * @throw UserInputException if molecule index is out of range
+ * @throw UserInputException if the molecule is already assigned to the
+ * forced-core or forced-layer region
  */
 void SimulationBox::setupForcedOuterMolecules(
     const std::vector<int>& moleculeIndices
@@ -204,19 +261,22 @@ void SimulationBox::setupForcedOuterMolecules(
             );
         }
 
-        if (_molecules[static_cast<size_t>(index)].isForcedInner())
+        auto& molecule = _molecules[static_cast<size_t>(index)];
+
+        if (molecule.isForcedCore() || molecule.isForcedLayer())
         {
             throw UserInputException(
                 std::format(
                     "Ambiguous molecule index {} - molecule cannot be in "
-                    "forced_inner_list AND forced_outer_list at the same time",
+                    "forced_outer_list AND forced_core_list/forced_layer_list "
+                    "at the same time",
                     index
                 )
             );
         }
         else
         {
-            _molecules[static_cast<size_t>(index)].setForcedOuter(true);
+            molecule.setForcedOuter(true);
         }
     }
 }
