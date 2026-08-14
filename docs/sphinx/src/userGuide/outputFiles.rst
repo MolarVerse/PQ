@@ -143,6 +143,24 @@ Hessian Info File
 
 Stores metadata for a generated Hessian, including the matrix filename, Hessian builder, optimization flag, finite-difference displacement, sign convention, unit and matrix dimensions. The file starts with ``format = pq-hessian-info-v1`` so downstream tools can identify the metadata format.
 
+.. _hybridCenterFile:
+
+******************
+Hybrid Center File
+******************
+
+**File Type:** ``.center.xyz``
+
+Stores the coordinates (*x*, *y*, *z*) of the inner region center in ``.xyz`` file format:
+    
+    | **line 1:** 1
+    | **line 2:** empty or "# step = step_number"
+    | **line 3:** X *x* *y* *z*
+
+There is one dummy atom used to denote the position of the inner region center.
+The atom has the name ``X`` and its coordinates are denoted by *x* *y* *z* in Å.
+The file is only written for :ref:`hybrid type calculations <HybridCalculationKeys>`.
+
 .. _instantEnergyFile:
 
 ********************

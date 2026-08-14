@@ -8,7 +8,6 @@ from pathlib import Path
 
 from changelog_fragments import (
     AUDIENCE_SECTIONS,
-    FRAGMENT_RE,
     FragmentError,
     load_fragments,
     parse_fragment_name,
@@ -184,12 +183,6 @@ def validate_pr_changes(changes, root=ROOT, base_fragment_counts=None):
     for _, relative_path in editable_fragments:
         audience = fragment_audience(relative_path)
         name = Path(relative_path).name
-        if not FRAGMENT_RE.match(name):
-            errors.append(
-                f"invalid fragment name '{name}'; expected "
-                "<category>.<slug>.md"
-            )
-            continue
         try:
             parse_fragment_name(name, audience)
             read_fragment_entries(root / relative_path)

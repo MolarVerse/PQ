@@ -78,6 +78,7 @@ void TypesSection::processSection(
     Engine &
 )
 {
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
     if (lineElements.size() != 8)
         throw ParameterFileException(
             std::format(
@@ -90,6 +91,7 @@ void TypesSection::processSection(
 
     const auto scaleCoulomb     = stod(lineElements[6]);
     const auto scaleVanDerWaals = stod(lineElements[7]);
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
     if (scaleCoulomb < 0.0 || scaleCoulomb > 1.0)
         throw ParameterFileException(

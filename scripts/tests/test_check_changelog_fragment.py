@@ -92,6 +92,23 @@ class ChangelogFragmentCheckTests(unittest.TestCase):
                 any("invalid user category 'ci'" in error for error in errors)
             )
 
+    def test_invalid_name_error_explains_allowed_characters(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            path = root / "changes" / "user" / "bugfix.Slug-nAme.md"
+            path.parent.mkdir(parents=True)
+            path.write_text("- Fix the output.\n", encoding="utf-8")
+
+            errors = CHECK.validate_pr_changes(
+                [("A", "changes/user/bugfix.Slug-nAme.md")], root
+            )
+
+            self.assertEqual(1, len(errors))
+            self.assertIn("uses only lowercase letters", errors[0])
+            self.assertIn(
+                "uses only lowercase letters, digits, and hyphens", errors[0]
+            )
+
     def test_rejects_direct_changelog_edits(self):
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = Path(temporary_directory)

@@ -2,10 +2,12 @@ add_library(pq_pch OBJECT dummy.cpp)
 target_precompile_headers(pq_pch PRIVATE
     <format>
     <memory>
+    <Eigen/Dense>
 )
 set_target_properties(pq_pch PROPERTIES
     POSITION_INDEPENDENT_CODE ON
 )
+target_link_libraries(pq_pch PUBLIC Eigen3::Eigen)
 
 add_subdirectory(simulationBox)
 add_subdirectory(config)
@@ -28,6 +30,7 @@ add_subdirectory(connectivity)
 add_subdirectory(forceField)
 add_subdirectory(settings)
 add_subdirectory(intraNonBonded)
+add_subdirectory(waterModels/inter)
 add_subdirectory(exceptions)
 add_subdirectory(QM)
 add_subdirectory(maxwellBoltzmann)
@@ -35,6 +38,7 @@ add_subdirectory(box)
 add_subdirectory(kernels)
 add_subdirectory(opt)
 add_subdirectory(randomNumberGenerator)
+add_subdirectory(hybridConfigurator)
 
 if(BUILD_WITH_PYTHON_BINDINGS)
     add_definitions(-DWITH_WITH_PYTHON_BINDINGS)

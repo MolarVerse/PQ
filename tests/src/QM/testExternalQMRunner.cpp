@@ -51,6 +51,7 @@ using settings::QMMethod;
 using settings::QMSettings;
 using settings::Settings;
 using simulationBox::Atom;
+using simulationBox::Periodicity;
 using simulationBox::SimulationBox;
 using testing::HasSubstr;
 
@@ -70,7 +71,7 @@ namespace
        public:
         void writeCoordsFile(SimulationBox &) override {}
 
-        void execute() override
+        void execute(SimulationBox &) override
         {
             _sawStaleResults = std::filesystem::exists(
                                    FileSettings::getQMForcesTempFileName()
@@ -83,7 +84,7 @@ namespace
                                );
 
             writeFile(FileSettings::getQMForcesTempFileName(), "0\n0 0 0\n");
-            writeFile(FileSettings::getQMChargesTempFileName(), "1 0\n");
+            writeFile(FileSettings::getQMChargesTempFileName(), "0\n");
         }
 
         void runCommand(
@@ -158,7 +159,6 @@ namespace
             auto atom = std::make_shared<Atom>();
             atom->setName("H");
             _simulationBox.addAtom(atom);
-            _simulationBox.addQMAtom(atom);
             _simulationBox.setBoxDimensions({10.0, 10.0, 10.0});
         }
 
@@ -231,13 +231,14 @@ TEST_F(ExternalQMRunnerTest, quotesDftbCommandArguments)
     const auto inputFile = std::string("input file; touch qm-injected");
     FileSettings::setDFTBFileName(inputFile);
 
-    runner.execute();
+    runner.execute(_simulationBox);
 
     EXPECT_EQ(
         std::format(
-            "{} 0 1 0 0 0 {}",
+            "{} 0 0 0 {} {}",
             utilities::shellQuote(path.string()),
-            utilities::shellQuote(inputFile)
+            utilities::shellQuote(inputFile),
+            utilities::shellQuote(FileSettings::getPointChargeFileName())
         ),
         runner.getCommand()
     );
@@ -249,7 +250,7 @@ TEST_F(ExternalQMRunnerTest, quotesPyscfCommandArguments)
     auto       runner = CommandCaptureRunner<QM::PySCFRunner>();
     const auto path   = configureQuotedScript(runner);
 
-    runner.execute();
+    runner.execute(_simulationBox);
 
     EXPECT_EQ(
         std::format(
@@ -267,10 +268,15 @@ TEST_F(ExternalQMRunnerTest, quotesTurbomoleCommandArguments)
     auto       runner = CommandCaptureRunner<QM::TurbomoleRunner>();
     const auto path   = configureQuotedScript(runner);
 
-    runner.execute();
+    runner.execute(_simulationBox);
 
     EXPECT_EQ(
-        std::format("{} 0 1 0 0 0", utilities::shellQuote(path.string())),
+        std::format(
+            "{} 0 1 0 {} {}",
+            utilities::shellQuote(path.string()),
+            utilities::shellQuote(FileSettings::getTMFileName()),
+            utilities::shellQuote(FileSettings::getPointChargeFileName())
+        ),
         runner.getCommand()
     );
     EXPECT_FALSE(std::filesystem::exists(_workPath / "qm-injected"));
@@ -282,7 +288,9 @@ TEST_F(ExternalQMRunnerTest, removesStaleResultsBeforeExecution)
     writeFile(FileSettings::getQMChargesTempFileName(), "stale");
     writeFile(FileSettings::getStressTensorTempFileName(), "stale");
 
-    EXPECT_NO_THROW(_runner.run(_simulationBox, _physicalData));
+    EXPECT_NO_THROW(
+        _runner.run(_simulationBox, _physicalData, Periodicity::NON_PERIODIC)
+    );
     EXPECT_FALSE(_runner.sawStaleResults());
     EXPECT_FALSE(
         std::filesystem::exists(FileSettings::getStressTensorTempFileName())
@@ -311,14 +319,18 @@ TEST_F(ExternalQMRunnerTest, rejectsNonFiniteForces)
 
 TEST_F(ExternalQMRunnerTest, rejectsIncompleteCharges)
 {
-    writeFile(FileSettings::getQMChargesTempFileName(), "1\n");
+    auto atom = std::make_shared<Atom>();
+    atom->setName("H");
+    _simulationBox.addAtom(atom);
+
+    writeFile(FileSettings::getQMChargesTempFileName(), "0\n");
 
     EXPECT_THROW(_runner.readChargeFile(_simulationBox), QMRunnerException);
 }
 
 TEST_F(ExternalQMRunnerTest, rejectsNonFiniteCharges)
 {
-    writeFile(FileSettings::getQMChargesTempFileName(), "1 nan\n");
+    writeFile(FileSettings::getQMChargesTempFileName(), "nan\n");
 
     EXPECT_THROW(_runner.readChargeFile(_simulationBox), QMRunnerException);
 }

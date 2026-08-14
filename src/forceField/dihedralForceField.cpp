@@ -26,6 +26,7 @@
 
 #include "coulombPotential.hpp"   // for CoulombPotential
 #include "forceField.hpp"         // IWYU pragma: keep - for correctLinker
+#include "hybridSettings.hpp"     // for HybridSettings
 #include "molecule.hpp"           // for Molecule
 #include "physicalData.hpp"       // for PhysicalData
 #include "simulationBox.hpp"      // for SimulationBox
@@ -35,7 +36,10 @@ using namespace connectivity;
 using namespace linearAlgebra;
 using namespace physicalData;
 using namespace potential;
+using namespace settings;
 using namespace simulationBox;
+
+using enum HybridZone;
 
 /**
  * @brief Construct a new Dihedral Force Field:: Dihedral Force Field object
@@ -49,7 +53,9 @@ DihedralForceField::DihedralForceField(
     const std::vector<size_t>     &atomIndices,
     const size_t                   type
 )
-    : Dihedral(molecules, atomIndices), _type(type){};
+    : Dihedral(molecules, atomIndices), _type(type)
+{
+}
 
 /**
  * @brief calculate energy and forces for a single dihedral
@@ -68,6 +74,13 @@ void DihedralForceField::calculateEnergyAndForces(
     NonCoulombPotential    &nonCoulombPotential
 )
 {
+    const bool allInactive =
+        !_molecules[0]->isActive() && !_molecules[1]->isActive() &&
+        !_molecules[2]->isActive() && !_molecules[3]->isActive();
+
+    if (allInactive)
+        return;
+
     const auto position2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
     const auto position3 = _molecules[2]->getAtomPosition(_atomIndices[2]);
 
@@ -154,8 +167,19 @@ void DihedralForceField::calculateEnergyAndForces(
 
             const auto forcexyz = forceMagnitude * dPosition14;
 
+            using enum SmoothingMethod;
+
+            auto       smF       = 0.0;
+            const auto smoothing = HybridSettings::getSmoothingMethod();
+
+            if (smoothing == HOTSPOT &&
+                _molecules[0]->getHybridZone() == SMOOTHING)
+                smF = _molecules[0]->getSmoothingFactor();
+
             if (!isImproperDihedral)
-                physicalData.addVirial(tensorProduct(dPosition14, forcexyz));
+                physicalData.addVirial(
+                    tensorProduct(dPosition14, forcexyz) * (1 - smF)
+                );
 
             _molecules[0]->addAtomForce(_atomIndices[0], forcexyz);
             _molecules[3]->addAtomForce(_atomIndices[3], -forcexyz);

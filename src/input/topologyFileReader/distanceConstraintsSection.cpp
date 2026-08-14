@@ -60,13 +60,17 @@ void DistanceConstraintsSection::processSection(
     Engine                   &engine
 )
 {
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
     if (lineElements.size() != 6)
-        throw TopologyException(std::format(
-            "Wrong number of arguments in topology file \"Distance "
-            "Constraints\" section at line {} - number of elements has to be "
-            "6!",
-            _lineNumber
-        ));
+        throw TopologyException(
+            std::format(
+                "Wrong number of arguments in topology file \"Distance "
+                "Constraints\" section at line {} - number of elements has to "
+                "be "
+                "6!",
+                _lineNumber
+            )
+        );
 
     auto atom1             = stoul(lineElements[0]);
     auto atom2             = stoul(lineElements[1]);
@@ -74,21 +78,26 @@ void DistanceConstraintsSection::processSection(
     auto upperDistance     = stod(lineElements[3]);
     auto springConstant    = stod(lineElements[4]);
     auto dSpringConstantDt = stod(lineElements[5]);
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
     if (atom1 == atom2)
-        throw TopologyException(std::format(
-            "Topology file \"Distance "
-            "Constraints\" at line {} - atoms cannot be the same!",
-            _lineNumber
-        ));
+        throw TopologyException(
+            std::format(
+                "Topology file \"Distance "
+                "Constraints\" at line {} - atoms cannot be the same!",
+                _lineNumber
+            )
+        );
 
     if (lowerDistance > upperDistance)
-        throw TopologyException(std::format(
-            "Topology file \"Distance "
-            "Constraints\" at line {} - lower distance cannot be greater "
-            "than upper distance!",
-            _lineNumber
-        ));
+        throw TopologyException(
+            std::format(
+                "Topology file \"Distance "
+                "Constraints\" at line {} - lower distance cannot be greater "
+                "than upper distance!",
+                _lineNumber
+            )
+        );
 
     auto &simBox = engine.getSimulationBox();
 
@@ -106,7 +115,7 @@ void DistanceConstraintsSection::processSection(
         dSpringConstantDt
     );
 
-    engine.getConstraints().addDistanceConstraint(distanceConstraint);
+    engine.getConstraints()->addDistanceConstraint(distanceConstraint);
 }
 
 /**
@@ -126,9 +135,12 @@ std::string DistanceConstraintsSection::keyword() { return "dist_constraints"; }
 void DistanceConstraintsSection::endedNormally(const bool endedNormal) const
 {
     if (!endedNormal)
-        throw TopologyException(std::format(
-            "Topology file error in \"Distance Constraints\" section at line "
-            "{} - no end of section found!",
-            _lineNumber
-        ));
+        throw TopologyException(
+            std::format(
+                "Topology file error in \"Distance Constraints\" section at "
+                "line "
+                "{} - no end of section found!",
+                _lineNumber
+            )
+        );
 }

@@ -30,8 +30,18 @@
 
 #include <stop_token>
 
+#include "box.hpp"
 #include "timer.hpp"
-#include "typeAliases.hpp"
+
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}   // namespace physicalData
+
+namespace simulationBox
+{
+    class SimulationBox;   // forward declaration
+}   // namespace simulationBox
 
 namespace QM
 {
@@ -43,11 +53,19 @@ namespace QM
      */
     class QMRunner : public timings::Timer
     {
+       protected:
+        simulationBox::Periodicity _periodicity;
+
        public:
         virtual ~QMRunner() = default;
 
         void throwAfterTimeout(const std::stop_token stopToken) const;
-        virtual void run(pq::SimBox &, pq::PhysicalData &) = 0;
+        void run(simulationBox::SimulationBox &, physicalData::PhysicalData &);
+        virtual void run(
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &,
+            simulationBox::Periodicity per
+        ) = 0;
     };
 }   // namespace QM
 

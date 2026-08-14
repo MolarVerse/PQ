@@ -43,7 +43,7 @@ using namespace input;
  */
 TEST_F(TestInputFileReader, testParseTopologyFilename)
 {
-    FilesInputParser parser(*_engine);
+    FilesInputParser parser(*_engine, _engine->getIntraNonBonded());
 
     std::vector<std::string> lineElements = {
         "topology_file",
@@ -73,7 +73,7 @@ TEST_F(TestInputFileReader, testParseTopologyFilename)
  */
 TEST_F(TestInputFileReader, testParseParameterFilename)
 {
-    FilesInputParser parser(*_engine);
+    FilesInputParser parser(*_engine, _engine->getIntraNonBonded());
 
     std::vector<std::string> lineElements = {
         "parameter_file",
@@ -104,7 +104,7 @@ TEST_F(TestInputFileReader, testParseParameterFilename)
  */
 TEST_F(TestInputFileReader, parseIntraNonBondedFile)
 {
-    FilesInputParser         parser(*_engine);
+    FilesInputParser         parser(*_engine, _engine->getIntraNonBonded());
     std::vector<std::string> lineElements = {
         "intra-nonBonded_file",
         "=",
@@ -134,7 +134,7 @@ TEST_F(TestInputFileReader, parseIntraNonBondedFile)
  */
 TEST_F(TestInputFileReader, testStartFileName)
 {
-    FilesInputParser         parser(*_engine);
+    FilesInputParser         parser(*_engine, _engine->getIntraNonBonded());
     std::vector<std::string> lineElements = {
         "startFile_name",
         "=",
@@ -160,7 +160,7 @@ TEST_F(TestInputFileReader, testStartFileName)
  */
 TEST_F(TestInputFileReader, testMoldescriptorFileName)
 {
-    FilesInputParser         parser(*_engine);
+    FilesInputParser         parser(*_engine, _engine->getIntraNonBonded());
     std::vector<std::string> lineElements = {
         "moldescriptorFile_name",
         "=",
@@ -191,7 +191,7 @@ TEST_F(TestInputFileReader, testMoldescriptorFileName)
  */
 TEST_F(TestInputFileReader, testGuffPath)
 {
-    FilesInputParser               parser(*_engine);
+    FilesInputParser parser(*_engine, _engine->getIntraNonBonded());
     const std::vector<std::string> lineElements = {"guff_path", "=", "guff"};
     EXPECT_THROW_MSG(
         parser.parseGuffPath(lineElements, 0),
@@ -206,7 +206,7 @@ TEST_F(TestInputFileReader, testGuffPath)
  */
 TEST_F(TestInputFileReader, guffDatFilename)
 {
-    FilesInputParser         parser(*_engine);
+    FilesInputParser         parser(*_engine, _engine->getIntraNonBonded());
     std::vector<std::string> lineElements = {"guffdat_file", "=", "guff.dat"};
     EXPECT_THROW_MSG(
         parser.parseGuffDatFilename(lineElements, 0),
@@ -227,7 +227,7 @@ TEST_F(TestInputFileReader, guffDatFilename)
  */
 TEST_F(TestInputFileReader, testRpmdStartFileName)
 {
-    FilesInputParser         parser(*_engine);
+    FilesInputParser         parser(*_engine, _engine->getIntraNonBonded());
     std::vector<std::string> lineElements = {
         "rpmd_start_file",
         "=",
@@ -256,7 +256,7 @@ TEST_F(TestInputFileReader, testRpmdStartFileName)
  */
 TEST_F(TestInputFileReader, testMShakeFileName)
 {
-    FilesInputParser         parser(*_engine);
+    FilesInputParser         parser(*_engine, _engine->getIntraNonBonded());
     std::vector<std::string> lineElements = {"mshake_file", "=", "mshake.dat"};
 
     EXPECT_THROW_MSG(
@@ -278,8 +278,12 @@ TEST_F(TestInputFileReader, testMShakeFileName)
  */
 TEST_F(TestInputFileReader, testDFTBFileName)
 {
-    FilesInputParser         parser(*_engine);
-    std::vector<std::string> lineElements = {"dftb_file", "=", "dftb_in.template"};
+    FilesInputParser         parser(*_engine, _engine->getIntraNonBonded());
+    std::vector<std::string> lineElements = {
+        "dftb_file",
+        "=",
+        "dftb_in.template"
+    };
 
     EXPECT_THROW_MSG(
         parser.parseDFTBFilename(lineElements, 0),
@@ -292,5 +296,35 @@ TEST_F(TestInputFileReader, testDFTBFileName)
     EXPECT_EQ(
         settings::FileSettings::getDFTBFileName(),
         "data/dftbReader/dftb_in.template"
+    );
+}
+
+/**
+ * @brief tests parsing the "turbomole_file" command
+ */
+TEST_F(TestInputFileReader, testTMFileName)
+{
+    FilesInputParser         parser(*_engine, _engine->getIntraNonBonded());
+    std::vector<std::string> lineElements = {
+        "turbomole_file",
+        "=",
+        "tm_define.template"
+    };
+
+    EXPECT_THROW_MSG(
+        parser.parseTMFilename(lineElements, 0),
+        customException::InputFileException,
+        "Cannot open TURBOMOLE setup file - filename = tm_define.template"
+    );
+
+    lineElements = {
+        "turbomole_file",
+        "=",
+        "data/turbomoleReader/tm_define.template"
+    };
+    parser.parseTMFilename(lineElements, 0);
+    EXPECT_EQ(
+        settings::FileSettings::getTMFileName(),
+        "data/turbomoleReader/tm_define.template"
     );
 }

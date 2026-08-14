@@ -39,7 +39,7 @@ namespace
     std::shared_ptr<SimulationBox> makeBoxWithOneAtom(
         const linearAlgebra::Vec3D &pos,
         const linearAlgebra::Vec3D &force,
-        const linearAlgebra::Vec3D &boxDims = {100.0, 100.0, 100.0}
+        const linearAlgebra::Vec3D &boxDims
     )
     {
         auto box = std::make_shared<SimulationBox>();
@@ -51,6 +51,14 @@ namespace
         box->addAtom(a);
 
         return box;
+    }
+
+    std::shared_ptr<SimulationBox> makeBoxWithOneAtom(
+        const linearAlgebra::Vec3D &pos,
+        const linearAlgebra::Vec3D &force
+    )
+    {
+        return makeBoxWithOneAtom(pos, force, {100.0, 100.0, 100.0});
     }
 }   // namespace
 

@@ -27,7 +27,6 @@
 #include <cstddef>   // for size_t
 
 #include "inputFileParser.hpp"   // for InputFileParser
-#include "typeAliases.hpp"       // for std::vector<std::string>
 
 namespace input
 {
@@ -43,10 +42,8 @@ namespace input
         bool _resolveBuiltInSlakosPath;
 
        public:
-        explicit QMInputParser(
-            pq::Engine &,
-            bool resolveBuiltInSlakosPath = true
-        );
+        explicit QMInputParser(engine::Engine &, bool resolveBuiltInSlakosPath);
+        explicit QMInputParser(engine::Engine &);
 
         void parseQMMethod(const std::vector<std::string> &, const size_t);
         void parseQMScript(const std::vector<std::string> &, const size_t);

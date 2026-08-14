@@ -30,7 +30,7 @@
 #include <string>        // for string
 #include <string_view>   // for string_view
 
-#include "typeAliases.hpp"   // for strings. ParseFunc
+#include "engine.hpp"   // for Engine
 
 namespace input
 {
@@ -51,14 +51,14 @@ namespace input
             std::function<void(const std::vector<std::string> &, const size_t)>;
 
        protected:
-        pq::Engine &_engine;
+        engine::Engine &_engine;
 
         std::map<std::string, ParseFunc> _keywordFuncMap;
         std::map<std::string, bool>      _keywordRequiredMap;
         std::map<std::string, int>       _keywordCountMap;
 
        public:
-        explicit InputFileParser(pq::Engine &engine) : _engine(engine) {}
+        explicit InputFileParser(engine::Engine &engine) : _engine(engine) {}
 
         void addKeyword(const std::string &, ParseFunc, bool);
 

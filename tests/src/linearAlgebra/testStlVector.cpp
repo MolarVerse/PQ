@@ -22,8 +22,7 @@
 
 #include <gtest/gtest.h>   // for Test, TestInfo (ptr only), EXPECT_EQ, InitGoogleTest, RUN_ALL_TESTS
 
-#include <algorithm>   // for copy
-#include <vector>      // for allocator, vector
+#include <vector>   // for allocator, vector
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
 #include "stlVector.hpp"   // for max, mean, sum
@@ -32,19 +31,19 @@ TEST(TestStlVector, sum)
 {
     const std::vector<double> v1 = {1.0, 2.0, 3.0, 4.0};
 
-    EXPECT_EQ(sum(v1), 10.0);
+    EXPECT_EQ(stl::sum(v1), 10.0);
 }
 
 TEST(TestStlVector, mean)
 {
     const std::vector<double> v1 = {1.0, 2.0, 3.0, 4.0};
 
-    EXPECT_EQ(mean(v1), 2.5);
+    EXPECT_EQ(stl::mean(v1), 2.5);
 }
 
 TEST(TestStlVector, max)
 {
     const std::vector<double> v1 = {1.0, 2.0, 3.0, 4.0};
 
-    EXPECT_EQ(max(v1), 4.0);
+    EXPECT_EQ(stl::max(v1), 4.0);
 }

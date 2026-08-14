@@ -27,8 +27,13 @@
 #include <cstddef>
 
 #include "bond.hpp"
-#include "typeAliases.hpp"
 #include "vector3d.hpp"
+
+namespace simulationBox
+{
+    class Molecule;        // forward declaration
+    class SimulationBox;   // forward declaration
+}   // namespace simulationBox
 
 namespace constraints
 {
@@ -55,17 +60,20 @@ namespace constraints
 
        public:
         DistanceConstraint(
-            pq::Molecule *molecule1,
-            pq::Molecule *molecule2,
-            const size_t  atomIndex1,
-            const size_t  atomIndex2,
-            const double  lowerDistance,
-            const double  upperDistance,
-            const double  springConstant,
-            const double  dSpringConstantDt
+            simulationBox::Molecule *molecule1,
+            simulationBox::Molecule *molecule2,
+            const size_t             atomIndex1,
+            const size_t             atomIndex2,
+            const double             lowerDistance,
+            const double             upperDistance,
+            const double             springConstant,
+            const double             dSpringConstantDt
         );
 
-        void applyDistanceConstraint(const pq::SimBox &, const double);
+        void applyDistanceConstraint(
+            const simulationBox::SimulationBox &,
+            const double
+        );
 
         [[nodiscard]] double getLowerDistance() const;
         [[nodiscard]] double getUpperDistance() const;

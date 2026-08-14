@@ -30,12 +30,16 @@
 #include <vector>        // for vector
 
 #include "defaults.hpp"   // for _GUFF_FILENAME_DEFAULT_
-#include "typeAliases.hpp"
+
+namespace engine
+{
+    class Engine;   // forward declaration
+}   // namespace engine
 
 namespace input::guffdat
 {
-    void               readGuffDat(pq::Engine &);
-    [[nodiscard]] bool isNeeded(pq::Engine &);
+    void               readGuffDat(engine::Engine &);
+    [[nodiscard]] bool isNeeded(engine::Engine &);
 
     /**
      * @class GuffDatReader
@@ -53,10 +57,10 @@ namespace input::guffdat
             _guffCoulombCoeffs;
         std::vector<std::vector<std::vector<std::vector<bool>>>> _isGuffPairSet;
 
-        pq::Engine &_engine;
+        engine::Engine &_engine;
 
        public:
-        explicit GuffDatReader(pq::Engine &engine);
+        explicit GuffDatReader(engine::Engine &engine);
 
         void setupGuffMaps();
         void parseLine(const std::vector<std::string> &lineCommands);
@@ -65,6 +69,10 @@ namespace input::guffdat
         void calculatePartialCharges();
         void checkPartialCharges();
         void checkNecessaryGuffPairs();
+        bool bothMoltypesAreWaterType(
+            const size_t molType1,
+            const size_t molType2
+        );
         void addNonCoulombPair(
             const size_t               molType1,
             const size_t               molType2,

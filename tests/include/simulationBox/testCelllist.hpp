@@ -24,16 +24,16 @@
 
 #define _TEST_CELL_LIST_HPP_
 
+#include <gtest/gtest.h>
+
 #include "celllist.hpp"            // for CellList
 #include "potentialSettings.hpp"   // for PotentialSettings
 #include "simulationBox.hpp"       // for SimulationBox
 
-#include <gtest/gtest.h>
-
 class TestCellList : public ::testing::Test
 {
-  protected:
-    virtual void SetUp()
+   protected:
+    void SetUp() override
     {
         _cellList = new simulationBox::CellList();
         _cellList->setNumberOfCells(2);
@@ -45,7 +45,7 @@ class TestCellList : public ::testing::Test
         settings::PotentialSettings::setCoulombRadiusCutOff(1.5);
     }
 
-    virtual void TearDown()
+    void TearDown() override
     {
         delete _cellList;
         delete _simulationBox;

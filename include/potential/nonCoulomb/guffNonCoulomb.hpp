@@ -28,7 +28,6 @@
 #include <vector>    // vector
 
 #include "nonCoulombPotential.hpp"
-#include "typeAliases.hpp"
 
 namespace potential
 {
@@ -41,7 +40,9 @@ namespace potential
     class GuffNonCoulomb : public NonCoulombPotential
     {
        private:
-        pq::SharedNonCoulPairVec4d _guffNonCoulombPairs;
+        std::vector<std::vector<
+            std::vector<std::vector<std::shared_ptr<NonCoulombPair>>>>>
+            _guffNonCoulombPairs;
 
        public:
         void resizeGuff(const size_t);
@@ -55,7 +56,7 @@ namespace potential
 
         void setGuffNonCoulPair(
             const std::vector<size_t> &,
-            const pq::SharedNonCoulPair &
+            const std::shared_ptr<NonCoulombPair> &
         );
 
         /***************************
@@ -63,11 +64,13 @@ namespace potential
          ***************************/
 
         [[nodiscard]]
-        pq::SharedNonCoulPair getNonCoulPair(
+        std::shared_ptr<NonCoulombPair> getNonCoulPair(
             const std::vector<size_t> &indices
         ) override;
 
-        [[nodiscard]] pq::SharedNonCoulPairVec4d getNonCoulombPairs() const;
+        [[nodiscard]] std::vector<std::vector<
+            std::vector<std::vector<std::shared_ptr<NonCoulombPair>>>>>
+        getNonCoulombPairs() const;
 
         [[nodiscard]] size_t getMolType1(const std::vector<size_t> &) const;
         [[nodiscard]] size_t getMolType2(const std::vector<size_t> &) const;

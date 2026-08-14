@@ -1,1 +1,0 @@
-- Trajectory comments can include the effective simulation step when `include_output_metadata` is enabled.

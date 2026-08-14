@@ -1,1 +1,0 @@
-- Count non-adjacent duplicate atom types correctly.

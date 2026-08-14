@@ -27,7 +27,11 @@
 #include <cstddef>   // for size_t
 
 #include "output.hpp"   // for Output
-#include "typeAliases.hpp"
+
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}   // namespace physicalData
 
 namespace output
 {
@@ -43,7 +47,7 @@ namespace output
         using Output::Output;
 
         void writeHeader(const double timeStep);
-        void write(const size_t step, const pq::PhysicalData &);
+        void write(const size_t step, const physicalData::PhysicalData &);
     };
 
 }   // namespace output

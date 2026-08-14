@@ -53,11 +53,9 @@ void Thermostat::applyThermostat(
     PhysicalData  &physicalData
 )
 {
-    startTimingsSection("Calc Temperature");
+    auto _ = scoped("Calc Temperature");
 
     physicalData.calculateTemperature(simulationBox);
-
-    stopTimingsSection("Calc Temperature");
 }
 
 /**

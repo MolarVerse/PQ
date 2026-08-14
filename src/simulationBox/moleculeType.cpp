@@ -31,14 +31,14 @@ using namespace simulationBox;
  *
  * @param moltype
  */
-MoleculeType::MoleculeType(const size_t moltype) : _moltype(moltype){};
+MoleculeType::MoleculeType(const size_t moltype) : _moltype(moltype) {}
 
 /**
  * @brief Construct a new Molecule Type:: Molecule Type object
  *
  * @param name
  */
-MoleculeType::MoleculeType(const std::string_view &name) : _name(name){};
+MoleculeType::MoleculeType(const std::string_view &name) : _name(name) {}
 
 /**
  * @brief finds number of different atom types in molecule
@@ -155,7 +155,7 @@ void MoleculeType::setMoltype(const size_t moltype) { _moltype = moltype; }
  *
  * @param charge
  */
-void MoleculeType::setCharge(const double charge) { _charge = charge; }
+void MoleculeType::setCharge(const int charge) { _charge = charge; }
 
 /**
  * @brief sets the partial charge of an atom
@@ -237,9 +237,9 @@ size_t MoleculeType::getInternalAtomType(const size_t type) const
 /**
  * @brief get the charge of the molecule
  *
- * @return double
+ * @return int
  */
-double MoleculeType::getCharge() const { return _charge; }
+int MoleculeType::getCharge() const { return _charge; }
 
 /**
  * @brief get the partial charge of an atom
@@ -273,9 +273,12 @@ std::string MoleculeType::getAtomName(const size_t index) const
 /**
  * @brief get the atom names of the molecule
  *
- * @return std::vector<std::string>&
+ * @return std::vector<std::string>
  */
-std::vector<std::string> &MoleculeType::getAtomNames() { return _atomNames; }
+std::vector<std::string> MoleculeType::getAtomNames() const
+{
+    return _atomNames;
+}
 
 /**
  * @brief get the external atom types of the molecule

@@ -51,8 +51,9 @@ using namespace simulationBox;
  * one element past the matrix and vector is touched per outer iteration.
  *
  * This test sets up a rigid equilateral triangular reference molecule,
- * stretches one bond in the SimBox copy, and runs applyMShake. With the
- * fixed UT loop bound, applyMShake must converge without throwing.
+ * stretches one bond in the simulationBox::SimulationBox copy, and runs
+ * applyMShake. With the fixed UT loop bound, applyMShake must converge without
+ * throwing.
  */
 TEST(TestMShake, applyMShake_threeAtomMolecule)
 {
@@ -81,7 +82,7 @@ TEST(TestMShake, applyMShake_threeAtomMolecule)
     mShake.addMShakeReference(mShakeRef);
     mShake.initMShake();   // builds the (3, 3) mShake inverse matrix
 
-    // --- SimBox with one slightly-stretched triangle ---
+    // --- simulationBox::SimulationBox with one slightly-stretched triangle ---
     auto simBox = SimulationBox();
     simBox.setBoxDimensions({100.0, 100.0, 100.0});
 

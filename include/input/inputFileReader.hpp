@@ -32,7 +32,6 @@
 #include <vector>        // for vector
 
 #include "inputFileParser.hpp"   // for InputFileParser
-#include "typeAliases.hpp"       // for pq::ParseFunc
 
 namespace engine
 {
@@ -77,9 +76,10 @@ namespace input
         explicit InputFileReader(
             const std::string_view &,
             engine::Engine &,
-            bool validateFilePaths        = true,
-            bool resolveBuiltInSlakosPath = true
+            bool validateFilePaths,
+            bool resolveBuiltInSlakosPath
         );
+        explicit InputFileReader(const std::string_view &, engine::Engine &);
 
         void read();
         void addKeywords();

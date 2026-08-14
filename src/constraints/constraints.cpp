@@ -61,15 +61,13 @@ void Constraints::calculateConstraintBondRefs(
     const SimulationBox &simulationBox
 )
 {
-    startTimingsSection("Reference Bond Data");
+    auto _ = scoped("Reference Bond Data");
 
     std::ranges::for_each(
         _bondConstraints,
         [&simulationBox](auto &bondConstraint)
         { bondConstraint.calculateConstraintBondRef(simulationBox); }
     );
-
-    stopTimingsSection("Reference Bond Data");
 }
 
 /**
@@ -99,7 +97,7 @@ void Constraints::applyShake(SimulationBox &simulationBox)
  */
 void Constraints::_applyShake(SimulationBox &simBox)
 {
-    startTimingsSection("Shake");
+    auto _ = scoped("Shake");
 
     std::vector<bool> convergedVector;
     bool              converged = false;
@@ -135,8 +133,6 @@ void Constraints::_applyShake(SimulationBox &simBox)
                 std::ranges::count(convergedVector, false)
             )
         );
-
-    stopTimingsSection("Shake");
 }
 
 /**
@@ -147,9 +143,8 @@ void Constraints::_applyShake(SimulationBox &simBox)
  */
 void Constraints::_applyMShake(SimulationBox &simulationBox)
 {
-    startTimingsSection("MShake - Shake");
+    auto _ = scoped("MShake - Shake");
     _mShake->applyMShake(simulationBox);
-    stopTimingsSection("MShake - Shake");
 }
 
 /**
@@ -178,7 +173,7 @@ void Constraints::applyRattle(SimulationBox &simBox)
  */
 void Constraints::_applyRattle()
 {
-    startTimingsSection("Rattle");
+    auto _ = scoped("Rattle");
 
     std::vector<bool> convergedVector;
     bool              converged = false;
@@ -214,8 +209,6 @@ void Constraints::_applyRattle()
                 std::ranges::count(convergedVector, false)
             )
         );
-
-    stopTimingsSection("Rattle");
 }
 
 /**
@@ -225,9 +218,8 @@ void Constraints::_applyRattle()
  */
 void Constraints::_applyMRattle(SimulationBox &simulationBox)
 {
-    startTimingsSection("MShake - Rattle");
+    auto _ = scoped("MShake - Rattle");
     _mShake->applyMRattle(simulationBox);
-    stopTimingsSection("MShake - Rattle");
 }
 
 /**

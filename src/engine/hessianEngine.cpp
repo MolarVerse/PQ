@@ -100,13 +100,12 @@ std::shared_ptr<Evaluator> HessianEngine::setupEvaluator()
             "Unknown job type for Hessian evaluator setup."
         );
 
-    evaluator->setCellList(getSharedCellList());
+    evaluator->setCellList(getCellList());
     evaluator->setSimulationBox(getSharedSimulationBox());
     evaluator->setPotential(getSharedPotential());
     evaluator->setForceField(getSharedForceField());
-    evaluator->setConstraints(getSharedConstraints());
-    evaluator->setIntraNonBonded(getSharedIntraNonBonded());
-    evaluator->setVirial(getSharedVirial());
+    evaluator->setConstraints(getConstraints());
+    evaluator->setIntraNonBonded(getIntraNonBonded());
     evaluator->setPhysicalData(getSharedPhysicalData());
     evaluator->setPhysicalDataOld(getSharedPhysicalDataOld());
 
@@ -162,7 +161,7 @@ void HessianEngine::runOptimization()
             break;
 
         writeOptimizationOutput();
-        deleteTempFiles();
+        deleteTmpFiles();
     }
 
     if (!_converged)
@@ -442,7 +441,8 @@ void HessianEngine::writeHessian(const HessianMatrix &hessian) const
     if (file.fail())
         throw UserInputException("Could not open Hessian file for writing.");
 
-    file << std::scientific << std::setprecision(16);
+    constexpr auto precision = 16;
+    file << std::scientific << std::setprecision(precision);
 
     for (const auto &row : hessian)
     {
@@ -484,26 +484,27 @@ void HessianEngine::writeHessianInfo(const HessianMatrix &hessian) const
 
 void HessianEngine::addTimers()
 {
-    _engineOutput.setTimerName("Output");
+    _engineOutput.setTimerId(TimerId::Output);
     _timer.addTimer(_engineOutput.getTimer());
 
-    _constraints->setTimerName("Constraints");
+    _constraints->setTimerId(TimerId::Constraints);
     _timer.addTimer(_constraints->getTimer());
 
-    _cellList->setTimerName("Cell List");
+    _cellList->setTimerId(TimerId::CellList);
     _timer.addTimer(_cellList->getTimer());
 
-    _potential->setTimerName("Potential");
+    _potential->setTimerId(TimerId::Potential);
     _timer.addTimer(_potential->getTimer());
 
-    _intraNonBonded->setTimerName("IntraNonBonded");
+    _intraNonBonded->setTimerId(TimerId::IntraNonBonded);
     _timer.addTimer(_intraNonBonded->getTimer());
 
-    _physicalData->setTimerName("Physical Data");
+    _physicalData->setTimerId(TimerId::PhysicalData);
     _timer.addTimer(_physicalData->getTimer());
 }
 
-pq::SharedPhysicalData HessianEngine::getSharedPhysicalDataOld()
+std::shared_ptr<physicalData::PhysicalData> HessianEngine::
+    getSharedPhysicalDataOld()
 {
     return _physicalDataOld;
 }

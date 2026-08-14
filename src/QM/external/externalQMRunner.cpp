@@ -38,9 +38,12 @@
 #include "fileSettings.hpp"                  // for FileSettings
 #include "physicalData.hpp"                  // for PhysicalData
 #include "qmSettings.hpp"                    // for QMSettings
-#include "simulationBox.hpp"                 // for SimulationBox
+#include "settings.hpp"
+#include "simulationBox.hpp"   // for SimulationBox
 
 using QM::ExternalQMRunner;
+using enum simulationBox::Periodicity;
+
 using namespace simulationBox;
 using namespace physicalData;
 using namespace customException;
@@ -60,11 +63,34 @@ std::string QM::bundledQMScriptPath(const std::string_view script)
 /**
  * @brief run the qm engine
  *
- * @param simBox
+ * @param simBox SimulationBox reference
+ * @param physicalData PhysicalData reference
+ * @param per periodicity of the system
  */
-void ExternalQMRunner::run(SimulationBox &simBox, PhysicalData &physicalData)
+void ExternalQMRunner::run(
+    SimulationBox &simBox,
+    PhysicalData  &physicalData,
+    Periodicity    per
+)
 {
-    writeCoordsFile(simBox);
+    if (per != XYZ && per != NON_PERIODIC)
+        throw QMRunnerException(
+            "External QM runners only available for non- and 3D-periodic "
+            "calculations."
+        );
+
+    _periodicity = per;
+
+    {
+        auto _ = scoped("Write Coordinates");
+        writeCoordsFile(simBox);
+    }
+
+    if (Settings::isHybridJobtype())
+    {
+        auto _ = scoped("Write Pointcharges");
+        writePointChargeFile(simBox);
+    }
 
     const auto resultFiles = std::array{
         FileSettings::getQMForcesTempFileName(),
@@ -76,15 +102,28 @@ void ExternalQMRunner::run(SimulationBox &simBox, PhysicalData &physicalData)
     std::jthread timeoutThread{[this](const std::stop_token stopToken)
                                { throwAfterTimeout(stopToken); }};
 
-    execute();
+    {
+        auto _ = scoped("Execute External QM Runner");
+        execute(simBox);
+    }
 
     timeoutThread.request_stop();
 
-    readForceFile(simBox, physicalData);
+    {
+        auto _ = scoped("Read Forces");
+        readForceFile(simBox, physicalData);
+    }
 
-    readChargeFile(simBox);
+    {
+        auto _ = scoped("Read Charges");
+        readChargeFile(simBox);
+    }
 
-    readStressTensor(simBox.getBox(), physicalData);
+    if (per != NON_PERIODIC)
+    {
+        auto _ = scoped("Read Stress Tensor");
+        readStressTensor(simBox.getBox(), physicalData);
+    }
 }
 
 std::string ExternalQMRunner::resolveScriptPath(
@@ -120,8 +159,8 @@ void ExternalQMRunner::executeCommand(
 }
 
 /**
- * @brief reads the force file (including qm energy) and sets the forces of the
- * atoms
+ * @brief reads the force file (including qm energy) and sets the forces of
+ * the atoms
  *
  * @param box
  * @param physicalData
@@ -251,10 +290,9 @@ void ExternalQMRunner::readChargeFile(SimulationBox &box)
 
     auto readCharges = [&chargeFile, &chargeFileName](auto &atom)
     {
-        auto index  = 0;     // Read and discard the first column (index)
-        auto charge = 0.0;   // Read the second column (charge value)
+        auto charge = 0.0;
 
-        if (!(chargeFile >> index >> charge))
+        if (!(chargeFile >> charge))
             throw QMRunnerException(
                 std::format(
                     "Incomplete {} charge file \"{}\"",
@@ -279,11 +317,11 @@ void ExternalQMRunner::readChargeFile(SimulationBox &box)
     chargeFile.close();
 }
 
-/*******************************
- *                             *
- * standard getter and setters *
- *                             *
- *******************************/
+/********************************
+ *                              *
+ * standard getters and setters *
+ *                              *
+ ********************************/
 
 /**
  * @brief getter for the script path
@@ -298,22 +336,16 @@ const std::string &ExternalQMRunner::getScriptPath() const
 /**
  * @brief getter for the singularity path
  *
- * @return const std::string&
+ * @return std::string
  */
-const std::string &ExternalQMRunner::getSingularity() const
-{
-    return _singularity;
-}
+std::string ExternalQMRunner::getSingularity() const { return _singularity; }
 
 /**
  * @brief getter for the static build path
  *
- * @return const std::string&
+ * @return std::string
  */
-const std::string &ExternalQMRunner::getStaticBuild() const
-{
-    return _staticBuild;
-}
+std::string ExternalQMRunner::getStaticBuild() const { return _staticBuild; }
 
 /**
  * @brief setter for the script path

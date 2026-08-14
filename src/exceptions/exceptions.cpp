@@ -40,6 +40,16 @@ CustomException::CustomException(
 }
 
 /**
+ * @brief Construct a new Custom Exception:: Custom Exception object
+ *
+ * @param message
+ */
+CustomException::CustomException(const std::string_view message)
+    : CustomException(message, std::nullopt)
+{
+}
+
+/**
  * @brief Adds a source line if the exception has no line yet.
  *
  * @param lineNumber
@@ -328,6 +338,29 @@ const char *CompileTimeException::what() const throw()
     colorfulOutput(Color::FG_RED, "CompileTimeError");
     return _message.c_str();
 }
+
+/**
+ * @brief Construct a new Custom Exception:: Custom Exception object
+ *
+ * @param message
+ */
+const char *HybridConfiguratorException::what() const throw()
+{
+    colorfulOutput(Color::FG_RED, "HybridConfiguratorError");
+    return _message.c_str();
+}
+
+/**
+ * @brief Construct a new Custom Exception:: Custom Exception object
+ *
+ * @param message
+ */
+const char *HybridMDEngineException::what() const throw()
+{
+    colorfulOutput(Color::FG_RED, "HybridMDEngineError");
+    return _message.c_str();
+}
+
 /**
  * @brief return the exception message for PhysicalDataException
  *

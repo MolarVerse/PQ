@@ -22,9 +22,8 @@
 
 #include "intraNonBondedSetup.hpp"
 
-#include "engine.hpp"           // for Engine
-#include "intraNonBonded.hpp"   // for IntraNonBonded
-#include "potential.hpp"        // for Potential
+#include "engine.hpp"      // for Engine
+#include "potential.hpp"   // for Potential
 
 using namespace setup;
 using namespace engine;
@@ -52,7 +51,7 @@ void setup::setupIntraNonBonded(engine::Engine &engine)
  *
  * @param engine
  */
-IntraNonBondedSetup::IntraNonBondedSetup(Engine &engine) : _engine(engine){};
+IntraNonBondedSetup::IntraNonBondedSetup(Engine &engine) : _engine(engine) {}
 
 /**
  * @brief Setup intra non bonded interactions
@@ -71,8 +70,8 @@ void IntraNonBondedSetup::setup()
     const auto &nonCoulombPot  = potential.getNonCoulombPotSharedPtr();
     const auto &coulombPot     = potential.getCoulombPotSharedPtr();
 
-    intraNonBonded.setNonCoulombPotential(nonCoulombPot);
-    intraNonBonded.setCoulombPotential(coulombPot);
+    intraNonBonded->setNonCoulombPotential(nonCoulombPot);
+    intraNonBonded->setCoulombPotential(coulombPot);
 
-    intraNonBonded.fillIntraNonBondedMaps(_engine.getSimulationBox());
+    intraNonBonded->fillIntraNonBondedMaps(_engine.getSimulationBox());
 }

@@ -25,9 +25,12 @@
 #include <memory>
 
 #include "coulombPotential.hpp"   // IWYU pragma: keep -- needed for explicit template instantiation
+#include "dftbplusRunner.hpp"   // IWYU pragma: keep -- needed for explicit template instantiation
 #include "engine.hpp"   // IWYU pragma: keep -- needed for explicit template instantiation
 #include "nonCoulombPotential.hpp"   // IWYU pragma: keep -- needed for explicit template instantiation
+#include "pyscfRunner.hpp"   // IWYU pragma: keep -- needed for explicit template instantiation
 #include "qmRunner.hpp"   // IWYU pragma: keep -- needed for explicit template instantiation
+#include "turbomoleRunner.hpp"   // IWYU pragma: keep -- needed for explicit template instantiation
 
 namespace test
 {
@@ -69,9 +72,23 @@ namespace test
         potential::NonCoulombPotential* const& potential,
         const std::type_info&                  expectedType
     );
-    template void checkType<QM::QMRunner*>(
-        QM::QMRunner* const&  runner,
+
+    // QM runners
+    template void checkType<QM::QMRunner>(
+        QM::QMRunner const&   runner,
         const std::type_info& expectedType
+    );
+    template void checkType<QM::DFTBPlusRunner>(
+        QM::DFTBPlusRunner const& runner,
+        const std::type_info&     expectedTypech
+    );
+    template void checkType<QM::PySCFRunner>(
+        QM::PySCFRunner const& runner,
+        const std::type_info&  expectedType
+    );
+    template void checkType<QM::TurbomoleRunner>(
+        QM::TurbomoleRunner const& runner,
+        const std::type_info&      expectedType
     );
 
 }   // namespace test

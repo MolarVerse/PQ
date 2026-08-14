@@ -20,9 +20,15 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#include <algorithm>   // for std::ranges:find
+#include <optional>    // for optional
+
 #include "simulationBox.hpp"
 
 using namespace simulationBox;
+
+using std::optional;
+using std::ranges::distance;
 
 /************************
  *                      *
@@ -38,16 +44,6 @@ using namespace simulationBox;
 void SimulationBox::addAtom(const std::shared_ptr<Atom> atom)
 {
     _atoms.push_back(atom);
-}
-
-/**
- * @brief Add a QM atom to the simulation box
- *
- * @param atom
- */
-void SimulationBox::addQMAtom(const std::shared_ptr<Atom> atom)
-{
-    _qmAtoms.push_back(atom);
 }
 
 /**
@@ -79,16 +75,16 @@ void SimulationBox::addMoleculeType(const MoleculeType &molecule)
 /**
  * @brief Get the water type
  *
- * @return int
+ * @return std::optional<size_t>
  */
-int SimulationBox::getWaterType() const { return _waterType; }
+optional<size_t> SimulationBox::getWaterType() const { return _waterType; }
 
 /**
  * @brief Get the ammonia type
  *
- * @return int
+ * @return std::optional<size_t>
  */
-int SimulationBox::getAmmoniaType() const { return _ammoniaType; }
+optional<size_t> SimulationBox::getAmmoniaType() const { return _ammoniaType; }
 
 /**
  * @brief Get the number of molecules
@@ -116,7 +112,23 @@ size_t SimulationBox::getNumberOfAtoms() const { return _atoms.size(); }
  *
  * @return size_t
  */
-size_t SimulationBox::getNumberOfQMAtoms() const { return _qmAtoms.size(); }
+size_t SimulationBox::getNumberOfQMAtoms() const
+{
+    return distance(getQMAtoms());
+}
+
+/**
+ * @brief Get the unique names of the QM atoms
+ *
+ * @return set<string>
+ */
+std::set<std::string> SimulationBox::getUniqueQMAtomNames() const
+{
+    std::set<std::string> uniqueQMAtomNames;
+    for (const auto &atom : getQMAtoms())
+        uniqueQMAtomNames.insert(atom->getName());
+    return uniqueQMAtomNames;
+}
 
 /**
  * @brief get the total mass
@@ -147,23 +159,23 @@ double SimulationBox::getDensity() const { return _density; }
 linearAlgebra::Vec3D &SimulationBox::getCenterOfMass() { return _centerOfMass; }
 
 /**
+ * @brief get the indices of the atoms marking the center of the inner region
+ * for hybrid type calculations
+ *
+ * @return vector<int>
+ */
+std::vector<int> SimulationBox::getInnerRegionCenterAtomIndices()
+{
+    return _innerRegionCenterAtomIndices;
+}
+
+/**
  * @brief get atom by index
  *
  * @param index
  * @return Atom&
  */
 Atom &SimulationBox::getAtom(const size_t index) { return *(_atoms[index]); }
-
-/**
- * @brief get QM atom by index
- *
- * @param index
- * @return Atom&
- */
-Atom &SimulationBox::getQMAtom(const size_t index)
-{
-    return *(_qmAtoms[index]);
-}
 
 /**
  * @brief get molecule by index
@@ -225,13 +237,13 @@ std::vector<double> SimulationBox::getAtomicScalarForcesOld() const
 std::vector<std::shared_ptr<Atom>> &SimulationBox::getAtoms() { return _atoms; }
 
 /**
- * @brief get all QM atoms
+ * @brief get all atoms
  *
  * @return std::vector<std::shared_ptr<Atom>>&
  */
-std::vector<std::shared_ptr<Atom>> &SimulationBox::getQMAtoms()
+const std::vector<std::shared_ptr<Atom>> &SimulationBox::getAtoms() const
 {
-    return _qmAtoms;
+    return _atoms;
 }
 
 /**
@@ -240,6 +252,16 @@ std::vector<std::shared_ptr<Atom>> &SimulationBox::getQMAtoms()
  * @return std::vector<Molecule>&
  */
 std::vector<Molecule> &SimulationBox::getMolecules() { return _molecules; }
+
+/**
+ * @brief get all molecules
+ *
+ * @return std::vector<Molecule>&
+ */
+const std::vector<Molecule> &SimulationBox::getMolecules() const
+{
+    return _molecules;
+}
 
 /**
  * @brief get all molecule types
@@ -357,11 +379,11 @@ std::vector<int> SimulationBox::getAtomicNumbers() const
 }
 
 /**
- * @brief flattens positions of each atom into a single vector of doubles
+ * @brief flattens positions of each QM atom into a single vector of doubles
  *
  * @return std::vector<double>
  */
-std::vector<double> SimulationBox::flattenPositions() const
+std::vector<double> SimulationBox::getFlattenedQMPositions() const
 {
     std::vector<double> positions;
 
@@ -374,7 +396,7 @@ std::vector<double> SimulationBox::flattenPositions() const
         positions.push_back(position[2]);
     };
 
-    std::ranges::for_each(_atoms, addPositions);
+    std::ranges::for_each(getQMAtoms(), addPositions);
 
     return positions;
 }
@@ -390,7 +412,7 @@ std::vector<double> SimulationBox::flattenPositions() const
  *
  * @param waterType
  */
-void SimulationBox::setWaterType(const int waterType)
+void SimulationBox::setWaterType(const size_t waterType)
 {
     _waterType = waterType;
 }
@@ -400,7 +422,7 @@ void SimulationBox::setWaterType(const int waterType)
  *
  * @param ammoniaType
  */
-void SimulationBox::setAmmoniaType(const int ammoniaType)
+void SimulationBox::setAmmoniaType(const size_t ammoniaType)
 {
     _ammoniaType = ammoniaType;
 }
@@ -541,7 +563,8 @@ void SimulationBox::setVolume(const double volume) const
  *
  * @param boxDimensions
  */
-void SimulationBox::setBoxDimensions(const linearAlgebra::Vec3D &boxDimensions
+void SimulationBox::setBoxDimensions(
+    const linearAlgebra::Vec3D &boxDimensions
 ) const
 {
     _box->setBoxDimensions(boxDimensions);

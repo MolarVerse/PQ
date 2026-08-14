@@ -25,6 +25,7 @@
 #include <fstream>   // for basic_istream, ifstream
 #include <string>    // for basic_string, string
 
+#include "atomSection.hpp"
 #include "boxSection.hpp"          // for BoxSection
 #include "engine.hpp"              // for Engine
 #include "fileSettings.hpp"        // for FileSettings
@@ -52,7 +53,10 @@ RestartFileReader::RestartFileReader(
     const std::string &filename,
     Engine            &engine
 )
-    : _fileName(filename), _fp(filename), _engine(engine)
+    : _fileName(filename),
+      _fp(filename),
+      _engine(engine),
+      _atomSection(std::make_unique<AtomSection>())
 {
     _sections.push_back(std::make_unique<BoxSection>());
     _sections.push_back(std::make_unique<NoseHooverSection>());

@@ -41,7 +41,6 @@ namespace
 {
     constexpr bool withAse             = PQ_BUILD_WITH_ASE;
     constexpr bool withMpi             = PQ_BUILD_WITH_MPI;
-    constexpr bool withKokkos          = PQ_BUILD_WITH_KOKKOS;
     constexpr bool withPythonBindings  = PQ_BUILD_WITH_PYTHON_BINDINGS;
     constexpr bool withPythonEmbedding = PQ_BUILD_WITH_PYTHON_EMBEDDING;
     constexpr bool sharedBuild         = PQ_BUILD_SHARED;
@@ -63,7 +62,7 @@ namespace
         cli::JsonWriter       &json,
         const std::string_view name,
         const std::string_view type,
-        const std::string_view unit = ""
+        const std::string_view unit
     )
     {
         json.beginObject(name);
@@ -72,12 +71,20 @@ namespace
             json.value("unit", unit);
     }
 
+    void beginParameter(
+        cli::JsonWriter       &json,
+        const std::string_view name,
+        const std::string_view type
+    )
+    {
+        beginParameter(json, name, type, "");
+    }
+
     void writeBuildCapabilities(cli::JsonWriter &json)
     {
         json.beginObject("build");
         json.value("ase", withAse);
         json.value("mpi", withMpi);
-        json.value("kokkos", withKokkos);
         json.value("python_bindings", withPythonBindings);
         json.value("python_embedding", withPythonEmbedding);
         json.value("shared", sharedBuild);
@@ -197,15 +204,23 @@ namespace
         );
         json.beginObject("minimum_from");
         json.value("parameter", "timestep");
-        json.value("factor", 0.001);
+        json.value("factor", constants::FS_TO_PS);
         json.endObject();
         json.value("default", defaults::BERENDSEN_THERMOSTAT_RELAX_TIME);
         json.endObject();
 
         beginParameter(json, "friction", "number", "ps^-1");
         json.value("minimum", 0);
-        json.value("maximum", std::numeric_limits<double>::max() / 1.0e12);
-        json.value("default", defaults::LANGEVIN_THERMOSTAT_FRICTION / 1.0e12);
+        json.value(
+            "maximum",
+            std::numeric_limits<double>::max() /
+                defaults::MAX_FRICTION_CONVERSION
+        );
+        json.value(
+            "default",
+            defaults::LANGEVIN_THERMOSTAT_FRICTION /
+                defaults::MAX_FRICTION_CONVERSION
+        );
         json.endObject();
 
         beginParameter(json, "nh-chain_length", "integer");
@@ -235,7 +250,7 @@ namespace
         );
         json.beginObject("minimum_from");
         json.value("parameter", "timestep");
-        json.value("factor", 0.001);
+        json.value("factor", constants::FS_TO_PS);
         json.endObject();
         json.value("default", defaults::BERENDSEN_MANOSTAT_RELAX_TIME);
         json.endObject();
@@ -315,7 +330,7 @@ void cli::writeCapabilities(std::ostream &output)
     auto json = JsonWriter(output);
     json.beginObject();
     json.value("schema", "pq.capabilities");
-    json.value("schema_version", 1);
+    json.value("schema_version", 2);
     json.value("version", sysinfo::VERSION);
     writeBuildCapabilities(json);
     writeCliCapabilities(json);

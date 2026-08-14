@@ -47,7 +47,7 @@ namespace forceField
 }   // namespace forceField
 
 #ifndef _FORCE_FIELD_TPP_
-#include "forcefield.tpp.hpp"   // IWYU pragma: keep - DO NOT MOVE THIS LINE
+#include "forcefield.tpp.hpp"   // IWYU pragma: export - DO NOT MOVE THIS LINE
 #endif
 
 #endif   // _FORCE_FIELD_HPP_

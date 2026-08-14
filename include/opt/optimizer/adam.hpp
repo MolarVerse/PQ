@@ -38,9 +38,11 @@ namespace opt
     {
        private:
         constexpr static size_t _maxHistoryLength = 2;
+        constexpr static auto   _defaultBeta1     = 0.9;
+        constexpr static auto   _defaultBeta2     = 0.999;
 
-        double _beta1 = 0.9;
-        double _beta2 = 0.999;
+        double _beta1 = _defaultBeta1;
+        double _beta2 = _defaultBeta2;
 
         std::vector<linearAlgebra::Vec3D> _momentum1;
         std::vector<linearAlgebra::Vec3D> _momentum2;
@@ -49,13 +51,13 @@ namespace opt
         explicit Adam(const size_t nEpochs, const size_t nAtoms);
         explicit Adam(const size_t, const double, const double, const size_t);
 
-        Adam()  = default;
-        ~Adam() = default;
+        Adam()           = default;
+        ~Adam() override = default;
 
-        [[nodiscard]] std::shared_ptr<Optimizer> clone() const;
-        [[nodiscard]] size_t                     maxHistoryLength() const;
+        [[nodiscard]] std::shared_ptr<Optimizer> clone() const override;
+        [[nodiscard]] size_t maxHistoryLength() const override;
 
-        void update(const double learningRate, const size_t step);
+        void update(const double learningRate, const size_t step) override;
     };
 }   // namespace opt
 

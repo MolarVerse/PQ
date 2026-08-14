@@ -25,7 +25,7 @@
 #include <filesystem>
 #include <format>   // for std::format
 
-#include "exceptions.hpp"        // for customException
+#include "exceptions.hpp"   // for customException
 #include "executablePath.hpp"
 #include "stringUtilities.hpp"   // for toLowerCopy
 
@@ -402,11 +402,14 @@ void QMSettings::setMaceMode(const std::string_view &mode)
         _maceMode = FAST;
 
     else
-        throw UserInputException(std::format(
-            "Unknown mace_mode \"{}\". Valid values are \"accurate\" (exact "
-            "e3nn reference) or \"fast\" (cuequivariance-accelerated).",
-            mode
-        ));
+        throw UserInputException(
+            std::format(
+                "Unknown mace_mode \"{}\". Valid values are \"accurate\" "
+                "(exact "
+                "e3nn reference) or \"fast\" (cuequivariance-accelerated).",
+                mode
+            )
+        );
 }
 
 /**
@@ -512,6 +515,16 @@ void QMSettings::setSlakosType(const std::string_view &slakos)
         throw UserInputException(
             std::format("Slakos {} not recognized", slakos)
         );
+}
+
+/**
+ * @brief sets the slakosType to enum in settings
+ *
+ * @param slakos
+ */
+void QMSettings::setSlakosType(const SlakosType slakos)
+{
+    setSlakosType(slakos, true);
 }
 
 /**

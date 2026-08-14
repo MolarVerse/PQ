@@ -42,7 +42,7 @@
 class TestBondConstraint : public ::testing::Test
 {
    protected:
-    virtual void SetUp()
+    void SetUp() override
     {
         auto molecule1 = simulationBox::Molecule();
         molecule1.setNumberOfAtoms(3);
@@ -75,7 +75,7 @@ class TestBondConstraint : public ::testing::Test
         );
     }
 
-    virtual void TearDown()
+    void TearDown() override
     {
         delete _box;
         delete _bondConstraint;

@@ -58,7 +58,7 @@ class TestIntraNonBondedReader : public ::testing::Test
         _engine = new engine::MMMDEngine();
 
         _engine->getSimulationBox().addMoleculeType(molecule1);
-        _engine->getIntraNonBonded().activate();
+        _engine->getIntraNonBonded()->activate();
 
         _intraNonBondedReader =
             new input::intraNonBondedReader::IntraNonBondedReader(

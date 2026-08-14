@@ -57,15 +57,17 @@ void OptEngine::run()
             break;
 
         writeOutput();
-        deleteTempFiles();
+        deleteTmpFiles();
     }
 
     if (!_converged)
     {
-        throw customException::OptException(std::format(
-            "Optimizer did not converge after {} epochs.",
-            _optimizer->getNEpochs()
-        ));
+        throw customException::OptException(
+            std::format(
+                "Optimizer did not converge after {} epochs.",
+                _optimizer->getNEpochs()
+            )
+        );
     }
 
     if (_optStopped)
@@ -89,22 +91,22 @@ void OptEngine::run()
 
     const auto elapsedTime = double(_timer.calculateElapsedTime()) * 1e-3;
 
-    _engineOutput.setTimerName("Output");
+    _engineOutput.setTimerId(TimerId::Output);
     _timer.addTimer(_engineOutput.getTimer());
 
-    _constraints->setTimerName("Constraints");
+    _constraints->setTimerId(TimerId::Constraints);
     _timer.addTimer(_constraints->getTimer());
 
-    _cellList->setTimerName("Cell List");
+    _cellList->setTimerId(TimerId::CellList);
     _timer.addTimer(_cellList->getTimer());
 
-    _potential->setTimerName("Potential");
+    _potential->setTimerId(TimerId::Potential);
     _timer.addTimer(_potential->getTimer());
 
-    _intraNonBonded->setTimerName("IntraNonBonded");
+    _intraNonBonded->setTimerId(TimerId::IntraNonBonded);
     _timer.addTimer(_intraNonBonded->getTimer());
 
-    _physicalData->setTimerName("Physical Data");
+    _physicalData->setTimerId(TimerId::PhysicalData);
     _timer.addTimer(_physicalData->getTimer());
 
     _engineOutput.writeTimingsFile(_timer);

@@ -33,7 +33,6 @@
 #include "potentialSettings.hpp"          // for PotentialSettings
 #include "testParameterFileSection.hpp"   // for TestParameterFileSection
 #include "throwWithMessage.hpp"           // for ASSERT_THROW_MSG
-#include "typeAliases.hpp"                // for std::vector<std::string>
 
 using namespace input::parameterFile;
 using namespace potential;

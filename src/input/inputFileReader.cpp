@@ -30,6 +30,7 @@
 #include <string>      // for char_traits, string
 #include <vector>      // for vector
 
+#include "MMInputParser.hpp"                 // for MMParserForceField
 #include "QMInputParser.hpp"                 // for InputFileParserQM
 #include "cellListInputParser.hpp"           // for CellListInputParser
 #include "constraintsInputParser.hpp"        // for InputFileParserConstraints
@@ -38,13 +39,11 @@
 #include "engine.hpp"                        // for Engine
 #include "exceptions.hpp"                    // for InputFileException
 #include "filesInputParser.hpp"              // for InputFileParserFiles
-#include "forceFieldInputParser.hpp"         // for InputFileParserForceField
 #include "generalInputParser.hpp"            // for InputFileParserGeneral
 #include "hessianInputParser.hpp"            // for HessianInputParser
 #include "hybridInputParser.hpp"             // for InputFileParserQMMM
 #include "integratorInputParser.hpp"         // for InputFileParserIntegrator
 #include "manostatInputParser.hpp"           // for InputFileParserManostat
-#include "nonCoulombInputParser.hpp"         // for InputFileParserNonCoulomb
 #include "optInputParser.hpp"                // for OptInputParser
 #include "outputInputParser.hpp"             // for InputFileParserOutput
 #include "resetKineticsInputParser.hpp"      // for InputFileParserResetKinetics
@@ -69,6 +68,24 @@ using std::make_unique;
  *
  * @param fileName
  * @param engine
+ */
+InputFileReader::InputFileReader(
+    const std::string_view &fileName,
+    engine::Engine         &engine
+)
+    : InputFileReader(fileName, engine, true, true)
+{
+}
+
+/**
+ * @brief Construct a new Input File Reader:: Input File Reader object
+ *
+ * @details adds all parsers to the _parsers vector and calls addKeywords() to
+ * add all keywords to the _keywordFuncMap, _keywordRequiredMap and
+ * _keywordCountMap
+ *
+ * @param fileName
+ * @param engine
  * @param validateFilePaths
  * @param resolveBuiltInSlakosPath
  */
@@ -80,18 +97,27 @@ InputFileReader::InputFileReader(
 )
     : _fileName(fileName), _engine(engine)
 {
-    _parsers.push_back(make_unique<CellListInputParser>(_engine));
-    _parsers.push_back(make_unique<ConstraintsInputParser>(_engine));
+    // TODO: remove engine after rework
+    _parsers.push_back(
+        make_unique<CellListInputParser>(_engine, _engine.getCellList())
+    );
+    _parsers.push_back(
+        make_unique<ConstraintsInputParser>(_engine, _engine.getConstraints())
+    );
     _parsers.push_back(make_unique<CoulombLongRangeInputParser>(_engine));
     _parsers.push_back(
-        make_unique<FilesInputParser>(_engine, validateFilePaths)
+        make_unique<FilesInputParser>(
+            _engine,
+            _engine.getIntraNonBonded(),
+            validateFilePaths
+        )
     );
-    _parsers.push_back(make_unique<ForceFieldInputParser>(_engine));
+    _parsers.push_back(make_unique<MMInputParser>(_engine));
     _parsers.push_back(make_unique<GeneralInputParser>(_engine));
     _parsers.push_back(make_unique<HessianInputParser>(_engine));
     _parsers.push_back(make_unique<IntegratorInputParser>(_engine));
     _parsers.push_back(make_unique<ManostatInputParser>(_engine));
-    _parsers.push_back(make_unique<NonCoulombInputParser>(_engine));
+    _parsers.push_back(make_unique<MMInputParser>(_engine));
     _parsers.push_back(make_unique<OutputInputParser>(_engine));
     _parsers.push_back(make_unique<ResetKineticsInputParser>(_engine));
     _parsers.push_back(make_unique<SimulationBoxInputParser>(_engine));

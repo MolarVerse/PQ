@@ -26,11 +26,16 @@
 
 #include "learningRateStrategy.hpp"
 #include "optimizer.hpp"
-#include "typeAliases.hpp"
+
+namespace engine
+{
+    class Engine;      // forward declaration
+    class OptEngine;   // forward declaration
+}   // namespace engine
 
 namespace setup
 {
-    void setupOptimizer(pq::Engine &);
+    void setupOptimizer(engine::Engine &);
 
     /**
      * @class OptimizerSetup
@@ -41,10 +46,10 @@ namespace setup
     class OptimizerSetup
     {
        private:
-        pq::OptEngine &_optEngine;
+        engine::OptEngine &_optEngine;
 
        public:
-        explicit OptimizerSetup(pq::OptEngine &optEngine);
+        explicit OptimizerSetup(engine::OptEngine &optEngine);
 
         void setup();
         void writeSetupInfo() const;

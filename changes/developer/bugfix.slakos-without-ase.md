@@ -1,1 +1,0 @@
-- Guard SLAKOS tests in builds without ASE.

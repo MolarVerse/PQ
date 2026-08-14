@@ -28,7 +28,17 @@
 #include <string_view>
 
 #include "qmRunner.hpp"
-#include "typeAliases.hpp"
+
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}   // namespace physicalData
+
+namespace simulationBox
+{
+    class Box;             // forward declaration
+    class SimulationBox;   // forward declaration
+}   // namespace simulationBox
 
 namespace QM
 {
@@ -41,9 +51,9 @@ namespace QM
     class ExternalQMRunner : public QMRunner
     {
        protected:
-        std::string       _scriptPath  = SCRIPT_PATH_;
-        const std::string _singularity = SINGULARITY_;
-        const std::string _staticBuild = STATIC_BUILD_;
+        std::string            _scriptPath  = SCRIPT_PATH_;
+        constexpr static auto *_singularity = SINGULARITY_;
+        constexpr static auto *_staticBuild = STATIC_BUILD_;
 
         [[nodiscard]] std::string resolveScriptPath(
             std::string_view script
@@ -58,22 +68,36 @@ namespace QM
         ExternalQMRunner()           = default;
         ~ExternalQMRunner() override = default;
 
-        void         run(pq::SimBox &, pq::PhysicalData &) override;
-        virtual void execute() = 0;
+        void run(
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &,
+            simulationBox::Periodicity per
+        ) override;
+        virtual void execute(simulationBox::SimulationBox &) = 0;
 
-        virtual void writeCoordsFile(pq::SimBox &) = 0;
-        virtual void readStressTensor(pq::Box &, pq::PhysicalData &) {}
+        virtual void writeCoordsFile(simulationBox::SimulationBox &) = 0;
 
-        void readForceFile(pq::SimBox &, pq::PhysicalData &);
-        void readChargeFile(pq::SimBox &);
+        virtual void writePointChargeFile(simulationBox::SimulationBox &) {}
+        virtual void readStressTensor(
+            simulationBox::Box &,
+            physicalData::PhysicalData &
+        )
+        {
+        }
+
+        void readForceFile(
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &
+        );
+        void readChargeFile(simulationBox::SimulationBox &);
 
         /*******************************
          * standard getter and setters *
          *******************************/
 
         [[nodiscard]] const std::string &getScriptPath() const;
-        [[nodiscard]] const std::string &getSingularity() const;
-        [[nodiscard]] const std::string &getStaticBuild() const;
+        [[nodiscard]] std::string        getSingularity() const;
+        [[nodiscard]] std::string        getStaticBuild() const;
 
         void setScriptPath(const std::string_view &scriptPath);
     };

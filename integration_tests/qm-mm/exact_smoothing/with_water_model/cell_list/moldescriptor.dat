@@ -1,0 +1,14 @@
+Water_Type 1
+# Molecule 1
+  H2O_TIP3P-mTR  3   0
+  O              0  -0.82    0
+  H              1   0.41    1
+  H              1   0.41    2
+
+
+# Molecule 2
+  Potassium(I)   1   1
+  K              0   1.0    3
+
+
+

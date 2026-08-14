@@ -27,7 +27,6 @@
 #include <cstddef>   // for size_t
 
 #include "inputFileParser.hpp"   // for InputFileParser
-#include "typeAliases.hpp"       // for std::vector<std::string>
 
 namespace input
 {
@@ -40,7 +39,7 @@ namespace input
     class OutputInputParser : public InputFileParser
     {
        public:
-        explicit OutputInputParser(pq::Engine &);
+        explicit OutputInputParser(engine::Engine &);
 
         void parseOverwriteOutput(
             const std::vector<std::string> &,
@@ -73,6 +72,11 @@ namespace input
         );
 
         void parseTrajectoryFilename(
+            const std::vector<std::string> &,
+            const size_t
+        );
+
+        void parseHybridCenterFilename(
             const std::vector<std::string> &,
             const size_t
         );

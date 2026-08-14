@@ -22,12 +22,24 @@
 
 #include "hybridInputParser.hpp"
 
-#include <format>   // for format
+#include <algorithm>     // for min, unique
+#include <cstddef>       // for size_t
+#include <format>        // for format
+#include <ranges>        // for sort
+#include <string>        // for string
+#include <string_view>   // for string_view
+#include <vector>        // for vector
 
-#include "exceptions.hpp"       // for InputFileException, customException
-#include "hybridSettings.hpp"   // for HybridSettings
+#include "exceptions.hpp"        // for InputFileException, customException
+#include "hybridSettings.hpp"    // for HybridSettings
+#include "inputFileParser.hpp"   // for InputFileParser
 #include "parserUtils.hpp"
 #include "stringUtilities.hpp"   // for toLowerCopy
+
+#ifdef PYTHON_ENABLED
+#include "fileSettings.hpp"   // for FileSettings
+#include "selection.hpp"      // for parseSelection
+#endif
 
 using namespace input;
 using namespace engine;
@@ -47,18 +59,18 @@ using namespace utilities;
 HybridInputParser::HybridInputParser(Engine &engine) : InputFileParser(engine)
 {
     addKeyword(
-        std::string("core_center"),
-        bindMember(&HybridInputParser::parseCoreCenter, this),
+        std::string("inner_region_center"),
+        bindMember(&HybridInputParser::parseInnerRegionCenter, this),
         false
     );
     addKeyword(
-        std::string("core_only_list"),
-        bindMember(&HybridInputParser::parseCoreOnlyList, this),
+        std::string("forced_inner_list"),
+        bindMember(&HybridInputParser::parseForcedInnerList, this),
         false
     );
     addKeyword(
-        std::string("non_core_only_list"),
-        bindMember(&HybridInputParser::parseNonCoreOnlyList, this),
+        std::string("forced_outer_list"),
+        bindMember(&HybridInputParser::parseForcedOuterList, this),
         false
     );
     addKeyword(
@@ -77,8 +89,23 @@ HybridInputParser::HybridInputParser(Engine &engine) : InputFileParser(engine)
         false
     );
     addKeyword(
-        std::string("smoothing_radius"),
-        bindMember(&HybridInputParser::parseSmoothingRadius, this),
+        std::string("smoothing_region_thickness"),
+        bindMember(&HybridInputParser::parseSmoothingRegionThickness, this),
+        false
+    );
+    addKeyword(
+        std::string("point_charge_thickness"),
+        bindMember(&HybridInputParser::parsePointChargeThickness, this),
+        false
+    );
+    addKeyword(
+        std::string("smoothing_method"),
+        bindMember(&HybridInputParser::parseSmoothingMethod, this),
+        false
+    );
+    addKeyword(
+        std::string("qm_force_distribution"),
+        bindMember(&HybridInputParser::parseQMForceDistribution, this),
         false
     );
 }
@@ -89,43 +116,51 @@ HybridInputParser::HybridInputParser(Engine &engine) : InputFileParser(engine)
  * @param lineElements
  * @param lineNumber
  */
-void HybridInputParser::parseCoreCenter(
+void HybridInputParser::parseInnerRegionCenter(
     const std::vector<std::string> &lineElements,
     const size_t                    lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
-    HybridSettings::setCoreCenterString(lineElements[2]);
+    HybridSettings::setInnerRegionCenter(
+        parseSelection(lineElements[2], lineElements[0])
+    );
 }
 
 /**
- * @brief parse list of atoms which should be treated as core region only
+ * @brief parse list of molecules which are forced to the inner region in hybrid
+ * calculations
  *
  * @param lineElements
  * @param lineNumber
  */
-void HybridInputParser::parseCoreOnlyList(
+void HybridInputParser::parseForcedInnerList(
     const std::vector<std::string> &lineElements,
     const size_t                    lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
-    HybridSettings::setCoreOnlyListString(lineElements[2]);
+    HybridSettings::setForcedInnerList(
+        parseSelection(lineElements[2], lineElements[0])
+    );
 }
 
 /**
- * @brief parse list of atoms which should be treated as non-core region only
+ * @brief parse list of molecules which are forced to the outer region in hybrid
+ * calculations
  *
  * @param lineElements
  * @param lineNumber
  */
-void HybridInputParser::parseNonCoreOnlyList(
+void HybridInputParser::parseForcedOuterList(
     const std::vector<std::string> &lineElements,
     const size_t                    lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
-    HybridSettings::setNonCoreOnlyListString(lineElements[2]);
+    HybridSettings::setForcedOuterList(
+        parseSelection(lineElements[2], lineElements[0])
+    );
 }
 
 /**
@@ -140,7 +175,7 @@ void HybridInputParser::parseUseQMCharges(
 )
 {
     checkCommand(lineElements, lineNumber);
-    auto use_qm_charges = toLowerCopy(lineElements[2]);
+    auto use_qm_charges = toLowerAndReplaceDashesCopy(lineElements[2]);
 
     if ("qm" == use_qm_charges)
         HybridSettings::setUseQMCharges(true);
@@ -156,8 +191,6 @@ void HybridInputParser::parseUseQMCharges(
                 lineElements[2]
             )
         );
-
-    throw UserInputException("Not implemented");
 }
 
 /**
@@ -165,6 +198,8 @@ void HybridInputParser::parseUseQMCharges(
  *
  * @param lineElements
  * @param lineNumber
+ *
+ * @throws InputFileException if the radius is negative
  */
 void HybridInputParser::parseCoreRadius(
     const std::vector<std::string> &lineElements,
@@ -185,8 +220,6 @@ void HybridInputParser::parseCoreRadius(
         );
 
     HybridSettings::setCoreRadius(coreRadius);
-
-    throw UserInputException("Not implemented");
 }
 
 /**
@@ -194,6 +227,8 @@ void HybridInputParser::parseCoreRadius(
  *
  * @param lineElements
  * @param lineNumber
+ *
+ * @throws InputFileException if the radius is negative
  */
 void HybridInputParser::parseLayerRadius(
     const std::vector<std::string> &lineElements,
@@ -214,26 +249,26 @@ void HybridInputParser::parseLayerRadius(
         );
 
     HybridSettings::setLayerRadius(layerRadius);
-
-    throw UserInputException("Not implemented");
 }
 
 /**
- * @brief parse smoothing radius
+ * @brief parse smoothing region thickness
  *
  * @param lineElements
  * @param lineNumber
+ *
+ * @throws InputFileException if the thickness is negative
  */
-void HybridInputParser::parseSmoothingRadius(
+void HybridInputParser::parseSmoothingRegionThickness(
     const std::vector<std::string> &lineElements,
     const size_t                    lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto smoothingRadius = stringToFiniteDouble(lineElements[2]);
+    const auto thickness = std::stod(lineElements[2]);
 
-    if (smoothingRadius < 0.0)
+    if (thickness < 0.0)
         throw InputFileException(
             std::format(
                 "Invalid {} {} in input file - must be a positive number",
@@ -242,7 +277,348 @@ void HybridInputParser::parseSmoothingRadius(
             )
         );
 
-    HybridSettings::setSmoothingRadius(smoothingRadius);
+    HybridSettings::setSmoothingRegionThickness(thickness);
+}
 
-    throw UserInputException("Not implemented");
+/**
+ * @brief parse point charge thickness
+ *
+ * @param lineElements
+ * @param lineNumber
+ *
+ * @throws InputFileException if the radius is negative
+ */
+void HybridInputParser::parsePointChargeThickness(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+
+    const auto radius = std::stod(lineElements[2]);
+
+    if (radius < 0.0)
+        throw InputFileException(
+            std::format(
+                "Invalid {} {} in input file - must be a positive number",
+                lineElements[0],
+                lineElements[2]
+            )
+        );
+
+    HybridSettings::setPointChargeThickness(radius);
+}
+
+/**
+ * @brief parse smoothing method
+ *
+ * @param lineElements
+ * @param lineNumber
+ *
+ * @throws InputFileException if no valid smoothing method has been selected
+ */
+void HybridInputParser::parseSmoothingMethod(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+
+    const auto method = toLowerAndReplaceDashesCopy(lineElements[2]);
+
+    using enum settings::SmoothingMethod;
+
+    if (method == "hotspot")
+        HybridSettings::setSmoothingMethod(HOTSPOT);
+
+    else if (method == "exact")
+        HybridSettings::setSmoothingMethod(EXACT);
+
+    else
+        throw InputFileException(
+            std::format(
+                "Invalid smoothing method \"{}\" in input file\n"
+                "Possible values are: hotspot, exact",
+                lineElements[2]
+            )
+        );
+}
+
+/**
+ * @brief parse QM force distribution method in hotspot smoothing
+ *
+ * @param lineElements
+ * @param lineNumber
+ *
+ * @throws InputFileException if no valid qm force distribution method has been
+ * selected
+ */
+void HybridInputParser::parseQMForceDistribution(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+
+    const auto method = toLowerAndReplaceDashesCopy(lineElements[2]);
+
+    using enum settings::QMForceDist;
+
+    if (method == "none")
+        HybridSettings::setQMForceDist(NONE);
+
+    else if (method == "equal")
+        HybridSettings::setQMForceDist(EQUAL);
+
+    else if (method == "random")
+        HybridSettings::setQMForceDist(RANDOM);
+
+    else if (method == "distance_weighted")
+        HybridSettings::setQMForceDist(DISTANCE_WEIGHTED);
+
+    else
+        throw InputFileException(
+            std::format(
+                "Invalid qm force distribution method \"{}\" in input file\n"
+                "Possible options are: none, equal, random and "
+                "distance-weighted",
+                lineElements[2]
+            )
+        );
+}
+
+/**
+ * @brief parse selection string
+ *
+ * @details This function parses a string that contains a selection of atoms.
+ * The selection can be a list of atom indices or a selection string that is
+ * understood by the PQAnalysis Python package. In order to use the full
+ * selection parser power of the PQAnalysis Python package, the PQ build must be
+ * compiled with Python bindings. If the PQ build is compiled without Python
+ * bindings, the selection string must be a comma-separated list of integers or
+ * a - separated range of indices, representing the atom indices in the restart
+ * file that should be treated as the selection. If the selection is empty, the
+ * function returns a vector with a single element, 0.
+ *
+ * @param selection The selection string
+ * @param key The key of the selection string
+ *
+ * @return std::vector<int> The selection vector
+ *
+ * @throws customException::InputFileException if the selection string contains
+ * characters that are not digits, "-" or commas and the PQ build is compiled
+ * without Python bindings.
+ */
+std::vector<int> HybridInputParser::parseSelection(
+    const std::string &selection,
+    const std::string &key
+)
+{
+    std::vector<int> selectionVec;
+
+    if (selection.empty())
+        return {0};
+
+    auto needsPython = false;
+    if (selection.find_first_not_of("0123456789,-") != std::string::npos)
+        needsPython = true;
+
+#ifdef PYTHON_ENABLED
+    std::string restartFile = FileSettings::getStartFileName();
+    std::string moldescFile = FileSettings::getMolDescriptorFileName();
+
+    if (needsPython)
+        selectionVec = pq_python::select(selection, restartFile, moldescFile);
+#else
+
+    // check if string contains any characters that are not digits or commas
+    if (needsPython)
+    {
+        throw InputFileException(
+            std::format(
+                "The value of key {} - {} contains characters that are not "
+                "digits, \"-\" or commas. The current build of PQ was compiled "
+                "without Python bindings, so the {} string must be a "
+                "comma-separated list of integers, representing the atom "
+                "indices in the restart file that should be treated as the {}. "
+                "In order to use the full selection parser power of the "
+                "PQAnalysis Python package, the PQ build must be compiled with "
+                "Python bindings.",
+                key,
+                selection,
+                key,
+                key
+            )
+        );
+    }
+#endif
+
+    if (!needsPython)
+        selectionVec = parseSelectionNoPython(selection, key);
+
+    std::ranges::sort(selectionVec);
+    auto ret = std::ranges::unique(selectionVec);
+    selectionVec.erase(ret.begin(), ret.end());
+
+    return selectionVec;
+}
+
+/**
+ * @brief parse selection string without Python
+ *
+ * @param selection The selection string
+ * @param key The key of the selection string
+ *
+ * @return std::vector<int> The selection vector
+ *
+ * @throws customException::InputFileException if the selection string is an
+ * empty list
+ */
+std::vector<int> HybridInputParser::parseSelectionNoPython(
+    const std::string &selection,
+    const std::string &key
+)
+{
+    std::vector<int> selectionVec;
+
+    size_t pos = 0;
+    while (pos < selection.size())
+    {
+        size_t nextPos = selection.find(',', pos);
+        if (nextPos == std::string::npos)
+            nextPos = selection.size();
+
+        auto atomIndexStr =
+            std::string_view(selection).substr(pos, nextPos - pos);
+
+        // remove all whitespaces from the atom index string
+        atomIndexStr.remove_prefix(
+            std::min(atomIndexStr.find_first_not_of(" "), atomIndexStr.size())
+        );
+        const auto min = std::min(
+            atomIndexStr.find_last_not_of(" ") + 1,
+            atomIndexStr.size()
+        );
+        atomIndexStr.remove_suffix(atomIndexStr.size() - min);
+
+        // check if the atom index string is a range of indices
+        size_t rangePos = atomIndexStr.find('-');
+        if (rangePos != std::string::npos)
+        {
+            const auto startString = atomIndexStr.substr(0, rangePos);
+            const auto endString   = atomIndexStr.substr(rangePos + 1);
+
+            int start = -1;
+            int end   = -1;
+
+            try
+            {
+                start = std::stoi(std::string(startString));
+            }
+            catch (const std::invalid_argument &)
+            {
+                throw InputFileException(
+                    std::format(
+                        "Invalid start index \"{}\" in range \"{}\" for key "
+                        "{}. Must be a valid integer.",
+                        startString,
+                        atomIndexStr,
+                        key
+                    )
+                );
+            }
+            catch (const std::out_of_range &)
+            {
+                throw InputFileException(
+                    std::format(
+                        "Start index \"{}\" in range \"{}\" for key {} is out "
+                        "of range.",
+                        startString,
+                        atomIndexStr,
+                        key
+                    )
+                );
+            }
+
+            try
+            {
+                end = std::stoi(std::string(endString));
+            }
+            catch (const std::invalid_argument &)
+            {
+                throw InputFileException(
+                    std::format(
+                        "Invalid end index \"{}\" in range \"{}\" for key {}. "
+                        "Must be a valid integer.",
+                        endString,
+                        atomIndexStr,
+                        key
+                    )
+                );
+            }
+            catch (const std::out_of_range &)
+            {
+                throw InputFileException(
+                    std::format(
+                        "End index \"{}\" in range \"{}\" for key {} is out of "
+                        "range.",
+                        endString,
+                        atomIndexStr,
+                        key
+                    )
+                );
+            }
+
+            for (int i = start; i <= end; ++i) selectionVec.push_back(i);
+
+            pos = nextPos + 1;
+            continue;
+        }
+
+        try
+        {
+            selectionVec.push_back(std::stoi(std::string(atomIndexStr)));
+        }
+        catch (const std::invalid_argument &)
+        {
+            throw InputFileException(
+                std::format(
+                    "Invalid atom index \"{}\" for key {}. Must be a valid "
+                    "integer.",
+                    atomIndexStr,
+                    key
+                )
+            );
+        }
+        catch (const std::out_of_range &)
+        {
+            throw InputFileException(
+                std::format(
+                    "Atom index \"{}\" for key {} is out of range.",
+                    atomIndexStr,
+                    key
+                )
+            );
+        }
+        pos = nextPos + 1;
+    }
+
+    // check if the selection vector is empty
+    if (selectionVec.empty())
+    {
+        throw customException::InputFileException(
+            std::format(
+                "The value of key {} - {} is an empty list. The {} string must "
+                "be a comma-separated list of integers or ranges, representing "
+                "the atom indices in the restart file that should be treated "
+                "as the {}.",
+                key,
+                selection,
+                key,
+                key
+            )
+        );
+    }
+
+    return selectionVec;
 }

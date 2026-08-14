@@ -47,10 +47,14 @@ namespace
        public:
         explicit HarmonicEvaluator(
             std::vector<double> forceConstants,
-            const bool          analyticSupported = false
+            const bool          analyticSupported
         )
             : _forceConstants(std::move(forceConstants)),
               _analyticSupported(analyticSupported)
+        {
+        }
+        explicit HarmonicEvaluator(std::vector<double> forceConstants)
+            : HarmonicEvaluator(std::move(forceConstants), false)
         {
         }
 

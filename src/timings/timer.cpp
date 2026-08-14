@@ -32,9 +32,9 @@ using namespace customException;
 /**
  * @brief Construct a new Timer:: Timer object
  *
- * @param name
+ * @param id
  */
-Timer::Timer(const std::string_view name) : _name(name) {}
+Timer::Timer(const TimerId id) : _id(id) {}
 
 /**
  * @brief get timings details
@@ -79,11 +79,11 @@ double Timer::calculateLoopTime() const
  */
 void Timer::startTimingsSection()
 {
-    const auto index = findTimingsSectionIndex(_name);
+    const auto index = findTimingsSectionIndex(getTimerName());
 
     if (index == _timingDetails.size())
     {
-        _timingDetails.emplace_back(_name);
+        _timingDetails.emplace_back(getTimerName());
         _timingDetails.back().beginTimer();
     }
     else
@@ -113,7 +113,7 @@ void Timer::startTimingsSection(const std::string_view name)
  */
 void Timer::stopTimingsSection()
 {
-    const auto index = findTimingsSectionIndex(_name);
+    const auto index = findTimingsSectionIndex(getTimerName());
 
     if (index == _timingDetails.size())
         throw CustomException("Timer not found");
@@ -166,11 +166,11 @@ void Timer::sortTimingsSections()
  ********************/
 
 /**
- * @brief set timer name
+ * @brief set timer id
  *
- * @param name
+ * @param id
  */
-void Timer::setTimerName(const std::string_view name) { _name = name; }
+void Timer::setTimerId(const TimerId id) { _id = id; }
 
 /********************
  * standard getters *
@@ -195,7 +195,7 @@ TimingsSection Timer::getTimingsSection(const std::string_view name) const
  *
  * @return std::string
  */
-std::string Timer::getTimerName() const { return _name; }
+std::string Timer::getTimerName() const { return toString(_id); }
 
 /**
  * @brief get timer
@@ -203,3 +203,14 @@ std::string Timer::getTimerName() const { return _name; }
  * @return Timer
  */
 Timer Timer::getTimer() const { return *this; }
+
+/**
+ * @brief get a timings section guard
+ *
+ * @param name
+ * @return TimingsSectionGuard
+ */
+TimingsSectionGuard Timer::scoped(const std::string_view name)
+{
+    return TimingsSectionGuard(*this, name);
+}

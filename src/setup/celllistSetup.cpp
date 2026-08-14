@@ -71,8 +71,9 @@ void CellListSetup::setup()
 
     if (_engine.isCellListActivated())
     {
-        _engine.getCellList().resizeCells();
-        _engine.getCellList().setup(_engine.getSimulationBox());
+        const auto &cellList = _engine.getCellList();
+        cellList->resizeCells();
+        cellList->setup(_engine.getSimulationBox());
         _engine.makePotential(PotentialCellList());
     }
     else

@@ -1,1 +1,0 @@
-- Installed PQ now resolves reference data, external-QM scripts, and Slakos files relative to its installation prefix.

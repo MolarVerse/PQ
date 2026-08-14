@@ -22,7 +22,7 @@
 
 #include "berendsenThermostat.hpp"
 
-#include <cmath>    // for sqrt
+#include <cmath>   // for sqrt
 
 #include "mathUtilities.hpp"        // for isZero
 #include "physicalData.hpp"         // for PhysicalData
@@ -63,7 +63,7 @@ void BerendsenThermostat::applyThermostat(
     PhysicalData  &data
 )
 {
-    startTimingsSection("Berendsen");
+    auto _ = scoped("Berendsen");
 
     data.calculateTemperature(simulationBox);
 
@@ -73,10 +73,7 @@ void BerendsenThermostat::applyThermostat(
     // thermostat: dividing by _temperature would NaN all velocities
     // (1 / 0 -> Inf, then vel * Inf = NaN when vel is 0). Skip silently.
     if (isZero(_temperature))
-    {
-        stopTimingsSection("Berendsen");
         return;
-    }
 
     const auto dt        = TimingsSettings::getTimeStep();
     const auto tempRatio = _targetTemperature / _temperature;
@@ -87,8 +84,6 @@ void BerendsenThermostat::applyThermostat(
         atom->scaleVelocity(berendsenFactor);
 
     data.setTemperature(_temperature * berendsenFactor * berendsenFactor);
-
-    stopTimingsSection("Berendsen");
 }
 
 /**

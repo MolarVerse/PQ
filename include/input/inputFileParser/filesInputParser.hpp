@@ -27,7 +27,6 @@
 #include <cstddef>   // for size_t
 
 #include "inputFileParser.hpp"   // for InputFileParser
-#include "typeAliases.hpp"
 
 namespace input
 {
@@ -40,10 +39,20 @@ namespace input
     class FilesInputParser : public InputFileParser
     {
        private:
+        std::shared_ptr<intraNonBonded::IntraNonBonded> _intraNonBonded;
+
         bool _validateFilePaths;
 
        public:
-        explicit FilesInputParser(pq::Engine &, bool validateFilePaths = true);
+        explicit FilesInputParser(
+            engine::Engine &,
+            std::shared_ptr<intraNonBonded::IntraNonBonded> intraNonBonded,
+            bool                                            validateFilePaths
+        );
+        explicit FilesInputParser(
+            engine::Engine &,
+            std::shared_ptr<intraNonBonded::IntraNonBonded> intraNonBonded
+        );
 
         void parseIntraNonBondedFile(
             const std::vector<std::string> &,
@@ -85,6 +94,8 @@ namespace input
         );
 
         void parseDFTBFilename(const std::vector<std::string> &, const size_t);
+
+        void parseTMFilename(const std::vector<std::string> &, const size_t);
     };
 
 }   // namespace input
