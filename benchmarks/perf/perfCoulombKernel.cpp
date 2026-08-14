@@ -23,6 +23,8 @@
 // Fixed-work micro-benchmark of the Coulomb pair kernels (shifted + Wolf).
 
 #include <cstdio>
+#include <format>
+#include <iostream>
 
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
@@ -45,15 +47,17 @@ int main()
     double sink = 0.0;
     for (long i = 0; i < ITERATIONS; ++i)
     {
-        const double distance      = 1.0 + (i & 255) * 0.03;   // within cutoff
+        const double distance =
+            1.0 + static_cast<double>(i & 255) * 0.03;   // within cutoff
         const double chargeProduct = 0.5 * -0.5;
 
-        const auto [eShift, fShift] = shifted.calculate(distance, chargeProduct);
-        const auto [eWolf, fWolf]   = wolf.calculate(distance, chargeProduct);
+        const auto [eShift, fShift] =
+            shifted.calculate(distance, chargeProduct);
+        const auto [eWolf, fWolf] = wolf.calculate(distance, chargeProduct);
 
         sink += eShift + fShift + eWolf + fWolf;
     }
 
-    std::printf("%.6f\n", sink);
+    std::cout << std::format("{:.6f}\n", sink);
     return 0;
 }

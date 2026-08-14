@@ -32,7 +32,6 @@
 #include "mdEngine.hpp"           // for Engine
 #include "settings.hpp"           // for IsMDJobType
 #include "stochasticRescalingManostat.hpp"
-#include "typeAliases.hpp"
 
 using namespace setup;
 using namespace engine;
@@ -98,7 +97,7 @@ void ManostatSetup::setupBerendsenManostat()
 {
     const auto isotropy = ManostatSettings::getIsotropy();
     const auto pTarget  = ManostatSettings::getTargetPressure();
-    const auto tau      = ManostatSettings::getTauManostat() * _PS_TO_FS_;
+    const auto tau      = ManostatSettings::getTauManostat() * PS_TO_FS;
     const auto compress = ManostatSettings::getCompressibility();
     const auto aniso    = ManostatSettings::get2DAnisotropicAxis();
     const auto iso      = ManostatSettings::get2DIsotropicAxes();
@@ -138,7 +137,7 @@ void ManostatSetup::setupStochasticRescalingManostat()
 {
     const auto isotropy = ManostatSettings::getIsotropy();
     const auto pTarget  = ManostatSettings::getTargetPressure();
-    const auto tau      = ManostatSettings::getTauManostat() * _PS_TO_FS_;
+    const auto tau      = ManostatSettings::getTauManostat() * PS_TO_FS;
     const auto compress = ManostatSettings::getCompressibility();
     const auto aniso    = ManostatSettings::get2DAnisotropicAxis();
     const auto iso      = ManostatSettings::get2DIsotropicAxes();
@@ -150,20 +149,20 @@ void ManostatSetup::setupStochasticRescalingManostat()
             // clang-format off
 
         case SEMI_ISOTROPIC:
-            _engine.makeManostat(pq::SemiIsoStochasticManostat(pTarget, tau, compress, aniso, iso));
+            _engine.makeManostat(SemiIsotropicStochasticRescalingManostat(pTarget, tau, compress, aniso, iso));
             break;
 
         case ANISOTROPIC:
-            _engine.makeManostat(pq::AnisoStochasticManostat(pTarget, tau, compress));
+            _engine.makeManostat(AnisotropicStochasticRescalingManostat(pTarget, tau, compress));
             break;
 
         case FULL_ANISOTROPIC:
-            _engine.makeManostat(pq::FullAnisoStochasticManostat(pTarget, tau, compress));
+            _engine.makeManostat(FullAnisotropicStochasticRescalingManostat(pTarget, tau, compress));
             break;
 
         case NONE: // fall through
         case ISOTROPIC:
-            _engine.makeManostat(manostat::StochasticRescalingManostat(pTarget, tau, compress));
+            _engine.makeManostat(StochasticRescalingManostat(pTarget, tau, compress));
 
             // clang-format on
     }

@@ -39,7 +39,7 @@ namespace
     std::shared_ptr<SimulationBox> makeBoxWithOneAtom(
         const linearAlgebra::Vec3D &pos,
         const linearAlgebra::Vec3D &force,
-        const linearAlgebra::Vec3D &boxDims = {100.0, 100.0, 100.0}
+        const linearAlgebra::Vec3D &boxDims
     )
     {
         auto box = std::make_shared<SimulationBox>();
@@ -51,6 +51,14 @@ namespace
         box->addAtom(a);
 
         return box;
+    }
+
+    std::shared_ptr<SimulationBox> makeBoxWithOneAtom(
+        const linearAlgebra::Vec3D &pos,
+        const linearAlgebra::Vec3D &force
+    )
+    {
+        return makeBoxWithOneAtom(pos, force, {100.0, 100.0, 100.0});
     }
 }   // namespace
 
@@ -86,7 +94,8 @@ TEST(TestAdam, updateAtStepOneReducesToLearningRateTimesSignOfForce)
     // Adam-step-1 with momentum1=0, momentum2=0 simplifies analytically to
     //   m1_hat = -force, m2_hat = force²
     //   pos_new ≈ pos + lr * force / sqrt(force² + eps²)
-    // For force >> eps, sqrt(force² + eps²) ≈ |force|, so pos_new ≈ pos + lr * sign(force).
+    // For force >> eps, sqrt(force² + eps²) ≈ |force|, so pos_new ≈ pos + lr *
+    // sign(force).
     auto box = makeBoxWithOneAtom({0.0, 0.0, 0.0}, {2.0, -3.0, 0.5});
 
     Adam adam(1u, /*nAtoms=*/1u);
@@ -133,7 +142,7 @@ TEST(TestAdam, updateAppliesPBCToNewPosition)
 
     Adam adam(1u, 1u);
     adam.setSimulationBox(box);
-    adam.update(/*lr=*/0.5, /*step=*/1u);
+    adam.update(/*learningRate=*/0.5, /*step=*/1u);
 
     // After step pos[0] ≈ 9.99 + 0.5 ≈ 10.49 → wraps to ≈ 0.49.
     EXPECT_LT(box->getAtoms()[0]->getPosition()[0], 1.0);

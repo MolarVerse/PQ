@@ -1,2 +1,1 @@
-- remove type alias for output namespace from pq namespace
-- add `DefaultFile` class for default file names and use it also in `EnergyOutput` to avoid manually repeating the default file names
+- delete `typeAliases.hpp` file completely

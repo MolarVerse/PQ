@@ -24,14 +24,37 @@
 
 #define _POTENTIAL_HPP_
 
-#include <cstddef>   // for size_t
+#include <memory>    // for shared_ptr
 #include <utility>   // for pair
 
+#include "coulombPotential.hpp"
+#include "nonCoulombPotential.hpp"
 #include "timer.hpp"
-#include "typeAliases.hpp"
+
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}   // namespace physicalData
+
+namespace simulationBox
+{
+    class Box;             // forward declaration
+    class Molecule;        // forward declaration
+    class Atom;            // forward declaration
+    class CellList;        // forward declaration
+    class SimulationBox;   // forward declaration
+}   // namespace simulationBox
 
 namespace potential
 {
+    struct QMChargeTag
+    {
+    };
+
+    struct MMChargeTag
+    {
+    };
+
     /**
      * @class Potential
      *
@@ -49,47 +72,102 @@ namespace potential
     class Potential : public timings::Timer
     {
        protected:
-        pq::SharedCoulombPot    _coulombPotential;
-        pq::SharedNonCoulombPot _nonCoulombPot;
+        std::shared_ptr<CoulombPotential>    _coulombPotential;
+        std::shared_ptr<NonCoulombPotential> _nonCoulombPot;
 
        public:
         virtual ~Potential() = default;
 
         virtual void calculateForces(
-            pq::SimBox &,
-            pq::PhysicalData &,
-            pq::CellList &
-        )                                         = 0;
-        virtual pq::SharedPotential clone() const = 0;
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &,
+            simulationBox::CellList &
+        ) = 0;
 
+        void calculateQMMMForces(
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &,
+            simulationBox::CellList &
+        );
+
+        virtual void calculateCoreToOuterForces(
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &,
+            simulationBox::CellList &
+        ) = 0;
+
+        virtual void calculateLayerToOuterForces(
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &,
+            simulationBox::CellList &
+        ) = 0;
+
+        virtual void calculateOuterToOuterForces(
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &,
+            simulationBox::CellList &
+        ) = 0;
+
+        virtual void calculateHotspotSmoothingMMForces(
+            simulationBox::SimulationBox &,
+            physicalData::PhysicalData &,
+            simulationBox::CellList &
+        ) = 0;
+
+        virtual std::shared_ptr<Potential> clone() const = 0;
+
+        template <typename ChargeTag1, typename ChargeTag2>
         std::pair<double, double> calculateSingleInteraction(
-            const pq::Box &,
-            pq::Molecule &,
-            pq::Molecule &,
-            const size_t,
-            const size_t
+            const simulationBox::Box &box,
+            simulationBox::Molecule  &mol1,
+            simulationBox::Molecule  &mol2,
+            simulationBox::Atom      &atom1,
+            simulationBox::Atom      &atom2
+        ) const;
+
+        template <typename ChargeTag1, typename ChargeTag2>
+        double calculateSingleCoulombInteraction(
+            const simulationBox::Box &box,
+            simulationBox::Atom      &atom1,
+            simulationBox::Atom      &atom2
+        ) const;
+
+        template <typename ChargeTag1, typename ChargeTag2>
+        std::pair<double, double> calculateSingleInteractionOneWay(
+            const simulationBox::Box &box,
+            simulationBox::Molecule  &mol1,
+            simulationBox::Molecule  &mol2,
+            simulationBox::Atom      &atom1,
+            simulationBox::Atom      &atom2
         ) const;
 
         template <typename T>
         void makeCoulombPotential(T p);
 
         template <typename T>
-        void makeNonCoulombPotential(T nonCoulombPot);
+        void makeNonCoulombPotential(const T &nonCoulombPot);
+
+        template <typename T>
+        double getPartialCharge(simulationBox::Atom &atom) const;
 
         /***************************
          * standard setter methods *
          ***************************/
 
-        void setNonCoulombPotential(const pq::SharedNonCoulombPot);
+        void setNonCoulombPotential(
+            const std::shared_ptr<NonCoulombPotential> pot
+        );
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] pq::CoulombPot         &getCoulombPotential() const;
-        [[nodiscard]] pq::NonCoulombPot      &getNonCoulombPotential() const;
-        [[nodiscard]] pq::SharedCoulombPot    getCoulombPotSharedPtr() const;
-        [[nodiscard]] pq::SharedNonCoulombPot getNonCoulombPotSharedPtr() const;
+        [[nodiscard]] CoulombPotential    &getCoulombPotential() const;
+        [[nodiscard]] NonCoulombPotential &getNonCoulombPotential() const;
+        [[nodiscard]]
+        std::shared_ptr<CoulombPotential> getCoulombPotSharedPtr() const;
+        [[nodiscard]]
+        std::shared_ptr<NonCoulombPotential> getNonCoulombPotSharedPtr() const;
     };
 
 }   // namespace potential

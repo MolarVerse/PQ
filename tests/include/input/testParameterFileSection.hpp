@@ -25,9 +25,9 @@
 #define _TEST_PARAMETER_FILE_SECTION_HPP_
 
 #include <gtest/gtest.h>   // for Test
-#include <stdio.h>         // for remove
 
-#include <string>   // for allocator, string
+#include <filesystem>   // for remove
+#include <string>       // for allocator, string
 
 #include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
 #include "mmmdEngine.hpp"             // for Engine
@@ -69,7 +69,7 @@ class TestParameterFileSection : public ::testing::Test
     void TearDown() override
     {
         delete _engine;
-        ::remove(_parameterFileName.c_str());
+        static_cast<void>(std::filesystem::remove(_parameterFileName));
     }
 };
 

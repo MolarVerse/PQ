@@ -27,7 +27,6 @@
 #include <cstddef>   // for size_t
 
 #include "inputFileParser.hpp"   // for InputFileParser
-#include "typeAliases.hpp"       // for pq::strings
 
 namespace input
 {
@@ -40,13 +39,23 @@ namespace input
     class ManostatInputParser : public InputFileParser
     {
        public:
-        explicit ManostatInputParser(pq::Engine &);
+        explicit ManostatInputParser(engine::Engine &);
 
-        void parseManostat(const pq::strings &, const size_t);
-        void parsePressure(const pq::strings &, const size_t);
-        void parseManostatRelaxationTime(const pq::strings &, const size_t);
-        void parseCompressibility(const pq::strings &, const size_t);
-        void parseIsotropy(const pq::strings &, const size_t);
+        void parseManostat(const std::vector<std::string> &, const size_t);
+
+        void parsePressure(const std::vector<std::string> &, const size_t);
+
+        void parseManostatRelaxationTime(
+            const std::vector<std::string> &,
+            const size_t
+        );
+
+        void parseCompressibility(
+            const std::vector<std::string> &,
+            const size_t
+        );
+
+        void parseIsotropy(const std::vector<std::string> &, const size_t);
     };
 
 }   // namespace input

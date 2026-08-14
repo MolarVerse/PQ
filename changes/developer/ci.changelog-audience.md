@@ -1,3 +1,0 @@
-- Require regular pull requests to add audience-qualified changelog entries.
-- Split user and developer changelogs and require curated user notes in release pull requests.
-- Replace per-PR changelog edits with release-time generation.

@@ -25,12 +25,12 @@
 #define _TEST_TOPOLOGY_SECTION_HPP_
 
 #include <gtest/gtest.h>   // for Test
-#include <stdio.h>         // for remove
 
+#include <filesystem>
 #include <string>   // for allocator, string
 
-#include "mmmdEngine.hpp"      // for Engine
-#include "molecule.hpp"        // for Molecule
+#include "mmmdEngine.hpp"   // for Engine
+#include "molecule.hpp"     // for Molecule
 
 /**
  * @class TestTopologySection
@@ -64,7 +64,7 @@ class TestTopologySection : public ::testing::Test
     void TearDown() override
     {
         delete _engine;
-        ::remove(_topologyFileName.c_str());
+        static_cast<void>(std::filesystem::remove(_topologyFileName));
     }
 };
 

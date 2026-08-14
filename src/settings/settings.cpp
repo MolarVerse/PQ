@@ -23,6 +23,7 @@
 #include "settings.hpp"
 
 #include <string>   // for operator==, string
+#include <utility>
 
 #include "stringUtilities.hpp"   // for toLowerCopy
 
@@ -105,11 +106,11 @@ void Settings::setJobtype(const JobType jobtype)
 
         case MM_OPT:       // fallthrough
         case MM_HESSIAN:   // fallthrough
-        case MM_MD: deactivateRingPolymerMD(); break;
-        case QM_MD: deactivateRingPolymerMD(); break;
-        case RING_POLYMER_QM_MD: activateRingPolymerMD(); break;
-        case QMMM_MD: deactivateRingPolymerMD(); break;
+        case MM_MD:        // fallthrough
+        case QM_MD:        // fallthrough
+        case QMMM_MD:      // fallthrough
         case NONE: deactivateRingPolymerMD(); break;
+        case RING_POLYMER_QM_MD: activateRingPolymerMD(); break;
     }
 }
 
@@ -180,6 +181,16 @@ void Settings::setDimensionality(const size_t dimensionality)
     _dimensionality = dimensionality;
 }
 
+/**
+ * @brief sets the virial type
+ *
+ * @param virialType
+ */
+void Settings::setVirialType(const VirialType virialType)
+{
+    _virial = virialType;
+}
+
 /***************************
  *                         *
  * standard getter methods *
@@ -233,6 +244,13 @@ bool Settings::isRandomSeedSet() { return _isRandomSeedset; }
  */
 size_t Settings::getDimensionality() { return _dimensionality; }
 
+/**
+ * @brief get the virial type
+ *
+ * @return VirialType
+ */
+VirialType Settings::getVirialType() { return _virial; }
+
 /******************************
  *                            *
  * standard is-active methods *
@@ -240,27 +258,47 @@ size_t Settings::getDimensionality() { return _dimensionality; }
  ******************************/
 
 /**
- * @brief Returns true if the jobtype does no use any MM type simulations
+ * @brief Returns true if the jobtype does not use any MM type simulations
  *
- * @return true/false if the jobtype does no use any MM type simulations
+ * @return true/false if the jobtype does not use any MM type simulations
  *
  */
-bool Settings::isQMOnly()
+bool Settings::isQMOnlyJobtype()
 {
     using enum JobType;
 
-    if (_jobtype == QM_MD)
-        return true;
+    switch (_jobtype)
+    {
+        case MM_MD:
+        case QMMM_MD:
+        case MM_OPT:
+        case MM_HESSIAN:
+        case NONE: return false;
+        case QM_MD:
+        case RING_POLYMER_QM_MD: return true;
+    }
 
-    else if (_jobtype == RING_POLYMER_QM_MD)
-        return true;
-
-    else
-        return false;
+    std::unreachable();
 }
 
 /**
- * @brief Returns true if the jobtype does is based on MD simulations
+ * @brief Returns true if the jobtype does not use any QM type simulations
+ *
+ * @return true/false if the jobtype does not use any QM type simulations
+ *
+ */
+bool Settings::isMMOnlyJobtype() { return _jobtype == JobType::MM_MD; }
+
+/**
+ * @brief Returns true if the jobtype is a hybrid type simulation
+ *
+ * @return true/false if the jobtype is a hybrid type simulation
+ *
+ */
+bool Settings::isHybridJobtype() { return _jobtype == JobType::QMMM_MD; }
+
+/**
+ * @brief Returns true if the jobtype performs an MD simulation
  *
  * @return true/false
  *
@@ -326,14 +364,6 @@ bool Settings::isQMActivated()
 }
 
 /**
- * @brief Returns true if both MM and QM simulations are activated
- *
- * @return true/false
- *
- */
-bool Settings::isQMMMActivated() { return _jobtype == JobType::QMMM_MD; }
-
-/**
  * @brief Returns true if only QM simulations are activated
  *
  * @return true/false
@@ -363,14 +393,6 @@ bool Settings::isMMOnlyActivated()
  */
 bool Settings::isRingPolymerMDActivated() { return _isRingPolymerMDActivated; }
 
-/**
- * @brief Returns true if Kokkos is activated
- *
- * @return true/false
- *
- */
-bool Settings::useKokkos() { return _useKokkos; }
-
 /*****************************
  *                           *
  * standard activate methods *
@@ -382,12 +404,6 @@ bool Settings::useKokkos() { return _useKokkos; }
  *
  */
 void Settings::activateRingPolymerMD() { _isRingPolymerMDActivated = true; }
-
-/**
- * @brief activate Kokkos
- *
- */
-void Settings::activateKokkos() { _useKokkos = true; }
 
 /**
  * @brief deactivate ring polymer MD simulations

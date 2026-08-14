@@ -24,11 +24,15 @@
 
 #define _RESET_KINETICS_SETUP_HPP_
 
-#include "typeAliases.hpp"
+namespace engine
+{
+    class Engine;     // forward declaration
+    class MDEngine;   // forward declaration
+}   // namespace engine
 
 namespace setup::resetKinetics
 {
-    void setupResetKinetics(pq::Engine &);
+    void setupResetKinetics(engine::Engine &);
 
     /**
      * @class ResetKineticsSetup
@@ -39,10 +43,10 @@ namespace setup::resetKinetics
     class ResetKineticsSetup
     {
        private:
-        pq::MDEngine &_engine;
+        engine::MDEngine &_engine;
 
        public:
-        explicit ResetKineticsSetup(pq::MDEngine &engine);
+        explicit ResetKineticsSetup(engine::MDEngine &engine);
 
         void setup();
         void writeSetupInfo() const;

@@ -27,7 +27,6 @@
 #include <cstddef>   // for size_t
 
 #include "inputFileParser.hpp"   // for InputFileParser
-#include "typeAliases.hpp"       // for pq::strings
 
 namespace input
 {
@@ -40,11 +39,19 @@ namespace input
     class CoulombLongRangeInputParser : public InputFileParser
     {
        public:
-        explicit CoulombLongRangeInputParser(pq::Engine &);
+        explicit CoulombLongRangeInputParser(engine::Engine &);
 
-        void parseCoulombLongRange(const pq::strings &, const size_t);
-        void parseReactionFieldEpsilon(const pq::strings &, const size_t);
-        void parseWolfParameter(const pq::strings &, const size_t);
+        void parseCoulombLongRange(
+            const std::vector<std::string> &,
+            const size_t
+        );
+
+        void parseReactionFieldEpsilon(
+            const std::vector<std::string> &,
+            const size_t
+        );
+
+        void parseWolfParameter(const std::vector<std::string> &, const size_t);
     };
 
 }   // namespace input

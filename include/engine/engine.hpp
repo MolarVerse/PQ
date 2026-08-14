@@ -25,25 +25,20 @@
 #define _ENGINE_HPP_
 
 #include <cstddef>   // for size_t
+#include <memory>
 
 #include "celllist.hpp"
 #include "constraints.hpp"
 #include "engineOutput.hpp"
 #include "forceFieldClass.hpp"
 #include "globalTimer.hpp"
+#include "interWater.hpp"
 #include "intraNonBonded.hpp"
+#include "intraWater.hpp"
 #include "physicalData.hpp"
 #include "potential.hpp"
 #include "simulationBox.hpp"
-#include "typeAliases.hpp"
 #include "virial.hpp"
-
-#ifdef WITH_KOKKOS
-#include "coulombWolf_kokkos.hpp"
-#include "lennardJones_kokkos.hpp"
-#include "potential_kokkos.hpp"
-#include "simulationBox_kokkos.hpp"
-#endif
 
 namespace engine
 {
@@ -66,21 +61,18 @@ namespace engine
 
         physicalData::PhysicalData _averagePhysicalData;
 
-        pq::SharedVirial       _virial;
-        pq::SharedPotential    _potential;
-        pq::SharedPhysicalData _physicalData;
-        pq::SharedSimBox       _simulationBox;
-        pq::SharedCellList     _cellList;
-        pq::SharedIntraNonBond _intraNonBonded;
-        pq::SharedForceField   _forceField;
-        pq::SharedConstraints  _constraints;
+        std::shared_ptr<potential::Potential>           _potential;
+        std::shared_ptr<physicalData::PhysicalData>     _physicalData;
+        std::shared_ptr<simulationBox::SimulationBox>   _simulationBox;
+        std::shared_ptr<simulationBox::CellList>        _cellList;
+        std::shared_ptr<intraNonBonded::IntraNonBonded> _intraNonBonded;
+        std::shared_ptr<forceField::ForceField>         _forceField;
+        std::shared_ptr<constraints::Constraints>       _constraints;
 
-#ifdef WITH_KOKKOS
-        simulationBox::KokkosSimulationBox _kokkosSimulationBox;
-        potential::KokkosLennardJones      _kokkosLennardJones;
-        potential::KokkosCoulombWolf       _kokkosCoulombWolf;
-        potential::KokkosPotential         _kokkosPotential;
-#endif
+        std::unique_ptr<waterModel::IntraWater> _intraWater =
+            std::make_unique<waterModel::IntraWater>();
+        std::unique_ptr<waterModel::InterWater> _interWater =
+            std::make_unique<waterModel::InterWater>();
 
        public:
         Engine();
@@ -88,7 +80,7 @@ namespace engine
 
         virtual void run()         = 0;
         virtual void writeOutput() = 0;
-        void         deleteTempFiles();
+        void         deleteTmpFiles();
 
         void addTimer(const timings::Timer &timings);
 
@@ -108,15 +100,19 @@ namespace engine
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] simulationBox::CellList        &getCellList();
-        [[nodiscard]] simulationBox::SimulationBox   &getSimulationBox();
-        [[nodiscard]] physicalData::PhysicalData     &getPhysicalData();
-        [[nodiscard]] physicalData::PhysicalData     &getAveragePhysicalData();
-        [[nodiscard]] constraints::Constraints       &getConstraints();
-        [[nodiscard]] forceField::ForceField         &getForceField();
-        [[nodiscard]] intraNonBonded::IntraNonBonded &getIntraNonBonded();
-        [[nodiscard]] virial::Virial                 &getVirial();
-        [[nodiscard]] potential::Potential           &getPotential();
+        [[nodiscard]]
+        const std::shared_ptr<simulationBox::CellList> &getCellList() const;
+        [[nodiscard]]
+        const std::shared_ptr<constraints::Constraints> &getConstraints() const;
+        [[nodiscard]]
+        const std::shared_ptr<
+            intraNonBonded::IntraNonBonded> &getIntraNonBonded() const;
+
+        [[nodiscard]] simulationBox::SimulationBox &getSimulationBox();
+        [[nodiscard]] physicalData::PhysicalData   &getPhysicalData();
+        [[nodiscard]] physicalData::PhysicalData   &getAveragePhysicalData();
+        [[nodiscard]] forceField::ForceField       &getForceField();
+        [[nodiscard]] potential::Potential         &getPotential();
 
         /*************************
          * output getter methods *
@@ -137,27 +133,25 @@ namespace engine
          * get pointer methods *
          ***********************/
 
-        [[nodiscard]] forceField::ForceField         *getForceFieldPtr();
-        [[nodiscard]] potential::Potential           *getPotentialPtr();
-        [[nodiscard]] virial::Virial                 *getVirialPtr();
-        [[nodiscard]] simulationBox::CellList        *getCellListPtr();
-        [[nodiscard]] simulationBox::SimulationBox   *getSimulationBoxPtr();
-        [[nodiscard]] physicalData::PhysicalData     *getPhysicalDataPtr();
-        [[nodiscard]] constraints::Constraints       *getConstraintsPtr();
-        [[nodiscard]] intraNonBonded::IntraNonBonded *getIntraNonBondedPtr();
+        [[nodiscard]] forceField::ForceField       *getForceFieldPtr();
+        [[nodiscard]] potential::Potential         *getPotentialPtr();
+        [[nodiscard]] simulationBox::SimulationBox *getSimulationBoxPtr();
+        [[nodiscard]] physicalData::PhysicalData   *getPhysicalDataPtr();
 
         /******************************
          * get shared pointer methods *
          ******************************/
 
-        [[nodiscard]] pq::SharedForceField   getSharedForceField() const;
-        [[nodiscard]] pq::SharedSimBox       getSharedSimulationBox() const;
-        [[nodiscard]] pq::SharedPhysicalData getSharedPhysicalData() const;
-        [[nodiscard]] pq::SharedCellList     getSharedCellList() const;
-        [[nodiscard]] pq::SharedConstraints  getSharedConstraints() const;
-        [[nodiscard]] pq::SharedIntraNonBond getSharedIntraNonBonded() const;
-        [[nodiscard]] pq::SharedVirial       getSharedVirial() const;
-        [[nodiscard]] pq::SharedPotential    getSharedPotential() const;
+        [[nodiscard]]
+        std::shared_ptr<forceField::ForceField> getSharedForceField() const;
+        [[nodiscard]]
+        std::shared_ptr<simulationBox::SimulationBox> getSharedSimulationBox(
+        ) const;
+        [[nodiscard]]
+        std::shared_ptr<physicalData::PhysicalData> getSharedPhysicalData(
+        ) const;
+        [[nodiscard]] std::shared_ptr<potential::Potential> getSharedPotential(
+        ) const;
 
         /***************************
          * make unique_ptr methods *
@@ -166,7 +160,7 @@ namespace engine
         template <typename T>
         void makePotential(T);
         template <typename T>
-        void makeVirial(T virial);
+        void makeIntraWater(T &&);
 
         /********************************
          * standard getters and setters *
@@ -176,25 +170,7 @@ namespace engine
         [[nodiscard]] timings::GlobalTimer &getTimer() { return _timer; }
 
         void setTimer(const timings::GlobalTimer &timer) { _timer = timer; }
-
-#ifdef WITH_KOKKOS
-        [[nodiscard]] simulationBox::KokkosSimulationBox &getKokkosSimulationBox(
-        );
-        [[nodiscard]] potential::KokkosLennardJones &getKokkosLennardJones();
-        [[nodiscard]] potential::KokkosCoulombWolf  &getKokkosCoulombWolf();
-        [[nodiscard]] potential::KokkosPotential    &getKokkosPotential();
-        void initKokkosSimulationBox(const size_t numAtoms);
-        void initKokkosLennardJones(const size_t numAtomTypes);
-        void initKokkosCoulombWolf(
-            const double coulombRadiusCutOff,
-            const double kappa,
-            const double wolfParameter1,
-            const double wolfParameter2,
-            const double wolfParameter3,
-            const double prefactor
-        );
-        void initKokkosPotential();
-#endif
+        void setInterWater(std::unique_ptr<waterModel::InterWater> interWater);
     };
 }   // namespace engine
 

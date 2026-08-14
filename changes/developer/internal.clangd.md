@@ -1,1 +1,3 @@
-- Add first version of CI for static analysis via clangd and clang-tidy (all clangd-tidy checks for now disabled apart a test check)
+- fix a lot of more small clang-tidy warnings (larger one will be handled in separate PRs)
+- address all cppcoreguidline clang-tidy checks and all darwin checks
+- add most important fuchsia clang-tidy warnings (especially no default arguments)

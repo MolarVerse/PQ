@@ -24,12 +24,13 @@
 
 #define _TIMER_HPP_
 
-
 #include <cstddef>   // for size_t
 #include <string>    // for string
+#include <vector>    // for vector
 
+#include "timerId.hpp"
 #include "timingsSection.hpp"   // for TimingsManager
-#include "typeAliases.hpp"
+#include "timingsSectionGuard.hpp"
 
 namespace timings
 {
@@ -48,27 +49,26 @@ namespace timings
     class Timer
     {
        protected:
-        std::string _name = "DefaultTimings";
+        TimerId _id = TimerId::DefaultTimings;
 
         std::vector<TimingsSection> _timingDetails;
 
        public:
-        explicit Timer(const std::string_view);
+        explicit Timer(TimerId id);
+        Timer() = default;
 
-        Timer()  = default;
-        ~Timer() = default;
+        [[nodiscard]]
+        const std::vector<TimingsSection>& getTimingDetails() const;
 
-        [[nodiscard]] std::vector<TimingsSection> getTimingDetails() const;
-        [[nodiscard]] double                      calculateElapsedTime() const;
-        [[nodiscard]] double                      calculateLoopTime() const;
+        [[nodiscard]] double calculateElapsedTime() const;
+        [[nodiscard]] double calculateLoopTime() const;
 
-        [[nodiscard]] size_t findTimingsSectionIndex(const std::string_view name
+        [[nodiscard]] size_t findTimingsSectionIndex(
+            const std::string_view name
         ) const;
 
         void startTimingsSection();
-        void startTimingsSection(const std::string_view name);
         void stopTimingsSection();
-        void stopTimingsSection(const std::string_view name);
 
         void sortTimingsSections();
 
@@ -76,17 +76,26 @@ namespace timings
          * standard setters *
          ********************/
 
-        void setTimerName(const std::string_view name);
+        void setTimerId(TimerId id);
 
         /********************
          * standard getters *
          ********************/
 
-        [[nodiscard]] TimingsSection getTimingsSection(const std::string_view
+        [[nodiscard]] TimingsSection getTimingsSection(
+            const std::string_view
         ) const;
 
         [[nodiscard]] std::string getTimerName() const;
         [[nodiscard]] Timer       getTimer() const;
+
+        [[nodiscard]] TimingsSectionGuard scoped(const std::string_view name);
+
+       private:
+        friend class TimingsSectionGuard;
+
+        void startTimingsSection(const std::string_view name);
+        void stopTimingsSection(const std::string_view name);
     };
 
 }   // namespace timings

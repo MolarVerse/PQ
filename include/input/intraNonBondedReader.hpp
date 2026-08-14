@@ -29,12 +29,15 @@
 #include <iosfwd>    // for ifstream
 #include <string>    // for string
 
-#include "typeAliases.hpp"
+namespace engine
+{
+    class Engine;   // forward declaration
+}   // namespace engine
 
 namespace input::intraNonBondedReader
 {
-    void               readIntraNonBondedFile(pq::Engine &);
-    [[nodiscard]] bool isNeeded(const pq::Engine &engine);
+    void               readIntraNonBondedFile(engine::Engine &);
+    [[nodiscard]] bool isNeeded(const engine::Engine &engine);
 
     /**
      * @class IntraNonBondedReader
@@ -50,10 +53,13 @@ namespace input::intraNonBondedReader
 
         size_t _lineNumber = 1;
 
-        pq::Engine &_engine;
+        engine::Engine &_engine;
 
        public:
-        IntraNonBondedReader(const std::string &fileName, pq::Engine &engine);
+        IntraNonBondedReader(
+            const std::string &fileName,
+            engine::Engine    &engine
+        );
 
         void                 read();
         void                 processMolecule(const size_t moleculeType);

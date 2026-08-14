@@ -24,6 +24,7 @@
 
 #include <gtest/gtest.h>
 
+#include <format>
 #include <string>
 
 #include "exceptions.hpp"
@@ -171,7 +172,7 @@ TEST_F(TestMShakeReader, testReadMemberFunction)
 
     input::mShake::readMShake(*_engine);
 
-    auto mShakeReferences = _engine->getConstraints().getMShakeReferences();
+    auto mShakeReferences = _engine->getConstraints()->getMShakeReferences();
 
     EXPECT_EQ(mShakeReferences.size(), 2);
     EXPECT_EQ(mShakeReferences[0].getMoleculeType().getMoltype(), 1);
@@ -218,7 +219,7 @@ TEST_F(TestMShakeReader, testRead)
 
     reader.read();
 
-    auto mShakeReferences = _engine->getConstraints().getMShakeReferences();
+    auto mShakeReferences = _engine->getConstraints()->getMShakeReferences();
 
     EXPECT_EQ(mShakeReferences.size(), 2);
     EXPECT_EQ(mShakeReferences[0].getMoleculeType().getMoltype(), 1);

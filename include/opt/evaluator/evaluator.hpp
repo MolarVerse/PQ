@@ -29,11 +29,11 @@
 #include "celllist.hpp"
 #include "constraints.hpp"
 #include "forceFieldClass.hpp"
+#include "hessianBuilder.hpp"
 #include "intraNonBonded.hpp"
 #include "physicalData.hpp"
 #include "potential.hpp"
 #include "simulationBox.hpp"
-#include "typeAliases.hpp"
 #include "virial.hpp"
 
 namespace opt
@@ -55,32 +55,38 @@ namespace opt
         std::shared_ptr<forceField::ForceField>         _forceField;
         std::shared_ptr<physicalData::PhysicalData>     _physicalData;
         std::shared_ptr<physicalData::PhysicalData>     _physicalDataOld;
-        std::shared_ptr<virial::Virial>                 _virial;
         std::shared_ptr<intraNonBonded::IntraNonBonded> _intraNonBonded;
 
        public:
         Evaluator()          = default;
         virtual ~Evaluator() = default;
 
-        virtual pq::SharedEvaluator clone() const = 0;
-        virtual void                evaluate()    = 0;
+        virtual std::shared_ptr<Evaluator> clone() const = 0;
+        virtual void                       evaluate()    = 0;
 
-        [[nodiscard]] virtual bool              supportsAnalyticHessian() const;
-        [[nodiscard]] virtual pq::HessianMatrix calculateAnalyticHessian();
+        [[nodiscard]] virtual bool          supportsAnalyticHessian() const;
+        [[nodiscard]] virtual HessianMatrix calculateAnalyticHessian();
 
         /***************************
          * standard setter methods *
          ***************************/
 
-        void setPotential(const pq::SharedPotential);
-        void setCellList(const pq::SharedCellList);
-        void setSimulationBox(const pq::SharedSimBox);
-        void setConstraints(const pq::SharedConstraints);
-        void setPhysicalData(const pq::SharedPhysicalData);
-        void setPhysicalDataOld(const pq::SharedPhysicalData);
-        void setForceField(const pq::SharedForceField);
-        void setVirial(const pq::SharedVirial);
-        void setIntraNonBonded(const pq::SharedIntraNonBond);
+        void setPotential(const std::shared_ptr<potential::Potential>);
+        void setCellList(const std::shared_ptr<simulationBox::CellList>);
+        void setSimulationBox(
+            const std::shared_ptr<simulationBox::SimulationBox>
+        );
+        void setConstraints(const std::shared_ptr<constraints::Constraints>);
+
+        void setPhysicalData(const std::shared_ptr<physicalData::PhysicalData>);
+        void setPhysicalDataOld(
+            const std::shared_ptr<physicalData::PhysicalData>
+        );
+
+        void setForceField(const std::shared_ptr<forceField::ForceField>);
+        void setIntraNonBonded(
+            const std::shared_ptr<intraNonBonded::IntraNonBonded>
+        );
     };
 
 }   // namespace opt

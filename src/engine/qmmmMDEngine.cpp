@@ -21,3 +21,572 @@
 ******************************************************************************/
 
 #include "qmmmMDEngine.hpp"
+
+#include <cstdlib>      // for abs
+#include <format>       // for format
+#include <functional>   // for reference_wrapper
+#include <limits>       // for numeric_limits
+#include <vector>       // for vector
+
+#include "exceptions.hpp"       // for HybridMDEngineException
+#include "hybridSettings.hpp"   // for HybridSettings
+#include "intraNonBondedMap.hpp"
+#include "molecule.hpp"
+#include "vector3d.hpp"
+#include "virial.hpp"
+
+using namespace pq;
+using namespace customException;
+using namespace settings;
+using namespace simulationBox;
+
+using enum HybridZone;
+
+using virial::calculateQMVirial;
+using virial::calculateVirial;
+using virial::intraMolecularVirialCorrection;
+
+namespace engine
+{
+    /**
+     * @brief calculate QM/MM forces
+     *
+     */
+    void QMMMMDEngine::calculateForces()
+    {
+        _configurator.calculateInnerRegionCenter(*_simulationBox);
+        _configurator.shiftAtomsToInnerRegionCenter(*_simulationBox);
+        _configurator.assignHybridZones(*_simulationBox);
+        moltypeCheck();
+        _configurator.calculateSmoothingFactors(*_simulationBox);
+        _cellList->updateCellList(*_simulationBox);
+        _physicalData->setNumberOfSmoothingMolecules(
+            static_cast<double>(std::ranges::distance(
+                _simulationBox->getMoleculesInsideZone(SMOOTHING)
+            ))
+        );
+
+        applySmoothing();
+
+        combineInnerOuterForces();
+        _configurator.shiftAtomsBackToInitialPositions(*_simulationBox);
+    }
+
+    /**
+     * @brief Apply the selected smoothing method for QM/MM boundary treatment
+     *
+     * @throws HybridMDEngineException if an unknown smoothing method is
+     * requested
+     *
+     * @details This function dispatches to the appropriate smoothing algorithm
+     * (hotspot or exact) based on the user-configured smoothing method setting.
+     * The smoothing method determines how forces and energies are calculated in
+     * the boundary region between QM and MM zones. This is a wrapper function
+     * that delegates to either applyHotspotSmoothing() or
+     * applyExactSmoothing().
+     */
+    void QMMMMDEngine::applySmoothing()
+    {
+        using enum SmoothingMethod;
+
+        const auto &smoothingMethod = HybridSettings::getSmoothingMethod();
+
+        switch (smoothingMethod)
+        {
+            case HOTSPOT: applyHotspotSmoothing(); break;
+            case EXACT: applyExactSmoothing(); break;
+        }
+    }
+
+    /**
+     * @brief Apply exact smoothing algorithm for QM/MM boundary treatment
+     *
+     * @details This function implements the exact smoothing algorithm by
+     * iterating through all 2^n combinations of smoothing molecules being
+     * active/inactive in the inner (QM) region.
+     *
+     * @note Computational cost: O(2^n) where n = number of smoothing molecules
+     */
+    void QMMMMDEngine::applyExactSmoothing()
+    {
+        using enum Periodicity;
+        using std::ranges::distance;
+
+        linearAlgebra::tensor3D virial     = {0.0};
+        auto                    numQMAtoms = 0.0;
+        auto                   &atoms      = _simulationBox->getAtoms();
+        const auto              nSmMol =
+            distance(_simulationBox->getMoleculesInsideZone(SMOOTHING));
+
+        // Loop over all combinations of smoothing molecules
+        for (size_t i = 0; i < (1u << nSmMol); ++i)
+        {
+            // STEP 1: Generate set of inactive molecules and calculate
+            // associated global smoothing factor for this configuration
+            const auto inactiveSmMol =
+                generateInactiveSmoothingMoleculeSet(i, nSmMol);
+            const auto globalSmF =
+                calculateGlobalSmoothingFactor(inactiveSmMol);
+
+            // STEP 2: Setup and run QM calculation, accumulate QM forces and QM
+            // virial contribution and the number of QM atoms for this
+            // combination
+            _configurator.activateMolecules(*_simulationBox);
+            _configurator.deactivateOuterMolecules(*_simulationBox);
+            _configurator.deactivateSmoothingMolecules(
+                inactiveSmMol,
+                *_simulationBox
+            );
+
+            numQMAtoms +=
+                static_cast<double>(_simulationBox->getNumberOfQMAtoms()) *
+                globalSmF;
+
+            // to not carry over qm_charges of atoms which are not qm anymore
+            for (auto &atom : _simulationBox->getAtoms())
+                atom->getQMCharge().reset();
+
+            _qmRunner->run(*_simulationBox, *_physicalData, NON_PERIODIC);
+
+            virial += calculateQMVirial(*_simulationBox) * globalSmF;
+            virial +=
+                intraMolecularVirialCorrection(*_simulationBox) * globalSmF;
+            addScaledCurrentForcesToInnerAndReset(atoms, globalSmF);
+
+            // STEP 3: Setup and run MM calculation, accumulate MM forces and MM
+            // virial contribution
+            _configurator.toggleMoleculeActivation(*_simulationBox);
+
+            if (isCellListActivated())
+            {
+                _cellList->assignMoleculeHybridZoneIndices();
+                _cellList->assignWaterMoleculeIndices(*_simulationBox);
+            }
+
+            _potential->calculateQMMMForces(
+                *_simulationBox,
+                *_physicalData,
+                *_cellList
+            );
+
+            _interWater->calculateQMMMForces(
+                *_simulationBox,
+                *_physicalData,
+                _potential->getCoulombPotSharedPtr(),
+                *_cellList
+            );
+
+            _intraNonBonded->calculate(*_simulationBox, *_physicalData);
+
+            virial += calculateVirial(*_simulationBox) * globalSmF;
+            virial +=
+                intraMolecularVirialCorrection(*_simulationBox) * globalSmF;
+            addScaledCurrentForcesToOuterAndReset(atoms, globalSmF);
+
+            // bonded interactions directly add to physical data virial
+            _physicalData->setVirial({0.0});
+
+            _forceField->calculateBondedInteractions(
+                *_simulationBox,
+                *_physicalData
+            );
+
+            _intraWater->calculate(*_simulationBox, *_physicalData);
+
+            virial += _physicalData->getVirial() * globalSmF;
+            virial +=
+                intraMolecularVirialCorrection(*_simulationBox) * globalSmF;
+            addScaledCurrentForcesToOuterAndReset(atoms, globalSmF);
+
+            // STEP 4: Scale and accumulate hybrid energies and delete temp
+            // files --> following configs cannot continue if the QM calc fails
+            scaleAndAccumulateEnergies(globalSmF);
+            _physicalData->resetEnergies();
+            deleteTmpFiles();
+        }
+
+        // STEP 5: Set energies, virial and numQMAtoms to accumulated values
+        moveEnergiesToPhysicalData();
+        _physicalData->setVirial(virial);
+        _physicalData->setNumberOfQMAtoms(numQMAtoms);
+    }
+
+    /**
+     * @brief Apply hotspot smoothing algorithm for QM/MM boundary treatment
+     *
+     * @details This function implements the hotspot smoothing algorithm by
+     * running separate QM and MM calculations and scaling forces of smoothing
+     * molecules according to their individual smoothing factors. More
+     * computationally efficient than exact smoothing but less rigorous.
+     *
+     * @warning The energies yielded by this smoothing method are not correct
+     *
+     * @note Computational cost: O(1) - constant time regardless of number of
+     * smoothing molecules
+     */
+    void QMMMMDEngine::applyHotspotSmoothing()
+    {
+        using enum Periodicity;
+
+        auto                   &atoms  = _simulationBox->getAtoms();
+        linearAlgebra::tensor3D virial = {0.0};
+
+        // Set number of QM atoms in physical data for output purposes
+        setNumberOfQMAtoms();
+
+        // STEP 1: Setup and run QM calculation, scale forces of smoothing
+        // molecules with smF
+        _configurator.activateMolecules(*_simulationBox);
+        _configurator.deactivateOuterMolecules(*_simulationBox);
+
+        _qmRunner->run(*_simulationBox, *_physicalData, NON_PERIODIC);
+
+        if (HybridSettings::getQMForceDist() == QMForceDist::NONE)
+            scaleSmoothingMoleculeForcesInner();
+        else
+            distributeSmoothingMolQMForces();
+
+        virial += calculateQMVirial(*_simulationBox);
+        virial += intraMolecularVirialCorrection(*_simulationBox);
+        addCurrentForcesToInnerAndReset(atoms);
+
+        // STEP 2: Setup and run inter-nonbonded calculation between
+        // MM-MM , CORE-MM , LAYER+SMOOTHING-MM and scale forces of smoothing
+        // molecules with smF
+        _configurator.toggleMoleculeActivation(*_simulationBox);
+
+        if (isCellListActivated())
+        {
+            _cellList->assignMoleculeHybridZoneIndices();
+            _cellList->assignWaterMoleculeIndices(*_simulationBox);
+        }
+
+        _potential
+            ->calculateQMMMForces(*_simulationBox, *_physicalData, *_cellList);
+
+        _interWater->calculateQMMMForces(
+            *_simulationBox,
+            *_physicalData,
+            _potential->getCoulombPotSharedPtr(),
+            *_cellList
+        );
+
+        scaleSmoothingMoleculeForcesInner();
+        virial += calculateVirial(*_simulationBox);
+        virial += intraMolecularVirialCorrection(*_simulationBox);
+        addCurrentForcesToOuterAndReset(atoms);
+
+        // STEP 3: Calculate inter-nonbonded forces between SMOOTHING molecules
+        // and scale forces of smoothing molecules with (1 - smF)
+
+        _potential->calculateHotspotSmoothingMMForces(
+            *_simulationBox,
+            *_physicalData,
+            *_cellList
+        );
+
+        _interWater->calculateHotspotSmoothingMMForces(
+            *_simulationBox,
+            *_physicalData,
+            _potential->getCoulombPotSharedPtr(),
+            *_cellList
+        );
+
+        scaleSmoothingMoleculeForcesOuter();
+        virial += calculateVirial(*_simulationBox);
+        virial += intraMolecularVirialCorrection(*_simulationBox);
+        addCurrentForcesToOuterAndReset(atoms);
+
+        // STEP 4: Setup and run intra-nonbonded calculation and scale forces of
+        // smoothing molecules with (1 - smF)
+
+        _configurator.activateSmoothingMolecules(*_simulationBox);
+
+        _intraNonBonded->calculate(*_simulationBox, *_physicalData);
+
+        scaleSmoothingMoleculeForcesOuter();
+        virial += calculateVirial(*_simulationBox);
+        virial += intraMolecularVirialCorrection(*_simulationBox);
+        addCurrentForcesToOuterAndReset(atoms);
+
+        // STEP 5: Run intra-bonded calculation and scale forces of
+        // smoothing molecules with (1 - smF)
+
+        // bonded interactions directly add to physical data virial
+        _physicalData->setVirial({0.0});
+
+        _forceField->calculateBondedInteractions(
+            *_simulationBox,
+            *_physicalData
+        );
+
+        _intraWater->calculate(*_simulationBox, *_physicalData);
+
+        scaleSmoothingMoleculeForcesOuter();
+        virial += _physicalData->getVirial();
+        virial += intraMolecularVirialCorrection(*_simulationBox);
+        addCurrentForcesToOuterAndReset(atoms);
+
+        _physicalData->setVirial(virial);
+    }
+
+    /**
+     * @brief Set the number of QM atoms in physical data for output purposes
+     *
+     * @details This function temporarily configures the simulation box to count
+     * only QM atoms by activating all molecules and then deactivating outer
+     * molecules. The count is stored in physical data and then all molecules
+     * are reactivated to restore the original state.
+     */
+    void QMMMMDEngine::setNumberOfQMAtoms()
+    {
+        _configurator.activateMolecules(*_simulationBox);
+        _configurator.deactivateOuterMolecules(*_simulationBox);
+        const auto nQMAtoms = _simulationBox->getNumberOfQMAtoms();
+        _physicalData->setNumberOfQMAtoms(static_cast<double>(nQMAtoms));
+        _configurator.activateMolecules(*_simulationBox);
+    }
+
+    /**
+     * @brief Validates that all non-core molecules have a non-zero moltype
+     *
+     * @details This function iterates through all molecules and verifies that
+     * each molecule outside the QM core has a moltype that is not zero.
+     *
+     * @throws HybridMDEngineException if any non-core molecule has moltype == 0
+     */
+    void QMMMMDEngine::moltypeCheck()
+    {
+        size_t count = 0;
+        for (const auto &mol : _simulationBox->getMolecules())
+        {
+            if (mol.getMoltype() == 0 && mol.getHybridZone() != CORE)
+                throw(HybridMDEngineException(
+                    std::format(
+                        "Molecule number {} is outside the QM core and has "
+                        "moltype 0. All molecules outside the QM core must "
+                        "have a non-zero moltype assigned.",
+                        count
+                    )
+                ));
+            ++count;
+        }
+    }
+
+    /**
+     * @brief Scale current PhysicalData energies and add them to the internal
+     * QM/MM PhyscialData object. Used for the exact smoothing method.
+     *
+     * @param globalSmF Global smoothing factor for the current configuration.
+     */
+    void QMMMMDEngine::scaleAndAccumulateEnergies(const double globalSmF)
+    {
+        // clang-format off
+        _qmmmPhysicalData.addQMEnergy             ( _physicalData->getQMEnergy()              * globalSmF);
+        _qmmmPhysicalData.addCoulombEnergy        ( _physicalData->getCoulombEnergy()         * globalSmF);
+        _qmmmPhysicalData.addNonCoulombEnergy     ( _physicalData->getNonCoulombEnergy()      * globalSmF);
+        _qmmmPhysicalData.addBondEnergy           ( _physicalData->getBondEnergy()            * globalSmF);
+        _qmmmPhysicalData.addAngleEnergy          ( _physicalData->getAngleEnergy()           * globalSmF);
+        _qmmmPhysicalData.addDihedralEnergy       ( _physicalData->getDihedralEnergy()        * globalSmF);
+        _qmmmPhysicalData.addImproperEnergy       ( _physicalData->getImproperEnergy()        * globalSmF);
+        _qmmmPhysicalData.addIntraCoulombEnergy   ( _physicalData->getIntraCoulombEnergy()    * globalSmF);
+        _qmmmPhysicalData.addIntraNonCoulombEnergy( _physicalData->getIntraNonCoulombEnergy() * globalSmF);
+        // clang-format on
+    }
+
+    /**
+     * @brief Transfer internal accumulated energies from the QM/MM PhysicalData
+     * object to PhysicalData and reset the internal object. Used for the exact
+     * smoothing method.
+     */
+    void QMMMMDEngine::moveEnergiesToPhysicalData()
+    {
+        // clang-format off
+        _physicalData->setQMEnergy              ( _qmmmPhysicalData.getQMEnergy()              );
+        _physicalData->setCoulombEnergy         ( _qmmmPhysicalData.getCoulombEnergy()         );
+        _physicalData->setNonCoulombEnergy      ( _qmmmPhysicalData.getNonCoulombEnergy()      );
+        _physicalData->setBondEnergy            ( _qmmmPhysicalData.getBondEnergy()            );
+        _physicalData->setAngleEnergy           ( _qmmmPhysicalData.getAngleEnergy()           );
+        _physicalData->setDihedralEnergy        ( _qmmmPhysicalData.getDihedralEnergy()        );
+        _physicalData->setImproperEnergy        ( _qmmmPhysicalData.getImproperEnergy()        );
+        _physicalData->setIntraCoulombEnergy    ( _qmmmPhysicalData.getIntraCoulombEnergy()    );
+        _physicalData->setIntraNonCoulombEnergy ( _qmmmPhysicalData.getIntraNonCoulombEnergy() );
+        // clang-format on
+
+        _qmmmPhysicalData.reset();
+    }
+
+    /**
+     * @brief Dispatch QM-force redistribution for smoothing-zone molecules.
+     *
+     * @details Selects the redistribution strategy configured via
+     * HybridSettings::getQMForceDist().
+     * - NONE: scale smoothing-zone forces by smF only.
+     * - EQUAL: redistribute each smoothing-molecule deficit equally to
+     *   CORE/LAYER molecules, then split by atomic mass within each molecule.
+     * - RANDOM: redistribute each smoothing-molecule deficit randomly to
+     *   CORE/LAYER molecules, then split by atomic mass within each molecule.
+     * - DISTANCE_WEIGHTED: redistribute each smoothing-molecule deficit using
+     *   switched-polynomial COM distance weights, then split by atomic mass
+     *   within each recipient molecule.
+     *
+     * @note For each smoothing molecule, the current atom forces are first
+     * scaled by smF and only the force deficit F*(1-smF) is redistributed.
+     *
+     * @throws HybridMDEngineException if no CORE/LAYER recipient molecules are
+     * available for redistribution.
+     */
+    void QMMMMDEngine::distributeSmoothingMolQMForces()
+    {
+        const auto type = HybridSettings::getQMForceDist();
+        std::vector<std::reference_wrapper<Molecule>> recipientMolecules;
+
+        for (auto &mol : _simulationBox->getMoleculesInsideZone(CORE))
+            recipientMolecules.push_back(mol);
+
+        for (auto &mol : _simulationBox->getMoleculesInsideZone(LAYER))
+            recipientMolecules.push_back(mol);
+
+        if (recipientMolecules.empty())
+            throw HybridMDEngineException(
+                "Cannot redistribute smoothing inner force: no CORE/LAYER "
+                "molecules available."
+            );
+
+        for (auto &smoothingMol :
+             _simulationBox->getMoleculesInsideZone(SMOOTHING))
+        {
+            const auto smF = smoothingMol.getSmoothingFactor();
+
+            auto deficitForce = linearAlgebra::Vec3D{0.0};
+            for (auto &atom : smoothingMol.getAtoms())
+            {
+                deficitForce += atom->getForce() * (1 - smF);
+                atom->scaleForce(smF);
+            }
+
+            auto weights = std::vector<double>(recipientMolecules.size(), 0.0);
+
+            // clang-format off
+            switch (type)
+            {
+                using enum QMForceDist;
+
+                case NONE: continue;
+                case EQUAL: weights = std::vector<double>(recipientMolecules.size(), 1.0); break;
+                case RANDOM: weights = getRandomWeights(recipientMolecules); break;
+                case DISTANCE_WEIGHTED: weights = getDistanceWeights(smoothingMol, recipientMolecules); break;
+            }
+            // clang-format on
+
+            // normalize weights to sum to 1
+            auto weightSum = 0.0;
+            for (const auto weight : weights) weightSum += weight;
+
+            if (std::abs(weightSum) <= std::numeric_limits<double>::epsilon())
+            {
+                // fallback: equal distribution
+                const auto equal = 1.0 / static_cast<double>(weights.size());
+                for (auto &w : weights) w = equal;
+            }
+            else
+            {
+                for (auto &w : weights) w /= weightSum;
+            }
+
+            for (size_t i = 0; i < recipientMolecules.size(); ++i)
+            {
+                const auto molShare     = deficitForce * weights[i];
+                auto      &recipientMol = recipientMolecules[i].get();
+                const auto molMass      = recipientMol.getMolMass();
+
+                for (auto &atom : recipientMol.getAtoms())
+                {
+                    const auto massFraction = atom->getMass() / molMass;
+                    atom->addForce(molShare * massFraction);
+                }
+            }
+        }
+    }
+
+    /**
+     * @brief Generate random, unnormalized molecule weights.
+     *
+     * @param recipientMolecules Recipient CORE/LAYER molecules.
+     *
+     * @return A vector with one random value in [0, 1] per recipient molecule.
+     *
+     * @details The returned values are intentionally unnormalized. The caller
+     * performs normalization and handles zero-sum fallback logic.
+     */
+    std::vector<double> QMMMMDEngine::getRandomWeights(
+        const std::vector<std::reference_wrapper<Molecule>> &recipientMolecules
+    )
+    {
+        std::vector<double> randomWeights(recipientMolecules.size(), 0.0);
+
+        for (auto &weight : randomWeights)
+            weight = _rng.getUniformRealDistribution(0.0, 1.0);
+
+        return randomWeights;
+    }
+
+    /**
+     * @brief Generate distance-based, unnormalized molecule weights.
+     *
+     * @param smoothingMol The smoothing molecule whose force deficit is being
+     * redistributed.
+     * @param recipientMolecules Recipient CORE/LAYER molecules.
+     *
+     * @return A vector with one switched-polynomial weight per recipient
+     * molecule.
+     *
+     * @details Weights are computed from center-of-mass distance using
+     * weightingRadius = 2 * HybridSettings::getLayerRadius(). For x = d/R and
+     * x < 1, the switch is S(x)=1-10x^3+15x^4-6x^5; otherwise the weight is 0.
+     * The returned values are unnormalized and normalized by the caller.
+     */
+    std::vector<double> QMMMMDEngine::getDistanceWeights(
+        const Molecule                                      &smoothingMol,
+        const std::vector<std::reference_wrapper<Molecule>> &recipientMolecules
+    )
+    {
+        const auto weightingRadius = 2.0 * HybridSettings::getLayerRadius();
+        std::vector<double> weights;
+        weights.reserve(recipientMolecules.size());
+
+        const auto       smoothingCOM = smoothingMol.getCenterOfMass();
+        constexpr double x3Coeff      = 10.0;
+        constexpr double x4Coeff      = 15.0;
+        constexpr double x5Coeff      = 6.0;
+
+        for (const auto &recipientMol : recipientMolecules)
+        {
+            const auto delta =
+                recipientMol.get().getCenterOfMass() - smoothingCOM;
+
+            const auto distance = linearAlgebra::norm(delta);
+
+            auto switchedWeight = 0.0;
+            if (weightingRadius > 0.0)
+            {
+                const auto x = distance / weightingRadius;
+
+                if (x < 1.0)
+                {
+                    const auto x3 = x * x * x;
+                    const auto x4 = x3 * x;
+                    const auto x5 = x4 * x;
+
+                    switchedWeight =
+                        1.0 - x3Coeff * x3 + x4Coeff * x4 - x5Coeff * x5;
+                }
+            }
+
+            weights.push_back(switchedWeight);
+        }
+
+        return weights;
+    }
+
+}   // namespace engine

@@ -24,11 +24,18 @@
 
 #define _OPTIMIZER_SETUP_HPP_
 
-#include "typeAliases.hpp"
+#include "learningRateStrategy.hpp"
+#include "optimizer.hpp"
+
+namespace engine
+{
+    class Engine;      // forward declaration
+    class OptEngine;   // forward declaration
+}   // namespace engine
 
 namespace setup
 {
-    void setupOptimizer(pq::Engine &);
+    void setupOptimizer(engine::Engine &);
 
     /**
      * @class OptimizerSetup
@@ -39,20 +46,20 @@ namespace setup
     class OptimizerSetup
     {
        private:
-        pq::OptEngine &_optEngine;
+        engine::OptEngine &_optEngine;
 
        public:
-        explicit OptimizerSetup(pq::OptEngine &optEngine);
+        explicit OptimizerSetup(engine::OptEngine &optEngine);
 
         void setup();
         void writeSetupInfo() const;
 
-        void setupConvergence(pq::SharedOptimizer &);
-        void setupMinMaxLR(pq::SharedLearningRate &);
+        void setupConvergence(std::shared_ptr<opt::Optimizer> &);
+        void setupMinMaxLR(std::shared_ptr<opt::LearningRateStrategy> &);
 
-        pq::SharedOptimizer    setupEmptyOptimizer();
-        pq::SharedLearningRate setupLearningRateStrategy();
-        pq::SharedEvaluator    setupEvaluator();
+        std::shared_ptr<opt::Optimizer>            setupEmptyOptimizer();
+        std::shared_ptr<opt::LearningRateStrategy> setupLearningRateStrategy();
+        std::shared_ptr<opt::Evaluator>            setupEvaluator();
     };
 
 }   // namespace setup

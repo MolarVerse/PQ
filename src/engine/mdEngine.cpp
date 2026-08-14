@@ -25,16 +25,31 @@
 #include "constants/conversionFactors.hpp"   // for _FS_TO_PS_
 #include "outputFileSettings.hpp"            // for OutputFileSettings
 #include "progressbar.hpp"                   // for progressbar
-#include "qmmdEngine.hpp"                    // for QMMDEngine
+#include "qmCapableEngine.hpp"               // for QMCapableEngine
 #include "referencesOutput.hpp"              // for ReferencesOutput
 #include "settings.hpp"                      // for Settings
 #include "timingsSettings.hpp"               // for TimingsSettings
+#include "velocityVerlet.hpp"
 
 using namespace engine;
 using namespace output;
 using namespace settings;
 using namespace constants;
 using namespace physicalData;
+
+using virial::intraMolecularVirialCorrection;
+
+/**
+ * @brief Constructor for MDEngine
+ *
+ * @details This constructor initializes the MDEngine with default settings.
+ */
+MDEngine::MDEngine()
+    : _integrator(std::make_unique<integrator::VelocityVerlet>()),
+      _thermostat(std::make_unique<thermostat::Thermostat>()),
+      _manostat(std::make_unique<manostat::Manostat>())
+{
+}
 
 /**
  * @brief Run the simulation for numberOfSteps steps.
@@ -57,60 +72,58 @@ void MDEngine::run()
         takeStep();
 
         writeOutput();
-        deleteTempFiles();
+        deleteTmpFiles();
     }
 
     _timer.stopSimulationTimer();
 
     const auto elapsedTime = double(_timer.calculateElapsedTime()) * 1e-3;
 
-    _engineOutput.setTimerName("Output");
+    _engineOutput.setTimerId(TimerId::Output);
     _timer.addTimer(_engineOutput.getTimer());
 
-    _thermostat->setTimerName("Thermostat");
+    _thermostat->setTimerId(TimerId::Thermostat);
     _timer.addTimer(_thermostat->getTimer());
 
-    _integrator->setTimerName("Integrator");
+    _integrator->setTimerId(TimerId::Integrator);
     _timer.addTimer(_integrator->getTimer());
 
-    _constraints->setTimerName("Constraints");
+    _constraints->setTimerId(TimerId::Constraints);
     _timer.addTimer(_constraints->getTimer());
 
-    _cellList->setTimerName("Cell List");
+    _cellList->setTimerId(TimerId::CellList);
     _timer.addTimer(_cellList->getTimer());
 
-    _potential->setTimerName("Potential");
+    _potential->setTimerId(TimerId::Potential);
     _timer.addTimer(_potential->getTimer());
 
-    _intraNonBonded->setTimerName("IntraNonBonded");
+    _intraNonBonded->setTimerId(TimerId::IntraNonBonded);
     _timer.addTimer(_intraNonBonded->getTimer());
 
-    _virial->setTimerName("Virial");
-    _timer.addTimer(_virial->getTimer());
-
-    _physicalData->setTimerName("Physical Data");
+    _physicalData->setTimerId(TimerId::PhysicalData);
     _timer.addTimer(_physicalData->getTimer());
 
-    _manostat->setTimerName("Manostat");
+    _manostat->setTimerId(TimerId::Manostat);
     _timer.addTimer(_manostat->getTimer());
 
-    _resetKinetics.setTimerName("Reset Kinetics");
+    _resetKinetics.setTimerId(TimerId::ResetKinetics);
     _timer.addTimer(_resetKinetics.getTimer());
+
+    _intraWater->setTimerId(TimerId::WaterIntraPotential);
+    _timer.addTimer(_intraWater->getTimer());
+
+    _interWater->setTimerId(TimerId::WaterInterPotential);
+    _timer.addTimer(_interWater->getTimer());
 
     if (Settings::isQMActivated())
     {
-        dynamic_cast<QMMDEngine *>(this)->getQMRunner()->setTimerName(
-            "QM Engine"
+        dynamic_cast<QMCapableEngine *>(this)->getQMRunner()->setTimerId(
+            TimerId::QMEngine
         );
         _timer.addTimer(
-            dynamic_cast<QMMDEngine *>(this)->getQMRunner()->getTimer()
+            dynamic_cast<QMCapableEngine *>(this)->getQMRunner()->getTimer()
         );
     }
-
-#ifdef WITH_KOKKOS
-    _kokkosPotential.setTimerName("Kokkos Potential");
-    _timer.addTimer(_kokkosPotential.getTimer());
-#endif
 
     references::ReferencesOutput::writeReferencesFile();
 
@@ -152,7 +165,11 @@ void MDEngine::takeStepAfterForces()
 
     _constraints->calculateConstraintBondRefs(*_simulationBox);
 
-    _virial->intraMolecularVirialCorrection(*_simulationBox, *_physicalData);
+    if (!Settings::isHybridJobtype())
+    {
+        const auto virial = intraMolecularVirialCorrection(*_simulationBox);
+        _physicalData->addVirial(virial);
+    }
 
     _thermostat->applyThermostatOnForces(*_simulationBox);
 
@@ -170,10 +187,17 @@ void MDEngine::takeStepAfterForces()
 
     _thermostat->applyTemperatureRamping();
 
-    if (Settings::isQMActivated())
+    if (Settings::isQMOnlyJobtype())
     {
-        _physicalData->setNumberOfQMAtoms(_simulationBox->getNumberOfQMAtoms());
+        const auto nQMAtoms = _simulationBox->getNumberOfQMAtoms();
+        _physicalData->setNumberOfQMAtoms(static_cast<double>(nQMAtoms));
     }
+}
+
+void MDEngine::calculateForcesWrapper()
+{
+    _simulationBox->resetAllForces();
+    calculateForces();
 }
 
 /**
@@ -184,7 +208,7 @@ void MDEngine::takeStep()
 {
     takeStepBeforeForces();
 
-    calculateForces();
+    calculateForcesWrapper();
 
     takeStepAfterForces();
 }
@@ -204,10 +228,10 @@ void MDEngine::writeOutput()
 
     if (0 == _step % outputFreq)
     {
-        _engineOutput.writeXyzFile(*_simulationBox);
-        _engineOutput.writeVelFile(*_simulationBox);
-        _engineOutput.writeForceFile(*_simulationBox);
-        _engineOutput.writeChargeFile(*_simulationBox);
+        _engineOutput.writeXyzFile(*_simulationBox, effStep);
+        _engineOutput.writeVelFile(*_simulationBox, effStep);
+        _engineOutput.writeForceFile(*_simulationBox, effStep);
+        _engineOutput.writeChargeFile(*_simulationBox, effStep);
         _engineOutput.writeRstFile(*_simulationBox, *_thermostat, effStep);
 
         _engineOutput.writeVirialFile(
@@ -221,6 +245,9 @@ void MDEngine::writeOutput()
         );   // use physicalData instead of averagePhysicalData
 
         _engineOutput.writeBoxFile(effStep, _simulationBox->getBox());
+
+        if (Settings::isHybridJobtype())
+            _engineOutput.writeHybridCenterXyzFile(_configurator, effStep);
     }
 
     // NOTE:
@@ -241,7 +268,7 @@ void MDEngine::writeOutput()
 
         const auto dt            = TimingsSettings::getTimeStep();
         const auto effStepDouble = static_cast<double>(effStep);
-        const auto simTime       = effStepDouble * dt * _FS_TO_PS_;
+        const auto simTime       = effStepDouble * dt * FS_TO_PS;
 
         _engineOutput.writeEnergyFile(effStep, _averagePhysicalData);
         _engineOutput.writeInstantEnergyFile(effStep, *_physicalData);
@@ -303,6 +330,16 @@ output::EnergyOutput &MDEngine::getInstantEnergyOutput()
 output::MomentumOutput &MDEngine::getMomentumOutput()
 {
     return _engineOutput.getMomentumOutput();
+}
+
+/**
+ * @brief get the reference to the xyz hybrid center output
+ *
+ * @return output::TrajectoryOutput&
+ */
+output::TrajectoryOutput &MDEngine::getXyzHybridCenterOutput()
+{
+    return _engineOutput.getXyzHybridCenterOutput();
 }
 
 /**

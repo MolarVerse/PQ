@@ -22,18 +22,18 @@
 
 #include "testThermostat.hpp"
 
-#include <cmath>    // for sqrt
+#include <cmath>   // for sqrt
 
-#include "berendsenThermostat.hpp"                    // for BerendsenThermostat
-#include "constants/internalConversionFactors.hpp"    // for _TEMPERATURE_FACTOR_
-#include "gtest/gtest.h"                              // for InitGoogleTest
-#include "langevinThermostat.hpp"                     // for LangevinThermostat
-#include "noseHooverThermostat.hpp"                   // for NoseHooverThermostat
-#include "physicalData.hpp"                           // for PhysicalData
-#include "simulationBox.hpp"                          // for SimulationBox
-#include "thermostatSettings.hpp"                     // for ThermostatType
-#include "timingsSettings.hpp"                        // for TimingsSettings
-#include "velocityRescalingThermostat.hpp"            // for VelocityRescalingThermostat
+#include "berendsenThermostat.hpp"                   // for BerendsenThermostat
+#include "constants/internalConversionFactors.hpp"   // for _TEMPERATURE_FACTOR_
+#include "gtest/gtest.h"                             // for InitGoogleTest
+#include "langevinThermostat.hpp"                    // for LangevinThermostat
+#include "noseHooverThermostat.hpp"                  // for NoseHooverThermostat
+#include "physicalData.hpp"                          // for PhysicalData
+#include "simulationBox.hpp"                         // for SimulationBox
+#include "thermostatSettings.hpp"                    // for ThermostatType
+#include "timingsSettings.hpp"                       // for TimingsSettings
+#include "velocityRescalingThermostat.hpp"   // for VelocityRescalingThermostat
 
 TEST_F(TestThermostat, calculateTemperature)
 {
@@ -59,8 +59,7 @@ TEST_F(TestThermostat, calculateTemperature)
 
     EXPECT_EQ(
         _data->getTemperature(),
-        sum(kineticEnergyAtomicVector) * constants::_TEMPERATURE_FACTOR_ /
-            (nDOF)
+        sum(kineticEnergyAtomicVector) * constants::TEMPERATURE_FACTOR / (nDOF)
     );
 }
 
@@ -146,7 +145,7 @@ TEST_F(TestThermostat, applyThermostatBerendsen)
     const auto nDOF = _simulationBox->getDegreesOfFreedom();
 
     const auto oldTemperature = sum(kineticEnergyAtomicVector) *
-                                constants::_TEMPERATURE_FACTOR_ /
+                                constants::TEMPERATURE_FACTOR /
                                 static_cast<double>(nDOF);
 
     const auto berendsenFactor =
@@ -174,7 +173,10 @@ TEST_F(TestThermostat, velocityRescaling_tauSetterGetter)
 TEST_F(TestThermostat, velocityRescaling_thermostatType)
 {
     auto vr = thermostat::VelocityRescalingThermostat(300.0, 100.0);
-    EXPECT_EQ(vr.getThermostatType(), settings::ThermostatType::VELOCITY_RESCALING);
+    EXPECT_EQ(
+        vr.getThermostatType(),
+        settings::ThermostatType::VELOCITY_RESCALING
+    );
 }
 
 TEST_F(TestThermostat, velocityRescaling_applyDoesNotNaN)
@@ -323,4 +325,30 @@ TEST_F(TestThermostat, noseHoover_setChiAtIndex)
 
     nh.setZeta(1u, 3.0);
     EXPECT_DOUBLE_EQ(nh.getZeta()[1], 3.0);
+}
+
+TEST_F(TestThermostat, noseHoover_appliesFiniteForceAndStateUpdates)
+{
+    auto nh = thermostat::NoseHooverThermostat(
+        300.0,
+        std::vector<double>{0.1, 0.2, 0.3},
+        std::vector<double>{0.0, 0.0, 0.0},
+        1.0
+    );
+    settings::TimingsSettings::setTimeStep(0.1);
+
+    nh.applyThermostatOnForces(*_simulationBox);
+    for (const auto &atom : _simulationBox->getAtoms())
+        for (size_t axis = 0; axis < 3; ++axis)
+            EXPECT_TRUE(std::isfinite(atom->getForce()[axis]));
+
+    const auto chiBefore  = nh.getChi();
+    const auto zetaBefore = nh.getZeta();
+    nh.applyThermostat(*_simulationBox, *_data);
+
+    EXPECT_TRUE(std::isfinite(_data->getTemperature()));
+    EXPECT_TRUE(std::isfinite(_data->getNoseHooverMomentumEnergy()));
+    EXPECT_TRUE(std::isfinite(_data->getNoseHooverFrictionEnergy()));
+    EXPECT_NE(nh.getChi(), chiBefore);
+    EXPECT_NE(nh.getZeta(), zetaBefore);
 }

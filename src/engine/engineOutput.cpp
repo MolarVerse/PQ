@@ -27,6 +27,7 @@
 #include "boxOutput.hpp"
 #include "defaults.hpp"
 #include "energyOutput.hpp"
+#include "hybridConfigurator.hpp"
 #include "infoOutput.hpp"
 #include "logOutput.hpp"
 #include "momentumOutput.hpp"
@@ -55,6 +56,7 @@ using namespace engine;
 using namespace simulationBox;
 using namespace physicalData;
 using namespace thermostat;
+using namespace configurator;
 
 using output::BoxFileOutput;
 using output::EnergyOutput;
@@ -81,6 +83,7 @@ EngineOutput::EngineOutput()
       _instantEnergyOutput(std::make_unique<EnergyOutput>(DefaultFiles::instEnFile)),
       _infoOutput(std::make_unique<InfoOutput>(DefaultFiles::infoFile)),
       _xyzOutput(std::make_unique<TrajectoryOutput>(DefaultFiles::trajFile)),
+      _xyzHybridCenterOutput(std::make_unique<TrajectoryOutput>(DefaultFiles::hybridCenterFile)),
       _velOutput(std::make_unique<TrajectoryOutput>(DefaultFiles::velFile)),
       _forceOutput(std::make_unique<TrajectoryOutput>(DefaultFiles::forceFile)),
       _chargeOutput(std::make_unique<TrajectoryOutput>(DefaultFiles::chargeFile)),
@@ -115,9 +118,8 @@ void EngineOutput::writeEnergyFile(
     const PhysicalData &physicalData
 )
 {
-    startTimingsSection("EnergyOutput");
+    auto _ = scoped("EnergyOutput");
     _energyOutput->write(step, physicalData);
-    stopTimingsSection("EnergyOutput");
 }
 
 /**
@@ -131,9 +133,8 @@ void EngineOutput::writeInstantEnergyFile(
     const PhysicalData &physicalData
 )
 {
-    startTimingsSection("InstantEnergyOutput");
+    auto _ = scoped("InstantEnergyOutput");
     _instantEnergyOutput->write(step, physicalData);
-    stopTimingsSection("InstantEnergyOutput");
 }
 
 /**
@@ -147,57 +148,77 @@ void EngineOutput::writeMomentumFile(
     const PhysicalData &physicalData
 )
 {
-    startTimingsSection("MomentumOutput");
+    auto _ = scoped("MomentumOutput");
     _momentumOutput->write(step, physicalData);
-    stopTimingsSection("MomentumOutput");
 }
 
 /**
  * @brief wrapper for xyz file output function
  *
  * @param simulationBox
+ * @param step
  */
-void EngineOutput::writeXyzFile(SimulationBox &simulationBox)
+void EngineOutput::writeXyzFile(SimulationBox &simulationBox, const size_t step)
 {
-    startTimingsSection("TrajectoryOutput");
-    _xyzOutput->writeXyz(simulationBox);
-    stopTimingsSection("TrajectoryOutput");
+    auto _ = scoped("TrajectoryOutput");
+    _xyzOutput->writeXyz(simulationBox, step);
+}
+
+/**
+ * @brief wrapper for hybrid center xyz file output function
+ *
+ * @param configurator
+ * @param step
+ */
+void EngineOutput::writeHybridCenterXyzFile(
+    const HybridConfigurator &configurator,
+    const size_t              step
+)
+{
+    auto _ = scoped("TrajectoryOutput");
+    _xyzHybridCenterOutput->writeHybridCenterXyz(configurator, step);
 }
 
 /**
  * @brief wrapper for velocity file output function
  *
  * @param simulationBox
+ * @param step
  */
-void EngineOutput::writeVelFile(SimulationBox &simulationBox)
+void EngineOutput::writeVelFile(SimulationBox &simulationBox, const size_t step)
 {
-    startTimingsSection("TrajectoryOutput");
-    _velOutput->writeVelocities(simulationBox);
-    stopTimingsSection("TrajectoryOutput");
+    auto _ = scoped("TrajectoryOutput");
+    _velOutput->writeVelocities(simulationBox, step);
 }
 
 /**
  * @brief wrapper for force file output function
  *
  * @param simulationBox
+ * @param step
  */
-void EngineOutput::writeForceFile(SimulationBox &simulationBox)
+void EngineOutput::writeForceFile(
+    SimulationBox &simulationBox,
+    const size_t   step
+)
 {
-    startTimingsSection("TrajectoryOutput");
-    _forceOutput->writeForces(simulationBox);
-    stopTimingsSection("TrajectoryOutput");
+    auto _ = scoped("TrajectoryOutput");
+    _forceOutput->writeForces(simulationBox, step);
 }
 
 /**
  * @brief wrapper for charge file output function
  *
  * @param simulationBox
+ * @param step
  */
-void EngineOutput::writeChargeFile(SimulationBox &simulationBox)
+void EngineOutput::writeChargeFile(
+    SimulationBox &simulationBox,
+    const size_t   step
+)
 {
-    startTimingsSection("TrajectoryOutput");
-    _chargeOutput->writeCharges(simulationBox);
-    stopTimingsSection("TrajectoryOutput");
+    auto _ = scoped("TrajectoryOutput");
+    _chargeOutput->writeCharges(simulationBox, step);
 }
 
 /**
@@ -211,9 +232,8 @@ void EngineOutput::writeInfoFile(
     const PhysicalData &physicalData
 )
 {
-    startTimingsSection("InfoOutput");
+    auto _ = scoped("InfoOutput");
     _infoOutput->write(time, physicalData);
-    stopTimingsSection("InfoOutput");
 }
 
 /**
@@ -228,9 +248,8 @@ void EngineOutput::writeRstFile(
     const size_t      step
 )
 {
-    startTimingsSection("RstFileOutput");
+    auto _ = scoped("RstFileOutput");
     _rstFileOutput->write(simulationBox, thermostat, step);
-    stopTimingsSection("RstFileOutput");
 }
 
 /**
@@ -244,9 +263,8 @@ void EngineOutput::writeOptRstFile(
     const size_t   step
 )
 {
-    startTimingsSection("RstFileOutput");
+    auto _ = scoped("RstFileOutput");
     _rstFileOutput->write(simulationBox, Thermostat(), step);
-    stopTimingsSection("RstFileOutput");
 }
 
 /**
@@ -260,9 +278,8 @@ void EngineOutput::writeVirialFile(
     const PhysicalData &physicalData
 )
 {
-    startTimingsSection("VirialOutput");
+    auto _ = scoped("VirialOutput");
     _virialOutput->write(step, physicalData);
-    stopTimingsSection("VirialOutput");
 }
 
 /**
@@ -276,9 +293,8 @@ void EngineOutput::writeStressFile(
     const PhysicalData &physicalData
 )
 {
-    startTimingsSection("StressOutput");
+    auto _ = scoped("StressOutput");
     _stressOutput->write(step, physicalData);
-    stopTimingsSection("StressOutput");
 }
 
 /**
@@ -289,9 +305,8 @@ void EngineOutput::writeStressFile(
  */
 void EngineOutput::writeBoxFile(const size_t step, const Box &simulationBox)
 {
-    startTimingsSection("BoxFileOutput");
+    auto _ = scoped("BoxFileOutput");
     _boxFileOutput->write(step, simulationBox);
-    stopTimingsSection("BoxFileOutput");
 }
 
 /**
@@ -301,13 +316,12 @@ void EngineOutput::writeBoxFile(const size_t step, const Box &simulationBox)
  * @param optimizer
  */
 void EngineOutput::writeOptFile(
-    const size_t         step,
-    const pq::Optimizer &optimizer
+    const size_t          step,
+    const opt::Optimizer &optimizer
 )
 {
-    startTimingsSection("OptOutput");
+    auto _ = scoped("OptOutput");
     _optOutput->write(step, optimizer);
-    stopTimingsSection("OptOutput");
 }
 
 /**
@@ -318,57 +332,68 @@ void EngineOutput::writeOptFile(
  */
 void EngineOutput::writeRingPolymerRstFile(std::vector<SimulationBox> &beads)
 {
-    startTimingsSection("RingPolymerRestartFileOutput");
+    auto _ = scoped("RingPolymerRestartFileOutput");
     _rpmdRstFileOutput->write(beads);
-    stopTimingsSection("RingPolymerRestartFileOutput");
 }
 
 /**
  * @brief wrapper for ring polymer xyz file output function
  *
  * @param beads
+ * @param step
  */
-void EngineOutput::writeRingPolymerXyzFile(std::vector<SimulationBox> &beads)
+void EngineOutput::writeRingPolymerXyzFile(
+    std::vector<SimulationBox> &beads,
+    const size_t                step
+)
 {
-    startTimingsSection("RingPolymerTrajectoryOutput");
-    _rpmdXyzOutput->writeXyz(beads);
-    stopTimingsSection("RingPolymerTrajectoryOutput");
+    auto _ = scoped("RingPolymerTrajectoryOutput");
+    _rpmdXyzOutput->writeXyz(beads, step);
 }
 
 /**
  * @brief wrapper for ring polymer velocity file output function
  *
  * @param beads
+ * @param step
  */
-void EngineOutput::writeRingPolymerVelFile(std::vector<SimulationBox> &beads)
+void EngineOutput::writeRingPolymerVelFile(
+    std::vector<SimulationBox> &beads,
+    const size_t                step
+)
 {
-    startTimingsSection("RingPolymerTrajectoryOutput");
-    _rpmdVelOutput->writeVelocities(beads);
-    stopTimingsSection("RingPolymerTrajectoryOutput");
+    auto _ = scoped("RingPolymerTrajectoryOutput");
+    _rpmdVelOutput->writeVelocities(beads, step);
 }
 
 /**
  * @brief wrapper for ring polymer force file output function
  *
  * @param beads
+ * @param step
  */
-void EngineOutput::writeRingPolymerForceFile(std::vector<SimulationBox> &beads)
+void EngineOutput::writeRingPolymerForceFile(
+    std::vector<SimulationBox> &beads,
+    const size_t                step
+)
 {
-    startTimingsSection("RingPolymerTrajectoryOutput");
-    _rpmdForceOutput->writeForces(beads);
-    stopTimingsSection("RingPolymerTrajectoryOutput");
+    auto _ = scoped("RingPolymerTrajectoryOutput");
+    _rpmdForceOutput->writeForces(beads, step);
 }
 
 /**
  * @brief wrapper for ring polymer charge file output function
  *
  * @param beads
+ * @param step
  */
-void EngineOutput::writeRingPolymerChargeFile(std::vector<SimulationBox> &beads)
+void EngineOutput::writeRingPolymerChargeFile(
+    std::vector<SimulationBox> &beads,
+    const size_t                step
+)
 {
-    startTimingsSection("RingPolymerTrajectoryOutput");
-    _rpmdChargeOutput->writeCharges(beads);
-    stopTimingsSection("RingPolymerTrajectoryOutput");
+    auto _ = scoped("RingPolymerTrajectoryOutput");
+    _rpmdChargeOutput->writeCharges(beads, step);
 }
 
 /**
@@ -382,9 +407,8 @@ void EngineOutput::writeRingPolymerEnergyFile(
     const std::vector<PhysicalData> &dataVector
 )
 {
-    startTimingsSection("RingPolymerEnergyOutput");
+    auto _ = scoped("RingPolymerEnergyOutput");
     _rpmdEnergyOutput->write(step, dataVector);
-    stopTimingsSection("RingPolymerEnergyOutput");
 }
 
 /**
@@ -436,6 +460,16 @@ MomentumOutput &EngineOutput::getMomentumOutput() { return *_momentumOutput; }
  * @return TrajectoryOutput
  */
 TrajectoryOutput &EngineOutput::getXyzOutput() { return *_xyzOutput; }
+
+/**
+ * @brief getter for hybrid center xyz output
+ *
+ * @return TrajectoryOutput
+ */
+TrajectoryOutput &EngineOutput::getXyzHybridCenterOutput()
+{
+    return *_xyzHybridCenterOutput;
+}
 
 /**
  * @brief getter for velocity output

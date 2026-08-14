@@ -10,12 +10,9 @@ target_include_directories(testUtils
 
 target_link_libraries(testUtils
     PUBLIC
+    gtest
     engine
     potential
     coulombPotential
     nonCoulombPotential
-)
-
-install(TARGETS testUtils
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
 )

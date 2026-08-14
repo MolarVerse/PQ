@@ -1,1 +1,0 @@
-- Reject aliased cell-list layouts.

@@ -48,10 +48,8 @@
 #include "thermostatSetup.hpp"              // for setupThermostat
 #include "timer.hpp"                        // for Timings
 #include "topologyReader.hpp"               // for readTopologyFile
-
-#ifdef WITH_KOKKOS
-#include "kokkosSetup.hpp"   // for setupKokkos
-#endif
+#include "waterModelSettings.hpp"           // for WaterModelSettings
+#include "waterModelSetup.hpp"              // for setupWaterModel
 
 using namespace engine;
 using namespace input;
@@ -72,12 +70,13 @@ using namespace setup::resetKinetics;
  * @param inputFileName
  * @param engine
  */
-void setup::setupRequestedJob(const std::string &inputFileName, Engine &engine)
+void setup::setupRequestedJob(const std::string& inputFileName, Engine& engine)
 {
-    auto simulationTimer = Timer("Simulation");
-    auto setupTimer      = Timer("Setup");
+    auto setupTimer = Timer(TimerId::Setup);
 
-    startSetup(simulationTimer, setupTimer, engine);
+    auto _ = setupTimer.scoped("TotalSetup");
+
+    startSetup(engine);
 
     readInputFile(inputFileName, engine);
 
@@ -90,11 +89,7 @@ void setup::setupRequestedJob(const std::string &inputFileName, Engine &engine)
     // needs setup of engine before reading guff.dat
     readGuffDat(engine);
 
-#ifdef WITH_KOKKOS
-    setupKokkos(engine);
-#endif
-
-    endSetup(simulationTimer, setupTimer, engine);
+    endSetup(setupTimer, engine);
 }
 
 /**
@@ -102,15 +97,8 @@ void setup::setupRequestedJob(const std::string &inputFileName, Engine &engine)
  *
  * @param engine
  */
-void setup::startSetup(
-    Timer  &simulationTimer,
-    Timer  &setupTimer,
-    Engine &engine
-)
+void setup::startSetup(engine::Engine& engine)
 {
-    simulationTimer.startTimingsSection();
-    setupTimer.startTimingsSection("TotalSetup");
-
     engine.getStdoutOutput().writeHeader();
 }
 
@@ -119,17 +107,10 @@ void setup::startSetup(
  *
  * @param engine
  */
-void setup::endSetup(
-    const Timer &simulationTimer,
-    Timer       &setupTimer,
-    Engine      &engine
-)
+void setup::endSetup(timings::Timer& setupTimer, Engine& engine)
 {
     engine.getStdoutOutput().writeSetupCompleted();
     engine.getLogOutput().writeSetupCompleted();
-
-    setupTimer.stopTimingsSection("TotalSetup");
-    engine.getTimer().addSimulationTimer(simulationTimer);
     engine.addTimer(setupTimer);
 }
 
@@ -139,7 +120,7 @@ void setup::endSetup(
  * @param inputFileName
  * @param engine
  */
-void setup::readFiles(Engine &engine)
+void setup::readFiles(Engine& engine)
 {
     readMolDescriptor(engine);
 
@@ -157,7 +138,7 @@ void setup::readFiles(Engine &engine)
  *
  * @param engine
  */
-void setup::setupEngine(Engine &engine)
+void setup::setupEngine(Engine& engine)
 {
     if (Settings::isQMActivated())
         setupQM(engine);
@@ -189,12 +170,15 @@ void setup::setupEngine(Engine &engine)
     if (ForceFieldSettings::isActive())
         setupForceField(engine);
 
+    if (WaterModelSettings::isWaterModelSet())
+        setupWaterModel(engine);
+
     setupConstraints(engine);
 
     if (Settings::isMDJobType())
         setupRingPolymer(engine);
 
-    if (Settings::isQMMMActivated())
+    if (Settings::isHybridJobtype())
         setupHybrid(engine);
 
     if (Settings::isOptJobType())

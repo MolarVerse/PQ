@@ -47,9 +47,13 @@ using namespace customException;
  * cell-number <size_t>
  *
  * @param engine
+ * @param cellListPtr pointer to the cell list object
  */
-CellListInputParser::CellListInputParser(Engine &engine)
-    : InputFileParser(engine)
+CellListInputParser::CellListInputParser(
+    engine::Engine                          &engine,
+    std::shared_ptr<simulationBox::CellList> cellListPtr
+)
+    : InputFileParser(engine), _cellListPtr(cellListPtr)
 {
     addKeyword(
         std::string("cell-list"),
@@ -85,10 +89,10 @@ void CellListInputParser::parseCellListActivated(
     const auto cellListActivated = toLowerCopy(lineElements[2]);
 
     if (cellListActivated == "on")
-        _engine.getCellList().activate();
+        _cellListPtr->activate();
 
     else if (cellListActivated == "off")
-        _engine.getCellList().deactivate();
+        _cellListPtr->deactivate();
 
     else
         throw InputFileException(
@@ -119,7 +123,7 @@ void CellListInputParser::parseNumberOfCells(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto cellNumber = stoi(lineElements[2]);
+    const auto cellNumber = stringToInt(lineElements[2]);
 
     if (cellNumber <= 0)
         throw InputFileException(
@@ -127,5 +131,5 @@ void CellListInputParser::parseNumberOfCells(
             lineElements[2]
         );
 
-    _engine.getCellList().setNumberOfCells(size_t(cellNumber));
+    _cellListPtr->setNumberOfCells(size_t(cellNumber));
 }

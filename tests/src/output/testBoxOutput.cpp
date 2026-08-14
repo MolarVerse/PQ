@@ -66,7 +66,8 @@ TEST(TestBoxFileOutput, writeEmitsStepAndDimensionsAndAngles)
     // Orthorhombic angles: 90 / 90 / 90.
     EXPECT_NE(content.find("90.00000000"), std::string::npos);
 
-    ::remove(path.c_str());
+    const auto errorCode = std::remove(path.c_str());
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: " << path;
 }
 
 TEST(TestBoxFileOutput, writeOneLinePerCall)
@@ -87,8 +88,10 @@ TEST(TestBoxFileOutput, writeOneLinePerCall)
     // Two newlines for two steps written.
     size_t newlines = 0;
     for (auto c : content)
-        if (c == '\n') ++newlines;
+        if (c == '\n')
+            ++newlines;
     EXPECT_EQ(newlines, 2u);
 
-    ::remove(path.c_str());
+    const auto errorCode = std::remove(path.c_str());
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: " << path;
 }

@@ -22,23 +22,26 @@
 
 #include "turbomoleRunner.hpp"
 
-#include <cstddef>      // for size_t
 #include <cstdlib>      // for system
+#include <filesystem>   // for remove
 #include <format>       // for format
 #include <fstream>      // for ofstream
 #include <string>       // for string
 
-#include "atom.hpp"              // for Atom
-#include "constants.hpp"         // for constants
-#include "exceptions.hpp"        // for InputFileException
-#include "qmSettings.hpp"        // for QMSettings
-#include "simulationBox.hpp"     // for SimulationBox
-#include "stringUtilities.hpp"   // for fileExists
+#include "constants.hpp"            // for constants
+#include "exceptions.hpp"           // for InputFileException
+#include "fileSettings.hpp"         // for FileSettings
+#include "hybridConfigurator.hpp"   // for HybridConfigurator
+#include "hybridSettings.hpp"       // for SmoothingMethod
+#include "qmSettings.hpp"           // for QMSettings
+#include "simulationBox.hpp"        // for SimulationBox
+#include "stringUtilities.hpp"      // for fileExists
 
 using QM::TurbomoleRunner;
 
 using namespace simulationBox;
 using namespace customException;
+using namespace configurator;
 using namespace constants;
 using namespace settings;
 using namespace utilities;
@@ -46,29 +49,25 @@ using namespace utilities;
 /**
  * @brief writes the coords file in turbomole format
  *
- * @param simBox
+ * @param box
  */
-void TurbomoleRunner::writeCoordsFile(SimulationBox &simBox)
+void TurbomoleRunner::writeCoordsFile(SimulationBox &box)
 {
     const std::string fileName = "coord";
     std::ofstream     coordsFile(fileName);
 
     coordsFile << "$coord\n";
 
-    const auto nAtoms = simBox.getNumberOfQMAtoms();
-
-    for (size_t i = 0; i < nAtoms; ++i)
+    for (const auto &atom : box.getQMAtoms())
     {
-        const auto &atom = simBox.getQMAtom(i);
-        const auto  pos  = atom.getPosition() * _ANGSTROM_TO_BOHR_;
+        const auto pos = atom->getPosition() * ANGSTROM_TO_BOHR;
 
-        // turbomole does not support tabs in the coord file
         coordsFile << std::format(
             "   {:16.12f}   {:16.12f}   {:16.12f}   {}\n",
             pos[0],
             pos[1],
             pos[2],
-            atom.getName()
+            atom->getName()
         );
     }
 
@@ -77,24 +76,80 @@ void TurbomoleRunner::writeCoordsFile(SimulationBox &simBox)
     coordsFile.close();
 }
 
+void TurbomoleRunner::writePointChargeFile(simulationBox::SimulationBox &box)
+{
+    const std::string fileName = FileSettings::getPointChargeFileName();
+    std::ofstream     pcFile(fileName);
+
+    using enum HybridZone;
+    for (const auto &mol : box.getInactiveMolecules())
+    {
+        const auto zone = mol.getHybridZone();
+
+        if (zone == SMOOTHING || zone == POINT_CHARGE)
+            for (const auto &atom : mol.getAtoms())
+            {
+                const auto pos = atom->getPosition() * ANGSTROM_TO_BOHR;
+                pcFile << std::format(
+                    "{:16.12f}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
+                    pos[0],
+                    pos[1],
+                    pos[2],
+                    atom->getPartialCharge()
+                );
+                _usePointCharges = true;
+            }
+    }
+    pcFile.close();
+
+    if (!_usePointCharges)
+        std::filesystem::remove(fileName);
+}
+
 /**
  * @brief executes the external qm program
  *
  */
-void TurbomoleRunner::execute()
+void TurbomoleRunner::execute(SimulationBox &box)
 {
-    const auto scriptFile = _scriptPath + QMSettings::getQMScript();
+    using enum settings::SmoothingMethod;
+
+    const auto scriptFile = resolveScriptPath(QMSettings::getQMScript());
 
     if (!fileExists(scriptFile))
-        throw InputFileException(std::format(
-            "Turbomole script file \"{}\" does not exist.",
-            scriptFile
-        ));
+        throw InputFileException(
+            std::format(
+                "Turbomole script file \"{}\" does not exist.",
+                scriptFile
+            )
+        );
 
-    const auto reuseCharges = _isFirstExecution ? 1 : 0;
+    auto charge         = box.calcActiveMolCharge();
+    auto molChangedZone = HybridConfigurator::getMoleculeChangedZone();
 
-    const auto command = std::format("{} 0 {} 0 0 0", scriptFile, reuseCharges);
-    ::system(command.c_str());
+    // TODO: https://github.com/MolarVerse/PQ/issues/200
+    if (HybridSettings::getSmoothingMethod() == EXACT)
+        molChangedZone = true;
+
+    const auto runTMDefine     = molChangedZone || _isFirstExecution ? 1 : 0;
+    const auto usePointCharges = _usePointCharges ? 1 : 0;
+
+    const auto command = std::format(
+        "{} {} {} {} {} {}",
+        scriptFile,
+        charge,
+        runTMDefine,
+        usePointCharges,
+        FileSettings::getTMFileName(),
+        FileSettings::getPointChargeFileName()
+    );
+    const auto status = ::system(command.c_str());
+
+    if (status != 0)
+        throw QMRunnerException(
+            std::format("Turbomole runner failed with exit status {}.", status)
+        );
 
     _isFirstExecution = false;
+    _usePointCharges  = false;
 }

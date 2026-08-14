@@ -26,6 +26,8 @@
 
 #include <cstddef>
 #include <cstdio>
+#include <format>
+#include <iostream>
 
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
@@ -45,7 +47,8 @@ int main()
 {
     settings::TimingsSettings::setTimeStep(0.001);
 
-    auto  box       = benchSetup::makePopulatedBox(20, 3);
+    auto box =
+        benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
     auto &molecules = box.getMolecules();
 
     auto constr = constraints::Constraints();
@@ -77,6 +80,6 @@ int main()
     }
 
     // read state so the loop cannot be optimized away
-    std::printf("%.6f\n", box.calculateMomentum()[0]);
+    std::cout << std::format("{:.6f}\n", box.calculateMomentum()[0]);
     return 0;
 }

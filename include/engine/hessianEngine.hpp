@@ -27,47 +27,58 @@
 #include <memory>
 
 #include "engine.hpp"
-#include "typeAliases.hpp"
+#include "hessianBuilder.hpp"
+#include "learningRateStrategy.hpp"
 
 namespace engine
 {
     class HessianEngine : public Engine
     {
        private:
-        pq::SharedPhysicalData _physicalDataOld =
-            std::make_shared<pq::PhysicalData>();
+        std::shared_ptr<physicalData::PhysicalData> _physicalDataOld =
+            std::make_shared<physicalData::PhysicalData>();
 
-        pq::SharedOptimizer    _optimizer;
-        pq::SharedLearningRate _learningRateStrategy;
-        pq::SharedEvaluator    _evaluator;
+        std::shared_ptr<opt::Optimizer>            _optimizer;
+        std::shared_ptr<opt::LearningRateStrategy> _learningRateStrategy;
+        std::shared_ptr<opt::Evaluator>            _evaluator;
 
         bool _converged  = false;
         bool _optStopped = false;
 
-        [[nodiscard]] pq::SharedEvaluator setupEvaluator();
-        [[nodiscard]] pq::SharedHessianBuilder setupHessianBuilder() const;
+        [[nodiscard]]
+        std::shared_ptr<opt::Evaluator> setupEvaluator();
+        [[nodiscard]]
+        std::shared_ptr<opt::HessianBuilder> setupHessianBuilder() const;
 
-        void setupOptimization(const pq::SharedEvaluator &evaluator);
+        void setupOptimization(
+            const std::shared_ptr<opt::Evaluator> &evaluator
+        );
         void runOptimization();
         void takeOptimizationStep();
         void writeOptimizationOutput();
 
-        [[nodiscard]] pq::SharedOptimizer    setupEmptyOptimizer();
-        [[nodiscard]] pq::SharedLearningRate setupLearningRateStrategy();
-        void setupConvergence(pq::SharedOptimizer &optimizer);
-        void setupMinMaxLearningRate(pq::SharedLearningRate &learningRate);
+        [[nodiscard]]
+        std::shared_ptr<opt::Optimizer> setupEmptyOptimizer();
+        [[nodiscard]]
+        std::shared_ptr<opt::LearningRateStrategy> setupLearningRateStrategy();
+
+        void setupConvergence(std::shared_ptr<opt::Optimizer> &optimizer);
+        void setupMinMaxLearningRate(
+            std::shared_ptr<opt::LearningRateStrategy> &learningRate
+        );
         void writeOptimizationSetupInfo();
 
-        void writeHessian(const pq::HessianMatrix &hessian) const;
-        void writeHessianInfo(const pq::HessianMatrix &hessian) const;
+        void writeHessian(const opt::HessianMatrix &hessian) const;
+        void writeHessianInfo(const opt::HessianMatrix &hessian) const;
         void addTimers();
 
        public:
         void run() final;
         void writeOutput() final;
 
-        [[nodiscard]] pq::SharedPhysicalData getSharedPhysicalDataOld();
-        [[nodiscard]] output::OptOutput     &getOptOutput();
+        [[nodiscard]] std::shared_ptr<physicalData::PhysicalData> getSharedPhysicalDataOld(
+        );
+        [[nodiscard]] output::OptOutput &getOptOutput();
     };
 
 }   // namespace engine

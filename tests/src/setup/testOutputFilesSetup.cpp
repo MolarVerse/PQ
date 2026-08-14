@@ -22,7 +22,7 @@
 
 #include <gtest/gtest.h>
 
-#include <cstdio>
+#include <filesystem>
 #include <fstream>
 #include <string>
 #include <vector>
@@ -42,19 +42,24 @@ namespace
     // default value, so we must use the same prefix across tests. Each test
     // wipes the on-disk files first so opening doesn't fail with
     // "file already exists".
-    constexpr const char *_PREFIX = "ofsTest";
+    constexpr const char *PREFIX = "ofsTest";
 
     void cleanupPrefix()
     {
         const std::vector<std::string> suffixes = {
-            ".log",      ".info",     ".rst",        ".en",        ".xyz",
-            ".timings",  ".force",    ".instant_en", ".vel",       ".chrg",
-            ".mom",      ".vir",      ".stress",     ".box",       ".rpmd.rst",
-            ".rpmd.xyz", ".rpmd.vel", ".rpmd.force", ".rpmd.chrg", ".rpmd.en",
-            ".opt",      ".ref"
+            ".log",        ".info",       ".rst",        ".en",
+            ".xyz",        ".center.xyz", ".timings",    ".force",
+            ".instant_en", ".vel",        ".chrg",       ".mom",
+            ".vir",        ".stress",     ".box",        ".rpmd.rst",
+            ".rpmd.xyz",   ".rpmd.vel",   ".rpmd.force", ".rpmd.chrg",
+            ".rpmd.en",    ".opt",        ".ref"
         };
         for (const auto &s : suffixes)
-            ::remove((std::string(_PREFIX) + s).c_str());
+        {
+            static_cast<void>(
+                std::filesystem::remove((std::string(PREFIX) + s).c_str())
+            );
+        }
     }
 }   // namespace
 
@@ -63,20 +68,39 @@ TEST_F(TestSetup, setupOutputFilesOptJobReplaceDefaultsAndAssignsOptFile)
     cleanupPrefix();
     Settings::setJobtype(JobType::MM_OPT);
     Settings::setIsRingPolymerMDActivated(false);
-    OutputFileSettings::setFilePrefix(_PREFIX);
+    OutputFileSettings::setFilePrefix(PREFIX);
 
     EXPECT_NO_THROW(setupOutputFiles(*_engine));
 
     // After setup, the log/timings/info filenames are now prefix-substituted.
     EXPECT_EQ(
         OutputFileSettings::getLogFileName(),
-        std::string(_PREFIX) + ".log"
+        std::string(PREFIX) + ".log"
     );
     EXPECT_EQ(
         OutputFileSettings::getOptFileName(),
-        std::string(_PREFIX) + ".opt"
+        std::string(PREFIX) + ".opt"
     );
 
+    cleanupPrefix();
+}
+
+TEST_F(TestSetup, setupOutputFilesHybridPathAssignsCenterFile)
+{
+    cleanupPrefix();
+    Settings::setJobtype(JobType::QMMM_MD);
+    Settings::setIsRingPolymerMDActivated(false);
+    OutputFileSettings::setFilePrefix(PREFIX);
+
+    OutputFilesSetup s(*_mdEngine);
+    EXPECT_NO_THROW(s.setup());
+
+    EXPECT_EQ(
+        _mdEngine->getXyzHybridCenterOutput().getFilename(),
+        std::string(PREFIX) + ".center.xyz"
+    );
+
+    _mdEngine->getXyzHybridCenterOutput().close();
     cleanupPrefix();
 }
 
@@ -85,7 +109,7 @@ TEST_F(TestSetup, setupOutputFilesMDPathPreservesLegacyEnergyFormatByDefault)
     cleanupPrefix();
     Settings::setJobtype(JobType::MM_MD);
     Settings::setIsRingPolymerMDActivated(false);
-    OutputFileSettings::setFilePrefix(_PREFIX);
+    OutputFileSettings::setFilePrefix(PREFIX);
     OutputFileSettings::setIncludeOutputMetadata(false);
     TimingsSettings::setTimeStep(0.5);
 
@@ -95,8 +119,8 @@ TEST_F(TestSetup, setupOutputFilesMDPathPreservesLegacyEnergyFormatByDefault)
     _mdEngine->getEnergyOutput().close();
     _mdEngine->getInstantEnergyOutput().close();
 
-    std::ifstream energyFile(std::string(_PREFIX) + ".en");
-    std::ifstream instantEnergyFile(std::string(_PREFIX) + ".instant_en");
+    std::ifstream energyFile(std::string(PREFIX) + ".en");
+    std::ifstream instantEnergyFile(std::string(PREFIX) + ".instant_en");
     std::string   line;
 
     EXPECT_FALSE(static_cast<bool>(std::getline(energyFile, line)));
@@ -110,7 +134,7 @@ TEST_F(TestSetup, setupOutputFilesMDPathWritesEnabledMetadata)
     cleanupPrefix();
     Settings::setJobtype(JobType::MM_MD);
     Settings::setIsRingPolymerMDActivated(false);
-    OutputFileSettings::setFilePrefix(_PREFIX);
+    OutputFileSettings::setFilePrefix(PREFIX);
     OutputFileSettings::setIncludeOutputMetadata(true);
     TimingsSettings::setTimeStep(0.5);
 
@@ -120,8 +144,8 @@ TEST_F(TestSetup, setupOutputFilesMDPathWritesEnabledMetadata)
     _mdEngine->getEnergyOutput().close();
     _mdEngine->getInstantEnergyOutput().close();
 
-    std::ifstream energyFile(std::string(_PREFIX) + ".en");
-    std::ifstream instantEnergyFile(std::string(_PREFIX) + ".instant_en");
+    std::ifstream energyFile(std::string(PREFIX) + ".en");
+    std::ifstream instantEnergyFile(std::string(PREFIX) + ".instant_en");
     std::string   line;
 
     std::getline(energyFile, line);
@@ -138,7 +162,7 @@ TEST_F(TestSetup, setupOutputFilesRPMDPathRunsWithoutThrowing)
     cleanupPrefix();
     Settings::setJobtype(JobType::MM_MD);
     Settings::setIsRingPolymerMDActivated(true);
-    OutputFileSettings::setFilePrefix(_PREFIX);
+    OutputFileSettings::setFilePrefix(PREFIX);
 
     OutputFilesSetup s(*_mdEngine);
     EXPECT_NO_THROW(s.setup());

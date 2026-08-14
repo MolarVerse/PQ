@@ -26,7 +26,15 @@
 
 #include <string>   // for string
 
-#include "typeAliases.hpp"
+namespace engine
+{
+    class Engine;   // forward declaration
+}   // namespace engine
+
+namespace timings
+{
+    class Timer;   // forward declaration
+}   // namespace timings
 
 /**
  * @namespace setup
@@ -39,13 +47,13 @@
  */
 namespace setup
 {
-    void setupRequestedJob(const std::string &inputFileName, pq::Engine &);
+    void setupRequestedJob(const std::string &inputFileName, engine::Engine &);
 
-    void startSetup(pq::Timer &, pq::Timer &, pq::Engine &);
-    void endSetup(const pq::Timer &, pq::Timer &, pq::Engine &);
+    void startSetup(engine::Engine &);
+    void endSetup(timings::Timer &, engine::Engine &);
 
-    void readFiles(pq::Engine &);
-    void setupEngine(pq::Engine &);
+    void readFiles(engine::Engine &);
+    void setupEngine(engine::Engine &);
 }   // namespace setup
 
 #endif   // _SETUP_HPP_

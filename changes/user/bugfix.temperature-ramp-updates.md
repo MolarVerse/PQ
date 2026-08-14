@@ -1,0 +1,1 @@
+- Temperature ramps validate their schedule and reach the requested target across partial final intervals.

@@ -28,19 +28,29 @@
 #include <vector>
 
 #include "hessianSettings.hpp"
-#include "typeAliases.hpp"
+#include "vector3d.hpp"
+
+namespace simulationBox
+{
+    class SimulationBox;   // forward declaration
+}   // namespace simulationBox
 
 namespace opt
 {
+    class Evaluator;   // forward declaration
+
+    using HessianMatrix = std::vector<std::vector<double>>;
+
     class HessianBuilder
     {
        public:
         HessianBuilder()          = default;
         virtual ~HessianBuilder() = default;
 
-        [[nodiscard]] virtual pq::HessianMatrix build(
-            Evaluator          &evaluator,
-            pq::SimBox         &simulationBox
+        [[nodiscard]]
+        virtual HessianMatrix build(
+            Evaluator                    &evaluator,
+            simulationBox::SimulationBox &simulationBox
         ) const = 0;
     };
 
@@ -49,32 +59,34 @@ namespace opt
        protected:
         double _displacement;
 
-        [[nodiscard]] std::vector<double> evaluateForces(
-            Evaluator         &evaluator,
-            pq::SimBox        &simulationBox,
-            const size_t       coordinateIndex,
-            const double       displacement
+        [[nodiscard]]
+        std::vector<double> evaluateForces(
+            Evaluator                    &evaluator,
+            simulationBox::SimulationBox &simulationBox,
+            const size_t                  coordinateIndex,
+            const double                  displacement
         ) const;
 
         static void restorePositions(
-            pq::SimBox                  &simulationBox,
-            const std::vector<pq::Vec3D> &positions
+            simulationBox::SimulationBox            &simulationBox,
+            const std::vector<linearAlgebra::Vec3D> &positions
         );
 
         static void displaceCoordinate(
-            pq::SimBox        &simulationBox,
-            const size_t       coordinateIndex,
-            const double       displacement
+            simulationBox::SimulationBox &simulationBox,
+            const size_t                  coordinateIndex,
+            const double                  displacement
         );
 
-        [[nodiscard]] static std::vector<double> flattenForces(
-            const pq::SimBox &simulationBox
+        [[nodiscard]]
+        static std::vector<double> flattenForces(
+            const simulationBox::SimulationBox &simulationBox
         );
 
        public:
         explicit ForceDifferenceHessianBuilder(const double displacement);
 
-        static void symmetrize(pq::HessianMatrix &hessian);
+        static void symmetrize(HessianMatrix &hessian);
     };
 
     class CentralForceDifferenceHessianBuilder
@@ -83,9 +95,10 @@ namespace opt
        public:
         using ForceDifferenceHessianBuilder::ForceDifferenceHessianBuilder;
 
-        [[nodiscard]] pq::HessianMatrix build(
-            Evaluator          &evaluator,
-            pq::SimBox         &simulationBox
+        [[nodiscard]]
+        HessianMatrix build(
+            Evaluator                    &evaluator,
+            simulationBox::SimulationBox &simulationBox
         ) const override;
     };
 
@@ -95,9 +108,10 @@ namespace opt
        public:
         using ForceDifferenceHessianBuilder::ForceDifferenceHessianBuilder;
 
-        [[nodiscard]] pq::HessianMatrix build(
-            Evaluator          &evaluator,
-            pq::SimBox         &simulationBox
+        [[nodiscard]]
+        HessianMatrix build(
+            Evaluator                    &evaluator,
+            simulationBox::SimulationBox &simulationBox
         ) const override;
     };
 
@@ -107,22 +121,25 @@ namespace opt
        public:
         using ForceDifferenceHessianBuilder::ForceDifferenceHessianBuilder;
 
-        [[nodiscard]] pq::HessianMatrix build(
-            Evaluator          &evaluator,
-            pq::SimBox         &simulationBox
+        [[nodiscard]]
+        HessianMatrix build(
+            Evaluator                    &evaluator,
+            simulationBox::SimulationBox &simulationBox
         ) const override;
     };
 
     class AnalyticHessianBuilder : public HessianBuilder
     {
        public:
-        [[nodiscard]] pq::HessianMatrix build(
-            Evaluator          &evaluator,
-            pq::SimBox         &simulationBox
+        [[nodiscard]]
+        HessianMatrix build(
+            Evaluator                    &evaluator,
+            simulationBox::SimulationBox &simulationBox
         ) const override;
     };
 
-    [[nodiscard]] std::shared_ptr<HessianBuilder> makeHessianBuilder(
+    [[nodiscard]]
+    std::shared_ptr<HessianBuilder> makeHessianBuilder(
         const settings::HessianBuilderType builder,
         const double                       displacement
     );

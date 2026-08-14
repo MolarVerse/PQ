@@ -32,6 +32,7 @@ target_include_directories(output
 target_link_libraries(output
     PUBLIC
     utilities
+    hybridConfigurator
     physicalData
     simulationBox
     optimization
@@ -39,15 +40,10 @@ target_link_libraries(output
     thermostat
 )
 
-if(BUILD_WITH_TESTS)
-    target_link_libraries(output
-        PUBLIC
-        gtest
-    )
-endif()
+target_precompile_headers(output REUSE_FROM pq_pch)
 
 install(TARGETS output
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+    DESTINATION lib
 )
 
 add_subdirectory(references)

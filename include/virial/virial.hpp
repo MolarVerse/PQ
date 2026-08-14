@@ -24,42 +24,27 @@
 
 #define _VIRIAL_HPP_
 
-#include <string>   // for string
+#include "staticMatrix.hpp"
 
-#include "timer.hpp"          // for Timer
-#include "typeAliases.hpp"
+namespace simulationBox
+{
+    class SimulationBox;   // forward declaration
+}
 
 namespace virial
 {
-    /**
-     * @class Virial
-     *
-     * @brief Base class for virial calculation
-     *
-     * @details implements virial calculation, which is valid for both atomic
-     * and molecular systems
-     */
-    class Virial : public timings::Timer
-    {
-       protected:
-        std::string _virialType;   // TODO: make this an enum
+    [[nodiscard]]
+    linearAlgebra::tensor3D calculateQMVirial(
+        const simulationBox::SimulationBox&
+    );
 
-        pq::tensor3D _virial;
+    [[nodiscard]]
+    linearAlgebra::tensor3D calculateVirial(simulationBox::SimulationBox&);
 
-       public:
-        virtual ~Virial() = default;
-
-        virtual std::shared_ptr<Virial> clone() const = 0;
-
-        virtual void calculateVirial(pq::SimBox &, pq::PhysicalData &);
-        virtual void intraMolecularVirialCorrection(pq::SimBox &, pq::PhysicalData &) {
-        };
-
-        void setVirial(const pq::tensor3D &virial);
-
-        [[nodiscard]] pq::tensor3D getVirial() const;
-        [[nodiscard]] std::string  getVirialType() const;
-    };
+    [[nodiscard]]
+    linearAlgebra::tensor3D intraMolecularVirialCorrection(
+        const simulationBox::SimulationBox&
+    );
 }   // namespace virial
 
 #endif   // _VIRIAL_HPP_

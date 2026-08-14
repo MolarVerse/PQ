@@ -22,10 +22,9 @@
 
 #include "evaluator.hpp"
 
-#include "exceptions.hpp"
-
 #include "celllist.hpp"
 #include "constraints.hpp"
+#include "exceptions.hpp"
 #include "forceFieldClass.hpp"
 #include "intraNonBonded.hpp"
 #include "physicalData.hpp"
@@ -45,7 +44,7 @@ using namespace customException;
 
 bool Evaluator::supportsAnalyticHessian() const { return false; }
 
-pq::HessianMatrix Evaluator::calculateAnalyticHessian()
+HessianMatrix Evaluator::calculateAnalyticHessian()
 {
     throw UserInputException(
         "The selected evaluator does not support analytic Hessian generation."
@@ -103,7 +102,8 @@ void Evaluator::setConstraints(const std::shared_ptr<Constraints> constraints)
  *
  * @param physicalData - std::shared_ptr<PhysicalData>
  */
-void Evaluator::setPhysicalData(const std::shared_ptr<PhysicalData> physicalData
+void Evaluator::setPhysicalData(
+    const std::shared_ptr<PhysicalData> physicalData
 )
 {
     _physicalData = physicalData;
@@ -141,14 +141,4 @@ void Evaluator::setIntraNonBonded(
 )
 {
     _intraNonBonded = intraNonBonded;
-}
-
-/**
- * @brief set the virial as shared pointer
- *
- * @param virial - std::shared_ptr<Virial>
- */
-void Evaluator::setVirial(const std::shared_ptr<Virial> virial)
-{
-    _virial = virial;
 }

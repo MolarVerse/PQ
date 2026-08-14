@@ -25,6 +25,8 @@
 
 #include <cmath>
 #include <cstdio>
+#include <format>
+#include <iostream>
 
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
@@ -33,10 +35,10 @@
 #endif
 
 #include "angleForceField.hpp"
-#include "perfBenchSetup.hpp"
 #include "bondForceField.hpp"
 #include "coulombShiftedPotential.hpp"
 #include "dihedralForceField.hpp"
+#include "perfBenchSetup.hpp"
 #include "physicalData.hpp"
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
@@ -52,7 +54,7 @@ int main()
     auto coulombPotential    = potential::CoulombShiftedPotential(20.0);
     auto nonCoulombPotential = benchSetup::makeNonCoulomb();
 
-    auto molecule = benchSetup::makeMolecule(4);
+    auto molecule = benchSetup::makeMolecule({.nAtoms = 4});
 
     settings::PotentialSettings::setScale14Coulomb(0.75);
     settings::PotentialSettings::setScale14VanDerWaals(0.5);
@@ -105,8 +107,8 @@ int main()
     }
 
     // read state so the loop cannot be optimized away
-    std::printf(
-        "%.6f\n",
+    std::cout << std::format(
+        "{:.6f}\n",
         physicalData.getBondEnergy() + physicalData.getAngleEnergy() +
             physicalData.getDihedralEnergy() + molecule.getAtomForce(0)[0]
     );

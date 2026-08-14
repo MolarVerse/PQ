@@ -26,63 +26,93 @@
 
 #include <cstddef>   // for size_t
 #include <map>       // for map
+#include <optional>
 
 #include "nonCoulombPotential.hpp"
-#include "typeAliases.hpp"
+
+class TestNonCoulombPotentialFF;   // forward declaration
+
+namespace benchSetup
+{
+    struct BenchNonCoulombFFPot;   // forward declaration
+}
 
 namespace potential
 {
     class ForceFieldNonCoulomb : public NonCoulombPotential
     {
        private:
-        pq::SharedNonCoulPairVec _nonCoulPairsVec;
-        pq::SharedNonCoulPairMat _nonCoulPairsMat;
+        std::vector<std::shared_ptr<NonCoulombPair>> _nonCoulPairsVec;
+
+        struct matrix;
+        std::unique_ptr<matrix> _nonCoulPairsMatPtr;
+
+        static constexpr auto _globalVdwType1Index = 4;
+        static constexpr auto _globalVdwType2Index = 5;
 
        public:
+        ForceFieldNonCoulomb();
+        ~ForceFieldNonCoulomb() override;
+
+        ForceFieldNonCoulomb(const ForceFieldNonCoulomb &);
+        ForceFieldNonCoulomb &operator=(const ForceFieldNonCoulomb &);
+        ForceFieldNonCoulomb(ForceFieldNonCoulomb &&) noexcept;
+        ForceFieldNonCoulomb &operator=(ForceFieldNonCoulomb &&) noexcept;
+
         void setupNonCoulombicCutoffs();
         void determineInternalGlobalVdwTypes(const std::map<size_t, size_t> &);
-        void fillDiagOfNonCoulPairsMatrix(pq::SharedNonCoulPairVec &);
+        void fillDiagOfNonCoulPairsMatrix(
+            std::vector<std::shared_ptr<NonCoulombPair>> &
+        );
         void fillOffDiagOfNonCoulPairsMatrix();
-        void sortNonCoulombicsPairs(pq::SharedNonCoulPairVec &diagonalElements);
+        void sortNonCoulombicsPairs(
+            std::vector<std::shared_ptr<NonCoulombPair>> &diagonalElements
+        );
         void setOffDiagonalElement(const size_t, const size_t);
 
-        [[nodiscard]] pq::SharedNonCoulPairVec getSelfInteractionNonCoulPairs(
-        ) const;
-        [[nodiscard]] pq::OptSharedNonCoulPair findNonCoulPairByInternalTypes(
-            const size_t,
-            const size_t
-        ) const;
+        [[nodiscard]]
+        std::vector<std::shared_ptr<
+            NonCoulombPair>> getSelfInteractionNonCoulPairs() const;
 
-        void addNonCoulombicPair(const pq::SharedNonCoulPair &pair);
+        [[nodiscard]]
+        std::
+            optional<std::shared_ptr<NonCoulombPair>> findNonCoulPairByInternalTypes(
+                const size_t,
+                const size_t
+            ) const;
+
+        void addNonCoulombicPair(const std::shared_ptr<NonCoulombPair> &pair);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] pq::SharedNonCoulPair getNonCoulPair(
-            const pq::stlVectorUL &indices
+        [[nodiscard]]
+        std::shared_ptr<NonCoulombPair> getNonCoulPair(
+            const std::vector<size_t> &indices
         ) override;
 
-        [[nodiscard]] size_t getGlobalVdwType1(const pq::stlVectorUL &) const;
-        [[nodiscard]] size_t getGlobalVdwType2(const pq::stlVectorUL &) const;
-        [[nodiscard]] pq::SharedNonCoulPairVec &getNonCoulombPairsVector();
-        [[nodiscard]] pq::SharedNonCoulPairMat &getNonCoulombPairsMatrix();
+        [[nodiscard]]
+        size_t getGlobalVdwType1(const std::vector<size_t> &) const;
+        [[nodiscard]]
+        size_t getGlobalVdwType2(const std::vector<size_t> &) const;
+
+        [[nodiscard]]
+        std::vector<std::shared_ptr<NonCoulombPair>> &getNonCoulombPairsVector(
+        );
+
+        friend class ::TestNonCoulombPotentialFF;
+        friend struct benchSetup::BenchNonCoulombFFPot;
 
         /***************************
          * standard setter methods *
          ***************************/
 
-        void setNonCoulombPairsVector(const pq::SharedNonCoulPairVec &vec);
-        void setNonCoulombPairsMatrix(const pq::SharedNonCoulPairMat &mat);
-
-        template <typename T>
-        void setNonCoulombPairsMatrix(const size_t, const size_t, T &);
+        void setNonCoulombPairsVector(
+            const std::vector<std::shared_ptr<NonCoulombPair>> &vec
+        );
     };
 
 }   // namespace potential
-
-#ifndef _FORCE_FIELD_NON_COULOMB_TPP_
-#include "forceFieldNonCoulomb.tpp.hpp"   // IWYU pragma: keep - DO NOT MOVE THIS LINE
-#endif
 
 #endif   // _FORCE_FIELD_NON_COULOMB_HPP_

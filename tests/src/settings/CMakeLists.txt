@@ -1,6 +1,9 @@
 set(source_files
+    testHybridSettings.cpp
     testPotentialSettings.cpp
     testQMSettings.cpp
+    testSettings.cpp
+    testExternalQMScripts.cpp
     testOutputFileSettings.cpp
     testThermostatSettings.cpp
     testManostatSettings.cpp
@@ -8,6 +11,7 @@ set(source_files
     testFileSettings.cpp
     testConvergenceSettings.cpp
     testHessianSettings.cpp
+    testWaterModelSettings.cpp
 )
 
 foreach(source_file ${source_files})
@@ -29,9 +33,16 @@ foreach(source_file ${source_files})
         COMMAND ${test_name}
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/tests
     )
+    target_precompile_headers(${test_name} REUSE_FROM pq_test_pch)
+    target_link_libraries(${test_name} PRIVATE pq_test_pch)
 
     set_property(TEST ${test_name} PROPERTY LABELS settings)
 endforeach()
+
+target_include_directories(testExternalQMScripts
+    PRIVATE
+    ${PROJECT_SOURCE_DIR}/apps
+)
 
 if(${BUILD_WITH_GCOVR})
     include(CodeCoverage)

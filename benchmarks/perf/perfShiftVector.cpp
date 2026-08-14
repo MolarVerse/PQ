@@ -24,6 +24,8 @@
 // computation for orthorhombic and triclinic boxes (called per atom pair).
 
 #include <cstdio>
+#include <format>
+#include <iostream>
 
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
@@ -51,13 +53,13 @@ int main()
     double sink = 0.0;
     for (long i = 0; i < ITERATIONS; ++i)
     {
-        const double               x = (i & 127) * 0.3 - 19.0;
+        const double x = static_cast<double>(i & 127) * 0.3 - 19.0;
         const linearAlgebra::Vec3D v(x, 0.5 * x, -x);
 
         sink += norm(ortho.calcShiftVector(v));
         sink += norm(triclinic.calcShiftVector(v));
     }
 
-    std::printf("%.6f\n", sink);
+    std::cout << std::format("{:.6f}\n", sink);
     return 0;
 }

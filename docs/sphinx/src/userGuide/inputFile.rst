@@ -97,7 +97,7 @@ Possible options are:
 
    3. **qm-rpmd** - Represents a full quantum mechanics ring polymer molecular dynamics simulation. For more information see the :ref:`ringpolymermdKeys` section
 
-   4. **qmmm-md** - Represents a hybrid quantum mechanics - molecular mechanics molecular dynamics simulation. (Not implemented yet)
+   4. **qmmm-md** - Represents a hybrid quantum mechanics - molecular mechanics molecular dynamics simulation.
 
    5. **mm-opt** - represents a geometry optimization calculation using molecular mechanics.
 
@@ -267,8 +267,10 @@ Output Metadata
     include_output_metadata = {bool} -> false
 
 When enabled, ``include_output_metadata`` adds a comment header containing the
-simulation timestep to the averaged and instantaneous MD energy files. It is
-disabled by default to preserve the existing numeric file format.
+simulation timestep to the averaged and instantaneous MD energy files. It also
+adds the effective simulation step to the comment line of trajectory, velocity,
+force, and charge frames, including their ring-polymer variants. It is disabled
+by default to preserve the existing file formats.
 
 .. centered:: *default value* = false
 
@@ -474,6 +476,24 @@ The ``traj_file`` keyword sets the name for the :ref:`trajectoryFile`, which sto
 
 .. centered:: *default value* = "default.xyz"
 
+.. _hybridcenterfilekey:
+
+Hybrid Center File
+==================
+
+.. admonition:: Key
+    :class: tip
+
+    hybrid_center_file = {file} -> "default.center.xyz"
+
+The ``hybrid_center_file`` keyword sets the name for the :ref:`hybridCenterFile`, which stores the position of the inner region center in a hybrid type MD simulation.
+
+.. centered:: *default value* = "default.center.xyz"
+
+.. Note::
+
+    The ``hybrid_center_file`` keyword is ignored for non-hybrid-type calculations.
+
 .. _velocityfilekey:
 
 Velocity File
@@ -647,6 +667,18 @@ DFTB Setup File
 
 .. centered:: *default value* = "dftb_in.template"
 
+.. _turbomolefileKey:
+
+TURBOMOLE Setup File
+====================
+
+.. admonition:: Key
+    :class: tip
+
+    turbomole_file = {file} -> "tm_define.template"
+
+.. centered:: *default value* = "tm_define.template"
+
 .. _topologyFileKey:
 
 Topology File
@@ -815,6 +847,8 @@ Temperature Ramp Frequency
 
 With the ``temp_ramp_frequency`` keyword the user can specify the frequency of the temperature ramping from the ``start_temp`` to the ``temp`` value. If no starting temperature is given the keyword will be ignored. If a starting temperature is given and this keyword is omitted the temperature ramping will be performed, so that each step the temperature is increased by the same value.
 
+If the ramp length is not divisible by this frequency, the temperature increments are scaled by the number of scheduled updates so that the final update reaches the requested target temperature exactly.
+
 .. centered:: *default value* = 1 step
 
 .. _thermostatKey:
@@ -864,7 +898,7 @@ This keyword is used in combination with the Berendsen and velocity rescaling th
 
 With the ``t_relaxation`` keyword the relaxation time in ``ps`` (*i.e.* :math:`\tau`) of the Berendsen or stochastic velocity rescaling thermostat is set, see equations :eq:`BerendsenThermostatEquation` and :eq:`BussiDonadioParrinelloThermostatEquation`.
 
-.. centered:: *default value* = 0.1 ps
+.. centered:: *default value* = 1.0 ps
 
 .. _frictionKey:
 
@@ -959,7 +993,7 @@ This keyword is used in combination with the Berendsen and stochastic cell resca
 .. admonition:: Key
     :class: tip
 
-    p_relaxation = {double} ps -> 0.1 ps
+    p_relaxation = {double} ps -> 1.0 ps
 
 With the ``p_relaxation`` keyword the relaxation time in ``ps`` (*i.e.* :math:`\tau`) of the Berendsen or stochastic cell rescaling manostat is set.
 
@@ -1309,6 +1343,107 @@ Possible options are:
 
    3. **bonded** - non bonded interaction are described *via* GUFF formalism and bonded interactions *via* force field approach
 
+.. _waterModelKeys:
+
+*****************
+Water Model Keys
+*****************
+
+.. |H2O-DC| replace:: H\ :sub:`2`\ O-DC
+.. _H2O-DC: https://pubs.acs.org/doi/10.1021/jp3002383
+
+
+.. _intraWaterModelKey:
+
+Intramolecular Water Model
+==========================
+
+.. admonition:: Key
+    :class: tip
+
+    water_intra = {string}
+
+With the ``water_intra`` keyword the model for the intramolecular water potential can be chosen.
+
+Possible options are:
+
+   1. **SPC** - `SPC <https://doi.org/10.1007/978-94-015-7658-1_21>`__
+
+   2. **SPC_E** - `SPC/E <https://pubs.acs.org/doi/10.1021/j100308a038>`__
+
+   3. **SPC_Fw** - `SPC/Fw <https://pubs.aip.org/aip/jcp/article/124/2/024503/295556>`__
+
+   4. **qSPC_Fw** - `qSPC/Fw <https://pubs.aip.org/aip/jcp/article/125/18/184507/187988>`__
+
+   5. **SPC_DC** - `SPC/DC <https://pubs.acs.org/doi/10.1021/jp3002383>`__
+
+   6. **H2O-DC** - |H2O-DC|_
+   
+   7. **TIP3P** - `TIP3P <https://pubs.aip.org/aip/jcp/article/79/2/926/776316>`__
+
+   8. **OPC3** - `OPC3 <https://pubs.aip.org/aip/jcp/article/145/7/074501/810108>`__
+
+   9. **SPC-mTR** - `SPC-mTR <https://www.sciencedirect.com/science/article/pii/S0378381297002719>`__
+
+   10. **TIP3P-mTR** - `TIP3P-mTR <https://www.sciencedirect.com/science/article/pii/S0378381297002719>`__
+
+
+
+.. _interWaterModelKey:
+
+Intermolecular Water Model
+==========================
+
+.. admonition:: Key
+    :class: tip
+
+    water_inter = {string}
+
+With the ``water_inter`` keyword the model for the intermolecular water potential can be chosen.
+
+Possible options are:
+
+   1. **SPC** - `SPC <https://doi.org/10.1007/978-94-015-7658-1_21>`__
+
+   2. **SPC_E** - `SPC/E <https://pubs.acs.org/doi/10.1021/j100308a038>`__
+
+   3. **SPC_Fw** - `SPC/Fw <https://pubs.aip.org/aip/jcp/article/124/2/024503/295556>`__
+
+   4. **qSPC_Fw** - `qSPC/Fw <https://pubs.aip.org/aip/jcp/article/125/18/184507/187988>`__
+
+   5. **SPC_DC** - `SPC/DC <https://pubs.acs.org/doi/10.1021/jp3002383>`__
+
+   6. **H2O-DC** - |H2O-DC|_
+   
+   7. **TIP3P** - `TIP3P <https://pubs.aip.org/aip/jcp/article/79/2/926/776316>`__
+
+   8. **OPC3** - `OPC3 <https://pubs.aip.org/aip/jcp/article/145/7/074501/810108>`__
+
+   9. **SPC-mTR** - `SPC-mTR <https://www.sciencedirect.com/science/article/pii/S0378381297002719>`__
+
+   10. **TIP3P-mTR** - `TIP3P-mTR <https://www.sciencedirect.com/science/article/pii/S0378381297002719>`__
+
+
+
+
+.. _noncoulombRadiusKey:
+
+NonCoulombRadiusCutoff
+======================
+
+.. admonition:: Key
+    :class: tip
+
+    rnoncoulomb = {double} :math:`\mathrm{\mathring{A}}` -> :ref:`rcoulomb <radialCoulombCutoffKey>`
+
+With the ``rnoncoulomb`` keyword the user can specify the cutoff radius for non-coulomb interactions between water type molecules.
+
+.. Note::
+
+    This keyword is only considered if usage of an intermolecular water model is requested.
+
+.. centered:: *default value* = the value of :ref:`rcoulomb <radialCoulombCutoffKey>`
+
 .. _longrangecorrectionKeys:
 
 *********************
@@ -1586,6 +1721,7 @@ ASE-DFTB+ Approach
     slakos = {string}
 
 With the ``slakos`` keyword the user can specify the type of the ``ase-dftbplus`` approach for DFTB+ calculations.
+It is required when ``qm_prog = ase-dftbplus``.
 
 Possible options are:
 
@@ -1688,51 +1824,58 @@ With the ``rpmd_n_replica`` keyword the number of beads for a ring polymer MD si
 .. Note::
     This keyword is required for any kind of ring polymer MD simulation!
 
-.. _qmmmKeys:
+.. _HybridCalculationKeys:
 
-**********
-QM/MM Keys
-**********
+************************
+Hybrid Calculation Keys
+************************
 
-.. _qmcenterKey:
+.. _innerRegionCenterKey:
 
-QM Center
-=========
+Inner Region Center
+====================
 
 .. admonition:: Key
     :class: tip
 
-    qm_center = {selection} -> 0
+    inner_region_center = {selection} -> 0
 
-With the ``qm_center`` keyword the user can specify the center of the QM region. The default selection is the first atom of the system (*i.e.* 0). For more information about the selection grammar see the `selectionType`_ section. The ``qm_center`` if more than one atom is selected will be by default the center of mass of the selected atoms.
+With the ``inner_region_center`` keyword the user can specify the center of the inner region.
+The default selection is the first atom of the system (*i.e.* 0).
+For more information about the selection grammar see the `selectionType`_ section.
+The ``inner_region_center`` if more than one atom is selected will be by default the center of mass of the selected atoms.
 
 .. centered:: *default value* = 0
 
-.. _qmonlylistKey:
+.. _forcedinnerlistKey:
 
-QM Only List
-============
-
-.. admonition:: Key
-    :class: tip
-
-    qm_only_list = {selection}
-
-With the ``qm_only_list`` keyword the user can specify a list of atoms which should be treated as QM atoms only. This means that these atoms can not leave the QM region during the simulation. For more information about the selection grammar see the `selectionType`_ section. By default no atoms are selected.
-
-.. _mmonlylistKey:
-
-MM Only List
-============
+Forced Inner List
+==================
 
 .. admonition:: Key
     :class: tip
 
-    mm_only_list = {selection}
+    forced_inner_list = {selection}
 
-With the ``mm_only_list`` keyword the user can specify a list of atoms which should be treated as MM atoms only. This means that these atoms can not enter the QM region during the simulation. For more information about the selection grammar see the `selectionType`_ section. By default no atoms are selected.
+With the ``forced_inner_list`` keyword the user can specify a list of molecules which will always be treated with the method chosen for the inner region of the hybrid system.
+For more information about the selection grammar see the `selectionType`_ section.
+By default, no molecules are selected.
 
-.. _qmchargesKey:
+.. _forcedOuterListKey:
+
+Forced Outer List
+==================
+
+.. admonition:: Key
+    :class: tip
+
+    forced_outer_list = {selection}
+
+With the ``forced_outer_list`` keyword the user can specify a list of molecules which will always be treated with the method chosen for the outer region of the hybrid system.
+For more information about the selection grammar see the `selectionType`_ section.
+By default, no molecules are selected.
+
+.. _qmChargesKey:
 
 QM Charges
 ==========
@@ -1740,57 +1883,125 @@ QM Charges
 .. admonition:: Key
     :class: tip
 
-    qm_charges = {string} -> "off"
+    qm_charges = {string} -> "qm"
 
 With the ``qm_charges`` keyword the user can specify the charge model for the QM atoms.
 
 Possible options are:
 
-   1. **off** (default) - charges of the QM atoms are taken from the MM model
+   1. **qm** (default) - charges of the QM atoms are taken from the QM calculation
 
-   2. **on** - charges of the QM atoms are taken from the QM calculation
+   2. **mm** - charges of the QM atoms are taken from the total charge of the associated moltype specified in the :ref:`moldescriptorFile` setup file
 
-.. _qmcoreradiusKey:
+.. _smoothingMethodKey:
 
-QM Core Radius
-==============
+Smoothing Method
+=================
+.. admonition:: Key
+    :class: tip
+
+    smoothing_method = {string} -> "hotspot"
+
+With the ``smoothing_method`` keyword the user can specify the smoothing method for the hybrid calculation.
+
+Possible options are:
+
+   1. **hotspot** (default) - all molecules in the smoothing region are treated as QM molecules and their contribution is weighted according to their position in the smoothing region
+
+   2. **exact** - all possible combinations of QM and MM treatment of the molecules in the smoothing region are calculated and weighted according to a global smoothing factor --- Computational cost: O(2\ :sup:`n`) where n = number of smoothing molecules
+
+.. _coreRadiusKey:
+
+Core Radius
+===========
 
 .. admonition:: Key
     :class: tip
 
-    qm_core_radius = {double} :math:`\mathrm{\mathring{A}}` -> 0.0 :math:`\mathrm{\mathring{A}}`
+    core_radius = {double} Å -> 0.0 Å
 
-With the ``qm_core_radius`` keyword the user can specify the core radius in :math:`\mathrm{\mathring{A}}` around the ``qm_center``. The default value is 0.0 :math:`\mathrm{\mathring{A}}`, which means that the core radius is not set and only explicit QM atoms are used for the QM region.
+With the ``core_radius`` keyword the user can specify the core radius in Å around the center of the inner region in hybrid type calculations.
+The default value is 0.0 Å, which means that the core radius is not set and only :ref:`forced_inner_list <forcedInnerListKey>` atoms are treated by the method chosen for the inner region.
 
 .. centered:: *default value* = 0.0 Å
 
-.. _qmmmlayerradiuskey:
+.. _layerRadiusKey:
 
-QM/MM Layer Radius
-==================
+Layer Radius
+============
 
 .. admonition:: Key
     :class: tip
 
-    qmmm_layer_radius = {double} :math:`\mathrm{\mathring{A}}` -> 0.0 :math:`\mathrm{\mathring{A}}`
+    layer_radius = {double} Å -> 0.0 Å
 
-With the ``qmmm_layer_radius`` keyword the user can specify the layer radius in :math:`\mathrm{\mathring{A}}` around the ``qm_center``. The default value is 0.0 :math:`\mathrm{\mathring{A}}`, which means that no special QM/MM treatment is applied.
+With the ``layer_radius`` keyword the user can specify the layer radius in Å measured from the ``inner_region_center``.
+The default value is 0.0 Å, which means that no special hybrid method treatment is applied.
 
 .. centered:: *default value* = 0.0 Å
 
-.. _qmmmsmoothingradiuskey:
+.. _smoothingRegionThicknessKey:
 
-QM/MM Smoothing Radius
+Smoothing Region Thickness
+===========================
+
+.. admonition:: Key
+    :class: tip
+
+    smoothing_region_thickness = {double} Å -> 0.0 Å
+
+With the ``smoothing_region_thickness`` keyword the user can specify the thickness of the smoothing region in Å.
+The default value is 0.0 Å, which means that no smoothing is applied.
+
+.. centered:: *default value* = 0.0 Å
+
+.. _pointChargeThicknessKey:
+
+Point Charge Thickness
 ======================
 
 .. admonition:: Key
     :class: tip
 
-    qmmm_smoothing_radius = {double} :math:`\mathrm{\mathring{A}}` -> 0.0 :math:`\mathrm{\mathring{A}}`
+    point_charge_thickness = {double} Å -> 0.0 Å
 
-With the ``qmmm_smoothing_radius`` keyword the user can specify the smoothing radius in :math:`\mathrm{\mathring{A}}` of the QM atoms. The default value is 0.0 :math:`\mathrm{\mathring{A}}`, which means that the smoothing radius is not set and no smoothing is applied.
+With the ``point_charge_thickness`` keyword the user can specify the distance from the :ref:`layer_radius <layerRadiusKey>` up to which point charges are included in Å.
+The default value is 0.0 Å, which means that no point charges are included.
 
 .. centered:: *default value* = 0.0 Å
+
+.. _qmForceDistributionKey:
+
+QM Force Distribution
+=====================
+
+.. admonition:: Key
+    :class: tip
+
+    qm_force_distribution = {string} -> "none"
+
+With the ``qm_force_distribution`` keyword the user can specify how the missing QM forces from smoothing molecules are distributed among non-smoothing QM molecules.
+Each recipient QM molecule then distributes its received share to its atoms proportional to atom masses.
+
+.. Note::
+    This keyword is only relevant if the :ref:`smoothing_method <smoothingMethodKey>` keyword is set to ``hotspot``.
+
+Possible options are:
+
+   1. **none** (default) - No distribution of deficient smoothing molecules forces.
+
+   2. **equal** - Deficient smoothing molecule forces are distributed equally among all non-smoothing QM molecules.
+
+   3. **random** - Deficient smoothing molecule forces are distributed randomly among all non-smoothing QM molecules.
+
+   4. **distance-weighted** - Deficient smoothing molecule forces are distributed distance-weighted among all non-smoothing QM molecules.
+
+
+.. image:: hybrid_zones.png
+    :width: 600
+    :align: center
+    :alt: graphical representation of the different hybrid zones and the associated keywords
+
 
 .. _celllistKeys:
 

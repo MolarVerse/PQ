@@ -22,6 +22,9 @@
 
 #include <gtest/gtest.h>   // for Test, InitGoogleTest, RUN_ALL_TESTS, EXPECT_EQ
 
+#include <cstdlib>
+#include <filesystem>
+
 #include "exceptions.hpp"         // for UserInputException
 #include "gtest/gtest.h"          // for Message, TestPartResult
 #include "qmSettings.hpp"         // for QMSettings, QMMethod
@@ -175,6 +178,29 @@ TEST(QMSettingsTest, SetSlakosTypeTest)
         "Slakos notASlakosType not recognized"
     );
 }
+
+#ifdef WITH_ASE
+TEST(QMSettingsTest, ResolvesBundledSlakos)
+{
+    const auto *expectedRoot = std::getenv("PQ_TEST_EXPECTED_SLAKOS_ROOT");
+
+    for (const auto *slakos : {"3ob", "matsci"})
+    {
+        QMSettings::setSlakosType(slakos);
+        const auto path =
+            std::filesystem::weakly_canonical(QMSettings::getSlakosPath());
+
+        EXPECT_TRUE(std::filesystem::is_directory(path));
+        if (expectedRoot)
+            EXPECT_EQ(
+                path,
+                std::filesystem::weakly_canonical(
+                    std::filesystem::path(expectedRoot) / slakos / "skfiles"
+                )
+            );
+    }
+}
+#endif
 
 #ifndef WITH_ASE
 TEST(QMSettingsTest, SetBuiltInSlakosTypeRequiresAse)

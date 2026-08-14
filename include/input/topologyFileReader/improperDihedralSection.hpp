@@ -25,7 +25,11 @@
 #define _IMPROPER_DIHEDRAL_SECTION_HPP_
 
 #include "topologySection.hpp"
-#include "typeAliases.hpp"
+
+namespace engine
+{
+    class Engine;   // forward declaration
+}   // namespace engine
 
 namespace input::topology
 {
@@ -38,7 +42,10 @@ namespace input::topology
     class ImproperDihedralSection : public TopologySection
     {
        public:
-        void processSection(pq::strings &, pq::Engine &) override;
+        void processSection(
+            std::vector<std::string> &,
+            engine::Engine &
+        ) override;
 
         [[nodiscard]] std::string keyword() override;
         void                      endedNormally(const bool) const override;

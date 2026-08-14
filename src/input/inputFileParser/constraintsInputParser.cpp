@@ -28,11 +28,13 @@
 
 #include "constraintSettings.hpp"   // for ConstraintSettings
 #include "constraints.hpp"          // for Constraints
-#include "engine.hpp"               // for Engine
-#include "exceptions.hpp"           // for InputFileException
+#include "constraints.hpp"
+#include "engine.hpp"       // for Engine
+#include "exceptions.hpp"   // for InputFileException
 #include "parserUtils.hpp"
 #include "references.hpp"         // for ReferencesOutput
 #include "referencesOutput.hpp"   // for ReferencesOutput
+#include "stringUtilities.hpp"    // for stringToFiniteDouble, stringToInt
 
 using namespace input;
 using namespace engine;
@@ -50,9 +52,13 @@ using namespace customException;
  * rattle-tolerance <double>
  *
  * @param engine
+ * @param constraints pointer to the constraints object
  */
-ConstraintsInputParser::ConstraintsInputParser(Engine &engine)
-    : InputFileParser(engine)
+ConstraintsInputParser::ConstraintsInputParser(
+    Engine                                   &engine,
+    std::shared_ptr<constraints::Constraints> constraints
+)
+    : InputFileParser(engine), _constraints(constraints)
 {
     addKeyword(
         std::string("shake"),
@@ -119,23 +125,21 @@ void ConstraintsInputParser::parseShakeActivated(
 {
     checkCommand(lineElements, lineNumber);
 
-    auto &constraints = _engine.getConstraints();
-
     if (lineElements[2] == "on" || lineElements[2] == "shake")
     {
-        constraints.activateShake();
+        _constraints->activateShake();
         ConstraintSettings::activateShake();
-        ReferencesOutput::addReferenceFile(_RATTLE_FILE_);
+        ReferencesOutput::addReferenceFile(RATTLE_FILE);
     }
     else if (lineElements[2] == "off")
     {
-        constraints.deactivateShake();
+        _constraints->deactivateShake();
         ConstraintSettings::deactivateShake();
     }
     else if (lineElements[2] == "mshake")
     {
-        constraints.activateMShake();
-        constraints.activateShake();
+        _constraints->activateMShake();
+        _constraints->activateShake();
         ConstraintSettings::activateMShake();
         ConstraintSettings::activateShake();
     }
@@ -168,9 +172,9 @@ void ConstraintsInputParser::parseShakeTolerance(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto tolerance = stod(lineElements[2]);
+    const auto tolerance = utilities::stringToFiniteDouble(lineElements[2]);
 
-    if (tolerance < 0.0)
+    if (tolerance <= 0.0)
         throw InputFileException("Shake tolerance must be positive");
 
     ConstraintSettings::setShakeTolerance(tolerance);
@@ -192,9 +196,9 @@ void ConstraintsInputParser::parseShakeIteration(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto iteration = stoi(lineElements[2]);
+    const auto iteration = utilities::stringToInt(lineElements[2]);
 
-    if (iteration < 0)
+    if (iteration <= 0)
         throw InputFileException("Maximum shake iterations must be positive");
 
     ConstraintSettings::setShakeMaxIter(size_t(iteration));
@@ -216,9 +220,9 @@ void ConstraintsInputParser::parseRattleTolerance(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto tolerance = stod(lineElements[2]);
+    const auto tolerance = utilities::stringToFiniteDouble(lineElements[2]);
 
-    if (tolerance < 0.0)
+    if (tolerance <= 0.0)
         throw InputFileException("Rattle tolerance must be positive");
 
     ConstraintSettings::setRattleTolerance(tolerance);
@@ -240,9 +244,9 @@ void ConstraintsInputParser::parseRattleIteration(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto iteration = stoi(lineElements[2]);
+    const auto iteration = utilities::stringToInt(lineElements[2]);
 
-    if (iteration < 0)
+    if (iteration <= 0)
         throw InputFileException("Maximum rattle iterations must be positive");
 
     ConstraintSettings::setRattleMaxIter(size_t(iteration));
@@ -264,9 +268,9 @@ void ConstraintsInputParser::parseMShakeTolerance(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto tolerance = stod(lineElements[2]);
+    const auto tolerance = utilities::stringToFiniteDouble(lineElements[2]);
 
-    if (tolerance < 0.0)
+    if (tolerance <= 0.0)
         throw InputFileException("MShake tolerance must be positive");
 
     ConstraintSettings::setMShakeTolerance(tolerance);
@@ -288,9 +292,9 @@ void ConstraintsInputParser::parseMShakeIteration(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto iteration = stoi(lineElements[2]);
+    const auto iteration = utilities::stringToInt(lineElements[2]);
 
-    if (iteration < 0)
+    if (iteration <= 0)
         throw InputFileException("Maximum MShake iterations must be positive");
 
     ConstraintSettings::setMShakeMaxIter(size_t(iteration));
@@ -317,12 +321,12 @@ void ConstraintsInputParser::parseDistanceConstraintActivated(
 
     if (lineElements[2] == "on")
     {
-        _engine.getConstraints().activateDistanceConstraints();
+        _constraints->activateDistanceConstraints();
         ConstraintSettings::activateDistanceConstraints();
     }
     else if (lineElements[2] == "off")
     {
-        _engine.getConstraints().deactivateDistanceConstraints();
+        _constraints->deactivateDistanceConstraints();
         ConstraintSettings::deactivateDistanceConstraints();
     }
     else

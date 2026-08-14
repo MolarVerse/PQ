@@ -25,6 +25,8 @@
 // and force accumulation), so callgrind yields a stable instruction count.
 
 #include <cstdio>
+#include <format>
+#include <iostream>
 
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
@@ -44,7 +46,7 @@ static constexpr long ITERATIONS = 20000;
 
 int main()
 {
-    auto molecule            = benchSetup::makeMolecule(2);
+    auto molecule            = benchSetup::makeMolecule({.nAtoms = 2});
     auto nonCoulombPotential = benchSetup::makeNonCoulomb();
     auto coulombPotential    = potential::CoulombShiftedPotential(10.0);
 
@@ -82,6 +84,6 @@ int main()
         sink += coulombEnergy + nonCoulombEnergy;
     }
 
-    std::printf("%.6f\n", sink);
+    std::cout << std::format("{:.6f}\n", sink);
     return 0;
 }

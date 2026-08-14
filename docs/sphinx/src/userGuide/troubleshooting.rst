@@ -56,13 +56,6 @@ or ``slakos = matsci``, rebuild with:
 For custom Slater-Koster files, set ``slakos = custom`` and provide
 ``slakos_path``.
 
-Kokkos Fallbacks
-****************
-
-When PQ is built with Kokkos support, the accelerated MM path is only used for
-supported non-Coulombic and Coulomb settings. If another combination is
-requested, PQ prints a warning and falls back to serial execution.
-
 Constraint Setup
 ****************
 

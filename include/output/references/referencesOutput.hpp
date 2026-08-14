@@ -24,11 +24,12 @@
 
 #define _REFERENCES_OUTPUT_HPP_
 
+#include <string>   // for string
+#include <unordered_set>
+
 #define REFERENCES_PATH_ _REFERENCES_PATH_
 
-#include <string>   // for string
-
-#include "typeAliases.hpp"
+class ReferencesOutputTest;
 
 namespace references
 {
@@ -41,10 +42,12 @@ namespace references
     class ReferencesOutput
     {
        private:
-        static inline std::string _referenceFilesPath = REFERENCES_PATH_;
+        static inline std::unordered_set<std::string> _referenceFileNames;
+        static inline std::unordered_set<std::string> _bibtexFileNames;
 
-        static inline pq::stringSet _referenceFileNames = pq::stringSet();
-        static inline pq::stringSet _bibtexFileNames    = pq::stringSet();
+#ifdef WITH_TESTS
+        friend class ::ReferencesOutputTest;
+#endif
 
        public:
         static void writeReferencesFile();

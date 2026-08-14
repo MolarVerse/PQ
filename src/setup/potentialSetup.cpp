@@ -23,6 +23,7 @@
 #include "potentialSetup.hpp"
 
 #include <algorithm>     // for __for_each_fn, __sort_fn
+#include <format>        // for vector
 #include <string>        // for operator==
 #include <string_view>   // for string_view
 #include <vector>        // for vector
@@ -160,7 +161,7 @@ void PotentialSetup::setupNonCoulombicPairs()
     auto &simBox = _engine.getSimulationBox();
 
     // clang-format off
-    auto &nonCoulPot = dynamic_cast<pq::FFNonCoulomb &>(pot.getNonCoulombPotential());
+    auto &nonCoulPot = dynamic_cast<potential::ForceFieldNonCoulomb&>(pot.getNonCoulombPotential());
     nonCoulPot.setupNonCoulombicCutoffs();
     // clang-format on
 

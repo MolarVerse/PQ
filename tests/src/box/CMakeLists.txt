@@ -15,6 +15,7 @@ foreach(source_file ${source_files})
         PRIVATE
         box
         linearAlgebra
+        settings
         gtest
         gmock
         pq_test_main
@@ -24,6 +25,8 @@ foreach(source_file ${source_files})
         COMMAND ${test_name}
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/tests
     )
+    target_precompile_headers(${test_name} REUSE_FROM pq_test_pch)
+    target_link_libraries(${test_name} PRIVATE pq_test_pch)
 
     set_property(TEST ${test_name} PROPERTY LABELS box)
 endforeach()

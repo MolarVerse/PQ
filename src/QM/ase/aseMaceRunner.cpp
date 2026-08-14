@@ -22,7 +22,9 @@
 
 #include "aseMaceRunner.hpp"
 
-#include <cstdio>
+#include <cstdio>   // for fprintf, stderr
+#include <format>
+#include <iostream>
 
 using QM::AseMaceRunner;
 
@@ -65,8 +67,7 @@ AseMaceRunner::AseMaceRunner(
     {
         ::PyErr_Print();
         if (enableCueq)
-            ::fprintf(
-                stderr,
+            std::cerr << std::format(
                 "\nPQ: mace_mode = fast uses cuequivariance-accelerated MACE "
                 "kernels. These need 'cuequivariance', 'cuequivariance-torch' "
                 "and -- the piece pip does NOT pull in automatically -- the "

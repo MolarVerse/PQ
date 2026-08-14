@@ -27,7 +27,7 @@
 #include <cstddef>
 #include <vector>
 
-#include "typeAliases.hpp"
+#include "molecule.hpp"   // for Molecule
 
 namespace connectivity
 {
@@ -45,14 +45,18 @@ namespace connectivity
         std::vector<size_t>                    _atomIndices;
 
        public:
-        ConnectivityElement(const std::vector<pq::Molecule *> &, const std::vector<size_t> &);
+        ConnectivityElement(
+            const std::vector<simulationBox::Molecule *> &,
+            const std::vector<size_t> &
+        );
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] std::vector<pq::Molecule *> getMolecules() const;
-        [[nodiscard]] std::vector<size_t>         getAtomIndices() const;
+        [[nodiscard]]
+        std::vector<simulationBox::Molecule *> getMolecules() const;
+        [[nodiscard]] std::vector<size_t>      getAtomIndices() const;
     };
 
 }   // namespace connectivity

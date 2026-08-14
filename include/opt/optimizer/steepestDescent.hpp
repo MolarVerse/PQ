@@ -42,13 +42,13 @@ namespace opt
        public:
         explicit SteepestDescent(const size_t nEpochs);
 
-        SteepestDescent()  = default;
-        ~SteepestDescent() = default;
+        SteepestDescent()           = default;
+        ~SteepestDescent() override = default;
 
-        [[nodiscard]] pq::SharedOptimizer clone() const;
-        [[nodiscard]] size_t              maxHistoryLength() const;
+        [[nodiscard]] std::shared_ptr<Optimizer> clone() const override;
+        [[nodiscard]] size_t maxHistoryLength() const override;
 
-        void update(const double learningRate, const size_t step);
+        void update(const double learningRate, const size_t step) override;
     };
 
 }   // namespace opt

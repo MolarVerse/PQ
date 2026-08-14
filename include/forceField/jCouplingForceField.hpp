@@ -28,7 +28,17 @@
 #include <vector>
 
 #include "dihedral.hpp"
-#include "typeAliases.hpp"
+
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}   // namespace physicalData
+
+namespace simulationBox
+{
+    class Molecule;        // forward declaration
+    class SimulationBox;   // forward declaration
+}   // namespace simulationBox
 
 namespace forceField
 {
@@ -45,7 +55,7 @@ namespace forceField
         bool   _upperSymmetry = true;
         bool   _lowerSymmetry = true;
 
-        double _J0;
+        double _j0;
         double _forceConstant;
         double _a;
         double _b;
@@ -54,13 +64,17 @@ namespace forceField
 
        public:
         JCouplingForceField(
-            const std::vector<pq::Molecule *> &molecules,
-            const std::vector<size_t>         &atomIndices,
-            const size_t                       type
+            const std::vector<simulationBox::Molecule *> &molecules,
+            const std::vector<size_t>                    &atomIndices,
+            const size_t                                  type
         );
 
-        void calculateEnergyAndForces(const pq::SimBox &, pq::PhysicalData &) {
-        };   // TODO: implement
+        void calculateEnergyAndForces(
+            const simulationBox::SimulationBox &,
+            physicalData::PhysicalData &
+        )
+        {
+        }   // TODO: implement
 
         /***************************
          * standard setter methods *

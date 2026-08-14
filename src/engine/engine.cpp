@@ -27,7 +27,6 @@
 
 #include "fileSettings.hpp"   // for FileSettings
 #include "logOutput.hpp"      // for LogOutput
-#include "molecularVirial.hpp"
 #include "potentialBruteForce.hpp"
 #include "stdoutOutput.hpp"      // for StdoutOutput
 #include "timingsSettings.hpp"   // for TimingsSettings
@@ -51,8 +50,7 @@ using namespace settings;
  * cell list, intra-non-bonded handler, force field, and constraints.
  */
 Engine::Engine()
-    : _virial{std::make_shared<virial::MolecularVirial>()},
-      _potential{std::make_shared<potential::PotentialBruteForce>()},
+    : _potential{std::make_shared<potential::PotentialBruteForce>()},
       _physicalData{std::make_shared<physicalData::PhysicalData>()},
       _simulationBox{std::make_shared<simulationBox::SimulationBox>()},
       _cellList{std::make_shared<simulationBox::CellList>()},
@@ -89,17 +87,19 @@ double Engine::calculateTotalSimulationTime() const
  * The files are safely deleted using std::filesystem::remove, which does not
  * throw exceptions if the files do not exist.
  */
-void Engine::deleteTempFiles()
+void Engine::deleteTmpFiles()
 {
     using std::filesystem::remove;
 
     const auto qm_forces     = FileSettings::getQMForcesTempFileName();
     const auto qm_charges    = FileSettings::getQMChargesTempFileName();
     const auto stress_tensor = FileSettings::getStressTensorTempFileName();
+    const auto pointcharges  = FileSettings::getPointChargeFileName();
 
     remove(qm_forces);
     remove(qm_charges);
     remove(stress_tensor);
+    remove(pointcharges);
 }
 
 /**
@@ -152,13 +152,6 @@ bool Engine::isIntraNonBondedActivated() const
 }
 
 /**
- * @brief get the reference to the cell list
- *
- * @return CellList&
- */
-CellList &Engine::getCellList() { return *_cellList; }
-
-/**
  * @brief get the reference to the simulation box
  *
  * @return SimulationBox&
@@ -180,13 +173,6 @@ PhysicalData &Engine::getPhysicalData() { return *_physicalData; }
 PhysicalData &Engine::getAveragePhysicalData() { return _averagePhysicalData; }
 
 /**
- * @brief get the reference to the Constraints
- *
- * @return timings::Timer&
- */
-Constraints &Engine::getConstraints() { return *_constraints; }
-
-/**
  * @brief get the reference to the force field
  *
  * @return ForceField&
@@ -196,16 +182,12 @@ ForceField &Engine::getForceField() { return *_forceField; }
 /**
  * @brief get the reference to the intra non bonded interactions
  *
- * @return IntraNonBonded&
+ * @return const std::shared_ptr<IntraNonBonded>&
  */
-IntraNonBonded &Engine::getIntraNonBonded() { return *_intraNonBonded; }
-
-/**
- * @brief get the reference to the virial
- *
- * @return Virial&
- */
-Virial &Engine::getVirial() { return *_virial; }
+const std::shared_ptr<IntraNonBonded> &Engine::getIntraNonBonded() const
+{
+    return _intraNonBonded;
+}
 
 /**
  * @brief get the reference to the potential
@@ -229,20 +211,6 @@ ForceField *Engine::getForceFieldPtr() { return _forceField.get(); }
 Potential *Engine::getPotentialPtr() { return _potential.get(); }
 
 /**
- * @brief get the pointer to the virial
- *
- * @return Virial*
- */
-Virial *Engine::getVirialPtr() { return _virial.get(); }
-
-/**
- * @brief get the pointer to the cell list
- *
- * @return CellList*
- */
-CellList *Engine::getCellListPtr() { return _cellList.get(); }
-
-/**
  * @brief get the pointer to the simulation box
  *
  * @return SimulationBox*
@@ -257,18 +225,14 @@ SimulationBox *Engine::getSimulationBoxPtr() { return _simulationBox.get(); }
 PhysicalData *Engine::getPhysicalDataPtr() { return _physicalData.get(); }
 
 /**
- * @brief get the pointer to the constraints
+ * @brief set the inter-water interactions handler
  *
- * @return Constraints*
+ * @param interWater The new inter-water handler to use
  */
-Constraints *Engine::getConstraintsPtr() { return _constraints.get(); }
-
-/**
- * @brief get the pointer to the intra non bonded interactions
- *
- * @return IntraNonBonded*
- */
-IntraNonBonded *Engine::getIntraNonBondedPtr() { return _intraNonBonded.get(); }
+void Engine::setInterWater(std::unique_ptr<waterModel::InterWater> interWater)
+{
+    _interWater = std::move(interWater);
+}
 
 /**
  * @brief get the reference to the engine output
@@ -390,9 +354,9 @@ std::shared_ptr<PhysicalData> Engine::getSharedPhysicalData() const
 /**
  * @brief get the shared pointer to the cell list
  *
- * @return std::shared_ptr<CellList>
+ * @return const std::shared_ptr<CellList>&
  */
-std::shared_ptr<CellList> Engine::getSharedCellList() const
+const std::shared_ptr<CellList> &Engine::getCellList() const
 {
     return _cellList;
 }
@@ -400,29 +364,12 @@ std::shared_ptr<CellList> Engine::getSharedCellList() const
 /**
  * @brief get the shared pointer to the constraints
  *
- * @return std::shared_ptr<Constraints>
+ * @return const std::shared_ptr<Constraints>&
  */
-std::shared_ptr<Constraints> Engine::getSharedConstraints() const
+const std::shared_ptr<Constraints> &Engine::getConstraints() const
 {
     return _constraints;
 }
-
-/**
- * @brief get the shared pointer to the intra non bonded interactions
- *
- * @return std::shared_ptr<IntraNonBonded>
- */
-std::shared_ptr<IntraNonBonded> Engine::getSharedIntraNonBonded() const
-{
-    return _intraNonBonded;
-}
-
-/**
- * @brief get the shared pointer to the virial
- *
- * @return std::shared_ptr<Virial>
- */
-std::shared_ptr<Virial> Engine::getSharedVirial() const { return _virial; }
 
 /**
  * @brief get the shared pointer to the potential

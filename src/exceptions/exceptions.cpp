@@ -31,9 +31,53 @@ using namespace customException;
  *
  * @param message
  */
-CustomException::CustomException(const std::string_view message)
-    : _message(message)
+CustomException::CustomException(
+    const std::string_view message,
+    std::optional<size_t>  lineNumber
+)
+    : _message(message), _lineNumber(lineNumber)
 {
+}
+
+/**
+ * @brief Construct a new Custom Exception:: Custom Exception object
+ *
+ * @param message
+ */
+CustomException::CustomException(const std::string_view message)
+    : CustomException(message, std::nullopt)
+{
+}
+
+/**
+ * @brief Adds a source line if the exception has no line yet.
+ *
+ * @param lineNumber
+ */
+void CustomException::setLineNumber(const size_t lineNumber) noexcept
+{
+    if (!_lineNumber.has_value())
+        _lineNumber = lineNumber;
+}
+
+/**
+ * @brief Returns the exception message without producing output.
+ *
+ * @return const std::string&
+ */
+const std::string &CustomException::getMessage() const noexcept
+{
+    return _message;
+}
+
+/**
+ * @brief Returns the source line associated with the exception.
+ *
+ * @return std::optional<size_t>
+ */
+std::optional<size_t> CustomException::getLineNumber() const noexcept
+{
+    return _lineNumber;
 }
 
 /**
@@ -292,6 +336,28 @@ const char *OptWarning::what() const throw()
 const char *CompileTimeException::what() const throw()
 {
     colorfulOutput(Color::FG_RED, "CompileTimeError");
+    return _message.c_str();
+}
+
+/**
+ * @brief Construct a new Custom Exception:: Custom Exception object
+ *
+ * @param message
+ */
+const char *HybridConfiguratorException::what() const throw()
+{
+    colorfulOutput(Color::FG_RED, "HybridConfiguratorError");
+    return _message.c_str();
+}
+
+/**
+ * @brief Construct a new Custom Exception:: Custom Exception object
+ *
+ * @param message
+ */
+const char *HybridMDEngineException::what() const throw()
+{
+    colorfulOutput(Color::FG_RED, "HybridMDEngineError");
     return _message.c_str();
 }
 

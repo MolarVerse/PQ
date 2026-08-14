@@ -31,7 +31,6 @@
 #include <vector>        // for vector
 
 #include "topologySection.hpp"
-#include "typeAliases.hpp"
 
 namespace input::topology
 {
@@ -54,10 +53,12 @@ namespace input::topology
         std::vector<std::unique_ptr<TopologySection>> _topologySections;
 
        public:
-        TopologyReader(const std::string &filename, pq::Engine &engine);
+        TopologyReader(const std::string &filename, engine::Engine &engine);
 
         void                           read();
-        [[nodiscard]] TopologySection *determineSection(const pq::strings &);
+        [[nodiscard]] TopologySection *determineSection(
+            const std::vector<std::string> &
+        );
 
         void setFilename(const std::string_view &filename);
     };

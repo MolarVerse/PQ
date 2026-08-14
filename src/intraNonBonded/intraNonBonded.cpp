@@ -22,9 +22,10 @@
 
 #include "intraNonBonded.hpp"
 
-#include <algorithm>    // for for_each
-#include <format>       // for format
+#include <algorithm>   // for for_each
+#include <format>      // for format
 
+#include "coulombPotential.hpp"
 #include "exceptions.hpp"
 #include "simulationBox.hpp"
 
@@ -64,10 +65,12 @@ IntraNonBondedContainer *IntraNonBonded::findIntraNonBondedContainerByMolType(
     if (it != _intraNonBondedContainers.end())
         return std::to_address(it);
     else
-        throw IntraNonBondedException(std::format(
-            "IntraNonBondedContainer with molType {} not found!",
-            molType
-        ));
+        throw IntraNonBondedException(
+            std::format(
+                "IntraNonBondedContainer with molType {} not found!",
+                molType
+            )
+        );
 }
 
 /**
@@ -103,7 +106,7 @@ void IntraNonBonded::calculate(
     PhysicalData        &physicalData
 )
 {
-    startTimingsSection("IntraNonBonded");
+    auto _ = scoped("IntraNonBonded");
 
     auto calculateSingleContr = [this, &box, &physicalData](auto &intraMap)
     {
@@ -116,8 +119,6 @@ void IntraNonBonded::calculate(
     };
 
     std::ranges::for_each(_intraNonBondedMaps, calculateSingleContr);
-
-    stopTimingsSection("IntraNonBonded");
 }
 
 /*************************

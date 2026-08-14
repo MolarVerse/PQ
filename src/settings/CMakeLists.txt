@@ -15,6 +15,7 @@ add_library(settings
     outputFileSettings.cpp
     optimizerSettings.cpp
     convergenceSettings.cpp
+    waterModelSettings.cpp
     hessianSettings.cpp
 )
 
@@ -30,5 +31,5 @@ target_link_libraries(settings
 )
 
 install(TARGETS settings
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/
+    DESTINATION lib
 )

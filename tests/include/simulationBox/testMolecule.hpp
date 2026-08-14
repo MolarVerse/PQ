@@ -24,16 +24,17 @@
 
 #define _TEST_MOLECULE_HPP_
 
+#include <gtest/gtest.h>   // for Test
+
+#include <memory>   // for __shared_ptr_access, shared_ptr, make_shared
+
 #include "atom.hpp"       // for Atom
 #include "molecule.hpp"   // for Molecule
 
-#include <gtest/gtest.h>   // for Test
-#include <memory>          // for __shared_ptr_access, shared_ptr, make_shared
-
 class TestMolecule : public ::testing::Test
 {
-  protected:
-    virtual void SetUp()
+   protected:
+    void SetUp() override
     {
         _molecule = new simulationBox::Molecule();
         _molecule->setNumberOfAtoms(3);
@@ -69,7 +70,7 @@ class TestMolecule : public ::testing::Test
         _molecule->addAtom(_atom3);
     }
 
-    virtual void TearDown() { delete _molecule; }
+    void TearDown() override { delete _molecule; }
 
     simulationBox::Molecule *_molecule;
 };

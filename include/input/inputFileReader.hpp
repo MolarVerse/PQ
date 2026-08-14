@@ -32,7 +32,6 @@
 #include <vector>        // for vector
 
 #include "inputFileParser.hpp"   // for InputFileParser
-#include "typeAliases.hpp"       // for pq::ParseFunc
 
 namespace engine
 {
@@ -64,21 +63,27 @@ namespace input
         std::string     _fileName;
         engine::Engine &_engine;
 
-        std::map<std::string, pq::ParseFunc> _keywordFuncMap;
-        std::map<std::string, size_t>        _keywordCountMap;
-        std::map<std::string, bool>          _keywordRequiredMap;
-        std::map<std::string, bool>          _keywordSetMap;
+        std::map<std::string, InputFileParser::ParseFunc> _keywordFuncMap;
+        std::map<std::string, size_t>                     _keywordCountMap;
+        std::map<std::string, bool>                       _keywordRequiredMap;
+        std::map<std::string, bool>                       _keywordSetMap;
 
         std::vector<std::unique_ptr<InputFileParser>> _parsers;
 
         size_t _lineNumber = 1;
 
        public:
+        explicit InputFileReader(
+            const std::string_view &,
+            engine::Engine &,
+            bool validateFilePaths,
+            bool resolveBuiltInSlakosPath
+        );
         explicit InputFileReader(const std::string_view &, engine::Engine &);
 
         void read();
         void addKeywords();
-        void process(const pq::strings &lineElements);
+        void process(const std::vector<std::string> &lineElements);
         void postProcess();
         void validateInputConfiguration() const;
 
@@ -101,7 +106,7 @@ namespace input
         [[nodiscard]] std::map<std::string, size_t> getKeywordCountMap() const;
         [[nodiscard]] std::map<std::string, bool> getKeywordSetMap() const;
         [[nodiscard]] std::map<std::string, bool> getKeywordRequiredMap() const;
-        [[nodiscard]] std::map<std::string, pq::ParseFunc> getKeywordFuncMap() const;
+        [[nodiscard]] std::map<std::string, InputFileParser::ParseFunc> getKeywordFuncMap() const;
         // clang-format on
 
        private:
@@ -110,9 +115,11 @@ namespace input
          ******************************/
 
         void validateTimings() const;
+        void validateOptimizer() const;
         void validateQM() const;
         void validateThermostat() const;
         void validateManostat() const;
+        void validateCellList() const;
         void validateReactionFieldCoulomb() const;
         void validateRingPolymer() const;
     };

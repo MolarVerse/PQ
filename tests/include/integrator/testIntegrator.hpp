@@ -28,8 +28,8 @@
 
 #include <memory>   // for __shared_ptr_access, shared_ptr, make_shared
 
-#include "atom.hpp"              // for Atom
-#include "integrator.hpp"        // for Integrator, VelocityVerlet
+#include "atom.hpp"   // for Atom
+#include "integrator.hpp"
 #include "molecule.hpp"          // for Molecule
 #include "simulationBox.hpp"     // for SimulationBox
 #include "timingsSettings.hpp"   // for TimingsSettings
@@ -44,7 +44,7 @@
 class TestIntegrator : public ::testing::Test
 {
    protected:
-    virtual void SetUp()
+    void SetUp() override
     {
         _integrator = new integrator::VelocityVerlet();
         settings::TimingsSettings::setTimeStep(0.1);
@@ -80,7 +80,7 @@ class TestIntegrator : public ::testing::Test
         _box->addAtom(atom2);
     }
 
-    virtual void TearDown()
+    void TearDown() override
     {
         delete _integrator;
         delete _molecule1;

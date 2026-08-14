@@ -22,6 +22,8 @@
 
 #include "outputInputParser.hpp"
 
+#include <format>   // for format
+
 #include "exceptions.hpp"           // for InputFileException
 #include "outputFileSettings.hpp"   // for OutputFileSettings
 #include "parserUtils.hpp"
@@ -107,6 +109,11 @@ OutputInputParser::OutputInputParser(Engine &engine) : InputFileParser(engine)
     addKeyword(
         std::string("traj_file"),
         bindMember(&OutputInputParser::parseTrajectoryFilename, this),
+        false
+    );
+    addKeyword(
+        std::string("hybrid_center_file"),
+        bindMember(&OutputInputParser::parseHybridCenterFilename, this),
         false
     );
     addKeyword(
@@ -217,7 +224,7 @@ void OutputInputParser::parseOutputFreq(
 {
     checkCommand(lineElements, lineNumber);
 
-    const auto outputFrequency = stoi(lineElements[2]);
+    const auto outputFrequency = stringToInt(lineElements[2]);
     if (outputFrequency < 0)
         throw InputFileException(format(
             "Output frequency cannot be negative - \"{}\" at line {} in input "
@@ -339,6 +346,22 @@ void OutputInputParser::parseTrajectoryFilename(
 {
     checkCommand(lineElements, lineNumber);
     OutputFileSettings::setTrajectoryFileName(lineElements[2]);
+}
+
+/**
+ * @brief parse hybrid center filename of simulation and add it to output
+ *
+ * @details default value is default.center.xyz
+ *
+ * @param lineElements
+ */
+void OutputInputParser::parseHybridCenterFilename(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+    OutputFileSettings::setHybridCenterFileName(lineElements[2]);
 }
 
 /**

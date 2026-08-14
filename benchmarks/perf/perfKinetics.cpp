@@ -24,6 +24,8 @@
 // (temperature, momentum, angular momentum, total force).
 
 #include <cstdio>
+#include <format>
+#include <iostream>
 
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
@@ -37,7 +39,8 @@ static constexpr long ITERATIONS = 1000;
 
 int main()
 {
-    auto box = benchSetup::makePopulatedBox(20, 3);
+    auto box =
+        benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
 
     CALLGRIND_ZERO_STATS;
 
@@ -50,6 +53,6 @@ int main()
         sink += box.calculateTotalForce();
     }
 
-    std::printf("%.6f\n", sink);
+    std::cout << std::format("{:.6f}\n", sink);
     return 0;
 }

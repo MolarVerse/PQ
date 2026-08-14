@@ -24,13 +24,10 @@
 
 #define _OUTPUT_HPP_
 
+#include <cstddef>       // for size_t
 #include <fstream>       // for ofstream
 #include <string>        // for string
 #include <string_view>   // for string_view
-
-#ifdef WITH_TESTS
-#include <gtest/gtest_prod.h>   // for FRIEND_TEST
-#endif
 
 class TestOutput_testSpecialSetFilename_Test;   // Friend test class
 
@@ -50,6 +47,9 @@ namespace output
         int           _rank;
 
         void openFile();
+        void               writeComment(std::size_t);
+        void               writeForceComment(std::size_t, double);
+        static std::string formatForceComment(std::size_t, double);
 
        public:
         explicit Output(const std::string &filename) : _fileName(filename){};
@@ -58,7 +58,7 @@ namespace output
         void close();
 
 #ifdef WITH_TESTS
-        FRIEND_TEST(::TestOutput, testSpecialSetFilename);
+        friend class ::TestOutput_testSpecialSetFilename_Test;
 #endif
 
         /***************************

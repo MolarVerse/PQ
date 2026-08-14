@@ -24,11 +24,16 @@
 
 #define _QM_SETUP_HPP_
 
-#include "typeAliases.hpp"
+#include "qmCapableEngine.hpp"
+namespace engine
+{
+    class Engine;       // forward declaration
+    class QMMDEngine;   // forward declaration
+}   // namespace engine
 
 namespace setup
 {
-    void setupQM(pq::Engine &);
+    void setupQM(engine::Engine &);
 
     /**
      * @class QMSetup
@@ -39,10 +44,10 @@ namespace setup
     class QMSetup
     {
        private:
-        pq::QMMDEngine &_engine;
+        engine::QMCapableEngine &_qmCapableEngine;
 
        public:
-        explicit QMSetup(pq::QMMDEngine &engine);
+        explicit QMSetup(engine::QMCapableEngine &qmCapableEngine);
 
         void setup();
         void setupQMMethod();

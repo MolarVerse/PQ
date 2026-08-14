@@ -24,6 +24,7 @@
 
 #include <format>   // for std::format
 
+#include "constants/conversionFactors.hpp"
 #include "globalTimer.hpp"   // for GlobalTimer
 
 using namespace output;
@@ -45,6 +46,7 @@ void TimingsOutput::write(GlobalTimer &timer)
         "Time [%]"
     );
 
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
     // write a line consisting only of '-'
     _fp << std::format(
         "{:<30}\t{:>10}\t{:>10}\n",
@@ -59,9 +61,10 @@ void TimingsOutput::write(GlobalTimer &timer)
     _fp << std::format(
         "{:<30}\t{:>10.3f}\t{:>10.3f}\n",
         "Total",
-        timer.calculateElapsedTime() * 1e-3,
+        timer.calculateElapsedTime() * constants::MS_TO_S,
         100.0
     );
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
     _fp << "\n";
 
@@ -75,7 +78,7 @@ void TimingsOutput::write(GlobalTimer &timer)
         _fp << std::format(
             "{:<30}\t{:>10.3f}\t{:>10.3f}\n",
             name,
-            time * 1e-3,
+            time * constants::MS_TO_S,
             percentage
         );
     }
@@ -93,6 +96,7 @@ void TimingsOutput::write(GlobalTimer &timer)
         "RelT [%]"
     );
 
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
     // write a line consisting only of '-'
     _fp << std::format(
         "{:<30}\t{:>10}\t{:>10}\t{:>10}\n",
@@ -108,10 +112,11 @@ void TimingsOutput::write(GlobalTimer &timer)
     _fp << std::format(
         "{:<30}\t{:>10.3f}\t{:>10.3f}\t{:>10.3f}\n",
         "Total",
-        timer.calculateElapsedTime() * 1e-3,
+        timer.calculateElapsedTime() * constants::MS_TO_S,
         100.0,
         100.0
     );
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
     _fp << "\n";
 
@@ -127,13 +132,15 @@ void TimingsOutput::write(GlobalTimer &timer)
         const auto time       = section.calculateElapsedTime();
         const auto percentage = (time / timer.calculateElapsedTime()) * 100.0;
 
+        // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
         _fp << std::format(
             "{:<30}\t{:>10.3f}\t{:>10.3f}\t{:>10.3f}\n",
             name,
-            time * 1e-3,
+            time * constants::MS_TO_S,
             percentage,
             100.0
         );
+        // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
         for (const auto &subSection : subsections)
         {
@@ -146,7 +153,7 @@ void TimingsOutput::write(GlobalTimer &timer)
             _fp << std::format(
                 "{:<30}\t{:>10.3f}\t{:>10.3f}\t{:>10.3f}\n",
                 subName,
-                subTime * 1e-3,
+                subTime * constants::MS_TO_S,
                 subTotPercentage,
                 subPercentage
             );

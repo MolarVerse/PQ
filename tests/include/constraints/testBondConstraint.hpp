@@ -24,14 +24,14 @@
 
 #define _TEST_BOND_CONSTRAINT_HPP_
 
+#include <gtest/gtest.h>   // for Test
+
+#include <memory>   // for make_shared, __shared_ptr_access, shared_ptr
+
 #include "atom.hpp"             // for Atom
 #include "bondConstraint.hpp"   // for BondConstraint
 #include "molecule.hpp"         // for Molecule
 #include "simulationBox.hpp"    // for SimulationBox
-
-#include <gtest/gtest.h>   // for Test
-#include <memory>          // for make_shared, __shared_ptr_access, shared_ptr
-#include <vector>          // for vector
 
 /**
  * @class TestBondConstraint
@@ -41,8 +41,8 @@
  */
 class TestBondConstraint : public ::testing::Test
 {
-  protected:
-    virtual void SetUp()
+   protected:
+    void SetUp() override
     {
         auto molecule1 = simulationBox::Molecule();
         molecule1.setNumberOfAtoms(3);
@@ -66,11 +66,16 @@ class TestBondConstraint : public ::testing::Test
         _box->addMolecule(molecule1);
         _box->setBoxDimensions(linearAlgebra::Vec3D(10.0, 10.0, 10.0));
 
-        _bondConstraint =
-            new constraints::BondConstraint(&(_box->getMolecules()[0]), &(_box->getMolecules()[0]), 0, 1, _targetBondLength);
+        _bondConstraint = new constraints::BondConstraint(
+            &(_box->getMolecules()[0]),
+            &(_box->getMolecules()[0]),
+            0,
+            1,
+            _targetBondLength
+        );
     }
 
-    virtual void TearDown()
+    void TearDown() override
     {
         delete _box;
         delete _bondConstraint;

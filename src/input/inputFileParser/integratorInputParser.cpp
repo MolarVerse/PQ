@@ -32,6 +32,7 @@
 #include "referencesOutput.hpp"   // for ReferencesOutput
 #include "settings.hpp"           // for Settings
 #include "stringUtilities.hpp"    // for toLowerCopy
+#include "velocityVerlet.hpp"
 
 using namespace input;
 using namespace engine;
@@ -89,7 +90,7 @@ void IntegratorInputParser::parseIntegrator(
     {
         auto &mdEngine = dynamic_cast<MDEngine &>(_engine);
         mdEngine.makeIntegrator(VelocityVerlet());
-        ReferencesOutput::addReferenceFile(_VELOCITY_VERLET_FILE_);
+        ReferencesOutput::addReferenceFile(VELOCITY_VERLET_FILE);
     }
 
     else

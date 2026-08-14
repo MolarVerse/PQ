@@ -22,7 +22,7 @@
 
 #include "mathUtilities.hpp"
 
-using namespace linearAlgebra;
+#include "vector3d.hpp"
 
 /**
  * @brief specializing of template function compare with tolerance
@@ -33,7 +33,11 @@ using namespace linearAlgebra;
  * @return true
  * @return false
  */
-bool utilities::compare(const Vec3D &a, const Vec3D &b, const double &tolerance)
+bool utilities::compare(
+    const linearAlgebra::Vector3D<double> &a,
+    const linearAlgebra::Vector3D<double> &b,
+    const double                          &tolerance
+)
 {
     auto isEq = true;
     isEq      = isEq && compare<double>(a[0], b[0], tolerance);
@@ -51,7 +55,10 @@ bool utilities::compare(const Vec3D &a, const Vec3D &b, const double &tolerance)
  * @return true
  * @return false
  */
-bool utilities::compare(const Vec3D &a, const Vec3D &b)
+bool utilities::compare(
+    const linearAlgebra::Vector3D<double> &a,
+    const linearAlgebra::Vector3D<double> &b
+)
 {
     auto isEq = true;
     isEq      = isEq && compare<double>(a[0], b[0]);

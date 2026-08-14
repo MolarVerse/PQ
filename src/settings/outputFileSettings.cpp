@@ -82,6 +82,9 @@ void OutputFileSettings::replaceDefaultValues(const std::string &prefix)
     if (DefaultFiles::trajFile == _trajFile)
         _trajFile = prefix + ".xyz";
 
+    if (DefaultFiles::hybridCenterFile == _hybridCenterFile)
+        _hybridCenterFile = prefix + ".center.xyz";
+
     if (DefaultFiles::energyFile == _energyFile)
         _energyFile = prefix + ".en";
 
@@ -181,7 +184,7 @@ std::string OutputFileSettings::determineMostCommonPrefix()
     uniqueFileNames.erase(first, last);
 
     std::string mostCommonPrefix = "default";
-    int         count            = 0;
+    auto        count            = 0;
 
     auto getHighestOccurrence =
         [&fileNames, &mostCommonPrefix, &count](const std::string &fileName)
@@ -189,12 +192,12 @@ std::string OutputFileSettings::determineMostCommonPrefix()
         if (fileName == "default")
             return;
 
-        const int occurrence = std::ranges::count(fileNames, fileName);
+        const auto occurrence = std::ranges::count(fileNames, fileName);
 
         if (occurrence > count)
         {
             mostCommonPrefix = fileName;
-            count            = occurrence;
+            count            = static_cast<int>(occurrence);
         }
     };
 
@@ -256,6 +259,16 @@ void OutputFileSettings::setMomentumFileName(const std::string_view name)
 void OutputFileSettings::setTrajectoryFileName(const std::string_view name)
 {
     _trajFile = name;
+}
+
+/**
+ * @brief sets the hybrid center file name
+ *
+ * @param name
+ */
+void OutputFileSettings::setHybridCenterFileName(const std::string_view name)
+{
+    _hybridCenterFile = name;
 }
 
 /**
@@ -524,6 +537,16 @@ std::string OutputFileSettings::getMomentumFileName() { return _momFile; }
  * @return std::string
  */
 std::string OutputFileSettings::getTrajectoryFileName() { return _trajFile; }
+
+/**
+ * @brief get the hybrid center file name
+ *
+ * @return std::string
+ */
+std::string OutputFileSettings::getHybridCenterFileName()
+{
+    return _hybridCenterFile;
+}
 
 /**
  * @brief get the velocity file name

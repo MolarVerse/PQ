@@ -137,11 +137,11 @@ namespace settings
         static inline SlakosType    _slakosType    = SlakosType::NONE;
         static inline XtbMethod     _xtbMethod     = XtbMethod::GFN2;
 
-        static inline std::string _qmScript         = "";
-        static inline std::string _qmScriptFullPath = "";
-        static inline std::string _maceModelPath    = "";
-        static inline std::string _slakosPath       = "";
-        static inline std::string _fennolModelPath  = "";
+        static inline std::string _qmScript;
+        static inline std::string _qmScriptFullPath;
+        static inline std::string _maceModelPath;
+        static inline std::string _slakosPath;
+        static inline std::string _fennolModelPath;
 
         static inline bool _useDispersionCorrection = false;
         static inline bool _removeNetForce          = false;
@@ -153,7 +153,7 @@ namespace settings
         static inline std::unordered_map<std::string, double> _hubbardDerivs;
 
         // clang-format off
-        static inline double _qmLoopTimeLimit = defaults::_QM_LOOP_TIME_LIMIT_DEFAULT_;
+        static inline double _qmLoopTimeLimit = defaults::QM_LOOP_TIME_LIMIT_DEFAULT;
         // clang-format on
 
        public:
@@ -178,6 +178,10 @@ namespace settings
         static void setQMScriptFullPath(const std::string_view &script);
 
         static void setSlakosType(const std::string_view &slakos);
+        static void setSlakosType(
+            const SlakosType slakos,
+            bool             resolveBuiltInPath
+        );
         static void setSlakosType(const SlakosType slakos);
         static void setSlakosPath(const std::string_view &path);
 

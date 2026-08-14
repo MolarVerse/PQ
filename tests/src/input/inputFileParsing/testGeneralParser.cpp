@@ -22,6 +22,7 @@
 
 #include <gtest/gtest.h>   // for InitGoogleTest, RUN_ALL_TESTS
 
+#include <format>
 #include <memory>   // for unique_ptr
 #include <string>   // for string, allocator, basic_string
 #include <vector>   // for vector
@@ -96,6 +97,7 @@ TEST_F(TestInputFileReader, JobType)
         "- mm-md\n"
         "- qm-md\n"
         "- qm-rpmd\n"
+        "- qmmm-md\n"
     );
 
     EXPECT_NO_THROW(parser.parseJobType(lineElements, 0));

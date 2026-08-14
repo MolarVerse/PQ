@@ -165,4 +165,5 @@ namespace
     BENCHMARK(BM_TriclinicToOrthoSpace);
     BENCHMARK(BM_TriclinicToSimSpace);
     BENCHMARK(BM_TriclinicTensorRoundTrip);
+
 }   // namespace

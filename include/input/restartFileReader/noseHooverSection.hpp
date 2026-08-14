@@ -27,7 +27,6 @@
 #include <string>   // for string
 
 #include "restartFileSection.hpp"   // for RestartFileSection
-#include "typeAliases.hpp"
 
 namespace input::restartFile
 {
@@ -40,7 +39,10 @@ namespace input::restartFile
     class NoseHooverSection : public RestartFileSection
     {
        public:
-        void process(pq::strings &lineElements, pq::Engine &) override;
+        void process(
+            std::vector<std::string> &lineElements,
+            engine::Engine &
+        ) override;
 
         [[nodiscard]] std::string keyword() override;
         [[nodiscard]] bool        isHeader() override;

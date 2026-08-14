@@ -22,35 +22,38 @@
 
 #include "dftbplusRunner.hpp"
 
-#include <cstddef>   // for size_t
-#include <cstdlib>   // for system
-#include <format>    // for format
-#include <fstream>   // for ofstream
-#include <string>    // for string
-#include <vector>    // for vector
+#include <algorithm>    // for std::ranges:find
+#include <cstddef>      // for size_t
+#include <cstdlib>      // for system
+#include <filesystem>   // for remove
+#include <format>       // for format
+#include <fstream>      // for ofstream
+#include <iterator>     // for std::ranges::distance
+#include <set>          // for set
+#include <string>       // for string
 
-#include "atom.hpp"   // for Atom
+#include "box.hpp"   // for simulationBox::Periodicity
 #include "constants.hpp"
-#include "exceptions.hpp"        // for InputFileException
-#include "fileSettings.hpp"      // for FileSettings
-#include "physicalData.hpp"      // for PhysicalData
-#include "qmSettings.hpp"        // for QMSettings
-#include "settings.hpp"          // for Settings
-#include "simulationBox.hpp"     // for SimulationBox
-#include "stringUtilities.hpp"   // for fileExists
+#include "exceptions.hpp"           // for InputFileException
+#include "fileSettings.hpp"         // for FileSettings
+#include "hybridConfigurator.hpp"   // for HybridConfigurator
+#include "hybridSettings.hpp"       // for SmoothingMethod
+#include "physicalData.hpp"         // for PhysicalData
+#include "qmSettings.hpp"           // for QMSettings
+#include "simulationBox.hpp"        // for SimulationBox
+#include "stringUtilities.hpp"      // for fileExists
 
 using QM::DFTBPlusRunner;
+using enum simulationBox::Periodicity;
 
-using namespace simulationBox;
-using namespace physicalData;
-using namespace customException;
-using namespace settings;
+using namespace configurator;
 using namespace constants;
-using namespace utilities;
+using namespace customException;
 using namespace linearAlgebra;
-
-using std::ranges::distance;
-using std::ranges::find;
+using namespace physicalData;
+using namespace settings;
+using namespace simulationBox;
+using namespace utilities;
 
 /**
  * @brief writes the coords file in order to run the external qm program
@@ -59,97 +62,162 @@ using std::ranges::find;
  */
 void DFTBPlusRunner::writeCoordsFile(SimulationBox &box)
 {
+    using std::ranges::distance;
+    using std::ranges::find;
+
     const std::string fileName = "coords";
     std::ofstream     coordsFile(fileName);
 
-    coordsFile << box.getNumberOfQMAtoms() << "  S\n";
+    coordsFile << box.getNumberOfQMAtoms();
+    coordsFile << "  " << (_periodicity == NON_PERIODIC ? 'C' : 'S') << '\n';
 
     const auto uniqueAtomNames = box.getUniqueQMAtomNames();
 
     for (const auto &atomName : uniqueAtomNames) coordsFile << atomName << "  ";
-
     coordsFile << "\n";
 
-    for (size_t i = 0, numberOfAtoms = box.getNumberOfQMAtoms();
-         i < numberOfAtoms;
-         ++i)
+    size_t atomIndex = 1;
+    for (const auto &atom : box.getQMAtoms())
     {
-        const auto &atom = box.getQMAtom(i);
-
-        const auto iter   = find(uniqueAtomNames, atom.getName());
+        const auto iter   = find(uniqueAtomNames, atom->getName());
         const auto atomId = distance(uniqueAtomNames.begin(), iter) + 1;
 
         coordsFile << std::format(
             "{:5d} {:5d}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
-            i + 1,
+            atomIndex,
             atomId,
-            atom.getPosition()[0],
-            atom.getPosition()[1],
-            atom.getPosition()[2]
+            atom->getPosition()[0],
+            atom->getPosition()[1],
+            atom->getPosition()[2]
+        );
+        ++atomIndex;
+    }
+
+    if (_periodicity != NON_PERIODIC)
+    {
+        const auto boxMatrix = box.getBox().getBoxMatrix(_periodicity);
+
+        // coordinate origin
+        coordsFile << std::format(
+            "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
+            "",
+            0.0,
+            0.0,
+            0.0
+        );
+
+        coordsFile << std::format(
+            "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
+            "",
+            boxMatrix[0][0],
+            boxMatrix[1][0],
+            boxMatrix[2][0]
+        );
+
+        coordsFile << std::format(
+            "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
+            "",
+            boxMatrix[0][1],
+            boxMatrix[1][1],
+            boxMatrix[2][1]
+        );
+
+        coordsFile << std::format(
+            "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
+            "",
+            boxMatrix[0][2],
+            boxMatrix[1][2],
+            boxMatrix[2][2]
         );
     }
 
-    const auto boxMatrix = box.getBox().getBoxMatrix();
-
-    coordsFile << std::format(
-        "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
-        "",
-        0.0,
-        0.0,
-        0.0
-    );
-
-    coordsFile << std::format(
-        "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
-        "",
-        boxMatrix[0][0],
-        boxMatrix[1][0],
-        boxMatrix[2][0]
-    );
-
-    coordsFile << std::format(
-        "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
-        "",
-        boxMatrix[0][1],
-        boxMatrix[1][1],
-        boxMatrix[2][1]
-    );
-
-    coordsFile << std::format(
-        "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
-        "",
-        boxMatrix[0][2],
-        boxMatrix[1][2],
-        boxMatrix[2][2]
-    );
-
     coordsFile.close();
+}
+
+/**
+ * @brief Writes a file containing point charges for hybrid simulations.
+ *
+ * This function creates the pointcharges file listing the positions and
+ * partial charges of all atoms in inactive molecules assigned to the
+ * SMOOTHING or POINT_CHARGE hybrid zones. The file is used for QM/QM and QM/MM
+ * coupling in DFTB+ calculations.
+ *
+ * @param box Simulation box containing molecules and atoms.
+ */
+void DFTBPlusRunner::writePointChargeFile(simulationBox::SimulationBox &box)
+{
+    const std::string fileName = FileSettings::getPointChargeFileName();
+    std::ofstream     pcFile(fileName);
+
+    using enum HybridZone;
+    for (const auto &mol : box.getInactiveMolecules())
+    {
+        const auto zone = mol.getHybridZone();
+
+        if (zone == SMOOTHING || zone == POINT_CHARGE)
+            for (const auto &atom : mol.getAtoms())
+            {
+                pcFile << std::format(
+                    "{:16.12f}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
+                    atom->getPosition()[0],
+                    atom->getPosition()[1],
+                    atom->getPosition()[2],
+                    atom->getPartialCharge()
+                );
+                _usePointCharges = true;
+            }
+    }
+    pcFile.close();
+
+    if (!_usePointCharges)
+        std::filesystem::remove(fileName);
 }
 
 /**
  * @brief executes the qm script of the external program
  *
  */
-void DFTBPlusRunner::execute()
+void DFTBPlusRunner::execute(SimulationBox &box)
 {
-    const auto scriptFile = _scriptPath + QMSettings::getQMScript();
+    const auto scriptFile = resolveScriptPath(QMSettings::getQMScript());
 
     if (!fileExists(scriptFile))
         throw InputFileException(
             std::format("DFTB+ script file \"{}\" does not exist.", scriptFile)
         );
 
-    const auto reuseCharges = _isFirstExecution ? 1 : 0;
+    auto charge = box.calcActiveMolCharge();
+
+    auto molChangedZone = HybridConfigurator::getMoleculeChangedZone();
+
+    using enum settings::SmoothingMethod;
+
+    // TODO: https://github.com/MolarVerse/PQ/issues/200
+    if (HybridSettings::getSmoothingMethod() == EXACT)
+        molChangedZone = true;
+
+    const auto readChargesBin  = !_isFirstExecution && !molChangedZone ? 1 : 0;
+    const auto usePointCharges = _usePointCharges ? 1 : 0;
 
     const auto command = std::format(
-        "{} 0 {} 0 0 0 {}",
+        "{} {} {} {} {} {}",
         scriptFile,
-        reuseCharges,
-        FileSettings::getDFTBFileName()
+        charge,
+        readChargesBin,
+        usePointCharges,
+        FileSettings::getDFTBFileName(),
+        FileSettings::getPointChargeFileName()
     );
-    ::system(command.c_str());
+    const auto status = ::system(command.c_str());
 
+    if (status != 0)
+        throw QMRunnerException(
+            std::format("DFTB+ runner failed with exit status {}.", status)
+        );
+
+    // set for next execution
     _isFirstExecution = false;
+    _usePointCharges  = false;
 }
 
 /**
@@ -160,9 +228,6 @@ void DFTBPlusRunner::execute()
  */
 void DFTBPlusRunner::readStressTensor(Box &box, PhysicalData &data)
 {
-    if (Settings::getJobtype() != JobType::QM_MD)
-        return;
-
     const auto stressFileName = FileSettings::getStressTensorTempFileName();
 
     std::ifstream stressFile(stressFileName);
@@ -182,7 +247,7 @@ void DFTBPlusRunner::readStressTensor(Box &box, PhysicalData &data)
     stressFile >> stress[1][0] >> stress[1][1] >> stress[1][2];
     stressFile >> stress[2][0] >> stress[2][1] >> stress[2][2];
 
-    const auto conversion = _HARTREE_PER_BOHR3_TO_KCAL_PER_MOL_PER_ANGSTROM3_;
+    const auto conversion = HARTREE_PER_BOHR3_TO_KCAL_PER_MOL_PER_ANGSTROM3;
     stress                = stress * conversion;
     const auto virial     = stress * box.getVolume();
 

@@ -26,18 +26,21 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <memory>
 
 #include "adam.hpp"
 #include "constant.hpp"
 #include "constantDecay.hpp"
 #include "convergenceSettings.hpp"
 #include "defaults.hpp"
+#include "evaluator.hpp"
 #include "exceptions.hpp"
 #include "expDecay.hpp"
 #include "hessianBuilder.hpp"
 #include "hessianSettings.hpp"
 #include "logOutput.hpp"
 #include "mmEvaluator.hpp"
+#include "optimizer.hpp"
 #include "optimizerSettings.hpp"
 #include "outputFileSettings.hpp"
 #include "physicalData.hpp"
@@ -85,9 +88,9 @@ void HessianEngine::run()
 
 void HessianEngine::writeOutput() {}
 
-pq::SharedEvaluator HessianEngine::setupEvaluator()
+std::shared_ptr<Evaluator> HessianEngine::setupEvaluator()
 {
-    pq::SharedEvaluator evaluator;
+    std::shared_ptr<Evaluator> evaluator;
 
     if (Settings::getJobtype() == JobType::MM_HESSIAN)
         evaluator = std::make_shared<MMEvaluator>();
@@ -97,20 +100,19 @@ pq::SharedEvaluator HessianEngine::setupEvaluator()
             "Unknown job type for Hessian evaluator setup."
         );
 
-    evaluator->setCellList(getSharedCellList());
+    evaluator->setCellList(getCellList());
     evaluator->setSimulationBox(getSharedSimulationBox());
     evaluator->setPotential(getSharedPotential());
     evaluator->setForceField(getSharedForceField());
-    evaluator->setConstraints(getSharedConstraints());
-    evaluator->setIntraNonBonded(getSharedIntraNonBonded());
-    evaluator->setVirial(getSharedVirial());
+    evaluator->setConstraints(getConstraints());
+    evaluator->setIntraNonBonded(getIntraNonBonded());
     evaluator->setPhysicalData(getSharedPhysicalData());
     evaluator->setPhysicalDataOld(getSharedPhysicalDataOld());
 
     return evaluator;
 }
 
-pq::SharedHessianBuilder HessianEngine::setupHessianBuilder() const
+std::shared_ptr<opt::HessianBuilder> HessianEngine::setupHessianBuilder() const
 {
     return makeHessianBuilder(
         HessianSettings::getBuilder(),
@@ -118,7 +120,9 @@ pq::SharedHessianBuilder HessianEngine::setupHessianBuilder() const
     );
 }
 
-void HessianEngine::setupOptimization(const pq::SharedEvaluator &evaluator)
+void HessianEngine::setupOptimization(
+    const std::shared_ptr<Evaluator> &evaluator
+)
 {
     _evaluator            = evaluator;
     _learningRateStrategy = setupLearningRateStrategy();
@@ -157,7 +161,7 @@ void HessianEngine::runOptimization()
             break;
 
         writeOptimizationOutput();
-        deleteTempFiles();
+        deleteTmpFiles();
     }
 
     if (!_converged)
@@ -240,8 +244,8 @@ void HessianEngine::writeOptimizationOutput()
 
     if (0 == _step % outputFreq)
     {
-        _engineOutput.writeXyzFile(*_simulationBox);
-        _engineOutput.writeForceFile(*_simulationBox);
+        _engineOutput.writeXyzFile(*_simulationBox, effStep);
+        _engineOutput.writeForceFile(*_simulationBox, effStep);
         _engineOutput.writeOptRstFile(*_simulationBox, effStep);
         _engineOutput.writeOptFile(_step, *_optimizer);
     }
@@ -267,12 +271,12 @@ void HessianEngine::writeOptimizationOutput()
     _physicalData->reset();
 }
 
-pq::SharedOptimizer HessianEngine::setupEmptyOptimizer()
+std::shared_ptr<Optimizer> HessianEngine::setupEmptyOptimizer()
 {
     const auto nEpochs       = TimingsSettings::getNumberOfSteps();
     const auto optimizerType = OptimizerSettings::getOptimizer();
 
-    pq::SharedOptimizer optimizer;
+    std::shared_ptr<Optimizer> optimizer;
 
     switch (optimizerType)
     {
@@ -306,10 +310,12 @@ pq::SharedOptimizer HessianEngine::setupEmptyOptimizer()
     return optimizer;
 }
 
-pq::SharedLearningRate HessianEngine::setupLearningRateStrategy()
+std::shared_ptr<LearningRateStrategy> HessianEngine::setupLearningRateStrategy()
 {
     const auto alpha0     = OptimizerSettings::getInitialLearningRate();
     const auto lrStrategy = OptimizerSettings::getLearningRateStrategy();
+
+    OptimizerSettings::validateLearningRateStrategy();
 
     switch (lrStrategy)
     {
@@ -319,48 +325,27 @@ pq::SharedLearningRate HessianEngine::setupLearningRateStrategy()
 
         case CONSTANT_DECAY:
         {
-            const auto alphaDecay = OptimizerSettings::getLearningRateDecay();
-
-            if (!alphaDecay.has_value())
-                throw UserInputException(
-                    "You need to specify a learning rate decay factor for the "
-                    "constant decay learning rate strategy"
-                );
-
             const auto alphaFreq = OptimizerSettings::getLRUpdateFrequency();
 
             return std::make_shared<ConstantDecayLRStrategy>(
                 alpha0,
-                alphaDecay.value(),
+                OptimizerSettings::getLearningRateDecay().value(),
                 alphaFreq
             );
         }
 
         case EXPONENTIAL_DECAY:
         {
-            const auto alphaDecay = OptimizerSettings::getLearningRateDecay();
-
-            if (!alphaDecay.has_value())
-                throw UserInputException(
-                    "You need to specify a learning rate decay factor for the "
-                    "exponential decay learning rate strategy"
-                );
-
             const auto alphaFreq = OptimizerSettings::getLRUpdateFrequency();
 
             return std::make_shared<ExpDecayLR>(
                 alpha0,
-                alphaDecay.value(),
+                OptimizerSettings::getLearningRateDecay().value(),
                 alphaFreq
             );
         }
 
         case LINESEARCH_WOLFE:
-            throw UserInputException(
-                "The Wolfe line search learning rate strategy is not yet "
-                "implemented"
-            );
-
         case NONE: break;
     }
 
@@ -370,7 +355,7 @@ pq::SharedLearningRate HessianEngine::setupLearningRateStrategy()
     );
 }
 
-void HessianEngine::setupConvergence(pq::SharedOptimizer &optimizer)
+void HessianEngine::setupConvergence(std::shared_ptr<opt::Optimizer> &optimizer)
 {
     const auto strategyOptional = ConvSettings::getEnConvStrategy();
     const auto defaultStrategy  = ConvSettings::getDefaultEnergyConvStrategy();
@@ -387,14 +372,14 @@ void HessianEngine::setupConvergence(pq::SharedOptimizer &optimizer)
     const auto maxForceOptional  = ConvSettings::getMaxForceConv();
     const auto rmsForceOptional  = ConvSettings::getRMSForceConv();
 
-    auto relEnergy = energyOptional.value_or(_REL_ENERGY_CONV_DEFAULT_);
-    auto absEnergy = energyOptional.value_or(_ABS_ENERGY_CONV_DEFAULT_);
+    auto relEnergy = energyOptional.value_or(REL_ENERGY_CONV_DEFAULT);
+    auto absEnergy = energyOptional.value_or(ABS_ENERGY_CONV_DEFAULT);
 
     relEnergy = relEnergyOptional.value_or(relEnergy);
     absEnergy = absEnergyOptional.value_or(absEnergy);
 
-    auto maxForce = forceOptional.value_or(_MAX_FORCE_CONV_DEFAULT_);
-    auto rmsForce = forceOptional.value_or(_RMS_FORCE_CONV_DEFAULT_);
+    auto maxForce = forceOptional.value_or(MAX_FORCE_CONV_DEFAULT);
+    auto rmsForce = forceOptional.value_or(RMS_FORCE_CONV_DEFAULT);
 
     maxForce = maxForceOptional.value_or(maxForce);
     rmsForce = rmsForceOptional.value_or(rmsForce);
@@ -414,21 +399,13 @@ void HessianEngine::setupConvergence(pq::SharedOptimizer &optimizer)
 }
 
 void HessianEngine::setupMinMaxLearningRate(
-    pq::SharedLearningRate &learningRate
+    std::shared_ptr<LearningRateStrategy> &learningRate
 )
 {
     const auto minLR = OptimizerSettings::getMinLearningRate();
     const auto maxLR = OptimizerSettings::getMaxLearningRate();
 
-    if (maxLR.has_value() && minLR >= maxLR.value())
-        throw UserInputException(
-            std::format(
-                "The minimum learning rate {} is greater or equal to the "
-                "maximum learning rate {}, which is not allowed.",
-                minLR,
-                maxLR.value()
-            )
-        );
+    OptimizerSettings::validateLearningRateBounds();
 
     learningRate->setMinLearningRate(minLR);
     learningRate->setMaxLearningRate(maxLR);
@@ -457,14 +434,15 @@ void HessianEngine::writeOptimizationSetupInfo()
     _engineOutput.getLogOutput().writeEmptyLine();
 }
 
-void HessianEngine::writeHessian(const pq::HessianMatrix &hessian) const
+void HessianEngine::writeHessian(const HessianMatrix &hessian) const
 {
     std::ofstream file(HessianSettings::getHessianFile());
 
     if (file.fail())
         throw UserInputException("Could not open Hessian file for writing.");
 
-    file << std::scientific << std::setprecision(16);
+    constexpr auto precision = 16;
+    file << std::scientific << std::setprecision(precision);
 
     for (const auto &row : hessian)
     {
@@ -480,7 +458,7 @@ void HessianEngine::writeHessian(const pq::HessianMatrix &hessian) const
     }
 }
 
-void HessianEngine::writeHessianInfo(const pq::HessianMatrix &hessian) const
+void HessianEngine::writeHessianInfo(const HessianMatrix &hessian) const
 {
     std::ofstream file(HessianSettings::getHessianInfoFile());
 
@@ -506,26 +484,27 @@ void HessianEngine::writeHessianInfo(const pq::HessianMatrix &hessian) const
 
 void HessianEngine::addTimers()
 {
-    _engineOutput.setTimerName("Output");
+    _engineOutput.setTimerId(TimerId::Output);
     _timer.addTimer(_engineOutput.getTimer());
 
-    _constraints->setTimerName("Constraints");
+    _constraints->setTimerId(TimerId::Constraints);
     _timer.addTimer(_constraints->getTimer());
 
-    _cellList->setTimerName("Cell List");
+    _cellList->setTimerId(TimerId::CellList);
     _timer.addTimer(_cellList->getTimer());
 
-    _potential->setTimerName("Potential");
+    _potential->setTimerId(TimerId::Potential);
     _timer.addTimer(_potential->getTimer());
 
-    _intraNonBonded->setTimerName("IntraNonBonded");
+    _intraNonBonded->setTimerId(TimerId::IntraNonBonded);
     _timer.addTimer(_intraNonBonded->getTimer());
 
-    _physicalData->setTimerName("Physical Data");
+    _physicalData->setTimerId(TimerId::PhysicalData);
     _timer.addTimer(_physicalData->getTimer());
 }
 
-pq::SharedPhysicalData HessianEngine::getSharedPhysicalDataOld()
+std::shared_ptr<physicalData::PhysicalData> HessianEngine::
+    getSharedPhysicalDataOld()
 {
     return _physicalDataOld;
 }

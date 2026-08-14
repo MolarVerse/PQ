@@ -27,7 +27,6 @@
 #include <cstddef>   // for size_t
 
 #include "inputFileParser.hpp"
-#include "typeAliases.hpp"
 
 namespace input
 {
@@ -40,15 +39,15 @@ namespace input
     class ResetKineticsInputParser : public InputFileParser
     {
        public:
-        explicit ResetKineticsInputParser(pq::Engine &);
+        explicit ResetKineticsInputParser(engine::Engine &);
 
-        void parseNScale(const pq::strings &, const size_t);
-        void parseFScale(const pq::strings &, const size_t);
-        void parseNReset(const pq::strings &, const size_t);
-        void parseFReset(const pq::strings &, const size_t);
-        void parseNResetAngular(const pq::strings &, const size_t);
-        void parseFResetAngular(const pq::strings &, const size_t);
-        void parseFResetForces(const pq::strings &, const size_t);
+        void parseNScale(const std::vector<std::string> &, const size_t);
+        void parseFScale(const std::vector<std::string> &, const size_t);
+        void parseNReset(const std::vector<std::string> &, const size_t);
+        void parseFReset(const std::vector<std::string> &, const size_t);
+        void parseNResetAngular(const std::vector<std::string> &, const size_t);
+        void parseFResetAngular(const std::vector<std::string> &, const size_t);
+        void parseFResetForces(const std::vector<std::string> &, const size_t);
     };
 
 }   // namespace input

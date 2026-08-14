@@ -25,7 +25,16 @@
 #define _CELL_LIST_INPUT_PARSER_HPP_
 
 #include "inputFileParser.hpp"
-#include "typeAliases.hpp"
+
+namespace engine
+{
+    class Engine;   // forward declaration
+}   // namespace engine
+
+namespace simulationBox
+{
+    class CellList;   // forward declaration
+}   // namespace simulationBox
 
 namespace input
 {
@@ -37,11 +46,20 @@ namespace input
      */
     class CellListInputParser : public InputFileParser
     {
-       public:
-        explicit CellListInputParser(pq::Engine &);
+        std::shared_ptr<simulationBox::CellList> _cellListPtr;
 
-        void parseCellListActivated(const pq::strings &, const size_t);
-        void parseNumberOfCells(const pq::strings &, const size_t);
+       public:
+        explicit CellListInputParser(
+            engine::Engine                          &engine,
+            std::shared_ptr<simulationBox::CellList> cellListPtr
+        );
+
+        void parseCellListActivated(
+            const std::vector<std::string> &,
+            const size_t
+        );
+
+        void parseNumberOfCells(const std::vector<std::string> &, const size_t);
     };
 
 }   // namespace input

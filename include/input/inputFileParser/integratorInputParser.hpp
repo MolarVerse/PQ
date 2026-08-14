@@ -27,7 +27,6 @@
 #include <cstddef>   // for size_t
 
 #include "inputFileParser.hpp"   // for InputFileParser
-#include "typeAliases.hpp"       // for pq::strings
 
 namespace input
 {
@@ -40,9 +39,9 @@ namespace input
     class IntegratorInputParser : public InputFileParser
     {
        public:
-        explicit IntegratorInputParser(pq::Engine &);
+        explicit IntegratorInputParser(engine::Engine &);
 
-        void parseIntegrator(const pq::strings &, const size_t);
+        void parseIntegrator(const std::vector<std::string> &, const size_t);
     };
 
 }   // namespace input

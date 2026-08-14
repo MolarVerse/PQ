@@ -24,6 +24,7 @@
 
 #include <format>          // for format
 #include <sstream>         // for stringstream
+#include <stdexcept>       // for invalid_argument, out_of_range
 #include <unordered_map>   // for unordered_map
 
 #include "engine.hpp"            // for Engine
@@ -52,7 +53,27 @@ using namespace constants;
  *
  * @param engine
  */
-QMInputParser::QMInputParser(Engine &engine) : InputFileParser(engine)
+QMInputParser::QMInputParser(engine::Engine &engine)
+    : QMInputParser(engine, true)
+{
+}
+
+/**
+ * @brief Construct a new QMInputParser:: QMInputParser object
+ *
+ * @details following keywords are added to the _keywordFuncMap,
+ * _keywordRequiredMap and _keywordCountMap: 1) qm_prog <string> 2) qm_script
+ * <string>
+ *
+ * @param engine
+ * @param resolveBuiltInSlakosPath
+ */
+QMInputParser::QMInputParser(
+    Engine    &engine,
+    const bool resolveBuiltInSlakosPath
+)
+    : InputFileParser(engine),
+      _resolveBuiltInSlakosPath(resolveBuiltInSlakosPath)
 {
     addKeyword(
         std::string("qm_prog"),
@@ -178,13 +199,13 @@ void QMInputParser::parseQMMethod(
     if ("dftbplus" == method)
     {
         QMSettings::setQMMethod(DFTBPLUS);
-        ReferencesOutput::addReferenceFile(_DFTBPLUS_FILE_);
+        ReferencesOutput::addReferenceFile(DFTBPLUS_FILE);
     }
 
     else if ("ase_dftbplus" == method)
     {
         QMSettings::setQMMethod(ASEDFTBPLUS);
-        ReferencesOutput::addReferenceFile(_DFTBPLUS_FILE_);
+        ReferencesOutput::addReferenceFile(DFTBPLUS_FILE);
     }
 
     else if ("ase_xtb" == method)
@@ -193,19 +214,19 @@ void QMInputParser::parseQMMethod(
     else if ("pyscf" == method)
     {
         QMSettings::setQMMethod(PYSCF);
-        ReferencesOutput::addReferenceFile(_PYSCF_FILE_);
+        ReferencesOutput::addReferenceFile(PYSCF_FILE);
     }
 
     else if ("turbomole" == method)
     {
         QMSettings::setQMMethod(TURBOMOLE);
-        ReferencesOutput::addReferenceFile(_TURBOMOLE_FILE_);
+        ReferencesOutput::addReferenceFile(TURBOMOLE_FILE);
     }
 
     else if ("fennol" == method)
     {
         QMSettings::setQMMethod(method);
-        ReferencesOutput::addReferenceFile(_FENNOL_FILE_);
+        ReferencesOutput::addReferenceFile(FENNOL_FILE);
     }
 
     else if (method.starts_with("mace"))
@@ -269,7 +290,7 @@ void QMInputParser::parseQMLoopTimeLimit(
 )
 {
     checkCommand(lineElements, lineNumber);
-    QMSettings::setQMLoopTimeLimit(std::stod(lineElements[2]));
+    QMSettings::setQMLoopTimeLimit(stringToFiniteDouble(lineElements[2]));
 }
 
 /**
@@ -426,13 +447,13 @@ void QMInputParser::parseMaceQMMethod(const std::string_view &model)
     if ("mace" == model || "mace_mp" == model)
     {
         QMSettings::setMaceModelType(MACE_MP);
-        ReferencesOutput::addReferenceFile(_MACEMP_FILE_);
+        ReferencesOutput::addReferenceFile(MACEMP_FILE);
     }
 
     else if ("mace_off" == model)
     {
         QMSettings::setMaceModelType(MACE_OFF);
-        ReferencesOutput::addReferenceFile(_MACEOFF_FILE_);
+        ReferencesOutput::addReferenceFile(MACEOFF_FILE);
     }
 
     else if ("mace_anicc" == model || "mace_ani" == model)
@@ -476,13 +497,15 @@ void QMInputParser::parseSlakosType(
 
     if ("3ob" == slakos)
     {
-        QMSettings::setSlakosType(THREEOB);
+        QMSettings::setSlakosType(THREEOB, _resolveBuiltInSlakosPath);
         QMSettings::setHubbardDerivs(hubbardDerivMap3ob);
+        ReferencesOutput::addReferenceFile(THREEOB_FILE);
     }
 
     else if ("matsci" == slakos)
     {
-        QMSettings::setSlakosType(MATSCI);
+        QMSettings::setSlakosType(MATSCI, _resolveBuiltInSlakosPath);
+        ReferencesOutput::addReferenceFile(MATSCI_FILE);
     }
 
     else if ("custom" == slakos)
@@ -555,14 +578,36 @@ void QMInputParser::parseHubbardDerivs(
     std::string       item;
     while (std::getline(ss, item, ','))
     {
-        std::stringstream pairStream(item);
-        std::string       element;
-        double            value;
-        if (std::getline(pairStream, element, ':') && pairStream >> value)
+        const auto separator = item.find(':');
+
+        if (separator == std::string::npos || 0 == separator ||
+            separator + 1 == item.size() ||
+            item.find(':', separator + 1) != std::string::npos)
         {
-            hubbardDerivs[element] = value;
+            throw InputFileException(
+                std::format(
+                    "Invalid hubbard_derivs format \"{}\" in input file.",
+                    derivs
+                )
+            );
         }
-        else
+
+        const auto element = item.substr(0, separator);
+        try
+        {
+            hubbardDerivs[element] =
+                stringToFiniteDouble(item.substr(separator + 1));
+        }
+        catch (const std::invalid_argument &)
+        {
+            throw InputFileException(
+                std::format(
+                    "Invalid hubbard_derivs format \"{}\" in input file.",
+                    derivs
+                )
+            );
+        }
+        catch (const std::out_of_range &)
         {
             throw InputFileException(
                 std::format(
