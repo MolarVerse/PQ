@@ -148,6 +148,7 @@ void GeneralInputParser::parseJobTypeForEngine(
         engine.reset(new QMMMMDEngine());
     }
     else
+    {
         throw InputFileException(format(
             "Invalid jobtype \"{}\" in input file - possible values are:\n"
             "- mm-opt\n"
@@ -158,6 +159,7 @@ void GeneralInputParser::parseJobTypeForEngine(
             "- qmmm-md\n",
             lineElements[2]
         ));
+    }
 }
 
 /**
@@ -189,11 +191,13 @@ void GeneralInputParser::parseDimensionality(
         Settings::setDimensionality(static_cast<size_t>(dimensionality));
 
     else
+    {
         throw InputFileException(format(
             "Invalid dimensionality \"{}\" in input file\n"
             "Possible values are: 3, 3d",
             lineElements[2]
         ));
+    }
 }
 
 /**
@@ -226,11 +230,13 @@ void GeneralInputParser::parseFloatingPointType(
         Settings::setFloatingPointType(DOUBLE);
 
     else
+    {
         throw InputFileException(format(
             "Invalid floating point type \"{}\" in input file\n"
             "Possible values are: float, double",
             lineElements[2]
         ));
+    }
 }
 
 /**

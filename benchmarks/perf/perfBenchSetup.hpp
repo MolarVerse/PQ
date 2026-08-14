@@ -131,13 +131,7 @@ namespace benchSetup
             )
         );
 
-        auto pair = potential::LennardJonesPair(
-            std::size_t(0),
-            std::size_t(1),
-            12.0,
-            2.0,
-            3.0
-        );
+        auto pair = potential::LennardJonesPair(0UL, 1UL, 12.0, 2.0, 3.0);
         potential.setNonCoulombPairsMatrix(0, 1, pair);
         potential.setNonCoulombPairsMatrix(1, 0, pair);
 

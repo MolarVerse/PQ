@@ -274,11 +274,15 @@ void SimulationBoxSetup::setAtomicNumbers()
             const auto keyword = toLowerCopy(molecule.getAtomName(i));
 
             if (!atomNumberMap.contains(keyword))
+            {
                 throw MolDescriptorException(
                     "Invalid atom name \"" + keyword + "\""
                 );
+            }
             else
+            {
                 molecule.getAtom(i).setAtomicNumber(atomNumberMap.at(keyword));
+            }
         }
     };
 
@@ -390,6 +394,7 @@ void SimulationBoxSetup::checkRcCutoff()
     const auto  minDim = simBox.getMinimalBoxDimension();
 
     if (rc > minDim / 2.0)
+    {
         throw InputFileException(
             std::format(
                 "Rc cutoff is larger than half of the minimal box dimension of "
@@ -397,6 +402,7 @@ void SimulationBoxSetup::checkRcCutoff()
                 minDim
             )
         );
+    }
 }
 
 /**
@@ -525,16 +531,20 @@ void SimulationBoxSetup::writeSetupInfo() const
          getZeroVelocities()) ||
         SimulationBoxSettings::getInitializeVelocities() ==
             InitVelocities::FORCE)
+    {
         log.writeSetupInfo(
             "velocities initialized with Maxwell-Boltzmann distribution"
         );
+    }
     else
+    {
         log.writeSetupInfo(
             std::format(
                 "velocities taken from start file \"{}\"",
                 FileSettings::getStartFileName()
             )
         );
+    }
     log.writeEmptyLine();
 }
 

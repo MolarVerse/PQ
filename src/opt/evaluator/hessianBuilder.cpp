@@ -134,12 +134,14 @@ std::vector<double> ForceDifferenceHessianBuilder::flattenForces(
 void ForceDifferenceHessianBuilder::symmetrize(HessianMatrix &hessian)
 {
     for (size_t row = 0; row < hessian.size(); ++row)
+    {
         for (size_t col = row + 1; col < hessian.size(); ++col)
         {
             const auto value  = 0.5 * (hessian[row][col] + hessian[col][row]);
             hessian[row][col] = value;
             hessian[col][row] = value;
         }
+    }
 }
 
 /**

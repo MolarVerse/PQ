@@ -59,6 +59,7 @@ int main()
     constr.activateShake();
 
     for (std::size_t m = 0; m < molecules.size(); ++m)
+    {
         constr.addBondConstraint(
             constraints::BondConstraint(
                 &molecules[m],
@@ -68,6 +69,7 @@ int main()
                 0.85
             )
         );
+    }
 
     constr.calculateConstraintBondRefs(box);
 

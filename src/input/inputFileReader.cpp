@@ -183,6 +183,7 @@ void InputFileReader::process(const std::vector<std::string> &lineElements)
     const auto keyword          = toLowerAndReplaceDashesCopy(original_keyword);
 
     if (!_keywordFuncMap.contains(keyword))
+    {
         throw InputFileException(
             std::format(
                 "Invalid keyword \"{}\" at line {}",
@@ -190,6 +191,7 @@ void InputFileReader::process(const std::vector<std::string> &lineElements)
                 _lineNumber
             )
         );
+    }
 
     InputFileParser::ParseFunc parserFunc = _keywordFuncMap[keyword];
 
@@ -422,6 +424,7 @@ void input::processEqualSign(std::string &command, const size_t lineNumber)
         command.replace(equalSignPos, 1, " = ");
 
     else
+    {
         throw InputFileException(
             std::format(
                 "Missing equal sign in command \"{}\" in line {}",
@@ -429,6 +432,7 @@ void input::processEqualSign(std::string &command, const size_t lineNumber)
                 lineNumber
             )
         );
+    }
 }
 
 /***************************

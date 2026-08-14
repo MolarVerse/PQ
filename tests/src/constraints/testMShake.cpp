@@ -55,7 +55,7 @@ using namespace simulationBox;
  * applyMShake. With the fixed UT loop bound, applyMShake must converge without
  * throwing.
  */
-TEST(TestMShake, applyMShake_threeAtomMolecule)
+TEST(TestMShake, applyMShakeThreeAtomMolecule)
 {
     // --- reference shape: equilateral triangle in the xy plane ---
     auto moltype = MoleculeType();
@@ -142,7 +142,7 @@ TEST(TestMShake, applyMShake_threeAtomMolecule)
  * the routine must throw MShakeException rather than looping forever or
  * silently giving up.
  */
-TEST(TestMShake, applyMShake_throwsWhenIterationLimitTooSmall)
+TEST(TestMShake, applyMShakeThrowsWhenIterationLimitTooSmall)
 {
     auto moltype = MoleculeType();
     moltype.setMoltype(1);

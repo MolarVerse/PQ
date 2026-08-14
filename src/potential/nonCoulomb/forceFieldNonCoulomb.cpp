@@ -167,6 +167,7 @@ void ForceFieldNonCoulomb::sortNonCoulombicsPairs(
     const auto iter = adjacent_find(nonCoulPairsVec, compareSharedPtrs);
 
     if (iter != nonCoulPairsVec.end())
+    {
         throw ParameterFileException(
             std::format(
                 "Non-coulombic pairs with global van der Waals types {} and {} "
@@ -176,6 +177,7 @@ void ForceFieldNonCoulomb::sortNonCoulombicsPairs(
                 (*iter)->getVanDerWaalsType2()
             )
         );
+    }
 }
 
 /**
@@ -366,7 +368,9 @@ std::optional<std::shared_ptr<NonCoulombPair>> ForceFieldNonCoulomb::
         return *firstNonCoulPair;
     }
     else
+    {
         return std::nullopt;
+    }
 }
 
 /**

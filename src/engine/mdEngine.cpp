@@ -77,7 +77,7 @@ void MDEngine::run()
 
     _timer.stopSimulationTimer();
 
-    const auto elapsedTime = double(_timer.calculateElapsedTime()) * 1e-3;
+    const auto elapsedTime = _timer.calculateElapsedTime() * constants::MS_TO_S;
 
     _engineOutput.setTimerName("Output");
     _timer.addTimer(_engineOutput.getTimer());

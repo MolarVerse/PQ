@@ -21,6 +21,7 @@
 # fuchsia-virtual-inheritance: needs a huge rework of the engine code base, but should be possible to fix it for all classes
 # fuchsia-multiple-inheritance: needs a huge rework of the engine code base, but should be possible to fix it for all classes
 # google-build-using-namespace: definitely needed but needs a rework of the code base, maybe with a custom clang-tidy checker
+# google-readability-todo: needs to be discussed on how to generalize TODO handling
 ---
 Checks:          
   '
@@ -41,6 +42,16 @@ Checks:
   google-e*,
   google-f*,
   google-g*,
+  google-h*,
+  google-i*,
+  google-j*,
+  google-k*,
+  google-l*,
+  google-m*,
+  google-n*,
+  google-o*,
+  google-p*,
+  google-read*,
   -cppcoreguidelines-owning-memory,
   -cppcoreguidelines-pro-type-member-init,
   -cppcoreguidelines-pro-type-union-access,
@@ -54,6 +65,7 @@ Checks:
   -fuchsia-virtual-inheritance,
   -fuchsia-multiple-inheritance,
   -google-build-using-namespace,
+  -google-readability-todo,
   -altera-struct-pack-align,
   -altera-unroll-loops,
   -boost-use-ranges,
@@ -79,12 +91,18 @@ HeaderFilterRegex: '.*/PQ/src/.*'
 SystemHeaders: false
 FormatStyle:     google
 CheckOptions:
+    ### allow some magic numbers
     - key:             readability-magic-numbers.IgnoredFloatingPointValues
       value:           "0.5;2.0"
     - key:             cppcoreguidelines-avoid-magic-numbers.IgnoredFloatingPointValues
       value:           "0.5;2.0;1.0"
+
+    ### special member functions
     - key:             cppcoreguidelines-special-member-functions.AllowSoleDefaultDtor
       value:           true
+    - key:             hicpp-special-member-functions.AllowSoleDefaultDtor
+      value:           true
+
 #   - key:             llvmlibc-restrict-system-libc-headers.Includes
 #     value:           'cstdint'
 
@@ -94,19 +112,14 @@ CheckOptions:
 #   - key:             readability-identifier-length.IgnoredVariableNames
 #     value:           '^(id|it|db|x|y|z|tx)$'
   
-#   ### special member functions
-#   - key:             cppcoreguidelines-special-member-functions.AllowSoleDefaultDtor
-#     value:           true
-#   - key:             hicpp-special-member-functions.AllowSoleDefaultDtor
-#     value:           true 
 
-#   ### short line statements
-#   - key:             readability-braces-around-statements.ShortStatementLines
-#     value:           4
-#   - key:             google-readability-braces-around-statements.ShortStatementLines
-#     value:           4
-#   - key:             hicpp-braces-around-statements.ShortStatementLines
-#     value:           4
+  ### short line statements
+    - key:             readability-braces-around-statements.ShortStatementLines
+      value:           4
+    - key:             google-readability-braces-around-statements.ShortStatementLines
+      value:           4
+    - key:             hicpp-braces-around-statements.ShortStatementLines
+      value:           4
 
 #   ### necessary for POD-structs!
 #   - key:             misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic
@@ -114,16 +127,6 @@ CheckOptions:
 ...
 
 ### TO BE INCLUDED IN THE FUTURE
-  # google-objc-avoid-nsobject-new,
-  # google-objc-avoid-throwing-exception,
-  # google-objc-function-naming,
-  # google-objc-global-variable-declaration,
-  # google-readability-avoid-underscore-in-googletest-name,
-  # google-readability-braces-around-statements,
-  # google-readability-casting,
-  # google-readability-function-size,
-  # google-readability-namespace-comments,
-  # google-readability-todo,
   # google-runtime-int,
   # google-runtime-operator,
   # google-upgrade-googletest-case,

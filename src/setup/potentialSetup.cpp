@@ -174,10 +174,12 @@ void PotentialSetup::setupNonCoulombicPairs()
     auto       selfNonCoulPairs = nonCoulPot.getSelfInteractionNonCoulPairs();
 
     if (selfNonCoulPairs.size() != nGlobalVdwTypes)
+    {
         throw ParameterFileException(
             "Not all self interacting non coulombics were set in the "
             "noncoulombics section of the parameter file"
         );
+    }
 
     std::ranges::sort(
         selfNonCoulPairs,
@@ -266,7 +268,9 @@ void PotentialSetup::writeNonCoulombInfo() const
         // clang-format on
     }
     else
+    {
         log.writeSetupInfo("Non-coulombic potential: Guff");
+    }
 
     log.writeEmptyLine();
 }

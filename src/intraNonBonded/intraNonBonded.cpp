@@ -65,12 +65,14 @@ IntraNonBondedContainer *IntraNonBonded::findIntraNonBondedContainerByMolType(
     if (it != _intraNonBondedContainers.end())
         return std::to_address(it);
     else
+    {
         throw IntraNonBondedException(
             std::format(
                 "IntraNonBondedContainer with molType {} not found!",
                 molType
             )
         );
+    }
 }
 
 /**

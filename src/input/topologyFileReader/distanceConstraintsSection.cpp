@@ -62,6 +62,7 @@ void DistanceConstraintsSection::processSection(
 {
     // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
     if (lineElements.size() != 6)
+    {
         throw TopologyException(
             std::format(
                 "Wrong number of arguments in topology file \"Distance "
@@ -71,6 +72,7 @@ void DistanceConstraintsSection::processSection(
                 _lineNumber
             )
         );
+    }
 
     auto atom1             = stoul(lineElements[0]);
     auto atom2             = stoul(lineElements[1]);
@@ -81,6 +83,7 @@ void DistanceConstraintsSection::processSection(
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
     if (atom1 == atom2)
+    {
         throw TopologyException(
             std::format(
                 "Topology file \"Distance "
@@ -88,8 +91,10 @@ void DistanceConstraintsSection::processSection(
                 _lineNumber
             )
         );
+    }
 
     if (lowerDistance > upperDistance)
+    {
         throw TopologyException(
             std::format(
                 "Topology file \"Distance "
@@ -98,6 +103,7 @@ void DistanceConstraintsSection::processSection(
                 _lineNumber
             )
         );
+    }
 
     auto &simBox = engine.getSimulationBox();
 
@@ -135,6 +141,7 @@ std::string DistanceConstraintsSection::keyword() { return "dist_constraints"; }
 void DistanceConstraintsSection::endedNormally(const bool endedNormal) const
 {
     if (!endedNormal)
+    {
         throw TopologyException(
             std::format(
                 "Topology file error in \"Distance Constraints\" section at "
@@ -143,4 +150,5 @@ void DistanceConstraintsSection::endedNormally(const bool endedNormal) const
                 _lineNumber
             )
         );
+    }
 }

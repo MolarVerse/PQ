@@ -57,7 +57,9 @@ DistanceConstraint::DistanceConstraint(
       _lowerDistance(lowerDistance),
       _upperDistance(upperDistance),
       _springConstant(springConstant),
-      _dSpringConstantDt(dSpringConstantDt){};
+      _dSpringConstantDt(dSpringConstantDt)
+{
+}
 
 /**
  * @brief calculates the reference distance of all distance constraints
@@ -100,7 +102,9 @@ void DistanceConstraint::applyDistanceConstraint(
         _force           = +force_constant * delta * dPos / distance;
     }
     else
+    {
         return;
+    }
 
     _molecules[0]->addAtomForce(_atomIndices[0], _force);
     _molecules[1]->addAtomForce(_atomIndices[1], -_force);

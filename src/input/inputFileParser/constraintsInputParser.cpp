@@ -201,7 +201,7 @@ void ConstraintsInputParser::parseShakeIteration(
     if (iteration <= 0)
         throw InputFileException("Maximum shake iterations must be positive");
 
-    ConstraintSettings::setShakeMaxIter(size_t(iteration));
+    ConstraintSettings::setShakeMaxIter(static_cast<size_t>(iteration));
 }
 
 /**
@@ -249,7 +249,7 @@ void ConstraintsInputParser::parseRattleIteration(
     if (iteration <= 0)
         throw InputFileException("Maximum rattle iterations must be positive");
 
-    ConstraintSettings::setRattleMaxIter(size_t(iteration));
+    ConstraintSettings::setRattleMaxIter(static_cast<size_t>(iteration));
 }
 
 /**
@@ -297,7 +297,7 @@ void ConstraintsInputParser::parseMShakeIteration(
     if (iteration <= 0)
         throw InputFileException("Maximum MShake iterations must be positive");
 
-    ConstraintSettings::setMShakeMaxIter(size_t(iteration));
+    ConstraintSettings::setMShakeMaxIter(static_cast<size_t>(iteration));
 }
 
 /**

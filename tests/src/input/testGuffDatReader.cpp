@@ -56,7 +56,7 @@ using namespace customException;
  * @details expects throw if mol types are not found
  *
  */
-TEST_F(TestGuffDatReader, parseLine_ErrorMoltypeNotFound)
+TEST_F(TestGuffDatReader, parseLineErrorMoltypeNotFound)
 {
     auto line = std::vector<std::string>{"3", "1", "1"};
     EXPECT_THROW_MSG(
@@ -79,7 +79,7 @@ TEST_F(TestGuffDatReader, parseLine_ErrorMoltypeNotFound)
  * @details expects throw if atom types are not found
  *
  */
-TEST_F(TestGuffDatReader, parseLine_ErrorAtomTypeNotFound)
+TEST_F(TestGuffDatReader, parseLineErrorAtomTypeNotFound)
 {
     auto line = std::vector<std::string>{"1", "0", "2", "3"};
     EXPECT_THROW_MSG(
@@ -455,7 +455,7 @@ TEST_F(TestGuffDatReader, addNonCoulombPair)
  * @details error number of line arguments
  *
  */
-TEST_F(TestGuffDatReader, read_errorNumberOfLineArguments)
+TEST_F(TestGuffDatReader, readErrorNumberOfLineArguments)
 {
     _guffDatReader->setFilename(
         "data/guffDatReader/guffNumberLineElementsError.dat"
@@ -468,7 +468,7 @@ TEST_F(TestGuffDatReader, read_errorNumberOfLineArguments)
     );
 }
 
-TEST_F(TestGuffDatReader, checkPartialCharges_NotMatchingCoefficients)
+TEST_F(TestGuffDatReader, checkPartialChargesNotMatchingCoefficients)
 {
     _guffDatReader->setupGuffMaps();
     _guffDatReader->setGuffCoulombCoefficients(0, 0, 0, 0, 1.0);
@@ -627,7 +627,7 @@ TEST_F(TestGuffDatReader, readGuffDat)
     EXPECT_NO_THROW(readGuffDat(*_engine));
 }
 
-TEST_F(TestGuffDatReader, readGuffDat_ErrorButNoThrowNotActivated)
+TEST_F(TestGuffDatReader, readGuffDatErrorButNoThrowNotActivated)
 {
     _guffDatReader->setFilename("");   // just to produce any kind of error
     Settings::setJobtype(JobType::MM_MD);
@@ -635,7 +635,7 @@ TEST_F(TestGuffDatReader, readGuffDat_ErrorButNoThrowNotActivated)
     EXPECT_NO_THROW(readGuffDat(*_engine));
 }
 
-TEST_F(TestGuffDatReader, readGuffDat_ErrorButNoThrowMMNotActivated)
+TEST_F(TestGuffDatReader, readGuffDatErrorButNoThrowMMNotActivated)
 {
     _guffDatReader->setFilename("");   // just to produce any kind of error
     Settings::setJobtype(JobType::MM_MD);

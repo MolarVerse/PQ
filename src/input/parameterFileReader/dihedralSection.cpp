@@ -65,6 +65,7 @@ void DihedralSection::processSection(
 )
 {
     if (lineElements.size() != 4)
+    {
         throw ParameterFileException(
             std::format(
                 "Wrong number of arguments in parameter file dihedral section "
@@ -73,6 +74,7 @@ void DihedralSection::processSection(
                 _lineNumber
             )
         );
+    }
 
     auto id            = stoul(lineElements[0]);
     auto forceConstant = stod(lineElements[1]);
@@ -80,6 +82,7 @@ void DihedralSection::processSection(
     auto phase         = stod(lineElements[3]) * DEG_TO_RAD;
 
     if (periodicity < 0.0)
+    {
         throw ParameterFileException(
             std::format(
                 "Parameter file dihedral section at line {} - periodicity has "
@@ -88,6 +91,7 @@ void DihedralSection::processSection(
                 _lineNumber
             )
         );
+    }
 
     auto dihedralType = DihedralType(id, forceConstant, periodicity, phase);
 

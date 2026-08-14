@@ -77,7 +77,9 @@ void CellListSetup::setup()
         _engine.makePotential(PotentialCellList());
     }
     else
+    {
         _engine.makePotential(PotentialBruteForce());
+    }
 
     _engine.getPotential().setNonCoulombPotential(nonCoulombPot);
 }

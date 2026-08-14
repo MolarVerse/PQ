@@ -80,7 +80,7 @@ void NoseHooverThermostat::applyThermostatOnForces(SimulationBox &simBox)
 
     auto factor  = _chi[0] * couplingFreqSquared;
     factor      /= (kT_target * degreesOfFreedom);
-    factor       *= MOMENTUM_TO_FORCE;
+    factor      *= MOMENTUM_TO_FORCE;
 
     auto applyNoseHoover = [factor](auto &atom)
     { atom->addForce(-factor * atom->getVelocity() * atom->getMass()); };
@@ -108,7 +108,8 @@ void NoseHooverThermostat::applyThermostat(
 
     _temperature = physicalData.getTemperature();
 
-    const auto degreesOfFreedom    = double(simBox.getDegreesOfFreedom());
+    const auto degreesOfFreedom =
+        static_cast<double>(simBox.getDegreesOfFreedom());
     const auto couplingFreqSquared = _couplingFrequency * _couplingFrequency;
 
     const auto dt = TimingsSettings::getTimeStep();

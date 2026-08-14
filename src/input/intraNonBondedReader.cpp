@@ -178,6 +178,7 @@ size_t IntraNonBondedReader::findMoleculeType(const std::string &id) const
         if (molTypeExists)
             return molTypeFromSizeT;
         else
+        {
             throw IntraNonBondedException(format(
                 "ERROR: could not find molecule type '{}' in line {} in file "
                 "'{}'",
@@ -185,9 +186,12 @@ size_t IntraNonBondedReader::findMoleculeType(const std::string &id) const
                 _lineNumber,
                 _fileName
             ));
+        }
     }
     else
+    {
         return molTypeFromString.value();
+    }
 }
 
 /**
@@ -243,9 +247,10 @@ void IntraNonBondedReader::processMolecule(const size_t moleculeType)
             break;
         }
 
-        const auto refAtomIdx = size_t(stoi(lineElements[0]) - 1);
+        const auto refAtomIdx = static_cast<size_t>(stoi(lineElements[0]) - 1);
 
         if (refAtomIdx >= nAtoms)
+        {
             throw IntraNonBondedException(format(
                 "ERROR: reference atom index '{}' in line {} in file '{}' is "
                 "out of range",
@@ -253,6 +258,7 @@ void IntraNonBondedReader::processMolecule(const size_t moleculeType)
                 _lineNumber,
                 _fileName
             ));
+        }
 
         auto addAtomIdxToRefAtom =
             [&atomIndices, refAtomIdx, nAtoms, this](const auto &lineElement)
@@ -260,7 +266,8 @@ void IntraNonBondedReader::processMolecule(const size_t moleculeType)
             auto atomIndex  = ::abs(stoi(lineElement)) - 1;
             atomIndex      *= sign(stoi(lineElement));
 
-            if (::abs(atomIndex) >= int(nAtoms))
+            if (::abs(atomIndex) >= static_cast<int>(nAtoms))
+            {
                 throw IntraNonBondedException(format(
                     "ERROR: atom index '{}' in line {} in file '{}' is out of "
                     "range",
@@ -268,6 +275,7 @@ void IntraNonBondedReader::processMolecule(const size_t moleculeType)
                     _lineNumber,
                     _fileName
                 ));
+            }
 
             atomIndices[refAtomIdx].push_back(atomIndex);
         };
@@ -278,11 +286,13 @@ void IntraNonBondedReader::processMolecule(const size_t moleculeType)
     }
 
     if (!endedNormal)
+    {
         throw IntraNonBondedException(format(
             "ERROR: could not find 'END' for moltype '{}' in file '{}'",
             moleculeType,
             _fileName
         ));
+    }
 
     const auto container = IntraNonBondedContainer(moleculeType, atomIndices);
 
@@ -314,11 +324,13 @@ void IntraNonBondedReader::checkDuplicates() const
     const auto it = std::ranges::adjacent_find(moleculeTypes);
 
     if (it != moleculeTypes.end())
+    {
         throw IntraNonBondedException(format(
             "ERROR: moltype '{}' is defined multiple times in file '{}'",
             *it,
             _fileName
         ));
+    }
 }
 
 /**

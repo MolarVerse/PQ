@@ -86,13 +86,15 @@ std::vector<std::string> utilities::getLineCommands(
         if (';' == line[static_cast<size_t>(i)])
             break;
 
-        else if (!bool(::isspace(line[static_cast<size_t>(i)])))
+        else if (!static_cast<bool>(::isspace(line[static_cast<size_t>(i)])))
+        {
             throw InputFileException(
                 std::format(
                     "Missing semicolon in input file at line {}",
                     lineNumber
                 )
             );
+        }
     }
 
     using std::    operator""sv;
@@ -138,7 +140,10 @@ std::vector<std::string> utilities::splitString(const std::string &line)
  */
 std::string utilities::toLowerCopy(std::string myString)
 {
-    std::ranges::for_each(myString, [](char &c) { c = char(::tolower(c)); });
+    std::ranges::for_each(
+        myString,
+        [](char &c) { c = static_cast<char>(::tolower(c)); }
+    );
     return myString;
 }
 
@@ -163,7 +168,7 @@ std::string utilities::toLowerAndReplaceDashesCopy(std::string myString)
 {
     for (char &c : myString)
     {
-        c = char(::tolower(c));
+        c = static_cast<char>(::tolower(c));
         if (c == '-')
             c = '_';
     }
@@ -192,11 +197,11 @@ std::string utilities::toLowerAndReplaceDashesCopy(
  */
 std::string utilities::firstLetterToUpperCaseCopy(std::string myString)
 {
-    myString[0] = char(::toupper(myString[0]));
+    myString[0] = static_cast<char>(::toupper(myString[0]));
 
     std::ranges::for_each(
         myString | std::views::drop(1),
-        [](char &c) { c = char(::tolower(c)); }
+        [](char &c) { c = static_cast<char>(::tolower(c)); }
     );
 
     return myString;
@@ -239,6 +244,7 @@ bool utilities::keywordToBool(const std::vector<std::string> &lineElements)
         return false;
 
     else
+    {
         throw InputFileException(
             std::format(
                 "Invalid boolean option \"{}\" for keyword \"{}\" in input "
@@ -248,6 +254,7 @@ bool utilities::keywordToBool(const std::vector<std::string> &lineElements)
                 lineElements[0]
             )
         );
+    }
 }
 
 /**
@@ -270,6 +277,7 @@ void utilities::addSpaces(
         command.replace(equalSignPos, 1, " " + stringToReplace + " ");
 
     else
+    {
         throw customException::InputFileException(
             std::format(
                 "Missing \"{}\" in command \"{}\" in line {}",
@@ -278,6 +286,7 @@ void utilities::addSpaces(
                 lineNumber
             )
         );
+    }
 }
 
 /**
@@ -302,18 +311,23 @@ std::uint_fast32_t utilities::stringToUintFast32t(const std::string &str)
         startPos = 1;
 
     for (size_t i = startPos; i < str.length(); ++i)
+    {
         if (!std::isdigit(static_cast<unsigned char>(str[i])))
+        {
             throw std::invalid_argument(
                 std::format(
                     "String \"{}\" is not a valid unsigned integer",
                     str
                 )
             );
+        }
+    }
 
     long long      valueLL{std::stoll(str)};
     constexpr auto maxValue = static_cast<long long>(UINT32_MAX);
 
     if (valueLL < 0 || valueLL > maxValue)
+    {
         throw std::out_of_range(
             std::format(
                 "The number has to be an integer between \"0\" and \"{}\" "
@@ -321,6 +335,7 @@ std::uint_fast32_t utilities::stringToUintFast32t(const std::string &str)
                 maxValue
             )
         );
+    }
 
     return static_cast<std::uint_fast32_t>(valueLL);
 }
@@ -345,6 +360,7 @@ unsigned long long utilities::stringToULL(const std::string &str)
     const auto maxValue = std::numeric_limits<std::uint64_t>::max();
 
     if (str[0] == '-')
+    {
         throw std::out_of_range(
             std::format(
                 "The number has to be an integer between \"0\" and "
@@ -352,6 +368,7 @@ unsigned long long utilities::stringToULL(const std::string &str)
                 maxValue
             )
         );
+    }
 
     size_t startPos = (str[0] == '+') ? 1 : 0;
     if (startPos == str.length())
@@ -360,13 +377,17 @@ unsigned long long utilities::stringToULL(const std::string &str)
         );
 
     for (size_t i = startPos; i < str.length(); ++i)
+    {
         if (!std::isdigit(static_cast<unsigned char>(str[i])))
+        {
             throw std::invalid_argument(
                 std::format(
                     "String \"{}\" is not a valid unsigned long long",
                     str
                 )
             );
+        }
+    }
 
     try
     {

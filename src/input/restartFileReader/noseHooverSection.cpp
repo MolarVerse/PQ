@@ -47,6 +47,7 @@ void NoseHooverSection::process(
 )
 {
     if (4 != lineElements.size())
+    {
         throw RstFileException(
             std::format(
                 "Error not enough arguments in line {} for a chi entry of the "
@@ -55,6 +56,7 @@ void NoseHooverSection::process(
                 _lineNumber
             )
         );
+    }
 
     const auto idx  = stoul(lineElements[1]);
     const auto chi  = stod(lineElements[2]);
@@ -64,6 +66,7 @@ void NoseHooverSection::process(
     auto [iterZeta, zetaIsInserted] = ThermostatSettings::addZeta(idx, zeta);
 
     if (!chiIsInserted || !zetaIsInserted)
+    {
         throw RstFileException(
             std::format(
                 "Error in line {} in restart file; chi or zeta entry already "
@@ -71,6 +74,7 @@ void NoseHooverSection::process(
                 _lineNumber
             )
         );
+    }
 }
 
 /**

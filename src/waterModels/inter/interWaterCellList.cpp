@@ -65,6 +65,7 @@ void InterWaterStrategyCellList::calculate(
         [&](Atom &atomA, Atom &atomB, const auto &nonCoulPairPtr)
     {
         if (nonCoulPairPtr)
+        {
             calculateSingleInteraction<MMChargeTag, MMChargeTag>(
                 atomA,
                 atomB,
@@ -75,6 +76,7 @@ void InterWaterStrategyCellList::calculate(
                 totalCoulombEnergy,
                 totalNonCoulombEnergy
             );
+        }
     };
 
     for (const auto &cell_i : cellList.getCells())
@@ -106,25 +108,31 @@ void InterWaterStrategyCellList::calculate(
 
                         // O-H interaction (different atom types)
                         if (isAtom_i_O != isAtom_j_O)
+                        {
                             singleInteraction(
                                 *atom_i,
                                 *atom_j,
                                 state._nonCoulombPairOH
                             );
-                        // O-O interaction
+                            // O-O interaction
+                        }
                         else if (isAtom_i_O)
+                        {
                             singleInteraction(
                                 *atom_i,
                                 *atom_j,
                                 state._nonCoulombPairOO
                             );
-                        // H-H interaction
+                            // H-H interaction
+                        }
                         else
+                        {
                             singleInteraction(
                                 *atom_i,
                                 *atom_j,
                                 state._nonCoulombPairHH
                             );
+                        }
                     }
                 }
             }
@@ -167,25 +175,31 @@ void InterWaterStrategyCellList::calculate(
 
                             // O-H interaction (different atom types)
                             if (isAtom_i_O != isAtom_j_O)
+                            {
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
                                     state._nonCoulombPairOH
                                 );
-                            // O-O interaction
+                                // O-O interaction
+                            }
                             else if (isAtom_i_O)
+                            {
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
                                     state._nonCoulombPairOO
                                 );
-                            // H-H interaction
+                                // H-H interaction
+                            }
                             else
+                            {
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
                                     state._nonCoulombPairHH
                                 );
+                            }
                         }
                     }
                 }
@@ -276,6 +290,7 @@ void InterWaterStrategyCellList::calculateCoreToOuterForces(
                     continue;
 
                 for (auto *atom_i : cell_i.getAtoms(mol_i))
+                {
                     for (const auto mol_j : cell_j->getActiveMoleculeIndices())
                     {
                         if (isNonWaterMolecule(waterMolecules_j, mol_j))
@@ -284,6 +299,7 @@ void InterWaterStrategyCellList::calculateCoreToOuterForces(
                         for (auto *atom_j : cell_j->getAtoms(mol_j))
                             singleCoulombInteraction(*atom_i, *atom_j);
                     }
+                }
             }
         }
     }
@@ -302,6 +318,7 @@ void InterWaterStrategyCellList::calculateCoreToOuterForces(
                     continue;
 
                 for (auto *atom_i : cell_j->getAtoms(mol_i))
+                {
                     for (const auto mol_j : cell_i.getActiveMoleculeIndices())
                     {
                         if (isNonWaterMolecule(waterMolecules_i, mol_j))
@@ -310,6 +327,7 @@ void InterWaterStrategyCellList::calculateCoreToOuterForces(
                         for (auto *atom_j : cell_i.getAtoms(mol_j))
                             singleCoulombInteraction(*atom_i, *atom_j);
                     }
+                }
             }
         }
     }
@@ -343,6 +361,7 @@ void InterWaterStrategyCellList::calculateLayerToOuterForces(
         [&](Atom &atomA, Atom &atomB, const auto &nonCoulPairPtr)
     {
         if (nonCoulPairPtr)
+        {
             calculateSingleInteraction<QMChargeTag, MMChargeTag>(
                 atomA,
                 atomB,
@@ -353,6 +372,7 @@ void InterWaterStrategyCellList::calculateLayerToOuterForces(
                 totalCoulombEnergy,
                 totalNonCoulombEnergy
             );
+        }
     };
 
     const auto isNonWaterMolecule =
@@ -391,25 +411,31 @@ void InterWaterStrategyCellList::calculateLayerToOuterForces(
 
                         // O-H interaction (different atom types)
                         if (isAtom_i_O != isAtom_j_O)
+                        {
                             singleInteraction(
                                 *atom_i,
                                 *atom_j,
                                 state._nonCoulombPairOH
                             );
-                        // O-O interaction
+                            // O-O interaction
+                        }
                         else if (isAtom_i_O)
+                        {
                             singleInteraction(
                                 *atom_i,
                                 *atom_j,
                                 state._nonCoulombPairOO
                             );
-                        // H-H interaction
+                            // H-H interaction
+                        }
                         else
+                        {
                             singleInteraction(
                                 *atom_i,
                                 *atom_j,
                                 state._nonCoulombPairHH
                             );
+                        }
                     }
                 }
             }
@@ -445,25 +471,31 @@ void InterWaterStrategyCellList::calculateLayerToOuterForces(
 
                             // O-H interaction (different atom types)
                             if (isAtom_i_O != isAtom_j_O)
+                            {
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
                                     state._nonCoulombPairOH
                                 );
-                            // O-O interaction
+                                // O-O interaction
+                            }
                             else if (isAtom_i_O)
+                            {
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
                                     state._nonCoulombPairOO
                                 );
-                            // H-H interaction
+                                // H-H interaction
+                            }
                             else
+                            {
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
                                     state._nonCoulombPairHH
                                 );
+                            }
                         }
                     }
                 }
@@ -500,25 +532,31 @@ void InterWaterStrategyCellList::calculateLayerToOuterForces(
 
                             // O-H interaction (different atom types)
                             if (isAtom_i_O != isAtom_j_O)
+                            {
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
                                     state._nonCoulombPairOH
                                 );
-                            // O-O interaction
+                                // O-O interaction
+                            }
                             else if (isAtom_i_O)
+                            {
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
                                     state._nonCoulombPairOO
                                 );
-                            // H-H interaction
+                                // H-H interaction
+                            }
                             else
+                            {
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
                                     state._nonCoulombPairHH
                                 );
+                            }
                         }
                     }
                 }
@@ -556,6 +594,7 @@ void InterWaterStrategyCellList::calculateOuterToOuterForces(
         [&](Atom &atomA, Atom &atomB, const auto &nonCoulPairPtr)
     {
         if (nonCoulPairPtr)
+        {
             calculateSingleInteraction<MMChargeTag, MMChargeTag>(
                 atomA,
                 atomB,
@@ -566,6 +605,7 @@ void InterWaterStrategyCellList::calculateOuterToOuterForces(
                 totalCoulombEnergy,
                 totalNonCoulombEnergy
             );
+        }
     };
 
     const auto isNonWaterMolecule =
@@ -607,25 +647,31 @@ void InterWaterStrategyCellList::calculateOuterToOuterForces(
 
                         // O-H interaction (different atom types)
                         if (isAtom_i_O != isAtom_j_O)
+                        {
                             singleInteraction(
                                 *atom_i,
                                 *atom_j,
                                 state._nonCoulombPairOH
                             );
-                        // O-O interaction
+                            // O-O interaction
+                        }
                         else if (isAtom_i_O)
+                        {
                             singleInteraction(
                                 *atom_i,
                                 *atom_j,
                                 state._nonCoulombPairOO
                             );
-                        // H-H interaction
+                            // H-H interaction
+                        }
                         else
+                        {
                             singleInteraction(
                                 *atom_i,
                                 *atom_j,
                                 state._nonCoulombPairHH
                             );
+                        }
                     }
                 }
             }
@@ -668,25 +714,31 @@ void InterWaterStrategyCellList::calculateOuterToOuterForces(
 
                             // O-H interaction (different atom types)
                             if (isAtom_i_O != isAtom_j_O)
+                            {
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
                                     state._nonCoulombPairOH
                                 );
-                            // O-O interaction
+                                // O-O interaction
+                            }
                             else if (isAtom_i_O)
+                            {
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
                                     state._nonCoulombPairOO
                                 );
-                            // H-H interaction
+                                // H-H interaction
+                            }
                             else
+                            {
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
                                     state._nonCoulombPairHH
                                 );
+                            }
                         }
                     }
                 }
@@ -724,6 +776,7 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
         [&](Atom &atomA, Atom &atomB, const auto &nonCoulPairPtr)
     {
         if (nonCoulPairPtr)
+        {
             calculateSingleInteraction<MMChargeTag, QMChargeTag>(
                 atomA,
                 atomB,
@@ -734,12 +787,14 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                 totalCoulombEnergy,
                 totalNonCoulombEnergy
             );
+        }
     };
 
     const auto singleInteractionOneWay =
         [&](Atom &atomA, Atom &atomB, const auto &nonCoulPairPtr)
     {
         if (nonCoulPairPtr)
+        {
             calculateSingleInteractionOneWay<MMChargeTag, QMChargeTag>(
                 atomA,
                 atomB,
@@ -750,6 +805,7 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                 totalCoulombEnergy,
                 totalNonCoulombEnergy
             );
+        }
     };
 
     const auto isNonWaterMolecule =
@@ -788,25 +844,31 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
 
                         // O-H interaction (different atom types)
                         if (isAtom_i_O != isAtom_j_O)
+                        {
                             singleInteraction(
                                 *atom_i,
                                 *atom_j,
                                 state._nonCoulombPairOH
                             );
-                        // O-O interaction
+                            // O-O interaction
+                        }
                         else if (isAtom_i_O)
+                        {
                             singleInteraction(
                                 *atom_i,
                                 *atom_j,
                                 state._nonCoulombPairOO
                             );
-                        // H-H interaction
+                            // H-H interaction
+                        }
                         else
+                        {
                             singleInteraction(
                                 *atom_i,
                                 *atom_j,
                                 state._nonCoulombPairHH
                             );
+                        }
                     }
                 }
             }
@@ -843,25 +905,31 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
 
                             // O-H interaction (different atom types)
                             if (isAtom_i_O != isAtom_j_O)
+                            {
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
                                     state._nonCoulombPairOH
                                 );
-                            // O-O interaction
+                                // O-O interaction
+                            }
                             else if (isAtom_i_O)
+                            {
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
                                     state._nonCoulombPairOO
                                 );
-                            // H-H interaction
+                                // H-H interaction
+                            }
                             else
+                            {
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
                                     state._nonCoulombPairHH
                                 );
+                            }
                         }
                     }
                 }
@@ -899,25 +967,31 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
 
                             // O-H interaction (different atom types)
                             if (isAtom_i_O != isAtom_j_O)
+                            {
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
                                     state._nonCoulombPairOH
                                 );
-                            // O-O interaction
+                                // O-O interaction
+                            }
                             else if (isAtom_i_O)
+                            {
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
                                     state._nonCoulombPairOO
                                 );
-                            // H-H interaction
+                                // H-H interaction
+                            }
                             else
+                            {
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
                                     state._nonCoulombPairHH
                                 );
+                            }
                         }
                     }
                 }
@@ -953,25 +1027,31 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
 
                         // O-H interaction (different atom types)
                         if (isAtom_i_O != isAtom_j_O)
+                        {
                             singleInteractionOneWay(
                                 *atom_i,
                                 *atom_j,
                                 state._nonCoulombPairOH
                             );
-                        // O-O interaction
+                            // O-O interaction
+                        }
                         else if (isAtom_i_O)
+                        {
                             singleInteractionOneWay(
                                 *atom_i,
                                 *atom_j,
                                 state._nonCoulombPairOO
                             );
-                        // H-H interaction
+                            // H-H interaction
+                        }
                         else
+                        {
                             singleInteractionOneWay(
                                 *atom_i,
                                 *atom_j,
                                 state._nonCoulombPairHH
                             );
+                        }
                     }
                 }
             }
@@ -1015,25 +1095,31 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
 
                             // O-H interaction (different atom types)
                             if (isAtom_i_O != isAtom_j_O)
+                            {
                                 singleInteractionOneWay(
                                     *atom_i,
                                     *atom_j,
                                     state._nonCoulombPairOH
                                 );
-                            // O-O interaction
+                                // O-O interaction
+                            }
                             else if (isAtom_i_O)
+                            {
                                 singleInteractionOneWay(
                                     *atom_i,
                                     *atom_j,
                                     state._nonCoulombPairOO
                                 );
-                            // H-H interaction
+                                // H-H interaction
+                            }
                             else
+                            {
                                 singleInteractionOneWay(
                                     *atom_i,
                                     *atom_j,
                                     state._nonCoulombPairHH
                                 );
+                            }
                         }
                     }
                 }
@@ -1078,25 +1164,31 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
 
                             // O-H interaction (different atom types)
                             if (isAtom_i_O != isAtom_j_O)
+                            {
                                 singleInteractionOneWay(
                                     *atom_i,
                                     *atom_j,
                                     state._nonCoulombPairOH
                                 );
-                            // O-O interaction
+                                // O-O interaction
+                            }
                             else if (isAtom_i_O)
+                            {
                                 singleInteractionOneWay(
                                     *atom_i,
                                     *atom_j,
                                     state._nonCoulombPairOO
                                 );
-                            // H-H interaction
+                                // H-H interaction
+                            }
                             else
+                            {
                                 singleInteractionOneWay(
                                     *atom_i,
                                     *atom_j,
                                     state._nonCoulombPairHH
                                 );
+                            }
                         }
                     }
                 }

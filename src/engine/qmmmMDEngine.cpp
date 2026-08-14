@@ -361,6 +361,7 @@ namespace engine
         for (const auto &mol : _simulationBox->getMolecules())
         {
             if (mol.getMoltype() == 0 && mol.getHybridZone() != CORE)
+            {
                 throw(HybridMDEngineException(
                     std::format(
                         "Molecule number {} is outside the QM core and has "
@@ -369,6 +370,7 @@ namespace engine
                         count
                     )
                 ));
+            }
             ++count;
         }
     }
@@ -448,10 +450,12 @@ namespace engine
             recipientMolecules.push_back(mol);
 
         if (recipientMolecules.empty())
+        {
             throw HybridMDEngineException(
                 "Cannot redistribute smoothing inner force: no CORE/LAYER "
                 "molecules available."
             );
+        }
 
         for (auto &smoothingMol :
              _simulationBox->getMoleculesInsideZone(SMOOTHING))

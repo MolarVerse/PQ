@@ -124,12 +124,14 @@ void SimulationBox::addInnerRegionCenterAtoms(
     for (const auto index : atomIndices)
     {
         if (index < 0 || index >= static_cast<int>(_atoms.size()))
+        {
             throw UserInputException(
                 std::format(
                     "Inner region center atom index {} out of range",
                     index
                 )
             );
+        }
     }
 
     _innerRegionCenterAtomIndices = atomIndices;
@@ -151,14 +153,17 @@ void SimulationBox::setupForcedInnerMolecules(
     for (const auto index : moleculeIndices)
     {
         if (index < 0 || index >= static_cast<int>(_molecules.size()))
+        {
             throw UserInputException(
                 std::format(
                     "Forced inner region molecule index {} out of range",
                     index
                 )
             );
+        }
 
         if (_molecules[static_cast<size_t>(index)].isForcedOuter())
+        {
             throw UserInputException(
                 std::format(
                     "Ambiguous molecule index {} - molecule cannot be in "
@@ -166,8 +171,11 @@ void SimulationBox::setupForcedInnerMolecules(
                     index
                 )
             );
+        }
         else
+        {
             _molecules[static_cast<size_t>(index)].setForcedInner(true);
+        }
     }
 }
 
@@ -187,14 +195,17 @@ void SimulationBox::setupForcedOuterMolecules(
     for (const auto index : moleculeIndices)
     {
         if (index < 0 || index >= static_cast<int>(_molecules.size()))
+        {
             throw UserInputException(
                 std::format(
                     "Forced outer region molecule index {} out of range",
                     index
                 )
             );
+        }
 
         if (_molecules[static_cast<size_t>(index)].isForcedInner())
+        {
             throw UserInputException(
                 std::format(
                     "Ambiguous molecule index {} - molecule cannot be in "
@@ -202,8 +213,11 @@ void SimulationBox::setupForcedOuterMolecules(
                     index
                 )
             );
+        }
         else
+        {
             _molecules[static_cast<size_t>(index)].setForcedOuter(true);
+        }
     }
 }
 
@@ -358,12 +372,14 @@ void SimulationBox::setPartialChargesOfMoleculesFromMoleculeTypes()
             molecule.setPartialCharges(molType->getPartialCharges());
 
         else if (molecule.getMoltype() != 0)
+        {
             throw UserInputException(
                 std::format(
                     "Molecule type {} not found in molecule types",
                     molecule.getMoltype()
                 )
             );
+        }
     };
 
     std::ranges::for_each(_molecules, setPartialCharges);
@@ -620,7 +636,7 @@ double SimulationBox::calculateTemperature()
 
     std::ranges::for_each(_atoms, accumulateTemperature);
 
-    temperature *= TEMPERATURE_FACTOR / double(_degreesOfFreedom);
+    temperature *= TEMPERATURE_FACTOR / static_cast<double>(_degreesOfFreedom);
 
     return temperature;
 }

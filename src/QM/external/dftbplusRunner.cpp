@@ -155,6 +155,7 @@ void DFTBPlusRunner::writePointChargeFile(simulationBox::SimulationBox &box)
         const auto zone = mol.getHybridZone();
 
         if (zone == SMOOTHING || zone == POINT_CHARGE)
+        {
             for (const auto &atom : mol.getAtoms())
             {
                 pcFile << std::format(
@@ -166,6 +167,7 @@ void DFTBPlusRunner::writePointChargeFile(simulationBox::SimulationBox &box)
                 );
                 _usePointCharges = true;
             }
+        }
     }
     pcFile.close();
 
@@ -233,6 +235,7 @@ void DFTBPlusRunner::readStressTensor(Box &box, PhysicalData &data)
     std::ifstream stressFile(stressFileName);
 
     if (!stressFile.is_open())
+    {
         throw QMRunnerException(
             std::format(
                 "Cannot open {} stress tensor \"{}\"",
@@ -240,6 +243,7 @@ void DFTBPlusRunner::readStressTensor(Box &box, PhysicalData &data)
                 stressFileName
             )
         );
+    }
 
     StaticMatrix3x3<double> stress;
 

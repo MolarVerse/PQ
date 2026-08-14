@@ -179,6 +179,7 @@ void HybridSetup::checkZoneRadii()
         _engine.getSimulationBox().getMinimalBoxDimension();
 
     if (coreRadius > layerRadius)
+    {
         throw(InputFileException(
             std::format(
                 "Core radius ({} Å) cannot be larger than layer radius ({} Å)",
@@ -186,8 +187,10 @@ void HybridSetup::checkZoneRadii()
                 layerRadius
             )
         ));
+    }
 
     if (coreRadius > (layerRadius - smoothingRegionThickness))
+    {
         throw(InputFileException(
             std::format(
                 "Smoothing region is too thick ({} Å) for the chosen "
@@ -197,8 +200,10 @@ void HybridSetup::checkZoneRadii()
                 layerRadius
             )
         ));
+    }
 
     if (layerRadius > (minimalBoxDimension / 4))
+    {
         throw(InputFileException(
             std::format(
                 "Layer radius ({} Å) exceeds one quarter of the smallest box "
@@ -208,8 +213,10 @@ void HybridSetup::checkZoneRadii()
                 minimalBoxDimension
             )
         ));
+    }
 
     if ((layerRadius + pointChargeThickness) > (minimalBoxDimension * 3 / 2))
+    {
         throw(InputFileException(
             std::format(
                 "Layer radius ({} Å) plus point charge thickness ({} Å) "
@@ -221,6 +228,7 @@ void HybridSetup::checkZoneRadii()
                 minimalBoxDimension
             )
         ));
+    }
 }
 
 /**
@@ -241,12 +249,14 @@ void HybridSetup::validateQMChargeSettings()
         _engine.getSimulationBox().moleculeTypeExists(0);
 
     if (mmChargesRequested && qmAtomsPresent)
+    {
         throw(InputFileException(
             "Invalid configuration: MM charges requested (qm_charges = mm) in "
             "input file but atoms with moltype \"0\" are present in the "
             "system. Either set \"qm_charges = qm\" or ensure all atoms have a"
             "non-zero moltype."
         ));
+    }
 }
 
 /**

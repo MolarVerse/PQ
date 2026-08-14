@@ -96,7 +96,9 @@ int main()
     };
 
     for (size_t ix = 0; ix < perSide; ++ix)
+    {
         for (size_t iy = 0; iy < perSide; ++iy)
+        {
             for (size_t iz = 0; iz < perSide; ++iz)
             {
                 const Vec3D o{
@@ -123,6 +125,8 @@ int main()
                 ));
                 simBox.addMolecule(molecule);
             }
+        }
+    }
 
     InterWaterState state;
     state._oxygenCharge   = -0.82;

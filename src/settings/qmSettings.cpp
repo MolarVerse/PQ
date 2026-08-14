@@ -402,6 +402,7 @@ void QMSettings::setMaceMode(const std::string_view &mode)
         _maceMode = FAST;
 
     else
+    {
         throw UserInputException(
             std::format(
                 "Unknown mace_mode \"{}\". Valid values are \"accurate\" "
@@ -410,6 +411,7 @@ void QMSettings::setMaceMode(const std::string_view &mode)
                 mode
             )
         );
+    }
 }
 
 /**
@@ -495,26 +497,26 @@ void QMSettings::setSlakosType(const std::string_view &slakos)
         _slakosType = THREEOB;
         _slakosPath = builtinSlakosPath(_slakosType);
     }
-
     else if ("matsci" == slakosType)
     {
         _slakosType = MATSCI;
         _slakosPath = builtinSlakosPath(_slakosType);
     }
-
     else if ("custom" == slakosType)
+    {
         _slakosType = CUSTOM;
-
+    }
     else if ("none" == slakosType)
     {
         _slakosType = NONE;
         _slakosPath = "";
     }
-
     else
+    {
         throw UserInputException(
             std::format("Slakos {} not recognized", slakos)
         );
+    }
 }
 
 /**
@@ -558,12 +560,12 @@ void QMSettings::setSlakosPath(const std::string_view &path)
 {
     if (_slakosType == SlakosType::CUSTOM)
         _slakosPath = path;
-
     else if (_slakosType == SlakosType::NONE)
+    {
         throw UserInputException(
             "Slakos path cannot be set without a slakos type"
         );
-
+    }
     else
     {
         throw UserInputException(

@@ -73,6 +73,7 @@ void InterWaterStrategyBruteForce::calculate(
                 [&](Atom &atomA, Atom &atomB, const auto &nonCoulPairPtr)
             {
                 if (nonCoulPairPtr)
+                {
                     calculateSingleInteraction<MMChargeTag, MMChargeTag>(
                         atomA,
                         atomB,
@@ -83,6 +84,7 @@ void InterWaterStrategyBruteForce::calculate(
                         totalCoulombEnergy,
                         totalNonCoulombEnergy
                     );
+                }
             };
 
             // O-O interaction
@@ -229,6 +231,7 @@ void InterWaterStrategyBruteForce::calculateLayerToOuterForces(
                 [&](Atom &atomA, Atom &atomB, const auto &nonCoulPairPtr)
             {
                 if (nonCoulPairPtr)
+                {
                     calculateSingleInteraction<QMChargeTag, MMChargeTag>(
                         atomA,
                         atomB,
@@ -239,6 +242,7 @@ void InterWaterStrategyBruteForce::calculateLayerToOuterForces(
                         totalCoulombEnergy,
                         totalNonCoulombEnergy
                     );
+                }
             };
 
             // O-O interaction
@@ -327,6 +331,7 @@ void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
                 [&](Atom &atomA, Atom &atomB, const auto &nonCoulPairPtr)
             {
                 if (nonCoulPairPtr)
+                {
                     calculateSingleInteraction<MMChargeTag, QMChargeTag>(
                         atomA,
                         atomB,
@@ -337,6 +342,7 @@ void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
                         totalCoulombEnergy,
                         totalNonCoulombEnergy
                     );
+                }
             };
 
             // O-O interaction
@@ -391,6 +397,7 @@ void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
                 [&](Atom &atomA, Atom &atomB, const auto &nonCoulPairPtr)
             {
                 if (nonCoulPairPtr)
+                {
                     calculateSingleInteractionOneWay<MMChargeTag, QMChargeTag>(
                         atomA,
                         atomB,
@@ -401,6 +408,7 @@ void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
                         totalCoulombEnergy,
                         totalNonCoulombEnergy
                     );
+                }
             };
 
             // clang-format off

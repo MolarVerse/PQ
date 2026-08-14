@@ -94,6 +94,7 @@ namespace
     )
     {
         if (!std::filesystem::is_regular_file(fileName))
+        {
             throw customException::InputFileException(
                 std::format(
                     "{} \"{}\" does not exist or is not a regular file",
@@ -101,6 +102,7 @@ namespace
                     fileName.string()
                 )
             );
+        }
     }
 
     void requireDirectory(
@@ -109,6 +111,7 @@ namespace
     )
     {
         if (!std::filesystem::is_directory(directoryName))
+        {
             throw customException::InputFileException(
                 std::format(
                     "{} \"{}\" does not exist or is not a directory",
@@ -116,6 +119,7 @@ namespace
                     directoryName.string()
                 )
             );
+        }
     }
 
     bool isRemoteResource(const std::string_view value)
@@ -172,19 +176,24 @@ namespace
         const auto fullPathScript = QMSettings::getQMScriptFullPath();
 
         if (script.empty() && fullPathScript.empty())
+        {
             throw customException::InputFileException(
                 "No qm_script provided. Please provide a qm_script in the "
                 "input file."
             );
+        }
 
         if (!script.empty() && !fullPathScript.empty())
+        {
             throw customException::InputFileException(
                 "\"qm_script\" and \"qm_script_full_path\" are mutually "
                 "exclusive"
             );
+        }
 
         if (!script.empty() &&
             !cli::isExternalQMScript(QMSettings::getQMMethod(), script))
+        {
             throw customException::InputFileException(
                 std::format(
                     "Bundled QM script \"{}\" is not available for {}",
@@ -192,6 +201,7 @@ namespace
                     cli::externalQMProgramName(QMSettings::getQMMethod())
                 )
             );
+        }
     }
 
     void validateInstalledExternalQMScript()
@@ -207,10 +217,12 @@ namespace
 
         if ((PQ_BUILD_STATIC || PQ_BUILD_WITH_SINGULARITY) &&
             fullPathScript.empty())
+        {
             throw customException::InputFileException(
                 "This PQ build requires \"qm_script_full_path\" for "
                 "external QM programs"
             );
+        }
 
         if (!fullPathScript.empty())
         {
@@ -228,10 +240,12 @@ namespace
         );
 
         if (selected != scripts.end() && !selected->requiredWorkingFile.empty())
+        {
             requireFile(
                 selected->requiredWorkingFile,
                 "Required QM working file"
             );
+        }
     }
 
     void validateInputDependencies(engine::Engine &engine)
@@ -276,23 +290,29 @@ namespace
         requireFile(FileSettings::getStartFileName(), "Start file");
 
         if (FileSettings::isRingPolymerStartFileNameSet())
+        {
             requireFile(
                 FileSettings::getRingPolymerStartFileName(),
                 "Ring-polymer start file"
             );
+        }
 
         if (FileSettings::isIntraNonBondedFileNameSet())
+        {
             requireFile(
                 FileSettings::getIntraNonBondedFileName(),
                 "Intra non-bonded file"
             );
+        }
 
         if (Settings::isMMActivated() ||
             ManostatSettings::getManostatType() != ManostatType::NONE)
+        {
             requireFile(
                 FileSettings::getMolDescriptorFileName(),
                 "Moldescriptor file"
             );
+        }
 
         if (Settings::isMMActivated() &&
             !engine.isForceFieldNonCoulombicsActivated())
@@ -320,15 +340,19 @@ namespace
         {
             const auto slakosType = QMSettings::getSlakosType();
             if (slakosType == SlakosType::CUSTOM)
+            {
                 requireDirectory(
                     QMSettings::getSlakosPath(),
                     "Slater-Koster directory"
                 );
+            }
             else
+            {
                 requireDirectory(
                     bundledSlakosPath(slakosType),
                     "Built-in Slater-Koster directory"
                 );
+            }
         }
 
         if (method == QMMethod::FENNOL)
@@ -355,6 +379,7 @@ namespace
             method == settings::QMMethod::ASEXTB ||
             method == settings::QMMethod::FENNOL ||
             method == settings::QMMethod::MACE)
+        {
             throw customException::InputFileException(
                 std::format(
                     "QM method {} requires ASE support, but this PQ build "
@@ -362,6 +387,7 @@ namespace
                     settings::string(method)
                 )
             );
+        }
     }
 
     void appendWarnings(
@@ -375,40 +401,47 @@ namespace
         using settings::ThermostatType;
 
         if (reader.getKeywordSet("mace_model_size"))
+        {
             result.diagnostics.push_back(
                 {cli::ValidationSeverity::WARNING,
                  "\"mace_model_size\" is deprecated; use \"mace_model\"",
                  std::nullopt}
             );
-
+        }
         if (ThermostatSettings::getThermostatType() ==
                 ThermostatType::NOSE_HOOVER &&
             utilities::isZero(
                 ThermostatSettings::getNoseHooverCouplingFrequency()
             ))
+        {
             result.diagnostics.push_back(
                 {cli::ValidationSeverity::WARNING,
                  "A zero Nose-Hoover coupling frequency disables thermostat "
                  "coupling",
                  std::nullopt}
             );
+        }
 
         if (ThermostatSettings::getThermostatType() ==
                 ThermostatType::LANGEVIN &&
             utilities::isZero(ThermostatSettings::getFriction()))
+        {
             result.diagnostics.push_back(
                 {cli::ValidationSeverity::WARNING,
                  "A zero Langevin friction disables thermostat coupling",
                  std::nullopt}
             );
+        }
 
         if (ManostatSettings::getManostatType() != ManostatType::NONE &&
             utilities::isZero(ManostatSettings::getCompressibility()))
+        {
             result.diagnostics.push_back(
                 {cli::ValidationSeverity::WARNING,
                  "A zero compressibility disables cell response",
                  std::nullopt}
             );
+        }
     }
 
     std::string_view string(const cli::ValidationSeverity severity)

@@ -61,6 +61,7 @@ void ImproperDihedralSection::processSection(
 {
     // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
     if (lineElements.size() != 5)
+    {
         throw TopologyException(
             std::format(
                 "Wrong number of arguments in topology file improper dihedral "
@@ -69,6 +70,7 @@ void ImproperDihedralSection::processSection(
                 _lineNumber
             )
         );
+    }
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
     auto atom1                = stoul(lineElements[0]);
@@ -83,6 +85,7 @@ void ImproperDihedralSection::processSection(
     atoms.erase(it, end);
 
     if (4 != atoms.size())
+    {
         throw TopologyException(
             std::format(
                 "Topology file improper dihedral section at line {} - atoms "
@@ -91,6 +94,7 @@ void ImproperDihedralSection::processSection(
                 _lineNumber
             )
         );
+    }
 
     auto &simBox = engine.getSimulationBox();
 
@@ -124,6 +128,7 @@ std::string ImproperDihedralSection::keyword() { return "impropers"; }
 void ImproperDihedralSection::endedNormally(const bool endedNormal) const
 {
     if (!endedNormal)
+    {
         throw TopologyException(
             std::format(
                 "Topology file improper dihedral section at line {} - no end "
@@ -132,4 +137,5 @@ void ImproperDihedralSection::endedNormally(const bool endedNormal) const
                 _lineNumber
             )
         );
+    }
 }

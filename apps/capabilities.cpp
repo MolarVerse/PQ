@@ -133,18 +133,22 @@ namespace
                 json.value("label", script.label);
 
                 if (!script.requiredFileKeyword.empty())
+                {
                     writeStringArray(
                         json,
                         "required_file_keywords",
                         {script.requiredFileKeyword}
                     );
+                }
 
                 if (!script.requiredWorkingFile.empty())
+                {
                     writeStringArray(
                         json,
                         "required_working_files",
                         {script.requiredWorkingFile}
                     );
+                }
 
                 json.endObject();
             }
@@ -285,6 +289,7 @@ namespace
         for (const auto program : {"dftbplus", "pyscf", "turbomole"})
             json.value(program);
         if (withAse)
+        {
             for (const auto program :
                  {"ase_dftbplus",
                   "ase_xtb",
@@ -293,6 +298,7 @@ namespace
                   "mace_mp",
                   "mace_off"})
                 json.value(program);
+        }
         json.endArray();
 
         writeExternalQMCapabilities(json);

@@ -140,7 +140,9 @@ void RingPolymerSetup::initializeBeads()
         readRingPolymerRestartFile(_engine);
     }
     else
+    {
         initializeVelocitiesOfBeads();
+    }
 }
 
 /**

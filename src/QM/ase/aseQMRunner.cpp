@@ -69,7 +69,8 @@ namespace
 
         try
         {
-            auto positions_array = array_d(ssize_t(nAtoms) * 3, &pos[0]);
+            auto positions_array =
+                array_d(static_cast<ssize_t>(nAtoms) * 3, &pos[0]);
 
             const auto positions_array_reshaped = pybind11::array(
                 pybind11::buffer_info(
@@ -184,7 +185,7 @@ namespace
         try
         {
             const auto atomicNumbers_ =
-                array_i(ssize_t(nAtoms), &atomicNumbers[0]);
+                array_i(static_cast<ssize_t>(nAtoms), &atomicNumbers[0]);
 
             return atomicNumbers_;
         }
@@ -343,11 +344,13 @@ void AseQMRunner::collectForces(SimulationBox &simBox) const
         const auto forces = _ase->forces.unchecked<2>();
 
         for (size_t i = 0; i < nAtoms; ++i)
+        {
             simBox.getAtoms()[i]->setForce(
                 {forces(i, 0) * EV_TO_KCAL_PER_MOL,
                  forces(i, 1) * EV_TO_KCAL_PER_MOL,
                  forces(i, 2) * EV_TO_KCAL_PER_MOL}
             );
+        }
     }
     catch (const pybind11::error_already_set &)
     {

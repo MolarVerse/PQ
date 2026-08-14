@@ -92,12 +92,14 @@ void SimulationBoxInputParser::parseCoulombRadius(
     const auto cutOff = stringToFiniteDouble(lineElements[2]);
 
     if (cutOff < 0.0)
+    {
         throw InputFileException(format(
             "Coulomb radius cutoff must be positive - \"{}\" at line {} in "
             "input file",
             lineElements[2],
             lineNumber
         ));
+    }
 
     PotentialSettings::setCoulombRadiusCutOff(cutOff);
 }
@@ -119,12 +121,14 @@ void SimulationBoxInputParser::parseNonCoulombRadius(
     const auto cutOff = stod(lineElements[2]);
 
     if (cutOff < 0.0)
+    {
         throw InputFileException(format(
             "Non-Coulomb radius cutoff must be positive - \"{}\" at line {} in "
             "input file",
             lineElements[2],
             lineNumber
         ));
+    }
 
     PotentialSettings::setNonCoulombRadiusCutOff(cutOff);
 }
@@ -189,6 +193,7 @@ void SimulationBoxInputParser::parseInitializeVelocities(
         SimulationBoxSettings::setInitializeVelocities(FORCE);
 
     else
+    {
         throw InputFileException(
             std::format(
                 "Invalid value for initialize velocities - \"{}\" at line {} "
@@ -199,4 +204,5 @@ void SimulationBoxInputParser::parseInitializeVelocities(
                 lineNumber
             )
         );
+    }
 }

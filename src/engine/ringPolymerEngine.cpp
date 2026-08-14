@@ -192,11 +192,12 @@ void RingPolymerEngine::combineBeads()
     {
         for (size_t i = 0; i < bead.getNumberOfAtoms(); ++i)
         {
-            auto &atom = bead.getAtom(i);
+            auto      &atom   = bead.getAtom(i);
+            const auto nBeads = static_cast<double>(numberOfBeads);
 
-            const auto pos   = atom.getPosition() / double(numberOfBeads);
-            const auto vel   = atom.getVelocity() / double(numberOfBeads);
-            const auto force = atom.getForce() / double(numberOfBeads);
+            const auto pos   = atom.getPosition() / nBeads;
+            const auto vel   = atom.getVelocity() / nBeads;
+            const auto force = atom.getForce() / nBeads;
 
             _simulationBox->getAtom(i).addPosition(pos);
             _simulationBox->getAtom(i).addVelocity(vel);

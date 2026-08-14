@@ -47,7 +47,9 @@ namespace benchmarkSetup
 
         std::size_t atomIndex = 0;
         for (std::size_t x = 0; x < cellsPerSide; ++x)
+        {
             for (std::size_t y = 0; y < cellsPerSide; ++y)
+            {
                 for (std::size_t z = 0; z < cellsPerSide; ++z)
                 {
                     auto atom = std::make_shared<simulationBox::Atom>();
@@ -82,6 +84,8 @@ namespace benchmarkSetup
                     simulationBox.addAtom(atom);
                     simulationBox.addMolecule(molecule);
                 }
+            }
+        }
 
         simulationBox.calculateTotalMass();
         simulationBox.calculateDegreesOfFreedom();

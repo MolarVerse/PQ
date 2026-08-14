@@ -74,12 +74,14 @@ void PySCFRunner::execute(SimulationBox &)
     const auto scriptFileName = resolveScriptPath(QMSettings::getQMScript());
 
     if (!fileExists(scriptFileName))
+    {
         throw InputFileException(
             std::format(
                 "PySCF script file \"{}\" does not exist.",
                 scriptFileName
             )
         );
+    }
 
     const auto command = std::format("python {} > pyscf.out", scriptFileName);
 

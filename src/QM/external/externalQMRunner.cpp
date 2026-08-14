@@ -72,10 +72,12 @@ void ExternalQMRunner::run(
 )
 {
     if (per != XYZ && per != NON_PERIODIC)
+    {
         throw QMRunnerException(
             "External QM runners only available for non- and 3D-periodic "
             "calculations."
         );
+    }
 
     _periodicity = per;
 
@@ -151,6 +153,7 @@ void ExternalQMRunner::readForceFile(
     std::ifstream forceFile(forceFileName);
 
     if (!forceFile.is_open())
+    {
         throw QMRunnerException(
             std::format(
                 "Cannot open {} force file \"{}\"",
@@ -158,8 +161,10 @@ void ExternalQMRunner::readForceFile(
                 forceFileName
             )
         );
+    }
 
     if (forceFile.peek() == std::ifstream::traits_type::eof())
+    {
         throw QMRunnerException(
             std::format(
                 "Empty {} force file \"{}\"",
@@ -167,12 +172,14 @@ void ExternalQMRunner::readForceFile(
                 forceFileName
             )
         );
+    }
 
     double energy = 0.0;
 
     forceFile >> energy;
 
     if (std::isnan(energy) || std::isinf(energy))
+    {
         throw QMRunnerException(
             std::format(
                 "Invalid QM energy (NaN/Inf) in {} force file \"{}\"",
@@ -180,6 +187,7 @@ void ExternalQMRunner::readForceFile(
                 forceFileName
             )
         );
+    }
 
     physicalData.setQMEnergy(energy * HARTREE_TO_KCAL_PER_MOL);
 
@@ -190,7 +198,9 @@ void ExternalQMRunner::readForceFile(
         forceFile >> grad[0] >> grad[1] >> grad[2];
 
         for (size_t i = 0; i < 3; ++i)
+        {
             if (std::isnan(grad[i]) || std::isinf(grad[i]))
+            {
                 throw QMRunnerException(
                     std::format(
                         "Invalid QM force component (NaN/Inf) in {} force file "
@@ -199,6 +209,8 @@ void ExternalQMRunner::readForceFile(
                         forceFileName
                     )
                 );
+            }
+        }
 
         atom->setForce(-grad * HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM);
     };
@@ -227,6 +239,7 @@ void ExternalQMRunner::readChargeFile(SimulationBox &box)
     std::ifstream chargeFile(chargeFileName);
 
     if (!chargeFile.is_open())
+    {
         throw QMRunnerException(
             std::format(
                 "Cannot open {} charge file \"{}\"",
@@ -234,8 +247,10 @@ void ExternalQMRunner::readChargeFile(SimulationBox &box)
                 chargeFileName
             )
         );
+    }
 
     if (chargeFile.peek() == std::ifstream::traits_type::eof())
+    {
         throw QMRunnerException(
             std::format(
                 "Empty {} charge file \"{}\"",
@@ -243,6 +258,7 @@ void ExternalQMRunner::readChargeFile(SimulationBox &box)
                 chargeFileName
             )
         );
+    }
 
     box.resetQMCharges();
 
