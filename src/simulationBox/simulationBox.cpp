@@ -208,16 +208,19 @@ void SimulationBox::setupForcedLayerMolecules(
     for (const auto index : moleculeIndices)
     {
         if (index < 0 || index >= static_cast<int>(_molecules.size()))
+        {
             throw UserInputException(
                 std::format(
                     "Forced Layer region molecule index {} out of range",
                     index
                 )
             );
+        }
 
         auto& molecule = _molecules[static_cast<size_t>(index)];
 
         if (molecule.isForcedCore() || molecule.isForcedOuter())
+        {
             throw UserInputException(
                 std::format(
                     "Ambiguous molecule index {} - molecule cannot be in "
@@ -226,8 +229,11 @@ void SimulationBox::setupForcedLayerMolecules(
                     index
                 )
             );
+        }
         else
+        {
             molecule.setForcedLayer(true);
+        }
     }
 }
 

@@ -205,6 +205,7 @@ void ExternalQMRunner::readForceFile(
     double energy = 0.0;
 
     if (!(forceFile >> energy))
+    {
         throw QMRunnerException(
             std::format(
                 "Cannot read QM energy from {} force file \"{}\"",
@@ -212,6 +213,7 @@ void ExternalQMRunner::readForceFile(
                 forceFileName
             )
         );
+    }
 
     if (!std::isfinite(energy))
     {
@@ -231,6 +233,7 @@ void ExternalQMRunner::readForceFile(
         auto grad = linearAlgebra::Vec3D();
 
         if (!(forceFile >> grad[0] >> grad[1] >> grad[2]))
+        {
             throw QMRunnerException(
                 std::format(
                     "Incomplete {} force file \"{}\"",
@@ -238,6 +241,7 @@ void ExternalQMRunner::readForceFile(
                     forceFileName
                 )
             );
+        }
 
         for (size_t i = 0; i < 3; ++i)
         {
@@ -309,6 +313,7 @@ void ExternalQMRunner::readChargeFile(SimulationBox &box)
         auto charge = 0.0;
 
         if (!(chargeFile >> charge))
+        {
             throw QMRunnerException(
                 std::format(
                     "Incomplete {} charge file \"{}\"",
@@ -316,7 +321,9 @@ void ExternalQMRunner::readChargeFile(SimulationBox &box)
                     chargeFileName
                 )
             );
+        }
         if (!std::isfinite(charge))
+        {
             throw QMRunnerException(
                 std::format(
                     "Invalid value in {} charge file \"{}\"",
@@ -324,6 +331,7 @@ void ExternalQMRunner::readChargeFile(SimulationBox &box)
                     chargeFileName
                 )
             );
+        }
 
         atom->setQMCharge(charge);
     };
