@@ -22,6 +22,7 @@
 
 #include "testCelllist.hpp"
 
+#include <limits>   // for numeric_limits
 #include <memory>   // for make_shared, __shared_ptr_access
 #include <vector>   // for vector
 
@@ -262,6 +263,28 @@ TEST_F(TestCellList, activateDeactivateToggles_isActive)
 
     _cellList->activate();
     EXPECT_TRUE(_cellList->isActive());
+}
+
+TEST_F(TestCellList, resizeCellsRejectsOverflow)
+{
+    _cellList->setNumberOfCells(std::numeric_limits<int>::max());
+
+    EXPECT_THROW_MSG(
+        _cellList->resizeCells(),
+        customException::CellListException,
+        "Number of cells exceeds the supported size"
+    );
+}
+
+TEST_F(TestCellList, resizeCellsRejectsZeroDimensions)
+{
+    _cellList->setNumberOfCells(0);
+
+    EXPECT_THROW_MSG(
+        _cellList->resizeCells(),
+        customException::CellListException,
+        "Number of cells must be positive"
+    );
 }
 
 /* ---------- clone() copies the configured cell counts ---------- */
