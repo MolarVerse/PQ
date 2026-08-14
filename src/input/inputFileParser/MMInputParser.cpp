@@ -228,9 +228,13 @@ void MMInputParser::parseWaterIntraModel(
         WaterModelSettings::setWaterIntraModel(OPC3);
     }
     else if (waterIntraModel == "spc_mtr")
+    {
         WaterModelSettings::setWaterIntraModel(SPC_MTR);
+    }
     else if (waterIntraModel == "tip3p_mtr")
+    {
         WaterModelSettings::setWaterIntraModel(TIP3P_MTR);
+    }
     else
     {
         throw InputFileException(format(
