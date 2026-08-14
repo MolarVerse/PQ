@@ -493,18 +493,18 @@ TEST_F(TestSimulationBox, validatesHybridIndexLists)
     _simulationBox->setupForcedOuterMolecules({0});
     EXPECT_TRUE(_simulationBox->getMolecule(0).isForcedOuter());
     EXPECT_THROW(
-        _simulationBox->setupForcedInnerMolecules({0}),
+        _simulationBox->setupForcedCoreMolecules({0}),
         customException::UserInputException
     );
 
-    _simulationBox->setupForcedInnerMolecules({1});
-    EXPECT_TRUE(_simulationBox->getMolecule(1).isForcedInner());
+    _simulationBox->setupForcedCoreMolecules({1});
+    EXPECT_TRUE(_simulationBox->getMolecule(1).isForcedCore());
     EXPECT_THROW(
         _simulationBox->setupForcedOuterMolecules({1}),
         customException::UserInputException
     );
     EXPECT_THROW(
-        _simulationBox->setupForcedInnerMolecules({2}),
+        _simulationBox->setupForcedCoreMolecules({2}),
         customException::UserInputException
     );
     EXPECT_THROW(

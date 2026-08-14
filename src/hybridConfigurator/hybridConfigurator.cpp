@@ -183,7 +183,7 @@ void HybridConfigurator::assignHybridZones(simulationBox::SimulationBox& simBox)
     {
         mol.calculateCenterOfMass(simBox.getBox());
 
-        if (mol.isForcedInner())
+        if (mol.isForcedCore())
         {
             setZone(mol, CORE);
             continue;

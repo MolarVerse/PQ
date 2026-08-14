@@ -69,7 +69,7 @@ namespace settings
     {
        private:
         static inline std::optional<std::vector<int>> _innerRegionCenter;
-        static inline std::vector<int>                _forcedInnerList;
+        static inline std::vector<int>                _forcedCoreList;
         static inline std::vector<int>                _forcedOuterList;
 
         static inline bool _useQMCharges = true;
@@ -88,7 +88,7 @@ namespace settings
          ********************/
 
         static void setInnerRegionCenter(const std::vector<int> &);
-        static void setForcedInnerList(const std::vector<int> &);
+        static void setForcedCoreList(const std::vector<int> &);
         static void setForcedOuterList(const std::vector<int> &);
 
         static void setUseQMCharges(const bool useQMCharges);
@@ -107,7 +107,7 @@ namespace settings
 
         [[nodiscard]] static std::optional<std::vector<int>> getInnerRegionCenter(
         );
-        [[nodiscard]] static std::vector<int> getForcedInnerList();
+        [[nodiscard]] static std::vector<int> getForcedCoreList();
         [[nodiscard]] static std::vector<int> getForcedOuterList();
 
         [[nodiscard]] static bool getUseQMCharges();

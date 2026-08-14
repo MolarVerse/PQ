@@ -66,22 +66,22 @@ void HybridSettings::setInnerRegionCenter(
 }
 
 /**
- * @brief set the _forcedInnerList in the settings
+ * @brief set the _forcedCoreList in the settings
  *
- * @details the forcedInnerList is a list of molecules which will always be
- * treated with the method chosen for the inner region of the hybrid calculation
+ * @details the forcedCoreList is a list of molecules which will always be
+ * part of the CORE zone in hybrid calculation
  *
  * @param list
  */
-void HybridSettings::setForcedInnerList(const std::vector<int> &list)
+void HybridSettings::setForcedCoreList(const std::vector<int> &list)
 {
-    _forcedInnerList = list;
+    _forcedCoreList = list;
 }
 
 /**
  * @brief set the _forcedOuterList in the settings
  *
- * @details the forcedInnerList is a list of molecules which will always be
+ * @details the forcedOuterList is a list of molecules which will always be
  * treated with the method chosen for the outer region of the hybrid calculation
  *
  * @param list
@@ -185,14 +185,11 @@ std::optional<std::vector<int>> HybridSettings::getInnerRegionCenter()
 }
 
 /**
- * @brief get the forcedInnerList
+ * @brief get the forcedCoreList
  *
  * @return vector<int>
  */
-std::vector<int> HybridSettings::getForcedInnerList()
-{
-    return _forcedInnerList;
-}
+std::vector<int> HybridSettings::getForcedCoreList() { return _forcedCoreList; }
 
 /**
  * @brief get the forcedOuterList

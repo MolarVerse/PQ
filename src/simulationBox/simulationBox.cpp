@@ -136,7 +136,7 @@ void SimulationBox::addInnerRegionCenterAtoms(
 }
 
 /**
- * @brief assigns _isForcedInner to all molecules which are in the
+ * @brief assigns _isForcedCore to all molecules which are in the
  * moleculeIndices vector
  *
  * @param moleculeIndices
@@ -144,7 +144,7 @@ void SimulationBox::addInnerRegionCenterAtoms(
  * @throw UserInputException if molecule index is out of range
  * @throw UserInputException if molecule is already _isForcedOuter
  */
-void SimulationBox::setupForcedInnerMolecules(
+void SimulationBox::setupForcedCoreMolecules(
     const std::vector<int>& moleculeIndices
 )
 {
@@ -153,7 +153,7 @@ void SimulationBox::setupForcedInnerMolecules(
         if (index < 0 || index >= static_cast<int>(_molecules.size()))
             throw UserInputException(
                 std::format(
-                    "Forced inner region molecule index {} out of range",
+                    "Forced CORE region molecule index {} out of range",
                     index
                 )
             );
@@ -162,12 +162,12 @@ void SimulationBox::setupForcedInnerMolecules(
             throw UserInputException(
                 std::format(
                     "Ambiguous molecule index {} - molecule cannot be in "
-                    "forced_inner_list AND forced_outer_list at the same time",
+                    "forced_core_list AND forced_outer_list at the same time",
                     index
                 )
             );
         else
-            _molecules[static_cast<size_t>(index)].setForcedInner(true);
+            _molecules[static_cast<size_t>(index)].setForcedCore(true);
     }
 }
 
@@ -178,7 +178,7 @@ void SimulationBox::setupForcedInnerMolecules(
  * @param moleculeIndices
  *
  * @throw UserInputException if molecule index is out of range
- * @throw UserInputException if molecule is already _isForcedInner
+ * @throw UserInputException if molecule is already _isForcedCore
  */
 void SimulationBox::setupForcedOuterMolecules(
     const std::vector<int>& moleculeIndices
@@ -194,11 +194,11 @@ void SimulationBox::setupForcedOuterMolecules(
                 )
             );
 
-        if (_molecules[static_cast<size_t>(index)].isForcedInner())
+        if (_molecules[static_cast<size_t>(index)].isForcedCore())
             throw UserInputException(
                 std::format(
                     "Ambiguous molecule index {} - molecule cannot be in "
-                    "forced_inner_list AND forced_outer_list at the same time",
+                    "forced_core_list AND forced_outer_list at the same time",
                     index
                 )
             );

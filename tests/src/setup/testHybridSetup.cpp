@@ -62,7 +62,7 @@ namespace
     {
         Settings::setJobtype(JobType::QMMM_MD);
         QMSettings::setQMMethod(QMMethod::DFTBPLUS);
-        HybridSettings::setForcedInnerList({});
+        HybridSettings::setForcedCoreList({});
         HybridSettings::setForcedOuterList({});
         HybridSettings::setUseQMCharges(true);
         HybridSettings::setCoreRadius(2.0);
@@ -187,14 +187,14 @@ TEST_F(TestSetup, setupHybridConfiguresExplicitLists)
     configureValidHybridSettings(*_engine);
     QMSettings::setQMMethod(QMMethod::TURBOMOLE);
     HybridSettings::setInnerRegionCenter({0, 1});
-    HybridSettings::setForcedInnerList({0});
+    HybridSettings::setForcedCoreList({0});
     HybridSettings::setForcedOuterList({1});
     HybridSettings::setUseQMCharges(false);
     addSingleAtomMolecule(*_engine, 1);
     addSingleAtomMolecule(*_engine, 2);
 
     EXPECT_NO_THROW(HybridSetup(*_engine).setup());
-    EXPECT_TRUE(_engine->getSimulationBox().getMolecule(0).isForcedInner());
+    EXPECT_TRUE(_engine->getSimulationBox().getMolecule(0).isForcedCore());
     EXPECT_TRUE(_engine->getSimulationBox().getMolecule(1).isForcedOuter());
 }
 

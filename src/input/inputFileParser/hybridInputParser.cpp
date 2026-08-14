@@ -64,8 +64,8 @@ HybridInputParser::HybridInputParser(Engine &engine) : InputFileParser(engine)
         false
     );
     addKeyword(
-        std::string("forced_inner_list"),
-        bindMember(&HybridInputParser::parseForcedInnerList, this),
+        std::string("forced_core_list"),
+        bindMember(&HybridInputParser::parseForcedCoreList, this),
         false
     );
     addKeyword(
@@ -128,19 +128,19 @@ void HybridInputParser::parseInnerRegionCenter(
 }
 
 /**
- * @brief parse list of molecules which are forced to the inner region in hybrid
+ * @brief parse list of molecules which are forced to the CORE region in hybrid
  * calculations
  *
  * @param lineElements
  * @param lineNumber
  */
-void HybridInputParser::parseForcedInnerList(
+void HybridInputParser::parseForcedCoreList(
     const std::vector<std::string> &lineElements,
     const size_t                    lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
-    HybridSettings::setForcedInnerList(
+    HybridSettings::setForcedCoreList(
         parseSelection(lineElements[2], lineElements[0])
     );
 }
