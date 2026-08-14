@@ -23,6 +23,7 @@
 // Fixed-work micro-benchmark of the box coordinate transforms: wrapping into
 // the box, and triclinic <-> orthogonal space conversions.
 
+#include <cstdint>
 #include <cstdio>
 #include <format>
 #include <iostream>

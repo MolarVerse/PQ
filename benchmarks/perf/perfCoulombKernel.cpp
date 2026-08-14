@@ -22,6 +22,7 @@
 
 // Fixed-work micro-benchmark of the Coulomb pair kernels (shifted + Wolf).
 
+#include <cstdint>
 #include <cstdio>
 #include <format>
 #include <iostream>

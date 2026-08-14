@@ -22,6 +22,7 @@
 
 // Fixed-work micro-benchmark of the molecular virial computation.
 
+#include <cstdint>
 #include <cstdio>
 #include <format>
 #include <iostream>

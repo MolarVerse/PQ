@@ -23,6 +23,7 @@
 // Fixed-work micro-benchmark of the periodic minimal-image shift-vector
 // computation for orthorhombic and triclinic boxes (called per atom pair).
 
+#include <cstdint>
 #include <cstdio>
 #include <format>
 #include <iostream>

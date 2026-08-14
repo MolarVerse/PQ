@@ -23,6 +23,7 @@
 // Fixed-work micro-benchmark of the non-Coulomb pair kernels
 // (Lennard-Jones, Buckingham, Morse).
 
+#include <cstdint>
 #include <cstdio>
 #include <format>
 #include <iostream>

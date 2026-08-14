@@ -23,6 +23,7 @@
 // Fixed-work micro-benchmark of the intermolecular water kernel (cell list).
 
 #include <cmath>
+#include <cstdint>
 #include <cstdio>
 #include <iomanip>
 #include <iostream>

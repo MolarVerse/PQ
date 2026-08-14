@@ -22,6 +22,7 @@
 
 // Fixed-work micro-benchmark of the velocity-Verlet integrator step.
 
+#include <cstdint>
 #include <cstdio>
 #include <format>
 #include <iostream>

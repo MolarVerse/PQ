@@ -23,6 +23,7 @@
 // Fixed-work micro-benchmark of the per-step kinetic diagnostics
 // (temperature, momentum, angular momentum, total force).
 
+#include <cstdint>
 #include <cstdio>
 #include <format>
 #include <iostream>
