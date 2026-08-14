@@ -22,8 +22,7 @@
 
 #include "intraNonBondedSetup.hpp"
 
-#include "engine.hpp"      // for Engine
-#include "potential.hpp"   // for Potential
+#include "engine.hpp"   // for Engine
 
 using namespace setup;
 using namespace engine;
@@ -65,10 +64,10 @@ IntraNonBondedSetup::IntraNonBondedSetup(Engine &engine) : _engine(engine) {}
  */
 void IntraNonBondedSetup::setup()
 {
-    auto       &intraNonBonded = _engine.getIntraNonBonded();
+    const auto &intraNonBonded = _engine.getIntraNonBonded();
     const auto &potential      = _engine.getPotential();
-    const auto &nonCoulombPot  = potential.getNonCoulombPotSharedPtr();
-    const auto &coulombPot     = potential.getCoulombPotSharedPtr();
+    const auto &nonCoulombPot  = potential->getNonCoulombPotSharedPtr();
+    const auto &coulombPot     = potential->getCoulombPotSharedPtr();
 
     intraNonBonded->setNonCoulombPotential(nonCoulombPot);
     intraNonBonded->setCoulombPotential(coulombPot);

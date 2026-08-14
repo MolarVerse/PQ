@@ -107,12 +107,14 @@ namespace engine
         [[nodiscard]]
         const std::shared_ptr<
             intraNonBonded::IntraNonBonded> &getIntraNonBonded() const;
+        [[nodiscard]]
+        const std::shared_ptr<forceField::ForceField> &getForceField() const;
+        [[nodiscard]]
+        const std::shared_ptr<potential::Potential> &getPotential() const;
 
         [[nodiscard]] simulationBox::SimulationBox &getSimulationBox();
         [[nodiscard]] physicalData::PhysicalData   &getPhysicalData();
         [[nodiscard]] physicalData::PhysicalData   &getAveragePhysicalData();
-        [[nodiscard]] forceField::ForceField       &getForceField();
-        [[nodiscard]] potential::Potential         &getPotential();
 
         /*************************
          * output getter methods *
@@ -133,8 +135,6 @@ namespace engine
          * get pointer methods *
          ***********************/
 
-        [[nodiscard]] forceField::ForceField       *getForceFieldPtr();
-        [[nodiscard]] potential::Potential         *getPotentialPtr();
         [[nodiscard]] simulationBox::SimulationBox *getSimulationBoxPtr();
         [[nodiscard]] physicalData::PhysicalData   *getPhysicalDataPtr();
 
@@ -143,14 +143,10 @@ namespace engine
          ******************************/
 
         [[nodiscard]]
-        std::shared_ptr<forceField::ForceField> getSharedForceField() const;
-        [[nodiscard]]
         std::shared_ptr<simulationBox::SimulationBox> getSharedSimulationBox(
         ) const;
         [[nodiscard]]
         std::shared_ptr<physicalData::PhysicalData> getSharedPhysicalData(
-        ) const;
-        [[nodiscard]] std::shared_ptr<potential::Potential> getSharedPotential(
         ) const;
 
         /***************************

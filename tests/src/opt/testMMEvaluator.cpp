@@ -79,7 +79,9 @@ namespace
         eval.setPhysicalDataOld(std::make_shared<PhysicalData>());
         eval.setForceField(std::make_shared<forceField::ForceField>());
         eval.setIntraNonBonded(
+
             std::make_shared<intraNonBonded::IntraNonBonded>()
+
         );
         eval.setConstraints(std::make_shared<constraints::Constraints>());
 

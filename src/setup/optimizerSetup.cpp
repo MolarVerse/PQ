@@ -236,8 +236,8 @@ std::shared_ptr<Evaluator> OptimizerSetup::setupEvaluator()
 
     evaluator->setCellList(_optEngine.getCellList());
     evaluator->setSimulationBox(_optEngine.getSharedSimulationBox());
-    evaluator->setPotential(_optEngine.getSharedPotential());
-    evaluator->setForceField(_optEngine.getSharedForceField());
+    evaluator->setPotential(_optEngine.getPotential());
+    evaluator->setForceField(_optEngine.getForceField());
     evaluator->setConstraints(_optEngine.getConstraints());
     evaluator->setIntraNonBonded(_optEngine.getIntraNonBonded());
     evaluator->setSimulationBox(_optEngine.getSharedSimulationBox());

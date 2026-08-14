@@ -52,6 +52,7 @@ namespace setup
         engine::Engine &_engine;
 
         void makeInterWater();
+        void makeIntraWater();
         void checkTopologyFile();
         void checkMoldescriptorWaterCharge(const waterModel::InterWaterState &);
         void shakeSetupForRigidWater(const RigidWaterGeometry &geometry);

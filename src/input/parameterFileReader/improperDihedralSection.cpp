@@ -93,5 +93,5 @@ void ImproperDihedralSection::processSection(
 
     auto improperType = DihedralType(id, forceConstant, periodicity, phase);
 
-    engine.getForceField().addImproperDihedralType(improperType);
+    engine.getForceField()->addImproperDihedralType(improperType);
 }

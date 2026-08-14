@@ -104,7 +104,7 @@ void ImproperDihedralSection::processSection(
 
     auto improperFF = DihedralForceField(mols, atomIdxs, improperDihedralType);
 
-    engine.getForceField().addImproperDihedral(improperFF);
+    engine.getForceField()->addImproperDihedral(improperFF);
 }
 
 /**
