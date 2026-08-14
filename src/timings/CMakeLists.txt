@@ -1,5 +1,6 @@
 add_library(timings
     timer.cpp
+    timerId.cpp
     timingsSection.cpp
     timingsSectionGuard.cpp
     globalTimer.cpp
@@ -15,6 +16,7 @@ target_link_libraries(timings
     PUBLIC
     exceptions
     settings
+    mstd
 )
 
 install(TARGETS timings

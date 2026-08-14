@@ -32,7 +32,7 @@ using namespace timings;
  * @brief Construct a new Global Timer:: Global Timer object
  *
  */
-GlobalTimer::GlobalTimer() : _simulationTimer("Simulation")
+GlobalTimer::GlobalTimer() : _simulationTimer(TimerId::Simulation)
 {
     _simulationTimer.startTimingsSection();
 }

@@ -22,8 +22,6 @@
 
 #include "pyscfRunner.hpp"
 
-#include <stdlib.h>   // for system, size_t
-
 #include <format>    // for format
 #include <fstream>   // for ofstream, operator<<, basic_ostream
 #include <string>    // for allocator, string, operator+, operator<<
@@ -83,12 +81,11 @@ void PySCFRunner::execute(SimulationBox &)
         );
     }
 
-    const auto command = std::format("python {} > pyscf.out", scriptFileName);
+    const auto command = std::format(
+        "python {} > {}",
+        shellQuote(scriptFileName),
+        shellQuote("pyscf.out")
+    );
 
-    const auto status = ::system(command.c_str());
-
-    if (status != 0)
-        throw QMRunnerException(
-            std::format("PySCF runner failed with exit status {}.", status)
-        );
+    executeCommand(command, "PySCF");
 }
