@@ -48,7 +48,7 @@ TEST_F(TestTopologySection, jCouplingSectionEndedNormally)
 
 TEST_F(TestTopologySection, jCouplingSectionProcessFiveElements)
 {
-    JCouplingSection         section;
+    JCouplingSection section;
     // atom1, atom2, atom3, atom4, type
     std::vector<std::string> lineElements = {"1", "2", "3", "4", "9"};
     section.processSection(lineElements, *_engine);
@@ -84,7 +84,7 @@ TEST_F(TestTopologySection, jCouplingSectionThrowsOnWrongElementCount)
 
 TEST_F(TestTopologySection, jCouplingSectionThrowsOnDuplicateAtomIndices)
 {
-    JCouplingSection         section;
+    JCouplingSection section;
     // atom1 == atom2 — unique check should fire.
     std::vector<std::string> lineElements = {"1", "1", "2", "3", "9"};
     EXPECT_THROW(
