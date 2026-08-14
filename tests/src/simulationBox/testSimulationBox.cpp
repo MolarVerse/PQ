@@ -493,23 +493,78 @@ TEST_F(TestSimulationBox, validatesHybridIndexLists)
     _simulationBox->setupForcedOuterMolecules({0});
     EXPECT_TRUE(_simulationBox->getMolecule(0).isForcedOuter());
     EXPECT_THROW(
-        _simulationBox->setupForcedInnerMolecules({0}),
+        _simulationBox->setupForcedCoreMolecules({0}),
         customException::UserInputException
     );
 
-    _simulationBox->setupForcedInnerMolecules({1});
-    EXPECT_TRUE(_simulationBox->getMolecule(1).isForcedInner());
+    _simulationBox->setupForcedCoreMolecules({1});
+    EXPECT_TRUE(_simulationBox->getMolecule(1).isForcedCore());
     EXPECT_THROW(
         _simulationBox->setupForcedOuterMolecules({1}),
         customException::UserInputException
     );
     EXPECT_THROW(
-        _simulationBox->setupForcedInnerMolecules({2}),
+        _simulationBox->setupForcedCoreMolecules({2}),
         customException::UserInputException
     );
     EXPECT_THROW(
         _simulationBox->setupForcedOuterMolecules({-1}),
         customException::UserInputException
+    );
+}
+
+TEST_F(TestSimulationBox, validatesForcedLayerList)
+{
+    simulationBox::SimulationBox simBox;
+    simBox.addMolecule(simulationBox::Molecule{});
+    simBox.addMolecule(simulationBox::Molecule{});
+    simBox.addMolecule(simulationBox::Molecule{});
+
+    simBox.setupForcedCoreMolecules({0});
+    simBox.setupForcedLayerMolecules({1});
+    simBox.setupForcedOuterMolecules({2});
+
+    EXPECT_TRUE(simBox.getMolecule(0).isForcedCore());
+    EXPECT_TRUE(simBox.getMolecule(1).isForcedLayer());
+    EXPECT_TRUE(simBox.getMolecule(2).isForcedOuter());
+
+    EXPECT_THROW_MSG(
+        simBox.setupForcedLayerMolecules({-1}),
+        customException::UserInputException,
+        "Forced Layer region molecule index -1 out of range"
+    );
+    EXPECT_THROW_MSG(
+        simBox.setupForcedLayerMolecules({3}),
+        customException::UserInputException,
+        "Forced Layer region molecule index 3 out of range"
+    );
+    EXPECT_THROW_MSG(
+        simBox.setupForcedLayerMolecules({0}),
+        customException::UserInputException,
+        "Ambiguous molecule index 0 - molecule cannot be in "
+        "forced_layer_list AND forced_core_list/forced_outer_list at the same "
+        "time"
+    );
+    EXPECT_THROW_MSG(
+        simBox.setupForcedLayerMolecules({2}),
+        customException::UserInputException,
+        "Ambiguous molecule index 2 - molecule cannot be in "
+        "forced_layer_list AND forced_core_list/forced_outer_list at the same "
+        "time"
+    );
+    EXPECT_THROW_MSG(
+        simBox.setupForcedCoreMolecules({1}),
+        customException::UserInputException,
+        "Ambiguous molecule index 1 - molecule cannot be in "
+        "forced_core_list AND forced_layer_list/forced_outer_list at the same "
+        "time"
+    );
+    EXPECT_THROW_MSG(
+        simBox.setupForcedOuterMolecules({1}),
+        customException::UserInputException,
+        "Ambiguous molecule index 1 - molecule cannot be in "
+        "forced_outer_list AND forced_core_list/forced_layer_list at the same "
+        "time"
     );
 }
 
