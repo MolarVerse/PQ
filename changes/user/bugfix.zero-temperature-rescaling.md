@@ -1,1 +1,1 @@
-- Zero-temperature rescaling remains finite and rejects positive targets that cannot be reached from zero kinetic energy.
+- Temperature rescaling rejects zero kinetic energy before division and handles a zero target from a finite temperature.

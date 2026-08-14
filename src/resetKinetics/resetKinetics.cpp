@@ -132,23 +132,10 @@ void ResetKinetics::resetTemperature(SimulationBox &simBox)
 {
     const auto targetTemp = ThermostatSettings::getActualTargetTemperature();
 
-    if (isZero(targetTemp))
-    {
-        std::ranges::for_each(
-            simBox.getAtoms(),
-            [](auto &atom) { atom->scaleVelocity(0.0); }
-        );
-
-        _temperature     = simBox.calculateTemperature();
-        _momentum        = simBox.calculateMomentum();
-        _angularMomentum = simBox.calculateAngularMomentum(_momentum);
-        return;
-    }
-
     if (isZero(_temperature))
         throw UserInputException(
-            "Cannot rescale a zero-temperature system to a positive target "
-            "temperature. Initialize velocities first."
+            "Cannot rescale a zero-temperature system. Initialize velocities "
+            "first."
         );
 
     const auto lambda = ::sqrt(targetTemp / _temperature);
