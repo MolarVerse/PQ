@@ -16,7 +16,7 @@ target_include_directories(driver
 target_link_libraries(driver
     PUBLIC
     engine
-    input
+    PQ_input
     setup
 )
 
