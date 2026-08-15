@@ -276,9 +276,9 @@ std::vector<MoleculeType> &SimulationBox::getMoleculeTypes()
 /**
  * @brief get the external global VDW types
  *
- * @return std::vector<size_t>&
+ * @return std::vector<ExtVdwType>&
  */
-std::vector<size_t> &SimulationBox::getExternalGlobalVdwTypes()
+std::vector<ExtVdwType> &SimulationBox::getExternalGlobalVdwTypes()
 {
     return _externalGlobalVdwTypes;
 }
@@ -286,9 +286,10 @@ std::vector<size_t> &SimulationBox::getExternalGlobalVdwTypes()
 /**
  * @brief get the external to internal global VDW types map
  *
- * @return std::unordered_map<size_t, size_t>&
+ * @return std::map<ExtVdwType, VdwType>&
  */
-std::map<size_t, size_t> &SimulationBox::getExternalToInternalGlobalVDWTypes()
+std::map<ExtVdwType, VdwType> &SimulationBox::
+    getExternalToInternalGlobalVDWTypes()
 {
     return _externalToInternalGlobalVDWTypes;
 }

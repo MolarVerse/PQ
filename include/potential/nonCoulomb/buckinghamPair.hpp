@@ -24,10 +24,10 @@
 
 #define _BUCKINGHAM_PAIR_HPP_
 
-#include <cstddef>   // size_t
 #include <utility>   // pair
 
 #include "nonCoulombPair.hpp"
+#include "strongTypes.hpp"
 
 namespace potential
 {
@@ -46,12 +46,12 @@ namespace potential
 
        public:
         explicit BuckinghamPair(
-            const size_t vanDerWaalsType1,
-            const size_t vanDerWaalsType2,
-            const double cutOff,
-            const double a,
-            const double dRho,
-            const double c6
+            const ExtVdwType vanDerWaalsType1,
+            const ExtVdwType vanDerWaalsType2,
+            const double     cutOff,
+            const double     a,
+            const double     dRho,
+            const double     c6
         );
 
         explicit BuckinghamPair(
@@ -70,9 +70,21 @@ namespace potential
             const double c6
         );
 
+        // TODO: we need to explicitly delete it to not implicitly create it
+        // with the wrong types!!! Needs cleanup
+        explicit BuckinghamPair(
+            const size_t,
+            const size_t,
+            const double,
+            const double,
+            const double,
+            const double
+        ) = delete;
+
         [[nodiscard]] bool operator==(const BuckinghamPair &other) const;
 
-        [[nodiscard]] std::pair<double, double> calculate(const double distance
+        [[nodiscard]] std::pair<double, double> calculate(
+            const double distance
         ) const override;
 
         [[nodiscard]] double getA() const;

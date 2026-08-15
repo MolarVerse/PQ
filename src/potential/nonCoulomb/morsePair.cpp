@@ -40,17 +40,19 @@ using namespace utilities;
  * @param equilibriumDistance
  */
 MorsePair::MorsePair(
-    const size_t vanDerWaalsType1,
-    const size_t vanDerWaalsType2,
-    const double cutOff,
-    const double dissociationEnergy,
-    const double wellWidth,
-    const double equilibriumDistance
+    const ExtVdwType vanDerWaalsType1,
+    const ExtVdwType vanDerWaalsType2,
+    const double     cutOff,
+    const double     dissociationEnergy,
+    const double     wellWidth,
+    const double     equilibriumDistance
 )
     : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff),
       _dissociationEnergy(dissociationEnergy),
       _wellWidth(wellWidth),
-      _equilibriumDistance(equilibriumDistance){};
+      _equilibriumDistance(equilibriumDistance)
+{
+}
 
 /**
  * @brief Construct a new Morse Pair:: Morse Pair object
@@ -69,7 +71,9 @@ MorsePair::MorsePair(
     : NonCoulombPair(cutOff),
       _dissociationEnergy(dissociationEnergy),
       _wellWidth(wellWidth),
-      _equilibriumDistance(equilibriumDistance){};
+      _equilibriumDistance(equilibriumDistance)
+{
+}
 
 /**
  * @brief Construct a new Morse Pair:: Morse Pair object
@@ -92,7 +96,9 @@ MorsePair::MorsePair(
     : NonCoulombPair(cutOff, energyCutoff, forceCutoff),
       _dissociationEnergy(dissociationEnergy),
       _wellWidth(wellWidth),
-      _equilibriumDistance(equilibriumDistance){};
+      _equilibriumDistance(equilibriumDistance)
+{
+}
 
 /**
  * @brief operator overload for the comparison of two MorsePair objects

@@ -104,7 +104,7 @@ namespace
         oxygen->setQMCharge(-0.9);
         oxygen->setPosition(origin);
         oxygen->setAtomType(0);
-        oxygen->setInternalGlobalVDWType(0);
+        oxygen->setInternalGlobalVDWType(VdwType{0});
         oxygen->setForceToZero();
 
         h1->setAtomicNumber(AtomNumber{1});
@@ -112,7 +112,7 @@ namespace
         h1->setQMCharge(0.45);
         h1->setPosition(origin + Vec3D{geometry.oh1, 0.0, 0.0});
         h1->setAtomType(1);
-        h1->setInternalGlobalVDWType(0);
+        h1->setInternalGlobalVDWType(VdwType{0});
         h1->setForceToZero();
 
         h2->setAtomicNumber(AtomNumber{1});
@@ -127,7 +127,7 @@ namespace
             }
         );
         h2->setAtomType(1);
-        h2->setInternalGlobalVDWType(0);
+        h2->setInternalGlobalVDWType(VdwType{0});
         h2->setForceToZero();
 
         Molecule water;
@@ -633,14 +633,14 @@ TEST(PotentialTemplates, QmChargesAndOneWayInteractions)
     atom1.setPartialCharge(-0.8);
     atom1.setQMCharge(-0.9);
     atom1.setAtomType(0);
-    atom1.setInternalGlobalVDWType(0);
+    atom1.setInternalGlobalVDWType(VdwType{0});
     atom1.setForceToZero();
 
     Atom atom2;
     atom2.setPosition({1.2, 0.1, 0.0});
     atom2.setPartialCharge(0.4);
     atom2.setAtomType(0);
-    atom2.setInternalGlobalVDWType(0);
+    atom2.setInternalGlobalVDWType(VdwType{0});
     atom2.setForceToZero();
 
     HybridSettings::setUseQMCharges(true);

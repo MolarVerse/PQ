@@ -263,16 +263,22 @@ size_t Atom::getAtomType() const { return _atomType; }
 /**
  * @brief return the external global VDW type
  *
- * @return size_t
+ * @return ExtVdwType
  */
-size_t Atom::getExternalGlobalVDWType() const { return _externalGlobalVDWType; }
+ExtVdwType Atom::getExternalGlobalVDWType() const
+{
+    return _externalGlobalVDWType;
+}
 
 /**
  * @brief return the internal global VDW type
  *
- * @return size_t
+ * @return VdwType
  */
-size_t Atom::getInternalGlobalVDWType() const { return _internalGlobalVDWType; }
+VdwType Atom::getInternalGlobalVDWType() const
+{
+    return _internalGlobalVDWType;
+}
 
 /**
  * @brief return the mass of the atom
@@ -425,7 +431,7 @@ void Atom::setExternalAtomType(const size_t externalAtomType)
  *
  * @param externalGlobalVDWType
  */
-void Atom::setExternalGlobalVDWType(const size_t externalGlobalVDWType)
+void Atom::setExternalGlobalVDWType(const ExtVdwType externalGlobalVDWType)
 {
     _externalGlobalVDWType = externalGlobalVDWType;
 }
@@ -435,7 +441,7 @@ void Atom::setExternalGlobalVDWType(const size_t externalGlobalVDWType)
  *
  * @param internalGlobalVDWType
  */
-void Atom::setInternalGlobalVDWType(const size_t internalGlobalVDWType)
+void Atom::setInternalGlobalVDWType(const VdwType internalGlobalVDWType)
 {
     _internalGlobalVDWType = internalGlobalVDWType;
 }

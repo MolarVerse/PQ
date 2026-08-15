@@ -29,6 +29,7 @@
 #include <optional>
 
 #include "nonCoulombPotential.hpp"
+#include "strongTypes.hpp"
 
 class TestNonCoulombPotentialFF;   // forward declaration
 
@@ -47,9 +48,6 @@ namespace potential
         struct matrix;
         std::unique_ptr<matrix> _nonCoulPairsMatPtr;
 
-        static constexpr auto _globalVdwType1Index = 4;
-        static constexpr auto _globalVdwType2Index = 5;
-
        public:
         ForceFieldNonCoulomb();
         ~ForceFieldNonCoulomb() override;
@@ -60,7 +58,9 @@ namespace potential
         ForceFieldNonCoulomb &operator=(ForceFieldNonCoulomb &&) noexcept;
 
         void setupNonCoulombicCutoffs();
-        void determineInternalGlobalVdwTypes(const std::map<size_t, size_t> &);
+        void determineInternalGlobalVdwTypes(
+            const std::map<ExtVdwType, VdwType> &
+        );
         void fillDiagOfNonCoulPairsMatrix(
             std::vector<std::shared_ptr<NonCoulombPair>> &
         );
@@ -68,7 +68,7 @@ namespace potential
         void sortNonCoulombicsPairs(
             std::vector<std::shared_ptr<NonCoulombPair>> &diagonalElements
         );
-        void setOffDiagonalElement(const size_t, const size_t);
+        void setOffDiagonalElement(VdwType atomType1, VdwType atomType2);
 
         [[nodiscard]]
         std::vector<std::shared_ptr<
@@ -77,8 +77,8 @@ namespace potential
         [[nodiscard]]
         std::
             optional<std::shared_ptr<NonCoulombPair>> findNonCoulPairByInternalTypes(
-                const size_t,
-                const size_t
+                const VdwType intType1,
+                const VdwType intType2
             ) const;
 
         void addNonCoulombicPair(const std::shared_ptr<NonCoulombPair> &pair);
@@ -89,13 +89,9 @@ namespace potential
 
         [[nodiscard]]
         std::shared_ptr<NonCoulombPair> getNonCoulPair(
-            const std::vector<size_t> &indices
+            const std::vector<size_t>         &indices,
+            const std::pair<VdwType, VdwType> &vdwTypes
         ) override;
-
-        [[nodiscard]]
-        size_t getGlobalVdwType1(const std::vector<size_t> &) const;
-        [[nodiscard]]
-        size_t getGlobalVdwType2(const std::vector<size_t> &) const;
 
         [[nodiscard]]
         std::vector<std::shared_ptr<NonCoulombPair>> &getNonCoulombPairsVector(

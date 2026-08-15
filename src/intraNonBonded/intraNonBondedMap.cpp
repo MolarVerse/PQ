@@ -166,16 +166,12 @@ std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(
 
         const auto moltype = _molecule->getMoltype();
 
-        const auto combinedIdx = {
-            moltype,
-            moltype,
-            atomType1,
-            atomType2,
-            globalVdwType1,
-            globalVdwType2
-        };
+        const auto combinedIdx = {moltype, moltype, atomType1, atomType2};
 
-        const auto nonCoulombicPair = nonCoulPot->getNonCoulPair(combinedIdx);
+        const auto nonCoulombicPair = nonCoulPot->getNonCoulPair(
+            combinedIdx,
+            {globalVdwType1, globalVdwType2}
+        );
 
         if (distance < nonCoulombicPair->getRadialCutOff())
         {

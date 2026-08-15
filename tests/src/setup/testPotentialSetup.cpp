@@ -22,8 +22,7 @@
 
 #include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ
 
-#include <cstddef>   // for size_t
-#include <memory>    // for make_shared
+#include <memory>   // for make_shared
 
 #include "coulombReactionField.hpp"      // for CoulombReactionField
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
@@ -37,7 +36,8 @@
 #include "moleculeType.hpp"              // for MoleculeType
 #include "potentialSettings.hpp"         // for PotentialSettings
 #include "potentialSetup.hpp"            // for PotentialSetup, setupPotential
-#include "testSetup.hpp"                 // for TestSetup
+#include "strongTypes.hpp"
+#include "testSetup.hpp"   // for TestSetup
 #include "testUtils.hpp"
 #include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
 
@@ -126,8 +126,8 @@ TEST_F(TestSetup, setupNonCoulombicPairs)
     PotentialSetup potentialSetup(*_engine);
 
     auto molecule = simulationBox::MoleculeType(1);
-    molecule.addExternalGlobalVDWType(0);
-    molecule.addExternalGlobalVDWType(1);
+    molecule.addExternalGlobalVDWType(ExtVdwType{0});
+    molecule.addExternalGlobalVDWType(ExtVdwType{1});
 
     _engine->getSimulationBox().addMoleculeType(molecule);
 
@@ -142,8 +142,8 @@ TEST_F(TestSetup, setupNonCoulombicPairs)
         _engine->getPotential()->getNonCoulombPotential()
     );
 
-    const auto zero = size_t(0);
-    const auto one  = size_t(1);
+    const auto zero = ExtVdwType(0);
+    const auto one  = ExtVdwType(1);
 
     auto nonCoulombPair1 = LennardJonesPair(zero, zero, 10.0, 2.0, 3.0);
     auto nonCoulombPair2 = LennardJonesPair(one, zero, 10.0, 2.0, 3.0);

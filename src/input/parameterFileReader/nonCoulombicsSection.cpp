@@ -34,6 +34,7 @@
 #include "morsePair.hpp"              // for MorsePair
 #include "potentialSettings.hpp"      // for PotentialSettings
 #include "stringUtilities.hpp"        // for toLowerCopy
+#include "strongTypes.hpp"
 
 using namespace input::parameterFile;
 using namespace customException;
@@ -166,10 +167,10 @@ void NonCoulombicsSection::processLJ(
             )
         );
 
-    const size_t atomType1 = stoul(lineElements[0]);
-    const size_t atomType2 = stoul(lineElements[1]);
-    const auto   c6        = stod(lineElements[2]);
-    const auto   c12       = stod(lineElements[3]);
+    const auto atomType1 = ExtVdwType{stoul(lineElements[0])};
+    const auto atomType2 = ExtVdwType{stoul(lineElements[1])};
+    const auto c6        = stod(lineElements[2]);
+    const auto c12       = stod(lineElements[3]);
 
     auto cutOff = 5 == lineElements.size() ? stod(lineElements[4]) : -1.0;
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
@@ -215,18 +216,18 @@ void NonCoulombicsSection::processBuckingham(
     if (lineElements.size() != 5 && lineElements.size() != 6)
         throw ParameterFileException(
             std::format(
-                "Wrong number of arguments in parameter file in Lennard Jones "
+                "Wrong number of arguments in parameter file in Buckingham "
                 "nonCoulombics section at line {} - number of "
                 "elements has to be 5 or 6!",
                 _lineNumber
             )
         );
 
-    const size_t atomType1 = stoul(lineElements[0]);
-    const size_t atomType2 = stoul(lineElements[1]);
-    const auto   a         = stod(lineElements[2]);
-    const auto   dRho      = stod(lineElements[3]);
-    const auto   c6        = stod(lineElements[4]);
+    const auto atomType1 = ExtVdwType{stoul(lineElements[0])};
+    const auto atomType2 = ExtVdwType{stoul(lineElements[1])};
+    const auto a         = stod(lineElements[2]);
+    const auto dRho      = stod(lineElements[3]);
+    const auto c6        = stod(lineElements[4]);
 
     auto cutOff = 6 == lineElements.size() ? stod(lineElements[5]) : -1.0;
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
@@ -272,18 +273,18 @@ void NonCoulombicsSection::processMorse(
     if (lineElements.size() != 5 && lineElements.size() != 6)
         throw ParameterFileException(
             std::format(
-                "Wrong number of arguments in parameter file in Lennard Jones "
+                "Wrong number of arguments in parameter file in Morse "
                 "nonCoulombics section at line {} - number of "
                 "elements has to be 5 or 6!",
                 _lineNumber
             )
         );
 
-    const size_t atomType1           = stoul(lineElements[0]);
-    const size_t atomType2           = stoul(lineElements[1]);
-    const auto   dissociationEnergy  = stod(lineElements[2]);
-    const auto   wellWidth           = stod(lineElements[3]);
-    const auto   equilibriumDistance = stod(lineElements[4]);
+    const auto atomType1           = ExtVdwType{stoul(lineElements[0])};
+    const auto atomType2           = ExtVdwType{stoul(lineElements[1])};
+    const auto dissociationEnergy  = stod(lineElements[2]);
+    const auto wellWidth           = stod(lineElements[3]);
+    const auto equilibriumDistance = stod(lineElements[4]);
 
     auto cutOff = 6 == lineElements.size() ? stod(lineElements[5]) : -1.0;
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)

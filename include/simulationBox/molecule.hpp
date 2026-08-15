@@ -32,6 +32,7 @@
 #include <vector>        // for vector
 
 #include "atom.hpp"   // for Atom
+#include "strongTypes.hpp"
 
 namespace simulationBox
 {
@@ -109,8 +110,8 @@ namespace simulationBox
         void scale(const linearAlgebra::tensor3D &, const Box &);
         void scaleVelocity(const linearAlgebra::tensor3D &, const Box &);
 
-        [[nodiscard]] size_t              getNumberOfAtomTypes();
-        [[nodiscard]] std::vector<size_t> getExternalGlobalVDWTypes() const;
+        [[nodiscard]] size_t                  getNumberOfAtomTypes();
+        [[nodiscard]] std::vector<ExtVdwType> getExternalGlobalVDWTypes() const;
 
         [[nodiscard]] std::vector<double> getAtomMasses() const;
         [[nodiscard]] std::vector<double> getPartialCharges() const;
@@ -184,12 +185,13 @@ namespace simulationBox
             const size_t index
         ) const;
 
-        [[nodiscard]] AtomNumber getAtomicNumber(const size_t index) const;
-        [[nodiscard]] double     getAtomMass(const size_t index) const;
-        [[nodiscard]] double     getPartialCharge(const size_t index) const;
-        [[nodiscard]] size_t     getAtomType(const size_t index) const;
-        [[nodiscard]] size_t getInternalGlobalVDWType(const size_t index) const;
+        [[nodiscard]] AtomNumber  getAtomicNumber(const size_t index) const;
+        [[nodiscard]] double      getAtomMass(const size_t index) const;
+        [[nodiscard]] double      getPartialCharge(const size_t index) const;
+        [[nodiscard]] size_t      getAtomType(const size_t index) const;
         [[nodiscard]] std::string getAtomName(const size_t index) const;
+        [[nodiscard]]
+        VdwType getInternalGlobalVDWType(const size_t index) const;
 
         /***************************
          * standard getter methods *

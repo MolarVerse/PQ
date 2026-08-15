@@ -23,6 +23,7 @@
 #include "lennardJonesPair.hpp"
 
 #include "mathUtilities.hpp"   // for compare
+#include "strongTypes.hpp"
 
 using namespace potential;
 using namespace utilities;
@@ -37,11 +38,11 @@ using namespace utilities;
  * @param c12
  */
 LennardJonesPair::LennardJonesPair(
-    const size_t vanDerWaalsType1,
-    const size_t vanDerWaalsType2,
-    const double cutOff,
-    const double c6,
-    const double c12
+    const ExtVdwType vanDerWaalsType1,
+    const ExtVdwType vanDerWaalsType2,
+    const double     cutOff,
+    const double     c6,
+    const double     c12
 )
     : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff),
       _c6(c6),

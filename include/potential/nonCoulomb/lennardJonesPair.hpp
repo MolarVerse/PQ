@@ -24,10 +24,10 @@
 
 #define _LENNARD_JONES_PAIR_HPP_
 
-#include <cstddef>   // size_t
 #include <utility>   // pair
 
 #include "nonCoulombPair.hpp"
+#include "strongTypes.hpp"
 
 namespace potential
 {
@@ -46,11 +46,11 @@ namespace potential
 
        public:
         explicit LennardJonesPair(
-            const size_t vanDerWaalsType1,
-            const size_t vanDerWaalsType2,
-            const double cutOff,
-            const double c6,
-            const double c12
+            const ExtVdwType vanDerWaalsType1,
+            const ExtVdwType vanDerWaalsType2,
+            const double     cutOff,
+            const double     c6,
+            const double     c12
         );
 
         explicit LennardJonesPair(
@@ -67,9 +67,20 @@ namespace potential
             const double c12
         );
 
+        // TODO: we need to explicitly delete it to not implictly create it with
+        // the wrong types!!! Needs cleanup
+        explicit LennardJonesPair(
+            const size_t,
+            const size_t,
+            const double,
+            const double,
+            const double
+        ) = delete;
+
         [[nodiscard]] bool operator==(const LennardJonesPair &other) const;
 
-        [[nodiscard]] std::pair<double, double> calculate(const double distance
+        [[nodiscard]] std::pair<double, double> calculate(
+            const double distance
         ) const override;
 
         [[nodiscard]] double getC6() const;

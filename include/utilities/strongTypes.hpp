@@ -64,4 +64,22 @@ struct DihedralIdTag
 };
 using DihedralId = StrongSizeT<struct DihedralIdTag>;
 
+struct ExtVdwTypeTag
+{
+    static std::string toString(const size_t &value)
+    {
+        return std::format("ExtVdwType({})", value);
+    }
+};
+using ExtVdwType = StrongSizeT<struct ExtVdwTypeTag>;
+
+struct VdwTypeTag
+{
+    static std::string toString(const size_t &value)
+    {
+        return std::format("VdwType({})", value);
+    }
+};
+using VdwType = StrongSizeT<struct VdwTypeTag>;
+
 #endif   // _STRONG_TYPES_HPP_

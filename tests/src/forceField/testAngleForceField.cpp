@@ -57,8 +57,13 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
     auto physicalData     = physicalData::PhysicalData();
     auto coulombPotential = potential::CoulombShiftedPotential(10.0);
 
-    auto nonCoulombPair =
-        potential::LennardJonesPair(size_t(1), size_t(1), 5.0, 2.0, 4.0);
+    auto nonCoulombPair = potential::LennardJonesPair(
+        ExtVdwType(1),
+        ExtVdwType(1),
+        5.0,
+        2.0,
+        4.0
+    );
     setNonCoulombPairsMatrix(
         linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(2, 2)
     );
@@ -81,9 +86,9 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
     atom2->setForce({0.0, 0.0, 0.0});
     atom3->setForce({0.0, 0.0, 0.0});
 
-    atom1->setInternalGlobalVDWType(0);
-    atom2->setInternalGlobalVDWType(1);
-    atom3->setInternalGlobalVDWType(1);
+    atom1->setInternalGlobalVDWType(VdwType{0});
+    atom2->setInternalGlobalVDWType(VdwType{1});
+    atom3->setInternalGlobalVDWType(VdwType{1});
 
     atom1->setAtomType(0);
     atom2->setAtomType(1);

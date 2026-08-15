@@ -22,9 +22,8 @@
 
 #include <gtest/gtest.h>   // for Test, CmpHelperFloatingPointEQ, EXPECT_EQ
 
-#include <cmath>     // for pow, exp
-#include <cstddef>   // for size_t
-#include <vector>    // for vector
+#include <cmath>    // for pow, exp
+#include <vector>   // for vector
 
 #include "buckinghamPair.hpp"   // for BuckinghamPair
 #include "gtest/gtest.h"        // for AssertionResult, Message, TestPartResult
@@ -37,10 +36,11 @@ using namespace potential;
  */
 TEST(TestBuckinghamPair, equalsOperator)
 {
-    const size_t vdwType1 = 0;
-    const size_t vdwType2 = 1;
-    const size_t vdwType3 = 2;
-    const auto   nonCoulombPair1 =
+    const ExtVdwType vdwType1{0};
+    const ExtVdwType vdwType2{1};
+    const ExtVdwType vdwType3{2};
+
+    const auto nonCoulombPair1 =
         BuckinghamPair(vdwType1, vdwType2, 1.0, 2.0, 3.0, 4.0);
 
     const auto nonCoulombPair2 =

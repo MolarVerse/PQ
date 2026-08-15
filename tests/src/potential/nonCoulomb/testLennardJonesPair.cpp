@@ -22,9 +22,8 @@
 
 #include <gtest/gtest.h>   // for Test, CmpHelperFloatingPointEQ, EXPECT_EQ
 
-#include <cmath>     // for pow
-#include <cstddef>   // for size_t
-#include <vector>    // for vector
+#include <cmath>    // for pow
+#include <vector>   // for vector
 
 #include "gtest/gtest.h"   // for AssertionResult, Message, TestPartResult
 #include "lennardJonesPair.hpp"   // for LennardJonesPair
@@ -32,15 +31,15 @@
 using namespace potential;
 
 /**
- * @brief tests the equals operator of BuckinghamPair
+ * @brief tests the equals operator of LennardJonesPair
  *
  */
 TEST(TestLennardJonesPair, equalsOperator)
 {
-    const size_t vdwType1 = 0;
-    const size_t vdwType2 = 1;
-    const size_t vdwType3 = 2;
-    const auto   nonCoulombPair1 =
+    const ExtVdwType vdwType1{0};
+    const ExtVdwType vdwType2{1};
+    const ExtVdwType vdwType3{2};
+    const auto       nonCoulombPair1 =
         LennardJonesPair(vdwType1, vdwType2, 1.0, 2.0, 3.0);
 
     const auto nonCoulombPair2 =

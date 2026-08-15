@@ -28,6 +28,8 @@
 #include <iostream>
 #include <memory>
 
+#include "strongTypes.hpp"
+
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
 #else
@@ -89,7 +91,7 @@ int main()
         atom->setAtomicNumber(atomicNumber);
         atom->setPosition(pos);
         atom->setAtomType(0);
-        atom->setInternalGlobalVDWType(0);
+        atom->setInternalGlobalVDWType(VdwType{0});
         atom->setPartialCharge(charge);
         atom->setForceToZero();
         return atom;

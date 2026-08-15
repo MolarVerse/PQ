@@ -49,8 +49,8 @@ namespace simulationBox
         std::string _name;
         std::string _atomTypeName;
 
-        size_t _externalGlobalVDWType;
-        size_t _internalGlobalVDWType;
+        ExtVdwType _externalGlobalVDWType;
+        VdwType    _internalGlobalVDWType;
 
         size_t _externalAtomType;
         size_t _atomType;
@@ -125,8 +125,8 @@ namespace simulationBox
         [[nodiscard]] size_t getExternalAtomType() const;
         [[nodiscard]] size_t getAtomType() const;
 
-        [[nodiscard]] size_t getExternalGlobalVDWType() const;
-        [[nodiscard]] size_t getInternalGlobalVDWType() const;
+        [[nodiscard]] ExtVdwType getExternalGlobalVDWType() const;
+        [[nodiscard]] VdwType    getInternalGlobalVDWType() const;
 
         [[nodiscard]]
         AtomNumber getAtomicNumber() const
@@ -166,8 +166,8 @@ namespace simulationBox
 
         void setAtomType(const size_t atomType);
         void setExternalAtomType(const size_t externalAtomType);
-        void setExternalGlobalVDWType(const size_t externalGlobalVDWType);
-        void setInternalGlobalVDWType(const size_t internalGlobalVDWType);
+        void setExternalGlobalVDWType(const ExtVdwType externalGlobalVDWType);
+        void setInternalGlobalVDWType(const VdwType internalGlobalVDWType);
 
         void setPosition(const linearAlgebra::Vec3D &position);
         void setVelocity(const linearAlgebra::Vec3D &velocity);

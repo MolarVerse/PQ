@@ -40,12 +40,12 @@ using namespace utilities;
  * @param c6
  */
 BuckinghamPair::BuckinghamPair(
-    const size_t vanDerWaalsType1,
-    const size_t vanDerWaalsType2,
-    const double cutOff,
-    const double a,
-    const double dRho,
-    const double c6
+    const ExtVdwType vanDerWaalsType1,
+    const ExtVdwType vanDerWaalsType2,
+    const double     cutOff,
+    const double     a,
+    const double     dRho,
+    const double     c6
 )
     : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff),
       _a(a),

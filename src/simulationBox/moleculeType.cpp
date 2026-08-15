@@ -91,7 +91,9 @@ void MoleculeType::addPartialCharge(const double partialCharge)
  *
  * @param externalGlobalVDWType
  */
-void MoleculeType::addExternalGlobalVDWType(const size_t externalGlobalVDWType)
+void MoleculeType::addExternalGlobalVDWType(
+    const ExtVdwType externalGlobalVDWType
+)
 {
     _externalGlobalVDWTypes.push_back(externalGlobalVDWType);
 }
@@ -293,9 +295,9 @@ std::vector<size_t> &MoleculeType::getExternalAtomTypes()
 /**
  * @brief get the external global VDW types of the molecule
  *
- * @return std::vector<size_t>&
+ * @return std::vector<ExtVdwType>&
  */
-std::vector<size_t> &MoleculeType::getExternalGlobalVDWTypes()
+std::vector<ExtVdwType> &MoleculeType::getExternalGlobalVDWTypes()
 {
     return _externalGlobalVDWTypes;
 }

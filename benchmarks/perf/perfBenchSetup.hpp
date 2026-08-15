@@ -38,6 +38,7 @@
 #include "matrix.hpp"
 #include "molecule.hpp"
 #include "simulationBox.hpp"
+#include "strongTypes.hpp"
 
 namespace potential
 {
@@ -109,7 +110,7 @@ namespace benchSetup
             atom->setShiftForce({0.0, 0.0, 0.0});
             atom->setMass(12.0);
             atom->setAtomType(i % 2);
-            atom->setInternalGlobalVDWType(i % 2);
+            atom->setInternalGlobalVDWType(VdwType{i % 2});
             atom->setPartialCharge((i % 2 == 0) ? 0.4 : -0.4);
 
             molecule.addAtom(atom);
@@ -132,8 +133,8 @@ namespace benchSetup
         );
 
         auto pair = potential::LennardJonesPair(
-            std::size_t(0),
-            std::size_t(1),
+            ExtVdwType(0),
+            ExtVdwType(1),
             12.0,
             2.0,
             3.0
