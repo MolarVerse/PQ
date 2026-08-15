@@ -24,6 +24,7 @@
 
 #include <cstddef>   // for size_t
 
+#include "globalTimer.hpp"
 #include "molecule.hpp"             // for Molecule
 #include "physicalData.hpp"         // for PhysicalData
 #include "simulationBox.hpp"        // for SimulationBox
@@ -55,7 +56,7 @@ void PotentialBruteForce::calculateForces(
     CellList &
 )
 {
-    auto _ = scoped("InterNonBonded");
+    auto _ = scopedTimer(TimerId::Potential, "InterNonBonded");
 
     const auto box            = simBox.getBoxPtr();
     const auto waterTypeValue = simBox.getWaterType().value_or(size_t{0});
@@ -122,7 +123,7 @@ void PotentialBruteForce::calculateCoreToOuterForces(
     CellList &
 )
 {
-    auto _ = scoped("InterNonBondedCoreToOuter");
+    auto _ = scopedTimer(TimerId::Potential, "InterNonBondedCoreToOuter");
 
     const auto box = simBox.getBoxPtr();
 
@@ -166,7 +167,7 @@ void PotentialBruteForce::calculateLayerToOuterForces(
     CellList &
 )
 {
-    auto _ = scoped("InterNonBondedLayerToOuter");
+    auto _ = scopedTimer(TimerId::Potential, "InterNonBondedLayerToOuter");
 
     const auto box            = simBox.getBoxPtr();
     const auto waterTypeValue = simBox.getWaterType().value_or(size_t{0});
@@ -239,7 +240,7 @@ void PotentialBruteForce::calculateHotspotSmoothingMMForces(
     CellList &
 )
 {
-    auto _ = scoped("InterNonBondedSmoothingMM");
+    auto _ = scopedTimer(TimerId::Potential, "InterNonBondedSmoothingMM");
 
     const auto box            = simBox.getBoxPtr();
     const auto waterTypeValue = simBox.getWaterType().value_or(size_t{0});

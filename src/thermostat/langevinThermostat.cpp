@@ -27,6 +27,7 @@
 
 #include "constants/conversionFactors.hpp"   // for _FS_TO_S_, _KG_TO_GRAM_
 #include "constants/natureConstants.hpp"     // for _UNIVERSAL_GAS_CONSTANT_
+#include "globalTimer.hpp"                   // for GlobalTimer
 #include "physicalData.hpp"                  // for PhysicalData
 #include "simulationBox.hpp"                 // for SimulationBox
 #include "thermostatSettings.hpp"            // for ThermostatType
@@ -150,7 +151,7 @@ void LangevinThermostat::applyThermostat(
     PhysicalData  &data
 )
 {
-    auto _ = scoped("LangevinThermostat - Full Step");
+    auto _ = scopedTimer(TimerId::Thermostat, "LangevinThermostat - Full Step");
 
     applyLangevin(simBox);
     data.calculateTemperature(simBox);
@@ -169,7 +170,7 @@ void LangevinThermostat::applyThermostatHalfStep(
     PhysicalData &
 )
 {
-    auto _ = scoped("LangevinThermostat - Half Step");
+    auto _ = scopedTimer(TimerId::Thermostat, "LangevinThermostat - Half Step");
 
     applyLangevin(simBox);
 }

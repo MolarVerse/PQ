@@ -27,6 +27,7 @@
 #include <vector>      // for vector
 
 #include "exceptions.hpp"   // for ShakeException
+#include "globalTimer.hpp"
 #include "mShake.hpp"
 #include "physicalData.hpp"    // for PhysicalData
 #include "simulationBox.hpp"   // for SimulationBox
@@ -61,7 +62,7 @@ void Constraints::calculateConstraintBondRefs(
     const SimulationBox &simulationBox
 )
 {
-    auto _ = scoped("Reference Bond Data");
+    auto _ = scopedTimer(TimerId::Constraints, "Reference Bond Data");
 
     std::ranges::for_each(
         _bondConstraints,
@@ -97,7 +98,7 @@ void Constraints::applyShake(SimulationBox &simulationBox)
  */
 void Constraints::_applyShake(SimulationBox &simBox)
 {
-    auto _ = scoped("Shake");
+    auto _ = scopedTimer(TimerId::Constraints, "Shake");
 
     std::vector<bool> convergedVector;
     bool              converged = false;
@@ -143,7 +144,7 @@ void Constraints::_applyShake(SimulationBox &simBox)
  */
 void Constraints::_applyMShake(SimulationBox &simulationBox)
 {
-    auto _ = scoped("MShake - Shake");
+    auto _ = scopedTimer(TimerId::Constraints, "MShake - Shake");
     _mShake->applyMShake(simulationBox);
 }
 
@@ -173,7 +174,7 @@ void Constraints::applyRattle(SimulationBox &simBox)
  */
 void Constraints::_applyRattle()
 {
-    auto _ = scoped("Rattle");
+    auto _ = scopedTimer(TimerId::Constraints, "Rattle");
 
     std::vector<bool> convergedVector;
     bool              converged = false;
@@ -218,7 +219,7 @@ void Constraints::_applyRattle()
  */
 void Constraints::_applyMRattle(SimulationBox &simulationBox)
 {
-    auto _ = scoped("MShake - Rattle");
+    auto _ = scopedTimer(TimerId::Constraints, "MShake - Rattle");
     _mShake->applyMRattle(simulationBox);
 }
 

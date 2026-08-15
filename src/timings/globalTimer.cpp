@@ -23,6 +23,7 @@
 #include "globalTimer.hpp"
 
 #include <algorithm>   // for ranges::sort
+#include <vector>
 
 #include "timer.hpp"
 
@@ -32,9 +33,54 @@ using namespace timings;
  * @brief Construct a new Global Timer:: Global Timer object
  *
  */
-GlobalTimer::GlobalTimer() : _simulationTimer(TimerId::Simulation)
+GlobalTimer::GlobalTimer()
 {
-    _simulationTimer.startTimingsSection();
+    for (const auto id : TimerIdMeta::values_view())
+        _timers.at(static_cast<size_t>(id)) = Timer(id);
+
+    _getSimulationTimer().startTimingsSection();
+}
+
+/**
+ * @brief Get the Simulation Timer object
+ *
+ * @return Timer&
+ */
+Timer& GlobalTimer::_getSimulationTimer()
+{
+    return _timers.at(static_cast<size_t>(TimerId::Simulation));
+}
+
+/**
+ * @brief Get the Simulation Timer object (const version)
+ *
+ * @return const Timer&
+ */
+const Timer& GlobalTimer::_getSimulationTimer() const
+{
+    return _timers.at(static_cast<size_t>(TimerId::Simulation));
+}
+
+/**
+ * @brief Get the Timer object for a specific TimerId
+ *
+ * @param id
+ * @return Timer&
+ */
+Timer& GlobalTimer::_getTimer(const TimerId id)
+{
+    return _timers.at(static_cast<size_t>(id));
+}
+
+/**
+ * @brief Get the Timer object for a specific TimerId (const version)
+ *
+ * @param id
+ * @return const Timer&
+ */
+const Timer& GlobalTimer::_getTimer(const TimerId id) const
+{
+    return _timers.at(static_cast<size_t>(id));
 }
 
 /**
@@ -44,7 +90,7 @@ GlobalTimer::GlobalTimer() : _simulationTimer(TimerId::Simulation)
  */
 double GlobalTimer::calculateLoopTime() const
 {
-    return _simulationTimer.calculateLoopTime();
+    return _getSimulationTimer().calculateLoopTime();
 }
 
 /**
@@ -54,31 +100,28 @@ double GlobalTimer::calculateLoopTime() const
  */
 double GlobalTimer::calculateElapsedTime() const
 {
-    return _simulationTimer.calculateElapsedTime();
+    return _getSimulationTimer().calculateElapsedTime();
 }
 
 /**
  * @brief sorts the timers
  *
+ * @return std::vector<Timer>
+ *
  */
-void GlobalTimer::sortTimers()
+std::vector<Timer> GlobalTimer::sortTimers() const
 {
-    for (auto& timer : _timers) timer.sortTimingsSections();
+    std::vector<Timer> sortedTimers(_timers.begin(), _timers.end());
+
+    for (auto timer : sortedTimers) timer.sortTimingsSections();
 
     std::ranges::sort(
-        _timers,
+        sortedTimers,
         [](const Timer& a, const Timer& b)
         { return a.calculateElapsedTime() > b.calculateElapsedTime(); }
     );
-}
 
-/**
- * @brief start the simulation timer
- *
- */
-void GlobalTimer::startSimulationTimer()
-{
-    _simulationTimer.startTimingsSection();
+    return sortedTimers;
 }
 
 /**
@@ -87,19 +130,30 @@ void GlobalTimer::startSimulationTimer()
  */
 void GlobalTimer::stopSimulationTimer()
 {
-    _simulationTimer.stopTimingsSection();
+    _getSimulationTimer().stopTimingsSection();
 }
 
 /**
- * @brief adds a timer
+ * @brief stop and restart the simulation timer
  *
- * @param timer
  */
-void GlobalTimer::addTimer(const Timer& timer) { _timers.push_back(timer); }
+void GlobalTimer::stopAndRestartSimulationTimer()
+{
+    _getSimulationTimer().stopTimingsSection();
+    _getSimulationTimer().startTimingsSection();
+}
 
 /**
- * @brief get the timers
+ * @brief get a scoped timer for a specific timer id and section name
  *
- * @return const std::vector<Timer>&
+ * @param id
+ * @param sectionName
+ * @return TimingsSectionGuard
  */
-const std::vector<Timer>& GlobalTimer::getTimers() const { return _timers; }
+TimingsSectionGuard GlobalTimer::scoped(
+    TimerId            id,
+    const std::string& sectionName
+)
+{
+    return _getTimer(id).scoped(sectionName);
+}

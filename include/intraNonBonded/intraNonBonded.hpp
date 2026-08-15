@@ -31,7 +31,6 @@
 #include "coulombPotential.hpp"
 #include "intraNonBondedContainer.hpp"   // for IntraNonBondedContainer
 #include "intraNonBondedMap.hpp"         // for IntraNonBondedMap
-#include "timer.hpp"                     // for Timer
 
 namespace intraNonBonded
 {
@@ -52,7 +51,7 @@ namespace intraNonBonded
      *
      * @brief base class for intra non bonded interactions
      */
-    class IntraNonBonded : public timings::Timer
+    class IntraNonBonded
     {
        protected:
         IntraNonBondedType _intraNonBondedType = IntraNonBondedType::NONE;

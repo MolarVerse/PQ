@@ -40,7 +40,6 @@
 #include "rstFileOutput.hpp"
 #include "stdoutOutput.hpp"
 #include "stressOutput.hpp"
-#include "timer.hpp"
 #include "timingsOutput.hpp"
 #include "trajectoryOutput.hpp"
 #include "virialOutput.hpp"
@@ -58,7 +57,7 @@ namespace engine
      * @brief contains unique pointers to all of the output classes
      *
      */
-    class EngineOutput : public timings::Timer
+    class EngineOutput
     {
        private:
         std::unique_ptr<output::EnergyOutput> _energyOutput;
@@ -156,7 +155,7 @@ namespace engine
             const std::vector<physicalData::PhysicalData> &
         );
 
-        void writeTimingsFile(timings::GlobalTimer &);
+        void writeTimingsFile();
 
         /***************************
          * standard getter methods *

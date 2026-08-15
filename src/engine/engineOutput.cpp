@@ -27,6 +27,7 @@
 #include "boxOutput.hpp"
 #include "defaults.hpp"
 #include "energyOutput.hpp"
+#include "globalTimer.hpp"
 #include "hybridConfigurator.hpp"
 #include "infoOutput.hpp"
 #include "logOutput.hpp"
@@ -118,7 +119,7 @@ void EngineOutput::writeEnergyFile(
     const PhysicalData &physicalData
 )
 {
-    auto _ = scoped("EnergyOutput");
+    auto _ = scopedTimer(TimerId::Output, "EnergyOutput");
     _energyOutput->write(step, physicalData);
 }
 
@@ -133,7 +134,7 @@ void EngineOutput::writeInstantEnergyFile(
     const PhysicalData &physicalData
 )
 {
-    auto _ = scoped("InstantEnergyOutput");
+    auto _ = scopedTimer(TimerId::Output, "InstantEnergyOutput");
     _instantEnergyOutput->write(step, physicalData);
 }
 
@@ -148,7 +149,7 @@ void EngineOutput::writeMomentumFile(
     const PhysicalData &physicalData
 )
 {
-    auto _ = scoped("MomentumOutput");
+    auto _ = scopedTimer(TimerId::Output, "MomentumOutput");
     _momentumOutput->write(step, physicalData);
 }
 
@@ -160,7 +161,7 @@ void EngineOutput::writeMomentumFile(
  */
 void EngineOutput::writeXyzFile(SimulationBox &simulationBox, const size_t step)
 {
-    auto _ = scoped("TrajectoryOutput");
+    auto _ = scopedTimer(TimerId::Output, "TrajectoryOutput");
     _xyzOutput->writeXyz(simulationBox, step);
 }
 
@@ -175,7 +176,7 @@ void EngineOutput::writeHybridCenterXyzFile(
     const size_t              step
 )
 {
-    auto _ = scoped("TrajectoryOutput");
+    auto _ = scopedTimer(TimerId::Output, "TrajectoryOutput");
     _xyzHybridCenterOutput->writeHybridCenterXyz(configurator, step);
 }
 
@@ -187,7 +188,7 @@ void EngineOutput::writeHybridCenterXyzFile(
  */
 void EngineOutput::writeVelFile(SimulationBox &simulationBox, const size_t step)
 {
-    auto _ = scoped("TrajectoryOutput");
+    auto _ = scopedTimer(TimerId::Output, "TrajectoryOutput");
     _velOutput->writeVelocities(simulationBox, step);
 }
 
@@ -202,7 +203,7 @@ void EngineOutput::writeForceFile(
     const size_t   step
 )
 {
-    auto _ = scoped("TrajectoryOutput");
+    auto _ = scopedTimer(TimerId::Output, "TrajectoryOutput");
     _forceOutput->writeForces(simulationBox, step);
 }
 
@@ -217,7 +218,7 @@ void EngineOutput::writeChargeFile(
     const size_t   step
 )
 {
-    auto _ = scoped("TrajectoryOutput");
+    auto _ = scopedTimer(TimerId::Output, "TrajectoryOutput");
     _chargeOutput->writeCharges(simulationBox, step);
 }
 
@@ -232,7 +233,7 @@ void EngineOutput::writeInfoFile(
     const PhysicalData &physicalData
 )
 {
-    auto _ = scoped("InfoOutput");
+    auto _ = scopedTimer(TimerId::Output, "InfoOutput");
     _infoOutput->write(time, physicalData);
 }
 
@@ -248,7 +249,7 @@ void EngineOutput::writeRstFile(
     const size_t      step
 )
 {
-    auto _ = scoped("RstFileOutput");
+    auto _ = scopedTimer(TimerId::Output, "RstFileOutput");
     _rstFileOutput->write(simulationBox, thermostat, step);
 }
 
@@ -263,7 +264,7 @@ void EngineOutput::writeOptRstFile(
     const size_t   step
 )
 {
-    auto _ = scoped("RstFileOutput");
+    auto _ = scopedTimer(TimerId::Output, "RstFileOutput");
     _rstFileOutput->write(simulationBox, Thermostat(), step);
 }
 
@@ -278,7 +279,7 @@ void EngineOutput::writeVirialFile(
     const PhysicalData &physicalData
 )
 {
-    auto _ = scoped("VirialOutput");
+    auto _ = scopedTimer(TimerId::Output, "VirialOutput");
     _virialOutput->write(step, physicalData);
 }
 
@@ -293,7 +294,7 @@ void EngineOutput::writeStressFile(
     const PhysicalData &physicalData
 )
 {
-    auto _ = scoped("StressOutput");
+    auto _ = scopedTimer(TimerId::Output, "StressOutput");
     _stressOutput->write(step, physicalData);
 }
 
@@ -305,7 +306,7 @@ void EngineOutput::writeStressFile(
  */
 void EngineOutput::writeBoxFile(const size_t step, const Box &simulationBox)
 {
-    auto _ = scoped("BoxFileOutput");
+    auto _ = scopedTimer(TimerId::Output, "BoxFileOutput");
     _boxFileOutput->write(step, simulationBox);
 }
 
@@ -320,7 +321,7 @@ void EngineOutput::writeOptFile(
     const opt::Optimizer &optimizer
 )
 {
-    auto _ = scoped("OptOutput");
+    auto _ = scopedTimer(TimerId::Output, "OptOutput");
     _optOutput->write(step, optimizer);
 }
 
@@ -332,7 +333,7 @@ void EngineOutput::writeOptFile(
  */
 void EngineOutput::writeRingPolymerRstFile(std::vector<SimulationBox> &beads)
 {
-    auto _ = scoped("RingPolymerRestartFileOutput");
+    auto _ = scopedTimer(TimerId::Output, "RingPolymerRestartFileOutput");
     _rpmdRstFileOutput->write(beads);
 }
 
@@ -347,7 +348,7 @@ void EngineOutput::writeRingPolymerXyzFile(
     const size_t                step
 )
 {
-    auto _ = scoped("RingPolymerTrajectoryOutput");
+    auto _ = scopedTimer(TimerId::Output, "RingPolymerTrajectoryOutput");
     _rpmdXyzOutput->writeXyz(beads, step);
 }
 
@@ -362,7 +363,7 @@ void EngineOutput::writeRingPolymerVelFile(
     const size_t                step
 )
 {
-    auto _ = scoped("RingPolymerTrajectoryOutput");
+    auto _ = scopedTimer(TimerId::Output, "RingPolymerTrajectoryOutput");
     _rpmdVelOutput->writeVelocities(beads, step);
 }
 
@@ -377,7 +378,7 @@ void EngineOutput::writeRingPolymerForceFile(
     const size_t                step
 )
 {
-    auto _ = scoped("RingPolymerTrajectoryOutput");
+    auto _ = scopedTimer(TimerId::Output, "RingPolymerTrajectoryOutput");
     _rpmdForceOutput->writeForces(beads, step);
 }
 
@@ -392,7 +393,7 @@ void EngineOutput::writeRingPolymerChargeFile(
     const size_t                step
 )
 {
-    auto _ = scoped("RingPolymerTrajectoryOutput");
+    auto _ = scopedTimer(TimerId::Output, "RingPolymerTrajectoryOutput");
     _rpmdChargeOutput->writeCharges(beads, step);
 }
 
@@ -407,7 +408,7 @@ void EngineOutput::writeRingPolymerEnergyFile(
     const std::vector<PhysicalData> &dataVector
 )
 {
-    auto _ = scoped("RingPolymerEnergyOutput");
+    auto _ = scopedTimer(TimerId::Output, "RingPolymerEnergyOutput");
     _rpmdEnergyOutput->write(step, dataVector);
 }
 
@@ -416,12 +417,12 @@ void EngineOutput::writeRingPolymerEnergyFile(
  *
  * @param timer
  */
-void EngineOutput::writeTimingsFile(timings::GlobalTimer &timer)
+void EngineOutput::writeTimingsFile()
 {
     // NOTE:
     // here is no timer applied, since the timings file is written at the end of
     // the simulation
-    _timingsOutput->write(timer);
+    _timingsOutput->write();
 }
 
 /***************************

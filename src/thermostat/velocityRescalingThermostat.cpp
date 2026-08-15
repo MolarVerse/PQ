@@ -25,6 +25,7 @@
 #include <cmath>   // for sqrt
 
 #include "exceptions.hpp"           // for UserInputException
+#include "globalTimer.hpp"          // for GlobalTimer
 #include "mathUtilities.hpp"        // for isZero
 #include "physicalData.hpp"         // for PhysicalData
 #include "simulationBox.hpp"        // for SimulationBox
@@ -96,7 +97,7 @@ void VelocityRescalingThermostat::applyThermostat(
     PhysicalData  &physicalData
 )
 {
-    auto _ = scoped("Velocity Rescaling");
+    auto _ = scopedTimer(TimerId::Thermostat, "Velocity Rescaling");
 
     physicalData.calculateTemperature(simulationBox);
 

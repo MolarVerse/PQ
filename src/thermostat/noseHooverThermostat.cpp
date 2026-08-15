@@ -27,6 +27,7 @@
 
 #include "constants/conversionFactors.hpp"   // for _BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_, _FS_TO_S_
 #include "constants/internalConversionFactors.hpp"   // for _MOMENTUM_TO_FORCE_
+#include "globalTimer.hpp"                           // for GlobalTimer
 #include "physicalData.hpp"                          // for PhysicalData
 #include "simulationBox.hpp"                         // for SimulationBox
 #include "thermostatSettings.hpp"                    // for ThermostatType
@@ -69,7 +70,7 @@ NoseHooverThermostat::NoseHooverThermostat(
  */
 void NoseHooverThermostat::applyThermostatOnForces(SimulationBox &simBox)
 {
-    auto _ = scoped("Nose-Hoover - Forces");
+    auto _ = scopedTimer(TimerId::Thermostat, "Nose-Hoover - Forces");
 
     const auto kB        = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
     const auto kT_target = kB * _targetTemperature;
@@ -80,7 +81,7 @@ void NoseHooverThermostat::applyThermostatOnForces(SimulationBox &simBox)
 
     auto factor  = _chi[0] * couplingFreqSquared;
     factor      /= (kT_target * degreesOfFreedom);
-    factor       *= MOMENTUM_TO_FORCE;
+    factor      *= MOMENTUM_TO_FORCE;
 
     auto applyNoseHoover = [factor](auto &atom)
     { atom->addForce(-factor * atom->getVelocity() * atom->getMass()); };
@@ -102,7 +103,7 @@ void NoseHooverThermostat::applyThermostat(
     PhysicalData  &physicalData
 )
 {
-    auto _ = scoped("Nose-Hoover - Velocities");
+    auto _ = scopedTimer(TimerId::Thermostat, "Nose-Hoover - Velocities");
 
     physicalData.calculateTemperature(simBox);
 

@@ -24,32 +24,62 @@
 
 #define _GLOBAL_TIMER_HPP_
 
+#include "singleton.hpp"
 #include "timer.hpp"
+#include "timerId.hpp"
+#include "timingsSectionGuard.hpp"
 
 namespace timings
 {
-    class GlobalTimer
+    class GlobalTimer : public Singleton<GlobalTimer>
     {
        private:
-        Timer _simulationTimer;
-
-        std::vector<Timer> _timers;
+        std::array<Timer, TimerIdMeta::size> _timers{};
 
        public:
-        GlobalTimer();
-
         [[nodiscard]] double calculateLoopTime() const;
         [[nodiscard]] double calculateElapsedTime() const;
 
-        void sortTimers();
+        std::vector<Timer> sortTimers() const;
 
-        void startSimulationTimer();
         void stopSimulationTimer();
+        void stopAndRestartSimulationTimer();
 
-        void addTimer(const Timer &timer);
+        [[nodiscard]]
+        TimingsSectionGuard scoped(TimerId id, const std::string &sectionName);
 
-        [[nodiscard]] const std::vector<Timer> &getTimers() const;
+       private:
+        friend class Singleton<GlobalTimer>;
+        GlobalTimer();
+
+        [[nodiscard]] Timer       &_getSimulationTimer();
+        [[nodiscard]] const Timer &_getSimulationTimer() const;
+
+        [[nodiscard]] Timer       &_getTimer(TimerId id);
+        [[nodiscard]] const Timer &_getTimer(TimerId id) const;
     };
 }   // namespace timings
+
+/**
+ * @brief Scoped timer for a specific section of code.
+ *
+ * This function creates a scoped timer for a specific section of code. It
+ * starts the timer when the function is called and stops it when the returned
+ * TimingsSectionGuard object goes out of scope.
+ *
+ * @param id The TimerId for the section of code being timed.
+ * @param sectionName A descriptive name for the section of code being timed.
+ *
+ * @return A TimingsSectionGuard object that manages the timing of the specified
+ *         section of code.
+ */
+[[nodiscard]]
+inline timings::TimingsSectionGuard scopedTimer(
+    TimerId            id,
+    const std::string &sectionName
+)
+{
+    return timings::GlobalTimer::get().scoped(id, sectionName);
+}
 
 #endif   // _GLOBAL_TIMER_HPP_

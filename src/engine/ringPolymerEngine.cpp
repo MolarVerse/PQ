@@ -28,11 +28,12 @@
 #include "atom.hpp"                                  // for Atom
 #include "constants/internalConversionFactors.hpp"   // for _RPMD_PREFACTOR_
 #include "engineOutput.hpp"                          // for EngineOutput
-#include "outputFileSettings.hpp"                    // for OutputFileSettings
-#include "physicalData.hpp"                          // for PhysicalData
-#include "ringPolymerSettings.hpp"                   // for RingPolymerSettings
-#include "thermostatSettings.hpp"                    // for ThermostatSettings
-#include "timingsSettings.hpp"                       // for TimingsSettings
+#include "globalTimer.hpp"
+#include "outputFileSettings.hpp"    // for OutputFileSettings
+#include "physicalData.hpp"          // for PhysicalData
+#include "ringPolymerSettings.hpp"   // for RingPolymerSettings
+#include "thermostatSettings.hpp"    // for ThermostatSettings
+#include "timingsSettings.hpp"       // for TimingsSettings
 
 using engine::Engine;
 using engine::RingPolymerEngine;
@@ -88,12 +89,12 @@ void RingPolymerEngine::writeOutput()
     // is now included in total simulation time Unfortunately, setup is
     // therefore included in the first looptime output but this is not a big
     // problem - could also be a feature and not a bug
-    _timer.stopSimulationTimer();
-    _timer.startSimulationTimer();
+    timings::GlobalTimer::get().stopAndRestartSimulationTimer();
+    const auto elapsedTime = timings::GlobalTimer::get().calculateElapsedTime();
 
     for (size_t i = 0; i < _ringPolymerBeads.size(); ++i)
     {
-        rpmdData[i].setLoopTime(_timer.calculateLoopTime());
+        rpmdData[i].setLoopTime(elapsedTime);
         averageRPMDData[i].updateAverages(rpmdData[i]);
     }
 
