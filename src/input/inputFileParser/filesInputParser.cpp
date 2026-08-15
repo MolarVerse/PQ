@@ -25,14 +25,12 @@
 #include <cstddef>   // for size_t
 #include <format>    // for format
 
-#include "engine.hpp"         // for Engine
 #include "exceptions.hpp"     // for InputFileException
 #include "fileSettings.hpp"   // for FileSettings
 #include "parserUtils.hpp"
 #include "stringUtilities.hpp"   // for fileExists
 
 using namespace input;
-using namespace engine;
 using namespace customException;
 using namespace settings;
 using namespace utilities;

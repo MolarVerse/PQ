@@ -25,7 +25,6 @@
 #include <cstddef>   // for size_t
 #include <format>    // for format
 
-#include "engine.hpp"                 // for Engine
 #include "exceptions.hpp"             // for InputFileException, customException
 #include "forceFieldClass.hpp"        // for ForceField
 #include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
@@ -37,12 +36,10 @@
 #include "waterModelSettings.hpp"   // for WaterModelSettings
 
 using namespace input;
-using namespace engine;
 using namespace customException;
 using namespace settings;
 using namespace utilities;
 using namespace potential;
-using namespace waterModel;
 
 /**
  * @brief Construct a new Input File Parser Force Field:: Input File Parser

@@ -24,15 +24,12 @@
 
 #include <format>   // for format
 
-#include "engine.hpp"       // for Engine
 #include "exceptions.hpp"   // for InputFileException, customException
 #include "parserUtils.hpp"
 #include "settings.hpp"
 #include "stringUtilities.hpp"   // for toLowerCopy
 
 using namespace input;
-using namespace virial;
-using namespace engine;
 using namespace customException;
 using namespace utilities;
 

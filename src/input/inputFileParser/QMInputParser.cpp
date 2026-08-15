@@ -27,7 +27,6 @@
 #include <stdexcept>       // for invalid_argument, out_of_range
 #include <unordered_map>   // for unordered_map
 
-#include "engine.hpp"            // for Engine
 #include "exceptions.hpp"        // for InputFileException, customException
 #include "hubbardDerivMap.hpp"   // for hubbardDerivMap3ob
 #include "parserUtils.hpp"
@@ -40,7 +39,6 @@ using namespace input;
 using namespace utilities;
 using namespace settings;
 using namespace customException;
-using namespace engine;
 using namespace references;
 using namespace constants;
 

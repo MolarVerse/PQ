@@ -25,7 +25,6 @@
 #include <cstddef>   // for size_t
 #include <format>    // for format
 
-#include "engine.hpp"       // for Engine
 #include "exceptions.hpp"   // for InputFileException, customException
 #include "parserUtils.hpp"
 #include "potentialSettings.hpp"       // for PotentialSettings
@@ -33,7 +32,6 @@
 #include "stringUtilities.hpp"         // for toLowerCopy
 
 using namespace input;
-using namespace engine;
 using namespace customException;
 using namespace settings;
 using namespace utilities;
