@@ -362,10 +362,10 @@ TEST_F(TestThermostat, noseHooverSetChiAtIndex)
         std::vector<double>{0.0, 0.0, 0.0},
         1.0e13
     );
-    nh.setChi(2u, 7.0);
+    nh.setChi(2U, 7.0);
     EXPECT_DOUBLE_EQ(nh.getChi()[2], 7.0);
 
-    nh.setZeta(1u, 3.0);
+    nh.setZeta(1U, 3.0);
     EXPECT_DOUBLE_EQ(nh.getZeta()[1], 3.0);
 }
 

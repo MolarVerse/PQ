@@ -458,8 +458,8 @@ TEST_F(TestManostat, semiIsotropicBerendsenIsotropy)
         1.0,
         0.1,
         4.5,
-        2u,
-        std::vector<size_t>{0u, 1u}
+        2U,
+        std::vector<size_t>{0U, 1U}
     );
     EXPECT_EQ(bm.getIsotropy(), settings::Isotropy::SEMI_ISOTROPIC);
     EXPECT_EQ(bm.getManostatType(), settings::ManostatType::BERENDSEN);

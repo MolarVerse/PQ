@@ -81,12 +81,12 @@ namespace
 
 TEST(TestResetKinetics, constructorStoresStepAndFrequencyParameters)
 {
-    resetKinetics::ResetKinetics rk(1u, 2u, 3u, 4u, 50u, 100u, 11u);
-    EXPECT_EQ(rk.getNStepsTemperatureReset(), 1u);
-    EXPECT_EQ(rk.getFrequencyTemperatureReset(), 2u);
-    EXPECT_EQ(rk.getNStepsMomentumReset(), 3u);
-    EXPECT_EQ(rk.getFrequencyMomentumReset(), 4u);
-    EXPECT_EQ(rk.getNStepsForcesReset(), 11u);
+    resetKinetics::ResetKinetics rk(1U, 2U, 3U, 4U, 50U, 100U, 11U);
+    EXPECT_EQ(rk.getNStepsTemperatureReset(), 1U);
+    EXPECT_EQ(rk.getFrequencyTemperatureReset(), 2U);
+    EXPECT_EQ(rk.getNStepsMomentumReset(), 3U);
+    EXPECT_EQ(rk.getFrequencyMomentumReset(), 4U);
+    EXPECT_EQ(rk.getNStepsForcesReset(), 11U);
 }
 
 TEST(TestResetKinetics, settersAcceptValuesWithoutThrowing)
@@ -236,13 +236,13 @@ TEST(TestResetKinetics, resetAngularMomentumLeavesVelocitiesFinite)
 TEST(TestResetKinetics, resetForcesZerosForcesEachStep)
 {
     auto                        *box = makeBox();
-    resetKinetics::ResetKinetics rk(0u, 0u, 0u, 0u, 0u, 0u, 1u);
+    resetKinetics::ResetKinetics rk(0U, 0U, 0U, 0U, 0U, 0U, 1U);
 
     // Seed atom forces with non-zero values.
     for (auto &atom : box->getAtoms())
         atom->setForce(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
 
-    rk.resetForces(0u, *box);
+    rk.resetForces(0U, *box);
 
     for (const auto &atom : box->getAtoms())
         for (size_t i = 0; i < 3; ++i)

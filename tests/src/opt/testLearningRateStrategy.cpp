@@ -43,9 +43,9 @@ TEST(TestConstantLRStrategy, constructorStoresInitialLearningRate)
 TEST(TestConstantLRStrategy, updateLearningRateIsNoOp)
 {
     auto lr = ConstantLRStrategy(0.1);
-    lr.updateLearningRate(5u, 100u);
+    lr.updateLearningRate(5U, 100U);
     EXPECT_DOUBLE_EQ(lr.getLearningRate(), 0.1);
-    lr.updateLearningRate(99u, 100u);
+    lr.updateLearningRate(99U, 100U);
     EXPECT_DOUBLE_EQ(lr.getLearningRate(), 0.1);
 }
 
@@ -60,21 +60,21 @@ TEST(TestConstantLRStrategy, cloneProducesEquivalentObject)
 
 TEST(TestConstantDecayLRStrategy, decaysOnFrequencyHit)
 {
-    auto lr = ConstantDecayLRStrategy(1.0, 0.1, 2u);
+    auto lr = ConstantDecayLRStrategy(1.0, 0.1, 2U);
     // step 1: not a multiple of frequency (2), no decay
-    lr.updateLearningRate(1u, 100u);
+    lr.updateLearningRate(1U, 100U);
     EXPECT_DOUBLE_EQ(lr.getLearningRate(), 1.0);
     // step 2: hits frequency, applies one decay
-    lr.updateLearningRate(2u, 100u);
+    lr.updateLearningRate(2U, 100U);
     EXPECT_DOUBLE_EQ(lr.getLearningRate(), 0.9);
     // step 4: hits frequency again
-    lr.updateLearningRate(4u, 100u);
+    lr.updateLearningRate(4U, 100U);
     EXPECT_DOUBLE_EQ(lr.getLearningRate(), 0.8);
 }
 
 TEST(TestConstantDecayLRStrategy, cloneProducesEquivalentObject)
 {
-    const auto lr     = ConstantDecayLRStrategy(0.5, 0.05, 1u);
+    const auto lr     = ConstantDecayLRStrategy(0.5, 0.05, 1U);
     const auto cloned = lr.clone();
     EXPECT_DOUBLE_EQ(cloned->getLearningRate(), 0.5);
 }
@@ -85,12 +85,12 @@ TEST(TestExpDecayLR, matchesAnalyticalExpDecayFormula)
 {
     const auto initial = 1.0;
     const auto decay   = 0.5;
-    const auto nEpochs = 100u;
+    const auto nEpochs = 100U;
 
-    auto lr = ExpDecayLR(initial, decay, 1u);
+    auto lr = ExpDecayLR(initial, decay, 1U);
 
     // After step k: learningRate = initial * exp(-decay * k / nEpochs).
-    for (auto step : {1u, 10u, 50u, 100u})
+    for (auto step : {1U, 10U, 50U, 100U})
     {
         lr.updateLearningRate(step, nEpochs);
         const auto expected = initial * std::exp(
@@ -103,14 +103,14 @@ TEST(TestExpDecayLR, matchesAnalyticalExpDecayFormula)
 
 TEST(TestExpDecayLR, learningRateMonotonicallyDecreasesWithStep)
 {
-    auto       lr      = ExpDecayLR(1.0, 1.0, 1u);
-    const auto nEpochs = 100u;
+    auto       lr      = ExpDecayLR(1.0, 1.0, 1U);
+    const auto nEpochs = 100U;
 
-    lr.updateLearningRate(1u, nEpochs);
+    lr.updateLearningRate(1U, nEpochs);
     const auto lrAt1 = lr.getLearningRate();
-    lr.updateLearningRate(50u, nEpochs);
+    lr.updateLearningRate(50U, nEpochs);
     const auto lrAt50 = lr.getLearningRate();
-    lr.updateLearningRate(100u, nEpochs);
+    lr.updateLearningRate(100U, nEpochs);
     const auto lrAt100 = lr.getLearningRate();
 
     EXPECT_LT(lrAt50, lrAt1);
@@ -124,13 +124,13 @@ TEST(TestLearningRateStrategy, clampsToMaxAndAppendsWarning)
     auto lr = ConstantDecayLRStrategy(
         1.0,
         -10.0,
-        1u
+        1U
     );   // negative "decay" → increase
     lr.setMaxLearningRate(std::optional<double>{1.5});
 
     // Step 1 would bring learning rate to 11.0; checkLearningRate clamps
     // to 1.5.
-    lr.updateLearningRate(1u, 100u);
+    lr.updateLearningRate(1U, 100U);
     EXPECT_DOUBLE_EQ(lr.getLearningRate(), 1.5);
     EXPECT_FALSE(lr.getWarningMessages().empty());
 }
@@ -138,12 +138,12 @@ TEST(TestLearningRateStrategy, clampsToMaxAndAppendsWarning)
 TEST(TestLearningRateStrategy, clampsToMinAndAppendsWarning)
 {
     auto lr =
-        ConstantDecayLRStrategy(0.1, 0.5, 1u);   // decay larger than initial
+        ConstantDecayLRStrategy(0.1, 0.5, 1U);   // decay larger than initial
     lr.setMinLearningRate(0.05);
 
     // Step 1 would bring learning rate to -0.4; checkLearningRate clamps to
     // 0.05.
-    lr.updateLearningRate(1u, 100u);
+    lr.updateLearningRate(1U, 100U);
     EXPECT_DOUBLE_EQ(lr.getLearningRate(), 0.05);
     EXPECT_FALSE(lr.getWarningMessages().empty());
 }

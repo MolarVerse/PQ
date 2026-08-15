@@ -120,7 +120,7 @@ namespace engine
             distance(_simulationBox->getMoleculesInsideZone(SMOOTHING));
 
         // Loop over all combinations of smoothing molecules
-        for (size_t i = 0; i < (1u << nSmMol); ++i)
+        for (size_t i = 0; i < (1U << nSmMol); ++i)
         {
             // STEP 1: Generate set of inactive molecules and calculate
             // associated global smoothing factor for this configuration
@@ -445,10 +445,10 @@ namespace engine
         std::vector<std::reference_wrapper<Molecule>> recipientMolecules;
 
         for (auto &mol : _simulationBox->getMoleculesInsideZone(CORE))
-            recipientMolecules.push_back(mol);
+            recipientMolecules.emplace_back(mol);
 
         for (auto &mol : _simulationBox->getMoleculesInsideZone(LAYER))
-            recipientMolecules.push_back(mol);
+            recipientMolecules.emplace_back(mol);
 
         if (recipientMolecules.empty())
         {
