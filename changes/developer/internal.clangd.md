@@ -5,3 +5,4 @@
 - add most important hicpp clang-tidy warnings
 - add all important llvm clang-tidy warnings
 - add most important misc* clang-tidy warnings
+- add all important modernize clang-tidy warnings
