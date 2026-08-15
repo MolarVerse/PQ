@@ -22,6 +22,7 @@
 
 #include "qmmmMDEngine.hpp"
 
+#include <cstddef>
 #include <cstdlib>      // for abs
 #include <format>       // for format
 #include <functional>   // for reference_wrapper
@@ -115,7 +116,7 @@ namespace engine
         linearAlgebra::tensor3D virial     = {0.0};
         auto                    numQMAtoms = 0.0;
         auto                   &atoms      = _simulationBox->getAtoms();
-        const auto              nSmMol =
+        const std::size_t       nSmMol =
             distance(_simulationBox->getMoleculesInsideZone(SMOOTHING));
 
         // Loop over all combinations of smoothing molecules

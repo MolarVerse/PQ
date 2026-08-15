@@ -58,7 +58,7 @@ int main()
     double sink = 0.0;
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
-        const double scale = 1.0 + static_cast<double>(i & 255) * 0.01;
+        const double scale = 1.0 + static_cast<double>(i & 255U) * 0.01;
         const Vec3D  a     = v1 * scale;
         const Vec3D  b     = v2 - a;
 

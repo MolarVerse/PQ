@@ -49,7 +49,7 @@ int main()
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
         const double distance =
-            1.0 + static_cast<double>(i & 255) * 0.03;   // within cutoff
+            1.0 + static_cast<double>(i & 255U) * 0.03;   // within cutoff
         const double chargeProduct = 0.5 * -0.5;
 
         const auto [eShift, fShift] =

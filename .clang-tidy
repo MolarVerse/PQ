@@ -51,6 +51,13 @@ Checks:
   hicpp-l*,
   hicpp-m*,
   hicpp-n*,
+  hicpp-o*,
+  hicpp-p*,
+  hicpp-q*,
+  hicpp-r*,
+  hicpp-s*,
+  hicpp-t*,
+  hicpp-v*,
   -cppcoreguidelines-owning-memory,
   -cppcoreguidelines-pro-type-member-init,
   -cppcoreguidelines-pro-type-union-access,
@@ -127,9 +134,6 @@ CheckOptions:
 ...
 
 ### TO BE INCLUDED IN THE FUTURE
-  # hicpp-signed-bitwise,
-  # hicpp-special-member-functions,
-  # hicpp-static-assert,
   # hicpp-undelegated-constructor,
   # hicpp-uppercase-literal-suffix,
   # hicpp-use-auto,
