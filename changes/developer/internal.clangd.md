@@ -2,3 +2,5 @@
 - address all cppcoreguidline clang-tidy checks and all darwin checks
 - add most important fuchsia clang-tidy warnings (especially no default arguments)
 - add most important google clang-tidy warnings
+- add most important hicpp clang-tidy warnings
+- add all important llvm clang-tidy warnings
