@@ -306,7 +306,7 @@ std::vector<std::shared_ptr<NonCoulombPair>> ForceFieldNonCoulomb::
 
     auto view = _nonCoulPairsVec | std::views::filter(isSelfInteractionElement);
 
-    return std::vector(view.begin(), view.end());
+    return {view.begin(), view.end()};
 }
 
 /**

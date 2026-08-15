@@ -24,7 +24,6 @@
 // constraint per molecule, started at rest (positionOld == position) so the
 // solver is stable across iterations.
 
-#include <cstddef>
 #include <cstdint>
 #include <cstdio>
 #include <format>
@@ -59,16 +58,10 @@ int main()
     constr.setRattleTolerance(1.0e-8);
     constr.activateShake();
 
-    for (std::size_t m = 0; m < molecules.size(); ++m)
+    for (auto &molecule : molecules)
     {
         constr.addBondConstraint(
-            constraints::BondConstraint(
-                &molecules[m],
-                &molecules[m],
-                0,
-                1,
-                0.85
-            )
+            constraints::BondConstraint(&molecule, &molecule, 0, 1, 0.85)
         );
     }
 

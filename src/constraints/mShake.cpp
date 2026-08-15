@@ -162,10 +162,9 @@ void MShake::applyMShake(SimulationBox &simBox)
     const auto timeFactor  = 4.0 * dt * dt;
     const auto shakeFactor = 2.0 * dt * dt;
 
-    for (size_t mol = 0; mol < molecules.size(); ++mol)
+    for (auto &molecule : molecules)
     {
-        auto      &molecule = molecules[mol];
-        const auto moltype  = molecule.getMoltype();
+        const auto moltype = molecule.getMoltype();
 
         if (!isMShakeType(moltype))
             continue;
@@ -396,10 +395,9 @@ void MShake::applyMRattle(SimulationBox &simulationBox)
 {
     auto &molecules = simulationBox.getMolecules();
 
-    for (size_t mol = 0; mol < molecules.size(); ++mol)
+    for (auto &molecule : molecules)
     {
-        auto      &molecule = molecules[mol];
-        const auto moltype  = molecule.getMoltype();
+        const auto moltype = molecule.getMoltype();
 
         if (!isMShakeType(moltype))
             continue;

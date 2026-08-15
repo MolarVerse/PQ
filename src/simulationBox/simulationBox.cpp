@@ -56,9 +56,9 @@ void SimulationBox::copy(const SimulationBox& toCopy)
 
     this->_atoms.clear();
 
-    for (size_t i = 0; i < toCopy._atoms.size(); ++i)
+    for (const auto& _atom : toCopy._atoms)
     {
-        const auto atom = std::make_shared<Atom>(*toCopy._atoms[i]);
+        const auto atom = std::make_shared<Atom>(*_atom);
         this->_atoms.push_back(atom);
     }
 

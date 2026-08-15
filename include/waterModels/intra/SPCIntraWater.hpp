@@ -48,10 +48,10 @@ namespace waterModel
         ) final;
 
         // clang-format off
-        virtual double getEqOHDistance() const = 0;          // Angström
-        virtual double getEqHOHAngle() const = 0;            // radians
-        virtual double getForceConstantOHBond() const = 0;   // kcal mol^-1 Angström^-2
-        virtual double getForceConstantHOHAngle() const = 0; // kcal mol^-1 rad^-2
+        [[nodiscard]] virtual double getEqOHDistance() const = 0;          // Angström
+        [[nodiscard]] virtual double getEqHOHAngle() const = 0;            // radians
+        [[nodiscard]] virtual double getForceConstantOHBond() const = 0;   // kcal mol^-1 Angström^-2
+        [[nodiscard]] virtual double getForceConstantHOHAngle() const = 0; // kcal mol^-1 rad^-2
         // clang-format on
     };
 
@@ -65,10 +65,10 @@ namespace waterModel
         static constexpr double _forceConstantHOHAngle = 75.9;                  // kcal mol^-1 rad^-2
 
        public:
-        double getEqOHDistance() const final          { return _eqOHDistance; }         
-        double getEqHOHAngle() const final            { return _eqHOHAngle; }           
-        double getForceConstantOHBond() const final   { return _forceConstantOHBond; }  
-        double getForceConstantHOHAngle() const final { return _forceConstantHOHAngle; }
+        [[nodiscard]] double getEqOHDistance() const final          { return _eqOHDistance; }         
+        [[nodiscard]] double getEqHOHAngle() const final            { return _eqHOHAngle; }           
+        [[nodiscard]] double getForceConstantOHBond() const final   { return _forceConstantOHBond; }  
+        [[nodiscard]] double getForceConstantHOHAngle() const final { return _forceConstantHOHAngle; }
         // clang-format on
     };
 
@@ -82,10 +82,10 @@ namespace waterModel
         static constexpr double _forceConstantHOHAngle = 75.9;                 // kcal mol^-1 rad^-2
 
        public:
-        double getEqOHDistance() const final          { return _eqOHDistance; }         
-        double getEqHOHAngle() const final            { return _eqHOHAngle; }           
-        double getForceConstantOHBond() const final   { return _forceConstantOHBond; }  
-        double getForceConstantHOHAngle() const final { return _forceConstantHOHAngle; }
+        [[nodiscard]] double getEqOHDistance() const final          { return _eqOHDistance; }         
+        [[nodiscard]] double getEqHOHAngle() const final            { return _eqHOHAngle; }           
+        [[nodiscard]] double getForceConstantOHBond() const final   { return _forceConstantOHBond; }  
+        [[nodiscard]] double getForceConstantHOHAngle() const final { return _forceConstantHOHAngle; }
         // clang-format on
     };
 

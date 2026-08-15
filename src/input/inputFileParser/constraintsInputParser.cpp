@@ -25,6 +25,7 @@
 #include <cstddef>       // for size_t
 #include <format>        // for format
 #include <string_view>   // for string_view
+#include <utility>
 
 #include "constraintSettings.hpp"   // for ConstraintSettings
 #include "constraints.hpp"          // for Constraints
@@ -58,7 +59,7 @@ ConstraintsInputParser::ConstraintsInputParser(
     Engine                                   &engine,
     std::shared_ptr<constraints::Constraints> constraints
 )
-    : InputFileParser(engine), _constraints(constraints)
+    : InputFileParser(engine), _constraints(std::move(constraints))
 {
     addKeyword(
         std::string("shake"),

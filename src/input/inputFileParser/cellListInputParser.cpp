@@ -25,7 +25,8 @@
 #include <cstddef>   // for size_t
 #include <format>    // for format
 #include <string>    // for allocator, operator==, string
-#include <vector>    // for vector
+#include <utility>
+#include <vector>   // for vector
 
 #include "engine.hpp"            // for Engine
 #include "exceptions.hpp"        // for InputFileException
@@ -53,7 +54,7 @@ CellListInputParser::CellListInputParser(
     engine::Engine                          &engine,
     std::shared_ptr<simulationBox::CellList> cellListPtr
 )
-    : InputFileParser(engine), _cellListPtr(cellListPtr)
+    : InputFileParser(engine), _cellListPtr(std::move(cellListPtr))
 {
     addKeyword(
         std::string("cell-list"),

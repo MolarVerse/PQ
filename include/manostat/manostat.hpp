@@ -70,8 +70,8 @@ namespace manostat
 
         void rotateMu(linearAlgebra::tensor3D &mu) const;
 
-        virtual settings::ManostatType getManostatType() const;
-        virtual settings::Isotropy     getIsotropy() const;
+        [[nodiscard]] virtual settings::ManostatType getManostatType() const;
+        [[nodiscard]] virtual settings::Isotropy     getIsotropy() const;
     };
 
 }   // namespace manostat

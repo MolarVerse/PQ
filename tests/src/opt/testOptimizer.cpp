@@ -113,11 +113,11 @@ TEST(TestOptimizer, updateHistoryAppendsAndGettersReturnLast)
 
     pushSample(
         opt,
-        {1.0,
-         {1.0, 0.0, 0.0},
-         {0.0, 2.0, 0.0},
-         {0.1, 0.2, 0.3},
-         {0.4, 0.5, 0.6}}
+        {.energy = 1.0,
+         .force0 = {1.0, 0.0, 0.0},
+         .force1 = {0.0, 2.0, 0.0},
+         .pos0   = {0.1, 0.2, 0.3},
+         .pos1   = {0.4, 0.5, 0.6}}
     );
 
     EXPECT_DOUBLE_EQ(opt.getEnergy(), 1.0);
@@ -149,11 +149,11 @@ TEST(TestOptimizer, updateHistoryTrimsToMaxHistoryLength)
     {
         pushSample(
             opt,
-            {static_cast<double>(i),
-             {static_cast<double>(i), 0.0, 0.0},
-             {0.0, static_cast<double>(i), 0.0},
-             {static_cast<double>(i), 0.0, 0.0},
-             {0.0, static_cast<double>(i), 0.0}}
+            {.energy = static_cast<double>(i),
+             .force0 = {static_cast<double>(i), 0.0, 0.0},
+             .force1 = {0.0, static_cast<double>(i), 0.0},
+             .pos0   = {static_cast<double>(i), 0.0, 0.0},
+             .pos1   = {0.0, static_cast<double>(i), 0.0}}
         );
     }
 
@@ -217,19 +217,19 @@ TEST(TestOptimizer, hasConvergedReturnsTrueForFlatEnergyAndZeroForces)
     // Two history entries with identical energy and zero forces → converged.
     pushSample(
         opt,
-        {1.0,
-         {0.0, 0.0, 0.0},
-         {0.0, 0.0, 0.0},
-         {0.0, 0.0, 0.0},
-         {0.0, 0.0, 0.0}}
+        {.energy = 1.0,
+         .force0 = {0.0, 0.0, 0.0},
+         .force1 = {0.0, 0.0, 0.0},
+         .pos0   = {0.0, 0.0, 0.0},
+         .pos1   = {0.0, 0.0, 0.0}}
     );
     pushSample(
         opt,
-        {1.0,
-         {0.0, 0.0, 0.0},
-         {0.0, 0.0, 0.0},
-         {0.0, 0.0, 0.0},
-         {0.0, 0.0, 0.0}}
+        {.energy = 1.0,
+         .force0 = {0.0, 0.0, 0.0},
+         .force1 = {0.0, 0.0, 0.0},
+         .pos0   = {0.0, 0.0, 0.0},
+         .pos1   = {0.0, 0.0, 0.0}}
     );
 
     EXPECT_TRUE(opt.hasConverged());
@@ -252,19 +252,19 @@ TEST(TestOptimizer, hasConvergedReturnsFalseForLargeForce)
 
     pushSample(
         opt,
-        {1.0,
-         {0.0, 0.0, 0.0},
-         {0.0, 0.0, 0.0},
-         {0.0, 0.0, 0.0},
-         {0.0, 0.0, 0.0}}
+        {.energy = 1.0,
+         .force0 = {0.0, 0.0, 0.0},
+         .force1 = {0.0, 0.0, 0.0},
+         .pos0   = {0.0, 0.0, 0.0},
+         .pos1   = {0.0, 0.0, 0.0}}
     );
     pushSample(
         opt,
-        {1.0,
-         {1.0, 0.0, 0.0},
-         {0.0, 0.0, 0.0},
-         {0.0, 0.0, 0.0},
-         {0.0, 0.0, 0.0}}
+        {.energy = 1.0,
+         .force0 = {1.0, 0.0, 0.0},
+         .force1 = {0.0, 0.0, 0.0},
+         .pos0   = {0.0, 0.0, 0.0},
+         .pos1   = {0.0, 0.0, 0.0}}
     );
 
     EXPECT_FALSE(opt.hasConverged());

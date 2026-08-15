@@ -43,6 +43,7 @@ namespace opt
         ExpDecayLR() = default;
         ExpDecayLR(const double, const double, const size_t);
 
+        [[nodiscard]]
         std::shared_ptr<LearningRateStrategy> clone() const override;
 
         void updateLearningRate(

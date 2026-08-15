@@ -24,6 +24,7 @@
 
 #include <cstddef>   // for size_t
 #include <format>    // for format
+#include <utility>
 
 #include "engine.hpp"         // for Engine
 #include "exceptions.hpp"     // for InputFileException
@@ -78,7 +79,7 @@ FilesInputParser::FilesInputParser(
     const bool                                      validateFilePaths
 )
     : InputFileParser(engine),
-      _intraNonBonded(intraNonBonded),
+      _intraNonBonded(std::move(intraNonBonded)),
       _validateFilePaths(validateFilePaths)
 {
     addKeyword(

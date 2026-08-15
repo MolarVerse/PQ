@@ -108,10 +108,7 @@ std::vector<std::string> utilities::getLineCommands(
     std::vector<std::string> lineCommands;
     for (auto it : splitView) lineCommands.emplace_back(it);
 
-    return std::vector<std::string>(
-        lineCommands.begin(),
-        lineCommands.end() - 1
-    );
+    return {lineCommands.begin(), lineCommands.end() - 1};
 }
 
 /**
@@ -300,7 +297,7 @@ void utilities::addSpaces(
     {
         throw customException::InputFileException(
             std::format(
-                "Missing \"{}\" in command \"{}\" in line {}",
+                R"(Missing "{}" in command "{}" in line {})",
                 stringToReplace,
                 command,
                 lineNumber

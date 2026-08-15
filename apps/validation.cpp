@@ -81,9 +81,9 @@ namespace
             .inputFile   = std::string(inputFile),
             .scope       = scope,
             .diagnostics = {
-                {cli::ValidationSeverity::ERROR,
-                 std::string(message),
-                 lineNumber}
+                {.severity   = cli::ValidationSeverity::ERROR,
+                 .message    = std::string(message),
+                 .lineNumber = lineNumber}
             }
         };
     }
@@ -411,7 +411,7 @@ namespace
         {
             result.diagnostics.push_back(
                 {cli::ValidationSeverity::WARNING,
-                 "\"mace_model_size\" is deprecated; use \"mace_model\"",
+                 R"("mace_model_size" is deprecated; use "mace_model")",
                  std::nullopt}
             );
         }

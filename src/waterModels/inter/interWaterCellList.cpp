@@ -20,6 +20,7 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#include <algorithm>
 #include <vector>
 
 #include "atom.hpp"   // for Atom
@@ -248,11 +249,8 @@ void InterWaterStrategyCellList::calculateCoreToOuterForces(
         [](const std::vector<size_t> &waterMolecules,
            const size_t               molIndex) -> bool
     {
-        return std::find(
-                   waterMolecules.begin(),
-                   waterMolecules.end(),
-                   molIndex
-               ) == waterMolecules.end();
+        return std::ranges::find(waterMolecules, molIndex) ==
+               waterMolecules.end();
     };
 
     for (const auto &cell_i : cellList.getCells())
@@ -379,11 +377,8 @@ void InterWaterStrategyCellList::calculateLayerToOuterForces(
         [](const std::vector<size_t> &waterMolecules,
            const size_t               molIndex) -> bool
     {
-        return std::find(
-                   waterMolecules.begin(),
-                   waterMolecules.end(),
-                   molIndex
-               ) == waterMolecules.end();
+        return std::ranges::find(waterMolecules, molIndex) ==
+               waterMolecules.end();
     };
 
     for (const auto &cell_i : cellList.getCells())
@@ -612,11 +607,8 @@ void InterWaterStrategyCellList::calculateOuterToOuterForces(
         [](const std::vector<size_t> &waterMolecules,
            const size_t               molIndex) -> bool
     {
-        return std::find(
-                   waterMolecules.begin(),
-                   waterMolecules.end(),
-                   molIndex
-               ) == waterMolecules.end();
+        return std::ranges::find(waterMolecules, molIndex) ==
+               waterMolecules.end();
     };
 
     for (const auto &cell_i : cellList.getCells())
@@ -812,11 +804,8 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
         [](const std::vector<size_t> &waterMolecules,
            const size_t               molIndex) -> bool
     {
-        return std::find(
-                   waterMolecules.begin(),
-                   waterMolecules.end(),
-                   molIndex
-               ) == waterMolecules.end();
+        return std::ranges::find(waterMolecules, molIndex) ==
+               waterMolecules.end();
     };
 
     for (const auto &cell_i : cellList.getCells())

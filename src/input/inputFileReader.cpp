@@ -213,7 +213,7 @@ void InputFileReader::process(const std::vector<std::string> &lineElements)
     {
         throw InputFileException(
             std::format(
-                "Invalid value \"{}\" for keyword \"{}\"",
+                R"(Invalid value "{}" for keyword "{}")",
                 lineElements[2],
                 original_keyword
             ),
@@ -224,7 +224,7 @@ void InputFileReader::process(const std::vector<std::string> &lineElements)
     {
         throw InputFileException(
             std::format(
-                "Value \"{}\" for keyword \"{}\" is out of range",
+                R"(Value "{}" for keyword "{}" is out of range)",
                 lineElements[2],
                 original_keyword
             ),

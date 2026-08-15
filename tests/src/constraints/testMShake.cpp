@@ -72,7 +72,7 @@ TEST(TestMShake, applyMShakeThreeAtomMolecule)
     refAtoms[2].setName("H");
     refAtoms[0].setPosition({0.0, 0.0, 0.0});
     refAtoms[1].setPosition({1.0, 0.0, 0.0});
-    refAtoms[2].setPosition({0.5, std::sqrt(3.0) / 2.0, 0.0});
+    refAtoms[2].setPosition({0.5, std::numbers::sqrt3 / 2.0, 0.0});
 
     auto mShakeRef = MShakeReference();
     mShakeRef.setMoleculeType(moltype);
@@ -92,7 +92,7 @@ TEST(TestMShake, applyMShakeThreeAtomMolecule)
 
     const auto refPos0 = Vec3D(0.0, 0.0, 0.0);
     const auto refPos1 = Vec3D(1.0, 0.0, 0.0);
-    const auto refPos2 = Vec3D(0.5, std::sqrt(3.0) / 2.0, 0.0);
+    const auto refPos2 = Vec3D(0.5, std::numbers::sqrt3 / 2.0, 0.0);
 
     auto a1 = std::make_shared<Atom>();
     auto a2 = std::make_shared<Atom>();
@@ -155,7 +155,7 @@ TEST(TestMShake, applyMShakeThrowsWhenIterationLimitTooSmall)
     refAtoms[2].setName("H");
     refAtoms[0].setPosition({0.0, 0.0, 0.0});
     refAtoms[1].setPosition({1.0, 0.0, 0.0});
-    refAtoms[2].setPosition({0.5, std::sqrt(3.0) / 2.0, 0.0});
+    refAtoms[2].setPosition({0.5, std::numbers::sqrt3 / 2.0, 0.0});
 
     auto mShakeRef = MShakeReference();
     mShakeRef.setMoleculeType(moltype);
@@ -174,7 +174,7 @@ TEST(TestMShake, applyMShakeThrowsWhenIterationLimitTooSmall)
 
     const auto refPos0 = Vec3D(0.0, 0.0, 0.0);
     const auto refPos1 = Vec3D(1.0, 0.0, 0.0);
-    const auto refPos2 = Vec3D(0.5, std::sqrt(3.0) / 2.0, 0.0);
+    const auto refPos2 = Vec3D(0.5, std::numbers::sqrt3 / 2.0, 0.0);
 
     auto a1 = std::make_shared<Atom>();
     auto a2 = std::make_shared<Atom>();

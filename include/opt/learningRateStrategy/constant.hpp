@@ -42,6 +42,7 @@ namespace opt
         ConstantLRStrategy()           = default;
         ~ConstantLRStrategy() override = default;
 
+        [[nodiscard]]
         std::shared_ptr<LearningRateStrategy> clone() const override;
 
         void updateLearningRate(

@@ -78,12 +78,12 @@ void IntraNonBondedMap::calculate(
         const auto atomIndices =
             _intraNonBondedContainer->getAtomIndices()[atomIndex1];
 
-        for (auto iter = atomIndices.begin(); iter != atomIndices.end(); ++iter)
+        for (const auto atomIndice : atomIndices)
         {
             const auto [coulombEnergyTemp, nonCoulombEnergyTemp] =
                 calculateSingleInteraction(
                     atomIndex1,
-                    *iter,
+                    atomIndice,
                     box,
                     physicalData,
                     coulombPotential,

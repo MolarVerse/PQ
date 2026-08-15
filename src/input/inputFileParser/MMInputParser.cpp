@@ -24,6 +24,7 @@
 
 #include <cstddef>   // for size_t
 #include <format>    // for format
+#include <utility>
 
 #include "engine.hpp"                 // for Engine
 #include "exceptions.hpp"             // for InputFileException, customException
@@ -60,7 +61,9 @@ MMInputParser::MMInputParser(
     std::shared_ptr<forceField::ForceField> forceField,
     std::shared_ptr<potential::Potential>   potential
 )
-    : InputFileParser(engine), _forceField(forceField), _potential(potential)
+    : InputFileParser(engine),
+      _forceField(std::move(forceField)),
+      _potential(std::move(potential))
 {
     addKeyword(
         std::string("force-field"),

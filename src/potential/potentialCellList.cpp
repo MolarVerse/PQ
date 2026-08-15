@@ -200,11 +200,8 @@ void PotentialCellList::calculateCoreToOuterForces(
     const auto isWaterMolecule = [](const std::vector<size_t> &waterMolecules,
                                     const size_t               molIndex) -> bool
     {
-        return std::find(
-                   waterMolecules.begin(),
-                   waterMolecules.end(),
-                   molIndex
-               ) != waterMolecules.end();
+        return std::ranges::find(waterMolecules, molIndex) !=
+               waterMolecules.end();
     };
 
     double totalCoulombEnergy = 0.0;
@@ -323,11 +320,8 @@ void PotentialCellList::calculateLayerToOuterForces(
     const auto isWaterMolecule = [](const std::vector<size_t> &waterMolecules,
                                     const size_t               molIndex) -> bool
     {
-        return std::find(
-                   waterMolecules.begin(),
-                   waterMolecules.end(),
-                   molIndex
-               ) != waterMolecules.end();
+        return std::ranges::find(waterMolecules, molIndex) !=
+               waterMolecules.end();
     };
 
     double totalCoulombEnergy    = 0.0;
@@ -476,11 +470,8 @@ void PotentialCellList::calculateOuterToOuterForces(
     const auto isWaterMolecule = [](const std::vector<size_t> &waterMolecules,
                                     const size_t               molIndex) -> bool
     {
-        return std::find(
-                   waterMolecules.begin(),
-                   waterMolecules.end(),
-                   molIndex
-               ) != waterMolecules.end();
+        return std::ranges::find(waterMolecules, molIndex) !=
+               waterMolecules.end();
     };
 
     double totalCoulombEnergy    = 0.0;
@@ -591,11 +582,8 @@ void PotentialCellList::calculateHotspotSmoothingMMForces(
     const auto isWaterMolecule = [](const std::vector<size_t> &waterMolecules,
                                     const size_t               molIndex) -> bool
     {
-        return std::find(
-                   waterMolecules.begin(),
-                   waterMolecules.end(),
-                   molIndex
-               ) != waterMolecules.end();
+        return std::ranges::find(waterMolecules, molIndex) !=
+               waterMolecules.end();
     };
 
     double totalCoulombEnergy    = 0.0;

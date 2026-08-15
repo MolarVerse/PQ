@@ -58,6 +58,7 @@ namespace
         {
         }
 
+        [[nodiscard]]
         std::shared_ptr<Evaluator> clone() const override
         {
             return std::make_shared<HarmonicEvaluator>(*this);

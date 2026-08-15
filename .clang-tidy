@@ -11,6 +11,7 @@
 # llvmlibc-restrict-system-libc-headers: some more llvm garbage
 # llvmlibc-inline-function-decl: some more llvm garbage
 # llvm-include-order: has a different include order than we do
+#modernize-use-trailing-return-type: we do not want to enforce this, at least not for now
 
 # Checks to be absolutely enabled:
 # cert-env33-c: ::system is not available on all platforms, and we do not want to use it anyway
@@ -47,6 +48,8 @@ Checks:
   linuxkernel*,
   llvm*,
   misc-*,
+  modernize*,
+  mpi*,
   -cppcoreguidelines-owning-memory,
   -cppcoreguidelines-pro-type-member-init,
   -cppcoreguidelines-pro-type-union-access,
@@ -75,6 +78,7 @@ Checks:
   -llvmlibc-restrict-system-libc-headers,
   -llvmlibc-inline-function-decl,
   -llvm-include-order,
+  -modernize-use-trailing-return-type,
   '
 WarningsAsErrors: ''
 HeaderFileExtensions:
@@ -129,45 +133,6 @@ CheckOptions:
 ...
 
 ### TO BE INCLUDED IN THE FUTURE
-  # modernize-avoid-bind,
-  # modernize-avoid-c-arrays,
-  # modernize-concat-nested-namespaces,
-  # modernize-deprecated-headers,
-  # modernize-deprecated-ios-base-aliases,
-  # modernize-loop-convert,
-  # modernize-macro-to-enum,
-  # modernize-make-shared,
-  # modernize-make-unique,
-  # modernize-pass-by-value,
-  # modernize-raw-string-literal,
-  # modernize-redundant-void-arg,
-  # modernize-replace-auto-ptr,
-  # modernize-replace-disallow-copy-and-assign-macro,
-  # modernize-replace-random-shuffle,
-  # modernize-return-braced-init-list,
-  # modernize-shrink-to-fit,
-  # modernize-type-traits,
-  # modernize-unary-static-assert,
-  # modernize-use-auto,
-  # modernize-use-bool-literals,
-  # modernize-use-constraints,
-  # modernize-use-default-member-init,
-  # modernize-use-emplace,
-  # modernize-use-equals-default,
-  # modernize-use-equals-delete,
-  # modernize-use-nodiscard,
-  # modernize-use-noexcept,
-  # modernize-use-nullptr,
-  # modernize-use-override,
-  # modernize-use-starts-ends-with,
-  # modernize-use-std-numbers,
-  # modernize-use-std-print,
-  # modernize-use-trailing-return-type,
-  # modernize-use-transparent-functors,
-  # modernize-use-uncaught-exceptions,
-  # modernize-use-using,
-  # mpi-buffer-deref,
-  # mpi-type-mismatch,
   # objc-assert-equals,
   # objc-avoid-nserror-init,
   # objc-dealloc-in-category,

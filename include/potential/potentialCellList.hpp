@@ -79,7 +79,7 @@ namespace potential
             simulationBox::CellList      &cellList
         ) override;
 
-        std::shared_ptr<Potential> clone() const override;
+        [[nodiscard]] std::shared_ptr<Potential> clone() const override;
     };
 
 }   // namespace potential

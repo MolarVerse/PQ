@@ -303,12 +303,12 @@ std::optional<RigidWaterGeometry> WaterModelSetup::getRigidWaterGeometry(
     // clang-format off
     switch (intraModel)
     {
-        case SPC: return RigidWaterGeometry{SPC_OH_DIST, SPC_HH_DIST};
-        case SPC_E: return RigidWaterGeometry{SPC_E_OH_DIST, SPC_E_HH_DIST};
-        case SPC_DC: return RigidWaterGeometry{SPC_DC_OH_DIST, SPC_DC_HH_DIST};
-        case H2O_DC: return RigidWaterGeometry{H2O_DC_OH_DIST, H2O_DC_HH_DIST};
-        case TIP3P: return RigidWaterGeometry{TIP3P_OH_DIST, TIP3P_HH_DIST};
-        case OPC3: return RigidWaterGeometry{OPC3_OH_DIST, OPC3_HH_DIST};
+        case SPC:    return RigidWaterGeometry{.dOH=SPC_OH_DIST, .dHH=SPC_HH_DIST};
+        case SPC_E:  return RigidWaterGeometry{.dOH=SPC_E_OH_DIST, .dHH=SPC_E_HH_DIST};
+        case SPC_DC: return RigidWaterGeometry{.dOH=SPC_DC_OH_DIST, .dHH=SPC_DC_HH_DIST};
+        case H2O_DC: return RigidWaterGeometry{.dOH=H2O_DC_OH_DIST, .dHH=H2O_DC_HH_DIST};
+        case TIP3P:  return RigidWaterGeometry{.dOH=TIP3P_OH_DIST, .dHH=TIP3P_HH_DIST};
+        case OPC3:   return RigidWaterGeometry{.dOH=OPC3_OH_DIST, .dHH=OPC3_HH_DIST};
         case SPC_FW:
         case QSPC_FW:
         case SPC_MTR:

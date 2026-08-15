@@ -120,32 +120,32 @@ void GeneralInputParser::parseJobTypeForEngine(
     if (jobtype == "mm_opt")
     {
         Settings::setJobtype(MM_OPT);
-        engine.reset(new OptEngine());
+        engine = std::make_unique<OptEngine>();
     }
     else if (jobtype == "mm_hessian")
     {
         Settings::setJobtype(MM_HESSIAN);
-        engine.reset(new HessianEngine());
+        engine = std::make_unique<HessianEngine>();
     }
     else if (jobtype == "mm_md")
     {
         Settings::setJobtype(MM_MD);
-        engine.reset(new MMMDEngine());
+        engine = std::make_unique<MMMDEngine>();
     }
     else if (jobtype == "qm_md")
     {
         Settings::setJobtype(QM_MD);
-        engine.reset(new QMMDEngine());
+        engine = std::make_unique<QMMDEngine>();
     }
     else if (jobtype == "qm_rpmd")
     {
         Settings::setJobtype(RING_POLYMER_QM_MD);
-        engine.reset(new RingPolymerQMMDEngine());
+        engine = std::make_unique<RingPolymerQMMDEngine>();
     }
     else if (jobtype == "qmmm_md")
     {
         Settings::setJobtype(QMMM_MD);
-        engine.reset(new QMMMMDEngine());
+        engine = std::make_unique<QMMMMDEngine>();
     }
     else
     {
