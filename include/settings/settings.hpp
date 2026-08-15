@@ -66,6 +66,12 @@ namespace settings
         MOLECULAR
     };
 
+    enum class IntegratorType
+    {
+        NONE,
+        VELOCITY_VERLET,
+    };
+
     [[nodiscard]] std::string string(const FPType fpType);
     [[nodiscard]] std::string string(const VirialType virialType);
     [[nodiscard]] std::string string(const JobType jobtype);
@@ -94,7 +100,8 @@ namespace settings
         static inline size_t _dimensionality = defaults::DIMENSIONALITY_DEFAULT;
         // clang-format on
 
-        static inline VirialType _virial = VirialType::MOLECULAR;
+        static inline VirialType     _virial     = VirialType::MOLECULAR;
+        static inline IntegratorType _integrator = IntegratorType::NONE;
 
        public:
         Settings()  = default;
@@ -117,6 +124,7 @@ namespace settings
         static void setDimensionality(const size_t dimensionality);
 
         static void setVirialType(const VirialType virialType);
+        static void setIntegratorType(const IntegratorType integratorType);
 
         /***************************
          * standard getter methods *
@@ -132,7 +140,8 @@ namespace settings
 
         [[nodiscard]] static size_t getDimensionality();
 
-        [[nodiscard]] static VirialType getVirialType();
+        [[nodiscard]] static VirialType     getVirialType();
+        [[nodiscard]] static IntegratorType getIntegratorType();
 
         /******************************
          * standard is-active methods *

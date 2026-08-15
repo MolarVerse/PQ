@@ -47,9 +47,13 @@ using namespace utilities;
  * <double>
  *
  * @param engine
+ * @param simulationBox
  */
-SimulationBoxInputParser::SimulationBoxInputParser(Engine &engine)
-    : InputFileParser(engine)
+SimulationBoxInputParser::SimulationBoxInputParser(
+    Engine                                       &engine,
+    std::shared_ptr<simulationBox::SimulationBox> simulationBox
+)
+    : InputFileParser(engine), _simulationBox(simulationBox)
 {
     addKeyword(
         std::string("rcoulomb"),
@@ -154,7 +158,7 @@ void SimulationBoxInputParser::parseDensity(
         );
 
     SimulationBoxSettings::setDensitySet(true);
-    _engine.getSimulationBox().setDensity(density);
+    _simulationBox->setDensity(density);
 }
 
 /**

@@ -191,6 +191,16 @@ void Settings::setVirialType(const VirialType virialType)
     _virial = virialType;
 }
 
+/**
+ * @brief sets the integrator type
+ *
+ * @param integratorType
+ */
+void Settings::setIntegratorType(const IntegratorType integratorType)
+{
+    _integrator = integratorType;
+}
+
 /***************************
  *                         *
  * standard getter methods *
@@ -250,6 +260,13 @@ size_t Settings::getDimensionality() { return _dimensionality; }
  * @return VirialType
  */
 VirialType Settings::getVirialType() { return _virial; }
+
+/**
+ * @brief get the integrator type
+ *
+ * @return IntegratorType
+ */
+IntegratorType Settings::getIntegratorType() { return _integrator; }
 
 /******************************
  *                            *

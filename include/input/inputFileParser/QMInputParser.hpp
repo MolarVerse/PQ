@@ -39,11 +39,16 @@ namespace input
     class QMInputParser : public InputFileParser
     {
        private:
+        output::LogOutput    *_logOutput;
+        output::StdoutOutput *_stdoutOutput;
+
         bool _resolveBuiltInSlakosPath;
 
        public:
         explicit QMInputParser(
             engine::Engine &,
+            output::LogOutput &,
+            output::StdoutOutput &,
             bool resolveBuiltInSlakosPath = true
         );
 

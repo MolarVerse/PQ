@@ -107,7 +107,12 @@ InputFileReader::InputFileReader(
     _parsers.push_back(make_unique<ManostatInputParser>(_engine));
     _parsers.push_back(make_unique<OutputInputParser>(_engine));
     _parsers.push_back(make_unique<ResetKineticsInputParser>(_engine));
-    _parsers.push_back(make_unique<SimulationBoxInputParser>(_engine));
+    _parsers.push_back(
+        make_unique<SimulationBoxInputParser>(
+            _engine,
+            _engine.getSharedSimulationBox()
+        )
+    );
     _parsers.push_back(make_unique<ThermostatInputParser>(_engine));
     _parsers.push_back(make_unique<TimingsInputParser>(_engine));
     _parsers.push_back(make_unique<VirialInputParser>(_engine));
@@ -117,7 +122,12 @@ InputFileReader::InputFileReader(
     _parsers.push_back(make_unique<ConvInputParser>(_engine));
     _parsers.push_back(make_unique<OptInputParser>(_engine));
     _parsers.push_back(
-        make_unique<QMInputParser>(_engine, resolveBuiltInSlakosPath)
+        make_unique<QMInputParser>(
+            _engine,
+            engine.getLogOutput(),
+            engine.getStdoutOutput(),
+            resolveBuiltInSlakosPath
+        )
     );
 
     addKeywords();

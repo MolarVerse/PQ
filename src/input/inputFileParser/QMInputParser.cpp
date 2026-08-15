@@ -52,13 +52,19 @@ using namespace constants;
  * <string>
  *
  * @param engine
+ * @param logOutput
+ * @param stdoutOutput
  * @param resolveBuiltInSlakosPath
  */
 QMInputParser::QMInputParser(
-    Engine    &engine,
-    const bool resolveBuiltInSlakosPath
+    Engine                               &engine,
+    output::LogOutput                    &logOutput,
+    output::StdoutOutput                 &stdoutOutput,
+    const bool                            resolveBuiltInSlakosPath
 )
     : InputFileParser(engine),
+      _logOutput(&logOutput),
+      _stdoutOutput(&stdoutOutput),
       _resolveBuiltInSlakosPath(resolveBuiltInSlakosPath)
 {
     addKeyword(
@@ -326,16 +332,14 @@ void QMInputParser::parseMaceModel(
     using enum MaceModel;
     checkCommand(lineElements, lineNumber);
 
-    auto      &logOutput = _engine.getLogOutput();
-    auto      &stdOut    = _engine.getStdoutOutput();
     const auto modelSizeWarning =
         "The keyword \"mace_model_size\" is deprecated and has been renamed to "
         "\"mace_model\". It will be removed in a future release.";
 
     if (lineElements[0] == "mace_model_size")
     {
-        logOutput.queueWarning(modelSizeWarning);
-        stdOut.writeSetupWarning(modelSizeWarning);
+        _logOutput->queueWarning(modelSizeWarning);
+        _stdoutOutput->writeSetupWarning(modelSizeWarning);
     }
 
     const auto size = toLowerAndReplaceDashesCopy(lineElements[2]);

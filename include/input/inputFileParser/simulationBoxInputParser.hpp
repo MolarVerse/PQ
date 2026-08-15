@@ -38,8 +38,14 @@ namespace input
      */
     class SimulationBoxInputParser : public InputFileParser
     {
+       private:
+        std::shared_ptr<simulationBox::SimulationBox> _simulationBox;
+
        public:
-        explicit SimulationBoxInputParser(engine::Engine &);
+        explicit SimulationBoxInputParser(
+            engine::Engine &,
+            std::shared_ptr<simulationBox::SimulationBox>
+        );
 
         void parseCoulombRadius(const std::vector<std::string> &, const size_t);
         void parseNonCoulombRadius(

@@ -48,8 +48,9 @@
 #include "thermostatSetup.hpp"              // for setupThermostat
 #include "timer.hpp"                        // for Timings
 #include "topologyReader.hpp"               // for readTopologyFile
-#include "waterModelSettings.hpp"           // for WaterModelSettings
-#include "waterModelSetup.hpp"              // for setupWaterModel
+#include "velocityVerlet.hpp"
+#include "waterModelSettings.hpp"   // for WaterModelSettings
+#include "waterModelSetup.hpp"      // for setupWaterModel
 
 using namespace engine;
 using namespace input;
@@ -145,6 +146,22 @@ void setup::setupEngine(Engine& engine)
 
     if (Settings::isMDJobType())
     {
+        switch (Settings::getIntegratorType())
+        {
+            case IntegratorType::VELOCITY_VERLET:
+            {
+                auto& mdEngine = dynamic_cast<MDEngine&>(engine);
+                mdEngine.makeIntegrator(integrator::VelocityVerlet());
+                break;
+            }
+            case IntegratorType::NONE:
+            {
+                throw customException::InputFileException(
+                    "Integrator is not set for MD simulation - please set it "
+                    "in the input file"
+                );
+            }
+        }
         setupRandomNumberGenerator(engine);
         setupResetKinetics(engine);
     }
