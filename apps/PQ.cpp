@@ -23,18 +23,15 @@
 #include <cstdlib>     // for EXIT_FAILURE, EXIT_SUCCESS
 #include <exception>   // for exception
 #include <iostream>    // for operator<<
-#include <memory>      // for unique_ptr
 #include <string>      // for string, char_traits
 #include <vector>      // for vector
 
 #include "capabilities.hpp"      // for writeCapabilities
 #include "commandLineArgs.hpp"   // for CommandLineArgs
-#include "engine.hpp"            // for Engine
-#include "exceptions.hpp"        // for CustomException
-#include "inputFileReader.hpp"   // for readJobType
-#include "setup.hpp"             // for setupSimulation
-#include "systemInfo.hpp"        // for _VERSION_
-#include "validation.hpp"        // for validation
+#include "driver.hpp"
+#include "exceptions.hpp"   // for CustomException
+#include "systemInfo.hpp"   // for _VERSION_
+#include "validation.hpp"   // for validation
 
 #ifdef WITH_MPI
 #include <mpi.h>   // for MPI_Abort, MPI_COMM_WORLD, MPI_Finalize
@@ -45,26 +42,6 @@
 #ifdef WITH_PYBIND11
 #include <pybind11/embed.h>   // for scoped_interpreter
 #endif
-
-static int run(const std::string &inputFileName)
-{
-    auto engine = std::unique_ptr<engine::Engine>();
-    input::readJobType(inputFileName, engine);
-
-    setup::setupRequestedJob(inputFileName, *engine);
-
-    /*
-        HERE STARTS THE MAIN LOOP
-    */
-
-    engine->run();
-
-    /*
-        HERE ENDS THE MAIN LOOP
-    */
-
-    return EXIT_SUCCESS;
-}
 
 static void printHelp()
 {
@@ -164,7 +141,7 @@ int main(int argc, char *argv[])
 
     try
     {
-        exitCode = run(commandLineArgs.getInputFileName());
+        driver::Driver().run(commandLineArgs.getInputFileName());
     }
     catch (const customException::CustomException &e)
     {
