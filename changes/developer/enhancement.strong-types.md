@@ -2,3 +2,4 @@
 - add strong type for `BondId`
 - add strong type for `AngleId`
 - add strong type for `DihedralId`
+- add strong types for `ExtVdwType` and `VdwType`
