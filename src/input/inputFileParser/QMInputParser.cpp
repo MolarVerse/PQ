@@ -52,15 +52,33 @@ using namespace constants;
  * <string>
  *
  * @param engine
+ */
+QMInputParser::QMInputParser(
+    engine::Engine       &engine,
+    output::LogOutput    &logOutput,
+    output::StdoutOutput &stdoutOutput
+)
+    : QMInputParser(engine, logOutput, stdoutOutput, true)
+{
+}
+
+/**
+ * @brief Construct a new QMInputParser:: QMInputParser object
+ *
+ * @details following keywords are added to the _keywordFuncMap,
+ * _keywordRequiredMap and _keywordCountMap: 1) qm_prog <string> 2) qm_script
+ * <string>
+ *
+ * @param engine
  * @param logOutput
  * @param stdoutOutput
  * @param resolveBuiltInSlakosPath
  */
 QMInputParser::QMInputParser(
-    Engine                               &engine,
-    output::LogOutput                    &logOutput,
-    output::StdoutOutput                 &stdoutOutput,
-    const bool                            resolveBuiltInSlakosPath
+    Engine               &engine,
+    output::LogOutput    &logOutput,
+    output::StdoutOutput &stdoutOutput,
+    const bool            resolveBuiltInSlakosPath
 )
     : InputFileParser(engine),
       _logOutput(&logOutput),

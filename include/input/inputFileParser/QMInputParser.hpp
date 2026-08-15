@@ -49,7 +49,12 @@ namespace input
             engine::Engine &,
             output::LogOutput &,
             output::StdoutOutput &,
-            bool resolveBuiltInSlakosPath = true
+            bool resolveBuiltInSlakosPath
+        );
+        explicit QMInputParser(
+            engine::Engine &,
+            output::LogOutput &,
+            output::StdoutOutput &
         );
 
         void parseQMMethod(const std::vector<std::string> &, const size_t);

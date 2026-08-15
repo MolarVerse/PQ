@@ -252,6 +252,45 @@ TEST(testHybridConfigurator, assignHybridZonesCoreZero)
     EXPECT_EQ(simBox.getMolecule(0).getHybridZone(), CORE);
 }
 
+TEST(testHybridConfigurator, forcedZonesOverrideDistanceAssignment)
+{
+    HybridConfigurator           hybridConfigurator;
+    simulationBox::SimulationBox simBox;
+
+    simBox.setBoxDimensions({100.0, 100.0, 100.0});
+
+    HybridSettings::setCoreRadius(2.0);
+    HybridSettings::setLayerRadius(4.0);
+    HybridSettings::setSmoothingRegionThickness(1.0);
+    HybridSettings::setPointChargeThickness(2.0);
+
+    auto makeMolecule = [](const Vec3D &position)
+    {
+        auto atom = std::make_shared<Atom>();
+        atom->setPosition(position);
+        atom->setMass(1.0);
+
+        auto molecule = Molecule();
+        molecule.addAtom(atom);
+        molecule.setMolMass(1.0);
+        return molecule;
+    };
+
+    auto forcedCore = makeMolecule({20.0, 0.0, 0.0});
+    forcedCore.setForcedCore(true);
+    simBox.addMolecule(forcedCore);
+
+    auto forcedLayer = makeMolecule({20.0, 0.0, 0.0});
+    forcedLayer.setForcedLayer(true);
+    simBox.addMolecule(forcedLayer);
+
+    hybridConfigurator.assignHybridZones(simBox);
+
+    using enum simulationBox::HybridZone;
+    EXPECT_EQ(simBox.getMolecule(0).getHybridZone(), CORE);
+    EXPECT_EQ(simBox.getMolecule(1).getHybridZone(), LAYER);
+}
+
 TEST(testHybridConfigurator, activateDeactivateMolecules)
 {
     HybridConfigurator           hybridConfigurator;

@@ -203,6 +203,29 @@ std::string utilities::firstLetterToUpperCaseCopy(std::string myString)
 }
 
 /**
+ * @brief quotes one argument for a POSIX shell command
+ *
+ * @param argument
+ * @return std::string
+ */
+std::string utilities::shellQuote(const std::string_view argument)
+{
+    std::string quoted{"'"};
+    quoted.reserve(argument.size() + 2);
+
+    for (const auto character : argument)
+    {
+        if (character == '\'')
+            quoted += "'\"'\"'";
+        else
+            quoted += character;
+    }
+
+    quoted += '\'';
+    return quoted;
+}
+
+/**
  * @brief checks if a file exists and can be opened
  *
  * @param filename

@@ -89,9 +89,9 @@ namespace
         SimulationBox       &simBox,
         const Vec3D         &origin,
         const WaterGeometry &geometry,
-        const HybridZone     zone    = HybridZone::NOT_HYBRID,
-        const bool           active  = true,
-        const size_t         molType = kWaterType
+        const HybridZone     zone,
+        const bool           active,
+        const size_t         molType
     )
     {
         const auto oxygen = std::make_shared<Atom>();
@@ -145,6 +145,27 @@ namespace
         simBox.addAtom(h1);
         simBox.addAtom(h2);
         simBox.addMolecule(water);
+    }
+
+    void addWater(
+        SimulationBox       &simBox,
+        const Vec3D         &origin,
+        const WaterGeometry &geometry,
+        const HybridZone     zone
+    )
+    {
+        addWater(simBox, origin, geometry, zone, true, kWaterType);
+    }
+
+    void addWater(
+        SimulationBox       &simBox,
+        const Vec3D         &origin,
+        const WaterGeometry &geometry,
+        const HybridZone     zone,
+        bool                 active
+    )
+    {
+        addWater(simBox, origin, geometry, zone, active, kWaterType);
     }
 
     SimulationBox makeIntraWaterBox(const WaterGeometry &geometry)

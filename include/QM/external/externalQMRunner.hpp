@@ -51,12 +51,17 @@ namespace QM
     class ExternalQMRunner : public QMRunner
     {
        protected:
-        std::string                     _scriptPath  = SCRIPT_PATH_;
-        const static inline std::string _singularity = SINGULARITY_;
-        const static inline std::string _staticBuild = STATIC_BUILD_;
+        std::string            _scriptPath  = SCRIPT_PATH_;
+        constexpr static auto *_singularity = SINGULARITY_;
+        constexpr static auto *_staticBuild = STATIC_BUILD_;
 
         [[nodiscard]] std::string resolveScriptPath(
             std::string_view script
+        ) const;
+
+        virtual void executeCommand(
+            std::string_view command,
+            std::string_view program
         ) const;
 
        public:
@@ -91,8 +96,8 @@ namespace QM
          *******************************/
 
         [[nodiscard]] const std::string &getScriptPath() const;
-        [[nodiscard]] const std::string &getSingularity() const;
-        [[nodiscard]] const std::string &getStaticBuild() const;
+        [[nodiscard]] std::string        getSingularity() const;
+        [[nodiscard]] std::string        getStaticBuild() const;
 
         void setScriptPath(const std::string_view &scriptPath);
     };

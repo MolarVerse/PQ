@@ -62,13 +62,22 @@ namespace
         cli::JsonWriter       &json,
         const std::string_view name,
         const std::string_view type,
-        const std::string_view unit = ""
+        const std::string_view unit
     )
     {
         json.beginObject(name);
         json.value("type", type);
         if (!unit.empty())
             json.value("unit", unit);
+    }
+
+    void beginParameter(
+        cli::JsonWriter       &json,
+        const std::string_view name,
+        const std::string_view type
+    )
+    {
+        beginParameter(json, name, type, "");
     }
 
     void writeBuildCapabilities(cli::JsonWriter &json)

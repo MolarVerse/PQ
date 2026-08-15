@@ -22,7 +22,6 @@
 
 #include "turbomoleRunner.hpp"
 
-#include <cstdlib>      // for system
 #include <filesystem>   // for remove
 #include <format>       // for format
 #include <fstream>      // for ofstream
@@ -136,19 +135,14 @@ void TurbomoleRunner::execute(SimulationBox &box)
 
     const auto command = std::format(
         "{} {} {} {} {} {}",
-        scriptFile,
+        shellQuote(scriptFile),
         charge,
         runTMDefine,
         usePointCharges,
-        FileSettings::getTMFileName(),
-        FileSettings::getPointChargeFileName()
+        shellQuote(FileSettings::getTMFileName()),
+        shellQuote(FileSettings::getPointChargeFileName())
     );
-    const auto status = ::system(command.c_str());
-
-    if (status != 0)
-        throw QMRunnerException(
-            std::format("Turbomole runner failed with exit status {}.", status)
-        );
+    executeCommand(command, "Turbomole");
 
     _isFirstExecution = false;
     _usePointCharges  = false;

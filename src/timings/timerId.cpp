@@ -20,44 +20,36 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _HYBRID_SETUP_HPP_
+#include "timerId.hpp"
 
-#define _HYBRID_SETUP_HPP_
-
-namespace engine
+/**
+ * @brief convert TimerId to string
+ *
+ * @param id
+ * @return std::string
+ */
+std::string toString(TimerId id)
 {
-    class Engine;   // forward declaration
-}   // namespace engine
+    if (id == TimerId::DefaultTimings)
+        return "Default Timings";
 
-namespace setup
-{
-    void setupHybrid(engine::Engine &);
+    if (id == TimerId::CellList)
+        return "Cell List";
 
-    /**
-     * @class HybridSetup
-     *
-     * @brief Setup Hybrid calculations e.g. QM/MM
-     *
-     */
-    class HybridSetup
-    {
-       private:
-        engine::Engine &_engine;
+    if (id == TimerId::PhysicalData)
+        return "Physical Data";
 
-       public:
-        explicit HybridSetup(engine::Engine &engine);
+    if (id == TimerId::ResetKinetics)
+        return "Reset Kinetics";
 
-        void setup();
-        void validateQMMethod();
-        void setupInnerRegionCenter();
-        void setupForcedCoreList();
-        void setupForcedLayerList();
-        void setupForcedOuterList();
-        void checkZoneRadii();
-        void validateQMChargeSettings();
-        void setupWriteInfo() const;
-    };
+    if (id == TimerId::WaterIntraPotential)
+        return "Water Intra Potential";
 
-}   // namespace setup
+    if (id == TimerId::WaterInterPotential)
+        return "Water Inter Potential";
 
-#endif   // _HYBRID_SETUP_HPP_
+    if (id == TimerId::QMEngine)
+        return "QM Engine";
+
+    return TimerIdMeta::toString(id);
+}

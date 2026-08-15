@@ -57,7 +57,7 @@ namespace
 
     void addWaterSystem(
         engine::MDEngine               &engine,
-        const std::vector<std::string> &atomNames = {"O", "H", "H"}
+        const std::vector<std::string> &atomNames
     )
     {
         auto &simBox = engine.getSimulationBox();
@@ -82,6 +82,11 @@ namespace
         }
 
         simBox.addMolecule(water);
+    }
+
+    void addWaterSystem(engine::MDEngine &engine)
+    {
+        addWaterSystem(engine, {"O", "H", "H"});
     }
 
     template <typename Parameter>
