@@ -40,118 +40,117 @@
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 
+using linearAlgebra::Vec3D;
+using physicalData::PhysicalData;
+using potential::CoulombPotential;
+using potential::CoulombShiftedPotential;
+using potential::GuffNonCoulomb;
+using potential::LennardJonesPair;
+using potential::PotentialBruteForce;
+using potential::PotentialCellList;
+using settings::PotentialSettings;
 using simulationBox::Atom;
 using simulationBox::CellList;
 using simulationBox::Molecule;
 using simulationBox::MoleculeType;
 using simulationBox::SimulationBox;
-using potential::CoulombPotential;
-using potential::CoulombShiftedPotential;
-using potential::GuffNonCoulomb;
-using potential::LennardJonesPair;
-using potential::NonCoulombPair;
-using potential::PotentialBruteForce;
-using potential::PotentialCellList;
-using physicalData::PhysicalData;
-using settings::PotentialSettings;
-using linearAlgebra::Vec3D;
 
 namespace
 {
 
-// Box / cell layout is chosen so that the periodic neighbour offsets do not
-// alias the same physical cell: with nNeighbour = ceil(cutoff / cellSize) we
-// must have kCellsPerSide >= 2 * nNeighbour + 1. Here cellSize = 5 and
-// cutoff = 4 yield nNeighbour = 1, so kCellsPerSide = 3 is sufficient and the
-// half-neighbour list in CellList visits each cell pair exactly once.
-constexpr double kBoxEdge        = 15.0;
-constexpr double kCoulombCutOff  = 4.0;
-constexpr size_t kCellsPerSide   = 3;
-constexpr double kForceTolerance = 1.0e-10;
+    // Box / cell layout is chosen so that the periodic neighbour offsets do not
+    // alias the same physical cell: with nNeighbour = ceil(cutoff / cellSize)
+    // we must have kCellsPerSide >= 2 * nNeighbour + 1. Here cellSize = 5 and
+    // cutoff = 4 yield nNeighbour = 1, so kCellsPerSide = 3 is sufficient and
+    // the half-neighbour list in CellList visits each cell pair exactly once.
+    constexpr double kBoxEdge        = 15.0;
+    constexpr double kCoulombCutOff  = 4.0;
+    constexpr size_t kCellsPerSide   = 3;
+    constexpr double kForceTolerance = 1.0e-10;
 
-struct Placement
-{
-    size_t molType;
-    Vec3D  position;
-};
-
-/*
- * Build a SimulationBox with two single-atom molecule types and a handful of
- * molecules placed so the workload exercises both code paths in
- * PotentialCellList: pairs inside the same cell and pairs across neighbouring
- * cells, with some pairs above and below the cutoff.
- *
- * Each call constructs independent Atom shared_ptrs, so two boxes built from
- * the same placements are completely decoupled and can be force-evaluated
- * with the two potentials in parallel.
- */
-SimulationBox buildSimulationBox(const std::vector<Placement> &placements)
-{
-    SimulationBox simBox;
-    simBox.setBoxDimensions({kBoxEdge, kBoxEdge, kBoxEdge});
-
-    auto buildMoleculeType = [](const size_t molType, const double charge)
+    struct Placement
     {
-        MoleculeType mt;
-        mt.setMoltype(molType);
-        mt.setNumberOfAtoms(1);
-        mt.addExternalAtomType(molType);
-        mt.addExternalToInternalAtomTypeElement(molType, 0);
-        mt.addPartialCharge(charge);
-        mt.addAtomType(0);
-        return mt;
+        size_t molType;
+        Vec3D  position;
     };
 
-    simBox.addMoleculeType(buildMoleculeType(1, 0.5));
-    simBox.addMoleculeType(buildMoleculeType(2, -0.3));
-
-    for (const auto &p : placements)
+    /*
+     * Build a SimulationBox with two single-atom molecule types and a handful
+     * of molecules placed so the workload exercises both code paths in
+     * PotentialCellList: pairs inside the same cell and pairs across
+     * neighbouring cells, with some pairs above and below the cutoff.
+     *
+     * Each call constructs independent Atom shared_ptrs, so two boxes built
+     * from the same placements are completely decoupled and can be
+     * force-evaluated with the two potentials in parallel.
+     */
+    SimulationBox buildSimulationBox(const std::vector<Placement> &placements)
     {
-        auto atom = std::make_shared<Atom>();
-        atom->setPosition(p.position);
-        atom->setAtomType(0);
-        atom->setExternalAtomType(p.molType);
-        atom->setPartialCharge(p.molType == 1 ? 0.5 : -0.3);
-        atom->setInternalGlobalVDWType(0);
-        atom->setForceToZero();
+        SimulationBox simBox;
+        simBox.setBoxDimensions({kBoxEdge, kBoxEdge, kBoxEdge});
 
-        Molecule molecule;
-        molecule.setMoltype(p.molType);
-        molecule.setNumberOfAtoms(1);
-        molecule.addAtom(atom);
-
-        simBox.addMolecule(molecule);
-    }
-
-    return simBox;
-}
-
-std::shared_ptr<GuffNonCoulomb> buildGuffNonCoulomb()
-{
-    auto guff = std::make_shared<GuffNonCoulomb>();
-    guff->resizeGuff(2);
-    for (size_t m1 = 0; m1 < 2; ++m1)
-    {
-        guff->resizeGuff(m1, 2);
-        for (size_t m2 = 0; m2 < 2; ++m2)
+        auto buildMoleculeType = [](const size_t molType, const double charge)
         {
-            guff->resizeGuff(m1, m2, 1);
-            guff->resizeGuff(m1, m2, 0, 1);
+            MoleculeType mt;
+            mt.setMoltype(molType);
+            mt.setNumberOfAtoms(1);
+            mt.addExternalAtomType(molType);
+            mt.addExternalToInternalAtomTypeElement(molType, 0);
+            mt.addPartialCharge(charge);
+            mt.addAtomType(0);
+            return mt;
+        };
+
+        simBox.addMoleculeType(buildMoleculeType(1, 0.5));
+        simBox.addMoleculeType(buildMoleculeType(2, -0.3));
+
+        for (const auto &p : placements)
+        {
+            auto atom = std::make_shared<Atom>();
+            atom->setPosition(p.position);
+            atom->setAtomType(0);
+            atom->setExternalAtomType(p.molType);
+            atom->setPartialCharge(p.molType == 1 ? 0.5 : -0.3);
+            atom->setInternalGlobalVDWType(0);
+            atom->setForceToZero();
+
+            Molecule molecule;
+            molecule.setMoltype(p.molType);
+            molecule.setNumberOfAtoms(1);
+            molecule.addAtom(atom);
+
+            simBox.addMolecule(molecule);
         }
+
+        return simBox;
     }
 
-    const auto pair = std::make_shared<LennardJonesPair>(
-        kCoulombCutOff,
-        /*c6=*/  -1.0,
-        /*c12=*/  1.0
-    );
+    std::shared_ptr<GuffNonCoulomb> buildGuffNonCoulomb()
+    {
+        auto guff = std::make_shared<GuffNonCoulomb>();
+        guff->resizeGuff(2);
+        for (size_t m1 = 0; m1 < 2; ++m1)
+        {
+            guff->resizeGuff(m1, 2);
+            for (size_t m2 = 0; m2 < 2; ++m2)
+            {
+                guff->resizeGuff(m1, m2, 1);
+                guff->resizeGuff(m1, m2, 0, 1);
+            }
+        }
 
-    for (size_t m1 = 1; m1 <= 2; ++m1)
-        for (size_t m2 = 1; m2 <= 2; ++m2)
-            guff->setGuffNonCoulPair({m1, m2, 0, 0}, pair);
+        const auto pair = std::make_shared<LennardJonesPair>(
+            kCoulombCutOff,
+            /*c6=*/-1.0,
+            /*c12=*/1.0
+        );
 
-    return guff;
-}
+        for (size_t m1 = 1; m1 <= 2; ++m1)
+            for (size_t m2 = 1; m2 <= 2; ++m2)
+                guff->setGuffNonCoulPair({m1, m2, 0, 0}, pair);
+
+        return guff;
+    }
 
 }   // namespace
 
@@ -170,10 +169,10 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
     const std::vector<Placement> placements = {
         {1, {-5.0, -5.0, -5.0}},
         {2, {-3.0, -4.0, -3.5}},
-        {1, { 1.0,  1.5,  2.0}},
-        {2, { 2.0,  2.5,  3.5}},
-        {1, {-1.0,  3.0,  1.0}},
-        {2, { 7.0, -7.0,  6.0}},
+        {1, {1.0, 1.5, 2.0}},
+        {2, {2.0, 2.5, 3.5}},
+        {1, {-1.0, 3.0, 1.0}},
+        {2, {7.0, -7.0, 6.0}},
     };
 
     auto simBoxBF = buildSimulationBox(placements);
@@ -214,10 +213,7 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
         kForceTolerance
     );
 
-    ASSERT_EQ(
-        simBoxBF.getNumberOfMolecules(),
-        simBoxCL.getNumberOfMolecules()
-    );
+    ASSERT_EQ(simBoxBF.getNumberOfMolecules(), simBoxCL.getNumberOfMolecules());
     for (size_t i = 0; i < simBoxBF.getNumberOfMolecules(); ++i)
     {
         const auto &molBF = simBoxBF.getMolecule(i);

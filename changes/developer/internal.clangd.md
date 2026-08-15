@@ -4,3 +4,4 @@
 - add most important google clang-tidy warnings
 - add most important hicpp clang-tidy warnings
 - add all important llvm clang-tidy warnings
+- add most important misc* clang-tidy warnings

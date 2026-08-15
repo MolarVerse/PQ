@@ -215,8 +215,15 @@ namespace
         const auto script         = QMSettings::getQMScript();
         const auto fullPathScript = QMSettings::getQMScriptFullPath();
 
-        if ((PQ_BUILD_STATIC || PQ_BUILD_WITH_SINGULARITY) &&
-            fullPathScript.empty())
+        // NOTE: these compile flags seem redundant with certain cmake
+        // configurations, but are necessary for some build configurations (e.g.
+        // Singularity)
+        // NOLINTBEGIN(misc-redundant-expression)
+        constexpr bool isStaticBuild =
+            PQ_BUILD_STATIC || PQ_BUILD_WITH_SINGULARITY;
+        // NOLINTEND(misc-redundant-expression)
+
+        if (isStaticBuild && fullPathScript.empty())
         {
             throw customException::InputFileException(
                 "This PQ build requires \"qm_script_full_path\" for "

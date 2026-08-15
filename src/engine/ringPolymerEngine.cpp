@@ -34,7 +34,6 @@
 #include "thermostatSettings.hpp"                    // for ThermostatSettings
 #include "timingsSettings.hpp"                       // for TimingsSettings
 
-using engine::Engine;
 using engine::RingPolymerEngine;
 
 using namespace settings;
