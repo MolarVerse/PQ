@@ -21,7 +21,8 @@
 ******************************************************************************/
 
 #include <gtest/gtest.h>   // for Test, InitGoogleTest, RUN_ALL_TESTS
-#include <stdint.h>        // for UINT64_MAX
+
+#include <cstdint>
 
 #include "gtest/gtest.h"            // for Message, TestPartResult
 #include "outputFileSettings.hpp"   // for OutputFileSettings
