@@ -24,4 +24,13 @@ struct BondIdTag
 };
 using BondId = StrongSizeT<struct BondIdTag>;
 
+struct AngleIdTag
+{
+    static std::string toString(const size_t &value)
+    {
+        return std::format("AngleId({})", value);
+    }
+};
+using AngleId = StrongSizeT<struct AngleIdTag>;
+
 #endif   // _STRONG_TYPES_HPP_

@@ -93,11 +93,11 @@ TEST_F(TestForceField, findBondTypeById_notFoundError)
 TEST_F(TestForceField, findAngleTypeById)
 {
     auto forceField = forceField::ForceField();
-    auto angleType  = forceField::AngleType(0, 1.0, 1.0);
+    auto angleType  = forceField::AngleType(AngleId{0}, 1.0, 1.0);
 
     forceField.addAngleType(angleType);
 
-    EXPECT_EQ(forceField.findAngleTypeById(0), angleType);
+    EXPECT_EQ(forceField.findAngleTypeById(AngleId{0}), angleType);
 }
 
 /**
@@ -109,7 +109,7 @@ TEST_F(TestForceField, findAngleTypeById_notFoundError)
     auto forceField = forceField::ForceField();
 
     EXPECT_THROW_MSG(
-        forceField.findAngleTypeById(0),
+        forceField.findAngleTypeById(AngleId{0}),
         customException::TopologyException,
         "Angle type with id " + std::to_string(0) + " not found."
     );
@@ -240,7 +240,7 @@ TEST_F(TestForceField, calculateBondedInteractions)
     auto angleForceField = forceField::AngleForceField(
         {&molecule, &molecule, &molecule},
         {0, 1, 2},
-        0
+        AngleId{0}
     );
     auto dihedralForceField = forceField::DihedralForceField(
         {&molecule, &molecule, &molecule, &molecule},

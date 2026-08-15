@@ -24,8 +24,6 @@
 
 #define _BOND_TYPE_HPP_
 
-#include <cstddef>
-
 #include "strongTypes.hpp"
 
 namespace forceField

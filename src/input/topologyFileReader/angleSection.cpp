@@ -76,7 +76,7 @@ void AngleSection::processSection(
     auto atom1     = stoul(lineElements[0]);
     auto atom2     = stoul(lineElements[1]);
     auto atom3     = stoul(lineElements[2]);
-    auto angleType = stoul(lineElements[3]);
+    auto angleType = AngleId{stoul(lineElements[3])};
     auto isLinker  = false;
 
     if (5 == lineElements.size())

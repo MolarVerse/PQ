@@ -107,25 +107,25 @@ TEST_F(TestSetup, forceFieldSetup_setupAngles)
     auto angle1 = forceField::AngleForceField(
         {molecule1Ptr, molecule2Ptr, molecule2Ptr},
         {0, 1, 2},
-        0
+        AngleId{0}
     );
     auto angle2 = forceField::AngleForceField(
         {molecule1Ptr, molecule1Ptr, molecule2Ptr},
         {0, 1, 2},
-        1
+        AngleId{1}
     );
     auto angle3 = forceField::AngleForceField(
         {molecule1Ptr, molecule2Ptr, molecule2Ptr},
         {0, 1, 2},
-        0
+        AngleId{0}
     );
 
     _engine->getForceField()->addAngle(angle1);
     _engine->getForceField()->addAngle(angle2);
     _engine->getForceField()->addAngle(angle3);
 
-    auto angleType1 = forceField::AngleType(0, 1.0, 1.0);
-    auto angleType2 = forceField::AngleType(1, 2.0, 2.0);
+    auto angleType1 = forceField::AngleType(AngleId{0}, 1.0, 1.0);
+    auto angleType2 = forceField::AngleType(AngleId{1}, 2.0, 2.0);
 
     _engine->getForceField()->addAngleType(angleType1);
     _engine->getForceField()->addAngleType(angleType2);
@@ -133,26 +133,19 @@ TEST_F(TestSetup, forceFieldSetup_setupAngles)
     auto setup = setup::ForceFieldSetup(*_engine);
     setup.setupAngles();
 
-    EXPECT_EQ(_engine->getForceField()->getAngles()[0].getType(), 0);
-    EXPECT_EQ(
-        _engine->getForceField()->getAngles()[0].getEquilibriumAngle(),
-        1.0
-    );
-    EXPECT_EQ(_engine->getForceField()->getAngles()[0].getForceConstant(), 1.0);
+    const auto &angles = _engine->getForceField()->getAngles();
 
-    EXPECT_EQ(_engine->getForceField()->getAngles()[1].getType(), 1);
-    EXPECT_EQ(
-        _engine->getForceField()->getAngles()[1].getEquilibriumAngle(),
-        2.0
-    );
-    EXPECT_EQ(_engine->getForceField()->getAngles()[1].getForceConstant(), 2.0);
+    EXPECT_EQ(angles[0].getType(), AngleId{0});
+    EXPECT_EQ(angles[0].getEquilibriumAngle(), 1.0);
+    EXPECT_EQ(angles[0].getForceConstant(), 1.0);
 
-    EXPECT_EQ(_engine->getForceField()->getAngles()[2].getType(), 0);
-    EXPECT_EQ(
-        _engine->getForceField()->getAngles()[2].getEquilibriumAngle(),
-        1.0
-    );
-    EXPECT_EQ(_engine->getForceField()->getAngles()[2].getForceConstant(), 1.0);
+    EXPECT_EQ(angles[1].getType(), AngleId{1});
+    EXPECT_EQ(angles[1].getEquilibriumAngle(), 2.0);
+    EXPECT_EQ(angles[1].getForceConstant(), 2.0);
+
+    EXPECT_EQ(angles[2].getType(), AngleId{0});
+    EXPECT_EQ(angles[2].getEquilibriumAngle(), 1.0);
+    EXPECT_EQ(angles[2].getForceConstant(), 1.0);
 
     EXPECT_EQ(_engine->getForceField()->getAngleTypes().size(), 0);
 }
@@ -343,7 +336,7 @@ TEST_F(TestSetup, forceFieldSetup_setupForceField)
     auto angle = forceField::AngleForceField(
         {molecule1Ptr, molecule1Ptr, molecule1Ptr},
         {0, 1, 2},
-        0
+        AngleId{0}
     );
     auto dihedral = forceField::DihedralForceField(
         {molecule1Ptr, molecule1Ptr, molecule1Ptr, molecule1Ptr},
@@ -362,7 +355,7 @@ TEST_F(TestSetup, forceFieldSetup_setupForceField)
     _engine->getForceField()->addImproperDihedral(improperDihedral);
 
     auto bondType             = forceField::BondType(BondId{0}, 1.0, 2.0);
-    auto angleType            = forceField::AngleType(0, 2.0, 3.0);
+    auto angleType            = forceField::AngleType(AngleId{0}, 2.0, 3.0);
     auto dihedralType         = forceField::DihedralType(0, 3.0, 4.0, 5.0);
     auto improperDihedralType = forceField::DihedralType(0, 4.0, 5.0, 6.0);
 
@@ -379,12 +372,11 @@ TEST_F(TestSetup, forceFieldSetup_setupForceField)
     EXPECT_EQ(bonds[0].getEquilibriumBondLength(), 1.0);
     EXPECT_EQ(bonds[0].getForceConstant(), 2.0);
 
-    EXPECT_EQ(_engine->getForceField()->getAngles()[0].getType(), 0);
-    EXPECT_EQ(
-        _engine->getForceField()->getAngles()[0].getEquilibriumAngle(),
-        2.0
-    );
-    EXPECT_EQ(_engine->getForceField()->getAngles()[0].getForceConstant(), 3.0);
+    const auto &angles = _engine->getForceField()->getAngles();
+
+    EXPECT_EQ(angles[0].getType(), AngleId{0});
+    EXPECT_EQ(angles[0].getEquilibriumAngle(), 2.0);
+    EXPECT_EQ(angles[0].getForceConstant(), 3.0);
 
     EXPECT_EQ(_engine->getForceField()->getDihedrals()[0].getType(), 0);
     EXPECT_EQ(
@@ -429,7 +421,7 @@ TEST_F(TestSetup, forceFieldSetup_setupForceField_doNothing)
     auto angle = forceField::AngleForceField(
         {molecule1Ptr, molecule1Ptr, molecule1Ptr},
         {0, 1, 2},
-        0
+        AngleId{0}
     );
     auto dihedral = forceField::DihedralForceField(
         {molecule1Ptr, molecule1Ptr, molecule1Ptr, molecule1Ptr},
@@ -448,7 +440,7 @@ TEST_F(TestSetup, forceFieldSetup_setupForceField_doNothing)
     _engine->getForceField()->addImproperDihedral(improperDihedral);
 
     auto bondType             = forceField::BondType(BondId{0}, 1.0, 2.0);
-    auto angleType            = forceField::AngleType(0, 2.0, 3.0);
+    auto angleType            = forceField::AngleType(AngleId{0}, 2.0, 3.0);
     auto dihedralType         = forceField::DihedralType(0, 3.0, 4.0, 5.0);
     auto improperDihedralType = forceField::DihedralType(0, 4.0, 5.0, 6.0);
 
@@ -460,38 +452,23 @@ TEST_F(TestSetup, forceFieldSetup_setupForceField_doNothing)
     settings::ForceFieldSettings::deactivate();
     setup::setupForceField(*_engine);
 
-    EXPECT_NE(
-        _engine->getForceField()->getBonds()[0].getEquilibriumBondLength(),
-        1.0
-    );
-    EXPECT_NE(_engine->getForceField()->getBonds()[0].getForceConstant(), 2.0);
+    const auto &bonds     = _engine->getForceField()->getBonds();
+    const auto &angles    = _engine->getForceField()->getAngles();
+    const auto &dihedrals = _engine->getForceField()->getDihedrals();
+    const auto &improperDihedrals =
+        _engine->getForceField()->getImproperDihedrals();
 
-    EXPECT_NE(
-        _engine->getForceField()->getAngles()[0].getEquilibriumAngle(),
-        2.0
-    );
-    EXPECT_NE(_engine->getForceField()->getAngles()[0].getForceConstant(), 3.0);
+    EXPECT_NE(bonds[0].getEquilibriumBondLength(), 1.0);
+    EXPECT_NE(bonds[0].getForceConstant(), 2.0);
 
-    EXPECT_NE(
-        _engine->getForceField()->getDihedrals()[0].getForceConstant(),
-        3.0
-    );
-    EXPECT_NE(
-        _engine->getForceField()->getDihedrals()[0].getPeriodicity(),
-        4.0
-    );
-    EXPECT_NE(_engine->getForceField()->getDihedrals()[0].getPhaseShift(), 5.0);
+    EXPECT_NE(angles[0].getEquilibriumAngle(), 2.0);
+    EXPECT_NE(angles[0].getForceConstant(), 3.0);
 
-    EXPECT_NE(
-        _engine->getForceField()->getImproperDihedrals()[0].getForceConstant(),
-        4.0
-    );
-    EXPECT_NE(
-        _engine->getForceField()->getImproperDihedrals()[0].getPeriodicity(),
-        5.0
-    );
-    EXPECT_NE(
-        _engine->getForceField()->getImproperDihedrals()[0].getPhaseShift(),
-        6.0
-    );
+    EXPECT_NE(dihedrals[0].getForceConstant(), 3.0);
+    EXPECT_NE(dihedrals[0].getPeriodicity(), 4.0);
+    EXPECT_NE(dihedrals[0].getPhaseShift(), 5.0);
+
+    EXPECT_NE(improperDihedrals[0].getForceConstant(), 4.0);
+    EXPECT_NE(improperDihedrals[0].getPeriodicity(), 5.0);
+    EXPECT_NE(improperDihedrals[0].getPhaseShift(), 6.0);
 }

@@ -102,7 +102,7 @@ namespace forceField
         );
 
         const BondType      &findBondTypeById(BondId id) const;
-        const AngleType     &findAngleTypeById(size_t id) const;
+        const AngleType     &findAngleTypeById(AngleId id) const;
         const DihedralType  &findDihedralTypeById(size_t id) const;
         const DihedralType  &findImproperTypeById(size_t id) const;
         const JCouplingType &findJCouplingTypeById(size_t id) const;

@@ -67,7 +67,7 @@ int main()
     auto angle = forceField::AngleForceField(
         {&molecule, &molecule, &molecule},
         {0, 1, 2},
-        0
+        AngleId{0}
     );
     angle.setEquilibriumAngle(M_PI / 2.0);
     angle.setForceConstant(3.0);

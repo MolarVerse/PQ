@@ -24,7 +24,7 @@
 
 #define _ANGLE_TYPE_HPP_
 
-#include <cstddef>
+#include "strongTypes.hpp"
 
 namespace forceField
 {
@@ -43,13 +43,13 @@ namespace forceField
     class AngleType
     {
        private:
-        size_t _id;
+        AngleId _id;
 
         double _equilibriumAngle;
         double _forceConstant;
 
        public:
-        AngleType(const size_t, const double, const double);
+        AngleType(const AngleId, const double, const double);
 
         friend bool operator==(const AngleType &, const AngleType &);
 
@@ -57,9 +57,9 @@ namespace forceField
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] size_t getId() const;
-        [[nodiscard]] double getEquilibriumAngle() const;
-        [[nodiscard]] double getForceConstant() const;
+        [[nodiscard]] AngleId getId() const;
+        [[nodiscard]] double  getEquilibriumAngle() const;
+        [[nodiscard]] double  getForceConstant() const;
     };
 
 }   // namespace forceField

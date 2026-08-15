@@ -74,7 +74,7 @@ const BondType &ForceField::findBondTypeById(const BondId id) const
  *
  * @throws TopologyException if angle type with id not found
  */
-const AngleType &ForceField::findAngleTypeById(const size_t id) const
+const AngleType &ForceField::findAngleTypeById(const AngleId id) const
 {
     auto isAngleId = [id](const AngleType &angleType)
     { return angleType.getId() == id; };
@@ -85,7 +85,7 @@ const AngleType &ForceField::findAngleTypeById(const size_t id) const
         return *angleType;
     else
         throw TopologyException(
-            std::format("Angle type with id {} not found.", id)
+            std::format("Angle type with id {} not found.", id.toString())
         );
 }
 
