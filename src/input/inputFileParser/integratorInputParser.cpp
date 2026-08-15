@@ -33,7 +33,6 @@
 #include "stringUtilities.hpp"    // for toLowerCopy
 
 using namespace input;
-using namespace engine;
 using namespace customException;
 using namespace settings;
 using namespace utilities;
@@ -48,8 +47,7 @@ using namespace references;
  *
  * @param engine
  */
-IntegratorInputParser::IntegratorInputParser(Engine &engine)
-    : InputFileParser(engine)
+IntegratorInputParser::IntegratorInputParser()
 {
     addKeyword(
         std::string("integrator"),

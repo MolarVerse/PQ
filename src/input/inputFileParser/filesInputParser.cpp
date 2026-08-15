@@ -52,10 +52,9 @@ using namespace utilities;
  * @param intraNonBonded
  */
 FilesInputParser::FilesInputParser(
-    Engine                                         &engine,
     std::shared_ptr<intraNonBonded::IntraNonBonded> intraNonBonded
 )
-    : FilesInputParser(engine, intraNonBonded, true)
+    : FilesInputParser(intraNonBonded, true)
 {
 }
 
@@ -73,11 +72,10 @@ FilesInputParser::FilesInputParser(
  * @param engine
  */
 FilesInputParser::FilesInputParser(
-    Engine                                         &engine,
     std::shared_ptr<intraNonBonded::IntraNonBonded> intraNonBonded,
     const bool                                      validateFilePaths
 )
-    : InputFileParser(engine),
+    : InputFileParser(),
       _intraNonBonded(intraNonBonded),
       _validateFilePaths(validateFilePaths)
 {

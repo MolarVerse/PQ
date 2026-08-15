@@ -50,10 +50,9 @@ using namespace utilities;
  * @param simulationBox
  */
 SimulationBoxInputParser::SimulationBoxInputParser(
-    Engine                                       &engine,
     std::shared_ptr<simulationBox::SimulationBox> simulationBox
 )
-    : InputFileParser(engine), _simulationBox(simulationBox)
+    : _simulationBox(simulationBox)
 {
     addKeyword(
         std::string("rcoulomb"),

@@ -103,6 +103,8 @@ namespace settings
         static inline VirialType     _virial     = VirialType::MOLECULAR;
         static inline IntegratorType _integrator = IntegratorType::NONE;
 
+        static inline bool _isCellListActivated = false;
+
        public:
         Settings()  = default;
         ~Settings() = default;
@@ -149,6 +151,8 @@ namespace settings
 
         static void activateRingPolymerMD();
         static void deactivateRingPolymerMD();
+        static void activateCellList();
+        static void deactivateCellList();
 
         [[nodiscard]] static bool isQMOnlyJobtype();
         [[nodiscard]] static bool isMMOnlyJobtype();
@@ -160,6 +164,7 @@ namespace settings
         [[nodiscard]] static bool isRingPolymerMDActivated();
         [[nodiscard]] static bool isMDJobType();
         [[nodiscard]] static bool isOptJobType();
+        [[nodiscard]] static bool isCellListActivated();
     };
 
 }   // namespace settings

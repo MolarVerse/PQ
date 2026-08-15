@@ -27,6 +27,8 @@
 #include <cstddef>   // for size_t
 
 #include "inputFileParser.hpp"   // for InputFileParser
+#include "logOutput.hpp"
+#include "stdoutOutput.hpp"
 
 namespace input
 {
@@ -46,16 +48,11 @@ namespace input
 
        public:
         explicit QMInputParser(
-            engine::Engine &,
             output::LogOutput &,
             output::StdoutOutput &,
             bool resolveBuiltInSlakosPath
         );
-        explicit QMInputParser(
-            engine::Engine &,
-            output::LogOutput &,
-            output::StdoutOutput &
-        );
+        explicit QMInputParser(output::LogOutput &, output::StdoutOutput &);
 
         void parseQMMethod(const std::vector<std::string> &, const size_t);
         void parseQMScript(const std::vector<std::string> &, const size_t);

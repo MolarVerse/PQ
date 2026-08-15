@@ -56,11 +56,10 @@ using namespace waterModel;
  * @param potential
  */
 MMInputParser::MMInputParser(
-    Engine                                 &engine,
     std::shared_ptr<forceField::ForceField> forceField,
     std::shared_ptr<potential::Potential>   potential
 )
-    : InputFileParser(engine), _forceField(forceField), _potential(potential)
+    : _forceField(forceField), _potential(potential)
 {
     addKeyword(
         std::string("force-field"),

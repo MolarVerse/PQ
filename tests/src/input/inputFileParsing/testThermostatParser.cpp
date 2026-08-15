@@ -44,7 +44,7 @@ TEST_F(TestInputFileReader, testParseTemperature)
 {
     EXPECT_EQ(settings::ThermostatSettings::isTemperatureSet(), false);
 
-    ThermostatInputParser    parser(*_engine);
+    ThermostatInputParser    parser;
     std::vector<std::string> lineElements = {"temp", "=", "300.0"};
     parser.parseTemperature(lineElements, 0);
 
@@ -71,7 +71,7 @@ TEST_F(TestInputFileReader, testParseTemperature)
  */
 TEST_F(TestInputFileReader, testParseRelaxationTime)
 {
-    ThermostatInputParser    parser(*_engine);
+    ThermostatInputParser    parser;
     std::vector<std::string> lineElements = {"t_relaxation", "=", "10.0"};
     parser.parseThermostatRelaxationTime(lineElements, 0);
     EXPECT_EQ(settings::ThermostatSettings::getRelaxationTime(), 10.0);
@@ -108,7 +108,7 @@ TEST_F(TestInputFileReader, testParseRelaxationTime)
  */
 TEST_F(TestInputFileReader, testParseThermostat)
 {
-    ThermostatInputParser    parser(*_engine);
+    ThermostatInputParser    parser;
     std::vector<std::string> lineElements = {"thermostat", "=", "none"};
     parser.parseThermostat(lineElements, 0);
     EXPECT_EQ(
@@ -167,7 +167,7 @@ TEST_F(TestInputFileReader, testParseThermostat)
  */
 TEST_F(TestInputFileReader, testParseFriction)
 {
-    ThermostatInputParser    parser(*_engine);
+    ThermostatInputParser    parser;
     std::vector<std::string> lineElements = {"friction", "=", "0.1"};
     parser.parseThermostatFriction(lineElements, 0);
     EXPECT_EQ(settings::ThermostatSettings::getFriction(), 0.1 * 1.0e12);
@@ -195,7 +195,7 @@ TEST_F(TestInputFileReader, testParseFriction)
  */
 TEST_F(TestInputFileReader, testParseChainLength)
 {
-    ThermostatInputParser    parser(*_engine);
+    ThermostatInputParser    parser;
     std::vector<std::string> lineElements = {"nh-chain-length", "=", "10"};
     parser.parseThermostatChainLength(lineElements, 0);
     EXPECT_EQ(settings::ThermostatSettings::getNoseHooverChainLength(), 10);
@@ -221,7 +221,7 @@ TEST_F(TestInputFileReader, testParseChainLength)
  */
 TEST_F(TestInputFileReader, testParseCouplingFrequency)
 {
-    ThermostatInputParser    parser(*_engine);
+    ThermostatInputParser    parser;
     std::vector<std::string> lineElements = {"coupling_frequency", "=", "10"};
     parser.parseThermostatCouplingFrequency(lineElements, 0);
     EXPECT_EQ(
@@ -252,7 +252,7 @@ TEST_F(TestInputFileReader, testParseCouplingFrequency)
  */
 TEST_F(TestInputFileReader, testParseTemperatureRampSteps)
 {
-    ThermostatInputParser    parser(*_engine);
+    ThermostatInputParser    parser;
     std::vector<std::string> lineElements = {"temp_ramp_steps", "=", "10"};
     parser.parseTemperatureRampSteps(lineElements, 0);
     EXPECT_EQ(settings::ThermostatSettings::getTemperatureRampSteps(), 10);
@@ -273,7 +273,7 @@ TEST_F(TestInputFileReader, testParseTemperatureRampSteps)
  */
 TEST_F(TestInputFileReader, testParseTemperatureRampFrequency)
 {
-    ThermostatInputParser    parser(*_engine);
+    ThermostatInputParser    parser;
     std::vector<std::string> lineElements = {"temp_ramp_frequency", "=", "10"};
     parser.parseTemperatureRampFrequency(lineElements, 0);
     EXPECT_EQ(settings::ThermostatSettings::getTemperatureRampFrequency(), 10);
@@ -301,7 +301,7 @@ TEST_F(TestInputFileReader, testParseTemperatureRampFrequency)
  */
 TEST_F(TestInputFileReader, testParseStartTemperature)
 {
-    ThermostatInputParser    parser(*_engine);
+    ThermostatInputParser    parser;
     std::vector<std::string> lineElements = {"start_temperature", "=", "10"};
     parser.parseStartTemperature(lineElements, 0);
     EXPECT_EQ(settings::ThermostatSettings::getStartTemperature(), 10);
@@ -325,7 +325,7 @@ TEST_F(TestInputFileReader, testParseStartTemperature)
  */
 TEST_F(TestInputFileReader, testParseEndTemperature)
 {
-    ThermostatInputParser    parser(*_engine);
+    ThermostatInputParser    parser;
     std::vector<std::string> lineElements = {"end_temperature", "=", "10"};
     parser.parseEndTemperature(lineElements, 0);
     EXPECT_EQ(settings::ThermostatSettings::getEndTemperature(), 10);

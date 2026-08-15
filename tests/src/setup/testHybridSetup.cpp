@@ -87,7 +87,7 @@ TEST_F(TestSetup, setupHybridIsNoOpWhenQMMMNotActive)
 
 TEST_F(TestSetup, parseSelectionNoPythonSingleIndex)
 {
-    HybridInputParser parser(*_engine);
+    HybridInputParser parser;
     const auto        v = parser.parseSelectionNoPython("3", "qm_center");
     ASSERT_EQ(v.size(), 1u);
     EXPECT_EQ(v[0], 3);
@@ -95,7 +95,7 @@ TEST_F(TestSetup, parseSelectionNoPythonSingleIndex)
 
 TEST_F(TestSetup, parseSelectionNoPythonCommaList)
 {
-    HybridInputParser parser(*_engine);
+    HybridInputParser parser;
     const auto        v = parser.parseSelectionNoPython("1,3,5", "qm_center");
     ASSERT_EQ(v.size(), 3u);
     EXPECT_EQ(v[0], 1);
@@ -105,7 +105,7 @@ TEST_F(TestSetup, parseSelectionNoPythonCommaList)
 
 TEST_F(TestSetup, parseSelectionNoPythonRange)
 {
-    HybridInputParser parser(*_engine);
+    HybridInputParser parser;
     const auto        v = parser.parseSelectionNoPython("2-5", "qm_center");
     ASSERT_EQ(v.size(), 4u);
     EXPECT_EQ(v[0], 2);
@@ -114,7 +114,7 @@ TEST_F(TestSetup, parseSelectionNoPythonRange)
 
 TEST_F(TestSetup, parseSelectionNoPythonMixedRangeAndList)
 {
-    HybridInputParser parser(*_engine);
+    HybridInputParser parser;
     const auto        v = parser.parseSelectionNoPython("1,3-4,7", "qm_center");
     ASSERT_EQ(v.size(), 4u);
     EXPECT_EQ(v[0], 1);
@@ -125,7 +125,7 @@ TEST_F(TestSetup, parseSelectionNoPythonMixedRangeAndList)
 
 TEST_F(TestSetup, parseSelectionNoPythonEmptyThrows)
 {
-    HybridInputParser parser(*_engine);
+    HybridInputParser parser;
     EXPECT_THROW(
         parser.parseSelectionNoPython("", "qm_center"),
         InputFileException
@@ -136,7 +136,7 @@ TEST_F(TestSetup, parseSelectionNoPythonEmptyThrows)
 
 TEST_F(TestSetup, parseSelectionEmptyReturnsZeroOnly)
 {
-    HybridInputParser parser(*_engine);
+    HybridInputParser parser;
     const auto        v = parser.parseSelection("", "qm_center");
     ASSERT_EQ(v.size(), 1u);
     EXPECT_EQ(v[0], 0);
@@ -144,7 +144,7 @@ TEST_F(TestSetup, parseSelectionEmptyReturnsZeroOnly)
 
 TEST_F(TestSetup, parseSelectionSortsAndDeduplicates)
 {
-    HybridInputParser parser(*_engine);
+    HybridInputParser parser;
     const auto        v = parser.parseSelection("5,1,3,1", "qm_center");
     ASSERT_EQ(v.size(), 3u);
     EXPECT_EQ(v[0], 1);
@@ -155,7 +155,7 @@ TEST_F(TestSetup, parseSelectionSortsAndDeduplicates)
 #ifndef PYTHON_ENABLED
 TEST_F(TestSetup, parseSelectionWithLettersThrowsWithoutPython)
 {
-    HybridInputParser parser(*_engine);
+    HybridInputParser parser;
     EXPECT_THROW(
         parser.parseSelection("not_a_number", "qm_center"),
         InputFileException
@@ -167,7 +167,7 @@ TEST_F(TestSetup, parseSelectionWithLettersThrowsWithoutPython)
 
 TEST_F(TestSetup, setupThrowsNotImplemented)
 {
-    HybridSetup hs(*_engine);
+    HybridSetup hs{*_engine};
     EXPECT_THROW(hs.setup(), InputFileException);
 }
 
@@ -196,7 +196,7 @@ TEST_F(TestSetup, setupHybridConfiguresExplicitLists)
     addSingleAtomMolecule(*_engine, 2);
     addSingleAtomMolecule(*_engine, 3);
 
-    EXPECT_NO_THROW(HybridSetup(*_engine).setup());
+    EXPECT_NO_THROW(HybridSetup{*_engine}.setup());
     EXPECT_TRUE(_engine->getSimulationBox().getMolecule(0).isForcedCore());
     EXPECT_TRUE(_engine->getSimulationBox().getMolecule(1).isForcedLayer());
     EXPECT_TRUE(_engine->getSimulationBox().getMolecule(2).isForcedOuter());
@@ -204,7 +204,7 @@ TEST_F(TestSetup, setupHybridConfiguresExplicitLists)
 
 TEST_F(TestSetup, hybridSetupRejectsUnsupportedQmMethods)
 {
-    HybridSetup          setup(*_engine);
+    HybridSetup          setup{*_engine};
     constexpr std::array unsupported{
         QMMethod::PYSCF,
         QMMethod::ASEDFTBPLUS,
@@ -229,7 +229,7 @@ TEST_F(TestSetup, hybridSetupRejectsUnsupportedQmMethods)
 TEST_F(TestSetup, hybridSetupValidatesZoneRadii)
 {
     _engine->getSimulationBox().setBoxDimensions({40.0, 40.0, 40.0});
-    HybridSetup setup(*_engine);
+    HybridSetup setup{*_engine};
 
     HybridSettings::setCoreRadius(5.0);
     HybridSettings::setLayerRadius(4.0);
@@ -261,7 +261,7 @@ TEST_F(TestSetup, hybridSetupRejectsMmChargesForMoltypeZero)
 {
     _engine->getSimulationBox().addMoleculeType(simulationBox::MoleculeType(0));
     HybridSettings::setUseQMCharges(false);
-    HybridSetup setup(*_engine);
+    HybridSetup setup{*_engine};
 
     EXPECT_THROW(setup.validateQMChargeSettings(), InputFileException);
 

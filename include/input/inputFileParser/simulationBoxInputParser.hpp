@@ -27,6 +27,7 @@
 #include <cstddef>   // for size_t
 
 #include "inputFileParser.hpp"   // for InputFileParser
+#include "simulationBox.hpp"
 
 namespace input
 {
@@ -43,7 +44,6 @@ namespace input
 
        public:
         explicit SimulationBoxInputParser(
-            engine::Engine &,
             std::shared_ptr<simulationBox::SimulationBox>
         );
 

@@ -55,10 +55,9 @@ using namespace customException;
  * @param constraints pointer to the constraints object
  */
 ConstraintsInputParser::ConstraintsInputParser(
-    Engine                                   &engine,
     std::shared_ptr<constraints::Constraints> constraints
 )
-    : InputFileParser(engine), _constraints(constraints)
+    : _constraints(constraints)
 {
     addKeyword(
         std::string("shake"),

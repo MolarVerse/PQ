@@ -25,7 +25,6 @@
 #include <format>      // for format
 
 #include "constants/conversionFactors.hpp"
-#include "engine.hpp"            // for Engine
 #include "exceptions.hpp"        // for InputFileException
 #include "hessianSettings.hpp"   // for HessianSettings
 #include "inputFileReader.hpp"
@@ -76,17 +75,21 @@ void InputFileReader::validateTimings() const
         (jobType == MM_HESSIAN && HessianSettings::optimizeBeforeHessian());
 
     if (requiresNumberOfSteps && !getKeywordSet("nstep"))
-        throw UserInputException(std::format(
-            "Job type {} selected. Please set nstep in the input file.",
-            string(jobType)
-        ));
+        throw UserInputException(
+            std::format(
+                "Job type {} selected. Please set nstep in the input file.",
+                string(jobType)
+            )
+        );
 
     if (Settings::isMDJobType() && !getKeywordSet("timestep"))
-        throw UserInputException(std::format(
-            "Molecular Dynamics job type {} selected. Please set the "
-            "time step in the input file.",
-            string(jobType)
-        ));
+        throw UserInputException(
+            std::format(
+                "Molecular Dynamics job type {} selected. Please set the "
+                "time step in the input file.",
+                string(jobType)
+            )
+        );
 }
 
 /**
@@ -170,11 +173,14 @@ void InputFileReader::validateQM() const
 
     if (modelType != MaceModelType::MACE_MP && model != MaceModel::SMALL &&
         model != MaceModel::MEDIUM && model != MaceModel::LARGE)
-        throw InputFileException(std::format(
-            "The '{}' model size is only compatible with the '{}' model type.",
-            string(model),
-            string(MaceModelType::MACE_MP)
-        ));
+        throw InputFileException(
+            std::format(
+                "The '{}' model size is only compatible with the '{}' model "
+                "type.",
+                string(model),
+                string(MaceModelType::MACE_MP)
+            )
+        );
 
     if (model == MaceModel::CUSTOM && !modelPathSet)
         throw InputFileException(
@@ -207,17 +213,22 @@ void InputFileReader::validateThermostat() const
     if (thermostatType != ThermostatType::NONE)
     {
         if (!targetTempDefined && !endTempDefined)
-            throw InputFileException(std::format(
-                "Target or end temperature not set for {} thermostat",
-                string(thermostatType)
-            ));
+            throw InputFileException(
+                std::format(
+                    "Target or end temperature not set for {} thermostat",
+                    string(thermostatType)
+                )
+            );
 
         if (targetTempDefined && endTempDefined)
-            throw InputFileException(std::format(
-                "Both target and end temperature set for {} thermostat. They "
-                "are mutually exclusive as they are treated as synonyms",
-                string(thermostatType)
-            ));
+            throw InputFileException(
+                std::format(
+                    "Both target and end temperature set for {} thermostat. "
+                    "They "
+                    "are mutually exclusive as they are treated as synonyms",
+                    string(thermostatType)
+                )
+            );
     }
 
     if (SimulationBoxSettings::getInitializeVelocities() !=
@@ -302,24 +313,27 @@ void InputFileReader::validateThermostat() const
     const auto rampSteps  = ThermostatSettings::getTemperatureRampSteps();
 
     if (rampSteps > totalSteps)
-        throw InputFileException(std::format(
-            "Number of total simulation steps {} is smaller than the "
-            "number of temperature ramping steps {}",
-            totalSteps,
-            rampSteps
-        ));
+        throw InputFileException(
+            std::format(
+                "Number of total simulation steps {} is smaller than the "
+                "number of temperature ramping steps {}",
+                totalSteps,
+                rampSteps
+            )
+        );
 
     const auto effectiveRampSteps = rampSteps == 0 ? totalSteps : rampSteps;
-    const auto frequency =
-        ThermostatSettings::getTemperatureRampFrequency();
+    const auto frequency = ThermostatSettings::getTemperatureRampFrequency();
 
     if (frequency > effectiveRampSteps)
-        throw InputFileException(std::format(
-            "Temperature ramp frequency {} is larger than the number of "
-            "ramping steps {}",
-            frequency,
-            effectiveRampSteps
-        ));
+        throw InputFileException(
+            std::format(
+                "Temperature ramp frequency {} is larger than the number of "
+                "ramping steps {}",
+                frequency,
+                effectiveRampSteps
+            )
+        );
 }
 
 /**
@@ -335,10 +349,12 @@ void InputFileReader::validateManostat() const
         return;
 
     if (!getKeywordSet("pressure"))
-        throw InputFileException(std::format(
-            "Pressure not set for {} manostat",
-            string(manostatType)
-        ));
+        throw InputFileException(
+            std::format(
+                "Pressure not set for {} manostat",
+                string(manostatType)
+            )
+        );
 
     const auto relaxationTime =
         ManostatSettings::getTauManostat() * constants::PS_TO_FS;
@@ -357,7 +373,7 @@ void InputFileReader::validateManostat() const
  */
 void InputFileReader::validateCellList() const
 {
-    if (!_engine.isCellListActivated())
+    if (!Settings::isCellListActivated())
         return;
 
     if (Settings::isQMOnlyActivated())

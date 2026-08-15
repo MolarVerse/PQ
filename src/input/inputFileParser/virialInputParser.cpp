@@ -45,7 +45,7 @@ using namespace utilities;
  *
  * @param engine
  */
-VirialInputParser::VirialInputParser(Engine& engine) : InputFileParser(engine)
+VirialInputParser::VirialInputParser()
 {
     addKeyword(
         std::string("virial"),
