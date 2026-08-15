@@ -101,7 +101,7 @@ namespace forceField
             physicalData::PhysicalData &
         );
 
-        const BondType      &findBondTypeById(size_t id) const;
+        const BondType      &findBondTypeById(BondId id) const;
         const AngleType     &findAngleTypeById(size_t id) const;
         const DihedralType  &findDihedralTypeById(size_t id) const;
         const DihedralType  &findImproperTypeById(size_t id) const;

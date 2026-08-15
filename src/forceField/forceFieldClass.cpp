@@ -51,7 +51,7 @@ std::shared_ptr<ForceField> ForceField::clone() const
  *
  * @throws TopologyException if bond type with id not found
  */
-const BondType &ForceField::findBondTypeById(const size_t id) const
+const BondType &ForceField::findBondTypeById(const BondId id) const
 {
     auto isBondId = [id](const BondType &bondType)
     { return bondType.getId() == id; };
@@ -62,7 +62,7 @@ const BondType &ForceField::findBondTypeById(const size_t id) const
         return *bondType;
     else
         throw TopologyException(
-            std::format("Bond type with id {} not found.", id)
+            std::format("Bond type with id {} not found.", id.toString())
         );
 }
 

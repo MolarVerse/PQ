@@ -86,7 +86,7 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
     molecule.addAtom(atom2);
 
     auto bondForceField =
-        forceField::BondForceField(&molecule, &molecule, 0, 1, 0);
+        forceField::BondForceField(&molecule, &molecule, 0, 1, BondId{0});
     bondForceField.setEquilibriumBondLength(1.2);
     bondForceField.setForceConstant(3.0);
     bondForceField.setIsLinker(false);

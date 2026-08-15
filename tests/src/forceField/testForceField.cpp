@@ -64,11 +64,11 @@ class TestForceField : public TestNonCoulombPotentialFF
 TEST_F(TestForceField, findBondTypeById)
 {
     auto       forceField = forceField::ForceField();
-    const auto bondType   = forceField::BondType(0, 1.0, 1.0);
+    const auto bondType   = forceField::BondType(BondId{0}, 1.0, 1.0);
 
     forceField.addBondType(bondType);
 
-    EXPECT_EQ(forceField.findBondTypeById(0), bondType);
+    EXPECT_EQ(forceField.findBondTypeById(BondId{0}), bondType);
 }
 
 /**
@@ -80,7 +80,7 @@ TEST_F(TestForceField, findBondTypeById_notFoundError)
     auto forceField = forceField::ForceField();
 
     EXPECT_THROW_MSG(
-        forceField.findBondTypeById(0),
+        forceField.findBondTypeById(BondId{0}),
         customException::TopologyException,
         "Bond type with id " + std::to_string(0) + " not found."
     );
@@ -236,7 +236,7 @@ TEST_F(TestForceField, calculateBondedInteractions)
     molecule.addAtom(atom4);
 
     auto bondForceField =
-        forceField::BondForceField(&molecule, &molecule, 0, 1, 0);
+        forceField::BondForceField(&molecule, &molecule, 0, 1, BondId{0});
     auto angleForceField = forceField::AngleForceField(
         {&molecule, &molecule, &molecule},
         {0, 1, 2},

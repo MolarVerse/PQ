@@ -43,16 +43,11 @@ TEST_F(TestParameterFileSection, processSectionBonds)
     std::vector<std::string>          lineElements = {"0", "1.22", "234.3"};
     input::parameterFile::BondSection bondSection;
     bondSection.processSection(lineElements, *_engine);
-    EXPECT_EQ(_engine->getForceField()->getBondTypes().size(), 1);
-    EXPECT_EQ(_engine->getForceField()->getBondTypes()[0].getId(), 0);
-    EXPECT_EQ(
-        _engine->getForceField()->getBondTypes()[0].getEquilibriumBondLength(),
-        1.22
-    );
-    EXPECT_EQ(
-        _engine->getForceField()->getBondTypes()[0].getForceConstant(),
-        234.3
-    );
+    const auto &bondTypes = _engine->getForceField()->getBondTypes();
+    EXPECT_EQ(bondTypes.size(), 1);
+    EXPECT_EQ(bondTypes[0].getId(), BondId{0});
+    EXPECT_EQ(bondTypes[0].getEquilibriumBondLength(), 1.22);
+    EXPECT_EQ(bondTypes[0].getForceConstant(), 234.3);
 
     lineElements = {"1", "2", "1.0", "0"};
     EXPECT_THROW(

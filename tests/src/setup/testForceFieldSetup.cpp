@@ -53,18 +53,18 @@ TEST_F(TestSetup, forceFieldSetup_setupBonds)
     auto *molecule2Ptr = &_engine->getSimulationBox().getMolecule(1);
 
     auto bond1 =
-        forceField::BondForceField(molecule1Ptr, molecule2Ptr, 0, 1, 0);
+        forceField::BondForceField(molecule1Ptr, molecule2Ptr, 0, 1, BondId{0});
     auto bond2 =
-        forceField::BondForceField(molecule1Ptr, molecule1Ptr, 0, 1, 1);
+        forceField::BondForceField(molecule1Ptr, molecule1Ptr, 0, 1, BondId{1});
     auto bond3 =
-        forceField::BondForceField(molecule1Ptr, molecule2Ptr, 0, 1, 0);
+        forceField::BondForceField(molecule1Ptr, molecule2Ptr, 0, 1, BondId{0});
 
     _engine->getForceField()->addBond(bond1);
     _engine->getForceField()->addBond(bond2);
     _engine->getForceField()->addBond(bond3);
 
-    auto bondType1 = forceField::BondType(0, 1.0, 1.0);
-    auto bondType2 = forceField::BondType(1, 2.0, 2.0);
+    auto bondType1 = forceField::BondType(BondId{0}, 1.0, 1.0);
+    auto bondType2 = forceField::BondType(BondId{1}, 2.0, 2.0);
 
     _engine->getForceField()->addBondType(bondType1);
     _engine->getForceField()->addBondType(bondType2);
@@ -72,26 +72,19 @@ TEST_F(TestSetup, forceFieldSetup_setupBonds)
     auto setup = setup::ForceFieldSetup(*_engine);
     setup.setupBonds();
 
-    EXPECT_EQ(_engine->getForceField()->getBonds()[0].getType(), 0);
-    EXPECT_EQ(
-        _engine->getForceField()->getBonds()[0].getEquilibriumBondLength(),
-        1.0
-    );
-    EXPECT_EQ(_engine->getForceField()->getBonds()[0].getForceConstant(), 1.0);
+    const auto &bonds = _engine->getForceField()->getBonds();
 
-    EXPECT_EQ(_engine->getForceField()->getBonds()[1].getType(), 1);
-    EXPECT_EQ(
-        _engine->getForceField()->getBonds()[1].getEquilibriumBondLength(),
-        2.0
-    );
-    EXPECT_EQ(_engine->getForceField()->getBonds()[1].getForceConstant(), 2.0);
+    EXPECT_EQ(bonds[0].getType(), BondId{0});
+    EXPECT_EQ(bonds[0].getEquilibriumBondLength(), 1.0);
+    EXPECT_EQ(bonds[0].getForceConstant(), 1.0);
 
-    EXPECT_EQ(_engine->getForceField()->getBonds()[2].getType(), 0);
-    EXPECT_EQ(
-        _engine->getForceField()->getBonds()[2].getEquilibriumBondLength(),
-        1.0
-    );
-    EXPECT_EQ(_engine->getForceField()->getBonds()[2].getForceConstant(), 1.0);
+    EXPECT_EQ(bonds[1].getType(), BondId{1});
+    EXPECT_EQ(bonds[1].getEquilibriumBondLength(), 2.0);
+    EXPECT_EQ(bonds[1].getForceConstant(), 2.0);
+
+    EXPECT_EQ(bonds[2].getType(), BondId{0});
+    EXPECT_EQ(bonds[2].getEquilibriumBondLength(), 1.0);
+    EXPECT_EQ(bonds[2].getForceConstant(), 1.0);
 
     EXPECT_EQ(_engine->getForceField()->getBondTypes().size(), 0);
 }
@@ -345,7 +338,8 @@ TEST_F(TestSetup, forceFieldSetup_setupForceField)
     _engine->getSimulationBox().addMolecule(molecule1);
     auto *molecule1Ptr = &_engine->getSimulationBox().getMolecule(0);
 
-    auto bond = forceField::BondForceField(molecule1Ptr, molecule1Ptr, 0, 1, 0);
+    auto bond =
+        forceField::BondForceField(molecule1Ptr, molecule1Ptr, 0, 1, BondId{0});
     auto angle = forceField::AngleForceField(
         {molecule1Ptr, molecule1Ptr, molecule1Ptr},
         {0, 1, 2},
@@ -367,7 +361,7 @@ TEST_F(TestSetup, forceFieldSetup_setupForceField)
     _engine->getForceField()->addDihedral(dihedral);
     _engine->getForceField()->addImproperDihedral(improperDihedral);
 
-    auto bondType             = forceField::BondType(0, 1.0, 2.0);
+    auto bondType             = forceField::BondType(BondId{0}, 1.0, 2.0);
     auto angleType            = forceField::AngleType(0, 2.0, 3.0);
     auto dihedralType         = forceField::DihedralType(0, 3.0, 4.0, 5.0);
     auto improperDihedralType = forceField::DihedralType(0, 4.0, 5.0, 6.0);
@@ -379,12 +373,11 @@ TEST_F(TestSetup, forceFieldSetup_setupForceField)
 
     setup::setupForceField(*_engine);
 
-    EXPECT_EQ(_engine->getForceField()->getBonds()[0].getType(), 0);
-    EXPECT_EQ(
-        _engine->getForceField()->getBonds()[0].getEquilibriumBondLength(),
-        1.0
-    );
-    EXPECT_EQ(_engine->getForceField()->getBonds()[0].getForceConstant(), 2.0);
+    const auto &bonds = _engine->getForceField()->getBonds();
+
+    EXPECT_EQ(bonds[0].getType(), BondId{0});
+    EXPECT_EQ(bonds[0].getEquilibriumBondLength(), 1.0);
+    EXPECT_EQ(bonds[0].getForceConstant(), 2.0);
 
     EXPECT_EQ(_engine->getForceField()->getAngles()[0].getType(), 0);
     EXPECT_EQ(
@@ -431,7 +424,8 @@ TEST_F(TestSetup, forceFieldSetup_setupForceField_doNothing)
     _engine->getSimulationBox().addMolecule(molecule1);
     auto *molecule1Ptr = &_engine->getSimulationBox().getMolecule(0);
 
-    auto bond = forceField::BondForceField(molecule1Ptr, molecule1Ptr, 0, 1, 0);
+    auto bond =
+        forceField::BondForceField(molecule1Ptr, molecule1Ptr, 0, 1, BondId{0});
     auto angle = forceField::AngleForceField(
         {molecule1Ptr, molecule1Ptr, molecule1Ptr},
         {0, 1, 2},
@@ -453,7 +447,7 @@ TEST_F(TestSetup, forceFieldSetup_setupForceField_doNothing)
     _engine->getForceField()->addDihedral(dihedral);
     _engine->getForceField()->addImproperDihedral(improperDihedral);
 
-    auto bondType             = forceField::BondType(0, 1.0, 2.0);
+    auto bondType             = forceField::BondType(BondId{0}, 1.0, 2.0);
     auto angleType            = forceField::AngleType(0, 2.0, 3.0);
     auto dihedralType         = forceField::DihedralType(0, 3.0, 4.0, 5.0);
     auto improperDihedralType = forceField::DihedralType(0, 4.0, 5.0, 6.0);

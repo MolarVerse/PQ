@@ -59,7 +59,8 @@ int main()
     settings::PotentialSettings::setScale14Coulomb(0.75);
     settings::PotentialSettings::setScale14VanDerWaals(0.5);
 
-    auto bond = forceField::BondForceField(&molecule, &molecule, 0, 1, 0);
+    auto bond =
+        forceField::BondForceField(&molecule, &molecule, 0, 1, BondId{0});
     bond.setEquilibriumBondLength(1.2);
     bond.setForceConstant(3.0);
 

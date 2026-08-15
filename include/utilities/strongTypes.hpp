@@ -10,10 +10,18 @@ using StrongSizeT = mstd::StrongType<
     Tag,
     mstd::StrongTypeTrait::ORDERED | mstd::StrongTypeTrait::HASHABLE>;
 
-struct AtomNumberTag
-{
-};
-
+// clang-format off
+struct AtomNumberTag{};
 using AtomNumber = StrongSizeT<struct AtomNumberTag>;
+// clang-format on
+
+struct BondIdTag
+{
+    static std::string toString(const size_t &value)
+    {
+        return std::format("BondId({})", value);
+    }
+};
+using BondId = StrongSizeT<struct BondIdTag>;
 
 #endif   // _STRONG_TYPES_HPP_
