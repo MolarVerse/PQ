@@ -50,6 +50,8 @@ Checks:
   misc-*,
   modernize*,
   mpi*,
+  objc*,
+  openmp*,
   -cppcoreguidelines-owning-memory,
   -cppcoreguidelines-pro-type-member-init,
   -cppcoreguidelines-pro-type-union-access,
@@ -133,17 +135,6 @@ CheckOptions:
 ...
 
 ### TO BE INCLUDED IN THE FUTURE
-  # objc-assert-equals,
-  # objc-avoid-nserror-init,
-  # objc-dealloc-in-category,
-  # objc-forbidden-subclassing,
-  # objc-missing-hash,
-  # objc-nsdate-formatter,
-  # objc-nsinvocation-argument-lifetime,
-  # objc-property-declaration,
-  # objc-super-self,
-  # openmp-exception-escape,
-  # openmp-use-default-none,
   # performance-avoid-endl,
   # performance-enum-size,
   # performance-faster-string-find,
