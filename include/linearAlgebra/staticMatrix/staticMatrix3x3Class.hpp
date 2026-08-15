@@ -56,9 +56,9 @@ namespace linearAlgebra
         explicit StaticMatrix3x3(const Vector3D<Vector3D<T>> &data);
         explicit StaticMatrix3x3(const Vector3D<Vector3D<T>> &&data);
         explicit StaticMatrix3x3(
-            const Vector3D<T> &,
-            const Vector3D<T> &,
-            const Vector3D<T> &
+            const Vector3D<T> &row1,
+            const Vector3D<T> &row2,
+            const Vector3D<T> &row3
         );
 
         // NOLINTBEGIN(google-explicit-constructor, hicpp-explicit-conversions)
@@ -70,8 +70,8 @@ namespace linearAlgebra
         const Vector3D<T> &operator[](const size_t index) const;
 
         friend bool operator==(
-            const StaticMatrix3x3 &,
-            const StaticMatrix3x3 &
+            const StaticMatrix3x3 &lhs,
+            const StaticMatrix3x3 &rhs
         ) = default;
 
         StaticMatrix3x3 operator-();

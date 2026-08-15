@@ -75,7 +75,7 @@ void TypesSection::process(
  */
 void TypesSection::processSection(
     std::vector<std::string> &lineElements,
-    Engine &
+    Engine & /*engine*/
 )
 {
     // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)

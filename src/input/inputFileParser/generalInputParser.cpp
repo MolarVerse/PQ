@@ -86,8 +86,8 @@ GeneralInputParser::GeneralInputParser(Engine &engine) : InputFileParser(engine)
  * after engine is generated
  */
 void GeneralInputParser::parseJobType(
-    const std::vector<std::string> &,
-    const size_t
+    const std::vector<std::string> & /*lineElements*/,
+    const size_t /*lineNumber*/
 )
 {
 }

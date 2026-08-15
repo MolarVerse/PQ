@@ -43,7 +43,7 @@ void InterWaterStrategyBruteForce::calculate(
     simulationBox::SimulationBox                       &simBox,
     physicalData::PhysicalData                         &physicalData,
     const std::shared_ptr<potential::CoulombPotential> &coulombPotential,
-    CellList &
+    CellList & /*cellList*/
 )
 {
     const auto rCut = potential::CoulombPotential::getCoulombRadiusCutOff();
@@ -120,11 +120,11 @@ void InterWaterStrategyBruteForce::calculate(
  * @param coulombPotential Coulomb potential evaluator.
  */
 void InterWaterStrategyBruteForce::calculateCoreToOuterForces(
-    const InterWaterState &,
+    const InterWaterState & /*state*/,
     simulationBox::SimulationBox                       &simBox,
     PhysicalData                                       &physicalData,
     const std::shared_ptr<potential::CoulombPotential> &coulombPotential,
-    CellList &
+    CellList & /*cellList*/
 )
 {
     const auto rCut = potential::CoulombPotential::getCoulombRadiusCutOff();
@@ -196,7 +196,7 @@ void InterWaterStrategyBruteForce::calculateLayerToOuterForces(
     simulationBox::SimulationBox                       &simBox,
     PhysicalData                                       &physicalData,
     const std::shared_ptr<potential::CoulombPotential> &coulombPotential,
-    CellList &
+    CellList & /*cellList*/
 )
 {
     const auto rCut = potential::CoulombPotential::getCoulombRadiusCutOff();
@@ -299,7 +299,7 @@ void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
     simulationBox::SimulationBox                       &simBox,
     PhysicalData                                       &physicalData,
     const std::shared_ptr<potential::CoulombPotential> &coulombPotential,
-    CellList &
+    CellList & /*cellList*/
 )
 {
     const auto rCut = potential::CoulombPotential::getCoulombRadiusCutOff();

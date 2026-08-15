@@ -63,7 +63,7 @@ std::string NonCoulombicsSection::keyword() { return "noncoulombics"; }
  */
 void NonCoulombicsSection::processHeader(
     std::vector<std::string> &lineElements,
-    Engine &
+    Engine & /*engine*/
 )
 {
     using enum NonCoulombType;

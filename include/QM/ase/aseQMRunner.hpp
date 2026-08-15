@@ -50,9 +50,9 @@ namespace QM
         ~AseQMRunner() override;
 
         void run(
-            simulationBox::SimulationBox &,
-            physicalData::PhysicalData &,
-            simulationBox::Periodicity per
+            simulationBox::SimulationBox &simBox,
+            physicalData::PhysicalData   &physData,
+            simulationBox::Periodicity    periodicity
         ) override;
         void buildAseAtoms(const simulationBox::SimulationBox &);
         void execute();

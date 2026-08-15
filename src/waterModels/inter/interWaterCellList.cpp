@@ -220,7 +220,7 @@ void InterWaterStrategyCellList::calculate(
  * @param cellList Cell list structure used for neighbor searching.
  */
 void InterWaterStrategyCellList::calculateCoreToOuterForces(
-    const InterWaterState &,
+    const InterWaterState & /*state*/,
     simulationBox::SimulationBox                       &simBox,
     PhysicalData                                       &physicalData,
     const std::shared_ptr<potential::CoulombPotential> &coulombPotential,

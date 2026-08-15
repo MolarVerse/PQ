@@ -141,7 +141,7 @@ namespace
     [[nodiscard]]
     pybind11::array_t<bool> asePBC(simulationBox::Periodicity periodicity)
     {
-        std::array<bool, 3> pbc_array;
+        std::array<bool, 3> pbc_array{true, true, true};
 
         switch (periodicity)
         {
@@ -153,7 +153,6 @@ namespace
             case XZ: pbc_array = {true, false, true}; break;
             case YZ: pbc_array = {false, true, true}; break;
             case XYZ: pbc_array = {true, true, true}; break;
-            default: pbc_array = {false, false, false}; break;
         }
 
         try

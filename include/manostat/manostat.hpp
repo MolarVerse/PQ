@@ -62,6 +62,7 @@ namespace manostat
             const simulationBox::SimulationBox &,
             physicalData::PhysicalData &
         );
+
         virtual void applyManostat(
             simulationBox::SimulationBox &,
             physicalData::PhysicalData &

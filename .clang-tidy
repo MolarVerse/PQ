@@ -22,6 +22,7 @@
 # fuchsia-multiple-inheritance: needs a huge rework of the engine code base, but should be possible to fix it for all classes
 # google-build-using-namespace: definitely needed but needs a rework of the code base, maybe with a custom clang-tidy checker
 # google-readability-todo: needs to be discussed on how to generalize TODO handling
+# hicpp-member-init: while checking i have seen that there are some parts that really need to be checked (not that straightforward to fix)
 ---
 Checks:          
   '
@@ -64,6 +65,7 @@ Checks:
   -fuchsia-multiple-inheritance,
   -google-build-using-namespace,
   -google-readability-todo,
+  -hicpp-member-init,
   -altera-struct-pack-align,
   -altera-unroll-loops,
   -boost-use-ranges,

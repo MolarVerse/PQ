@@ -115,7 +115,7 @@ std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(
     const size_t atomIdx1,
     const int    atomIndex2AsInt,
     const Vec3D &box,
-    PhysicalData &,
+    PhysicalData & /*physicalData*/,
     const CoulombPotential *coulPot,
     NonCoulombPotential    *nonCoulPot
 ) const

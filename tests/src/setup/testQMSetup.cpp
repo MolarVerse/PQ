@@ -52,8 +52,10 @@ namespace
     class DefaultExternalQMRunner final : public QM::ExternalQMRunner
     {
        public:
-        void execute(simulationBox::SimulationBox &) override {}
-        void writeCoordsFile(simulationBox::SimulationBox &) override {}
+        void execute(simulationBox::SimulationBox & /*simBox*/) override {}
+        void writeCoordsFile(simulationBox::SimulationBox & /*simBox*/) override
+        {
+        }
     };
 
     void setBuildCompatibleQMScript()

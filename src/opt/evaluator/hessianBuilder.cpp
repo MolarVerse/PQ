@@ -275,7 +275,7 @@ HessianMatrix FivePointForceDifferenceHessianBuilder::build(
  */
 HessianMatrix AnalyticHessianBuilder::build(
     Evaluator &evaluator,
-    simulationBox::SimulationBox &
+    simulationBox::SimulationBox & /*simulationBox*/
 ) const
 {
     if (!evaluator.supportsAnalyticHessian())

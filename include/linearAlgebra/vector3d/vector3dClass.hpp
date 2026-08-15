@@ -85,35 +85,35 @@ namespace linearAlgebra
          ********************/
 
         // = operators
-        Vector3D &operator=(Vector3D<T> &&) noexcept;
-        Vector3D &operator=(const Vector3D<T> &);
+        Vector3D &operator=(Vector3D<T> &&vec) noexcept;
+        Vector3D &operator=(const Vector3D<T> &vec);
 
         // += operators
-        void operator+=(const Vector3D<T> &)
+        void operator+=(const Vector3D<T> &vec)
         requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>;
 
-        Vector3D &operator+=(const T)
+        Vector3D &operator+=(const T t)
         requires pq::Arithmetic<T>;
 
         // -= operators
-        Vector3D &operator-=(const Vector3D<T> &)
+        Vector3D &operator-=(const Vector3D<T> &vec)
         requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>;
 
-        Vector3D &operator-=(const T)
+        Vector3D &operator-=(const T t)
         requires pq::Arithmetic<T>;
 
         // *= operators
-        Vector3D &operator*=(const Vector3D<T> &)
+        Vector3D &operator*=(const Vector3D<T> &vec)
         requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>;
 
-        Vector3D &operator*=(const T)
+        Vector3D &operator*=(const T t)
         requires pq::Arithmetic<T>;
 
         // /= operators
-        Vector3D &operator/=(const Vector3D<T> &)
+        Vector3D &operator/=(const Vector3D<T> &vec)
         requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>;
 
-        Vector3D &operator/=(const T)
+        Vector3D &operator/=(const T t)
         requires pq::Arithmetic<T>;
 
         /**********************

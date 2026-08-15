@@ -52,7 +52,7 @@ PotentialBruteForce::~PotentialBruteForce() = default;
 void PotentialBruteForce::calculateForces(
     SimulationBox &simBox,
     PhysicalData  &physicalData,
-    CellList &
+    CellList & /*cellList*/
 )
 {
     auto _ = scoped("InterNonBonded");
@@ -121,7 +121,7 @@ void PotentialBruteForce::calculateForces(
 void PotentialBruteForce::calculateCoreToOuterForces(
     SimulationBox &simBox,
     PhysicalData  &physicalData,
-    CellList &
+    CellList & /*cellList*/
 )
 {
     auto _ = scoped("InterNonBondedCoreToOuter");
@@ -167,7 +167,7 @@ void PotentialBruteForce::calculateCoreToOuterForces(
 void PotentialBruteForce::calculateLayerToOuterForces(
     SimulationBox &simBox,
     PhysicalData  &physicalData,
-    CellList &
+    CellList & /*cellList*/
 )
 {
     auto _ = scoped("InterNonBondedLayerToOuter");
@@ -242,7 +242,7 @@ void PotentialBruteForce::calculateOuterToOuterForces(
 void PotentialBruteForce::calculateHotspotSmoothingMMForces(
     SimulationBox &simBox,
     PhysicalData  &physicalData,
-    CellList &
+    CellList & /*cellList*/
 )
 {
     auto _ = scoped("InterNonBondedSmoothingMM");

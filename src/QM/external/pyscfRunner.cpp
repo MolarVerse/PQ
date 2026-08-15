@@ -67,7 +67,7 @@ void PySCFRunner::writeCoordsFile(SimulationBox &box)
  * @brief executes the qm script of the external program
  *
  */
-void PySCFRunner::execute(SimulationBox &)
+void PySCFRunner::execute(SimulationBox & /*simBox*/)
 {
     const auto scriptFileName = resolveScriptPath(QMSettings::getQMScript());
 

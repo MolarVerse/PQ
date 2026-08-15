@@ -43,7 +43,7 @@ using namespace settings;
  */
 void NoseHooverSection::process(
     std::vector<std::string> &lineElements,
-    Engine &
+    Engine & /*engine*/
 )
 {
     if (4 != lineElements.size())

@@ -43,8 +43,8 @@ namespace waterModel
     {
        public:
         void calculate(
-            simulationBox::SimulationBox &,
-            physicalData::PhysicalData &
+            simulationBox::SimulationBox &simBox,
+            physicalData::PhysicalData   &physData
         ) final;
 
         // clang-format off

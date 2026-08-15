@@ -240,7 +240,7 @@ void DFTBPlusRunner::readStressTensor(Box &box, PhysicalData &data)
         );
     }
 
-    StaticMatrix3x3<double> stress;
+    StaticMatrix3x3<double> stress{0.0};
 
     if (!(stressFile >> stress[0][0] >> stress[0][1] >> stress[0][2] >>
           stress[1][0] >> stress[1][1] >> stress[1][2] >> stress[2][0] >>
