@@ -32,6 +32,7 @@
 #include "exceptions.hpp"          // for CellListException
 #include "molecule.hpp"            // for Molecule
 #include "potentialSettings.hpp"   // for PotentialSettings
+#include "settings.hpp"            // for Settings
 #include "simulationBox.hpp"       // for SimulationBox
 
 using namespace simulationBox;
@@ -219,7 +220,7 @@ void CellList::addNeighbouringCellPointers(Cell &cell)
  */
 void CellList::updateCellList(SimulationBox &simulationBox)
 {
-    if (!_activated)
+    if (!settings::Settings::isCellListActivated())
         return;
 
     auto _ = scoped("Update");
@@ -361,26 +362,6 @@ void CellList::addCell(const Cell &cell) { _cells.push_back(cell); }
  * standard activate methods *
  *                           *
  *****************************/
-
-/**
- * @brief activate cell list
- *
- */
-void CellList::activate() { _activated = true; }
-
-/**
- * @brief deactivate cell list
- *
- */
-void CellList::deactivate() { _activated = false; }
-
-/**
- * @brief check if cell list is active
- *
- * @return true
- * @return false
- */
-bool CellList::isActive() const { return _activated; }
 
 /***************************
  *                         *

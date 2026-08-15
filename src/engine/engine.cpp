@@ -125,14 +125,6 @@ bool Engine::isGuffActivated() const
 }
 
 /**
- * @brief checks if the cell list is activated
- *
- * @return true
- * @return false
- */
-bool Engine::isCellListActivated() const { return _cellList->isActive(); }
-
-/**
  * @brief checks if any constraints are activated
  *
  * @return true

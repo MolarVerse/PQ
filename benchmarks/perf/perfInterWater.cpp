@@ -141,11 +141,12 @@ int main()
 
     auto coulombPot = std::make_shared<CoulombShiftedPotential>(CUTOFF);
 
+    settings::Settings::activateCellList();
+
     CellList cellList;
     cellList.setNumberOfCells(3);
     cellList.resizeCells();
     cellList.setup(simBox);
-    cellList.activate();
     cellList.updateCellList(simBox);
 
     auto physicalData = physicalData::PhysicalData();

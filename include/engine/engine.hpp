@@ -92,7 +92,6 @@ namespace engine
 
         [[nodiscard]] bool isForceFieldNonCoulombicsActivated() const;
         [[nodiscard]] bool isGuffActivated() const;
-        [[nodiscard]] bool isCellListActivated() const;
         [[nodiscard]] bool isConstraintsActivated() const;
         [[nodiscard]] bool isIntraNonBondedActivated() const;
 

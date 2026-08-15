@@ -100,10 +100,17 @@ namespace settings
         static inline size_t _dimensionality = defaults::DIMENSIONALITY_DEFAULT;
         // clang-format on
 
-        static inline VirialType     _virial     = VirialType::MOLECULAR;
-        static inline IntegratorType _integrator = IntegratorType::NONE;
+        static inline VirialType _virial = VirialType::MOLECULAR;
 
-        static inline bool _isCellListActivated = false;
+        // setting velocity verlet as default integrator type for backward
+        // compatibility until 0.7.0 it was not necessary to specify the
+        // integrator type in the input file, so we set it to velocity verlet by
+        // default
+        static inline IntegratorType _integrator =
+            IntegratorType::VELOCITY_VERLET;
+
+        static inline bool _isCellListActivated =
+            defaults::CELL_LIST_IS_ACTIVE_DEFAULT;
 
        public:
         Settings()  = default;
