@@ -17,6 +17,7 @@ target_link_libraries(interWater
     physicalData
     settings
     simulationBox
+    config_headers
 )
 
 install(TARGETS interWater

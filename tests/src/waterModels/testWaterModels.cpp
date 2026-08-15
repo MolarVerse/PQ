@@ -46,6 +46,7 @@
 #include "potentialSettings.hpp"
 #include "settings.hpp"
 #include "simulationBox.hpp"
+#include "strongTypes.hpp"
 #include "waterModelSettings.hpp"
 
 using linearAlgebra::Vec3D;
@@ -98,7 +99,7 @@ namespace
         const auto h1     = std::make_shared<Atom>();
         const auto h2     = std::make_shared<Atom>();
 
-        oxygen->setAtomicNumber(8);
+        oxygen->setAtomicNumber(AtomNumber{8});
         oxygen->setPartialCharge(-0.82);
         oxygen->setQMCharge(-0.9);
         oxygen->setPosition(origin);
@@ -106,7 +107,7 @@ namespace
         oxygen->setInternalGlobalVDWType(0);
         oxygen->setForceToZero();
 
-        h1->setAtomicNumber(1);
+        h1->setAtomicNumber(AtomNumber{1});
         h1->setPartialCharge(0.41);
         h1->setQMCharge(0.45);
         h1->setPosition(origin + Vec3D{geometry.oh1, 0.0, 0.0});
@@ -114,7 +115,7 @@ namespace
         h1->setInternalGlobalVDWType(0);
         h1->setForceToZero();
 
-        h2->setAtomicNumber(1);
+        h2->setAtomicNumber(AtomNumber{1});
         h2->setPartialCharge(0.41);
         h2->setQMCharge(0.45);
         h2->setPosition(
@@ -787,5 +788,8 @@ TEST(SimulationBoxViews, ConstAndMutableWaterViewsFilterCorrectly)
     size_t     water     = 0;
     for ([[maybe_unused]] const auto &molecule : waterView) ++water;
     EXPECT_EQ(water, 1);
-    EXPECT_EQ(simBox.getMolecule(0).getAtom(0).getAtomicNumber(), 8);
+    EXPECT_EQ(
+        simBox.getMolecule(0).getAtom(0).getAtomicNumber(),
+        AtomNumber{8}
+    );
 }

@@ -27,6 +27,8 @@
 #include <map>
 #include <string>
 
+#include "strongTypes.hpp"
+
 namespace constants
 {
     /**
@@ -43,29 +45,62 @@ namespace constants
      * sup with atomic number 1000000
      * dum with atomic number 1
      */
-    const std::map<std::string, int> atomNumberMap = {
-        {"h", 1},   {"d", 1},    {"t", 1},      {"he", 2},        {"li", 3},
-        {"be", 4},  {"b", 5},    {"c", 6},      {"n", 7},         {"o", 8},
-        {"f", 9},   {"ne", 10},  {"na", 11},    {"mg", 12},       {"al", 13},
-        {"si", 14}, {"p", 15},   {"s", 16},     {"cl", 17},       {"ar", 18},
-        {"k", 19},  {"ca", 20},  {"sc", 21},    {"ti", 22},       {"v", 23},
-        {"cr", 24}, {"mn", 25},  {"fe", 26},    {"co", 27},       {"ni", 28},
-        {"cu", 29}, {"zn", 30},  {"ga", 31},    {"ge", 32},       {"as", 33},
-        {"se", 34}, {"br", 35},  {"kr", 36},    {"rb", 37},       {"sr", 38},
-        {"y", 39},  {"zr", 40},  {"nb", 41},    {"mo", 42},       {"tc", 43},
-        {"ru", 44}, {"rh", 45},  {"pd", 46},    {"ag", 47},       {"cd", 48},
-        {"in", 49}, {"sn", 50},  {"sb", 51},    {"te", 52},       {"i", 53},
-        {"xe", 54}, {"cs", 55},  {"ba", 56},    {"la", 57},       {"ce", 58},
-        {"pr", 59}, {"nd", 60},  {"pm", 61},    {"sm", 62},       {"eu", 63},
-        {"gd", 64}, {"tb", 65},  {"dy", 66},    {"ho", 67},       {"er", 68},
-        {"tm", 69}, {"yb", 70},  {"lu", 71},    {"hf", 72},       {"ta", 73},
-        {"w", 74},  {"re", 75},  {"os", 76},    {"ir", 77},       {"pt", 78},
-        {"au", 79}, {"hg", 80},  {"tl", 81},    {"pb", 82},       {"bi", 83},
-        {"po", 84}, {"at", 85},  {"rn", 86},    {"fr", 87},       {"ra", 88},
-        {"ac", 89}, {"th", 90},  {"pa", 91},    {"u", 92},        {"np", 93},
-        {"pu", 94}, {"am", 95},  {"cm", 96},    {"bk", 97},       {"cf", 98},
-        {"es", 99}, {"fm", 100}, {"md", 101},   {"no", 102},      {"lr", 103},
-        {"q", 999}, {"x", 999},  {"cav", 1000}, {"sup", 1000000}, {"dum", 1}
+    const std::map<std::string, AtomNumber> atomNumberMap = {
+        {"h", AtomNumber{1}},         {"d", AtomNumber{1}},
+        {"t", AtomNumber{1}},         {"he", AtomNumber{2}},
+        {"li", AtomNumber{3}},        {"be", AtomNumber{4}},
+        {"b", AtomNumber{5}},         {"c", AtomNumber{6}},
+        {"n", AtomNumber{7}},         {"o", AtomNumber{8}},
+        {"f", AtomNumber{9}},         {"ne", AtomNumber{10}},
+        {"na", AtomNumber{11}},       {"mg", AtomNumber{12}},
+        {"al", AtomNumber{13}},       {"si", AtomNumber{14}},
+        {"p", AtomNumber{15}},        {"s", AtomNumber{16}},
+        {"cl", AtomNumber{17}},       {"ar", AtomNumber{18}},
+        {"k", AtomNumber{19}},        {"ca", AtomNumber{20}},
+        {"sc", AtomNumber{21}},       {"ti", AtomNumber{22}},
+        {"v", AtomNumber{23}},        {"cr", AtomNumber{24}},
+        {"mn", AtomNumber{25}},       {"fe", AtomNumber{26}},
+        {"co", AtomNumber{27}},       {"ni", AtomNumber{28}},
+        {"cu", AtomNumber{29}},       {"zn", AtomNumber{30}},
+        {"ga", AtomNumber{31}},       {"ge", AtomNumber{32}},
+        {"as", AtomNumber{33}},       {"se", AtomNumber{34}},
+        {"br", AtomNumber{35}},       {"kr", AtomNumber{36}},
+        {"rb", AtomNumber{37}},       {"sr", AtomNumber{38}},
+        {"y", AtomNumber{39}},        {"zr", AtomNumber{40}},
+        {"nb", AtomNumber{41}},       {"mo", AtomNumber{42}},
+        {"tc", AtomNumber{43}},       {"ru", AtomNumber{44}},
+        {"rh", AtomNumber{45}},       {"pd", AtomNumber{46}},
+        {"ag", AtomNumber{47}},       {"cd", AtomNumber{48}},
+        {"in", AtomNumber{49}},       {"sn", AtomNumber{50}},
+        {"sb", AtomNumber{51}},       {"te", AtomNumber{52}},
+        {"i", AtomNumber{53}},        {"xe", AtomNumber{54}},
+        {"cs", AtomNumber{55}},       {"ba", AtomNumber{56}},
+        {"la", AtomNumber{57}},       {"ce", AtomNumber{58}},
+        {"pr", AtomNumber{59}},       {"nd", AtomNumber{60}},
+        {"pm", AtomNumber{61}},       {"sm", AtomNumber{62}},
+        {"eu", AtomNumber{63}},       {"gd", AtomNumber{64}},
+        {"tb", AtomNumber{65}},       {"dy", AtomNumber{66}},
+        {"ho", AtomNumber{67}},       {"er", AtomNumber{68}},
+        {"tm", AtomNumber{69}},       {"yb", AtomNumber{70}},
+        {"lu", AtomNumber{71}},       {"hf", AtomNumber{72}},
+        {"ta", AtomNumber{73}},       {"w", AtomNumber{74}},
+        {"re", AtomNumber{75}},       {"os", AtomNumber{76}},
+        {"ir", AtomNumber{77}},       {"pt", AtomNumber{78}},
+        {"au", AtomNumber{79}},       {"hg", AtomNumber{80}},
+        {"tl", AtomNumber{81}},       {"pb", AtomNumber{82}},
+        {"bi", AtomNumber{83}},       {"po", AtomNumber{84}},
+        {"at", AtomNumber{85}},       {"rn", AtomNumber{86}},
+        {"fr", AtomNumber{87}},       {"ra", AtomNumber{88}},
+        {"ac", AtomNumber{89}},       {"th", AtomNumber{90}},
+        {"pa", AtomNumber{91}},       {"u", AtomNumber{92}},
+        {"np", AtomNumber{93}},       {"pu", AtomNumber{94}},
+        {"am", AtomNumber{95}},       {"cm", AtomNumber{96}},
+        {"bk", AtomNumber{97}},       {"cf", AtomNumber{98}},
+        {"es", AtomNumber{99}},       {"fm", AtomNumber{100}},
+        {"md", AtomNumber{101}},      {"no", AtomNumber{102}},
+        {"lr", AtomNumber{103}},      {"q", AtomNumber{999}},
+        {"x", AtomNumber{999}},       {"cav", AtomNumber{1000}},
+        {"sup", AtomNumber{1000000}}, {"dum", AtomNumber{1}}
     };
 
 }   // namespace constants

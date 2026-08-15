@@ -55,8 +55,8 @@ using linearAlgebra::Vec3D;
 static constexpr long   ITERATIONS             = 50;
 static constexpr size_t WATER_TYPE             = 1;
 static constexpr double CUTOFF                 = 9.0;
-static constexpr int    HYDROGEN_ATOMIC_NUMBER = 1;
-static constexpr int    OXYGEN_ATOMIC_NUMBER   = 8;
+static constexpr auto   HYDROGEN_ATOMIC_NUMBER = AtomNumber{1};
+static constexpr auto   OXYGEN_ATOMIC_NUMBER   = AtomNumber{8};
 
 int main()
 {
@@ -82,7 +82,7 @@ int main()
     const auto makeAtom = [](const std::string_view name,
                              const Vec3D           &pos,
                              const double           charge,
-                             const int              atomicNumber)
+                             const AtomNumber       atomicNumber)
     {
         auto atom = std::make_shared<Atom>();
         atom->setName(name);

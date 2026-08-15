@@ -477,9 +477,9 @@ Vec3D Molecule::getAtomShiftForce(const size_t index) const
  * @brief returns the atomic number of the atom by index
  *
  * @param index
- * @return int
+ * @return AtomNumber
  */
-int Molecule::getAtomicNumber(const size_t index) const
+AtomNumber Molecule::getAtomicNumber(const size_t index) const
 {
     return _atoms[index]->getAtomicNumber();
 }
