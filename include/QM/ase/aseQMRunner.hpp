@@ -29,7 +29,7 @@
 namespace pybind11
 {
     class object;
-}
+}   // namespace pybind11
 
 namespace QM
 {

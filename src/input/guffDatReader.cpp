@@ -697,8 +697,7 @@ void GuffDatReader::checkPartialCharges()
         if (moleculeType1Optional == std::nullopt)
             continue;
 
-        else
-            moleculeType1 = moleculeType1Optional.value();
+        moleculeType1 = moleculeType1Optional.value();
 
         for (size_t j = 0; j < nMolTypes; ++j)
         {
@@ -715,8 +714,7 @@ void GuffDatReader::checkPartialCharges()
                 ))
                 continue;
 
-            else
-                moleculeType2 = moleculeType2Optional.value();
+            moleculeType2 = moleculeType2Optional.value();
 
             const auto nAtomTypes1 = moleculeType1.getNumberOfAtomTypes();
 

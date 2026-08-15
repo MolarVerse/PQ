@@ -29,7 +29,7 @@
 namespace simulationBox
 {
     class SimulationBox;   // forward declaration
-}
+}   // namespace simulationBox
 
 namespace virial
 {

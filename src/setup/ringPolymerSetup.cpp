@@ -129,10 +129,10 @@ void RingPolymerSetup::initializeBeads()
 {
     if (FileSettings::isRingPolymerStartFileNameSet())
     {
-        auto       &log    = _engine.getLogOutput();
-        const auto &stdOut = _engine.getStdoutOutput();
-        const auto  msg    = "Reading ring polymer restart file: ";
-        const auto &file   = FileSettings::getRingPolymerStartFileName();
+        auto             &log    = _engine.getLogOutput();
+        const auto       &stdOut = _engine.getStdoutOutput();
+        const auto *const msg    = "Reading ring polymer restart file: ";
+        const auto       &file   = FileSettings::getRingPolymerStartFileName();
 
         log.writeRead(msg, file);
         stdOut.writeRead(msg, file);

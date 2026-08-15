@@ -279,10 +279,8 @@ void SimulationBoxSetup::setAtomicNumbers()
                     "Invalid atom name \"" + keyword + "\""
                 );
             }
-            else
-            {
-                molecule.getAtom(i).setAtomicNumber(atomNumberMap.at(keyword));
-            }
+
+            molecule.getAtom(i).setAtomicNumber(atomNumberMap.at(keyword));
         }
     };
 
@@ -347,7 +345,7 @@ void SimulationBoxSetup::checkBoxSettings()
     if (!isDensitySet && !isBoxSet)
         throw UserInputException("Box dimensions and density not set");
 
-    else if (!isBoxSet)
+    if (!isBoxSet)
     {
         const auto boxDimensions = simBox.calcBoxDimFromDensity();
 

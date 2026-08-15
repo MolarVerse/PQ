@@ -183,7 +183,7 @@ namespace
         json.value("maximum", UINT32_MAX);
         json.endObject();
 
-        for (const auto name : {"temp", "start_temp", "end_temp"})
+        for (const auto *const name : {"temp", "start_temp", "end_temp"})
         {
             beginParameter(json, name, "number", "K");
             json.value("minimum", 0);
@@ -286,11 +286,13 @@ namespace
         );
 
         json.beginArray("qm_programs");
-        for (const auto program : {"dftbplus", "pyscf", "turbomole"})
+
+        for (const auto *const program : {"dftbplus", "pyscf", "turbomole"})
             json.value(program);
+
         if (withAse)
         {
-            for (const auto program :
+            for (const auto *const program :
                  {"ase_dftbplus",
                   "ase_xtb",
                   "fennol",

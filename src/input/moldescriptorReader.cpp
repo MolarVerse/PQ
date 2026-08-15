@@ -101,7 +101,7 @@ void MoldescriptorReader::read()
         if (lineElements.empty())
             continue;
 
-        else if (lineElements.size() > 1)
+        if (lineElements.size() > 1)
         {
             auto &simBox = _engine.getSimulationBox();
 
@@ -213,7 +213,7 @@ void MoldescriptorReader::processMolecule(
         if (lineElements.empty())
             continue;
 
-        else if ((3 == lineElements.size()) || (4 == lineElements.size()))
+        if ((3 == lineElements.size()) || (4 == lineElements.size()))
         {
             molecule.addAtomName(lineElements[0]);
             molecule.addExternalAtomType(stoul(lineElements[1]));

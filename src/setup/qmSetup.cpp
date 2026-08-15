@@ -194,7 +194,8 @@ void QMSetup::setupQMScript() const
                 "information please refer to the documentation."
             );
         }
-        else if (!isQMScriptEmpty)
+
+        if (!isQMScriptEmpty)
         {
             throw QMRunnerException(
                 "You have set both 'qm_script' and 'qm_script_full_path' in "
@@ -204,14 +205,12 @@ void QMSetup::setupQMScript() const
                 "documentation."
             );
         }
-        else
-        {
-            // setting script path to empty string to avoid errors
-            externalQMRunner.setScriptPath("");
 
-            // overwriting qm_script with full path
-            QMSettings::setQMScript(QMSettings::getQMScriptFullPath());
-        }
+        // setting script path to empty string to avoid errors
+        externalQMRunner.setScriptPath("");
+
+        // overwriting qm_script with full path
+        QMSettings::setQMScript(QMSettings::getQMScriptFullPath());
     }
     else if (isQMScriptEmpty && isQMScriptFullPathEmpty)
     {
@@ -281,12 +280,13 @@ void QMSetup::setupWriteInfo() const
 
     if (qmMethod == MACE)
     {
-        const auto modelType = QMSettings::getMaceModelType();
-        const auto modelSize = QMSettings::getMaceModel();
-        const auto modelPath = QMSettings::getMaceModelPath();
-        const auto fp        = Settings::getFloatingPointPybindString();
-        const auto useDisp   = QMSettings::useDispersionCorr() ? "on" : "off";
-        const auto maceMode  = QMSettings::getMaceMode();
+        const auto        modelType = QMSettings::getMaceModelType();
+        const auto        modelSize = QMSettings::getMaceModel();
+        const auto        modelPath = QMSettings::getMaceModelPath();
+        const auto        fp        = Settings::getFloatingPointPybindString();
+        const auto        maceMode  = QMSettings::getMaceMode();
+        const auto *const useDisp =
+            QMSettings::useDispersionCorr() ? "on" : "off";
 
         // clang-format off
         const auto modelTypeMsg = std::format("Model type:            {}", string(modelType));

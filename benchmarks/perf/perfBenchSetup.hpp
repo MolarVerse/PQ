@@ -42,7 +42,7 @@
 namespace potential
 {
     class NonCoulombPair;   // forward declaration
-}
+}   // namespace potential
 
 namespace benchSetup
 {

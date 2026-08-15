@@ -152,11 +152,10 @@ void ForceFieldNonCoulomb::sortNonCoulombicsPairs(
         if (pair1IntType1 < pair2IntType1)
             return true;
 
-        else if (pair1IntType1 == pair2IntType1)
+        if (pair1IntType1 == pair2IntType1)
             return pair1IntType2 < pair2IntType2;
 
-        else
-            return false;
+        return false;
     };
 
     std::ranges::sort(nonCoulPairsVec, isLess);
@@ -367,10 +366,8 @@ std::optional<std::shared_ptr<NonCoulombPair>> ForceFieldNonCoulomb::
 
         return *firstNonCoulPair;
     }
-    else
-    {
-        return std::nullopt;
-    }
+
+    return std::nullopt;
 }
 
 /**

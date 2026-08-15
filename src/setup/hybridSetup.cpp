@@ -310,7 +310,7 @@ void HybridSetup::setupWriteInfo() const
     if (jobtype == JobType::QMMM_MD)
     {
         // clang-format off
-        const auto jobtypeMsg =                 "Hybrid type:                 QM/MM";
+        const auto *const jobtypeMsg =                 "Hybrid type:                 QM/MM";
         // clang-format on
 
         logOutput.writeSetupInfo(jobtypeMsg);

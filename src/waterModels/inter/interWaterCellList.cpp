@@ -39,7 +39,7 @@ using namespace simulationBox;
 namespace
 {
     const auto oxygenAtomicNumber = atomNumberMap.at("o");
-}
+}   // namespace
 
 /**
  * @brief Evaluate intermolecular water interactions via cell list.

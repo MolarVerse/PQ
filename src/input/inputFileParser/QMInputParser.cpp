@@ -339,9 +339,10 @@ void QMInputParser::parseMaceModel(
     using enum MaceModel;
     checkCommand(lineElements, lineNumber);
 
-    auto      &logOutput = _engine.getLogOutput();
-    auto      &stdOut    = _engine.getStdoutOutput();
-    const auto modelSizeWarning =
+    auto &logOutput = _engine.getLogOutput();
+    auto &stdOut    = _engine.getStdoutOutput();
+
+    const auto *const modelSizeWarning =
         "The keyword \"mace_model_size\" is deprecated and has been renamed to "
         "\"mace_model\". It will be removed in a future release.";
 

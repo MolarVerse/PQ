@@ -188,7 +188,8 @@ void HybridConfigurator::assignHybridZones(simulationBox::SimulationBox& simBox)
             setZone(mol, CORE);
             continue;
         }
-        else if (mol.isForcedLayer())
+
+        if (mol.isForcedLayer())
         {
             setZone(mol, LAYER);
             continue;

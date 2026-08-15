@@ -154,44 +154,38 @@ size_t IntraNonBondedReader::findMoleculeType(const std::string &id) const
     auto &simBox            = _engine.getSimulationBox();
     auto  molTypeFromString = simBox.findMoleculeTypeByString(id);
 
-    if (molTypeFromString == std::nullopt)
-    {
-        auto molTypeFromSizeT = size_t{};
-
-        try
-        {
-            molTypeFromSizeT = stoul(id);
-        }
-        catch (...)
-        {
-            throw IntraNonBondedException(format(
-                "ERROR: could not find molecule type '{}' in line {} in file "
-                "'{}'",
-                id,
-                _lineNumber,
-                _fileName
-            ));
-        }
-
-        const bool molTypeExists = simBox.moleculeTypeExists(molTypeFromSizeT);
-
-        if (molTypeExists)
-            return molTypeFromSizeT;
-        else
-        {
-            throw IntraNonBondedException(format(
-                "ERROR: could not find molecule type '{}' in line {} in file "
-                "'{}'",
-                id,
-                _lineNumber,
-                _fileName
-            ));
-        }
-    }
-    else
-    {
+    if (molTypeFromString.has_value())
         return molTypeFromString.value();
+
+    auto molTypeFromSizeT = size_t{};
+
+    try
+    {
+        molTypeFromSizeT = stoul(id);
     }
+    catch (...)
+    {
+        throw IntraNonBondedException(format(
+            "ERROR: could not find molecule type '{}' in line {} in file "
+            "'{}'",
+            id,
+            _lineNumber,
+            _fileName
+        ));
+    }
+
+    const bool molTypeExists = simBox.moleculeTypeExists(molTypeFromSizeT);
+
+    if (molTypeExists)
+        return molTypeFromSizeT;
+
+    throw IntraNonBondedException(format(
+        "ERROR: could not find molecule type '{}' in line {} in file "
+        "'{}'",
+        id,
+        _lineNumber,
+        _fileName
+    ));
 }
 
 /**

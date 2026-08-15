@@ -106,8 +106,8 @@ std::optional<Molecule> SimulationBox::findMolecule(const size_t moleculeType)
 
     if (molecule != _molecules.end())
         return *molecule;
-    else
-        return std::nullopt;
+
+    return std::nullopt;
 }
 
 /**
@@ -180,10 +180,8 @@ void SimulationBox::setupForcedCoreMolecules(
                 )
             );
         }
-        else
-        {
-            molecule.setForcedCore(true);
-        }
+
+        molecule.setForcedCore(true);
     }
 }
 
@@ -230,10 +228,8 @@ void SimulationBox::setupForcedLayerMolecules(
                 )
             );
         }
-        else
-        {
-            molecule.setForcedLayer(true);
-        }
+
+        molecule.setForcedLayer(true);
     }
 }
 
@@ -280,10 +276,8 @@ void SimulationBox::setupForcedOuterMolecules(
                 )
             );
         }
-        else
-        {
-            molecule.setForcedOuter(true);
-        }
+
+        molecule.setForcedOuter(true);
     }
 }
 
@@ -304,10 +298,10 @@ MoleculeType& SimulationBox::findMoleculeType(const size_t moleculeType)
 
     if (molecule != _moleculeTypes.end())
         return *molecule;
-    else
-        throw RstFileException(
-            std::format("Molecule type {} not found", moleculeType)
-        );
+
+    throw RstFileException(
+        std::format("Molecule type {} not found", moleculeType)
+    );
 }
 
 /**
@@ -347,8 +341,8 @@ std::optional<size_t> SimulationBox::findMoleculeTypeByString(
 
     if (molecule != _moleculeTypes.end())
         return molecule->getMoltype();
-    else
-        return std::nullopt;
+
+    return std::nullopt;
 }
 
 /**
@@ -728,8 +722,8 @@ void SimulationBox::checkCoulRadiusCutOff(
 
         if (exceptionType == ExceptionType::MANOSTATEXCEPTION)
             throw ManostatException(message);
-        else
-            throw UserInputException(message);
+
+        throw UserInputException(message);
     }
 }
 

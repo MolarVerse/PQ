@@ -86,7 +86,7 @@ std::vector<std::string> utilities::getLineCommands(
         if (';' == line[static_cast<size_t>(i)])
             break;
 
-        else if (!static_cast<bool>(::isspace(line[static_cast<size_t>(i)])))
+        if (!static_cast<bool>(::isspace(line[static_cast<size_t>(i)])))
         {
             throw InputFileException(
                 std::format(
@@ -263,21 +263,18 @@ bool utilities::keywordToBool(const std::vector<std::string> &lineElements)
     if ("on" == option || "yes" == option || "true" == option)
         return true;
 
-    else if ("off" == option || "no" == option || "false" == option)
+    if ("off" == option || "no" == option || "false" == option)
         return false;
 
-    else
-    {
-        throw InputFileException(
-            std::format(
-                "Invalid boolean option \"{}\" for keyword \"{}\" in input "
-                "file.\n"
-                "Possible values are: on, yes, true, off, no, false.",
-                lineElements[2],
-                lineElements[0]
-            )
-        );
-    }
+    throw InputFileException(
+        std::format(
+            "Invalid boolean option \"{}\" for keyword \"{}\" in input "
+            "file.\n"
+            "Possible values are: on, yes, true, off, no, false.",
+            lineElements[2],
+            lineElements[0]
+        )
+    );
 }
 
 /**

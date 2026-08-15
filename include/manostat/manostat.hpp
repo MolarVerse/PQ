@@ -31,12 +31,12 @@
 namespace simulationBox
 {
     class SimulationBox;   // forward declaration
-}
+}   // namespace simulationBox
 
 namespace physicalData
 {
     class PhysicalData;   // forward declaration
-}
+}   // namespace physicalData
 
 namespace manostat
 {

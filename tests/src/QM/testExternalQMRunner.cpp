@@ -185,7 +185,9 @@ namespace
                 _workPath / "working path; $(touch qm-injected)";
             std::filesystem::create_directory(scriptDirectory);
 
-            const auto scriptName = "runner's script; touch qm-injected; #";
+            const auto *const scriptName =
+                "runner's script; touch qm-injected; #";
+
             const auto scriptFile = scriptDirectory / scriptName;
             writeFile(scriptFile.string(), "");
 
