@@ -26,7 +26,7 @@
 
 #include "vector3d.hpp"
 
-namespace simulationBox
+namespace molsys
 {
     class SimulationBox;   // forward declaration
 }
@@ -36,7 +36,7 @@ namespace kernel
     [[nodiscard]] double distSquared(
         const linearAlgebra::Vec3D &,
         const linearAlgebra::Vec3D &,
-        const simulationBox::SimulationBox &
+        const molsys::SimulationBox &
     );
 
     [[nodiscard]] linearAlgebra::Vec3D distVec(
@@ -47,7 +47,7 @@ namespace kernel
     [[nodiscard]] linearAlgebra::Vec3D distVec(
         const linearAlgebra::Vec3D &,
         const linearAlgebra::Vec3D &,
-        const simulationBox::SimulationBox &
+        const molsys::SimulationBox &
     );
 
     [[nodiscard]] std::pair<linearAlgebra::Vec3D, double> distVecAndDist2(
@@ -58,7 +58,7 @@ namespace kernel
     [[nodiscard]] std::pair<linearAlgebra::Vec3D, double> distVecAndDist2(
         const linearAlgebra::Vec3D &,
         const linearAlgebra::Vec3D &,
-        const simulationBox::SimulationBox &
+        const molsys::SimulationBox &
     );
 
 }   // namespace kernel

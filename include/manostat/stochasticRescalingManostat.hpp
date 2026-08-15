@@ -65,7 +65,7 @@ namespace manostat
         ) noexcept = delete;
 
         void applyManostat(
-            simulationBox::SimulationBox &,
+            molsys::SimulationBox &,
             physicalData::PhysicalData &
         ) override;
 

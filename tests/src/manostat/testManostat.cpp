@@ -52,8 +52,8 @@ class TestableStochasticRescalingManostat
 namespace
 {
     void setupCutMolecule(
-        simulationBox::SimulationBox& box,
-        physicalData::PhysicalData&   data
+        molsys::SimulationBox&      box,
+        physicalData::PhysicalData& data
     )
     {
         settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
@@ -71,15 +71,15 @@ namespace
             diagonalMatrix(linearAlgebra::Vec3D(0.0))
         );
 
-        auto atom1 = std::make_shared<simulationBox::Atom>();
-        auto atom2 = std::make_shared<simulationBox::Atom>();
+        auto atom1 = std::make_shared<molsys::Atom>();
+        auto atom2 = std::make_shared<molsys::Atom>();
 
         atom1->setPosition({4.95, 0.0, 0.0});
         atom2->setPosition({-4.85, 0.0, 0.0});
         atom1->setMass(1.0);
         atom2->setMass(1.0);
 
-        auto molecule = simulationBox::Molecule();
+        auto molecule = molsys::Molecule();
         molecule.setNumberOfAtoms(2);
         molecule.setMolMass(2.0);
         molecule.addAtom(atom1);
@@ -91,9 +91,7 @@ namespace
         box.addMolecule(molecule);
     }
 
-    linearAlgebra::Vec3D getMinimumImageDistance(
-        simulationBox::SimulationBox& box
-    )
+    linearAlgebra::Vec3D getMinimumImageDistance(molsys::SimulationBox& box)
     {
         auto dPosition = box.getMolecule(0).getAtomPosition(1) -
                          box.getMolecule(0).getAtomPosition(0);
@@ -102,7 +100,7 @@ namespace
         return dPosition;
     }
 
-    void expectCutMoleculeScaled(simulationBox::SimulationBox& box)
+    void expectCutMoleculeScaled(molsys::SimulationBox& box)
     {
         const auto dPosition = getMinimumImageDistance(box);
 
@@ -130,8 +128,8 @@ namespace
     }
 
     double getMinimumImageDistance(
-        simulationBox::SimulationBox& box,
-        const size_t                  moleculeIndex
+        molsys::SimulationBox& box,
+        const size_t           moleculeIndex
     )
     {
         auto dPosition = box.getMolecule(moleculeIndex).getAtomPosition(1) -
@@ -178,8 +176,8 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
     _box->setBoxDimensions({2.0, 2.0, 2.0});
     const auto boxOld = _box->getBoxDimensions();
 
-    auto       molecule = simulationBox::Molecule();
-    const auto atom     = std::make_shared<simulationBox::Atom>();
+    auto       molecule = molsys::Molecule();
+    const auto atom     = std::make_shared<molsys::Atom>();
     atom->setPosition({1.0, 0.0, 0.0});
     molecule.addAtom(atom);
     molecule.setCenterOfMass({1.0, 0.0, 0.0});
@@ -254,15 +252,15 @@ TEST_F(
     setupCutMolecule(*_box, *_data);
     settings::ThermostatSettings::setActualTargetTemperature(0.0);
 
-    auto atom1 = std::make_shared<simulationBox::Atom>();
-    auto atom2 = std::make_shared<simulationBox::Atom>();
+    auto atom1 = std::make_shared<molsys::Atom>();
+    auto atom2 = std::make_shared<molsys::Atom>();
 
     atom1->setPosition({-1.0, 0.0, 0.0});
     atom2->setPosition({-0.8, 0.0, 0.0});
     atom1->setMass(1.0);
     atom2->setMass(1.0);
 
-    auto molecule = simulationBox::Molecule();
+    auto molecule = molsys::Molecule();
     molecule.setNumberOfAtoms(2);
     molecule.setMolMass(2.0);
     molecule.addAtom(atom1);
@@ -354,7 +352,7 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
     _data->setVirial(linearAlgebra::tensor3D(0.0));
     _data->setKineticEnergyMolecularVector(linearAlgebra::tensor3D(0.0));
 
-    auto molecule = simulationBox::Molecule();
+    auto molecule = molsys::Molecule();
     molecule.setNumberOfAtoms(2);
     molecule.setMolMass(2.0);
 
@@ -363,7 +361,7 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
                              const linearAlgebra::Vec3D& velocity
                          )
     {
-        auto atom = std::make_shared<simulationBox::Atom>();
+        auto atom = std::make_shared<molsys::Atom>();
         atom->setMass(1.0);
         atom->setPosition(position);
         atom->setVelocity(velocity);

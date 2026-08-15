@@ -32,7 +32,7 @@
 #include "vector3d.hpp"   // IWYU pragma: keep
 
 using namespace output;
-using simulationBox::OrthorhombicBox;
+using molsys::OrthorhombicBox;
 
 namespace
 {

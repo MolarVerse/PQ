@@ -40,7 +40,7 @@ namespace
             benchmarkSetup::cutOff
         );
 
-        simulationBox::CellList cellList;
+        molsys::CellList cellList;
         cellList.setNumberOfCells(cellsPerSide);
         cellList.resizeCells();
         cellList.setup(simBox);

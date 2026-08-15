@@ -26,10 +26,10 @@
 
 #include "timer.hpp"
 
-namespace simulationBox
+namespace molsys
 {
     class SimulationBox;   // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
 namespace physicalData
 {
@@ -44,7 +44,7 @@ namespace waterModel
         virtual ~IntraWater() = default;
 
         virtual void calculate(
-            simulationBox::SimulationBox &,
+            molsys::SimulationBox &,
             physicalData::PhysicalData &
         )
         {

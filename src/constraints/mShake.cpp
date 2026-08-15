@@ -40,7 +40,7 @@ using namespace constraints;
 using namespace kernel;
 using namespace linearAlgebra;
 using namespace settings;
-using namespace simulationBox;
+using namespace molsys;
 
 /**
  * @brief struct to hold the mShake matrices and their inverses

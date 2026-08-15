@@ -34,11 +34,11 @@ namespace physicalData
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
 
-namespace simulationBox
+namespace molsys
 {
     class Box;             // forward declaration
     class SimulationBox;   // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
 namespace QM
 {
@@ -69,27 +69,27 @@ namespace QM
         ~ExternalQMRunner() override = default;
 
         void run(
-            simulationBox::SimulationBox &,
+            molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            simulationBox::Periodicity per
+            molsys::Periodicity per
         ) override;
-        virtual void execute(simulationBox::SimulationBox &) = 0;
+        virtual void execute(molsys::SimulationBox &) = 0;
 
-        virtual void writeCoordsFile(simulationBox::SimulationBox &) = 0;
+        virtual void writeCoordsFile(molsys::SimulationBox &) = 0;
 
-        virtual void writePointChargeFile(simulationBox::SimulationBox &) {}
+        virtual void writePointChargeFile(molsys::SimulationBox &) {}
         virtual void readStressTensor(
-            simulationBox::Box &,
+            molsys::Box &,
             physicalData::PhysicalData &
         )
         {
         }
 
         void readForceFile(
-            simulationBox::SimulationBox &,
+            molsys::SimulationBox &,
             physicalData::PhysicalData &
         );
-        void readChargeFile(simulationBox::SimulationBox &);
+        void readChargeFile(molsys::SimulationBox &);
 
         /*******************************
          * standard getter and setters *

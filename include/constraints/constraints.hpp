@@ -38,10 +38,10 @@ namespace physicalData
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
 
-namespace simulationBox
+namespace molsys
 {
     class SimulationBox;   // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
 /**
  * @brief namespace for all constraints
@@ -82,21 +82,21 @@ namespace constraints
         ~Constraints();
 
         void calculateConstraintBondRefs(
-            const simulationBox::SimulationBox &simulationBox
+            const molsys::SimulationBox &simulationBox
         );
 
         void initMShake();
 
-        void applyShake(simulationBox::SimulationBox &simulationBox);
-        void _applyShake(simulationBox::SimulationBox &simulationBox);
-        void _applyMShake(simulationBox::SimulationBox &simulationBox);
+        void applyShake(molsys::SimulationBox &simulationBox);
+        void _applyShake(molsys::SimulationBox &simulationBox);
+        void _applyMShake(molsys::SimulationBox &simulationBox);
 
-        void applyRattle(simulationBox::SimulationBox &simulationBox);
+        void applyRattle(molsys::SimulationBox &simulationBox);
         void _applyRattle();
-        void _applyMRattle(simulationBox::SimulationBox &simulationBox);
+        void _applyMRattle(molsys::SimulationBox &simulationBox);
 
         void applyDistanceConstraints(
-            const simulationBox::SimulationBox &,
+            const molsys::SimulationBox &,
             physicalData::PhysicalData &,
             const double
         );
@@ -139,7 +139,7 @@ namespace constraints
 
         [[nodiscard]] size_t getNumberOfBondConstraints() const;
         [[nodiscard]] size_t getNumberOfMShakeConstraints(
-            simulationBox::SimulationBox &
+            molsys::SimulationBox &
         ) const;
         [[nodiscard]] size_t getNumberOfDistanceConstraints() const;
 

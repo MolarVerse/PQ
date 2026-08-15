@@ -53,7 +53,7 @@ class TestManostat : public ::testing::Test
             diagonalMatrix(linearAlgebra::Vec3D(1.0, 1.0, 1.0))
         );
 
-        _box = new simulationBox::SimulationBox();
+        _box = new molsys::SimulationBox();
         _box->setVolume(2.0);
     }
 
@@ -64,9 +64,9 @@ class TestManostat : public ::testing::Test
         delete _manostat;
     }
 
-    physicalData::PhysicalData*   _data;
-    simulationBox::SimulationBox* _box;
-    manostat::Manostat*           _manostat;
+    physicalData::PhysicalData* _data;
+    molsys::SimulationBox*      _box;
+    manostat::Manostat*         _manostat;
 };
 
 #endif

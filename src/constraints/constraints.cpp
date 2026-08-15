@@ -32,7 +32,7 @@
 #include "simulationBox.hpp"   // for SimulationBox
 
 using namespace constraints;
-using namespace simulationBox;
+using namespace molsys;
 using namespace customException;
 
 /**

@@ -50,21 +50,21 @@ namespace QM
         ~AseQMRunner() override;
 
         void run(
-            simulationBox::SimulationBox &,
+            molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            simulationBox::Periodicity per
+            molsys::Periodicity per
         ) override;
-        void buildAseAtoms(const simulationBox::SimulationBox &);
+        void buildAseAtoms(const molsys::SimulationBox &);
         void execute();
 
         void collectData(
-            simulationBox::SimulationBox &,
+            molsys::SimulationBox &,
             physicalData::PhysicalData &
         ) const;
-        void collectForces(simulationBox::SimulationBox &) const;
+        void collectForces(molsys::SimulationBox &) const;
         void collectEnergy(physicalData::PhysicalData &) const;
         void collectStress(
-            const simulationBox::SimulationBox &,
+            const molsys::SimulationBox &,
             physicalData::PhysicalData &
         ) const;
 

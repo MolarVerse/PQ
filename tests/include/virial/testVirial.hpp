@@ -39,13 +39,13 @@ class TestVirial : public ::testing::Test
    protected:
     void SetUp() override
     {
-        _simBox = new simulationBox::SimulationBox();
+        _simBox = new molsys::SimulationBox();
         settings::Settings::setVirialType(settings::VirialType::ATOMIC);
 
-        auto molecule1 = simulationBox::Molecule();
+        auto molecule1 = molsys::Molecule();
 
-        const auto atom1 = std::make_shared<simulationBox::Atom>();
-        const auto atom2 = std::make_shared<simulationBox::Atom>();
+        const auto atom1 = std::make_shared<molsys::Atom>();
+        const auto atom2 = std::make_shared<molsys::Atom>();
 
         molecule1.setNumberOfAtoms(2);
 
@@ -59,9 +59,9 @@ class TestVirial : public ::testing::Test
         molecule1.addAtom(atom1);
         molecule1.addAtom(atom2);
 
-        auto molecule2 = simulationBox::Molecule();
+        auto molecule2 = molsys::Molecule();
 
-        auto atom3 = std::make_shared<simulationBox::Atom>();
+        auto atom3 = std::make_shared<molsys::Atom>();
 
         molecule2.setNumberOfAtoms(1);
         atom3->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
@@ -82,7 +82,7 @@ class TestVirial : public ::testing::Test
 
     void TearDown() override { delete _simBox; }
 
-    simulationBox::SimulationBox *_simBox;
+    molsys::SimulationBox *_simBox;
 };
 
 #endif

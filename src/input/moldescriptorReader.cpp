@@ -37,7 +37,7 @@
 using namespace input::molDescriptor;
 using namespace settings;
 using namespace engine;
-using namespace simulationBox;
+using namespace molsys;
 using namespace utilities;
 using namespace customException;
 

@@ -44,11 +44,11 @@ class TestBondConstraint : public ::testing::Test
    protected:
     void SetUp() override
     {
-        auto molecule1 = simulationBox::Molecule();
+        auto molecule1 = molsys::Molecule();
         molecule1.setNumberOfAtoms(3);
 
-        auto atom1 = std::make_shared<simulationBox::Atom>();
-        auto atom2 = std::make_shared<simulationBox::Atom>();
+        auto atom1 = std::make_shared<molsys::Atom>();
+        auto atom2 = std::make_shared<molsys::Atom>();
 
         atom1->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
         atom2->setPosition(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
@@ -62,7 +62,7 @@ class TestBondConstraint : public ::testing::Test
         molecule1.addAtom(atom1);
         molecule1.addAtom(atom2);
 
-        _box = new simulationBox::SimulationBox();
+        _box = new molsys::SimulationBox();
         _box->addMolecule(molecule1);
         _box->setBoxDimensions(linearAlgebra::Vec3D(10.0, 10.0, 10.0));
 
@@ -81,9 +81,9 @@ class TestBondConstraint : public ::testing::Test
         delete _bondConstraint;
     }
 
-    simulationBox::SimulationBox *_box;
-    constraints::BondConstraint  *_bondConstraint;
-    double                        _targetBondLength = 1.2;
+    molsys::SimulationBox       *_box;
+    constraints::BondConstraint *_bondConstraint;
+    double                       _targetBondLength = 1.2;
 };
 
 #endif   // _TEST_BOND_CONSTRAINT_HPP_

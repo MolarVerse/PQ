@@ -38,7 +38,7 @@
 using namespace pq;
 using namespace customException;
 using namespace settings;
-using namespace simulationBox;
+using namespace molsys;
 
 using enum HybridZone;
 

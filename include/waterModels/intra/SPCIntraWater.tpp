@@ -52,8 +52,8 @@
  * @note Inactive molecules are skipped.
  */
 void waterModel::SPCIntraWater::calculate(
-    simulationBox::SimulationBox& box,
-    physicalData::PhysicalData&   physicalData
+    molsys::SimulationBox&      box,
+    physicalData::PhysicalData& physicalData
 )
 {
     auto _ = scoped("Calculate Potential");
@@ -107,7 +107,7 @@ void waterModel::SPCIntraWater::calculate(
         oxygen.addForce(forceOH2);
         hydrogen2.addForce(-forceOH2);
 
-        using enum simulationBox::HybridZone;
+        using enum molsys::HybridZone;
         using enum settings::SmoothingMethod;
 
         auto       smF       = 0.0;

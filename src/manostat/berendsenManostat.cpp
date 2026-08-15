@@ -35,7 +35,7 @@ using namespace linearAlgebra;
 using namespace settings;
 using namespace manostat;
 using namespace customException;
-using namespace simulationBox;
+using namespace molsys;
 using namespace physicalData;
 
 /**

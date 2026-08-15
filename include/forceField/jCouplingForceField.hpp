@@ -34,11 +34,11 @@ namespace physicalData
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
 
-namespace simulationBox
+namespace molsys
 {
     class Molecule;        // forward declaration
     class SimulationBox;   // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
 namespace forceField
 {
@@ -64,13 +64,13 @@ namespace forceField
 
        public:
         JCouplingForceField(
-            const std::vector<simulationBox::Molecule *> &molecules,
-            const std::vector<size_t>                    &atomIndices,
-            const size_t                                  type
+            const std::vector<molsys::Molecule *> &molecules,
+            const std::vector<size_t>             &atomIndices,
+            const size_t                           type
         );
 
         void calculateEnergyAndForces(
-            const simulationBox::SimulationBox &,
+            const molsys::SimulationBox &,
             physicalData::PhysicalData &
         )
         {

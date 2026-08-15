@@ -50,8 +50,8 @@ using namespace customException;
  * @param cellListPtr pointer to the cell list object
  */
 CellListInputParser::CellListInputParser(
-    engine::Engine                          &engine,
-    std::shared_ptr<simulationBox::CellList> cellListPtr
+    engine::Engine                   &engine,
+    std::shared_ptr<molsys::CellList> cellListPtr
 )
     : InputFileParser(engine), _cellListPtr(cellListPtr)
 {

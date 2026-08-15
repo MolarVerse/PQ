@@ -47,7 +47,7 @@ static constexpr long ITERATIONS = 20000;
 
 int main()
 {
-    auto box = simulationBox::SimulationBox();
+    auto box = molsys::SimulationBox();
     box.setBoxDimensions({10.0, 10.0, 10.0});
 
     auto physicalData        = physicalData::PhysicalData();

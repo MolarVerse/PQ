@@ -33,7 +33,7 @@
 using namespace intraNonBonded;
 using namespace potential;
 using namespace physicalData;
-using namespace simulationBox;
+using namespace molsys;
 using namespace linearAlgebra;
 using namespace settings;
 
@@ -44,7 +44,7 @@ using namespace settings;
  * @param intraNonBondedType
  */
 IntraNonBondedMap::IntraNonBondedMap(
-    simulationBox::Molecule *molecule,
+    molsys::Molecule        *molecule,
     IntraNonBondedContainer *intraNonBondedType
 )
     : _molecule(molecule), _intraNonBondedContainer(intraNonBondedType)
@@ -227,12 +227,9 @@ IntraNonBondedContainer *IntraNonBondedMap::getIntraNonBondedType() const
 /**
  * @brief get the molecule pointer
  *
- * @return simulationBox::Molecule*
+ * @return molsys::Molecule*
  */
-simulationBox::Molecule *IntraNonBondedMap::getMolecule() const
-{
-    return _molecule;
-}
+molsys::Molecule *IntraNonBondedMap::getMolecule() const { return _molecule; }
 
 /**
  * @brief get the atom indices of the IntraNonBondedContainer object

@@ -46,7 +46,7 @@ namespace thermostat
         BerendsenThermostat() = default;
 
         void applyThermostat(
-            simulationBox::SimulationBox &,
+            molsys::SimulationBox &,
             physicalData::PhysicalData &
         ) override;
 

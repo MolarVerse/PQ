@@ -35,7 +35,7 @@
 using thermostat::LangevinThermostat;
 using namespace constants;
 using namespace physicalData;
-using namespace simulationBox;
+using namespace molsys;
 using namespace settings;
 using namespace linearAlgebra;
 

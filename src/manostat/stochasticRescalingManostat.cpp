@@ -37,7 +37,7 @@
 using namespace linearAlgebra;
 using namespace manostat;
 using namespace settings;
-using namespace simulationBox;
+using namespace molsys;
 using namespace physicalData;
 using namespace customException;
 using namespace constants;
@@ -129,8 +129,8 @@ StochasticRescalingManostat::StochasticRescalingManostat(
  * @param physicalData
  */
 void StochasticRescalingManostat::applyManostat(
-    simulationBox::SimulationBox &simBox,
-    physicalData::PhysicalData   &physicalData
+    molsys::SimulationBox      &simBox,
+    physicalData::PhysicalData &physicalData
 )
 {
     auto _ = scoped("Stochastic Rescaling");
@@ -179,7 +179,7 @@ tensor3D StochasticRescalingManostat::calculateMu(const double volume)
     const auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
 
     auto stochasticFactor  = 2.0 * kT * compress / volume;
-    stochasticFactor       *= PRESSURE_FACTOR;
+    stochasticFactor      *= PRESSURE_FACTOR;
     stochasticFactor       = ::sqrt(stochasticFactor) * random;
 
     const auto deltaP = _targetPressure - _pressure;

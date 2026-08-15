@@ -48,7 +48,7 @@ namespace manostat
         explicit BerendsenManostat(const double, const double, const double);
 
         void applyManostat(
-            simulationBox::SimulationBox &,
+            molsys::SimulationBox &,
             physicalData::PhysicalData &
         ) override;
 

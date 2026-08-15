@@ -41,7 +41,7 @@ using namespace customException;
 using namespace linearAlgebra;
 using namespace utilities;
 using namespace settings;
-using namespace simulationBox;
+using namespace molsys;
 using namespace engine;
 
 /**

@@ -24,30 +24,31 @@
 
 #define _TEST_THERMOSTAT_HPP_
 
+#include <gtest/gtest.h>   // for Test
+
+#include <memory>   // for make_shared, __shared_ptr_access, shared_ptr
+
 #include "atom.hpp"            // for Atom
 #include "molecule.hpp"        // for Molecule
 #include "physicalData.hpp"    // for PhysicalData
 #include "simulationBox.hpp"   // for SimulationBox
 #include "thermostat.hpp"      // for Thermostat
 
-#include <gtest/gtest.h>   // for Test
-#include <memory>          // for make_shared, __shared_ptr_access, shared_ptr
-
 class TestThermostat : public ::testing::Test
 {
-  protected:
+   protected:
     void SetUp() override
     {
         _thermostat = new thermostat::Thermostat();
         _data       = new physicalData::PhysicalData();
 
-        _simulationBox = new simulationBox::SimulationBox();
+        _simulationBox = new molsys::SimulationBox();
 
-        auto molecule1 = simulationBox::Molecule();
+        auto molecule1 = molsys::Molecule();
         molecule1.setNumberOfAtoms(2);
 
-        auto atom1 = std::make_shared<simulationBox::Atom>();
-        auto atom2 = std::make_shared<simulationBox::Atom>();
+        auto atom1 = std::make_shared<molsys::Atom>();
+        auto atom2 = std::make_shared<molsys::Atom>();
 
         atom1->setMass(1.0);
         atom2->setMass(1.0);
@@ -57,10 +58,10 @@ class TestThermostat : public ::testing::Test
         molecule1.addAtom(atom1);
         molecule1.addAtom(atom2);
 
-        auto molecule2 = simulationBox::Molecule();
+        auto molecule2 = molsys::Molecule();
         molecule2.setNumberOfAtoms(1);
 
-        auto atom3 = std::make_shared<simulationBox::Atom>();
+        auto atom3 = std::make_shared<molsys::Atom>();
 
         atom3->setMass(1.0);
         atom3->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
@@ -84,9 +85,9 @@ class TestThermostat : public ::testing::Test
         delete _thermostat;
     }
 
-    physicalData::PhysicalData   *_data;
-    simulationBox::SimulationBox *_simulationBox;
-    thermostat::Thermostat       *_thermostat;
+    physicalData::PhysicalData *_data;
+    molsys::SimulationBox      *_simulationBox;
+    thermostat::Thermostat     *_thermostat;
 };
 
 #endif

@@ -34,7 +34,7 @@ namespace physicalData
     class PhysicalData;   // forward declaration
 }
 
-namespace simulationBox
+namespace molsys
 {
     class SimulationBox;   // forward declaration
 }
@@ -78,12 +78,12 @@ namespace resetKinetics
         void reset(
             const size_t step,
             physicalData::PhysicalData &,
-            simulationBox::SimulationBox &
+            molsys::SimulationBox &
         );
-        void resetTemperature(simulationBox::SimulationBox &);
-        void resetMomentum(simulationBox::SimulationBox &);
-        void resetAngularMomentum(simulationBox::SimulationBox &);
-        void resetForces(const size_t step, simulationBox::SimulationBox &);
+        void resetTemperature(molsys::SimulationBox &);
+        void resetMomentum(molsys::SimulationBox &);
+        void resetAngularMomentum(molsys::SimulationBox &);
+        void resetForces(const size_t step, molsys::SimulationBox &);
 
         /********************
          * standard setters *

@@ -32,7 +32,7 @@
 #include "staticMatrix.hpp"
 #include "vector3d.hpp"
 
-namespace simulationBox
+namespace molsys
 {
 
     class Box;   // forward declaration
@@ -180,6 +180,6 @@ namespace simulationBox
 
         void resetQMCharge();
     };
-}   // namespace simulationBox
+}   // namespace molsys
 
 #endif   // _ATOM_HPP_

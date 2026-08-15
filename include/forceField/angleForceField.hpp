@@ -34,11 +34,11 @@ namespace physicalData
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
 
-namespace simulationBox
+namespace molsys
 {
     class Molecule;        // forward declaration
     class SimulationBox;   // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
 namespace potential
 {
@@ -65,16 +65,16 @@ namespace forceField
 
        public:
         AngleForceField(
-            const std::vector<simulationBox::Molecule *> &molecules,
-            const std::vector<size_t>                    &atomIndices,
-            const size_t                                  type
+            const std::vector<molsys::Molecule *> &molecules,
+            const std::vector<size_t>             &atomIndices,
+            const size_t                           type
         );
 
         void calculateEnergyAndForces(
-            const simulationBox::SimulationBox &simBox,
-            physicalData::PhysicalData         &data,
-            const potential::CoulombPotential  &coulombPot,
-            potential::NonCoulombPotential     &nonCoulombPot
+            const molsys::SimulationBox       &simBox,
+            physicalData::PhysicalData        &data,
+            const potential::CoulombPotential &coulombPot,
+            potential::NonCoulombPotential    &nonCoulombPot
         );
 
         /***************************

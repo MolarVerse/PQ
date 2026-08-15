@@ -22,7 +22,7 @@
 
 #include "hybridMDEngine.hpp"
 
-using enum simulationBox::HybridZone;
+using enum molsys::HybridZone;
 
 namespace engine
 {
@@ -56,7 +56,7 @@ namespace engine
      * simulation box to zero.
      */
     void HybridMDEngine::addCurrentForcesToInnerAndReset(
-        std::vector<std::shared_ptr<simulationBox::Atom>>& atoms
+        std::vector<std::shared_ptr<molsys::Atom>>& atoms
     )
     {
         for (auto& atom : atoms)
@@ -83,8 +83,8 @@ namespace engine
      * global smoothing factor.
      */
     void HybridMDEngine::addScaledCurrentForcesToInnerAndReset(
-        std::vector<std::shared_ptr<simulationBox::Atom>>& atoms,
-        const double                                       globalSmF
+        std::vector<std::shared_ptr<molsys::Atom>>& atoms,
+        const double                                globalSmF
     )
     {
         for (auto& atom : atoms)
@@ -106,7 +106,7 @@ namespace engine
      * simulation box to zero.
      */
     void HybridMDEngine::addCurrentForcesToOuterAndReset(
-        std::vector<std::shared_ptr<simulationBox::Atom>>& atoms
+        std::vector<std::shared_ptr<molsys::Atom>>& atoms
     )
     {
         for (auto& atom : atoms)
@@ -133,8 +133,8 @@ namespace engine
      * global smoothing factor.
      */
     void HybridMDEngine::addScaledCurrentForcesToOuterAndReset(
-        std::vector<std::shared_ptr<simulationBox::Atom>>& atoms,
-        const double                                       globalSmF
+        std::vector<std::shared_ptr<molsys::Atom>>& atoms,
+        const double                                globalSmF
     )
     {
         for (auto& atom : atoms)

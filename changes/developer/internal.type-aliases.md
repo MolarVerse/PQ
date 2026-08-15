@@ -1,1 +1,2 @@
 - delete `typeAliases.hpp` file completely
+- shorten `simulationBox` namespace to `molsys`

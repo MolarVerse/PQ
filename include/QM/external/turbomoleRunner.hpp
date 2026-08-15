@@ -41,9 +41,9 @@ namespace QM
         bool _usePointCharges  = false;
 
        public:
-        void writeCoordsFile(simulationBox::SimulationBox &) override;
-        void writePointChargeFile(simulationBox::SimulationBox &) override;
-        void execute(simulationBox::SimulationBox &) override;
+        void writeCoordsFile(molsys::SimulationBox &) override;
+        void writePointChargeFile(molsys::SimulationBox &) override;
+        void execute(molsys::SimulationBox &) override;
     };
 }   // namespace QM
 

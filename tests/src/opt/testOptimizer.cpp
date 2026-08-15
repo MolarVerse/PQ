@@ -34,19 +34,19 @@
 #include "vector3d.hpp"   // IWYU pragma: keep
 
 using namespace opt;
-using simulationBox::Atom;
-using simulationBox::SimulationBox;
+using molsys::Atom;
+using molsys::SimulationBox;
 using physicalData::PhysicalData;
 
 namespace
 {
     struct Sample
     {
-        double                       energy;
-        linearAlgebra::Vec3D         force0;
-        linearAlgebra::Vec3D         force1;
-        linearAlgebra::Vec3D         pos0;
-        linearAlgebra::Vec3D         pos1;
+        double               energy;
+        linearAlgebra::Vec3D force0;
+        linearAlgebra::Vec3D force1;
+        linearAlgebra::Vec3D pos0;
+        linearAlgebra::Vec3D pos1;
     };
 
     // Build a fresh box+physData pair, set the sample state on them, and call
@@ -101,14 +101,8 @@ TEST(TestOptimizer, cloneProducesEquivalentObject)
 TEST(TestOptimizer, getHistoryIndexThrowsOnNonNegativeOffset)
 {
     const SteepestDescent opt(1u);
-    EXPECT_THROW(
-        (void)opt.getHistoryIndex(0),
-        customException::OptException
-    );
-    EXPECT_THROW(
-        (void)opt.getHistoryIndex(1),
-        customException::OptException
-    );
+    EXPECT_THROW((void) opt.getHistoryIndex(0), customException::OptException);
+    EXPECT_THROW((void) opt.getHistoryIndex(1), customException::OptException);
 }
 
 /* ---------- updateHistory + getters ---------- */
@@ -223,11 +217,19 @@ TEST(TestOptimizer, hasConvergedReturnsTrueForFlatEnergyAndZeroForces)
     // Two history entries with identical energy and zero forces → converged.
     pushSample(
         opt,
-        {1.0, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}}
+        {1.0,
+         {0.0, 0.0, 0.0},
+         {0.0, 0.0, 0.0},
+         {0.0, 0.0, 0.0},
+         {0.0, 0.0, 0.0}}
     );
     pushSample(
         opt,
-        {1.0, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}}
+        {1.0,
+         {0.0, 0.0, 0.0},
+         {0.0, 0.0, 0.0},
+         {0.0, 0.0, 0.0},
+         {0.0, 0.0, 0.0}}
     );
 
     EXPECT_TRUE(opt.hasConverged());
@@ -250,11 +252,19 @@ TEST(TestOptimizer, hasConvergedReturnsFalseForLargeForce)
 
     pushSample(
         opt,
-        {1.0, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}}
+        {1.0,
+         {0.0, 0.0, 0.0},
+         {0.0, 0.0, 0.0},
+         {0.0, 0.0, 0.0},
+         {0.0, 0.0, 0.0}}
     );
     pushSample(
         opt,
-        {1.0, {1.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}}
+        {1.0,
+         {1.0, 0.0, 0.0},
+         {0.0, 0.0, 0.0},
+         {0.0, 0.0, 0.0},
+         {0.0, 0.0, 0.0}}
     );
 
     EXPECT_FALSE(opt.hasConverged());

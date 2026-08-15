@@ -37,7 +37,7 @@
 
 using namespace constraints;
 using namespace linearAlgebra;
-using namespace simulationBox;
+using namespace molsys;
 
 /**
  * @brief regression test for the M-SHAKE inner-loop bound (3-atom molecule).
@@ -51,7 +51,7 @@ using namespace simulationBox;
  * one element past the matrix and vector is touched per outer iteration.
  *
  * This test sets up a rigid equilateral triangular reference molecule,
- * stretches one bond in the simulationBox::SimulationBox copy, and runs
+ * stretches one bond in the molsys::SimulationBox copy, and runs
  * applyMShake. With the fixed UT loop bound, applyMShake must converge without
  * throwing.
  */
@@ -82,7 +82,7 @@ TEST(TestMShake, applyMShake_threeAtomMolecule)
     mShake.addMShakeReference(mShakeRef);
     mShake.initMShake();   // builds the (3, 3) mShake inverse matrix
 
-    // --- simulationBox::SimulationBox with one slightly-stretched triangle ---
+    // --- molsys::SimulationBox with one slightly-stretched triangle ---
     auto simBox = SimulationBox();
     simBox.setBoxDimensions({100.0, 100.0, 100.0});
 

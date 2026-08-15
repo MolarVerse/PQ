@@ -104,24 +104,24 @@ namespace engine
             const physicalData::PhysicalData &
         );
 
-        void writeXyzFile(simulationBox::SimulationBox &, const size_t);
+        void writeXyzFile(molsys::SimulationBox &, const size_t);
         void writeHybridCenterXyzFile(
             const configurator::HybridConfigurator &,
             const size_t
         );
-        void writeVelFile(simulationBox::SimulationBox &, const size_t);
-        void writeForceFile(simulationBox::SimulationBox &, const size_t);
-        void writeChargeFile(simulationBox::SimulationBox &, const size_t);
+        void writeVelFile(molsys::SimulationBox &, const size_t);
+        void writeForceFile(molsys::SimulationBox &, const size_t);
+        void writeChargeFile(molsys::SimulationBox &, const size_t);
         void writeInfoFile(
             const double simulationTime,
             const physicalData::PhysicalData &
         );
         void writeRstFile(
-            simulationBox::SimulationBox &,
+            molsys::SimulationBox &,
             const thermostat::Thermostat &,
             const size_t
         );
-        void writeOptRstFile(simulationBox::SimulationBox &, const size_t);
+        void writeOptRstFile(molsys::SimulationBox &, const size_t);
 
         void writeMomentumFile(
             const size_t step,
@@ -129,26 +129,24 @@ namespace engine
         );
         void writeVirialFile(const size_t, const physicalData::PhysicalData &);
         void writeStressFile(const size_t, const physicalData::PhysicalData &);
-        void writeBoxFile(const size_t, const simulationBox::Box &);
+        void writeBoxFile(const size_t, const molsys::Box &);
         void writeOptFile(const size_t, const opt::Optimizer &);
 
-        void writeRingPolymerRstFile(
-            std::vector<simulationBox::SimulationBox> &
-        );
+        void writeRingPolymerRstFile(std::vector<molsys::SimulationBox> &);
         void writeRingPolymerXyzFile(
-            std::vector<simulationBox::SimulationBox> &,
+            std::vector<molsys::SimulationBox> &,
             const size_t
         );
         void writeRingPolymerVelFile(
-            std::vector<simulationBox::SimulationBox> &,
+            std::vector<molsys::SimulationBox> &,
             const size_t
         );
         void writeRingPolymerForceFile(
-            std::vector<simulationBox::SimulationBox> &,
+            std::vector<molsys::SimulationBox> &,
             const size_t
         );
         void writeRingPolymerChargeFile(
-            std::vector<simulationBox::SimulationBox> &,
+            std::vector<molsys::SimulationBox> &,
             const size_t
         );
         void writeRingPolymerEnergyFile(

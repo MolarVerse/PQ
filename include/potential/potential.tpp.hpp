@@ -59,11 +59,11 @@ namespace potential
      */
     template <typename ChargeTag1, typename ChargeTag2>
     std::pair<double, double> Potential::calculateSingleInteraction(
-        const simulationBox::Box &box,
-        simulationBox::Molecule  &mol1,
-        simulationBox::Molecule  &mol2,
-        simulationBox::Atom      &atom1,
-        simulationBox::Atom      &atom2
+        const molsys::Box &box,
+        molsys::Molecule  &mol1,
+        molsys::Molecule  &mol2,
+        molsys::Atom      &atom1,
+        molsys::Atom      &atom2
     ) const
     {
         auto coulombEnergy    = 0.0;
@@ -157,9 +157,9 @@ namespace potential
      */
     template <typename ChargeTag1, typename ChargeTag2>
     double Potential::calculateSingleCoulombInteraction(
-        const simulationBox::Box &box,
-        simulationBox::Atom      &atom1,
-        simulationBox::Atom      &atom2
+        const molsys::Box &box,
+        molsys::Atom      &atom1,
+        molsys::Atom      &atom2
     ) const
     {
         auto coulombEnergy = 0.0;
@@ -225,11 +225,11 @@ namespace potential
      */
     template <typename ChargeTag1, typename ChargeTag2>
     std::pair<double, double> Potential::calculateSingleInteractionOneWay(
-        const simulationBox::Box &box,
-        simulationBox::Molecule  &mol1,
-        simulationBox::Molecule  &mol2,
-        simulationBox::Atom      &atom1,
-        simulationBox::Atom      &atom2
+        const molsys::Box &box,
+        molsys::Molecule  &mol1,
+        molsys::Molecule  &mol2,
+        molsys::Atom      &atom1,
+        molsys::Atom      &atom2
     ) const
     {
         auto coulombEnergy    = 0.0;
@@ -343,7 +343,7 @@ namespace potential
      * @throws std::abort() Always aborts as this should never be called
      */
     template <typename T>
-    double Potential::getPartialCharge(simulationBox::Atom & /*atom*/) const
+    double Potential::getPartialCharge(molsys::Atom & /*atom*/) const
     {
         std::abort();
     }
@@ -362,7 +362,7 @@ namespace potential
      */
     template <>
     inline double Potential::getPartialCharge<QMChargeTag>(
-        simulationBox::Atom &atom
+        molsys::Atom &atom
     ) const
     {
         const auto useQMCharges = settings::HybridSettings::getUseQMCharges();
@@ -384,7 +384,7 @@ namespace potential
      */
     template <>
     inline double Potential::getPartialCharge<MMChargeTag>(
-        simulationBox::Atom &atom
+        molsys::Atom &atom
     ) const
     {
         return atom.getPartialCharge();

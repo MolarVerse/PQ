@@ -61,7 +61,7 @@ using namespace restartFile;
 using namespace topology;
 using namespace parameterFile;
 using namespace input::intraNonBondedReader;
-using namespace setup::simulationBox;
+using namespace setup::molsys;
 using namespace setup::resetKinetics;
 
 /**

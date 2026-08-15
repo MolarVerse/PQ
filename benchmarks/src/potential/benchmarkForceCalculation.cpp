@@ -79,7 +79,7 @@ namespace
         );
         forceCalculation.setNonCoulombPotential(makeNonCoulombPotential());
 
-        simulationBox::CellList cellList;
+        molsys::CellList cellList;
         if constexpr (std::is_same_v<
                           PotentialType,
                           potential::PotentialCellList>)

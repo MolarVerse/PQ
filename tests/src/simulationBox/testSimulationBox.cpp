@@ -154,10 +154,10 @@ TEST_F(TestSimulationBox, findMoleculeByAtomIndex)
  */
 TEST_F(TestSimulationBox, findNecessaryMoleculeTypes)
 {
-    auto simulationBox = simulationBox::SimulationBox();
-    auto molecule1     = simulationBox::Molecule();
-    auto molecule2     = simulationBox::Molecule();
-    auto molecule3     = simulationBox::Molecule();
+    auto simulationBox = molsys::SimulationBox();
+    auto molecule1     = molsys::Molecule();
+    auto molecule2     = molsys::Molecule();
+    auto molecule3     = molsys::Molecule();
 
     molecule1.setMoltype(1);
     molecule2.setMoltype(2);
@@ -169,9 +169,9 @@ TEST_F(TestSimulationBox, findNecessaryMoleculeTypes)
     simulationBox.addMolecule(molecule2);
     simulationBox.addMolecule(molecule1);
 
-    const auto moleculeType1 = simulationBox::MoleculeType(1);
-    const auto moleculeType2 = simulationBox::MoleculeType(2);
-    const auto moleculeType3 = simulationBox::MoleculeType(3);
+    const auto moleculeType1 = molsys::MoleculeType(1);
+    const auto moleculeType2 = molsys::MoleculeType(2);
+    const auto moleculeType3 = molsys::MoleculeType(3);
 
     simulationBox.addMoleculeType(moleculeType1);
     simulationBox.addMoleculeType(moleculeType2);
@@ -240,9 +240,9 @@ TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
  */
 TEST_F(TestSimulationBox, setupExternalToInternalGlobalVdwTypesMap)
 {
-    simulationBox::SimulationBox simulationBox;
-    simulationBox::MoleculeType  molecule1(1);
-    simulationBox::MoleculeType  molecule2(2);
+    molsys::SimulationBox simulationBox;
+    molsys::MoleculeType  molecule1(1);
+    molsys::MoleculeType  molecule2(2);
 
     molecule1.addExternalGlobalVDWType(1);
     molecule1.addExternalGlobalVDWType(3);
@@ -306,25 +306,25 @@ TEST_F(TestSimulationBox, findMoleculeTypeByString)
  */
 TEST_F(TestSimulationBox, setPartialChargesOfMoleculesFromMoleculeTypes)
 {
-    simulationBox::SimulationBox simulationBox;
-    simulationBox::MoleculeType  molecule1(1);
-    simulationBox::MoleculeType  molecule2(2);
+    molsys::SimulationBox simulationBox;
+    molsys::MoleculeType  molecule1(1);
+    molsys::MoleculeType  molecule2(2);
 
     molecule1.setPartialCharges({0.1, 0.2, 0.3});
     molecule2.setPartialCharges({0.4, 0.5});
 
-    const auto atom1 = std::make_shared<simulationBox::Atom>();
-    const auto atom2 = std::make_shared<simulationBox::Atom>();
-    const auto atom3 = std::make_shared<simulationBox::Atom>();
-    const auto atom4 = std::make_shared<simulationBox::Atom>();
-    const auto atom5 = std::make_shared<simulationBox::Atom>();
-    const auto atom6 = std::make_shared<simulationBox::Atom>();
-    const auto atom7 = std::make_shared<simulationBox::Atom>();
-    const auto atom8 = std::make_shared<simulationBox::Atom>();
+    const auto atom1 = std::make_shared<molsys::Atom>();
+    const auto atom2 = std::make_shared<molsys::Atom>();
+    const auto atom3 = std::make_shared<molsys::Atom>();
+    const auto atom4 = std::make_shared<molsys::Atom>();
+    const auto atom5 = std::make_shared<molsys::Atom>();
+    const auto atom6 = std::make_shared<molsys::Atom>();
+    const auto atom7 = std::make_shared<molsys::Atom>();
+    const auto atom8 = std::make_shared<molsys::Atom>();
 
-    simulationBox::Molecule molecule3(1);
-    simulationBox::Molecule molecule4(2);
-    simulationBox::Molecule molecule5(1);
+    molsys::Molecule molecule3(1);
+    molsys::Molecule molecule4(2);
+    molsys::Molecule molecule5(1);
 
     molecule3.setNumberOfAtoms(3);
     molecule4.setNumberOfAtoms(2);
@@ -371,8 +371,8 @@ TEST_F(
     setPartialChargesOfMoleculesFromMoleculeTypes_MoleculeTypeNotFound
 )
 {
-    simulationBox::SimulationBox  simulationBox;
-    const simulationBox::Molecule molecule1(1);
+    molsys::SimulationBox  simulationBox;
+    const molsys::Molecule molecule1(1);
 
     simulationBox.addMolecule(molecule1);
 
@@ -384,12 +384,12 @@ TEST_F(
 }
 
 /**
- * @brief tests SimulationBox::removeNetForce()
+ * @brief tests molsys::removeNetForce()
  *
  */
 TEST_F(TestSimulationBox, removeNetForce)
 {
-    using namespace simulationBox;
+    using namespace molsys;
     using namespace linearAlgebra;
 
     SimulationBox simBox;
@@ -437,12 +437,12 @@ TEST_F(TestSimulationBox, removeNetForce)
 }
 
 /**
- * @brief tests SimulationBox::updateOldPositions()
+ * @brief tests molsys::updateOldPositions()
  *
  */
 TEST_F(TestSimulationBox, updateOldPositions)
 {
-    using namespace simulationBox;
+    using namespace molsys;
     using namespace linearAlgebra;
 
     _simulationBox->getAtoms()[0]->setPositionOld({9.0, 9.0, 9.0});
@@ -458,7 +458,7 @@ TEST_F(TestSimulationBox, updateOldPositions)
 
 TEST_F(TestSimulationBox, copyOwnsIndependentAtoms)
 {
-    simulationBox::SimulationBox copied;
+    molsys::SimulationBox copied;
     copied.copy(*_simulationBox);
 
     ASSERT_EQ(copied.getNumberOfAtoms(), _simulationBox->getNumberOfAtoms());
@@ -515,10 +515,10 @@ TEST_F(TestSimulationBox, validatesHybridIndexLists)
 
 TEST_F(TestSimulationBox, validatesForcedLayerList)
 {
-    simulationBox::SimulationBox simBox;
-    simBox.addMolecule(simulationBox::Molecule{});
-    simBox.addMolecule(simulationBox::Molecule{});
-    simBox.addMolecule(simulationBox::Molecule{});
+    molsys::SimulationBox simBox;
+    simBox.addMolecule(molsys::Molecule{});
+    simBox.addMolecule(molsys::Molecule{});
+    simBox.addMolecule(molsys::Molecule{});
 
     simBox.setupForcedCoreMolecules({0});
     simBox.setupForcedLayerMolecules({1});
@@ -570,18 +570,18 @@ TEST_F(TestSimulationBox, validatesForcedLayerList)
 
 TEST_F(TestSimulationBox, assignsInternalVdwTypesToAtoms)
 {
-    simulationBox::SimulationBox simBox;
-    simulationBox::MoleculeType  type(1);
+    molsys::SimulationBox simBox;
+    molsys::MoleculeType  type(1);
     type.addExternalGlobalVDWType(4);
     type.addExternalGlobalVDWType(9);
     simBox.addMoleculeType(type);
 
-    auto atom1 = std::make_shared<simulationBox::Atom>();
-    auto atom2 = std::make_shared<simulationBox::Atom>();
+    auto atom1 = std::make_shared<molsys::Atom>();
+    auto atom2 = std::make_shared<molsys::Atom>();
     atom1->setExternalGlobalVDWType(4);
     atom2->setExternalGlobalVDWType(9);
 
-    simulationBox::Molecule molecule(1);
+    molsys::Molecule molecule(1);
     molecule.setNumberOfAtoms(2);
     molecule.addAtom(atom1);
     molecule.addAtom(atom2);
@@ -651,6 +651,6 @@ TEST_F(TestSimulationBox, activeChargeAndEmptyForceRemoval)
     _simulationBox->getMolecule(1).deactivateMolecule();
     EXPECT_EQ(_simulationBox->calcActiveMolCharge(), 2);
 
-    simulationBox::SimulationBox empty;
+    molsys::SimulationBox empty;
     EXPECT_NO_THROW(empty.removeNetForce());
 }

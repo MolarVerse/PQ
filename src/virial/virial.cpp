@@ -25,7 +25,7 @@
 #include "settings.hpp"
 #include "simulationBox.hpp"   // for SimulationBox
 
-using namespace simulationBox;
+using namespace molsys;
 using namespace linearAlgebra;
 using namespace pq;
 

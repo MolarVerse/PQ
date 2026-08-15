@@ -32,7 +32,7 @@
 #include "timer.hpp"      // for Timer
 #include "vector3d.hpp"
 
-namespace simulationBox
+namespace molsys
 {
     class SimulationBox;   // forward declaration
 
@@ -106,6 +106,6 @@ namespace simulationBox
         void setNumberOfNeighbourCells(const size_t nCells);
     };
 
-}   // namespace simulationBox
+}   // namespace molsys
 
 #endif   // _CELL_LIST_HPP_

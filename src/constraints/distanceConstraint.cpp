@@ -28,7 +28,7 @@
 #include "simulationBox.hpp"
 
 using namespace constraints;
-using namespace simulationBox;
+using namespace molsys;
 using namespace connectivity;
 
 /**
@@ -57,7 +57,9 @@ DistanceConstraint::DistanceConstraint(
       _lowerDistance(lowerDistance),
       _upperDistance(upperDistance),
       _springConstant(springConstant),
-      _dSpringConstantDt(dSpringConstantDt){};
+      _dSpringConstantDt(dSpringConstantDt)
+{
+}
 
 /**
  * @brief calculates the reference distance of all distance constraints
@@ -67,8 +69,8 @@ DistanceConstraint::DistanceConstraint(
  *
  */
 void DistanceConstraint::applyDistanceConstraint(
-    const simulationBox::SimulationBox &simulationBox,
-    const double                        dt
+    const molsys::SimulationBox &simulationBox,
+    const double                 dt
 )
 {
     _lowerEnergy = 0.0;

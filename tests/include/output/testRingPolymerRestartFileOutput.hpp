@@ -48,19 +48,19 @@ class TestRingPolymerRestartFileOutput : public ::testing::Test
     {
         _rstFileOutput =
             new output::RingPolymerRestartFileOutput("default.rpmd.rst");
-        _simulationBox1 = new simulationBox::SimulationBox();
-        _simulationBox2 = new simulationBox::SimulationBox();
+        _simulationBox1 = new molsys::SimulationBox();
+        _simulationBox2 = new molsys::SimulationBox();
 
         _simulationBox1->setBoxDimensions({10.0, 10.0, 10.0});
         _simulationBox2->setBoxDimensions({10.0, 10.0, 10.0});
 
-        auto molecule1_1 = simulationBox::Molecule();
-        auto molecule1_2 = simulationBox::Molecule();
+        auto molecule1_1 = molsys::Molecule();
+        auto molecule1_2 = molsys::Molecule();
 
-        const auto atom1_1 = std::make_shared<simulationBox::Atom>();
-        const auto atom2_1 = std::make_shared<simulationBox::Atom>();
-        const auto atom1_2 = std::make_shared<simulationBox::Atom>();
-        const auto atom2_2 = std::make_shared<simulationBox::Atom>();
+        const auto atom1_1 = std::make_shared<molsys::Atom>();
+        const auto atom2_1 = std::make_shared<molsys::Atom>();
+        const auto atom1_2 = std::make_shared<molsys::Atom>();
+        const auto atom2_2 = std::make_shared<molsys::Atom>();
 
         molecule1_1.setNumberOfAtoms(2);
         molecule1_2.setNumberOfAtoms(2);
@@ -93,11 +93,11 @@ class TestRingPolymerRestartFileOutput : public ::testing::Test
         molecule1_2.addAtom(atom1_2);
         molecule1_2.addAtom(atom2_2);
 
-        auto molecule2_1 = simulationBox::Molecule();
-        auto molecule2_2 = simulationBox::Molecule();
+        auto molecule2_1 = molsys::Molecule();
+        auto molecule2_2 = molsys::Molecule();
 
-        const auto atom3_1 = std::make_shared<simulationBox::Atom>();
-        const auto atom3_2 = std::make_shared<simulationBox::Atom>();
+        const auto atom3_1 = std::make_shared<molsys::Atom>();
+        const auto atom3_2 = std::make_shared<molsys::Atom>();
 
         molecule2_1.setNumberOfAtoms(1);
         molecule2_2.setNumberOfAtoms(1);
@@ -137,10 +137,10 @@ class TestRingPolymerRestartFileOutput : public ::testing::Test
         EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.rpmd.rst";
     }
 
-    output::RingPolymerRestartFileOutput     *_rstFileOutput;
-    simulationBox::SimulationBox             *_simulationBox1;
-    simulationBox::SimulationBox             *_simulationBox2;
-    std::vector<simulationBox::SimulationBox> _beads;
+    output::RingPolymerRestartFileOutput *_rstFileOutput;
+    molsys::SimulationBox                *_simulationBox1;
+    molsys::SimulationBox                *_simulationBox2;
+    std::vector<molsys::SimulationBox>    _beads;
 };
 
 #endif   // _TEST_RING_POLYMER_RESTART_FILE_OUTPUT_HPP_

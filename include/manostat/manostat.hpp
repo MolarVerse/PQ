@@ -28,7 +28,7 @@
 #include "staticMatrix.hpp"
 #include "timer.hpp"   // for Timer
 
-namespace simulationBox
+namespace molsys
 {
     class SimulationBox;   // forward declaration
 }
@@ -59,11 +59,11 @@ namespace manostat
         virtual ~Manostat() = default;
 
         void calculatePressure(
-            const simulationBox::SimulationBox &,
+            const molsys::SimulationBox &,
             physicalData::PhysicalData &
         );
         virtual void applyManostat(
-            simulationBox::SimulationBox &,
+            molsys::SimulationBox &,
             physicalData::PhysicalData &
         );
 

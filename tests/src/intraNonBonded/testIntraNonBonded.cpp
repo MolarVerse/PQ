@@ -107,12 +107,12 @@ TEST_F(TestIntraNonBonded, fillIntraNonBondedMaps)
     intraNonBonded.addIntraNonBondedContainer(intraNonBondedContainer2);
     intraNonBonded.addIntraNonBondedContainer(intraNonBondedContainer3);
 
-    auto simulationBox = simulationBox::SimulationBox();
-    auto molecule1     = simulationBox::Molecule(0);
-    auto molecule2     = simulationBox::Molecule(1);
-    auto molecule3     = simulationBox::Molecule(2);
-    auto molecule4     = simulationBox::Molecule(1);
-    auto molecule5     = simulationBox::Molecule(2);
+    auto simulationBox = molsys::SimulationBox();
+    auto molecule1     = molsys::Molecule(0);
+    auto molecule2     = molsys::Molecule(1);
+    auto molecule3     = molsys::Molecule(2);
+    auto molecule4     = molsys::Molecule(1);
+    auto molecule5     = molsys::Molecule(2);
 
     simulationBox.addMolecule(molecule1);
     simulationBox.addMolecule(molecule2);
@@ -172,11 +172,11 @@ TEST_F(TestIntraNonBonded, fillIntraNonBondedMaps)
  */
 TEST_F(TestIntraNonBonded, calculate)
 {
-    auto molecule = simulationBox::Molecule(0);
+    auto molecule = molsys::Molecule(0);
     molecule.setNumberOfAtoms(2);
 
-    auto atom1 = std::make_shared<simulationBox::Atom>();
-    auto atom2 = std::make_shared<simulationBox::Atom>();
+    auto atom1 = std::make_shared<molsys::Atom>();
+    auto atom2 = std::make_shared<molsys::Atom>();
 
     atom1->setPosition({0.0, 0.0, 0.0});
     atom2->setPosition({0.0, 0.0, 11.0});
@@ -210,7 +210,7 @@ TEST_F(TestIntraNonBonded, calculate)
     setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
     setNonCoulombPairsMatrix(1, 0, nonCoulombPair);
 
-    auto simulationBox = simulationBox::SimulationBox();
+    auto simulationBox = molsys::SimulationBox();
     simulationBox.setBoxDimensions({10.0, 10.0, 10.0});
 
     auto physicalData = physicalData::PhysicalData();

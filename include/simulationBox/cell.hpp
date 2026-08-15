@@ -30,7 +30,7 @@
 #include "molecule.hpp"   // for Molecule
 #include "simulationBox.hpp"
 
-namespace simulationBox
+namespace molsys
 {
     /**
      * @class Cell
@@ -64,7 +64,7 @@ namespace simulationBox
         void addNeighbourCell(Cell *cell);
         void addAtoms(const std::vector<Atom *> &atomPointers);
         void assignMoleculeHybridZoneIndices();
-        void assignWaterMoleculeIndices(const simulationBox::SimulationBox &);
+        void assignWaterMoleculeIndices(const SimulationBox &);
 
         /***************************
          * standard getter methods *
@@ -114,6 +114,6 @@ namespace simulationBox
         void setCellIndex(const linearAlgebra::Vec3Dul &cellIndex);
     };
 
-}   // namespace simulationBox
+}   // namespace molsys
 
 #endif   // _CELL_HPP_

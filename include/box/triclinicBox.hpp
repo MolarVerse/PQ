@@ -26,7 +26,7 @@
 
 #include "box.hpp"   // for Box
 
-namespace simulationBox
+namespace molsys
 {
     std::pair<linearAlgebra::Vec3D, linearAlgebra::Vec3D> calcBoxDimAndAnglesFromBoxMatrix(
         const linearAlgebra::tensor3D &
@@ -96,6 +96,6 @@ namespace simulationBox
            ) const override;
     };
 
-}   // namespace simulationBox
+}   // namespace molsys
 
 #endif   // _TRICLINIC_BOX_HPP_

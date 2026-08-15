@@ -25,7 +25,7 @@
 #include "simulationBox.hpp"
 
 using namespace integrator;
-using namespace simulationBox;
+using namespace molsys;
 
 VelocityVerlet::VelocityVerlet() : Integrator("VelocityVerlet") {}
 

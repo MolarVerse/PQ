@@ -29,16 +29,16 @@
 
 #include <thread>
 
-#include "box.hpp"         // for simulationBox::Periodicity
+#include "box.hpp"         // for molsys::Periodicity
 #include "constants.hpp"   // for _DEG_TO_RAD_
 #include "physicalData.hpp"
 #include "qmSettings.hpp"   // for QMSettings
 #include "simulationBox.hpp"
 
-using enum simulationBox::Periodicity;
+using enum molsys::Periodicity;
 
 using QM::AseQMRunner;
-using namespace simulationBox;
+using namespace molsys;
 using namespace physicalData;
 using namespace constants;
 using namespace settings;
@@ -138,7 +138,7 @@ namespace
      * @throw pybind11::error_already_set if the construction of the array fails
      */
     [[nodiscard]]
-    pybind11::array_t<bool> asePBC(simulationBox::Periodicity periodicity)
+    pybind11::array_t<bool> asePBC(molsys::Periodicity periodicity)
     {
         std::array<bool, 3> pbc_array;
 

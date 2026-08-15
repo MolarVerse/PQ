@@ -32,7 +32,7 @@
 #include <set>          // for set
 #include <string>       // for string
 
-#include "box.hpp"   // for simulationBox::Periodicity
+#include "box.hpp"   // for molsys::Periodicity
 #include "constants.hpp"
 #include "exceptions.hpp"           // for InputFileException
 #include "fileSettings.hpp"         // for FileSettings
@@ -44,7 +44,7 @@
 #include "stringUtilities.hpp"      // for fileExists
 
 using QM::DFTBPlusRunner;
-using enum simulationBox::Periodicity;
+using enum molsys::Periodicity;
 
 using namespace configurator;
 using namespace constants;
@@ -52,7 +52,7 @@ using namespace customException;
 using namespace linearAlgebra;
 using namespace physicalData;
 using namespace settings;
-using namespace simulationBox;
+using namespace molsys;
 using namespace utilities;
 
 /**
@@ -144,7 +144,7 @@ void DFTBPlusRunner::writeCoordsFile(SimulationBox &box)
  *
  * @param box Simulation box containing molecules and atoms.
  */
-void DFTBPlusRunner::writePointChargeFile(simulationBox::SimulationBox &box)
+void DFTBPlusRunner::writePointChargeFile(molsys::SimulationBox &box)
 {
     const std::string fileName = FileSettings::getPointChargeFileName();
     std::ofstream     pcFile(fileName);

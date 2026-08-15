@@ -29,11 +29,11 @@
 
 #include "timer.hpp"   // for Timer
 
-namespace simulationBox
+namespace molsys
 {
     class Atom;            // forward declaration
     class SimulationBox;   // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
 namespace integrator
 {
@@ -53,13 +53,13 @@ namespace integrator
         Integrator()          = default;
         virtual ~Integrator() = default;
 
-        virtual void firstStep(simulationBox::SimulationBox &)  = 0;
-        virtual void secondStep(simulationBox::SimulationBox &) = 0;
+        virtual void firstStep(molsys::SimulationBox &)  = 0;
+        virtual void secondStep(molsys::SimulationBox &) = 0;
 
-        void integrateVelocities(simulationBox::Atom *) const;
+        void integrateVelocities(molsys::Atom *) const;
         void integratePositions(
-            simulationBox::Atom *,
-            const simulationBox::SimulationBox &
+            molsys::Atom *,
+            const molsys::SimulationBox &
         ) const;
 
         /********************************
