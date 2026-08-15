@@ -25,6 +25,7 @@
 #include <algorithm>
 #include <format>   // for format
 
+#include "dihedralType.hpp"
 #include "exceptions.hpp"
 
 using namespace forceField;
@@ -97,7 +98,7 @@ const AngleType &ForceField::findAngleTypeById(const AngleId id) const
  *
  * @throws TopologyException if dihedral type with id not found
  */
-const DihedralType &ForceField::findDihedralTypeById(const size_t id) const
+const DihedralType &ForceField::findDihedralTypeById(const DihedralId id) const
 {
     auto isDihedralId = [id](const DihedralType &dihedralType)
     { return dihedralType.getId() == id; };
@@ -109,7 +110,7 @@ const DihedralType &ForceField::findDihedralTypeById(const size_t id) const
         return *dihedralType;
     else
         throw TopologyException(
-            std::format("Dihedral type with id {} not found.", id)
+            std::format("Dihedral type with id {} not found.", id.toString())
         );
 }
 
@@ -122,7 +123,7 @@ const DihedralType &ForceField::findDihedralTypeById(const size_t id) const
  * @throws TopologyException if improper dihedral type with id
  * not found
  */
-const DihedralType &ForceField::findImproperTypeById(const size_t id) const
+const DihedralType &ForceField::findImproperTypeById(const DihedralId id) const
 {
     auto isImproperId = [id](const DihedralType &dihedralType)
     { return dihedralType.getId() == id; };
@@ -134,7 +135,10 @@ const DihedralType &ForceField::findImproperTypeById(const size_t id) const
         return *dihedralType;
     else
         throw TopologyException(
-            std::format("Improper dihedral type with id {} not found.", id)
+            std::format(
+                "Improper dihedral type with id {} not found.",
+                id.toString()
+            )
         );
 }
 

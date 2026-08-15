@@ -46,7 +46,8 @@
 #include "physicalData.hpp"           // for PhysicalData
 #include "potentialSettings.hpp"      // for PotentialSettings
 #include "simulationBox.hpp"          // for SimulationBox
-#include "throwWithMessage.hpp"       // for EXPECT_THROW_MSG
+#include "strongTypes.hpp"
+#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
 
 namespace potential
 {
@@ -82,7 +83,7 @@ TEST_F(TestForceField, findBondTypeById_notFoundError)
     EXPECT_THROW_MSG(
         forceField.findBondTypeById(BondId{0}),
         customException::TopologyException,
-        "Bond type with id " + std::to_string(0) + " not found."
+        "Bond type with id " + BondId(0).toString() + " not found."
     );
 }
 
@@ -111,7 +112,7 @@ TEST_F(TestForceField, findAngleTypeById_notFoundError)
     EXPECT_THROW_MSG(
         forceField.findAngleTypeById(AngleId{0}),
         customException::TopologyException,
-        "Angle type with id " + std::to_string(0) + " not found."
+        "Angle type with id " + AngleId(0).toString() + " not found."
     );
 }
 
@@ -122,11 +123,11 @@ TEST_F(TestForceField, findAngleTypeById_notFoundError)
 TEST_F(TestForceField, findDihedralTypeById)
 {
     auto forceField   = forceField::ForceField();
-    auto dihedralType = forceField::DihedralType(0, 1.0, 1.0, 1.0);
+    auto dihedralType = forceField::DihedralType(DihedralId{0}, 1.0, 1.0, 1.0);
 
     forceField.addDihedralType(dihedralType);
 
-    EXPECT_EQ(forceField.findDihedralTypeById(0), dihedralType);
+    EXPECT_EQ(forceField.findDihedralTypeById(DihedralId{0}), dihedralType);
 }
 
 /**
@@ -138,9 +139,9 @@ TEST_F(TestForceField, findDihedralTypeById_notFoundError)
     auto forceField = forceField::ForceField();
 
     EXPECT_THROW_MSG(
-        forceField.findDihedralTypeById(0),
+        forceField.findDihedralTypeById(DihedralId{0}),
         customException::TopologyException,
-        "Dihedral type with id " + std::to_string(0) + " not found."
+        "Dihedral type with id " + DihedralId(0).toString() + " not found."
     );
 }
 
@@ -150,12 +151,16 @@ TEST_F(TestForceField, findDihedralTypeById_notFoundError)
  */
 TEST_F(TestForceField, findImproperTypeById)
 {
-    auto forceField           = forceField::ForceField();
-    auto improperDihedralType = forceField::DihedralType(0, 1.0, 1.0, 1.0);
+    auto forceField = forceField::ForceField();
+    auto improperDihedralType =
+        forceField::DihedralType(DihedralId{0}, 1.0, 1.0, 1.0);
 
     forceField.addImproperDihedralType(improperDihedralType);
 
-    EXPECT_EQ(forceField.findImproperTypeById(0), improperDihedralType);
+    EXPECT_EQ(
+        forceField.findImproperTypeById(DihedralId{0}),
+        improperDihedralType
+    );
 }
 
 /**
@@ -167,9 +172,10 @@ TEST_F(TestForceField, findImproperDihedralTypeById_notFoundError)
     auto forceField = forceField::ForceField();
 
     EXPECT_THROW_MSG(
-        forceField.findImproperTypeById(0),
+        forceField.findImproperTypeById(DihedralId{0}),
         customException::TopologyException,
-        "Improper dihedral type with id " + std::to_string(0) + " not found."
+        "Improper dihedral type with id " + DihedralId(0).toString() +
+            " not found."
     );
 }
 
@@ -245,12 +251,12 @@ TEST_F(TestForceField, calculateBondedInteractions)
     auto dihedralForceField = forceField::DihedralForceField(
         {&molecule, &molecule, &molecule, &molecule},
         {0, 1, 2, 3},
-        0
+        DihedralId{0}
     );
     auto improperDihedralForceField = forceField::DihedralForceField(
         {&molecule, &molecule, &molecule, &molecule},
         {0, 1, 2, 3},
-        0
+        DihedralId{0}
     );
 
     bondForceField.setEquilibriumBondLength(1.2);

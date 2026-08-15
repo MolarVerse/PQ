@@ -33,4 +33,13 @@ struct AngleIdTag
 };
 using AngleId = StrongSizeT<struct AngleIdTag>;
 
+struct DihedralIdTag
+{
+    static std::string toString(const size_t &value)
+    {
+        return std::format("DihedralId({})", value);
+    }
+};
+using DihedralId = StrongSizeT<struct DihedralIdTag>;
+
 #endif   // _STRONG_TYPES_HPP_

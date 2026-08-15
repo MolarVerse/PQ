@@ -30,6 +30,7 @@
 #include "dihedralForceField.hpp"   // for BondForceField
 #include "engine.hpp"               // for Engine
 #include "exceptions.hpp"           // for TopologyException
+#include "strongTypes.hpp"
 
 using namespace input::topology;
 using namespace simulationBox;
@@ -77,7 +78,7 @@ void DihedralSection::processSection(
     auto atom2        = stoul(lineElements[1]);
     auto atom3        = stoul(lineElements[2]);
     auto atom4        = stoul(lineElements[3]);
-    auto dihedralType = stoul(lineElements[4]);
+    auto dihedralType = DihedralId{stoul(lineElements[4])};
     auto isLinker     = false;
 
     if (6 == lineElements.size())

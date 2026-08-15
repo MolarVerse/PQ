@@ -75,7 +75,7 @@ void ImproperDihedralSection::processSection(
     auto atom2                = stoul(lineElements[1]);
     auto atom3                = stoul(lineElements[2]);
     auto atom4                = stoul(lineElements[3]);
-    auto improperDihedralType = stoul(lineElements[4]);
+    auto improperDihedralType = DihedralId{stoul(lineElements[4])};
 
     auto atoms = std::vector{atom1, atom2, atom3, atom4};
     std::ranges::sort(atoms);

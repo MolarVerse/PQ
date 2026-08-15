@@ -75,7 +75,7 @@ int main()
     auto dihedral = forceField::DihedralForceField(
         {&molecule, &molecule, &molecule, &molecule},
         {0, 1, 2, 3},
-        0
+        DihedralId{0}
     );
     dihedral.setPhaseShift(M_PI);
     dihedral.setPeriodicity(3);

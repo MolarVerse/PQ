@@ -57,8 +57,8 @@ namespace forceField
     class DihedralForceField : public connectivity::Dihedral
     {
        private:
-        size_t _type;
-        bool   _isLinker = false;
+        DihedralId _type;
+        bool       _isLinker = false;
 
         double _forceConstant = 0.0;
         double _periodicity   = 0.0;
@@ -68,7 +68,7 @@ namespace forceField
         DihedralForceField(
             const std::vector<simulationBox::Molecule *> &molecules,
             const std::vector<size_t>                    &atomIndices,
-            const size_t                                  type
+            const DihedralId                              type
         );
 
         void calculateEnergyAndForces(
@@ -94,10 +94,10 @@ namespace forceField
 
         [[nodiscard]] bool isLinker() const;
 
-        [[nodiscard]] size_t getType() const;
-        [[nodiscard]] double getForceConstant() const;
-        [[nodiscard]] double getPeriodicity() const;
-        [[nodiscard]] double getPhaseShift() const;
+        [[nodiscard]] DihedralId getType() const;
+        [[nodiscard]] double     getForceConstant() const;
+        [[nodiscard]] double     getPeriodicity() const;
+        [[nodiscard]] double     getPhaseShift() const;
     };
 
 }   // namespace forceField
