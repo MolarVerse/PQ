@@ -34,7 +34,7 @@ using namespace linearAlgebra;
  *
  * @return std::vector<size_t>
  */
-std::vector<size_t> molsys::flattenAtomTypes()
+std::vector<size_t> SimulationBox::flattenAtomTypes()
 {
     std::vector<size_t> atomTypes;
 
@@ -52,7 +52,7 @@ std::vector<size_t> molsys::flattenAtomTypes()
  *
  * @return std::vector<size_t>
  */
-std::vector<size_t> molsys::flattenMolTypes()
+std::vector<size_t> SimulationBox::flattenMolTypes()
 {
     std::vector<size_t> molTypes;
 
@@ -73,7 +73,7 @@ std::vector<size_t> molsys::flattenMolTypes()
  *
  * @return std::vector<size_t>
  */
-std::vector<size_t> molsys::flattenInternalGlobalVDWTypes()
+std::vector<size_t> SimulationBox::flattenInternalGlobalVDWTypes()
 {
     std::vector<size_t> internalGlobalVDWTypes;
 
@@ -90,7 +90,7 @@ std::vector<size_t> molsys::flattenInternalGlobalVDWTypes()
  *
  * @return std::vector<double>
  */
-std::vector<double> molsys::flattenVelocities()
+std::vector<double> SimulationBox::flattenVelocities()
 {
     std::vector<double> velocities;
 
@@ -113,7 +113,7 @@ std::vector<double> molsys::flattenVelocities()
  *
  * @return std::vector<double>
  */
-std::vector<double> molsys::flattenForces()
+std::vector<double> SimulationBox::flattenForces()
 {
     std::vector<double> forces;
 
@@ -136,7 +136,7 @@ std::vector<double> molsys::flattenForces()
  *
  * @return std::vector<double>
  */
-std::vector<double> molsys::flattenPartialCharges()
+std::vector<double> SimulationBox::flattenPartialCharges()
 {
     std::vector<double> partialCharges;
 
@@ -153,7 +153,7 @@ std::vector<double> molsys::flattenPartialCharges()
  *
  * @param positions
  */
-void molsys::deFlattenPositions(const std::vector<double> &positions)
+void SimulationBox::deFlattenPositions(const std::vector<double> &positions)
 {
     size_t index = 0;
 
@@ -176,7 +176,7 @@ void molsys::deFlattenPositions(const std::vector<double> &positions)
  *
  * @param velocities
  */
-void molsys::deFlattenVelocities(const std::vector<double> &velocities)
+void SimulationBox::deFlattenVelocities(const std::vector<double> &velocities)
 {
     size_t index = 0;
 
@@ -199,7 +199,7 @@ void molsys::deFlattenVelocities(const std::vector<double> &velocities)
  *
  * @param forces
  */
-void molsys::deFlattenForces(const std::vector<double> &forces)
+void SimulationBox::deFlattenForces(const std::vector<double> &forces)
 {
     size_t index = 0;
 
