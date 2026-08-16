@@ -41,7 +41,7 @@ using std::ranges::distance;
  *
  * @param atom
  */
-void SimulationBox::addAtom(const std::shared_ptr<Atom> atom)
+void SimulationBox::addAtom(const std::shared_ptr<Atom> &atom)
 {
     _atoms.push_back(atom);
 }
@@ -208,6 +208,7 @@ std::vector<double> SimulationBox::getAtomicScalarForces() const
 {
     std::vector<double> atomicScalarForces;
 
+    atomicScalarForces.reserve(_atoms.size());
     for (const auto &atom : _atoms)
         atomicScalarForces.push_back(norm(atom->getForce()));
 
@@ -223,6 +224,7 @@ std::vector<double> SimulationBox::getAtomicScalarForcesOld() const
 {
     std::vector<double> atomicScalarForces;
 
+    atomicScalarForces.reserve(_atoms.size());
     for (const auto &atom : _atoms)
         atomicScalarForces.push_back(norm(atom->getForceOld()));
 
@@ -330,6 +332,7 @@ std::vector<linearAlgebra::Vec3D> SimulationBox::getPositions() const
 {
     std::vector<linearAlgebra::Vec3D> positions;
 
+    positions.reserve(_atoms.size());
     for (const auto &atom : _atoms) positions.push_back(atom->getPosition());
 
     return positions;
@@ -344,6 +347,7 @@ std::vector<linearAlgebra::Vec3D> SimulationBox::getVelocities() const
 {
     std::vector<linearAlgebra::Vec3D> velocities;
 
+    velocities.reserve(_atoms.size());
     for (const auto &atom : _atoms) velocities.push_back(atom->getVelocity());
 
     return velocities;
@@ -358,6 +362,7 @@ std::vector<linearAlgebra::Vec3D> SimulationBox::getForces() const
 {
     std::vector<linearAlgebra::Vec3D> forces;
 
+    forces.reserve(_atoms.size());
     for (const auto &atom : _atoms) forces.push_back(atom->getForce());
 
     return forces;
@@ -372,6 +377,7 @@ std::vector<int> SimulationBox::getAtomicNumbers() const
 {
     std::vector<int> atomicNumbers;
 
+    atomicNumbers.reserve(_atoms.size());
     for (const auto &atom : _atoms)
         atomicNumbers.push_back(atom->getAtomicNumber());
 

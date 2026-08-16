@@ -90,10 +90,10 @@ StochasticRescalingManostat &StochasticRescalingManostat::operator=(
  */
 SemiIsotropicStochasticRescalingManostat::
     SemiIsotropicStochasticRescalingManostat(
-        const double               targetPressure,
-        const double               tau,
-        const double               compressibility,
-        const size_t               anisotropicAxis,
+        double                     targetPressure,
+        double                     tau,
+        double                     compressibility,
+        size_t                     anisotropicAxis,
         const std::vector<size_t> &isotropicAxes
     )
     : StochasticRescalingManostat(targetPressure, tau, compressibility),
@@ -111,9 +111,9 @@ SemiIsotropicStochasticRescalingManostat::
  * @param compressibility
  */
 StochasticRescalingManostat::StochasticRescalingManostat(
-    const double targetPressure,
-    const double tau,
-    const double compressibility
+    double targetPressure,
+    double tau,
+    double compressibility
 )
     : Manostat(targetPressure),
       _tau(tau),
@@ -170,7 +170,7 @@ void StochasticRescalingManostat::applyManostat(
  * @param volume
  * @return Vec3D
  */
-tensor3D StochasticRescalingManostat::calculateMu(const double volume)
+tensor3D StochasticRescalingManostat::calculateMu(double volume)
 {
     const auto compress = _compressibility * _dt / _tau;
     const auto kb       = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
@@ -179,7 +179,7 @@ tensor3D StochasticRescalingManostat::calculateMu(const double volume)
     const auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
 
     auto stochasticFactor  = 2.0 * kT * compress / volume;
-    stochasticFactor       *= PRESSURE_FACTOR;
+    stochasticFactor      *= PRESSURE_FACTOR;
     stochasticFactor       = ::sqrt(stochasticFactor) * random;
 
     const auto deltaP = _targetPressure - _pressure;
@@ -199,9 +199,7 @@ tensor3D StochasticRescalingManostat::calculateMu(const double volume)
  * @param volume
  * @return Vec3D
  */
-tensor3D SemiIsotropicStochasticRescalingManostat::calculateMu(
-    const double volume
-)
+tensor3D SemiIsotropicStochasticRescalingManostat::calculateMu(double volume)
 {
     const auto compress = _compressibility * _dt / _tau;
     const auto kb       = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
@@ -245,9 +243,7 @@ tensor3D SemiIsotropicStochasticRescalingManostat::calculateMu(
  * @param volume
  * @return Vec3D
  */
-tensor3D AnisotropicStochasticRescalingManostat::calculateMu(
-    const double volume
-)
+tensor3D AnisotropicStochasticRescalingManostat::calculateMu(double volume)
 {
     const auto compress = _compressibility * _dt / _tau;
     const auto kb       = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
@@ -273,9 +269,7 @@ tensor3D AnisotropicStochasticRescalingManostat::calculateMu(
  * @param volume
  * @return tensor3D
  */
-tensor3D FullAnisotropicStochasticRescalingManostat::calculateMu(
-    const double volume
-)
+tensor3D FullAnisotropicStochasticRescalingManostat::calculateMu(double volume)
 {
     const auto compress = _compressibility * _dt / _tau;
     const auto kb       = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;

@@ -45,7 +45,7 @@ using namespace physicalData;
  * @param data
  */
 void RingPolymerEnergyOutput::write(
-    const size_t                     step,
+    size_t                           step,
     const std::vector<PhysicalData> &dataVector
 )
 {

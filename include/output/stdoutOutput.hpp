@@ -42,7 +42,7 @@ namespace output
         void writeInfo(const std::string &message) const;
 
         void writeHeader() const;
-        void writeEndedNormally(const double elapsedTime) const;
+        void writeEndedNormally(double elapsedTime) const;
 
         void writeDensityWarning() const;
         void writeOptWarning(const std::string &message) const;

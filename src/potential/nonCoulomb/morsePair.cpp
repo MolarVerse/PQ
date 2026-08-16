@@ -40,17 +40,19 @@ using namespace utilities;
  * @param equilibriumDistance
  */
 MorsePair::MorsePair(
-    const size_t vanDerWaalsType1,
-    const size_t vanDerWaalsType2,
-    const double cutOff,
-    const double dissociationEnergy,
-    const double wellWidth,
-    const double equilibriumDistance
+    size_t vanDerWaalsType1,
+    size_t vanDerWaalsType2,
+    double cutOff,
+    double dissociationEnergy,
+    double wellWidth,
+    double equilibriumDistance
 )
     : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff),
       _dissociationEnergy(dissociationEnergy),
       _wellWidth(wellWidth),
-      _equilibriumDistance(equilibriumDistance){};
+      _equilibriumDistance(equilibriumDistance)
+{
+}
 
 /**
  * @brief Construct a new Morse Pair:: Morse Pair object
@@ -61,15 +63,17 @@ MorsePair::MorsePair(
  * @param equilibriumDistance
  */
 MorsePair::MorsePair(
-    const double cutOff,
-    const double dissociationEnergy,
-    const double wellWidth,
-    const double equilibriumDistance
+    double cutOff,
+    double dissociationEnergy,
+    double wellWidth,
+    double equilibriumDistance
 )
     : NonCoulombPair(cutOff),
       _dissociationEnergy(dissociationEnergy),
       _wellWidth(wellWidth),
-      _equilibriumDistance(equilibriumDistance){};
+      _equilibriumDistance(equilibriumDistance)
+{
+}
 
 /**
  * @brief Construct a new Morse Pair:: Morse Pair object
@@ -82,17 +86,19 @@ MorsePair::MorsePair(
  * @param equilibriumDistance
  */
 MorsePair::MorsePair(
-    const double cutOff,
-    const double energyCutoff,
-    const double forceCutoff,
-    const double dissociationEnergy,
-    const double wellWidth,
-    const double equilibriumDistance
+    double cutOff,
+    double energyCutoff,
+    double forceCutoff,
+    double dissociationEnergy,
+    double wellWidth,
+    double equilibriumDistance
 )
     : NonCoulombPair(cutOff, energyCutoff, forceCutoff),
       _dissociationEnergy(dissociationEnergy),
       _wellWidth(wellWidth),
-      _equilibriumDistance(equilibriumDistance){};
+      _equilibriumDistance(equilibriumDistance)
+{
+}
 
 /**
  * @brief operator overload for the comparison of two MorsePair objects
@@ -119,7 +125,7 @@ bool MorsePair::operator==(const MorsePair &other) const
  * @param distance
  * @return std::pair<double, double>
  */
-std::pair<double, double> MorsePair::calculate(const double distance) const
+std::pair<double, double> MorsePair::calculate(double distance) const
 {
     const auto deltaEquilibrium = distance - _equilibriumDistance;
     const auto expTerm          = std::exp(-_wellWidth * deltaEquilibrium);

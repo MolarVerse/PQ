@@ -45,10 +45,10 @@ namespace potential
             _guffNonCoulombPairs;
 
        public:
-        void resizeGuff(const size_t);
-        void resizeGuff(const size_t, const size_t);
-        void resizeGuff(const size_t, const size_t, const size_t);
-        void resizeGuff(const size_t, const size_t, const size_t, const size_t);
+        void resizeGuff(size_t);
+        void resizeGuff(size_t, size_t);
+        void resizeGuff(size_t, size_t, size_t);
+        void resizeGuff(size_t, size_t, size_t, size_t);
 
         /***************************
          * standard setter methods *

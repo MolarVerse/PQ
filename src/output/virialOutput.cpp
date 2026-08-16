@@ -22,7 +22,7 @@
 
 #include "virialOutput.hpp"
 
-#include <format>    // for format
+#include <format>   // for format
 
 #include "physicalData.hpp"   // for PhysicalData
 
@@ -47,7 +47,7 @@ using namespace physicalData;
  * @param step
  * @param data
  */
-void VirialOutput::write(const size_t step, const PhysicalData &data)
+void VirialOutput::write(size_t step, const PhysicalData &data)
 {
     const auto virial = data.getVirial();
 

@@ -40,12 +40,12 @@ using namespace utilities;
  * @param c6
  */
 BuckinghamPair::BuckinghamPair(
-    const size_t vanDerWaalsType1,
-    const size_t vanDerWaalsType2,
-    const double cutOff,
-    const double a,
-    const double dRho,
-    const double c6
+    size_t vanDerWaalsType1,
+    size_t vanDerWaalsType2,
+    double cutOff,
+    double a,
+    double dRho,
+    double c6
 )
     : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff),
       _a(a),
@@ -62,12 +62,7 @@ BuckinghamPair::BuckinghamPair(
  * @param dRho
  * @param c6
  */
-BuckinghamPair::BuckinghamPair(
-    const double cutOff,
-    const double a,
-    const double dRho,
-    const double c6
-)
+BuckinghamPair::BuckinghamPair(double cutOff, double a, double dRho, double c6)
     : NonCoulombPair(cutOff), _a(a), _dRho(dRho), _c6(c6)
 {
 }
@@ -83,12 +78,12 @@ BuckinghamPair::BuckinghamPair(
  * @param c6
  */
 BuckinghamPair::BuckinghamPair(
-    const double cutOff,
-    const double energyCutoff,
-    const double forceCutoff,
-    const double a,
-    const double dRho,
-    const double c6
+    double cutOff,
+    double energyCutoff,
+    double forceCutoff,
+    double a,
+    double dRho,
+    double c6
 )
     : NonCoulombPair(cutOff, energyCutoff, forceCutoff),
       _a(a),
@@ -122,7 +117,7 @@ bool BuckinghamPair::operator==(const BuckinghamPair &other) const
  * @param distance
  * @return std::pair<double, double>
  */
-std::pair<double, double> BuckinghamPair::calculate(const double distance) const
+std::pair<double, double> BuckinghamPair::calculate(double distance) const
 {
     const auto distanceThird = distance * distance * distance;
     const auto distanceSixth = distanceThird * distanceThird;

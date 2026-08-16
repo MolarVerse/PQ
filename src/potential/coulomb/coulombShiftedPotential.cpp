@@ -34,8 +34,8 @@ using namespace constants;
  * @return std::pair<double, double>
  */
 std::pair<double, double> CoulombShiftedPotential::calculate(
-    const double distance,
-    const double chargeProduct
+    double distance,
+    double chargeProduct
 ) const
 {
     const auto coulombPrefactor    = chargeProduct * COULOMB_PREFACTOR;

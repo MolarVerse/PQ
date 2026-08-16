@@ -39,7 +39,7 @@ namespace customException
      * @enum ExceptionType
      *
      */
-    enum class ExceptionType : size_t
+    enum class ExceptionType : std::uint8_t
     {
         INPUTFILEEXCEPTION,
         RSTFILEEXCEPTION,
@@ -80,13 +80,13 @@ namespace customException
 
        public:
         explicit CustomException(
-            const std::string_view message,
-            std::optional<size_t>  lineNumber
+            std::string_view      message,
+            std::optional<size_t> lineNumber
         );
-        explicit CustomException(const std::string_view message);
+        explicit CustomException(std::string_view message);
 
-        void colorfulOutput(const Color::Code, const std::string_view) const;
-        void setLineNumber(const size_t lineNumber) noexcept;
+        void colorfulOutput(Color::Code, std::string_view) const;
+        void setLineNumber(size_t lineNumber) noexcept;
         [[nodiscard]] const std::string    &getMessage() const noexcept;
         [[nodiscard]] std::optional<size_t> getLineNumber() const noexcept;
     };

@@ -41,15 +41,12 @@ namespace input
        public:
         explicit SimulationBoxInputParser(engine::Engine &);
 
-        void parseCoulombRadius(const std::vector<std::string> &, const size_t);
-        void parseNonCoulombRadius(
-            const std::vector<std::string> &,
-            const size_t
-        );
-        void parseDensity(const std::vector<std::string> &, const size_t);
+        void parseCoulombRadius(const std::vector<std::string> &, size_t);
+        void parseNonCoulombRadius(const std::vector<std::string> &, size_t);
+        void parseDensity(const std::vector<std::string> &, size_t);
         void parseInitializeVelocities(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
     };
 

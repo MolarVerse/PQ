@@ -114,7 +114,7 @@ std::string ShakeSection::keyword() { return "shake"; }
  *
  * @throws TopologyException if endedNormal is false
  */
-void ShakeSection::endedNormally(const bool endedNormal) const
+void ShakeSection::endedNormally(bool endedNormal) const
 {
     if (!endedNormal)
     {

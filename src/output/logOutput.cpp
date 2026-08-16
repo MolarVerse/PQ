@@ -57,7 +57,7 @@ void LogOutput::writeHeader() { _fp << header() << '\n' << std::flush; }
  * @brief write a message to the log file if the simulation ended normally
  *
  */
-void LogOutput::writeEndedNormally(const double elapsedTime)
+void LogOutput::writeEndedNormally(double elapsedTime)
 {
     _fp << elapsedTimeMessage(elapsedTime) << '\n';
     _fp << endedNormally() << '\n' << std::flush;
@@ -91,7 +91,7 @@ void LogOutput::writeOptWarning(const std::string &message)
  *
  * @param momentum
  */
-void LogOutput::writeInitialMomentum(const double momentum)
+void LogOutput::writeInitialMomentum(double momentum)
 {
     _fp << "\n" << std::flush;
 

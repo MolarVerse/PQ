@@ -49,9 +49,9 @@ namespace settings
          * standard setters *
          ********************/
 
-        static void setTimeStep(const double timeStep);
-        static void setStepCount(const size_t stepCount);
-        static void setNumberOfSteps(const size_t numberOfSteps);
+        static void setTimeStep(double timeStep);
+        static void setStepCount(size_t stepCount);
+        static void setNumberOfSteps(size_t numberOfSteps);
 
         /********************
          * standard setters *

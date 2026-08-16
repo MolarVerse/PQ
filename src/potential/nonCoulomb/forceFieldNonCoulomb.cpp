@@ -220,8 +220,8 @@ void ForceFieldNonCoulomb::fillDiagOfNonCoulPairsMatrix(
  * index combinations and it has different parameters
  */
 void ForceFieldNonCoulomb::setOffDiagonalElement(
-    const size_t atomType1,
-    const size_t atomType2
+    size_t atomType1,
+    size_t atomType2
 )
 {
     auto nonCoulPair1 = findNonCoulPairByInternalTypes(atomType1, atomType2);
@@ -322,10 +322,7 @@ std::vector<std::shared_ptr<NonCoulombPair>> ForceFieldNonCoulomb::
  * @throws if the non coulombic pair is found twice
  */
 std::optional<std::shared_ptr<NonCoulombPair>> ForceFieldNonCoulomb::
-    findNonCoulPairByInternalTypes(
-        const size_t intType1,
-        const size_t intType2
-    ) const
+    findNonCoulPairByInternalTypes(size_t intType1, size_t intType2) const
 {
     auto findByIntAtomTypes = [intType1, intType2](const auto &nonCoulPair)
     {

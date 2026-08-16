@@ -59,20 +59,20 @@ namespace opt
        public:
         Convergence() = default;
         Convergence(
-            const bool,
-            const bool,
-            const bool,
-            const double,
-            const double,
-            const double,
-            const double,
-            const settings::ConvStrategy
+            bool,
+            bool,
+            bool,
+            double,
+            double,
+            double,
+            double,
+            settings::ConvStrategy
         );
 
         [[nodiscard]] bool checkConvergence() const;
 
-        void calcEnergyConvergence(const double, const double);
-        void calcForceConvergence(const double, const double);
+        void calcEnergyConvergence(double, double);
+        void calcForceConvergence(double, double);
 
         /***************************
          * standard getter methods *

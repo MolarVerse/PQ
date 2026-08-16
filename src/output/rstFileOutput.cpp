@@ -46,7 +46,7 @@ using namespace settings;
 void RstFileOutput::write(
     SimulationBox    &simBox,
     const Thermostat &thermostat,
-    const size_t      step
+    size_t            step
 )
 {
     std::ostringstream buffer;

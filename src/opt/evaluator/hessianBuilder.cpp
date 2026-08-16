@@ -39,7 +39,7 @@ using namespace customException;
  * @param displacement
  */
 ForceDifferenceHessianBuilder::ForceDifferenceHessianBuilder(
-    const double displacement
+    double displacement
 )
     : _displacement(displacement)
 {
@@ -54,8 +54,8 @@ ForceDifferenceHessianBuilder::ForceDifferenceHessianBuilder(
 std::vector<double> ForceDifferenceHessianBuilder::evaluateForces(
     Evaluator                    &evaluator,
     simulationBox::SimulationBox &simulationBox,
-    const size_t                  coordinateIndex,
-    const double                  displacement
+    size_t                        coordinateIndex,
+    double                        displacement
 ) const
 {
     displaceCoordinate(simulationBox, coordinateIndex, displacement);
@@ -90,8 +90,8 @@ void ForceDifferenceHessianBuilder::restorePositions(
  */
 void ForceDifferenceHessianBuilder::displaceCoordinate(
     simulationBox::SimulationBox &simulationBox,
-    const size_t                  coordinateIndex,
-    const double                  displacement
+    size_t                        coordinateIndex,
+    double                        displacement
 )
 {
     const auto atomIndex = coordinateIndex / 3;
@@ -298,8 +298,8 @@ HessianMatrix AnalyticHessianBuilder::build(
  * @return std::shared_ptr<HessianBuilder>
  */
 std::shared_ptr<HessianBuilder> opt::makeHessianBuilder(
-    const HessianBuilderType builder,
-    const double             displacement
+    HessianBuilderType builder,
+    double             displacement
 )
 {
     using enum HessianBuilderType;

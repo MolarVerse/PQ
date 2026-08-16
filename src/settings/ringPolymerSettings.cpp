@@ -29,7 +29,7 @@ using settings::RingPolymerSettings;
  *
  * @param numberOfBeads
  */
-void RingPolymerSettings::setNumberOfBeads(const size_t numberOfBeads)
+void RingPolymerSettings::setNumberOfBeads(size_t numberOfBeads)
 {
     _numberOfBeads = numberOfBeads;
 }

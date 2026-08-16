@@ -62,14 +62,14 @@ namespace opt
         std::deque<std::vector<linearAlgebra::Vec3D>> _positionHistory;
 
        public:
-        explicit Optimizer(const size_t);
+        explicit Optimizer(size_t);
 
         Optimizer()          = default;
         virtual ~Optimizer() = default;
 
         [[nodiscard]]
-        virtual std::shared_ptr<Optimizer> clone() const = 0;
-        virtual void update(const double, const size_t)  = 0;
+        virtual std::shared_ptr<Optimizer> clone() const          = 0;
+        virtual void                       update(double, size_t) = 0;
         [[nodiscard]]
         virtual size_t maxHistoryLength() const = 0;
 
@@ -80,16 +80,18 @@ namespace opt
          * standard setter methods *
          ***************************/
 
-        void setConvergence(const opt::Convergence);
+        void setConvergence(opt::Convergence);
 
         void setSimulationBox(
-            const std::shared_ptr<simulationBox::SimulationBox>
+            const std::shared_ptr<simulationBox::SimulationBox>&
         );
 
-        void setPhysicalData(const std::shared_ptr<physicalData::PhysicalData>);
+        void setPhysicalData(
+            const std::shared_ptr<physicalData::PhysicalData>&
+        );
 
         void setPhysicalDataOld(
-            const std::shared_ptr<physicalData::PhysicalData>
+            const std::shared_ptr<physicalData::PhysicalData>&
         );
 
         /***************************
@@ -101,25 +103,25 @@ namespace opt
         [[nodiscard]] size_t getHistoryIndex(int offset) const;
 
         [[nodiscard]] double getEnergy() const;
-        [[nodiscard]] double getEnergy(const int) const;
+        [[nodiscard]] double getEnergy(int) const;
 
         [[nodiscard]] double getRMSForce() const;
-        [[nodiscard]] double getRMSForce(const int) const;
+        [[nodiscard]] double getRMSForce(int) const;
 
         [[nodiscard]] double getMaxForce() const;
-        [[nodiscard]] double getMaxForce(const int) const;
+        [[nodiscard]] double getMaxForce(int) const;
 
         [[nodiscard]]
         std::vector<linearAlgebra::Vec3D> getForces() const;
         [[nodiscard]]
-        std::vector<linearAlgebra::Vec3D> getForces(const int) const;
+        std::vector<linearAlgebra::Vec3D> getForces(int) const;
 
         [[nodiscard]]
         std::vector<linearAlgebra::Vec3D> getPositions() const;
         [[nodiscard]]
-        std::vector<linearAlgebra::Vec3D> getPositions(const int) const;
+        std::vector<linearAlgebra::Vec3D> getPositions(int) const;
 
-        [[nodiscard]] opt::Convergence &getConvergence();
+        [[nodiscard]] opt::Convergence& getConvergence();
         [[nodiscard]] opt::Convergence  getConvergence() const;
     };
 

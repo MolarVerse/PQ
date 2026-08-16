@@ -174,7 +174,7 @@ namespace linearAlgebra
      * @return StaticMatrix3x3<T>
      */
     template <typename T>
-    StaticMatrix3x3<T> operator*(const StaticMatrix3x3<T> &mat, const T t)
+    StaticMatrix3x3<T> operator*(const StaticMatrix3x3<T> &mat, const T &t)
     {
         return StaticMatrix3x3<T>(mat[0] * t, mat[1] * t, mat[2] * t);
     }
@@ -186,7 +186,7 @@ namespace linearAlgebra
      * @return StaticMatrix3x3<T>
      */
     template <typename T>
-    StaticMatrix3x3<T> operator*(const T t, const StaticMatrix3x3<T> &mat)
+    StaticMatrix3x3<T> operator*(const T &t, const StaticMatrix3x3<T> &mat)
     {
         return StaticMatrix3x3<T>(mat[0] * t, mat[1] * t, mat[2] * t);
     }
@@ -218,7 +218,7 @@ namespace linearAlgebra
      * @param rhs
      */
     template <typename T>
-    void operator*=(StaticMatrix3x3<T> &lhs, const T t)
+    void operator*=(StaticMatrix3x3<T> &lhs, const T &t)
     {
         lhs[0] *= t;
         lhs[1] *= t;
@@ -234,12 +234,12 @@ namespace linearAlgebra
     /**
      * @brief operator/ for StaticMatrix3x3 and scalar
      *
-     * @param StaticMatrix3x3<T> mat, T t
+     * @param StaticMatrix3x3<T> mat, const U &t
      * @return StaticMatrix3x3<T>
      */
     template <typename T, typename U>
     requires std::convertible_to<U, T>
-    StaticMatrix3x3<T> operator/(const StaticMatrix3x3<T> &mat, const U t)
+    StaticMatrix3x3<T> operator/(const StaticMatrix3x3<T> &mat, const U &t)
     {
         return StaticMatrix3x3<T>(mat[0] / t, mat[1] / t, mat[2] / t);
     }
@@ -247,12 +247,12 @@ namespace linearAlgebra
     /**
      * @brief operator/ for scalar and StaticMatrix3x3
      *
-     * @param StaticMatrix3x3<T> mat, T t
+     * @param const U &t, const StaticMatrix3x3<T> &mat
      * @return StaticMatrix3x3<T>
      */
     template <typename T, typename U>
     requires std::convertible_to<U, T>
-    StaticMatrix3x3<T> operator/(const U t, const StaticMatrix3x3<T> &mat)
+    StaticMatrix3x3<T> operator/(const U &t, const StaticMatrix3x3<T> &mat)
     {
         return StaticMatrix3x3<T>(t / mat[0], t / mat[1], t / mat[2]);
     }
@@ -264,7 +264,7 @@ namespace linearAlgebra
      * @param rhs
      */
     template <typename T>
-    void operator/=(StaticMatrix3x3<T> &lhs, const T t)
+    void operator/=(StaticMatrix3x3<T> &lhs, const T &t)
     {
         lhs[0] /= t;
         lhs[1] /= t;
@@ -416,7 +416,7 @@ namespace linearAlgebra
      * @param t
      */
     template <typename T>
-    StaticMatrix3x3<T> diagonalMatrix(const T t)
+    StaticMatrix3x3<T> diagonalMatrix(const T &t)
     {
         StaticMatrix3x3<T> result{T()};
 

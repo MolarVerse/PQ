@@ -86,13 +86,13 @@ namespace simulationBox
          * scaling methods *
          *******************/
 
-        void scaleVelocity(const double scaleFactor);
+        void scaleVelocity(double scaleFactor);
         void scaleVelocity(const linearAlgebra::Vec3D &scaleFactor);
         void scaleVelocityOrthogonalSpace(
             const linearAlgebra::tensor3D &,
             const Box &
         );
-        void scaleForce(const double scaleFactor);
+        void scaleForce(double scaleFactor);
         void scaleForce(const linearAlgebra::Vec3D &scaleFactor);
 
         /**************************
@@ -102,7 +102,7 @@ namespace simulationBox
         void addPosition(const linearAlgebra::Vec3D &position);
         void addVelocity(const linearAlgebra::Vec3D &velocity);
         void addForce(const linearAlgebra::Vec3D &force) { _force += force; }
-        void addForce(const double, const double, const double);
+        void addForce(double, double, double);
         void addForceInner(const linearAlgebra::Vec3D &force);
         void addForceOuter(const linearAlgebra::Vec3D &force);
         void addShiftForce(const linearAlgebra::Vec3D &shiftForce)
@@ -148,20 +148,20 @@ namespace simulationBox
          * standard setter methods *
          ***************************/
 
-        void setActive(const bool isActive);
+        void setActive(bool isActive);
 
         void setName(const std::string_view &name);
         void setAtomTypeName(const std::string_view &atomTypeName);
-        void setAtomicNumber(const int atomicNumber);
+        void setAtomicNumber(int atomicNumber);
 
-        void setMass(const double mass);
-        void setPartialCharge(const double partialCharge);
-        void setQMCharge(const double charge);
+        void setMass(double mass);
+        void setPartialCharge(double partialCharge);
+        void setQMCharge(double charge);
 
-        void setAtomType(const size_t atomType);
-        void setExternalAtomType(const size_t externalAtomType);
-        void setExternalGlobalVDWType(const size_t externalGlobalVDWType);
-        void setInternalGlobalVDWType(const size_t internalGlobalVDWType);
+        void setAtomType(size_t atomType);
+        void setExternalAtomType(size_t externalAtomType);
+        void setExternalGlobalVDWType(size_t externalGlobalVDWType);
+        void setInternalGlobalVDWType(size_t internalGlobalVDWType);
 
         void setPosition(const linearAlgebra::Vec3D &position);
         void setVelocity(const linearAlgebra::Vec3D &velocity);

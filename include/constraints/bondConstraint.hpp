@@ -55,9 +55,9 @@ namespace constraints
         BondConstraint(
             simulationBox::Molecule *molecule1,
             simulationBox::Molecule *molecule2,
-            const size_t             atomIndex1,
-            const size_t             atomIndex2,
-            const double             bondLength
+            size_t                   atomIndex1,
+            size_t                   atomIndex2,
+            double                   bondLength
         );
 
         void calculateConstraintBondRef(const simulationBox::SimulationBox &);
@@ -67,11 +67,10 @@ namespace constraints
         ) const;
         [[nodiscard]] double calculateVelocityDelta() const;
 
-        [[nodiscard]] bool applyShake(
-            const simulationBox::SimulationBox &,
-            const double
-        );
-        [[nodiscard]] bool applyRattle(const double);
+        [[nodiscard]]
+        bool applyShake(const simulationBox::SimulationBox &, double);
+
+        [[nodiscard]] bool applyRattle(double);
 
         /***************************
          * standard setter methods *

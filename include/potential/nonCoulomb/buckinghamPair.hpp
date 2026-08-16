@@ -46,34 +46,34 @@ namespace potential
 
        public:
         explicit BuckinghamPair(
-            const size_t vanDerWaalsType1,
-            const size_t vanDerWaalsType2,
-            const double cutOff,
-            const double a,
-            const double dRho,
-            const double c6
+            size_t vanDerWaalsType1,
+            size_t vanDerWaalsType2,
+            double cutOff,
+            double a,
+            double dRho,
+            double c6
         );
 
         explicit BuckinghamPair(
-            const double cutOff,
-            const double a,
-            const double dRho,
-            const double c6
+            double cutOff,
+            double a,
+            double dRho,
+            double c6
         );
 
         explicit BuckinghamPair(
-            const double cutOff,
-            const double energyCutoff,
-            const double forceCutoff,
-            const double a,
-            const double dRho,
-            const double c6
+            double cutOff,
+            double energyCutoff,
+            double forceCutoff,
+            double a,
+            double dRho,
+            double c6
         );
 
         [[nodiscard]] bool operator==(const BuckinghamPair &other) const;
 
-        [[nodiscard]] std::pair<double, double> calculate(const double distance
-        ) const override;
+        [[nodiscard]]
+        std::pair<double, double> calculate(double distance) const override;
 
         [[nodiscard]] double getA() const;
         [[nodiscard]] double getDRho() const;

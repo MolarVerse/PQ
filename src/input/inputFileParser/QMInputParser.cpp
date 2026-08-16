@@ -188,7 +188,7 @@ QMInputParser::QMInputParser(
  */
 void QMInputParser::parseQMMethod(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     using enum QMMethod;
@@ -250,7 +250,7 @@ void QMInputParser::parseQMMethod(
  */
 void QMInputParser::parseQMScript(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -270,7 +270,7 @@ void QMInputParser::parseQMScript(
  */
 void QMInputParser::parseQMScriptFullPath(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -285,7 +285,7 @@ void QMInputParser::parseQMScriptFullPath(
  */
 void QMInputParser::parseQMLoopTimeLimit(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -300,7 +300,7 @@ void QMInputParser::parseQMLoopTimeLimit(
  */
 void QMInputParser::parseDispersion(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -315,7 +315,7 @@ void QMInputParser::parseDispersion(
  */
 void QMInputParser::parseRemoveNetForce(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -333,7 +333,7 @@ void QMInputParser::parseRemoveNetForce(
  */
 void QMInputParser::parseMaceModel(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     using enum MaceModel;
@@ -412,7 +412,7 @@ void QMInputParser::parseMaceModel(
  */
 void QMInputParser::parseMaceMode(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -428,7 +428,7 @@ void QMInputParser::parseMaceMode(
  */
 void QMInputParser::parseMaceModelPath(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -490,7 +490,7 @@ void QMInputParser::parseMaceQMMethod(const std::string_view &model)
  */
 void QMInputParser::parseSlakosType(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     using enum SlakosType;
@@ -535,7 +535,7 @@ void QMInputParser::parseSlakosType(
  */
 void QMInputParser::parseSlakosPath(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -550,7 +550,7 @@ void QMInputParser::parseSlakosPath(
  */
 void QMInputParser::parseThirdOrder(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -567,7 +567,7 @@ void QMInputParser::parseThirdOrder(
  */
 void QMInputParser::parseHubbardDerivs(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommandArray(lineElements, lineNumber);
@@ -638,7 +638,7 @@ void QMInputParser::parseHubbardDerivs(
  */
 void QMInputParser::parseXtbMethod(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     using enum XtbMethod;
@@ -675,7 +675,7 @@ void QMInputParser::parseXtbMethod(
  */
 void QMInputParser::parseFennolModelPath(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -690,7 +690,7 @@ void QMInputParser::parseFennolModelPath(
  */
 void QMInputParser::parseGPUPreprocessing(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);

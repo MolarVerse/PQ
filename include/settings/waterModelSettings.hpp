@@ -24,7 +24,7 @@
 
 #define _WATER_MODEL_SETTINGS_HPP_
 
-#include <cstddef>       // for size_t
+#include <cstdint>       // for std::uint8_t
 #include <string>        // for string
 #include <string_view>   // for string_view
 
@@ -33,7 +33,7 @@ namespace settings
     /**
      * @brief Enum for intramolecular water model types
      */
-    enum class WaterIntraModel : size_t
+    enum class WaterIntraModel : std::uint8_t
     {
         NONE,
         SPC,
@@ -53,7 +53,7 @@ namespace settings
     /**
      * @brief Enum for intermolecular water model types
      */
-    enum class WaterInterModel : size_t
+    enum class WaterInterModel : std::uint8_t
     {
         NONE,
         SPC,
@@ -106,14 +106,14 @@ namespace settings
          * standard setters *
          ********************/
 
-        static void setIsWaterModelSet(const bool isSet);
-        static void setIsInterWaterModelSet(const bool isSet);
+        static void setIsWaterModelSet(bool isSet);
+        static void setIsInterWaterModelSet(bool isSet);
 
         static void setWaterIntraModel(const std::string_view &model);
-        static void setWaterIntraModel(const WaterIntraModel model);
+        static void setWaterIntraModel(WaterIntraModel model);
 
         static void setWaterInterModel(const std::string_view &model);
-        static void setWaterInterModel(const WaterInterModel model);
+        static void setWaterInterModel(WaterInterModel model);
     };
 
 }   // namespace settings

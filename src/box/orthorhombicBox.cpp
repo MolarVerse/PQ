@@ -66,10 +66,7 @@ Vec3D OrthorhombicBox::calcShiftVector(const Vec3D &shiftVector) const
  *
  * @return vector<double>
  */
-Vec3D OrthorhombicBox::calcBoxDimFromDensity(
-    const double totalMass,
-    const double density
-)
+Vec3D OrthorhombicBox::calcBoxDimFromDensity(double totalMass, double density)
 {
     _volume = totalMass / (density * KG_PER_L_TO_AMU_PER_ANGSTROM3);
 

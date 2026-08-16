@@ -39,14 +39,14 @@ using namespace settings;
  *
  * @param name
  */
-Molecule::Molecule(const std::string_view name) : _name(name) {}
+Molecule::Molecule(std::string_view name) : _name(name) {}
 
 /**
  * @brief Construct a new Molecule:: Molecule object
  *
  * @param moltype
  */
-Molecule::Molecule(const size_t moltype) : _moltype(moltype) {}
+Molecule::Molecule(size_t moltype) : _moltype(moltype) {}
 
 /**
  * @brief finds number of different atom types in molecule
@@ -58,7 +58,7 @@ size_t Molecule::getNumberOfAtomTypes()
     std::vector<size_t> extAtomTypes;
 
     const auto fill                = std::back_inserter(extAtomTypes);
-    auto       getExternalAtomType = [](auto atom)
+    auto       getExternalAtomType = [](const auto &atom)
     { return atom->getExternalAtomType(); };
 
     std::ranges::transform(_atoms, fill, getExternalAtomType);
@@ -105,7 +105,7 @@ void Molecule::calculateCenterOfMass(const Box &box)
  */
 void Molecule::reconstructAtomsAroundCenterOfMass(const Box &box)
 {
-    auto reconstructAtom = [&box, this](auto atom)
+    auto reconstructAtom = [&box, this](const auto &atom)
     {
         auto position  = atom->getPosition();
         position      -= box.calcShiftVector(position - _centerOfMass);
@@ -132,7 +132,7 @@ void Molecule::scale(const tensor3D &shiftTensor, const Box &box)
 
     const auto shift = shiftTensor * centerOfMass - centerOfMass;
 
-    auto scaleAtomPosition = [&box, shift](auto atom)
+    auto scaleAtomPosition = [&box, shift](const auto &atom)
     {
         auto position = atom->getPosition();
 
@@ -184,7 +184,7 @@ void Molecule::scaleVelocity(const tensor3D &scalingTensor, const Box &box)
     const auto velocityShift =
         scaledCenterOfMassVelocity - centerOfMassVelocity;
 
-    auto shiftAtomVelocity = [velocityShift](auto atom)
+    auto shiftAtomVelocity = [velocityShift](const auto &atom)
     { atom->addVelocity(velocityShift); };
 
     std::ranges::for_each(_atoms, shiftAtomVelocity);
@@ -277,7 +277,10 @@ void Molecule::setPartialCharges(const std::vector<double> &partialCharges)
  */
 void Molecule::setAtomForcesToZero()
 {
-    std::ranges::for_each(_atoms, [](auto atom) { atom->setForceToZero(); });
+    std::ranges::for_each(
+        _atoms,
+        [](const auto &atom) { atom->setForceToZero(); }
+    );
 }
 
 /**
@@ -311,7 +314,7 @@ void Molecule::deactivateMolecule()
  *
  * @param atom
  */
-void Molecule::addAtom(const std::shared_ptr<Atom> atom)
+void Molecule::addAtom(const std::shared_ptr<Atom> &atom)
 {
     _atoms.push_back(atom);
 }
@@ -322,7 +325,7 @@ void Molecule::addAtom(const std::shared_ptr<Atom> atom)
  * @param index
  * @param position
  */
-void Molecule::addAtomPosition(const size_t index, const Vec3D &position)
+void Molecule::addAtomPosition(size_t index, const Vec3D &position)
 {
     _atoms[index]->addPosition(position);
 }
@@ -333,7 +336,7 @@ void Molecule::addAtomPosition(const size_t index, const Vec3D &position)
  * @param index
  * @param velocity
  */
-void Molecule::addAtomVelocity(const size_t index, const Vec3D &velocity)
+void Molecule::addAtomVelocity(size_t index, const Vec3D &velocity)
 {
     _atoms[index]->addVelocity(velocity);
 }
@@ -344,7 +347,7 @@ void Molecule::addAtomVelocity(const size_t index, const Vec3D &velocity)
  * @param index
  * @param force
  */
-void Molecule::addAtomForce(const size_t index, const Vec3D &force)
+void Molecule::addAtomForce(size_t index, const Vec3D &force)
 {
     _atoms[index]->addForce(force);
 }
@@ -355,7 +358,7 @@ void Molecule::addAtomForce(const size_t index, const Vec3D &force)
  * @param index
  * @param shiftForce
  */
-void Molecule::addAtomShiftForce(const size_t index, const Vec3D &shiftForce)
+void Molecule::addAtomShiftForce(size_t index, const Vec3D &shiftForce)
 {
     _atoms[index]->addShiftForce(shiftForce);
 }
@@ -372,7 +375,7 @@ void Molecule::addAtomShiftForce(const size_t index, const Vec3D &shiftForce)
  * @param index
  * @param position
  */
-void Molecule::setAtomPosition(const size_t index, const Vec3D &position)
+void Molecule::setAtomPosition(size_t index, const Vec3D &position)
 {
     _atoms[index]->setPosition(position);
 }
@@ -383,7 +386,7 @@ void Molecule::setAtomPosition(const size_t index, const Vec3D &position)
  * @param index
  * @param velocity
  */
-void Molecule::setAtomVelocity(const size_t index, const Vec3D &velocity)
+void Molecule::setAtomVelocity(size_t index, const Vec3D &velocity)
 {
     _atoms[index]->setVelocity(velocity);
 }
@@ -394,7 +397,7 @@ void Molecule::setAtomVelocity(const size_t index, const Vec3D &velocity)
  * @param index
  * @param force
  */
-void Molecule::setAtomForce(const size_t index, const Vec3D &force)
+void Molecule::setAtomForce(size_t index, const Vec3D &force)
 {
     _atoms[index]->setForce(force);
 }
@@ -405,7 +408,7 @@ void Molecule::setAtomForce(const size_t index, const Vec3D &force)
  * @param index
  * @param shiftForce
  */
-void Molecule::setAtomShiftForce(const size_t index, const Vec3D &shiftForce)
+void Molecule::setAtomShiftForce(size_t index, const Vec3D &shiftForce)
 {
     _atoms[index]->setShiftForce(shiftForce);
 }
@@ -422,7 +425,7 @@ void Molecule::setAtomShiftForce(const size_t index, const Vec3D &shiftForce)
  * @param index
  * @return Vec3D
  */
-Vec3D Molecule::getAtomPosition(const size_t index) const
+Vec3D Molecule::getAtomPosition(size_t index) const
 {
     return _atoms[index]->getPosition();
 }
@@ -435,6 +438,7 @@ Vec3D Molecule::getAtomPosition(const size_t index) const
 std::vector<Vec3D> Molecule::getAtomPositions() const
 {
     std::vector<Vec3D> positions;
+    positions.reserve(_atoms.size());
     for (const auto &atom : _atoms) positions.push_back(atom->getPosition());
 
     return positions;
@@ -446,7 +450,7 @@ std::vector<Vec3D> Molecule::getAtomPositions() const
  * @param index
  * @return Vec3D
  */
-Vec3D Molecule::getAtomVelocity(const size_t index) const
+Vec3D Molecule::getAtomVelocity(size_t index) const
 {
     return _atoms[index]->getVelocity();
 }
@@ -457,7 +461,7 @@ Vec3D Molecule::getAtomVelocity(const size_t index) const
  * @param index
  * @return Vec3D
  */
-Vec3D Molecule::getAtomForce(const size_t index) const
+Vec3D Molecule::getAtomForce(size_t index) const
 {
     return _atoms[index]->getForce();
 }
@@ -468,7 +472,7 @@ Vec3D Molecule::getAtomForce(const size_t index) const
  * @param index
  * @return Vec3D
  */
-Vec3D Molecule::getAtomShiftForce(const size_t index) const
+Vec3D Molecule::getAtomShiftForce(size_t index) const
 {
     return _atoms[index]->getShiftForce();
 }
@@ -479,7 +483,7 @@ Vec3D Molecule::getAtomShiftForce(const size_t index) const
  * @param index
  * @return int
  */
-int Molecule::getAtomicNumber(const size_t index) const
+int Molecule::getAtomicNumber(size_t index) const
 {
     return _atoms[index]->getAtomicNumber();
 }
@@ -490,7 +494,7 @@ int Molecule::getAtomicNumber(const size_t index) const
  * @param index
  * @return double
  */
-double Molecule::getAtomMass(const size_t index) const
+double Molecule::getAtomMass(size_t index) const
 {
     return _atoms[index]->getMass();
 }
@@ -501,7 +505,7 @@ double Molecule::getAtomMass(const size_t index) const
  * @param index
  * @return double
  */
-double Molecule::getPartialCharge(const size_t index) const
+double Molecule::getPartialCharge(size_t index) const
 {
     return _atoms[index]->getPartialCharge();
 }
@@ -512,7 +516,7 @@ double Molecule::getPartialCharge(const size_t index) const
  * @param index
  * @return size_t
  */
-size_t Molecule::getAtomType(const size_t index) const
+size_t Molecule::getAtomType(size_t index) const
 {
     return _atoms[index]->getAtomType();
 }
@@ -523,7 +527,7 @@ size_t Molecule::getAtomType(const size_t index) const
  * @param index
  * @return size_t
  */
-size_t Molecule::getInternalGlobalVDWType(const size_t index) const
+size_t Molecule::getInternalGlobalVDWType(size_t index) const
 {
     return _atoms[index]->getInternalGlobalVDWType();
 }
@@ -534,7 +538,7 @@ size_t Molecule::getInternalGlobalVDWType(const size_t index) const
  * @param index
  * @return std::string
  */
-std::string Molecule::getAtomName(const size_t index) const
+std::string Molecule::getAtomName(size_t index) const
 {
     return _atoms[index]->getName();
 }
@@ -608,7 +612,7 @@ double Molecule::getSmoothingFactor() const { return _smoothingFactor; }
  * @param index
  * @return Atom
  */
-Atom &Molecule::getAtom(const size_t index) { return *(_atoms[index]); }
+Atom &Molecule::getAtom(size_t index) { return *(_atoms[index]); }
 
 /**
  * @brief returns the atoms of the molecule
@@ -665,14 +669,14 @@ bool Molecule::isForcedOuter() const { return _isForcedOuter; }
  *
  * @param name
  */
-void Molecule::setName(const std::string_view name) { _name = name; }
+void Molecule::setName(std::string_view name) { _name = name; }
 
 /**
  * @brief set the number of atoms in the molecule
  *
  * @param numberOfAtoms
  */
-void Molecule::setNumberOfAtoms(const size_t numberOfAtoms)
+void Molecule::setNumberOfAtoms(size_t numberOfAtoms)
 {
     _numberOfAtoms = numberOfAtoms;
 }
@@ -682,21 +686,21 @@ void Molecule::setNumberOfAtoms(const size_t numberOfAtoms)
  *
  * @param moltype
  */
-void Molecule::setMoltype(const size_t moltype) { _moltype = moltype; }
+void Molecule::setMoltype(size_t moltype) { _moltype = moltype; }
 
 /**
  * @brief set the charge of the molecule
  *
  * @param charge
  */
-void Molecule::setCharge(const int charge) { _charge = charge; }
+void Molecule::setCharge(int charge) { _charge = charge; }
 
 /**
  * @brief set the molecular mass of the molecule
  *
  * @param molMass
  */
-void Molecule::setMolMass(const double molMass) { _molMass = molMass; }
+void Molecule::setMolMass(double molMass) { _molMass = molMass; }
 
 /**
  * @brief set the center of mass of the molecule
@@ -713,7 +717,7 @@ void Molecule::setCenterOfMass(const Vec3D &centerOfMass)
  *
  * @param hybridZone
  */
-void Molecule::setHybridZone(const HybridZone hybridZone)
+void Molecule::setHybridZone(HybridZone hybridZone)
 {
     _hybridZone = hybridZone;
 }
@@ -723,10 +727,7 @@ void Molecule::setHybridZone(const HybridZone hybridZone)
  *
  * @param factor
  */
-void Molecule::setSmoothingFactor(const double factor)
-{
-    _smoothingFactor = factor;
-}
+void Molecule::setSmoothingFactor(double factor) { _smoothingFactor = factor; }
 
 /**
  * @brief set if the molecule is forced to be in the CORE region for hybrid
@@ -734,7 +735,7 @@ void Molecule::setSmoothingFactor(const double factor)
  *
  * @param isForcedCore
  */
-void Molecule::setForcedCore(const bool isForcedCore)
+void Molecule::setForcedCore(bool isForcedCore)
 {
     _isForcedCore = isForcedCore;
 }
@@ -745,7 +746,7 @@ void Molecule::setForcedCore(const bool isForcedCore)
  *
  * @param isForcedLayer
  */
-void Molecule::setForcedLayer(const bool isForcedLayer)
+void Molecule::setForcedLayer(bool isForcedLayer)
 {
     _isForcedLayer = isForcedLayer;
 }
@@ -756,7 +757,7 @@ void Molecule::setForcedLayer(const bool isForcedLayer)
  *
  * @param isForcedOuter
  */
-void Molecule::setForcedOuter(const bool isForcedOuter)
+void Molecule::setForcedOuter(bool isForcedOuter)
 {
     _isForcedOuter = isForcedOuter;
 }

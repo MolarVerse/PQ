@@ -556,7 +556,7 @@ void SimulationBoxSetup::writeSetupInfo() const
  * @brief sets if the velocities in the start file are zero
  *
  */
-void SimulationBoxSetup::setZeroVelocities(const bool zeroVelocities)
+void SimulationBoxSetup::setZeroVelocities(bool zeroVelocities)
 {
     _zeroVelocities = zeroVelocities;
 }

@@ -281,8 +281,8 @@ void HybridConfigurator::activateSmoothingMolecules(
  * the smoothing zone, not the global molecule index.
  */
 void HybridConfigurator::deactivateSmoothingMolecules(
-    std::unordered_set<size_t>    inactiveMolecules,
-    simulationBox::SimulationBox& simBox
+    const std::unordered_set<size_t>& inactiveMolecules,
+    simulationBox::SimulationBox&     simBox
 )
 {
     size_t count{0};

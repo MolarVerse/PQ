@@ -211,7 +211,7 @@ size_t IntraNonBondedReader::findMoleculeType(const std::string &id) const
  * out of range
  * @throws IntraNonBondedException if "END" is not found
  */
-void IntraNonBondedReader::processMolecule(const size_t moleculeType)
+void IntraNonBondedReader::processMolecule(size_t moleculeType)
 {
     std::string line;
     auto        endedNormal = false;

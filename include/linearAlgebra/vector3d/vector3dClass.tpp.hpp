@@ -102,7 +102,7 @@ namespace linearAlgebra
      * @return Vector3D
      */
     template <class T>
-    Vector3D<T> &Vector3D<T>::operator+=(const T rhs)
+    Vector3D<T> &Vector3D<T>::operator+=(const T &rhs)
     requires pq::Arithmetic<T>
     {
         _x += rhs;
@@ -138,7 +138,7 @@ namespace linearAlgebra
      * @return Vector3D<T>&
      */
     template <class T>
-    Vector3D<T> &Vector3D<T>::operator-=(const T rhs)
+    Vector3D<T> &Vector3D<T>::operator-=(const T &rhs)
     requires pq::Arithmetic<T>
     {
         _x -= rhs;
@@ -176,7 +176,7 @@ namespace linearAlgebra
      * @return Vector3D<T>&
      */
     template <class T>
-    Vector3D<T> &Vector3D<T>::operator*=(const T rhs)
+    Vector3D<T> &Vector3D<T>::operator*=(const T &rhs)
     requires pq::Arithmetic<T>
     {
         _x *= rhs;
@@ -214,7 +214,7 @@ namespace linearAlgebra
      * @return Vector3D<T>&
      */
     template <class T>
-    Vector3D<T> &Vector3D<T>::operator/=(const T rhs)
+    Vector3D<T> &Vector3D<T>::operator/=(const T &rhs)
     requires pq::Arithmetic<T>
     {
         _x /= rhs;
@@ -232,11 +232,11 @@ namespace linearAlgebra
     /**
      * @brief index operator
      *
-     * @param const size_t index
+     * @param size_t index
      * @return T&
      */
     template <class T>
-    T &Vector3D<T>::operator[](const size_t index)
+    T &Vector3D<T>::operator[](size_t index)
     {
         return _xyz[index];
     }
@@ -244,11 +244,11 @@ namespace linearAlgebra
     /**
      * @brief const index operator
      *
-     * @param const size_t index
+     * @param size_t index
      * @return const T&
      */
     template <class T>
-    const T &Vector3D<T>::operator[](const size_t index) const
+    const T &Vector3D<T>::operator[](size_t index) const
     {
         return _xyz[index];
     }

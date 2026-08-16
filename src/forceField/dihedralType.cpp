@@ -36,15 +36,17 @@ using namespace utilities;
  * @param phaseShift
  */
 DihedralType::DihedralType(
-    const size_t id,
-    const double forceConstant,
-    const double frequency,
-    const double phaseShift
+    size_t id,
+    double forceConstant,
+    double frequency,
+    double phaseShift
 )
     : _id(id),
       _forceConstant(forceConstant),
       _periodicity(frequency),
-      _phaseShift(phaseShift){};
+      _phaseShift(phaseShift)
+{
+}
 
 /**
  * @brief operator overload for the comparison of two DihedralType objects

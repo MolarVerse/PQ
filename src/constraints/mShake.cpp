@@ -187,6 +187,7 @@ void MShake::applyMShake(SimulationBox &simBox)
          * initialize the unconstrained positions of all atoms *
          *******************************************************/
 
+        posUnconstrained.reserve(atoms.size());
         for (const auto &atom : atoms)
             posUnconstrained.push_back(atom->getPosition());
 
@@ -465,7 +466,7 @@ void MShake::applyMRattle(SimulationBox &simulationBox)
  *
  * @return bool
  */
-bool MShake::isMShakeType(const size_t moltype) const
+bool MShake::isMShakeType(size_t moltype) const
 {
     bool isMShake = false;
 
@@ -493,7 +494,7 @@ bool MShake::isMShakeType(const size_t moltype) const
  * @throw customException::MShakeException if no M - Shake reference is
  * found
  */
-const MShakeReference &MShake::findMShakeRef(const size_t moltype) const
+const MShakeReference &MShake::findMShakeRef(size_t moltype) const
 {
     for (const auto &mShakeReference : _mShakeReferences)
     {
@@ -518,7 +519,7 @@ const MShakeReference &MShake::findMShakeRef(const size_t moltype) const
  * @throw customException::MShakeException if no M - Shake reference is
  * found
  */
-size_t MShake::findMShakeReferenceIndex(const size_t moltype) const
+size_t MShake::findMShakeReferenceIndex(size_t moltype) const
 {
     size_t index = 0;
 

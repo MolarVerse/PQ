@@ -93,8 +93,8 @@ TEST_F(TestInputFileReader, testAddKeyword)
 
     for (size_t i = 0; i < keywordsRef.size(); ++i)
     {
-        std::string keyword  = keywordsRef[i];
-        bool        required = requiredRef[i];
+        const std::string &keyword  = keywordsRef[i];
+        bool               required = requiredRef[i];
 
         EXPECT_EQ(_inputFileReader->getKeywordCount(keyword), 0);
         EXPECT_FALSE(_inputFileReader->getKeywordSet(keyword));
@@ -211,8 +211,8 @@ TEST_F(TestInputFileReader, testPostProcessRequiredFail)
 
     for (size_t i = 0; i < keywordsRef.size(); ++i)
     {
-        std::string keyword  = keywordsRef[i];
-        bool        required = requiredRef[i];
+        const std::string &keyword  = keywordsRef[i];
+        bool               required = requiredRef[i];
 
         if (required)
         {

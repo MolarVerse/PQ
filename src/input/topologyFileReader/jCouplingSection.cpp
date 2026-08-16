@@ -123,7 +123,7 @@ std::string JCouplingSection::keyword() { return "j_couplings"; }
  *
  * @throws TopologyException if endedNormal is false
  */
-void JCouplingSection::endedNormally(const bool endedNormal) const
+void JCouplingSection::endedNormally(bool endedNormal) const
 {
     if (!endedNormal)
     {

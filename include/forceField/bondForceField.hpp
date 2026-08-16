@@ -66,9 +66,9 @@ namespace forceField
         BondForceField(
             simulationBox::Molecule *molecule1,
             simulationBox::Molecule *molecule2,
-            const size_t             atomIndex1,
-            const size_t             atomIndex2,
-            const size_t             type
+            size_t                   atomIndex1,
+            size_t                   atomIndex2,
+            size_t                   type
         );
 
         void calculateEnergyAndForces(
@@ -82,9 +82,9 @@ namespace forceField
          * standard setter methods *
          ***************************/
 
-        void setIsLinker(const bool isLinker);
-        void setEquilibriumBondLength(const double equilibriumBondLength);
-        void setForceConstant(const double forceConstant);
+        void setIsLinker(bool isLinker);
+        void setEquilibriumBondLength(double equilibriumBondLength);
+        void setForceConstant(double forceConstant);
 
         /***************************
          * standard getter methods *

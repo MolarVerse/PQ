@@ -53,13 +53,13 @@ namespace settings
          * standard setter methods *
          ***************************/
 
-        static void setNScale(const size_t nScale);
-        static void setFScale(const size_t fScale);
-        static void setNReset(const size_t nReset);
-        static void setFReset(const size_t fReset);
-        static void setNResetAngular(const size_t nResetAngular);
-        static void setFResetAngular(const size_t fResetAngular);
-        static void setFResetForces(const size_t fResetForces);
+        static void setNScale(size_t nScale);
+        static void setFScale(size_t fScale);
+        static void setNReset(size_t nReset);
+        static void setFReset(size_t fReset);
+        static void setNResetAngular(size_t nResetAngular);
+        static void setFResetAngular(size_t fResetAngular);
+        static void setFResetForces(size_t fResetForces);
 
         /***************************
          * standard getter methods *

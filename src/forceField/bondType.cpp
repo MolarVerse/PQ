@@ -35,9 +35,9 @@ using namespace utilities;
  * @param springConstant
  */
 BondType::BondType(
-    const size_t id,
-    const double equilibriumBondLength,
-    const double springConstant
+    size_t id,
+    double equilibriumBondLength,
+    double springConstant
 )
     : _id(id),
       _equilBondLength(equilibriumBondLength),

@@ -54,7 +54,7 @@ namespace output
         void write(
             simulationBox::SimulationBox &,
             const thermostat::Thermostat &,
-            const size_t
+            size_t
         );
         void writeNHChain(const thermostat::Thermostat &, std::ostringstream &);
     };

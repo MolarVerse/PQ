@@ -34,8 +34,8 @@ using namespace constants;
  * @return std::pair<double, double>
  */
 std::pair<double, double> CoulombReactionField::calculate(
-    const double dist,
-    const double chargeProduct
+    double dist,
+    double chargeProduct
 ) const
 {
     const auto coulombPrefactor = chargeProduct * COULOMB_PREFACTOR;

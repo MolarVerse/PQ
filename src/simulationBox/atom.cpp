@@ -79,7 +79,7 @@ void Atom::updateOldForce() { _forceOld = _force; }
  *
  * @param scaleFactor double
  */
-void Atom::scaleVelocity(const double scaleFactor) { _velocity *= scaleFactor; }
+void Atom::scaleVelocity(double scaleFactor) { _velocity *= scaleFactor; }
 
 /**
  * @brief scales the velocity of the atom by a Vec3D elementwise
@@ -113,7 +113,7 @@ void Atom::scaleVelocityOrthogonalSpace(
  *
  * @param scaleFactor double
  */
-void Atom::scaleForce(const double scaleFactor) { _force *= scaleFactor; }
+void Atom::scaleForce(double scaleFactor) { _force *= scaleFactor; }
 
 /**
  * @brief scales the force of the atom by a Vec3D elementwise
@@ -149,11 +149,7 @@ void Atom::addVelocity(const Vec3D &velocity) { _velocity += velocity; }
  * @param force_y
  * @param force_z
  */
-void Atom::addForce(
-    const double force_x,
-    const double force_y,
-    const double force_z
-)
+void Atom::addForce(double force_x, double force_y, double force_z)
 {
     _force += {force_x, force_y, force_z};
 }
@@ -349,7 +345,7 @@ Vec3D Atom::getShiftForce() const { return _shiftForce; }
  *
  * @param isActive
  */
-void Atom::setActive(const bool isActive) { _isActive = isActive; }
+void Atom::setActive(bool isActive) { _isActive = isActive; }
 
 /**
  * @brief set the name of the atom (element name)
@@ -373,24 +369,21 @@ void Atom::setAtomTypeName(const std::string_view &atomTypeName)
  *
  * @param atomicNumber
  */
-void Atom::setAtomicNumber(const int atomicNumber)
-{
-    _atomicNumber = atomicNumber;
-}
+void Atom::setAtomicNumber(int atomicNumber) { _atomicNumber = atomicNumber; }
 
 /**
  * @brief set the mass of the atom
  *
  * @param mass
  */
-void Atom::setMass(const double mass) { _mass = mass; }
+void Atom::setMass(double mass) { _mass = mass; }
 
 /**
  * @brief set the partial charge of the atom
  *
  * @param partialCharge
  */
-void Atom::setPartialCharge(const double partialCharge)
+void Atom::setPartialCharge(double partialCharge)
 {
     _partialCharge = partialCharge;
 }
@@ -400,21 +393,21 @@ void Atom::setPartialCharge(const double partialCharge)
  *
  * @param partialCharge
  */
-void Atom::setQMCharge(const double charge) { _qmCharge = charge; }
+void Atom::setQMCharge(double charge) { _qmCharge = charge; }
 
 /**
  * @brief set the atom type (internal)
  *
  * @param atomType
  */
-void Atom::setAtomType(const size_t atomType) { _atomType = atomType; }
+void Atom::setAtomType(size_t atomType) { _atomType = atomType; }
 
 /**
  * @brief set the external atom type
  *
  * @param externalAtomType
  */
-void Atom::setExternalAtomType(const size_t externalAtomType)
+void Atom::setExternalAtomType(size_t externalAtomType)
 {
     _externalAtomType = externalAtomType;
 }
@@ -424,7 +417,7 @@ void Atom::setExternalAtomType(const size_t externalAtomType)
  *
  * @param externalGlobalVDWType
  */
-void Atom::setExternalGlobalVDWType(const size_t externalGlobalVDWType)
+void Atom::setExternalGlobalVDWType(size_t externalGlobalVDWType)
 {
     _externalGlobalVDWType = externalGlobalVDWType;
 }
@@ -434,7 +427,7 @@ void Atom::setExternalGlobalVDWType(const size_t externalGlobalVDWType)
  *
  * @param internalGlobalVDWType
  */
-void Atom::setInternalGlobalVDWType(const size_t internalGlobalVDWType)
+void Atom::setInternalGlobalVDWType(size_t internalGlobalVDWType)
 {
     _internalGlobalVDWType = internalGlobalVDWType;
 }

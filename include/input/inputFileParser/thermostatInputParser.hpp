@@ -41,39 +41,30 @@ namespace input
        public:
         explicit ThermostatInputParser(engine::Engine &);
 
-        void parseThermostat(const std::vector<std::string> &, const size_t);
-        void parseTemperature(const std::vector<std::string> &, const size_t);
-        void parseStartTemperature(
-            const std::vector<std::string> &,
-            const size_t
-        );
-        void parseEndTemperature(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void parseThermostat(const std::vector<std::string> &, size_t);
+        void parseTemperature(const std::vector<std::string> &, size_t);
+        void parseStartTemperature(const std::vector<std::string> &, size_t);
+        void parseEndTemperature(const std::vector<std::string> &, size_t);
         void parseTemperatureRampSteps(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
         void parseTemperatureRampFrequency(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
         void parseThermostatRelaxationTime(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
-        void parseThermostatFriction(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void parseThermostatFriction(const std::vector<std::string> &, size_t);
         void parseThermostatChainLength(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
         void parseThermostatCouplingFrequency(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
     };
 

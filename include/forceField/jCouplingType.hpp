@@ -57,13 +57,13 @@ namespace forceField
 
        public:
         JCouplingType(
-            const size_t id,
-            const double J0,
-            const double forceConstant,
-            const double a,
-            const double b,
-            const double c,
-            const double phaseShift
+            size_t id,
+            double J0,
+            double forceConstant,
+            double a,
+            double b,
+            double c,
+            double phaseShift
         );
 
         friend bool operator==(const JCouplingType &, const JCouplingType &);
@@ -84,8 +84,8 @@ namespace forceField
          * standard setter methods *
          ***************************/
 
-        void setUpperSymmetry(const bool boolean);
-        void setLowerSymmetry(const bool boolean);
+        void setUpperSymmetry(bool boolean);
+        void setLowerSymmetry(bool boolean);
     };
 
 }   // namespace forceField

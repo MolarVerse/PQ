@@ -37,7 +37,7 @@ namespace settings
      * @brief enum class to store the type of the job
      *
      */
-    enum class JobType
+    enum class JobType : std::uint8_t
     {
         MM_MD,
         QM_MD,
@@ -54,25 +54,19 @@ namespace settings
      * @brief enum class to store the floating point type
      *
      */
-    enum class FPType
+    enum class FPType : std::uint8_t
     {
         FLOAT,
         DOUBLE
     };
 
-    enum class VirialType
+    enum class VirialType : std::uint8_t
     {
         ATOMIC,
         MOLECULAR
     };
 
-    [[nodiscard]] std::string string(const FPType fpType);
-    [[nodiscard]] std::string string(const VirialType virialType);
-    [[nodiscard]] std::string string(const JobType jobtype);
-    [[nodiscard]] JobType     jobtypeFromString(const std::string_view jobtype);
-    [[nodiscard]] FPType      fpTypeFromString(const std::string_view fpType);
-
-    [[nodiscard]] std::string string(const JobType jobtype);
+    [[nodiscard]] std::string string(JobType jobtype);
 
     /**
      * @class Settings
@@ -104,19 +98,19 @@ namespace settings
          * standard setter methods *
          ***************************/
 
-        static void setJobtype(const std::string_view jobtype);
-        static void setJobtype(const JobType jobtype);
+        static void setJobtype(std::string_view jobtype);
+        static void setJobtype(JobType jobtype);
 
-        static void setFloatingPointType(const std::string_view);
-        static void setFloatingPointType(const FPType);
+        static void setFloatingPointType(std::string_view);
+        static void setFloatingPointType(FPType);
 
-        static void setRandomSeed(const uint_fast32_t randomSeed);
-        static void setIsRandomSeedSet(const bool isRandomSeedSet);
+        static void setRandomSeed(uint_fast32_t randomSeed);
+        static void setIsRandomSeedSet(bool isRandomSeedSet);
 
-        static void setIsRingPolymerMDActivated(const bool isRingPolymerMD);
-        static void setDimensionality(const size_t dimensionality);
+        static void setIsRingPolymerMDActivated(bool isRingPolymerMD);
+        static void setDimensionality(size_t dimensionality);
 
-        static void setVirialType(const VirialType virialType);
+        static void setVirialType(VirialType virialType);
 
         /***************************
          * standard getter methods *

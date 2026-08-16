@@ -39,10 +39,7 @@ using namespace linearAlgebra;
  *
  * @param targetPressure
  */
-Manostat::Manostat(const double targetPressure)
-    : _targetPressure(targetPressure)
-{
-}
+Manostat::Manostat(double targetPressure) : _targetPressure(targetPressure) {}
 
 /**
  * @brief calculate the pressure of the system

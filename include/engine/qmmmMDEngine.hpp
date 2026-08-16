@@ -55,7 +55,7 @@ namespace engine
         void moltypeCheck();
         void setNumberOfQMAtoms();
 
-        void scaleAndAccumulateEnergies(const double globalSmF);
+        void scaleAndAccumulateEnergies(double globalSmF);
         void moveEnergiesToPhysicalData();
 
         void distributeSmoothingMolQMForces();

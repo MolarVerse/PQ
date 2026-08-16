@@ -71,21 +71,23 @@ namespace opt
          * standard setter methods *
          ***************************/
 
-        void setPotential(const std::shared_ptr<potential::Potential>);
-        void setCellList(const std::shared_ptr<simulationBox::CellList>);
+        void setPotential(const std::shared_ptr<potential::Potential>&);
+        void setCellList(const std::shared_ptr<simulationBox::CellList>&);
         void setSimulationBox(
-            const std::shared_ptr<simulationBox::SimulationBox>
+            const std::shared_ptr<simulationBox::SimulationBox>&
         );
-        void setConstraints(const std::shared_ptr<constraints::Constraints>);
+        void setConstraints(const std::shared_ptr<constraints::Constraints>&);
 
-        void setPhysicalData(const std::shared_ptr<physicalData::PhysicalData>);
+        void setPhysicalData(
+            const std::shared_ptr<physicalData::PhysicalData>&
+        );
         void setPhysicalDataOld(
-            const std::shared_ptr<physicalData::PhysicalData>
+            const std::shared_ptr<physicalData::PhysicalData>&
         );
 
-        void setForceField(const std::shared_ptr<forceField::ForceField>);
+        void setForceField(const std::shared_ptr<forceField::ForceField>&);
         void setIntraNonBonded(
-            const std::shared_ptr<intraNonBonded::IntraNonBonded>
+            const std::shared_ptr<intraNonBonded::IntraNonBonded>&
         );
     };
 

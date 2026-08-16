@@ -24,7 +24,7 @@
 
 #define _POSITION_SETTINGS_HPP_
 
-#include <cstddef>       // for size_t
+#include <cstdint>
 #include <optional>      // for optional
 #include <string>        // for allocator, string
 #include <string_view>   // for string_view
@@ -39,7 +39,7 @@ namespace settings
      * @brief enum class to store the coulomb long range type
      *
      */
-    enum class NonCoulombType : size_t
+    enum class NonCoulombType : std::uint8_t
     {
         LJ,
         LJ_9_12,   // at the momentum just dummy for testing not implemented yet
@@ -55,7 +55,7 @@ namespace settings
      * @brief enum class to store the coulomb long range type
      *
      */
-    enum class CoulombLongRangeType : size_t
+    enum class CoulombLongRangeType : std::uint8_t
     {
         SHIFTED,
         REACTION_FIELD,
@@ -64,8 +64,8 @@ namespace settings
 
     // TODO: implement long range type as enum
 
-    [[nodiscard]] std::string string(const NonCoulombType nonCoulombType);
-    [[nodiscard]] std::string string(const CoulombLongRangeType nonCoulombType);
+    [[nodiscard]] std::string string(NonCoulombType nonCoulombType);
+    [[nodiscard]] std::string string(CoulombLongRangeType nonCoulombType);
 
     /**
      * @class PotentialSettings
@@ -98,17 +98,17 @@ namespace settings
          ********************/
 
         static void setNonCoulombType(const std::string_view &type);
-        static void setNonCoulombType(const NonCoulombType type);
+        static void setNonCoulombType(NonCoulombType type);
         static void setCoulombLongRangeType(const std::string_view &type);
-        static void setCoulombLongRangeType(const CoulombLongRangeType &type);
+        static void setCoulombLongRangeType(CoulombLongRangeType type);
 
         // clang-format off
-        static void setCoulombRadiusCutOff(const double coulombRadiusCutOff);
-        static void setNonCoulombRadiusCutOff(const double nonCoulombRadiusCutOff);
-        static void setScale14Coulomb(const double scale14Coulomb);
-        static void setScale14VanDerWaals(const double scale14VanDerWaals);
-        static void setReactionFieldEpsilon(const double epsilon);
-        static void setWolfParameter(const double wolfParameter);
+        static void setCoulombRadiusCutOff(double coulombRadiusCutOff);
+        static void setNonCoulombRadiusCutOff(double nonCoulombRadiusCutOff);
+        static void setScale14Coulomb(double scale14Coulomb);
+        static void setScale14VanDerWaals(double scale14VanDerWaals);
+        static void setReactionFieldEpsilon(double epsilon);
+        static void setWolfParameter(double wolfParameter);
         // clang-format on
 
         /********************

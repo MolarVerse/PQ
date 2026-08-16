@@ -86,7 +86,7 @@ CoulombLongRangeInputParser::CoulombLongRangeInputParser(Engine &engine)
  */
 void CoulombLongRangeInputParser::parseCoulombLongRange(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -127,7 +127,7 @@ void CoulombLongRangeInputParser::parseCoulombLongRange(
  */
 void CoulombLongRangeInputParser::parseWolfParameter(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -149,7 +149,7 @@ void CoulombLongRangeInputParser::parseWolfParameter(
  */
 void CoulombLongRangeInputParser::parseReactionFieldEpsilon(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);

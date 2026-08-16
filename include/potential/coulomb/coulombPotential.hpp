@@ -51,21 +51,18 @@ namespace potential
 
        public:
         virtual ~CoulombPotential() = default;
-        explicit CoulombPotential(const double coulombRadiusCutOff);
+        explicit CoulombPotential(double coulombRadiusCutOff);
 
         [[nodiscard]]
-        virtual std::pair<double, double> calculate(
-            const double,
-            const double
-        ) const = 0;
+        virtual std::pair<double, double> calculate(double, double) const = 0;
 
         /***************************
          * standard setter methods *
          ***************************/
 
-        static void setCoulombRadiusCutOff(const double coulombRadiusCutOff);
-        static void setCoulombEnergyCutOff(const double coulombEnergyCutOff);
-        static void setCoulombForceCutOff(const double coulombForceCutOff);
+        static void setCoulombRadiusCutOff(double coulombRadiusCutOff);
+        static void setCoulombEnergyCutOff(double coulombEnergyCutOff);
+        static void setCoulombForceCutOff(double coulombForceCutOff);
 
         /***************************
          * standard getter methods *

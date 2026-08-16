@@ -56,8 +56,10 @@ namespace setup
         void checkTopologyFile();
         void checkMoldescriptorWaterCharge(const waterModel::InterWaterState &);
         void shakeSetupForRigidWater(const RigidWaterGeometry &geometry);
-        [[nodiscard]] std::optional<RigidWaterGeometry> getRigidWaterGeometry(
-            const settings::WaterIntraModel intraModel
+
+        [[nodiscard]]
+        std::optional<RigidWaterGeometry> getRigidWaterGeometry(
+            settings::WaterIntraModel intraModel
         );
         void addReferences();
 

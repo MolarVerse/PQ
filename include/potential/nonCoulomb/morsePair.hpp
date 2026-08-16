@@ -46,33 +46,34 @@ namespace potential
 
        public:
         explicit MorsePair(
-            const size_t vanDerWaalsType1,
-            const size_t vanDerWaalsType2,
-            const double cutOff,
-            const double dissociationEnergy,
-            const double wellWidth,
-            const double equilibriumDistance
+            size_t vanDerWaalsType1,
+            size_t vanDerWaalsType2,
+            double cutOff,
+            double dissociationEnergy,
+            double wellWidth,
+            double equilibriumDistance
         );
 
         explicit MorsePair(
-            const double cutOff,
-            const double dissociationEnergy,
-            const double wellWidth,
-            const double equilibriumDistance
+            double cutOff,
+            double dissociationEnergy,
+            double wellWidth,
+            double equilibriumDistance
         );
 
         explicit MorsePair(
-            const double cutOff,
-            const double energyCutoff,
-            const double forceCutoff,
-            const double dissociationEnergy,
-            const double wellWidth,
-            const double equilibriumDistance
+            double cutOff,
+            double energyCutoff,
+            double forceCutoff,
+            double dissociationEnergy,
+            double wellWidth,
+            double equilibriumDistance
         );
 
         [[nodiscard]] bool operator==(const MorsePair &other) const;
 
-        [[nodiscard]] std::pair<double, double> calculate(const double distance
+        [[nodiscard]] std::pair<double, double> calculate(
+            double distance
         ) const override;
 
         [[nodiscard]] double getDissociationEnergy() const;

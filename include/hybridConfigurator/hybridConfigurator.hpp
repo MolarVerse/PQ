@@ -51,7 +51,7 @@ namespace configurator
         void deactivateOuterMolecules(simulationBox::SimulationBox &);
         void activateSmoothingMolecules(simulationBox::SimulationBox &);
         void deactivateSmoothingMolecules(
-            std::unordered_set<size_t> inactiveMolecules,
+            const std::unordered_set<size_t> &inactiveMolecules,
             simulationBox::SimulationBox &
         );
         void toggleMoleculeActivation(simulationBox::SimulationBox &);

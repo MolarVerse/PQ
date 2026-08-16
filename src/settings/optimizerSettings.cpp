@@ -23,6 +23,7 @@
 #include "optimizerSettings.hpp"
 
 #include <format>
+#include <utility>
 
 #include "exceptions.hpp"
 #include "stringUtilities.hpp"   // for toLowerCopy
@@ -37,7 +38,7 @@ using namespace customException;
  * @param method
  * @return std::string
  */
-std::string settings::string(const OptimizerType method)
+std::string settings::string(OptimizerType method)
 {
     switch (method)
     {
@@ -45,11 +46,10 @@ std::string settings::string(const OptimizerType method)
 
         case STEEPEST_DESCENT: return "STEEPEST-DESCENT";
         case ADAM: return "ADAM";
-
-        case NONE: break;
+        case NONE: return "none";
     }
 
-    return "none";
+    std::unreachable();
 }
 
 /**
@@ -58,7 +58,7 @@ std::string settings::string(const OptimizerType method)
  * @param method
  * @return std::string
  */
-std::string settings::string(const LREnum method)
+std::string settings::string(LREnum method)
 {
     switch (method)
     {
@@ -69,10 +69,10 @@ std::string settings::string(const LREnum method)
         case EXPONENTIAL_DECAY: return "EXPONENTIAL-DECAY";
         case LINESEARCH_WOLFE: return "LINESEARCH-WOLFE";
 
-        case NONE: break;
+        case NONE: return "none";
     }
 
-    return "none";
+    std::unreachable();
 }
 
 /***************************
@@ -106,7 +106,7 @@ void OptimizerSettings::setOptimizer(const std::string_view &optimizer)
  *
  * @param optimizer
  */
-void OptimizerSettings::setOptimizer(const OptimizerType optimizer)
+void OptimizerSettings::setOptimizer(OptimizerType optimizer)
 {
     _optimizer = optimizer;
 }
@@ -143,7 +143,7 @@ void OptimizerSettings::setLearningRateStrategy(const std::string_view &method)
  *
  * @param method
  */
-void OptimizerSettings::setLearningRateStrategy(const LREnum method)
+void OptimizerSettings::setLearningRateStrategy(LREnum method)
 {
     _lRStrategy = method;
 }
@@ -153,7 +153,7 @@ void OptimizerSettings::setLearningRateStrategy(const LREnum method)
  *
  * @param nEpochs
  */
-void OptimizerSettings::setNumberOfEpochs(const size_t nEpochs)
+void OptimizerSettings::setNumberOfEpochs(size_t nEpochs)
 {
     _nEpochs = nEpochs;
 }
@@ -163,7 +163,7 @@ void OptimizerSettings::setNumberOfEpochs(const size_t nEpochs)
  *
  * @param frequency
  */
-void OptimizerSettings::setLRUpdateFrequency(const size_t frequency)
+void OptimizerSettings::setLRUpdateFrequency(size_t frequency)
 {
     _lRupdateFrequency = frequency;
 }
@@ -173,7 +173,7 @@ void OptimizerSettings::setLRUpdateFrequency(const size_t frequency)
  *
  * @param learningRate
  */
-void OptimizerSettings::setInitialLearningRate(const double learningRate)
+void OptimizerSettings::setInitialLearningRate(double learningRate)
 {
     _initialLearningRate = learningRate;
 }
@@ -183,7 +183,7 @@ void OptimizerSettings::setInitialLearningRate(const double learningRate)
  *
  * @param decay
  */
-void OptimizerSettings::setLearningRateDecay(const double decay)
+void OptimizerSettings::setLearningRateDecay(double decay)
 {
     _learningRateDecay = decay;
 }
@@ -193,7 +193,7 @@ void OptimizerSettings::setLearningRateDecay(const double decay)
  *
  * @param minLearningRate
  */
-void OptimizerSettings::setMinLearningRate(const double minLearningRate)
+void OptimizerSettings::setMinLearningRate(double minLearningRate)
 {
     _minLearningRate = minLearningRate;
 }
@@ -203,7 +203,7 @@ void OptimizerSettings::setMinLearningRate(const double minLearningRate)
  *
  * @param maxLearningRate
  */
-void OptimizerSettings::setMaxLearningRate(const double maxLearningRate)
+void OptimizerSettings::setMaxLearningRate(double maxLearningRate)
 {
     _maxLearningRate = maxLearningRate;
 }

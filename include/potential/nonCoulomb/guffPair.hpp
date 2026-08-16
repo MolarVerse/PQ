@@ -48,11 +48,11 @@ namespace potential
         std::vector<double> _coefficients;
 
        public:
-        explicit GuffPair(const double, const std::vector<double> &);
-        explicit GuffPair(const double, const double, const double, const std::vector<double> &);
+        explicit GuffPair(double, const std::vector<double> &);
+        explicit GuffPair(double, double, double, const std::vector<double> &);
 
-        [[nodiscard]] std::pair<double, double> calculate(const double distance
-        ) const override;
+        [[nodiscard]]
+        std::pair<double, double> calculate(double distance) const override;
 
         [[nodiscard]] std::vector<double> getCoefficients() const;
     };

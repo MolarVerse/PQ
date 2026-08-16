@@ -240,7 +240,7 @@ void OptEngine::writeOutput()
  *
  * @param optimizer
  */
-void OptEngine::setOptimizer(const std::shared_ptr<Optimizer> optimizer)
+void OptEngine::setOptimizer(const std::shared_ptr<Optimizer> &optimizer)
 {
     _optimizer = optimizer;
 }
@@ -251,7 +251,7 @@ void OptEngine::setOptimizer(const std::shared_ptr<Optimizer> optimizer)
  * @param learningRateStrategy
  */
 void OptEngine::setLearningRateStrategy(
-    const std::shared_ptr<LearningRateStrategy> learningRateStrategy
+    const std::shared_ptr<LearningRateStrategy> &learningRateStrategy
 )
 {
     _learningRateStrategy = learningRateStrategy;
@@ -262,7 +262,7 @@ void OptEngine::setLearningRateStrategy(
  *
  * @param evaluator
  */
-void OptEngine::setEvaluator(const std::shared_ptr<Evaluator> evaluator)
+void OptEngine::setEvaluator(const std::shared_ptr<Evaluator> &evaluator)
 {
     _evaluator = evaluator;
 }

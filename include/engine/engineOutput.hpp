@@ -95,64 +95,58 @@ namespace engine
        public:
         EngineOutput();
 
-        void writeEnergyFile(
-            const size_t step,
-            const physicalData::PhysicalData &
-        );
+        void writeEnergyFile(size_t step, const physicalData::PhysicalData &);
         void writeInstantEnergyFile(
-            const size_t step,
+            size_t step,
             const physicalData::PhysicalData &
         );
 
-        void writeXyzFile(simulationBox::SimulationBox &, const size_t);
+        void writeXyzFile(simulationBox::SimulationBox &, size_t);
         void writeHybridCenterXyzFile(
             const configurator::HybridConfigurator &,
-            const size_t
+            size_t
         );
-        void writeVelFile(simulationBox::SimulationBox &, const size_t);
-        void writeForceFile(simulationBox::SimulationBox &, const size_t);
-        void writeChargeFile(simulationBox::SimulationBox &, const size_t);
+        void writeVelFile(simulationBox::SimulationBox &, size_t);
+        void writeForceFile(simulationBox::SimulationBox &, size_t);
+        void writeChargeFile(simulationBox::SimulationBox &, size_t);
         void writeInfoFile(
-            const double simulationTime,
+            double simulationTime,
             const physicalData::PhysicalData &
         );
         void writeRstFile(
             simulationBox::SimulationBox &,
             const thermostat::Thermostat &,
-            const size_t
+            size_t
         );
-        void writeOptRstFile(simulationBox::SimulationBox &, const size_t);
+        void writeOptRstFile(simulationBox::SimulationBox &, size_t);
 
-        void writeMomentumFile(
-            const size_t step,
-            const physicalData::PhysicalData &
-        );
-        void writeVirialFile(const size_t, const physicalData::PhysicalData &);
-        void writeStressFile(const size_t, const physicalData::PhysicalData &);
-        void writeBoxFile(const size_t, const simulationBox::Box &);
-        void writeOptFile(const size_t, const opt::Optimizer &);
+        void writeMomentumFile(size_t step, const physicalData::PhysicalData &);
+        void writeVirialFile(size_t, const physicalData::PhysicalData &);
+        void writeStressFile(size_t, const physicalData::PhysicalData &);
+        void writeBoxFile(size_t, const simulationBox::Box &);
+        void writeOptFile(size_t, const opt::Optimizer &);
 
         void writeRingPolymerRstFile(
             std::vector<simulationBox::SimulationBox> &
         );
         void writeRingPolymerXyzFile(
             std::vector<simulationBox::SimulationBox> &,
-            const size_t
+            size_t
         );
         void writeRingPolymerVelFile(
             std::vector<simulationBox::SimulationBox> &,
-            const size_t
+            size_t
         );
         void writeRingPolymerForceFile(
             std::vector<simulationBox::SimulationBox> &,
-            const size_t
+            size_t
         );
         void writeRingPolymerChargeFile(
             std::vector<simulationBox::SimulationBox> &,
-            const size_t
+            size_t
         );
         void writeRingPolymerEnergyFile(
-            const size_t,
+            size_t,
             const std::vector<physicalData::PhysicalData> &
         );
 

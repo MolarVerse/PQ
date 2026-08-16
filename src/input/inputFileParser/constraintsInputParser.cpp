@@ -121,7 +121,7 @@ ConstraintsInputParser::ConstraintsInputParser(
  */
 void ConstraintsInputParser::parseShakeActivated(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -168,7 +168,7 @@ void ConstraintsInputParser::parseShakeActivated(
  */
 void ConstraintsInputParser::parseShakeTolerance(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -192,7 +192,7 @@ void ConstraintsInputParser::parseShakeTolerance(
  */
 void ConstraintsInputParser::parseShakeIteration(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -216,7 +216,7 @@ void ConstraintsInputParser::parseShakeIteration(
  */
 void ConstraintsInputParser::parseRattleTolerance(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -240,7 +240,7 @@ void ConstraintsInputParser::parseRattleTolerance(
  */
 void ConstraintsInputParser::parseRattleIteration(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -264,7 +264,7 @@ void ConstraintsInputParser::parseRattleIteration(
  */
 void ConstraintsInputParser::parseMShakeTolerance(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -288,7 +288,7 @@ void ConstraintsInputParser::parseMShakeTolerance(
  */
 void ConstraintsInputParser::parseMShakeIteration(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -315,7 +315,7 @@ void ConstraintsInputParser::parseMShakeIteration(
  */
 void ConstraintsInputParser::parseDistanceConstraintActivated(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);

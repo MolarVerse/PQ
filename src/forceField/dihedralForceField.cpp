@@ -51,7 +51,7 @@ using enum HybridZone;
 DihedralForceField::DihedralForceField(
     const std::vector<Molecule *> &molecules,
     const std::vector<size_t>     &atomIndices,
-    const size_t                   type
+    size_t                         type
 )
     : Dihedral(molecules, atomIndices), _type(type)
 {
@@ -69,7 +69,7 @@ DihedralForceField::DihedralForceField(
 void DihedralForceField::calculateEnergyAndForces(
     const SimulationBox    &box,
     PhysicalData           &physicalData,
-    const bool              isImproperDihedral,
+    bool                    isImproperDihedral,
     const CoulombPotential &coulombPotential,
     NonCoulombPotential    &nonCoulombPotential
 )
@@ -198,17 +198,14 @@ void DihedralForceField::calculateEnergyAndForces(
  *
  * @param isLinker
  */
-void DihedralForceField::setIsLinker(const bool isLinker)
-{
-    _isLinker = isLinker;
-}
+void DihedralForceField::setIsLinker(bool isLinker) { _isLinker = isLinker; }
 
 /**
  * @brief set force constant
  *
  * @param forceConstant
  */
-void DihedralForceField::setForceConstant(const double forceConstant)
+void DihedralForceField::setForceConstant(double forceConstant)
 {
     _forceConstant = forceConstant;
 }
@@ -218,7 +215,7 @@ void DihedralForceField::setForceConstant(const double forceConstant)
  *
  * @param periodicity
  */
-void DihedralForceField::setPeriodicity(const double periodicity)
+void DihedralForceField::setPeriodicity(double periodicity)
 {
     _periodicity = periodicity;
 }
@@ -228,7 +225,7 @@ void DihedralForceField::setPeriodicity(const double periodicity)
  *
  * @param phaseShift
  */
-void DihedralForceField::setPhaseShift(const double phaseShift)
+void DihedralForceField::setPhaseShift(double phaseShift)
 {
     _phaseShift = phaseShift;
 }

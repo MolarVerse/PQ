@@ -62,7 +62,7 @@ StaticMatrix3x3<double> Box::getBoxMatrix() const
  *
  * @return StaticMatrix3x3<double>
  */
-StaticMatrix3x3<double> Box::getBoxMatrix(const Periodicity per) const
+StaticMatrix3x3<double> Box::getBoxMatrix(Periodicity per) const
 {
     auto boxMatrix = getBoxMatrix();
 
@@ -186,14 +186,14 @@ linearAlgebra::Vec3D Box::getBoxDimensions() const { return _boxDimensions; }
  *
  * @param volume
  */
-void Box::setVolume(const double volume) { _volume = volume; }
+void Box::setVolume(double volume) { _volume = volume; }
 
 /**
  * @brief set if the box size has changed
  *
  * @param boxSizeHasChanged
  */
-void Box::setBoxSizeHasChanged(const bool boxSizeHasChanged)
+void Box::setBoxSizeHasChanged(bool boxSizeHasChanged)
 {
     _boxSizeHasChanged = boxSizeHasChanged;
 }

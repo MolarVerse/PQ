@@ -41,7 +41,7 @@ namespace input
        public:
         explicit IntegratorInputParser(engine::Engine &);
 
-        void parseIntegrator(const std::vector<std::string> &, const size_t);
+        void parseIntegrator(const std::vector<std::string> &, size_t);
     };
 
 }   // namespace input

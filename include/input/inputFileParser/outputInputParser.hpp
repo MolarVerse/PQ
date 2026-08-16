@@ -41,116 +41,74 @@ namespace input
        public:
         explicit OutputInputParser(engine::Engine &);
 
-        void parseOverwriteOutput(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void parseOverwriteOutput(const std::vector<std::string> &, size_t);
 
         void parseIncludeOutputMetadata(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
 
-        void parseOutputFreq(const std::vector<std::string> &, const size_t);
+        void parseOutputFreq(const std::vector<std::string> &, size_t);
 
-        void parseFilePrefix(const std::vector<std::string> &, const size_t);
+        void parseFilePrefix(const std::vector<std::string> &, size_t);
 
-        void parseLogFilename(const std::vector<std::string> &, const size_t);
+        void parseLogFilename(const std::vector<std::string> &, size_t);
 
-        void parseRefFilename(const std::vector<std::string> &, const size_t);
+        void parseRefFilename(const std::vector<std::string> &, size_t);
 
-        void parseInfoFilename(const std::vector<std::string> &, const size_t);
+        void parseInfoFilename(const std::vector<std::string> &, size_t);
 
-        void parseEnergyFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void parseEnergyFilename(const std::vector<std::string> &, size_t);
 
         void parseInstantEnergyFilename(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
 
-        void parseTrajectoryFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void parseTrajectoryFilename(const std::vector<std::string> &, size_t);
 
         void parseHybridCenterFilename(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
 
-        void parseVelocityFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void parseVelocityFilename(const std::vector<std::string> &, size_t);
 
-        void parseForceFilename(const std::vector<std::string> &, const size_t);
+        void parseForceFilename(const std::vector<std::string> &, size_t);
 
-        void parseRestartFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void parseRestartFilename(const std::vector<std::string> &, size_t);
 
-        void parseChargeFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void parseChargeFilename(const std::vector<std::string> &, size_t);
 
-        void parseMomentumFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void parseMomentumFilename(const std::vector<std::string> &, size_t);
 
-        void parseVirialFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void parseVirialFilename(const std::vector<std::string> &, size_t);
 
-        void parseStressFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void parseStressFilename(const std::vector<std::string> &, size_t);
 
-        void parseBoxFilename(const std::vector<std::string> &, const size_t);
+        void parseBoxFilename(const std::vector<std::string> &, size_t);
 
-        void parseTimingsFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void parseTimingsFilename(const std::vector<std::string> &, size_t);
 
-        void parseOptFilename(const std::vector<std::string> &, const size_t);
+        void parseOptFilename(const std::vector<std::string> &, size_t);
 
-        void parseRPMDRestartFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void parseRPMDRestartFilename(const std::vector<std::string> &, size_t);
 
         void parseRPMDTrajectoryFilename(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
 
         void parseRPMDVelocityFilename(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
 
-        void parseRPMDForceFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void parseRPMDForceFilename(const std::vector<std::string> &, size_t);
 
-        void parseRPMDChargeFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void parseRPMDChargeFilename(const std::vector<std::string> &, size_t);
 
-        void parseRPMDEnergyFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void parseRPMDEnergyFilename(const std::vector<std::string> &, size_t);
     };
 
 }   // namespace input

@@ -45,43 +45,28 @@ namespace input
         explicit QMInputParser(engine::Engine &, bool resolveBuiltInSlakosPath);
         explicit QMInputParser(engine::Engine &);
 
-        void parseQMMethod(const std::vector<std::string> &, const size_t);
-        void parseQMScript(const std::vector<std::string> &, const size_t);
-        void parseQMScriptFullPath(
-            const std::vector<std::string> &,
-            const size_t
-        );
-        void parseQMLoopTimeLimit(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void parseQMMethod(const std::vector<std::string> &, size_t);
+        void parseQMScript(const std::vector<std::string> &, size_t);
+        void parseQMScriptFullPath(const std::vector<std::string> &, size_t);
+        void parseQMLoopTimeLimit(const std::vector<std::string> &, size_t);
 
-        void parseDispersion(const std::vector<std::string> &, const size_t);
-        void parseRemoveNetForce(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void parseDispersion(const std::vector<std::string> &, size_t);
+        void parseRemoveNetForce(const std::vector<std::string> &, size_t);
 
-        void parseMaceModel(const std::vector<std::string> &, const size_t);
-        void parseMaceMode(const std::vector<std::string> &, const size_t);
-        void parseMaceModelPath(const std::vector<std::string> &, const size_t);
+        void parseMaceModel(const std::vector<std::string> &, size_t);
+        void parseMaceMode(const std::vector<std::string> &, size_t);
+        void parseMaceModelPath(const std::vector<std::string> &, size_t);
         void parseMaceQMMethod(const std::string_view &);
 
-        void parseSlakosType(const std::vector<std::string> &, const size_t);
-        void parseSlakosPath(const std::vector<std::string> &, const size_t);
-        void parseThirdOrder(const std::vector<std::string> &, const size_t);
-        void parseHubbardDerivs(const std::vector<std::string> &, const size_t);
+        void parseSlakosType(const std::vector<std::string> &, size_t);
+        void parseSlakosPath(const std::vector<std::string> &, size_t);
+        void parseThirdOrder(const std::vector<std::string> &, size_t);
+        void parseHubbardDerivs(const std::vector<std::string> &, size_t);
 
-        void parseXtbMethod(const std::vector<std::string> &, const size_t);
+        void parseXtbMethod(const std::vector<std::string> &, size_t);
 
-        void parseFennolModelPath(
-            const std::vector<std::string> &,
-            const size_t
-        );
-        void parseGPUPreprocessing(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void parseFennolModelPath(const std::vector<std::string> &, size_t);
+        void parseGPUPreprocessing(const std::vector<std::string> &, size_t);
     };
 
 }   // namespace input

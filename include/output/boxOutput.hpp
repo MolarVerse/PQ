@@ -46,7 +46,7 @@ namespace output
        public:
         using Output::Output;
 
-        void write(const size_t, const simulationBox::Box &);
+        void write(size_t, const simulationBox::Box &);
     };
 
 }   // namespace output

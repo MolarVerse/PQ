@@ -53,7 +53,7 @@ using std::shared_ptr;
  * @return shared_ptr<QMRunner> Shared pointer to the created QM runner
  * @throws InputFileException if the method is not supported
  */
-shared_ptr<QMRunner> QMRunnerManager::createQMRunner(const QMMethod method)
+shared_ptr<QMRunner> QMRunnerManager::createQMRunner(QMMethod method)
 {
     using enum QMMethod;
 

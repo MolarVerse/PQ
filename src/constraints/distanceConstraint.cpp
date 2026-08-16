@@ -44,14 +44,14 @@ using namespace connectivity;
  * @param dSpringConstantDt
  */
 DistanceConstraint::DistanceConstraint(
-    Molecule    *molecule1,
-    Molecule    *molecule2,
-    const size_t atomIndex1,
-    const size_t atomIndex2,
-    const double lowerDistance,
-    const double upperDistance,
-    const double springConstant,
-    const double dSpringConstantDt
+    Molecule *molecule1,
+    Molecule *molecule2,
+    size_t    atomIndex1,
+    size_t    atomIndex2,
+    double    lowerDistance,
+    double    upperDistance,
+    double    springConstant,
+    double    dSpringConstantDt
 )
     : Bond(molecule1, molecule2, atomIndex1, atomIndex2),
       _lowerDistance(lowerDistance),
@@ -70,7 +70,7 @@ DistanceConstraint::DistanceConstraint(
  */
 void DistanceConstraint::applyDistanceConstraint(
     const simulationBox::SimulationBox &simulationBox,
-    const double                        dt
+    double                              dt
 )
 {
     _lowerEnergy = 0.0;

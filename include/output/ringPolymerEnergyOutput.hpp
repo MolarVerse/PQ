@@ -47,10 +47,7 @@ namespace output
        public:
         using Output::Output;
 
-        void write(
-            const size_t step,
-            const std::vector<physicalData::PhysicalData>&
-        );
+        void write(size_t step, const std::vector<physicalData::PhysicalData>&);
 
         double sumOfRingPolymerEnergies(
             const std::vector<physicalData::PhysicalData>&

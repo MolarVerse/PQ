@@ -49,22 +49,10 @@ namespace input
             std::shared_ptr<potential::Potential>   potential
         );
 
-        void parseForceFieldType(
-            const std::vector<std::string> &,
-            const size_t
-        );
-        void parseNonCoulombType(
-            const std::vector<std::string> &,
-            const size_t
-        );
-        void parseWaterIntraModel(
-            const std::vector<std::string> &,
-            const size_t
-        );
-        void parseWaterInterModel(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void parseForceFieldType(const std::vector<std::string> &, size_t);
+        void parseNonCoulombType(const std::vector<std::string> &, size_t);
+        void parseWaterIntraModel(const std::vector<std::string> &, size_t);
+        void parseWaterInterModel(const std::vector<std::string> &, size_t);
     };
 
 }   // namespace input

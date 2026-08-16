@@ -45,23 +45,17 @@ namespace input
        public:
         explicit GeneralInputParser(engine::Engine &);
 
-        void parseJobType(const std::vector<std::string> &, const size_t);
+        void parseJobType(const std::vector<std::string> &, size_t);
 
-        void parseDimensionality(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void parseDimensionality(const std::vector<std::string> &, size_t);
 
-        void parseFloatingPointType(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void parseFloatingPointType(const std::vector<std::string> &, size_t);
 
-        void parseRandomSeed(const std::vector<std::string> &, const size_t);
+        void parseRandomSeed(const std::vector<std::string> &, size_t);
 
         static void parseJobTypeForEngine(
             const std::vector<std::string> &,
-            const size_t,
+            size_t,
             std::unique_ptr<engine::Engine> &
         );
     };

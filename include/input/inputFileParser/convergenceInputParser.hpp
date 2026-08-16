@@ -41,58 +41,43 @@ namespace input
 
         void parseEnergyConvergenceStrategy(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
 
         void parseUseEnergyConvergence(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
 
-        void parseUseForceConvergence(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void parseUseForceConvergence(const std::vector<std::string> &, size_t);
 
         void parseUseMaxForceConvergence(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
 
         void parseUseRMSForceConvergence(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
 
-        void parseEnergyConvergence(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void parseEnergyConvergence(const std::vector<std::string> &, size_t);
 
         void parseRelativeEnergyConvergence(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
 
         void parseAbsoluteEnergyConvergence(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
 
-        void parseForceConvergence(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void parseForceConvergence(const std::vector<std::string> &, size_t);
 
-        void parseMaxForceConvergence(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void parseMaxForceConvergence(const std::vector<std::string> &, size_t);
 
-        void parseRMSForceConvergence(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void parseRMSForceConvergence(const std::vector<std::string> &, size_t);
     };
 
 }   // namespace input

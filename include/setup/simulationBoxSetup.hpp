@@ -73,7 +73,7 @@ namespace setup::simulationBox
          * standard setter methods *
          ***************************/
 
-        static void setZeroVelocities(const bool zeroVelocities);
+        static void setZeroVelocities(bool zeroVelocities);
 
         /***************************
          * standard getter methods *

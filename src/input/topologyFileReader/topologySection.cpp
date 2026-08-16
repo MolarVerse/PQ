@@ -80,7 +80,7 @@ void TopologySection::process(
  *
  * @param lineNumber
  */
-void TopologySection::setLineNumber(const int lineNumber)
+void TopologySection::setLineNumber(int lineNumber)
 {
     _lineNumber = lineNumber;
 }

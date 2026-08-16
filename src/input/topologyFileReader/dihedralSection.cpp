@@ -148,7 +148,7 @@ std::string DihedralSection::keyword() { return "dihedrals"; }
  *
  * @throws TopologyException if endedNormal is false
  */
-void DihedralSection::endedNormally(const bool endedNormal) const
+void DihedralSection::endedNormally(bool endedNormal) const
 {
     if (!endedNormal)
     {

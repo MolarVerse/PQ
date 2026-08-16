@@ -48,24 +48,22 @@ namespace potential
         inline static double _wolfParam3;
 
        public:
-        explicit CoulombWolf(
-            const double coulombRadiusCutOff,
-            const double kappa
-        );
+        explicit CoulombWolf(double coulombRadiusCutOff, double kappa);
 
-        [[nodiscard]] std::pair<double, double> calculate(
-            const double distance,
-            const double chargeProduct
+        [[nodiscard]]
+        std::pair<double, double> calculate(
+            double distance,
+            double chargeProduct
         ) const override;
 
         /***************************
          * standard setter methods *
          ***************************/
 
-        static void setKappa(const double kappa);
-        static void setWolfParameter1(const double wolfParameter1);
-        static void setWolfParameter2(const double wolfParameter2);
-        static void setWolfParameter3(const double wolfParameter3);
+        static void setKappa(double kappa);
+        static void setWolfParameter1(double wolfParameter1);
+        static void setWolfParameter2(double wolfParameter2);
+        static void setWolfParameter3(double wolfParameter3);
 
         /***************************
          * standard getter methods *

@@ -49,7 +49,7 @@ namespace integrator
         std::string _integratorType;   // TODO: make enum
 
        public:
-        explicit Integrator(const std::string_view integratorType);
+        explicit Integrator(std::string_view integratorType);
         Integrator()          = default;
         virtual ~Integrator() = default;
 

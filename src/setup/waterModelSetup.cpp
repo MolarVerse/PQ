@@ -295,7 +295,7 @@ void WaterModelSetup::checkMoldescriptorWaterCharge(
  * the model is not rigid.
  */
 std::optional<RigidWaterGeometry> WaterModelSetup::getRigidWaterGeometry(
-    const WaterIntraModel intraModel
+    WaterIntraModel intraModel
 )
 {
     using enum WaterIntraModel;

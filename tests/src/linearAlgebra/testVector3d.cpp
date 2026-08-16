@@ -27,7 +27,7 @@
 #include <string>     // for allocator, string
 
 #include "gtest/gtest.h"   // for Message, TestPartResult, AssertionResult
-#include "vector3d.hpp"    // IWYU pragma: keep - for Vec3D, Vec3Di, Vec3Dul, maximum, minimum
+#include "vector3d.hpp"   // IWYU pragma: keep - for Vec3D, Vec3Di, Vec3Dul, maximum, minimum
 
 using namespace linearAlgebra;
 
@@ -633,18 +633,18 @@ TEST(TestVector3d, end)
  */
 TEST(TestVector3d, equalOperator)
 {
-    auto  vec1 = Vec3D(1.0, 2.0, 3.0);
-    Vec3D vec2 = vec1;
+    auto         vec1 = Vec3D(1.0, 2.0, 3.0);
+    const Vec3D& vec2 = vec1;
 
     EXPECT_EQ(vec1, vec2);
 
-    auto   vec3 = Vec3Di(1, 2, 3);
-    Vec3Di vec4 = vec3;
+    auto          vec3 = Vec3Di(1, 2, 3);
+    const Vec3Di& vec4 = vec3;
 
     EXPECT_EQ(vec3, vec4);
 
-    auto    vec5 = Vec3Dul(1, 2, 3);
-    Vec3Dul vec6 = vec5;
+    auto           vec5 = Vec3Dul(1, 2, 3);
+    const Vec3Dul& vec6 = vec5;
 
     EXPECT_EQ(vec5, vec6);
 }

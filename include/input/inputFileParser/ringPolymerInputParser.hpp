@@ -41,7 +41,7 @@ namespace input
        public:
         explicit RingPolymerInputParser(engine::Engine &);
 
-        void parseNumberOfBeads(const std::vector<std::string> &, const size_t);
+        void parseNumberOfBeads(const std::vector<std::string> &, size_t);
     };
 
 }   // namespace input

@@ -45,7 +45,7 @@ namespace manostat
         double _dt;
 
        public:
-        explicit BerendsenManostat(const double, const double, const double);
+        explicit BerendsenManostat(double, double, double);
 
         void applyManostat(
             simulationBox::SimulationBox &simBox,
@@ -79,10 +79,10 @@ namespace manostat
 
        public:
         SemiIsotropicBerendsenManostat(
-            const double,
-            const double,
-            const double,
-            const size_t,
+            double,
+            double,
+            double,
+            size_t,
             const std::vector<size_t> &
         );
 

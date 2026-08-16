@@ -102,7 +102,7 @@ MMInputParser::MMInputParser(
  */
 void MMInputParser::parseForceFieldType(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -152,7 +152,7 @@ void MMInputParser::parseForceFieldType(
  */
 void MMInputParser::parseNonCoulombType(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -197,7 +197,7 @@ void MMInputParser::parseNonCoulombType(
  */
 void MMInputParser::parseWaterIntraModel(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     using enum WaterIntraModel;
@@ -267,7 +267,7 @@ void MMInputParser::parseWaterIntraModel(
  */
 void MMInputParser::parseWaterInterModel(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     using enum WaterInterModel;

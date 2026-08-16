@@ -41,13 +41,13 @@ namespace input
        public:
         explicit ResetKineticsInputParser(engine::Engine &);
 
-        void parseNScale(const std::vector<std::string> &, const size_t);
-        void parseFScale(const std::vector<std::string> &, const size_t);
-        void parseNReset(const std::vector<std::string> &, const size_t);
-        void parseFReset(const std::vector<std::string> &, const size_t);
-        void parseNResetAngular(const std::vector<std::string> &, const size_t);
-        void parseFResetAngular(const std::vector<std::string> &, const size_t);
-        void parseFResetForces(const std::vector<std::string> &, const size_t);
+        void parseNScale(const std::vector<std::string> &, size_t);
+        void parseFScale(const std::vector<std::string> &, size_t);
+        void parseNReset(const std::vector<std::string> &, size_t);
+        void parseFReset(const std::vector<std::string> &, size_t);
+        void parseNResetAngular(const std::vector<std::string> &, size_t);
+        void parseFResetAngular(const std::vector<std::string> &, size_t);
+        void parseFResetForces(const std::vector<std::string> &, size_t);
     };
 
 }   // namespace input

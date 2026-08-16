@@ -48,11 +48,11 @@ using namespace constants;
  * @param bondLength
  */
 BondConstraint::BondConstraint(
-    Molecule    *molecule1,
-    Molecule    *molecule2,
-    const size_t atomIndex1,
-    const size_t atomIndex2,
-    const double bondLength
+    Molecule *molecule1,
+    Molecule *molecule2,
+    size_t    atomIndex1,
+    size_t    atomIndex2,
+    double    bondLength
 )
     : connectivity::Bond(molecule1, molecule2, atomIndex1, atomIndex2),
       _targetBondLength(bondLength)
@@ -106,10 +106,7 @@ double BondConstraint::calculateDistanceDelta(const SimulationBox &simBox) const
  * applied
  *
  */
-bool BondConstraint::applyShake(
-    const SimulationBox &simBox,
-    const double         tolerance
-)
+bool BondConstraint::applyShake(const SimulationBox &simBox, double tolerance)
 {
     const auto delta = calculateDistanceDelta(simBox);
 
@@ -168,7 +165,7 @@ bool BondConstraint::applyShake(
  * applied
  *
  */
-bool BondConstraint::applyRattle(const double tolerance)
+bool BondConstraint::applyRattle(double tolerance)
 {
     const auto delta = calculateVelocityDelta();
 

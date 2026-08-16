@@ -68,7 +68,7 @@ VirialInputParser::VirialInputParser(Engine& engine) : InputFileParser(engine)
  */
 void VirialInputParser::parseVirial(
     const std::vector<std::string>& lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);

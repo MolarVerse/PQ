@@ -46,31 +46,27 @@ namespace potential
 
        public:
         explicit LennardJonesPair(
-            const size_t vanDerWaalsType1,
-            const size_t vanDerWaalsType2,
-            const double cutOff,
-            const double c6,
-            const double c12
+            size_t vanDerWaalsType1,
+            size_t vanDerWaalsType2,
+            double cutOff,
+            double c6,
+            double c12
         );
 
-        explicit LennardJonesPair(
-            const double cutOff,
-            const double c6,
-            const double c12
-        );
+        explicit LennardJonesPair(double cutOff, double c6, double c12);
 
         explicit LennardJonesPair(
-            const double cutOff,
-            const double energyCutoff,
-            const double forceCutoff,
-            const double c6,
-            const double c12
+            double cutOff,
+            double energyCutoff,
+            double forceCutoff,
+            double c6,
+            double c12
         );
 
         [[nodiscard]] bool operator==(const LennardJonesPair &other) const;
 
-        [[nodiscard]] std::pair<double, double> calculate(const double distance
-        ) const override;
+        [[nodiscard]]
+        std::pair<double, double> calculate(double distance) const override;
 
         [[nodiscard]] double getC6() const;
         [[nodiscard]] double getC12() const;

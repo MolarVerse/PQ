@@ -24,6 +24,7 @@
 
 #include <filesystem>
 #include <format>   // for std::format
+#include <utility>
 
 #include "exceptions.hpp"   // for customException
 #include "executablePath.hpp"
@@ -75,7 +76,7 @@ namespace
  * @param method
  * @return std::string
  */
-std::string settings::string(const QMMethod method)
+std::string settings::string(QMMethod method)
 {
     switch (method)
     {
@@ -89,10 +90,10 @@ std::string settings::string(const QMMethod method)
         case MACE: return "MACE";
         case FENNOL: return "FeNNol";
 
-        case NONE: break;
+        case NONE: return "none";
     }
 
-    return "none";
+    std::unreachable();
 }
 
 /**
@@ -101,7 +102,7 @@ std::string settings::string(const QMMethod method)
  * @param model
  * @return std::string
  */
-std::string settings::string(const MaceModel model)
+std::string settings::string(MaceModel model)
 {
     switch (model)
     {
@@ -121,7 +122,7 @@ std::string settings::string(const MaceModel model)
         case CUSTOM: return "custom";
     }
 
-    return "none";
+    std::unreachable();
 }
 
 /**
@@ -130,7 +131,7 @@ std::string settings::string(const MaceModel model)
  * @param model
  * @return std::string
  */
-std::string settings::string(const MaceModelType model)
+std::string settings::string(MaceModelType model)
 {
     switch (model)
     {
@@ -141,7 +142,7 @@ std::string settings::string(const MaceModelType model)
         case MACE_ANICC: return "mace_anicc";
     }
 
-    return "none";
+    std::unreachable();
 }
 
 /**
@@ -150,7 +151,7 @@ std::string settings::string(const MaceModelType model)
  * @param mode
  * @return std::string
  */
-std::string settings::string(const MaceMode mode)
+std::string settings::string(MaceMode mode)
 {
     switch (mode)
     {
@@ -160,7 +161,7 @@ std::string settings::string(const MaceMode mode)
         case FAST: return "fast";
     }
 
-    return "unknown mode";
+    std::unreachable();
 }
 
 /**
@@ -169,7 +170,7 @@ std::string settings::string(const MaceMode mode)
  * @param slakos
  * @return std::string
  */
-std::string settings::string(const SlakosType slakos)
+std::string settings::string(SlakosType slakos)
 {
     switch (slakos)
     {
@@ -182,7 +183,7 @@ std::string settings::string(const SlakosType slakos)
         case NONE: break;
     }
 
-    return "none";
+    std::unreachable();
 }
 
 /**
@@ -191,7 +192,7 @@ std::string settings::string(const SlakosType slakos)
  * @param method
  * @return std::string
  */
-std::string settings::string(const XtbMethod method)
+std::string settings::string(XtbMethod method)
 {
     switch (method)
     {
@@ -202,7 +203,7 @@ std::string settings::string(const XtbMethod method)
         case IPEA1: return "IPEA1-xTB";
     }
 
-    return "none";
+    std::unreachable();
 }
 
 /**
@@ -212,7 +213,7 @@ std::string settings::string(const XtbMethod method)
  * @return std::string
  */
 std::string settings::string(
-    const std::unordered_map<std::string, double> unordered_map
+    const std::unordered_map<std::string, double> &unordered_map
 )
 {
     std::string unorderedMapStr;
@@ -291,7 +292,7 @@ void QMSettings::setQMMethod(const std::string_view &method)
  *
  * @param method
  */
-void QMSettings::setQMMethod(const QMMethod method) { _qmMethod = method; }
+void QMSettings::setQMMethod(QMMethod method) { _qmMethod = method; }
 
 /**
  * @brief sets the maceModel to enum in settings
@@ -351,7 +352,7 @@ void QMSettings::setMaceModel(const std::string_view &model)
  *
  * @param model
  */
-void QMSettings::setMaceModel(const MaceModel model) { _maceModel = model; }
+void QMSettings::setMaceModel(MaceModel model) { _maceModel = model; }
 
 /**
  * @brief sets the maceModelType to enum in settings
@@ -383,7 +384,7 @@ void QMSettings::setMaceModelType(const std::string_view &model)
  *
  * @param model
  */
-void QMSettings::setMaceModelType(const MaceModelType model)
+void QMSettings::setMaceModelType(MaceModelType model)
 {
     _maceModelType = model;
 }
@@ -422,7 +423,7 @@ void QMSettings::setMaceMode(const std::string_view &mode)
  *
  * @param mode
  */
-void QMSettings::setMaceMode(const MaceMode mode) { _maceMode = mode; }
+void QMSettings::setMaceMode(MaceMode mode) { _maceMode = mode; }
 
 /**
  * @brief set the mace model path
@@ -463,7 +464,7 @@ void QMSettings::setXtbMethod(const std::string_view &method)
  *
  * @param method
  */
-void QMSettings::setXtbMethod(const XtbMethod method) { _xtbMethod = method; }
+void QMSettings::setXtbMethod(XtbMethod method) { _xtbMethod = method; }
 
 /**
  * @brief sets the qmScript in settings
@@ -527,7 +528,7 @@ void QMSettings::setSlakosType(const std::string_view &slakos)
  *
  * @param slakos
  */
-void QMSettings::setSlakosType(const SlakosType slakos)
+void QMSettings::setSlakosType(SlakosType slakos)
 {
     setSlakosType(slakos, true);
 }
@@ -538,10 +539,7 @@ void QMSettings::setSlakosType(const SlakosType slakos)
  * @param slakos
  * @param resolveBuiltInPath
  */
-void QMSettings::setSlakosType(
-    const SlakosType slakos,
-    const bool       resolveBuiltInPath
-)
+void QMSettings::setSlakosType(SlakosType slakos, bool resolveBuiltInPath)
 {
     if (!resolveBuiltInPath &&
         (slakos == SlakosType::THREEOB || slakos == SlakosType::MATSCI))
@@ -584,7 +582,7 @@ void QMSettings::setSlakosPath(const std::string_view &path)
  * @brief sets if third order DFTB should be used
  *
  */
-void QMSettings::setUseThirdOrderDftb(const bool useThirdOrderDftb)
+void QMSettings::setUseThirdOrderDftb(bool useThirdOrderDftb)
 {
     _useThirdOrderDftb = useThirdOrderDftb;
 }
@@ -593,7 +591,7 @@ void QMSettings::setUseThirdOrderDftb(const bool useThirdOrderDftb)
  * @brief sets if the third order is set
  *
  */
-void QMSettings::setIsThirdOrderDftbSet(const bool isThirdOrderDftbSet)
+void QMSettings::setIsThirdOrderDftbSet(bool isThirdOrderDftbSet)
 {
     _isThirdOrderDftbSet = isThirdOrderDftbSet;
 }
@@ -603,7 +601,7 @@ void QMSettings::setIsThirdOrderDftbSet(const bool isThirdOrderDftbSet)
  *
  */
 void QMSettings::setHubbardDerivs(
-    std::unordered_map<std::string, double> hubbardDerivs
+    const std::unordered_map<std::string, double> &hubbardDerivs
 )
 {
     _hubbardDerivs = hubbardDerivs;
@@ -613,7 +611,7 @@ void QMSettings::setHubbardDerivs(
  * @brief sets if the Hubbard Derivative dictionary is set by the user
  *
  */
-void QMSettings::setIsHubbardDerivsSet(const bool isHubbardDerivsSet)
+void QMSettings::setIsHubbardDerivsSet(bool isHubbardDerivsSet)
 {
     _isHubbardDerivsSet = isHubbardDerivsSet;
 }
@@ -622,7 +620,7 @@ void QMSettings::setIsHubbardDerivsSet(const bool isHubbardDerivsSet)
  * @brief sets if the dispersion correction should be used
  *
  */
-void QMSettings::setUseDispersionCorrection(const bool useDispersionCorr)
+void QMSettings::setUseDispersionCorrection(bool useDispersionCorr)
 {
     _useDispersionCorrection = useDispersionCorr;
 }
@@ -631,7 +629,7 @@ void QMSettings::setUseDispersionCorrection(const bool useDispersionCorr)
  * @brief sets if the net force should be removed after reading in the QM forces
  *
  */
-void QMSettings::setRemoveNetForce(const bool removeNetForce)
+void QMSettings::setRemoveNetForce(bool removeNetForce)
 {
     _removeNetForce = removeNetForce;
 }
@@ -641,10 +639,7 @@ void QMSettings::setRemoveNetForce(const bool removeNetForce)
  *
  * @param time
  */
-void QMSettings::setQMLoopTimeLimit(const double time)
-{
-    _qmLoopTimeLimit = time;
-}
+void QMSettings::setQMLoopTimeLimit(double time) { _qmLoopTimeLimit = time; }
 
 /**
  * @brief sets the FeNNol model path
@@ -660,7 +655,7 @@ void QMSettings::setFennolModelPath(const std::string_view &path)
  * @brief sets if the GPU pre-processing should be enabled for FeNNol
  *
  */
-void QMSettings::setUseGPUPreprocessing(const bool useGPUPreprocessing)
+void QMSettings::setUseGPUPreprocessing(bool useGPUPreprocessing)
 {
     _useGPUPreprocessing = useGPUPreprocessing;
 }

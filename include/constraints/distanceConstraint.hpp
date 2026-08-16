@@ -62,17 +62,17 @@ namespace constraints
         DistanceConstraint(
             simulationBox::Molecule *molecule1,
             simulationBox::Molecule *molecule2,
-            const size_t             atomIndex1,
-            const size_t             atomIndex2,
-            const double             lowerDistance,
-            const double             upperDistance,
-            const double             springConstant,
-            const double             dSpringConstantDt
+            size_t                   atomIndex1,
+            size_t                   atomIndex2,
+            double                   lowerDistance,
+            double                   upperDistance,
+            double                   springConstant,
+            double                   dSpringConstantDt
         );
 
         void applyDistanceConstraint(
             const simulationBox::SimulationBox &,
-            const double
+            double
         );
 
         [[nodiscard]] double getLowerDistance() const;

@@ -46,9 +46,9 @@ using namespace physicalData;
  * @param compressibility
  */
 BerendsenManostat::BerendsenManostat(
-    const double targetPressure,
-    const double tau,
-    const double compressibility
+    double targetPressure,
+    double tau,
+    double compressibility
 )
     : Manostat(targetPressure),
       _tau(tau),
@@ -65,10 +65,10 @@ BerendsenManostat::BerendsenManostat(
  * @param compressibility
  */
 SemiIsotropicBerendsenManostat::SemiIsotropicBerendsenManostat(
-    const double               targetPressure,
-    const double               tau,
-    const double               compressibility,
-    const size_t               anisotropicAxis,
+    double                     targetPressure,
+    double                     tau,
+    double                     compressibility,
+    size_t                     anisotropicAxis,
     const std::vector<size_t> &isotropicAxes
 )
     : BerendsenManostat(targetPressure, tau, compressibility),

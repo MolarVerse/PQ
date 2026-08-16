@@ -54,12 +54,8 @@ namespace input
             std::shared_ptr<simulationBox::CellList> cellListPtr
         );
 
-        void parseCellListActivated(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseNumberOfCells(const std::vector<std::string> &, const size_t);
+        void parseCellListActivated(const std::vector<std::string> &, size_t);
+        void parseNumberOfCells(const std::vector<std::string> &, size_t);
     };
 
 }   // namespace input

@@ -101,7 +101,7 @@ void ExternalQMRunner::run(
     };
     for (const auto &file : resultFiles) std::filesystem::remove(file);
 
-    std::jthread timeoutThread{[this](const std::stop_token stopToken)
+    std::jthread timeoutThread{[this](const std::stop_token &stopToken)
                                { throwAfterTimeout(stopToken); }};
 
     {

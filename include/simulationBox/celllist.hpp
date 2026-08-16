@@ -61,9 +61,9 @@ namespace simulationBox
 
         void determineCellSize(const linearAlgebra::Vec3D &box);
         void determineCellBoundaries(const linearAlgebra::Vec3D &box);
-        void checkCoulombCutoff(const double coulombCutoff) const;
+        void checkCoulombCutoff(double coulombCutoff) const;
 
-        void addNeighbouringCells(const double coulombCutoff);
+        void addNeighbouringCells(double coulombCutoff);
         void addNeighbouringCellPointers(Cell &);
         void addMoleculesToCells(SimulationBox &simulationBox);
         void assignMoleculeHybridZoneIndices();
@@ -96,14 +96,14 @@ namespace simulationBox
         [[nodiscard]] linearAlgebra::Vec3Dul getNumberOfNeighbourCells() const;
         [[nodiscard]] linearAlgebra::Vec3D   getCellSize() const;
         [[nodiscard]] const std::vector<Cell> &getCells() const;
-        [[nodiscard]] Cell                    &getCell(const size_t index);
+        [[nodiscard]] Cell                    &getCell(size_t index);
 
         /***************************
          * standard setter methods *
          ***************************/
 
-        void setNumberOfCells(const size_t nCells);
-        void setNumberOfNeighbourCells(const size_t nCells);
+        void setNumberOfCells(size_t nCells);
+        void setNumberOfNeighbourCells(size_t nCells);
     };
 
 }   // namespace simulationBox

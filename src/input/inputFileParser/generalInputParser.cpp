@@ -87,7 +87,7 @@ GeneralInputParser::GeneralInputParser(Engine &engine) : InputFileParser(engine)
  */
 void GeneralInputParser::parseJobType(
     const std::vector<std::string> & /*lineElements*/,
-    const size_t /*lineNumber*/
+    size_t /*lineNumber*/
 )
 {
 }
@@ -108,7 +108,7 @@ void GeneralInputParser::parseJobType(
  */
 void GeneralInputParser::parseJobTypeForEngine(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber,
+    size_t                          lineNumber,
     std::unique_ptr<Engine>        &engine
 )
 {
@@ -176,7 +176,7 @@ void GeneralInputParser::parseJobTypeForEngine(
  */
 void GeneralInputParser::parseDimensionality(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -215,7 +215,7 @@ void GeneralInputParser::parseDimensionality(
  */
 void GeneralInputParser::parseFloatingPointType(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     using enum FPType;
@@ -251,7 +251,7 @@ void GeneralInputParser::parseFloatingPointType(
  */
 void GeneralInputParser::parseRandomSeed(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);

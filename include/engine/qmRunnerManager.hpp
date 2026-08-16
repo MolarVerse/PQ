@@ -48,7 +48,7 @@ namespace engine
 
        public:
         static std::shared_ptr<QM::QMRunner> createQMRunner(
-            const settings::QMMethod method
+            settings::QMMethod method
         );
         static std::shared_ptr<QM::QMRunner> createAseDftbRunner();
         static std::shared_ptr<QM::QMRunner> createAseFennolRunner();

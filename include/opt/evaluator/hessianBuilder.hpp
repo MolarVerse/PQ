@@ -63,8 +63,8 @@ namespace opt
         std::vector<double> evaluateForces(
             Evaluator                    &evaluator,
             simulationBox::SimulationBox &simulationBox,
-            const size_t                  coordinateIndex,
-            const double                  displacement
+            size_t                        coordinateIndex,
+            double                        displacement
         ) const;
 
         static void restorePositions(
@@ -74,8 +74,8 @@ namespace opt
 
         static void displaceCoordinate(
             simulationBox::SimulationBox &simulationBox,
-            const size_t                  coordinateIndex,
-            const double                  displacement
+            size_t                        coordinateIndex,
+            double                        displacement
         );
 
         [[nodiscard]]
@@ -84,7 +84,7 @@ namespace opt
         );
 
        public:
-        explicit ForceDifferenceHessianBuilder(const double displacement);
+        explicit ForceDifferenceHessianBuilder(double displacement);
 
         static void symmetrize(HessianMatrix &hessian);
     };
@@ -140,8 +140,8 @@ namespace opt
 
     [[nodiscard]]
     std::shared_ptr<HessianBuilder> makeHessianBuilder(
-        const settings::HessianBuilderType builder,
-        const double                       displacement
+        settings::HessianBuilderType builder,
+        double                       displacement
     );
 
 }   // namespace opt

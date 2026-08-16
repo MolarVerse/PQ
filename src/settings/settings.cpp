@@ -35,7 +35,7 @@ using namespace utilities;
  *
  * @param jobtype
  */
-std::string settings::string(const JobType jobtype)
+std::string settings::string(JobType jobtype)
 {
     switch (jobtype)
     {
@@ -47,10 +47,10 @@ std::string settings::string(const JobType jobtype)
         case RING_POLYMER_QM_MD: return "RING_POLYMER_QM_MD";
         case MM_OPT: return "MM_OPT";
         case MM_HESSIAN: return "MM_HESSIAN";
-        case NONE: break;
+        case NONE: return "NONE";
     }
 
-    return "NONE";
+    std::unreachable();
 }
 
 /***************************
@@ -64,7 +64,7 @@ std::string settings::string(const JobType jobtype)
  *
  * @param jobtype
  */
-void Settings::setJobtype(const std::string_view jobtype)
+void Settings::setJobtype(std::string_view jobtype)
 {
     using enum JobType;
     const auto jobtypeToLower = toLowerAndReplaceDashesCopy(jobtype);
@@ -96,7 +96,7 @@ void Settings::setJobtype(const std::string_view jobtype)
  *
  * @param jobtype
  */
-void Settings::setJobtype(const JobType jobtype)
+void Settings::setJobtype(JobType jobtype)
 {
     _jobtype = jobtype;
 
@@ -112,6 +112,8 @@ void Settings::setJobtype(const JobType jobtype)
         case NONE: deactivateRingPolymerMD(); break;
         case RING_POLYMER_QM_MD: activateRingPolymerMD(); break;
     }
+
+    std::unreachable();
 }
 
 /**
@@ -119,7 +121,7 @@ void Settings::setJobtype(const JobType jobtype)
  *
  * @param floatingPointType
  */
-void Settings::setFloatingPointType(const std::string_view floatingPointType)
+void Settings::setFloatingPointType(std::string_view floatingPointType)
 {
     using enum FPType;
     const auto floatingPointTypeToLower = toLowerCopy(floatingPointType);
@@ -136,7 +138,7 @@ void Settings::setFloatingPointType(const std::string_view floatingPointType)
  *
  * @param floatingPointType
  */
-void Settings::setFloatingPointType(const FPType floatingPointType)
+void Settings::setFloatingPointType(FPType floatingPointType)
 {
     _floatingPointType = floatingPointType;
 }
@@ -146,7 +148,7 @@ void Settings::setFloatingPointType(const FPType floatingPointType)
  *
  * @param randomSeed
  */
-void Settings::setRandomSeed(const uint_fast32_t randomSeed)
+void Settings::setRandomSeed(uint_fast32_t randomSeed)
 {
     _randomSeed = randomSeed;
 }
@@ -156,7 +158,7 @@ void Settings::setRandomSeed(const uint_fast32_t randomSeed)
  *
  * @param isRandomSeedSet
  */
-void Settings::setIsRandomSeedSet(const bool isRandomSeedSet)
+void Settings::setIsRandomSeedSet(bool isRandomSeedSet)
 {
     _isRandomSeedset = isRandomSeedSet;
 }
@@ -166,7 +168,7 @@ void Settings::setIsRandomSeedSet(const bool isRandomSeedSet)
  *
  * @param dimensionality
  */
-void Settings::setIsRingPolymerMDActivated(const bool isRingPolymerMD)
+void Settings::setIsRingPolymerMDActivated(bool isRingPolymerMD)
 {
     _isRingPolymerMDActivated = isRingPolymerMD;
 }
@@ -176,7 +178,7 @@ void Settings::setIsRingPolymerMDActivated(const bool isRingPolymerMD)
  *
  * @param dimensionality
  */
-void Settings::setDimensionality(const size_t dimensionality)
+void Settings::setDimensionality(size_t dimensionality)
 {
     _dimensionality = dimensionality;
 }
@@ -186,10 +188,7 @@ void Settings::setDimensionality(const size_t dimensionality)
  *
  * @param virialType
  */
-void Settings::setVirialType(const VirialType virialType)
-{
-    _virial = virialType;
-}
+void Settings::setVirialType(VirialType virialType) { _virial = virialType; }
 
 /***************************
  *                         *

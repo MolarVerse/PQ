@@ -382,7 +382,7 @@ namespace engine
      *
      * @param globalSmF Global smoothing factor for the current configuration.
      */
-    void QMMMMDEngine::scaleAndAccumulateEnergies(const double globalSmF)
+    void QMMMMDEngine::scaleAndAccumulateEnergies(double globalSmF)
     {
         // clang-format off
         _qmmmPhysicalData.addQMEnergy             ( _physicalData->getQMEnergy()              * globalSmF);

@@ -42,8 +42,7 @@ using namespace constants;
  * @param coulRC - coulomb radius cut off
  * @param kappa
  */
-CoulombWolf::CoulombWolf(const double coulRC, const double kappa)
-    : CoulombPotential(coulRC)
+CoulombWolf::CoulombWolf(double coulRC, double kappa) : CoulombPotential(coulRC)
 {
     _kappa      = kappa;
     _wolfParam1 = ::erfc(_kappa * coulRC) / coulRC;
@@ -67,8 +66,8 @@ CoulombWolf::CoulombWolf(const double coulRC, const double kappa)
  * @return std::pair<double, double>
  */
 std::pair<double, double> CoulombWolf::calculate(
-    const double distance,
-    const double chargeProduct
+    double distance,
+    double chargeProduct
 ) const
 {
     const auto coulombPrefactor = chargeProduct * COULOMB_PREFACTOR;
@@ -101,14 +100,14 @@ std::pair<double, double> CoulombWolf::calculate(
  *
  * @param kappa
  */
-void CoulombWolf::setKappa(const double kappa) { _kappa = kappa; }
+void CoulombWolf::setKappa(double kappa) { _kappa = kappa; }
 
 /**
  * @brief set the wolf parameter 1
  *
  * @param wolfParam1
  */
-void CoulombWolf::setWolfParameter1(const double wolfParam1)
+void CoulombWolf::setWolfParameter1(double wolfParam1)
 {
     _wolfParam1 = wolfParam1;
 }
@@ -118,7 +117,7 @@ void CoulombWolf::setWolfParameter1(const double wolfParam1)
  *
  * @param wolfParam2
  */
-void CoulombWolf::setWolfParameter2(const double wolfParam2)
+void CoulombWolf::setWolfParameter2(double wolfParam2)
 {
     _wolfParam2 = wolfParam2;
 }
@@ -128,7 +127,7 @@ void CoulombWolf::setWolfParameter2(const double wolfParam2)
  *
  * @param wolfParam3
  */
-void CoulombWolf::setWolfParameter3(const double wolfParam3)
+void CoulombWolf::setWolfParameter3(double wolfParam3)
 {
     _wolfParam3 = wolfParam3;
 }
@@ -144,34 +143,25 @@ void CoulombWolf::setWolfParameter3(const double wolfParam3)
  *
  * @return double
  */
-[[nodiscard]] double CoulombWolf::getKappa() const { return _kappa; }
+double CoulombWolf::getKappa() const { return _kappa; }
 
 /**
  * @brief get the wolf parameter 1
  *
  * @return double
  */
-[[nodiscard]] double CoulombWolf::getWolfParameter1() const
-{
-    return _wolfParam1;
-}
+double CoulombWolf::getWolfParameter1() const { return _wolfParam1; }
 
 /**
  * @brief get the wolf parameter 2
  *
  * @return double
  */
-[[nodiscard]] double CoulombWolf::getWolfParameter2() const
-{
-    return _wolfParam2;
-}
+double CoulombWolf::getWolfParameter2() const { return _wolfParam2; }
 
 /**
  * @brief get the wolf parameter 3
  *
  * @return double
  */
-[[nodiscard]] double CoulombWolf::getWolfParameter3() const
-{
-    return _wolfParam3;
-}
+double CoulombWolf::getWolfParameter3() const { return _wolfParam3; }

@@ -34,14 +34,12 @@ using namespace utilities;
  * @param equilibriumAngle
  * @param springConstant
  */
-AngleType::AngleType(
-    const size_t id,
-    const double equilibriumAngle,
-    const double springConstant
-)
+AngleType::AngleType(size_t id, double equilibriumAngle, double springConstant)
     : _id(id),
       _equilibriumAngle(equilibriumAngle),
-      _forceConstant(springConstant){};
+      _forceConstant(springConstant)
+{
+}
 
 /**
  * @brief operator overload for the comparison of two AngleType objects

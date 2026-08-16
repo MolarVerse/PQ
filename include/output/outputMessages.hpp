@@ -32,9 +32,7 @@ namespace output
     std::string header();
     std::string endedNormally();
 
-    std::string initialMomentumMessage(const double initialMomentum);
-
-    std::string elapsedTimeMessage(const double elapsedTime);
+    std::string elapsedTimeMessage(double elapsedTime);
 
     std::string setupMessage(const std::string& setup);
     std::string setupCompletedMessage();

@@ -84,7 +84,7 @@ namespace engine
      */
     void HybridMDEngine::addScaledCurrentForcesToInnerAndReset(
         std::vector<std::shared_ptr<simulationBox::Atom>>& atoms,
-        const double                                       globalSmF
+        double                                             globalSmF
     )
     {
         for (auto& atom : atoms)
@@ -134,7 +134,7 @@ namespace engine
      */
     void HybridMDEngine::addScaledCurrentForcesToOuterAndReset(
         std::vector<std::shared_ptr<simulationBox::Atom>>& atoms,
-        const double                                       globalSmF
+        double                                             globalSmF
     )
     {
         for (auto& atom : atoms)

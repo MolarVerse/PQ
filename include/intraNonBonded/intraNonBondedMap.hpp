@@ -82,9 +82,10 @@ namespace intraNonBonded
             physicalData::PhysicalData         &data
         ) const;
 
-        [[nodiscard]] std::pair<double, double> calculateSingleInteraction(
-            const size_t                       atomIdx1,
-            const int                          atomIdx2,
+        [[nodiscard]]
+        std::pair<double, double> calculateSingleInteraction(
+            size_t                             atomIdx1,
+            int                                atomIdx2,
             const linearAlgebra::Vec3D        &box,
             physicalData::PhysicalData        &data,
             const potential::CoulombPotential *coulPot,

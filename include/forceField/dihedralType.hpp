@@ -52,10 +52,10 @@ namespace forceField
 
        public:
         DihedralType(
-            const size_t id,
-            const double forceConstant,
-            const double frequency,
-            const double phaseShift
+            size_t id,
+            double forceConstant,
+            double frequency,
+            double phaseShift
         );
 
         friend bool operator==(const DihedralType &, const DihedralType &);

@@ -38,13 +38,13 @@ using namespace forceField;
  * @param phaseShift
  */
 JCouplingType::JCouplingType(
-    const size_t id,
-    const double J0,
-    const double forceConstant,
-    const double a,
-    const double b,
-    const double c,
-    const double phaseShift
+    size_t id,
+    double J0,
+    double forceConstant,
+    double a,
+    double b,
+    double c,
+    double phaseShift
 )
     : _id(id),
       _j0(J0),
@@ -151,17 +151,11 @@ double JCouplingType::getPhaseShift() const { return _phaseShift; }
  *
  * @param boolean
  */
-void JCouplingType::setUpperSymmetry(const bool boolean)
-{
-    _upperSymmetry = boolean;
-}
+void JCouplingType::setUpperSymmetry(bool boolean) { _upperSymmetry = boolean; }
 
 /**
  * @brief set if the lower symmetry should be used
  *
  * @param boolean
  */
-void JCouplingType::setLowerSymmetry(const bool boolean)
-{
-    _lowerSymmetry = boolean;
-}
+void JCouplingType::setLowerSymmetry(bool boolean) { _lowerSymmetry = boolean; }

@@ -49,22 +49,13 @@ namespace output
         using Output::Output;
 
         void writeHeader(const simulationBox::SimulationBox &);
-        void writeXyz(
-            std::vector<simulationBox::SimulationBox> &,
-            const size_t
-        );
+        void writeXyz(std::vector<simulationBox::SimulationBox> &, size_t);
         void writeVelocities(
             std::vector<simulationBox::SimulationBox> &,
-            const size_t
+            size_t
         );
-        void writeForces(
-            std::vector<simulationBox::SimulationBox> &,
-            const size_t
-        );
-        void writeCharges(
-            std::vector<simulationBox::SimulationBox> &,
-            const size_t
-        );
+        void writeForces(std::vector<simulationBox::SimulationBox> &, size_t);
+        void writeCharges(std::vector<simulationBox::SimulationBox> &, size_t);
     };
 }   // namespace output
 

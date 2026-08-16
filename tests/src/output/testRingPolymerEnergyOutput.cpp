@@ -80,7 +80,7 @@ TEST(TestRingPolymerEnergyOutput, writeEmitsStepSumMaxMeanAndPerBeadEnergies)
     out.close();
 
     const auto content = slurp(path);
-    EXPECT_NE(content.find("5"), std::string::npos);
+    EXPECT_NE(content.find('5'), std::string::npos);
     // Sum = 4.0
     EXPECT_NE(content.find("4.000000000000"), std::string::npos);
     // Max = 3.0 (also serves as the second value)

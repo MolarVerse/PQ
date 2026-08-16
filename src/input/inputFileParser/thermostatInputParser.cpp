@@ -129,7 +129,7 @@ ThermostatInputParser::ThermostatInputParser(Engine &engine)
  */
 void ThermostatInputParser::parseThermostat(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -188,7 +188,7 @@ void ThermostatInputParser::parseThermostat(
  */
 void ThermostatInputParser::parseTemperature(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -212,7 +212,7 @@ void ThermostatInputParser::parseTemperature(
  */
 void ThermostatInputParser::parseStartTemperature(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -238,7 +238,7 @@ void ThermostatInputParser::parseStartTemperature(
  */
 void ThermostatInputParser::parseEndTemperature(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -267,7 +267,7 @@ void ThermostatInputParser::parseEndTemperature(
  */
 void ThermostatInputParser::parseTemperatureRampSteps(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -294,7 +294,7 @@ void ThermostatInputParser::parseTemperatureRampSteps(
  */
 void ThermostatInputParser::parseTemperatureRampFrequency(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -322,7 +322,7 @@ void ThermostatInputParser::parseTemperatureRampFrequency(
  */
 void ThermostatInputParser::parseThermostatRelaxationTime(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -356,7 +356,7 @@ void ThermostatInputParser::parseThermostatRelaxationTime(
  */
 void ThermostatInputParser::parseThermostatFriction(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -393,7 +393,7 @@ void ThermostatInputParser::parseThermostatFriction(
  */
 void ThermostatInputParser::parseThermostatChainLength(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -421,7 +421,7 @@ void ThermostatInputParser::parseThermostatChainLength(
  */
 void ThermostatInputParser::parseThermostatCouplingFrequency(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);

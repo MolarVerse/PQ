@@ -53,14 +53,14 @@ namespace output
         using Output::Output;
 
         void writeHeader(const simulationBox::SimulationBox &);
-        void writeXyz(simulationBox::SimulationBox &, const size_t);
+        void writeXyz(simulationBox::SimulationBox &, size_t);
         void writeHybridCenterXyz(
             const configurator::HybridConfigurator &configurator,
-            const size_t                            step
+            size_t                                  step
         );
-        void writeVelocities(simulationBox::SimulationBox &, const size_t);
-        void writeForces(simulationBox::SimulationBox &, const size_t);
-        void writeCharges(simulationBox::SimulationBox &, const size_t);
+        void writeVelocities(simulationBox::SimulationBox &, size_t);
+        void writeForces(simulationBox::SimulationBox &, size_t);
+        void writeCharges(simulationBox::SimulationBox &, size_t);
     };
 
 }   // namespace output

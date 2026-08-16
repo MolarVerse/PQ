@@ -61,7 +61,7 @@ RingPolymerInputParser::RingPolymerInputParser(Engine &engine)
  */
 void RingPolymerInputParser::parseNumberOfBeads(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);

@@ -47,7 +47,7 @@ namespace engine
         );
         void addScaledCurrentForcesToInnerAndReset(
             std::vector<std::shared_ptr<simulationBox::Atom>>& atoms,
-            const double                                       globalSmF
+            double                                             globalSmF
         );
 
         void addCurrentForcesToOuterAndReset(
@@ -55,7 +55,7 @@ namespace engine
         );
         void addScaledCurrentForcesToOuterAndReset(
             std::vector<std::shared_ptr<simulationBox::Atom>>& atoms,
-            const double                                       globalSmF
+            double                                             globalSmF
         );
 
         void scaleSmoothingMoleculeForcesInner();

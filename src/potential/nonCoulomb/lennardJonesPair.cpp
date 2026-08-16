@@ -37,11 +37,11 @@ using namespace utilities;
  * @param c12
  */
 LennardJonesPair::LennardJonesPair(
-    const size_t vanDerWaalsType1,
-    const size_t vanDerWaalsType2,
-    const double cutOff,
-    const double c6,
-    const double c12
+    size_t vanDerWaalsType1,
+    size_t vanDerWaalsType2,
+    double cutOff,
+    double c6,
+    double c12
 )
     : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff),
       _c6(c6),
@@ -56,11 +56,7 @@ LennardJonesPair::LennardJonesPair(
  * @param c6
  * @param c12
  */
-LennardJonesPair::LennardJonesPair(
-    const double cutOff,
-    const double c6,
-    const double c12
-)
+LennardJonesPair::LennardJonesPair(double cutOff, double c6, double c12)
     : NonCoulombPair(cutOff), _c6(c6), _c12(c12)
 {
 }
@@ -75,11 +71,11 @@ LennardJonesPair::LennardJonesPair(
  * @param c12
  */
 LennardJonesPair::LennardJonesPair(
-    const double cutOff,
-    const double energyCutoff,
-    const double forceCutoff,
-    const double c6,
-    const double c12
+    double cutOff,
+    double energyCutoff,
+    double forceCutoff,
+    double c6,
+    double c12
 )
     : NonCoulombPair(cutOff, energyCutoff, forceCutoff), _c6(c6), _c12(c12)
 {
@@ -94,7 +90,8 @@ LennardJonesPair::LennardJonesPair(
  */
 bool LennardJonesPair::operator==(const LennardJonesPair &other) const
 {
-    auto                                 isEqual = true;
+    auto isEqual = true;
+
     isEqual = isEqual && NonCoulombPair::operator==(other);
     isEqual = isEqual && compare(_c6, other._c6);
     isEqual = isEqual && compare(_c12, other._c12);
@@ -108,9 +105,7 @@ bool LennardJonesPair::operator==(const LennardJonesPair &other) const
  * @param distance
  * @return std::pair<double, double>
  */
-std::pair<double, double> LennardJonesPair::calculate(
-    const double distance
-) const
+std::pair<double, double> LennardJonesPair::calculate(double distance) const
 {
     const auto distanceThird   = distance * distance * distance;
     const auto distanceSixth   = distanceThird * distanceThird;

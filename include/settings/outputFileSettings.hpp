@@ -84,8 +84,8 @@ namespace settings
         OutputFileSettings()  = default;
         ~OutputFileSettings() = default;
 
-        static void setOutputFrequency(const size_t outputFreq);
-        static void setFilePrefix(const std::string_view prefix);
+        static void setOutputFrequency(size_t outputFreq);
+        static void setFilePrefix(std::string_view prefix);
         static void replaceDefaultValues(const std::string &prefix);
 
         [[nodiscard]] static std::string determineMostCommonPrefix();
@@ -94,36 +94,36 @@ namespace settings
          * standard setter methods *
          ***************************/
 
-        static void setRestartFileName(const std::string_view);
-        static void setEnergyFileName(const std::string_view);
-        static void setInstantEnergyFileName(const std::string_view);
-        static void setMomentumFileName(const std::string_view);
-        static void setTrajectoryFileName(const std::string_view);
-        static void setHybridCenterFileName(const std::string_view);
-        static void setVelocityFileName(const std::string_view);
-        static void setForceFileName(const std::string_view);
-        static void setChargeFileName(const std::string_view);
-        static void setLogFileName(const std::string_view);
-        static void setRefFileName(const std::string_view);
-        static void setInfoFileName(const std::string_view);
+        static void setRestartFileName(std::string_view);
+        static void setEnergyFileName(std::string_view);
+        static void setInstantEnergyFileName(std::string_view);
+        static void setMomentumFileName(std::string_view);
+        static void setTrajectoryFileName(std::string_view);
+        static void setHybridCenterFileName(std::string_view);
+        static void setVelocityFileName(std::string_view);
+        static void setForceFileName(std::string_view);
+        static void setChargeFileName(std::string_view);
+        static void setLogFileName(std::string_view);
+        static void setRefFileName(std::string_view);
+        static void setInfoFileName(std::string_view);
 
-        static void setVirialFileName(const std::string_view);
-        static void setStressFileName(const std::string_view);
-        static void setBoxFileName(const std::string_view);
+        static void setVirialFileName(std::string_view);
+        static void setStressFileName(std::string_view);
+        static void setBoxFileName(std::string_view);
 
-        static void setOptFileName(const std::string_view);
+        static void setOptFileName(std::string_view);
 
-        static void setRingPolymerRestartFileName(const std::string_view);
-        static void setRingPolymerTrajectoryFileName(const std::string_view);
-        static void setRingPolymerVelocityFileName(const std::string_view);
-        static void setRingPolymerForceFileName(const std::string_view);
-        static void setRingPolymerChargeFileName(const std::string_view);
-        static void setRingPolymerEnergyFileName(const std::string_view);
+        static void setRingPolymerRestartFileName(std::string_view);
+        static void setRingPolymerTrajectoryFileName(std::string_view);
+        static void setRingPolymerVelocityFileName(std::string_view);
+        static void setRingPolymerForceFileName(std::string_view);
+        static void setRingPolymerChargeFileName(std::string_view);
+        static void setRingPolymerEnergyFileName(std::string_view);
 
-        static void setTimingsFileName(const std::string_view);
+        static void setTimingsFileName(std::string_view);
 
-        static void setOverwriteOutputFiles(const bool);
-        static void setIncludeOutputMetadata(const bool);
+        static void setOverwriteOutputFiles(bool);
+        static void setIncludeOutputMetadata(bool);
 
         /***************************
          * standard getter methods *

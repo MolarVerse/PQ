@@ -59,7 +59,7 @@ TEST(TestBoxFileOutput, writeEmitsStepAndDimensionsAndAngles)
     out.close();
 
     const auto content = slurp(path);
-    EXPECT_NE(content.find("7"), std::string::npos);
+    EXPECT_NE(content.find('7'), std::string::npos);
     EXPECT_NE(content.find("10.00000000"), std::string::npos);
     EXPECT_NE(content.find("20.00000000"), std::string::npos);
     EXPECT_NE(content.find("30.00000000"), std::string::npos);

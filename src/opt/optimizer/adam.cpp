@@ -32,7 +32,7 @@ using namespace opt;
  * @param nIterations
  * @param nAtoms
  */
-Adam::Adam(const size_t nEpochs, const size_t nAtoms) : Optimizer(nEpochs)
+Adam::Adam(size_t nEpochs, size_t nAtoms) : Optimizer(nEpochs)
 {
     _momentum1.resize(nAtoms, linearAlgebra::Vec3D(0.0, 0.0, 0.0));
     _momentum2.resize(nAtoms, linearAlgebra::Vec3D(0.0, 0.0, 0.0));
@@ -45,12 +45,7 @@ Adam::Adam(const size_t nEpochs, const size_t nAtoms) : Optimizer(nEpochs)
  * @param beta1
  * @param beta2
  */
-Adam::Adam(
-    const size_t nEpochs,
-    const double beta1,
-    const double beta2,
-    const size_t nAtoms
-)
+Adam::Adam(size_t nEpochs, double beta1, double beta2, size_t nAtoms)
     : Optimizer(nEpochs), _beta1(beta1), _beta2(beta2)
 {
     _momentum1.resize(nAtoms, linearAlgebra::Vec3D(0.0, 0.0, 0.0));
@@ -79,7 +74,7 @@ size_t Adam::maxHistoryLength() const { return _maxHistoryLength; }
  *
  * @param learningRate
  */
-void Adam::update(const double learningRate, const size_t step)
+void Adam::update(double learningRate, size_t step)
 {
     for (size_t i = 0; i < _simulationBox->getNumberOfAtoms(); ++i)
     {

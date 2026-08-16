@@ -29,7 +29,7 @@ using namespace potential;
  *
  * @param numberOfMoleculeTypes
  */
-void GuffNonCoulomb::resizeGuff(const size_t numberOfMoleculeTypes)
+void GuffNonCoulomb::resizeGuff(size_t numberOfMoleculeTypes)
 {
     _guffNonCoulombPairs.resize(numberOfMoleculeTypes);
 }
@@ -41,10 +41,7 @@ void GuffNonCoulomb::resizeGuff(const size_t numberOfMoleculeTypes)
  * @param m1
  * @param numberOfMoleculeTypes
  */
-void GuffNonCoulomb::resizeGuff(
-    const size_t m1,
-    const size_t numberOfMoleculeTypes
-)
+void GuffNonCoulomb::resizeGuff(size_t m1, size_t numberOfMoleculeTypes)
 {
     _guffNonCoulombPairs[m1].resize(numberOfMoleculeTypes);
 }
@@ -57,11 +54,7 @@ void GuffNonCoulomb::resizeGuff(
  * @param m2
  * @param numberOfAtoms
  */
-void GuffNonCoulomb::resizeGuff(
-    const size_t m1,
-    const size_t m2,
-    const size_t numberOfAtoms
-)
+void GuffNonCoulomb::resizeGuff(size_t m1, size_t m2, size_t numberOfAtoms)
 {
     _guffNonCoulombPairs[m1][m2].resize(numberOfAtoms);
 }
@@ -75,10 +68,10 @@ void GuffNonCoulomb::resizeGuff(
  * @param numberOfAtoms
  */
 void GuffNonCoulomb::resizeGuff(
-    const size_t m1,
-    const size_t m2,
-    const size_t a1,
-    const size_t numberOfAtoms
+    size_t m1,
+    size_t m2,
+    size_t a1,
+    size_t numberOfAtoms
 )
 {
     _guffNonCoulombPairs[m1][m2][a1].resize(numberOfAtoms);

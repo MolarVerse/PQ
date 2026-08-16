@@ -44,12 +44,12 @@ namespace linearAlgebra
 
        public:
         Matrix() = default;
-        explicit Matrix(const size_t rows, const size_t cols);
-        explicit Matrix(const size_t rowsAndCols);
+        explicit Matrix(size_t rows, size_t cols);
+        explicit Matrix(size_t rowsAndCols);
         explicit Matrix(Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> data);
 
-        [[nodiscard]] T &operator()(const size_t index_i, const size_t index_j);
-        [[nodiscard]] std::vector<T> operator()(const size_t index);
+        [[nodiscard]] T             &operator()(size_t index_i, size_t index_j);
+        [[nodiscard]] std::vector<T> operator()(size_t index);
 
         [[nodiscard]] std::pair<size_t, size_t> shape() const;
 

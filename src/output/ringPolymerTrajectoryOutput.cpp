@@ -60,7 +60,7 @@ void RingPolymerTrajectoryOutput::writeHeader(const SimulationBox &simBox)
  */
 void RingPolymerTrajectoryOutput::writeXyz(
     std::vector<SimulationBox> &beads,
-    const size_t                step
+    size_t                      step
 )
 {
     std::ostringstream buffer;
@@ -104,7 +104,7 @@ void RingPolymerTrajectoryOutput::writeXyz(
  */
 void RingPolymerTrajectoryOutput::writeVelocities(
     std::vector<SimulationBox> &beads,
-    const size_t                step
+    size_t                      step
 )
 {
     std::ostringstream buffer;
@@ -149,7 +149,7 @@ void RingPolymerTrajectoryOutput::writeVelocities(
  */
 void RingPolymerTrajectoryOutput::writeForces(
     std::vector<SimulationBox> &beads,
-    const size_t                step
+    size_t                      step
 )
 {
     std::ostringstream buffer;
@@ -199,7 +199,7 @@ void RingPolymerTrajectoryOutput::writeForces(
  */
 void RingPolymerTrajectoryOutput::writeCharges(
     std::vector<SimulationBox> &beads,
-    const size_t                step
+    size_t                      step
 )
 {
     std::ostringstream buffer;

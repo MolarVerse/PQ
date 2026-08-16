@@ -156,7 +156,7 @@ namespace potential
          ***************************/
 
         void setNonCoulombPotential(
-            const std::shared_ptr<NonCoulombPotential> pot
+            const std::shared_ptr<NonCoulombPotential> &pot
         );
 
         /***************************

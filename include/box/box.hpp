@@ -32,7 +32,7 @@ namespace simulationBox
     /**
      * @class enum Periodicity
      */
-    enum class Periodicity : size_t
+    enum class Periodicity : std::uint8_t
     {
         NON_PERIODIC,
         X,
@@ -91,9 +91,8 @@ namespace simulationBox
 
         [[nodiscard]] virtual linearAlgebra::Vec3D    getBoxAngles() const;
         [[nodiscard]] virtual linearAlgebra::tensor3D getBoxMatrix() const;
-        [[nodiscard]] virtual linearAlgebra::tensor3D getBoxMatrix(
-            const Periodicity per
-        ) const;
+        [[nodiscard]]
+        virtual linearAlgebra::tensor3D getBoxMatrix(Periodicity per) const;
 
         [[nodiscard]]
         virtual linearAlgebra::Vec3D toOrthoSpace(
@@ -125,8 +124,8 @@ namespace simulationBox
          * standard setters *
          ********************/
 
-        void setVolume(const double volume);
-        void setBoxSizeHasChanged(const bool boxSizeHasChanged);
+        void setVolume(double volume);
+        void setBoxSizeHasChanged(bool boxSizeHasChanged);
     };
 
 }   // namespace simulationBox

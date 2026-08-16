@@ -34,9 +34,9 @@
 
 namespace input
 {
-    void checkEqualSign(const std::string_view &, const size_t);
-    void checkCommand(const std::vector<std::string> &, const size_t);
-    void checkCommandArray(const std::vector<std::string> &, const size_t);
+    void checkEqualSign(const std::string_view &, size_t);
+    void checkCommand(const std::vector<std::string> &, size_t);
+    void checkCommandArray(const std::vector<std::string> &, size_t);
 
     /**
      * @class InputFileParser

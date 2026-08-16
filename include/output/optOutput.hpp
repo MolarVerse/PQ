@@ -46,7 +46,7 @@ namespace output
        public:
         using Output::Output;
 
-        void write(const size_t step, const opt::Optimizer& optimizer);
+        void write(size_t step, const opt::Optimizer& optimizer);
     };
 
 }   // namespace output

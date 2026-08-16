@@ -398,7 +398,7 @@ std::vector<MoleculeType> SimulationBox::findNecessaryMoleculeTypes()
 
     auto searchMoleculeTypes = [&neededMolTypes, this](const auto& molecule)
     {
-        auto predicate = [&molecule](const auto moleculeType)
+        auto predicate = [&molecule](const auto& moleculeType)
         { return molecule.getMoltype() == moleculeType.getMoltype(); };
 
         const auto molType = std::ranges::find_if(neededMolTypes, predicate);
@@ -423,7 +423,7 @@ void SimulationBox::setPartialChargesOfMoleculesFromMoleculeTypes()
     auto setPartialCharges =
         [&moleculeTypes = _moleculeTypes](Molecule& molecule)
     {
-        auto predicate = [&molecule](const auto moleculeType)
+        auto predicate = [&molecule](const auto& moleculeType)
         { return molecule.getMoltype() == moleculeType.getMoltype(); };
 
         const auto molType = std::ranges::find_if(moleculeTypes, predicate);

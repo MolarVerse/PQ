@@ -32,8 +32,8 @@ using namespace customException;
  * @param message
  */
 CustomException::CustomException(
-    const std::string_view message,
-    std::optional<size_t>  lineNumber
+    std::string_view      message,
+    std::optional<size_t> lineNumber
 )
     : _message(message), _lineNumber(lineNumber)
 {
@@ -44,7 +44,7 @@ CustomException::CustomException(
  *
  * @param message
  */
-CustomException::CustomException(const std::string_view message)
+CustomException::CustomException(std::string_view message)
     : CustomException(message, std::nullopt)
 {
 }
@@ -54,7 +54,7 @@ CustomException::CustomException(const std::string_view message)
  *
  * @param lineNumber
  */
-void CustomException::setLineNumber(const size_t lineNumber) noexcept
+void CustomException::setLineNumber(size_t lineNumber) noexcept
 {
     if (!_lineNumber.has_value())
         _lineNumber = lineNumber;
@@ -87,12 +87,12 @@ std::optional<size_t> CustomException::getLineNumber() const noexcept
  * @param exceptionMsg
  */
 void CustomException::colorfulOutput(
-    const Color::Code      color,
-    const std::string_view exceptionMsg
+    Color::Code      color,
+    std::string_view exceptionMsg
 ) const
 {
     const Color::Modifier modifier(color);
-    const Color::Modifier def(Color::FG_DEFAULT);
+    const Color::Modifier def{Color::Code::FG_DEFAULT};
 
     std::cout << modifier << exceptionMsg << def << '\n' << std::flush;
 }
@@ -104,7 +104,7 @@ void CustomException::colorfulOutput(
  */
 const char *InputFileException::what() const noexcept
 {
-    colorfulOutput(Color::FG_RED, "InputFileError");
+    colorfulOutput(Color::Code::FG_RED, "InputFileError");
     return _message.c_str();
 }
 
@@ -115,7 +115,7 @@ const char *InputFileException::what() const noexcept
  */
 const char *RstFileException::what() const noexcept
 {
-    colorfulOutput(Color::FG_RED, "RstFileError");
+    colorfulOutput(Color::Code::FG_RED, "RstFileError");
     return _message.c_str();
 }
 
@@ -126,7 +126,7 @@ const char *RstFileException::what() const noexcept
  */
 const char *UserInputException::what() const noexcept
 {
-    colorfulOutput(Color::FG_RED, "UserInputError");
+    colorfulOutput(Color::Code::FG_RED, "UserInputError");
     return _message.c_str();
 }
 
@@ -137,7 +137,7 @@ const char *UserInputException::what() const noexcept
  */
 const char *MolDescriptorException::what() const noexcept
 {
-    colorfulOutput(Color::FG_RED, "MolDescriptorError");
+    colorfulOutput(Color::Code::FG_RED, "MolDescriptorError");
     return _message.c_str();
 }
 
@@ -148,7 +148,7 @@ const char *MolDescriptorException::what() const noexcept
  */
 const char *UserInputExceptionWarning::what() const noexcept
 {
-    colorfulOutput(Color::FG_ORANGE, "UserInputWarning");
+    colorfulOutput(Color::Code::FG_ORANGE, "UserInputWarning");
     return _message.c_str();
 }
 
@@ -159,7 +159,7 @@ const char *UserInputExceptionWarning::what() const noexcept
  */
 const char *GuffDatException::what() const noexcept
 {
-    colorfulOutput(Color::FG_RED, "GuffDatError");
+    colorfulOutput(Color::Code::FG_RED, "GuffDatError");
     return _message.c_str();
 }
 
@@ -170,7 +170,7 @@ const char *GuffDatException::what() const noexcept
  */
 const char *TopologyException::what() const noexcept
 {
-    colorfulOutput(Color::FG_RED, "TopologyError");
+    colorfulOutput(Color::Code::FG_RED, "TopologyError");
     return _message.c_str();
 }
 
@@ -181,7 +181,7 @@ const char *TopologyException::what() const noexcept
  */
 const char *ParameterFileException::what() const noexcept
 {
-    colorfulOutput(Color::FG_RED, "ParameterFileError");
+    colorfulOutput(Color::Code::FG_RED, "ParameterFileError");
     return _message.c_str();
 }
 
@@ -192,7 +192,7 @@ const char *ParameterFileException::what() const noexcept
  */
 const char *ManostatException::what() const noexcept
 {
-    colorfulOutput(Color::FG_RED, "ManostatError");
+    colorfulOutput(Color::Code::FG_RED, "ManostatError");
     return _message.c_str();
 }
 
@@ -203,7 +203,7 @@ const char *ManostatException::what() const noexcept
  */
 const char *IntraNonBondedException::what() const noexcept
 {
-    colorfulOutput(Color::FG_RED, "IntraNonBondedError");
+    colorfulOutput(Color::Code::FG_RED, "IntraNonBondedError");
     return _message.c_str();
 }
 
@@ -214,7 +214,7 @@ const char *IntraNonBondedException::what() const noexcept
  */
 const char *ShakeException::what() const noexcept
 {
-    colorfulOutput(Color::FG_RED, "ShakeError");
+    colorfulOutput(Color::Code::FG_RED, "ShakeError");
     return _message.c_str();
 }
 
@@ -225,7 +225,7 @@ const char *ShakeException::what() const noexcept
  */
 const char *CellListException::what() const noexcept
 {
-    colorfulOutput(Color::FG_RED, "CellListError");
+    colorfulOutput(Color::Code::FG_RED, "CellListError");
     return _message.c_str();
 }
 
@@ -236,7 +236,7 @@ const char *CellListException::what() const noexcept
  */
 const char *RingPolymerRestartFileException::what() const noexcept
 {
-    colorfulOutput(Color::FG_RED, "RingPolymerRestartFileError");
+    colorfulOutput(Color::Code::FG_RED, "RingPolymerRestartFileError");
     return _message.c_str();
 }
 
@@ -247,7 +247,7 @@ const char *RingPolymerRestartFileException::what() const noexcept
  */
 const char *QMRunnerException::what() const noexcept
 {
-    colorfulOutput(Color::FG_RED, "QMRunnerError");
+    colorfulOutput(Color::Code::FG_RED, "QMRunnerError");
     return _message.c_str();
 }
 
@@ -258,7 +258,7 @@ const char *QMRunnerException::what() const noexcept
  */
 const char *MPIException::what() const noexcept
 {
-    colorfulOutput(Color::FG_RED, "MPIError");
+    colorfulOutput(Color::Code::FG_RED, "MPIError");
     return _message.c_str();
 }
 
@@ -269,7 +269,7 @@ const char *MPIException::what() const noexcept
  */
 const char *QMRunTimeExceeded::what() const noexcept
 {
-    colorfulOutput(Color::FG_RED, "QMRunTimeExceeded");
+    colorfulOutput(Color::Code::FG_RED, "QMRunTimeExceeded");
     return _message.c_str();
 }
 
@@ -280,7 +280,7 @@ const char *QMRunTimeExceeded::what() const noexcept
  */
 const char *MShakeFileException::what() const noexcept
 {
-    colorfulOutput(Color::FG_RED, "MShakeError");
+    colorfulOutput(Color::Code::FG_RED, "MShakeError");
     return _message.c_str();
 }
 
@@ -291,7 +291,7 @@ const char *MShakeFileException::what() const noexcept
  */
 const char *MShakeException::what() const noexcept
 {
-    colorfulOutput(Color::FG_RED, "MShakeError");
+    colorfulOutput(Color::Code::FG_RED, "MShakeError");
     return _message.c_str();
 }
 
@@ -302,7 +302,7 @@ const char *MShakeException::what() const noexcept
  */
 const char *LinearAlgebraException::what() const noexcept
 {
-    colorfulOutput(Color::FG_RED, "LinearAlgebraError");
+    colorfulOutput(Color::Code::FG_RED, "LinearAlgebraError");
     return _message.c_str();
 }
 
@@ -313,7 +313,7 @@ const char *LinearAlgebraException::what() const noexcept
  */
 const char *OptException::what() const noexcept
 {
-    colorfulOutput(Color::FG_RED, "OptimizationError");
+    colorfulOutput(Color::Code::FG_RED, "OptimizationError");
     return _message.c_str();
 }
 
@@ -324,7 +324,7 @@ const char *OptException::what() const noexcept
  */
 const char *OptWarning::what() const noexcept
 {
-    colorfulOutput(Color::FG_ORANGE, "OptimizationWarning");
+    colorfulOutput(Color::Code::FG_ORANGE, "OptimizationWarning");
     return _message.c_str();
 }
 
@@ -335,7 +335,7 @@ const char *OptWarning::what() const noexcept
  */
 const char *CompileTimeException::what() const noexcept
 {
-    colorfulOutput(Color::FG_RED, "CompileTimeError");
+    colorfulOutput(Color::Code::FG_RED, "CompileTimeError");
     return _message.c_str();
 }
 
@@ -346,7 +346,7 @@ const char *CompileTimeException::what() const noexcept
  */
 const char *HybridConfiguratorException::what() const noexcept
 {
-    colorfulOutput(Color::FG_RED, "HybridConfiguratorError");
+    colorfulOutput(Color::Code::FG_RED, "HybridConfiguratorError");
     return _message.c_str();
 }
 
@@ -357,7 +357,7 @@ const char *HybridConfiguratorException::what() const noexcept
  */
 const char *HybridMDEngineException::what() const noexcept
 {
-    colorfulOutput(Color::FG_RED, "HybridMDEngineError");
+    colorfulOutput(Color::Code::FG_RED, "HybridMDEngineError");
     return _message.c_str();
 }
 
@@ -368,6 +368,6 @@ const char *HybridMDEngineException::what() const noexcept
  */
 const char *PhysicalDataException::what() const noexcept
 {
-    colorfulOutput(Color::FG_RED, "PhysicalDataError");
+    colorfulOutput(Color::Code::FG_RED, "PhysicalDataError");
     return _message.c_str();
 }

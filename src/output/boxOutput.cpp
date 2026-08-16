@@ -26,7 +26,7 @@
 #include <format>    // for format
 #include <ostream>   // for ofstream, basic_ostream, operator<<
 
-#include "box.hpp"        // for SimulationBox
+#include "box.hpp"   // for SimulationBox
 
 using output::BoxFileOutput;
 using namespace simulationBox;
@@ -36,7 +36,7 @@ using namespace simulationBox;
  *
  * @param box
  */
-void BoxFileOutput::write(const size_t step, const Box &box)
+void BoxFileOutput::write(size_t step, const Box &box)
 {
     _fp << std::format("{:<5}\t", step);
 

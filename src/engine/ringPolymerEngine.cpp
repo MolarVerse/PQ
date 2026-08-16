@@ -45,9 +45,7 @@ using namespace physicalData;
  *
  * @param physicalData
  */
-void RingPolymerEngine::resizeRingPolymerBeadPhysicalData(
-    const size_t numberOfBeads
-)
+void RingPolymerEngine::resizeRingPolymerBeadPhysicalData(size_t numberOfBeads)
 {
     _ringPolymerBeadsPhysicalData.resize(numberOfBeads);
     _averageRingPolymerBeadsPhysicalData.resize(numberOfBeads);

@@ -67,7 +67,7 @@ namespace forceField
         AngleForceField(
             const std::vector<simulationBox::Molecule *> &molecules,
             const std::vector<size_t>                    &atomIndices,
-            const size_t                                  type
+            size_t                                        type
         );
 
         void calculateEnergyAndForces(
@@ -81,9 +81,9 @@ namespace forceField
          * standard setter methods *
          ***************************/
 
-        void setIsLinker(const bool isLinker);
-        void setEquilibriumAngle(const double equilibriumAngle);
-        void setForceConstant(const double forceConstant);
+        void setIsLinker(bool isLinker);
+        void setEquilibriumAngle(double equilibriumAngle);
+        void setForceConstant(double forceConstant);
 
         /***************************
          * standard getter methods *

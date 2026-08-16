@@ -52,7 +52,7 @@ using enum HybridZone;
 AngleForceField::AngleForceField(
     const std::vector<Molecule *> &molecules,
     const std::vector<size_t>     &atomIndices,
-    const size_t                   type
+    size_t                         type
 )
     : Angle(molecules, atomIndices), _type(type)
 {
@@ -184,14 +184,14 @@ void AngleForceField::calculateEnergyAndForces(
  *
  * @param isLinker
  */
-void AngleForceField::setIsLinker(const bool isLinker) { _isLinker = isLinker; }
+void AngleForceField::setIsLinker(bool isLinker) { _isLinker = isLinker; }
 
 /**
  * @brief set equilibrium angle
  *
  * @param equilibriumAngle
  */
-void AngleForceField::setEquilibriumAngle(const double equilibriumAngle)
+void AngleForceField::setEquilibriumAngle(double equilibriumAngle)
 {
     _equilibriumAngle = equilibriumAngle;
 }
@@ -201,7 +201,7 @@ void AngleForceField::setEquilibriumAngle(const double equilibriumAngle)
  *
  * @param forceConstant
  */
-void AngleForceField::setForceConstant(const double forceConstant)
+void AngleForceField::setForceConstant(double forceConstant)
 {
     _forceConstant = forceConstant;
 }

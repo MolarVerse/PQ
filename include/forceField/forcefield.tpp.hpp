@@ -57,9 +57,9 @@ namespace forceField
         physicalData::PhysicalData        &physicalData,
         const simulationBox::Molecule     *molecule1,
         const simulationBox::Molecule     *molecule2,
-        const size_t                       atomIndex1,
-        const size_t                       atomIndex2,
-        const double                       distance
+        size_t                             atomIndex1,
+        size_t                             atomIndex2,
+        double                             distance
     )
     {
         const auto q1 = molecule1->getPartialCharge(atomIndex1);

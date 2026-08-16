@@ -92,8 +92,8 @@ InputFileReader::InputFileReader(
 InputFileReader::InputFileReader(
     const std::string_view &fileName,
     engine::Engine         &engine,
-    const bool              validateFilePaths,
-    const bool              resolveBuiltInSlakosPath
+    bool                    validateFilePaths,
+    bool                    resolveBuiltInSlakosPath
 )
     : _fileName(fileName), _engine(engine)
 {
@@ -184,8 +184,8 @@ void InputFileReader::addKeywords()
  */
 void InputFileReader::process(const std::vector<std::string> &lineElements)
 {
-    const auto original_keyword = lineElements[0];
-    const auto keyword          = toLowerAndReplaceDashesCopy(original_keyword);
+    const auto &original_keyword = lineElements[0];
+    const auto  keyword = toLowerAndReplaceDashesCopy(original_keyword);
 
     if (!_keywordFuncMap.contains(keyword))
     {
@@ -422,7 +422,7 @@ void InputFileReader::postProcess()
  *
  * @throw InputFileException if equal sign is missing
  */
-void input::processEqualSign(std::string &command, const size_t lineNumber)
+void input::processEqualSign(std::string &command, size_t lineNumber)
 {
     const auto equalSignPos = command.find('=');
     if (equalSignPos != std::string::npos)
@@ -451,7 +451,7 @@ void input::processEqualSign(std::string &command, const size_t lineNumber)
  *
  * @param fileName
  */
-void InputFileReader::setFilename(const std::string_view fileName)
+void InputFileReader::setFilename(std::string_view fileName)
 {
     _fileName = fileName;
 }
@@ -462,10 +462,7 @@ void InputFileReader::setFilename(const std::string_view fileName)
  * @param keyword
  * @param count
  */
-void InputFileReader::setKeywordCount(
-    const std::string &keyword,
-    const size_t       count
-)
+void InputFileReader::setKeywordCount(const std::string &keyword, size_t count)
 {
     _keywordCountMap[keyword] = count;
     _keywordSetMap[keyword]   = (count > 0);

@@ -68,18 +68,15 @@ namespace potential
         void sortNonCoulombicsPairs(
             std::vector<std::shared_ptr<NonCoulombPair>> &diagonalElements
         );
-        void setOffDiagonalElement(const size_t, const size_t);
+        void setOffDiagonalElement(size_t, size_t);
 
         [[nodiscard]]
         std::vector<std::shared_ptr<
             NonCoulombPair>> getSelfInteractionNonCoulPairs() const;
 
         [[nodiscard]]
-        std::
-            optional<std::shared_ptr<NonCoulombPair>> findNonCoulPairByInternalTypes(
-                const size_t,
-                const size_t
-            ) const;
+        std::optional<std::shared_ptr<
+            NonCoulombPair>> findNonCoulPairByInternalTypes(size_t, size_t) const;
 
         void addNonCoulombicPair(const std::shared_ptr<NonCoulombPair> &pair);
 

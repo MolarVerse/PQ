@@ -50,7 +50,7 @@ namespace engine
        public:
         void writeOutput() override;
 
-        void resizeRingPolymerBeadPhysicalData(const size_t numberOfBeads);
+        void resizeRingPolymerBeadPhysicalData(size_t numberOfBeads);
 
         void coupleRingPolymerBeads();
         void combineBeads();

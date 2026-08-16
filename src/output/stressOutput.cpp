@@ -22,7 +22,7 @@
 
 #include "stressOutput.hpp"
 
-#include <format>    // for format
+#include <format>   // for format
 
 #include "physicalData.hpp"   // for PhysicalData
 
@@ -47,7 +47,7 @@ using namespace physicalData;
  * @param step
  * @param data
  */
-void StressOutput::write(const size_t step, const PhysicalData &data)
+void StressOutput::write(size_t step, const PhysicalData &data)
 {
     const auto &stress = data.getStressTensor();
 

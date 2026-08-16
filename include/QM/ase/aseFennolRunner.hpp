@@ -40,8 +40,8 @@ namespace QM
 
         explicit AseFennolRunner(
             const std::string& modelPath,
-            const bool         gpuPreprocessing,
-            const bool         useFloat64
+            bool               gpuPreprocessing,
+            bool               useFloat64
         );
     };
 }   // namespace QM

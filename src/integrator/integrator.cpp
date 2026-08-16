@@ -38,7 +38,7 @@ using namespace constants;
  *
  * @param integratorType
  */
-Integrator::Integrator(const std::string_view integratorType)
+Integrator::Integrator(std::string_view integratorType)
     : _integratorType(integratorType)
 {
 }

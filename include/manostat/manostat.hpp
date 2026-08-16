@@ -54,7 +54,7 @@ namespace manostat
         double _targetPressure;   // no default value, must be set
 
        public:
-        explicit Manostat(const double targetPressure);
+        explicit Manostat(double targetPressure);
         Manostat()          = default;
         virtual ~Manostat() = default;
 

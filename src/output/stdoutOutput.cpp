@@ -57,7 +57,7 @@ void StdoutOutput::writeHeader() const
  *
  * @param elapsedTime
  */
-void StdoutOutput::writeEndedNormally(const double elapsedTime) const
+void StdoutOutput::writeEndedNormally(double elapsedTime) const
 {
     std::cout << elapsedTimeMessage(elapsedTime) << '\n';
     std::cout << endedNormally() << '\n' << std::flush;

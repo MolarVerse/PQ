@@ -41,21 +41,18 @@ namespace input
        public:
         explicit ManostatInputParser(engine::Engine &);
 
-        void parseManostat(const std::vector<std::string> &, const size_t);
+        void parseManostat(const std::vector<std::string> &, size_t);
 
-        void parsePressure(const std::vector<std::string> &, const size_t);
+        void parsePressure(const std::vector<std::string> &, size_t);
 
         void parseManostatRelaxationTime(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
 
-        void parseCompressibility(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void parseCompressibility(const std::vector<std::string> &, size_t);
 
-        void parseIsotropy(const std::vector<std::string> &, const size_t);
+        void parseIsotropy(const std::vector<std::string> &, size_t);
     };
 
 }   // namespace input

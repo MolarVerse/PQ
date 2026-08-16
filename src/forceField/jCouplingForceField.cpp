@@ -35,7 +35,7 @@ using namespace connectivity;
 JCouplingForceField::JCouplingForceField(
     const std::vector<simulationBox::Molecule *> &molecules,
     const std::vector<size_t>                    &atomIndices,
-    const size_t                                  type
+    size_t                                        type
 )
     : Dihedral(molecules, atomIndices), _type(type)
 {
@@ -52,7 +52,7 @@ JCouplingForceField::JCouplingForceField(
  *
  * @param boolean
  */
-void JCouplingForceField::setUpperSymmetry(const bool boolean)
+void JCouplingForceField::setUpperSymmetry(bool boolean)
 {
     _upperSymmetry = boolean;
 }
@@ -62,7 +62,7 @@ void JCouplingForceField::setUpperSymmetry(const bool boolean)
  *
  * @param boolean
  */
-void JCouplingForceField::setLowerSymmetry(const bool boolean)
+void JCouplingForceField::setLowerSymmetry(bool boolean)
 {
     _lowerSymmetry = boolean;
 }
@@ -72,45 +72,42 @@ void JCouplingForceField::setLowerSymmetry(const bool boolean)
  *
  * @param J0
  */
-void JCouplingForceField::setJ0(const double J0) { _j0 = J0; }
+void JCouplingForceField::setJ0(double J0) { _j0 = J0; }
 
 /**
  * @brief Set the force constant
  *
  * @param k
  */
-void JCouplingForceField::setForceConstant(const double k)
-{
-    _forceConstant = k;
-}
+void JCouplingForceField::setForceConstant(double k) { _forceConstant = k; }
 
 /**
  * @brief Set the a
  *
  * @param a
  */
-void JCouplingForceField::setA(const double a) { _a = a; }
+void JCouplingForceField::setA(double a) { _a = a; }
 
 /**
  * @brief Set the b
  *
  * @param b
  */
-void JCouplingForceField::setB(const double b) { _b = b; }
+void JCouplingForceField::setB(double b) { _b = b; }
 
 /**
  * @brief Set the c
  *
  * @param c
  */
-void JCouplingForceField::setC(const double c) { _c = c; }
+void JCouplingForceField::setC(double c) { _c = c; }
 
 /**
  * @brief Set the phase shift
  *
  * @param phi
  */
-void JCouplingForceField::setPhaseShift(const double phi) { _phaseShift = phi; }
+void JCouplingForceField::setPhaseShift(double phi) { _phaseShift = phi; }
 
 /***************************
  *                         *

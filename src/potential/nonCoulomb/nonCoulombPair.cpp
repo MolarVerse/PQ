@@ -35,20 +35,22 @@ using namespace utilities;
  * @param cutOff
  */
 NonCoulombPair::NonCoulombPair(
-    const size_t vanDerWaalsType1,
-    const size_t vanDerWaalsType2,
-    const double cutOff
+    size_t vanDerWaalsType1,
+    size_t vanDerWaalsType2,
+    double cutOff
 )
     : _vanDerWaalsType1(vanDerWaalsType1),
       _vanDerWaalsType2(vanDerWaalsType2),
-      _radialCutOff(cutOff){};
+      _radialCutOff(cutOff)
+{
+}
 
 /**
  * @brief Construct a new Non Coulomb Pair:: Non Coulomb Pair object
  *
  * @param cutOff
  */
-NonCoulombPair::NonCoulombPair(const double cutOff) : _radialCutOff(cutOff){};
+NonCoulombPair::NonCoulombPair(double cutOff) : _radialCutOff(cutOff) {}
 
 /**
  * @brief Construct a new Non Coulomb Pair:: Non Coulomb Pair object
@@ -58,13 +60,15 @@ NonCoulombPair::NonCoulombPair(const double cutOff) : _radialCutOff(cutOff){};
  * @param forceCutoff
  */
 NonCoulombPair::NonCoulombPair(
-    const double cutoff,
-    const double energyCutoff,
-    const double forceCutoff
+    double cutoff,
+    double energyCutoff,
+    double forceCutoff
 )
     : _radialCutOff(cutoff),
       _energyCutOff(energyCutoff),
-      _forceCutOff(forceCutoff){};
+      _forceCutOff(forceCutoff)
+{
+}
 
 /**
  * @brief operator overload for the comparison of two NonCoulombPair objects
@@ -103,7 +107,7 @@ bool NonCoulombPair::operator==(const NonCoulombPair &other) const
  *
  * @param internalType1
  */
-void NonCoulombPair::setInternalType1(const size_t internalType1)
+void NonCoulombPair::setInternalType1(size_t internalType1)
 {
     _internalType1 = internalType1;
 }
@@ -113,7 +117,7 @@ void NonCoulombPair::setInternalType1(const size_t internalType1)
  *
  * @param internalType2
  */
-void NonCoulombPair::setInternalType2(const size_t internalType2)
+void NonCoulombPair::setInternalType2(size_t internalType2)
 {
     _internalType2 = internalType2;
 }
@@ -123,7 +127,7 @@ void NonCoulombPair::setInternalType2(const size_t internalType2)
  *
  * @param energyCutoff
  */
-void NonCoulombPair::setRadialCutOff(const double radialCutoff)
+void NonCoulombPair::setRadialCutOff(double radialCutoff)
 {
     _radialCutOff = radialCutoff;
 }
@@ -133,7 +137,7 @@ void NonCoulombPair::setRadialCutOff(const double radialCutoff)
  *
  * @param energyCutoff
  */
-void NonCoulombPair::setEnergyCutOff(const double energyCutoff)
+void NonCoulombPair::setEnergyCutOff(double energyCutoff)
 {
     _energyCutOff = energyCutoff;
 }
@@ -143,7 +147,7 @@ void NonCoulombPair::setEnergyCutOff(const double energyCutoff)
  *
  * @param forceCutoff
  */
-void NonCoulombPair::setForceCutOff(const double forceCutoff)
+void NonCoulombPair::setForceCutOff(double forceCutoff)
 {
     _forceCutOff = forceCutoff;
 }

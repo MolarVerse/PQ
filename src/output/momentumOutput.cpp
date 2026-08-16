@@ -22,7 +22,7 @@
 
 #include "momentumOutput.hpp"
 
-#include <format>    // for format
+#include <format>   // for format
 
 #include "physicalData.hpp"   // for PhysicalData
 
@@ -46,7 +46,7 @@ using namespace physicalData;
  * @param step
  * @param data
  */
-void MomentumOutput::write(const size_t step, const PhysicalData &data)
+void MomentumOutput::write(size_t step, const PhysicalData &data)
 {
     _fp << std::format("{:10d}\t", step);
     _fp << std::format("{:20.5e}\t", norm(data.getMomentum()));

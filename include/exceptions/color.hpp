@@ -24,6 +24,7 @@
 
 #define _COLOR_HPP_
 
+#include <cstdint>
 #include <ostream>
 
 namespace Color
@@ -34,7 +35,7 @@ namespace Color
      * @brief ANSI escape codes for colors
      *
      */
-    enum Code
+    enum class Code : std::uint8_t
     {
         FG_RED = 31,
         // FG_GREEN   = 32,
@@ -61,7 +62,7 @@ namespace Color
         explicit Modifier(const Code pCode) : code(pCode) {}
         friend std::ostream &operator<<(std::ostream &os, const Modifier &mod)
         {
-            return os << "\033" << "[" << mod.code << "m";
+            return os << "\033" << "[" << static_cast<int>(mod.code) << "m";
         }
     };
 }   // namespace Color

@@ -138,7 +138,7 @@ std::string DistanceConstraintsSection::keyword() { return "dist_constraints"; }
  *
  * @throws TopologyException if endedNormal is false
  */
-void DistanceConstraintsSection::endedNormally(const bool endedNormal) const
+void DistanceConstraintsSection::endedNormally(bool endedNormal) const
 {
     if (!endedNormal)
     {

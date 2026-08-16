@@ -66,24 +66,24 @@ namespace resetKinetics
        public:
         ResetKinetics() = default;
         ResetKinetics(
-            const size_t nStepsTemperatureReset,
-            const size_t frequencyTemperatureReset,
-            const size_t nStepsMomentumReset,
-            const size_t frequencyMomentumReset,
-            const size_t nStepsAngularReset,
-            const size_t frequencyAngularReset,
-            const size_t nStepsForcesReset
+            size_t nStepsTemperatureReset,
+            size_t frequencyTemperatureReset,
+            size_t nStepsMomentumReset,
+            size_t frequencyMomentumReset,
+            size_t nStepsAngularReset,
+            size_t frequencyAngularReset,
+            size_t nStepsForcesReset
         );
 
         void reset(
-            const size_t step,
+            size_t step,
             physicalData::PhysicalData &,
             simulationBox::SimulationBox &
         );
         void resetTemperature(simulationBox::SimulationBox &);
         void resetMomentum(simulationBox::SimulationBox &);
         void resetAngularMomentum(simulationBox::SimulationBox &);
-        void resetForces(const size_t step, simulationBox::SimulationBox &);
+        void resetForces(size_t step, simulationBox::SimulationBox &);
 
         /********************
          * standard setters *

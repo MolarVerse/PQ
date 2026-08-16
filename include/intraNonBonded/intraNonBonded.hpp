@@ -40,7 +40,7 @@ namespace intraNonBonded
      * interactions
      *
      */
-    enum class IntraNonBondedType : size_t
+    enum class IntraNonBondedType : std::uint8_t
     {
         NONE,
         GUFF,
@@ -73,9 +73,8 @@ namespace intraNonBonded
         );
         void fillIntraNonBondedMaps(simulationBox::SimulationBox &);
 
-        [[nodiscard]] IntraNonBondedContainer *findIntraNonBondedContainerByMolType(
-            const size_t
-        );
+        [[nodiscard]]
+        IntraNonBondedContainer *findIntraNonBondedContainerByMolType(size_t);
 
         /*************************
          * standard add methods  *

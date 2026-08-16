@@ -236,7 +236,7 @@ void Constraints::_applyMRattle(SimulationBox &simulationBox)
 void Constraints::applyDistanceConstraints(
     const SimulationBox        &simulationBox,
     physicalData::PhysicalData &data,
-    const double                time
+    double                      time
 )
 {
     if (!_distanceConstActivated)
@@ -492,7 +492,7 @@ double Constraints::getRattleTolerance() const { return _rattleTolerance; }
  *
  * @param shakeMaxIter
  */
-void Constraints::setShakeMaxIter(const size_t shakeMaxIter)
+void Constraints::setShakeMaxIter(size_t shakeMaxIter)
 {
     _shakeMaxIter = shakeMaxIter;
 }
@@ -502,7 +502,7 @@ void Constraints::setShakeMaxIter(const size_t shakeMaxIter)
  *
  * @param rattleMaxIter
  */
-void Constraints::setRattleMaxIter(const size_t rattleMaxIter)
+void Constraints::setRattleMaxIter(size_t rattleMaxIter)
 {
     _rattleMaxIter = rattleMaxIter;
 }
@@ -512,7 +512,7 @@ void Constraints::setRattleMaxIter(const size_t rattleMaxIter)
  *
  * @param shakeTolerance
  */
-void Constraints::setShakeTolerance(const double shakeTolerance)
+void Constraints::setShakeTolerance(double shakeTolerance)
 {
     _shakeTolerance = shakeTolerance;
 }
@@ -522,7 +522,7 @@ void Constraints::setShakeTolerance(const double shakeTolerance)
  *
  * @param rattleTolerance
  */
-void Constraints::setRattleTolerance(const double rattleTolerance)
+void Constraints::setRattleTolerance(double rattleTolerance)
 {
     _rattleTolerance = rattleTolerance;
 }

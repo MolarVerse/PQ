@@ -55,13 +55,13 @@ using namespace utilities;
  * @param frequencyAngularReset
  */
 ResetKinetics::ResetKinetics(
-    const size_t nStepsTemperatureReset,
-    const size_t frequencyTemperatureReset,
-    const size_t nStepsMomentumReset,
-    const size_t frequencyMomentumReset,
-    const size_t nStepsAngularReset,
-    const size_t frequencyAngularReset,
-    const size_t nStepsForcesReset
+    size_t nStepsTemperatureReset,
+    size_t frequencyTemperatureReset,
+    size_t nStepsMomentumReset,
+    size_t frequencyMomentumReset,
+    size_t nStepsAngularReset,
+    size_t frequencyAngularReset,
+    size_t nStepsForcesReset
 )
     : _nStepsTemperatureReset(nStepsTemperatureReset),
       _frequencyTemperatureReset(frequencyTemperatureReset),
@@ -81,7 +81,7 @@ ResetKinetics::ResetKinetics(
  * @param simBox
  */
 void ResetKinetics::reset(
-    const size_t   step,
+    size_t         step,
     PhysicalData  &data,
     SimulationBox &simBox
 )
@@ -230,7 +230,7 @@ void ResetKinetics::resetAngularMomentum(SimulationBox &simBox)
  * @param step
  * @param simBox
  */
-void ResetKinetics::resetForces(const size_t step, SimulationBox &simBox)
+void ResetKinetics::resetForces(size_t step, SimulationBox &simBox)
 {
     if (0 != step % _nStepsForcesReset)
         return;

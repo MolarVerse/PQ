@@ -59,7 +59,7 @@ namespace QM
        public:
         virtual ~QMRunner() = default;
 
-        void throwAfterTimeout(const std::stop_token stopToken) const;
+        void throwAfterTimeout(const std::stop_token &stopToken) const;
         void run(simulationBox::SimulationBox &, physicalData::PhysicalData &);
         virtual void run(
             simulationBox::SimulationBox &,

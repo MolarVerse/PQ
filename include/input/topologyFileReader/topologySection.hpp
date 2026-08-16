@@ -59,9 +59,9 @@ namespace input::topology
             engine::Engine           &engine
         ) = 0;
 
-        virtual void endedNormally(const bool) const = 0;
+        virtual void endedNormally(bool) const = 0;
 
-        void setLineNumber(const int lineNumber);
+        void setLineNumber(int lineNumber);
         void setFp(std::ifstream *fp);
 
         [[nodiscard]] int getLineNumber() const;

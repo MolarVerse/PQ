@@ -125,7 +125,7 @@ std::string ImproperDihedralSection::keyword() { return "impropers"; }
  *
  * @throws TopologyException if endedNormal is false
  */
-void ImproperDihedralSection::endedNormally(const bool endedNormal) const
+void ImproperDihedralSection::endedNormally(bool endedNormal) const
 {
     if (!endedNormal)
     {

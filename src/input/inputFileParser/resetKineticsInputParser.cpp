@@ -97,7 +97,7 @@ ResetKineticsInputParser::ResetKineticsInputParser(Engine &engine)
  */
 void ResetKineticsInputParser::parseNScale(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -122,7 +122,7 @@ void ResetKineticsInputParser::parseNScale(
  */
 void ResetKineticsInputParser::parseFScale(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -147,7 +147,7 @@ void ResetKineticsInputParser::parseFScale(
  */
 void ResetKineticsInputParser::parseNReset(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -172,7 +172,7 @@ void ResetKineticsInputParser::parseNReset(
  */
 void ResetKineticsInputParser::parseFReset(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -197,7 +197,7 @@ void ResetKineticsInputParser::parseFReset(
  */
 void ResetKineticsInputParser::parseNResetAngular(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -222,7 +222,7 @@ void ResetKineticsInputParser::parseNResetAngular(
  */
 void ResetKineticsInputParser::parseFResetAngular(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -247,7 +247,7 @@ void ResetKineticsInputParser::parseFResetAngular(
  */
 void ResetKineticsInputParser::parseFResetForces(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
