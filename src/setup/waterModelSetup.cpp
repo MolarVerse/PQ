@@ -130,22 +130,7 @@ void WaterModelSetup::setup()
     if (WaterModelSettings::getWaterInterModel() != WaterInterModel::NONE)
         makeInterWater();
 
-    _engine.getLogOutput().writeSetupInfo(
-        std::format(
-            "Intramolecular water model: {}",
-            string(WaterModelSettings::getWaterIntraModel())
-        )
-    );
-
-    _engine.getLogOutput().writeSetupInfo(
-        std::format(
-            "Intermolecular water model: {}",
-            string(WaterModelSettings::getWaterInterModel())
-        )
-    );
-
-    _engine.getLogOutput().writeEmptyLine();
-
+    setupWriteInfo();
     addReferences();
 }
 
@@ -472,5 +457,54 @@ void WaterModelSetup::addReferences()
         case TIP3P_MTR: ReferencesOutput::addReferenceFile(TIP3P_MTR_FILE); break;
         case NONE: break;
     }
-    //clang-format on
+    // clang-format on
+}
+
+/**
+ * @brief write info about the water model setup
+ *
+ */
+void WaterModelSetup::setupWriteInfo() const
+{
+    auto &logOutput = _engine.getLogOutput();
+    auto &stdOut    = _engine.getStdoutOutput();
+
+    const auto intraWaterModel = WaterModelSettings::getWaterIntraModel();
+    const auto interWaterModel = WaterModelSettings::getWaterInterModel();
+
+    // clang-format off
+    const auto intraWaterModelMsg = std::format("Intramolecular water model: {}", string(intraWaterModel));
+    const auto interWaterModelMsg = std::format("Intermolecular water model: {}", string(interWaterModel));
+    // clang-format on
+
+    logOutput.writeSetupInfo(intraWaterModelMsg);
+    logOutput.writeSetupInfo(interWaterModelMsg);
+
+    const bool isMTRIntra =
+        WaterModelSettings::getWaterIntraModel() == WaterIntraModel::SPC_MTR ||
+        WaterModelSettings::getWaterIntraModel() == WaterIntraModel::TIP3P_MTR;
+
+    const bool useMTRSafetyPotential =
+        WaterModelSettings::getUseMTRSafetyPotential();
+
+    if (isMTRIntra)
+    {
+        // clang-format off
+        const auto mtrSafetyPotentialMsg = std::format("mTR safety potential:       {}", useMTRSafetyPotential ? "enabled" : "off");
+        // clang-format on
+        logOutput.writeSetupInfo(mtrSafetyPotentialMsg);
+    }
+
+    if (isMTRIntra && !useMTRSafetyPotential)
+    {
+        // clang-format off
+        const auto mtrSafetyPotentialWarning = "An mTR-type intramolecular water model has been chosen, but the corresponding safety potential has not been enabled. This setup is not recommended.";
+        // clang-format on
+
+        logOutput.writeEmptyLine();
+        logOutput.writeSetupWarning(mtrSafetyPotentialWarning);
+        stdOut.writeSetupWarning(mtrSafetyPotentialWarning);
+    }
+
+    logOutput.writeEmptyLine();
 }

@@ -22,9 +22,14 @@
 
 #include "interWater.hpp"   // for InterWater
 
+#include <typeinfo>
 #include <utility>
 
+#include "defaults.hpp"
+#include "interWaterParamters.hpp"
+#include "lennardJonesPair.hpp"
 #include "potentialSettings.hpp"   // for PotentialSettings
+#include "waterModelSettings.hpp"
 
 using namespace potential;
 using namespace pq;
@@ -162,6 +167,32 @@ InterWater::InterWater(
     : _state{std::move(state)}, _strategy{std::move(strategy)}
 {
     initState();
+}
+
+void InterWater::addMTRSafetyPotential()
+{
+    const auto intraModel      = WaterModelSettings::getWaterIntraModel();
+    const bool isMTRIntraModel = intraModel == WaterIntraModel::SPC_MTR ||
+                                 intraModel == WaterIntraModel::TIP3P_MTR;
+
+    const bool isMTRInterModel = typeid(_state) == typeid(SPCmTRInterParam) ||
+                                 typeid(_state) == typeid(TIP3PmTRInterParam);
+
+    const bool enableMTRSafetyPotential =
+        isMTRIntraModel && isMTRInterModel &&
+        WaterModelSettings::getUseMTRSafetyPotential();
+
+    if (!enableMTRSafetyPotential)
+        return;
+
+    const auto C6Coefficient = 0.0;
+
+    auto safetyPotential = std::make_unique<LennardJonesPair>(
+        defaults::MTR_SAFETY_POTENTIAL_NON_COULOMB_RADIUS_DEFAULT,
+        C6Coefficient,
+        defaults::MTR_SAFETY_POTENTIAL_C12_DEFAULT
+    );
+    _state._nonCoulombPairOH = std::move(safetyPotential);
 }
 
 /**

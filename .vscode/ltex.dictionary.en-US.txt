@@ -16,3 +16,4 @@ WIREs
 TURBOMOLE
 moltype
 moltypes
+mTR-type

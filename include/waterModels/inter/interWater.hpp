@@ -179,10 +179,12 @@ namespace waterModel
         InterWaterState                     _state;
         std::unique_ptr<InterWaterStrategy> _strategy;
 
+        void addMTRSafetyPotential();
         void setNonCoulombCutOffRadii();
         void initNonCoulombPairs();
         void initState()
         {
+            addMTRSafetyPotential();
             setNonCoulombCutOffRadii();
             initNonCoulombPairs();
         }

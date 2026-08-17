@@ -1387,7 +1387,9 @@ Possible options are:
 
    10. **TIP3P-mTR** - `TIP3P-mTR <https://www.sciencedirect.com/science/article/pii/S0378381297002719>`__
 
+.. Note::
 
+    If the intramolecular water model is set to ``SPC-mTR`` or ``TIP3P-mTR`` it is recommended to enable the use of the intermolecular O-H safety potential using the :ref:`mTR_safety_potential <mtrSafetyPotentialKey>` keyword.
 
 .. _interWaterModelKey:
 
@@ -1423,9 +1425,6 @@ Possible options are:
 
    10. **TIP3P-mTR** - `TIP3P-mTR <https://www.sciencedirect.com/science/article/pii/S0378381297002719>`__
 
-
-
-
 .. _noncoulombRadiusKey:
 
 NonCoulombRadiusCutoff
@@ -1443,6 +1442,29 @@ With the ``rnoncoulomb`` keyword the user can specify the cutoff radius for non-
     This keyword is only considered if usage of an intermolecular water model is requested.
 
 .. centered:: *default value* = the value of :ref:`rcoulomb <radialCoulombCutoffKey>`
+
+.. _mtrSafetyPotentialKey:
+
+mTR Safety Potential
+====================
+
+.. admonition:: Key
+    :class: tip
+
+    mTR_safety_potential = {bool} -> false
+
+With the ``mTR_safety_potential`` keyword the user can enable the use of an additional weak intermolecular O-H repulsive potential, when using any mTR-type water model.
+The potential :math:`V` is described by :
+
+    .. math:: V = \frac{C_{12}}{r^{12}}
+        :label: mTRSafetyPotentialEquation
+
+with the :math:`C_{\text 12}` parameter being 120.0 :math:`\frac{\text{Å¹² kcal}}{\text{mol}}` and the cut-off radius :math:`r` being 3.0 Å.
+Using an intramolecular mTR-type model without enabling this keyword can lead to abstraction of hydrogen atoms, as the intramolecular O-H Morse potential is too weak at long O-H bond distances.
+
+.. Note::
+
+    This keyword only takes effect when both the :ref:`intramolecular <intraWaterModelKey>` and :ref:`intermolecular <interWaterModelKey>` water model keywords are set to mTR-type models.
 
 .. _longrangecorrectionKeys:
 

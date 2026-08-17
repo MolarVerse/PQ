@@ -1,0 +1,1 @@
+- Add mTR_safety_potential keyword to enable an intermolecular O-H C12 safety potential when using an mTR-type intramolecular water model

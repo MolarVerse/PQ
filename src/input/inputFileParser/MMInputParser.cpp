@@ -82,6 +82,11 @@ MMInputParser::MMInputParser(
         bindMember(&MMInputParser::parseWaterInterModel, this),
         false
     );
+    addKeyword(
+        std::string("mtr_safety_potential"),
+        bindMember(&MMInputParser::parseMTRSafetyPotential, this),
+        false
+    );
 }
 
 /**
@@ -288,4 +293,14 @@ void MMInputParser::parseWaterInterModel(
 
     WaterModelSettings::setIsWaterModelSet(true);
     WaterModelSettings::setIsInterWaterModelSet(true);
+}
+
+void MMInputParser::parseMTRSafetyPotential(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+
+    WaterModelSettings::setUseMTRSafetyPotential(keywordToBool(lineElements));
 }

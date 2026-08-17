@@ -59,6 +59,7 @@ namespace setup
         [[nodiscard]] std::optional<RigidWaterGeometry> getRigidWaterGeometry(
             const settings::WaterIntraModel intraModel
         );
+        void setupWriteInfo() const;
         void addReferences();
 
        public:

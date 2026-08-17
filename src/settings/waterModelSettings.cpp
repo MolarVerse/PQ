@@ -53,6 +53,16 @@ bool WaterModelSettings::isInterWaterModelSet()
 }
 
 /**
+ * @brief get the useMTRSafetyPotential
+ *
+ * @return bool
+ */
+bool WaterModelSettings::getUseMTRSafetyPotential()
+{
+    return _useMTRSafetyPotential;
+}
+
+/**
  * @brief returns the waterIntraModel
  *
  * @return waterIntraModel
@@ -94,6 +104,18 @@ void WaterModelSettings::setIsWaterModelSet(const bool isSet)
 void WaterModelSettings::setIsInterWaterModelSet(const bool isSet)
 {
     _isInterWaterModelSet = isSet;
+}
+
+/**
+ * @brief set the useMTRSafetyPotential in the settings
+ *
+ * @param useMTRSafetyPotential
+ */
+void WaterModelSettings::setUseMTRSafetyPotential(
+    const bool useMTRSafetyPotential
+)
+{
+    _useMTRSafetyPotential = useMTRSafetyPotential;
 }
 
 /**

@@ -79,8 +79,9 @@ namespace settings
     class WaterModelSettings
     {
        private:
-        static inline bool            _isWaterModelSet      = false;
-        static inline bool            _isInterWaterModelSet = false;
+        static inline bool            _isWaterModelSet       = false;
+        static inline bool            _isInterWaterModelSet  = false;
+        static inline bool            _useMTRSafetyPotential = false;
         static inline WaterIntraModel _waterIntraModel = WaterIntraModel::NONE;
         static inline WaterInterModel _waterInterModel = WaterInterModel::NONE;
 
@@ -99,6 +100,7 @@ namespace settings
 
         [[nodiscard]] static bool            isWaterModelSet();
         [[nodiscard]] static bool            isInterWaterModelSet();
+        [[nodiscard]] static bool            getUseMTRSafetyPotential();
         [[nodiscard]] static WaterIntraModel getWaterIntraModel();
         [[nodiscard]] static WaterInterModel getWaterInterModel();
 
@@ -108,6 +110,7 @@ namespace settings
 
         static void setIsWaterModelSet(const bool isSet);
         static void setIsInterWaterModelSet(const bool isSet);
+        static void setUseMTRSafetyPotential(const bool useMTRSafetyPotential);
 
         static void setWaterIntraModel(const std::string_view &model);
         static void setWaterIntraModel(const WaterIntraModel model);

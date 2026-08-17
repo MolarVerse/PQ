@@ -116,6 +116,11 @@ namespace defaults
 
     static constexpr size_t DIMENSIONALITY_DEFAULT = 3;
 
+    static constexpr double MTR_SAFETY_POTENTIAL_C12_DEFAULT =
+        120.0;   // A^12 kcal mol^-1
+    static constexpr double MTR_SAFETY_POTENTIAL_NON_COULOMB_RADIUS_DEFAULT =
+        3.0;   // in Å
+
     static constexpr double QM_LOOP_TIME_LIMIT_DEFAULT = 3600;   // in s
     static constexpr double VACUUM_BOX_DIMENSION       = 1000;   // in Å
 

@@ -65,6 +65,10 @@ namespace input
             const std::vector<std::string> &,
             const size_t
         );
+        void parseMTRSafetyPotential(
+            const std::vector<std::string> &,
+            const size_t
+        );
     };
 
 }   // namespace input

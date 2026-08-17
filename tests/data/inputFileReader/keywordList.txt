@@ -80,6 +80,7 @@ force-field                 false
 noncoulomb                  false
 water_intra                 false
 water_inter                 false
+mtr_safety_potential        false
 
 overwrite_output            false
 include_output_metadata     false
