@@ -182,9 +182,10 @@ void NonCoulombicsSection::processLJ(
     auto &pot       = engine.getPotential()->getNonCoulombPotential();
     auto &potential = dynamic_cast<ForceFieldNonCoulomb &>(pot);
 
+    const auto params = LJParams{.c6 = c6, .c12 = c12};
+
     potential.addNonCoulombicPair(
-        std::make_shared<
-            LennardJonesPair>(atomType1, atomType2, cutOff, c6, c12)
+        std::make_shared<LennardJonesPair>(atomType1, atomType2, cutOff, params)
     );
 }
 

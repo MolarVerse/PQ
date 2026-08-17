@@ -145,10 +145,14 @@ TEST_F(TestSetup, setupNonCoulombicPairs)
     const auto zero = ExtVdwType(0);
     const auto one  = ExtVdwType(1);
 
-    auto nonCoulombPair1 = LennardJonesPair(zero, zero, 10.0, 2.0, 3.0);
-    auto nonCoulombPair2 = LennardJonesPair(one, zero, 10.0, 2.0, 3.0);
-    auto nonCoulombPair3 = LennardJonesPair(zero, one, 10.0, 2.0, 3.0);
-    auto nonCoulombPair4 = LennardJonesPair(one, one, 10.0, 2.0, 3.0);
+    auto nonCoulombPair1 =
+        LennardJonesPair(zero, zero, 10.0, LJParams{.c6 = 2.0, .c12 = 3.0});
+    auto nonCoulombPair2 =
+        LennardJonesPair(one, zero, 10.0, LJParams{.c6 = 2.0, .c12 = 3.0});
+    auto nonCoulombPair3 =
+        LennardJonesPair(zero, one, 10.0, LJParams{.c6 = 2.0, .c12 = 3.0});
+    auto nonCoulombPair4 =
+        LennardJonesPair(one, one, 10.0, LJParams{.c6 = 2.0, .c12 = 3.0});
 
     nonCoulombPotential.addNonCoulombicPair(
         std::make_shared<LennardJonesPair>(nonCoulombPair1)

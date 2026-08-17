@@ -143,8 +143,7 @@ namespace
 
         const auto pair = std::make_shared<LennardJonesPair>(
             kCoulombCutOff,
-            /*c6=*/-1.0,
-            /*c12=*/1.0
+            LJParams{.c6 = -1.0, .c12 = 1.0}
         );
 
         for (size_t m1 = 1; m1 <= 2; ++m1)

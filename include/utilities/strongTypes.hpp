@@ -82,4 +82,18 @@ struct VdwTypeTag
 };
 using VdwType = StrongSizeT<struct VdwTypeTag>;
 
+/**
+ * @struct LJParams
+ *
+ * @brief Struct to hold Lennard-Jones parameters c6 and c12
+ *
+ */
+struct LJParams
+{
+    double c6{0.0};
+    double c12{0.0};
+
+    constexpr bool operator==(const LJParams &other) const;
+};
+
 #endif   // _STRONG_TYPES_HPP_

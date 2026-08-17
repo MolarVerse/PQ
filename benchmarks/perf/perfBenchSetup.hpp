@@ -136,8 +136,7 @@ namespace benchSetup
             ExtVdwType(0),
             ExtVdwType(1),
             12.0,
-            2.0,
-            3.0
+            LJParams{.c6 = 2.0, .c12 = 3.0}
         );
         potential.setNonCoulombPairsMatrix(0, 1, pair);
         potential.setNonCoulombPairsMatrix(1, 0, pair);

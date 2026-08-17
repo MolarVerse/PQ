@@ -43,7 +43,7 @@
 #include "potentialSettings.hpp"   // for PotentialSettings, string
 #include "settings.hpp"            // for Settings
 #include "strongTypes.hpp"
-#include "testMorsePairUtils.hpp"
+#include "testNonCoulombPairUtils.hpp"
 #include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
 
 using namespace input::guffdat;
@@ -189,7 +189,10 @@ TEST_F(TestGuffDatReader, parseLine)
 
     EXPECT_EQ(
         pair,
-        LennardJonesPair(PotentialSettings::getCoulombRadiusCutOff(), 2.0, 3.0)
+        LennardJonesPair(
+            PotentialSettings::getCoulombRadiusCutOff(),
+            LJParams{2.0, 3.0}
+        )
     );
 }
 
@@ -206,8 +209,8 @@ TEST_F(TestGuffDatReader, addLennardJonesPair)
               .get())
     );
 
-    EXPECT_EQ(pair.getC6(), 1.0);
-    EXPECT_EQ(pair.getC12(), 3.0);
+    EXPECT_EQ(TestLJPairUtils::params(&pair).c6, 1.0);
+    EXPECT_EQ(TestLJPairUtils::params(&pair).c12, 3.0);
     EXPECT_EQ(pair.getRadialCutOff(), 10.0);
 
     // FIXME: Does not work on macos using EXPECT_EQ

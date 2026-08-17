@@ -3,3 +3,5 @@
 - add strong type for `AngleId`
 - add strong type for `DihedralId`
 - add strong types for `ExtVdwType` and `VdwType`
+- add strong type for morse params aka `MorseParams`
+- add strong type for lennard jones params aka `LJParams`

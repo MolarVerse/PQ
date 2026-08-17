@@ -60,8 +60,7 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
         ExtVdwType(0),
         ExtVdwType(1),
         5.0,
-        2.0,
-        4.0
+        LJParams{.c6 = 2.0, .c12 = 4.0}
     );
     setNonCoulombPairsMatrix(
         linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(2, 2)

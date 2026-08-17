@@ -91,8 +91,7 @@ TEST_F(TestIntraNonBondedMap, calculateSingleInteraction_AND_calculate)
         ExtVdwType(0),
         ExtVdwType(1),
         10.0,
-        2.0,
-        3.0
+        LJParams{.c6 = 2.0, .c12 = 3.0}
     );
     setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
     setNonCoulombPairsMatrix(1, 0, nonCoulombPair);

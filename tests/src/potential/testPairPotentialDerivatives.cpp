@@ -30,6 +30,7 @@
 #include "guffPair.hpp"
 #include "lennardJonesPair.hpp"
 #include "morsePair.hpp"
+#include "strongTypes.hpp"
 
 namespace
 {
@@ -72,8 +73,12 @@ namespace
 
 TEST(TestPairPotentialDerivatives, LennardJonesForceIsNegativeEnergyDerivative)
 {
-    const auto potential =
-        potential::LennardJonesPair(4.0, 0.15, -0.2, -1.0, 1.5);
+    const auto potential = potential::LennardJonesPair(
+        4.0,
+        0.15,
+        -0.2,
+        LJParams{.c6 = -1.0, .c12 = 1.5}
+    );
 
     expectForceIsNegativeEnergyDerivative(
         [&potential](const double r) { return potential.calculate(r); },
@@ -179,7 +184,7 @@ TEST(TestPairPotentialDerivatives, NonCoulombShiftedPairsAreZeroAtCutoff)
     constexpr auto cutoff = 4.0;
 
     const auto lennardJonesUnshifted =
-        potential::LennardJonesPair(cutoff, -1.0, 1.5);
+        potential::LennardJonesPair(cutoff, LJParams{.c6 = -1.0, .c12 = 1.5});
     const auto buckinghamUnshifted =
         potential::BuckinghamPair(cutoff, 2.0, -1.1, -0.4);
     const auto morseUnshifted = potential::MorsePair(
@@ -206,8 +211,7 @@ TEST(TestPairPotentialDerivatives, NonCoulombShiftedPairsAreZeroAtCutoff)
         cutoff,
         ljEnergyCutoff,
         ljForceCutoff,
-        -1.0,
-        1.5
+        LJParams{.c6 = -1.0, .c12 = 1.5}
     );
     const auto buckingham = potential::BuckinghamPair(
         cutoff,

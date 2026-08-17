@@ -39,31 +39,34 @@ TEST(TestLennardJonesPair, equalsOperator)
     const ExtVdwType vdwType1{0};
     const ExtVdwType vdwType2{1};
     const ExtVdwType vdwType3{2};
+    const auto       ljParams1 = LJParams{.c6 = 2.0, .c12 = 3.0};
+    const auto       ljParams2 = LJParams{.c6 = 3.0, .c12 = 3.0};
+    const auto       ljParams3 = LJParams{.c6 = 2.0, .c12 = 4.0};
     const auto       nonCoulombPair1 =
-        LennardJonesPair(vdwType1, vdwType2, 1.0, 2.0, 3.0);
+        LennardJonesPair(vdwType1, vdwType2, 1.0, ljParams1);
 
     const auto nonCoulombPair2 =
-        LennardJonesPair(vdwType1, vdwType2, 1.0, 2.0, 3.0);
+        LennardJonesPair(vdwType1, vdwType2, 1.0, ljParams1);
     EXPECT_TRUE(nonCoulombPair1 == nonCoulombPair2);
 
     const auto nonCoulombPair3 =
-        LennardJonesPair(vdwType2, vdwType1, 1.0, 2.0, 3.0);
+        LennardJonesPair(vdwType2, vdwType1, 1.0, ljParams1);
     EXPECT_TRUE(nonCoulombPair1 == nonCoulombPair3);
 
     const auto nonCoulombPair4 =
-        LennardJonesPair(vdwType1, vdwType3, 1.0, 2.0, 3.0);
+        LennardJonesPair(vdwType1, vdwType3, 1.0, ljParams1);
     EXPECT_FALSE(nonCoulombPair1 == nonCoulombPair4);
 
     const auto nonCoulombPair5 =
-        LennardJonesPair(vdwType1, vdwType2, 2.0, 2.0, 3.0);
+        LennardJonesPair(vdwType1, vdwType2, 2.0, ljParams1);
     EXPECT_FALSE(nonCoulombPair1 == nonCoulombPair5);
 
     const auto nonCoulombPair6 =
-        LennardJonesPair(vdwType1, vdwType2, 1.0, 3.0, 3.0);
+        LennardJonesPair(vdwType1, vdwType2, 1.0, ljParams2);
     EXPECT_FALSE(nonCoulombPair1 == nonCoulombPair6);
 
     const auto nonCoulombPair7 =
-        LennardJonesPair(vdwType1, vdwType2, 1.0, 2.0, 4.0);
+        LennardJonesPair(vdwType1, vdwType2, 1.0, ljParams3);
     EXPECT_FALSE(nonCoulombPair1 == nonCoulombPair7);
 }
 
@@ -82,8 +85,7 @@ TEST(TestLennardJonesPair, calculateEnergyAndForces)
         rncCutoff,
         energyCutoff,
         forceCutoff,
-        coefficients[0],
-        coefficients[1]
+        LJParams{.c6 = coefficients[0], .c12 = coefficients[1]}
     );
 
     auto distance        = 2.0;

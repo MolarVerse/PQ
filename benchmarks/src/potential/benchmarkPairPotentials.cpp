@@ -67,7 +67,10 @@ namespace
 
     void BM_LennardJones(benchmark::State& state)
     {
-        potential::LennardJonesPair potential(9.0, 2.0, 3.0);
+        potential::LennardJonesPair potential(
+            9.0,
+            LJParams{.c6 = 2.0, .c12 = 3.0}
+        );
         runNonCoulombBenchmark(state, potential);
     }
 

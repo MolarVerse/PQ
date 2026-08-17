@@ -50,8 +50,7 @@ namespace
 
         const auto pair = std::make_shared<potential::LennardJonesPair>(
             benchmarkSetup::cutOff,
-            1.0,
-            1.0
+            LJParams{.c6 = 1.0, .c12 = 1.0}
         );
         nonCoulomb->setGuffNonCoulPair({1, 1, 0, 0}, pair);
 

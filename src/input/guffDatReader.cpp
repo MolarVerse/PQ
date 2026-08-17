@@ -419,31 +419,19 @@ void GuffDatReader::addLennardJonesPair(
         _engine.getPotential()->getNonCoulombPotential()
     );
 
-    const auto LJPair =
-        LennardJonesPair(rncCutOff, coefficients[0], coefficients[2]);
+    const auto params = LJParams{.c6 = coefficients[0], .c12 = coefficients[2]};
+    const auto LJPair = LennardJonesPair(rncCutOff, params);
 
     const auto [eCutOff, fCutOff] = LJPair.calculate(rncCutOff);
 
     guffNonCoulomb.setGuffNonCoulPair(
         {molType1, molType2, atomType1, atomType2},
-        std::make_shared<LennardJonesPair>(
-            rncCutOff,
-            eCutOff,
-            fCutOff,
-            coefficients[0],
-            coefficients[2]
-        )
+        std::make_shared<LennardJonesPair>(rncCutOff, eCutOff, fCutOff, params)
     );
 
     guffNonCoulomb.setGuffNonCoulPair(
         {molType2, molType1, atomType2, atomType1},
-        std::make_shared<LennardJonesPair>(
-            rncCutOff,
-            eCutOff,
-            fCutOff,
-            coefficients[0],
-            coefficients[2]
-        )
+        std::make_shared<LennardJonesPair>(rncCutOff, eCutOff, fCutOff, params)
     );
 }
 

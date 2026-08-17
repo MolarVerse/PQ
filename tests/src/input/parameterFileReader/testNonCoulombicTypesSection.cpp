@@ -32,7 +32,7 @@
 #include "nonCoulombicsSection.hpp"   // for NonCoulombicsSection
 #include "potentialSettings.hpp"      // for PotentialSettings
 #include "strongTypes.hpp"
-#include "testMorsePairUtils.hpp"
+#include "testNonCoulombPairUtils.hpp"
 #include "testParameterFileSection.hpp"   // for TestParameterFileSection
 #include "throwWithMessage.hpp"           // for ASSERT_THROW_MSG
 
@@ -57,8 +57,8 @@ TEST_F(TestParameterFileSection, processSectionLennardJones)
     const auto *pair       = dynamic_cast<const LennardJonesPair *>(pairVector);
     EXPECT_EQ(pair->getVanDerWaalsType1(), ExtVdwType{0});
     EXPECT_EQ(pair->getVanDerWaalsType2(), ExtVdwType{1});
-    EXPECT_EQ(pair->getC6(), 1.22);
-    EXPECT_EQ(pair->getC12(), 234.3);
+    EXPECT_EQ(TestLJPairUtils::params(pair).c6, 1.22);
+    EXPECT_EQ(TestLJPairUtils::params(pair).c12, 234.3);
     EXPECT_EQ(pair->getRadialCutOff(), 324.3);
 
     lineElements = {"0", "1", "1.22", "234.3"};
@@ -69,8 +69,8 @@ TEST_F(TestParameterFileSection, processSectionLennardJones)
     auto       *pair2 = dynamic_cast<const LennardJonesPair *>(pairVector2);
     EXPECT_EQ(pair2->getVanDerWaalsType1(), ExtVdwType{0});
     EXPECT_EQ(pair2->getVanDerWaalsType2(), ExtVdwType{1});
-    EXPECT_EQ(pair2->getC6(), 1.22);
-    EXPECT_EQ(pair2->getC12(), 234.3);
+    EXPECT_EQ(TestLJPairUtils::params(pair2).c6, 1.22);
+    EXPECT_EQ(TestLJPairUtils::params(pair2).c12, 234.3);
     EXPECT_EQ(pair2->getRadialCutOff(), 12.5);
 
     lineElements = {"1", "2", "1.0", "0", "2", "3.3"};

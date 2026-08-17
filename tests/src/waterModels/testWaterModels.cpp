@@ -219,8 +219,7 @@ namespace
 
         const auto pair = std::make_shared<LennardJonesPair>(
             kCutOff,
-            /*c6=*/-1.0,
-            /*c12=*/1.0
+            LJParams{.c6 = -1.0, .c12 = 1.0}
         );
 
         for (size_t mol1 = 1; mol1 <= 2; ++mol1)
@@ -424,7 +423,10 @@ TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)
     atom2.setForceToZero();
 
     const auto coulomb = std::make_shared<CoulombShiftedPotential>(kCutOff);
-    const LennardJonesPair    nonCoulomb(kCutOff, -1.0, 1.0);
+    const LennardJonesPair nonCoulomb(
+        kCutOff,
+        LJParams{.c6 = -1.0, .c12 = 1.0}
+    );
     ExposedInterWaterStrategy strategy;
 
     EXPECT_DOUBLE_EQ(nonCoulomb.getRadialCutOff(), kCutOff);
@@ -506,11 +508,18 @@ TEST(InterWater, NonOxygenOnlyStateInitializesEveryPair)
     PotentialSettings::setCoulombRadiusCutOff(kCutOff);
     PotentialSettings::setNonCoulombRadiusCutOff(kCutOff);
 
-    auto oxygenOxygen = std::make_unique<LennardJonesPair>(kCutOff, -1.0, 1.0);
-    auto oxygenHydrogen =
-        std::make_unique<LennardJonesPair>(kCutOff, -1.0, 1.0);
-    auto hydrogenHydrogen =
-        std::make_unique<LennardJonesPair>(kCutOff, -1.0, 1.0);
+    auto oxygenOxygen = std::make_unique<LennardJonesPair>(
+        kCutOff,
+        LJParams{.c6 = -1.0, .c12 = 1.0}
+    );
+    auto oxygenHydrogen = std::make_unique<LennardJonesPair>(
+        kCutOff,
+        LJParams{.c6 = -1.0, .c12 = 1.0}
+    );
+    auto hydrogenHydrogen = std::make_unique<LennardJonesPair>(
+        kCutOff,
+        LJParams{.c6 = -1.0, .c12 = 1.0}
+    );
     const auto *oxygenOxygenView     = oxygenOxygen.get();
     const auto *oxygenHydrogenView   = oxygenHydrogen.get();
     const auto *hydrogenHydrogenView = hydrogenHydrogen.get();

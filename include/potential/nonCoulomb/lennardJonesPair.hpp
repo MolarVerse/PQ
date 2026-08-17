@@ -29,8 +29,11 @@
 #include "nonCoulombPair.hpp"
 #include "strongTypes.hpp"
 
+struct TestLJPairUtils;
+
 namespace potential
 {
+
     /**
      * @class LennardJonesPair
      *
@@ -41,30 +44,23 @@ namespace potential
     class LennardJonesPair : public NonCoulombPair
     {
        private:
-        double _c6;
-        double _c12;
+        LJParams _params;
 
        public:
         explicit LennardJonesPair(
             const ExtVdwType vanDerWaalsType1,
             const ExtVdwType vanDerWaalsType2,
             const double     cutOff,
-            const double     c6,
-            const double     c12
+            const LJParams  &params
         );
 
-        explicit LennardJonesPair(
-            const double cutOff,
-            const double c6,
-            const double c12
-        );
+        explicit LennardJonesPair(const double cutOff, const LJParams &params);
 
         explicit LennardJonesPair(
-            const double cutOff,
-            const double energyCutoff,
-            const double forceCutoff,
-            const double c6,
-            const double c12
+            const double    cutOff,
+            const double    energyCutoff,
+            const double    forceCutoff,
+            const LJParams &params
         );
 
         // TODO: we need to explicitly delete it to not implictly create it with
@@ -73,8 +69,7 @@ namespace potential
             const size_t,
             const size_t,
             const double,
-            const double,
-            const double
+            const LJParams &
         ) = delete;
 
         [[nodiscard]] bool operator==(const LennardJonesPair &other) const;
@@ -83,8 +78,7 @@ namespace potential
             const double distance
         ) const override;
 
-        [[nodiscard]] double getC6() const;
-        [[nodiscard]] double getC12() const;
+        friend struct ::TestLJPairUtils;
     };
 
 }   // namespace potential
