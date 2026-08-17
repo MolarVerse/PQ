@@ -31,7 +31,7 @@ using namespace simulationBox;
  *
  * @param moltype
  */
-MoleculeType::MoleculeType(const size_t moltype) : _moltype(moltype) {}
+MoleculeType::MoleculeType(size_t moltype) : _moltype(moltype) {}
 
 /**
  * @brief Construct a new Molecule Type:: Molecule Type object
@@ -71,7 +71,7 @@ void MoleculeType::addAtomName(const std::string &atomName)
  *
  * @param externalAtomType
  */
-void MoleculeType::addExternalAtomType(const size_t externalAtomType)
+void MoleculeType::addExternalAtomType(size_t externalAtomType)
 {
     _externalAtomTypes.push_back(externalAtomType);
 }
@@ -81,7 +81,7 @@ void MoleculeType::addExternalAtomType(const size_t externalAtomType)
  *
  * @param partialCharge
  */
-void MoleculeType::addPartialCharge(const double partialCharge)
+void MoleculeType::addPartialCharge(double partialCharge)
 {
     _partialCharges.push_back(partialCharge);
 }
@@ -91,7 +91,7 @@ void MoleculeType::addPartialCharge(const double partialCharge)
  *
  * @param externalGlobalVDWType
  */
-void MoleculeType::addExternalGlobalVDWType(const size_t externalGlobalVDWType)
+void MoleculeType::addExternalGlobalVDWType(size_t externalGlobalVDWType)
 {
     _externalGlobalVDWTypes.push_back(externalGlobalVDWType);
 }
@@ -103,8 +103,8 @@ void MoleculeType::addExternalGlobalVDWType(const size_t externalGlobalVDWType)
  * @param value
  */
 void MoleculeType::addExternalToInternalAtomTypeElement(
-    const size_t key,
-    const size_t value
+    size_t key,
+    size_t value
 )
 {
     _externalToInternalAtomTypes.try_emplace(key, value);
@@ -115,7 +115,7 @@ void MoleculeType::addExternalToInternalAtomTypeElement(
  *
  * @param atomType
  */
-void MoleculeType::addAtomType(const size_t atomType)
+void MoleculeType::addAtomType(size_t atomType)
 {
     _atomTypes.push_back(atomType);
 }
@@ -138,7 +138,7 @@ void MoleculeType::setName(const std::string_view &name) { _name = name; }
  *
  * @param numberOfAtoms
  */
-void MoleculeType::setNumberOfAtoms(const size_t numberOfAtoms)
+void MoleculeType::setNumberOfAtoms(size_t numberOfAtoms)
 {
     _numberOfAtoms = numberOfAtoms;
 }
@@ -148,14 +148,14 @@ void MoleculeType::setNumberOfAtoms(const size_t numberOfAtoms)
  *
  * @param moltype
  */
-void MoleculeType::setMoltype(const size_t moltype) { _moltype = moltype; }
+void MoleculeType::setMoltype(size_t moltype) { _moltype = moltype; }
 
 /**
  * @brief sets the charge of the molecule
  *
  * @param charge
  */
-void MoleculeType::setCharge(const int charge) { _charge = charge; }
+void MoleculeType::setCharge(int charge) { _charge = charge; }
 
 /**
  * @brief sets the partial charge of an atom
@@ -163,10 +163,7 @@ void MoleculeType::setCharge(const int charge) { _charge = charge; }
  * @param index
  * @param partialCharge
  */
-void MoleculeType::setPartialCharge(
-    const size_t index,
-    const double partialCharge
-)
+void MoleculeType::setPartialCharge(size_t index, double partialCharge)
 {
     _partialCharges[index] = partialCharge;
 }
@@ -207,7 +204,7 @@ size_t MoleculeType::getMoltype() const { return _moltype; }
  * @param index
  * @return size_t
  */
-size_t MoleculeType::getExternalAtomType(const size_t index) const
+size_t MoleculeType::getExternalAtomType(size_t index) const
 {
     return _externalAtomTypes[index];
 }
@@ -218,7 +215,7 @@ size_t MoleculeType::getExternalAtomType(const size_t index) const
  * @param index
  * @return size_t
  */
-size_t MoleculeType::getAtomType(const size_t index) const
+size_t MoleculeType::getAtomType(size_t index) const
 {
     return _atomTypes[index];
 }
@@ -229,7 +226,7 @@ size_t MoleculeType::getAtomType(const size_t index) const
  * @param type
  * @return size_t
  */
-size_t MoleculeType::getInternalAtomType(const size_t type) const
+size_t MoleculeType::getInternalAtomType(size_t type) const
 {
     return _externalToInternalAtomTypes.at(type);
 }
@@ -247,7 +244,7 @@ int MoleculeType::getCharge() const { return _charge; }
  * @param index
  * @return double
  */
-double MoleculeType::getPartialCharge(const size_t index) const
+double MoleculeType::getPartialCharge(size_t index) const
 {
     return _partialCharges[index];
 }
@@ -265,7 +262,7 @@ std::string MoleculeType::getName() const { return _name; }
  * @param index
  * @return std::string
  */
-std::string MoleculeType::getAtomName(const size_t index) const
+std::string MoleculeType::getAtomName(size_t index) const
 {
     return _atomNames[index];
 }

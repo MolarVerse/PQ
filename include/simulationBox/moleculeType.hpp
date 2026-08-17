@@ -56,7 +56,7 @@ namespace simulationBox
 
        public:
         MoleculeType() = default;
-        explicit MoleculeType(const size_t moltype);
+        explicit MoleculeType(size_t moltype);
         explicit MoleculeType(const std::string_view &name);
 
         [[nodiscard]] size_t getNumberOfAtomTypes();
@@ -66,12 +66,12 @@ namespace simulationBox
          **************************/
 
         void addAtomName(const std::string &atomName);
-        void addExternalAtomType(const size_t externalAtomType);
-        void addPartialCharge(const double partialCharge);
-        void addExternalGlobalVDWType(const size_t externalGlobalVDWType);
+        void addExternalAtomType(size_t externalAtomType);
+        void addPartialCharge(double partialCharge);
+        void addExternalGlobalVDWType(size_t externalGlobalVDWType);
 
-        void addExternalToInternalAtomTypeElement(const size_t, const size_t);
-        void addAtomType(const size_t atomType);
+        void addExternalToInternalAtomTypeElement(size_t, size_t);
+        void addAtomType(size_t atomType);
 
         /***************************
          * standard setter methods *
@@ -79,11 +79,11 @@ namespace simulationBox
 
         void setName(const std::string_view &name);
 
-        void setNumberOfAtoms(const size_t numberOfAtoms);
-        void setMoltype(const size_t moltype);
+        void setNumberOfAtoms(size_t numberOfAtoms);
+        void setMoltype(size_t moltype);
 
-        void setCharge(const int charge);
-        void setPartialCharge(const size_t index, const double partialCharge);
+        void setCharge(int charge);
+        void setPartialCharge(size_t index, double partialCharge);
         void setPartialCharges(const std::vector<double> &partialCharges);
 
         /***************************
@@ -92,20 +92,20 @@ namespace simulationBox
 
         [[nodiscard]] size_t getNumberOfAtoms() const;
         [[nodiscard]] size_t getMoltype() const;
-        [[nodiscard]] size_t getExternalAtomType(const size_t index) const;
-        [[nodiscard]] size_t getAtomType(const size_t index) const;
-        [[nodiscard]] size_t getInternalAtomType(const size_t type) const;
+        [[nodiscard]] size_t getExternalAtomType(size_t index) const;
+        [[nodiscard]] size_t getAtomType(size_t index) const;
+        [[nodiscard]] size_t getInternalAtomType(size_t type) const;
 
         [[nodiscard]] int    getCharge() const;
-        [[nodiscard]] double getPartialCharge(const size_t index) const;
+        [[nodiscard]] double getPartialCharge(size_t index) const;
 
         [[nodiscard]] std::string getName() const;
-        [[nodiscard]] std::string getAtomName(const size_t index) const;
+        [[nodiscard]] std::string getAtomName(size_t index) const;
 
-        [[nodiscard]] std::vector<std::string>  getAtomNames() const;
-        [[nodiscard]] std::vector<size_t>      &getExternalAtomTypes();
-        [[nodiscard]] std::vector<size_t>      &getExternalGlobalVDWTypes();
-        [[nodiscard]] std::vector<double>      &getPartialCharges();
+        [[nodiscard]] std::vector<std::string> getAtomNames() const;
+        [[nodiscard]] std::vector<size_t>     &getExternalAtomTypes();
+        [[nodiscard]] std::vector<size_t>     &getExternalGlobalVDWTypes();
+        [[nodiscard]] std::vector<double>     &getPartialCharges();
 
         [[nodiscard]] std::map<size_t, size_t> getExternalToInternalAtomTypes(
         ) const;

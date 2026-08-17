@@ -91,19 +91,13 @@ namespace QM
         {
         }
 
-        void readForceFile(
-            simulationBox::SimulationBox &,
-            physicalData::PhysicalData &
-        );
-        void readChargeFile(simulationBox::SimulationBox &);
-
         /*******************************
          * standard getter and setters *
          *******************************/
 
         [[nodiscard]] const std::string &getScriptPath() const;
-        [[nodiscard]] std::string        getSingularity() const;
-        [[nodiscard]] std::string        getStaticBuild() const;
+        [[nodiscard]] static std::string getSingularity();
+        [[nodiscard]] static std::string getStaticBuild();
 
         void setScriptPath(const std::string_view &scriptPath);
     };

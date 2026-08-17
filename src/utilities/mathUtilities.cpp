@@ -75,7 +75,4 @@ bool utilities::compare(
  * @param j
  * @return size_t
  */
-size_t utilities::kroneckerDelta(const size_t i, const size_t j)
-{
-    return i == j ? 1 : 0;
-}
+size_t utilities::kroneckerDelta(size_t i, size_t j) { return i == j ? 1 : 0; }

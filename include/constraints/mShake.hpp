@@ -28,7 +28,6 @@
 #include <vector>   // for vector
 
 #include "mShakeReference.hpp"
-#include "vector3d.hpp"   // for Vec3D
 
 namespace simulationBox
 {
@@ -70,12 +69,6 @@ namespace constraints
         [[nodiscard]]
         size_t calcNumberOfBondConstraints(
             simulationBox::SimulationBox &
-        ) const;
-        [[nodiscard]]
-        double calcMatrixElement(
-            const std::tuple<size_t, size_t, size_t, size_t> &indices,
-            const std::pair<double, double>                  &masses,
-            const std::pair<linearAlgebra::Vec3D, linearAlgebra::Vec3D> &pos
         ) const;
 
         [[nodiscard]] bool   isMShakeType(size_t moltype) const;

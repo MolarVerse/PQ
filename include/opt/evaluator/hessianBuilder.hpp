@@ -59,28 +59,9 @@ namespace opt
        protected:
         double _displacement;
 
-        [[nodiscard]]
-        std::vector<double> evaluateForces(
-            Evaluator                    &evaluator,
-            simulationBox::SimulationBox &simulationBox,
-            size_t                        coordinateIndex,
-            double                        displacement
-        ) const;
-
         static void restorePositions(
             simulationBox::SimulationBox            &simulationBox,
             const std::vector<linearAlgebra::Vec3D> &positions
-        );
-
-        static void displaceCoordinate(
-            simulationBox::SimulationBox &simulationBox,
-            size_t                        coordinateIndex,
-            double                        displacement
-        );
-
-        [[nodiscard]]
-        static std::vector<double> flattenForces(
-            const simulationBox::SimulationBox &simulationBox
         );
 
        public:

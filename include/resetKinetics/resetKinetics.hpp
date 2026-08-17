@@ -89,7 +89,7 @@ namespace resetKinetics
          * standard setters *
          *******************/
 
-        void setTemperature(const double temperature);
+        void setTemperature(double temperature);
         void setMomentum(const linearAlgebra::Vec3D &momentum);
         void setAngularMomentum(const linearAlgebra::Vec3D &angularMomentum);
 

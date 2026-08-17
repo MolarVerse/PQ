@@ -99,7 +99,7 @@ AseDftbRunner::AseDftbRunner(
  *
  * @return std::unordered_map<std::string, float>
  */
-const std::unordered_map<std::string, double> AseDftbRunner::getHubbDerivDict(
+const std::unordered_map<std::string, double> &AseDftbRunner::getHubbDerivDict(
 ) const
 {
     return _hubbardDerivDict;

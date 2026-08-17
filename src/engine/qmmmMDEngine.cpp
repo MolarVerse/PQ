@@ -47,6 +47,67 @@ using virial::calculateQMVirial;
 using virial::calculateVirial;
 using virial::intraMolecularVirialCorrection;
 
+namespace
+{
+    /**
+     * @brief Generate distance-based, unnormalized molecule weights.
+     *
+     * @param smoothingMol The smoothing molecule whose force deficit is being
+     * redistributed.
+     * @param recipientMolecules Recipient CORE/LAYER molecules.
+     *
+     * @return A vector with one switched-polynomial weight per recipient
+     * molecule.
+     *
+     * @details Weights are computed from center-of-mass distance using
+     * weightingRadius = 2 * HybridSettings::getLayerRadius(). For x = d/R and
+     * x < 1, the switch is S(x)=1-10x^3+15x^4-6x^5; otherwise the weight is 0.
+     * The returned values are unnormalized and normalized by the caller.
+     */
+    std::vector<double> getDistanceWeights(
+        const Molecule                                      &smoothingMol,
+        const std::vector<std::reference_wrapper<Molecule>> &recipientMolecules
+    )
+    {
+        const auto weightingRadius = 2.0 * HybridSettings::getLayerRadius();
+        std::vector<double> weights;
+        weights.reserve(recipientMolecules.size());
+
+        const auto       smoothingCOM = smoothingMol.getCenterOfMass();
+        constexpr double x3Coeff      = 10.0;
+        constexpr double x4Coeff      = 15.0;
+        constexpr double x5Coeff      = 6.0;
+
+        for (const auto &recipientMol : recipientMolecules)
+        {
+            const auto delta =
+                recipientMol.get().getCenterOfMass() - smoothingCOM;
+
+            const auto distance = linearAlgebra::norm(delta);
+
+            auto switchedWeight = 0.0;
+            if (weightingRadius > 0.0)
+            {
+                const auto x = distance / weightingRadius;
+
+                if (x < 1.0)
+                {
+                    const auto x3 = x * x * x;
+                    const auto x4 = x3 * x;
+                    const auto x5 = x4 * x;
+
+                    switchedWeight =
+                        1.0 - x3Coeff * x3 + x4Coeff * x4 - x5Coeff * x5;
+                }
+            }
+
+            weights.push_back(switchedWeight);
+        }
+
+        return weights;
+    }
+}   // namespace
+
 namespace engine
 {
     /**
@@ -534,64 +595,6 @@ namespace engine
             weight = _rng.getUniformRealDistribution(0.0, 1.0);
 
         return randomWeights;
-    }
-
-    /**
-     * @brief Generate distance-based, unnormalized molecule weights.
-     *
-     * @param smoothingMol The smoothing molecule whose force deficit is being
-     * redistributed.
-     * @param recipientMolecules Recipient CORE/LAYER molecules.
-     *
-     * @return A vector with one switched-polynomial weight per recipient
-     * molecule.
-     *
-     * @details Weights are computed from center-of-mass distance using
-     * weightingRadius = 2 * HybridSettings::getLayerRadius(). For x = d/R and
-     * x < 1, the switch is S(x)=1-10x^3+15x^4-6x^5; otherwise the weight is 0.
-     * The returned values are unnormalized and normalized by the caller.
-     */
-    std::vector<double> QMMMMDEngine::getDistanceWeights(
-        const Molecule                                      &smoothingMol,
-        const std::vector<std::reference_wrapper<Molecule>> &recipientMolecules
-    )
-    {
-        const auto weightingRadius = 2.0 * HybridSettings::getLayerRadius();
-        std::vector<double> weights;
-        weights.reserve(recipientMolecules.size());
-
-        const auto       smoothingCOM = smoothingMol.getCenterOfMass();
-        constexpr double x3Coeff      = 10.0;
-        constexpr double x4Coeff      = 15.0;
-        constexpr double x5Coeff      = 6.0;
-
-        for (const auto &recipientMol : recipientMolecules)
-        {
-            const auto delta =
-                recipientMol.get().getCenterOfMass() - smoothingCOM;
-
-            const auto distance = linearAlgebra::norm(delta);
-
-            auto switchedWeight = 0.0;
-            if (weightingRadius > 0.0)
-            {
-                const auto x = distance / weightingRadius;
-
-                if (x < 1.0)
-                {
-                    const auto x3 = x * x * x;
-                    const auto x4 = x3 * x;
-                    const auto x5 = x4 * x;
-
-                    switchedWeight =
-                        1.0 - x3Coeff * x3 + x4Coeff * x4 - x5Coeff * x5;
-                }
-            }
-
-            weights.push_back(switchedWeight);
-        }
-
-        return weights;
     }
 
 }   // namespace engine

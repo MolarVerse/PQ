@@ -25,12 +25,11 @@
 #define _EXCEPTIONS_HPP_
 
 #include <cstddef>
+#include <cstdint>
 #include <exception>
 #include <optional>
 #include <string>
 #include <string_view>
-
-#include "color.hpp"
 
 namespace customException
 {
@@ -85,7 +84,6 @@ namespace customException
         );
         explicit CustomException(std::string_view message);
 
-        void colorfulOutput(Color::Code, std::string_view) const;
         void setLineNumber(size_t lineNumber) noexcept;
         [[nodiscard]] const std::string    &getMessage() const noexcept;
         [[nodiscard]] std::optional<size_t> getLineNumber() const noexcept;

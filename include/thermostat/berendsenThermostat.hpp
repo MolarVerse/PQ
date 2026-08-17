@@ -42,7 +42,7 @@ namespace thermostat
         double _tau;
 
        public:
-        explicit BerendsenThermostat(const double targetTemp, const double tau);
+        explicit BerendsenThermostat(double targetTemp, double tau);
         BerendsenThermostat() = default;
 
         void applyThermostat(
@@ -50,7 +50,7 @@ namespace thermostat
             physicalData::PhysicalData   &physData
         ) override;
 
-        void setTau(const double tau);
+        void setTau(double tau);
 
         [[nodiscard]] double getTau() const;
         [[nodiscard]]

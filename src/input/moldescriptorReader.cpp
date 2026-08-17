@@ -41,6 +41,35 @@ using namespace simulationBox;
 using namespace utilities;
 using namespace customException;
 
+namespace
+{
+    /**
+     * @brief convert external to internal atom types
+     *
+     * @details In order to manage if user declares for example only atom type 1
+     * and 3 in the moldescriptor file, the internal atom types are the 0 and 1.
+     *
+     * @param molecule
+     */
+    void convertExternalToInternalAtomTypes(MoleculeType &molecule)
+    {
+        const size_t numberOfAtoms = molecule.getNumberOfAtoms();
+
+        for (size_t i = 0; i < numberOfAtoms; ++i)
+        {
+            const size_t externalAtomType = molecule.getExternalAtomType(i);
+            molecule.addExternalToInternalAtomTypeElement(externalAtomType, i);
+        }
+
+        for (size_t i = 0; i < numberOfAtoms; ++i)
+        {
+            const size_t externalAtomType = molecule.getExternalAtomType(i);
+            molecule.addAtomType(molecule.getInternalAtomType(externalAtomType)
+            );
+        }
+    }
+}   // namespace
+
 /**
  * @brief constructor
  *
@@ -255,31 +284,4 @@ void MoldescriptorReader::processMolecule(
     convertExternalToInternalAtomTypes(molecule);
 
     simBox.addMoleculeType(molecule);
-}
-
-/**
- * @brief convert external to internal atom types
- *
- * @details In order to manage if user declares for example only atom type 1 and
- * 3 in the moldescriptor file, the internal atom types are the 0 and 1.
- *
- * @param molecule
- */
-void MoldescriptorReader::convertExternalToInternalAtomTypes(
-    MoleculeType &molecule
-) const
-{
-    const size_t numberOfAtoms = molecule.getNumberOfAtoms();
-
-    for (size_t i = 0; i < numberOfAtoms; ++i)
-    {
-        const size_t externalAtomType = molecule.getExternalAtomType(i);
-        molecule.addExternalToInternalAtomTypeElement(externalAtomType, i);
-    }
-
-    for (size_t i = 0; i < numberOfAtoms; ++i)
-    {
-        const size_t externalAtomType = molecule.getExternalAtomType(i);
-        molecule.addAtomType(molecule.getInternalAtomType(externalAtomType));
-    }
 }

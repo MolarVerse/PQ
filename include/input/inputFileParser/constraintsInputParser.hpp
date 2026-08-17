@@ -53,12 +53,30 @@ namespace input
         );
 
         void parseShakeActivated(const std::vector<std::string> &, size_t);
-        void parseShakeTolerance(const std::vector<std::string> &, size_t);
-        void parseShakeIteration(const std::vector<std::string> &, size_t);
-        void parseRattleTolerance(const std::vector<std::string> &, size_t);
-        void parseRattleIteration(const std::vector<std::string> &, size_t);
-        void parseMShakeTolerance(const std::vector<std::string> &, size_t);
-        void parseMShakeIteration(const std::vector<std::string> &, size_t);
+        static void parseShakeTolerance(
+            const std::vector<std::string> &,
+            size_t
+        );
+        static void parseShakeIteration(
+            const std::vector<std::string> &,
+            size_t
+        );
+        static void parseRattleTolerance(
+            const std::vector<std::string> &,
+            size_t
+        );
+        static void parseRattleIteration(
+            const std::vector<std::string> &,
+            size_t
+        );
+        static void parseMShakeTolerance(
+            const std::vector<std::string> &,
+            size_t
+        );
+        static void parseMShakeIteration(
+            const std::vector<std::string> &,
+            size_t
+        );
         void parseDistanceConstraintActivated(
             const std::vector<std::string> &,
             size_t

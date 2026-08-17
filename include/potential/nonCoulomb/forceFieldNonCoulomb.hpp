@@ -64,8 +64,8 @@ namespace potential
         void fillDiagOfNonCoulPairsMatrix(
             std::vector<std::shared_ptr<NonCoulombPair>> &
         );
-        void fillOffDiagOfNonCoulPairsMatrix();
-        void sortNonCoulombicsPairs(
+        void        fillOffDiagOfNonCoulPairsMatrix();
+        static void sortNonCoulombicsPairs(
             std::vector<std::shared_ptr<NonCoulombPair>> &diagonalElements
         );
         void setOffDiagonalElement(size_t, size_t);
@@ -90,9 +90,9 @@ namespace potential
         ) override;
 
         [[nodiscard]]
-        size_t getGlobalVdwType1(const std::vector<size_t> &) const;
+        static size_t getGlobalVdwType1(const std::vector<size_t> &);
         [[nodiscard]]
-        size_t getGlobalVdwType2(const std::vector<size_t> &) const;
+        static size_t getGlobalVdwType2(const std::vector<size_t> &);
 
         [[nodiscard]]
         std::vector<std::shared_ptr<NonCoulombPair>> &getNonCoulombPairsVector(

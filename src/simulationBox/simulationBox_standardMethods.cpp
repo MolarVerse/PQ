@@ -438,17 +438,14 @@ void SimulationBox::setAmmoniaType(const size_t ammoniaType)
  *
  * @param centerOfMass
  */
-void SimulationBox::setTotalMass(const double totalMass)
-{
-    _totalMass = totalMass;
-}
+void SimulationBox::setTotalMass(double totalMass) { _totalMass = totalMass; }
 
 /**
  * @brief set the total charge
  *
  * @param centerOfMass
  */
-void SimulationBox::setTotalCharge(const double totalCharge)
+void SimulationBox::setTotalCharge(double totalCharge)
 {
     _totalCharge = totalCharge;
 }
@@ -458,7 +455,7 @@ void SimulationBox::setTotalCharge(const double totalCharge)
  *
  * @param centerOfMass
  */
-void SimulationBox::setDensity(const double density) { _density = density; }
+void SimulationBox::setDensity(double density) { _density = density; }
 
 /**
  * @brief set the degrees of freedom
@@ -559,10 +556,7 @@ linearAlgebra::Vec3D SimulationBox::getBoxAngles() const
  *
  * @param volume
  */
-void SimulationBox::setVolume(const double volume) const
-{
-    _box->setVolume(volume);
-}
+void SimulationBox::setVolume(double volume) const { _box->setVolume(volume); }
 
 /**
  * @brief sets the box dimensions
@@ -581,7 +575,7 @@ void SimulationBox::setBoxDimensions(
  *
  * @param boxSizeHasChanged
  */
-void SimulationBox::setBoxSizeHasChanged(const bool boxSizeHasChanged) const
+void SimulationBox::setBoxSizeHasChanged(bool boxSizeHasChanged) const
 {
     _box->setBoxSizeHasChanged(boxSizeHasChanged);
 }

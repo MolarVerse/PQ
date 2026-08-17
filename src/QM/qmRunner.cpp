@@ -47,7 +47,7 @@ using namespace customException;
  *
  * @throw QMRunnerException if the timeout is exceeded
  */
-void QMRunner::throwAfterTimeout(const std::stop_token &stopToken) const
+void QMRunner::throwAfterTimeout(const std::stop_token &stopToken)
 {
     const auto qmLoopTimeLimit = QMSettings::getQMLoopTimeLimit();
 

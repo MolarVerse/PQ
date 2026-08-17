@@ -105,7 +105,7 @@ void ThermostatSetup::setup()
 /**
  * @brief keeps target and end temperature synchronized
  */
-void ThermostatSetup::setupTargetTemperature() const
+void ThermostatSetup::setupTargetTemperature()
 {
     const auto targetTempDefined = ThermostatSettings::isTemperatureSet();
     const auto endTempDefined    = ThermostatSettings::isEndTemperatureSet();
@@ -178,7 +178,7 @@ void ThermostatSetup::setupNoseHooverThermostat()
     const auto nhChainLength = ThermostatSettings::getNoseHooverChainLength();
 
     auto nhCouplFreq  = ThermostatSettings::getNoseHooverCouplingFrequency();
-    nhCouplFreq       *= PER_CM_TO_HZ;
+    nhCouplFreq      *= PER_CM_TO_HZ;
 
     const auto chi  = std::vector<double>(nhChainLength + 1, 0.0);
     const auto zeta = std::vector<double>(nhChainLength + 1, 0.0);

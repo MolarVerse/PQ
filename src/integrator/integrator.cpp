@@ -49,7 +49,7 @@ Integrator::Integrator(std::string_view integratorType)
  * @param molecule
  * @param index
  */
-void Integrator::integrateVelocities(Atom *atom) const
+void Integrator::integrateVelocities(Atom *atom)
 {
     auto       velocity = atom->getVelocity();
     const auto force    = atom->getForce();
@@ -68,10 +68,7 @@ void Integrator::integrateVelocities(Atom *atom) const
  * @param index
  * @param simBox
  */
-void Integrator::integratePositions(
-    Atom                *atom,
-    const SimulationBox &simBox
-) const
+void Integrator::integratePositions(Atom *atom, const SimulationBox &simBox)
 {
     auto       position = atom->getPosition();
     const auto velocity = atom->getVelocity();

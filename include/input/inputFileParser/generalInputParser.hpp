@@ -47,11 +47,17 @@ namespace input
 
         void parseJobType(const std::vector<std::string> &, size_t);
 
-        void parseDimensionality(const std::vector<std::string> &, size_t);
+        static void parseDimensionality(
+            const std::vector<std::string> &,
+            size_t
+        );
 
-        void parseFloatingPointType(const std::vector<std::string> &, size_t);
+        static void parseFloatingPointType(
+            const std::vector<std::string> &,
+            size_t
+        );
 
-        void parseRandomSeed(const std::vector<std::string> &, size_t);
+        static void parseRandomSeed(const std::vector<std::string> &, size_t);
 
         static void parseJobTypeForEngine(
             const std::vector<std::string> &,

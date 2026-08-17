@@ -115,7 +115,6 @@ namespace input
          ******************************/
 
         void validateTimings() const;
-        void validateOptimizer() const;
         void validateQM() const;
         void validateThermostat() const;
         void validateManostat() const;

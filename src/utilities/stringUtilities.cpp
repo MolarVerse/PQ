@@ -78,7 +78,7 @@ std::string utilities::removeComments(
  */
 std::vector<std::string> utilities::getLineCommands(
     const std::string &line,
-    const size_t       lineNumber
+    size_t             lineNumber
 )
 {
     for (auto i = static_cast<int>(line.size() - 1); i >= 0; --i)
@@ -286,7 +286,7 @@ bool utilities::keywordToBool(const std::vector<std::string> &lineElements)
 void utilities::addSpaces(
     std::string       &command,
     const std::string &stringToReplace,
-    const size_t       lineNumber
+    size_t             lineNumber
 )
 {
     const auto equalSignPos = command.find(stringToReplace);

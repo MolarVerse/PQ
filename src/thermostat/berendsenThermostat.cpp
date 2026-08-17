@@ -44,10 +44,7 @@ using namespace utilities;
  * @param targetTemp
  * @param tau
  */
-BerendsenThermostat::BerendsenThermostat(
-    const double targetTemp,
-    const double tau
-)
+BerendsenThermostat::BerendsenThermostat(double targetTemp, double tau)
     : Thermostat(targetTemp), _tau(tau)
 {
 }
@@ -105,7 +102,7 @@ double BerendsenThermostat::getTau() const { return _tau; }
  *
  * @param tau
  */
-void BerendsenThermostat::setTau(const double tau) { _tau = tau; }
+void BerendsenThermostat::setTau(double tau) { _tau = tau; }
 
 /**
  * @brief Get thermostat type

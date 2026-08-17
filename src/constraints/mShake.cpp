@@ -42,6 +42,45 @@ using namespace linearAlgebra;
 using namespace settings;
 using namespace simulationBox;
 
+namespace
+{
+    /**
+     * @brief calculate M - Shake matrix element
+     *
+     */
+    [[nodiscard]]
+    double calcMatrixElement(
+        const std::tuple<size_t, size_t, size_t, size_t> &indices,
+        const std::pair<double, double>                  &masses,
+        const std::pair<Vec3D, Vec3D>                    &pos
+    )
+    {
+        const auto i = std::get<0>(indices);
+        const auto j = std::get<1>(indices);
+        const auto k = std::get<2>(indices);
+        const auto l = std::get<3>(indices);
+
+        // Cast to double: kroneckerDelta returns size_t, so subtractions
+        // like (ik - il) underflow to SIZE_T_MAX when the first operand is 0.
+        const auto ik = static_cast<double>(utilities::kroneckerDelta(i, k));
+        const auto il = static_cast<double>(utilities::kroneckerDelta(i, l));
+        const auto jk = static_cast<double>(utilities::kroneckerDelta(j, k));
+        const auto jl = static_cast<double>(utilities::kroneckerDelta(j, l));
+
+        const auto mass_i = masses.first;
+        const auto mass_j = masses.second;
+
+        const auto &pos_ij = pos.first;
+        const auto &pos_kl = pos.second;
+
+        auto mShakeElement  = (ik - il) / mass_i;
+        mShakeElement      += (jl - jk) / mass_j;
+        mShakeElement      *= dot(pos_ij, pos_kl);
+
+        return mShakeElement;
+    }
+}   // namespace
+
 /**
  * @brief struct to hold the mShake matrices and their inverses
  *
@@ -602,39 +641,4 @@ size_t MShake::calcNumberOfBondConstraints(SimulationBox &simBox) const
     }
 
     return nBondConstraints;
-}
-
-/**
- * @brief calculate M - Shake matrix element
- *
- */
-double MShake::calcMatrixElement(
-    const std::tuple<size_t, size_t, size_t, size_t> &indices,
-    const std::pair<double, double>                  &masses,
-    const std::pair<Vec3D, Vec3D>                    &pos
-) const
-{
-    const auto i = std::get<0>(indices);
-    const auto j = std::get<1>(indices);
-    const auto k = std::get<2>(indices);
-    const auto l = std::get<3>(indices);
-
-    // Cast to double: kroneckerDelta returns size_t, so subtractions
-    // like (ik - il) underflow to SIZE_T_MAX when the first operand is 0.
-    const auto ik = static_cast<double>(utilities::kroneckerDelta(i, k));
-    const auto il = static_cast<double>(utilities::kroneckerDelta(i, l));
-    const auto jk = static_cast<double>(utilities::kroneckerDelta(j, k));
-    const auto jl = static_cast<double>(utilities::kroneckerDelta(j, l));
-
-    const auto mass_i = masses.first;
-    const auto mass_j = masses.second;
-
-    const auto &pos_ij = pos.first;
-    const auto &pos_kl = pos.second;
-
-    auto mShakeElement  = (ik - il) / mass_i;
-    mShakeElement      += (jl - jk) / mass_j;
-    mShakeElement      *= dot(pos_ij, pos_kl);
-
-    return mShakeElement;
 }

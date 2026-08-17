@@ -64,9 +64,6 @@ namespace input::molDescriptor
 
         void read();
         void processMolecule(std::vector<std::string> &lineElements);
-        void convertExternalToInternalAtomTypes(
-            simulationBox::MoleculeType &
-        ) const;
     };
 
 }   // namespace input::molDescriptor

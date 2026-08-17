@@ -56,7 +56,6 @@ namespace output
             const thermostat::Thermostat &,
             size_t
         );
-        void writeNHChain(const thermostat::Thermostat &, std::ostringstream &);
     };
 
 }   // namespace output

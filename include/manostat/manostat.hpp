@@ -68,7 +68,7 @@ namespace manostat
             physicalData::PhysicalData &
         );
 
-        void rotateMu(linearAlgebra::tensor3D &mu) const;
+        static void rotateMu(linearAlgebra::tensor3D &mu);
 
         [[nodiscard]] virtual settings::ManostatType getManostatType() const;
         [[nodiscard]] virtual settings::Isotropy     getIsotropy() const;

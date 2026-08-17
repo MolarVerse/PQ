@@ -50,7 +50,7 @@ namespace thermostat
 
        public:
         VelocityRescalingThermostat() = default;
-        explicit VelocityRescalingThermostat(const double, const double);
+        explicit VelocityRescalingThermostat(double, double);
         ~VelocityRescalingThermostat() override = default;
 
         // copy constructor and copy assignment needed for random number
@@ -69,7 +69,7 @@ namespace thermostat
             physicalData::PhysicalData   &physData
         ) override;
 
-        void setTau(const double tau);
+        void setTau(double tau);
 
         [[nodiscard]]
         settings::ThermostatType getThermostatType() const override;

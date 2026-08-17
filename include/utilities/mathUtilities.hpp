@@ -116,7 +116,7 @@ namespace utilities
         return -1;
     }
 
-    [[nodiscard]] size_t kroneckerDelta(const size_t i, const size_t j);
+    [[nodiscard]] size_t kroneckerDelta(size_t i, size_t j);
 
 }   // namespace utilities
 

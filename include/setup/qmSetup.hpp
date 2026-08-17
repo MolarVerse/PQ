@@ -49,13 +49,13 @@ namespace setup
        public:
         explicit QMSetup(engine::QMCapableEngine &qmCapableEngine);
 
-        void setup();
-        void setupQMMethod();
-        void setupQMMethodAseDftbPlus();
-        void setupQMMethodAseXtb();
-        void setupQMScript() const;
-        void setupCoulombRadiusCutOff() const;
-        void setupWriteInfo() const;
+        void        setup();
+        void        setupQMMethod();
+        static void setupQMMethodAseDftbPlus();
+        static void setupQMMethodAseXtb();
+        void        setupQMScript() const;
+        static void setupCoulombRadiusCutOff();
+        void        setupWriteInfo() const;
     };
 
 }   // namespace setup

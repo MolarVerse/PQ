@@ -61,12 +61,14 @@ namespace engine
         void scaleSmoothingMoleculeForcesInner();
         void scaleSmoothingMoleculeForcesOuter();
 
-        [[nodiscard]] std::unordered_set<size_t> generateInactiveSmoothingMoleculeSet(
+        [[nodiscard]]
+        static std::unordered_set<size_t> generateInactiveSmoothingMoleculeSet(
             size_t bitPattern,
             size_t totalMolecules
-        ) const;
+        );
 
-        [[nodiscard]] double calculateGlobalSmoothingFactor(
+        [[nodiscard]]
+        double calculateGlobalSmoothingFactor(
             const std::unordered_set<size_t>& inactiveForInnerCalcMolecules
         ) const;
 

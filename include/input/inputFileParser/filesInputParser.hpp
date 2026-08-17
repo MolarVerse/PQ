@@ -69,10 +69,10 @@ namespace input
         );
 
         void parseGuffDatFilename(const std::vector<std::string> &, size_t);
-        void parseGuffPath(const std::vector<std::string> &, size_t);
+        static void parseGuffPath(const std::vector<std::string> &, size_t);
         void parseMShakeFilename(const std::vector<std::string> &, size_t);
         void parseDFTBFilename(const std::vector<std::string> &, size_t);
-        void parseTMFilename(const std::vector<std::string> &, size_t);
+        static void parseTMFilename(const std::vector<std::string> &, size_t);
     };
 
 }   // namespace input

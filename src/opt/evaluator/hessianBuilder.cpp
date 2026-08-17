@@ -32,6 +32,76 @@ using namespace opt;
 using namespace settings;
 using namespace customException;
 
+namespace
+{
+    /**
+     * @brief displace a specific coordinate of the simulation box
+     *
+     * @param simulationBox
+     * @param coordinateIndex
+     * @param displacement
+     */
+    void displaceCoordinate(
+        simulationBox::SimulationBox &simulationBox,
+        size_t                        coordinateIndex,
+        double                        displacement
+    )
+    {
+        const auto atomIndex = coordinateIndex / 3;
+        const auto dimension = coordinateIndex % 3;
+
+        auto position        = simulationBox.getAtom(atomIndex).getPosition();
+        position[dimension] += displacement;
+
+        simulationBox.getAtom(atomIndex).setPosition(position);
+    }
+
+    /**
+     * @brief flatten the forces of the simulation box into a 1D vector
+     *
+     * @param simulationBox
+     * @return std::vector<double>
+     */
+    std::vector<double> flattenForces(
+        const simulationBox::SimulationBox &simulationBox
+    )
+    {
+        std::vector<double> flattenedForces;
+        flattenedForces.reserve(3 * simulationBox.getNumberOfAtoms());
+
+        for (const auto &force : simulationBox.getForces())
+        {
+            flattenedForces.push_back(force[0]);
+            flattenedForces.push_back(force[1]);
+            flattenedForces.push_back(force[2]);
+        }
+
+        return flattenedForces;
+    }
+
+    /**
+     * @brief Construct a new Central Force Difference Hessian Builder:: Central
+     * Force Difference Hessian Builder object
+     *
+     * @param displacement
+     */
+    [[nodiscard]]
+    std::vector<double> evaluateForces(
+        Evaluator                    &evaluator,
+        simulationBox::SimulationBox &simulationBox,
+        size_t                        coordinateIndex,
+        double                        displacement
+    )
+    {
+        displaceCoordinate(simulationBox, coordinateIndex, displacement);
+        evaluator.evaluate();
+        const auto forces = flattenForces(simulationBox);
+        displaceCoordinate(simulationBox, coordinateIndex, -displacement);
+
+        return forces;
+    }
+}   // namespace
+
 /**
  * @brief Construct a new Force Difference Hessian Builder:: Force Difference
  * Hessian Builder object
@@ -43,27 +113,6 @@ ForceDifferenceHessianBuilder::ForceDifferenceHessianBuilder(
 )
     : _displacement(displacement)
 {
-}
-
-/**
- * @brief Construct a new Central Force Difference Hessian Builder:: Central
- * Force Difference Hessian Builder object
- *
- * @param displacement
- */
-std::vector<double> ForceDifferenceHessianBuilder::evaluateForces(
-    Evaluator                    &evaluator,
-    simulationBox::SimulationBox &simulationBox,
-    size_t                        coordinateIndex,
-    double                        displacement
-) const
-{
-    displaceCoordinate(simulationBox, coordinateIndex, displacement);
-    evaluator.evaluate();
-    const auto forces = flattenForces(simulationBox);
-    displaceCoordinate(simulationBox, coordinateIndex, -displacement);
-
-    return forces;
 }
 
 /**
@@ -79,51 +128,6 @@ void ForceDifferenceHessianBuilder::restorePositions(
 {
     for (size_t atomIndex = 0; atomIndex < positions.size(); ++atomIndex)
         simulationBox.getAtom(atomIndex).setPosition(positions[atomIndex]);
-}
-
-/**
- * @brief displace a specific coordinate of the simulation box
- *
- * @param simulationBox
- * @param coordinateIndex
- * @param displacement
- */
-void ForceDifferenceHessianBuilder::displaceCoordinate(
-    simulationBox::SimulationBox &simulationBox,
-    size_t                        coordinateIndex,
-    double                        displacement
-)
-{
-    const auto atomIndex = coordinateIndex / 3;
-    const auto dimension = coordinateIndex % 3;
-
-    auto position        = simulationBox.getAtom(atomIndex).getPosition();
-    position[dimension] += displacement;
-
-    simulationBox.getAtom(atomIndex).setPosition(position);
-}
-
-/**
- * @brief flatten the forces of the simulation box into a 1D vector
- *
- * @param simulationBox
- * @return std::vector<double>
- */
-std::vector<double> ForceDifferenceHessianBuilder::flattenForces(
-    const simulationBox::SimulationBox &simulationBox
-)
-{
-    std::vector<double> flattenedForces;
-    flattenedForces.reserve(3 * simulationBox.getNumberOfAtoms());
-
-    for (const auto &force : simulationBox.getForces())
-    {
-        flattenedForces.push_back(force[0]);
-        flattenedForces.push_back(force[1]);
-        flattenedForces.push_back(force[2]);
-    }
-
-    return flattenedForces;
 }
 
 /**

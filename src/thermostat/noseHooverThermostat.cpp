@@ -47,10 +47,10 @@ using namespace physicalData;
  * @param couplingFrequency
  */
 NoseHooverThermostat::NoseHooverThermostat(
-    const double               targetTemp,
+    double                     targetTemp,
     const std::vector<double> &chi,
     const std::vector<double> &zeta,
-    const double               couplingFrequency
+    double                     couplingFrequency
 )
     : Thermostat(targetTemp),
       _chi(chi),
@@ -80,7 +80,7 @@ void NoseHooverThermostat::applyThermostatOnForces(SimulationBox &simBox)
 
     auto factor  = _chi[0] * couplingFreqSquared;
     factor      /= (kT_target * degreesOfFreedom);
-    factor       *= MOMENTUM_TO_FORCE;
+    factor      *= MOMENTUM_TO_FORCE;
 
     auto applyNoseHoover = [factor](auto &atom)
     { atom->addForce(-factor * atom->getVelocity() * atom->getMass()); };
@@ -194,7 +194,7 @@ double NoseHooverThermostat::getCouplingFrequency() const
  * @param index
  * @param chi
  */
-void NoseHooverThermostat::setChi(const unsigned int index, const double chi)
+void NoseHooverThermostat::setChi(unsigned int index, double chi)
 {
     _chi[index] = chi;
 }
@@ -215,7 +215,7 @@ void NoseHooverThermostat::setChi(const std::vector<double> &chi)
  * @param index
  * @param zeta
  */
-void NoseHooverThermostat::setZeta(const unsigned int index, const double zeta)
+void NoseHooverThermostat::setZeta(unsigned int index, double zeta)
 {
     _zeta[index] = zeta;
 }
@@ -235,7 +235,7 @@ void NoseHooverThermostat::setZeta(const std::vector<double> &zeta)
  *
  * @param couplingFrequency
  */
-void NoseHooverThermostat::setCouplingFrequency(const double couplingFrequency)
+void NoseHooverThermostat::setCouplingFrequency(double couplingFrequency)
 {
     _couplingFrequency = couplingFrequency;
 }

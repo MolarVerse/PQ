@@ -41,14 +41,20 @@ namespace input
        public:
         explicit CoulombLongRangeInputParser(engine::Engine &);
 
-        void parseCoulombLongRange(const std::vector<std::string> &, size_t);
-
-        void parseReactionFieldEpsilon(
+        static void parseCoulombLongRange(
             const std::vector<std::string> &,
             size_t
         );
 
-        void parseWolfParameter(const std::vector<std::string> &, size_t);
+        static void parseReactionFieldEpsilon(
+            const std::vector<std::string> &,
+            size_t
+        );
+
+        static void parseWolfParameter(
+            const std::vector<std::string> &,
+            size_t
+        );
     };
 
 }   // namespace input

@@ -59,6 +59,202 @@ using namespace customException;
 using namespace physicalData;
 using namespace defaults;
 
+namespace
+{
+    /**
+     * @brief write the hessian matrix to a file
+     *
+     * @param hessian
+     */
+    [[nodiscard]]
+    std::shared_ptr<opt::HessianBuilder> setupHessianBuilder()
+    {
+        return makeHessianBuilder(
+            HessianSettings::getBuilder(),
+            HessianSettings::getDisplacement()
+        );
+    }
+
+    /**
+     * @brief setup the learning rate strategy based on user input
+     *
+     * @return std::shared_ptr<LearningRateStrategy>
+     */
+    [[nodiscard]]
+    std::shared_ptr<LearningRateStrategy> setupLearningRateStrategy()
+    {
+        const auto alpha0     = OptimizerSettings::getInitialLearningRate();
+        const auto lrStrategy = OptimizerSettings::getLearningRateStrategy();
+
+        OptimizerSettings::validateLearningRateStrategy();
+
+        switch (lrStrategy)
+        {
+            using enum LREnum;
+
+            case CONSTANT: return std::make_shared<ConstantLRStrategy>(alpha0);
+
+            case CONSTANT_DECAY:
+            {
+                const auto alphaFreq =
+                    OptimizerSettings::getLRUpdateFrequency();
+
+                return std::make_shared<ConstantDecayLRStrategy>(
+                    alpha0,
+                    OptimizerSettings::getLearningRateDecay().value(),
+                    alphaFreq
+                );
+            }
+
+            case EXPONENTIAL_DECAY:
+            {
+                const auto alphaFreq =
+                    OptimizerSettings::getLRUpdateFrequency();
+
+                return std::make_shared<ExpDecayLR>(
+                    alpha0,
+                    OptimizerSettings::getLearningRateDecay().value(),
+                    alphaFreq
+                );
+            }
+
+            case LINESEARCH_WOLFE:
+            case NONE: break;
+        }
+
+        throw UserInputException(
+            "In order to run the optimizer, you need to specify a "
+            "learning rate strategy."
+        );
+    }
+
+    /**
+     * @brief setup the min and max learning rate for the learning rate strategy
+     *
+     * @param learningRate
+     */
+    void setupMinMaxLearningRate(
+        std::shared_ptr<LearningRateStrategy> &learningRate
+    )
+    {
+        const auto minLR = OptimizerSettings::getMinLearningRate();
+        const auto maxLR = OptimizerSettings::getMaxLearningRate();
+
+        OptimizerSettings::validateLearningRateBounds();
+
+        learningRate->setMinLearningRate(minLR);
+        learningRate->setMaxLearningRate(maxLR);
+    }
+
+    /**
+     * @brief setup the convergence criteria for the optimizer
+     *
+     * @param optimizer
+     */
+    void setupConvergence(std::shared_ptr<opt::Optimizer> &optimizer)
+    {
+        const auto strategyOptional = ConvSettings::getEnConvStrategy();
+        const auto defaultStrategy =
+            ConvSettings::getDefaultEnergyConvStrategy();
+        const auto energyStrategy = strategyOptional.value_or(defaultStrategy);
+
+        const auto useEnergyOptional   = ConvSettings::getUseEnergyConv();
+        const auto useMaxForceOptional = ConvSettings::getUseMaxForceConv();
+        const auto useRMSForceOptional = ConvSettings::getUseRMSForceConv();
+
+        const auto energyOptional    = ConvSettings::getEnergyConv();
+        const auto absEnergyOptional = ConvSettings::getAbsEnergyConv();
+        const auto relEnergyOptional = ConvSettings::getRelEnergyConv();
+        const auto forceOptional     = ConvSettings::getForceConv();
+        const auto maxForceOptional  = ConvSettings::getMaxForceConv();
+        const auto rmsForceOptional  = ConvSettings::getRMSForceConv();
+
+        auto relEnergy = energyOptional.value_or(REL_ENERGY_CONV_DEFAULT);
+        auto absEnergy = energyOptional.value_or(ABS_ENERGY_CONV_DEFAULT);
+
+        relEnergy = relEnergyOptional.value_or(relEnergy);
+        absEnergy = absEnergyOptional.value_or(absEnergy);
+
+        auto maxForce = forceOptional.value_or(MAX_FORCE_CONV_DEFAULT);
+        auto rmsForce = forceOptional.value_or(RMS_FORCE_CONV_DEFAULT);
+
+        maxForce = maxForceOptional.value_or(maxForce);
+        rmsForce = rmsForceOptional.value_or(rmsForce);
+
+        const Convergence convergence(
+            useEnergyOptional,
+            useMaxForceOptional,
+            useRMSForceOptional,
+            relEnergy,
+            absEnergy,
+            maxForce,
+            rmsForce,
+            energyStrategy
+        );
+
+        optimizer->setConvergence(convergence);
+    }
+
+    /**
+     * @brief write the hessian matrix to the file
+     */
+    void writeHessian(const HessianMatrix &hessian)
+    {
+        std::ofstream file(HessianSettings::getHessianFile());
+
+        if (file.fail())
+            throw UserInputException(
+                "Could not open Hessian file for writing."
+            );
+
+        constexpr auto precision = 16;
+        file << std::scientific << std::setprecision(precision);
+
+        for (const auto &row : hessian)
+        {
+            for (size_t col = 0; col < row.size(); ++col)
+            {
+                if (col != 0)
+                    file << ' ';
+
+                file << row[col];
+            }
+
+            file << '\n';
+        }
+    }
+
+    /**
+     * @brief write the hessian info file
+     *
+     * @param hessian
+     */
+    void writeHessianInfo(const HessianMatrix &hessian)
+    {
+        std::ofstream file(HessianSettings::getHessianInfoFile());
+
+        if (file.fail())
+            throw UserInputException(
+                "Could not open Hessian info file for writing."
+            );
+
+        file << "format = pq-hessian-info-v1\n";
+        file << "hessian_file = " << HessianSettings::getHessianFile() << '\n';
+        file << "hessian_builder = " << string(HessianSettings::getBuilder())
+             << '\n';
+        file << "optimize_before_hessian = "
+             << (HessianSettings::optimizeBeforeHessian() ? "true" : "false")
+             << '\n';
+        file << "hessian_displacement = " << HessianSettings::getDisplacement()
+             << '\n';
+        file << "hessian_definition = -dF_i/dx_j\n";
+        file << "hessian_unit = kcal_mol-1_angstrom-2\n";
+        file << "rows = " << hessian.size() << '\n';
+        file << "columns = " << (hessian.empty() ? 0 : hessian[0].size())
+             << '\n';
+    }
+}   // namespace
+
 void HessianEngine::run()
 {
     auto evaluator = setupEvaluator();
@@ -111,14 +307,6 @@ std::shared_ptr<Evaluator> HessianEngine::setupEvaluator()
     evaluator->setPhysicalDataOld(getSharedPhysicalDataOld());
 
     return evaluator;
-}
-
-std::shared_ptr<opt::HessianBuilder> HessianEngine::setupHessianBuilder() const
-{
-    return makeHessianBuilder(
-        HessianSettings::getBuilder(),
-        HessianSettings::getDisplacement()
-    );
 }
 
 void HessianEngine::setupOptimization(
@@ -313,107 +501,6 @@ std::shared_ptr<Optimizer> HessianEngine::setupEmptyOptimizer()
     return optimizer;
 }
 
-std::shared_ptr<LearningRateStrategy> HessianEngine::setupLearningRateStrategy()
-{
-    const auto alpha0     = OptimizerSettings::getInitialLearningRate();
-    const auto lrStrategy = OptimizerSettings::getLearningRateStrategy();
-
-    OptimizerSettings::validateLearningRateStrategy();
-
-    switch (lrStrategy)
-    {
-        using enum LREnum;
-
-        case CONSTANT: return std::make_shared<ConstantLRStrategy>(alpha0);
-
-        case CONSTANT_DECAY:
-        {
-            const auto alphaFreq = OptimizerSettings::getLRUpdateFrequency();
-
-            return std::make_shared<ConstantDecayLRStrategy>(
-                alpha0,
-                OptimizerSettings::getLearningRateDecay().value(),
-                alphaFreq
-            );
-        }
-
-        case EXPONENTIAL_DECAY:
-        {
-            const auto alphaFreq = OptimizerSettings::getLRUpdateFrequency();
-
-            return std::make_shared<ExpDecayLR>(
-                alpha0,
-                OptimizerSettings::getLearningRateDecay().value(),
-                alphaFreq
-            );
-        }
-
-        case LINESEARCH_WOLFE:
-        case NONE: break;
-    }
-
-    throw UserInputException(
-        "In order to run the optimizer, you need to specify a "
-        "learning rate strategy."
-    );
-}
-
-void HessianEngine::setupConvergence(std::shared_ptr<opt::Optimizer> &optimizer)
-{
-    const auto strategyOptional = ConvSettings::getEnConvStrategy();
-    const auto defaultStrategy  = ConvSettings::getDefaultEnergyConvStrategy();
-    const auto energyStrategy   = strategyOptional.value_or(defaultStrategy);
-
-    const auto useEnergyOptional   = ConvSettings::getUseEnergyConv();
-    const auto useMaxForceOptional = ConvSettings::getUseMaxForceConv();
-    const auto useRMSForceOptional = ConvSettings::getUseRMSForceConv();
-
-    const auto energyOptional    = ConvSettings::getEnergyConv();
-    const auto absEnergyOptional = ConvSettings::getAbsEnergyConv();
-    const auto relEnergyOptional = ConvSettings::getRelEnergyConv();
-    const auto forceOptional     = ConvSettings::getForceConv();
-    const auto maxForceOptional  = ConvSettings::getMaxForceConv();
-    const auto rmsForceOptional  = ConvSettings::getRMSForceConv();
-
-    auto relEnergy = energyOptional.value_or(REL_ENERGY_CONV_DEFAULT);
-    auto absEnergy = energyOptional.value_or(ABS_ENERGY_CONV_DEFAULT);
-
-    relEnergy = relEnergyOptional.value_or(relEnergy);
-    absEnergy = absEnergyOptional.value_or(absEnergy);
-
-    auto maxForce = forceOptional.value_or(MAX_FORCE_CONV_DEFAULT);
-    auto rmsForce = forceOptional.value_or(RMS_FORCE_CONV_DEFAULT);
-
-    maxForce = maxForceOptional.value_or(maxForce);
-    rmsForce = rmsForceOptional.value_or(rmsForce);
-
-    const Convergence convergence(
-        useEnergyOptional,
-        useMaxForceOptional,
-        useRMSForceOptional,
-        relEnergy,
-        absEnergy,
-        maxForce,
-        rmsForce,
-        energyStrategy
-    );
-
-    optimizer->setConvergence(convergence);
-}
-
-void HessianEngine::setupMinMaxLearningRate(
-    std::shared_ptr<LearningRateStrategy> &learningRate
-)
-{
-    const auto minLR = OptimizerSettings::getMinLearningRate();
-    const auto maxLR = OptimizerSettings::getMaxLearningRate();
-
-    OptimizerSettings::validateLearningRateBounds();
-
-    learningRate->setMinLearningRate(minLR);
-    learningRate->setMaxLearningRate(maxLR);
-}
-
 void HessianEngine::writeOptimizationSetupInfo()
 {
     _engineOutput.getLogOutput().writeSetupInfo(
@@ -435,54 +522,6 @@ void HessianEngine::writeOptimizationSetupInfo()
         )
     );
     _engineOutput.getLogOutput().writeEmptyLine();
-}
-
-void HessianEngine::writeHessian(const HessianMatrix &hessian) const
-{
-    std::ofstream file(HessianSettings::getHessianFile());
-
-    if (file.fail())
-        throw UserInputException("Could not open Hessian file for writing.");
-
-    constexpr auto precision = 16;
-    file << std::scientific << std::setprecision(precision);
-
-    for (const auto &row : hessian)
-    {
-        for (size_t col = 0; col < row.size(); ++col)
-        {
-            if (col != 0)
-                file << ' ';
-
-            file << row[col];
-        }
-
-        file << '\n';
-    }
-}
-
-void HessianEngine::writeHessianInfo(const HessianMatrix &hessian) const
-{
-    std::ofstream file(HessianSettings::getHessianInfoFile());
-
-    if (file.fail())
-        throw UserInputException(
-            "Could not open Hessian info file for writing."
-        );
-
-    file << "format = pq-hessian-info-v1\n";
-    file << "hessian_file = " << HessianSettings::getHessianFile() << '\n';
-    file << "hessian_builder = " << string(HessianSettings::getBuilder())
-         << '\n';
-    file << "optimize_before_hessian = "
-         << (HessianSettings::optimizeBeforeHessian() ? "true" : "false")
-         << '\n';
-    file << "hessian_displacement = " << HessianSettings::getDisplacement()
-         << '\n';
-    file << "hessian_definition = -dF_i/dx_j\n";
-    file << "hessian_unit = kcal_mol-1_angstrom-2\n";
-    file << "rows = " << hessian.size() << '\n';
-    file << "columns = " << (hessian.empty() ? 0 : hessian[0].size()) << '\n';
 }
 
 void HessianEngine::addTimers()

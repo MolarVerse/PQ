@@ -70,7 +70,7 @@ namespace
         try
         {
             auto positions_array =
-                array_d(static_cast<ssize_t>(nAtoms) * 3, &pos[0]);
+                array_d(static_cast<ssize_t>(nAtoms) * 3, pos.data());
 
             const auto positions_array_reshaped = pybind11::array(
                 pybind11::buffer_info(
@@ -120,7 +120,7 @@ namespace
 
         try
         {
-            const auto box_array_ = array_d(6, &box_array[0]);
+            const auto box_array_ = array_d(6, box_array.data());
 
             return box_array_;
         }
@@ -184,7 +184,7 @@ namespace
         try
         {
             const auto atomicNumbers_ =
-                array_i(static_cast<ssize_t>(nAtoms), &atomicNumbers[0]);
+                array_i(static_cast<ssize_t>(nAtoms), atomicNumbers.data());
 
             return atomicNumbers_;
         }

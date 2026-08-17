@@ -46,8 +46,8 @@ using namespace utilities;
  * @param tau
  */
 VelocityRescalingThermostat::VelocityRescalingThermostat(
-    const double targetTemp,
-    const double tau
+    double targetTemp,
+    double tau
 )
     : Thermostat(targetTemp), _tau(tau)
 {
@@ -158,7 +158,7 @@ double VelocityRescalingThermostat::getTau() const { return _tau; }
  *
  * @param tau
  */
-void VelocityRescalingThermostat::setTau(const double tau) { _tau = tau; }
+void VelocityRescalingThermostat::setTau(double tau) { _tau = tau; }
 /**
  * @brief Get thermostat type
  *

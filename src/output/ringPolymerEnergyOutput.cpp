@@ -32,6 +32,46 @@
 using namespace output;
 using namespace physicalData;
 
+namespace
+{
+    /**
+     * @brief sum of all ring polymer spring energies
+     *
+     * @param dataVector
+     *
+     * @return sum of all ring polymer spring energies
+     */
+    double sumOfRingPolymerEnergies(const std::vector<PhysicalData> &dataVector)
+    {
+        return std::accumulate(
+            dataVector.begin(),
+            dataVector.end(),
+            0.0,
+            [](const auto &sum, const auto &data)
+            { return sum + data.getRingPolymerEnergy(); }
+        );
+    }
+
+    /**
+     * @brief maximum ring polymer spring energy
+     *
+     * @param dataVector
+     *
+     * @return maximum ring polymer spring energy
+     */
+    double maxRingPolymerEnergy(const std::vector<PhysicalData> &dataVector)
+    {
+        return std::ranges::max_element(
+                   dataVector,
+                   [](const auto &a, const auto &b)
+                   {
+                       return a.getRingPolymerEnergy() <
+                              b.getRingPolymerEnergy();
+                   }
+        )->getRingPolymerEnergy();
+    }
+}   // namespace
+
 /**
  * @brief write the energy output of each ring polymer
  *
@@ -70,42 +110,4 @@ void RingPolymerEnergyOutput::write(
     _fp << '\n' << std::flush;
 
     _fp << std::flush;
-}
-
-/**
- * @brief sum of all ring polymer spring energies
- *
- * @param dataVector
- *
- * @return sum of all ring polymer spring energies
- */
-double RingPolymerEnergyOutput::sumOfRingPolymerEnergies(
-    const std::vector<PhysicalData> &dataVector
-)
-{
-    return std::accumulate(
-        dataVector.begin(),
-        dataVector.end(),
-        0.0,
-        [](const auto &sum, const auto &data)
-        { return sum + data.getRingPolymerEnergy(); }
-    );
-}
-
-/**
- * @brief maximum ring polymer spring energy
- *
- * @param dataVector
- *
- * @return maximum ring polymer spring energy
- */
-double RingPolymerEnergyOutput::maxRingPolymerEnergy(
-    const std::vector<PhysicalData> &dataVector
-)
-{
-    return std::ranges::max_element(
-               dataVector,
-               [](const auto &a, const auto &b)
-               { return a.getRingPolymerEnergy() < b.getRingPolymerEnergy(); }
-    )->getRingPolymerEnergy();
 }

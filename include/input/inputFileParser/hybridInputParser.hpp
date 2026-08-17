@@ -41,23 +41,41 @@ namespace input
        public:
         explicit HybridInputParser(engine::Engine &);
 
-        void parseInnerRegionCenter(const std::vector<std::string> &, size_t);
-        void parseForcedCoreList(const std::vector<std::string> &, size_t);
-        void parseForcedLayerList(const std::vector<std::string> &, size_t);
-        void parseForcedOuterList(const std::vector<std::string> &, size_t);
-        void parseUseQMCharges(const std::vector<std::string> &, size_t);
-        void parseCoreRadius(const std::vector<std::string> &, size_t);
-        void parseLayerRadius(const std::vector<std::string> &, size_t);
-        void parseSmoothingRegionThickness(
+        static void parseInnerRegionCenter(
             const std::vector<std::string> &,
             size_t
         );
-        void parsePointChargeThickness(
+        static void parseForcedCoreList(
             const std::vector<std::string> &,
             size_t
         );
-        void parseSmoothingMethod(const std::vector<std::string> &, size_t);
-        void parseQMForceDistribution(const std::vector<std::string> &, size_t);
+        static void parseForcedLayerList(
+            const std::vector<std::string> &,
+            size_t
+        );
+        static void parseForcedOuterList(
+            const std::vector<std::string> &,
+            size_t
+        );
+        static void parseUseQMCharges(const std::vector<std::string> &, size_t);
+        static void parseCoreRadius(const std::vector<std::string> &, size_t);
+        static void parseLayerRadius(const std::vector<std::string> &, size_t);
+        static void parseSmoothingRegionThickness(
+            const std::vector<std::string> &,
+            size_t
+        );
+        static void parsePointChargeThickness(
+            const std::vector<std::string> &,
+            size_t
+        );
+        static void parseSmoothingMethod(
+            const std::vector<std::string> &,
+            size_t
+        );
+        static void parseQMForceDistribution(
+            const std::vector<std::string> &,
+            size_t
+        );
 
         std::vector<int> parseSelection(
             const std::string &,

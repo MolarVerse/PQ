@@ -56,11 +56,11 @@ namespace integrator
         virtual void firstStep(simulationBox::SimulationBox &)  = 0;
         virtual void secondStep(simulationBox::SimulationBox &) = 0;
 
-        void integrateVelocities(simulationBox::Atom *) const;
-        void integratePositions(
+        static void integrateVelocities(simulationBox::Atom *);
+        static void integratePositions(
             simulationBox::Atom *,
             const simulationBox::SimulationBox &
-        ) const;
+        );
 
         /********************************
          * standard getters and setters *

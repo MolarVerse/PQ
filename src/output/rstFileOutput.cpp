@@ -37,6 +37,36 @@ using namespace simulationBox;
 using namespace thermostat;
 using namespace settings;
 
+namespace
+{
+    /**
+     * @brief write Nose-Hoover thermostat chi/zeta info to the restart file
+     *
+     * @param thermostat
+     * @param buffer
+     */
+    void writeNHChain(const Thermostat &thermostat, std::ostringstream &buffer)
+    {
+        const auto &nh = dynamic_cast<const NoseHooverThermostat &>(thermostat);
+
+        const auto &chi  = nh.getChi();
+        const auto &zeta = nh.getZeta();
+
+        for (size_t i = 0; i < chi.size() - 1; ++i)
+        {
+            buffer << "chi "
+                   << std::format(
+                          "{:2d}\t{:10.5e}\t{:10.5e}",
+                          i + 1,
+                          chi[i],
+                          zeta[i]
+                      )
+                   << '\n';
+        }
+    }
+
+}   // namespace
+
 /**
  * @brief Write the restart file
  *
@@ -98,29 +128,4 @@ void RstFileOutput::write(
     // Write the buffer to the file
     _fp << buffer.str();
     _fp << std::flush;
-}
-
-/**
- * @brief write Nose-Hoover thermostat chi/zeta info to the restart file
- *
- * @param thermostat
- * @param buffer
- */
-void RstFileOutput::writeNHChain(
-    const Thermostat   &thermostat,
-    std::ostringstream &buffer
-)
-{
-    const auto &nh = dynamic_cast<const NoseHooverThermostat &>(thermostat);
-
-    const auto &chi  = nh.getChi();
-    const auto &zeta = nh.getZeta();
-
-    for (size_t i = 0; i < chi.size() - 1; ++i)
-    {
-        buffer
-            << "chi "
-            << std::format("{:2d}\t{:10.5e}\t{:10.5e}", i + 1, chi[i], zeta[i])
-            << '\n';
-    }
 }

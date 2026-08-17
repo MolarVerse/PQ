@@ -39,21 +39,33 @@ namespace input
        public:
         explicit OptInputParser(engine::Engine &);
 
-        void parseOptimizer(const std::vector<std::string> &, size_t);
+        static void parseOptimizer(const std::vector<std::string> &, size_t);
 
-        void parseLearningRateStrategy(
+        static void parseLearningRateStrategy(
             const std::vector<std::string> &,
             size_t
         );
-        void parseInitialLearningRate(const std::vector<std::string> &, size_t);
-        void parseLearningRateUpdateFreq(
+        static void parseInitialLearningRate(
             const std::vector<std::string> &,
             size_t
         );
-        void parseMinLearningRate(const std::vector<std::string> &, size_t);
-        void parseMaxLearningRate(const std::vector<std::string> &, size_t);
+        static void parseLearningRateUpdateFreq(
+            const std::vector<std::string> &,
+            size_t
+        );
+        static void parseMinLearningRate(
+            const std::vector<std::string> &,
+            size_t
+        );
+        static void parseMaxLearningRate(
+            const std::vector<std::string> &,
+            size_t
+        );
 
-        void parseLearningRateDecay(const std::vector<std::string> &, size_t);
+        static void parseLearningRateDecay(
+            const std::vector<std::string> &,
+            size_t
+        );
     };
 
 }   // namespace input

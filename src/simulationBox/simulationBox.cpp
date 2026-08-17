@@ -64,7 +64,7 @@ void SimulationBox::copy(const SimulationBox& toCopy)
 
     auto fillAtomsInMolecules = [this](size_t runningIndex, Molecule& molecule)
     {
-        const size_t numberOfAtoms = molecule.getNumberOfAtoms();
+        const auto numberOfAtoms = molecule.getNumberOfAtoms();
         molecule.getAtoms().clear();
 
         for (size_t i = 0; i < numberOfAtoms; ++i)
@@ -97,7 +97,7 @@ std::shared_ptr<SimulationBox> SimulationBox::clone() const
  * @param moleculeType
  * @return std::optional<Molecule &>
  */
-std::optional<Molecule> SimulationBox::findMolecule(const size_t moleculeType)
+std::optional<Molecule> SimulationBox::findMolecule(size_t moleculeType)
 {
     auto isMoleculeType = [moleculeType](const Molecule& mol)
     { return mol.getMoltype() == moleculeType; };
@@ -289,7 +289,7 @@ void SimulationBox::setupForcedOuterMolecules(
  *
  * @throw RstFileException if molecule type not found
  */
-MoleculeType& SimulationBox::findMoleculeType(const size_t moleculeType)
+MoleculeType& SimulationBox::findMoleculeType(size_t moleculeType)
 {
     auto isMoleculeType = [moleculeType](const auto& mol)
     { return mol.getMoltype() == moleculeType; };
@@ -311,7 +311,7 @@ MoleculeType& SimulationBox::findMoleculeType(const size_t moleculeType)
  * @return true
  * @return false
  */
-bool SimulationBox::moleculeTypeExists(const size_t moleculeType) const
+bool SimulationBox::moleculeTypeExists(size_t moleculeType) const
 {
     auto isMoleculeType = [moleculeType](const auto& mol)
     { return mol.getMoltype() == moleculeType; };
@@ -355,7 +355,7 @@ std::optional<size_t> SimulationBox::findMoleculeTypeByString(
  * @return pair<Molecule *, size_t>
  */
 std::pair<Molecule*, size_t> SimulationBox::findMoleculeByAtomIndex(
-    const size_t atomIndex
+    size_t atomIndex
 )
 {
     size_t sum = 0;
@@ -488,7 +488,7 @@ void SimulationBox::setupExternalToInternalGlobalVdwTypesMap()
      ***********************************************************************/
 
     // c++23 with std::ranges::views::enumerate
-    const size_t size = _externalGlobalVdwTypes.size();
+    const auto size = _externalGlobalVdwTypes.size();
     for (size_t i = 0; i < size; ++i)
     {
         const auto type = _externalGlobalVdwTypes[i];
@@ -709,7 +709,7 @@ double SimulationBox::calculateTemperature()
  * the minimal box dimension
  */
 void SimulationBox::checkCoulRadiusCutOff(
-    const ExceptionType exceptionType
+    const ExceptionType& exceptionType
 ) const
 {
     const auto coulRadiusCutOff = PotentialSettings::getCoulombRadiusCutOff();
@@ -761,7 +761,7 @@ int SimulationBox::calcActiveMolCharge() const
  * @brief initialize positions of all atoms
  *
  */
-void SimulationBox::initPositions(const double displacement)
+void SimulationBox::initPositions(double displacement)
 {
     RandomNumberGenerator randomNumberGenerator{};
 

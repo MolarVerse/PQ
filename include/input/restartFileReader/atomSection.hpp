@@ -54,24 +54,10 @@ namespace input::restartFile
     class AtomSection : public RestartFileSection
     {
        private:
-        void processQMAtomLine(
-            std::vector<std::string> &lineElements,
-            simulationBox::SimulationBox &
-        );
-        void processAtomLine(
-            std::vector<std::string> &,
-            simulationBox::SimulationBox &,
-            simulationBox::Molecule &
-        ) const;
-
         void checkAtomLine(
             std::vector<std::string> &lineElements,
             const simulationBox::Molecule &
         );
-        void setAtomPropertyVectors(
-            std::vector<std::string> &,
-            std::shared_ptr<simulationBox::Atom> &
-        ) const;
 
 #ifdef WITH_TESTS
         friend class ::TestAtomSection_testProcessAtomLine_Test;

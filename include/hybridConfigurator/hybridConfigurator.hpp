@@ -46,16 +46,16 @@ namespace configurator
         void calculateInnerRegionCenter(simulationBox::SimulationBox &);
         void shiftAtomsToInnerRegionCenter(simulationBox::SimulationBox &);
         void shiftAtomsBackToInitialPositions(simulationBox::SimulationBox &);
-        void assignHybridZones(simulationBox::SimulationBox &);
-        void activateMolecules(simulationBox::SimulationBox &);
-        void deactivateOuterMolecules(simulationBox::SimulationBox &);
-        void activateSmoothingMolecules(simulationBox::SimulationBox &);
-        void deactivateSmoothingMolecules(
+        static void assignHybridZones(simulationBox::SimulationBox &);
+        static void activateMolecules(simulationBox::SimulationBox &);
+        static void deactivateOuterMolecules(simulationBox::SimulationBox &);
+        static void activateSmoothingMolecules(simulationBox::SimulationBox &);
+        static void deactivateSmoothingMolecules(
             const std::unordered_set<size_t> &inactiveMolecules,
             simulationBox::SimulationBox &
         );
-        void toggleMoleculeActivation(simulationBox::SimulationBox &);
-        void calculateSmoothingFactors(simulationBox::SimulationBox &);
+        static void toggleMoleculeActivation(simulationBox::SimulationBox &);
+        static void calculateSmoothingFactors(simulationBox::SimulationBox &);
 
         /********************************
          * standard getters and setters *

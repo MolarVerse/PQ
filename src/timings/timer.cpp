@@ -96,7 +96,7 @@ void Timer::startTimingsSection()
  * @brief starts a new timer
  *
  */
-void Timer::startTimingsSection(const std::string_view name)
+void Timer::startTimingsSection(std::string_view name)
 {
     const auto index = findTimingsSectionIndex(name);
 
@@ -129,7 +129,7 @@ void Timer::stopTimingsSection()
  * @brief stops a timer
  *
  */
-void Timer::stopTimingsSection(const std::string_view name)
+void Timer::stopTimingsSection(std::string_view name)
 {
     const auto index = findTimingsSectionIndex(name);
 
@@ -143,7 +143,7 @@ void Timer::stopTimingsSection(const std::string_view name)
  * @brief find timeManager by name
  *
  */
-size_t Timer::findTimingsSectionIndex(const std::string_view name) const
+size_t Timer::findTimingsSectionIndex(std::string_view name) const
 {
     for (size_t i = 0; i < _timingDetails.size(); ++i)
         if (_timingDetails[i].getName() == name)
@@ -184,7 +184,7 @@ void Timer::setTimerId(const TimerId id) { _id = id; }
  * @brief get TimingsSection by name
  *
  */
-TimingsSection Timer::getTimingsSection(const std::string_view name) const
+TimingsSection Timer::getTimingsSection(std::string_view name) const
 {
     const auto index = findTimingsSectionIndex(name);
 
@@ -214,7 +214,7 @@ Timer Timer::getTimer() const { return *this; }
  * @param name
  * @return TimingsSectionGuard
  */
-TimingsSectionGuard Timer::scoped(const std::string_view name)
+TimingsSectionGuard Timer::scoped(std::string_view name)
 {
     return TimingsSectionGuard(*this, name);
 }

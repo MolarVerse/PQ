@@ -58,10 +58,10 @@ namespace setup
         void shakeSetupForRigidWater(const RigidWaterGeometry &geometry);
 
         [[nodiscard]]
-        std::optional<RigidWaterGeometry> getRigidWaterGeometry(
+        static std::optional<RigidWaterGeometry> getRigidWaterGeometry(
             settings::WaterIntraModel intraModel
         );
-        void addReferences();
+        static void addReferences();
 
        public:
         explicit WaterModelSetup(engine::MDEngine &engine);

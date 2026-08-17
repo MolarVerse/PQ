@@ -48,13 +48,6 @@ namespace output
         using Output::Output;
 
         void write(size_t step, const std::vector<physicalData::PhysicalData>&);
-
-        double sumOfRingPolymerEnergies(
-            const std::vector<physicalData::PhysicalData>&
-        );
-        double maxRingPolymerEnergy(
-            const std::vector<physicalData::PhysicalData>&
-        );
     };
 
 }   // namespace output

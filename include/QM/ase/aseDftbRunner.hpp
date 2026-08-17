@@ -50,7 +50,7 @@ namespace QM
         /***************************
          * standard getter methods *
          ***************************/
-        const std::unordered_map<std::string, double> getHubbDerivDict() const;
+        const std::unordered_map<std::string, double> &getHubbDerivDict() const;
 
         /***************************
          * standard setter methods *

@@ -255,7 +255,7 @@ void ResetKinetics::resetForces(size_t step, SimulationBox &simBox)
  *
  * @param temperature
  */
-void ResetKinetics::setTemperature(const double temperature)
+void ResetKinetics::setTemperature(double temperature)
 {
     _temperature = temperature;
 }

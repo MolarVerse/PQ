@@ -44,7 +44,7 @@ namespace waterModel
         simulationBox::Atom                                &atom1,
         simulationBox::Atom                                &atom2,
         const std::shared_ptr<potential::CoulombPotential> &coulombPotential,
-        const double                                        rCutSquared,
+        double                                              rCutSquared,
         const simulationBox::SimulationBox                 &simBox,
         const potential::NonCoulombPair                    &nonCoulPair,
         double                                             &coulombEnergy,
@@ -60,11 +60,11 @@ namespace waterModel
 
         dxyz += txyz;
 
-        const double distanceSquared = normSquared(dxyz);
+        const auto distanceSquared = normSquared(dxyz);
 
         if (distanceSquared < rCutSquared)
         {
-            const double distance = ::sqrt(distanceSquared);
+            const auto distance = ::sqrt(distanceSquared);
 
             const auto charge_i = getPartialCharge<ChargeTag1>(atom1);
             const auto charge_j = getPartialCharge<ChargeTag2>(atom2);
@@ -105,7 +105,7 @@ namespace waterModel
         simulationBox::Atom                                &atom1,
         simulationBox::Atom                                &atom2,
         const std::shared_ptr<potential::CoulombPotential> &coulombPotential,
-        const double                                        rCutSquared,
+        double                                              rCutSquared,
         const simulationBox::SimulationBox                 &simBox,
         double                                             &coulombEnergy
     )
@@ -119,7 +119,7 @@ namespace waterModel
 
         dxyz += txyz;
 
-        const double distanceSquared = normSquared(dxyz);
+        const auto distanceSquared = normSquared(dxyz);
 
         if (distanceSquared < rCutSquared)
         {
@@ -156,7 +156,7 @@ namespace waterModel
         simulationBox::Atom                                &atom1,
         simulationBox::Atom                                &atom2,
         const std::shared_ptr<potential::CoulombPotential> &coulombPotential,
-        const double                                        rCutSquared,
+        double                                              rCutSquared,
         const simulationBox::SimulationBox                 &simBox,
         const potential::NonCoulombPair                    &nonCoulPair,
         double                                             &coulombEnergy,
@@ -172,11 +172,11 @@ namespace waterModel
 
         dxyz += txyz;
 
-        const double distanceSquared = normSquared(dxyz);
+        const auto distanceSquared = normSquared(dxyz);
 
         if (distanceSquared < rCutSquared)
         {
-            const double distance = ::sqrt(distanceSquared);
+            const auto distance = ::sqrt(distanceSquared);
 
             const auto charge_i = getPartialCharge<ChargeTag1>(atom1);
             const auto charge_j = getPartialCharge<ChargeTag2>(atom2);

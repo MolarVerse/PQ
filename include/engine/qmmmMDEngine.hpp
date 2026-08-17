@@ -64,11 +64,6 @@ namespace engine
             const std::vector<std::reference_wrapper<simulationBox::Molecule>>
                 &recipientMolecules
         );
-        std::vector<double> getDistanceWeights(
-            const simulationBox::Molecule &smoothingMol,
-            const std::vector<std::reference_wrapper<simulationBox::Molecule>>
-                &recipientMolecules
-        );
     };
 
 }   // namespace engine

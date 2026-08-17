@@ -45,7 +45,7 @@ namespace thermostat
         double _sigma    = 0.0;
 
        public:
-        explicit LangevinThermostat(const double, const double);
+        explicit LangevinThermostat(double, double);
         LangevinThermostat()           = default;
         ~LangevinThermostat() override = default;
 
@@ -56,7 +56,7 @@ namespace thermostat
         LangevinThermostat(LangevinThermostat &&) noexcept            = delete;
         LangevinThermostat &operator=(LangevinThermostat &&) noexcept = delete;
 
-        void calculateSigma(const double, const double);
+        void calculateSigma(double, double);
 
         void applyLangevin(simulationBox::SimulationBox &);
 
@@ -74,10 +74,10 @@ namespace thermostat
          * standard setter methods *
          ***************************/
 
-        void setTargetTemperature(const double targetTemperature) override;
+        void setTargetTemperature(double targetTemperature) override;
 
-        void setFriction(const double friction);
-        void setSigma(const double sigma);
+        void setFriction(double friction);
+        void setSigma(double sigma);
 
         /***************************
          * standard getter methods *

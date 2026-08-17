@@ -241,7 +241,7 @@ void QMSetup::setupQMScript() const
  * @brief set coulomb radius cutoff to 0.0 for QM-MD, QM-RPMD
  *
  */
-void QMSetup::setupCoulombRadiusCutOff() const
+void QMSetup::setupCoulombRadiusCutOff()
 {
     using enum JobType;
 

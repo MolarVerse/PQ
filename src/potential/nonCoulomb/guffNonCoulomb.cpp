@@ -148,7 +148,7 @@ std::vector<std::vector<std::vector<std::vector<std::shared_ptr<NonCoulombPair>>
  * @param indices
  * @return size_t
  */
-size_t GuffNonCoulomb::getMolType1(const std::vector<size_t> &indices) const
+size_t GuffNonCoulomb::getMolType1(const std::vector<size_t> &indices)
 {
     return indices[0];
 }
@@ -159,7 +159,7 @@ size_t GuffNonCoulomb::getMolType1(const std::vector<size_t> &indices) const
  * @param indices
  * @return size_t
  */
-size_t GuffNonCoulomb::getMolType2(const std::vector<size_t> &indices) const
+size_t GuffNonCoulomb::getMolType2(const std::vector<size_t> &indices)
 {
     return indices[1];
 }
@@ -170,7 +170,7 @@ size_t GuffNonCoulomb::getMolType2(const std::vector<size_t> &indices) const
  * @param indices
  * @return size_t
  */
-size_t GuffNonCoulomb::getAtomType1(const std::vector<size_t> &indices) const
+size_t GuffNonCoulomb::getAtomType1(const std::vector<size_t> &indices)
 {
     return indices[2];
 }
@@ -181,7 +181,7 @@ size_t GuffNonCoulomb::getAtomType1(const std::vector<size_t> &indices) const
  * @param indices
  * @return size_t
  */
-size_t GuffNonCoulomb::getAtomType2(const std::vector<size_t> &indices) const
+size_t GuffNonCoulomb::getAtomType2(const std::vector<size_t> &indices)
 {
     return indices[3];
 }

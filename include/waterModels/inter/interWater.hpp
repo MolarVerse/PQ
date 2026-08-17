@@ -106,7 +106,7 @@ namespace waterModel
             simulationBox::Atom &atom2,
             const std::shared_ptr<potential::CoulombPotential>
                                                &coulombPotential,
-            const double                        rCutSquared,
+            double                              rCutSquared,
             const simulationBox::SimulationBox &simBox,
             const potential::NonCoulombPair    &nonCoulPair,
             double                             &coulombEnergy,
@@ -119,7 +119,7 @@ namespace waterModel
             simulationBox::Atom &atom2,
             const std::shared_ptr<potential::CoulombPotential>
                                                &coulombPotential,
-            const double                        rCutSquared,
+            double                              rCutSquared,
             const simulationBox::SimulationBox &simBox,
             double                             &coulombEnergy
         );
@@ -130,7 +130,7 @@ namespace waterModel
             simulationBox::Atom &atom2,
             const std::shared_ptr<potential::CoulombPotential>
                                                &coulombPotential,
-            const double                        rCutSquared,
+            double                              rCutSquared,
             const simulationBox::SimulationBox &simBox,
             const potential::NonCoulombPair    &nonCoulPair,
             double                             &coulombEnergy,

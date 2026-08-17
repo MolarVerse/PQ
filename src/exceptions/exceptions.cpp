@@ -24,7 +24,26 @@
 
 #include <iostream>
 
+#include "color.hpp"
+
 using namespace customException;
+
+namespace
+{
+    /**
+     * @brief Prints the exceptionMsg type in color.
+     *
+     * @param color
+     * @param exceptionMsg
+     */
+    void colorfulOutput(Color::Code color, std::string_view exceptionMsg)
+    {
+        const Color::Modifier modifier(color);
+        const Color::Modifier def{Color::Code::FG_DEFAULT};
+
+        std::cout << modifier << exceptionMsg << def << '\n' << std::flush;
+    }
+}   // namespace
 
 /**
  * @brief Construct a new Custom Exception:: Custom Exception object
@@ -78,23 +97,6 @@ const std::string &CustomException::getMessage() const noexcept
 std::optional<size_t> CustomException::getLineNumber() const noexcept
 {
     return _lineNumber;
-}
-
-/**
- * @brief Prints the exceptionMsg type in color.
- *
- * @param color
- * @param exceptionMsg
- */
-void CustomException::colorfulOutput(
-    Color::Code      color,
-    std::string_view exceptionMsg
-) const
-{
-    const Color::Modifier modifier(color);
-    const Color::Modifier def{Color::Code::FG_DEFAULT};
-
-    std::cout << modifier << exceptionMsg << def << '\n' << std::flush;
 }
 
 /**

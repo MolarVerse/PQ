@@ -28,7 +28,6 @@
 #include <utility>
 
 #include "constraintSettings.hpp"   // for ConstraintSettings
-#include "constraints.hpp"          // for Constraints
 #include "constraints.hpp"
 #include "engine.hpp"       // for Engine
 #include "exceptions.hpp"   // for InputFileException

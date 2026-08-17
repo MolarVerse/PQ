@@ -46,6 +46,142 @@ using namespace utilities;
 
 using std::make_unique;
 
+namespace
+{
+    /**
+     * @brief sets the atom properties from the line elements
+     *
+     * @param lineElements
+     * @param atom
+     */
+    void setAtomPropertyVectors(
+        std::vector<std::string> &lineElements,
+        std::shared_ptr<Atom>    &atom
+    )
+    {
+        try
+        {
+            const auto x = stringToFiniteDouble(lineElements[3]);
+            const auto y = stringToFiniteDouble(lineElements[4]);
+            const auto z = stringToFiniteDouble(lineElements[5]);
+
+            atom->setPosition({x, y, z});
+
+            // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
+            if (lineElements.size() > 6)
+            {
+                const auto vx = stringToFiniteDouble(lineElements[6]);
+                const auto vy = stringToFiniteDouble(lineElements[7]);
+                const auto vz = stringToFiniteDouble(lineElements[8]);
+
+                atom->setVelocity({vx, vy, vz});
+            }
+
+            if (lineElements.size() > 9)
+            {
+                const auto fx = stringToFiniteDouble(lineElements[9]);
+                const auto fy = stringToFiniteDouble(lineElements[10]);
+                const auto fz = stringToFiniteDouble(lineElements[11]);
+
+                atom->setForce({fx, fy, fz});
+            }
+
+            if (lineElements.size() > 12)
+            {
+                const auto oldX = stringToFiniteDouble(lineElements[12]);
+                const auto oldY = stringToFiniteDouble(lineElements[13]);
+                const auto oldZ = stringToFiniteDouble(lineElements[14]);
+
+                atom->setPositionOld({oldX, oldY, oldZ});
+            }
+
+            if (lineElements.size() > 15)
+            {
+                const auto oldVx = stringToFiniteDouble(lineElements[15]);
+                const auto oldVy = stringToFiniteDouble(lineElements[16]);
+                const auto oldVz = stringToFiniteDouble(lineElements[17]);
+
+                atom->setVelocityOld({oldVx, oldVy, oldVz});
+            }
+
+            if (lineElements.size() > 18)
+            {
+                const auto oldFx = stringToFiniteDouble(lineElements[18]);
+                const auto oldFy = stringToFiniteDouble(lineElements[19]);
+                const auto oldFz = stringToFiniteDouble(lineElements[20]);
+
+                atom->setForceOld({oldFx, oldFy, oldFz});
+            }
+            // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
+        }
+        catch (const std::exception &e)
+        {
+            throw RstFileException(e.what());
+        }
+    }
+
+    /**
+     * @brief processes a line of the atom section of the rst file
+     *
+     * @details the line looks like this:
+     * atomTypeName randomEntry MolType x y z vx vy vz fx fy fz
+     *
+     * @note for backward compatibility the line can also look like this:
+     * atomTypeName randomEntry MolType x y z vx vy vz fx fy fz x_old y_old
+     * z_old vx_old vy_old vz_old fx_old fy_old fz_old but the old coordinates,
+     * velocities and forces are not used and also not read from the file
+     *
+     * @param lineElements
+     * @param simBox
+     * @param molecule
+     */
+    void processAtomLine(
+        std::vector<std::string> &lineElements,
+        SimulationBox            &simBox,
+        Molecule                 &molecule
+    )
+    {
+        auto atom = std::make_shared<Atom>();
+
+        atom->setAtomTypeName(lineElements[0]);
+
+        setAtomPropertyVectors(lineElements, atom);
+
+        simBox.addAtom(atom);
+        molecule.addAtom(atom);
+    }
+
+    /**
+     * @brief adds a single atom with moltype 0 to the simulation box
+     *
+     * @details for details how the line looks like see processAtomLine
+     *
+     * @param lineElements
+     * @param simBox
+     */
+    void processQMAtomLine(
+        std::vector<std::string> &lineElements,
+        SimulationBox            &simBox
+    )
+    {
+        auto       atom     = std::make_shared<Atom>();
+        const auto molecule = make_unique<Molecule>(0);
+
+        molecule->setName("QM");
+        molecule->setNumberOfAtoms(1);
+
+        atom->setAtomTypeName(lineElements[0]);
+        atom->setName(lineElements[0]);
+
+        setAtomPropertyVectors(lineElements, atom);
+
+        molecule->addAtom(atom);
+
+        simBox.addAtom(atom);
+        simBox.addMolecule(*molecule);
+    }
+}   // namespace
+
 /**
  * @brief processes the atom section of the rst file
  *
@@ -154,67 +290,6 @@ void AtomSection::process(
 }
 
 /**
- * @brief processes a line of the atom section of the rst file
- *
- * @details the line looks like this:
- * atomTypeName randomEntry MolType x y z vx vy vz fx fy fz
- *
- * @note for backward compatibility the line can also look like this:
- * atomTypeName randomEntry MolType x y z vx vy vz fx fy fz x_old y_old z_old
- * vx_old vy_old vz_old fx_old fy_old fz_old but the old coordinates, velocities
- * and forces are not used and also not read from the file
- *
- * @param lineElements
- * @param simBox
- * @param molecule
- */
-void AtomSection::processAtomLine(
-    std::vector<std::string> &lineElements,
-    SimulationBox            &simBox,
-    Molecule                 &molecule
-) const
-{
-    auto atom = std::make_shared<Atom>();
-
-    atom->setAtomTypeName(lineElements[0]);
-
-    setAtomPropertyVectors(lineElements, atom);
-
-    simBox.addAtom(atom);
-    molecule.addAtom(atom);
-}
-
-/**
- * @brief adds a single atom with moltype 0 to the simulation box
- *
- * @details for details how the line looks like see processAtomLine
- *
- * @param lineElements
- * @param simBox
- */
-void AtomSection::processQMAtomLine(
-    std::vector<std::string> &lineElements,
-    SimulationBox            &simBox
-)
-{
-    auto       atom     = std::make_shared<Atom>();
-    const auto molecule = make_unique<Molecule>(0);
-
-    molecule->setName("QM");
-    molecule->setNumberOfAtoms(1);
-
-    atom->setAtomTypeName(lineElements[0]);
-    atom->setName(lineElements[0]);
-
-    setAtomPropertyVectors(lineElements, atom);
-
-    molecule->addAtom(atom);
-
-    simBox.addAtom(atom);
-    simBox.addMolecule(*molecule);
-}
-
-/**
  * @brief checks if the next line of the rst file exists - if not an
  * exception is thrown
  *
@@ -232,93 +307,20 @@ void AtomSection::checkAtomLine(
 {
     ++_lineNumber;
 
-    if (std::string line; !getline(*_fp, line))
-    {
-        throw RstFileException(
-            std::format(
-                "Error in line {}: Molecule must have {} atoms",
-                _lineNumber,
-                molecule.getNumberOfAtoms()
-            )
-        );
-    }
-    else
+    if (std::string line; getline(*_fp, line))
     {
         line         = removeComments(line, "#");
         lineElements = splitString(line);
+        return;
     }
-}
 
-/**
- * @brief sets the atom properties from the line elements
- *
- * @param lineElements
- * @param atom
- */
-void AtomSection::setAtomPropertyVectors(
-    std::vector<std::string> &lineElements,
-    std::shared_ptr<Atom>    &atom
-) const
-{
-    try
-    {
-        const auto x = stringToFiniteDouble(lineElements[3]);
-        const auto y = stringToFiniteDouble(lineElements[4]);
-        const auto z = stringToFiniteDouble(lineElements[5]);
-
-        atom->setPosition({x, y, z});
-
-        // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
-        if (lineElements.size() > 6)
-        {
-            const auto vx = stringToFiniteDouble(lineElements[6]);
-            const auto vy = stringToFiniteDouble(lineElements[7]);
-            const auto vz = stringToFiniteDouble(lineElements[8]);
-
-            atom->setVelocity({vx, vy, vz});
-        }
-
-        if (lineElements.size() > 9)
-        {
-            const auto fx = stringToFiniteDouble(lineElements[9]);
-            const auto fy = stringToFiniteDouble(lineElements[10]);
-            const auto fz = stringToFiniteDouble(lineElements[11]);
-
-            atom->setForce({fx, fy, fz});
-        }
-
-        if (lineElements.size() > 12)
-        {
-            const auto oldX = stringToFiniteDouble(lineElements[12]);
-            const auto oldY = stringToFiniteDouble(lineElements[13]);
-            const auto oldZ = stringToFiniteDouble(lineElements[14]);
-
-            atom->setPositionOld({oldX, oldY, oldZ});
-        }
-
-        if (lineElements.size() > 15)
-        {
-            const auto oldVx = stringToFiniteDouble(lineElements[15]);
-            const auto oldVy = stringToFiniteDouble(lineElements[16]);
-            const auto oldVz = stringToFiniteDouble(lineElements[17]);
-
-            atom->setVelocityOld({oldVx, oldVy, oldVz});
-        }
-
-        if (lineElements.size() > 18)
-        {
-            const auto oldFx = stringToFiniteDouble(lineElements[18]);
-            const auto oldFy = stringToFiniteDouble(lineElements[19]);
-            const auto oldFz = stringToFiniteDouble(lineElements[20]);
-
-            atom->setForceOld({oldFx, oldFy, oldFz});
-        }
-        // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
-    }
-    catch (const std::exception &e)
-    {
-        throw RstFileException(e.what());
-    }
+    throw RstFileException(
+        std::format(
+            "Error in line {}: Molecule must have {} atoms",
+            _lineNumber,
+            molecule.getNumberOfAtoms()
+        )
+    );
 }
 
 /**

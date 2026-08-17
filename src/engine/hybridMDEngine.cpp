@@ -203,7 +203,7 @@ namespace engine
         generateInactiveSmoothingMoleculeSet(
             size_t bitPattern,
             size_t totalMolecules
-        ) const
+        )
     {
         std::unordered_set<size_t> inactiveMolecules;
 

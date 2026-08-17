@@ -143,25 +143,25 @@ void CoulombWolf::setWolfParameter3(double wolfParam3)
  *
  * @return double
  */
-double CoulombWolf::getKappa() const { return _kappa; }
+double CoulombWolf::getKappa() { return _kappa; }
 
 /**
  * @brief get the wolf parameter 1
  *
  * @return double
  */
-double CoulombWolf::getWolfParameter1() const { return _wolfParam1; }
+double CoulombWolf::getWolfParameter1() { return _wolfParam1; }
 
 /**
  * @brief get the wolf parameter 2
  *
  * @return double
  */
-double CoulombWolf::getWolfParameter2() const { return _wolfParam2; }
+double CoulombWolf::getWolfParameter2() { return _wolfParam2; }
 
 /**
  * @brief get the wolf parameter 3
  *
  * @return double
  */
-double CoulombWolf::getWolfParameter3() const { return _wolfParam3; }
+double CoulombWolf::getWolfParameter3() { return _wolfParam3; }

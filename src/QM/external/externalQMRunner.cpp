@@ -50,6 +50,191 @@ using namespace customException;
 using namespace settings;
 using namespace constants;
 
+namespace
+{
+    /**
+     * @brief reads the force file (including qm energy) and sets the forces of
+     * the atoms
+     *
+     * @param box
+     * @param physicalData
+     *
+     * @throw QMRunnerException
+     *  - if the force file cannot be opened
+     *  - if the force file is empty
+     */
+    void readForceFile(SimulationBox &box, PhysicalData &physicalData)
+    {
+        const auto forceFileName = FileSettings::getQMForcesTempFileName();
+
+        std::ifstream forceFile(forceFileName);
+
+        if (!forceFile.is_open())
+        {
+            throw QMRunnerException(
+                std::format(
+                    "Cannot open {} force file \"{}\"",
+                    string(QMSettings::getQMMethod()),
+                    forceFileName
+                )
+            );
+        }
+
+        if (forceFile.peek() == std::ifstream::traits_type::eof())
+        {
+            throw QMRunnerException(
+                std::format(
+                    "Empty {} force file \"{}\"",
+                    string(QMSettings::getQMMethod()),
+                    forceFileName
+                )
+            );
+        }
+
+        double energy = 0.0;
+
+        if (!(forceFile >> energy))
+        {
+            throw QMRunnerException(
+                std::format(
+                    "Cannot read QM energy from {} force file \"{}\"",
+                    string(QMSettings::getQMMethod()),
+                    forceFileName
+                )
+            );
+        }
+
+        if (!std::isfinite(energy))
+        {
+            throw QMRunnerException(
+                std::format(
+                    "Invalid QM energy (NaN/Inf) in {} force file \"{}\"",
+                    string(QMSettings::getQMMethod()),
+                    forceFileName
+                )
+            );
+        }
+
+        physicalData.setQMEnergy(energy * HARTREE_TO_KCAL_PER_MOL);
+
+        auto readForces = [&forceFile, &forceFileName](auto &atom)
+        {
+            auto grad = linearAlgebra::Vec3D();
+
+            if (!(forceFile >> grad[0] >> grad[1] >> grad[2]))
+            {
+                throw QMRunnerException(
+                    std::format(
+                        "Incomplete {} force file \"{}\"",
+                        string(QMSettings::getQMMethod()),
+                        forceFileName
+                    )
+                );
+            }
+
+            for (size_t i = 0; i < 3; ++i)
+            {
+                if (!std::isfinite(grad[i]))
+                {
+                    throw QMRunnerException(
+                        std::format(
+                            "Invalid QM force component (NaN/Inf) in {} force "
+                            "file "
+                            "\"{}\"",
+                            string(QMSettings::getQMMethod()),
+                            forceFileName
+                        )
+                    );
+                }
+            }
+
+            atom->setForce(
+                -grad * HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM
+            );
+        };
+
+        std::ranges::for_each(box.getQMAtoms(), readForces);
+
+        forceFile.close();
+
+        if (QMSettings::getRemoveNetForce())
+            box.removeNetForce();
+    }
+
+    /**
+     * @brief reads the charge file (qm_charges) and sets the _qmCharge of the
+     * atoms
+     *
+     * @param box
+     *
+     * @throw QMRunnerException
+     *  - if the charge file cannot be opened
+     *  - if the charge file is empty
+     */
+    void readChargeFile(SimulationBox &box)
+    {
+        const auto chargeFileName = FileSettings::getQMChargesTempFileName();
+
+        std::ifstream chargeFile(chargeFileName);
+
+        if (!chargeFile.is_open())
+        {
+            throw QMRunnerException(
+                std::format(
+                    "Cannot open {} charge file \"{}\"",
+                    string(QMSettings::getQMMethod()),
+                    chargeFileName
+                )
+            );
+        }
+
+        if (chargeFile.peek() == std::ifstream::traits_type::eof())
+        {
+            throw QMRunnerException(
+                std::format(
+                    "Empty {} charge file \"{}\"",
+                    string(QMSettings::getQMMethod()),
+                    chargeFileName
+                )
+            );
+        }
+
+        box.resetQMCharges();
+
+        auto readCharges = [&chargeFile, &chargeFileName](auto &atom)
+        {
+            auto charge = 0.0;
+
+            if (!(chargeFile >> charge))
+            {
+                throw QMRunnerException(
+                    std::format(
+                        "Incomplete {} charge file \"{}\"",
+                        string(QMSettings::getQMMethod()),
+                        chargeFileName
+                    )
+                );
+            }
+            if (!std::isfinite(charge))
+            {
+                throw QMRunnerException(
+                    std::format(
+                        "Invalid value in {} charge file \"{}\"",
+                        string(QMSettings::getQMMethod()),
+                        chargeFileName
+                    )
+                );
+            }
+
+            atom->setQMCharge(charge);
+        };
+
+        std::ranges::for_each(box.getQMAtoms(), readCharges);
+
+        chargeFile.close();
+    }
+}   // namespace
+
 std::string QM::bundledQMScriptPath(const std::string_view script)
 {
     const auto installedPath =
@@ -101,7 +286,7 @@ void ExternalQMRunner::run(
     };
     for (const auto &file : resultFiles) std::filesystem::remove(file);
 
-    std::jthread timeoutThread{[this](const std::stop_token &stopToken)
+    std::jthread timeoutThread{[](const std::stop_token &stopToken)
                                { throwAfterTimeout(stopToken); }};
 
     {
@@ -160,187 +345,6 @@ void ExternalQMRunner::executeCommand(
 #endif
 }
 
-/**
- * @brief reads the force file (including qm energy) and sets the forces of
- * the atoms
- *
- * @param box
- * @param physicalData
- *
- * @throw QMRunnerException
- *  - if the force file cannot be opened
- *  - if the force file is empty
- */
-void ExternalQMRunner::readForceFile(
-    SimulationBox &box,
-    PhysicalData  &physicalData
-)
-{
-    const auto forceFileName = FileSettings::getQMForcesTempFileName();
-
-    std::ifstream forceFile(forceFileName);
-
-    if (!forceFile.is_open())
-    {
-        throw QMRunnerException(
-            std::format(
-                "Cannot open {} force file \"{}\"",
-                string(QMSettings::getQMMethod()),
-                forceFileName
-            )
-        );
-    }
-
-    if (forceFile.peek() == std::ifstream::traits_type::eof())
-    {
-        throw QMRunnerException(
-            std::format(
-                "Empty {} force file \"{}\"",
-                string(QMSettings::getQMMethod()),
-                forceFileName
-            )
-        );
-    }
-
-    double energy = 0.0;
-
-    if (!(forceFile >> energy))
-    {
-        throw QMRunnerException(
-            std::format(
-                "Cannot read QM energy from {} force file \"{}\"",
-                string(QMSettings::getQMMethod()),
-                forceFileName
-            )
-        );
-    }
-
-    if (!std::isfinite(energy))
-    {
-        throw QMRunnerException(
-            std::format(
-                "Invalid QM energy (NaN/Inf) in {} force file \"{}\"",
-                string(QMSettings::getQMMethod()),
-                forceFileName
-            )
-        );
-    }
-
-    physicalData.setQMEnergy(energy * HARTREE_TO_KCAL_PER_MOL);
-
-    auto readForces = [&forceFile, &forceFileName](auto &atom)
-    {
-        auto grad = linearAlgebra::Vec3D();
-
-        if (!(forceFile >> grad[0] >> grad[1] >> grad[2]))
-        {
-            throw QMRunnerException(
-                std::format(
-                    "Incomplete {} force file \"{}\"",
-                    string(QMSettings::getQMMethod()),
-                    forceFileName
-                )
-            );
-        }
-
-        for (size_t i = 0; i < 3; ++i)
-        {
-            if (!std::isfinite(grad[i]))
-            {
-                throw QMRunnerException(
-                    std::format(
-                        "Invalid QM force component (NaN/Inf) in {} force file "
-                        "\"{}\"",
-                        string(QMSettings::getQMMethod()),
-                        forceFileName
-                    )
-                );
-            }
-        }
-
-        atom->setForce(-grad * HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM);
-    };
-
-    std::ranges::for_each(box.getQMAtoms(), readForces);
-
-    forceFile.close();
-
-    if (QMSettings::getRemoveNetForce())
-        box.removeNetForce();
-}
-
-/**
- * @brief reads the charge file (qm_charges) and sets the _qmCharge of the atoms
- *
- * @param box
- *
- * @throw QMRunnerException
- *  - if the charge file cannot be opened
- *  - if the charge file is empty
- */
-void ExternalQMRunner::readChargeFile(SimulationBox &box)
-{
-    const auto chargeFileName = FileSettings::getQMChargesTempFileName();
-
-    std::ifstream chargeFile(chargeFileName);
-
-    if (!chargeFile.is_open())
-    {
-        throw QMRunnerException(
-            std::format(
-                "Cannot open {} charge file \"{}\"",
-                string(QMSettings::getQMMethod()),
-                chargeFileName
-            )
-        );
-    }
-
-    if (chargeFile.peek() == std::ifstream::traits_type::eof())
-    {
-        throw QMRunnerException(
-            std::format(
-                "Empty {} charge file \"{}\"",
-                string(QMSettings::getQMMethod()),
-                chargeFileName
-            )
-        );
-    }
-
-    box.resetQMCharges();
-
-    auto readCharges = [&chargeFile, &chargeFileName](auto &atom)
-    {
-        auto charge = 0.0;
-
-        if (!(chargeFile >> charge))
-        {
-            throw QMRunnerException(
-                std::format(
-                    "Incomplete {} charge file \"{}\"",
-                    string(QMSettings::getQMMethod()),
-                    chargeFileName
-                )
-            );
-        }
-        if (!std::isfinite(charge))
-        {
-            throw QMRunnerException(
-                std::format(
-                    "Invalid value in {} charge file \"{}\"",
-                    string(QMSettings::getQMMethod()),
-                    chargeFileName
-                )
-            );
-        }
-
-        atom->setQMCharge(charge);
-    };
-
-    std::ranges::for_each(box.getQMAtoms(), readCharges);
-
-    chargeFile.close();
-}
-
 /********************************
  *                              *
  * standard getters and setters *
@@ -360,16 +364,16 @@ const std::string &ExternalQMRunner::getScriptPath() const
 /**
  * @brief getter for the singularity path
  *
- * @return std::string
+ * @return  std::string
  */
-std::string ExternalQMRunner::getSingularity() const { return _singularity; }
+std::string ExternalQMRunner::getSingularity() { return _singularity; }
 
 /**
  * @brief getter for the static build path
  *
- * @return std::string
+ * @return  std::string
  */
-std::string ExternalQMRunner::getStaticBuild() const { return _staticBuild; }
+std::string ExternalQMRunner::getStaticBuild() { return _staticBuild; }
 
 /**
  * @brief setter for the script path

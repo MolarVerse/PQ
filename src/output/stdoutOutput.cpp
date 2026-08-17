@@ -37,7 +37,7 @@ using namespace customException;
  *
  * @param message
  */
-void StdoutOutput::writeInfo(const std::string &message) const
+void StdoutOutput::writeInfo(const std::string &message)
 {
     std::cout << message << '\n' << std::flush;
 }
@@ -47,7 +47,7 @@ void StdoutOutput::writeInfo(const std::string &message) const
  *
  * @return string
  */
-void StdoutOutput::writeHeader() const
+void StdoutOutput::writeHeader()
 {
     std::cout << header() << '\n' << std::flush;
 }
@@ -57,7 +57,7 @@ void StdoutOutput::writeHeader() const
  *
  * @param elapsedTime
  */
-void StdoutOutput::writeEndedNormally(double elapsedTime) const
+void StdoutOutput::writeEndedNormally(double elapsedTime)
 {
     std::cout << elapsedTimeMessage(elapsedTime) << '\n';
     std::cout << endedNormally() << '\n' << std::flush;
@@ -68,7 +68,7 @@ void StdoutOutput::writeEndedNormally(double elapsedTime) const
  * are set
  *
  */
-void StdoutOutput::writeDensityWarning() const
+void StdoutOutput::writeDensityWarning()
 {
     try
     {
@@ -91,7 +91,7 @@ void StdoutOutput::writeDensityWarning() const
  *
  * @param msg
  */
-void StdoutOutput::writeOptWarning(const std::string &msg) const
+void StdoutOutput::writeOptWarning(const std::string &msg)
 {
     try
     {
@@ -108,7 +108,7 @@ void StdoutOutput::writeOptWarning(const std::string &msg) const
  *
  * @param setup
  */
-void StdoutOutput::writeSetup(const std::string &setup) const
+void StdoutOutput::writeSetup(const std::string &setup)
 {
     std::cout << setupMessage(setup) << '\n' << std::flush;
 }
@@ -118,7 +118,7 @@ void StdoutOutput::writeSetup(const std::string &setup) const
  *
  * @param warning
  */
-void StdoutOutput::writeSetupWarning(const std::string &warning) const
+void StdoutOutput::writeSetupWarning(const std::string &warning)
 {
     std::cout << WARNING << (warning) << "\n\n" << std::flush;
 }
@@ -127,7 +127,7 @@ void StdoutOutput::writeSetupWarning(const std::string &warning) const
  * @brief write a message to the stdout to inform that the setup is completed
  *
  */
-void StdoutOutput::writeSetupCompleted() const
+void StdoutOutput::writeSetupCompleted()
 {
     std::cout << setupCompletedMessage() << '\n' << std::flush;
 }
@@ -141,7 +141,7 @@ void StdoutOutput::writeSetupCompleted() const
 void StdoutOutput::writeRead(
     const std::string &message,
     const std::string &file
-) const
+)
 {
     std::cout << readMessage(message, file) << '\n' << std::flush;
 }

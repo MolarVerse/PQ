@@ -179,9 +179,8 @@ void WaterModelSetup::checkTopologyFile()
         const auto *mol1 = bond.getMolecule1();
         const auto *mol2 = bond.getMolecule2();
 
-        const bool involvesWater =
-            (mol1 && waterMolecules.find(mol1) != waterMolecules.end()) ||
-            (mol2 && waterMolecules.find(mol2) != waterMolecules.end());
+        const bool involvesWater = (mol1 && waterMolecules.contains(mol1)) ||
+                                   (mol2 && waterMolecules.contains(mol2));
 
         if (involvesWater)
         {
@@ -211,10 +210,9 @@ void WaterModelSetup::checkTopologyFile()
         const auto *mol2      = molecules[1];
         const auto *mol3      = molecules[2];
 
-        const bool involvesWater =
-            (mol1 && waterMolecules.find(mol1) != waterMolecules.end()) ||
-            (mol2 && waterMolecules.find(mol2) != waterMolecules.end()) ||
-            (mol3 && waterMolecules.find(mol3) != waterMolecules.end());
+        const bool involvesWater = (mol1 && waterMolecules.contains(mol1)) ||
+                                   (mol2 && waterMolecules.contains(mol2)) ||
+                                   (mol3 && waterMolecules.contains(mol3));
 
         if (involvesWater)
         {
