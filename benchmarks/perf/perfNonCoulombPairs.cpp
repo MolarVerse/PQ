@@ -43,7 +43,14 @@ int main()
 {
     auto lj    = potential::LennardJonesPair(9.0, 2.0, 3.0);
     auto buck  = potential::BuckinghamPair(9.0, 1.0, 0.3, 2.0);
-    auto morse = potential::MorsePair(9.0, 1.0, 2.0, 1.5);
+    auto morse = potential::MorsePair(
+        9.0,
+        potential::MorseParams{
+            .dissociationEnergy  = 1.0,
+            .wellWidth           = 2.0,
+            .equilibriumDistance = 1.5
+        }
+    );
 
     CALLGRIND_ZERO_STATS;
 

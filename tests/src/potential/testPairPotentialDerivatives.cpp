@@ -52,7 +52,7 @@ namespace
     )
     {
         const auto [energy, force] = calculate(distance);
-        (void)energy;
+        (void) energy;
 
         const auto energyDerivative = centralDifference(
             [&calculate](const double r) { return calculate(r).first; },
@@ -64,11 +64,9 @@ namespace
 
     std::vector<double> buildGuffCoefficients()
     {
-        return {
-            0.5,   2.0,  -0.2,  4.0,  0.1,   6.0,  -0.05, 8.0,
-            0.4,   1.2,  1.3,   -0.3, -1.1,  2.5,  0.02,  -0.5,
-            0.3,   2.0,  -0.01, -0.25, -0.4, 2.0
-        };
+        return {0.5, 2.0, -0.2,  4.0,   0.1,  6.0, -0.05, 8.0,
+                0.4, 1.2, 1.3,   -0.3,  -1.1, 2.5, 0.02,  -0.5,
+                0.3, 2.0, -0.01, -0.25, -0.4, 2.0};
     }
 }   // namespace
 
@@ -98,8 +96,16 @@ TEST(TestPairPotentialDerivatives, BuckinghamForceIsNegativeEnergyDerivative)
 
 TEST(TestPairPotentialDerivatives, MorseForceIsNegativeEnergyDerivative)
 {
-    const auto potential =
-        potential::MorsePair(4.0, 0.3, -0.2, 2.5, 1.4, 1.1);
+    const auto potential = potential::MorsePair(
+        4.0,
+        0.3,
+        -0.2,
+        potential::MorseParams{
+            .dissociationEnergy  = 2.5,
+            .wellWidth           = 1.4,
+            .equilibriumDistance = 1.1
+        }
+    );
 
     expectForceIsNegativeEnergyDerivative(
         [&potential](const double r) { return potential.calculate(r); },
@@ -120,7 +126,10 @@ TEST(TestPairPotentialDerivatives, GuffForceIsNegativeEnergyDerivative)
     );
 }
 
-TEST(TestPairPotentialDerivatives, ShiftedCoulombForceIsNegativeEnergyDerivative)
+TEST(
+    TestPairPotentialDerivatives,
+    ShiftedCoulombForceIsNegativeEnergyDerivative
+)
 {
     const auto potential     = potential::CoulombShiftedPotential(4.0);
     const auto chargeProduct = 0.75;
@@ -173,7 +182,14 @@ TEST(TestPairPotentialDerivatives, NonCoulombShiftedPairsAreZeroAtCutoff)
         potential::LennardJonesPair(cutoff, -1.0, 1.5);
     const auto buckinghamUnshifted =
         potential::BuckinghamPair(cutoff, 2.0, -1.1, -0.4);
-    const auto morseUnshifted = potential::MorsePair(cutoff, 2.5, 1.4, 1.1);
+    const auto morseUnshifted = potential::MorsePair(
+        cutoff,
+        potential::MorseParams{
+            .dissociationEnergy  = 2.5,
+            .wellWidth           = 1.4,
+            .equilibriumDistance = 1.1
+        }
+    );
     const auto guffUnshifted =
         potential::GuffPair(cutoff, buildGuffCoefficients());
 
@@ -205,9 +221,11 @@ TEST(TestPairPotentialDerivatives, NonCoulombShiftedPairsAreZeroAtCutoff)
         cutoff,
         morseEnergyCutoff,
         morseForceCutoff,
-        2.5,
-        1.4,
-        1.1
+        potential::MorseParams{
+            .dissociationEnergy  = 2.5,
+            .wellWidth           = 1.4,
+            .equilibriumDistance = 1.1
+        }
     );
     const auto guff = potential::GuffPair(
         cutoff,

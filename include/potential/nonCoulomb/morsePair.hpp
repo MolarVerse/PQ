@@ -28,8 +28,20 @@
 
 #include "nonCoulombPair.hpp"
 
+struct TestMorsePairUtils;   // forward declaration
+
 namespace potential
 {
+    struct MorseParams
+    {
+        double dissociationEnergy;
+        double wellWidth;
+        double equilibriumDistance;
+
+        [[nodiscard]]
+        constexpr bool operator==(const MorseParams &other) const;
+    };
+
     /**
      * @class MorsePair
      *
@@ -39,34 +51,23 @@ namespace potential
     class MorsePair : public NonCoulombPair
     {
        private:
-        double _dissociationEnergy;
-        double _wellWidth;
-        double _equilibriumDistance;
+        MorseParams _params;
 
        public:
         explicit MorsePair(
-            const ExtVdwType vanDerWaalsType1,
-            const ExtVdwType vanDerWaalsType2,
-            const double     cutOff,
-            const double     dissociationEnergy,
-            const double     wellWidth,
-            const double     equilibriumDistance
+            const ExtVdwType   vanDerWaalsType1,
+            const ExtVdwType   vanDerWaalsType2,
+            const double       cutOff,
+            const MorseParams &params
         );
 
-        explicit MorsePair(
-            const double cutOff,
-            const double dissociationEnergy,
-            const double wellWidth,
-            const double equilibriumDistance
-        );
+        explicit MorsePair(const double cutOff, const MorseParams &params);
 
         explicit MorsePair(
-            const double cutOff,
-            const double energyCutoff,
-            const double forceCutoff,
-            const double dissociationEnergy,
-            const double wellWidth,
-            const double equilibriumDistance
+            const double       cutOff,
+            const double       energyCutoff,
+            const double       forceCutoff,
+            const MorseParams &params
         );
 
         // TODO: we need to explicitly delete it to not implicitly create it
@@ -75,9 +76,7 @@ namespace potential
             const size_t,
             const size_t,
             const double,
-            const double,
-            const double,
-            const double
+            const MorseParams &
         ) = delete;
 
         [[nodiscard]] bool operator==(const MorsePair &other) const;
@@ -86,9 +85,7 @@ namespace potential
             const double distance
         ) const override;
 
-        [[nodiscard]] double getDissociationEnergy() const;
-        [[nodiscard]] double getWellWidth() const;
-        [[nodiscard]] double getEquilibriumDistance() const;
+        friend struct ::TestMorsePairUtils;
     };
 
 }   // namespace potential

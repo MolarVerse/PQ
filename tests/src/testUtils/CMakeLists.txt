@@ -1,5 +1,6 @@
 add_library(testUtils
     testUtils.cpp
+    testMorsePairUtils.cpp
 )
 
 target_include_directories(testUtils

@@ -79,7 +79,14 @@ namespace
 
     void BM_Morse(benchmark::State& state)
     {
-        potential::MorsePair potential(9.0, 1.0, 2.0, 1.5);
+        potential::MorsePair potential(
+            9.0,
+            potential::MorseParams{
+                .dissociationEnergy  = 1.0,
+                .wellWidth           = 2.0,
+                .equilibriumDistance = 1.5
+            }
+        );
         runNonCoulombBenchmark(state, potential);
     }
 

@@ -32,6 +32,7 @@
 #include "nonCoulombicsSection.hpp"   // for NonCoulombicsSection
 #include "potentialSettings.hpp"      // for PotentialSettings
 #include "strongTypes.hpp"
+#include "testMorsePairUtils.hpp"
 #include "testParameterFileSection.hpp"   // for TestParameterFileSection
 #include "throwWithMessage.hpp"           // for ASSERT_THROW_MSG
 
@@ -136,9 +137,11 @@ TEST_F(TestParameterFileSection, processSectionMorse)
     );
     EXPECT_EQ(pair->getVanDerWaalsType1(), ExtVdwType{0});
     EXPECT_EQ(pair->getVanDerWaalsType2(), ExtVdwType{1});
-    EXPECT_EQ(pair->getDissociationEnergy(), 1.22);
-    EXPECT_EQ(pair->getWellWidth(), 234.3);
-    EXPECT_EQ(pair->getEquilibriumDistance(), 324.3);
+
+    const auto &morseParams = TestMorsePairUtils::params(pair);
+    EXPECT_EQ(morseParams.dissociationEnergy, 1.22);
+    EXPECT_EQ(morseParams.wellWidth, 234.3);
+    EXPECT_EQ(morseParams.equilibriumDistance, 324.3);
     EXPECT_EQ(pair->getRadialCutOff(), 435.0);
 
     lineElements = {"0", "1", "1.22", "234.3", "324.3"};
@@ -149,9 +152,11 @@ TEST_F(TestParameterFileSection, processSectionMorse)
     );
     EXPECT_EQ(pair2->getVanDerWaalsType1(), ExtVdwType{0});
     EXPECT_EQ(pair2->getVanDerWaalsType2(), ExtVdwType{1});
-    EXPECT_EQ(pair2->getDissociationEnergy(), 1.22);
-    EXPECT_EQ(pair2->getWellWidth(), 234.3);
-    EXPECT_EQ(pair2->getEquilibriumDistance(), 324.3);
+
+    const auto &morseParams2 = TestMorsePairUtils::params(pair2);
+    EXPECT_EQ(morseParams2.dissociationEnergy, 1.22);
+    EXPECT_EQ(morseParams2.wellWidth, 234.3);
+    EXPECT_EQ(morseParams2.equilibriumDistance, 324.3);
     EXPECT_EQ(pair2->getRadialCutOff(), 12.5);
 
     lineElements = {"1", "2", "1.0", "0", "2", "3.3", "345"};

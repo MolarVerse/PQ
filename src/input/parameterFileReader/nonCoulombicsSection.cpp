@@ -296,14 +296,13 @@ void NonCoulombicsSection::processMorse(
     auto &pot       = engine.getPotential()->getNonCoulombPotential();
     auto &potential = dynamic_cast<ForceFieldNonCoulomb &>(pot);
 
+    const auto params = MorseParams{
+        .dissociationEnergy  = dissociationEnergy,
+        .wellWidth           = wellWidth,
+        .equilibriumDistance = equilibriumDistance
+    };
+
     potential.addNonCoulombicPair(
-        std::make_shared<MorsePair>(
-            atomType1,
-            atomType2,
-            cutOff,
-            dissociationEnergy,
-            wellWidth,
-            equilibriumDistance
-        )
+        std::make_shared<MorsePair>(atomType1, atomType2, cutOff, params)
     );
 }

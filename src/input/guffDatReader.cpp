@@ -531,21 +531,18 @@ void GuffDatReader::addMorsePair(
         _engine.getPotential()->getNonCoulombPotential()
     );
 
-    // clang-format off
-    const auto morsePair          = MorsePair(rncCutOff, coeffs[0], coeffs[1], coeffs[2]);
+    const auto params = MorseParams{
+        .dissociationEnergy  = coeffs[0],
+        .wellWidth           = coeffs[1],
+        .equilibriumDistance = coeffs[2]
+    };
+
+    const auto morsePair          = MorsePair(rncCutOff, params);
     const auto [eCutOff, fCutOff] = morsePair.calculate(rncCutOff);
-    // clang-format on
 
     guffNonCoulomb.setGuffNonCoulPair(
         {molType1, molType2, atomType1, atomType2},
-        std::make_shared<MorsePair>(
-            rncCutOff,
-            eCutOff,
-            fCutOff,
-            coeffs[0],
-            coeffs[1],
-            coeffs[2]
-        )
+        std::make_shared<MorsePair>(rncCutOff, eCutOff, fCutOff, params)
     );
 
     guffNonCoulomb.setGuffNonCoulPair(
@@ -555,14 +552,7 @@ void GuffDatReader::addMorsePair(
             atomType2,
             atomType1,
         },
-        std::make_shared<MorsePair>(
-            rncCutOff,
-            eCutOff,
-            fCutOff,
-            coeffs[0],
-            coeffs[1],
-            coeffs[2]
-        )
+        std::make_shared<MorsePair>(rncCutOff, eCutOff, fCutOff, params)
     );
 }
 

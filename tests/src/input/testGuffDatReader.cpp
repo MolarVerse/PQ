@@ -30,8 +30,8 @@
 #include <string>   // for string, basic_string, char_traits
 #include <vector>   // for vector
 
-#include "buckinghamPair.hpp"                        // for BuckinghamPair
-#include "constants/internalConversionFactors.hpp"   // for _COULOMB_PREFACTOR_
+#include "buckinghamPair.hpp"      // for BuckinghamPair
+#include "constants.hpp"           // for _COULOMB_PREFACTOR_
 #include "defaults.hpp"            // for _NUMBER_OF_GUFF_ENTRIES_
 #include "engine.hpp"              // for Engine
 #include "exceptions.hpp"          // for GuffDatException, UserInputException
@@ -43,6 +43,7 @@
 #include "potentialSettings.hpp"   // for PotentialSettings, string
 #include "settings.hpp"            // for Settings
 #include "strongTypes.hpp"
+#include "testMorsePairUtils.hpp"
 #include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
 
 using namespace input::guffdat;
@@ -279,9 +280,11 @@ TEST_F(TestGuffDatReader, addMorsePair)
               .get())
     );
 
-    EXPECT_EQ(pair.getDissociationEnergy(), 1.0);
-    EXPECT_EQ(pair.getWellWidth(), 2.0);
-    EXPECT_EQ(pair.getEquilibriumDistance(), 3.0);
+    const auto &params = TestMorsePairUtils::params(&pair);
+
+    EXPECT_EQ(params.dissociationEnergy, 1.0);
+    EXPECT_EQ(params.wellWidth, 2.0);
+    EXPECT_EQ(params.equilibriumDistance, 3.0);
     EXPECT_EQ(pair.getRadialCutOff(), 10.0);
     EXPECT_EQ(
         pair.getEnergyCutOff(),
