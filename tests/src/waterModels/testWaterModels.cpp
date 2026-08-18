@@ -391,15 +391,9 @@ namespace
         );
         PhysicalData physicalData;
         CellList     unusedCellList;
-        const auto   coulomb =
-            std::make_shared<CoulombShiftedPotential>(kCutOff);
+        const auto coulomb = std::make_shared<CoulombShiftedPotential>(kCutOff);
 
-        interWater.calculate(
-            simBox,
-            physicalData,
-            coulomb,
-            unusedCellList
-        );
+        interWater.calculate(simBox, physicalData, coulomb, unusedCellList);
 
         return physicalData.getNonCoulombEnergy();
     }
