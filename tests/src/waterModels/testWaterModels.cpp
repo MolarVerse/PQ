@@ -362,6 +362,48 @@ namespace
             molecule.setAtomForcesToZero();
     }
 
+    double calculateSPCmTRNonCoulombEnergy(const bool useSafetyPotential)
+    {
+        constexpr WaterGeometry geometry{1.0, 1.0, 1.82};
+
+        SimulationBox simBox;
+        simBox.setBoxDimensions({20.0, 20.0, 20.0});
+        simBox.setWaterType(kWaterType);
+        addWater(simBox, {-1.25, 0.0, 0.0}, geometry, HybridZone::OUTER);
+        addWater(simBox, {1.25, 0.0, 0.0}, geometry, HybridZone::OUTER);
+
+        PotentialSettings::setCoulombRadiusCutOff(kCutOff);
+        PotentialSettings::setNonCoulombRadiusCutOff(kCutOff);
+        CoulombPotential::setCoulombRadiusCutOff(kCutOff);
+        CoulombPotential::setCoulombEnergyCutOff(0.0);
+        CoulombPotential::setCoulombForceCutOff(0.0);
+        WaterModelSettings::setWaterIntraModel(
+            settings::WaterIntraModel::SPC_MTR
+        );
+        WaterModelSettings::setWaterInterModel(
+            settings::WaterInterModel::SPC_MTR
+        );
+        WaterModelSettings::setUseMTRSafetyPotential(useSafetyPotential);
+
+        InterWater interWater(
+            waterModel::makeInterWaterState<waterModel::SPCmTRInterParam>(),
+            std::make_unique<waterModel::InterWaterStrategyBruteForce>()
+        );
+        PhysicalData physicalData;
+        CellList     unusedCellList;
+        const auto   coulomb =
+            std::make_shared<CoulombShiftedPotential>(kCutOff);
+
+        interWater.calculate(
+            simBox,
+            physicalData,
+            coulomb,
+            unusedCellList
+        );
+
+        return physicalData.getNonCoulombEnergy();
+    }
+
 }   // namespace
 
 TEST(IntraWater, FlexibleSpcModelsProduceFiniteConservativeForces)
@@ -498,6 +540,18 @@ TEST(InterWater, DefaultStrategyIsInert)
 
     EXPECT_DOUBLE_EQ(data.getCoulombEnergy(), 0.0);
     EXPECT_DOUBLE_EQ(data.getNonCoulombEnergy(), 0.0);
+}
+
+TEST(InterWater, MtrSafetyPotentialAddsRepulsiveOxygenHydrogenEnergy)
+{
+    const auto energyWithoutSafety = calculateSPCmTRNonCoulombEnergy(false);
+    const auto energyWithSafety    = calculateSPCmTRNonCoulombEnergy(true);
+
+    EXPECT_GT(energyWithSafety, energyWithoutSafety + 1.0e-6);
+
+    WaterModelSettings::setUseMTRSafetyPotential(false);
+    WaterModelSettings::setWaterIntraModel(settings::WaterIntraModel::NONE);
+    WaterModelSettings::setWaterInterModel(settings::WaterInterModel::NONE);
 }
 
 TEST(InterWater, NonOxygenOnlyStateInitializesEveryPair)
