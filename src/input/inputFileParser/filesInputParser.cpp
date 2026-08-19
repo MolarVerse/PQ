@@ -49,9 +49,37 @@ using namespace utilities;
  * 9) mshake_file <string> 10) dftb_file <string> 11) turbomole_file <string>
  *
  * @param engine
+ * @param intraNonBonded
  */
-FilesInputParser::FilesInputParser(Engine &engine, const bool validateFilePaths)
-    : InputFileParser(engine), _validateFilePaths(validateFilePaths)
+FilesInputParser::FilesInputParser(
+    Engine                                         &engine,
+    std::shared_ptr<intraNonBonded::IntraNonBonded> intraNonBonded
+)
+    : FilesInputParser(engine, intraNonBonded, true)
+{
+}
+
+/**
+ * @brief Construct a new Input File Parser Non Coulomb Type:: Input File Parser
+ * Non Coulomb Type object
+ *
+ * @details following keywords are added to the _keywordFuncMap,
+ * _keywordRequiredMap and _keywordCountMap: 1) intra-nonBonded_file <string> 2)
+ * topology_file <string> 3) parameter_file <string> 4) start_file <string>
+ * (required) 5) rpmd_start_file <string> 6) moldescriptor_file <string>
+ * 7) guff_path <string> (deprecated) 8) guff_file <string>
+ * 9) mshake_file <string> 10) dftb_file <string> 11) turbomole_file <string>
+ *
+ * @param engine
+ */
+FilesInputParser::FilesInputParser(
+    Engine                                         &engine,
+    std::shared_ptr<intraNonBonded::IntraNonBonded> intraNonBonded,
+    const bool                                      validateFilePaths
+)
+    : InputFileParser(engine),
+      _intraNonBonded(intraNonBonded),
+      _validateFilePaths(validateFilePaths)
 {
     addKeyword(
         std::string("intra-nonBonded_file"),
@@ -144,7 +172,7 @@ void FilesInputParser::parseIntraNonBondedFile(
             std::format("Intra non bonded file \"{}\" File not found", fileName)
         );
 
-    _engine.getIntraNonBonded().activate();
+    _intraNonBonded->activate();
 
     FileSettings::setIntraNonBondedFileName(fileName);
     FileSettings::setIsIntraNonBondedFileNameSet();

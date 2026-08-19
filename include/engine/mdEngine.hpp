@@ -49,7 +49,8 @@ namespace engine
     class MDEngine : public Engine
     {
        protected:
-        resetKinetics::ResetKinetics _resetKinetics;
+        resetKinetics::ResetKinetics     _resetKinetics;
+        configurator::HybridConfigurator _configurator{};
 
         std::unique_ptr<integrator::Integrator> _integrator;
         std::unique_ptr<thermostat::Thermostat> _thermostat;
@@ -79,6 +80,7 @@ namespace engine
         [[nodiscard]] manostat::Manostat           &getManostat();
         [[nodiscard]] output::EnergyOutput         &getInstantEnergyOutput();
         [[nodiscard]] output::MomentumOutput       &getMomentumOutput();
+        [[nodiscard]] output::TrajectoryOutput     &getXyzHybridCenterOutput();
         [[nodiscard]] output::TrajectoryOutput     &getVelOutput();
         [[nodiscard]] output::TrajectoryOutput     &getChargeOutput();
         [[nodiscard]] output::VirialOutput         &getVirialOutput();

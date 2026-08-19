@@ -22,20 +22,18 @@
 
 #include "setup.hpp"
 
-#include "atomicVirial.hpp"
-#include "celllistSetup.hpp"          // for setupCellList
-#include "constraintsSetup.hpp"       // for setupConstraints
-#include "engine.hpp"                 // for Engine
-#include "forceFieldSettings.hpp"     // for ForceFieldSettings
-#include "forceFieldSetup.hpp"        // for setupForceField
-#include "guffDatReader.hpp"          // for readGuffDat, readInput
-#include "hybridSetup.hpp"            // for setupQMMM
-#include "inputFileReader.hpp"        // for readInputFile
-#include "intraNonBondedReader.hpp"   // for readIntraNonBondedFile
-#include "intraNonBondedSetup.hpp"    // for setupIntraNonBonded
-#include "manostatSetup.hpp"          // for setupManostat
-#include "moldescriptorReader.hpp"    // for readMolDescriptor
-#include "molecularVirial.hpp"
+#include "celllistSetup.hpp"                // for setupCellList
+#include "constraintsSetup.hpp"             // for setupConstraints
+#include "engine.hpp"                       // for Engine
+#include "forceFieldSettings.hpp"           // for ForceFieldSettings
+#include "forceFieldSetup.hpp"              // for setupForceField
+#include "guffDatReader.hpp"                // for readGuffDat, readInput
+#include "hybridSetup.hpp"                  // for setupQMMM
+#include "inputFileReader.hpp"              // for readInputFile
+#include "intraNonBondedReader.hpp"         // for readIntraNonBondedFile
+#include "intraNonBondedSetup.hpp"          // for setupIntraNonBonded
+#include "manostatSetup.hpp"                // for setupManostat
+#include "moldescriptorReader.hpp"          // for readMolDescriptor
 #include "optimizerSetup.hpp"               // for setupOptimizer
 #include "outputFilesSetup.hpp"             // for setupOutputFiles
 #include "parameterFileReader.hpp"          // for readParameterFile
@@ -52,14 +50,6 @@
 #include "topologyReader.hpp"               // for readTopologyFile
 #include "waterModelSettings.hpp"           // for WaterModelSettings
 #include "waterModelSetup.hpp"              // for setupWaterModel
-
-#ifdef WITH_KOKKOS
-#include "kokkosSetup.hpp"   // for setupKokkos
-#endif
-
-#ifdef WITH_KOKKOS
-#include "kokkosSetup.hpp"   // for setupKokkos
-#endif
 
 using namespace engine;
 using namespace input;
@@ -82,7 +72,7 @@ using namespace setup::resetKinetics;
  */
 void setup::setupRequestedJob(const std::string& inputFileName, Engine& engine)
 {
-    auto setupTimer = Timer("Setup");
+    auto setupTimer = Timer(TimerId::Setup);
 
     auto _ = setupTimer.scoped("TotalSetup");
 
@@ -98,10 +88,6 @@ void setup::setupRequestedJob(const std::string& inputFileName, Engine& engine)
 
     // needs setup of engine before reading guff.dat
     readGuffDat(engine);
-
-#ifdef WITH_KOKKOS
-    setupKokkos(engine);
-#endif
 
     endSetup(setupTimer, engine);
 }
@@ -197,16 +183,6 @@ void setup::setupEngine(Engine& engine)
 
     if (Settings::isOptJobType())
         setupOptimizer(engine);
-
-    switch (Settings::getVirialType())
-    {
-        case VirialType::ATOMIC:
-            engine.makeVirial(virial::AtomicVirial());
-            break;
-        case VirialType::MOLECULAR:
-            engine.makeVirial(virial::MolecularVirial());
-            break;
-    }
 
     engine.getLogOutput().flushQueuedWarnings();
 }

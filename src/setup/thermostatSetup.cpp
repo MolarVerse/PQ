@@ -219,12 +219,36 @@ void ThermostatSetup::setupNoseHooverThermostat()
 void ThermostatSetup::setupTemperatureRamp()
 {
     /*************************************************************************
-     * If the start temperature is defined, the temperature ramp is enabled.
-     **
+     * If the start temperature is defined, the temperature ramp is enabled. *
      *************************************************************************/
 
     if (!ThermostatSettings::isStartTemperatureSet())
         return;
+
+    /*************************************************************
+     * If steps is 0, set the steps to the total number of steps *
+     *************************************************************/
+
+    auto       steps = ThermostatSettings::getTemperatureRampSteps();
+    const auto useFullSimulation = steps == 0;
+
+    if (useFullSimulation)
+        steps = TimingsSettings::getNumberOfSteps();
+
+    if (steps == 0)
+        throw InputFileException(
+            "Temperature ramp requires at least one simulation step"
+        );
+
+    const auto frequency = ThermostatSettings::getTemperatureRampFrequency();
+
+    if (frequency == 0)
+        throw InputFileException(
+            "Temperature ramp frequency must be greater than zero"
+        );
+
+    if (useFullSimulation)
+        ThermostatSettings::setTemperatureRampSteps(steps);
 
     /*************************************************************
      * resetting the target temperature to the start temperature *
@@ -234,30 +258,15 @@ void ThermostatSetup::setupTemperatureRamp()
 
     _engine.getThermostat().setTargetTemperature(startTemp);
     ThermostatSettings::setActualTargetTemperature(startTemp);
-
-    auto steps = ThermostatSettings::getTemperatureRampSteps();
-
-    /*************************************************************
-     * If steps is 0, set the steps to the total number of steps *
-     *************************************************************/
-
-    if (steps == 0)
-    {
-        steps = TimingsSettings::getNumberOfSteps();
-        ThermostatSettings::setTemperatureRampSteps(steps);
-    }
-
     _engine.getThermostat().setTemperatureRampingSteps(steps);
+    _engine.getThermostat().setTemperatureRampingFrequency(frequency);
 
-    const auto frequency = ThermostatSettings::getTemperatureRampFrequency();
-
-    const auto targetTemp = ThermostatSettings::getTargetTemperature();
-    const auto tempDelta  = targetTemp - startTemp;
-    const auto tempIncrease =
-        tempDelta / double(steps) * static_cast<double>(frequency);
+    const auto targetTemp   = ThermostatSettings::getTargetTemperature();
+    const auto tempDelta    = targetTemp - startTemp;
+    const auto updates      = steps / frequency + (steps % frequency != 0);
+    const auto tempIncrease = tempDelta / double(updates);
 
     _engine.getThermostat().setTemperatureIncrease(tempIncrease);
-    _engine.getThermostat().setTemperatureRampingFrequency(frequency);
 }
 
 void ThermostatSetup::writeSetupInfo() const

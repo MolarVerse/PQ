@@ -68,6 +68,24 @@ using std::make_unique;
  *
  * @param fileName
  * @param engine
+ */
+InputFileReader::InputFileReader(
+    const std::string_view &fileName,
+    engine::Engine         &engine
+)
+    : InputFileReader(fileName, engine, true, true)
+{
+}
+
+/**
+ * @brief Construct a new Input File Reader:: Input File Reader object
+ *
+ * @details adds all parsers to the _parsers vector and calls addKeywords() to
+ * add all keywords to the _keywordFuncMap, _keywordRequiredMap and
+ * _keywordCountMap
+ *
+ * @param fileName
+ * @param engine
  * @param validateFilePaths
  * @param resolveBuiltInSlakosPath
  */
@@ -88,14 +106,23 @@ InputFileReader::InputFileReader(
     );
     _parsers.push_back(make_unique<CoulombLongRangeInputParser>(_engine));
     _parsers.push_back(
-        make_unique<FilesInputParser>(_engine, validateFilePaths)
+        make_unique<FilesInputParser>(
+            _engine,
+            _engine.getIntraNonBonded(),
+            validateFilePaths
+        )
     );
-    _parsers.push_back(make_unique<MMInputParser>(_engine));
+    _parsers.push_back(
+        make_unique<MMInputParser>(
+            _engine,
+            _engine.getForceField(),
+            _engine.getPotential()
+        )
+    );
     _parsers.push_back(make_unique<GeneralInputParser>(_engine));
     _parsers.push_back(make_unique<HessianInputParser>(_engine));
     _parsers.push_back(make_unique<IntegratorInputParser>(_engine));
     _parsers.push_back(make_unique<ManostatInputParser>(_engine));
-    _parsers.push_back(make_unique<MMInputParser>(_engine));
     _parsers.push_back(make_unique<OutputInputParser>(_engine));
     _parsers.push_back(make_unique<ResetKineticsInputParser>(_engine));
     _parsers.push_back(make_unique<SimulationBoxInputParser>(_engine));

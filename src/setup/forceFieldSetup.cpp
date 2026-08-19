@@ -26,9 +26,7 @@
 #include <format>
 
 #include "engine.hpp"               // for Engine
-#include "forceFieldClass.hpp"      // for ForceField
 #include "forceFieldSettings.hpp"   // for ForceFieldSettings
-#include "potential.hpp"            // for Potential
 #include "settings.hpp"             // for Settings
 
 using namespace setup;
@@ -74,15 +72,15 @@ ForceFieldSetup::ForceFieldSetup(Engine &engine) : _engine(engine) {}
  */
 void ForceFieldSetup::setup()
 {
-    auto       &forceField    = _engine.getForceField();
+    const auto &forceField    = _engine.getForceField();
     const auto &potential     = _engine.getPotential();
-    const auto &nonCoulombPot = potential.getNonCoulombPotSharedPtr();
-    const auto &coulombPot    = potential.getCoulombPotSharedPtr();
+    const auto &nonCoulombPot = potential->getNonCoulombPotSharedPtr();
+    const auto &coulombPot    = potential->getCoulombPotSharedPtr();
 
     if (Settings::isMMActivated())
     {
-        forceField.setNonCoulombPotential(nonCoulombPot);
-        forceField.setCoulombPotential(coulombPot);
+        forceField->setNonCoulombPotential(nonCoulombPot);
+        forceField->setCoulombPotential(coulombPot);
 
         setupBonds();
         setupAngles();
@@ -104,20 +102,20 @@ void ForceFieldSetup::setup()
  */
 void ForceFieldSetup::setupBonds()
 {
-    auto &forceField = _engine.getForceField();
+    const auto &forceField = _engine.getForceField();
 
     auto addForceFieldParameters = [&forceField](auto &bond)
     {
-        const auto bondType = forceField.findBondTypeById(bond.getType());
+        const auto bondType = forceField->findBondTypeById(bond.getType());
         bond.setEquilibriumBondLength(bondType.getEquilibriumBondLength());
         bond.setForceConstant(bondType.getForceConstant());
     };
 
-    std::ranges::for_each(forceField.getBonds(), addForceFieldParameters);
+    std::ranges::for_each(forceField->getBonds(), addForceFieldParameters);
 
-    _nBondTypes = forceField.getBondTypes().size();
+    _nBondTypes = forceField->getBondTypes().size();
 
-    forceField.clearBondTypes();
+    forceField->clearBondTypes();
 }
 
 /**
@@ -130,20 +128,20 @@ void ForceFieldSetup::setupBonds()
  */
 void ForceFieldSetup::setupAngles()
 {
-    auto &forceField = _engine.getForceField();
+    const auto &forceField = _engine.getForceField();
 
     auto addForceFieldParameters = [&forceField](auto &angle)
     {
-        const auto angleType = forceField.findAngleTypeById(angle.getType());
+        const auto angleType = forceField->findAngleTypeById(angle.getType());
         angle.setEquilibriumAngle(angleType.getEquilibriumAngle());
         angle.setForceConstant(angleType.getForceConstant());
     };
 
-    std::ranges::for_each(forceField.getAngles(), addForceFieldParameters);
+    std::ranges::for_each(forceField->getAngles(), addForceFieldParameters);
 
-    _nAngleTypes = forceField.getAngleTypes().size();
+    _nAngleTypes = forceField->getAngleTypes().size();
 
-    forceField.clearAngleTypes();
+    forceField->clearAngleTypes();
 }
 
 /**
@@ -156,21 +154,21 @@ void ForceFieldSetup::setupAngles()
  */
 void ForceFieldSetup::setupDihedrals()
 {
-    auto &ff = _engine.getForceField();
+    const auto &ff = _engine.getForceField();
 
     auto addForceFieldParameters = [&ff](auto &dihedral)
     {
-        const auto dihedralType = ff.findDihedralTypeById(dihedral.getType());
+        const auto dihedralType = ff->findDihedralTypeById(dihedral.getType());
         dihedral.setForceConstant(dihedralType.getForceConstant());
         dihedral.setPhaseShift(dihedralType.getPhaseShift());
         dihedral.setPeriodicity(dihedralType.getPeriodicity());
     };
 
-    std::ranges::for_each(ff.getDihedrals(), addForceFieldParameters);
+    std::ranges::for_each(ff->getDihedrals(), addForceFieldParameters);
 
-    _nDihedralTypes = ff.getDihedralTypes().size();
+    _nDihedralTypes = ff->getDihedralTypes().size();
 
-    ff.clearDihedralTypes();
+    ff->clearDihedralTypes();
 }
 
 /**
@@ -183,21 +181,21 @@ void ForceFieldSetup::setupDihedrals()
  */
 void ForceFieldSetup::setupImproperDihedrals()
 {
-    auto &ff = _engine.getForceField();
+    const auto &ff = _engine.getForceField();
 
     auto addForceFieldParameters = [&ff](auto &improper)
     {
-        const auto improperType = ff.findImproperTypeById(improper.getType());
+        const auto improperType = ff->findImproperTypeById(improper.getType());
         improper.setForceConstant(improperType.getForceConstant());
         improper.setPhaseShift(improperType.getPhaseShift());
         improper.setPeriodicity(improperType.getPeriodicity());
     };
 
-    std::ranges::for_each(ff.getImproperDihedrals(), addForceFieldParameters);
+    std::ranges::for_each(ff->getImproperDihedrals(), addForceFieldParameters);
 
-    _nImproperTypes = ff.getImproperTypes().size();
+    _nImproperTypes = ff->getImproperTypes().size();
 
-    ff.clearImproperDihedralTypes();
+    ff->clearImproperDihedralTypes();
 }
 
 /**
@@ -206,12 +204,12 @@ void ForceFieldSetup::setupImproperDihedrals()
  */
 void ForceFieldSetup::writeSetupInfo()
 {
-    auto &forceField = _engine.getForceField();
+    const auto &forceField = _engine.getForceField();
 
-    const auto nBonds             = forceField.getBonds().size();
-    const auto nAngles            = forceField.getAngles().size();
-    const auto nDihedrals         = forceField.getDihedrals().size();
-    const auto nImproperDihedrals = forceField.getImproperDihedrals().size();
+    const auto nBonds             = forceField->getBonds().size();
+    const auto nAngles            = forceField->getAngles().size();
+    const auto nDihedrals         = forceField->getDihedrals().size();
+    const auto nImproperDihedrals = forceField->getImproperDihedrals().size();
 
     const auto nBondMsg     = std::format("Bonds:     {}", nBonds);
     const auto nAngleMsg    = std::format("Angles:    {}", nAngles);

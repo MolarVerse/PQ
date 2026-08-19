@@ -114,6 +114,13 @@ void OutputFilesSetup::setup()
         mdEngine.getStressOutput().setFilename(stressFile);
         mdEngine.getBoxFileOutput().setFilename(boxFile);
 
+        if (Settings::isHybridJobtype())
+        {
+            const auto hybridCenterFile =
+                OutputFileSettings::getHybridCenterFileName();
+            mdEngine.getXyzHybridCenterOutput().setFilename(hybridCenterFile);
+        }
+
         if (OutputFileSettings::getIncludeOutputMetadata())
         {
             const auto timeStep = TimingsSettings::getTimeStep();

@@ -95,7 +95,8 @@ namespace simulationBox
         HybridZone _hybridZone = HybridZone::NOT_HYBRID;
         bool       _isActive   = true;
         double     _smoothingFactor;
-        bool       _isForcedInner = false;
+        bool       _isForcedCore  = false;
+        bool       _isForcedLayer = false;
         bool       _isForcedOuter = false;
 
        public:
@@ -213,7 +214,8 @@ namespace simulationBox
         [[nodiscard]] const std::vector<std::shared_ptr<Atom>> &getAtoms(
         ) const;
 
-        [[nodiscard]] bool isForcedInner() const;
+        [[nodiscard]] bool isForcedCore() const;
+        [[nodiscard]] bool isForcedLayer() const;
         [[nodiscard]] bool isForcedOuter() const;
 
         /***************************
@@ -231,7 +233,8 @@ namespace simulationBox
         void setHybridZone(const HybridZone hybridZone);
         void setSmoothingFactor(const double factor);
 
-        void setForcedInner(const bool isForcedInner);
+        void setForcedCore(const bool isForcedCore);
+        void setForcedLayer(const bool isForcedLayer);
         void setForcedOuter(const bool isForcedOuter);
     };
 

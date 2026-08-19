@@ -22,8 +22,7 @@
 
 #include "celllistSetup.hpp"
 
-#include "engine.hpp"      // for Engine
-#include "potential.hpp"   // for PotentialBruteForce, PotentialCellList, Potential
+#include "engine.hpp"   // for Engine
 #include "potentialBruteForce.hpp"
 #include "potentialCellList.hpp"   // for PotentialCellList
 
@@ -67,7 +66,7 @@ CellListSetup::CellListSetup(Engine &engine) : _engine(engine) {}
 void CellListSetup::setup()
 {
     const auto &potential     = _engine.getPotential();
-    const auto  nonCoulombPot = potential.getNonCoulombPotSharedPtr();
+    const auto  nonCoulombPot = potential->getNonCoulombPotSharedPtr();
 
     if (_engine.isCellListActivated())
     {
@@ -79,5 +78,5 @@ void CellListSetup::setup()
     else
         _engine.makePotential(PotentialBruteForce());
 
-    _engine.getPotential().setNonCoulombPotential(nonCoulombPot);
+    _engine.getPotential()->setNonCoulombPotential(nonCoulombPot);
 }

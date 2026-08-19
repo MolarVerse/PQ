@@ -54,8 +54,14 @@ TEST_F(TestInputFileReader, parseForcedRegionLists)
 {
     auto parser = HybridInputParser(*_engine);
 
-    parser.parseForcedInnerList({"forced_inner_list", "=", "3,1,3"}, 0);
-    EXPECT_EQ(HybridSettings::getForcedInnerList(), std::vector<int>({1, 3}));
+    parser.parseForcedCoreList({"forced_core_list", "=", "3,1,3"}, 0);
+    EXPECT_EQ(HybridSettings::getForcedCoreList(), std::vector<int>({1, 3}));
+
+    parser.parseForcedLayerList({"forced_layer_list", "=", "5,7-9,8"}, 0);
+    EXPECT_EQ(
+        HybridSettings::getForcedLayerList(),
+        std::vector<int>({5, 7, 8, 9})
+    );
 
     parser.parseForcedOuterList({"forced_outer_list", "=", "8-10,9"}, 0);
     EXPECT_EQ(

@@ -22,9 +22,7 @@
 
 #include "intraNonBondedSetup.hpp"
 
-#include "engine.hpp"           // for Engine
-#include "intraNonBonded.hpp"   // for IntraNonBonded
-#include "potential.hpp"        // for Potential
+#include "engine.hpp"   // for Engine
 
 using namespace setup;
 using namespace engine;
@@ -52,7 +50,7 @@ void setup::setupIntraNonBonded(engine::Engine &engine)
  *
  * @param engine
  */
-IntraNonBondedSetup::IntraNonBondedSetup(Engine &engine) : _engine(engine){};
+IntraNonBondedSetup::IntraNonBondedSetup(Engine &engine) : _engine(engine) {}
 
 /**
  * @brief Setup intra non bonded interactions
@@ -66,13 +64,13 @@ IntraNonBondedSetup::IntraNonBondedSetup(Engine &engine) : _engine(engine){};
  */
 void IntraNonBondedSetup::setup()
 {
-    auto       &intraNonBonded = _engine.getIntraNonBonded();
+    const auto &intraNonBonded = _engine.getIntraNonBonded();
     const auto &potential      = _engine.getPotential();
-    const auto &nonCoulombPot  = potential.getNonCoulombPotSharedPtr();
-    const auto &coulombPot     = potential.getCoulombPotSharedPtr();
+    const auto &nonCoulombPot  = potential->getNonCoulombPotSharedPtr();
+    const auto &coulombPot     = potential->getCoulombPotSharedPtr();
 
-    intraNonBonded.setNonCoulombPotential(nonCoulombPot);
-    intraNonBonded.setCoulombPotential(coulombPot);
+    intraNonBonded->setNonCoulombPotential(nonCoulombPot);
+    intraNonBonded->setCoulombPotential(coulombPot);
 
-    intraNonBonded.fillIntraNonBondedMaps(_engine.getSimulationBox());
+    intraNonBonded->fillIntraNonBondedMaps(_engine.getSimulationBox());
 }

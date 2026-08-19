@@ -45,6 +45,11 @@
 #include "trajectoryOutput.hpp"
 #include "virialOutput.hpp"
 
+namespace configurator
+{
+    class HybridConfigurator;   // forward declaration
+}   // namespace configurator
+
 namespace engine
 {
     /**
@@ -61,6 +66,7 @@ namespace engine
         std::unique_ptr<output::InfoOutput>   _infoOutput;
 
         std::unique_ptr<output::TrajectoryOutput> _xyzOutput;
+        std::unique_ptr<output::TrajectoryOutput> _xyzHybridCenterOutput;
         std::unique_ptr<output::TrajectoryOutput> _velOutput;
         std::unique_ptr<output::TrajectoryOutput> _forceOutput;
         std::unique_ptr<output::TrajectoryOutput> _chargeOutput;
@@ -97,7 +103,12 @@ namespace engine
             const size_t step,
             const physicalData::PhysicalData &
         );
+
         void writeXyzFile(simulationBox::SimulationBox &, const size_t);
+        void writeHybridCenterXyzFile(
+            const configurator::HybridConfigurator &,
+            const size_t
+        );
         void writeVelFile(simulationBox::SimulationBox &, const size_t);
         void writeForceFile(simulationBox::SimulationBox &, const size_t);
         void writeChargeFile(simulationBox::SimulationBox &, const size_t);
@@ -154,6 +165,7 @@ namespace engine
         [[nodiscard]] output::EnergyOutput     &getEnergyOutput();
         [[nodiscard]] output::EnergyOutput     &getInstantEnergyOutput();
         [[nodiscard]] output::TrajectoryOutput &getXyzOutput();
+        [[nodiscard]] output::TrajectoryOutput &getXyzHybridCenterOutput();
         [[nodiscard]] output::TrajectoryOutput &getVelOutput();
         [[nodiscard]] output::TrajectoryOutput &getForceOutput();
         [[nodiscard]] output::TrajectoryOutput &getChargeOutput();

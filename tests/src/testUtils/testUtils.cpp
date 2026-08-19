@@ -60,9 +60,9 @@ namespace test
         const std::unique_ptr<engine::Engine>& engine,
         const std::type_info&                  expectedType
     );
-    template void checkType<potential::Potential*>(
-        potential::Potential* const& potential,
-        const std::type_info&        expectedType
+    template void checkType<std::shared_ptr<potential::Potential>>(
+        const std::shared_ptr<potential::Potential>& potential,
+        const std::type_info&                        expectedType
     );
     template void checkType<potential::CoulombPotential*>(
         potential::CoulombPotential* const& potential,

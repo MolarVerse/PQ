@@ -69,7 +69,8 @@ void HybridSetup::setup()
 {
     validateQMMethod();
     setupInnerRegionCenter();
-    setupForcedInnerList();
+    setupForcedCoreList();
+    setupForcedLayerList();
     setupForcedOuterList();
     validateQMChargeSettings();
     checkZoneRadii();
@@ -134,13 +135,24 @@ void HybridSetup::setupInnerRegionCenter()
 }
 
 /**
- * @brief setup forced inner list
+ * @brief setup forced core list
  *
  */
-void HybridSetup::setupForcedInnerList()
+void HybridSetup::setupForcedCoreList()
 {
-    _engine.getSimulationBox().setupForcedInnerMolecules(
-        HybridSettings::getForcedInnerList()
+    _engine.getSimulationBox().setupForcedCoreMolecules(
+        HybridSettings::getForcedCoreList()
+    );
+}
+
+/**
+ * @brief setup forced layer list
+ *
+ */
+void HybridSetup::setupForcedLayerList()
+{
+    _engine.getSimulationBox().setupForcedLayerMolecules(
+        HybridSettings::getForcedLayerList()
     );
 }
 
@@ -263,7 +275,7 @@ void HybridSetup::setupWriteInfo() const
         HybridSettings::getInnerRegionCenter();
     const auto innerRegionCenter =
         innerRegionCenterSettings.value_or(std::vector<int>{0});
-    const auto forcedInnerList = HybridSettings::getForcedInnerList();
+    const auto forcedCoreList  = HybridSettings::getForcedCoreList();
     const auto forcedOuterList = HybridSettings::getForcedOuterList();
     const auto useQMCharges    = HybridSettings::getUseQMCharges();
     const auto coreRadius      = HybridSettings::getCoreRadius();
@@ -297,7 +309,7 @@ void HybridSetup::setupWriteInfo() const
     // clang-format off
     const auto smoothingMethodMsg          = std::format("Smoothing method:            {}", string(smoothingMethod));
     const auto innerRegionCenterMsg        = std::format("Inner region center atoms:   {}", formatIndexList(innerRegionCenter));
-    const auto forcedInnerListMsg          = std::format("Forced inner molecules:      {}", formatIndexList(forcedInnerList));
+    const auto forcedCoreListMsg           = std::format("Forced inner molecules:      {}", formatIndexList(forcedCoreList));
     const auto forcedOuterListMsg          = std::format("Forced outer molecules:      {}", formatIndexList(forcedOuterList));
     const auto qmChargesSourceMsg          = std::format("QM charge source:            {}", useQMCharges ? "qm" : "mm");
     const auto coreRadiusMsg               = std::format("Core radius:                 {} Å", coreRadius);
@@ -308,7 +320,7 @@ void HybridSetup::setupWriteInfo() const
 
     logOutput.writeSetupInfo(smoothingMethodMsg);
     logOutput.writeSetupInfo(innerRegionCenterMsg);
-    logOutput.writeSetupInfo(forcedInnerListMsg);
+    logOutput.writeSetupInfo(forcedCoreListMsg);
     logOutput.writeSetupInfo(forcedOuterListMsg);
     logOutput.writeSetupInfo(qmChargesSourceMsg);
     logOutput.writeEmptyLine();

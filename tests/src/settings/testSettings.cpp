@@ -348,11 +348,3 @@ TEST(TestSettings, isRingPolymerMDActivatedTest)
     Settings::setJobtype(NONE);
     EXPECT_EQ(Settings::isRingPolymerMDActivated(), false);
 }
-
-TEST(TestSettings, activateKokkosTest)
-{
-    EXPECT_EQ(Settings::useKokkos(), false);
-
-    Settings::activateKokkos();
-    EXPECT_EQ(Settings::useKokkos(), true);
-}

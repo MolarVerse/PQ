@@ -26,6 +26,7 @@
 #include <string>   // for getline, allocator, string
 
 #include "gtest/gtest.h"   // for Message, TestPartResult
+#include "hybridConfigurator.hpp"
 #include "outputFileSettings.hpp"
 
 /**
@@ -61,6 +62,58 @@ TEST_F(TestTrajectoryOutput, writeXyzMetadata)
 
     _trajectoryOutput->setFilename("default.xyz");
     _trajectoryOutput->writeXyz(*_simulationBox, 42);
+    _trajectoryOutput->close();
+    settings::OutputFileSettings::setIncludeOutputMetadata(false);
+
+    std::ifstream file("default.xyz");
+    std::string   line;
+    getline(file, line);
+    getline(file, line);
+    EXPECT_EQ(line, "# step = 42");
+}
+
+/**
+ * @brief Test the writeHybridCenterXyz method
+ *
+ */
+TEST_F(TestTrajectoryOutput, writeHybridCenterXyz)
+{
+    configurator::HybridConfigurator hybridConfigurator;
+
+    _simulationBox->getAtom(1).setMass(1.0);
+    _simulationBox->addInnerRegionCenterAtoms({1});
+    hybridConfigurator.calculateInnerRegionCenter(*_simulationBox);
+
+    _trajectoryOutput->setFilename("default.xyz");
+    _trajectoryOutput->writeHybridCenterXyz(hybridConfigurator, 7);
+    _trajectoryOutput->close();
+
+    std::ifstream file("default.xyz");
+    std::string   line;
+    getline(file, line);
+    EXPECT_EQ(line, "1");
+    getline(file, line);
+    EXPECT_EQ(line, "");
+    getline(file, line);
+    EXPECT_EQ(line, "X    \t     1.00000000\t     2.00000000\t     3.00000000");
+}
+
+/**
+ * @brief Test optional step metadata in the hybrid center xyz comment line
+ *
+ */
+TEST_F(TestTrajectoryOutput, writeHybridCenterXyzMetadata)
+{
+    settings::OutputFileSettings::setIncludeOutputMetadata(true);
+
+    configurator::HybridConfigurator hybridConfigurator;
+
+    _simulationBox->getAtom(1).setMass(1.0);
+    _simulationBox->addInnerRegionCenterAtoms({1});
+    hybridConfigurator.calculateInnerRegionCenter(*_simulationBox);
+
+    _trajectoryOutput->setFilename("default.xyz");
+    _trajectoryOutput->writeHybridCenterXyz(hybridConfigurator, 42);
     _trajectoryOutput->close();
     settings::OutputFileSettings::setIncludeOutputMetadata(false);
 

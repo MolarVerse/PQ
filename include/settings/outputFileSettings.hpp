@@ -48,17 +48,20 @@ namespace settings
         static inline bool        _filePrefixSet         = false;
         static inline std::string _filePrefix;
 
-        static inline std::string _energyFile = DefaultFiles::energyFile;
-        static inline std::string _instEnFile = DefaultFiles::instEnFile;
-        static inline std::string _rstFile    = DefaultFiles::restartFile;
-        static inline std::string _momFile    = DefaultFiles::momentumFile;
-        static inline std::string _trajFile   = DefaultFiles::trajFile;
-        static inline std::string _velFile    = DefaultFiles::velFile;
-        static inline std::string _forceFile  = DefaultFiles::forceFile;
-        static inline std::string _chargeFile = DefaultFiles::chargeFile;
-        static inline std::string _logFile    = DefaultFiles::logFile;
-        static inline std::string _refFile    = DefaultFiles::refFile;
-        static inline std::string _infoFile   = DefaultFiles::infoFile;
+        // clang-format off
+        static inline std::string _energyFile       = DefaultFiles::energyFile;
+        static inline std::string _instEnFile       = DefaultFiles::instEnFile;
+        static inline std::string _rstFile          = DefaultFiles::restartFile;
+        static inline std::string _momFile          = DefaultFiles::momentumFile;
+        static inline std::string _trajFile         = DefaultFiles::trajFile;
+        static inline std::string _hybridCenterFile = DefaultFiles::hybridCenterFile;
+        static inline std::string _velFile          = DefaultFiles::velFile;
+        static inline std::string _forceFile        = DefaultFiles::forceFile;
+        static inline std::string _chargeFile       = DefaultFiles::chargeFile;
+        static inline std::string _logFile          = DefaultFiles::logFile;
+        static inline std::string _refFile          = DefaultFiles::refFile;
+        static inline std::string _infoFile         = DefaultFiles::infoFile;
+        // clang-format on
 
         static inline std::string _virialFile = DefaultFiles::virialFile;
         static inline std::string _stressFile = DefaultFiles::stressFile;
@@ -96,6 +99,7 @@ namespace settings
         static void setInstantEnergyFileName(const std::string_view);
         static void setMomentumFileName(const std::string_view);
         static void setTrajectoryFileName(const std::string_view);
+        static void setHybridCenterFileName(const std::string_view);
         static void setVelocityFileName(const std::string_view);
         static void setForceFileName(const std::string_view);
         static void setChargeFileName(const std::string_view);
@@ -135,6 +139,7 @@ namespace settings
         [[nodiscard]] static std::string getInstantEnergyFileName();
         [[nodiscard]] static std::string getMomentumFileName();
         [[nodiscard]] static std::string getTrajectoryFileName();
+        [[nodiscard]] static std::string getHybridCenterFileName();
         [[nodiscard]] static std::string getVelocityFileName();
         [[nodiscard]] static std::string getForceFileName();
         [[nodiscard]] static std::string getChargeFileName();

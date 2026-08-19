@@ -22,8 +22,8 @@
 
 #include "testVirial.hpp"
 
-#include "gtest/gtest.h"         // for Message, TestPartResult
-#include "molecularVirial.hpp"   // for MolecularVirial
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include "virial.hpp"
 
 using namespace linearAlgebra;
 using namespace physicalData;
@@ -52,9 +52,8 @@ TEST_F(TestVirial, calculateVirial)
                         shiftForce_mol1_atom1 + shiftForce_mol1_atom2 +
                         shiftForce_mol2_atom1;
 
-    _virial->calculateVirial(*_simBox, *_data);
-
-    EXPECT_EQ(diagonal(_data->getVirial()), virial);
+    const auto virialCalc = calculateVirial(*_simBox);
+    EXPECT_EQ(diagonal(virialCalc), virial);
     EXPECT_EQ(_simBox->getMolecule(0).getAtomShiftForce(0), Vec3D{0});
     EXPECT_EQ(_simBox->getMolecule(0).getAtomShiftForce(1), Vec3D{0});
     EXPECT_EQ(_simBox->getMolecule(1).getAtomShiftForce(0), Vec3D{0});
@@ -62,14 +61,11 @@ TEST_F(TestVirial, calculateVirial)
 
 TEST_F(TestVirial, atomicVirialHasNoIntramolecularCorrection)
 {
-    EXPECT_EQ(_virial->intraMolecularVirialCorrection(*_simBox), tensor3D{0.0});
+    EXPECT_EQ(intraMolecularVirialCorrection(*_simBox), tensor3D{0.0});
 }
 
 TEST_F(TestVirial, intramolecularCorrection)
 {
-    auto *virialClass = new MolecularVirial();
-    virialClass->setVirial({0.0});
-
     const auto &molecule0 = _simBox->getMolecule(0);
     const auto &molecule1 = _simBox->getMolecule(1);
 
@@ -91,15 +87,14 @@ TEST_F(TestVirial, intramolecularCorrection)
                   shiftForce_mol1_atom1 + shiftForce_mol1_atom2 +
                   shiftForce_mol2_atom1;
 
-    virialClass->calculateVirial(*_simBox, *_data);
+    const auto virialCalc = calculateVirial(*_simBox);
 
-    EXPECT_EQ(diagonal(_data->getVirial()), virial);
+    EXPECT_EQ(diagonal(virialCalc), virial);
 }
 
 TEST_F(TestVirial, calculateMolecularVirial)
 {
-    auto *virialClass = new MolecularVirial();
-    virialClass->setVirial(tensor3D(0.0));
+    settings::Settings::setVirialType(settings::VirialType::MOLECULAR);
 
     const auto &molecule0 = _simBox->getMolecule(0);
     const auto &molecule1 = _simBox->getMolecule(1);
@@ -122,7 +117,7 @@ TEST_F(TestVirial, calculateMolecularVirial)
 
     PhysicalData physicalData;
 
-    virialClass->intraMolecularVirialCorrection(*_simBox, physicalData);
+    const auto virialCalculated = intraMolecularVirialCorrection(*_simBox);
 
-    EXPECT_EQ(diagonal(virialClass->getVirial()), virial);
+    EXPECT_EQ(diagonal(virialCalculated), virial);
 }

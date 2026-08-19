@@ -76,6 +76,11 @@ namespace input
             const size_t
         );
 
+        void parseHybridCenterFilename(
+            const std::vector<std::string> &,
+            const size_t
+        );
+
         void parseVelocityFilename(
             const std::vector<std::string> &,
             const size_t

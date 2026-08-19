@@ -55,7 +55,6 @@ namespace opt
         std::shared_ptr<forceField::ForceField>         _forceField;
         std::shared_ptr<physicalData::PhysicalData>     _physicalData;
         std::shared_ptr<physicalData::PhysicalData>     _physicalDataOld;
-        std::shared_ptr<virial::Virial>                 _virial;
         std::shared_ptr<intraNonBonded::IntraNonBonded> _intraNonBonded;
 
        public:
@@ -85,7 +84,6 @@ namespace opt
         );
 
         void setForceField(const std::shared_ptr<forceField::ForceField>);
-        void setVirial(const std::shared_ptr<virial::Virial>);
         void setIntraNonBonded(
             const std::shared_ptr<intraNonBonded::IntraNonBonded>
         );

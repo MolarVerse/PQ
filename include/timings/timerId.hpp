@@ -20,39 +20,35 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MOLECULAR_VIRIAL_HPP_
+#ifndef _TIMER_ID_HPP_
+#define _TIMER_ID_HPP_
 
-#define _MOLECULAR_VIRIAL_HPP_
+#include <cstdint>
+#include <mstd/enum.hpp>
+#include <string>
 
-#include "simulationBox.hpp"
-#include "virial.hpp"
+#define TIMER_ID_LIST(X)   \
+    X(DefaultTimings)      \
+    X(EngineOutput)        \
+    X(Constraints)         \
+    X(CellList)            \
+    X(PhysicalData)        \
+    X(Simulation)          \
+    X(Integrator)          \
+    X(Thermostat)          \
+    X(Manostat)            \
+    X(Output)              \
+    X(Potential)           \
+    X(IntraNonBonded)      \
+    X(Virial)              \
+    X(ResetKinetics)       \
+    X(WaterIntraPotential) \
+    X(WaterInterPotential) \
+    X(QMEngine)            \
+    X(Setup)
 
-namespace virial
-{
-    /**
-     * @class MolecularVirial
-     *
-     * @brief Class for virial calculation of molecular systems
-     *
-     * @details overrides calculateVirial() function to include intra-molecular
-     * virial correction
-     */
-    class MolecularVirial : public Virial
-    {
-       public:
-        MolecularVirial();
+MSTD_ENUM(TimerId, std::uint8_t, TIMER_ID_LIST);
 
-        std::shared_ptr<Virial> clone() const override;
+std::string toString(TimerId id);
 
-        void intraMolecularVirialCorrection(
-            simulationBox::SimulationBox &,
-            physicalData::PhysicalData &
-        ) override;
-        linearAlgebra::tensor3D intraMolecularVirialCorrection(
-            simulationBox::SimulationBox &
-        ) const override;
-    };
-
-}   // namespace virial
-
-#endif   // _MOLECULAR_VIRIAL_HPP_
+#endif   // _TIMER_ID_HPP_

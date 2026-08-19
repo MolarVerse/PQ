@@ -22,7 +22,10 @@
 
 #include "mmmdEngine.hpp"
 
+#include "virial.hpp"
+
 using namespace engine;
+using virial::calculateVirial;
 
 /**
  * @brief calculate MM forces
@@ -32,17 +35,7 @@ void MMMDEngine::calculateForces()
 {
     _cellList->updateCellList(*_simulationBox);
 
-#ifdef WITH_KOKKOS
-    _kokkosPotential.calculateForces(
-        *_simulationBox,
-        _kokkosSimulationBox,
-        *_physicalData,
-        _kokkosLennardJones,
-        _kokkosCoulombWolf
-    );
-#else
     _potential->calculateForces(*_simulationBox, *_physicalData, *_cellList);
-#endif
 
     _interWater->calculate(
         *_simulationBox,
@@ -53,7 +46,8 @@ void MMMDEngine::calculateForces()
 
     _intraNonBonded->calculate(*_simulationBox, *_physicalData);
 
-    _virial->calculateVirial(*_simulationBox, *_physicalData);
+    const auto virial = calculateVirial(*_simulationBox);
+    _physicalData->setVirial(virial);
 
     _forceField->calculateBondedInteractions(*_simulationBox, *_physicalData);
 

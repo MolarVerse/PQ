@@ -44,14 +44,14 @@ TEST_F(TestParameterFileSection, processSectionAngle)
     std::vector<std::string>           lineElements = {"0", "1.22", "234.3"};
     input::parameterFile::AngleSection angleSection;
     angleSection.processSection(lineElements, *_engine);
-    EXPECT_EQ(_engine->getForceField().getAngleTypes().size(), 1);
-    EXPECT_EQ(_engine->getForceField().getAngleTypes()[0].getId(), 0);
+    EXPECT_EQ(_engine->getForceField()->getAngleTypes().size(), 1);
+    EXPECT_EQ(_engine->getForceField()->getAngleTypes()[0].getId(), 0);
     EXPECT_EQ(
-        _engine->getForceField().getAngleTypes()[0].getEquilibriumAngle(),
+        _engine->getForceField()->getAngleTypes()[0].getEquilibriumAngle(),
         1.22 * constants::DEG_TO_RAD
     );
     EXPECT_EQ(
-        _engine->getForceField().getAngleTypes()[0].getForceConstant(),
+        _engine->getForceField()->getAngleTypes()[0].getForceConstant(),
         234.3
     );
 

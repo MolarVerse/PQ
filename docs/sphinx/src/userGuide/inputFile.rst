@@ -97,7 +97,7 @@ Possible options are:
 
    3. **qm-rpmd** - Represents a full quantum mechanics ring polymer molecular dynamics simulation. For more information see the :ref:`ringpolymermdKeys` section
 
-   4. **qmmm-md** - Represents a hybrid quantum mechanics - molecular mechanics molecular dynamics simulation. (Not implemented yet)
+   4. **qmmm-md** - Represents a hybrid quantum mechanics - molecular mechanics molecular dynamics simulation.
 
    5. **mm-opt** - represents a geometry optimization calculation using molecular mechanics.
 
@@ -476,6 +476,24 @@ The ``traj_file`` keyword sets the name for the :ref:`trajectoryFile`, which sto
 
 .. centered:: *default value* = "default.xyz"
 
+.. _hybridcenterfilekey:
+
+Hybrid Center File
+==================
+
+.. admonition:: Key
+    :class: tip
+
+    hybrid_center_file = {file} -> "default.center.xyz"
+
+The ``hybrid_center_file`` keyword sets the name for the :ref:`hybridCenterFile`, which stores the position of the inner region center in a hybrid type MD simulation.
+
+.. centered:: *default value* = "default.center.xyz"
+
+.. Note::
+
+    The ``hybrid_center_file`` keyword is ignored for non-hybrid-type calculations.
+
 .. _velocityfilekey:
 
 Velocity File
@@ -828,6 +846,8 @@ Temperature Ramp Frequency
     temp_ramp_frequency = {uint+} -> 1
 
 With the ``temp_ramp_frequency`` keyword the user can specify the frequency of the temperature ramping from the ``start_temp`` to the ``temp`` value. If no starting temperature is given the keyword will be ignored. If a starting temperature is given and this keyword is omitted the temperature ramping will be performed, so that each step the temperature is increased by the same value.
+
+If the ramp length is not divisible by this frequency, the temperature increments are scaled by the number of scheduled updates so that the final update reaches the requested target temperature exactly.
 
 .. centered:: *default value* = 1 step
 
@@ -1827,17 +1847,31 @@ The ``inner_region_center`` if more than one atom is selected will be by default
 
 .. centered:: *default value* = 0
 
-.. _forcedinnerlistKey:
+.. _forcedCoreListKey:
 
-Forced Inner List
-==================
+Forced Core List
+=================
 
 .. admonition:: Key
     :class: tip
 
-    forced_inner_list = {selection}
+    forced_core_list = {selection}
 
-With the ``forced_inner_list`` keyword the user can specify a list of molecules which will always be treated with the method chosen for the inner region of the hybrid system.
+With the ``forced_core_list`` keyword the user can specify a list of molecules which will always be part of the ``CORE`` region of the hybrid system.
+For more information about the selection grammar see the `selectionType`_ section.
+By default, no molecules are selected.
+
+.. _forcedLayerListKey:
+
+Forced Layer List
+=================
+
+.. admonition:: Key
+    :class: tip
+
+    forced_layer_list = {selection}
+
+With the ``forced_layer_list`` keyword the user can specify a list of molecules which will always be part of the ``LAYER`` region of the hybrid system.
 For more information about the selection grammar see the `selectionType`_ section.
 By default, no molecules are selected.
 
@@ -1901,7 +1935,7 @@ Core Radius
     core_radius = {double} Å -> 0.0 Å
 
 With the ``core_radius`` keyword the user can specify the core radius in Å around the center of the inner region in hybrid type calculations.
-The default value is 0.0 Å, which means that the core radius is not set and only :ref:`forced_inner_list <forcedInnerListKey>` atoms are treated by the method chosen for the inner region.
+The default value is 0.0 Å, which means that the core radius is not set and only :ref:`forced_core_list <forcedCoreListKey>` molecules are part of the ``CORE`` region.
 
 .. centered:: *default value* = 0.0 Å
 

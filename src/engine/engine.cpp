@@ -27,7 +27,6 @@
 
 #include "fileSettings.hpp"   // for FileSettings
 #include "logOutput.hpp"      // for LogOutput
-#include "molecularVirial.hpp"
 #include "potentialBruteForce.hpp"
 #include "stdoutOutput.hpp"      // for StdoutOutput
 #include "timingsSettings.hpp"   // for TimingsSettings
@@ -51,8 +50,7 @@ using namespace settings;
  * cell list, intra-non-bonded handler, force field, and constraints.
  */
 Engine::Engine()
-    : _virial{std::make_shared<virial::MolecularVirial>()},
-      _potential{std::make_shared<potential::PotentialBruteForce>()},
+    : _potential{std::make_shared<potential::PotentialBruteForce>()},
       _physicalData{std::make_shared<physicalData::PhysicalData>()},
       _simulationBox{std::make_shared<simulationBox::SimulationBox>()},
       _cellList{std::make_shared<simulationBox::CellList>()},
@@ -177,51 +175,32 @@ PhysicalData &Engine::getAveragePhysicalData() { return _averagePhysicalData; }
 /**
  * @brief get the reference to the force field
  *
- * @return ForceField&
+ * @return const std::shared_ptr<forceField::ForceField>&
  */
-ForceField &Engine::getForceField() { return *_forceField; }
+const std::shared_ptr<forceField::ForceField> &Engine::getForceField() const
+{
+    return _forceField;
+}
 
 /**
  * @brief get the reference to the intra non bonded interactions
  *
- * @return IntraNonBonded&
+ * @return const std::shared_ptr<IntraNonBonded>&
  */
-IntraNonBonded &Engine::getIntraNonBonded() { return *_intraNonBonded; }
-
-/**
- * @brief get the reference to the virial
- *
- * @return Virial&
- */
-Virial &Engine::getVirial() { return *_virial; }
+const std::shared_ptr<IntraNonBonded> &Engine::getIntraNonBonded() const
+{
+    return _intraNonBonded;
+}
 
 /**
  * @brief get the reference to the potential
  *
- * @return Potential&
+ * @return const Potential&
  */
-Potential &Engine::getPotential() { return *_potential; }
-
-/**
- * @brief get the pointer to the force field
- *
- * @return ForceField*
- */
-ForceField *Engine::getForceFieldPtr() { return _forceField.get(); }
-
-/**
- * @brief get the pointer to the potential
- *
- * @return Potential*
- */
-Potential *Engine::getPotentialPtr() { return _potential.get(); }
-
-/**
- * @brief get the pointer to the virial
- *
- * @return Virial*
- */
-Virial *Engine::getVirialPtr() { return _virial.get(); }
+const std::shared_ptr<potential::Potential> &Engine::getPotential() const
+{
+    return _potential;
+}
 
 /**
  * @brief get the pointer to the simulation box
@@ -236,13 +215,6 @@ SimulationBox *Engine::getSimulationBoxPtr() { return _simulationBox.get(); }
  * @return PhysicalData*
  */
 PhysicalData *Engine::getPhysicalDataPtr() { return _physicalData.get(); }
-
-/**
- * @brief get the pointer to the intra non bonded interactions
- *
- * @return IntraNonBonded*
- */
-IntraNonBonded *Engine::getIntraNonBondedPtr() { return _intraNonBonded.get(); }
 
 /**
  * @brief set the inter-water interactions handler
@@ -342,16 +314,6 @@ InfoOutput &Engine::getInfoOutput() { return _engineOutput.getInfoOutput(); }
  ******************************/
 
 /**
- * @brief get the shared pointer to the force field
- *
- * @return std::shared_ptr<ForceField>
- */
-std::shared_ptr<ForceField> Engine::getSharedForceField() const
-{
-    return _forceField;
-}
-
-/**
  * @brief get the shared pointer to the simulation box
  *
  * @return std::shared_ptr<SimulationBox>
@@ -389,31 +351,4 @@ const std::shared_ptr<CellList> &Engine::getCellList() const
 const std::shared_ptr<Constraints> &Engine::getConstraints() const
 {
     return _constraints;
-}
-
-/**
- * @brief get the shared pointer to the intra non bonded interactions
- *
- * @return std::shared_ptr<IntraNonBonded>
- */
-std::shared_ptr<IntraNonBonded> Engine::getSharedIntraNonBonded() const
-{
-    return _intraNonBonded;
-}
-
-/**
- * @brief get the shared pointer to the virial
- *
- * @return std::shared_ptr<Virial>
- */
-std::shared_ptr<Virial> Engine::getSharedVirial() const { return _virial; }
-
-/**
- * @brief get the shared pointer to the potential
- *
- * @return std::shared_ptr<Potential>
- */
-std::shared_ptr<Potential> Engine::getSharedPotential() const
-{
-    return _potential;
 }

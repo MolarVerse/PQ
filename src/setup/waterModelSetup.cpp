@@ -30,11 +30,13 @@
 #include <unordered_set>
 #include <utility>
 
-#include "bondConstraint.hpp"     // for BondConstraint
-#include "engine.hpp"             // for Engine
-#include "exceptions.hpp"         // for customException
-#include "fileSettings.hpp"       // for FileSettings
-#include "interWater.hpp"         // for InterWater
+#include "SPCIntraWater.hpp"
+#include "bondConstraint.hpp"   // for BondConstraint
+#include "engine.hpp"           // for Engine
+#include "exceptions.hpp"       // for customException
+#include "fileSettings.hpp"     // for FileSettings
+#include "interWater.hpp"       // for InterWater
+#include "mTRIntraWater.hpp"
 #include "mdEngine.hpp"           // for MDEngine
 #include "references.hpp"         // for References
 #include "referencesOutput.hpp"   // for ReferencesOutput
@@ -115,6 +117,8 @@ void WaterModelSetup::setup()
             "Water models are not supported for QM-only job types."
         ));
 
+    makeIntraWater();
+
     if (WaterModelSettings::getWaterIntraModel() != WaterIntraModel::NONE)
         checkTopologyFile();
 
@@ -166,7 +170,7 @@ void WaterModelSetup::checkTopologyFile()
 
     size_t bondIndex = 1;
 
-    for (const auto &bond : _engine.getForceField().getBonds())
+    for (const auto &bond : _engine.getForceField()->getBonds())
     {
         const auto *mol1 = bond.getMolecule1();
         const auto *mol2 = bond.getMolecule2();
@@ -194,7 +198,7 @@ void WaterModelSetup::checkTopologyFile()
 
     size_t angleIndex = 1;
 
-    for (const auto &angle : _engine.getForceField().getAngles())
+    for (const auto &angle : _engine.getForceField()->getAngles())
     {
         const auto  molecules = angle.getMolecules();
         const auto *mol1      = molecules[0];
@@ -343,6 +347,35 @@ void WaterModelSetup::shakeSetupForRigidWater(
     }
 
     constraints->activateShake();
+}
+
+/**
+ * @brief Set up the intramolecular water model.
+ *
+ * @details For flexible water models, this function constructs the appropriate
+ * @ref IntraWater object and installs it in the MD engine. Rigid water models
+ * are handled by constraints and do not require an @ref IntraWater object.
+ */
+void WaterModelSetup::makeIntraWater()
+{
+    using enum WaterIntraModel;
+
+    const auto intraModel = WaterModelSettings::getWaterIntraModel();
+
+    switch (intraModel)
+    {
+        case SPC_FW: _engine.makeIntraWater(SPCFwIntraWater{}); break;
+        case QSPC_FW: _engine.makeIntraWater(qSPCFwIntraWater{}); break;
+        case SPC_MTR: _engine.makeIntraWater(SPCMTRIntraWater{}); break;
+        case TIP3P_MTR: _engine.makeIntraWater(TIP3PMTRIntraWater{}); break;
+        case SPC:
+        case SPC_E:
+        case SPC_DC:
+        case H2O_DC:
+        case TIP3P:
+        case OPC3:
+        case NONE: break;
+    }
 }
 
 /**

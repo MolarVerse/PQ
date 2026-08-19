@@ -14,7 +14,7 @@ Key features include:
 - **Quantum mechanics integration**: Compatible with DFTB+, Turbomole, PySCF and MACE engines
 - **Flexible force fields**: GUFF (Grand Unified Force Field) and AMBER-type force fields with various non-bonded interaction models (Lennard-Jones, Buckingham, Morse)
 - **Advanced algorithms**: Ring polymer molecular dynamics for quantum nuclear effects, various thermostats and manostats
-- **High-performance computing**: MPI support for parallel simulations and optional Kokkos acceleration
+- **High-performance computing**: MPI support for parallel ring-polymer simulations
 - **Integrated ecosystem**: Part of the [MolarVerse](https://github.com/MolarVerse) organization, providing seamless integration with companion tools for trajectory analysis, structure preparation and CLI utilities
 
 PQ is designed for researchers in computational chemistry and materials science who require accurate and efficient molecular dynamics simulations across different scales and methodologies.
@@ -66,8 +66,8 @@ For compilation then type:
 
 The executable binary is then found in the subfolder named "apps" inside the build directory.
 
-For optional build settings such as MPI, ASE support, Kokkos, native CPU tuning
-and LTO, see the Installation Guide.
+For optional build settings such as MPI, ASE support, native CPU tuning and LTO,
+see the Installation Guide.
 
 ## Citation
 

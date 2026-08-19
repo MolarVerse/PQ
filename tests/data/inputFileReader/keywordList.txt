@@ -91,6 +91,7 @@ info_file                   false
 energy_file                 false
 instant_energy_file         false
 traj_file                   false
+hybrid_center_file          false
 vel_file                    false
 restart_file                false
 charge_file                 false
@@ -149,7 +150,8 @@ xtb_method                  false
 rpmd_n_replica              false
 
 inner_region_center         false
-forced_inner_list           false
+forced_core_list            false
+forced_layer_list           false
 forced_outer_list           false
 qm_charges                  false
 core_radius                 false

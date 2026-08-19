@@ -142,13 +142,3 @@ void Evaluator::setIntraNonBonded(
 {
     _intraNonBonded = intraNonBonded;
 }
-
-/**
- * @brief set the virial as shared pointer
- *
- * @param virial - std::shared_ptr<Virial>
- */
-void Evaluator::setVirial(const std::shared_ptr<Virial> virial)
-{
-    _virial = virial;
-}

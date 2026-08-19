@@ -116,7 +116,7 @@ void AngleSection::processSection(
     auto angleForceField = AngleForceField(mols, atomIndices, angleType);
     angleForceField.setIsLinker(isLinker);
 
-    engine.getForceField().addAngle(angleForceField);
+    engine.getForceField()->addAngle(angleForceField);
 }
 
 /**

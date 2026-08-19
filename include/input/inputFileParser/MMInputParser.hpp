@@ -38,8 +38,16 @@ namespace input
      */
     class MMInputParser : public InputFileParser
     {
+       private:
+        std::shared_ptr<forceField::ForceField> _forceField;
+        std::shared_ptr<potential::Potential>   _potential;
+
        public:
-        explicit MMInputParser(engine::Engine &);
+        explicit MMInputParser(
+            engine::Engine &,
+            std::shared_ptr<forceField::ForceField> forceField,
+            std::shared_ptr<potential::Potential>   potential
+        );
 
         void parseForceFieldType(
             const std::vector<std::string> &,

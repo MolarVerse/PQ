@@ -1,0 +1,1 @@
+- The forced_inner_list keyword has been renamed to forced_core_list

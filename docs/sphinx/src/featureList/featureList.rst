@@ -18,7 +18,9 @@ The supported :ref:`jobtype <jobtype>` values are:
 * ``mm-md`` - molecular-mechanics molecular dynamics
 * ``qm-md`` - quantum-mechanics molecular dynamics
 * ``qm-rpmd`` - quantum-mechanics ring-polymer molecular dynamics
+* ``qmmm-md`` - hybrid quantum mechanics - molecular mechanics molecular dynamics
 * ``mm-opt`` - molecular-mechanics geometry optimization
+* ``mm-hessian`` - molecular mechanics Hessian calculation
 
 *******************
 Molecular Mechanics
@@ -34,7 +36,6 @@ Molecular Mechanics
 
 * brute-force pair evaluation
 * :ref:`cell-list <celllistKeys>` pair evaluation
-* optional Kokkos acceleration for supported MM Lennard-Jones/Wolf setups
 
 **Long-range corrections**
 
@@ -113,7 +114,6 @@ Planned Items
 
 The following items are planned for future releases:
 
-* hybrid QM/MM job type
 * MM-RPMD
 * Verlet-list force evaluation
 * Ewald summation
