@@ -93,7 +93,25 @@ struct LJParams
     double c6{0.0};
     double c12{0.0};
 
-    constexpr bool operator==(const LJParams &other) const;
+    [[nodiscard]]
+    bool operator==(const LJParams &other) const;
+};
+
+/**
+ * @struct MorseParams
+ *
+ * @brief Struct to hold Morse parameters dissociationEnergy, wellWidth and
+ * equilibriumDistance
+ *
+ */
+struct MorseParams
+{
+    double dissociationEnergy;
+    double wellWidth;
+    double equilibriumDistance;
+
+    [[nodiscard]]
+    bool operator==(const MorseParams &other) const;
 };
 
 #endif   // _STRONG_TYPES_HPP_

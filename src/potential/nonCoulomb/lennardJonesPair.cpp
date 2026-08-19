@@ -22,23 +22,9 @@
 
 #include "lennardJonesPair.hpp"
 
-#include "mathUtilities.hpp"   // for compare
 #include "strongTypes.hpp"
 
 using namespace potential;
-using namespace utilities;
-
-/**
- * @brief operator overload for the comparison of two LJParams objects
- *
- * @param other
- * @return true
- * @return false
- */
-constexpr bool LJParams::operator==(const LJParams &other) const
-{
-    return compare(c6, other.c6) && compare(c12, other.c12);
-}
 
 /**
  * @brief Construct a new Lennard Jones Pair:: Lennard Jones Pair object

@@ -10,9 +10,7 @@
  */
 struct TestMorsePairUtils
 {
-    static const potential::MorseParams& params(
-        const potential::MorsePair* morsePair
-    );
+    static const MorseParams& params(const potential::MorsePair* morsePair);
 };
 
 /**

@@ -27,21 +27,12 @@
 #include <utility>   // pair
 
 #include "nonCoulombPair.hpp"
+#include "strongTypes.hpp"
 
 struct TestMorsePairUtils;   // forward declaration
 
 namespace potential
 {
-    struct MorseParams
-    {
-        double dissociationEnergy;
-        double wellWidth;
-        double equilibriumDistance;
-
-        [[nodiscard]]
-        constexpr bool operator==(const MorseParams &other) const;
-    };
-
     /**
      * @class MorsePair
      *

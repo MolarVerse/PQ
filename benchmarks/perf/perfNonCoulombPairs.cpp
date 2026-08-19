@@ -45,7 +45,7 @@ int main()
     auto buck  = potential::BuckinghamPair(9.0, 1.0, 0.3, 2.0);
     auto morse = potential::MorsePair(
         9.0,
-        potential::MorseParams{
+        MorseParams{
             .dissociationEnergy  = 1.0,
             .wellWidth           = 2.0,
             .equilibriumDistance = 1.5

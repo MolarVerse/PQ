@@ -84,7 +84,7 @@ namespace
     {
         potential::MorsePair potential(
             9.0,
-            potential::MorseParams{
+            MorseParams{
                 .dissociationEnergy  = 1.0,
                 .wellWidth           = 2.0,
                 .equilibriumDistance = 1.5

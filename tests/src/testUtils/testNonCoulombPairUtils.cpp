@@ -9,7 +9,7 @@
  * @param morsePair pointer to the MorsePair object
  * @return const potential::MorseParams& reference to the MorseParams
  */
-const potential::MorseParams& TestMorsePairUtils::params(
+const MorseParams& TestMorsePairUtils::params(
     const potential::MorsePair* morsePair
 )
 {

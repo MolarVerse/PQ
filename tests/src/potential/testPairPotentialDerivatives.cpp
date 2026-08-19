@@ -105,7 +105,7 @@ TEST(TestPairPotentialDerivatives, MorseForceIsNegativeEnergyDerivative)
         4.0,
         0.3,
         -0.2,
-        potential::MorseParams{
+        MorseParams{
             .dissociationEnergy  = 2.5,
             .wellWidth           = 1.4,
             .equilibriumDistance = 1.1
@@ -189,7 +189,7 @@ TEST(TestPairPotentialDerivatives, NonCoulombShiftedPairsAreZeroAtCutoff)
         potential::BuckinghamPair(cutoff, 2.0, -1.1, -0.4);
     const auto morseUnshifted = potential::MorsePair(
         cutoff,
-        potential::MorseParams{
+        MorseParams{
             .dissociationEnergy  = 2.5,
             .wellWidth           = 1.4,
             .equilibriumDistance = 1.1
@@ -225,7 +225,7 @@ TEST(TestPairPotentialDerivatives, NonCoulombShiftedPairsAreZeroAtCutoff)
         cutoff,
         morseEnergyCutoff,
         morseForceCutoff,
-        potential::MorseParams{
+        MorseParams{
             .dissociationEnergy  = 2.5,
             .wellWidth           = 1.4,
             .equilibriumDistance = 1.1

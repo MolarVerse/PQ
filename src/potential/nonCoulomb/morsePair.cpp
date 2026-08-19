@@ -24,21 +24,7 @@
 
 #include <cmath>   // for exp
 
-#include "mathUtilities.hpp"   // for compare
-
 using namespace potential;
-using namespace utilities;
-
-constexpr bool MorseParams::operator==(const MorseParams &other) const
-{
-    auto isEq = true;
-
-    isEq = isEq && compare(dissociationEnergy, other.dissociationEnergy);
-    isEq = isEq && compare(wellWidth, other.wellWidth);
-    isEq = isEq && compare(equilibriumDistance, other.equilibriumDistance);
-
-    return isEq;
-}
 
 /**
  * @brief Construct a new Morse Pair:: Morse Pair object

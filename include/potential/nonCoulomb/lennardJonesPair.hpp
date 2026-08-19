@@ -72,7 +72,8 @@ namespace potential
             const LJParams &
         ) = delete;
 
-        [[nodiscard]] bool operator==(const LennardJonesPair &other) const;
+        [[nodiscard]]
+        bool operator==(const LennardJonesPair &other) const;
 
         [[nodiscard]] std::pair<double, double> calculate(
             const double distance

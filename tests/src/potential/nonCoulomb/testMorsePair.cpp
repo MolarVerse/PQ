@@ -152,7 +152,7 @@ TEST(TestMorsePair, calculateEnergyAndForces)
         rncCutoff,
         energyCutoff,
         forceCutoff,
-        potential::MorseParams{
+        MorseParams{
             .dissociationEnergy  = coefficients[0],
             .wellWidth           = coefficients[1],
             .equilibriumDistance = coefficients[2]
