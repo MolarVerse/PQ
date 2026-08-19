@@ -7,6 +7,12 @@ implementation changes are documented in
 ## Next Release
 
 <!-- insertion marker -->
+## [v0.7.1](https://github.com/MolarVerse/PQ/releases/tag/v0.7.1) - 2026-08-18
+
+### Documentation
+
+- Document the units used by topology setup-file indices, constraints, and force constants.
+
 ## [v0.7.0](https://github.com/MolarVerse/PQ/releases/tag/v0.7.0) - 2026-08-07
 
 ### New Features
