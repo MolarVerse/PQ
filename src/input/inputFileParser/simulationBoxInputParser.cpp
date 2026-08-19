@@ -24,10 +24,12 @@
 
 #include <cstddef>   // for size_t
 #include <format>    // for format
+#include <utility>
 
 #include "exceptions.hpp"   // for InputFileException, customException
 #include "parserUtils.hpp"
-#include "potentialSettings.hpp"       // for PotentialSettings
+#include "potentialSettings.hpp"   // for PotentialSettings
+#include "simulationBox.hpp"
 #include "simulationBoxSettings.hpp"   // for setDensitySet
 #include "stringUtilities.hpp"         // for toLowerCopy
 
@@ -50,7 +52,7 @@ using namespace utilities;
 SimulationBoxInputParser::SimulationBoxInputParser(
     std::shared_ptr<simulationBox::SimulationBox> simulationBox
 )
-    : _simulationBox(simulationBox)
+    : _simulationBox(std::move(simulationBox))
 {
     addKeyword(
         std::string("rcoulomb"),

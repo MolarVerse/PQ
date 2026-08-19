@@ -27,7 +27,11 @@
 #include <cstddef>   // for size_t
 
 #include "inputFileParser.hpp"   // for InputFileParser
-#include "simulationBox.hpp"
+
+namespace simulationBox
+{
+    class SimulationBox;
+}   // namespace simulationBox
 
 namespace input
 {
