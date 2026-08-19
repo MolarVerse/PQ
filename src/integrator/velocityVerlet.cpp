@@ -29,7 +29,7 @@ using namespace integrator;
 using namespace simulationBox;
 
 /**
- * @brief Construct a new Velocity Verlet:: Velocity Verlet object
+ * @brief Construct a new Velocity Verlet::Velocity Verlet object
  *
  */
 VelocityVerlet::VelocityVerlet() : Integrator("VelocityVerlet") {}

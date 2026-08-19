@@ -64,7 +64,7 @@ namespace intraNonBonded
         std::vector<IntraNonBondedContainer> _intraNonBondedContainers;
 
        public:
-        std::shared_ptr<IntraNonBonded> clone() const;
+        [[nodiscard]] std::shared_ptr<IntraNonBonded> clone() const;
 
         void calculate(
             const simulationBox::SimulationBox &,

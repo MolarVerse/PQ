@@ -92,7 +92,7 @@ TEST_F(TestTopologySection, processShakeSection)
  * @brief tests if incorrect number of elements is correctly handled
  *
  */
-TEST_F(TestTopologySection, processShakeSection_incorrectNumberOfElements)
+TEST_F(TestTopologySection, processShakeSectionIncorrectNumberOfElements)
 {
     ShakeSection shakeSection;
 
@@ -119,7 +119,7 @@ TEST_F(TestTopologySection, processShakeSection_incorrectNumberOfElements)
  * @brief tests if same atom given twice is correctly handled
  *
  */
-TEST_F(TestTopologySection, processShakeSection_sameAtomTwice)
+TEST_F(TestTopologySection, processShakeSectionSameAtomTwice)
 {
     ShakeSection shakeSection;
 
@@ -146,7 +146,7 @@ TEST_F(TestTopologySection, processShakeSection_sameAtomTwice)
  * @brief tests if missing end statement is correctly handled
  *
  */
-TEST_F(TestTopologySection, processShakeSection_missingEnd)
+TEST_F(TestTopologySection, processShakeSectionMissingEnd)
 {
     ShakeSection shakeSection;
 

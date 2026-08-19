@@ -39,6 +39,36 @@ using settings::XtbMethod;
 using namespace customException;
 using namespace utilities;
 
+namespace
+{
+    /**
+     * @brief builds the file path for a built-in SLAKOS set (3ob/matsci)
+     *
+     * @details installed data next to the executable is preferred. The fetched
+     * build-tree data is used while running an uninstalled ASE build.
+     */
+    std::string builtinSlakosPath([[maybe_unused]] const SlakosType type)
+    {
+#ifdef __SLAKOS_DIR__
+        const auto installedPath = utilities::installedDataPath(
+            std::filesystem::path("slakos") / settings::string(type) / "skfiles"
+        );
+        if (std::filesystem::is_directory(installedPath))
+            return installedPath.string() +
+                   std::filesystem::path::preferred_separator;
+
+        const auto buildPath = std::filesystem::path(__SLAKOS_DIR__) /
+                               settings::string(type) / "skfiles";
+        return buildPath.string() + std::filesystem::path::preferred_separator;
+#else
+        throw InputFileException(
+            "Built-in SLAKOS sets (3ob/matsci) require building PQ with "
+            "-DBUILD_WITH_ASE=On"
+        );
+#endif
+    }
+}   // namespace
+
 /**
  * @brief returns the qmMethod as string
  *
@@ -153,33 +183,6 @@ std::string settings::string(const SlakosType slakos)
     }
 
     return "none";
-}
-
-/**
- * @brief builds the file path for a built-in SLAKOS set (3ob/matsci)
- *
- * @details installed data next to the executable is preferred. The fetched
- * build-tree data is used while running an uninstalled ASE build.
- */
-static std::string builtinSlakosPath([[maybe_unused]] const SlakosType type)
-{
-#ifdef __SLAKOS_DIR__
-    const auto installedPath = utilities::installedDataPath(
-        std::filesystem::path("slakos") / settings::string(type) / "skfiles"
-    );
-    if (std::filesystem::is_directory(installedPath))
-        return installedPath.string() +
-               std::filesystem::path::preferred_separator;
-
-    const auto buildPath = std::filesystem::path(__SLAKOS_DIR__) /
-                           settings::string(type) / "skfiles";
-    return buildPath.string() + std::filesystem::path::preferred_separator;
-#else
-    throw InputFileException(
-        "Built-in SLAKOS sets (3ob/matsci) require building PQ with "
-        "-DBUILD_WITH_ASE=On"
-    );
-#endif
 }
 
 /**
@@ -402,6 +405,7 @@ void QMSettings::setMaceMode(const std::string_view &mode)
         _maceMode = FAST;
 
     else
+    {
         throw UserInputException(
             std::format(
                 "Unknown mace_mode \"{}\". Valid values are \"accurate\" "
@@ -410,6 +414,7 @@ void QMSettings::setMaceMode(const std::string_view &mode)
                 mode
             )
         );
+    }
 }
 
 /**
@@ -495,26 +500,26 @@ void QMSettings::setSlakosType(const std::string_view &slakos)
         _slakosType = THREEOB;
         _slakosPath = builtinSlakosPath(_slakosType);
     }
-
     else if ("matsci" == slakosType)
     {
         _slakosType = MATSCI;
         _slakosPath = builtinSlakosPath(_slakosType);
     }
-
     else if ("custom" == slakosType)
+    {
         _slakosType = CUSTOM;
-
+    }
     else if ("none" == slakosType)
     {
         _slakosType = NONE;
         _slakosPath = "";
     }
-
     else
+    {
         throw UserInputException(
             std::format("Slakos {} not recognized", slakos)
         );
+    }
 }
 
 /**
@@ -558,12 +563,12 @@ void QMSettings::setSlakosPath(const std::string_view &path)
 {
     if (_slakosType == SlakosType::CUSTOM)
         _slakosPath = path;
-
     else if (_slakosType == SlakosType::NONE)
+    {
         throw UserInputException(
             "Slakos path cannot be set without a slakos type"
         );
-
+    }
     else
     {
         throw UserInputException(

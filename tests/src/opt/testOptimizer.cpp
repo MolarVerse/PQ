@@ -34,19 +34,19 @@
 #include "vector3d.hpp"   // IWYU pragma: keep
 
 using namespace opt;
+using physicalData::PhysicalData;
 using simulationBox::Atom;
 using simulationBox::SimulationBox;
-using physicalData::PhysicalData;
 
 namespace
 {
     struct Sample
     {
-        double                       energy;
-        linearAlgebra::Vec3D         force0;
-        linearAlgebra::Vec3D         force1;
-        linearAlgebra::Vec3D         pos0;
-        linearAlgebra::Vec3D         pos1;
+        double               energy;
+        linearAlgebra::Vec3D force0;
+        linearAlgebra::Vec3D force1;
+        linearAlgebra::Vec3D pos0;
+        linearAlgebra::Vec3D pos1;
     };
 
     // Build a fresh box+physData pair, set the sample state on them, and call
@@ -79,51 +79,45 @@ namespace
 
 TEST(TestOptimizer, constructorStoresEpochs)
 {
-    const SteepestDescent opt(42u);
-    EXPECT_EQ(opt.getNEpochs(), 42u);
+    const SteepestDescent opt(42U);
+    EXPECT_EQ(opt.getNEpochs(), 42U);
 }
 
 TEST(TestOptimizer, maxHistoryLengthIsTwoForSteepestDescent)
 {
-    const SteepestDescent opt(1u);
-    EXPECT_EQ(opt.maxHistoryLength(), 2u);
+    const SteepestDescent opt(1U);
+    EXPECT_EQ(opt.maxHistoryLength(), 2U);
 }
 
 TEST(TestOptimizer, cloneProducesEquivalentObject)
 {
-    const SteepestDescent opt(7u);
+    const SteepestDescent opt(7U);
     const auto            cloned = opt.clone();
-    EXPECT_EQ(cloned->getNEpochs(), 7u);
+    EXPECT_EQ(cloned->getNEpochs(), 7U);
 }
 
 /* ---------- getHistoryIndex ---------- */
 
 TEST(TestOptimizer, getHistoryIndexThrowsOnNonNegativeOffset)
 {
-    const SteepestDescent opt(1u);
-    EXPECT_THROW(
-        (void)opt.getHistoryIndex(0),
-        customException::OptException
-    );
-    EXPECT_THROW(
-        (void)opt.getHistoryIndex(1),
-        customException::OptException
-    );
+    const SteepestDescent opt(1U);
+    EXPECT_THROW((void) opt.getHistoryIndex(0), customException::OptException);
+    EXPECT_THROW((void) opt.getHistoryIndex(1), customException::OptException);
 }
 
 /* ---------- updateHistory + getters ---------- */
 
 TEST(TestOptimizer, updateHistoryAppendsAndGettersReturnLast)
 {
-    SteepestDescent opt(1u);
+    SteepestDescent opt(1U);
 
     pushSample(
         opt,
-        {1.0,
-         {1.0, 0.0, 0.0},
-         {0.0, 2.0, 0.0},
-         {0.1, 0.2, 0.3},
-         {0.4, 0.5, 0.6}}
+        {.energy = 1.0,
+         .force0 = {1.0, 0.0, 0.0},
+         .force1 = {0.0, 2.0, 0.0},
+         .pos0   = {0.1, 0.2, 0.3},
+         .pos1   = {0.4, 0.5, 0.6}}
     );
 
     EXPECT_DOUBLE_EQ(opt.getEnergy(), 1.0);
@@ -135,8 +129,8 @@ TEST(TestOptimizer, updateHistoryAppendsAndGettersReturnLast)
 
     const auto forces    = opt.getForces();
     const auto positions = opt.getPositions();
-    ASSERT_EQ(forces.size(), 2u);
-    ASSERT_EQ(positions.size(), 2u);
+    ASSERT_EQ(forces.size(), 2U);
+    ASSERT_EQ(positions.size(), 2U);
     EXPECT_EQ(forces[0], linearAlgebra::Vec3D(1.0, 0.0, 0.0));
     EXPECT_EQ(positions[1], linearAlgebra::Vec3D(0.4, 0.5, 0.6));
 
@@ -148,18 +142,18 @@ TEST(TestOptimizer, updateHistoryAppendsAndGettersReturnLast)
 
 TEST(TestOptimizer, updateHistoryTrimsToMaxHistoryLength)
 {
-    SteepestDescent opt(1u);
+    SteepestDescent opt(1U);
     const auto      maxLen = opt.maxHistoryLength();
 
     for (size_t i = 0; i < maxLen + 3; ++i)
     {
         pushSample(
             opt,
-            {double(i),
-             {double(i), 0.0, 0.0},
-             {0.0, double(i), 0.0},
-             {double(i), 0.0, 0.0},
-             {0.0, double(i), 0.0}}
+            {.energy = static_cast<double>(i),
+             .force0 = {static_cast<double>(i), 0.0, 0.0},
+             .force1 = {0.0, static_cast<double>(i), 0.0},
+             .pos0   = {static_cast<double>(i), 0.0, 0.0},
+             .pos1   = {0.0, static_cast<double>(i), 0.0}}
         );
     }
 
@@ -180,7 +174,7 @@ TEST(TestOptimizer, updateHistoryTrimsToMaxHistoryLength)
 
 TEST(TestOptimizer, setAndGetConvergenceRoundTrips)
 {
-    SteepestDescent opt(1u);
+    SteepestDescent opt(1U);
     Convergence     conv(
         true,
         true,
@@ -207,7 +201,7 @@ TEST(TestOptimizer, setAndGetConvergenceRoundTrips)
 
 TEST(TestOptimizer, hasConvergedReturnsTrueForFlatEnergyAndZeroForces)
 {
-    SteepestDescent opt(1u);
+    SteepestDescent opt(1U);
     Convergence     conv(
         true,
         true,
@@ -223,11 +217,19 @@ TEST(TestOptimizer, hasConvergedReturnsTrueForFlatEnergyAndZeroForces)
     // Two history entries with identical energy and zero forces → converged.
     pushSample(
         opt,
-        {1.0, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}}
+        {.energy = 1.0,
+         .force0 = {0.0, 0.0, 0.0},
+         .force1 = {0.0, 0.0, 0.0},
+         .pos0   = {0.0, 0.0, 0.0},
+         .pos1   = {0.0, 0.0, 0.0}}
     );
     pushSample(
         opt,
-        {1.0, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}}
+        {.energy = 1.0,
+         .force0 = {0.0, 0.0, 0.0},
+         .force1 = {0.0, 0.0, 0.0},
+         .pos0   = {0.0, 0.0, 0.0},
+         .pos1   = {0.0, 0.0, 0.0}}
     );
 
     EXPECT_TRUE(opt.hasConverged());
@@ -235,7 +237,7 @@ TEST(TestOptimizer, hasConvergedReturnsTrueForFlatEnergyAndZeroForces)
 
 TEST(TestOptimizer, hasConvergedReturnsFalseForLargeForce)
 {
-    SteepestDescent opt(1u);
+    SteepestDescent opt(1U);
     Convergence     conv(
         true,
         true,
@@ -250,11 +252,19 @@ TEST(TestOptimizer, hasConvergedReturnsFalseForLargeForce)
 
     pushSample(
         opt,
-        {1.0, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}}
+        {.energy = 1.0,
+         .force0 = {0.0, 0.0, 0.0},
+         .force1 = {0.0, 0.0, 0.0},
+         .pos0   = {0.0, 0.0, 0.0},
+         .pos1   = {0.0, 0.0, 0.0}}
     );
     pushSample(
         opt,
-        {1.0, {1.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}}
+        {.energy = 1.0,
+         .force0 = {1.0, 0.0, 0.0},
+         .force1 = {0.0, 0.0, 0.0},
+         .pos0   = {0.0, 0.0, 0.0},
+         .pos1   = {0.0, 0.0, 0.0}}
     );
 
     EXPECT_FALSE(opt.hasConverged());
@@ -264,7 +274,7 @@ TEST(TestOptimizer, hasConvergedReturnsFalseForLargeForce)
 
 TEST(TestOptimizer, setPhysicalDataOldStoresPointer)
 {
-    SteepestDescent opt(1u);
+    SteepestDescent opt(1U);
     auto            phys = std::make_shared<PhysicalData>();
     phys->setKineticEnergy(0.42);
     EXPECT_NO_THROW(opt.setPhysicalDataOld(phys));

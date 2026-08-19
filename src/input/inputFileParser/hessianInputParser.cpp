@@ -92,6 +92,7 @@ void HessianInputParser::parseDisplacement(
     const auto displacement = stringToFiniteDouble(lineElements[2]);
 
     if (displacement <= 0.0)
+    {
         throw InputFileException(
             std::format(
                 "Hessian displacement must be greater than 0 in input file "
@@ -99,6 +100,7 @@ void HessianInputParser::parseDisplacement(
                 lineNumber
             )
         );
+    }
 
     HessianSettings::setDisplacement(displacement);
 }
@@ -123,6 +125,7 @@ void HessianInputParser::parseBuilder(
     HessianSettings::setBuilder(lineElements[2]);
 
     if (HessianSettings::getBuilder() == NONE)
+    {
         throw InputFileException(
             std::format(
                 "Invalid hessian_builder \"{}\" in input file at line {} - "
@@ -131,4 +134,5 @@ void HessianInputParser::parseBuilder(
                 lineNumber
             )
         );
+    }
 }

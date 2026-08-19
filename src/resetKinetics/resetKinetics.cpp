@@ -134,10 +134,12 @@ void ResetKinetics::resetTemperature(SimulationBox &simBox)
     const auto targetTemp = ThermostatSettings::getActualTargetTemperature();
 
     if (isZero(_temperature))
+    {
         throw UserInputException(
             "Cannot rescale a zero-temperature system. Initialize velocities "
             "first."
         );
+    }
 
     const auto lambda = ::sqrt(targetTemp / _temperature);
 

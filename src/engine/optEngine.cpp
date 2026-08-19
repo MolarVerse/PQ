@@ -24,6 +24,7 @@
 
 #include <format>   // for format
 
+#include "constants.hpp"
 #include "exceptions.hpp"
 #include "globalTimer.hpp"
 #include "outputFileSettings.hpp"
@@ -91,7 +92,7 @@ void OptEngine::run()
     timings::GlobalTimer::get().stopSimulationTimer();
 
     const auto elapsedTime =
-        double(timings::GlobalTimer::get().calculateElapsedTime()) * 1e-3;
+        timings::GlobalTimer::get().calculateElapsedTime() * constants::MS_TO_S;
 
     _engineOutput.writeTimingsFile();
 

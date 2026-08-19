@@ -43,7 +43,7 @@ namespace simulationBox
         void scaleBox(const linearAlgebra::tensor3D &scalingTensor) override;
 
         [[nodiscard]] linearAlgebra::Vec3D calcShiftVector(
-            const linearAlgebra::Vec3D &
+            const linearAlgebra::Vec3D &shiftVector
         ) const override;
 
         [[nodiscard]] linearAlgebra::Vec3D calcBoxDimFromDensity(

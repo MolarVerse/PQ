@@ -47,11 +47,12 @@
 namespace physicalData
 {
     class PhysicalData;   // forward declaration
-}
+}   // namespace physicalData
+
 namespace simulationBox
 {
     class SimulationBox;   // forward declaration
-}
+}   // namespace simulationBox
 
 using namespace engine;
 using namespace simulationBox;

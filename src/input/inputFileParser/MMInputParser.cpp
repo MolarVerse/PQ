@@ -24,6 +24,7 @@
 
 #include <cstddef>   // for size_t
 #include <format>    // for format
+#include <utility>
 
 #include "engine.hpp"                 // for Engine
 #include "exceptions.hpp"             // for InputFileException, customException
@@ -60,7 +61,9 @@ MMInputParser::MMInputParser(
     std::shared_ptr<forceField::ForceField> forceField,
     std::shared_ptr<potential::Potential>   potential
 )
-    : InputFileParser(engine), _forceField(forceField), _potential(potential)
+    : InputFileParser(engine),
+      _forceField(std::move(forceField)),
+      _potential(std::move(potential))
 {
     addKeyword(
         std::string("force-field"),
@@ -123,6 +126,7 @@ void MMInputParser::parseForceFieldType(
         _forceField->deactivateNonCoulombic();
     }
     else
+    {
         throw InputFileException(format(
             "Invalid force-field keyword \"{}\" at line {} "
             "in input file\n"
@@ -130,6 +134,7 @@ void MMInputParser::parseForceFieldType(
             lineElements[2],
             lineNumber
         ));
+    }
 }
 
 /**
@@ -169,12 +174,14 @@ void MMInputParser::parseNonCoulombType(
         PotentialSettings::setNonCoulombType(MORSE);
 
     else
+    {
         throw InputFileException(format(
             "Invalid nonCoulomb type \"{}\" at line {} in input file.\n"
             "Possible options are: lj, buck, morse and guff",
             lineElements[2],
             lineNumber
         ));
+    }
 }
 
 /**
@@ -208,18 +215,31 @@ void MMInputParser::parseWaterIntraModel(
     else if (waterIntraModel == "qspc_fw")
         WaterModelSettings::setWaterIntraModel(QSPC_FW);
     else if (waterIntraModel == "spc_dc")
+    {
         WaterModelSettings::setWaterIntraModel(SPC_DC);
+    }
     else if (waterIntraModel == "h2o_dc")
+    {
         WaterModelSettings::setWaterIntraModel(H2O_DC);
+    }
     else if (waterIntraModel == "tip3p")
+    {
         WaterModelSettings::setWaterIntraModel(TIP3P);
+    }
     else if (waterIntraModel == "opc3")
+    {
         WaterModelSettings::setWaterIntraModel(OPC3);
+    }
     else if (waterIntraModel == "spc_mtr")
+    {
         WaterModelSettings::setWaterIntraModel(SPC_MTR);
+    }
     else if (waterIntraModel == "tip3p_mtr")
+    {
         WaterModelSettings::setWaterIntraModel(TIP3P_MTR);
+    }
     else
+    {
         throw InputFileException(format(
             "Invalid water_intra keyword \"{}\" at line {} "
             "in input file\n"
@@ -229,6 +249,7 @@ void MMInputParser::parseWaterIntraModel(
             lineElements[2],
             lineNumber
         ));
+    }
 
     WaterModelSettings::setIsWaterModelSet(true);
 }
@@ -276,6 +297,7 @@ void MMInputParser::parseWaterInterModel(
     else if (waterInterModel == "tip3p_mtr")
         WaterModelSettings::setWaterInterModel(TIP3P_MTR);
     else
+    {
         throw InputFileException(format(
             "Invalid water_inter keyword \"{}\" at line {} "
             "in input file\n"
@@ -285,6 +307,7 @@ void MMInputParser::parseWaterInterModel(
             lineElements[2],
             lineNumber
         ));
+    }
 
     WaterModelSettings::setIsWaterModelSet(true);
     WaterModelSettings::setIsInterWaterModelSet(true);

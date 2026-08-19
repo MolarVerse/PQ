@@ -72,11 +72,15 @@ namespace thermostat
             physicalData::PhysicalData &
         );
 
-        virtual void applyThermostatOnForces(simulationBox::SimulationBox &) {}
+        virtual void applyThermostatOnForces(
+            simulationBox::SimulationBox & /*simBox*/
+        )
+        {
+        }
 
         virtual void applyThermostatHalfStep(
-            simulationBox::SimulationBox &,
-            physicalData::PhysicalData &
+            simulationBox::SimulationBox & /*simBox*/,
+            physicalData::PhysicalData & /*physData*/
         )
         {
         }

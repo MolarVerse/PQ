@@ -40,8 +40,8 @@ namespace opt
         MMEvaluator()           = default;
         ~MMEvaluator() override = default;
 
-        std::shared_ptr<Evaluator> clone() const override;
-        void                       evaluate() override;
+        [[nodiscard]] std::shared_ptr<Evaluator> clone() const override;
+        void                                     evaluate() override;
     };
 
 }   // namespace opt

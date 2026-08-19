@@ -36,7 +36,7 @@
 namespace engine
 {
     class Engine;   // forward declaration
-}
+}   // namespace engine
 
 /**
  * @brief namespace for reading input files

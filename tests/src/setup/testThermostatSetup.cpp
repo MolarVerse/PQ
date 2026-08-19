@@ -39,7 +39,7 @@
 
 using namespace setup;
 
-TEST_F(TestSetup, setupThermostat_no_thermostat)
+TEST_F(TestSetup, setupThermostatNoThermostat)
 {
     ThermostatSetup thermostatSetup(*_mdEngine);
 
@@ -47,7 +47,7 @@ TEST_F(TestSetup, setupThermostat_no_thermostat)
     EXPECT_NO_THROW(thermostatSetup.setup());
 }
 
-TEST_F(TestSetup, setupThermostat_temp_ramping)
+TEST_F(TestSetup, setupThermostatTempRamping)
 {
     ThermostatSetup thermostatSetup(*_mdEngine);
 
@@ -162,7 +162,7 @@ TEST_F(TestSetup, rejectsZeroTemperatureRampFrequency)
     settings::ThermostatSettings::setTemperatureRampFrequency(1);
 }
 
-TEST_F(TestSetup, setupThermostat_only_end_temp_defined)
+TEST_F(TestSetup, setupThermostatOnlyEndTempDefined)
 {
     ThermostatSetup thermostatSetup(*_mdEngine);
 
@@ -175,7 +175,7 @@ TEST_F(TestSetup, setupThermostat_only_end_temp_defined)
     );
 }
 
-TEST_F(TestSetup, setupThermostat_berendsen)
+TEST_F(TestSetup, setupThermostatBerendsen)
 {
     ThermostatSetup thermostatSetup(*_mdEngine);
 
@@ -213,7 +213,7 @@ TEST_F(TestSetup, setupThermostat_berendsen)
     settings::ThermostatSettings::setEndTemperatureSet(false);
 }
 
-TEST_F(TestSetup, setupThermostat_velocity_rescaling)
+TEST_F(TestSetup, setupThermostatVelocityRescaling)
 {
     ThermostatSetup thermostatSetup(*_mdEngine);
 
@@ -228,7 +228,7 @@ TEST_F(TestSetup, setupThermostat_velocity_rescaling)
     EXPECT_EQ(velocityRescalingThermostat.getTau(), 0.2 * 1000);
 }
 
-TEST_F(TestSetup, setupThermostat_langevin)
+TEST_F(TestSetup, setupThermostatLangevin)
 {
     ThermostatSetup thermostatSetup(*_mdEngine);
 
@@ -261,7 +261,7 @@ TEST_F(TestSetup, setupThermostat_langevin)
     EXPECT_NO_THROW(setupThermostat(*_mdEngine));
 }
 
-TEST_F(TestSetup, setupThermostat_nh_chain)
+TEST_F(TestSetup, setupThermostatNhChain)
 {
     ThermostatSetup thermostatSetup(*_mdEngine);
 

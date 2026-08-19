@@ -71,7 +71,7 @@ std::shared_ptr<LearningRateStrategy> ConstantDecayLRStrategy::clone() const
  */
 void ConstantDecayLRStrategy::updateLearningRate(
     const size_t step,
-    const size_t
+    const size_t /* totalSteps */
 )
 {
     if (step % _frequency == 0)

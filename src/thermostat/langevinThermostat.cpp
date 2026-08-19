@@ -165,10 +165,8 @@ void LangevinThermostat::applyThermostat(
  * @param simBox
  * @param data
  */
-void LangevinThermostat::applyThermostatHalfStep(
-    SimulationBox &simBox,
-    PhysicalData &
-)
+void LangevinThermostat::
+    applyThermostatHalfStep(SimulationBox &simBox, PhysicalData & /*data*/)
 {
     auto _ = scopedTimer(TimerId::Thermostat, "LangevinThermostat - Half Step");
 

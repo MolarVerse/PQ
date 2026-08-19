@@ -29,7 +29,7 @@
 namespace potential
 {
     class NonCoulombPair;   // forward declaration
-}
+}   // namespace potential
 
 /**
  * @brief struct to hold the non-coulombic pairs matrix

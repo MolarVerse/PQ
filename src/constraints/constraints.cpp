@@ -128,12 +128,14 @@ void Constraints::_applyShake(SimulationBox &simBox)
     }
 
     if (!converged)
+    {
         throw ShakeException(
             std::format(
                 "Shake algorithm did not converge for {} bonds.",
                 std::ranges::count(convergedVector, false)
             )
         );
+    }
 }
 
 /**
@@ -204,12 +206,14 @@ void Constraints::_applyRattle()
     }
 
     if (!converged)
+    {
         throw ShakeException(
             std::format(
                 "Rattle algorithm did not converge for {} bonds.",
                 std::ranges::count(convergedVector, false)
             )
         );
+    }
 }
 
 /**

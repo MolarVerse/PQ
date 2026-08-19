@@ -40,7 +40,7 @@ namespace timings
         [[nodiscard]] double calculateLoopTime() const;
         [[nodiscard]] double calculateElapsedTime() const;
 
-        std::vector<Timer> sortTimers() const;
+        [[nodiscard]] std::vector<Timer> sortTimers() const;
 
         void stopSimulationTimer();
         void stopAndRestartSimulationTimer();

@@ -43,9 +43,10 @@ namespace potential
        public:
         using CoulombPotential::CoulombPotential;
 
-        [[nodiscard]] std::pair<double, double> calculate(
-            const double,
-            const double
+        [[nodiscard]]
+        std::pair<double, double> calculate(
+            const double distance,
+            const double chargeProduct
         ) const override;
     };
 

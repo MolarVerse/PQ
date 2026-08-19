@@ -201,7 +201,7 @@ TEST_F(TestInputFileReader, parseRandomSeed)
     lineElements = {
         "random_seed",
         "=",
-        std::to_string(static_cast<long long>(UINT32_MAX) + 1)
+        std::to_string(static_cast<std::int64_t>(UINT32_MAX) + 1)
     };
     EXPECT_THROW_MSG(
         parser.parseRandomSeed(lineElements, 0),
@@ -209,7 +209,7 @@ TEST_F(TestInputFileReader, parseRandomSeed)
         std::format(
             "Random seed value \"{}\" is out of range.\n"
             "Must be an integer between \"0\" and \"{}\" (inclusive)",
-            static_cast<long long>(UINT32_MAX) + 1,
+            static_cast<std::int64_t>(UINT32_MAX) + 1,
             UINT32_MAX
         )
     );

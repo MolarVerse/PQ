@@ -201,11 +201,8 @@ void PotentialCellList::calculateCoreToOuterForces(
     const auto isWaterMolecule = [](const std::vector<size_t> &waterMolecules,
                                     const size_t               molIndex) -> bool
     {
-        return std::find(
-                   waterMolecules.begin(),
-                   waterMolecules.end(),
-                   molIndex
-               ) != waterMolecules.end();
+        return std::ranges::find(waterMolecules, molIndex) !=
+               waterMolecules.end();
     };
 
     double totalCoulombEnergy = 0.0;
@@ -215,6 +212,7 @@ void PotentialCellList::calculateCoreToOuterForces(
         const auto &waterMolecules = cell_i.getWaterMoleculeIndices();
 
         for (const auto mol_i : cell_i.getCoreMoleculeIndices())
+        {
             for (const auto mol_j : cell_i.getActiveMoleculeIndices())
             {
                 if (isWaterMolecule(waterMolecules, mol_i) &&
@@ -222,11 +220,14 @@ void PotentialCellList::calculateCoreToOuterForces(
                     continue;
 
                 for (auto *atom_i : cell_i.getAtoms(mol_i))
+                {
                     for (auto *atom_j : cell_i.getAtoms(mol_j))
                         totalCoulombEnergy += calculateSingleCoulombInteraction<
                             QMChargeTag,
                             MMChargeTag>(*box, *atom_i, *atom_j);
+                }
             }
+        }
     }
 
     for (const auto &cell_i : cellList.getCells())
@@ -238,6 +239,7 @@ void PotentialCellList::calculateCoreToOuterForces(
             const auto &waterMolecules_j = cell_j->getWaterMoleculeIndices();
 
             for (const auto mol_i : cell_i.getCoreMoleculeIndices())
+            {
                 for (const auto mol_j : cell_j->getActiveMoleculeIndices())
                 {
                     if (isWaterMolecule(waterMolecules_i, mol_i) &&
@@ -245,12 +247,17 @@ void PotentialCellList::calculateCoreToOuterForces(
                         continue;
 
                     for (auto *atom_i : cell_i.getAtoms(mol_i))
+                    {
                         for (auto *atom_j : cell_j->getAtoms(mol_j))
+                        {
                             totalCoulombEnergy +=
                                 calculateSingleCoulombInteraction<
                                     QMChargeTag,
                                     MMChargeTag>(*box, *atom_i, *atom_j);
+                        }
+                    }
                 }
+            }
         }
     }
 
@@ -263,6 +270,7 @@ void PotentialCellList::calculateCoreToOuterForces(
             const auto &waterMolecules_j = cell_j->getWaterMoleculeIndices();
 
             for (const auto mol_i : cell_j->getCoreMoleculeIndices())
+            {
                 for (const auto mol_j : cell_i.getActiveMoleculeIndices())
                 {
                     if (isWaterMolecule(waterMolecules_j, mol_i) &&
@@ -270,12 +278,17 @@ void PotentialCellList::calculateCoreToOuterForces(
                         continue;
 
                     for (auto *atom_i : cell_j->getAtoms(mol_i))
+                    {
                         for (auto *atom_j : cell_i.getAtoms(mol_j))
+                        {
                             totalCoulombEnergy +=
                                 calculateSingleCoulombInteraction<
                                     QMChargeTag,
                                     MMChargeTag>(*box, *atom_i, *atom_j);
+                        }
+                    }
                 }
+            }
         }
     }
 
@@ -308,11 +321,8 @@ void PotentialCellList::calculateLayerToOuterForces(
     const auto isWaterMolecule = [](const std::vector<size_t> &waterMolecules,
                                     const size_t               molIndex) -> bool
     {
-        return std::find(
-                   waterMolecules.begin(),
-                   waterMolecules.end(),
-                   molIndex
-               ) != waterMolecules.end();
+        return std::ranges::find(waterMolecules, molIndex) !=
+               waterMolecules.end();
     };
 
     double totalCoulombEnergy    = 0.0;
@@ -335,6 +345,7 @@ void PotentialCellList::calculateLayerToOuterForces(
                 auto *molecule_j = cell_i.getMolecule(mol_j);
 
                 for (auto *atom_i : cell_i.getAtoms(mol_i))
+                {
                     for (auto *atom_j : cell_i.getAtoms(mol_j))
                     {
                         const auto [coulombEnergy, nonCoulombEnergy] =
@@ -351,6 +362,7 @@ void PotentialCellList::calculateLayerToOuterForces(
                         totalCoulombEnergy    += coulombEnergy;
                         totalNonCoulombEnergy += nonCoulombEnergy;
                     }
+                }
             }
         }
     }
@@ -376,6 +388,7 @@ void PotentialCellList::calculateLayerToOuterForces(
                     auto *molecule_j = cell_j->getMolecule(mol_j);
 
                     for (auto *atom_i : cell_i.getAtoms(mol_i))
+                    {
                         for (auto *atom_j : cell_j->getAtoms(mol_j))
                         {
                             const auto [coulombEnergy, nonCoulombEnergy] =
@@ -392,6 +405,7 @@ void PotentialCellList::calculateLayerToOuterForces(
                             totalCoulombEnergy    += coulombEnergy;
                             totalNonCoulombEnergy += nonCoulombEnergy;
                         }
+                    }
                 }
             }
         }
@@ -418,6 +432,7 @@ void PotentialCellList::calculateLayerToOuterForces(
                     auto *molecule_j = cell_i.getMolecule(mol_j);
 
                     for (auto *atom_i : cell_j->getAtoms(mol_i))
+                    {
                         for (auto *atom_j : cell_i.getAtoms(mol_j))
                         {
                             const auto [coulombEnergy, nonCoulombEnergy] =
@@ -434,6 +449,7 @@ void PotentialCellList::calculateLayerToOuterForces(
                             totalCoulombEnergy    += coulombEnergy;
                             totalNonCoulombEnergy += nonCoulombEnergy;
                         }
+                    }
                 }
             }
         }
@@ -455,11 +471,8 @@ void PotentialCellList::calculateOuterToOuterForces(
     const auto isWaterMolecule = [](const std::vector<size_t> &waterMolecules,
                                     const size_t               molIndex) -> bool
     {
-        return std::find(
-                   waterMolecules.begin(),
-                   waterMolecules.end(),
-                   molIndex
-               ) != waterMolecules.end();
+        return std::ranges::find(waterMolecules, molIndex) !=
+               waterMolecules.end();
     };
 
     double totalCoulombEnergy    = 0.0;
@@ -485,6 +498,7 @@ void PotentialCellList::calculateOuterToOuterForces(
                 auto *molecule_j = cell_i.getMolecule(mol_j);
 
                 for (auto *atom_i : cell_i.getAtoms(mol_i))
+                {
                     for (auto *atom_j : cell_i.getAtoms(mol_j))
                     {
                         const auto [coulombEnergy, nonCoulombEnergy] =
@@ -501,6 +515,7 @@ void PotentialCellList::calculateOuterToOuterForces(
                         totalCoulombEnergy    += coulombEnergy;
                         totalNonCoulombEnergy += nonCoulombEnergy;
                     }
+                }
             }
         }
     }
@@ -529,6 +544,7 @@ void PotentialCellList::calculateOuterToOuterForces(
                         continue;
 
                     for (auto *atom_i : cell_i.getAtoms(mol_i))
+                    {
                         for (auto *atom_j : cell_j->getAtoms(mol_j))
                         {
                             const auto [coulombEnergy, nonCoulombEnergy] =
@@ -545,6 +561,7 @@ void PotentialCellList::calculateOuterToOuterForces(
                             totalCoulombEnergy    += coulombEnergy;
                             totalNonCoulombEnergy += nonCoulombEnergy;
                         }
+                    }
                 }
             }
         }
@@ -566,11 +583,8 @@ void PotentialCellList::calculateHotspotSmoothingMMForces(
     const auto isWaterMolecule = [](const std::vector<size_t> &waterMolecules,
                                     const size_t               molIndex) -> bool
     {
-        return std::find(
-                   waterMolecules.begin(),
-                   waterMolecules.end(),
-                   molIndex
-               ) != waterMolecules.end();
+        return std::ranges::find(waterMolecules, molIndex) !=
+               waterMolecules.end();
     };
 
     double totalCoulombEnergy    = 0.0;
@@ -597,15 +611,20 @@ void PotentialCellList::calculateHotspotSmoothingMMForces(
                 if (isMolJCore)
                 {
                     for (auto *atom_i : cell_i.getAtoms(mol_i))
+                    {
                         for (auto *atom_j : cell_i.getAtoms(mol_j))
+                        {
                             totalCoulombEnergy +=
                                 calculateSingleCoulombInteraction<
                                     MMChargeTag,
                                     QMChargeTag>(*box, *atom_i, *atom_j);
+                        }
+                    }
                 }
                 else
                 {
                     for (auto *atom_i : cell_i.getAtoms(mol_i))
+                    {
                         for (auto *atom_j : cell_i.getAtoms(mol_j))
                         {
                             const auto [coulombEnergy, nonCoulombEnergy] =
@@ -622,6 +641,7 @@ void PotentialCellList::calculateHotspotSmoothingMMForces(
                             totalCoulombEnergy    += coulombEnergy;
                             totalNonCoulombEnergy += nonCoulombEnergy;
                         }
+                    }
                 }
             }
         }
@@ -653,15 +673,20 @@ void PotentialCellList::calculateHotspotSmoothingMMForces(
                     if (isMolJCore)
                     {
                         for (auto *atom_i : cell_i.getAtoms(mol_i))
+                        {
                             for (auto *atom_j : cell_j->getAtoms(mol_j))
+                            {
                                 totalCoulombEnergy +=
                                     calculateSingleCoulombInteraction<
                                         MMChargeTag,
                                         QMChargeTag>(*box, *atom_i, *atom_j);
+                            }
+                        }
                     }
                     else
                     {
                         for (auto *atom_i : cell_i.getAtoms(mol_i))
+                        {
                             for (auto *atom_j : cell_j->getAtoms(mol_j))
                             {
                                 const auto [coulombEnergy, nonCoulombEnergy] =
@@ -678,6 +703,7 @@ void PotentialCellList::calculateHotspotSmoothingMMForces(
                                 totalCoulombEnergy    += coulombEnergy;
                                 totalNonCoulombEnergy += nonCoulombEnergy;
                             }
+                        }
                     }
                 }
             }
@@ -709,15 +735,20 @@ void PotentialCellList::calculateHotspotSmoothingMMForces(
                     if (isMolJCore)
                     {
                         for (auto *atom_i : cell_j->getAtoms(mol_i))
+                        {
                             for (auto *atom_j : cell_i.getAtoms(mol_j))
+                            {
                                 totalCoulombEnergy +=
                                     calculateSingleCoulombInteraction<
                                         MMChargeTag,
                                         QMChargeTag>(*box, *atom_i, *atom_j);
+                            }
+                        }
                     }
                     else
                     {
                         for (auto *atom_i : cell_j->getAtoms(mol_i))
+                        {
                             for (auto *atom_j : cell_i.getAtoms(mol_j))
                             {
                                 const auto [coulombEnergy, nonCoulombEnergy] =
@@ -734,6 +765,7 @@ void PotentialCellList::calculateHotspotSmoothingMMForces(
                                 totalCoulombEnergy    += coulombEnergy;
                                 totalNonCoulombEnergy += nonCoulombEnergy;
                             }
+                        }
                     }
                 }
             }
@@ -760,6 +792,7 @@ void PotentialCellList::calculateHotspotSmoothingMMForces(
                 auto *molecule_j = cell_i.getMolecule(mol_j);
 
                 for (auto *atom_i : cell_i.getAtoms(mol_i))
+                {
                     for (auto *atom_j : cell_i.getAtoms(mol_j))
                     {
                         const auto [coulombEnergy, nonCoulombEnergy] =
@@ -776,6 +809,7 @@ void PotentialCellList::calculateHotspotSmoothingMMForces(
                         totalCoulombEnergy    += coulombEnergy;
                         totalNonCoulombEnergy += nonCoulombEnergy;
                     }
+                }
             }
         }
     }
@@ -804,6 +838,7 @@ void PotentialCellList::calculateHotspotSmoothingMMForces(
                         continue;
 
                     for (auto *atom_i : cell_i.getAtoms(mol_i))
+                    {
                         for (auto *atom_j : cell_j->getAtoms(mol_j))
                         {
                             const auto [coulombEnergy, nonCoulombEnergy] =
@@ -820,6 +855,7 @@ void PotentialCellList::calculateHotspotSmoothingMMForces(
                             totalCoulombEnergy    += coulombEnergy;
                             totalNonCoulombEnergy += nonCoulombEnergy;
                         }
+                    }
                 }
             }
         }
@@ -849,6 +885,7 @@ void PotentialCellList::calculateHotspotSmoothingMMForces(
                         continue;
 
                     for (auto *atom_i : cell_j->getAtoms(mol_i))
+                    {
                         for (auto *atom_j : cell_i.getAtoms(mol_j))
                         {
                             const auto [coulombEnergy, nonCoulombEnergy] =
@@ -865,6 +902,7 @@ void PotentialCellList::calculateHotspotSmoothingMMForces(
                             totalCoulombEnergy    += coulombEnergy;
                             totalNonCoulombEnergy += nonCoulombEnergy;
                         }
+                    }
                 }
             }
         }

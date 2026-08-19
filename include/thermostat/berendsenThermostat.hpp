@@ -46,8 +46,8 @@ namespace thermostat
         BerendsenThermostat() = default;
 
         void applyThermostat(
-            simulationBox::SimulationBox &,
-            physicalData::PhysicalData &
+            simulationBox::SimulationBox &simBox,
+            physicalData::PhysicalData   &physData
         ) override;
 
         void setTau(const double tau);

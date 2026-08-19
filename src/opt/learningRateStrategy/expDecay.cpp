@@ -55,7 +55,9 @@ std::shared_ptr<LearningRateStrategy> ExpDecayLR::clone() const
  */
 void ExpDecayLR::updateLearningRate(const size_t step, const size_t nEpochs)
 {
-    const auto factor = std::exp(-_decay * double(step) / double(nEpochs));
+    const auto factor = std::exp(
+        -_decay * static_cast<double>(step) / static_cast<double>(nEpochs)
+    );
 
     _learningRate = _initialLearningRate * factor;
 }

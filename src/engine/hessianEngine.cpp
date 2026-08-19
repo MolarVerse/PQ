@@ -168,12 +168,14 @@ void HessianEngine::runOptimization()
     }
 
     if (!_converged)
+    {
         throw OptException(
             std::format(
                 "Optimizer did not converge after {} epochs.",
                 _optimizer->getNEpochs()
             )
         );
+    }
 
     if (_optStopped)
     {
