@@ -36,8 +36,9 @@
 #include "exceptions.hpp"                    // for InputFileException
 #include "executablePath.hpp"                // for executablePath
 #include "fileSettings.hpp"                  // for FileSettings
-#include "physicalData.hpp"                  // for PhysicalData
-#include "qmSettings.hpp"                    // for QMSettings
+#include "globalTimer.hpp"
+#include "physicalData.hpp"   // for PhysicalData
+#include "qmSettings.hpp"     // for QMSettings
 #include "settings.hpp"
 #include "simulationBox.hpp"   // for SimulationBox
 
@@ -84,13 +85,13 @@ void ExternalQMRunner::run(
     _periodicity = per;
 
     {
-        auto _ = scoped("Write Coordinates");
+        auto _ = scopedTimer(TimerId::QMEngine, "Write Coordinates");
         writeCoordsFile(simBox);
     }
 
     if (Settings::isHybridJobtype())
     {
-        auto _ = scoped("Write Pointcharges");
+        auto _ = scopedTimer(TimerId::QMEngine, "Write Pointcharges");
         writePointChargeFile(simBox);
     }
 
@@ -105,25 +106,25 @@ void ExternalQMRunner::run(
                                { throwAfterTimeout(stopToken); }};
 
     {
-        auto _ = scoped("Execute External QM Runner");
+        auto _ = scopedTimer(TimerId::QMEngine, "Execute External QM Runner");
         execute(simBox);
     }
 
     timeoutThread.request_stop();
 
     {
-        auto _ = scoped("Read Forces");
+        auto _ = scopedTimer(TimerId::QMEngine, "Read Forces");
         readForceFile(simBox, physicalData);
     }
 
     {
-        auto _ = scoped("Read Charges");
+        auto _ = scopedTimer(TimerId::QMEngine, "Read Charges");
         readChargeFile(simBox);
     }
 
     if (per != NON_PERIODIC)
     {
-        auto _ = scoped("Read Stress Tensor");
+        auto _ = scopedTimer(TimerId::QMEngine, "Read Stress Tensor");
         readStressTensor(simBox.getBox(), physicalData);
     }
 }

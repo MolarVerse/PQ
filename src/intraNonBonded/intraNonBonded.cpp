@@ -27,6 +27,7 @@
 
 #include "coulombPotential.hpp"
 #include "exceptions.hpp"
+#include "globalTimer.hpp"
 #include "simulationBox.hpp"
 
 using namespace intraNonBonded;
@@ -106,7 +107,7 @@ void IntraNonBonded::calculate(
     PhysicalData        &physicalData
 )
 {
-    auto _ = scoped("IntraNonBonded");
+    auto _ = scopedTimer(TimerId::IntraNonBonded, "IntraNonBonded");
 
     auto calculateSingleContr = [this, &box, &physicalData](auto &intraMap)
     {

@@ -37,6 +37,7 @@
 #include "evaluator.hpp"
 #include "exceptions.hpp"
 #include "expDecay.hpp"
+#include "globalTimer.hpp"
 #include "hessianBuilder.hpp"
 #include "hessianSettings.hpp"
 #include "logOutput.hpp"
@@ -76,13 +77,14 @@ void HessianEngine::run()
     writeHessian(hessian);
     writeHessianInfo(hessian);
 
-    _timer.stopSimulationTimer();
+    timings::GlobalTimer::get().stopSimulationTimer();
 
-    addTimers();
     references::ReferencesOutput::writeReferencesFile();
-    _engineOutput.writeTimingsFile(_timer);
+    _engineOutput.writeTimingsFile();
 
-    const auto elapsedTime = _timer.calculateElapsedTime() * constants::MS_TO_S;
+    const auto elapsedTime =
+        timings::GlobalTimer::get().calculateElapsedTime() * constants::MS_TO_S;
+
     _engineOutput.getLogOutput().writeEndedNormally(elapsedTime);
     _engineOutput.getStdoutOutput().writeEndedNormally(elapsedTime);
 }
@@ -253,10 +255,9 @@ void HessianEngine::writeOptimizationOutput()
         _engineOutput.writeOptFile(_step, *_optimizer);
     }
 
-    _timer.stopSimulationTimer();
-    _timer.startSimulationTimer();
+    timings::GlobalTimer::get().stopAndRestartSimulationTimer();
 
-    _physicalData->setLoopTime(_timer.calculateLoopTime());
+    _physicalData->setLoopTime(timings::GlobalTimer::get().calculateLoopTime());
     _averagePhysicalData.updateAverages(*_physicalData);
 
     if (0 == _step % outputFreq)
@@ -483,27 +484,6 @@ void HessianEngine::writeHessianInfo(const HessianMatrix &hessian) const
     file << "hessian_unit = kcal_mol-1_angstrom-2\n";
     file << "rows = " << hessian.size() << '\n';
     file << "columns = " << (hessian.empty() ? 0 : hessian[0].size()) << '\n';
-}
-
-void HessianEngine::addTimers()
-{
-    _engineOutput.setTimerId(TimerId::Output);
-    _timer.addTimer(_engineOutput.getTimer());
-
-    _constraints->setTimerId(TimerId::Constraints);
-    _timer.addTimer(_constraints->getTimer());
-
-    _cellList->setTimerId(TimerId::CellList);
-    _timer.addTimer(_cellList->getTimer());
-
-    _potential->setTimerId(TimerId::Potential);
-    _timer.addTimer(_potential->getTimer());
-
-    _intraNonBonded->setTimerId(TimerId::IntraNonBonded);
-    _timer.addTimer(_intraNonBonded->getTimer());
-
-    _physicalData->setTimerId(TimerId::PhysicalData);
-    _timer.addTimer(_physicalData->getTimer());
 }
 
 std::shared_ptr<physicalData::PhysicalData> HessianEngine::

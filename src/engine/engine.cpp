@@ -61,12 +61,6 @@ Engine::Engine()
 }
 
 /**
- * @brief Adds a timings section to the timingsSection vector.
- *
- */
-void Engine::addTimer(const Timer &timings) { _timer.addTimer(timings); }
-
-/**
  * @brief Calculate total simulation time.
  *
  * @return double

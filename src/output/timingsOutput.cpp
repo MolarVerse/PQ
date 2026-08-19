@@ -35,9 +35,9 @@ using namespace timings;
  *
  * @param timer The timer object
  */
-void TimingsOutput::write(GlobalTimer &timer)
+void TimingsOutput::write()
 {
-    timer.sortTimers();
+    const auto timers = timings::GlobalTimer::get().sortTimers();
 
     _fp << std::format(
         "{:<30}\t{:>10}\t{:>10}\n",
@@ -57,11 +57,13 @@ void TimingsOutput::write(GlobalTimer &timer)
 
     _fp << "\n";
 
+    const auto elapsedTime = timings::GlobalTimer::get().calculateElapsedTime();
+
     // write the simulation timer
     _fp << std::format(
         "{:<30}\t{:>10.3f}\t{:>10.3f}\n",
         "Total",
-        timer.calculateElapsedTime() * constants::MS_TO_S,
+        elapsedTime * constants::MS_TO_S,
         100.0
     );
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
@@ -69,11 +71,11 @@ void TimingsOutput::write(GlobalTimer &timer)
     _fp << "\n";
 
     // write the execution timers
-    for (const auto &section : timer.getTimers())
+    for (const auto &section : timers)
     {
         const auto name       = section.getTimerName();
         const auto time       = section.calculateElapsedTime();
-        const auto percentage = (time / timer.calculateElapsedTime()) * 100.0;
+        const auto percentage = (time / elapsedTime) * 100.0;
 
         _fp << std::format(
             "{:<30}\t{:>10.3f}\t{:>10.3f}\n",
@@ -112,7 +114,7 @@ void TimingsOutput::write(GlobalTimer &timer)
     _fp << std::format(
         "{:<30}\t{:>10.3f}\t{:>10.3f}\t{:>10.3f}\n",
         "Total",
-        timer.calculateElapsedTime() * constants::MS_TO_S,
+        elapsedTime * constants::MS_TO_S,
         100.0,
         100.0
     );
@@ -121,7 +123,7 @@ void TimingsOutput::write(GlobalTimer &timer)
     _fp << "\n";
 
     // write the execution timers
-    for (const auto &section : timer.getTimers())
+    for (const auto &section : timers)
     {
         auto subsections = section.getTimingDetails();
 
@@ -130,7 +132,7 @@ void TimingsOutput::write(GlobalTimer &timer)
 
         const auto name       = section.getTimerName();
         const auto time       = section.calculateElapsedTime();
-        const auto percentage = (time / timer.calculateElapsedTime()) * 100.0;
+        const auto percentage = (time / elapsedTime) * 100.0;
 
         // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
         _fp << std::format(
@@ -144,11 +146,10 @@ void TimingsOutput::write(GlobalTimer &timer)
 
         for (const auto &subSection : subsections)
         {
-            const auto subName       = subSection.getName();
-            const auto subTime       = subSection.calculateElapsedTime();
-            const auto subPercentage = (subTime / time) * 100.0;
-            const auto subTotPercentage =
-                (subTime / timer.calculateElapsedTime()) * 100.0;
+            const auto subName          = subSection.getName();
+            const auto subTime          = subSection.calculateElapsedTime();
+            const auto subPercentage    = (subTime / time) * 100.0;
+            const auto subTotPercentage = (subTime / elapsedTime) * 100.0;
 
             _fp << std::format(
                 "{:<30}\t{:>10.3f}\t{:>10.3f}\t{:>10.3f}\n",

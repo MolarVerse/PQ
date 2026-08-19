@@ -30,6 +30,7 @@
 
 #include "cell.hpp"                // for Cell
 #include "exceptions.hpp"          // for CellListException
+#include "globalTimer.hpp"         // for GlobalTimer
 #include "molecule.hpp"            // for Molecule
 #include "potentialSettings.hpp"   // for PotentialSettings
 #include "simulationBox.hpp"       // for SimulationBox
@@ -234,7 +235,7 @@ void CellList::updateCellList(SimulationBox &simulationBox)
     if (!_activated)
         return;
 
-    auto _ = scoped("Update");
+    auto _ = scopedTimer(TimerId::CellList, "Update");
 
     if (simulationBox.getBoxSizeHasChanged())
     {

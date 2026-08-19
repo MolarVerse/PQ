@@ -20,34 +20,37 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef __TIMINGS_OUTPUT_HPP__
+#ifndef _SINGLETON_HPP_
+#define _SINGLETON_HPP_
 
-#define __TIMINGS_OUTPUT_HPP__
-
-#include "output.hpp"   // for Output
-
-namespace timings
+/**
+ * @brief Singleton class template.
+ *
+ * This header file defines a Singleton class template that provides a
+ * thread-safe implementation of the Singleton design pattern. It ensures that
+ * only one instance of the specified type T is created and provides global
+ * access to that instance.
+ *
+ * @tparam T The type of the singleton instance.
+ */
+template <typename T>
+class Singleton
 {
-    class GlobalTimer;   // forward declaration
-}   // namespace timings
-
-namespace output
-{
-
-    /**
-     * @class TimingsOutput inherits from Output
-     *
-     * @brief Output file for info file
-     *
-     */
-    class TimingsOutput : public Output
+   public:
+    static T& get()
     {
-       public:
-        using Output::Output;
+        static T instance;
+        return instance;
+    }
 
-        void write();
-    };
+    Singleton(const Singleton&)            = delete;
+    Singleton& operator=(const Singleton&) = delete;
+    Singleton(Singleton&&)                 = delete;
+    Singleton& operator=(Singleton&&)      = delete;
 
-}   // namespace output
+   protected:
+    Singleton()  = default;
+    ~Singleton() = default;
+};
 
-#endif /* __TIMINGS_OUTPUT_HPP__ */
+#endif   // _SINGLETON_HPP_
