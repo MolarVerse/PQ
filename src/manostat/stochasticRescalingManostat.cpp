@@ -55,7 +55,8 @@ StochasticRescalingManostat::StochasticRescalingManostat(
     : Manostat(other),
       _tau(other._tau),
       _compressibility(other._compressibility),
-      _dt(other._dt)
+      _dt(other._dt),
+      _fixedAxis(other._fixedAxis)
 {
 }
 
@@ -75,6 +76,7 @@ StochasticRescalingManostat &StochasticRescalingManostat::operator=(
         _tau             = other._tau;
         _compressibility = other._compressibility;
         _dt              = other._dt;
+        _fixedAxis       = other._fixedAxis;
     }
     return *this;
 }
@@ -87,6 +89,7 @@ StochasticRescalingManostat &StochasticRescalingManostat::operator=(
  * @param compressibility
  * @param anisotropicAxis
  * @param isotropicAxes
+ * @param fixedAxis
  * @return SemiIsotropicStochasticRescalingManostat::
  */
 SemiIsotropicStochasticRescalingManostat::
@@ -95,9 +98,15 @@ SemiIsotropicStochasticRescalingManostat::
         const double               tau,
         const double               compressibility,
         const size_t               anisotropicAxis,
-        const std::vector<size_t> &isotropicAxes
+        const std::vector<size_t> &isotropicAxes,
+        const FixedAxis            fixedAxis
     )
-    : StochasticRescalingManostat(targetPressure, tau, compressibility),
+    : StochasticRescalingManostat(
+          targetPressure,
+          tau,
+          compressibility,
+          fixedAxis
+      ),
       _2DAnisotropicAxis(anisotropicAxis),
       _2DIsotropicAxes(isotropicAxes)
 {
@@ -110,16 +119,19 @@ SemiIsotropicStochasticRescalingManostat::
  * @param targetPressure
  * @param tau
  * @param compressibility
+ * @param fixedAxis
  */
 StochasticRescalingManostat::StochasticRescalingManostat(
-    const double targetPressure,
-    const double tau,
-    const double compressibility
+    const double    targetPressure,
+    const double    tau,
+    const double    compressibility,
+    const FixedAxis fixedAxis
 )
     : Manostat(targetPressure),
       _tau(tau),
       _compressibility(compressibility),
-      _dt(TimingsSettings::getTimeStep())
+      _dt(TimingsSettings::getTimeStep()),
+      _fixedAxis(fixedAxis)
 {
 }
 
@@ -168,19 +180,57 @@ void StochasticRescalingManostat::applyManostat(
  * @brief calculate mu as scaling factor for Stochastic Rescaling manostat
  * (isotropic)
  *
+ * @details If a fixed axis is specified, that axis is not scaled (mu = 1.0)
+ * and the remaining axes are scaled isotropically with stochastic coupling
+ *
  * @param volume
  * @return Vec3D
  */
 tensor3D StochasticRescalingManostat::calculateMu(const double volume)
 {
+    using enum FixedAxis;
+
     const auto compress = _compressibility * _dt / _tau;
     const auto kb       = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
 
     const auto kT     = kb * ThermostatSettings::getActualTargetTemperature();
     const auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
 
+    // 2D pressure coupling
+    if (_fixedAxis != NONE)
+    {
+        const auto fixedAxisIndex = static_cast<size_t>(_fixedAxis) - 1;
+        const auto p_xyz          = diagonal(_pressureTensor);
+
+        // Calculate average pressure of non-fixed axes
+        double p_avg = 0.0;
+        for (size_t i = 0; i < 3; ++i)
+            if (i != fixedAxisIndex)
+                p_avg += p_xyz[i];
+        p_avg /= 2.0;
+
+        auto stochasticFactor  = 2.0 * kT * compress / volume;
+        stochasticFactor      *= PRESSURE_FACTOR;
+        stochasticFactor       = ::sqrt(stochasticFactor) * random;
+
+        const auto deltaP = _targetPressure - p_avg;
+
+        // 2D isotropic scaling
+        constexpr auto dimension = 2.0;
+        const auto     mu_2D =
+            ::exp((-compress * deltaP + stochasticFactor) / dimension);
+
+        Vec3D mu = {1.0, 1.0, 1.0};
+        for (size_t i = 0; i < 3; ++i)
+            if (i != fixedAxisIndex)
+                mu[i] = mu_2D;
+
+        return diagonalMatrix(mu);
+    }
+
+    // 3D pressure coupling
     auto stochasticFactor  = 2.0 * kT * compress / volume;
-    stochasticFactor       *= PRESSURE_FACTOR;
+    stochasticFactor      *= PRESSURE_FACTOR;
     stochasticFactor       = ::sqrt(stochasticFactor) * random;
 
     const auto deltaP = _targetPressure - _pressure;
@@ -243,6 +293,9 @@ tensor3D SemiIsotropicStochasticRescalingManostat::calculateMu(
  * @brief calculate mu as scaling factor for Stochastic Rescaling manostat
  * (anisotropic)
  *
+ * @details If a fixed axis is specified, that axis is not scaled (mu = 1.0)
+ * and the other axes are scaled independently with stochastic coupling
+ *
  * @param volume
  * @return Vec3D
  */
@@ -250,6 +303,8 @@ tensor3D AnisotropicStochasticRescalingManostat::calculateMu(
     const double volume
 )
 {
+    using enum FixedAxis;
+
     const auto compress = _compressibility * _dt / _tau;
     const auto kb       = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
 
@@ -262,14 +317,25 @@ tensor3D AnisotropicStochasticRescalingManostat::calculateMu(
 
     const auto deltaP = _targetPressure - diagonal(_pressureTensor);
 
-    return diagonalMatrix(
-        exp(-compress * (deltaP) / _pressureTensor.size + stochasticFactor)
-    );
+    auto mu =
+        exp(-compress * (deltaP) / _pressureTensor.size + stochasticFactor);
+
+    // 2D anisotropic: fix one axis
+    if (_fixedAxis != NONE)
+    {
+        const auto fixedAxisIndex = static_cast<size_t>(_fixedAxis) - 1;
+        mu[fixedAxisIndex]        = 1.0;
+    }
+
+    return diagonalMatrix(mu);
 }
 
 /**
  * @brief calculate mu as scaling factor for Stochastic Rescaling manostat (full
  * anisotropic including angles)
+ *
+ * @details If a fixed axis is specified, the corresponding row and column
+ * are zeroed (no coupling with other axes) and the diagonal is set to 1.0
  *
  * @param volume
  * @return tensor3D
@@ -278,6 +344,8 @@ tensor3D FullAnisotropicStochasticRescalingManostat::calculateMu(
     const double volume
 )
 {
+    using enum FixedAxis;
+
     const auto compress = _compressibility * _dt / _tau;
     const auto kb       = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
 
@@ -291,6 +359,21 @@ tensor3D FullAnisotropicStochasticRescalingManostat::calculateMu(
     const auto deltaP = diagonalMatrix(_targetPressure) - _pressureTensor;
     auto       mu =
         expPade(-compress * deltaP / _pressureTensor.size + stochasticFactor);
+
+    // 2D full anisotropic: fix one axis and remove its coupling
+    if (_fixedAxis != NONE)
+    {
+        const auto fixedAxisIndex = static_cast<size_t>(_fixedAxis) - 1;
+
+        // Zero out the row and column of the fixed axis
+        for (size_t i = 0; i < 3; ++i)
+        {
+            mu[fixedAxisIndex][i] = 0.0;
+            mu[i][fixedAxisIndex] = 0.0;
+        }
+        // Set diagonal to 1.0 (no scaling)
+        mu[fixedAxisIndex][fixedAxisIndex] = 1.0;
+    }
 
     rotateMu(mu);
 

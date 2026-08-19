@@ -140,6 +140,30 @@ void ManostatSettings::setIsotropy(const Isotropy &isotropy)
     _isotropy = isotropy;
 }
 
+void ManostatSettings::setFixedAxis(const std::string_view &fixedAxis)
+{
+    using enum FixedAxis;
+    const auto FixedAxisToLower =
+        utilities::toLowerAndReplaceDashesCopy(fixedAxis);
+
+    if (FixedAxisToLower == "none")
+        _fixedAxis = NONE;
+
+    else if (FixedAxisToLower == "x")
+        _fixedAxis = X;
+
+    else if (FixedAxisToLower == "y")
+        _fixedAxis = Y;
+
+    else if (FixedAxisToLower == "z")
+        _fixedAxis = Z;
+}
+
+void ManostatSettings::setFixedAxis(const FixedAxis &fixedAxis)
+{
+    _fixedAxis = fixedAxis;
+}
+
 /**
  * @brief sets the targetPressure to double in settings
  *
@@ -221,6 +245,13 @@ ManostatType ManostatSettings::getManostatType() { return _manostatType; }
  * @return Isotropy
  */
 Isotropy ManostatSettings::getIsotropy() { return _isotropy; }
+
+/**
+ * @brief get the FixedAxis
+ *
+ * @return FixedAxis
+ */
+FixedAxis ManostatSettings::getFixedAxis() { return _fixedAxis; }
 
 /**
  * @brief get the target pressure
