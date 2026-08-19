@@ -193,6 +193,12 @@ underscores.</p>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">J_COUPLINGS</span></code>: atom_1 atom_2 atom_3 atom_4 j_coupling_type</div>
 </div>
 </div></blockquote>
+<p>Fields named <code class="docutils literal notranslate"><span class="pre">atom_*</span></code> are unitless global atom indices. Fields named
+<code class="docutils literal notranslate"><span class="pre">*_type</span></code> are unitless indices into the corresponding parameter-file section.
+Distances in <code class="docutils literal notranslate"><span class="pre">SHAKE</span></code> and <code class="docutils literal notranslate"><span class="pre">DIST_CONSTRAINTS</span></code> are given in Å. The
+<code class="docutils literal notranslate"><span class="pre">DIST_CONSTRAINTS</span></code> force constant is given in
+<span class="math notranslate nohighlight">\(\frac{\text{kcal}}{\text{mol Å}^2}\)</span> and <code class="docutils literal notranslate"><span class="pre">dforce_constant_dt</span></code> in
+<span class="math notranslate nohighlight">\(\frac{\text{kcal}}{\text{mol Å}^2\text{ fs}}\)</span>.</p>
 <p>The optional fourth field in <code class="docutils literal notranslate"><span class="pre">SHAKE</span></code> entries is accepted for legacy input
 files but is not used by the reader. The optional <code class="docutils literal notranslate"><span class="pre">*</span></code> marker in the bonded
 sections marks a linker interaction. Topology atom indices are global atom
