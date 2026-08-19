@@ -55,7 +55,7 @@ using namespace simulationBox;
  * applyMShake. With the fixed UT loop bound, applyMShake must converge without
  * throwing.
  */
-TEST(TestMShake, applyMShake_threeAtomMolecule)
+TEST(TestMShake, applyMShakeThreeAtomMolecule)
 {
     // --- reference shape: equilateral triangle in the xy plane ---
     auto moltype = MoleculeType();
@@ -72,7 +72,7 @@ TEST(TestMShake, applyMShake_threeAtomMolecule)
     refAtoms[2].setName("H");
     refAtoms[0].setPosition({0.0, 0.0, 0.0});
     refAtoms[1].setPosition({1.0, 0.0, 0.0});
-    refAtoms[2].setPosition({0.5, std::sqrt(3.0) / 2.0, 0.0});
+    refAtoms[2].setPosition({0.5, std::numbers::sqrt3 / 2.0, 0.0});
 
     auto mShakeRef = MShakeReference();
     mShakeRef.setMoleculeType(moltype);
@@ -92,7 +92,7 @@ TEST(TestMShake, applyMShake_threeAtomMolecule)
 
     const auto refPos0 = Vec3D(0.0, 0.0, 0.0);
     const auto refPos1 = Vec3D(1.0, 0.0, 0.0);
-    const auto refPos2 = Vec3D(0.5, std::sqrt(3.0) / 2.0, 0.0);
+    const auto refPos2 = Vec3D(0.5, std::numbers::sqrt3 / 2.0, 0.0);
 
     auto a1 = std::make_shared<Atom>();
     auto a2 = std::make_shared<Atom>();
@@ -142,7 +142,7 @@ TEST(TestMShake, applyMShake_threeAtomMolecule)
  * the routine must throw MShakeException rather than looping forever or
  * silently giving up.
  */
-TEST(TestMShake, applyMShake_throwsWhenIterationLimitTooSmall)
+TEST(TestMShake, applyMShakeThrowsWhenIterationLimitTooSmall)
 {
     auto moltype = MoleculeType();
     moltype.setMoltype(1);
@@ -155,7 +155,7 @@ TEST(TestMShake, applyMShake_throwsWhenIterationLimitTooSmall)
     refAtoms[2].setName("H");
     refAtoms[0].setPosition({0.0, 0.0, 0.0});
     refAtoms[1].setPosition({1.0, 0.0, 0.0});
-    refAtoms[2].setPosition({0.5, std::sqrt(3.0) / 2.0, 0.0});
+    refAtoms[2].setPosition({0.5, std::numbers::sqrt3 / 2.0, 0.0});
 
     auto mShakeRef = MShakeReference();
     mShakeRef.setMoleculeType(moltype);
@@ -174,7 +174,7 @@ TEST(TestMShake, applyMShake_throwsWhenIterationLimitTooSmall)
 
     const auto refPos0 = Vec3D(0.0, 0.0, 0.0);
     const auto refPos1 = Vec3D(1.0, 0.0, 0.0);
-    const auto refPos2 = Vec3D(0.5, std::sqrt(3.0) / 2.0, 0.0);
+    const auto refPos2 = Vec3D(0.5, std::numbers::sqrt3 / 2.0, 0.0);
 
     auto a1 = std::make_shared<Atom>();
     auto a2 = std::make_shared<Atom>();

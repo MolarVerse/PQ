@@ -47,7 +47,7 @@
 namespace potential
 {
     class NonCoulombPair;   // forward declaration
-}
+}   // namespace potential
 
 class TestIntraNonBonded : public TestNonCoulombPotentialFF
 {
@@ -205,8 +205,13 @@ TEST_F(TestIntraNonBonded, calculate)
         linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(2, 2)
     );
 
-    auto nonCoulombPair =
-        potential::LennardJonesPair(size_t(0), size_t(1), 10.0, 2.0, 3.0);
+    auto nonCoulombPair = potential::LennardJonesPair(
+        static_cast<size_t>(0),
+        static_cast<size_t>(1),
+        10.0,
+        2.0,
+        3.0
+    );
     setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
     setNonCoulombPairsMatrix(1, 0, nonCoulombPair);
 

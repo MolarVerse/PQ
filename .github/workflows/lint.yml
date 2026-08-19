@@ -77,7 +77,7 @@ jobs:
 
       - name: Run clangd-tidy
         run: |
-          clangd-tidy $(find src/ apps/ include/ -name "*.cpp" -o -name "*.hpp" -o -name "*.tpp" 2>/dev/null) -p=build
+          clangd-tidy --fail-on-severity=hint $(find src/ apps/ include/ -name "*.cpp" -o -name "*.hpp" -o -name "*.tpp" 2>/dev/null) -p=build
 
   lint-gate:
     if: always()

@@ -28,7 +28,6 @@
 #include "bondSection.hpp"           // for BondSection
 #include "engine.hpp"                // for Engine
 #include "exceptions.hpp"            // for TopologyException
-#include "gtest/gtest.h"             // for Message, TestPartResult
 #include "testTopologySection.hpp"   // for TestTopologySection
 
 /**

@@ -201,38 +201,36 @@ void QMInputParser::parseQMMethod(
         QMSettings::setQMMethod(DFTBPLUS);
         ReferencesOutput::addReferenceFile(DFTBPLUS_FILE);
     }
-
     else if ("ase_dftbplus" == method)
     {
         QMSettings::setQMMethod(ASEDFTBPLUS);
         ReferencesOutput::addReferenceFile(DFTBPLUS_FILE);
     }
-
     else if ("ase_xtb" == method)
+    {
         QMSettings::setQMMethod(ASEXTB);
-
+    }
     else if ("pyscf" == method)
     {
         QMSettings::setQMMethod(PYSCF);
         ReferencesOutput::addReferenceFile(PYSCF_FILE);
     }
-
     else if ("turbomole" == method)
     {
         QMSettings::setQMMethod(TURBOMOLE);
         ReferencesOutput::addReferenceFile(TURBOMOLE_FILE);
     }
-
     else if ("fennol" == method)
     {
         QMSettings::setQMMethod(method);
         ReferencesOutput::addReferenceFile(FENNOL_FILE);
     }
-
     else if (method.starts_with("mace"))
+    {
         parseMaceQMMethod(method);
-
+    }
     else
+    {
         throw InputFileException(
             std::format(
                 "Invalid qm_prog \"{}\" in input file.\n"
@@ -241,6 +239,7 @@ void QMInputParser::parseQMMethod(
                 lineElements[2]
             )
         );
+    }
 }
 
 /**
@@ -340,9 +339,10 @@ void QMInputParser::parseMaceModel(
     using enum MaceModel;
     checkCommand(lineElements, lineNumber);
 
-    auto      &logOutput = _engine.getLogOutput();
-    auto      &stdOut    = _engine.getStdoutOutput();
-    const auto modelSizeWarning =
+    auto &logOutput = _engine.getLogOutput();
+    auto &stdOut    = _engine.getStdoutOutput();
+
+    const auto *const modelSizeWarning =
         "The keyword \"mace_model_size\" is deprecated and has been renamed to "
         "\"mace_model\". It will be removed in a future release.";
 
@@ -391,6 +391,7 @@ void QMInputParser::parseMaceModel(
         QMSettings::setMaceModel(CUSTOM);
 
     else
+    {
         throw InputFileException(
             std::format(
                 "Invalid mace_model \"{}\" in input file.\n"
@@ -400,6 +401,7 @@ void QMInputParser::parseMaceModel(
                 lineElements[2]
             )
         );
+    }
 }
 
 /**
@@ -457,12 +459,13 @@ void QMInputParser::parseMaceQMMethod(const std::string_view &model)
     }
 
     else if ("mace_anicc" == model || "mace_ani" == model)
+    {
         throw InputFileException(
             std::format(
                 "The mace ani model is not supported in this version of PQ.\n"
             )
         );
-
+    }
     else
     {
         throw InputFileException(
@@ -509,9 +512,11 @@ void QMInputParser::parseSlakosType(
     }
 
     else if ("custom" == slakos)
+    {
         QMSettings::setSlakosType(CUSTOM);
-
+    }
     else
+    {
         throw InputFileException(
             std::format(
                 "Invalid slakos type \"{}\" in input file.\n"
@@ -519,6 +524,7 @@ void QMInputParser::parseSlakosType(
                 lineElements[2]
             )
         );
+    }
 }
 
 /**
@@ -650,6 +656,7 @@ void QMInputParser::parseXtbMethod(
         QMSettings::setXtbMethod(IPEA1);
 
     else
+    {
         throw InputFileException(
             std::format(
                 "Invalid xTB method \"{}\" in input file.\n"
@@ -657,6 +664,7 @@ void QMInputParser::parseXtbMethod(
                 lineElements[2]
             )
         );
+    }
 }
 
 /**

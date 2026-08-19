@@ -188,7 +188,8 @@ void HybridConfigurator::assignHybridZones(simulationBox::SimulationBox& simBox)
             setZone(mol, CORE);
             continue;
         }
-        else if (mol.isForcedLayer())
+
+        if (mol.isForcedLayer())
         {
             setZone(mol, LAYER);
             continue;
@@ -310,10 +311,12 @@ void HybridConfigurator::toggleMoleculeActivation(
 )
 {
     for (auto& mol : simBox.getMolecules())
+    {
         if (mol.isActive())
             mol.deactivateMolecule();
         else
             mol.activateMolecule();
+    }
 }
 
 /**
@@ -345,10 +348,12 @@ void HybridConfigurator::calculateSmoothingFactors(
         const auto distanceFactor = (com - (layer - thickness)) / thickness;
 
         if (distanceFactor < 0.0 || distanceFactor > 1.0)
+        {
             throw(HybridConfiguratorException(
                 "Cannot calculate smoothing factor for molecule outside the "
                 "smoothing region"
             ));
+        }
 
         const auto dF  = distanceFactor - 0.5;
         const auto smF = dF * (dF * dF * (-6.0 * dF * dF + 5.0) - 1.875) + 0.5;

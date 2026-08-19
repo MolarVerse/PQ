@@ -27,35 +27,32 @@
 
 TEST(ConstraintSettingsTest, ShakeMaxIterRoundTrip)
 {
-    settings::ConstraintSettings::setShakeMaxIter(500u);
-    EXPECT_EQ(settings::ConstraintSettings::getShakeMaxIter(), 500u);
+    settings::ConstraintSettings::setShakeMaxIter(500U);
+    EXPECT_EQ(settings::ConstraintSettings::getShakeMaxIter(), 500U);
 
-    settings::ConstraintSettings::setShakeMaxIter(1u);
-    EXPECT_EQ(settings::ConstraintSettings::getShakeMaxIter(), 1u);
+    settings::ConstraintSettings::setShakeMaxIter(1U);
+    EXPECT_EQ(settings::ConstraintSettings::getShakeMaxIter(), 1U);
 }
 
 TEST(ConstraintSettingsTest, RattleMaxIterRoundTrip)
 {
-    settings::ConstraintSettings::setRattleMaxIter(750u);
-    EXPECT_EQ(settings::ConstraintSettings::getRattleMaxIter(), 750u);
+    settings::ConstraintSettings::setRattleMaxIter(750U);
+    EXPECT_EQ(settings::ConstraintSettings::getRattleMaxIter(), 750U);
 }
 
 TEST(ConstraintSettingsTest, MShakeMaxIterRoundTrip)
 {
-    settings::ConstraintSettings::setMShakeMaxIter(5u);
-    EXPECT_EQ(settings::ConstraintSettings::getMShakeMaxIter(), 5u);
+    settings::ConstraintSettings::setMShakeMaxIter(5U);
+    EXPECT_EQ(settings::ConstraintSettings::getMShakeMaxIter(), 5U);
 
-    settings::ConstraintSettings::setMShakeMaxIter(2u);
-    EXPECT_EQ(settings::ConstraintSettings::getMShakeMaxIter(), 2u);
+    settings::ConstraintSettings::setMShakeMaxIter(2U);
+    EXPECT_EQ(settings::ConstraintSettings::getMShakeMaxIter(), 2U);
 }
 
 TEST(ConstraintSettingsTest, ShakeToleranceRoundTrip)
 {
     settings::ConstraintSettings::setShakeTolerance(1.0e-4);
-    EXPECT_DOUBLE_EQ(
-        settings::ConstraintSettings::getShakeTolerance(),
-        1.0e-4
-    );
+    EXPECT_DOUBLE_EQ(settings::ConstraintSettings::getShakeTolerance(), 1.0e-4);
 
     settings::ConstraintSettings::setShakeTolerance(1.0e-12);
     EXPECT_DOUBLE_EQ(
@@ -87,4 +84,3 @@ TEST(ConstraintSettingsTest, MShakeToleranceRoundTrip)
         1.1e-10
     );
 }
-

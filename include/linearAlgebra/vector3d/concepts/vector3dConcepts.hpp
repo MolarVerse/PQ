@@ -33,7 +33,7 @@ namespace linearAlgebra
 {
     template <class T>
     class Vector3D;
-}
+}   // namespace linearAlgebra
 
 namespace pq
 {

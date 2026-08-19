@@ -55,8 +55,8 @@ namespace input::topology
         virtual std::string keyword() = 0;
 
         virtual void processSection(
-            std::vector<std::string> &,
-            engine::Engine &
+            std::vector<std::string> &lineElements,
+            engine::Engine           &engine
         ) = 0;
 
         virtual void endedNormally(const bool) const = 0;

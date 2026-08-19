@@ -142,8 +142,8 @@ TEST_F(TestSetup, setupNonCoulombicPairs)
         _engine->getPotential()->getNonCoulombPotential()
     );
 
-    const auto zero = size_t(0);
-    const auto one  = size_t(1);
+    const auto zero = static_cast<size_t>(0);
+    const auto one  = static_cast<size_t>(1);
 
     auto nonCoulombPair1 = LennardJonesPair(zero, zero, 10.0, 2.0, 3.0);
     auto nonCoulombPair2 = LennardJonesPair(one, zero, 10.0, 2.0, 3.0);

@@ -23,6 +23,7 @@
 // Fixed-work micro-benchmark of the non-Coulomb pair kernels
 // (Lennard-Jones, Buckingham, Morse).
 
+#include <cstdint>
 #include <cstdio>
 #include <format>
 #include <iostream>
@@ -37,7 +38,7 @@
 #include "lennardJonesPair.hpp"
 #include "morsePair.hpp"
 
-static constexpr long ITERATIONS = 20000;
+static constexpr std::uint64_t ITERATIONS = 20000;
 
 int main()
 {
@@ -48,10 +49,10 @@ int main()
     CALLGRIND_ZERO_STATS;
 
     double sink = 0.0;
-    for (long i = 0; i < ITERATIONS; ++i)
+    for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
         const double distance =
-            1.0 + static_cast<double>(i & 255) * 0.03;   // within cutoff
+            1.0 + static_cast<double>(i & 255U) * 0.03;   // within cutoff
 
         const auto [eLj, fLj]       = lj.calculate(distance);
         const auto [eBuck, fBuck]   = buck.calculate(distance);

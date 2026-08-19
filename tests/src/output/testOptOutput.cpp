@@ -54,7 +54,7 @@ TEST(TestOptOutput, writeProducesStepAndAllConvergenceColumns)
     OptOutput out(path);
     out.setFilename(path);
 
-    SteepestDescent opt(1u);
+    SteepestDescent opt(1U);
     Convergence     conv(
         true,
         true,
@@ -87,7 +87,7 @@ TEST(TestOptOutput, writeAbsoluteStrategyZeroesOutRelativeFlag)
     OptOutput out(path);
     out.setFilename(path);
 
-    SteepestDescent opt(1u);
+    SteepestDescent opt(1U);
     Convergence     conv(
         true,
         true,
@@ -120,7 +120,7 @@ TEST(TestOptOutput, writeRelativeStrategyZeroesOutAbsoluteFlag)
     OptOutput out(path);
     out.setFilename(path);
 
-    SteepestDescent opt(1u);
+    SteepestDescent opt(1U);
     Convergence     conv(
         true,
         true,
@@ -151,7 +151,7 @@ TEST(TestOptOutput, writeRespectsDisabledEnergyConv)
     OptOutput out(path);
     out.setFilename(path);
 
-    SteepestDescent opt(1u);
+    SteepestDescent opt(1U);
     Convergence     conv(
         false,   // energy disabled
         true,

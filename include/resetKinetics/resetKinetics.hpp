@@ -32,12 +32,12 @@
 namespace physicalData
 {
     class PhysicalData;   // forward declaration
-}
+}   // namespace physicalData
 
 namespace simulationBox
 {
     class SimulationBox;   // forward declaration
-}
+}   // namespace simulationBox
 
 namespace resetKinetics
 {

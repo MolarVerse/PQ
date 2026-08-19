@@ -61,15 +61,51 @@ TEST(TestWaterModelSettings, IntraModelNamesRoundTrip)
     };
 
     constexpr std::array cases{
-        ModelCase{"spc-e", WaterIntraModel::SPC_E, "SPC/E"},
-        ModelCase{"SPC_FW", WaterIntraModel::SPC_FW, "SPC/Fw"},
-        ModelCase{"qspc-fw", WaterIntraModel::QSPC_FW, "qSPC/Fw"},
-        ModelCase{"spc-dc", WaterIntraModel::SPC_DC, "SPC/DC"},
-        ModelCase{"h2o-dc", WaterIntraModel::H2O_DC, "H2O-DC"},
-        ModelCase{"tip3p", WaterIntraModel::TIP3P, "TIP3P"},
-        ModelCase{"opc3", WaterIntraModel::OPC3, "OPC3"},
-        ModelCase{"spc-mtr", WaterIntraModel::SPC_MTR, "SPC-mTR"},
-        ModelCase{"tip3p-mtr", WaterIntraModel::TIP3P_MTR, "TIP3P-mTR"},
+        ModelCase{
+            .input   = "spc-e",
+            .model   = WaterIntraModel::SPC_E,
+            .display = "SPC/E"
+        },
+        ModelCase{
+            .input   = "SPC_FW",
+            .model   = WaterIntraModel::SPC_FW,
+            .display = "SPC/Fw"
+        },
+        ModelCase{
+            .input   = "qspc-fw",
+            .model   = WaterIntraModel::QSPC_FW,
+            .display = "qSPC/Fw"
+        },
+        ModelCase{
+            .input   = "spc-dc",
+            .model   = WaterIntraModel::SPC_DC,
+            .display = "SPC/DC"
+        },
+        ModelCase{
+            .input   = "h2o-dc",
+            .model   = WaterIntraModel::H2O_DC,
+            .display = "H2O-DC"
+        },
+        ModelCase{
+            .input   = "tip3p",
+            .model   = WaterIntraModel::TIP3P,
+            .display = "TIP3P"
+        },
+        ModelCase{
+            .input   = "opc3",
+            .model   = WaterIntraModel::OPC3,
+            .display = "OPC3"
+        },
+        ModelCase{
+            .input   = "spc-mtr",
+            .model   = WaterIntraModel::SPC_MTR,
+            .display = "SPC-mTR"
+        },
+        ModelCase{
+            .input   = "tip3p-mtr",
+            .model   = WaterIntraModel::TIP3P_MTR,
+            .display = "TIP3P-mTR"
+        },
     };
 
     for (const auto &testCase : cases)
@@ -97,16 +133,56 @@ TEST(TestWaterModelSettings, InterModelNamesRoundTrip)
     };
 
     constexpr std::array cases{
-        ModelCase{"spc", WaterInterModel::SPC, "SPC"},
-        ModelCase{"spc-e", WaterInterModel::SPC_E, "SPC/E"},
-        ModelCase{"SPC_FW", WaterInterModel::SPC_FW, "SPC/Fw"},
-        ModelCase{"qspc-fw", WaterInterModel::QSPC_FW, "qSPC/Fw"},
-        ModelCase{"spc-dc", WaterInterModel::SPC_DC, "SPC/DC"},
-        ModelCase{"h2o-dc", WaterInterModel::H2O_DC, "H2O-DC"},
-        ModelCase{"tip3p", WaterInterModel::TIP3P, "TIP3P"},
-        ModelCase{"opc3", WaterInterModel::OPC3, "OPC3"},
-        ModelCase{"spc-mtr", WaterInterModel::SPC_MTR, "SPC-mTR"},
-        ModelCase{"tip3p-mtr", WaterInterModel::TIP3P_MTR, "TIP3P-mTR"},
+        ModelCase{
+            .input   = "spc",
+            .model   = WaterInterModel::SPC,
+            .display = "SPC"
+        },
+        ModelCase{
+            .input   = "spc-e",
+            .model   = WaterInterModel::SPC_E,
+            .display = "SPC/E"
+        },
+        ModelCase{
+            .input   = "SPC_FW",
+            .model   = WaterInterModel::SPC_FW,
+            .display = "SPC/Fw"
+        },
+        ModelCase{
+            .input   = "qspc-fw",
+            .model   = WaterInterModel::QSPC_FW,
+            .display = "qSPC/Fw"
+        },
+        ModelCase{
+            .input   = "spc-dc",
+            .model   = WaterInterModel::SPC_DC,
+            .display = "SPC/DC"
+        },
+        ModelCase{
+            .input   = "h2o-dc",
+            .model   = WaterInterModel::H2O_DC,
+            .display = "H2O-DC"
+        },
+        ModelCase{
+            .input   = "tip3p",
+            .model   = WaterInterModel::TIP3P,
+            .display = "TIP3P"
+        },
+        ModelCase{
+            .input   = "opc3",
+            .model   = WaterInterModel::OPC3,
+            .display = "OPC3"
+        },
+        ModelCase{
+            .input   = "spc-mtr",
+            .model   = WaterInterModel::SPC_MTR,
+            .display = "SPC-mTR"
+        },
+        ModelCase{
+            .input   = "tip3p-mtr",
+            .model   = WaterInterModel::TIP3P_MTR,
+            .display = "TIP3P-mTR"
+        },
     };
 
     for (const auto &testCase : cases)

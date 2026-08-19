@@ -44,8 +44,8 @@ namespace waterModel
         virtual ~IntraWater() = default;
 
         virtual void calculate(
-            simulationBox::SimulationBox &,
-            physicalData::PhysicalData &
+            simulationBox::SimulationBox& /*simBox*/,
+            physicalData::PhysicalData& /*physData*/
         )
         {
         }

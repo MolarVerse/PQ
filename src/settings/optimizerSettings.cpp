@@ -222,21 +222,26 @@ void OptimizerSettings::validateLearningRateStrategy()
     const auto strategy = getLearningRateStrategy();
 
     if (strategy == LREnum::LINESEARCH_WOLFE)
+    {
         throw UserInputException(
             "The Wolfe line search learning rate strategy is not yet "
             "implemented"
         );
+    }
 
     if (strategy == LREnum::NONE)
+    {
         throw UserInputException(
             "In order to run the optimizer, you need to specify a learning "
             "rate strategy."
         );
+    }
 
     const auto needsDecay = strategy == LREnum::CONSTANT_DECAY ||
                             strategy == LREnum::EXPONENTIAL_DECAY;
 
     if (needsDecay && !getLearningRateDecay().has_value())
+    {
         throw UserInputException(
             std::format(
                 "The {} learning rate strategy requires learning-rate-decay.",
@@ -244,6 +249,7 @@ void OptimizerSettings::validateLearningRateStrategy()
                                                    : "exponential-decay"
             )
         );
+    }
 }
 
 /**
@@ -255,6 +261,7 @@ void OptimizerSettings::validateLearningRateBounds()
     const auto maxLR = getMaxLearningRate();
 
     if (maxLR.has_value() && minLR >= maxLR.value())
+    {
         throw UserInputException(
             std::format(
                 "The minimum learning rate {} is greater or equal to the "
@@ -263,6 +270,7 @@ void OptimizerSettings::validateLearningRateBounds()
                 maxLR.value()
             )
         );
+    }
 }
 
 /***************************

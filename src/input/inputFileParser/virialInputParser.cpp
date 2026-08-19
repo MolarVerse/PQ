@@ -82,10 +82,12 @@ void VirialInputParser::parseVirial(
         settings::Settings::setVirialType(settings::VirialType::ATOMIC);
 
     else
+    {
         throw InputFileException(format(
             "Invalid virial setting \"{}\" at line {} in input file.\n"
             "Possible options are: molecular or atomic",
             lineElements[2],
             lineNumber
         ));
+    }
 }

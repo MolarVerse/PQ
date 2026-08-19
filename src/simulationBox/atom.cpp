@@ -50,8 +50,7 @@ void Atom::initMass()
     if (!atomMassMap.contains(keyword))
         throw MolDescriptorException("Invalid atom name \"" + keyword + "\"");
 
-    else
-        setMass(atomMassMap.at(keyword));
+    setMass(atomMassMap.at(keyword));
 }
 
 /**
