@@ -208,7 +208,7 @@ namespace engine
         std::unordered_set<size_t> inactiveMolecules;
 
         for (size_t j = 0; j < totalMolecules; ++j)
-            if (bitPattern & (1u << j))
+            if (bitPattern & (1U << j))
                 inactiveMolecules.insert(j);
 
         return inactiveMolecules;

@@ -117,14 +117,16 @@ void TimingsSection::endTimer()
  */
 double TimingsSection::calculateElapsedTime() const
 {
-    return double(duration_cast<ns>(_time->totalTime).count()) *
+    return static_cast<double>(duration_cast<ns>(_time->totalTime).count()) *
            constants::NS_TO_MS;
 }
 
 double TimingsSection::calculateAverageLoopTime() const
 {
-    auto time = double(duration_cast<ns>(_time->totalTime).count());
-    time      = time * constants::NS_TO_S / double(_steps);
+    auto time =
+        static_cast<double>(duration_cast<ns>(_time->totalTime).count());
+
+    time = time * constants::NS_TO_S / static_cast<double>(_steps);
 
     return time;
 }
@@ -135,8 +137,9 @@ double TimingsSection::calculateAverageLoopTime() const
  */
 double TimingsSection::calculateLoopTime() const
 {
-    auto time = double(duration_cast<ns>(_time->lastStepTime).count());
-    time      = time * constants::NS_TO_S;
+    auto time =
+        static_cast<double>(duration_cast<ns>(_time->lastStepTime).count());
+    time = time * constants::NS_TO_S;
 
     return time;
 }

@@ -42,22 +42,32 @@ namespace cli
     };
 
     inline constexpr auto dftbPlusScripts = std::array{ExternalQMScriptInfo{
-        "dftbplus_periodic_stress",
-        "DFTB+ periodic stress",
-        "dftb_file",
-        ""
+        .name                = "dftbplus_periodic_stress",
+        .label               = "DFTB+ periodic stress",
+        .requiredFileKeyword = "dftb_file",
+        .requiredWorkingFile = ""
     }};
 
     inline constexpr auto pyScfScripts = std::array{
-        ExternalQMScriptInfo{"pyscf_hf.py", "UHF / STO-3G", "", ""},
-        ExternalQMScriptInfo{"pyscf_mp2.py", "UMP2 / 6-311++G**", "", ""}
+        ExternalQMScriptInfo{
+            .name                = "pyscf_hf.py",
+            .label               = "UHF / STO-3G",
+            .requiredFileKeyword = "",
+            .requiredWorkingFile = ""
+        },
+        ExternalQMScriptInfo{
+            .name                = "pyscf_mp2.py",
+            .label               = "UMP2 / 6-311++G**",
+            .requiredFileKeyword = "",
+            .requiredWorkingFile = ""
+        }
     };
 
     inline constexpr auto turbomoleScripts = std::array{ExternalQMScriptInfo{
-        "turbomole_ricc2",
-        "RI-MP2",
-        "",
-        "tm_define.template"
+        .name                = "turbomole_ricc2",
+        .label               = "RI-MP2",
+        .requiredFileKeyword = "",
+        .requiredWorkingFile = "tm_define.template"
     }};
 
     inline constexpr auto externalQMMethods = std::array{

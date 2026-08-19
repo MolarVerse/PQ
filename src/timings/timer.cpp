@@ -87,7 +87,9 @@ void Timer::startTimingsSection()
         _timingDetails.back().beginTimer();
     }
     else
+    {
         _timingDetails[index].beginTimer();
+    }
 }
 
 /**
@@ -104,7 +106,9 @@ void Timer::startTimingsSection(const std::string_view name)
         _timingDetails.back().beginTimer();
     }
     else
+    {
         _timingDetails[index].beginTimer();
+    }
 }
 
 /**

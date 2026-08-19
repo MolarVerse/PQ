@@ -41,14 +41,19 @@ namespace input::parameterFile
        public:
         [[nodiscard]] std::string keyword() override;
 
-        void process(std::vector<std::string> &, engine::Engine &) override;
-        void processSection(
-            std::vector<std::string> &,
-            engine::Engine &
+        void process(
+            std::vector<std::string> &lineElements,
+            engine::Engine           &engine
         ) override;
+
+        void processSection(
+            std::vector<std::string> &lineElements,
+            engine::Engine           &engine
+        ) override;
+
         void processHeader(
-            std::vector<std::string> &,
-            engine::Engine &
+            std::vector<std::string> & /*lineElements*/,
+            engine::Engine & /*engine*/
         ) override
         {
         }

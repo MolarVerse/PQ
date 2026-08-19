@@ -78,7 +78,7 @@ jobs:
             git ls-files apps include src |
               grep -E '\.(c|cc|cpp|cxx|h|hh|hpp|hxx|tpp)$'
           )
-          clangd-tidy "${files[@]}" -p=build --tqdm -j1
+          clangd-tidy "${files[@]}" -p=build --fail-on-severity=hint --tqdm -j1
 
   static-lto:
     name: Full static LTO

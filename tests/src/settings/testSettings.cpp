@@ -36,7 +36,7 @@ using enum settings::FPType;
 using namespace settings;
 // using namespace customException;
 
-TEST(TestSettings, string_JobtypeTest)
+TEST(TestSettings, stringJobtypeTest)
 {
     EXPECT_EQ(string(MM_MD), "MM_MD");
     EXPECT_EQ(string(QM_MD), "QM_MD");

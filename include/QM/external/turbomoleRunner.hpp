@@ -41,9 +41,13 @@ namespace QM
         bool _usePointCharges  = false;
 
        public:
-        void writeCoordsFile(simulationBox::SimulationBox &) override;
-        void writePointChargeFile(simulationBox::SimulationBox &) override;
-        void execute(simulationBox::SimulationBox &) override;
+        void writeCoordsFile(simulationBox::SimulationBox &simBox) override;
+
+        void writePointChargeFile(
+            simulationBox::SimulationBox &simBox
+        ) override;
+
+        void execute(simulationBox::SimulationBox &simBox) override;
     };
 }   // namespace QM
 

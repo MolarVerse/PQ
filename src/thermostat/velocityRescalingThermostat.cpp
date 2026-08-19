@@ -25,6 +25,7 @@
 #include <cmath>   // for sqrt
 
 #include "exceptions.hpp"           // for UserInputException
+#include "globalTimer.hpp"          // for GlobalTimer
 #include "mathUtilities.hpp"        // for isZero
 #include "physicalData.hpp"         // for PhysicalData
 #include "simulationBox.hpp"        // for SimulationBox
@@ -96,7 +97,7 @@ void VelocityRescalingThermostat::applyThermostat(
     PhysicalData  &physicalData
 )
 {
-    auto _ = scoped("Velocity Rescaling");
+    auto _ = scopedTimer(TimerId::Thermostat, "Velocity Rescaling");
 
     physicalData.calculateTemperature(simulationBox);
 
@@ -115,7 +116,7 @@ void VelocityRescalingThermostat::applyThermostat(
 
     const auto timeStep  = TimingsSettings::getTimeStep();
     const auto tempRatio = _targetTemperature / _temperature;
-    const auto dof       = double(simulationBox.getDegreesOfFreedom());
+    const auto dof = static_cast<double>(simulationBox.getDegreesOfFreedom());
 
     auto lambda = 1.0 + timeStep / _tau * (tempRatio - 1.0);
 

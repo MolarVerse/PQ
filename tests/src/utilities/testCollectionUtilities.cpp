@@ -32,10 +32,10 @@
  */
 TEST(TestCollectionUtilities, getUniqueElements)
 {
-    const auto elements       = std::vector<size_t>{3u, 1u, 2u, 1u, 3u};
+    const auto elements       = std::vector<size_t>{3U, 1U, 2U, 1U, 3U};
     const auto uniqueElements = utilities::getUniqueElements(elements);
 
-    EXPECT_EQ(uniqueElements, (std::vector<size_t>{1u, 2u, 3u}));
+    EXPECT_EQ(uniqueElements, (std::vector<size_t>{1U, 2U, 3U}));
 }
 
 /**

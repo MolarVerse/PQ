@@ -49,23 +49,32 @@ using namespace customException;
  * @throws RstFileException if the number of elements in the line is not 2
  * @throws RstFileException if the step count is negative
  */
-void StepCountSection::process(std::vector<std::string> &lineElements, Engine &)
+void StepCountSection::
+    process(std::vector<std::string> &lineElements, Engine & /*engine*/)
 {
     if (lineElements.size() != 2)
-        throw RstFileException(std::format(
-            "Error in line {}: Step count section must have 2 elements",
-            _lineNumber
-        ));
+    {
+        throw RstFileException(
+            std::format(
+                "Error in line {}: Step count section must have 2 elements",
+                _lineNumber
+            )
+        );
+    }
 
     auto stepCount = stoi(lineElements[1]);
 
     if (stepCount < 0)
-        throw RstFileException(std::format(
-            "Error in line {}: Step count must be positive",
-            _lineNumber
-        ));
+    {
+        throw RstFileException(
+            std::format(
+                "Error in line {}: Step count must be positive",
+                _lineNumber
+            )
+        );
+    }
 
-    TimingsSettings::setStepCount(size_t(stepCount));
+    TimingsSettings::setStepCount(static_cast<size_t>(stepCount));
 }
 
 /**

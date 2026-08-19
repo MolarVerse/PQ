@@ -70,8 +70,8 @@ namespace forceField
         );
 
         void calculateEnergyAndForces(
-            const simulationBox::SimulationBox &,
-            physicalData::PhysicalData &
+            const simulationBox::SimulationBox & /*simBox*/,
+            physicalData::PhysicalData & /*physData*/
         )
         {
         }   // TODO: implement

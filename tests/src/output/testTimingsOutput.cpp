@@ -29,7 +29,6 @@
 #include <thread>
 
 #include "globalTimer.hpp"
-#include "timer.hpp"
 #include "timingsOutput.hpp"
 
 using namespace output;
@@ -53,12 +52,10 @@ TEST(TestTimingsOutput, writeProducesHeaderAndTotalRow)
     TimingsOutput out(path);
     out.setFilename(path);
 
-    GlobalTimer global;
-    global.startSimulationTimer();
     std::this_thread::sleep_for(std::chrono::milliseconds(1));
-    global.stopSimulationTimer();
+    timings::GlobalTimer::get().stopSimulationTimer();
 
-    out.write(global);
+    out.write();
     out.close();
 
     const auto content = slurp(path);
@@ -78,20 +75,15 @@ TEST(TestTimingsOutput, writeListsRegisteredSubTimers)
     TimingsOutput out(path);
     out.setFilename(path);
 
-    GlobalTimer global;
-    global.startSimulationTimer();
-
-    Timer t(TimerId::DefaultTimings);
     {
-        auto _ = t.scoped("inner");
+        auto _ = scopedTimer(TimerId::DefaultTimings, "inner");
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 
-    global.addTimer(t);
     std::this_thread::sleep_for(std::chrono::milliseconds(1));
-    global.stopSimulationTimer();
+    timings::GlobalTimer::get().stopSimulationTimer();
 
-    out.write(global);
+    out.write();
     out.close();
 
     const auto content = slurp(path);

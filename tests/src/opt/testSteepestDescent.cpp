@@ -87,11 +87,11 @@ TEST(TestSteepestDescent, updateMovesAtomsByLearningRateTimesForce)
         {-0.2, 0.3, 0.7}
     );
 
-    SteepestDescent opt(1u);
+    SteepestDescent opt(1U);
     opt.setSimulationBox(box);
 
     const auto lr = 0.1;
-    opt.update(lr, 1u);
+    opt.update(lr, 1U);
 
     EXPECT_DOUBLE_EQ(box->getAtoms()[0]->getPosition()[0], 0.0 + lr * 0.5);
     EXPECT_DOUBLE_EQ(box->getAtoms()[0]->getPosition()[1], 0.0 + lr * 1.0);
@@ -111,9 +111,9 @@ TEST(TestSteepestDescent, updateStoresOldPosition)
         {0.2, 0.2, 0.2}
     );
 
-    SteepestDescent opt(1u);
+    SteepestDescent opt(1U);
     opt.setSimulationBox(box);
-    opt.update(0.05, 1u);
+    opt.update(0.05, 1U);
 
     EXPECT_EQ(
         box->getAtoms()[0]->getPositionOld(),
@@ -137,9 +137,9 @@ TEST(TestSteepestDescent, updateAppliesPBCToNewPosition)
         {10.0, 10.0, 10.0}
     );
 
-    SteepestDescent opt(1u);
+    SteepestDescent opt(1U);
     opt.setSimulationBox(box);
-    opt.update(1.0, 1u);
+    opt.update(1.0, 1U);
 
     EXPECT_DOUBLE_EQ(box->getAtoms()[0]->getPosition()[0], 1.0);
 }
@@ -153,9 +153,9 @@ TEST(TestSteepestDescent, updateIsNoOpWithZeroLearningRate)
         {1.0, 1.0, 1.0}
     );
 
-    SteepestDescent opt(1u);
+    SteepestDescent opt(1U);
     opt.setSimulationBox(box);
-    opt.update(0.0, 1u);
+    opt.update(0.0, 1U);
 
     EXPECT_EQ(
         box->getAtoms()[0]->getPosition(),

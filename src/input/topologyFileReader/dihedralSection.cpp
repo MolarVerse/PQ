@@ -64,6 +64,7 @@ void DihedralSection::processSection(
 {
     // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
     if (lineElements.size() != 5 && lineElements.size() != 6)
+    {
         throw TopologyException(
             std::format(
                 "Wrong number of arguments in topology file dihedral section "
@@ -72,6 +73,7 @@ void DihedralSection::processSection(
                 _lineNumber
             )
         );
+    }
 
     auto atom1        = stoul(lineElements[0]);
     auto atom2        = stoul(lineElements[1]);
@@ -86,6 +88,7 @@ void DihedralSection::processSection(
             isLinker = true;
 
         else
+        {
             throw TopologyException(
                 std::format(
                     "Sixth entry in topology file in dihedral section has to "
@@ -94,6 +97,7 @@ void DihedralSection::processSection(
                     _lineNumber
                 )
             );
+        }
     }
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
@@ -103,6 +107,7 @@ void DihedralSection::processSection(
     atoms.erase(it, end);
 
     if (4 != atoms.size())
+    {
         throw TopologyException(
             std::format(
                 "Topology file dihedral section at line {} - atoms cannot be "
@@ -111,6 +116,7 @@ void DihedralSection::processSection(
                 _lineNumber
             )
         );
+    }
 
     auto &simBox = engine.getSimulationBox();
 
@@ -145,6 +151,7 @@ std::string DihedralSection::keyword() { return "dihedrals"; }
 void DihedralSection::endedNormally(const bool endedNormal) const
 {
     if (!endedNormal)
+    {
         throw TopologyException(
             std::format(
                 "Topology file dihedral section at line {} - no end of section "
@@ -152,4 +159,5 @@ void DihedralSection::endedNormally(const bool endedNormal) const
                 _lineNumber
             )
         );
+    }
 }

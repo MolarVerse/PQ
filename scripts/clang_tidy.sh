@@ -108,4 +108,4 @@ if [[ ${#files[@]} -eq 0 ]]; then
 fi
 
 echo "  Files: ${#files[@]}"
-clangd-tidy "${files[@]}" -p="$build_dir" --tqdm -j"$jobs"
+clangd-tidy "${files[@]}" -p="$build_dir" --fail-on-severity=hint --tqdm -j"$jobs"

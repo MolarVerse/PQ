@@ -61,13 +61,17 @@ void BondSection::processSection(
 )
 {
     if (lineElements.size() != 3 && lineElements.size() != 4)
+    {
         throw TopologyException(
+
             std::format(
                 "Wrong number of arguments in topology file bond section at "
                 "line {} - number of elements has to be 3 or 4!",
                 _lineNumber
             )
+
         );
+    }
 
     const auto atom1    = stoul(lineElements[0]);
     const auto atom2    = stoul(lineElements[1]);
@@ -80,6 +84,7 @@ void BondSection::processSection(
             isLinker = true;
 
         else
+        {
             throw TopologyException(
                 std::format(
                     "Forth entry in topology file in bond section has to be a "
@@ -87,9 +92,11 @@ void BondSection::processSection(
                     _lineNumber
                 )
             );
+        }
     }
 
     if (atom1 == atom2)
+    {
         throw TopologyException(
             std::format(
                 "Topology file shake section at line {} - atoms cannot be the "
@@ -97,6 +104,7 @@ void BondSection::processSection(
                 _lineNumber
             )
         );
+    }
 
     auto &simBox = engine.getSimulationBox();
 
@@ -126,6 +134,7 @@ std::string BondSection::keyword() { return "bonds"; }
 void BondSection::endedNormally(const bool endedNormal) const
 {
     if (!endedNormal)
+    {
         throw TopologyException(
             std::format(
                 "Topology file bond section at line {} - no end of section "
@@ -133,4 +142,5 @@ void BondSection::endedNormally(const bool endedNormal) const
                 _lineNumber
             )
         );
+    }
 }

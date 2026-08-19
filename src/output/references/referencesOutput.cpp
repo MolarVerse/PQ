@@ -57,32 +57,38 @@ namespace
     )
     {
         if (!std::filesystem::is_regular_file(path))
+        {
             throw std::runtime_error(
                 std::format(
                     "PQ reference file \"{}\" could not be found",
                     path.string()
                 )
             );
+        }
 
         std::ifstream referenceFile(path);
         if (!referenceFile.is_open())
+        {
             throw std::runtime_error(
                 std::format(
                     "Could not open PQ reference file \"{}\"",
                     path.string()
                 )
             );
+        }
 
         std::string line;
         while (getline(referenceFile, line)) output << line << '\n';
 
         if (referenceFile.bad())
+        {
             throw std::runtime_error(
                 std::format(
                     "Could not read PQ reference file \"{}\"",
                     path.string()
                 )
             );
+        }
 
         output << "\n\n";
     }
@@ -139,12 +145,14 @@ void ReferencesOutput::writeReferencesFile()
     output << rendered.str();
     output.close();
     if (!output)
+    {
         throw std::runtime_error(
             std::format(
                 "Could not write reference output file \"{}\"",
                 filename
             )
         );
+    }
 }
 
 /**

@@ -24,7 +24,6 @@
 #define PQ_GOOGLE_BENCHMARK_SETUP_HPP
 
 #include <cstddef>
-#include <memory>
 
 #include "atom.hpp"
 #include "molecule.hpp"
@@ -47,7 +46,9 @@ namespace benchmarkSetup
 
         std::size_t atomIndex = 0;
         for (std::size_t x = 0; x < cellsPerSide; ++x)
+        {
             for (std::size_t y = 0; y < cellsPerSide; ++y)
+            {
                 for (std::size_t z = 0; z < cellsPerSide; ++z)
                 {
                     auto atom = std::make_shared<simulationBox::Atom>();
@@ -82,6 +83,8 @@ namespace benchmarkSetup
                     simulationBox.addAtom(atom);
                     simulationBox.addMolecule(molecule);
                 }
+            }
+        }
 
         simulationBox.calculateTotalMass();
         simulationBox.calculateDegreesOfFreedom();
