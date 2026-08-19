@@ -82,30 +82,24 @@ TEST(ManostatSettingsTest, DoubleSettersAndGetters)
     EXPECT_DOUBLE_EQ(settings::ManostatSettings::getTauManostat(), 1.5);
 
     settings::ManostatSettings::setCompressibility(4.5e-5);
-    EXPECT_DOUBLE_EQ(
-        settings::ManostatSettings::getCompressibility(),
-        4.5e-5
-    );
+    EXPECT_DOUBLE_EQ(settings::ManostatSettings::getCompressibility(), 4.5e-5);
 }
 
 TEST(ManostatSettingsTest, AnisotropicAxesSettersAndGetters)
 {
-    settings::ManostatSettings::set2DIsotropicAxes({0u, 1u});
+    settings::ManostatSettings::set2DIsotropicAxes({0U, 1U});
     EXPECT_EQ(
         settings::ManostatSettings::get2DIsotropicAxes(),
-        (std::vector<size_t>{0u, 1u})
+        (std::vector<size_t>{0U, 1U})
     );
 
-    settings::ManostatSettings::set2DAnisotropicAxis(2u);
-    EXPECT_EQ(settings::ManostatSettings::get2DAnisotropicAxis(), 2u);
+    settings::ManostatSettings::set2DAnisotropicAxis(2U);
+    EXPECT_EQ(settings::ManostatSettings::get2DAnisotropicAxis(), 2U);
 }
 
 TEST(ManostatSettingsTest, StringRoundTripForManostatType)
 {
-    EXPECT_EQ(
-        settings::string(settings::ManostatType::BERENDSEN),
-        "berendsen"
-    );
+    EXPECT_EQ(settings::string(settings::ManostatType::BERENDSEN), "berendsen");
     EXPECT_EQ(
         settings::string(settings::ManostatType::STOCHASTIC_RESCALING),
         "stochastic_rescaling"
@@ -115,18 +109,12 @@ TEST(ManostatSettingsTest, StringRoundTripForManostatType)
 
 TEST(ManostatSettingsTest, StringRoundTripForIsotropy)
 {
-    EXPECT_EQ(
-        settings::string(settings::Isotropy::ISOTROPIC),
-        "isotropic"
-    );
+    EXPECT_EQ(settings::string(settings::Isotropy::ISOTROPIC), "isotropic");
     EXPECT_EQ(
         settings::string(settings::Isotropy::SEMI_ISOTROPIC),
         "semi_isotropic"
     );
-    EXPECT_EQ(
-        settings::string(settings::Isotropy::ANISOTROPIC),
-        "anisotropic"
-    );
+    EXPECT_EQ(settings::string(settings::Isotropy::ANISOTROPIC), "anisotropic");
     EXPECT_EQ(
         settings::string(settings::Isotropy::FULL_ANISOTROPIC),
         "full_anisotropic"

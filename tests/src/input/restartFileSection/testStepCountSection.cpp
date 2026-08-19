@@ -47,6 +47,7 @@ TEST_F(TestStepCountSection, testIsHeader)
 TEST_F(TestStepCountSection, testNumberOfArguments)
 {
     for (size_t i = 0; i < 10; ++i)
+    {
         if (i != 2)
         {
             auto line = std::vector<std::string>(i);
@@ -55,6 +56,7 @@ TEST_F(TestStepCountSection, testNumberOfArguments)
                 customException::RstFileException
             );
         }
+    }
 }
 
 TEST_F(TestStepCountSection, testNegativeStepCount)

@@ -44,6 +44,7 @@ TEST_F(TestBoxSection, testIsHeader) { EXPECT_TRUE(_section->isHeader()); }
 TEST_F(TestBoxSection, testNumberOfArguments)
 {
     for (size_t i = 0; i < 10; ++i)
+    {
         if (i != 4 && i != 7)
         {
             auto line = std::vector<std::string>(i);
@@ -52,6 +53,7 @@ TEST_F(TestBoxSection, testNumberOfArguments)
                 customException::RstFileException
             );
         }
+    }
 }
 
 TEST_F(TestBoxSection, testProcess)

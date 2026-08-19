@@ -190,6 +190,7 @@ void GuffDatReader::setupGuffMaps()
     }
 
     for (size_t i = 0; i < nMolTypes; ++i)
+    {
         for (size_t j = 0; j < nMolTypes; ++j)
         {
             auto      &molType    = simBox.getMoleculeType(i);
@@ -199,8 +200,10 @@ void GuffDatReader::setupGuffMaps()
             _guffCoulombCoeffs[i][j].resize(nAtomTypes);
             _isGuffPairSet[i][j].resize(nAtomTypes);
         }
+    }
 
     for (size_t i = 0; i < nMolTypes; ++i)
+    {
         for (size_t j = 0; j < nMolTypes; ++j)
         {
             auto      &molType1    = simBox.getMoleculeType(i);
@@ -219,6 +222,7 @@ void GuffDatReader::setupGuffMaps()
                     _isGuffPairSet[i][j][k][l] = false;
             }
         }
+    }
 }
 
 /**
@@ -693,8 +697,7 @@ void GuffDatReader::checkPartialCharges()
         if (moleculeType1Optional == std::nullopt)
             continue;
 
-        else
-            moleculeType1 = moleculeType1Optional.value();
+        moleculeType1 = moleculeType1Optional.value();
 
         for (size_t j = 0; j < nMolTypes; ++j)
         {
@@ -711,8 +714,7 @@ void GuffDatReader::checkPartialCharges()
                 ))
                 continue;
 
-            else
-                moleculeType2 = moleculeType2Optional.value();
+            moleculeType2 = moleculeType2Optional.value();
 
             const auto nAtomTypes1 = moleculeType1.getNumberOfAtomTypes();
 
@@ -733,6 +735,7 @@ void GuffDatReader::checkPartialCharges()
                             coeff,
                             constants::GUFF_DAT_COULOMB_PREFACTOR_THRESHOLD
                         ))
+                    {
                         throw GuffDatException(
                             std::format(
                                 "Invalid coulomb coefficient guff file for "
@@ -749,6 +752,7 @@ void GuffDatReader::checkPartialCharges()
                                 coeff
                             )
                         );
+                    }
                 }
             }
         }
@@ -772,6 +776,7 @@ void GuffDatReader::checkNecessaryGuffPairs()
     const auto necessaryMoleculeTypes = simBox.findNecessaryMoleculeTypes();
 
     for (const auto &moleculeType1 : necessaryMoleculeTypes)
+    {
         for (const auto &moleculeType2 : necessaryMoleculeTypes)
         {
             if (bothMoltypesAreWaterType(
@@ -785,11 +790,12 @@ void GuffDatReader::checkNecessaryGuffPairs()
             {
                 const auto nAtoms2 = moleculeType2.getNumberOfAtoms();
                 for (size_t atomIndex2 = 0; atomIndex2 < nAtoms2; ++atomIndex2)
+                {
                     if (!_isGuffPairSet[moleculeType1.getMoltype() - 1]
                                        [moleculeType2.getMoltype() - 1]
                                        [moleculeType1.getAtomType(atomIndex1)]
                                        [moleculeType2.getAtomType(atomIndex2)])
-
+                    {
                         throw GuffDatException(
                             std::format(
                                 "No guff pair set for molecule types {} and {} "
@@ -802,8 +808,11 @@ void GuffDatReader::checkNecessaryGuffPairs()
                                 moleculeType2.getExternalAtomType(atomIndex2)
                             )
                         );
+                    }
+                }
             }
         }
+    }
 }
 
 /**

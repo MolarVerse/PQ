@@ -112,7 +112,7 @@ namespace physicalData
         void calculateTemperature(simulationBox::SimulationBox&);
         void calculateKinetics(simulationBox::SimulationBox&);
 
-        std::shared_ptr<PhysicalData> clone() const;
+        [[nodiscard]] std::shared_ptr<PhysicalData> clone() const;
 
         void copy(const PhysicalData&);
         void updateAverages(const PhysicalData&);

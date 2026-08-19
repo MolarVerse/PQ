@@ -31,6 +31,7 @@
 #include "adam.hpp"
 #include "constant.hpp"
 #include "constantDecay.hpp"
+#include "constants.hpp"
 #include "convergenceSettings.hpp"
 #include "defaults.hpp"
 #include "evaluator.hpp"
@@ -81,7 +82,7 @@ void HessianEngine::run()
     references::ReferencesOutput::writeReferencesFile();
     _engineOutput.writeTimingsFile(_timer);
 
-    const auto elapsedTime = double(_timer.calculateElapsedTime()) * 1e-3;
+    const auto elapsedTime = _timer.calculateElapsedTime() * constants::MS_TO_S;
     _engineOutput.getLogOutput().writeEndedNormally(elapsedTime);
     _engineOutput.getStdoutOutput().writeEndedNormally(elapsedTime);
 }
@@ -165,12 +166,14 @@ void HessianEngine::runOptimization()
     }
 
     if (!_converged)
+    {
         throw OptException(
             std::format(
                 "Optimizer did not converge after {} epochs.",
                 _optimizer->getNEpochs()
             )
         );
+    }
 
     if (_optStopped)
     {

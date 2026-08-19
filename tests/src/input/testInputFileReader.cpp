@@ -41,30 +41,34 @@
 using namespace input;
 using namespace settings;
 
-static void readKeywordList(
-    const std::string        &filename,
-    std::vector<std::string> &keywords,
-    std::vector<bool>        &required
-)
+namespace
 {
-    std::string   line;
-    std::ifstream inputFile(filename);
-
-    while (getline(inputFile, line))
+    void readKeywordList(
+        const std::string        &filename,
+        std::vector<std::string> &keywords,
+        std::vector<bool>        &required
+    )
     {
-        std::string keyword;
-        std::string requiredString = "";
-        bool        requiredBool   = false;
+        std::string   line;
+        std::ifstream inputFile(filename);
 
-        if (std::istringstream(line).str().empty())
-            continue;
-        std::istringstream(line) >> keyword >> requiredString;
-        std::istringstream(requiredString) >> std::boolalpha >> requiredBool;
+        while (getline(inputFile, line))
+        {
+            std::string keyword;
+            std::string requiredString = "";
+            bool        requiredBool   = false;
 
-        keywords.push_back(keyword);
-        required.push_back(requiredBool);
+            if (std::istringstream(line).str().empty())
+                continue;
+            std::istringstream(line) >> keyword >> requiredString;
+            std::istringstream(requiredString) >> std::boolalpha >>
+                requiredBool;
+
+            keywords.push_back(keyword);
+            required.push_back(requiredBool);
+        }
     }
-}
+}   // namespace
 
 TEST_F(TestInputFileReader, testAddKeyword)
 {

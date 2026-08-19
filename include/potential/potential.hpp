@@ -114,6 +114,7 @@ namespace potential
             simulationBox::CellList &
         ) = 0;
 
+        [[nodiscard]]
         virtual std::shared_ptr<Potential> clone() const = 0;
 
         template <typename ChargeTag1, typename ChargeTag2>

@@ -29,7 +29,6 @@
 #include "randomNumberGeneratorSetup.hpp"   // for randomNumberGeneratorSetup
 #include "settings.hpp"                     // for Settings
 
-using setup::RandomNumberGeneratorSetup;
 using namespace settings;
 
 TEST(TestRandomNumberGeneratorSetup, setupWithoutRandomSeed)

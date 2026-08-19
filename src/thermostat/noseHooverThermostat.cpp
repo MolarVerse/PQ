@@ -74,7 +74,7 @@ void NoseHooverThermostat::applyThermostatOnForces(SimulationBox &simBox)
     const auto kB        = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
     const auto kT_target = kB * _targetTemperature;
 
-    const double degreesOfFreedom =
+    const auto degreesOfFreedom =
         static_cast<double>(simBox.getDegreesOfFreedom());
     const auto couplingFreqSquared = _couplingFrequency * _couplingFrequency;
 
@@ -108,7 +108,8 @@ void NoseHooverThermostat::applyThermostat(
 
     _temperature = physicalData.getTemperature();
 
-    const auto degreesOfFreedom    = double(simBox.getDegreesOfFreedom());
+    const auto degreesOfFreedom =
+        static_cast<double>(simBox.getDegreesOfFreedom());
     const auto couplingFreqSquared = _couplingFrequency * _couplingFrequency;
 
     const auto dt = TimingsSettings::getTimeStep();
