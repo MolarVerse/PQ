@@ -229,8 +229,8 @@ std::string Settings::getFloatingPointPybindString()
 {
     if (_floatingPointType == FPType::FLOAT)
         return "float32";
-    else
-        return "float64";
+
+    return "float64";
 }
 
 /**

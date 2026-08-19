@@ -69,10 +69,10 @@ class CommandLineArgs
 
     void parse();
 
-    std::string       getInputFileName() const;
-    CommandLineAction getAction() const;
-    CommandLineFormat getFormat() const;
-    ValidationScope   getValidationScope() const;
+    [[nodiscard]] std::string       getInputFileName() const;
+    [[nodiscard]] CommandLineAction getAction() const;
+    [[nodiscard]] CommandLineFormat getFormat() const;
+    [[nodiscard]] ValidationScope   getValidationScope() const;
 };
 
 #endif   // _COMMAND_LINE_ARGS_HPP_

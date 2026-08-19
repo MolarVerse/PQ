@@ -97,20 +97,24 @@ void WaterModelSetup::setup()
     const auto waterType = _engine.getSimulationBox().getWaterType();
 
     if (!waterType.has_value())
+    {
         throw(UserInputException(
             "Use of water model has been requested in the input file, but "
             "no water type is specified in the moldescriptor file."
         ));
+    }
 
     const auto water =
         _engine.getSimulationBox().findMoleculeType(waterType.value());
 
     // water atoms have to be in this order for calculation
     if (water.getAtomNames() != std::vector<std::string>{"O", "H", "H"})
+    {
         throw(MolDescriptorException(
             "Water molecule type must have exactly 3 atoms in the following "
             "order: O (oxygen), H (hydrogen), H (hydrogen)."
         ));
+    }
 
     if (Settings::isQMOnlyJobtype())
         throw(UserInputException(
@@ -180,6 +184,7 @@ void WaterModelSetup::checkTopologyFile()
             (mol2 && waterMolecules.find(mol2) != waterMolecules.end());
 
         if (involvesWater)
+        {
             throw(UserInputException(
                 std::format(
                     "A water type molecule is included in the bond list of the "
@@ -192,6 +197,7 @@ void WaterModelSetup::checkTopologyFile()
                     string(WaterModelSettings::getWaterIntraModel())
                 )
             ));
+        }
 
         ++bondIndex;
     }
@@ -211,6 +217,7 @@ void WaterModelSetup::checkTopologyFile()
             (mol3 && waterMolecules.find(mol3) != waterMolecules.end());
 
         if (involvesWater)
+        {
             throw(UserInputException(
                 std::format(
                     "A water type molecule is included in the angle list of "
@@ -223,6 +230,7 @@ void WaterModelSetup::checkTopologyFile()
                     string(WaterModelSettings::getWaterIntraModel())
                 )
             ));
+        }
 
         ++angleIndex;
     }
@@ -251,6 +259,7 @@ void WaterModelSetup::checkMoldescriptorWaterCharge(
         constexpr double tol    = 1e-8;
         const auto       actual = water.getPartialCharge(atomIndex);
         if (std::abs(actual - expected) > tol)
+        {
             throw(UserInputException(
                 std::format(
                     "Water molecule partial charge mismatch for atom {}: "
@@ -261,6 +270,7 @@ void WaterModelSetup::checkMoldescriptorWaterCharge(
                     actual
                 )
             ));
+        }
     };
 
     const auto &waterMolecules =
@@ -293,12 +303,12 @@ std::optional<RigidWaterGeometry> WaterModelSetup::getRigidWaterGeometry(
     // clang-format off
     switch (intraModel)
     {
-        case SPC: return RigidWaterGeometry{SPC_OH_DIST, SPC_HH_DIST};
-        case SPC_E: return RigidWaterGeometry{SPC_E_OH_DIST, SPC_E_HH_DIST};
-        case SPC_DC: return RigidWaterGeometry{SPC_DC_OH_DIST, SPC_DC_HH_DIST};
-        case H2O_DC: return RigidWaterGeometry{H2O_DC_OH_DIST, H2O_DC_HH_DIST};
-        case TIP3P: return RigidWaterGeometry{TIP3P_OH_DIST, TIP3P_HH_DIST};
-        case OPC3: return RigidWaterGeometry{OPC3_OH_DIST, OPC3_HH_DIST};
+        case SPC:    return RigidWaterGeometry{.dOH=SPC_OH_DIST, .dHH=SPC_HH_DIST};
+        case SPC_E:  return RigidWaterGeometry{.dOH=SPC_E_OH_DIST, .dHH=SPC_E_HH_DIST};
+        case SPC_DC: return RigidWaterGeometry{.dOH=SPC_DC_OH_DIST, .dHH=SPC_DC_HH_DIST};
+        case H2O_DC: return RigidWaterGeometry{.dOH=H2O_DC_OH_DIST, .dHH=H2O_DC_HH_DIST};
+        case TIP3P:  return RigidWaterGeometry{.dOH=TIP3P_OH_DIST, .dHH=TIP3P_HH_DIST};
+        case OPC3:   return RigidWaterGeometry{.dOH=OPC3_OH_DIST, .dHH=OPC3_HH_DIST};
         case SPC_FW:
         case QSPC_FW:
         case SPC_MTR:

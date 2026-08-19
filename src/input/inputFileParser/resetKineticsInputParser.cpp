@@ -105,7 +105,7 @@ void ResetKineticsInputParser::parseNScale(
     if (nScale < 0)
         throw InputFileException("Nscale must be positive");
 
-    ResetKineticsSettings::setNScale(size_t(nScale));
+    ResetKineticsSettings::setNScale(static_cast<size_t>(nScale));
 }
 
 /**

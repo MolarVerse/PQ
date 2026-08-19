@@ -225,14 +225,18 @@ void OutputInputParser::parseOutputFreq(
 
     const auto outputFrequency = stringToInt(lineElements[2]);
     if (outputFrequency < 0)
+    {
         throw InputFileException(format(
             "Output frequency cannot be negative - \"{}\" at line {} in input "
             "file",
             lineElements[2],
             lineNumber
         ));
+    }
 
-    OutputFileSettings::setOutputFrequency(size_t(outputFrequency));
+    OutputFileSettings::setOutputFrequency(
+        static_cast<size_t>(outputFrequency)
+    );
 }
 
 /**

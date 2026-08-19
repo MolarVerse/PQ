@@ -35,7 +35,7 @@ class TestNonCoulombPotentialFF;   // forward declaration
 namespace benchSetup
 {
     struct BenchNonCoulombFFPot;   // forward declaration
-}
+}   // namespace benchSetup
 
 namespace potential
 {

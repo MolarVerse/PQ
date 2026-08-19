@@ -98,5 +98,5 @@ void TimingsInputParser::parseNumberOfSteps(
     if (numberOfSteps < 1)
         throw InputFileException("Number of steps must be greater than zero");
 
-    TimingsSettings::setNumberOfSteps(size_t(numberOfSteps));
+    TimingsSettings::setNumberOfSteps(static_cast<size_t>(numberOfSteps));
 }

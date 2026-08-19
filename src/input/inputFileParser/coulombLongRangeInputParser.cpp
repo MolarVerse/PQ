@@ -103,6 +103,7 @@ void CoulombLongRangeInputParser::parseCoulombLongRange(
         PotentialSettings::setCoulombLongRangeType(WOLF);
 
     else
+    {
         throw InputFileException(format(
             "Invalid long-range type for coulomb correction "
             "\"{}\" at line {} in input file\n"
@@ -110,6 +111,7 @@ void CoulombLongRangeInputParser::parseCoulombLongRange(
             lineElements[2],
             lineNumber
         ));
+    }
 }
 
 /**
@@ -153,10 +155,12 @@ void CoulombLongRangeInputParser::parseReactionFieldEpsilon(
     const auto epsilon = stringToFiniteDouble(lineElements[2]);
 
     if (epsilon < 1.0)
+    {
         throw InputFileException(
             "Static relative permittivity \"rf_epsilon\" cannot be lower than "
             "1.0"
         );
+    }
 
     PotentialSettings::setReactionFieldEpsilon(epsilon);
 }

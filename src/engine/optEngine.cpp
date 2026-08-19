@@ -24,6 +24,7 @@
 
 #include <format>   // for format
 
+#include "constants/conversionFactors.hpp"
 #include "exceptions.hpp"
 #include "outputFileSettings.hpp"
 #include "progressbar.hpp"
@@ -89,7 +90,7 @@ void OptEngine::run()
 
     _timer.stopSimulationTimer();
 
-    const auto elapsedTime = double(_timer.calculateElapsedTime()) * 1e-3;
+    const auto elapsedTime = _timer.calculateElapsedTime() * constants::MS_TO_S;
 
     _engineOutput.setTimerId(TimerId::Output);
     _timer.addTimer(_engineOutput.getTimer());

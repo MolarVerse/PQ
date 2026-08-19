@@ -25,7 +25,8 @@
 #include <cstddef>   // for size_t
 #include <format>    // for format
 #include <string>    // for allocator, operator==, string
-#include <vector>    // for vector
+#include <utility>
+#include <vector>   // for vector
 
 #include "celllist.hpp"
 #include "exceptions.hpp"        // for InputFileException
@@ -52,7 +53,7 @@ using namespace customException;
 CellListInputParser::CellListInputParser(
     std::shared_ptr<simulationBox::CellList> cellListPtr
 )
-    : _cellListPtr(cellListPtr)
+    : _cellListPtr(std::move(cellListPtr))
 {
     addKeyword(
         std::string("cell-list"),
@@ -92,6 +93,7 @@ void CellListInputParser::parseCellListActivated(
     else if (cellListActivated == "off")
         settings::Settings::deactivateCellList();
     else
+    {
         throw InputFileException(
             std::format(
                 "Invalid cell-list keyword \"{}\" "
@@ -101,6 +103,7 @@ void CellListInputParser::parseCellListActivated(
                 lineNumber
             )
         );
+    }
 }
 
 /**
@@ -123,10 +126,12 @@ void CellListInputParser::parseNumberOfCells(
     const auto cellNumber = stringToInt(lineElements[2]);
 
     if (cellNumber <= 0)
+    {
         throw InputFileException(
             "Number of cells must be positive - number of cells = " +
             lineElements[2]
         );
+    }
 
-    _cellListPtr->setNumberOfCells(size_t(cellNumber));
+    _cellListPtr->setNumberOfCells(static_cast<size_t>(cellNumber));
 }

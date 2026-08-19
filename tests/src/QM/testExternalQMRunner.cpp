@@ -69,9 +69,9 @@ namespace
         bool _sawStaleResults = false;
 
        public:
-        void writeCoordsFile(SimulationBox &) override {}
+        void writeCoordsFile(SimulationBox & /*simBox*/) override {}
 
-        void execute(SimulationBox &) override
+        void execute(SimulationBox & /*simBox*/) override
         {
             _sawStaleResults = std::filesystem::exists(
                                    FileSettings::getQMForcesTempFileName()
@@ -107,7 +107,7 @@ namespace
        protected:
         void executeCommand(
             const std::string_view command,
-            const std::string_view
+            const std::string_view /*program*/
         ) const override
         {
             _command = command;
@@ -185,7 +185,9 @@ namespace
                 _workPath / "working path; $(touch qm-injected)";
             std::filesystem::create_directory(scriptDirectory);
 
-            const auto scriptName = "runner's script; touch qm-injected; #";
+            const auto *const scriptName =
+                "runner's script; touch qm-injected; #";
+
             const auto scriptFile = scriptDirectory / scriptName;
             writeFile(scriptFile.string(), "");
 

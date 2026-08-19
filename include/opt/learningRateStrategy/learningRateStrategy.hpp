@@ -64,6 +64,7 @@ namespace opt
         LearningRateStrategy()          = default;
         virtual ~LearningRateStrategy() = default;
 
+        [[nodiscard]]
         virtual std::shared_ptr<LearningRateStrategy> clone() const = 0;
 
         virtual void updateLearningRate(

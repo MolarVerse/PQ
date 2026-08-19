@@ -49,7 +49,7 @@ TEST_F(TestConstraints, calcRefBondLengths)
  * @brief test apply shake algorithm to all bond constraints
  *
  */
-TEST_F(TestConstraints, applyShake_converged)
+TEST_F(TestConstraints, applyShakeConverged)
 {
     _constraints->setShakeMaxIter(1000);
     _constraints->setShakeTolerance(1.0e-4);
@@ -99,7 +99,7 @@ TEST_F(TestConstraints, applyShake_converged)
  * converge
  *
  */
-TEST_F(TestConstraints, applyShake_notConverged)
+TEST_F(TestConstraints, applyShakeNotConverged)
 {
     _constraints->setShakeMaxIter(10);
     _constraints->setShakeTolerance(0.0);
@@ -119,7 +119,7 @@ TEST_F(TestConstraints, applyShake_notConverged)
  * converge but is deactivated
  *
  */
-TEST_F(TestConstraints, applyShake_notConverged_deactivated)
+TEST_F(TestConstraints, applyShakeNotConvergedDeactivated)
 {
     _constraints->setShakeMaxIter(10);
     _constraints->setShakeTolerance(0.0);
@@ -136,7 +136,7 @@ TEST_F(TestConstraints, applyShake_notConverged_deactivated)
  * @brief test apply rattle algorithm to all bond constraints
  *
  */
-TEST_F(TestConstraints, applyRattle_converged)
+TEST_F(TestConstraints, applyRattleConverged)
 {
     _constraints->setRattleMaxIter(1000);
     _constraints->setRattleTolerance(1.0e-4);
@@ -167,7 +167,7 @@ TEST_F(TestConstraints, applyRattle_converged)
  * converge
  *
  */
-TEST_F(TestConstraints, applyRattle_notConverged)
+TEST_F(TestConstraints, applyRattleNotConverged)
 {
     _constraints->setRattleMaxIter(10);
     _constraints->setRattleTolerance(0.0);
@@ -185,7 +185,7 @@ TEST_F(TestConstraints, applyRattle_notConverged)
  * converge but is deactivated
  *
  */
-TEST_F(TestConstraints, applyRattle_notConverged_deactivated)
+TEST_F(TestConstraints, applyRattleNotConvergedDeactivated)
 {
     _constraints->setRattleMaxIter(10);
     _constraints->setRattleTolerance(0.0);

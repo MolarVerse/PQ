@@ -24,6 +24,7 @@
 
 #include <cstddef>   // for size_t
 #include <format>    // for format
+#include <utility>
 
 #include "exceptions.hpp"     // for InputFileException
 #include "fileSettings.hpp"   // for FileSettings
@@ -74,7 +75,7 @@ FilesInputParser::FilesInputParser(
     const bool                                      validateFilePaths
 )
     : InputFileParser(),
-      _intraNonBonded(intraNonBonded),
+      _intraNonBonded(std::move(intraNonBonded)),
       _validateFilePaths(validateFilePaths)
 {
     addKeyword(
@@ -267,12 +268,14 @@ void FilesInputParser::parseRingPolymerStartFilename(
     const auto &filename = lineElements[2];
 
     if (_validateFilePaths && !fileExists(filename))
+    {
         throw InputFileException(
             std::format(
                 "Cannot open ring polymer start file - filename = {}",
                 filename
             )
         );
+    }
 
     FileSettings::setRingPolymerStartFileName(filename);
     FileSettings::setIsRingPolymerStartFileNameSet();
@@ -297,6 +300,7 @@ void FilesInputParser::parseMoldescriptorFilename(
     const auto &filename = lineElements[2];
 
     if (_validateFilePaths && !fileExists(filename))
+    {
         throw InputFileException(
             std::format(
                 "Cannot open moldescriptor file - filename = \"{}\" - file not "
@@ -304,6 +308,7 @@ void FilesInputParser::parseMoldescriptorFilename(
                 filename
             )
         );
+    }
 
     FileSettings::setMolDescriptorFileName(filename);
 }
@@ -314,8 +319,8 @@ void FilesInputParser::parseMoldescriptorFilename(
  * @throws InputFileException deprecated keyword
  */
 void FilesInputParser::parseGuffPath(
-    const std::vector<std::string> &,
-    const size_t
+    const std::vector<std::string> & /*lineElements*/,
+    const size_t /*lineNumber*/
 )
 {
     throw InputFileException(
@@ -418,12 +423,14 @@ void FilesInputParser::parseTMFilename(
     const auto &filename = lineElements[2];
 
     if (!fileExists(filename))
+    {
         throw InputFileException(
             std::format(
                 "Cannot open TURBOMOLE setup file - filename = {}",
                 filename
             )
         );
+    }
 
     FileSettings::setTMFileName(filename);
 }

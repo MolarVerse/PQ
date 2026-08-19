@@ -73,7 +73,7 @@ Vec3D OrthorhombicBox::calcBoxDimFromDensity(
 {
     _volume = totalMass / (density * KG_PER_L_TO_AMU_PER_ANGSTROM3);
 
-    return Vec3D(::cbrt(_volume));
+    return {::cbrt(_volume)};
 }
 
 Vec3D OrthorhombicBox::wrapPositionIntoBox(const Vec3D &pos) const

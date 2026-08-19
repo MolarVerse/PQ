@@ -46,49 +46,52 @@
 #include <pybind11/embed.h>   // for scoped_interpreter
 #endif
 
-static int run(const std::string &inputFileName)
+namespace
 {
-    auto engine = std::unique_ptr<engine::Engine>();
-    input::readJobType(inputFileName, engine);
+    int run(const std::string &inputFileName)
+    {
+        auto engine = std::unique_ptr<engine::Engine>();
+        input::readJobType(inputFileName, engine);
 
-    setup::setupRequestedJob(inputFileName, *engine);
+        setup::setupRequestedJob(inputFileName, *engine);
 
-    /*
-        HERE STARTS THE MAIN LOOP
-    */
+        /*
+            HERE STARTS THE MAIN LOOP
+        */
 
-    engine->run();
+        engine->run();
 
-    /*
-        HERE ENDS THE MAIN LOOP
-    */
+        /*
+            HERE ENDS THE MAIN LOOP
+        */
 
-    return EXIT_SUCCESS;
-}
+        return EXIT_SUCCESS;
+    }
 
-static void printHelp()
-{
-    std::cout
-        << "Usage: PQ <input_file>\n"
-        << "       PQ --help\n"
-        << "       PQ --version\n"
-        << "       PQ --capabilities=json\n"
-        << "       PQ --validate <input_file> [--format=text|json] "
-           "[--scope=installed|portable]\n\n"
-        << "Run a PQ simulation from an input file.\n\n"
-        << "Options:\n"
-        << "  -h, --help       Show this help message.\n"
-        << "  -V, --version    Show the PQ version.\n"
-        << "  --capabilities=json\n"
-        << "                    Show compiled capabilities as JSON.\n"
-        << "  --validate <input_file>\n"
-        << "                    Check input without running a simulation.\n"
-        << "  --format=text     Return readable validation (default).\n"
-        << "  --format=json     Return machine-readable validation.\n"
-        << "  --scope=installed Check this build and referenced files "
-           "(default).\n"
-        << "  --scope=portable  Check portable input semantics only.\n";
-}
+    void printHelp()
+    {
+        std::cout
+            << "Usage: PQ <input_file>\n"
+            << "       PQ --help\n"
+            << "       PQ --version\n"
+            << "       PQ --capabilities=json\n"
+            << "       PQ --validate <input_file> [--format=text|json] "
+               "[--scope=installed|portable]\n\n"
+            << "Run a PQ simulation from an input file.\n\n"
+            << "Options:\n"
+            << "  -h, --help       Show this help message.\n"
+            << "  -V, --version    Show the PQ version.\n"
+            << "  --capabilities=json\n"
+            << "                    Show compiled capabilities as JSON.\n"
+            << "  --validate <input_file>\n"
+            << "                    Check input without running a simulation.\n"
+            << "  --format=text     Return readable validation (default).\n"
+            << "  --format=json     Return machine-readable validation.\n"
+            << "  --scope=installed Check this build and referenced files "
+               "(default).\n"
+            << "  --scope=portable  Check portable input semantics only.\n";
+    }
+}   // namespace
 
 // main wrapper
 int main(int argc, char *argv[])

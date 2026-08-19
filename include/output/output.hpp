@@ -28,6 +28,7 @@
 #include <fstream>       // for ofstream
 #include <string>        // for string
 #include <string_view>   // for string_view
+#include <utility>
 
 class TestOutput_testSpecialSetFilename_Test;   // Friend test class
 
@@ -52,7 +53,9 @@ namespace output
         static std::string formatForceComment(std::size_t, double);
 
        public:
-        explicit Output(const std::string &filename) : _fileName(filename) {}
+        explicit Output(std::string filename) : _fileName(std::move(filename))
+        {
+        }
         ~Output() { close(); }
         Output(const Output &)                = delete;
         Output &operator=(const Output &)     = delete;

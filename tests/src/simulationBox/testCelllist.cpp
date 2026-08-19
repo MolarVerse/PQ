@@ -100,7 +100,7 @@ TEST_F(TestCellList, getCellIndexOfAtom)
     );
 }
 
-TEST_F(TestCellList, getCellIndexOfAtom_wrapsPeriodicBoundaryCoordinates)
+TEST_F(TestCellList, getCellIndexOfAtomWrapsPeriodicBoundaryCoordinates)
 {
     _simulationBox->setBoxDimensions(linearAlgebra::Vec3D(10.0, 10.0, 10.0));
     _cellList->setNumberOfCells(2);
@@ -276,7 +276,7 @@ TEST_F(TestCellList, resizeCellsRejectsZeroDimensions)
 
 /* ---------- clone() copies the configured cell counts ---------- */
 
-TEST_F(TestCellList, clone_preservesNumberOfCellsAndNeighbourCells)
+TEST_F(TestCellList, clonePreservesNumberOfCellsAndNeighbourCells)
 {
     _cellList->setNumberOfCells(4);
     _cellList->setNumberOfNeighbourCells(2);

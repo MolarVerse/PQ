@@ -115,7 +115,7 @@ void VelocityRescalingThermostat::applyThermostat(
 
     const auto timeStep  = TimingsSettings::getTimeStep();
     const auto tempRatio = _targetTemperature / _temperature;
-    const auto dof       = double(simulationBox.getDegreesOfFreedom());
+    const auto dof = static_cast<double>(simulationBox.getDegreesOfFreedom());
 
     auto lambda = 1.0 + timeStep / _tau * (tempRatio - 1.0);
 

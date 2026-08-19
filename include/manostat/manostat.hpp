@@ -31,12 +31,12 @@
 namespace simulationBox
 {
     class SimulationBox;   // forward declaration
-}
+}   // namespace simulationBox
 
 namespace physicalData
 {
     class PhysicalData;   // forward declaration
-}
+}   // namespace physicalData
 
 namespace manostat
 {
@@ -62,6 +62,7 @@ namespace manostat
             const simulationBox::SimulationBox &,
             physicalData::PhysicalData &
         );
+
         virtual void applyManostat(
             simulationBox::SimulationBox &,
             physicalData::PhysicalData &
@@ -69,8 +70,8 @@ namespace manostat
 
         void rotateMu(linearAlgebra::tensor3D &mu) const;
 
-        virtual settings::ManostatType getManostatType() const;
-        virtual settings::Isotropy     getIsotropy() const;
+        [[nodiscard]] virtual settings::ManostatType getManostatType() const;
+        [[nodiscard]] virtual settings::Isotropy     getIsotropy() const;
     };
 
 }   // namespace manostat

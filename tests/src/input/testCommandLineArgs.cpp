@@ -33,10 +33,10 @@
 /**
  * @brief tests parsing an input file name
  */
-TEST(TestCommandLineArgs, parse_input_file)
+TEST(TestCommandLineArgs, parseInputFile)
 {
     std::vector<std::string> args = {"program", "input.in"};
-    auto commandLineArgs          = CommandLineArgs(int(args.size()), args);
+    auto commandLineArgs = CommandLineArgs(static_cast<int>(args.size()), args);
 
     commandLineArgs.parse();
     EXPECT_EQ("input.in", commandLineArgs.getInputFileName());
@@ -46,12 +46,14 @@ TEST(TestCommandLineArgs, parse_input_file)
 /**
  * @brief tests parsing the help option
  */
-TEST(TestCommandLineArgs, parse_help)
+TEST(TestCommandLineArgs, parseHelp)
 {
     for (const auto &option : {"-h", "--help"})
     {
         std::vector<std::string> args = {"program", option};
-        auto commandLineArgs          = CommandLineArgs(int(args.size()), args);
+
+        auto commandLineArgs =
+            CommandLineArgs(static_cast<int>(args.size()), args);
 
         commandLineArgs.parse();
         EXPECT_EQ(CommandLineAction::HELP, commandLineArgs.getAction());
@@ -61,12 +63,13 @@ TEST(TestCommandLineArgs, parse_help)
 /**
  * @brief tests parsing the version option
  */
-TEST(TestCommandLineArgs, parse_version)
+TEST(TestCommandLineArgs, parseVersion)
 {
     for (const auto &option : {"-V", "--version"})
     {
         std::vector<std::string> args = {"program", option};
-        auto commandLineArgs          = CommandLineArgs(int(args.size()), args);
+        auto                     commandLineArgs =
+            CommandLineArgs(static_cast<int>(args.size()), args);
 
         commandLineArgs.parse();
         EXPECT_EQ(CommandLineAction::VERSION, commandLineArgs.getAction());
@@ -76,10 +79,10 @@ TEST(TestCommandLineArgs, parse_version)
 /**
  * @brief tests parsing the machine-readable capabilities option
  */
-TEST(TestCommandLineArgs, parse_capabilities)
+TEST(TestCommandLineArgs, parseCapabilities)
 {
     std::vector<std::string> args = {"program", "--capabilities=json"};
-    auto commandLineArgs          = CommandLineArgs(int(args.size()), args);
+    auto commandLineArgs = CommandLineArgs(static_cast<int>(args.size()), args);
 
     commandLineArgs.parse();
     EXPECT_EQ(CommandLineAction::CAPABILITIES, commandLineArgs.getAction());
@@ -88,10 +91,10 @@ TEST(TestCommandLineArgs, parse_capabilities)
 /**
  * @brief tests parsing input validation
  */
-TEST(TestCommandLineArgs, parse_validation)
+TEST(TestCommandLineArgs, parseValidation)
 {
     std::vector<std::string> args = {"program", "--validate", "input.in"};
-    auto commandLineArgs          = CommandLineArgs(int(args.size()), args);
+    auto commandLineArgs = CommandLineArgs(static_cast<int>(args.size()), args);
 
     commandLineArgs.parse();
     EXPECT_EQ(CommandLineAction::VALIDATE, commandLineArgs.getAction());
@@ -100,7 +103,7 @@ TEST(TestCommandLineArgs, parse_validation)
     EXPECT_EQ("input.in", commandLineArgs.getInputFileName());
 }
 
-TEST(TestCommandLineArgs, parse_portable_json_validation)
+TEST(TestCommandLineArgs, parsePortableJsonValidation)
 {
     std::vector<std::string> args = {
         "program",
@@ -109,14 +112,14 @@ TEST(TestCommandLineArgs, parse_portable_json_validation)
         "--scope=portable",
         "--format=json"
     };
-    auto commandLineArgs = CommandLineArgs(int(args.size()), args);
+    auto commandLineArgs = CommandLineArgs(static_cast<int>(args.size()), args);
 
     commandLineArgs.parse();
     EXPECT_EQ(CommandLineFormat::JSON, commandLineArgs.getFormat());
     EXPECT_EQ(ValidationScope::PORTABLE, commandLineArgs.getValidationScope());
 }
 
-TEST(TestCommandLineArgs, parse_validation_options_in_either_order)
+TEST(TestCommandLineArgs, parseValidationOptionsInEitherOrder)
 {
     std::vector<std::string> args = {
         "program",
@@ -125,7 +128,7 @@ TEST(TestCommandLineArgs, parse_validation_options_in_either_order)
         "--format=json",
         "--scope=portable"
     };
-    auto commandLineArgs = CommandLineArgs(int(args.size()), args);
+    auto commandLineArgs = CommandLineArgs(static_cast<int>(args.size()), args);
 
     EXPECT_NO_THROW(commandLineArgs.parse());
     EXPECT_EQ(CommandLineFormat::JSON, commandLineArgs.getFormat());
@@ -135,11 +138,11 @@ TEST(TestCommandLineArgs, parse_validation_options_in_either_order)
 /**
  * @brief tests parsing machine-readable input validation
  */
-TEST(TestCommandLineArgs, parse_json_validation)
+TEST(TestCommandLineArgs, parseJsonValidation)
 {
     std::vector<std::string> args =
         {"program", "--validate", "input.in", "--format=json"};
-    auto commandLineArgs = CommandLineArgs(int(args.size()), args);
+    auto commandLineArgs = CommandLineArgs(static_cast<int>(args.size()), args);
 
     commandLineArgs.parse();
     EXPECT_EQ(CommandLineAction::VALIDATE, commandLineArgs.getAction());
@@ -147,7 +150,7 @@ TEST(TestCommandLineArgs, parse_json_validation)
     EXPECT_EQ("input.in", commandLineArgs.getInputFileName());
 }
 
-TEST(TestCommandLineArgs, parse_explicit_text_validation)
+TEST(TestCommandLineArgs, parseExplicitTextValidation)
 {
     std::vector<std::string> args = {
         "program",
@@ -156,18 +159,18 @@ TEST(TestCommandLineArgs, parse_explicit_text_validation)
         "--format=text",
         "--scope=installed"
     };
-    auto commandLineArgs = CommandLineArgs(int(args.size()), args);
+    auto commandLineArgs = CommandLineArgs(static_cast<int>(args.size()), args);
 
     commandLineArgs.parse();
     EXPECT_EQ(CommandLineFormat::TEXT, commandLineArgs.getFormat());
     EXPECT_EQ(ValidationScope::INSTALLED, commandLineArgs.getValidationScope());
 }
 
-TEST(TestCommandLineArgs, reject_duplicate_validation_format)
+TEST(TestCommandLineArgs, rejectDuplicateValidationFormat)
 {
     std::vector<std::string> args =
         {"program", "--validate", "input.in", "--format=text", "--format=json"};
-    auto commandLineArgs = CommandLineArgs(int(args.size()), args);
+    auto commandLineArgs = CommandLineArgs(static_cast<int>(args.size()), args);
 
     EXPECT_THROW_MSG(
         commandLineArgs.parse(),
@@ -179,10 +182,10 @@ TEST(TestCommandLineArgs, reject_duplicate_validation_format)
 /**
  * @brief tests rejecting validation without an input file
  */
-TEST(TestCommandLineArgs, parse_validation_without_input)
+TEST(TestCommandLineArgs, parseValidationWithoutInput)
 {
     std::vector<std::string> args = {"program", "--validate"};
-    auto commandLineArgs          = CommandLineArgs(int(args.size()), args);
+    auto commandLineArgs = CommandLineArgs(static_cast<int>(args.size()), args);
 
     EXPECT_THROW_MSG(
         commandLineArgs.parse(),
@@ -194,10 +197,10 @@ TEST(TestCommandLineArgs, parse_validation_without_input)
 /**
  * @brief tests rejecting a validation format without an input file
  */
-TEST(TestCommandLineArgs, parse_validation_format_without_input)
+TEST(TestCommandLineArgs, parseValidationFormatWithoutInput)
 {
     std::vector<std::string> args = {"program", "--validate", "--format=json"};
-    auto commandLineArgs          = CommandLineArgs(int(args.size()), args);
+    auto commandLineArgs = CommandLineArgs(static_cast<int>(args.size()), args);
 
     EXPECT_THROW_MSG(
         commandLineArgs.parse(),
@@ -209,11 +212,11 @@ TEST(TestCommandLineArgs, parse_validation_format_without_input)
 /**
  * @brief tests rejecting unsupported validation formats
  */
-TEST(TestCommandLineArgs, parse_validation_unknown_format)
+TEST(TestCommandLineArgs, parseValidationUnknownFormat)
 {
     std::vector<std::string> args =
         {"program", "--validate", "input.in", "--format=yaml"};
-    auto commandLineArgs = CommandLineArgs(int(args.size()), args);
+    auto commandLineArgs = CommandLineArgs(static_cast<int>(args.size()), args);
 
     EXPECT_THROW_MSG(
         commandLineArgs.parse(),
@@ -222,11 +225,11 @@ TEST(TestCommandLineArgs, parse_validation_unknown_format)
     );
 }
 
-TEST(TestCommandLineArgs, parse_validation_unknown_scope)
+TEST(TestCommandLineArgs, parseValidationUnknownScope)
 {
     std::vector<std::string> args =
         {"program", "--validate", "input.in", "--scope=project"};
-    auto commandLineArgs = CommandLineArgs(int(args.size()), args);
+    auto commandLineArgs = CommandLineArgs(static_cast<int>(args.size()), args);
 
     EXPECT_THROW_MSG(
         commandLineArgs.parse(),
@@ -238,10 +241,10 @@ TEST(TestCommandLineArgs, parse_validation_unknown_scope)
 /**
  * @brief tests rejecting an unknown option
  */
-TEST(TestCommandLineArgs, parse_unknown_option)
+TEST(TestCommandLineArgs, parseUnknownOption)
 {
     std::vector<std::string> args = {"program", "--unknown"};
-    auto commandLineArgs          = CommandLineArgs(int(args.size()), args);
+    auto commandLineArgs = CommandLineArgs(static_cast<int>(args.size()), args);
 
     EXPECT_THROW_MSG(
         commandLineArgs.parse(),
@@ -254,10 +257,10 @@ TEST(TestCommandLineArgs, parse_unknown_option)
  * @brief tests throwing exception if no input file name is given
  *
  */
-TEST(TestCommandLineArgs, parse_missing_input_file)
+TEST(TestCommandLineArgs, parseMissingInputFile)
 {
     std::vector<std::string> args = {"program"};
-    auto commandLineArgs          = CommandLineArgs(int(args.size()), args);
+    auto commandLineArgs = CommandLineArgs(static_cast<int>(args.size()), args);
 
     EXPECT_THROW_MSG(
         commandLineArgs.parse(),
@@ -269,10 +272,10 @@ TEST(TestCommandLineArgs, parse_missing_input_file)
 /**
  * @brief tests rejecting extra positional arguments
  */
-TEST(TestCommandLineArgs, parse_extra_argument)
+TEST(TestCommandLineArgs, parseExtraArgument)
 {
     std::vector<std::string> args = {"program", "input.in", "extra"};
-    auto commandLineArgs          = CommandLineArgs(int(args.size()), args);
+    auto commandLineArgs = CommandLineArgs(static_cast<int>(args.size()), args);
 
     EXPECT_THROW_MSG(
         commandLineArgs.parse(),

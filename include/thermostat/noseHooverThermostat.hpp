@@ -54,8 +54,8 @@ namespace thermostat
         );
 
         void applyThermostat(
-            simulationBox::SimulationBox &,
-            physicalData::PhysicalData &
+            simulationBox::SimulationBox &simBox,
+            physicalData::PhysicalData   &physData
         ) override;
 
         void applyThermostatOnForces(

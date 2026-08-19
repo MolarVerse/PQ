@@ -22,6 +22,7 @@
 
 #include "qmmmMDEngine.hpp"
 
+#include <cstddef>
 #include <cstdlib>      // for abs
 #include <format>       // for format
 #include <functional>   // for reference_wrapper
@@ -115,11 +116,11 @@ namespace engine
         linearAlgebra::tensor3D virial     = {0.0};
         auto                    numQMAtoms = 0.0;
         auto                   &atoms      = _simulationBox->getAtoms();
-        const auto              nSmMol =
+        const std::size_t       nSmMol =
             distance(_simulationBox->getMoleculesInsideZone(SMOOTHING));
 
         // Loop over all combinations of smoothing molecules
-        for (size_t i = 0; i < (1u << nSmMol); ++i)
+        for (size_t i = 0; i < (1U << nSmMol); ++i)
         {
             // STEP 1: Generate set of inactive molecules and calculate
             // associated global smoothing factor for this configuration
@@ -361,6 +362,7 @@ namespace engine
         for (const auto &mol : _simulationBox->getMolecules())
         {
             if (mol.getMoltype() == 0 && mol.getHybridZone() != CORE)
+            {
                 throw(HybridMDEngineException(
                     std::format(
                         "Molecule number {} is outside the QM core and has "
@@ -369,6 +371,7 @@ namespace engine
                         count
                     )
                 ));
+            }
             ++count;
         }
     }
@@ -442,16 +445,18 @@ namespace engine
         std::vector<std::reference_wrapper<Molecule>> recipientMolecules;
 
         for (auto &mol : _simulationBox->getMoleculesInsideZone(CORE))
-            recipientMolecules.push_back(mol);
+            recipientMolecules.emplace_back(mol);
 
         for (auto &mol : _simulationBox->getMoleculesInsideZone(LAYER))
-            recipientMolecules.push_back(mol);
+            recipientMolecules.emplace_back(mol);
 
         if (recipientMolecules.empty())
+        {
             throw HybridMDEngineException(
                 "Cannot redistribute smoothing inner force: no CORE/LAYER "
                 "molecules available."
             );
+        }
 
         for (auto &smoothingMol :
              _simulationBox->getMoleculesInsideZone(SMOOTHING))

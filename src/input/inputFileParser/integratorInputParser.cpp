@@ -88,6 +88,7 @@ void IntegratorInputParser::parseIntegrator(
     }
 
     else
+    {
         throw InputFileException(
             std::format(
                 "Invalid integrator \"{}\" at line {} in input file",
@@ -95,4 +96,5 @@ void IntegratorInputParser::parseIntegrator(
                 lineNumber
             )
         );
+    }
 }

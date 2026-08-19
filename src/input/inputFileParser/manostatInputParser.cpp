@@ -126,6 +126,7 @@ void ManostatInputParser::parseManostat(
     }
 
     else
+    {
         throw InputFileException(
             std::format(
                 "Invalid manostat \"{}\" at line {} in input file.\n"
@@ -135,6 +136,7 @@ void ManostatInputParser::parseManostat(
                 lineNumber
             )
         );
+    }
 }
 
 /**
@@ -179,10 +181,12 @@ void ManostatInputParser::parseManostatRelaxationTime(
         );
 
     if (relaxationTime > std::numeric_limits<double>::max() / PS_TO_FS)
+    {
         throw InputFileException(
             "Relaxation time of manostat is too large to represent in "
             "femtoseconds"
         );
+    }
 
     ManostatSettings::setTauManostat(relaxationTime);
 }
@@ -262,12 +266,15 @@ void ManostatInputParser::parseIsotropy(
     }
 
     else if (isotropy == "anisotropic")
+    {
         ManostatSettings::setIsotropy(ANISOTROPIC);
-
+    }
     else if (isotropy == "full_anisotropic")
+    {
         ManostatSettings::setIsotropy(FULL_ANISOTROPIC);
-
+    }
     else
+    {
         throw InputFileException(
             std::format(
                 "Invalid isotropy \"{}\" at line {} in input file.\n"
@@ -277,4 +284,5 @@ void ManostatInputParser::parseIsotropy(
                 lineNumber
             )
         );
+    }
 }

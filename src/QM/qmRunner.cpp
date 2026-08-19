@@ -54,7 +54,7 @@ void QMRunner::throwAfterTimeout(const std::stop_token stopToken) const
     if (qmLoopTimeLimit <= 0)
         return;
 
-    const auto timeout = int(::ceil(qmLoopTimeLimit));
+    const auto timeout = static_cast<int>(::ceil(qmLoopTimeLimit));
 
     for (int i = 0; i < timeout * constants::S_TO_MS; ++i)
     {
