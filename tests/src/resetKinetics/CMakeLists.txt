@@ -14,7 +14,7 @@ foreach(source_file ${source_files})
         PRIVATE
         resetKinetics
         physicalData
-        simulationBox
+        molsys
         gtest
         pq_test_main
         gmock

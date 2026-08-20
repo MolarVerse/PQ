@@ -9,9 +9,9 @@ target_include_directories(kernels
 )
 
 target_link_libraries(kernels
-    PUBLIC
+    PRIVATE
     linearAlgebra
-    simulationBox
+    molsys
 )
 
 install(TARGETS kernels

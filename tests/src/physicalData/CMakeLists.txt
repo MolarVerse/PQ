@@ -13,7 +13,7 @@ foreach(source_file ${source_files})
     target_link_libraries(${test_name}
         PRIVATE
         physicalData
-        simulationBox
+        molsys
         gtest
         gmock
         pq_test_main

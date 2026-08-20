@@ -7,7 +7,7 @@ function(add_pq_benchmark target source)
     target_link_libraries(${target}
         PRIVATE
         benchmark::benchmark_main
-        simulationBox
+        molsys
         ${ARGN}
     )
 
@@ -41,8 +41,8 @@ add_pq_benchmark(
 )
 add_pq_benchmark(
     benchmark_cellList
-    simulationBox/benchmarkCellList.cpp
-    simulationBox
+    molsys/benchmarkCellList.cpp
+    molsys
 )
 add_pq_benchmark(
     benchmark_forceCalculation
@@ -56,8 +56,8 @@ add_pq_benchmark(
 )
 add_pq_benchmark(
     benchmark_kinetics
-    simulationBox/benchmarkKinetics.cpp
-    simulationBox
+    molsys/benchmarkKinetics.cpp
+    molsys
 )
 
 add_custom_target(google_benchmarks)

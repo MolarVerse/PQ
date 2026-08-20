@@ -14,7 +14,7 @@ target_include_directories(thermostat
 
 target_link_libraries(thermostat
     PUBLIC
-    simulationBox
+    molsys
     physicalData
     settings
     timings
