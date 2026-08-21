@@ -77,25 +77,21 @@ void InputFileReader::validateTimings() const
     if (requiresNumberOfSteps && !getKeywordSet("nstep"))
     {
         throw UserInputException(
-
             std::format(
                 "Job type {} selected. Please set nstep in the input file.",
                 string(jobType)
             )
-
         );
     }
 
     if (Settings::isMDJobType() && !getKeywordSet("timestep"))
     {
         throw UserInputException(
-
             std::format(
                 "Molecular Dynamics job type {} selected. Please set the "
                 "time step in the input file.",
                 string(jobType)
             )
-
         );
     }
 }
@@ -189,15 +185,12 @@ void InputFileReader::validateQM() const
         model != MaceModel::MEDIUM && model != MaceModel::LARGE)
     {
         throw InputFileException(
-
             std::format(
                 "The '{}' model size is only compatible with the '{}' model "
-                ""
                 "type.",
                 string(model),
                 string(MaceModelType::MACE_MP)
             )
-
         );
     }
 
@@ -238,27 +231,22 @@ void InputFileReader::validateThermostat() const
         if (!targetTempDefined && !endTempDefined)
         {
             throw InputFileException(
-
                 std::format(
                     "Target or end temperature not set for {} thermostat",
                     string(thermostatType)
                 )
-
             );
         }
 
         if (targetTempDefined && endTempDefined)
         {
             throw InputFileException(
-
                 std::format(
                     "Both target and end temperature set for {} thermostat. "
-                    ""
-                    "They "
-                    "are mutually exclusive as they are treated as synonyms",
+                    "They are mutually exclusive as they are treated as "
+                    "synonyms",
                     string(thermostatType)
                 )
-
             );
         }
     }
@@ -355,14 +343,12 @@ void InputFileReader::validateThermostat() const
     if (rampSteps > totalSteps)
     {
         throw InputFileException(
-
             std::format(
                 "Number of total simulation steps {} is smaller than the "
                 "number of temperature ramping steps {}",
                 totalSteps,
                 rampSteps
             )
-
         );
     }
 
@@ -372,14 +358,12 @@ void InputFileReader::validateThermostat() const
     if (frequency > effectiveRampSteps)
     {
         throw InputFileException(
-
             std::format(
                 "Temperature ramp frequency {} is larger than the number of "
                 "ramping steps {}",
                 frequency,
                 effectiveRampSteps
             )
-
         );
     }
 }
@@ -399,12 +383,10 @@ void InputFileReader::validateManostat() const
     if (!getKeywordSet("pressure"))
     {
         throw InputFileException(
-
             std::format(
                 "Pressure not set for {} manostat",
                 string(manostatType)
             )
-
         );
     }
 
