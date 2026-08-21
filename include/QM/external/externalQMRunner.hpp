@@ -69,18 +69,24 @@ namespace QM
         ~ExternalQMRunner() override = default;
 
         void run(
-            molsys::SimulationBox &,
-            physicalData::PhysicalData &,
-            molsys::Periodicity per
+            molsys::SimulationBox      &simBox,
+            physicalData::PhysicalData &physData,
+            molsys::Periodicity         periodicity
         ) override;
+
         virtual void execute(molsys::SimulationBox &) = 0;
 
         virtual void writeCoordsFile(molsys::SimulationBox &) = 0;
 
-        virtual void writePointChargeFile(molsys::SimulationBox &) {}
+        virtual void writePointChargeFile(
+            molsys::SimulationBox & /*simBox*/
+        )
+        {
+        }
+
         virtual void readStressTensor(
-            molsys::Box &,
-            physicalData::PhysicalData &
+            molsys::Box & /*simBox*/,
+            physicalData::PhysicalData & /*physData*/
         )
         {
         }

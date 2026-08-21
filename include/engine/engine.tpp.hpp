@@ -42,7 +42,7 @@ namespace engine
      * @tparam T
      */
     template <typename T>
-    inline void Engine::makePotential(T)
+    inline void Engine::makePotential(T /*potential*/)
     {
         _potential = std::make_unique<T>();
     }

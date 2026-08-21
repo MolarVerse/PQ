@@ -65,6 +65,7 @@ TEST_F(TestAtomSection, numberOfArguments)
 {
     _section->_lineNumber = 7;
     for (size_t i = 0; i < 25; ++i)
+    {
         if (i % 3 != 0 || i < 6 || i > 21)
         {
             auto line = std::vector<std::string>(i);
@@ -75,6 +76,7 @@ TEST_F(TestAtomSection, numberOfArguments)
                 "21 elements"
             );
         }
+    }
 }
 
 /**

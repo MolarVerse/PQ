@@ -31,7 +31,6 @@
 #include "constraints.hpp"
 #include "engineOutput.hpp"
 #include "forceFieldClass.hpp"
-#include "globalTimer.hpp"
 #include "interWater.hpp"
 #include "intraNonBonded.hpp"
 #include "intraWater.hpp"
@@ -57,8 +56,6 @@ namespace engine
 
         EngineOutput _engineOutput;
 
-        timings::GlobalTimer _timer;
-
         physicalData::PhysicalData _averagePhysicalData;
 
         std::shared_ptr<potential::Potential>           _potential;
@@ -81,8 +78,6 @@ namespace engine
         virtual void run()         = 0;
         virtual void writeOutput() = 0;
         void         deleteTmpFiles();
-
-        void addTimer(const timings::Timer &timings);
 
         [[nodiscard]] double calculateTotalSimulationTime() const;
 
@@ -153,18 +148,16 @@ namespace engine
          ***************************/
 
         template <typename T>
-        void makePotential(T);
+        void makePotential(T potential);
         template <typename T>
-        void makeIntraWater(T &&);
+        void makeIntraWater(T &&intraWater);
 
         /********************************
          * standard getters and setters *
          ********************************/
 
-        [[nodiscard]] size_t                getStep() const { return _step; }
-        [[nodiscard]] timings::GlobalTimer &getTimer() { return _timer; }
+        [[nodiscard]] size_t getStep() const { return _step; }
 
-        void setTimer(const timings::GlobalTimer &timer) { _timer = timer; }
         void setInterWater(std::unique_ptr<waterModel::InterWater> interWater);
     };
 }   // namespace engine

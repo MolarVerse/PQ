@@ -51,10 +51,11 @@ namespace QM
         bool _usePointCharges  = false;
 
        public:
-        void writeCoordsFile(molsys::SimulationBox &) override;
+        void writeCoordsFile(molsys::SimulationBox &simBox) override;
 
-        void writePointChargeFile(molsys::SimulationBox &) override;
-        void execute(molsys::SimulationBox &) override;
+        void writePointChargeFile(molsys::SimulationBox &simBox) override;
+
+        void execute(molsys::SimulationBox &simBox) override;
 
         void readStressTensor(
             molsys::Box                &box,

@@ -29,6 +29,6 @@
 namespace cli
 {
     void writeCapabilities(std::ostream &output);
-}
+}   // namespace cli
 
 #endif   // _CAPABILITIES_HPP_

@@ -368,7 +368,7 @@ TEST_F(TestSimulationBox, setPartialChargesOfMoleculesFromMoleculeTypes)
  */
 TEST_F(
     TestSimulationBox,
-    setPartialChargesOfMoleculesFromMoleculeTypes_MoleculeTypeNotFound
+    setPartialChargesOfMoleculesFromMoleculeTypesMoleculeTypeNotFound
 )
 {
     molsys::SimulationBox  simulationBox;

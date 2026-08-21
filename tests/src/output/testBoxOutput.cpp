@@ -90,7 +90,7 @@ TEST(TestBoxFileOutput, writeOneLinePerCall)
     for (auto c : content)
         if (c == '\n')
             ++newlines;
-    EXPECT_EQ(newlines, 2u);
+    EXPECT_EQ(newlines, 2U);
 
     const auto errorCode = std::remove(path.c_str());
     EXPECT_EQ(errorCode, 0) << "Failed to remove file: " << path;

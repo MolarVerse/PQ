@@ -67,17 +67,19 @@ void PySCFRunner::writeCoordsFile(SimulationBox &box)
  * @brief executes the qm script of the external program
  *
  */
-void PySCFRunner::execute(SimulationBox &)
+void PySCFRunner::execute(SimulationBox & /*simBox*/)
 {
     const auto scriptFileName = resolveScriptPath(QMSettings::getQMScript());
 
     if (!fileExists(scriptFileName))
+    {
         throw InputFileException(
             std::format(
                 "PySCF script file \"{}\" does not exist.",
                 scriptFileName
             )
         );
+    }
 
     const auto command = std::format(
         "python {} > {}",

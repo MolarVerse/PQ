@@ -82,11 +82,11 @@ TEST_F(TestMShakeReader, testProcessCommentLine)
 
 TEST_F(TestMShakeReader, testProcessAtomLines)
 {
-    auto reader          = input::mShake::MShakeReader(*_engine);
-    auto mShakeReference = constraints::MShakeReference();
-    auto atomLine1       = "H 0.0 0.0 0.0";
-    auto atomLine2       = "O 1.0 1.0 1.0  #asdfasdf";
-    auto atomLine3       = "C 2.0 2.0 2.0 0.0";
+    auto        reader          = input::mShake::MShakeReader(*_engine);
+    auto        mShakeReference = constraints::MShakeReference();
+    const auto *atomLine1       = "H 0.0 0.0 0.0";
+    const auto *atomLine2       = "O 1.0 1.0 1.0  #asdfasdf";
+    const auto *atomLine3       = "C 2.0 2.0 2.0 0.0";
 
     auto atomLines = std::vector<std::string>{atomLine1, atomLine2, atomLine3};
 

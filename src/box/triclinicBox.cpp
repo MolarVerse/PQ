@@ -129,7 +129,9 @@ namespace molsys
         if (distance > minimalBoxDimensionHalf)
         {
             for (int i = -1; i <= 1; ++i)
+            {
                 for (int j = -1; j <= 1; ++j)
+                {
                     for (int k = -1; k <= 1; ++k)
                     {
                         const auto shift =
@@ -149,6 +151,8 @@ namespace molsys
                             analyticalDistance = newDistance;
                         }
                     }
+                }
+            }
         }
 
         position = analyticPosition;

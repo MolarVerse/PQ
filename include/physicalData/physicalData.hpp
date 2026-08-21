@@ -24,11 +24,11 @@
 
 #define _PHYSICAL_DATA_HPP_
 
+#include <memory>
 #include <vector>   // for vector
 
 #include "settings.hpp"
 #include "staticMatrix.hpp"
-#include "timer.hpp"   // for Timer
 
 namespace molsys
 {
@@ -66,7 +66,7 @@ namespace physicalData
      * @brief PhysicalData is a class for output data storage
      *
      */
-    class PhysicalData : public timings::Timer
+    class PhysicalData
     {
        private:
         double _numberOfQMAtoms = 0.0;
@@ -112,7 +112,7 @@ namespace physicalData
         void calculateTemperature(molsys::SimulationBox&);
         void calculateKinetics(molsys::SimulationBox&);
 
-        std::shared_ptr<PhysicalData> clone() const;
+        [[nodiscard]] std::shared_ptr<PhysicalData> clone() const;
 
         void copy(const PhysicalData&);
         void updateAverages(const PhysicalData&);

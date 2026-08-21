@@ -48,20 +48,20 @@ namespace input::parameterFile
         [[nodiscard]] std::string keyword() override;
 
         void processSection(
-            std::vector<std::string> &,
-            engine::Engine &
+            std::vector<std::string> &lineElements,
+            engine::Engine           &engine
         ) override;
 
         void processHeader(
-            std::vector<std::string> &,
-            engine::Engine &
+            std::vector<std::string> &lineElements,
+            engine::Engine           &engine
         ) override;
 
         void processLJ(std::vector<std::string> &, engine::Engine &) const;
 
         void processBuckingham(
-            std::vector<std::string> &,
-            engine::Engine &
+            std::vector<std::string> &lineElements,
+            engine::Engine           &engine
         ) const;
 
         void processMorse(std::vector<std::string> &, engine::Engine &) const;

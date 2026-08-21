@@ -30,6 +30,7 @@
 
 #include "cell.hpp"                // for Cell
 #include "exceptions.hpp"          // for CellListException
+#include "globalTimer.hpp"         // for GlobalTimer
 #include "molecule.hpp"            // for Molecule
 #include "potentialSettings.hpp"   // for PotentialSettings
 #include "simulationBox.hpp"       // for SimulationBox
@@ -118,7 +119,9 @@ void CellList::checkCoulombCutoff(const double coulombCutoff) const
 void CellList::determineCellBoundaries(const Vec3D &box)
 {
     for (size_t i = 0; i < _nCells[0]; ++i)
+    {
         for (size_t j = 0; j < _nCells[1]; ++j)
+        {
             for (size_t k = 0; k < _nCells[2]; ++k)
             {
                 const auto ijk       = Vec3Dul(i, j, k);
@@ -132,6 +135,8 @@ void CellList::determineCellBoundaries(const Vec3D &box)
 
                 cell->setCellIndex(ijk);
             }
+        }
+    }
 }
 
 /**
@@ -147,7 +152,9 @@ void CellList::addNeighbouringCells(const double coulombCutoff)
     constexpr auto axisNames = std::array<std::string_view, 3>{"x", "y", "z"};
 
     for (size_t i = 0; i < axisNames.size(); ++i)
+    {
         if (_nCells[i] < requiredCells[i])
+        {
             throw CellListException(
                 std::format(
                     "Invalid cell-list layout for {} dimension: cell-number "
@@ -159,6 +166,8 @@ void CellList::addNeighbouringCells(const double coulombCutoff)
                     _nCells[i]
                 )
             );
+        }
+    }
 
     auto addCell = [this](auto &cell) { addNeighbouringCellPointers(cell); };
 
@@ -174,12 +183,14 @@ void CellList::addNeighbouringCellPointers(Cell &cell)
 {
     const size_t totalCellNeighbours = prod(_nNeighbourCells * 2 + 1);
 
-    const auto nNeighCells0 = int(_nNeighbourCells[0]);
-    const auto nNeighCells1 = int(_nNeighbourCells[1]);
-    const auto nNeighCells2 = int(_nNeighbourCells[2]);
+    const auto nNeighCells0 = static_cast<int>(_nNeighbourCells[0]);
+    const auto nNeighCells1 = static_cast<int>(_nNeighbourCells[1]);
+    const auto nNeighCells2 = static_cast<int>(_nNeighbourCells[2]);
 
     for (int i = -nNeighCells0; i <= nNeighCells0; ++i)
+    {
         for (int j = -nNeighCells1; j <= nNeighCells1; ++j)
+        {
             for (int k = -nNeighCells2; k <= nNeighCells2; ++k)
             {
                 const auto ijk = Vec3Di(i, j, k);
@@ -204,6 +215,8 @@ void CellList::addNeighbouringCellPointers(Cell &cell)
                 if (nNeighCells == (totalCellNeighbours - 1) / 2)
                     return;
             }
+        }
+    }
 }
 
 /**
@@ -222,7 +235,7 @@ void CellList::updateCellList(SimulationBox &simulationBox)
     if (!_activated)
         return;
 
-    auto _ = scoped("Update");
+    auto _ = scopedTimer(TimerId::CellList, "Update");
 
     if (simulationBox.getBoxSizeHasChanged())
     {

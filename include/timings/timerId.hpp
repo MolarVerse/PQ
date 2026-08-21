@@ -28,12 +28,12 @@
 #include <string>
 
 #define TIMER_ID_LIST(X)   \
+    X(Simulation, 0)       \
     X(DefaultTimings)      \
     X(EngineOutput)        \
     X(Constraints)         \
     X(CellList)            \
     X(PhysicalData)        \
-    X(Simulation)          \
     X(Integrator)          \
     X(Thermostat)          \
     X(Manostat)            \

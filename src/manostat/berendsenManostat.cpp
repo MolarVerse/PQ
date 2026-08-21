@@ -25,7 +25,8 @@
 #include <algorithm>   // for __for_each_fn, for_each
 #include <cmath>       // for cbrt
 
-#include "exceptions.hpp"         // for ExceptionType
+#include "exceptions.hpp"   // for ExceptionType
+#include "globalTimer.hpp"
 #include "manostatSettings.hpp"   // for ManostatType, Isotropy
 #include "physicalData.hpp"       // for PhysicalData
 #include "simulationBox.hpp"      // for SimulationBox
@@ -88,7 +89,7 @@ void BerendsenManostat::applyManostat(
     PhysicalData  &physicalData
 )
 {
-    auto _ = scoped("Berendsen");
+    auto _ = scopedTimer(TimerId::Manostat, "Berendsen");
 
     calculatePressure(simBox, physicalData);
 

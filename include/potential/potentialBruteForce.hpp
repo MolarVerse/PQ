@@ -40,36 +40,36 @@ namespace potential
         ~PotentialBruteForce() override;
 
         void calculateForces(
-            molsys::SimulationBox &,
-            physicalData::PhysicalData &,
-            molsys::CellList &
+            molsys::SimulationBox      &simBox,
+            physicalData::PhysicalData &physData,
+            molsys::CellList           &cellList
         ) override;
 
         void calculateCoreToOuterForces(
-            molsys::SimulationBox &,
-            physicalData::PhysicalData &,
-            molsys::CellList &
+            molsys::SimulationBox      &simBox,
+            physicalData::PhysicalData &physData,
+            molsys::CellList           &cellList
         ) override;
 
         void calculateLayerToOuterForces(
-            molsys::SimulationBox &,
-            physicalData::PhysicalData &,
-            molsys::CellList &
+            molsys::SimulationBox      &simBox,
+            physicalData::PhysicalData &physData,
+            molsys::CellList           &cellList
         ) override;
 
         void calculateOuterToOuterForces(
-            molsys::SimulationBox &,
-            physicalData::PhysicalData &,
-            molsys::CellList &
+            molsys::SimulationBox      &simBox,
+            physicalData::PhysicalData &physData,
+            molsys::CellList           &cellList
         ) override;
 
         void calculateHotspotSmoothingMMForces(
-            molsys::SimulationBox &,
-            physicalData::PhysicalData &,
-            molsys::CellList &
+            molsys::SimulationBox      &simBox,
+            physicalData::PhysicalData &physData,
+            molsys::CellList           &cellList
         ) override;
 
-        std::shared_ptr<Potential> clone() const override;
+        [[nodiscard]] std::shared_ptr<Potential> clone() const override;
     };
 }   // namespace potential
 

@@ -105,6 +105,7 @@ void MShake::initMShakeReferences()
 
                 size_t bond_kl = 0;
                 for (size_t k = 0; k < nAtoms - 1; ++k)
+                {
                     for (size_t l = k + 1; l < nAtoms; ++l)
                     {
                         const auto pos_k = atoms[k].getPosition();
@@ -122,6 +123,7 @@ void MShake::initMShakeReferences()
 
                         ++bond_kl;
                     }
+                }
 
                 ++bond_ij;
             }
@@ -160,10 +162,9 @@ void MShake::applyMShake(SimulationBox &simBox)
     const auto timeFactor  = 4.0 * dt * dt;
     const auto shakeFactor = 2.0 * dt * dt;
 
-    for (size_t mol = 0; mol < molecules.size(); ++mol)
+    for (auto &molecule : molecules)
     {
-        auto      &molecule = molecules[mol];
-        const auto moltype  = molecule.getMoltype();
+        const auto moltype = molecule.getMoltype();
 
         if (!isMShakeType(moltype))
             continue;
@@ -196,6 +197,7 @@ void MShake::applyMShake(SimulationBox &simBox)
         size_t index_ij = 0;
 
         for (size_t i = 0; i < nAtoms - 1; ++i)
+        {
             for (size_t j = i + 1; j < nAtoms; ++j)
             {
                 /*************************************************
@@ -235,6 +237,7 @@ void MShake::applyMShake(SimulationBox &simBox)
 
                 ++index_ij;
             }
+        }
 
         size_t iteration = 0;
 
@@ -363,6 +366,7 @@ void MShake::applyMShake(SimulationBox &simBox)
                 break;
 
             if (iteration >= mShakeMaxIter)
+            {
                 throw customException::MShakeException(
                     std::format(
                         "M-Shake did not converge within {} iterations for "
@@ -371,6 +375,7 @@ void MShake::applyMShake(SimulationBox &simBox)
                         moltype
                     )
                 );
+            }
         }
 
         for (size_t i = 0; i < nAtoms; ++i)
@@ -390,10 +395,9 @@ void MShake::applyMRattle(SimulationBox &simulationBox)
 {
     auto &molecules = simulationBox.getMolecules();
 
-    for (size_t mol = 0; mol < molecules.size(); ++mol)
+    for (auto &molecule : molecules)
     {
-        auto      &molecule = molecules[mol];
-        const auto moltype  = molecule.getMoltype();
+        const auto moltype = molecule.getMoltype();
 
         if (!isMShakeType(moltype))
             continue;

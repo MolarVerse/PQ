@@ -51,6 +51,7 @@ void RingPolymerRestartFileOutput::write(std::vector<SimulationBox> &beads)
     const auto nBeads = RingPolymerSettings::getNumberOfBeads();
 
     for (size_t i = 0; i < nBeads; ++i)
+    {
         for (const auto &molecule : beads[i].getMolecules())
         {
             const size_t nAtoms = molecule.getNumberOfAtoms();
@@ -81,6 +82,7 @@ void RingPolymerRestartFileOutput::write(std::vector<SimulationBox> &beads)
                 buffer << '\n';
             }
         }
+    }
 
     // Write the buffer to the file
     _fp << buffer.str();

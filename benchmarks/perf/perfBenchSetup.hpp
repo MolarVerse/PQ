@@ -42,7 +42,7 @@
 namespace potential
 {
     class NonCoulombPair;   // forward declaration
-}
+}   // namespace potential
 
 namespace benchSetup
 {
@@ -92,7 +92,7 @@ namespace benchSetup
         {
             auto atom = std::make_shared<molsys::Atom>();
 
-            const double d = static_cast<double>(i);
+            const auto d = static_cast<double>(i);
             // Quadratic y-term keeps atoms non-collinear so the bend-force
             // and dihedral kernels exercise their hot path (sin(alpha) != 0).
             const linearAlgebra::Vec3D pos{
@@ -131,13 +131,7 @@ namespace benchSetup
             )
         );
 
-        auto pair = potential::LennardJonesPair(
-            std::size_t(0),
-            std::size_t(1),
-            12.0,
-            2.0,
-            3.0
-        );
+        auto pair = potential::LennardJonesPair(0UL, 1UL, 12.0, 2.0, 3.0);
         potential.setNonCoulombPairsMatrix(0, 1, pair);
         potential.setNonCoulombPairsMatrix(1, 0, pair);
 

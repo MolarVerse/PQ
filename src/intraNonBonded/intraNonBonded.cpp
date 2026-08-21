@@ -27,6 +27,7 @@
 
 #include "coulombPotential.hpp"
 #include "exceptions.hpp"
+#include "globalTimer.hpp"
 #include "simulationBox.hpp"
 
 using namespace intraNonBonded;
@@ -64,13 +65,13 @@ IntraNonBondedContainer *IntraNonBonded::findIntraNonBondedContainerByMolType(
 
     if (it != _intraNonBondedContainers.end())
         return std::to_address(it);
-    else
-        throw IntraNonBondedException(
-            std::format(
-                "IntraNonBondedContainer with molType {} not found!",
-                molType
-            )
-        );
+
+    throw IntraNonBondedException(
+        std::format(
+            "IntraNonBondedContainer with molType {} not found!",
+            molType
+        )
+    );
 }
 
 /**
@@ -106,7 +107,7 @@ void IntraNonBonded::calculate(
     PhysicalData        &physicalData
 )
 {
-    auto _ = scoped("IntraNonBonded");
+    auto _ = scopedTimer(TimerId::IntraNonBonded, "IntraNonBonded");
 
     auto calculateSingleContr = [this, &box, &physicalData](auto &intraMap)
     {

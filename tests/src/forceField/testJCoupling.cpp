@@ -52,7 +52,7 @@ TEST(TestJCouplingType, operatorEqual)
 TEST(TestJCouplingType, getters)
 {
     const forceField::JCouplingType t(7, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0);
-    EXPECT_EQ(t.getId(), 7u);
+    EXPECT_EQ(t.getId(), 7U);
     EXPECT_DOUBLE_EQ(t.getJ0(), 1.0);
     EXPECT_DOUBLE_EQ(t.getForceConstant(), 2.0);
     EXPECT_DOUBLE_EQ(t.getA(), 3.0);
@@ -82,16 +82,21 @@ TEST(TestJCouplingForceField, settersAndGetters)
     molsys::Molecule                molecule;
     forceField::JCouplingForceField ff(
         std::vector<molsys::Molecule *>{
+
             &molecule,
+
             &molecule,
+
             &molecule,
+
             &molecule
+
         },
         std::vector<size_t>{0, 1, 2, 3},
         42
     );
 
-    EXPECT_EQ(ff.getType(), 42u);
+    EXPECT_EQ(ff.getType(), 42U);
 
     ff.setJ0(1.5);
     ff.setForceConstant(2.5);

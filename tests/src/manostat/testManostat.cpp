@@ -116,6 +116,7 @@ namespace
         EXPECT_NEAR(dPosition[2], 0.0, 1e-12);
 
         for (size_t atomIndex = 0; atomIndex < 2; ++atomIndex)
+        {
             for (size_t axis = 0; axis < 3; ++axis)
             {
                 const auto coordinate =
@@ -125,6 +126,7 @@ namespace
                 EXPECT_GE(coordinate, -halfBoxLength);
                 EXPECT_LT(coordinate, halfBoxLength);
             }
+        }
     }
 
     double getMinimumImageDistance(
@@ -215,7 +217,7 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
  * @brief tests that manostat scaling keeps cut molecules internally intact
  *
  */
-TEST_F(TestManostat, testApplyBerendsenManostat_preservesCutMoleculeGeometry)
+TEST_F(TestManostat, testApplyBerendsenManostatPreservesCutMoleculeGeometry)
 {
     setupCutMolecule(*_box, *_data);
 
@@ -231,7 +233,7 @@ TEST_F(TestManostat, testApplyBerendsenManostat_preservesCutMoleculeGeometry)
  */
 TEST_F(
     TestManostat,
-    testApplyStochasticRescalingManostat_preservesCutMoleculeGeometry
+    testApplyStochasticRescalingManostatPreservesCutMoleculeGeometry
 )
 {
     setupCutMolecule(*_box, *_data);
@@ -246,7 +248,7 @@ TEST_F(
 
 TEST_F(
     TestManostat,
-    testApplyStochasticRescalingManostat_matchesCutAndInsideDistances
+    testApplyStochasticRescalingManostatMatchesCutAndInsideDistances
 )
 {
     setupCutMolecule(*_box, *_data);
@@ -291,7 +293,7 @@ TEST_F(
  */
 TEST_F(
     TestManostat,
-    testApplyBerendsenManostat_cutoffLargerThanHalfOfMinimumBoxDimension
+    testApplyBerendsenManostatCutoffLargerThanHalfOfMinimumBoxDimension
 )
 {
     settings::PotentialSettings::setCoulombRadiusCutOff(10.0);
@@ -429,46 +431,46 @@ TEST_F(TestManostat, testRotateMu)
 
 /* ---------- BerendsenManostat — type, isotropy, getters ---------- */
 
-TEST_F(TestManostat, berendsen_taueAndCompressibilityGetters)
+TEST_F(TestManostat, berendsenTauAndCompressibilityGetters)
 {
     auto bm = manostat::BerendsenManostat(1.0, 0.1, 4.5);
     EXPECT_DOUBLE_EQ(bm.getTau(), 0.1);
     EXPECT_DOUBLE_EQ(bm.getCompressibility(), 4.5);
 }
 
-TEST_F(TestManostat, berendsen_manostatType)
+TEST_F(TestManostat, berendsenManostatType)
 {
     auto bm = manostat::BerendsenManostat(1.0, 0.1, 4.5);
     EXPECT_EQ(bm.getManostatType(), settings::ManostatType::BERENDSEN);
 }
 
-TEST_F(TestManostat, berendsen_isotropy)
+TEST_F(TestManostat, berendsenIsotropy)
 {
     auto bm = manostat::BerendsenManostat(1.0, 0.1, 4.5);
     EXPECT_EQ(bm.getIsotropy(), settings::Isotropy::ISOTROPIC);
 }
 
-TEST_F(TestManostat, semiIsotropicBerendsen_isotropy)
+TEST_F(TestManostat, semiIsotropicBerendsenIsotropy)
 {
     auto bm = manostat::SemiIsotropicBerendsenManostat(
         1.0,
         0.1,
         4.5,
-        2u,
-        std::vector<size_t>{0u, 1u}
+        2U,
+        std::vector<size_t>{0U, 1U}
     );
     EXPECT_EQ(bm.getIsotropy(), settings::Isotropy::SEMI_ISOTROPIC);
     EXPECT_EQ(bm.getManostatType(), settings::ManostatType::BERENDSEN);
 }
 
-TEST_F(TestManostat, anisotropicBerendsen_isotropy)
+TEST_F(TestManostat, anisotropicBerendsenIsotropy)
 {
     auto bm = manostat::AnisotropicBerendsenManostat(1.0, 0.1, 4.5);
     EXPECT_EQ(bm.getIsotropy(), settings::Isotropy::ANISOTROPIC);
     EXPECT_EQ(bm.getManostatType(), settings::ManostatType::BERENDSEN);
 }
 
-TEST_F(TestManostat, fullAnisotropicBerendsen_isotropy)
+TEST_F(TestManostat, fullAnisotropicBerendsenIsotropy)
 {
     auto bm = manostat::FullAnisotropicBerendsenManostat(1.0, 0.1, 4.5);
     EXPECT_EQ(bm.getIsotropy(), settings::Isotropy::FULL_ANISOTROPIC);

@@ -27,7 +27,6 @@
 #include <cstddef>   // for size_t
 
 #include "thermostatSettings.hpp"
-#include "timer.hpp"   // for Timer
 
 namespace physicalData
 {
@@ -50,7 +49,7 @@ namespace thermostat
      * calculate the temperature
      *
      */
-    class Thermostat : public timings::Timer
+    class Thermostat
     {
        protected:
         double _temperature       = 0.0;
@@ -73,11 +72,15 @@ namespace thermostat
             physicalData::PhysicalData &
         );
 
-        virtual void applyThermostatOnForces(molsys::SimulationBox &) {}
+        virtual void applyThermostatOnForces(
+            molsys::SimulationBox & /*simBox*/
+        )
+        {
+        }
 
         virtual void applyThermostatHalfStep(
-            molsys::SimulationBox &,
-            physicalData::PhysicalData &
+            molsys::SimulationBox & /*simBox*/,
+            physicalData::PhysicalData & /*physData*/
         )
         {
         }

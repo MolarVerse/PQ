@@ -188,6 +188,7 @@ void ThermostatSetup::setupNoseHooverThermostat()
     auto fillChi = [&thermostat, nhChainLength](const auto pair)
     {
         if (pair.first > nhChainLength)
+        {
             throw InputFileException(
                 std::format(
                     "Chi index {} is larger than the number of nose hoover "
@@ -196,6 +197,7 @@ void ThermostatSetup::setupNoseHooverThermostat()
                     nhChainLength
                 )
             );
+        }
 
         thermostat.setChi(size_t(pair.first - 1), pair.second);
     };
@@ -264,7 +266,7 @@ void ThermostatSetup::setupTemperatureRamp()
     const auto targetTemp   = ThermostatSettings::getTargetTemperature();
     const auto tempDelta    = targetTemp - startTemp;
     const auto updates      = steps / frequency + (steps % frequency != 0);
-    const auto tempIncrease = tempDelta / double(updates);
+    const auto tempIncrease = tempDelta / static_cast<double>(updates);
 
     _engine.getThermostat().setTemperatureIncrease(tempIncrease);
 }

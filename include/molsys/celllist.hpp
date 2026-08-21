@@ -29,7 +29,6 @@
 
 #include "cell.hpp"       // for Cell
 #include "defaults.hpp"   // for _NUMBER_OF_CELLS_DEFAULT_, _CELL_LIST_IS_ACT...
-#include "timer.hpp"      // for Timer
 #include "vector3d.hpp"
 
 namespace molsys
@@ -42,7 +41,7 @@ namespace molsys
      * @brief CellList is a class for cell list
      *
      */
-    class CellList : public timings::Timer
+    class CellList
     {
        private:
         bool _activated = defaults::CELL_LIST_IS_ACTIVE_DEFAULT;

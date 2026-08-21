@@ -25,7 +25,8 @@
 #include <cstddef>   // for size_t
 #include <format>    // for format
 #include <string>    // for allocator, operator==, string
-#include <vector>    // for vector
+#include <utility>
+#include <vector>   // for vector
 
 #include "engine.hpp"            // for Engine
 #include "exceptions.hpp"        // for InputFileException
@@ -53,7 +54,7 @@ CellListInputParser::CellListInputParser(
     engine::Engine                   &engine,
     std::shared_ptr<molsys::CellList> cellListPtr
 )
-    : InputFileParser(engine), _cellListPtr(cellListPtr)
+    : InputFileParser(engine), _cellListPtr(std::move(cellListPtr))
 {
     addKeyword(
         std::string("cell-list"),
@@ -95,6 +96,7 @@ void CellListInputParser::parseCellListActivated(
         _cellListPtr->deactivate();
 
     else
+    {
         throw InputFileException(
             std::format(
                 "Invalid cell-list keyword \"{}\" "
@@ -104,6 +106,7 @@ void CellListInputParser::parseCellListActivated(
                 lineNumber
             )
         );
+    }
 }
 
 /**
@@ -126,10 +129,12 @@ void CellListInputParser::parseNumberOfCells(
     const auto cellNumber = stringToInt(lineElements[2]);
 
     if (cellNumber <= 0)
+    {
         throw InputFileException(
             "Number of cells must be positive - number of cells = " +
             lineElements[2]
         );
+    }
 
-    _cellListPtr->setNumberOfCells(size_t(cellNumber));
+    _cellListPtr->setNumberOfCells(static_cast<size_t>(cellNumber));
 }

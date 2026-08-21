@@ -24,6 +24,7 @@
 
 #include <cstddef>   // for size_t
 
+#include "globalTimer.hpp"
 #include "molecule.hpp"             // for Molecule
 #include "physicalData.hpp"         // for PhysicalData
 #include "simulationBox.hpp"        // for SimulationBox
@@ -52,10 +53,10 @@ PotentialBruteForce::~PotentialBruteForce() = default;
 void PotentialBruteForce::calculateForces(
     SimulationBox &simBox,
     PhysicalData  &physicalData,
-    CellList &
+    CellList & /*cellList*/
 )
 {
-    auto _ = scoped("InterNonBonded");
+    auto _ = scopedTimer(TimerId::Potential, "InterNonBonded");
 
     const auto box            = simBox.getBoxPtr();
     const auto waterTypeValue = simBox.getWaterType().value_or(size_t{0});
@@ -85,6 +86,7 @@ void PotentialBruteForce::calculateForces(
             }
 
             for (auto &atom1 : mol1.getAtoms())
+            {
                 for (auto &atom2 : mol2.getAtoms())
                 {
                     const auto [coulombEnergy, nonCoulombEnergy] =
@@ -99,6 +101,7 @@ void PotentialBruteForce::calculateForces(
                     totalCoulombEnergy    += coulombEnergy;
                     totalNonCoulombEnergy += nonCoulombEnergy;
                 }
+            }
             ++j;
         }
         ++i;
@@ -119,10 +122,10 @@ void PotentialBruteForce::calculateForces(
 void PotentialBruteForce::calculateCoreToOuterForces(
     SimulationBox &simBox,
     PhysicalData  &physicalData,
-    CellList &
+    CellList & /*cellList*/
 )
 {
-    auto _ = scoped("InterNonBondedCoreToOuter");
+    auto _ = scopedTimer(TimerId::Potential, "InterNonBondedCoreToOuter");
 
     const auto box = simBox.getBoxPtr();
 
@@ -143,10 +146,12 @@ void PotentialBruteForce::calculateCoreToOuterForces(
                 continue;
 
             for (auto &atom1 : mol1.getAtoms())
+            {
                 for (auto &atom2 : mol2.getAtoms())
                     totalCoulombEnergy += calculateSingleCoulombInteraction<
                         QMChargeTag,
                         MMChargeTag>(*box, *atom1, *atom2);
+            }
         }
     }
 
@@ -163,10 +168,10 @@ void PotentialBruteForce::calculateCoreToOuterForces(
 void PotentialBruteForce::calculateLayerToOuterForces(
     SimulationBox &simBox,
     PhysicalData  &physicalData,
-    CellList &
+    CellList & /*cellList*/
 )
 {
-    auto _ = scoped("InterNonBondedLayerToOuter");
+    auto _ = scopedTimer(TimerId::Potential, "InterNonBondedLayerToOuter");
 
     const auto box            = simBox.getBoxPtr();
     const auto waterTypeValue = simBox.getWaterType().value_or(size_t{0});
@@ -190,6 +195,7 @@ void PotentialBruteForce::calculateLayerToOuterForces(
                 continue;
 
             for (auto &atom1 : mol1.getAtoms())
+            {
                 for (auto &atom2 : mol2.getAtoms())
                 {
                     const auto [coulombEnergy, nonCoulombEnergy] =
@@ -204,6 +210,7 @@ void PotentialBruteForce::calculateLayerToOuterForces(
                     totalCoulombEnergy    += coulombEnergy;
                     totalNonCoulombEnergy += nonCoulombEnergy;
                 }
+            }
         }
     }
     physicalData.addCoulombEnergy(totalCoulombEnergy);
@@ -236,10 +243,10 @@ void PotentialBruteForce::calculateOuterToOuterForces(
 void PotentialBruteForce::calculateHotspotSmoothingMMForces(
     SimulationBox &simBox,
     PhysicalData  &physicalData,
-    CellList &
+    CellList & /*cellList*/
 )
 {
-    auto _ = scoped("InterNonBondedSmoothingMM");
+    auto _ = scopedTimer(TimerId::Potential, "InterNonBondedSmoothingMM");
 
     const auto box            = simBox.getBoxPtr();
     const auto waterTypeValue = simBox.getWaterType().value_or(size_t{0});
@@ -263,14 +270,20 @@ void PotentialBruteForce::calculateHotspotSmoothingMMForces(
 
             // SMOOTHING-CORE interaction: evaluate Coulomb term only
             if (isMol2Core)
+            {
                 for (auto &atom1 : mol1.getAtoms())
+                {
                     for (auto &atom2 : mol2.getAtoms())
                         totalCoulombEnergy += calculateSingleCoulombInteraction<
                             MMChargeTag,
                             QMChargeTag>(*box, *atom1, *atom2);
-            // SMOOTHING-nonCORE: evaluate full interaction
+                }
+                // SMOOTHING-nonCORE: evaluate full interaction
+            }
             else
+            {
                 for (auto &atom1 : mol1.getAtoms())
+                {
                     for (auto &atom2 : mol2.getAtoms())
                     {
                         const auto [coulombEnergy, nonCoulombEnergy] =
@@ -281,6 +294,8 @@ void PotentialBruteForce::calculateHotspotSmoothingMMForces(
                         totalCoulombEnergy    += coulombEnergy;
                         totalNonCoulombEnergy += nonCoulombEnergy;
                     }
+                }
+            }
         }
     }
 
@@ -306,6 +321,7 @@ void PotentialBruteForce::calculateHotspotSmoothingMMForces(
             }
 
             for (auto &atom1 : mol1.getAtoms())
+            {
                 for (auto &atom2 : mol2.getAtoms())
                 {
                     const auto [coulombEnergy, nonCoulombEnergy] =
@@ -316,6 +332,7 @@ void PotentialBruteForce::calculateHotspotSmoothingMMForces(
                     totalCoulombEnergy    += coulombEnergy;
                     totalNonCoulombEnergy += nonCoulombEnergy;
                 }
+            }
             ++j;
         }
         ++i;

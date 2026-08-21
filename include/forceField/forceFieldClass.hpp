@@ -69,7 +69,7 @@ namespace forceField
         std::shared_ptr<potential::CoulombPotential>    _coulombPotential;
 
        public:
-        std::shared_ptr<ForceField> clone() const;
+        [[nodiscard]] std::shared_ptr<ForceField> clone() const;
 
         void calculateBondedInteractions(
             const molsys::SimulationBox &,
@@ -101,10 +101,11 @@ namespace forceField
             physicalData::PhysicalData &
         );
 
-        const BondType      &findBondTypeById(size_t id) const;
-        const AngleType     &findAngleTypeById(size_t id) const;
-        const DihedralType  &findDihedralTypeById(size_t id) const;
-        const DihedralType  &findImproperTypeById(size_t id) const;
+        [[nodiscard]] const BondType     &findBondTypeById(size_t id) const;
+        [[nodiscard]] const AngleType    &findAngleTypeById(size_t id) const;
+        [[nodiscard]] const DihedralType &findDihedralTypeById(size_t id) const;
+        [[nodiscard]] const DihedralType &findImproperTypeById(size_t id) const;
+        [[nodiscard]]
         const JCouplingType &findJCouplingTypeById(size_t id) const;
 
         /*****************************

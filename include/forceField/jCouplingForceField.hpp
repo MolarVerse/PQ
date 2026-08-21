@@ -70,8 +70,8 @@ namespace forceField
         );
 
         void calculateEnergyAndForces(
-            const molsys::SimulationBox &,
-            physicalData::PhysicalData &
+            const molsys::SimulationBox & /*simBox*/,
+            physicalData::PhysicalData & /*physData*/
         )
         {
         }   // TODO: implement

@@ -61,4 +61,4 @@ if [[ ${#files[@]} -eq 0 ]]; then
 fi
 
 echo "  Files: ${#files[@]}"
-clangd-tidy "${files[@]}" -p=. --tqdm -j1
+clangd-tidy "${files[@]}" -p=. --fail-on-severity=hint --tqdm -j1

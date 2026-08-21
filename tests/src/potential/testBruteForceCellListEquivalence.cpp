@@ -51,7 +51,6 @@ using potential::CoulombPotential;
 using potential::CoulombShiftedPotential;
 using potential::GuffNonCoulomb;
 using potential::LennardJonesPair;
-using potential::NonCoulombPair;
 using potential::PotentialBruteForce;
 using potential::PotentialCellList;
 using settings::PotentialSettings;

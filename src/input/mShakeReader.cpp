@@ -137,8 +137,9 @@ void MShakeReader::processCommentLine(
             const auto molType = std::stoi(configElements[2]);
             try
             {
-                auto  simBox       = _engine.getSimulationBox();
-                auto &moleculeType = simBox.findMoleculeType(size_t(molType));
+                auto  simBox = _engine.getSimulationBox();
+                auto &moleculeType =
+                    simBox.findMoleculeType(static_cast<size_t>(molType));
 
                 mShakeReference.setMoleculeType(moleculeType);
 
@@ -153,6 +154,7 @@ void MShakeReader::processCommentLine(
     }
 
     if (!foundMolType)
+    {
         throw MShakeFileException(
             std::format(
                 "Unknown command in mShake file at line {}! The M-Shake file "
@@ -167,6 +169,7 @@ void MShakeReader::processCommentLine(
                 _lineNumber
             )
         );
+    }
 }
 
 /**
@@ -195,6 +198,7 @@ void MShakeReader::processAtomLines(
         auto lineElements = splitString(line);
 
         if (lineElements.size() != 4)
+        {
             throw MShakeFileException(
                 std::format(
                     "Wrong number of elements in atom lines in mShake file "
@@ -206,6 +210,7 @@ void MShakeReader::processAtomLines(
                     _lineNumber
                 )
             );
+        }
 
         const auto atomName = lineElements[0];
         const auto x        = std::stod(lineElements[1]);
@@ -237,6 +242,7 @@ void MShakeReader::processAtomLines(
     }
 
     if (atomNames != refAtomNames)
+    {
         throw MShakeFileException(
             std::format(
                 "Atom names in mShake file at line {} do not match the atom "
@@ -247,6 +253,7 @@ void MShakeReader::processAtomLines(
                 _lineNumber
             )
         );
+    }
 
     mShakeReference.setAtoms(atoms);
 }

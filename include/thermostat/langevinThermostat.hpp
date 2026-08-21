@@ -61,13 +61,13 @@ namespace thermostat
         void applyLangevin(molsys::SimulationBox &);
 
         void applyThermostat(
-            molsys::SimulationBox &,
-            physicalData::PhysicalData &
+            molsys::SimulationBox      &simBox,
+            physicalData::PhysicalData &physData
         ) override;
 
         void applyThermostatHalfStep(
-            molsys::SimulationBox &,
-            physicalData::PhysicalData &
+            molsys::SimulationBox      &simBox,
+            physicalData::PhysicalData &physData
         ) override;
 
         /***************************

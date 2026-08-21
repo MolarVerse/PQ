@@ -115,6 +115,7 @@ void AtomSection::process(
          ********************************************************************************/
 
         if (molecule->getMoltype() != moltype)
+        {
             throw RstFileException(
                 std::format(
                     "Error in line {}: Molecule must have {} atoms",
@@ -122,6 +123,7 @@ void AtomSection::process(
                     molecule->getNumberOfAtoms()
                 )
             );
+        }
 
         processAtomLine(lineElements, simBox, *molecule);
 
@@ -231,6 +233,7 @@ void AtomSection::checkAtomLine(
     ++_lineNumber;
 
     if (std::string line; !getline(*_fp, line))
+    {
         throw RstFileException(
             std::format(
                 "Error in line {}: Molecule must have {} atoms",
@@ -238,6 +241,7 @@ void AtomSection::checkAtomLine(
                 molecule.getNumberOfAtoms()
             )
         );
+    }
     else
     {
         line         = removeComments(line, "#");
@@ -334,6 +338,7 @@ void AtomSection::checkNumberOfLineArguments(
 
     // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
     if (lineSize % 3 != 0 || lineSize < 6 || lineSize > 21)
+    {
         throw RstFileException(
             std::format(
                 "Error in line {}: Atom section must have 6, 9, 12, 15, 18 or "
@@ -341,6 +346,7 @@ void AtomSection::checkNumberOfLineArguments(
                 _lineNumber
             )
         );
+    }
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 }
 

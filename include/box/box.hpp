@@ -63,6 +63,7 @@ namespace molsys
 
         virtual void applyPBC(linearAlgebra::Vec3D &position) const = 0;
 
+        [[nodiscard]]
         virtual linearAlgebra::Vec3D wrapPositionIntoBox(
             const linearAlgebra::Vec3D &
         ) const = 0;
@@ -71,8 +72,9 @@ namespace molsys
             const linearAlgebra::tensor3D &scalingFactors
         ) = 0;
 
-        virtual double calculateVolume() = 0;
+        [[nodiscard]] virtual double calculateVolume() = 0;
 
+        [[nodiscard]]
         virtual linearAlgebra::Vec3D calcShiftVector(
             const linearAlgebra::Vec3D &
         ) const = 0;

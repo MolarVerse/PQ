@@ -26,6 +26,7 @@
 
 #include <cmath>
 
+#include "globalTimer.hpp"
 #include "hybridSettings.hpp"   // for HybridSettings
 #include "mTRIntraWater.hpp"    // for MTRIntraWater
 #include "physicalData.hpp"     // for PhysicalData
@@ -36,7 +37,7 @@ void waterModel::MTRIntraWater::calculate(
     physicalData::PhysicalData& physicalData
 )
 {
-    auto _ = scoped("Calculate Potential");
+    auto _ = scopedTimer(TimerId::WaterIntraPotential, "Calculate Potential");
 
     const auto eqOHDistance = getEqOHDistance();
     const auto eqHHDistance = getEqHHDistance();

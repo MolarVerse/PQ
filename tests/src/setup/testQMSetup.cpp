@@ -52,8 +52,8 @@ namespace
     class DefaultExternalQMRunner final : public QM::ExternalQMRunner
     {
        public:
-        void execute(molsys::SimulationBox &) override {}
-        void writeCoordsFile(molsys::SimulationBox &) override {}
+        void execute(molsys::SimulationBox & /*simBox*/) override {}
+        void writeCoordsFile(molsys::SimulationBox & /*simBox*/) override {}
     };
 
     void setBuildCompatibleQMScript()
@@ -242,8 +242,8 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlusCustom)
 
 TEST(TestQMSetup, setupQMLoopTimeLimitDefault)
 {
-    auto _engine  = new engine::QMMDEngine();
-    auto _qmSetup = new QMSetup(*_engine);
+    auto *_engine  = new engine::QMMDEngine();
+    auto *_qmSetup = new QMSetup(*_engine);
 
     _engine->getEngineOutput().getLogOutput().setFilename("default.log");
     QMSettings::setQMMethod(QMMethod::DFTBPLUS);
@@ -272,8 +272,8 @@ TEST(TestQMSetup, setupQMLoopTimeLimitDefault)
 
 TEST(TestQMSetup, setupQMLoopTimeLimitNegative)
 {
-    auto _engine  = new engine::QMMDEngine();
-    auto _qmSetup = new QMSetup(*_engine);
+    auto *_engine  = new engine::QMMDEngine();
+    auto *_qmSetup = new QMSetup(*_engine);
 
     _engine->getEngineOutput().getLogOutput().setFilename("default.log");
     QMSettings::setQMMethod(QMMethod::DFTBPLUS);
@@ -303,8 +303,8 @@ TEST(TestQMSetup, setupQMLoopTimeLimitNegative)
 
 TEST(TestQMSetup, setupQMLoopTimeLimitZero)
 {
-    auto _engine  = new engine::QMMDEngine();
-    auto _qmSetup = new QMSetup(*_engine);
+    auto *_engine  = new engine::QMMDEngine();
+    auto *_qmSetup = new QMSetup(*_engine);
 
     _engine->getEngineOutput().getLogOutput().setFilename("default.log");
     QMSettings::setQMMethod(QMMethod::DFTBPLUS);
@@ -334,8 +334,8 @@ TEST(TestQMSetup, setupQMLoopTimeLimitZero)
 
 TEST(TestQMSetup, setupQMLoopTimeLimitPositive)
 {
-    auto _engine  = new engine::QMMDEngine();
-    auto _qmSetup = new QMSetup(*_engine);
+    auto *_engine  = new engine::QMMDEngine();
+    auto *_qmSetup = new QMSetup(*_engine);
 
     _engine->getEngineOutput().getLogOutput().setFilename("default.log");
     QMSettings::setQMMethod(QMMethod::DFTBPLUS);
@@ -365,8 +365,8 @@ TEST(TestQMSetup, setupQMLoopTimeLimitPositive)
 
 TEST(TestQMSetup, setupQMRunnerFennol)
 {
-    auto _engine  = new engine::QMMDEngine();
-    auto _qmSetup = new QMSetup(*_engine);
+    auto *_engine  = new engine::QMMDEngine();
+    auto *_qmSetup = new QMSetup(*_engine);
 
     _engine->getEngineOutput().getLogOutput().setFilename("default.log");
     QMSettings::setQMMethod(QMMethod::FENNOL);

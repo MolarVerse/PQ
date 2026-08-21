@@ -29,7 +29,7 @@
 namespace pybind11
 {
     class object;
-}
+}   // namespace pybind11
 
 namespace QM
 {
@@ -50,9 +50,9 @@ namespace QM
         ~AseQMRunner() override;
 
         void run(
-            molsys::SimulationBox &,
-            physicalData::PhysicalData &,
-            molsys::Periodicity per
+            molsys::SimulationBox      &simBox,
+            physicalData::PhysicalData &physData,
+            molsys::Periodicity         periodicity
         ) override;
         void buildAseAtoms(const molsys::SimulationBox &);
         void execute();

@@ -58,6 +58,7 @@ namespace
         {
         }
 
+        [[nodiscard]]
         std::shared_ptr<Evaluator> clone() const override
         {
             return std::make_shared<HarmonicEvaluator>(*this);
@@ -197,8 +198,8 @@ TEST(TestHessianBuilder, analyticBuilderSymmetrizesEvaluatorHessian)
 
     const auto hessian = builder.build(evaluator, *box);
 
-    ASSERT_EQ(hessian.size(), 2u);
-    ASSERT_EQ(hessian[0].size(), 2u);
+    ASSERT_EQ(hessian.size(), 2U);
+    ASSERT_EQ(hessian[0].size(), 2U);
     EXPECT_DOUBLE_EQ(hessian[0][0], 2.0);
     EXPECT_DOUBLE_EQ(hessian[0][1], 5.0);
     EXPECT_DOUBLE_EQ(hessian[1][0], 5.0);

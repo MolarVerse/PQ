@@ -26,7 +26,8 @@
 
 #include <cmath>   // for sin
 
-#include "SPCIntraWater.hpp"    // for SPCIntraWater
+#include "SPCIntraWater.hpp"   // for SPCIntraWater
+#include "globalTimer.hpp"
 #include "hybridSettings.hpp"   // for HybridSettings
 #include "physicalData.hpp"     // for PhysicalData
 #include "simulationBox.hpp"    // for SimulationBox
@@ -56,7 +57,7 @@ void waterModel::SPCIntraWater::calculate(
     physicalData::PhysicalData& physicalData
 )
 {
-    auto _ = scoped("Calculate Potential");
+    auto _ = scopedTimer(TimerId::WaterIntraPotential, "Calculate Potential");
 
     const auto eqOHDistance = getEqOHDistance();
     const auto eqHOHAngle   = getEqHOHAngle();

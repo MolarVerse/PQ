@@ -56,11 +56,11 @@ namespace molsys
         auto getMMMolecules();
         auto getMMMolecules() const;
 
-        auto getMoleculesInsideZone(const HybridZone) const;
-        auto getMoleculesInsideZone(const HybridZone);
+        auto getMoleculesInsideZone(const HybridZone zone) const;
+        auto getMoleculesInsideZone(const HybridZone zone);
 
-        auto getMoleculesOutsideZone(const HybridZone) const;
-        auto getMoleculesOutsideZone(const HybridZone);
+        auto getMoleculesOutsideZone(const HybridZone zone) const;
+        auto getMoleculesOutsideZone(const HybridZone zone);
 
         auto getActiveMolecules();
         auto getActiveMolecules() const;

@@ -28,6 +28,7 @@
 
 #include "constants/conversionFactors.hpp"           // for _FS_TO_S_
 #include "constants/internalConversionFactors.hpp"   // for _KINETIC_ENERGY_FACTOR_
+#include "globalTimer.hpp"                           // for GlobalTimer
 #include "simulationBox.hpp"                         // for SimulationBox
 
 using namespace physicalData;
@@ -63,7 +64,7 @@ const linearAlgebra::tensor3D& KineticEnergyVirialTensor::getVirialTensor(
  */
 void PhysicalData::calculateKinetics(SimulationBox& simulationBox)
 {
-    auto _ = scoped("Calc Kinetics");
+    auto _ = scopedTimer(TimerId::PhysicalData, "Calc Kinetics");
 
     _momentum = Vec3D();
     tensor3D kineticEnergyAtomicTensor{};

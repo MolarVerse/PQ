@@ -43,7 +43,7 @@
 namespace potential
 {
     class NonCoulombPair;   // forward declaration
-}
+}   // namespace potential
 
 class TestDihedralForceField : public TestNonCoulombPotentialFF
 {
@@ -57,8 +57,13 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
     auto physicalData     = physicalData::PhysicalData();
     auto coulombPotential = potential::CoulombShiftedPotential(20.0);
 
-    auto nonCoulombPair =
-        potential::LennardJonesPair(size_t(0), size_t(1), 15.0, 2.0, 4.0);
+    auto nonCoulombPair = potential::LennardJonesPair(
+        static_cast<size_t>(0),
+        static_cast<size_t>(1),
+        15.0,
+        2.0,
+        4.0
+    );
     setNonCoulombPairsMatrix(
         linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(2, 2)
     );

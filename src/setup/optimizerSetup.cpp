@@ -229,10 +229,12 @@ std::shared_ptr<Evaluator> OptimizerSetup::setupEvaluator()
         evaluator = std::make_shared<MMEvaluator>();
 
     else
+    {
         throw UserInputException(
             "Unknown job type for the optimizer in order to setup up the "
             "evaluator"
         );
+    }
 
     evaluator->setCellList(_optEngine.getCellList());
     evaluator->setSimulationBox(_optEngine.getSharedSimulationBox());

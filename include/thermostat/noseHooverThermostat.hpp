@@ -54,8 +54,8 @@ namespace thermostat
         );
 
         void applyThermostat(
-            molsys::SimulationBox &,
-            physicalData::PhysicalData &
+            molsys::SimulationBox      &simBox,
+            physicalData::PhysicalData &physData
         ) override;
 
         void applyThermostatOnForces(molsys::SimulationBox &simBox) override;

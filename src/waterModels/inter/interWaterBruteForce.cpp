@@ -43,7 +43,7 @@ void InterWaterStrategyBruteForce::calculate(
     molsys::SimulationBox                              &simBox,
     physicalData::PhysicalData                         &physicalData,
     const std::shared_ptr<potential::CoulombPotential> &coulombPotential,
-    CellList &
+    CellList & /*cellList*/
 )
 {
     const auto rCut = potential::CoulombPotential::getCoulombRadiusCutOff();
@@ -73,6 +73,7 @@ void InterWaterStrategyBruteForce::calculate(
                 [&](Atom &atomA, Atom &atomB, const auto &nonCoulPairPtr)
             {
                 if (nonCoulPairPtr)
+                {
                     calculateSingleInteraction<MMChargeTag, MMChargeTag>(
                         atomA,
                         atomB,
@@ -83,6 +84,7 @@ void InterWaterStrategyBruteForce::calculate(
                         totalCoulombEnergy,
                         totalNonCoulombEnergy
                     );
+                }
             };
 
             // O-O interaction
@@ -118,11 +120,11 @@ void InterWaterStrategyBruteForce::calculate(
  * @param coulombPotential Coulomb potential evaluator.
  */
 void InterWaterStrategyBruteForce::calculateCoreToOuterForces(
-    const InterWaterState &,
+    const InterWaterState & /*state*/,
     molsys::SimulationBox                              &simBox,
     PhysicalData                                       &physicalData,
     const std::shared_ptr<potential::CoulombPotential> &coulombPotential,
-    CellList &
+    CellList & /*cellList*/
 )
 {
     const auto rCut = potential::CoulombPotential::getCoulombRadiusCutOff();
@@ -194,7 +196,7 @@ void InterWaterStrategyBruteForce::calculateLayerToOuterForces(
     molsys::SimulationBox                              &simBox,
     PhysicalData                                       &physicalData,
     const std::shared_ptr<potential::CoulombPotential> &coulombPotential,
-    CellList &
+    CellList & /*cellList*/
 )
 {
     const auto rCut = potential::CoulombPotential::getCoulombRadiusCutOff();
@@ -229,6 +231,7 @@ void InterWaterStrategyBruteForce::calculateLayerToOuterForces(
                 [&](Atom &atomA, Atom &atomB, const auto &nonCoulPairPtr)
             {
                 if (nonCoulPairPtr)
+                {
                     calculateSingleInteraction<QMChargeTag, MMChargeTag>(
                         atomA,
                         atomB,
@@ -239,6 +242,7 @@ void InterWaterStrategyBruteForce::calculateLayerToOuterForces(
                         totalCoulombEnergy,
                         totalNonCoulombEnergy
                     );
+                }
             };
 
             // O-O interaction
@@ -295,7 +299,7 @@ void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
     molsys::SimulationBox                              &simBox,
     PhysicalData                                       &physicalData,
     const std::shared_ptr<potential::CoulombPotential> &coulombPotential,
-    CellList &
+    CellList & /*cellList*/
 )
 {
     const auto rCut = potential::CoulombPotential::getCoulombRadiusCutOff();
@@ -327,6 +331,7 @@ void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
                 [&](Atom &atomA, Atom &atomB, const auto &nonCoulPairPtr)
             {
                 if (nonCoulPairPtr)
+                {
                     calculateSingleInteraction<MMChargeTag, QMChargeTag>(
                         atomA,
                         atomB,
@@ -337,6 +342,7 @@ void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
                         totalCoulombEnergy,
                         totalNonCoulombEnergy
                     );
+                }
             };
 
             // O-O interaction
@@ -391,6 +397,7 @@ void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
                 [&](Atom &atomA, Atom &atomB, const auto &nonCoulPairPtr)
             {
                 if (nonCoulPairPtr)
+                {
                     calculateSingleInteractionOneWay<MMChargeTag, QMChargeTag>(
                         atomA,
                         atomB,
@@ -401,6 +408,7 @@ void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
                         totalCoulombEnergy,
                         totalNonCoulombEnergy
                     );
+                }
             };
 
             // clang-format off

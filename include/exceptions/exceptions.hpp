@@ -102,7 +102,7 @@ namespace customException
        public:
         using CustomException::CustomException;
 
-        const char *what() const throw() override;
+        [[nodiscard]] const char *what() const noexcept override;
     };
 
     /**
@@ -116,7 +116,7 @@ namespace customException
        public:
         using CustomException::CustomException;
 
-        const char *what() const throw() override;
+        [[nodiscard]] const char *what() const noexcept override;
     };
 
     /**
@@ -130,7 +130,7 @@ namespace customException
        public:
         using CustomException::CustomException;
 
-        const char *what() const throw() override;
+        [[nodiscard]] const char *what() const noexcept override;
     };
 
     /**
@@ -144,7 +144,7 @@ namespace customException
        public:
         using CustomException::CustomException;
 
-        const char *what() const throw() override;
+        [[nodiscard]] const char *what() const noexcept override;
     };
 
     /**
@@ -158,7 +158,7 @@ namespace customException
        public:
         using CustomException::CustomException;
 
-        const char *what() const throw() override;
+        [[nodiscard]] const char *what() const noexcept override;
     };
 
     /**
@@ -172,7 +172,7 @@ namespace customException
        public:
         using CustomException::CustomException;
 
-        const char *what() const throw() override;
+        [[nodiscard]] const char *what() const noexcept override;
     };
 
     /**
@@ -185,7 +185,7 @@ namespace customException
        public:
         using CustomException::CustomException;
 
-        const char *what() const throw() override;
+        [[nodiscard]] const char *what() const noexcept override;
     };
 
     /**
@@ -198,7 +198,7 @@ namespace customException
        public:
         using CustomException::CustomException;
 
-        const char *what() const throw() override;
+        [[nodiscard]] const char *what() const noexcept override;
     };
 
     /**
@@ -211,7 +211,7 @@ namespace customException
        public:
         using CustomException::CustomException;
 
-        const char *what() const throw() override;
+        [[nodiscard]] const char *what() const noexcept override;
     };
 
     /**
@@ -224,7 +224,7 @@ namespace customException
        public:
         using CustomException::CustomException;
 
-        const char *what() const throw() override;
+        [[nodiscard]] const char *what() const noexcept override;
     };
 
     /**
@@ -237,7 +237,7 @@ namespace customException
        public:
         using CustomException::CustomException;
 
-        const char *what() const throw() override;
+        [[nodiscard]] const char *what() const noexcept override;
     };
 
     /**
@@ -250,7 +250,7 @@ namespace customException
        public:
         using CustomException::CustomException;
 
-        const char *what() const throw() override;
+        [[nodiscard]] const char *what() const noexcept override;
     };
 
     /**
@@ -263,7 +263,7 @@ namespace customException
        public:
         using CustomException::CustomException;
 
-        const char *what() const throw() override;
+        [[nodiscard]] const char *what() const noexcept override;
     };
 
     /**
@@ -276,7 +276,7 @@ namespace customException
        public:
         using CustomException::CustomException;
 
-        const char *what() const throw() override;
+        [[nodiscard]] const char *what() const noexcept override;
     };
 
     /**
@@ -290,7 +290,7 @@ namespace customException
        public:
         using CustomException::CustomException;
 
-        const char *what() const throw() override;
+        [[nodiscard]] const char *what() const noexcept override;
     };
 
     /**
@@ -304,7 +304,7 @@ namespace customException
        public:
         using CustomException::CustomException;
 
-        const char *what() const throw() override;
+        [[nodiscard]] const char *what() const noexcept override;
     };
 
     /**
@@ -317,7 +317,7 @@ namespace customException
        public:
         using CustomException::CustomException;
 
-        const char *what() const throw() override;
+        [[nodiscard]] const char *what() const noexcept override;
     };
 
     /**
@@ -330,7 +330,7 @@ namespace customException
        public:
         using CustomException::CustomException;
 
-        const char *what() const throw() override;
+        [[nodiscard]] const char *what() const noexcept override;
     };
 
     /**
@@ -343,7 +343,7 @@ namespace customException
        public:
         using CustomException::CustomException;
 
-        const char *what() const throw() override;
+        [[nodiscard]] const char *what() const noexcept override;
     };
 
     /**
@@ -356,7 +356,7 @@ namespace customException
        public:
         using CustomException::CustomException;
 
-        const char *what() const throw() override;
+        [[nodiscard]] const char *what() const noexcept override;
     };
 
     /**
@@ -369,7 +369,7 @@ namespace customException
        public:
         using CustomException::CustomException;
 
-        const char *what() const throw() override;
+        [[nodiscard]] const char *what() const noexcept override;
     };
 
     /**
@@ -382,7 +382,7 @@ namespace customException
        public:
         using CustomException::CustomException;
 
-        const char *what() const throw() override;
+        [[nodiscard]] const char *what() const noexcept override;
     };
 
     /**
@@ -395,7 +395,7 @@ namespace customException
        public:
         using CustomException::CustomException;
 
-        const char *what() const throw() override;
+        [[nodiscard]] const char *what() const noexcept override;
     };
 
     /**
@@ -408,7 +408,7 @@ namespace customException
        public:
         using CustomException::CustomException;
 
-        const char *what() const throw() override;
+        [[nodiscard]] const char *what() const noexcept override;
     };
 
     /**
@@ -421,7 +421,7 @@ namespace customException
        public:
         using CustomException::CustomException;
 
-        const char *what() const throw() override;
+        [[nodiscard]] const char *what() const noexcept override;
     };
 
 }   // namespace customException

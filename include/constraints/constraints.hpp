@@ -31,7 +31,6 @@
 #include "defaults.hpp"             // for defaults
 #include "distanceConstraint.hpp"   // for DistanceConstraint
 #include "mShakeReference.hpp"      // for MShakeReference
-#include "timer.hpp"                // for Timer
 
 namespace physicalData
 {
@@ -58,7 +57,7 @@ namespace constraints
      * @details it performs the shake and rattle algorithm on all bond
      * constraints
      */
-    class Constraints : public timings::Timer
+    class Constraints
     {
        private:
         std::unique_ptr<MShake> _mShake;
