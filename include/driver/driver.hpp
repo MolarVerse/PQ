@@ -20,34 +20,22 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef __TIMINGS_OUTPUT_HPP__
+#ifndef _DRIVER_HPP_
+#define _DRIVER_HPP_
 
-#define __TIMINGS_OUTPUT_HPP__
+#include <string>
 
-#include "output.hpp"   // for Output
-
-namespace timings
+namespace driver
 {
-    class GlobalTimer;   // forward declaration
-}   // namespace timings
-
-namespace output
-{
-
     /**
-     * @class TimingsOutput inherits from Output
-     *
-     * @brief Output file for info file
-     *
+     * @brief The Driver class is responsible for running a PQ simulation from
+     * an input file.
      */
-    class TimingsOutput : public Output
+    class Driver
     {
        public:
-        using Output::Output;
-
-        void write();
+        void run(const std::string &inputFileName);
     };
+}   // namespace driver
 
-}   // namespace output
-
-#endif /* __TIMINGS_OUTPUT_HPP__ */
+#endif   // _DRIVER_HPP_

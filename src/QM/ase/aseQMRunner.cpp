@@ -31,6 +31,7 @@
 
 #include "box.hpp"         // for simulationBox::Periodicity
 #include "constants.hpp"   // for _DEG_TO_RAD_
+#include "globalTimer.hpp"
 #include "physicalData.hpp"
 #include "qmSettings.hpp"   // for QMSettings
 #include "simulationBox.hpp"
@@ -264,17 +265,17 @@ void AseQMRunner::run(
                                { throwAfterTimeout(stopToken); }};
 
     {
-        auto _ = scoped("Build ASE Atoms");
+        auto _ = scopedTimer(TimerId::QMEngine, "Build ASE Atoms");
         buildAseAtoms(simBox);
     }
 
     {
-        auto _ = scoped("Execute ASE QM");
+        auto _ = scopedTimer(TimerId::QMEngine, "Execute ASE QM");
         execute();
     }
 
     {
-        auto _ = scoped("Collect ASE Data");
+        auto _ = scopedTimer(TimerId::QMEngine, "Collect ASE Data");
         collectData(simBox, physicalData);
     }
 
