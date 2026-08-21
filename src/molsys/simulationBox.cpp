@@ -57,9 +57,9 @@ namespace molsys
 
         this->_atoms.clear();
 
-        for (size_t i = 0; i < toCopy._atoms.size(); ++i)
+        for (const auto& _atom : toCopy._atoms)
         {
-            const auto atom = std::make_shared<Atom>(*toCopy._atoms[i]);
+            const auto atom = std::make_shared<Atom>(*_atom);
             this->_atoms.push_back(atom);
         }
 
@@ -110,8 +110,8 @@ namespace molsys
 
         if (molecule != _molecules.end())
             return *molecule;
-        else
-            return std::nullopt;
+
+        return std::nullopt;
     }
 
     /**
@@ -128,12 +128,14 @@ namespace molsys
         for (const auto index : atomIndices)
         {
             if (index < 0 || index >= static_cast<int>(_atoms.size()))
+            {
                 throw UserInputException(
                     std::format(
                         "Inner region center atom index {} out of range",
                         index
                     )
                 );
+            }
         }
 
         _innerRegionCenterAtomIndices = atomIndices;
@@ -160,16 +162,19 @@ namespace molsys
         for (const auto index : moleculeIndices)
         {
             if (index < 0 || index >= static_cast<int>(_molecules.size()))
+            {
                 throw UserInputException(
                     std::format(
                         "Forced CORE region molecule index {} out of range",
                         index
                     )
                 );
+            }
 
             auto& molecule = _molecules[static_cast<size_t>(index)];
 
             if (molecule.isForcedOuter() || molecule.isForcedLayer())
+            {
                 throw UserInputException(
                     std::format(
                         "Ambiguous molecule index {} - molecule cannot be in "
@@ -179,8 +184,8 @@ namespace molsys
                         index
                     )
                 );
-            else
-                molecule.setForcedCore(true);
+            }
+            molecule.setForcedCore(true);
         }
     }
 
@@ -205,16 +210,19 @@ namespace molsys
         for (const auto index : moleculeIndices)
         {
             if (index < 0 || index >= static_cast<int>(_molecules.size()))
+            {
                 throw UserInputException(
                     std::format(
                         "Forced Layer region molecule index {} out of range",
                         index
                     )
                 );
+            }
 
             auto& molecule = _molecules[static_cast<size_t>(index)];
 
             if (molecule.isForcedCore() || molecule.isForcedOuter())
+            {
                 throw UserInputException(
                     std::format(
                         "Ambiguous molecule index {} - molecule cannot be in "
@@ -224,8 +232,9 @@ namespace molsys
                         index
                     )
                 );
-            else
-                molecule.setForcedLayer(true);
+            }
+
+            molecule.setForcedLayer(true);
         }
     }
 
@@ -250,16 +259,19 @@ namespace molsys
         for (const auto index : moleculeIndices)
         {
             if (index < 0 || index >= static_cast<int>(_molecules.size()))
+            {
                 throw UserInputException(
                     std::format(
                         "Forced outer region molecule index {} out of range",
                         index
                     )
                 );
+            }
 
             auto& molecule = _molecules[static_cast<size_t>(index)];
 
             if (molecule.isForcedCore() || molecule.isForcedLayer())
+            {
                 throw UserInputException(
                     std::format(
                         "Ambiguous molecule index {} - molecule cannot be in "
@@ -269,8 +281,8 @@ namespace molsys
                         index
                     )
                 );
-            else
-                molecule.setForcedOuter(true);
+            }
+            molecule.setForcedOuter(true);
         }
     }
 
@@ -292,10 +304,9 @@ namespace molsys
 
         if (molecule != _moleculeTypes.end())
             return *molecule;
-        else
-            throw RstFileException(
-                std::format("Molecule type {} not found", moleculeType)
-            );
+        throw RstFileException(
+            std::format("Molecule type {} not found", moleculeType)
+        );
     }
 
     /**
@@ -337,8 +348,7 @@ namespace molsys
 
         if (molecule != _moleculeTypes.end())
             return molecule->getMoltype();
-        else
-            return std::nullopt;
+        return std::nullopt;
     }
 
     /**
@@ -431,12 +441,14 @@ namespace molsys
                 molecule.setPartialCharges(molType->getPartialCharges());
 
             else if (molecule.getMoltype() != 0)
+            {
                 throw UserInputException(
                     std::format(
                         "Molecule type {} not found in molecule types",
                         molecule.getMoltype()
                     )
                 );
+            }
         };
 
         std::ranges::for_each(_molecules, setPartialCharges);
@@ -696,7 +708,8 @@ namespace molsys
 
         std::ranges::for_each(_atoms, accumulateTemperature);
 
-        temperature *= TEMPERATURE_FACTOR / double(_degreesOfFreedom);
+        temperature *=
+            TEMPERATURE_FACTOR / static_cast<double>(_degreesOfFreedom);
 
         return temperature;
     }
@@ -723,8 +736,8 @@ namespace molsys
 
             if (exceptionType == ExceptionType::MANOSTATEXCEPTION)
                 throw ManostatException(message);
-            else
-                throw UserInputException(message);
+
+            throw UserInputException(message);
         }
     }
 

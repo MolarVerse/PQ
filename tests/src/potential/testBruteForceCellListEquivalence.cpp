@@ -167,12 +167,12 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
     // cell, one in-cutoff pair across neighbouring cells (including across a
     // periodic boundary), and an out-of-cutoff pair both paths must skip.
     const std::vector<Placement> placements = {
-        {1, {-5.0, -5.0, -5.0}},
-        {2, {-3.0, -4.0, -3.5}},
-        {1, {1.0, 1.5, 2.0}},
-        {2, {2.0, 2.5, 3.5}},
-        {1, {-1.0, 3.0, 1.0}},
-        {2, {7.0, -7.0, 6.0}},
+        {.molType = 1, .position = {-5.0, -5.0, -5.0}},
+        {.molType = 2, .position = {-3.0, -4.0, -3.5}},
+        {.molType = 1, .position = {1.0, 1.5, 2.0}},
+        {.molType = 2, .position = {2.0, 2.5, 3.5}},
+        {.molType = 1, .position = {-1.0, 3.0, 1.0}},
+        {.molType = 2, .position = {7.0, -7.0, 6.0}},
     };
 
     auto simBoxBF = buildSimulationBox(placements);
