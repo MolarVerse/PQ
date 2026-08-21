@@ -196,8 +196,7 @@ TEST_F(TestPhysicalData, reset)
     _physicalData->setVolume(1.0);
     _physicalData->setDensity(1.0);
     _physicalData->setPressure(1.0);
-    _physicalData->setVirial(
-        diagonalMatrix(linearAlgebra::Vec3D(1.0, 1.0, 1.0))
+    _physicalData->setVirial(diagonalMatrix(linearAlgebra::Vec3D(1.0, 1.0, 1.0))
     );
     _physicalData->setQMEnergy(1.0);
 
@@ -277,14 +276,14 @@ TEST_F(TestPhysicalData, addIntraNonCoulombEnergy)
 
 /* ---------- Energy accumulators (add… functions) ---------- */
 
-TEST_F(TestPhysicalData, addCoulombEnergy_accumulates)
+TEST_F(TestPhysicalData, addCoulombEnergyAccumulates)
 {
     _physicalData->setCoulombEnergy(2.0);
     _physicalData->addCoulombEnergy(3.5);
     EXPECT_DOUBLE_EQ(_physicalData->getCoulombEnergy(), 5.5);
 }
 
-TEST_F(TestPhysicalData, addNonCoulombEnergy_accumulates)
+TEST_F(TestPhysicalData, addNonCoulombEnergyAccumulates)
 {
     _physicalData->setNonCoulombEnergy(1.0);
     _physicalData->addNonCoulombEnergy(0.25);
@@ -292,7 +291,7 @@ TEST_F(TestPhysicalData, addNonCoulombEnergy_accumulates)
     EXPECT_DOUBLE_EQ(_physicalData->getNonCoulombEnergy(), 1.5);
 }
 
-TEST_F(TestPhysicalData, addBondEnergy_accumulates)
+TEST_F(TestPhysicalData, addBondEnergyAccumulates)
 {
     _physicalData->setBondEnergy(0.0);
     _physicalData->addBondEnergy(1.0);
@@ -300,7 +299,7 @@ TEST_F(TestPhysicalData, addBondEnergy_accumulates)
     EXPECT_DOUBLE_EQ(_physicalData->getBondEnergy(), 3.0);
 }
 
-TEST_F(TestPhysicalData, addAngleEnergy_accumulates)
+TEST_F(TestPhysicalData, addAngleEnergyAccumulates)
 {
     _physicalData->setAngleEnergy(0.0);
     _physicalData->addAngleEnergy(1.0);
@@ -308,21 +307,21 @@ TEST_F(TestPhysicalData, addAngleEnergy_accumulates)
     EXPECT_DOUBLE_EQ(_physicalData->getAngleEnergy(), 0.5);
 }
 
-TEST_F(TestPhysicalData, addDihedralEnergy_accumulates)
+TEST_F(TestPhysicalData, addDihedralEnergyAccumulates)
 {
     _physicalData->setDihedralEnergy(0.0);
     _physicalData->addDihedralEnergy(1.0);
     EXPECT_DOUBLE_EQ(_physicalData->getDihedralEnergy(), 1.0);
 }
 
-TEST_F(TestPhysicalData, addImproperEnergy_accumulates)
+TEST_F(TestPhysicalData, addImproperEnergyAccumulates)
 {
     _physicalData->setImproperEnergy(0.0);
     _physicalData->addImproperEnergy(1.5);
     EXPECT_DOUBLE_EQ(_physicalData->getImproperEnergy(), 1.5);
 }
 
-TEST_F(TestPhysicalData, addRingPolymerEnergy_accumulates)
+TEST_F(TestPhysicalData, addRingPolymerEnergyAccumulates)
 {
     _physicalData->setRingPolymerEnergy(0.0);
     _physicalData->addRingPolymerEnergy(2.0);
@@ -330,7 +329,7 @@ TEST_F(TestPhysicalData, addRingPolymerEnergy_accumulates)
     EXPECT_DOUBLE_EQ(_physicalData->getRingPolymerEnergy(), 5.0);
 }
 
-TEST_F(TestPhysicalData, addVirial_accumulates)
+TEST_F(TestPhysicalData, addVirialAccumulates)
 {
     const auto v0 = diagonalMatrix(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
     const auto v1 = diagonalMatrix(linearAlgebra::Vec3D(0.5, 0.5, 0.5));

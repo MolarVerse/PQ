@@ -57,7 +57,9 @@ void cli::writeJsonString(std::ostream &output, const std::string_view value)
                     output.fill(fill);
                 }
                 else
+                {
                     output << character;
+                }
             }
         }
     }

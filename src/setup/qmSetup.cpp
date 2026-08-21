@@ -178,7 +178,7 @@ void QMSetup::setupQMScript() const
     if (singularity || staticBuild)
     {
         if (isQMScriptFullPathEmpty)
-
+        {
             throw QMRunnerException(
                 "You are using at least one of these settings: i) singularity "
                 "build or/and ii) static build of PQ. Therefore the general "
@@ -193,9 +193,10 @@ void QMSetup::setupQMScript() const
                 "else and give the full/relative path to it. For more "
                 "information please refer to the documentation."
             );
+        }
 
-        else if (!isQMScriptEmpty)
-
+        if (!isQMScriptEmpty)
+        {
             throw QMRunnerException(
                 "You have set both 'qm_script' and 'qm_script_full_path' in "
                 "the input file. Please use only one the full path option as "
@@ -203,23 +204,21 @@ void QMSetup::setupQMScript() const
                 "build. For more information please refer to the "
                 "documentation."
             );
-
-        else
-        {
-            // setting script path to empty string to avoid errors
-            externalQMRunner.setScriptPath("");
-
-            // overwriting qm_script with full path
-            QMSettings::setQMScript(QMSettings::getQMScriptFullPath());
         }
+
+        // setting script path to empty string to avoid errors
+        externalQMRunner.setScriptPath("");
+
+        // overwriting qm_script with full path
+        QMSettings::setQMScript(QMSettings::getQMScriptFullPath());
     }
     else if (isQMScriptEmpty && isQMScriptFullPathEmpty)
-
+    {
         throw InputFileException(
             "No qm_script provided. Please provide a qm_script in the input "
             "file."
         );
-
+    }
     else if (!isQMScriptFullPathEmpty && isQMScriptEmpty)
     {
         // setting script path to empty string to avoid errors
@@ -229,12 +228,13 @@ void QMSetup::setupQMScript() const
         QMSettings::setQMScript(QMSettings::getQMScriptFullPath());
     }
     else if (!isQMScriptFullPathEmpty && !isQMScriptEmpty)
-
+    {
         throw InputFileException(
             "You have set both 'qm_script' and 'qm_script_full_path' in the "
             "input file. They are mutually exclusive. Please use only one of "
             "them. For more information please refer to the documentation."
         );
+    }
 }
 
 /**
@@ -280,12 +280,13 @@ void QMSetup::setupWriteInfo() const
 
     if (qmMethod == MACE)
     {
-        const auto modelType = QMSettings::getMaceModelType();
-        const auto modelSize = QMSettings::getMaceModel();
-        const auto modelPath = QMSettings::getMaceModelPath();
-        const auto fp        = Settings::getFloatingPointPybindString();
-        const auto useDisp   = QMSettings::useDispersionCorr() ? "on" : "off";
-        const auto maceMode  = QMSettings::getMaceMode();
+        const auto        modelType = QMSettings::getMaceModelType();
+        const auto        modelSize = QMSettings::getMaceModel();
+        const auto        modelPath = QMSettings::getMaceModelPath();
+        const auto        fp        = Settings::getFloatingPointPybindString();
+        const auto        maceMode  = QMSettings::getMaceMode();
+        const auto *const useDisp =
+            QMSettings::useDispersionCorr() ? "on" : "off";
 
         // clang-format off
         const auto modelTypeMsg = std::format("Model type:            {}", string(modelType));
@@ -307,6 +308,7 @@ void QMSetup::setupWriteInfo() const
         logOutput.writeSetupInfo(modeMsg);
 
         if (maceMode == MaceMode::FAST)
+        {
             logOutput.writeSetupInfo(
                 std::format(
                     "                       cuequivariance-accelerated "
@@ -315,6 +317,7 @@ void QMSetup::setupWriteInfo() const
                     "(use mace_mode = accurate for the exact reference)"
                 )
             );
+        }
     }
 
     if (qmMethod == FENNOL)

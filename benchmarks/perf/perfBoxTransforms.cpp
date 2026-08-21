@@ -23,6 +23,7 @@
 // Fixed-work micro-benchmark of the box coordinate transforms: wrapping into
 // the box, and triclinic <-> orthogonal space conversions.
 
+#include <cstdint>
 #include <cstdio>
 #include <format>
 #include <iostream>
@@ -36,7 +37,7 @@
 #include "orthorhombicBox.hpp"
 #include "triclinicBox.hpp"
 
-static constexpr long ITERATIONS = 20000;
+static constexpr std::uint64_t ITERATIONS = 20000;
 
 int main()
 {
@@ -52,9 +53,9 @@ int main()
     CALLGRIND_ZERO_STATS;
 
     double sink = 0.0;
-    for (long i = 0; i < ITERATIONS; ++i)
+    for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
-        const double x = static_cast<double>(i & 127) * 0.3 - 19.0;
+        const double x = static_cast<double>(i & 127U) * 0.3 - 19.0;
         const Vec3D  v(x, 0.5 * x, -x);
 
         sink += norm(ortho.wrapPositionIntoBox(v));

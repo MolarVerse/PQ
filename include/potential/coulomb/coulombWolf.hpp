@@ -54,8 +54,8 @@ namespace potential
         );
 
         [[nodiscard]] std::pair<double, double> calculate(
-            const double,
-            const double
+            const double distance,
+            const double chargeProduct
         ) const override;
 
         /***************************

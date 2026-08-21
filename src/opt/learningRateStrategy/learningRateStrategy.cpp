@@ -60,6 +60,7 @@ LearningRateStrategy::LearningRateStrategy(
 void LearningRateStrategy::checkLearningRate()
 {
     if (_maxLearningRate.has_value())
+    {
         if (_learningRate > _maxLearningRate.value())
         {
             _learningRate      = _maxLearningRate.value();
@@ -73,6 +74,7 @@ void LearningRateStrategy::checkLearningRate()
 
             _warningMessages.push_back(message);
         }
+    }
 
     if (_learningRate < _minLearningRate)
     {

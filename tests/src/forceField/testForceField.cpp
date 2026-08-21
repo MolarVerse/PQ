@@ -52,7 +52,7 @@
 namespace potential
 {
     class NonCoulombPair;   // forward declaration
-}
+}   // namespace potential
 
 class TestForceField : public TestNonCoulombPotentialFF
 {
@@ -76,12 +76,12 @@ TEST_F(TestForceField, findBondTypeById)
  * @brief tests findBondTypeById function for not found error
  *
  */
-TEST_F(TestForceField, findBondTypeById_notFoundError)
+TEST_F(TestForceField, findBondTypeByIdNotFoundError)
 {
     auto forceField = forceField::ForceField();
 
     EXPECT_THROW_MSG(
-        forceField.findBondTypeById(BondId{0}),
+        const auto _ = forceField.findBondTypeById(BondId{0}),
         customException::TopologyException,
         "Bond type with id " + BondId(0).toString() + " not found."
     );
@@ -105,12 +105,12 @@ TEST_F(TestForceField, findAngleTypeById)
  * @brief tests findAngleTypeById function for not found error
  *
  */
-TEST_F(TestForceField, findAngleTypeById_notFoundError)
+TEST_F(TestForceField, findAngleTypeByIdNotFoundError)
 {
     auto forceField = forceField::ForceField();
 
     EXPECT_THROW_MSG(
-        forceField.findAngleTypeById(AngleId{0}),
+        const auto _ = forceField.findAngleTypeById(AngleId{0}),
         customException::TopologyException,
         "Angle type with id " + AngleId(0).toString() + " not found."
     );
@@ -134,12 +134,12 @@ TEST_F(TestForceField, findDihedralTypeById)
  * @brief tests findDihedralTypeById function for not found error
  *
  */
-TEST_F(TestForceField, findDihedralTypeById_notFoundError)
+TEST_F(TestForceField, findDihedralTypeByIdNotFoundError)
 {
     auto forceField = forceField::ForceField();
 
     EXPECT_THROW_MSG(
-        forceField.findDihedralTypeById(DihedralId{0}),
+        const auto _ = forceField.findDihedralTypeById(DihedralId{0}),
         customException::TopologyException,
         "Dihedral type with id " + DihedralId(0).toString() + " not found."
     );
@@ -167,12 +167,12 @@ TEST_F(TestForceField, findImproperTypeById)
  * @brief tests findImproperTypeById function for not found error
  *
  */
-TEST_F(TestForceField, findImproperDihedralTypeById_notFoundError)
+TEST_F(TestForceField, findImproperDihedralTypeByIdNotFoundError)
 {
     auto forceField = forceField::ForceField();
 
     EXPECT_THROW_MSG(
-        forceField.findImproperTypeById(DihedralId{0}),
+        const auto _ = forceField.findImproperTypeById(DihedralId{0}),
         customException::TopologyException,
         "Improper dihedral type with id " + DihedralId(0).toString() +
             " not found."
@@ -194,8 +194,13 @@ TEST_F(TestForceField, calculateBondedInteractions)
     auto physicalData     = physicalData::PhysicalData();
     auto coulombPotential = potential::CoulombShiftedPotential(20.0);
 
-    auto nonCoulombPair =
-        potential::LennardJonesPair(size_t(0), size_t(1), 15.0, 2.0, 4.0);
+    auto nonCoulombPair = potential::LennardJonesPair(
+        static_cast<size_t>(0),
+        static_cast<size_t>(1),
+        15.0,
+        2.0,
+        4.0
+    );
     setNonCoulombPairsMatrix(
         linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(2, 2)
     );
@@ -310,8 +315,13 @@ TEST_F(TestForceField, correctLinker)
 {
     auto coulombPotential = potential::CoulombShiftedPotential(10.0);
 
-    auto nonCoulombPair =
-        potential::LennardJonesPair(size_t(0), size_t(1), 5.0, 2.0, 4.0);
+    auto nonCoulombPair = potential::LennardJonesPair(
+        static_cast<size_t>(0),
+        static_cast<size_t>(1),
+        5.0,
+        2.0,
+        4.0
+    );
     setNonCoulombPairsMatrix(
         linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(2, 2)
     );

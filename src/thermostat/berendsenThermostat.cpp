@@ -24,7 +24,8 @@
 
 #include <cmath>   // for sqrt
 
-#include "exceptions.hpp"           // for UserInputException
+#include "exceptions.hpp"   // for UserInputException
+#include "globalTimer.hpp"
 #include "mathUtilities.hpp"        // for isZero
 #include "physicalData.hpp"         // for PhysicalData
 #include "simulationBox.hpp"        // for SimulationBox
@@ -65,7 +66,7 @@ void BerendsenThermostat::applyThermostat(
     PhysicalData  &data
 )
 {
-    auto _ = scoped("Berendsen");
+    auto _ = scopedTimer(TimerId::Thermostat, "Berendsen");
 
     data.calculateTemperature(simulationBox);
 

@@ -27,7 +27,6 @@
 
 #include "engine.hpp"                    // for Engine
 #include "exceptions.hpp"                // for TopologyException
-#include "gtest/gtest.h"                 // for Message, TestPartResult
 #include "improperDihedralSection.hpp"   // for ImproperDihedralSection
 #include "testTopologySection.hpp"       // for TestTopologySection
 

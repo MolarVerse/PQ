@@ -87,6 +87,7 @@ void RingPolymerRestartFileReader::read()
 
             // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
             if ((lineElements.size() != 21) && (lineElements.size() != 12))
+            {
                 throw RstFileException(
                     std::format(
                         "Error in line {}: Atom section must have 12 or 21 "
@@ -94,6 +95,7 @@ void RingPolymerRestartFileReader::read()
                         lineNumber
                     )
                 );
+            }
 
             atom->setPosition(
                 {stod(lineElements[3]),

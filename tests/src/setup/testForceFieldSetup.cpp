@@ -41,7 +41,7 @@
  * @brief test setupBonds function
  *
  */
-TEST_F(TestSetup, forceFieldSetup_setupBonds)
+TEST_F(TestSetup, forceFieldSetupSetupBonds)
 {
     auto molecule1 = simulationBox::Molecule();
     auto molecule2 = simulationBox::Molecule();
@@ -93,7 +93,7 @@ TEST_F(TestSetup, forceFieldSetup_setupBonds)
  * @brief test setupAngles function
  *
  */
-TEST_F(TestSetup, forceFieldSetup_setupAngles)
+TEST_F(TestSetup, forceFieldSetupSetupAngles)
 {
     auto molecule1 = simulationBox::Molecule();
     auto molecule2 = simulationBox::Molecule();
@@ -154,7 +154,7 @@ TEST_F(TestSetup, forceFieldSetup_setupAngles)
  * @brief test setupDihedrals function
  *
  */
-TEST_F(TestSetup, forceFieldSetup_setupDihedrals)
+TEST_F(TestSetup, forceFieldSetupSetupDihedrals)
 {
     auto molecule1 = simulationBox::Molecule();
     auto molecule2 = simulationBox::Molecule();
@@ -218,7 +218,7 @@ TEST_F(TestSetup, forceFieldSetup_setupDihedrals)
  * @brief test setupImproperDihedrals function
  *
  */
-TEST_F(TestSetup, forceFieldSetup_setupImproperDihedrals)
+TEST_F(TestSetup, forceFieldSetupSetupImproperDihedrals)
 {
     auto molecule1 = simulationBox::Molecule();
     auto molecule2 = simulationBox::Molecule();
@@ -283,7 +283,7 @@ TEST_F(TestSetup, forceFieldSetup_setupImproperDihedrals)
  * @brief test setupForceField function
  *
  */
-TEST_F(TestSetup, forceFieldSetup_setupForceField)
+TEST_F(TestSetup, forceFieldSetupSetupForceField)
 {
     settings::ForceFieldSettings::activate();
 
@@ -356,7 +356,7 @@ TEST_F(TestSetup, forceFieldSetup_setupForceField)
  * @brief setupForceField should do nothing if force field is not activated
  *
  */
-TEST_F(TestSetup, forceFieldSetup_setupForceField_doNothing)
+TEST_F(TestSetup, forceFieldSetupSetupForceFieldDoNothing)
 {
     settings::ForceFieldSettings::activate();
 

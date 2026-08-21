@@ -40,8 +40,8 @@ namespace QM
         bool _isFirstExecution = true;
 
        public:
-        void writeCoordsFile(simulationBox::SimulationBox &) override;
-        void execute(simulationBox::SimulationBox &) override;
+        void writeCoordsFile(simulationBox::SimulationBox &simBox) override;
+        void execute(simulationBox::SimulationBox &simBox) override;
     };
 
 }   // namespace QM

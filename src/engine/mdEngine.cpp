@@ -23,12 +23,12 @@
 #include "mdEngine.hpp"
 
 #include "constants/conversionFactors.hpp"   // for _FS_TO_PS_
-#include "outputFileSettings.hpp"            // for OutputFileSettings
-#include "progressbar.hpp"                   // for progressbar
-#include "qmCapableEngine.hpp"               // for QMCapableEngine
-#include "referencesOutput.hpp"              // for ReferencesOutput
-#include "settings.hpp"                      // for Settings
-#include "timingsSettings.hpp"               // for TimingsSettings
+#include "globalTimer.hpp"
+#include "outputFileSettings.hpp"   // for OutputFileSettings
+#include "progressbar.hpp"          // for progressbar
+#include "referencesOutput.hpp"     // for ReferencesOutput
+#include "settings.hpp"             // for Settings
+#include "timingsSettings.hpp"      // for TimingsSettings
 #include "velocityVerlet.hpp"
 
 using namespace engine;
@@ -75,59 +75,14 @@ void MDEngine::run()
         deleteTmpFiles();
     }
 
-    _timer.stopSimulationTimer();
+    timings::GlobalTimer::get().stopSimulationTimer();
 
-    const auto elapsedTime = double(_timer.calculateElapsedTime()) * 1e-3;
-
-    _engineOutput.setTimerId(TimerId::Output);
-    _timer.addTimer(_engineOutput.getTimer());
-
-    _thermostat->setTimerId(TimerId::Thermostat);
-    _timer.addTimer(_thermostat->getTimer());
-
-    _integrator->setTimerId(TimerId::Integrator);
-    _timer.addTimer(_integrator->getTimer());
-
-    _constraints->setTimerId(TimerId::Constraints);
-    _timer.addTimer(_constraints->getTimer());
-
-    _cellList->setTimerId(TimerId::CellList);
-    _timer.addTimer(_cellList->getTimer());
-
-    _potential->setTimerId(TimerId::Potential);
-    _timer.addTimer(_potential->getTimer());
-
-    _intraNonBonded->setTimerId(TimerId::IntraNonBonded);
-    _timer.addTimer(_intraNonBonded->getTimer());
-
-    _physicalData->setTimerId(TimerId::PhysicalData);
-    _timer.addTimer(_physicalData->getTimer());
-
-    _manostat->setTimerId(TimerId::Manostat);
-    _timer.addTimer(_manostat->getTimer());
-
-    _resetKinetics.setTimerId(TimerId::ResetKinetics);
-    _timer.addTimer(_resetKinetics.getTimer());
-
-    _intraWater->setTimerId(TimerId::WaterIntraPotential);
-    _timer.addTimer(_intraWater->getTimer());
-
-    _interWater->setTimerId(TimerId::WaterInterPotential);
-    _timer.addTimer(_interWater->getTimer());
-
-    if (Settings::isQMActivated())
-    {
-        dynamic_cast<QMCapableEngine *>(this)->getQMRunner()->setTimerId(
-            TimerId::QMEngine
-        );
-        _timer.addTimer(
-            dynamic_cast<QMCapableEngine *>(this)->getQMRunner()->getTimer()
-        );
-    }
+    const auto elapsedTime =
+        timings::GlobalTimer::get().calculateElapsedTime() * constants::MS_TO_S;
 
     references::ReferencesOutput::writeReferencesFile();
 
-    _engineOutput.writeTimingsFile(_timer);
+    _engineOutput.writeTimingsFile();
 
     _engineOutput.getLogOutput().writeEndedNormally(elapsedTime);
     _engineOutput.getStdoutOutput().writeEndedNormally(elapsedTime);
@@ -256,10 +211,9 @@ void MDEngine::writeOutput()
     // included in total simulation time
     // Unfortunately, setup is therefore included in the first looptime output
     // but this is not a big problem - could also be a feature and not a bug
-    _timer.stopSimulationTimer();
-    _timer.startSimulationTimer();
+    timings::GlobalTimer::get().stopAndRestartSimulationTimer();
 
-    _physicalData->setLoopTime(_timer.calculateLoopTime());
+    _physicalData->setLoopTime(timings::GlobalTimer::get().calculateLoopTime());
     _averagePhysicalData.updateAverages(*_physicalData);
 
     if (0 == _step % outputFreq)

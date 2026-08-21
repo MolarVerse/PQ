@@ -83,6 +83,7 @@ void JCouplingSection::processSection(
 {
     // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
     if (lineElements.size() != 7 && lineElements.size() != 8)
+    {
         throw ParameterFileException(
             std::format(
                 "Wrong number of arguments in parameter file j-coupling "
@@ -91,6 +92,7 @@ void JCouplingSection::processSection(
                 _lineNumber
             )
         );
+    }
 
     auto id            = stoul(lineElements[0]);
     auto J0            = stod(lineElements[1]);

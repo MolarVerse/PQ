@@ -71,6 +71,7 @@ void RingPolymerTrajectoryOutput::writeXyz(
     const auto nBeads = RingPolymerSettings::getNumberOfBeads();
 
     for (size_t i = 0; i < nBeads; ++i)
+    {
         for (const auto &molecule : beads[i].getMolecules())
         {
             const auto nAtoms = molecule.getNumberOfAtoms();
@@ -88,6 +89,7 @@ void RingPolymerTrajectoryOutput::writeXyz(
                 buffer << std::format("{:15.8f}\n", z);
             }
         }
+    }
 
     // Write the buffer to the file
     _fp << buffer.str();
@@ -113,6 +115,7 @@ void RingPolymerTrajectoryOutput::writeVelocities(
     const auto nBeads = RingPolymerSettings::getNumberOfBeads();
 
     for (size_t i = 0; i < nBeads; ++i)
+    {
         for (const auto &molecule : beads[i].getMolecules())
         {
             const auto nAtoms = molecule.getNumberOfAtoms();
@@ -131,6 +134,7 @@ void RingPolymerTrajectoryOutput::writeVelocities(
                 buffer << std::format("{:20.8e}\n", vz);
             }
         }
+    }
 
     // Write the buffer to the file
     _fp << buffer.str();
@@ -161,6 +165,7 @@ void RingPolymerTrajectoryOutput::writeForces(
     writeForceComment(step, totalForce);
 
     for (size_t i = 0; i < RingPolymerSettings::getNumberOfBeads(); ++i)
+    {
         for (const auto &molecule : beads[i].getMolecules())
         {
             const auto nAtoms = molecule.getNumberOfAtoms();
@@ -179,6 +184,7 @@ void RingPolymerTrajectoryOutput::writeForces(
                 buffer << std::format("{:15.8f}\n", fz);
             }
         }
+    }
 
     // Write the buffer to the file
     _fp << buffer.str();
@@ -202,7 +208,9 @@ void RingPolymerTrajectoryOutput::writeCharges(
     writeComment(step);
 
     for (size_t i = 0; i < RingPolymerSettings::getNumberOfBeads(); ++i)
+    {
         for (const auto &molecule : beads[i].getMolecules())
+        {
             for (const auto &atom : molecule.getAtoms())
             {
                 const auto charge =
@@ -212,6 +220,8 @@ void RingPolymerTrajectoryOutput::writeCharges(
                 buffer << std::format("{:15.8f}\n", charge);
                 buffer << std::flush;
             }
+        }
+    }
 
     // Write the buffer to the file
     _fp << buffer.str();

@@ -61,8 +61,8 @@ namespace opt
         Evaluator()          = default;
         virtual ~Evaluator() = default;
 
-        virtual std::shared_ptr<Evaluator> clone() const = 0;
-        virtual void                       evaluate()    = 0;
+        [[nodiscard]] virtual std::shared_ptr<Evaluator> clone() const = 0;
+        virtual void                                     evaluate()    = 0;
 
         [[nodiscard]] virtual bool          supportsAnalyticHessian() const;
         [[nodiscard]] virtual HessianMatrix calculateAnalyticHessian();
