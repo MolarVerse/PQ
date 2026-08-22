@@ -38,6 +38,7 @@
 #include "molecule.hpp"                  // for Molecule
 #include "physicalData.hpp"              // for PhysicalData
 #include "simulationBox.hpp"             // for SimulationBox
+#include "strongTypes.hpp"
 
 namespace potential
 {
@@ -104,7 +105,7 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
     auto bondForceField = forceField::AngleForceField(
         {&molecule, &molecule, &molecule},
         {0, 1, 2},
-        0
+        AngleId{0}
     );
     bondForceField.setEquilibriumAngle(90 * M_PI / 180.0);
     bondForceField.setForceConstant(3.0);
@@ -213,7 +214,7 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
     auto angleForceField = forceField::AngleForceField(
         {&molecule, &molecule, &molecule},
         {0, 1, 2},
-        0
+        AngleId{0}
     );
     angleForceField.setEquilibriumAngle(M_PI);   // linear equilibrium
     angleForceField.setForceConstant(3.0);

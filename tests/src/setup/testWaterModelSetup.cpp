@@ -35,6 +35,7 @@
 #include "molecule.hpp"
 #include "moleculeType.hpp"
 #include "settings.hpp"
+#include "strongTypes.hpp"
 #include "testSetup.hpp"
 #include "waterModelSettings.hpp"
 #include "waterModelSetup.hpp"
@@ -231,7 +232,7 @@ TEST_F(TestSetup, waterModelSetupRejectsWaterBondsInTopology)
     addWaterSystem(*_mdEngine);
     auto *water = &_mdEngine->getSimulationBox().getMolecule(0);
     _mdEngine->getForceField()->addBond(
-        forceField::BondForceField(water, water, 0, 1, 0)
+        forceField::BondForceField(water, water, 0, 1, BondId{0})
     );
 
     EXPECT_THROW(WaterModelSetup(*_mdEngine).setup(), UserInputException);
@@ -244,7 +245,11 @@ TEST_F(TestSetup, waterModelSetupRejectsWaterAnglesInTopology)
     addWaterSystem(*_mdEngine);
     auto *water = &_mdEngine->getSimulationBox().getMolecule(0);
     _mdEngine->getForceField()->addAngle(
-        forceField::AngleForceField({water, water, water}, {0, 1, 2}, 0)
+        forceField::AngleForceField(
+            {water, water, water},
+            {0, 1, 2},
+            AngleId{0}
+        )
     );
 
     EXPECT_THROW(WaterModelSetup(*_mdEngine).setup(), UserInputException);

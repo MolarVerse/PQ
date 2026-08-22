@@ -35,13 +35,15 @@ using namespace utilities;
  * @param springConstant
  */
 AngleType::AngleType(
-    const size_t id,
-    const double equilibriumAngle,
-    const double springConstant
+    const AngleId id,
+    const double  equilibriumAngle,
+    const double  springConstant
 )
     : _id(id),
       _equilibriumAngle(equilibriumAngle),
-      _forceConstant(springConstant){};
+      _forceConstant(springConstant)
+{
+}
 
 /**
  * @brief operator overload for the comparison of two AngleType objects
@@ -68,9 +70,9 @@ bool forceField::operator==(const AngleType &self, const AngleType &other)
 /**
  * @brief get the id of the angle type
  *
- * @return size_t
+ * @return AngleId
  */
-size_t AngleType::getId() const { return _id; }
+AngleId AngleType::getId() const { return _id; }
 
 /**
  * @brief get the equilibrium angle of the angle type

@@ -366,11 +366,11 @@ std::vector<linearAlgebra::Vec3D> SimulationBox::getForces() const
 /**
  * @brief get all atomic numbers of all atoms
  *
- * @return std::vector<int>
+ * @return std::vector<AtomNumber>
  */
-std::vector<int> SimulationBox::getAtomicNumbers() const
+std::vector<AtomNumber> SimulationBox::getAtomicNumbers() const
 {
-    std::vector<int> atomicNumbers;
+    std::vector<AtomNumber> atomicNumbers;
 
     for (const auto &atom : _atoms)
         atomicNumbers.push_back(atom->getAtomicNumber());

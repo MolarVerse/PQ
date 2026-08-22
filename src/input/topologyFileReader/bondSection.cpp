@@ -75,7 +75,7 @@ void BondSection::processSection(
 
     const auto atom1    = stoul(lineElements[0]);
     const auto atom2    = stoul(lineElements[1]);
-    const auto bondType = stoul(lineElements[2]);
+    const auto bondType = BondId{stoul(lineElements[2])};
     auto       isLinker = false;
 
     if (4 == lineElements.size())

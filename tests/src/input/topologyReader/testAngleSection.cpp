@@ -25,10 +25,11 @@
 #include <string>   // for string, allocator, basic_string
 #include <vector>   // for vector
 
-#include "angleSection.hpp"          // for AngleSection
-#include "engine.hpp"                // for Engine
-#include "exceptions.hpp"            // for TopologyException
-#include "gtest/gtest.h"             // for Message, TestPartResult
+#include "angleSection.hpp"   // for AngleSection
+#include "engine.hpp"         // for Engine
+#include "exceptions.hpp"     // for TopologyException
+#include "gtest/gtest.h"      // for Message, TestPartResult
+#include "strongTypes.hpp"
 #include "testTopologySection.hpp"   // for TestTopologySection
 
 /**
@@ -40,24 +41,19 @@ TEST_F(TestTopologySection, processSectionAngle)
     std::vector<std::string>      lineElements = {"2", "1", "3", "7"};
     input::topology::AngleSection angleSection;
     angleSection.processSection(lineElements, *_engine);
-    EXPECT_EQ(_engine->getForceField()->getAngles().size(), 1);
-    EXPECT_EQ(
-        _engine->getForceField()->getAngles()[0].getMolecules()[0],
-        &(_engine->getSimulationBox().getMolecules()[0])
-    );
-    EXPECT_EQ(
-        _engine->getForceField()->getAngles()[0].getMolecules()[1],
-        &(_engine->getSimulationBox().getMolecules()[1])
-    );
-    EXPECT_EQ(
-        _engine->getForceField()->getAngles()[0].getMolecules()[2],
-        &(_engine->getSimulationBox().getMolecules()[1])
-    );
-    EXPECT_EQ(_engine->getForceField()->getAngles()[0].getAtomIndices()[0], 0);
-    EXPECT_EQ(_engine->getForceField()->getAngles()[0].getAtomIndices()[1], 0);
-    EXPECT_EQ(_engine->getForceField()->getAngles()[0].getAtomIndices()[2], 1);
-    EXPECT_EQ(_engine->getForceField()->getAngles()[0].getType(), 7);
-    EXPECT_EQ(_engine->getForceField()->getAngles()[0].isLinker(), false);
+
+    const auto &angles    = _engine->getForceField()->getAngles();
+    const auto &molecules = _engine->getSimulationBox().getMolecules();
+
+    EXPECT_EQ(angles.size(), 1);
+    EXPECT_EQ(angles[0].getMolecules()[0], &(molecules[0]));
+    EXPECT_EQ(angles[0].getMolecules()[1], &(molecules[1]));
+    EXPECT_EQ(angles[0].getMolecules()[2], &(molecules[1]));
+    EXPECT_EQ(angles[0].getAtomIndices()[0], 0);
+    EXPECT_EQ(angles[0].getAtomIndices()[1], 0);
+    EXPECT_EQ(angles[0].getAtomIndices()[2], 1);
+    EXPECT_EQ(angles[0].getType(), AngleId{7});
+    EXPECT_EQ(angles[0].isLinker(), false);
 
     lineElements = {"2", "1", "3", "7", "*"};
     angleSection.processSection(lineElements, *_engine);

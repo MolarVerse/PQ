@@ -45,7 +45,6 @@ using namespace constants;
 using namespace settings;
 
 using array_d = pybind11::array_t<double>;
-using array_i = pybind11::array_t<int>;
 
 namespace
 {
@@ -182,10 +181,18 @@ namespace
         const auto atomicNumbers = simBox.getAtomicNumbers();
         const auto nAtoms        = simBox.getNumberOfAtoms();
 
+        std::vector<int> atomicNumbersInt;
+        atomicNumbersInt.reserve(nAtoms);
+
+        for (const auto &atomicNumber : atomicNumbers)
+            atomicNumbersInt.push_back(static_cast<int>(atomicNumber.get()));
+
         try
         {
-            const auto atomicNumbers_ =
-                array_i(static_cast<ssize_t>(nAtoms), &atomicNumbers[0]);
+            const auto atomicNumbers_ = pybind11::array_t<int>(
+                static_cast<ssize_t>(nAtoms),
+                &atomicNumbersInt[0]
+            );
 
             return atomicNumbers_;
         }

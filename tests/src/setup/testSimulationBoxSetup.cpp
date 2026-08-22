@@ -310,17 +310,17 @@ TEST_F(TestSetup, testSetAtomicNumbers)
     SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.setAtomicNumbers();
 
-    EXPECT_DOUBLE_EQ(
+    EXPECT_EQ(
         _engine->getSimulationBox().getMolecules()[0].getAtomicNumber(0),
-        6
+        AtomNumber{6}
     );
-    EXPECT_DOUBLE_EQ(
+    EXPECT_EQ(
         _engine->getSimulationBox().getMolecules()[0].getAtomicNumber(1),
-        1
+        AtomNumber{1}
     );
-    EXPECT_DOUBLE_EQ(
+    EXPECT_EQ(
         _engine->getSimulationBox().getMolecules()[0].getAtomicNumber(2),
-        8
+        AtomNumber{8}
     );
 }
 
