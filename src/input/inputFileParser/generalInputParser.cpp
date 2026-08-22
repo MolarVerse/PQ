@@ -54,7 +54,7 @@ using std::format;
  *
  * @param engine
  */
-GeneralInputParser::GeneralInputParser(Engine &engine) : InputFileParser(engine)
+GeneralInputParser::GeneralInputParser()
 {
     addKeyword(
         std::string("jobtype"),

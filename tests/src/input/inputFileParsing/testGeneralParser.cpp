@@ -53,7 +53,7 @@ using namespace settings;
  */
 TEST_F(TestInputFileReader, JobType)
 {
-    GeneralInputParser       parser(*_engine);
+    GeneralInputParser       parser;
     std::vector<std::string> lineElements = {"jobtype", "=", "mm-md"};
     auto                     engine       = std::unique_ptr<engine::Engine>();
     parser.parseJobTypeForEngine(lineElements, 0, engine);
@@ -114,7 +114,7 @@ TEST_F(TestInputFileReader, JobType)
  */
 TEST_F(TestInputFileReader, parseDimensionality)
 {
-    GeneralInputParser       parser(*_engine);
+    GeneralInputParser       parser;
     std::vector<std::string> lineElements = {"dim", "=", "3"};
     parser.parseDimensionality(lineElements, 0);
     EXPECT_EQ(Settings::getDimensionality(), 3);
@@ -154,7 +154,7 @@ TEST_F(TestInputFileReader, parseDimensionality)
  */
 TEST_F(TestInputFileReader, parseFloatingPointType)
 {
-    GeneralInputParser       parser(*_engine);
+    GeneralInputParser       parser;
     std::vector<std::string> lineElements = {"floatingPointType", "=", "float"};
     parser.parseFloatingPointType(lineElements, 0);
     EXPECT_EQ(Settings::getFloatingPointType(), FPType::FLOAT);
@@ -178,7 +178,7 @@ TEST_F(TestInputFileReader, parseFloatingPointType)
  */
 TEST_F(TestInputFileReader, parseRandomSeed)
 {
-    GeneralInputParser parser(*_engine);
+    GeneralInputParser parser;
 
     std::vector<std::string> lineElements = {"random_seed", "=", "0"};
     parser.parseRandomSeed(lineElements, 0);

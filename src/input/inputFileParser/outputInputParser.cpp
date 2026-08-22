@@ -30,7 +30,6 @@
 #include "stringUtilities.hpp"   // for toLowerCopy
 
 using namespace input;
-using namespace engine;
 using namespace utilities;
 using namespace customException;
 using namespace settings;
@@ -69,7 +68,7 @@ using namespace settings;
  *
  * @param engine
  */
-OutputInputParser::OutputInputParser(Engine &engine) : InputFileParser(engine)
+OutputInputParser::OutputInputParser()
 {
     addKeyword(
         std::string("output_freq"),

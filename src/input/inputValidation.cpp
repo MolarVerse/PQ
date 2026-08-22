@@ -25,7 +25,6 @@
 #include <format>      // for format
 
 #include "constants/conversionFactors.hpp"
-#include "engine.hpp"            // for Engine
 #include "exceptions.hpp"        // for InputFileException
 #include "hessianSettings.hpp"   // for HessianSettings
 #include "inputFileReader.hpp"
@@ -244,8 +243,8 @@ void InputFileReader::validateThermostat() const
             throw InputFileException(
                 std::format(
                     "Both target and end temperature set for {} thermostat. "
-                    "They "
-                    "are mutually exclusive as they are treated as synonyms",
+                    "They are mutually exclusive as they are treated as "
+                    "synonyms",
                     string(thermostatType)
                 )
             );
@@ -408,7 +407,7 @@ void InputFileReader::validateManostat() const
  */
 void InputFileReader::validateCellList() const
 {
-    if (!_engine.isCellListActivated())
+    if (!Settings::isCellListActivated())
         return;
 
     if (Settings::isQMOnlyActivated())

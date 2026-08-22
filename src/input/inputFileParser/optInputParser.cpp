@@ -34,7 +34,6 @@ using namespace input;
 using namespace settings;
 using namespace customException;
 using namespace utilities;
-using namespace engine;
 
 /**
  * @brief Constructor
@@ -47,7 +46,7 @@ using namespace engine;
  *
  * @param engine The engine
  */
-OptInputParser::OptInputParser(Engine &engine) : InputFileParser(engine)
+OptInputParser::OptInputParser()
 {
     addKeyword(
         "optimizer",

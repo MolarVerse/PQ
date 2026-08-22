@@ -46,7 +46,7 @@ using namespace settings;
 TEST_F(TestInputFileReader, testParseShakeActivated)
 {
     const auto              &constraints = _engine->getConstraints();
-    ConstraintsInputParser   parser(*_engine, constraints);
+    ConstraintsInputParser   parser(constraints);
     std::vector<std::string> lineElements = {"shake", "=", "off"};
     parser.parseShakeActivated(lineElements, 0);
     EXPECT_FALSE(constraints->isActive());
@@ -96,7 +96,7 @@ TEST_F(TestInputFileReader, testParseShakeActivated)
  */
 TEST_F(TestInputFileReader, testParseShakeTolerance)
 {
-    ConstraintsInputParser   parser(*_engine, _engine->getConstraints());
+    ConstraintsInputParser   parser(_engine->getConstraints());
     std::vector<std::string> lineElements = {"shake-tolerance", "=", "0.0001"};
     parser.parseShakeTolerance(lineElements, 0);
     EXPECT_EQ(ConstraintSettings::getShakeTolerance(), 0.0001);
@@ -124,7 +124,7 @@ TEST_F(TestInputFileReader, testParseShakeTolerance)
  */
 TEST_F(TestInputFileReader, testParseShakeIteration)
 {
-    ConstraintsInputParser   parser(*_engine, _engine->getConstraints());
+    ConstraintsInputParser   parser(_engine->getConstraints());
     std::vector<std::string> lineElements = {"shake-iter", "=", "100"};
     parser.parseShakeIteration(lineElements, 0);
     EXPECT_EQ(ConstraintSettings::getShakeMaxIter(), 100);
@@ -152,7 +152,7 @@ TEST_F(TestInputFileReader, testParseShakeIteration)
  */
 TEST_F(TestInputFileReader, testParseRattleTolerance)
 {
-    ConstraintsInputParser   parser(*_engine, _engine->getConstraints());
+    ConstraintsInputParser   parser(_engine->getConstraints());
     std::vector<std::string> lineElements = {"rattle-tolerance", "=", "0.0001"};
     parser.parseRattleTolerance(lineElements, 0);
     EXPECT_EQ(ConstraintSettings::getRattleTolerance(), 0.0001);
@@ -180,7 +180,7 @@ TEST_F(TestInputFileReader, testParseRattleTolerance)
  */
 TEST_F(TestInputFileReader, testParseRattleIteration)
 {
-    ConstraintsInputParser   parser(*_engine, _engine->getConstraints());
+    ConstraintsInputParser   parser(_engine->getConstraints());
     std::vector<std::string> lineElements = {"rattle-iter", "=", "100"};
     parser.parseRattleIteration(lineElements, 0);
     EXPECT_EQ(ConstraintSettings::getRattleMaxIter(), 100);
@@ -208,7 +208,7 @@ TEST_F(TestInputFileReader, testParseRattleIteration)
  */
 TEST_F(TestInputFileReader, testParseMShakeTolerance)
 {
-    ConstraintsInputParser   parser(*_engine, _engine->getConstraints());
+    ConstraintsInputParser   parser(_engine->getConstraints());
     std::vector<std::string> lineElements = {"mshake-tolerance", "=", "0.01"};
     parser.parseMShakeTolerance(lineElements, 0);
     EXPECT_EQ(ConstraintSettings::getMShakeTolerance(), 0.01);
@@ -236,7 +236,7 @@ TEST_F(TestInputFileReader, testParseMShakeTolerance)
  */
 TEST_F(TestInputFileReader, testParseMShakeIteration)
 {
-    ConstraintsInputParser   parser(*_engine, _engine->getConstraints());
+    ConstraintsInputParser   parser(_engine->getConstraints());
     std::vector<std::string> lineElements = {"mshake-iter", "=", "73"};
     parser.parseMShakeIteration(lineElements, 0);
     EXPECT_EQ(ConstraintSettings::getMShakeMaxIter(), 73);
@@ -263,7 +263,7 @@ TEST_F(TestInputFileReader, testParseMShakeIteration)
 TEST_F(TestInputFileReader, testParseDistanceConstraintsActivated)
 {
     const auto              &constraints = _engine->getConstraints();
-    ConstraintsInputParser   parser(*_engine, constraints);
+    ConstraintsInputParser   parser(constraints);
     std::vector<std::string> lineElements = {"distance-constraints", "=", "on"};
     parser.parseDistanceConstraintActivated(lineElements, 0);
 

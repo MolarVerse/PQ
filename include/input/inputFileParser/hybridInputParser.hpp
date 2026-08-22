@@ -39,7 +39,7 @@ namespace input
     class HybridInputParser : public InputFileParser
     {
        public:
-        explicit HybridInputParser(engine::Engine &);
+        HybridInputParser();
 
         void parseInnerRegionCenter(
             const std::vector<std::string> &,

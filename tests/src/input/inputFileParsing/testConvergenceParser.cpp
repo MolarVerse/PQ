@@ -37,7 +37,7 @@ TEST_F(TestInputFileReader, parserEnergyConvergenceStrategy)
 {
     EXPECT_EQ(ConvSettings::getEnConvStrategy(), std::optional<ConvStrategy>());
 
-    auto parser = ConvInputParser(*_engine);
+    auto parser = ConvInputParser{};
 
     using enum ConvStrategy;
 
@@ -77,7 +77,7 @@ TEST_F(TestInputFileReader, parserUseEnergyConvergence)
 {
     EXPECT_TRUE(ConvSettings::getUseEnergyConv());
 
-    auto parser = ConvInputParser(*_engine);
+    auto parser = ConvInputParser{};
 
     auto lineElements =
         std::vector<std::string>{"use-energy-conv", "=", "false"};
@@ -102,7 +102,7 @@ TEST_F(TestInputFileReader, parserUseForceConvergence)
 {
     EXPECT_TRUE(ConvSettings::getUseForceConv());
 
-    auto parser = ConvInputParser(*_engine);
+    auto parser = ConvInputParser{};
 
     auto lineElements =
         std::vector<std::string>{"use-force-conv", "=", "false"};
@@ -126,7 +126,7 @@ TEST_F(TestInputFileReader, parserUseMaxForceConvergence)
 {
     EXPECT_TRUE(ConvSettings::getUseMaxForceConv());
 
-    auto parser = ConvInputParser(*_engine);
+    auto parser = ConvInputParser{};
 
     auto lineElements =
         std::vector<std::string>{"use-max-force-conv", "=", "false"};
@@ -154,7 +154,7 @@ TEST_F(TestInputFileReader, parserUseRMSForceConvergence)
 {
     EXPECT_TRUE(ConvSettings::getUseRMSForceConv());
 
-    auto parser = ConvInputParser(*_engine);
+    auto parser = ConvInputParser{};
 
     auto lineElements =
         std::vector<std::string>{"use-rms-force-conv", "=", "false"};
@@ -182,7 +182,7 @@ TEST_F(TestInputFileReader, parserEnergyConvergence)
 {
     EXPECT_FALSE(ConvSettings::getEnergyConv().has_value());
 
-    auto parser = ConvInputParser(*_engine);
+    auto parser = ConvInputParser{};
 
     const auto lineElements =
         std::vector<std::string>{"energy-conv", "=", "1e-3"};
@@ -202,7 +202,7 @@ TEST_F(TestInputFileReader, parserRelativeEnergyConvergence)
 {
     EXPECT_FALSE(ConvSettings::getRelEnergyConv().has_value());
 
-    auto parser = ConvInputParser(*_engine);
+    auto parser = ConvInputParser{};
 
     const auto lineElements =
         std::vector<std::string>{"rel-energy-conv", "=", "1e-3"};
@@ -223,7 +223,7 @@ TEST_F(TestInputFileReader, parserAbsoluteEnergyConvergence)
 {
     EXPECT_FALSE(ConvSettings::getAbsEnergyConv().has_value());
 
-    auto parser = ConvInputParser(*_engine);
+    auto parser = ConvInputParser{};
 
     const auto lineElements =
         std::vector<std::string>{"abs-energy-conv", "=", "1e-3"};
@@ -244,7 +244,7 @@ TEST_F(TestInputFileReader, parserForceConvergence)
 {
     EXPECT_FALSE(ConvSettings::getForceConv().has_value());
 
-    auto parser = ConvInputParser(*_engine);
+    auto parser = ConvInputParser{};
 
     const auto lineElements =
         std::vector<std::string>{"force-conv", "=", "1e-3"};
@@ -263,7 +263,7 @@ TEST_F(TestInputFileReader, parserMaxForceConvergence)
 {
     EXPECT_FALSE(ConvSettings::getMaxForceConv().has_value());
 
-    auto parser = ConvInputParser(*_engine);
+    auto parser = ConvInputParser{};
 
     const auto lineElements =
         std::vector<std::string>{"max-force-conv", "=", "1e-3"};
@@ -283,7 +283,7 @@ TEST_F(TestInputFileReader, parserRMSForceConvergence)
 {
     EXPECT_FALSE(ConvSettings::getRMSForceConv().has_value());
 
-    auto parser = ConvInputParser(*_engine);
+    auto parser = ConvInputParser{};
 
     const auto lineElements =
         std::vector<std::string>{"rms-force-conv", "=", "1e-3"};

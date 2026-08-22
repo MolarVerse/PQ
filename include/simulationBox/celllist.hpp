@@ -44,8 +44,6 @@ namespace simulationBox
     class CellList
     {
        private:
-        bool _activated = defaults::CELL_LIST_IS_ACTIVE_DEFAULT;
-
         std::vector<Cell> _cells;
 
         linearAlgebra::Vec3D   _cellSize;
@@ -78,14 +76,6 @@ namespace simulationBox
 
         void resizeCells();
         void addCell(const Cell &cell);
-
-        /*****************************
-         * standard activate methods *
-         *****************************/
-
-        void               activate();
-        void               deactivate();
-        [[nodiscard]] bool isActive() const;
 
         /***************************
          * standard getter methods *

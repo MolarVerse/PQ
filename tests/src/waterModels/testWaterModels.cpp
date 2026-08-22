@@ -358,11 +358,12 @@ namespace
 
     CellList makeCellList(SimulationBox &simBox)
     {
+        settings::Settings::activateCellList();
+
         CellList cellList;
         cellList.setNumberOfCells(3);
         cellList.resizeCells();
         cellList.setup(simBox);
-        cellList.activate();
         cellList.updateCellList(simBox);
         cellList.assignMoleculeHybridZoneIndices();
         cellList.assignWaterMoleculeIndices(simBox);

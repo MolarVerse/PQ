@@ -32,7 +32,6 @@
 
 using namespace input;
 using namespace settings;
-using namespace engine;
 using namespace utilities;
 using namespace customException;
 
@@ -57,7 +56,7 @@ using namespace customException;
  *
  * @param engine The engine
  */
-ConvInputParser::ConvInputParser(Engine &engine) : InputFileParser(engine)
+ConvInputParser::ConvInputParser()
 {
     addKeyword(
         "energy-conv-strategy",

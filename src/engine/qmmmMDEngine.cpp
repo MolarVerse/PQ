@@ -158,7 +158,7 @@ namespace engine
             // virial contribution
             _configurator.toggleMoleculeActivation(*_simulationBox);
 
-            if (isCellListActivated())
+            if (settings::Settings::isCellListActivated())
             {
                 _cellList->assignMoleculeHybridZoneIndices();
                 _cellList->assignWaterMoleculeIndices(*_simulationBox);
@@ -256,7 +256,7 @@ namespace engine
         // molecules with smF
         _configurator.toggleMoleculeActivation(*_simulationBox);
 
-        if (isCellListActivated())
+        if (settings::Settings::isCellListActivated())
         {
             _cellList->assignMoleculeHybridZoneIndices();
             _cellList->assignWaterMoleculeIndices(*_simulationBox);
