@@ -22,11 +22,16 @@
 
 #include "velocityVerlet.hpp"
 
+#include "globalTimer.hpp"
 #include "simulationBox.hpp"
 
 using namespace integrator;
 using namespace simulationBox;
 
+/**
+ * @brief Construct a new Velocity Verlet::Velocity Verlet object
+ *
+ */
 VelocityVerlet::VelocityVerlet() : Integrator("VelocityVerlet") {}
 
 /**
@@ -36,7 +41,7 @@ VelocityVerlet::VelocityVerlet() : Integrator("VelocityVerlet") {}
  */
 void VelocityVerlet::firstStep(SimulationBox &simBox)
 {
-    auto _ = scoped("Velocity Verlet - First Step");
+    auto _ = scopedTimer(TimerId::Integrator, "Velocity Verlet - First Step");
 
     auto integrate = [this, &simBox](auto &atom)
     {
@@ -64,7 +69,7 @@ void VelocityVerlet::firstStep(SimulationBox &simBox)
  */
 void VelocityVerlet::secondStep(SimulationBox &simBox)
 {
-    auto _ = scoped("Velocity Verlet - Second Step");
+    auto _ = scopedTimer(TimerId::Integrator, "Velocity Verlet - Second Step");
 
     std::ranges::for_each(
         simBox.getAtoms(),

@@ -64,7 +64,7 @@ std::string NonCoulombicsSection::keyword() { return "noncoulombics"; }
  */
 void NonCoulombicsSection::processHeader(
     std::vector<std::string> &lineElements,
-    Engine &
+    Engine & /*engine*/
 )
 {
     using enum NonCoulombType;
@@ -83,6 +83,7 @@ void NonCoulombicsSection::processHeader(
             PotentialSettings::setNonCoulombType(MORSE);
 
         else
+        {
             throw ParameterFileException(
                 std::format(
                     "Invalid type of nonCoulombic in parameter file "
@@ -91,10 +92,13 @@ void NonCoulombicsSection::processHeader(
                     _lineNumber
                 )
             );
+        }
     }
     else
+    {
         // default of guff gets overriden
         PotentialSettings::setNonCoulombType(LJ);
+    }
 }
 
 /**
@@ -158,6 +162,7 @@ void NonCoulombicsSection::processLJ(
 {
     // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
     if (lineElements.size() != 4 && lineElements.size() != 5)
+    {
         throw ParameterFileException(
             std::format(
                 "Wrong number of arguments in parameter file in Lennard Jones "
@@ -166,6 +171,7 @@ void NonCoulombicsSection::processLJ(
                 _lineNumber
             )
         );
+    }
 
     const auto atomType1 = ExtVdwType{stoul(lineElements[0])};
     const auto atomType2 = ExtVdwType{stoul(lineElements[1])};
@@ -215,6 +221,7 @@ void NonCoulombicsSection::processBuckingham(
 {
     // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
     if (lineElements.size() != 5 && lineElements.size() != 6)
+    {
         throw ParameterFileException(
             std::format(
                 "Wrong number of arguments in parameter file in Buckingham "
@@ -223,6 +230,7 @@ void NonCoulombicsSection::processBuckingham(
                 _lineNumber
             )
         );
+    }
 
     const auto atomType1 = ExtVdwType{stoul(lineElements[0])};
     const auto atomType2 = ExtVdwType{stoul(lineElements[1])};
@@ -272,6 +280,7 @@ void NonCoulombicsSection::processMorse(
 {
     // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
     if (lineElements.size() != 5 && lineElements.size() != 6)
+    {
         throw ParameterFileException(
             std::format(
                 "Wrong number of arguments in parameter file in Morse "
@@ -280,6 +289,7 @@ void NonCoulombicsSection::processMorse(
                 _lineNumber
             )
         );
+    }
 
     const auto atomType1           = ExtVdwType{stoul(lineElements[0])};
     const auto atomType2           = ExtVdwType{stoul(lineElements[1])};

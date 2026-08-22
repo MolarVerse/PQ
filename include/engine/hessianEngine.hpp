@@ -70,7 +70,6 @@ namespace engine
 
         void writeHessian(const opt::HessianMatrix &hessian) const;
         void writeHessianInfo(const opt::HessianMatrix &hessian) const;
-        void addTimers();
 
        public:
         void run() final;

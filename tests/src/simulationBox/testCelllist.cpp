@@ -32,9 +32,10 @@
 #include "gtest/gtest.h"           // for Message, TestPartResult
 #include "molecule.hpp"            // for Molecule
 #include "potentialSettings.hpp"   // for PotentialSettings
-#include "simulationBox.hpp"       // for SimulationBox
-#include "throwWithMessage.hpp"    // for EXPECT_THROW_MSG
-#include "vector3d.hpp"   // IWYU pragma: keep - for Vec3Dul, Vec3D, Vector3D
+#include "settings.hpp"
+#include "simulationBox.hpp"      // for SimulationBox
+#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
+#include "vector3d.hpp"
 
 TEST_F(TestCellList, determineCellSize)
 {
@@ -99,7 +100,7 @@ TEST_F(TestCellList, getCellIndexOfAtom)
     );
 }
 
-TEST_F(TestCellList, getCellIndexOfAtom_wrapsPeriodicBoundaryCoordinates)
+TEST_F(TestCellList, getCellIndexOfAtomWrapsPeriodicBoundaryCoordinates)
 {
     _simulationBox->setBoxDimensions(linearAlgebra::Vec3D(10.0, 10.0, 10.0));
     _cellList->setNumberOfCells(2);
@@ -251,20 +252,6 @@ TEST_F(TestCellList, checkCoulombCutoff)
     );
 }
 
-/* ---------- activate / deactivate / isActive ---------- */
-
-TEST_F(TestCellList, activateDeactivateToggles_isActive)
-{
-    _cellList->activate();
-    EXPECT_TRUE(_cellList->isActive());
-
-    _cellList->deactivate();
-    EXPECT_FALSE(_cellList->isActive());
-
-    _cellList->activate();
-    EXPECT_TRUE(_cellList->isActive());
-}
-
 TEST_F(TestCellList, resizeCellsRejectsOverflow)
 {
     _cellList->setNumberOfCells(std::numeric_limits<int>::max());
@@ -289,11 +276,11 @@ TEST_F(TestCellList, resizeCellsRejectsZeroDimensions)
 
 /* ---------- clone() copies the configured cell counts ---------- */
 
-TEST_F(TestCellList, clone_preservesNumberOfCellsAndNeighbourCells)
+TEST_F(TestCellList, clonePreservesNumberOfCellsAndNeighbourCells)
 {
     _cellList->setNumberOfCells(4);
     _cellList->setNumberOfNeighbourCells(2);
-    _cellList->activate();
+    settings::Settings::activateCellList();
 
     const auto cloned = _cellList->clone();
 
@@ -303,7 +290,6 @@ TEST_F(TestCellList, clone_preservesNumberOfCellsAndNeighbourCells)
         cloned->getNumberOfNeighbourCells(),
         _cellList->getNumberOfNeighbourCells()
     );
-    EXPECT_EQ(cloned->isActive(), _cellList->isActive());
 }
 
 /**
@@ -319,7 +305,7 @@ TEST_F(TestCellList, updateCellList)
     _cellList->resizeCells();
 
     EXPECT_NO_THROW(_cellList->updateCellList(*_simulationBox));
-    _cellList->activate();
+    settings::Settings::activateCellList();
 
     auto molecule = simulationBox::Molecule();
     molecule.setNumberOfAtoms(2);

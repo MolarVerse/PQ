@@ -30,7 +30,6 @@
 #include "timingsSettings.hpp"   // for TimingsSettings
 
 using namespace input;
-using namespace engine;
 using namespace customException;
 using namespace settings;
 using namespace utilities;
@@ -44,7 +43,7 @@ using namespace utilities;
  *
  * @param engine
  */
-TimingsInputParser::TimingsInputParser(Engine &engine) : InputFileParser(engine)
+TimingsInputParser::TimingsInputParser()
 {
     addKeyword(
         std::string("timestep"),
@@ -99,5 +98,5 @@ void TimingsInputParser::parseNumberOfSteps(
     if (numberOfSteps < 1)
         throw InputFileException("Number of steps must be greater than zero");
 
-    TimingsSettings::setNumberOfSteps(size_t(numberOfSteps));
+    TimingsSettings::setNumberOfSteps(static_cast<size_t>(numberOfSteps));
 }

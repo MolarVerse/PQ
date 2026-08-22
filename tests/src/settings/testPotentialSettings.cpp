@@ -29,7 +29,7 @@
  * @brief tests string function of enum nonCoulombType
  *
  */
-TEST(TestPotentialSettings, string_nonCoulombType)
+TEST(TestPotentialSettings, stringNonCoulombType)
 {
     EXPECT_EQ(settings::string(settings::NonCoulombType::LJ), "lj");
     EXPECT_EQ(settings::string(settings::NonCoulombType::LJ_9_12), "lj_9_12");
@@ -42,7 +42,7 @@ TEST(TestPotentialSettings, string_nonCoulombType)
 /**
  * @brief tests string conversion of Coulomb long-range types
  */
-TEST(TestPotentialSettings, string_coulombLongRangeType)
+TEST(TestPotentialSettings, stringCoulombLongRangeType)
 {
     using enum settings::CoulombLongRangeType;
 

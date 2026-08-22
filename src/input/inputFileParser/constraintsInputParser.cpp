@@ -25,11 +25,11 @@
 #include <cstddef>       // for size_t
 #include <format>        // for format
 #include <string_view>   // for string_view
+#include <utility>
 
 #include "constraintSettings.hpp"   // for ConstraintSettings
 #include "constraints.hpp"          // for Constraints
 #include "constraints.hpp"
-#include "engine.hpp"       // for Engine
 #include "exceptions.hpp"   // for InputFileException
 #include "parserUtils.hpp"
 #include "references.hpp"         // for ReferencesOutput
@@ -37,7 +37,6 @@
 #include "stringUtilities.hpp"    // for stringToFiniteDouble, stringToInt
 
 using namespace input;
-using namespace engine;
 using namespace settings;
 using namespace references;
 using namespace customException;
@@ -55,10 +54,9 @@ using namespace customException;
  * @param constraints pointer to the constraints object
  */
 ConstraintsInputParser::ConstraintsInputParser(
-    Engine                                   &engine,
     std::shared_ptr<constraints::Constraints> constraints
 )
-    : InputFileParser(engine), _constraints(constraints)
+    : _constraints(std::move(constraints))
 {
     addKeyword(
         std::string("shake"),
@@ -201,7 +199,7 @@ void ConstraintsInputParser::parseShakeIteration(
     if (iteration <= 0)
         throw InputFileException("Maximum shake iterations must be positive");
 
-    ConstraintSettings::setShakeMaxIter(size_t(iteration));
+    ConstraintSettings::setShakeMaxIter(static_cast<size_t>(iteration));
 }
 
 /**
@@ -249,7 +247,7 @@ void ConstraintsInputParser::parseRattleIteration(
     if (iteration <= 0)
         throw InputFileException("Maximum rattle iterations must be positive");
 
-    ConstraintSettings::setRattleMaxIter(size_t(iteration));
+    ConstraintSettings::setRattleMaxIter(static_cast<size_t>(iteration));
 }
 
 /**
@@ -297,7 +295,7 @@ void ConstraintsInputParser::parseMShakeIteration(
     if (iteration <= 0)
         throw InputFileException("Maximum MShake iterations must be positive");
 
-    ConstraintSettings::setMShakeMaxIter(size_t(iteration));
+    ConstraintSettings::setMShakeMaxIter(static_cast<size_t>(iteration));
 }
 
 /**

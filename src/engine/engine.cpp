@@ -61,12 +61,6 @@ Engine::Engine()
 }
 
 /**
- * @brief Adds a timings section to the timingsSection vector.
- *
- */
-void Engine::addTimer(const Timer &timings) { _timer.addTimer(timings); }
-
-/**
  * @brief Calculate total simulation time.
  *
  * @return double
@@ -123,14 +117,6 @@ bool Engine::isGuffActivated() const
 {
     return !_forceField->isNonCoulombicActivated();
 }
-
-/**
- * @brief checks if the cell list is activated
- *
- * @return true
- * @return false
- */
-bool Engine::isCellListActivated() const { return _cellList->isActive(); }
 
 /**
  * @brief checks if any constraints are activated

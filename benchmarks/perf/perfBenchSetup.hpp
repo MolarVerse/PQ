@@ -43,7 +43,7 @@
 namespace potential
 {
     class NonCoulombPair;   // forward declaration
-}
+}   // namespace potential
 
 namespace benchSetup
 {
@@ -93,7 +93,7 @@ namespace benchSetup
         {
             auto atom = std::make_shared<simulationBox::Atom>();
 
-            const double d = static_cast<double>(i);
+            const auto d = static_cast<double>(i);
             // Quadratic y-term keeps atoms non-collinear so the bend-force
             // and dihedral kernels exercise their hot path (sin(alpha) != 0).
             const linearAlgebra::Vec3D pos{

@@ -25,7 +25,6 @@
 #include <format>      // for format
 
 #include "constants/conversionFactors.hpp"
-#include "engine.hpp"            // for Engine
 #include "exceptions.hpp"        // for InputFileException
 #include "hessianSettings.hpp"   // for HessianSettings
 #include "inputFileReader.hpp"
@@ -76,17 +75,25 @@ void InputFileReader::validateTimings() const
         (jobType == MM_HESSIAN && HessianSettings::optimizeBeforeHessian());
 
     if (requiresNumberOfSteps && !getKeywordSet("nstep"))
-        throw UserInputException(std::format(
-            "Job type {} selected. Please set nstep in the input file.",
-            string(jobType)
-        ));
+    {
+        throw UserInputException(
+            std::format(
+                "Job type {} selected. Please set nstep in the input file.",
+                string(jobType)
+            )
+        );
+    }
 
     if (Settings::isMDJobType() && !getKeywordSet("timestep"))
-        throw UserInputException(std::format(
-            "Molecular Dynamics job type {} selected. Please set the "
-            "time step in the input file.",
-            string(jobType)
-        ));
+    {
+        throw UserInputException(
+            std::format(
+                "Molecular Dynamics job type {} selected. Please set the "
+                "time step in the input file.",
+                string(jobType)
+            )
+        );
+    }
 }
 
 /**
@@ -136,10 +143,12 @@ void InputFileReader::validateQM() const
 
         if (QMSettings::getSlakosType() == SlakosType::CUSTOM &&
             !getKeywordSet("slakos_path"))
+        {
             throw InputFileException(
                 "Custom Slater-Koster parameters require the "
                 "\"slakos_path\" keyword"
             );
+        }
 
         auto useThirdOrder = QMSettings::useThirdOrderDftb();
 
@@ -148,18 +157,22 @@ void InputFileReader::validateQM() const
             useThirdOrder = true;
 
         if (!useThirdOrder && getKeywordSet("hubbard_derivs"))
+        {
             throw InputFileException(
                 "You have set custom Hubbard derivatives but disabled 3rd "
                 "order DFTB. This setup is invalid."
             );
+        }
     }
 
     if (qmMethod == QMMethod::FENNOL && !getKeywordSet("fennol_model_path"))
+    {
         throw InputFileException(
             "The FeNNol QM runner has been selected but the "
             "\"fennol_model_path\" keyword has not been set. This setup is "
             "invalid."
         );
+    }
 
     if (qmMethod != QMMethod::MACE)
         return;
@@ -170,25 +183,34 @@ void InputFileReader::validateQM() const
 
     if (modelType != MaceModelType::MACE_MP && model != MaceModel::SMALL &&
         model != MaceModel::MEDIUM && model != MaceModel::LARGE)
-        throw InputFileException(std::format(
-            "The '{}' model size is only compatible with the '{}' model type.",
-            string(model),
-            string(MaceModelType::MACE_MP)
-        ));
+    {
+        throw InputFileException(
+            std::format(
+                "The '{}' model size is only compatible with the '{}' model "
+                "type.",
+                string(model),
+                string(MaceModelType::MACE_MP)
+            )
+        );
+    }
 
     if (model == MaceModel::CUSTOM && !modelPathSet)
+    {
         throw InputFileException(
             "You have requested a custom MACE model but haven't provided a "
             "MACE model path."
             "This setup is invalid."
         );
+    }
 
     if (model != MaceModel::CUSTOM && modelPathSet)
+    {
         throw InputFileException(
             "You have set a custom MACE model path without requesting a custom "
             "mace model size."
             "This setup is invalid."
         );
+    }
 }
 
 /**
@@ -207,17 +229,26 @@ void InputFileReader::validateThermostat() const
     if (thermostatType != ThermostatType::NONE)
     {
         if (!targetTempDefined && !endTempDefined)
-            throw InputFileException(std::format(
-                "Target or end temperature not set for {} thermostat",
-                string(thermostatType)
-            ));
+        {
+            throw InputFileException(
+                std::format(
+                    "Target or end temperature not set for {} thermostat",
+                    string(thermostatType)
+                )
+            );
+        }
 
         if (targetTempDefined && endTempDefined)
-            throw InputFileException(std::format(
-                "Both target and end temperature set for {} thermostat. They "
-                "are mutually exclusive as they are treated as synonyms",
-                string(thermostatType)
-            ));
+        {
+            throw InputFileException(
+                std::format(
+                    "Both target and end temperature set for {} thermostat. "
+                    "They are mutually exclusive as they are treated as "
+                    "synonyms",
+                    string(thermostatType)
+                )
+            );
+        }
     }
 
     if (SimulationBoxSettings::getInitializeVelocities() !=
@@ -245,20 +276,26 @@ void InputFileReader::validateThermostat() const
         auto maxTemperature = 0.0;
 
         if (targetTempDefined)
+        {
             maxTemperature = std::max(
                 maxTemperature,
                 ThermostatSettings::getTargetTemperature()
             );
+        }
         if (startTempDefined)
+        {
             maxTemperature = std::max(
                 maxTemperature,
                 ThermostatSettings::getStartTemperature()
             );
+        }
         if (endTempDefined)
+        {
             maxTemperature = std::max(
                 maxTemperature,
                 ThermostatSettings::getEndTemperature()
             );
+        }
 
         const auto unitConversion = constants::M2_TO_ANGSTROM2 *
                                     constants::KG_TO_GRAM / constants::FS_TO_S;
@@ -269,10 +306,12 @@ void InputFileReader::validateThermostat() const
                                   TimingsSettings::getTimeStep();
 
         if (!std::isfinite(sigmaSquared))
+        {
             throw InputFileException(
                 "Langevin thermostat parameters produce a non-finite "
                 "random-force scale"
             );
+        }
     }
 
     if (thermostatType == ThermostatType::NOSE_HOOVER)
@@ -302,24 +341,31 @@ void InputFileReader::validateThermostat() const
     const auto rampSteps  = ThermostatSettings::getTemperatureRampSteps();
 
     if (rampSteps > totalSteps)
-        throw InputFileException(std::format(
-            "Number of total simulation steps {} is smaller than the "
-            "number of temperature ramping steps {}",
-            totalSteps,
-            rampSteps
-        ));
+    {
+        throw InputFileException(
+            std::format(
+                "Number of total simulation steps {} is smaller than the "
+                "number of temperature ramping steps {}",
+                totalSteps,
+                rampSteps
+            )
+        );
+    }
 
     const auto effectiveRampSteps = rampSteps == 0 ? totalSteps : rampSteps;
-    const auto frequency =
-        ThermostatSettings::getTemperatureRampFrequency();
+    const auto frequency = ThermostatSettings::getTemperatureRampFrequency();
 
     if (frequency > effectiveRampSteps)
-        throw InputFileException(std::format(
-            "Temperature ramp frequency {} is larger than the number of "
-            "ramping steps {}",
-            frequency,
-            effectiveRampSteps
-        ));
+    {
+        throw InputFileException(
+            std::format(
+                "Temperature ramp frequency {} is larger than the number of "
+                "ramping steps {}",
+                frequency,
+                effectiveRampSteps
+            )
+        );
+    }
 }
 
 /**
@@ -335,10 +381,14 @@ void InputFileReader::validateManostat() const
         return;
 
     if (!getKeywordSet("pressure"))
-        throw InputFileException(std::format(
-            "Pressure not set for {} manostat",
-            string(manostatType)
-        ));
+    {
+        throw InputFileException(
+            std::format(
+                "Pressure not set for {} manostat",
+                string(manostatType)
+            )
+        );
+    }
 
     const auto relaxationTime =
         ManostatSettings::getTauManostat() * constants::PS_TO_FS;
@@ -357,7 +407,7 @@ void InputFileReader::validateManostat() const
  */
 void InputFileReader::validateCellList() const
 {
-    if (!_engine.isCellListActivated())
+    if (!Settings::isCellListActivated())
         return;
 
     if (Settings::isQMOnlyActivated())
@@ -386,11 +436,13 @@ void InputFileReader::validateReactionFieldCoulomb() const
         PotentialSettings::getCoulombLongRangeType();
 
     if (longRangeCorrection == REACTION_FIELD && !getKeywordSet("rf_epsilon"))
+    {
         throw InputFileException(
             "Missing required keyword \"rf_epsilon\" in input file: it must "
             "be set when the Coulomb long-range correction is set to "
             "\"reaction-field\"."
         );
+    }
 }
 
 /**

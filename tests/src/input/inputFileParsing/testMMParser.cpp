@@ -45,11 +45,7 @@ using namespace input;
  */
 TEST_F(TestInputFileReader, testParseForceField)
 {
-    MMInputParser parser(
-        *_engine,
-        _engine->getForceField(),
-        _engine->getPotential()
-    );
+    MMInputParser parser(_engine->getForceField(), _engine->getPotential());
     std::vector<std::string> lineElements = {"force-field", "=", "on"};
     parser.parseForceFieldType(lineElements, 0);
     EXPECT_TRUE(settings::ForceFieldSettings::isActive());
@@ -83,11 +79,7 @@ TEST_F(TestInputFileReader, testParseForceField)
  */
 TEST_F(TestInputFileReader, testParseNonCoulombType)
 {
-    MMInputParser parser(
-        *_engine,
-        _engine->getForceField(),
-        _engine->getPotential()
-    );
+    MMInputParser parser(_engine->getForceField(), _engine->getPotential());
     std::vector<std::string> lineElements = {"noncoulomb", "=", "guff"};
     parser.parseNonCoulombType(lineElements, 0);
     EXPECT_EQ(

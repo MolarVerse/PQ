@@ -36,8 +36,9 @@
 #include "exceptions.hpp"                    // for InputFileException
 #include "executablePath.hpp"                // for executablePath
 #include "fileSettings.hpp"                  // for FileSettings
-#include "physicalData.hpp"                  // for PhysicalData
-#include "qmSettings.hpp"                    // for QMSettings
+#include "globalTimer.hpp"
+#include "physicalData.hpp"   // for PhysicalData
+#include "qmSettings.hpp"     // for QMSettings
 #include "settings.hpp"
 #include "simulationBox.hpp"   // for SimulationBox
 
@@ -74,21 +75,23 @@ void ExternalQMRunner::run(
 )
 {
     if (per != XYZ && per != NON_PERIODIC)
+    {
         throw QMRunnerException(
             "External QM runners only available for non- and 3D-periodic "
             "calculations."
         );
+    }
 
     _periodicity = per;
 
     {
-        auto _ = scoped("Write Coordinates");
+        auto _ = scopedTimer(TimerId::QMEngine, "Write Coordinates");
         writeCoordsFile(simBox);
     }
 
     if (Settings::isHybridJobtype())
     {
-        auto _ = scoped("Write Pointcharges");
+        auto _ = scopedTimer(TimerId::QMEngine, "Write Pointcharges");
         writePointChargeFile(simBox);
     }
 
@@ -103,25 +106,25 @@ void ExternalQMRunner::run(
                                { throwAfterTimeout(stopToken); }};
 
     {
-        auto _ = scoped("Execute External QM Runner");
+        auto _ = scopedTimer(TimerId::QMEngine, "Execute External QM Runner");
         execute(simBox);
     }
 
     timeoutThread.request_stop();
 
     {
-        auto _ = scoped("Read Forces");
+        auto _ = scopedTimer(TimerId::QMEngine, "Read Forces");
         readForceFile(simBox, physicalData);
     }
 
     {
-        auto _ = scoped("Read Charges");
+        auto _ = scopedTimer(TimerId::QMEngine, "Read Charges");
         readChargeFile(simBox);
     }
 
     if (per != NON_PERIODIC)
     {
-        auto _ = scoped("Read Stress Tensor");
+        auto _ = scopedTimer(TimerId::QMEngine, "Read Stress Tensor");
         readStressTensor(simBox.getBox(), physicalData);
     }
 }
@@ -179,6 +182,7 @@ void ExternalQMRunner::readForceFile(
     std::ifstream forceFile(forceFileName);
 
     if (!forceFile.is_open())
+    {
         throw QMRunnerException(
             std::format(
                 "Cannot open {} force file \"{}\"",
@@ -186,8 +190,10 @@ void ExternalQMRunner::readForceFile(
                 forceFileName
             )
         );
+    }
 
     if (forceFile.peek() == std::ifstream::traits_type::eof())
+    {
         throw QMRunnerException(
             std::format(
                 "Empty {} force file \"{}\"",
@@ -195,10 +201,12 @@ void ExternalQMRunner::readForceFile(
                 forceFileName
             )
         );
+    }
 
     double energy = 0.0;
 
     if (!(forceFile >> energy))
+    {
         throw QMRunnerException(
             std::format(
                 "Cannot read QM energy from {} force file \"{}\"",
@@ -206,8 +214,10 @@ void ExternalQMRunner::readForceFile(
                 forceFileName
             )
         );
+    }
 
     if (!std::isfinite(energy))
+    {
         throw QMRunnerException(
             std::format(
                 "Invalid QM energy (NaN/Inf) in {} force file \"{}\"",
@@ -215,6 +225,7 @@ void ExternalQMRunner::readForceFile(
                 forceFileName
             )
         );
+    }
 
     physicalData.setQMEnergy(energy * HARTREE_TO_KCAL_PER_MOL);
 
@@ -223,6 +234,7 @@ void ExternalQMRunner::readForceFile(
         auto grad = linearAlgebra::Vec3D();
 
         if (!(forceFile >> grad[0] >> grad[1] >> grad[2]))
+        {
             throw QMRunnerException(
                 std::format(
                     "Incomplete {} force file \"{}\"",
@@ -230,9 +242,12 @@ void ExternalQMRunner::readForceFile(
                     forceFileName
                 )
             );
+        }
 
         for (size_t i = 0; i < 3; ++i)
+        {
             if (!std::isfinite(grad[i]))
+            {
                 throw QMRunnerException(
                     std::format(
                         "Invalid QM force component (NaN/Inf) in {} force file "
@@ -241,6 +256,8 @@ void ExternalQMRunner::readForceFile(
                         forceFileName
                     )
                 );
+            }
+        }
 
         atom->setForce(-grad * HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM);
     };
@@ -269,6 +286,7 @@ void ExternalQMRunner::readChargeFile(SimulationBox &box)
     std::ifstream chargeFile(chargeFileName);
 
     if (!chargeFile.is_open())
+    {
         throw QMRunnerException(
             std::format(
                 "Cannot open {} charge file \"{}\"",
@@ -276,8 +294,10 @@ void ExternalQMRunner::readChargeFile(SimulationBox &box)
                 chargeFileName
             )
         );
+    }
 
     if (chargeFile.peek() == std::ifstream::traits_type::eof())
+    {
         throw QMRunnerException(
             std::format(
                 "Empty {} charge file \"{}\"",
@@ -285,6 +305,7 @@ void ExternalQMRunner::readChargeFile(SimulationBox &box)
                 chargeFileName
             )
         );
+    }
 
     box.resetQMCharges();
 
@@ -293,6 +314,7 @@ void ExternalQMRunner::readChargeFile(SimulationBox &box)
         auto charge = 0.0;
 
         if (!(chargeFile >> charge))
+        {
             throw QMRunnerException(
                 std::format(
                     "Incomplete {} charge file \"{}\"",
@@ -300,7 +322,9 @@ void ExternalQMRunner::readChargeFile(SimulationBox &box)
                     chargeFileName
                 )
             );
+        }
         if (!std::isfinite(charge))
+        {
             throw QMRunnerException(
                 std::format(
                     "Invalid value in {} charge file \"{}\"",
@@ -308,6 +332,7 @@ void ExternalQMRunner::readChargeFile(SimulationBox &box)
                     chargeFileName
                 )
             );
+        }
 
         atom->setQMCharge(charge);
     };

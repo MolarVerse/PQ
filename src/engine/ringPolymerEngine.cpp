@@ -28,13 +28,13 @@
 #include "atom.hpp"                                  // for Atom
 #include "constants/internalConversionFactors.hpp"   // for _RPMD_PREFACTOR_
 #include "engineOutput.hpp"                          // for EngineOutput
-#include "outputFileSettings.hpp"                    // for OutputFileSettings
-#include "physicalData.hpp"                          // for PhysicalData
-#include "ringPolymerSettings.hpp"                   // for RingPolymerSettings
-#include "thermostatSettings.hpp"                    // for ThermostatSettings
-#include "timingsSettings.hpp"                       // for TimingsSettings
+#include "globalTimer.hpp"
+#include "outputFileSettings.hpp"    // for OutputFileSettings
+#include "physicalData.hpp"          // for PhysicalData
+#include "ringPolymerSettings.hpp"   // for RingPolymerSettings
+#include "thermostatSettings.hpp"    // for ThermostatSettings
+#include "timingsSettings.hpp"       // for TimingsSettings
 
-using engine::Engine;
 using engine::RingPolymerEngine;
 
 using namespace settings;
@@ -88,12 +88,12 @@ void RingPolymerEngine::writeOutput()
     // is now included in total simulation time Unfortunately, setup is
     // therefore included in the first looptime output but this is not a big
     // problem - could also be a feature and not a bug
-    _timer.stopSimulationTimer();
-    _timer.startSimulationTimer();
+    timings::GlobalTimer::get().stopAndRestartSimulationTimer();
+    const auto elapsedTime = timings::GlobalTimer::get().calculateElapsedTime();
 
     for (size_t i = 0; i < _ringPolymerBeads.size(); ++i)
     {
-        rpmdData[i].setLoopTime(_timer.calculateLoopTime());
+        rpmdData[i].setLoopTime(elapsedTime);
         averageRPMDData[i].updateAverages(rpmdData[i]);
     }
 
@@ -192,11 +192,12 @@ void RingPolymerEngine::combineBeads()
     {
         for (size_t i = 0; i < bead.getNumberOfAtoms(); ++i)
         {
-            auto &atom = bead.getAtom(i);
+            auto      &atom   = bead.getAtom(i);
+            const auto nBeads = static_cast<double>(numberOfBeads);
 
-            const auto pos   = atom.getPosition() / double(numberOfBeads);
-            const auto vel   = atom.getVelocity() / double(numberOfBeads);
-            const auto force = atom.getForce() / double(numberOfBeads);
+            const auto pos   = atom.getPosition() / nBeads;
+            const auto vel   = atom.getVelocity() / nBeads;
+            const auto force = atom.getForce() / nBeads;
 
             _simulationBox->getAtom(i).addPosition(pos);
             _simulationBox->getAtom(i).addVelocity(vel);

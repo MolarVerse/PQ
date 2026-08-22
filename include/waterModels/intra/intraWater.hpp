@@ -24,8 +24,6 @@
 
 #define _INTRA_WATER_HPP_
 
-#include "timer.hpp"
-
 namespace simulationBox
 {
     class SimulationBox;   // forward declaration
@@ -38,14 +36,14 @@ namespace physicalData
 
 namespace waterModel
 {
-    class IntraWater : public timings::Timer
+    class IntraWater
     {
        public:
         virtual ~IntraWater() = default;
 
         virtual void calculate(
-            simulationBox::SimulationBox &,
-            physicalData::PhysicalData &
+            simulationBox::SimulationBox& /*simBox*/,
+            physicalData::PhysicalData& /*physData*/
         )
         {
         }

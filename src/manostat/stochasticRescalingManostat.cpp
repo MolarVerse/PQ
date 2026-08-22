@@ -28,6 +28,7 @@
 #include "constants/conversionFactors.hpp"   // for _BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_
 #include "constants/internalConversionFactors.hpp"   // for _PRESSURE_FACTOR_
 #include "exceptions.hpp"                            // for ExceptionType
+#include "globalTimer.hpp"
 #include "manostatSettings.hpp"     // for ManostatType, Isotropy
 #include "physicalData.hpp"         // for PhysicalData
 #include "simulationBox.hpp"        // for SimulationBox
@@ -133,7 +134,7 @@ void StochasticRescalingManostat::applyManostat(
     physicalData::PhysicalData   &physicalData
 )
 {
-    auto _ = scoped("Stochastic Rescaling");
+    auto _ = scopedTimer(TimerId::Thermostat, "Stochastic Rescaling");
 
     calculatePressure(simBox, physicalData);
 

@@ -207,7 +207,7 @@ TEST_F(TestNonCoulombPotentialFF, fillDiagOfNonCoulPairsMatrix)
  */
 TEST_F(
     TestNonCoulombPotentialFF,
-    findNonCoulombicPairByInternalTypes_findOneType
+    findNonCoulombicPairByInternalTypesFindOneType
 )
 {
     _nonCoulombPotential->addNonCoulombicPair(
@@ -254,7 +254,7 @@ TEST_F(
  */
 TEST_F(
     TestNonCoulombPotentialFF,
-    findNonCoulombicPairByInternalTypes_findNothing
+    findNonCoulombicPairByInternalTypesFindNothing
 )
 {
     _nonCoulombPotential->addNonCoulombicPair(
@@ -300,7 +300,7 @@ TEST_F(
  */
 TEST_F(
     TestNonCoulombPotentialFF,
-    findNonCoulombicPairByInternalTypes_findMultipleTypes
+    findNonCoulombicPairByInternalTypesFindMultipleTypes
 )
 {
     _nonCoulombPotential->addNonCoulombicPair(
@@ -360,7 +360,7 @@ TEST_F(
  */
 TEST_F(
     TestNonCoulombPotentialFF,
-    fillOffDiagonalElementsOfNonCoulombicPairsMatrix_ElementNotFound
+    fillOffDiagonalElementsOfNonCoulombicPairsMatrixElementNotFound
 )
 {
     _nonCoulombPotential->addNonCoulombicPair(
@@ -401,7 +401,7 @@ TEST_F(
  */
 TEST_F(
     TestNonCoulombPotentialFF,
-    fillOffDiagonalElementsOfNonCoulombicPairsMatrix_foundOnlyPairWithLowerIndexFirst
+    fillOffDiagonalElementsOfNonCoulombicPairsMatrixFoundOnlyPairWithLowerIndexFirst
 )
 {
     _nonCoulombPotential->addNonCoulombicPair(
@@ -457,7 +457,7 @@ TEST_F(
  */
 TEST_F(
     TestNonCoulombPotentialFF,
-    fillOffDiagonalElementsOfNonCoulombicPairsMatrix_foundOnlyPairWithHigherIndexFirst
+    fillOffDiagonalElementsOfNonCoulombicPairsMatrixFoundOnlyPairWithHigherIndexFirst
 )
 {
     _nonCoulombPotential->addNonCoulombicPair(
@@ -513,7 +513,7 @@ TEST_F(
  */
 TEST_F(
     TestNonCoulombPotentialFF,
-    fillOffDiagonalElementsOfNonCoulombicPairsMatrix_foundBothPairs_withSameParams
+    fillOffDiagonalElementsOfNonCoulombicPairsMatrixFoundBothPairsWithSameParams
 )
 {
     _nonCoulombPotential->addNonCoulombicPair(
@@ -577,7 +577,7 @@ TEST_F(
  */
 TEST_F(
     TestNonCoulombPotentialFF,
-    fillOffDiagonalElementsOfNonCoulombicPairsMatrix_foundBothPairs_withDifferentParams
+    fillOffDiagonalElementsOfNonCoulombicPairsMatrixFoundBothPairsWithDifferentParams
 )
 {
     _nonCoulombPotential->addNonCoulombicPair(

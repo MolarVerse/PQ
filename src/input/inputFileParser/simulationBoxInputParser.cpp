@@ -24,16 +24,16 @@
 
 #include <cstddef>   // for size_t
 #include <format>    // for format
+#include <utility>
 
-#include "engine.hpp"       // for Engine
 #include "exceptions.hpp"   // for InputFileException, customException
 #include "parserUtils.hpp"
-#include "potentialSettings.hpp"       // for PotentialSettings
+#include "potentialSettings.hpp"   // for PotentialSettings
+#include "simulationBox.hpp"
 #include "simulationBoxSettings.hpp"   // for setDensitySet
 #include "stringUtilities.hpp"         // for toLowerCopy
 
 using namespace input;
-using namespace engine;
 using namespace customException;
 using namespace settings;
 using namespace utilities;
@@ -47,9 +47,12 @@ using namespace utilities;
  * <double>
  *
  * @param engine
+ * @param simulationBox
  */
-SimulationBoxInputParser::SimulationBoxInputParser(Engine &engine)
-    : InputFileParser(engine)
+SimulationBoxInputParser::SimulationBoxInputParser(
+    std::shared_ptr<simulationBox::SimulationBox> simulationBox
+)
+    : _simulationBox(std::move(simulationBox))
 {
     addKeyword(
         std::string("rcoulomb"),
@@ -92,12 +95,14 @@ void SimulationBoxInputParser::parseCoulombRadius(
     const auto cutOff = stringToFiniteDouble(lineElements[2]);
 
     if (cutOff < 0.0)
+    {
         throw InputFileException(format(
             "Coulomb radius cutoff must be positive - \"{}\" at line {} in "
             "input file",
             lineElements[2],
             lineNumber
         ));
+    }
 
     PotentialSettings::setCoulombRadiusCutOff(cutOff);
 }
@@ -119,12 +124,14 @@ void SimulationBoxInputParser::parseNonCoulombRadius(
     const auto cutOff = stod(lineElements[2]);
 
     if (cutOff < 0.0)
+    {
         throw InputFileException(format(
             "Non-Coulomb radius cutoff must be positive - \"{}\" at line {} in "
             "input file",
             lineElements[2],
             lineNumber
         ));
+    }
 
     PotentialSettings::setNonCoulombRadiusCutOff(cutOff);
 }
@@ -154,7 +161,7 @@ void SimulationBoxInputParser::parseDensity(
         );
 
     SimulationBoxSettings::setDensitySet(true);
-    _engine.getSimulationBox().setDensity(density);
+    _simulationBox->setDensity(density);
 }
 
 /**
@@ -189,6 +196,7 @@ void SimulationBoxInputParser::parseInitializeVelocities(
         SimulationBoxSettings::setInitializeVelocities(FORCE);
 
     else
+    {
         throw InputFileException(
             std::format(
                 "Invalid value for initialize velocities - \"{}\" at line {} "
@@ -199,4 +207,5 @@ void SimulationBoxInputParser::parseInitializeVelocities(
                 lineNumber
             )
         );
+    }
 }

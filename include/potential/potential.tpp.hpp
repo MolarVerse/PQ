@@ -361,8 +361,8 @@ namespace potential
 
         if (atom.getQMCharge() && useQMCharges)
             return atom.getQMCharge().value();
-        else
-            return atom.getPartialCharge();
+
+        return atom.getPartialCharge();
     }
 
     /**

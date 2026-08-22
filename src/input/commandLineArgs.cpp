@@ -67,9 +67,9 @@ void CommandLineArgs::parse()
 
         auto formatSet = false;
         auto scopeSet  = false;
-        for (auto index = 3; index < _argc; ++index)
+        for (size_t index = 3; index < static_cast<size_t>(_argc); ++index)
         {
-            const auto &option = _argv[size_t(index)];
+            const auto &option = _argv[index];
 
             if ("--format=json" == option && !formatSet)
             {
@@ -92,10 +92,12 @@ void CommandLineArgs::parse()
                 scopeSet         = true;
             }
             else
+            {
                 throw UserInputException(
                     "Unexpected argument: " + option +
                     ". Use PQ --help for usage."
                 );
+            }
         }
 
         return;
@@ -108,11 +110,15 @@ void CommandLineArgs::parse()
     else if ("--capabilities=json" == argument)
         _action = CommandLineAction::CAPABILITIES;
     else if (argument.starts_with('-'))
+    {
         throw UserInputException(
             "Unknown option: " + argument + ". Use PQ --help for usage."
         );
+    }
     else
+    {
         _inputFileName = argument;
+    }
 
     if (_argc > 2)
         throw UserInputException(

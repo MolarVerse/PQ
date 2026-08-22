@@ -43,7 +43,7 @@ using settings::InitVelocities;
 TEST_F(TestInputFileReader, parseDensity)
 {
     EXPECT_EQ(settings::SimulationBoxSettings::getDensitySet(), false);
-    SimulationBoxInputParser       parser(*_engine);
+    SimulationBoxInputParser       parser(_engine->getSharedSimulationBox());
     const std::vector<std::string> lineElements = {"density", "=", "1.0"};
     parser.parseDensity(lineElements, 0);
     EXPECT_EQ(_engine->getSimulationBox().getDensity(), 1.0);
@@ -72,7 +72,7 @@ TEST_F(TestInputFileReader, parseDensity)
  */
 TEST_F(TestInputFileReader, parseCoulombRadius)
 {
-    SimulationBoxInputParser       parser(*_engine);
+    SimulationBoxInputParser       parser(_engine->getSharedSimulationBox());
     const std::vector<std::string> lineElements = {"rcoulomb", "=", "1.0"};
     parser.parseCoulombRadius(lineElements, 0);
     EXPECT_EQ(settings::PotentialSettings::getCoulombRadiusCutOff(), 1.0);
@@ -88,7 +88,7 @@ TEST_F(TestInputFileReader, parseCoulombRadius)
 
 TEST_F(TestInputFileReader, parseInitVelocities)
 {
-    SimulationBoxInputParser       parser(*_engine);
+    SimulationBoxInputParser       parser(_engine->getSharedSimulationBox());
     const std::vector<std::string> lineElements = {
         "init_velocities",
         "=",

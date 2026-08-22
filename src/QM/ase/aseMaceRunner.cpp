@@ -67,6 +67,7 @@ AseMaceRunner::AseMaceRunner(
     {
         ::PyErr_Print();
         if (enableCueq)
+        {
             std::cerr << std::format(
                 "\nPQ: mace_mode = fast uses cuequivariance-accelerated MACE "
                 "kernels. These need 'cuequivariance', 'cuequivariance-torch' "
@@ -78,6 +79,7 @@ AseMaceRunner::AseMaceRunner(
                 "use fast mode, or set mace_mode = accurate for the standard "
                 "e3nn evaluation.\n"
             );
+        }
         throw;
     }
 }

@@ -31,7 +31,7 @@
 namespace opt
 {
     class Optimizer;   // forward declaration
-}
+}   // namespace opt
 
 namespace output
 {

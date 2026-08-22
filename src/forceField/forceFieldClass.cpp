@@ -61,10 +61,10 @@ const BondType &ForceField::findBondTypeById(const BondId id) const
 
     if (bondType != _bondTypes.end())
         return *bondType;
-    else
-        throw TopologyException(
-            std::format("Bond type with id {} not found.", id.toString())
-        );
+
+    throw TopologyException(
+        std::format("Bond type with id {} not found.", id.toString())
+    );
 }
 
 /**
@@ -84,10 +84,10 @@ const AngleType &ForceField::findAngleTypeById(const AngleId id) const
 
     if (angleType != _angleTypes.end())
         return *angleType;
-    else
-        throw TopologyException(
-            std::format("Angle type with id {} not found.", id.toString())
-        );
+
+    throw TopologyException(
+        std::format("Angle type with id {} not found.", id.toString())
+    );
 }
 
 /**
@@ -108,10 +108,10 @@ const DihedralType &ForceField::findDihedralTypeById(const DihedralId id) const
 
     if (dihedralType != dihedrals.end())
         return *dihedralType;
-    else
-        throw TopologyException(
-            std::format("Dihedral type with id {} not found.", id.toString())
-        );
+
+    throw TopologyException(
+        std::format("Dihedral type with id {} not found.", id.toString())
+    );
 }
 
 /**
@@ -133,13 +133,13 @@ const DihedralType &ForceField::findImproperTypeById(const DihedralId id) const
 
     if (dihedralType != impropers.end())
         return *dihedralType;
-    else
-        throw TopologyException(
-            std::format(
-                "Improper dihedral type with id {} not found.",
-                id.toString()
-            )
-        );
+
+    throw TopologyException(
+        std::format(
+            "Improper dihedral type with id {} not found.",
+            id.toString()
+        )
+    );
 }
 
 /**
@@ -161,10 +161,10 @@ const JCouplingType &ForceField::findJCouplingTypeById(const size_t id) const
 
     if (jCouplingType != _jCouplingTypes.end())
         return *jCouplingType;
-    else
-        throw TopologyException(
-            std::format("J-coupling type with id {} not found.", id)
-        );
+
+    throw TopologyException(
+        std::format("J-coupling type with id {} not found.", id)
+    );
 }
 
 /**

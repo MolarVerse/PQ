@@ -73,10 +73,13 @@ void OptOutput::write(const size_t step, const Optimizer& optimizer)
             isAbsEnergyEnabled = true;
         }
         else if (convStrategy == ABSOLUTE)
+        {
             isAbsEnergyEnabled = true;
-
+        }
         else if (convStrategy == RELATIVE)
+        {
             isRelEnergyEnabled = true;
+        }
     }
 
     const auto isRelEnConv    = conv.isRelEnergyConv();

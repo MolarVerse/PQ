@@ -43,7 +43,7 @@
 namespace potential
 {
     class NonCoulombPair;   // forward declaration
-}
+}   // namespace potential
 
 class TestIntraNonBondedMap : public TestNonCoulombPotentialFF
 {
@@ -52,7 +52,7 @@ class TestIntraNonBondedMap : public TestNonCoulombPotentialFF
 /**
  * @brief Test fixture class for the IntraNonBondedMap class
  */
-TEST_F(TestIntraNonBondedMap, calculateSingleInteraction_AND_calculate)
+TEST_F(TestIntraNonBondedMap, calculateSingleInteractionAndCalculate)
 {
     auto molecule = simulationBox::Molecule(0);
     molecule.setNumberOfAtoms(2);

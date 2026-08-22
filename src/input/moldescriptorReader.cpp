@@ -101,7 +101,7 @@ void MoldescriptorReader::read()
         if (lineElements.empty())
             continue;
 
-        else if (lineElements.size() > 1)
+        if (lineElements.size() > 1)
         {
             auto &simBox = _engine.getSimulationBox();
 
@@ -116,12 +116,14 @@ void MoldescriptorReader::read()
                 processMolecule(lineElements);
         }
         else
+        {
             throw MolDescriptorException(
                 std::format(
                     "Error in moldescriptor file at line {}",
                     _lineNumber
                 )
             );
+        }
     }
 }
 
@@ -152,12 +154,14 @@ void MoldescriptorReader::processMolecule(
 )
 {
     if (lineElements.size() < 3)
+    {
         throw MolDescriptorException(
             std::format(
                 "Not enough arguments in moldescriptor file at line {}",
                 _lineNumber
             )
         );
+    }
 
     auto        &simBox = _engine.getSimulationBox();
     MoleculeType molecule(lineElements[0]);
@@ -193,10 +197,12 @@ void MoldescriptorReader::processMolecule(
     while (atomCount < molecule.getNumberOfAtoms())
     {
         if (_fp.eof())
+        {
             throw MolDescriptorException(
                 "Error reading of moldescriptor stopped before last molecule "
                 "was finished"
             );
+        }
 
         getline(_fp, line);
         line         = removeComments(line, "#");
@@ -207,7 +213,7 @@ void MoldescriptorReader::processMolecule(
         if (lineElements.empty())
             continue;
 
-        else if ((3 == lineElements.size()) || (4 == lineElements.size()))
+        if ((3 == lineElements.size()) || (4 == lineElements.size()))
         {
             molecule.addAtomName(lineElements[0]);
             molecule.addExternalAtomType(stoul(lineElements[1]));
@@ -217,6 +223,7 @@ void MoldescriptorReader::processMolecule(
         }
 
         else
+        {
             throw MolDescriptorException(
                 std::format(
                     "Atom line in moldescriptor file at line {} has to have 3 "
@@ -225,10 +232,12 @@ void MoldescriptorReader::processMolecule(
                     _lineNumber
                 )
             );
+        }
 
         if (_engine.getForceField()->isNonCoulombicActivated())
         {
             if (lineElements.size() != 4)
+            {
                 throw MolDescriptorException(
                     std::format(
                         "Error in moldescriptor file at line {} - force field "
@@ -237,6 +246,7 @@ void MoldescriptorReader::processMolecule(
                         _lineNumber
                     )
                 );
+            }
 
             const auto vdwType = ExtVdwType{stoul(lineElements[3])};
             molecule.addExternalGlobalVDWType(vdwType);

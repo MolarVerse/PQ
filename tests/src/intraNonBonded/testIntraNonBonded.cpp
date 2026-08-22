@@ -47,7 +47,7 @@
 namespace potential
 {
     class NonCoulombPair;   // forward declaration
-}
+}   // namespace potential
 
 class TestIntraNonBonded : public TestNonCoulombPotentialFF
 {

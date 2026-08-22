@@ -29,7 +29,6 @@
 
 #include "cell.hpp"       // for Cell
 #include "defaults.hpp"   // for _NUMBER_OF_CELLS_DEFAULT_, _CELL_LIST_IS_ACT...
-#include "timer.hpp"      // for Timer
 #include "vector3d.hpp"
 
 namespace simulationBox
@@ -42,11 +41,9 @@ namespace simulationBox
      * @brief CellList is a class for cell list
      *
      */
-    class CellList : public timings::Timer
+    class CellList
     {
        private:
-        bool _activated = defaults::CELL_LIST_IS_ACTIVE_DEFAULT;
-
         std::vector<Cell> _cells;
 
         linearAlgebra::Vec3D   _cellSize;
@@ -79,14 +76,6 @@ namespace simulationBox
 
         void resizeCells();
         void addCell(const Cell &cell);
-
-        /*****************************
-         * standard activate methods *
-         *****************************/
-
-        void               activate();
-        void               deactivate();
-        [[nodiscard]] bool isActive() const;
 
         /***************************
          * standard getter methods *

@@ -39,7 +39,7 @@ namespace input
     class OutputInputParser : public InputFileParser
     {
        public:
-        explicit OutputInputParser(engine::Engine &);
+        OutputInputParser();
 
         void parseOverwriteOutput(
             const std::vector<std::string> &,

@@ -86,6 +86,7 @@ void TurbomoleRunner::writePointChargeFile(simulationBox::SimulationBox &box)
         const auto zone = mol.getHybridZone();
 
         if (zone == SMOOTHING || zone == POINT_CHARGE)
+        {
             for (const auto &atom : mol.getAtoms())
             {
                 const auto pos = atom->getPosition() * ANGSTROM_TO_BOHR;
@@ -98,6 +99,7 @@ void TurbomoleRunner::writePointChargeFile(simulationBox::SimulationBox &box)
                 );
                 _usePointCharges = true;
             }
+        }
     }
     pcFile.close();
 
@@ -116,12 +118,14 @@ void TurbomoleRunner::execute(SimulationBox &box)
     const auto scriptFile = resolveScriptPath(QMSettings::getQMScript());
 
     if (!fileExists(scriptFile))
+    {
         throw InputFileException(
             std::format(
                 "Turbomole script file \"{}\" does not exist.",
                 scriptFile
             )
         );
+    }
 
     auto charge         = box.calcActiveMolCharge();
     auto molChangedZone = HybridConfigurator::getMoleculeChangedZone();

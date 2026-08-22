@@ -22,11 +22,12 @@
 
 #include "setup.hpp"
 
-#include "celllistSetup.hpp"                // for setupCellList
-#include "constraintsSetup.hpp"             // for setupConstraints
-#include "engine.hpp"                       // for Engine
-#include "forceFieldSettings.hpp"           // for ForceFieldSettings
-#include "forceFieldSetup.hpp"              // for setupForceField
+#include "celllistSetup.hpp"        // for setupCellList
+#include "constraintsSetup.hpp"     // for setupConstraints
+#include "engine.hpp"               // for Engine
+#include "forceFieldSettings.hpp"   // for ForceFieldSettings
+#include "forceFieldSetup.hpp"      // for setupForceField
+#include "globalTimer.hpp"
 #include "guffDatReader.hpp"                // for readGuffDat, readInput
 #include "hybridSetup.hpp"                  // for setupQMMM
 #include "inputFileReader.hpp"              // for readInputFile
@@ -46,10 +47,10 @@
 #include "settings.hpp"                     // for Settings
 #include "simulationBoxSetup.hpp"           // for setupSimulationBox
 #include "thermostatSetup.hpp"              // for setupThermostat
-#include "timer.hpp"                        // for Timings
 #include "topologyReader.hpp"               // for readTopologyFile
-#include "waterModelSettings.hpp"           // for WaterModelSettings
-#include "waterModelSetup.hpp"              // for setupWaterModel
+#include "velocityVerlet.hpp"
+#include "waterModelSettings.hpp"   // for WaterModelSettings
+#include "waterModelSetup.hpp"      // for setupWaterModel
 
 using namespace engine;
 using namespace input;
@@ -72,9 +73,7 @@ using namespace setup::resetKinetics;
  */
 void setup::setupRequestedJob(const std::string& inputFileName, Engine& engine)
 {
-    auto setupTimer = Timer(TimerId::Setup);
-
-    auto _ = setupTimer.scoped("TotalSetup");
+    auto _ = scopedTimer(TimerId::Setup, "TotalSetup");
 
     startSetup(engine);
 
@@ -89,7 +88,7 @@ void setup::setupRequestedJob(const std::string& inputFileName, Engine& engine)
     // needs setup of engine before reading guff.dat
     readGuffDat(engine);
 
-    endSetup(setupTimer, engine);
+    endSetup(engine);
 }
 
 /**
@@ -107,11 +106,10 @@ void setup::startSetup(engine::Engine& engine)
  *
  * @param engine
  */
-void setup::endSetup(timings::Timer& setupTimer, Engine& engine)
+void setup::endSetup(Engine& engine)
 {
     engine.getStdoutOutput().writeSetupCompleted();
     engine.getLogOutput().writeSetupCompleted();
-    engine.addTimer(setupTimer);
 }
 
 /**
@@ -145,6 +143,22 @@ void setup::setupEngine(Engine& engine)
 
     if (Settings::isMDJobType())
     {
+        switch (Settings::getIntegratorType())
+        {
+            case IntegratorType::VELOCITY_VERLET:
+            {
+                auto& mdEngine = dynamic_cast<MDEngine&>(engine);
+                mdEngine.makeIntegrator(integrator::VelocityVerlet());
+                break;
+            }
+            case IntegratorType::NONE:
+            {
+                throw customException::InputFileException(
+                    "Integrator is not set for MD simulation - please set it "
+                    "in the input file"
+                );
+            }
+        }
         setupRandomNumberGenerator(engine);
         setupResetKinetics(engine);
     }

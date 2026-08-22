@@ -152,7 +152,7 @@ TEST_F(TestSetup, waterModelSetupCoversAllIntermolecularModels)
         WaterInterModel::SPC_MTR
     );
 
-    _mdEngine->getCellList()->activate();
+    settings::Settings::activateCellList();
     setupInterModel<waterModel::TIP3PmTRInterParam>(
         *_mdEngine,
         WaterInterModel::TIP3P_MTR

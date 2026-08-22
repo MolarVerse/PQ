@@ -27,7 +27,6 @@
 #include <cstddef>   // for size_t
 
 #include "thermostatSettings.hpp"
-#include "timer.hpp"   // for Timer
 
 namespace physicalData
 {
@@ -50,7 +49,7 @@ namespace thermostat
      * calculate the temperature
      *
      */
-    class Thermostat : public timings::Timer
+    class Thermostat
     {
        protected:
         double _temperature       = 0.0;
@@ -73,11 +72,15 @@ namespace thermostat
             physicalData::PhysicalData &
         );
 
-        virtual void applyThermostatOnForces(simulationBox::SimulationBox &) {}
+        virtual void applyThermostatOnForces(
+            simulationBox::SimulationBox & /*simBox*/
+        )
+        {
+        }
 
         virtual void applyThermostatHalfStep(
-            simulationBox::SimulationBox &,
-            physicalData::PhysicalData &
+            simulationBox::SimulationBox & /*simBox*/,
+            physicalData::PhysicalData & /*physData*/
         )
         {
         }

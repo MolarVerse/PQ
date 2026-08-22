@@ -64,6 +64,7 @@ void AngleSection::processSection(
 {
     // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
     if (lineElements.size() != 4 && lineElements.size() != 5)
+    {
         throw TopologyException(
             std::format(
                 "Wrong number of arguments in topology file angle section at "
@@ -72,6 +73,7 @@ void AngleSection::processSection(
                 _lineNumber
             )
         );
+    }
 
     auto atom1     = stoul(lineElements[0]);
     auto atom2     = stoul(lineElements[1]);
@@ -85,6 +87,7 @@ void AngleSection::processSection(
             isLinker = true;
 
         else
+        {
             throw TopologyException(
                 std::format(
                     "Fifth entry in topology file in angle section has to be a "
@@ -92,10 +95,12 @@ void AngleSection::processSection(
                     _lineNumber
                 )
             );
+        }
     }
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
     if (atom1 == atom2 || atom1 == atom3 || atom2 == atom3)
+    {
         throw TopologyException(
             std::format(
                 "Topology file angle section at line {} - atoms cannot be the "
@@ -103,6 +108,7 @@ void AngleSection::processSection(
                 _lineNumber
             )
         );
+    }
 
     auto &simBox = engine.getSimulationBox();
 
@@ -136,6 +142,7 @@ std::string AngleSection::keyword() { return "angles"; }
 void AngleSection::endedNormally(const bool endedNormal) const
 {
     if (!endedNormal)
+    {
         throw TopologyException(
             std::format(
                 "Topology file angle section at line {} - no end of section "
@@ -143,4 +150,5 @@ void AngleSection::endedNormally(const bool endedNormal) const
                 _lineNumber
             )
         );
+    }
 }

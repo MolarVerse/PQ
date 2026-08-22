@@ -56,7 +56,8 @@ size_t SteepestDescent::maxHistoryLength() const { return _maxHistoryLength; }
  *
  * @param learningRate
  */
-void SteepestDescent::update(const double learningRate, const size_t)
+void SteepestDescent::
+    update(const double learningRate, const size_t /* totalSteps*/)
 {
     const auto& atoms = _simulationBox->getAtoms();
 

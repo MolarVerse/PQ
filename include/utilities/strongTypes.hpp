@@ -24,6 +24,7 @@
 #define _STRONG_TYPES_HPP_
 
 #include <cstddef>
+#include <format>
 #include <mstd/types.hpp>
 
 template <typename Tag>

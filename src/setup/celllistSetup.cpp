@@ -37,7 +37,7 @@ using namespace potential;
  */
 void setup::setupCellList(Engine &engine)
 {
-    if (engine.isCellListActivated())
+    if (settings::Settings::isCellListActivated())
     {
         engine.getStdoutOutput().writeSetup("Cell List");
         engine.getLogOutput().writeSetup("Cell List");
@@ -68,7 +68,7 @@ void CellListSetup::setup()
     const auto &potential     = _engine.getPotential();
     const auto  nonCoulombPot = potential->getNonCoulombPotSharedPtr();
 
-    if (_engine.isCellListActivated())
+    if (settings::Settings::isCellListActivated())
     {
         const auto &cellList = _engine.getCellList();
         cellList->resizeCells();
@@ -76,7 +76,9 @@ void CellListSetup::setup()
         _engine.makePotential(PotentialCellList());
     }
     else
+    {
         _engine.makePotential(PotentialBruteForce());
+    }
 
     _engine.getPotential()->setNonCoulombPotential(nonCoulombPot);
 }

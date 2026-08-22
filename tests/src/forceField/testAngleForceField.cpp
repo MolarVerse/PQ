@@ -43,7 +43,7 @@
 namespace potential
 {
     class NonCoulombPair;   // forward declaration
-}
+}   // namespace potential
 
 class TestAngleForceField : public TestNonCoulombPotentialFF
 {
@@ -233,9 +233,11 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
     // All per-atom forces must be finite. Without the guard these would
     // be NaN from dividing by sin(pi) == 0 in the cross-product block.
     for (size_t a = 0; a < 3; ++a)
+    {
         for (size_t i = 0; i < 3; ++i)
         {
             EXPECT_FALSE(std::isnan(molecule.getAtomForce(a)[i]));
             EXPECT_FALSE(std::isinf(molecule.getAtomForce(a)[i]));
         }
+    }
 }

@@ -223,13 +223,21 @@ namespace
         );
 
         for (size_t mol1 = 1; mol1 <= 2; ++mol1)
+        {
             for (size_t mol2 = 1; mol2 <= 2; ++mol2)
+            {
                 for (size_t atom1 = 0; atom1 < 2; ++atom1)
+                {
                     for (size_t atom2 = 0; atom2 < 2; ++atom2)
+                    {
                         nonCoulomb->setGuffNonCoulPair(
                             {mol1, mol2, atom1, atom2},
                             pair
                         );
+                    }
+                }
+            }
+        }
 
         return nonCoulomb;
     }
@@ -238,51 +246,51 @@ namespace
     {
        public:
         void calculate(
-            const InterWaterState &,
-            SimulationBox &,
-            PhysicalData &,
-            const std::shared_ptr<potential::CoulombPotential> &,
-            CellList &
+            const InterWaterState & /*state*/,
+            SimulationBox & /*simBox*/,
+            PhysicalData & /*data*/,
+            const std::shared_ptr<potential::CoulombPotential> & /*coulomb*/,
+            CellList & /*cellList*/
         ) final
         {
         }
 
         void calculateCoreToOuterForces(
-            const InterWaterState &,
-            SimulationBox &,
-            PhysicalData &,
-            const std::shared_ptr<potential::CoulombPotential> &,
-            CellList &
+            const InterWaterState & /*state*/,
+            SimulationBox & /*simBox*/,
+            PhysicalData & /*data*/,
+            const std::shared_ptr<potential::CoulombPotential> & /*coulomb*/,
+            CellList & /*cellList*/
         ) final
         {
         }
 
         void calculateLayerToOuterForces(
-            const InterWaterState &,
-            SimulationBox &,
-            PhysicalData &,
-            const std::shared_ptr<potential::CoulombPotential> &,
-            CellList &
+            const InterWaterState & /*state*/,
+            SimulationBox & /*simBox*/,
+            PhysicalData & /*data*/,
+            const std::shared_ptr<potential::CoulombPotential> & /*coulomb*/,
+            CellList & /*cellList*/
         ) final
         {
         }
 
         void calculateOuterToOuterForces(
-            const InterWaterState &,
-            SimulationBox &,
-            PhysicalData &,
-            const std::shared_ptr<potential::CoulombPotential> &,
-            CellList &
+            const InterWaterState & /*state*/,
+            SimulationBox & /*simBox*/,
+            PhysicalData & /*data*/,
+            const std::shared_ptr<potential::CoulombPotential> & /*coulomb*/,
+            CellList & /*cellList*/
         ) final
         {
         }
 
         void calculateHotspotSmoothingMMForces(
-            const InterWaterState &,
-            SimulationBox &,
-            PhysicalData &,
-            const std::shared_ptr<potential::CoulombPotential> &,
-            CellList &
+            const InterWaterState & /*state*/,
+            SimulationBox & /*simBox*/,
+            PhysicalData & /*data*/,
+            const std::shared_ptr<potential::CoulombPotential> & /*coulomb*/,
+            CellList & /*cellList*/
         ) final
         {
         }
@@ -290,7 +298,11 @@ namespace
 
     SimulationBox makeHybridWaterBox()
     {
-        constexpr WaterGeometry geometry{0.96, 0.98, 1.82};
+        constexpr WaterGeometry geometry{
+            .oh1   = 0.96,
+            .oh2   = 0.98,
+            .angle = 1.82
+        };
 
         SimulationBox simBox;
         simBox.setBoxDimensions({15.0, 15.0, 15.0});
@@ -345,11 +357,12 @@ namespace
 
     CellList makeCellList(SimulationBox &simBox)
     {
+        settings::Settings::activateCellList();
+
         CellList cellList;
         cellList.setNumberOfCells(3);
         cellList.resizeCells();
         cellList.setup(simBox);
-        cellList.activate();
         cellList.updateCellList(simBox);
         cellList.assignMoleculeHybridZoneIndices();
         cellList.assignWaterMoleculeIndices(simBox);
@@ -371,17 +384,17 @@ TEST(IntraWater, FlexibleSpcModelsProduceFiniteConservativeForces)
     waterModel::SPCFwIntraWater spcFw;
     expectIntraModelConservesForce(
         spcFw,
-        {spcFw.getEqOHDistance() + 0.04,
-         spcFw.getEqOHDistance() - 0.03,
-         spcFw.getEqHOHAngle() + 0.05}
+        {.oh1   = spcFw.getEqOHDistance() + 0.04,
+         .oh2   = spcFw.getEqOHDistance() - 0.03,
+         .angle = spcFw.getEqHOHAngle() + 0.05}
     );
 
     waterModel::qSPCFwIntraWater qSpcFw;
     expectIntraModelConservesForce(
         qSpcFw,
-        {qSpcFw.getEqOHDistance() + 0.03,
-         qSpcFw.getEqOHDistance() - 0.02,
-         qSpcFw.getEqHOHAngle() - 0.04}
+        {.oh1   = qSpcFw.getEqOHDistance() + 0.03,
+         .oh2   = qSpcFw.getEqOHDistance() - 0.02,
+         .angle = qSpcFw.getEqHOHAngle() - 0.04}
     );
 }
 
@@ -389,13 +402,19 @@ TEST(IntraWater, MtrModelsProduceFiniteConservativeForces)
 {
     waterModel::SPCMTRIntraWater spcMtr;
     HybridSettings::setSmoothingMethod(SmoothingMethod::HOTSPOT);
-    expectIntraModelConservesForce(spcMtr, {1.04, 0.97, 1.88});
+    expectIntraModelConservesForce(
+        spcMtr,
+        {.oh1 = 1.04, .oh2 = 0.97, .angle = 1.88}
+    );
     EXPECT_DOUBLE_EQ(spcMtr.getEqOHDistance(), 1.0);
     EXPECT_DOUBLE_EQ(spcMtr.getEqHHDistance(), 1.632993162);
 
     waterModel::TIP3PMTRIntraWater tip3pMtr;
     HybridSettings::setSmoothingMethod(SmoothingMethod::EXACT);
-    expectIntraModelConservesForce(tip3pMtr, {1.00, 0.93, 1.82});
+    expectIntraModelConservesForce(
+        tip3pMtr,
+        {.oh1 = 1.00, .oh2 = 0.93, .angle = 1.82}
+    );
     EXPECT_DOUBLE_EQ(tip3pMtr.getEqOHDistance(), 0.9572);
     EXPECT_DOUBLE_EQ(tip3pMtr.getEqHHDistance(), 1.5139);
 }
@@ -753,7 +772,7 @@ TEST(PotentialStrategies, HybridRegionsExerciseBruteForceAndCellList)
 
 TEST(SimulationBoxViews, ConstAndMutableWaterViewsFilterCorrectly)
 {
-    constexpr WaterGeometry geometry{0.96, 0.96, 1.82};
+    constexpr WaterGeometry geometry{.oh1 = 0.96, .oh2 = 0.96, .angle = 1.82};
     SimulationBox           simBox;
     simBox.setBoxDimensions({15.0, 15.0, 15.0});
     simBox.setWaterType(kWaterType);

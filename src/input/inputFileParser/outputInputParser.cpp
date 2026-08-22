@@ -30,7 +30,6 @@
 #include "stringUtilities.hpp"   // for toLowerCopy
 
 using namespace input;
-using namespace engine;
 using namespace utilities;
 using namespace customException;
 using namespace settings;
@@ -69,7 +68,7 @@ using namespace settings;
  *
  * @param engine
  */
-OutputInputParser::OutputInputParser(Engine &engine) : InputFileParser(engine)
+OutputInputParser::OutputInputParser()
 {
     addKeyword(
         std::string("output_freq"),
@@ -226,14 +225,18 @@ void OutputInputParser::parseOutputFreq(
 
     const auto outputFrequency = stringToInt(lineElements[2]);
     if (outputFrequency < 0)
+    {
         throw InputFileException(format(
             "Output frequency cannot be negative - \"{}\" at line {} in input "
             "file",
             lineElements[2],
             lineNumber
         ));
+    }
 
-    OutputFileSettings::setOutputFrequency(size_t(outputFrequency));
+    OutputFileSettings::setOutputFrequency(
+        static_cast<size_t>(outputFrequency)
+    );
 }
 
 /**

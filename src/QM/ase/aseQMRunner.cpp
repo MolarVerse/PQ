@@ -31,6 +31,7 @@
 
 #include "box.hpp"         // for simulationBox::Periodicity
 #include "constants.hpp"   // for _DEG_TO_RAD_
+#include "globalTimer.hpp"
 #include "physicalData.hpp"
 #include "qmSettings.hpp"   // for QMSettings
 #include "simulationBox.hpp"
@@ -68,7 +69,8 @@ namespace
 
         try
         {
-            auto positions_array = array_d(ssize_t(nAtoms) * 3, &pos[0]);
+            auto positions_array =
+                array_d(static_cast<ssize_t>(nAtoms) * 3, &pos[0]);
 
             const auto positions_array_reshaped = pybind11::array(
                 pybind11::buffer_info(
@@ -139,7 +141,7 @@ namespace
     [[nodiscard]]
     pybind11::array_t<bool> asePBC(simulationBox::Periodicity periodicity)
     {
-        std::array<bool, 3> pbc_array;
+        std::array<bool, 3> pbc_array{true, true, true};
 
         switch (periodicity)
         {
@@ -151,7 +153,6 @@ namespace
             case XZ: pbc_array = {true, false, true}; break;
             case YZ: pbc_array = {false, true, true}; break;
             case XYZ: pbc_array = {true, true, true}; break;
-            default: pbc_array = {false, false, false}; break;
         }
 
         try
@@ -188,8 +189,10 @@ namespace
 
         try
         {
-            const auto atomicNumbers_ =
-                pybind11::array_t<int>(ssize_t(nAtoms), &atomicNumbersInt[0]);
+            const auto atomicNumbers_ = pybind11::array_t<int>(
+                static_cast<ssize_t>(nAtoms),
+                &atomicNumbersInt[0]
+            );
 
             return atomicNumbers_;
         }
@@ -269,17 +272,17 @@ void AseQMRunner::run(
                                { throwAfterTimeout(stopToken); }};
 
     {
-        auto _ = scoped("Build ASE Atoms");
+        auto _ = scopedTimer(TimerId::QMEngine, "Build ASE Atoms");
         buildAseAtoms(simBox);
     }
 
     {
-        auto _ = scoped("Execute ASE QM");
+        auto _ = scopedTimer(TimerId::QMEngine, "Execute ASE QM");
         execute();
     }
 
     {
-        auto _ = scoped("Collect ASE Data");
+        auto _ = scopedTimer(TimerId::QMEngine, "Collect ASE Data");
         collectData(simBox, physicalData);
     }
 
@@ -348,11 +351,13 @@ void AseQMRunner::collectForces(SimulationBox &simBox) const
         const auto forces = _ase->forces.unchecked<2>();
 
         for (size_t i = 0; i < nAtoms; ++i)
+        {
             simBox.getAtoms()[i]->setForce(
                 {forces(i, 0) * EV_TO_KCAL_PER_MOL,
                  forces(i, 1) * EV_TO_KCAL_PER_MOL,
                  forces(i, 2) * EV_TO_KCAL_PER_MOL}
             );
+        }
     }
     catch (const pybind11::error_already_set &)
     {

@@ -40,7 +40,7 @@ namespace
 
     Convergence makeConv(ConvStrategy strat)
     {
-        return Convergence(
+        return {
             _enableAll,
             _enableAll,
             _enableAll,
@@ -49,7 +49,7 @@ namespace
             _maxThresh,
             _rmsThresh,
             strat
-        );
+        };
     }
 
     Convergence makeConv() { return makeConv(ConvStrategy::RIGOROUS); }

@@ -26,20 +26,16 @@
 #include <format>    // for format
 
 #include "exceptions.hpp"   // for InputFileException, customException
-#include "mdEngine.hpp"     // for Engine
 #include "parserUtils.hpp"
 #include "references.hpp"         // for ReferencesOutput
 #include "referencesOutput.hpp"   // for ReferencesOutput
 #include "settings.hpp"           // for Settings
 #include "stringUtilities.hpp"    // for toLowerCopy
-#include "velocityVerlet.hpp"
 
 using namespace input;
-using namespace engine;
 using namespace customException;
 using namespace settings;
 using namespace utilities;
-using namespace integrator;
 using namespace references;
 
 /**
@@ -51,8 +47,7 @@ using namespace references;
  *
  * @param engine
  */
-IntegratorInputParser::IntegratorInputParser(Engine &engine)
-    : InputFileParser(engine)
+IntegratorInputParser::IntegratorInputParser()
 {
     addKeyword(
         std::string("integrator"),
@@ -88,12 +83,12 @@ void IntegratorInputParser::parseIntegrator(
 
     if (integrator == "v_verlet")
     {
-        auto &mdEngine = dynamic_cast<MDEngine &>(_engine);
-        mdEngine.makeIntegrator(VelocityVerlet());
+        Settings::setIntegratorType(IntegratorType::VELOCITY_VERLET);
         ReferencesOutput::addReferenceFile(VELOCITY_VERLET_FILE);
     }
 
     else
+    {
         throw InputFileException(
             std::format(
                 "Invalid integrator \"{}\" at line {} in input file",
@@ -101,4 +96,5 @@ void IntegratorInputParser::parseIntegrator(
                 lineNumber
             )
         );
+    }
 }

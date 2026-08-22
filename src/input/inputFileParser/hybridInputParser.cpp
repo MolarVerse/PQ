@@ -42,7 +42,6 @@
 #endif
 
 using namespace input;
-using namespace engine;
 using namespace customException;
 using namespace settings;
 using namespace utilities;
@@ -56,7 +55,7 @@ using namespace utilities;
  *
  * @param engine
  */
-HybridInputParser::HybridInputParser(Engine &engine) : InputFileParser(engine)
+HybridInputParser::HybridInputParser()
 {
     addKeyword(
         std::string("inner_region_center"),
@@ -207,6 +206,7 @@ void HybridInputParser::parseUseQMCharges(
         HybridSettings::setUseQMCharges(false);
 
     else
+    {
         throw InputFileException(
             std::format(
                 "Invalid qm_charges \"{}\" in input file\n"
@@ -214,6 +214,7 @@ void HybridInputParser::parseUseQMCharges(
                 lineElements[2]
             )
         );
+    }
 }
 
 /**
@@ -234,6 +235,7 @@ void HybridInputParser::parseCoreRadius(
     const auto coreRadius = stringToFiniteDouble(lineElements[2]);
 
     if (coreRadius < 0.0)
+    {
         throw InputFileException(
             std::format(
                 "Invalid {} {} in input file - must be a positive number",
@@ -241,6 +243,7 @@ void HybridInputParser::parseCoreRadius(
                 lineElements[2]
             )
         );
+    }
 
     HybridSettings::setCoreRadius(coreRadius);
 }
@@ -263,6 +266,7 @@ void HybridInputParser::parseLayerRadius(
     const auto layerRadius = stringToFiniteDouble(lineElements[2]);
 
     if (layerRadius < 0.0)
+    {
         throw InputFileException(
             std::format(
                 "Invalid {} {} in input file - must be a positive number",
@@ -270,6 +274,7 @@ void HybridInputParser::parseLayerRadius(
                 lineElements[2]
             )
         );
+    }
 
     HybridSettings::setLayerRadius(layerRadius);
 }
@@ -292,6 +297,7 @@ void HybridInputParser::parseSmoothingRegionThickness(
     const auto thickness = std::stod(lineElements[2]);
 
     if (thickness < 0.0)
+    {
         throw InputFileException(
             std::format(
                 "Invalid {} {} in input file - must be a positive number",
@@ -299,6 +305,7 @@ void HybridInputParser::parseSmoothingRegionThickness(
                 lineElements[2]
             )
         );
+    }
 
     HybridSettings::setSmoothingRegionThickness(thickness);
 }
@@ -321,6 +328,7 @@ void HybridInputParser::parsePointChargeThickness(
     const auto radius = std::stod(lineElements[2]);
 
     if (radius < 0.0)
+    {
         throw InputFileException(
             std::format(
                 "Invalid {} {} in input file - must be a positive number",
@@ -328,6 +336,7 @@ void HybridInputParser::parsePointChargeThickness(
                 lineElements[2]
             )
         );
+    }
 
     HybridSettings::setPointChargeThickness(radius);
 }
@@ -358,6 +367,7 @@ void HybridInputParser::parseSmoothingMethod(
         HybridSettings::setSmoothingMethod(EXACT);
 
     else
+    {
         throw InputFileException(
             std::format(
                 "Invalid smoothing method \"{}\" in input file\n"
@@ -365,6 +375,7 @@ void HybridInputParser::parseSmoothingMethod(
                 lineElements[2]
             )
         );
+    }
 }
 
 /**
@@ -400,6 +411,7 @@ void HybridInputParser::parseQMForceDistribution(
         HybridSettings::setQMForceDist(DISTANCE_WEIGHTED);
 
     else
+    {
         throw InputFileException(
             std::format(
                 "Invalid qm force distribution method \"{}\" in input file\n"
@@ -408,6 +420,7 @@ void HybridInputParser::parseQMForceDistribution(
                 lineElements[2]
             )
         );
+    }
 }
 
 /**
