@@ -369,7 +369,10 @@ void Atom::setAtomTypeName(const std::string_view &atomTypeName)
  *
  * @param atomicNumber
  */
-void Atom::setAtomicNumber(int atomicNumber) { _atomicNumber = atomicNumber; }
+void Atom::setAtomicNumber(AtomNumber atomicNumber)
+{
+    _atomicNumber = atomicNumber;
+}
 
 /**
  * @brief set the mass of the atom

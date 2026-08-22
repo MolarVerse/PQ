@@ -31,7 +31,6 @@
 #include <stop_token>
 
 #include "box.hpp"
-#include "timer.hpp"
 
 namespace physicalData
 {
@@ -51,7 +50,7 @@ namespace QM
      * @brief base class for different qm engines
      *
      */
-    class QMRunner : public timings::Timer
+    class QMRunner
     {
        protected:
         simulationBox::Periodicity _periodicity;

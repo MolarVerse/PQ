@@ -22,6 +22,7 @@
 
 #include "thermostat.hpp"
 
+#include "globalTimer.hpp"
 #include "physicalData.hpp"         // for PhysicalData
 #include "thermostatSettings.hpp"   // for ThermostatSettings
 
@@ -53,7 +54,7 @@ void Thermostat::applyThermostat(
     PhysicalData  &physicalData
 )
 {
-    auto _ = scoped("Calc Temperature");
+    auto _ = scopedTimer(TimerId::Thermostat, "Calc Temperature");
 
     physicalData.calculateTemperature(simulationBox);
 }

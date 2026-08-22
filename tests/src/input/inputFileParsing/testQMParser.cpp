@@ -39,7 +39,8 @@ TEST_F(TestInputFileReader, parseQMMethod)
     using enum QMMethod;
     EXPECT_EQ(QMSettings::getQMMethod(), NONE);
 
-    auto parser = QMInputParser(*_engine);
+    auto parser =
+        QMInputParser(_engine->getLogOutput(), _engine->getStdoutOutput());
     parser.parseQMMethod({"qm_prog", "=", "dftbplus"}, 0);
     EXPECT_EQ(QMSettings::getQMMethod(), DFTBPLUS);
 
@@ -74,14 +75,16 @@ TEST_F(TestInputFileReader, parseQMMethod)
 
 TEST_F(TestInputFileReader, parseQMScript)
 {
-    auto parser = QMInputParser(*_engine);
+    auto parser =
+        QMInputParser(_engine->getLogOutput(), _engine->getStdoutOutput());
     parser.parseQMScript({"qm_script", "=", "script.sh"}, 0);
     EXPECT_EQ(QMSettings::getQMScript(), "script.sh");
 }
 
 TEST_F(TestInputFileReader, parseQMScriptFullPath)
 {
-    auto parser = QMInputParser(*_engine);
+    auto parser =
+        QMInputParser(_engine->getLogOutput(), _engine->getStdoutOutput());
     parser.parseQMScriptFullPath(
         {"qm_script_full_path", "=", "/path/to/QM/Script.sh"},
         0
@@ -91,7 +94,8 @@ TEST_F(TestInputFileReader, parseQMScriptFullPath)
 
 TEST_F(TestInputFileReader, parseQMLoopTimeLimit)
 {
-    auto parser = QMInputParser(*_engine);
+    auto parser =
+        QMInputParser(_engine->getLogOutput(), _engine->getStdoutOutput());
     parser.parseQMLoopTimeLimit({"qm_loop_time_limit", "=", "10"}, 0);
     EXPECT_EQ(QMSettings::getQMLoopTimeLimit(), 10);
 
@@ -103,7 +107,8 @@ TEST_F(TestInputFileReader, parseDispersion)
 {
     EXPECT_FALSE(QMSettings::useDispersionCorr());
 
-    auto parser = QMInputParser(*_engine);
+    auto parser =
+        QMInputParser(_engine->getLogOutput(), _engine->getStdoutOutput());
     parser.parseDispersion({"dispersion", "=", "true"}, 0);
     EXPECT_TRUE(QMSettings::useDispersionCorr());
 
@@ -135,7 +140,8 @@ TEST_F(TestInputFileReader, parseRemoveNetForce)
 {
     EXPECT_FALSE(QMSettings::getRemoveNetForce());
 
-    auto parser = QMInputParser(*_engine);
+    auto parser =
+        QMInputParser(_engine->getLogOutput(), _engine->getStdoutOutput());
     parser.parseRemoveNetForce({"remove_net_force", "=", "true"}, 0);
     EXPECT_TRUE(QMSettings::getRemoveNetForce());
 
@@ -168,7 +174,8 @@ TEST_F(TestInputFileReader, parseMaceQMMethod)
     using enum QMMethod;
     using enum MaceModelType;
 
-    auto parser = QMInputParser(*_engine);
+    auto parser =
+        QMInputParser(_engine->getLogOutput(), _engine->getStdoutOutput());
 
     parser.parseMaceQMMethod("mace");
     EXPECT_EQ(QMSettings::getQMMethod(), MACE);
@@ -206,7 +213,8 @@ TEST_F(TestInputFileReader, parseMaceModel)
 {
     using enum MaceModel;
 
-    auto parser = QMInputParser(*_engine);
+    auto parser =
+        QMInputParser(_engine->getLogOutput(), _engine->getStdoutOutput());
     parser.parseMaceModel({"mace_model", "=", "small"}, 0);
     EXPECT_EQ(QMSettings::getMaceModel(), SMALL);
 
@@ -257,7 +265,8 @@ TEST_F(TestInputFileReader, parseMaceMode)
 {
     using enum MaceMode;
 
-    auto parser = QMInputParser(*_engine);
+    auto parser =
+        QMInputParser(_engine->getLogOutput(), _engine->getStdoutOutput());
 
     parser.parseMaceMode({"mace_mode", "=", "accurate"}, 0);
     EXPECT_EQ(QMSettings::getMaceMode(), ACCURATE);
@@ -275,7 +284,8 @@ TEST_F(TestInputFileReader, parseMaceMode)
 
 TEST_F(TestInputFileReader, parseMaceModelPath)
 {
-    auto parser = QMInputParser(*_engine);
+    auto parser =
+        QMInputParser(_engine->getLogOutput(), _engine->getStdoutOutput());
 
     QMSettings::setMaceModelPath("");
     EXPECT_EQ(QMSettings::getMaceModelPath(), "");
@@ -290,7 +300,8 @@ TEST_F(TestInputFileReader, parseSlakosType)
 {
     using enum QMMethod;
 
-    auto parser = QMInputParser(*_engine);
+    auto parser =
+        QMInputParser(_engine->getLogOutput(), _engine->getStdoutOutput());
 
 #ifdef WITH_ASE
     parser.parseSlakosType({"slakos", "=", "3ob"}, 0);
@@ -330,14 +341,16 @@ TEST_F(TestInputFileReader, parseSlakosTypeThirdOrder)
 {
     using enum QMMethod;
 
-    auto parser1 = QMInputParser(*_engine);
+    auto parser1 =
+        QMInputParser(_engine->getLogOutput(), _engine->getStdoutOutput());
 
     parser1.parseThirdOrder({"third_order", "=", "off"}, 0);
     parser1.parseSlakosType({"slakos", "=", "3ob"}, 0);
     EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::THREEOB);
     EXPECT_FALSE(QMSettings::useThirdOrderDftb());
 
-    auto parser2 = QMInputParser(*_engine);
+    auto parser2 =
+        QMInputParser(_engine->getLogOutput(), _engine->getStdoutOutput());
     parser2.parseSlakosType({"slakos", "=", "3ob"}, 0);
     parser2.parseThirdOrder({"third_order", "=", "off"}, 0);
     EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::THREEOB);
@@ -349,7 +362,8 @@ TEST_F(TestInputFileReader, parseSlakosPath)
 {
     using enum QMMethod;
 
-    auto parser = QMInputParser(*_engine);
+    auto parser =
+        QMInputParser(_engine->getLogOutput(), _engine->getStdoutOutput());
     parser.parseSlakosType({"slakos", "=", "custom"}, 0);
     parser.parseSlakosPath({"slakos_path", "=", "/path/to/slakos"}, 0);
     EXPECT_EQ(QMSettings::getSlakosPath(), "/path/to/slakos");
@@ -359,7 +373,8 @@ TEST_F(TestInputFileReader, parseThirdOrder)
 {
     EXPECT_FALSE(QMSettings::useThirdOrderDftb());
 
-    auto parser = QMInputParser(*_engine);
+    auto parser =
+        QMInputParser(_engine->getLogOutput(), _engine->getStdoutOutput());
     parser.parseThirdOrder({"third_order", "=", "on"}, 0);
     EXPECT_TRUE(QMSettings::useThirdOrderDftb());
 
@@ -390,7 +405,8 @@ TEST_F(TestInputFileReader, parseThirdOrder)
 
 TEST_F(TestInputFileReader, parseHubbardDerivs)
 {
-    auto parser = QMInputParser(*_engine);
+    auto parser =
+        QMInputParser(_engine->getLogOutput(), _engine->getStdoutOutput());
 
     parser.parseHubbardDerivs({"hubbard_derivs", "=", "H:1.0,He:2.0"}, 0);
 
@@ -422,7 +438,8 @@ TEST_F(TestInputFileReader, parseXtbMethod)
 {
     using enum QMMethod;
 
-    auto parser = QMInputParser(*_engine);
+    auto parser =
+        QMInputParser(_engine->getLogOutput(), _engine->getStdoutOutput());
 
     parser.parseXtbMethod({"xtb_method", "=", "Gfn1-XTb"}, 0);
     EXPECT_EQ(QMSettings::getXtbMethod(), XtbMethod::GFN1);
@@ -445,7 +462,8 @@ TEST_F(TestInputFileReader, parseFennolModelPath)
 {
     using enum QMMethod;
 
-    auto parser = QMInputParser(*_engine);
+    auto parser =
+        QMInputParser(_engine->getLogOutput(), _engine->getStdoutOutput());
 
     // clang-format off
     EXPECT_EQ(QMSettings::getFennolModelPath(), "");
@@ -467,7 +485,8 @@ TEST_F(TestInputFileReader, parseGPUPreprocessing)
 {
     using enum QMMethod;
 
-    auto parser = QMInputParser(*_engine);
+    auto parser =
+        QMInputParser(_engine->getLogOutput(), _engine->getStdoutOutput());
 
     EXPECT_EQ(QMSettings::useGPUPreprocessing(), true);
     parser.parseGPUPreprocessing({"GPU-Preprocessing", "=", "false"}, 0);

@@ -55,7 +55,7 @@ BondForceField::BondForceField(
     Molecule *molecule2,
     size_t    atomIndex1,
     size_t    atomIndex2,
-    size_t    type
+    BondId    type
 )
     : Bond(molecule1, molecule2, atomIndex1, atomIndex2), _type(type)
 {
@@ -178,9 +178,9 @@ bool BondForceField::isLinker() const { return _isLinker; }
 /**
  * @brief get the type of the bond
  *
- * @return size_t
+ * @return BondId
  */
-size_t BondForceField::getType() const { return _type; }
+BondId BondForceField::getType() const { return _type; }
 
 /**
  * @brief get the equilibrium bond length

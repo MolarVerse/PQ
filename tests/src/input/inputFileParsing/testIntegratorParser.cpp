@@ -41,7 +41,7 @@ using namespace input;
  */
 TEST_F(TestInputFileReader, testParseIntegrator)
 {
-    IntegratorInputParser    parser(*_mdEngine);
+    IntegratorInputParser    parser;
     std::vector<std::string> lineElements = {"integrator", "=", "v-verlet"};
     parser.parseIntegrator(lineElements, 0);
     EXPECT_EQ(_mdEngine->getIntegrator().getIntegratorType(), "VelocityVerlet");

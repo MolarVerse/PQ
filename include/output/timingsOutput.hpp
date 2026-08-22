@@ -45,7 +45,7 @@ namespace output
        public:
         using Output::Output;
 
-        void write(timings::GlobalTimer &timer);
+        void write();
     };
 
 }   // namespace output

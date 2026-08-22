@@ -48,7 +48,7 @@ TEST_F(TestInputFileReader, parserOptimizer)
 
     OptimizerSettings::setOptimizer("none");
 
-    auto parser = OptInputParser(*_engine);
+    auto parser = OptInputParser();
     parser.parseOptimizer({"optimizer", "=", "steepest-descent"}, 0);
     EXPECT_EQ(OptimizerSettings::getOptimizer(), STEEPEST_DESCENT);
 
@@ -80,7 +80,7 @@ TEST_F(TestInputFileReader, parserLearningRateStrategy)
 
     OptimizerSettings::setLearningRateStrategy("none");
 
-    auto parser = OptInputParser(*_engine);
+    auto parser = OptInputParser();
     parser.parseLearningRateStrategy(
         {"learning-rate-strategy", "=", "constant-decay"},
         0
@@ -138,7 +138,7 @@ TEST_F(TestInputFileReader, parserInitialLearningRate)
 
     OptimizerSettings::setInitialLearningRate(0.0);
 
-    auto parser = OptInputParser(*_engine);
+    auto parser = OptInputParser();
     parser.parseInitialLearningRate({"initial-learning-rate", "=", "0.99"}, 0);
     EXPECT_EQ(OptimizerSettings::getInitialLearningRate(), 0.99);
 
@@ -165,7 +165,7 @@ TEST_F(TestInputFileReader, parserLearningRateDecay)
 
     OptimizerSettings::setLearningRateDecay(0.0);
 
-    auto parser = OptInputParser(*_engine);
+    auto parser = OptInputParser();
     parser.parseLearningRateDecay({"learning-rate-decay", "=", "0.99"}, 0);
     EXPECT_EQ(OptimizerSettings::getLearningRateDecay(), 0.99);
 
@@ -188,7 +188,7 @@ TEST_F(TestInputFileReader, parserMaxLearningRate)
 
     OptimizerSettings::setMaxLearningRate(0.0);
 
-    auto parser = OptInputParser(*_engine);
+    auto parser = OptInputParser();
     parser.parseMaxLearningRate({"max-learning-rate", "=", "0.99"}, 0);
     EXPECT_EQ(OptimizerSettings::getMaxLearningRate(), 0.99);
 
@@ -215,7 +215,7 @@ TEST_F(TestInputFileReader, parserLRUpdateFrequency)
 
     OptimizerSettings::setLRUpdateFrequency(0);
 
-    auto parser = OptInputParser(*_engine);
+    auto parser = OptInputParser();
     parser.parseLearningRateUpdateFreq({"lr-update-frequency", "=", "100"}, 0);
     EXPECT_EQ(OptimizerSettings::getLRUpdateFrequency(), 100);
 
@@ -245,7 +245,7 @@ TEST_F(TestInputFileReader, parserMinLearningRate)
 
     OptimizerSettings::setMinLearningRate(0.0);
 
-    auto parser = OptInputParser(*_engine);
+    auto parser = OptInputParser();
     parser.parseMinLearningRate({"min-learning-rate", "=", "0.99"}, 0);
     EXPECT_EQ(OptimizerSettings::getMinLearningRate(), 0.99);
 

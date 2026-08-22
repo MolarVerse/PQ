@@ -29,9 +29,7 @@ target_compile_definitions(PQ
 
 target_link_libraries(PQ
   PUBLIC
-  PQ_input
-  setup
-  engine
+  driver
 )
 
 if(BUILD_WITH_MPI)

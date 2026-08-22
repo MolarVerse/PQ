@@ -24,7 +24,6 @@
 #define PQ_GOOGLE_BENCHMARK_SETUP_HPP
 
 #include <cstddef>
-#include <memory>
 
 #include "atom.hpp"
 #include "molecule.hpp"

@@ -60,8 +60,6 @@ namespace engine
 
         void writeOptimizationSetupInfo();
 
-        void addTimers();
-
        public:
         void run() final;
         void writeOutput() final;

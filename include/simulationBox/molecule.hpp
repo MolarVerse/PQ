@@ -172,7 +172,7 @@ namespace simulationBox
             size_t index
         ) const;
 
-        [[nodiscard]] int         getAtomicNumber(size_t index) const;
+        [[nodiscard]] AtomNumber  getAtomicNumber(size_t index) const;
         [[nodiscard]] double      getAtomMass(size_t index) const;
         [[nodiscard]] double      getPartialCharge(size_t index) const;
         [[nodiscard]] size_t      getAtomType(size_t index) const;

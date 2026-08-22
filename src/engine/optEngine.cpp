@@ -24,8 +24,9 @@
 
 #include <format>   // for format
 
-#include "constants/conversionFactors.hpp"
+#include "constants.hpp"
 #include "exceptions.hpp"
+#include "globalTimer.hpp"
 #include "outputFileSettings.hpp"
 #include "progressbar.hpp"
 #include "timingsSettings.hpp"
@@ -88,29 +89,12 @@ void OptEngine::run()
         throw customException::OptException(msg);
     }
 
-    _timer.stopSimulationTimer();
+    timings::GlobalTimer::get().stopSimulationTimer();
 
-    const auto elapsedTime = _timer.calculateElapsedTime() * constants::MS_TO_S;
+    const auto elapsedTime =
+        timings::GlobalTimer::get().calculateElapsedTime() * constants::MS_TO_S;
 
-    _engineOutput.setTimerId(TimerId::Output);
-    _timer.addTimer(_engineOutput.getTimer());
-
-    _constraints->setTimerId(TimerId::Constraints);
-    _timer.addTimer(_constraints->getTimer());
-
-    _cellList->setTimerId(TimerId::CellList);
-    _timer.addTimer(_cellList->getTimer());
-
-    _potential->setTimerId(TimerId::Potential);
-    _timer.addTimer(_potential->getTimer());
-
-    _intraNonBonded->setTimerId(TimerId::IntraNonBonded);
-    _timer.addTimer(_intraNonBonded->getTimer());
-
-    _physicalData->setTimerId(TimerId::PhysicalData);
-    _timer.addTimer(_physicalData->getTimer());
-
-    _engineOutput.writeTimingsFile(_timer);
+    _engineOutput.writeTimingsFile();
 
     if (_converged)
     {
@@ -208,10 +192,9 @@ void OptEngine::writeOutput()
     // included in total simulation time
     // Unfortunately, setup is therefore included in the first looptime output
     // but this is not a big problem - could also be a feature and not a bug
-    _timer.stopSimulationTimer();
-    _timer.startSimulationTimer();
+    timings::GlobalTimer::get().stopAndRestartSimulationTimer();
 
-    _physicalData->setLoopTime(_timer.calculateLoopTime());
+    _physicalData->setLoopTime(timings::GlobalTimer::get().calculateLoopTime());
     _averagePhysicalData.updateAverages(*_physicalData);
 
     if (0 == _step % outputFreq)

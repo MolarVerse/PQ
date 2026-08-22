@@ -26,7 +26,6 @@
 
 #include "manostatSettings.hpp"
 #include "staticMatrix.hpp"
-#include "timer.hpp"   // for Timer
 
 namespace simulationBox
 {
@@ -46,7 +45,7 @@ namespace manostat
      * @brief Manostat is a base class for all manostats
      *
      */
-    class Manostat : public timings::Timer
+    class Manostat
     {
        protected:
         linearAlgebra::tensor3D _pressureTensor = {0.0};

@@ -50,7 +50,7 @@ namespace setup
     void setupRequestedJob(const std::string &inputFileName, engine::Engine &);
 
     void startSetup(engine::Engine &);
-    void endSetup(timings::Timer &, engine::Engine &);
+    void endSetup(engine::Engine &);
 
     void readFiles(engine::Engine &);
     void setupEngine(engine::Engine &);

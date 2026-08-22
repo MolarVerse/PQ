@@ -1,0 +1,4 @@
+- add strong type for `AtomNumber`
+- add strong type for `BondId`
+- add strong type for `AngleId`
+- add strong type for `DihedralId`

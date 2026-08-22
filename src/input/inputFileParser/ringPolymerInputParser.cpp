@@ -30,7 +30,6 @@
 #include "stringUtilities.hpp"       // for stringToInt
 
 using namespace input;
-using namespace engine;
 using namespace customException;
 using namespace settings;
 
@@ -43,8 +42,7 @@ using namespace settings;
  *
  * @param engine
  */
-RingPolymerInputParser::RingPolymerInputParser(Engine &engine)
-    : InputFileParser(engine)
+RingPolymerInputParser::RingPolymerInputParser()
 {
     addKeyword(
         std::string("rpmd_n_replica"),

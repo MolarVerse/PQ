@@ -28,12 +28,13 @@
 
 #include "constants/conversionFactors.hpp"   // for _FS_TO_S_, _S_TO_FS_
 #include "exceptions.hpp"                    // for UserInputException
-#include "mathUtilities.hpp"                 // for isZero
-#include "physicalData.hpp"                  // for PhysicalData
-#include "simulationBox.hpp"                 // for SimulationBox
-#include "staticMatrix.hpp"                  // for operator*, operator+=
-#include "thermostatSettings.hpp"            // for ThermostatSettings
-#include "vector3d.hpp"                      // for Vec3D, Vector3D, cross
+#include "globalTimer.hpp"
+#include "mathUtilities.hpp"        // for isZero
+#include "physicalData.hpp"         // for PhysicalData
+#include "simulationBox.hpp"        // for SimulationBox
+#include "staticMatrix.hpp"         // for operator*, operator+=
+#include "thermostatSettings.hpp"   // for ThermostatSettings
+#include "vector3d.hpp"             // for Vec3D, Vector3D, cross
 
 using namespace resetKinetics;
 using namespace linearAlgebra;
@@ -86,7 +87,7 @@ void ResetKinetics::reset(
     SimulationBox &simBox
 )
 {
-    auto _ = scoped("Reset Kinetics");
+    auto _ = scopedTimer(TimerId::ResetKinetics, "Reset Kinetics");
 
     _momentum        = data.getMomentum() * S_TO_FS;
     _angularMomentum = data.getAngularMomentum() * S_TO_FS;

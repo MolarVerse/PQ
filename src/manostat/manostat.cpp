@@ -23,6 +23,7 @@
 #include "manostat.hpp"
 
 #include "constants/internalConversionFactors.hpp"   // for _PRESSURE_FACTOR_
+#include "globalTimer.hpp"
 #include "manostatSettings.hpp"   // for ManostatType, Isotropy
 #include "physicalData.hpp"       // for PhysicalData
 #include "simulationBox.hpp"      // for SimulationBox
@@ -92,7 +93,7 @@ void Manostat::rotateMu(tensor3D& mu)
  */
 void Manostat::applyManostat(SimulationBox& box, PhysicalData& data)
 {
-    auto _ = scoped("Calc Pressure");
+    auto _ = scopedTimer(TimerId::Manostat, "Calc Pressure");
 
     calculatePressure(box, data);
 }

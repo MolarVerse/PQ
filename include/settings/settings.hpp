@@ -66,6 +66,12 @@ namespace settings
         MOLECULAR
     };
 
+    enum class IntegratorType : std::uint8_t
+    {
+        NONE,
+        VELOCITY_VERLET,
+    };
+
     [[nodiscard]] std::string string(JobType jobtype);
 
     /**
@@ -90,6 +96,16 @@ namespace settings
 
         static inline VirialType _virial = VirialType::MOLECULAR;
 
+        // setting velocity verlet as default integrator type for backward
+        // compatibility until 0.7.0 it was not necessary to specify the
+        // integrator type in the input file, so we set it to velocity verlet by
+        // default
+        static inline IntegratorType _integrator =
+            IntegratorType::VELOCITY_VERLET;
+
+        static inline bool _isCellListActivated =
+            defaults::CELL_LIST_IS_ACTIVE_DEFAULT;
+
        public:
         Settings()  = default;
         ~Settings() = default;
@@ -111,6 +127,7 @@ namespace settings
         static void setDimensionality(size_t dimensionality);
 
         static void setVirialType(VirialType virialType);
+        static void setIntegratorType(const IntegratorType integratorType);
 
         /***************************
          * standard getter methods *
@@ -126,7 +143,8 @@ namespace settings
 
         [[nodiscard]] static size_t getDimensionality();
 
-        [[nodiscard]] static VirialType getVirialType();
+        [[nodiscard]] static VirialType     getVirialType();
+        [[nodiscard]] static IntegratorType getIntegratorType();
 
         /******************************
          * standard is-active methods *
@@ -134,6 +152,8 @@ namespace settings
 
         static void activateRingPolymerMD();
         static void deactivateRingPolymerMD();
+        static void activateCellList();
+        static void deactivateCellList();
 
         [[nodiscard]] static bool isQMOnlyJobtype();
         [[nodiscard]] static bool isMMOnlyJobtype();
@@ -145,6 +165,7 @@ namespace settings
         [[nodiscard]] static bool isRingPolymerMDActivated();
         [[nodiscard]] static bool isMDJobType();
         [[nodiscard]] static bool isOptJobType();
+        [[nodiscard]] static bool isCellListActivated();
     };
 
 }   // namespace settings

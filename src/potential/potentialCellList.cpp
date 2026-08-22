@@ -28,6 +28,7 @@
 
 #include "cell.hpp"                 // for Cell, simulationBox
 #include "celllist.hpp"             // for CellList
+#include "globalTimer.hpp"          // for GlobalTimer
 #include "molecule.hpp"             // for Molecule
 #include "physicalData.hpp"         // for PhysicalData
 #include "simulationBox.hpp"        // for SimulationBox
@@ -67,7 +68,7 @@ void PotentialCellList::calculateForces(
     CellList      &cellList
 )
 {
-    auto _ = scoped("InterNonBonded");
+    auto _ = scopedTimer(TimerId::Potential, "InterNonBonded");
 
     const auto box            = simBox.getBoxPtr();
     const auto waterTypeValue = simBox.getWaterType().value_or(size_t{0});
@@ -194,7 +195,7 @@ void PotentialCellList::calculateCoreToOuterForces(
     CellList      &cellList
 )
 {
-    auto _ = scoped("InterNonBondedCoreToOuter");
+    auto _ = scopedTimer(TimerId::Potential, "InterNonBondedCoreToOuter");
 
     const auto box             = simBox.getBoxPtr();
     const auto isWaterMolecule = [](const std::vector<size_t> &waterMolecules,
@@ -314,7 +315,7 @@ void PotentialCellList::calculateLayerToOuterForces(
     CellList      &cellList
 )
 {
-    auto _ = scoped("InterNonBondedLayerToOuter");
+    auto _ = scopedTimer(TimerId::Potential, "InterNonBondedLayerToOuter");
 
     const auto box             = simBox.getBoxPtr();
     const auto isWaterMolecule = [](const std::vector<size_t> &waterMolecules,
@@ -464,7 +465,7 @@ void PotentialCellList::calculateOuterToOuterForces(
     CellList      &cellList
 )
 {
-    auto _ = scoped("InterNonBondedOuterToOuter");
+    auto _ = scopedTimer(TimerId::Potential, "InterNonBondedOuterToOuter");
 
     const auto box             = simBox.getBoxPtr();
     const auto isWaterMolecule = [](const std::vector<size_t> &waterMolecules,
@@ -576,7 +577,7 @@ void PotentialCellList::calculateHotspotSmoothingMMForces(
     CellList      &cellList
 )
 {
-    auto _ = scoped("InterNonBondedSmoothingMM");
+    auto _ = scopedTimer(TimerId::Potential, "InterNonBondedSmoothingMM");
 
     const auto box             = simBox.getBoxPtr();
     const auto isWaterMolecule = [](const std::vector<size_t> &waterMolecules,

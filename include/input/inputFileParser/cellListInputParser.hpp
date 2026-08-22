@@ -26,11 +26,6 @@
 
 #include "inputFileParser.hpp"
 
-namespace engine
-{
-    class Engine;   // forward declaration
-}   // namespace engine
-
 namespace simulationBox
 {
     class CellList;   // forward declaration
@@ -50,7 +45,6 @@ namespace input
 
        public:
         explicit CellListInputParser(
-            engine::Engine                          &engine,
             std::shared_ptr<simulationBox::CellList> cellListPtr
         );
 

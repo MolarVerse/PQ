@@ -75,7 +75,7 @@ void BondSection::processSection(
         );
     }
 
-    auto id                  = stoul(lineElements[0]);
+    auto id                  = BondId{stoul(lineElements[0])};
     auto equilibriumDistance = stod(lineElements[1]);
     auto forceConstant       = stod(lineElements[2]);
 

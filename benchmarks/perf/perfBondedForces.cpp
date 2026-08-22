@@ -60,14 +60,15 @@ int main()
     settings::PotentialSettings::setScale14Coulomb(0.75);
     settings::PotentialSettings::setScale14VanDerWaals(0.5);
 
-    auto bond = forceField::BondForceField(&molecule, &molecule, 0, 1, 0);
+    auto bond =
+        forceField::BondForceField(&molecule, &molecule, 0, 1, BondId{0});
     bond.setEquilibriumBondLength(1.2);
     bond.setForceConstant(3.0);
 
     auto angle = forceField::AngleForceField(
         {&molecule, &molecule, &molecule},
         {0, 1, 2},
-        0
+        AngleId{0}
     );
     angle.setEquilibriumAngle(M_PI / 2.0);
     angle.setForceConstant(3.0);
@@ -75,7 +76,7 @@ int main()
     auto dihedral = forceField::DihedralForceField(
         {&molecule, &molecule, &molecule, &molecule},
         {0, 1, 2, 3},
-        0
+        DihedralId{0}
     );
     dihedral.setPhaseShift(M_PI);
     dihedral.setPeriodicity(3);

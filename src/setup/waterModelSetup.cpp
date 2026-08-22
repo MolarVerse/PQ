@@ -427,8 +427,7 @@ void WaterModelSetup::makeInterWater()
 
     std::unique_ptr<InterWaterStrategy> strategy;
 
-    auto isCellListActivated = _engine.getCellList()->isActive();
-    if (isCellListActivated)
+    if (settings::Settings::isCellListActivated())
         strategy = std::make_unique<InterWaterStrategyCellList>();
     else
         strategy = std::make_unique<InterWaterStrategyBruteForce>();

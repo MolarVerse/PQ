@@ -39,7 +39,7 @@ namespace input
     class CoulombLongRangeInputParser : public InputFileParser
     {
        public:
-        explicit CoulombLongRangeInputParser(engine::Engine &);
+        CoulombLongRangeInputParser();
 
         static void parseCoulombLongRange(
             const std::vector<std::string> &,

@@ -42,7 +42,6 @@
 #endif
 
 using namespace input;
-using namespace engine;
 using namespace customException;
 using namespace settings;
 using namespace utilities;
@@ -56,7 +55,7 @@ using namespace utilities;
  *
  * @param engine
  */
-HybridInputParser::HybridInputParser(Engine &engine) : InputFileParser(engine)
+HybridInputParser::HybridInputParser()
 {
     addKeyword(
         std::string("inner_region_center"),

@@ -24,6 +24,7 @@
 
 #include <utility>
 
+#include "globalTimer.hpp"         // for GlobalTimer
 #include "potentialSettings.hpp"   // for PotentialSettings
 
 using namespace potential;
@@ -60,7 +61,7 @@ void InterWater::calculate(
     if (_strategy == nullptr)
         return;
 
-    auto _ = scoped("Calculate");
+    auto _ = scopedTimer(TimerId::WaterInterPotential, "Calculate");
     _strategy
         ->calculate(_state, simBox, physicalData, sharedCoulombPot, cellList);
 }
@@ -84,7 +85,8 @@ void InterWater::calculateQMMMForces(
         return;
 
     {
-        auto _ = scoped("QM/MM Core to Outer");
+        auto _ =
+            scopedTimer(TimerId::WaterInterPotential, "QM/MM Core to Outer");
         _strategy->calculateCoreToOuterForces(
             _state,
             simBox,
@@ -95,7 +97,8 @@ void InterWater::calculateQMMMForces(
     }
 
     {
-        auto _ = scoped("QM/MM Layer to Outer");
+        auto _ =
+            scopedTimer(TimerId::WaterInterPotential, "QM/MM Layer to Outer");
         _strategy->calculateLayerToOuterForces(
             _state,
             simBox,
@@ -106,7 +109,8 @@ void InterWater::calculateQMMMForces(
     }
 
     {
-        auto _ = scoped("QM/MM Outer to Outer");
+        auto _ =
+            scopedTimer(TimerId::WaterInterPotential, "QM/MM Outer to Outer");
         _strategy->calculateOuterToOuterForces(
             _state,
             simBox,
@@ -135,7 +139,7 @@ void InterWater::calculateHotspotSmoothingMMForces(
     if (_strategy == nullptr)
         return;
 
-    auto _ = scoped("QM/MM Smoothing MM");
+    auto _ = scopedTimer(TimerId::WaterInterPotential, "QM/MM Smoothing MM");
     _strategy->calculateHotspotSmoothingMMForces(
         _state,
         simBox,

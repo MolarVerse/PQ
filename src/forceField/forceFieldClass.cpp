@@ -25,6 +25,7 @@
 #include <algorithm>
 #include <format>   // for format
 
+#include "dihedralType.hpp"
 #include "exceptions.hpp"
 
 using namespace forceField;
@@ -51,7 +52,7 @@ std::shared_ptr<ForceField> ForceField::clone() const
  *
  * @throws TopologyException if bond type with id not found
  */
-const BondType &ForceField::findBondTypeById(const size_t id) const
+const BondType &ForceField::findBondTypeById(const BondId id) const
 {
     auto isBondId = [id](const BondType &bondType)
     { return bondType.getId() == id; };
@@ -61,7 +62,9 @@ const BondType &ForceField::findBondTypeById(const size_t id) const
     if (bondType != _bondTypes.end())
         return *bondType;
 
-    throw TopologyException(std::format("Bond type with id {} not found.", id));
+    throw TopologyException(
+        std::format("Bond type with id {} not found.", id.toString())
+    );
 }
 
 /**
@@ -72,7 +75,7 @@ const BondType &ForceField::findBondTypeById(const size_t id) const
  *
  * @throws TopologyException if angle type with id not found
  */
-const AngleType &ForceField::findAngleTypeById(const size_t id) const
+const AngleType &ForceField::findAngleTypeById(const AngleId id) const
 {
     auto isAngleId = [id](const AngleType &angleType)
     { return angleType.getId() == id; };
@@ -83,7 +86,7 @@ const AngleType &ForceField::findAngleTypeById(const size_t id) const
         return *angleType;
 
     throw TopologyException(
-        std::format("Angle type with id {} not found.", id)
+        std::format("Angle type with id {} not found.", id.toString())
     );
 }
 
@@ -95,7 +98,7 @@ const AngleType &ForceField::findAngleTypeById(const size_t id) const
  *
  * @throws TopologyException if dihedral type with id not found
  */
-const DihedralType &ForceField::findDihedralTypeById(const size_t id) const
+const DihedralType &ForceField::findDihedralTypeById(const DihedralId id) const
 {
     auto isDihedralId = [id](const DihedralType &dihedralType)
     { return dihedralType.getId() == id; };
@@ -107,7 +110,7 @@ const DihedralType &ForceField::findDihedralTypeById(const size_t id) const
         return *dihedralType;
 
     throw TopologyException(
-        std::format("Dihedral type with id {} not found.", id)
+        std::format("Dihedral type with id {} not found.", id.toString())
     );
 }
 
@@ -120,7 +123,7 @@ const DihedralType &ForceField::findDihedralTypeById(const size_t id) const
  * @throws TopologyException if improper dihedral type with id
  * not found
  */
-const DihedralType &ForceField::findImproperTypeById(const size_t id) const
+const DihedralType &ForceField::findImproperTypeById(const DihedralId id) const
 {
     auto isImproperId = [id](const DihedralType &dihedralType)
     { return dihedralType.getId() == id; };
@@ -132,7 +135,10 @@ const DihedralType &ForceField::findImproperTypeById(const size_t id) const
         return *dihedralType;
 
     throw TopologyException(
-        std::format("Improper dihedral type with id {} not found.", id)
+        std::format(
+            "Improper dihedral type with id {} not found.",
+            id.toString()
+        )
     );
 }
 

@@ -37,7 +37,7 @@ namespace input
     class OptInputParser : public InputFileParser
     {
        public:
-        explicit OptInputParser(engine::Engine &);
+        OptInputParser();
 
         static void parseOptimizer(const std::vector<std::string> &, size_t);
 

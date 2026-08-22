@@ -5,9 +5,10 @@ function(add_pq_benchmark target source)
         ${CMAKE_CURRENT_SOURCE_DIR}
     )
     target_link_libraries(${target}
+        PUBLIC
+        simulationBox
         PRIVATE
         benchmark::benchmark_main
-        simulationBox
         ${ARGN}
     )
 

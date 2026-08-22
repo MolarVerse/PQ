@@ -39,7 +39,7 @@ namespace input
     class TimingsInputParser : public InputFileParser
     {
        public:
-        explicit TimingsInputParser(engine::Engine &);
+        TimingsInputParser();
 
         static void parseTimeStep(const std::vector<std::string> &, size_t);
         static void parseNumberOfSteps(

@@ -28,6 +28,7 @@
 #include "benchmarkSetup.hpp"
 #include "celllist.hpp"
 #include "potentialSettings.hpp"
+#include "settings.hpp"
 
 namespace
 {
@@ -44,7 +45,7 @@ namespace
         cellList.setNumberOfCells(cellsPerSide);
         cellList.resizeCells();
         cellList.setup(simBox);
-        cellList.activate();
+        settings::Settings::activateCellList();
 
         for (auto _ : state)
         {

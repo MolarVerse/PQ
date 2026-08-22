@@ -56,7 +56,7 @@ namespace forceField
     class BondForceField : public connectivity::Bond
     {
        private:
-        size_t _type;
+        BondId _type;
         bool   _isLinker = false;
 
         double _equilBondLength;
@@ -68,7 +68,7 @@ namespace forceField
             simulationBox::Molecule *molecule2,
             size_t                   atomIndex1,
             size_t                   atomIndex2,
-            size_t                   type
+            BondId                   type
         );
 
         void calculateEnergyAndForces(
@@ -90,7 +90,7 @@ namespace forceField
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] size_t getType() const;
+        [[nodiscard]] BondId getType() const;
         [[nodiscard]] bool   isLinker() const;
         [[nodiscard]] double getEquilibriumBondLength() const;
         [[nodiscard]] double getForceConstant() const;

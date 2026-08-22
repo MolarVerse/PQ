@@ -14,6 +14,7 @@ target_link_libraries(utilities
     PUBLIC
     linearAlgebra
     exceptions
+    mstd
 )
 
 install(TARGETS utilities

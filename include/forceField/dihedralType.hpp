@@ -24,7 +24,7 @@
 
 #define _DIHEDRAL_TYPE_HPP_
 
-#include <cstddef>
+#include "strongTypes.hpp"
 
 namespace forceField
 {
@@ -44,7 +44,7 @@ namespace forceField
     class DihedralType
     {
        private:
-        size_t _id;
+        DihedralId _id;
 
         double _forceConstant;
         double _periodicity;
@@ -52,10 +52,10 @@ namespace forceField
 
        public:
         DihedralType(
-            size_t id,
-            double forceConstant,
-            double frequency,
-            double phaseShift
+            DihedralId id,
+            double     forceConstant,
+            double     frequency,
+            double     phaseShift
         );
 
         friend bool operator==(const DihedralType &, const DihedralType &);
@@ -64,10 +64,10 @@ namespace forceField
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] size_t getId() const;
-        [[nodiscard]] double getForceConstant() const;
-        [[nodiscard]] double getPeriodicity() const;
-        [[nodiscard]] double getPhaseShift() const;
+        [[nodiscard]] DihedralId getId() const;
+        [[nodiscard]] double     getForceConstant() const;
+        [[nodiscard]] double     getPeriodicity() const;
+        [[nodiscard]] double     getPhaseShift() const;
     };
 
 }   // namespace forceField

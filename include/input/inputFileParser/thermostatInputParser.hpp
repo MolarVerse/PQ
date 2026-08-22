@@ -39,7 +39,7 @@ namespace input
     class ThermostatInputParser : public InputFileParser
     {
        public:
-        explicit ThermostatInputParser(engine::Engine &);
+        ThermostatInputParser();
 
         static void parseThermostat(const std::vector<std::string> &, size_t);
         static void parseTemperature(const std::vector<std::string> &, size_t);

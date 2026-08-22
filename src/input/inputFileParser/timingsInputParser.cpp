@@ -30,7 +30,6 @@
 #include "timingsSettings.hpp"   // for TimingsSettings
 
 using namespace input;
-using namespace engine;
 using namespace customException;
 using namespace settings;
 using namespace utilities;
@@ -44,7 +43,7 @@ using namespace utilities;
  *
  * @param engine
  */
-TimingsInputParser::TimingsInputParser(Engine &engine) : InputFileParser(engine)
+TimingsInputParser::TimingsInputParser()
 {
     addKeyword(
         std::string("timestep"),

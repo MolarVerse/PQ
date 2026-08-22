@@ -26,7 +26,6 @@
 
 #include <cstddef>   // for size_t
 
-#include "timer.hpp"   // for Timer
 #include "vector3d.hpp"
 
 namespace physicalData
@@ -48,7 +47,7 @@ namespace resetKinetics
      * for no reset
      *
      */
-    class ResetKinetics : public timings::Timer
+    class ResetKinetics
     {
        protected:
         size_t _nStepsTemperatureReset;

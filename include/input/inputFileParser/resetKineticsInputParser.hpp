@@ -39,7 +39,7 @@ namespace input
     class ResetKineticsInputParser : public InputFileParser
     {
        public:
-        explicit ResetKineticsInputParser(engine::Engine &);
+        ResetKineticsInputParser();
 
         static void parseNScale(const std::vector<std::string> &, size_t);
         static void parseFScale(const std::vector<std::string> &, size_t);

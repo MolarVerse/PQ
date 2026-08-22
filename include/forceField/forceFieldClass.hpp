@@ -101,10 +101,14 @@ namespace forceField
             physicalData::PhysicalData &
         );
 
-        [[nodiscard]] const BondType     &findBondTypeById(size_t id) const;
-        [[nodiscard]] const AngleType    &findAngleTypeById(size_t id) const;
-        [[nodiscard]] const DihedralType &findDihedralTypeById(size_t id) const;
-        [[nodiscard]] const DihedralType &findImproperTypeById(size_t id) const;
+        [[nodiscard]] const BondType     &findBondTypeById(BondId id) const;
+        [[nodiscard]] const AngleType    &findAngleTypeById(AngleId id) const;
+        [[nodiscard]] const DihedralType &findDihedralTypeById(
+            DihedralId id
+        ) const;
+        [[nodiscard]] const DihedralType &findImproperTypeById(
+            DihedralId id
+        ) const;
         [[nodiscard]]
         const JCouplingType &findJCouplingTypeById(size_t id) const;
 

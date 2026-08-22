@@ -24,9 +24,10 @@
 
 #define _INTER_WATER_HPP_
 
+#include <memory>
+
 #include "coulombPotential.hpp"
 #include "nonCoulombPair.hpp"
-#include "timer.hpp"
 
 namespace simulationBox
 {
@@ -141,7 +142,7 @@ namespace waterModel
         double getPartialCharge(simulationBox::Atom &atom) const;
     };
 
-    class InterWater : public timings::Timer
+    class InterWater
     {
        public:
         InterWater();

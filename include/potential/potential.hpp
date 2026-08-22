@@ -29,7 +29,6 @@
 
 #include "coulombPotential.hpp"
 #include "nonCoulombPotential.hpp"
-#include "timer.hpp"
 
 namespace physicalData
 {
@@ -69,7 +68,7 @@ namespace potential
      * nonCoulombicPairs for later processing
      *
      */
-    class Potential : public timings::Timer
+    class Potential
     {
        protected:
         std::shared_ptr<CoulombPotential>    _coulombPotential;

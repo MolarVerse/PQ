@@ -34,7 +34,7 @@ using namespace utilities;
  * @param equilibriumAngle
  * @param springConstant
  */
-AngleType::AngleType(size_t id, double equilibriumAngle, double springConstant)
+AngleType::AngleType(AngleId id, double equilibriumAngle, double springConstant)
     : _id(id),
       _equilibriumAngle(equilibriumAngle),
       _forceConstant(springConstant)
@@ -66,9 +66,9 @@ bool forceField::operator==(const AngleType &self, const AngleType &other)
 /**
  * @brief get the id of the angle type
  *
- * @return size_t
+ * @return AngleId
  */
-size_t AngleType::getId() const { return _id; }
+AngleId AngleType::getId() const { return _id; }
 
 /**
  * @brief get the equilibrium angle of the angle type

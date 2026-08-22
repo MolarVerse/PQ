@@ -31,6 +31,7 @@
 
 #include "box.hpp"         // for simulationBox::Periodicity
 #include "constants.hpp"   // for _DEG_TO_RAD_
+#include "globalTimer.hpp"
 #include "physicalData.hpp"
 #include "qmSettings.hpp"   // for QMSettings
 #include "simulationBox.hpp"
@@ -44,7 +45,6 @@ using namespace constants;
 using namespace settings;
 
 using array_d = pybind11::array_t<double>;
-using array_i = pybind11::array_t<int>;
 
 namespace
 {
@@ -181,10 +181,18 @@ namespace
         const auto atomicNumbers = simBox.getAtomicNumbers();
         const auto nAtoms        = simBox.getNumberOfAtoms();
 
+        std::vector<int> atomicNumbersInt;
+        atomicNumbersInt.reserve(nAtoms);
+
+        for (const auto &atomicNumber : atomicNumbers)
+            atomicNumbersInt.push_back(static_cast<int>(atomicNumber.get()));
+
         try
         {
-            const auto atomicNumbers_ =
-                array_i(static_cast<ssize_t>(nAtoms), atomicNumbers.data());
+            const auto atomicNumbers_ = pybind11::array_t<int>(
+                static_cast<ssize_t>(nAtoms),
+                atomicNumbersInt.data()
+            );
 
             return atomicNumbers_;
         }
@@ -264,17 +272,17 @@ void AseQMRunner::run(
                                { throwAfterTimeout(stopToken); }};
 
     {
-        auto _ = scoped("Build ASE Atoms");
+        auto _ = scopedTimer(TimerId::QMEngine, "Build ASE Atoms");
         buildAseAtoms(simBox);
     }
 
     {
-        auto _ = scoped("Execute ASE QM");
+        auto _ = scopedTimer(TimerId::QMEngine, "Execute ASE QM");
         execute();
     }
 
     {
-        auto _ = scoped("Collect ASE Data");
+        auto _ = scopedTimer(TimerId::QMEngine, "Collect ASE Data");
         collectData(simBox, physicalData);
     }
 

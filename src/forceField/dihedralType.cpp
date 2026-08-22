@@ -36,10 +36,10 @@ using namespace utilities;
  * @param phaseShift
  */
 DihedralType::DihedralType(
-    size_t id,
-    double forceConstant,
-    double frequency,
-    double phaseShift
+    DihedralId id,
+    double     forceConstant,
+    double     frequency,
+    double     phaseShift
 )
     : _id(id),
       _forceConstant(forceConstant),
@@ -74,9 +74,9 @@ bool forceField::operator==(const DihedralType &self, const DihedralType &other)
 /**
  * @brief get the id of the dihedral type
  *
- * @return size_t
+ * @return DihedralId
  */
-size_t DihedralType::getId() const { return _id; }
+DihedralId DihedralType::getId() const { return _id; }
 
 /**
  * @brief get the force constant of the dihedral type

@@ -56,6 +56,11 @@ namespace output
         explicit Output(std::string filename) : _fileName(std::move(filename))
         {
         }
+        ~Output() { close(); }
+        Output(const Output &)                = delete;
+        Output &operator=(const Output &)     = delete;
+        Output(Output &&) noexcept            = default;
+        Output &operator=(Output &&) noexcept = default;
 
         void setFilename(const std::string_view &);
         void close();

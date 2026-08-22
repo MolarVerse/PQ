@@ -196,11 +196,12 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
     CellList dummyCellList;
     bruteForce.calculateForces(simBoxBF, physicalDataBF, dummyCellList);
 
+    settings::Settings::activateCellList();
+
     CellList cellList;
     cellList.setNumberOfCells(kCellsPerSide);
     cellList.resizeCells();
     cellList.setup(simBoxCL);
-    cellList.activate();
     cellList.updateCellList(simBoxCL);
     cellListPotential.calculateForces(simBoxCL, physicalDataCL, cellList);
 

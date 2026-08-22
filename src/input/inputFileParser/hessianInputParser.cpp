@@ -34,8 +34,7 @@ using namespace settings;
 using namespace customException;
 using namespace utilities;
 
-HessianInputParser::HessianInputParser(engine::Engine &engine)
-    : InputFileParser(engine)
+HessianInputParser::HessianInputParser()
 {
     addKeyword(
         std::string("hessian_file"),
