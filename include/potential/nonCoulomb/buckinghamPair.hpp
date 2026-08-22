@@ -29,6 +29,8 @@
 #include "nonCoulombPair.hpp"
 #include "strongTypes.hpp"
 
+class TestBuckinghamPairUtils;   // forward declaration
+
 namespace potential
 {
     /**
@@ -40,34 +42,26 @@ namespace potential
     class BuckinghamPair : public NonCoulombPair
     {
        private:
-        double _a;
-        double _dRho;
-        double _c6;
+        BuckinghamParams _params;
 
        public:
         explicit BuckinghamPair(
-            const ExtVdwType vanDerWaalsType1,
-            const ExtVdwType vanDerWaalsType2,
-            const double     cutOff,
-            const double     a,
-            const double     dRho,
-            const double     c6
+            const ExtVdwType        vanDerWaalsType1,
+            const ExtVdwType        vanDerWaalsType2,
+            const double            cutOff,
+            const BuckinghamParams& params
         );
 
         explicit BuckinghamPair(
-            const double cutOff,
-            const double a,
-            const double dRho,
-            const double c6
+            const double            cutOff,
+            const BuckinghamParams& params
         );
 
         explicit BuckinghamPair(
-            const double cutOff,
-            const double energyCutoff,
-            const double forceCutoff,
-            const double a,
-            const double dRho,
-            const double c6
+            const double            cutOff,
+            const double            energyCutoff,
+            const double            forceCutoff,
+            const BuckinghamParams& params
         );
 
         // TODO: we need to explicitly delete it to not implicitly create it
@@ -76,20 +70,16 @@ namespace potential
             const size_t,
             const size_t,
             const double,
-            const double,
-            const double,
-            const double
+            const BuckinghamParams& params
         ) = delete;
 
-        [[nodiscard]] bool operator==(const BuckinghamPair &other) const;
+        [[nodiscard]] bool operator==(const BuckinghamPair& other) const;
 
         [[nodiscard]] std::pair<double, double> calculate(
             const double distance
         ) const override;
 
-        [[nodiscard]] double getA() const;
-        [[nodiscard]] double getDRho() const;
-        [[nodiscard]] double getC6() const;
+        friend class ::TestBuckinghamPairUtils;
     };
 
 }   // namespace potential

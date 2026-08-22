@@ -28,3 +28,17 @@ bool MorseParams::operator==(const MorseParams &other) const
            utilities::compare(wellWidth, other.wellWidth) &&
            utilities::compare(equilibriumDistance, other.equilibriumDistance);
 }
+
+/**
+ * @brief compare two BuckinghamParams objects for equality
+ *
+ * @param other
+ * @return true
+ * @return false
+ */
+bool BuckinghamParams::operator==(const BuckinghamParams &other) const
+{
+    return utilities::compare(scaling, other.scaling) &&
+           utilities::compare(dRho, other.dRho) &&
+           utilities::compare(c6, other.c6);
+}

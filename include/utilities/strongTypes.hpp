@@ -115,4 +115,20 @@ struct MorseParams
     bool operator==(const MorseParams &other) const;
 };
 
+/**
+ * @struct BuckinghamParams
+ *
+ * @brief Struct to hold Buckingham parameters a, dRho and c6
+ *
+ */
+struct BuckinghamParams
+{
+    double scaling;
+    double dRho;
+    double c6;
+
+    [[nodiscard]]
+    bool operator==(const BuckinghamParams &other) const;
+};
+
 #endif   // _STRONG_TYPES_HPP_

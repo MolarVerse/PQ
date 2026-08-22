@@ -5,3 +5,4 @@
 - add strong types for `ExtVdwType` and `VdwType`
 - add strong type for morse params aka `MorseParams`
 - add strong type for lennard jones params aka `LJParams`
+- add strong type for bukcingham params aka `BuckinghamParams`

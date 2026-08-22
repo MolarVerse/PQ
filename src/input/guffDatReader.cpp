@@ -464,36 +464,22 @@ void GuffDatReader::addBuckinghamPair(
         _engine.getPotential()->getNonCoulombPotential()
     );
 
-    const auto buckPair = BuckinghamPair(
-        rncCutOff,
-        coefficients[0],
-        coefficients[1],
-        coefficients[2]
-    );
+    const auto params = BuckinghamParams{
+        .scaling = coefficients[0],
+        .dRho    = coefficients[1],
+        .c6      = coefficients[2]
+    };
+    const auto buckPair           = BuckinghamPair(rncCutOff, params);
     const auto [eCutOff, fCutOff] = buckPair.calculate(rncCutOff);
 
     guffNonCoulomb.setGuffNonCoulPair(
         {molType1, molType2, atomType1, atomType2},
-        std::make_shared<BuckinghamPair>(
-            rncCutOff,
-            eCutOff,
-            fCutOff,
-            coefficients[0],
-            coefficients[1],
-            coefficients[2]
-        )
+        std::make_shared<BuckinghamPair>(rncCutOff, eCutOff, fCutOff, params)
     );
 
     guffNonCoulomb.setGuffNonCoulPair(
         {molType2, molType1, atomType2, atomType1},
-        std::make_shared<BuckinghamPair>(
-            rncCutOff,
-            eCutOff,
-            fCutOff,
-            coefficients[0],
-            coefficients[1],
-            coefficients[2]
-        )
+        std::make_shared<BuckinghamPair>(rncCutOff, eCutOff, fCutOff, params)
     );
 }
 

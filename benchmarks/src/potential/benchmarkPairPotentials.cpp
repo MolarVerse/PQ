@@ -76,7 +76,10 @@ namespace
 
     void BM_Buckingham(benchmark::State& state)
     {
-        potential::BuckinghamPair potential(9.0, 1.0, 0.3, 2.0);
+        potential::BuckinghamPair potential(
+            9.0,
+            BuckinghamParams{.scaling = 1.0, .dRho = 0.3, .c6 = 2.0}
+        );
         runNonCoulombBenchmark(state, potential);
     }
 

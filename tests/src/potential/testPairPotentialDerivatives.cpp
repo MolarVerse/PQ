@@ -89,8 +89,12 @@ TEST(TestPairPotentialDerivatives, LennardJonesForceIsNegativeEnergyDerivative)
 
 TEST(TestPairPotentialDerivatives, BuckinghamForceIsNegativeEnergyDerivative)
 {
-    const auto potential =
-        potential::BuckinghamPair(4.0, 0.25, -0.1, 2.0, -1.1, -0.4);
+    const auto potential = potential::BuckinghamPair(
+        4.0,
+        0.25,
+        -0.1,
+        BuckinghamParams{.scaling = 2.0, .dRho = -1.1, .c6 = -0.4}
+    );
 
     expectForceIsNegativeEnergyDerivative(
         [&potential](const double r) { return potential.calculate(r); },
@@ -185,8 +189,10 @@ TEST(TestPairPotentialDerivatives, NonCoulombShiftedPairsAreZeroAtCutoff)
 
     const auto lennardJonesUnshifted =
         potential::LennardJonesPair(cutoff, LJParams{.c6 = -1.0, .c12 = 1.5});
-    const auto buckinghamUnshifted =
-        potential::BuckinghamPair(cutoff, 2.0, -1.1, -0.4);
+    const auto buckinghamUnshifted = potential::BuckinghamPair(
+        cutoff,
+        BuckinghamParams{.scaling = 2.0, .dRho = -1.1, .c6 = -0.4}
+    );
     const auto morseUnshifted = potential::MorsePair(
         cutoff,
         MorseParams{
@@ -217,9 +223,7 @@ TEST(TestPairPotentialDerivatives, NonCoulombShiftedPairsAreZeroAtCutoff)
         cutoff,
         buckEnergyCutoff,
         buckForceCutoff,
-        2.0,
-        -1.1,
-        -0.4
+        BuckinghamParams{.scaling = 2.0, .dRho = -1.1, .c6 = -0.4}
     );
     const auto morse = potential::MorsePair(
         cutoff,

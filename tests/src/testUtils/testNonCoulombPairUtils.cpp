@@ -28,3 +28,16 @@ const LJParams& TestLJPairUtils::params(
 {
     return ljPair->_params;
 }
+
+/**
+ * @brief Get the BuckinghamParams from a BuckinghamPair.
+ *
+ * @param buckPair pointer to the BuckinghamPair object
+ * @return const BuckinghamParams& reference to the BuckinghamParams
+ */
+const BuckinghamParams& TestBuckinghamPairUtils::params(
+    const potential::BuckinghamPair* buckPair
+)
+{
+    return buckPair->_params;
+}

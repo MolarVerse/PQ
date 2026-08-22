@@ -247,9 +247,9 @@ TEST_F(TestGuffDatReader, addBuckinghamPair)
               .get())
     );
 
-    EXPECT_EQ(pair.getA(), 1.0);
-    EXPECT_EQ(pair.getDRho(), 2.0);
-    EXPECT_EQ(pair.getC6(), 3.0);
+    EXPECT_EQ(TestBuckinghamPairUtils::params(&pair).scaling, 1.0);
+    EXPECT_EQ(TestBuckinghamPairUtils::params(&pair).dRho, 2.0);
+    EXPECT_EQ(TestBuckinghamPairUtils::params(&pair).c6, 3.0);
     EXPECT_EQ(pair.getRadialCutOff(), 10.0);
     EXPECT_EQ(
         pair.getEnergyCutOff(),
