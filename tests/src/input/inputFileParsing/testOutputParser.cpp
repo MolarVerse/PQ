@@ -43,7 +43,7 @@ using namespace settings;
  */
 TEST_F(TestInputFileReader, testParseOutputFreq)
 {
-    OutputInputParser        parser(*_engine);
+    OutputInputParser        parser;
     std::vector<std::string> lineElements = {"outputfreq", "=", "1000"};
     parser.parseOutputFreq(lineElements, 0);
     EXPECT_EQ(OutputFileSettings::getOutputFrequency(), 1000);
@@ -63,7 +63,7 @@ TEST_F(TestInputFileReader, testParseOutputFreq)
  */
 TEST_F(TestInputFileReader, testParseFilePrefix)
 {
-    OutputInputParser              parser(*_engine);
+    OutputInputParser              parser;
     const std::vector<std::string> lineElements = {
         "file_prefix",
         "=",
@@ -79,7 +79,7 @@ TEST_F(TestInputFileReader, testParseFilePrefix)
  */
 TEST_F(TestInputFileReader, testParseLogFilename)
 {
-    OutputInputParser parser(*_engine);
+    OutputInputParser parser;
     _fileName                             = "log.txt";
     std::vector<std::string> lineElements = {"logfilename", "=", _fileName};
     parser.parseLogFilename(lineElements, 0);
@@ -92,7 +92,7 @@ TEST_F(TestInputFileReader, testParseLogFilename)
  */
 TEST_F(TestInputFileReader, testParseInfoFilename)
 {
-    OutputInputParser parser(*_engine);
+    OutputInputParser parser;
     _fileName                             = "info.txt";
     std::vector<std::string> lineElements = {"infoFilename", "=", "info.txt"};
     parser.parseInfoFilename(lineElements, 0);
@@ -105,7 +105,7 @@ TEST_F(TestInputFileReader, testParseInfoFilename)
  */
 TEST_F(TestInputFileReader, testParseEnergyFilename)
 {
-    OutputInputParser parser(*_engine);
+    OutputInputParser parser;
     _fileName                             = "energy.txt";
     std::vector<std::string> lineElements = {"energyFilename", "=", _fileName};
     parser.parseEnergyFilename(lineElements, 0);
@@ -118,7 +118,7 @@ TEST_F(TestInputFileReader, testParseEnergyFilename)
  */
 TEST_F(TestInputFileReader, testParseInstantEnergyFilename)
 {
-    OutputInputParser parser(*_engine);
+    OutputInputParser parser;
     _fileName                                   = "instant_energy.txt";
     const std::vector<std::string> lineElements = {
         "instantEnergyFilename",
@@ -135,7 +135,7 @@ TEST_F(TestInputFileReader, testParseInstantEnergyFilename)
  */
 TEST_F(TestInputFileReader, testParseTrajectoryFilename)
 {
-    OutputInputParser parser(*_engine);
+    OutputInputParser parser;
     _fileName                             = "trajectory.xyz";
     std::vector<std::string> lineElements = {
         "trajectoryFilename",
@@ -152,7 +152,7 @@ TEST_F(TestInputFileReader, testParseTrajectoryFilename)
  */
 TEST_F(TestInputFileReader, testParseHybridCenterFilename)
 {
-    OutputInputParser parser(*_engine);
+    OutputInputParser parser;
     _fileName                                   = "center.xyz";
     const std::vector<std::string> lineElements = {
         "hybrid_center_file",
@@ -169,7 +169,7 @@ TEST_F(TestInputFileReader, testParseHybridCenterFilename)
  */
 TEST_F(TestInputFileReader, testVelocityFilename)
 {
-    OutputInputParser parser(*_engine);
+    OutputInputParser parser;
     _fileName                             = "velocity.xyz";
     std::vector<std::string> lineElements = {
         "velocityFilename",
@@ -186,7 +186,7 @@ TEST_F(TestInputFileReader, testVelocityFilename)
  */
 TEST_F(TestInputFileReader, testForceFilename)
 {
-    OutputInputParser parser(*_engine);
+    OutputInputParser parser;
     _fileName                             = "force.xyz";
     std::vector<std::string> lineElements = {"forceFilename", "=", _fileName};
     parser.parseForceFilename(lineElements, 0);
@@ -199,7 +199,7 @@ TEST_F(TestInputFileReader, testForceFilename)
  */
 TEST_F(TestInputFileReader, testParseRestartFilename)
 {
-    OutputInputParser parser(*_engine);
+    OutputInputParser parser;
     _fileName                             = "restart.xyz";
     std::vector<std::string> lineElements = {"restartFilename", "=", _fileName};
     parser.parseRestartFilename(lineElements, 0);
@@ -212,7 +212,7 @@ TEST_F(TestInputFileReader, testParseRestartFilename)
  */
 TEST_F(TestInputFileReader, testChargeFilename)
 {
-    OutputInputParser parser(*_engine);
+    OutputInputParser parser;
     _fileName                             = "charge.xyz";
     std::vector<std::string> lineElements = {"chargeFilename", "=", _fileName};
     parser.parseChargeFilename(lineElements, 0);
@@ -225,7 +225,7 @@ TEST_F(TestInputFileReader, testChargeFilename)
  */
 TEST_F(TestInputFileReader, testMomentumFilename)
 {
-    OutputInputParser parser(*_engine);
+    OutputInputParser parser;
     _fileName                                   = "momentum.xyz";
     const std::vector<std::string> lineElements = {
         "momentumFilename",
@@ -242,7 +242,7 @@ TEST_F(TestInputFileReader, testMomentumFilename)
  */
 TEST_F(TestInputFileReader, testVirialFilename)
 {
-    OutputInputParser parser(*_engine);
+    OutputInputParser parser;
     _fileName                                   = "viri.xyz";
     const std::vector<std::string> lineElements = {
         "viriFilename",
@@ -259,7 +259,7 @@ TEST_F(TestInputFileReader, testVirialFilename)
  */
 TEST_F(TestInputFileReader, testStressFilename)
 {
-    OutputInputParser parser(*_engine);
+    OutputInputParser parser;
     _fileName                                   = "stress.xyz";
     const std::vector<std::string> lineElements = {
         "stress_file",
@@ -276,7 +276,7 @@ TEST_F(TestInputFileReader, testStressFilename)
  */
 TEST_F(TestInputFileReader, testBoxFilename)
 {
-    OutputInputParser parser(*_engine);
+    OutputInputParser parser;
     _fileName                                   = "box.xyz";
     const std::vector<std::string> lineElements = {"box_file", "=", _fileName};
     parser.parseBoxFilename(lineElements, 0);
@@ -289,7 +289,7 @@ TEST_F(TestInputFileReader, testBoxFilename)
  */
 TEST_F(TestInputFileReader, testTimingsFilename)
 {
-    OutputInputParser parser(*_engine);
+    OutputInputParser parser;
     _fileName                                   = "timings.txt";
     const std::vector<std::string> lineElements = {
         "timings_file",
@@ -306,7 +306,7 @@ TEST_F(TestInputFileReader, testTimingsFilename)
  */
 TEST_F(TestInputFileReader, testRPMDTrajectoryFilename)
 {
-    OutputInputParser parser(*_engine);
+    OutputInputParser parser;
     _fileName                                   = "rpmd_traj.xyz";
     const std::vector<std::string> lineElements = {
         "rpmd_traj_file",
@@ -323,7 +323,7 @@ TEST_F(TestInputFileReader, testRPMDTrajectoryFilename)
  */
 TEST_F(TestInputFileReader, testRPMDRestartFilename)
 {
-    OutputInputParser parser(*_engine);
+    OutputInputParser parser;
     _fileName                                   = "rpmd_traj.xyz";
     const std::vector<std::string> lineElements = {
         "rpmd_restart_file",
@@ -340,7 +340,7 @@ TEST_F(TestInputFileReader, testRPMDRestartFilename)
  */
 TEST_F(TestInputFileReader, testRPMDEnergyFilename)
 {
-    OutputInputParser parser(*_engine);
+    OutputInputParser parser;
     _fileName                                   = "rpmd_energy.txt";
     const std::vector<std::string> lineElements = {
         "rpmd_energy_file",
@@ -357,7 +357,7 @@ TEST_F(TestInputFileReader, testRPMDEnergyFilename)
  */
 TEST_F(TestInputFileReader, testRPMDForceFilename)
 {
-    OutputInputParser parser(*_engine);
+    OutputInputParser parser;
     _fileName                                   = "rpmd_force.xyz";
     const std::vector<std::string> lineElements = {
         "rpmd_force_file",
@@ -374,7 +374,7 @@ TEST_F(TestInputFileReader, testRPMDForceFilename)
  */
 TEST_F(TestInputFileReader, testRPMDChargeFilename)
 {
-    OutputInputParser parser(*_engine);
+    OutputInputParser parser;
     _fileName                                   = "rpmd_charge.xyz";
     const std::vector<std::string> lineElements = {
         "rpmd_charge_file",
@@ -391,7 +391,7 @@ TEST_F(TestInputFileReader, testRPMDChargeFilename)
  */
 TEST_F(TestInputFileReader, testRPMDVelocityFilename)
 {
-    OutputInputParser parser(*_engine);
+    OutputInputParser parser;
     _fileName                                   = "rpmd_velocity.xyz";
     const std::vector<std::string> lineElements = {
         "rpmd_velocity_file",
@@ -410,7 +410,7 @@ TEST_F(TestInputFileReader, parseOverwriteOutput)
 {
     EXPECT_FALSE(OutputFileSettings::getOverwriteOutputFiles());
 
-    OutputInputParser parser(*_engine);
+    OutputInputParser parser;
     parser.parseOverwriteOutput({"overwrite_output", "=", "true"}, 0);
     EXPECT_TRUE(OutputFileSettings::getOverwriteOutputFiles());
 
@@ -446,7 +446,7 @@ TEST_F(TestInputFileReader, parseIncludeOutputMetadata)
 {
     EXPECT_FALSE(OutputFileSettings::getIncludeOutputMetadata());
 
-    OutputInputParser parser(*_engine);
+    OutputInputParser parser;
     parser.parseIncludeOutputMetadata(
         {"include_output_metadata", "=", "true"},
         0

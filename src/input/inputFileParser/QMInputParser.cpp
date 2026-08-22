@@ -27,7 +27,6 @@
 #include <stdexcept>       // for invalid_argument, out_of_range
 #include <unordered_map>   // for unordered_map
 
-#include "engine.hpp"            // for Engine
 #include "exceptions.hpp"        // for InputFileException, customException
 #include "hubbardDerivMap.hpp"   // for hubbardDerivMap3ob
 #include "parserUtils.hpp"
@@ -40,7 +39,6 @@ using namespace input;
 using namespace utilities;
 using namespace settings;
 using namespace customException;
-using namespace engine;
 using namespace references;
 using namespace constants;
 
@@ -53,8 +51,11 @@ using namespace constants;
  *
  * @param engine
  */
-QMInputParser::QMInputParser(engine::Engine &engine)
-    : QMInputParser(engine, true)
+QMInputParser::QMInputParser(
+    output::LogOutput    &logOutput,
+    output::StdoutOutput &stdoutOutput
+)
+    : QMInputParser(logOutput, stdoutOutput, true)
 {
 }
 
@@ -66,13 +67,17 @@ QMInputParser::QMInputParser(engine::Engine &engine)
  * <string>
  *
  * @param engine
+ * @param logOutput
+ * @param stdoutOutput
  * @param resolveBuiltInSlakosPath
  */
 QMInputParser::QMInputParser(
-    Engine    &engine,
-    const bool resolveBuiltInSlakosPath
+    output::LogOutput    &logOutput,
+    output::StdoutOutput &stdoutOutput,
+    const bool            resolveBuiltInSlakosPath
 )
-    : InputFileParser(engine),
+    : _logOutput(&logOutput),
+      _stdoutOutput(&stdoutOutput),
       _resolveBuiltInSlakosPath(resolveBuiltInSlakosPath)
 {
     addKeyword(
@@ -339,17 +344,14 @@ void QMInputParser::parseMaceModel(
     using enum MaceModel;
     checkCommand(lineElements, lineNumber);
 
-    auto &logOutput = _engine.getLogOutput();
-    auto &stdOut    = _engine.getStdoutOutput();
-
     const auto *const modelSizeWarning =
         "The keyword \"mace_model_size\" is deprecated and has been renamed to "
         "\"mace_model\". It will be removed in a future release.";
 
     if (lineElements[0] == "mace_model_size")
     {
-        logOutput.queueWarning(modelSizeWarning);
-        stdOut.writeSetupWarning(modelSizeWarning);
+        _logOutput->queueWarning(modelSizeWarning);
+        _stdoutOutput->writeSetupWarning(modelSizeWarning);
     }
 
     const auto size = toLowerAndReplaceDashesCopy(lineElements[2]);

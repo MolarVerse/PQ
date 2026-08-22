@@ -84,10 +84,10 @@ namespace
                           PotentialType,
                           potential::PotentialCellList>)
         {
+            settings::Settings::activateCellList();
             cellList.setNumberOfCells(cellsPerSide);
             cellList.resizeCells();
             cellList.setup(simBox);
-            cellList.activate();
             cellList.updateCellList(simBox);
         }
 

@@ -373,7 +373,7 @@ void Atom::setAtomTypeName(const std::string_view &atomTypeName)
  *
  * @param atomicNumber
  */
-void Atom::setAtomicNumber(const int atomicNumber)
+void Atom::setAtomicNumber(const AtomNumber atomicNumber)
 {
     _atomicNumber = atomicNumber;
 }

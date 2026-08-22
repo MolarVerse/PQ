@@ -28,6 +28,11 @@
 
 #include "inputFileParser.hpp"   // for InputFileParser
 
+namespace molsys
+{
+    class SimulationBox;
+}   // namespace molsys
+
 namespace input
 {
     /**
@@ -38,8 +43,13 @@ namespace input
      */
     class SimulationBoxInputParser : public InputFileParser
     {
+       private:
+        std::shared_ptr<molsys::SimulationBox> _simulationBox;
+
        public:
-        explicit SimulationBoxInputParser(engine::Engine &);
+        explicit SimulationBoxInputParser(
+            std::shared_ptr<molsys::SimulationBox>
+        );
 
         void parseCoulombRadius(const std::vector<std::string> &, const size_t);
         void parseNonCoulombRadius(

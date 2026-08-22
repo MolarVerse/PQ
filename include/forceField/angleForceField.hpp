@@ -57,8 +57,8 @@ namespace forceField
     class AngleForceField : public connectivity::Angle
     {
        private:
-        size_t _type;
-        bool   _isLinker = false;
+        AngleId _type;
+        bool    _isLinker = false;
 
         double _equilibriumAngle = 0.0;
         double _forceConstant    = 0.0;
@@ -67,7 +67,7 @@ namespace forceField
         AngleForceField(
             const std::vector<molsys::Molecule *> &molecules,
             const std::vector<size_t>             &atomIndices,
-            const size_t                           type
+            const AngleId                          type
         );
 
         void calculateEnergyAndForces(
@@ -89,10 +89,10 @@ namespace forceField
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] size_t getType() const;
-        [[nodiscard]] bool   isLinker() const;
-        [[nodiscard]] double getEquilibriumAngle() const;
-        [[nodiscard]] double getForceConstant() const;
+        [[nodiscard]] AngleId getType() const;
+        [[nodiscard]] bool    isLinker() const;
+        [[nodiscard]] double  getEquilibriumAngle() const;
+        [[nodiscard]] double  getForceConstant() const;
     };
 
 }   // namespace forceField

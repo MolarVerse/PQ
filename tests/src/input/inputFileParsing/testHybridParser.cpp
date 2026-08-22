@@ -39,7 +39,7 @@ using namespace customException;
 
 TEST_F(TestInputFileReader, parseInnerRegionCenter)
 {
-    auto parser = HybridInputParser(*_engine);
+    auto parser = HybridInputParser{};
 
     parser.parseInnerRegionCenter({"inner_region_center", "=", "4,2,2"}, 0);
 
@@ -52,7 +52,7 @@ TEST_F(TestInputFileReader, parseInnerRegionCenter)
 
 TEST_F(TestInputFileReader, parseForcedRegionLists)
 {
-    auto parser = HybridInputParser(*_engine);
+    auto parser = HybridInputParser{};
 
     parser.parseForcedCoreList({"forced_core_list", "=", "3,1,3"}, 0);
     EXPECT_EQ(HybridSettings::getForcedCoreList(), std::vector<int>({1, 3}));
@@ -72,7 +72,7 @@ TEST_F(TestInputFileReader, parseForcedRegionLists)
 
 TEST_F(TestInputFileReader, parseUseQMCharges)
 {
-    auto parser = HybridInputParser(*_engine);
+    auto parser = HybridInputParser{};
 
     parser.parseUseQMCharges({"qm_charges", "=", "qm"}, 0);
     EXPECT_TRUE(HybridSettings::getUseQMCharges());
@@ -90,7 +90,7 @@ TEST_F(TestInputFileReader, parseUseQMCharges)
 
 TEST_F(TestInputFileReader, parseRegionRadii)
 {
-    auto parser = HybridInputParser(*_engine);
+    auto parser = HybridInputParser{};
 
     parser.parseCoreRadius({"core_radius", "=", "3.5"}, 0);
     EXPECT_DOUBLE_EQ(HybridSettings::getCoreRadius(), 3.5);
@@ -113,7 +113,7 @@ TEST_F(TestInputFileReader, parseRegionRadii)
 
 TEST_F(TestInputFileReader, parseThicknesses)
 {
-    auto parser = HybridInputParser(*_engine);
+    auto parser = HybridInputParser{};
 
     parser.parseSmoothingRegionThickness(
         {"smoothing_region_thickness", "=", "1.25"},
@@ -152,7 +152,7 @@ TEST_F(TestInputFileReader, parseSmoothingMethod)
 {
     using enum SmoothingMethod;
 
-    auto parser = HybridInputParser(*_engine);
+    auto parser = HybridInputParser{};
 
     parser.parseSmoothingMethod({"smoothing_method", "=", "hotspot"}, 0);
     EXPECT_EQ(HybridSettings::getSmoothingMethod(), HOTSPOT);
@@ -172,7 +172,7 @@ TEST_F(TestInputFileReader, parseQMForceDistribution)
 {
     using enum QMForceDist;
 
-    auto parser = HybridInputParser(*_engine);
+    auto parser = HybridInputParser{};
 
     parser.parseQMForceDistribution({"qm_force_distribution", "=", "none"}, 0);
     EXPECT_EQ(HybridSettings::getQMForceDist(), NONE);
@@ -206,7 +206,7 @@ TEST_F(TestInputFileReader, parseQMForceDistribution)
 
 TEST_F(TestInputFileReader, parseSelection)
 {
-    auto parser = HybridInputParser(*_engine);
+    auto parser = HybridInputParser{};
 
     EXPECT_EQ(
         parser.parseSelection("5,3-4,4,1", "forced_inner_list"),
@@ -221,7 +221,7 @@ TEST_F(TestInputFileReader, parseSelection)
 
 TEST_F(TestInputFileReader, parseSelectionNoPython)
 {
-    auto parser = HybridInputParser(*_engine);
+    auto parser = HybridInputParser{};
 
     EXPECT_EQ(
         parser

@@ -42,14 +42,14 @@ using namespace input;
  */
 TEST_F(TestInputFileReader, parseCellListActivated)
 {
-    CellListInputParser      parser(*_engine, _engine->getCellList());
+    CellListInputParser      parser(_engine->getCellList());
     std::vector<std::string> lineElements = {"cell-list", "=", "off"};
     parser.parseCellListActivated(lineElements, 0);
-    EXPECT_FALSE(_engine->getCellList()->isActive());
+    EXPECT_FALSE(settings::Settings::isCellListActivated());
 
     lineElements = {"cell-list", "=", "on"};
     parser.parseCellListActivated(lineElements, 0);
-    EXPECT_TRUE(_engine->getCellList()->isActive());
+    EXPECT_TRUE(settings::Settings::isCellListActivated());
 
     lineElements = {"cell-list", "=", "notValid"};
     EXPECT_THROW_MSG(
@@ -69,7 +69,7 @@ TEST_F(TestInputFileReader, parseCellListActivated)
  */
 TEST_F(TestInputFileReader, numberOfCells)
 {
-    CellListInputParser      parser(*_engine, _engine->getCellList());
+    CellListInputParser      parser(_engine->getCellList());
     std::vector<std::string> lineElements = {"cell-number", "=", "3"};
     parser.parseNumberOfCells(lineElements, 0);
     EXPECT_EQ(

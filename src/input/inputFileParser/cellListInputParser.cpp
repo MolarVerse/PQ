@@ -28,14 +28,14 @@
 #include <utility>
 #include <vector>   // for vector
 
-#include "engine.hpp"            // for Engine
+#include "celllist.hpp"
 #include "exceptions.hpp"        // for InputFileException
 #include "inputFileParser.hpp"   // for checkCommand, InputFileParser
 #include "parserUtils.hpp"
+#include "settings.hpp"
 #include "stringUtilities.hpp"   // for toLowerCopy
 
 using namespace input;
-using namespace engine;
 using namespace utilities;
 using namespace customException;
 
@@ -51,10 +51,9 @@ using namespace customException;
  * @param cellListPtr pointer to the cell list object
  */
 CellListInputParser::CellListInputParser(
-    engine::Engine                   &engine,
     std::shared_ptr<molsys::CellList> cellListPtr
 )
-    : InputFileParser(engine), _cellListPtr(std::move(cellListPtr))
+    : _cellListPtr(std::move(cellListPtr))
 {
     addKeyword(
         std::string("cell-list"),
@@ -90,11 +89,9 @@ void CellListInputParser::parseCellListActivated(
     const auto cellListActivated = toLowerCopy(lineElements[2]);
 
     if (cellListActivated == "on")
-        _cellListPtr->activate();
-
+        settings::Settings::activateCellList();
     else if (cellListActivated == "off")
-        _cellListPtr->deactivate();
-
+        settings::Settings::deactivateCellList();
     else
     {
         throw InputFileException(

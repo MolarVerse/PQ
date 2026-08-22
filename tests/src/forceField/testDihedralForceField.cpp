@@ -39,6 +39,7 @@
 #include "physicalData.hpp"              // for PhysicalData
 #include "potentialSettings.hpp"         // for PotentialSettings
 #include "simulationBox.hpp"             // for SimulationBox
+#include "strongTypes.hpp"
 
 namespace potential
 {
@@ -112,7 +113,7 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
     auto bondForceField = forceField::DihedralForceField(
         {&molecule, &molecule, &molecule, &molecule},
         {0, 1, 2, 3},
-        0
+        DihedralId{0}
     );
     bondForceField.setPhaseShift(180.0 * M_PI / 180.0);
     bondForceField.setPeriodicity(3);

@@ -184,10 +184,10 @@ namespace molsys
             const size_t index
         ) const;
 
-        [[nodiscard]] int    getAtomicNumber(const size_t index) const;
-        [[nodiscard]] double getAtomMass(const size_t index) const;
-        [[nodiscard]] double getPartialCharge(const size_t index) const;
-        [[nodiscard]] size_t getAtomType(const size_t index) const;
+        [[nodiscard]] AtomNumber getAtomicNumber(const size_t index) const;
+        [[nodiscard]] double     getAtomMass(const size_t index) const;
+        [[nodiscard]] double     getPartialCharge(const size_t index) const;
+        [[nodiscard]] size_t     getAtomType(const size_t index) const;
         [[nodiscard]] size_t getInternalGlobalVDWType(const size_t index) const;
         [[nodiscard]] std::string getAtomName(const size_t index) const;
 

@@ -25,8 +25,8 @@
 #include <string>   // for string, allocator, basic_string
 #include <vector>   // for vector
 
-#include "exceptions.hpp"        // for InputFileException
-#include "gtest/gtest.h"         // for Message, TestPartResult
+#include "exceptions.hpp"   // for InputFileException
+#include "gtest/gtest.h"    // for Message, TestPartResult
 #include "ringPolymerInputParser.hpp"
 #include "ringPolymerSettings.hpp"   // for RingPolymerSettings
 #include "testInputFileReader.hpp"   // for TestInputFileReader
@@ -43,7 +43,7 @@ using namespace input;
  */
 TEST_F(TestInputFileReader, testParseNumberOfReplicas)
 {
-    RingPolymerInputParser   parser(*_engine);
+    RingPolymerInputParser   parser;
     std::vector<std::string> lineElements = {"rpmd_n_replica", "=", "10"};
     parser.parseNumberOfBeads(lineElements, 0);
 

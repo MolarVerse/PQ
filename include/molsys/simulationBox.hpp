@@ -223,10 +223,10 @@ namespace molsys
         [[nodiscard]] std::vector<linearAlgebra::Vec3D> getPositions() const;
         [[nodiscard]] std::vector<linearAlgebra::Vec3D> getVelocities() const;
         [[nodiscard]] std::vector<linearAlgebra::Vec3D> getForces() const;
-        [[nodiscard]] std::vector<int>      getAtomicNumbers() const;
-        [[nodiscard]] std::vector<double>   flattenPositions() const;
-        [[nodiscard]] std::set<std::string> getUniqueQMAtomNames() const;
-        [[nodiscard]] std::vector<double>   getFlattenedQMPositions() const;
+        [[nodiscard]] std::vector<AtomNumber> getAtomicNumbers() const;
+        [[nodiscard]] std::vector<double>     flattenPositions() const;
+        [[nodiscard]] std::set<std::string>   getUniqueQMAtomNames() const;
+        [[nodiscard]] std::vector<double>     getFlattenedQMPositions() const;
 
         /***************************
          * standard setter methods *

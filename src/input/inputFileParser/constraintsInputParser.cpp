@@ -30,7 +30,6 @@
 #include "constraintSettings.hpp"   // for ConstraintSettings
 #include "constraints.hpp"          // for Constraints
 #include "constraints.hpp"
-#include "engine.hpp"       // for Engine
 #include "exceptions.hpp"   // for InputFileException
 #include "parserUtils.hpp"
 #include "references.hpp"         // for ReferencesOutput
@@ -38,7 +37,6 @@
 #include "stringUtilities.hpp"    // for stringToFiniteDouble, stringToInt
 
 using namespace input;
-using namespace engine;
 using namespace settings;
 using namespace references;
 using namespace customException;
@@ -56,10 +54,9 @@ using namespace customException;
  * @param constraints pointer to the constraints object
  */
 ConstraintsInputParser::ConstraintsInputParser(
-    Engine                                   &engine,
     std::shared_ptr<constraints::Constraints> constraints
 )
-    : InputFileParser(engine), _constraints(std::move(constraints))
+    : _constraints(std::move(constraints))
 {
     addKeyword(
         std::string("shake"),

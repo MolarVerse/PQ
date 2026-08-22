@@ -30,6 +30,7 @@
 #include <string_view>   // for string_view
 
 #include "staticMatrix.hpp"
+#include "strongTypes.hpp"
 #include "vector3d.hpp"
 
 namespace molsys
@@ -56,7 +57,7 @@ namespace molsys
 
         bool _isActive = true;
 
-        int                   _atomicNumber;
+        AtomNumber            _atomicNumber;
         double                _mass;
         double                _partialCharge;
         std::optional<double> _qmCharge;
@@ -127,7 +128,12 @@ namespace molsys
         [[nodiscard]] size_t getExternalGlobalVDWType() const;
         [[nodiscard]] size_t getInternalGlobalVDWType() const;
 
-        [[nodiscard]] int    getAtomicNumber() const { return _atomicNumber; }
+        [[nodiscard]]
+        AtomNumber getAtomicNumber() const
+        {
+            return _atomicNumber;
+        }
+
         [[nodiscard]] double getMass() const;
         [[nodiscard]] double getPartialCharge() const { return _partialCharge; }
         [[nodiscard]] std::optional<double> getQMCharge() const;
@@ -152,7 +158,7 @@ namespace molsys
 
         void setName(const std::string_view &name);
         void setAtomTypeName(const std::string_view &atomTypeName);
-        void setAtomicNumber(const int atomicNumber);
+        void setAtomicNumber(const AtomNumber atomicNumber);
 
         void setMass(const double mass);
         void setPartialCharge(const double partialCharge);

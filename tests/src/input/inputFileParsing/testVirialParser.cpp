@@ -44,7 +44,7 @@ using namespace ::testing;
  */
 TEST_F(TestInputFileReader, testParseVirial)
 {
-    VirialInputParser        parser(*_engine);
+    VirialInputParser        parser;
     std::vector<std::string> lineElements = {"virial", "=", "atomic"};
     parser.parseVirial(lineElements, 0);
     EXPECT_EQ(

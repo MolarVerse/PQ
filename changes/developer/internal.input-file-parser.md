@@ -2,3 +2,4 @@
 - prepare constraints input file parser to remove engine dependency
 - prepare files input file parser to remove engine dependency
 - prepare mm input file parser to remove engine dependency
+- remove engine member of all input file parser and the input file reader

@@ -24,16 +24,16 @@
 
 #include <cstddef>   // for size_t
 #include <format>    // for format
+#include <utility>
 
-#include "engine.hpp"       // for Engine
 #include "exceptions.hpp"   // for InputFileException, customException
 #include "parserUtils.hpp"
-#include "potentialSettings.hpp"       // for PotentialSettings
+#include "potentialSettings.hpp"   // for PotentialSettings
+#include "simulationBox.hpp"
 #include "simulationBoxSettings.hpp"   // for setDensitySet
 #include "stringUtilities.hpp"         // for toLowerCopy
 
 using namespace input;
-using namespace engine;
 using namespace customException;
 using namespace settings;
 using namespace utilities;
@@ -47,9 +47,12 @@ using namespace utilities;
  * <double>
  *
  * @param engine
+ * @param simulationBox
  */
-SimulationBoxInputParser::SimulationBoxInputParser(Engine &engine)
-    : InputFileParser(engine)
+SimulationBoxInputParser::SimulationBoxInputParser(
+    std::shared_ptr<molsys::SimulationBox> simulationBox
+)
+    : _simulationBox(std::move(simulationBox))
 {
     addKeyword(
         std::string("rcoulomb"),
@@ -158,7 +161,7 @@ void SimulationBoxInputParser::parseDensity(
         );
 
     SimulationBoxSettings::setDensitySet(true);
-    _engine.getSimulationBox().setDensity(density);
+    _simulationBox->setDensity(density);
 }
 
 /**

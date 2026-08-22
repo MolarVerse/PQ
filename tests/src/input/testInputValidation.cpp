@@ -114,6 +114,8 @@ class TestInputValidation : public ::testing::Test
             setKeyword("qm_prog");
     }
 
+    void TearDown() override { settings::Settings::deactivateCellList(); }
+
     std::unique_ptr<engine::OptEngine> _engine;
     std::unique_ptr<InputFileReader>   _reader;
 };
@@ -311,7 +313,7 @@ TEST_F(TestInputValidation, rejectsNonFiniteLangevinRampScale)
 TEST_F(TestInputValidation, rejectsCellListWithoutCoulombCutoff)
 {
     configureMDJob(JobType::MM_MD);
-    _engine->getCellList()->activate();
+    settings::Settings::activateCellList();
     PotentialSettings::setCoulombRadiusCutOff(0.0);
 
     ASSERT_THROW_MSG(
@@ -325,7 +327,7 @@ TEST_F(TestInputValidation, rejectsCellListForPureQM)
 {
     configureMDJob(JobType::QM_MD);
     QMSettings::setQMMethod(QMMethod::DFTBPLUS);
-    _engine->getCellList()->activate();
+    settings::Settings::activateCellList();
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(),

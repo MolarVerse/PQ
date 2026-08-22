@@ -17,6 +17,7 @@ target_link_libraries(interWater
     physicalData
     settings
     molsys
+    config_headers
 )
 
 install(TARGETS interWater

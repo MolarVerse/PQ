@@ -26,14 +26,12 @@
 #include <format>    // for format
 #include <utility>
 
-#include "engine.hpp"         // for Engine
 #include "exceptions.hpp"     // for InputFileException
 #include "fileSettings.hpp"   // for FileSettings
 #include "parserUtils.hpp"
 #include "stringUtilities.hpp"   // for fileExists
 
 using namespace input;
-using namespace engine;
 using namespace customException;
 using namespace settings;
 using namespace utilities;
@@ -53,10 +51,9 @@ using namespace utilities;
  * @param intraNonBonded
  */
 FilesInputParser::FilesInputParser(
-    Engine                                         &engine,
     std::shared_ptr<intraNonBonded::IntraNonBonded> intraNonBonded
 )
-    : FilesInputParser(engine, intraNonBonded, true)
+    : FilesInputParser(intraNonBonded, true)
 {
 }
 
@@ -74,11 +71,10 @@ FilesInputParser::FilesInputParser(
  * @param engine
  */
 FilesInputParser::FilesInputParser(
-    Engine                                         &engine,
     std::shared_ptr<intraNonBonded::IntraNonBonded> intraNonBonded,
     const bool                                      validateFilePaths
 )
-    : InputFileParser(engine),
+    : InputFileParser(),
       _intraNonBonded(std::move(intraNonBonded)),
       _validateFilePaths(validateFilePaths)
 {

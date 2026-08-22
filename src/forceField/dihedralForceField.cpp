@@ -51,7 +51,7 @@ using enum HybridZone;
 DihedralForceField::DihedralForceField(
     const std::vector<Molecule *> &molecules,
     const std::vector<size_t>     &atomIndices,
-    const size_t                   type
+    const DihedralId               type
 )
     : Dihedral(molecules, atomIndices), _type(type)
 {
@@ -250,9 +250,9 @@ bool DihedralForceField::isLinker() const { return _isLinker; }
 /**
  * @brief get type of dihedral
  *
- * @return size_t
+ * @return DihedralId
  */
-size_t DihedralForceField::getType() const { return _type; }
+DihedralId DihedralForceField::getType() const { return _type; }
 
 /**
  * @brief get force constant
