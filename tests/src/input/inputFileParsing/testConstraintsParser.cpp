@@ -29,7 +29,6 @@
 #include "constraintsInputParser.hpp"
 #include "engine.hpp"                // for Engine
 #include "exceptions.hpp"            // for InputFileException
-#include "gtest/gtest.h"             // for Message, TestPartResult
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
 

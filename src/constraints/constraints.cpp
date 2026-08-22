@@ -95,7 +95,7 @@ void Constraints::applyShake(SimulationBox &simulationBox)
  * @throws ShakeException if shake algorithm does not
  * converge
  */
-void Constraints::_applyShake(SimulationBox &simBox)
+void Constraints::_applyShake(SimulationBox &simulationBox)
 {
     auto _ = scoped("Shake");
 
@@ -109,10 +109,10 @@ void Constraints::_applyShake(SimulationBox &simBox)
         convergedVector.clear();
 
         auto applyShakeSingleBond =
-            [&simBox, &convergedVector, this](auto &bondConst)
+            [&simulationBox, &convergedVector, this](auto &bondConst)
         {
             convergedVector.push_back(
-                bondConst.applyShake(simBox, _shakeTolerance)
+                bondConst.applyShake(simulationBox, _shakeTolerance)
             );
         };
 
@@ -155,7 +155,7 @@ void Constraints::_applyMShake(SimulationBox &simulationBox)
  * @throws ShakeException if rattle algorithm does not
  * converge
  */
-void Constraints::applyRattle(SimulationBox &simBox)
+void Constraints::applyRattle(SimulationBox &simulationBox)
 {
     if (!_shakeActivated && !_mShakeActivated)
         return;
@@ -164,7 +164,7 @@ void Constraints::applyRattle(SimulationBox &simBox)
         _applyRattle();
 
     if (_mShakeActivated)
-        _applyMRattle(simBox);
+        _applyMRattle(simulationBox);
 }
 
 /**
@@ -244,7 +244,7 @@ void Constraints::applyDistanceConstraints(
 
     auto effective_time = time - _startTime;
 
-    effective_time = effective_time > 0.0 ? effective_time : -1.0;
+    effective_time = effective_time > 0.0 ? effective_time : -1;
 
     std::ranges::for_each(
         _distanceConstraints,

@@ -45,10 +45,10 @@ namespace
         auto box = std::make_shared<SimulationBox>();
         box->setBoxDimensions(boxDims);
 
-        auto a = std::make_shared<Atom>();
-        a->setPosition(pos);
-        a->setForce(force);
-        box->addAtom(a);
+        auto atom = std::make_shared<Atom>();
+        atom->setPosition(pos);
+        atom->setForce(force);
+        box->addAtom(atom);
 
         return box;
     }
@@ -101,8 +101,8 @@ TEST(TestAdam, updateAtStepOneReducesToLearningRateTimesSignOfForce)
     Adam adam(1U, /*nAtoms=*/1U);
     adam.setSimulationBox(box);
 
-    const auto lr = 0.01;
-    adam.update(lr, 1U);
+    const auto learningRate = 0.01;
+    adam.update(learningRate, 1U);
 
     // Per-component direction is preserved (no aliasing across xyz in Adam).
     const auto pos = box->getAtoms()[0]->getPosition();
@@ -111,9 +111,9 @@ TEST(TestAdam, updateAtStepOneReducesToLearningRateTimesSignOfForce)
     EXPECT_GT(pos[2], 0.0);   // positive force component
 
     // For large forces relative to eps, each component magnitude ≈ lr.
-    EXPECT_NEAR(std::abs(pos[0]), lr, 1.0e-6);
-    EXPECT_NEAR(std::abs(pos[1]), lr, 1.0e-6);
-    EXPECT_NEAR(std::abs(pos[2]), lr, 1.0e-6);
+    EXPECT_NEAR(std::abs(pos[0]), learningRate, 1.0e-6);
+    EXPECT_NEAR(std::abs(pos[1]), learningRate, 1.0e-6);
+    EXPECT_NEAR(std::abs(pos[2]), learningRate, 1.0e-6);
 }
 
 TEST(TestAdam, updateStoresOldPosition)

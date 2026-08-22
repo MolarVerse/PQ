@@ -22,12 +22,13 @@
 
 #include "testThermostat.hpp"
 
+#include <gtest/gtest.h>
+
 #include <cmath>   // for sqrt
 
 #include "berendsenThermostat.hpp"                   // for BerendsenThermostat
 #include "constants/internalConversionFactors.hpp"   // for _TEMPERATURE_FACTOR_
 #include "exceptions.hpp"                            // for UserInputException
-#include "gtest/gtest.h"                             // for InitGoogleTest
 #include "langevinThermostat.hpp"                    // for LangevinThermostat
 #include "noseHooverThermostat.hpp"                  // for NoseHooverThermostat
 #include "physicalData.hpp"                          // for PhysicalData
@@ -164,18 +165,18 @@ TEST_F(TestThermostat, applyThermostatBerendsen)
 
 TEST_F(TestThermostat, velocityRescalingTauSetterGetter)
 {
-    auto vr = thermostat::VelocityRescalingThermostat(300.0, 100.0);
-    EXPECT_DOUBLE_EQ(vr.getTau(), 100.0);
+    auto thermostat = thermostat::VelocityRescalingThermostat(300.0, 100.0);
+    EXPECT_DOUBLE_EQ(thermostat.getTau(), 100.0);
 
-    vr.setTau(50.0);
-    EXPECT_DOUBLE_EQ(vr.getTau(), 50.0);
+    thermostat.setTau(50.0);
+    EXPECT_DOUBLE_EQ(thermostat.getTau(), 50.0);
 }
 
 TEST_F(TestThermostat, velocityRescalingThermostatType)
 {
-    auto vr = thermostat::VelocityRescalingThermostat(300.0, 100.0);
+    auto thermostat = thermostat::VelocityRescalingThermostat(300.0, 100.0);
     EXPECT_EQ(
-        vr.getThermostatType(),
+        thermostat.getThermostatType(),
         settings::ThermostatType::VELOCITY_RESCALING
     );
 }
@@ -331,47 +332,50 @@ TEST_F(TestThermostat, langevinThermostatType)
 
 TEST_F(TestThermostat, noseHooverThermostatType)
 {
-    auto nh = thermostat::NoseHooverThermostat(
+    auto thermostat = thermostat::NoseHooverThermostat(
         300.0,
         std::vector<double>{0.0, 0.0, 0.0},
         std::vector<double>{0.0, 0.0, 0.0},
         1.0e13
     );
-    EXPECT_EQ(nh.getThermostatType(), settings::ThermostatType::NOSE_HOOVER);
+    EXPECT_EQ(
+        thermostat.getThermostatType(),
+        settings::ThermostatType::NOSE_HOOVER
+    );
 }
 
 TEST_F(TestThermostat, noseHooverCouplingFrequencySetterGetter)
 {
-    auto nh = thermostat::NoseHooverThermostat(
+    auto thermostat = thermostat::NoseHooverThermostat(
         300.0,
         std::vector<double>{0.0, 0.0, 0.0},
         std::vector<double>{0.0, 0.0, 0.0},
         1.0e13
     );
-    EXPECT_DOUBLE_EQ(nh.getCouplingFrequency(), 1.0e13);
+    EXPECT_DOUBLE_EQ(thermostat.getCouplingFrequency(), 1.0e13);
 
-    nh.setCouplingFrequency(5.0e12);
-    EXPECT_DOUBLE_EQ(nh.getCouplingFrequency(), 5.0e12);
+    thermostat.setCouplingFrequency(5.0e12);
+    EXPECT_DOUBLE_EQ(thermostat.getCouplingFrequency(), 5.0e12);
 }
 
 TEST_F(TestThermostat, noseHooverSetChiAtIndex)
 {
-    auto nh = thermostat::NoseHooverThermostat(
+    auto thermostat = thermostat::NoseHooverThermostat(
         300.0,
         std::vector<double>{0.0, 0.0, 0.0},
         std::vector<double>{0.0, 0.0, 0.0},
         1.0e13
     );
-    nh.setChi(2U, 7.0);
-    EXPECT_DOUBLE_EQ(nh.getChi()[2], 7.0);
+    thermostat.setChi(2U, 7.0);
+    EXPECT_DOUBLE_EQ(thermostat.getChi()[2], 7.0);
 
-    nh.setZeta(1U, 3.0);
-    EXPECT_DOUBLE_EQ(nh.getZeta()[1], 3.0);
+    thermostat.setZeta(1U, 3.0);
+    EXPECT_DOUBLE_EQ(thermostat.getZeta()[1], 3.0);
 }
 
 TEST_F(TestThermostat, noseHooverAppliesFiniteForceAndStateUpdates)
 {
-    auto nh = thermostat::NoseHooverThermostat(
+    auto thermostat = thermostat::NoseHooverThermostat(
         300.0,
         std::vector<double>{0.1, 0.2, 0.3},
         std::vector<double>{0.0, 0.0, 0.0},
@@ -379,18 +383,18 @@ TEST_F(TestThermostat, noseHooverAppliesFiniteForceAndStateUpdates)
     );
     settings::TimingsSettings::setTimeStep(0.1);
 
-    nh.applyThermostatOnForces(*_simulationBox);
+    thermostat.applyThermostatOnForces(*_simulationBox);
     for (const auto &atom : _simulationBox->getAtoms())
         for (size_t axis = 0; axis < 3; ++axis)
             EXPECT_TRUE(std::isfinite(atom->getForce()[axis]));
 
-    const auto chiBefore  = nh.getChi();
-    const auto zetaBefore = nh.getZeta();
-    nh.applyThermostat(*_simulationBox, *_data);
+    const auto chiBefore  = thermostat.getChi();
+    const auto zetaBefore = thermostat.getZeta();
+    thermostat.applyThermostat(*_simulationBox, *_data);
 
     EXPECT_TRUE(std::isfinite(_data->getTemperature()));
     EXPECT_TRUE(std::isfinite(_data->getNoseHooverMomentumEnergy()));
     EXPECT_TRUE(std::isfinite(_data->getNoseHooverFrictionEnergy()));
-    EXPECT_NE(nh.getChi(), chiBefore);
-    EXPECT_NE(nh.getZeta(), zetaBefore);
+    EXPECT_NE(thermostat.getChi(), chiBefore);
+    EXPECT_NE(thermostat.getZeta(), zetaBefore);
 }

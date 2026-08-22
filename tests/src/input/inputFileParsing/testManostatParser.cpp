@@ -26,8 +26,7 @@
 #include <string>   // for string, allocator, basic_string
 #include <vector>   // for vector
 
-#include "exceptions.hpp"        // for InputFileException
-#include "gtest/gtest.h"         // for Message, TestPartResult, testing
+#include "exceptions.hpp"   // for InputFileException
 #include "manostatInputParser.hpp"
 #include "manostatSettings.hpp"      // for ManostatSettings
 #include "testInputFileReader.hpp"   // for TestInputFileReader

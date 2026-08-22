@@ -27,7 +27,6 @@
 #include <vector>
 
 #include "exceptions.hpp"
-#include "gtest/gtest.h"
 #include "hybridInputParser.hpp"
 #include "hybridSettings.hpp"
 #include "testInputFileReader.hpp"

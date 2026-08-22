@@ -156,8 +156,8 @@ namespace physicalData
         void setVirial(const linearAlgebra::tensor3D& virial);
         void setStressTensor(const linearAlgebra::tensor3D& stressTensor);
 
-        void setMomentum(const linearAlgebra::Vec3D& vec);
-        void setAngularMomentum(const linearAlgebra::Vec3D& vec);
+        void setMomentum(const linearAlgebra::Vec3D& momentum);
+        void setAngularMomentum(const linearAlgebra::Vec3D& angularMomentum);
 
         void setKineticEnergy(double kineticEnergy);
         void setKineticEnergyAtomicVector(const linearAlgebra::tensor3D& vec);

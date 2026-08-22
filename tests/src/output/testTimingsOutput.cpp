@@ -23,28 +23,16 @@
 #include <gtest/gtest.h>
 
 #include <cstdio>
-#include <fstream>
-#include <sstream>
 #include <string>
 #include <thread>
 
 #include "globalTimer.hpp"
+#include "testOutputBase.hpp"
 #include "timer.hpp"
 #include "timingsOutput.hpp"
 
 using namespace output;
 using namespace timings;
-
-namespace
-{
-    std::string slurp(const std::string &path)
-    {
-        std::ifstream     in(path);
-        std::stringstream ss;
-        ss << in.rdbuf();
-        return ss.str();
-    }
-}   // namespace
 
 TEST(TestTimingsOutput, writeProducesHeaderAndTotalRow)
 {
@@ -81,13 +69,13 @@ TEST(TestTimingsOutput, writeListsRegisteredSubTimers)
     GlobalTimer global;
     global.startSimulationTimer();
 
-    Timer t(TimerId::DefaultTimings);
+    Timer timer(TimerId::DefaultTimings);
     {
-        auto _ = t.scoped("inner");
+        auto _ = timer.scoped("inner");
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 
-    global.addTimer(t);
+    global.addTimer(timer);
     std::this_thread::sleep_for(std::chrono::milliseconds(1));
     global.stopSimulationTimer();
 

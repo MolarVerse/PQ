@@ -67,23 +67,23 @@ namespace
 
             atom->setPosition({x, y, z});
 
-            // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
+            // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
             if (lineElements.size() > 6)
             {
-                const auto vx = stringToFiniteDouble(lineElements[6]);
-                const auto vy = stringToFiniteDouble(lineElements[7]);
-                const auto vz = stringToFiniteDouble(lineElements[8]);
+                const auto velX = stringToFiniteDouble(lineElements[6]);
+                const auto velY = stringToFiniteDouble(lineElements[7]);
+                const auto velZ = stringToFiniteDouble(lineElements[8]);
 
-                atom->setVelocity({vx, vy, vz});
+                atom->setVelocity({velX, velY, velZ});
             }
 
             if (lineElements.size() > 9)
             {
-                const auto fx = stringToFiniteDouble(lineElements[9]);
-                const auto fy = stringToFiniteDouble(lineElements[10]);
-                const auto fz = stringToFiniteDouble(lineElements[11]);
+                const auto forceX = stringToFiniteDouble(lineElements[9]);
+                const auto forceY = stringToFiniteDouble(lineElements[10]);
+                const auto forceZ = stringToFiniteDouble(lineElements[11]);
 
-                atom->setForce({fx, fy, fz});
+                atom->setForce({forceX, forceY, forceZ});
             }
 
             if (lineElements.size() > 12)
@@ -112,75 +112,75 @@ namespace
 
                 atom->setForceOld({oldFx, oldFy, oldFz});
             }
-            // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
+            // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
         }
         catch (const std::exception &e)
         {
             throw RstFileException(e.what());
         }
     }
-
-    /**
-     * @brief processes a line of the atom section of the rst file
-     *
-     * @details the line looks like this:
-     * atomTypeName randomEntry MolType x y z vx vy vz fx fy fz
-     *
-     * @note for backward compatibility the line can also look like this:
-     * atomTypeName randomEntry MolType x y z vx vy vz fx fy fz x_old y_old
-     * z_old vx_old vy_old vz_old fx_old fy_old fz_old but the old coordinates,
-     * velocities and forces are not used and also not read from the file
-     *
-     * @param lineElements
-     * @param simBox
-     * @param molecule
-     */
-    void processAtomLine(
-        std::vector<std::string> &lineElements,
-        SimulationBox            &simBox,
-        Molecule                 &molecule
-    )
-    {
-        auto atom = std::make_shared<Atom>();
-
-        atom->setAtomTypeName(lineElements[0]);
-
-        setAtomPropertyVectors(lineElements, atom);
-
-        simBox.addAtom(atom);
-        molecule.addAtom(atom);
-    }
-
-    /**
-     * @brief adds a single atom with moltype 0 to the simulation box
-     *
-     * @details for details how the line looks like see processAtomLine
-     *
-     * @param lineElements
-     * @param simBox
-     */
-    void processQMAtomLine(
-        std::vector<std::string> &lineElements,
-        SimulationBox            &simBox
-    )
-    {
-        auto       atom     = std::make_shared<Atom>();
-        const auto molecule = make_unique<Molecule>(0);
-
-        molecule->setName("QM");
-        molecule->setNumberOfAtoms(1);
-
-        atom->setAtomTypeName(lineElements[0]);
-        atom->setName(lineElements[0]);
-
-        setAtomPropertyVectors(lineElements, atom);
-
-        molecule->addAtom(atom);
-
-        simBox.addAtom(atom);
-        simBox.addMolecule(*molecule);
-    }
 }   // namespace
+
+/**
+ * @brief processes a line of the atom section of the rst file
+ *
+ * @details the line looks like this:
+ * atomTypeName randomEntry MolType x y z vx vy vz fx fy fz
+ *
+ * @note for backward compatibility the line can also look like this:
+ * atomTypeName randomEntry MolType x y z vx vy vz fx fy fz x_old y_old
+ * z_old vx_old vy_old vz_old fx_old fy_old fz_old but the old coordinates,
+ * velocities and forces are not used and also not read from the file
+ *
+ * @param lineElements
+ * @param simBox
+ * @param molecule
+ */
+void AtomSection::_processAtomLine(
+    std::vector<std::string> &lineElements,
+    SimulationBox            &simBox,
+    Molecule                 &molecule
+)
+{
+    auto atom = std::make_shared<Atom>();
+
+    atom->setAtomTypeName(lineElements[0]);
+
+    setAtomPropertyVectors(lineElements, atom);
+
+    simBox.addAtom(atom);
+    molecule.addAtom(atom);
+}
+
+/**
+ * @brief adds a single atom with moltype 0 to the simulation box
+ *
+ * @details for details how the line looks like see processAtomLine
+ *
+ * @param lineElements
+ * @param simBox
+ */
+void AtomSection::_processQMAtomLine(
+    std::vector<std::string> &lineElements,
+    SimulationBox            &simBox
+)
+{
+    auto       atom     = std::make_shared<Atom>();
+    const auto molecule = make_unique<Molecule>(0);
+
+    molecule->setName("QM");
+    molecule->setNumberOfAtoms(1);
+
+    atom->setAtomTypeName(lineElements[0]);
+    atom->setName(lineElements[0]);
+
+    setAtomPropertyVectors(lineElements, atom);
+
+    molecule->addAtom(atom);
+
+    simBox.addAtom(atom);
+    simBox.addMolecule(*molecule);
+}
 
 /**
  * @brief processes the atom section of the rst file
@@ -214,7 +214,7 @@ void AtomSection::process(
 
     if (0 == moltype)
     {
-        processQMAtomLine(lineElements, simBox);
+        _processQMAtomLine(lineElements, simBox);
         return;
     }
 
@@ -261,7 +261,7 @@ void AtomSection::process(
             );
         }
 
-        processAtomLine(lineElements, simBox, *molecule);
+        _processAtomLine(lineElements, simBox, *molecule);
 
         ++atomCounter;
 
@@ -338,7 +338,7 @@ void AtomSection::checkNumberOfLineArguments(
 {
     const auto lineSize = lineElements.size();
 
-    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     if (lineSize % 3 != 0 || lineSize < 6 || lineSize > 21)
     {
         throw RstFileException(
@@ -349,7 +349,7 @@ void AtomSection::checkNumberOfLineArguments(
             )
         );
     }
-    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 }
 
 /**

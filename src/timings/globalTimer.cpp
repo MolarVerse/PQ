@@ -67,8 +67,8 @@ void GlobalTimer::sortTimers()
 
     std::ranges::sort(
         _timers,
-        [](const Timer& a, const Timer& b)
-        { return a.calculateElapsedTime() > b.calculateElapsedTime(); }
+        [](const Timer& lhs, const Timer& rhs)
+        { return lhs.calculateElapsedTime() > rhs.calculateElapsedTime(); }
     );
 }
 

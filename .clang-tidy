@@ -75,21 +75,8 @@ Checks:
   portability-restrict-system-includes,
   portability-simd-intrinsics,
   portability-std-allocator-const,
-  readability-avoid-const-params-in-decls,
-  readability-avoid-nested-conditional-operator,
-  readability-avoid-return-with-void-value,
-  readability-avoid-unconditional-preprocessor-if,
-  readability-braces-around-statements,
-  readability-const-return-type,
-  readability-container-contains,
-  readability-container-data-pointer,
-  readability-container-size-empty,
-  readability-convert-member-functions-to-static,
-  readability-delete-null-pointer,
-  readability-duplicate-include,
-  readability-else-after-return,
-  readability-function-cognitive-complexity,
-  readability-function-size,
+  readability-*,
+  zircon-*,
   -cppcoreguidelines-owning-memory,
   -cppcoreguidelines-pro-type-member-init,
   -cppcoreguidelines-pro-type-union-access,
@@ -140,7 +127,7 @@ FormatStyle:     google
 CheckOptions:
     ### allow some magic numbers
     - key:             readability-magic-numbers.IgnoredFloatingPointValues
-      value:           "0.5;2.0"
+      value:           "0.5;2.0;1.0"
     - key:             cppcoreguidelines-avoid-magic-numbers.IgnoredFloatingPointValues
       value:           "0.5;2.0;1.0"
 
@@ -153,11 +140,14 @@ CheckOptions:
 #   - key:             llvmlibc-restrict-system-libc-headers.Includes
 #     value:           'cstdint'
 
-#   ### allow short variable names
-#   - key:             readability-identifier-length.IgnoredParameterNames
-#     value:           '^(id|it|db|x|y|z|tx)$'
-#   - key:             readability-identifier-length.IgnoredVariableNames
-#     value:           '^(id|it|db|x|y|z|tx)$'
+  ### allow short variable names
+    - key:             readability-identifier-length.IgnoredParameterNames
+      value:           '^(id|it|x|y|z|lj|J0|mu|c6)$'
+    - key:             readability-identifier-length.IgnoredVariableNames
+      value:           '^(id|it|x|y|z|lj|J0|mu|c6|_)$'
+    - key:             readability-identifier-length.IgnoredLoopCounterNames
+      value:           '^(x|y|z|i|j|k|l)$'
+      
   
 
   ### short line statements
@@ -172,40 +162,3 @@ CheckOptions:
     - key:             misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic
       value:           true
 ...
-
-### TO BE INCLUDED IN THE FUTURE
-  # readability-identifier-length,
-  # readability-identifier-naming,
-  # readability-implicit-bool-conversion,
-  # readability-inconsistent-declaration-parameter-name,
-  # readability-isolate-declaration,
-  # readability-magic-numbers,
-  # readability-make-member-function-const,
-  # readability-misleading-indentation,
-  # readability-misplaced-array-index,
-  # readability-named-parameter,
-  # readability-non-const-parameter,
-  # readability-operators-representation,
-  # readability-qualified-auto,
-  # readability-redundant-access-specifiers,
-  # readability-redundant-casting,
-  # readability-redundant-control-flow,
-  # readability-redundant-declaration,
-  # readability-redundant-function-ptr-dereference,
-  # readability-redundant-inline-specifier,
-  # readability-redundant-member-init,
-  # readability-redundant-preprocessor,
-  # readability-redundant-smartptr-get,
-  # readability-redundant-string-cstr,
-  # readability-redundant-string-init,
-  # readability-reference-to-constructed-temporary,
-  # readability-simplify-boolean-expr,
-  # readability-simplify-subscript-expr,
-  # readability-static-accessed-through-instance,
-  # readability-static-definition-in-anonymous-namespace,
-  # readability-string-compare,
-  # readability-suspicious-call-argument,
-  # readability-uniqueptr-delete-release,
-  # readability-uppercase-literal-suffix,
-  # readability-use-anyofallof,
-  # zircon-temporary-objects,

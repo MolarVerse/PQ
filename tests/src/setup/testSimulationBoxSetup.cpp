@@ -33,7 +33,7 @@
 #include "exceptions.hpp"     // for MolDescriptorException, InputFileException
 #include "fileSettings.hpp"   // for FileSettings
 #include "forceFieldSettings.hpp"      // for ForceFieldSettings
-#include "gtest/gtest.h"               // for Message, TestPartResult
+                                       // for Message, TestPartResult
 #include "molecule.hpp"                // for Molecule
 #include "moleculeType.hpp"            // for MoleculeType
 #include "potentialSettings.hpp"       // for PotentialSettings

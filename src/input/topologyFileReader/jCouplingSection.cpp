@@ -59,7 +59,7 @@ void JCouplingSection::processSection(
     Engine                   &engine
 )
 {
-    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     if (lineElements.size() != 5)
     {
         throw TopologyException(
@@ -92,7 +92,7 @@ void JCouplingSection::processSection(
             )
         );
     }
-    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
     auto &simBox = engine.getSimulationBox();
 

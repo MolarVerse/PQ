@@ -84,11 +84,11 @@ void Adam::update(double learningRate, size_t step)
         _momentum1[i] = _beta1 * _momentum1[i] - (1.0 - _beta1) * force;
         _momentum2[i] = _beta2 * _momentum2[i] + (1.0 - _beta2) * force * force;
 
-        const auto m1 = _momentum1[i] / (1.0 - std::pow(_beta1, step));
-        const auto m2 = _momentum2[i] / (1.0 - std::pow(_beta2, step));
+        const auto mom1 = _momentum1[i] / (1.0 - std::pow(_beta1, step));
+        const auto mom2 = _momentum2[i] / (1.0 - std::pow(_beta2, step));
 
         constexpr auto epsilon = 1e-8;
-        auto           pos_new = pos - learningRate * m1 / (sqrt(m2 + epsilon));
+        auto pos_new = pos - learningRate * mom1 / (sqrt(mom2 + epsilon));
 
         _simulationBox->applyPBC(pos_new);
 

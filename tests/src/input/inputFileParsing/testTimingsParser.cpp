@@ -28,7 +28,6 @@
 #include <vector>   // for vector
 
 #include "exceptions.hpp"            // for InputFileException
-#include "gtest/gtest.h"             // for Message, TestPartResult, testing
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
 #include "timingsInputParser.hpp"

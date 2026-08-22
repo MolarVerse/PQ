@@ -266,9 +266,9 @@ void MDEngine::writeOutput()
     {
         _averagePhysicalData.makeAverages(static_cast<double>(outputFreq));
 
-        const auto dt            = TimingsSettings::getTimeStep();
+        const auto timeStep      = TimingsSettings::getTimeStep();
         const auto effStepDouble = static_cast<double>(effStep);
-        const auto simTime       = effStepDouble * dt * FS_TO_PS;
+        const auto simTime       = effStepDouble * timeStep * FS_TO_PS;
 
         _engineOutput.writeEnergyFile(effStep, _averagePhysicalData);
         _engineOutput.writeInstantEnergyFile(effStep, *_physicalData);

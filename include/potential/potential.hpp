@@ -143,7 +143,7 @@ namespace potential
         ) const;
 
         template <typename T>
-        void makeCoulombPotential(T p);
+        void makeCoulombPotential(T potential);
 
         template <typename T>
         void makeNonCoulombPotential(const T &nonCoulombPot);

@@ -70,7 +70,7 @@ namespace input
         );
         static void parseMaceQMMethod(const std::string_view &);
 
-        void        parseSlakosType(const std::vector<std::string> &, size_t);
+        void parseSlakosType(const std::vector<std::string> &, size_t) const;
         static void parseSlakosPath(const std::vector<std::string> &, size_t);
         static void parseThirdOrder(const std::vector<std::string> &, size_t);
         static void parseHubbardDerivs(

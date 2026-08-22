@@ -43,8 +43,8 @@ int main()
 {
     using namespace linearAlgebra;
 
-    const Vec3D v1{1.1, 2.2, 3.3};
-    const Vec3D v2{0.7, -1.3, 2.1};
+    const Vec3D vec1{1.1, 2.2, 3.3};
+    const Vec3D vec2{0.7, -1.3, 2.1};
 
     // non-singular so inverse() is well defined
     const StaticMatrix3x3<double> matrix{
@@ -58,13 +58,14 @@ int main()
     double sink = 0.0;
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
-        const double scale = 1.0 + static_cast<double>(i & 255U) * 0.01;
-        const Vec3D  a     = v1 * scale;
-        const Vec3D  b     = v2 - a;
+        const double scale      = 1.0 + static_cast<double>(i & 255U) * 0.01;
+        const Vec3D  vec1Scaled = vec1 * scale;
+        const Vec3D  vec2Rel    = vec2 - vec1Scaled;
 
-        sink += norm(a + b) + normSquared(a) + dot(a, b) + norm(cross(a, b));
+        sink += norm(vec1Scaled + vec2Rel) + normSquared(vec1Scaled) +
+                dot(vec1Scaled, vec2Rel) + norm(cross(vec1Scaled, vec2Rel));
 
-        const Vec3D matrixVec = matrix * b;
+        const Vec3D matrixVec = matrix * vec2Rel;
         const auto  matrixSq  = matrix * transpose(matrix);
 
         sink += norm(matrixVec) + det(matrixSq) + det(inverse(matrix));

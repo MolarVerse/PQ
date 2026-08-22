@@ -76,11 +76,11 @@ namespace linearAlgebra
      * @param t
      */
     template <typename T>
-    StaticMatrix3x3<T>::StaticMatrix3x3(const T &t)
+    StaticMatrix3x3<T>::StaticMatrix3x3(const T &mat)
     {
-        _data[0] = Vector3D<T>(t);
-        _data[1] = Vector3D<T>(t);
-        _data[2] = Vector3D<T>(t);
+        _data[0] = Vector3D<T>(mat);
+        _data[1] = Vector3D<T>(mat);
+        _data[2] = Vector3D<T>(mat);
     }
 
     /**

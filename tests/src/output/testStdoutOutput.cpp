@@ -26,7 +26,6 @@
 #include <iosfwd>   // for stringstream
 #include <string>   // for allocator, string
 
-#include "gtest/gtest.h"        // for Message, TestPartResult
 #include "outputMessages.hpp"   // for _OUTPUT_
 #include "systemInfo.hpp"       // for _AUTHOR_, _EMAIL_
 

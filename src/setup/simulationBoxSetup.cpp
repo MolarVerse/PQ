@@ -387,11 +387,11 @@ void SimulationBoxSetup::checkBoxSettings()
  */
 void SimulationBoxSetup::checkRcCutoff()
 {
-    const auto &simBox = _engine.getSimulationBox();
-    const auto  rc     = PotentialSettings::getCoulombRadiusCutOff();
-    const auto  minDim = simBox.getMinimalBoxDimension();
+    const auto &simBox        = _engine.getSimulationBox();
+    const auto  coulombCutoff = PotentialSettings::getCoulombRadiusCutOff();
+    const auto  minDim        = simBox.getMinimalBoxDimension();
 
-    if (rc > minDim / 2.0)
+    if (coulombCutoff > minDim / 2.0)
     {
         throw InputFileException(
             std::format(
@@ -498,10 +498,11 @@ void SimulationBoxSetup::writeSetupInfo() const
     log.writeEmptyLine();
     // clang-format on
 
-    const auto rc    = PotentialSettings::getCoulombRadiusCutOff();
-    const auto rcStr = std::format("{:14.5f} {}", rc, ANGSTROM);
+    const auto coulombCutoff = PotentialSettings::getCoulombRadiusCutOff();
+    const auto coulombCutoffStr =
+        std::format("{:14.5f} {}", coulombCutoff, ANGSTROM);
 
-    log.writeSetupInfo(std::format("coulomb cutoff:  {}", rcStr));
+    log.writeSetupInfo(std::format("coulomb cutoff:  {}", coulombCutoffStr));
     log.writeEmptyLine();
 
     if (SimulationBoxSettings::getInitializeVelocities() ==

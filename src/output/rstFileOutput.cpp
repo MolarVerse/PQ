@@ -47,10 +47,11 @@ namespace
      */
     void writeNHChain(const Thermostat &thermostat, std::ostringstream &buffer)
     {
-        const auto &nh = dynamic_cast<const NoseHooverThermostat &>(thermostat);
+        const auto &nhChain =
+            dynamic_cast<const NoseHooverThermostat &>(thermostat);
 
-        const auto &chi  = nh.getChi();
-        const auto &zeta = nh.getZeta();
+        const auto &chi  = nhChain.getChi();
+        const auto &zeta = nhChain.getZeta();
 
         for (size_t i = 0; i < chi.size() - 1; ++i)
         {
@@ -106,20 +107,30 @@ void RstFileOutput::write(
             const auto x        = molecule.getAtomPosition(i)[0];
             const auto y        = molecule.getAtomPosition(i)[1];
             const auto z        = molecule.getAtomPosition(i)[2];
-            const auto vx       = molecule.getAtomVelocity(i)[0];
-            const auto vy       = molecule.getAtomVelocity(i)[1];
-            const auto vz       = molecule.getAtomVelocity(i)[2];
-            const auto fx       = molecule.getAtomForce(i)[0];
-            const auto fy       = molecule.getAtomForce(i)[1];
-            const auto fz       = molecule.getAtomForce(i)[2];
+            const auto velX     = molecule.getAtomVelocity(i)[0];
+            const auto velY     = molecule.getAtomVelocity(i)[1];
+            const auto velZ     = molecule.getAtomVelocity(i)[2];
+            const auto forceX   = molecule.getAtomForce(i)[0];
+            const auto forceY   = molecule.getAtomForce(i)[1];
+            const auto forceZ   = molecule.getAtomForce(i)[2];
 
             buffer << std::format("{:<5}\t", atomName);
             buffer << std::format("{:<5}\t", i + 1);
             buffer << std::format("{:<5}\t", molType);
 
             buffer << std::format("{:15.8f}\t{:15.8f}\t{:15.8f}\t", x, y, z);
-            buffer << std::format("{:19.8e}\t{:19.8e}\t{:19.8e}\t", vx, vy, vz);
-            buffer << std::format("{:15.8f}\t{:15.8f}\t{:15.8f}", fx, fy, fz);
+            buffer << std::format(
+                "{:19.8e}\t{:19.8e}\t{:19.8e}\t",
+                velX,
+                velY,
+                velZ
+            );
+            buffer << std::format(
+                "{:15.8f}\t{:15.8f}\t{:15.8f}",
+                forceX,
+                forceY,
+                forceZ
+            );
 
             buffer << '\n' << std::flush;
         }

@@ -42,7 +42,7 @@ TEST_F(TestTopologySection, processSectionBond)
     EXPECT_EQ(_engine->getForceField()->getBonds().size(), 1);
     EXPECT_EQ(
         _engine->getForceField()->getBonds()[0].getMolecule1(),
-        &(_engine->getSimulationBox().getMolecules()[0])
+        _engine->getSimulationBox().getMolecules().data()
     );
     EXPECT_EQ(
         _engine->getForceField()->getBonds()[0].getMolecule2(),

@@ -156,7 +156,7 @@ void CoulombLongRangeInputParser::parseReactionFieldEpsilon(
 
     const auto epsilon = stringToFiniteDouble(lineElements[2]);
 
-    if (epsilon < 1.0)
+    if (epsilon < 1)
     {
         throw InputFileException(
             "Static relative permittivity \"rf_epsilon\" cannot be lower than "

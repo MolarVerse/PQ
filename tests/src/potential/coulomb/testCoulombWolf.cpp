@@ -26,7 +26,7 @@
 
 #include "constants/internalConversionFactors.hpp"   // for _COULOMB_PREFACTOR_
 #include "coulombWolf.hpp"                           // for CoulombWolf
-#include "gtest/gtest.h"   // for Message, TestPartResult
+// for Message, TestPartResult
 
 using namespace potential;
 

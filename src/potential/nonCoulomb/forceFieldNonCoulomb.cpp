@@ -139,7 +139,7 @@ void ForceFieldNonCoulomb::determineInternalGlobalVdwTypes(
  * der Waals types are defined twice
  */
 void ForceFieldNonCoulomb::sortNonCoulombicsPairs(
-    std::vector<std::shared_ptr<NonCoulombPair>> &nonCoulPairsVec
+    std::vector<std::shared_ptr<NonCoulombPair>> &diagonalElements
 )
 {
     auto isLess = [](const auto &nonCoulPair1, const auto &nonCoulPair2)
@@ -158,14 +158,14 @@ void ForceFieldNonCoulomb::sortNonCoulombicsPairs(
         return false;
     };
 
-    std::ranges::sort(nonCoulPairsVec, isLess);
+    std::ranges::sort(diagonalElements, isLess);
 
     auto compareSharedPtrs = [](const auto &pair1, const auto &pair2)
     { return *pair1 == *pair2; };
 
-    const auto iter = adjacent_find(nonCoulPairsVec, compareSharedPtrs);
+    const auto iter = adjacent_find(diagonalElements, compareSharedPtrs);
 
-    if (iter != nonCoulPairsVec.end())
+    if (iter != diagonalElements.end())
     {
         throw ParameterFileException(
             std::format(

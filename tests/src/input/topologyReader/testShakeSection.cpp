@@ -27,7 +27,7 @@
 
 #include "engine.hpp"                // for Engine
 #include "exceptions.hpp"            // for TopologyException
-#include "gtest/gtest.h"             // for Message, TestPartResult
+                                     // for Message, TestPartResult
 #include "shakeSection.hpp"          // for ShakeSection
 #include "testTopologySection.hpp"   // for TestTopologySection
 
@@ -46,7 +46,7 @@ TEST_F(TestTopologySection, processSectionShake)
     EXPECT_EQ(constraints->getBondConstraints().size(), 1);
     EXPECT_EQ(
         constraints->getBondConstraints()[0].getMolecule1(),
-        &(_engine->getSimulationBox().getMolecules()[0])
+        _engine->getSimulationBox().getMolecules().data()
     );
     EXPECT_EQ(
         constraints->getBondConstraints()[0].getMolecule2(),

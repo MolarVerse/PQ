@@ -85,12 +85,12 @@ SemiIsotropicBerendsenManostat::SemiIsotropicBerendsenManostat(
  */
 void BerendsenManostat::applyManostat(
     SimulationBox &simBox,
-    PhysicalData  &physicalData
+    PhysicalData  &physData
 )
 {
     auto _ = scoped("Berendsen");
 
-    calculatePressure(simBox, physicalData);
+    calculatePressure(simBox, physData);
 
     const auto mu = calculateMu();
 
@@ -103,8 +103,8 @@ void BerendsenManostat::applyManostat(
 
     simBox.scaleBox(mu);
 
-    physicalData.setVolume(simBox.getVolume());
-    physicalData.setDensity(simBox.getDensity());
+    physData.setVolume(simBox.getVolume());
+    physData.setDensity(simBox.getDensity());
 
     simBox.checkCoulRadiusCutOff(ExceptionType::MANOSTATEXCEPTION);
 
@@ -121,10 +121,10 @@ void BerendsenManostat::applyManostat(
  */
 tensor3D BerendsenManostat::calculateMu() const
 {
-    const auto p         = trace(_pressureTensor) / 3.0;
+    const auto pressure  = trace(_pressureTensor) / 3.0;
     const auto preFactor = _compressibility * _dt / _tau;
 
-    return diagonalMatrix(::cbrt(1.0 - preFactor * (_targetPressure - p)));
+    return diagonalMatrix(::cbrt(1 - preFactor * (_targetPressure - pressure)));
 }
 
 /**
@@ -168,7 +168,7 @@ tensor3D AnisotropicBerendsenManostat::calculateMu() const
     const auto pxyz      = diagonal(_pressureTensor);
     const auto preFactor = _compressibility * _dt / _tau;
 
-    return diagonalMatrix(1.0 - preFactor * (_targetPressure - pxyz));
+    return diagonalMatrix(1 - preFactor * (_targetPressure - pxyz));
 }
 
 /**

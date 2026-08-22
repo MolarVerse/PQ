@@ -28,7 +28,7 @@
 #include "dihedralSection.hpp"       // for DihedralSection
 #include "engine.hpp"                // for Engine
 #include "exceptions.hpp"            // for TopologyException
-#include "gtest/gtest.h"             // for Message, TestPartResult
+                                     // for Message, TestPartResult
 #include "testTopologySection.hpp"   // for TestTopologySection
 
 /**
@@ -43,7 +43,7 @@ TEST_F(TestTopologySection, processSectionDihedral)
     EXPECT_EQ(_engine->getForceField()->getDihedrals().size(), 1);
     EXPECT_EQ(
         _engine->getForceField()->getDihedrals()[0].getMolecules()[0],
-        &(_engine->getSimulationBox().getMolecules()[0])
+        _engine->getSimulationBox().getMolecules().data()
     );
     EXPECT_EQ(
         _engine->getForceField()->getDihedrals()[0].getMolecules()[1],

@@ -117,87 +117,97 @@ namespace
         [[nodiscard]] const std::string &getCommand() const { return _command; }
     };
 
-    class ExternalQMRunnerTest : public testing::Test
-    {
-       protected:
-        std::filesystem::path   _originalPath;
-        std::filesystem::path   _workPath;
-        SimulationBox           _simulationBox;
-        PhysicalData            _physicalData;
-        ExternalQMRunnerHarness _runner;
-        QM::DFTBPlusRunner      _dftbRunner;
-
-        QMMethod    _qmMethod;
-        JobType     _jobType;
-        bool        _removeNetForce;
-        double      _timeLimit;
-        std::string _qmScript;
-        std::string _dftbFile;
-
-        void SetUp() override
-        {
-            _qmMethod       = QMSettings::getQMMethod();
-            _jobType        = Settings::getJobtype();
-            _removeNetForce = QMSettings::getRemoveNetForce();
-            _timeLimit      = QMSettings::getQMLoopTimeLimit();
-            _qmScript       = QMSettings::getQMScript();
-            _dftbFile       = FileSettings::getDFTBFileName();
-            _originalPath   = std::filesystem::current_path();
-
-            const auto stamp =
-                std::chrono::steady_clock::now().time_since_epoch().count();
-            _workPath = std::filesystem::temp_directory_path() /
-                        ("pq external qm; " + std::to_string(stamp));
-            ASSERT_TRUE(std::filesystem::create_directory(_workPath));
-            std::filesystem::current_path(_workPath);
-
-            QMSettings::setQMMethod(QMMethod::DFTBPLUS);
-            QMSettings::setRemoveNetForce(false);
-            QMSettings::setQMLoopTimeLimit(0.0);
-            Settings::setJobtype(JobType::QM_MD);
-
-            auto atom = std::make_shared<Atom>();
-            atom->setName("H");
-            _simulationBox.addAtom(atom);
-            _simulationBox.setBoxDimensions({10.0, 10.0, 10.0});
-        }
-
-        void TearDown() override
-        {
-            QMSettings::setQMMethod(_qmMethod);
-            QMSettings::setRemoveNetForce(_removeNetForce);
-            QMSettings::setQMLoopTimeLimit(_timeLimit);
-            QMSettings::setQMScript(_qmScript);
-            FileSettings::setDFTBFileName(_dftbFile);
-            Settings::setJobtype(_jobType);
-
-            std::filesystem::current_path(_originalPath);
-            std::error_code error;
-            std::filesystem::remove_all(_workPath, error);
-            EXPECT_FALSE(error);
-        }
-
-        std::filesystem::path configureQuotedScript(
-            QM::ExternalQMRunner &runner
-        ) const
-        {
-            const auto scriptDirectory =
-                _workPath / "working path; $(touch qm-injected)";
-            std::filesystem::create_directory(scriptDirectory);
-
-            const auto *const scriptName =
-                "runner's script; touch qm-injected; #";
-
-            const auto scriptFile = scriptDirectory / scriptName;
-            writeFile(scriptFile.string(), "");
-
-            runner.setScriptPath(scriptDirectory.string() + '/');
-            QMSettings::setQMScript(scriptName);
-
-            return scriptFile;
-        }
-    };
 }   // namespace
+
+class ExternalQMRunnerTest : public testing::Test
+{
+   protected:
+    std::filesystem::path   _originalPath;
+    std::filesystem::path   _workPath;
+    SimulationBox           _simulationBox;
+    PhysicalData            _physicalData;
+    ExternalQMRunnerHarness _runner;
+    QM::DFTBPlusRunner      _dftbRunner;
+
+    QMMethod    _qmMethod;
+    JobType     _jobType;
+    bool        _removeNetForce;
+    double      _timeLimit;
+    std::string _qmScript;
+    std::string _dftbFile;
+
+    static void readForceFile(SimulationBox &box, PhysicalData &physicalData)
+    {
+        QM::ExternalQMRunner::_readForceFile(box, physicalData);
+    }
+
+    static void readChargeFile(SimulationBox &box)
+    {
+        QM::ExternalQMRunner::_readChargeFile(box);
+    }
+
+    void SetUp() override
+    {
+        _qmMethod       = QMSettings::getQMMethod();
+        _jobType        = Settings::getJobtype();
+        _removeNetForce = QMSettings::getRemoveNetForce();
+        _timeLimit      = QMSettings::getQMLoopTimeLimit();
+        _qmScript       = QMSettings::getQMScript();
+        _dftbFile       = FileSettings::getDFTBFileName();
+        _originalPath   = std::filesystem::current_path();
+
+        const auto stamp =
+            std::chrono::steady_clock::now().time_since_epoch().count();
+        _workPath = std::filesystem::temp_directory_path() /
+                    ("pq external qm; " + std::to_string(stamp));
+        ASSERT_TRUE(std::filesystem::create_directory(_workPath));
+        std::filesystem::current_path(_workPath);
+
+        QMSettings::setQMMethod(QMMethod::DFTBPLUS);
+        QMSettings::setRemoveNetForce(false);
+        QMSettings::setQMLoopTimeLimit(0.0);
+        Settings::setJobtype(JobType::QM_MD);
+
+        auto atom = std::make_shared<Atom>();
+        atom->setName("H");
+        _simulationBox.addAtom(atom);
+        _simulationBox.setBoxDimensions({10.0, 10.0, 10.0});
+    }
+
+    void TearDown() override
+    {
+        QMSettings::setQMMethod(_qmMethod);
+        QMSettings::setRemoveNetForce(_removeNetForce);
+        QMSettings::setQMLoopTimeLimit(_timeLimit);
+        QMSettings::setQMScript(_qmScript);
+        FileSettings::setDFTBFileName(_dftbFile);
+        Settings::setJobtype(_jobType);
+
+        std::filesystem::current_path(_originalPath);
+        std::error_code error;
+        std::filesystem::remove_all(_workPath, error);
+        EXPECT_FALSE(error);
+    }
+
+    std::filesystem::path configureQuotedScript(
+        QM::ExternalQMRunner &runner
+    ) const
+    {
+        const auto scriptDirectory =
+            _workPath / "working path; $(touch qm-injected)";
+        std::filesystem::create_directory(scriptDirectory);
+
+        const auto *const scriptName = "runner's script; touch qm-injected; #";
+
+        const auto scriptFile = scriptDirectory / scriptName;
+        writeFile(scriptFile.string(), "");
+
+        runner.setScriptPath(scriptDirectory.string() + '/');
+        QMSettings::setQMScript(scriptName);
+
+        return scriptFile;
+    }
+};
 
 TEST_F(ExternalQMRunnerTest, propagatesCommandFailure)
 {
@@ -304,7 +314,7 @@ TEST_F(ExternalQMRunnerTest, rejectsIncompleteForces)
     writeFile(FileSettings::getQMForcesTempFileName(), "0\n0 0\n");
 
     EXPECT_THROW(
-        _runner.readForceFile(_simulationBox, _physicalData),
+        readForceFile(_simulationBox, _physicalData),
         QMRunnerException
     );
 }
@@ -314,7 +324,7 @@ TEST_F(ExternalQMRunnerTest, rejectsNonFiniteForces)
     writeFile(FileSettings::getQMForcesTempFileName(), "0\nnan 0 0\n");
 
     EXPECT_THROW(
-        _runner.readForceFile(_simulationBox, _physicalData),
+        readForceFile(_simulationBox, _physicalData),
         QMRunnerException
     );
 }
@@ -327,14 +337,14 @@ TEST_F(ExternalQMRunnerTest, rejectsIncompleteCharges)
 
     writeFile(FileSettings::getQMChargesTempFileName(), "0\n");
 
-    EXPECT_THROW(_runner.readChargeFile(_simulationBox), QMRunnerException);
+    EXPECT_THROW(readChargeFile(_simulationBox), QMRunnerException);
 }
 
 TEST_F(ExternalQMRunnerTest, rejectsNonFiniteCharges)
 {
     writeFile(FileSettings::getQMChargesTempFileName(), "nan\n");
 
-    EXPECT_THROW(_runner.readChargeFile(_simulationBox), QMRunnerException);
+    EXPECT_THROW(readChargeFile(_simulationBox), QMRunnerException);
 }
 
 TEST_F(ExternalQMRunnerTest, rejectsIncompleteStressTensor)

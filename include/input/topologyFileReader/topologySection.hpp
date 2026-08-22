@@ -62,7 +62,7 @@ namespace input::topology
         virtual void endedNormally(bool) const = 0;
 
         void setLineNumber(int lineNumber);
-        void setFp(std::ifstream *fp);
+        void setFp(std::ifstream *file);
 
         [[nodiscard]] int getLineNumber() const;
     };

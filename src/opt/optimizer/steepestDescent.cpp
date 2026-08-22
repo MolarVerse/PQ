@@ -60,7 +60,7 @@ void SteepestDescent::update(double learningRate, size_t /* totalSteps*/)
 {
     const auto& atoms = _simulationBox->getAtoms();
 
-    for (auto& atom : atoms)
+    for (const auto& atom : atoms)
     {
         const auto force = atom->getForce();
         const auto pos   = atom->getPosition();

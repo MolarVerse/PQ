@@ -25,9 +25,7 @@
 #include <string>        // for allocator, string
 #include <string_view>   // for string_view
 
-#include "color.hpp"        // for Code
 #include "exceptions.hpp"   // for CustomException
-#include "gtest/gtest.h"    // for Message, TestPartResult
 
 /**
  * @brief tests colorful output for FG_RED
@@ -36,9 +34,8 @@
 TEST(TestColor, redException)
 {
     testing::internal::CaptureStdout();
-    auto customException = customException::CustomException("test");
-    customException.colorfulOutput(Color::Code::FG_RED, "test");
-    std::string output = testing::internal::GetCapturedStdout();
+    auto        customException = customException::CustomException("test");
+    std::string output          = testing::internal::GetCapturedStdout();
     EXPECT_STREQ(output.c_str(), "\033[31mtest\033[39m\n");
 }
 
@@ -49,8 +46,7 @@ TEST(TestColor, redException)
 TEST(TestColor, orangeException)
 {
     testing::internal::CaptureStdout();
-    auto customException = customException::CustomException("test");
-    customException.colorfulOutput(Color::Code::FG_ORANGE, "test");
-    std::string output = testing::internal::GetCapturedStdout();
+    auto        customException = customException::CustomException("test");
+    std::string output          = testing::internal::GetCapturedStdout();
     EXPECT_STREQ(output.c_str(), "\033[33mtest\033[39m\n");
 }

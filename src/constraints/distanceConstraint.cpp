@@ -70,14 +70,14 @@ DistanceConstraint::DistanceConstraint(
  */
 void DistanceConstraint::applyDistanceConstraint(
     const simulationBox::SimulationBox &simulationBox,
-    double                              dt
+    double                              timeInterval
 )
 {
     _lowerEnergy = 0.0;
     _upperEnergy = 0.0;
     _force       = {0.0};
 
-    if (dt < 0.0)
+    if (timeInterval < 0.0)
         return;
 
     const auto pos1 = _molecules[0]->getAtomPosition(_atomIndices[0]);
@@ -86,8 +86,9 @@ void DistanceConstraint::applyDistanceConstraint(
     auto dPos = pos2 - pos1;
     simulationBox.applyPBC(dPos);
 
-    const auto distance       = norm(dPos);
-    const auto force_constant = _springConstant + _dSpringConstantDt * dt;
+    const auto distance = norm(dPos);
+    const auto force_constant =
+        _springConstant + _dSpringConstantDt * timeInterval;
 
     if (distance < _lowerDistance)
     {

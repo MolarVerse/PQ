@@ -26,7 +26,6 @@
 #include <vector>   // for vector
 
 #include "exceptions.hpp"           // for InputFileException
-#include "gtest/gtest.h"            // for Message, TestPartResult
 #include "outputFileSettings.hpp"   // for OutputFileSettings
 #include "outputInputParser.hpp"
 #include "testInputFileReader.hpp"   // for TestInputFileReader

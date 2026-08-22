@@ -23,29 +23,17 @@
 #include <gtest/gtest.h>
 
 #include <cstdio>
-#include <fstream>
-#include <sstream>
 #include <string>
 
 #include "convergence.hpp"
 #include "convergenceSettings.hpp"
 #include "optOutput.hpp"
 #include "steepestDescent.hpp"
+#include "testOutputBase.hpp"
 
 using namespace output;
 using namespace opt;
 using settings::ConvStrategy;
-
-namespace
-{
-    std::string slurp(const std::string &path)
-    {
-        std::ifstream     in(path);
-        std::stringstream ss;
-        ss << in.rdbuf();
-        return ss.str();
-    }
-}   // namespace
 
 TEST(TestOptOutput, writeProducesStepAndAllConvergenceColumns)
 {

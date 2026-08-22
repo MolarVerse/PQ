@@ -30,13 +30,11 @@
 #include "dftbplusRunner.hpp"   // for DFTBPlusRunner
 #include "exceptions.hpp"       // for InputFileException
 #include "externalQMRunner.hpp"
-#include "gtest/gtest.h"   // for Message, TestPartResult
 #include "orthorhombicBox.hpp"
 #include "physicalData.hpp"
 #include "pyscfRunner.hpp"   // for PySCFRunner
 #include "qmSettings.hpp"    // for QMMethod, QMSettings
 #include "qmSetup.hpp"       // for QMSetup, setupQM
-#include "qmSetup.hpp"       // for QMSetup
 #include "qmmdEngine.hpp"    // for QMMDEngine
 #include "settings.hpp"      // for Settings
 #include "simulationBox.hpp"

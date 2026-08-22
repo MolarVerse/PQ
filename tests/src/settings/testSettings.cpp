@@ -26,7 +26,7 @@
 
 #include "settings.hpp"   // for Settings
 // #include "exceptions.hpp"         // for UserInputException
-// #include "gtest/gtest.h"          // for Message, TestPartResult
+// #include gtest.h"          // for Message, TestPartResult
 // #include "qmSettings.hpp"         // for QMSettings, QMMethod
 // #include "throwWithMessage.hpp"   // for ASSERT_THROW_MSG
 

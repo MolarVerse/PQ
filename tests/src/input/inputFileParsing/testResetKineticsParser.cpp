@@ -25,8 +25,7 @@
 #include <string>   // for string, allocator, basic_string
 #include <vector>   // for vector
 
-#include "exceptions.hpp"        // for InputFileException
-#include "gtest/gtest.h"         // for Message, TestPartResult
+#include "exceptions.hpp"   // for InputFileException
 #include "resetKineticsInputParser.hpp"
 #include "resetKineticsSettings.hpp"   // for ResetKineticsSettings
 #include "testInputFileReader.hpp"     // for TestInputFileReader

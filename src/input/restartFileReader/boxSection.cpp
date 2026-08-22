@@ -64,7 +64,7 @@ using namespace engine;
  */
 void BoxSection::process(std::vector<std::string> &lineElements, Engine &engine)
 {
-    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     if ((lineElements.size() != 4) && (lineElements.size() != 7))
     {
         throw RstFileException(
@@ -80,17 +80,17 @@ void BoxSection::process(std::vector<std::string> &lineElements, Engine &engine)
         stod(lineElements[2]),
         stod(lineElements[3])
     };
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
     auto checkPositive = [](const double dimension) { return dimension < 0.0; };
 
     if (std::ranges::any_of(boxDimensions, checkPositive))
         throw RstFileException("All box dimensions must be positive");
-    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
     constexpr auto defaultAngle = 90.0;
     auto           boxAngles = Vec3D{defaultAngle, defaultAngle, defaultAngle};
 
-    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     if (7 == lineElements.size())
     {
         boxAngles = Vec3D{
@@ -107,7 +107,7 @@ void BoxSection::process(std::vector<std::string> &lineElements, Engine &engine)
                 "Box angles must be positive and smaller than 180°"
             );
     }
-    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
     if (!compare(
             boxAngles,

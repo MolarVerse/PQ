@@ -171,7 +171,7 @@ InterWater::InterWater(
  * falls back to the Coulomb cutoff. O-O is always updated, while O-H and H-H
  * are only updated when oxygen-only non-Coulomb interactions are disabled.
  */
-void InterWater::setNonCoulombCutOffRadii()
+void InterWater::setNonCoulombCutOffRadii() const
 {
     const auto radialCutOff =
         PotentialSettings::getNonCoulombRadiusCutOff().value_or(
@@ -200,7 +200,7 @@ void InterWater::setNonCoulombCutOffRadii()
  * non-Coulomb pairs (OO, OH, HH) by evaluating them at their radial cutoff
  * distances.
  */
-void InterWater::initNonCoulombPairs()
+void InterWater::initNonCoulombPairs() const
 {
     const auto setForceAndEnergyCutOff = [](const auto &nonCoulombPair)
     {

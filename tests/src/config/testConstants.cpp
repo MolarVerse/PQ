@@ -27,7 +27,6 @@
 #include "constants/conversionFactors.hpp"           // for _ANGSTROM_TO_METER_
 #include "constants/internalConversionFactors.hpp"   // for _FORCE_UNIT_TO_SI_, ...
 #include "constants/natureConstants.hpp"             // for _AVOGADRO_NUMBER_
-#include "gtest/gtest.h"                             // for Message
 
 /*********************
  * natural constants *

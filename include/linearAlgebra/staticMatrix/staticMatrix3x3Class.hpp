@@ -62,7 +62,7 @@ namespace linearAlgebra
         );
 
         // NOLINTBEGIN(google-explicit-constructor, hicpp-explicit-conversions)
-        StaticMatrix3x3(const T &t);
+        StaticMatrix3x3(const T &mat);
         // NOLINTEND(google-explicit-constructor, hicpp-explicit-conversions)
         explicit StaticMatrix3x3(const std::vector<T> &vector);
 

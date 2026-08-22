@@ -116,11 +116,11 @@ std::pair<double, double> LennardJonesPair::calculate(double distance) const
     energy      -= _energyCutOff;
     energy      -= _forceCutOff * (_radialCutOff - distance);
 
-    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     auto force  = 12.0 * _c12 / (distanceTwelfth * distance);
     force      += 6.0 * _c6 / (distanceSixth * distance);
     force      -= _forceCutOff;
-    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
     return {energy, force};
 }

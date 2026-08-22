@@ -31,7 +31,7 @@
 #include "engine.hpp"                    // for Engine
 #include "exceptions.hpp"                // for ParameterFileException
 #include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
-#include "gtest/gtest.h"                 // for Message, TestPartResult
+                                         // for Message, TestPartResult
 #include "guffNonCoulomb.hpp"            // for GuffNonCoulomb
 #include "lennardJonesPair.hpp"          // for LennardJonesPair
 #include "moleculeType.hpp"              // for MoleculeType

@@ -58,13 +58,13 @@ BerendsenThermostat::BerendsenThermostat(double targetTemp, double tau)
  * @param data
  */
 void BerendsenThermostat::applyThermostat(
-    SimulationBox &simulationBox,
+    SimulationBox &simBox,
     PhysicalData  &data
 )
 {
     auto _ = scoped("Berendsen");
 
-    data.calculateTemperature(simulationBox);
+    data.calculateTemperature(simBox);
 
     _temperature = data.getTemperature();
 
@@ -79,12 +79,13 @@ void BerendsenThermostat::applyThermostat(
         );
     }
 
-    const auto dt        = TimingsSettings::getTimeStep();
+    const auto timeStep  = TimingsSettings::getTimeStep();
     const auto tempRatio = _targetTemperature / _temperature;
 
-    const auto berendsenFactor = ::sqrt(1.0 + dt / _tau * (tempRatio - 1.0));
+    const auto berendsenFactor =
+        ::sqrt(1.0 + timeStep / _tau * (tempRatio - 1.0));
 
-    for (const auto &atom : simulationBox.getAtoms())
+    for (const auto &atom : simBox.getAtoms())
         atom->scaleVelocity(berendsenFactor);
 
     data.setTemperature(_temperature * berendsenFactor * berendsenFactor);

@@ -23,7 +23,6 @@
 #include <gtest/gtest.h>
 
 #include "convergenceSettings.hpp"
-#include "gtest/gtest.h"
 
 TEST(ConvSettingsTest, StrategyToString)
 {
@@ -43,10 +42,7 @@ TEST(ConvSettingsTest, EnergyConvSettersAndOptionalGetters)
 {
     settings::ConvSettings::setEnergyConv(1.0e-6);
     ASSERT_TRUE(settings::ConvSettings::getEnergyConv().has_value());
-    EXPECT_DOUBLE_EQ(
-        settings::ConvSettings::getEnergyConv().value(),
-        1.0e-6
-    );
+    EXPECT_DOUBLE_EQ(settings::ConvSettings::getEnergyConv().value(), 1.0e-6);
 
     settings::ConvSettings::setRelEnergyConv(1.0e-5);
     ASSERT_TRUE(settings::ConvSettings::getRelEnergyConv().has_value());
@@ -67,22 +63,13 @@ TEST(ConvSettingsTest, ForceConvSettersAndOptionalGetters)
 {
     settings::ConvSettings::setForceConv(1.0e-3);
     ASSERT_TRUE(settings::ConvSettings::getForceConv().has_value());
-    EXPECT_DOUBLE_EQ(
-        settings::ConvSettings::getForceConv().value(),
-        1.0e-3
-    );
+    EXPECT_DOUBLE_EQ(settings::ConvSettings::getForceConv().value(), 1.0e-3);
 
     settings::ConvSettings::setMaxForceConv(1.0e-2);
     ASSERT_TRUE(settings::ConvSettings::getMaxForceConv().has_value());
-    EXPECT_DOUBLE_EQ(
-        settings::ConvSettings::getMaxForceConv().value(),
-        1.0e-2
-    );
+    EXPECT_DOUBLE_EQ(settings::ConvSettings::getMaxForceConv().value(), 1.0e-2);
 
     settings::ConvSettings::setRMSForceConv(1.0e-3);
     ASSERT_TRUE(settings::ConvSettings::getRMSForceConv().has_value());
-    EXPECT_DOUBLE_EQ(
-        settings::ConvSettings::getRMSForceConv().value(),
-        1.0e-3
-    );
+    EXPECT_DOUBLE_EQ(settings::ConvSettings::getRMSForceConv().value(), 1.0e-3);
 }

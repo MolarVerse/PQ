@@ -51,7 +51,7 @@ namespace QM
 
         void run(
             simulationBox::SimulationBox &simBox,
-            physicalData::PhysicalData   &physData,
+            physicalData::PhysicalData   &physicalData,
             simulationBox::Periodicity    periodicity
         ) override;
         void buildAseAtoms(const simulationBox::SimulationBox &);

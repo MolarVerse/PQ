@@ -39,21 +39,22 @@ using namespace constants;
  * @details this constructor calculates automatically the three need wolf
  * parameters from kappa in order to gain speed
  *
- * @param coulRC - coulomb radius cut off
+ * @param coulombRadiusCutOff - coulomb radius cut off
  * @param kappa
  */
-CoulombWolf::CoulombWolf(double coulRC, double kappa) : CoulombPotential(coulRC)
+CoulombWolf::CoulombWolf(double coulombRadiusCutOff, double kappa)
+    : CoulombPotential(coulombRadiusCutOff)
 {
     _kappa      = kappa;
-    _wolfParam1 = ::erfc(_kappa * coulRC) / coulRC;
+    _wolfParam1 = ::erfc(_kappa * coulombRadiusCutOff) / coulombRadiusCutOff;
     _wolfParam2 = 2.0 * _kappa / ::sqrt(M_PI);
 
     const auto kappaSquared  = _kappa * _kappa;
-    const auto coulRCSquared = coulRC * coulRC;
+    const auto coulRCSquared = coulombRadiusCutOff * coulombRadiusCutOff;
     const auto expFactor     = ::exp(-kappaSquared * coulRCSquared);
 
-    _wolfParam3  = _wolfParam1 / coulRC;
-    _wolfParam3 += _wolfParam2 * expFactor / coulRC;
+    _wolfParam3  = _wolfParam1 / coulombRadiusCutOff;
+    _wolfParam3 += _wolfParam2 * expFactor / coulombRadiusCutOff;
 }
 
 /**
@@ -107,9 +108,9 @@ void CoulombWolf::setKappa(double kappa) { _kappa = kappa; }
  *
  * @param wolfParam1
  */
-void CoulombWolf::setWolfParameter1(double wolfParam1)
+void CoulombWolf::setWolfParameter1(double wolfParameter1)
 {
-    _wolfParam1 = wolfParam1;
+    _wolfParam1 = wolfParameter1;
 }
 
 /**
@@ -117,9 +118,9 @@ void CoulombWolf::setWolfParameter1(double wolfParam1)
  *
  * @param wolfParam2
  */
-void CoulombWolf::setWolfParameter2(double wolfParam2)
+void CoulombWolf::setWolfParameter2(double wolfParameter2)
 {
-    _wolfParam2 = wolfParam2;
+    _wolfParam2 = wolfParameter2;
 }
 
 /**
@@ -127,9 +128,9 @@ void CoulombWolf::setWolfParameter2(double wolfParam2)
  *
  * @param wolfParam3
  */
-void CoulombWolf::setWolfParameter3(double wolfParam3)
+void CoulombWolf::setWolfParameter3(double wolfParameter3)
 {
-    _wolfParam3 = wolfParam3;
+    _wolfParam3 = wolfParameter3;
 }
 
 /***************************

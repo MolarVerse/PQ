@@ -26,7 +26,6 @@
 #include <vector>   // for vector
 
 #include "exceptions.hpp"            // for InputFileException
-#include "gtest/gtest.h"             // for Message, TestPartResult
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "thermostatInputParser.hpp"
 #include "thermostatSettings.hpp"   // for ThermostatSettings

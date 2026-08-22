@@ -33,7 +33,6 @@
 
 #include "exceptions.hpp"        // for InputFileException
 #include "gmock/gmock.h"         // for ElementsAre, MakePredicateFormatter
-#include "gtest/gtest.h"         // for AssertionResult, Message, TestPartResult
 #include "stringUtilities.hpp"   // for getLineCommands, splitString, fileExists
 #include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG and ASSERT_THROW_MSG
 
@@ -63,7 +62,7 @@ TEST(TestStringUtilities, getLineCommands)
         utilities::getLineCommands(line2, 0),
         customException::InputFileException
     );
-    auto *line = "nstep = 1";
+    const auto *line = "nstep = 1";
     ASSERT_THROW(
         utilities::getLineCommands(line, 1),
         customException::InputFileException

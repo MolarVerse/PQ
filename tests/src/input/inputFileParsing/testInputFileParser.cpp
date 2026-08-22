@@ -28,7 +28,6 @@
 
 #include "exceptions.hpp"           // for InputFileException
 #include "generalInputParser.hpp"   // for InputFileParserGeneral
-#include "gtest/gtest.h"            // for Message, TestPartResult
 #include "inputFileParser.hpp"      // for ParseFunc, checkCommand
 #include "parserUtils.hpp"
 #include "testInputFileReader.hpp"   // for TestInputFileReader

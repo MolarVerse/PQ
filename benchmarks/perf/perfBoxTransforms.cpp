@@ -55,13 +55,13 @@ int main()
     double sink = 0.0;
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
-        const double x = static_cast<double>(i & 127U) * 0.3 - 19.0;
-        const Vec3D  v(x, 0.5 * x, -x);
+        const double tmp = static_cast<double>(i & 127U) * 0.3 - 19.0;
+        const Vec3D  pos(tmp, 0.5 * tmp, -tmp);
 
-        sink += norm(ortho.wrapPositionIntoBox(v));
-        sink += norm(triclinic.wrapPositionIntoBox(v));
-        sink += norm(triclinic.toOrthoSpace(v));
-        sink += norm(triclinic.toSimSpace(v));
+        sink += norm(ortho.wrapPositionIntoBox(pos));
+        sink += norm(triclinic.wrapPositionIntoBox(pos));
+        sink += norm(triclinic.toOrthoSpace(pos));
+        sink += norm(triclinic.toSimSpace(pos));
     }
 
     std::cout << std::format("{:.6f}\n", sink);

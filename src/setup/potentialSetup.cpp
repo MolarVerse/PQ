@@ -157,8 +157,8 @@ void PotentialSetup::setupNonCoulomb()
  */
 void PotentialSetup::setupNonCoulombicPairs()
 {
-    auto &pot    = _engine.getPotential();
-    auto &simBox = _engine.getSimulationBox();
+    const auto &pot    = _engine.getPotential();
+    auto       &simBox = _engine.getSimulationBox();
 
     // clang-format off
     auto &nonCoulPot = dynamic_cast<potential::ForceFieldNonCoulomb&>(pot->getNonCoulombPotential());

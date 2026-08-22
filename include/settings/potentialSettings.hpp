@@ -62,10 +62,8 @@ namespace settings
         WOLF
     };
 
-    // TODO: implement long range type as enum
-
     [[nodiscard]] std::string string(NonCoulombType nonCoulombType);
-    [[nodiscard]] std::string string(CoulombLongRangeType nonCoulombType);
+    [[nodiscard]] std::string string(CoulombLongRangeType coulombLongRangeType);
 
     /**
      * @class PotentialSettings

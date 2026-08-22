@@ -179,8 +179,8 @@ namespace waterModel
         InterWaterState                     _state;
         std::unique_ptr<InterWaterStrategy> _strategy;
 
-        void setNonCoulombCutOffRadii();
-        void initNonCoulombPairs();
+        void setNonCoulombCutOffRadii() const;
+        void initNonCoulombPairs() const;
         void initState()
         {
             setNonCoulombCutOffRadii();
@@ -246,7 +246,7 @@ namespace waterModel
     {
        public:
         void calculate(
-            const InterWaterState                              &interWaterState,
+            const InterWaterState                              &state,
             simulationBox::SimulationBox                       &simBox,
             physicalData::PhysicalData                         &physData,
             const std::shared_ptr<potential::CoulombPotential> &coulPot,
@@ -254,7 +254,7 @@ namespace waterModel
         ) final;
 
         void calculateCoreToOuterForces(
-            const InterWaterState                              &interWaterState,
+            const InterWaterState                              &state,
             simulationBox::SimulationBox                       &simBox,
             physicalData::PhysicalData                         &physData,
             const std::shared_ptr<potential::CoulombPotential> &coulPot,
@@ -262,7 +262,7 @@ namespace waterModel
         ) final;
 
         void calculateLayerToOuterForces(
-            const InterWaterState                              &interWaterState,
+            const InterWaterState                              &state,
             simulationBox::SimulationBox                       &simBox,
             physicalData::PhysicalData                         &physData,
             const std::shared_ptr<potential::CoulombPotential> &coulPot,
@@ -270,7 +270,7 @@ namespace waterModel
         ) final;
 
         void calculateOuterToOuterForces(
-            const InterWaterState                              &interWaterState,
+            const InterWaterState                              &state,
             simulationBox::SimulationBox                       &simBox,
             physicalData::PhysicalData                         &physData,
             const std::shared_ptr<potential::CoulombPotential> &coulPot,
@@ -278,7 +278,7 @@ namespace waterModel
         ) final;
 
         void calculateHotspotSmoothingMMForces(
-            const InterWaterState                              &interWaterState,
+            const InterWaterState                              &state,
             simulationBox::SimulationBox                       &simBox,
             physicalData::PhysicalData                         &physData,
             const std::shared_ptr<potential::CoulombPotential> &coulPot,
@@ -290,7 +290,7 @@ namespace waterModel
     {
        public:
         void calculate(
-            const InterWaterState                              &interWaterState,
+            const InterWaterState                              &state,
             simulationBox::SimulationBox                       &simBox,
             physicalData::PhysicalData                         &physData,
             const std::shared_ptr<potential::CoulombPotential> &coulPot,
@@ -298,7 +298,7 @@ namespace waterModel
         ) final;
 
         void calculateCoreToOuterForces(
-            const InterWaterState                              &interWaterState,
+            const InterWaterState                              &state,
             simulationBox::SimulationBox                       &simBox,
             physicalData::PhysicalData                         &physData,
             const std::shared_ptr<potential::CoulombPotential> &coulPot,
@@ -306,7 +306,7 @@ namespace waterModel
         ) final;
 
         void calculateLayerToOuterForces(
-            const InterWaterState                              &interWaterState,
+            const InterWaterState                              &state,
             simulationBox::SimulationBox                       &simBox,
             physicalData::PhysicalData                         &physData,
             const std::shared_ptr<potential::CoulombPotential> &coulPot,
@@ -314,7 +314,7 @@ namespace waterModel
         ) final;
 
         void calculateOuterToOuterForces(
-            const InterWaterState                              &interWaterState,
+            const InterWaterState                              &state,
             simulationBox::SimulationBox                       &simBox,
             physicalData::PhysicalData                         &physData,
             const std::shared_ptr<potential::CoulombPotential> &coulPot,
@@ -322,7 +322,7 @@ namespace waterModel
         ) final;
 
         void calculateHotspotSmoothingMMForces(
-            const InterWaterState                              &interWaterState,
+            const InterWaterState                              &state,
             simulationBox::SimulationBox                       &simBox,
             physicalData::PhysicalData                         &physData,
             const std::shared_ptr<potential::CoulombPotential> &coulPot,

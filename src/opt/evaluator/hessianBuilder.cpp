@@ -206,7 +206,7 @@ HessianMatrix ForwardForceDifferenceHessianBuilder::build(
 
     const auto originalPositions = simulationBox.getPositions();
     evaluator.evaluate();
-    const auto f0 = flattenForces(simulationBox);
+    const auto forces0 = flattenForces(simulationBox);
 
     for (size_t col = 0; col < numberOfCoordinates; ++col)
     {
@@ -214,7 +214,7 @@ HessianMatrix ForwardForceDifferenceHessianBuilder::build(
             evaluateForces(evaluator, simulationBox, col, _displacement);
 
         for (size_t row = 0; row < numberOfCoordinates; ++row)
-            hessian[row][col] = -(fPlus[row] - f0[row]) / _displacement;
+            hessian[row][col] = -(fPlus[row] - forces0[row]) / _displacement;
 
         restorePositions(simulationBox, originalPositions);
     }

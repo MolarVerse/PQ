@@ -22,8 +22,8 @@
 
 #include "output.hpp"
 
-#include <format>       // for format
-#include <fstream>      // for ifstream, ofstream, std
+#include <format>    // for format
+#include <fstream>   // for ifstream, ofstream, std
 
 #include "exceptions.hpp"           // for InputFileException, customException
 #include "outputFileSettings.hpp"   // for OutputFileSettings
@@ -51,8 +51,8 @@ void Output::setFilename(const string_view &filename)
     if (_fileName.empty())
         throw InputFileException("Filename cannot be empty");
 
-    if (const ifstream fp(_fileName.c_str());
-        fp.good() && !overwriteOutputFiles)
+    if (const ifstream file(_fileName.c_str());
+        file.good() && !overwriteOutputFiles)
         throw InputFileException(
             "File already exists - filename = " + string(_fileName)
         );

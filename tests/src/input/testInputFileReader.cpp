@@ -31,7 +31,6 @@
 #include <vector>    // for vector, _Bit_iterator, _Bit_reference
 
 #include "exceptions.hpp"
-#include "gtest/gtest.h"
 #include "mmmdEngine.hpp"
 #include "potentialSettings.hpp"
 #include "settings.hpp"

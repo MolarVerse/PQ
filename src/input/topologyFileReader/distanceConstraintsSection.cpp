@@ -60,7 +60,7 @@ void DistanceConstraintsSection::processSection(
     Engine                   &engine
 )
 {
-    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     if (lineElements.size() != 6)
     {
         throw TopologyException(
@@ -80,7 +80,7 @@ void DistanceConstraintsSection::processSection(
     auto upperDistance     = stod(lineElements[3]);
     auto springConstant    = stod(lineElements[4]);
     auto dSpringConstantDt = stod(lineElements[5]);
-    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
     if (atom1 == atom2)
     {

@@ -72,45 +72,45 @@ std::pair<double, double> GuffPair::calculate(double distance) const
     double energy = 0.0;
     double force  = 0.0;
 
-    if (const auto c1 = _coefficients[0]; c1 != 0.0)
+    if (const auto coeff1 = _coefficients[0]; coeff1 != 0.0)
     {
-        const auto n2           = _coefficients[1];
-        const auto distance_n2  = ::pow(distance, n2);
-        energy                 += c1 / distance_n2;
-        force                  += n2 * c1 / (distance_n2 * distance);
+        const auto power2           = _coefficients[1];
+        const auto distance_power2  = ::pow(distance, power2);
+        energy                     += coeff1 / distance_power2;
+        force += power2 * coeff1 / (distance_power2 * distance);
     }
-    if (const auto c3 = _coefficients[2]; c3 != 0.0)
+    if (const auto coeff3 = _coefficients[2]; coeff3 != 0.0)
     {
-        const auto n4           = _coefficients[3];
-        const auto distance_n4  = ::pow(distance, n4);
-        energy                 += c3 / distance_n4;
-        force                  += n4 * c3 / (distance_n4 * distance);
-    }
-
-    if (const auto c5 = _coefficients[4]; c5 != 0.0)
-    {
-        const auto n6           = _coefficients[5];
-        const auto distance_n6  = ::pow(distance, n6);
-        energy                 += c5 / distance_n6;
-        force                  += n6 * c5 / (distance_n6 * distance);
-    }
-    if (const auto c7 = _coefficients[6]; c7 != 0.0)
-    {
-        const auto n8           = _coefficients[7];
-        const auto distance_n8  = ::pow(distance, n8);
-        energy                 += c7 / distance_n8;
-        force                  += n8 * c7 / (distance_n8 * distance);
+        const auto power4           = _coefficients[3];
+        const auto distance_power4  = ::pow(distance, power4);
+        energy                     += coeff3 / distance_power4;
+        force += power4 * coeff3 / (distance_power4 * distance);
     }
 
-    if (const auto c9 = _coefficients[8]; c9 != 0.0)
+    if (const auto coeff5 = _coefficients[4]; coeff5 != 0.0)
+    {
+        const auto power6           = _coefficients[5];
+        const auto distance_power6  = ::pow(distance, power6);
+        energy                     += coeff5 / distance_power6;
+        force += power6 * coeff5 / (distance_power6 * distance);
+    }
+    if (const auto coeff7 = _coefficients[6]; coeff7 != 0.0)
+    {
+        const auto power8           = _coefficients[7];
+        const auto distance_power8  = ::pow(distance, power8);
+        energy                     += coeff7 / distance_power8;
+        force += power8 * coeff7 / (distance_power8 * distance);
+    }
+
+    if (const auto coeff9 = _coefficients[8]; coeff9 != 0.0)
     {
         const auto cexp10 = _coefficients[9];
         const auto rExp11 = _coefficients[10];
 
         const auto helper = ::exp(cexp10 * (distance - rExp11));
 
-        energy += c9 / (1 + helper);
-        force  += c9 * cexp10 * helper / ((1 + helper) * (1 + helper));
+        energy += coeff9 / (1 + helper);
+        force  += coeff9 * cexp10 * helper / ((1 + helper) * (1 + helper));
     }
 
     if (const auto c12 = _coefficients[11]; c12 != 0.0)

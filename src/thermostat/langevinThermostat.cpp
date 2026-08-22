@@ -129,11 +129,12 @@ void LangevinThermostat::applyLangevin(SimulationBox &simBox)
         };
 
         const auto velocity = atom->getVelocity();
-        auto       dv       = -propagationFactor * _friction * mass * velocity;
+        auto deltaVelocity  = -propagationFactor * _friction * mass * velocity;
 
-        dv += propagationFactor * _sigma * std::sqrt(mass) * randomFactor;
+        deltaVelocity +=
+            propagationFactor * _sigma * std::sqrt(mass) * randomFactor;
 
-        atom->addVelocity(dv);
+        atom->addVelocity(deltaVelocity);
     };
 
     std::ranges::for_each(simBox.getAtoms(), applyFriction);

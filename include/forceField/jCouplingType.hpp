@@ -30,7 +30,7 @@ namespace forceField
 {
     class JCouplingType;   // forward declaration
 
-    bool operator==(const JCouplingType &lhs, const JCouplingType &rhs);
+    bool operator==(const JCouplingType &self, const JCouplingType &other);
 
     /**
      * @class JCouplingType
@@ -60,9 +60,9 @@ namespace forceField
             size_t id,
             double J0,
             double forceConstant,
-            double a,
-            double b,
-            double c,
+            double constA,
+            double constB,
+            double constC,
             double phaseShift
         );
 

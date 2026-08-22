@@ -52,10 +52,11 @@ namespace
     )
     {
         const auto [energy, force] = calculate(distance);
-        (void)energy;
+        (void) energy;
 
         const auto energyDerivative = centralDifference(
-            [&calculate](const double r) { return calculate(r).first; },
+            [&calculate](const double radius)
+            { return calculate(radius).first; },
             distance
         );
 
@@ -64,11 +65,9 @@ namespace
 
     std::vector<double> buildGuffCoefficients()
     {
-        return {
-            0.5,   2.0,  -0.2,  4.0,  0.1,   6.0,  -0.05, 8.0,
-            0.4,   1.2,  1.3,   -0.3, -1.1,  2.5,  0.02,  -0.5,
-            0.3,   2.0,  -0.01, -0.25, -0.4, 2.0
-        };
+        return {0.5, 2.0, -0.2,  4.0,   0.1,  6.0, -0.05, 8.0,
+                0.4, 1.2, 1.3,   -0.3,  -1.1, 2.5, 0.02,  -0.5,
+                0.3, 2.0, -0.01, -0.25, -0.4, 2.0};
     }
 }   // namespace
 
@@ -78,7 +77,8 @@ TEST(TestPairPotentialDerivatives, LennardJonesForceIsNegativeEnergyDerivative)
         potential::LennardJonesPair(4.0, 0.15, -0.2, -1.0, 1.5);
 
     expectForceIsNegativeEnergyDerivative(
-        [&potential](const double r) { return potential.calculate(r); },
+        [&potential](const double radius)
+        { return potential.calculate(radius); },
         1.7,
         1.0e-7
     );
@@ -90,7 +90,8 @@ TEST(TestPairPotentialDerivatives, BuckinghamForceIsNegativeEnergyDerivative)
         potential::BuckinghamPair(4.0, 0.25, -0.1, 2.0, -1.1, -0.4);
 
     expectForceIsNegativeEnergyDerivative(
-        [&potential](const double r) { return potential.calculate(r); },
+        [&potential](const double radius)
+        { return potential.calculate(radius); },
         1.6,
         1.0e-7
     );
@@ -98,11 +99,11 @@ TEST(TestPairPotentialDerivatives, BuckinghamForceIsNegativeEnergyDerivative)
 
 TEST(TestPairPotentialDerivatives, MorseForceIsNegativeEnergyDerivative)
 {
-    const auto potential =
-        potential::MorsePair(4.0, 0.3, -0.2, 2.5, 1.4, 1.1);
+    const auto potential = potential::MorsePair(4.0, 0.3, -0.2, 2.5, 1.4, 1.1);
 
     expectForceIsNegativeEnergyDerivative(
-        [&potential](const double r) { return potential.calculate(r); },
+        [&potential](const double radius)
+        { return potential.calculate(radius); },
         1.7,
         1.0e-7
     );
@@ -114,20 +115,24 @@ TEST(TestPairPotentialDerivatives, GuffForceIsNegativeEnergyDerivative)
         potential::GuffPair(4.0, 0.4, -0.2, buildGuffCoefficients());
 
     expectForceIsNegativeEnergyDerivative(
-        [&potential](const double r) { return potential.calculate(r); },
+        [&potential](const double radius)
+        { return potential.calculate(radius); },
         1.8,
         1.0e-6
     );
 }
 
-TEST(TestPairPotentialDerivatives, ShiftedCoulombForceIsNegativeEnergyDerivative)
+TEST(
+    TestPairPotentialDerivatives,
+    ShiftedCoulombForceIsNegativeEnergyDerivative
+)
 {
     const auto potential     = potential::CoulombShiftedPotential(4.0);
     const auto chargeProduct = 0.75;
 
     expectForceIsNegativeEnergyDerivative(
-        [&potential, chargeProduct](const double r)
-        { return potential.calculate(r, chargeProduct); },
+        [&potential, chargeProduct](const double radius)
+        { return potential.calculate(radius, chargeProduct); },
         1.7,
         1.0e-7
     );
@@ -139,8 +144,8 @@ TEST(TestPairPotentialDerivatives, WolfCoulombForceIsNegativeEnergyDerivative)
     const auto chargeProduct = -0.75;
 
     expectForceIsNegativeEnergyDerivative(
-        [&potential, chargeProduct](const double r)
-        { return potential.calculate(r, chargeProduct); },
+        [&potential, chargeProduct](const double radius)
+        { return potential.calculate(radius, chargeProduct); },
         1.7,
         1.0e-5
     );

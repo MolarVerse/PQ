@@ -90,7 +90,7 @@ void TopologySection::setLineNumber(int lineNumber)
  *
  * @param fp
  */
-void TopologySection::setFp(std::ifstream *fp) { _fp = fp; }
+void TopologySection::setFp(std::ifstream *file) { _fp = file; }
 
 /**
  * @brief get line number

@@ -33,7 +33,7 @@
 
 #include "exceptions.hpp"             // for ParameterFileException
 #include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
-#include "gtest/gtest.h"              // for Message, TestPartResult
+                                      // for Message, TestPartResult
 #include "lennardJonesPair.hpp"       // for LennardJonesPair
 #include "matrix.hpp"                 // for Matrix
 #include "nonCoulombPair.hpp"         // for NonCoulombPair

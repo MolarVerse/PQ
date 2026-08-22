@@ -42,7 +42,7 @@ TEST_F(TestTopologySection, processSectionImproperDihedral)
     EXPECT_EQ(_engine->getForceField()->getImproperDihedrals().size(), 1);
     EXPECT_EQ(
         _engine->getForceField()->getImproperDihedrals()[0].getMolecules()[0],
-        &(_engine->getSimulationBox().getMolecules()[0])
+        _engine->getSimulationBox().getMolecules().data()
     );
     EXPECT_EQ(
         _engine->getForceField()->getImproperDihedrals()[0].getMolecules()[1],

@@ -345,9 +345,9 @@ void HybridConfigurator::calculateSmoothingFactors(
         mol.calculateCenterOfMass(simBox.getBox());
         const auto com = norm(mol.getCenterOfMass());
 
-        const auto distanceFactor = (com - (layer - thickness)) / thickness;
+        auto distanceFactor = (com - (layer - thickness)) / thickness;
 
-        if (distanceFactor < 0.0 || distanceFactor > 1.0)
+        if (distanceFactor < 0.0 || distanceFactor > 1)
         {
             throw(HybridConfiguratorException(
                 "Cannot calculate smoothing factor for molecule outside the "
@@ -355,8 +355,11 @@ void HybridConfigurator::calculateSmoothingFactors(
             ));
         }
 
-        const auto dF  = distanceFactor - 0.5;
-        const auto smF = dF * (dF * dF * (-6.0 * dF * dF + 5.0) - 1.875) + 0.5;
+        distanceFactor       -= 0.5;
+        const auto dfSquared  = distanceFactor * distanceFactor;
+        const auto smF =
+            distanceFactor * (dfSquared * (-6.0 * dfSquared + 5.0) - 1.875) +
+            0.5;
 
         mol.setSmoothingFactor(smF);
     }

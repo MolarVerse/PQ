@@ -29,7 +29,7 @@
 #include "atom.hpp"                // for Atom
 #include "cell.hpp"                // for Cell
 #include "exceptions.hpp"          // for CellListException
-#include "gtest/gtest.h"           // for Message, TestPartResult
+                                   // for Message, TestPartResult
 #include "molecule.hpp"            // for Molecule
 #include "potentialSettings.hpp"   // for PotentialSettings
 #include "simulationBox.hpp"       // for SimulationBox

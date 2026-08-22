@@ -62,12 +62,12 @@ void RingPolymerRestartFileOutput::write(std::vector<SimulationBox> &beads)
                 const auto x        = molecule.getAtomPosition(j)[0];
                 const auto y        = molecule.getAtomPosition(j)[1];
                 const auto z        = molecule.getAtomPosition(j)[2];
-                const auto vx       = molecule.getAtomVelocity(j)[0];
-                const auto vy       = molecule.getAtomVelocity(j)[1];
-                const auto vz       = molecule.getAtomVelocity(j)[2];
-                const auto fx       = molecule.getAtomForce(j)[0];
-                const auto fy       = molecule.getAtomForce(j)[1];
-                const auto fz       = molecule.getAtomForce(j)[2];
+                const auto velX     = molecule.getAtomVelocity(j)[0];
+                const auto velY     = molecule.getAtomVelocity(j)[1];
+                const auto velZ     = molecule.getAtomVelocity(j)[2];
+                const auto forceX   = molecule.getAtomForce(j)[0];
+                const auto forceY   = molecule.getAtomForce(j)[1];
+                const auto forceZ   = molecule.getAtomForce(j)[2];
 
                 buffer << std::format("{:>5}{}\t", atomName, i + 1);
                 buffer << std::format("{:>5}\t", j + 1);
@@ -75,8 +75,8 @@ void RingPolymerRestartFileOutput::write(std::vector<SimulationBox> &beads)
 
                 // clang-format off
                 buffer << std::format("{:15.8f}\t{:15.8f}\t{:15.8f}\t", x, y, z);
-                buffer << std::format("{:19.8e}\t{:19.8e}\t{:19.8e}\t", vx, vy, vz);
-                buffer << std::format("{:15.8f}\t{:15.8f}\t{:15.8f}", fx, fy, fz);
+                buffer << std::format("{:19.8e}\t{:19.8e}\t{:19.8e}\t", velX, velY, velZ);
+                buffer << std::format("{:15.8f}\t{:15.8f}\t{:15.8f}", forceX, forceY, forceZ);
                 // clang-format on
 
                 buffer << '\n';

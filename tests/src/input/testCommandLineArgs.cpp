@@ -27,7 +27,6 @@
 
 #include "commandLineArgs.hpp"    // for CommandLineArgs
 #include "exceptions.hpp"         // for UserInputException
-#include "gtest/gtest.h"          // for Message, TestPartResult
 #include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
 
 /**

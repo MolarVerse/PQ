@@ -36,7 +36,6 @@
 #include "engine.hpp"              // for Engine
 #include "exceptions.hpp"          // for GuffDatException, UserInputException
 #include "gmock/gmock.h"           // for ElementsAre, MakePredicateFormatter
-#include "gtest/gtest.h"           // for Message, TestPartResult
 #include "guffPair.hpp"            // for GuffPair
 #include "lennardJonesPair.hpp"    // for LennardJonesPair
 #include "morsePair.hpp"           // for MorsePair

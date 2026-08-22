@@ -77,11 +77,11 @@ namespace input
             size_t
         );
 
-        std::vector<int> parseSelection(
+        static std::vector<int> parseSelection(
             const std::string &,
             const std::string &
         );
-        std::vector<int> parseSelectionNoPython(
+        static std::vector<int> parseSelectionNoPython(
             const std::string &,
             const std::string &
         );

@@ -129,10 +129,10 @@ GuffDatReader::GuffDatReader(engine::Engine &engine) : _engine(engine)
  */
 void GuffDatReader::read()
 {
-    std::ifstream fp(_fileName);
+    std::ifstream file(_fileName);
     std::string   line;
 
-    while (getline(fp, line))
+    while (getline(file, line))
     {
         line = removeComments(line, "#");
 
@@ -527,7 +527,7 @@ void GuffDatReader::addMorsePair(
     size_t                     molType2,
     size_t                     atomType1,
     size_t                     atomType2,
-    const std::vector<double> &coeffs,
+    const std::vector<double> &coefficients,
     double                     rncCutOff
 )
 {
@@ -535,10 +535,9 @@ void GuffDatReader::addMorsePair(
         _engine.getPotential()->getNonCoulombPotential()
     );
 
-    // clang-format off
-    const auto morsePair          = MorsePair(rncCutOff, coeffs[0], coeffs[1], coeffs[2]);
+    const auto morsePair =
+        MorsePair(rncCutOff, coefficients[0], coefficients[1], coefficients[2]);
     const auto [eCutOff, fCutOff] = morsePair.calculate(rncCutOff);
-    // clang-format on
 
     guffNonCoulomb.setGuffNonCoulPair(
         {molType1, molType2, atomType1, atomType2},
@@ -546,9 +545,9 @@ void GuffDatReader::addMorsePair(
             rncCutOff,
             eCutOff,
             fCutOff,
-            coeffs[0],
-            coeffs[1],
-            coeffs[2]
+            coefficients[0],
+            coefficients[1],
+            coefficients[2]
         )
     );
 
@@ -563,9 +562,9 @@ void GuffDatReader::addMorsePair(
             rncCutOff,
             eCutOff,
             fCutOff,
-            coeffs[0],
-            coeffs[1],
-            coeffs[2]
+            coefficients[0],
+            coefficients[1],
+            coefficients[2]
         )
     );
 }

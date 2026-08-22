@@ -30,7 +30,7 @@
 #include "atom.hpp"                      // for Atom
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
 #include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
-#include "gtest/gtest.h"                 // for Message, TestPartResult
+                                         // for Message, TestPartResult
 #include "intraNonBondedContainer.hpp"   // for IntraNonBondedContainer
 #include "intraNonBondedMap.hpp"         // for IntraNonBondedMap
 #include "lennardJonesPair.hpp"          // for LennardJonesPair

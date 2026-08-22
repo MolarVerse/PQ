@@ -49,14 +49,14 @@ namespace potential
             size_t vanDerWaalsType1,
             size_t vanDerWaalsType2,
             double cutOff,
-            double a,
+            double scaling,
             double dRho,
             double c6
         );
 
         explicit BuckinghamPair(
             double cutOff,
-            double a,
+            double scaling,
             double dRho,
             double c6
         );
@@ -65,7 +65,7 @@ namespace potential
             double cutOff,
             double energyCutoff,
             double forceCutoff,
-            double a,
+            double scaling,
             double dRho,
             double c6
         );

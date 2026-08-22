@@ -28,7 +28,6 @@
 #include "cellListInputParser.hpp"   // for CellListInputParser
 #include "engine.hpp"                // for Engine
 #include "exceptions.hpp"            // for InputFileException
-#include "gtest/gtest.h"             // for Message, AssertionResult
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
 

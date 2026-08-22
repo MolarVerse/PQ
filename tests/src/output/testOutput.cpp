@@ -24,8 +24,7 @@
 #include <format>       // for format
 #include <string>       // for string
 
-#include "exceptions.hpp"   // for InputFileException
-#include "gtest/gtest.h"   // for Test, Message, TestPartResult, InitGoogleTest, RUN_ALL_TESTS
+#include "exceptions.hpp"           // for InputFileException
 #include "output.hpp"               // for Output
 #include "outputFileSettings.hpp"   // for OutputFileSettings
 #include "throwWithMessage.hpp"     // for EXPECT_THROW_MSG

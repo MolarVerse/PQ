@@ -32,7 +32,6 @@
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
 #include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
 #include "gmock/gmock.h"                 // for DoubleNear, ElementsAre
-#include "gtest/gtest.h"                 // for Message, TestPartResult
 #include "lennardJonesPair.hpp"          // for LennardJonesPair
 #include "matrix.hpp"                    // for Matrix
 #include "molecule.hpp"                  // for Molecule

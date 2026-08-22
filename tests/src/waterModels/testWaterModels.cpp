@@ -94,9 +94,9 @@ namespace
         const size_t         molType
     )
     {
-        const auto oxygen = std::make_shared<Atom>();
-        const auto h1     = std::make_shared<Atom>();
-        const auto h2     = std::make_shared<Atom>();
+        const auto oxygen    = std::make_shared<Atom>();
+        const auto hydrogen1 = std::make_shared<Atom>();
+        const auto hydrogen2 = std::make_shared<Atom>();
 
         oxygen->setAtomicNumber(8);
         oxygen->setPartialCharge(-0.82);
@@ -106,18 +106,18 @@ namespace
         oxygen->setInternalGlobalVDWType(0);
         oxygen->setForceToZero();
 
-        h1->setAtomicNumber(1);
-        h1->setPartialCharge(0.41);
-        h1->setQMCharge(0.45);
-        h1->setPosition(origin + Vec3D{geometry.oh1, 0.0, 0.0});
-        h1->setAtomType(1);
-        h1->setInternalGlobalVDWType(0);
-        h1->setForceToZero();
+        hydrogen1->setAtomicNumber(1);
+        hydrogen1->setPartialCharge(0.41);
+        hydrogen1->setQMCharge(0.45);
+        hydrogen1->setPosition(origin + Vec3D{geometry.oh1, 0.0, 0.0});
+        hydrogen1->setAtomType(1);
+        hydrogen1->setInternalGlobalVDWType(0);
+        hydrogen1->setForceToZero();
 
-        h2->setAtomicNumber(1);
-        h2->setPartialCharge(0.41);
-        h2->setQMCharge(0.45);
-        h2->setPosition(
+        hydrogen2->setAtomicNumber(1);
+        hydrogen2->setPartialCharge(0.41);
+        hydrogen2->setQMCharge(0.45);
+        hydrogen2->setPosition(
             origin +
             Vec3D{
                 geometry.oh2 * std::cos(geometry.angle),
@@ -125,9 +125,9 @@ namespace
                 0.0
             }
         );
-        h2->setAtomType(1);
-        h2->setInternalGlobalVDWType(0);
-        h2->setForceToZero();
+        hydrogen2->setAtomType(1);
+        hydrogen2->setInternalGlobalVDWType(0);
+        hydrogen2->setForceToZero();
 
         Molecule water;
         water.setMoltype(molType);
@@ -135,15 +135,15 @@ namespace
         water.setHybridZone(zone);
         water.setSmoothingFactor(0.25);
         water.addAtom(oxygen);
-        water.addAtom(h1);
-        water.addAtom(h2);
+        water.addAtom(hydrogen1);
+        water.addAtom(hydrogen2);
 
         if (!active)
             water.deactivateMolecule();
 
         simBox.addAtom(oxygen);
-        simBox.addAtom(h1);
-        simBox.addAtom(h2);
+        simBox.addAtom(hydrogen1);
+        simBox.addAtom(hydrogen2);
         simBox.addMolecule(water);
     }
 

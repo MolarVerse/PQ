@@ -38,43 +38,43 @@ void GuffNonCoulomb::resizeGuff(size_t numberOfMoleculeTypes)
  * @brief resizes the second outermost vector of the 4d vector
  * _guffNonCoulombPairs
  *
- * @param m1
+ * @param mol1
  * @param numberOfMoleculeTypes
  */
-void GuffNonCoulomb::resizeGuff(size_t m1, size_t numberOfMoleculeTypes)
+void GuffNonCoulomb::resizeGuff(size_t mol1, size_t numberOfMoleculeTypes)
 {
-    _guffNonCoulombPairs[m1].resize(numberOfMoleculeTypes);
+    _guffNonCoulombPairs[mol1].resize(numberOfMoleculeTypes);
 }
 
 /**
  * @brief resizes the third outermost vector of the 4d vector
  * _guffNonCoulombPairs
  *
- * @param m1
- * @param m2
+ * @param mol1
+ * @param mol2
  * @param numberOfAtoms
  */
-void GuffNonCoulomb::resizeGuff(size_t m1, size_t m2, size_t numberOfAtoms)
+void GuffNonCoulomb::resizeGuff(size_t mol1, size_t mol2, size_t numberOfAtoms)
 {
-    _guffNonCoulombPairs[m1][m2].resize(numberOfAtoms);
+    _guffNonCoulombPairs[mol1][mol2].resize(numberOfAtoms);
 }
 
 /**
  * @brief resizes the innermost vector of the 4d vector _guffNonCoulombPairs
  *
- * @param m1
- * @param m2
- * @param a1
+ * @param mol1
+ * @param mol2
+ * @param atom1
  * @param numberOfAtoms
  */
 void GuffNonCoulomb::resizeGuff(
-    size_t m1,
-    size_t m2,
-    size_t a1,
+    size_t mol1,
+    size_t mol2,
+    size_t atom1,
     size_t numberOfAtoms
 )
 {
-    _guffNonCoulombPairs[m1][m2][a1].resize(numberOfAtoms);
+    _guffNonCoulombPairs[mol1][mol2][atom1].resize(numberOfAtoms);
 }
 
 /***************************
@@ -94,12 +94,12 @@ void GuffNonCoulomb::setGuffNonCoulPair(
     const std::shared_ptr<NonCoulombPair> &nonCoulombPair
 )
 {
-    const auto m1 = getMolType1(indices) - 1;
-    const auto m2 = getMolType2(indices) - 1;
-    const auto a1 = getAtomType1(indices);
-    const auto a2 = getAtomType2(indices);
+    const auto mol1  = getMolType1(indices) - 1;
+    const auto mol2  = getMolType2(indices) - 1;
+    const auto atom1 = getAtomType1(indices);
+    const auto atom2 = getAtomType2(indices);
 
-    _guffNonCoulombPairs[m1][m2][a1][a2] = nonCoulombPair;
+    _guffNonCoulombPairs[mol1][mol2][atom1][atom2] = nonCoulombPair;
 }
 
 /***************************
@@ -118,12 +118,12 @@ std::shared_ptr<NonCoulombPair> GuffNonCoulomb::getNonCoulPair(
     const std::vector<size_t> &indices
 )
 {
-    const auto m1 = getMolType1(indices) - 1;
-    const auto m2 = getMolType2(indices) - 1;
-    const auto a1 = getAtomType1(indices);
-    const auto a2 = getAtomType2(indices);
+    const auto mol1  = getMolType1(indices) - 1;
+    const auto mol2  = getMolType2(indices) - 1;
+    const auto atom1 = getAtomType1(indices);
+    const auto atom2 = getAtomType2(indices);
 
-    return _guffNonCoulombPairs[m1][m2][a1][a2];
+    return _guffNonCoulombPairs[mol1][mol2][atom1][atom2];
 }
 
 /**

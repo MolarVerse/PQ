@@ -24,7 +24,6 @@
 
 #include "coulombLongRangeInputParser.hpp"
 #include "exceptions.hpp"            // for InputFileException
-#include "gtest/gtest.h"             // for Message, TestPartResult
 #include "potentialSettings.hpp"     // for PotentialSettings
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG

@@ -38,7 +38,7 @@ void VelocityVerlet::firstStep(SimulationBox &simBox)
 {
     auto _ = scoped("Velocity Verlet - First Step");
 
-    auto integrate = [this, &simBox](auto &atom)
+    auto integrate = [&simBox](auto &atom)
     {
         integrateVelocities(atom.get());
         integratePositions(atom.get(), simBox);
@@ -68,6 +68,6 @@ void VelocityVerlet::secondStep(SimulationBox &simBox)
 
     std::ranges::for_each(
         simBox.getAtoms(),
-        [this](const auto &atom) { integrateVelocities(atom.get()); }
+        [](const auto &atom) { integrateVelocities(atom.get()); }
     );
 }

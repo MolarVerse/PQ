@@ -85,7 +85,7 @@ void RingPolymerRestartFileReader::read()
                     break;
             }
 
-            // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
+            // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
             if ((lineElements.size() != 21) && (lineElements.size() != 12))
             {
                 throw RstFileException(
@@ -114,7 +114,7 @@ void RingPolymerRestartFileReader::read()
                  stod(lineElements[10]),
                  stod(lineElements[11])}
             );
-            // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
+            // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
         }
     }
 }

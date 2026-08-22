@@ -48,7 +48,7 @@ namespace output
         static void writeOptWarning(const std::string &message);
 
         static void writeSetup(const std::string &setup);
-        static void writeSetupWarning(const std::string &setup);
+        static void writeSetupWarning(const std::string &warning);
         static void writeSetupCompleted();
         static void writeRead(const std::string &, const std::string &);
     };

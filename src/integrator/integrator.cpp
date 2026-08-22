@@ -51,12 +51,12 @@ Integrator::Integrator(std::string_view integratorType)
  */
 void Integrator::integrateVelocities(Atom *atom)
 {
-    auto       velocity = atom->getVelocity();
-    const auto force    = atom->getForce();
-    const auto mass     = atom->getMass();
-    const auto dt       = TimingsSettings::getTimeStep();
+    auto       velocity  = atom->getVelocity();
+    const auto force     = atom->getForce();
+    const auto mass      = atom->getMass();
+    const auto timeStamp = TimingsSettings::getTimeStep();
 
-    velocity += dt * force / mass * V_VERLET_VELOCITY_FACTOR;
+    velocity += timeStamp * force / mass * V_VERLET_VELOCITY_FACTOR;
 
     atom->setVelocity(velocity);
 }

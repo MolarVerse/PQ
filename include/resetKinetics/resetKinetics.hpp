@@ -83,7 +83,7 @@ namespace resetKinetics
         void resetTemperature(simulationBox::SimulationBox &);
         void resetMomentum(simulationBox::SimulationBox &);
         void resetAngularMomentum(simulationBox::SimulationBox &);
-        void resetForces(size_t step, simulationBox::SimulationBox &);
+        void resetForces(size_t step, simulationBox::SimulationBox &) const;
 
         /********************
          * standard setters *

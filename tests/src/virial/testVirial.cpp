@@ -22,7 +22,8 @@
 
 #include "testVirial.hpp"
 
-#include "gtest/gtest.h"   // for Message, TestPartResult
+#include <gtest/gtest.h>
+
 #include "virial.hpp"
 
 using namespace linearAlgebra;

@@ -25,8 +25,7 @@
 #include <string>   // for string, allocator, basic_string
 #include <vector>   // for vector
 
-#include "exceptions.hpp"        // for InputFileException, customException
-#include "gtest/gtest.h"         // for Message, TestPartResult
+#include "exceptions.hpp"   // for InputFileException, customException
 #include "integratorInputParser.hpp"
 #include "mdEngine.hpp"              // for Engine
 #include "testInputFileReader.hpp"   // for TestInputFileReader

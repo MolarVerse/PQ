@@ -183,7 +183,7 @@ namespace settings
         static void setSlakosPath(const std::string_view &path);
 
         static void setUseDispersionCorrection(bool use);
-        static void setRemoveNetForce(bool use);
+        static void setRemoveNetForce(bool removeNetForce);
         static void setUseThirdOrderDftb(bool use);
         static void setIsThirdOrderDftbSet(bool isThirdOrderDftbSet);
         static void setHubbardDerivs(

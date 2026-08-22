@@ -51,12 +51,12 @@ namespace benchSetup
         potential::ForceFieldNonCoulomb nonCoulomb;
 
         void setNonCoulombPairsMatrix(
-            const std::size_t                  i,
-            const std::size_t                  j,
+            const std::size_t                  index1,
+            const std::size_t                  index2,
             const potential::LennardJonesPair& pair
         )
         {
-            nonCoulomb._nonCoulPairsMatPtr->matrix(i, j) =
+            nonCoulomb._nonCoulPairsMatPtr->matrix(index1, index2) =
                 std::make_shared<potential::LennardJonesPair>(pair);
         }
 
@@ -92,19 +92,19 @@ namespace benchSetup
         {
             auto atom = std::make_shared<simulationBox::Atom>();
 
-            const auto d = static_cast<double>(i);
+            const auto deviation = static_cast<double>(i);
             // Quadratic y-term keeps atoms non-collinear so the bend-force
             // and dihedral kernels exercise their hot path (sin(alpha) != 0).
             const linearAlgebra::Vec3D pos{
-                params.origin + 1.0 + 0.7 * d,
-                0.4 * d + 0.1 * d * d,
-                0.25 * d
+                params.origin + 1.0 + (0.7 * deviation),
+                (0.4 * deviation) + (0.1 * deviation * deviation),
+                0.25 * deviation
             };
             atom->setPosition(pos);
             atom->setPositionOld(
                 pos
             );   // at-rest start (stable for constraints)
-            atom->setVelocity({0.01 * (d + 1.0), -0.015, 0.02});
+            atom->setVelocity({0.01 * (deviation + 1.0), -0.015, 0.02});
             atom->setForce({0.1, -0.2, 0.05});
             atom->setShiftForce({0.0, 0.0, 0.0});
             atom->setMass(12.0);
@@ -158,11 +158,11 @@ namespace benchSetup
         auto box = simulationBox::SimulationBox();
         box.setBoxDimensions({30.0, 30.0, 30.0});
 
-        for (std::size_t m = 0; m < params.nMolecules; ++m)
+        for (std::size_t mol = 0; mol < params.nMolecules; ++mol)
         {
             auto molecule = makeMolecule(
                 {.nAtoms = params.nAtomsPerMol,
-                 .origin = 3.0 * static_cast<double>(m)}
+                 .origin = 3.0 * static_cast<double>(mol)}
             );
 
             for (std::size_t i = 0; i < params.nAtomsPerMol; ++i)

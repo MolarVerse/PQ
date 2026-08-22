@@ -91,31 +91,31 @@ namespace
 
         auto buildMoleculeType = [](const size_t molType, const double charge)
         {
-            MoleculeType mt;
-            mt.setMoltype(molType);
-            mt.setNumberOfAtoms(1);
-            mt.addExternalAtomType(molType);
-            mt.addExternalToInternalAtomTypeElement(molType, 0);
-            mt.addPartialCharge(charge);
-            mt.addAtomType(0);
-            return mt;
+            MoleculeType molType_;
+            molType_.setMoltype(molType);
+            molType_.setNumberOfAtoms(1);
+            molType_.addExternalAtomType(molType);
+            molType_.addExternalToInternalAtomTypeElement(molType, 0);
+            molType_.addPartialCharge(charge);
+            molType_.addAtomType(0);
+            return molType_;
         };
 
         simBox.addMoleculeType(buildMoleculeType(1, 0.5));
         simBox.addMoleculeType(buildMoleculeType(2, -0.3));
 
-        for (const auto &p : placements)
+        for (const auto &placement : placements)
         {
             auto atom = std::make_shared<Atom>();
-            atom->setPosition(p.position);
+            atom->setPosition(placement.position);
             atom->setAtomType(0);
-            atom->setExternalAtomType(p.molType);
-            atom->setPartialCharge(p.molType == 1 ? 0.5 : -0.3);
+            atom->setExternalAtomType(placement.molType);
+            atom->setPartialCharge(placement.molType == 1 ? 0.5 : -0.3);
             atom->setInternalGlobalVDWType(0);
             atom->setForceToZero();
 
             Molecule molecule;
-            molecule.setMoltype(p.molType);
+            molecule.setMoltype(placement.molType);
             molecule.setNumberOfAtoms(1);
             molecule.addAtom(atom);
 
@@ -181,18 +181,20 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
     PhysicalData physicalDataBF;
     PhysicalData physicalDataCL;
 
-    PotentialBruteForce bf;
-    bf.makeCoulombPotential(CoulombShiftedPotential(kCoulombCutOff));
-    bf.setNonCoulombPotential(buildGuffNonCoulomb());
+    PotentialBruteForce bruteForce;
+    bruteForce.makeCoulombPotential(CoulombShiftedPotential(kCoulombCutOff));
+    bruteForce.setNonCoulombPotential(buildGuffNonCoulomb());
 
-    PotentialCellList cl;
-    cl.makeCoulombPotential(CoulombShiftedPotential(kCoulombCutOff));
-    cl.setNonCoulombPotential(buildGuffNonCoulomb());
+    PotentialCellList cellListPotential;
+    cellListPotential.makeCoulombPotential(
+        CoulombShiftedPotential(kCoulombCutOff)
+    );
+    cellListPotential.setNonCoulombPotential(buildGuffNonCoulomb());
 
     // Brute force ignores its CellList argument; pass a default-constructed
     // one purely to satisfy the signature.
     CellList dummyCellList;
-    bf.calculateForces(simBoxBF, physicalDataBF, dummyCellList);
+    bruteForce.calculateForces(simBoxBF, physicalDataBF, dummyCellList);
 
     CellList cellList;
     cellList.setNumberOfCells(kCellsPerSide);
@@ -200,7 +202,7 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
     cellList.setup(simBoxCL);
     cellList.activate();
     cellList.updateCellList(simBoxCL);
-    cl.calculateForces(simBoxCL, physicalDataCL, cellList);
+    cellListPotential.calculateForces(simBoxCL, physicalDataCL, cellList);
 
     EXPECT_NEAR(
         physicalDataBF.getCoulombEnergy(),
@@ -221,17 +223,17 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
 
         ASSERT_EQ(molBF.getNumberOfAtoms(), molCL.getNumberOfAtoms());
 
-        for (size_t a = 0; a < molBF.getNumberOfAtoms(); ++a)
+        for (size_t atomIdx = 0; atomIdx < molBF.getNumberOfAtoms(); ++atomIdx)
         {
-            const auto fBF = molBF.getAtomForce(a);
-            const auto fCL = molCL.getAtomForce(a);
+            const auto fBF = molBF.getAtomForce(atomIdx);
+            const auto fCL = molCL.getAtomForce(atomIdx);
 
             EXPECT_NEAR(fBF[0], fCL[0], kForceTolerance)
-                << "force x mismatch on molecule " << i << " atom " << a;
+                << "force x mismatch on molecule " << i << " atom " << atomIdx;
             EXPECT_NEAR(fBF[1], fCL[1], kForceTolerance)
-                << "force y mismatch on molecule " << i << " atom " << a;
+                << "force y mismatch on molecule " << i << " atom " << atomIdx;
             EXPECT_NEAR(fBF[2], fCL[2], kForceTolerance)
-                << "force z mismatch on molecule " << i << " atom " << a;
+                << "force z mismatch on molecule " << i << " atom " << atomIdx;
         }
     }
 }

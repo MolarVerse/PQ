@@ -123,15 +123,15 @@ void RingPolymerTrajectoryOutput::writeVelocities(
             for (size_t j = 0; j < nAtoms; ++j)
             {
                 const auto atomName = molecule.getAtomName(j);
-                const auto vx       = molecule.getAtomVelocity(j)[0];
-                const auto vy       = molecule.getAtomVelocity(j)[1];
-                const auto vz       = molecule.getAtomVelocity(j)[2];
+                const auto velX     = molecule.getAtomVelocity(j)[0];
+                const auto velY     = molecule.getAtomVelocity(j)[1];
+                const auto velZ     = molecule.getAtomVelocity(j)[2];
 
                 buffer << std::format("{:>5}{}\t", atomName, i + 1);
 
-                buffer << std::format("{:20.8e}\t", vx);
-                buffer << std::format("{:20.8e}\t", vy);
-                buffer << std::format("{:20.8e}\n", vz);
+                buffer << std::format("{:20.8e}\t", velX);
+                buffer << std::format("{:20.8e}\t", velY);
+                buffer << std::format("{:20.8e}\n", velZ);
             }
         }
     }
@@ -173,15 +173,15 @@ void RingPolymerTrajectoryOutput::writeForces(
             for (size_t j = 0; j < nAtoms; ++j)
             {
                 const auto atomName = molecule.getAtomName(j);
-                const auto fx       = molecule.getAtomForce(j)[0];
-                const auto fy       = molecule.getAtomForce(j)[1];
-                const auto fz       = molecule.getAtomForce(j)[2];
+                const auto forceX   = molecule.getAtomForce(j)[0];
+                const auto forceY   = molecule.getAtomForce(j)[1];
+                const auto forceZ   = molecule.getAtomForce(j)[2];
 
                 buffer << std::format("{:>5}{}\t", atomName, i + 1);
 
-                buffer << std::format("{:15.8f}\t", fx);
-                buffer << std::format("{:15.8f}\t", fy);
-                buffer << std::format("{:15.8f}\n", fz);
+                buffer << std::format("{:15.8f}\t", forceX);
+                buffer << std::format("{:15.8f}\t", forceY);
+                buffer << std::format("{:15.8f}\n", forceZ);
             }
         }
     }

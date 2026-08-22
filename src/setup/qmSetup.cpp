@@ -280,11 +280,11 @@ void QMSetup::setupWriteInfo() const
 
     if (qmMethod == MACE)
     {
-        const auto        modelType = QMSettings::getMaceModelType();
-        const auto        modelSize = QMSettings::getMaceModel();
-        const auto        modelPath = QMSettings::getMaceModelPath();
-        const auto        fp        = Settings::getFloatingPointPybindString();
-        const auto        maceMode  = QMSettings::getMaceMode();
+        const auto modelType        = QMSettings::getMaceModelType();
+        const auto modelSize        = QMSettings::getMaceModel();
+        const auto modelPath        = QMSettings::getMaceModelPath();
+        const auto floatingPointStr = Settings::getFloatingPointPybindString();
+        const auto maceMode         = QMSettings::getMaceMode();
         const auto *const useDisp =
             QMSettings::useDispersionCorr() ? "on" : "off";
 
@@ -292,7 +292,7 @@ void QMSetup::setupWriteInfo() const
         const auto modelTypeMsg = std::format("Model type:            {}", string(modelType));
         const auto modelSizeMsg = std::format("Model size:            {}", string(modelSize));
         const auto modelPathMsg = std::format("Model path:            {}", modelPath);
-        const auto fpMsg        = std::format("Floating point type:   {}", fp);
+        const auto fpMsg        = std::format("Floating point type:   {}", floatingPointStr);
         const auto dispCorrMsg  = std::format("Dispersion Correction: {}", useDisp);
         const auto modeMsg      = std::format("Evaluation mode:       {}", string(maceMode));
         // clang-format on

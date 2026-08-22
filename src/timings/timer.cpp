@@ -160,8 +160,8 @@ void Timer::sortTimingsSections()
 {
     std::ranges::sort(
         _timingDetails,
-        [](const TimingsSection& a, const TimingsSection& b)
-        { return a.calculateElapsedTime() > b.calculateElapsedTime(); }
+        [](const TimingsSection& lhs, const TimingsSection& rhs)
+        { return lhs.calculateElapsedTime() > rhs.calculateElapsedTime(); }
     );
 }
 

@@ -230,7 +230,7 @@ void ResetKinetics::resetAngularMomentum(SimulationBox &simBox)
  * @param step
  * @param simBox
  */
-void ResetKinetics::resetForces(size_t step, SimulationBox &simBox)
+void ResetKinetics::resetForces(size_t step, SimulationBox &simBox) const
 {
     if (0 != step % _nStepsForcesReset)
         return;

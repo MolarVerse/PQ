@@ -41,17 +41,17 @@ JCouplingType::JCouplingType(
     size_t id,
     double J0,
     double forceConstant,
-    double a,
-    double b,
-    double c,
+    double constA,
+    double constB,
+    double constC,
     double phaseShift
 )
     : _id(id),
       _j0(J0),
       _forceConstant(forceConstant),
-      _a(a),
-      _b(b),
-      _c(c),
+      _a(constA),
+      _b(constB),
+      _c(constC),
       _phaseShift(phaseShift)
 {
 }
@@ -69,14 +69,14 @@ bool forceField::operator==(
     const JCouplingType &other
 )
 {
-    const auto k         = self._forceConstant;
-    const auto phi       = self._phaseShift;
-    const auto other_k   = other._forceConstant;
-    const auto other_phi = other._phaseShift;
+    const auto forceConstant = self._forceConstant;
+    const auto phi           = self._phaseShift;
+    const auto other_k       = other._forceConstant;
+    const auto other_phi     = other._phaseShift;
 
     auto isEqual = self._id == other._id;
     isEqual      = isEqual && utilities::compare(self._j0, other._j0);
-    isEqual      = isEqual && utilities::compare(k, other_k);
+    isEqual      = isEqual && utilities::compare(forceConstant, other_k);
     isEqual      = isEqual && utilities::compare(self._a, other._a);
     isEqual      = isEqual && utilities::compare(self._b, other._b);
     isEqual      = isEqual && utilities::compare(self._c, other._c);

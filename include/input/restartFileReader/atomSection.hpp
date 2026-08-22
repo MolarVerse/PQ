@@ -28,8 +28,7 @@
 
 #include "restartFileSection.hpp"   // for RestartFileSection
 
-class TestAtomSection_testProcessAtomLine_Test;     // Friend test class
-class TestAtomSection_testProcessQMAtomLine_Test;   // Friend test class
+class TestAtomSection;
 
 namespace engine
 {
@@ -59,11 +58,6 @@ namespace input::restartFile
             const simulationBox::Molecule &
         );
 
-#ifdef WITH_TESTS
-        friend class ::TestAtomSection_testProcessAtomLine_Test;
-        friend class ::TestAtomSection_testProcessQMAtomLine_Test;
-#endif
-
        public:
         void checkNumberOfLineArguments(std::vector<std::string> &) const;
         void process(
@@ -73,6 +67,20 @@ namespace input::restartFile
 
         [[nodiscard]] std::string keyword() override;
         [[nodiscard]] bool        isHeader() override;
+
+       private:
+        static void _processAtomLine(
+            std::vector<std::string>     &lineElements,
+            simulationBox::SimulationBox &simBox,
+            simulationBox::Molecule      &molecule
+        );
+
+        static void _processQMAtomLine(
+            std::vector<std::string>     &lineElements,
+            simulationBox::SimulationBox &simBox
+        );
+
+        friend class ::TestAtomSection;
     };
 
 }   // namespace input::restartFile

@@ -109,7 +109,7 @@ void ParameterFileSection::setLineNumber(int lineNumber)
  *
  * @param fp
  */
-void ParameterFileSection::setFp(std::ifstream *fp) { _fp = fp; }
+void ParameterFileSection::setFp(std::ifstream *file) { _fp = file; }
 
 /**
  * @brief get line number of section

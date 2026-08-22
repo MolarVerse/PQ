@@ -46,15 +46,15 @@ namespace
         auto box = std::make_shared<SimulationBox>();
         box->setBoxDimensions(boxDims);
 
-        auto a1 = std::make_shared<Atom>();
-        auto a2 = std::make_shared<Atom>();
-        a1->setPosition(pos0);
-        a2->setPosition(pos1);
-        a1->setForce(force0);
-        a2->setForce(force1);
+        auto atom1 = std::make_shared<Atom>();
+        auto atom2 = std::make_shared<Atom>();
+        atom1->setPosition(pos0);
+        atom2->setPosition(pos1);
+        atom1->setForce(force0);
+        atom2->setForce(force1);
 
-        box->addAtom(a1);
-        box->addAtom(a2);
+        box->addAtom(atom1);
+        box->addAtom(atom2);
 
         return box;
     }
@@ -90,16 +90,34 @@ TEST(TestSteepestDescent, updateMovesAtomsByLearningRateTimesForce)
     SteepestDescent opt(1U);
     opt.setSimulationBox(box);
 
-    const auto lr = 0.1;
-    opt.update(lr, 1U);
+    const auto learningRate = 0.1;
+    opt.update(learningRate, 1U);
 
-    EXPECT_DOUBLE_EQ(box->getAtoms()[0]->getPosition()[0], 0.0 + lr * 0.5);
-    EXPECT_DOUBLE_EQ(box->getAtoms()[0]->getPosition()[1], 0.0 + lr * 1.0);
-    EXPECT_DOUBLE_EQ(box->getAtoms()[0]->getPosition()[2], 0.0 + lr * -1.0);
+    EXPECT_DOUBLE_EQ(
+        box->getAtoms()[0]->getPosition()[0],
+        0.0 + learningRate * 0.5
+    );
+    EXPECT_DOUBLE_EQ(
+        box->getAtoms()[0]->getPosition()[1],
+        0.0 + learningRate * 1.0
+    );
+    EXPECT_DOUBLE_EQ(
+        box->getAtoms()[0]->getPosition()[2],
+        0.0 + learningRate * -1.0
+    );
 
-    EXPECT_DOUBLE_EQ(box->getAtoms()[1]->getPosition()[0], 1.0 + lr * -0.2);
-    EXPECT_DOUBLE_EQ(box->getAtoms()[1]->getPosition()[1], 2.0 + lr * 0.3);
-    EXPECT_DOUBLE_EQ(box->getAtoms()[1]->getPosition()[2], 3.0 + lr * 0.7);
+    EXPECT_DOUBLE_EQ(
+        box->getAtoms()[1]->getPosition()[0],
+        1.0 + learningRate * -0.2
+    );
+    EXPECT_DOUBLE_EQ(
+        box->getAtoms()[1]->getPosition()[1],
+        2.0 + learningRate * 0.3
+    );
+    EXPECT_DOUBLE_EQ(
+        box->getAtoms()[1]->getPosition()[2],
+        3.0 + learningRate * 0.7
+    );
 }
 
 TEST(TestSteepestDescent, updateStoresOldPosition)

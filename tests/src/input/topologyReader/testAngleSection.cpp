@@ -28,7 +28,7 @@
 #include "angleSection.hpp"          // for AngleSection
 #include "engine.hpp"                // for Engine
 #include "exceptions.hpp"            // for TopologyException
-#include "gtest/gtest.h"             // for Message, TestPartResult
+                                     // for Message, TestPartResult
 #include "testTopologySection.hpp"   // for TestTopologySection
 
 /**
@@ -43,7 +43,7 @@ TEST_F(TestTopologySection, processSectionAngle)
     EXPECT_EQ(_engine->getForceField()->getAngles().size(), 1);
     EXPECT_EQ(
         _engine->getForceField()->getAngles()[0].getMolecules()[0],
-        &(_engine->getSimulationBox().getMolecules()[0])
+        _engine->getSimulationBox().getMolecules().data()
     );
     EXPECT_EQ(
         _engine->getForceField()->getAngles()[0].getMolecules()[1],

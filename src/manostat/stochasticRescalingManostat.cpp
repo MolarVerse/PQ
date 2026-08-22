@@ -130,12 +130,12 @@ StochasticRescalingManostat::StochasticRescalingManostat(
  */
 void StochasticRescalingManostat::applyManostat(
     simulationBox::SimulationBox &simBox,
-    physicalData::PhysicalData   &physicalData
+    physicalData::PhysicalData   &physData
 )
 {
     auto _ = scoped("Stochastic Rescaling");
 
-    calculatePressure(simBox, physicalData);
+    calculatePressure(simBox, physData);
 
     const auto mu = calculateMu(simBox.getVolume());
 
@@ -148,8 +148,8 @@ void StochasticRescalingManostat::applyManostat(
 
     simBox.scaleBox(mu);
 
-    physicalData.setVolume(simBox.getVolume());
-    physicalData.setDensity(simBox.getDensity());
+    physData.setVolume(simBox.getVolume());
+    physData.setDensity(simBox.getDensity());
 
     simBox.checkCoulRadiusCutOff(ExceptionType::MANOSTATEXCEPTION);
 
@@ -172,13 +172,15 @@ void StochasticRescalingManostat::applyManostat(
  */
 tensor3D StochasticRescalingManostat::calculateMu(double volume)
 {
-    const auto compress = _compressibility * _dt / _tau;
-    const auto kb       = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
+    const auto compress          = _compressibility * _dt / _tau;
+    const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
 
-    const auto kT     = kb * ThermostatSettings::getActualTargetTemperature();
+    const auto thermalEnergy =
+        boltzmannConstant * ThermostatSettings::getActualTargetTemperature();
+
     const auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
 
-    auto stochasticFactor  = 2.0 * kT * compress / volume;
+    auto stochasticFactor  = 2.0 * thermalEnergy * compress / volume;
     stochasticFactor      *= PRESSURE_FACTOR;
     stochasticFactor       = ::sqrt(stochasticFactor) * random;
 
@@ -201,13 +203,15 @@ tensor3D StochasticRescalingManostat::calculateMu(double volume)
  */
 tensor3D SemiIsotropicStochasticRescalingManostat::calculateMu(double volume)
 {
-    const auto compress = _compressibility * _dt / _tau;
-    const auto kb       = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
+    const auto compress          = _compressibility * _dt / _tau;
+    const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
 
-    const auto kT     = kb * ThermostatSettings::getActualTargetTemperature();
+    const auto thermalEnergy =
+        boltzmannConstant * ThermostatSettings::getActualTargetTemperature();
     const auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
 
-    auto stochasticFactor = 1.0 / _pressureTensor.size * kT * compress / volume;
+    auto stochasticFactor =
+        1.0 / _pressureTensor.size * thermalEnergy * compress / volume;
     stochasticFactor *= PRESSURE_FACTOR;
 
     const auto stochasticFactor_xy = ::sqrt(4.0 * stochasticFactor) * random;
@@ -245,13 +249,15 @@ tensor3D SemiIsotropicStochasticRescalingManostat::calculateMu(double volume)
  */
 tensor3D AnisotropicStochasticRescalingManostat::calculateMu(double volume)
 {
-    const auto compress = _compressibility * _dt / _tau;
-    const auto kb       = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
+    const auto compress          = _compressibility * _dt / _tau;
+    const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
 
-    const auto kT     = kb * ThermostatSettings::getActualTargetTemperature();
+    const auto thermalEnergy =
+        boltzmannConstant * ThermostatSettings::getActualTargetTemperature();
     const auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
 
-    auto stochasticFactor = 2.0 / _pressureTensor.size * kT * compress / volume;
+    auto stochasticFactor =
+        2.0 / _pressureTensor.size * thermalEnergy * compress / volume;
     stochasticFactor *= PRESSURE_FACTOR;
     stochasticFactor  = ::sqrt(stochasticFactor) * random;
 
@@ -271,13 +277,15 @@ tensor3D AnisotropicStochasticRescalingManostat::calculateMu(double volume)
  */
 tensor3D FullAnisotropicStochasticRescalingManostat::calculateMu(double volume)
 {
-    const auto compress = _compressibility * _dt / _tau;
-    const auto kb       = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
+    const auto compress          = _compressibility * _dt / _tau;
+    const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
 
-    const auto kT     = kb * ThermostatSettings::getActualTargetTemperature();
+    const auto thermalEnergy =
+        boltzmannConstant * ThermostatSettings::getActualTargetTemperature();
     const auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
 
-    auto stochasticFactor = 2.0 / _pressureTensor.size * kT * compress / volume;
+    auto stochasticFactor =
+        2.0 / _pressureTensor.size * thermalEnergy * compress / volume;
     stochasticFactor *= PRESSURE_FACTOR;
     stochasticFactor  = ::sqrt(stochasticFactor) * random;
 

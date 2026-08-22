@@ -55,23 +55,35 @@ namespace input
         );
 
         void parseIntraNonBondedFile(const std::vector<std::string> &, size_t);
-        void parseTopologyFilename(const std::vector<std::string> &, size_t);
-        void parseParameterFilename(const std::vector<std::string> &, size_t);
-        void parseStartFilename(const std::vector<std::string> &, size_t);
+        void parseTopologyFilename(
+            const std::vector<std::string> &,
+            size_t
+        ) const;
+        void parseParameterFilename(
+            const std::vector<std::string> &,
+            size_t
+        ) const;
+        void parseStartFilename(const std::vector<std::string> &, size_t) const;
         void parseRingPolymerStartFilename(
             const std::vector<std::string> &,
             size_t
-        );
+        ) const;
 
         void parseMoldescriptorFilename(
             const std::vector<std::string> &,
             size_t
-        );
+        ) const;
 
-        void parseGuffDatFilename(const std::vector<std::string> &, size_t);
+        void parseGuffDatFilename(
+            const std::vector<std::string> &,
+            size_t
+        ) const;
         static void parseGuffPath(const std::vector<std::string> &, size_t);
-        void parseMShakeFilename(const std::vector<std::string> &, size_t);
-        void parseDFTBFilename(const std::vector<std::string> &, size_t);
+        void        parseMShakeFilename(
+                   const std::vector<std::string> &,
+                   size_t
+               ) const;
+        void parseDFTBFilename(const std::vector<std::string> &, size_t) const;
         static void parseTMFilename(const std::vector<std::string> &, size_t);
     };
 

@@ -491,7 +491,7 @@ void QMInputParser::parseMaceQMMethod(const std::string_view &model)
 void QMInputParser::parseSlakosType(
     const std::vector<std::string> &lineElements,
     size_t                          lineNumber
-)
+) const
 {
     using enum SlakosType;
     checkCommand(lineElements, lineNumber);
@@ -580,9 +580,9 @@ void QMInputParser::parseHubbardDerivs(
         derivs += lineElements[i];
     }
 
-    std::stringstream ss(derivs);
+    std::stringstream sstream(derivs);
     std::string       item;
-    while (std::getline(ss, item, ','))
+    while (std::getline(sstream, item, ','))
     {
         const auto separator = item.find(':');
 

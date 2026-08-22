@@ -26,7 +26,7 @@
 #include <cstddef>   // for size_t
 #include <vector>    // for vector
 
-#include "gtest/gtest.h"   // for AssertionResult, Message, TestPartResult
+// for AssertionResult, Message, TestPartResult
 #include "morsePair.hpp"   // for MorsePair
 
 using namespace potential;

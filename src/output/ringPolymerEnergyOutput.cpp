@@ -32,45 +32,46 @@
 using namespace output;
 using namespace physicalData;
 
-namespace
+/**
+ * @brief sum of all ring polymer spring energies
+ *
+ * @param dataVector
+ *
+ * @return sum of all ring polymer spring energies
+ */
+double RingPolymerEnergyOutput::_sumOfRingPolymerEnergies(
+    const std::vector<PhysicalData> &dataVector
+)
 {
-    /**
-     * @brief sum of all ring polymer spring energies
-     *
-     * @param dataVector
-     *
-     * @return sum of all ring polymer spring energies
-     */
-    double sumOfRingPolymerEnergies(const std::vector<PhysicalData> &dataVector)
-    {
-        return std::accumulate(
-            dataVector.begin(),
-            dataVector.end(),
-            0.0,
-            [](const auto &sum, const auto &data)
-            { return sum + data.getRingPolymerEnergy(); }
-        );
-    }
+    return std::accumulate(
+        dataVector.begin(),
+        dataVector.end(),
+        0.0,
+        [](const auto &sum, const auto &data)
+        { return sum + data.getRingPolymerEnergy(); }
+    );
+}
 
-    /**
-     * @brief maximum ring polymer spring energy
-     *
-     * @param dataVector
-     *
-     * @return maximum ring polymer spring energy
-     */
-    double maxRingPolymerEnergy(const std::vector<PhysicalData> &dataVector)
-    {
-        return std::ranges::max_element(
-                   dataVector,
-                   [](const auto &a, const auto &b)
-                   {
-                       return a.getRingPolymerEnergy() <
-                              b.getRingPolymerEnergy();
-                   }
-        )->getRingPolymerEnergy();
-    }
-}   // namespace
+/**
+ * @brief maximum ring polymer spring energy
+ *
+ * @param dataVector
+ *
+ * @return maximum ring polymer spring energy
+ */
+double RingPolymerEnergyOutput::_maxRingPolymerEnergy(
+    const std::vector<PhysicalData> &dataVector
+)
+{
+    return std::ranges::max_element(
+               dataVector,
+               [](const auto &lhs, const auto &rhs)
+               {
+                   return lhs.getRingPolymerEnergy() <
+                          rhs.getRingPolymerEnergy();
+               }
+    )->getRingPolymerEnergy();
+}
 
 /**
  * @brief write the energy output of each ring polymer
@@ -91,13 +92,13 @@ void RingPolymerEnergyOutput::write(
 {
     _fp << std::format("{:10d}\t", step);
 
-    _fp << std::format("{:20.12f}\t", sumOfRingPolymerEnergies(dataVector));
+    _fp << std::format("{:20.12f}\t", _sumOfRingPolymerEnergies(dataVector));
 
-    _fp << std::format("{:20.12f}\t", maxRingPolymerEnergy(dataVector));
+    _fp << std::format("{:20.12f}\t", _maxRingPolymerEnergy(dataVector));
 
     _fp << std::format(
         "{:20.12f}\t",
-        sumOfRingPolymerEnergies(dataVector) /
+        _sumOfRingPolymerEnergies(dataVector) /
             static_cast<double>(dataVector.size())
     );
 

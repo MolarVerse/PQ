@@ -89,13 +89,13 @@ void StdoutOutput::writeDensityWarning()
  * @brief write a warning message to the stdout if the optimization did not
  * converge
  *
- * @param msg
+ * @param message
  */
-void StdoutOutput::writeOptWarning(const std::string &msg)
+void StdoutOutput::writeOptWarning(const std::string &message)
 {
     try
     {
-        throw UserInputExceptionWarning(std::format("{}{}", WARNING, msg));
+        throw UserInputExceptionWarning(std::format("{}{}", WARNING, message));
     }
     catch (const UserInputExceptionWarning &e)
     {

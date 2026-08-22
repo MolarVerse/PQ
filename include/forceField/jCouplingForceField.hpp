@@ -84,11 +84,11 @@ namespace forceField
         void setLowerSymmetry(bool boolean);
 
         void setJ0(double J0);
-        void setForceConstant(double k);
-        void setA(double a);
-        void setB(double b);
-        void setC(double c);
-        void setPhaseShift(double phi);
+        void setForceConstant(double forceConstant);
+        void setA(double constA);
+        void setB(double constB);
+        void setC(double constC);
+        void setPhaseShift(double phaseShift);
 
         /***************************
          * standard getter methods *

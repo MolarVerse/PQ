@@ -89,7 +89,7 @@ void TriclinicBox::calculateBoxMatrix()
  */
 void TriclinicBox::calculateTransformationMatrix()
 {
-    _transformationMatrix[0][0] = 1.0;
+    _transformationMatrix[0][0] = 1;
     _transformationMatrix[0][1] = cosGamma();
     _transformationMatrix[0][2] = cosBeta();
 
@@ -99,7 +99,7 @@ void TriclinicBox::calculateTransformationMatrix()
 
     const auto sumcos_2          = sum(cos(_boxAngles) * cos(_boxAngles));
     const auto prodcos           = prod(cos(_boxAngles));
-    _transformationMatrix[2][2]  = ::sqrt(1.0 - sumcos_2 + 2 * prodcos);
+    _transformationMatrix[2][2]  = ::sqrt(1 - sumcos_2 + 2 * prodcos);
     _transformationMatrix[2][2] /= sinGamma();
 }
 

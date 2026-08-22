@@ -29,7 +29,7 @@
 #include <vector>     // for vector
 
 #include "exceptions.hpp"   // for ManostatException, RstFileException
-#include "gtest/gtest.h"    // for Message, TestPartResult, AssertionRe...
+// for Message, TestPartResult, AssertionRe...
 #include "potentialSettings.hpp"   // for PotentialSettings
 #include "throwWithMessage.hpp"    // for throwWithMessage
 #include "vectorNear.hpp"          // for EXPECT_VECTOR_NEAR
@@ -131,7 +131,7 @@ TEST_F(TestSimulationBox, findMoleculeByAtomIndex)
 {
     const auto &[molecule1, atomIndex1] =
         _simulationBox->findMoleculeByAtomIndex(3);
-    EXPECT_EQ(molecule1, &(_simulationBox->getMolecules()[0]));
+    EXPECT_EQ(molecule1, _simulationBox->getMolecules().data());
     EXPECT_EQ(atomIndex1, 2);
 
     const auto &[molecule2, atomIndex2] =

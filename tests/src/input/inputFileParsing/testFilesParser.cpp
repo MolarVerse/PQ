@@ -28,7 +28,6 @@
 #include "exceptions.hpp"     // for InputFileException
 #include "fileSettings.hpp"   // for FileSettings
 #include "filesInputParser.hpp"
-#include "gtest/gtest.h"             // for Message, TestPartResult, testing
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
 

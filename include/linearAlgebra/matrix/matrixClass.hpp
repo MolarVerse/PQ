@@ -58,7 +58,7 @@ namespace linearAlgebra
         [[nodiscard]] size_t size() const { return _rows * _cols; }
 
         Matrix<T>      inverse();
-        std::vector<T> solve(const std::vector<T> &b);
+        std::vector<T> solve(const std::vector<T> &rhs);
     };
 
 }   // namespace linearAlgebra

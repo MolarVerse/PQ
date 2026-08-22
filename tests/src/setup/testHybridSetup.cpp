@@ -88,39 +88,39 @@ TEST_F(TestSetup, setupHybridIsNoOpWhenQMMMNotActive)
 TEST_F(TestSetup, parseSelectionNoPythonSingleIndex)
 {
     HybridInputParser parser(*_engine);
-    const auto        v = parser.parseSelectionNoPython("3", "qm_center");
-    ASSERT_EQ(v.size(), 1U);
-    EXPECT_EQ(v[0], 3);
+    const auto        value = parser.parseSelectionNoPython("3", "qm_center");
+    ASSERT_EQ(value.size(), 1U);
+    EXPECT_EQ(value[0], 3);
 }
 
 TEST_F(TestSetup, parseSelectionNoPythonCommaList)
 {
     HybridInputParser parser(*_engine);
-    const auto        v = parser.parseSelectionNoPython("1,3,5", "qm_center");
-    ASSERT_EQ(v.size(), 3U);
-    EXPECT_EQ(v[0], 1);
-    EXPECT_EQ(v[1], 3);
-    EXPECT_EQ(v[2], 5);
+    const auto value = parser.parseSelectionNoPython("1,3,5", "qm_center");
+    ASSERT_EQ(value.size(), 3U);
+    EXPECT_EQ(value[0], 1);
+    EXPECT_EQ(value[1], 3);
+    EXPECT_EQ(value[2], 5);
 }
 
 TEST_F(TestSetup, parseSelectionNoPythonRange)
 {
     HybridInputParser parser(*_engine);
-    const auto        v = parser.parseSelectionNoPython("2-5", "qm_center");
-    ASSERT_EQ(v.size(), 4U);
-    EXPECT_EQ(v[0], 2);
-    EXPECT_EQ(v[3], 5);
+    const auto        value = parser.parseSelectionNoPython("2-5", "qm_center");
+    ASSERT_EQ(value.size(), 4U);
+    EXPECT_EQ(value[0], 2);
+    EXPECT_EQ(value[3], 5);
 }
 
 TEST_F(TestSetup, parseSelectionNoPythonMixedRangeAndList)
 {
     HybridInputParser parser(*_engine);
-    const auto        v = parser.parseSelectionNoPython("1,3-4,7", "qm_center");
-    ASSERT_EQ(v.size(), 4U);
-    EXPECT_EQ(v[0], 1);
-    EXPECT_EQ(v[1], 3);
-    EXPECT_EQ(v[2], 4);
-    EXPECT_EQ(v[3], 7);
+    const auto value = parser.parseSelectionNoPython("1,3-4,7", "qm_center");
+    ASSERT_EQ(value.size(), 4U);
+    EXPECT_EQ(value[0], 1);
+    EXPECT_EQ(value[1], 3);
+    EXPECT_EQ(value[2], 4);
+    EXPECT_EQ(value[3], 7);
 }
 
 TEST_F(TestSetup, parseSelectionNoPythonEmptyThrows)
@@ -137,19 +137,19 @@ TEST_F(TestSetup, parseSelectionNoPythonEmptyThrows)
 TEST_F(TestSetup, parseSelectionEmptyReturnsZeroOnly)
 {
     HybridInputParser parser(*_engine);
-    const auto        v = parser.parseSelection("", "qm_center");
-    ASSERT_EQ(v.size(), 1U);
-    EXPECT_EQ(v[0], 0);
+    const auto        value = parser.parseSelection("", "qm_center");
+    ASSERT_EQ(value.size(), 1U);
+    EXPECT_EQ(value[0], 0);
 }
 
 TEST_F(TestSetup, parseSelectionSortsAndDeduplicates)
 {
     HybridInputParser parser(*_engine);
-    const auto        v = parser.parseSelection("5,1,3,1", "qm_center");
-    ASSERT_EQ(v.size(), 3U);
-    EXPECT_EQ(v[0], 1);
-    EXPECT_EQ(v[1], 3);
-    EXPECT_EQ(v[2], 5);
+    const auto        value = parser.parseSelection("5,1,3,1", "qm_center");
+    ASSERT_EQ(value.size(), 3U);
+    EXPECT_EQ(value[0], 1);
+    EXPECT_EQ(value[1], 3);
+    EXPECT_EQ(value[2], 5);
 }
 
 #ifndef PYTHON_ENABLED
@@ -167,8 +167,8 @@ TEST_F(TestSetup, parseSelectionWithLettersThrowsWithoutPython)
 
 TEST_F(TestSetup, setupThrowsNotImplemented)
 {
-    HybridSetup hs(*_engine);
-    EXPECT_THROW(hs.setup(), InputFileException);
+    HybridSetup hybridSetup(*_engine);
+    EXPECT_THROW(hybridSetup.setup(), InputFileException);
 }
 
 TEST_F(TestSetup, setupHybridConfiguresDefaultCenter)

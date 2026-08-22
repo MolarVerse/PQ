@@ -29,6 +29,8 @@
 
 #include "qmRunner.hpp"
 
+class ExternalQMRunnerTest;   // forward declaration
+
 namespace physicalData
 {
     class PhysicalData;   // forward declaration
@@ -70,7 +72,7 @@ namespace QM
 
         void run(
             simulationBox::SimulationBox &simBox,
-            physicalData::PhysicalData   &physData,
+            physicalData::PhysicalData   &physicalData,
             simulationBox::Periodicity    periodicity
         ) override;
 
@@ -100,6 +102,15 @@ namespace QM
         [[nodiscard]] static std::string getStaticBuild();
 
         void setScriptPath(const std::string_view &scriptPath);
+
+       private:
+        static void _readForceFile(
+            simulationBox::SimulationBox &box,
+            physicalData::PhysicalData   &physicalData
+        );
+        static void _readChargeFile(simulationBox::SimulationBox &box);
+
+        friend class ::ExternalQMRunnerTest;   // for testing private methods
     };
 }   // namespace QM
 

@@ -45,7 +45,7 @@ namespace settings
         RELATIVE
     };
 
-    std::string string(ConvStrategy method);
+    std::string string(ConvStrategy strategy);
 
     /**
      * @class ConvSettings

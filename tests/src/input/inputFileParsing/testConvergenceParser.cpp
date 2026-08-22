@@ -25,7 +25,6 @@
 #include "convergenceInputParser.hpp"   // for InputFileParserOptimizer
 #include "convergenceSettings.hpp"      // for ConvSettings
 #include "exceptions.hpp"            // for InputFileException, customException
-#include "gtest/gtest.h"             // for Message, TestPartResult
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "throwWithMessage.hpp"      // for ASSERT_THROW_MSG
 

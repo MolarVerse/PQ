@@ -26,7 +26,7 @@
 #include <filesystem>
 
 #include "exceptions.hpp"         // for UserInputException
-#include "gtest/gtest.h"          // for Message, TestPartResult
+                                  // for Message, TestPartResult
 #include "qmSettings.hpp"         // for QMSettings, QMMethod
 #include "throwWithMessage.hpp"   // for ASSERT_THROW_MSG
 
@@ -191,7 +191,7 @@ TEST(QMSettingsTest, ResolvesBundledSlakos)
             std::filesystem::weakly_canonical(QMSettings::getSlakosPath());
 
         EXPECT_TRUE(std::filesystem::is_directory(path));
-        if (expectedRoot)
+        if (expectedRoot != nullptr)
         {
             EXPECT_EQ(
                 path,

@@ -132,10 +132,10 @@ namespace linearAlgebra
      *
      */
     template <typename T>
-    std::vector<T> Matrix<T>::solve(const std::vector<T> &b)
+    std::vector<T> Matrix<T>::solve(const std::vector<T> &rhs)
     {
-        Eigen::Matrix<T, Eigen::Dynamic, 1> bEigen(b.size());
-        std::ranges::copy(b, bEigen.data());
+        Eigen::Matrix<T, Eigen::Dynamic, 1> bEigen(rhs.size());
+        std::ranges::copy(rhs, bEigen.data());
 
         Eigen::MatrixXd              matrix = _data.transpose() * _data;
         Eigen::LDLT<Eigen::MatrixXd> ldlt(matrix);

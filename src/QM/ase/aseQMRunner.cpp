@@ -260,7 +260,7 @@ void AseQMRunner::run(
 {
     _periodicity = per;
 
-    std::jthread timeoutThread{[this](const std::stop_token &stopToken)
+    std::jthread timeoutThread{[](const std::stop_token &stopToken)
                                { throwAfterTimeout(stopToken); }};
 
     {

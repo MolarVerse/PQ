@@ -26,7 +26,7 @@
 #include <vector>    // for vector
 
 #include "exceptions.hpp"     // for TopologyException
-#include "gtest/gtest.h"      // for Message, TestPartResult
+                              // for Message, TestPartResult
 #include "shakeSection.hpp"   // for ShakeSection
 
 using namespace input::topology;
@@ -50,10 +50,10 @@ TEST_F(TestTopologySection, processShakeSection)
     outputStream.close();
 
     auto          lineElements = std::vector{std::string("")};
-    std::ifstream fp(_topologyFileName.c_str());
-    getline(fp, lineElements[0]);
+    std::ifstream file(_topologyFileName.c_str());
+    getline(file, lineElements[0]);
 
-    shakeSection.setFp(&fp);
+    shakeSection.setFp(&file);
     shakeSection.setLineNumber(1);
 
     EXPECT_NO_THROW(shakeSection.process(lineElements, *_engine));
@@ -63,7 +63,7 @@ TEST_F(TestTopologySection, processShakeSection)
 
     EXPECT_EQ(
         constraints->getBondConstraints()[0].getMolecule1(),
-        &(_engine->getSimulationBox().getMolecules()[0])
+        _engine->getSimulationBox().getMolecules().data()
     );
     EXPECT_EQ(
         constraints->getBondConstraints()[0].getMolecule2(),
@@ -105,9 +105,9 @@ TEST_F(TestTopologySection, processShakeSectionIncorrectNumberOfElements)
     outputStream.close();
 
     auto          lineElements = std::vector{std::string("")};
-    std::ifstream fp(_topologyFileName.c_str());
-    getline(fp, lineElements[0]);
-    shakeSection.setFp(&fp);
+    std::ifstream file(_topologyFileName.c_str());
+    getline(file, lineElements[0]);
+    shakeSection.setFp(&file);
 
     EXPECT_THROW(
         shakeSection.process(lineElements, *_engine),
@@ -132,9 +132,9 @@ TEST_F(TestTopologySection, processShakeSectionSameAtomTwice)
     outputStream.close();
 
     auto          lineElements = std::vector{std::string("")};
-    std::ifstream fp(_topologyFileName.c_str());
-    getline(fp, lineElements[0]);
-    shakeSection.setFp(&fp);
+    std::ifstream file(_topologyFileName.c_str());
+    getline(file, lineElements[0]);
+    shakeSection.setFp(&file);
 
     EXPECT_THROW(
         shakeSection.process(lineElements, *_engine),
@@ -161,9 +161,9 @@ TEST_F(TestTopologySection, processShakeSectionMissingEnd)
     outputStream.close();
 
     auto          lineElements = std::vector{std::string("")};
-    std::ifstream fp(_topologyFileName.c_str());
-    getline(fp, lineElements[0]);
-    shakeSection.setFp(&fp);
+    std::ifstream file(_topologyFileName.c_str());
+    getline(file, lineElements[0]);
+    shakeSection.setFp(&file);
 
     EXPECT_THROW(
         shakeSection.process(lineElements, *_engine),

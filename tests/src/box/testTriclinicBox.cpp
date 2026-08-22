@@ -20,15 +20,16 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#include <gtest/gtest.h>
+
 #include <array>
 
 #include "constants/conversionFactors.hpp"   // for _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_
 #include "defaults.hpp"                      // for VACUUM_BOX_DIMENSION
-#include "gtest/gtest.h"                     // for Message, TestPartResult
-#include "manostatSettings.hpp"              // for ManostatSettings
-#include "matrixNear.hpp"                    // for EXPECT_MATRIX_NEAR
-#include "triclinicBox.hpp"                  // for TriclinicBox
-#include "vectorNear.hpp"                    // for EXPECT_VECTOR_NEAR
+#include "manostatSettings.hpp"   // for ManostatSettings
+#include "matrixNear.hpp"         // for EXPECT_MATRIX_NEAR
+#include "triclinicBox.hpp"       // for TriclinicBox
+#include "vectorNear.hpp"         // for EXPECT_VECTOR_NEAR
 
 using namespace simulationBox;
 

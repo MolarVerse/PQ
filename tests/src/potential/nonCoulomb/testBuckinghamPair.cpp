@@ -27,7 +27,7 @@
 #include <vector>    // for vector
 
 #include "buckinghamPair.hpp"   // for BuckinghamPair
-#include "gtest/gtest.h"        // for AssertionResult, Message, TestPartResult
+                                // for AssertionResult, Message, TestPartResult
 
 using namespace potential;
 

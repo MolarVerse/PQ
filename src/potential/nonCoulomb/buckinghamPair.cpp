@@ -43,12 +43,12 @@ BuckinghamPair::BuckinghamPair(
     size_t vanDerWaalsType1,
     size_t vanDerWaalsType2,
     double cutOff,
-    double a,
+    double scaling,
     double dRho,
     double c6
 )
     : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff),
-      _a(a),
+      _a(scaling),
       _dRho(dRho),
       _c6(c6)
 {
@@ -62,8 +62,13 @@ BuckinghamPair::BuckinghamPair(
  * @param dRho
  * @param c6
  */
-BuckinghamPair::BuckinghamPair(double cutOff, double a, double dRho, double c6)
-    : NonCoulombPair(cutOff), _a(a), _dRho(dRho), _c6(c6)
+BuckinghamPair::BuckinghamPair(
+    double cutOff,
+    double scaling,
+    double dRho,
+    double c6
+)
+    : NonCoulombPair(cutOff), _a(scaling), _dRho(dRho), _c6(c6)
 {
 }
 
@@ -81,12 +86,12 @@ BuckinghamPair::BuckinghamPair(
     double cutOff,
     double energyCutoff,
     double forceCutoff,
-    double a,
+    double scaling,
     double dRho,
     double c6
 )
     : NonCoulombPair(cutOff, energyCutoff, forceCutoff),
-      _a(a),
+      _a(scaling),
       _dRho(dRho),
       _c6(c6)
 {
@@ -128,8 +133,11 @@ std::pair<double, double> BuckinghamPair::calculate(double distance) const
 
     auto force = -_dRho * expTerm;
 
-    // NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers)
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,
+    // readability-magic-numbers)
     force += 6.0 * _c6 / (distanceSixth * distance) - _forceCutOff;
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,
+    // readability-magic-numbers)
 
     return {energy, force};
 }

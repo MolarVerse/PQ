@@ -26,7 +26,7 @@
 #include <vector>    // for vector
 
 #include "bondSection.hpp"   // for BondSection
-#include "gtest/gtest.h"     // for Message, TestPartResult
+                             // for Message, TestPartResult
 
 /**
  * @brief tests full process function TODO: think of a clever way to test this
@@ -47,10 +47,10 @@ TEST_F(TestParameterFileSection, processParameterSection)
     outputStream.close();
 
     auto          lineElements = std::vector{std::string("")};
-    std::ifstream fp(_parameterFileName.c_str());
-    getline(fp, lineElements[0]);
+    std::ifstream file(_parameterFileName.c_str());
+    getline(file, lineElements[0]);
 
-    section.setFp(&fp);
+    section.setFp(&file);
     section.setLineNumber(1);
 
     EXPECT_NO_THROW(section.process(lineElements, *_engine));

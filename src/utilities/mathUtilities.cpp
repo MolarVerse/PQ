@@ -34,15 +34,15 @@
  * @return false
  */
 bool utilities::compare(
-    const linearAlgebra::Vector3D<double> &a,
-    const linearAlgebra::Vector3D<double> &b,
+    const linearAlgebra::Vector3D<double> &lhs,
+    const linearAlgebra::Vector3D<double> &rhs,
     const double                          &tolerance
 )
 {
     auto isEq = true;
-    isEq      = isEq && compare<double>(a[0], b[0], tolerance);
-    isEq      = isEq && compare<double>(a[1], b[1], tolerance);
-    isEq      = isEq && compare<double>(a[2], b[2], tolerance);
+    isEq      = isEq && compare<double>(lhs[0], rhs[0], tolerance);
+    isEq      = isEq && compare<double>(lhs[1], rhs[1], tolerance);
+    isEq      = isEq && compare<double>(lhs[2], rhs[2], tolerance);
 
     return isEq;
 }
@@ -56,14 +56,14 @@ bool utilities::compare(
  * @return false
  */
 bool utilities::compare(
-    const linearAlgebra::Vector3D<double> &a,
-    const linearAlgebra::Vector3D<double> &b
+    const linearAlgebra::Vector3D<double> &lhs,
+    const linearAlgebra::Vector3D<double> &rhs
 )
 {
     auto isEq = true;
-    isEq      = isEq && compare<double>(a[0], b[0]);
-    isEq      = isEq && compare<double>(a[1], b[1]);
-    isEq      = isEq && compare<double>(a[2], b[2]);
+    isEq      = isEq && compare<double>(lhs[0], rhs[0]);
+    isEq      = isEq && compare<double>(lhs[1], rhs[1]);
+    isEq      = isEq && compare<double>(lhs[2], rhs[2]);
 
     return isEq;
 }
@@ -75,4 +75,7 @@ bool utilities::compare(
  * @param j
  * @return size_t
  */
-size_t utilities::kroneckerDelta(size_t i, size_t j) { return i == j ? 1 : 0; }
+size_t utilities::kroneckerDelta(size_t lhs, size_t rhs)
+{
+    return lhs == rhs ? 1 : 0;
+}

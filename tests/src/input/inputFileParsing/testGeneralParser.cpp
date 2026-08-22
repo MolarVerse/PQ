@@ -30,7 +30,6 @@
 #include "engine.hpp"                  // for Engine
 #include "exceptions.hpp"              // for InputFileException
 #include "generalInputParser.hpp"      // for GeneralInputParser
-#include "gtest/gtest.h"               // for Message, TestPartResult
 #include "hessianEngine.hpp"           // for HessianEngine
 #include "mmmdEngine.hpp"              // for MMMDEngine
 #include "optEngine.hpp"               // for MMOptEngine

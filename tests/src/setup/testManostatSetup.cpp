@@ -23,7 +23,7 @@
 #include <gtest/gtest.h>   // for EXPECT_EQ, EXPECT_NO_THROW, InitGoog...
 
 #include "berendsenManostat.hpp"   // for BerendsenManostat
-#include "gtest/gtest.h"           // for Message, TestPartResult
+                                   // for Message, TestPartResult
 #include "manostat.hpp"            // for BerendsenManostat, Manostat
 #include "manostatSettings.hpp"    // for ManostatSettings
 #include "manostatSetup.hpp"       // for ManostatSetup, setupManostat, setup

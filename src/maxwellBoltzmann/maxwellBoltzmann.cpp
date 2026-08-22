@@ -57,11 +57,12 @@ void MaxwellBoltzmann::initializeVelocities(SimulationBox &simBox)
 {
     auto generateVelocities = [this](auto &atom)
     {
-        const auto mass = atom->getMass() * AMU_TO_KG;
-        const auto kb   = BOLTZMANN_CONSTANT;
+        const auto mass              = atom->getMass() * AMU_TO_KG;
+        const auto boltzmannConstant = BOLTZMANN_CONSTANT;
         const auto temp = ThermostatSettings::getActualTargetTemperature();
 
-        const auto stddev = ::sqrt(kb * temp / mass) / VELOCITY_UNIT_TO_SI;
+        const auto stddev =
+            ::sqrt(boltzmannConstant * temp / mass) / VELOCITY_UNIT_TO_SI;
 
         atom->setVelocity(
             {_randomNumberGenerator.getNormalDistribution(0.0, stddev),

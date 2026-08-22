@@ -25,8 +25,8 @@
 #include <cmath>    // for ::pow, ::exp
 #include <vector>   // for vector, allocator
 
-#include "gtest/gtest.h"        // for Message, TestPartResult
-#include "guffPair.hpp"         // for GuffPair
+// for Message, TestPartResult
+#include "guffPair.hpp"   // for GuffPair
 
 using namespace potential;
 
@@ -122,13 +122,14 @@ TEST(TestGuffPair, calculateWithSparseCoefficients)
     // with rExp17 == rExp21 == distance, which is 0^0 = NaN-prone; the gate
     // keeps the result finite.
     auto coefficients = std::vector<double>(22, 0.0);
-    coefficients[0]  = 4.0;        // c1
-    coefficients[1]  = 6.0;        // n2
-    coefficients[8]  = 1.5;        // c9
-    coefficients[9]  = 2.0;        // cexp10
-    coefficients[10] = 1.0;        // rExp11
-    coefficients[16] = distance;   // rExp17  - would make distance - rExp17 == 0
-    coefficients[17] = 3.0;        // n18
+    coefficients[0]   = 4.0;   // c1
+    coefficients[1]   = 6.0;   // n2
+    coefficients[8]   = 1.5;   // c9
+    coefficients[9]   = 2.0;   // cexp10
+    coefficients[10]  = 1.0;   // rExp11
+    coefficients[16] =
+        distance;             // rExp17  - would make distance - rExp17 == 0
+    coefficients[17] = 3.0;   // n18
     coefficients[20] = distance;   // rExp21
     coefficients[21] = 3.0;        // n22
 

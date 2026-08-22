@@ -22,11 +22,11 @@
 
 #include "testMolecule.hpp"
 
-#include "gtest/gtest.h"         // for Message, TestPartResult
-#include "manostatSettings.hpp"  // for ManostatSettings
-#include "mathUtilities.hpp"     // for compare
-#include "moleculeType.hpp"      // for MoleculeType
-#include "orthorhombicBox.hpp"   // for OrthorhombicBox
+// for Message, TestPartResult
+#include "manostatSettings.hpp"   // for ManostatSettings
+#include "mathUtilities.hpp"      // for compare
+#include "moleculeType.hpp"       // for MoleculeType
+#include "orthorhombicBox.hpp"    // for OrthorhombicBox
 
 TEST_F(TestMolecule, calculateCenterOfMass)
 {
@@ -109,11 +109,10 @@ TEST_F(TestMolecule, scaleVelocityPreservesInternalVelocities)
     const auto relativeVelocity20 =
         _molecule->getAtomVelocity(2) - _molecule->getAtomVelocity(0);
 
-    const auto centerOfMassVelocity =
-        (1.0 * _molecule->getAtomVelocity(0) +
-         2.0 * _molecule->getAtomVelocity(1) +
-         3.0 * _molecule->getAtomVelocity(2)) /
-        6.0;
+    const auto centerOfMassVelocity = (1.0 * _molecule->getAtomVelocity(0) +
+                                       2.0 * _molecule->getAtomVelocity(1) +
+                                       3.0 * _molecule->getAtomVelocity(2)) /
+                                      6.0;
 
     _molecule->scaleVelocity(scale, box);
 
@@ -123,21 +122,27 @@ TEST_F(TestMolecule, scaleVelocityPreservesInternalVelocities)
          3.0 * _molecule->getAtomVelocity(2)) /
         6.0;
 
-    EXPECT_TRUE(utilities::compare(
-        scaledCenterOfMassVelocity,
-        scale * centerOfMassVelocity,
-        1e-12
-    ));
-    EXPECT_TRUE(utilities::compare(
-        _molecule->getAtomVelocity(1) - _molecule->getAtomVelocity(0),
-        relativeVelocity10,
-        1e-12
-    ));
-    EXPECT_TRUE(utilities::compare(
-        _molecule->getAtomVelocity(2) - _molecule->getAtomVelocity(0),
-        relativeVelocity20,
-        1e-12
-    ));
+    EXPECT_TRUE(
+        utilities::compare(
+            scaledCenterOfMassVelocity,
+            scale * centerOfMassVelocity,
+            1e-12
+        )
+    );
+    EXPECT_TRUE(
+        utilities::compare(
+            _molecule->getAtomVelocity(1) - _molecule->getAtomVelocity(0),
+            relativeVelocity10,
+            1e-12
+        )
+    );
+    EXPECT_TRUE(
+        utilities::compare(
+            _molecule->getAtomVelocity(2) - _molecule->getAtomVelocity(0),
+            relativeVelocity20,
+            1e-12
+        )
+    );
 }
 
 TEST_F(TestMolecule, setAtomForceToZero)

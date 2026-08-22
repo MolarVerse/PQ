@@ -90,14 +90,14 @@ namespace
             {
                 const auto x = distance / weightingRadius;
 
-                if (x < 1.0)
+                if (x < 1)
                 {
-                    const auto x3 = x * x * x;
-                    const auto x4 = x3 * x;
-                    const auto x5 = x4 * x;
+                    const auto x_3 = x * x * x;
+                    const auto x_4 = x_3 * x;
+                    const auto x_5 = x_4 * x;
 
                     switchedWeight =
-                        1.0 - x3Coeff * x3 + x4Coeff * x4 - x5Coeff * x5;
+                        1 - x3Coeff * x_3 + x4Coeff * x_4 - x5Coeff * x_5;
                 }
             }
 
@@ -539,7 +539,7 @@ namespace engine
                 using enum QMForceDist;
 
                 case NONE: continue;
-                case EQUAL: weights = std::vector<double>(recipientMolecules.size(), 1.0); break;
+                case EQUAL: weights = std::vector<double>(recipientMolecules.size(), 1); break;
                 case RANDOM: weights = getRandomWeights(recipientMolecules); break;
                 case DISTANCE_WEIGHTED: weights = getDistanceWeights(smoothingMol, recipientMolecules); break;
             }
@@ -553,11 +553,11 @@ namespace engine
             {
                 // fallback: equal distribution
                 const auto equal = 1.0 / static_cast<double>(weights.size());
-                for (auto &w : weights) w = equal;
+                for (auto &weight : weights) weight = equal;
             }
             else
             {
-                for (auto &w : weights) w /= weightSum;
+                for (auto &weight : weights) weight /= weightSum;
             }
 
             for (size_t i = 0; i < recipientMolecules.size(); ++i)
@@ -592,7 +592,7 @@ namespace engine
         std::vector<double> randomWeights(recipientMolecules.size(), 0.0);
 
         for (auto &weight : randomWeights)
-            weight = _rng.getUniformRealDistribution(0.0, 1.0);
+            weight = _rng.getUniformRealDistribution(0.0, 1);
 
         return randomWeights;
     }

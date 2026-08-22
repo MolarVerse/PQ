@@ -191,7 +191,7 @@ void FilesInputParser::parseIntraNonBondedFile(
 void FilesInputParser::parseTopologyFilename(
     const std::vector<std::string> &lineElements,
     size_t                          lineNumber
-)
+) const
 {
     checkCommand(lineElements, lineNumber);
 
@@ -218,7 +218,7 @@ void FilesInputParser::parseTopologyFilename(
 void FilesInputParser::parseParameterFilename(
     const std::vector<std::string> &lineElements,
     size_t                          lineNumber
-)
+) const
 {
     checkCommand(lineElements, lineNumber);
 
@@ -242,7 +242,7 @@ void FilesInputParser::parseParameterFilename(
 void FilesInputParser::parseStartFilename(
     const std::vector<std::string> &lineElements,
     size_t                          lineNumber
-)
+) const
 {
     checkCommand(lineElements, lineNumber);
 
@@ -265,7 +265,7 @@ void FilesInputParser::parseStartFilename(
 void FilesInputParser::parseRingPolymerStartFilename(
     const std::vector<std::string> &lineElements,
     size_t                          lineNumber
-)
+) const
 {
     checkCommand(lineElements, lineNumber);
 
@@ -297,7 +297,7 @@ void FilesInputParser::parseRingPolymerStartFilename(
 void FilesInputParser::parseMoldescriptorFilename(
     const std::vector<std::string> &lineElements,
     size_t                          lineNumber
-)
+) const
 {
     checkCommand(lineElements, lineNumber);
 
@@ -348,7 +348,7 @@ void FilesInputParser::parseGuffPath(
 void FilesInputParser::parseGuffDatFilename(
     const std::vector<std::string> &lineElements,
     size_t                          lineNumber
-)
+) const
 {
     checkCommand(lineElements, lineNumber);
 
@@ -372,7 +372,7 @@ void FilesInputParser::parseGuffDatFilename(
 void FilesInputParser::parseMShakeFilename(
     const std::vector<std::string> &lineElements,
     size_t                          lineNumber
-)
+) const
 {
     checkCommand(lineElements, lineNumber);
 
@@ -396,7 +396,7 @@ void FilesInputParser::parseMShakeFilename(
 void FilesInputParser::parseDFTBFilename(
     const std::vector<std::string> &lineElements,
     size_t                          lineNumber
-)
+) const
 {
     checkCommand(lineElements, lineNumber);
 
