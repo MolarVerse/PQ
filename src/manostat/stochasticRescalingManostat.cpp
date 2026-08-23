@@ -38,7 +38,7 @@
 using namespace linearAlgebra;
 using namespace manostat;
 using namespace settings;
-using namespace simulationBox;
+using namespace molsys;
 using namespace physicalData;
 using namespace customException;
 using namespace constants;
@@ -130,8 +130,8 @@ StochasticRescalingManostat::StochasticRescalingManostat(
  * @param physicalData
  */
 void StochasticRescalingManostat::applyManostat(
-    simulationBox::SimulationBox &simBox,
-    physicalData::PhysicalData   &physicalData
+    molsys::SimulationBox      &simBox,
+    physicalData::PhysicalData &physicalData
 )
 {
     auto _ = scopedTimer(TimerId::Thermostat, "Stochastic Rescaling");

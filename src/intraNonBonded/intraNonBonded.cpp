@@ -33,7 +33,7 @@
 using namespace intraNonBonded;
 using namespace potential;
 using namespace customException;
-using namespace simulationBox;
+using namespace molsys;
 using namespace physicalData;
 
 using std::ranges::find_if;

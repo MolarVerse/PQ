@@ -27,10 +27,10 @@
 #include "randomNumberGenerator.hpp"   // for RandomNumberGenerator
 #include "thermostat.hpp"
 
-namespace simulationBox
+namespace molsys
 {
     class SimulationBox;   // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
 namespace thermostat
 {
@@ -65,8 +65,8 @@ namespace thermostat
         ) noexcept = delete;
 
         void applyThermostat(
-            simulationBox::SimulationBox &simBox,
-            physicalData::PhysicalData   &physData
+            molsys::SimulationBox      &simBox,
+            physicalData::PhysicalData &physData
         ) override;
 
         void setTau(const double tau);

@@ -9,8 +9,8 @@ target_include_directories(virial
 )
 
 target_link_libraries(virial
-    PUBLIC
-    simulationBox
+    PRIVATE
+    molsys
 )
 
 install(TARGETS virial

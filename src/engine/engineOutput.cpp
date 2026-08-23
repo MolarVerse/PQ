@@ -49,13 +49,13 @@ namespace physicalData
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
 
-namespace simulationBox
+namespace molsys
 {
     class SimulationBox;   // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
 using namespace engine;
-using namespace simulationBox;
+using namespace molsys;
 using namespace physicalData;
 using namespace thermostat;
 using namespace configurator;

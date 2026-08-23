@@ -47,7 +47,7 @@
 #include "stdoutOutput.hpp"            // for StdoutOutput
 #include "stringUtilities.hpp"   // for toLowerCopy, firstLetterToUpperCaseCopy
 
-using setup::simulationBox::SimulationBoxSetup;
+using setup::molsys::SimulationBoxSetup;
 using namespace engine;
 using namespace settings;
 using namespace utilities;
@@ -61,7 +61,7 @@ using namespace output;
  *
  * @param engine
  */
-void setup::simulationBox::setupSimulationBox(Engine &engine)
+void setup::molsys::setupSimulationBox(Engine &engine)
 {
     engine.getStdoutOutput().writeSetup("simulation box");
     engine.getLogOutput().writeSetup("simulation box");
@@ -250,7 +250,7 @@ void SimulationBoxSetup::setPartialCharges()
  */
 void SimulationBoxSetup::setAtomMasses()
 {
-    auto setAtomMasses = [](::simulationBox::Molecule &molecule)
+    auto setAtomMasses = [](::molsys::Molecule &molecule)
     {
         for (auto &atom : molecule.getAtoms()) atom->initMass();
     };
@@ -266,7 +266,7 @@ void SimulationBoxSetup::setAtomMasses()
  */
 void SimulationBoxSetup::setAtomicNumbers()
 {
-    auto setAtomicNumbers = [](::simulationBox::Molecule &molecule)
+    auto setAtomicNumbers = [](::molsys::Molecule &molecule)
     {
         const auto nAtoms = molecule.getNumberOfAtoms();
         for (size_t i = 0; i < nAtoms; ++i)
@@ -311,7 +311,7 @@ void SimulationBoxSetup::calculateTotalCharge()
 {
     double totalCharge = 0.0;
 
-    auto calcMolCharge = [&totalCharge](const ::simulationBox::Molecule &mol)
+    auto calcMolCharge = [&totalCharge](const ::molsys::Molecule &mol)
     {
         const auto &charges = mol.getPartialCharges();
         totalCharge += std::accumulate(charges.begin(), charges.end(), 0.0);

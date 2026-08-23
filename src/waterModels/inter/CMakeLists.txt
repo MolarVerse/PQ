@@ -16,7 +16,7 @@ target_link_libraries(interWater
     nonCoulombPotential
     physicalData
     settings
-    simulationBox
+    molsys
     config_headers
 )
 

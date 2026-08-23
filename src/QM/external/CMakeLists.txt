@@ -15,7 +15,7 @@ target_include_directories(externalQM
 
 target_link_libraries(externalQM
     PUBLIC
-    simulationBox
+    molsys
     settings
     utilities
     physicalData

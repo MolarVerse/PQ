@@ -33,10 +33,10 @@ namespace physicalData
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
 
-namespace simulationBox
+namespace molsys
 {
     class SimulationBox;   // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
 namespace thermostat
 {
@@ -68,18 +68,18 @@ namespace thermostat
         void applyTemperatureRamping();
 
         virtual void applyThermostat(
-            simulationBox::SimulationBox &,
+            molsys::SimulationBox &,
             physicalData::PhysicalData &
         );
 
         virtual void applyThermostatOnForces(
-            simulationBox::SimulationBox & /*simBox*/
+            molsys::SimulationBox & /*simBox*/
         )
         {
         }
 
         virtual void applyThermostatHalfStep(
-            simulationBox::SimulationBox & /*simBox*/,
+            molsys::SimulationBox & /*simBox*/,
             physicalData::PhysicalData & /*physData*/
         )
         {

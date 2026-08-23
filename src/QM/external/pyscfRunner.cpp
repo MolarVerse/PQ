@@ -32,7 +32,7 @@
 #include "stringUtilities.hpp"   // for fileExists
 
 using QM::PySCFRunner;
-using namespace simulationBox;
+using namespace molsys;
 using namespace settings;
 using namespace customException;
 using namespace utilities;

@@ -27,7 +27,7 @@
 #include "staticMatrix.hpp"   // for tensor3D
 #include "vector3d.hpp"       // for Vec3D
 
-namespace simulationBox
+namespace molsys
 {
     /**
      * @class enum Periodicity
@@ -129,6 +129,6 @@ namespace simulationBox
         void setBoxSizeHasChanged(const bool boxSizeHasChanged);
     };
 
-}   // namespace simulationBox
+}   // namespace molsys
 
 #endif   // _BOX_HPP_

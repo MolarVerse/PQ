@@ -1,6 +1,6 @@
 add_subdirectory(setup)
 add_subdirectory(QM)
-add_subdirectory(simulationBox)
+add_subdirectory(molsys)
 add_subdirectory(linearAlgebra)
 add_subdirectory(manostat)
 add_subdirectory(integrator)

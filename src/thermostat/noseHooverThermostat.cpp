@@ -36,7 +36,7 @@
 using thermostat::NoseHooverThermostat;
 using namespace constants;
 using namespace settings;
-using namespace simulationBox;
+using namespace molsys;
 using namespace physicalData;
 
 /**

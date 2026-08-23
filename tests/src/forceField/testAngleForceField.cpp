@@ -51,7 +51,7 @@ class TestAngleForceField : public TestNonCoulombPotentialFF
 
 TEST_F(TestAngleForceField, calculateEnergyAndForces)
 {
-    auto box = simulationBox::SimulationBox();
+    auto box = molsys::SimulationBox();
     box.setBoxDimensions({10.0, 10.0, 10.0});
 
     auto physicalData     = physicalData::PhysicalData();
@@ -69,14 +69,14 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
     );
     setNonCoulombPairsMatrix(1, 1, nonCoulombPair);
 
-    auto molecule = simulationBox::Molecule();
+    auto molecule = molsys::Molecule();
 
     molecule.setMoltype(0);
     molecule.setNumberOfAtoms(3);
 
-    auto atom1 = std::make_shared<simulationBox::Atom>();
-    auto atom2 = std::make_shared<simulationBox::Atom>();
-    auto atom3 = std::make_shared<simulationBox::Atom>();
+    auto atom1 = std::make_shared<molsys::Atom>();
+    auto atom2 = std::make_shared<molsys::Atom>();
+    auto atom3 = std::make_shared<molsys::Atom>();
 
     atom1->setPosition({0.0, 0.0, 0.0});
     atom2->setPosition({1.0, 1.0, 1.0});
@@ -183,19 +183,19 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
  */
 TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
 {
-    auto box = simulationBox::SimulationBox();
+    auto box = molsys::SimulationBox();
     box.setBoxDimensions({100.0, 100.0, 100.0});
 
     auto physicalData     = physicalData::PhysicalData();
     auto coulombPotential = potential::CoulombShiftedPotential(10.0);
 
-    auto molecule = simulationBox::Molecule();
+    auto molecule = molsys::Molecule();
     molecule.setMoltype(0);
     molecule.setNumberOfAtoms(3);
 
-    auto atom1 = std::make_shared<simulationBox::Atom>();
-    auto atom2 = std::make_shared<simulationBox::Atom>();
-    auto atom3 = std::make_shared<simulationBox::Atom>();
+    auto atom1 = std::make_shared<molsys::Atom>();
+    auto atom2 = std::make_shared<molsys::Atom>();
+    auto atom3 = std::make_shared<molsys::Atom>();
 
     // Strictly collinear: atom2 is the central atom, atom1 and atom3 are
     // 180 degrees apart along the x axis. alpha = pi -> sin(alpha) = 0.

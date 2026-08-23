@@ -48,7 +48,7 @@
 #include "vector3d.hpp"
 #include "waterModelSettings.hpp"
 
-using namespace simulationBox;
+using namespace molsys;
 using namespace potential;
 using namespace waterModel;
 using linearAlgebra::Vec3D;

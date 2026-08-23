@@ -54,11 +54,11 @@ class TestIntraNonBondedMap : public TestNonCoulombPotentialFF
  */
 TEST_F(TestIntraNonBondedMap, calculateSingleInteractionAndCalculate)
 {
-    auto molecule = simulationBox::Molecule(0);
+    auto molecule = molsys::Molecule(0);
     molecule.setNumberOfAtoms(2);
 
-    auto atom1 = std::make_shared<simulationBox::Atom>();
-    auto atom2 = std::make_shared<simulationBox::Atom>();
+    auto atom1 = std::make_shared<molsys::Atom>();
+    auto atom2 = std::make_shared<molsys::Atom>();
 
     atom1->setPosition({0.0, 0.0, 0.0});
     atom2->setPosition({0.0, 0.0, 11.0});
@@ -97,7 +97,7 @@ TEST_F(TestIntraNonBondedMap, calculateSingleInteractionAndCalculate)
     setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
     setNonCoulombPairsMatrix(1, 0, nonCoulombPair);
 
-    auto simulationBox = simulationBox::SimulationBox();
+    auto simulationBox = molsys::SimulationBox();
     simulationBox.setBoxDimensions({10.0, 10.0, 10.0});
 
     auto physicalData = physicalData::PhysicalData();

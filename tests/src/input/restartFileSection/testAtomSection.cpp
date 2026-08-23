@@ -103,7 +103,7 @@ TEST_F(TestAtomSection, notEnoughElementsInLine)
 
     std::string filename = "data/atomSection/testNotEnoughAtomsInMolecule.rst";
 
-    auto molecule = simulationBox::MoleculeType(1);
+    auto molecule = molsys::MoleculeType(1);
     molecule.setNumberOfAtoms(3);
     _engine->getSimulationBox().getMoleculeTypes().push_back(molecule);
 
@@ -137,7 +137,7 @@ TEST_F(TestAtomSection, numberOfArgumentsWithinMolecule)
     std::string filename =
         "data/atomSection/testNumberOfArgumentsWithinMolecule.rst";
 
-    auto molecule = simulationBox::MoleculeType(1);
+    auto molecule = molsys::MoleculeType(1);
     molecule.setNumberOfAtoms(3);
     _engine->getSimulationBox().getMoleculeTypes().push_back(molecule);
 
@@ -158,11 +158,11 @@ TEST_F(TestAtomSection, testProcess)
 
     std::string filename = "data/atomSection/testProcess.rst";
 
-    auto molecule = simulationBox::MoleculeType(1);
+    auto molecule = molsys::MoleculeType(1);
     molecule.setNumberOfAtoms(3);
     _engine->getSimulationBox().addMoleculeType(molecule);
 
-    auto molecule2 = simulationBox::MoleculeType(2);
+    auto molecule2 = molsys::MoleculeType(2);
     molecule2.setNumberOfAtoms(4);
     _engine->getSimulationBox().addMoleculeType(molecule2);
 
@@ -212,7 +212,7 @@ TEST_F(TestAtomSection, testProcess)
 
 TEST_F(TestAtomSection, testProcessAtomLine)
 {
-    simulationBox::Molecule molecule(1);
+    molsys::Molecule molecule(1);
 
     auto line = std::vector<std::string>(21);
     line[0]   = "Ar";

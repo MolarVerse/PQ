@@ -17,7 +17,7 @@ target_include_directories(aseQM
 
 target_link_libraries(aseQM
     PUBLIC
-    simulationBox
+    molsys
     settings
     utilities
     physicalData

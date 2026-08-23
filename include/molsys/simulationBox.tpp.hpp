@@ -26,7 +26,7 @@
 
 #include "simulationBox.hpp"
 
-namespace simulationBox
+namespace molsys
 {
     /**
      * @brief set the box depending on dynamic type
@@ -40,6 +40,6 @@ namespace simulationBox
         _box = std::make_shared<T>(box);
     }
 
-}   // namespace simulationBox
+}   // namespace molsys
 
 #endif   // _SIMULATION_BOX_TPP_

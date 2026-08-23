@@ -35,12 +35,12 @@ class TestCellList : public ::testing::Test
    protected:
     void SetUp() override
     {
-        _cellList = new simulationBox::CellList();
+        _cellList = new molsys::CellList();
         _cellList->setNumberOfCells(2);
         _cellList->setNumberOfNeighbourCells(1);
         _cellList->resizeCells();
 
-        _simulationBox = new simulationBox::SimulationBox();
+        _simulationBox = new molsys::SimulationBox();
         _simulationBox->setBoxDimensions({10.0, 10.0, 10.0});
         settings::PotentialSettings::setCoulombRadiusCutOff(1.5);
     }
@@ -51,8 +51,8 @@ class TestCellList : public ::testing::Test
         delete _simulationBox;
     }
 
-    simulationBox::CellList      *_cellList;
-    simulationBox::SimulationBox *_simulationBox;
+    molsys::CellList      *_cellList;
+    molsys::SimulationBox *_simulationBox;
 };
 
 #endif   // _TEST_CELL_LIST_HPP_

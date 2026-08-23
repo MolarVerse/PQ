@@ -33,10 +33,10 @@ namespace thermostat
     class Thermostat;   // forward declaration
 }   // namespace thermostat
 
-namespace simulationBox
+namespace molsys
 {
     class SimulationBox;   // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
 namespace output
 {
@@ -52,7 +52,7 @@ namespace output
         using Output::Output;
 
         void write(
-            simulationBox::SimulationBox &,
+            molsys::SimulationBox &,
             const thermostat::Thermostat &,
             const size_t
         );

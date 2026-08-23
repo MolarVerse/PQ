@@ -28,10 +28,10 @@
 
 #include "vector3d.hpp"
 
-namespace simulationBox
+namespace molsys
 {
     class SimulationBox;   // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
 namespace configurator
 {
@@ -43,19 +43,19 @@ namespace configurator
         static inline bool   _molChangedZone    = false;
 
        public:
-        void calculateInnerRegionCenter(simulationBox::SimulationBox &);
-        void shiftAtomsToInnerRegionCenter(simulationBox::SimulationBox &);
-        void shiftAtomsBackToInitialPositions(simulationBox::SimulationBox &);
-        void assignHybridZones(simulationBox::SimulationBox &);
-        void activateMolecules(simulationBox::SimulationBox &);
-        void deactivateOuterMolecules(simulationBox::SimulationBox &);
-        void activateSmoothingMolecules(simulationBox::SimulationBox &);
+        void calculateInnerRegionCenter(molsys::SimulationBox &);
+        void shiftAtomsToInnerRegionCenter(molsys::SimulationBox &);
+        void shiftAtomsBackToInitialPositions(molsys::SimulationBox &);
+        void assignHybridZones(molsys::SimulationBox &);
+        void activateMolecules(molsys::SimulationBox &);
+        void deactivateOuterMolecules(molsys::SimulationBox &);
+        void activateSmoothingMolecules(molsys::SimulationBox &);
         void deactivateSmoothingMolecules(
             std::unordered_set<size_t> inactiveMolecules,
-            simulationBox::SimulationBox &
+            molsys::SimulationBox &
         );
-        void toggleMoleculeActivation(simulationBox::SimulationBox &);
-        void calculateSmoothingFactors(simulationBox::SimulationBox &);
+        void toggleMoleculeActivation(molsys::SimulationBox &);
+        void calculateSmoothingFactors(molsys::SimulationBox &);
 
         /********************************
          * standard getters and setters *

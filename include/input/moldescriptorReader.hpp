@@ -35,10 +35,10 @@ namespace engine
     class Engine;   // forward declaration
 }   // namespace engine
 
-namespace simulationBox
+namespace molsys
 {
     class MoleculeType;   // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
 namespace input::molDescriptor
 {
@@ -64,9 +64,7 @@ namespace input::molDescriptor
 
         void read();
         void processMolecule(std::vector<std::string> &lineElements);
-        void convertExternalToInternalAtomTypes(
-            simulationBox::MoleculeType &
-        ) const;
+        void convertExternalToInternalAtomTypes(molsys::MoleculeType &) const;
     };
 
 }   // namespace input::molDescriptor

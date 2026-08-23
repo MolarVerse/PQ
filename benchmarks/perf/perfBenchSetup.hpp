@@ -81,16 +81,16 @@ namespace benchSetup
     // A molecule of nAtoms on a compact lattice with mass / velocity / force /
     // shift-force / charge / atom-type / vdW-type set. Atom types alternate
     // 0/1 and charges +/-0.4.
-    inline simulationBox::Molecule makeMolecule(const MoleculeParams& params)
+    inline molsys::Molecule makeMolecule(const MoleculeParams& params)
     {
-        auto molecule = simulationBox::Molecule();
+        auto molecule = molsys::Molecule();
         molecule.setMoltype(1);
         molecule.setNumberOfAtoms(params.nAtoms);
 
         double molMass = 0.0;
         for (std::size_t i = 0; i < params.nAtoms; ++i)
         {
-            auto atom = std::make_shared<simulationBox::Atom>();
+            auto atom = std::make_shared<molsys::Atom>();
 
             const auto d = static_cast<double>(i);
             // Quadratic y-term keeps atoms non-collinear so the bend-force
@@ -151,11 +151,9 @@ namespace benchSetup
     // A SimulationBox populated with nMolecules of nAtomsPerMol. Both the flat
     // atom list (used by integrator/kinetics) and the molecule list (used by
     // center-of-mass/virial) are filled, and the box totals are computed.
-    inline simulationBox::SimulationBox makePopulatedBox(
-        const BoxParams& params
-    )
+    inline molsys::SimulationBox makePopulatedBox(const BoxParams& params)
     {
-        auto box = simulationBox::SimulationBox();
+        auto box = molsys::SimulationBox();
         box.setBoxDimensions({30.0, 30.0, 30.0});
 
         for (std::size_t m = 0; m < params.nMolecules; ++m)

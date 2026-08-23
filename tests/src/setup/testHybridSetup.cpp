@@ -46,10 +46,10 @@ namespace
 {
     void addSingleAtomMolecule(engine::Engine &engine, const size_t molType)
     {
-        auto atom = std::make_shared<simulationBox::Atom>();
+        auto atom = std::make_shared<molsys::Atom>();
         atom->setPosition({static_cast<double>(molType), 0.0, 0.0});
 
-        simulationBox::Molecule molecule;
+        molsys::Molecule molecule;
         molecule.setMoltype(molType);
         molecule.setNumberOfAtoms(1);
         molecule.addAtom(atom);
@@ -259,7 +259,7 @@ TEST_F(TestSetup, hybridSetupValidatesZoneRadii)
 
 TEST_F(TestSetup, hybridSetupRejectsMmChargesForMoltypeZero)
 {
-    _engine->getSimulationBox().addMoleculeType(simulationBox::MoleculeType(0));
+    _engine->getSimulationBox().addMoleculeType(molsys::MoleculeType(0));
     HybridSettings::setUseQMCharges(false);
     HybridSetup setup{*_engine};
 

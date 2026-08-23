@@ -27,7 +27,7 @@
 #include "molecule.hpp"
 #include "views.hpp"
 
-namespace simulationBox
+namespace molsys
 {
     /**
      * @class SimulationBoxView
@@ -395,6 +395,6 @@ namespace simulationBox
                );
     }
 
-}   // namespace simulationBox
+}   // namespace molsys
 
 #endif   // _SIMULATION_BOX_VIEW_HPP_

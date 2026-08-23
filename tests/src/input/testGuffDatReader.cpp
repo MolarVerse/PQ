@@ -515,20 +515,20 @@ TEST_F(TestGuffDatReader, checkPartialCharges)
 
 TEST_F(TestGuffDatReader, checkNecessaryGuffPairs)
 {
-    engine::MMMDEngine          engine;
-    simulationBox::Molecule     molecule1(1);
-    simulationBox::Molecule     molecule2(2);
-    simulationBox::MoleculeType moleculeType1(1);
-    simulationBox::MoleculeType moleculeType2(2);
-    simulationBox::MoleculeType moleculeType3(3);
+    engine::MMMDEngine   engine;
+    molsys::Molecule     molecule1(1);
+    molsys::Molecule     molecule2(2);
+    molsys::MoleculeType moleculeType1(1);
+    molsys::MoleculeType moleculeType2(2);
+    molsys::MoleculeType moleculeType3(3);
 
     molecule1.setNumberOfAtoms(2);
     molecule2.setNumberOfAtoms(1);
     molecule2.setNumberOfAtoms(3);
 
-    auto atom1 = std::make_shared<simulationBox::Atom>();
-    auto atom2 = std::make_shared<simulationBox::Atom>();
-    auto atom3 = std::make_shared<simulationBox::Atom>();
+    auto atom1 = std::make_shared<molsys::Atom>();
+    auto atom2 = std::make_shared<molsys::Atom>();
+    auto atom3 = std::make_shared<molsys::Atom>();
 
     atom1->setAtomType(0);
     atom2->setAtomType(1);

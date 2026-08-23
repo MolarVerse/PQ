@@ -67,10 +67,10 @@ namespace intraNonBonded
         [[nodiscard]] std::shared_ptr<IntraNonBonded> clone() const;
 
         void calculate(
-            const simulationBox::SimulationBox &,
+            const molsys::SimulationBox &,
             physicalData::PhysicalData &
         );
-        void fillIntraNonBondedMaps(simulationBox::SimulationBox &);
+        void fillIntraNonBondedMaps(molsys::SimulationBox &);
 
         [[nodiscard]] IntraNonBondedContainer *findIntraNonBondedContainerByMolType(
             const size_t

@@ -32,7 +32,7 @@
 #include "simulationBox.hpp"                         // for SimulationBox
 
 using namespace physicalData;
-using namespace simulationBox;
+using namespace molsys;
 using namespace linearAlgebra;
 using namespace constants;
 

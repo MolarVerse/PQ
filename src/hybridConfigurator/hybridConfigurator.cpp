@@ -30,13 +30,13 @@
 #include "hybridSettings.hpp"   // for HybridSettings
 #include "simulationBox.hpp"
 
-using enum simulationBox::HybridZone;
+using enum molsys::HybridZone;
 
 using namespace pq;
 using namespace configurator;
 using namespace customException;
 using namespace settings;
-using namespace simulationBox;
+using namespace molsys;
 
 /**
  * @brief Calculate the center of mass of the inner region center atoms
@@ -51,7 +51,7 @@ using namespace simulationBox;
  * indices list)
  */
 void HybridConfigurator::calculateInnerRegionCenter(
-    simulationBox::SimulationBox& simBox
+    molsys::SimulationBox& simBox
 )
 {
     const auto& indices = simBox.getInnerRegionCenterAtomIndices();
@@ -93,7 +93,7 @@ void HybridConfigurator::calculateInnerRegionCenter(
  * @note The inner region center must be calculated before calling this function
  */
 void HybridConfigurator::shiftAtomsToInnerRegionCenter(
-    simulationBox::SimulationBox& simBox
+    molsys::SimulationBox& simBox
 )
 {
     for (auto& atom : simBox.getAtoms())
@@ -119,7 +119,7 @@ void HybridConfigurator::shiftAtomsToInnerRegionCenter(
  *       to restore the original atomic positions
  */
 void HybridConfigurator::shiftAtomsBackToInitialPositions(
-    simulationBox::SimulationBox& simBox
+    molsys::SimulationBox& simBox
 )
 {
     for (auto& atom : simBox.getAtoms())
@@ -157,7 +157,7 @@ void HybridConfigurator::shiftAtomsBackToInitialPositions(
  *       shiftAtomsToInnerRegionCenter) before calling this function for
  *       accurate distance calculations
  */
-void HybridConfigurator::assignHybridZones(simulationBox::SimulationBox& simBox)
+void HybridConfigurator::assignHybridZones(molsys::SimulationBox& simBox)
 {
     const auto coreRadius  = HybridSettings::getCoreRadius();
     const auto layerRadius = HybridSettings::getLayerRadius();
@@ -229,7 +229,7 @@ void HybridConfigurator::assignHybridZones(simulationBox::SimulationBox& simBox)
  * zone assignment. This is typically used to reset the activation state before
  * applying selective activation/deactivation patterns.
  */
-void HybridConfigurator::activateMolecules(simulationBox::SimulationBox& simBox)
+void HybridConfigurator::activateMolecules(molsys::SimulationBox& simBox)
 {
     for (auto& mol : simBox.getMolecules()) mol.activateMolecule();
 }
@@ -243,9 +243,7 @@ void HybridConfigurator::activateMolecules(simulationBox::SimulationBox& simBox)
  * POINT_CHARGE and OUTER regions. This is typically used during inner
  * region calculations where only the inner molecules should be active.
  */
-void HybridConfigurator::deactivateOuterMolecules(
-    simulationBox::SimulationBox& simBox
-)
+void HybridConfigurator::deactivateOuterMolecules(molsys::SimulationBox& simBox)
 {
     for (auto& mol : simBox.getMolecules())
     {
@@ -262,7 +260,7 @@ void HybridConfigurator::deactivateOuterMolecules(
  * @param simBox The simulation box containing the molecules
  */
 void HybridConfigurator::activateSmoothingMolecules(
-    simulationBox::SimulationBox& simBox
+    molsys::SimulationBox& simBox
 )
 {
     for (auto& mol : simBox.getMoleculesInsideZone(SMOOTHING))
@@ -281,8 +279,8 @@ void HybridConfigurator::activateSmoothingMolecules(
  * the smoothing zone, not the global molecule index.
  */
 void HybridConfigurator::deactivateSmoothingMolecules(
-    std::unordered_set<size_t>    inactiveMolecules,
-    simulationBox::SimulationBox& simBox
+    std::unordered_set<size_t> inactiveMolecules,
+    molsys::SimulationBox&     simBox
 )
 {
     size_t count{0};
@@ -306,9 +304,7 @@ void HybridConfigurator::deactivateSmoothingMolecules(
  * activated. This operation is performed regardless of the molecules' hybrid
  * zone assignments and is useful for implementing complementary calculations.
  */
-void HybridConfigurator::toggleMoleculeActivation(
-    simulationBox::SimulationBox& simBox
-)
+void HybridConfigurator::toggleMoleculeActivation(molsys::SimulationBox& simBox)
 {
     for (auto& mol : simBox.getMolecules())
     {
@@ -334,7 +330,7 @@ void HybridConfigurator::toggleMoleculeActivation(
  * region
  */
 void HybridConfigurator::calculateSmoothingFactors(
-    simulationBox::SimulationBox& simBox
+    molsys::SimulationBox& simBox
 )
 {
     const auto layer     = HybridSettings::getLayerRadius();

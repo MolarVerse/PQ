@@ -29,7 +29,7 @@
 #include <string_view>   // for string_view
 #include <vector>        // for vector
 
-namespace simulationBox
+namespace molsys
 {
     /**
      * @class MoleculeType
@@ -102,15 +102,15 @@ namespace simulationBox
         [[nodiscard]] std::string getName() const;
         [[nodiscard]] std::string getAtomName(const size_t index) const;
 
-        [[nodiscard]] std::vector<std::string>  getAtomNames() const;
-        [[nodiscard]] std::vector<size_t>      &getExternalAtomTypes();
-        [[nodiscard]] std::vector<size_t>      &getExternalGlobalVDWTypes();
-        [[nodiscard]] std::vector<double>      &getPartialCharges();
+        [[nodiscard]] std::vector<std::string> getAtomNames() const;
+        [[nodiscard]] std::vector<size_t>     &getExternalAtomTypes();
+        [[nodiscard]] std::vector<size_t>     &getExternalGlobalVDWTypes();
+        [[nodiscard]] std::vector<double>     &getPartialCharges();
 
         [[nodiscard]] std::map<size_t, size_t> getExternalToInternalAtomTypes(
         ) const;
     };
 
-}   // namespace simulationBox
+}   // namespace molsys
 
 #endif   // _MOLECULE_TYPE_HPP_

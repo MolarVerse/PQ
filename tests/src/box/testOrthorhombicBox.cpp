@@ -29,7 +29,7 @@
 #include "orthorhombicBox.hpp"               // for OrthorhombicBox
 #include "vectorNear.hpp"                    // for EXPECT_VECTOR_NEAR
 
-using namespace simulationBox;
+using namespace molsys;
 
 TEST(TestOrthoRhombicBox, setBoxDimensions)
 {

@@ -28,9 +28,9 @@ using namespace potential;
 using namespace pq;
 using namespace waterModel;
 using namespace physicalData;
-using namespace simulationBox;
+using namespace molsys;
 
-using enum simulationBox::HybridZone;
+using enum molsys::HybridZone;
 
 /**
  * @brief Evaluate intermolecular water interactions by brute force.
@@ -40,7 +40,7 @@ using enum simulationBox::HybridZone;
  */
 void InterWaterStrategyBruteForce::calculate(
     const InterWaterState                              &state,
-    simulationBox::SimulationBox                       &simBox,
+    molsys::SimulationBox                              &simBox,
     physicalData::PhysicalData                         &physicalData,
     const std::shared_ptr<potential::CoulombPotential> &coulombPotential,
     CellList & /*cellList*/
@@ -121,7 +121,7 @@ void InterWaterStrategyBruteForce::calculate(
  */
 void InterWaterStrategyBruteForce::calculateCoreToOuterForces(
     const InterWaterState & /*state*/,
-    simulationBox::SimulationBox                       &simBox,
+    molsys::SimulationBox                              &simBox,
     PhysicalData                                       &physicalData,
     const std::shared_ptr<potential::CoulombPotential> &coulombPotential,
     CellList & /*cellList*/
@@ -193,7 +193,7 @@ void InterWaterStrategyBruteForce::calculateCoreToOuterForces(
  */
 void InterWaterStrategyBruteForce::calculateLayerToOuterForces(
     const InterWaterState                              &state,
-    simulationBox::SimulationBox                       &simBox,
+    molsys::SimulationBox                              &simBox,
     PhysicalData                                       &physicalData,
     const std::shared_ptr<potential::CoulombPotential> &coulombPotential,
     CellList & /*cellList*/
@@ -277,7 +277,7 @@ void InterWaterStrategyBruteForce::calculateLayerToOuterForces(
  */
 void InterWaterStrategyBruteForce::calculateOuterToOuterForces(
     const InterWaterState                              &state,
-    simulationBox::SimulationBox                       &simBox,
+    molsys::SimulationBox                              &simBox,
     PhysicalData                                       &physicalData,
     const std::shared_ptr<potential::CoulombPotential> &coulombPotential,
     CellList                                           &cellList
@@ -296,7 +296,7 @@ void InterWaterStrategyBruteForce::calculateOuterToOuterForces(
  */
 void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
     const InterWaterState                              &state,
-    simulationBox::SimulationBox                       &simBox,
+    molsys::SimulationBox                              &simBox,
     PhysicalData                                       &physicalData,
     const std::shared_ptr<potential::CoulombPotential> &coulombPotential,
     CellList & /*cellList*/

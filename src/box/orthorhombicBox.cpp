@@ -24,72 +24,76 @@
 
 #include "constants.hpp"   // for _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_
 
-using simulationBox::OrthorhombicBox;
 using namespace linearAlgebra;
 using namespace constants;
 
-/**
- * @brief Calculate the volume of the box
- *
- * @return volume
- */
-double OrthorhombicBox::calculateVolume()
+namespace molsys
 {
-    _volume = _boxDimensions[0] * _boxDimensions[1] * _boxDimensions[2];
 
-    return _volume;
-}
+    /**
+     * @brief Calculate the volume of the box
+     *
+     * @return volume
+     */
+    double OrthorhombicBox::calculateVolume()
+    {
+        _volume = _boxDimensions[0] * _boxDimensions[1] * _boxDimensions[2];
 
-/**
- * @brief applies the periodic boundary conditions
- *
- * @param position
- */
-void OrthorhombicBox::applyPBC(Vec3D &position) const
-{
-    position -= _boxDimensions * round(position / _boxDimensions);
-}
+        return _volume;
+    }
 
-/**
- * @brief Calculate the shift vector
- *
- * @param shiftVector
- * @return Vec3D
- */
-Vec3D OrthorhombicBox::calcShiftVector(const Vec3D &shiftVector) const
-{
-    return _boxDimensions * round(shiftVector / _boxDimensions);
-}
+    /**
+     * @brief applies the periodic boundary conditions
+     *
+     * @param position
+     */
+    void OrthorhombicBox::applyPBC(Vec3D &position) const
+    {
+        position -= _boxDimensions * round(position / _boxDimensions);
+    }
 
-/**
- * @brief Calculate the box dimensions from the density
- *
- * @return vector<double>
- */
-Vec3D OrthorhombicBox::calcBoxDimFromDensity(
-    const double totalMass,
-    const double density
-)
-{
-    _volume = totalMass / (density * KG_PER_L_TO_AMU_PER_ANGSTROM3);
+    /**
+     * @brief Calculate the shift vector
+     *
+     * @param shiftVector
+     * @return Vec3D
+     */
+    Vec3D OrthorhombicBox::calcShiftVector(const Vec3D &shiftVector) const
+    {
+        return _boxDimensions * round(shiftVector / _boxDimensions);
+    }
 
-    return {::cbrt(_volume)};
-}
+    /**
+     * @brief Calculate the box dimensions from the density
+     *
+     * @return vector<double>
+     */
+    Vec3D OrthorhombicBox::calcBoxDimFromDensity(
+        const double totalMass,
+        const double density
+    )
+    {
+        _volume = totalMass / (density * KG_PER_L_TO_AMU_PER_ANGSTROM3);
 
-Vec3D OrthorhombicBox::wrapPositionIntoBox(const Vec3D &pos) const
-{
-    Vec3D position = pos;
-    applyPBC(position);
-    return position;
-}
+        return {::cbrt(_volume)};
+    }
 
-/**
- * @brief scales the cell dimensions and recalculates the volume
- *
- * @param scalingFactors
- */
-void OrthorhombicBox::scaleBox(const tensor3D &scalingTensor)
-{
-    setBoxDimensions(_boxDimensions *= diagonal(scalingTensor));
-    _volume = calculateVolume();
-}
+    Vec3D OrthorhombicBox::wrapPositionIntoBox(const Vec3D &pos) const
+    {
+        Vec3D position = pos;
+        applyPBC(position);
+        return position;
+    }
+
+    /**
+     * @brief scales the cell dimensions and recalculates the volume
+     *
+     * @param scalingFactors
+     */
+    void OrthorhombicBox::scaleBox(const tensor3D &scalingTensor)
+    {
+        setBoxDimensions(_boxDimensions *= diagonal(scalingTensor));
+        _volume = calculateVolume();
+    }
+
+}   // namespace molsys

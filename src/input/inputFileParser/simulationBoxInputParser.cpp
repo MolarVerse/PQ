@@ -50,7 +50,7 @@ using namespace utilities;
  * @param simulationBox
  */
 SimulationBoxInputParser::SimulationBoxInputParser(
-    std::shared_ptr<simulationBox::SimulationBox> simulationBox
+    std::shared_ptr<molsys::SimulationBox> simulationBox
 )
     : _simulationBox(std::move(simulationBox))
 {

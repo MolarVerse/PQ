@@ -86,7 +86,7 @@ foreach(source_file ${source_files})
     target_link_libraries(${test_name}
         PRIVATE
         output
-        simulationBox
+        molsys
         ${${test_name}_extra_libs}
         gtest
         gmock
