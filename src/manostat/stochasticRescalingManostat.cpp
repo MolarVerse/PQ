@@ -212,7 +212,7 @@ tensor3D SemiIsotropicStochasticRescalingManostat::calculateMu(double volume)
     const auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
 
     auto stochasticFactor =
-        1.0 / _pressureTensor.size * thermalEnergy * compress / volume;
+        1.0 / linearAlgebra::tensor3D::size * thermalEnergy * compress / volume;
     stochasticFactor *= PRESSURE_FACTOR;
 
     const auto stochasticFactor_xy = ::sqrt(4.0 * stochasticFactor) * random;
@@ -228,8 +228,8 @@ tensor3D SemiIsotropicStochasticRescalingManostat::calculateMu(double volume)
     const auto deltaPz  = _targetPressure - p_z;
 
     // clang-format off
-    const auto mu_xy = ::exp(-compress * deltaPxy / 3.0 + stochasticFactor_xy / 2.0);
-    const auto mu_z  = ::exp(-compress * deltaPz / 3.0 + stochasticFactor_z);
+    const auto mu_xy = ::exp((-compress * deltaPxy / 3.0) + (stochasticFactor_xy / 2.0));
+    const auto mu_z  = ::exp((-compress * deltaPz / 3.0) + stochasticFactor_z);
     // clang-format on
 
     Vec3D mu;
@@ -258,15 +258,15 @@ tensor3D AnisotropicStochasticRescalingManostat::calculateMu(double volume)
     const auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
 
     auto stochasticFactor =
-        2.0 / _pressureTensor.size * thermalEnergy * compress / volume;
+        2.0 / linearAlgebra::tensor3D::size * thermalEnergy * compress / volume;
     stochasticFactor *= PRESSURE_FACTOR;
     stochasticFactor  = ::sqrt(stochasticFactor) * random;
 
     const auto deltaP = _targetPressure - diagonal(_pressureTensor);
 
-    return diagonalMatrix(
-        exp(-compress * (deltaP) / _pressureTensor.size + stochasticFactor)
-    );
+    return diagonalMatrix(exp(
+        -compress * (deltaP) / linearAlgebra::tensor3D::size + stochasticFactor
+    ));
 }
 
 /**
@@ -286,13 +286,14 @@ tensor3D FullAnisotropicStochasticRescalingManostat::calculateMu(double volume)
     const auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
 
     auto stochasticFactor =
-        2.0 / _pressureTensor.size * thermalEnergy * compress / volume;
+        2.0 / linearAlgebra::tensor3D::size * thermalEnergy * compress / volume;
     stochasticFactor *= PRESSURE_FACTOR;
     stochasticFactor  = ::sqrt(stochasticFactor) * random;
 
     const auto deltaP = diagonalMatrix(_targetPressure) - _pressureTensor;
-    auto       mu =
-        expPade(-compress * deltaP / _pressureTensor.size + stochasticFactor);
+    auto       mu     = expPade(
+        -compress * deltaP / linearAlgebra::tensor3D::size + stochasticFactor
+    );
 
     rotateMu(mu);
 

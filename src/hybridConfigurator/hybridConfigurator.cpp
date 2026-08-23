@@ -358,7 +358,7 @@ void HybridConfigurator::calculateSmoothingFactors(
         distanceFactor       -= 0.5;
         const auto dfSquared  = distanceFactor * distanceFactor;
         const auto smF =
-            distanceFactor * (dfSquared * (-6.0 * dfSquared + 5.0) - 1.875) +
+            (distanceFactor * (dfSquared * (-6.0 * dfSquared + 5.0) - 1.875)) +
             0.5;
 
         mol.setSmoothingFactor(smF);

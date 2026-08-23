@@ -63,7 +63,7 @@ using namespace output;
  */
 void setup::simulationBox::setupSimulationBox(Engine &engine)
 {
-    engine.getStdoutOutput().writeSetup("simulation box");
+    output::StdoutOutput::writeSetup("simulation box");
     engine.getLogOutput().writeSetup("simulation box");
 
     SimulationBoxSetup simulationBoxSetup(engine);
@@ -371,7 +371,7 @@ void SimulationBoxSetup::checkBoxSettings()
         simBox.setDensity(density);
 
         _engine.getLogOutput().writeDensityWarning();
-        _engine.getStdoutOutput().writeDensityWarning();
+        output::StdoutOutput::writeDensityWarning();
     }
 
     _engine.getPhysicalData().setVolume(simBox.getVolume());
@@ -454,7 +454,6 @@ void SimulationBoxSetup::initVelocities()
 void SimulationBoxSetup::writeSetupInfo() const
 {
     auto &log    = _engine.getLogOutput();
-    auto &std    = _engine.getStdoutOutput();
     auto &simBox = _engine.getSimulationBox();
 
     const auto nAtoms = simBox.getNumberOfAtoms();
@@ -516,7 +515,7 @@ void SimulationBoxSetup::writeSetupInfo() const
                 FileSettings::getStartFileName()
             )
         );
-        std.writeSetupWarning(
+        output::StdoutOutput::writeSetupWarning(
             std::format(
                 "Ignoring 'init_velocities' because non-zero velocities in "
                 "\"{}\"",

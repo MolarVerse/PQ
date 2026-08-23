@@ -67,7 +67,7 @@ namespace forceField
         AngleForceField(
             const std::vector<simulationBox::Molecule *> &molecules,
             const std::vector<size_t>                    &atomIndices,
-            const AngleId                                 type
+            AngleId                                       type
         );
 
         void calculateEnergyAndForces(

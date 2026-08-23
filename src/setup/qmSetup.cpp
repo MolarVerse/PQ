@@ -65,7 +65,7 @@ void setup::setupQM(Engine &engine)
     if (!Settings::isQMActivated())
         return;
 
-    engine.getStdoutOutput().writeSetup("QM runner");
+    output::StdoutOutput::writeSetup("QM runner");
     engine.getLogOutput().writeSetup("QM runner");
 
     // Try to cast to QMCapableEngine first (covers both QMMDEngine and
@@ -163,8 +163,8 @@ void QMSetup::setupQMScript() const
     auto &qmRunner         = *_qmCapableEngine.getQMRunner();
     auto &externalQMRunner = dynamic_cast<ExternalQMRunner &>(qmRunner);
 
-    const auto singularityString = externalQMRunner.getSingularity();
-    const auto staticBuildString = externalQMRunner.getStaticBuild();
+    const auto singularityString = QM::ExternalQMRunner::getSingularity();
+    const auto staticBuildString = QM::ExternalQMRunner::getStaticBuild();
 
     const auto singularity = toLowerCopy(singularityString) == "on";
     const auto staticBuild = toLowerCopy(staticBuildString) == "on";
@@ -262,7 +262,6 @@ void QMSetup::setupWriteInfo() const
     // Cast QMCapableEngine to Engine to access output methods
     auto &engine    = dynamic_cast<Engine &>(_qmCapableEngine);
     auto &logOutput = engine.getLogOutput();
-    auto &stdOut    = engine.getStdoutOutput();
 
     const auto qmMethod        = QMSettings::getQMMethod();
     const auto qmRunnerMessage = std::format("QM runner: {}", string(qmMethod));
@@ -370,14 +369,14 @@ void QMSetup::setupWriteInfo() const
         {
             logOutput.writeEmptyLine();
             logOutput.writeSetupWarning(threeOBThirdOrderMsg);
-            stdOut.writeSetupWarning(threeOBThirdOrderMsg);
+            output::StdoutOutput::writeSetupWarning(threeOBThirdOrderMsg);
         }
 
         if (slakosType == SlakosType::THREEOB && ishubbardDerivsSet)
         {
             logOutput.writeEmptyLine();
             logOutput.writeSetupWarning(threeOBHubbardDerivsMsg);
-            stdOut.writeSetupWarning(threeOBHubbardDerivsMsg);
+            output::StdoutOutput::writeSetupWarning(threeOBHubbardDerivsMsg);
         }
     }
 

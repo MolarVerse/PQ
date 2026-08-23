@@ -99,7 +99,7 @@ void TriclinicBox::calculateTransformationMatrix()
 
     const auto sumcos_2          = sum(cos(_boxAngles) * cos(_boxAngles));
     const auto prodcos           = prod(cos(_boxAngles));
-    _transformationMatrix[2][2]  = ::sqrt(1 - sumcos_2 + 2 * prodcos);
+    _transformationMatrix[2][2]  = ::sqrt(1 - sumcos_2 + (2 * prodcos));
     _transformationMatrix[2][2] /= sinGamma();
 }
 
@@ -275,11 +275,13 @@ std::pair<Vec3D, Vec3D> simulationBox::calcBoxDimAndAnglesFromBoxMatrix(
 {
     const auto box_x = boxMatrix[0][0];
     const auto box_y = ::sqrt(
-        boxMatrix[1][1] * boxMatrix[1][1] + boxMatrix[0][1] * boxMatrix[0][1]
+        (boxMatrix[1][1] * boxMatrix[1][1]) +
+        (boxMatrix[0][1] * boxMatrix[0][1])
     );
     const auto box_z = ::sqrt(
-        boxMatrix[2][2] * boxMatrix[2][2] + boxMatrix[1][2] * boxMatrix[1][2] +
-        boxMatrix[0][2] * boxMatrix[0][2]
+        (boxMatrix[2][2] * boxMatrix[2][2]) +
+        (boxMatrix[1][2] * boxMatrix[1][2]) +
+        (boxMatrix[0][2] * boxMatrix[0][2])
     );
 
     const auto cos_alpha = (boxMatrix[0][1] * boxMatrix[0][2] +

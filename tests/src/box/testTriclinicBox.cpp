@@ -96,9 +96,9 @@ TEST(TestTriclinicBox, setBoxAngles)
             {0.0,
              0.0,
              ::sqrt(
-                 1 - cos(alpha) * cos(alpha) - cos(beta) * cos(beta) -
-                 cos(gamma) * cos(gamma) +
-                 2 * cos(alpha) * cos(beta) * cos(gamma)
+                 1 - (cos(alpha) * cos(alpha)) - (cos(beta) * cos(beta)) -
+                 (cos(gamma) * cos(gamma)) +
+                 (2 * cos(alpha) * cos(beta) * cos(gamma))
              ) / sin(gamma)}
         ),
         1e-15
@@ -124,9 +124,9 @@ TEST(TestTriclinicBox, calculateVolume)
     const auto volume =
         1.0 * 2.0 * 3.0 *
         ::sqrt(
-            1 - ::cos(alpha) * ::cos(alpha) - ::cos(beta) * ::cos(beta) -
-            ::cos(gamma) * ::cos(gamma) +
-            2 * ::cos(alpha) * ::cos(beta) * ::cos(gamma)
+            1 - (::cos(alpha) * ::cos(alpha)) - (::cos(beta) * ::cos(beta)) -
+            (::cos(gamma) * ::cos(gamma)) +
+            (2 * ::cos(alpha) * ::cos(beta) * ::cos(gamma))
         );
 
     EXPECT_DOUBLE_EQ(box.calculateVolume(), volume);

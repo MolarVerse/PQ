@@ -103,9 +103,9 @@ int main()
             for (size_t iz = 0; iz < perSide; ++iz)
             {
                 const Vec3D oxygen{
-                    1.0 + spacing * static_cast<double>(ix),
-                    1.0 + spacing * static_cast<double>(iy),
-                    1.0 + spacing * static_cast<double>(iz)
+                    1.0 + (spacing * static_cast<double>(ix)),
+                    1.0 + (spacing * static_cast<double>(iy)),
+                    1.0 + (spacing * static_cast<double>(iz))
                 };
 
                 Molecule molecule;

@@ -84,7 +84,7 @@ void BerendsenThermostat::applyThermostat(
     const auto tempRatio = _targetTemperature / _temperature;
 
     const auto berendsenFactor =
-        ::sqrt(1.0 + timeStep / _tau * (tempRatio - 1.0));
+        ::sqrt(1.0 + (timeStep / _tau * (tempRatio - 1.0)));
 
     for (const auto &atom : simBox.getAtoms())
         atom->scaleVelocity(berendsenFactor);

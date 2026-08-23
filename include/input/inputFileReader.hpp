@@ -113,13 +113,13 @@ namespace input
          * input validation functions *
          ******************************/
 
-        void validateTimings() const;
-        void validateQM() const;
-        void validateThermostat() const;
-        void validateManostat() const;
-        void validateCellList() const;
-        void validateReactionFieldCoulomb() const;
-        void validateRingPolymer() const;
+        void        validateTimings() const;
+        void        validateQM() const;
+        void        validateThermostat() const;
+        void        validateManostat() const;
+        void        validateReactionFieldCoulomb() const;
+        void        validateRingPolymer() const;
+        static void validateCellList();
     };
 
 }   // namespace input

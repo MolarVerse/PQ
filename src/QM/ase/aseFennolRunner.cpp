@@ -38,7 +38,6 @@ AseFennolRunner::AseFennolRunner(
     bool               gpuPreprocessing,
     bool               useFloat64
 )
-    : AseQMRunner()
 {
     try
     {

@@ -127,7 +127,7 @@ namespace settings
         static void setDimensionality(size_t dimensionality);
 
         static void setVirialType(VirialType virialType);
-        static void setIntegratorType(const IntegratorType integratorType);
+        static void setIntegratorType(IntegratorType integratorType);
 
         /***************************
          * standard getter methods *

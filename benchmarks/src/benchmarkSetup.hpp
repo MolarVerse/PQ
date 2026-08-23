@@ -53,12 +53,12 @@ namespace benchmarkSetup
                 {
                     auto atom = std::make_shared<simulationBox::Atom>();
                     const linearAlgebra::Vec3D position{
-                        -boxEdge / 2.0 +
-                            (static_cast<double>(x) + 0.5) * cellEdge,
-                        -boxEdge / 2.0 +
-                            (static_cast<double>(y) + 0.5) * cellEdge,
-                        -boxEdge / 2.0 +
-                            (static_cast<double>(z) + 0.5) * cellEdge,
+                        (-boxEdge / 2.0) +
+                            ((static_cast<double>(x) + 0.5) * cellEdge),
+                        (-boxEdge / 2.0) +
+                            ((static_cast<double>(y) + 0.5) * cellEdge),
+                        (-boxEdge / 2.0) +
+                            ((static_cast<double>(z) + 0.5) * cellEdge),
                     };
                     atom->setPosition(position);
                     atom->setPositionOld(position);

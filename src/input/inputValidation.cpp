@@ -408,7 +408,7 @@ void InputFileReader::validateManostat() const
  * @throws InputFileException if an active cell list is incompatible with the
  * selected potential
  */
-void InputFileReader::validateCellList() const
+void InputFileReader::validateCellList()
 {
     if (!Settings::isCellListActivated())
         return;

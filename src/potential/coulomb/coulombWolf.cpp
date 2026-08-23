@@ -77,7 +77,7 @@ std::pair<double, double> CoulombWolf::calculate(
     const auto erfcFactor    = ::erfc(kappaDistance);
     const auto expFactor     = ::exp(-kappaDistance * kappaDistance);
 
-    auto energy  = erfcFactor / distance - _wolfParam1;
+    auto energy  = (erfcFactor / distance) - _wolfParam1;
     energy      += _wolfParam3 * (distance - _coulombRadiusCutOff);
 
     auto force  = erfcFactor / (distance * distance);

@@ -45,10 +45,10 @@ std::pair<double, double> CoulombReactionField::calculate(
     const auto rCutForce        = _coulombForceCutOff;
     const auto rfCutOffCubed    = _rfPrefactor * _coulombCutOffCubedInverse;
 
-    auto energy  = dInv - 2.0 * rCutEnergy + dist * rCutForce;
+    auto energy  = dInv - (2.0 * rCutEnergy) + (dist * rCutForce);
     energy      += rfCutOffCubed * deltaCutOff * deltaCutOff;
 
-    auto force  = dInv * dInv - rCutForce;
+    auto force  = (dInv * dInv) - rCutForce;
     force      += 2.0 * rfCutOffCubed * deltaCutOff;
 
     energy *= coulombPrefactor;

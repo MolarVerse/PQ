@@ -68,12 +68,11 @@ void input::intraNonBondedReader::readIntraNonBondedFile(Engine &engine)
     if (!isNeeded(engine))
         return;
 
-    const auto &stdOut = engine.getStdoutOutput();
-    auto       &log    = engine.getLogOutput();
+    auto &log = engine.getLogOutput();
 
     const auto filename = FileSettings::getIntraNonBondedFileName();
 
-    stdOut.writeRead("Intra Non-Bonded File", filename);
+    output::StdoutOutput::writeRead("Intra Non-Bonded File", filename);
     log.writeRead("Intra Non-Bonded File", filename);
 
     IntraNonBondedReader reader(filename, engine);

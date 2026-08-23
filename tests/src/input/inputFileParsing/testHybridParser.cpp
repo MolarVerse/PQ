@@ -40,7 +40,10 @@ TEST_F(TestInputFileReader, parseInnerRegionCenter)
 {
     auto parser = HybridInputParser{};
 
-    parser.parseInnerRegionCenter({"inner_region_center", "=", "4,2,2"}, 0);
+    input::HybridInputParser::parseInnerRegionCenter(
+        {"inner_region_center", "=", "4,2,2"},
+        0
+    );
 
     ASSERT_TRUE(HybridSettings::getInnerRegionCenter().has_value());
     EXPECT_EQ(
@@ -53,16 +56,25 @@ TEST_F(TestInputFileReader, parseForcedRegionLists)
 {
     auto parser = HybridInputParser{};
 
-    parser.parseForcedCoreList({"forced_core_list", "=", "3,1,3"}, 0);
+    input::HybridInputParser::parseForcedCoreList(
+        {"forced_core_list", "=", "3,1,3"},
+        0
+    );
     EXPECT_EQ(HybridSettings::getForcedCoreList(), std::vector<int>({1, 3}));
 
-    parser.parseForcedLayerList({"forced_layer_list", "=", "5,7-9,8"}, 0);
+    input::HybridInputParser::parseForcedLayerList(
+        {"forced_layer_list", "=", "5,7-9,8"},
+        0
+    );
     EXPECT_EQ(
         HybridSettings::getForcedLayerList(),
         std::vector<int>({5, 7, 8, 9})
     );
 
-    parser.parseForcedOuterList({"forced_outer_list", "=", "8-10,9"}, 0);
+    input::HybridInputParser::parseForcedOuterList(
+        {"forced_outer_list", "=", "8-10,9"},
+        0
+    );
     EXPECT_EQ(
         HybridSettings::getForcedOuterList(),
         std::vector<int>({8, 9, 10})
@@ -73,10 +85,10 @@ TEST_F(TestInputFileReader, parseUseQMCharges)
 {
     auto parser = HybridInputParser{};
 
-    parser.parseUseQMCharges({"qm_charges", "=", "qm"}, 0);
+    input::HybridInputParser::parseUseQMCharges({"qm_charges", "=", "qm"}, 0);
     EXPECT_TRUE(HybridSettings::getUseQMCharges());
 
-    parser.parseUseQMCharges({"qm_charges", "=", "mm"}, 0);
+    input::HybridInputParser::parseUseQMCharges({"qm_charges", "=", "mm"}, 0);
     EXPECT_FALSE(HybridSettings::getUseQMCharges());
 
     ASSERT_THROW_MSG(
@@ -91,10 +103,13 @@ TEST_F(TestInputFileReader, parseRegionRadii)
 {
     auto parser = HybridInputParser{};
 
-    parser.parseCoreRadius({"core_radius", "=", "3.5"}, 0);
+    input::HybridInputParser::parseCoreRadius({"core_radius", "=", "3.5"}, 0);
     EXPECT_DOUBLE_EQ(HybridSettings::getCoreRadius(), 3.5);
 
-    parser.parseLayerRadius({"layer_radius", "=", "8.25"}, 0);
+    input::HybridInputParser::parseLayerRadius(
+        {"layer_radius", "=", "8.25"},
+        0
+    );
     EXPECT_DOUBLE_EQ(HybridSettings::getLayerRadius(), 8.25);
 
     ASSERT_THROW_MSG(
@@ -114,13 +129,13 @@ TEST_F(TestInputFileReader, parseThicknesses)
 {
     auto parser = HybridInputParser{};
 
-    parser.parseSmoothingRegionThickness(
+    input::HybridInputParser::parseSmoothingRegionThickness(
         {"smoothing_region_thickness", "=", "1.25"},
         0
     );
     EXPECT_DOUBLE_EQ(HybridSettings::getSmoothingRegionThickness(), 1.25);
 
-    parser.parsePointChargeThickness(
+    input::HybridInputParser::parsePointChargeThickness(
         {"point_charge_thickness", "=", "4.75"},
         0
     );
@@ -153,10 +168,16 @@ TEST_F(TestInputFileReader, parseSmoothingMethod)
 
     auto parser = HybridInputParser{};
 
-    parser.parseSmoothingMethod({"smoothing_method", "=", "hotspot"}, 0);
+    input::HybridInputParser::parseSmoothingMethod(
+        {"smoothing_method", "=", "hotspot"},
+        0
+    );
     EXPECT_EQ(HybridSettings::getSmoothingMethod(), HOTSPOT);
 
-    parser.parseSmoothingMethod({"smoothing_method", "=", "exact"}, 0);
+    input::HybridInputParser::parseSmoothingMethod(
+        {"smoothing_method", "=", "exact"},
+        0
+    );
     EXPECT_EQ(HybridSettings::getSmoothingMethod(), EXACT);
 
     ASSERT_THROW_MSG(
@@ -173,19 +194,25 @@ TEST_F(TestInputFileReader, parseQMForceDistribution)
 
     auto parser = HybridInputParser{};
 
-    parser.parseQMForceDistribution({"qm_force_distribution", "=", "none"}, 0);
+    input::HybridInputParser::parseQMForceDistribution(
+        {"qm_force_distribution", "=", "none"},
+        0
+    );
     EXPECT_EQ(HybridSettings::getQMForceDist(), NONE);
 
-    parser.parseQMForceDistribution({"qm_force_distribution", "=", "equal"}, 0);
+    input::HybridInputParser::parseQMForceDistribution(
+        {"qm_force_distribution", "=", "equal"},
+        0
+    );
     EXPECT_EQ(HybridSettings::getQMForceDist(), EQUAL);
 
-    parser.parseQMForceDistribution(
+    input::HybridInputParser::parseQMForceDistribution(
         {"qm_force_distribution", "=", "random"},
         0
     );
     EXPECT_EQ(HybridSettings::getQMForceDist(), RANDOM);
 
-    parser.parseQMForceDistribution(
+    input::HybridInputParser::parseQMForceDistribution(
         {"qm_force_distribution", "=", "distance-weighted"},
         0
     );

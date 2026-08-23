@@ -75,7 +75,7 @@ void setup::setupRequestedJob(const std::string& inputFileName, Engine& engine)
 {
     auto _ = scopedTimer(TimerId::Setup, "TotalSetup");
 
-    startSetup(engine);
+    startSetup();
 
     readInputFile(inputFileName, engine);
 
@@ -96,10 +96,7 @@ void setup::setupRequestedJob(const std::string& inputFileName, Engine& engine)
  *
  * @param engine
  */
-void setup::startSetup(engine::Engine& engine)
-{
-    engine.getStdoutOutput().writeHeader();
-}
+void setup::startSetup() { output::StdoutOutput::writeHeader(); }
 
 /**
  * @brief end the setup
@@ -108,7 +105,7 @@ void setup::startSetup(engine::Engine& engine)
  */
 void setup::endSetup(Engine& engine)
 {
-    engine.getStdoutOutput().writeSetupCompleted();
+    output::StdoutOutput::writeSetupCompleted();
     engine.getLogOutput().writeSetupCompleted();
 }
 

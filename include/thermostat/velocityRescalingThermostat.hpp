@@ -44,7 +44,7 @@ namespace thermostat
     class VelocityRescalingThermostat : public Thermostat
     {
        private:
-        randomNumberGenerator::RandomNumberGenerator _randomNumberGenerator{};
+        randomNumberGenerator::RandomNumberGenerator _randomNumberGenerator;
 
         double _tau = 0.0;
 

@@ -55,33 +55,33 @@ TEST_F(TestInputFileReader, JobType)
     GeneralInputParser       parser;
     std::vector<std::string> lineElements = {"jobtype", "=", "mm-md"};
     auto                     engine       = std::unique_ptr<engine::Engine>();
-    parser.parseJobTypeForEngine(lineElements, 0, engine);
+    input::GeneralInputParser::parseJobTypeForEngine(lineElements, 0, engine);
     EXPECT_EQ(Settings::getJobtype(), JobType::MM_MD);
     EXPECT_EQ(Settings::isMMActivated(), true);
     test::checkType(engine, typeid(engine::MMMDEngine));
 
     lineElements = {"jobtype", "=", "qm-md"};
-    parser.parseJobTypeForEngine(lineElements, 0, engine);
+    input::GeneralInputParser::parseJobTypeForEngine(lineElements, 0, engine);
     EXPECT_EQ(Settings::getJobtype(), JobType::QM_MD);
     EXPECT_EQ(Settings::isQMActivated(), true);
     test::checkType(engine, typeid(engine::QMMDEngine));
 
     lineElements = {"jobtype", "=", "qm-rpmd"};
-    parser.parseJobTypeForEngine(lineElements, 0, engine);
+    input::GeneralInputParser::parseJobTypeForEngine(lineElements, 0, engine);
     EXPECT_EQ(Settings::getJobtype(), JobType::RING_POLYMER_QM_MD);
     EXPECT_EQ(Settings::isQMActivated(), true);
     EXPECT_EQ(Settings::isRingPolymerMDActivated(), true);
     test::checkType(engine, typeid(engine::RingPolymerQMMDEngine));
 
     lineElements = {"jobtype", "=", "mm-opt"};
-    parser.parseJobTypeForEngine(lineElements, 0, engine);
+    input::GeneralInputParser::parseJobTypeForEngine(lineElements, 0, engine);
     EXPECT_EQ(Settings::getJobtype(), JobType::MM_OPT);
     EXPECT_EQ(Settings::isOptJobType(), true);
     EXPECT_EQ(Settings::isMMActivated(), true);
     test::checkType(engine, typeid(engine::OptEngine));
 
     lineElements = {"jobtype", "=", "mm-hessian"};
-    parser.parseJobTypeForEngine(lineElements, 0, engine);
+    input::GeneralInputParser::parseJobTypeForEngine(lineElements, 0, engine);
     EXPECT_EQ(Settings::getJobtype(), JobType::MM_HESSIAN);
     EXPECT_EQ(Settings::isMMActivated(), true);
     test::checkType(engine, typeid(engine::HessianEngine));
@@ -115,11 +115,11 @@ TEST_F(TestInputFileReader, parseDimensionality)
 {
     GeneralInputParser       parser;
     std::vector<std::string> lineElements = {"dim", "=", "3"};
-    parser.parseDimensionality(lineElements, 0);
+    input::GeneralInputParser::parseDimensionality(lineElements, 0);
     EXPECT_EQ(Settings::getDimensionality(), 3);
 
     lineElements = {"dim", "=", "3D"};
-    parser.parseDimensionality(lineElements, 0);
+    input::GeneralInputParser::parseDimensionality(lineElements, 0);
     EXPECT_EQ(Settings::getDimensionality(), 3);
 
     lineElements = {"dim", "=", "2"};
@@ -155,11 +155,11 @@ TEST_F(TestInputFileReader, parseFloatingPointType)
 {
     GeneralInputParser       parser;
     std::vector<std::string> lineElements = {"floatingPointType", "=", "float"};
-    parser.parseFloatingPointType(lineElements, 0);
+    input::GeneralInputParser::parseFloatingPointType(lineElements, 0);
     EXPECT_EQ(Settings::getFloatingPointType(), FPType::FLOAT);
 
     lineElements = {"floatingPointType", "=", "double"};
-    parser.parseFloatingPointType(lineElements, 0);
+    input::GeneralInputParser::parseFloatingPointType(lineElements, 0);
     EXPECT_EQ(Settings::getFloatingPointType(), FPType::DOUBLE);
 
     lineElements = {"floatingPointType", "=", "notValid"};
@@ -180,19 +180,19 @@ TEST_F(TestInputFileReader, parseRandomSeed)
     GeneralInputParser parser;
 
     std::vector<std::string> lineElements = {"random_seed", "=", "0"};
-    parser.parseRandomSeed(lineElements, 0);
+    input::GeneralInputParser::parseRandomSeed(lineElements, 0);
     EXPECT_EQ(Settings::isRandomSeedSet(), true);
     EXPECT_EQ(Settings::getRandomSeed(), 0);
     Settings::setIsRandomSeedSet(false);
 
     lineElements = {"random_seed", "=", "+73"};
-    parser.parseRandomSeed(lineElements, 0);
+    input::GeneralInputParser::parseRandomSeed(lineElements, 0);
     EXPECT_EQ(Settings::isRandomSeedSet(), true);
     EXPECT_EQ(Settings::getRandomSeed(), 73);
     Settings::setIsRandomSeedSet(false);
 
     lineElements = {"random_seed", "=", std::to_string(UINT32_MAX)};
-    parser.parseRandomSeed(lineElements, 0);
+    input::GeneralInputParser::parseRandomSeed(lineElements, 0);
     EXPECT_EQ(Settings::isRandomSeedSet(), true);
     EXPECT_EQ(Settings::getRandomSeed(), UINT32_MAX);
     Settings::setIsRandomSeedSet(false);

@@ -101,7 +101,7 @@ namespace linearAlgebra
         {
             for (size_t j = 0; j < 3; ++j)
             {
-                _data[i][j] = vector[i * 3 + j];
+                _data[i][j] = vector[(i * 3) + j];
             }
         }
     }

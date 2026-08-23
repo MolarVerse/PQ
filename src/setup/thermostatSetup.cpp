@@ -55,7 +55,7 @@ using namespace constants;
  */
 void setup::setupThermostat(Engine &engine)
 {
-    engine.getStdoutOutput().writeSetup("thermostat");
+    output::StdoutOutput::writeSetup("thermostat");
     engine.getLogOutput().writeSetup("thermostat");
 
     ThermostatSetup thermostatSetup(dynamic_cast<MDEngine &>(engine));
@@ -266,7 +266,7 @@ void ThermostatSetup::setupTemperatureRamp()
     const auto targetTemp   = ThermostatSettings::getTargetTemperature();
     const auto tempDelta    = targetTemp - startTemp;
     const auto remainder    = steps % frequency == 0 ? 0 : 1;
-    const auto updates      = steps / frequency + remainder;
+    const auto updates      = (steps / frequency) + remainder;
     const auto tempIncrease = tempDelta / static_cast<double>(updates);
 
     _engine.getThermostat().setTemperatureIncrease(tempIncrease);

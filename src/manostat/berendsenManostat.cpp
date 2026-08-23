@@ -125,7 +125,9 @@ tensor3D BerendsenManostat::calculateMu() const
     const auto pressure  = trace(_pressureTensor) / 3.0;
     const auto preFactor = _compressibility * _dt / _tau;
 
-    return diagonalMatrix(::cbrt(1 - preFactor * (_targetPressure - pressure)));
+    return diagonalMatrix(
+        ::cbrt(1 - (preFactor * (_targetPressure - pressure)))
+    );
 }
 
 /**
@@ -147,8 +149,8 @@ tensor3D SemiIsotropicBerendsenManostat::calculateMu() const
 
     const auto preFactor = _compressibility * _dt / _tau;
 
-    const double mu_xy = ::sqrt(1.0 - preFactor * (_targetPressure - p_xy));
-    const double mu_z  = 1.0 - preFactor * (_targetPressure - p_z);
+    const double mu_xy = ::sqrt(1.0 - (preFactor * (_targetPressure - p_xy)));
+    const double mu_z  = 1.0 - (preFactor * (_targetPressure - p_z));
 
     linearAlgebra::Vec3D mu;
 

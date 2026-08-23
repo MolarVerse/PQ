@@ -106,7 +106,7 @@ void DihedralForceField::calculateEnergyAndForces(
     auto phi = angle(crossPosition123, crossPosition432);
     phi      = dot(dPosition12, crossPosition432) > 0.0 ? -phi : phi;
 
-    const auto cosine = ::cos(_periodicity * phi + _phaseShift);
+    const auto cosine = ::cos((_periodicity * phi) + _phaseShift);
     const auto energy = _forceConstant * (1.0 + cosine);
 
     if (isImproperDihedral)
@@ -128,7 +128,7 @@ void DihedralForceField::calculateEnergyAndForces(
     forceMagnitude            /= (distance432Squared * distance23);
     const auto forceVector432  = forceMagnitude * crossPosition432;
 
-    const auto sine = ::sin(_periodicity * phi + _phaseShift);
+    const auto sine = ::sin((_periodicity * phi) + _phaseShift);
     forceMagnitude  = _forceConstant * _periodicity * sine;
 
     const auto diffForce123_432 = forceVector123 - forceVector432;

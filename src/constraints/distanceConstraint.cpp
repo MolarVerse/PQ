@@ -88,7 +88,7 @@ void DistanceConstraint::applyDistanceConstraint(
 
     const auto distance = norm(dPos);
     const auto force_constant =
-        _springConstant + _dSpringConstantDt * timeInterval;
+        _springConstant + (_dSpringConstantDt * timeInterval);
 
     if (distance < _lowerDistance)
     {

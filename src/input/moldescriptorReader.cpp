@@ -94,7 +94,7 @@ void input::molDescriptor::readMolDescriptor(Engine &engine)
 {
     const auto filename = FileSettings::getMolDescriptorFileName();
 
-    engine.getStdoutOutput().writeRead("Moldescriptor File", filename);
+    output::StdoutOutput::writeRead("Moldescriptor File", filename);
     engine.getLogOutput().writeRead("Moldescriptor File", filename);
 
     MoldescriptorReader reader(engine);

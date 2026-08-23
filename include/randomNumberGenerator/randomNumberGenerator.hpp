@@ -37,7 +37,7 @@ namespace randomNumberGenerator
     class RandomNumberGenerator
     {
        private:
-        std::random_device _randomDevice{};
+        std::random_device _randomDevice;
         std::mt19937       _generator;
 
        public:

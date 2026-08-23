@@ -147,7 +147,7 @@ void input::topology::readTopologyFile(Engine &engine)
 
     const auto filename = FileSettings::getTopologyFileName();
 
-    engine.getStdoutOutput().writeRead("Topology File", filename);
+    output::StdoutOutput::writeRead("Topology File", filename);
     engine.getLogOutput().writeRead("Topology File", filename);
 
     TopologyReader topologyReader(filename, engine);

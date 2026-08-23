@@ -321,7 +321,7 @@ TEST_F(TestInputFileReader, testTMFileName)
         "=",
         "data/turbomoleReader/tm_define.template"
     };
-    parser.parseTMFilename(lineElements, 0);
+    input::FilesInputParser::parseTMFilename(lineElements, 0);
     EXPECT_EQ(
         settings::FileSettings::getTMFileName(),
         "data/turbomoleReader/tm_define.template"

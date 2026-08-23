@@ -64,7 +64,7 @@ void setup::setupOptimizer(Engine &engine)
     if (!Settings::isOptJobType())
         return;
 
-    engine.getStdoutOutput().writeSetup("Optimizer");
+    output::StdoutOutput::writeSetup("Optimizer");
     engine.getLogOutput().writeSetup("Optimizer");
 
     OptimizerSetup optimizerSetup(dynamic_cast<OptEngine &>(engine));
@@ -355,7 +355,7 @@ void OptimizerSetup::writeSetupInfo() const
 
     using enum LREnum;
 
-    std::string decayLRStr = "";
+    std::string decayLRStr;
 
     if (lrStrategy == CONSTANT_DECAY || lrStrategy == EXPONENTIAL_DECAY)
     {

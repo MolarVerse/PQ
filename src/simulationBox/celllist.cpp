@@ -61,7 +61,7 @@ size_t CellList::getCellIndex(const Vec3Dul &cellIndices) const
 {
     const auto outerProduct = cellIndices[0] * _nCells[1] * _nCells[2];
 
-    return outerProduct + cellIndices[1] * _nCells[2] + cellIndices[2];
+    return outerProduct + (cellIndices[1] * _nCells[2]) + cellIndices[2];
 }
 
 /**

@@ -46,8 +46,7 @@ using std::ranges::find_if;
  *
  **/
 ForceFieldNonCoulomb::ForceFieldNonCoulomb()
-    : _nonCoulPairsVec(std::vector<std::shared_ptr<NonCoulombPair>>()),
-      _nonCoulPairsMatPtr(std::make_unique<matrix>())
+    : _nonCoulPairsMatPtr(std::make_unique<matrix>())
 {
 }
 

@@ -47,7 +47,7 @@ using namespace engine;
  */
 void setup::setupOutputFiles(Engine &engine)
 {
-    engine.getStdoutOutput().writeSetup("Output Files");
+    output::StdoutOutput::writeSetup("Output Files");
 
     OutputFilesSetup outputFilesSetup(engine);
     outputFilesSetup.setup();

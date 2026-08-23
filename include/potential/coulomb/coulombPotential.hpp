@@ -68,15 +68,15 @@ namespace potential
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] inline static double getCoulombRadiusCutOff()
+        [[nodiscard]] static double getCoulombRadiusCutOff()
         {
             return _coulombRadiusCutOff;
         }
-        [[nodiscard]] inline static double getCoulombEnergyCutOff()
+        [[nodiscard]] static double getCoulombEnergyCutOff()
         {
             return _coulombEnergyCutOff;
         }
-        [[nodiscard]] inline static double getCoulombForceCutOff()
+        [[nodiscard]] static double getCoulombForceCutOff()
         {
             return _coulombForceCutOff;
         }

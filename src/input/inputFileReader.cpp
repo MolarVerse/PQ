@@ -379,7 +379,7 @@ void input::readInputFile(
     engine::Engine         &engine
 )
 {
-    engine.getStdoutOutput().writeRead("Input File", std::string(fileName));
+    output::StdoutOutput::writeRead("Input File", std::string(fileName));
 
     InputFileReader inputFileReader(fileName, engine);
     inputFileReader.read();

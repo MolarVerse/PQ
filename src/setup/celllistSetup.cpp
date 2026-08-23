@@ -39,7 +39,7 @@ void setup::setupCellList(Engine &engine)
 {
     if (settings::Settings::isCellListActivated())
     {
-        engine.getStdoutOutput().writeSetup("Cell List");
+        output::StdoutOutput::writeSetup("Cell List");
         engine.getLogOutput().writeSetup("Cell List");
     }
 

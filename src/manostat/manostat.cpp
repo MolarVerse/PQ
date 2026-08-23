@@ -61,7 +61,7 @@ void Manostat::calculatePressure(const SimulationBox& box, PhysicalData& data)
     _pressureTensor *= PRESSURE_FACTOR;
 
     // NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers)
-    _pressure = trace(_pressureTensor) / _pressureTensor.size;
+    _pressure = trace(_pressureTensor) / linearAlgebra::tensor3D::size;
 
     data.setPressure(_pressure);
 }

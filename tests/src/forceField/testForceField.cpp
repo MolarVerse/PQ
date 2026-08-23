@@ -24,7 +24,6 @@
 
 #include <cstddef>   // for size_t
 #include <memory>    // for shared_ptr, allocator
-#include <string>    // for operator+, to_string, char_traits
 
 #include "../potential/nonCoulomb/testForceFieldNonCoulomb.hpp"
 #include "angleForceField.hpp"           // for AngleForceField

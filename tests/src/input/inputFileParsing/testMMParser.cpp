@@ -80,28 +80,28 @@ TEST_F(TestInputFileReader, testParseNonCoulombType)
 {
     MMInputParser parser(_engine->getForceField(), _engine->getPotential());
     std::vector<std::string> lineElements = {"noncoulomb", "=", "guff"};
-    parser.parseNonCoulombType(lineElements, 0);
+    input::MMInputParser::parseNonCoulombType(lineElements, 0);
     EXPECT_EQ(
         settings::PotentialSettings::getNonCoulombType(),
         settings::NonCoulombType::GUFF
     );
 
     lineElements = {"noncoulomb", "=", "lj"};
-    parser.parseNonCoulombType(lineElements, 0);
+    input::MMInputParser::parseNonCoulombType(lineElements, 0);
     EXPECT_EQ(
         settings::PotentialSettings::getNonCoulombType(),
         settings::NonCoulombType::LJ
     );
 
     lineElements = {"noncoulomb", "=", "buck"};
-    parser.parseNonCoulombType(lineElements, 0);
+    input::MMInputParser::parseNonCoulombType(lineElements, 0);
     EXPECT_EQ(
         settings::PotentialSettings::getNonCoulombType(),
         settings::NonCoulombType::BUCKINGHAM
     );
 
     lineElements = {"noncoulomb", "=", "morse"};
-    parser.parseNonCoulombType(lineElements, 0);
+    input::MMInputParser::parseNonCoulombType(lineElements, 0);
     EXPECT_EQ(
         settings::PotentialSettings::getNonCoulombType(),
         settings::NonCoulombType::MORSE

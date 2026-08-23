@@ -46,7 +46,6 @@ AseMaceRunner::AseMaceRunner(
     bool               dispersion,
     bool               enableCueq
 )
-    : AseQMRunner()
 {
     try
     {

@@ -102,10 +102,10 @@ void OptEngine::run()
             std::format("Optimizer converged after {} epochs.", _step);
 
         getLogOutput().writeInfo(msg);
-        getStdoutOutput().writeInfo(msg);
+        output::StdoutOutput::writeInfo(msg);
 
         getLogOutput().writeEndedNormally(elapsedTime);
-        getStdoutOutput().writeEndedNormally(elapsedTime);
+        output::StdoutOutput::writeEndedNormally(elapsedTime);
     }
 }
 
@@ -140,12 +140,12 @@ void OptEngine::takeStep()
                 _optimizer->getNEpochs()
             );
             getLogOutput().writeOptWarning(headerMessage);
-            getStdoutOutput().writeOptWarning(headerMessage);
+            output::StdoutOutput::writeOptWarning(headerMessage);
 
             for (const auto &message : msg)
             {
                 getLogOutput().writeOptWarning(message);
-                getStdoutOutput().writeOptWarning(message);
+                output::StdoutOutput::writeOptWarning(message);
             }
         }
     }

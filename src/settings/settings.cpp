@@ -195,7 +195,7 @@ void Settings::setVirialType(VirialType virialType) { _virial = virialType; }
  *
  * @param integratorType
  */
-void Settings::setIntegratorType(const IntegratorType integratorType)
+void Settings::setIntegratorType(IntegratorType integratorType)
 {
     _integrator = integratorType;
 }

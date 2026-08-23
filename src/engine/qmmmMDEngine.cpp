@@ -118,9 +118,11 @@ namespace engine
     {
         _configurator.calculateInnerRegionCenter(*_simulationBox);
         _configurator.shiftAtomsToInnerRegionCenter(*_simulationBox);
-        _configurator.assignHybridZones(*_simulationBox);
+        configurator::HybridConfigurator::assignHybridZones(*_simulationBox);
         moltypeCheck();
-        _configurator.calculateSmoothingFactors(*_simulationBox);
+        configurator::HybridConfigurator::calculateSmoothingFactors(
+            *_simulationBox
+        );
         _cellList->updateCellList(*_simulationBox);
         _physicalData->setNumberOfSmoothingMolecules(
             static_cast<double>(std::ranges::distance(
@@ -193,9 +195,12 @@ namespace engine
             // STEP 2: Setup and run QM calculation, accumulate QM forces and QM
             // virial contribution and the number of QM atoms for this
             // combination
-            _configurator.activateMolecules(*_simulationBox);
-            _configurator.deactivateOuterMolecules(*_simulationBox);
-            _configurator.deactivateSmoothingMolecules(
+            configurator::HybridConfigurator::activateMolecules(*_simulationBox
+            );
+            configurator::HybridConfigurator::deactivateOuterMolecules(
+                *_simulationBox
+            );
+            configurator::HybridConfigurator::deactivateSmoothingMolecules(
                 inactiveSmMol,
                 *_simulationBox
             );
@@ -217,7 +222,9 @@ namespace engine
 
             // STEP 3: Setup and run MM calculation, accumulate MM forces and MM
             // virial contribution
-            _configurator.toggleMoleculeActivation(*_simulationBox);
+            configurator::HybridConfigurator::toggleMoleculeActivation(
+                *_simulationBox
+            );
 
             if (settings::Settings::isCellListActivated())
             {
@@ -298,8 +305,10 @@ namespace engine
 
         // STEP 1: Setup and run QM calculation, scale forces of smoothing
         // molecules with smF
-        _configurator.activateMolecules(*_simulationBox);
-        _configurator.deactivateOuterMolecules(*_simulationBox);
+        configurator::HybridConfigurator::activateMolecules(*_simulationBox);
+        configurator::HybridConfigurator::deactivateOuterMolecules(
+            *_simulationBox
+        );
 
         _qmRunner->run(*_simulationBox, *_physicalData, NON_PERIODIC);
 
@@ -315,7 +324,9 @@ namespace engine
         // STEP 2: Setup and run inter-nonbonded calculation between
         // MM-MM , CORE-MM , LAYER+SMOOTHING-MM and scale forces of smoothing
         // molecules with smF
-        _configurator.toggleMoleculeActivation(*_simulationBox);
+        configurator::HybridConfigurator::toggleMoleculeActivation(
+            *_simulationBox
+        );
 
         if (settings::Settings::isCellListActivated())
         {
@@ -362,7 +373,9 @@ namespace engine
         // STEP 4: Setup and run intra-nonbonded calculation and scale forces of
         // smoothing molecules with (1 - smF)
 
-        _configurator.activateSmoothingMolecules(*_simulationBox);
+        configurator::HybridConfigurator::activateSmoothingMolecules(
+            *_simulationBox
+        );
 
         _intraNonBonded->calculate(*_simulationBox, *_physicalData);
 
@@ -402,11 +415,13 @@ namespace engine
      */
     void QMMMMDEngine::setNumberOfQMAtoms()
     {
-        _configurator.activateMolecules(*_simulationBox);
-        _configurator.deactivateOuterMolecules(*_simulationBox);
+        configurator::HybridConfigurator::activateMolecules(*_simulationBox);
+        configurator::HybridConfigurator::deactivateOuterMolecules(
+            *_simulationBox
+        );
         const auto nQMAtoms = _simulationBox->getNumberOfQMAtoms();
         _physicalData->setNumberOfQMAtoms(static_cast<double>(nQMAtoms));
-        _configurator.activateMolecules(*_simulationBox);
+        configurator::HybridConfigurator::activateMolecules(*_simulationBox);
     }
 
     /**

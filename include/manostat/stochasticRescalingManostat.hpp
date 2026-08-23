@@ -38,7 +38,7 @@ namespace manostat
     class StochasticRescalingManostat : public Manostat
     {
        protected:
-        randomNumberGenerator::RandomNumberGenerator _randomNumberGenerator{};
+        randomNumberGenerator::RandomNumberGenerator _randomNumberGenerator;
 
         double _tau;
         double _compressibility;

@@ -52,7 +52,7 @@ using namespace customException;
  */
 void setup::setupPotential(Engine &engine)
 {
-    engine.getStdoutOutput().writeSetup("MM potential");
+    output::StdoutOutput::writeSetup("MM potential");
     engine.getLogOutput().writeSetup("MM potential");
 
     PotentialSetup potentialSetup(engine);

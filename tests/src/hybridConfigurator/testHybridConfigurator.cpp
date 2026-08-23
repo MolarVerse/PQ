@@ -209,7 +209,7 @@ TEST(testHybridConfigurator, assignHybridZones)
     mol5.setMolMass(atom6->getMass());
     simBox.addMolecule(mol5);
 
-    hybridConfigurator.assignHybridZones(simBox);
+    configurator::HybridConfigurator::assignHybridZones(simBox);
 
     using enum simulationBox::HybridZone;
     EXPECT_EQ(simBox.getMolecule(0).getHybridZone(), CORE);
@@ -241,13 +241,13 @@ TEST(testHybridConfigurator, assignHybridZonesCoreZero)
     mol.setMolMass(atom->getMass());
     simBox.addMolecule(mol);
 
-    hybridConfigurator.assignHybridZones(simBox);
+    configurator::HybridConfigurator::assignHybridZones(simBox);
 
     using enum simulationBox::HybridZone;
     EXPECT_EQ(simBox.getMolecule(0).getHybridZone(), LAYER);
 
     HybridSettings::setCoreRadius(0.00001);
-    hybridConfigurator.assignHybridZones(simBox);
+    configurator::HybridConfigurator::assignHybridZones(simBox);
 
     EXPECT_EQ(simBox.getMolecule(0).getHybridZone(), CORE);
 }
@@ -284,7 +284,7 @@ TEST(testHybridConfigurator, forcedZonesOverrideDistanceAssignment)
     forcedLayer.setForcedLayer(true);
     simBox.addMolecule(forcedLayer);
 
-    hybridConfigurator.assignHybridZones(simBox);
+    configurator::HybridConfigurator::assignHybridZones(simBox);
 
     using enum simulationBox::HybridZone;
     EXPECT_EQ(simBox.getMolecule(0).getHybridZone(), CORE);
@@ -335,7 +335,7 @@ TEST(testHybridConfigurator, activateDeactivateMolecules)
     simBox.addMolecule(mol5);
     simBox.addMolecule(mol6);
 
-    hybridConfigurator.activateMolecules(simBox);
+    configurator::HybridConfigurator::activateMolecules(simBox);
 
     const auto &nMol = simBox.getMolecules().size();
     for (size_t i = 0; i < nMol; ++i)
@@ -344,7 +344,7 @@ TEST(testHybridConfigurator, activateDeactivateMolecules)
         EXPECT_EQ(simBox.getMolecule(i).getAtom(0).isActive(), true);
     }
 
-    hybridConfigurator.deactivateOuterMolecules(simBox);
+    configurator::HybridConfigurator::deactivateOuterMolecules(simBox);
 
     std::vector<bool> expected = {true, true, true, true, false, false};
     for (size_t i = 0; i < 6; ++i)
@@ -353,7 +353,7 @@ TEST(testHybridConfigurator, activateDeactivateMolecules)
         EXPECT_EQ(simBox.getMolecule(i).getAtom(0).isActive(), expected[i]);
     }
 
-    hybridConfigurator.deactivateSmoothingMolecules(
+    configurator::HybridConfigurator::deactivateSmoothingMolecules(
         std::unordered_set<size_t>{0},
         simBox
     );
@@ -365,7 +365,7 @@ TEST(testHybridConfigurator, activateDeactivateMolecules)
         EXPECT_EQ(simBox.getMolecule(i).getAtom(0).isActive(), expected[i]);
     }
 
-    hybridConfigurator.toggleMoleculeActivation(simBox);
+    configurator::HybridConfigurator::toggleMoleculeActivation(simBox);
 
     expected = {false, false, true, false, true, true};
     for (size_t i = 0; i < 6; ++i)
@@ -431,7 +431,7 @@ TEST(testHybridConfigurator, calculateSmoothingFactors)
     mol4.setHybridZone(SMOOTHING);
     simBox.addMolecule(mol4);
 
-    hybridConfigurator.calculateSmoothingFactors(simBox);
+    configurator::HybridConfigurator::calculateSmoothingFactors(simBox);
 
     EXPECT_NEAR(simBox.getMolecule(0).getSmoothingFactor(), 1.0, 1e-10);
     EXPECT_NEAR(simBox.getMolecule(1).getSmoothingFactor(), 0.5, 1e-10);

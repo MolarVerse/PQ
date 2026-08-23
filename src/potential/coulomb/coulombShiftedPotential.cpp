@@ -44,7 +44,7 @@ std::pair<double, double> CoulombShiftedPotential::calculate(
     const auto forceCutOffIntegral = _coulombForceCutOff * deltaCutOff;
 
     auto energy = dInv - _coulombEnergyCutOff - forceCutOffIntegral;
-    auto force  = dInv * dInv - _coulombForceCutOff;
+    auto force  = (dInv * dInv) - _coulombForceCutOff;
 
     energy *= coulombPrefactor;
     force  *= coulombPrefactor;
