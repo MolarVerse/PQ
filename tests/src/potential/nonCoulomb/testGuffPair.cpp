@@ -22,11 +22,10 @@
 
 #include <gtest/gtest.h>   // for Test, CmpHelperFloatingPointEQ, InitGo...
 
-#include <cmath>    // for ::pow, ::exp
-#include <vector>   // for vector, allocator
+#include <cmath>   // for ::pow, ::exp
 
-#include "gtest/gtest.h"        // for Message, TestPartResult
-#include "guffPair.hpp"         // for GuffPair
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include "guffPair.hpp"    // for GuffPair
 
 using namespace potential;
 
@@ -37,9 +36,10 @@ using namespace potential;
 TEST(TestGuffPair, calculateEnergyAndForces)
 {
     const auto coefficients =
-        std::vector<double>{2.0,  3.0,  4.0,  5.0,  6.0,  7.0,  8.0,  9.0,
-                            10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 17.0,
-                            18.0, 19.0, 20.0, 21.0, 22.0, 23.0};
+        std::array<double, defaults::NUM_GUFF_COEFFICIENTS>{
+            2.0,  3.0,  4.0,  5.0,  6.0,  7.0,  8.0,  9.0,  10.0, 11.0, 12.0,
+            13.0, 14.0, 15.0, 16.0, 17.0, 18.0, 19.0, 20.0, 21.0, 22.0, 23.0
+        };
     const auto   rncCutoff    = 3.0;
     const double energyCutoff = 1.0;
     const double forceCutoff  = 2.0;
@@ -121,14 +121,16 @@ TEST(TestGuffPair, calculateWithSparseCoefficients)
     // and c19 blocks would otherwise compute pow(distance - rExp17/21, n)
     // with rExp17 == rExp21 == distance, which is 0^0 = NaN-prone; the gate
     // keeps the result finite.
-    auto coefficients = std::vector<double>(22, 0.0);
-    coefficients[0]  = 4.0;        // c1
-    coefficients[1]  = 6.0;        // n2
-    coefficients[8]  = 1.5;        // c9
-    coefficients[9]  = 2.0;        // cexp10
-    coefficients[10] = 1.0;        // rExp11
-    coefficients[16] = distance;   // rExp17  - would make distance - rExp17 == 0
-    coefficients[17] = 3.0;        // n18
+    auto coefficients = std::array<double, defaults::NUM_GUFF_COEFFICIENTS>{};
+    coefficients.fill(0.0);
+    coefficients[0]  = 4.0;   // c1
+    coefficients[1]  = 6.0;   // n2
+    coefficients[8]  = 1.5;   // c9
+    coefficients[9]  = 2.0;   // cexp10
+    coefficients[10] = 1.0;   // rExp11
+    coefficients[16] =
+        distance;             // rExp17  - would make distance - rExp17 == 0
+    coefficients[17] = 3.0;   // n18
     coefficients[20] = distance;   // rExp21
     coefficients[21] = 3.0;        // n22
 

@@ -29,7 +29,7 @@
 #include "nonCoulombPair.hpp"
 #include "strongTypes.hpp"
 
-class TestBuckinghamPairUtils;   // forward declaration
+struct TestBuckinghamPairUtils;   // forward declaration
 
 namespace potential
 {
@@ -79,7 +79,7 @@ namespace potential
             const double distance
         ) const override;
 
-        friend class ::TestBuckinghamPairUtils;
+        friend struct ::TestBuckinghamPairUtils;
     };
 
 }   // namespace potential

@@ -2,6 +2,7 @@
 #define _TEST_MORSE_PAIR_UTILS_
 
 #include "buckinghamPair.hpp"
+#include "guffPair.hpp"
 #include "lennardJonesPair.hpp"
 #include "morsePair.hpp"
 
@@ -31,6 +32,17 @@ struct TestBuckinghamPairUtils
 {
     static const BuckinghamParams& params(
         const potential::BuckinghamPair* buckPair
+    );
+};
+
+/**
+ * @brief struct TestGuffPairUtils
+ *
+ */
+struct TestGuffPairUtils
+{
+    static const std::array<double, defaults::NUM_GUFF_COEFFICIENTS>& coeffs(
+        const potential::GuffPair* guffPair
     );
 };
 

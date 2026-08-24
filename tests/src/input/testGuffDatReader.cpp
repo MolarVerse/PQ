@@ -318,7 +318,7 @@ TEST_F(TestGuffDatReader, addGuffPair)
         2,
         0,
         0,
-        {1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1},
+        {1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2},
         10.0
     );
 
@@ -330,7 +330,7 @@ TEST_F(TestGuffDatReader, addGuffPair)
     );
 
     EXPECT_THAT(
-        pair.getCoefficients(),
+        TestGuffPairUtils::coeffs(&pair),
         testing::ElementsAre(
             1,
             2,
@@ -353,8 +353,7 @@ TEST_F(TestGuffDatReader, addGuffPair)
             1,
             1,
             1,
-            2,
-            1
+            2
         )
     );
     EXPECT_EQ(pair.getRadialCutOff(), 10.0);
@@ -369,7 +368,7 @@ TEST_F(TestGuffDatReader, addGuffPair)
     );
 
     EXPECT_THAT(
-        pair2.getCoefficients(),
+        TestGuffPairUtils::coeffs(&pair2),
         testing::ElementsAre(
             1,
             2,
@@ -392,24 +391,31 @@ TEST_F(TestGuffDatReader, addGuffPair)
             1,
             1,
             1,
-            2,
-            1
+            2
         )
     );
     EXPECT_EQ(pair2.getRadialCutOff(), 10.0);
-    EXPECT_EQ(pair.getEnergyCutOff(), 3.0121946291700612e+35);
-    EXPECT_EQ(pair.getForceCutOff(), -5.4219503325061099e+36);
+    EXPECT_EQ(pair2.getEnergyCutOff(), 3.0121946291700612e+35);
+    EXPECT_EQ(pair2.getForceCutOff(), -5.4219503325061099e+36);
 }
 
 TEST_F(TestGuffDatReader, addNonCoulombPair)
 {
     const auto &guffCoefficients =
-        std::vector<double>({1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1,
-                             1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1});
+        std::array<double, defaults::NUM_GUFF_COEFFICIENTS>{
+            1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2
+        };
     _guffDatReader->setupGuffMaps();
 
     PotentialSettings::setNonCoulombType("lj");
-    _guffDatReader->addNonCoulombPair(1, 2, 0, 0, guffCoefficients, 10.0);
+    _guffDatReader->addNonCoulombPair(
+        1,
+        2,
+        0,
+        0,
+        {guffCoefficients.begin(), guffCoefficients.end()},
+        10.0
+    );
 
     EXPECT_NO_THROW(
         [[maybe_unused]] const auto &dummy = dynamic_cast<LennardJonesPair &>(
@@ -421,7 +427,14 @@ TEST_F(TestGuffDatReader, addNonCoulombPair)
     );
 
     PotentialSettings::setNonCoulombType("buck");
-    _guffDatReader->addNonCoulombPair(1, 2, 0, 0, guffCoefficients, 10.0);
+    _guffDatReader->addNonCoulombPair(
+        1,
+        2,
+        0,
+        0,
+        {guffCoefficients.begin(), guffCoefficients.end()},
+        10.0
+    );
 
     EXPECT_NO_THROW(
         [[maybe_unused]] const auto &dummy = dynamic_cast<BuckinghamPair &>(
@@ -433,7 +446,14 @@ TEST_F(TestGuffDatReader, addNonCoulombPair)
     );
 
     PotentialSettings::setNonCoulombType("morse");
-    _guffDatReader->addNonCoulombPair(1, 2, 0, 0, guffCoefficients, 10.0);
+    _guffDatReader->addNonCoulombPair(
+        1,
+        2,
+        0,
+        0,
+        {guffCoefficients.begin(), guffCoefficients.end()},
+        10.0
+    );
 
     EXPECT_NO_THROW(
         [[maybe_unused]] const auto &dummy = dynamic_cast<MorsePair &>(
@@ -445,7 +465,14 @@ TEST_F(TestGuffDatReader, addNonCoulombPair)
     );
 
     PotentialSettings::setNonCoulombType("guff");
-    _guffDatReader->addNonCoulombPair(1, 2, 0, 0, guffCoefficients, 10.0);
+    _guffDatReader->addNonCoulombPair(
+        1,
+        2,
+        0,
+        0,
+        {guffCoefficients.begin(), guffCoefficients.end()},
+        10.0
+    );
 
     EXPECT_NO_THROW(
         [[maybe_unused]] const auto &dummy = dynamic_cast<GuffPair &>(
@@ -459,7 +486,14 @@ TEST_F(TestGuffDatReader, addNonCoulombPair)
     PotentialSettings::setNonCoulombType("lj_9_12");
 
     EXPECT_THROW_MSG(
-        _guffDatReader->addNonCoulombPair(1, 2, 0, 0, guffCoefficients, 10.0),
+        _guffDatReader->addNonCoulombPair(
+            1,
+            2,
+            0,
+            0,
+            {guffCoefficients.begin(), guffCoefficients.end()},
+            10.0
+        ),
         UserInputException,
         std::format(
             "Invalid nonCoulombic type {} given",

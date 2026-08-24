@@ -41,3 +41,16 @@ const BuckinghamParams& TestBuckinghamPairUtils::params(
 {
     return buckPair->_params;
 }
+
+/**
+ * @brief Get the coefficients from a GuffPair.
+ *
+ * @param guffPair pointer to the GuffPair object
+ * @return const std::array<double, defaults::NUM_GUFF_COEFFICIENTS>& reference
+ * to the coefficients
+ */
+const std::array<double, defaults::NUM_GUFF_COEFFICIENTS>& TestGuffPairUtils::
+    coeffs(const potential::GuffPair* guffPair)
+{
+    return guffPair->_coefficients;
+}

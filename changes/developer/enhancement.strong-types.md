@@ -6,3 +6,4 @@
 - add strong type for morse params aka `MorseParams`
 - add strong type for lennard jones params aka `LJParams`
 - add strong type for bukcingham params aka `BuckinghamParams`
+- make guff pari used `std::array` instead of `std::vector`

@@ -22,8 +22,6 @@
 
 #include <gtest/gtest.h>
 
-#include <vector>
-
 #include "buckinghamPair.hpp"
 #include "coulombShiftedPotential.hpp"
 #include "coulombWolf.hpp"
@@ -63,7 +61,7 @@ namespace
         EXPECT_NEAR(force, -energyDerivative, tolerance);
     }
 
-    std::vector<double> buildGuffCoefficients()
+    std::array<double, defaults::NUM_GUFF_COEFFICIENTS> buildGuffCoefficients()
     {
         return {0.5, 2.0, -0.2,  4.0,   0.1,  6.0, -0.05, 8.0,
                 0.4, 1.2, 1.3,   -0.3,  -1.1, 2.5, 0.02,  -0.5,

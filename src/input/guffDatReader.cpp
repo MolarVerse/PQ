@@ -375,12 +375,16 @@ void GuffDatReader::addNonCoulombPair(
         }
         case GUFF:
         {
+            std::array<double, defaults::NUM_GUFF_COEFFICIENTS> coeffs;
+            for (size_t i = 0; i < coefficients.size(); ++i)
+                coeffs.at(i) = coefficients[i];
+
             addGuffPair(
                 molType1,
                 molType2,
                 atomType1,
                 atomType2,
-                coefficients,
+                coeffs,
                 rncCutOff
             );
             break;
@@ -545,12 +549,12 @@ void GuffDatReader::addMorsePair(
  * @param rncCutOff
  */
 void GuffDatReader::addGuffPair(
-    const size_t               molType1,
-    const size_t               molType2,
-    const size_t               atomType1,
-    const size_t               atomType2,
-    const std::vector<double> &coefficients,
-    const double               rncCutOff
+    const size_t                                               molType1,
+    const size_t                                               molType2,
+    const size_t                                               atomType1,
+    const size_t                                               atomType2,
+    const std::array<double, defaults::NUM_GUFF_COEFFICIENTS> &coefficients,
+    const double                                               rncCutOff
 )
 {
     auto &guffNonCoulomb = dynamic_cast<GuffNonCoulomb &>(
