@@ -48,8 +48,8 @@ namespace manostat
         explicit BerendsenManostat(const double, const double, const double);
 
         void applyManostat(
-            simulationBox::SimulationBox &simBox,
-            physicalData::PhysicalData   &physData
+            molsys::SimulationBox      &simBox,
+            physicalData::PhysicalData &physData
         ) override;
 
         [[nodiscard]] virtual linearAlgebra::tensor3D calculateMu() const;

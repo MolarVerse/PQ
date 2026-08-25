@@ -49,7 +49,7 @@ target_link_libraries(engine
     settings
     thermostat
     output
-    simulationBox
+    molsys
     timings
     physicalData
     virial

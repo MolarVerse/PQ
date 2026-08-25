@@ -16,7 +16,7 @@ foreach(source_file ${source_files})
         PRIVATE
         constraints
         connectivity
-        simulationBox
+        molsys
         settings
         utilities
         gtest

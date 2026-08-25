@@ -36,13 +36,11 @@ namespace benchmarkSetup
     inline constexpr double cellEdge = 3.0;
     inline constexpr double cutOff   = 4.0;
 
-    inline simulationBox::SimulationBox makeLattice(
-        const std::size_t cellsPerSide
-    )
+    inline molsys::SimulationBox makeLattice(const std::size_t cellsPerSide)
     {
         const double boxEdge = cellEdge * static_cast<double>(cellsPerSide);
 
-        simulationBox::SimulationBox simulationBox;
+        molsys::SimulationBox simulationBox;
         simulationBox.setBoxDimensions({boxEdge, boxEdge, boxEdge});
 
         std::size_t atomIndex = 0;
@@ -52,7 +50,7 @@ namespace benchmarkSetup
             {
                 for (std::size_t z = 0; z < cellsPerSide; ++z)
                 {
-                    auto atom = std::make_shared<simulationBox::Atom>();
+                    auto atom = std::make_shared<molsys::Atom>();
                     const linearAlgebra::Vec3D position{
                         -boxEdge / 2.0 +
                             (static_cast<double>(x) + 0.5) * cellEdge,
@@ -75,7 +73,7 @@ namespace benchmarkSetup
                     atom->setPartialCharge(atomIndex++ % 2 == 0 ? 0.4 : -0.4);
                     atom->setShiftForce({0.0, 0.0, 0.0});
 
-                    simulationBox::Molecule molecule;
+                    molsys::Molecule molecule;
                     molecule.setMoltype(1);
                     molecule.setNumberOfAtoms(1);
                     molecule.setMolMass(12.0);
@@ -94,7 +92,7 @@ namespace benchmarkSetup
         return simulationBox;
     }
 
-    inline void resetForces(simulationBox::SimulationBox& simulationBox)
+    inline void resetForces(molsys::SimulationBox& simulationBox)
     {
         simulationBox.resetForces();
         for (const auto& atom : simulationBox.getAtoms())

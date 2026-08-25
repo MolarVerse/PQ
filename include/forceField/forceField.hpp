@@ -38,8 +38,8 @@ namespace forceField
         const potential::CoulombPotential &coulombPotential,
         potential::NonCoulombPotential    &nonCoulombPotential,
         physicalData::PhysicalData        &physicalData,
-        const simulationBox::Molecule     *molecule1,
-        const simulationBox::Molecule     *molecule2,
+        const molsys::Molecule            *molecule1,
+        const molsys::Molecule            *molecule2,
         const size_t                       atomIndex1,
         const size_t                       atomIndex2,
         const double                       distance

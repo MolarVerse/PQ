@@ -28,7 +28,7 @@
 #include "moleculeType.hpp"   // for MoleculeType
 
 using namespace constraints;
-using namespace simulationBox;
+using namespace molsys;
 
 /***************************
  *                         *

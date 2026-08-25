@@ -36,7 +36,7 @@
 #include "settings.hpp"            // for Settings
 #include "simulationBox.hpp"       // for SimulationBox
 
-using namespace simulationBox;
+using namespace molsys;
 using namespace settings;
 using namespace linearAlgebra;
 using namespace customException;

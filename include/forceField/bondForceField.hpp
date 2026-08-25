@@ -33,11 +33,11 @@ namespace physicalData
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
 
-namespace simulationBox
+namespace molsys
 {
     class Molecule;        // forward declaration
     class SimulationBox;   // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
 namespace potential
 {
@@ -64,18 +64,18 @@ namespace forceField
 
        public:
         BondForceField(
-            simulationBox::Molecule *molecule1,
-            simulationBox::Molecule *molecule2,
-            const size_t             atomIndex1,
-            const size_t             atomIndex2,
-            const BondId             type
+            molsys::Molecule *molecule1,
+            molsys::Molecule *molecule2,
+            const size_t      atomIndex1,
+            const size_t      atomIndex2,
+            const BondId      type
         );
 
         void calculateEnergyAndForces(
-            const simulationBox::SimulationBox &simBox,
-            physicalData::PhysicalData         &data,
-            const potential::CoulombPotential  &coulombPot,
-            potential::NonCoulombPotential     &nonCoulombPot
+            const molsys::SimulationBox       &simBox,
+            physicalData::PhysicalData        &data,
+            const potential::CoulombPotential &coulombPot,
+            potential::NonCoulombPotential    &nonCoulombPot
         );
 
         /***************************

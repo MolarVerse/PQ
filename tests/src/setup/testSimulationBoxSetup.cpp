@@ -43,22 +43,22 @@
 #include "strongTypes.hpp"
 #include "testSetup.hpp"   // for TestSetup
 
-using setup::simulationBox::SimulationBoxSetup;
+using setup::molsys::SimulationBoxSetup;
 
 TEST_F(TestSetup, setAtomNames)
 {
-    ::simulationBox::Molecule molecule(1);
+    ::molsys::Molecule molecule(1);
     molecule.setNumberOfAtoms(3);
-    const auto atom1 = std::make_shared<::simulationBox::Atom>();
-    const auto atom2 = std::make_shared<::simulationBox::Atom>();
-    const auto atom3 = std::make_shared<::simulationBox::Atom>();
+    const auto atom1 = std::make_shared<::molsys::Atom>();
+    const auto atom2 = std::make_shared<::molsys::Atom>();
+    const auto atom3 = std::make_shared<::molsys::Atom>();
     molecule.addAtom(atom1);
     molecule.addAtom(atom2);
     molecule.addAtom(atom3);
 
-    const ::simulationBox::Molecule qmMolecule(0);
+    const ::molsys::Molecule qmMolecule(0);
 
-    ::simulationBox::MoleculeType moleculeType(1);
+    ::molsys::MoleculeType moleculeType(1);
     moleculeType.setNumberOfAtoms(3);
     moleculeType.addAtomName("zN");
     moleculeType.addAtomName("H");
@@ -91,18 +91,18 @@ TEST_F(TestSetup, setAtomNames)
 
 TEST_F(TestSetup, setAtomTypes)
 {
-    ::simulationBox::Molecule molecule(1);
+    ::molsys::Molecule molecule(1);
     molecule.setNumberOfAtoms(3);
-    const auto atom1 = std::make_shared<::simulationBox::Atom>();
-    const auto atom2 = std::make_shared<::simulationBox::Atom>();
-    const auto atom3 = std::make_shared<::simulationBox::Atom>();
+    const auto atom1 = std::make_shared<::molsys::Atom>();
+    const auto atom2 = std::make_shared<::molsys::Atom>();
+    const auto atom3 = std::make_shared<::molsys::Atom>();
     molecule.addAtom(atom1);
     molecule.addAtom(atom2);
     molecule.addAtom(atom3);
 
-    const ::simulationBox::Molecule qmMolecule(0);
+    const ::molsys::Molecule qmMolecule(0);
 
-    ::simulationBox::MoleculeType moleculeType(1);
+    ::molsys::MoleculeType moleculeType(1);
     moleculeType.setNumberOfAtoms(3);
     moleculeType.addAtomType(0);
     moleculeType.addAtomType(1);
@@ -150,18 +150,18 @@ TEST_F(TestSetup, setAtomTypes)
 
 TEST_F(TestSetup, setExternalVDWTypes)
 {
-    ::simulationBox::Molecule molecule(1);
+    ::molsys::Molecule molecule(1);
     molecule.setNumberOfAtoms(3);
-    const auto atom1 = std::make_shared<::simulationBox::Atom>();
-    const auto atom2 = std::make_shared<::simulationBox::Atom>();
-    const auto atom3 = std::make_shared<::simulationBox::Atom>();
+    const auto atom1 = std::make_shared<::molsys::Atom>();
+    const auto atom2 = std::make_shared<::molsys::Atom>();
+    const auto atom3 = std::make_shared<::molsys::Atom>();
     molecule.addAtom(atom1);
     molecule.addAtom(atom2);
     molecule.addAtom(atom3);
 
-    const ::simulationBox::Molecule qmMolecule(0);
+    const ::molsys::Molecule qmMolecule(0);
 
-    ::simulationBox::MoleculeType moleculeType(1);
+    ::molsys::MoleculeType moleculeType(1);
     moleculeType.setNumberOfAtoms(3);
     moleculeType.addExternalGlobalVDWType(ExtVdwType{0});
     moleculeType.addExternalGlobalVDWType(ExtVdwType{1});
@@ -187,18 +187,18 @@ TEST_F(TestSetup, setExternalVDWTypes)
 
 TEST_F(TestSetup, setPartialCharges)
 {
-    ::simulationBox::Molecule molecule(1);
+    ::molsys::Molecule molecule(1);
     molecule.setNumberOfAtoms(3);
-    const auto atom1 = std::make_shared<::simulationBox::Atom>();
-    const auto atom2 = std::make_shared<::simulationBox::Atom>();
-    const auto atom3 = std::make_shared<::simulationBox::Atom>();
+    const auto atom1 = std::make_shared<::molsys::Atom>();
+    const auto atom2 = std::make_shared<::molsys::Atom>();
+    const auto atom3 = std::make_shared<::molsys::Atom>();
     molecule.addAtom(atom1);
     molecule.addAtom(atom2);
     molecule.addAtom(atom3);
 
-    const ::simulationBox::Molecule qmMolecule(0);
+    const ::molsys::Molecule qmMolecule(0);
 
-    ::simulationBox::MoleculeType moleculeType(1);
+    ::molsys::MoleculeType moleculeType(1);
     moleculeType.setNumberOfAtoms(3);
     moleculeType.addPartialCharge(0.0);
     moleculeType.addPartialCharge(1.0);
@@ -224,11 +224,11 @@ TEST_F(TestSetup, setPartialCharges)
 
 TEST_F(TestSetup, testSetAtomMasses)
 {
-    ::simulationBox::Molecule molecule(1);
+    ::molsys::Molecule molecule(1);
     molecule.setNumberOfAtoms(3);
-    const auto atom1 = std::make_shared<::simulationBox::Atom>();
-    const auto atom2 = std::make_shared<::simulationBox::Atom>();
-    const auto atom3 = std::make_shared<::simulationBox::Atom>();
+    const auto atom1 = std::make_shared<::molsys::Atom>();
+    const auto atom2 = std::make_shared<::molsys::Atom>();
+    const auto atom3 = std::make_shared<::molsys::Atom>();
     atom1->setName("C");
     atom2->setName("H");
     atom3->setName("O");
@@ -249,11 +249,11 @@ TEST_F(TestSetup, testSetAtomMasses)
 
 TEST_F(TestSetup, testSetAtomMassesThrowsError)
 {
-    ::simulationBox::Molecule molecule(1);
+    ::molsys::Molecule molecule(1);
     molecule.setNumberOfAtoms(3);
-    const auto atom1 = std::make_shared<::simulationBox::Atom>();
-    const auto atom2 = std::make_shared<::simulationBox::Atom>();
-    const auto atom3 = std::make_shared<::simulationBox::Atom>();
+    const auto atom1 = std::make_shared<::molsys::Atom>();
+    const auto atom2 = std::make_shared<::molsys::Atom>();
+    const auto atom3 = std::make_shared<::molsys::Atom>();
     atom1->setName("C");
     atom2->setName("H");
     atom3->setName("L");
@@ -271,11 +271,11 @@ TEST_F(TestSetup, testSetAtomMassesThrowsError)
 
 TEST_F(TestSetup, testSetAtomicNumbers)
 {
-    ::simulationBox::Molecule molecule(1);
+    ::molsys::Molecule molecule(1);
     molecule.setNumberOfAtoms(3);
-    const auto atom1 = std::make_shared<::simulationBox::Atom>();
-    const auto atom2 = std::make_shared<::simulationBox::Atom>();
-    const auto atom3 = std::make_shared<::simulationBox::Atom>();
+    const auto atom1 = std::make_shared<::molsys::Atom>();
+    const auto atom2 = std::make_shared<::molsys::Atom>();
+    const auto atom3 = std::make_shared<::molsys::Atom>();
     atom1->setName("C");
     atom2->setName("H");
     atom3->setName("O");
@@ -296,11 +296,11 @@ TEST_F(TestSetup, testSetAtomicNumbers)
 
 TEST_F(TestSetup, testSetAtomicNumbersThrowsError)
 {
-    ::simulationBox::Molecule molecule(1);
+    ::molsys::Molecule molecule(1);
     molecule.setNumberOfAtoms(3);
-    const auto atom1 = std::make_shared<::simulationBox::Atom>();
-    const auto atom2 = std::make_shared<::simulationBox::Atom>();
-    const auto atom3 = std::make_shared<::simulationBox::Atom>();
+    const auto atom1 = std::make_shared<::molsys::Atom>();
+    const auto atom2 = std::make_shared<::molsys::Atom>();
+    const auto atom3 = std::make_shared<::molsys::Atom>();
     atom1->setName("C");
     atom2->setName("H");
     atom3->setName("L");
@@ -318,11 +318,11 @@ TEST_F(TestSetup, testSetAtomicNumbersThrowsError)
 
 TEST_F(TestSetup, testSetMolMass)
 {
-    ::simulationBox::Molecule molecule1(1);
+    ::molsys::Molecule molecule1(1);
     molecule1.setNumberOfAtoms(3);
-    const auto atom1 = std::make_shared<::simulationBox::Atom>();
-    const auto atom2 = std::make_shared<::simulationBox::Atom>();
-    const auto atom3 = std::make_shared<::simulationBox::Atom>();
+    const auto atom1 = std::make_shared<::molsys::Atom>();
+    const auto atom2 = std::make_shared<::molsys::Atom>();
+    const auto atom3 = std::make_shared<::molsys::Atom>();
     atom1->setName("C");
     atom2->setName("H");
     atom3->setName("O");
@@ -330,10 +330,10 @@ TEST_F(TestSetup, testSetMolMass)
     molecule1.addAtom(atom2);
     molecule1.addAtom(atom3);
 
-    ::simulationBox::Molecule molecule2(2);
+    ::molsys::Molecule molecule2(2);
     molecule2.setNumberOfAtoms(2);
-    const auto atom4 = std::make_shared<::simulationBox::Atom>();
-    const auto atom5 = std::make_shared<::simulationBox::Atom>();
+    const auto atom4 = std::make_shared<::molsys::Atom>();
+    const auto atom5 = std::make_shared<::molsys::Atom>();
     atom4->setName("H");
     atom5->setName("H");
     molecule2.addAtom(atom4);
@@ -353,11 +353,11 @@ TEST_F(TestSetup, testSetMolMass)
 
 TEST_F(TestSetup, testSetTotalCharge)
 {
-    ::simulationBox::Molecule molecule(1);
+    ::molsys::Molecule molecule(1);
     molecule.setNumberOfAtoms(3);
-    const auto atom1 = std::make_shared<::simulationBox::Atom>();
-    const auto atom2 = std::make_shared<::simulationBox::Atom>();
-    const auto atom3 = std::make_shared<::simulationBox::Atom>();
+    const auto atom1 = std::make_shared<::molsys::Atom>();
+    const auto atom2 = std::make_shared<::molsys::Atom>();
+    const auto atom3 = std::make_shared<::molsys::Atom>();
     atom1->setName("C");
     atom2->setName("H");
     atom3->setName("O");
@@ -458,8 +458,8 @@ TEST_F(TestSetup, testCheckZeroVelocities)
     SimulationBoxSetup simBoxSetup(*_engine);
     auto              &simBox = _engine->getSimulationBox();
 
-    const auto atom1 = std::make_shared<::simulationBox::Atom>();
-    const auto atom2 = std::make_shared<::simulationBox::Atom>();
+    const auto atom1 = std::make_shared<::molsys::Atom>();
+    const auto atom2 = std::make_shared<::molsys::Atom>();
     atom1->setVelocity({8e-10, 0.0, 0.0});
     atom2->setVelocity({1.0, 2.0, 3.0});
     simBox.getAtoms().push_back(atom1);
@@ -490,11 +490,11 @@ TEST_F(TestSetup, testFullSetup)
 {
     settings::ForceFieldSettings::activate();
 
-    ::simulationBox::Molecule molecule1(1);
+    ::molsys::Molecule molecule1(1);
     molecule1.setNumberOfAtoms(3);
-    const auto atom1 = std::make_shared<::simulationBox::Atom>();
-    const auto atom2 = std::make_shared<::simulationBox::Atom>();
-    const auto atom3 = std::make_shared<::simulationBox::Atom>();
+    const auto atom1 = std::make_shared<::molsys::Atom>();
+    const auto atom2 = std::make_shared<::molsys::Atom>();
+    const auto atom3 = std::make_shared<::molsys::Atom>();
     atom1->setName("C");
     atom2->setName("H");
     atom3->setName("O");
@@ -504,10 +504,10 @@ TEST_F(TestSetup, testFullSetup)
 
     molecule1.setPartialCharges({0.1, 0.2, -0.4});
 
-    ::simulationBox::Molecule molecule2(2);
+    ::molsys::Molecule molecule2(2);
     molecule2.setNumberOfAtoms(2);
-    const auto atom4 = std::make_shared<::simulationBox::Atom>();
-    const auto atom5 = std::make_shared<::simulationBox::Atom>();
+    const auto atom4 = std::make_shared<::molsys::Atom>();
+    const auto atom5 = std::make_shared<::molsys::Atom>();
     atom4->setName("H");
     atom5->setName("H");
     molecule2.addAtom(atom4);
@@ -518,8 +518,8 @@ TEST_F(TestSetup, testFullSetup)
     _engine->getSimulationBox().getMolecules().push_back(molecule1);
     _engine->getSimulationBox().getMolecules().push_back(molecule2);
 
-    auto moleculeType1 = ::simulationBox::MoleculeType(1);
-    auto moleculeType2 = ::simulationBox::MoleculeType(2);
+    auto moleculeType1 = ::molsys::MoleculeType(1);
+    auto moleculeType2 = ::molsys::MoleculeType(2);
 
     moleculeType1.setNumberOfAtoms(3);
     moleculeType1.addAtomName("C");
@@ -560,7 +560,7 @@ TEST_F(TestSetup, testFullSetup)
     _engine->getSimulationBox().setBoxDimensions({10.0, 20.0, 30.0});
     settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
 
-    EXPECT_NO_THROW(setup::simulationBox::setupSimulationBox(*_engine));
+    EXPECT_NO_THROW(setup::molsys::setupSimulationBox(*_engine));
 }
 
 TEST_F(TestSetup, testWriteSetupInfo)
@@ -568,8 +568,8 @@ TEST_F(TestSetup, testWriteSetupInfo)
     _engine->getEngineOutput().getLogOutput().setFilename("default.log");
     auto &simBox = _engine->getSimulationBox();
 
-    const auto atom1 = std::make_shared<::simulationBox::Atom>();
-    const auto atom2 = std::make_shared<::simulationBox::Atom>();
+    const auto atom1 = std::make_shared<::molsys::Atom>();
+    const auto atom2 = std::make_shared<::molsys::Atom>();
     simBox.getAtoms().push_back(atom1);
     simBox.getAtoms().push_back(atom2);
     auto simBox2 = simBox;

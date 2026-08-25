@@ -50,6 +50,11 @@
 #include "waterModelSettings.hpp"
 
 using linearAlgebra::Vec3D;
+using molsys::Atom;
+using molsys::CellList;
+using molsys::HybridZone;
+using molsys::Molecule;
+using molsys::SimulationBox;
 using physicalData::PhysicalData;
 using potential::CoulombPotential;
 using potential::CoulombShiftedPotential;
@@ -65,11 +70,6 @@ using settings::PotentialSettings;
 using settings::Settings;
 using settings::SmoothingMethod;
 using settings::WaterModelSettings;
-using simulationBox::Atom;
-using simulationBox::CellList;
-using simulationBox::HybridZone;
-using simulationBox::Molecule;
-using simulationBox::SimulationBox;
 using waterModel::InterWater;
 using waterModel::InterWaterState;
 using waterModel::InterWaterStrategy;
@@ -648,7 +648,7 @@ TEST(PotentialTemplates, QmChargesAndOneWayInteractions)
     potential.makeCoulombPotential(CoulombShiftedPotential(kCutOff));
     potential.setNonCoulombPotential(makeNonCoulombPotential());
 
-    simulationBox::OrthorhombicBox box;
+    molsys::OrthorhombicBox box;
     box.setBoxDimensions({15.0, 15.0, 15.0});
 
     Molecule mol1;

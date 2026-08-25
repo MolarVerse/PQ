@@ -12,7 +12,7 @@ target_include_directories(connectivity
 
 target_link_libraries(connectivity
     PRIVATE
-    simulationBox
+    molsys
 )
 
 install(TARGETS connectivity

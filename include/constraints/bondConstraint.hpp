@@ -29,11 +29,11 @@
 #include "bond.hpp"
 #include "vector3d.hpp"
 
-namespace simulationBox
+namespace molsys
 {
     class Molecule;        // forward declaration
     class SimulationBox;   // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
 namespace constraints
 {
@@ -53,22 +53,22 @@ namespace constraints
 
        public:
         BondConstraint(
-            simulationBox::Molecule *molecule1,
-            simulationBox::Molecule *molecule2,
-            const size_t             atomIndex1,
-            const size_t             atomIndex2,
-            const double             bondLength
+            molsys::Molecule *molecule1,
+            molsys::Molecule *molecule2,
+            const size_t      atomIndex1,
+            const size_t      atomIndex2,
+            const double      bondLength
         );
 
-        void calculateConstraintBondRef(const simulationBox::SimulationBox &);
+        void calculateConstraintBondRef(const molsys::SimulationBox &);
 
         [[nodiscard]] double calculateDistanceDelta(
-            const simulationBox::SimulationBox &
+            const molsys::SimulationBox &
         ) const;
         [[nodiscard]] double calculateVelocityDelta() const;
 
         [[nodiscard]] bool applyShake(
-            const simulationBox::SimulationBox &,
+            const molsys::SimulationBox &,
             const double
         );
         [[nodiscard]] bool applyRattle(const double);

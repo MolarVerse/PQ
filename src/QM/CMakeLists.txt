@@ -10,7 +10,7 @@ target_include_directories(QM
 
 target_link_libraries(QM
     PUBLIC
-    simulationBox
+    molsys
     settings
     utilities
     physicalData

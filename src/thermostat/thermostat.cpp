@@ -27,7 +27,7 @@
 #include "thermostatSettings.hpp"   // for ThermostatSettings
 
 using thermostat::Thermostat;
-using namespace simulationBox;
+using namespace molsys;
 using namespace physicalData;
 using namespace settings;
 

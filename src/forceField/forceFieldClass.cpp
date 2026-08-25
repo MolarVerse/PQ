@@ -30,7 +30,7 @@
 
 using namespace forceField;
 using namespace customException;
-using namespace simulationBox;
+using namespace molsys;
 using namespace physicalData;
 using namespace potential;
 

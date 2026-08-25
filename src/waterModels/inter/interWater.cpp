@@ -52,10 +52,10 @@ InterWater::InterWater()
  * @param cellList Cell list structure used for neighbor searching.
  */
 void InterWater::calculate(
-    simulationBox::SimulationBox                       &simBox,
+    molsys::SimulationBox                              &simBox,
     physicalData::PhysicalData                         &physicalData,
     const std::shared_ptr<potential::CoulombPotential> &sharedCoulombPot,
-    simulationBox::CellList                            &cellList
+    molsys::CellList                                   &cellList
 )
 {
     if (_strategy == nullptr)
@@ -75,10 +75,10 @@ void InterWater::calculate(
  * @param cellList Cell list structure used for neighbor searching.
  */
 void InterWater::calculateQMMMForces(
-    simulationBox::SimulationBox                       &simBox,
+    molsys::SimulationBox                              &simBox,
     physicalData::PhysicalData                         &physicalData,
     const std::shared_ptr<potential::CoulombPotential> &sharedCoulombPot,
-    simulationBox::CellList                            &cellList
+    molsys::CellList                                   &cellList
 )
 {
     if (_strategy == nullptr)
@@ -130,10 +130,10 @@ void InterWater::calculateQMMMForces(
  * @param cellList Cell list structure used for neighbor searching.
  */
 void InterWater::calculateHotspotSmoothingMMForces(
-    simulationBox::SimulationBox                       &simBox,
+    molsys::SimulationBox                              &simBox,
     physicalData::PhysicalData                         &physicalData,
     const std::shared_ptr<potential::CoulombPotential> &sharedCoulombPot,
-    simulationBox::CellList                            &cellList
+    molsys::CellList                                   &cellList
 )
 {
     if (_strategy == nullptr)

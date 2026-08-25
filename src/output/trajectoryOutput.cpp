@@ -35,7 +35,7 @@
 using namespace output;
 using namespace defaults;
 using namespace configurator;
-using namespace simulationBox;
+using namespace molsys;
 
 /**
  * @brief Write the header of a trajectory files

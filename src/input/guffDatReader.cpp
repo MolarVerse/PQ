@@ -53,7 +53,7 @@ using namespace settings;
 using namespace utilities;
 using namespace defaults;
 using namespace customException;
-using namespace simulationBox;
+using namespace molsys;
 using namespace potential;
 using namespace constants;
 

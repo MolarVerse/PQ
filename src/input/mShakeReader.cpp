@@ -36,7 +36,7 @@ using namespace customException;
 using namespace settings;
 using namespace utilities;
 using namespace constraints;
-using namespace simulationBox;
+using namespace molsys;
 
 /**
  * @brief Wrapper to construct MShakeReader and read mShake file

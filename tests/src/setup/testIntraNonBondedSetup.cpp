@@ -37,7 +37,7 @@
  */
 TEST_F(TestSetup, setupIntraNonBonded)
 {
-    auto molecule = simulationBox::Molecule(1);
+    auto molecule = molsys::Molecule(1);
     auto intraNonBondedContainer =
         intraNonBonded::IntraNonBondedContainer(1, {{-1}});
 

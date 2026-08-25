@@ -27,10 +27,10 @@
 #include "manostatSettings.hpp"
 #include "staticMatrix.hpp"
 
-namespace simulationBox
+namespace molsys
 {
     class SimulationBox;   // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
 namespace physicalData
 {
@@ -58,12 +58,12 @@ namespace manostat
         virtual ~Manostat() = default;
 
         void calculatePressure(
-            const simulationBox::SimulationBox &,
+            const molsys::SimulationBox &,
             physicalData::PhysicalData &
         );
 
         virtual void applyManostat(
-            simulationBox::SimulationBox &,
+            molsys::SimulationBox &,
             physicalData::PhysicalData &
         );
 

@@ -31,7 +31,7 @@
 
 #include "strongTypes.hpp"
 
-namespace simulationBox
+namespace molsys
 {
     /**
      * @class MoleculeType
@@ -113,6 +113,6 @@ namespace simulationBox
         ) const;
     };
 
-}   // namespace simulationBox
+}   // namespace molsys
 
 #endif   // _MOLECULE_TYPE_HPP_

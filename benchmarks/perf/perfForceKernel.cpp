@@ -59,7 +59,7 @@ int main()
     auto intraNonBondedMap =
         intraNonBonded::IntraNonBondedMap(&molecule, &intraNonBondedType);
 
-    auto simulationBox = simulationBox::SimulationBox();
+    auto simulationBox = molsys::SimulationBox();
     simulationBox.setBoxDimensions({10.0, 10.0, 10.0});
 
     auto physicalData = physicalData::PhysicalData();

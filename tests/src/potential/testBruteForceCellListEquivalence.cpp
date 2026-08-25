@@ -42,6 +42,11 @@
 #include "strongTypes.hpp"
 
 using linearAlgebra::Vec3D;
+using molsys::Atom;
+using molsys::CellList;
+using molsys::Molecule;
+using molsys::MoleculeType;
+using molsys::SimulationBox;
 using physicalData::PhysicalData;
 using potential::CoulombPotential;
 using potential::CoulombShiftedPotential;
@@ -50,11 +55,6 @@ using potential::LennardJonesPair;
 using potential::PotentialBruteForce;
 using potential::PotentialCellList;
 using settings::PotentialSettings;
-using simulationBox::Atom;
-using simulationBox::CellList;
-using simulationBox::Molecule;
-using simulationBox::MoleculeType;
-using simulationBox::SimulationBox;
 
 namespace
 {

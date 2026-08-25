@@ -43,19 +43,19 @@ namespace engine
         void combineInnerOuterForces();
 
         void addCurrentForcesToInnerAndReset(
-            std::vector<std::shared_ptr<simulationBox::Atom>>& atoms
+            std::vector<std::shared_ptr<molsys::Atom>>& atoms
         );
         void addScaledCurrentForcesToInnerAndReset(
-            std::vector<std::shared_ptr<simulationBox::Atom>>& atoms,
-            const double                                       globalSmF
+            std::vector<std::shared_ptr<molsys::Atom>>& atoms,
+            const double                                globalSmF
         );
 
         void addCurrentForcesToOuterAndReset(
-            std::vector<std::shared_ptr<simulationBox::Atom>>& atoms
+            std::vector<std::shared_ptr<molsys::Atom>>& atoms
         );
         void addScaledCurrentForcesToOuterAndReset(
-            std::vector<std::shared_ptr<simulationBox::Atom>>& atoms,
-            const double                                       globalSmF
+            std::vector<std::shared_ptr<molsys::Atom>>& atoms,
+            const double                                globalSmF
         );
 
         void scaleSmoothingMoleculeForcesInner();

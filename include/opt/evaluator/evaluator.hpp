@@ -49,9 +49,9 @@ namespace opt
     {
        protected:
         std::shared_ptr<potential::Potential>           _potential;
-        std::shared_ptr<simulationBox::SimulationBox>   _simulationBox;
+        std::shared_ptr<molsys::SimulationBox>          _simulationBox;
         std::shared_ptr<constraints::Constraints>       _constraints;
-        std::shared_ptr<simulationBox::CellList>        _cellList;
+        std::shared_ptr<molsys::CellList>               _cellList;
         std::shared_ptr<forceField::ForceField>         _forceField;
         std::shared_ptr<physicalData::PhysicalData>     _physicalData;
         std::shared_ptr<physicalData::PhysicalData>     _physicalDataOld;
@@ -72,10 +72,8 @@ namespace opt
          ***************************/
 
         void setPotential(const std::shared_ptr<potential::Potential>);
-        void setCellList(const std::shared_ptr<simulationBox::CellList>);
-        void setSimulationBox(
-            const std::shared_ptr<simulationBox::SimulationBox>
-        );
+        void setCellList(const std::shared_ptr<molsys::CellList>);
+        void setSimulationBox(const std::shared_ptr<molsys::SimulationBox>);
         void setConstraints(const std::shared_ptr<constraints::Constraints>);
 
         void setPhysicalData(const std::shared_ptr<physicalData::PhysicalData>);

@@ -10,11 +10,11 @@ foreach(source_file ${source_files})
     target_include_directories(${test_name}
         PRIVATE
         ${PROJECT_SOURCE_DIR}/tests/include/macros
-        ${PROJECT_SOURCE_DIR}/tests/include/simulationBox
+        ${PROJECT_SOURCE_DIR}/tests/include/molsys
     )
     target_link_libraries(${test_name}
         PRIVATE
-        simulationBox
+        molsys
         engine
         linearAlgebra
         gtest
@@ -29,7 +29,7 @@ foreach(source_file ${source_files})
     target_precompile_headers(${test_name} REUSE_FROM pq_test_pch)
     target_link_libraries(${test_name} PRIVATE pq_test_pch)
 
-    set_property(TEST ${test_name} PROPERTY LABELS simulationBox)
+    set_property(TEST ${test_name} PROPERTY LABELS molsys)
 endforeach()
 
 if(${BUILD_WITH_GCOVR})
@@ -38,9 +38,9 @@ if(${BUILD_WITH_GCOVR})
         NAME coverage_simulationBox
         EXCLUDE ${EXCLUDE_FOR_GCOVR}
 
-        # DEPENDENCIES ${CMAKE_BUILD_DIR}/src/simulationBox
+        # DEPENDENCIES ${CMAKE_BUILD_DIR}/src/molsys
         EXECUTABLE "ctest"
-        EXECUTABLE_ARGS "-L;simulationBox"
+        EXECUTABLE_ARGS "-L;molsys"
         OUTPUT_PATH "coverage"
     )
 endif()

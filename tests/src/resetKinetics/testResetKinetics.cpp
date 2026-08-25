@@ -38,16 +38,16 @@
 
 namespace
 {
-    // Build a fresh 3-atom simulationBox::SimulationBox the tests can share: 2
+    // Build a fresh 3-atom molsys::SimulationBox the tests can share: 2
     // atoms in mol1, 1 atom in mol2, all mass 1, deterministic velocities.
-    simulationBox::SimulationBox *makeBox()
+    molsys::SimulationBox *makeBox()
     {
-        auto *box      = new simulationBox::SimulationBox();
-        auto  molecule = simulationBox::Molecule();
+        auto *box      = new molsys::SimulationBox();
+        auto  molecule = molsys::Molecule();
         molecule.setNumberOfAtoms(2);
 
-        auto a1 = std::make_shared<simulationBox::Atom>();
-        auto a2 = std::make_shared<simulationBox::Atom>();
+        auto a1 = std::make_shared<molsys::Atom>();
+        auto a2 = std::make_shared<molsys::Atom>();
         a1->setMass(1.0);
         a2->setMass(1.0);
         a1->setPosition(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
@@ -58,9 +58,9 @@ namespace
         molecule.addAtom(a1);
         molecule.addAtom(a2);
 
-        auto molecule2 = simulationBox::Molecule();
+        auto molecule2 = molsys::Molecule();
         molecule2.setNumberOfAtoms(1);
-        auto a3 = std::make_shared<simulationBox::Atom>();
+        auto a3 = std::make_shared<molsys::Atom>();
         a3->setMass(1.0);
         a3->setPosition(linearAlgebra::Vec3D(0.0, 1.0, 0.0));
         a3->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));

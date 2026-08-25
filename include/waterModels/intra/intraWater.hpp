@@ -24,10 +24,10 @@
 
 #define _INTRA_WATER_HPP_
 
-namespace simulationBox
+namespace molsys
 {
     class SimulationBox;   // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
 namespace physicalData
 {
@@ -42,7 +42,7 @@ namespace waterModel
         virtual ~IntraWater() = default;
 
         virtual void calculate(
-            simulationBox::SimulationBox& /*simBox*/,
+            molsys::SimulationBox& /*simBox*/,
             physicalData::PhysicalData& /*physData*/
         )
         {

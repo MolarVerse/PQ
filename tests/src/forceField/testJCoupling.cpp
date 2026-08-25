@@ -79,13 +79,18 @@ TEST(TestJCouplingType, symmetryFlagSetters)
 
 TEST(TestJCouplingForceField, settersAndGetters)
 {
-    simulationBox::Molecule         molecule;
+    molsys::Molecule                molecule;
     forceField::JCouplingForceField ff(
-        std::vector<simulationBox::Molecule *>{
+        std::vector<molsys::Molecule *>{
+
             &molecule,
+
             &molecule,
+
             &molecule,
+
             &molecule
+
         },
         std::vector<size_t>{0, 1, 2, 3},
         42
@@ -110,9 +115,9 @@ TEST(TestJCouplingForceField, settersAndGetters)
 
 TEST(TestJCouplingForceField, symmetryFlagsDefaultTrue)
 {
-    simulationBox::Molecule         molecule;
+    molsys::Molecule                molecule;
     forceField::JCouplingForceField ff(
-        std::vector<simulationBox::Molecule *>{
+        std::vector<molsys::Molecule *>{
             &molecule,
             &molecule,
             &molecule,

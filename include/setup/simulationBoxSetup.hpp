@@ -29,7 +29,7 @@ namespace engine
     class Engine;   // forward declaration
 }   // namespace engine
 
-namespace setup::simulationBox
+namespace setup::molsys
 {
     void setupSimulationBox(engine::Engine &);
 
@@ -82,6 +82,6 @@ namespace setup::simulationBox
         [[nodiscard]] static bool getZeroVelocities();
     };
 
-}   // namespace setup::simulationBox
+}   // namespace setup::molsys
 
 #endif   // _SIMULATION_BOX_SETUP_HPP_

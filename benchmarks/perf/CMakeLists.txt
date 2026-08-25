@@ -42,7 +42,7 @@ foreach(perf_source ${perf_benchmarks})
         integrator
         virial
         constraints
-        simulationBox
+        molsys
         potential
         interWater
         settings

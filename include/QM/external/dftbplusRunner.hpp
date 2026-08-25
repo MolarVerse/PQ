@@ -31,10 +31,10 @@ namespace physicalData
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
 
-namespace simulationBox
+namespace molsys
 {
     class Box;   // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
 namespace QM
 {
@@ -51,16 +51,14 @@ namespace QM
         bool _usePointCharges  = false;
 
        public:
-        void writeCoordsFile(simulationBox::SimulationBox &simBox) override;
+        void writeCoordsFile(molsys::SimulationBox &simBox) override;
 
-        void writePointChargeFile(
-            simulationBox::SimulationBox &simBox
-        ) override;
+        void writePointChargeFile(molsys::SimulationBox &simBox) override;
 
-        void execute(simulationBox::SimulationBox &simBox) override;
+        void execute(molsys::SimulationBox &simBox) override;
 
         void readStressTensor(
-            simulationBox::Box         &box,
+            molsys::Box                &box,
             physicalData::PhysicalData &data
         ) override;
     };

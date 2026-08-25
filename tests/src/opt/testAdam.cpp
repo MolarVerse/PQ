@@ -31,8 +31,8 @@
 #include "vector3d.hpp"   // IWYU pragma: keep
 
 using namespace opt;
-using simulationBox::Atom;
-using simulationBox::SimulationBox;
+using molsys::Atom;
+using molsys::SimulationBox;
 
 namespace
 {

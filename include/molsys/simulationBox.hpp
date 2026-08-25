@@ -41,7 +41,7 @@
 #include "strongTypes.hpp"
 
 /**
- * @namespace simulationBox
+ * @namespace molsys
  *
  * @brief contains class:
  *  SimulationBox
@@ -51,7 +51,7 @@
  *  Molecule
  *
  */
-namespace simulationBox
+namespace molsys
 {
     /**
      * @class SimulationBox
@@ -265,7 +265,7 @@ namespace simulationBox
         void setBoxSizeHasChanged(const bool boxSizeHasChanged) const;
     };
 
-}   // namespace simulationBox
+}   // namespace molsys
 
 #ifndef _SIMULATION_BOX_TPP_
 #include "simulationBox.tpp.hpp"   // IWYU pragma: export

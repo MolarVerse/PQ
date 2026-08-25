@@ -52,10 +52,8 @@ namespace
     class DefaultExternalQMRunner final : public QM::ExternalQMRunner
     {
        public:
-        void execute(simulationBox::SimulationBox & /*simBox*/) override {}
-        void writeCoordsFile(simulationBox::SimulationBox & /*simBox*/) override
-        {
-        }
+        void execute(molsys::SimulationBox & /*simBox*/) override {}
+        void writeCoordsFile(molsys::SimulationBox & /*simBox*/) override {}
     };
 
     void setBuildCompatibleQMScript()
@@ -73,10 +71,10 @@ namespace
 
 TEST(TestQMSetup, defaultExternalRunnerHooksAreOptional)
 {
-    DefaultExternalQMRunner        runner;
-    simulationBox::SimulationBox   simBox;
-    simulationBox::OrthorhombicBox box;
-    physicalData::PhysicalData     physicalData;
+    DefaultExternalQMRunner    runner;
+    molsys::SimulationBox      simBox;
+    molsys::OrthorhombicBox    box;
+    physicalData::PhysicalData physicalData;
     QM::ExternalQMRunner *volatile baseRunner = &runner;
 
     EXPECT_NO_THROW(baseRunner->writePointChargeFile(simBox));
