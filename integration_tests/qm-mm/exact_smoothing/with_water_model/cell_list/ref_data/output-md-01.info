@@ -2,11 +2,11 @@
 |                                     PQ info file                                      |
 -----------------------------------------------------------------------------------------
 |   SIMULATION-TIME         0.00100 ps       TEMPERATURE           216.84702 K          |
-|   PRESSURE            16077.58007 bar      E(TOT)             -42466.60559 kcal/mol   |
+|   PRESSURE             2958.70215 bar      E(TOT)             -42466.60559 kcal/mol   |
 |   E(QM)              -26489.63153 kcal/mol N(QM-ATOMS)            31.85951 -          |
 |   E(KIN)               3878.27390 kcal/mol E(INTRA)                0.00000 kcal/mol   |
 |   E(COUL)            -24542.49194 kcal/mol E(NON-COUL)          4648.53213 kcal/mol   |
 |   N(SM-MOL)               2.00000 -                                                   |
-|   MOMENTUM                8.0e-09 amuA/fs  LOOPTIME                1.20835 s          |
+|   MOMENTUM                8.0e-09 amuA/fs  LOOPTIME                1.12277 s          |
 -----------------------------------------------------------------------------------------
 
