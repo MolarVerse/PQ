@@ -116,8 +116,6 @@ TEST_F(TestVirial, calculateMolecularVirial)
         force_mol1_atom2 * (position_mol1_atom2 - centerOfMass_mol1) -
         force_mol2_atom1 * (position_mol2_atom1 - centerOfMass_mol2);
 
-    PhysicalData physicalData;
-
     const auto virialCalculated = intraMolecularVirialCorrection(*_simBox);
 
     EXPECT_EQ(diagonal(virialCalculated), virial);

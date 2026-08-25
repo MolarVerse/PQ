@@ -72,7 +72,8 @@ TEST_F(TestSetup, setupLearningRateStrategyConstant)
     OptimizerSettings::setInitialLearningRate(0.25);
 
     OptimizerSetup setup(dynamic_cast<engine::OptEngine &>(*_engine));
-    const auto     learningRate = setup.setupLearningRateStrategy();
+    const auto     learningRate =
+        setup::OptimizerSetup::setupLearningRateStrategy();
     EXPECT_DOUBLE_EQ(learningRate->getLearningRate(), 0.25);
 }
 
@@ -85,7 +86,8 @@ TEST_F(TestSetup, setupLearningRateStrategyConstantDecay)
     OptimizerSettings::setLRUpdateFrequency(1);
 
     OptimizerSetup setup(dynamic_cast<engine::OptEngine &>(*_engine));
-    const auto     learningRate = setup.setupLearningRateStrategy();
+    const auto     learningRate =
+        setup::OptimizerSetup::setupLearningRateStrategy();
     EXPECT_DOUBLE_EQ(learningRate->getLearningRate(), 0.5);
 }
 
@@ -98,7 +100,8 @@ TEST_F(TestSetup, setupLearningRateStrategyExpDecay)
     OptimizerSettings::setLRUpdateFrequency(2);
 
     OptimizerSetup setup(dynamic_cast<engine::OptEngine &>(*_engine));
-    const auto     learningRate = setup.setupLearningRateStrategy();
+    const auto     learningRate =
+        setup::OptimizerSetup::setupLearningRateStrategy();
     EXPECT_DOUBLE_EQ(learningRate->getLearningRate(), 1.0);
 }
 
@@ -158,7 +161,7 @@ TEST_F(TestSetup, setupMinMaxLRAcceptsValidRange)
     OptimizerSettings::setMaxLearningRate(1.0);
 
     OptimizerSetup setup(dynamic_cast<engine::OptEngine &>(*_engine));
-    auto           learningRate = setup.setupLearningRateStrategy();
+    auto learningRate = setup::OptimizerSetup::setupLearningRateStrategy();
     EXPECT_NO_THROW(setup.setupMinMaxLR(learningRate));
 }
 
@@ -170,7 +173,7 @@ TEST_F(TestSetup, setupMinMaxLRThrowsWhenMinGreaterThanMax)
     OptimizerSettings::setMaxLearningRate(0.5);
 
     OptimizerSetup setup(dynamic_cast<engine::OptEngine &>(*_engine));
-    auto           learningRate = setup.setupLearningRateStrategy();
+    auto learningRate = setup::OptimizerSetup::setupLearningRateStrategy();
     EXPECT_THROW(setup.setupMinMaxLR(learningRate), UserInputException);
 }
 

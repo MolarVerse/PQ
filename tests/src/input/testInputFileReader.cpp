@@ -54,8 +54,8 @@ namespace
         while (getline(inputFile, line))
         {
             std::string keyword;
-            std::string requiredString = "";
-            bool        requiredBool   = false;
+            std::string requiredString;
+            bool        requiredBool = false;
 
             if (std::istringstream(line).str().empty())
                 continue;

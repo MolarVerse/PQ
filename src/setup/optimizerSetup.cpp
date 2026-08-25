@@ -227,7 +227,6 @@ std::shared_ptr<Evaluator> OptimizerSetup::setupEvaluator()
 
     if (Settings::getJobtype() == JobType::MM_OPT)
         evaluator = std::make_shared<MMEvaluator>();
-
     else
     {
         throw UserInputException(

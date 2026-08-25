@@ -45,7 +45,7 @@ TEST_F(TestInputFileReader, testParseTimestep)
 {
     TimingsInputParser parser;
     vector<string>     lineElements = {"timestep", "=", "1"};
-    parser.parseTimeStep(lineElements, 0);
+    input::TimingsInputParser::parseTimeStep(lineElements, 0);
     EXPECT_EQ(settings::TimingsSettings::getTimeStep(), 1.0);
 
     lineElements = {"timestep", "=", "0"};
@@ -79,7 +79,7 @@ TEST_F(TestInputFileReader, testParseNumberOfSteps)
 {
     TimingsInputParser parser;
     vector<string>     lineElements = {"nsteps", "=", "1000"};
-    parser.parseNumberOfSteps(lineElements, 0);
+    input::TimingsInputParser::parseNumberOfSteps(lineElements, 0);
     EXPECT_EQ(settings::TimingsSettings::getNumberOfSteps(), 1000);
 
     lineElements = {"nsteps", "=", "-1"};

@@ -44,7 +44,7 @@ TEST_F(TestInputFileReader, testParseNumberOfReplicas)
 {
     RingPolymerInputParser   parser;
     std::vector<std::string> lineElements = {"rpmd_n_replica", "=", "10"};
-    parser.parseNumberOfBeads(lineElements, 0);
+    input::RingPolymerInputParser::parseNumberOfBeads(lineElements, 0);
 
     EXPECT_EQ(settings::RingPolymerSettings::getNumberOfBeads(), 10);
 

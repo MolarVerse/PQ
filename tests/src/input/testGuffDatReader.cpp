@@ -180,9 +180,9 @@ TEST_F(TestGuffDatReader, parseLine)
     auto &potential = dynamic_cast<GuffNonCoulomb &>(
         _engine->getPotential()->getNonCoulombPotential()
     );
-    const auto &pair = dynamic_cast<LennardJonesPair &>(
-        *potential.getNonCoulPair({1, 2, 1, 0}).get()
-    );
+    const auto &pair =
+        dynamic_cast<LennardJonesPair &>(*potential.getNonCoulPair({1, 2, 1, 0})
+        );
 
     EXPECT_EQ(
         pair,
@@ -196,11 +196,11 @@ TEST_F(TestGuffDatReader, addLennardJonesPair)
 
     _guffDatReader->addLennardJonesPair(1, 2, 0, 0, {1.0, 2.0, 3.0}, 10.0);
 
-    const auto &pair =
-        dynamic_cast<LennardJonesPair &>(*(_engine->getPotential()
-                                               ->getNonCoulombPotential()
-                                               .getNonCoulPair({1, 2, 0, 0})
-                                               .get()));
+    const auto &pair = dynamic_cast<LennardJonesPair &>(
+        *(_engine->getPotential()->getNonCoulombPotential().getNonCoulPair(
+            {1, 2, 0, 0}
+        ))
+    );
 
     EXPECT_EQ(pair.getC6(), 1.0);
     EXPECT_EQ(pair.getC12(), 3.0);
@@ -209,19 +209,19 @@ TEST_F(TestGuffDatReader, addLennardJonesPair)
     // FIXME: Does not work on macos using EXPECT_EQ
     EXPECT_NEAR(
         pair.getEnergyCutOff(),
-        1.0 / ::pow(10.0, 6) + 3.0 / ::pow(10.0, 12),
+        (1.0 / ::pow(10.0, 6)) + (3.0 / ::pow(10.0, 12)),
         1e-5
     );
     EXPECT_EQ(
         pair.getForceCutOff(),
-        6.0 / ::pow(10.0, 7) + 12.0 * 3.0 / ::pow(10.0, 13)
+        (6.0 / ::pow(10.0, 7)) + (12.0 * 3.0 / ::pow(10.0, 13))
     );
 
-    const auto &pair2 =
-        dynamic_cast<LennardJonesPair &>(*(_engine->getPotential()
-                                               ->getNonCoulombPotential()
-                                               .getNonCoulPair({2, 1, 0, 0})
-                                               .get()));
+    const auto &pair2 = dynamic_cast<LennardJonesPair &>(
+        *(_engine->getPotential()->getNonCoulombPotential().getNonCoulPair(
+            {2, 1, 0, 0}
+        ))
+    );
 
     EXPECT_EQ(pair, pair2);
 }
@@ -232,11 +232,11 @@ TEST_F(TestGuffDatReader, addBuckinghamPair)
 
     _guffDatReader->addBuckinghamPair(1, 2, 0, 0, {1.0, 2.0, 3.0}, 10.0);
 
-    const auto &pair =
-        dynamic_cast<BuckinghamPair &>(*(_engine->getPotential()
-                                             ->getNonCoulombPotential()
-                                             .getNonCoulPair({1, 2, 0, 0})
-                                             .get()));
+    const auto &pair = dynamic_cast<BuckinghamPair &>(
+        *(_engine->getPotential()->getNonCoulombPotential().getNonCoulPair(
+            {1, 2, 0, 0}
+        ))
+    );
 
     EXPECT_EQ(pair.getA(), 1.0);
     EXPECT_EQ(pair.getDRho(), 2.0);
@@ -244,18 +244,18 @@ TEST_F(TestGuffDatReader, addBuckinghamPair)
     EXPECT_EQ(pair.getRadialCutOff(), 10.0);
     EXPECT_EQ(
         pair.getEnergyCutOff(),
-        1.0 * ::exp(10.0 * 2.0) + 3.0 / ::pow(10.0, 6)
+        (1.0 * ::exp(10.0 * 2.0)) + (3.0 / ::pow(10.0, 6))
     );
     EXPECT_EQ(
         pair.getForceCutOff(),
-        -2.0 * ::exp(10.0 * 2.0) + 6.0 * 3.0 / ::pow(10.0, 7)
+        (-2.0 * ::exp(10.0 * 2.0)) + (6.0 * 3.0 / ::pow(10.0, 7))
     );
 
-    const auto &pair2 =
-        dynamic_cast<BuckinghamPair &>(*(_engine->getPotential()
-                                             ->getNonCoulombPotential()
-                                             .getNonCoulPair({2, 1, 0, 0})
-                                             .get()));
+    const auto &pair2 = dynamic_cast<BuckinghamPair &>(
+        *(_engine->getPotential()->getNonCoulombPotential().getNonCoulPair(
+            {2, 1, 0, 0}
+        ))
+    );
 
     EXPECT_EQ(pair, pair2);
 }
@@ -266,11 +266,11 @@ TEST_F(TestGuffDatReader, addMorsePair)
 
     _guffDatReader->addMorsePair(1, 2, 0, 0, {1.0, 2.0, 3.0}, 10.0);
 
-    const auto &pair =
-        dynamic_cast<MorsePair &>(*(_engine->getPotential()
-                                        ->getNonCoulombPotential()
-                                        .getNonCoulPair({1, 2, 0, 0})
-                                        .get()));
+    const auto &pair = dynamic_cast<MorsePair &>(
+        *(_engine->getPotential()->getNonCoulombPotential().getNonCoulPair(
+            {1, 2, 0, 0}
+        ))
+    );
 
     EXPECT_EQ(pair.getDissociationEnergy(), 1.0);
     EXPECT_EQ(pair.getWellWidth(), 2.0);
@@ -286,11 +286,11 @@ TEST_F(TestGuffDatReader, addMorsePair)
             2.0
     );
 
-    const auto &pair2 =
-        dynamic_cast<MorsePair &>(*(_engine->getPotential()
-                                        ->getNonCoulombPotential()
-                                        .getNonCoulPair({2, 1, 0, 0})
-                                        .get()));
+    const auto &pair2 = dynamic_cast<MorsePair &>(
+        *(_engine->getPotential()->getNonCoulombPotential().getNonCoulPair(
+            {2, 1, 0, 0}
+        ))
+    );
 
     EXPECT_EQ(pair, pair2);
 }
@@ -308,11 +308,11 @@ TEST_F(TestGuffDatReader, addGuffPair)
         10.0
     );
 
-    const auto &pair =
-        dynamic_cast<GuffPair &>(*(_engine->getPotential()
-                                       ->getNonCoulombPotential()
-                                       .getNonCoulPair({1, 2, 0, 0})
-                                       .get()));
+    const auto &pair = dynamic_cast<GuffPair &>(
+        *(_engine->getPotential()->getNonCoulombPotential().getNonCoulPair(
+            {1, 2, 0, 0}
+        ))
+    );
 
     EXPECT_THAT(
         pair.getCoefficients(),
@@ -346,11 +346,11 @@ TEST_F(TestGuffDatReader, addGuffPair)
     EXPECT_EQ(pair.getEnergyCutOff(), 3.0121946291700612e+35);
     EXPECT_EQ(pair.getForceCutOff(), -5.4219503325061099e+36);
 
-    const auto &pair2 =
-        dynamic_cast<GuffPair &>(*(_engine->getPotential()
-                                       ->getNonCoulombPotential()
-                                       .getNonCoulPair({2, 1, 0, 0})
-                                       .get()));
+    const auto &pair2 = dynamic_cast<GuffPair &>(
+        *(_engine->getPotential()->getNonCoulombPotential().getNonCoulPair(
+            {2, 1, 0, 0}
+        ))
+    );
 
     EXPECT_THAT(
         pair2.getCoefficients(),

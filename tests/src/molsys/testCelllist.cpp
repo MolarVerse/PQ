@@ -78,7 +78,7 @@ TEST_F(TestCellList, getCellIndex)
     const auto                  cellIndices = linearAlgebra::Vec3Dul(1, 2, 3);
     [[maybe_unused]] const auto dummy = _cellList->getCellIndex(cellIndices);
 
-    EXPECT_EQ(_cellList->getCellIndex(cellIndices), 1 * 2 * 2 + 2 * 2 + 3);
+    EXPECT_EQ(_cellList->getCellIndex(cellIndices), (1 * 2 * 2) + (2 * 2) + 3);
 }
 
 TEST_F(TestCellList, getCellIndexOfAtom)

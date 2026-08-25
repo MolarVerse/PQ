@@ -43,7 +43,7 @@ TEST_F(TestInputFileReader, testParseIntegrator)
 {
     IntegratorInputParser    parser;
     std::vector<std::string> lineElements = {"integrator", "=", "v-verlet"};
-    parser.parseIntegrator(lineElements, 0);
+    input::IntegratorInputParser::parseIntegrator(lineElements, 0);
     EXPECT_EQ(_mdEngine->getIntegrator().getIntegratorType(), "VelocityVerlet");
 
     lineElements = {"integrator", "=", "notValid"};

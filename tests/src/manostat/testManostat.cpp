@@ -192,7 +192,7 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
 
     const auto scaleFactors = linearAlgebra::Vec3D(
         ::pow(
-            1.0 - 4.5 * 0.5 / 0.1 * (1.0 - 3.0 * constants::PRESSURE_FACTOR),
+            1.0 - (4.5 * 0.5 / 0.1 * (1.0 - 3.0 * constants::PRESSURE_FACTOR)),
             1.0 / 3.0
         )
     );
@@ -417,7 +417,7 @@ TEST_F(TestManostat, testRotateMu)
         {7.0, 8.0, 9.0},
     });
 
-    _manostat->rotateMu(mu);
+    manostat::Manostat::rotateMu(mu);
 
     EXPECT_EQ(
         mu,

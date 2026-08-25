@@ -218,7 +218,7 @@ TEST_F(TestAtomSection, testProcessAtomLine)
     for (size_t i = 3; i < 21; ++i)
     {
         const auto iValue = static_cast<double>(i);
-        line[i]           = std::to_string(iValue + iValue / 10.0);
+        line[i]           = std::to_string(iValue + (iValue / 10.0));
     }
 
     processAtomLine(line, _engine->getSimulationBox(), molecule);
@@ -246,7 +246,7 @@ TEST_F(TestAtomSection, testProcessQMAtomLine)
     for (size_t i = 3; i < 21; ++i)
     {
         const auto iValue = static_cast<double>(i);
-        line[i]           = std::to_string(iValue + iValue / 10.0);
+        line[i]           = std::to_string(iValue + (iValue / 10.0));
     }
 
     processQMAtomLine(line, _engine->getSimulationBox());

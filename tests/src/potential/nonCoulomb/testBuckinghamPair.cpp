@@ -99,12 +99,12 @@ TEST(TestBuckinghamPair, calculateEnergyAndForces)
 
     EXPECT_DOUBLE_EQ(
         energy,
-        helper + coefficients[2] / ::pow(distance, 6) - energyCutoff -
-            forceCutoff * (rncCutoff - distance)
+        helper + (coefficients[2] / ::pow(distance, 6)) - energyCutoff -
+            (forceCutoff * (rncCutoff - distance))
     );
     EXPECT_DOUBLE_EQ(
         force,
-        -helper * coefficients[1] + 6.0 * coefficients[2] / ::pow(distance, 7) -
-            forceCutoff
+        (-helper * coefficients[1]) +
+            (6.0 * coefficients[2] / ::pow(distance, 7)) - forceCutoff
     );
 }

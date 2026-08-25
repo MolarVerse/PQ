@@ -151,7 +151,7 @@ TEST_F(TestThermostat, applyThermostatBerendsen)
                                 static_cast<double>(nDOF);
 
     const auto berendsenFactor =
-        ::sqrt(1.0 + 0.1 / 100.0 * (300.0 / oldTemperature - 1.0));
+        ::sqrt(1.0 + (0.1 / 100.0 * (300.0 / oldTemperature - 1.0)));
 
     _thermostat->applyThermostat(*_simulationBox, *_data);
 

@@ -95,28 +95,28 @@ TEST(TestSteepestDescent, updateMovesAtomsByLearningRateTimesForce)
 
     EXPECT_DOUBLE_EQ(
         box->getAtoms()[0]->getPosition()[0],
-        0.0 + learningRate * 0.5
+        0.0 + (learningRate * 0.5)
     );
     EXPECT_DOUBLE_EQ(
         box->getAtoms()[0]->getPosition()[1],
-        0.0 + learningRate * 1.0
+        0.0 + (learningRate * 1.0)
     );
     EXPECT_DOUBLE_EQ(
         box->getAtoms()[0]->getPosition()[2],
-        0.0 + learningRate * -1.0
+        0.0 + (learningRate * -1.0)
     );
 
     EXPECT_DOUBLE_EQ(
         box->getAtoms()[1]->getPosition()[0],
-        1.0 + learningRate * -0.2
+        1.0 + (learningRate * -0.2)
     );
     EXPECT_DOUBLE_EQ(
         box->getAtoms()[1]->getPosition()[1],
-        2.0 + learningRate * 0.3
+        2.0 + (learningRate * 0.3)
     );
     EXPECT_DOUBLE_EQ(
         box->getAtoms()[1]->getPosition()[2],
-        3.0 + learningRate * 0.7
+        3.0 + (learningRate * 0.7)
     );
 }
 

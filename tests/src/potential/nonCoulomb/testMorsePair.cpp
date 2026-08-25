@@ -99,12 +99,12 @@ TEST(TestMorsePair, calculateEnergyAndForces)
 
     EXPECT_DOUBLE_EQ(
         energy,
-        coefficients[0] * ::pow(1 - expTerm, 2) - energyCutoff -
-            forceCutoff * (rncCutoff - distance)
+        (coefficients[0] * ::pow(1 - expTerm, 2)) - energyCutoff -
+            (forceCutoff * (rncCutoff - distance))
     );
     EXPECT_DOUBLE_EQ(
         force,
-        -2 * coefficients[0] * coefficients[1] * (1 - expTerm) * expTerm -
+        (-2 * coefficients[0] * coefficients[1] * (1 - expTerm) * expTerm) -
             forceCutoff
     );
 }

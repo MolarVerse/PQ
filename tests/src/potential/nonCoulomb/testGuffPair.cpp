@@ -50,8 +50,8 @@ TEST(TestGuffPair, calculateEnergyAndForces)
     auto distance              = 2.0;
     const auto [energy, force] = guffNonCoulomb.calculate(distance);
 
-    auto energyREF = coefficients[0] / ::pow(distance, coefficients[1]) +
-                     coefficients[2] / ::pow(distance, coefficients[3]);
+    auto energyREF = (coefficients[0] / ::pow(distance, coefficients[1])) +
+                     (coefficients[2] / ::pow(distance, coefficients[3]));
     energyREF += coefficients[4] / ::pow(distance, coefficients[5]) +
                  coefficients[6] / ::pow(distance, coefficients[7]);
     energyREF += coefficients[8] /
@@ -141,19 +141,16 @@ TEST(TestGuffPair, calculateWithSparseCoefficients)
     // Only the two non-zero terms contribute. Distance cutoff terms are zero
     // because energyCutoff = forceCutoff = 0.
     const auto expectedEnergy =
-        coefficients[0] / ::pow(distance, coefficients[1]) +
-        coefficients[8] /
-            (1 + ::exp(coefficients[9] * (distance - coefficients[10])));
+        (coefficients[0] / ::pow(distance, coefficients[1])) +
+        (coefficients[8] /
+         (1 + ::exp(coefficients[9] * (distance - coefficients[10]))));
 
     const auto expectedForce =
-        coefficients[1] * coefficients[0] /
-            (::pow(distance, coefficients[1]) * distance) +
-        coefficients[8] * coefficients[9] *
-            ::exp(coefficients[9] * (distance - coefficients[10])) /
-            ::pow(
-                1 + ::exp(coefficients[9] * (distance - coefficients[10])),
-                2
-            );
+        (coefficients[1] * coefficients[0] /
+         (::pow(distance, coefficients[1]) * distance)) +
+        (coefficients[8] * coefficients[9] *
+         ::exp(coefficients[9] * (distance - coefficients[10])) /
+         ::pow(1 + ::exp(coefficients[9] * (distance - coefficients[10])), 2));
 
     EXPECT_DOUBLE_EQ(energy, expectedEnergy);
     EXPECT_DOUBLE_EQ(force, expectedForce);

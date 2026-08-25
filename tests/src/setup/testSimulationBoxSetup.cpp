@@ -377,7 +377,7 @@ TEST_F(TestSetup, testSetMolMass)
 
     EXPECT_DOUBLE_EQ(
         _engine->getSimulationBox().getMolecules()[0].getMolMass(),
-        12.0107 + 1 * 1.00794 + 15.9994
+        12.0107 + (1 * 1.00794) + 15.9994
     );
 }
 

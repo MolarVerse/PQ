@@ -88,7 +88,8 @@ TEST_F(TestSetup, setupHybridIsNoOpWhenQMMMNotActive)
 TEST_F(TestSetup, parseSelectionNoPythonSingleIndex)
 {
     HybridInputParser parser;
-    const auto        value = parser.parseSelectionNoPython("3", "qm_center");
+    const auto        value =
+        input::HybridInputParser::parseSelectionNoPython("3", "qm_center");
     ASSERT_EQ(value.size(), 1U);
     EXPECT_EQ(value[0], 3);
 }
@@ -96,7 +97,8 @@ TEST_F(TestSetup, parseSelectionNoPythonSingleIndex)
 TEST_F(TestSetup, parseSelectionNoPythonCommaList)
 {
     HybridInputParser parser;
-    const auto value = parser.parseSelectionNoPython("1,3,5", "qm_center");
+    const auto        value =
+        input::HybridInputParser::parseSelectionNoPython("1,3,5", "qm_center");
     ASSERT_EQ(value.size(), 3U);
     EXPECT_EQ(value[0], 1);
     EXPECT_EQ(value[1], 3);
@@ -106,7 +108,8 @@ TEST_F(TestSetup, parseSelectionNoPythonCommaList)
 TEST_F(TestSetup, parseSelectionNoPythonRange)
 {
     HybridInputParser parser;
-    const auto        value = parser.parseSelectionNoPython("2-5", "qm_center");
+    const auto        value =
+        input::HybridInputParser::parseSelectionNoPython("2-5", "qm_center");
     ASSERT_EQ(value.size(), 4U);
     EXPECT_EQ(value[0], 2);
     EXPECT_EQ(value[3], 5);
@@ -115,7 +118,10 @@ TEST_F(TestSetup, parseSelectionNoPythonRange)
 TEST_F(TestSetup, parseSelectionNoPythonMixedRangeAndList)
 {
     HybridInputParser parser;
-    const auto value = parser.parseSelectionNoPython("1,3-4,7", "qm_center");
+    const auto        value = input::HybridInputParser::parseSelectionNoPython(
+        "1,3-4,7",
+        "qm_center"
+    );
     ASSERT_EQ(value.size(), 4U);
     EXPECT_EQ(value[0], 1);
     EXPECT_EQ(value[1], 3);
@@ -137,7 +143,8 @@ TEST_F(TestSetup, parseSelectionNoPythonEmptyThrows)
 TEST_F(TestSetup, parseSelectionEmptyReturnsZeroOnly)
 {
     HybridInputParser parser;
-    const auto        value = parser.parseSelection("", "qm_center");
+    const auto        value =
+        input::HybridInputParser::parseSelection("", "qm_center");
     ASSERT_EQ(value.size(), 1U);
     EXPECT_EQ(value[0], 0);
 }
@@ -145,7 +152,8 @@ TEST_F(TestSetup, parseSelectionEmptyReturnsZeroOnly)
 TEST_F(TestSetup, parseSelectionSortsAndDeduplicates)
 {
     HybridInputParser parser;
-    const auto        value = parser.parseSelection("5,1,3,1", "qm_center");
+    const auto        value =
+        input::HybridInputParser::parseSelection("5,1,3,1", "qm_center");
     ASSERT_EQ(value.size(), 3U);
     EXPECT_EQ(value[0], 1);
     EXPECT_EQ(value[1], 3);
