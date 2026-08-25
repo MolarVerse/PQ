@@ -34,7 +34,7 @@
 
 using namespace opt;
 using namespace potential;
-using namespace simulationBox;
+using namespace molsys;
 using namespace physicalData;
 using namespace forceField;
 using namespace intraNonBonded;

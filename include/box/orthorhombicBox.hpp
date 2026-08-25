@@ -26,7 +26,7 @@
 
 #include "box.hpp"   // for Box
 
-namespace simulationBox
+namespace molsys
 {
     /**
      * @class OrthorhombicBox
@@ -57,6 +57,6 @@ namespace simulationBox
         ) const override;
     };
 
-}   // namespace simulationBox
+}   // namespace molsys
 
 #endif   // _ORTHORHOMBIC_BOX_HPP_

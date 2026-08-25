@@ -26,7 +26,7 @@
 #include "nonCoulombPotential.hpp"   // for NonCoulombPotential
 
 using namespace potential;
-using namespace simulationBox;
+using namespace molsys;
 using namespace physicalData;
 
 void Potential::calculateQMMMForces(

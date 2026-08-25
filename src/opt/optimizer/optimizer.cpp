@@ -30,7 +30,7 @@
 
 using namespace opt;
 using namespace physicalData;
-using namespace simulationBox;
+using namespace molsys;
 using namespace settings;
 using namespace customException;
 

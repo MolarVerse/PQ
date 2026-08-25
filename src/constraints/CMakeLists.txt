@@ -18,7 +18,7 @@ target_link_libraries(constraints
 
     PRIVATE
     connectivity
-    simulationBox
+    molsys
     linearAlgebra
     settings
     timings

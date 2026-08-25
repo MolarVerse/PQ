@@ -29,7 +29,7 @@
 #include <string_view>   // for string_view
 #include <vector>        // for vector
 
-namespace simulationBox
+namespace molsys
 {
     /**
      * @class MoleculeType
@@ -111,6 +111,6 @@ namespace simulationBox
         ) const;
     };
 
-}   // namespace simulationBox
+}   // namespace molsys
 
 #endif   // _MOLECULE_TYPE_HPP_

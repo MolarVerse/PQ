@@ -40,8 +40,8 @@ namespace integrator
         explicit VelocityVerlet();
         ~VelocityVerlet() override = default;
 
-        void firstStep(simulationBox::SimulationBox &simBox) override;
-        void secondStep(simulationBox::SimulationBox &simBox) override;
+        void firstStep(molsys::SimulationBox &simBox) override;
+        void secondStep(molsys::SimulationBox &simBox) override;
     };
 
 }   // namespace integrator

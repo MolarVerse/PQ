@@ -31,10 +31,10 @@
 #include "intraNonBondedContainer.hpp"   // for IntraNonBondedContainer
 #include "molecule.hpp"
 
-namespace simulationBox
+namespace molsys
 {
     class SimulationBox;   // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
 namespace physicalData
 {
@@ -66,20 +66,20 @@ namespace intraNonBonded
     class IntraNonBondedMap
     {
        private:
-        simulationBox::Molecule *_molecule;
+        molsys::Molecule        *_molecule;
         IntraNonBondedContainer *_intraNonBondedContainer;
 
        public:
         explicit IntraNonBondedMap(
-            simulationBox::Molecule *molecule,
+            molsys::Molecule        *molecule,
             IntraNonBondedContainer *intraNonBondedType
         );
 
         void calculate(
-            const potential::CoulombPotential  *coulombPotential,
-            potential::NonCoulombPotential     *nonCoulombPotential,
-            const simulationBox::SimulationBox &simulationBox,
-            physicalData::PhysicalData         &physicalData
+            const potential::CoulombPotential *coulombPotential,
+            potential::NonCoulombPotential    *nonCoulombPotential,
+            const molsys::SimulationBox       &simulationBox,
+            physicalData::PhysicalData        &physicalData
         ) const;
 
         [[nodiscard]]
@@ -97,7 +97,7 @@ namespace intraNonBonded
          ***************************/
 
         [[nodiscard]] IntraNonBondedContainer *getIntraNonBondedType() const;
-        [[nodiscard]] simulationBox::Molecule *getMolecule() const;
+        [[nodiscard]] molsys::Molecule        *getMolecule() const;
         [[nodiscard]] std::vector<std::vector<int>> getAtomIndices() const;
     };
 

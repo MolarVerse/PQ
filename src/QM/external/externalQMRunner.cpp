@@ -43,9 +43,9 @@
 #include "simulationBox.hpp"   // for SimulationBox
 
 using QM::ExternalQMRunner;
-using enum simulationBox::Periodicity;
+using enum molsys::Periodicity;
 
-using namespace simulationBox;
+using namespace molsys;
 using namespace physicalData;
 using namespace customException;
 using namespace settings;
@@ -171,7 +171,7 @@ void ExternalQMRunner::_readForceFile(
  *  - if the charge file cannot be opened
  *  - if the charge file is empty
  */
-void ExternalQMRunner::_readChargeFile(simulationBox::SimulationBox &box)
+void ExternalQMRunner::_readChargeFile(molsys::SimulationBox &box)
 {
     const auto chargeFileName = FileSettings::getQMChargesTempFileName();
 

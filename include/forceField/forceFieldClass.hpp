@@ -72,32 +72,32 @@ namespace forceField
         [[nodiscard]] std::shared_ptr<ForceField> clone() const;
 
         void calculateBondedInteractions(
-            const simulationBox::SimulationBox &,
+            const molsys::SimulationBox &,
             physicalData::PhysicalData &
         );
 
         void calculateBondInteractions(
-            const simulationBox::SimulationBox &,
+            const molsys::SimulationBox &,
             physicalData::PhysicalData &
         );
 
         void calculateAngleInteractions(
-            const simulationBox::SimulationBox &,
+            const molsys::SimulationBox &,
             physicalData::PhysicalData &
         );
 
         void calculateDihedralInteractions(
-            const simulationBox::SimulationBox &,
+            const molsys::SimulationBox &,
             physicalData::PhysicalData &
         );
 
         void calculateImproperDihedralInteractions(
-            const simulationBox::SimulationBox &,
+            const molsys::SimulationBox &,
             physicalData::PhysicalData &
         );
 
         void calculateJCouplingInteractions(
-            const simulationBox::SimulationBox &,
+            const molsys::SimulationBox &,
             physicalData::PhysicalData &
         );
 

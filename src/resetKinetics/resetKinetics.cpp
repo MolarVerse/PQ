@@ -39,7 +39,7 @@
 using namespace resetKinetics;
 using namespace linearAlgebra;
 using namespace physicalData;
-using namespace simulationBox;
+using namespace molsys;
 using namespace constants;
 using namespace customException;
 using namespace settings;

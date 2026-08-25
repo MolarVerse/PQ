@@ -131,7 +131,7 @@ TEST_F(TestCellList, getCellIndexOfAtomWrapsPeriodicBoundaryCoordinates)
 
 TEST_F(TestCellList, addNeighbouringCellPointers)
 {
-    auto cell = simulationBox::Cell();
+    auto cell = molsys::Cell();
     cell.setCellIndex(linearAlgebra::Vec3Dul(0, 0, 0));
 
     _cellList->setNumberOfCells(7);
@@ -307,11 +307,11 @@ TEST_F(TestCellList, updateCellList)
     EXPECT_NO_THROW(_cellList->updateCellList(*_simulationBox));
     settings::Settings::activateCellList();
 
-    auto molecule = simulationBox::Molecule();
+    auto molecule = molsys::Molecule();
     molecule.setNumberOfAtoms(2);
 
-    const auto atom1 = std::make_shared<simulationBox::Atom>();
-    const auto atom2 = std::make_shared<simulationBox::Atom>();
+    const auto atom1 = std::make_shared<molsys::Atom>();
+    const auto atom2 = std::make_shared<molsys::Atom>();
 
     atom1->setPosition(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
     atom2->setPosition(linearAlgebra::Vec3D(6.0, 7.0, 8.0));

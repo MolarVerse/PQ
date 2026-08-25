@@ -32,7 +32,7 @@
 #include "simulationBox.hpp"         // for SimulationBox
 
 using output::RingPolymerRestartFileOutput;
-using namespace simulationBox;
+using namespace molsys;
 using namespace settings;
 
 /**

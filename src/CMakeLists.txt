@@ -9,7 +9,7 @@ set_target_properties(pq_pch PROPERTIES
 )
 target_link_libraries(pq_pch PUBLIC Eigen3::Eigen)
 
-add_subdirectory(simulationBox)
+add_subdirectory(molsys)
 add_subdirectory(config)
 add_subdirectory(engine)
 add_subdirectory(utilities)

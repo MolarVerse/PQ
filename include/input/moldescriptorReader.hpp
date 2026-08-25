@@ -35,10 +35,10 @@ namespace engine
     class Engine;   // forward declaration
 }   // namespace engine
 
-namespace simulationBox
+namespace molsys
 {
     class MoleculeType;   // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
 namespace input::molDescriptor
 {

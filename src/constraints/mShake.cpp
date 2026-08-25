@@ -40,7 +40,7 @@ using namespace constraints;
 using namespace kernel;
 using namespace linearAlgebra;
 using namespace settings;
-using namespace simulationBox;
+using namespace molsys;
 
 namespace
 {

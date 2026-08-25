@@ -28,10 +28,10 @@
 
 #include "output.hpp"
 
-namespace simulationBox
+namespace molsys
 {
     class SimulationBox;   // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
 namespace output
 {
@@ -46,7 +46,7 @@ namespace output
        public:
         using Output::Output;
 
-        void write(std::vector<simulationBox::SimulationBox> &);
+        void write(std::vector<molsys::SimulationBox> &);
     };
 
 }   // namespace output

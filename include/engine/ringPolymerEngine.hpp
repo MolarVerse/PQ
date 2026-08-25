@@ -42,8 +42,8 @@ namespace engine
     class RingPolymerEngine : virtual public MDEngine
     {
        protected:
-        std::vector<simulationBox::SimulationBox> _ringPolymerBeads;
-        std::vector<physicalData::PhysicalData>   _ringPolymerBeadsPhysicalData;
+        std::vector<molsys::SimulationBox>      _ringPolymerBeads;
+        std::vector<physicalData::PhysicalData> _ringPolymerBeadsPhysicalData;
         std::vector<physicalData::PhysicalData>
             _averageRingPolymerBeadsPhysicalData;
 
@@ -59,7 +59,7 @@ namespace engine
          * standard add methods *
          ************************/
 
-        void addRingPolymerBead(const simulationBox::SimulationBox &bead)
+        void addRingPolymerBead(const molsys::SimulationBox &bead)
         {
             _ringPolymerBeads.push_back(bead);
         }
@@ -68,8 +68,7 @@ namespace engine
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] std::vector<simulationBox::SimulationBox> &getRingPolymerBeads(
-        )
+        [[nodiscard]] std::vector<molsys::SimulationBox> &getRingPolymerBeads()
         {
             return _ringPolymerBeads;
         }

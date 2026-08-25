@@ -20,7 +20,7 @@ target_link_libraries(optimizer
     PRIVATE
     linearAlgebra
     PUBLIC
-    simulationBox
+    molsys
     physicalData
 )
 

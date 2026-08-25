@@ -36,11 +36,11 @@ namespace physicalData
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
 
-namespace simulationBox
+namespace molsys
 {
     class Box;             // forward declaration
     class SimulationBox;   // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
 namespace QM
 {
@@ -71,23 +71,23 @@ namespace QM
         ~ExternalQMRunner() override = default;
 
         void run(
-            simulationBox::SimulationBox &simBox,
-            physicalData::PhysicalData   &physicalData,
-            simulationBox::Periodicity    periodicity
+            molsys::SimulationBox      &simBox,
+            physicalData::PhysicalData &physicalData,
+            molsys::Periodicity         periodicity
         ) override;
 
-        virtual void execute(simulationBox::SimulationBox &) = 0;
+        virtual void execute(molsys::SimulationBox &) = 0;
 
-        virtual void writeCoordsFile(simulationBox::SimulationBox &) = 0;
+        virtual void writeCoordsFile(molsys::SimulationBox &) = 0;
 
         virtual void writePointChargeFile(
-            simulationBox::SimulationBox & /*simBox*/
+            molsys::SimulationBox & /*simBox*/
         )
         {
         }
 
         virtual void readStressTensor(
-            simulationBox::Box & /*simBox*/,
+            molsys::Box & /*simBox*/,
             physicalData::PhysicalData & /*physData*/
         )
         {
@@ -105,10 +105,10 @@ namespace QM
 
        private:
         static void _readForceFile(
-            simulationBox::SimulationBox &box,
-            physicalData::PhysicalData   &physicalData
+            molsys::SimulationBox      &box,
+            physicalData::PhysicalData &physicalData
         );
-        static void _readChargeFile(simulationBox::SimulationBox &box);
+        static void _readChargeFile(molsys::SimulationBox &box);
 
         friend class ::ExternalQMRunnerTest;   // for testing private methods
     };

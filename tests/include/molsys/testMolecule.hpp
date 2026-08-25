@@ -36,12 +36,12 @@ class TestMolecule : public ::testing::Test
    protected:
     void SetUp() override
     {
-        _molecule = new simulationBox::Molecule();
+        _molecule = new molsys::Molecule();
         _molecule->setNumberOfAtoms(3);
 
-        auto _atom1 = std::make_shared<simulationBox::Atom>();
-        auto _atom2 = std::make_shared<simulationBox::Atom>();
-        auto _atom3 = std::make_shared<simulationBox::Atom>();
+        auto _atom1 = std::make_shared<molsys::Atom>();
+        auto _atom2 = std::make_shared<molsys::Atom>();
+        auto _atom3 = std::make_shared<molsys::Atom>();
 
         _atom1->setExternalAtomType(1);
         _atom2->setExternalAtomType(2);
@@ -72,7 +72,7 @@ class TestMolecule : public ::testing::Test
 
     void TearDown() override { delete _molecule; }
 
-    simulationBox::Molecule *_molecule;
+    molsys::Molecule *_molecule;
 };
 
 #endif   // _TEST_MOLECULE_HPP_

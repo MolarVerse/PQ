@@ -33,7 +33,7 @@
 #include "simulationBox.hpp"      // for SimulationBox
 
 using namespace forceField;
-using namespace simulationBox;
+using namespace molsys;
 using namespace connectivity;
 using namespace linearAlgebra;
 using namespace physicalData;

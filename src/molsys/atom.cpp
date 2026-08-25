@@ -29,7 +29,7 @@
 #include "settings.hpp"           // for Settings
 #include "stringUtilities.hpp"    // for toLowerCopy
 
-using namespace simulationBox;
+using namespace molsys;
 using namespace utilities;
 using namespace constants;
 using namespace customException;

@@ -29,7 +29,7 @@
 #include "box.hpp"   // for SimulationBox
 
 using output::BoxFileOutput;
-using namespace simulationBox;
+using namespace molsys;
 
 /**
  * @brief Write the lattice parameters a, b, c, alpha, beta, gamma to file

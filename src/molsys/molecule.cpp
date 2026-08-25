@@ -30,7 +30,7 @@
 #include "manostatSettings.hpp"   // for ManostatSettings
 #include "settings.hpp"           // for Settings
 
-using namespace simulationBox;
+using namespace molsys;
 using namespace linearAlgebra;
 using namespace settings;
 

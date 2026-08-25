@@ -9,7 +9,8 @@ target_include_directories(hybridConfigurator
 
 target_link_libraries(hybridConfigurator
     PUBLIC
-    simulationBox
+    molsys
+    linearAlgebra
 )
 
 install(TARGETS hybridConfigurator

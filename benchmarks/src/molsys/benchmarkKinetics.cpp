@@ -31,8 +31,8 @@
 namespace
 {
     void setItemsProcessed(
-        benchmark::State&                   state,
-        const simulationBox::SimulationBox& simBox
+        benchmark::State&            state,
+        const molsys::SimulationBox& simBox
     )
     {
         state.SetItemsProcessed(

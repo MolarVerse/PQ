@@ -61,7 +61,7 @@ namespace engine
         void distributeSmoothingMolQMForces();
 
         std::vector<double> getRandomWeights(
-            const std::vector<std::reference_wrapper<simulationBox::Molecule>>
+            const std::vector<std::reference_wrapper<molsys::Molecule>>
                 &recipientMolecules
         );
     };

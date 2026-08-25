@@ -33,7 +33,7 @@
 
 #include "atom.hpp"   // for Atom
 
-namespace simulationBox
+namespace molsys
 {
     /**
      * @enum HybridZone
@@ -226,6 +226,6 @@ namespace simulationBox
         void setForcedOuter(bool isForcedOuter);
     };
 
-}   // namespace simulationBox
+}   // namespace molsys
 
 #endif   // _MOLECULE_HPP_

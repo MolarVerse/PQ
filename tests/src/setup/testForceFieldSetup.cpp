@@ -43,8 +43,8 @@
  */
 TEST_F(TestSetup, forceFieldSetupSetupBonds)
 {
-    auto molecule1 = simulationBox::Molecule();
-    auto molecule2 = simulationBox::Molecule();
+    auto molecule1 = molsys::Molecule();
+    auto molecule2 = molsys::Molecule();
 
     _engine->getSimulationBox().addMolecule(molecule1);
     _engine->getSimulationBox().addMolecule(molecule2);
@@ -95,8 +95,8 @@ TEST_F(TestSetup, forceFieldSetupSetupBonds)
  */
 TEST_F(TestSetup, forceFieldSetupSetupAngles)
 {
-    auto molecule1 = simulationBox::Molecule();
-    auto molecule2 = simulationBox::Molecule();
+    auto molecule1 = molsys::Molecule();
+    auto molecule2 = molsys::Molecule();
 
     _engine->getSimulationBox().addMolecule(molecule1);
     _engine->getSimulationBox().addMolecule(molecule2);
@@ -156,8 +156,8 @@ TEST_F(TestSetup, forceFieldSetupSetupAngles)
  */
 TEST_F(TestSetup, forceFieldSetupSetupDihedrals)
 {
-    auto molecule1 = simulationBox::Molecule();
-    auto molecule2 = simulationBox::Molecule();
+    auto molecule1 = molsys::Molecule();
+    auto molecule2 = molsys::Molecule();
 
     _engine->getSimulationBox().addMolecule(molecule1);
     _engine->getSimulationBox().addMolecule(molecule2);
@@ -220,8 +220,8 @@ TEST_F(TestSetup, forceFieldSetupSetupDihedrals)
  */
 TEST_F(TestSetup, forceFieldSetupSetupImproperDihedrals)
 {
-    auto molecule1 = simulationBox::Molecule();
-    auto molecule2 = simulationBox::Molecule();
+    auto molecule1 = molsys::Molecule();
+    auto molecule2 = molsys::Molecule();
 
     _engine->getSimulationBox().addMolecule(molecule1);
     _engine->getSimulationBox().addMolecule(molecule2);
@@ -287,7 +287,7 @@ TEST_F(TestSetup, forceFieldSetupSetupForceField)
 {
     settings::ForceFieldSettings::activate();
 
-    auto molecule1 = simulationBox::Molecule();
+    auto molecule1 = molsys::Molecule();
     _engine->getSimulationBox().addMolecule(molecule1);
     auto *molecule1Ptr = &_engine->getSimulationBox().getMolecule(0);
 
@@ -360,7 +360,7 @@ TEST_F(TestSetup, forceFieldSetupSetupForceFieldDoNothing)
 {
     settings::ForceFieldSettings::activate();
 
-    auto molecule1 = simulationBox::Molecule();
+    auto molecule1 = molsys::Molecule();
     _engine->getSimulationBox().addMolecule(molecule1);
     auto *molecule1Ptr = &_engine->getSimulationBox().getMolecule(0);
 

@@ -32,7 +32,7 @@
 #include "timingsSettings.hpp"
 
 using namespace constraints;
-using namespace simulationBox;
+using namespace molsys;
 using namespace linearAlgebra;
 using namespace kernel;
 using namespace settings;
@@ -65,7 +65,7 @@ BondConstraint::BondConstraint(
  * @param simulationBox
  */
 void BondConstraint::calculateConstraintBondRef(
-    const simulationBox::SimulationBox &simBox
+    const molsys::SimulationBox &simBox
 )
 {
     simBox.applyPBC(_shakeDistanceRef);

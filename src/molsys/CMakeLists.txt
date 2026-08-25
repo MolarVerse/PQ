@@ -1,4 +1,4 @@
-set(simulationBox_source_files
+set(molsys_source_files
     simulationBox.cpp
     simulationBox_standardMethods.cpp
 
@@ -10,26 +10,26 @@ set(simulationBox_source_files
 )
 
 if(BUILD_WITH_MPI)
-    set(simulationBox_source_files
-        ${simulationBox_source_files}
+    set(molsys_source_files
+        ${molsys_source_files}
         simulationBox_MPI.cpp
     )
 endif()
 
-add_library(simulationBox
-    ${simulationBox_source_files}
+add_library(molsys
+    ${molsys_source_files}
 )
 
-target_include_directories(simulationBox
+target_include_directories(molsys
     PUBLIC
-    ${PROJECT_SOURCE_DIR}/include/simulationBox
+    ${PROJECT_SOURCE_DIR}/include/molsys
     ${PROJECT_SOURCE_DIR}/include/config
     ${PROJECT_SOURCE_DIR}/include/views
     PRIVATE
     ${PROJECT_SOURCE_DIR}/include/utilities
 )
 
-target_link_libraries(simulationBox
+target_link_libraries(molsys
     PUBLIC
     linearAlgebra
     box
@@ -39,6 +39,6 @@ target_link_libraries(simulationBox
     randomNumberGenerator
 )
 
-install(TARGETS simulationBox
+install(TARGETS molsys
     DESTINATION lib
 )

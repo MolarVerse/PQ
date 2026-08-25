@@ -51,7 +51,7 @@ using namespace customException;
  * @param cellListPtr pointer to the cell list object
  */
 CellListInputParser::CellListInputParser(
-    std::shared_ptr<simulationBox::CellList> cellListPtr
+    std::shared_ptr<molsys::CellList> cellListPtr
 )
     : _cellListPtr(std::move(cellListPtr))
 {

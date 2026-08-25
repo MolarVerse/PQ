@@ -38,7 +38,7 @@ namespace manostat
         explicit MonteCarloManostat() = default;
 
         void applyManostat(
-            simulationBox::SimulationBox& /*simBox*/,
+            molsys::SimulationBox& /*simBox*/,
             physicalData::PhysicalData& /*physData*/
         ) override
         {

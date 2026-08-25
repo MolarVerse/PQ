@@ -31,7 +31,7 @@
 #include "vector3d.hpp"
 
 using namespace output;
-using simulationBox::OrthorhombicBox;
+using molsys::OrthorhombicBox;
 
 TEST(TestBoxFileOutput, writeEmitsStepAndDimensionsAndAngles)
 {

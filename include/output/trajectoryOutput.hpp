@@ -29,10 +29,10 @@
 #include "hybridConfigurator.hpp"
 #include "output.hpp"   // for Output
 
-namespace simulationBox
+namespace molsys
 {
     class SimulationBox;   // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
 namespace configurator
 {
@@ -52,15 +52,15 @@ namespace output
        public:
         using Output::Output;
 
-        void writeHeader(const simulationBox::SimulationBox &);
-        void writeXyz(simulationBox::SimulationBox &, size_t);
+        void writeHeader(const molsys::SimulationBox &);
+        void writeXyz(molsys::SimulationBox &, size_t);
         void writeHybridCenterXyz(
             const configurator::HybridConfigurator &configurator,
             size_t                                  step
         );
-        void writeVelocities(simulationBox::SimulationBox &, size_t);
-        void writeForces(simulationBox::SimulationBox &, size_t);
-        void writeCharges(simulationBox::SimulationBox &, size_t);
+        void writeVelocities(molsys::SimulationBox &, size_t);
+        void writeForces(molsys::SimulationBox &, size_t);
+        void writeCharges(molsys::SimulationBox &, size_t);
     };
 
 }   // namespace output

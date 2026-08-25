@@ -23,7 +23,7 @@
 #include "bond.hpp"
 
 using namespace connectivity;
-using namespace simulationBox;
+using namespace molsys;
 
 /**
  * @brief Construct a new Bond:: Bond object

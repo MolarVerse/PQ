@@ -32,7 +32,7 @@
 #include "timingsSettings.hpp"   // for TimingsSettings
 
 using namespace engine;
-using namespace simulationBox;
+using namespace molsys;
 using namespace physicalData;
 using namespace forceField;
 using namespace intraNonBonded;
@@ -52,8 +52,8 @@ using namespace settings;
 Engine::Engine()
     : _potential{std::make_shared<potential::PotentialBruteForce>()},
       _physicalData{std::make_shared<physicalData::PhysicalData>()},
-      _simulationBox{std::make_shared<simulationBox::SimulationBox>()},
-      _cellList{std::make_shared<simulationBox::CellList>()},
+      _simulationBox{std::make_shared<molsys::SimulationBox>()},
+      _cellList{std::make_shared<molsys::CellList>()},
       _intraNonBonded{std::make_shared<intraNonBonded::IntraNonBonded>()},
       _forceField{std::make_shared<forceField::ForceField>()},
       _constraints{std::make_shared<constraints::Constraints>()}

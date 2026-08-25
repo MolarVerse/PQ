@@ -30,10 +30,10 @@
 #include "hessianSettings.hpp"
 #include "vector3d.hpp"
 
-namespace simulationBox
+namespace molsys
 {
     class SimulationBox;   // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
 namespace opt
 {
@@ -49,8 +49,8 @@ namespace opt
 
         [[nodiscard]]
         virtual HessianMatrix build(
-            Evaluator                    &evaluator,
-            simulationBox::SimulationBox &simulationBox
+            Evaluator             &evaluator,
+            molsys::SimulationBox &simulationBox
         ) const = 0;
     };
 
@@ -60,7 +60,7 @@ namespace opt
         double _displacement;
 
         static void restorePositions(
-            simulationBox::SimulationBox            &simulationBox,
+            molsys::SimulationBox                   &simulationBox,
             const std::vector<linearAlgebra::Vec3D> &positions
         );
 
@@ -78,8 +78,8 @@ namespace opt
 
         [[nodiscard]]
         HessianMatrix build(
-            Evaluator                    &evaluator,
-            simulationBox::SimulationBox &simulationBox
+            Evaluator             &evaluator,
+            molsys::SimulationBox &simulationBox
         ) const override;
     };
 
@@ -91,8 +91,8 @@ namespace opt
 
         [[nodiscard]]
         HessianMatrix build(
-            Evaluator                    &evaluator,
-            simulationBox::SimulationBox &simulationBox
+            Evaluator             &evaluator,
+            molsys::SimulationBox &simulationBox
         ) const override;
     };
 
@@ -104,8 +104,8 @@ namespace opt
 
         [[nodiscard]]
         HessianMatrix build(
-            Evaluator                    &evaluator,
-            simulationBox::SimulationBox &simulationBox
+            Evaluator             &evaluator,
+            molsys::SimulationBox &simulationBox
         ) const override;
     };
 
@@ -114,8 +114,8 @@ namespace opt
        public:
         [[nodiscard]]
         HessianMatrix build(
-            Evaluator                    &evaluator,
-            simulationBox::SimulationBox &simulationBox
+            Evaluator             &evaluator,
+            molsys::SimulationBox &simulationBox
         ) const override;
     };
 

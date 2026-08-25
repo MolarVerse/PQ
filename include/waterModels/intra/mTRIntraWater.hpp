@@ -32,8 +32,8 @@ namespace waterModel
     {
        public:
         void calculate(
-            simulationBox::SimulationBox &simBox,
-            physicalData::PhysicalData   &physicalData
+            molsys::SimulationBox      &simBox,
+            physicalData::PhysicalData &physicalData
         ) final;
 
         [[nodiscard]] virtual double getEqOHDistance() const = 0;   // Angström

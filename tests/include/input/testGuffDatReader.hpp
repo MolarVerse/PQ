@@ -50,7 +50,7 @@ class TestGuffDatReader : public ::testing::Test
    protected:
     void SetUp() override
     {
-        auto moleculeType1 = simulationBox::MoleculeType();
+        auto moleculeType1 = molsys::MoleculeType();
         moleculeType1.setNumberOfAtoms(2);
         moleculeType1.setMoltype(1);
         moleculeType1.addExternalAtomType(1);
@@ -62,7 +62,7 @@ class TestGuffDatReader : public ::testing::Test
         moleculeType1.addAtomType(0);
         moleculeType1.addAtomType(1);
 
-        auto moleculeType2 = simulationBox::MoleculeType();
+        auto moleculeType2 = molsys::MoleculeType();
         moleculeType2.setNumberOfAtoms(1);
         moleculeType2.setMoltype(2);
         moleculeType2.addExternalAtomType(3);
@@ -70,12 +70,12 @@ class TestGuffDatReader : public ::testing::Test
         moleculeType2.addPartialCharge(0.25);
         moleculeType2.addAtomType(0);
 
-        auto molecule1 = simulationBox::Molecule();
+        auto molecule1 = molsys::Molecule();
         molecule1.setNumberOfAtoms(2);
         molecule1.setMoltype(1);
 
-        auto atom1 = std::make_shared<simulationBox::Atom>();
-        auto atom2 = std::make_shared<simulationBox::Atom>();
+        auto atom1 = std::make_shared<molsys::Atom>();
+        auto atom2 = std::make_shared<molsys::Atom>();
 
         atom1->setExternalAtomType(1);
         atom2->setExternalAtomType(2);

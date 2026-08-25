@@ -27,7 +27,7 @@
 #include "waterModelSettings.hpp"   // for WaterModelSettings
 
 using namespace settings;
-using namespace simulationBox;
+using namespace molsys;
 using namespace linearAlgebra;
 
 /**

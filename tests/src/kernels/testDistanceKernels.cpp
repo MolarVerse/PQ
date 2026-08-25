@@ -51,7 +51,7 @@ TEST(TestDistanceKernels, distVecWithPBCChoosesMinimumImage)
 {
     // 10 x 10 x 10 orthorhombic box. Two atoms at (0.5, 0, 0) and
     // (9.5, 0, 0) should be 1.0 apart under minimum image, not 9.0.
-    auto box = simulationBox::SimulationBox();
+    auto box = molsys::SimulationBox();
     box.setBoxDimensions({10.0, 10.0, 10.0});
 
     const auto vec1 = linearAlgebra::Vec3D(0.5, 0.0, 0.0);
@@ -63,7 +63,7 @@ TEST(TestDistanceKernels, distVecWithPBCChoosesMinimumImage)
 
 TEST(TestDistanceKernels, distVecAndDist2WithPBCConsistentWithDistVec)
 {
-    auto box = simulationBox::SimulationBox();
+    auto box = molsys::SimulationBox();
     box.setBoxDimensions({8.0, 8.0, 8.0});
 
     const auto vec1 = linearAlgebra::Vec3D(0.0, 0.0, 0.0);
@@ -77,7 +77,7 @@ TEST(TestDistanceKernels, distVecAndDist2WithPBCConsistentWithDistVec)
 
 TEST(TestDistanceKernels, distVecWithPBCIsSymmetricAcrossAllAxes)
 {
-    auto box = simulationBox::SimulationBox();
+    auto box = molsys::SimulationBox();
     box.setBoxDimensions({10.0, 12.0, 14.0});
 
     const auto vec1 = linearAlgebra::Vec3D(4.8, -5.5, 6.2);
@@ -106,7 +106,7 @@ TEST(TestDistanceKernels, distVecWithPBCIsSymmetricAcrossAllAxes)
 
 TEST(TestDistanceKernels, distSquaredWithPBCMinimumImageDistance)
 {
-    auto box = simulationBox::SimulationBox();
+    auto box = molsys::SimulationBox();
     box.setBoxDimensions({10.0, 10.0, 10.0});
 
     const auto vec1 = linearAlgebra::Vec3D(0.5, 0.0, 0.0);

@@ -114,9 +114,9 @@ class TestAtomSection : public ::testing::Test
 {
    protected:
     static void processAtomLine(
-        std::vector<std::string>     &line,
-        simulationBox::SimulationBox &simulationBox,
-        simulationBox::Molecule      &molecule
+        std::vector<std::string> &line,
+        molsys::SimulationBox    &simulationBox,
+        molsys::Molecule         &molecule
     )
     {
         input::restartFile::AtomSection::_processAtomLine(
@@ -127,8 +127,8 @@ class TestAtomSection : public ::testing::Test
     }
 
     static void processQMAtomLine(
-        std::vector<std::string>     &line,
-        simulationBox::SimulationBox &simulationBox
+        std::vector<std::string> &line,
+        molsys::SimulationBox    &simulationBox
     )
     {
         input::restartFile::AtomSection::_processQMAtomLine(

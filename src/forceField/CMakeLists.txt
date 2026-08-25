@@ -18,7 +18,7 @@ target_include_directories(forceField
 
 target_link_libraries(forceField
     PUBLIC
-    simulationBox
+    molsys
     connectivity
     linearAlgebra
     utilities

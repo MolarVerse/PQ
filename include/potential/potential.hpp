@@ -35,14 +35,14 @@ namespace physicalData
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
 
-namespace simulationBox
+namespace molsys
 {
     class Box;             // forward declaration
     class Molecule;        // forward declaration
     class Atom;            // forward declaration
     class CellList;        // forward declaration
     class SimulationBox;   // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
 namespace potential
 {
@@ -78,39 +78,39 @@ namespace potential
         virtual ~Potential() = default;
 
         virtual void calculateForces(
-            simulationBox::SimulationBox &,
+            molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            simulationBox::CellList &
+            molsys::CellList &
         ) = 0;
 
         void calculateQMMMForces(
-            simulationBox::SimulationBox &,
+            molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            simulationBox::CellList &
+            molsys::CellList &
         );
 
         virtual void calculateCoreToOuterForces(
-            simulationBox::SimulationBox &,
+            molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            simulationBox::CellList &
+            molsys::CellList &
         ) = 0;
 
         virtual void calculateLayerToOuterForces(
-            simulationBox::SimulationBox &,
+            molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            simulationBox::CellList &
+            molsys::CellList &
         ) = 0;
 
         virtual void calculateOuterToOuterForces(
-            simulationBox::SimulationBox &,
+            molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            simulationBox::CellList &
+            molsys::CellList &
         ) = 0;
 
         virtual void calculateHotspotSmoothingMMForces(
-            simulationBox::SimulationBox &,
+            molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            simulationBox::CellList &
+            molsys::CellList &
         ) = 0;
 
         [[nodiscard]]
@@ -118,27 +118,27 @@ namespace potential
 
         template <typename ChargeTag1, typename ChargeTag2>
         std::pair<double, double> calculateSingleInteraction(
-            const simulationBox::Box &box,
-            simulationBox::Molecule  &mol1,
-            simulationBox::Molecule  &mol2,
-            simulationBox::Atom      &atom1,
-            simulationBox::Atom      &atom2
+            const molsys::Box &box,
+            molsys::Molecule  &mol1,
+            molsys::Molecule  &mol2,
+            molsys::Atom      &atom1,
+            molsys::Atom      &atom2
         ) const;
 
         template <typename ChargeTag1, typename ChargeTag2>
         double calculateSingleCoulombInteraction(
-            const simulationBox::Box &box,
-            simulationBox::Atom      &atom1,
-            simulationBox::Atom      &atom2
+            const molsys::Box &box,
+            molsys::Atom      &atom1,
+            molsys::Atom      &atom2
         ) const;
 
         template <typename ChargeTag1, typename ChargeTag2>
         std::pair<double, double> calculateSingleInteractionOneWay(
-            const simulationBox::Box &box,
-            simulationBox::Molecule  &mol1,
-            simulationBox::Molecule  &mol2,
-            simulationBox::Atom      &atom1,
-            simulationBox::Atom      &atom2
+            const molsys::Box &box,
+            molsys::Molecule  &mol1,
+            molsys::Molecule  &mol2,
+            molsys::Atom      &atom1,
+            molsys::Atom      &atom2
         ) const;
 
         template <typename T>
@@ -148,7 +148,7 @@ namespace potential
         void makeNonCoulombPotential(const T &nonCoulombPot);
 
         template <typename T>
-        double getPartialCharge(simulationBox::Atom &atom) const;
+        double getPartialCharge(molsys::Atom &atom) const;
 
         /***************************
          * standard setter methods *

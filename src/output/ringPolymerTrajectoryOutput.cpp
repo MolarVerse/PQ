@@ -34,7 +34,7 @@
 
 using output::RingPolymerTrajectoryOutput;
 using namespace settings;
-using namespace simulationBox;
+using namespace molsys;
 
 /**
  * @brief write the header of the beads trajectory file

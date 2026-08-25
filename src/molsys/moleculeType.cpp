@@ -24,7 +24,7 @@
 
 #include "collectionUtilities.hpp"
 
-using namespace simulationBox;
+using namespace molsys;
 
 /**
  * @brief Construct a new Molecule Type:: Molecule Type object

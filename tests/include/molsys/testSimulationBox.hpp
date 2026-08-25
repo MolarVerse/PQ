@@ -38,17 +38,17 @@ class TestSimulationBox : public ::testing::Test
    protected:
     void SetUp() override
     {
-        _simulationBox = new simulationBox::SimulationBox();
+        _simulationBox = new molsys::SimulationBox();
 
-        auto molecule1 = simulationBox::Molecule();
-        auto molecule2 = simulationBox::Molecule();
+        auto molecule1 = molsys::Molecule();
+        auto molecule2 = molsys::Molecule();
 
         molecule1.setNumberOfAtoms(3);
         molecule2.setNumberOfAtoms(2);
 
-        auto atom1 = std::make_shared<simulationBox::Atom>();
-        auto atom2 = std::make_shared<simulationBox::Atom>();
-        auto atom3 = std::make_shared<simulationBox::Atom>();
+        auto atom1 = std::make_shared<molsys::Atom>();
+        auto atom2 = std::make_shared<molsys::Atom>();
+        auto atom3 = std::make_shared<molsys::Atom>();
 
         atom1->setPosition(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
         atom2->setPosition(linearAlgebra::Vec3D(1.0, 0.0, 0.0));
@@ -66,8 +66,8 @@ class TestSimulationBox : public ::testing::Test
         molecule1.addAtom(atom2);
         molecule1.addAtom(atom3);
 
-        auto atom4 = std::make_shared<simulationBox::Atom>();
-        auto atom5 = std::make_shared<simulationBox::Atom>();
+        auto atom4 = std::make_shared<molsys::Atom>();
+        auto atom5 = std::make_shared<molsys::Atom>();
 
         atom4->setPosition(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
         atom5->setPosition(linearAlgebra::Vec3D(1.0, 0.0, 0.0));
@@ -84,8 +84,8 @@ class TestSimulationBox : public ::testing::Test
         _simulationBox->addMolecule(molecule1);
         _simulationBox->addMolecule(molecule2);
 
-        auto moleculeType1 = simulationBox::MoleculeType(1);
-        auto moleculeType2 = simulationBox::MoleculeType(2);
+        auto moleculeType1 = molsys::MoleculeType(1);
+        auto moleculeType2 = molsys::MoleculeType(2);
 
         _simulationBox->addMoleculeType(moleculeType1);
         _simulationBox->addMoleculeType(moleculeType2);
@@ -100,7 +100,7 @@ class TestSimulationBox : public ::testing::Test
 
     void TearDown() override { delete _simulationBox; }
 
-    simulationBox::SimulationBox *_simulationBox;
+    molsys::SimulationBox *_simulationBox;
 };
 
 #endif   // _TEST_SIMULATION_BOX_HPP_

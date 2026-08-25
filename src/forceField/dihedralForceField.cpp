@@ -37,7 +37,7 @@ using namespace linearAlgebra;
 using namespace physicalData;
 using namespace potential;
 using namespace settings;
-using namespace simulationBox;
+using namespace molsys;
 
 using enum HybridZone;
 

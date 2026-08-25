@@ -36,11 +36,11 @@
 #include "simulationBox.hpp"
 
 using namespace opt;
+using molsys::Atom;
+using molsys::CellList;
+using molsys::Molecule;
+using molsys::SimulationBox;
 using physicalData::PhysicalData;
-using simulationBox::Atom;
-using simulationBox::CellList;
-using simulationBox::Molecule;
-using simulationBox::SimulationBox;
 
 namespace
 {

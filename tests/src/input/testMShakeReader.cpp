@@ -73,7 +73,7 @@ TEST_F(TestMShakeReader, testProcessCommentLine)
         "Molecule type 1 not found"
     );
 
-    auto molType = simulationBox::MoleculeType(1);
+    auto molType = molsys::MoleculeType(1);
     _engine->getSimulationBox().addMoleculeType(molType);
 
     reader.processCommentLine(commentLine, mShakeReference);
@@ -103,7 +103,7 @@ TEST_F(TestMShakeReader, testProcessAtomLines)
         error_message
     );
 
-    auto molType = simulationBox::MoleculeType(1);
+    auto molType = molsys::MoleculeType(1);
     mShakeReference.setMoleculeType(molType);
 
     atomLines = std::vector<std::string>{atomLine1};
@@ -159,13 +159,13 @@ TEST_F(TestMShakeReader, testReadMemberFunction)
 {
     settings::FileSettings::setMShakeFileName("data/mshakeReader/mshake.dat");
 
-    auto molType = simulationBox::MoleculeType(1);
+    auto molType = molsys::MoleculeType(1);
     molType.addAtomName("H");
     molType.addAtomName("O");
     molType.addAtomName("C");
     _engine->getSimulationBox().addMoleculeType(molType);
 
-    auto molType2 = simulationBox::MoleculeType(2);
+    auto molType2 = molsys::MoleculeType(2);
     molType2.addAtomName("H");
     molType2.addAtomName("O");
     _engine->getSimulationBox().addMoleculeType(molType2);
@@ -206,13 +206,13 @@ TEST_F(TestMShakeReader, testRead)
     settings::FileSettings::setMShakeFileName("data/mshakeReader/mshake.dat");
     auto reader = input::mShake::MShakeReader(*_engine);
 
-    auto molType = simulationBox::MoleculeType(1);
+    auto molType = molsys::MoleculeType(1);
     molType.addAtomName("H");
     molType.addAtomName("O");
     molType.addAtomName("C");
     _engine->getSimulationBox().addMoleculeType(molType);
 
-    auto molType2 = simulationBox::MoleculeType(2);
+    auto molType2 = molsys::MoleculeType(2);
     molType2.addAtomName("H");
     molType2.addAtomName("O");
     _engine->getSimulationBox().addMoleculeType(molType2);

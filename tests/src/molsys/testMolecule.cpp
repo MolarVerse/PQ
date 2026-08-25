@@ -30,9 +30,9 @@
 
 TEST_F(TestMolecule, calculateCenterOfMass)
 {
-    const linearAlgebra::Vec3D     boxDimensions = {10.0, 10.0, 10.0};
-    const linearAlgebra::Vec3D     centerOfMass  = {1.0 / 3.0, 1.0 / 2.0, 0.0};
-    simulationBox::OrthorhombicBox box;
+    const linearAlgebra::Vec3D boxDimensions = {10.0, 10.0, 10.0};
+    const linearAlgebra::Vec3D centerOfMass  = {1.0 / 3.0, 1.0 / 2.0, 0.0};
+    molsys::OrthorhombicBox    box;
     box.setBoxDimensions(boxDimensions);
 
     _molecule->calculateCenterOfMass(box);
@@ -47,7 +47,7 @@ TEST_F(TestMolecule, scaleAtoms)
     const linearAlgebra::Vec3D atomPosition2 = _molecule->getAtomPosition(1);
     const linearAlgebra::Vec3D atomPosition3 = _molecule->getAtomPosition(2);
 
-    simulationBox::OrthorhombicBox box;
+    molsys::OrthorhombicBox box;
     box.setBoxDimensions({10.0, 10.0, 10.0});
 
     _molecule->calculateCenterOfMass(box);
@@ -68,7 +68,7 @@ TEST_F(TestMolecule, scaleAtomsWrapsIntoBox)
     const linearAlgebra::tensor3D scale =
         diagonalMatrix(linearAlgebra::Vec3D{0.5, 0.5, 0.5});
 
-    simulationBox::OrthorhombicBox box;
+    molsys::OrthorhombicBox box;
     box.setBoxDimensions({2.0, 2.0, 2.0});
 
     _molecule->setAtomPosition(0, {0.9, 0.0, 0.0});
@@ -101,7 +101,7 @@ TEST_F(TestMolecule, scaleVelocityPreservesInternalVelocities)
     const linearAlgebra::tensor3D scale =
         diagonalMatrix(linearAlgebra::Vec3D{0.5, 0.25, 2.0});
 
-    simulationBox::OrthorhombicBox box;
+    molsys::OrthorhombicBox box;
     box.setBoxDimensions({10.0, 10.0, 10.0});
 
     const auto relativeVelocity10 =
@@ -160,12 +160,12 @@ TEST_F(TestMolecule, getNumberOfAtomTypes)
 
 TEST_F(TestMolecule, getNumberOfAtomTypesCountsNonAdjacentDuplicates)
 {
-    auto molecule = simulationBox::Molecule();
+    auto molecule = molsys::Molecule();
     molecule.setNumberOfAtoms(3);
 
-    const auto atom1 = std::make_shared<simulationBox::Atom>();
-    const auto atom2 = std::make_shared<simulationBox::Atom>();
-    const auto atom3 = std::make_shared<simulationBox::Atom>();
+    const auto atom1 = std::make_shared<molsys::Atom>();
+    const auto atom2 = std::make_shared<molsys::Atom>();
+    const auto atom3 = std::make_shared<molsys::Atom>();
 
     atom1->setExternalAtomType(1);
     atom2->setExternalAtomType(2);
@@ -180,7 +180,7 @@ TEST_F(TestMolecule, getNumberOfAtomTypesCountsNonAdjacentDuplicates)
 
 TEST_F(TestMolecule, moleculeTypeCountsNonAdjacentDuplicates)
 {
-    auto moleculeType = simulationBox::MoleculeType();
+    auto moleculeType = molsys::MoleculeType();
 
     moleculeType.addAtomType(1);
     moleculeType.addAtomType(2);

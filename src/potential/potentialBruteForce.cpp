@@ -33,9 +33,9 @@
 using namespace physicalData;
 using namespace potential;
 using namespace settings;
-using namespace simulationBox;
+using namespace molsys;
 
-using enum simulationBox::HybridZone;
+using enum molsys::HybridZone;
 
 /**
  * @brief Destroy the Potential Brute Force:: Potential Brute Force object

@@ -23,13 +23,15 @@
 #include "connectivityElement.hpp"
 
 using namespace connectivity;
-using namespace simulationBox;
+using namespace molsys;
 
 ConnectivityElement::ConnectivityElement(
     const std::vector<Molecule *> &molecules,
     const std::vector<size_t>     &atomIndices
 )
-    : _molecules(molecules), _atomIndices(atomIndices){};
+    : _molecules(molecules), _atomIndices(atomIndices)
+{
+}
 
 /***************************
  *                         *

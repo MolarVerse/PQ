@@ -29,10 +29,10 @@
 
 #include "mShakeReference.hpp"
 
-namespace simulationBox
+namespace molsys
 {
     class SimulationBox;   // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
 namespace constraints
 {
@@ -59,17 +59,13 @@ namespace constraints
 
         void initMShake();
         void initMShakeReferences();
-        void applyMShake(simulationBox::SimulationBox &simBox);
-        void applyMRattle(simulationBox::SimulationBox &);
+        void applyMShake(molsys::SimulationBox &simBox);
+        void applyMRattle(molsys::SimulationBox &);
 
         [[nodiscard]]
-        size_t calcNumberOfMShakeMolecules(
-            simulationBox::SimulationBox &
-        ) const;
+        size_t calcNumberOfMShakeMolecules(molsys::SimulationBox &) const;
         [[nodiscard]]
-        size_t calcNumberOfBondConstraints(
-            simulationBox::SimulationBox &
-        ) const;
+        size_t calcNumberOfBondConstraints(molsys::SimulationBox &) const;
 
         [[nodiscard]] bool   isMShakeType(size_t moltype) const;
         [[nodiscard]] size_t findMShakeReferenceIndex(size_t) const;

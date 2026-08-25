@@ -26,7 +26,7 @@
 
 #include "simulationBox.hpp"
 
-using simulationBox::SimulationBox;
+using molsys::SimulationBox;
 using namespace linearAlgebra;
 
 /**

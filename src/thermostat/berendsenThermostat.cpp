@@ -35,7 +35,7 @@
 using thermostat::BerendsenThermostat;
 using namespace customException;
 using namespace settings;
-using namespace simulationBox;
+using namespace molsys;
 using namespace physicalData;
 using namespace utilities;
 

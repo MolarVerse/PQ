@@ -13,7 +13,7 @@ foreach(source_file ${source_files})
         PRIVATE
         thermostat
         physicalData
-        simulationBox
+        molsys
         gtest
         gmock
         pq_test_main

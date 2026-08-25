@@ -30,11 +30,11 @@
 #include "settings.hpp"
 #include "staticMatrix.hpp"
 
-namespace simulationBox
+namespace molsys
 {
     class SimulationBox;   // forward declaration
 
-}   // namespace simulationBox
+}   // namespace molsys
 
 namespace physicalData
 {
@@ -109,8 +109,8 @@ namespace physicalData
         double _ringPolymerEnergy = 0.0;
 
        public:
-        void calculateTemperature(simulationBox::SimulationBox&);
-        void calculateKinetics(simulationBox::SimulationBox&);
+        void calculateTemperature(molsys::SimulationBox&);
+        void calculateKinetics(molsys::SimulationBox&);
 
         [[nodiscard]] std::shared_ptr<PhysicalData> clone() const;
 

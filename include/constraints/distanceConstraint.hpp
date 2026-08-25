@@ -29,11 +29,11 @@
 #include "bond.hpp"
 #include "vector3d.hpp"
 
-namespace simulationBox
+namespace molsys
 {
     class Molecule;        // forward declaration
     class SimulationBox;   // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
 namespace constraints
 {
@@ -60,20 +60,17 @@ namespace constraints
 
        public:
         DistanceConstraint(
-            simulationBox::Molecule *molecule1,
-            simulationBox::Molecule *molecule2,
-            size_t                   atomIndex1,
-            size_t                   atomIndex2,
-            double                   lowerDistance,
-            double                   upperDistance,
-            double                   springConstant,
-            double                   dSpringConstantDt
+            molsys::Molecule *molecule1,
+            molsys::Molecule *molecule2,
+            size_t            atomIndex1,
+            size_t            atomIndex2,
+            double            lowerDistance,
+            double            upperDistance,
+            double            springConstant,
+            double            dSpringConstantDt
         );
 
-        void applyDistanceConstraint(
-            const simulationBox::SimulationBox &,
-            double
-        );
+        void applyDistanceConstraint(const molsys::SimulationBox &, double);
 
         [[nodiscard]] double getLowerDistance() const;
         [[nodiscard]] double getUpperDistance() const;

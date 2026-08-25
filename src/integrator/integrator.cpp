@@ -29,7 +29,7 @@
 #include "timingsSettings.hpp"                       // for TimingsSettings
 
 using namespace integrator;
-using namespace simulationBox;
+using namespace molsys;
 using namespace settings;
 using namespace constants;
 

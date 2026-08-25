@@ -125,7 +125,7 @@ TEST_F(TestSetup, setupNonCoulombicPairs)
     _engine->getPotential()->makeNonCoulombPotential(ForceFieldNonCoulomb());
     PotentialSetup potentialSetup(*_engine);
 
-    auto molecule = simulationBox::MoleculeType(1);
+    auto molecule = molsys::MoleculeType(1);
     molecule.addExternalGlobalVDWType(0);
     molecule.addExternalGlobalVDWType(1);
 

@@ -28,7 +28,7 @@
 #include "simulationBox.hpp"
 
 using namespace constraints;
-using namespace simulationBox;
+using namespace molsys;
 using namespace connectivity;
 
 /**
@@ -69,8 +69,8 @@ DistanceConstraint::DistanceConstraint(
  *
  */
 void DistanceConstraint::applyDistanceConstraint(
-    const simulationBox::SimulationBox &simulationBox,
-    double                              timeInterval
+    const molsys::SimulationBox &simulationBox,
+    double                       timeInterval
 )
 {
     _lowerEnergy = 0.0;

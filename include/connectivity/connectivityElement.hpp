@@ -41,12 +41,12 @@ namespace connectivity
     class ConnectivityElement
     {
        protected:
-        std::vector<simulationBox::Molecule *> _molecules;
-        std::vector<size_t>                    _atomIndices;
+        std::vector<molsys::Molecule *> _molecules;
+        std::vector<size_t>             _atomIndices;
 
        public:
         ConnectivityElement(
-            const std::vector<simulationBox::Molecule *> &,
+            const std::vector<molsys::Molecule *> &,
             const std::vector<size_t> &
         );
 
@@ -55,8 +55,8 @@ namespace connectivity
          ***************************/
 
         [[nodiscard]]
-        std::vector<simulationBox::Molecule *> getMolecules() const;
-        [[nodiscard]] std::vector<size_t>      getAtomIndices() const;
+        std::vector<molsys::Molecule *>   getMolecules() const;
+        [[nodiscard]] std::vector<size_t> getAtomIndices() const;
     };
 
 }   // namespace connectivity

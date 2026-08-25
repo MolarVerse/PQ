@@ -37,10 +37,10 @@ namespace physicalData
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
 
-namespace simulationBox
+namespace molsys
 {
     class SimulationBox;   // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
 namespace QM
 {
@@ -53,18 +53,18 @@ namespace QM
     class QMRunner
     {
        protected:
-        simulationBox::Periodicity _periodicity;
+        molsys::Periodicity _periodicity;
 
        public:
         virtual ~QMRunner() = default;
 
         static void throwAfterTimeout(const std::stop_token &stopToken);
 
-        void run(simulationBox::SimulationBox &, physicalData::PhysicalData &);
+        void         run(molsys::SimulationBox &, physicalData::PhysicalData &);
         virtual void run(
-            simulationBox::SimulationBox &,
+            molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            simulationBox::Periodicity per
+            molsys::Periodicity per
         ) = 0;
     };
 }   // namespace QM

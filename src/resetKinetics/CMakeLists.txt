@@ -10,7 +10,7 @@ target_include_directories(resetKinetics
 
 target_link_libraries(resetKinetics
     PUBLIC
-    simulationBox
+    molsys
     physicalData
     settings
     timings

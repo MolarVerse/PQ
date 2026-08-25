@@ -42,15 +42,15 @@
 
 using customException::MolDescriptorException;
 using customException::UserInputException;
+using molsys::Atom;
+using molsys::Molecule;
+using molsys::MoleculeType;
 using settings::JobType;
 using settings::Settings;
 using settings::WaterInterModel;
 using settings::WaterIntraModel;
 using settings::WaterModelSettings;
 using setup::WaterModelSetup;
-using simulationBox::Atom;
-using simulationBox::Molecule;
-using simulationBox::MoleculeType;
 
 namespace
 {
