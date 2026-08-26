@@ -69,13 +69,13 @@ std::vector<size_t> SimulationBox::flattenMolTypes()
 
 /**
  * @brief flattens internal global VDW types of each atom into a single vector
- * of size_t
+ * of VdwType
  *
- * @return std::vector<size_t>
+ * @return std::vector<VdwType>
  */
-std::vector<size_t> SimulationBox::flattenInternalGlobalVDWTypes()
+std::vector<VdwType> SimulationBox::flattenInternalGlobalVDWTypes()
 {
-    std::vector<size_t> internalGlobalVDWTypes;
+    std::vector<VdwType> internalGlobalVDWTypes;
 
     auto addInternalGlobalVDWTypes = [&internalGlobalVDWTypes](auto &atom)
     { internalGlobalVDWTypes.push_back(atom->getInternalGlobalVDWType()); };

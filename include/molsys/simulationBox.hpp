@@ -153,9 +153,9 @@ namespace molsys
         );
 
 #ifdef WITH_MPI
-        [[nodiscard]] std::vector<size_t> flattenAtomTypes();
-        [[nodiscard]] std::vector<size_t> flattenMolTypes();
-        [[nodiscard]] std::vector<size_t> flattenInternalGlobalVDWTypes();
+        [[nodiscard]] std::vector<size_t>  flattenAtomTypes();
+        [[nodiscard]] std::vector<size_t>  flattenMolTypes();
+        [[nodiscard]] std::vector<VdwType> flattenInternalGlobalVDWTypes();
 
         [[nodiscard]] std::vector<double> flattenVelocities();
         [[nodiscard]] std::vector<double> flattenForces();
