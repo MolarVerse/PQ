@@ -24,7 +24,6 @@
 
 #include <algorithm>     // for copy, max
 #include <format>        // for std::format
-#include <map>           // for map
 #include <ranges>        // for __find_if_fn, find_if
 #include <string_view>   // for string_view
 
@@ -116,7 +115,7 @@ void ForceFieldNonCoulomb::setupNonCoulombicCutoffs()
  *
  */
 void ForceFieldNonCoulomb::determineInternalGlobalVdwTypes(
-    const std::map<ExtVdwType, VdwType> &extToIntGlobalVDWTypes
+    const std::unordered_map<ExtVdwType, VdwType> &extToIntGlobalVDWTypes
 )
 {
     auto setIntVDWType = [&extToIntGlobalVDWTypes](auto &nonCoulombPair)

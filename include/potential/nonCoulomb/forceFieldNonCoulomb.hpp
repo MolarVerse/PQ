@@ -25,8 +25,8 @@
 #define _FORCE_FIELD_NON_COULOMB_HPP_
 
 #include <cstddef>   // for size_t
-#include <map>       // for map
 #include <optional>
+#include <unordered_map>
 
 #include "nonCoulombPotential.hpp"
 #include "strongTypes.hpp"
@@ -59,7 +59,7 @@ namespace potential
 
         void setupNonCoulombicCutoffs();
         void determineInternalGlobalVdwTypes(
-            const std::map<ExtVdwType, VdwType> &
+            const std::unordered_map<ExtVdwType, VdwType> &
         );
         void fillDiagOfNonCoulPairsMatrix(
             std::vector<std::shared_ptr<NonCoulombPair>> &

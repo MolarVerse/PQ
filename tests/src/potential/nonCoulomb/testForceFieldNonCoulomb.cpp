@@ -24,7 +24,6 @@
 
 #include <gtest/gtest.h>   // for Test, EXPECT_EQ, TestInfo
 
-#include <map>        // for map
 #include <memory>     // for make_shared, shared_ptr
 #include <optional>   // for optional, nullopt
 #include <utility>    // for move
@@ -143,7 +142,7 @@ TEST_F(TestNonCoulombPotentialFF, determineInternalGlobalVdwTypes)
         )
     );
 
-    std::map<ExtVdwType, VdwType> externalToInternalTypes(
+    std::unordered_map<ExtVdwType, VdwType> externalToInternalTypes(
         {{ExtVdwType{1}, VdwType{0}},
          {ExtVdwType{2}, VdwType{1}},
          {ExtVdwType{5}, VdwType{2}}}
@@ -229,7 +228,7 @@ TEST_F(
 
     // these two lines were already tested in
     // TestPotential_determineInternalGlobalVdwTypes
-    std::map<ExtVdwType, VdwType> externalToInternalTypes(
+    std::unordered_map<ExtVdwType, VdwType> externalToInternalTypes(
         {{ExtVdwType{1}, VdwType{0}},
          {ExtVdwType{2}, VdwType{1}},
          {ExtVdwType{5}, VdwType{2}}}
@@ -276,7 +275,7 @@ TEST_F(
 
     // these two lines were already tested in
     // TestPotential_determineInternalGlobalVdwTypes
-    std::map<ExtVdwType, VdwType> externalToInternalTypes(
+    std::unordered_map<ExtVdwType, VdwType> externalToInternalTypes(
         {{ExtVdwType{1}, VdwType{0}},
          {ExtVdwType{2}, VdwType{1}},
          {ExtVdwType{5}, VdwType{2}}}
@@ -330,7 +329,7 @@ TEST_F(
 
     // these two lines were already tested in
     // TestPotential_determineInternalGlobalVdwTypes
-    std::map<ExtVdwType, VdwType> externalToInternalTypes(
+    std::unordered_map<ExtVdwType, VdwType> externalToInternalTypes(
         {{ExtVdwType{1}, VdwType{0}},
          {ExtVdwType{2}, VdwType{1}},
          {ExtVdwType{5}, VdwType{2}}}
@@ -374,7 +373,7 @@ TEST_F(
 
     // these two lines were already tested in
     // TestPotential_determineInternalGlobalVdwTypes
-    std::map<ExtVdwType, VdwType> externalToInternalTypes(
+    std::unordered_map<ExtVdwType, VdwType> externalToInternalTypes(
         {{ExtVdwType{1}, VdwType{0}},
          {ExtVdwType{2}, VdwType{1}},
          {ExtVdwType{5}, VdwType{2}}}
@@ -431,7 +430,7 @@ TEST_F(
 
     // these two lines were already tested in
     // TestPotential_determineInternalGlobalVdwTypes
-    std::map<ExtVdwType, VdwType> externalToInternalTypes(
+    std::unordered_map<ExtVdwType, VdwType> externalToInternalTypes(
         {{ExtVdwType{1}, VdwType{0}},
          {ExtVdwType{2}, VdwType{1}},
          {ExtVdwType{5}, VdwType{2}}}
@@ -487,7 +486,7 @@ TEST_F(
 
     // these two lines were already tested in
     // TestPotential_determineInternalGlobalVdwTypes
-    std::map<ExtVdwType, VdwType> externalToInternalTypes(
+    std::unordered_map<ExtVdwType, VdwType> externalToInternalTypes(
         {{ExtVdwType{1}, VdwType{0}},
          {ExtVdwType{2}, VdwType{1}},
          {ExtVdwType{5}, VdwType{2}}}
@@ -551,7 +550,7 @@ TEST_F(
 
     // these two lines were already tested in
     // TestPotential_determineInternalGlobalVdwTypes
-    std::map<ExtVdwType, VdwType> externalToInternalTypes(
+    std::unordered_map<ExtVdwType, VdwType> externalToInternalTypes(
         {{ExtVdwType{1}, VdwType{0}},
          {ExtVdwType{2}, VdwType{1}},
          {ExtVdwType{5}, VdwType{2}}}
@@ -599,7 +598,7 @@ TEST_F(
 
     // these two lines were already tested in
     // TestPotential_determineInternalGlobalVdwTypes
-    std::map<ExtVdwType, VdwType> externalToInternalTypes(
+    std::unordered_map<ExtVdwType, VdwType> externalToInternalTypes(
         {{ExtVdwType{1}, VdwType{0}},
          {ExtVdwType{2}, VdwType{1}},
          {ExtVdwType{5}, VdwType{2}}}
@@ -667,7 +666,7 @@ TEST_F(TestNonCoulombPotentialFF, getSelfInteractionNonCoulPairs)
 
     // these two lines were already tested in
     // TestPotential_determineInternalGlobalVdwTypes
-    std::map<ExtVdwType, VdwType> externalToInternalTypes(
+    std::unordered_map<ExtVdwType, VdwType> externalToInternalTypes(
         {{ExtVdwType{1}, VdwType{0}},
          {ExtVdwType{2}, VdwType{1}},
          {ExtVdwType{5}, VdwType{2}}}

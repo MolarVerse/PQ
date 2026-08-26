@@ -24,11 +24,11 @@
 
 #define _SIMULATION_BOX_HPP_
 
-#include <map>   // for map
 #include <memory>
 #include <optional>   // for optional
 #include <set>
 #include <string>   // for string
+#include <unordered_map>
 #include <vector>   // for vector
 
 #include "atom.hpp"                // for Atom
@@ -88,8 +88,9 @@ namespace molsys
         std::vector<Molecule>              _molecules;
         std::vector<MoleculeType>          _moleculeTypes;
 
-        std::vector<ExtVdwType>       _externalGlobalVdwTypes;
-        std::map<ExtVdwType, VdwType> _externalToInternalGlobalVDWTypes;
+        std::vector<ExtVdwType> _externalGlobalVdwTypes;
+        std::unordered_map<ExtVdwType, VdwType>
+            _externalToInternalGlobalVDWTypes;
 
        public:
         void                                         copy(const SimulationBox&);
@@ -215,7 +216,9 @@ namespace molsys
         [[nodiscard]]
         std::vector<ExtVdwType>& getExternalGlobalVdwTypes();
         [[nodiscard]]
-        std::map<ExtVdwType, VdwType>& getExternalToInternalGlobalVDWTypes();
+        std::unordered_map<
+            ExtVdwType,
+            VdwType>& getExternalToInternalGlobalVDWTypes();
 
         [[nodiscard]] Box&                 getBox();
         [[nodiscard]] Box&                 getBox() const;
