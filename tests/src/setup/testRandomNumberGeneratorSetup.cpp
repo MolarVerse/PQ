@@ -29,7 +29,6 @@
 #include "randomNumberGeneratorSetup.hpp"   // for randomNumberGeneratorSetup
 #include "settings.hpp"                     // for Settings
 
-using setup::RandomNumberGeneratorSetup;
 using namespace settings;
 
 TEST(TestRandomNumberGeneratorSetup, setupWithoutRandomSeed)
@@ -48,7 +47,8 @@ TEST(TestRandomNumberGeneratorSetup, setupWithoutRandomSeed)
     getline(file, line);
     EXPECT_EQ(line, "         Using system-generated random seed");
 
-    ::remove("default.log");
+    const auto errorCode = std::remove("default.log");
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
 }
 
 TEST(TestRandomNumberGeneratorSetup, setupWithRandomSeed)
@@ -67,5 +67,6 @@ TEST(TestRandomNumberGeneratorSetup, setupWithRandomSeed)
     getline(file, line);
     EXPECT_EQ(line, "         Random seed has been set to: 73");
 
-    ::remove("default.log");
+    const auto errorCode = std::remove("default.log");
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
 }

@@ -22,17 +22,22 @@
 
 #include "velocityRescalingThermostat.hpp"
 
-#include <cmath>    // for sqrt
+#include <cmath>   // for sqrt
 
+#include "exceptions.hpp"           // for UserInputException
+#include "globalTimer.hpp"          // for GlobalTimer
+#include "mathUtilities.hpp"        // for isZero
 #include "physicalData.hpp"         // for PhysicalData
 #include "simulationBox.hpp"        // for SimulationBox
 #include "thermostatSettings.hpp"   // for ThermostatType
 #include "timingsSettings.hpp"      // for TimingsSettings
 
 using thermostat::VelocityRescalingThermostat;
+using namespace customException;
 using namespace settings;
-using namespace simulationBox;
+using namespace molsys;
 using namespace physicalData;
+using namespace utilities;
 
 /**
  * @brief Construct a new Velocity Rescaling Thermostat:: Velocity Rescaling
@@ -62,6 +67,24 @@ VelocityRescalingThermostat::VelocityRescalingThermostat(
 }
 
 /**
+ * @brief Copy assignment operator for Velocity Rescaling Thermostat
+ *
+ * @param other
+ * @return VelocityRescalingThermostat&
+ */
+VelocityRescalingThermostat &VelocityRescalingThermostat::operator=(
+    const VelocityRescalingThermostat &other
+)
+{
+    if (this != &other)
+    {
+        Thermostat::operator=(other);
+        _tau = other._tau;
+    }
+    return *this;
+}
+
+/**
  * @brief apply thermostat - Velocity Rescaling
  *
  * @link https://doi.org/10.1063/1.2408420
@@ -74,15 +97,26 @@ void VelocityRescalingThermostat::applyThermostat(
     PhysicalData  &physicalData
 )
 {
-    startTimingsSection("Velocity Rescaling");
+    auto _ = scopedTimer(TimerId::Thermostat, "Velocity Rescaling");
 
     physicalData.calculateTemperature(simulationBox);
 
     _temperature = physicalData.getTemperature();
 
+    if (isZero(_temperature))
+    {
+        if (isZero(_targetTemperature))
+            return;
+
+        throw UserInputException(
+            "Cannot apply velocity rescaling to a zero-temperature system "
+            "with a positive target temperature. Initialize velocities first."
+        );
+    }
+
     const auto timeStep  = TimingsSettings::getTimeStep();
     const auto tempRatio = _targetTemperature / _temperature;
-    const auto dof       = double(simulationBox.getDegreesOfFreedom());
+    const auto dof = static_cast<double>(simulationBox.getDegreesOfFreedom());
 
     auto lambda = 1.0 + timeStep / _tau * (tempRatio - 1.0);
 
@@ -111,8 +145,6 @@ void VelocityRescalingThermostat::applyThermostat(
     const auto temperature = _temperature * berendsenFactor * berendsenFactor;
 
     physicalData.setTemperature(temperature);
-
-    stopTimingsSection("Velocity Rescaling");
 }
 
 /**

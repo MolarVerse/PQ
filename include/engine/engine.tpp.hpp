@@ -24,6 +24,10 @@
 
 #define _ENGINE_TPP_
 
+#include <memory>
+#include <type_traits>
+#include <utility>
+
 #include "engine.hpp"
 
 namespace engine
@@ -38,21 +42,24 @@ namespace engine
      * @tparam T
      */
     template <typename T>
-    inline void Engine::makePotential(T)
+    inline void Engine::makePotential(T /*potential*/)
     {
         _potential = std::make_unique<T>();
     }
 
     /**
-     * @brief make unique_ptr for virial
+     * @brief make unique_ptr for waterIntra
      *
      * @tparam T
      */
     template <typename T>
-    inline void Engine::makeVirial(T virial)
+    inline void Engine::makeIntraWater(T &&intraWaterModel)
     {
-        _virial = std::make_unique<T>(virial);
+        using IntraWaterType = std::decay_t<T>;
+        _intraWater =
+            std::make_unique<IntraWaterType>(std::forward<T>(intraWaterModel));
     }
+
 }   // namespace engine
 
 #endif   // _ENGINE_TPP_

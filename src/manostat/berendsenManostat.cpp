@@ -25,7 +25,8 @@
 #include <algorithm>   // for __for_each_fn, for_each
 #include <cmath>       // for cbrt
 
-#include "exceptions.hpp"         // for ExceptionType
+#include "exceptions.hpp"   // for ExceptionType
+#include "globalTimer.hpp"
 #include "manostatSettings.hpp"   // for ManostatType, Isotropy
 #include "physicalData.hpp"       // for PhysicalData
 #include "simulationBox.hpp"      // for SimulationBox
@@ -35,7 +36,7 @@ using namespace linearAlgebra;
 using namespace settings;
 using namespace manostat;
 using namespace customException;
-using namespace simulationBox;
+using namespace molsys;
 using namespace physicalData;
 
 /**
@@ -50,9 +51,11 @@ BerendsenManostat::BerendsenManostat(
     const double tau,
     const double compressibility
 )
-    : Manostat(targetPressure), _tau(tau), _compressibility(compressibility)
+    : Manostat(targetPressure),
+      _tau(tau),
+      _compressibility(compressibility),
+      _dt(TimingsSettings::getTimeStep())
 {
-    _dt = TimingsSettings::getTimeStep();
 }
 
 /**
@@ -71,7 +74,9 @@ SemiIsotropicBerendsenManostat::SemiIsotropicBerendsenManostat(
 )
     : BerendsenManostat(targetPressure, tau, compressibility),
       _2DAnisotropicAxis(anisotropicAxis),
-      _2DIsotropicAxes(isotropicAxes) {};
+      _2DIsotropicAxes(isotropicAxes)
+{
+}
 
 /**
  * @brief apply Berendsen manostat for NPT ensemble
@@ -84,7 +89,7 @@ void BerendsenManostat::applyManostat(
     PhysicalData  &physicalData
 )
 {
-    startTimingsSection("Berendsen");
+    auto _ = scopedTimer(TimerId::Manostat, "Berendsen");
 
     calculatePressure(simBox, physicalData);
 
@@ -108,8 +113,6 @@ void BerendsenManostat::applyManostat(
     { molecule.scale(mu, simBox.getBox()); };
 
     std::ranges::for_each(simBox.getMolecules(), scaleMolecule);
-
-    stopTimingsSection("Berendsen");
 }
 
 /**

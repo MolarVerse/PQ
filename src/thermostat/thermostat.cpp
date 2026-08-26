@@ -22,11 +22,12 @@
 
 #include "thermostat.hpp"
 
+#include "globalTimer.hpp"
 #include "physicalData.hpp"         // for PhysicalData
 #include "thermostatSettings.hpp"   // for ThermostatSettings
 
 using thermostat::Thermostat;
-using namespace simulationBox;
+using namespace molsys;
 using namespace physicalData;
 using namespace settings;
 
@@ -53,11 +54,9 @@ void Thermostat::applyThermostat(
     PhysicalData  &physicalData
 )
 {
-    startTimingsSection("Calc Temperature");
+    auto _ = scopedTimer(TimerId::Thermostat, "Calc Temperature");
 
     physicalData.calculateTemperature(simulationBox);
-
-    stopTimingsSection("Calc Temperature");
 }
 
 /**

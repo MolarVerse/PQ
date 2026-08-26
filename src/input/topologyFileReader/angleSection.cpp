@@ -33,7 +33,7 @@
 #include "simulationBox.hpp"     // for SimulationBox
 
 using namespace input::topology;
-using namespace simulationBox;
+using namespace molsys;
 using namespace forceField;
 using namespace customException;
 using namespace engine;
@@ -62,17 +62,23 @@ void AngleSection::processSection(
     Engine                   &engine
 )
 {
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
     if (lineElements.size() != 4 && lineElements.size() != 5)
-        throw TopologyException(std::format(
-            "Wrong number of arguments in topology file angle section at line "
-            "{} - number of elements has to be 4 or 5!",
-            _lineNumber
-        ));
+    {
+        throw TopologyException(
+            std::format(
+                "Wrong number of arguments in topology file angle section at "
+                "line "
+                "{} - number of elements has to be 4 or 5!",
+                _lineNumber
+            )
+        );
+    }
 
     auto atom1     = stoul(lineElements[0]);
     auto atom2     = stoul(lineElements[1]);
     auto atom3     = stoul(lineElements[2]);
-    auto angleType = stoul(lineElements[3]);
+    auto angleType = AngleId{stoul(lineElements[3])};
     auto isLinker  = false;
 
     if (5 == lineElements.size())
@@ -81,19 +87,28 @@ void AngleSection::processSection(
             isLinker = true;
 
         else
-            throw TopologyException(std::format(
-                "Fifth entry in topology file in angle section has to be a "
-                "\'*\' or empty at line {}!",
-                _lineNumber
-            ));
+        {
+            throw TopologyException(
+                std::format(
+                    "Fifth entry in topology file in angle section has to be a "
+                    "\'*\' or empty at line {}!",
+                    _lineNumber
+                )
+            );
+        }
     }
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
     if (atom1 == atom2 || atom1 == atom3 || atom2 == atom3)
-        throw TopologyException(std::format(
-            "Topology file angle section at line {} - atoms cannot be the "
-            "same!",
-            _lineNumber
-        ));
+    {
+        throw TopologyException(
+            std::format(
+                "Topology file angle section at line {} - atoms cannot be the "
+                "same!",
+                _lineNumber
+            )
+        );
+    }
 
     auto &simBox = engine.getSimulationBox();
 
@@ -107,7 +122,7 @@ void AngleSection::processSection(
     auto angleForceField = AngleForceField(mols, atomIndices, angleType);
     angleForceField.setIsLinker(isLinker);
 
-    engine.getForceField().addAngle(angleForceField);
+    engine.getForceField()->addAngle(angleForceField);
 }
 
 /**
@@ -127,8 +142,13 @@ std::string AngleSection::keyword() { return "angles"; }
 void AngleSection::endedNormally(const bool endedNormal) const
 {
     if (!endedNormal)
-        throw TopologyException(std::format(
-            "Topology file angle section at line {} - no end of section found!",
-            _lineNumber
-        ));
+    {
+        throw TopologyException(
+            std::format(
+                "Topology file angle section at line {} - no end of section "
+                "found!",
+                _lineNumber
+            )
+        );
+    }
 }

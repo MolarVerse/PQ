@@ -24,58 +24,25 @@
 
 #define _VIRIAL_HPP_
 
-#include "settings.hpp"
 #include "staticMatrix.hpp"
-#include "timer.hpp"
 
-namespace simulationBox
+namespace molsys
 {
     class SimulationBox;   // forward declaration
-}
-
-namespace physicalData
-{
-    class PhysicalData;   // forward declaration
-}
+}   // namespace molsys
 
 namespace virial
 {
-    /**
-     * @class Virial
-     *
-     * @brief Base class for virial calculation
-     *
-     * @details implements virial calculation, which is valid for both atomic
-     * and molecular systems
-     */
-    class Virial : public timings::Timer
-    {
-       protected:
-        settings::VirialType _virialType;
+    [[nodiscard]]
+    linearAlgebra::tensor3D calculateQMVirial(const molsys::SimulationBox&);
 
-        linearAlgebra::tensor3D _virial;
+    [[nodiscard]]
+    linearAlgebra::tensor3D calculateVirial(molsys::SimulationBox&);
 
-       public:
-        virtual ~Virial() = default;
-
-        virtual std::shared_ptr<Virial> clone() const = 0;
-
-        virtual void calculateVirial(
-            simulationBox::SimulationBox&,
-            physicalData::PhysicalData&
-        );
-        virtual void intraMolecularVirialCorrection(
-            simulationBox::SimulationBox&,
-            physicalData::PhysicalData&
-        )
-        {
-        }
-
-        void setVirial(const linearAlgebra::tensor3D& virial);
-
-        [[nodiscard]] linearAlgebra::tensor3D getVirial() const;
-        [[nodiscard]] settings::VirialType    getVirialType() const;
-    };
+    [[nodiscard]]
+    linearAlgebra::tensor3D intraMolecularVirialCorrection(
+        const molsys::SimulationBox&
+    );
 }   // namespace virial
 
 #endif   // _VIRIAL_HPP_

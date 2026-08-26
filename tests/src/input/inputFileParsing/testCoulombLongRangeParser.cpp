@@ -44,7 +44,7 @@ TEST_F(TestInputFileReader, testParseCoulombLongRange)
 {
     using enum CoulombLongRangeType;
 
-    CoulombLongRangeInputParser parser(*_engine);
+    CoulombLongRangeInputParser parser;
 
     std::vector<std::string> lineElements = {"long-range", "=", "none"};
     parser.parseCoulombLongRange(lineElements, 0);
@@ -76,7 +76,7 @@ TEST_F(TestInputFileReader, testParseCoulombLongRange)
  */
 TEST_F(TestInputFileReader, testParseWolfParameter)
 {
-    CoulombLongRangeInputParser parser(*_engine);
+    CoulombLongRangeInputParser parser;
 
     std::vector<std::string> lineElements = {"wolf_param", "=", "1.0"};
     parser.parseWolfParameter(lineElements, 0);
@@ -96,7 +96,7 @@ TEST_F(TestInputFileReader, testParseWolfParameter)
  */
 TEST_F(TestInputFileReader, testParseReactionFieldEpsilon)
 {
-    CoulombLongRangeInputParser parser(*_engine);
+    CoulombLongRangeInputParser parser;
 
     std::vector<std::string> lineElements = {"rf-epsilon", "=", "1.0"};
     parser.parseReactionFieldEpsilon(lineElements, 0);

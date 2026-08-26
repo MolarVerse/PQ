@@ -34,12 +34,11 @@
 #include "exceptions.hpp"        // for RstFileException
 #include "molecule.hpp"          // for Molecule
 #include "moleculeType.hpp"      // for MoleculeType
-#include "settings.hpp"          // for Settings
 #include "simulationBox.hpp"     // for SimulationBox
 #include "stringUtilities.hpp"   // for removeComments, splitString
 
 using namespace input::restartFile;
-using namespace simulationBox;
+using namespace molsys;
 using namespace engine;
 using namespace customException;
 using namespace settings;
@@ -116,6 +115,7 @@ void AtomSection::process(
          ********************************************************************************/
 
         if (molecule->getMoltype() != moltype)
+        {
             throw RstFileException(
                 std::format(
                     "Error in line {}: Molecule must have {} atoms",
@@ -123,6 +123,7 @@ void AtomSection::process(
                     molecule->getNumberOfAtoms()
                 )
             );
+        }
 
         processAtomLine(lineElements, simBox, *molecule);
 
@@ -181,13 +182,10 @@ void AtomSection::processAtomLine(
 
     simBox.addAtom(atom);
     molecule.addAtom(atom);
-
-    if (Settings::isQMOnly())
-        simBox.addQMAtom(atom);
 }
 
 /**
- * @brief adds a single atom with moltype 0 to the simulation box _qmAtoms
+ * @brief adds a single atom with moltype 0 to the simulation box
  *
  * @details for details how the line looks like see processAtomLine
  *
@@ -210,13 +208,9 @@ void AtomSection::processQMAtomLine(
 
     setAtomPropertyVectors(lineElements, atom);
 
-    atom->setQMOnly(true);
-    molecule->setQMOnly(true);
-
     molecule->addAtom(atom);
 
     simBox.addAtom(atom);
-    simBox.addQMAtom(atom);
     simBox.addMolecule(*molecule);
 }
 
@@ -239,6 +233,7 @@ void AtomSection::checkAtomLine(
     ++_lineNumber;
 
     if (std::string line; !getline(*_fp, line))
+    {
         throw RstFileException(
             std::format(
                 "Error in line {}: Molecule must have {} atoms",
@@ -246,6 +241,7 @@ void AtomSection::checkAtomLine(
                 molecule.getNumberOfAtoms()
             )
         );
+    }
     else
     {
         line         = removeComments(line, "#");
@@ -272,6 +268,7 @@ void AtomSection::setAtomPropertyVectors(
 
         atom->setPosition({x, y, z});
 
+        // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
         if (lineElements.size() > 6)
         {
             const auto vx = stringToFiniteDouble(lineElements[6]);
@@ -316,6 +313,7 @@ void AtomSection::setAtomPropertyVectors(
 
             atom->setForceOld({oldFx, oldFy, oldFz});
         }
+        // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
     }
     catch (const std::exception &e)
     {
@@ -338,7 +336,9 @@ void AtomSection::checkNumberOfLineArguments(
 {
     const auto lineSize = lineElements.size();
 
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
     if (lineSize % 3 != 0 || lineSize < 6 || lineSize > 21)
+    {
         throw RstFileException(
             std::format(
                 "Error in line {}: Atom section must have 6, 9, 12, 15, 18 or "
@@ -346,6 +346,8 @@ void AtomSection::checkNumberOfLineArguments(
                 _lineNumber
             )
         );
+    }
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 }
 
 /**

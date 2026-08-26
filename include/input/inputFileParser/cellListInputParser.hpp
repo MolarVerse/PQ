@@ -26,6 +26,11 @@
 
 #include "inputFileParser.hpp"
 
+namespace molsys
+{
+    class CellList;   // forward declaration
+}   // namespace molsys
+
 namespace input
 {
     /**
@@ -36,8 +41,12 @@ namespace input
      */
     class CellListInputParser : public InputFileParser
     {
+        std::shared_ptr<molsys::CellList> _cellListPtr;
+
        public:
-        explicit CellListInputParser(pq::Engine &);
+        explicit CellListInputParser(
+            std::shared_ptr<molsys::CellList> cellListPtr
+        );
 
         void parseCellListActivated(
             const std::vector<std::string> &,

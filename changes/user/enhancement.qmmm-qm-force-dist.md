@@ -1,0 +1,1 @@
+- Add qm_force_distribution keyword to handle distribution of the QM forces in hybrid type calculations (options: none, equal, random, distance_weighted)

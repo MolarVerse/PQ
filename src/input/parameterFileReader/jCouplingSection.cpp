@@ -81,7 +81,9 @@ void JCouplingSection::processSection(
     Engine                   &engine
 )
 {
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
     if (lineElements.size() != 7 && lineElements.size() != 8)
+    {
         throw ParameterFileException(
             std::format(
                 "Wrong number of arguments in parameter file j-coupling "
@@ -90,6 +92,7 @@ void JCouplingSection::processSection(
                 _lineNumber
             )
         );
+    }
 
     auto id            = stoul(lineElements[0]);
     auto J0            = stod(lineElements[1]);
@@ -115,11 +118,12 @@ void JCouplingSection::processSection(
         if (symmetry == "-")
             upperSymmetry = false;
     }
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
     auto jCouplingType = JCouplingType(id, J0, forceConstant, a, b, c, phase);
 
     jCouplingType.setUpperSymmetry(upperSymmetry);
     jCouplingType.setLowerSymmetry(lowerSymmetry);
 
-    engine.getForceField().addJCouplingType(jCouplingType);
+    engine.getForceField()->addJCouplingType(jCouplingType);
 }

@@ -29,7 +29,6 @@
 #include <thread>
 
 #include "globalTimer.hpp"
-#include "timer.hpp"
 #include "timingsOutput.hpp"
 
 using namespace output;
@@ -53,12 +52,10 @@ TEST(TestTimingsOutput, writeProducesHeaderAndTotalRow)
     TimingsOutput out(path);
     out.setFilename(path);
 
-    GlobalTimer global;
-    global.startSimulationTimer();
     std::this_thread::sleep_for(std::chrono::milliseconds(1));
-    global.stopSimulationTimer();
+    timings::GlobalTimer::get().stopSimulationTimer();
 
-    out.write(global);
+    out.write();
     out.close();
 
     const auto content = slurp(path);
@@ -67,7 +64,8 @@ TEST(TestTimingsOutput, writeProducesHeaderAndTotalRow)
     EXPECT_NE(content.find("Time [%]"), std::string::npos);
     EXPECT_NE(content.find("Total"), std::string::npos);
     EXPECT_NE(content.find("RelT [%]"), std::string::npos);
-    ::remove(path.c_str());
+    const auto errorCode = std::remove(path.c_str());
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: " << path;
 }
 
 TEST(TestTimingsOutput, writeListsRegisteredSubTimers)
@@ -77,23 +75,23 @@ TEST(TestTimingsOutput, writeListsRegisteredSubTimers)
     TimingsOutput out(path);
     out.setFilename(path);
 
-    GlobalTimer global;
-    global.startSimulationTimer();
+    {
+        auto _ = scopedTimer(TimerId::DefaultTimings, "inner");
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
 
-    Timer t("MySection");
-    t.startTimingsSection("inner");
     std::this_thread::sleep_for(std::chrono::milliseconds(1));
-    t.stopTimingsSection("inner");
+    timings::GlobalTimer::get().stopSimulationTimer();
 
-    global.addTimer(t);
-    std::this_thread::sleep_for(std::chrono::milliseconds(1));
-    global.stopSimulationTimer();
-
-    out.write(global);
+    out.write();
     out.close();
 
     const auto content = slurp(path);
-    EXPECT_NE(content.find("MySection"), std::string::npos);
+    EXPECT_NE(
+        content.find(toString(TimerId::DefaultTimings)),
+        std::string::npos
+    );
     EXPECT_NE(content.find("inner"), std::string::npos);
-    ::remove(path.c_str());
+    const auto errorCode = std::remove(path.c_str());
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: " << path;
 }

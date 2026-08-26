@@ -27,18 +27,23 @@
 #include <cstddef>     // for size_t
 
 #include "constants/conversionFactors.hpp"   // for _FS_TO_S_, _S_TO_FS_
-#include "physicalData.hpp"                  // for PhysicalData
-#include "simulationBox.hpp"                 // for SimulationBox
-#include "staticMatrix.hpp"                  // for operator*, operator+=
-#include "thermostatSettings.hpp"            // for ThermostatSettings
-#include "vector3d.hpp"                      // for Vec3D, Vector3D, cross
+#include "exceptions.hpp"                    // for UserInputException
+#include "globalTimer.hpp"
+#include "mathUtilities.hpp"        // for isZero
+#include "physicalData.hpp"         // for PhysicalData
+#include "simulationBox.hpp"        // for SimulationBox
+#include "staticMatrix.hpp"         // for operator*, operator+=
+#include "thermostatSettings.hpp"   // for ThermostatSettings
+#include "vector3d.hpp"             // for Vec3D, Vector3D, cross
 
 using namespace resetKinetics;
 using namespace linearAlgebra;
 using namespace physicalData;
-using namespace simulationBox;
+using namespace molsys;
 using namespace constants;
+using namespace customException;
 using namespace settings;
+using namespace utilities;
 
 /**
  * @brief Construct a new Reset Kinetics:: Reset Kinetics object
@@ -82,7 +87,7 @@ void ResetKinetics::reset(
     SimulationBox &simBox
 )
 {
-    startTimingsSection("Reset Kinetics");
+    auto _ = scopedTimer(TimerId::ResetKinetics, "Reset Kinetics");
 
     _momentum        = data.getMomentum() * S_TO_FS;
     _angularMomentum = data.getAngularMomentum() * S_TO_FS;
@@ -113,8 +118,6 @@ void ResetKinetics::reset(
     data.setTemperature(_temperature);
     data.setMomentum(_momentum * FS_TO_S);
     data.setAngularMomentum(_angularMomentum * FS_TO_S);
-
-    stopTimingsSection("Reset Kinetics");
 }
 
 /**
@@ -129,7 +132,16 @@ void ResetKinetics::reset(
 void ResetKinetics::resetTemperature(SimulationBox &simBox)
 {
     const auto targetTemp = ThermostatSettings::getActualTargetTemperature();
-    const auto lambda     = ::sqrt(targetTemp / _temperature);
+
+    if (isZero(_temperature))
+    {
+        throw UserInputException(
+            "Cannot rescale a zero-temperature system. Initialize velocities "
+            "first."
+        );
+    }
+
+    const auto lambda = ::sqrt(targetTemp / _temperature);
 
     std::ranges::for_each(
         simBox.getAtoms(),

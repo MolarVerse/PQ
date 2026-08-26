@@ -50,7 +50,9 @@ RingPolymerRestartFileReader::RingPolymerRestartFileReader(
     const std::string &fileName,
     RingPolymerEngine &engine
 )
-    : _fileName(fileName), _fp(fileName), _engine(engine){};
+    : _fileName(fileName), _fp(fileName), _engine(engine)
+{
+}
 
 /**
  * @brief Reads a .rpmd.rst file sets the ring polymer beads in the engine
@@ -68,7 +70,8 @@ void RingPolymerRestartFileReader::read()
     {
         for (auto &atom : _engine.getRingPolymerBeads()[i].getAtoms())
         {
-            do {
+            while (true)
+            {
                 if (!getline(_fp, line))
                     throw RingPolymerRestartFileException(
                         "Error reading ring polymer restart file"
@@ -78,14 +81,21 @@ void RingPolymerRestartFileReader::read()
                 lineElements = splitString(line);
                 ++lineNumber;
 
-            } while (lineElements.empty());
+                if (!lineElements.empty())
+                    break;
+            }
 
+            // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
             if ((lineElements.size() != 21) && (lineElements.size() != 12))
-                throw RstFileException(std::format(
-                    "Error in line {}: Atom section must have 12 or 21 "
-                    "elements",
-                    lineNumber
-                ));
+            {
+                throw RstFileException(
+                    std::format(
+                        "Error in line {}: Atom section must have 12 or 21 "
+                        "elements",
+                        lineNumber
+                    )
+                );
+            }
 
             atom->setPosition(
                 {stod(lineElements[3]),
@@ -104,6 +114,7 @@ void RingPolymerRestartFileReader::read()
                  stod(lineElements[10]),
                  stod(lineElements[11])}
             );
+            // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
         }
     }
 }

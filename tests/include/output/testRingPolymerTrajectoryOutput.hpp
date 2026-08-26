@@ -24,16 +24,16 @@
 
 #define _TEST_RING_POLYMER_TRAJECTORY_FILE_OUTPUT_HPP_
 
+#include <gtest/gtest.h>   // for Test
+
+#include <memory>   // for __shared_ptr_access, shared_ptr, make_shared
+#include <vector>   // for vector
+
 #include "atom.hpp"                          // for Atom
 #include "molecule.hpp"                      // for Molecule
 #include "ringPolymerSettings.hpp"           // for RingPolymerSettings
 #include "ringPolymerTrajectoryOutput.hpp"   // for RingPolymerTrajectoryOutput
 #include "simulationBox.hpp"                 // for SimulationBox
-
-#include <gtest/gtest.h>   // for Test
-#include <memory>          // for __shared_ptr_access, shared_ptr, make_shared
-#include <stdio.h>         // for remove
-#include <vector>          // for vector
 
 /**
  * @class TestRingPolymerTrajectoryOutput
@@ -43,25 +43,26 @@
  */
 class TestRingPolymerTrajectoryOutput : public ::testing::Test
 {
-  protected:
+   protected:
     void SetUp() override
     {
         settings::RingPolymerSettings::setNumberOfBeads(2);
 
-        _trajectoryOutput = new output::RingPolymerTrajectoryOutput("default.rpmd.xyz");
-        _simulationBox1   = new simulationBox::SimulationBox();
-        _simulationBox2   = new simulationBox::SimulationBox();
+        _trajectoryOutput =
+            new output::RingPolymerTrajectoryOutput("default.rpmd.xyz");
+        _simulationBox1 = new molsys::SimulationBox();
+        _simulationBox2 = new molsys::SimulationBox();
 
         _simulationBox1->setBoxDimensions({10.0, 10.0, 10.0});
         _simulationBox2->setBoxDimensions({10.0, 10.0, 10.0});
 
-        auto molecule1_1 = simulationBox::Molecule();
-        auto molecule1_2 = simulationBox::Molecule();
+        auto molecule1_1 = molsys::Molecule();
+        auto molecule1_2 = molsys::Molecule();
 
-        const auto atom1_1 = std::make_shared<simulationBox::Atom>();
-        const auto atom2_1 = std::make_shared<simulationBox::Atom>();
-        const auto atom1_2 = std::make_shared<simulationBox::Atom>();
-        const auto atom2_2 = std::make_shared<simulationBox::Atom>();
+        const auto atom1_1 = std::make_shared<molsys::Atom>();
+        const auto atom2_1 = std::make_shared<molsys::Atom>();
+        const auto atom1_2 = std::make_shared<molsys::Atom>();
+        const auto atom2_2 = std::make_shared<molsys::Atom>();
 
         molecule1_1.setNumberOfAtoms(2);
         molecule1_2.setNumberOfAtoms(2);
@@ -94,11 +95,11 @@ class TestRingPolymerTrajectoryOutput : public ::testing::Test
         molecule1_2.addAtom(atom1_2);
         molecule1_2.addAtom(atom2_2);
 
-        auto molecule2_1 = simulationBox::Molecule();
-        auto molecule2_2 = simulationBox::Molecule();
+        auto molecule2_1 = molsys::Molecule();
+        auto molecule2_2 = molsys::Molecule();
 
-        const auto atom3_1 = std::make_shared<simulationBox::Atom>();
-        const auto atom3_2 = std::make_shared<simulationBox::Atom>();
+        const auto atom3_1 = std::make_shared<molsys::Atom>();
+        const auto atom3_2 = std::make_shared<molsys::Atom>();
 
         molecule2_1.setNumberOfAtoms(1);
         molecule2_2.setNumberOfAtoms(1);
@@ -140,13 +141,14 @@ class TestRingPolymerTrajectoryOutput : public ::testing::Test
         delete _trajectoryOutput;
         delete _simulationBox1;
         delete _simulationBox2;
-        ::remove("default.rpmd.xyz");
+        const auto errorCode = std::remove("default.rpmd.xyz");
+        EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.rpmd.xyz";
     }
 
-    output::RingPolymerTrajectoryOutput      *_trajectoryOutput;
-    simulationBox::SimulationBox             *_simulationBox1;
-    simulationBox::SimulationBox             *_simulationBox2;
-    std::vector<simulationBox::SimulationBox> _beads;
+    output::RingPolymerTrajectoryOutput *_trajectoryOutput;
+    molsys::SimulationBox               *_simulationBox1;
+    molsys::SimulationBox               *_simulationBox2;
+    std::vector<molsys::SimulationBox>   _beads;
 };
 
 #endif   // _TEST_RING_POLYMER_TRAJECTORY_FILE_OUTPUT_HPP_

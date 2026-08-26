@@ -35,8 +35,8 @@ namespace engine
     class HessianEngine : public Engine
     {
        private:
-        std::shared_ptr<pq::PhysicalData> _physicalDataOld =
-            std::make_shared<pq::PhysicalData>();
+        std::shared_ptr<physicalData::PhysicalData> _physicalDataOld =
+            std::make_shared<physicalData::PhysicalData>();
 
         std::shared_ptr<opt::Optimizer>            _optimizer;
         std::shared_ptr<opt::LearningRateStrategy> _learningRateStrategy;
@@ -70,14 +70,14 @@ namespace engine
 
         void writeHessian(const opt::HessianMatrix &hessian) const;
         void writeHessianInfo(const opt::HessianMatrix &hessian) const;
-        void addTimers();
 
        public:
         void run() final;
         void writeOutput() final;
 
-        [[nodiscard]] pq::SharedPhysicalData getSharedPhysicalDataOld();
-        [[nodiscard]] output::OptOutput     &getOptOutput();
+        [[nodiscard]] std::shared_ptr<physicalData::PhysicalData> getSharedPhysicalDataOld(
+        );
+        [[nodiscard]] output::OptOutput &getOptOutput();
     };
 
 }   // namespace engine

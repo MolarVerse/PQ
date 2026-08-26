@@ -79,15 +79,15 @@ namespace
         );
         forceCalculation.setNonCoulombPotential(makeNonCoulombPotential());
 
-        simulationBox::CellList cellList;
+        molsys::CellList cellList;
         if constexpr (std::is_same_v<
                           PotentialType,
                           potential::PotentialCellList>)
         {
+            settings::Settings::activateCellList();
             cellList.setNumberOfCells(cellsPerSide);
             cellList.resizeCells();
             cellList.setup(simBox);
-            cellList.activate();
             cellList.updateCellList(simBox);
         }
 

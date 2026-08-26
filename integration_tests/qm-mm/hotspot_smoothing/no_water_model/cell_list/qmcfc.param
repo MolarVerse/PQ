@@ -1,0 +1,13 @@
+#         BONDS   ANGLES   DIHEDRALS   IMPROPERS   NONCOULOMBICS    1-4 SCALE-COULOMB     1-4 SCALE-VDW
+TYPES      1       1        0            0           0              0.83333333333333    0.50000000000000
+
+
+BONDS
+      0       1.012     1059.162    # O - H
+END
+
+
+ANGLES
+      0     113.24       75.90   # H - O - H
+END
+

@@ -25,7 +25,6 @@
 #define _POTENTIAL_BRUTE_FORCE_HPP_
 
 #include "potential.hpp"
-#include "typeAliases.hpp"
 
 namespace potential
 {
@@ -40,10 +39,37 @@ namespace potential
        public:
         ~PotentialBruteForce() override;
 
-        void calculateForces(pq::SimBox &, pq::PhysicalData &, pq::CellList &)
-            override;
+        void calculateForces(
+            molsys::SimulationBox      &simBox,
+            physicalData::PhysicalData &physData,
+            molsys::CellList           &cellList
+        ) override;
 
-        pq::SharedPotential clone() const override;
+        void calculateCoreToOuterForces(
+            molsys::SimulationBox      &simBox,
+            physicalData::PhysicalData &physData,
+            molsys::CellList           &cellList
+        ) override;
+
+        void calculateLayerToOuterForces(
+            molsys::SimulationBox      &simBox,
+            physicalData::PhysicalData &physData,
+            molsys::CellList           &cellList
+        ) override;
+
+        void calculateOuterToOuterForces(
+            molsys::SimulationBox      &simBox,
+            physicalData::PhysicalData &physData,
+            molsys::CellList           &cellList
+        ) override;
+
+        void calculateHotspotSmoothingMMForces(
+            molsys::SimulationBox      &simBox,
+            physicalData::PhysicalData &physData,
+            molsys::CellList           &cellList
+        ) override;
+
+        [[nodiscard]] std::shared_ptr<Potential> clone() const override;
     };
 }   // namespace potential
 

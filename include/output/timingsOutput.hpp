@@ -25,7 +25,11 @@
 #define __TIMINGS_OUTPUT_HPP__
 
 #include "output.hpp"   // for Output
-#include "typeAliases.hpp"
+
+namespace timings
+{
+    class GlobalTimer;   // forward declaration
+}   // namespace timings
 
 namespace output
 {
@@ -41,7 +45,7 @@ namespace output
        public:
         using Output::Output;
 
-        void write(pq::GlobalTimer &timer);
+        void write();
     };
 
 }   // namespace output

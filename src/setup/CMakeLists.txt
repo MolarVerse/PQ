@@ -6,7 +6,6 @@ set(setup_source_files
     manostatSetup.cpp
     resetKineticsSetup.cpp
     potentialSetup.cpp
-    integratorSetup.cpp
     constraintsSetup.cpp
     forceFieldSetup.cpp
     intraNonBondedSetup.cpp
@@ -16,14 +15,8 @@ set(setup_source_files
     outputFilesSetup.cpp
     optimizerSetup.cpp
     randomNumberGeneratorSetup.cpp
+    waterModelSetup.cpp
 )
-
-if(BUILD_WITH_KOKKOS)
-    set(setup_source_files
-        ${setup_source_files}
-        kokkosSetup.cpp
-    )
-endif()
 
 add_library(setup
     ${setup_source_files}
@@ -43,6 +36,7 @@ target_link_libraries(setup
     ringPolymerRestartFileReader
 
     engine
+    settings
     utilities
     output
     potential
@@ -56,15 +50,6 @@ if(BUILD_WITH_MPI)
     target_link_libraries(setup
         PRIVATE
         PQ_mpi
-    )
-endif()
-
-if(BUILD_WITH_PYTHON_BINDINGS)
-    add_definitions(-DPYTHON_ENABLED)
-
-    target_link_libraries(setup
-        PUBLIC
-        pq_python
     )
 endif()
 

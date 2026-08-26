@@ -26,18 +26,17 @@
 
 #include <cstddef>   // for size_t
 
-#include "timer.hpp"   // for Timer
 #include "vector3d.hpp"
 
 namespace physicalData
 {
     class PhysicalData;   // forward declaration
-}
+}   // namespace physicalData
 
-namespace simulationBox
+namespace molsys
 {
     class SimulationBox;   // forward declaration
-}
+}   // namespace molsys
 
 namespace resetKinetics
 {
@@ -48,7 +47,7 @@ namespace resetKinetics
      * for no reset
      *
      */
-    class ResetKinetics : public timings::Timer
+    class ResetKinetics
     {
        protected:
         size_t _nStepsTemperatureReset;
@@ -78,12 +77,12 @@ namespace resetKinetics
         void reset(
             const size_t step,
             physicalData::PhysicalData &,
-            simulationBox::SimulationBox &
+            molsys::SimulationBox &
         );
-        void resetTemperature(simulationBox::SimulationBox &);
-        void resetMomentum(simulationBox::SimulationBox &);
-        void resetAngularMomentum(simulationBox::SimulationBox &);
-        void resetForces(const size_t step, simulationBox::SimulationBox &);
+        void resetTemperature(molsys::SimulationBox &);
+        void resetMomentum(molsys::SimulationBox &);
+        void resetAngularMomentum(molsys::SimulationBox &);
+        void resetForces(const size_t step, molsys::SimulationBox &);
 
         /********************
          * standard setters *

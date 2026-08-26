@@ -24,10 +24,9 @@
 
 #define _TEST_LOGOUTPUT_HPP_
 
-#include "logOutput.hpp"   // for LogOutput
-
 #include <gtest/gtest.h>   // for Test
-#include <stdio.h>         // for remove
+
+#include "logOutput.hpp"   // for LogOutput
 
 /**
  * @class TestLogOutput
@@ -37,13 +36,14 @@
  */
 class TestLogOutput : public ::testing::Test
 {
-  protected:
+   protected:
     void SetUp() override { _logOutput = new output::LogOutput("default.log"); }
 
     void TearDown() override
     {
         delete _logOutput;
-        ::remove("default.log");
+        const auto errorCode = std::remove("default.log");
+        EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
     }
 
     output::LogOutput *_logOutput;

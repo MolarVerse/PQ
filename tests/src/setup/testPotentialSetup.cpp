@@ -56,7 +56,7 @@ TEST_F(TestSetup, setupReactionFieldPotential)
     PotentialSettings::setReactionFieldEpsilon(80.0);
     EXPECT_NO_THROW(potentialSetup.setup());
     test::checkType(
-        &(_engine->getPotential().getCoulombPotential()),
+        &(_engine->getPotential()->getCoulombPotential()),
         typeid(CoulombReactionField)
     );
 
@@ -73,7 +73,7 @@ TEST_F(TestSetup, setupCoulombPotential)
     potentialSetup.setupCoulomb();
 
     test::checkType(
-        &_engine->getPotential().getCoulombPotential(),
+        &_engine->getPotential()->getCoulombPotential(),
         typeid(CoulombShiftedPotential)
     );
 
@@ -82,11 +82,11 @@ TEST_F(TestSetup, setupCoulombPotential)
     potentialSetup2.setup();
 
     test::checkType(
-        &_engine->getPotential().getCoulombPotential(),
+        &_engine->getPotential()->getCoulombPotential(),
         typeid(CoulombWolf)
     );
     const auto &wolfCoulomb = dynamic_cast<CoulombWolf &>(
-        _engine->getPotential().getCoulombPotential()
+        _engine->getPotential()->getCoulombPotential()
     );
     EXPECT_EQ(wolfCoulomb.getKappa(), 0.25);
 }
@@ -96,22 +96,22 @@ TEST_F(TestSetup, setupCoulombPotential)
  */
 TEST_F(TestSetup, setupNonCoulombPotential)
 {
-    _engine->getForceField().activateNonCoulombic();
-    _engine->getPotential().makeNonCoulombPotential(ForceFieldNonCoulomb());
+    _engine->getForceField()->activateNonCoulombic();
+    _engine->getPotential()->makeNonCoulombPotential(ForceFieldNonCoulomb());
     PotentialSetup potentialSetup(*_engine);
     potentialSetup.setupNonCoulomb();
 
     test::checkType(
-        &_engine->getPotential().getNonCoulombPotential(),
+        &_engine->getPotential()->getNonCoulombPotential(),
         typeid(ForceFieldNonCoulomb)
     );
 
-    _engine->getForceField().deactivateNonCoulombic();
+    _engine->getForceField()->deactivateNonCoulombic();
     PotentialSetup potentialSetup2(*_engine);
     potentialSetup2.setupNonCoulomb();
 
     test::checkType(
-        &_engine->getPotential().getNonCoulombPotential(),
+        &_engine->getPotential()->getNonCoulombPotential(),
         typeid(GuffNonCoulomb)
     );
 }
@@ -121,11 +121,11 @@ TEST_F(TestSetup, setupNonCoulombPotential)
  */
 TEST_F(TestSetup, setupNonCoulombicPairs)
 {
-    _engine->getForceField().activateNonCoulombic();
-    _engine->getPotential().makeNonCoulombPotential(ForceFieldNonCoulomb());
+    _engine->getForceField()->activateNonCoulombic();
+    _engine->getPotential()->makeNonCoulombPotential(ForceFieldNonCoulomb());
     PotentialSetup potentialSetup(*_engine);
 
-    auto molecule = simulationBox::MoleculeType(1);
+    auto molecule = molsys::MoleculeType(1);
     molecule.addExternalGlobalVDWType(0);
     molecule.addExternalGlobalVDWType(1);
 
@@ -139,11 +139,11 @@ TEST_F(TestSetup, setupNonCoulombicPairs)
     );
 
     auto nonCoulombPotential = dynamic_cast<ForceFieldNonCoulomb &>(
-        _engine->getPotential().getNonCoulombPotential()
+        _engine->getPotential()->getNonCoulombPotential()
     );
 
-    const auto zero = size_t(0);
-    const auto one  = size_t(1);
+    const auto zero = static_cast<size_t>(0);
+    const auto one  = static_cast<size_t>(1);
 
     auto nonCoulombPair1 = LennardJonesPair(zero, zero, 10.0, 2.0, 3.0);
     auto nonCoulombPair2 = LennardJonesPair(one, zero, 10.0, 2.0, 3.0);
@@ -163,7 +163,7 @@ TEST_F(TestSetup, setupNonCoulombicPairs)
         std::make_shared<LennardJonesPair>(nonCoulombPair4)
     );
 
-    _engine->getPotential().makeNonCoulombPotential(nonCoulombPotential);
+    _engine->getPotential()->makeNonCoulombPotential(nonCoulombPotential);
     PotentialSetup potentialSetup2(*_engine);
 
     EXPECT_NO_THROW(potentialSetup2.setupNonCoulombicPairs());
@@ -178,8 +178,8 @@ TEST_F(TestSetup, setupPotential)
 {
     EXPECT_NO_THROW(setupPotential(*_engine));
 
-    _engine->getForceField().activateNonCoulombic();
-    _engine->getPotential().makeNonCoulombPotential(ForceFieldNonCoulomb());
+    _engine->getForceField()->activateNonCoulombic();
+    _engine->getPotential()->makeNonCoulombPotential(ForceFieldNonCoulomb());
     EXPECT_NO_THROW(setupPotential(*_engine));
 }
 

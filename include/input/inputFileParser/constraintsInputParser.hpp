@@ -27,7 +27,11 @@
 #include <cstddef>   // for size_t
 
 #include "inputFileParser.hpp"   // for InputFileParser
-#include "typeAliases.hpp"       // for std::vector<std::string>
+
+namespace constraints
+{
+    class Constraints;
+}   // namespace constraints
 
 namespace input
 {
@@ -39,8 +43,13 @@ namespace input
      */
     class ConstraintsInputParser : public InputFileParser
     {
+       private:
+        std::shared_ptr<constraints::Constraints> _constraints;
+
        public:
-        explicit ConstraintsInputParser(pq::Engine &);
+        explicit ConstraintsInputParser(
+            std::shared_ptr<constraints::Constraints> constraints
+        );
 
         void parseShakeActivated(
             const std::vector<std::string> &,

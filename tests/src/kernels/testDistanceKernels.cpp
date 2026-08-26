@@ -28,7 +28,7 @@
 
 using namespace kernel;
 
-TEST(TestDistanceKernels, distVecNoPBC_isSimpleSubtraction)
+TEST(TestDistanceKernels, distVecNoPBCIsSimpleSubtraction)
 {
     const auto a = linearAlgebra::Vec3D(2.0, 3.0, 4.0);
     const auto b = linearAlgebra::Vec3D(1.0, 1.0, 1.0);
@@ -38,7 +38,7 @@ TEST(TestDistanceKernels, distVecNoPBC_isSimpleSubtraction)
     EXPECT_EQ(distVec(b, a), linearAlgebra::Vec3D(-1.0, -2.0, -3.0));
 }
 
-TEST(TestDistanceKernels, distVecAndDist2NoPBC_matchesAnalyticalDistanceSquared)
+TEST(TestDistanceKernels, distVecAndDist2NoPBCMatchesAnalyticalDistanceSquared)
 {
     const auto a = linearAlgebra::Vec3D(1.0, 2.0, 2.0);
     const auto b = linearAlgebra::Vec3D(0.0, 0.0, 0.0);
@@ -48,11 +48,11 @@ TEST(TestDistanceKernels, distVecAndDist2NoPBC_matchesAnalyticalDistanceSquared)
     EXPECT_DOUBLE_EQ(r2, 1.0 + 4.0 + 4.0);
 }
 
-TEST(TestDistanceKernels, distVecWithPBC_choosesMinimumImage)
+TEST(TestDistanceKernels, distVecWithPBCChoosesMinimumImage)
 {
     // 10 x 10 x 10 orthorhombic box. Two atoms at (0.5, 0, 0) and
     // (9.5, 0, 0) should be 1.0 apart under minimum image, not 9.0.
-    auto box = simulationBox::SimulationBox();
+    auto box = molsys::SimulationBox();
     box.setBoxDimensions({10.0, 10.0, 10.0});
 
     const auto a   = linearAlgebra::Vec3D(0.5, 0.0, 0.0);
@@ -62,23 +62,23 @@ TEST(TestDistanceKernels, distVecWithPBC_choosesMinimumImage)
     EXPECT_NEAR(linearAlgebra::norm(dxy), 1.0, 1e-12);
 }
 
-TEST(TestDistanceKernels, distVecAndDist2WithPBC_consistentWithDistVec)
+TEST(TestDistanceKernels, distVecAndDist2WithPBCConsistentWithDistVec)
 {
-    auto box = simulationBox::SimulationBox();
+    auto box = molsys::SimulationBox();
     box.setBoxDimensions({8.0, 8.0, 8.0});
 
     const auto a = linearAlgebra::Vec3D(0.0, 0.0, 0.0);
     const auto b = linearAlgebra::Vec3D(3.0, 4.0, 0.0);
 
-    const auto dxyzOnly        = distVec(a, b, box);
-    const auto [dxyz, r2]      = distVecAndDist2(a, b, box);
+    const auto dxyzOnly   = distVec(a, b, box);
+    const auto [dxyz, r2] = distVecAndDist2(a, b, box);
     EXPECT_EQ(dxyzOnly, dxyz);
     EXPECT_DOUBLE_EQ(r2, linearAlgebra::normSquared(dxyz));
 }
 
-TEST(TestDistanceKernels, distVecWithPBC_isSymmetricAcrossAllAxes)
+TEST(TestDistanceKernels, distVecWithPBCIsSymmetricAcrossAllAxes)
 {
-    auto box = simulationBox::SimulationBox();
+    auto box = molsys::SimulationBox();
     box.setBoxDimensions({10.0, 12.0, 14.0});
 
     const auto a = linearAlgebra::Vec3D(4.8, -5.5, 6.2);
@@ -101,9 +101,9 @@ TEST(TestDistanceKernels, distVecWithPBC_isSymmetricAcrossAllAxes)
     EXPECT_NEAR(ab[2], -ba[2], 1e-12);
 }
 
-TEST(TestDistanceKernels, distSquaredWithPBC_minimumImageDistance)
+TEST(TestDistanceKernels, distSquaredWithPBCMinimumImageDistance)
 {
-    auto box = simulationBox::SimulationBox();
+    auto box = molsys::SimulationBox();
     box.setBoxDimensions({10.0, 10.0, 10.0});
 
     const auto a = linearAlgebra::Vec3D(0.5, 0.0, 0.0);

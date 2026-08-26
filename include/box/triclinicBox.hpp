@@ -26,7 +26,7 @@
 
 #include "box.hpp"   // for Box
 
-namespace simulationBox
+namespace molsys
 {
     std::pair<linearAlgebra::Vec3D, linearAlgebra::Vec3D> calcBoxDimAndAnglesFromBoxMatrix(
         const linearAlgebra::tensor3D &
@@ -49,23 +49,28 @@ namespace simulationBox
         void calculateTransformationMatrix();
 
        public:
-        [[nodiscard]] double               calculateVolume() override;
-        [[nodiscard]] linearAlgebra::Vec3D calcShiftVector(
-            const linearAlgebra::Vec3D &
+        [[nodiscard]] double calculateVolume() override;
+        [[nodiscard]]
+        linearAlgebra::Vec3D calcShiftVector(
+            const linearAlgebra::Vec3D &vec
         ) const override;
 
-        [[nodiscard]] linearAlgebra::Vec3D toOrthoSpace(
-            const linearAlgebra::Vec3D &
+        [[nodiscard]]
+        linearAlgebra::Vec3D toOrthoSpace(
+            const linearAlgebra::Vec3D &vec
         ) const override;
-        [[nodiscard]] linearAlgebra::tensor3D toOrthoSpace(
-            const linearAlgebra::tensor3D &
+        [[nodiscard]]
+        linearAlgebra::tensor3D toOrthoSpace(
+            const linearAlgebra::tensor3D &mat
         ) const override;
 
-        [[nodiscard]] linearAlgebra::Vec3D toSimSpace(
-            const linearAlgebra::Vec3D &
+        [[nodiscard]]
+        linearAlgebra::Vec3D toSimSpace(
+            const linearAlgebra::Vec3D &vec
         ) const override;
-        [[nodiscard]] linearAlgebra::tensor3D toSimSpace(
-            const linearAlgebra::tensor3D &
+        [[nodiscard]]
+        linearAlgebra::tensor3D toSimSpace(
+            const linearAlgebra::tensor3D &mat
         ) const override;
 
         void applyPBC(linearAlgebra::Vec3D &position) const override;
@@ -87,12 +92,15 @@ namespace simulationBox
 
         [[nodiscard]] linearAlgebra::Vec3D    getBoxAngles() const override;
         [[nodiscard]] linearAlgebra::tensor3D getBoxMatrix() const override;
+        [[nodiscard]] linearAlgebra::tensor3D getBoxMatrix(
+            Periodicity periodicity
+        ) const override;
         [[nodiscard]] linearAlgebra::tensor3D getTransformationMatrix() const;
         [[nodiscard]] linearAlgebra::Vec3D    wrapPositionIntoBox(
-               const linearAlgebra::Vec3D &
+               const linearAlgebra::Vec3D &pos
            ) const override;
     };
 
-}   // namespace simulationBox
+}   // namespace molsys
 
 #endif   // _TRICLINIC_BOX_HPP_

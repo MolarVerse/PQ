@@ -30,6 +30,7 @@
 #include <string>      // for char_traits, string
 #include <vector>      // for vector
 
+#include "MMInputParser.hpp"                 // for MMParserForceField
 #include "QMInputParser.hpp"                 // for InputFileParserQM
 #include "cellListInputParser.hpp"           // for CellListInputParser
 #include "constraintsInputParser.hpp"        // for InputFileParserConstraints
@@ -38,13 +39,11 @@
 #include "engine.hpp"                        // for Engine
 #include "exceptions.hpp"                    // for InputFileException
 #include "filesInputParser.hpp"              // for InputFileParserFiles
-#include "forceFieldInputParser.hpp"         // for InputFileParserForceField
 #include "generalInputParser.hpp"            // for InputFileParserGeneral
 #include "hessianInputParser.hpp"            // for HessianInputParser
 #include "hybridInputParser.hpp"             // for InputFileParserQMMM
 #include "integratorInputParser.hpp"         // for InputFileParserIntegrator
 #include "manostatInputParser.hpp"           // for InputFileParserManostat
-#include "nonCoulombInputParser.hpp"         // for InputFileParserNonCoulomb
 #include "optInputParser.hpp"                // for OptInputParser
 #include "outputInputParser.hpp"             // for InputFileParserOutput
 #include "resetKineticsInputParser.hpp"      // for InputFileParserResetKinetics
@@ -69,6 +68,24 @@ using std::make_unique;
  *
  * @param fileName
  * @param engine
+ */
+InputFileReader::InputFileReader(
+    const std::string_view &fileName,
+    engine::Engine         &engine
+)
+    : InputFileReader(fileName, engine, true, true)
+{
+}
+
+/**
+ * @brief Construct a new Input File Reader:: Input File Reader object
+ *
+ * @details adds all parsers to the _parsers vector and calls addKeywords() to
+ * add all keywords to the _keywordFuncMap, _keywordRequiredMap and
+ * _keywordCountMap
+ *
+ * @param fileName
+ * @param engine
  * @param validateFilePaths
  * @param resolveBuiltInSlakosPath
  */
@@ -78,33 +95,49 @@ InputFileReader::InputFileReader(
     const bool              validateFilePaths,
     const bool              resolveBuiltInSlakosPath
 )
-    : _fileName(fileName), _engine(engine)
+    : _fileName(fileName)
 {
-    _parsers.push_back(make_unique<CellListInputParser>(_engine));
-    _parsers.push_back(make_unique<ConstraintsInputParser>(_engine));
-    _parsers.push_back(make_unique<CoulombLongRangeInputParser>(_engine));
+    // TODO: remove engine after rework
+    _parsers.push_back(make_unique<CellListInputParser>(engine.getCellList()));
     _parsers.push_back(
-        make_unique<FilesInputParser>(_engine, validateFilePaths)
+        make_unique<ConstraintsInputParser>(engine.getConstraints())
     );
-    _parsers.push_back(make_unique<ForceFieldInputParser>(_engine));
-    _parsers.push_back(make_unique<GeneralInputParser>(_engine));
-    _parsers.push_back(make_unique<HessianInputParser>(_engine));
-    _parsers.push_back(make_unique<IntegratorInputParser>(_engine));
-    _parsers.push_back(make_unique<ManostatInputParser>(_engine));
-    _parsers.push_back(make_unique<NonCoulombInputParser>(_engine));
-    _parsers.push_back(make_unique<OutputInputParser>(_engine));
-    _parsers.push_back(make_unique<ResetKineticsInputParser>(_engine));
-    _parsers.push_back(make_unique<SimulationBoxInputParser>(_engine));
-    _parsers.push_back(make_unique<ThermostatInputParser>(_engine));
-    _parsers.push_back(make_unique<TimingsInputParser>(_engine));
-    _parsers.push_back(make_unique<VirialInputParser>(_engine));
-    _parsers.push_back(make_unique<HybridInputParser>(_engine));
-    _parsers.push_back(make_unique<RingPolymerInputParser>(_engine));
-
-    _parsers.push_back(make_unique<ConvInputParser>(_engine));
-    _parsers.push_back(make_unique<OptInputParser>(_engine));
+    _parsers.push_back(make_unique<CoulombLongRangeInputParser>());
     _parsers.push_back(
-        make_unique<QMInputParser>(_engine, resolveBuiltInSlakosPath)
+        make_unique<FilesInputParser>(
+            engine.getIntraNonBonded(),
+            validateFilePaths
+        )
+    );
+    _parsers.push_back(
+        make_unique<MMInputParser>(
+            engine.getForceField(),
+            engine.getPotential()
+        )
+    );
+    _parsers.push_back(make_unique<GeneralInputParser>());
+    _parsers.push_back(make_unique<HessianInputParser>());
+    _parsers.push_back(make_unique<IntegratorInputParser>());
+    _parsers.push_back(make_unique<ManostatInputParser>());
+    _parsers.push_back(make_unique<OutputInputParser>());
+    _parsers.push_back(make_unique<ResetKineticsInputParser>());
+    _parsers.push_back(
+        make_unique<SimulationBoxInputParser>(engine.getSharedSimulationBox())
+    );
+    _parsers.push_back(make_unique<ThermostatInputParser>());
+    _parsers.push_back(make_unique<TimingsInputParser>());
+    _parsers.push_back(make_unique<VirialInputParser>());
+    _parsers.push_back(make_unique<HybridInputParser>());
+    _parsers.push_back(make_unique<RingPolymerInputParser>());
+
+    _parsers.push_back(make_unique<ConvInputParser>());
+    _parsers.push_back(make_unique<OptInputParser>());
+    _parsers.push_back(
+        make_unique<QMInputParser>(
+            engine.getLogOutput(),
+            engine.getStdoutOutput(),
+            resolveBuiltInSlakosPath
+        )
     );
 
     addKeywords();
@@ -157,6 +190,7 @@ void InputFileReader::process(const std::vector<std::string> &lineElements)
     const auto keyword          = toLowerAndReplaceDashesCopy(original_keyword);
 
     if (!_keywordFuncMap.contains(keyword))
+    {
         throw InputFileException(
             std::format(
                 "Invalid keyword \"{}\" at line {}",
@@ -164,6 +198,7 @@ void InputFileReader::process(const std::vector<std::string> &lineElements)
                 _lineNumber
             )
         );
+    }
 
     InputFileParser::ParseFunc parserFunc = _keywordFuncMap[keyword];
 
@@ -180,7 +215,7 @@ void InputFileReader::process(const std::vector<std::string> &lineElements)
     {
         throw InputFileException(
             std::format(
-                "Invalid value \"{}\" for keyword \"{}\"",
+                R"(Invalid value "{}" for keyword "{}")",
                 lineElements[2],
                 original_keyword
             ),
@@ -191,7 +226,7 @@ void InputFileReader::process(const std::vector<std::string> &lineElements)
     {
         throw InputFileException(
             std::format(
-                "Value \"{}\" for keyword \"{}\" is out of range",
+                R"(Value "{}" for keyword "{}" is out of range)",
                 lineElements[2],
                 original_keyword
             ),
@@ -396,6 +431,7 @@ void input::processEqualSign(std::string &command, const size_t lineNumber)
         command.replace(equalSignPos, 1, " = ");
 
     else
+    {
         throw InputFileException(
             std::format(
                 "Missing equal sign in command \"{}\" in line {}",
@@ -403,6 +439,7 @@ void input::processEqualSign(std::string &command, const size_t lineNumber)
                 lineNumber
             )
         );
+    }
 }
 
 /***************************

@@ -25,7 +25,11 @@
 #define _MAXWELL_BOLTZMANN_HPP_
 
 #include "randomNumberGenerator.hpp"   // for RandomNumberGenerator
-#include "typeAliases.hpp"
+
+namespace molsys
+{
+    class SimulationBox;   // forward declaration
+}   // namespace molsys
 
 namespace maxwellBoltzmann
 {
@@ -45,7 +49,7 @@ namespace maxwellBoltzmann
         randomNumberGenerator::RandomNumberGenerator _randomNumberGenerator{};
 
        public:
-        void initializeVelocities(pq::SimBox &);
+        void initializeVelocities(molsys::SimulationBox &);
     };
 }   // namespace maxwellBoltzmann
 

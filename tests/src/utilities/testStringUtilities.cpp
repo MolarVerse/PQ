@@ -167,6 +167,16 @@ TEST(TestStringUtilities, firstLetterToUpperCaseCopy)
     EXPECT_EQ("Test", utilities::firstLetterToUpperCaseCopy(line));
 }
 
+TEST(TestStringUtilities, shellQuote)
+{
+    EXPECT_EQ("''", utilities::shellQuote(""));
+    EXPECT_EQ("'path with spaces'", utilities::shellQuote("path with spaces"));
+    EXPECT_EQ(
+        "'a'\"'\"'b; touch nope'",
+        utilities::shellQuote("a'b; touch nope")
+    );
+}
+
 /**
  * @brief test check if file exists
  *
@@ -181,7 +191,7 @@ TEST(TestStringUtilities, fileExists)
     EXPECT_TRUE(utilities::fileExists(file));
     EXPECT_FALSE(utilities::fileExists("testFile2.txt"));
     EXPECT_FALSE(utilities::fileExists(directory));
-    std::remove(file.c_str());
+    std::filesystem::remove(file);
     std::filesystem::remove(directory);
 }
 
@@ -202,7 +212,7 @@ TEST(TestStringUtilities, stringToUintFast32t)
 
     constexpr auto maxValue = UINT32_MAX;
 
-    str = std::to_string(static_cast<long long>(UINT32_MAX) + 1);
+    str = std::to_string(static_cast<std::int64_t>(UINT32_MAX) + 1);
     EXPECT_THROW_MSG(
         utilities::stringToUintFast32t(str),
         std::out_of_range,
@@ -286,7 +296,8 @@ TEST(TestStringUtilities, stringToInt)
             std::format("Invalid integer value '{}' encountered", invalid)
         );
 
-    const auto outOfRange = std::to_string(static_cast<long long>(INT_MAX) + 1);
+    const auto outOfRange =
+        std::to_string(static_cast<std::int64_t>(INT_MAX) + 1);
     EXPECT_THROW_MSG(
         utilities::stringToInt(outOfRange),
         std::out_of_range,

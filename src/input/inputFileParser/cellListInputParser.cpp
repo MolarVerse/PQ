@@ -25,16 +25,17 @@
 #include <cstddef>   // for size_t
 #include <format>    // for format
 #include <string>    // for allocator, operator==, string
-#include <vector>    // for vector
+#include <utility>
+#include <vector>   // for vector
 
-#include "engine.hpp"            // for Engine
+#include "celllist.hpp"
 #include "exceptions.hpp"        // for InputFileException
 #include "inputFileParser.hpp"   // for checkCommand, InputFileParser
 #include "parserUtils.hpp"
+#include "settings.hpp"
 #include "stringUtilities.hpp"   // for toLowerCopy
 
 using namespace input;
-using namespace engine;
 using namespace utilities;
 using namespace customException;
 
@@ -47,9 +48,12 @@ using namespace customException;
  * cell-number <size_t>
  *
  * @param engine
+ * @param cellListPtr pointer to the cell list object
  */
-CellListInputParser::CellListInputParser(Engine &engine)
-    : InputFileParser(engine)
+CellListInputParser::CellListInputParser(
+    std::shared_ptr<molsys::CellList> cellListPtr
+)
+    : _cellListPtr(std::move(cellListPtr))
 {
     addKeyword(
         std::string("cell-list"),
@@ -85,12 +89,11 @@ void CellListInputParser::parseCellListActivated(
     const auto cellListActivated = toLowerCopy(lineElements[2]);
 
     if (cellListActivated == "on")
-        _engine.getCellList().activate();
-
+        settings::Settings::activateCellList();
     else if (cellListActivated == "off")
-        _engine.getCellList().deactivate();
-
+        settings::Settings::deactivateCellList();
     else
+    {
         throw InputFileException(
             std::format(
                 "Invalid cell-list keyword \"{}\" "
@@ -100,6 +103,7 @@ void CellListInputParser::parseCellListActivated(
                 lineNumber
             )
         );
+    }
 }
 
 /**
@@ -122,10 +126,12 @@ void CellListInputParser::parseNumberOfCells(
     const auto cellNumber = stringToInt(lineElements[2]);
 
     if (cellNumber <= 0)
+    {
         throw InputFileException(
             "Number of cells must be positive - number of cells = " +
             lineElements[2]
         );
+    }
 
-    _engine.getCellList().setNumberOfCells(size_t(cellNumber));
+    _cellListPtr->setNumberOfCells(static_cast<size_t>(cellNumber));
 }

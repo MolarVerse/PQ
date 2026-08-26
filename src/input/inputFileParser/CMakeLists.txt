@@ -7,13 +7,12 @@ add_library(inputFileParser
     convergenceInputParser.cpp
     coulombLongRangeInputParser.cpp
     filesInputParser.cpp
-    forceFieldInputParser.cpp
     generalInputParser.cpp
     hessianInputParser.cpp
     hybridInputParser.cpp
     integratorInputParser.cpp
     manostatInputParser.cpp
-    nonCoulombInputParser.cpp
+    MMInputParser.cpp
     outputInputParser.cpp
     optInputParser.cpp
     QMInputParser.cpp
@@ -40,6 +39,22 @@ target_link_libraries(inputFileParser
     settings
     references
 )
+
+if(BUILD_WITH_TESTS)
+    target_link_libraries(inputFileParser
+        PUBLIC
+        gtest
+    )
+endif()
+
+if(BUILD_WITH_PYTHON_BINDINGS)
+    add_definitions(-DPYTHON_ENABLED)
+
+    target_link_libraries(setup
+        PUBLIC
+        pq_python
+    )
+endif()
 
 install(TARGETS inputFileParser
     DESTINATION lib

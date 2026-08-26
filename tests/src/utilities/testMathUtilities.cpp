@@ -95,10 +95,10 @@ TEST(TestMathUtilities, compareVec3DWithTolerance)
  */
 TEST(TestMathUtilities, kroneckerDelta)
 {
-    EXPECT_EQ(kroneckerDelta(0u, 0u), 1u);
-    EXPECT_EQ(kroneckerDelta(1u, 1u), 1u);
-    EXPECT_EQ(kroneckerDelta(0u, 1u), 0u);
-    EXPECT_EQ(kroneckerDelta(5u, 7u), 0u);
+    EXPECT_EQ(kroneckerDelta(0U, 0U), 1U);
+    EXPECT_EQ(kroneckerDelta(1U, 1U), 1U);
+    EXPECT_EQ(kroneckerDelta(0U, 1U), 0U);
+    EXPECT_EQ(kroneckerDelta(5U, 7U), 0U);
 }
 
 /**

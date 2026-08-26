@@ -35,7 +35,7 @@ using namespace utilities;
  * @param springConstant
  */
 BondType::BondType(
-    const size_t id,
+    const BondId id,
     const double equilibriumBondLength,
     const double springConstant
 )
@@ -70,9 +70,9 @@ bool forceField::operator==(const BondType &self, const BondType &other)
 /**
  * @brief get the id of the bond type
  *
- * @return size_t
+ * @return BondId
  */
-size_t BondType::getId() const { return _id; }
+BondId BondType::getId() const { return _id; }
 
 /**
  * @brief get the equilibrium bond length of the bond type

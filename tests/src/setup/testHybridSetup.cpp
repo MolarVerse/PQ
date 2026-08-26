@@ -22,17 +22,58 @@
 
 #include <gtest/gtest.h>
 
+#include <array>
+#include <memory>
 #include <string>
 #include <vector>
 
+#include "atom.hpp"
 #include "exceptions.hpp"
 #include "hybridSetup.hpp"
+#include "inputFileParser/hybridInputParser.hpp"
+#include "molecule.hpp"
+#include "moleculeType.hpp"
+#include "qmSettings.hpp"
 #include "settings.hpp"
 #include "testSetup.hpp"
 
 using namespace setup;
 using namespace settings;
 using namespace customException;
+using namespace input;
+
+namespace
+{
+    void addSingleAtomMolecule(engine::Engine &engine, const size_t molType)
+    {
+        auto atom = std::make_shared<molsys::Atom>();
+        atom->setPosition({static_cast<double>(molType), 0.0, 0.0});
+
+        molsys::Molecule molecule;
+        molecule.setMoltype(molType);
+        molecule.setNumberOfAtoms(1);
+        molecule.addAtom(atom);
+
+        engine.getSimulationBox().addAtom(atom);
+        engine.getSimulationBox().addMolecule(molecule);
+    }
+
+    void configureValidHybridSettings(engine::Engine &engine)
+    {
+        Settings::setJobtype(JobType::QMMM_MD);
+        QMSettings::setQMMethod(QMMethod::DFTBPLUS);
+        HybridSettings::setForcedCoreList({});
+        HybridSettings::setForcedLayerList({});
+        HybridSettings::setForcedOuterList({});
+        HybridSettings::setUseQMCharges(true);
+        HybridSettings::setCoreRadius(2.0);
+        HybridSettings::setLayerRadius(4.0);
+        HybridSettings::setSmoothingRegionThickness(1.0);
+        HybridSettings::setPointChargeThickness(2.0);
+        engine.getSimulationBox().setBoxDimensions({40.0, 40.0, 40.0});
+    }
+
+}   // namespace
 
 /* ---------- free function ---------- */
 
@@ -46,17 +87,17 @@ TEST_F(TestSetup, setupHybridIsNoOpWhenQMMMNotActive)
 
 TEST_F(TestSetup, parseSelectionNoPythonSingleIndex)
 {
-    HybridSetup hs(*_engine);
-    const auto  v = hs.parseSelectionNoPython("3", "qm_center");
-    ASSERT_EQ(v.size(), 1u);
+    HybridInputParser parser;
+    const auto        v = parser.parseSelectionNoPython("3", "qm_center");
+    ASSERT_EQ(v.size(), 1U);
     EXPECT_EQ(v[0], 3);
 }
 
 TEST_F(TestSetup, parseSelectionNoPythonCommaList)
 {
-    HybridSetup hs(*_engine);
-    const auto  v = hs.parseSelectionNoPython("1,3,5", "qm_center");
-    ASSERT_EQ(v.size(), 3u);
+    HybridInputParser parser;
+    const auto        v = parser.parseSelectionNoPython("1,3,5", "qm_center");
+    ASSERT_EQ(v.size(), 3U);
     EXPECT_EQ(v[0], 1);
     EXPECT_EQ(v[1], 3);
     EXPECT_EQ(v[2], 5);
@@ -64,18 +105,18 @@ TEST_F(TestSetup, parseSelectionNoPythonCommaList)
 
 TEST_F(TestSetup, parseSelectionNoPythonRange)
 {
-    HybridSetup hs(*_engine);
-    const auto  v = hs.parseSelectionNoPython("2-5", "qm_center");
-    ASSERT_EQ(v.size(), 4u);
+    HybridInputParser parser;
+    const auto        v = parser.parseSelectionNoPython("2-5", "qm_center");
+    ASSERT_EQ(v.size(), 4U);
     EXPECT_EQ(v[0], 2);
     EXPECT_EQ(v[3], 5);
 }
 
 TEST_F(TestSetup, parseSelectionNoPythonMixedRangeAndList)
 {
-    HybridSetup hs(*_engine);
-    const auto  v = hs.parseSelectionNoPython("1,3-4,7", "qm_center");
-    ASSERT_EQ(v.size(), 4u);
+    HybridInputParser parser;
+    const auto        v = parser.parseSelectionNoPython("1,3-4,7", "qm_center");
+    ASSERT_EQ(v.size(), 4U);
     EXPECT_EQ(v[0], 1);
     EXPECT_EQ(v[1], 3);
     EXPECT_EQ(v[2], 4);
@@ -84,9 +125,9 @@ TEST_F(TestSetup, parseSelectionNoPythonMixedRangeAndList)
 
 TEST_F(TestSetup, parseSelectionNoPythonEmptyThrows)
 {
-    HybridSetup hs(*_engine);
+    HybridInputParser parser;
     EXPECT_THROW(
-        hs.parseSelectionNoPython("", "qm_center"),
+        parser.parseSelectionNoPython("", "qm_center"),
         InputFileException
     );
 }
@@ -95,17 +136,17 @@ TEST_F(TestSetup, parseSelectionNoPythonEmptyThrows)
 
 TEST_F(TestSetup, parseSelectionEmptyReturnsZeroOnly)
 {
-    HybridSetup hs(*_engine);
-    const auto  v = hs.parseSelection("", "qm_center");
-    ASSERT_EQ(v.size(), 1u);
+    HybridInputParser parser;
+    const auto        v = parser.parseSelection("", "qm_center");
+    ASSERT_EQ(v.size(), 1U);
     EXPECT_EQ(v[0], 0);
 }
 
 TEST_F(TestSetup, parseSelectionSortsAndDeduplicates)
 {
-    HybridSetup hs(*_engine);
-    const auto  v = hs.parseSelection("5,1,3,1", "qm_center");
-    ASSERT_EQ(v.size(), 3u);
+    HybridInputParser parser;
+    const auto        v = parser.parseSelection("5,1,3,1", "qm_center");
+    ASSERT_EQ(v.size(), 3U);
     EXPECT_EQ(v[0], 1);
     EXPECT_EQ(v[1], 3);
     EXPECT_EQ(v[2], 5);
@@ -114,9 +155,9 @@ TEST_F(TestSetup, parseSelectionSortsAndDeduplicates)
 #ifndef PYTHON_ENABLED
 TEST_F(TestSetup, parseSelectionWithLettersThrowsWithoutPython)
 {
-    HybridSetup hs(*_engine);
+    HybridInputParser parser;
     EXPECT_THROW(
-        hs.parseSelection("not_a_number", "qm_center"),
+        parser.parseSelection("not_a_number", "qm_center"),
         InputFileException
     );
 }
@@ -126,6 +167,104 @@ TEST_F(TestSetup, parseSelectionWithLettersThrowsWithoutPython)
 
 TEST_F(TestSetup, setupThrowsNotImplemented)
 {
-    HybridSetup hs(*_engine);
-    EXPECT_THROW(hs.setup(), UserInputException);
+    HybridSetup hs{*_engine};
+    EXPECT_THROW(hs.setup(), InputFileException);
+}
+
+TEST_F(TestSetup, setupHybridConfiguresDefaultCenter)
+{
+    configureValidHybridSettings(*_engine);
+    addSingleAtomMolecule(*_engine, 1);
+
+    EXPECT_NO_THROW(setupHybrid(*_engine));
+    EXPECT_EQ(
+        _engine->getSimulationBox().getInnerRegionCenterAtomIndices(),
+        std::vector<int>{0}
+    );
+}
+
+TEST_F(TestSetup, setupHybridConfiguresExplicitLists)
+{
+    configureValidHybridSettings(*_engine);
+    QMSettings::setQMMethod(QMMethod::TURBOMOLE);
+    HybridSettings::setInnerRegionCenter({0, 1});
+    HybridSettings::setForcedCoreList({0});
+    HybridSettings::setForcedLayerList({1});
+    HybridSettings::setForcedOuterList({2});
+    HybridSettings::setUseQMCharges(false);
+    addSingleAtomMolecule(*_engine, 1);
+    addSingleAtomMolecule(*_engine, 2);
+    addSingleAtomMolecule(*_engine, 3);
+
+    EXPECT_NO_THROW(HybridSetup{*_engine}.setup());
+    EXPECT_TRUE(_engine->getSimulationBox().getMolecule(0).isForcedCore());
+    EXPECT_TRUE(_engine->getSimulationBox().getMolecule(1).isForcedLayer());
+    EXPECT_TRUE(_engine->getSimulationBox().getMolecule(2).isForcedOuter());
+}
+
+TEST_F(TestSetup, hybridSetupRejectsUnsupportedQmMethods)
+{
+    HybridSetup          setup{*_engine};
+    constexpr std::array unsupported{
+        QMMethod::PYSCF,
+        QMMethod::ASEDFTBPLUS,
+        QMMethod::ASEXTB,
+        QMMethod::MACE,
+        QMMethod::FENNOL,
+        QMMethod::NONE,
+    };
+
+    for (const auto method : unsupported)
+    {
+        QMSettings::setQMMethod(method);
+        EXPECT_THROW(setup.validateQMMethod(), InputFileException);
+    }
+
+    QMSettings::setQMMethod(QMMethod::DFTBPLUS);
+    EXPECT_NO_THROW(setup.validateQMMethod());
+    QMSettings::setQMMethod(QMMethod::TURBOMOLE);
+    EXPECT_NO_THROW(setup.validateQMMethod());
+}
+
+TEST_F(TestSetup, hybridSetupValidatesZoneRadii)
+{
+    _engine->getSimulationBox().setBoxDimensions({40.0, 40.0, 40.0});
+    HybridSetup setup{*_engine};
+
+    HybridSettings::setCoreRadius(5.0);
+    HybridSettings::setLayerRadius(4.0);
+    HybridSettings::setSmoothingRegionThickness(1.0);
+    HybridSettings::setPointChargeThickness(0.0);
+    EXPECT_THROW(setup.checkZoneRadii(), InputFileException);
+
+    HybridSettings::setCoreRadius(3.5);
+    HybridSettings::setLayerRadius(4.0);
+    HybridSettings::setSmoothingRegionThickness(1.0);
+    EXPECT_THROW(setup.checkZoneRadii(), InputFileException);
+
+    HybridSettings::setCoreRadius(2.0);
+    HybridSettings::setLayerRadius(11.0);
+    HybridSettings::setSmoothingRegionThickness(1.0);
+    EXPECT_THROW(setup.checkZoneRadii(), InputFileException);
+
+    HybridSettings::setCoreRadius(1.0);
+    HybridSettings::setLayerRadius(2.0);
+    HybridSettings::setSmoothingRegionThickness(0.5);
+    HybridSettings::setPointChargeThickness(59.0);
+    EXPECT_THROW(setup.checkZoneRadii(), InputFileException);
+
+    HybridSettings::setPointChargeThickness(2.0);
+    EXPECT_NO_THROW(setup.checkZoneRadii());
+}
+
+TEST_F(TestSetup, hybridSetupRejectsMmChargesForMoltypeZero)
+{
+    _engine->getSimulationBox().addMoleculeType(molsys::MoleculeType(0));
+    HybridSettings::setUseQMCharges(false);
+    HybridSetup setup{*_engine};
+
+    EXPECT_THROW(setup.validateQMChargeSettings(), InputFileException);
+
+    HybridSettings::setUseQMCharges(true);
+    EXPECT_NO_THROW(setup.validateQMChargeSettings());
 }

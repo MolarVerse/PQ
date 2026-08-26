@@ -25,7 +25,6 @@
 #define _TURBOMOLE_RUNNER_HPP_
 
 #include "externalQMRunner.hpp"   // for ExternalQMRunner
-#include "typeAliases.hpp"
 
 namespace QM
 {
@@ -39,10 +38,14 @@ namespace QM
     {
        private:
         bool _isFirstExecution = true;
+        bool _usePointCharges  = false;
 
        public:
-        void writeCoordsFile(pq::SimBox &) override;
-        void execute() override;
+        void writeCoordsFile(molsys::SimulationBox &simBox) override;
+
+        void writePointChargeFile(molsys::SimulationBox &simBox) override;
+
+        void execute(molsys::SimulationBox &simBox) override;
     };
 }   // namespace QM
 

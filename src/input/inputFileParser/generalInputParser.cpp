@@ -22,7 +22,6 @@
 
 #include "generalInputParser.hpp"
 
-#include <cctype>      // for std::isdigit
 #include <cstdint>     // for uint_fast32_t and UINT32_MAX
 #include <format>      // for format
 #include <stdexcept>   // for out_of_range and invalid_argument
@@ -34,6 +33,7 @@
 #include "optEngine.hpp"       // for MMOptEngine
 #include "parserUtils.hpp"
 #include "qmmdEngine.hpp"              // for QMMDEngine
+#include "qmmmMDEngine.hpp"            // for QMMMMDEngine
 #include "ringPolymerqmmdEngine.hpp"   // for RingPolymerQMMDEngine
 #include "settings.hpp"                // for Settings
 #include "stringUtilities.hpp"         // for toLowerCopy
@@ -54,7 +54,7 @@ using std::format;
  *
  * @param engine
  */
-GeneralInputParser::GeneralInputParser(Engine &engine) : InputFileParser(engine)
+GeneralInputParser::GeneralInputParser()
 {
     addKeyword(
         std::string("jobtype"),
@@ -86,8 +86,8 @@ GeneralInputParser::GeneralInputParser(Engine &engine) : InputFileParser(engine)
  * after engine is generated
  */
 void GeneralInputParser::parseJobType(
-    const std::vector<std::string> &,
-    const size_t
+    const std::vector<std::string> & /*lineElements*/,
+    const size_t /*lineNumber*/
 )
 {
 }
@@ -120,38 +120,46 @@ void GeneralInputParser::parseJobTypeForEngine(
     if (jobtype == "mm_opt")
     {
         Settings::setJobtype(MM_OPT);
-        engine.reset(new OptEngine());
+        engine = std::make_unique<OptEngine>();
     }
     else if (jobtype == "mm_hessian")
     {
         Settings::setJobtype(MM_HESSIAN);
-        engine.reset(new HessianEngine());
+        engine = std::make_unique<HessianEngine>();
     }
     else if (jobtype == "mm_md")
     {
         Settings::setJobtype(MM_MD);
-        engine.reset(new MMMDEngine());
+        engine = std::make_unique<MMMDEngine>();
     }
     else if (jobtype == "qm_md")
     {
         Settings::setJobtype(QM_MD);
-        engine.reset(new QMMDEngine());
+        engine = std::make_unique<QMMDEngine>();
     }
     else if (jobtype == "qm_rpmd")
     {
         Settings::setJobtype(RING_POLYMER_QM_MD);
-        engine.reset(new RingPolymerQMMDEngine());
+        engine = std::make_unique<RingPolymerQMMDEngine>();
+    }
+    else if (jobtype == "qmmm_md")
+    {
+        Settings::setJobtype(QMMM_MD);
+        engine = std::make_unique<QMMMMDEngine>();
     }
     else
+    {
         throw InputFileException(format(
             "Invalid jobtype \"{}\" in input file - possible values are:\n"
             "- mm-opt\n"
             "- mm-hessian\n"
             "- mm-md\n"
             "- qm-md\n"
-            "- qm-rpmd\n",
+            "- qm-rpmd\n"
+            "- qmmm-md\n",
             lineElements[2]
         ));
+    }
 }
 
 /**
@@ -180,14 +188,16 @@ void GeneralInputParser::parseDimensionality(
     const auto dimensionality = stringToInt(dimensionalityString);
 
     if (dimensionality == 3)
-        Settings::setDimensionality(size_t(dimensionality));
+        Settings::setDimensionality(static_cast<size_t>(dimensionality));
 
     else
+    {
         throw InputFileException(format(
             "Invalid dimensionality \"{}\" in input file\n"
             "Possible values are: 3, 3d",
             lineElements[2]
         ));
+    }
 }
 
 /**
@@ -220,11 +230,13 @@ void GeneralInputParser::parseFloatingPointType(
         Settings::setFloatingPointType(DOUBLE);
 
     else
+    {
         throw InputFileException(format(
             "Invalid floating point type \"{}\" in input file\n"
             "Possible values are: float, double",
             lineElements[2]
         ));
+    }
 }
 
 /**
@@ -244,7 +256,7 @@ void GeneralInputParser::parseRandomSeed(
 {
     checkCommand(lineElements, lineNumber);
 
-    constexpr auto maxRandomSeed = static_cast<long long>(UINT32_MAX);
+    constexpr auto maxRandomSeed = static_cast<std::int64_t>(UINT32_MAX);
 
     auto throwRangeError = [&maxRandomSeed](const auto &value)
     {
@@ -266,7 +278,7 @@ void GeneralInputParser::parseRandomSeed(
         ));
     };
 
-    std::uint_fast32_t randomSeed;
+    std::uint_fast32_t randomSeed = 0;
 
     try
     {

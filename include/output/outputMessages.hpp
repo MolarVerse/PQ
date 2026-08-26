@@ -24,10 +24,10 @@
 
 namespace output
 {
-    static constexpr char WARNING[]  = "WARNING: ";
-    static constexpr char INFO[]     = "INFO:    ";
-    static constexpr char OUTPUT[]   = "         ";
-    static constexpr char ANGSTROM[] = "\u212b";
+    static constexpr auto* WARNING  = "WARNING: ";
+    static constexpr auto* INFO     = "INFO:    ";
+    static constexpr auto* OUTPUT   = "         ";
+    static constexpr auto* ANGSTROM = "\u212b";
 
     std::string header();
     std::string endedNormally();
@@ -36,8 +36,8 @@ namespace output
 
     std::string elapsedTimeMessage(const double elapsedTime);
 
-    std::string setupMessage(const std::string &setup);
+    std::string setupMessage(const std::string& setup);
     std::string setupCompletedMessage();
-    std::string readMessage(const std::string &, const std::string &);
+    std::string readMessage(const std::string&, const std::string&);
 
 }   // namespace output

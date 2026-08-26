@@ -28,7 +28,23 @@
 #include <vector>
 
 #include "dihedral.hpp"
-#include "typeAliases.hpp"
+
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}   // namespace physicalData
+
+namespace molsys
+{
+    class Molecule;        // forward declaration
+    class SimulationBox;   // forward declaration
+}   // namespace molsys
+
+namespace potential
+{
+    class CoulombPotential;      // forward declaration
+    class NonCoulombPotential;   // forward declaration
+}   // namespace potential
 
 namespace forceField
 {
@@ -41,8 +57,8 @@ namespace forceField
     class DihedralForceField : public connectivity::Dihedral
     {
        private:
-        size_t _type;
-        bool   _isLinker = false;
+        DihedralId _type;
+        bool       _isLinker = false;
 
         double _forceConstant = 0.0;
         double _periodicity   = 0.0;
@@ -50,17 +66,17 @@ namespace forceField
 
        public:
         DihedralForceField(
-            const std::vector<pq::Molecule *> &molecules,
-            const std::vector<size_t>         &atomIndices,
-            const size_t                       type
+            const std::vector<molsys::Molecule *> &molecules,
+            const std::vector<size_t>             &atomIndices,
+            const DihedralId                       type
         );
 
         void calculateEnergyAndForces(
-            const pq::SimBox     &simBox,
-            pq::PhysicalData     &data,
-            const bool            isImproperDihedral,
-            const pq::CoulombPot &coulombPot,
-            pq::NonCoulombPot    &nonCoulombPot
+            const molsys::SimulationBox       &simBox,
+            physicalData::PhysicalData        &data,
+            const bool                         isImproperDihedral,
+            const potential::CoulombPotential &coulombPot,
+            potential::NonCoulombPotential    &nonCoulombPot
         );
 
         /***************************
@@ -78,10 +94,10 @@ namespace forceField
 
         [[nodiscard]] bool isLinker() const;
 
-        [[nodiscard]] size_t getType() const;
-        [[nodiscard]] double getForceConstant() const;
-        [[nodiscard]] double getPeriodicity() const;
-        [[nodiscard]] double getPhaseShift() const;
+        [[nodiscard]] DihedralId getType() const;
+        [[nodiscard]] double     getForceConstant() const;
+        [[nodiscard]] double     getPeriodicity() const;
+        [[nodiscard]] double     getPhaseShift() const;
     };
 
 }   // namespace forceField

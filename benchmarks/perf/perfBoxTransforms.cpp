@@ -23,7 +23,10 @@
 // Fixed-work micro-benchmark of the box coordinate transforms: wrapping into
 // the box, and triclinic <-> orthogonal space conversions.
 
+#include <cstdint>
 #include <cstdio>
+#include <format>
+#include <iostream>
 
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
@@ -34,25 +37,25 @@
 #include "orthorhombicBox.hpp"
 #include "triclinicBox.hpp"
 
-static constexpr long ITERATIONS = 20000;
+static constexpr std::uint64_t ITERATIONS = 20000;
 
 int main()
 {
     using linearAlgebra::Vec3D;
 
-    auto ortho = simulationBox::OrthorhombicBox();
+    auto ortho = molsys::OrthorhombicBox();
     ortho.setBoxDimensions({20.0, 20.0, 20.0});
 
-    auto triclinic = simulationBox::TriclinicBox();
+    auto triclinic = molsys::TriclinicBox();
     triclinic.setBoxDimensions({20.0, 20.0, 20.0});
     triclinic.setBoxAngles({80.0, 90.0, 100.0});
 
     CALLGRIND_ZERO_STATS;
 
     double sink = 0.0;
-    for (long i = 0; i < ITERATIONS; ++i)
+    for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
-        const double x = static_cast<double>(i & 127) * 0.3 - 19.0;
+        const double x = static_cast<double>(i & 127U) * 0.3 - 19.0;
         const Vec3D  v(x, 0.5 * x, -x);
 
         sink += norm(ortho.wrapPositionIntoBox(v));
@@ -61,6 +64,6 @@ int main()
         sink += norm(triclinic.toSimSpace(v));
     }
 
-    std::printf("%.6f\n", sink);
+    std::cout << std::format("{:.6f}\n", sink);
     return 0;
 }

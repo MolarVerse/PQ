@@ -42,7 +42,7 @@
 namespace potential
 {
     class NonCoulombPair;   // forward declaration
-}
+}   // namespace potential
 
 class TestBondForceField : public TestNonCoulombPotentialFF
 {
@@ -50,26 +50,31 @@ class TestBondForceField : public TestNonCoulombPotentialFF
 
 TEST_F(TestBondForceField, calculateEnergyAndForces)
 {
-    auto box = simulationBox::SimulationBox();
+    auto box = molsys::SimulationBox();
     box.setBoxDimensions({10.0, 10.0, 10.0});
 
     auto physicalData     = physicalData::PhysicalData();
     auto coulombPotential = potential::CoulombShiftedPotential(10.0);
 
-    auto nonCoulombPair =
-        potential::LennardJonesPair(size_t(0), size_t(1), 5.0, 2.0, 4.0);
+    auto nonCoulombPair = potential::LennardJonesPair(
+        static_cast<size_t>(0),
+        static_cast<size_t>(1),
+        5.0,
+        2.0,
+        4.0
+    );
     setNonCoulombPairsMatrix(
         linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(2, 2)
     );
     setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
 
-    auto molecule = simulationBox::Molecule();
+    auto molecule = molsys::Molecule();
 
     molecule.setMoltype(0);
     molecule.setNumberOfAtoms(2);
 
-    auto atom1 = std::make_shared<simulationBox::Atom>();
-    auto atom2 = std::make_shared<simulationBox::Atom>();
+    auto atom1 = std::make_shared<molsys::Atom>();
+    auto atom2 = std::make_shared<molsys::Atom>();
 
     atom1->setPosition({0.0, 0.0, 0.0});
     atom2->setPosition({1.0, 2.0, 3.0});
@@ -86,7 +91,7 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
     molecule.addAtom(atom2);
 
     auto bondForceField =
-        forceField::BondForceField(&molecule, &molecule, 0, 1, 0);
+        forceField::BondForceField(&molecule, &molecule, 0, 1, BondId{0});
     bondForceField.setEquilibriumBondLength(1.2);
     bondForceField.setForceConstant(3.0);
     bondForceField.setIsLinker(false);

@@ -27,8 +27,23 @@
 #include "staticMatrix.hpp"   // for tensor3D
 #include "vector3d.hpp"       // for Vec3D
 
-namespace simulationBox
+namespace molsys
 {
+    /**
+     * @class enum Periodicity
+     */
+    enum class Periodicity : size_t
+    {
+        NON_PERIODIC,
+        X,
+        Y,
+        Z,
+        XY,
+        XZ,
+        YZ,
+        XYZ
+    };
+
     /**
      * @class Box
      *
@@ -48,6 +63,7 @@ namespace simulationBox
 
         virtual void applyPBC(linearAlgebra::Vec3D &position) const = 0;
 
+        [[nodiscard]]
         virtual linearAlgebra::Vec3D wrapPositionIntoBox(
             const linearAlgebra::Vec3D &
         ) const = 0;
@@ -56,8 +72,9 @@ namespace simulationBox
             const linearAlgebra::tensor3D &scalingFactors
         ) = 0;
 
-        virtual double calculateVolume() = 0;
+        [[nodiscard]] virtual double calculateVolume() = 0;
 
+        [[nodiscard]]
         virtual linearAlgebra::Vec3D calcShiftVector(
             const linearAlgebra::Vec3D &
         ) const = 0;
@@ -74,6 +91,9 @@ namespace simulationBox
 
         [[nodiscard]] virtual linearAlgebra::Vec3D    getBoxAngles() const;
         [[nodiscard]] virtual linearAlgebra::tensor3D getBoxMatrix() const;
+        [[nodiscard]] virtual linearAlgebra::tensor3D getBoxMatrix(
+            const Periodicity per
+        ) const;
 
         [[nodiscard]]
         virtual linearAlgebra::Vec3D toOrthoSpace(
@@ -109,6 +129,6 @@ namespace simulationBox
         void setBoxSizeHasChanged(const bool boxSizeHasChanged);
     };
 
-}   // namespace simulationBox
+}   // namespace molsys
 
 #endif   // _BOX_HPP_

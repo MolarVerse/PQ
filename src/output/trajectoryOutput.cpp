@@ -27,12 +27,15 @@
 #include <ostream>   // for ofstream, basic_ostream, operator<<
 #include <sstream>   // for ostringstream
 
+#include "defaults.hpp"
+#include "hybridConfigurator.hpp"
 #include "molecule.hpp"        // for Molecule
 #include "simulationBox.hpp"   // for SimulationBox
 
 using namespace output;
-using namespace settings;
-using namespace simulationBox;
+using namespace defaults;
+using namespace configurator;
+using namespace molsys;
 
 /**
  * @brief Write the header of a trajectory files
@@ -72,6 +75,39 @@ void TrajectoryOutput::writeXyz(SimulationBox &simBox, const size_t step)
         buffer << std::format("{:15.8f}\t", pos[1]);
         buffer << std::format("{:15.8f}\n", pos[2]);
     }
+
+    // Write the buffer to the file
+    _fp << buffer.str();
+    _fp << std::flush;
+}
+
+/**
+ * @brief Write hybrid center xyz file
+ *
+ * @param simBox
+ * @param step
+ */
+void TrajectoryOutput::writeHybridCenterXyz(
+    const HybridConfigurator &configurator,
+    const size_t              step
+)
+{
+    // one dummy atom is needed to mark the inner region center
+    constexpr size_t numberOfCenterAtoms = 1;
+    constexpr char   centerAtomName      = INNER_REGION_CENTER_ATOM_NAME;
+
+    // header line
+    _fp << numberOfCenterAtoms << '\n';
+    writeComment(step);
+
+    std::ostringstream buffer;
+    buffer << std::format("{:<5}\t", centerAtomName);
+
+    const auto &pos = configurator.getInnerRegionCenter();
+
+    buffer << std::format("{:15.8f}\t", pos[0]);
+    buffer << std::format("{:15.8f}\t", pos[1]);
+    buffer << std::format("{:15.8f}\n", pos[2]);
 
     // Write the buffer to the file
     _fp << buffer.str();

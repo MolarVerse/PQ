@@ -46,16 +46,27 @@ namespace manostat
 
        public:
         StochasticRescalingManostat() = default;
-        StochasticRescalingManostat(const StochasticRescalingManostat &other);
         explicit StochasticRescalingManostat(
             const double targetPressure,
             const double tau,
             const double compressibility
         );
+        ~StochasticRescalingManostat() override = default;
+
+        // copy constructor and copy assignment needed for random number
+        // generator
+        StochasticRescalingManostat(const StochasticRescalingManostat &other);
+        StochasticRescalingManostat &operator=(
+            const StochasticRescalingManostat &other
+        );
+        StochasticRescalingManostat(StochasticRescalingManostat &&) noexcept =
+            delete;
+        StochasticRescalingManostat &operator=(StochasticRescalingManostat &&
+        ) noexcept = delete;
 
         void applyManostat(
-            simulationBox::SimulationBox &,
-            physicalData::PhysicalData &
+            molsys::SimulationBox      &simBox,
+            physicalData::PhysicalData &physData
         ) override;
 
         [[nodiscard]] virtual linearAlgebra::tensor3D calculateMu(const double);

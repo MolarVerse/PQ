@@ -23,7 +23,10 @@
 // Fixed-work micro-benchmark of the linear-algebra primitives (Vec3D and the
 // 3x3 tensor) that underlie every force/energy kernel.
 
+#include <cstdint>
 #include <cstdio>
+#include <format>
+#include <iostream>
 
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
@@ -34,7 +37,7 @@
 #include "staticMatrix.hpp"
 #include "vector3d.hpp"
 
-static constexpr long ITERATIONS = 20000;
+static constexpr std::uint64_t ITERATIONS = 20000;
 
 int main()
 {
@@ -53,9 +56,9 @@ int main()
     CALLGRIND_ZERO_STATS;
 
     double sink = 0.0;
-    for (long i = 0; i < ITERATIONS; ++i)
+    for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
-        const double scale = 1.0 + static_cast<double>(i & 255) * 0.01;
+        const double scale = 1.0 + static_cast<double>(i & 255U) * 0.01;
         const Vec3D  a     = v1 * scale;
         const Vec3D  b     = v2 - a;
 
@@ -67,6 +70,6 @@ int main()
         sink += norm(matrixVec) + det(matrixSq) + det(inverse(matrix));
     }
 
-    std::printf("%.6f\n", sink);
+    std::cout << std::format("{:.6f}\n", sink);
     return 0;
 }

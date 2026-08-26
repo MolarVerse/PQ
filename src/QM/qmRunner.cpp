@@ -25,11 +25,15 @@
 #include <cmath>    // for ceil
 #include <thread>   // for sleep_for
 
+#include "constants.hpp"
 #include "exceptions.hpp"
 #include "qmSettings.hpp"
 
 using QM::QMRunner;
+using enum molsys::Periodicity;
+
 using namespace settings;
+using namespace defaults;
 using namespace customException;
 
 /**
@@ -50,9 +54,9 @@ void QMRunner::throwAfterTimeout(const std::stop_token stopToken) const
     if (qmLoopTimeLimit <= 0)
         return;
 
-    const auto timeout = int(::ceil(qmLoopTimeLimit));
+    const auto timeout = static_cast<int>(::ceil(qmLoopTimeLimit));
 
-    for (int i = 0; i < timeout * 1000; ++i)
+    for (int i = 0; i < timeout * constants::S_TO_MS; ++i)
     {
         if (stopToken.stop_requested())
             return;
@@ -61,4 +65,18 @@ void QMRunner::throwAfterTimeout(const std::stop_token stopToken) const
     }
 
     throw QMRunnerException("QM calculation timeout");
+}
+
+/**
+ * @brief run the qm engine with default periodicity XYZ (3d)
+ *
+ * @param simBox SimulationBox reference
+ * @param physicalData PhysicalData reference
+ */
+void QMRunner::run(
+    molsys::SimulationBox      &simBox,
+    physicalData::PhysicalData &physicalData
+)
+{
+    run(simBox, physicalData, XYZ);
 }

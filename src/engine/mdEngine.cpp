@@ -23,18 +23,33 @@
 #include "mdEngine.hpp"
 
 #include "constants/conversionFactors.hpp"   // for _FS_TO_PS_
-#include "outputFileSettings.hpp"            // for OutputFileSettings
-#include "progressbar.hpp"                   // for progressbar
-#include "qmmdEngine.hpp"                    // for QMMDEngine
-#include "referencesOutput.hpp"              // for ReferencesOutput
-#include "settings.hpp"                      // for Settings
-#include "timingsSettings.hpp"               // for TimingsSettings
+#include "globalTimer.hpp"
+#include "outputFileSettings.hpp"   // for OutputFileSettings
+#include "progressbar.hpp"          // for progressbar
+#include "referencesOutput.hpp"     // for ReferencesOutput
+#include "settings.hpp"             // for Settings
+#include "timingsSettings.hpp"      // for TimingsSettings
+#include "velocityVerlet.hpp"
 
 using namespace engine;
 using namespace output;
 using namespace settings;
 using namespace constants;
 using namespace physicalData;
+
+using virial::intraMolecularVirialCorrection;
+
+/**
+ * @brief Constructor for MDEngine
+ *
+ * @details This constructor initializes the MDEngine with default settings.
+ */
+MDEngine::MDEngine()
+    : _integrator(std::make_unique<integrator::VelocityVerlet>()),
+      _thermostat(std::make_unique<thermostat::Thermostat>()),
+      _manostat(std::make_unique<manostat::Manostat>())
+{
+}
 
 /**
  * @brief Run the simulation for numberOfSteps steps.
@@ -57,64 +72,17 @@ void MDEngine::run()
         takeStep();
 
         writeOutput();
-        deleteTempFiles();
+        deleteTmpFiles();
     }
 
-    _timer.stopSimulationTimer();
+    timings::GlobalTimer::get().stopSimulationTimer();
 
-    const auto elapsedTime = double(_timer.calculateElapsedTime()) * 1e-3;
-
-    _engineOutput.setTimerName("Output");
-    _timer.addTimer(_engineOutput.getTimer());
-
-    _thermostat->setTimerName("Thermostat");
-    _timer.addTimer(_thermostat->getTimer());
-
-    _integrator->setTimerName("Integrator");
-    _timer.addTimer(_integrator->getTimer());
-
-    _constraints->setTimerName("Constraints");
-    _timer.addTimer(_constraints->getTimer());
-
-    _cellList->setTimerName("Cell List");
-    _timer.addTimer(_cellList->getTimer());
-
-    _potential->setTimerName("Potential");
-    _timer.addTimer(_potential->getTimer());
-
-    _intraNonBonded->setTimerName("IntraNonBonded");
-    _timer.addTimer(_intraNonBonded->getTimer());
-
-    _virial->setTimerName("Virial");
-    _timer.addTimer(_virial->getTimer());
-
-    _physicalData->setTimerName("Physical Data");
-    _timer.addTimer(_physicalData->getTimer());
-
-    _manostat->setTimerName("Manostat");
-    _timer.addTimer(_manostat->getTimer());
-
-    _resetKinetics.setTimerName("Reset Kinetics");
-    _timer.addTimer(_resetKinetics.getTimer());
-
-    if (Settings::isQMActivated())
-    {
-        dynamic_cast<QMMDEngine *>(this)->getQMRunner()->setTimerName(
-            "QM Engine"
-        );
-        _timer.addTimer(
-            dynamic_cast<QMMDEngine *>(this)->getQMRunner()->getTimer()
-        );
-    }
-
-#ifdef WITH_KOKKOS
-    _kokkosPotential.setTimerName("Kokkos Potential");
-    _timer.addTimer(_kokkosPotential.getTimer());
-#endif
+    const auto elapsedTime =
+        timings::GlobalTimer::get().calculateElapsedTime() * constants::MS_TO_S;
 
     references::ReferencesOutput::writeReferencesFile();
 
-    _engineOutput.writeTimingsFile(_timer);
+    _engineOutput.writeTimingsFile();
 
     _engineOutput.getLogOutput().writeEndedNormally(elapsedTime);
     _engineOutput.getStdoutOutput().writeEndedNormally(elapsedTime);
@@ -152,7 +120,11 @@ void MDEngine::takeStepAfterForces()
 
     _constraints->calculateConstraintBondRefs(*_simulationBox);
 
-    _virial->intraMolecularVirialCorrection(*_simulationBox, *_physicalData);
+    if (!Settings::isHybridJobtype())
+    {
+        const auto virial = intraMolecularVirialCorrection(*_simulationBox);
+        _physicalData->addVirial(virial);
+    }
 
     _thermostat->applyThermostatOnForces(*_simulationBox);
 
@@ -170,12 +142,17 @@ void MDEngine::takeStepAfterForces()
 
     _thermostat->applyTemperatureRamping();
 
-    if (Settings::isQMActivated())
+    if (Settings::isQMOnlyJobtype())
     {
-        _physicalData->setNumberOfQMAtoms(
-            static_cast<double>(_simulationBox->getNumberOfQMAtoms())
-        );
+        const auto nQMAtoms = _simulationBox->getNumberOfQMAtoms();
+        _physicalData->setNumberOfQMAtoms(static_cast<double>(nQMAtoms));
     }
+}
+
+void MDEngine::calculateForcesWrapper()
+{
+    _simulationBox->resetAllForces();
+    calculateForces();
 }
 
 /**
@@ -186,7 +163,7 @@ void MDEngine::takeStep()
 {
     takeStepBeforeForces();
 
-    calculateForces();
+    calculateForcesWrapper();
 
     takeStepAfterForces();
 }
@@ -223,6 +200,9 @@ void MDEngine::writeOutput()
         );   // use physicalData instead of averagePhysicalData
 
         _engineOutput.writeBoxFile(effStep, _simulationBox->getBox());
+
+        if (Settings::isHybridJobtype())
+            _engineOutput.writeHybridCenterXyzFile(_configurator, effStep);
     }
 
     // NOTE:
@@ -231,10 +211,9 @@ void MDEngine::writeOutput()
     // included in total simulation time
     // Unfortunately, setup is therefore included in the first looptime output
     // but this is not a big problem - could also be a feature and not a bug
-    _timer.stopSimulationTimer();
-    _timer.startSimulationTimer();
+    timings::GlobalTimer::get().stopAndRestartSimulationTimer();
 
-    _physicalData->setLoopTime(_timer.calculateLoopTime());
+    _physicalData->setLoopTime(timings::GlobalTimer::get().calculateLoopTime());
     _averagePhysicalData.updateAverages(*_physicalData);
 
     if (0 == _step % outputFreq)
@@ -305,6 +284,16 @@ output::EnergyOutput &MDEngine::getInstantEnergyOutput()
 output::MomentumOutput &MDEngine::getMomentumOutput()
 {
     return _engineOutput.getMomentumOutput();
+}
+
+/**
+ * @brief get the reference to the xyz hybrid center output
+ *
+ * @return output::TrajectoryOutput&
+ */
+output::TrajectoryOutput &MDEngine::getXyzHybridCenterOutput()
+{
+    return _engineOutput.getXyzHybridCenterOutput();
 }
 
 /**

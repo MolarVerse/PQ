@@ -25,6 +25,7 @@
 #define _QM_MM_MD_ENGINE_HPP_
 
 #include "hybridMDEngine.hpp"
+#include "randomNumberGenerator.hpp"
 
 namespace engine
 {
@@ -38,10 +39,36 @@ namespace engine
     class QMMMMDEngine : public HybridMDEngine
     {
        public:
-        QMMMMDEngine()  = default;
-        ~QMMMMDEngine() = default;
+        QMMMMDEngine()           = default;
+        ~QMMMMDEngine() override = default;
 
-        void calculateForces() override {};   // TODO: implement
+        void calculateForces() override;
+
+       private:
+        randomNumberGenerator::RandomNumberGenerator _rng{};
+        physicalData::PhysicalData                   _qmmmPhysicalData{};
+
+        void applySmoothing();
+        void applyExactSmoothing();
+        void applyHotspotSmoothing();
+
+        void moltypeCheck();
+        void setNumberOfQMAtoms();
+
+        void scaleAndAccumulateEnergies(const double globalSmF);
+        void moveEnergiesToPhysicalData();
+
+        void distributeSmoothingMolQMForces();
+
+        std::vector<double> getRandomWeights(
+            const std::vector<std::reference_wrapper<molsys::Molecule>>
+                &recipientMolecules
+        );
+        std::vector<double> getDistanceWeights(
+            const molsys::Molecule &smoothingMol,
+            const std::vector<std::reference_wrapper<molsys::Molecule>>
+                &recipientMolecules
+        );
     };
 
 }   // namespace engine

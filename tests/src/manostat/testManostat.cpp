@@ -52,8 +52,8 @@ class TestableStochasticRescalingManostat
 namespace
 {
     void setupCutMolecule(
-        simulationBox::SimulationBox& box,
-        physicalData::PhysicalData&   data
+        molsys::SimulationBox&      box,
+        physicalData::PhysicalData& data
     )
     {
         settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
@@ -71,15 +71,15 @@ namespace
             diagonalMatrix(linearAlgebra::Vec3D(0.0))
         );
 
-        auto atom1 = std::make_shared<simulationBox::Atom>();
-        auto atom2 = std::make_shared<simulationBox::Atom>();
+        auto atom1 = std::make_shared<molsys::Atom>();
+        auto atom2 = std::make_shared<molsys::Atom>();
 
         atom1->setPosition({4.95, 0.0, 0.0});
         atom2->setPosition({-4.85, 0.0, 0.0});
         atom1->setMass(1.0);
         atom2->setMass(1.0);
 
-        auto molecule = simulationBox::Molecule();
+        auto molecule = molsys::Molecule();
         molecule.setNumberOfAtoms(2);
         molecule.setMolMass(2.0);
         molecule.addAtom(atom1);
@@ -91,9 +91,7 @@ namespace
         box.addMolecule(molecule);
     }
 
-    linearAlgebra::Vec3D getMinimumImageDistance(
-        simulationBox::SimulationBox& box
-    )
+    linearAlgebra::Vec3D getMinimumImageDistance(molsys::SimulationBox& box)
     {
         auto dPosition = box.getMolecule(0).getAtomPosition(1) -
                          box.getMolecule(0).getAtomPosition(0);
@@ -102,7 +100,7 @@ namespace
         return dPosition;
     }
 
-    void expectCutMoleculeScaled(simulationBox::SimulationBox& box)
+    void expectCutMoleculeScaled(molsys::SimulationBox& box)
     {
         const auto dPosition = getMinimumImageDistance(box);
 
@@ -118,6 +116,7 @@ namespace
         EXPECT_NEAR(dPosition[2], 0.0, 1e-12);
 
         for (size_t atomIndex = 0; atomIndex < 2; ++atomIndex)
+        {
             for (size_t axis = 0; axis < 3; ++axis)
             {
                 const auto coordinate =
@@ -127,11 +126,12 @@ namespace
                 EXPECT_GE(coordinate, -halfBoxLength);
                 EXPECT_LT(coordinate, halfBoxLength);
             }
+        }
     }
 
     double getMinimumImageDistance(
-        simulationBox::SimulationBox& box,
-        const size_t                  moleculeIndex
+        molsys::SimulationBox& box,
+        const size_t           moleculeIndex
     )
     {
         auto dPosition = box.getMolecule(moleculeIndex).getAtomPosition(1) -
@@ -178,8 +178,8 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
     _box->setBoxDimensions({2.0, 2.0, 2.0});
     const auto boxOld = _box->getBoxDimensions();
 
-    auto       molecule = simulationBox::Molecule();
-    const auto atom     = std::make_shared<simulationBox::Atom>();
+    auto       molecule = molsys::Molecule();
+    const auto atom     = std::make_shared<molsys::Atom>();
     atom->setPosition({1.0, 0.0, 0.0});
     molecule.addAtom(atom);
     molecule.setCenterOfMass({1.0, 0.0, 0.0});
@@ -217,7 +217,7 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
  * @brief tests that manostat scaling keeps cut molecules internally intact
  *
  */
-TEST_F(TestManostat, testApplyBerendsenManostat_preservesCutMoleculeGeometry)
+TEST_F(TestManostat, testApplyBerendsenManostatPreservesCutMoleculeGeometry)
 {
     setupCutMolecule(*_box, *_data);
 
@@ -233,7 +233,7 @@ TEST_F(TestManostat, testApplyBerendsenManostat_preservesCutMoleculeGeometry)
  */
 TEST_F(
     TestManostat,
-    testApplyStochasticRescalingManostat_preservesCutMoleculeGeometry
+    testApplyStochasticRescalingManostatPreservesCutMoleculeGeometry
 )
 {
     setupCutMolecule(*_box, *_data);
@@ -248,21 +248,21 @@ TEST_F(
 
 TEST_F(
     TestManostat,
-    testApplyStochasticRescalingManostat_matchesCutAndInsideDistances
+    testApplyStochasticRescalingManostatMatchesCutAndInsideDistances
 )
 {
     setupCutMolecule(*_box, *_data);
     settings::ThermostatSettings::setActualTargetTemperature(0.0);
 
-    auto atom1 = std::make_shared<simulationBox::Atom>();
-    auto atom2 = std::make_shared<simulationBox::Atom>();
+    auto atom1 = std::make_shared<molsys::Atom>();
+    auto atom2 = std::make_shared<molsys::Atom>();
 
     atom1->setPosition({-1.0, 0.0, 0.0});
     atom2->setPosition({-0.8, 0.0, 0.0});
     atom1->setMass(1.0);
     atom2->setMass(1.0);
 
-    auto molecule = simulationBox::Molecule();
+    auto molecule = molsys::Molecule();
     molecule.setNumberOfAtoms(2);
     molecule.setMolMass(2.0);
     molecule.addAtom(atom1);
@@ -293,7 +293,7 @@ TEST_F(
  */
 TEST_F(
     TestManostat,
-    testApplyBerendsenManostat_cutoffLargerThanHalfOfMinimumBoxDimension
+    testApplyBerendsenManostatCutoffLargerThanHalfOfMinimumBoxDimension
 )
 {
     settings::PotentialSettings::setCoulombRadiusCutOff(10.0);
@@ -354,7 +354,7 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
     _data->setVirial(linearAlgebra::tensor3D(0.0));
     _data->setKineticEnergyMolecularVector(linearAlgebra::tensor3D(0.0));
 
-    auto molecule = simulationBox::Molecule();
+    auto molecule = molsys::Molecule();
     molecule.setNumberOfAtoms(2);
     molecule.setMolMass(2.0);
 
@@ -363,7 +363,7 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
                              const linearAlgebra::Vec3D& velocity
                          )
     {
-        auto atom = std::make_shared<simulationBox::Atom>();
+        auto atom = std::make_shared<molsys::Atom>();
         atom->setMass(1.0);
         atom->setPosition(position);
         atom->setVelocity(velocity);
@@ -431,46 +431,46 @@ TEST_F(TestManostat, testRotateMu)
 
 /* ---------- BerendsenManostat — type, isotropy, getters ---------- */
 
-TEST_F(TestManostat, berendsen_taueAndCompressibilityGetters)
+TEST_F(TestManostat, berendsenTauAndCompressibilityGetters)
 {
     auto bm = manostat::BerendsenManostat(1.0, 0.1, 4.5);
     EXPECT_DOUBLE_EQ(bm.getTau(), 0.1);
     EXPECT_DOUBLE_EQ(bm.getCompressibility(), 4.5);
 }
 
-TEST_F(TestManostat, berendsen_manostatType)
+TEST_F(TestManostat, berendsenManostatType)
 {
     auto bm = manostat::BerendsenManostat(1.0, 0.1, 4.5);
     EXPECT_EQ(bm.getManostatType(), settings::ManostatType::BERENDSEN);
 }
 
-TEST_F(TestManostat, berendsen_isotropy)
+TEST_F(TestManostat, berendsenIsotropy)
 {
     auto bm = manostat::BerendsenManostat(1.0, 0.1, 4.5);
     EXPECT_EQ(bm.getIsotropy(), settings::Isotropy::ISOTROPIC);
 }
 
-TEST_F(TestManostat, semiIsotropicBerendsen_isotropy)
+TEST_F(TestManostat, semiIsotropicBerendsenIsotropy)
 {
     auto bm = manostat::SemiIsotropicBerendsenManostat(
         1.0,
         0.1,
         4.5,
-        2u,
-        std::vector<size_t>{0u, 1u}
+        2U,
+        std::vector<size_t>{0U, 1U}
     );
     EXPECT_EQ(bm.getIsotropy(), settings::Isotropy::SEMI_ISOTROPIC);
     EXPECT_EQ(bm.getManostatType(), settings::ManostatType::BERENDSEN);
 }
 
-TEST_F(TestManostat, anisotropicBerendsen_isotropy)
+TEST_F(TestManostat, anisotropicBerendsenIsotropy)
 {
     auto bm = manostat::AnisotropicBerendsenManostat(1.0, 0.1, 4.5);
     EXPECT_EQ(bm.getIsotropy(), settings::Isotropy::ANISOTROPIC);
     EXPECT_EQ(bm.getManostatType(), settings::ManostatType::BERENDSEN);
 }
 
-TEST_F(TestManostat, fullAnisotropicBerendsen_isotropy)
+TEST_F(TestManostat, fullAnisotropicBerendsenIsotropy)
 {
     auto bm = manostat::FullAnisotropicBerendsenManostat(1.0, 0.1, 4.5);
     EXPECT_EQ(bm.getIsotropy(), settings::Isotropy::FULL_ANISOTROPIC);

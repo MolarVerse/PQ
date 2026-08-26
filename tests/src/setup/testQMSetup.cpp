@@ -29,13 +29,17 @@
 
 #include "dftbplusRunner.hpp"   // for DFTBPlusRunner
 #include "exceptions.hpp"       // for InputFileException
-#include "gtest/gtest.h"        // for Message, TestPartResult
-#include "pyscfRunner.hpp"      // for PySCFRunner
-#include "qmSettings.hpp"       // for QMMethod, QMSettings
-#include "qmSetup.hpp"          // for QMSetup, setupQM
-#include "qmSetup.hpp"          // for QMSetup
-#include "qmmdEngine.hpp"       // for QMMDEngine
-#include "settings.hpp"         // for Settings
+#include "externalQMRunner.hpp"
+#include "gtest/gtest.h"   // for Message, TestPartResult
+#include "orthorhombicBox.hpp"
+#include "physicalData.hpp"
+#include "pyscfRunner.hpp"   // for PySCFRunner
+#include "qmSettings.hpp"    // for QMMethod, QMSettings
+#include "qmSetup.hpp"       // for QMSetup, setupQM
+#include "qmSetup.hpp"       // for QMSetup
+#include "qmmdEngine.hpp"    // for QMMDEngine
+#include "settings.hpp"      // for Settings
+#include "simulationBox.hpp"
 #include "testUtils.hpp"
 #include "throwWithMessage.hpp"   // for ASSERT_THROW_MSG
 #include "turbomoleRunner.hpp"    // for TurbomoleRunner
@@ -45,6 +49,13 @@ using namespace settings;
 
 namespace
 {
+    class DefaultExternalQMRunner final : public QM::ExternalQMRunner
+    {
+       public:
+        void execute(molsys::SimulationBox & /*simBox*/) override {}
+        void writeCoordsFile(molsys::SimulationBox & /*simBox*/) override {}
+    };
+
     void setBuildCompatibleQMScript()
     {
         QMSettings::setQMScript("");
@@ -57,6 +68,18 @@ namespace
             QMSettings::setQMScript("test");
     }
 }   // namespace
+
+TEST(TestQMSetup, defaultExternalRunnerHooksAreOptional)
+{
+    DefaultExternalQMRunner    runner;
+    molsys::SimulationBox      simBox;
+    molsys::OrthorhombicBox    box;
+    physicalData::PhysicalData physicalData;
+    QM::ExternalQMRunner *volatile baseRunner = &runner;
+
+    EXPECT_NO_THROW(baseRunner->writePointChargeFile(simBox));
+    EXPECT_NO_THROW(baseRunner->readStressTensor(box, physicalData));
+}
 
 TEST(TestQMSetup, resolvesBundledQMScript)
 {
@@ -83,14 +106,14 @@ TEST(TestQMSetup, setupDftbplus)
     setBuildCompatibleQMScript();
     setupQM.setup();
 
-    test::checkType(engine.getQMRunner(), typeid(QM::DFTBPlusRunner));
+    test::checkType(*engine.getQMRunner(), typeid(QM::DFTBPlusRunner));
 
     settings::QMSettings::setQMMethod(settings::QMMethod::NONE);
 
     ASSERT_THROW_MSG(
         setupQM.setup(),
         customException::InputFileException,
-        "A qm based jobtype was requested but no external program via "
+        "A QM based jobtype was requested but no valid external program via "
         "\"qm_prog\" provided"
     );
 }
@@ -104,14 +127,14 @@ TEST(TestQMSetup, setupPySCF)
     setBuildCompatibleQMScript();
     setupQM.setup();
 
-    test::checkType(engine.getQMRunner(), typeid(QM::PySCFRunner));
+    test::checkType(*engine.getQMRunner(), typeid(QM::PySCFRunner));
 
     settings::QMSettings::setQMMethod(settings::QMMethod::NONE);
 
     ASSERT_THROW_MSG(
         setupQM.setup(),
         customException::InputFileException,
-        "A qm based jobtype was requested but no external program via "
+        "A QM based jobtype was requested but no valid external program via "
         "\"qm_prog\" provided"
     );
 }
@@ -125,14 +148,14 @@ TEST(TestQMSetup, setupTurbomoleRunner)
     setBuildCompatibleQMScript();
     setupQM.setup();
 
-    test::checkType(engine.getQMRunner(), typeid(QM::TurbomoleRunner));
+    test::checkType(*engine.getQMRunner(), typeid(QM::TurbomoleRunner));
 
     settings::QMSettings::setQMMethod(settings::QMMethod::NONE);
 
     ASSERT_THROW_MSG(
         setupQM.setup(),
         customException::InputFileException,
-        "A qm based jobtype was requested but no external program via "
+        "A QM based jobtype was requested but no valid external program via "
         "\"qm_prog\" provided"
     );
 }
@@ -219,8 +242,8 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlusCustom)
 
 TEST(TestQMSetup, setupQMLoopTimeLimitDefault)
 {
-    auto _engine  = new engine::QMMDEngine();
-    auto _qmSetup = new QMSetup(*_engine);
+    auto *_engine  = new engine::QMMDEngine();
+    auto *_qmSetup = new QMSetup(*_engine);
 
     _engine->getEngineOutput().getLogOutput().setFilename("default.log");
     QMSettings::setQMMethod(QMMethod::DFTBPLUS);
@@ -241,15 +264,16 @@ TEST(TestQMSetup, setupQMLoopTimeLimitDefault)
     getline(file, line);
     EXPECT_EQ(line, "         QM looptime limit: 3600 s");
 
-    ::remove("default.log");
+    const auto errorCode = std::remove("default.log");
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
     delete _engine;
     delete _qmSetup;
 }
 
 TEST(TestQMSetup, setupQMLoopTimeLimitNegative)
 {
-    auto _engine  = new engine::QMMDEngine();
-    auto _qmSetup = new QMSetup(*_engine);
+    auto *_engine  = new engine::QMMDEngine();
+    auto *_qmSetup = new QMSetup(*_engine);
 
     _engine->getEngineOutput().getLogOutput().setFilename("default.log");
     QMSettings::setQMMethod(QMMethod::DFTBPLUS);
@@ -271,15 +295,16 @@ TEST(TestQMSetup, setupQMLoopTimeLimitNegative)
     getline(file, line);
     EXPECT_EQ(line, "         QM looptime limit: unlimited");
 
-    ::remove("default.log");
+    const auto errorCode = std::remove("default.log");
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
     delete _engine;
     delete _qmSetup;
 }
 
 TEST(TestQMSetup, setupQMLoopTimeLimitZero)
 {
-    auto _engine  = new engine::QMMDEngine();
-    auto _qmSetup = new QMSetup(*_engine);
+    auto *_engine  = new engine::QMMDEngine();
+    auto *_qmSetup = new QMSetup(*_engine);
 
     _engine->getEngineOutput().getLogOutput().setFilename("default.log");
     QMSettings::setQMMethod(QMMethod::DFTBPLUS);
@@ -301,15 +326,16 @@ TEST(TestQMSetup, setupQMLoopTimeLimitZero)
     getline(file, line);
     EXPECT_EQ(line, "         QM looptime limit: unlimited");
 
-    ::remove("default.log");
+    const auto errorCode = std::remove("default.log");
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
     delete _engine;
     delete _qmSetup;
 }
 
 TEST(TestQMSetup, setupQMLoopTimeLimitPositive)
 {
-    auto _engine  = new engine::QMMDEngine();
-    auto _qmSetup = new QMSetup(*_engine);
+    auto *_engine  = new engine::QMMDEngine();
+    auto *_qmSetup = new QMSetup(*_engine);
 
     _engine->getEngineOutput().getLogOutput().setFilename("default.log");
     QMSettings::setQMMethod(QMMethod::DFTBPLUS);
@@ -331,15 +357,16 @@ TEST(TestQMSetup, setupQMLoopTimeLimitPositive)
     getline(file, line);
     EXPECT_EQ(line, "         QM looptime limit: 3.14 s");
 
-    ::remove("default.log");
+    const auto errorCode = std::remove("default.log");
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
     delete _engine;
     delete _qmSetup;
 }
 
 TEST(TestQMSetup, setupQMRunnerFennol)
 {
-    auto _engine  = new engine::QMMDEngine();
-    auto _qmSetup = new QMSetup(*_engine);
+    auto *_engine  = new engine::QMMDEngine();
+    auto *_qmSetup = new QMSetup(*_engine);
 
     _engine->getEngineOutput().getLogOutput().setFilename("default.log");
     QMSettings::setQMMethod(QMMethod::FENNOL);
@@ -364,7 +391,8 @@ TEST(TestQMSetup, setupQMRunnerFennol)
     EXPECT_EQ(line, "         Using float64:            false");
     // clang-format on
 
-    ::remove("default.log");
+    const auto errorCode = std::remove("default.log");
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
     delete _engine;
     delete _qmSetup;
 }

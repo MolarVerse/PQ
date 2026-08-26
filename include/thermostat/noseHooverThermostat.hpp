@@ -27,7 +27,6 @@
 #include <vector>   // for std::vector
 
 #include "thermostat.hpp"
-#include "typeAliases.hpp"
 
 namespace thermostat
 {
@@ -54,8 +53,12 @@ namespace thermostat
             const double               couplingFrequency
         );
 
-        void applyThermostat(pq::SimBox &, pq::PhysicalData &) override;
-        void applyThermostatOnForces(pq::SimBox &simBox) override;
+        void applyThermostat(
+            molsys::SimulationBox      &simBox,
+            physicalData::PhysicalData &physData
+        ) override;
+
+        void applyThermostatOnForces(molsys::SimulationBox &simBox) override;
 
         /***************************
          * standard getter methods *
@@ -65,7 +68,8 @@ namespace thermostat
         [[nodiscard]] std::vector<double> getZeta() const;
         [[nodiscard]] double              getCouplingFrequency() const;
 
-        [[nodiscard]] pq::ThermostatType getThermostatType() const override;
+        [[nodiscard]]
+        settings::ThermostatType getThermostatType() const override;
 
         /***************************
          * standard setter methods *

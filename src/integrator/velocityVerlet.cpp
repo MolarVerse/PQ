@@ -22,12 +22,17 @@
 
 #include "velocityVerlet.hpp"
 
+#include "globalTimer.hpp"
 #include "simulationBox.hpp"
 
 using namespace integrator;
-using namespace simulationBox;
+using namespace molsys;
 
-VelocityVerlet::VelocityVerlet() : Integrator("VelocityVerlet"){};
+/**
+ * @brief Construct a new Velocity Verlet::Velocity Verlet object
+ *
+ */
+VelocityVerlet::VelocityVerlet() : Integrator("VelocityVerlet") {}
 
 /**
  * @brief applies first half step of velocity verlet algorithm
@@ -36,7 +41,7 @@ VelocityVerlet::VelocityVerlet() : Integrator("VelocityVerlet"){};
  */
 void VelocityVerlet::firstStep(SimulationBox &simBox)
 {
-    startTimingsSection("Velocity Verlet - First Step");
+    auto _ = scopedTimer(TimerId::Integrator, "Velocity Verlet - First Step");
 
     auto integrate = [this, &simBox](auto &atom)
     {
@@ -55,8 +60,6 @@ void VelocityVerlet::firstStep(SimulationBox &simBox)
     };
 
     std::ranges::for_each(simBox.getMolecules(), calculateCOM);
-
-    stopTimingsSection("Velocity Verlet - First Step");
 }
 
 /**
@@ -66,12 +69,10 @@ void VelocityVerlet::firstStep(SimulationBox &simBox)
  */
 void VelocityVerlet::secondStep(SimulationBox &simBox)
 {
-    startTimingsSection("Velocity Verlet - Second Step");
+    auto _ = scopedTimer(TimerId::Integrator, "Velocity Verlet - Second Step");
 
     std::ranges::for_each(
         simBox.getAtoms(),
         [this](const auto &atom) { integrateVelocities(atom.get()); }
     );
-
-    stopTimingsSection("Velocity Verlet - Second Step");
 }

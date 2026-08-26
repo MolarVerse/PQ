@@ -31,7 +31,6 @@
 #include "stringUtilities.hpp"         // for stringToInt
 
 using namespace input;
-using namespace engine;
 using namespace customException;
 using namespace settings;
 
@@ -45,8 +44,7 @@ using namespace settings;
  *
  * @param engine
  */
-ResetKineticsInputParser::ResetKineticsInputParser(Engine &engine)
-    : InputFileParser(engine)
+ResetKineticsInputParser::ResetKineticsInputParser()
 {
     addKeyword(
         std::string("nscale"),
@@ -107,7 +105,7 @@ void ResetKineticsInputParser::parseNScale(
     if (nScale < 0)
         throw InputFileException("Nscale must be positive");
 
-    ResetKineticsSettings::setNScale(size_t(nScale));
+    ResetKineticsSettings::setNScale(static_cast<size_t>(nScale));
 }
 
 /**

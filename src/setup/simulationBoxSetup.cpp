@@ -47,7 +47,7 @@
 #include "stdoutOutput.hpp"            // for StdoutOutput
 #include "stringUtilities.hpp"   // for toLowerCopy, firstLetterToUpperCaseCopy
 
-using setup::simulationBox::SimulationBoxSetup;
+using setup::molsys::SimulationBoxSetup;
 using namespace engine;
 using namespace settings;
 using namespace utilities;
@@ -61,7 +61,7 @@ using namespace output;
  *
  * @param engine
  */
-void setup::simulationBox::setupSimulationBox(Engine &engine)
+void setup::molsys::setupSimulationBox(Engine &engine)
 {
     engine.getStdoutOutput().writeSetup("simulation box");
     engine.getLogOutput().writeSetup("simulation box");
@@ -85,7 +85,7 @@ void SimulationBoxSetup::setup()
 {
     setAtomNames();
     setAtomTypes();
-    if (_engine.getForceFieldPtr()->isNonCoulombicActivated())
+    if (_engine.getForceField()->isNonCoulombicActivated())
         setExternalVDWTypes();
     setPartialCharges();
 
@@ -250,7 +250,7 @@ void SimulationBoxSetup::setPartialCharges()
  */
 void SimulationBoxSetup::setAtomMasses()
 {
-    auto setAtomMasses = [](::simulationBox::Molecule &molecule)
+    auto setAtomMasses = [](::molsys::Molecule &molecule)
     {
         for (auto &atom : molecule.getAtoms()) atom->initMass();
     };
@@ -266,7 +266,7 @@ void SimulationBoxSetup::setAtomMasses()
  */
 void SimulationBoxSetup::setAtomicNumbers()
 {
-    auto setAtomicNumbers = [](::simulationBox::Molecule &molecule)
+    auto setAtomicNumbers = [](::molsys::Molecule &molecule)
     {
         const auto nAtoms = molecule.getNumberOfAtoms();
         for (size_t i = 0; i < nAtoms; ++i)
@@ -274,11 +274,13 @@ void SimulationBoxSetup::setAtomicNumbers()
             const auto keyword = toLowerCopy(molecule.getAtomName(i));
 
             if (!atomNumberMap.contains(keyword))
+            {
                 throw MolDescriptorException(
                     "Invalid atom name \"" + keyword + "\""
                 );
-            else
-                molecule.getAtom(i).setAtomicNumber(atomNumberMap.at(keyword));
+            }
+
+            molecule.getAtom(i).setAtomicNumber(atomNumberMap.at(keyword));
         }
     };
 
@@ -309,7 +311,7 @@ void SimulationBoxSetup::calculateTotalCharge()
 {
     double totalCharge = 0.0;
 
-    auto calcMolCharge = [&totalCharge](const ::simulationBox::Molecule &mol)
+    auto calcMolCharge = [&totalCharge](const ::molsys::Molecule &mol)
     {
         const auto &charges = mol.getPartialCharges();
         totalCharge += std::accumulate(charges.begin(), charges.end(), 0.0);
@@ -343,7 +345,7 @@ void SimulationBoxSetup::checkBoxSettings()
     if (!isDensitySet && !isBoxSet)
         throw UserInputException("Box dimensions and density not set");
 
-    else if (!isBoxSet)
+    if (!isBoxSet)
     {
         const auto boxDimensions = simBox.calcBoxDimFromDensity();
 
@@ -390,6 +392,7 @@ void SimulationBoxSetup::checkRcCutoff()
     const auto  minDim = simBox.getMinimalBoxDimension();
 
     if (rc > minDim / 2.0)
+    {
         throw InputFileException(
             std::format(
                 "Rc cutoff is larger than half of the minimal box dimension of "
@@ -397,6 +400,7 @@ void SimulationBoxSetup::checkRcCutoff()
                 minDim
             )
         );
+    }
 }
 
 /**
@@ -525,16 +529,20 @@ void SimulationBoxSetup::writeSetupInfo() const
          getZeroVelocities()) ||
         SimulationBoxSettings::getInitializeVelocities() ==
             InitVelocities::FORCE)
+    {
         log.writeSetupInfo(
             "velocities initialized with Maxwell-Boltzmann distribution"
         );
+    }
     else
+    {
         log.writeSetupInfo(
             std::format(
                 "velocities taken from start file \"{}\"",
                 FileSettings::getStartFileName()
             )
         );
+    }
     log.writeEmptyLine();
 }
 

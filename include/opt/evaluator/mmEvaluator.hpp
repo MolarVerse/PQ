@@ -37,11 +37,11 @@ namespace opt
     class MMEvaluator : public Evaluator
     {
        public:
-        MMEvaluator()          = default;
-        virtual ~MMEvaluator() = default;
+        MMEvaluator()           = default;
+        ~MMEvaluator() override = default;
 
-        std::shared_ptr<Evaluator> clone() const override;
-        void                       evaluate() override;
+        [[nodiscard]] std::shared_ptr<Evaluator> clone() const override;
+        void                                     evaluate() override;
     };
 
 }   // namespace opt

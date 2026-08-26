@@ -7,13 +7,12 @@ set(source_files
     testConvergenceParser.cpp
     testCoulombLongRangeParser.cpp
     testFilesParser.cpp
-    testForceFieldParser.cpp
     testGeneralParser.cpp
-    testHessianParser.cpp
     testHybridParser.cpp
+    testHessianParser.cpp
     testIntegratorParser.cpp
     testManostatParser.cpp
-    testNonCoulombParser.cpp
+    testMMParser.cpp
     testOptParser.cpp
     testOutputParser.cpp
     testQMParser.cpp

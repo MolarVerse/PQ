@@ -28,7 +28,7 @@
 #include <limits>        // for numeric_limits
 #include <string_view>   // for string_view
 
-#include "constants/conversionFactors.hpp"
+#include "constants.hpp"
 #include "exceptions.hpp"   // for InputFileException, customException
 #include "parserUtils.hpp"
 #include "references.hpp"           // for References
@@ -37,7 +37,6 @@
 #include "thermostatSettings.hpp"   // for ThermostatSettings
 
 using namespace input;
-using namespace engine;
 using namespace customException;
 using namespace settings;
 using namespace utilities;
@@ -55,8 +54,7 @@ using namespace constants;
  *
  * @param engine
  */
-ThermostatInputParser::ThermostatInputParser(Engine &engine)
-    : InputFileParser(engine)
+ThermostatInputParser::ThermostatInputParser()
 {
     addKeyword(
         std::string("thermostat"),
@@ -166,6 +164,7 @@ void ThermostatInputParser::parseThermostat(
     }
 
     else
+    {
         throw InputFileException(format(
             "Invalid thermostat \"{}\" at line {} in input file.\n"
             "Possible options are: none, berendsen, velocity_rescaling, "
@@ -173,6 +172,7 @@ void ThermostatInputParser::parseThermostat(
             lineElements[2],
             lineNumber
         ));
+    }
 }
 
 /**
@@ -275,7 +275,9 @@ void ThermostatInputParser::parseTemperatureRampSteps(
     if (temperatureRampSteps < 0)
         throw InputFileException("Temperature ramp steps cannot be negative");
 
-    ThermostatSettings::setTemperatureRampSteps(size_t(temperatureRampSteps));
+    ThermostatSettings::setTemperatureRampSteps(
+        static_cast<size_t>(temperatureRampSteps)
+    );
 }
 
 /**
@@ -302,7 +304,9 @@ void ThermostatInputParser::parseTemperatureRampFrequency(
             "Temperature ramp frequency must be greater than zero"
         );
 
-    ThermostatSettings::setTemperatureRampFrequency(size_t(tempRampFreq));
+    ThermostatSettings::setTemperatureRampFrequency(
+        static_cast<size_t>(tempRampFreq)
+    );
 }
 
 /**
@@ -329,10 +333,12 @@ void ThermostatInputParser::parseThermostatRelaxationTime(
         );
 
     if (relaxationTime > std::numeric_limits<double>::max() / PS_TO_FS)
+    {
         throw InputFileException(
             "Relaxation time of thermostat is too large to represent in "
             "femtoseconds"
         );
+    }
 
     ThermostatSettings::setRelaxationTime(relaxationTime);
 }
@@ -360,13 +366,18 @@ void ThermostatInputParser::parseThermostatFriction(
             "Friction of thermostat must be finite and non-negative"
         );
 
-    if (friction > std::numeric_limits<double>::max() / 1.0e12)
+    if (friction >
+        std::numeric_limits<double>::max() / defaults::MAX_FRICTION_CONVERSION)
+    {
         throw InputFileException(
             "Friction of thermostat is too large to represent in inverse "
             "seconds"
         );
+    }
 
-    ThermostatSettings::setFriction(friction * 1.0e12);
+    ThermostatSettings::setFriction(
+        friction * constants::NOSE_HOVER_FRICTION_INPUT_TO_INTERNAL
+    );
 }
 
 /**
@@ -392,7 +403,9 @@ void ThermostatInputParser::parseThermostatChainLength(
             "Chain length of thermostat must be greater than zero"
         );
 
-    ThermostatSettings::setNoseHooverChainLength(size_t(chainLength));
+    ThermostatSettings::setNoseHooverChainLength(
+        static_cast<size_t>(chainLength)
+    );
 }
 
 /**
@@ -420,10 +433,12 @@ void ThermostatInputParser::parseThermostatCouplingFrequency(
 
     if (couplingFrequency >
         std::sqrt(std::numeric_limits<double>::max()) / PER_CM_TO_HZ)
+    {
         throw InputFileException(
             "Coupling frequency of thermostat is too large to represent in "
             "hertz"
         );
+    }
 
     ThermostatSettings::setNoseHooverCouplingFrequency(couplingFrequency);
 }

@@ -24,15 +24,12 @@
 
 #include <format>   // for format
 
-#include "engine.hpp"       // for Engine
 #include "exceptions.hpp"   // for InputFileException, customException
 #include "parserUtils.hpp"
 #include "settings.hpp"
 #include "stringUtilities.hpp"   // for toLowerCopy
 
 using namespace input;
-using namespace virial;
-using namespace engine;
 using namespace customException;
 using namespace utilities;
 
@@ -45,7 +42,7 @@ using namespace utilities;
  *
  * @param engine
  */
-VirialInputParser::VirialInputParser(Engine& engine) : InputFileParser(engine)
+VirialInputParser::VirialInputParser()
 {
     addKeyword(
         std::string("virial"),
@@ -82,10 +79,12 @@ void VirialInputParser::parseVirial(
         settings::Settings::setVirialType(settings::VirialType::ATOMIC);
 
     else
+    {
         throw InputFileException(format(
             "Invalid virial setting \"{}\" at line {} in input file.\n"
             "Possible options are: molecular or atomic",
             lineElements[2],
             lineNumber
         ));
+    }
 }

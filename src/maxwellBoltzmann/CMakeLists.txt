@@ -17,7 +17,7 @@ endif()
 
 target_link_libraries(maxwellBoltzmann
     PUBLIC
-    simulationBox
+    molsys
     settings
     resetKinetics
     randomNumberGenerator

@@ -46,21 +46,33 @@ namespace linearAlgebra
        private:
         Vector3D<Vector3D<T>> _data;
 
+        constexpr static auto _nElements = 9;
+
        public:
         StaticMatrix3x3() = default;
 
+        static constexpr auto size = 3;
+
         explicit StaticMatrix3x3(const Vector3D<Vector3D<T>> &data);
         explicit StaticMatrix3x3(const Vector3D<Vector3D<T>> &&data);
-        explicit StaticMatrix3x3(const Vector3D<T> &, const Vector3D<T> &, const Vector3D<T> &);
+        explicit StaticMatrix3x3(
+            const Vector3D<T> &row1,
+            const Vector3D<T> &row2,
+            const Vector3D<T> &row3
+        );
 
+        // NOLINTBEGIN(google-explicit-constructor, hicpp-explicit-conversions)
         StaticMatrix3x3(const T t);
-        StaticMatrix3x3(const std::vector<T> &vector);
+        // NOLINTEND(google-explicit-constructor, hicpp-explicit-conversions)
+        explicit StaticMatrix3x3(const std::vector<T> &vector);
 
         Vector3D<T>       &operator[](const size_t index);
         const Vector3D<T> &operator[](const size_t index) const;
 
-        friend bool operator==(const StaticMatrix3x3 &, const StaticMatrix3x3 &) =
-            default;
+        friend bool operator==(
+            const StaticMatrix3x3 &lhs,
+            const StaticMatrix3x3 &rhs
+        ) = default;
 
         StaticMatrix3x3 operator-();
         std::vector<T>  toStdVector() const;

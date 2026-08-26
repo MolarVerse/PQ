@@ -25,7 +25,6 @@
 #define _PYSCF_RUNNER_HPP_
 
 #include "externalQMRunner.hpp"   // for ExternalQMRunner
-#include "typeAliases.hpp"
 
 namespace QM
 {
@@ -41,8 +40,8 @@ namespace QM
         bool _isFirstExecution = true;
 
        public:
-        void writeCoordsFile(pq::SimBox &) override;
-        void execute() override;
+        void writeCoordsFile(molsys::SimulationBox &simBox) override;
+        void execute(molsys::SimulationBox &simBox) override;
     };
 
 }   // namespace QM

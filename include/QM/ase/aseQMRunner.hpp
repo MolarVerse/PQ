@@ -25,12 +25,11 @@
 #define _ASE_QM_RUNNER_HPP_
 
 #include "qmRunner.hpp"
-#include "typeAliases.hpp"
 
 namespace pybind11
 {
     class object;
-}
+}   // namespace pybind11
 
 namespace QM
 {
@@ -50,14 +49,24 @@ namespace QM
         AseQMRunner();
         ~AseQMRunner() override;
 
-        void run(pq::SimBox &, pq::PhysicalData &) override;
-        void buildAseAtoms(const pq::SimBox &);
+        void run(
+            molsys::SimulationBox      &simBox,
+            physicalData::PhysicalData &physData,
+            molsys::Periodicity         periodicity
+        ) override;
+        void buildAseAtoms(const molsys::SimulationBox &);
         void execute();
 
-        void collectData(pq::SimBox &, pq::PhysicalData &) const;
-        void collectForces(pq::SimBox &) const;
-        void collectEnergy(pq::PhysicalData &) const;
-        void collectStress(const pq::SimBox &, pq::PhysicalData &) const;
+        void collectData(
+            molsys::SimulationBox &,
+            physicalData::PhysicalData &
+        ) const;
+        void collectForces(molsys::SimulationBox &) const;
+        void collectEnergy(physicalData::PhysicalData &) const;
+        void collectStress(
+            const molsys::SimulationBox &,
+            physicalData::PhysicalData &
+        ) const;
 
        protected:
         void setAseCalculator(const pybind11::object &calculator);

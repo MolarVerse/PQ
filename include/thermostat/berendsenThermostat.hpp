@@ -25,7 +25,6 @@
 #define _BERENDSEN_THERMOSTAT_HPP_
 
 #include "thermostat.hpp"
-#include "typeAliases.hpp"
 
 namespace thermostat
 {
@@ -46,12 +45,16 @@ namespace thermostat
         explicit BerendsenThermostat(const double targetTemp, const double tau);
         BerendsenThermostat() = default;
 
-        void applyThermostat(pq::SimBox &, pq::PhysicalData &) override;
+        void applyThermostat(
+            molsys::SimulationBox      &simBox,
+            physicalData::PhysicalData &physData
+        ) override;
 
         void setTau(const double tau);
 
-        [[nodiscard]] double             getTau() const;
-        [[nodiscard]] pq::ThermostatType getThermostatType() const override;
+        [[nodiscard]] double getTau() const;
+        [[nodiscard]]
+        settings::ThermostatType getThermostatType() const override;
     };
 
 }   // namespace thermostat

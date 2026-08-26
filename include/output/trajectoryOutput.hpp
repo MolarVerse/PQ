@@ -26,8 +26,18 @@
 
 #include <cstddef>   // for size_t
 
+#include "hybridConfigurator.hpp"
 #include "output.hpp"   // for Output
-#include "typeAliases.hpp"
+
+namespace molsys
+{
+    class SimulationBox;   // forward declaration
+}   // namespace molsys
+
+namespace configurator
+{
+    class HybridConfigurator;   // forward declaration
+}   // namespace configurator
 
 namespace output
 {
@@ -42,11 +52,15 @@ namespace output
        public:
         using Output::Output;
 
-        void writeHeader(const pq::SimBox &);
-        void writeXyz(pq::SimBox &, const size_t);
-        void writeVelocities(pq::SimBox &, const size_t);
-        void writeForces(pq::SimBox &, const size_t);
-        void writeCharges(pq::SimBox &, const size_t);
+        void writeHeader(const molsys::SimulationBox &);
+        void writeXyz(molsys::SimulationBox &, const size_t);
+        void writeHybridCenterXyz(
+            const configurator::HybridConfigurator &configurator,
+            const size_t                            step
+        );
+        void writeVelocities(molsys::SimulationBox &, const size_t);
+        void writeForces(molsys::SimulationBox &, const size_t);
+        void writeCharges(molsys::SimulationBox &, const size_t);
     };
 
 }   // namespace output

@@ -27,10 +27,21 @@
 #include <string>   // for string
 
 #include "restartFileSection.hpp"   // for RestartFileSection
-#include "typeAliases.hpp"          // for strings
 
 class TestAtomSection_testProcessAtomLine_Test;     // Friend test class
 class TestAtomSection_testProcessQMAtomLine_Test;   // Friend test class
+
+namespace engine
+{
+    class Engine;   // forward declaration
+}   // namespace engine
+
+namespace molsys
+{
+    class SimulationBox;   // forward declaration
+    class Molecule;        // forward declaration
+    class Atom;            // forward declaration
+}   // namespace molsys
 
 namespace input::restartFile
 {
@@ -45,21 +56,21 @@ namespace input::restartFile
        private:
         void processQMAtomLine(
             std::vector<std::string> &lineElements,
-            pq::SimBox &
+            molsys::SimulationBox &
         );
         void processAtomLine(
             std::vector<std::string> &,
-            pq::SimBox &,
-            pq::Molecule &
+            molsys::SimulationBox &,
+            molsys::Molecule &
         ) const;
 
         void checkAtomLine(
             std::vector<std::string> &lineElements,
-            const pq::Molecule &
+            const molsys::Molecule &
         );
         void setAtomPropertyVectors(
             std::vector<std::string> &,
-            pq::SharedAtom &
+            std::shared_ptr<molsys::Atom> &
         ) const;
 
 #ifdef WITH_TESTS
@@ -71,7 +82,7 @@ namespace input::restartFile
         void checkNumberOfLineArguments(std::vector<std::string> &) const;
         void process(
             std::vector<std::string> &lineElements,
-            pq::Engine &
+            engine::Engine           &engine
         ) override;
 
         [[nodiscard]] std::string keyword() override;

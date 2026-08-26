@@ -22,7 +22,6 @@
 
 #include "testParameterFileReader.hpp"
 
-
 #include "angleSection.hpp"      // for AngleSection
 #include "bondSection.hpp"       // for BondSection
 #include "dihedralSection.hpp"   // for DihedralSection
@@ -146,7 +145,7 @@ TEST_F(TestParameterFileReader, deleteSection)
  * @details if filename is empty, exception should be thrown
  *
  */
-TEST_F(TestParameterFileReader, read_fileNameEmpty)
+TEST_F(TestParameterFileReader, readFileNameEmpty)
 {
     settings::ForceFieldSettings::activate();
     settings::FileSettings::unsetIsParameterFileNameSet();
@@ -160,7 +159,7 @@ TEST_F(TestParameterFileReader, read_fileNameEmpty)
 TEST_F(TestParameterFileReader, readParameterFile)
 {
     settings::ForceFieldSettings::activate();
-    _engine->getPotential().makeNonCoulombPotential(
+    _engine->getPotential()->makeNonCoulombPotential(
         potential::ForceFieldNonCoulomb()
     );
     settings::FileSettings::setParameterFileName(

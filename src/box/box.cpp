@@ -22,126 +22,189 @@
 
 #include "box.hpp"
 
+#include "defaults.hpp"
+
 using namespace linearAlgebra;
-using namespace simulationBox;
 
-/******************************************************
- *                                                    *
- * virtual methods that are overriden in triclinicBox *
- *                                                    *
- ******************************************************/
-
-/**
- * @brief get the box angles
- *
- * @return Vec3D
- */
-Vec3D Box::getBoxAngles() const { return Vec3D(90.0); }
-
-/**
- * @brief get the box matrix
- *
- * @return StaticMatrix3x3<double>
- */
-StaticMatrix3x3<double> Box::getBoxMatrix() const
+namespace molsys
 {
-    return diagonalMatrix(_boxDimensions);
-}
 
-/**
- * @brief transform a vector into orthogonal space
- *
- * @param position
- * @return Vec3D
- */
-Vec3D Box::toOrthoSpace(const Vec3D &position) const { return position; }
+    /******************************************************
+     *                                                    *
+     * virtual methods that are overriden in triclinicBox *
+     *                                                    *
+     ******************************************************/
 
-/**
- * @brief transform a tensor into orthogonal space
- *
- * @param position
- * @return tensor3D
- */
-tensor3D Box::toOrthoSpace(const tensor3D &position) const { return position; }
+    /**
+     * @brief get the box angles
+     *
+     * @return Vec3D
+     */
+    Vec3D Box::getBoxAngles() const
+    {
+        constexpr auto ninetyDegrees = 90.0;
+        return Vec3D{ninetyDegrees};
+    }
 
-/**
- * @brief transform a vector into simulation space
- *
- * @param position
- * @return Vec3D
- */
-Vec3D Box::toSimSpace(const Vec3D &position) const { return position; }
+    /**
+     * @brief get the box matrix
+     *
+     * @return StaticMatrix3x3<double>
+     */
+    StaticMatrix3x3<double> Box::getBoxMatrix() const
+    {
+        return diagonalMatrix(_boxDimensions);
+    }
 
-/**
- * @brief transform a tensor into simulation space
- *
- * @param position
- * @return tensor3D
- */
-tensor3D Box::toSimSpace(const tensor3D &position) const { return position; }
+    /**
+     * @brief get the box matrix
+     *
+     * @return StaticMatrix3x3<double>
+     */
+    StaticMatrix3x3<double> Box::getBoxMatrix(
+        const Periodicity periodicity
+    ) const
+    {
+        auto boxMatrix = getBoxMatrix();
 
-/**
- * @brief set the box dimensions
- *
- * @param boxDimensions
- */
-void Box::setBoxDimensions(const Vec3D &boxDimensions)
-{
-    _boxDimensions = boxDimensions;
-}
+        using enum Periodicity;
 
-/***************************
- *                         *
- * standard getter methods *
- *                         *
- ***************************/
+        switch (periodicity)
+        {
+            case NON_PERIODIC:
+                boxMatrix[0][0] = defaults::VACUUM_BOX_DIMENSION;
+                boxMatrix[1][1] = defaults::VACUUM_BOX_DIMENSION;
+                boxMatrix[2][2] = defaults::VACUUM_BOX_DIMENSION;
+                break;
+            case X:
+                boxMatrix[1][1] = defaults::VACUUM_BOX_DIMENSION;
+                boxMatrix[2][2] = defaults::VACUUM_BOX_DIMENSION;
+                break;
+            case Y:
+                boxMatrix[0][0] = defaults::VACUUM_BOX_DIMENSION;
+                boxMatrix[2][2] = defaults::VACUUM_BOX_DIMENSION;
+                break;
+            case Z:
+                boxMatrix[0][0] = defaults::VACUUM_BOX_DIMENSION;
+                boxMatrix[1][1] = defaults::VACUUM_BOX_DIMENSION;
+                break;
+            case XY: boxMatrix[2][2] = defaults::VACUUM_BOX_DIMENSION; break;
+            case XZ: boxMatrix[1][1] = defaults::VACUUM_BOX_DIMENSION; break;
+            case YZ: boxMatrix[0][0] = defaults::VACUUM_BOX_DIMENSION; break;
+            case XYZ: break;
+        }
 
-/**
- * @brief get if the box size has changed
- *
- * @return true
- * @return false
- */
-bool Box::getBoxSizeHasChanged() const { return _boxSizeHasChanged; }
+        return boxMatrix;
+    }
 
-/**
- * @brief get the volume of the box
- *
- * @return double
- */
-double Box::getVolume() const { return _volume; }
+    /**
+     * @brief transform a vector into orthogonal space
+     *
+     * @param position
+     * @return Vec3D
+     */
+    Vec3D Box::toOrthoSpace(const Vec3D &position) const { return position; }
 
-/**
- * @brief get the minimal box dimension
- *
- * @return double
- */
-double Box::getMinimalBoxDimension() const { return minimum(_boxDimensions); }
+    /**
+     * @brief transform a tensor into orthogonal space
+     *
+     * @param position
+     * @return tensor3D
+     */
+    tensor3D Box::toOrthoSpace(const tensor3D &position) const
+    {
+        return position;
+    }
 
-/**
- * @brief get the box dimensions
- *
- * @return Vec3D
- */
-linearAlgebra::Vec3D Box::getBoxDimensions() const { return _boxDimensions; }
+    /**
+     * @brief transform a vector into simulation space
+     *
+     * @param position
+     * @return Vec3D
+     */
+    Vec3D Box::toSimSpace(const Vec3D &position) const { return position; }
 
-/********************
- * standard setters *
- ********************/
+    /**
+     * @brief transform a tensor into simulation space
+     *
+     * @param position
+     * @return tensor3D
+     */
+    tensor3D Box::toSimSpace(const tensor3D &position) const
+    {
+        return position;
+    }
 
-/**
- * @brief set the volume of the box
- *
- * @param volume
- */
-void Box::setVolume(const double volume) { _volume = volume; }
+    /**
+     * @brief set the box dimensions
+     *
+     * @param boxDimensions
+     */
+    void Box::setBoxDimensions(const Vec3D &boxDimensions)
+    {
+        _boxDimensions = boxDimensions;
+    }
 
-/**
- * @brief set if the box size has changed
- *
- * @param boxSizeHasChanged
- */
-void Box::setBoxSizeHasChanged(const bool boxSizeHasChanged)
-{
-    _boxSizeHasChanged = boxSizeHasChanged;
-}
+    /***************************
+     *                         *
+     * standard getter methods *
+     *                         *
+     ***************************/
+
+    /**
+     * @brief get if the box size has changed
+     *
+     * @return true
+     * @return false
+     */
+    bool Box::getBoxSizeHasChanged() const { return _boxSizeHasChanged; }
+
+    /**
+     * @brief get the volume of the box
+     *
+     * @return double
+     */
+    double Box::getVolume() const { return _volume; }
+
+    /**
+     * @brief get the minimal box dimension
+     *
+     * @return double
+     */
+    double Box::getMinimalBoxDimension() const
+    {
+        return minimum(_boxDimensions);
+    }
+
+    /**
+     * @brief get the box dimensions
+     *
+     * @return Vec3D
+     */
+    linearAlgebra::Vec3D Box::getBoxDimensions() const
+    {
+        return _boxDimensions;
+    }
+
+    /********************
+     * standard setters *
+     ********************/
+
+    /**
+     * @brief set the volume of the box
+     *
+     * @param volume
+     */
+    void Box::setVolume(const double volume) { _volume = volume; }
+
+    /**
+     * @brief set if the box size has changed
+     *
+     * @param boxSizeHasChanged
+     */
+    void Box::setBoxSizeHasChanged(const bool boxSizeHasChanged)
+    {
+        _boxSizeHasChanged = boxSizeHasChanged;
+    }
+
+}   // namespace molsys

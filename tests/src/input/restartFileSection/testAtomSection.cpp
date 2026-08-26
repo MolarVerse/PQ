@@ -24,10 +24,12 @@
 
 #include <cstddef>   // for size_t
 #include <fstream>   // for ifstream, std
+#include <memory>    // for shared_ptr, __shared_ptr_access
 #include <string>    // for string, stod, allocator, basic_string
 #include <vector>    // for vector
 
 #include "atom.hpp"           // for Atom
+#include "atomSection.hpp"    // for AtomSection
 #include "engine.hpp"         // for Engine
 #include "exceptions.hpp"     // for RstFileException, customException
 #include "gmock/gmock.h"      // for ElementsAre, MakePredicateFormatter
@@ -36,6 +38,8 @@
 #include "moleculeType.hpp"   // for MoleculeType
 #include "restartFileReader/atomSection.hpp"
 #include "restartFileReader/restartFileSection.hpp"
+#include "restartFileSection.hpp"   // for RstFileSection, AtomSection
+#include "settings.hpp"
 #include "testRestartFileSection.hpp"   // for TestAtomSection
 #include "throwWithMessage.hpp"         // for ASSERT_THROW_MSG
 
@@ -61,6 +65,7 @@ TEST_F(TestAtomSection, numberOfArguments)
 {
     _section->_lineNumber = 7;
     for (size_t i = 0; i < 25; ++i)
+    {
         if (i % 3 != 0 || i < 6 || i > 21)
         {
             auto line = std::vector<std::string>(i);
@@ -71,6 +76,7 @@ TEST_F(TestAtomSection, numberOfArguments)
                 "21 elements"
             );
         }
+    }
 }
 
 /**
@@ -97,7 +103,7 @@ TEST_F(TestAtomSection, notEnoughElementsInLine)
 
     std::string filename = "data/atomSection/testNotEnoughAtomsInMolecule.rst";
 
-    auto molecule = simulationBox::MoleculeType(1);
+    auto molecule = molsys::MoleculeType(1);
     molecule.setNumberOfAtoms(3);
     _engine->getSimulationBox().getMoleculeTypes().push_back(molecule);
 
@@ -131,7 +137,7 @@ TEST_F(TestAtomSection, numberOfArgumentsWithinMolecule)
     std::string filename =
         "data/atomSection/testNumberOfArgumentsWithinMolecule.rst";
 
-    auto molecule = simulationBox::MoleculeType(1);
+    auto molecule = molsys::MoleculeType(1);
     molecule.setNumberOfAtoms(3);
     _engine->getSimulationBox().getMoleculeTypes().push_back(molecule);
 
@@ -152,11 +158,11 @@ TEST_F(TestAtomSection, testProcess)
 
     std::string filename = "data/atomSection/testProcess.rst";
 
-    auto molecule = simulationBox::MoleculeType(1);
+    auto molecule = molsys::MoleculeType(1);
     molecule.setNumberOfAtoms(3);
     _engine->getSimulationBox().addMoleculeType(molecule);
 
-    auto molecule2 = simulationBox::MoleculeType(2);
+    auto molecule2 = molsys::MoleculeType(2);
     molecule2.setNumberOfAtoms(4);
     _engine->getSimulationBox().addMoleculeType(molecule2);
 
@@ -176,6 +182,8 @@ TEST_F(TestAtomSection, testProcess)
     for (size_t i = 3; i < 21; ++i) line[i] = "1.0";
 
     _section->process(line, *_engine);
+
+    settings::Settings::setJobtype(settings::JobType::QM_MD);
 
     EXPECT_EQ(_engine->getSimulationBox().getMolecules().size(), 3);
 
@@ -197,18 +205,14 @@ TEST_F(TestAtomSection, testProcess)
         3
     );
 
-    line    = std::vector<std::string>(21);
-    line[2] = "0";
-    for (size_t i = 3; i < 21; ++i) line[i] = "1.0";
+    EXPECT_EQ(_engine->getSimulationBox().getNumberOfQMAtoms(), 10);
 
-    _section->process(line, *_engine);
-
-    EXPECT_EQ(_engine->getSimulationBox().getQMAtoms().size(), 1);
+    settings::Settings::setJobtype(settings::JobType::NONE);
 }
 
 TEST_F(TestAtomSection, testProcessAtomLine)
 {
-    simulationBox::Molecule molecule(1);
+    molsys::Molecule molecule(1);
 
     auto line = std::vector<std::string>(21);
     line[0]   = "Ar";
@@ -252,21 +256,25 @@ TEST_F(TestAtomSection, testProcessQMAtomLine)
         _engine->getSimulationBox()
     );
 
-    auto atoms = _engine->getSimulationBox().getQMAtoms();
+    settings::Settings::setJobtype(settings::JobType::QM_MD);
+    auto atoms      = _engine->getSimulationBox().getQMAtoms();
+    auto first_atom = *atoms.begin();
 
-    ASSERT_EQ(atoms.size(), 1);
+    ASSERT_EQ(_engine->getSimulationBox().getNumberOfQMAtoms(), 1);
     ASSERT_THAT(
-        atoms[0]->getPosition(),
+        first_atom->getPosition(),
         testing::ElementsAre(stod(line[3]), stod(line[4]), stod(line[5]))
     );
     ASSERT_THAT(
-        atoms[0]->getVelocity(),
+        first_atom->getVelocity(),
         testing::ElementsAre(stod(line[6]), stod(line[7]), stod(line[8]))
     );
     ASSERT_THAT(
-        atoms[0]->getForce(),
+        first_atom->getForce(),
         testing::ElementsAre(stod(line[9]), stod(line[10]), stod(line[11]))
     );
 
-    ASSERT_EQ(atoms[0]->getAtomTypeName(), line[0]);
+    ASSERT_EQ(first_atom->getAtomTypeName(), line[0]);
+
+    settings::Settings::setJobtype(settings::JobType::NONE);
 }

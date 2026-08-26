@@ -41,9 +41,16 @@
 
 TEST_F(TestNonCoulombPotentialFF, copyConstructorCopiesOwnedMatrix)
 {
-    setNonCoulombPairsMatrix(linearAlgebra::Matrix<pq::SharedNonCoulPair>(1));
-    const auto pair =
-        potential::LennardJonesPair(size_t(1), size_t(1), 2.0, 1.0, 1.0);
+    setNonCoulombPairsMatrix(
+        linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(1)
+    );
+    const auto pair = potential::LennardJonesPair(
+        static_cast<size_t>(1),
+        static_cast<size_t>(1),
+        2.0,
+        1.0,
+        1.0
+    );
     setNonCoulombPairsMatrix(0, 0, pair);
     _nonCoulombPotential->setNonCoulombPairsVector(
         {std::make_shared<potential::LennardJonesPair>(pair)}
@@ -57,8 +64,13 @@ TEST_F(TestNonCoulombPotentialFF, copyConstructorCopiesOwnedMatrix)
         getNonCoulombPairsMatrix()(0, 0)
     );
 
-    const auto replacement =
-        potential::LennardJonesPair(size_t(1), size_t(1), 3.0, 2.0, 1.0);
+    const auto replacement = potential::LennardJonesPair(
+        static_cast<size_t>(1),
+        static_cast<size_t>(1),
+        3.0,
+        2.0,
+        1.0
+    );
     setNonCoulombPairsMatrix(*_nonCoulombPotential, 0, 0, replacement);
     EXPECT_NE(
         getNonCoulombPairsMatrix(copy)(0, 0),
@@ -68,9 +80,16 @@ TEST_F(TestNonCoulombPotentialFF, copyConstructorCopiesOwnedMatrix)
 
 TEST_F(TestNonCoulombPotentialFF, copyAssignmentCopiesOwnedMatrix)
 {
-    setNonCoulombPairsMatrix(linearAlgebra::Matrix<pq::SharedNonCoulPair>(1));
-    const auto pair =
-        potential::LennardJonesPair(size_t(1), size_t(1), 2.0, 1.0, 1.0);
+    setNonCoulombPairsMatrix(
+        linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(1)
+    );
+    const auto pair = potential::LennardJonesPair(
+        static_cast<size_t>(1),
+        static_cast<size_t>(1),
+        2.0,
+        1.0,
+        1.0
+    );
     setNonCoulombPairsMatrix(0, 0, pair);
 
     auto copy = potential::ForceFieldNonCoulomb();
@@ -84,9 +103,16 @@ TEST_F(TestNonCoulombPotentialFF, copyAssignmentCopiesOwnedMatrix)
 
 TEST_F(TestNonCoulombPotentialFF, moveOperationsTransferOwnedMatrix)
 {
-    setNonCoulombPairsMatrix(linearAlgebra::Matrix<pq::SharedNonCoulPair>(1));
-    const auto pair =
-        potential::LennardJonesPair(size_t(1), size_t(1), 2.0, 1.0, 1.0);
+    setNonCoulombPairsMatrix(
+        linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(1)
+    );
+    const auto pair = potential::LennardJonesPair(
+        static_cast<size_t>(1),
+        static_cast<size_t>(1),
+        2.0,
+        1.0,
+        1.0
+    );
     setNonCoulombPairsMatrix(0, 0, pair);
 
     auto moved =
@@ -105,12 +131,22 @@ TEST_F(TestNonCoulombPotentialFF, moveOperationsTransferOwnedMatrix)
 TEST_F(TestNonCoulombPotentialFF, determineInternalGlobalVdwTypes)
 {
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(1), size_t(5), 2.0, 1.0, 1.0)
+        std::make_shared<potential::LennardJonesPair>(
+            static_cast<size_t>(1),
+            static_cast<size_t>(5),
+            2.0,
+            1.0,
+            1.0
+        )
     );
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(1), size_t(2), 2.0, 1.0, 1.0)
+        std::make_shared<potential::LennardJonesPair>(
+            static_cast<size_t>(1),
+            static_cast<size_t>(2),
+            2.0,
+            1.0,
+            1.0
+        )
     );
 
     std::map<size_t, size_t> externalToInternalTypes({{1, 0}, {2, 1}, {5, 2}});
@@ -143,12 +179,22 @@ TEST_F(TestNonCoulombPotentialFF, determineInternalGlobalVdwTypes)
  */
 TEST_F(TestNonCoulombPotentialFF, fillDiagOfNonCoulPairsMatrix)
 {
-    auto nonCoulombicPair1 =
-        potential::LennardJonesPair(size_t(1), size_t(1), 2.0, 1.0, 1.0);
+    auto nonCoulombicPair1 = potential::LennardJonesPair(
+        static_cast<size_t>(1),
+        static_cast<size_t>(1),
+        2.0,
+        1.0,
+        1.0
+    );
     nonCoulombicPair1.setInternalType1(0);
     nonCoulombicPair1.setInternalType2(0);
-    auto nonCoulombicPair2 =
-        potential::LennardJonesPair(size_t(9), size_t(9), 2.0, 1.0, 1.0);
+    auto nonCoulombicPair2 = potential::LennardJonesPair(
+        static_cast<size_t>(9),
+        static_cast<size_t>(9),
+        2.0,
+        1.0,
+        1.0
+    );
     nonCoulombicPair2.setInternalType1(9);
     nonCoulombicPair2.setInternalType2(9);
 
@@ -174,16 +220,26 @@ TEST_F(TestNonCoulombPotentialFF, fillDiagOfNonCoulPairsMatrix)
  */
 TEST_F(
     TestNonCoulombPotentialFF,
-    findNonCoulombicPairByInternalTypes_findOneType
+    findNonCoulombicPairByInternalTypesFindOneType
 )
 {
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(1), size_t(5), 2.0, 1.0, 1.0)
+        std::make_shared<potential::LennardJonesPair>(
+            static_cast<size_t>(1),
+            static_cast<size_t>(5),
+            2.0,
+            1.0,
+            1.0
+        )
     );
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(1), size_t(2), 2.0, 1.0, 1.0)
+        std::make_shared<potential::LennardJonesPair>(
+            static_cast<size_t>(1),
+            static_cast<size_t>(2),
+            2.0,
+            1.0,
+            1.0
+        )
     );
 
     // these two lines were already tested in
@@ -206,16 +262,26 @@ TEST_F(
  */
 TEST_F(
     TestNonCoulombPotentialFF,
-    findNonCoulombicPairByInternalTypes_findNothing
+    findNonCoulombicPairByInternalTypesFindNothing
 )
 {
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(1), size_t(5), 2.0, 1.0, 1.0)
+        std::make_shared<potential::LennardJonesPair>(
+            static_cast<size_t>(1),
+            static_cast<size_t>(5),
+            2.0,
+            1.0,
+            1.0
+        )
     );
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(1), size_t(2), 2.0, 1.0, 1.0)
+        std::make_shared<potential::LennardJonesPair>(
+            static_cast<size_t>(1),
+            static_cast<size_t>(2),
+            2.0,
+            1.0,
+            1.0
+        )
     );
 
     // these two lines were already tested in
@@ -237,20 +303,35 @@ TEST_F(
  */
 TEST_F(
     TestNonCoulombPotentialFF,
-    findNonCoulombicPairByInternalTypes_findMultipleTypes
+    findNonCoulombicPairByInternalTypesFindMultipleTypes
 )
 {
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(1), size_t(5), 2.0, 1.0, 1.0)
+        std::make_shared<potential::LennardJonesPair>(
+            static_cast<size_t>(1),
+            static_cast<size_t>(5),
+            2.0,
+            1.0,
+            1.0
+        )
     );
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(1), size_t(5), 2.0, 5.0, 1.0)
+        std::make_shared<potential::LennardJonesPair>(
+            static_cast<size_t>(1),
+            static_cast<size_t>(5),
+            2.0,
+            5.0,
+            1.0
+        )
     );
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(1), size_t(2), 2.0, 1.0, 1.0)
+        std::make_shared<potential::LennardJonesPair>(
+            static_cast<size_t>(1),
+            static_cast<size_t>(2),
+            2.0,
+            1.0,
+            1.0
+        )
     );
 
     // these two lines were already tested in
@@ -276,12 +357,17 @@ TEST_F(
  */
 TEST_F(
     TestNonCoulombPotentialFF,
-    fillOffDiagonalElementsOfNonCoulombicPairsMatrix_ElementNotFound
+    fillOffDiagonalElementsOfNonCoulombicPairsMatrixElementNotFound
 )
 {
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(1), size_t(5), 2.0, 1.0, 1.0)
+        std::make_shared<potential::LennardJonesPair>(
+            static_cast<size_t>(1),
+            static_cast<size_t>(5),
+            2.0,
+            1.0,
+            1.0
+        )
     );
 
     // these two lines were already tested in
@@ -309,20 +395,35 @@ TEST_F(
  */
 TEST_F(
     TestNonCoulombPotentialFF,
-    fillOffDiagonalElementsOfNonCoulombicPairsMatrix_foundOnlyPairWithLowerIndexFirst
+    fillOffDiagonalElementsOfNonCoulombicPairsMatrixFoundOnlyPairWithLowerIndexFirst
 )
 {
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(1), size_t(2), 2.0, 1.0, 1.0)
+        std::make_shared<potential::LennardJonesPair>(
+            static_cast<size_t>(1),
+            static_cast<size_t>(2),
+            2.0,
+            1.0,
+            1.0
+        )
     );
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(1), size_t(5), 2.0, 1.0, 1.0)
+        std::make_shared<potential::LennardJonesPair>(
+            static_cast<size_t>(1),
+            static_cast<size_t>(5),
+            2.0,
+            1.0,
+            1.0
+        )
     );
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(2), size_t(5), 2.0, 1.0, 1.0)
+        std::make_shared<potential::LennardJonesPair>(
+            static_cast<size_t>(2),
+            static_cast<size_t>(5),
+            2.0,
+            1.0,
+            1.0
+        )
     );
 
     // these two lines were already tested in
@@ -349,20 +450,35 @@ TEST_F(
  */
 TEST_F(
     TestNonCoulombPotentialFF,
-    fillOffDiagonalElementsOfNonCoulombicPairsMatrix_foundOnlyPairWithHigherIndexFirst
+    fillOffDiagonalElementsOfNonCoulombicPairsMatrixFoundOnlyPairWithHigherIndexFirst
 )
 {
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(2), size_t(1), 2.0, 1.0, 1.0)
+        std::make_shared<potential::LennardJonesPair>(
+            static_cast<size_t>(2),
+            static_cast<size_t>(1),
+            2.0,
+            1.0,
+            1.0
+        )
     );
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(5), size_t(1), 2.0, 1.0, 1.0)
+        std::make_shared<potential::LennardJonesPair>(
+            static_cast<size_t>(5),
+            static_cast<size_t>(1),
+            2.0,
+            1.0,
+            1.0
+        )
     );
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(5), size_t(2), 2.0, 1.0, 1.0)
+        std::make_shared<potential::LennardJonesPair>(
+            static_cast<size_t>(5),
+            static_cast<size_t>(2),
+            2.0,
+            1.0,
+            1.0
+        )
     );
 
     // these two lines were already tested in
@@ -389,24 +505,44 @@ TEST_F(
  */
 TEST_F(
     TestNonCoulombPotentialFF,
-    fillOffDiagonalElementsOfNonCoulombicPairsMatrix_foundBothPairs_withSameParams
+    fillOffDiagonalElementsOfNonCoulombicPairsMatrixFoundBothPairsWithSameParams
 )
 {
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(2), size_t(1), 2.0, 1.0, 1.0)
+        std::make_shared<potential::LennardJonesPair>(
+            static_cast<size_t>(2),
+            static_cast<size_t>(1),
+            2.0,
+            1.0,
+            1.0
+        )
     );
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(1), size_t(2), 2.0, 1.0, 1.0)
+        std::make_shared<potential::LennardJonesPair>(
+            static_cast<size_t>(1),
+            static_cast<size_t>(2),
+            2.0,
+            1.0,
+            1.0
+        )
     );
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(1), size_t(5), 2.0, 1.0, 1.0)
+        std::make_shared<potential::LennardJonesPair>(
+            static_cast<size_t>(1),
+            static_cast<size_t>(5),
+            2.0,
+            1.0,
+            1.0
+        )
     );
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(2), size_t(5), 2.0, 1.0, 1.0)
+        std::make_shared<potential::LennardJonesPair>(
+            static_cast<size_t>(2),
+            static_cast<size_t>(5),
+            2.0,
+            1.0,
+            1.0
+        )
     );
 
     // these two lines were already tested in
@@ -433,16 +569,26 @@ TEST_F(
  */
 TEST_F(
     TestNonCoulombPotentialFF,
-    fillOffDiagonalElementsOfNonCoulombicPairsMatrix_foundBothPairs_withDifferentParams
+    fillOffDiagonalElementsOfNonCoulombicPairsMatrixFoundBothPairsWithDifferentParams
 )
 {
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(1), size_t(2), 2.0, 1.0, 1.0)
+        std::make_shared<potential::LennardJonesPair>(
+            static_cast<size_t>(1),
+            static_cast<size_t>(2),
+            2.0,
+            1.0,
+            1.0
+        )
     );
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(2), size_t(1), 5.0, 1.0, 1.0)
+        std::make_shared<potential::LennardJonesPair>(
+            static_cast<size_t>(2),
+            static_cast<size_t>(1),
+            5.0,
+            1.0,
+            1.0
+        )
     );
 
     // these two lines were already tested in
@@ -470,20 +616,40 @@ TEST_F(
 TEST_F(TestNonCoulombPotentialFF, getSelfInteractionNonCoulPairs)
 {
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(1), size_t(5), 2.0, 1.0, 1.0)
+        std::make_shared<potential::LennardJonesPair>(
+            static_cast<size_t>(1),
+            static_cast<size_t>(5),
+            2.0,
+            1.0,
+            1.0
+        )
     );
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(1), size_t(2), 2.0, 1.0, 1.0)
+        std::make_shared<potential::LennardJonesPair>(
+            static_cast<size_t>(1),
+            static_cast<size_t>(2),
+            2.0,
+            1.0,
+            1.0
+        )
     );
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(2), size_t(2), 2.0, 1.0, 1.0)
+        std::make_shared<potential::LennardJonesPair>(
+            static_cast<size_t>(2),
+            static_cast<size_t>(2),
+            2.0,
+            1.0,
+            1.0
+        )
     );
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<
-            potential::LennardJonesPair>(size_t(5), size_t(5), 2.0, 1.0, 1.0)
+        std::make_shared<potential::LennardJonesPair>(
+            static_cast<size_t>(5),
+            static_cast<size_t>(5),
+            2.0,
+            1.0,
+            1.0
+        )
     );
 
     // these two lines were already tested in
@@ -508,8 +674,8 @@ TEST_F(TestNonCoulombPotentialFF, sortNonCoulombicsPairs)
     auto vector = std::vector<std::shared_ptr<potential::NonCoulombPair>>();
 
     auto pair1 = std::make_shared<potential::LennardJonesPair>(
-        size_t(1),
-        size_t(1),
+        static_cast<size_t>(1),
+        static_cast<size_t>(1),
         2.0,
         1.0,
         1.0
@@ -518,8 +684,8 @@ TEST_F(TestNonCoulombPotentialFF, sortNonCoulombicsPairs)
     pair1->setInternalType2(5);
     vector.push_back(pair1);
     auto pair2 = std::make_shared<potential::LennardJonesPair>(
-        size_t(2),
-        size_t(2),
+        static_cast<size_t>(2),
+        static_cast<size_t>(2),
         2.0,
         1.0,
         1.0
@@ -528,8 +694,8 @@ TEST_F(TestNonCoulombPotentialFF, sortNonCoulombicsPairs)
     pair2->setInternalType2(2);
     vector.push_back(pair2);
     auto pair3 = std::make_shared<potential::LennardJonesPair>(
-        size_t(2),
-        size_t(3),
+        static_cast<size_t>(2),
+        static_cast<size_t>(3),
         2.0,
         1.0,
         1.0
@@ -538,8 +704,8 @@ TEST_F(TestNonCoulombPotentialFF, sortNonCoulombicsPairs)
     pair3->setInternalType2(3);
     vector.push_back(pair3);
     auto pair4 = std::make_shared<potential::LennardJonesPair>(
-        size_t(1),
-        size_t(4),
+        static_cast<size_t>(1),
+        static_cast<size_t>(4),
         2.0,
         1.0,
         1.0
@@ -560,8 +726,8 @@ TEST_F(TestNonCoulombPotentialFF, sortNonCoulombicsPairs)
     EXPECT_EQ(vector[3]->getInternalType2(), 3);
 
     auto pair5 = std::make_shared<potential::LennardJonesPair>(
-        size_t(1),
-        size_t(1),
+        static_cast<size_t>(1),
+        static_cast<size_t>(1),
         2.0,
         1.0,
         1.0

@@ -63,7 +63,7 @@ std::string NonCoulombicsSection::keyword() { return "noncoulombics"; }
  */
 void NonCoulombicsSection::processHeader(
     std::vector<std::string> &lineElements,
-    Engine &
+    Engine & /*engine*/
 )
 {
     using enum NonCoulombType;
@@ -82,6 +82,7 @@ void NonCoulombicsSection::processHeader(
             PotentialSettings::setNonCoulombType(MORSE);
 
         else
+        {
             throw ParameterFileException(
                 std::format(
                     "Invalid type of nonCoulombic in parameter file "
@@ -90,10 +91,13 @@ void NonCoulombicsSection::processHeader(
                     _lineNumber
                 )
             );
+        }
     }
     else
+    {
         // default of guff gets overriden
         PotentialSettings::setNonCoulombType(LJ);
+    }
 }
 
 /**
@@ -155,7 +159,9 @@ void NonCoulombicsSection::processLJ(
     Engine                   &engine
 ) const
 {
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
     if (lineElements.size() != 4 && lineElements.size() != 5)
+    {
         throw ParameterFileException(
             std::format(
                 "Wrong number of arguments in parameter file in Lennard Jones "
@@ -164,6 +170,7 @@ void NonCoulombicsSection::processLJ(
                 _lineNumber
             )
         );
+    }
 
     const size_t atomType1 = stoul(lineElements[0]);
     const size_t atomType2 = stoul(lineElements[1]);
@@ -171,12 +178,13 @@ void NonCoulombicsSection::processLJ(
     const auto   c12       = stod(lineElements[3]);
 
     auto cutOff = 5 == lineElements.size() ? stod(lineElements[4]) : -1.0;
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
     const auto coulombCutOff = PotentialSettings::getCoulombRadiusCutOff();
 
     cutOff = cutOff < 0.0 ? coulombCutOff : cutOff;
 
-    auto &pot       = engine.getPotential().getNonCoulombPotential();
+    auto &pot       = engine.getPotential()->getNonCoulombPotential();
     auto &potential = dynamic_cast<ForceFieldNonCoulomb &>(pot);
 
     potential.addNonCoulombicPair(
@@ -209,7 +217,9 @@ void NonCoulombicsSection::processBuckingham(
     Engine                   &engine
 ) const
 {
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
     if (lineElements.size() != 5 && lineElements.size() != 6)
+    {
         throw ParameterFileException(
             std::format(
                 "Wrong number of arguments in parameter file in Lennard Jones "
@@ -218,6 +228,7 @@ void NonCoulombicsSection::processBuckingham(
                 _lineNumber
             )
         );
+    }
 
     const size_t atomType1 = stoul(lineElements[0]);
     const size_t atomType2 = stoul(lineElements[1]);
@@ -226,12 +237,13 @@ void NonCoulombicsSection::processBuckingham(
     const auto   c6        = stod(lineElements[4]);
 
     auto cutOff = 6 == lineElements.size() ? stod(lineElements[5]) : -1.0;
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
     const auto coulombCutOff = PotentialSettings::getCoulombRadiusCutOff();
 
     cutOff = cutOff < 0.0 ? coulombCutOff : cutOff;
 
-    auto &pot       = engine.getPotential().getNonCoulombPotential();
+    auto &pot       = engine.getPotential()->getNonCoulombPotential();
     auto &potential = dynamic_cast<ForceFieldNonCoulomb &>(pot);
 
     potential.addNonCoulombicPair(
@@ -264,7 +276,9 @@ void NonCoulombicsSection::processMorse(
     Engine                   &engine
 ) const
 {
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
     if (lineElements.size() != 5 && lineElements.size() != 6)
+    {
         throw ParameterFileException(
             std::format(
                 "Wrong number of arguments in parameter file in Lennard Jones "
@@ -273,6 +287,7 @@ void NonCoulombicsSection::processMorse(
                 _lineNumber
             )
         );
+    }
 
     const size_t atomType1           = stoul(lineElements[0]);
     const size_t atomType2           = stoul(lineElements[1]);
@@ -281,12 +296,13 @@ void NonCoulombicsSection::processMorse(
     const auto   equilibriumDistance = stod(lineElements[4]);
 
     auto cutOff = 6 == lineElements.size() ? stod(lineElements[5]) : -1.0;
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
     const auto coulombCutOff = PotentialSettings::getCoulombRadiusCutOff();
 
     cutOff = cutOff < 0.0 ? coulombCutOff : cutOff;
 
-    auto &pot       = engine.getPotential().getNonCoulombPotential();
+    auto &pot       = engine.getPotential()->getNonCoulombPotential();
     auto &potential = dynamic_cast<ForceFieldNonCoulomb &>(pot);
 
     potential.addNonCoulombicPair(

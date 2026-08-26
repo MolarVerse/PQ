@@ -42,7 +42,7 @@
 namespace potential
 {
     class NonCoulombPair;   // forward declaration
-}
+}   // namespace potential
 
 namespace benchSetup
 {
@@ -74,25 +74,25 @@ namespace benchSetup
      */
     struct MoleculeParams
     {
-        std::size_t nAtoms;
+        std::size_t nAtoms = 0;
         double      origin = 0.0;
     };
 
     // A molecule of nAtoms on a compact lattice with mass / velocity / force /
     // shift-force / charge / atom-type / vdW-type set. Atom types alternate
     // 0/1 and charges +/-0.4.
-    inline simulationBox::Molecule makeMolecule(const MoleculeParams& params)
+    inline molsys::Molecule makeMolecule(const MoleculeParams& params)
     {
-        auto molecule = simulationBox::Molecule();
+        auto molecule = molsys::Molecule();
         molecule.setMoltype(1);
         molecule.setNumberOfAtoms(params.nAtoms);
 
         double molMass = 0.0;
         for (std::size_t i = 0; i < params.nAtoms; ++i)
         {
-            auto atom = std::make_shared<simulationBox::Atom>();
+            auto atom = std::make_shared<molsys::Atom>();
 
-            const double d = static_cast<double>(i);
+            const auto d = static_cast<double>(i);
             // Quadratic y-term keeps atoms non-collinear so the bend-force
             // and dihedral kernels exercise their hot path (sin(alpha) != 0).
             const linearAlgebra::Vec3D pos{
@@ -131,13 +131,7 @@ namespace benchSetup
             )
         );
 
-        auto pair = potential::LennardJonesPair(
-            std::size_t(0),
-            std::size_t(1),
-            12.0,
-            2.0,
-            3.0
-        );
+        auto pair = potential::LennardJonesPair(0UL, 1UL, 12.0, 2.0, 3.0);
         potential.setNonCoulombPairsMatrix(0, 1, pair);
         potential.setNonCoulombPairsMatrix(1, 0, pair);
 
@@ -157,11 +151,9 @@ namespace benchSetup
     // A SimulationBox populated with nMolecules of nAtomsPerMol. Both the flat
     // atom list (used by integrator/kinetics) and the molecule list (used by
     // center-of-mass/virial) are filled, and the box totals are computed.
-    inline simulationBox::SimulationBox makePopulatedBox(
-        const BoxParams& params
-    )
+    inline molsys::SimulationBox makePopulatedBox(const BoxParams& params)
     {
-        auto box = simulationBox::SimulationBox();
+        auto box = molsys::SimulationBox();
         box.setBoxDimensions({30.0, 30.0, 30.0});
 
         for (std::size_t m = 0; m < params.nMolecules; ++m)

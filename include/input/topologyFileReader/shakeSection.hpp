@@ -27,7 +27,6 @@
 #include <string>   // for allocator, string
 
 #include "topologySection.hpp"   // for TopologySection
-#include "typeAliases.hpp"
 
 namespace input::topology
 {
@@ -40,10 +39,13 @@ namespace input::topology
     class ShakeSection : public TopologySection
     {
        public:
-        void processSection(std::vector<std::string> &, pq::Engine &) override;
+        void processSection(
+            std::vector<std::string> &lineElements,
+            engine::Engine           &engine
+        ) override;
 
         [[nodiscard]] std::string keyword() override;
-        void                      endedNormally(const bool) const override;
+        void endedNormally(const bool endedNormal) const override;
     };
 }   // namespace input::topology
 

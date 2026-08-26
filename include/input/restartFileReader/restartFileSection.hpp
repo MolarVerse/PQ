@@ -26,8 +26,12 @@
 
 #include <fstream>   // for ifstream
 #include <string>    // for string, allocator
+#include <vector>
 
-#include "typeAliases.hpp"
+namespace engine
+{
+    class Engine;   // forward declaration
+}   // namespace engine
 
 namespace input::restartFile
 {
@@ -39,16 +43,19 @@ namespace input::restartFile
      */
     class RestartFileSection
     {
+        // TODO: remove this public access
+       public:
+        int            _lineNumber = 0;
+        std::ifstream *_fp         = nullptr;
+
        public:
         virtual ~RestartFileSection() = default;
-        int            _lineNumber;
-        std::ifstream *_fp;
 
         virtual std::string keyword()  = 0;
         virtual bool        isHeader() = 0;
         virtual void        process(
                    std::vector<std::string> &lineElements,
-                   pq::Engine &
+                   engine::Engine &
                ) = 0;
     };
 

@@ -28,6 +28,7 @@
 #include <string_view>   // for string_view
 #include <vector>        // for vector
 
+#include "constants.hpp"
 #include "engine.hpp"                  // for Engine
 #include "exceptions.hpp"              // for RstFileException
 #include "mathUtilities.hpp"           // for compare
@@ -40,7 +41,7 @@ using namespace customException;
 using namespace linearAlgebra;
 using namespace utilities;
 using namespace settings;
-using namespace simulationBox;
+using namespace molsys;
 using namespace engine;
 
 /**
@@ -63,13 +64,16 @@ using namespace engine;
  */
 void BoxSection::process(std::vector<std::string> &lineElements, Engine &engine)
 {
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
     if ((lineElements.size() != 4) && (lineElements.size() != 7))
+    {
         throw RstFileException(
             std::format(
                 "Error in line {}: Box section must have 4 or 7 elements",
                 _lineNumber
             )
         );
+    }
 
     const auto boxDimensions = Vec3D{
         stod(lineElements[1]),
@@ -81,9 +85,12 @@ void BoxSection::process(std::vector<std::string> &lineElements, Engine &engine)
 
     if (std::ranges::any_of(boxDimensions, checkPositive))
         throw RstFileException("All box dimensions must be positive");
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
-    auto boxAngles = Vec3D{90.0, 90.0, 90.0};
+    constexpr auto defaultAngle = 90.0;
+    auto           boxAngles = Vec3D{defaultAngle, defaultAngle, defaultAngle};
 
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
     if (7 == lineElements.size())
     {
         boxAngles = Vec3D{
@@ -93,15 +100,20 @@ void BoxSection::process(std::vector<std::string> &lineElements, Engine &engine)
         };
 
         auto checkAngles = [](const double angle)
-        { return angle < 0.0 || angle > 180.0; };
+        { return angle < 0.0 || angle > 2.0 * defaultAngle; };
 
         if (std::ranges::any_of(boxAngles, checkAngles))
             throw RstFileException(
                 "Box angles must be positive and smaller than 180°"
             );
     }
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
-    if (!compare(boxAngles, Vec3D{90.0, 90.0, 90.0}, 1e-5))
+    if (!compare(
+            boxAngles,
+            Vec3D{defaultAngle, defaultAngle, defaultAngle},
+            constants::TRICLINIC_BOX_ANGLE_THRESHOLD
+        ))
     {
         auto box = TriclinicBox();
         box.setBoxAngles(boxAngles);

@@ -28,7 +28,9 @@
 #include <string>    // for string
 #include <vector>    // for vector
 
+#include "timerId.hpp"
 #include "timingsSection.hpp"   // for TimingsManager
+#include "timingsSectionGuard.hpp"
 
 namespace timings
 {
@@ -47,12 +49,12 @@ namespace timings
     class Timer
     {
        protected:
-        std::string _name = "DefaultTimings";
+        TimerId _id = TimerId::DefaultTimings;
 
         std::vector<TimingsSection> _timingDetails;
 
        public:
-        explicit Timer(const std::string_view);
+        explicit Timer(TimerId id);
         Timer() = default;
 
         [[nodiscard]]
@@ -66,9 +68,7 @@ namespace timings
         ) const;
 
         void startTimingsSection();
-        void startTimingsSection(const std::string_view name);
         void stopTimingsSection();
-        void stopTimingsSection(const std::string_view name);
 
         void sortTimingsSections();
 
@@ -76,7 +76,7 @@ namespace timings
          * standard setters *
          ********************/
 
-        void setTimerName(const std::string_view name);
+        void setTimerId(TimerId id);
 
         /********************
          * standard getters *
@@ -88,6 +88,14 @@ namespace timings
 
         [[nodiscard]] std::string getTimerName() const;
         [[nodiscard]] Timer       getTimer() const;
+
+        [[nodiscard]] TimingsSectionGuard scoped(const std::string_view name);
+
+       private:
+        friend class TimingsSectionGuard;
+
+        void startTimingsSection(const std::string_view name);
+        void stopTimingsSection(const std::string_view name);
     };
 
 }   // namespace timings

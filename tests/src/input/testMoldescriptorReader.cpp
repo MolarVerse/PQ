@@ -120,6 +120,7 @@ TEST_F(TestMoldescriptorReader, moldescriptorReader)
  */
 TEST_F(TestMoldescriptorReader, specialTypes)
 {
+    ASSERT_EQ(_engine->getSimulationBox().getWaterType(), std::nullopt);
     settings::FileSettings::setMolDescriptorFileName(
         "examples/setup/moldescriptor.dat"
     );
@@ -153,7 +154,7 @@ TEST_F(TestMoldescriptorReader, toManyAtomsPerMoltype)
  */
 TEST_F(TestMoldescriptorReader, globalVdwTypes)
 {
-    _engine->getForceFieldPtr()->activateNonCoulombic();
+    _engine->getForceField()->activateNonCoulombic();
 
     settings::FileSettings::setMolDescriptorFileName(
         "data/moldescriptorReader/moldescriptor_withGlobalVdwTypes.dat"

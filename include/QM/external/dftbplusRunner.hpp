@@ -25,7 +25,16 @@
 #define _DFTBPLUS_RUNNER_HPP_
 
 #include "externalQMRunner.hpp"   // for ExternalQMRunner
-#include "typeAliases.hpp"
+
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}   // namespace physicalData
+
+namespace molsys
+{
+    class Box;   // forward declaration
+}   // namespace molsys
 
 namespace QM
 {
@@ -39,11 +48,19 @@ namespace QM
     {
        private:
         bool _isFirstExecution = true;
+        bool _usePointCharges  = false;
 
        public:
-        void writeCoordsFile(pq::SimBox &) override;
-        void execute() override;
-        void readStressTensor(pq::Box &box, pq::PhysicalData &data) override;
+        void writeCoordsFile(molsys::SimulationBox &simBox) override;
+
+        void writePointChargeFile(molsys::SimulationBox &simBox) override;
+
+        void execute(molsys::SimulationBox &simBox) override;
+
+        void readStressTensor(
+            molsys::Box                &box,
+            physicalData::PhysicalData &data
+        ) override;
     };
 }   // namespace QM
 

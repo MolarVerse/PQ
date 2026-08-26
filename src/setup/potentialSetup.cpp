@@ -96,29 +96,29 @@ void PotentialSetup::setup()
  */
 void PotentialSetup::setupCoulomb()
 {
-    const auto coulRCut  = PotentialSettings::getCoulombRadiusCutOff();
-    const auto wolfParam = PotentialSettings::getWolfParameter();
-    const auto rfEpsilon = PotentialSettings::getReactionFieldEpsilon();
-    auto      &potential = _engine.getPotential();
+    const auto  coulRCut  = PotentialSettings::getCoulombRadiusCutOff();
+    const auto  wolfParam = PotentialSettings::getWolfParameter();
+    const auto  rfEpsilon = PotentialSettings::getReactionFieldEpsilon();
+    const auto &potential = _engine.getPotential();
 
     switch (PotentialSettings::getCoulombLongRangeType())
     {
         using enum CoulombLongRangeType;
 
         case REACTION_FIELD:
-            potential.makeCoulombPotential(
+            potential->makeCoulombPotential(
                 CoulombReactionField(coulRCut, rfEpsilon)
             );
             return;
 
         case WOLF:
-            potential.makeCoulombPotential(CoulombWolf(coulRCut, wolfParam));
+            potential->makeCoulombPotential(CoulombWolf(coulRCut, wolfParam));
             return;
 
         case SHIFTED: break;
     }
 
-    potential.makeCoulombPotential(CoulombShiftedPotential(coulRCut));
+    potential->makeCoulombPotential(CoulombShiftedPotential(coulRCut));
 }
 
 /**
@@ -129,14 +129,14 @@ void PotentialSetup::setupCoulomb()
  */
 void PotentialSetup::setupNonCoulomb()
 {
-    auto &potential = _engine.getPotential();
+    const auto &potential = _engine.getPotential();
 
     // NOTE: no else branch needed ForceFieldNonCoulomb is default
     //       makeForceFieldNonCoulomb is a no-op if already set
     //       However, it does also throw errors atm - thus the else
     //       statement is left out
-    if (!_engine.getForceFieldPtr()->isNonCoulombicActivated())
-        potential.makeNonCoulombPotential(GuffNonCoulomb());
+    if (!_engine.getForceField()->isNonCoulombicActivated())
+        potential->makeNonCoulombPotential(GuffNonCoulomb());
 }
 
 /**
@@ -161,7 +161,7 @@ void PotentialSetup::setupNonCoulombicPairs()
     auto &simBox = _engine.getSimulationBox();
 
     // clang-format off
-    auto &nonCoulPot = dynamic_cast<pq::FFNonCoulomb &>(pot.getNonCoulombPotential());
+    auto &nonCoulPot = dynamic_cast<potential::ForceFieldNonCoulomb&>(pot->getNonCoulombPotential());
     nonCoulPot.setupNonCoulombicCutoffs();
     // clang-format on
 
@@ -174,10 +174,12 @@ void PotentialSetup::setupNonCoulombicPairs()
     auto       selfNonCoulPairs = nonCoulPot.getSelfInteractionNonCoulPairs();
 
     if (selfNonCoulPairs.size() != nGlobalVdwTypes)
+    {
         throw ParameterFileException(
             "Not all self interacting non coulombics were set in the "
             "noncoulombics section of the parameter file"
         );
+    }
 
     std::ranges::sort(
         selfNonCoulPairs,
@@ -255,7 +257,7 @@ void PotentialSetup::writeNonCoulombInfo() const
 {
     auto &log = _engine.getLogOutput();
 
-    if (_engine.getForceFieldPtr()->isNonCoulombicActivated())
+    if (_engine.getForceField()->isNonCoulombicActivated())
     {
         auto      &simBox          = _engine.getSimulationBox();
         const auto nGlobalVdwTypes = simBox.getExternalGlobalVdwTypes().size();
@@ -266,7 +268,9 @@ void PotentialSetup::writeNonCoulombInfo() const
         // clang-format on
     }
     else
+    {
         log.writeSetupInfo("Non-coulombic potential: Guff");
+    }
 
     log.writeEmptyLine();
 }

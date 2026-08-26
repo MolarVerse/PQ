@@ -26,26 +26,28 @@
 #include <memory>
 
 #include "atom.hpp"
+#include "exceptions.hpp"
 #include "gtest/gtest.h"
 #include "molecule.hpp"
 #include "physicalData.hpp"
 #include "resetKinetics.hpp"
 #include "simulationBox.hpp"
 #include "thermostatSettings.hpp"
+#include "throwWithMessage.hpp"
 #include "vector3d.hpp"   // IWYU pragma: keep
 
 namespace
 {
-    // Build a fresh 3-atom SimBox the tests can share: 2 atoms in mol1,
-    // 1 atom in mol2, all mass 1, deterministic velocities.
-    simulationBox::SimulationBox *makeBox()
+    // Build a fresh 3-atom molsys::SimulationBox the tests can share: 2
+    // atoms in mol1, 1 atom in mol2, all mass 1, deterministic velocities.
+    molsys::SimulationBox *makeBox()
     {
-        auto *box      = new simulationBox::SimulationBox();
-        auto  molecule = simulationBox::Molecule();
+        auto *box      = new molsys::SimulationBox();
+        auto  molecule = molsys::Molecule();
         molecule.setNumberOfAtoms(2);
 
-        auto a1 = std::make_shared<simulationBox::Atom>();
-        auto a2 = std::make_shared<simulationBox::Atom>();
+        auto a1 = std::make_shared<molsys::Atom>();
+        auto a2 = std::make_shared<molsys::Atom>();
         a1->setMass(1.0);
         a2->setMass(1.0);
         a1->setPosition(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
@@ -56,9 +58,9 @@ namespace
         molecule.addAtom(a1);
         molecule.addAtom(a2);
 
-        auto molecule2 = simulationBox::Molecule();
+        auto molecule2 = molsys::Molecule();
         molecule2.setNumberOfAtoms(1);
-        auto a3 = std::make_shared<simulationBox::Atom>();
+        auto a3 = std::make_shared<molsys::Atom>();
         a3->setMass(1.0);
         a3->setPosition(linearAlgebra::Vec3D(0.0, 1.0, 0.0));
         a3->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
@@ -79,12 +81,12 @@ namespace
 
 TEST(TestResetKinetics, constructorStoresStepAndFrequencyParameters)
 {
-    resetKinetics::ResetKinetics rk(1u, 2u, 3u, 4u, 50u, 100u, 11u);
-    EXPECT_EQ(rk.getNStepsTemperatureReset(), 1u);
-    EXPECT_EQ(rk.getFrequencyTemperatureReset(), 2u);
-    EXPECT_EQ(rk.getNStepsMomentumReset(), 3u);
-    EXPECT_EQ(rk.getFrequencyMomentumReset(), 4u);
-    EXPECT_EQ(rk.getNStepsForcesReset(), 11u);
+    resetKinetics::ResetKinetics rk(1U, 2U, 3U, 4U, 50U, 100U, 11U);
+    EXPECT_EQ(rk.getNStepsTemperatureReset(), 1U);
+    EXPECT_EQ(rk.getFrequencyTemperatureReset(), 2U);
+    EXPECT_EQ(rk.getNStepsMomentumReset(), 3U);
+    EXPECT_EQ(rk.getFrequencyMomentumReset(), 4U);
+    EXPECT_EQ(rk.getNStepsForcesReset(), 11U);
 }
 
 TEST(TestResetKinetics, settersAcceptValuesWithoutThrowing)
@@ -120,6 +122,63 @@ TEST(TestResetKinetics, resetTemperatureRescalesVelocitiesAndStaysFinite)
 
     EXPECT_FALSE(std::isnan(T_after));
     EXPECT_FALSE(std::isinf(T_after));
+
+    delete box;
+}
+
+TEST(TestResetKinetics, resetTemperatureScalesFiniteTemperatureToZero)
+{
+    auto                        *box = makeBox();
+    resetKinetics::ResetKinetics resetKinetics;
+
+    auto data = physicalData::PhysicalData();
+    data.calculateTemperature(*box);
+    settings::ThermostatSettings::setTargetTemperature(0.0);
+    resetKinetics.setTemperature(data.getTemperature());
+    resetKinetics.resetTemperature(*box);
+
+    data.calculateTemperature(*box);
+    EXPECT_DOUBLE_EQ(data.getTemperature(), 0.0);
+    for (const auto &atom : box->getAtoms())
+        EXPECT_EQ(atom->getVelocity(), linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+
+    delete box;
+}
+
+TEST(TestResetKinetics, rejectsZeroTargetFromZeroTemperature)
+{
+    auto                        *box = makeBox();
+    resetKinetics::ResetKinetics resetKinetics;
+
+    for (const auto &atom : box->getAtoms()) atom->setVelocity({0.0, 0.0, 0.0});
+
+    settings::ThermostatSettings::setTargetTemperature(0.0);
+    resetKinetics.setTemperature(0.0);
+
+    EXPECT_THROW_MSG(
+        resetKinetics.resetTemperature(*box),
+        customException::UserInputException,
+        "Cannot rescale a zero-temperature system. Initialize velocities first."
+    );
+
+    delete box;
+}
+
+TEST(TestResetKinetics, rejectsPositiveTargetFromZeroTemperature)
+{
+    auto                        *box = makeBox();
+    resetKinetics::ResetKinetics resetKinetics;
+
+    for (const auto &atom : box->getAtoms()) atom->setVelocity({0.0, 0.0, 0.0});
+
+    settings::ThermostatSettings::setTargetTemperature(300.0);
+    resetKinetics.setTemperature(0.0);
+
+    EXPECT_THROW_MSG(
+        resetKinetics.resetTemperature(*box),
+        customException::UserInputException,
+        "Cannot rescale a zero-temperature system. Initialize velocities first."
+    );
 
     delete box;
 }
@@ -163,11 +222,13 @@ TEST(TestResetKinetics, resetAngularMomentumLeavesVelocitiesFinite)
     rk.resetAngularMomentum(*box);
 
     for (const auto &atom : box->getAtoms())
+    {
         for (size_t i = 0; i < 3; ++i)
         {
             EXPECT_FALSE(std::isnan(atom->getVelocity()[i]));
             EXPECT_FALSE(std::isinf(atom->getVelocity()[i]));
         }
+    }
 
     delete box;
 }
@@ -175,13 +236,13 @@ TEST(TestResetKinetics, resetAngularMomentumLeavesVelocitiesFinite)
 TEST(TestResetKinetics, resetForcesZerosForcesEachStep)
 {
     auto                        *box = makeBox();
-    resetKinetics::ResetKinetics rk(0u, 0u, 0u, 0u, 0u, 0u, 1u);
+    resetKinetics::ResetKinetics rk(0U, 0U, 0U, 0U, 0U, 0U, 1U);
 
     // Seed atom forces with non-zero values.
     for (auto &atom : box->getAtoms())
         atom->setForce(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
 
-    rk.resetForces(0u, *box);
+    rk.resetForces(0U, *box);
 
     for (const auto &atom : box->getAtoms())
         for (size_t i = 0; i < 3; ++i)

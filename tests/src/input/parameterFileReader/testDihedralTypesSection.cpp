@@ -44,20 +44,14 @@ TEST_F(TestParameterFileSection, processSectionDihedral)
     std::vector<std::string> lineElements = {"0", "1.22", "234.3", "324.3"};
     DihedralSection          dihedralSection;
     dihedralSection.processSection(lineElements, *_engine);
-    EXPECT_EQ(_engine->getForceField().getDihedralTypes().size(), 1);
-    EXPECT_EQ(_engine->getForceField().getDihedralTypes()[0].getId(), 0);
-    EXPECT_EQ(
-        _engine->getForceField().getDihedralTypes()[0].getForceConstant(),
-        1.22
-    );
-    EXPECT_EQ(
-        _engine->getForceField().getDihedralTypes()[0].getPeriodicity(),
-        234.3
-    );
-    EXPECT_EQ(
-        _engine->getForceField().getDihedralTypes()[0].getPhaseShift(),
-        324.3 * constants::DEG_TO_RAD
-    );
+
+    const auto &dihedralTypes = _engine->getForceField()->getDihedralTypes();
+
+    EXPECT_EQ(dihedralTypes.size(), 1);
+    EXPECT_EQ(dihedralTypes[0].getId(), DihedralId{0});
+    EXPECT_EQ(dihedralTypes[0].getForceConstant(), 1.22);
+    EXPECT_EQ(dihedralTypes[0].getPeriodicity(), 234.3);
+    EXPECT_EQ(dihedralTypes[0].getPhaseShift(), 324.3 * constants::DEG_TO_RAD);
 
     lineElements = {"1", "2", "1.0", "0", "2"};
     EXPECT_THROW(

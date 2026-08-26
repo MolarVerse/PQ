@@ -1,0 +1,3 @@
+- add guarded RAII approach for starting and automatically stopping a timings section with its destructor
+- use a dedicated enum class for timers to make it less error prone
+- removed now all timer dependencies from header files -- global timer is stateless and more robust

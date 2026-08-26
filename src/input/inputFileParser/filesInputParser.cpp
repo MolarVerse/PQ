@@ -24,15 +24,14 @@
 
 #include <cstddef>   // for size_t
 #include <format>    // for format
+#include <utility>
 
-#include "engine.hpp"         // for Engine
 #include "exceptions.hpp"     // for InputFileException
 #include "fileSettings.hpp"   // for FileSettings
 #include "parserUtils.hpp"
 #include "stringUtilities.hpp"   // for fileExists
 
 using namespace input;
-using namespace engine;
 using namespace customException;
 using namespace settings;
 using namespace utilities;
@@ -46,12 +45,38 @@ using namespace utilities;
  * topology_file <string> 3) parameter_file <string> 4) start_file <string>
  * (required) 5) rpmd_start_file <string> 6) moldescriptor_file <string>
  * 7) guff_path <string> (deprecated) 8) guff_file <string>
- * 9) mshake_file <string> 10) dftb_file <string>
+ * 9) mshake_file <string> 10) dftb_file <string> 11) turbomole_file <string>
+ *
+ * @param engine
+ * @param intraNonBonded
+ */
+FilesInputParser::FilesInputParser(
+    std::shared_ptr<intraNonBonded::IntraNonBonded> intraNonBonded
+)
+    : FilesInputParser(intraNonBonded, true)
+{
+}
+
+/**
+ * @brief Construct a new Input File Parser Non Coulomb Type:: Input File Parser
+ * Non Coulomb Type object
+ *
+ * @details following keywords are added to the _keywordFuncMap,
+ * _keywordRequiredMap and _keywordCountMap: 1) intra-nonBonded_file <string> 2)
+ * topology_file <string> 3) parameter_file <string> 4) start_file <string>
+ * (required) 5) rpmd_start_file <string> 6) moldescriptor_file <string>
+ * 7) guff_path <string> (deprecated) 8) guff_file <string>
+ * 9) mshake_file <string> 10) dftb_file <string> 11) turbomole_file <string>
  *
  * @param engine
  */
-FilesInputParser::FilesInputParser(Engine &engine, const bool validateFilePaths)
-    : InputFileParser(engine), _validateFilePaths(validateFilePaths)
+FilesInputParser::FilesInputParser(
+    std::shared_ptr<intraNonBonded::IntraNonBonded> intraNonBonded,
+    const bool                                      validateFilePaths
+)
+    : InputFileParser(),
+      _intraNonBonded(std::move(intraNonBonded)),
+      _validateFilePaths(validateFilePaths)
 {
     addKeyword(
         std::string("intra-nonBonded_file"),
@@ -112,6 +137,12 @@ FilesInputParser::FilesInputParser(Engine &engine, const bool validateFilePaths)
         bindMember(&FilesInputParser::parseDFTBFilename, this),
         false
     );
+
+    addKeyword(
+        std::string("turbomole_file"),
+        bindMember(&FilesInputParser::parseTMFilename, this),
+        false
+    );
 }
 
 /**
@@ -138,7 +169,7 @@ void FilesInputParser::parseIntraNonBondedFile(
             std::format("Intra non bonded file \"{}\" File not found", fileName)
         );
 
-    _engine.getIntraNonBonded().activate();
+    _intraNonBonded->activate();
 
     FileSettings::setIntraNonBondedFileName(fileName);
     FileSettings::setIsIntraNonBondedFileNameSet();
@@ -237,12 +268,14 @@ void FilesInputParser::parseRingPolymerStartFilename(
     const auto &filename = lineElements[2];
 
     if (_validateFilePaths && !fileExists(filename))
+    {
         throw InputFileException(
             std::format(
                 "Cannot open ring polymer start file - filename = {}",
                 filename
             )
         );
+    }
 
     FileSettings::setRingPolymerStartFileName(filename);
     FileSettings::setIsRingPolymerStartFileNameSet();
@@ -267,6 +300,7 @@ void FilesInputParser::parseMoldescriptorFilename(
     const auto &filename = lineElements[2];
 
     if (_validateFilePaths && !fileExists(filename))
+    {
         throw InputFileException(
             std::format(
                 "Cannot open moldescriptor file - filename = \"{}\" - file not "
@@ -274,6 +308,7 @@ void FilesInputParser::parseMoldescriptorFilename(
                 filename
             )
         );
+    }
 
     FileSettings::setMolDescriptorFileName(filename);
 }
@@ -284,8 +319,8 @@ void FilesInputParser::parseMoldescriptorFilename(
  * @throws InputFileException deprecated keyword
  */
 void FilesInputParser::parseGuffPath(
-    const std::vector<std::string> &,
-    const size_t
+    const std::vector<std::string> & /*lineElements*/,
+    const size_t /*lineNumber*/
 )
 {
     throw InputFileException(
@@ -369,4 +404,33 @@ void FilesInputParser::parseDFTBFilename(
         );
 
     FileSettings::setDFTBFileName(filename);
+}
+
+/**
+ * @brief parse Turbomole file of simulation and set it in settings
+ *
+ * @param lineElements
+ *
+ * @throws InputFileException if file does not exist
+ */
+void FilesInputParser::parseTMFilename(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+
+    const auto &filename = lineElements[2];
+
+    if (!fileExists(filename))
+    {
+        throw InputFileException(
+            std::format(
+                "Cannot open TURBOMOLE setup file - filename = {}",
+                filename
+            )
+        );
+    }
+
+    FileSettings::setTMFileName(filename);
 }

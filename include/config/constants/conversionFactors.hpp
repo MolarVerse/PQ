@@ -129,6 +129,12 @@ namespace constants
     static constexpr double FS_TO_S  = 1.0 / S_TO_FS;
     static constexpr double PS_TO_FS = 1.0e3;
     static constexpr double FS_TO_PS = 1.0 / PS_TO_FS;
+    static constexpr double S_TO_MS  = 1.0e3;
+    static constexpr double MS_TO_S  = 1.0 / S_TO_MS;
+    static constexpr double S_TO_NS  = 1.0e9;
+    static constexpr double NS_TO_S  = 1.0 / S_TO_NS;
+    static constexpr double MS_TO_NS = 1.0e6;
+    static constexpr double NS_TO_MS = 1.0 / MS_TO_NS;
 
     /**
      * @brief Conversion factors for pressure calculation

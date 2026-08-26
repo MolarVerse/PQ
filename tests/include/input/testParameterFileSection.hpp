@@ -25,9 +25,9 @@
 #define _TEST_PARAMETER_FILE_SECTION_HPP_
 
 #include <gtest/gtest.h>   // for Test
-#include <stdio.h>         // for remove
 
-#include <string>   // for allocator, string
+#include <filesystem>   // for remove
+#include <string>       // for allocator, string
 
 #include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
 #include "mmmdEngine.hpp"             // for Engine
@@ -47,10 +47,10 @@ class TestParameterFileSection : public ::testing::Test
 
     void SetUp() override
     {
-        auto molecule1 = simulationBox::Molecule();
+        auto molecule1 = molsys::Molecule();
         molecule1.setNumberOfAtoms(1);
 
-        auto molecule2 = simulationBox::Molecule();
+        auto molecule2 = molsys::Molecule();
         molecule2.setNumberOfAtoms(3);
 
         // NOTE: use dummy engine for testing
@@ -61,7 +61,7 @@ class TestParameterFileSection : public ::testing::Test
         _engine->getSimulationBox().addMolecule(molecule1);
         _engine->getSimulationBox().addMolecule(molecule2);
 
-        _engine->getPotential().makeNonCoulombPotential(
+        _engine->getPotential()->makeNonCoulombPotential(
             potential::ForceFieldNonCoulomb()
         );
     }
@@ -69,7 +69,7 @@ class TestParameterFileSection : public ::testing::Test
     void TearDown() override
     {
         delete _engine;
-        ::remove(_parameterFileName.c_str());
+        static_cast<void>(std::filesystem::remove(_parameterFileName));
     }
 };
 

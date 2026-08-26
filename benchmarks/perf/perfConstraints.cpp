@@ -24,8 +24,10 @@
 // constraint per molecule, started at rest (positionOld == position) so the
 // solver is stable across iterations.
 
-#include <cstddef>
+#include <cstdint>
 #include <cstdio>
+#include <format>
+#include <iostream>
 
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
@@ -39,7 +41,7 @@
 #include "simulationBox.hpp"
 #include "timingsSettings.hpp"
 
-static constexpr long ITERATIONS = 1000;
+static constexpr std::uint64_t ITERATIONS = 1000;
 
 int main()
 {
@@ -56,28 +58,24 @@ int main()
     constr.setRattleTolerance(1.0e-8);
     constr.activateShake();
 
-    for (std::size_t m = 0; m < molecules.size(); ++m)
+    for (auto &molecule : molecules)
+    {
         constr.addBondConstraint(
-            constraints::BondConstraint(
-                &molecules[m],
-                &molecules[m],
-                0,
-                1,
-                0.85
-            )
+            constraints::BondConstraint(&molecule, &molecule, 0, 1, 0.85)
         );
+    }
 
     constr.calculateConstraintBondRefs(box);
 
     CALLGRIND_ZERO_STATS;
 
-    for (long i = 0; i < ITERATIONS; ++i)
+    for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
         constr.applyShake(box);
         constr.applyRattle(box);
     }
 
     // read state so the loop cannot be optimized away
-    std::printf("%.6f\n", box.calculateMomentum()[0]);
+    std::cout << std::format("{:.6f}\n", box.calculateMomentum()[0]);
     return 0;
 }

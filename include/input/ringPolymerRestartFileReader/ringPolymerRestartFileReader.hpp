@@ -25,13 +25,16 @@
 #define _RING_POLYMER_RESTART_FILE_READER_HPP_
 
 #include <fstream>
-#include <string>    // for string
+#include <string>   // for string
 
-#include "typeAliases.hpp"
+namespace engine
+{
+    class RingPolymerEngine;   // forward declaration
+}   // namespace engine
 
 namespace input::ringPolymer
 {
-    void readRingPolymerRestartFile(pq::RingPolymerEngine &);
+    void readRingPolymerRestartFile(engine::RingPolymerEngine &);
 
     /**
      * @class RingPolymerRestartFileReader
@@ -42,12 +45,15 @@ namespace input::ringPolymer
     class RingPolymerRestartFileReader
     {
        private:
-        const std::string      _fileName;
-        std::ifstream          _fp;
-        pq::RingPolymerEngine &_engine;
+        const std::string          _fileName;
+        std::ifstream              _fp;
+        engine::RingPolymerEngine &_engine;
 
        public:
-        RingPolymerRestartFileReader(const std::string &, pq::RingPolymerEngine &);
+        RingPolymerRestartFileReader(
+            const std::string &,
+            engine::RingPolymerEngine &
+        );
 
         void read();
     };

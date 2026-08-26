@@ -31,15 +31,15 @@
 #include "vector3d.hpp"   // IWYU pragma: keep
 
 using namespace opt;
-using simulationBox::Atom;
-using simulationBox::SimulationBox;
+using molsys::Atom;
+using molsys::SimulationBox;
 
 namespace
 {
     std::shared_ptr<SimulationBox> makeBoxWithOneAtom(
         const linearAlgebra::Vec3D &pos,
         const linearAlgebra::Vec3D &force,
-        const linearAlgebra::Vec3D &boxDims = {100.0, 100.0, 100.0}
+        const linearAlgebra::Vec3D &boxDims
     )
     {
         auto box = std::make_shared<SimulationBox>();
@@ -52,31 +52,39 @@ namespace
 
         return box;
     }
+
+    std::shared_ptr<SimulationBox> makeBoxWithOneAtom(
+        const linearAlgebra::Vec3D &pos,
+        const linearAlgebra::Vec3D &force
+    )
+    {
+        return makeBoxWithOneAtom(pos, force, {100.0, 100.0, 100.0});
+    }
 }   // namespace
 
 /* ---------- constructors ---------- */
 
 TEST(TestAdam, defaultBetasConstructorAcceptsNAtoms)
 {
-    EXPECT_NO_THROW(Adam(10u, /*nAtoms=*/4u));
+    EXPECT_NO_THROW(Adam(10U, /*nAtoms=*/4U));
 }
 
 TEST(TestAdam, customBetasConstructorAcceptsBeta1AndBeta2)
 {
-    EXPECT_NO_THROW(Adam(10u, /*beta1=*/0.5, /*beta2=*/0.5, /*nAtoms=*/4u));
+    EXPECT_NO_THROW(Adam(10U, /*beta1=*/0.5, /*beta2=*/0.5, /*nAtoms=*/4U));
 }
 
 TEST(TestAdam, cloneProducesAdamInstance)
 {
-    const Adam src(10u, 4u);
+    const Adam src(10U, 4U);
     const auto cloned = src.clone();
     EXPECT_NE(std::dynamic_pointer_cast<Adam>(cloned), nullptr);
 }
 
 TEST(TestAdam, maxHistoryLengthIsTwo)
 {
-    const Adam adam(10u, 4u);
-    EXPECT_EQ(adam.maxHistoryLength(), 2u);
+    const Adam adam(10U, 4U);
+    EXPECT_EQ(adam.maxHistoryLength(), 2U);
 }
 
 /* ---------- single update step ---------- */
@@ -90,11 +98,11 @@ TEST(TestAdam, updateAtStepOneReducesToLearningRateTimesSignOfForce)
     // sign(force).
     auto box = makeBoxWithOneAtom({0.0, 0.0, 0.0}, {2.0, -3.0, 0.5});
 
-    Adam adam(1u, /*nAtoms=*/1u);
+    Adam adam(1U, /*nAtoms=*/1U);
     adam.setSimulationBox(box);
 
     const auto lr = 0.01;
-    adam.update(lr, 1u);
+    adam.update(lr, 1U);
 
     // Per-component direction is preserved (no aliasing across xyz in Adam).
     const auto pos = box->getAtoms()[0]->getPosition();
@@ -112,9 +120,9 @@ TEST(TestAdam, updateStoresOldPosition)
 {
     auto box = makeBoxWithOneAtom({3.0, 4.0, 5.0}, {1.0, 1.0, 1.0});
 
-    Adam adam(1u, 1u);
+    Adam adam(1U, 1U);
     adam.setSimulationBox(box);
-    adam.update(0.01, 1u);
+    adam.update(0.01, 1U);
 
     EXPECT_EQ(
         box->getAtoms()[0]->getPositionOld(),
@@ -132,9 +140,9 @@ TEST(TestAdam, updateAppliesPBCToNewPosition)
         {10.0, 10.0, 10.0}
     );
 
-    Adam adam(1u, 1u);
+    Adam adam(1U, 1U);
     adam.setSimulationBox(box);
-    adam.update(/*learningRate=*/0.5, /*step=*/1u);
+    adam.update(/*learningRate=*/0.5, /*step=*/1U);
 
     // After step pos[0] ≈ 9.99 + 0.5 ≈ 10.49 → wraps to ≈ 0.49.
     EXPECT_LT(box->getAtoms()[0]->getPosition()[0], 1.0);
@@ -145,9 +153,9 @@ TEST(TestAdam, updateLeavesPositionUnchangedWhenForceIsZero)
 {
     auto box = makeBoxWithOneAtom({1.0, 2.0, 3.0}, {0.0, 0.0, 0.0});
 
-    Adam adam(1u, 1u);
+    Adam adam(1U, 1U);
     adam.setSimulationBox(box);
-    adam.update(0.1, 1u);
+    adam.update(0.1, 1U);
 
     EXPECT_EQ(
         box->getAtoms()[0]->getPosition(),

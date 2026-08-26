@@ -67,6 +67,7 @@ void ImproperDihedralSection::processSection(
 )
 {
     if (lineElements.size() != 4)
+    {
         throw ParameterFileException(
             std::format(
                 "Wrong number of arguments in parameter file improper section "
@@ -75,13 +76,15 @@ void ImproperDihedralSection::processSection(
                 _lineNumber
             )
         );
+    }
 
-    auto id            = stoul(lineElements[0]);
+    auto id            = DihedralId{stoul(lineElements[0])};
     auto forceConstant = stod(lineElements[1]);
     auto periodicity   = stod(lineElements[2]);
     auto phase         = stod(lineElements[3]) * DEG_TO_RAD;
 
     if (periodicity < 0.0)
+    {
         throw ParameterFileException(
             std::format(
                 "Parameter file improper section at line {} - periodicity has "
@@ -90,8 +93,9 @@ void ImproperDihedralSection::processSection(
                 _lineNumber
             )
         );
+    }
 
     auto improperType = DihedralType(id, forceConstant, periodicity, phase);
 
-    engine.getForceField().addImproperDihedralType(improperType);
+    engine.getForceField()->addImproperDihedralType(improperType);
 }

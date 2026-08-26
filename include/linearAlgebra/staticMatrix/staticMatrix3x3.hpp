@@ -39,7 +39,10 @@ namespace linearAlgebra
      ****************************/
 
     template <typename T>
-    StaticMatrix3x3<T> operator+(const StaticMatrix3x3<T> &, const StaticMatrix3x3<T> &);
+    StaticMatrix3x3<T> operator+(
+        const StaticMatrix3x3<T> &lhs,
+        const StaticMatrix3x3<T> &rhs
+    );
 
     template <typename T>
     StaticMatrix3x3<T> operator+(const StaticMatrix3x3<T> &lhs, const T &rhs);
@@ -52,7 +55,10 @@ namespace linearAlgebra
      ****************************/
 
     template <typename T>
-    StaticMatrix3x3<T> operator-(const StaticMatrix3x3<T> &, const StaticMatrix3x3<T> &);
+    StaticMatrix3x3<T> operator-(
+        const StaticMatrix3x3<T> &lhs,
+        const StaticMatrix3x3<T> &rhs
+    );
 
     template <typename T>
     void operator-=(StaticMatrix3x3<T> &lhs, const StaticMatrix3x3<T> &rhs);
@@ -62,7 +68,10 @@ namespace linearAlgebra
      ****************************/
 
     template <typename T>
-    StaticMatrix3x3<T> operator*(const StaticMatrix3x3<T> &, const StaticMatrix3x3<T> &);
+    StaticMatrix3x3<T> operator*(
+        const StaticMatrix3x3<T> &lhs,
+        const StaticMatrix3x3<T> &rhs
+    );
 
     template <typename T>
     StaticMatrix3x3<T> operator*(const StaticMatrix3x3<T> &mat, const T t);
@@ -71,7 +80,10 @@ namespace linearAlgebra
     StaticMatrix3x3<T> operator*(const T t, const StaticMatrix3x3<T> &mat);
 
     template <typename T>
-    Vector3D<T> operator*(const StaticMatrix3x3<T> &, const Vector3D<T> &);
+    Vector3D<T> operator*(
+        const StaticMatrix3x3<T> &mat,
+        const Vector3D<T>        &vec
+    );
 
     template <typename T>
     void operator*=(StaticMatrix3x3<T> &lhs, const T t);
@@ -80,11 +92,13 @@ namespace linearAlgebra
      * operator/ and operator/= *
      ****************************/
 
-    template <typename T>
-    StaticMatrix3x3<T> operator/(const StaticMatrix3x3<T> &mat, const T t);
+    template <typename T, typename U>
+    requires std::convertible_to<U, T>
+    StaticMatrix3x3<T> operator/(const StaticMatrix3x3<T> &mat, const U t);
 
-    template <typename T>
-    StaticMatrix3x3<T> operator/(const T t, const StaticMatrix3x3<T> &mat);
+    template <typename T, typename U>
+    requires std::convertible_to<U, T>
+    StaticMatrix3x3<T> operator/(const U t, const StaticMatrix3x3<T> &mat);
 
     template <typename T>
     void operator/=(StaticMatrix3x3<T> &lhs, const T t);
@@ -100,7 +114,10 @@ namespace linearAlgebra
     T det(const StaticMatrix3x3<T> &mat);
 
     template <typename T>
-    StaticMatrix3x3<T> tensorProduct(const Vector3D<T> &, const Vector3D<T> &);
+    StaticMatrix3x3<T> tensorProduct(
+        const Vector3D<T> &lhs,
+        const Vector3D<T> &rhs
+    );
 
     template <typename T>
     StaticMatrix3x3<T> cofactorMatrix(const StaticMatrix3x3<T> &mat);

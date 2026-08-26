@@ -61,7 +61,10 @@ def parse_fragment_name(name, audience):
     match = FRAGMENT_RE.match(name)
     if not match:
         raise FragmentError(
-            f"invalid fragment name '{name}'; expected <category>.<slug>.md"
+            f"invalid fragment name '{name}'; expected <category>.<slug>.md, "
+            "where <category> uses only lowercase letters and <slug> starts "
+            "with a lowercase letter or digit and uses only lowercase letters, "
+            "digits, and hyphens"
         )
 
     category = match.group("category")

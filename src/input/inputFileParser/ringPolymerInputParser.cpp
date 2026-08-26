@@ -30,7 +30,6 @@
 #include "stringUtilities.hpp"       // for stringToInt
 
 using namespace input;
-using namespace engine;
 using namespace customException;
 using namespace settings;
 
@@ -43,8 +42,7 @@ using namespace settings;
  *
  * @param engine
  */
-RingPolymerInputParser::RingPolymerInputParser(Engine &engine)
-    : InputFileParser(engine)
+RingPolymerInputParser::RingPolymerInputParser()
 {
     addKeyword(
         std::string("rpmd_n_replica"),
@@ -69,12 +67,14 @@ void RingPolymerInputParser::parseNumberOfBeads(
     auto numberOfBeads = utilities::stringToInt(lineElements[2]);
 
     if (numberOfBeads < 2)
+    {
         throw InputFileException(
             std::format(
                 "Number of beads must be at least 2 - in input file in line {}",
                 lineNumber
             )
         );
+    }
 
-    RingPolymerSettings::setNumberOfBeads(size_t(numberOfBeads));
+    RingPolymerSettings::setNumberOfBeads(static_cast<size_t>(numberOfBeads));
 }

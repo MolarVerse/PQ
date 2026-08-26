@@ -22,7 +22,10 @@
 
 // Fixed-work micro-benchmark of the velocity-Verlet integrator step.
 
+#include <cstdint>
 #include <cstdio>
+#include <format>
+#include <iostream>
 
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
@@ -34,7 +37,7 @@
 #include "timingsSettings.hpp"
 #include "velocityVerlet.hpp"
 
-static constexpr long ITERATIONS = 1000;
+static constexpr std::uint64_t ITERATIONS = 1000;
 
 int main()
 {
@@ -46,13 +49,13 @@ int main()
 
     CALLGRIND_ZERO_STATS;
 
-    for (long i = 0; i < ITERATIONS; ++i)
+    for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
         integrator.firstStep(box);
         integrator.secondStep(box);
     }
 
     // read state so the loop cannot be optimized away
-    std::printf("%.6f\n", box.calculateMomentum()[0]);
+    std::cout << std::format("{:.6f}\n", box.calculateMomentum()[0]);
     return 0;
 }

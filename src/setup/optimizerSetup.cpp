@@ -46,14 +46,13 @@ using namespace defaults;
 using namespace engine;
 using namespace opt;
 
-using SharedCellList       = std::shared_ptr<simulationBox::CellList>;
-using SharedSimBox         = std::shared_ptr<simulationBox::SimulationBox>;
+using SharedCellList       = std::shared_ptr<molsys::CellList>;
+using SharedSimBox         = std::shared_ptr<molsys::SimulationBox>;
 using SharedForceField     = std::shared_ptr<forceField::ForceField>;
 using SharedPotential      = std::shared_ptr<potential::Potential>;
 using SharedPhysicalData   = std::shared_ptr<physicalData::PhysicalData>;
 using SharedConstraints    = std::shared_ptr<constraints::Constraints>;
 using SharedIntraNonBonded = std::shared_ptr<intraNonBonded::IntraNonBonded>;
-using SharedVirial         = std::shared_ptr<virial::Virial>;
 
 /**
  * @brief Wrapper for the optimizer setup
@@ -230,18 +229,19 @@ std::shared_ptr<Evaluator> OptimizerSetup::setupEvaluator()
         evaluator = std::make_shared<MMEvaluator>();
 
     else
+    {
         throw UserInputException(
             "Unknown job type for the optimizer in order to setup up the "
             "evaluator"
         );
+    }
 
-    evaluator->setCellList(_optEngine.getSharedCellList());
+    evaluator->setCellList(_optEngine.getCellList());
     evaluator->setSimulationBox(_optEngine.getSharedSimulationBox());
-    evaluator->setPotential(_optEngine.getSharedPotential());
-    evaluator->setForceField(_optEngine.getSharedForceField());
-    evaluator->setConstraints(_optEngine.getSharedConstraints());
-    evaluator->setIntraNonBonded(_optEngine.getSharedIntraNonBonded());
-    evaluator->setVirial(_optEngine.getSharedVirial());
+    evaluator->setPotential(_optEngine.getPotential());
+    evaluator->setForceField(_optEngine.getForceField());
+    evaluator->setConstraints(_optEngine.getConstraints());
+    evaluator->setIntraNonBonded(_optEngine.getIntraNonBonded());
     evaluator->setSimulationBox(_optEngine.getSharedSimulationBox());
     evaluator->setPhysicalData(_optEngine.getSharedPhysicalData());
     evaluator->setPhysicalDataOld(_optEngine.getSharedPhysicalDataOld());

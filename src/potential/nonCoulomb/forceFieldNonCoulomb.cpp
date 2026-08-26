@@ -33,7 +33,6 @@
 #include "lennardJonesPair.hpp"   // IWYU pragma: keep -- for template instantiation
 #include "matrix.hpp"
 #include "nonCoulombPair.hpp"   // for NonCoulombPair
-#include "typeAliases.hpp"
 
 using namespace potential;
 using namespace customException;
@@ -47,15 +46,16 @@ using std::ranges::find_if;
  *
  **/
 ForceFieldNonCoulomb::ForceFieldNonCoulomb()
-    : _nonCoulPairsVec(pq::SharedNonCoulPairVec()),
+    : _nonCoulPairsVec(std::vector<std::shared_ptr<NonCoulombPair>>()),
       _nonCoulPairsMatPtr(std::make_unique<matrix>())
 {
 }
 
-ForceFieldNonCoulomb::~ForceFieldNonCoulomb()                       = default;
-ForceFieldNonCoulomb::ForceFieldNonCoulomb(ForceFieldNonCoulomb &&) = default;
+ForceFieldNonCoulomb::~ForceFieldNonCoulomb() = default;
+ForceFieldNonCoulomb::ForceFieldNonCoulomb(ForceFieldNonCoulomb &&) noexcept =
+    default;
 ForceFieldNonCoulomb &ForceFieldNonCoulomb::operator=(ForceFieldNonCoulomb &&
-)                                                                   = default;
+) noexcept = default;
 
 /**
  * @brief copy constructor
@@ -152,11 +152,10 @@ void ForceFieldNonCoulomb::sortNonCoulombicsPairs(
         if (pair1IntType1 < pair2IntType1)
             return true;
 
-        else if (pair1IntType1 == pair2IntType1)
+        if (pair1IntType1 == pair2IntType1)
             return pair1IntType2 < pair2IntType2;
 
-        else
-            return false;
+        return false;
     };
 
     std::ranges::sort(nonCoulPairsVec, isLess);
@@ -167,6 +166,7 @@ void ForceFieldNonCoulomb::sortNonCoulombicsPairs(
     const auto iter = adjacent_find(nonCoulPairsVec, compareSharedPtrs);
 
     if (iter != nonCoulPairsVec.end())
+    {
         throw ParameterFileException(
             std::format(
                 "Non-coulombic pairs with global van der Waals types {} and {} "
@@ -176,6 +176,7 @@ void ForceFieldNonCoulomb::sortNonCoulombicsPairs(
                 (*iter)->getVanDerWaalsType2()
             )
         );
+    }
 }
 
 /**
@@ -305,7 +306,7 @@ std::vector<std::shared_ptr<NonCoulombPair>> ForceFieldNonCoulomb::
 
     auto view = _nonCoulPairsVec | std::views::filter(isSelfInteractionElement);
 
-    return std::vector(view.begin(), view.end());
+    return {view.begin(), view.end()};
 }
 
 /**
@@ -365,8 +366,8 @@ std::optional<std::shared_ptr<NonCoulombPair>> ForceFieldNonCoulomb::
 
         return *firstNonCoulPair;
     }
-    else
-        return std::nullopt;
+
+    return std::nullopt;
 }
 
 /**
@@ -416,7 +417,7 @@ size_t ForceFieldNonCoulomb::getGlobalVdwType1(
     const std::vector<size_t> &indices
 ) const
 {
-    return indices[4];
+    return indices[_globalVdwType1Index];
 }
 
 /**
@@ -429,7 +430,7 @@ size_t ForceFieldNonCoulomb::getGlobalVdwType2(
     const std::vector<size_t> &indices
 ) const
 {
-    return indices[5];
+    return indices[_globalVdwType2Index];
 }
 
 /**

@@ -192,12 +192,14 @@ TEST(QMSettingsTest, ResolvesBundledSlakos)
 
         EXPECT_TRUE(std::filesystem::is_directory(path));
         if (expectedRoot)
+        {
             EXPECT_EQ(
                 path,
                 std::filesystem::weakly_canonical(
                     std::filesystem::path(expectedRoot) / slakos / "skfiles"
                 )
             );
+        }
     }
 }
 #endif

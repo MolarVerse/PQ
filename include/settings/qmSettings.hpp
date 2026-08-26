@@ -137,11 +137,11 @@ namespace settings
         static inline SlakosType    _slakosType    = SlakosType::NONE;
         static inline XtbMethod     _xtbMethod     = XtbMethod::GFN2;
 
-        static inline std::string _qmScript         = "";
-        static inline std::string _qmScriptFullPath = "";
-        static inline std::string _maceModelPath    = "";
-        static inline std::string _slakosPath       = "";
-        static inline std::string _fennolModelPath  = "";
+        static inline std::string _qmScript;
+        static inline std::string _qmScriptFullPath;
+        static inline std::string _maceModelPath;
+        static inline std::string _slakosPath;
+        static inline std::string _fennolModelPath;
 
         static inline bool _useDispersionCorrection = false;
         static inline bool _removeNetForce          = false;
@@ -180,8 +180,9 @@ namespace settings
         static void setSlakosType(const std::string_view &slakos);
         static void setSlakosType(
             const SlakosType slakos,
-            bool             resolveBuiltInPath = true
+            bool             resolveBuiltInPath
         );
+        static void setSlakosType(const SlakosType slakos);
         static void setSlakosPath(const std::string_view &path);
 
         static void setUseDispersionCorrection(const bool use);

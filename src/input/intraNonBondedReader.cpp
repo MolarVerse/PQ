@@ -33,7 +33,6 @@
 #include "engine.hpp"                    // for Engine
 #include "exceptions.hpp"                // for IntraNonBondedException
 #include "fileSettings.hpp"              // for FileSettings
-#include "intraNonBonded.hpp"            // for IntraNonBonded
 #include "intraNonBondedContainer.hpp"   // for IntraNonBondedContainer
 #include "mathUtilities.hpp"             // for sign, utilities
 #include "simulationBox.hpp"             // for SimulationBox
@@ -92,7 +91,9 @@ IntraNonBondedReader::IntraNonBondedReader(
     const std::string &fileName,
     Engine            &engine
 )
-    : _fileName(fileName), _fp(fileName), _engine(engine){};
+    : _fileName(fileName), _fp(fileName), _engine(engine)
+{
+}
 
 /**
  * @brief reads the intra non bonded interactions from the intraNonBonded file
@@ -153,40 +154,38 @@ size_t IntraNonBondedReader::findMoleculeType(const std::string &id) const
     auto &simBox            = _engine.getSimulationBox();
     auto  molTypeFromString = simBox.findMoleculeTypeByString(id);
 
-    if (molTypeFromString == std::nullopt)
-    {
-        auto molTypeFromSizeT = size_t{};
-
-        try
-        {
-            molTypeFromSizeT = stoul(id);
-        }
-        catch (...)
-        {
-            throw IntraNonBondedException(format(
-                "ERROR: could not find molecule type '{}' in line {} in file "
-                "'{}'",
-                id,
-                _lineNumber,
-                _fileName
-            ));
-        }
-
-        const bool molTypeExists = simBox.moleculeTypeExists(molTypeFromSizeT);
-
-        if (molTypeExists)
-            return molTypeFromSizeT;
-        else
-            throw IntraNonBondedException(format(
-                "ERROR: could not find molecule type '{}' in line {} in file "
-                "'{}'",
-                id,
-                _lineNumber,
-                _fileName
-            ));
-    }
-    else
+    if (molTypeFromString.has_value())
         return molTypeFromString.value();
+
+    auto molTypeFromSizeT = size_t{};
+
+    try
+    {
+        molTypeFromSizeT = stoul(id);
+    }
+    catch (...)
+    {
+        throw IntraNonBondedException(format(
+            "ERROR: could not find molecule type '{}' in line {} in file "
+            "'{}'",
+            id,
+            _lineNumber,
+            _fileName
+        ));
+    }
+
+    const bool molTypeExists = simBox.moleculeTypeExists(molTypeFromSizeT);
+
+    if (molTypeExists)
+        return molTypeFromSizeT;
+
+    throw IntraNonBondedException(format(
+        "ERROR: could not find molecule type '{}' in line {} in file "
+        "'{}'",
+        id,
+        _lineNumber,
+        _fileName
+    ));
 }
 
 /**
@@ -242,9 +241,10 @@ void IntraNonBondedReader::processMolecule(const size_t moleculeType)
             break;
         }
 
-        const auto refAtomIdx = size_t(stoi(lineElements[0]) - 1);
+        const auto refAtomIdx = static_cast<size_t>(stoi(lineElements[0]) - 1);
 
         if (refAtomIdx >= nAtoms)
+        {
             throw IntraNonBondedException(format(
                 "ERROR: reference atom index '{}' in line {} in file '{}' is "
                 "out of range",
@@ -252,6 +252,7 @@ void IntraNonBondedReader::processMolecule(const size_t moleculeType)
                 _lineNumber,
                 _fileName
             ));
+        }
 
         auto addAtomIdxToRefAtom =
             [&atomIndices, refAtomIdx, nAtoms, this](const auto &lineElement)
@@ -259,7 +260,8 @@ void IntraNonBondedReader::processMolecule(const size_t moleculeType)
             auto atomIndex  = ::abs(stoi(lineElement)) - 1;
             atomIndex      *= sign(stoi(lineElement));
 
-            if (::abs(atomIndex) >= int(nAtoms))
+            if (::abs(atomIndex) >= static_cast<int>(nAtoms))
+            {
                 throw IntraNonBondedException(format(
                     "ERROR: atom index '{}' in line {} in file '{}' is out of "
                     "range",
@@ -267,6 +269,7 @@ void IntraNonBondedReader::processMolecule(const size_t moleculeType)
                     _lineNumber,
                     _fileName
                 ));
+            }
 
             atomIndices[refAtomIdx].push_back(atomIndex);
         };
@@ -277,15 +280,17 @@ void IntraNonBondedReader::processMolecule(const size_t moleculeType)
     }
 
     if (!endedNormal)
+    {
         throw IntraNonBondedException(format(
             "ERROR: could not find 'END' for moltype '{}' in file '{}'",
             moleculeType,
             _fileName
         ));
+    }
 
     const auto container = IntraNonBondedContainer(moleculeType, atomIndices);
 
-    _engine.getIntraNonBonded().addIntraNonBondedContainer(container);
+    _engine.getIntraNonBonded()->addIntraNonBondedContainer(container);
 }
 
 /**
@@ -297,8 +302,8 @@ void IntraNonBondedReader::processMolecule(const size_t moleculeType)
  */
 void IntraNonBondedReader::checkDuplicates() const
 {
-    auto      &intraNonBonded = _engine.getIntraNonBonded();
-    const auto nonBondedCont  = intraNonBonded.getIntraNonBondedContainers();
+    const auto &intraNonBonded = _engine.getIntraNonBonded();
+    const auto  nonBondedCont  = intraNonBonded->getIntraNonBondedContainers();
 
     auto transform = [](const auto &container)
     { return container.getMolType(); };
@@ -313,11 +318,13 @@ void IntraNonBondedReader::checkDuplicates() const
     const auto it = std::ranges::adjacent_find(moleculeTypes);
 
     if (it != moleculeTypes.end())
+    {
         throw IntraNonBondedException(format(
             "ERROR: moltype '{}' is defined multiple times in file '{}'",
             *it,
             _fileName
         ));
+    }
 }
 
 /**

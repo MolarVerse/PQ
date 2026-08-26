@@ -47,9 +47,9 @@ TEST_F(TestParameterFileSection, jCouplingSectionProcessSevenElements)
         {"7", "1.0", "2.0", "3.0", "4.0", "5.0", "30.0"};
     section.processSection(lineElements, *_engine);
 
-    const auto &types = _engine->getForceField().getJCouplTypes();
-    ASSERT_EQ(types.size(), 1u);
-    EXPECT_EQ(types[0].getId(), 7u);
+    const auto &types = _engine->getForceField()->getJCouplTypes();
+    ASSERT_EQ(types.size(), 1U);
+    EXPECT_EQ(types[0].getId(), 7U);
     EXPECT_DOUBLE_EQ(types[0].getJ0(), 1.0);
     EXPECT_DOUBLE_EQ(types[0].getForceConstant(), 2.0);
     EXPECT_DOUBLE_EQ(types[0].getA(), 3.0);
@@ -63,7 +63,7 @@ TEST_F(TestParameterFileSection, jCouplingSectionAcceptsZeroSymmetry)
     std::vector<std::string> lineElements =
         {"1", "0.0", "0.0", "0.0", "0.0", "0.0", "0.0", "0"};
     EXPECT_NO_THROW(section.processSection(lineElements, *_engine));
-    EXPECT_EQ(_engine->getForceField().getJCouplTypes().size(), 1u);
+    EXPECT_EQ(_engine->getForceField()->getJCouplTypes().size(), 1U);
 }
 
 TEST_F(TestParameterFileSection, jCouplingSectionAcceptsPlusSymmetry)

@@ -73,7 +73,10 @@ namespace linearAlgebra
         Vector3D() = default;
         Vector3D(const T x, const T y, const T z) : _x(x), _y(y), _z(z) {}
         Vector3D(const Vector3D<T> &xyz) : _xyz(xyz._xyz) {}
+        Vector3D(Vector3D<T> &&xyz) noexcept : _xyz(std::move(xyz._xyz)) {}
+        // NOLINTBEGIN(google-explicit-constructor, hicpp-explicit-conversions)
         Vector3D(const T xyz) : _x(xyz), _y(xyz), _z(xyz) {}
+        // NOLINTEND(google-explicit-constructor, hicpp-explicit-conversions)
 
         using value_type = T;
 
@@ -82,35 +85,35 @@ namespace linearAlgebra
          ********************/
 
         // = operators
-        Vector3D &operator=(Vector3D<T> &);
-        Vector3D &operator=(const Vector3D<T> &);
+        Vector3D &operator=(Vector3D<T> &&vec) noexcept;
+        Vector3D &operator=(const Vector3D<T> &vec);
 
         // += operators
-        void operator+=(const Vector3D<T> &)
+        void operator+=(const Vector3D<T> &vec)
         requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>;
 
-        Vector3D &operator+=(const T)
+        Vector3D &operator+=(const T t)
         requires pq::Arithmetic<T>;
 
         // -= operators
-        Vector3D &operator-=(const Vector3D<T> &)
+        Vector3D &operator-=(const Vector3D<T> &vec)
         requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>;
 
-        Vector3D &operator-=(const T)
+        Vector3D &operator-=(const T t)
         requires pq::Arithmetic<T>;
 
         // *= operators
-        Vector3D &operator*=(const Vector3D<T> &)
+        Vector3D &operator*=(const Vector3D<T> &vec)
         requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>;
 
-        Vector3D &operator*=(const T)
+        Vector3D &operator*=(const T t)
         requires pq::Arithmetic<T>;
 
         // /= operators
-        Vector3D &operator/=(const Vector3D<T> &)
+        Vector3D &operator/=(const Vector3D<T> &vec)
         requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>;
 
-        Vector3D &operator/=(const T)
+        Vector3D &operator/=(const T t)
         requires pq::Arithmetic<T>;
 
         /**********************

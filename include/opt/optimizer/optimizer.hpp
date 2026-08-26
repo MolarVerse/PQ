@@ -48,7 +48,7 @@ namespace opt
 
         opt::Convergence _convergence;
 
-        std::shared_ptr<simulationBox::SimulationBox>
+        std::shared_ptr<molsys::SimulationBox>
             _simulationBox;   // TODO(97gamjak): remove this via pimpl
         std::shared_ptr<physicalData::PhysicalData>
             _physicalData;   // TODO(97gamjak): remove this via pimpl
@@ -82,9 +82,7 @@ namespace opt
 
         void setConvergence(const opt::Convergence);
 
-        void setSimulationBox(
-            const std::shared_ptr<simulationBox::SimulationBox>
-        );
+        void setSimulationBox(const std::shared_ptr<molsys::SimulationBox>);
 
         void setPhysicalData(const std::shared_ptr<physicalData::PhysicalData>);
 

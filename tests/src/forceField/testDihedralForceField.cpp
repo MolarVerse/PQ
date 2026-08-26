@@ -39,11 +39,12 @@
 #include "physicalData.hpp"              // for PhysicalData
 #include "potentialSettings.hpp"         // for PotentialSettings
 #include "simulationBox.hpp"             // for SimulationBox
+#include "strongTypes.hpp"
 
 namespace potential
 {
     class NonCoulombPair;   // forward declaration
-}
+}   // namespace potential
 
 class TestDihedralForceField : public TestNonCoulombPotentialFF
 {
@@ -51,28 +52,33 @@ class TestDihedralForceField : public TestNonCoulombPotentialFF
 
 TEST_F(TestDihedralForceField, calculateEnergyAndForces)
 {
-    auto box = simulationBox::SimulationBox();
+    auto box = molsys::SimulationBox();
     box.setBoxDimensions({10.0, 10.0, 10.0});
 
     auto physicalData     = physicalData::PhysicalData();
     auto coulombPotential = potential::CoulombShiftedPotential(20.0);
 
-    auto nonCoulombPair =
-        potential::LennardJonesPair(size_t(0), size_t(1), 15.0, 2.0, 4.0);
+    auto nonCoulombPair = potential::LennardJonesPair(
+        static_cast<size_t>(0),
+        static_cast<size_t>(1),
+        15.0,
+        2.0,
+        4.0
+    );
     setNonCoulombPairsMatrix(
         linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(2, 2)
     );
     setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
 
-    auto molecule = simulationBox::Molecule();
+    auto molecule = molsys::Molecule();
 
     molecule.setMoltype(0);
     molecule.setNumberOfAtoms(4);
 
-    auto atom1 = std::make_shared<simulationBox::Atom>();
-    auto atom2 = std::make_shared<simulationBox::Atom>();
-    auto atom3 = std::make_shared<simulationBox::Atom>();
-    auto atom4 = std::make_shared<simulationBox::Atom>();
+    auto atom1 = std::make_shared<molsys::Atom>();
+    auto atom2 = std::make_shared<molsys::Atom>();
+    auto atom3 = std::make_shared<molsys::Atom>();
+    auto atom4 = std::make_shared<molsys::Atom>();
 
     atom1->setPosition({0.0, 0.0, 0.0});
     atom2->setPosition({1.0, 1.0, 1.0});
@@ -107,7 +113,7 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
     auto bondForceField = forceField::DihedralForceField(
         {&molecule, &molecule, &molecule, &molecule},
         {0, 1, 2, 3},
-        0
+        DihedralId{0}
     );
     bondForceField.setPhaseShift(180.0 * M_PI / 180.0);
     bondForceField.setPeriodicity(3);

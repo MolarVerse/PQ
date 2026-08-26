@@ -59,19 +59,25 @@ void ImproperDihedralSection::processSection(
     Engine                   &engine
 )
 {
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
     if (lineElements.size() != 5)
-        throw TopologyException(std::format(
-            "Wrong number of arguments in topology file improper dihedral "
-            "section at "
-            "line {} - number of elements has to be 5!",
-            _lineNumber
-        ));
+    {
+        throw TopologyException(
+            std::format(
+                "Wrong number of arguments in topology file improper dihedral "
+                "section at "
+                "line {} - number of elements has to be 5!",
+                _lineNumber
+            )
+        );
+    }
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
     auto atom1                = stoul(lineElements[0]);
     auto atom2                = stoul(lineElements[1]);
     auto atom3                = stoul(lineElements[2]);
     auto atom4                = stoul(lineElements[3]);
-    auto improperDihedralType = stoul(lineElements[4]);
+    auto improperDihedralType = DihedralId{stoul(lineElements[4])};
 
     auto atoms = std::vector{atom1, atom2, atom3, atom4};
     std::ranges::sort(atoms);
@@ -79,11 +85,16 @@ void ImproperDihedralSection::processSection(
     atoms.erase(it, end);
 
     if (4 != atoms.size())
-        throw TopologyException(std::format(
-            "Topology file improper dihedral section at line {} - atoms cannot "
-            "be the same!",
-            _lineNumber
-        ));
+    {
+        throw TopologyException(
+            std::format(
+                "Topology file improper dihedral section at line {} - atoms "
+                "cannot "
+                "be the same!",
+                _lineNumber
+            )
+        );
+    }
 
     auto &simBox = engine.getSimulationBox();
 
@@ -97,7 +108,7 @@ void ImproperDihedralSection::processSection(
 
     auto improperFF = DihedralForceField(mols, atomIdxs, improperDihedralType);
 
-    engine.getForceField().addImproperDihedral(improperFF);
+    engine.getForceField()->addImproperDihedral(improperFF);
 }
 
 /**
@@ -117,9 +128,14 @@ std::string ImproperDihedralSection::keyword() { return "impropers"; }
 void ImproperDihedralSection::endedNormally(const bool endedNormal) const
 {
     if (!endedNormal)
-        throw TopologyException(std::format(
-            "Topology file improper dihedral section at line {} - no end of "
-            "section found!",
-            _lineNumber
-        ));
+    {
+        throw TopologyException(
+            std::format(
+                "Topology file improper dihedral section at line {} - no end "
+                "of "
+                "section found!",
+                _lineNumber
+            )
+        );
+    }
 }

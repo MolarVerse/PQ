@@ -73,7 +73,7 @@ TEST_F(TestMShakeReader, testProcessCommentLine)
         "Molecule type 1 not found"
     );
 
-    auto molType = simulationBox::MoleculeType(1);
+    auto molType = molsys::MoleculeType(1);
     _engine->getSimulationBox().addMoleculeType(molType);
 
     reader.processCommentLine(commentLine, mShakeReference);
@@ -82,11 +82,11 @@ TEST_F(TestMShakeReader, testProcessCommentLine)
 
 TEST_F(TestMShakeReader, testProcessAtomLines)
 {
-    auto reader          = input::mShake::MShakeReader(*_engine);
-    auto mShakeReference = constraints::MShakeReference();
-    auto atomLine1       = "H 0.0 0.0 0.0";
-    auto atomLine2       = "O 1.0 1.0 1.0  #asdfasdf";
-    auto atomLine3       = "C 2.0 2.0 2.0 0.0";
+    auto        reader          = input::mShake::MShakeReader(*_engine);
+    auto        mShakeReference = constraints::MShakeReference();
+    const auto *atomLine1       = "H 0.0 0.0 0.0";
+    const auto *atomLine2       = "O 1.0 1.0 1.0  #asdfasdf";
+    const auto *atomLine3       = "C 2.0 2.0 2.0 0.0";
 
     auto atomLines = std::vector<std::string>{atomLine1, atomLine2, atomLine3};
 
@@ -103,7 +103,7 @@ TEST_F(TestMShakeReader, testProcessAtomLines)
         error_message
     );
 
-    auto molType = simulationBox::MoleculeType(1);
+    auto molType = molsys::MoleculeType(1);
     mShakeReference.setMoleculeType(molType);
 
     atomLines = std::vector<std::string>{atomLine1};
@@ -159,20 +159,20 @@ TEST_F(TestMShakeReader, testReadMemberFunction)
 {
     settings::FileSettings::setMShakeFileName("data/mshakeReader/mshake.dat");
 
-    auto molType = simulationBox::MoleculeType(1);
+    auto molType = molsys::MoleculeType(1);
     molType.addAtomName("H");
     molType.addAtomName("O");
     molType.addAtomName("C");
     _engine->getSimulationBox().addMoleculeType(molType);
 
-    auto molType2 = simulationBox::MoleculeType(2);
+    auto molType2 = molsys::MoleculeType(2);
     molType2.addAtomName("H");
     molType2.addAtomName("O");
     _engine->getSimulationBox().addMoleculeType(molType2);
 
     input::mShake::readMShake(*_engine);
 
-    auto mShakeReferences = _engine->getConstraints().getMShakeReferences();
+    auto mShakeReferences = _engine->getConstraints()->getMShakeReferences();
 
     EXPECT_EQ(mShakeReferences.size(), 2);
     EXPECT_EQ(mShakeReferences[0].getMoleculeType().getMoltype(), 1);
@@ -206,20 +206,20 @@ TEST_F(TestMShakeReader, testRead)
     settings::FileSettings::setMShakeFileName("data/mshakeReader/mshake.dat");
     auto reader = input::mShake::MShakeReader(*_engine);
 
-    auto molType = simulationBox::MoleculeType(1);
+    auto molType = molsys::MoleculeType(1);
     molType.addAtomName("H");
     molType.addAtomName("O");
     molType.addAtomName("C");
     _engine->getSimulationBox().addMoleculeType(molType);
 
-    auto molType2 = simulationBox::MoleculeType(2);
+    auto molType2 = molsys::MoleculeType(2);
     molType2.addAtomName("H");
     molType2.addAtomName("O");
     _engine->getSimulationBox().addMoleculeType(molType2);
 
     reader.read();
 
-    auto mShakeReferences = _engine->getConstraints().getMShakeReferences();
+    auto mShakeReferences = _engine->getConstraints()->getMShakeReferences();
 
     EXPECT_EQ(mShakeReferences.size(), 2);
     EXPECT_EQ(mShakeReferences[0].getMoleculeType().getMoltype(), 1);

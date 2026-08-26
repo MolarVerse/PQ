@@ -27,6 +27,7 @@
 
 #include "constants/conversionFactors.hpp"   // for _FS_TO_S_, _KG_TO_GRAM_
 #include "constants/natureConstants.hpp"     // for _UNIVERSAL_GAS_CONSTANT_
+#include "globalTimer.hpp"                   // for GlobalTimer
 #include "physicalData.hpp"                  // for PhysicalData
 #include "simulationBox.hpp"                 // for SimulationBox
 #include "thermostatSettings.hpp"            // for ThermostatType
@@ -35,7 +36,7 @@
 using thermostat::LangevinThermostat;
 using namespace constants;
 using namespace physicalData;
-using namespace simulationBox;
+using namespace molsys;
 using namespace settings;
 using namespace linearAlgebra;
 
@@ -64,6 +65,25 @@ LangevinThermostat::LangevinThermostat(
 LangevinThermostat::LangevinThermostat(const LangevinThermostat &other)
     : Thermostat(other), _friction(other._friction), _sigma(other._sigma)
 {
+}
+
+/**
+ * @brief Copy assignment operator for Langevin Thermostat
+ *
+ * @param other
+ * @return LangevinThermostat&
+ */
+LangevinThermostat &LangevinThermostat::operator=(
+    const LangevinThermostat &other
+)
+{
+    if (this != &other)
+    {
+        Thermostat::operator=(other);
+        _friction = other._friction;
+        _sigma    = other._sigma;
+    }
+    return *this;
 }
 
 /**
@@ -131,12 +151,10 @@ void LangevinThermostat::applyThermostat(
     PhysicalData  &data
 )
 {
-    startTimingsSection("LangevinThermostat - Full Step");
+    auto _ = scopedTimer(TimerId::Thermostat, "LangevinThermostat - Full Step");
 
     applyLangevin(simBox);
     data.calculateTemperature(simBox);
-
-    stopTimingsSection("LangevinThermostat - Full Step");
 }
 
 /**
@@ -147,16 +165,12 @@ void LangevinThermostat::applyThermostat(
  * @param simBox
  * @param data
  */
-void LangevinThermostat::applyThermostatHalfStep(
-    SimulationBox &simBox,
-    PhysicalData &
-)
+void LangevinThermostat::
+    applyThermostatHalfStep(SimulationBox &simBox, PhysicalData & /*data*/)
 {
-    startTimingsSection("LangevinThermostat - Half Step");
+    auto _ = scopedTimer(TimerId::Thermostat, "LangevinThermostat - Half Step");
 
     applyLangevin(simBox);
-
-    stopTimingsSection("LangevinThermostat - Half Step");
 }
 
 /***************************

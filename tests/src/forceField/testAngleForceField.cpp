@@ -38,11 +38,12 @@
 #include "molecule.hpp"                  // for Molecule
 #include "physicalData.hpp"              // for PhysicalData
 #include "simulationBox.hpp"             // for SimulationBox
+#include "strongTypes.hpp"
 
 namespace potential
 {
     class NonCoulombPair;   // forward declaration
-}
+}   // namespace potential
 
 class TestAngleForceField : public TestNonCoulombPotentialFF
 {
@@ -50,27 +51,32 @@ class TestAngleForceField : public TestNonCoulombPotentialFF
 
 TEST_F(TestAngleForceField, calculateEnergyAndForces)
 {
-    auto box = simulationBox::SimulationBox();
+    auto box = molsys::SimulationBox();
     box.setBoxDimensions({10.0, 10.0, 10.0});
 
     auto physicalData     = physicalData::PhysicalData();
     auto coulombPotential = potential::CoulombShiftedPotential(10.0);
 
-    auto nonCoulombPair =
-        potential::LennardJonesPair(size_t(1), size_t(1), 5.0, 2.0, 4.0);
+    auto nonCoulombPair = potential::LennardJonesPair(
+        static_cast<size_t>(1),
+        static_cast<size_t>(1),
+        5.0,
+        2.0,
+        4.0
+    );
     setNonCoulombPairsMatrix(
         linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(2, 2)
     );
     setNonCoulombPairsMatrix(1, 1, nonCoulombPair);
 
-    auto molecule = simulationBox::Molecule();
+    auto molecule = molsys::Molecule();
 
     molecule.setMoltype(0);
     molecule.setNumberOfAtoms(3);
 
-    auto atom1 = std::make_shared<simulationBox::Atom>();
-    auto atom2 = std::make_shared<simulationBox::Atom>();
-    auto atom3 = std::make_shared<simulationBox::Atom>();
+    auto atom1 = std::make_shared<molsys::Atom>();
+    auto atom2 = std::make_shared<molsys::Atom>();
+    auto atom3 = std::make_shared<molsys::Atom>();
 
     atom1->setPosition({0.0, 0.0, 0.0});
     atom2->setPosition({1.0, 1.0, 1.0});
@@ -99,7 +105,7 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
     auto bondForceField = forceField::AngleForceField(
         {&molecule, &molecule, &molecule},
         {0, 1, 2},
-        0
+        AngleId{0}
     );
     bondForceField.setEquilibriumAngle(90 * M_PI / 180.0);
     bondForceField.setForceConstant(3.0);
@@ -177,19 +183,19 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
  */
 TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
 {
-    auto box = simulationBox::SimulationBox();
+    auto box = molsys::SimulationBox();
     box.setBoxDimensions({100.0, 100.0, 100.0});
 
     auto physicalData     = physicalData::PhysicalData();
     auto coulombPotential = potential::CoulombShiftedPotential(10.0);
 
-    auto molecule = simulationBox::Molecule();
+    auto molecule = molsys::Molecule();
     molecule.setMoltype(0);
     molecule.setNumberOfAtoms(3);
 
-    auto atom1 = std::make_shared<simulationBox::Atom>();
-    auto atom2 = std::make_shared<simulationBox::Atom>();
-    auto atom3 = std::make_shared<simulationBox::Atom>();
+    auto atom1 = std::make_shared<molsys::Atom>();
+    auto atom2 = std::make_shared<molsys::Atom>();
+    auto atom3 = std::make_shared<molsys::Atom>();
 
     // Strictly collinear: atom2 is the central atom, atom1 and atom3 are
     // 180 degrees apart along the x axis. alpha = pi -> sin(alpha) = 0.
@@ -208,7 +214,7 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
     auto angleForceField = forceField::AngleForceField(
         {&molecule, &molecule, &molecule},
         {0, 1, 2},
-        0
+        AngleId{0}
     );
     angleForceField.setEquilibriumAngle(M_PI);   // linear equilibrium
     angleForceField.setForceConstant(3.0);
@@ -228,9 +234,11 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
     // All per-atom forces must be finite. Without the guard these would
     // be NaN from dividing by sin(pi) == 0 in the cross-product block.
     for (size_t a = 0; a < 3; ++a)
+    {
         for (size_t i = 0; i < 3; ++i)
         {
             EXPECT_FALSE(std::isnan(molecule.getAtomForce(a)[i]));
             EXPECT_FALSE(std::isinf(molecule.getAtomForce(a)[i]));
         }
+    }
 }

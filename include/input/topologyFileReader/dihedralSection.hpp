@@ -25,7 +25,11 @@
 #define _DIHEDRAL_SECTION_HPP_
 
 #include "topologySection.hpp"
-#include "typeAliases.hpp"
+
+namespace engine
+{
+    class Engine;   // forward declaration
+}   // namespace engine
 
 namespace input::topology
 {
@@ -38,10 +42,13 @@ namespace input::topology
     class DihedralSection : public TopologySection
     {
        public:
-        void processSection(std::vector<std::string> &, pq::Engine &) override;
+        void processSection(
+            std::vector<std::string> &lineElements,
+            engine::Engine           &engine
+        ) override;
 
         [[nodiscard]] std::string keyword() override;
-        void                      endedNormally(const bool) const override;
+        void endedNormally(const bool endedNormal) const override;
     };
 }   // namespace input::topology
 

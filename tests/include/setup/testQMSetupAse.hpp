@@ -25,14 +25,10 @@
 #define _TEST_QMSETUP_ASE_HPP_
 
 #include <gtest/gtest.h>   // for Test
-#include <stdio.h>         // for remove
 
 #include "qmSettings.hpp"   // for QMMethod, QMSettings
 #include "qmSetup.hpp"      // for QMSetup, setupQM
 #include "qmmdEngine.hpp"   // for QMMDEngine
-
-using setup::QMSetup;
-using namespace settings;
 
 /**
  * @class TestQMSetupAse
@@ -46,27 +42,28 @@ class TestQMSetupAse : public ::testing::Test
     void SetUp() override
     {
         _engine  = new engine::QMMDEngine();
-        _qmSetup = new QMSetup(*_engine);
+        _qmSetup = new setup::QMSetup(*_engine);
         _engine->getEngineOutput().getLogOutput().setFilename("default.log");
-        QMSettings::setQMMethod(QMMethod::ASEDFTBPLUS);
+        settings::QMSettings::setQMMethod(settings::QMMethod::ASEDFTBPLUS);
     }
 
     void TearDown() override
     {
         delete _engine;
         delete _qmSetup;
-        ::remove("default.log");
-        QMSettings::setQMMethod(QMMethod::NONE);
-        QMSettings::setSlakosType("none");
-        QMSettings::setUseDispersionCorrection(false);
-        QMSettings::setUseThirdOrderDftb(false);
-        QMSettings::setIsThirdOrderDftbSet(false);
-        QMSettings::setHubbardDerivs({});
-        QMSettings::setIsHubbardDerivsSet(false);
+        const auto errorCode = std::remove("default.log");
+        EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
+        settings::QMSettings::setQMMethod(settings::QMMethod::NONE);
+        settings::QMSettings::setSlakosType("none");
+        settings::QMSettings::setUseDispersionCorrection(false);
+        settings::QMSettings::setUseThirdOrderDftb(false);
+        settings::QMSettings::setIsThirdOrderDftbSet(false);
+        settings::QMSettings::setHubbardDerivs({});
+        settings::QMSettings::setIsHubbardDerivsSet(false);
     }
 
     engine::QMMDEngine *_engine;
-    QMSetup            *_qmSetup;
+    setup::QMSetup     *_qmSetup;
 };
 
 #endif   // _TEST_QMSETUP_ASE_HPP_

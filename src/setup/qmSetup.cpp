@@ -25,11 +25,12 @@
 #include <format>        // for format
 #include <string_view>   // for string_view
 
+#include "engine.hpp"              // for Engine
 #include "exceptions.hpp"          // for InputFileException
 #include "externalQMRunner.hpp"    // for ExternalQMRunner
 #include "potentialSettings.hpp"   // for PotentialSettings
+#include "qmCapableEngine.hpp"     // for QMCapableEngine
 #include "qmSettings.hpp"          // for QMMethod, QMSettings
-#include "qmmdEngine.hpp"          // for QMMDEngine
 #include "references.hpp"          // for ReferencesOutput
 #include "referencesOutput.hpp"    // for ReferencesOutput
 #include "settings.hpp"            // for Settings
@@ -45,6 +46,16 @@ using namespace customException;
 using namespace references;
 
 /**
+ * @brief constructor
+ *
+ * @param qmCapableEngine
+ */
+QMSetup::QMSetup(engine::QMCapableEngine &qmCapableEngine)
+    : _qmCapableEngine(qmCapableEngine)
+{
+}
+
+/**
  * @brief wrapper to build QMSetup object and call setup
  *
  * @param engine
@@ -57,16 +68,21 @@ void setup::setupQM(Engine &engine)
     engine.getStdoutOutput().writeSetup("QM runner");
     engine.getLogOutput().writeSetup("QM runner");
 
-    QMSetup qmSetup(dynamic_cast<QMMDEngine &>(engine));
-    qmSetup.setup();
+    // Try to cast to QMCapableEngine first (covers both QMMDEngine and
+    // QMMMMDEngine)
+    if (auto *qmCapableEngine =
+            dynamic_cast<engine::QMCapableEngine *>(&engine))
+    {
+        QMSetup qmSetup(*qmCapableEngine);
+        qmSetup.setup();
+    }
+    else
+    {
+        throw InputFileException(
+            "QM setup requested but engine does not support QM capabilities"
+        );
+    }
 }
-
-/**
- * @brief constructor
- *
- * @param engine
- */
-QMSetup::QMSetup(QMMDEngine &engine) : _engine(engine) {}
 
 /**
  * @brief setup QM-MD for all subtypes
@@ -94,7 +110,7 @@ void QMSetup::setup()
  */
 void QMSetup::setupQMMethod()
 {
-    _engine.setQMRunner(QMSettings::getQMMethod());
+    _qmCapableEngine.setQMRunner(QMSettings::getQMMethod());
 }
 
 /**
@@ -144,7 +160,7 @@ void QMSetup::setupQMMethodAseXtb()
  */
 void QMSetup::setupQMScript() const
 {
-    auto &qmRunner         = *_engine.getQMRunner();
+    auto &qmRunner         = *_qmCapableEngine.getQMRunner();
     auto &externalQMRunner = dynamic_cast<ExternalQMRunner &>(qmRunner);
 
     const auto singularityString = externalQMRunner.getSingularity();
@@ -162,7 +178,7 @@ void QMSetup::setupQMScript() const
     if (singularity || staticBuild)
     {
         if (isQMScriptFullPathEmpty)
-
+        {
             throw QMRunnerException(
                 "You are using at least one of these settings: i) singularity "
                 "build or/and ii) static build of PQ. Therefore the general "
@@ -177,9 +193,10 @@ void QMSetup::setupQMScript() const
                 "else and give the full/relative path to it. For more "
                 "information please refer to the documentation."
             );
+        }
 
-        else if (!isQMScriptEmpty)
-
+        if (!isQMScriptEmpty)
+        {
             throw QMRunnerException(
                 "You have set both 'qm_script' and 'qm_script_full_path' in "
                 "the input file. Please use only one the full path option as "
@@ -187,23 +204,21 @@ void QMSetup::setupQMScript() const
                 "build. For more information please refer to the "
                 "documentation."
             );
-
-        else
-        {
-            // setting script path to empty string to avoid errors
-            externalQMRunner.setScriptPath("");
-
-            // overwriting qm_script with full path
-            QMSettings::setQMScript(QMSettings::getQMScriptFullPath());
         }
+
+        // setting script path to empty string to avoid errors
+        externalQMRunner.setScriptPath("");
+
+        // overwriting qm_script with full path
+        QMSettings::setQMScript(QMSettings::getQMScriptFullPath());
     }
     else if (isQMScriptEmpty && isQMScriptFullPathEmpty)
-
+    {
         throw InputFileException(
             "No qm_script provided. Please provide a qm_script in the input "
             "file."
         );
-
+    }
     else if (!isQMScriptFullPathEmpty && isQMScriptEmpty)
     {
         // setting script path to empty string to avoid errors
@@ -213,12 +228,13 @@ void QMSetup::setupQMScript() const
         QMSettings::setQMScript(QMSettings::getQMScriptFullPath());
     }
     else if (!isQMScriptFullPathEmpty && !isQMScriptEmpty)
-
+    {
         throw InputFileException(
             "You have set both 'qm_script' and 'qm_script_full_path' in the "
             "input file. They are mutually exclusive. Please use only one of "
             "them. For more information please refer to the documentation."
         );
+    }
 }
 
 /**
@@ -243,8 +259,10 @@ void QMSetup::setupWriteInfo() const
 {
     using enum QMMethod;
 
-    auto &logOutput = _engine.getLogOutput();
-    auto &stdOut    = _engine.getStdoutOutput();
+    // Cast QMCapableEngine to Engine to access output methods
+    auto &engine    = dynamic_cast<Engine &>(_qmCapableEngine);
+    auto &logOutput = engine.getLogOutput();
+    auto &stdOut    = engine.getStdoutOutput();
 
     const auto qmMethod        = QMSettings::getQMMethod();
     const auto qmRunnerMessage = std::format("QM runner: {}", string(qmMethod));
@@ -262,12 +280,13 @@ void QMSetup::setupWriteInfo() const
 
     if (qmMethod == MACE)
     {
-        const auto modelType = QMSettings::getMaceModelType();
-        const auto modelSize = QMSettings::getMaceModel();
-        const auto modelPath = QMSettings::getMaceModelPath();
-        const auto fp        = Settings::getFloatingPointPybindString();
-        const auto useDisp   = QMSettings::useDispersionCorr() ? "on" : "off";
-        const auto maceMode  = QMSettings::getMaceMode();
+        const auto        modelType = QMSettings::getMaceModelType();
+        const auto        modelSize = QMSettings::getMaceModel();
+        const auto        modelPath = QMSettings::getMaceModelPath();
+        const auto        fp        = Settings::getFloatingPointPybindString();
+        const auto        maceMode  = QMSettings::getMaceMode();
+        const auto *const useDisp =
+            QMSettings::useDispersionCorr() ? "on" : "off";
 
         // clang-format off
         const auto modelTypeMsg = std::format("Model type:            {}", string(modelType));
@@ -289,6 +308,7 @@ void QMSetup::setupWriteInfo() const
         logOutput.writeSetupInfo(modeMsg);
 
         if (maceMode == MaceMode::FAST)
+        {
             logOutput.writeSetupInfo(
                 std::format(
                     "                       cuequivariance-accelerated "
@@ -297,6 +317,7 @@ void QMSetup::setupWriteInfo() const
                     "(use mace_mode = accurate for the exact reference)"
                 )
             );
+        }
     }
 
     if (qmMethod == FENNOL)

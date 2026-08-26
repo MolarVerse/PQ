@@ -43,18 +43,18 @@ TEST_F(TestSetup, setupCellList)
     cellListSetup.setup();
 
     test::checkType(
-        &_engine->getPotential(),
+        _engine->getPotential(),
         typeid(potential::PotentialBruteForce)
     );
 
     settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
+    settings::Settings::activateCellList();
     _engine->getSimulationBox().setBoxDimensions({15.0, 15.0, 15.0});
-    _engine->getCellList().setNumberOfCells(3);
-    _engine->getCellList().activate();
+    _engine->getCellList()->setNumberOfCells(3);
     cellListSetup.setup();
 
     test::checkType(
-        &_engine->getPotential(),
+        _engine->getPotential(),
         typeid(potential::PotentialCellList)
     );
 

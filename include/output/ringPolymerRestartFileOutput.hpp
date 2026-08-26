@@ -27,7 +27,11 @@
 #include <vector>   // for vector
 
 #include "output.hpp"
-#include "typeAliases.hpp"
+
+namespace molsys
+{
+    class SimulationBox;   // forward declaration
+}   // namespace molsys
 
 namespace output
 {
@@ -42,7 +46,7 @@ namespace output
        public:
         using Output::Output;
 
-        void write(std::vector<pq::SimBox> &);
+        void write(std::vector<molsys::SimulationBox> &);
     };
 
 }   // namespace output

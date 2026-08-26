@@ -25,7 +25,6 @@
 #define _OPT_INPUT_PARSER_HPP_
 
 #include "inputFileParser.hpp"   // for InputFileParser
-#include "typeAliases.hpp"       // for std::vector<std::string>, pq::Engine
 
 namespace input
 {
@@ -38,7 +37,7 @@ namespace input
     class OptInputParser : public InputFileParser
     {
        public:
-        explicit OptInputParser(pq::Engine &);
+        OptInputParser();
 
         void parseOptimizer(const std::vector<std::string> &, const size_t);
 

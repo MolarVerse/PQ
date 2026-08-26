@@ -33,8 +33,8 @@
 #include "simulationBox.hpp"
 
 using namespace opt;
-using simulationBox::Atom;
-using simulationBox::SimulationBox;
+using molsys::Atom;
+using molsys::SimulationBox;
 
 namespace
 {
@@ -47,13 +47,18 @@ namespace
        public:
         explicit HarmonicEvaluator(
             std::vector<double> forceConstants,
-            const bool          analyticSupported = false
+            const bool          analyticSupported
         )
             : _forceConstants(std::move(forceConstants)),
               _analyticSupported(analyticSupported)
         {
         }
+        explicit HarmonicEvaluator(std::vector<double> forceConstants)
+            : HarmonicEvaluator(std::move(forceConstants), false)
+        {
+        }
 
+        [[nodiscard]]
         std::shared_ptr<Evaluator> clone() const override
         {
             return std::make_shared<HarmonicEvaluator>(*this);
@@ -193,8 +198,8 @@ TEST(TestHessianBuilder, analyticBuilderSymmetrizesEvaluatorHessian)
 
     const auto hessian = builder.build(evaluator, *box);
 
-    ASSERT_EQ(hessian.size(), 2u);
-    ASSERT_EQ(hessian[0].size(), 2u);
+    ASSERT_EQ(hessian.size(), 2U);
+    ASSERT_EQ(hessian[0].size(), 2U);
     EXPECT_DOUBLE_EQ(hessian[0][0], 2.0);
     EXPECT_DOUBLE_EQ(hessian[0][1], 5.0);
     EXPECT_DOUBLE_EQ(hessian[1][0], 5.0);

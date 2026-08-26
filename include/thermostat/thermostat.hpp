@@ -26,8 +26,17 @@
 
 #include <cstddef>   // for size_t
 
-#include "timer.hpp"   // for Timer
-#include "typeAliases.hpp"
+#include "thermostatSettings.hpp"
+
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}   // namespace physicalData
+
+namespace molsys
+{
+    class SimulationBox;   // forward declaration
+}   // namespace molsys
 
 namespace thermostat
 {
@@ -40,7 +49,7 @@ namespace thermostat
      * calculate the temperature
      *
      */
-    class Thermostat : public timings::Timer
+    class Thermostat
     {
        protected:
         double _temperature       = 0.0;
@@ -58,10 +67,23 @@ namespace thermostat
 
         void applyTemperatureRamping();
 
-        virtual void applyThermostat(pq::SimBox &, pq::PhysicalData &);
-        virtual void applyThermostatOnForces(pq::SimBox &) {};
-        virtual void applyThermostatHalfStep(pq::SimBox &, pq::PhysicalData &) {
-        };
+        virtual void applyThermostat(
+            molsys::SimulationBox &,
+            physicalData::PhysicalData &
+        );
+
+        virtual void applyThermostatOnForces(
+            molsys::SimulationBox & /*simBox*/
+        )
+        {
+        }
+
+        virtual void applyThermostatHalfStep(
+            molsys::SimulationBox & /*simBox*/,
+            physicalData::PhysicalData & /*physData*/
+        )
+        {
+        }
 
         /***************************
          * standard setter methods *
@@ -83,7 +105,8 @@ namespace thermostat
         [[nodiscard]] size_t getRampingStepsLeft() const;
         [[nodiscard]] size_t getRampingFrequency() const;
 
-        [[nodiscard]] virtual pq::ThermostatType getThermostatType() const;
+        [[nodiscard]]
+        virtual settings::ThermostatType getThermostatType() const;
     };
 
 }   // namespace thermostat

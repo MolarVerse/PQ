@@ -26,16 +26,20 @@
 
 #include "coulombPotential.hpp"   // for CoulombPotential
 #include "forceField.hpp"         // IWYU pragma: keep - for correctLinker
+#include "hybridSettings.hpp"     // for HybridSettings
 #include "molecule.hpp"           // for Molecule
 #include "physicalData.hpp"       // for PhysicalData
 #include "simulationBox.hpp"      // for SimulationBox
 
 using namespace forceField;
-using namespace simulationBox;
+using namespace molsys;
 using namespace connectivity;
 using namespace linearAlgebra;
 using namespace physicalData;
 using namespace potential;
+using namespace settings;
+
+using enum HybridZone;
 
 /**
  * @brief constructor
@@ -51,9 +55,11 @@ BondForceField::BondForceField(
     Molecule    *molecule2,
     const size_t atomIndex1,
     const size_t atomIndex2,
-    const size_t type
+    const BondId type
 )
-    : Bond(molecule1, molecule2, atomIndex1, atomIndex2), _type(type){};
+    : Bond(molecule1, molecule2, atomIndex1, atomIndex2), _type(type)
+{
+}
 
 /**
  * @brief calculate energy and forces for a single bond
@@ -71,6 +77,12 @@ void BondForceField::calculateEnergyAndForces(
     NonCoulombPotential    &nonCoulombPotential
 )
 {
+    const bool bothInactive =
+        !_molecules[0]->isActive() && !_molecules[1]->isActive();
+
+    if (bothInactive)
+        return;
+
     const auto position1 = _molecules[0]->getAtomPosition(_atomIndices[0]);
     const auto position2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
     auto       dPosition = position1 - position2;
@@ -105,7 +117,15 @@ void BondForceField::calculateEnergyAndForces(
     _molecules[0]->addAtomForce(_atomIndices[0], force);
     _molecules[1]->addAtomForce(_atomIndices[1], -force);
 
-    physicalData.addVirial(tensorProduct(dPosition, force));
+    using enum SmoothingMethod;
+
+    auto       smF       = 0.0;
+    const auto smoothing = HybridSettings::getSmoothingMethod();
+
+    if (smoothing == HOTSPOT && _molecules[0]->getHybridZone() == SMOOTHING)
+        smF = _molecules[0]->getSmoothingFactor();
+
+    physicalData.addVirial(tensorProduct(dPosition, force) * (1 - smF));
 }
 
 /***************************
@@ -126,7 +146,8 @@ void BondForceField::setIsLinker(const bool isLinker) { _isLinker = isLinker; }
  *
  * @param equilibriumBondLength
  */
-void BondForceField::setEquilibriumBondLength(const double equilibriumBondLength
+void BondForceField::setEquilibriumBondLength(
+    const double equilibriumBondLength
 )
 {
     _equilBondLength = equilibriumBondLength;
@@ -159,9 +180,9 @@ bool BondForceField::isLinker() const { return _isLinker; }
 /**
  * @brief get the type of the bond
  *
- * @return size_t
+ * @return BondId
  */
-size_t BondForceField::getType() const { return _type; }
+BondId BondForceField::getType() const { return _type; }
 
 /**
  * @brief get the equilibrium bond length

@@ -29,7 +29,6 @@
 #include <memory>   // for make_shared, __shared_ptr_access, shared_ptr
 
 #include "atom.hpp"            // for Atom
-#include "atomicVirial.hpp"    // for AtomicVirial
 #include "molecule.hpp"        // for Molecule
 #include "physicalData.hpp"    // for PhysicalData
 #include "simulationBox.hpp"   // for SimulationBox
@@ -40,15 +39,13 @@ class TestVirial : public ::testing::Test
    protected:
     void SetUp() override
     {
-        _virial = new virial::AtomicVirial();
-        _data   = new physicalData::PhysicalData();
+        _simBox = new molsys::SimulationBox();
+        settings::Settings::setVirialType(settings::VirialType::ATOMIC);
 
-        _simBox = new simulationBox::SimulationBox();
+        auto molecule1 = molsys::Molecule();
 
-        auto molecule1 = simulationBox::Molecule();
-
-        const auto atom1 = std::make_shared<simulationBox::Atom>();
-        const auto atom2 = std::make_shared<simulationBox::Atom>();
+        const auto atom1 = std::make_shared<molsys::Atom>();
+        const auto atom2 = std::make_shared<molsys::Atom>();
 
         molecule1.setNumberOfAtoms(2);
 
@@ -62,9 +59,9 @@ class TestVirial : public ::testing::Test
         molecule1.addAtom(atom1);
         molecule1.addAtom(atom2);
 
-        auto molecule2 = simulationBox::Molecule();
+        auto molecule2 = molsys::Molecule();
 
-        auto atom3 = std::make_shared<simulationBox::Atom>();
+        auto atom3 = std::make_shared<molsys::Atom>();
 
         molecule2.setNumberOfAtoms(1);
         atom3->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
@@ -76,19 +73,16 @@ class TestVirial : public ::testing::Test
         _simBox->addMolecule(molecule1);
         _simBox->addMolecule(molecule2);
 
+        _simBox->addAtom(atom1);
+        _simBox->addAtom(atom2);
+        _simBox->addAtom(atom3);
+
         _simBox->setBoxDimensions(linearAlgebra::Vec3D(10.0, 10.0, 10.0));
     }
 
-    void TearDown() override
-    {
-        delete _data;
-        delete _simBox;
-        delete _virial;
-    }
+    void TearDown() override { delete _simBox; }
 
-    physicalData::PhysicalData   *_data;
-    simulationBox::SimulationBox *_simBox;
-    virial::Virial               *_virial;
+    molsys::SimulationBox *_simBox;
 };
 
 #endif

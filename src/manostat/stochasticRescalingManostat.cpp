@@ -28,6 +28,7 @@
 #include "constants/conversionFactors.hpp"   // for _BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_
 #include "constants/internalConversionFactors.hpp"   // for _PRESSURE_FACTOR_
 #include "exceptions.hpp"                            // for ExceptionType
+#include "globalTimer.hpp"
 #include "manostatSettings.hpp"     // for ManostatType, Isotropy
 #include "physicalData.hpp"         // for PhysicalData
 #include "simulationBox.hpp"        // for SimulationBox
@@ -37,7 +38,7 @@
 using namespace linearAlgebra;
 using namespace manostat;
 using namespace settings;
-using namespace simulationBox;
+using namespace molsys;
 using namespace physicalData;
 using namespace customException;
 using namespace constants;
@@ -56,6 +57,26 @@ StochasticRescalingManostat::StochasticRescalingManostat(
       _compressibility(other._compressibility),
       _dt(other._dt)
 {
+}
+
+/**
+ * @brief copy assignment operator for Stochastic Rescaling Manostat
+ *
+ * @param other
+ * @return StochasticRescalingManostat&
+ */
+StochasticRescalingManostat &StochasticRescalingManostat::operator=(
+    const StochasticRescalingManostat &other
+)
+{
+    if (this != &other)
+    {
+        Manostat::operator=(other);
+        _tau             = other._tau;
+        _compressibility = other._compressibility;
+        _dt              = other._dt;
+    }
+    return *this;
 }
 
 /**
@@ -95,9 +116,11 @@ StochasticRescalingManostat::StochasticRescalingManostat(
     const double tau,
     const double compressibility
 )
-    : Manostat(targetPressure), _tau(tau), _compressibility(compressibility)
+    : Manostat(targetPressure),
+      _tau(tau),
+      _compressibility(compressibility),
+      _dt(TimingsSettings::getTimeStep())
 {
-    _dt = TimingsSettings::getTimeStep();
 }
 
 /**
@@ -107,11 +130,11 @@ StochasticRescalingManostat::StochasticRescalingManostat(
  * @param physicalData
  */
 void StochasticRescalingManostat::applyManostat(
-    simulationBox::SimulationBox &simBox,
-    physicalData::PhysicalData   &physicalData
+    molsys::SimulationBox      &simBox,
+    physicalData::PhysicalData &physicalData
 )
 {
-    startTimingsSection("Stochastic Rescaling");
+    auto _ = scopedTimer(TimerId::Thermostat, "Stochastic Rescaling");
 
     calculatePressure(simBox, physicalData);
 
@@ -139,8 +162,6 @@ void StochasticRescalingManostat::applyManostat(
 
     std::ranges::for_each(simBox.getMolecules(), scalePositions);
     std::ranges::for_each(simBox.getMolecules(), scaleVelocities);
-
-    stopTimingsSection("Stochastic Rescaling");
 }
 
 /**
@@ -164,7 +185,12 @@ tensor3D StochasticRescalingManostat::calculateMu(const double volume)
 
     const auto deltaP = _targetPressure - _pressure;
 
-    return diagonalMatrix(::exp((-compress * deltaP + stochasticFactor) / 3.0));
+    // TODO: check how to generalize this!
+    constexpr auto dimension = 3.0;
+
+    return diagonalMatrix(
+        ::exp((-compress * deltaP + stochasticFactor) / dimension)
+    );
 }
 
 /**
@@ -184,8 +210,8 @@ tensor3D SemiIsotropicStochasticRescalingManostat::calculateMu(
     const auto kT     = kb * ThermostatSettings::getActualTargetTemperature();
     const auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
 
-    auto stochasticFactor  = 1 / 3.0 * kT * compress / volume;
-    stochasticFactor       *= PRESSURE_FACTOR;
+    auto stochasticFactor = 1.0 / _pressureTensor.size * kT * compress / volume;
+    stochasticFactor *= PRESSURE_FACTOR;
 
     const auto stochasticFactor_xy = ::sqrt(4.0 * stochasticFactor) * random;
     const auto stochasticFactor_z  = ::sqrt(2.0 * stochasticFactor) * random;
@@ -230,13 +256,15 @@ tensor3D AnisotropicStochasticRescalingManostat::calculateMu(
     const auto kT     = kb * ThermostatSettings::getActualTargetTemperature();
     const auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
 
-    auto stochasticFactor  = 2.0 / 3.0 * kT * compress / volume;
-    stochasticFactor       *= PRESSURE_FACTOR;
-    stochasticFactor       = ::sqrt(stochasticFactor) * random;
+    auto stochasticFactor = 2.0 / _pressureTensor.size * kT * compress / volume;
+    stochasticFactor *= PRESSURE_FACTOR;
+    stochasticFactor  = ::sqrt(stochasticFactor) * random;
 
     const auto deltaP = _targetPressure - diagonal(_pressureTensor);
 
-    return diagonalMatrix(exp(-compress * (deltaP) / 3.0 + stochasticFactor));
+    return diagonalMatrix(
+        exp(-compress * (deltaP) / _pressureTensor.size + stochasticFactor)
+    );
 }
 
 /**
@@ -256,12 +284,13 @@ tensor3D FullAnisotropicStochasticRescalingManostat::calculateMu(
     const auto kT     = kb * ThermostatSettings::getActualTargetTemperature();
     const auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
 
-    auto stochasticFactor  = 2.0 / 3.0 * kT * compress / volume;
-    stochasticFactor       *= PRESSURE_FACTOR;
-    stochasticFactor       = ::sqrt(stochasticFactor) * random;
+    auto stochasticFactor = 2.0 / _pressureTensor.size * kT * compress / volume;
+    stochasticFactor *= PRESSURE_FACTOR;
+    stochasticFactor  = ::sqrt(stochasticFactor) * random;
 
     const auto deltaP = diagonalMatrix(_targetPressure) - _pressureTensor;
-    auto       mu     = expPade(-compress * deltaP / 3.0 + stochasticFactor);
+    auto       mu =
+        expPade(-compress * deltaP / _pressureTensor.size + stochasticFactor);
 
     rotateMu(mu);
 

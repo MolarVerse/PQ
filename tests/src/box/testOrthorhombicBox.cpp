@@ -20,12 +20,16 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#include <array>
+
 #include "constants/conversionFactors.hpp"   // for _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_
+#include "defaults.hpp"                      // for VACUUM_BOX_DIMENSION
 #include "gtest/gtest.h"                     // for Message, TestPartResult
+#include "matrixNear.hpp"                    // for EXPECT_MATRIX_NEAR
 #include "orthorhombicBox.hpp"               // for OrthorhombicBox
 #include "vectorNear.hpp"                    // for EXPECT_VECTOR_NEAR
 
-using namespace simulationBox;
+using namespace molsys;
 
 TEST(TestOrthoRhombicBox, setBoxDimensions)
 {
@@ -114,4 +118,55 @@ TEST(TestOrthoRhombicBox, wrapPositionIntoBox)
         linearAlgebra::Vec3D(0.2, -0.3, 0.4),
         tolerance
     );
+}
+
+TEST(TestOrthoRhombicBox, periodicityMasksBoxDimensions)
+{
+    OrthorhombicBox box;
+    box.setBoxDimensions({1.0, 2.0, 3.0});
+
+    using enum Periodicity;
+    constexpr std::array periodicities{NON_PERIODIC, X, Y, Z, XY, XZ, YZ, XYZ};
+    constexpr std::array expectedPeriodicAxes{
+        std::array{false, false, false},
+        std::array{true, false, false},
+        std::array{false, true, false},
+        std::array{false, false, true},
+        std::array{true, true, false},
+        std::array{true, false, true},
+        std::array{false, true, true},
+        std::array{true, true, true},
+    };
+
+    for (size_t i = 0; i < periodicities.size(); ++i)
+    {
+        const auto matrix = box.getBoxMatrix(periodicities.at(i));
+        for (size_t axis = 0; axis < 3; ++axis)
+        {
+            const auto expected = expectedPeriodicAxes.at(i).at(axis)
+                                      ? box.getBoxDimensions()[axis]
+                                      : defaults::VACUUM_BOX_DIMENSION;
+            EXPECT_DOUBLE_EQ(matrix[axis][axis], expected);
+        }
+    }
+}
+
+TEST(TestOrthoRhombicBox, baseTransformsAndStateAccessors)
+{
+    OrthorhombicBox box;
+    box.setBoxDimensions({2.0, 3.0, 4.0});
+
+    const linearAlgebra::Vec3D vector{1.0, 2.0, 3.0};
+    const auto tensor = diagonalMatrix(linearAlgebra::Vec3D{1.0, 2.0, 3.0});
+
+    EXPECT_EQ(box.getBoxAngles(), linearAlgebra::Vec3D(90.0));
+    EXPECT_EQ(box.toOrthoSpace(vector), vector);
+    EXPECT_EQ(box.toSimSpace(vector), vector);
+    EXPECT_MATRIX_NEAR(box.toOrthoSpace(tensor), tensor, 0.0);
+    EXPECT_MATRIX_NEAR(box.toSimSpace(tensor), tensor, 0.0);
+
+    box.setVolume(24.0);
+    box.setBoxSizeHasChanged(true);
+    EXPECT_DOUBLE_EQ(box.getVolume(), 24.0);
+    EXPECT_TRUE(box.getBoxSizeHasChanged());
 }

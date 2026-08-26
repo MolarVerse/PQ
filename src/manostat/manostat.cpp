@@ -23,12 +23,13 @@
 #include "manostat.hpp"
 
 #include "constants/internalConversionFactors.hpp"   // for _PRESSURE_FACTOR_
+#include "globalTimer.hpp"
 #include "manostatSettings.hpp"   // for ManostatType, Isotropy
 #include "physicalData.hpp"       // for PhysicalData
 #include "simulationBox.hpp"      // for SimulationBox
 
 using namespace manostat;
-using namespace simulationBox;
+using namespace molsys;
 using namespace physicalData;
 using namespace constants;
 using namespace settings;
@@ -62,7 +63,8 @@ void Manostat::calculatePressure(const SimulationBox& box, PhysicalData& data)
     _pressureTensor  = (2.0 * ekinVirial + forceVirial) / volume;
     _pressureTensor *= PRESSURE_FACTOR;
 
-    _pressure = trace(_pressureTensor) / 3.0;
+    // NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers)
+    _pressure = trace(_pressureTensor) / _pressureTensor.size;
 
     data.setPressure(_pressure);
 }
@@ -94,11 +96,9 @@ void Manostat::rotateMu(tensor3D& mu) const
  */
 void Manostat::applyManostat(SimulationBox& box, PhysicalData& data)
 {
-    startTimingsSection("Calc Pressure");
+    auto _ = scopedTimer(TimerId::Manostat, "Calc Pressure");
 
     calculatePressure(box, data);
-
-    stopTimingsSection("Calc Pressure");
 }
 
 /**

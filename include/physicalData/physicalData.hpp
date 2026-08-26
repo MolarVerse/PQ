@@ -24,17 +24,17 @@
 
 #define _PHYSICAL_DATA_HPP_
 
+#include <memory>
 #include <vector>   // for vector
 
 #include "settings.hpp"
 #include "staticMatrix.hpp"
-#include "timer.hpp"   // for Timer
 
-namespace simulationBox
+namespace molsys
 {
     class SimulationBox;   // forward declaration
 
-}   // namespace simulationBox
+}   // namespace molsys
 
 namespace physicalData
 {
@@ -66,7 +66,7 @@ namespace physicalData
      * @brief PhysicalData is a class for output data storage
      *
      */
-    class PhysicalData : public timings::Timer
+    class PhysicalData
     {
        private:
         double _numberOfQMAtoms = 0.0;
@@ -90,6 +90,8 @@ namespace physicalData
 
         double _qmEnergy = 0.0;
 
+        double _numberOfSmoothingMol = 0.0;
+
         double _noseHooverMomentumEnergy = 0.0;
         double _noseHooverFrictionEnergy = 0.0;
 
@@ -107,15 +109,16 @@ namespace physicalData
         double _ringPolymerEnergy = 0.0;
 
        public:
-        void calculateTemperature(simulationBox::SimulationBox&);
-        void calculateKinetics(simulationBox::SimulationBox&);
+        void calculateTemperature(molsys::SimulationBox&);
+        void calculateKinetics(molsys::SimulationBox&);
 
-        std::shared_ptr<PhysicalData> clone() const;
+        [[nodiscard]] std::shared_ptr<PhysicalData> clone() const;
 
         void copy(const PhysicalData&);
         void updateAverages(const PhysicalData&);
         void makeAverages(const double);
         void reset();
+        void resetEnergies();
 
         void addIntraCoulombEnergy(const double intraCoulombEnergy);
         void addIntraNonCoulombEnergy(const double intraNonCoulombEnergy);
@@ -127,6 +130,7 @@ namespace physicalData
          *************************/
 
         void addVirial(const linearAlgebra::tensor3D& virial);
+        void addQMEnergy(const double qmEnergy);
         void addCoulombEnergy(const double coulombEnergy);
         void addNonCoulombEnergy(const double nonCoulombEnergy);
 
@@ -173,6 +177,8 @@ namespace physicalData
 
         void setQMEnergy(const double qmEnergy);
 
+        void setNumberOfSmoothingMolecules(const double numberSmMol);
+
         void setNoseHooverMomentumEnergy(const double momentumEnergy);
         void setNoseHooverFrictionEnergy(const double frictionEnergy);
 
@@ -206,6 +212,8 @@ namespace physicalData
         [[nodiscard]] double getImproperEnergy() const;
 
         [[nodiscard]] double getQMEnergy() const;
+
+        [[nodiscard]] double getNumberOfSmoothingMolecules() const;
 
         [[nodiscard]] double getNoseHooverMomentumEnergy() const;
         [[nodiscard]] double getNoseHooverFrictionEnergy() const;

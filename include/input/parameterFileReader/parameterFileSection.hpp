@@ -26,8 +26,13 @@
 
 #include <iosfwd>   // for ifstream
 #include <string>   // for string, allocator
+#include <vector>   // for vector
 
-#include "typeAliases.hpp"
+namespace engine
+{
+    class Engine;   // forward declaration
+}   // namespace engine
+
 namespace input::parameterFile
 {
     /**
@@ -39,15 +44,15 @@ namespace input::parameterFile
     class ParameterFileSection
     {
        protected:
-        int            _lineNumber;
-        std::ifstream *_fp;
+        int            _lineNumber = 0;
+        std::ifstream *_fp         = nullptr;
 
        public:
         virtual ~ParameterFileSection() = default;
 
         virtual void process(
             std::vector<std::string> &lineElements,
-            pq::Engine &
+            engine::Engine &
         );
 
         void endedNormally(const bool);
@@ -56,12 +61,12 @@ namespace input::parameterFile
 
         virtual void processSection(
             std::vector<std::string> &lineElements,
-            pq::Engine &
+            engine::Engine &
         ) = 0;
 
         virtual void processHeader(
             std::vector<std::string> &lineElements,
-            pq::Engine &
+            engine::Engine &
         ) = 0;
 
         void setLineNumber(const int lineNumber);

@@ -31,8 +31,8 @@ namespace
 {
     using linearAlgebra::tensor3D;
     using linearAlgebra::Vec3D;
-    using simulationBox::OrthorhombicBox;
-    using simulationBox::TriclinicBox;
+    using molsys::OrthorhombicBox;
+    using molsys::TriclinicBox;
 
     OrthorhombicBox makeOrthorhombicBox()
     {
@@ -165,4 +165,5 @@ namespace
     BENCHMARK(BM_TriclinicToOrthoSpace);
     BENCHMARK(BM_TriclinicToSimSpace);
     BENCHMARK(BM_TriclinicTensorRoundTrip);
+
 }   // namespace

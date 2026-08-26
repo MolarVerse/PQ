@@ -28,7 +28,17 @@
 #include <vector>
 
 #include "dihedral.hpp"
-#include "typeAliases.hpp"
+
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}   // namespace physicalData
+
+namespace molsys
+{
+    class Molecule;        // forward declaration
+    class SimulationBox;   // forward declaration
+}   // namespace molsys
 
 namespace forceField
 {
@@ -54,12 +64,16 @@ namespace forceField
 
        public:
         JCouplingForceField(
-            const std::vector<pq::Molecule *> &molecules,
-            const std::vector<size_t>         &atomIndices,
-            const size_t                       type
+            const std::vector<molsys::Molecule *> &molecules,
+            const std::vector<size_t>             &atomIndices,
+            const size_t                           type
         );
 
-        void calculateEnergyAndForces(const pq::SimBox &, pq::PhysicalData &) {
+        void calculateEnergyAndForces(
+            const molsys::SimulationBox & /*simBox*/,
+            physicalData::PhysicalData & /*physData*/
+        )
+        {
         }   // TODO: implement
 
         /***************************

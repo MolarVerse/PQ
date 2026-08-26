@@ -26,7 +26,7 @@
 
 #include "box.hpp"   // for Box
 
-namespace simulationBox
+namespace molsys
 {
     /**
      * @class OrthorhombicBox
@@ -43,7 +43,7 @@ namespace simulationBox
         void scaleBox(const linearAlgebra::tensor3D &scalingTensor) override;
 
         [[nodiscard]] linearAlgebra::Vec3D calcShiftVector(
-            const linearAlgebra::Vec3D &
+            const linearAlgebra::Vec3D &shiftVector
         ) const override;
 
         [[nodiscard]] linearAlgebra::Vec3D calcBoxDimFromDensity(
@@ -56,6 +56,6 @@ namespace simulationBox
         ) const override;
     };
 
-}   // namespace simulationBox
+}   // namespace molsys
 
 #endif   // _ORTHORHOMBIC_BOX_HPP_

@@ -43,7 +43,7 @@
 namespace potential
 {
     class NonCoulombPair;   // forward declaration
-}
+}   // namespace potential
 
 class TestIntraNonBondedMap : public TestNonCoulombPotentialFF
 {
@@ -52,13 +52,13 @@ class TestIntraNonBondedMap : public TestNonCoulombPotentialFF
 /**
  * @brief Test fixture class for the IntraNonBondedMap class
  */
-TEST_F(TestIntraNonBondedMap, calculateSingleInteraction_AND_calculate)
+TEST_F(TestIntraNonBondedMap, calculateSingleInteractionAndCalculate)
 {
-    auto molecule = simulationBox::Molecule(0);
+    auto molecule = molsys::Molecule(0);
     molecule.setNumberOfAtoms(2);
 
-    auto atom1 = std::make_shared<simulationBox::Atom>();
-    auto atom2 = std::make_shared<simulationBox::Atom>();
+    auto atom1 = std::make_shared<molsys::Atom>();
+    auto atom2 = std::make_shared<molsys::Atom>();
 
     atom1->setPosition({0.0, 0.0, 0.0});
     atom2->setPosition({0.0, 0.0, 11.0});
@@ -87,12 +87,17 @@ TEST_F(TestIntraNonBondedMap, calculateSingleInteraction_AND_calculate)
         linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(2, 2)
     );
 
-    auto nonCoulombPair =
-        potential::LennardJonesPair(size_t(0), size_t(1), 10.0, 2.0, 3.0);
+    auto nonCoulombPair = potential::LennardJonesPair(
+        static_cast<size_t>(0),
+        static_cast<size_t>(1),
+        10.0,
+        2.0,
+        3.0
+    );
     setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
     setNonCoulombPairsMatrix(1, 0, nonCoulombPair);
 
-    auto simulationBox = simulationBox::SimulationBox();
+    auto simulationBox = molsys::SimulationBox();
     simulationBox.setBoxDimensions({10.0, 10.0, 10.0});
 
     auto physicalData = physicalData::PhysicalData();

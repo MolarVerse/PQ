@@ -27,7 +27,23 @@
 #include <cstddef>
 
 #include "bond.hpp"
-#include "typeAliases.hpp"
+
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}   // namespace physicalData
+
+namespace molsys
+{
+    class Molecule;        // forward declaration
+    class SimulationBox;   // forward declaration
+}   // namespace molsys
+
+namespace potential
+{
+    class CoulombPotential;      // forward declaration
+    class NonCoulombPotential;   // forward declaration
+}   // namespace potential
 
 namespace forceField
 {
@@ -40,7 +56,7 @@ namespace forceField
     class BondForceField : public connectivity::Bond
     {
        private:
-        size_t _type;
+        BondId _type;
         bool   _isLinker = false;
 
         double _equilBondLength;
@@ -48,18 +64,18 @@ namespace forceField
 
        public:
         BondForceField(
-            pq::Molecule *molecule1,
-            pq::Molecule *molecule2,
-            const size_t  atomIndex1,
-            const size_t  atomIndex2,
-            const size_t  type
+            molsys::Molecule *molecule1,
+            molsys::Molecule *molecule2,
+            const size_t      atomIndex1,
+            const size_t      atomIndex2,
+            const BondId      type
         );
 
         void calculateEnergyAndForces(
-            const pq::SimBox     &simBox,
-            pq::PhysicalData     &data,
-            const pq::CoulombPot &coulombPot,
-            pq::NonCoulombPot    &nonCoulombPot
+            const molsys::SimulationBox       &simBox,
+            physicalData::PhysicalData        &data,
+            const potential::CoulombPotential &coulombPot,
+            potential::NonCoulombPotential    &nonCoulombPot
         );
 
         /***************************
@@ -74,7 +90,7 @@ namespace forceField
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] size_t getType() const;
+        [[nodiscard]] BondId getType() const;
         [[nodiscard]] bool   isLinker() const;
         [[nodiscard]] double getEquilibriumBondLength() const;
         [[nodiscard]] double getForceConstant() const;

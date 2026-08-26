@@ -33,7 +33,7 @@
 using namespace intraNonBonded;
 using namespace potential;
 using namespace physicalData;
-using namespace simulationBox;
+using namespace molsys;
 using namespace linearAlgebra;
 using namespace settings;
 
@@ -44,7 +44,7 @@ using namespace settings;
  * @param intraNonBondedType
  */
 IntraNonBondedMap::IntraNonBondedMap(
-    pq::Molecule            *molecule,
+    molsys::Molecule        *molecule,
     IntraNonBondedContainer *intraNonBondedType
 )
     : _molecule(molecule), _intraNonBondedContainer(intraNonBondedType)
@@ -78,12 +78,12 @@ void IntraNonBondedMap::calculate(
         const auto atomIndices =
             _intraNonBondedContainer->getAtomIndices()[atomIndex1];
 
-        for (auto iter = atomIndices.begin(); iter != atomIndices.end(); ++iter)
+        for (const auto atomIndice : atomIndices)
         {
             const auto [coulombEnergyTemp, nonCoulombEnergyTemp] =
                 calculateSingleInteraction(
                     atomIndex1,
-                    *iter,
+                    atomIndice,
                     box,
                     physicalData,
                     coulombPotential,
@@ -115,15 +115,18 @@ std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(
     const size_t atomIdx1,
     const int    atomIndex2AsInt,
     const Vec3D &box,
-    PhysicalData &,
+    PhysicalData & /*physicalData*/,
     const CoulombPotential *coulPot,
     NonCoulombPotential    *nonCoulPot
 ) const
 {
+    if (!_molecule->isActive())
+        return {0.0, 0.0};
+
     auto coulombEnergy    = 0.0;
     auto nonCoulombEnergy = 0.0;
 
-    const auto atomIdx2 = size_t(::abs(atomIndex2AsInt));
+    const auto atomIdx2 = static_cast<size_t>(::abs(atomIndex2AsInt));
     const bool scale    = atomIndex2AsInt < 0;
 
     const auto &pos1 = _molecule->getAtomPosition(atomIdx1);
@@ -138,7 +141,7 @@ std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(
 
     if (distance < CoulombPotential::getCoulombRadiusCutOff())
     {
-        const auto charge1 = _molecule->getPartialCharge(size_t(atomIdx1));
+        const auto charge1 = _molecule->getPartialCharge(atomIdx1);
         const auto charge2 = _molecule->getPartialCharge(atomIdx2);
 
         const auto chargeProduct = charge1 * charge2;
@@ -224,9 +227,9 @@ IntraNonBondedContainer *IntraNonBondedMap::getIntraNonBondedType() const
 /**
  * @brief get the molecule pointer
  *
- * @return pq::Molecule*
+ * @return molsys::Molecule*
  */
-pq::Molecule *IntraNonBondedMap::getMolecule() const { return _molecule; }
+molsys::Molecule *IntraNonBondedMap::getMolecule() const { return _molecule; }
 
 /**
  * @brief get the atom indices of the IntraNonBondedContainer object

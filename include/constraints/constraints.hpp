@@ -31,8 +31,16 @@
 #include "defaults.hpp"             // for defaults
 #include "distanceConstraint.hpp"   // for DistanceConstraint
 #include "mShakeReference.hpp"      // for MShakeReference
-#include "timer.hpp"                // for Timer
-#include "typeAliases.hpp"
+
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}   // namespace physicalData
+
+namespace molsys
+{
+    class SimulationBox;   // forward declaration
+}   // namespace molsys
 
 /**
  * @brief namespace for all constraints
@@ -49,7 +57,7 @@ namespace constraints
      * @details it performs the shake and rattle algorithm on all bond
      * constraints
      */
-    class Constraints : public timings::Timer
+    class Constraints
     {
        private:
         std::unique_ptr<MShake> _mShake;
@@ -72,21 +80,23 @@ namespace constraints
         Constraints();
         ~Constraints();
 
-        void calculateConstraintBondRefs(const pq::SimBox &simulationBox);
+        void calculateConstraintBondRefs(
+            const molsys::SimulationBox &simulationBox
+        );
 
         void initMShake();
 
-        void applyShake(pq::SimBox &simulationBox);
-        void _applyShake(pq::SimBox &simulationBox);
-        void _applyMShake(pq::SimBox &simulationBox);
+        void applyShake(molsys::SimulationBox &simulationBox);
+        void _applyShake(molsys::SimulationBox &simulationBox);
+        void _applyMShake(molsys::SimulationBox &simulationBox);
 
-        void applyRattle(pq::SimBox &simulationBox);
+        void applyRattle(molsys::SimulationBox &simulationBox);
         void _applyRattle();
-        void _applyMRattle(pq::SimBox &simulationBox);
+        void _applyMRattle(molsys::SimulationBox &simulationBox);
 
         void applyDistanceConstraints(
-            const pq::SimBox &,
-            pq::PhysicalData &,
+            const molsys::SimulationBox &,
+            physicalData::PhysicalData &,
             const double
         );
 
@@ -119,12 +129,17 @@ namespace constraints
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] const pq::BondConstraintsVec &getBondConstraints() const;
-        [[nodiscard]] const pq::DistConstraintsVec &getDistConstraints() const;
-        [[nodiscard]] const pq::MShakeReferenceVec &getMShakeReferences() const;
+        [[nodiscard]]
+        const std::vector<BondConstraint> &getBondConstraints() const;
+        [[nodiscard]]
+        const std::vector<DistanceConstraint> &getDistConstraints() const;
+        [[nodiscard]]
+        const std::vector<MShakeReference> &getMShakeReferences() const;
 
         [[nodiscard]] size_t getNumberOfBondConstraints() const;
-        [[nodiscard]] size_t getNumberOfMShakeConstraints(pq::SimBox &) const;
+        [[nodiscard]] size_t getNumberOfMShakeConstraints(
+            molsys::SimulationBox &
+        ) const;
         [[nodiscard]] size_t getNumberOfDistanceConstraints() const;
 
         [[nodiscard]] size_t getShakeMaxIter() const;

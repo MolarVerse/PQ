@@ -22,7 +22,12 @@
 
 // Fixed-work micro-benchmark of the molecular virial computation.
 
+#include <cstdint>
 #include <cstdio>
+#include <format>
+#include <iostream>
+
+#include "virial.hpp"
 
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
@@ -30,25 +35,31 @@
 #define CALLGRIND_ZERO_STATS
 #endif
 
-#include "molecularVirial.hpp"
 #include "perfBenchSetup.hpp"
 #include "physicalData.hpp"
 
-static constexpr long ITERATIONS = 1000;
+static constexpr std::uint64_t ITERATIONS = 1000;
 
 int main()
 {
     auto box =
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
     auto physicalData = physicalData::PhysicalData();
-    auto virial       = virial::MolecularVirial();
+    settings::Settings::setVirialType(settings::VirialType::MOLECULAR);
 
     CALLGRIND_ZERO_STATS;
 
-    for (long i = 0; i < ITERATIONS; ++i)
-        virial.calculateVirial(box, physicalData);
+    linearAlgebra::tensor3D result{0.0};
 
-    const auto result = virial.getVirial();
-    std::printf("%.6f\n", result[0][0] + result[1][1] + result[2][2]);
+    for (std::uint64_t i = 0; i < ITERATIONS; ++i)
+    {
+        result = virial::calculateVirial(box);
+        physicalData.setVirial(result);
+    }
+
+    std::cout << std::format(
+        "{:.6f}\n",
+        result[0][0] + result[1][1] + result[2][2]
+    );
     return 0;
 }

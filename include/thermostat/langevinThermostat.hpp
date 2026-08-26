@@ -26,7 +26,12 @@
 
 #include "randomNumberGenerator.hpp"   // for RandomNumberGenerator
 #include "thermostat.hpp"
-#include "typeAliases.hpp"
+#include "thermostatSettings.hpp"
+
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}   // namespace physicalData
 
 namespace thermostat
 {
@@ -41,14 +46,29 @@ namespace thermostat
 
        public:
         explicit LangevinThermostat(const double, const double);
+        LangevinThermostat()           = default;
+        ~LangevinThermostat() override = default;
+
+        // copy constructor and copy assignment needed for random number
+        // generator
         LangevinThermostat(const LangevinThermostat &);
-        LangevinThermostat() = default;
+        LangevinThermostat &operator=(const LangevinThermostat &);
+        LangevinThermostat(LangevinThermostat &&) noexcept            = delete;
+        LangevinThermostat &operator=(LangevinThermostat &&) noexcept = delete;
 
         void calculateSigma(const double, const double);
 
-        void applyLangevin(pq::SimBox &);
-        void applyThermostat(pq::SimBox &, pq::PhysicalData &) override;
-        void applyThermostatHalfStep(pq::SimBox &, pq::PhysicalData &) override;
+        void applyLangevin(molsys::SimulationBox &);
+
+        void applyThermostat(
+            molsys::SimulationBox      &simBox,
+            physicalData::PhysicalData &physData
+        ) override;
+
+        void applyThermostatHalfStep(
+            molsys::SimulationBox      &simBox,
+            physicalData::PhysicalData &physData
+        ) override;
 
         /***************************
          * standard setter methods *
@@ -63,9 +83,10 @@ namespace thermostat
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] double             getFriction() const;
-        [[nodiscard]] double             getSigma() const;
-        [[nodiscard]] pq::ThermostatType getThermostatType() const override;
+        [[nodiscard]] double getFriction() const;
+        [[nodiscard]] double getSigma() const;
+        [[nodiscard]]
+        settings::ThermostatType getThermostatType() const override;
     };
 
 }   // namespace thermostat

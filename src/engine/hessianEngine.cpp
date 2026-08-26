@@ -31,11 +31,13 @@
 #include "adam.hpp"
 #include "constant.hpp"
 #include "constantDecay.hpp"
+#include "constants.hpp"
 #include "convergenceSettings.hpp"
 #include "defaults.hpp"
 #include "evaluator.hpp"
 #include "exceptions.hpp"
 #include "expDecay.hpp"
+#include "globalTimer.hpp"
 #include "hessianBuilder.hpp"
 #include "hessianSettings.hpp"
 #include "logOutput.hpp"
@@ -75,13 +77,14 @@ void HessianEngine::run()
     writeHessian(hessian);
     writeHessianInfo(hessian);
 
-    _timer.stopSimulationTimer();
+    timings::GlobalTimer::get().stopSimulationTimer();
 
-    addTimers();
     references::ReferencesOutput::writeReferencesFile();
-    _engineOutput.writeTimingsFile(_timer);
+    _engineOutput.writeTimingsFile();
 
-    const auto elapsedTime = double(_timer.calculateElapsedTime()) * 1e-3;
+    const auto elapsedTime =
+        timings::GlobalTimer::get().calculateElapsedTime() * constants::MS_TO_S;
+
     _engineOutput.getLogOutput().writeEndedNormally(elapsedTime);
     _engineOutput.getStdoutOutput().writeEndedNormally(elapsedTime);
 }
@@ -100,13 +103,12 @@ std::shared_ptr<Evaluator> HessianEngine::setupEvaluator()
             "Unknown job type for Hessian evaluator setup."
         );
 
-    evaluator->setCellList(getSharedCellList());
+    evaluator->setCellList(getCellList());
     evaluator->setSimulationBox(getSharedSimulationBox());
-    evaluator->setPotential(getSharedPotential());
-    evaluator->setForceField(getSharedForceField());
-    evaluator->setConstraints(getSharedConstraints());
-    evaluator->setIntraNonBonded(getSharedIntraNonBonded());
-    evaluator->setVirial(getSharedVirial());
+    evaluator->setPotential(getPotential());
+    evaluator->setForceField(getForceField());
+    evaluator->setConstraints(getConstraints());
+    evaluator->setIntraNonBonded(getIntraNonBonded());
     evaluator->setPhysicalData(getSharedPhysicalData());
     evaluator->setPhysicalDataOld(getSharedPhysicalDataOld());
 
@@ -162,16 +164,18 @@ void HessianEngine::runOptimization()
             break;
 
         writeOptimizationOutput();
-        deleteTempFiles();
+        deleteTmpFiles();
     }
 
     if (!_converged)
+    {
         throw OptException(
             std::format(
                 "Optimizer did not converge after {} epochs.",
                 _optimizer->getNEpochs()
             )
         );
+    }
 
     if (_optStopped)
     {
@@ -251,10 +255,9 @@ void HessianEngine::writeOptimizationOutput()
         _engineOutput.writeOptFile(_step, *_optimizer);
     }
 
-    _timer.stopSimulationTimer();
-    _timer.startSimulationTimer();
+    timings::GlobalTimer::get().stopAndRestartSimulationTimer();
 
-    _physicalData->setLoopTime(_timer.calculateLoopTime());
+    _physicalData->setLoopTime(timings::GlobalTimer::get().calculateLoopTime());
     _averagePhysicalData.updateAverages(*_physicalData);
 
     if (0 == _step % outputFreq)
@@ -442,7 +445,8 @@ void HessianEngine::writeHessian(const HessianMatrix &hessian) const
     if (file.fail())
         throw UserInputException("Could not open Hessian file for writing.");
 
-    file << std::scientific << std::setprecision(16);
+    constexpr auto precision = 16;
+    file << std::scientific << std::setprecision(precision);
 
     for (const auto &row : hessian)
     {
@@ -482,28 +486,8 @@ void HessianEngine::writeHessianInfo(const HessianMatrix &hessian) const
     file << "columns = " << (hessian.empty() ? 0 : hessian[0].size()) << '\n';
 }
 
-void HessianEngine::addTimers()
-{
-    _engineOutput.setTimerName("Output");
-    _timer.addTimer(_engineOutput.getTimer());
-
-    _constraints->setTimerName("Constraints");
-    _timer.addTimer(_constraints->getTimer());
-
-    _cellList->setTimerName("Cell List");
-    _timer.addTimer(_cellList->getTimer());
-
-    _potential->setTimerName("Potential");
-    _timer.addTimer(_potential->getTimer());
-
-    _intraNonBonded->setTimerName("IntraNonBonded");
-    _timer.addTimer(_intraNonBonded->getTimer());
-
-    _physicalData->setTimerName("Physical Data");
-    _timer.addTimer(_physicalData->getTimer());
-}
-
-pq::SharedPhysicalData HessianEngine::getSharedPhysicalDataOld()
+std::shared_ptr<physicalData::PhysicalData> HessianEngine::
+    getSharedPhysicalDataOld()
 {
     return _physicalDataOld;
 }

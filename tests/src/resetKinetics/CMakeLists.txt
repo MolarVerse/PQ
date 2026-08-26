@@ -7,13 +7,14 @@ foreach(source_file ${source_files})
     add_executable(${test_name} ${source_file})
     target_include_directories(${test_name}
         PRIVATE
+        ${PROJECT_SOURCE_DIR}/tests/include/macros
         ${PROJECT_SOURCE_DIR}/tests/include/resetKinetics
     )
     target_link_libraries(${test_name}
         PRIVATE
         resetKinetics
         physicalData
-        simulationBox
+        molsys
         gtest
         pq_test_main
         gmock

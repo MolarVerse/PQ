@@ -17,7 +17,7 @@ target_link_libraries(evaluator
     constraints
     physicalData
     virial
-    simulationBox
+    molsys
     forceField
     intraNonBonded
 )

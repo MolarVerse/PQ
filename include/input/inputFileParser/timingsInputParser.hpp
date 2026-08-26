@@ -27,7 +27,6 @@
 #include <cstddef>   // for size_t
 
 #include "inputFileParser.hpp"
-#include "typeAliases.hpp"
 
 namespace input
 {
@@ -40,7 +39,7 @@ namespace input
     class TimingsInputParser : public InputFileParser
     {
        public:
-        explicit TimingsInputParser(pq::Engine &);
+        TimingsInputParser();
 
         void parseTimeStep(const std::vector<std::string> &, const size_t);
         void parseNumberOfSteps(const std::vector<std::string> &, const size_t);

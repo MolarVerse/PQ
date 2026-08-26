@@ -38,8 +38,8 @@ namespace forceField
         const potential::CoulombPotential &coulombPotential,
         potential::NonCoulombPotential    &nonCoulombPotential,
         physicalData::PhysicalData        &physicalData,
-        const simulationBox::Molecule     *molecule1,
-        const simulationBox::Molecule     *molecule2,
+        const molsys::Molecule            *molecule1,
+        const molsys::Molecule            *molecule2,
         const size_t                       atomIndex1,
         const size_t                       atomIndex2,
         const double                       distance
@@ -47,7 +47,7 @@ namespace forceField
 }   // namespace forceField
 
 #ifndef _FORCE_FIELD_TPP_
-#include "forcefield.tpp.hpp"   // IWYU pragma: keep - DO NOT MOVE THIS LINE
+#include "forcefield.tpp.hpp"   // IWYU pragma: export - DO NOT MOVE THIS LINE
 #endif
 
 #endif   // _FORCE_FIELD_HPP_

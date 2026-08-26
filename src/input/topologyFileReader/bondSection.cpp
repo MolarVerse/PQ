@@ -26,13 +26,13 @@
 #include <string>   // for stoul, string, operator==, char_traits
 #include <vector>   // for vector
 
-#include "bondForceField.hpp"    // for BondForceField
-#include "engine.hpp"            // for Engine
-#include "exceptions.hpp"        // for TopologyException
-#include "simulationBox.hpp"     // for SimulationBox
+#include "bondForceField.hpp"   // for BondForceField
+#include "engine.hpp"           // for Engine
+#include "exceptions.hpp"       // for TopologyException
+#include "simulationBox.hpp"    // for SimulationBox
 
 using namespace input::topology;
-using namespace simulationBox;
+using namespace molsys;
 using namespace forceField;
 using namespace customException;
 using namespace engine;
@@ -61,15 +61,21 @@ void BondSection::processSection(
 )
 {
     if (lineElements.size() != 3 && lineElements.size() != 4)
-        throw TopologyException(std::format(
-            "Wrong number of arguments in topology file bond section at line "
-            "{} - number of elements has to be 3 or 4!",
-            _lineNumber
-        ));
+    {
+        throw TopologyException(
+
+            std::format(
+                "Wrong number of arguments in topology file bond section at "
+                "line {} - number of elements has to be 3 or 4!",
+                _lineNumber
+            )
+
+        );
+    }
 
     const auto atom1    = stoul(lineElements[0]);
     const auto atom2    = stoul(lineElements[1]);
-    const auto bondType = stoul(lineElements[2]);
+    const auto bondType = BondId{stoul(lineElements[2])};
     auto       isLinker = false;
 
     if (4 == lineElements.size())
@@ -78,19 +84,27 @@ void BondSection::processSection(
             isLinker = true;
 
         else
-            throw TopologyException(std::format(
-                "Forth entry in topology file in bond section has to be a "
-                "\'*\' or empty at line {}!",
-                _lineNumber
-            ));
+        {
+            throw TopologyException(
+                std::format(
+                    "Forth entry in topology file in bond section has to be a "
+                    "\'*\' or empty at line {}!",
+                    _lineNumber
+                )
+            );
+        }
     }
 
     if (atom1 == atom2)
-        throw TopologyException(std::format(
-            "Topology file shake section at line {} - atoms cannot be the "
-            "same!",
-            _lineNumber
-        ));
+    {
+        throw TopologyException(
+            std::format(
+                "Topology file shake section at line {} - atoms cannot be the "
+                "same!",
+                _lineNumber
+            )
+        );
+    }
 
     auto &simBox = engine.getSimulationBox();
 
@@ -100,7 +114,7 @@ void BondSection::processSection(
     auto bondFF = BondForceField(mol1, mol2, atomIdx1, atomIdx2, bondType);
     bondFF.setIsLinker(isLinker);
 
-    engine.getForceField().addBond(bondFF);
+    engine.getForceField()->addBond(bondFF);
 }
 
 /**
@@ -120,8 +134,13 @@ std::string BondSection::keyword() { return "bonds"; }
 void BondSection::endedNormally(const bool endedNormal) const
 {
     if (!endedNormal)
-        throw TopologyException(std::format(
-            "Topology file bond section at line {} - no end of section found!",
-            _lineNumber
-        ));
+    {
+        throw TopologyException(
+            std::format(
+                "Topology file bond section at line {} - no end of section "
+                "found!",
+                _lineNumber
+            )
+        );
+    }
 }

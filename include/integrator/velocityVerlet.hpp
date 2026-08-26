@@ -25,7 +25,6 @@
 #define _VELOCITY_VERLET_HPP_
 
 #include "integrator.hpp"
-#include "typeAliases.hpp"
 
 namespace integrator
 {
@@ -41,8 +40,8 @@ namespace integrator
         explicit VelocityVerlet();
         ~VelocityVerlet() override = default;
 
-        void firstStep(pq::SimBox &) override;
-        void secondStep(pq::SimBox &) override;
+        void firstStep(molsys::SimulationBox &simBox) override;
+        void secondStep(molsys::SimulationBox &simBox) override;
     };
 
 }   // namespace integrator

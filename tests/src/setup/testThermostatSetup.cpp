@@ -27,7 +27,8 @@
 #include "berendsenThermostat.hpp"           // for BerendsenThermostat
 #include "constants/conversionFactors.hpp"   // for _FS_TO_S_, _KG_TO_GRAM_
 #include "constants/natureConstants.hpp"     // for _UNIVERSAL_GAS_CONSTANT_
-#include "gtest/gtest.h"                     // for Message, TestPartResult
+#include "exceptions.hpp"                    // for InputFileException
+#include "inputFileReader.hpp"               // for InputFileReader
 #include "langevinThermostat.hpp"            // for LangevinThermostat
 #include "noseHooverThermostat.hpp"          // for NoseHooverThermostat
 #include "testSetup.hpp"                     // for TestSetup
@@ -38,7 +39,7 @@
 
 using namespace setup;
 
-TEST_F(TestSetup, setupThermostat_no_thermostat)
+TEST_F(TestSetup, setupThermostatNoThermostat)
 {
     ThermostatSetup thermostatSetup(*_mdEngine);
 
@@ -46,7 +47,7 @@ TEST_F(TestSetup, setupThermostat_no_thermostat)
     EXPECT_NO_THROW(thermostatSetup.setup());
 }
 
-TEST_F(TestSetup, setupThermostat_temp_ramping)
+TEST_F(TestSetup, setupThermostatTempRamping)
 {
     ThermostatSetup thermostatSetup(*_mdEngine);
 
@@ -100,7 +101,68 @@ TEST_F(TestSetup, setupThermostat_temp_ramping)
     );
 }
 
-TEST_F(TestSetup, setupThermostat_only_end_temp_defined)
+TEST_F(TestSetup, temperatureRampReachesEndWithPartialFinalInterval)
+{
+    ThermostatSetup        thermostatSetup(*_mdEngine);
+    input::InputFileReader reader("input.in", *_mdEngine);
+
+    reader.process({"nstep", "=", "10"});
+    reader.process({"thermostat", "=", "berendsen"});
+    reader.process({"temp", "=", "300"});
+    reader.process({"start_temp", "=", "200"});
+    reader.process({"temp_ramp_steps", "=", "10"});
+    reader.process({"temp_ramp_frequency", "=", "3"});
+
+    thermostatSetup.setup();
+
+    EXPECT_DOUBLE_EQ(
+        thermostatSetup.getEngine().getThermostat().getTemperatureIncrease(),
+        25.0
+    );
+
+    for (size_t step = 0; step < 10; ++step)
+        thermostatSetup.getEngine().getThermostat().applyTemperatureRamping();
+
+    EXPECT_DOUBLE_EQ(
+        thermostatSetup.getEngine().getThermostat().getTargetTemperature(),
+        300.0
+    );
+
+    settings::ThermostatSettings::setTemperatureRampSteps(0);
+    settings::ThermostatSettings::setTemperatureRampFrequency(1);
+}
+
+TEST_F(TestSetup, rejectsEmptyTemperatureRamp)
+{
+    ThermostatSetup thermostatSetup(*_mdEngine);
+
+    settings::TimingsSettings::setNumberOfSteps(0);
+    settings::ThermostatSettings::setThermostatType("berendsen");
+    settings::ThermostatSettings::setTargetTemperature(300);
+    settings::ThermostatSettings::setStartTemperature(200);
+    settings::ThermostatSettings::setTemperatureRampSteps(0);
+
+    EXPECT_THROW(thermostatSetup.setup(), customException::InputFileException);
+}
+
+TEST_F(TestSetup, rejectsZeroTemperatureRampFrequency)
+{
+    ThermostatSetup thermostatSetup(*_mdEngine);
+
+    settings::TimingsSettings::setNumberOfSteps(10);
+    settings::ThermostatSettings::setThermostatType("berendsen");
+    settings::ThermostatSettings::setTargetTemperature(300);
+    settings::ThermostatSettings::setStartTemperature(200);
+    settings::ThermostatSettings::setTemperatureRampSteps(10);
+    settings::ThermostatSettings::setTemperatureRampFrequency(0);
+
+    EXPECT_THROW(thermostatSetup.setup(), customException::InputFileException);
+
+    settings::ThermostatSettings::setTemperatureRampSteps(0);
+    settings::ThermostatSettings::setTemperatureRampFrequency(1);
+}
+
+TEST_F(TestSetup, setupThermostatOnlyEndTempDefined)
 {
     ThermostatSetup thermostatSetup(*_mdEngine);
 
@@ -113,7 +175,7 @@ TEST_F(TestSetup, setupThermostat_only_end_temp_defined)
     );
 }
 
-TEST_F(TestSetup, setupThermostat_berendsen)
+TEST_F(TestSetup, setupThermostatBerendsen)
 {
     ThermostatSetup thermostatSetup(*_mdEngine);
 
@@ -151,7 +213,7 @@ TEST_F(TestSetup, setupThermostat_berendsen)
     settings::ThermostatSettings::setEndTemperatureSet(false);
 }
 
-TEST_F(TestSetup, setupThermostat_velocity_rescaling)
+TEST_F(TestSetup, setupThermostatVelocityRescaling)
 {
     ThermostatSetup thermostatSetup(*_mdEngine);
 
@@ -166,7 +228,7 @@ TEST_F(TestSetup, setupThermostat_velocity_rescaling)
     EXPECT_EQ(velocityRescalingThermostat.getTau(), 0.2 * 1000);
 }
 
-TEST_F(TestSetup, setupThermostat_langevin)
+TEST_F(TestSetup, setupThermostatLangevin)
 {
     ThermostatSetup thermostatSetup(*_mdEngine);
 
@@ -199,7 +261,7 @@ TEST_F(TestSetup, setupThermostat_langevin)
     EXPECT_NO_THROW(setupThermostat(*_mdEngine));
 }
 
-TEST_F(TestSetup, setupThermostat_nh_chain)
+TEST_F(TestSetup, setupThermostatNhChain)
 {
     ThermostatSetup thermostatSetup(*_mdEngine);
 

@@ -24,7 +24,9 @@
 
 #include <format>   // for format
 
+#include "constants.hpp"
 #include "exceptions.hpp"
+#include "globalTimer.hpp"
 #include "outputFileSettings.hpp"
 #include "progressbar.hpp"
 #include "timingsSettings.hpp"
@@ -57,15 +59,17 @@ void OptEngine::run()
             break;
 
         writeOutput();
-        deleteTempFiles();
+        deleteTmpFiles();
     }
 
     if (!_converged)
     {
-        throw customException::OptException(std::format(
-            "Optimizer did not converge after {} epochs.",
-            _optimizer->getNEpochs()
-        ));
+        throw customException::OptException(
+            std::format(
+                "Optimizer did not converge after {} epochs.",
+                _optimizer->getNEpochs()
+            )
+        );
     }
 
     if (_optStopped)
@@ -85,29 +89,12 @@ void OptEngine::run()
         throw customException::OptException(msg);
     }
 
-    _timer.stopSimulationTimer();
+    timings::GlobalTimer::get().stopSimulationTimer();
 
-    const auto elapsedTime = double(_timer.calculateElapsedTime()) * 1e-3;
+    const auto elapsedTime =
+        timings::GlobalTimer::get().calculateElapsedTime() * constants::MS_TO_S;
 
-    _engineOutput.setTimerName("Output");
-    _timer.addTimer(_engineOutput.getTimer());
-
-    _constraints->setTimerName("Constraints");
-    _timer.addTimer(_constraints->getTimer());
-
-    _cellList->setTimerName("Cell List");
-    _timer.addTimer(_cellList->getTimer());
-
-    _potential->setTimerName("Potential");
-    _timer.addTimer(_potential->getTimer());
-
-    _intraNonBonded->setTimerName("IntraNonBonded");
-    _timer.addTimer(_intraNonBonded->getTimer());
-
-    _physicalData->setTimerName("Physical Data");
-    _timer.addTimer(_physicalData->getTimer());
-
-    _engineOutput.writeTimingsFile(_timer);
+    _engineOutput.writeTimingsFile();
 
     if (_converged)
     {
@@ -205,10 +192,9 @@ void OptEngine::writeOutput()
     // included in total simulation time
     // Unfortunately, setup is therefore included in the first looptime output
     // but this is not a big problem - could also be a feature and not a bug
-    _timer.stopSimulationTimer();
-    _timer.startSimulationTimer();
+    timings::GlobalTimer::get().stopAndRestartSimulationTimer();
 
-    _physicalData->setLoopTime(_timer.calculateLoopTime());
+    _physicalData->setLoopTime(timings::GlobalTimer::get().calculateLoopTime());
     _averagePhysicalData.updateAverages(*_physicalData);
 
     if (0 == _step % outputFreq)

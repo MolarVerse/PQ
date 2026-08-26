@@ -34,9 +34,9 @@
  * @return double The squared distance between the two particles.
  */
 double kernel::distSquared(
-    const linearAlgebra::Vec3D         &pos_i,
-    const linearAlgebra::Vec3D         &pos_j,
-    const simulationBox::SimulationBox &simBox
+    const linearAlgebra::Vec3D  &pos_i,
+    const linearAlgebra::Vec3D  &pos_j,
+    const molsys::SimulationBox &simBox
 )
 {
     auto r_ij = pos_i - pos_j;
@@ -72,9 +72,9 @@ linearAlgebra::Vec3D kernel::distVec(
  * @return linearAlgebra::Vec3D The distance vector between the two particles.
  */
 linearAlgebra::Vec3D kernel::distVec(
-    const linearAlgebra::Vec3D         &pos_i,
-    const linearAlgebra::Vec3D         &pos_j,
-    const simulationBox::SimulationBox &simBox
+    const linearAlgebra::Vec3D  &pos_i,
+    const linearAlgebra::Vec3D  &pos_j,
+    const molsys::SimulationBox &simBox
 )
 {
     auto r_ij = pos_i - pos_j;
@@ -118,9 +118,9 @@ std::pair<linearAlgebra::Vec3D, double> kernel::distVecAndDist2(
  * squared distance between the two particles.
  */
 std::pair<linearAlgebra::Vec3D, double> kernel::distVecAndDist2(
-    const linearAlgebra::Vec3D         &pos_i,
-    const linearAlgebra::Vec3D         &pos_j,
-    const simulationBox::SimulationBox &simBox
+    const linearAlgebra::Vec3D  &pos_i,
+    const linearAlgebra::Vec3D  &pos_j,
+    const molsys::SimulationBox &simBox
 )
 {
     auto r_ij = pos_i - pos_j;

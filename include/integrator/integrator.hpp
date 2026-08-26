@@ -27,8 +27,11 @@
 #include <string>        // for string
 #include <string_view>   // for string_view
 
-#include "timer.hpp"   // for Timer
-#include "typeAliases.hpp"
+namespace molsys
+{
+    class Atom;            // forward declaration
+    class SimulationBox;   // forward declaration
+}   // namespace molsys
 
 namespace integrator
 {
@@ -38,7 +41,7 @@ namespace integrator
      * @brief Integrator is a base class for all integrators
      *
      */
-    class Integrator : public timings::Timer
+    class Integrator
     {
        protected:
         std::string _integratorType;   // TODO: make enum
@@ -48,11 +51,14 @@ namespace integrator
         Integrator()          = default;
         virtual ~Integrator() = default;
 
-        virtual void firstStep(pq::SimBox &)  = 0;
-        virtual void secondStep(pq::SimBox &) = 0;
+        virtual void firstStep(molsys::SimulationBox &)  = 0;
+        virtual void secondStep(molsys::SimulationBox &) = 0;
 
-        void integrateVelocities(pq::Atom *) const;
-        void integratePositions(pq::Atom *, const pq::SimBox &) const;
+        void integrateVelocities(molsys::Atom *) const;
+        void integratePositions(
+            molsys::Atom *,
+            const molsys::SimulationBox &
+        ) const;
 
         /********************************
          * standard getters and setters *

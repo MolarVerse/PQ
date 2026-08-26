@@ -28,7 +28,17 @@
 #include <string_view>
 
 #include "qmRunner.hpp"
-#include "typeAliases.hpp"
+
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}   // namespace physicalData
+
+namespace molsys
+{
+    class Box;             // forward declaration
+    class SimulationBox;   // forward declaration
+}   // namespace molsys
 
 namespace QM
 {
@@ -41,34 +51,59 @@ namespace QM
     class ExternalQMRunner : public QMRunner
     {
        protected:
-        std::string       _scriptPath  = SCRIPT_PATH_;
-        const std::string _singularity = SINGULARITY_;
-        const std::string _staticBuild = STATIC_BUILD_;
+        std::string            _scriptPath  = SCRIPT_PATH_;
+        constexpr static auto *_singularity = SINGULARITY_;
+        constexpr static auto *_staticBuild = STATIC_BUILD_;
 
         [[nodiscard]] std::string resolveScriptPath(
             std::string_view script
+        ) const;
+
+        virtual void executeCommand(
+            std::string_view command,
+            std::string_view program
         ) const;
 
        public:
         ExternalQMRunner()           = default;
         ~ExternalQMRunner() override = default;
 
-        void         run(pq::SimBox &, pq::PhysicalData &) override;
-        virtual void execute() = 0;
+        void run(
+            molsys::SimulationBox      &simBox,
+            physicalData::PhysicalData &physData,
+            molsys::Periodicity         periodicity
+        ) override;
 
-        virtual void writeCoordsFile(pq::SimBox &) = 0;
-        virtual void readStressTensor(pq::Box &, pq::PhysicalData &) {}
+        virtual void execute(molsys::SimulationBox &) = 0;
 
-        void readForceFile(pq::SimBox &, pq::PhysicalData &);
-        void readChargeFile(pq::SimBox &);
+        virtual void writeCoordsFile(molsys::SimulationBox &) = 0;
+
+        virtual void writePointChargeFile(
+            molsys::SimulationBox & /*simBox*/
+        )
+        {
+        }
+
+        virtual void readStressTensor(
+            molsys::Box & /*simBox*/,
+            physicalData::PhysicalData & /*physData*/
+        )
+        {
+        }
+
+        void readForceFile(
+            molsys::SimulationBox &,
+            physicalData::PhysicalData &
+        );
+        void readChargeFile(molsys::SimulationBox &);
 
         /*******************************
          * standard getter and setters *
          *******************************/
 
         [[nodiscard]] const std::string &getScriptPath() const;
-        [[nodiscard]] const std::string &getSingularity() const;
-        [[nodiscard]] const std::string &getStaticBuild() const;
+        [[nodiscard]] std::string        getSingularity() const;
+        [[nodiscard]] std::string        getStaticBuild() const;
 
         void setScriptPath(const std::string_view &scriptPath);
     };

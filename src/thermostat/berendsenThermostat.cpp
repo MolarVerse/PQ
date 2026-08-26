@@ -22,8 +22,10 @@
 
 #include "berendsenThermostat.hpp"
 
-#include <cmath>    // for sqrt
+#include <cmath>   // for sqrt
 
+#include "exceptions.hpp"   // for UserInputException
+#include "globalTimer.hpp"
 #include "mathUtilities.hpp"        // for isZero
 #include "physicalData.hpp"         // for PhysicalData
 #include "simulationBox.hpp"        // for SimulationBox
@@ -31,8 +33,9 @@
 #include "timingsSettings.hpp"      // for TimingsSettings
 
 using thermostat::BerendsenThermostat;
+using namespace customException;
 using namespace settings;
-using namespace simulationBox;
+using namespace molsys;
 using namespace physicalData;
 using namespace utilities;
 
@@ -63,19 +66,21 @@ void BerendsenThermostat::applyThermostat(
     PhysicalData  &data
 )
 {
-    startTimingsSection("Berendsen");
+    auto _ = scopedTimer(TimerId::Thermostat, "Berendsen");
 
     data.calculateTemperature(simulationBox);
 
     _temperature = data.getTemperature();
 
-    // If the kinetic energy is (approximately) zero, there is nothing to
-    // thermostat: dividing by _temperature would NaN all velocities
-    // (1 / 0 -> Inf, then vel * Inf = NaN when vel is 0). Skip silently.
     if (isZero(_temperature))
     {
-        stopTimingsSection("Berendsen");
-        return;
+        if (isZero(_targetTemperature))
+            return;
+
+        throw UserInputException(
+            "Cannot apply Berendsen coupling to a zero-temperature system "
+            "with a positive target temperature. Initialize velocities first."
+        );
     }
 
     const auto dt        = TimingsSettings::getTimeStep();
@@ -87,8 +92,6 @@ void BerendsenThermostat::applyThermostat(
         atom->scaleVelocity(berendsenFactor);
 
     data.setTemperature(_temperature * berendsenFactor * berendsenFactor);
-
-    stopTimingsSection("Berendsen");
 }
 
 /**

@@ -1,0 +1,1 @@
+- make virial a pure static class, as the entire member handling was already partially deprecated with the qmmm implementations

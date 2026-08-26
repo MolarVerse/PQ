@@ -33,7 +33,7 @@ set(testOptimizer_includes
     ${PROJECT_SOURCE_DIR}/include/settings
     ${PROJECT_SOURCE_DIR}/include/exceptions
     ${PROJECT_SOURCE_DIR}/include/physicalData
-    ${PROJECT_SOURCE_DIR}/include/simulationBox
+    ${PROJECT_SOURCE_DIR}/include/molsys
     ${PROJECT_SOURCE_DIR}/include/linearAlgebra
     ${PROJECT_SOURCE_DIR}/include/linearAlgebra/vector3d
     ${PROJECT_SOURCE_DIR}/include/config
@@ -42,7 +42,7 @@ set(testOptimizer_libs
     optimizer
     convergence
     physicalData
-    simulationBox
+    molsys
     exceptions
     settings
     linearAlgebra
@@ -51,7 +51,7 @@ set(testOptimizer_libs
 set(testSteepestDescent_includes
     ${PROJECT_SOURCE_DIR}/include/opt/optimizer
     ${PROJECT_SOURCE_DIR}/include/opt/convergence
-    ${PROJECT_SOURCE_DIR}/include/simulationBox
+    ${PROJECT_SOURCE_DIR}/include/molsys
     ${PROJECT_SOURCE_DIR}/include/linearAlgebra
     ${PROJECT_SOURCE_DIR}/include/linearAlgebra/vector3d
     ${PROJECT_SOURCE_DIR}/include/config
@@ -59,14 +59,14 @@ set(testSteepestDescent_includes
 set(testSteepestDescent_libs
     optimizer
     convergence
-    simulationBox
+    molsys
     linearAlgebra
 )
 
 set(testAdam_includes
     ${PROJECT_SOURCE_DIR}/include/opt/optimizer
     ${PROJECT_SOURCE_DIR}/include/opt/convergence
-    ${PROJECT_SOURCE_DIR}/include/simulationBox
+    ${PROJECT_SOURCE_DIR}/include/molsys
     ${PROJECT_SOURCE_DIR}/include/linearAlgebra
     ${PROJECT_SOURCE_DIR}/include/linearAlgebra/vector3d
     ${PROJECT_SOURCE_DIR}/include/config
@@ -74,13 +74,13 @@ set(testAdam_includes
 set(testAdam_libs
     optimizer
     convergence
-    simulationBox
+    molsys
     linearAlgebra
 )
 
 set(testMMEvaluator_includes
     ${PROJECT_SOURCE_DIR}/include/opt/evaluator
-    ${PROJECT_SOURCE_DIR}/include/simulationBox
+    ${PROJECT_SOURCE_DIR}/include/molsys
     ${PROJECT_SOURCE_DIR}/include/physicalData
     ${PROJECT_SOURCE_DIR}/include/potential
     ${PROJECT_SOURCE_DIR}/include/forceField
@@ -93,7 +93,7 @@ set(testMMEvaluator_includes
 )
 set(testMMEvaluator_libs
     evaluator
-    simulationBox
+    molsys
     physicalData
     potential
     forceField
@@ -105,7 +105,7 @@ set(testMMEvaluator_libs
 
 set(testHessianBuilder_includes
     ${PROJECT_SOURCE_DIR}/include/opt/evaluator
-    ${PROJECT_SOURCE_DIR}/include/simulationBox
+    ${PROJECT_SOURCE_DIR}/include/molsys
     ${PROJECT_SOURCE_DIR}/include/settings
     ${PROJECT_SOURCE_DIR}/include/exceptions
     ${PROJECT_SOURCE_DIR}/include/linearAlgebra
@@ -114,7 +114,7 @@ set(testHessianBuilder_includes
 )
 set(testHessianBuilder_libs
     evaluator
-    simulationBox
+    molsys
     settings
     exceptions
     linearAlgebra

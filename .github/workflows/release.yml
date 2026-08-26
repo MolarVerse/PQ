@@ -217,7 +217,6 @@ jobs:
           if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
             version="$DISPATCH_VERSION"
             commit="$DISPATCH_COMMIT"
-            source="manual retry"
           elif [[ "$HEAD_REF" =~ ^release/(v[0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
             version="${BASH_REMATCH[1]}"
             commit="$MERGE_COMMIT"
@@ -247,7 +246,6 @@ jobs:
           fi
 
           echo "commit=$commit" >> "$GITHUB_OUTPUT"
-          echo "source=$source" >> "$GITHUB_OUTPUT"
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
       - name: Mint release bot token
@@ -306,7 +304,6 @@ jobs:
       - name: Create GitHub release
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
-          RELEASE_SOURCE: ${{ steps.release.outputs.source }}
           VERSION: ${{ steps.release.outputs.version }}
         run: |
           if gh release view "$VERSION" >/dev/null 2>&1; then
@@ -316,8 +313,8 @@ jobs:
 
           gh release create "$VERSION" \
             --verify-tag \
-            --title "Release $VERSION" \
-            --notes "Released from $RELEASE_SOURCE. See CHANGELOG.md and DEV-CHANGELOG.md for details."
+            --title "$VERSION" \
+            --generate-notes
 
       - name: Open main to dev sync pull request
         env:
@@ -331,8 +328,25 @@ jobs:
             exit 0
           fi
 
-          gh pr create \
+          pr_url="$(gh pr create \
             --base dev \
             --head main \
             --title "Sync main into dev after $VERSION" \
-            --body "Sync release $VERSION back into dev."
+            --body "Sync release $VERSION back into dev.")"
+          echo "Created sync pull request: $pr_url"
+
+          release_notes="$(gh api --method POST \
+            "repos/$GITHUB_REPOSITORY/releases/generate-notes" \
+            -f tag_name="$VERSION" \
+            --jq .body)"
+          pr_number="$(gh pr view "$pr_url" --json number --jq .number)"
+          while IFS= read -r reviewer; do
+            if ! gh api --method POST \
+              "repos/$GITHUB_REPOSITORY/pulls/$pr_number/requested_reviewers" \
+              -f "reviewers[]=$reviewer" >/dev/null; then
+              echo "::warning::Could not request review from @$reviewer."
+            fi
+          done < <(
+            printf '%s\n' "$release_notes" |
+              python3 scripts/release_reviewers.py "$GITHUB_REPOSITORY"
+          )

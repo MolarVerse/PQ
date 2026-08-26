@@ -1,8 +1,5 @@
 add_library(virial
     virial.cpp
-
-    atomicVirial.cpp
-    molecularVirial.cpp
 )
 
 target_include_directories(virial
@@ -12,10 +9,8 @@ target_include_directories(virial
 )
 
 target_link_libraries(virial
-    PUBLIC
-    simulationBox
-    physicalData
-    timings
+    PRIVATE
+    molsys
 )
 
 install(TARGETS virial

@@ -24,7 +24,10 @@
 // dihedral).
 
 #include <cmath>
+#include <cstdint>
 #include <cstdio>
+#include <format>
+#include <iostream>
 
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
@@ -41,11 +44,11 @@
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 
-static constexpr long ITERATIONS = 20000;
+static constexpr std::uint64_t ITERATIONS = 20000;
 
 int main()
 {
-    auto box = simulationBox::SimulationBox();
+    auto box = molsys::SimulationBox();
     box.setBoxDimensions({10.0, 10.0, 10.0});
 
     auto physicalData        = physicalData::PhysicalData();
@@ -57,14 +60,15 @@ int main()
     settings::PotentialSettings::setScale14Coulomb(0.75);
     settings::PotentialSettings::setScale14VanDerWaals(0.5);
 
-    auto bond = forceField::BondForceField(&molecule, &molecule, 0, 1, 0);
+    auto bond =
+        forceField::BondForceField(&molecule, &molecule, 0, 1, BondId{0});
     bond.setEquilibriumBondLength(1.2);
     bond.setForceConstant(3.0);
 
     auto angle = forceField::AngleForceField(
         {&molecule, &molecule, &molecule},
         {0, 1, 2},
-        0
+        AngleId{0}
     );
     angle.setEquilibriumAngle(M_PI / 2.0);
     angle.setForceConstant(3.0);
@@ -72,7 +76,7 @@ int main()
     auto dihedral = forceField::DihedralForceField(
         {&molecule, &molecule, &molecule, &molecule},
         {0, 1, 2, 3},
-        0
+        DihedralId{0}
     );
     dihedral.setPhaseShift(M_PI);
     dihedral.setPeriodicity(3);
@@ -81,7 +85,7 @@ int main()
 
     CALLGRIND_ZERO_STATS;
 
-    for (long i = 0; i < ITERATIONS; ++i)
+    for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
         bond.calculateEnergyAndForces(
             box,
@@ -105,8 +109,8 @@ int main()
     }
 
     // read state so the loop cannot be optimized away
-    std::printf(
-        "%.6f\n",
+    std::cout << std::format(
+        "{:.6f}\n",
         physicalData.getBondEnergy() + physicalData.getAngleEnergy() +
             physicalData.getDihedralEnergy() + molecule.getAtomForce(0)[0]
     );

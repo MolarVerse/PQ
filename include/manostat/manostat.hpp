@@ -26,17 +26,16 @@
 
 #include "manostatSettings.hpp"
 #include "staticMatrix.hpp"
-#include "timer.hpp"   // for Timer
 
-namespace simulationBox
+namespace molsys
 {
     class SimulationBox;   // forward declaration
-}
+}   // namespace molsys
 
 namespace physicalData
 {
     class PhysicalData;   // forward declaration
-}
+}   // namespace physicalData
 
 namespace manostat
 {
@@ -46,7 +45,7 @@ namespace manostat
      * @brief Manostat is a base class for all manostats
      *
      */
-    class Manostat : public timings::Timer
+    class Manostat
     {
        protected:
         linearAlgebra::tensor3D _pressureTensor = {0.0};
@@ -59,18 +58,19 @@ namespace manostat
         virtual ~Manostat() = default;
 
         void calculatePressure(
-            const simulationBox::SimulationBox &,
+            const molsys::SimulationBox &,
             physicalData::PhysicalData &
         );
+
         virtual void applyManostat(
-            simulationBox::SimulationBox &,
+            molsys::SimulationBox &,
             physicalData::PhysicalData &
         );
 
         void rotateMu(linearAlgebra::tensor3D &mu) const;
 
-        virtual settings::ManostatType getManostatType() const;
-        virtual settings::Isotropy     getIsotropy() const;
+        [[nodiscard]] virtual settings::ManostatType getManostatType() const;
+        [[nodiscard]] virtual settings::Isotropy     getIsotropy() const;
     };
 
 }   // namespace manostat

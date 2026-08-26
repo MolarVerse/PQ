@@ -27,7 +27,11 @@
 #include <cstddef>   // for size_t
 
 #include "output.hpp"
-#include "typeAliases.hpp"
+
+namespace molsys
+{
+    class Box;   // forward declaration
+}   // namespace molsys
 
 namespace output
 {
@@ -42,7 +46,7 @@ namespace output
        public:
         using Output::Output;
 
-        void write(const size_t, const pq::Box &);
+        void write(const size_t, const molsys::Box &);
     };
 
 }   // namespace output

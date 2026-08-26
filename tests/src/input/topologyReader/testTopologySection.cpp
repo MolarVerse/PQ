@@ -25,9 +25,9 @@
 #include <ostream>   // for operator<<, basic_ostream, ofstream
 #include <vector>    // for vector
 
-#include "exceptions.hpp"        // for TopologyException
-#include "gtest/gtest.h"         // for Message, TestPartResult
-#include "shakeSection.hpp"      // for ShakeSection
+#include "exceptions.hpp"     // for TopologyException
+#include "gtest/gtest.h"      // for Message, TestPartResult
+#include "shakeSection.hpp"   // for ShakeSection
 
 using namespace input::topology;
 
@@ -57,50 +57,33 @@ TEST_F(TestTopologySection, processShakeSection)
     shakeSection.setLineNumber(1);
 
     EXPECT_NO_THROW(shakeSection.process(lineElements, *_engine));
+    const auto& constraints = _engine->getConstraints();
 
-    EXPECT_EQ(_engine->getConstraints().getBondConstraints().size(), 2);
+    EXPECT_EQ(constraints->getBondConstraints().size(), 2);
 
     EXPECT_EQ(
-        _engine->getConstraints().getBondConstraints()[0].getMolecule1(),
+        constraints->getBondConstraints()[0].getMolecule1(),
         &(_engine->getSimulationBox().getMolecules()[0])
     );
     EXPECT_EQ(
-        _engine->getConstraints().getBondConstraints()[0].getMolecule2(),
+        constraints->getBondConstraints()[0].getMolecule2(),
         &(_engine->getSimulationBox().getMolecules()[1])
     );
-    EXPECT_EQ(
-        _engine->getConstraints().getBondConstraints()[0].getAtomIndex1(),
-        0
-    );
-    EXPECT_EQ(
-        _engine->getConstraints().getBondConstraints()[0].getAtomIndex2(),
-        0
-    );
-    EXPECT_EQ(
-        _engine->getConstraints().getBondConstraints()[0].getTargetBondLength(),
-        1.0
-    );
+    EXPECT_EQ(constraints->getBondConstraints()[0].getAtomIndex1(), 0);
+    EXPECT_EQ(constraints->getBondConstraints()[0].getAtomIndex2(), 0);
+    EXPECT_EQ(constraints->getBondConstraints()[0].getTargetBondLength(), 1.0);
 
     EXPECT_EQ(
-        _engine->getConstraints().getBondConstraints()[1].getMolecule1(),
+        constraints->getBondConstraints()[1].getMolecule1(),
         &(_engine->getSimulationBox().getMolecules()[1])
     );
     EXPECT_EQ(
-        _engine->getConstraints().getBondConstraints()[1].getMolecule2(),
+        constraints->getBondConstraints()[1].getMolecule2(),
         &(_engine->getSimulationBox().getMolecules()[1])
     );
-    EXPECT_EQ(
-        _engine->getConstraints().getBondConstraints()[1].getAtomIndex1(),
-        0
-    );
-    EXPECT_EQ(
-        _engine->getConstraints().getBondConstraints()[1].getAtomIndex2(),
-        1
-    );
-    EXPECT_EQ(
-        _engine->getConstraints().getBondConstraints()[1].getTargetBondLength(),
-        1.2
-    );
+    EXPECT_EQ(constraints->getBondConstraints()[1].getAtomIndex1(), 0);
+    EXPECT_EQ(constraints->getBondConstraints()[1].getAtomIndex2(), 1);
+    EXPECT_EQ(constraints->getBondConstraints()[1].getTargetBondLength(), 1.2);
 
     EXPECT_EQ(shakeSection.getLineNumber(), 5);
 }
@@ -109,7 +92,7 @@ TEST_F(TestTopologySection, processShakeSection)
  * @brief tests if incorrect number of elements is correctly handled
  *
  */
-TEST_F(TestTopologySection, processShakeSection_incorrectNumberOfElements)
+TEST_F(TestTopologySection, processShakeSectionIncorrectNumberOfElements)
 {
     ShakeSection shakeSection;
 
@@ -136,7 +119,7 @@ TEST_F(TestTopologySection, processShakeSection_incorrectNumberOfElements)
  * @brief tests if same atom given twice is correctly handled
  *
  */
-TEST_F(TestTopologySection, processShakeSection_sameAtomTwice)
+TEST_F(TestTopologySection, processShakeSectionSameAtomTwice)
 {
     ShakeSection shakeSection;
 
@@ -163,7 +146,7 @@ TEST_F(TestTopologySection, processShakeSection_sameAtomTwice)
  * @brief tests if missing end statement is correctly handled
  *
  */
-TEST_F(TestTopologySection, processShakeSection_missingEnd)
+TEST_F(TestTopologySection, processShakeSectionMissingEnd)
 {
     ShakeSection shakeSection;
 

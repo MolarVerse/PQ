@@ -109,7 +109,7 @@ TEST_F(TestInputFileReader, equalSign)
  */
 TEST_F(TestInputFileReader, addKeyword)
 {
-    GeneralInputParser parser(*_engine);
+    GeneralInputParser parser{};
     const auto         initialSizeOfMaps = parser.getKeywordCountMap().size();
 
     parser.addKeyword(

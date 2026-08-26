@@ -53,11 +53,13 @@ TEST(TestVirialOutput, writeEmitsStepAndAllNineTensorComponents)
     out.setFilename(path);
 
     PhysicalData data;
-    data.setVirial(linearAlgebra::tensor3D{
-        linearAlgebra::Vec3D{0.1, 0.2, 0.3},
-        linearAlgebra::Vec3D{0.4, 0.5, 0.6},
-        linearAlgebra::Vec3D{0.7, 0.8, 0.9}
-    });
+    data.setVirial(
+        linearAlgebra::tensor3D{
+            linearAlgebra::Vec3D{0.1, 0.2, 0.3},
+            linearAlgebra::Vec3D{0.4, 0.5, 0.6},
+            linearAlgebra::Vec3D{0.7, 0.8, 0.9}
+        }
+    );
 
     out.write(42, data);
     out.close();
@@ -68,7 +70,8 @@ TEST(TestVirialOutput, writeEmitsStepAndAllNineTensorComponents)
     EXPECT_NE(content.find("5.00000e-01"), std::string::npos);
     EXPECT_NE(content.find("9.00000e-01"), std::string::npos);
 
-    ::remove(path.c_str());
+    const auto errorCode = std::remove(path.c_str());
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: " << path;
 }
 
 TEST(TestVirialOutput, writeEmitsOneLinePerCall)
@@ -85,11 +88,13 @@ TEST(TestVirialOutput, writeEmitsOneLinePerCall)
     out.write(3, data);
     out.close();
 
-    const auto content = slurp(path);
+    const auto content  = slurp(path);
     size_t     newlines = 0;
     for (auto c : content)
-        if (c == '\n') ++newlines;
-    EXPECT_EQ(newlines, 3u);
+        if (c == '\n')
+            ++newlines;
+    EXPECT_EQ(newlines, 3U);
 
-    ::remove(path.c_str());
+    const auto errorCode = std::remove(path.c_str());
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: " << path;
 }

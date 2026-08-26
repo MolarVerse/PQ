@@ -30,9 +30,10 @@
 #include "dihedralForceField.hpp"   // for BondForceField
 #include "engine.hpp"               // for Engine
 #include "exceptions.hpp"           // for TopologyException
+#include "strongTypes.hpp"
 
 using namespace input::topology;
-using namespace simulationBox;
+using namespace molsys;
 using namespace forceField;
 using namespace customException;
 using namespace engine;
@@ -62,18 +63,24 @@ void DihedralSection::processSection(
     Engine                   &engine
 )
 {
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
     if (lineElements.size() != 5 && lineElements.size() != 6)
-        throw TopologyException(std::format(
-            "Wrong number of arguments in topology file dihedral section at "
-            "line {} - number of elements has to be 5 or 6!",
-            _lineNumber
-        ));
+    {
+        throw TopologyException(
+            std::format(
+                "Wrong number of arguments in topology file dihedral section "
+                "at "
+                "line {} - number of elements has to be 5 or 6!",
+                _lineNumber
+            )
+        );
+    }
 
     auto atom1        = stoul(lineElements[0]);
     auto atom2        = stoul(lineElements[1]);
     auto atom3        = stoul(lineElements[2]);
     auto atom4        = stoul(lineElements[3]);
-    auto dihedralType = stoul(lineElements[4]);
+    auto dihedralType = DihedralId{stoul(lineElements[4])};
     auto isLinker     = false;
 
     if (6 == lineElements.size())
@@ -82,12 +89,18 @@ void DihedralSection::processSection(
             isLinker = true;
 
         else
-            throw TopologyException(std::format(
-                "Sixth entry in topology file in dihedral section has to be a "
-                "\'*\' or empty at line {}!",
-                _lineNumber
-            ));
+        {
+            throw TopologyException(
+                std::format(
+                    "Sixth entry in topology file in dihedral section has to "
+                    "be a "
+                    "\'*\' or empty at line {}!",
+                    _lineNumber
+                )
+            );
+        }
     }
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
     auto atoms = std::vector{atom1, atom2, atom3, atom4};
     std::ranges::sort(atoms);
@@ -95,11 +108,16 @@ void DihedralSection::processSection(
     atoms.erase(it, end);
 
     if (4 != atoms.size())
-        throw TopologyException(std::format(
-            "Topology file dihedral section at line {} - atoms cannot be the "
-            "same!",
-            _lineNumber
-        ));
+    {
+        throw TopologyException(
+            std::format(
+                "Topology file dihedral section at line {} - atoms cannot be "
+                "the "
+                "same!",
+                _lineNumber
+            )
+        );
+    }
 
     auto &simBox = engine.getSimulationBox();
 
@@ -114,7 +132,7 @@ void DihedralSection::processSection(
     auto dihedralFF = DihedralForceField(mols, atomIdxs, dihedralType);
     dihedralFF.setIsLinker(isLinker);
 
-    engine.getForceField().addDihedral(dihedralFF);
+    engine.getForceField()->addDihedral(dihedralFF);
 }
 
 /**
@@ -134,9 +152,13 @@ std::string DihedralSection::keyword() { return "dihedrals"; }
 void DihedralSection::endedNormally(const bool endedNormal) const
 {
     if (!endedNormal)
-        throw TopologyException(std::format(
-            "Topology file dihedral section at line {} - no end of section "
-            "found!",
-            _lineNumber
-        ));
+    {
+        throw TopologyException(
+            std::format(
+                "Topology file dihedral section at line {} - no end of section "
+                "found!",
+                _lineNumber
+            )
+        );
+    }
 }

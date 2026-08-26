@@ -24,14 +24,14 @@
 
 #define _TEST_TRAJECTORY_FILE_OUTPUT_HPP_
 
+#include <gtest/gtest.h>   // for Test
+
+#include <memory>   // for __shared_ptr_access, shared_ptr, make_shared
+
 #include "atom.hpp"               // for Atom
 #include "molecule.hpp"           // for Molecule
 #include "simulationBox.hpp"      // for SimulationBox
 #include "trajectoryOutput.hpp"   // for TrajectoryOutput
-
-#include <gtest/gtest.h>   // for Test
-#include <memory>          // for __shared_ptr_access, shared_ptr, make_shared
-#include <stdio.h>         // for remove
 
 /**
  * @class TestTrajectoryOutput
@@ -41,18 +41,18 @@
  */
 class TestTrajectoryOutput : public ::testing::Test
 {
-  protected:
+   protected:
     void SetUp() override
     {
         _trajectoryOutput = new output::TrajectoryOutput("default.xyz");
-        _simulationBox    = new simulationBox::SimulationBox();
+        _simulationBox    = new molsys::SimulationBox();
 
         _simulationBox->setBoxDimensions({10.0, 10.0, 10.0});
 
-        auto molecule1 = simulationBox::Molecule();
+        auto molecule1 = molsys::Molecule();
 
-        const auto atom1 = std::make_shared<simulationBox::Atom>();
-        const auto atom2 = std::make_shared<simulationBox::Atom>();
+        const auto atom1 = std::make_shared<molsys::Atom>();
+        const auto atom2 = std::make_shared<molsys::Atom>();
 
         molecule1.setNumberOfAtoms(2);
 
@@ -70,9 +70,9 @@ class TestTrajectoryOutput : public ::testing::Test
         molecule1.addAtom(atom1);
         molecule1.addAtom(atom2);
 
-        auto molecule2 = simulationBox::Molecule();
+        auto molecule2 = molsys::Molecule();
 
-        auto atom3 = std::make_shared<simulationBox::Atom>();
+        auto atom3 = std::make_shared<molsys::Atom>();
 
         molecule2.setNumberOfAtoms(1);
 
@@ -95,11 +95,12 @@ class TestTrajectoryOutput : public ::testing::Test
     {
         delete _trajectoryOutput;
         delete _simulationBox;
-        ::remove("default.xyz");
+        const auto errorCode = std::remove("default.xyz");
+        EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.xyz";
     }
 
-    output::TrajectoryOutput     *_trajectoryOutput;
-    simulationBox::SimulationBox *_simulationBox;
+    output::TrajectoryOutput *_trajectoryOutput;
+    molsys::SimulationBox    *_simulationBox;
 };
 
 #endif   // _TEST_TRAJECTORY_FILE_OUTPUT_HPP_

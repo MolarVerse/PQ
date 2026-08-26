@@ -25,18 +25,18 @@
 #include <cstddef>       // for size_t
 #include <format>        // for format
 #include <string_view>   // for string_view
+#include <utility>
 
 #include "constraintSettings.hpp"   // for ConstraintSettings
 #include "constraints.hpp"          // for Constraints
-#include "engine.hpp"               // for Engine
-#include "exceptions.hpp"           // for InputFileException
+#include "constraints.hpp"
+#include "exceptions.hpp"   // for InputFileException
 #include "parserUtils.hpp"
 #include "references.hpp"         // for ReferencesOutput
 #include "referencesOutput.hpp"   // for ReferencesOutput
 #include "stringUtilities.hpp"    // for stringToFiniteDouble, stringToInt
 
 using namespace input;
-using namespace engine;
 using namespace settings;
 using namespace references;
 using namespace customException;
@@ -51,9 +51,12 @@ using namespace customException;
  * rattle-tolerance <double>
  *
  * @param engine
+ * @param constraints pointer to the constraints object
  */
-ConstraintsInputParser::ConstraintsInputParser(Engine &engine)
-    : InputFileParser(engine)
+ConstraintsInputParser::ConstraintsInputParser(
+    std::shared_ptr<constraints::Constraints> constraints
+)
+    : _constraints(std::move(constraints))
 {
     addKeyword(
         std::string("shake"),
@@ -120,23 +123,21 @@ void ConstraintsInputParser::parseShakeActivated(
 {
     checkCommand(lineElements, lineNumber);
 
-    auto &constraints = _engine.getConstraints();
-
     if (lineElements[2] == "on" || lineElements[2] == "shake")
     {
-        constraints.activateShake();
+        _constraints->activateShake();
         ConstraintSettings::activateShake();
         ReferencesOutput::addReferenceFile(RATTLE_FILE);
     }
     else if (lineElements[2] == "off")
     {
-        constraints.deactivateShake();
+        _constraints->deactivateShake();
         ConstraintSettings::deactivateShake();
     }
     else if (lineElements[2] == "mshake")
     {
-        constraints.activateMShake();
-        constraints.activateShake();
+        _constraints->activateMShake();
+        _constraints->activateShake();
         ConstraintSettings::activateMShake();
         ConstraintSettings::activateShake();
     }
@@ -198,7 +199,7 @@ void ConstraintsInputParser::parseShakeIteration(
     if (iteration <= 0)
         throw InputFileException("Maximum shake iterations must be positive");
 
-    ConstraintSettings::setShakeMaxIter(size_t(iteration));
+    ConstraintSettings::setShakeMaxIter(static_cast<size_t>(iteration));
 }
 
 /**
@@ -246,7 +247,7 @@ void ConstraintsInputParser::parseRattleIteration(
     if (iteration <= 0)
         throw InputFileException("Maximum rattle iterations must be positive");
 
-    ConstraintSettings::setRattleMaxIter(size_t(iteration));
+    ConstraintSettings::setRattleMaxIter(static_cast<size_t>(iteration));
 }
 
 /**
@@ -294,7 +295,7 @@ void ConstraintsInputParser::parseMShakeIteration(
     if (iteration <= 0)
         throw InputFileException("Maximum MShake iterations must be positive");
 
-    ConstraintSettings::setMShakeMaxIter(size_t(iteration));
+    ConstraintSettings::setMShakeMaxIter(static_cast<size_t>(iteration));
 }
 
 /**
@@ -318,12 +319,12 @@ void ConstraintsInputParser::parseDistanceConstraintActivated(
 
     if (lineElements[2] == "on")
     {
-        _engine.getConstraints().activateDistanceConstraints();
+        _constraints->activateDistanceConstraints();
         ConstraintSettings::activateDistanceConstraints();
     }
     else if (lineElements[2] == "off")
     {
-        _engine.getConstraints().deactivateDistanceConstraints();
+        _constraints->deactivateDistanceConstraints();
         ConstraintSettings::deactivateDistanceConstraints();
     }
     else
