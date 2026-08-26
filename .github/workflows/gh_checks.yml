@@ -1,0 +1,49 @@
+name: Check Issue Development Link
+
+on:
+  issues:
+    types: [opened, reopened, edited]
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: 'Issue number to check'
+        required: true
+
+jobs:
+  check-linked-pr:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Query Development-linked PRs
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number || inputs.issue_number }}
+          REPO: ${{ github.repository }}
+        run: |
+          OWNER="${REPO%/*}"
+          NAME="${REPO#*/}"
+
+          COUNT=$(gh api graphql -f query='
+            query($owner: String!, $repo: String!, $number: Int!) {
+              repository(owner: $owner, name: $repo) {
+                issue(number: $number) {
+                  closedByPullRequestsReferences(first: 10) {
+                    totalCount
+                  }
+                }
+              }
+            }' -F owner="$OWNER" -F repo="$NAME" -F number="$ISSUE_NUMBER" \
+            --jq '.data.repository.issue.closedByPullRequestsReferences.totalCount')
+
+          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
+          if [ "$COUNT" -eq 0 ]; then
+            echo "linked=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "linked=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Fail if no linked PR
+        if: steps.check.outputs.linked == 'false'
+        run: |
+          echo "::error::Issue #${{ env.ISSUE_NUMBER }} has no PR linked under Development."
+          exit 1

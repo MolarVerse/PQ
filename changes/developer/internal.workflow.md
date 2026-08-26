@@ -1,1 +1,2 @@
 - add explicit path filtering via filters in CI to make them checkable in rulesets
+- add CI to check if a pull request has a linked issue
