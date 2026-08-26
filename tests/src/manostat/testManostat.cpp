@@ -308,7 +308,7 @@ TEST_F(
 
     EXPECT_THROW_MSG(
         _manostat->applyManostat(*_box, *_data),
-        customException::ManostatException,
+        exc::ManostatException,
         "Coulomb radius cut off is larger than half of the minimal box "
         "dimension"
     );

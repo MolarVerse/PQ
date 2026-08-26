@@ -64,19 +64,19 @@ TEST_F(TestTopologySection, processSectionDihedral)
     lineElements = {"1", "1", "2", "3", "4"};
     EXPECT_THROW(
         dihedralSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+        exc::TopologyException
     );
 
     lineElements = {"1", "2", "7"};
     EXPECT_THROW(
         dihedralSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+        exc::TopologyException
     );
 
     lineElements = {"1", "2", "3", "4", "7", "#"};
     EXPECT_THROW(
         dihedralSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+        exc::TopologyException
     );
 }
 
@@ -87,9 +87,6 @@ TEST_F(TestTopologySection, processSectionDihedral)
 TEST_F(TestTopologySection, endedNormallyDihedral)
 {
     input::topology::DihedralSection dihedralSection;
-    EXPECT_THROW(
-        dihedralSection.endedNormally(false),
-        customException::TopologyException
-    );
+    EXPECT_THROW(dihedralSection.endedNormally(false), exc::TopologyException);
     EXPECT_NO_THROW(dihedralSection.endedNormally(true));
 }

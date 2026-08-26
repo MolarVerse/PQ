@@ -31,7 +31,7 @@
 
 using namespace input;
 using namespace settings;
-using namespace customException;
+using namespace exc;
 
 TEST_F(TestInputFileReader, parserEnergyConvergenceStrategy)
 {

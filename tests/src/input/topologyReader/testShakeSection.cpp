@@ -59,13 +59,13 @@ TEST_F(TestTopologySection, processSectionShake)
     lineElements = {"1", "1", "1.0", "0"};
     EXPECT_THROW(
         shakeSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+        exc::TopologyException
     );
 
     lineElements = {"1", "1", "1.0", "0", "1"};
     EXPECT_THROW(
         shakeSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+        exc::TopologyException
     );
 }
 
@@ -76,9 +76,6 @@ TEST_F(TestTopologySection, processSectionShake)
 TEST_F(TestTopologySection, endedNormallyShake)
 {
     input::topology::ShakeSection shakeSection;
-    EXPECT_THROW(
-        shakeSection.endedNormally(false),
-        customException::TopologyException
-    );
+    EXPECT_THROW(shakeSection.endedNormally(false), exc::TopologyException);
     EXPECT_NO_THROW(shakeSection.endedNormally(true));
 }

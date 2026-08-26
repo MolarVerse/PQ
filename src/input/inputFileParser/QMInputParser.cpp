@@ -38,7 +38,7 @@
 using namespace input;
 using namespace utilities;
 using namespace settings;
-using namespace customException;
+using namespace exc;
 using namespace references;
 using namespace constants;
 

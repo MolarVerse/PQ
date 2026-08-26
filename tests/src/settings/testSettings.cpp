@@ -34,7 +34,7 @@ using enum settings::JobType;
 using enum settings::FPType;
 
 using namespace settings;
-// using namespace customException;
+// using namespace exc;
 
 TEST(TestSettings, stringJobtypeTest)
 {

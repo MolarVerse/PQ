@@ -42,19 +42,19 @@ TEST(TestOutput, testSpecialSetFilename)
 
     EXPECT_THROW_MSG(
         output.setFilename(""),
-        customException::InputFileException,
+        exc::InputFileException,
         "Filename cannot be empty"
     );
 
     EXPECT_THROW_MSG(
         output.setFilename("src"),
-        customException::InputFileException,
+        exc::InputFileException,
         "File already exists - filename = src"
     );
 
     EXPECT_THROW_MSG(
         output.openFile(),
-        customException::InputFileException,
+        exc::InputFileException,
         std::format("Could not open file - filename = src")
     );
 
@@ -64,7 +64,7 @@ TEST(TestOutput, testSpecialSetFilename)
 
     EXPECT_THROW_MSG(
         output.setFilename(testFileName),
-        customException::InputFileException,
+        exc::InputFileException,
         std::format("File already exists - filename = {}", testFileName)
     );
 

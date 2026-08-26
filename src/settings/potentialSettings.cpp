@@ -27,7 +27,7 @@
 
 using namespace settings;
 using namespace utilities;
-using namespace customException;
+using namespace exc;
 
 /**
  * @brief return string of nonCoulombType

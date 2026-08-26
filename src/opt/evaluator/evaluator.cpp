@@ -40,7 +40,7 @@ using namespace forceField;
 using namespace intraNonBonded;
 using namespace virial;
 using namespace constraints;
-using namespace customException;
+using namespace exc;
 
 bool Evaluator::supportsAnalyticHessian() const { return false; }
 

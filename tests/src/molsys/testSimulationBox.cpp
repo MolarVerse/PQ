@@ -119,7 +119,7 @@ TEST_F(TestSimulationBox, findMoleculeType)
 
     EXPECT_THROW(
         [[maybe_unused]] auto &dummy = _simulationBox->findMoleculeType(3),
-        customException::RstFileException
+        exc::RstFileException
     );
 }
 
@@ -141,11 +141,11 @@ TEST_F(TestSimulationBox, findMoleculeByAtomIndex)
 
     EXPECT_THROW([[maybe_unused]] const auto dummy =
                      _simulationBox->findMoleculeByAtomIndex(6);
-                 , customException::UserInputException);
+                 , exc::UserInputException);
 
     EXPECT_THROW([[maybe_unused]] const auto dummy =
                      _simulationBox->findMoleculeByAtomIndex(0);
-                 , customException::UserInputException);
+                 , exc::UserInputException);
 }
 
 /**
@@ -194,19 +194,15 @@ TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
     _simulationBox->setBoxDimensions({1.99, 10.0, 10.0});
 
     EXPECT_THROW_MSG(
-        _simulationBox->checkCoulRadiusCutOff(
-            customException::ExceptionType::USERINPUTEXCEPTION
-        ),
-        customException::UserInputException,
+        _simulationBox->checkCoulRadiusCutOff(ExceptionType::UserInputError),
+        exc::UserInputException,
         "Coulomb radius cut off is larger than half of the minimal box "
         "dimension"
     );
 
     EXPECT_THROW_MSG(
-        _simulationBox->checkCoulRadiusCutOff(
-            customException::ExceptionType::MANOSTATEXCEPTION
-        ),
-        customException::ManostatException,
+        _simulationBox->checkCoulRadiusCutOff(ExceptionType::ManostatError),
+        exc::ManostatException,
         "Coulomb radius cut off is larger than half of the minimal box "
         "dimension"
     );
@@ -214,10 +210,8 @@ TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
     _simulationBox->setBoxDimensions({10.0, 1.99, 10.0});
 
     EXPECT_THROW_MSG(
-        _simulationBox->checkCoulRadiusCutOff(
-            customException::ExceptionType::USERINPUTEXCEPTION
-        ),
-        customException::UserInputException,
+        _simulationBox->checkCoulRadiusCutOff(ExceptionType::UserInputError),
+        exc::UserInputException,
         "Coulomb radius cut off is larger than half of the minimal box "
         "dimension"
     );
@@ -225,10 +219,8 @@ TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
     _simulationBox->setBoxDimensions({10.0, 10.0, 1.99});
 
     EXPECT_THROW_MSG(
-        _simulationBox->checkCoulRadiusCutOff(
-            customException::ExceptionType::USERINPUTEXCEPTION
-        ),
-        customException::UserInputException,
+        _simulationBox->checkCoulRadiusCutOff(ExceptionType::UserInputError),
+        exc::UserInputException,
         "Coulomb radius cut off is larger than half of the minimal box "
         "dimension"
     );
@@ -378,7 +370,7 @@ TEST_F(
 
     EXPECT_THROW_MSG(
         simulationBox.setPartialChargesOfMoleculesFromMoleculeTypes(),
-        customException::UserInputException,
+        exc::UserInputException,
         "Molecule type 1 not found in molecule types"
     );
 }
@@ -483,33 +475,33 @@ TEST_F(TestSimulationBox, validatesHybridIndexLists)
     );
     EXPECT_THROW(
         _simulationBox->addInnerRegionCenterAtoms({-1}),
-        customException::UserInputException
+        exc::UserInputException
     );
     EXPECT_THROW(
         _simulationBox->addInnerRegionCenterAtoms({5}),
-        customException::UserInputException
+        exc::UserInputException
     );
 
     _simulationBox->setupForcedOuterMolecules({0});
     EXPECT_TRUE(_simulationBox->getMolecule(0).isForcedOuter());
     EXPECT_THROW(
         _simulationBox->setupForcedCoreMolecules({0}),
-        customException::UserInputException
+        exc::UserInputException
     );
 
     _simulationBox->setupForcedCoreMolecules({1});
     EXPECT_TRUE(_simulationBox->getMolecule(1).isForcedCore());
     EXPECT_THROW(
         _simulationBox->setupForcedOuterMolecules({1}),
-        customException::UserInputException
+        exc::UserInputException
     );
     EXPECT_THROW(
         _simulationBox->setupForcedCoreMolecules({2}),
-        customException::UserInputException
+        exc::UserInputException
     );
     EXPECT_THROW(
         _simulationBox->setupForcedOuterMolecules({-1}),
-        customException::UserInputException
+        exc::UserInputException
     );
 }
 
@@ -530,38 +522,38 @@ TEST_F(TestSimulationBox, validatesForcedLayerList)
 
     EXPECT_THROW_MSG(
         simBox.setupForcedLayerMolecules({-1}),
-        customException::UserInputException,
+        exc::UserInputException,
         "Forced Layer region molecule index -1 out of range"
     );
     EXPECT_THROW_MSG(
         simBox.setupForcedLayerMolecules({3}),
-        customException::UserInputException,
+        exc::UserInputException,
         "Forced Layer region molecule index 3 out of range"
     );
     EXPECT_THROW_MSG(
         simBox.setupForcedLayerMolecules({0}),
-        customException::UserInputException,
+        exc::UserInputException,
         "Ambiguous molecule index 0 - molecule cannot be in "
         "forced_layer_list AND forced_core_list/forced_outer_list at the same "
         "time"
     );
     EXPECT_THROW_MSG(
         simBox.setupForcedLayerMolecules({2}),
-        customException::UserInputException,
+        exc::UserInputException,
         "Ambiguous molecule index 2 - molecule cannot be in "
         "forced_layer_list AND forced_core_list/forced_outer_list at the same "
         "time"
     );
     EXPECT_THROW_MSG(
         simBox.setupForcedCoreMolecules({1}),
-        customException::UserInputException,
+        exc::UserInputException,
         "Ambiguous molecule index 1 - molecule cannot be in "
         "forced_core_list AND forced_layer_list/forced_outer_list at the same "
         "time"
     );
     EXPECT_THROW_MSG(
         simBox.setupForcedOuterMolecules({1}),
-        customException::UserInputException,
+        exc::UserInputException,
         "Ambiguous molecule index 1 - molecule cannot be in "
         "forced_outer_list AND forced_core_list/forced_layer_list at the same "
         "time"

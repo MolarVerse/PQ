@@ -367,7 +367,7 @@ void MShake::applyMShake(SimulationBox &simBox)
 
             if (iteration >= mShakeMaxIter)
             {
-                throw customException::MShakeException(
+                throw exc::MShakeException(
                     std::format(
                         "M-Shake did not converge within {} iterations for "
                         "molecule type {}",
@@ -490,7 +490,7 @@ bool MShake::isMShakeType(const size_t moltype) const
  *
  * @return bool
  *
- * @throw customException::MShakeException if no M - Shake reference is
+ * @throw exc::MShakeException if no M - Shake reference is
  * found
  */
 const MShakeReference &MShake::findMShakeRef(const size_t moltype) const
@@ -503,7 +503,7 @@ const MShakeReference &MShake::findMShakeRef(const size_t moltype) const
             return mShakeReference;
     }
 
-    throw customException::MShakeException(
+    throw exc::MShakeException(
         std::format("No M-Shake reference found for molecule type {}", moltype)
     );
 }
@@ -515,7 +515,7 @@ const MShakeReference &MShake::findMShakeRef(const size_t moltype) const
  *
  * @return size_t
  *
- * @throw customException::MShakeException if no M - Shake reference is
+ * @throw exc::MShakeException if no M - Shake reference is
  * found
  */
 size_t MShake::findMShakeReferenceIndex(const size_t moltype) const
@@ -532,7 +532,7 @@ size_t MShake::findMShakeReferenceIndex(const size_t moltype) const
         ++index;
     }
 
-    throw customException::MShakeException(
+    throw exc::MShakeException(
         std::format("No M-Shake reference found for molecule type {}", moltype)
     );
 }

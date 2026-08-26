@@ -142,7 +142,7 @@ TEST_F(TestSetup, rejectsEmptyTemperatureRamp)
     settings::ThermostatSettings::setStartTemperature(200);
     settings::ThermostatSettings::setTemperatureRampSteps(0);
 
-    EXPECT_THROW(thermostatSetup.setup(), customException::InputFileException);
+    EXPECT_THROW(thermostatSetup.setup(), exc::InputFileException);
 }
 
 TEST_F(TestSetup, rejectsZeroTemperatureRampFrequency)
@@ -156,7 +156,7 @@ TEST_F(TestSetup, rejectsZeroTemperatureRampFrequency)
     settings::ThermostatSettings::setTemperatureRampSteps(10);
     settings::ThermostatSettings::setTemperatureRampFrequency(0);
 
-    EXPECT_THROW(thermostatSetup.setup(), customException::InputFileException);
+    EXPECT_THROW(thermostatSetup.setup(), exc::InputFileException);
 
     settings::ThermostatSettings::setTemperatureRampSteps(0);
     settings::ThermostatSettings::setTemperatureRampFrequency(1);

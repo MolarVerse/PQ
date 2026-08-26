@@ -81,7 +81,7 @@ TEST_F(TestForceField, findBondTypeByIdNotFoundError)
 
     EXPECT_THROW_MSG(
         const auto _ = forceField.findBondTypeById(BondId{0}),
-        customException::TopologyException,
+        exc::TopologyException,
         "Bond type with id " + BondId(0).toString() + " not found."
     );
 }
@@ -110,7 +110,7 @@ TEST_F(TestForceField, findAngleTypeByIdNotFoundError)
 
     EXPECT_THROW_MSG(
         const auto _ = forceField.findAngleTypeById(AngleId{0}),
-        customException::TopologyException,
+        exc::TopologyException,
         "Angle type with id " + AngleId(0).toString() + " not found."
     );
 }
@@ -139,7 +139,7 @@ TEST_F(TestForceField, findDihedralTypeByIdNotFoundError)
 
     EXPECT_THROW_MSG(
         const auto _ = forceField.findDihedralTypeById(DihedralId{0}),
-        customException::TopologyException,
+        exc::TopologyException,
         "Dihedral type with id " + DihedralId(0).toString() + " not found."
     );
 }
@@ -172,7 +172,7 @@ TEST_F(TestForceField, findImproperDihedralTypeByIdNotFoundError)
 
     EXPECT_THROW_MSG(
         const auto _ = forceField.findImproperTypeById(DihedralId{0}),
-        customException::TopologyException,
+        exc::TopologyException,
         "Improper dihedral type with id " + DihedralId(0).toString() +
             " not found."
     );

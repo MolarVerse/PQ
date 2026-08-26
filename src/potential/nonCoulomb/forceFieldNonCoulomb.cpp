@@ -35,7 +35,7 @@
 #include "nonCoulombPair.hpp"   // for NonCoulombPair
 
 using namespace potential;
-using namespace customException;
+using namespace exc;
 using namespace linearAlgebra;
 
 using std::ranges::adjacent_find;

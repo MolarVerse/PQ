@@ -40,7 +40,7 @@
 
 using namespace input::topology;
 using namespace engine;
-using namespace customException;
+using namespace exc;
 using namespace settings;
 using namespace utilities;
 

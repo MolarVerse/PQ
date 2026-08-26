@@ -42,7 +42,7 @@ using namespace settings;
 using namespace engine;
 using namespace QM;
 using namespace utilities;
-using namespace customException;
+using namespace exc;
 using namespace references;
 
 /**

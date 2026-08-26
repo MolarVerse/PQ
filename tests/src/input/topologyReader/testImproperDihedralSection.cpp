@@ -58,13 +58,13 @@ TEST_F(TestTopologySection, processSectionImproperDihedral)
     lineElements = {"1", "1", "2", "3", "4"};
     EXPECT_THROW(
         improperDihedralSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+        exc::TopologyException
     );
 
     lineElements = {"1", "2", "7"};
     EXPECT_THROW(
         improperDihedralSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+        exc::TopologyException
     );
 }
 
@@ -77,7 +77,7 @@ TEST_F(TestTopologySection, endedNormallyImproperDihedral)
     input::topology::ImproperDihedralSection improperDihedralSection;
     EXPECT_THROW(
         improperDihedralSection.endedNormally(false),
-        customException::TopologyException
+        exc::TopologyException
     );
     EXPECT_NO_THROW(improperDihedralSection.endedNormally(true));
 }

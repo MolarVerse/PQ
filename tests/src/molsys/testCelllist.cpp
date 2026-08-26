@@ -228,7 +228,7 @@ TEST_F(TestCellList, addNeighbouringCellsRejectsAliasedPeriodicOffsets)
 
     EXPECT_THROW_MSG(
         _cellList->addNeighbouringCells(4.0),
-        customException::CellListException,
+        exc::CellListException,
         "Invalid cell-list layout for x dimension: cell-number must be at "
         "least 2 * neighbour cells + 1 (required 3, configured 2). Decrease "
         "coulomb radius cutoff or increase cell-number."
@@ -247,7 +247,7 @@ TEST_F(TestCellList, checkCoulombCutoff)
 
     EXPECT_THROW_MSG(
         _cellList->checkCoulombCutoff(0.1),
-        customException::CellListException,
+        exc::CellListException,
         "Coulomb cutoff is smaller than half of the largest cell size."
     );
 }
@@ -258,7 +258,7 @@ TEST_F(TestCellList, resizeCellsRejectsOverflow)
 
     EXPECT_THROW_MSG(
         _cellList->resizeCells(),
-        customException::CellListException,
+        exc::CellListException,
         "Number of cells exceeds the supported size"
     );
 }
@@ -269,7 +269,7 @@ TEST_F(TestCellList, resizeCellsRejectsZeroDimensions)
 
     EXPECT_THROW_MSG(
         _cellList->resizeCells(),
-        customException::CellListException,
+        exc::CellListException,
         "Number of cells must be positive"
     );
 }

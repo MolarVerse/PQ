@@ -36,7 +36,7 @@
 TEST(TestColor, redException)
 {
     testing::internal::CaptureStdout();
-    auto customException = customException::CustomException("test");
+    auto customException = exc::BaseException<Color::FG_RED>("test");
     customException.colorfulOutput(Color::FG_RED, "test");
     std::string output = testing::internal::GetCapturedStdout();
     EXPECT_STREQ(output.c_str(), "\033[31mtest\033[39m\n");
@@ -49,7 +49,7 @@ TEST(TestColor, redException)
 TEST(TestColor, orangeException)
 {
     testing::internal::CaptureStdout();
-    auto customException = customException::CustomException("test");
+    auto customException = exc::BaseException<Color::FG_ORANGE>("test");
     customException.colorfulOutput(Color::FG_ORANGE, "test");
     std::string output = testing::internal::GetCapturedStdout();
     EXPECT_STREQ(output.c_str(), "\033[33mtest\033[39m\n");

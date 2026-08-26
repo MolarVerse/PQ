@@ -22,14 +22,14 @@
 
 #include "output.hpp"
 
-#include <format>       // for format
-#include <fstream>      // for ifstream, ofstream, std
+#include <format>    // for format
+#include <fstream>   // for ifstream, ofstream, std
 
 #include "exceptions.hpp"           // for InputFileException, customException
 #include "outputFileSettings.hpp"   // for OutputFileSettings
 
 using namespace std;
-using namespace customException;
+using namespace exc;
 using namespace output;
 using namespace settings;
 

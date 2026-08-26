@@ -35,7 +35,7 @@
 using namespace linearAlgebra;
 using namespace settings;
 using namespace manostat;
-using namespace customException;
+using namespace exc;
 using namespace molsys;
 using namespace physicalData;
 
@@ -107,7 +107,7 @@ void BerendsenManostat::applyManostat(
     physicalData.setVolume(simBox.getVolume());
     physicalData.setDensity(simBox.getDensity());
 
-    simBox.checkCoulRadiusCutOff(ExceptionType::MANOSTATEXCEPTION);
+    simBox.checkCoulRadiusCutOff(ExceptionType::ManostatError);
 
     auto scaleMolecule = [&mu, &simBox](auto &molecule)
     { molecule.scale(mu, simBox.getBox()); };

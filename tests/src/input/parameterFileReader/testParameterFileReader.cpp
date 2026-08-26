@@ -94,7 +94,7 @@ TEST_F(TestParameterFileReader, determineSection)
 
     EXPECT_THROW_MSG(
         [[maybe_unused]] const auto dummy = reader->determineSection({"N.A."}),
-        customException::ParameterFileException,
+        exc::ParameterFileException,
         "Unknown or already parsed keyword \"N.A.\" in parameter file"
     );
 }
@@ -151,7 +151,7 @@ TEST_F(TestParameterFileReader, readFileNameEmpty)
     settings::FileSettings::unsetIsParameterFileNameSet();
     EXPECT_THROW_MSG(
         _parameterFileReader->read(),
-        customException::InputFileException,
+        exc::InputFileException,
         "Parameter file needed for requested simulation setup"
     );
 }

@@ -37,7 +37,7 @@
 #include "virial.hpp"
 
 using namespace pq;
-using namespace customException;
+using namespace exc;
 using namespace settings;
 using namespace molsys;
 

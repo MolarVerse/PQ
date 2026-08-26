@@ -34,7 +34,7 @@
 using namespace input::topology;
 using namespace molsys;
 using namespace forceField;
-using namespace customException;
+using namespace exc;
 using namespace engine;
 
 /**

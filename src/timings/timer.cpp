@@ -27,7 +27,7 @@
 #include "exceptions.hpp"
 
 using namespace timings;
-using namespace customException;
+using namespace exc;
 
 /**
  * @brief Construct a new Timer:: Timer object
@@ -120,7 +120,7 @@ void Timer::stopTimingsSection()
     const auto index = findTimingsSectionIndex(getTimerName());
 
     if (index == _timingDetails.size())
-        throw CustomException("Timer not found");
+        throw TimerException("Timer not found");
 
     _timingDetails[index].endTimer();
 }
@@ -134,7 +134,7 @@ void Timer::stopTimingsSection(const std::string_view name)
     const auto index = findTimingsSectionIndex(name);
 
     if (index == _timingDetails.size())
-        throw CustomException("Timer not found");
+        throw TimerException("Timer not found");
 
     _timingDetails[index].endTimer();
 }
@@ -189,7 +189,7 @@ TimingsSection Timer::getTimingsSection(const std::string_view name) const
     const auto index = findTimingsSectionIndex(name);
 
     if (index == _timingDetails.size())
-        throw CustomException("Timer not found");
+        throw TimerException("Timer not found");
 
     return _timingDetails[index];
 }

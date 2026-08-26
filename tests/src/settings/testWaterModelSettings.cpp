@@ -28,7 +28,7 @@
 #include "exceptions.hpp"
 #include "waterModelSettings.hpp"
 
-using customException::UserInputException;
+using exc::UserInputException;
 using settings::WaterInterModel;
 using settings::WaterIntraModel;
 using settings::WaterModelSettings;

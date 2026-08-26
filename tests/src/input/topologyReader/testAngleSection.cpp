@@ -62,19 +62,19 @@ TEST_F(TestTopologySection, processSectionAngle)
     lineElements = {"1", "1", "2", "3"};
     EXPECT_THROW(
         angleSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+        exc::TopologyException
     );
 
     lineElements = {"1", "2", "7"};
     EXPECT_THROW(
         angleSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+        exc::TopologyException
     );
 
     lineElements = {"1", "2", "3", "7", "#"};
     EXPECT_THROW(
         angleSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+        exc::TopologyException
     );
 }
 
@@ -85,9 +85,6 @@ TEST_F(TestTopologySection, processSectionAngle)
 TEST_F(TestTopologySection, endedNormallyAngle)
 {
     input::topology::AngleSection angleSection;
-    EXPECT_THROW(
-        angleSection.endedNormally(false),
-        customException::TopologyException
-    );
+    EXPECT_THROW(angleSection.endedNormally(false), exc::TopologyException);
     EXPECT_NO_THROW(angleSection.endedNormally(true));
 }

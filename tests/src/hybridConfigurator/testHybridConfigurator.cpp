@@ -36,7 +36,7 @@
 #include "vectorNear.hpp"           // for EXPECT_VECTOR_NEAR
 
 using namespace configurator;
-using namespace customException;
+using namespace exc;
 using namespace linearAlgebra;
 using namespace pq;
 using namespace settings;

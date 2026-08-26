@@ -48,7 +48,7 @@ using enum molsys::Periodicity;
 
 using namespace configurator;
 using namespace constants;
-using namespace customException;
+using namespace exc;
 using namespace linearAlgebra;
 using namespace physicalData;
 using namespace settings;

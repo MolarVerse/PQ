@@ -30,7 +30,7 @@
 
 using input::restartFile::NoseHooverSection;
 using namespace engine;
-using namespace customException;
+using namespace exc;
 using namespace settings;
 
 /**

@@ -63,21 +63,21 @@ TEST_F(TestTopologySection, processSectionShake)
     lineElements = {"1", "1", "1.0", "2", "1"};
     EXPECT_THROW(
         distanceConstraintsSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+        exc::TopologyException
     );
 
     // same atom indices
     lineElements = {"1", "1", "1.0", "2", "1", "2"};
     EXPECT_THROW(
         distanceConstraintsSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+        exc::TopologyException
     );
 
     // lower distance greater than upper distance
     lineElements = {"1", "2", "2.0", "1.0", "1", "2"};
     EXPECT_THROW(
         distanceConstraintsSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+        exc::TopologyException
     );
 }
 
@@ -90,7 +90,7 @@ TEST_F(TestTopologySection, endedNormallyShake)
     input::topology::DistanceConstraintsSection distanceConstraintsSection;
     EXPECT_THROW(
         distanceConstraintsSection.endedNormally(false),
-        customException::TopologyException
+        exc::TopologyException
     );
     EXPECT_NO_THROW(distanceConstraintsSection.endedNormally(true));
 }

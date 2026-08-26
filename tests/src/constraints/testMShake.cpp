@@ -201,5 +201,5 @@ TEST(TestMShake, applyMShakeThrowsWhenIterationLimitTooSmall)
     settings::ConstraintSettings::setMShakeMaxIter(1);
     settings::ConstraintSettings::setMShakeTolerance(-1.0);
 
-    EXPECT_THROW(mShake.applyMShake(simBox), customException::MShakeException);
+    EXPECT_THROW(mShake.applyMShake(simBox), exc::MShakeException);
 }

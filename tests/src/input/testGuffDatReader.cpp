@@ -48,7 +48,7 @@ using namespace input::guffdat;
 using namespace potential;
 using namespace settings;
 using namespace constants;
-using namespace customException;
+using namespace exc;
 
 /**
  * @brief tests parseLine function of GuffDatReader

@@ -27,7 +27,6 @@
 
 #include "constants/conversionFactors.hpp"   // for _BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_
 #include "constants/internalConversionFactors.hpp"   // for _PRESSURE_FACTOR_
-#include "exceptions.hpp"                            // for ExceptionType
 #include "globalTimer.hpp"
 #include "manostatSettings.hpp"     // for ManostatType, Isotropy
 #include "physicalData.hpp"         // for PhysicalData
@@ -40,7 +39,7 @@ using namespace manostat;
 using namespace settings;
 using namespace molsys;
 using namespace physicalData;
-using namespace customException;
+using namespace exc;
 using namespace constants;
 using namespace linearAlgebra;
 
@@ -152,7 +151,7 @@ void StochasticRescalingManostat::applyManostat(
     physicalData.setVolume(simBox.getVolume());
     physicalData.setDensity(simBox.getDensity());
 
-    simBox.checkCoulRadiusCutOff(ExceptionType::MANOSTATEXCEPTION);
+    simBox.checkCoulRadiusCutOff(ExceptionType::ManostatError);
 
     auto scalePositions = [&mu, &simBox](auto &molecule)
     { molecule.scale(mu, simBox.getBox()); };
@@ -180,7 +179,7 @@ tensor3D StochasticRescalingManostat::calculateMu(const double volume)
     const auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
 
     auto stochasticFactor  = 2.0 * kT * compress / volume;
-    stochasticFactor       *= PRESSURE_FACTOR;
+    stochasticFactor      *= PRESSURE_FACTOR;
     stochasticFactor       = ::sqrt(stochasticFactor) * random;
 
     const auto deltaP = _targetPressure - _pressure;

@@ -37,7 +37,7 @@
 
 using namespace input;
 using namespace utilities;
-using namespace customException;
+using namespace exc;
 
 /**
  * @brief Construct a new Input File Parser Cell List:: Input File Parser Cell
