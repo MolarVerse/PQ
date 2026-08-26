@@ -132,6 +132,17 @@ atom type name. In case of a pure QM calculation the charge of the moltype, the 
 set to 0 and the global_vdW_type can be omitted. For MM calculations that utilize just the <a class="reference internal" href="#guffdatfile"><span class="std std-ref">GUFF File</span></a>, the
 point_charge can be set to 0 and the global_vdW_type can be omitted.</p>
 </div>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>If an <a class="reference internal" href="inputFile.html#intrawatermodelkey"><span class="std std-ref">intra-</span></a> or <a class="reference internal" href="inputFile.html#interwatermodelkey"><span class="std std-ref">intermolecular</span></a> water model has been selected <em>via</em> the
+<a class="reference internal" href="inputFile.html#inputfile"><span class="std std-ref">Input File</span></a>, the water moltype must be specified using a single line in the moldescriptor file of the following form:</p>
+<div class="line-block">
+<div class="line">Water_Type moltype_number</div>
+</div>
+<p>where the <em>moltype_number</em> integer denotes the moltype number corresponding to the water molecules. Additionally, the specified water moltype
+must contain exactly three atoms, namely “O”, “H” and “H”, in this specific order. Furthermore, if an <a class="reference internal" href="inputFile.html#interwatermodelkey"><span class="std std-ref">intermolecular water model</span></a> has
+been selected, the <em>charge</em> of each atom must coincide with the partial charge defined by the associate intermolecular water potential.</p>
+</div>
 </section>
 <section id="guff-file">
 <span id="guffdatfile"></span><h2>GUFF File<a class="headerlink" href="#guff-file" title="Link to this heading"></a></h2>
@@ -157,6 +168,12 @@ are given in Å and energies in kcal/mol. The units of the parameters are chosen
 <p>All entries in the GUFF file need to be separated <em>via</em> a semicolon <code class="docutils literal notranslate"><span class="pre">;</span></code>. Furthermore, defining all possible interactions is mandatory. If a certain
 potential is not needed, the corresponding coefficients are set to 0.</p>
 <p>Using the GUFF file requires the <a class="reference internal" href="#moldescriptorfile"><span class="std std-ref">Moldescriptor</span></a> setup file to be provided as well.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>GUFF entries corresponding to interactions between water moltypes (as defined in the <a class="reference internal" href="#moldescriptorfile"><span class="std std-ref">Moldescriptor</span></a> setup file) may be omitted. If such entries
+are provided nonetheless, they will be ignored. The cutoff radius for van der Waals interactions between water molecules can be adjusted <em>via</em> the
+<a class="reference internal" href="inputFile.html#noncoulombradiuskey"><span class="std std-ref">rnoncoulomb</span></a> key in the <a class="reference internal" href="inputFile.html#inputfile"><span class="std std-ref">Input File</span></a>.</p>
 </div>
 </section>
 <section id="dftb-setup-file">

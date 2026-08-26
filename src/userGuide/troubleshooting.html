@@ -57,7 +57,6 @@
 <li class="toctree-l3"><a class="reference internal" href="#missing-setup-files">Missing Setup Files</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#unknown-job-type">Unknown Job Type</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#ase-and-slater-koster-files">ASE and Slater-Koster Files</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#kokkos-fallbacks">Kokkos Fallbacks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#constraint-setup">Constraint Setup</a></li>
 </ul>
 </li>
@@ -142,12 +141,6 @@ or <code class="docutils literal notranslate"><span class="pre">slakos</span> <s
 </div>
 <p>For custom Slater-Koster files, set <code class="docutils literal notranslate"><span class="pre">slakos</span> <span class="pre">=</span> <span class="pre">custom</span></code> and provide
 <code class="docutils literal notranslate"><span class="pre">slakos_path</span></code>.</p>
-</section>
-<section id="kokkos-fallbacks">
-<h2>Kokkos Fallbacks<a class="headerlink" href="#kokkos-fallbacks" title="Link to this heading"></a></h2>
-<p>When PQ is built with Kokkos support, the accelerated MM path is only used for
-supported non-Coulombic and Coulomb settings. If another combination is
-requested, PQ prints a warning and falls back to serial execution.</p>
 </section>
 <section id="constraint-setup">
 <h2>Constraint Setup<a class="headerlink" href="#constraint-setup" title="Link to this heading"></a></h2>

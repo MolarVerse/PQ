@@ -65,10 +65,11 @@
 <li class="toctree-l4"><a class="reference internal" href="#reset-kinetics-keys">Reset Kinetics Keys</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#constraints-keys">Constraints Keys</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#mm-keys">MM Keys</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#water-model-keys">Water Model Keys</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#long-range-correction">Long Range Correction</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#qm-keys">QM Keys</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ring-polymer-md-keys">Ring Polymer MD Keys</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#qm-mm-keys">QM/MM Keys</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#hybrid-calculation-keys">Hybrid Calculation Keys</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#cell-list-keys">Cell List Keys</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#optimization-keys">Optimization Keys</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#convergence-keys">Convergence Keys</a></li>
@@ -207,7 +208,7 @@ Input keys and string options are case-insensitive. Dashes and underscores are t
 <li><p><strong>mm-md</strong> - Represents a full molecular mechanics molecular dynamics simulation performed <em>via</em> the <a class="reference internal" href="setupFiles.html#guffdatfile"><span class="std std-ref">GUFF</span></a> formalism and/or the <code class="docutils literal notranslate"><span class="pre">Amber</span> <span class="pre">force</span> <span class="pre">field</span></code>. Respective input file keys are found in the <a class="reference internal" href="#mmkeys"><span class="std std-ref">MM Keys</span></a> section.</p></li>
 <li><p><strong>qm-md</strong> - Represents a full quantum mechanics molecular dynamics simulation. For more information see the <a class="reference internal" href="#qmkeys"><span class="std std-ref">QM Keys</span></a> section.</p></li>
 <li><p><strong>qm-rpmd</strong> - Represents a full quantum mechanics ring polymer molecular dynamics simulation. For more information see the <a class="reference internal" href="#ringpolymermdkeys"><span class="std std-ref">Ring Polymer MD Keys</span></a> section</p></li>
-<li><p><strong>qmmm-md</strong> - Represents a hybrid quantum mechanics - molecular mechanics molecular dynamics simulation. (Not implemented yet)</p></li>
+<li><p><strong>qmmm-md</strong> - Represents a hybrid quantum mechanics - molecular mechanics molecular dynamics simulation.</p></li>
 <li><p><strong>mm-opt</strong> - represents a geometry optimization calculation using molecular mechanics.</p></li>
 <li><p><strong>mm-hessian</strong> - represents a molecular mechanics Hessian calculation. By default, the geometry is optimized first and the Hessian is built at the optimized structure. Set <code class="docutils literal notranslate"><span class="pre">optimize_before_hessian</span> <span class="pre">=</span> <span class="pre">false</span></code> to calculate the Hessian directly at the input geometry.</p></li>
 </ol>
@@ -473,6 +474,19 @@ by default to preserve the existing file formats.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">traj_file</span></code> keyword sets the name for the <a class="reference internal" href="outputFiles.html#trajectoryfile"><span class="std std-ref">Trajectory File</span></a>, which stores the atomic positions throughout the MD simulation.</p>
 <p class="centered">
 <strong><em>default value</em> = “default.xyz”</strong></p></section>
+<section id="hybrid-center-file">
+<span id="hybridcenterfilekey"></span><h3>Hybrid Center File<a class="headerlink" href="#hybrid-center-file" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>hybrid_center_file = {file} -&gt; “default.center.xyz”</p>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">hybrid_center_file</span></code> keyword sets the name for the <a class="reference internal" href="outputFiles.html#hybridcenterfile"><span class="std std-ref">Hybrid Center File</span></a>, which stores the position of the inner region center in a hybrid type MD simulation.</p>
+<p class="centered">
+<strong><em>default value</em> = “default.center.xyz”</strong></p><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">hybrid_center_file</span></code> keyword is ignored for non-hybrid-type calculations.</p>
+</div>
+</section>
 <section id="velocity-file">
 <span id="velocityfilekey"></span><h3>Velocity File<a class="headerlink" href="#velocity-file" title="Link to this heading"></a></h3>
 <div class="tip admonition">
@@ -585,6 +599,14 @@ is set to <code class="docutils literal notranslate"><span class="pre">on</span>
 </div>
 <p class="centered">
 <strong><em>default value</em> = “dftb_in.template”</strong></p></section>
+<section id="turbomole-setup-file">
+<span id="turbomolefilekey"></span><h3>TURBOMOLE Setup File<a class="headerlink" href="#turbomole-setup-file" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>turbomole_file = {file} -&gt; “tm_define.template”</p>
+</div>
+<p class="centered">
+<strong><em>default value</em> = “tm_define.template”</strong></p></section>
 <section id="topology-file">
 <span id="topologyfilekey"></span><h3>Topology File<a class="headerlink" href="#topology-file" title="Link to this heading"></a></h3>
 <div class="tip admonition">
@@ -704,6 +726,7 @@ is set to <code class="docutils literal notranslate"><span class="pre">on</span>
 <p>temp_ramp_frequency = {uint+} -&gt; 1</p>
 </div>
 <p>With the <code class="docutils literal notranslate"><span class="pre">temp_ramp_frequency</span></code> keyword the user can specify the frequency of the temperature ramping from the <code class="docutils literal notranslate"><span class="pre">start_temp</span></code> to the <code class="docutils literal notranslate"><span class="pre">temp</span></code> value. If no starting temperature is given the keyword will be ignored. If a starting temperature is given and this keyword is omitted the temperature ramping will be performed, so that each step the temperature is increased by the same value.</p>
+<p>If the ramp length is not divisible by this frequency, the temperature increments are scaled by the number of scheduled updates so that the final update reaches the requested target temperature exactly.</p>
 <p class="centered">
 <strong><em>default value</em> = 1 step</strong></p></section>
 <section id="thermostat">
@@ -1055,6 +1078,68 @@ is set to <code class="docutils literal notranslate"><span class="pre">on</span>
 </div></blockquote>
 </section>
 </section>
+<section id="water-model-keys">
+<span id="watermodelkeys"></span><h2>Water Model Keys<a class="headerlink" href="#water-model-keys" title="Link to this heading"></a></h2>
+<section id="intramolecular-water-model">
+<span id="intrawatermodelkey"></span><h3>Intramolecular Water Model<a class="headerlink" href="#intramolecular-water-model" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>water_intra = {string}</p>
+</div>
+<p>With the <code class="docutils literal notranslate"><span class="pre">water_intra</span></code> keyword the model for the intramolecular water potential can be chosen.</p>
+<p>Possible options are:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p><strong>SPC</strong> - <a class="reference external" href="https://doi.org/10.1007/978-94-015-7658-1_21">SPC</a></p></li>
+<li><p><strong>SPC_E</strong> - <a class="reference external" href="https://pubs.acs.org/doi/10.1021/j100308a038">SPC/E</a></p></li>
+<li><p><strong>SPC_Fw</strong> - <a class="reference external" href="https://pubs.aip.org/aip/jcp/article/124/2/024503/295556">SPC/Fw</a></p></li>
+<li><p><strong>qSPC_Fw</strong> - <a class="reference external" href="https://pubs.aip.org/aip/jcp/article/125/18/184507/187988">qSPC/Fw</a></p></li>
+<li><p><strong>SPC_DC</strong> - <a class="reference external" href="https://pubs.acs.org/doi/10.1021/jp3002383">SPC/DC</a></p></li>
+<li><p><strong>H2O-DC</strong> - <a class="reference external" href="https://pubs.acs.org/doi/10.1021/jp3002383">H<sub>2</sub>O-DC</a></p></li>
+<li><p><strong>TIP3P</strong> - <a class="reference external" href="https://pubs.aip.org/aip/jcp/article/79/2/926/776316">TIP3P</a></p></li>
+<li><p><strong>OPC3</strong> - <a class="reference external" href="https://pubs.aip.org/aip/jcp/article/145/7/074501/810108">OPC3</a></p></li>
+<li><p><strong>SPC-mTR</strong> - <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0378381297002719">SPC-mTR</a></p></li>
+<li><p><strong>TIP3P-mTR</strong> - <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0378381297002719">TIP3P-mTR</a></p></li>
+</ol>
+</div></blockquote>
+</section>
+<section id="intermolecular-water-model">
+<span id="interwatermodelkey"></span><h3>Intermolecular Water Model<a class="headerlink" href="#intermolecular-water-model" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>water_inter = {string}</p>
+</div>
+<p>With the <code class="docutils literal notranslate"><span class="pre">water_inter</span></code> keyword the model for the intermolecular water potential can be chosen.</p>
+<p>Possible options are:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p><strong>SPC</strong> - <a class="reference external" href="https://doi.org/10.1007/978-94-015-7658-1_21">SPC</a></p></li>
+<li><p><strong>SPC_E</strong> - <a class="reference external" href="https://pubs.acs.org/doi/10.1021/j100308a038">SPC/E</a></p></li>
+<li><p><strong>SPC_Fw</strong> - <a class="reference external" href="https://pubs.aip.org/aip/jcp/article/124/2/024503/295556">SPC/Fw</a></p></li>
+<li><p><strong>qSPC_Fw</strong> - <a class="reference external" href="https://pubs.aip.org/aip/jcp/article/125/18/184507/187988">qSPC/Fw</a></p></li>
+<li><p><strong>SPC_DC</strong> - <a class="reference external" href="https://pubs.acs.org/doi/10.1021/jp3002383">SPC/DC</a></p></li>
+<li><p><strong>H2O-DC</strong> - <a class="reference external" href="https://pubs.acs.org/doi/10.1021/jp3002383">H<sub>2</sub>O-DC</a></p></li>
+<li><p><strong>TIP3P</strong> - <a class="reference external" href="https://pubs.aip.org/aip/jcp/article/79/2/926/776316">TIP3P</a></p></li>
+<li><p><strong>OPC3</strong> - <a class="reference external" href="https://pubs.aip.org/aip/jcp/article/145/7/074501/810108">OPC3</a></p></li>
+<li><p><strong>SPC-mTR</strong> - <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0378381297002719">SPC-mTR</a></p></li>
+<li><p><strong>TIP3P-mTR</strong> - <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0378381297002719">TIP3P-mTR</a></p></li>
+</ol>
+</div></blockquote>
+</section>
+<section id="noncoulombradiuscutoff">
+<span id="noncoulombradiuskey"></span><h3>NonCoulombRadiusCutoff<a class="headerlink" href="#noncoulombradiuscutoff" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>rnoncoulomb = {double} <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> -&gt; <a class="reference internal" href="#radialcoulombcutoffkey"><span class="std std-ref">rcoulomb</span></a></p>
+</div>
+<p>With the <code class="docutils literal notranslate"><span class="pre">rnoncoulomb</span></code> keyword the user can specify the cutoff radius for non-coulomb interactions between water type molecules.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This keyword is only considered if usage of an intermolecular water model is requested.</p>
+</div>
+<p class="centered">
+<strong><em>default value</em> = the value of <a class="reference internal" href="#radialcoulombcutoffkey"><span class="std std-ref">rcoulomb</span></a></strong></p></section>
+</section>
 <section id="long-range-correction">
 <span id="longrangecorrectionkeys"></span><h2>Long Range Correction<a class="headerlink" href="#long-range-correction" title="Link to this heading"></a></h2>
 <section id="long-range">
@@ -1331,75 +1416,143 @@ It is required when <code class="docutils literal notranslate"><span class="pre"
 </div>
 </section>
 </section>
-<section id="qm-mm-keys">
-<span id="qmmmkeys"></span><h2>QM/MM Keys<a class="headerlink" href="#qm-mm-keys" title="Link to this heading"></a></h2>
-<section id="qm-center">
-<span id="qmcenterkey"></span><h3>QM Center<a class="headerlink" href="#qm-center" title="Link to this heading"></a></h3>
+<section id="hybrid-calculation-keys">
+<span id="hybridcalculationkeys"></span><h2>Hybrid Calculation Keys<a class="headerlink" href="#hybrid-calculation-keys" title="Link to this heading"></a></h2>
+<section id="inner-region-center">
+<span id="innerregioncenterkey"></span><h3>Inner Region Center<a class="headerlink" href="#inner-region-center" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
-<p>qm_center = {selection} -&gt; 0</p>
+<p>inner_region_center = {selection} -&gt; 0</p>
 </div>
-<p>With the <code class="docutils literal notranslate"><span class="pre">qm_center</span></code> keyword the user can specify the center of the QM region. The default selection is the first atom of the system (<em>i.e.</em> 0). For more information about the selection grammar see the <a class="reference internal" href="#selectiontype">selectionType</a> section. The <code class="docutils literal notranslate"><span class="pre">qm_center</span></code> if more than one atom is selected will be by default the center of mass of the selected atoms.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">inner_region_center</span></code> keyword the user can specify the center of the inner region.
+The default selection is the first atom of the system (<em>i.e.</em> 0).
+For more information about the selection grammar see the <a class="reference internal" href="#selectiontype">selectionType</a> section.
+The <code class="docutils literal notranslate"><span class="pre">inner_region_center</span></code> if more than one atom is selected will be by default the center of mass of the selected atoms.</p>
 <p class="centered">
 <strong><em>default value</em> = 0</strong></p></section>
-<section id="qm-only-list">
-<span id="qmonlylistkey"></span><h3>QM Only List<a class="headerlink" href="#qm-only-list" title="Link to this heading"></a></h3>
+<section id="forced-core-list">
+<span id="forcedcorelistkey"></span><h3>Forced Core List<a class="headerlink" href="#forced-core-list" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
-<p>qm_only_list = {selection}</p>
+<p>forced_core_list = {selection}</p>
 </div>
-<p>With the <code class="docutils literal notranslate"><span class="pre">qm_only_list</span></code> keyword the user can specify a list of atoms which should be treated as QM atoms only. This means that these atoms can not leave the QM region during the simulation. For more information about the selection grammar see the <a class="reference internal" href="#selectiontype">selectionType</a> section. By default no atoms are selected.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">forced_core_list</span></code> keyword the user can specify a list of molecules which will always be part of the <code class="docutils literal notranslate"><span class="pre">CORE</span></code> region of the hybrid system.
+For more information about the selection grammar see the <a class="reference internal" href="#selectiontype">selectionType</a> section.
+By default, no molecules are selected.</p>
 </section>
-<section id="mm-only-list">
-<span id="mmonlylistkey"></span><h3>MM Only List<a class="headerlink" href="#mm-only-list" title="Link to this heading"></a></h3>
+<section id="forced-layer-list">
+<span id="forcedlayerlistkey"></span><h3>Forced Layer List<a class="headerlink" href="#forced-layer-list" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
-<p>mm_only_list = {selection}</p>
+<p>forced_layer_list = {selection}</p>
 </div>
-<p>With the <code class="docutils literal notranslate"><span class="pre">mm_only_list</span></code> keyword the user can specify a list of atoms which should be treated as MM atoms only. This means that these atoms can not enter the QM region during the simulation. For more information about the selection grammar see the <a class="reference internal" href="#selectiontype">selectionType</a> section. By default no atoms are selected.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">forced_layer_list</span></code> keyword the user can specify a list of molecules which will always be part of the <code class="docutils literal notranslate"><span class="pre">LAYER</span></code> region of the hybrid system.
+For more information about the selection grammar see the <a class="reference internal" href="#selectiontype">selectionType</a> section.
+By default, no molecules are selected.</p>
+</section>
+<section id="forced-outer-list">
+<span id="forcedouterlistkey"></span><h3>Forced Outer List<a class="headerlink" href="#forced-outer-list" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>forced_outer_list = {selection}</p>
+</div>
+<p>With the <code class="docutils literal notranslate"><span class="pre">forced_outer_list</span></code> keyword the user can specify a list of molecules which will always be treated with the method chosen for the outer region of the hybrid system.
+For more information about the selection grammar see the <a class="reference internal" href="#selectiontype">selectionType</a> section.
+By default, no molecules are selected.</p>
 </section>
 <section id="qm-charges">
 <span id="qmchargeskey"></span><h3>QM Charges<a class="headerlink" href="#qm-charges" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
-<p>qm_charges = {string} -&gt; “off”</p>
+<p>qm_charges = {string} -&gt; “qm”</p>
 </div>
 <p>With the <code class="docutils literal notranslate"><span class="pre">qm_charges</span></code> keyword the user can specify the charge model for the QM atoms.</p>
 <p>Possible options are:</p>
 <blockquote>
 <div><ol class="arabic simple">
-<li><p><strong>off</strong> (default) - charges of the QM atoms are taken from the MM model</p></li>
-<li><p><strong>on</strong> - charges of the QM atoms are taken from the QM calculation</p></li>
+<li><p><strong>qm</strong> (default) - charges of the QM atoms are taken from the QM calculation</p></li>
+<li><p><strong>mm</strong> - charges of the QM atoms are taken from the total charge of the associated moltype specified in the <a class="reference internal" href="setupFiles.html#moldescriptorfile"><span class="std std-ref">Moldescriptor</span></a> setup file</p></li>
 </ol>
 </div></blockquote>
 </section>
-<section id="qm-core-radius">
-<span id="qmcoreradiuskey"></span><h3>QM Core Radius<a class="headerlink" href="#qm-core-radius" title="Link to this heading"></a></h3>
+<section id="smoothing-method">
+<span id="smoothingmethodkey"></span><h3>Smoothing Method<a class="headerlink" href="#smoothing-method" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
-<p>qm_core_radius = {double} <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> -&gt; 0.0 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span></p>
+<p>smoothing_method = {string} -&gt; “hotspot”</p>
 </div>
-<p>With the <code class="docutils literal notranslate"><span class="pre">qm_core_radius</span></code> keyword the user can specify the core radius in <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> around the <code class="docutils literal notranslate"><span class="pre">qm_center</span></code>. The default value is 0.0 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span>, which means that the core radius is not set and only explicit QM atoms are used for the QM region.</p>
-<p class="centered">
-<strong><em>default value</em> = 0.0 Å</strong></p></section>
-<section id="qm-mm-layer-radius">
-<span id="qmmmlayerradiuskey"></span><h3>QM/MM Layer Radius<a class="headerlink" href="#qm-mm-layer-radius" title="Link to this heading"></a></h3>
+<p>With the <code class="docutils literal notranslate"><span class="pre">smoothing_method</span></code> keyword the user can specify the smoothing method for the hybrid calculation.</p>
+<p>Possible options are:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p><strong>hotspot</strong> (default) - all molecules in the smoothing region are treated as QM molecules and their contribution is weighted according to their position in the smoothing region</p></li>
+<li><p><strong>exact</strong> - all possible combinations of QM and MM treatment of the molecules in the smoothing region are calculated and weighted according to a global smoothing factor — Computational cost: O(2<sup>n</sup>) where n = number of smoothing molecules</p></li>
+</ol>
+</div></blockquote>
+</section>
+<section id="core-radius">
+<span id="coreradiuskey"></span><h3>Core Radius<a class="headerlink" href="#core-radius" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
-<p>qmmm_layer_radius = {double} <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> -&gt; 0.0 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span></p>
+<p>core_radius = {double} Å -&gt; 0.0 Å</p>
 </div>
-<p>With the <code class="docutils literal notranslate"><span class="pre">qmmm_layer_radius</span></code> keyword the user can specify the layer radius in <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> around the <code class="docutils literal notranslate"><span class="pre">qm_center</span></code>. The default value is 0.0 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span>, which means that no special QM/MM treatment is applied.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">core_radius</span></code> keyword the user can specify the core radius in Å around the center of the inner region in hybrid type calculations.
+The default value is 0.0 Å, which means that the core radius is not set and only <a class="reference internal" href="#forcedcorelistkey"><span class="std std-ref">forced_core_list</span></a> molecules are part of the <code class="docutils literal notranslate"><span class="pre">CORE</span></code> region.</p>
 <p class="centered">
 <strong><em>default value</em> = 0.0 Å</strong></p></section>
-<section id="qm-mm-smoothing-radius">
-<span id="qmmmsmoothingradiuskey"></span><h3>QM/MM Smoothing Radius<a class="headerlink" href="#qm-mm-smoothing-radius" title="Link to this heading"></a></h3>
+<section id="layer-radius">
+<span id="layerradiuskey"></span><h3>Layer Radius<a class="headerlink" href="#layer-radius" title="Link to this heading"></a></h3>
 <div class="tip admonition">
 <p class="admonition-title">Key</p>
-<p>qmmm_smoothing_radius = {double} <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> -&gt; 0.0 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span></p>
+<p>layer_radius = {double} Å -&gt; 0.0 Å</p>
 </div>
-<p>With the <code class="docutils literal notranslate"><span class="pre">qmmm_smoothing_radius</span></code> keyword the user can specify the smoothing radius in <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span> of the QM atoms. The default value is 0.0 <span class="math notranslate nohighlight">\(\mathrm{\mathring{A}}\)</span>, which means that the smoothing radius is not set and no smoothing is applied.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">layer_radius</span></code> keyword the user can specify the layer radius in Å measured from the <code class="docutils literal notranslate"><span class="pre">inner_region_center</span></code>.
+The default value is 0.0 Å, which means that no special hybrid method treatment is applied.</p>
 <p class="centered">
 <strong><em>default value</em> = 0.0 Å</strong></p></section>
+<section id="smoothing-region-thickness">
+<span id="smoothingregionthicknesskey"></span><h3>Smoothing Region Thickness<a class="headerlink" href="#smoothing-region-thickness" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>smoothing_region_thickness = {double} Å -&gt; 0.0 Å</p>
+</div>
+<p>With the <code class="docutils literal notranslate"><span class="pre">smoothing_region_thickness</span></code> keyword the user can specify the thickness of the smoothing region in Å.
+The default value is 0.0 Å, which means that no smoothing is applied.</p>
+<p class="centered">
+<strong><em>default value</em> = 0.0 Å</strong></p></section>
+<section id="point-charge-thickness">
+<span id="pointchargethicknesskey"></span><h3>Point Charge Thickness<a class="headerlink" href="#point-charge-thickness" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>point_charge_thickness = {double} Å -&gt; 0.0 Å</p>
+</div>
+<p>With the <code class="docutils literal notranslate"><span class="pre">point_charge_thickness</span></code> keyword the user can specify the distance from the <a class="reference internal" href="#layerradiuskey"><span class="std std-ref">layer_radius</span></a> up to which point charges are included in Å.
+The default value is 0.0 Å, which means that no point charges are included.</p>
+<p class="centered">
+<strong><em>default value</em> = 0.0 Å</strong></p></section>
+<section id="qm-force-distribution">
+<span id="qmforcedistributionkey"></span><h3>QM Force Distribution<a class="headerlink" href="#qm-force-distribution" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>qm_force_distribution = {string} -&gt; “none”</p>
+</div>
+<p>With the <code class="docutils literal notranslate"><span class="pre">qm_force_distribution</span></code> keyword the user can specify how the missing QM forces from smoothing molecules are distributed among non-smoothing QM molecules.
+Each recipient QM molecule then distributes its received share to its atoms proportional to atom masses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This keyword is only relevant if the <a class="reference internal" href="#smoothingmethodkey"><span class="std std-ref">smoothing_method</span></a> keyword is set to <code class="docutils literal notranslate"><span class="pre">hotspot</span></code>.</p>
+</div>
+<p>Possible options are:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p><strong>none</strong> (default) - No distribution of deficient smoothing molecules forces.</p></li>
+<li><p><strong>equal</strong> - Deficient smoothing molecule forces are distributed equally among all non-smoothing QM molecules.</p></li>
+<li><p><strong>random</strong> - Deficient smoothing molecule forces are distributed randomly among all non-smoothing QM molecules.</p></li>
+<li><p><strong>distance-weighted</strong> - Deficient smoothing molecule forces are distributed distance-weighted among all non-smoothing QM molecules.</p></li>
+</ol>
+</div></blockquote>
+<a class="reference internal image-reference" href="../../_images/hybrid_zones.png"><img alt="graphical representation of the different hybrid zones and the associated keywords" class="align-center" src="../../_images/hybrid_zones.png" style="width: 600px;" /></a>
+</section>
 </section>
 <section id="cell-list-keys">
 <span id="celllistkeys"></span><h2>Cell List Keys<a class="headerlink" href="#cell-list-keys" title="Link to this heading"></a></h2>

@@ -63,6 +63,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#info-file">Info File</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hessian-file">Hessian File</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hessian-info-file">Hessian Info File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#hybrid-center-file">Hybrid Center File</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#instant-energy-file">Instant Energy File</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#log-file">Log File</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#momentum-file">Momentum File</a></li>
@@ -339,6 +340,21 @@ in ps instead of the step number. Entries in the <code class="docutils literal n
 <span id="hessianinfofile"></span><h2>Hessian Info File<a class="headerlink" href="#hessian-info-file" title="Link to this heading"></a></h2>
 <p><strong>File Type:</strong> <code class="docutils literal notranslate"><span class="pre">.hessian.info</span></code> or user-defined</p>
 <p>Stores metadata for a generated Hessian, including the matrix filename, Hessian builder, optimization flag, finite-difference displacement, sign convention, unit and matrix dimensions. The file starts with <code class="docutils literal notranslate"><span class="pre">format</span> <span class="pre">=</span> <span class="pre">pq-hessian-info-v1</span></code> so downstream tools can identify the metadata format.</p>
+</section>
+<section id="hybrid-center-file">
+<span id="hybridcenterfile"></span><h2>Hybrid Center File<a class="headerlink" href="#hybrid-center-file" title="Link to this heading"></a></h2>
+<p><strong>File Type:</strong> <code class="docutils literal notranslate"><span class="pre">.center.xyz</span></code></p>
+<p>Stores the coordinates (<em>x</em>, <em>y</em>, <em>z</em>) of the inner region center in <code class="docutils literal notranslate"><span class="pre">.xyz</span></code> file format:</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><strong>line 1:</strong> 1</div>
+<div class="line"><strong>line 2:</strong> empty or “# step = step_number”</div>
+<div class="line"><strong>line 3:</strong> X <em>x</em> <em>y</em> <em>z</em></div>
+</div>
+</div></blockquote>
+<p>There is one dummy atom used to denote the position of the inner region center.
+The atom has the name <code class="docutils literal notranslate"><span class="pre">X</span></code> and its coordinates are denoted by <em>x</em> <em>y</em> <em>z</em> in Å.
+The file is only written for <a class="reference internal" href="inputFile.html#hybridcalculationkeys"><span class="std std-ref">hybrid type calculations</span></a>.</p>
 </section>
 <section id="instant-energy-file">
 <span id="instantenergyfile"></span><h2>Instant Energy File<a class="headerlink" href="#instant-energy-file" title="Link to this heading"></a></h2>
