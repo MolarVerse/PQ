@@ -37,12 +37,18 @@ using namespace customException;
 Timer::Timer(const TimerId id) : _id(id) {}
 
 /**
- * @brief get timings details
+ * @brief get the sorted timings details
  *
  */
-const std::vector<TimingsSection>& Timer::getTimingDetails() const
+std::vector<TimingsSection> Timer::getTimingDetails() const
 {
-    return _timingDetails;
+    std::vector<TimingsSection> sortedTimingDetails = _timingDetails;
+    std::ranges::sort(
+        sortedTimingDetails,
+        [](const TimingsSection& a, const TimingsSection& b)
+        { return a.calculateElapsedTime() > b.calculateElapsedTime(); }
+    );
+    return sortedTimingDetails;
 }
 
 /**
