@@ -26,195 +26,143 @@
 
 #include "simulationBox.hpp"
 
-using molsys::SimulationBox;
-using namespace linearAlgebra;
-
-/**
- * @brief flattens atom types of each atom into a single vector of size_t
- *
- * @return std::vector<size_t>
- */
-std::vector<size_t> SimulationBox::flattenAtomTypes()
+namespace molsys
 {
-    std::vector<size_t> atomTypes;
-
-    auto addAtomTypes = [&atomTypes](auto &atom)
-    { atomTypes.push_back(atom->getAtomType()); };
-
-    std::ranges::for_each(_atoms, addAtomTypes);
-
-    return atomTypes;
-}
-
-/**
- * @brief flattens mol types of each molecule of each atom into a single vector
- * of size_t
- *
- * @return std::vector<size_t>
- */
-std::vector<size_t> SimulationBox::flattenMolTypes()
-{
-    std::vector<size_t> molTypes;
-
-    auto addMolTypes = [&molTypes](auto &molecule)
+    /**
+     * @brief flattens velocities of each atom into a single vector of doubles
+     *
+     * @return std::vector<double>
+     */
+    std::vector<double> SimulationBox::flattenVelocities()
     {
-        for (size_t i = 0; i < molecule.getNumberOfAtoms(); ++i)
-            molTypes.push_back(molecule.getMoltype());
-    };
+        std::vector<double> velocities;
 
-    std::ranges::for_each(_molecules, addMolTypes);
+        auto addVelocities = [&velocities](auto &atom)
+        {
+            const auto velocity = atom->getVelocity();
 
-    return molTypes;
-}
+            velocities.push_back(velocity[0]);
+            velocities.push_back(velocity[1]);
+            velocities.push_back(velocity[2]);
+        };
 
-/**
- * @brief flattens internal global VDW types of each atom into a single vector
- * of size_t
- *
- * @return std::vector<size_t>
- */
-std::vector<size_t> SimulationBox::flattenInternalGlobalVDWTypes()
-{
-    std::vector<size_t> internalGlobalVDWTypes;
+        std::ranges::for_each(_atoms, addVelocities);
 
-    auto addInternalGlobalVDWTypes = [&internalGlobalVDWTypes](auto &atom)
-    { internalGlobalVDWTypes.push_back(atom->getInternalGlobalVDWType()); };
+        return velocities;
+    }
 
-    std::ranges::for_each(_atoms, addInternalGlobalVDWTypes);
-
-    return internalGlobalVDWTypes;
-}
-
-/**
- * @brief flattens velocities of each atom into a single vector of doubles
- *
- * @return std::vector<double>
- */
-std::vector<double> SimulationBox::flattenVelocities()
-{
-    std::vector<double> velocities;
-
-    auto addVelocities = [&velocities](auto &atom)
+    /**
+     * @brief flattens forces of each atom into a single vector of doubles
+     *
+     * @return std::vector<double>
+     */
+    std::vector<double> SimulationBox::flattenForces()
     {
-        const auto velocity = atom->getVelocity();
+        std::vector<double> forces;
 
-        velocities.push_back(velocity[0]);
-        velocities.push_back(velocity[1]);
-        velocities.push_back(velocity[2]);
-    };
+        auto addForces = [&forces](auto &atom)
+        {
+            const auto force = atom->getForce();
 
-    std::ranges::for_each(_atoms, addVelocities);
+            forces.push_back(force[0]);
+            forces.push_back(force[1]);
+            forces.push_back(force[2]);
+        };
 
-    return velocities;
-}
+        std::ranges::for_each(_atoms, addForces);
 
-/**
- * @brief flattens forces of each atom into a single vector of doubles
- *
- * @return std::vector<double>
- */
-std::vector<double> SimulationBox::flattenForces()
-{
-    std::vector<double> forces;
+        return forces;
+    }
 
-    auto addForces = [&forces](auto &atom)
+    /**
+     * @brief flattens partial charges of each atom into a single vector of
+     * doubles
+     *
+     * @return std::vector<double>
+     */
+    std::vector<double> SimulationBox::flattenPartialCharges()
     {
-        const auto force = atom->getForce();
+        std::vector<double> partialCharges;
 
-        forces.push_back(force[0]);
-        forces.push_back(force[1]);
-        forces.push_back(force[2]);
-    };
+        auto addPartialCharges = [&partialCharges](auto &atom)
+        { partialCharges.push_back(atom->getPartialCharge()); };
 
-    std::ranges::for_each(_atoms, addForces);
+        std::ranges::for_each(_atoms, addPartialCharges);
 
-    return forces;
-}
+        return partialCharges;
+    }
 
-/**
- * @brief flattens partial charges of each atom into a single vector of doubles
- *
- * @return std::vector<double>
- */
-std::vector<double> SimulationBox::flattenPartialCharges()
-{
-    std::vector<double> partialCharges;
-
-    auto addPartialCharges = [&partialCharges](auto &atom)
-    { partialCharges.push_back(atom->getPartialCharge()); };
-
-    std::ranges::for_each(_atoms, addPartialCharges);
-
-    return partialCharges;
-}
-
-/**
- * @brief de-flattens positions of each atom from a single vector of doubles
- *
- * @param positions
- */
-void SimulationBox::deFlattenPositions(const std::vector<double> &positions)
-{
-    size_t index = 0;
-
-    auto setPositions = [&positions, &index](auto &atom)
+    /**
+     * @brief de-flattens positions of each atom from a single vector of doubles
+     *
+     * @param positions
+     */
+    void SimulationBox::deFlattenPositions(const std::vector<double> &positions)
     {
-        Vec3D position;
+        size_t index = 0;
 
-        position[0] = positions[index++];
-        position[1] = positions[index++];
-        position[2] = positions[index++];
+        auto setPositions = [&positions, &index](auto &atom)
+        {
+            Vec3D position;
 
-        atom->setPosition(position);
-    };
+            position[0] = positions[index++];
+            position[1] = positions[index++];
+            position[2] = positions[index++];
 
-    std::ranges::for_each(_atoms, setPositions);
-}
+            atom->setPosition(position);
+        };
 
-/**
- * @brief de-flattens velocities of each atom from a single vector of doubles
- *
- * @param velocities
- */
-void SimulationBox::deFlattenVelocities(const std::vector<double> &velocities)
-{
-    size_t index = 0;
+        std::ranges::for_each(_atoms, setPositions);
+    }
 
-    auto setVelocities = [&velocities, &index](auto &atom)
+    /**
+     * @brief de-flattens velocities of each atom from a single vector of
+     * doubles
+     *
+     * @param velocities
+     */
+    void SimulationBox::deFlattenVelocities(
+        const std::vector<double> &velocities
+    )
     {
-        Vec3D velocity;
+        size_t index = 0;
 
-        velocity[0] = velocities[index++];
-        velocity[1] = velocities[index++];
-        velocity[2] = velocities[index++];
+        auto setVelocities = [&velocities, &index](auto &atom)
+        {
+            Vec3D velocity;
 
-        atom->setVelocity(velocity);
-    };
+            velocity[0] = velocities[index++];
+            velocity[1] = velocities[index++];
+            velocity[2] = velocities[index++];
 
-    std::ranges::for_each(_atoms, setVelocities);
-}
+            atom->setVelocity(velocity);
+        };
 
-/**
- * @brief de-flattens forces of each atom from a single vector of doubles
- *
- * @param forces
- */
-void SimulationBox::deFlattenForces(const std::vector<double> &forces)
-{
-    size_t index = 0;
+        std::ranges::for_each(_atoms, setVelocities);
+    }
 
-    auto setForces = [&forces, &index](auto &atom)
+    /**
+     * @brief de-flattens forces of each atom from a single vector of doubles
+     *
+     * @param forces
+     */
+    void SimulationBox::deFlattenForces(const std::vector<double> &forces)
     {
-        Vec3D force;
+        size_t index = 0;
 
-        force[0] = forces[index++];
-        force[1] = forces[index++];
-        force[2] = forces[index++];
+        auto setForces = [&forces, &index](auto &atom)
+        {
+            Vec3D force;
 
-        atom->setForce(force);
-    };
+            force[0] = forces[index++];
+            force[1] = forces[index++];
+            force[2] = forces[index++];
 
-    std::ranges::for_each(_atoms, setForces);
-}
+            atom->setForce(force);
+        };
+
+        std::ranges::for_each(_atoms, setForces);
+    }
+}   // namespace molsys
 
 #endif   // WITH_MPI
