@@ -25,7 +25,6 @@
 #include <algorithm>   // for __for_each_fn, for_each
 #include <cmath>       // for cbrt
 
-#include "exceptions.hpp"   // for ExceptionType
 #include "globalTimer.hpp"
 #include "manostatSettings.hpp"   // for ManostatType, Isotropy
 #include "physicalData.hpp"       // for PhysicalData

@@ -25,9 +25,9 @@
 #include <string>        // for allocator, string
 #include <string_view>   // for string_view
 
-#include "color.hpp"        // for Code
-#include "exceptions.hpp"   // for CustomException
-#include "gtest/gtest.h"    // for Message, TestPartResult
+#include "baseException.hpp"
+#include "color.hpp"       // for Code
+#include "gtest/gtest.h"   // for Message, TestPartResult
 
 /**
  * @brief tests colorful output for FG_RED

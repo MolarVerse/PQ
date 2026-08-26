@@ -33,7 +33,6 @@
 
 #include "atom.hpp"                // for Atom
 #include "box.hpp"                 // for Box
-#include "exceptions.hpp"          // for ExceptionType
 #include "molecule.hpp"            // for Molecule
 #include "moleculeType.hpp"        // for MoleculeType
 #include "orthorhombicBox.hpp"     // for OrthorhombicBox

@@ -30,7 +30,6 @@
 #include "capabilities.hpp"      // for writeCapabilities
 #include "commandLineArgs.hpp"   // for CommandLineArgs
 #include "driver.hpp"
-#include "exceptions.hpp"   // for CustomException
 #include "systemInfo.hpp"   // for _VERSION_
 #include "validation.hpp"   // for validation
 
