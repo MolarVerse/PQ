@@ -1,0 +1,76 @@
+name: Check PR Has Linked Issue
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize, ready_for_review]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR number to check'
+        required: true
+
+jobs:
+  check-linked-issue:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Resolve PR number and head SHA
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          if [ -n "${{ github.event.pull_request.number }}" ]; then
+            NUMBER="${{ github.event.pull_request.number }}"
+            SHA="${{ github.event.pull_request.head.sha }}"
+          else
+            NUMBER="${{ inputs.pr_number }}"
+            SHA=$(gh api "repos/$REPO/pulls/$NUMBER" --jq '.head.sha')
+          fi
+          echo "number=$NUMBER" >> "$GITHUB_OUTPUT"
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+
+      - name: Query issues linked to this PR
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ steps.pr.outputs.number }}
+        run: |
+          OWNER="${REPO%/*}"
+          NAME="${REPO#*/}"
+
+          COUNT=$(gh api graphql -f query='
+            query($owner: String!, $repo: String!, $number: Int!) {
+              repository(owner: $owner, name: $repo) {
+                pullRequest(number: $number) {
+                  closingIssuesReferences(first: 10) {
+                    totalCount
+                  }
+                }
+              }
+            }' -F owner="$OWNER" -F repo="$NAME" -F number="$PR_NUMBER" \
+            --jq '.data.repository.pullRequest.closingIssuesReferences.totalCount')
+
+          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
+          if [ "$COUNT" -eq 0 ]; then
+            echo "state=failure" >> "$GITHUB_OUTPUT"
+          else
+            echo "state=success" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Report commit status on the PR's head SHA
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          gh api "repos/$REPO/statuses/${{ steps.pr.outputs.sha }}" \
+            -f state="${{ steps.check.outputs.state }}" \
+            -f context="Check PR Has Linked Issue" \
+            -f description="Manually re-checked via workflow_dispatch"
+
+      - name: Fail job if unlinked
+        if: steps.check.outputs.state == 'failure'
+        run: |
+          echo "::error::PR #${{ steps.pr.outputs.number }} has no issue linked."
+          exit 1
