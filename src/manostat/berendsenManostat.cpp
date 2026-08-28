@@ -25,7 +25,6 @@
 #include <algorithm>   // for __for_each_fn, for_each
 #include <cmath>       // for cbrt
 
-#include "exceptions.hpp"   // for ExceptionType
 #include "globalTimer.hpp"
 #include "manostatSettings.hpp"   // for ManostatType, Isotropy
 #include "physicalData.hpp"       // for PhysicalData
@@ -35,7 +34,7 @@
 using namespace linearAlgebra;
 using namespace settings;
 using namespace manostat;
-using namespace customException;
+using namespace exc;
 using namespace molsys;
 using namespace physicalData;
 
@@ -107,7 +106,7 @@ void BerendsenManostat::applyManostat(
     physicalData.setVolume(simBox.getVolume());
     physicalData.setDensity(simBox.getDensity());
 
-    simBox.checkCoulRadiusCutOff(ExceptionType::MANOSTATEXCEPTION);
+    simBox.checkCoulRadiusCutOff(ExceptionType::ManostatError);
 
     auto scaleMolecule = [&mu, &simBox](auto &molecule)
     { molecule.scale(mu, simBox.getBox()); };

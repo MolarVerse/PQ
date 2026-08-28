@@ -43,7 +43,7 @@ using namespace setup;
 using namespace potential;
 using namespace engine;
 using namespace settings;
-using namespace customException;
+using namespace exc;
 
 /**
  * @brief wrapper to create PotentialSetup object and call setup

@@ -52,7 +52,7 @@ using namespace input::guffdat;
 using namespace settings;
 using namespace utilities;
 using namespace defaults;
-using namespace customException;
+using namespace exc;
 using namespace molsys;
 using namespace potential;
 using namespace constants;

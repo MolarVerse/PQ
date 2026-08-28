@@ -34,7 +34,7 @@
 #include "stlVector.hpp"               // for rms
 
 using namespace linearAlgebra;
-using namespace customException;
+using namespace exc;
 using namespace constants;
 using namespace settings;
 using namespace randomNumberGenerator;
@@ -734,7 +734,7 @@ namespace molsys
                 "Coulomb radius cut off is larger than half of the minimal box "
                 "dimension";
 
-            if (exceptionType == ExceptionType::MANOSTATEXCEPTION)
+            if (exceptionType == ExceptionType::ManostatError)
                 throw ManostatException(message);
 
             throw UserInputException(message);

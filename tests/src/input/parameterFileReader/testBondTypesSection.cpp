@@ -52,13 +52,13 @@ TEST_F(TestParameterFileSection, processSectionBonds)
     lineElements = {"1", "2", "1.0", "0"};
     EXPECT_THROW(
         bondSection.processSection(lineElements, *_engine),
-        customException::ParameterFileException
+        exc::ParameterFileException
     );
 
     lineElements = {"1", "-2", "1.0"};
     EXPECT_THROW(
         bondSection.processSection(lineElements, *_engine),
-        customException::ParameterFileException
+        exc::ParameterFileException
     );
 }
 
@@ -69,7 +69,7 @@ TEST_F(TestParameterFileSection, endedNormallyBonds)
 
     ASSERT_THROW_MSG(
         bondSection.endedNormally(false),
-        customException::ParameterFileException,
+        exc::ParameterFileException,
         "Parameter file bonds section ended abnormally!"
     );
 }

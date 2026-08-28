@@ -153,7 +153,7 @@ void setup::setupEngine(Engine& engine)
             }
             case IntegratorType::NONE:
             {
-                throw customException::InputFileException(
+                throw exc::InputFileException(
                     "Integrator is not set for MD simulation - please set it "
                     "in the input file"
                 );

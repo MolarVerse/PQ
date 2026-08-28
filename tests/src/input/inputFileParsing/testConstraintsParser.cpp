@@ -82,7 +82,7 @@ TEST_F(TestInputFileReader, testParseShakeActivated)
     lineElements = {"shake", "=", "1"};
     EXPECT_THROW_MSG(
         parser.parseShakeActivated(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Invalid shake keyword \"1\" at line 0 in input file\n"
         "Possible keywords are: \"on\", \"off\", \"shake\", \"mshake\""
     );
@@ -104,14 +104,14 @@ TEST_F(TestInputFileReader, testParseShakeTolerance)
     lineElements = {"shake-tolerance", "=", "-0.0001"};
     EXPECT_THROW_MSG(
         parser.parseShakeTolerance(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Shake tolerance must be positive"
     );
 
     lineElements = {"shake-tolerance", "=", "0"};
     EXPECT_THROW_MSG(
         parser.parseShakeTolerance(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Shake tolerance must be positive"
     );
 }
@@ -132,14 +132,14 @@ TEST_F(TestInputFileReader, testParseShakeIteration)
     lineElements = {"shake-iter", "=", "-100"};
     EXPECT_THROW_MSG(
         parser.parseShakeIteration(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Maximum shake iterations must be positive"
     );
 
     lineElements = {"shake-iter", "=", "0"};
     EXPECT_THROW_MSG(
         parser.parseShakeIteration(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Maximum shake iterations must be positive"
     );
 }
@@ -160,14 +160,14 @@ TEST_F(TestInputFileReader, testParseRattleTolerance)
     lineElements = {"rattle-tolerance", "=", "-0.0001"};
     EXPECT_THROW_MSG(
         parser.parseRattleTolerance(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Rattle tolerance must be positive"
     );
 
     lineElements = {"rattle-tolerance", "=", "0"};
     EXPECT_THROW_MSG(
         parser.parseRattleTolerance(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Rattle tolerance must be positive"
     );
 }
@@ -188,14 +188,14 @@ TEST_F(TestInputFileReader, testParseRattleIteration)
     lineElements = {"rattle-iter", "=", "-100"};
     EXPECT_THROW_MSG(
         parser.parseRattleIteration(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Maximum rattle iterations must be positive"
     );
 
     lineElements = {"rattle-iter", "=", "0"};
     EXPECT_THROW_MSG(
         parser.parseRattleIteration(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Maximum rattle iterations must be positive"
     );
 }
@@ -216,14 +216,14 @@ TEST_F(TestInputFileReader, testParseMShakeTolerance)
     lineElements = {"mshake-tolerance", "=", "-0.0001"};
     EXPECT_THROW_MSG(
         parser.parseMShakeTolerance(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "MShake tolerance must be positive"
     );
 
     lineElements = {"mshake-tolerance", "=", "0"};
     EXPECT_THROW_MSG(
         parser.parseMShakeTolerance(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "MShake tolerance must be positive"
     );
 }
@@ -244,14 +244,14 @@ TEST_F(TestInputFileReader, testParseMShakeIteration)
     lineElements = {"mshake-iter", "=", "-100"};
     EXPECT_THROW_MSG(
         parser.parseMShakeIteration(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Maximum MShake iterations must be positive"
     );
 
     lineElements = {"mshake-iter", "=", "0"};
     EXPECT_THROW_MSG(
         parser.parseMShakeIteration(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Maximum MShake iterations must be positive"
     );
 }
@@ -280,7 +280,7 @@ TEST_F(TestInputFileReader, testParseDistanceConstraintsActivated)
     lineElements = {"distance-constraints", "=", "1"};
     EXPECT_THROW_MSG(
         parser.parseDistanceConstraintActivated(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Invalid distance-constraints keyword \"1\" "
         "at line 0 in input file\n"
         "Possible keywords are \"on\" and \"off\""

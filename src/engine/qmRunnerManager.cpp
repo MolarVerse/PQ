@@ -40,7 +40,7 @@
 
 using namespace engine;
 using namespace settings;
-using namespace customException;
+using namespace exc;
 using namespace QM;
 
 using std::make_shared;

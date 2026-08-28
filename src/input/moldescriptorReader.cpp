@@ -39,7 +39,7 @@ using namespace settings;
 using namespace engine;
 using namespace molsys;
 using namespace utilities;
-using namespace customException;
+using namespace exc;
 
 /**
  * @brief constructor

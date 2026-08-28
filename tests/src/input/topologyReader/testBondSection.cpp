@@ -61,19 +61,19 @@ TEST_F(TestTopologySection, processSectionBond)
     lineElements = {"1", "1", "7"};
     EXPECT_THROW(
         bondSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+        exc::TopologyException
     );
 
     lineElements = {"1", "2", "7", "1", "2"};
     EXPECT_THROW(
         bondSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+        exc::TopologyException
     );
 
     lineElements = {"1", "2", "7", "#"};
     EXPECT_THROW(
         bondSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+        exc::TopologyException
     );
 }
 
@@ -84,9 +84,6 @@ TEST_F(TestTopologySection, processSectionBond)
 TEST_F(TestTopologySection, endedNormallyBond)
 {
     input::topology::BondSection bondSection;
-    EXPECT_THROW(
-        bondSection.endedNormally(false),
-        customException::TopologyException
-    );
+    EXPECT_THROW(bondSection.endedNormally(false), exc::TopologyException);
     EXPECT_NO_THROW(bondSection.endedNormally(true));
 }

@@ -64,7 +64,7 @@ TEST_F(TestInputFileReader, parseHessianDisplacement)
 
     EXPECT_THROW_MSG(
         parser.parseDisplacement(lineElements, 7),
-        customException::InputFileException,
+        exc::InputFileException,
         "Hessian displacement must be greater than 0 in input file at line 7"
     );
 }
@@ -89,7 +89,7 @@ TEST_F(TestInputFileReader, parseHessianBuilder)
 
     EXPECT_THROW_MSG(
         parser.parseBuilder(lineElements, 9),
-        customException::InputFileException,
+        exc::InputFileException,
         "Invalid hessian_builder \"unknown\" in input file at line 9 - "
         "possible values are: central, forward, five-point, analytic"
     );

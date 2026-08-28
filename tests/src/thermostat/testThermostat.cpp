@@ -228,7 +228,7 @@ TEST_F(TestThermostat, berendsenRejectsPositiveTargetFromZero)
 
     EXPECT_THROW(
         _thermostat->applyThermostat(*_simulationBox, *_data),
-        customException::UserInputException
+        exc::UserInputException
     );
 }
 
@@ -260,7 +260,7 @@ TEST_F(TestThermostat, velocityRescalingRejectsPositiveTargetFromZero)
 
     EXPECT_THROW(
         _thermostat->applyThermostat(*_simulationBox, *_data),
-        customException::UserInputException
+        exc::UserInputException
     );
 }
 

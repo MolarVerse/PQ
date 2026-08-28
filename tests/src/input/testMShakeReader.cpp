@@ -61,7 +61,7 @@ TEST_F(TestMShakeReader, testProcessCommentLine)
 
     EXPECT_THROW_MSG(
         reader.processCommentLine(commentLine, mShakeReference),
-        customException::MShakeFileException,
+        exc::MShakeFileException,
         error_message
     );
 
@@ -69,7 +69,7 @@ TEST_F(TestMShakeReader, testProcessCommentLine)
 
     EXPECT_THROW_MSG(
         reader.processCommentLine(commentLine, mShakeReference),
-        customException::MShakeFileException,
+        exc::MShakeFileException,
         "Molecule type 1 not found"
     );
 
@@ -99,7 +99,7 @@ TEST_F(TestMShakeReader, testProcessAtomLines)
 
     EXPECT_THROW_MSG(
         reader.processAtomLines(atomLines, mShakeReference),
-        customException::MShakeFileException,
+        exc::MShakeFileException,
         error_message
     );
 
@@ -110,7 +110,7 @@ TEST_F(TestMShakeReader, testProcessAtomLines)
 
     EXPECT_THROW_MSG(
         reader.processAtomLines(atomLines, mShakeReference),
-        customException::MShakeFileException,
+        exc::MShakeFileException,
         "Molecule type 1 has only one atom. M-Shake requires at least two "
         "atoms."
     );
@@ -123,7 +123,7 @@ TEST_F(TestMShakeReader, testProcessAtomLines)
 
     EXPECT_THROW_MSG(
         reader.processAtomLines(atomLines, mShakeReference),
-        customException::MShakeFileException,
+        exc::MShakeFileException,
         "Atom names in mShake file at line 0 do not match the atom names of "
         "the molecule type! The M-Shake file should be in the form a an "
         "extended xyz file. Therefore, the atom names in the atom lines should "

@@ -32,7 +32,7 @@
 
 using namespace intraNonBonded;
 using namespace potential;
-using namespace customException;
+using namespace exc;
 using namespace molsys;
 using namespace physicalData;
 

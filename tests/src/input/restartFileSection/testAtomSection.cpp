@@ -71,7 +71,7 @@ TEST_F(TestAtomSection, numberOfArguments)
             auto line = std::vector<std::string>(i);
             ASSERT_THROW_MSG(
                 _section->process(line, *_engine),
-                customException::RstFileException,
+                exc::RstFileException,
                 "Error in line 7: Atom section must have 6, 9, 12, 15, 18 or "
                 "21 elements"
             );
@@ -89,7 +89,7 @@ TEST_F(TestAtomSection, moltypeNotFound)
     line[2]   = "1";
     ASSERT_THROW_MSG(
         _section->process(line, *_engine),
-        customException::RstFileException,
+        exc::RstFileException,
         "Molecule type 1 not found"
     );
 }
@@ -110,10 +110,7 @@ TEST_F(TestAtomSection, notEnoughElementsInLine)
     std::ifstream fp(filename);
     _section->_fp = &fp;
 
-    ASSERT_THROW(
-        _section->process(line, *_engine),
-        customException::RstFileException
-    );
+    ASSERT_THROW(_section->process(line, *_engine), exc::RstFileException);
 
     line[2] = "1";
 
@@ -122,10 +119,7 @@ TEST_F(TestAtomSection, notEnoughElementsInLine)
     std::ifstream fp2(filename2);
     _section->_fp = &fp2;
 
-    ASSERT_THROW(
-        _section->process(line, *_engine),
-        customException::RstFileException
-    );
+    ASSERT_THROW(_section->process(line, *_engine), exc::RstFileException);
 }
 
 TEST_F(TestAtomSection, numberOfArgumentsWithinMolecule)
@@ -144,10 +138,7 @@ TEST_F(TestAtomSection, numberOfArgumentsWithinMolecule)
     std::ifstream fp(filename);
     _section->_fp = &fp;
 
-    ASSERT_THROW(
-        _section->process(line, *_engine),
-        customException::RstFileException
-    );
+    ASSERT_THROW(_section->process(line, *_engine), exc::RstFileException);
 }
 
 TEST_F(TestAtomSection, testProcess)

@@ -33,7 +33,6 @@
 
 #include "atom.hpp"                // for Atom
 #include "box.hpp"                 // for Box
-#include "exceptions.hpp"          // for ExceptionType
 #include "molecule.hpp"            // for Molecule
 #include "moleculeType.hpp"        // for MoleculeType
 #include "orthorhombicBox.hpp"     // for OrthorhombicBox
@@ -94,7 +93,7 @@ namespace molsys
         void                                         copy(const SimulationBox&);
         [[nodiscard]] std::shared_ptr<SimulationBox> clone() const;
 
-        void checkCoulRadiusCutOff(const customException::ExceptionType) const;
+        void checkCoulRadiusCutOff(const ExceptionType) const;
         void setupExternalToInternalGlobalVdwTypesMap();
 
         void calculateDegreesOfFreedom();

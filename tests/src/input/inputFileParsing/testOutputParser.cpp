@@ -51,7 +51,7 @@ TEST_F(TestInputFileReader, testParseOutputFreq)
     lineElements = {"outputfreq", "=", "-1000"};
     EXPECT_THROW_MSG(
         parser.parseOutputFreq(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Output frequency cannot be negative - \"-1000\" at line 0 in input "
         "file"
     );
@@ -431,7 +431,7 @@ TEST_F(TestInputFileReader, parseOverwriteOutput)
 
     ASSERT_THROW_MSG(
         parser.parseOverwriteOutput({"overwrite_output", "=", "notABool"}, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Invalid boolean option \"notABool\" for keyword \"overwrite_output\" "
         "in input file.\n"
         "Possible values are: on, yes, true, off, no, false."
@@ -464,7 +464,7 @@ TEST_F(TestInputFileReader, parseIncludeOutputMetadata)
             {"include_output_metadata", "=", "notABool"},
             0
         ),
-        customException::InputFileException,
+        exc::InputFileException,
         "Invalid boolean option \"notABool\" for keyword "
         "\"include_output_metadata\" in input file.\n"
         "Possible values are: on, yes, true, off, no, false."

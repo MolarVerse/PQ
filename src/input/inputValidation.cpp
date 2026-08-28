@@ -39,7 +39,7 @@
 
 using namespace input;
 using namespace settings;
-using namespace customException;
+using namespace exc;
 
 /**
  * @brief validates semantic dependencies between parsed input keywords

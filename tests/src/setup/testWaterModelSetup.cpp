@@ -40,8 +40,8 @@
 #include "waterModelSettings.hpp"
 #include "waterModelSetup.hpp"
 
-using customException::MolDescriptorException;
-using customException::UserInputException;
+using exc::MolDescriptorException;
+using exc::UserInputException;
 using molsys::Atom;
 using molsys::Molecule;
 using molsys::MoleculeType;

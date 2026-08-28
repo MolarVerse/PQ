@@ -31,7 +31,7 @@
 #include "testTopologySection.hpp"
 
 using input::topology::JCouplingSection;
-using namespace customException;
+using namespace exc;
 
 TEST_F(TestTopologySection, jCouplingSectionKeyword)
 {

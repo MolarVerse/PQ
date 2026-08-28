@@ -26,10 +26,10 @@
 #include <string>      // for string, char_traits
 #include <vector>      // for vector
 
+#include "baseException.hpp"
 #include "capabilities.hpp"      // for writeCapabilities
 #include "commandLineArgs.hpp"   // for CommandLineArgs
 #include "driver.hpp"
-#include "exceptions.hpp"   // for CustomException
 #include "systemInfo.hpp"   // for _VERSION_
 #include "validation.hpp"   // for validation
 
@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
     {
         commandLineArgs.parse();
     }
-    catch (const customException::CustomException &e)
+    catch (const exc::PQException &e)
     {
         std::cerr << "Error: " << e.getMessage() << '\n' << std::flush;
         return EXIT_FAILURE;
@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
     {
         driver::Driver().run(commandLineArgs.getInputFileName());
     }
-    catch (const customException::CustomException &e)
+    catch (const exc::PQException &e)
     {
         std::cerr << "Error: " << e.getMessage() << '\n' << std::flush;
         exitCode = EXIT_FAILURE;

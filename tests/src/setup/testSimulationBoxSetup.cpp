@@ -288,7 +288,7 @@ TEST_F(TestSetup, testSetAtomMassesThrowsError)
     SimulationBoxSetup simulationBoxSetup(*_engine);
     ASSERT_THROW(
         simulationBoxSetup.setAtomMasses(),
-        customException::MolDescriptorException
+        exc::MolDescriptorException
     );
 }
 
@@ -342,7 +342,7 @@ TEST_F(TestSetup, testSetAtomicNumbersThrowsError)
     SimulationBoxSetup simulationBoxSetup(*_engine);
     ASSERT_THROW(
         simulationBoxSetup.setAtomicNumbers(),
-        customException::MolDescriptorException
+        exc::MolDescriptorException
     );
 }
 
@@ -411,7 +411,7 @@ TEST_F(TestSetup, noDensityNoBox)
     SimulationBoxSetup simulationBoxSetup(*_engine);
     ASSERT_THROW(
         simulationBoxSetup.checkBoxSettings(),
-        customException::UserInputException
+        exc::UserInputException
     );
 }
 
@@ -473,10 +473,7 @@ TEST_F(TestSetup, testCheckRcCutoff)
     _engine->getSimulationBox().setBoxDimensions({10.0, 20.0, 30.0});
     settings::PotentialSettings::setCoulombRadiusCutOff(14.0);
     SimulationBoxSetup simulationBoxSetup(*_engine);
-    EXPECT_THROW(
-        simulationBoxSetup.checkRcCutoff(),
-        customException::InputFileException
-    );
+    EXPECT_THROW(simulationBoxSetup.checkRcCutoff(), exc::InputFileException);
 
     SimulationBoxSetup simulationBox2Setup(*_engine);
     settings::PotentialSettings::setCoulombRadiusCutOff(4.0);

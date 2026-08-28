@@ -25,7 +25,7 @@
 #include "exceptions.hpp"
 
 using namespace settings;
-using namespace customException;
+using namespace exc;
 
 /**
  * @brief returns the convergence strategy as string

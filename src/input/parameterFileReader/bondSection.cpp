@@ -29,7 +29,7 @@
 #include "exceptions.hpp"   // for ParameterFileException
 
 using namespace input::parameterFile;
-using namespace customException;
+using namespace exc;
 using namespace engine;
 using namespace forceField;
 

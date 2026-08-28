@@ -39,7 +39,7 @@
 using namespace input;
 using namespace settings;
 using namespace references;
-using namespace customException;
+using namespace exc;
 
 /**
  * @brief Construct a new Input File Parser Constraints:: Input File Parser

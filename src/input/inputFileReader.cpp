@@ -56,7 +56,7 @@
 
 using namespace input;
 using namespace utilities;
-using namespace customException;
+using namespace exc;
 using std::make_unique;
 
 /**
@@ -206,7 +206,7 @@ void InputFileReader::process(const std::vector<std::string> &lineElements)
     {
         parserFunc(lineElements, _lineNumber);
     }
-    catch (CustomException &exception)
+    catch (PQException &exception)
     {
         exception.setLineNumber(_lineNumber);
         throw;
@@ -285,7 +285,7 @@ void InputFileReader::read()
                 processInputCommand
             );
         }
-        catch (CustomException &exception)
+        catch (PQException &exception)
         {
             exception.setLineNumber(_lineNumber);
             throw;
@@ -353,7 +353,7 @@ void input::readJobType(
                 processInputCommand
             );
         }
-        catch (CustomException &exception)
+        catch (PQException &exception)
         {
             exception.setLineNumber(lineNumber);
             throw;

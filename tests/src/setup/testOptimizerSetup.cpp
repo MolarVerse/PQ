@@ -37,7 +37,7 @@
 
 using namespace setup;
 using namespace settings;
-using namespace customException;
+using namespace exc;
 
 namespace
 {
@@ -175,10 +175,7 @@ TEST_F(TestSetup, setupEmptyOptimizerSteepestDescent)
     OptimizerSetup s(dynamic_cast<engine::OptEngine &>(*_engine));
     const auto     opt = s.setupEmptyOptimizer();
     ASSERT_NE(opt, nullptr);
-    EXPECT_NE(
-        std::dynamic_pointer_cast<opt::SteepestDescent>(opt),
-        nullptr
-    );
+    EXPECT_NE(std::dynamic_pointer_cast<opt::SteepestDescent>(opt), nullptr);
 }
 
 TEST_F(TestSetup, setupEmptyOptimizerAdam)

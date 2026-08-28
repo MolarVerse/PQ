@@ -33,7 +33,7 @@
 using namespace std;
 using namespace ::testing;
 using namespace input::molDescriptor;
-using namespace customException;
+using namespace exc;
 
 /**
  * @brief tests constructor of MoldescriptorReader

@@ -34,7 +34,7 @@ using enum molsys::Periodicity;
 
 using namespace settings;
 using namespace defaults;
-using namespace customException;
+using namespace exc;
 
 /**
  * @brief function to throw an exception after a timeout

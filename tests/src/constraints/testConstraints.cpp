@@ -109,7 +109,7 @@ TEST_F(TestConstraints, applyShakeNotConverged)
 
     EXPECT_THROW_MSG(
         _constraints->applyShake(*_box),
-        customException::ShakeException,
+        exc::ShakeException,
         "Shake algorithm did not converge for 2 bonds."
     );
 }
@@ -175,7 +175,7 @@ TEST_F(TestConstraints, applyRattleNotConverged)
 
     EXPECT_THROW_MSG(
         _constraints->applyRattle(*_box),
-        customException::ShakeException,
+        exc::ShakeException,
         "Rattle algorithm did not converge for 2 bonds."
     );
 }
