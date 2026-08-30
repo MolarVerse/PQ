@@ -34,7 +34,7 @@ using enum molsys::HybridZone;
 
 using namespace pq;
 using namespace configurator;
-using namespace customException;
+using namespace exc;
 using namespace settings;
 using namespace molsys;
 

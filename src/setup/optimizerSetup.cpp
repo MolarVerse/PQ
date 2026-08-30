@@ -41,7 +41,7 @@
 
 using setup::OptimizerSetup;
 using namespace settings;
-using namespace customException;
+using namespace exc;
 using namespace defaults;
 using namespace engine;
 using namespace opt;

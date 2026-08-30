@@ -95,7 +95,7 @@ namespace
     {
         if (!std::filesystem::is_regular_file(fileName))
         {
-            throw customException::InputFileException(
+            throw exc::InputFileException(
                 std::format(
                     "{} \"{}\" does not exist or is not a regular file",
                     description,
@@ -112,7 +112,7 @@ namespace
     {
         if (!std::filesystem::is_directory(directoryName))
         {
-            throw customException::InputFileException(
+            throw exc::InputFileException(
                 std::format(
                     "{} \"{}\" does not exist or is not a directory",
                     description,
@@ -177,7 +177,7 @@ namespace
 
         if (script.empty() && fullPathScript.empty())
         {
-            throw customException::InputFileException(
+            throw exc::InputFileException(
                 "No qm_script provided. Please provide a qm_script in the "
                 "input file."
             );
@@ -185,7 +185,7 @@ namespace
 
         if (!script.empty() && !fullPathScript.empty())
         {
-            throw customException::InputFileException(
+            throw exc::InputFileException(
                 "\"qm_script\" and \"qm_script_full_path\" are mutually "
                 "exclusive"
             );
@@ -194,7 +194,7 @@ namespace
         if (!script.empty() &&
             !cli::isExternalQMScript(QMSettings::getQMMethod(), script))
         {
-            throw customException::InputFileException(
+            throw exc::InputFileException(
                 std::format(
                     "Bundled QM script \"{}\" is not available for {}",
                     script,
@@ -225,7 +225,7 @@ namespace
 
         if (isStaticBuild && fullPathScript.empty())
         {
-            throw customException::InputFileException(
+            throw exc::InputFileException(
                 "This PQ build requires \"qm_script_full_path\" for "
                 "external QM programs"
             );
@@ -263,20 +263,20 @@ namespace
         if (engine.isConstraintsActivated() || ForceFieldSettings::isActive())
         {
             if (!FileSettings::isTopologyFileNameSet())
-                throw customException::InputFileException(
+                throw exc::InputFileException(
                     "Topology file needed for requested simulation setup"
                 );
         }
 
         if (ForceFieldSettings::isActive() &&
             !FileSettings::isParameterFileNameSet())
-            throw customException::InputFileException(
+            throw exc::InputFileException(
                 "Parameter file needed for requested simulation setup"
             );
 
         if (engine.getConstraints()->isMShakeActive() &&
             FileSettings::getMShakeFileName().empty())
-            throw customException::InputFileException(
+            throw exc::InputFileException(
                 "M-SHAKE file needed for requested simulation setup"
             );
 
@@ -387,7 +387,7 @@ namespace
             method == settings::QMMethod::FENNOL ||
             method == settings::QMMethod::MACE)
         {
-            throw customException::InputFileException(
+            throw exc::InputFileException(
                 std::format(
                     "QM method {} requires ASE support, but this PQ build "
                     "does not include it",
@@ -507,7 +507,7 @@ cli::ValidationResult cli::validateInputFile(
         appendWarnings(reader, result);
         return result;
     }
-    catch (const customException::CustomException &exception)
+    catch (const exc::PQException &exception)
     {
         return invalidResult(
             inputFile,

@@ -32,7 +32,7 @@
 using namespace molsys;
 using namespace utilities;
 using namespace constants;
-using namespace customException;
+using namespace exc;
 using namespace linearAlgebra;
 using namespace settings;
 

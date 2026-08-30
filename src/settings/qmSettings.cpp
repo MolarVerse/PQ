@@ -36,7 +36,7 @@ using settings::QMMethod;
 using settings::QMSettings;
 using settings::SlakosType;
 using settings::XtbMethod;
-using namespace customException;
+using namespace exc;
 using namespace utilities;
 
 namespace

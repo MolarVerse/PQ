@@ -134,6 +134,13 @@ The topology line formats are:
     | ``DIST_CONSTRAINTS``: atom_1 atom_2 lower_distance upper_distance force_constant dforce_constant_dt
     | ``J_COUPLINGS``: atom_1 atom_2 atom_3 atom_4 j_coupling_type
 
+Fields named ``atom_*`` are unitless global atom indices. Fields named
+``*_type`` are unitless indices into the corresponding parameter-file section.
+Distances in ``SHAKE`` and ``DIST_CONSTRAINTS`` are given in Å. The
+``DIST_CONSTRAINTS`` force constant is given in
+:math:`\frac{\text{kcal}}{\text{mol Å}^2}` and ``dforce_constant_dt`` in
+:math:`\frac{\text{kcal}}{\text{mol Å}^2\text{ fs}}`.
+
 The optional fourth field in ``SHAKE`` entries is accepted for legacy input
 files but is not used by the reader. The optional ``*`` marker in the bonded
 sections marks a linker interaction. Topology atom indices are global atom

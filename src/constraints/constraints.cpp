@@ -34,7 +34,7 @@
 
 using namespace constraints;
 using namespace molsys;
-using namespace customException;
+using namespace exc;
 
 /**
  * @brief constructor

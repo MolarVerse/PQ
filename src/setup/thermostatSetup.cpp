@@ -43,7 +43,7 @@ using namespace setup;
 using namespace settings;
 using namespace engine;
 using namespace thermostat;
-using namespace customException;
+using namespace exc;
 using namespace constants;
 
 /**

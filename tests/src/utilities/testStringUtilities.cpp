@@ -59,15 +59,9 @@ TEST(TestStringUtilities, removeComments)
 TEST(TestStringUtilities, getLineCommands)
 {
     std::string line2 = "test";
-    EXPECT_THROW(
-        utilities::getLineCommands(line2, 0),
-        customException::InputFileException
-    );
+    EXPECT_THROW(utilities::getLineCommands(line2, 0), exc::InputFileException);
     auto *line = "nstep = 1";
-    ASSERT_THROW(
-        utilities::getLineCommands(line, 1),
-        customException::InputFileException
-    );
+    ASSERT_THROW(utilities::getLineCommands(line, 1), exc::InputFileException);
 
     line = "nstep = 1;";
     ASSERT_THAT(
@@ -76,10 +70,7 @@ TEST(TestStringUtilities, getLineCommands)
     );
 
     line = "nstep = 1; nstep = 2";
-    ASSERT_THROW(
-        utilities::getLineCommands(line, 1),
-        customException::InputFileException
-    );
+    ASSERT_THROW(utilities::getLineCommands(line, 1), exc::InputFileException);
 
     line = "nstep = 1; nstep = 2;";
     ASSERT_THAT(
@@ -147,7 +138,7 @@ TEST(TestStringUtilities, keywordToBool)
     line = {"keyword", "=", "notABool"};
     ASSERT_THROW_MSG(
         utilities::keywordToBool(line),
-        customException::InputFileException,
+        exc::InputFileException,
         "Invalid boolean option \"notABool\" for keyword \"keyword\" in "
         "input file.\n"
         "Possible values are: on, yes, true, off, no, false."

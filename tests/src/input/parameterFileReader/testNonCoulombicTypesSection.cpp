@@ -38,7 +38,7 @@
 
 using namespace input::parameterFile;
 using namespace potential;
-using namespace customException;
+using namespace exc;
 using namespace settings;
 
 TEST_F(TestParameterFileSection, processSectionLennardJones)

@@ -64,7 +64,7 @@ TEST_F(TestInputFileReader, testParseForceField)
     lineElements = {"forceField", "=", "notValid"};
     ASSERT_THROW_MSG(
         parser.parseForceFieldType(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Invalid force-field keyword \"notValid\" at line 0 in input file\n"
         "Possible options are \"on\", \"off\" or \"bonded\""
     );
@@ -111,7 +111,7 @@ TEST_F(TestInputFileReader, testParseNonCoulombType)
     lineElements = {"coulomb", "=", "notValid"};
     EXPECT_THROW_MSG(
         parser.parseNonCoulombType(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Invalid nonCoulomb type \"notValid\" at line 0 in input file.\n"
         "Possible options are: lj, buck, morse and guff"
     );

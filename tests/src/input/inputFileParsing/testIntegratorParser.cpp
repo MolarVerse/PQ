@@ -50,7 +50,7 @@ TEST_F(TestInputFileReader, testParseIntegrator)
     lineElements = {"integrator", "=", "notValid"};
     ASSERT_THROW_MSG(
         parser.parseIntegrator(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Invalid integrator \"notValid\" at line 0 in input file"
     );
 }

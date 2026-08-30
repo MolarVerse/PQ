@@ -72,21 +72,21 @@ TEST_F(TestInputFileReader, ParseRelaxationTimeManostat)
     lineElements = {"p_relaxation", "=", "-100.0"};
     EXPECT_THROW_MSG(
         parser.parseManostatRelaxationTime(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Relaxation time of manostat must be finite and greater than zero"
     );
 
     lineElements = {"p_relaxation", "=", "0"};
     EXPECT_THROW_MSG(
         parser.parseManostatRelaxationTime(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Relaxation time of manostat must be finite and greater than zero"
     );
 
     lineElements = {"p_relaxation", "=", "1e308"};
     EXPECT_THROW_MSG(
         parser.parseManostatRelaxationTime(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Relaxation time of manostat is too large to represent in femtoseconds"
     );
 }
@@ -125,7 +125,7 @@ TEST_F(TestInputFileReader, ParseManostat)
     lineElements = {"manostat", "=", "notValid"};
     EXPECT_THROW_MSG(
         parser.parseManostat(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Invalid manostat \"notValid\" at line 0 in input file.\n"
         "Possible options are: berendsen, stochastic_rescaling and none"
     );
@@ -147,7 +147,7 @@ TEST_F(TestInputFileReader, ParseCompressibility)
     lineElements = {"compressibility", "=", "-0.1"};
     EXPECT_THROW_MSG(
         parser.parseCompressibility(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Compressibility must be finite and non-negative"
     );
 
@@ -250,7 +250,7 @@ TEST_F(TestInputFileReader, ParseIsotropy)
     lineElements = {"isotropy", "=", "notValid"};
     EXPECT_THROW_MSG(
         parser.parseIsotropy(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Invalid isotropy \"notValid\" at line 0 in input file.\n"
         "Possible options are: isotropic, xy, xz, yz, anisotropic and "
         "full_anisotropic"

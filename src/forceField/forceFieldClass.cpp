@@ -29,7 +29,7 @@
 #include "exceptions.hpp"
 
 using namespace forceField;
-using namespace customException;
+using namespace exc;
 using namespace molsys;
 using namespace physicalData;
 using namespace potential;

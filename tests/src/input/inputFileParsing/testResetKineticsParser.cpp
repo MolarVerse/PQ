@@ -49,7 +49,7 @@ TEST_F(TestInputFileReader, testParseNScale)
     lineElements = {"nscale", "=", "-1"};
     EXPECT_THROW_MSG(
         parser.parseNScale(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Nscale must be positive"
     );
 }
@@ -69,7 +69,7 @@ TEST_F(TestInputFileReader, testParseFScale)
     lineElements = {"fscale", "=", "-1"};
     EXPECT_THROW_MSG(
         parser.parseFScale(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Fscale must be positive"
     );
 }
@@ -89,7 +89,7 @@ TEST_F(TestInputFileReader, testParseNReset)
     lineElements = {"nreset", "=", "-1"};
     EXPECT_THROW_MSG(
         parser.parseNReset(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Nreset must be positive"
     );
 }
@@ -109,7 +109,7 @@ TEST_F(TestInputFileReader, testParseFReset)
     lineElements = {"freset", "=", "-1"};
     EXPECT_THROW_MSG(
         parser.parseFReset(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Freset must be positive"
     );
 }
@@ -129,7 +129,7 @@ TEST_F(TestInputFileReader, testParseNResetAngular)
     lineElements = {"nreset_angular", "=", "-1"};
     EXPECT_THROW_MSG(
         parser.parseNResetAngular(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Nreset_angular must be positive"
     );
 }
@@ -149,7 +149,7 @@ TEST_F(TestInputFileReader, testParseFResetAngular)
     lineElements = {"freset_angular", "=", "-1"};
     EXPECT_THROW_MSG(
         parser.parseFResetAngular(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Freset_angular must be positive"
     );
 }

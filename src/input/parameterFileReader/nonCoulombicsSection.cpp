@@ -37,7 +37,7 @@
 #include "strongTypes.hpp"
 
 using namespace input::parameterFile;
-using namespace customException;
+using namespace exc;
 using namespace engine;
 using namespace potential;
 using namespace settings;

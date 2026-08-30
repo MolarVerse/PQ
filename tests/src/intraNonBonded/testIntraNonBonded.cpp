@@ -85,7 +85,7 @@ TEST_F(TestIntraNonBonded, findIntraNonBondedContainerByMolType)
     EXPECT_THROW_MSG(
         [[maybe_unused]] const auto dummy =
             intraNonBonded.findIntraNonBondedContainerByMolType(3),
-        customException::IntraNonBondedException,
+        exc::IntraNonBondedException,
         std::format("IntraNonBondedContainer with molType 3 not found!")
     )
 }

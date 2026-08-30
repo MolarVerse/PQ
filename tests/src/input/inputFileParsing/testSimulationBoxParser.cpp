@@ -52,14 +52,14 @@ TEST_F(TestInputFileReader, parseDensity)
     const std::vector<std::string> lineElements2 = {"density", "=", "-1.0"};
     EXPECT_THROW_MSG(
         parser.parseDensity(lineElements2, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Density must be positive - density = -1"
     );
 
     const std::vector<std::string> zeroDensity = {"density", "=", "0"};
     EXPECT_THROW_MSG(
         parser.parseDensity(zeroDensity, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Density must be positive - density = 0"
     );
 }
@@ -80,7 +80,7 @@ TEST_F(TestInputFileReader, parseCoulombRadius)
     const std::vector<std::string> lineElements2 = {"rcoulomb", "=", "-1.0"};
     EXPECT_THROW_MSG(
         parser.parseCoulombRadius(lineElements2, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Coulomb radius cutoff must be positive - \"-1.0\" at line 0 in input "
         "file"
     );
@@ -130,7 +130,7 @@ TEST_F(TestInputFileReader, parseInitVelocities)
     };
     EXPECT_THROW_MSG(
         parser.parseInitializeVelocities(lineElements4, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Invalid value for initialize velocities - \"wrongKeyword\" at line 0 "
         "in input file.\n"
         "Possible options are: true, false, force"

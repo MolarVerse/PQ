@@ -119,9 +119,9 @@ void waterModel::MTRIntraWater::calculate(
         if (smoothing == HOTSPOT && water.getHybridZone() == SMOOTHING)
             smF = water.getSmoothingFactor();
 
-        physicalData.addVirial(tensorProduct(dOH1, forceOH1) * (1 - smF));
-        physicalData.addVirial(tensorProduct(dOH2, forceOH2) * (1 - smF));
-        physicalData.addVirial(tensorProduct(dHH, forceAngle) * (1 - smF));
+        physicalData.addVirial(-tensorProduct(dOH1, forceOH1) * (1 - smF));
+        physicalData.addVirial(-tensorProduct(dOH2, forceOH2) * (1 - smF));
+        physicalData.addVirial(-tensorProduct(dHH, forceAngle) * (1 - smF));
 
         physicalData.addBondEnergy(bondEnergy);
         physicalData.addAngleEnergy(angleEnergy);

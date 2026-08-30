@@ -111,7 +111,7 @@ TEST_F(TestTopologySection, processShakeSectionIncorrectNumberOfElements)
 
     EXPECT_THROW(
         shakeSection.process(lineElements, *_engine),
-        customException::TopologyException
+        exc::TopologyException
     );
 }
 
@@ -138,7 +138,7 @@ TEST_F(TestTopologySection, processShakeSectionSameAtomTwice)
 
     EXPECT_THROW(
         shakeSection.process(lineElements, *_engine),
-        customException::TopologyException
+        exc::TopologyException
     );
 }
 
@@ -167,6 +167,6 @@ TEST_F(TestTopologySection, processShakeSectionMissingEnd)
 
     EXPECT_THROW(
         shakeSection.process(lineElements, *_engine),
-        customException::TopologyException
+        exc::TopologyException
     );
 }

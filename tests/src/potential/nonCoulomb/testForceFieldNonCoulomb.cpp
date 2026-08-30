@@ -342,7 +342,7 @@ TEST_F(
         [[maybe_unused]] const auto dummy =
             _nonCoulombPotential
                 ->findNonCoulPairByInternalTypes(VdwType{0}, VdwType{2}),
-        customException::ParameterFileException,
+        exc::ParameterFileException,
         std::format(
             "Non coulombic pair with global van der waals types {} and {} is "
             "defined twice in the parameter file.",
@@ -387,7 +387,7 @@ TEST_F(
 
     EXPECT_THROW_MSG(
         _nonCoulombPotential->fillOffDiagOfNonCoulPairsMatrix(),
-        customException::ParameterFileException,
+        exc::ParameterFileException,
         "Not all combinations of global van der Waals types are defined in the "
         "parameter file - and no mixing rules were chosen"
     );
@@ -612,7 +612,7 @@ TEST_F(
 
     EXPECT_THROW_MSG(
         _nonCoulombPotential->fillOffDiagOfNonCoulPairsMatrix(),
-        customException::ParameterFileException,
+        exc::ParameterFileException,
         std::format(
             "Non-coulombic pairs with global van der Waals types {}, {} and "
             "{}, {} in "
@@ -749,7 +749,7 @@ TEST_F(TestNonCoulombPotentialFF, sortNonCoulombicsPairs)
 
     EXPECT_THROW_MSG(
         _nonCoulombPotential->sortNonCoulombicsPairs(vector),
-        customException::ParameterFileException,
+        exc::ParameterFileException,
         std::format(
             "Non-coulombic pairs with global van der Waals types {} and {} in "
             "the "

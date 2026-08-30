@@ -133,7 +133,7 @@ TEST_F(TestSetup, setupNonCoulombicPairs)
 
     EXPECT_THROW_MSG(
         potentialSetup.setupNonCoulombicPairs(),
-        customException::ParameterFileException,
+        exc::ParameterFileException,
         "Not all self interacting non coulombics were set in the noncoulombics "
         "section of the parameter file"
     );

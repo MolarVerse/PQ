@@ -144,7 +144,7 @@ namespace linearAlgebra
         if (ldlt.info() != Eigen::Success)
         {
             // matrix is not positive-definite
-            throw customException::LinearAlgebraException(
+            throw exc::LinearAlgebraException(
                 "Matrix is not positive-definite."
             );
         }

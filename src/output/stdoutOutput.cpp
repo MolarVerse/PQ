@@ -30,7 +30,7 @@
 #include "outputMessages.hpp"   // for initialMomentumMessage
 
 using output::StdoutOutput;
-using namespace customException;
+using namespace exc;
 
 /**
  * @brief write a message to the stdout

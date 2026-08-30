@@ -33,7 +33,7 @@
 #include "stringUtilities.hpp"    // for toLowerCopy
 
 using namespace input;
-using namespace customException;
+using namespace exc;
 using namespace settings;
 using namespace utilities;
 using namespace references;

@@ -31,7 +31,7 @@
 #include "testParameterFileSection.hpp"
 
 using namespace input::parameterFile;
-using namespace customException;
+using namespace exc;
 
 TEST_F(TestParameterFileSection, jCouplingSectionKeyword)
 {

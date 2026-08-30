@@ -32,7 +32,7 @@
 #include "jCouplingForceField.hpp"   // for JCouplingForceField
 
 using namespace input::topology;
-using namespace customException;
+using namespace exc;
 using namespace engine;
 using namespace forceField;
 

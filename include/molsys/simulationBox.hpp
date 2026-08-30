@@ -33,7 +33,6 @@
 
 #include "atom.hpp"                // for Atom
 #include "box.hpp"                 // for Box
-#include "exceptions.hpp"          // for ExceptionType
 #include "molecule.hpp"            // for Molecule
 #include "moleculeType.hpp"        // for MoleculeType
 #include "orthorhombicBox.hpp"     // for OrthorhombicBox
@@ -96,7 +95,7 @@ namespace molsys
         void                                         copy(const SimulationBox&);
         [[nodiscard]] std::shared_ptr<SimulationBox> clone() const;
 
-        void checkCoulRadiusCutOff(const customException::ExceptionType) const;
+        void checkCoulRadiusCutOff(const ExceptionType) const;
         void setupExternalToInternalGlobalVdwTypesMap();
 
         void calculateDegreesOfFreedom();
@@ -153,10 +152,6 @@ namespace molsys
         );
 
 #ifdef WITH_MPI
-        [[nodiscard]] std::vector<size_t>  flattenAtomTypes();
-        [[nodiscard]] std::vector<size_t>  flattenMolTypes();
-        [[nodiscard]] std::vector<VdwType> flattenInternalGlobalVDWTypes();
-
         [[nodiscard]] std::vector<double> flattenVelocities();
         [[nodiscard]] std::vector<double> flattenForces();
         [[nodiscard]] std::vector<double> flattenPartialCharges();

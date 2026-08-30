@@ -35,7 +35,7 @@
 using setup::HybridSetup;
 using namespace settings;
 using namespace engine;
-using namespace customException;
+using namespace exc;
 
 /**
  * @brief wrapper to build HybridSetup object and call setup
@@ -81,7 +81,7 @@ void HybridSetup::setup()
 /**
  * @brief Check if chosen QM method is available for hybrid type calculations
  *
- * @throws customException::InputFileException if the QM method is not supported
+ * @throws exc::InputFileException if the QM method is not supported
  * for hybrid type calculations
  */
 void HybridSetup::validateQMMethod()
@@ -170,13 +170,13 @@ void HybridSetup::setupForcedOuterList()
 /**
  * @brief Validate zone radii configuration for hybrid calculations
  *
- * @throws customException::InputFileException if the core radius is larger than
+ * @throws exc::InputFileException if the core radius is larger than
  * the layer radius
- * @throws customException::InputFileException if the smoothing region is too
+ * @throws exc::InputFileException if the smoothing region is too
  * thick for the chosen combinatin of core and layer radius
- * @throws customException::InputFileException if the layer radius exceeds one
+ * @throws exc::InputFileException if the layer radius exceeds one
  quarter of the smallest box dimension (minimum image convention)
- * @throws customException::InputFileException if the sum of layer radius and
+ * @throws exc::InputFileException if the sum of layer radius and
  point charge thickness exceeds three quarters of the smallest box dimension
  (includes point charges from beyond immediate neighboring cells)
  */
@@ -251,7 +251,7 @@ void HybridSetup::checkZoneRadii()
  * calculations where MM charges are requested (qm_charges = mm) but QM atoms
  * (moltype 0) are present in the system.
  *
- * @throws customException::InputFileException if MM charges are requested but
+ * @throws exc::InputFileException if MM charges are requested but
  * atoms without moltype are present in the simulation box
  */
 void HybridSetup::validateQMChargeSettings()

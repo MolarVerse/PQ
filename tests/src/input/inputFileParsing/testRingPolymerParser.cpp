@@ -52,7 +52,7 @@ TEST_F(TestInputFileReader, testParseNumberOfReplicas)
     lineElements = {"rpmd_n_replica", "=", "1"};
     EXPECT_THROW_MSG(
         parser.parseNumberOfBeads(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Number of beads must be at least 2 - in input file in line 0"
     );
 }

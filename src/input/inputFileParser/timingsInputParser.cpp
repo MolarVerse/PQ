@@ -30,7 +30,7 @@
 #include "timingsSettings.hpp"   // for TimingsSettings
 
 using namespace input;
-using namespace customException;
+using namespace exc;
 using namespace settings;
 using namespace utilities;
 

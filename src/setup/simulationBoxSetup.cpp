@@ -52,7 +52,7 @@ using namespace engine;
 using namespace settings;
 using namespace utilities;
 using namespace constants;
-using namespace customException;
+using namespace exc;
 using namespace maxwellBoltzmann;
 using namespace output;
 

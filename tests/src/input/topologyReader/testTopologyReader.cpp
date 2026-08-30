@@ -64,7 +64,7 @@ TEST_F(TestTopologyReader, determineSection)
     EXPECT_THROW(
         [[maybe_unused]] const auto dummy =
             _topologyReader->determineSection({"unknown"}),
-        customException::TopologyException
+        exc::TopologyException
     );
 }
 
@@ -79,7 +79,7 @@ TEST_F(TestTopologyReader, read)
     EXPECT_NO_THROW(_topologyReader->read());
 
     settings::FileSettings::unsetIsTopologyFileNameSet();
-    EXPECT_THROW(_topologyReader->read(), customException::InputFileException);
+    EXPECT_THROW(_topologyReader->read(), exc::InputFileException);
 }
 
 /**

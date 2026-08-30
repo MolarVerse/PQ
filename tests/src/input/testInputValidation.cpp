@@ -41,7 +41,7 @@
 #include "throwWithMessage.hpp"        // for ASSERT_THROW_MSG
 #include "timingsSettings.hpp"         // for TimingsSettings
 
-using namespace customException;
+using namespace exc;
 using namespace input;
 using namespace settings;
 

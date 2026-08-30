@@ -32,7 +32,7 @@
 
 using namespace input::mShake;
 using namespace engine;
-using namespace customException;
+using namespace exc;
 using namespace settings;
 using namespace utilities;
 using namespace constraints;

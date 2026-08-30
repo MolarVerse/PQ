@@ -34,7 +34,7 @@
 using namespace input::restartFile;
 using namespace engine;
 using namespace settings;
-using namespace customException;
+using namespace exc;
 
 /**
  * @brief processes the step count section of the rst file

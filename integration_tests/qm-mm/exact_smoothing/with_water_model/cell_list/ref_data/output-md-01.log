@@ -22,8 +22,8 @@
                         Stefan Seiwald
                         Benjamin Reitmair
 
-         Version:       v0.6.4-0901cfdc
-         Compile date:  Aug  6 2026 21:57:26
+         Version:       v0.7.0-8ae5a57f
+         Compile date:  Aug 25 2026 07:33:06
 
 INFO:    Reading Moldescriptor File "moldescriptor.dat"
 
@@ -114,7 +114,7 @@ INFO:    Reading Guffdat File "guff.dat"
 INFO:    Initial momentum = 7.91874e-09 Å*amu/fs
 
 
-         Elapsed time = 2.45433 s
+         Elapsed time = 2.38179 s
 
 
 INFO:    For citation please refer to the ".ref" file.

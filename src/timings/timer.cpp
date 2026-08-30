@@ -27,7 +27,7 @@
 #include "exceptions.hpp"
 
 using namespace timings;
-using namespace customException;
+using namespace exc;
 
 /**
  * @brief Construct a new Timer:: Timer object
@@ -37,12 +37,18 @@ using namespace customException;
 Timer::Timer(const TimerId id) : _id(id) {}
 
 /**
- * @brief get timings details
+ * @brief get the sorted timings details
  *
  */
-const std::vector<TimingsSection>& Timer::getTimingDetails() const
+std::vector<TimingsSection> Timer::getTimingDetails() const
 {
-    return _timingDetails;
+    std::vector<TimingsSection> sortedTimingDetails = _timingDetails;
+    std::ranges::sort(
+        sortedTimingDetails,
+        [](const TimingsSection& a, const TimingsSection& b)
+        { return a.calculateElapsedTime() > b.calculateElapsedTime(); }
+    );
+    return sortedTimingDetails;
 }
 
 /**
@@ -120,7 +126,7 @@ void Timer::stopTimingsSection()
     const auto index = findTimingsSectionIndex(getTimerName());
 
     if (index == _timingDetails.size())
-        throw CustomException("Timer not found");
+        throw TimerException("Timer not found");
 
     _timingDetails[index].endTimer();
 }
@@ -134,7 +140,7 @@ void Timer::stopTimingsSection(const std::string_view name)
     const auto index = findTimingsSectionIndex(name);
 
     if (index == _timingDetails.size())
-        throw CustomException("Timer not found");
+        throw TimerException("Timer not found");
 
     _timingDetails[index].endTimer();
 }
@@ -189,7 +195,7 @@ TimingsSection Timer::getTimingsSection(const std::string_view name) const
     const auto index = findTimingsSectionIndex(name);
 
     if (index == _timingDetails.size())
-        throw CustomException("Timer not found");
+        throw TimerException("Timer not found");
 
     return _timingDetails[index];
 }
