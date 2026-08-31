@@ -33,7 +33,7 @@ endforeach()
 if(${BUILD_WITH_GCOVR})
     include(CodeCoverage)
     setup_target_for_coverage_gcovr_html(
-        NAME coverage_input
+        NAME coverage_apps
         EXCLUDE ${EXCLUDE_FOR_GCOVR}
 
         EXECUTABLE "ctest"
