@@ -39,6 +39,7 @@
 #include "potentialCellList.hpp"
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
+#include "strongTypes.hpp"
 
 using linearAlgebra::Vec3D;
 using molsys::Atom;
@@ -111,7 +112,7 @@ namespace
             atom->setAtomType(0);
             atom->setExternalAtomType(p.molType);
             atom->setPartialCharge(p.molType == 1 ? 0.5 : -0.3);
-            atom->setInternalGlobalVDWType(0);
+            atom->setInternalGlobalVDWType(VdwType{0});
             atom->setForceToZero();
 
             Molecule molecule;
@@ -141,8 +142,7 @@ namespace
 
         const auto pair = std::make_shared<LennardJonesPair>(
             kCoulombCutOff,
-            /*c6=*/-1.0,
-            /*c12=*/1.0
+            LJParams{.c6 = -1.0, .c12 = 1.0}
         );
 
         for (size_t m1 = 1; m1 <= 2; ++m1)

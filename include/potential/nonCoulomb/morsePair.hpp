@@ -24,10 +24,12 @@
 
 #define _MORSE_PAIR_HPP_
 
-#include <cstddef>   // size_t
 #include <utility>   // pair
 
 #include "nonCoulombPair.hpp"
+#include "strongTypes.hpp"
+
+struct TestMorsePairUtils;   // forward declaration
 
 namespace potential
 {
@@ -40,44 +42,41 @@ namespace potential
     class MorsePair : public NonCoulombPair
     {
        private:
-        double _dissociationEnergy;
-        double _wellWidth;
-        double _equilibriumDistance;
+        MorseParams _params;
 
        public:
         explicit MorsePair(
-            const size_t vanDerWaalsType1,
-            const size_t vanDerWaalsType2,
-            const double cutOff,
-            const double dissociationEnergy,
-            const double wellWidth,
-            const double equilibriumDistance
+            const ExtVdwType   vanDerWaalsType1,
+            const ExtVdwType   vanDerWaalsType2,
+            const double       cutOff,
+            const MorseParams &params
         );
 
-        explicit MorsePair(
-            const double cutOff,
-            const double dissociationEnergy,
-            const double wellWidth,
-            const double equilibriumDistance
-        );
+        explicit MorsePair(const double cutOff, const MorseParams &params);
 
         explicit MorsePair(
-            const double cutOff,
-            const double energyCutoff,
-            const double forceCutoff,
-            const double dissociationEnergy,
-            const double wellWidth,
-            const double equilibriumDistance
+            const double       cutOff,
+            const double       energyCutoff,
+            const double       forceCutoff,
+            const MorseParams &params
         );
+
+        // TODO: we need to explicitly delete it to not implicitly create it
+        // with the wrong types!!! Needs cleanup
+        explicit MorsePair(
+            const size_t,
+            const size_t,
+            const double,
+            const MorseParams &
+        ) = delete;
 
         [[nodiscard]] bool operator==(const MorsePair &other) const;
 
-        [[nodiscard]] std::pair<double, double> calculate(const double distance
+        [[nodiscard]] std::pair<double, double> calculate(
+            const double distance
         ) const override;
 
-        [[nodiscard]] double getDissociationEnergy() const;
-        [[nodiscard]] double getWellWidth() const;
-        [[nodiscard]] double getEquilibriumDistance() const;
+        friend struct ::TestMorsePairUtils;
     };
 
 }   // namespace potential

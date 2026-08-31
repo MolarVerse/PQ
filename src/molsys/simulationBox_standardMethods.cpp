@@ -295,9 +295,9 @@ namespace molsys
     /**
      * @brief get the external global VDW types
      *
-     * @return std::vector<size_t>&
+     * @return std::vector<ExtVdwType>&
      */
-    std::vector<size_t> &SimulationBox::getExternalGlobalVdwTypes()
+    std::vector<ExtVdwType> &SimulationBox::getExternalGlobalVdwTypes()
     {
         return _externalGlobalVdwTypes;
     }
@@ -305,9 +305,9 @@ namespace molsys
     /**
      * @brief get the external to internal global VDW types map
      *
-     * @return std::unordered_map<size_t, size_t>&
+     * @return std::unordered_map<ExtVdwType, VdwType>&
      */
-    std::map<size_t, size_t> &SimulationBox::
+    std::unordered_map<ExtVdwType, VdwType> &SimulationBox::
         getExternalToInternalGlobalVDWTypes()
     {
         return _externalToInternalGlobalVDWTypes;

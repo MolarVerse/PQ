@@ -40,7 +40,8 @@
 #include "simulationBox.hpp"           // for SimulationBox
 #include "simulationBoxSettings.hpp"   // for SimulationBoxSettings
 #include "simulationBoxSetup.hpp"   // for SimulationBoxSetup, setupSimulationBox
-#include "testSetup.hpp"            // for TestSetup
+#include "strongTypes.hpp"
+#include "testSetup.hpp"   // for TestSetup
 
 using setup::molsys::SimulationBoxSetup;
 
@@ -162,9 +163,9 @@ TEST_F(TestSetup, setExternalVDWTypes)
 
     ::molsys::MoleculeType moleculeType(1);
     moleculeType.setNumberOfAtoms(3);
-    moleculeType.addExternalGlobalVDWType(0);
-    moleculeType.addExternalGlobalVDWType(1);
-    moleculeType.addExternalGlobalVDWType(2);
+    moleculeType.addExternalGlobalVDWType(ExtVdwType{0});
+    moleculeType.addExternalGlobalVDWType(ExtVdwType{1});
+    moleculeType.addExternalGlobalVDWType(ExtVdwType{2});
 
     _engine->getSimulationBox().addMolecule(molecule);
     _engine->getSimulationBox().addMolecule(qmMolecule);
@@ -177,21 +178,11 @@ TEST_F(TestSetup, setExternalVDWTypes)
     SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.setExternalVDWTypes();
 
-    EXPECT_EQ(
-        _engine->getSimulationBox().getMolecules()[0].getExternalGlobalVDWTypes(
-        )[0],
-        0
-    );
-    EXPECT_EQ(
-        _engine->getSimulationBox().getMolecules()[0].getExternalGlobalVDWTypes(
-        )[1],
-        1
-    );
-    EXPECT_EQ(
-        _engine->getSimulationBox().getMolecules()[0].getExternalGlobalVDWTypes(
-        )[2],
-        2
-    );
+    const auto &moleculeResult = _engine->getSimulationBox().getMolecules()[0];
+
+    EXPECT_EQ(moleculeResult.getExternalGlobalVDWTypes()[0], ExtVdwType{0});
+    EXPECT_EQ(moleculeResult.getExternalGlobalVDWTypes()[1], ExtVdwType{1});
+    EXPECT_EQ(moleculeResult.getExternalGlobalVDWTypes()[2], ExtVdwType{2});
 }
 
 TEST_F(TestSetup, setPartialCharges)
@@ -224,18 +215,11 @@ TEST_F(TestSetup, setPartialCharges)
     SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.setPartialCharges();
 
-    EXPECT_EQ(
-        _engine->getSimulationBox().getMolecules()[0].getPartialCharges()[0],
-        0.0
-    );
-    EXPECT_EQ(
-        _engine->getSimulationBox().getMolecules()[0].getPartialCharges()[1],
-        1.0
-    );
-    EXPECT_EQ(
-        _engine->getSimulationBox().getMolecules()[0].getPartialCharges()[2],
-        2.0
-    );
+    const auto &moleculeResult = _engine->getSimulationBox().getMolecules()[0];
+
+    EXPECT_EQ(moleculeResult.getPartialCharges()[0], 0.0);
+    EXPECT_EQ(moleculeResult.getPartialCharges()[1], 1.0);
+    EXPECT_EQ(moleculeResult.getPartialCharges()[2], 2.0);
 }
 
 TEST_F(TestSetup, testSetAtomMasses)
@@ -256,18 +240,11 @@ TEST_F(TestSetup, testSetAtomMasses)
     SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.setAtomMasses();
 
-    EXPECT_DOUBLE_EQ(
-        _engine->getSimulationBox().getMolecules()[0].getAtomMass(0),
-        12.0107
-    );
-    EXPECT_DOUBLE_EQ(
-        _engine->getSimulationBox().getMolecules()[0].getAtomMass(1),
-        1.00794
-    );
-    EXPECT_DOUBLE_EQ(
-        _engine->getSimulationBox().getMolecules()[0].getAtomMass(2),
-        15.9994
-    );
+    const auto &moleculeResult = _engine->getSimulationBox().getMolecules()[0];
+
+    EXPECT_DOUBLE_EQ(moleculeResult.getAtomMass(0), 12.0107);
+    EXPECT_DOUBLE_EQ(moleculeResult.getAtomMass(1), 1.00794);
+    EXPECT_DOUBLE_EQ(moleculeResult.getAtomMass(2), 15.9994);
 }
 
 TEST_F(TestSetup, testSetAtomMassesThrowsError)
@@ -310,18 +287,11 @@ TEST_F(TestSetup, testSetAtomicNumbers)
     SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.setAtomicNumbers();
 
-    EXPECT_EQ(
-        _engine->getSimulationBox().getMolecules()[0].getAtomicNumber(0),
-        AtomNumber{6}
-    );
-    EXPECT_EQ(
-        _engine->getSimulationBox().getMolecules()[0].getAtomicNumber(1),
-        AtomNumber{1}
-    );
-    EXPECT_EQ(
-        _engine->getSimulationBox().getMolecules()[0].getAtomicNumber(2),
-        AtomNumber{8}
-    );
+    const auto &moleculeResult = _engine->getSimulationBox().getMolecules()[0];
+
+    EXPECT_EQ(moleculeResult.getAtomicNumber(0), AtomNumber{6});
+    EXPECT_EQ(moleculeResult.getAtomicNumber(1), AtomNumber{1});
+    EXPECT_EQ(moleculeResult.getAtomicNumber(2), AtomNumber{8});
 }
 
 TEST_F(TestSetup, testSetAtomicNumbersThrowsError)
@@ -561,9 +531,9 @@ TEST_F(TestSetup, testFullSetup)
     moleculeType1.addExternalAtomType(0);
     moleculeType1.addExternalAtomType(0);
     moleculeType1.addExternalAtomType(0);
-    moleculeType1.addExternalGlobalVDWType(0);
-    moleculeType1.addExternalGlobalVDWType(1);
-    moleculeType1.addExternalGlobalVDWType(2);
+    moleculeType1.addExternalGlobalVDWType(ExtVdwType{0});
+    moleculeType1.addExternalGlobalVDWType(ExtVdwType{1});
+    moleculeType1.addExternalGlobalVDWType(ExtVdwType{2});
 
     moleculeType2.setNumberOfAtoms(2);
     moleculeType2.addAtomName("H");
@@ -574,8 +544,8 @@ TEST_F(TestSetup, testFullSetup)
     moleculeType2.addAtomType(0);
     moleculeType2.addExternalAtomType(0);
     moleculeType2.addExternalAtomType(0);
-    moleculeType2.addExternalGlobalVDWType(0);
-    moleculeType2.addExternalGlobalVDWType(1);
+    moleculeType2.addExternalGlobalVDWType(ExtVdwType{0});
+    moleculeType2.addExternalGlobalVDWType(ExtVdwType{1});
 
     _engine->getSimulationBox().addMoleculeType(moleculeType1);
     _engine->getSimulationBox().addMoleculeType(moleculeType2);

@@ -193,14 +193,14 @@ void Molecule::scaleVelocity(const tensor3D &scalingTensor, const Box &box)
 /**
  * @brief returns the external global vdw types of the atoms in the molecule
  *
- * @return std::vector<size_t>
+ * @return std::vector<ExtVdwType>
  */
-std::vector<size_t> Molecule::getExternalGlobalVDWTypes() const
+std::vector<ExtVdwType> Molecule::getExternalGlobalVDWTypes() const
 {
-    std::vector<size_t> externalGlobalVDWTypes(getNumberOfAtoms());
+    std::vector<ExtVdwType> externalGlobalVDWTypes;
 
-    for (size_t i = 0; i < getNumberOfAtoms(); ++i)
-        externalGlobalVDWTypes[i] = _atoms[i]->getExternalGlobalVDWType();
+    for (const auto &atom : _atoms)
+        externalGlobalVDWTypes.push_back(atom->getExternalGlobalVDWType());
 
     return externalGlobalVDWTypes;
 }
@@ -521,9 +521,9 @@ size_t Molecule::getAtomType(const size_t index) const
  * @brief returns the internal global vdw type of the atom by index
  *
  * @param index
- * @return size_t
+ * @return VdwType
  */
-size_t Molecule::getInternalGlobalVDWType(const size_t index) const
+VdwType Molecule::getInternalGlobalVDWType(const size_t index) const
 {
     return _atoms[index]->getInternalGlobalVDWType();
 }

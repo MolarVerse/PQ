@@ -24,8 +24,9 @@
 
 #define _NON_COULOMB_PAIR_HPP_
 
-#include <cstddef>   // for size_t
 #include <utility>   // for pair
+
+#include "strongTypes.hpp"
 
 namespace potential
 {
@@ -42,17 +43,21 @@ namespace potential
     class NonCoulombPair
     {
        protected:
-        size_t _vanDerWaalsType1 = 0;
-        size_t _vanDerWaalsType2 = 0;
-        size_t _internalType1    = 0;
-        size_t _internalType2    = 0;
+        ExtVdwType _vanDerWaalsType1{0};
+        ExtVdwType _vanDerWaalsType2{0};
+        VdwType    _internalType1{0};
+        VdwType    _internalType2{0};
 
         double _radialCutOff;
         double _energyCutOff = 0.0;
         double _forceCutOff  = 0.0;
 
        public:
-        explicit NonCoulombPair(const size_t, const size_t, const double);
+        explicit NonCoulombPair(
+            const ExtVdwType,
+            const ExtVdwType,
+            const double
+        );
         explicit NonCoulombPair(const double);
         explicit NonCoulombPair(const double, const double, const double);
 
@@ -68,8 +73,8 @@ namespace potential
          * standard setters *
          ********************/
 
-        void setInternalType1(const size_t internalType1);
-        void setInternalType2(const size_t internalType2);
+        void setInternalType1(const VdwType internalType1);
+        void setInternalType2(const VdwType internalType2);
         void setRadialCutOff(const double radialCutoff);
         void setEnergyCutOff(const double energyCutoff);
         void setForceCutOff(const double forceCutoff);
@@ -78,10 +83,10 @@ namespace potential
          * standard getters *
          ********************/
 
-        [[nodiscard]] size_t getVanDerWaalsType1() const;
-        [[nodiscard]] size_t getVanDerWaalsType2() const;
-        [[nodiscard]] size_t getInternalType1() const;
-        [[nodiscard]] size_t getInternalType2() const;
+        [[nodiscard]] ExtVdwType getVanDerWaalsType1() const;
+        [[nodiscard]] ExtVdwType getVanDerWaalsType2() const;
+        [[nodiscard]] VdwType    getInternalType1() const;
+        [[nodiscard]] VdwType    getInternalType2() const;
         [[nodiscard]] double getRadialCutOff() const { return _radialCutOff; }
         [[nodiscard]] double getEnergyCutOff() const;
         [[nodiscard]] double getForceCutOff() const;

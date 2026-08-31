@@ -22,15 +22,17 @@
 
 #include <gtest/gtest.h>   // for EXPECT_EQ, TestInfo (ptr only)
 
-#include "buckinghamPair.hpp"             // for BuckinghamPair
-#include "engine.hpp"                     // for Engine
-#include "exceptions.hpp"                 // for ParameterFileException
-#include "forceFieldNonCoulomb.hpp"       // for ForceFieldNonCoulomb
-#include "gtest/gtest.h"                  // for Message, TestPartResult, tes...
-#include "lennardJonesPair.hpp"           // for LennardJonesPair
-#include "morsePair.hpp"                  // for MorsePair
-#include "nonCoulombicsSection.hpp"       // for NonCoulombicsSection
-#include "potentialSettings.hpp"          // for PotentialSettings
+#include "buckinghamPair.hpp"         // for BuckinghamPair
+#include "engine.hpp"                 // for Engine
+#include "exceptions.hpp"             // for ParameterFileException
+#include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
+#include "gtest/gtest.h"              // for Message, TestPartResult, tes...
+#include "lennardJonesPair.hpp"       // for LennardJonesPair
+#include "morsePair.hpp"              // for MorsePair
+#include "nonCoulombicsSection.hpp"   // for NonCoulombicsSection
+#include "potentialSettings.hpp"      // for PotentialSettings
+#include "strongTypes.hpp"
+#include "testNonCoulombPairUtils.hpp"
 #include "testParameterFileSection.hpp"   // for TestParameterFileSection
 #include "throwWithMessage.hpp"           // for ASSERT_THROW_MSG
 
@@ -53,10 +55,10 @@ TEST_F(TestParameterFileSection, processSectionLennardJones)
 
     const auto *pairVector = potential.getNonCoulombPairsVector()[0].get();
     const auto *pair       = dynamic_cast<const LennardJonesPair *>(pairVector);
-    EXPECT_EQ(pair->getVanDerWaalsType1(), 0);
-    EXPECT_EQ(pair->getVanDerWaalsType2(), 1);
-    EXPECT_EQ(pair->getC6(), 1.22);
-    EXPECT_EQ(pair->getC12(), 234.3);
+    EXPECT_EQ(pair->getVanDerWaalsType1(), ExtVdwType{0});
+    EXPECT_EQ(pair->getVanDerWaalsType2(), ExtVdwType{1});
+    EXPECT_EQ(TestLJPairUtils::params(pair).c6, 1.22);
+    EXPECT_EQ(TestLJPairUtils::params(pair).c12, 234.3);
     EXPECT_EQ(pair->getRadialCutOff(), 324.3);
 
     lineElements = {"0", "1", "1.22", "234.3"};
@@ -65,10 +67,10 @@ TEST_F(TestParameterFileSection, processSectionLennardJones)
 
     const auto *pairVector2 = potential.getNonCoulombPairsVector()[1].get();
     auto       *pair2 = dynamic_cast<const LennardJonesPair *>(pairVector2);
-    EXPECT_EQ(pair2->getVanDerWaalsType1(), 0);
-    EXPECT_EQ(pair2->getVanDerWaalsType2(), 1);
-    EXPECT_EQ(pair2->getC6(), 1.22);
-    EXPECT_EQ(pair2->getC12(), 234.3);
+    EXPECT_EQ(pair2->getVanDerWaalsType1(), ExtVdwType{0});
+    EXPECT_EQ(pair2->getVanDerWaalsType2(), ExtVdwType{1});
+    EXPECT_EQ(TestLJPairUtils::params(pair2).c6, 1.22);
+    EXPECT_EQ(TestLJPairUtils::params(pair2).c12, 234.3);
     EXPECT_EQ(pair2->getRadialCutOff(), 12.5);
 
     lineElements = {"1", "2", "1.0", "0", "2", "3.3"};
@@ -92,11 +94,11 @@ TEST_F(TestParameterFileSection, processSectionBuckingham)
 
     const auto *pairVector = potential.getNonCoulombPairsVector()[0].get();
     const auto *pair       = dynamic_cast<const BuckinghamPair *>(pairVector);
-    EXPECT_EQ(pair->getVanDerWaalsType1(), 0);
-    EXPECT_EQ(pair->getVanDerWaalsType2(), 1);
-    EXPECT_EQ(pair->getA(), 1.22);
-    EXPECT_EQ(pair->getDRho(), 234.3);
-    EXPECT_EQ(pair->getC6(), 324.3);
+    EXPECT_EQ(pair->getVanDerWaalsType1(), ExtVdwType{0});
+    EXPECT_EQ(pair->getVanDerWaalsType2(), ExtVdwType{1});
+    EXPECT_EQ(TestBuckinghamPairUtils::params(pair).scaling, 1.22);
+    EXPECT_EQ(TestBuckinghamPairUtils::params(pair).dRho, 234.3);
+    EXPECT_EQ(TestBuckinghamPairUtils::params(pair).c6, 324.3);
     EXPECT_EQ(pair->getRadialCutOff(), 435.0);
 
     lineElements = {"0", "1", "1.22", "234.3", "324.3"};
@@ -105,11 +107,11 @@ TEST_F(TestParameterFileSection, processSectionBuckingham)
 
     const auto *pairVector2 = potential.getNonCoulombPairsVector()[1].get();
     const auto *pair2       = dynamic_cast<const BuckinghamPair *>(pairVector2);
-    EXPECT_EQ(pair2->getVanDerWaalsType1(), 0);
-    EXPECT_EQ(pair2->getVanDerWaalsType2(), 1);
-    EXPECT_EQ(pair2->getA(), 1.22);
-    EXPECT_EQ(pair2->getDRho(), 234.3);
-    EXPECT_EQ(pair2->getC6(), 324.3);
+    EXPECT_EQ(pair2->getVanDerWaalsType1(), ExtVdwType{0});
+    EXPECT_EQ(pair2->getVanDerWaalsType2(), ExtVdwType{1});
+    EXPECT_EQ(TestBuckinghamPairUtils::params(pair2).scaling, 1.22);
+    EXPECT_EQ(TestBuckinghamPairUtils::params(pair2).dRho, 234.3);
+    EXPECT_EQ(TestBuckinghamPairUtils::params(pair2).c6, 324.3);
     EXPECT_EQ(pair2->getRadialCutOff(), 12.5);
 
     lineElements = {"1", "2", "1.0", "0", "2", "3.3", "345"};
@@ -133,11 +135,13 @@ TEST_F(TestParameterFileSection, processSectionMorse)
     auto *pair = dynamic_cast<const MorsePair *>(
         potential.getNonCoulombPairsVector()[0].get()
     );
-    EXPECT_EQ(pair->getVanDerWaalsType1(), 0);
-    EXPECT_EQ(pair->getVanDerWaalsType2(), 1);
-    EXPECT_EQ(pair->getDissociationEnergy(), 1.22);
-    EXPECT_EQ(pair->getWellWidth(), 234.3);
-    EXPECT_EQ(pair->getEquilibriumDistance(), 324.3);
+    EXPECT_EQ(pair->getVanDerWaalsType1(), ExtVdwType{0});
+    EXPECT_EQ(pair->getVanDerWaalsType2(), ExtVdwType{1});
+
+    const auto &morseParams = TestMorsePairUtils::params(pair);
+    EXPECT_EQ(morseParams.dissociationEnergy, 1.22);
+    EXPECT_EQ(morseParams.wellWidth, 234.3);
+    EXPECT_EQ(morseParams.equilibriumDistance, 324.3);
     EXPECT_EQ(pair->getRadialCutOff(), 435.0);
 
     lineElements = {"0", "1", "1.22", "234.3", "324.3"};
@@ -146,11 +150,13 @@ TEST_F(TestParameterFileSection, processSectionMorse)
     auto *pair2 = dynamic_cast<const MorsePair *>(
         potential.getNonCoulombPairsVector()[1].get()
     );
-    EXPECT_EQ(pair2->getVanDerWaalsType1(), 0);
-    EXPECT_EQ(pair2->getVanDerWaalsType2(), 1);
-    EXPECT_EQ(pair2->getDissociationEnergy(), 1.22);
-    EXPECT_EQ(pair2->getWellWidth(), 234.3);
-    EXPECT_EQ(pair2->getEquilibriumDistance(), 324.3);
+    EXPECT_EQ(pair2->getVanDerWaalsType1(), ExtVdwType{0});
+    EXPECT_EQ(pair2->getVanDerWaalsType2(), ExtVdwType{1});
+
+    const auto &morseParams2 = TestMorsePairUtils::params(pair2);
+    EXPECT_EQ(morseParams2.dissociationEnergy, 1.22);
+    EXPECT_EQ(morseParams2.wellWidth, 234.3);
+    EXPECT_EQ(morseParams2.equilibriumDistance, 324.3);
     EXPECT_EQ(pair2->getRadialCutOff(), 12.5);
 
     lineElements = {"1", "2", "1.0", "0", "2", "3.3", "345"};

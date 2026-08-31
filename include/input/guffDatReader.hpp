@@ -106,12 +106,13 @@ namespace input::guffdat
             const double               rncCutOff
         );
         void addGuffPair(
-            const size_t               molType1,
-            const size_t               molType2,
-            const size_t               atomType1,
-            const size_t               atomType2,
-            const std::vector<double> &coefficients,
-            const double               rncCutOff
+            const size_t molType1,
+            const size_t molType2,
+            const size_t atomType1,
+            const size_t atomType2,
+            const std::array<double, defaults::NUM_GUFF_COEFFICIENTS>
+                        &coefficients,
+            const double rncCutOff
         );
 
         /********************

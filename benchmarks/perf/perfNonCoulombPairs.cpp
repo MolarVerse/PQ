@@ -42,9 +42,19 @@ static constexpr std::uint64_t ITERATIONS = 20000;
 
 int main()
 {
-    auto lj    = potential::LennardJonesPair(9.0, 2.0, 3.0);
-    auto buck  = potential::BuckinghamPair(9.0, 1.0, 0.3, 2.0);
-    auto morse = potential::MorsePair(9.0, 1.0, 2.0, 1.5);
+    auto lj = potential::LennardJonesPair(9.0, LJParams{.c6 = 2.0, .c12 = 3.0});
+    auto buck = potential::BuckinghamPair(
+        9.0,
+        BuckinghamParams{.scaling = 1.0, .dRho = 0.3, .c6 = 2.0}
+    );
+    auto morse = potential::MorsePair(
+        9.0,
+        MorseParams{
+            .dissociationEnergy  = 1.0,
+            .wellWidth           = 2.0,
+            .equilibriumDistance = 1.5
+        }
+    );
 
     CALLGRIND_ZERO_STATS;
 

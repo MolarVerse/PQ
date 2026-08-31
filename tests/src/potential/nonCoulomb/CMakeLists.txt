@@ -18,6 +18,7 @@ foreach(source_file ${source_files})
         PRIVATE
         PQ_input
         potential
+        nonCoulombPotential
         gtest
         gmock
         pq_test_main

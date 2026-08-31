@@ -31,8 +31,9 @@
 #include "exceptions.hpp"   // for ManostatException, RstFileException
 #include "gtest/gtest.h"    // for Message, TestPartResult, AssertionRe...
 #include "potentialSettings.hpp"   // for PotentialSettings
-#include "throwWithMessage.hpp"    // for throwWithMessage
-#include "vectorNear.hpp"          // for EXPECT_VECTOR_NEAR
+#include "strongTypes.hpp"
+#include "throwWithMessage.hpp"   // for throwWithMessage
+#include "vectorNear.hpp"         // for EXPECT_VECTOR_NEAR
 
 /**
  * @brief tests numberOfAtoms function
@@ -236,12 +237,12 @@ TEST_F(TestSimulationBox, setupExternalToInternalGlobalVdwTypesMap)
     molsys::MoleculeType  molecule1(1);
     molsys::MoleculeType  molecule2(2);
 
-    molecule1.addExternalGlobalVDWType(1);
-    molecule1.addExternalGlobalVDWType(3);
-    molecule1.addExternalGlobalVDWType(5);
+    molecule1.addExternalGlobalVDWType(ExtVdwType{1});
+    molecule1.addExternalGlobalVDWType(ExtVdwType{3});
+    molecule1.addExternalGlobalVDWType(ExtVdwType{5});
 
-    molecule2.addExternalGlobalVDWType(3);
-    molecule2.addExternalGlobalVDWType(5);
+    molecule2.addExternalGlobalVDWType(ExtVdwType{3});
+    molecule2.addExternalGlobalVDWType(ExtVdwType{5});
 
     simulationBox.addMoleculeType(molecule1);
     simulationBox.addMoleculeType(molecule2);
@@ -251,13 +252,16 @@ TEST_F(TestSimulationBox, setupExternalToInternalGlobalVdwTypesMap)
     EXPECT_EQ(simulationBox.getExternalGlobalVdwTypes().size(), 3);
     EXPECT_EQ(
         simulationBox.getExternalGlobalVdwTypes(),
-        std::vector<size_t>({1, 3, 5})
+        std::vector<ExtVdwType>({ExtVdwType{1}, ExtVdwType{3}, ExtVdwType{5}})
     );
 
-    EXPECT_EQ(simulationBox.getExternalToInternalGlobalVDWTypes().size(), 3);
-    EXPECT_EQ(simulationBox.getExternalToInternalGlobalVDWTypes().at(1), 0);
-    EXPECT_EQ(simulationBox.getExternalToInternalGlobalVDWTypes().at(3), 1);
-    EXPECT_EQ(simulationBox.getExternalToInternalGlobalVDWTypes().at(5), 2);
+    const auto &externalToInternalMap =
+        simulationBox.getExternalToInternalGlobalVDWTypes();
+
+    EXPECT_EQ(externalToInternalMap.size(), 3);
+    EXPECT_EQ(externalToInternalMap.at(ExtVdwType{1}), VdwType{0});
+    EXPECT_EQ(externalToInternalMap.at(ExtVdwType{3}), VdwType{1});
+    EXPECT_EQ(externalToInternalMap.at(ExtVdwType{5}), VdwType{2});
 }
 
 /**
@@ -564,14 +568,14 @@ TEST_F(TestSimulationBox, assignsInternalVdwTypesToAtoms)
 {
     molsys::SimulationBox simBox;
     molsys::MoleculeType  type(1);
-    type.addExternalGlobalVDWType(4);
-    type.addExternalGlobalVDWType(9);
+    type.addExternalGlobalVDWType(ExtVdwType{4});
+    type.addExternalGlobalVDWType(ExtVdwType{9});
     simBox.addMoleculeType(type);
 
     auto atom1 = std::make_shared<molsys::Atom>();
     auto atom2 = std::make_shared<molsys::Atom>();
-    atom1->setExternalGlobalVDWType(4);
-    atom2->setExternalGlobalVDWType(9);
+    atom1->setExternalGlobalVDWType(ExtVdwType{4});
+    atom2->setExternalGlobalVDWType(ExtVdwType{9});
 
     molsys::Molecule molecule(1);
     molecule.setNumberOfAtoms(2);
@@ -581,8 +585,9 @@ TEST_F(TestSimulationBox, assignsInternalVdwTypesToAtoms)
 
     simBox.setupExternalToInternalGlobalVdwTypesMap();
 
-    EXPECT_EQ(simBox.getMolecule(0).getAtom(0).getInternalGlobalVDWType(), 0);
-    EXPECT_EQ(simBox.getMolecule(0).getAtom(1).getInternalGlobalVDWType(), 1);
+    auto &moleculeResult = simBox.getMolecule(0);
+    EXPECT_EQ(moleculeResult.getAtom(0).getInternalGlobalVDWType(), VdwType{0});
+    EXPECT_EQ(moleculeResult.getAtom(1).getInternalGlobalVDWType(), VdwType{1});
 }
 
 TEST_F(TestSimulationBox, forceMetricsAndAtomStateUpdates)

@@ -22,10 +22,9 @@
 
 #include <gtest/gtest.h>   // for Test, EXPECT_EQ, TestInfo
 
-#include <cstddef>   // for size_t
-#include <format>    // for format
-#include <memory>    // for shared_ptr, allocator, make_shared
-#include <vector>    // for vector
+#include <format>   // for format
+#include <memory>   // for shared_ptr, allocator, make_shared
+#include <vector>   // for vector
 
 #include "../potential/nonCoulomb/testForceFieldNonCoulomb.hpp"
 #include "atom.hpp"                      // for Atom
@@ -42,7 +41,8 @@
 #include "physicalData.hpp"              // for PhysicalData
 #include "potentialSettings.hpp"         // for PotentialSettings
 #include "simulationBox.hpp"             // for SimulationBox
-#include "throwWithMessage.hpp"          // for EXPECT_THROW_MSG
+#include "strongTypes.hpp"
+#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
 
 namespace potential
 {
@@ -182,8 +182,8 @@ TEST_F(TestIntraNonBonded, calculate)
     atom2->setPosition({0.0, 0.0, 11.0});
     atom1->setForce({0.0, 0.0, 0.0});
     atom2->setForce({0.0, 0.0, 0.0});
-    atom1->setInternalGlobalVDWType(0);
-    atom2->setInternalGlobalVDWType(1);
+    atom1->setInternalGlobalVDWType(VdwType{0});
+    atom2->setInternalGlobalVDWType(VdwType{1});
     atom1->setAtomType(0);
     atom2->setAtomType(1);
     atom1->setPartialCharge(0.5);
@@ -206,11 +206,10 @@ TEST_F(TestIntraNonBonded, calculate)
     );
 
     auto nonCoulombPair = potential::LennardJonesPair(
-        static_cast<size_t>(0),
-        static_cast<size_t>(1),
+        ExtVdwType(0),
+        ExtVdwType(1),
         10.0,
-        2.0,
-        3.0
+        LJParams{.c6 = 2.0, .c12 = 3.0}
     );
     setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
     setNonCoulombPairsMatrix(1, 0, nonCoulombPair);

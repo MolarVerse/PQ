@@ -77,13 +77,12 @@ namespace waterModel
         inline static const auto _nonCoulombPairOO =
             potential::LennardJonesPair(
                 defaults::COULOMB_CUT_OFF_DEFAULT,
-                constants::SPC_LJ_C6_OO,
-                constants::SPC_LJ_C12_OO
+                constants::SPC_LJ_PARAMS_OO
             );
         inline static const auto _nonCoulombPairOH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
+            potential::LennardJonesPair(0.01, LJParams{});
         inline static const auto _nonCoulombPairHH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
+            potential::LennardJonesPair(0.01, LJParams{});
     };
 
     struct SPCEInterParam
@@ -94,13 +93,12 @@ namespace waterModel
         inline static const auto _nonCoulombPairOO =
             potential::LennardJonesPair(
                 defaults::COULOMB_CUT_OFF_DEFAULT,
-                constants::SPC_E_LJ_C6_OO,
-                constants::SPC_E_LJ_C12_OO
+                constants::SPC_E_LJ_PARAMS_OO
             );
         inline static const auto _nonCoulombPairOH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
+            potential::LennardJonesPair(0.01, LJParams{});
         inline static const auto _nonCoulombPairHH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
+            potential::LennardJonesPair(0.01, LJParams{});
     };
 
     struct SPCFwInterParam
@@ -111,13 +109,12 @@ namespace waterModel
         inline static const auto _nonCoulombPairOO =
             potential::LennardJonesPair(
                 defaults::COULOMB_CUT_OFF_DEFAULT,
-                constants::SPC_FW_LJ_C6_OO,
-                constants::SPC_FW_LJ_C12_OO
+                constants::SPC_FW_LJ_PARAMS_OO
             );
         inline static const auto _nonCoulombPairOH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
+            potential::LennardJonesPair(0.01, LJParams{});
         inline static const auto _nonCoulombPairHH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
+            potential::LennardJonesPair(0.01, LJParams{});
     };
 
     struct qSPCFwInterParam
@@ -128,13 +125,12 @@ namespace waterModel
         inline static const auto _nonCoulombPairOO =
             potential::LennardJonesPair(
                 defaults::COULOMB_CUT_OFF_DEFAULT,
-                constants::QSPC_FW_LJ_C6_OO,
-                constants::QSPC_FW_LJ_C12_OO
+                constants::QSPC_FW_LJ_PARAMS_OO
             );
         inline static const auto _nonCoulombPairOH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
+            potential::LennardJonesPair(0.01, LJParams{});
         inline static const auto _nonCoulombPairHH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
+            potential::LennardJonesPair(0.01, LJParams{});
     };
 
     struct SPCDCInterParam
@@ -145,13 +141,12 @@ namespace waterModel
         inline static const auto _nonCoulombPairOO =
             potential::LennardJonesPair(
                 defaults::COULOMB_CUT_OFF_DEFAULT,
-                constants::SPC_DC_LJ_C6_OO,
-                constants::SPC_DC_LJ_C12_OO
+                constants::SPC_DC_LJ_PARAMS_OO
             );
         inline static const auto _nonCoulombPairOH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
+            potential::LennardJonesPair(0.01, LJParams{});
         inline static const auto _nonCoulombPairHH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
+            potential::LennardJonesPair(0.01, LJParams{});
     };
 
     struct H2ODCInterParam
@@ -162,13 +157,12 @@ namespace waterModel
         inline static const auto _nonCoulombPairOO =
             potential::LennardJonesPair(
                 defaults::COULOMB_CUT_OFF_DEFAULT,
-                constants::H2O_DC_LJ_C6_OO,
-                constants::H2O_DC_LJ_C12_OO
+                constants::H2O_DC_LJ_PARAMS_OO
             );
         inline static const auto _nonCoulombPairOH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
+            potential::LennardJonesPair(0.01, LJParams{});
         inline static const auto _nonCoulombPairHH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
+            potential::LennardJonesPair(0.01, LJParams{});
     };
 
     struct TIP3PInterParam
@@ -179,13 +173,12 @@ namespace waterModel
         inline static const auto _nonCoulombPairOO =
             potential::LennardJonesPair(
                 defaults::COULOMB_CUT_OFF_DEFAULT,
-                constants::TIP3P_LJ_C6_OO,
-                constants::TIP3P_LJ_C12_OO
+                constants::TIP3P_LJ_PARAMS_OO
             );
         inline static const auto _nonCoulombPairOH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
+            potential::LennardJonesPair(0.01, LJParams{});
         inline static const auto _nonCoulombPairHH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
+            potential::LennardJonesPair(0.01, LJParams{});
     };
 
     struct OPC3InterParam
@@ -196,13 +189,12 @@ namespace waterModel
         inline static const auto _nonCoulombPairOO =
             potential::LennardJonesPair(
                 defaults::COULOMB_CUT_OFF_DEFAULT,
-                constants::OPC3_LJ_C6_OO,
-                constants::OPC3_LJ_C12_OO
+                constants::OPC3_LJ_PARAMS_OO
             );
         inline static const auto _nonCoulombPairOH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
+            potential::LennardJonesPair(0.01, LJParams{});
         inline static const auto _nonCoulombPairHH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
+            potential::LennardJonesPair(0.01, LJParams{});
     };
 
     struct SPCmTRInterParam
@@ -213,13 +205,12 @@ namespace waterModel
         inline static const auto _nonCoulombPairOO =
             potential::LennardJonesPair(
                 defaults::COULOMB_CUT_OFF_DEFAULT,
-                constants::SPC_MTR_LJ_C6_OO,
-                constants::SPC_MTR_LJ_C12_OO
+                constants::SPC_MTR_LJ_PARAMS_OO
             );
         inline static const auto _nonCoulombPairOH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
+            potential::LennardJonesPair(0.01, LJParams{});
         inline static const auto _nonCoulombPairHH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
+            potential::LennardJonesPair(0.01, LJParams{});
     };
 
     struct TIP3PmTRInterParam
@@ -230,13 +221,12 @@ namespace waterModel
         inline static const auto _nonCoulombPairOO =
             potential::LennardJonesPair(
                 defaults::COULOMB_CUT_OFF_DEFAULT,
-                constants::TIP3P_MTR_LJ_C6_OO,
-                constants::TIP3P_MTR_LJ_C12_OO
+                constants::TIP3P_MTR_LJ_PARAMS_OO
             );
         inline static const auto _nonCoulombPairOH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
+            potential::LennardJonesPair(0.01, LJParams{});
         inline static const auto _nonCoulombPairHH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
+            potential::LennardJonesPair(0.01, LJParams{});
     };
 
 }   // namespace waterModel

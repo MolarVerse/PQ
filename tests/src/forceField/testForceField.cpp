@@ -22,8 +22,7 @@
 
 #include <gtest/gtest.h>   // for Test, CmpHelperNE, TestInfo
 
-#include <cstddef>   // for size_t
-#include <memory>    // for shared_ptr, allocator
+#include <memory>   // for shared_ptr, allocator
 
 #include "../potential/nonCoulomb/testForceFieldNonCoulomb.hpp"
 #include "angleForceField.hpp"           // for AngleForceField
@@ -194,11 +193,10 @@ TEST_F(TestForceField, calculateBondedInteractions)
     auto coulombPotential = potential::CoulombShiftedPotential(20.0);
 
     auto nonCoulombPair = potential::LennardJonesPair(
-        static_cast<size_t>(0),
-        static_cast<size_t>(1),
+        ExtVdwType(0),
+        ExtVdwType(1),
         15.0,
-        2.0,
-        4.0
+        LJParams{.c6 = 2.0, .c12 = 4.0}
     );
     setNonCoulombPairsMatrix(
         linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(2, 2)
@@ -225,10 +223,10 @@ TEST_F(TestForceField, calculateBondedInteractions)
     atom3->setForce({0.0, 0.0, 0.0});
     atom4->setForce({0.0, 0.0, 0.0});
 
-    atom1->setInternalGlobalVDWType(0);
-    atom2->setInternalGlobalVDWType(1);
-    atom3->setInternalGlobalVDWType(0);
-    atom4->setInternalGlobalVDWType(1);
+    atom1->setInternalGlobalVDWType(VdwType{0});
+    atom2->setInternalGlobalVDWType(VdwType{1});
+    atom3->setInternalGlobalVDWType(VdwType{0});
+    atom4->setInternalGlobalVDWType(VdwType{1});
 
     atom1->setAtomType(0);
     atom2->setAtomType(1);
@@ -315,11 +313,10 @@ TEST_F(TestForceField, correctLinker)
     auto coulombPotential = potential::CoulombShiftedPotential(10.0);
 
     auto nonCoulombPair = potential::LennardJonesPair(
-        static_cast<size_t>(0),
-        static_cast<size_t>(1),
+        ExtVdwType(0),
+        ExtVdwType(1),
         5.0,
-        2.0,
-        4.0
+        LJParams{.c6 = 2.0, .c12 = 4.0}
     );
     setNonCoulombPairsMatrix(
         linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(2, 2)
@@ -333,8 +330,8 @@ TEST_F(TestForceField, correctLinker)
 
     atom1->setForce({0.0, 0.0, 0.0});
     atom2->setForce({0.0, 0.0, 0.0});
-    atom1->setInternalGlobalVDWType(0);
-    atom2->setInternalGlobalVDWType(1);
+    atom1->setInternalGlobalVDWType(VdwType{0});
+    atom2->setInternalGlobalVDWType(VdwType{1});
     atom1->setAtomType(0);
     atom2->setAtomType(1);
     atom1->setPartialCharge(1.0);

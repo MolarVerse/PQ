@@ -24,11 +24,11 @@
 
 #define _SIMULATION_BOX_HPP_
 
-#include <map>   // for map
 #include <memory>
 #include <optional>   // for optional
 #include <set>
 #include <string>   // for string
+#include <unordered_map>
 #include <vector>   // for vector
 
 #include "atom.hpp"                // for Atom
@@ -37,6 +37,7 @@
 #include "moleculeType.hpp"        // for MoleculeType
 #include "orthorhombicBox.hpp"     // for OrthorhombicBox
 #include "simulationBoxView.hpp"   // for SimulationBoxView
+#include "strongTypes.hpp"
 
 /**
  * @namespace molsys
@@ -86,8 +87,9 @@ namespace molsys
         std::vector<Molecule>              _molecules;
         std::vector<MoleculeType>          _moleculeTypes;
 
-        std::vector<size_t>      _externalGlobalVdwTypes;
-        std::map<size_t, size_t> _externalToInternalGlobalVDWTypes;
+        std::vector<ExtVdwType> _externalGlobalVdwTypes;
+        std::unordered_map<ExtVdwType, VdwType>
+            _externalToInternalGlobalVDWTypes;
 
        public:
         void                                         copy(const SimulationBox&);
@@ -206,9 +208,12 @@ namespace molsys
         [[nodiscard]] const std::vector<Molecule>& getMolecules() const;
         [[nodiscard]] std::vector<MoleculeType>&   getMoleculeTypes();
 
-        [[nodiscard]] std::vector<size_t>& getExternalGlobalVdwTypes();
-        [[nodiscard]] std::map<size_t, size_t>& getExternalToInternalGlobalVDWTypes(
-        );
+        [[nodiscard]]
+        std::vector<ExtVdwType>& getExternalGlobalVdwTypes();
+        [[nodiscard]]
+        std::unordered_map<
+            ExtVdwType,
+            VdwType>& getExternalToInternalGlobalVDWTypes();
 
         [[nodiscard]] Box&                 getBox();
         [[nodiscard]] Box&                 getBox() const;

@@ -65,4 +65,70 @@ struct DihedralIdTag
 };
 using DihedralId = StrongSizeT<struct DihedralIdTag>;
 
+struct ExtVdwTypeTag
+{
+    static std::string toString(const size_t &value)
+    {
+        return std::format("ExtVdwType({})", value);
+    }
+};
+using ExtVdwType = StrongSizeT<struct ExtVdwTypeTag>;
+
+struct VdwTypeTag
+{
+    static std::string toString(const size_t &value)
+    {
+        return std::format("VdwType({})", value);
+    }
+};
+using VdwType = StrongSizeT<struct VdwTypeTag>;
+
+/**
+ * @struct LJParams
+ *
+ * @brief Struct to hold Lennard-Jones parameters c6 and c12
+ *
+ */
+struct LJParams
+{
+    double c6{0.0};
+    double c12{0.0};
+
+    [[nodiscard]]
+    bool operator==(const LJParams &other) const;
+};
+
+/**
+ * @struct MorseParams
+ *
+ * @brief Struct to hold Morse parameters dissociationEnergy, wellWidth and
+ * equilibriumDistance
+ *
+ */
+struct MorseParams
+{
+    double dissociationEnergy;
+    double wellWidth;
+    double equilibriumDistance;
+
+    [[nodiscard]]
+    bool operator==(const MorseParams &other) const;
+};
+
+/**
+ * @struct BuckinghamParams
+ *
+ * @brief Struct to hold Buckingham parameters a, dRho and c6
+ *
+ */
+struct BuckinghamParams
+{
+    double scaling;
+    double dRho;
+    double c6;
+
+    [[nodiscard]]
+    bool operator==(const BuckinghamParams &other) const;
+};
+
 #endif   // _STRONG_TYPES_HPP_

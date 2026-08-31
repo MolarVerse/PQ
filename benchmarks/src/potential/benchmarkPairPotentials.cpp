@@ -67,19 +67,32 @@ namespace
 
     void BM_LennardJones(benchmark::State& state)
     {
-        potential::LennardJonesPair potential(9.0, 2.0, 3.0);
+        potential::LennardJonesPair potential(
+            9.0,
+            LJParams{.c6 = 2.0, .c12 = 3.0}
+        );
         runNonCoulombBenchmark(state, potential);
     }
 
     void BM_Buckingham(benchmark::State& state)
     {
-        potential::BuckinghamPair potential(9.0, 1.0, 0.3, 2.0);
+        potential::BuckinghamPair potential(
+            9.0,
+            BuckinghamParams{.scaling = 1.0, .dRho = 0.3, .c6 = 2.0}
+        );
         runNonCoulombBenchmark(state, potential);
     }
 
     void BM_Morse(benchmark::State& state)
     {
-        potential::MorsePair potential(9.0, 1.0, 2.0, 1.5);
+        potential::MorsePair potential(
+            9.0,
+            MorseParams{
+                .dissociationEnergy  = 1.0,
+                .wellWidth           = 2.0,
+                .equilibriumDistance = 1.5
+            }
+        );
         runNonCoulombBenchmark(state, potential);
     }
 

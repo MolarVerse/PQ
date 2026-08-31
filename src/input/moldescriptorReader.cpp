@@ -248,7 +248,8 @@ void MoldescriptorReader::processMolecule(
                 );
             }
 
-            molecule.addExternalGlobalVDWType(stoul(lineElements[3]));
+            const auto vdwType = ExtVdwType{stoul(lineElements[3])};
+            molecule.addExternalGlobalVDWType(vdwType);
         }
     }
 

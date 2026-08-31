@@ -29,6 +29,8 @@
 #include <string_view>   // for string_view
 #include <vector>        // for vector
 
+#include "strongTypes.hpp"
+
 namespace molsys
 {
     /**
@@ -49,7 +51,7 @@ namespace molsys
         std::vector<std::string> _atomNames;
         std::vector<size_t>      _atomTypes;
         std::vector<size_t>      _externalAtomTypes;
-        std::vector<size_t>      _externalGlobalVDWTypes;
+        std::vector<ExtVdwType>  _externalGlobalVDWTypes;
         std::vector<double>      _partialCharges;
 
         std::map<size_t, size_t> _externalToInternalAtomTypes;
@@ -68,7 +70,7 @@ namespace molsys
         void addAtomName(const std::string &atomName);
         void addExternalAtomType(const size_t externalAtomType);
         void addPartialCharge(const double partialCharge);
-        void addExternalGlobalVDWType(const size_t externalGlobalVDWType);
+        void addExternalGlobalVDWType(const ExtVdwType externalGlobalVDWType);
 
         void addExternalToInternalAtomTypeElement(const size_t, const size_t);
         void addAtomType(const size_t atomType);
@@ -104,7 +106,7 @@ namespace molsys
 
         [[nodiscard]] std::vector<std::string> getAtomNames() const;
         [[nodiscard]] std::vector<size_t>     &getExternalAtomTypes();
-        [[nodiscard]] std::vector<size_t>     &getExternalGlobalVDWTypes();
+        [[nodiscard]] std::vector<ExtVdwType> &getExternalGlobalVDWTypes();
         [[nodiscard]] std::vector<double>     &getPartialCharges();
 
         [[nodiscard]] std::map<size_t, size_t> getExternalToInternalAtomTypes(

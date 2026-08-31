@@ -29,6 +29,7 @@
 #include <vector>   // for vector
 
 #include "nonCoulombPair.hpp"
+#include "strongTypes.hpp"
 
 namespace potential
 {
@@ -62,7 +63,8 @@ namespace potential
 
         [[nodiscard]]
         virtual std::shared_ptr<NonCoulombPair> getNonCoulPair(
-            const std::vector<size_t> &indices
+            const std::vector<size_t>         &indices,
+            const std::pair<VdwType, VdwType> &vdwTypes
         ) = 0;
 
         [[nodiscard]] MixingRule getMixingRule() const;

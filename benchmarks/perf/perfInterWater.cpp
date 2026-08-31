@@ -29,6 +29,8 @@
 #include <iostream>
 #include <memory>
 
+#include "strongTypes.hpp"
+
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
 #else
@@ -90,7 +92,7 @@ int main()
         atom->setAtomicNumber(atomicNumber);
         atom->setPosition(pos);
         atom->setAtomType(0);
-        atom->setInternalGlobalVDWType(0);
+        atom->setInternalGlobalVDWType(VdwType{0});
         atom->setPartialCharge(charge);
         atom->setForceToZero();
         return atom;
@@ -130,14 +132,20 @@ int main()
     }
 
     InterWaterState state;
-    state._oxygenCharge   = -0.82;
-    state._hydrogenCharge = 0.41;
-    state._nonCoulombPairOO =
-        std::make_unique<LennardJonesPair>(CUTOFF, -2.0, 4.0);
-    state._nonCoulombPairOH =
-        std::make_unique<LennardJonesPair>(CUTOFF, -0.5, 1.5);
-    state._nonCoulombPairHH =
-        std::make_unique<LennardJonesPair>(CUTOFF, -0.2, 0.8);
+    state._oxygenCharge     = -0.82;
+    state._hydrogenCharge   = 0.41;
+    state._nonCoulombPairOO = std::make_unique<LennardJonesPair>(
+        CUTOFF,
+        LJParams{.c6 = 2.0, .c12 = 4.0}
+    );
+    state._nonCoulombPairOH = std::make_unique<LennardJonesPair>(
+        CUTOFF,
+        LJParams{.c6 = 0.5, .c12 = 1.5}
+    );
+    state._nonCoulombPairHH = std::make_unique<LennardJonesPair>(
+        CUTOFF,
+        LJParams{.c6 = 0.2, .c12 = 0.8}
+    );
 
     InterWater interWater(
         std::move(state),

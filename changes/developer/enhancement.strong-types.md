@@ -2,3 +2,8 @@
 - add strong type for `BondId`
 - add strong type for `AngleId`
 - add strong type for `DihedralId`
+- add strong types for `ExtVdwType` and `VdwType`
+- add strong type for morse params aka `MorseParams`
+- add strong type for lennard jones params aka `LJParams`
+- add strong type for bukcingham params aka `BuckinghamParams`
+- make guff pari used `std::array` instead of `std::vector`

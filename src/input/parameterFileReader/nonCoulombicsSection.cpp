@@ -34,6 +34,7 @@
 #include "morsePair.hpp"              // for MorsePair
 #include "potentialSettings.hpp"      // for PotentialSettings
 #include "stringUtilities.hpp"        // for toLowerCopy
+#include "strongTypes.hpp"
 
 using namespace input::parameterFile;
 using namespace exc;
@@ -172,10 +173,10 @@ void NonCoulombicsSection::processLJ(
         );
     }
 
-    const size_t atomType1 = stoul(lineElements[0]);
-    const size_t atomType2 = stoul(lineElements[1]);
-    const auto   c6        = stod(lineElements[2]);
-    const auto   c12       = stod(lineElements[3]);
+    const auto atomType1 = ExtVdwType{stoul(lineElements[0])};
+    const auto atomType2 = ExtVdwType{stoul(lineElements[1])};
+    const auto c6        = stod(lineElements[2]);
+    const auto c12       = stod(lineElements[3]);
 
     auto cutOff = 5 == lineElements.size() ? stod(lineElements[4]) : -1.0;
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
@@ -187,9 +188,10 @@ void NonCoulombicsSection::processLJ(
     auto &pot       = engine.getPotential()->getNonCoulombPotential();
     auto &potential = dynamic_cast<ForceFieldNonCoulomb &>(pot);
 
+    const auto params = LJParams{.c6 = c6, .c12 = c12};
+
     potential.addNonCoulombicPair(
-        std::make_shared<
-            LennardJonesPair>(atomType1, atomType2, cutOff, c6, c12)
+        std::make_shared<LennardJonesPair>(atomType1, atomType2, cutOff, params)
     );
 }
 
@@ -222,7 +224,7 @@ void NonCoulombicsSection::processBuckingham(
     {
         throw ParameterFileException(
             std::format(
-                "Wrong number of arguments in parameter file in Lennard Jones "
+                "Wrong number of arguments in parameter file in Buckingham "
                 "nonCoulombics section at line {} - number of "
                 "elements has to be 5 or 6!",
                 _lineNumber
@@ -230,11 +232,11 @@ void NonCoulombicsSection::processBuckingham(
         );
     }
 
-    const size_t atomType1 = stoul(lineElements[0]);
-    const size_t atomType2 = stoul(lineElements[1]);
-    const auto   a         = stod(lineElements[2]);
-    const auto   dRho      = stod(lineElements[3]);
-    const auto   c6        = stod(lineElements[4]);
+    const auto atomType1 = ExtVdwType{stoul(lineElements[0])};
+    const auto atomType2 = ExtVdwType{stoul(lineElements[1])};
+    const auto a         = stod(lineElements[2]);
+    const auto dRho      = stod(lineElements[3]);
+    const auto c6        = stod(lineElements[4]);
 
     auto cutOff = 6 == lineElements.size() ? stod(lineElements[5]) : -1.0;
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
@@ -243,12 +245,12 @@ void NonCoulombicsSection::processBuckingham(
 
     cutOff = cutOff < 0.0 ? coulombCutOff : cutOff;
 
-    auto &pot       = engine.getPotential()->getNonCoulombPotential();
-    auto &potential = dynamic_cast<ForceFieldNonCoulomb &>(pot);
+    auto      &pot       = engine.getPotential()->getNonCoulombPotential();
+    auto      &potential = dynamic_cast<ForceFieldNonCoulomb &>(pot);
+    const auto params = BuckinghamParams{.scaling = a, .dRho = dRho, .c6 = c6};
 
     potential.addNonCoulombicPair(
-        std::make_shared<
-            BuckinghamPair>(atomType1, atomType2, cutOff, a, dRho, c6)
+        std::make_shared<BuckinghamPair>(atomType1, atomType2, cutOff, params)
     );
 }
 
@@ -281,7 +283,7 @@ void NonCoulombicsSection::processMorse(
     {
         throw ParameterFileException(
             std::format(
-                "Wrong number of arguments in parameter file in Lennard Jones "
+                "Wrong number of arguments in parameter file in Morse "
                 "nonCoulombics section at line {} - number of "
                 "elements has to be 5 or 6!",
                 _lineNumber
@@ -289,11 +291,11 @@ void NonCoulombicsSection::processMorse(
         );
     }
 
-    const size_t atomType1           = stoul(lineElements[0]);
-    const size_t atomType2           = stoul(lineElements[1]);
-    const auto   dissociationEnergy  = stod(lineElements[2]);
-    const auto   wellWidth           = stod(lineElements[3]);
-    const auto   equilibriumDistance = stod(lineElements[4]);
+    const auto atomType1           = ExtVdwType{stoul(lineElements[0])};
+    const auto atomType2           = ExtVdwType{stoul(lineElements[1])};
+    const auto dissociationEnergy  = stod(lineElements[2]);
+    const auto wellWidth           = stod(lineElements[3]);
+    const auto equilibriumDistance = stod(lineElements[4]);
 
     auto cutOff = 6 == lineElements.size() ? stod(lineElements[5]) : -1.0;
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
@@ -305,14 +307,13 @@ void NonCoulombicsSection::processMorse(
     auto &pot       = engine.getPotential()->getNonCoulombPotential();
     auto &potential = dynamic_cast<ForceFieldNonCoulomb &>(pot);
 
+    const auto params = MorseParams{
+        .dissociationEnergy  = dissociationEnergy,
+        .wellWidth           = wellWidth,
+        .equilibriumDistance = equilibriumDistance
+    };
+
     potential.addNonCoulombicPair(
-        std::make_shared<MorsePair>(
-            atomType1,
-            atomType2,
-            cutOff,
-            dissociationEnergy,
-            wellWidth,
-            equilibriumDistance
-        )
+        std::make_shared<MorsePair>(atomType1, atomType2, cutOff, params)
     );
 }
