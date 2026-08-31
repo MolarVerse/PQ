@@ -6,7 +6,9 @@ add_executable(PQ
 )
 
 target_include_directories(PQ
-  PUBLIC ${CODE_INCLUDE_DIR}
+  PRIVATE 
+  ${CODE_INCLUDE_DIR}
+  ${PROJECT_SOURCE_DIR}/apps/commandLine
 )
 
 if(NOT DEFINED BUILD_WITH_PYBIND11)
@@ -28,8 +30,10 @@ target_compile_definitions(PQ
 )
 
 target_link_libraries(PQ
-  PUBLIC
+  PRIVATE
   driver
+  exceptions
+  commandLineArgs
 )
 
 if(BUILD_WITH_MPI)
@@ -47,6 +51,8 @@ if(BUILD_WITH_PYBIND11)
     pybind11::module
   )
 endif()
+
+add_subdirectory(commandLine)
 
 install(TARGETS PQ
   DESTINATION bin

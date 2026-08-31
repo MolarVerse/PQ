@@ -1,11 +1,5 @@
 set(source_files
-    testRestartFileReader.cpp
-    testMoldescriptorReader.cpp
-    testGuffDatReader.cpp
-    testInputFileReader.cpp
-    testInputValidation.cpp
-    testIntraNonBondedReader.cpp
-    testMShakeReader.cpp
+    testCommandLineArgs.cpp
 )
 
 foreach(source_file ${source_files})
@@ -13,20 +7,17 @@ foreach(source_file ${source_files})
     add_executable(${test_name} ${source_file})
     target_include_directories(${test_name}
         PRIVATE
-        ${PROJECT_SOURCE_DIR}/include/input/
+        ${PROJECT_SOURCE_DIR}/apps/commandLine
         ${PROJECT_SOURCE_DIR}/tests/include/input
         ${PROJECT_SOURCE_DIR}/tests/include/macros
     )
     target_link_libraries(${test_name}
         PRIVATE
-        PQ_input
-        restartFileReader
-        potential
-        engine
         gtest
         gmock
         pq_test_main
-        testUtils
+        exceptions
+        commandLineArgs
     )
     add_test(
         NAME ${test_name}
@@ -50,8 +41,3 @@ if(${BUILD_WITH_GCOVR})
         OUTPUT_PATH "coverage"
     )
 endif()
-
-add_subdirectory(inputFileParsing)
-add_subdirectory(topologyReader)
-add_subdirectory(parameterFileReader)
-add_subdirectory(restartFileSection)
