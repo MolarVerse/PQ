@@ -147,7 +147,7 @@ namespace molsys
         [[nodiscard]] std::optional<size_t> findMoleculeTypeByString(
             const std::string& moleculeType
         ) const;
-        [[nodiscard]] 
+        [[nodiscard]]
         std::pair<Molecule*, AtomIndex> findMoleculeByGlobalAtomIndex(
             const size_t atomIndex
         );

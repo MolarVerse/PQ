@@ -89,7 +89,7 @@ TEST_F(TestIntegrator, firstStep)
     );
 
     auto velocities  = linearAlgebra::Vec3D(1.0, 2.0, 3.0);
-    velocities      += 0.1 * linearAlgebra::Vec3D(0.5, 1.5, 2.5) *
+    velocities       += 0.1 * linearAlgebra::Vec3D(0.5, 1.5, 2.5) *
                   constants::V_VERLET_VELOCITY_FACTOR;
 
     const auto vel = molecule.getAtomVelocity(AtomIndex{1});

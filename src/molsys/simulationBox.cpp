@@ -518,7 +518,8 @@ namespace molsys
 
                 const auto extType = atom.getExternalGlobalVDWType();
 
-                atom.setInternalGlobalVDWType(extToIntGlobalVDWTypes.at(extType)
+                atom.setInternalGlobalVDWType(
+                    extToIntGlobalVDWTypes.at(extType)
                 );
             }
         };
