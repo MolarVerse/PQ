@@ -24,8 +24,6 @@
 
 #define _FORCE_FIELD_HPP_
 
-#include <cstddef>   // for size_t
-
 #include "coulombPotential.hpp"      // for CoulombPotential
 #include "molecule.hpp"              // for Molecule
 #include "nonCoulombPotential.hpp"   // for NonCoulombPotential
@@ -40,8 +38,8 @@ namespace forceField
         physicalData::PhysicalData        &physicalData,
         const molsys::Molecule            *molecule1,
         const molsys::Molecule            *molecule2,
-        const size_t                       atomIndex1,
-        const size_t                       atomIndex2,
+        const AtomIndex                    atomIndex1,
+        const AtomIndex                    atomIndex2,
         const double                       distance
     );
 }   // namespace forceField

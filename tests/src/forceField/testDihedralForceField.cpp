@@ -110,7 +110,7 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
 
     auto bondForceField = forceField::DihedralForceField(
         {&molecule, &molecule, &molecule, &molecule},
-        {0, 1, 2, 3},
+        {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}, AtomIndex{3}},
         DihedralId{0}
     );
     bondForceField.setPhaseShift(180.0 * M_PI / 180.0);
@@ -131,18 +131,54 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
 
     EXPECT_NEAR(physicalData.getDihedralEnergy(), 3.9128709291752739, 1e-6);
     EXPECT_NEAR(physicalData.getImproperEnergy(), 0.0, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(0)[0], 3.19504825211347, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(0)[1], -6.39009650422694, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(0)[2], 3.19504825211347, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(1)[0], -5.1120772033815518, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(1)[1], 10.224154406763104, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(1)[2], -5.1120772033815518, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(2)[0], 1.9170289512680818, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(2)[1], -1.2780193008453877, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(2)[2], 0.63900965042269386, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(3)[0], 0.0, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(3)[1], -2.5560386016907759, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(3)[2], 1.278019300845388, 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(AtomIndex{0})[0], 3.19504825211347, 1e-6);
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{0})[1],
+        -6.39009650422694,
+        1e-6
+    );
+    EXPECT_NEAR(molecule.getAtomForce(AtomIndex{0})[2], 3.19504825211347, 1e-6);
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{1})[0],
+        -5.1120772033815518,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{1})[1],
+        10.224154406763104,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{1})[2],
+        -5.1120772033815518,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{2})[0],
+        1.9170289512680818,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{2})[1],
+        -1.2780193008453877,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{2})[2],
+        0.63900965042269386,
+        1e-6
+    );
+    EXPECT_NEAR(molecule.getAtomForce(AtomIndex{3})[0], 0.0, 1e-6);
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{3})[1],
+        -2.5560386016907759,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{3})[2],
+        1.278019300845388,
+        1e-6
+    );
     EXPECT_NEAR(physicalData.getCoulombEnergy(), 0.0, 1e-6);
     EXPECT_NEAR(physicalData.getNonCoulombEnergy(), 0.0, 1e-6);
     EXPECT_THAT(
@@ -172,18 +208,54 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
 
     EXPECT_NEAR(physicalData.getImproperEnergy(), 3.9128709291752739, 1e-6);
     EXPECT_NEAR(physicalData.getDihedralEnergy(), 0.0, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(0)[0], 3.19504825211347, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(0)[1], -6.39009650422694, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(0)[2], 3.19504825211347, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(1)[0], -5.1120772033815518, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(1)[1], 10.224154406763104, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(1)[2], -5.1120772033815518, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(2)[0], 1.9170289512680818, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(2)[1], -1.2780193008453877, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(2)[2], 0.63900965042269386, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(3)[0], 0.0, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(3)[1], -2.5560386016907759, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(3)[2], 1.278019300845388, 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(AtomIndex{0})[0], 3.19504825211347, 1e-6);
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{0})[1],
+        -6.39009650422694,
+        1e-6
+    );
+    EXPECT_NEAR(molecule.getAtomForce(AtomIndex{0})[2], 3.19504825211347, 1e-6);
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{1})[0],
+        -5.1120772033815518,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{1})[1],
+        10.224154406763104,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{1})[2],
+        -5.1120772033815518,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{2})[0],
+        1.9170289512680818,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{2})[1],
+        -1.2780193008453877,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{2})[2],
+        0.63900965042269386,
+        1e-6
+    );
+    EXPECT_NEAR(molecule.getAtomForce(AtomIndex{3})[0], 0.0, 1e-6);
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{3})[1],
+        -2.5560386016907759,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{3})[2],
+        1.278019300845388,
+        1e-6
+    );
     EXPECT_NEAR(physicalData.getCoulombEnergy(), 0.0, 1e-6);
     EXPECT_NEAR(physicalData.getNonCoulombEnergy(), 0.0, 1e-6);
     EXPECT_THAT(
@@ -213,18 +285,66 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
 
     EXPECT_NEAR(physicalData.getDihedralEnergy(), 3.9128709291752739, 1e-6);
     EXPECT_NEAR(physicalData.getImproperEnergy(), 0.0, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(0)[0], 2.2090108292824047, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(0)[1], -6.8831152156424729, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(0)[2], 2.4555201849901707, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(1)[0], -5.1120772033815518, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(1)[1], 10.224154406763104, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(1)[2], -5.1120772033815518, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(2)[0], 1.9170289512680818, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(2)[1], -1.2780193008453877, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(2)[2], 0.63900965042269386, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(3)[0], 0.98603742283106555, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(3)[1], -2.063019890275243, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(3)[2], 2.0175473679686871, 1e-6);
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{0})[0],
+        2.2090108292824047,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{0})[1],
+        -6.8831152156424729,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{0})[2],
+        2.4555201849901707,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{1})[0],
+        -5.1120772033815518,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{1})[1],
+        10.224154406763104,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{1})[2],
+        -5.1120772033815518,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{2})[0],
+        1.9170289512680818,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{2})[1],
+        -1.2780193008453877,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{2})[2],
+        0.63900965042269386,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{3})[0],
+        0.98603742283106555,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{3})[1],
+        -2.063019890275243,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{3})[2],
+        2.0175473679686871,
+        1e-6
+    );
     EXPECT_NEAR(physicalData.getCoulombEnergy(), 4.1158570930777021, 1e-6);
     EXPECT_NEAR(
         physicalData.getNonCoulombEnergy(),

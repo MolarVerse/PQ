@@ -65,7 +65,7 @@ namespace forceField
        public:
         JCouplingForceField(
             const std::vector<molsys::Molecule *> &molecules,
-            const std::vector<size_t>             &atomIndices,
+            const std::vector<AtomIndex>          &atomIndices,
             const size_t                           type
         );
 

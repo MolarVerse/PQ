@@ -52,8 +52,14 @@ TEST_F(TestTopologySection, processSectionShake)
         constraints->getDistConstraints()[0].getMolecule2(),
         &(_engine->getSimulationBox().getMolecules()[1])
     );
-    EXPECT_EQ(constraints->getDistConstraints()[0].getAtomIndex1(), 0);
-    EXPECT_EQ(constraints->getDistConstraints()[0].getAtomIndex2(), 0);
+    EXPECT_EQ(
+        constraints->getDistConstraints()[0].getAtomIndices()[0],
+        AtomIndex{0}
+    );
+    EXPECT_EQ(
+        constraints->getDistConstraints()[0].getAtomIndices()[1],
+        AtomIndex{0}
+    );
     EXPECT_EQ(constraints->getDistConstraints()[0].getLowerDistance(), 1.0);
     EXPECT_EQ(constraints->getDistConstraints()[0].getUpperDistance(), 2.0);
     EXPECT_EQ(constraints->getDistConstraints()[0].getSpringConstant(), 4.0);

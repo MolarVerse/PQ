@@ -24,9 +24,8 @@
 
 #define _DISTANCE_CONSTRAINT_HPP_
 
-#include <cstddef>
-
 #include "bond.hpp"
+#include "strongTypes.hpp"
 #include "vector3d.hpp"
 
 namespace molsys
@@ -62,8 +61,8 @@ namespace constraints
         DistanceConstraint(
             molsys::Molecule *molecule1,
             molsys::Molecule *molecule2,
-            const size_t      atomIndex1,
-            const size_t      atomIndex2,
+            const AtomIndex   atomIndex1,
+            const AtomIndex   atomIndex2,
             const double      lowerDistance,
             const double      upperDistance,
             const double      springConstant,

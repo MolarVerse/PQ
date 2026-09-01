@@ -24,7 +24,6 @@
 
 #define _INTRA_NON_BONDED_MAP_HPP_
 
-#include <cstddef>   // for size_t
 #include <utility>   // for pair
 #include <vector>    // for vector
 
@@ -82,8 +81,9 @@ namespace intraNonBonded
             physicalData::PhysicalData        &data
         ) const;
 
-        [[nodiscard]] std::pair<double, double> calculateSingleInteraction(
-            const size_t                       atomIdx1,
+        [[nodiscard]]
+        std::pair<double, double> calculateSingleInteraction(
+            const AtomIndex                    atomIdx1,
             const int                          atomIdx2,
             const linearAlgebra::Vec3D        &box,
             physicalData::PhysicalData        &data,

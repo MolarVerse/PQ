@@ -24,8 +24,6 @@
 
 #define _BOND_CONSTRAINT_HPP_
 
-#include <cstddef>
-
 #include "bond.hpp"
 #include "vector3d.hpp"
 
@@ -55,8 +53,8 @@ namespace constraints
         BondConstraint(
             molsys::Molecule *molecule1,
             molsys::Molecule *molecule2,
-            const size_t      atomIndex1,
-            const size_t      atomIndex2,
+            const AtomIndex   atomIndex1,
+            const AtomIndex   atomIndex2,
             const double      bondLength
         );
 

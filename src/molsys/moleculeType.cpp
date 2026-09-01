@@ -165,12 +165,9 @@ void MoleculeType::setCharge(const int charge) { _charge = charge; }
  * @param index
  * @param partialCharge
  */
-void MoleculeType::setPartialCharge(
-    const size_t index,
-    const double partialCharge
-)
+void MoleculeType::setPartialCharge(AtomIndex index, const double partialCharge)
 {
-    _partialCharges[index] = partialCharge;
+    _partialCharges[index.get()] = partialCharge;
 }
 
 /**
@@ -209,9 +206,9 @@ size_t MoleculeType::getMoltype() const { return _moltype; }
  * @param index
  * @return size_t
  */
-size_t MoleculeType::getExternalAtomType(const size_t index) const
+size_t MoleculeType::getExternalAtomType(AtomIndex index) const
 {
-    return _externalAtomTypes[index];
+    return _externalAtomTypes[index.get()];
 }
 
 /**
@@ -220,9 +217,9 @@ size_t MoleculeType::getExternalAtomType(const size_t index) const
  * @param index
  * @return size_t
  */
-size_t MoleculeType::getAtomType(const size_t index) const
+size_t MoleculeType::getAtomType(AtomIndex index) const
 {
-    return _atomTypes[index];
+    return _atomTypes[index.get()];
 }
 
 /**
@@ -249,9 +246,9 @@ int MoleculeType::getCharge() const { return _charge; }
  * @param index
  * @return double
  */
-double MoleculeType::getPartialCharge(const size_t index) const
+double MoleculeType::getPartialCharge(AtomIndex index) const
 {
-    return _partialCharges[index];
+    return _partialCharges[index.get()];
 }
 
 /**
@@ -267,9 +264,9 @@ std::string MoleculeType::getName() const { return _name; }
  * @param index
  * @return std::string
  */
-std::string MoleculeType::getAtomName(const size_t index) const
+std::string MoleculeType::getAtomName(AtomIndex index) const
 {
-    return _atomNames[index];
+    return _atomNames[index.get()];
 }
 
 /**

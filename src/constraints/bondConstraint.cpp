@@ -48,11 +48,11 @@ using namespace constants;
  * @param bondLength
  */
 BondConstraint::BondConstraint(
-    Molecule    *molecule1,
-    Molecule    *molecule2,
-    const size_t atomIndex1,
-    const size_t atomIndex2,
-    const double bondLength
+    Molecule       *molecule1,
+    Molecule       *molecule2,
+    const AtomIndex atomIndex1,
+    const AtomIndex atomIndex2,
+    const double    bondLength
 )
     : connectivity::Bond(molecule1, molecule2, atomIndex1, atomIndex2),
       _targetBondLength(bondLength)

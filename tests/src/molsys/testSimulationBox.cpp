@@ -23,7 +23,6 @@
 #include "testSimulationBox.hpp"
 
 #include <cstddef>    // for size_t, std
-#include <map>        // for map
 #include <optional>   // for optional
 #include <string>     // for string
 #include <vector>     // for vector
@@ -131,21 +130,21 @@ TEST_F(TestSimulationBox, findMoleculeType)
 TEST_F(TestSimulationBox, findMoleculeByAtomIndex)
 {
     const auto &[molecule1, atomIndex1] =
-        _simulationBox->findMoleculeByAtomIndex(3);
+        _simulationBox->findMoleculeByGlobalAtomIndex(3);
     EXPECT_EQ(molecule1, &(_simulationBox->getMolecules()[0]));
-    EXPECT_EQ(atomIndex1, 2);
+    EXPECT_EQ(atomIndex1, AtomIndex{2});
 
     const auto &[molecule2, atomIndex2] =
-        _simulationBox->findMoleculeByAtomIndex(4);
+        _simulationBox->findMoleculeByGlobalAtomIndex(4);
     EXPECT_EQ(molecule2, &(_simulationBox->getMolecules()[1]));
-    EXPECT_EQ(atomIndex2, 0);
+    EXPECT_EQ(atomIndex2, AtomIndex{0});
 
     EXPECT_THROW([[maybe_unused]] const auto dummy =
-                     _simulationBox->findMoleculeByAtomIndex(6);
+                     _simulationBox->findMoleculeByGlobalAtomIndex(6);
                  , exc::UserInputException);
 
     EXPECT_THROW([[maybe_unused]] const auto dummy =
-                     _simulationBox->findMoleculeByAtomIndex(0);
+                     _simulationBox->findMoleculeByGlobalAtomIndex(0);
                  , exc::UserInputException);
 }
 
@@ -463,7 +462,7 @@ TEST_F(TestSimulationBox, copyOwnsIndependentAtoms)
         _simulationBox->getNumberOfMolecules()
     );
     EXPECT_NE(&copied.getAtom(0), &_simulationBox->getAtom(0));
-    EXPECT_EQ(&copied.getMolecule(0).getAtom(0), &copied.getAtom(0));
+    EXPECT_EQ(&copied.getMolecule(0).getAtom(AtomIndex{0}), &copied.getAtom(0));
 
     const auto cloned = _simulationBox->clone();
     ASSERT_NE(cloned, nullptr);
@@ -586,8 +585,14 @@ TEST_F(TestSimulationBox, assignsInternalVdwTypesToAtoms)
     simBox.setupExternalToInternalGlobalVdwTypesMap();
 
     auto &moleculeResult = simBox.getMolecule(0);
-    EXPECT_EQ(moleculeResult.getAtom(0).getInternalGlobalVDWType(), VdwType{0});
-    EXPECT_EQ(moleculeResult.getAtom(1).getInternalGlobalVDWType(), VdwType{1});
+    EXPECT_EQ(
+        moleculeResult.getAtom(AtomIndex{0}).getInternalGlobalVDWType(),
+        VdwType{0}
+    );
+    EXPECT_EQ(
+        moleculeResult.getAtom(AtomIndex{1}).getInternalGlobalVDWType(),
+        VdwType{1}
+    );
 }
 
 TEST_F(TestSimulationBox, forceMetricsAndAtomStateUpdates)

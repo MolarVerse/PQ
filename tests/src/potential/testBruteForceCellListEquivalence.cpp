@@ -222,17 +222,17 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
 
         ASSERT_EQ(molBF.getNumberOfAtoms(), molCL.getNumberOfAtoms());
 
-        for (size_t a = 0; a < molBF.getNumberOfAtoms(); ++a)
+        for (AtomIndex a{0}; a.get() < molBF.getNumberOfAtoms(); ++a)
         {
             const auto fBF = molBF.getAtomForce(a);
             const auto fCL = molCL.getAtomForce(a);
 
             EXPECT_NEAR(fBF[0], fCL[0], kForceTolerance)
-                << "force x mismatch on molecule " << i << " atom " << a;
+                << "force x mismatch on molecule " << i << " atom " << a.get();
             EXPECT_NEAR(fBF[1], fCL[1], kForceTolerance)
-                << "force y mismatch on molecule " << i << " atom " << a;
+                << "force y mismatch on molecule " << i << " atom " << a.get();
             EXPECT_NEAR(fBF[2], fCL[2], kForceTolerance)
-                << "force z mismatch on molecule " << i << " atom " << a;
+                << "force z mismatch on molecule " << i << " atom " << a.get();
         }
     }
 }

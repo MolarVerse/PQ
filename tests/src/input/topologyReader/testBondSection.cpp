@@ -49,8 +49,8 @@ TEST_F(TestTopologySection, processSectionBond)
         bonds[0].getMolecule2(),
         &(_engine->getSimulationBox().getMolecules()[1])
     );
-    EXPECT_EQ(bonds[0].getAtomIndex1(), 0);
-    EXPECT_EQ(bonds[0].getAtomIndex2(), 0);
+    EXPECT_EQ(bonds[0].getAtomIndices()[0], AtomIndex{0});
+    EXPECT_EQ(bonds[0].getAtomIndices()[1], AtomIndex{0});
     EXPECT_EQ(bonds[0].getType(), BondId{7});
     EXPECT_EQ(bonds[0].isLinker(), false);
 

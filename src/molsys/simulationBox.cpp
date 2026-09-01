@@ -358,11 +358,10 @@ namespace molsys
      * atom in the molecule
      *
      * @param atomIndex
-     * @return pair<Molecule *, size_t>
+     * @return pair<Molecule *, AtomIndex>
      */
-    std::pair<Molecule*, size_t> SimulationBox::findMoleculeByAtomIndex(
-        const size_t atomIndex
-    )
+    std::pair<Molecule*, AtomIndex> SimulationBox::
+        findMoleculeByGlobalAtomIndex(const size_t atomIndex)
     {
         size_t sum = 0;
 
@@ -376,7 +375,7 @@ namespace molsys
                 if (atomIndex == 0)
                     break;
                 const auto index = atomIndex - (sum - nAtomsInMolecule) - 1;
-                return std::make_pair(&molecule, index);
+                return std::make_pair(&molecule, AtomIndex{index});
             }
         }
 
@@ -513,12 +512,13 @@ namespace molsys
             [&extToIntGlobalVDWTypes =
                  _externalToInternalGlobalVDWTypes](auto& molecule)
         {
-            for (size_t i = 0; i < molecule.getNumberOfAtoms(); ++i)
+            for (AtomIndex i{0}; i.get() < molecule.getNumberOfAtoms(); ++i)
             {
-                const auto extType =
-                    molecule.getAtom(i).getExternalGlobalVDWType();
-                molecule.getAtom(i).setInternalGlobalVDWType(
-                    extToIntGlobalVDWTypes.at(extType)
+                auto& atom = molecule.getAtom(i);
+
+                const auto extType = atom.getExternalGlobalVDWType();
+
+                atom.setInternalGlobalVDWType(extToIntGlobalVDWTypes.at(extType)
                 );
             }
         };
