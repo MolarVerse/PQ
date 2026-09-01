@@ -127,30 +127,37 @@ namespace
         return value.starts_with("https://") || value.starts_with("http://");
     }
 
-    std::filesystem::path runtimeAssetPath(
-        const std::filesystem::path &installedRelativePath,
-        const std::filesystem::path &buildPath
-    )
+    struct Files
+    {
+        std::filesystem::path installedRelativePath;
+        std::filesystem::path buildPath;
+    };
+
+    std::filesystem::path runtimeAssetPath(const Files &files)
     {
         const auto executable = utilities::executablePath();
         if (executable.empty())
-            return buildPath;
+            return files.buildPath;
 
         std::error_code error;
         const auto      buildExecutableDirectory =
             std::filesystem::weakly_canonical(PQ_BUILD_EXECUTABLE_DIR, error);
 
         if (!error && executable.parent_path() == buildExecutableDirectory)
-            return buildPath;
+            return files.buildPath;
 
-        return utilities::installedDataPath(installedRelativePath);
+        return utilities::installedDataPath(files.installedRelativePath);
     }
 
     std::filesystem::path bundledQMScriptPath(const std::string_view script)
     {
         return runtimeAssetPath(
-            std::filesystem::path("scripts") / script,
-            std::filesystem::path(PQ_BUILD_QM_SCRIPT_DIR) / script
+            Files{
+                .installedRelativePath =
+                    std::filesystem::path("scripts") / script,
+                .buildPath =
+                    std::filesystem::path(PQ_BUILD_QM_SCRIPT_DIR) / script
+            }
         );
     }
 
@@ -159,8 +166,12 @@ namespace
         const auto name = settings::string(type);
 
         return runtimeAssetPath(
-            std::filesystem::path("slakos") / name / "skfiles",
-            std::filesystem::path(PQ_BUILD_SLAKOS_DIR) / name / "skfiles"
+            Files{
+                .installedRelativePath =
+                    std::filesystem::path("slakos") / name / "skfiles",
+                .buildPath = std::filesystem::path(PQ_BUILD_SLAKOS_DIR) / name /
+                             "skfiles"
+            }
         );
     }
 

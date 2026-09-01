@@ -173,6 +173,8 @@ void cli::JsonWriter::value(std::nullptr_t)
     _output << "null";
 }
 
+// NOLINTBEGIN(bugprone-easily-swappable-parameters) -- here fine as it is the
+// specialized overload for string_view as second type
 void cli::JsonWriter::value(
     const std::string_view key,
     const std::string_view value
@@ -181,6 +183,7 @@ void cli::JsonWriter::value(
     beforeMember(key);
     writeJsonString(_output, value);
 }
+// NOLINTEND(bugprone-easily-swappable-parameters)
 
 void cli::JsonWriter::value(const std::string_view key, const char *value)
 {

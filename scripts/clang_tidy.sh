@@ -3,23 +3,16 @@ set -o pipefail
 
 LOGFILE="clangd-tidy-report.log"
 
-# check if log file exists and make a backup if it does
-if [[ -f "$LOGFILE" ]]; then
-    mv "$LOGFILE" "${LOGFILE}.bak"
-fi
-
-# Only stdout goes to the log file; stderr (where --tqdm draws its
-# progress bar via carriage returns) stays on the terminal only, so
-# the log file doesn't fill up with \r-based redraw noise.
-exec > >(tee "$LOGFILE")
-
-echo "Clangd-Tidy:"
-
 all_files=false
+recheck=false
 while [[ $# -gt 0 ]]; do
     case "$1" in
     --all)
         all_files=true
+        shift
+        ;;
+    --recheck)
+        recheck=true
         shift
         ;;
     *)
@@ -29,8 +22,46 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+if $all_files && $recheck; then
+    echo "--all and --recheck are mutually exclusive"
+    exit 1
+fi
+
+# Capture the previous run's log before it gets rotated to .bak, so
+# --recheck can extract failing files from it.
+prev_log=""
+if [[ -f "$LOGFILE" ]]; then
+    prev_log="$(cat "$LOGFILE")"
+    mv "$LOGFILE" "${LOGFILE}.bak"
+fi
+
+exec > >(tee "$LOGFILE")
+
+echo "Clangd-Tidy:"
+
 files=()
-if $all_files; then
+if $recheck; then
+    echo "  Mode: recheck files with prior diagnostics"
+    if [[ -z "$prev_log" ]]; then
+        echo "  No previous log found (${LOGFILE})."
+        exit 0
+    fi
+
+    # Strip ANSI escape codes in case the log contains colored output.
+    clean_log="$(sed -E 's/\x1b\[[0-9;]*m//g' <<<"$prev_log")"
+
+    while IFS= read -r f; do
+        [[ -f "$f" ]] && files+=("$f")
+    done < <(grep -oiE '^[^:]+:[0-9]+:[0-9]+: (error|warning|hint):' <<<"$clean_log" |
+        cut -d: -f1 | sort -u)
+
+    if [[ ${#files[@]} -eq 0 ]]; then
+        echo "  No diagnostic lines matched in previous log."
+        echo "  --- last 20 lines of previous log for inspection ---"
+        tail -n 20 <<<"$clean_log"
+        echo "  -----------------------------------------------------"
+    fi
+elif $all_files; then
     echo "  Mode: all tracked C++ files"
     while IFS= read -r f; do
         [[ -f "$f" ]] && files+=("$f")
