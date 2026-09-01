@@ -29,6 +29,8 @@ target_compile_definitions(PQ
   PQ_BUILD_SLAKOS_DIR="${PROJECT_BINARY_DIR}/external/slakos"
 )
 
+add_subdirectory(commandLine)
+
 target_link_libraries(PQ
   PRIVATE
   driver
@@ -51,8 +53,6 @@ if(BUILD_WITH_PYBIND11)
     pybind11::module
   )
 endif()
-
-add_subdirectory(commandLine)
 
 install(TARGETS PQ
   DESTINATION bin

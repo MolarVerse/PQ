@@ -4,7 +4,7 @@ add_library(commandLineArgs
 
 target_include_directories(commandLineArgs
     PUBLIC
-    ${PROJECT_SOURCE_DIR}/apps/commandLineArgs.hpp
+    ${PROJECT_SOURCE_DIR}/apps/commandLine
 )
 
 target_link_libraries(commandLineArgs
@@ -13,5 +13,5 @@ target_link_libraries(commandLineArgs
 )
 
 install(TARGETS commandLineArgs
-    DESTINATION bin
+    DESTINATION lib
 )

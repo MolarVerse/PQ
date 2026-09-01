@@ -27,7 +27,7 @@ foreach(source_file ${source_files})
     target_precompile_headers(${test_name} REUSE_FROM pq_test_pch)
     target_link_libraries(${test_name} PRIVATE pq_test_pch)
 
-    set_property(TEST ${test_name} PROPERTY LABELS input)
+    set_property(TEST ${test_name} PROPERTY LABELS apps)
 endforeach()
 
 if(${BUILD_WITH_GCOVR})
