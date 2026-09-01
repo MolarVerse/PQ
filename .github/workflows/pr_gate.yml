@@ -1,0 +1,642 @@
+name: PR Gate
+
+on:
+  pull_request:
+    branches:
+      - dev
+      - main
+    types: [opened, reopened, synchronize]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-gate-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  preflight:
+    name: Preflight
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      base_sha: ${{ steps.changes.outputs.base_sha }}
+      build: ${{ steps.changes.outputs.build }}
+      head_sha: ${{ steps.changes.outputs.head_sha }}
+      lint_all: ${{ steps.changes.outputs.lint_all }}
+      lto: ${{ steps.changes.outputs.lto }}
+      perf: ${{ steps.changes.outputs.perf }}
+
+    steps:
+      - name: Checkout pull request
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Classify changed paths
+        id: changes
+        env:
+          EVENT_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          EVENT_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+
+          base_sha="$EVENT_BASE_SHA"
+          head_sha="$EVENT_HEAD_SHA"
+          if [[ -z "$base_sha" || -z "$head_sha" ]]; then
+            base_sha="$(git rev-parse HEAD^)"
+            head_sha="$(git rev-parse HEAD)"
+          fi
+
+          build=false
+          cpp=false
+          lint_all=false
+          lto=false
+          perf=false
+          workflow=false
+          changed_file="$RUNNER_TEMP/pq-changed-files.txt"
+          git diff --name-only "$base_sha...$head_sha" > "$changed_file"
+
+          while IFS= read -r path; do
+            [[ -n "$path" ]] || continue
+
+            case "$path" in
+              .github/workflows/pr_gate.yml|.github/workflows/extended_ci.yml)
+                build=true
+                cpp=true
+                lto=true
+                perf=true
+                ;;
+            esac
+
+            case "$path" in
+              .github/workflows/*)
+                workflow=true
+                ;;
+            esac
+
+            case "$path" in
+              .clang-tidy|.cmake/*|.github/ci/*|.gitmodules|apps/*|benchmarks/CMakeLists.txt|benchmarks/src/*|external/*|include/*|integration_tests/*|src/*|tests/*|CMakeLists.txt|scripts/clang_tidy.sh)
+                build=true
+                ;;
+            esac
+
+            case "$path" in
+              .clang-tidy|scripts/clang_tidy.sh)
+                lint_all=true
+                ;;
+            esac
+
+            case "$path" in
+              .cmake/*|.gitmodules|apps/*|external/*|include/*|src/*|CMakeLists.txt)
+                lto=true
+                ;;
+            esac
+
+            case "$path" in
+              *.c|*.cc|*.cpp|*.cxx|*.h|*.hh|*.hpp|*.hxx|*.tpp|.clang-format|config/licenseHeader.txt|scripts/addLicense.sh)
+                cpp=true
+                ;;
+            esac
+
+            case "$path" in
+              .cmake/*|apps/*|benchmarks/*|external/*|include/*|src/*|CMakeLists.txt|scripts/perf_gate.sh)
+                perf=true
+                ;;
+            esac
+          done < "$changed_file"
+
+          {
+            echo "base_sha=$base_sha"
+            echo "build=$build"
+            echo "cpp=$cpp"
+            echo "head_sha=$head_sha"
+            echo "lint_all=$lint_all"
+            echo "lto=$lto"
+            echo "perf=$perf"
+            echo "workflow=$workflow"
+          } >> "$GITHUB_OUTPUT"
+
+          {
+            echo "### Changed paths"
+            echo
+            echo "build=$build, cpp=$cpp, lint_all=$lint_all, lto=$lto, perf=$perf, workflow=$workflow"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Test changelog tooling
+        run: python3 -m unittest discover -s scripts/tests -p 'test_*.py'
+
+      - name: Check workflow syntax
+        if: steps.changes.outputs.workflow == 'true'
+        uses: docker://rhysd/actionlint:1.7.12
+        with:
+          args: >-
+            -color -shellcheck=
+            -ignore=runner.*codecov/codecov-action@v3.*too.old
+
+      - name: Check changelog fragment
+        if: >-
+          github.event_name == 'pull_request' &&
+          github.base_ref == 'dev' &&
+          (github.event.pull_request.head.repo.full_name != github.repository ||
+          github.head_ref != 'main')
+        env:
+          BASE_SHA: ${{ steps.changes.outputs.base_sha }}
+          HEAD_SHA: ${{ steps.changes.outputs.head_sha }}
+        run: python3 scripts/check_changelog_fragment.py "$BASE_SHA" "$HEAD_SHA"
+
+      - name: Set up Python for formatting
+        if: steps.changes.outputs.cpp == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install clang-format
+        if: steps.changes.outputs.cpp == 'true'
+        run: python -m pip install clang-format==20.1.3
+
+      - name: Check changed C++ formatting
+        if: steps.changes.outputs.cpp == 'true'
+        env:
+          BASE_SHA: ${{ steps.changes.outputs.base_sha }}
+          HEAD_SHA: ${{ steps.changes.outputs.head_sha }}
+        run: |
+          set -euo pipefail
+          clang-format --style=file --dump-config >/dev/null
+          git-clang-format \
+            --diff \
+            --binary "$(command -v clang-format)" \
+            --extensions c,cc,cpp,cxx,h,hh,hpp,hxx,tpp \
+            "$BASE_SHA" \
+            "$HEAD_SHA" \
+            -- apps benchmarks include src tests
+
+      - name: Check license headers
+        if: steps.changes.outputs.cpp == 'true'
+        run: |
+          set -euo pipefail
+
+          header_lines="$(wc -l < config/licenseHeader.txt)"
+          expected_header="$(cat config/licenseHeader.txt)"
+          missing=()
+          while IFS= read -r file; do
+            file_header="$(head -n "$header_lines" "$file")"
+            if [[ "$file_header" != "$expected_header" ]]; then
+              missing+=("$file")
+            fi
+          done < <(
+            git ls-files apps benchmarks include src tests |
+              grep -E '\.(c|cc|cpp|cxx|h|hh|hpp|hxx|tpp)$'
+          )
+
+          if (( ${#missing[@]} > 0 )); then
+            printf 'Files with missing or invalid license headers:\n' >&2
+            printf '  %s\n' "${missing[@]}" >&2
+            exit 1
+          fi
+
+          echo "All tracked C++ files have the expected license header."
+
+  release:
+    name: x86 Release and integration
+    if: ${{ needs.preflight.outputs.build == 'true' }}
+    needs: preflight
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-13 g++-13 mold ninja-build
+
+      - name: Set up ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: pr-x86-release
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install build dependencies
+        run: python -m pip install numpy
+
+      - name: Build and run unit tests
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_WITH_DOCS=OFF \
+            -DBUILD_WITH_NATIVE=OFF
+          cmake --build build --parallel "$(nproc)"
+          ctest --test-dir build --output-on-failure
+        env:
+          CC: gcc-13
+          CXX: g++-13
+
+      - name: Set up Conda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-update-conda: false
+          python-version: '3.12'
+          activate-environment: test-env
+          channels: default, conda-forge
+          auto-activate-base: false
+
+      - name: Restore integration environment
+        id: conda-cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.CONDA }}/envs/test-env
+          key: >-
+            conda-integration-${{ runner.arch }}-${{
+            hashFiles('.github/ci/integration-conda.txt',
+            '.github/ci/integration-requirements.txt') }}
+
+      - name: Install integration dependencies
+        if: steps.conda-cache.outputs.cache-hit != 'true'
+        run: |
+          conda install -n test-env -y --file .github/ci/integration-conda.txt
+          conda run -n test-env \
+            python -m pip install -r .github/ci/integration-requirements.txt
+
+      - name: Run integration tests
+        run: conda run -n test-env pytest integration_tests -v
+
+  debug-quality:
+    name: x86 Debug, coverage, and changed lint
+    if: ${{ needs.preflight.outputs.build == 'true' }}
+    needs: preflight
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install build and lint tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            clangd-20 gcc-13 g++-13 mold
+          sudo update-alternatives \
+            --install /usr/bin/clangd clangd /usr/bin/clangd-20 100
+
+      - name: Set up ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: pr-x86-debug-quality
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: python -m pip install clangd-tidy coverage gcovr numpy
+
+      - name: Build tests and coverage
+        run: |
+          cmake -S . -B build \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DBUILD_WITH_DOCS=OFF \
+            -DBUILD_WITH_GCOVR=ON \
+            -DBUILD_WITH_NATIVE=OFF
+          cmake --build build --parallel "$(nproc)"
+          cmake --build build --target coverage_xml
+        env:
+          CC: gcc-13
+          CXX: g++-13
+
+      - name: Lint changed C++ files
+        env:
+          BASE_SHA: ${{ needs.preflight.outputs.base_sha }}
+        run: >-
+          scripts/clang_tidy.sh
+          --base "$BASE_SHA"
+          --build-dir build
+          --jobs 2
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
+        with:
+          fail_ci_if_error: true
+          gcov: true
+          gcov_executable: gcov-13
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  lint-config:
+    name: Full lint for lint configuration
+    if: ${{ needs.preflight.outputs.lint_all == 'true' }}
+    needs: preflight
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build and lint tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            clangd-20 gcc-13 g++-13 mold ninja-build
+          sudo update-alternatives \
+            --install /usr/bin/clangd clangd /usr/bin/clangd-20 100
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: python -m pip install clangd-tidy numpy tqdm
+
+      - name: Configure compile database
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DBUILD_WITH_DOCS=OFF \
+            -DBUILD_WITH_NATIVE=OFF
+        env:
+          CC: gcc-13
+          CXX: g++-13
+
+      - name: Lint all production C++ files
+        run: >-
+          scripts/clang_tidy.sh
+          --all
+          --build-dir build
+          --jobs 2
+
+  arm-release:
+    name: ARM Release
+    if: ${{ needs.preflight.outputs.build == 'true' }}
+    needs: preflight
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-13 g++-13 mold ninja-build
+
+      - name: Set up ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: pr-arm-release
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install build dependencies
+        run: python -m pip install numpy
+
+      - name: Build and run unit tests
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_WITH_DOCS=OFF \
+            -DBUILD_WITH_NATIVE=OFF
+          cmake --build build --parallel "$(nproc)"
+          ctest --test-dir build --output-on-failure
+        env:
+          CC: gcc-13
+          CXX: g++-13
+
+  lto-smoke:
+    name: Static LTO smoke
+    if: ${{ needs.preflight.outputs.lto == 'true' }}
+    needs: preflight
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-13 g++-13 mold ninja-build
+
+      - name: Set up ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: static-lto
+
+      - name: Build executable with static LTO
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_SHARED_LIBS=OFF \
+            -DBUILD_WITH_ASE=OFF \
+            -DBUILD_WITH_DOCS=OFF \
+            -DBUILD_WITH_LTO=ON \
+            -DBUILD_WITH_NATIVE=OFF \
+            -DBUILD_WITH_TESTS=OFF
+          cmake --build build --target PQ --parallel "$(nproc)"
+          build/apps/PQ --version
+        env:
+          CC: gcc-13
+          CXX: g++-13
+
+  performance:
+    name: Performance regression
+    if: ${{ needs.preflight.outputs.perf == 'true' }}
+    needs: preflight
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout pull request
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Restore cached base instruction counts
+        id: base-ir-cache
+        uses: actions/cache@v4
+        with:
+          path: base_ir.tsv
+          key: perf-base-ir-${{ needs.preflight.outputs.base_sha }}
+
+      - name: Checkout exact base commit
+        if: steps.base-ir-cache.outputs.cache-hit != 'true'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.preflight.outputs.base_sha }}
+          submodules: recursive
+          path: base
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-13 g++-13 valgrind mold
+
+      - name: Set up ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: perf-${{ github.base_ref || 'dev' }}
+
+      - name: Build pull-request benchmarks
+        run: |
+          cmake -S . -B build-pr \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_WITH_ASE=OFF \
+            -DBUILD_WITH_DOCS=OFF \
+            -DBUILD_WITH_NATIVE=OFF \
+            -DBUILD_WITH_PERF_BENCH=ON \
+            -DBUILD_WITH_TESTS=OFF
+          cmake --build build-pr --target perf_benchmarks --parallel "$(nproc)"
+        env:
+          CC: gcc-13
+          CXX: g++-13
+
+      - name: Build base benchmarks
+        if: steps.base-ir-cache.outputs.cache-hit != 'true'
+        run: |
+          cmake -S base -B build-base \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_WITH_ASE=OFF \
+            -DBUILD_WITH_DOCS=OFF \
+            -DBUILD_WITH_NATIVE=OFF \
+            -DBUILD_WITH_PERF_BENCH=ON \
+            -DBUILD_WITH_TESTS=OFF || true
+          cmake --build build-base --target perf_benchmarks \
+            --parallel "$(nproc)" || \
+            echo "Base commit has no performance benchmarks; baseline skipped."
+        env:
+          CC: gcc-13
+          CXX: g++-13
+
+      - name: Compare instruction counts
+        id: gate
+        continue-on-error: true
+        env:
+          PERF_BASE_IR_FILE: base_ir.tsv
+        run: >-
+          bash scripts/perf_gate.sh
+          build-pr/benchmarks/perf
+          build-base/benchmarks/perf
+          2
+
+      - name: Mint PQ Perf Bot token
+        id: app-token
+        if: github.event_name == 'pull_request'
+        continue-on-error: true
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.PQ_PERF_BOT_APP_ID }}
+          private-key: ${{ secrets.PQ_PERF_BOT_PRIVATE_KEY }}
+
+      - name: Post or update performance comment
+        if: github.event_name == 'pull_request'
+        continue-on-error: true
+        uses: actions/github-script@v7
+        with:
+          github-token: >-
+            ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const marker = '<!-- perf-gate-comment -->';
+            const botLogin = 'pq-perf-bot[bot]';
+            let body;
+            try {
+              body = fs.readFileSync('perf_report.md', 'utf8');
+            } catch (error) {
+              core.info('no perf_report.md, skipping comment');
+              return;
+            }
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+            const { data: comments } =
+              await github.rest.issues.listComments({ owner, repo, issue_number });
+            const existing = comments.find(
+              comment => comment.body && comment.body.includes(marker)
+            );
+            if (existing && existing.user.login !== botLogin) {
+              await github.rest.issues.deleteComment(
+                { owner, repo, comment_id: existing.id }
+              );
+              await github.rest.issues.createComment(
+                { owner, repo, issue_number, body }
+              );
+            } else if (existing) {
+              await github.rest.issues.updateComment(
+                { owner, repo, comment_id: existing.id, body }
+              );
+            } else {
+              await github.rest.issues.createComment(
+                { owner, repo, issue_number, body }
+              );
+            }
+
+      - name: Fail on regression
+        if: steps.gate.outcome == 'failure'
+        run: |
+          echo "Performance regression detected; see the PR comment or summary."
+          exit 1
+
+  result:
+    name: Required result
+    if: always()
+    needs:
+      - preflight
+      - release
+      - debug-quality
+      - lint-config
+      - arm-release
+      - lto-smoke
+      - performance
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+
+    steps:
+      - name: Verify required job results
+        env:
+          ARM_RELEASE: ${{ needs.arm-release.result }}
+          DEBUG_QUALITY: ${{ needs.debug-quality.result }}
+          LINT_CONFIG: ${{ needs.lint-config.result }}
+          LTO_SMOKE: ${{ needs.lto-smoke.result }}
+          PERFORMANCE: ${{ needs.performance.result }}
+          PREFLIGHT: ${{ needs.preflight.result }}
+          RELEASE: ${{ needs.release.result }}
+        run: |
+          set -euo pipefail
+
+          failed=false
+          results=(
+            "preflight=$PREFLIGHT"
+            "release=$RELEASE"
+            "debug-quality=$DEBUG_QUALITY"
+            "lint-config=$LINT_CONFIG"
+            "arm-release=$ARM_RELEASE"
+            "lto-smoke=$LTO_SMOKE"
+            "performance=$PERFORMANCE"
+          )
+
+          for entry in "${results[@]}"; do
+            name="${entry%%=*}"
+            result="${entry#*=}"
+            echo "$name: $result"
+            if [[ "$result" != "success" && "$result" != "skipped" ]]; then
+              failed=true
+            fi
+          done
+
+          if [[ "$failed" == "true" ]]; then
+            exit 1
+          fi

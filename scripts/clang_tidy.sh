@@ -1,56 +1,103 @@
 #!/usr/bin/env bash
-set -o pipefail
-
-LOGFILE="clangd-tidy-report.log"
-
-# check if log file exists and make a backup if it does
-if [[ -f "$LOGFILE" ]]; then
-    mv "$LOGFILE" "${LOGFILE}.bak"
-fi
-
-# Only stdout goes to the log file; stderr (where --tqdm draws its
-# progress bar via carriage returns) stays on the terminal only, so
-# the log file doesn't fill up with \r-based redraw noise.
-exec > >(tee "$LOGFILE")
-
-echo "Clangd-Tidy:"
+set -eo pipefail
 
 all_files=false
+base_ref="origin/dev"
+build_dir="."
+jobs=1
+
+usage() {
+    cat <<'EOF'
+Usage: scripts/clang_tidy.sh [options]
+
+Options:
+  --all                 Check every tracked production C/C++ file.
+  --base <revision>     Compare HEAD with this revision (default: origin/dev).
+  --build-dir <path>    Directory containing compile_commands.json (default: .).
+  --jobs <count>        Number of concurrent clangd-tidy workers (default: 1).
+  -h, --help            Show this help.
+EOF
+}
+
 while [[ $# -gt 0 ]]; do
     case "$1" in
     --all)
         all_files=true
         shift
         ;;
+    --base)
+        [[ $# -ge 2 ]] || { echo "--base requires a revision" >&2; exit 2; }
+        base_ref="$2"
+        shift 2
+        ;;
+    --build-dir)
+        [[ $# -ge 2 ]] || { echo "--build-dir requires a path" >&2; exit 2; }
+        build_dir="$2"
+        shift 2
+        ;;
+    --jobs)
+        [[ $# -ge 2 ]] || { echo "--jobs requires a count" >&2; exit 2; }
+        jobs="$2"
+        shift 2
+        ;;
+    -h|--help)
+        usage
+        exit 0
+        ;;
     *)
-        echo "Unknown option: $1"
-        exit 1
+        echo "Unknown option: $1" >&2
+        usage >&2
+        exit 2
         ;;
     esac
 done
 
+if [[ ! "$jobs" =~ ^[1-9][0-9]*$ ]]; then
+    echo "--jobs must be a positive integer" >&2
+    exit 2
+fi
+
+if [[ ! -f "$build_dir/compile_commands.json" ]]; then
+    echo "Missing $build_dir/compile_commands.json; configure CMake first." >&2
+    exit 2
+fi
+
+LOGFILE="clangd-tidy-report.log"
+if [[ -f "$LOGFILE" ]]; then
+    mv "$LOGFILE" "${LOGFILE}.bak"
+fi
+
+# Keep tqdm redraws on stderr instead of filling the report with carriage returns.
+exec > >(tee "$LOGFILE")
+
+echo "Clangd-Tidy:"
+
 files=()
 if $all_files; then
-    echo "  Mode: all tracked C++ files"
+    echo "  Mode: all tracked production C++ files"
     while IFS= read -r f; do
+        [[ "$f" =~ \.(c|cc|cpp|cxx|h|hh|hpp|hxx|tpp)$ ]] || continue
         [[ -f "$f" ]] && files+=("$f")
-    done < <(git ls-files '*.cpp' '*.cxx' '*.cc' '*.c' '*.h' '*.hpp' '*.hxx' -- ':!external')
+    done < <(git ls-files apps include src)
 else
-    echo "  Mode: changed files since origin/dev"
-    while IFS=$'\t' read -r status old new; do
+    merge_base="$(git merge-base HEAD "$base_ref")"
+    echo "  Mode: changed files since $base_ref"
+    while IFS=$'\t' read -r status first second; do
         case "$status" in
         D) ;;
-        R*) [[ -f "$new" ]] && files+=("$new") ;;
-        *) [[ -f "$old" ]] && files+=("$old") ;;
+        R*) [[ -f "$second" ]] && files+=("$second") ;;
+        *) [[ -f "$first" ]] && files+=("$first") ;;
         esac
-    done < <(git diff --name-status "$(git merge-base HEAD origin/dev)")
+    done < <(git diff --name-status --find-renames "$merge_base...HEAD")
 
-    # Filter to C++ files only (changed mode may include non-source files)
-    # and exclude anything under external/
+    # Match the full-lint scope: production C++ files only.
     cpp_files=()
     for f in "${files[@]}"; do
-        [[ "$f" == external/* ]] && continue
-        [[ "$f" =~ \.(cpp|cxx|cc|c|h|hpp|hxx)$ ]] && cpp_files+=("$f")
+        case "$f" in
+        apps/*|include/*|src/*) ;;
+        *) continue ;;
+        esac
+        [[ "$f" =~ \.(c|cc|cpp|cxx|h|hh|hpp|hxx|tpp)$ ]] && cpp_files+=("$f")
     done
     files=("${cpp_files[@]}")
 fi
@@ -61,4 +108,4 @@ if [[ ${#files[@]} -eq 0 ]]; then
 fi
 
 echo "  Files: ${#files[@]}"
-clangd-tidy "${files[@]}" -p=. --fail-on-severity=hint --tqdm -j1
+clangd-tidy "${files[@]}" -p="$build_dir" --fail-on-severity=hint --tqdm -j"$jobs"

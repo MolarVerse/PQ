@@ -1,0 +1,3 @@
+- Consolidate pull-request checks into one cancellable gate and move exhaustive build variants to extended CI.
+- Keep the required gate present for every pull request and filter heavy work in its preflight job.
+- Update coverage and documentation workflows to supported action runtimes.

@@ -1,0 +1,349 @@
+name: Extended CI
+
+on:
+  push:
+    branches:
+      - dev
+    paths:
+      - '.clang-tidy'
+      - '.cmake/**'
+      - '.github/ci/**'
+      - '.github/workflows/extended_ci.yml'
+      - '.gitmodules'
+      - 'apps/**'
+      - 'benchmarks/**'
+      - 'external/**'
+      - 'include/**'
+      - 'integration_tests/**'
+      - 'scripts/**'
+      - 'src/**'
+      - 'tests/**'
+      - 'CMakeLists.txt'
+  pull_request:
+    branches:
+      - main
+    types: [opened, reopened, synchronize]
+  schedule:
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: extended-ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name != 'schedule' }}
+
+jobs:
+  full-lint:
+    name: Full C++ lint
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'schedule' && 'dev' || '' }}
+
+      - name: Install build and lint tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            clangd-20 gcc-13 g++-13 mold ninja-build
+          sudo update-alternatives \
+            --install /usr/bin/clangd clangd /usr/bin/clangd-20 100
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: python -m pip install clangd-tidy numpy
+
+      - name: Configure compile database
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DBUILD_WITH_DOCS=OFF \
+            -DBUILD_WITH_NATIVE=OFF
+        env:
+          CC: gcc-13
+          CXX: g++-13
+
+      - name: Lint all production C++ files
+        run: |
+          set -euo pipefail
+          mapfile -t files < <(
+            git ls-files apps include src |
+              grep -E '\.(c|cc|cpp|cxx|h|hh|hpp|hxx|tpp)$'
+          )
+          clangd-tidy "${files[@]}" -p=build --fail-on-severity=hint --tqdm -j1
+
+  static-lto:
+    name: Full static LTO
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'schedule' && 'dev' || '' }}
+
+      - name: Install build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-13 g++-13 mold ninja-build
+
+      - name: Set up ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: static-lto
+
+      - name: Build and test static LTO
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_SHARED_LIBS=OFF \
+            -DBUILD_WITH_ASE=OFF \
+            -DBUILD_WITH_DOCS=OFF \
+            -DBUILD_WITH_LTO=ON \
+            -DBUILD_WITH_NATIVE=OFF
+          cmake --build build --parallel "$(nproc)"
+          ctest --test-dir build --output-on-failure
+        env:
+          CC: gcc-13
+          CXX: g++-13
+
+  arm-debug:
+    name: ARM Debug
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'schedule' && 'dev' || '' }}
+
+      - name: Install build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-13 g++-13 mold ninja-build
+
+      - name: Set up ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: extended-arm-debug
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install build dependencies
+        run: python -m pip install numpy
+
+      - name: Build and run unit tests
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DBUILD_WITH_DOCS=OFF \
+            -DBUILD_WITH_NATIVE=OFF
+          cmake --build build --parallel "$(nproc)"
+          ctest --test-dir build --output-on-failure
+        env:
+          CC: gcc-13
+          CXX: g++-13
+
+      - name: Set up Conda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-update-conda: false
+          python-version: '3.12'
+          activate-environment: test-env
+          channels: default, conda-forge
+          auto-activate-base: false
+
+      - name: Restore integration environment
+        id: conda-cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.CONDA }}/envs/test-env
+          key: >-
+            conda-integration-${{ runner.arch }}-${{
+            hashFiles('.github/ci/integration-conda.txt',
+            '.github/ci/integration-requirements.txt') }}
+
+      - name: Install integration dependencies
+        if: steps.conda-cache.outputs.cache-hit != 'true'
+        run: |
+          conda install -n test-env -y --file .github/ci/integration-conda.txt
+          conda run -n test-env \
+            python -m pip install -r .github/ci/integration-requirements.txt
+
+      - name: Run ARM integration tests
+        run: conda run -n test-env pytest integration_tests -v
+
+  mpi:
+    name: MPI build and tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'schedule' && 'dev' || '' }}
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            gcc-13 \
+            g++-13 \
+            libopenmpi-dev \
+            mold \
+            ninja-build \
+            openmpi-bin \
+            python-is-python3
+
+      - name: Set up ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: extended-mpi-release
+
+      - name: Build and run tests
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_WITH_ASE=OFF \
+            -DBUILD_WITH_DOCS=OFF \
+            -DBUILD_WITH_MPI=ON \
+            -DBUILD_WITH_NATIVE=OFF \
+            -DBUILD_WITH_TESTS=ON
+          cmake --build build --parallel "$(nproc)"
+          ctest --test-dir build --output-on-failure
+        env:
+          CC: gcc-13
+          CXX: g++-13
+
+  benchmarks:
+    name: Benchmark build and smoke
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'schedule' && 'dev' || '' }}
+
+      - name: Install build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-13 g++-13 ninja-build
+
+      - name: Set up ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: extended-benchmarks
+
+      - name: Build and run benchmark smoke tests
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_WITH_ASE=OFF \
+            -DBUILD_WITH_BENCHMARKING=ON \
+            -DBUILD_WITH_DOCS=OFF \
+            -DBUILD_WITH_NATIVE=OFF \
+            -DBUILD_WITH_TESTS=OFF
+          cmake --build build --target google_benchmarks --parallel "$(nproc)"
+          ctest --test-dir build -L benchmark --output-on-failure
+        env:
+          CC: gcc-13
+          CXX: g++-13
+
+  static-singularity:
+    name: Static Singularity build
+    if: >-
+      github.event_name == 'schedule' ||
+      github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'schedule' && 'dev' || '' }}
+
+      - name: Install build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-13 g++-13 mold ninja-build
+
+      - name: Set up ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: static-singularity
+
+      - name: Build and run tests
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_SHARED_LIBS=OFF \
+            -DBUILD_WITH_ASE=OFF \
+            -DBUILD_WITH_DOCS=OFF \
+            -DBUILD_WITH_NATIVE=OFF \
+            -DBUILD_WITH_SINGULARITY=ON \
+            -DBUILD_WITH_TESTS=ON
+          cmake --build build --parallel "$(nproc)"
+          ctest --test-dir build --output-on-failure
+        env:
+          CC: gcc-13
+          CXX: g++-13
+
+  result:
+    name: Extended result
+    if: always()
+    needs:
+      - full-lint
+      - static-lto
+      - arm-debug
+      - mpi
+      - benchmarks
+      - static-singularity
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+
+    steps:
+      - name: Verify extended job results
+        env:
+          ARM_DEBUG: ${{ needs.arm-debug.result }}
+          BENCHMARKS: ${{ needs.benchmarks.result }}
+          FULL_LINT: ${{ needs.full-lint.result }}
+          MPI: ${{ needs.mpi.result }}
+          STATIC_LTO: ${{ needs.static-lto.result }}
+          STATIC_SINGULARITY: ${{ needs.static-singularity.result }}
+        run: |
+          set -euo pipefail
+
+          failed=false
+          results=(
+            "full-lint=$FULL_LINT"
+            "static-lto=$STATIC_LTO"
+            "arm-debug=$ARM_DEBUG"
+            "mpi=$MPI"
+            "benchmarks=$BENCHMARKS"
+            "static-singularity=$STATIC_SINGULARITY"
+          )
+
+          for entry in "${results[@]}"; do
+            name="${entry%%=*}"
+            result="${entry#*=}"
+            echo "$name: $result"
+            if [[ "$result" != "success" && "$result" != "skipped" ]]; then
+              failed=true
+            fi
+          done
+
+          if [[ "$failed" == "true" ]]; then
+            exit 1
+          fi

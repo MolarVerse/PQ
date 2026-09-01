@@ -1,0 +1,3 @@
+pip
+conda-forge::dftbplus
+conda-forge::xtb
