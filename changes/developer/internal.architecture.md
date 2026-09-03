@@ -1,1 +1,2 @@
 - preparation of main app for architectural rework
+- move `commandLineArgs.{hpp,cpp}` completely into `apps/` as nothing else depends on it
