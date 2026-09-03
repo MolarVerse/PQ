@@ -22,10 +22,9 @@
 
 #include "angleSection.hpp"
 
-#include <cstddef>   // for size_t
-#include <format>    // for format
-#include <string>    // for stoul, string, operator==, char_traits
-#include <vector>    // for vector
+#include <format>   // for format
+#include <string>   // for stoul, string, operator==, char_traits
+#include <vector>   // for vector
 
 #include "angleForceField.hpp"   // for AngleForceField
 #include "engine.hpp"            // for Engine
