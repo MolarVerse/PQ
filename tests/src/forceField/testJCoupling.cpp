@@ -82,17 +82,13 @@ TEST(TestJCouplingForceField, settersAndGetters)
     molsys::Molecule                molecule;
     forceField::JCouplingForceField ff(
         std::vector<molsys::Molecule *>{
-
             &molecule,
-
             &molecule,
-
             &molecule,
-
             &molecule
 
         },
-        std::vector<size_t>{0, 1, 2, 3},
+        {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}, AtomIndex{3}},
         42
     );
 
@@ -123,7 +119,7 @@ TEST(TestJCouplingForceField, symmetryFlagsDefaultTrue)
             &molecule,
             &molecule
         },
-        std::vector<size_t>{0, 1, 2, 3},
+        {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}, AtomIndex{3}},
         0
     );
 

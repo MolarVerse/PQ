@@ -55,7 +55,7 @@ void RingPolymerRestartFileOutput::write(std::vector<SimulationBox> &beads)
         for (const auto &molecule : beads[i].getMolecules())
         {
             const size_t nAtoms = molecule.getNumberOfAtoms();
-            for (size_t j = 0; j < nAtoms; ++j)
+            for (AtomIndex j{0}; j.get() < nAtoms; ++j)
             {
                 const auto atomName = molecule.getAtomName(j);
                 const auto molType  = molecule.getMoltype();
@@ -70,7 +70,7 @@ void RingPolymerRestartFileOutput::write(std::vector<SimulationBox> &beads)
                 const auto fz       = molecule.getAtomForce(j)[2];
 
                 buffer << std::format("{:>5}{}\t", atomName, i + 1);
-                buffer << std::format("{:>5}\t", j + 1);
+                buffer << std::format("{:>5}\t", j.get() + 1);
                 buffer << std::format("{:>5}\t", molType);
 
                 // clang-format off

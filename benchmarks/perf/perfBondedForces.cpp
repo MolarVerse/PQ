@@ -60,14 +60,19 @@ int main()
     settings::PotentialSettings::setScale14Coulomb(0.75);
     settings::PotentialSettings::setScale14VanDerWaals(0.5);
 
-    auto bond =
-        forceField::BondForceField(&molecule, &molecule, 0, 1, BondId{0});
+    auto bond = forceField::BondForceField(
+        &molecule,
+        &molecule,
+        AtomIndex{0},
+        AtomIndex{1},
+        BondId{0}
+    );
     bond.setEquilibriumBondLength(1.2);
     bond.setForceConstant(3.0);
 
     auto angle = forceField::AngleForceField(
         {&molecule, &molecule, &molecule},
-        {0, 1, 2},
+        {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}},
         AngleId{0}
     );
     angle.setEquilibriumAngle(M_PI / 2.0);
@@ -75,7 +80,7 @@ int main()
 
     auto dihedral = forceField::DihedralForceField(
         {&molecule, &molecule, &molecule, &molecule},
-        {0, 1, 2, 3},
+        {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}, AtomIndex{3}},
         DihedralId{0}
     );
     dihedral.setPhaseShift(M_PI);
@@ -112,7 +117,8 @@ int main()
     std::cout << std::format(
         "{:.6f}\n",
         physicalData.getBondEnergy() + physicalData.getAngleEnergy() +
-            physicalData.getDihedralEnergy() + molecule.getAtomForce(0)[0]
+            physicalData.getDihedralEnergy() +
+            molecule.getAtomForce(AtomIndex{0})[0]
     );
     return 0;
 }

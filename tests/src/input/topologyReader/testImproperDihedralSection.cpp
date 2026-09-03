@@ -49,10 +49,10 @@ TEST_F(TestTopologySection, processSectionImproperDihedral)
     EXPECT_EQ(improperDihedrals[0].getMolecules()[1], &(molecules[1]));
     EXPECT_EQ(improperDihedrals[0].getMolecules()[2], &(molecules[1]));
     EXPECT_EQ(improperDihedrals[0].getMolecules()[3], &(molecules[1]));
-    EXPECT_EQ(improperDihedrals[0].getAtomIndices()[0], 0);
-    EXPECT_EQ(improperDihedrals[0].getAtomIndices()[1], 0);
-    EXPECT_EQ(improperDihedrals[0].getAtomIndices()[2], 1);
-    EXPECT_EQ(improperDihedrals[0].getAtomIndices()[3], 2);
+    EXPECT_EQ(improperDihedrals[0].getAtomIndices()[0], AtomIndex{0});
+    EXPECT_EQ(improperDihedrals[0].getAtomIndices()[1], AtomIndex{0});
+    EXPECT_EQ(improperDihedrals[0].getAtomIndices()[2], AtomIndex{1});
+    EXPECT_EQ(improperDihedrals[0].getAtomIndices()[3], AtomIndex{2});
     EXPECT_EQ(improperDihedrals[0].getType(), DihedralId{7});
 
     lineElements = {"1", "1", "2", "3", "4"};

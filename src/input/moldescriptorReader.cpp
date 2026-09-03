@@ -272,15 +272,18 @@ void MoldescriptorReader::convertExternalToInternalAtomTypes(
 {
     const size_t numberOfAtoms = molecule.getNumberOfAtoms();
 
-    for (size_t i = 0; i < numberOfAtoms; ++i)
+    for (AtomIndex i{0}; i.get() < numberOfAtoms; ++i)
     {
-        const size_t externalAtomType = molecule.getExternalAtomType(i);
-        molecule.addExternalToInternalAtomTypeElement(externalAtomType, i);
+        const auto externalAtomType = molecule.getExternalAtomType(i);
+        molecule.addExternalToInternalAtomTypeElement(
+            externalAtomType,
+            i.get()
+        );
     }
 
-    for (size_t i = 0; i < numberOfAtoms; ++i)
+    for (AtomIndex i{0}; i.get() < numberOfAtoms; ++i)
     {
-        const size_t externalAtomType = molecule.getExternalAtomType(i);
+        const auto externalAtomType = molecule.getExternalAtomType(i);
         molecule.addAtomType(molecule.getInternalAtomType(externalAtomType));
     }
 }

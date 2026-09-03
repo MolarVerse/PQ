@@ -243,21 +243,26 @@ TEST_F(TestForceField, calculateBondedInteractions)
     molecule.addAtom(atom3);
     molecule.addAtom(atom4);
 
-    auto bondForceField =
-        forceField::BondForceField(&molecule, &molecule, 0, 1, BondId{0});
+    auto bondForceField = forceField::BondForceField(
+        &molecule,
+        &molecule,
+        AtomIndex{0},
+        AtomIndex{1},
+        BondId{0}
+    );
     auto angleForceField = forceField::AngleForceField(
         {&molecule, &molecule, &molecule},
-        {0, 1, 2},
+        {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}},
         AngleId{0}
     );
     auto dihedralForceField = forceField::DihedralForceField(
         {&molecule, &molecule, &molecule, &molecule},
-        {0, 1, 2, 3},
+        {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}, AtomIndex{3}},
         DihedralId{0}
     );
     auto improperDihedralForceField = forceField::DihedralForceField(
         {&molecule, &molecule, &molecule, &molecule},
-        {0, 1, 2, 3},
+        {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}, AtomIndex{3}},
         DihedralId{0}
     );
 
@@ -348,8 +353,8 @@ TEST_F(TestForceField, correctLinker)
         physicalData,
         &molecule,
         &molecule,
-        0,
-        1,
+        AtomIndex{0},
+        AtomIndex{1},
         1.0
     );
 
@@ -369,8 +374,8 @@ TEST_F(TestForceField, correctLinker)
             physicalData,
             &molecule,
             &molecule,
-            0,
-            1,
+            AtomIndex{0},
+            AtomIndex{1},
             1.0
         );
 

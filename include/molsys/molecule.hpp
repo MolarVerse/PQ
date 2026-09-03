@@ -129,19 +129,16 @@ namespace molsys
 
         void addAtom(const std::shared_ptr<Atom> atom);
         void addAtomPosition(
-            const size_t                index,
+            AtomIndex                   index,
             const linearAlgebra::Vec3D &position
         );
         void addAtomVelocity(
-            const size_t                index,
+            AtomIndex                   index,
             const linearAlgebra::Vec3D &velocity
         );
-        void addAtomForce(
-            const size_t                index,
-            const linearAlgebra::Vec3D &force
-        );
+        void addAtomForce(AtomIndex index, const linearAlgebra::Vec3D &force);
         void addAtomShiftForce(
-            const size_t                index,
+            AtomIndex                   index,
             const linearAlgebra::Vec3D &shiftForce
         );
 
@@ -170,28 +167,29 @@ namespace molsys
          * standard getters for atom properties *
          *****************************************/
 
-        [[nodiscard]] linearAlgebra::Vec3D getAtomPosition(
-            const size_t index
-        ) const;
-        [[nodiscard]] std::vector<linearAlgebra::Vec3D> getAtomPositions(
-        ) const;
-        [[nodiscard]] linearAlgebra::Vec3D getAtomVelocity(
-            const size_t index
-        ) const;
-        [[nodiscard]] linearAlgebra::Vec3D getAtomForce(
-            const size_t index
-        ) const;
+        [[nodiscard]]
+        linearAlgebra::Vec3D getAtomPosition(AtomIndex index) const;
+
+        [[nodiscard]]
+        std::vector<linearAlgebra::Vec3D> getAtomPositions() const;
+
+        [[nodiscard]]
+        linearAlgebra::Vec3D getAtomVelocity(AtomIndex index) const;
+
+        [[nodiscard]]
+        linearAlgebra::Vec3D getAtomForce(AtomIndex) const;
+
         [[nodiscard]] linearAlgebra::Vec3D getAtomShiftForce(
             const size_t index
         ) const;
 
         [[nodiscard]] AtomNumber  getAtomicNumber(const size_t index) const;
-        [[nodiscard]] double      getAtomMass(const size_t index) const;
-        [[nodiscard]] double      getPartialCharge(const size_t index) const;
-        [[nodiscard]] size_t      getAtomType(const size_t index) const;
-        [[nodiscard]] std::string getAtomName(const size_t index) const;
+        [[nodiscard]] double      getAtomMass(AtomIndex index) const;
+        [[nodiscard]] double      getPartialCharge(AtomIndex index) const;
+        [[nodiscard]] size_t      getAtomType(AtomIndex index) const;
+        [[nodiscard]] std::string getAtomName(AtomIndex index) const;
         [[nodiscard]]
-        VdwType getInternalGlobalVDWType(const size_t index) const;
+        VdwType getInternalGlobalVDWType(AtomIndex index) const;
 
         /***************************
          * standard getter methods *
@@ -211,7 +209,7 @@ namespace molsys
         [[nodiscard]] bool   isActive() const { return _isActive; }
         [[nodiscard]] double getSmoothingFactor() const;
 
-        [[nodiscard]] Atom &getAtom(const size_t index);
+        [[nodiscard]] Atom &getAtom(AtomIndex index);
         [[nodiscard]] std::vector<std::shared_ptr<Atom>>       &getAtoms();
         [[nodiscard]] const std::vector<std::shared_ptr<Atom>> &getAtoms(
         ) const;

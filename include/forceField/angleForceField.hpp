@@ -24,8 +24,7 @@
 
 #define _ANGLE_FORCE_FIELD_HPP_
 
-#include <cstddef>   // for size_t
-#include <vector>    // for vector
+#include <vector>   // for vector
 
 #include "angle.hpp"
 
@@ -66,7 +65,7 @@ namespace forceField
        public:
         AngleForceField(
             const std::vector<molsys::Molecule *> &molecules,
-            const std::vector<size_t>             &atomIndices,
+            const std::vector<AtomIndex>          &atomIndices,
             const AngleId                          type
         );
 

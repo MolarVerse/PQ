@@ -27,7 +27,7 @@ using namespace molsys;
 
 ConnectivityElement::ConnectivityElement(
     const std::vector<Molecule *> &molecules,
-    const std::vector<size_t>     &atomIndices
+    const std::vector<AtomIndex>  &atomIndices
 )
     : _molecules(molecules), _atomIndices(atomIndices)
 {
@@ -44,7 +44,7 @@ std::vector<Molecule *> ConnectivityElement::getMolecules() const
     return _molecules;
 }
 
-std::vector<size_t> ConnectivityElement::getAtomIndices() const
+std::vector<AtomIndex> ConnectivityElement::getAtomIndices() const
 {
     return _atomIndices;
 }
