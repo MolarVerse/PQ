@@ -60,6 +60,14 @@ namespace settings
         FULL_ANISOTROPIC
     };
 
+    enum class FixedAxis
+    {
+        NONE,
+        X,
+        Y,
+        Z
+    };
+
     [[nodiscard]] std::string string(const ManostatType &manostatType);
     [[nodiscard]] std::string string(const Isotropy &isotropy);
 
@@ -74,6 +82,7 @@ namespace settings
        private:
         static inline ManostatType _manostatType = ManostatType::NONE;
         static inline Isotropy     _isotropy     = Isotropy::ISOTROPIC;
+        static inline FixedAxis    _fixedAxis    = FixedAxis::NONE;
 
         static inline double _targetPressure;
 
@@ -99,6 +108,9 @@ namespace settings
         static void setIsotropy(const std::string_view &isotropy);
         static void setIsotropy(const Isotropy &isotropy);
 
+        static void setFixedAxis(const std::string_view &fixedAxis);
+        static void setFixedAxis(const FixedAxis &fixedAxis);
+
         static void setTargetPressure(const double targetPressure);
         static void setTauManostat(const double tauManostat);
         static void setCompressibility(const double compressibility);
@@ -113,6 +125,7 @@ namespace settings
 
         [[nodiscard]] static ManostatType        getManostatType();
         [[nodiscard]] static Isotropy            getIsotropy();
+        [[nodiscard]] static FixedAxis           getFixedAxis();
         [[nodiscard]] static double              getTargetPressure();
         [[nodiscard]] static double              getTauManostat();
         [[nodiscard]] static double              getCompressibility();

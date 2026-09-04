@@ -64,6 +64,7 @@ pressure                    false
 p_relaxation                false
 compressibility             false
 isotropy                    false
+fixed_axis                  false
 
 thermostat                  false
 temp                        false
