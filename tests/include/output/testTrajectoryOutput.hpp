@@ -44,7 +44,7 @@ class TestTrajectoryOutput : public ::testing::Test
    protected:
     void SetUp() override
     {
-        _trajectoryOutput = new output::TrajectoryOutput("default.xyz");
+        _trajectoryOutput = new out::TrajectoryOutput("default.xyz");
         _simulationBox    = new molsys::SimulationBox();
 
         _simulationBox->setBoxDimensions({10.0, 10.0, 10.0});
@@ -99,8 +99,8 @@ class TestTrajectoryOutput : public ::testing::Test
         EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.xyz";
     }
 
-    output::TrajectoryOutput *_trajectoryOutput;
-    molsys::SimulationBox    *_simulationBox;
+    out::TrajectoryOutput *_trajectoryOutput;
+    molsys::SimulationBox *_simulationBox;
 };
 
 #endif   // _TEST_TRAJECTORY_FILE_OUTPUT_HPP_

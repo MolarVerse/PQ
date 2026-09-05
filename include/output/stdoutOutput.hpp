@@ -26,7 +26,7 @@
 
 #include "output.hpp"
 
-namespace output
+namespace out
 {
     /**
      * @class StdoutOutput inherits from Output
@@ -53,6 +53,6 @@ namespace output
         void writeRead(const std::string &, const std::string &) const;
     };
 
-}   // namespace output
+}   // namespace out
 
 #endif   // _STDOUT_OUTPUT_HPP_

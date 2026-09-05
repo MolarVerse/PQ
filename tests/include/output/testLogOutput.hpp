@@ -37,7 +37,7 @@
 class TestLogOutput : public ::testing::Test
 {
    protected:
-    void SetUp() override { _logOutput = new output::LogOutput("default.log"); }
+    void SetUp() override { _logOutput = new out::LogOutput("default.log"); }
 
     void TearDown() override
     {
@@ -46,7 +46,7 @@ class TestLogOutput : public ::testing::Test
         EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
     }
 
-    output::LogOutput *_logOutput;
+    out::LogOutput *_logOutput;
 };
 
 #endif   // _TEST_LOGOUTPUT_HPP_

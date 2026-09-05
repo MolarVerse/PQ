@@ -32,7 +32,7 @@
 #include "molecule.hpp"        // for Molecule
 #include "simulationBox.hpp"   // for SimulationBox
 
-using namespace output;
+using namespace out;
 using namespace defaults;
 using namespace configurator;
 using namespace molsys;

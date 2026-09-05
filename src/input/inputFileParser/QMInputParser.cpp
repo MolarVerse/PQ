@@ -52,8 +52,8 @@ using namespace constants;
  * @param engine
  */
 QMInputParser::QMInputParser(
-    output::LogOutput    &logOutput,
-    output::StdoutOutput &stdoutOutput
+    out::LogOutput    &logOutput,
+    out::StdoutOutput &stdoutOutput
 )
     : QMInputParser(logOutput, stdoutOutput, true)
 {
@@ -72,9 +72,9 @@ QMInputParser::QMInputParser(
  * @param resolveBuiltInSlakosPath
  */
 QMInputParser::QMInputParser(
-    output::LogOutput    &logOutput,
-    output::StdoutOutput &stdoutOutput,
-    const bool            resolveBuiltInSlakosPath
+    out::LogOutput    &logOutput,
+    out::StdoutOutput &stdoutOutput,
+    const bool         resolveBuiltInSlakosPath
 )
     : _logOutput(&logOutput),
       _stdoutOutput(&stdoutOutput),

@@ -31,7 +31,7 @@
 #include "orthorhombicBox.hpp"
 #include "vector3d.hpp"   // IWYU pragma: keep
 
-using namespace output;
+using namespace out;
 using molsys::OrthorhombicBox;
 
 namespace

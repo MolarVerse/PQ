@@ -492,7 +492,7 @@ std::shared_ptr<physicalData::PhysicalData> HessianEngine::
     return _physicalDataOld;
 }
 
-output::OptOutput &HessianEngine::getOptOutput()
+out::OptOutput &HessianEngine::getOptOutput()
 {
     return _engineOutput.getOptOutput();
 }

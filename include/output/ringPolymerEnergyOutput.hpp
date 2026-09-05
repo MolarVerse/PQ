@@ -34,7 +34,7 @@ namespace physicalData
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
 
-namespace output
+namespace out
 {
     /**
      * @class RingPolymerEnergyOutput inherits from Output
@@ -60,6 +60,6 @@ namespace output
         );
     };
 
-}   // namespace output
+}   // namespace out
 
 #endif   // _RING_POLYMER_ENERGY_OUTPUT_HPP_

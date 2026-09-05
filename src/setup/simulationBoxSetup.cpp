@@ -54,7 +54,7 @@ using namespace utilities;
 using namespace constants;
 using namespace exc;
 using namespace maxwellBoltzmann;
-using namespace output;
+using namespace out;
 
 /**
  * @brief wrapper to create SetupSimulationBox object and call setup
