@@ -51,7 +51,7 @@
 #include "waterModelSettings.hpp"
 
 using namespace molsys;
-using namespace potential;
+using namespace pot;
 using namespace waterModel;
 using linearAlgebra::Vec3D;
 

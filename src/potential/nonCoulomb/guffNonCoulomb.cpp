@@ -22,7 +22,7 @@
 
 #include "guffNonCoulomb.hpp"
 
-using namespace potential;
+using namespace pot;
 
 /**
  * @brief resizes the outermost vector of the 4d vector _guffNonCoulombPairs

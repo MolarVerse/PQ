@@ -39,10 +39,10 @@
 #include "simulationBox.hpp"             // for SimulationBox
 #include "strongTypes.hpp"
 
-namespace potential
+namespace pot
 {
     class NonCoulombPair;   // forward declaration
-}   // namespace potential
+}   // namespace pot
 
 class TestBondForceField : public TestNonCoulombPotentialFF
 {
@@ -54,16 +54,16 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
     box.setBoxDimensions({10.0, 10.0, 10.0});
 
     auto physicalData     = physicalData::PhysicalData();
-    auto coulombPotential = potential::CoulombShiftedPotential(10.0);
+    auto coulombPotential = pot::CoulombShiftedPotential(10.0);
 
-    auto nonCoulombPair = potential::LennardJonesPair(
+    auto nonCoulombPair = pot::LennardJonesPair(
         ExtVdwType(0),
         ExtVdwType(1),
         5.0,
         LJParams{.c6 = 2.0, .c12 = 4.0}
     );
     setNonCoulombPairsMatrix(
-        linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(2, 2)
+        linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
     );
     setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
 

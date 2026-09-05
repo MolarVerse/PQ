@@ -52,14 +52,14 @@ namespace forceField
      */
     template <typename T>
     double correctLinker(
-        const potential::CoulombPotential &coulPot,
-        potential::NonCoulombPotential    &nonCoulPot,
-        physicalData::PhysicalData        &physicalData,
-        const molsys::Molecule            *molecule1,
-        const molsys::Molecule            *molecule2,
-        const size_t                       atomIndex1,
-        const size_t                       atomIndex2,
-        const double                       distance
+        const pot::CoulombPotential &coulPot,
+        pot::NonCoulombPotential    &nonCoulPot,
+        physicalData::PhysicalData  &physicalData,
+        const molsys::Molecule      *molecule1,
+        const molsys::Molecule      *molecule2,
+        const size_t                 atomIndex1,
+        const size_t                 atomIndex2,
+        const double                 distance
     )
     {
         const auto q1 = molecule1->getPartialCharge(atomIndex1);

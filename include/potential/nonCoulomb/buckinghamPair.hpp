@@ -31,7 +31,7 @@
 
 struct TestBuckinghamPairUtils;   // forward declaration
 
-namespace potential
+namespace pot
 {
     /**
      * @class BuckinghamPair
@@ -82,6 +82,6 @@ namespace potential
         friend struct ::TestBuckinghamPairUtils;
     };
 
-}   // namespace potential
+}   // namespace pot
 
 #endif   // _BUCKINGHAM_PAIR_HPP_

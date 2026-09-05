@@ -67,16 +67,13 @@ namespace
 
     void BM_LennardJones(benchmark::State& state)
     {
-        potential::LennardJonesPair potential(
-            9.0,
-            LJParams{.c6 = 2.0, .c12 = 3.0}
-        );
+        pot::LennardJonesPair potential(9.0, LJParams{.c6 = 2.0, .c12 = 3.0});
         runNonCoulombBenchmark(state, potential);
     }
 
     void BM_Buckingham(benchmark::State& state)
     {
-        potential::BuckinghamPair potential(
+        pot::BuckinghamPair potential(
             9.0,
             BuckinghamParams{.scaling = 1.0, .dRho = 0.3, .c6 = 2.0}
         );
@@ -85,7 +82,7 @@ namespace
 
     void BM_Morse(benchmark::State& state)
     {
-        potential::MorsePair potential(
+        pot::MorsePair potential(
             9.0,
             MorseParams{
                 .dissociationEnergy  = 1.0,
@@ -98,19 +95,19 @@ namespace
 
     void BM_CoulombShifted(benchmark::State& state)
     {
-        potential::CoulombShiftedPotential potential(9.0);
+        pot::CoulombShiftedPotential potential(9.0);
         runCoulombBenchmark(state, potential);
     }
 
     void BM_CoulombWolf(benchmark::State& state)
     {
-        potential::CoulombWolf potential(9.0, 0.25);
+        pot::CoulombWolf potential(9.0, 0.25);
         runCoulombBenchmark(state, potential);
     }
 
     void BM_CoulombReactionField(benchmark::State& state)
     {
-        potential::CoulombReactionField potential(9.0, 78.5);
+        pot::CoulombReactionField potential(9.0, 78.5);
         runCoulombBenchmark(state, potential);
     }
 

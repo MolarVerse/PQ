@@ -60,17 +60,17 @@ namespace test
         const std::unique_ptr<engine::Engine>& engine,
         const std::type_info&                  expectedType
     );
-    template void checkType<std::shared_ptr<potential::Potential>>(
-        const std::shared_ptr<potential::Potential>& potential,
-        const std::type_info&                        expectedType
-    );
-    template void checkType<potential::CoulombPotential*>(
-        potential::CoulombPotential* const& potential,
-        const std::type_info&               expectedType
-    );
-    template void checkType<potential::NonCoulombPotential*>(
-        potential::NonCoulombPotential* const& potential,
+    template void checkType<std::shared_ptr<pot::Potential>>(
+        const std::shared_ptr<pot::Potential>& potential,
         const std::type_info&                  expectedType
+    );
+    template void checkType<pot::CoulombPotential*>(
+        pot::CoulombPotential* const& potential,
+        const std::type_info&         expectedType
+    );
+    template void checkType<pot::NonCoulombPotential*>(
+        pot::NonCoulombPotential* const& potential,
+        const std::type_info&            expectedType
     );
 
     // QM runners

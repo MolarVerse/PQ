@@ -48,12 +48,12 @@ using molsys::Molecule;
 using molsys::MoleculeType;
 using molsys::SimulationBox;
 using physicalData::PhysicalData;
-using potential::CoulombPotential;
-using potential::CoulombShiftedPotential;
-using potential::GuffNonCoulomb;
-using potential::LennardJonesPair;
-using potential::PotentialBruteForce;
-using potential::PotentialCellList;
+using pot::CoulombPotential;
+using pot::CoulombShiftedPotential;
+using pot::GuffNonCoulomb;
+using pot::LennardJonesPair;
+using pot::PotentialBruteForce;
+using pot::PotentialCellList;
 using settings::PotentialSettings;
 
 namespace

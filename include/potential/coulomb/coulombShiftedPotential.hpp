@@ -28,7 +28,7 @@
 
 #include "coulombPotential.hpp"
 
-namespace potential
+namespace pot
 {
     /**
      * @class CoulombShiftedPotential
@@ -38,7 +38,7 @@ namespace potential
      * CoulombShiftedPotential is a class for the shifted Coulomb potential
      *
      */
-    class CoulombShiftedPotential : public potential::CoulombPotential
+    class CoulombShiftedPotential : public CoulombPotential
     {
        public:
         using CoulombPotential::CoulombPotential;
@@ -50,6 +50,6 @@ namespace potential
         ) const override;
     };
 
-}   // namespace potential
+}   // namespace pot
 
 #endif   // _COULOMB_SHIFTED_POTENTIAL_HPP_

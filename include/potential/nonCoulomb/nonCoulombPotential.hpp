@@ -31,7 +31,7 @@
 #include "nonCoulombPair.hpp"
 #include "strongTypes.hpp"
 
-namespace potential
+namespace pot
 {
     /**
      * @enum MixingRule
@@ -72,6 +72,6 @@ namespace potential
         void setMixingRule(const MixingRule mixingRule);
     };
 
-}   // namespace potential
+}   // namespace pot
 
 #endif   // _NON_COULOMB_POTENTIAL_HPP_

@@ -43,7 +43,7 @@
 
 using namespace setup;
 using namespace settings;
-using namespace potential;
+using namespace pot;
 
 /**
  * @brief setup the reaction-field Coulomb potential

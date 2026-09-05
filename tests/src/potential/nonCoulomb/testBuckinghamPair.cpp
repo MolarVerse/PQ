@@ -28,7 +28,7 @@
 #include "buckinghamPair.hpp"   // for BuckinghamPair
 #include "gtest/gtest.h"        // for AssertionResult, Message, TestPartResult
 
-using namespace potential;
+using namespace pot;
 
 /**
  * @brief tests the equals operator of BuckinghamPair
@@ -115,7 +115,7 @@ TEST(TestBuckinghamPair, calculateEnergyAndForces)
     const double energyCutoff = 1.0;
     const double forceCutoff  = 2.0;
 
-    const auto potential = potential::BuckinghamPair(
+    const auto potential = pot::BuckinghamPair(
         rncCutoff,
         energyCutoff,
         forceCutoff,

@@ -40,11 +40,11 @@ namespace molsys
     class SimulationBox;   // forward declaration
 }   // namespace molsys
 
-namespace potential
+namespace pot
 {
     class CoulombPotential;      // forward declaration
     class NonCoulombPotential;   // forward declaration
-}   // namespace potential
+}   // namespace pot
 
 namespace forceField
 {
@@ -71,10 +71,10 @@ namespace forceField
         );
 
         void calculateEnergyAndForces(
-            const molsys::SimulationBox       &simBox,
-            physicalData::PhysicalData        &data,
-            const potential::CoulombPotential &coulombPot,
-            potential::NonCoulombPotential    &nonCoulombPot
+            const molsys::SimulationBox &simBox,
+            physicalData::PhysicalData  &data,
+            const pot::CoulombPotential &coulombPot,
+            pot::NonCoulombPotential    &nonCoulombPot
         );
 
         /***************************

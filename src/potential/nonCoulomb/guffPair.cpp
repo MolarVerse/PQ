@@ -24,7 +24,7 @@
 
 #include <cmath>   // for exp, pow
 
-using namespace potential;
+using namespace pot;
 
 /**
  * @brief Construct a new Guff Pair:: Guff Pair object

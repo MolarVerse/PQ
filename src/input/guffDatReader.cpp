@@ -54,7 +54,7 @@ using namespace utilities;
 using namespace defaults;
 using namespace exc;
 using namespace molsys;
-using namespace potential;
+using namespace pot;
 using namespace constants;
 
 /**

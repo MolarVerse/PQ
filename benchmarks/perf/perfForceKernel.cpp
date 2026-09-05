@@ -49,7 +49,7 @@ int main()
 {
     auto molecule            = benchSetup::makeMolecule({.nAtoms = 2});
     auto nonCoulombPotential = benchSetup::makeNonCoulomb();
-    auto coulombPotential    = potential::CoulombShiftedPotential(10.0);
+    auto coulombPotential    = pot::CoulombShiftedPotential(10.0);
 
     settings::PotentialSettings::setScale14Coulomb(0.75);
     settings::PotentialSettings::setScale14VanDerWaals(0.75);

@@ -28,7 +28,7 @@
 
 using namespace setup;
 using namespace engine;
-using namespace potential;
+using namespace pot;
 
 /**
  * @brief wrapper to build SetupCellList object and call setup

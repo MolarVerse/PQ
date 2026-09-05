@@ -28,7 +28,7 @@
 
 #include "strongTypes.hpp"
 
-namespace potential
+namespace pot
 {
     /**
      * @class NonCoulombPair
@@ -92,6 +92,6 @@ namespace potential
         [[nodiscard]] double getForceCutOff() const;
     };
 
-}   // namespace potential
+}   // namespace pot
 
 #endif   // _NON_COULOMB_PAIR_HPP_

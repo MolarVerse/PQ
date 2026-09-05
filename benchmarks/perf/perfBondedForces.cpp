@@ -52,7 +52,7 @@ int main()
     box.setBoxDimensions({10.0, 10.0, 10.0});
 
     auto physicalData        = physicalData::PhysicalData();
-    auto coulombPotential    = potential::CoulombShiftedPotential(20.0);
+    auto coulombPotential    = pot::CoulombShiftedPotential(20.0);
     auto nonCoulombPotential = benchSetup::makeNonCoulomb();
 
     auto molecule = benchSetup::makeMolecule({.nAtoms = 4});

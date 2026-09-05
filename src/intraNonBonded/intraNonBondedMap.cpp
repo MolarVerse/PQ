@@ -31,7 +31,7 @@
 #include "simulationBox.hpp"         // for SimulationBox
 
 using namespace intraNonBonded;
-using namespace potential;
+using namespace pot;
 using namespace physicalData;
 using namespace molsys;
 using namespace linearAlgebra;

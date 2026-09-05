@@ -41,11 +41,11 @@ namespace physicalData
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
 
-namespace potential
+namespace pot
 {
     class CoulombPotential;      // forward declaration
     class NonCoulombPotential;   // forward declaration
-}   // namespace potential
+}   // namespace pot
 
 namespace linearAlgebra
 {
@@ -76,19 +76,19 @@ namespace intraNonBonded
         );
 
         void calculate(
-            const potential::CoulombPotential *coulPot,
-            potential::NonCoulombPotential    *nonCoulPot,
-            const molsys::SimulationBox       &simBox,
-            physicalData::PhysicalData        &data
+            const pot::CoulombPotential *coulPot,
+            pot::NonCoulombPotential    *nonCoulPot,
+            const molsys::SimulationBox &simBox,
+            physicalData::PhysicalData  &data
         ) const;
 
         [[nodiscard]] std::pair<double, double> calculateSingleInteraction(
-            const size_t                       atomIdx1,
-            const int                          atomIdx2,
-            const linearAlgebra::Vec3D        &box,
-            physicalData::PhysicalData        &data,
-            const potential::CoulombPotential *coulPot,
-            potential::NonCoulombPotential    *nonCoulPot
+            const size_t                 atomIdx1,
+            const int                    atomIdx2,
+            const linearAlgebra::Vec3D  &box,
+            physicalData::PhysicalData  &data,
+            const pot::CoulombPotential *coulPot,
+            pot::NonCoulombPotential    *nonCoulPot
         ) const;
 
         /***************************

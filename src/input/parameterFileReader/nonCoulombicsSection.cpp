@@ -39,7 +39,7 @@
 using namespace input::parameterFile;
 using namespace exc;
 using namespace engine;
-using namespace potential;
+using namespace pot;
 using namespace settings;
 using namespace utilities;
 

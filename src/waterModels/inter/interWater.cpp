@@ -27,7 +27,7 @@
 #include "globalTimer.hpp"         // for GlobalTimer
 #include "potentialSettings.hpp"   // for PotentialSettings
 
-using namespace potential;
+using namespace pot;
 using namespace pq;
 using namespace settings;
 using namespace waterModel;
@@ -52,10 +52,10 @@ InterWater::InterWater()
  * @param cellList Cell list structure used for neighbor searching.
  */
 void InterWater::calculate(
-    molsys::SimulationBox                              &simBox,
-    physicalData::PhysicalData                         &physicalData,
-    const std::shared_ptr<potential::CoulombPotential> &sharedCoulombPot,
-    molsys::CellList                                   &cellList
+    molsys::SimulationBox                        &simBox,
+    physicalData::PhysicalData                   &physicalData,
+    const std::shared_ptr<pot::CoulombPotential> &sharedCoulombPot,
+    molsys::CellList                             &cellList
 )
 {
     if (_strategy == nullptr)
@@ -75,10 +75,10 @@ void InterWater::calculate(
  * @param cellList Cell list structure used for neighbor searching.
  */
 void InterWater::calculateQMMMForces(
-    molsys::SimulationBox                              &simBox,
-    physicalData::PhysicalData                         &physicalData,
-    const std::shared_ptr<potential::CoulombPotential> &sharedCoulombPot,
-    molsys::CellList                                   &cellList
+    molsys::SimulationBox                        &simBox,
+    physicalData::PhysicalData                   &physicalData,
+    const std::shared_ptr<pot::CoulombPotential> &sharedCoulombPot,
+    molsys::CellList                             &cellList
 )
 {
     if (_strategy == nullptr)
@@ -130,10 +130,10 @@ void InterWater::calculateQMMMForces(
  * @param cellList Cell list structure used for neighbor searching.
  */
 void InterWater::calculateHotspotSmoothingMMForces(
-    molsys::SimulationBox                              &simBox,
-    physicalData::PhysicalData                         &physicalData,
-    const std::shared_ptr<potential::CoulombPotential> &sharedCoulombPot,
-    molsys::CellList                                   &cellList
+    molsys::SimulationBox                        &simBox,
+    physicalData::PhysicalData                   &physicalData,
+    const std::shared_ptr<pot::CoulombPotential> &sharedCoulombPot,
+    molsys::CellList                             &cellList
 )
 {
     if (_strategy == nullptr)

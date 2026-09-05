@@ -40,8 +40,8 @@ static constexpr std::uint64_t ITERATIONS = 20000;
 
 int main()
 {
-    auto shifted = potential::CoulombShiftedPotential(9.0);
-    auto wolf    = potential::CoulombWolf(9.0, 0.25);
+    auto shifted = pot::CoulombShiftedPotential(9.0);
+    auto wolf    = pot::CoulombWolf(9.0, 0.25);
 
     CALLGRIND_ZERO_STATS;
 

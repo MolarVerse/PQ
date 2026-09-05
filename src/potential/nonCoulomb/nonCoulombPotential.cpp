@@ -22,7 +22,7 @@
 
 #include "nonCoulombPotential.hpp"
 
-using namespace potential;
+using namespace pot;
 
 /**
  * @brief get the mixing rule
