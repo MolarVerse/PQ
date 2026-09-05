@@ -31,7 +31,7 @@
 #include "physicalData.hpp"
 #include "ringPolymerEnergyOutput.hpp"
 
-using namespace output;
+using namespace out;
 using physicalData::PhysicalData;
 
 namespace

@@ -34,7 +34,7 @@ namespace molsys
     class SimulationBox;   // forward declaration
 }   // namespace molsys
 
-namespace output
+namespace out
 {
     /**
      * @class RingPolymerTrajectoryOutput inherits from Output
@@ -57,6 +57,6 @@ namespace output
         void writeForces(std::vector<molsys::SimulationBox> &, const size_t);
         void writeCharges(std::vector<molsys::SimulationBox> &, const size_t);
     };
-}   // namespace output
+}   // namespace out
 
 #endif   // _RING_POLYMER_TRAJECTORY_OUTPUT_HPP_

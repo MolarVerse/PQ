@@ -32,7 +32,7 @@
 #include "settings.hpp"             // for Settings
 #include "thermostatSettings.hpp"   // for ThermostatSettings
 
-using namespace output;
+using namespace out;
 using namespace physicalData;
 using namespace settings;
 

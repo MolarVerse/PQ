@@ -32,7 +32,7 @@
 
 class TestOutput_testSpecialSetFilename_Test;   // Friend test class
 
-namespace output
+namespace out
 {
     /**
      * @class Output
@@ -76,6 +76,6 @@ namespace output
         std::string getFilename() const;
     };
 
-}   // namespace output
+}   // namespace out
 
 #endif   // _OUTPUT_HPP_

@@ -44,9 +44,9 @@ class TestEnergyOutput : public ::testing::Test
    protected:
     void SetUp() override
     {
-        _infoOutput     = new output::InfoOutput("default.info");
-        _energyOutput   = new output::EnergyOutput("default.en");
-        _momentumOutput = new output::MomentumOutput("default.mom");
+        _infoOutput     = new out::InfoOutput("default.info");
+        _energyOutput   = new out::EnergyOutput("default.en");
+        _momentumOutput = new out::MomentumOutput("default.mom");
         _physicalData   = new physicalData::PhysicalData();
     }
 
@@ -61,9 +61,9 @@ class TestEnergyOutput : public ::testing::Test
         static_cast<void>(std::filesystem::remove("default.mom"));
     }
 
-    output::InfoOutput         *_infoOutput;
-    output::EnergyOutput       *_energyOutput;
-    output::MomentumOutput     *_momentumOutput;
+    out::InfoOutput            *_infoOutput;
+    out::EnergyOutput          *_energyOutput;
+    out::MomentumOutput        *_momentumOutput;
     physicalData::PhysicalData *_physicalData;
 };
 

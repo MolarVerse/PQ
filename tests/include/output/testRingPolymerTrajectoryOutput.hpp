@@ -49,7 +49,7 @@ class TestRingPolymerTrajectoryOutput : public ::testing::Test
         settings::RingPolymerSettings::setNumberOfBeads(2);
 
         _trajectoryOutput =
-            new output::RingPolymerTrajectoryOutput("default.rpmd.xyz");
+            new out::RingPolymerTrajectoryOutput("default.rpmd.xyz");
         _simulationBox1 = new molsys::SimulationBox();
         _simulationBox2 = new molsys::SimulationBox();
 
@@ -145,10 +145,10 @@ class TestRingPolymerTrajectoryOutput : public ::testing::Test
         EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.rpmd.xyz";
     }
 
-    output::RingPolymerTrajectoryOutput *_trajectoryOutput;
-    molsys::SimulationBox               *_simulationBox1;
-    molsys::SimulationBox               *_simulationBox2;
-    std::vector<molsys::SimulationBox>   _beads;
+    out::RingPolymerTrajectoryOutput  *_trajectoryOutput;
+    molsys::SimulationBox             *_simulationBox1;
+    molsys::SimulationBox             *_simulationBox2;
+    std::vector<molsys::SimulationBox> _beads;
 };
 
 #endif   // _TEST_RING_POLYMER_TRAJECTORY_FILE_OUTPUT_HPP_

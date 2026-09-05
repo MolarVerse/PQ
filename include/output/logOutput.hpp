@@ -29,7 +29,7 @@
 
 #include "output.hpp"
 
-namespace output
+namespace out
 {
     /**
      * @class LogOutput inherits from Output
@@ -66,6 +66,6 @@ namespace output
         std::vector<std::string> _pendingWarnings;
     };
 
-}   // namespace output
+}   // namespace out
 
 #endif   // _LOG_OUTPUT_HPP_
