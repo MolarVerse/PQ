@@ -22,7 +22,7 @@
 
 #include "coulombPotential.hpp"
 
-using namespace potential;
+using namespace pot;
 
 /**
  * @brief Construct a new Coulomb Potential:: Coulomb Potential object

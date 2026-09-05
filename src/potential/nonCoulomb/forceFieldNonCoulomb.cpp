@@ -34,7 +34,7 @@
 #include "nonCoulombPair.hpp"   // for NonCoulombPair
 #include "strongTypes.hpp"
 
-using namespace potential;
+using namespace pot;
 using namespace exc;
 using namespace linearAlgebra;
 

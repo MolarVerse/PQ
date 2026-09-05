@@ -31,7 +31,7 @@
 
 struct TestMorsePairUtils;   // forward declaration
 
-namespace potential
+namespace pot
 {
     /**
      * @class MorsePair
@@ -79,6 +79,6 @@ namespace potential
         friend struct ::TestMorsePairUtils;
     };
 
-}   // namespace potential
+}   // namespace pot
 
 #endif   // _MORSE_PAIR_HPP_

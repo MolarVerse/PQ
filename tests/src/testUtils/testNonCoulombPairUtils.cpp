@@ -29,11 +29,9 @@
  * @brief Get the MorseParams from a MorsePair.
  *
  * @param morsePair pointer to the MorsePair object
- * @return const potential::MorseParams& reference to the MorseParams
+ * @return const pot::MorseParams& reference to the MorseParams
  */
-const MorseParams& TestMorsePairUtils::params(
-    const potential::MorsePair* morsePair
-)
+const MorseParams& TestMorsePairUtils::params(const pot::MorsePair* morsePair)
 {
     return morsePair->_params;
 }
@@ -44,9 +42,7 @@ const MorseParams& TestMorsePairUtils::params(
  * @param ljPair pointer to the LennardJonesPair object
  * @return const LJParams& reference to the LJParams
  */
-const LJParams& TestLJPairUtils::params(
-    const potential::LennardJonesPair* ljPair
-)
+const LJParams& TestLJPairUtils::params(const pot::LennardJonesPair* ljPair)
 {
     return ljPair->_params;
 }
@@ -58,7 +54,7 @@ const LJParams& TestLJPairUtils::params(
  * @return const BuckinghamParams& reference to the BuckinghamParams
  */
 const BuckinghamParams& TestBuckinghamPairUtils::params(
-    const potential::BuckinghamPair* buckPair
+    const pot::BuckinghamPair* buckPair
 )
 {
     return buckPair->_params;
@@ -72,7 +68,7 @@ const BuckinghamParams& TestBuckinghamPairUtils::params(
  * to the coefficients
  */
 const std::array<double, defaults::NUM_GUFF_COEFFICIENTS>& TestGuffPairUtils::
-    coeffs(const potential::GuffPair* guffPair)
+    coeffs(const pot::GuffPair* guffPair)
 {
     return guffPair->_coefficients;
 }

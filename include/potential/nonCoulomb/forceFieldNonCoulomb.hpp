@@ -38,7 +38,7 @@ namespace benchSetup
     struct BenchNonCoulombFFPot;   // forward declaration
 }   // namespace benchSetup
 
-namespace potential
+namespace pot
 {
     class ForceFieldNonCoulomb : public NonCoulombPotential
     {
@@ -109,6 +109,6 @@ namespace potential
         );
     };
 
-}   // namespace potential
+}   // namespace pot
 
 #endif   // _FORCE_FIELD_NON_COULOMB_HPP_

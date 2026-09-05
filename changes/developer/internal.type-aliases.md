@@ -1,2 +1,3 @@
 - delete `typeAliases.hpp` file completely
 - shorten `simulationBox` namespace to `molsys`
+- short `potential` namespace to `pot`

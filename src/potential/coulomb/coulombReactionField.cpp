@@ -24,7 +24,7 @@
 
 #include "constants/internalConversionFactors.hpp"
 
-using namespace potential;
+using namespace pot;
 using namespace constants;
 
 /**

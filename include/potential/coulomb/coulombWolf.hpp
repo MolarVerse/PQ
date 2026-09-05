@@ -28,7 +28,7 @@
 
 #include "coulombPotential.hpp"
 
-namespace potential
+namespace pot
 {
     /**
      * @class CoulombWolf
@@ -77,6 +77,6 @@ namespace potential
         [[nodiscard]] double getWolfParameter3() const;
     };
 
-}   // namespace potential
+}   // namespace pot
 
 #endif   // _COULOMB_WOLF_HPP_

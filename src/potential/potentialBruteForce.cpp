@@ -31,7 +31,7 @@
 #include "waterModelSettings.hpp"   // for WaterModelSettings
 
 using namespace physicalData;
-using namespace potential;
+using namespace pot;
 using namespace settings;
 using namespace molsys;
 

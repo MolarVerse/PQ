@@ -28,7 +28,7 @@
 #include "gtest/gtest.h"   // for AssertionResult, Message, TestPartResult
 #include "lennardJonesPair.hpp"   // for LennardJonesPair
 
-using namespace potential;
+using namespace pot;
 
 /**
  * @brief tests the equals operator of LennardJonesPair
@@ -81,7 +81,7 @@ TEST(TestLennardJonesPair, calculateEnergyAndForces)
     const double energyCutoff = 1.0;
     const double forceCutoff  = 2.0;
 
-    const auto potential = potential::LennardJonesPair(
+    const auto potential = pot::LennardJonesPair(
         rncCutoff,
         energyCutoff,
         forceCutoff,

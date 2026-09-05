@@ -44,7 +44,7 @@ namespace molsys
     class SimulationBox;   // forward declaration
 }   // namespace molsys
 
-namespace potential
+namespace pot
 {
     struct QMChargeTag
     {
@@ -170,7 +170,7 @@ namespace potential
         std::shared_ptr<NonCoulombPotential> getNonCoulombPotSharedPtr() const;
     };
 
-}   // namespace potential
+}   // namespace pot
 
 #ifndef _POTENTIAL_TPP_
 #include "potential.tpp.hpp"   // IWYU pragma: keep - DO NOT MOVE THIS LINE

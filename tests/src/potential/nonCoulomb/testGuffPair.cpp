@@ -27,7 +27,7 @@
 #include "gtest/gtest.h"   // for Message, TestPartResult
 #include "guffPair.hpp"    // for GuffPair
 
-using namespace potential;
+using namespace pot;
 
 /**
  * @brief tests the calculation of the energy and force of a GuffPair
@@ -45,7 +45,7 @@ TEST(TestGuffPair, calculateEnergyAndForces)
     const double forceCutoff  = 2.0;
 
     const auto guffNonCoulomb =
-        potential::GuffPair(rncCutoff, energyCutoff, forceCutoff, coefficients);
+        pot::GuffPair(rncCutoff, energyCutoff, forceCutoff, coefficients);
 
     auto distance              = 2.0;
     const auto [energy, force] = guffNonCoulomb.calculate(distance);
@@ -135,7 +135,7 @@ TEST(TestGuffPair, calculateWithSparseCoefficients)
     coefficients[21] = 3.0;        // n22
 
     const auto pair =
-        potential::GuffPair(rncCutoff, energyCutoff, forceCutoff, coefficients);
+        pot::GuffPair(rncCutoff, energyCutoff, forceCutoff, coefficients);
 
     const auto [energy, force] = pair.calculate(distance);
 

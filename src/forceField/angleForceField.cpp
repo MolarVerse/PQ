@@ -37,7 +37,7 @@ using namespace molsys;
 using namespace connectivity;
 using namespace linearAlgebra;
 using namespace physicalData;
-using namespace potential;
+using namespace pot;
 using namespace settings;
 
 using enum HybridZone;

@@ -56,14 +56,14 @@ using molsys::HybridZone;
 using molsys::Molecule;
 using molsys::SimulationBox;
 using physicalData::PhysicalData;
-using potential::CoulombPotential;
-using potential::CoulombShiftedPotential;
-using potential::GuffNonCoulomb;
-using potential::LennardJonesPair;
-using potential::MMChargeTag;
-using potential::PotentialBruteForce;
-using potential::PotentialCellList;
-using potential::QMChargeTag;
+using pot::CoulombPotential;
+using pot::CoulombShiftedPotential;
+using pot::GuffNonCoulomb;
+using pot::LennardJonesPair;
+using pot::MMChargeTag;
+using pot::PotentialBruteForce;
+using pot::PotentialCellList;
+using pot::QMChargeTag;
 using settings::HybridSettings;
 using settings::JobType;
 using settings::PotentialSettings;
@@ -249,7 +249,7 @@ namespace
             const InterWaterState & /*state*/,
             SimulationBox & /*simBox*/,
             PhysicalData & /*data*/,
-            const std::shared_ptr<potential::CoulombPotential> & /*coulomb*/,
+            const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
             CellList & /*cellList*/
         ) final
         {
@@ -259,7 +259,7 @@ namespace
             const InterWaterState & /*state*/,
             SimulationBox & /*simBox*/,
             PhysicalData & /*data*/,
-            const std::shared_ptr<potential::CoulombPotential> & /*coulomb*/,
+            const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
             CellList & /*cellList*/
         ) final
         {
@@ -269,7 +269,7 @@ namespace
             const InterWaterState & /*state*/,
             SimulationBox & /*simBox*/,
             PhysicalData & /*data*/,
-            const std::shared_ptr<potential::CoulombPotential> & /*coulomb*/,
+            const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
             CellList & /*cellList*/
         ) final
         {
@@ -279,7 +279,7 @@ namespace
             const InterWaterState & /*state*/,
             SimulationBox & /*simBox*/,
             PhysicalData & /*data*/,
-            const std::shared_ptr<potential::CoulombPotential> & /*coulomb*/,
+            const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
             CellList & /*cellList*/
         ) final
         {
@@ -289,7 +289,7 @@ namespace
             const InterWaterState & /*state*/,
             SimulationBox & /*simBox*/,
             PhysicalData & /*data*/,
-            const std::shared_ptr<potential::CoulombPotential> & /*coulomb*/,
+            const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
             CellList & /*cellList*/
         ) final
         {

@@ -71,7 +71,7 @@ namespace
 
 TEST(TestPairPotentialDerivatives, LennardJonesForceIsNegativeEnergyDerivative)
 {
-    const auto potential = potential::LennardJonesPair(
+    const auto potential = pot::LennardJonesPair(
         4.0,
         0.15,
         -0.2,
@@ -87,7 +87,7 @@ TEST(TestPairPotentialDerivatives, LennardJonesForceIsNegativeEnergyDerivative)
 
 TEST(TestPairPotentialDerivatives, BuckinghamForceIsNegativeEnergyDerivative)
 {
-    const auto potential = potential::BuckinghamPair(
+    const auto potential = pot::BuckinghamPair(
         4.0,
         0.25,
         -0.1,
@@ -103,7 +103,7 @@ TEST(TestPairPotentialDerivatives, BuckinghamForceIsNegativeEnergyDerivative)
 
 TEST(TestPairPotentialDerivatives, MorseForceIsNegativeEnergyDerivative)
 {
-    const auto potential = potential::MorsePair(
+    const auto potential = pot::MorsePair(
         4.0,
         0.3,
         -0.2,
@@ -124,7 +124,7 @@ TEST(TestPairPotentialDerivatives, MorseForceIsNegativeEnergyDerivative)
 TEST(TestPairPotentialDerivatives, GuffForceIsNegativeEnergyDerivative)
 {
     const auto potential =
-        potential::GuffPair(4.0, 0.4, -0.2, buildGuffCoefficients());
+        pot::GuffPair(4.0, 0.4, -0.2, buildGuffCoefficients());
 
     expectForceIsNegativeEnergyDerivative(
         [&potential](const double r) { return potential.calculate(r); },
@@ -138,7 +138,7 @@ TEST(
     ShiftedCoulombForceIsNegativeEnergyDerivative
 )
 {
-    const auto potential     = potential::CoulombShiftedPotential(4.0);
+    const auto potential     = pot::CoulombShiftedPotential(4.0);
     const auto chargeProduct = 0.75;
 
     expectForceIsNegativeEnergyDerivative(
@@ -151,7 +151,7 @@ TEST(
 
 TEST(TestPairPotentialDerivatives, WolfCoulombForceIsNegativeEnergyDerivative)
 {
-    const auto potential     = potential::CoulombWolf(4.0, 0.25);
+    const auto potential     = pot::CoulombWolf(4.0, 0.25);
     const auto chargeProduct = -0.75;
 
     expectForceIsNegativeEnergyDerivative(
@@ -167,8 +167,8 @@ TEST(TestPairPotentialDerivatives, ShiftedPotentialsAreZeroAtCutoff)
     constexpr auto cutoff        = 4.0;
     constexpr auto chargeProduct = 0.75;
 
-    const auto shiftedCoulomb = potential::CoulombShiftedPotential(cutoff);
-    const auto wolfCoulomb    = potential::CoulombWolf(cutoff, 0.25);
+    const auto shiftedCoulomb = pot::CoulombShiftedPotential(cutoff);
+    const auto wolfCoulomb    = pot::CoulombWolf(cutoff, 0.25);
 
     const auto [shiftedCoulombEnergy, shiftedCoulombForce] =
         shiftedCoulomb.calculate(cutoff, chargeProduct);
@@ -186,12 +186,12 @@ TEST(TestPairPotentialDerivatives, NonCoulombShiftedPairsAreZeroAtCutoff)
     constexpr auto cutoff = 4.0;
 
     const auto lennardJonesUnshifted =
-        potential::LennardJonesPair(cutoff, LJParams{.c6 = -1.0, .c12 = 1.5});
-    const auto buckinghamUnshifted = potential::BuckinghamPair(
+        pot::LennardJonesPair(cutoff, LJParams{.c6 = -1.0, .c12 = 1.5});
+    const auto buckinghamUnshifted = pot::BuckinghamPair(
         cutoff,
         BuckinghamParams{.scaling = 2.0, .dRho = -1.1, .c6 = -0.4}
     );
-    const auto morseUnshifted = potential::MorsePair(
+    const auto morseUnshifted = pot::MorsePair(
         cutoff,
         MorseParams{
             .dissociationEnergy  = 2.5,
@@ -199,8 +199,7 @@ TEST(TestPairPotentialDerivatives, NonCoulombShiftedPairsAreZeroAtCutoff)
             .equilibriumDistance = 1.1
         }
     );
-    const auto guffUnshifted =
-        potential::GuffPair(cutoff, buildGuffCoefficients());
+    const auto guffUnshifted = pot::GuffPair(cutoff, buildGuffCoefficients());
 
     const auto [ljEnergyCutoff, ljForceCutoff] =
         lennardJonesUnshifted.calculate(cutoff);
@@ -211,19 +210,19 @@ TEST(TestPairPotentialDerivatives, NonCoulombShiftedPairsAreZeroAtCutoff)
     const auto [guffEnergyCutoff, guffForceCutoff] =
         guffUnshifted.calculate(cutoff);
 
-    const auto lennardJones = potential::LennardJonesPair(
+    const auto lennardJones = pot::LennardJonesPair(
         cutoff,
         ljEnergyCutoff,
         ljForceCutoff,
         LJParams{.c6 = -1.0, .c12 = 1.5}
     );
-    const auto buckingham = potential::BuckinghamPair(
+    const auto buckingham = pot::BuckinghamPair(
         cutoff,
         buckEnergyCutoff,
         buckForceCutoff,
         BuckinghamParams{.scaling = 2.0, .dRho = -1.1, .c6 = -0.4}
     );
-    const auto morse = potential::MorsePair(
+    const auto morse = pot::MorsePair(
         cutoff,
         morseEnergyCutoff,
         morseForceCutoff,
@@ -233,7 +232,7 @@ TEST(TestPairPotentialDerivatives, NonCoulombShiftedPairsAreZeroAtCutoff)
             .equilibriumDistance = 1.1
         }
     );
-    const auto guff = potential::GuffPair(
+    const auto guff = pot::GuffPair(
         cutoff,
         guffEnergyCutoff,
         guffForceCutoff,

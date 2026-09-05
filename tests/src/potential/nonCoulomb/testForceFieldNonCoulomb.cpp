@@ -41,9 +41,9 @@
 TEST_F(TestNonCoulombPotentialFF, copyConstructorCopiesOwnedMatrix)
 {
     setNonCoulombPairsMatrix(
-        linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(1)
+        linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>>(1)
     );
-    const auto pair = potential::LennardJonesPair(
+    const auto pair = pot::LennardJonesPair(
         ExtVdwType(1),
         ExtVdwType(1),
         2.0,
@@ -51,10 +51,10 @@ TEST_F(TestNonCoulombPotentialFF, copyConstructorCopiesOwnedMatrix)
     );
     setNonCoulombPairsMatrix(0, 0, pair);
     _nonCoulombPotential->setNonCoulombPairsVector(
-        {std::make_shared<potential::LennardJonesPair>(pair)}
+        {std::make_shared<pot::LennardJonesPair>(pair)}
     );
 
-    auto copy = potential::ForceFieldNonCoulomb(*_nonCoulombPotential);
+    auto copy = pot::ForceFieldNonCoulomb(*_nonCoulombPotential);
 
     EXPECT_EQ(copy.getNonCoulombPairsVector().size(), 1);
     EXPECT_EQ(
@@ -62,7 +62,7 @@ TEST_F(TestNonCoulombPotentialFF, copyConstructorCopiesOwnedMatrix)
         getNonCoulombPairsMatrix()(0, 0)
     );
 
-    const auto replacement = potential::LennardJonesPair(
+    const auto replacement = pot::LennardJonesPair(
         ExtVdwType(1),
         ExtVdwType(1),
         3.0,
@@ -78,9 +78,9 @@ TEST_F(TestNonCoulombPotentialFF, copyConstructorCopiesOwnedMatrix)
 TEST_F(TestNonCoulombPotentialFF, copyAssignmentCopiesOwnedMatrix)
 {
     setNonCoulombPairsMatrix(
-        linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(1)
+        linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>>(1)
     );
-    const auto pair = potential::LennardJonesPair(
+    const auto pair = pot::LennardJonesPair(
         ExtVdwType(1),
         ExtVdwType(1),
         2.0,
@@ -88,7 +88,7 @@ TEST_F(TestNonCoulombPotentialFF, copyAssignmentCopiesOwnedMatrix)
     );
     setNonCoulombPairsMatrix(0, 0, pair);
 
-    auto copy = potential::ForceFieldNonCoulomb();
+    auto copy = pot::ForceFieldNonCoulomb();
     copy      = *_nonCoulombPotential;
 
     const auto  matrixElement = getNonCoulombPairsMatrix(copy)(0, 0);
@@ -100,9 +100,9 @@ TEST_F(TestNonCoulombPotentialFF, copyAssignmentCopiesOwnedMatrix)
 TEST_F(TestNonCoulombPotentialFF, moveOperationsTransferOwnedMatrix)
 {
     setNonCoulombPairsMatrix(
-        linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(1)
+        linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>>(1)
     );
-    const auto pair = potential::LennardJonesPair(
+    const auto pair = pot::LennardJonesPair(
         ExtVdwType(1),
         ExtVdwType(1),
         2.0,
@@ -110,11 +110,10 @@ TEST_F(TestNonCoulombPotentialFF, moveOperationsTransferOwnedMatrix)
     );
     setNonCoulombPairsMatrix(0, 0, pair);
 
-    auto moved =
-        potential::ForceFieldNonCoulomb(std::move(*_nonCoulombPotential));
+    auto moved = pot::ForceFieldNonCoulomb(std::move(*_nonCoulombPotential));
     EXPECT_NE(getNonCoulombPairsMatrix(moved)(0, 0), nullptr);
 
-    auto assigned = potential::ForceFieldNonCoulomb();
+    auto assigned = pot::ForceFieldNonCoulomb();
     assigned      = std::move(moved);
     EXPECT_NE(getNonCoulombPairsMatrix(assigned)(0, 0), nullptr);
 }
@@ -126,7 +125,7 @@ TEST_F(TestNonCoulombPotentialFF, moveOperationsTransferOwnedMatrix)
 TEST_F(TestNonCoulombPotentialFF, determineInternalGlobalVdwTypes)
 {
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<potential::LennardJonesPair>(
+        std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(1),
             ExtVdwType(5),
             2.0,
@@ -134,7 +133,7 @@ TEST_F(TestNonCoulombPotentialFF, determineInternalGlobalVdwTypes)
         )
     );
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<potential::LennardJonesPair>(
+        std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(1),
             ExtVdwType(2),
             2.0,
@@ -167,7 +166,7 @@ TEST_F(TestNonCoulombPotentialFF, determineInternalGlobalVdwTypes)
  */
 TEST_F(TestNonCoulombPotentialFF, fillDiagOfNonCoulPairsMatrix)
 {
-    auto nonCoulombicPair1 = potential::LennardJonesPair(
+    auto nonCoulombicPair1 = pot::LennardJonesPair(
         ExtVdwType(1),
         ExtVdwType(1),
         2.0,
@@ -175,7 +174,7 @@ TEST_F(TestNonCoulombPotentialFF, fillDiagOfNonCoulPairsMatrix)
     );
     nonCoulombicPair1.setInternalType1(VdwType{0});
     nonCoulombicPair1.setInternalType2(VdwType{0});
-    auto nonCoulombicPair2 = potential::LennardJonesPair(
+    auto nonCoulombicPair2 = pot::LennardJonesPair(
         ExtVdwType(9),
         ExtVdwType(9),
         2.0,
@@ -184,9 +183,9 @@ TEST_F(TestNonCoulombPotentialFF, fillDiagOfNonCoulPairsMatrix)
     nonCoulombicPair2.setInternalType1(VdwType{9});
     nonCoulombicPair2.setInternalType2(VdwType{9});
 
-    std::vector<std::shared_ptr<potential::NonCoulombPair>> diagonalElements = {
-        std::make_shared<potential::LennardJonesPair>(nonCoulombicPair1),
-        std::make_shared<potential::LennardJonesPair>(nonCoulombicPair2)
+    std::vector<std::shared_ptr<pot::NonCoulombPair>> diagonalElements = {
+        std::make_shared<pot::LennardJonesPair>(nonCoulombicPair1),
+        std::make_shared<pot::LennardJonesPair>(nonCoulombicPair2)
     };
 
     _nonCoulombPotential->fillDiagOfNonCoulPairsMatrix(diagonalElements);
@@ -210,7 +209,7 @@ TEST_F(
 )
 {
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<potential::LennardJonesPair>(
+        std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(1),
             ExtVdwType(5),
             2.0,
@@ -218,7 +217,7 @@ TEST_F(
         )
     );
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<potential::LennardJonesPair>(
+        std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(1),
             ExtVdwType(2),
             2.0,
@@ -257,7 +256,7 @@ TEST_F(
 )
 {
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<potential::LennardJonesPair>(
+        std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(1),
             ExtVdwType(5),
             2.0,
@@ -265,7 +264,7 @@ TEST_F(
         )
     );
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<potential::LennardJonesPair>(
+        std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(1),
             ExtVdwType(2),
             2.0,
@@ -303,7 +302,7 @@ TEST_F(
 )
 {
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<potential::LennardJonesPair>(
+        std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(1),
             ExtVdwType(5),
             2.0,
@@ -311,7 +310,7 @@ TEST_F(
         )
     );
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<potential::LennardJonesPair>(
+        std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(1),
             ExtVdwType(5),
             2.0,
@@ -319,7 +318,7 @@ TEST_F(
         )
     );
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<potential::LennardJonesPair>(
+        std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(1),
             ExtVdwType(2),
             2.0,
@@ -363,7 +362,7 @@ TEST_F(
 )
 {
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<potential::LennardJonesPair>(
+        std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(1),
             ExtVdwType(5),
             2.0,
@@ -382,7 +381,7 @@ TEST_F(
         externalToInternalTypes
     );
     setNonCoulombPairsMatrix(
-        linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(3)
+        linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>>(3)
     );
 
     EXPECT_THROW_MSG(
@@ -404,7 +403,7 @@ TEST_F(
 )
 {
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<potential::LennardJonesPair>(
+        std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(1),
             ExtVdwType(2),
             2.0,
@@ -412,7 +411,7 @@ TEST_F(
         )
     );
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<potential::LennardJonesPair>(
+        std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(1),
             ExtVdwType(5),
             2.0,
@@ -420,7 +419,7 @@ TEST_F(
         )
     );
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<potential::LennardJonesPair>(
+        std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(2),
             ExtVdwType(5),
             2.0,
@@ -439,7 +438,7 @@ TEST_F(
         externalToInternalTypes
     );
     setNonCoulombPairsMatrix(
-        linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(3)
+        linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>>(3)
     );
     _nonCoulombPotential->fillOffDiagOfNonCoulPairsMatrix();
 
@@ -460,7 +459,7 @@ TEST_F(
 )
 {
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<potential::LennardJonesPair>(
+        std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(2),
             ExtVdwType(1),
             2.0,
@@ -468,7 +467,7 @@ TEST_F(
         )
     );
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<potential::LennardJonesPair>(
+        std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(5),
             ExtVdwType(1),
             2.0,
@@ -476,7 +475,7 @@ TEST_F(
         )
     );
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<potential::LennardJonesPair>(
+        std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(5),
             ExtVdwType(2),
             2.0,
@@ -495,7 +494,7 @@ TEST_F(
         externalToInternalTypes
     );
     setNonCoulombPairsMatrix(
-        linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(3)
+        linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>>(3)
     );
     _nonCoulombPotential->fillOffDiagOfNonCoulPairsMatrix();
 
@@ -516,7 +515,7 @@ TEST_F(
 )
 {
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<potential::LennardJonesPair>(
+        std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(2),
             ExtVdwType(1),
             2.0,
@@ -524,7 +523,7 @@ TEST_F(
         )
     );
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<potential::LennardJonesPair>(
+        std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(1),
             ExtVdwType(2),
             2.0,
@@ -532,7 +531,7 @@ TEST_F(
         )
     );
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<potential::LennardJonesPair>(
+        std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(1),
             ExtVdwType(5),
             2.0,
@@ -540,7 +539,7 @@ TEST_F(
         )
     );
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<potential::LennardJonesPair>(
+        std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(2),
             ExtVdwType(5),
             2.0,
@@ -559,7 +558,7 @@ TEST_F(
         externalToInternalTypes
     );
     setNonCoulombPairsMatrix(
-        linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(3)
+        linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>>(3)
     );
     _nonCoulombPotential->fillOffDiagOfNonCoulPairsMatrix();
 
@@ -580,7 +579,7 @@ TEST_F(
 )
 {
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<potential::LennardJonesPair>(
+        std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(1),
             ExtVdwType(2),
             2.0,
@@ -588,7 +587,7 @@ TEST_F(
         )
     );
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<potential::LennardJonesPair>(
+        std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(2),
             ExtVdwType(1),
             5.0,
@@ -607,7 +606,7 @@ TEST_F(
         externalToInternalTypes
     );
     setNonCoulombPairsMatrix(
-        linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(3)
+        linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>>(3)
     );
 
     EXPECT_THROW_MSG(
@@ -632,7 +631,7 @@ TEST_F(
 TEST_F(TestNonCoulombPotentialFF, getSelfInteractionNonCoulPairs)
 {
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<potential::LennardJonesPair>(
+        std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(1),
             ExtVdwType(5),
             2.0,
@@ -640,7 +639,7 @@ TEST_F(TestNonCoulombPotentialFF, getSelfInteractionNonCoulPairs)
         )
     );
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<potential::LennardJonesPair>(
+        std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(1),
             ExtVdwType(2),
             2.0,
@@ -648,7 +647,7 @@ TEST_F(TestNonCoulombPotentialFF, getSelfInteractionNonCoulPairs)
         )
     );
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<potential::LennardJonesPair>(
+        std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(2),
             ExtVdwType(2),
             2.0,
@@ -656,7 +655,7 @@ TEST_F(TestNonCoulombPotentialFF, getSelfInteractionNonCoulPairs)
         )
     );
     _nonCoulombPotential->addNonCoulombicPair(
-        std::make_shared<potential::LennardJonesPair>(
+        std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(5),
             ExtVdwType(5),
             2.0,
@@ -687,9 +686,9 @@ TEST_F(TestNonCoulombPotentialFF, getSelfInteractionNonCoulPairs)
  */
 TEST_F(TestNonCoulombPotentialFF, sortNonCoulombicsPairs)
 {
-    auto vector = std::vector<std::shared_ptr<potential::NonCoulombPair>>();
+    auto vector = std::vector<std::shared_ptr<pot::NonCoulombPair>>();
 
-    auto pair1 = std::make_shared<potential::LennardJonesPair>(
+    auto pair1 = std::make_shared<pot::LennardJonesPair>(
         ExtVdwType(1),
         ExtVdwType(1),
         2.0,
@@ -698,7 +697,7 @@ TEST_F(TestNonCoulombPotentialFF, sortNonCoulombicsPairs)
     pair1->setInternalType1(VdwType{1});
     pair1->setInternalType2(VdwType{5});
     vector.push_back(pair1);
-    auto pair2 = std::make_shared<potential::LennardJonesPair>(
+    auto pair2 = std::make_shared<pot::LennardJonesPair>(
         ExtVdwType(2),
         ExtVdwType(2),
         2.0,
@@ -707,7 +706,7 @@ TEST_F(TestNonCoulombPotentialFF, sortNonCoulombicsPairs)
     pair2->setInternalType1(VdwType{2});
     pair2->setInternalType2(VdwType{2});
     vector.push_back(pair2);
-    auto pair3 = std::make_shared<potential::LennardJonesPair>(
+    auto pair3 = std::make_shared<pot::LennardJonesPair>(
         ExtVdwType(2),
         ExtVdwType(3),
         2.0,
@@ -716,7 +715,7 @@ TEST_F(TestNonCoulombPotentialFF, sortNonCoulombicsPairs)
     pair3->setInternalType1(VdwType{2});
     pair3->setInternalType2(VdwType{3});
     vector.push_back(pair3);
-    auto pair4 = std::make_shared<potential::LennardJonesPair>(
+    auto pair4 = std::make_shared<pot::LennardJonesPair>(
         ExtVdwType(1),
         ExtVdwType(4),
         2.0,
@@ -737,7 +736,7 @@ TEST_F(TestNonCoulombPotentialFF, sortNonCoulombicsPairs)
     EXPECT_EQ(vector[3]->getInternalType1(), VdwType{2});
     EXPECT_EQ(vector[3]->getInternalType2(), VdwType{3});
 
-    auto pair5 = std::make_shared<potential::LennardJonesPair>(
+    auto pair5 = std::make_shared<pot::LennardJonesPair>(
         ExtVdwType(1),
         ExtVdwType(1),
         2.0,

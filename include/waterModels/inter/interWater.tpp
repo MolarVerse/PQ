@@ -41,14 +41,14 @@ namespace waterModel
      */
     template <typename ChargeTag1, typename ChargeTag2>
     void InterWaterStrategy::calculateSingleInteraction(
-        molsys::Atom                                       &atom1,
-        molsys::Atom                                       &atom2,
-        const std::shared_ptr<potential::CoulombPotential> &coulombPotential,
-        const double                                        rCutSquared,
-        const molsys::SimulationBox                        &simBox,
-        const potential::NonCoulombPair                    &nonCoulPair,
-        double                                             &coulombEnergy,
-        double                                             &nonCoulombEnergy
+        molsys::Atom                                 &atom1,
+        molsys::Atom                                 &atom2,
+        const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
+        const double                                  rCutSquared,
+        const molsys::SimulationBox                  &simBox,
+        const pot::NonCoulombPair                    &nonCoulPair,
+        double                                       &coulombEnergy,
+        double                                       &nonCoulombEnergy
     )
     {
         const auto xyz_i = atom1.getPosition();
@@ -102,12 +102,12 @@ namespace waterModel
      */
     template <typename ChargeTag1, typename ChargeTag2>
     void InterWaterStrategy::calculateSingleCoulombInteraction(
-        molsys::Atom                                       &atom1,
-        molsys::Atom                                       &atom2,
-        const std::shared_ptr<potential::CoulombPotential> &coulombPotential,
-        const double                                        rCutSquared,
-        const molsys::SimulationBox                        &simBox,
-        double                                             &coulombEnergy
+        molsys::Atom                                 &atom1,
+        molsys::Atom                                 &atom2,
+        const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
+        const double                                  rCutSquared,
+        const molsys::SimulationBox                  &simBox,
+        double                                       &coulombEnergy
     )
     {
         const auto xyz_i = atom1.getPosition();
@@ -153,14 +153,14 @@ namespace waterModel
      */
     template <typename ChargeTag1, typename ChargeTag2>
     void InterWaterStrategy::calculateSingleInteractionOneWay(
-        molsys::Atom                                       &atom1,
-        molsys::Atom                                       &atom2,
-        const std::shared_ptr<potential::CoulombPotential> &coulombPotential,
-        const double                                        rCutSquared,
-        const molsys::SimulationBox                        &simBox,
-        const potential::NonCoulombPair                    &nonCoulPair,
-        double                                             &coulombEnergy,
-        double                                             &nonCoulombEnergy
+        molsys::Atom                                 &atom1,
+        molsys::Atom                                 &atom2,
+        const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
+        const double                                  rCutSquared,
+        const molsys::SimulationBox                  &simBox,
+        const pot::NonCoulombPair                    &nonCoulPair,
+        double                                       &coulombEnergy,
+        double                                       &nonCoulombEnergy
     )
     {
         const auto xyz_i = atom1.getPosition();
@@ -216,7 +216,7 @@ namespace waterModel
     }
 
     template <>
-    inline double InterWaterStrategy::getPartialCharge<potential::QMChargeTag>(
+    inline double InterWaterStrategy::getPartialCharge<pot::QMChargeTag>(
         molsys::Atom &atom
     ) const
     {
@@ -229,7 +229,7 @@ namespace waterModel
     }
 
     template <>
-    inline double InterWaterStrategy::getPartialCharge<potential::MMChargeTag>(
+    inline double InterWaterStrategy::getPartialCharge<pot::MMChargeTag>(
         molsys::Atom &atom
     ) const
     {

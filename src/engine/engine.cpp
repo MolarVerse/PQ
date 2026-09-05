@@ -37,7 +37,7 @@ using namespace physicalData;
 using namespace forceField;
 using namespace intraNonBonded;
 using namespace virial;
-using namespace potential;
+using namespace pot;
 using namespace constraints;
 using namespace output;
 using namespace timings;
@@ -50,7 +50,7 @@ using namespace settings;
  * cell list, intra-non-bonded handler, force field, and constraints.
  */
 Engine::Engine()
-    : _potential{std::make_shared<potential::PotentialBruteForce>()},
+    : _potential{std::make_shared<pot::PotentialBruteForce>()},
       _physicalData{std::make_shared<physicalData::PhysicalData>()},
       _simulationBox{std::make_shared<molsys::SimulationBox>()},
       _cellList{std::make_shared<molsys::CellList>()},
@@ -183,7 +183,7 @@ const std::shared_ptr<IntraNonBonded> &Engine::getIntraNonBonded() const
  *
  * @return const Potential&
  */
-const std::shared_ptr<potential::Potential> &Engine::getPotential() const
+const std::shared_ptr<pot::Potential> &Engine::getPotential() const
 {
     return _potential;
 }

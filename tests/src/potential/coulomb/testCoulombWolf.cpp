@@ -28,7 +28,7 @@
 #include "coulombWolf.hpp"                           // for CoulombWolf
 #include "gtest/gtest.h"   // for Message, TestPartResult
 
-using namespace potential;
+using namespace pot;
 
 /**
  * @brief tests calculation of Coulomb potential with wolf long-range correction
@@ -40,7 +40,7 @@ TEST(TestCoulombWolf, calculate)
     const auto   rcCutoff      = 3.0;
     const double kappa         = 0.25;
 
-    const auto guffWolfCoulomb = potential::CoulombWolf(rcCutoff, kappa);
+    const auto guffWolfCoulomb = pot::CoulombWolf(rcCutoff, kappa);
     const auto constParam1     = ::erfc(kappa * rcCutoff) / rcCutoff;
     const auto constParam2     = 2.0 * kappa / ::sqrt(M_PI);
     const auto constParam3 =

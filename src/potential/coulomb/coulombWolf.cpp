@@ -30,7 +30,7 @@
 #define M_PI std::numbers::pi
 #endif
 
-using namespace potential;
+using namespace pot;
 using namespace constants;
 
 /**
