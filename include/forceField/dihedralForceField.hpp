@@ -24,7 +24,6 @@
 
 #define _DIHEDRAL_FORCE_FIELD_HPP_
 
-#include <cstddef>
 #include <vector>
 
 #include "dihedral.hpp"
@@ -67,7 +66,7 @@ namespace forceField
        public:
         DihedralForceField(
             const std::vector<molsys::Molecule *> &molecules,
-            const std::vector<size_t>             &atomIndices,
+            const std::vector<AtomIndex>          &atomIndices,
             const DihedralId                       type
         );
 

@@ -69,8 +69,14 @@ TEST_F(TestTopologySection, processShakeSection)
         constraints->getBondConstraints()[0].getMolecule2(),
         &(_engine->getSimulationBox().getMolecules()[1])
     );
-    EXPECT_EQ(constraints->getBondConstraints()[0].getAtomIndex1(), 0);
-    EXPECT_EQ(constraints->getBondConstraints()[0].getAtomIndex2(), 0);
+    EXPECT_EQ(
+        constraints->getBondConstraints()[0].getAtomIndices()[0],
+        AtomIndex{0}
+    );
+    EXPECT_EQ(
+        constraints->getBondConstraints()[0].getAtomIndices()[1],
+        AtomIndex{0}
+    );
     EXPECT_EQ(constraints->getBondConstraints()[0].getTargetBondLength(), 1.0);
 
     EXPECT_EQ(
@@ -81,8 +87,14 @@ TEST_F(TestTopologySection, processShakeSection)
         constraints->getBondConstraints()[1].getMolecule2(),
         &(_engine->getSimulationBox().getMolecules()[1])
     );
-    EXPECT_EQ(constraints->getBondConstraints()[1].getAtomIndex1(), 0);
-    EXPECT_EQ(constraints->getBondConstraints()[1].getAtomIndex2(), 1);
+    EXPECT_EQ(
+        constraints->getBondConstraints()[1].getAtomIndices()[0],
+        AtomIndex{0}
+    );
+    EXPECT_EQ(
+        constraints->getBondConstraints()[1].getAtomIndices()[1],
+        AtomIndex{1}
+    );
     EXPECT_EQ(constraints->getBondConstraints()[1].getTargetBondLength(), 1.2);
 
     EXPECT_EQ(shakeSection.getLineNumber(), 5);

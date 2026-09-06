@@ -31,11 +31,17 @@ template <typename Tag>
 using StrongSizeT = mstd::StrongType<
     size_t,
     Tag,
-    mstd::StrongTypeTrait::ORDERED | mstd::StrongTypeTrait::HASHABLE>;
+    mstd::StrongTypeTrait::ORDERED | mstd::StrongTypeTrait::HASHABLE |
+        mstd::StrongTypeTrait::INCREMENT>;
 
 // clang-format off
 struct AtomNumberTag{};
 using AtomNumber = StrongSizeT<struct AtomNumberTag>;
+// clang-format on
+
+// clang-format off
+struct AtomIndexTag{};
+using AtomIndex = StrongSizeT<struct AtomIndexTag>;
 // clang-format on
 
 struct BondIdTag

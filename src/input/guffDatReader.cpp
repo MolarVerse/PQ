@@ -622,7 +622,7 @@ void GuffDatReader::calculatePartialCharges()
         auto      *moleculeType = &(simBox.findMoleculeType(i + 1));
         const auto nAtoms       = moleculeType->getNumberOfAtoms();
 
-        for (size_t j = 0; j < nAtoms; ++j)
+        for (AtomIndex j{0}; j.get() < nAtoms; ++j)
         {
             // clang-format off
             const auto atomType     = moleculeType->getAtomType(j);
@@ -686,15 +686,16 @@ void GuffDatReader::checkPartialCharges()
 
             const auto nAtomTypes1 = moleculeType1.getNumberOfAtomTypes();
 
-            for (size_t k = 0; k < nAtomTypes1; ++k)
+            for (AtomIndex k{0}; k.get() < nAtomTypes1; ++k)
             {
                 const auto nAtomTypes2 = moleculeType2.getNumberOfAtomTypes();
-                for (size_t l = 0; l < nAtomTypes2; ++l)
+                for (AtomIndex l{0}; l.get() < nAtomTypes2; ++l)
                 {
                     auto partialCharge1 = moleculeType1.getPartialCharge(k);
                     auto partialCharge2 = moleculeType2.getPartialCharge(l);
 
-                    const auto coeff         = _guffCoulombCoeffs[i][j][k][l];
+                    const auto coeff =
+                        _guffCoulombCoeffs[i][j][k.get()][l.get()];
                     const auto chargeSquared = partialCharge1 * partialCharge2;
                     const auto prefactor = chargeSquared * COULOMB_PREFACTOR;
 
@@ -714,8 +715,8 @@ void GuffDatReader::checkPartialCharges()
                                 "be {} but is {}",
                                 i + 1,
                                 j + 1,
-                                k + 1,
-                                l + 1,
+                                k.get() + 1,
+                                l.get() + 1,
                                 prefactor,
                                 coeff
                             )
@@ -754,10 +755,12 @@ void GuffDatReader::checkNecessaryGuffPairs()
                 continue;
 
             const auto nAtoms1 = moleculeType1.getNumberOfAtoms();
-            for (size_t atomIndex1 = 0; atomIndex1 < nAtoms1; ++atomIndex1)
+            for (AtomIndex atomIndex1{0}; atomIndex1.get() < nAtoms1;
+                 ++atomIndex1)
             {
                 const auto nAtoms2 = moleculeType2.getNumberOfAtoms();
-                for (size_t atomIndex2 = 0; atomIndex2 < nAtoms2; ++atomIndex2)
+                for (AtomIndex atomIndex2{0}; atomIndex2.get() < nAtoms2;
+                     ++atomIndex2)
                 {
                     if (!_isGuffPairSet[moleculeType1.getMoltype() - 1]
                                        [moleculeType2.getMoltype() - 1]

@@ -108,8 +108,8 @@ void BondSection::processSection(
 
     auto &simBox = engine.getSimulationBox();
 
-    const auto [mol1, atomIdx1] = simBox.findMoleculeByAtomIndex(atom1);
-    const auto [mol2, atomIdx2] = simBox.findMoleculeByAtomIndex(atom2);
+    const auto [mol1, atomIdx1] = simBox.findMoleculeByGlobalAtomIndex(atom1);
+    const auto [mol2, atomIdx2] = simBox.findMoleculeByGlobalAtomIndex(atom2);
 
     auto bondFF = BondForceField(mol1, mol2, atomIdx1, atomIdx2, bondType);
     bondFF.setIsLinker(isLinker);

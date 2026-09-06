@@ -62,12 +62,12 @@ void InterWaterStrategyBruteForce::calculate(
             if (j >= i)
                 break;
 
-            auto &oxygen1   = water1.getAtom(0);
-            auto &oxygen2   = water2.getAtom(0);
-            auto &hydrogen1 = water1.getAtom(1);
-            auto &hydrogen2 = water1.getAtom(2);
-            auto &hydrogen3 = water2.getAtom(1);
-            auto &hydrogen4 = water2.getAtom(2);
+            auto &oxygen1   = water1.getAtom(AtomIndex{0});
+            auto &oxygen2   = water2.getAtom(AtomIndex{0});
+            auto &hydrogen1 = water1.getAtom(AtomIndex{1});
+            auto &hydrogen2 = water1.getAtom(AtomIndex{2});
+            auto &hydrogen3 = water2.getAtom(AtomIndex{1});
+            auto &hydrogen4 = water2.getAtom(AtomIndex{2});
 
             const auto singleInteraction =
                 [&](Atom &atomA, Atom &atomB, const auto &nonCoulPairPtr)
@@ -144,12 +144,12 @@ void InterWaterStrategyBruteForce::calculateCoreToOuterForces(
             if (water2.getMoltype() != waterTypeValue)
                 continue;
 
-            auto &oxygen1   = water1.getAtom(0);
-            auto &oxygen2   = water2.getAtom(0);
-            auto &hydrogen1 = water1.getAtom(1);
-            auto &hydrogen2 = water1.getAtom(2);
-            auto &hydrogen3 = water2.getAtom(1);
-            auto &hydrogen4 = water2.getAtom(2);
+            auto &oxygen1   = water1.getAtom(AtomIndex{0});
+            auto &oxygen2   = water2.getAtom(AtomIndex{0});
+            auto &hydrogen1 = water1.getAtom(AtomIndex{1});
+            auto &hydrogen2 = water1.getAtom(AtomIndex{2});
+            auto &hydrogen3 = water2.getAtom(AtomIndex{1});
+            auto &hydrogen4 = water2.getAtom(AtomIndex{2});
 
             const auto singleCoulombInteraction = [&](Atom &atomA, Atom &atomB)
             {
@@ -220,12 +220,12 @@ void InterWaterStrategyBruteForce::calculateLayerToOuterForces(
             if (water2.getMoltype() != waterTypeValue)
                 continue;
 
-            auto &oxygen1   = water1.getAtom(0);
-            auto &oxygen2   = water2.getAtom(0);
-            auto &hydrogen1 = water1.getAtom(1);
-            auto &hydrogen2 = water1.getAtom(2);
-            auto &hydrogen3 = water2.getAtom(1);
-            auto &hydrogen4 = water2.getAtom(2);
+            auto &oxygen1   = water1.getAtom(AtomIndex{0});
+            auto &oxygen2   = water2.getAtom(AtomIndex{0});
+            auto &hydrogen1 = water1.getAtom(AtomIndex{1});
+            auto &hydrogen2 = water1.getAtom(AtomIndex{2});
+            auto &hydrogen3 = water2.getAtom(AtomIndex{1});
+            auto &hydrogen4 = water2.getAtom(AtomIndex{2});
 
             const auto singleInteraction =
                 [&](Atom &atomA, Atom &atomB, const auto &nonCoulPairPtr)
@@ -320,12 +320,12 @@ void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
             if (water2.getMoltype() != waterTypeValue)
                 continue;
 
-            auto &oxygen1   = water1.getAtom(0);
-            auto &oxygen2   = water2.getAtom(0);
-            auto &hydrogen1 = water1.getAtom(1);
-            auto &hydrogen2 = water1.getAtom(2);
-            auto &hydrogen3 = water2.getAtom(1);
-            auto &hydrogen4 = water2.getAtom(2);
+            auto &oxygen1   = water1.getAtom(AtomIndex{0});
+            auto &oxygen2   = water2.getAtom(AtomIndex{0});
+            auto &hydrogen1 = water1.getAtom(AtomIndex{1});
+            auto &hydrogen2 = water1.getAtom(AtomIndex{2});
+            auto &hydrogen3 = water2.getAtom(AtomIndex{1});
+            auto &hydrogen4 = water2.getAtom(AtomIndex{2});
 
             const auto singleInteraction =
                 [&](Atom &atomA, Atom &atomB, const auto &nonCoulPairPtr)
@@ -386,12 +386,12 @@ void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
                 continue;
             }
 
-            auto &oxygen1   = water1.getAtom(0);
-            auto &oxygen2   = water2.getAtom(0);
-            auto &hydrogen1 = water1.getAtom(1);
-            auto &hydrogen2 = water1.getAtom(2);
-            auto &hydrogen3 = water2.getAtom(1);
-            auto &hydrogen4 = water2.getAtom(2);
+            auto &oxygen1   = water1.getAtom(AtomIndex{0});
+            auto &oxygen2   = water2.getAtom(AtomIndex{0});
+            auto &hydrogen1 = water1.getAtom(AtomIndex{1});
+            auto &hydrogen2 = water1.getAtom(AtomIndex{2});
+            auto &hydrogen3 = water2.getAtom(AtomIndex{1});
+            auto &hydrogen4 = water2.getAtom(AtomIndex{2});
 
             const auto singleInteractionOneWay =
                 [&](Atom &atomA, Atom &atomB, const auto &nonCoulPairPtr)

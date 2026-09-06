@@ -51,7 +51,7 @@ using enum HybridZone;
  */
 AngleForceField::AngleForceField(
     const std::vector<Molecule *> &molecules,
-    const std::vector<size_t>     &atomIndices,
+    const std::vector<AtomIndex>  &atomIndices,
     const AngleId                  type
 )
     : Angle(molecules, atomIndices), _type(type)

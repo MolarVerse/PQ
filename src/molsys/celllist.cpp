@@ -279,7 +279,7 @@ void CellList::addMoleculesToCells(SimulationBox &simulationBox)
 
         const auto nAtomsInMolecule = molecule->getNumberOfAtoms();
 
-        for (size_t j = 0; j < nAtomsInMolecule; ++j)
+        for (AtomIndex j{0}; j.get() < nAtomsInMolecule; ++j)
         {
             auto      *atom     = &molecule->getAtom(j);
             const auto position = molecule->getAtomPosition(j);
