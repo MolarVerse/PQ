@@ -71,22 +71,23 @@ TEST_F(TestBondConstraint, applyShake)
 
     EXPECT_FALSE(_bondConstraint->applyShake(*_box, 0.0));
 
+    const auto mol = _box->getMolecules()[0];
     EXPECT_EQ(
-        _box->getMolecules()[0].getAtomPosition(0),
+        mol.getAtomPosition(AtomIndex{0}),
         linearAlgebra::Vec3D(1.0, 1.0, 1.0) + dPos
     );
     EXPECT_EQ(
-        _box->getMolecules()[0].getAtomPosition(1),
+        mol.getAtomPosition(AtomIndex{1}),
         linearAlgebra::Vec3D(1.0, 2.0, 3.0) - 0.5 * dPos
     );
 
     const auto expectedDeltaVel = dPos / (timestep * constants::FS_TO_S);
     EXPECT_EQ(
-        _box->getMolecules()[0].getAtomVelocity(0),
+        mol.getAtomVelocity(AtomIndex{0}),
         linearAlgebra::Vec3D(0.0, 0.0, 0.0) + expectedDeltaVel
     );
     EXPECT_EQ(
-        _box->getMolecules()[0].getAtomVelocity(1),
+        mol.getAtomVelocity(AtomIndex{1}),
         linearAlgebra::Vec3D(1.0, 1.0, 1.0) - 0.5 * expectedDeltaVel
     );
 
@@ -119,12 +120,14 @@ TEST_F(TestBondConstraint, applyRattle)
     const auto dv    = delta * _bondConstraint->getShakeDistanceRef();
 
     EXPECT_FALSE(_bondConstraint->applyRattle(0.0));
+
+    const auto mol = _box->getMolecules()[0];
     EXPECT_EQ(
-        _box->getMolecules()[0].getAtomVelocity(0),
+        mol.getAtomVelocity(AtomIndex{0}),
         linearAlgebra::Vec3D(0.0, 0.0, 0.0) + dv
     );
     EXPECT_EQ(
-        _box->getMolecules()[0].getAtomVelocity(1),
+        mol.getAtomVelocity(AtomIndex{1}),
         linearAlgebra::Vec3D(1.0, 1.0, 1.0) - 0.5 * dv
     );
 

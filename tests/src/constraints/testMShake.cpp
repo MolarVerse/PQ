@@ -131,8 +131,8 @@ TEST(TestMShake, applyMShakeThreeAtomMolecule)
 
     // After convergence the perturbed bond 0-1 must be back to the
     // reference length 1.0 within the requested tolerance.
-    const auto pos0   = molecule.getAtomPosition(0);
-    const auto pos1   = molecule.getAtomPosition(1);
+    const auto pos0   = molecule.getAtomPosition(AtomIndex{0});
+    const auto pos1   = molecule.getAtomPosition(AtomIndex{1});
     const auto bond01 = norm(pos1 - pos0);
     EXPECT_NEAR(bond01, 1.0, 1.0e-5);
 }

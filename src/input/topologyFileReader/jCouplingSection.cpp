@@ -96,13 +96,13 @@ void JCouplingSection::processSection(
 
     auto &simBox = engine.getSimulationBox();
 
-    const auto [molecule1, idx1] = simBox.findMoleculeByAtomIndex(atom1);
-    const auto [molecule2, idx2] = simBox.findMoleculeByAtomIndex(atom2);
-    const auto [molecule3, idx3] = simBox.findMoleculeByAtomIndex(atom3);
-    const auto [molecule4, idx4] = simBox.findMoleculeByAtomIndex(atom4);
+    const auto [molecule1, idx1] = simBox.findMoleculeByGlobalAtomIndex(atom1);
+    const auto [molecule2, idx2] = simBox.findMoleculeByGlobalAtomIndex(atom2);
+    const auto [molecule3, idx3] = simBox.findMoleculeByGlobalAtomIndex(atom3);
+    const auto [molecule4, idx4] = simBox.findMoleculeByGlobalAtomIndex(atom4);
 
-    const auto mols = std::vector{molecule1, molecule2, molecule3, molecule4};
-    const auto atomIdxs = std::vector{idx1, idx2, idx3, idx4};
+    const auto mols     = {molecule1, molecule2, molecule3, molecule4};
+    const auto atomIdxs = {idx1, idx2, idx3, idx4};
 
     auto jCouplingFF = JCouplingForceField(mols, atomIdxs, dihedralType);
 

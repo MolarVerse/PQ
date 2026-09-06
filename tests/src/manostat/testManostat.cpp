@@ -93,8 +93,10 @@ namespace
 
     linearAlgebra::Vec3D getMinimumImageDistance(molsys::SimulationBox& box)
     {
-        auto dPosition = box.getMolecule(0).getAtomPosition(1) -
-                         box.getMolecule(0).getAtomPosition(0);
+        const auto mol = box.getMolecule(0);
+
+        auto dPosition = mol.getAtomPosition(AtomIndex{1}) -
+                         mol.getAtomPosition(AtomIndex{0});
         box.applyPBC(dPosition);
 
         return dPosition;
@@ -115,7 +117,7 @@ namespace
         EXPECT_NEAR(dPosition[1], 0.0, 1e-12);
         EXPECT_NEAR(dPosition[2], 0.0, 1e-12);
 
-        for (size_t atomIndex = 0; atomIndex < 2; ++atomIndex)
+        for (AtomIndex atomIndex{0}; atomIndex.get() < 2; ++atomIndex)
         {
             for (size_t axis = 0; axis < 3; ++axis)
             {
@@ -134,8 +136,11 @@ namespace
         const size_t           moleculeIndex
     )
     {
-        auto dPosition = box.getMolecule(moleculeIndex).getAtomPosition(1) -
-                         box.getMolecule(moleculeIndex).getAtomPosition(0);
+        const auto mol = box.getMolecule(moleculeIndex);
+
+        auto dPosition = mol.getAtomPosition(AtomIndex{1}) -
+                         mol.getAtomPosition(AtomIndex{0});
+
         box.applyPBC(dPosition);
 
         return norm(dPosition);
@@ -206,7 +211,7 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
     EXPECT_NEAR(boxNew[2], (boxOld * scaleFactors)[2], 1e-8);
     EXPECT_TRUE(
         utilities::compare(
-            _box->getMolecule(0).getAtomPosition(0),
+            _box->getMolecule(0).getAtomPosition(AtomIndex{0}),
             linearAlgebra::Vec3D(1.0, 0.0, 0.0) * scaleFactors,
             1e-9
         )
@@ -386,8 +391,9 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
 
     _manostat->applyManostat(*_box, *_data);
 
-    const auto velocity0            = _box->getMolecule(0).getAtomVelocity(0);
-    const auto velocity1            = _box->getMolecule(0).getAtomVelocity(1);
+    const auto mol                  = _box->getMolecule(0);
+    const auto velocity0            = mol.getAtomVelocity(AtomIndex{0});
+    const auto velocity1            = mol.getAtomVelocity(AtomIndex{1});
     const auto centerOfMassVelocity = (velocity0 + velocity1) / 2.0;
 
     EXPECT_TRUE(

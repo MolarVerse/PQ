@@ -24,8 +24,6 @@
 
 #define _BOND_FORCE_FIELD_HPP_
 
-#include <cstddef>
-
 #include "bond.hpp"
 
 namespace physicalData
@@ -66,8 +64,8 @@ namespace forceField
         BondForceField(
             molsys::Molecule *molecule1,
             molsys::Molecule *molecule2,
-            const size_t      atomIndex1,
-            const size_t      atomIndex2,
+            const AtomIndex   atomIndex1,
+            const AtomIndex   atomIndex2,
             const BondId      type
         );
 

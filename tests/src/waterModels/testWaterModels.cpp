@@ -189,9 +189,10 @@ namespace
 
         model.calculate(simBox, data);
 
-        const auto totalForce = simBox.getMolecule(0).getAtomForce(0) +
-                                simBox.getMolecule(0).getAtomForce(1) +
-                                simBox.getMolecule(0).getAtomForce(2);
+        const auto mol        = simBox.getMolecule(0);
+        const auto totalForce = mol.getAtomForce(AtomIndex{0}) +
+                                mol.getAtomForce(AtomIndex{1}) +
+                                mol.getAtomForce(AtomIndex{2});
 
         EXPECT_NEAR(totalForce[0], 0.0, 1.0e-12);
         EXPECT_NEAR(totalForce[1], 0.0, 1.0e-12);
@@ -817,7 +818,7 @@ TEST(SimulationBoxViews, ConstAndMutableWaterViewsFilterCorrectly)
     for ([[maybe_unused]] const auto &molecule : waterView) ++water;
     EXPECT_EQ(water, 1);
     EXPECT_EQ(
-        simBox.getMolecule(0).getAtom(0).getAtomicNumber(),
+        simBox.getMolecule(0).getAtom(AtomIndex{0}).getAtomicNumber(),
         AtomNumber{8}
     );
 }

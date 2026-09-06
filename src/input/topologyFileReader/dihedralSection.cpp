@@ -121,13 +121,13 @@ void DihedralSection::processSection(
 
     auto &simBox = engine.getSimulationBox();
 
-    const auto [mol1, idx1] = simBox.findMoleculeByAtomIndex(atom1);
-    const auto [mol2, idx2] = simBox.findMoleculeByAtomIndex(atom2);
-    const auto [mol3, idx3] = simBox.findMoleculeByAtomIndex(atom3);
-    const auto [mol4, idx4] = simBox.findMoleculeByAtomIndex(atom4);
+    const auto [mol1, idx1] = simBox.findMoleculeByGlobalAtomIndex(atom1);
+    const auto [mol2, idx2] = simBox.findMoleculeByGlobalAtomIndex(atom2);
+    const auto [mol3, idx3] = simBox.findMoleculeByGlobalAtomIndex(atom3);
+    const auto [mol4, idx4] = simBox.findMoleculeByGlobalAtomIndex(atom4);
 
     const auto mols     = std::vector<Molecule *>{mol1, mol2, mol3, mol4};
-    const auto atomIdxs = std::vector<size_t>{idx1, idx2, idx3, idx4};
+    const auto atomIdxs = {idx1, idx2, idx3, idx4};
 
     auto dihedralFF = DihedralForceField(mols, atomIdxs, dihedralType);
     dihedralFF.setIsLinker(isLinker);

@@ -43,9 +43,9 @@ TEST_F(TestMolecule, scaleAtoms)
 {
     const linearAlgebra::tensor3D scale =
         diagonalMatrix(linearAlgebra::Vec3D{1.0, 2.0, 3.0});
-    const linearAlgebra::Vec3D atomPosition1 = _molecule->getAtomPosition(0);
-    const linearAlgebra::Vec3D atomPosition2 = _molecule->getAtomPosition(1);
-    const linearAlgebra::Vec3D atomPosition3 = _molecule->getAtomPosition(2);
+    const auto atomPosition1 = _molecule->getAtomPosition(AtomIndex{0});
+    const auto atomPosition2 = _molecule->getAtomPosition(AtomIndex{1});
+    const auto atomPosition3 = _molecule->getAtomPosition(AtomIndex{2});
 
     molsys::OrthorhombicBox box;
     box.setBoxDimensions({10.0, 10.0, 10.0});
@@ -58,9 +58,9 @@ TEST_F(TestMolecule, scaleAtoms)
 
     _molecule->scale(scale, box);
 
-    EXPECT_EQ(_molecule->getAtomPosition(0), atomPosition1 + shift);
-    EXPECT_EQ(_molecule->getAtomPosition(1), atomPosition2 + shift);
-    EXPECT_EQ(_molecule->getAtomPosition(2), atomPosition3 + shift);
+    EXPECT_EQ(_molecule->getAtomPosition(AtomIndex{0}), atomPosition1 + shift);
+    EXPECT_EQ(_molecule->getAtomPosition(AtomIndex{1}), atomPosition2 + shift);
+    EXPECT_EQ(_molecule->getAtomPosition(AtomIndex{2}), atomPosition3 + shift);
 }
 
 TEST_F(TestMolecule, scaleAtomsWrapsIntoBox)
@@ -89,9 +89,9 @@ TEST_F(TestMolecule, scaleAtomsWrapsIntoBox)
     box.applyPBC(expectedPosition1);
     box.applyPBC(expectedPosition2);
 
-    EXPECT_EQ(_molecule->getAtomPosition(0), expectedPosition0);
-    EXPECT_EQ(_molecule->getAtomPosition(1), expectedPosition1);
-    EXPECT_EQ(_molecule->getAtomPosition(2), expectedPosition2);
+    EXPECT_EQ(_molecule->getAtomPosition(AtomIndex{0}), expectedPosition0);
+    EXPECT_EQ(_molecule->getAtomPosition(AtomIndex{1}), expectedPosition1);
+    EXPECT_EQ(_molecule->getAtomPosition(AtomIndex{2}), expectedPosition2);
 }
 
 TEST_F(TestMolecule, scaleVelocityPreservesInternalVelocities)
@@ -104,22 +104,23 @@ TEST_F(TestMolecule, scaleVelocityPreservesInternalVelocities)
     molsys::OrthorhombicBox box;
     box.setBoxDimensions({10.0, 10.0, 10.0});
 
-    const auto relativeVelocity10 =
-        _molecule->getAtomVelocity(1) - _molecule->getAtomVelocity(0);
-    const auto relativeVelocity20 =
-        _molecule->getAtomVelocity(2) - _molecule->getAtomVelocity(0);
+    const auto relativeVelocity10 = _molecule->getAtomVelocity(AtomIndex{1}) -
+                                    _molecule->getAtomVelocity(AtomIndex{0});
+    const auto relativeVelocity20 = _molecule->getAtomVelocity(AtomIndex{2}) -
+                                    _molecule->getAtomVelocity(AtomIndex{0});
 
-    const auto centerOfMassVelocity = (1.0 * _molecule->getAtomVelocity(0) +
-                                       2.0 * _molecule->getAtomVelocity(1) +
-                                       3.0 * _molecule->getAtomVelocity(2)) /
-                                      6.0;
+    const auto centerOfMassVelocity =
+        (1.0 * _molecule->getAtomVelocity(AtomIndex{0}) +
+         2.0 * _molecule->getAtomVelocity(AtomIndex{1}) +
+         3.0 * _molecule->getAtomVelocity(AtomIndex{2})) /
+        6.0;
 
     _molecule->scaleVelocity(scale, box);
 
     const auto scaledCenterOfMassVelocity =
-        (1.0 * _molecule->getAtomVelocity(0) +
-         2.0 * _molecule->getAtomVelocity(1) +
-         3.0 * _molecule->getAtomVelocity(2)) /
+        (1.0 * _molecule->getAtomVelocity(AtomIndex{0}) +
+         2.0 * _molecule->getAtomVelocity(AtomIndex{1}) +
+         3.0 * _molecule->getAtomVelocity(AtomIndex{2})) /
         6.0;
 
     EXPECT_TRUE(
@@ -131,14 +132,16 @@ TEST_F(TestMolecule, scaleVelocityPreservesInternalVelocities)
     );
     EXPECT_TRUE(
         utilities::compare(
-            _molecule->getAtomVelocity(1) - _molecule->getAtomVelocity(0),
+            _molecule->getAtomVelocity(AtomIndex{1}) -
+                _molecule->getAtomVelocity(AtomIndex{0}),
             relativeVelocity10,
             1e-12
         )
     );
     EXPECT_TRUE(
         utilities::compare(
-            _molecule->getAtomVelocity(2) - _molecule->getAtomVelocity(0),
+            _molecule->getAtomVelocity(AtomIndex{2}) -
+                _molecule->getAtomVelocity(AtomIndex{0}),
             relativeVelocity20,
             1e-12
         )
@@ -148,9 +151,9 @@ TEST_F(TestMolecule, scaleVelocityPreservesInternalVelocities)
 TEST_F(TestMolecule, setAtomForceToZero)
 {
     _molecule->setAtomForcesToZero();
-    EXPECT_EQ(_molecule->getAtomForce(0), linearAlgebra::Vec3D());
-    EXPECT_EQ(_molecule->getAtomForce(1), linearAlgebra::Vec3D());
-    EXPECT_EQ(_molecule->getAtomForce(2), linearAlgebra::Vec3D());
+    EXPECT_EQ(_molecule->getAtomForce(AtomIndex{0}), linearAlgebra::Vec3D());
+    EXPECT_EQ(_molecule->getAtomForce(AtomIndex{1}), linearAlgebra::Vec3D());
+    EXPECT_EQ(_molecule->getAtomForce(AtomIndex{2}), linearAlgebra::Vec3D());
 }
 
 TEST_F(TestMolecule, getNumberOfAtomTypes)

@@ -75,18 +75,10 @@ TEST_F(TestSetup, setAtomNames)
     SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.setAtomNames();
 
-    EXPECT_EQ(
-        _engine->getSimulationBox().getMolecules()[0].getAtomName(0),
-        "Zn"
-    );
-    EXPECT_EQ(
-        _engine->getSimulationBox().getMolecules()[0].getAtomName(1),
-        "H"
-    );
-    EXPECT_EQ(
-        _engine->getSimulationBox().getMolecules()[0].getAtomName(2),
-        "H"
-    );
+    const auto mol = _engine->getSimulationBox().getMolecules()[0];
+    EXPECT_EQ(mol.getAtomName(AtomIndex{0}), "Zn");
+    EXPECT_EQ(mol.getAtomName(AtomIndex{1}), "H");
+    EXPECT_EQ(mol.getAtomName(AtomIndex{2}), "H");
 }
 
 TEST_F(TestSetup, setAtomTypes)
@@ -122,30 +114,13 @@ TEST_F(TestSetup, setAtomTypes)
     SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.setAtomTypes();
 
-    EXPECT_EQ(_engine->getSimulationBox().getMolecules()[0].getAtomType(0), 0);
-    EXPECT_EQ(_engine->getSimulationBox().getMolecules()[0].getAtomType(1), 1);
-    EXPECT_EQ(_engine->getSimulationBox().getMolecules()[0].getAtomType(2), 2);
-    EXPECT_EQ(
-        _engine->getSimulationBox()
-            .getMolecules()[0]
-            .getAtom(0)
-            .getExternalAtomType(),
-        0
-    );
-    EXPECT_EQ(
-        _engine->getSimulationBox()
-            .getMolecules()[0]
-            .getAtom(1)
-            .getExternalAtomType(),
-        1
-    );
-    EXPECT_EQ(
-        _engine->getSimulationBox()
-            .getMolecules()[0]
-            .getAtom(2)
-            .getExternalAtomType(),
-        2
-    );
+    auto mol = _engine->getSimulationBox().getMolecules()[0];
+    EXPECT_EQ(mol.getAtomType(AtomIndex{0}), 0);
+    EXPECT_EQ(mol.getAtomType(AtomIndex{1}), 1);
+    EXPECT_EQ(mol.getAtomType(AtomIndex{2}), 2);
+    EXPECT_EQ(mol.getAtom(AtomIndex{0}).getExternalAtomType(), 0);
+    EXPECT_EQ(mol.getAtom(AtomIndex{1}).getExternalAtomType(), 1);
+    EXPECT_EQ(mol.getAtom(AtomIndex{2}).getExternalAtomType(), 2);
 }
 
 TEST_F(TestSetup, setExternalVDWTypes)
@@ -242,9 +217,9 @@ TEST_F(TestSetup, testSetAtomMasses)
 
     const auto &moleculeResult = _engine->getSimulationBox().getMolecules()[0];
 
-    EXPECT_DOUBLE_EQ(moleculeResult.getAtomMass(0), 12.0107);
-    EXPECT_DOUBLE_EQ(moleculeResult.getAtomMass(1), 1.00794);
-    EXPECT_DOUBLE_EQ(moleculeResult.getAtomMass(2), 15.9994);
+    EXPECT_DOUBLE_EQ(moleculeResult.getAtomMass(AtomIndex{0}), 12.0107);
+    EXPECT_DOUBLE_EQ(moleculeResult.getAtomMass(AtomIndex{1}), 1.00794);
+    EXPECT_DOUBLE_EQ(moleculeResult.getAtomMass(AtomIndex{2}), 15.9994);
 }
 
 TEST_F(TestSetup, testSetAtomMassesThrowsError)

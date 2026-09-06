@@ -50,7 +50,7 @@ using enum HybridZone;
  */
 DihedralForceField::DihedralForceField(
     const std::vector<Molecule *> &molecules,
-    const std::vector<size_t>     &atomIndices,
+    const std::vector<AtomIndex>  &atomIndices,
     const DihedralId               type
 )
     : Dihedral(molecules, atomIndices), _type(type)

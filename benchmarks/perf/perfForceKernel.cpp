@@ -29,6 +29,8 @@
 #include <format>
 #include <iostream>
 
+#include "strongTypes.hpp"
+
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
 #else
@@ -74,7 +76,7 @@ int main()
     {
         const auto [coulombEnergy, nonCoulombEnergy] =
             intraNonBondedMap.calculateSingleInteraction(
-                0,
+                AtomIndex{0},
                 atomIdx,
                 box,
                 physicalData,

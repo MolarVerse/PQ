@@ -51,11 +51,11 @@ using enum HybridZone;
  * @param type
  */
 BondForceField::BondForceField(
-    Molecule    *molecule1,
-    Molecule    *molecule2,
-    const size_t atomIndex1,
-    const size_t atomIndex2,
-    const BondId type
+    Molecule       *molecule1,
+    Molecule       *molecule2,
+    const AtomIndex atomIndex1,
+    const AtomIndex atomIndex2,
+    const BondId    type
 )
     : Bond(molecule1, molecule2, atomIndex1, atomIndex2), _type(type)
 {
