@@ -29,6 +29,7 @@
 #include "collectionUtilities.hpp"
 #include "manostatSettings.hpp"   // for ManostatSettings
 #include "settings.hpp"           // for Settings
+#include "strongTypes.hpp"
 
 using namespace molsys;
 using namespace linearAlgebra;
@@ -322,9 +323,9 @@ void Molecule::addAtom(const std::shared_ptr<Atom> atom)
  * @param index
  * @param position
  */
-void Molecule::addAtomPosition(const size_t index, const Vec3D &position)
+void Molecule::addAtomPosition(AtomIndex index, const Vec3D &position)
 {
-    _atoms[index]->addPosition(position);
+    _atoms[index.get()]->addPosition(position);
 }
 
 /**
@@ -333,9 +334,9 @@ void Molecule::addAtomPosition(const size_t index, const Vec3D &position)
  * @param index
  * @param velocity
  */
-void Molecule::addAtomVelocity(const size_t index, const Vec3D &velocity)
+void Molecule::addAtomVelocity(AtomIndex index, const Vec3D &velocity)
 {
-    _atoms[index]->addVelocity(velocity);
+    _atoms[index.get()]->addVelocity(velocity);
 }
 
 /**
@@ -344,9 +345,9 @@ void Molecule::addAtomVelocity(const size_t index, const Vec3D &velocity)
  * @param index
  * @param force
  */
-void Molecule::addAtomForce(const size_t index, const Vec3D &force)
+void Molecule::addAtomForce(AtomIndex index, const Vec3D &force)
 {
-    _atoms[index]->addForce(force);
+    _atoms[index.get()]->addForce(force);
 }
 
 /**
@@ -355,9 +356,9 @@ void Molecule::addAtomForce(const size_t index, const Vec3D &force)
  * @param index
  * @param shiftForce
  */
-void Molecule::addAtomShiftForce(const size_t index, const Vec3D &shiftForce)
+void Molecule::addAtomShiftForce(AtomIndex index, const Vec3D &shiftForce)
 {
-    _atoms[index]->addShiftForce(shiftForce);
+    _atoms[index.get()]->addShiftForce(shiftForce);
 }
 
 /*****************************************
@@ -422,9 +423,9 @@ void Molecule::setAtomShiftForce(const size_t index, const Vec3D &shiftForce)
  * @param index
  * @return Vec3D
  */
-Vec3D Molecule::getAtomPosition(const size_t index) const
+Vec3D Molecule::getAtomPosition(AtomIndex index) const
 {
-    return _atoms[index]->getPosition();
+    return _atoms[index.get()]->getPosition();
 }
 
 /**
@@ -446,9 +447,9 @@ std::vector<Vec3D> Molecule::getAtomPositions() const
  * @param index
  * @return Vec3D
  */
-Vec3D Molecule::getAtomVelocity(const size_t index) const
+Vec3D Molecule::getAtomVelocity(AtomIndex index) const
 {
-    return _atoms[index]->getVelocity();
+    return _atoms[index.get()]->getVelocity();
 }
 
 /**
@@ -457,9 +458,9 @@ Vec3D Molecule::getAtomVelocity(const size_t index) const
  * @param index
  * @return Vec3D
  */
-Vec3D Molecule::getAtomForce(const size_t index) const
+Vec3D Molecule::getAtomForce(AtomIndex index) const
 {
-    return _atoms[index]->getForce();
+    return _atoms[index.get()]->getForce();
 }
 
 /**
@@ -490,9 +491,9 @@ AtomNumber Molecule::getAtomicNumber(const size_t index) const
  * @param index
  * @return double
  */
-double Molecule::getAtomMass(const size_t index) const
+double Molecule::getAtomMass(AtomIndex index) const
 {
-    return _atoms[index]->getMass();
+    return _atoms[index.get()]->getMass();
 }
 
 /**
@@ -501,9 +502,9 @@ double Molecule::getAtomMass(const size_t index) const
  * @param index
  * @return double
  */
-double Molecule::getPartialCharge(const size_t index) const
+double Molecule::getPartialCharge(AtomIndex index) const
 {
-    return _atoms[index]->getPartialCharge();
+    return _atoms[index.get()]->getPartialCharge();
 }
 
 /**
@@ -512,9 +513,9 @@ double Molecule::getPartialCharge(const size_t index) const
  * @param index
  * @return size_t
  */
-size_t Molecule::getAtomType(const size_t index) const
+size_t Molecule::getAtomType(AtomIndex index) const
 {
-    return _atoms[index]->getAtomType();
+    return _atoms[index.get()]->getAtomType();
 }
 
 /**
@@ -523,9 +524,9 @@ size_t Molecule::getAtomType(const size_t index) const
  * @param index
  * @return VdwType
  */
-VdwType Molecule::getInternalGlobalVDWType(const size_t index) const
+VdwType Molecule::getInternalGlobalVDWType(AtomIndex index) const
 {
-    return _atoms[index]->getInternalGlobalVDWType();
+    return _atoms[index.get()]->getInternalGlobalVDWType();
 }
 
 /**
@@ -534,9 +535,9 @@ VdwType Molecule::getInternalGlobalVDWType(const size_t index) const
  * @param index
  * @return std::string
  */
-std::string Molecule::getAtomName(const size_t index) const
+std::string Molecule::getAtomName(AtomIndex index) const
 {
-    return _atoms[index]->getName();
+    return _atoms[index.get()]->getName();
 }
 
 /***************************
@@ -608,7 +609,10 @@ double Molecule::getSmoothingFactor() const { return _smoothingFactor; }
  * @param index
  * @return Atom
  */
-Atom &Molecule::getAtom(const size_t index) { return *(_atoms[index]); }
+Atom &Molecule::getAtom(const AtomIndex index)
+{
+    return *(_atoms[index.get()]);
+}
 
 /**
  * @brief returns the atoms of the molecule

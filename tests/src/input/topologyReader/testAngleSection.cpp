@@ -49,9 +49,9 @@ TEST_F(TestTopologySection, processSectionAngle)
     EXPECT_EQ(angles[0].getMolecules()[0], &(molecules[0]));
     EXPECT_EQ(angles[0].getMolecules()[1], &(molecules[1]));
     EXPECT_EQ(angles[0].getMolecules()[2], &(molecules[1]));
-    EXPECT_EQ(angles[0].getAtomIndices()[0], 0);
-    EXPECT_EQ(angles[0].getAtomIndices()[1], 0);
-    EXPECT_EQ(angles[0].getAtomIndices()[2], 1);
+    EXPECT_EQ(angles[0].getAtomIndices()[0], AtomIndex{0});
+    EXPECT_EQ(angles[0].getAtomIndices()[1], AtomIndex{0});
+    EXPECT_EQ(angles[0].getAtomIndices()[2], AtomIndex{1});
     EXPECT_EQ(angles[0].getType(), AngleId{7});
     EXPECT_EQ(angles[0].isLinker(), false);
 

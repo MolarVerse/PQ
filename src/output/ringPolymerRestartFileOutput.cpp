@@ -55,7 +55,7 @@ namespace out
             for (const auto &molecule : beads[i].getMolecules())
             {
                 const size_t nAtoms = molecule.getNumberOfAtoms();
-                for (size_t j = 0; j < nAtoms; ++j)
+                for (AtomIndex j{0}; j.get() < nAtoms; ++j)
                 {
                     const auto atomName = molecule.getAtomName(j);
                     const auto molType  = molecule.getMoltype();
@@ -70,14 +70,27 @@ namespace out
                     const auto fz       = molecule.getAtomForce(j)[2];
 
                     buffer << std::format("{:>5}{}\t", atomName, i + 1);
-                    buffer << std::format("{:>5}\t", j + 1);
+                    buffer << std::format("{:>5}\t", j.get() + 1);
                     buffer << std::format("{:>5}\t", molType);
 
-                    // clang-format off
-                buffer << std::format("{:15.8f}\t{:15.8f}\t{:15.8f}\t", x, y, z);
-                buffer << std::format("{:19.8e}\t{:19.8e}\t{:19.8e}\t", vx, vy, vz);
-                buffer << std::format("{:15.8f}\t{:15.8f}\t{:15.8f}", fx, fy, fz);
-                    // clang-format on
+                    buffer << std::format(
+                        "{:15.8f}\t{:15.8f}\t{:15.8f}\t",
+                        x,
+                        y,
+                        z
+                    );
+                    buffer << std::format(
+                        "{:19.8e}\t{:19.8e}\t{:19.8e}\t",
+                        vx,
+                        vy,
+                        vz
+                    );
+                    buffer << std::format(
+                        "{:15.8f}\t{:15.8f}\t{:15.8f}",
+                        fx,
+                        fy,
+                        fz
+                    );
 
                     buffer << '\n';
                 }

@@ -77,7 +77,7 @@ namespace out
             for (const auto &molecule : beads[i].getMolecules())
             {
                 const auto nAtoms = molecule.getNumberOfAtoms();
-                for (size_t j = 0; j < nAtoms; ++j)
+                for (AtomIndex j{0}; j.get() < nAtoms; ++j)
                 {
                     const auto atomName = molecule.getAtomName(j);
                     const auto x        = molecule.getAtomPosition(j)[0];
@@ -122,7 +122,7 @@ namespace out
             {
                 const auto nAtoms = molecule.getNumberOfAtoms();
 
-                for (size_t j = 0; j < nAtoms; ++j)
+                for (AtomIndex j{0}; j.get() < nAtoms; ++j)
                 {
                     const auto atomName = molecule.getAtomName(j);
                     const auto vx       = molecule.getAtomVelocity(j)[0];
@@ -175,7 +175,7 @@ namespace out
             {
                 const auto nAtoms = molecule.getNumberOfAtoms();
 
-                for (size_t j = 0; j < nAtoms; ++j)
+                for (AtomIndex j{0}; j.get() < nAtoms; ++j)
                 {
                     const auto atomName = molecule.getAtomName(j);
                     const auto fx       = molecule.getAtomForce(j)[0];

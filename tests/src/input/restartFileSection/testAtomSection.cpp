@@ -217,19 +217,19 @@ TEST_F(TestAtomSection, testProcessAtomLine)
         ->processAtomLine(line, _engine->getSimulationBox(), molecule);
 
     ASSERT_THAT(
-        molecule.getAtomPosition(0),
+        molecule.getAtomPosition(AtomIndex{0}),
         testing::ElementsAre(stod(line[3]), stod(line[4]), stod(line[5]))
     );
     ASSERT_THAT(
-        molecule.getAtomVelocity(0),
+        molecule.getAtomVelocity(AtomIndex{0}),
         testing::ElementsAre(stod(line[6]), stod(line[7]), stod(line[8]))
     );
     ASSERT_THAT(
-        molecule.getAtomForce(0),
+        molecule.getAtomForce(AtomIndex{0}),
         testing::ElementsAre(stod(line[9]), stod(line[10]), stod(line[11]))
     );
 
-    ASSERT_EQ(molecule.getAtom(0).getAtomTypeName(), line[0]);
+    ASSERT_EQ(molecule.getAtom(AtomIndex{0}).getAtomTypeName(), line[0]);
 }
 
 TEST_F(TestAtomSection, testProcessQMAtomLine)

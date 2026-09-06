@@ -69,8 +69,8 @@ class TestBondConstraint : public ::testing::Test
         _bondConstraint = new constraints::BondConstraint(
             &(_box->getMolecules()[0]),
             &(_box->getMolecules()[0]),
-            0,
-            1,
+            AtomIndex{0},
+            AtomIndex{1},
             _targetBondLength
         );
     }

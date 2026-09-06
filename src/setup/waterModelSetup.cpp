@@ -251,7 +251,7 @@ void WaterModelSetup::checkMoldescriptorWaterCharge(
     const auto modelName   = string(WaterModelSettings::getWaterInterModel());
     const auto checkCharge = [&modelName](
                                  const molsys::Molecule &water,
-                                 const size_t            atomIndex,
+                                 AtomIndex               atomIndex,
                                  const double            expected,
                                  const std::string      &atomName
                              )
@@ -278,9 +278,9 @@ void WaterModelSetup::checkMoldescriptorWaterCharge(
 
     for (const auto &water : waterMolecules)
     {
-        checkCharge(water, 0, state._oxygenCharge, "O");
-        checkCharge(water, 1, state._hydrogenCharge, "H1");
-        checkCharge(water, 2, state._hydrogenCharge, "H2");
+        checkCharge(water, AtomIndex{0}, state._oxygenCharge, "O");
+        checkCharge(water, AtomIndex{1}, state._hydrogenCharge, "H1");
+        checkCharge(water, AtomIndex{2}, state._hydrogenCharge, "H2");
     };
 }
 
@@ -334,11 +334,11 @@ void WaterModelSetup::shakeSetupForRigidWater(
     const RigidWaterGeometry &geometry
 )
 {
-    const auto   dOH     = geometry.dOH;
-    const auto   dHH     = geometry.dHH;
-    const size_t OIndex  = 0;
-    const size_t H1Index = 1;
-    const size_t H2Index = 2;
+    const auto      dOH = geometry.dOH;
+    const auto      dHH = geometry.dHH;
+    const AtomIndex OIndex{0};
+    const AtomIndex H1Index{1};
+    const AtomIndex H2Index{2};
 
     const auto &constraints = _engine.getConstraints();
 

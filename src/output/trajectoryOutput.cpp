@@ -131,7 +131,7 @@ void TrajectoryOutput::writeVelocities(SimulationBox &simBox, const size_t step)
     {
         const auto nAtoms = molecule.getNumberOfAtoms();
 
-        for (size_t i = 0; i < nAtoms; ++i)
+        for (AtomIndex i{0}; i.get() < nAtoms; ++i)
         {
             buffer << std::format("{:<5}\t", molecule.getAtomName(i));
 
@@ -165,7 +165,7 @@ void TrajectoryOutput::writeForces(SimulationBox &simBox, const size_t step)
     {
         const auto nAtoms = molecule.getNumberOfAtoms();
 
-        for (size_t i = 0; i < nAtoms; ++i)
+        for (AtomIndex i{0}; i.get() < nAtoms; ++i)
         {
             buffer << std::format("{:<5}\t", molecule.getAtomName(i));
 
