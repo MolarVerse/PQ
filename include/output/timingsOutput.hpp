@@ -31,7 +31,7 @@ namespace timings
     class GlobalTimer;   // forward declaration
 }   // namespace timings
 
-namespace output
+namespace out
 {
 
     /**
@@ -48,6 +48,6 @@ namespace output
         void write();
     };
 
-}   // namespace output
+}   // namespace out
 
 #endif /* __TIMINGS_OUTPUT_HPP__ */

@@ -22,45 +22,49 @@
 
 #include "virialOutput.hpp"
 
-#include <format>    // for format
+#include <format>   // for format
 
 #include "physicalData.hpp"   // for PhysicalData
 
-using output::VirialOutput;
-using namespace physicalData;
-
-/**
- * @brief Write the virial output
- *
- * @details The virial output is written in the following format:
- * - step
- * - v_xx
- * - v_xy
- * - v_xz
- * - v_yx
- * - v_yy
- * - v_yz
- * - v_zx
- * - v_zy
- * - v_zz
- *
- * @param step
- * @param data
- */
-void VirialOutput::write(const size_t step, const PhysicalData &data)
+namespace out
 {
-    const auto virial = data.getVirial();
 
-    _fp << std::format("{:10d}\t", step);
-    _fp << std::format("{:20.5e}\t", virial[0][0]);
-    _fp << std::format("{:20.5e}\t", virial[0][1]);
-    _fp << std::format("{:20.5e}\t", virial[0][2]);
-    _fp << std::format("{:20.5e}\t", virial[1][0]);
-    _fp << std::format("{:20.5e}\t", virial[1][1]);
-    _fp << std::format("{:20.5e}\t", virial[1][2]);
-    _fp << std::format("{:20.5e}\t", virial[2][0]);
-    _fp << std::format("{:20.5e}\t", virial[2][1]);
-    _fp << std::format("{:20.5e}\n", virial[2][2]);
+    /**
+     * @brief Write the virial output
+     *
+     * @details The virial output is written in the following format:
+     * - step
+     * - v_xx
+     * - v_xy
+     * - v_xz
+     * - v_yx
+     * - v_yy
+     * - v_yz
+     * - v_zx
+     * - v_zy
+     * - v_zz
+     *
+     * @param step
+     * @param data
+     */
+    void VirialOutput::write(
+        const size_t                      step,
+        const physicalData::PhysicalData &data
+    )
+    {
+        const auto virial = data.getVirial();
 
-    _fp << std::flush;
-}
+        _fp << std::format("{:10d}\t", step);
+        _fp << std::format("{:20.5e}\t", virial[0][0]);
+        _fp << std::format("{:20.5e}\t", virial[0][1]);
+        _fp << std::format("{:20.5e}\t", virial[0][2]);
+        _fp << std::format("{:20.5e}\t", virial[1][0]);
+        _fp << std::format("{:20.5e}\t", virial[1][1]);
+        _fp << std::format("{:20.5e}\t", virial[1][2]);
+        _fp << std::format("{:20.5e}\t", virial[2][0]);
+        _fp << std::format("{:20.5e}\t", virial[2][1]);
+        _fp << std::format("{:20.5e}\n", virial[2][2]);
+
+        _fp << std::flush;
+    }
+}   // namespace out

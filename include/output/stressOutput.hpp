@@ -33,7 +33,7 @@ namespace physicalData
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
 
-namespace output
+namespace out
 {
     /**
      * @class StressOutput inherits from Output
@@ -49,6 +49,6 @@ namespace output
         void write(const size_t step, const physicalData::PhysicalData &);
     };
 
-}   // namespace output
+}   // namespace out
 
 #endif   // _STRESS_OUTPUT_HPP_

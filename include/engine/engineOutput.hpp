@@ -60,36 +60,35 @@ namespace engine
     class EngineOutput
     {
        private:
-        std::unique_ptr<output::EnergyOutput> _energyOutput;
-        std::unique_ptr<output::EnergyOutput> _instantEnergyOutput;
-        std::unique_ptr<output::InfoOutput>   _infoOutput;
+        std::unique_ptr<out::EnergyOutput> _energyOutput;
+        std::unique_ptr<out::EnergyOutput> _instantEnergyOutput;
+        std::unique_ptr<out::InfoOutput>   _infoOutput;
 
-        std::unique_ptr<output::TrajectoryOutput> _xyzOutput;
-        std::unique_ptr<output::TrajectoryOutput> _xyzHybridCenterOutput;
-        std::unique_ptr<output::TrajectoryOutput> _velOutput;
-        std::unique_ptr<output::TrajectoryOutput> _forceOutput;
-        std::unique_ptr<output::TrajectoryOutput> _chargeOutput;
-        std::unique_ptr<output::RstFileOutput>    _rstFileOutput;
+        std::unique_ptr<out::TrajectoryOutput> _xyzOutput;
+        std::unique_ptr<out::TrajectoryOutput> _xyzHybridCenterOutput;
+        std::unique_ptr<out::TrajectoryOutput> _velOutput;
+        std::unique_ptr<out::TrajectoryOutput> _forceOutput;
+        std::unique_ptr<out::TrajectoryOutput> _chargeOutput;
+        std::unique_ptr<out::RstFileOutput>    _rstFileOutput;
 
-        std::unique_ptr<output::LogOutput>    _logOutput;
-        std::unique_ptr<output::StdoutOutput> _stdoutOutput;
+        std::unique_ptr<out::LogOutput>    _logOutput;
+        std::unique_ptr<out::StdoutOutput> _stdoutOutput;
 
-        std::unique_ptr<output::MomentumOutput> _momentumOutput;
-        std::unique_ptr<output::VirialOutput>   _virialOutput;
-        std::unique_ptr<output::StressOutput>   _stressOutput;
-        std::unique_ptr<output::BoxFileOutput>  _boxFileOutput;
+        std::unique_ptr<out::MomentumOutput> _momentumOutput;
+        std::unique_ptr<out::VirialOutput>   _virialOutput;
+        std::unique_ptr<out::StressOutput>   _stressOutput;
+        std::unique_ptr<out::BoxFileOutput>  _boxFileOutput;
 
-        std::unique_ptr<output::OptOutput> _optOutput;
+        std::unique_ptr<out::OptOutput> _optOutput;
 
-        std::unique_ptr<output::RingPolymerRestartFileOutput>
-                                                             _rpmdRstFileOutput;
-        std::unique_ptr<output::RingPolymerTrajectoryOutput> _rpmdXyzOutput;
-        std::unique_ptr<output::RingPolymerTrajectoryOutput> _rpmdVelOutput;
-        std::unique_ptr<output::RingPolymerTrajectoryOutput> _rpmdForceOutput;
-        std::unique_ptr<output::RingPolymerTrajectoryOutput> _rpmdChargeOutput;
-        std::unique_ptr<output::RingPolymerEnergyOutput>     _rpmdEnergyOutput;
+        std::unique_ptr<out::RingPolymerRestartFileOutput> _rpmdRstFileOutput;
+        std::unique_ptr<out::RingPolymerTrajectoryOutput>  _rpmdXyzOutput;
+        std::unique_ptr<out::RingPolymerTrajectoryOutput>  _rpmdVelOutput;
+        std::unique_ptr<out::RingPolymerTrajectoryOutput>  _rpmdForceOutput;
+        std::unique_ptr<out::RingPolymerTrajectoryOutput>  _rpmdChargeOutput;
+        std::unique_ptr<out::RingPolymerEnergyOutput>      _rpmdEnergyOutput;
 
-        std::unique_ptr<output::TimingsOutput> _timingsOutput;
+        std::unique_ptr<out::TimingsOutput> _timingsOutput;
 
        public:
         EngineOutput();
@@ -159,36 +158,36 @@ namespace engine
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] output::EnergyOutput     &getEnergyOutput();
-        [[nodiscard]] output::EnergyOutput     &getInstantEnergyOutput();
-        [[nodiscard]] output::TrajectoryOutput &getXyzOutput();
-        [[nodiscard]] output::TrajectoryOutput &getXyzHybridCenterOutput();
-        [[nodiscard]] output::TrajectoryOutput &getVelOutput();
-        [[nodiscard]] output::TrajectoryOutput &getForceOutput();
-        [[nodiscard]] output::TrajectoryOutput &getChargeOutput();
-        [[nodiscard]] output::RstFileOutput    &getRstFileOutput();
-        [[nodiscard]] output::InfoOutput       &getInfoOutput();
+        [[nodiscard]] out::EnergyOutput     &getEnergyOutput();
+        [[nodiscard]] out::EnergyOutput     &getInstantEnergyOutput();
+        [[nodiscard]] out::TrajectoryOutput &getXyzOutput();
+        [[nodiscard]] out::TrajectoryOutput &getXyzHybridCenterOutput();
+        [[nodiscard]] out::TrajectoryOutput &getVelOutput();
+        [[nodiscard]] out::TrajectoryOutput &getForceOutput();
+        [[nodiscard]] out::TrajectoryOutput &getChargeOutput();
+        [[nodiscard]] out::RstFileOutput    &getRstFileOutput();
+        [[nodiscard]] out::InfoOutput       &getInfoOutput();
 
-        [[nodiscard]] output::LogOutput    &getLogOutput();
-        [[nodiscard]] output::StdoutOutput &getStdoutOutput();
+        [[nodiscard]] out::LogOutput    &getLogOutput();
+        [[nodiscard]] out::StdoutOutput &getStdoutOutput();
 
-        [[nodiscard]] output::MomentumOutput &getMomentumOutput();
-        [[nodiscard]] output::VirialOutput   &getVirialOutput();
-        [[nodiscard]] output::StressOutput   &getStressOutput();
-        [[nodiscard]] output::BoxFileOutput  &getBoxFileOutput();
+        [[nodiscard]] out::MomentumOutput &getMomentumOutput();
+        [[nodiscard]] out::VirialOutput   &getVirialOutput();
+        [[nodiscard]] out::StressOutput   &getStressOutput();
+        [[nodiscard]] out::BoxFileOutput  &getBoxFileOutput();
 
-        [[nodiscard]] output::OptOutput &getOptOutput();
+        [[nodiscard]] out::OptOutput &getOptOutput();
 
         // clang-format off
-        [[nodiscard]] output::RingPolymerRestartFileOutput &getRingPolymerRstFileOutput();
-        [[nodiscard]] output::RingPolymerTrajectoryOutput &getRingPolymerXyzOutput();
-        [[nodiscard]] output::RingPolymerTrajectoryOutput &getRingPolymerVelOutput();
-        [[nodiscard]] output::RingPolymerTrajectoryOutput &getRingPolymerForceOutput();
-        [[nodiscard]] output::RingPolymerTrajectoryOutput &getRingPolymerChargeOutput();
-        [[nodiscard]] output::RingPolymerEnergyOutput &getRingPolymerEnergyOutput();
+        [[nodiscard]] out::RingPolymerRestartFileOutput &getRingPolymerRstFileOutput();
+        [[nodiscard]] out::RingPolymerTrajectoryOutput &getRingPolymerXyzOutput();
+        [[nodiscard]] out::RingPolymerTrajectoryOutput &getRingPolymerVelOutput();
+        [[nodiscard]] out::RingPolymerTrajectoryOutput &getRingPolymerForceOutput();
+        [[nodiscard]] out::RingPolymerTrajectoryOutput &getRingPolymerChargeOutput();
+        [[nodiscard]] out::RingPolymerEnergyOutput &getRingPolymerEnergyOutput();
         // clang-format on
 
-        [[nodiscard]] output::TimingsOutput &getTimingsOutput();
+        [[nodiscard]] out::TimingsOutput &getTimingsOutput();
     };
 
 }   // namespace engine

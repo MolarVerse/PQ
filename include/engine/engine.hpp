@@ -114,16 +114,16 @@ namespace engine
          * output getter methods *
          *************************/
 
-        [[nodiscard]] EngineOutput          &getEngineOutput();
-        [[nodiscard]] output::LogOutput     &getLogOutput();
-        [[nodiscard]] output::StdoutOutput  &getStdoutOutput();
-        [[nodiscard]] output::TimingsOutput &getTimingsOutput();
+        [[nodiscard]] EngineOutput       &getEngineOutput();
+        [[nodiscard]] out::LogOutput     &getLogOutput();
+        [[nodiscard]] out::StdoutOutput  &getStdoutOutput();
+        [[nodiscard]] out::TimingsOutput &getTimingsOutput();
 
-        [[nodiscard]] output::TrajectoryOutput &getXyzOutput();
-        [[nodiscard]] output::TrajectoryOutput &getForceOutput();
-        [[nodiscard]] output::InfoOutput       &getInfoOutput();
-        [[nodiscard]] output::EnergyOutput     &getEnergyOutput();
-        [[nodiscard]] output::RstFileOutput    &getRstFileOutput();
+        [[nodiscard]] out::TrajectoryOutput &getXyzOutput();
+        [[nodiscard]] out::TrajectoryOutput &getForceOutput();
+        [[nodiscard]] out::InfoOutput       &getInfoOutput();
+        [[nodiscard]] out::EnergyOutput     &getEnergyOutput();
+        [[nodiscard]] out::RstFileOutput    &getRstFileOutput();
 
         /***********************
          * get pointer methods *

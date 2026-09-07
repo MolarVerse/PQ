@@ -33,7 +33,7 @@ namespace opt
     class Optimizer;   // forward declaration
 }   // namespace opt
 
-namespace output
+namespace out
 {
     /**
      * @class OptOutput inherits from Output
@@ -49,6 +49,6 @@ namespace output
         void write(const size_t step, const opt::Optimizer& optimizer);
     };
 
-}   // namespace output
+}   // namespace out
 
 #endif   // _OPT_OUTPUT_HPP_

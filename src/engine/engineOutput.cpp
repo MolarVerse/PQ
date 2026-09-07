@@ -60,50 +60,34 @@ using namespace physicalData;
 using namespace thermostat;
 using namespace configurator;
 
-using output::BoxFileOutput;
-using output::EnergyOutput;
-using output::InfoOutput;
-using output::LogOutput;
-using output::MomentumOutput;
-using output::OptOutput;
-using output::RingPolymerEnergyOutput;
-using output::RingPolymerRestartFileOutput;
-using output::RingPolymerTrajectoryOutput;
-using output::RstFileOutput;
-using output::StdoutOutput;
-using output::StressOutput;
-using output::TimingsOutput;
-using output::TrajectoryOutput;
-using output::VirialOutput;
-
 // clang-format off
 /**
  * @brief constructor
  */
 EngineOutput::EngineOutput()
-    : _energyOutput(std::make_unique<EnergyOutput>(DefaultFiles::energyFile)), 
-      _instantEnergyOutput(std::make_unique<EnergyOutput>(DefaultFiles::instEnFile)),
-      _infoOutput(std::make_unique<InfoOutput>(DefaultFiles::infoFile)),
-      _xyzOutput(std::make_unique<TrajectoryOutput>(DefaultFiles::trajFile)),
-      _xyzHybridCenterOutput(std::make_unique<TrajectoryOutput>(DefaultFiles::hybridCenterFile)),
-      _velOutput(std::make_unique<TrajectoryOutput>(DefaultFiles::velFile)),
-      _forceOutput(std::make_unique<TrajectoryOutput>(DefaultFiles::forceFile)),
-      _chargeOutput(std::make_unique<TrajectoryOutput>(DefaultFiles::chargeFile)),
-      _rstFileOutput(std::make_unique<RstFileOutput>(DefaultFiles::restartFile)),
-      _logOutput(std::make_unique<LogOutput>(DefaultFiles::logFile)),
-      _stdoutOutput(std::make_unique<StdoutOutput>(DefaultFiles::stdoutFile)),
-      _momentumOutput(std::make_unique<MomentumOutput>(DefaultFiles::momentumFile)),
-      _virialOutput(std::make_unique<VirialOutput>(DefaultFiles::virialFile)),
-      _stressOutput(std::make_unique<StressOutput>(DefaultFiles::stressFile)),
-      _boxFileOutput(std::make_unique<BoxFileOutput>(DefaultFiles::boxFile)),
-      _optOutput(std::make_unique<OptOutput>(DefaultFiles::optFile)),
-      _rpmdRstFileOutput(std::make_unique<RingPolymerRestartFileOutput>(DefaultFiles::rpmdRstFile)),
-      _rpmdXyzOutput(std::make_unique<RingPolymerTrajectoryOutput>(DefaultFiles::rpmdTrajFile)),
-      _rpmdVelOutput(std::make_unique<RingPolymerTrajectoryOutput>(DefaultFiles::rpmdVelFile)),
-      _rpmdForceOutput(std::make_unique<RingPolymerTrajectoryOutput>(DefaultFiles::rpmdForceFile)),
-      _rpmdChargeOutput(std::make_unique<RingPolymerTrajectoryOutput>(DefaultFiles::rpmdChargeFile)),
-      _rpmdEnergyOutput(std::make_unique<RingPolymerEnergyOutput>(DefaultFiles::rpmdEnergyFile)),
-      _timingsOutput(std::make_unique<TimingsOutput>(DefaultFiles::timingsFile))
+    : _energyOutput(std::make_unique<out::EnergyOutput>(DefaultFiles::energyFile)), 
+      _instantEnergyOutput(std::make_unique<out::EnergyOutput>(DefaultFiles::instEnFile)),
+      _infoOutput(std::make_unique<out::InfoOutput>(DefaultFiles::infoFile)),
+      _xyzOutput(std::make_unique<out::TrajectoryOutput>(DefaultFiles::trajFile)),
+      _xyzHybridCenterOutput(std::make_unique<out::TrajectoryOutput>(DefaultFiles::hybridCenterFile)),
+      _velOutput(std::make_unique<out::TrajectoryOutput>(DefaultFiles::velFile)),
+      _forceOutput(std::make_unique<out::TrajectoryOutput>(DefaultFiles::forceFile)),
+      _chargeOutput(std::make_unique<out::TrajectoryOutput>(DefaultFiles::chargeFile)),
+      _rstFileOutput(std::make_unique<out::RstFileOutput>(DefaultFiles::restartFile)),
+      _logOutput(std::make_unique<out::LogOutput>(DefaultFiles::logFile)),
+      _stdoutOutput(std::make_unique<out::StdoutOutput>(DefaultFiles::stdoutFile)),
+      _momentumOutput(std::make_unique<out::MomentumOutput>(DefaultFiles::momentumFile)),
+      _virialOutput(std::make_unique<out::VirialOutput>(DefaultFiles::virialFile)),
+      _stressOutput(std::make_unique<out::StressOutput>(DefaultFiles::stressFile)),
+      _boxFileOutput(std::make_unique<out::BoxFileOutput>(DefaultFiles::boxFile)),
+      _optOutput(std::make_unique<out::OptOutput>(DefaultFiles::optFile)),
+      _rpmdRstFileOutput(std::make_unique<out::RingPolymerRestartFileOutput>(DefaultFiles::rpmdRstFile)),
+      _rpmdXyzOutput(std::make_unique<out::RingPolymerTrajectoryOutput>(DefaultFiles::rpmdTrajFile)),
+      _rpmdVelOutput(std::make_unique<out::RingPolymerTrajectoryOutput>(DefaultFiles::rpmdVelFile)),
+      _rpmdForceOutput(std::make_unique<out::RingPolymerTrajectoryOutput>(DefaultFiles::rpmdForceFile)),
+      _rpmdChargeOutput(std::make_unique<out::RingPolymerTrajectoryOutput>(DefaultFiles::rpmdChargeFile)),
+      _rpmdEnergyOutput(std::make_unique<out::RingPolymerEnergyOutput>(DefaultFiles::rpmdEnergyFile)),
+      _timingsOutput(std::make_unique<out::TimingsOutput>(DefaultFiles::timingsFile))
 
 {
 }
@@ -437,14 +421,14 @@ void EngineOutput::writeTimingsFile()
  *
  * @return EnergyOutput
  */
-EnergyOutput &EngineOutput::getEnergyOutput() { return *_energyOutput; }
+out::EnergyOutput &EngineOutput::getEnergyOutput() { return *_energyOutput; }
 
 /**
  * @brief getter for instant energy output
  *
  * @return EnergyOutput
  */
-EnergyOutput &EngineOutput::getInstantEnergyOutput()
+out::EnergyOutput &EngineOutput::getInstantEnergyOutput()
 {
     return *_instantEnergyOutput;
 }
@@ -454,21 +438,24 @@ EnergyOutput &EngineOutput::getInstantEnergyOutput()
  *
  * @return MomentumOutput
  */
-MomentumOutput &EngineOutput::getMomentumOutput() { return *_momentumOutput; }
+out::MomentumOutput &EngineOutput::getMomentumOutput()
+{
+    return *_momentumOutput;
+}
 
 /**
  * @brief getter for xyz output
  *
  * @return TrajectoryOutput
  */
-TrajectoryOutput &EngineOutput::getXyzOutput() { return *_xyzOutput; }
+out::TrajectoryOutput &EngineOutput::getXyzOutput() { return *_xyzOutput; }
 
 /**
  * @brief getter for hybrid center xyz output
  *
  * @return TrajectoryOutput
  */
-TrajectoryOutput &EngineOutput::getXyzHybridCenterOutput()
+out::TrajectoryOutput &EngineOutput::getXyzHybridCenterOutput()
 {
     return *_xyzHybridCenterOutput;
 }
@@ -478,84 +465,87 @@ TrajectoryOutput &EngineOutput::getXyzHybridCenterOutput()
  *
  * @return TrajectoryOutput
  */
-TrajectoryOutput &EngineOutput::getVelOutput() { return *_velOutput; }
+out::TrajectoryOutput &EngineOutput::getVelOutput() { return *_velOutput; }
 
 /**
  * @brief getter for force output
  *
  * @return TrajectoryOutput
  */
-TrajectoryOutput &EngineOutput::getForceOutput() { return *_forceOutput; }
+out::TrajectoryOutput &EngineOutput::getForceOutput() { return *_forceOutput; }
 
 /**
  * @brief getter for charge output
  *
  * @return TrajectoryOutput
  */
-TrajectoryOutput &EngineOutput::getChargeOutput() { return *_chargeOutput; }
+out::TrajectoryOutput &EngineOutput::getChargeOutput()
+{
+    return *_chargeOutput;
+}
 
 /**
  * @brief getter for log output
  *
  * @return LogOutput
  */
-LogOutput &EngineOutput::getLogOutput() { return *_logOutput; }
+out::LogOutput &EngineOutput::getLogOutput() { return *_logOutput; }
 
 /**
  * @brief getter for stdout output
  *
  * @return StdoutOutput
  */
-StdoutOutput &EngineOutput::getStdoutOutput() { return *_stdoutOutput; }
+out::StdoutOutput &EngineOutput::getStdoutOutput() { return *_stdoutOutput; }
 
 /**
  * @brief getter for restart file output
  *
  * @return RstFileOutput
  */
-RstFileOutput &EngineOutput::getRstFileOutput() { return *_rstFileOutput; }
+out::RstFileOutput &EngineOutput::getRstFileOutput() { return *_rstFileOutput; }
 
 /**
  * @brief getter for info output
  *
  * @return InfoOutput
  */
-InfoOutput &EngineOutput::getInfoOutput() { return *_infoOutput; }
+out::InfoOutput &EngineOutput::getInfoOutput() { return *_infoOutput; }
 
 /**
  * @brief getter for virial output
  *
  * @return VirialOutput
  */
-VirialOutput &EngineOutput::getVirialOutput() { return *_virialOutput; }
+out::VirialOutput &EngineOutput::getVirialOutput() { return *_virialOutput; }
 
 /**
  * @brief getter for stress output
  *
  * @return StressOutput
  */
-StressOutput &EngineOutput::getStressOutput() { return *_stressOutput; }
+out::StressOutput &EngineOutput::getStressOutput() { return *_stressOutput; }
 
 /**
  * @brief getter for box file output
  *
  * @return BoxFileOutput
  */
-BoxFileOutput &EngineOutput::getBoxFileOutput() { return *_boxFileOutput; }
+out::BoxFileOutput &EngineOutput::getBoxFileOutput() { return *_boxFileOutput; }
 
 /**
  * @brief getter for optimizer output
  *
  * @return OptOutput
  */
-OptOutput &EngineOutput::getOptOutput() { return *_optOutput; }
+out::OptOutput &EngineOutput::getOptOutput() { return *_optOutput; }
 
 /**
  * @brief getter for ring polymer restart file output
  *
  * @return RPMDRestartFileOutput
  */
-RingPolymerRestartFileOutput &EngineOutput::getRingPolymerRstFileOutput()
+out::RingPolymerRestartFileOutput &EngineOutput::getRingPolymerRstFileOutput()
 {
     return *_rpmdRstFileOutput;
 }
@@ -565,7 +555,7 @@ RingPolymerRestartFileOutput &EngineOutput::getRingPolymerRstFileOutput()
  *
  * @return RPMDTrajectoryOutput
  */
-RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerXyzOutput()
+out::RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerXyzOutput()
 {
     return *_rpmdXyzOutput;
 }
@@ -575,7 +565,7 @@ RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerXyzOutput()
  *
  * @return RPMDTrajectoryOutput
  */
-RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerVelOutput()
+out::RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerVelOutput()
 {
     return *_rpmdVelOutput;
 }
@@ -585,7 +575,7 @@ RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerVelOutput()
  *
  * @return RPMDTrajectoryOutput
  */
-RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerForceOutput()
+out::RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerForceOutput()
 {
     return *_rpmdForceOutput;
 }
@@ -595,7 +585,7 @@ RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerForceOutput()
  *
  * @return RPMDTrajectoryOutput
  */
-RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerChargeOutput()
+out::RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerChargeOutput()
 {
     return *_rpmdChargeOutput;
 }
@@ -605,7 +595,7 @@ RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerChargeOutput()
  *
  * @return RPMDEnergyOutput
  */
-RingPolymerEnergyOutput &EngineOutput::getRingPolymerEnergyOutput()
+out::RingPolymerEnergyOutput &EngineOutput::getRingPolymerEnergyOutput()
 {
     return *_rpmdEnergyOutput;
 }
@@ -615,4 +605,4 @@ RingPolymerEnergyOutput &EngineOutput::getRingPolymerEnergyOutput()
  *
  * @return TimingsOutput
  */
-TimingsOutput &EngineOutput::getTimingsOutput() { return *_timingsOutput; }
+out::TimingsOutput &EngineOutput::getTimingsOutput() { return *_timingsOutput; }

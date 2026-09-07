@@ -38,7 +38,7 @@ using namespace settings;
  */
 TEST(TestOutput, testSpecialSetFilename)
 {
-    auto output = output::Output("default.log");
+    auto output = out::Output("default.log");
 
     EXPECT_THROW_MSG(
         output.setFilename(""),

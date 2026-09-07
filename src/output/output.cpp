@@ -30,7 +30,7 @@
 
 using namespace std;
 using namespace exc;
-using namespace output;
+using namespace out;
 using namespace settings;
 
 /**

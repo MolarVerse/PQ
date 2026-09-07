@@ -208,7 +208,7 @@ TEST_F(TestLogOutput, writeInitialMomentum)
         line,
         std::format(
             "INFO:    Initial momentum = 1.00000e-01 {}*amu/fs",
-            output::ANGSTROM
+            out::ANGSTROM
         )
     );
 }

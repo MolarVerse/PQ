@@ -27,7 +27,7 @@
 #include "constants/conversionFactors.hpp"
 #include "globalTimer.hpp"   // for GlobalTimer
 
-using namespace output;
+using namespace out;
 using namespace timings;
 
 /**

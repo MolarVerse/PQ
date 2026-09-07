@@ -39,7 +39,7 @@ using namespace intraNonBonded;
 using namespace virial;
 using namespace pot;
 using namespace constraints;
-using namespace output;
+using namespace out;
 using namespace timings;
 using namespace settings;
 
