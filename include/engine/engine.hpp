@@ -58,7 +58,7 @@ namespace engine
 
         physicalData::PhysicalData _averagePhysicalData;
 
-        std::shared_ptr<potential::Potential>           _potential;
+        std::shared_ptr<pot::Potential>                 _potential;
         std::shared_ptr<physicalData::PhysicalData>     _physicalData;
         std::shared_ptr<molsys::SimulationBox>          _simulationBox;
         std::shared_ptr<molsys::CellList>               _cellList;
@@ -104,7 +104,7 @@ namespace engine
         [[nodiscard]]
         const std::shared_ptr<forceField::ForceField> &getForceField() const;
         [[nodiscard]]
-        const std::shared_ptr<potential::Potential> &getPotential() const;
+        const std::shared_ptr<pot::Potential> &getPotential() const;
 
         [[nodiscard]] molsys::SimulationBox      &getSimulationBox();
         [[nodiscard]] physicalData::PhysicalData &getPhysicalData();

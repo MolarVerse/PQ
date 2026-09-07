@@ -36,7 +36,7 @@ namespace molsys
     class CellList;   // forward declaration
 }   // namespace molsys
 
-namespace potential
+namespace pot
 {
     /**
      * @class PotentialCellList
@@ -82,6 +82,6 @@ namespace potential
         [[nodiscard]] std::shared_ptr<Potential> clone() const override;
     };
 
-}   // namespace potential
+}   // namespace pot
 
 #endif   // _POTENTIAL_CELL_LIST_HPP_

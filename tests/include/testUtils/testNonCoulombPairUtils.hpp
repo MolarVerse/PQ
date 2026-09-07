@@ -34,7 +34,7 @@
  */
 struct TestMorsePairUtils
 {
-    static const MorseParams& params(const potential::MorsePair* morsePair);
+    static const MorseParams& params(const pot::MorsePair* morsePair);
 };
 
 /**
@@ -43,7 +43,7 @@ struct TestMorsePairUtils
  */
 struct TestLJPairUtils
 {
-    static const LJParams& params(const potential::LennardJonesPair* ljPair);
+    static const LJParams& params(const pot::LennardJonesPair* ljPair);
 };
 
 /**
@@ -52,9 +52,7 @@ struct TestLJPairUtils
  */
 struct TestBuckinghamPairUtils
 {
-    static const BuckinghamParams& params(
-        const potential::BuckinghamPair* buckPair
-    );
+    static const BuckinghamParams& params(const pot::BuckinghamPair* buckPair);
 };
 
 /**
@@ -64,7 +62,7 @@ struct TestBuckinghamPairUtils
 struct TestGuffPairUtils
 {
     static const std::array<double, defaults::NUM_GUFF_COEFFICIENTS>& coeffs(
-        const potential::GuffPair* guffPair
+        const pot::GuffPair* guffPair
     );
 };
 

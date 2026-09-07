@@ -31,7 +31,7 @@
 
 struct TestLJPairUtils;
 
-namespace potential
+namespace pot
 {
 
     /**
@@ -82,6 +82,6 @@ namespace potential
         friend struct ::TestLJPairUtils;
     };
 
-}   // namespace potential
+}   // namespace pot
 
 #endif   // _LENNARD_JONES_PAIR_HPP_

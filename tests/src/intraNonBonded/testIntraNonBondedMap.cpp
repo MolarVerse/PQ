@@ -40,10 +40,10 @@
 #include "simulationBox.hpp"             // for SimulationBox
 #include "strongTypes.hpp"
 
-namespace potential
+namespace pot
 {
     class NonCoulombPair;   // forward declaration
-}   // namespace potential
+}   // namespace pot
 
 class TestIntraNonBondedMap : public TestNonCoulombPotentialFF
 {
@@ -82,12 +82,12 @@ TEST_F(TestIntraNonBondedMap, calculateSingleInteractionAndCalculate)
     auto intraNonBondedMap =
         intraNonBonded::IntraNonBondedMap(&molecule, &intraNonBondedType);
 
-    auto coulombPotential = potential::CoulombShiftedPotential(10.0);
+    auto coulombPotential = pot::CoulombShiftedPotential(10.0);
     setNonCoulombPairsMatrix(
-        linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(2, 2)
+        linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
     );
 
-    auto nonCoulombPair = potential::LennardJonesPair(
+    auto nonCoulombPair = pot::LennardJonesPair(
         ExtVdwType(0),
         ExtVdwType(1),
         10.0,

@@ -26,7 +26,7 @@
 
 #include "potential.hpp"
 
-namespace potential
+namespace pot
 {
     /**
      * @class PotentialBruteForce
@@ -71,6 +71,6 @@ namespace potential
 
         [[nodiscard]] std::shared_ptr<Potential> clone() const override;
     };
-}   // namespace potential
+}   // namespace pot
 
 #endif   // _POTENTIAL_BRUTE_FORCE_HPP_

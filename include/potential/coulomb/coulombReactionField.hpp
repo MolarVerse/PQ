@@ -28,7 +28,7 @@
 
 #include "coulombPotential.hpp"
 
-namespace potential
+namespace pot
 {
     /**
      * @class CoulombReactionField
@@ -62,6 +62,6 @@ namespace potential
         ) const override;
     };
 
-}   // namespace potential
+}   // namespace pot
 
 #endif   // _COULOMB_REACTION_FIELD_HPP_

@@ -24,7 +24,7 @@
 
 #include "mathUtilities.hpp"   // for compare
 
-using namespace potential;
+using namespace pot;
 using namespace utilities;
 
 /**

@@ -47,7 +47,7 @@
 #include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
 
 using namespace input::guffdat;
-using namespace potential;
+using namespace pot;
 using namespace settings;
 using namespace constants;
 using namespace exc;

@@ -40,7 +40,7 @@
 #include "simulationBox.hpp"             // for SimulationBox
 
 using namespace setup;
-using namespace potential;
+using namespace pot;
 using namespace engine;
 using namespace settings;
 using namespace exc;
@@ -161,7 +161,7 @@ void PotentialSetup::setupNonCoulombicPairs()
     auto &simBox = _engine.getSimulationBox();
 
     // clang-format off
-    auto &nonCoulPot = dynamic_cast<potential::ForceFieldNonCoulomb&>(pot->getNonCoulombPotential());
+    auto &nonCoulPot = dynamic_cast<pot::ForceFieldNonCoulomb&>(pot->getNonCoulombPotential());
     nonCoulPot.setupNonCoulombicCutoffs();
     // clang-format on
 

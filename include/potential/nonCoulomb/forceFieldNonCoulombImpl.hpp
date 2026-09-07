@@ -26,16 +26,16 @@
 #include "forceFieldNonCoulomb.hpp"
 #include "matrix.hpp"
 
-namespace potential
+namespace pot
 {
     class NonCoulombPair;   // forward declaration
-}   // namespace potential
+}   // namespace pot
 
 /**
  * @brief struct to hold the non-coulombic pairs matrix
  *
  */
-struct potential::ForceFieldNonCoulomb::matrix
+struct pot::ForceFieldNonCoulomb::matrix
 {
     linearAlgebra::Matrix<std::shared_ptr<NonCoulombPair>> matrix;
 };

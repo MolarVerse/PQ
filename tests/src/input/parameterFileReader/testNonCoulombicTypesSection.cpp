@@ -37,7 +37,7 @@
 #include "throwWithMessage.hpp"           // for ASSERT_THROW_MSG
 
 using namespace input::parameterFile;
-using namespace potential;
+using namespace pot;
 using namespace exc;
 using namespace settings;
 

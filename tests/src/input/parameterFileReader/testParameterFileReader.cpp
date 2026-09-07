@@ -160,7 +160,7 @@ TEST_F(TestParameterFileReader, readParameterFile)
 {
     settings::ForceFieldSettings::activate();
     _engine->getPotential()->makeNonCoulombPotential(
-        potential::ForceFieldNonCoulomb()
+        pot::ForceFieldNonCoulomb()
     );
     settings::FileSettings::setParameterFileName(
         "data/parameterFileReader/param.param"

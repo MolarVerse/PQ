@@ -29,7 +29,7 @@
 
 #include "nonCoulombPotential.hpp"
 
-namespace potential
+namespace pot
 {
     /**
      * @class GuffNonCoulomb
@@ -79,6 +79,6 @@ namespace potential
         [[nodiscard]] size_t getAtomType2(const std::vector<size_t> &) const;
     };
 
-}   // namespace potential
+}   // namespace pot
 
 #endif   // _GUFF_NON_COULOMB_HPP_

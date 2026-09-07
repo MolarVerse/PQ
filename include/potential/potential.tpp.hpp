@@ -34,7 +34,7 @@
 #include "molecule.hpp"
 #include "potential.hpp"
 
-namespace potential
+namespace pot
 {
     /**
      * @brief Calculate non-bonded inter-molecular interactions between two
@@ -382,6 +382,6 @@ namespace potential
         return atom.getPartialCharge();
     }
 
-}   // namespace potential
+}   // namespace pot
 
 #endif   // _POTENTIAL_TPP_

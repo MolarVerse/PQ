@@ -65,8 +65,8 @@ namespace forceField
         std::vector<DihedralType>  _improperDihedralTypes;
         std::vector<JCouplingType> _jCouplingTypes;
 
-        std::shared_ptr<potential::NonCoulombPotential> _nonCoulombPot;
-        std::shared_ptr<potential::CoulombPotential>    _coulombPotential;
+        std::shared_ptr<pot::NonCoulombPotential> _nonCoulombPot;
+        std::shared_ptr<pot::CoulombPotential>    _coulombPotential;
 
        public:
         [[nodiscard]] std::shared_ptr<ForceField> clone() const;
@@ -156,10 +156,10 @@ namespace forceField
          ********************/
 
         void setNonCoulombPotential(
-            const std::shared_ptr<potential::NonCoulombPotential> &pot
+            const std::shared_ptr<pot::NonCoulombPotential> &pot
         );
         void setCoulombPotential(
-            const std::shared_ptr<potential::CoulombPotential> &pot
+            const std::shared_ptr<pot::CoulombPotential> &pot
         );
 
         /********************

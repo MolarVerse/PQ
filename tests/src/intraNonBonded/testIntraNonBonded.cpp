@@ -44,10 +44,10 @@
 #include "strongTypes.hpp"
 #include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
 
-namespace potential
+namespace pot
 {
     class NonCoulombPair;   // forward declaration
-}   // namespace potential
+}   // namespace pot
 
 class TestIntraNonBonded : public TestNonCoulombPotentialFF
 {
@@ -200,12 +200,12 @@ TEST_F(TestIntraNonBonded, calculate)
     auto intraNonBondedMap =
         intraNonBonded::IntraNonBondedMap(&molecule, &intraNonBondedType);
 
-    auto coulombPotential = potential::CoulombShiftedPotential(10.0);
+    auto coulombPotential = pot::CoulombShiftedPotential(10.0);
     setNonCoulombPairsMatrix(
-        linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(2, 2)
+        linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
     );
 
-    auto nonCoulombPair = potential::LennardJonesPair(
+    auto nonCoulombPair = pot::LennardJonesPair(
         ExtVdwType(0),
         ExtVdwType(1),
         10.0,
@@ -223,10 +223,10 @@ TEST_F(TestIntraNonBonded, calculate)
     intraNonBonded.addIntraNonBondedMap(intraNonBondedMap);
 
     intraNonBonded.setCoulombPotential(
-        std::make_shared<potential::CoulombShiftedPotential>(coulombPotential)
+        std::make_shared<pot::CoulombShiftedPotential>(coulombPotential)
     );
     intraNonBonded.setNonCoulombPotential(
-        std::make_shared<potential::ForceFieldNonCoulomb>(*_nonCoulombPotential)
+        std::make_shared<pot::ForceFieldNonCoulomb>(*_nonCoulombPotential)
     );
     EXPECT_NO_THROW(intraNonBonded.calculate(simulationBox, physicalData));
 }

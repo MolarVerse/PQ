@@ -24,7 +24,7 @@
 
 #include "strongTypes.hpp"
 
-using namespace potential;
+using namespace pot;
 
 /**
  * @brief Construct a new Lennard Jones Pair:: Lennard Jones Pair object

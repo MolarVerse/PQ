@@ -35,7 +35,7 @@ using namespace forceField;
 using namespace connectivity;
 using namespace linearAlgebra;
 using namespace physicalData;
-using namespace potential;
+using namespace pot;
 using namespace settings;
 using namespace molsys;
 

@@ -62,7 +62,7 @@ class TestParameterFileSection : public ::testing::Test
         _engine->getSimulationBox().addMolecule(molecule2);
 
         _engine->getPotential()->makeNonCoulombPotential(
-            potential::ForceFieldNonCoulomb()
+            pot::ForceFieldNonCoulomb()
         );
     }
 

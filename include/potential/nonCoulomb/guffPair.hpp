@@ -31,7 +31,7 @@
 
 struct TestGuffPairUtils;   // forward declaration
 
-namespace potential
+namespace pot
 {
     /**
      * @class GuffPair
@@ -69,6 +69,6 @@ namespace potential
         friend struct ::TestGuffPairUtils;
     };
 
-}   // namespace potential
+}   // namespace pot
 
 #endif   // _GUFF_PAIR_HPP_

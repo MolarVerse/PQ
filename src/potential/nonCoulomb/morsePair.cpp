@@ -24,7 +24,7 @@
 
 #include <cmath>   // for exp
 
-using namespace potential;
+using namespace pot;
 
 /**
  * @brief Construct a new Morse Pair:: Morse Pair object

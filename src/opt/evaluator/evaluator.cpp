@@ -33,7 +33,7 @@
 #include "virial.hpp"
 
 using namespace opt;
-using namespace potential;
+using namespace pot;
 using namespace molsys;
 using namespace physicalData;
 using namespace forceField;

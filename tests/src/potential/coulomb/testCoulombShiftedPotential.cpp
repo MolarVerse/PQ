@@ -26,7 +26,7 @@
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
 #include "gtest/gtest.h"                 // for Message, TestPartResult
 
-using namespace potential;
+using namespace pot;
 
 /**
  * @brief tests calculation of shifted Coulomb potential
