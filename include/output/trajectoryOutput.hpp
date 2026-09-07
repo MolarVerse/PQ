@@ -39,7 +39,7 @@ namespace configurator
     class HybridConfigurator;   // forward declaration
 }   // namespace configurator
 
-namespace output
+namespace out
 {
     /**
      * @class TrajectoryOutput inherits from Output
@@ -63,6 +63,6 @@ namespace output
         void writeCharges(molsys::SimulationBox &, const size_t);
     };
 
-}   // namespace output
+}   // namespace out
 
 #endif   // _TRAJECTORY_OUTPUT_HPP_

@@ -78,27 +78,27 @@ namespace engine
         [[nodiscard]] integrator::Integrator       &getIntegrator();
         [[nodiscard]] thermostat::Thermostat       &getThermostat();
         [[nodiscard]] manostat::Manostat           &getManostat();
-        [[nodiscard]] output::EnergyOutput         &getInstantEnergyOutput();
-        [[nodiscard]] output::MomentumOutput       &getMomentumOutput();
-        [[nodiscard]] output::TrajectoryOutput     &getXyzHybridCenterOutput();
-        [[nodiscard]] output::TrajectoryOutput     &getVelOutput();
-        [[nodiscard]] output::TrajectoryOutput     &getChargeOutput();
-        [[nodiscard]] output::VirialOutput         &getVirialOutput();
-        [[nodiscard]] output::StressOutput         &getStressOutput();
-        [[nodiscard]] output::BoxFileOutput        &getBoxFileOutput();
+        [[nodiscard]] out::EnergyOutput            &getInstantEnergyOutput();
+        [[nodiscard]] out::MomentumOutput          &getMomentumOutput();
+        [[nodiscard]] out::TrajectoryOutput        &getXyzHybridCenterOutput();
+        [[nodiscard]] out::TrajectoryOutput        &getVelOutput();
+        [[nodiscard]] out::TrajectoryOutput        &getChargeOutput();
+        [[nodiscard]] out::VirialOutput            &getVirialOutput();
+        [[nodiscard]] out::StressOutput            &getStressOutput();
+        [[nodiscard]] out::BoxFileOutput           &getBoxFileOutput();
 
         [[nodiscard]]
-        output::RingPolymerRestartFileOutput &getRingPolymerRstFileOutput();
+        out::RingPolymerRestartFileOutput &getRingPolymerRstFileOutput();
         [[nodiscard]]
-        output::RingPolymerTrajectoryOutput &getRingPolymerXyzOutput();
+        out::RingPolymerTrajectoryOutput &getRingPolymerXyzOutput();
         [[nodiscard]]
-        output::RingPolymerTrajectoryOutput &getRingPolymerVelOutput();
+        out::RingPolymerTrajectoryOutput &getRingPolymerVelOutput();
         [[nodiscard]]
-        output::RingPolymerTrajectoryOutput &getRingPolymerForceOutput();
+        out::RingPolymerTrajectoryOutput &getRingPolymerForceOutput();
         [[nodiscard]]
-        output::RingPolymerTrajectoryOutput &getRingPolymerChargeOutput();
+        out::RingPolymerTrajectoryOutput &getRingPolymerChargeOutput();
         [[nodiscard]]
-        output::RingPolymerEnergyOutput &getRingPolymerEnergyOutput();
+        out::RingPolymerEnergyOutput &getRingPolymerEnergyOutput();
 
         /***************************
          * make unique_ptr methods *

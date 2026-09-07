@@ -33,7 +33,7 @@ namespace molsys
     class Box;   // forward declaration
 }   // namespace molsys
 
-namespace output
+namespace out
 {
     /**
      * @class BoxFileOutput inherits from Output
@@ -49,6 +49,6 @@ namespace output
         void write(const size_t, const molsys::Box &);
     };
 
-}   // namespace output
+}   // namespace out
 
 #endif   // _BOX_FILE_OUTPUT_HPP_

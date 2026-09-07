@@ -29,7 +29,7 @@
 
 #include "physicalData.hpp"   // for PhysicalData
 
-using namespace output;
+using namespace out;
 using namespace physicalData;
 
 /**

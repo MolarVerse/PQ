@@ -339,9 +339,9 @@ std::shared_ptr<PhysicalData> OptEngine::getSharedPhysicalDataOld()
 /**
  * @brief get the optimizer output
  *
- * @return output::OptOutput&
+ * @return out::OptOutput&
  */
-output::OptOutput &OptEngine::getOptOutput()
+out::OptOutput &OptEngine::getOptOutput()
 {
     return _engineOutput.getOptOutput();
 }

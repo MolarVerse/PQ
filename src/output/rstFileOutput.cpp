@@ -32,7 +32,7 @@
 #include "simulationBox.hpp"          // for SimulationBox
 #include "thermostatSettings.hpp"     // for ThermostatType
 
-using namespace output;
+using namespace out;
 using namespace molsys;
 using namespace thermostat;
 using namespace settings;

@@ -33,7 +33,7 @@ namespace physicalData
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
 
-namespace output
+namespace out
 {
 
     /**
@@ -74,6 +74,6 @@ namespace output
         void write(const double, const physicalData::PhysicalData &);
     };
 
-}   // namespace output
+}   // namespace out
 
 #endif /* __INFO_OUTPUT_HPP__ */
