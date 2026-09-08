@@ -93,8 +93,12 @@ namespace pot
             const auto moltype_i = mol1.getMoltype();
             const auto moltype_j = mol2.getMoltype();
 
-            const auto combinedIdx =
-                {moltype_i, moltype_j, atomType_i, atomType_j};
+            const std::tuple combinedIdx{
+                moltype_i,
+                moltype_j,
+                atomType_i,
+                atomType_j
+            };
 
             const auto charge_i = getPartialCharge<ChargeTag1>(atom1);
             const auto charge_j = getPartialCharge<ChargeTag2>(atom2);
@@ -255,8 +259,12 @@ namespace pot
             const auto moltype_i = mol1.getMoltype();
             const auto moltype_j = mol2.getMoltype();
 
-            const auto combinedIdx =
-                {moltype_i, moltype_j, atomType_i, atomType_j};
+            const std::tuple combinedIdx{
+                moltype_i,
+                moltype_j,
+                atomType_i,
+                atomType_j
+            };
 
             const auto charge_i = getPartialCharge<ChargeTag1>(atom1);
             const auto charge_j = getPartialCharge<ChargeTag2>(atom2);

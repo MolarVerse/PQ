@@ -59,7 +59,7 @@ TEST(TestMShake, applyMShakeThreeAtomMolecule)
 {
     // --- reference shape: equilateral triangle in the xy plane ---
     auto moltype = MoleculeType();
-    moltype.setMoltype(1);
+    moltype.setMoltype(MolType{1});
     moltype.setName("triangle");
     moltype.setNumberOfAtoms(3);
 
@@ -87,7 +87,7 @@ TEST(TestMShake, applyMShakeThreeAtomMolecule)
     simBox.setBoxDimensions({100.0, 100.0, 100.0});
 
     auto molecule = Molecule();
-    molecule.setMoltype(1);
+    molecule.setMoltype(MolType{1});
     molecule.setNumberOfAtoms(3);
 
     const auto refPos0 = Vec3D(0.0, 0.0, 0.0);
@@ -145,7 +145,7 @@ TEST(TestMShake, applyMShakeThreeAtomMolecule)
 TEST(TestMShake, applyMShakeThrowsWhenIterationLimitTooSmall)
 {
     auto moltype = MoleculeType();
-    moltype.setMoltype(1);
+    moltype.setMoltype(MolType{1});
     moltype.setName("triangle");
     moltype.setNumberOfAtoms(3);
 
@@ -169,7 +169,7 @@ TEST(TestMShake, applyMShakeThrowsWhenIterationLimitTooSmall)
     simBox.setBoxDimensions({100.0, 100.0, 100.0});
 
     auto molecule = Molecule();
-    molecule.setMoltype(1);
+    molecule.setMoltype(MolType{1});
     molecule.setNumberOfAtoms(3);
 
     const auto refPos0 = Vec3D(0.0, 0.0, 0.0);

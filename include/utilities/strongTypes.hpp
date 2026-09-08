@@ -44,6 +44,29 @@ struct AtomIndexTag{};
 using AtomIndex = StrongSizeT<struct AtomIndexTag>;
 // clang-format on
 
+// clang-format off
+struct AtomTypeTag{};
+using AtomType = StrongSizeT<struct AtomTypeTag>;
+// clang-format on
+
+struct ExtAtomTypeTag
+{
+    static std::string toString(const size_t &value)
+    {
+        return std::format("ExtAtomType({})", value);
+    }
+};
+using ExtAtomType = StrongSizeT<struct ExtAtomTypeTag>;
+
+struct MolTypeTag
+{
+    static std::string toString(const size_t &value)
+    {
+        return std::format("MolType({})", value);
+    }
+};
+using MolType = StrongSizeT<struct MolTypeTag>;
+
 struct BondIdTag
 {
     static std::string toString(const size_t &value)

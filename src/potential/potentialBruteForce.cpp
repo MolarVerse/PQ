@@ -59,7 +59,7 @@ void PotentialBruteForce::calculateForces(
     auto _ = scopedTimer(TimerId::Potential, "InterNonBonded");
 
     const auto box            = simBox.getBoxPtr();
-    const auto waterTypeValue = simBox.getWaterType().value_or(size_t{0});
+    const auto waterTypeValue = simBox.getWaterType().value_or(MolType{0});
     const auto isWaterInterModelSet =
         WaterModelSettings::isInterWaterModelSet();
 
@@ -131,7 +131,7 @@ void PotentialBruteForce::calculateCoreToOuterForces(
 
     double totalCoulombEnergy = 0.0;
 
-    const auto waterTypeValue = simBox.getWaterType().value_or(size_t{0});
+    const auto waterTypeValue = simBox.getWaterType().value_or(MolType{0});
     const auto isWaterInterModelSet =
         WaterModelSettings::isInterWaterModelSet();
 
@@ -174,7 +174,7 @@ void PotentialBruteForce::calculateLayerToOuterForces(
     auto _ = scopedTimer(TimerId::Potential, "InterNonBondedLayerToOuter");
 
     const auto box            = simBox.getBoxPtr();
-    const auto waterTypeValue = simBox.getWaterType().value_or(size_t{0});
+    const auto waterTypeValue = simBox.getWaterType().value_or(MolType{0});
     const auto isWaterInterModelSet =
         WaterModelSettings::isInterWaterModelSet();
 
@@ -249,7 +249,7 @@ void PotentialBruteForce::calculateHotspotSmoothingMMForces(
     auto _ = scopedTimer(TimerId::Potential, "InterNonBondedSmoothingMM");
 
     const auto box            = simBox.getBoxPtr();
-    const auto waterTypeValue = simBox.getWaterType().value_or(size_t{0});
+    const auto waterTypeValue = simBox.getWaterType().value_or(MolType{0});
     const auto isWaterInterModelSet =
         WaterModelSettings::isInterWaterModelSet();
 

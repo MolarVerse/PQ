@@ -59,11 +59,11 @@ class TestIntraNonBonded : public TestNonCoulombPotentialFF
 TEST_F(TestIntraNonBonded, findIntraNonBondedContainerByMolType)
 {
     const auto intraNonBondedContainer1 =
-        intraNonBonded::IntraNonBondedContainer(0, {{-1}});
+        intraNonBonded::IntraNonBondedContainer(MolType{0}, {{-1}});
     const auto intraNonBondedContainer2 =
-        intraNonBonded::IntraNonBondedContainer(1, {{-1}});
+        intraNonBonded::IntraNonBondedContainer(MolType{1}, {{-1}});
     const auto intraNonBondedContainer3 =
-        intraNonBonded::IntraNonBondedContainer(2, {{-1}});
+        intraNonBonded::IntraNonBondedContainer(MolType{2}, {{-1}});
 
     auto intraNonBonded = intraNonBonded::IntraNonBonded();
     intraNonBonded.addIntraNonBondedContainer(intraNonBondedContainer1);
@@ -71,7 +71,7 @@ TEST_F(TestIntraNonBonded, findIntraNonBondedContainerByMolType)
     intraNonBonded.addIntraNonBondedContainer(intraNonBondedContainer3);
 
     const auto *intraNonBondedContainerPtr =
-        intraNonBonded.findIntraNonBondedContainerByMolType(1);
+        intraNonBonded.findIntraNonBondedContainerByMolType(MolType{1});
 
     EXPECT_EQ(
         intraNonBondedContainerPtr->getMolType(),
@@ -84,9 +84,9 @@ TEST_F(TestIntraNonBonded, findIntraNonBondedContainerByMolType)
 
     EXPECT_THROW_MSG(
         [[maybe_unused]] const auto dummy =
-            intraNonBonded.findIntraNonBondedContainerByMolType(3),
+            intraNonBonded.findIntraNonBondedContainerByMolType(MolType{3}),
         exc::IntraNonBondedException,
-        std::format("IntraNonBondedContainer with molType 3 not found!")
+        "IntraNonBondedContainer with molType MolType(3) not found!"
     )
 }
 
@@ -96,11 +96,11 @@ TEST_F(TestIntraNonBonded, findIntraNonBondedContainerByMolType)
 TEST_F(TestIntraNonBonded, fillIntraNonBondedMaps)
 {
     const auto intraNonBondedContainer1 =
-        intraNonBonded::IntraNonBondedContainer(0, {{-1}});
+        intraNonBonded::IntraNonBondedContainer(MolType{0}, {{-1}});
     const auto intraNonBondedContainer2 =
-        intraNonBonded::IntraNonBondedContainer(1, {{-1}});
+        intraNonBonded::IntraNonBondedContainer(MolType{1}, {{-1}});
     const auto intraNonBondedContainer3 =
-        intraNonBonded::IntraNonBondedContainer(2, {{-1}});
+        intraNonBonded::IntraNonBondedContainer(MolType{2}, {{-1}});
 
     auto intraNonBonded = intraNonBonded::IntraNonBonded();
     intraNonBonded.addIntraNonBondedContainer(intraNonBondedContainer1);
@@ -108,11 +108,11 @@ TEST_F(TestIntraNonBonded, fillIntraNonBondedMaps)
     intraNonBonded.addIntraNonBondedContainer(intraNonBondedContainer3);
 
     auto simulationBox = molsys::SimulationBox();
-    auto molecule1     = molsys::Molecule(0);
-    auto molecule2     = molsys::Molecule(1);
-    auto molecule3     = molsys::Molecule(2);
-    auto molecule4     = molsys::Molecule(1);
-    auto molecule5     = molsys::Molecule(2);
+    auto molecule1     = molsys::Molecule{MolType{0}};
+    auto molecule2     = molsys::Molecule{MolType{1}};
+    auto molecule3     = molsys::Molecule{MolType{2}};
+    auto molecule4     = molsys::Molecule{MolType{1}};
+    auto molecule5     = molsys::Molecule{MolType{2}};
 
     simulationBox.addMolecule(molecule1);
     simulationBox.addMolecule(molecule2);
@@ -172,7 +172,7 @@ TEST_F(TestIntraNonBonded, fillIntraNonBondedMaps)
  */
 TEST_F(TestIntraNonBonded, calculate)
 {
-    auto molecule = molsys::Molecule(0);
+    auto molecule = molsys::Molecule{MolType{0}};
     molecule.setNumberOfAtoms(2);
 
     auto atom1 = std::make_shared<molsys::Atom>();
@@ -184,8 +184,8 @@ TEST_F(TestIntraNonBonded, calculate)
     atom2->setForce({0.0, 0.0, 0.0});
     atom1->setInternalGlobalVDWType(VdwType{0});
     atom2->setInternalGlobalVDWType(VdwType{1});
-    atom1->setAtomType(0);
-    atom2->setAtomType(1);
+    atom1->setAtomType(AtomType{0});
+    atom2->setAtomType(AtomType{1});
     atom1->setPartialCharge(0.5);
     atom2->setPartialCharge(-0.5);
 
@@ -196,7 +196,7 @@ TEST_F(TestIntraNonBonded, calculate)
     settings::PotentialSettings::setScale14VanDerWaals(0.75);
 
     auto intraNonBondedType =
-        intraNonBonded::IntraNonBondedContainer(0, {{-1}});
+        intraNonBonded::IntraNonBondedContainer(MolType{0}, {{-1}});
     auto intraNonBondedMap =
         intraNonBonded::IntraNonBondedMap(&molecule, &intraNonBondedType);
 

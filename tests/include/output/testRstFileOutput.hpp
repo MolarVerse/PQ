@@ -66,7 +66,7 @@ class TestRstFileOutput : public ::testing::Test
         atom2->setName("O");
         atom1->setPartialCharge(1.0);
         atom2->setPartialCharge(-1.0);
-        molecule1.setMoltype(1);
+        molecule1.setMoltype(MolType{1});
         molecule1.addAtom(atom1);
         molecule1.addAtom(atom2);
 
@@ -81,7 +81,7 @@ class TestRstFileOutput : public ::testing::Test
         atom3->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
         atom3->setName("Ar");
         atom3->setPartialCharge(0.0);
-        molecule2.setMoltype(2);
+        molecule2.setMoltype(MolType{2});
         molecule2.addAtom(atom3);
 
         _simulationBox->addMolecule(molecule1);

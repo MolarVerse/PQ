@@ -70,7 +70,7 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
 
     auto molecule = molsys::Molecule();
 
-    molecule.setMoltype(0);
+    molecule.setMoltype(MolType{0});
     molecule.setNumberOfAtoms(3);
 
     auto atom1 = std::make_shared<molsys::Atom>();
@@ -89,9 +89,9 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
     atom2->setInternalGlobalVDWType(VdwType{1});
     atom3->setInternalGlobalVDWType(VdwType{1});
 
-    atom1->setAtomType(0);
-    atom2->setAtomType(1);
-    atom3->setAtomType(1);
+    atom1->setAtomType(AtomType{0});
+    atom2->setAtomType(AtomType{1});
+    atom3->setAtomType(AtomType{1});
 
     atom1->setPartialCharge(1.0);
     atom2->setPartialCharge(-0.5);
@@ -257,7 +257,7 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
     auto coulombPotential = pot::CoulombShiftedPotential(10.0);
 
     auto molecule = molsys::Molecule();
-    molecule.setMoltype(0);
+    molecule.setMoltype(MolType{0});
     molecule.setNumberOfAtoms(3);
 
     auto atom1 = std::make_shared<molsys::Atom>();

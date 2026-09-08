@@ -70,7 +70,7 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
 
     auto molecule = molsys::Molecule();
 
-    molecule.setMoltype(0);
+    molecule.setMoltype(MolType{0});
     molecule.setNumberOfAtoms(4);
 
     auto atom1 = std::make_shared<molsys::Atom>();
@@ -93,10 +93,10 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
     atom3->setInternalGlobalVDWType(VdwType{0});
     atom4->setInternalGlobalVDWType(VdwType{1});
 
-    atom1->setAtomType(0);
-    atom2->setAtomType(1);
-    atom3->setAtomType(0);
-    atom4->setAtomType(1);
+    atom1->setAtomType(AtomType{0});
+    atom2->setAtomType(AtomType{1});
+    atom3->setAtomType(AtomType{0});
+    atom4->setAtomType(AtomType{1});
 
     atom1->setPartialCharge(1.0);
     atom2->setPartialCharge(-0.5);

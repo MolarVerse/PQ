@@ -8,3 +8,5 @@
 - add strong type for bukcingham params aka `BuckinghamParams`
 - make guff pair used `std::array` instead of `std::vector`
 - introduce `AtomIndex` instead of `size_t` for indexing into molecule 
+- implement `AtomType` and `ExtAtomType` instead of `size_t`
+- implement `MolType` instead of `size_t`

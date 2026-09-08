@@ -361,7 +361,7 @@ namespace engine
         size_t count = 0;
         for (const auto &mol : _simulationBox->getMolecules())
         {
-            if (mol.getMoltype() == 0 && mol.getHybridZone() != CORE)
+            if (mol.getMoltype() == MolType{0} && mol.getHybridZone() != CORE)
             {
                 throw(HybridMDEngineException(
                     std::format(

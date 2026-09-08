@@ -74,9 +74,10 @@ namespace constraints
             const std::pair<linearAlgebra::Vec3D, linearAlgebra::Vec3D> &pos
         ) const;
 
-        [[nodiscard]] bool   isMShakeType(const size_t moltype) const;
-        [[nodiscard]] size_t findMShakeReferenceIndex(const size_t) const;
-        [[nodiscard]] const MShakeReference &findMShakeRef(const size_t) const;
+        [[nodiscard]] bool   isMShakeType(MolType molType) const;
+        [[nodiscard]] size_t findMShakeReferenceIndex(MolType molType) const;
+        [[nodiscard]]
+        const MShakeReference &findMShakeRef(MolType molType) const;
         [[nodiscard]]
         const std::vector<MShakeReference> &getMShakeReferences() const;
 

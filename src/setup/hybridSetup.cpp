@@ -258,7 +258,7 @@ void HybridSetup::validateQMChargeSettings()
 {
     const auto mmChargesRequested = !HybridSettings::getUseQMCharges();
     const auto qmAtomsPresent =
-        _engine.getSimulationBox().moleculeTypeExists(0);
+        _engine.getSimulationBox().moleculeTypeExists(MolType{0});
 
     if (mmChargesRequested && qmAtomsPresent)
     {

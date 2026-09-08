@@ -22,7 +22,7 @@
 
 #include "testSimulationBox.hpp"
 
-#include <cstddef>   // for size_t, std
+#include <cstddef>    // for size_t, std
 #include <optional>   // for optional
 #include <string>     // for string
 #include <vector>     // for vector
@@ -101,10 +101,10 @@ TEST_F(TestSimulationBox, centerOfMassOfMolecules)
  */
 TEST_F(TestSimulationBox, findMolecule)
 {
-    auto molecule = _simulationBox->findMolecule(1);
-    EXPECT_EQ(molecule.value().getMoltype(), 1);
+    auto molecule = _simulationBox->findMolecule(MolType{1});
+    EXPECT_EQ(molecule.value().getMoltype(), MolType{1});
 
-    molecule = _simulationBox->findMolecule(3);
+    molecule = _simulationBox->findMolecule(MolType{3});
     EXPECT_EQ(molecule, std::nullopt);
 }
 
@@ -114,11 +114,12 @@ TEST_F(TestSimulationBox, findMolecule)
  */
 TEST_F(TestSimulationBox, findMoleculeType)
 {
-    const auto molecule = _simulationBox->findMoleculeType(1);
-    EXPECT_EQ(molecule.getMoltype(), 1);
+    const auto molecule = _simulationBox->findMoleculeType(MolType{1});
+    EXPECT_EQ(molecule.getMoltype(), MolType{1});
 
     EXPECT_THROW(
-        [[maybe_unused]] auto &dummy = _simulationBox->findMoleculeType(3),
+        [[maybe_unused]] auto &dummy =
+            _simulationBox->findMoleculeType(MolType{3}),
         exc::RstFileException
     );
 }
@@ -159,9 +160,9 @@ TEST_F(TestSimulationBox, findNecessaryMoleculeTypes)
     auto molecule2     = molsys::Molecule();
     auto molecule3     = molsys::Molecule();
 
-    molecule1.setMoltype(1);
-    molecule2.setMoltype(2);
-    molecule3.setMoltype(3);
+    molecule1.setMoltype(MolType{1});
+    molecule2.setMoltype(MolType{2});
+    molecule3.setMoltype(MolType{3});
 
     simulationBox.addMolecule(molecule1);
     simulationBox.addMolecule(molecule2);
@@ -169,9 +170,9 @@ TEST_F(TestSimulationBox, findNecessaryMoleculeTypes)
     simulationBox.addMolecule(molecule2);
     simulationBox.addMolecule(molecule1);
 
-    const auto moleculeType1 = molsys::MoleculeType(1);
-    const auto moleculeType2 = molsys::MoleculeType(2);
-    const auto moleculeType3 = molsys::MoleculeType(3);
+    const auto moleculeType1 = molsys::MoleculeType(MolType{1});
+    const auto moleculeType2 = molsys::MoleculeType(MolType{2});
+    const auto moleculeType3 = molsys::MoleculeType(MolType{3});
 
     simulationBox.addMoleculeType(moleculeType1);
     simulationBox.addMoleculeType(moleculeType2);
@@ -179,9 +180,9 @@ TEST_F(TestSimulationBox, findNecessaryMoleculeTypes)
 
     auto necessaryMoleculeTypes = simulationBox.findNecessaryMoleculeTypes();
     EXPECT_EQ(necessaryMoleculeTypes.size(), 3);
-    EXPECT_EQ(necessaryMoleculeTypes[0].getMoltype(), 1);
-    EXPECT_EQ(necessaryMoleculeTypes[1].getMoltype(), 2);
-    EXPECT_EQ(necessaryMoleculeTypes[2].getMoltype(), 3);
+    EXPECT_EQ(necessaryMoleculeTypes[0].getMoltype(), MolType{1});
+    EXPECT_EQ(necessaryMoleculeTypes[1].getMoltype(), MolType{2});
+    EXPECT_EQ(necessaryMoleculeTypes[2].getMoltype(), MolType{3});
 }
 
 /**
@@ -233,8 +234,8 @@ TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
 TEST_F(TestSimulationBox, setupExternalToInternalGlobalVdwTypesMap)
 {
     molsys::SimulationBox simulationBox;
-    molsys::MoleculeType  molecule1(1);
-    molsys::MoleculeType  molecule2(2);
+    molsys::MoleculeType  molecule1(MolType{1});
+    molsys::MoleculeType  molecule2(MolType{2});
 
     molecule1.addExternalGlobalVDWType(ExtVdwType{1});
     molecule1.addExternalGlobalVDWType(ExtVdwType{3});
@@ -269,11 +270,11 @@ TEST_F(TestSimulationBox, setupExternalToInternalGlobalVdwTypesMap)
  */
 TEST_F(TestSimulationBox, moleculeTypeExists)
 {
-    _simulationBox->getMoleculeTypes()[0].setMoltype(1);
-    _simulationBox->getMoleculeTypes()[1].setMoltype(2);
+    _simulationBox->getMoleculeTypes()[0].setMoltype(MolType{1});
+    _simulationBox->getMoleculeTypes()[1].setMoltype(MolType{2});
 
-    EXPECT_TRUE(_simulationBox->moleculeTypeExists(1));
-    EXPECT_FALSE(_simulationBox->moleculeTypeExists(3));
+    EXPECT_TRUE(_simulationBox->moleculeTypeExists(MolType{1}));
+    EXPECT_FALSE(_simulationBox->moleculeTypeExists(MolType{3}));
 }
 
 /**
@@ -287,8 +288,14 @@ TEST_F(TestSimulationBox, findMoleculeTypeByString)
     _simulationBox->getMoleculeTypes()[0].setName("mol1");
     _simulationBox->getMoleculeTypes()[1].setName("mol2");
 
-    EXPECT_EQ(_simulationBox->findMoleculeTypeByString("mol1").value(), 1);
-    EXPECT_EQ(_simulationBox->findMoleculeTypeByString("mol2").value(), 2);
+    EXPECT_EQ(
+        _simulationBox->findMoleculeTypeByString("mol1").value(),
+        MolType{1}
+    );
+    EXPECT_EQ(
+        _simulationBox->findMoleculeTypeByString("mol2").value(),
+        MolType{2}
+    );
     EXPECT_EQ(
         _simulationBox->findMoleculeTypeByString("mol3").has_value(),
         false
@@ -302,8 +309,8 @@ TEST_F(TestSimulationBox, findMoleculeTypeByString)
 TEST_F(TestSimulationBox, setPartialChargesOfMoleculesFromMoleculeTypes)
 {
     molsys::SimulationBox simulationBox;
-    molsys::MoleculeType  molecule1(1);
-    molsys::MoleculeType  molecule2(2);
+    molsys::MoleculeType  molecule1(MolType{1});
+    molsys::MoleculeType  molecule2(MolType{2});
 
     molecule1.setPartialCharges({0.1, 0.2, 0.3});
     molecule2.setPartialCharges({0.4, 0.5});
@@ -317,9 +324,9 @@ TEST_F(TestSimulationBox, setPartialChargesOfMoleculesFromMoleculeTypes)
     const auto atom7 = std::make_shared<molsys::Atom>();
     const auto atom8 = std::make_shared<molsys::Atom>();
 
-    molsys::Molecule molecule3(1);
-    molsys::Molecule molecule4(2);
-    molsys::Molecule molecule5(1);
+    molsys::Molecule molecule3(MolType{1});
+    molsys::Molecule molecule4(MolType{2});
+    molsys::Molecule molecule5(MolType{1});
 
     molecule3.setNumberOfAtoms(3);
     molecule4.setNumberOfAtoms(2);
@@ -367,14 +374,14 @@ TEST_F(
 )
 {
     molsys::SimulationBox  simulationBox;
-    const molsys::Molecule molecule1(1);
+    const molsys::Molecule molecule1{MolType{1}};
 
     simulationBox.addMolecule(molecule1);
 
     EXPECT_THROW_MSG(
         simulationBox.setPartialChargesOfMoleculesFromMoleculeTypes(),
         exc::UserInputException,
-        "Molecule type 1 not found in molecule types"
+        "Molecule type MolType(1) not found in molecule types"
     );
 }
 
@@ -566,7 +573,7 @@ TEST_F(TestSimulationBox, validatesForcedLayerList)
 TEST_F(TestSimulationBox, assignsInternalVdwTypesToAtoms)
 {
     molsys::SimulationBox simBox;
-    molsys::MoleculeType  type(1);
+    molsys::MoleculeType  type(MolType{1});
     type.addExternalGlobalVDWType(ExtVdwType{4});
     type.addExternalGlobalVDWType(ExtVdwType{9});
     simBox.addMoleculeType(type);
@@ -576,7 +583,7 @@ TEST_F(TestSimulationBox, assignsInternalVdwTypesToAtoms)
     atom1->setExternalGlobalVDWType(ExtVdwType{4});
     atom2->setExternalGlobalVDWType(ExtVdwType{9});
 
-    molsys::Molecule molecule(1);
+    molsys::Molecule molecule(MolType{1});
     molecule.setNumberOfAtoms(2);
     molecule.addAtom(atom1);
     molecule.addAtom(atom2);

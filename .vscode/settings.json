@@ -224,6 +224,7 @@
         "outputfreq",
         "PARAMETERFILEEXCEPTION",
         "pimd",
+        "PMTR",
         "pqviews",
         "PREFACTOR",
         "progressbar",
