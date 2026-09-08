@@ -3,3 +3,4 @@
 - prepare files input file parser to remove engine dependency
 - prepare mm input file parser to remove engine dependency
 - remove engine member of all input file parser and the input file reader
+- start refactoring input file parser approach with a clean generalized interface using `InputKey<T>` and `InputRegistry` (no changes of existing code yet)
