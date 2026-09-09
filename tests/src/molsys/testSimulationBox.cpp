@@ -22,17 +22,17 @@
 
 #include "testSimulationBox.hpp"
 
-#include <cstddef>    // for size_t, std
-#include <optional>   // for optional
-#include <string>     // for string
-#include <vector>     // for vector
+#include <cstddef>
+#include <optional>
+#include <string>
+#include <vector>
 
-#include "exceptions.hpp"   // for ManostatException, RstFileException
-#include "gtest/gtest.h"    // for Message, TestPartResult, AssertionRe...
-#include "potentialSettings.hpp"   // for PotentialSettings
+#include "exceptions.hpp"
+#include "gtest/gtest.h"
+#include "potentialSettings.hpp"
 #include "strongTypes.hpp"
-#include "throwWithMessage.hpp"   // for throwWithMessage
-#include "vectorNear.hpp"         // for EXPECT_VECTOR_NEAR
+#include "throwWithMessage.hpp"
+#include "vectorNear.hpp"
 
 /**
  * @brief tests numberOfAtoms function
