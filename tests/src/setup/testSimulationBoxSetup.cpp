@@ -47,7 +47,7 @@ using setup::molsys::SimulationBoxSetup;
 
 TEST_F(TestSetup, setAtomNames)
 {
-    ::molsys::Molecule molecule(1);
+    ::molsys::Molecule molecule{MolType{1}};
     molecule.setNumberOfAtoms(3);
     const auto atom1 = std::make_shared<::molsys::Atom>();
     const auto atom2 = std::make_shared<::molsys::Atom>();
@@ -56,9 +56,9 @@ TEST_F(TestSetup, setAtomNames)
     molecule.addAtom(atom2);
     molecule.addAtom(atom3);
 
-    const ::molsys::Molecule qmMolecule(0);
+    const ::molsys::Molecule qmMolecule{MolType{0}};
 
-    ::molsys::MoleculeType moleculeType(1);
+    ::molsys::MoleculeType moleculeType(MolType{1});
     moleculeType.setNumberOfAtoms(3);
     moleculeType.addAtomName("zN");
     moleculeType.addAtomName("H");
@@ -83,7 +83,7 @@ TEST_F(TestSetup, setAtomNames)
 
 TEST_F(TestSetup, setAtomTypes)
 {
-    ::molsys::Molecule molecule(1);
+    ::molsys::Molecule molecule{MolType{1}};
     molecule.setNumberOfAtoms(3);
     const auto atom1 = std::make_shared<::molsys::Atom>();
     const auto atom2 = std::make_shared<::molsys::Atom>();
@@ -92,16 +92,16 @@ TEST_F(TestSetup, setAtomTypes)
     molecule.addAtom(atom2);
     molecule.addAtom(atom3);
 
-    const ::molsys::Molecule qmMolecule(0);
+    const ::molsys::Molecule qmMolecule{MolType{0}};
 
-    ::molsys::MoleculeType moleculeType(1);
+    ::molsys::MoleculeType moleculeType(MolType{1});
     moleculeType.setNumberOfAtoms(3);
-    moleculeType.addAtomType(0);
-    moleculeType.addAtomType(1);
-    moleculeType.addAtomType(2);
-    moleculeType.addExternalAtomType(0);
-    moleculeType.addExternalAtomType(1);
-    moleculeType.addExternalAtomType(2);
+    moleculeType.addAtomType(AtomType{0});
+    moleculeType.addAtomType(AtomType{1});
+    moleculeType.addAtomType(AtomType{2});
+    moleculeType.addExternalAtomType(ExtAtomType{0});
+    moleculeType.addExternalAtomType(ExtAtomType{1});
+    moleculeType.addExternalAtomType(ExtAtomType{2});
 
     _engine->getSimulationBox().addMolecule(molecule);
     _engine->getSimulationBox().addMolecule(qmMolecule);
@@ -115,17 +115,17 @@ TEST_F(TestSetup, setAtomTypes)
     simulationBoxSetup.setAtomTypes();
 
     auto mol = _engine->getSimulationBox().getMolecules()[0];
-    EXPECT_EQ(mol.getAtomType(AtomIndex{0}), 0);
-    EXPECT_EQ(mol.getAtomType(AtomIndex{1}), 1);
-    EXPECT_EQ(mol.getAtomType(AtomIndex{2}), 2);
-    EXPECT_EQ(mol.getAtom(AtomIndex{0}).getExternalAtomType(), 0);
-    EXPECT_EQ(mol.getAtom(AtomIndex{1}).getExternalAtomType(), 1);
-    EXPECT_EQ(mol.getAtom(AtomIndex{2}).getExternalAtomType(), 2);
+    EXPECT_EQ(mol.getAtomType(AtomIndex{0}), AtomType{0});
+    EXPECT_EQ(mol.getAtomType(AtomIndex{1}), AtomType{1});
+    EXPECT_EQ(mol.getAtomType(AtomIndex{2}), AtomType{2});
+    EXPECT_EQ(mol.getAtom(AtomIndex{0}).getExternalAtomType(), ExtAtomType{0});
+    EXPECT_EQ(mol.getAtom(AtomIndex{1}).getExternalAtomType(), ExtAtomType{1});
+    EXPECT_EQ(mol.getAtom(AtomIndex{2}).getExternalAtomType(), ExtAtomType{2});
 }
 
 TEST_F(TestSetup, setExternalVDWTypes)
 {
-    ::molsys::Molecule molecule(1);
+    ::molsys::Molecule molecule{MolType{1}};
     molecule.setNumberOfAtoms(3);
     const auto atom1 = std::make_shared<::molsys::Atom>();
     const auto atom2 = std::make_shared<::molsys::Atom>();
@@ -134,9 +134,9 @@ TEST_F(TestSetup, setExternalVDWTypes)
     molecule.addAtom(atom2);
     molecule.addAtom(atom3);
 
-    const ::molsys::Molecule qmMolecule(0);
+    const ::molsys::Molecule qmMolecule{MolType{0}};
 
-    ::molsys::MoleculeType moleculeType(1);
+    ::molsys::MoleculeType moleculeType(MolType{1});
     moleculeType.setNumberOfAtoms(3);
     moleculeType.addExternalGlobalVDWType(ExtVdwType{0});
     moleculeType.addExternalGlobalVDWType(ExtVdwType{1});
@@ -162,7 +162,7 @@ TEST_F(TestSetup, setExternalVDWTypes)
 
 TEST_F(TestSetup, setPartialCharges)
 {
-    ::molsys::Molecule molecule(1);
+    ::molsys::Molecule molecule{MolType{1}};
     molecule.setNumberOfAtoms(3);
     const auto atom1 = std::make_shared<::molsys::Atom>();
     const auto atom2 = std::make_shared<::molsys::Atom>();
@@ -171,9 +171,9 @@ TEST_F(TestSetup, setPartialCharges)
     molecule.addAtom(atom2);
     molecule.addAtom(atom3);
 
-    const ::molsys::Molecule qmMolecule(0);
+    const ::molsys::Molecule qmMolecule{MolType{0}};
 
-    ::molsys::MoleculeType moleculeType(1);
+    ::molsys::MoleculeType moleculeType(MolType{1});
     moleculeType.setNumberOfAtoms(3);
     moleculeType.addPartialCharge(0.0);
     moleculeType.addPartialCharge(1.0);
@@ -199,7 +199,7 @@ TEST_F(TestSetup, setPartialCharges)
 
 TEST_F(TestSetup, testSetAtomMasses)
 {
-    ::molsys::Molecule molecule(1);
+    ::molsys::Molecule molecule{MolType{1}};
     molecule.setNumberOfAtoms(3);
     const auto atom1 = std::make_shared<::molsys::Atom>();
     const auto atom2 = std::make_shared<::molsys::Atom>();
@@ -224,7 +224,7 @@ TEST_F(TestSetup, testSetAtomMasses)
 
 TEST_F(TestSetup, testSetAtomMassesThrowsError)
 {
-    ::molsys::Molecule molecule(1);
+    ::molsys::Molecule molecule{MolType{1}};
     molecule.setNumberOfAtoms(3);
     const auto atom1 = std::make_shared<::molsys::Atom>();
     const auto atom2 = std::make_shared<::molsys::Atom>();
@@ -246,7 +246,7 @@ TEST_F(TestSetup, testSetAtomMassesThrowsError)
 
 TEST_F(TestSetup, testSetAtomicNumbers)
 {
-    ::molsys::Molecule molecule(1);
+    ::molsys::Molecule molecule{MolType{1}};
     molecule.setNumberOfAtoms(3);
     const auto atom1 = std::make_shared<::molsys::Atom>();
     const auto atom2 = std::make_shared<::molsys::Atom>();
@@ -271,7 +271,7 @@ TEST_F(TestSetup, testSetAtomicNumbers)
 
 TEST_F(TestSetup, testSetAtomicNumbersThrowsError)
 {
-    ::molsys::Molecule molecule(1);
+    ::molsys::Molecule molecule{MolType{1}};
     molecule.setNumberOfAtoms(3);
     const auto atom1 = std::make_shared<::molsys::Atom>();
     const auto atom2 = std::make_shared<::molsys::Atom>();
@@ -293,7 +293,7 @@ TEST_F(TestSetup, testSetAtomicNumbersThrowsError)
 
 TEST_F(TestSetup, testSetMolMass)
 {
-    ::molsys::Molecule molecule1(1);
+    ::molsys::Molecule molecule1{MolType{1}};
     molecule1.setNumberOfAtoms(3);
     const auto atom1 = std::make_shared<::molsys::Atom>();
     const auto atom2 = std::make_shared<::molsys::Atom>();
@@ -305,7 +305,7 @@ TEST_F(TestSetup, testSetMolMass)
     molecule1.addAtom(atom2);
     molecule1.addAtom(atom3);
 
-    ::molsys::Molecule molecule2(2);
+    ::molsys::Molecule molecule2{MolType{2}};
     molecule2.setNumberOfAtoms(2);
     const auto atom4 = std::make_shared<::molsys::Atom>();
     const auto atom5 = std::make_shared<::molsys::Atom>();
@@ -328,7 +328,7 @@ TEST_F(TestSetup, testSetMolMass)
 
 TEST_F(TestSetup, testSetTotalCharge)
 {
-    ::molsys::Molecule molecule(1);
+    ::molsys::Molecule molecule{MolType{1}};
     molecule.setNumberOfAtoms(3);
     const auto atom1 = std::make_shared<::molsys::Atom>();
     const auto atom2 = std::make_shared<::molsys::Atom>();
@@ -462,7 +462,7 @@ TEST_F(TestSetup, testFullSetup)
 {
     settings::ForceFieldSettings::activate();
 
-    ::molsys::Molecule molecule1(1);
+    ::molsys::Molecule molecule1{MolType{1}};
     molecule1.setNumberOfAtoms(3);
     const auto atom1 = std::make_shared<::molsys::Atom>();
     const auto atom2 = std::make_shared<::molsys::Atom>();
@@ -476,7 +476,7 @@ TEST_F(TestSetup, testFullSetup)
 
     molecule1.setPartialCharges({0.1, 0.2, -0.4});
 
-    ::molsys::Molecule molecule2(2);
+    ::molsys::Molecule molecule2{MolType{2}};
     molecule2.setNumberOfAtoms(2);
     const auto atom4 = std::make_shared<::molsys::Atom>();
     const auto atom5 = std::make_shared<::molsys::Atom>();
@@ -490,8 +490,8 @@ TEST_F(TestSetup, testFullSetup)
     _engine->getSimulationBox().getMolecules().push_back(molecule1);
     _engine->getSimulationBox().getMolecules().push_back(molecule2);
 
-    auto moleculeType1 = ::molsys::MoleculeType(1);
-    auto moleculeType2 = ::molsys::MoleculeType(2);
+    auto moleculeType1 = molsys::MoleculeType(MolType{1});
+    auto moleculeType2 = molsys::MoleculeType(MolType{2});
 
     moleculeType1.setNumberOfAtoms(3);
     moleculeType1.addAtomName("C");
@@ -500,12 +500,12 @@ TEST_F(TestSetup, testFullSetup)
     moleculeType1.addPartialCharge(0.1);
     moleculeType1.addPartialCharge(0.2);
     moleculeType1.addPartialCharge(-0.4);
-    moleculeType1.addAtomType(0);
-    moleculeType1.addAtomType(0);
-    moleculeType1.addAtomType(0);
-    moleculeType1.addExternalAtomType(0);
-    moleculeType1.addExternalAtomType(0);
-    moleculeType1.addExternalAtomType(0);
+    moleculeType1.addAtomType(AtomType{0});
+    moleculeType1.addAtomType(AtomType{0});
+    moleculeType1.addAtomType(AtomType{0});
+    moleculeType1.addExternalAtomType(ExtAtomType{0});
+    moleculeType1.addExternalAtomType(ExtAtomType{0});
+    moleculeType1.addExternalAtomType(ExtAtomType{0});
     moleculeType1.addExternalGlobalVDWType(ExtVdwType{0});
     moleculeType1.addExternalGlobalVDWType(ExtVdwType{1});
     moleculeType1.addExternalGlobalVDWType(ExtVdwType{2});
@@ -515,10 +515,10 @@ TEST_F(TestSetup, testFullSetup)
     moleculeType2.addAtomName("H");
     moleculeType2.addPartialCharge(0.1);
     moleculeType2.addPartialCharge(0.2);
-    moleculeType2.addAtomType(0);
-    moleculeType2.addAtomType(0);
-    moleculeType2.addExternalAtomType(0);
-    moleculeType2.addExternalAtomType(0);
+    moleculeType2.addAtomType(AtomType{0});
+    moleculeType2.addAtomType(AtomType{0});
+    moleculeType2.addExternalAtomType(ExtAtomType{0});
+    moleculeType2.addExternalAtomType(ExtAtomType{0});
     moleculeType2.addExternalGlobalVDWType(ExtVdwType{0});
     moleculeType2.addExternalGlobalVDWType(ExtVdwType{1});
 

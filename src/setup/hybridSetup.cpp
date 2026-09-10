@@ -173,7 +173,7 @@ void HybridSetup::setupForcedOuterList()
  * @throws exc::InputFileException if the core radius is larger than
  * the layer radius
  * @throws exc::InputFileException if the smoothing region is too
- * thick for the chosen combinatin of core and layer radius
+ * thick for the chosen combination of core and layer radius
  * @throws exc::InputFileException if the layer radius exceeds one
  quarter of the smallest box dimension (minimum image convention)
  * @throws exc::InputFileException if the sum of layer radius and
@@ -258,7 +258,7 @@ void HybridSetup::validateQMChargeSettings()
 {
     const auto mmChargesRequested = !HybridSettings::getUseQMCharges();
     const auto qmAtomsPresent =
-        _engine.getSimulationBox().moleculeTypeExists(0);
+        _engine.getSimulationBox().moleculeTypeExists(MolType{0});
 
     if (mmChargesRequested && qmAtomsPresent)
     {

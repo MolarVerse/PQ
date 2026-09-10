@@ -54,7 +54,7 @@ using setup::WaterModelSetup;
 
 namespace
 {
-    constexpr size_t kWaterType = 1;
+    constexpr MolType kWaterType{1};
 
     void addWaterSystem(
         engine::MDEngine               &engine,
@@ -64,7 +64,7 @@ namespace
         auto &simBox = engine.getSimulationBox();
         simBox.setWaterType(kWaterType);
 
-        MoleculeType waterType(kWaterType);
+        MoleculeType waterType{kWaterType};
         waterType.setNumberOfAtoms(3);
         for (const auto &name : atomNames) waterType.addAtomName(name);
         simBox.addMoleculeType(waterType);

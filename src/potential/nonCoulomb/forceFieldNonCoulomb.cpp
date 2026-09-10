@@ -405,7 +405,7 @@ void ForceFieldNonCoulomb::addNonCoulombicPair(
  * @return std::shared_ptr<NonCoulombPair>
  */
 std::shared_ptr<NonCoulombPair> ForceFieldNonCoulomb::getNonCoulPair(
-    const std::vector<size_t> & /*indices*/,
+    const std::tuple<MolType, MolType, AtomType, AtomType> & /*indices*/,
     const std::pair<VdwType, VdwType> &vdwTypes
 )
 {

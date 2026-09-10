@@ -85,7 +85,7 @@ void RstFileOutput::write(
 
             buffer << std::format("{:<5}\t", atomName);
             buffer << std::format("{:<5}\t", i.get() + 1);
-            buffer << std::format("{:<5}\t", molType);
+            buffer << std::format("{:<5}\t", molType.get());
 
             buffer << std::format("{:15.8f}\t{:15.8f}\t{:15.8f}\t", x, y, z);
             buffer << std::format("{:19.8e}\t{:19.8e}\t{:19.8e}\t", vx, vy, vz);

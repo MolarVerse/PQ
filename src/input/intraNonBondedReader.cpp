@@ -141,15 +141,15 @@ void IntraNonBondedReader::read()
 }
 
 /**
- * @brief finds the molecule type either by string or by size_t
+ * @brief finds the molecule type either by string
  *
  * @param id
- * @return size_t
+ * @return MolType
  *
  * @throws IntraNonBondedException if the molecule type is not
  * found
  */
-size_t IntraNonBondedReader::findMoleculeType(const std::string &id) const
+MolType IntraNonBondedReader::findMoleculeType(const std::string &id) const
 {
     auto &simBox            = _engine.getSimulationBox();
     auto  molTypeFromString = simBox.findMoleculeTypeByString(id);
@@ -157,11 +157,11 @@ size_t IntraNonBondedReader::findMoleculeType(const std::string &id) const
     if (molTypeFromString.has_value())
         return molTypeFromString.value();
 
-    auto molTypeFromSizeT = size_t{};
+    MolType molTypeFromSizeT{};
 
     try
     {
-        molTypeFromSizeT = stoul(id);
+        molTypeFromSizeT = MolType{stoul(id)};
     }
     catch (...)
     {
@@ -211,7 +211,7 @@ size_t IntraNonBondedReader::findMoleculeType(const std::string &id) const
  * out of range
  * @throws IntraNonBondedException if "END" is not found
  */
-void IntraNonBondedReader::processMolecule(const size_t moleculeType)
+void IntraNonBondedReader::processMolecule(MolType moleculeType)
 {
     std::string line;
     auto        endedNormal = false;
@@ -283,7 +283,7 @@ void IntraNonBondedReader::processMolecule(const size_t moleculeType)
     {
         throw IntraNonBondedException(format(
             "ERROR: could not find 'END' for moltype '{}' in file '{}'",
-            moleculeType,
+            moleculeType.toString(),
             _fileName
         ));
     }
@@ -313,7 +313,7 @@ void IntraNonBondedReader::checkDuplicates() const
     const auto start = moleculeTypesView.begin();
     const auto end   = moleculeTypesView.end();
 
-    std::vector<size_t> moleculeTypes(start, end);
+    std::vector<MolType> moleculeTypes(start, end);
     std::ranges::sort(moleculeTypes);
     const auto it = std::ranges::adjacent_find(moleculeTypes);
 
@@ -321,7 +321,7 @@ void IntraNonBondedReader::checkDuplicates() const
     {
         throw IntraNonBondedException(format(
             "ERROR: moltype '{}' is defined multiple times in file '{}'",
-            *it,
+            it->toString(),
             _fileName
         ));
     }

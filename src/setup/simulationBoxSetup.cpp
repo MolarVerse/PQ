@@ -121,7 +121,7 @@ void SimulationBoxSetup::setAtomNames()
     auto setAtomNamesOfMolecule = [&simBox](auto &molecule)
     {
         const auto &molType = molecule.getMoltype();
-        if (molType == 0)
+        if (molType == MolType{0})
             return;
 
         const auto moleculeType  = simBox.findMoleculeType(molType);
@@ -153,7 +153,7 @@ void SimulationBoxSetup::setAtomTypes()
     {
         const auto &molType = molecule.getMoltype();
 
-        if (molType == 0)
+        if (molType == MolType{0})
             return;
 
         auto       moleculeType = simBox.findMoleculeType(molType);
@@ -182,7 +182,7 @@ void SimulationBoxSetup::setExternalVDWTypes()
     {
         const auto &molType = molecule.getMoltype();
 
-        if (molType == 0)
+        if (molType == MolType{0})
             return;
 
         auto       moleculeType = simBox.findMoleculeType(molType);
@@ -200,7 +200,7 @@ void SimulationBoxSetup::setExternalVDWTypes()
                     "of atoms ({}) in molecule type {}",
                     moleculeType.getExternalGlobalVDWTypes().size(),
                     nAtoms,
-                    molType
+                    molType.toString()
                 )
             );
         }
@@ -228,7 +228,7 @@ void SimulationBoxSetup::setPartialCharges()
     {
         const auto &molType = molecule.getMoltype();
 
-        if (molType == 0)
+        if (molType == MolType{0})
             return;
 
         auto        moleculeType = simBox.findMoleculeType(molType);

@@ -90,7 +90,13 @@ void BondSection::processSection(
         );
     }
 
-    auto bondType = BondType(id, equilibriumDistance, forceConstant);
+    auto bondType = BondType(
+        id,
+        BondParams{
+            .equilibrium   = equilibriumDistance,
+            .forceConstant = forceConstant
+        }
+    );
 
     engine.getForceField()->addBondType(bondType);
 }

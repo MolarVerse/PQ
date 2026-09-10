@@ -70,7 +70,7 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
 
     auto molecule = molsys::Molecule();
 
-    molecule.setMoltype(0);
+    molecule.setMoltype(MolType{0});
     molecule.setNumberOfAtoms(3);
 
     auto atom1 = std::make_shared<molsys::Atom>();
@@ -89,9 +89,9 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
     atom2->setInternalGlobalVDWType(VdwType{1});
     atom3->setInternalGlobalVDWType(VdwType{1});
 
-    atom1->setAtomType(0);
-    atom2->setAtomType(1);
-    atom3->setAtomType(1);
+    atom1->setAtomType(AtomType{0});
+    atom2->setAtomType(AtomType{1});
+    atom3->setAtomType(AtomType{1});
 
     atom1->setPartialCharge(1.0);
     atom2->setPartialCharge(-0.5);
@@ -101,16 +101,19 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
     molecule.addAtom(atom2);
     molecule.addAtom(atom3);
 
-    auto bondForceField = forceField::AngleForceField(
+    auto angleFF = forceField::AngleForceField(
         {&molecule, &molecule, &molecule},
         {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}},
         AngleId{0}
     );
-    bondForceField.setEquilibriumAngle(90 * M_PI / 180.0);
-    bondForceField.setForceConstant(3.0);
-    bondForceField.setIsLinker(false);
+    const auto equilibrium   = 90 * M_PI / 180.0;
+    const auto forceConstant = 3.0;
+    angleFF.setParams(
+        AngleParams{.equilibrium = equilibrium, .forceConstant = forceConstant}
+    );
+    angleFF.setIsLinker(false);
 
-    bondForceField.calculateEnergyAndForces(
+    angleFF.calculateEnergyAndForces(
         box,
         physicalData,
         coulombPotential,
@@ -175,9 +178,9 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
     molecule.setAtomForce(2, {0.0, 0.0, 0.0});
     physicalData.reset();
 
-    bondForceField.setIsLinker(true);
+    angleFF.setIsLinker(true);
 
-    bondForceField.calculateEnergyAndForces(
+    angleFF.calculateEnergyAndForces(
         box,
         physicalData,
         coulombPotential,
@@ -257,7 +260,7 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
     auto coulombPotential = pot::CoulombShiftedPotential(10.0);
 
     auto molecule = molsys::Molecule();
-    molecule.setMoltype(0);
+    molecule.setMoltype(MolType{0});
     molecule.setNumberOfAtoms(3);
 
     auto atom1 = std::make_shared<molsys::Atom>();
@@ -283,8 +286,9 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
         {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}},
         AngleId{0}
     );
-    angleForceField.setEquilibriumAngle(M_PI);   // linear equilibrium
-    angleForceField.setForceConstant(3.0);
+    angleForceField.setParams(
+        AngleParams{.equilibrium = M_PI, .forceConstant = 3.0}
+    );
     angleForceField.setIsLinker(false);
 
     angleForceField.calculateEnergyAndForces(

@@ -125,8 +125,8 @@ TEST_F(TestMoldescriptorReader, specialTypes)
         "examples/setup/moldescriptor.dat"
     );
     readMolDescriptor(*_engine);
-    ASSERT_EQ(_engine->getSimulationBox().getWaterType(), 1);
-    ASSERT_EQ(_engine->getSimulationBox().getAmmoniaType(), 2);
+    ASSERT_EQ(_engine->getSimulationBox().getWaterType(), MolType{1});
+    ASSERT_EQ(_engine->getSimulationBox().getAmmoniaType(), MolType{2});
 }
 
 /**

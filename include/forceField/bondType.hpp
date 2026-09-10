@@ -46,11 +46,10 @@ namespace forceField
        private:
         BondId _id;
 
-        double _equilBondLength;
-        double _forceConstant;
+        BondParams _params;
 
        public:
-        BondType(const BondId, const double, const double);
+        BondType(const BondId, const BondParams &);
 
         friend bool operator==(const BondType &, const BondType &);
 
@@ -58,9 +57,8 @@ namespace forceField
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] BondId getId() const;
-        [[nodiscard]] double getEquilibriumBondLength() const;
-        [[nodiscard]] double getForceConstant() const;
+        [[nodiscard]] BondId            getId() const;
+        [[nodiscard]] const BondParams &getParams() const;
     };
 
 }   // namespace forceField

@@ -71,7 +71,7 @@ namespace out
 
                     buffer << std::format("{:>5}{}\t", atomName, i + 1);
                     buffer << std::format("{:>5}\t", j.get() + 1);
-                    buffer << std::format("{:>5}\t", molType);
+                    buffer << std::format("{:>5}\t", molType.get());
 
                     buffer << std::format(
                         "{:15.8f}\t{:15.8f}\t{:15.8f}\t",

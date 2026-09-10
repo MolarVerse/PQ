@@ -26,7 +26,6 @@
 #include <cstddef>
 #include <memory>
 #include <utility>
-#include <vector>
 
 #include "SPCIntraWater.hpp"
 #include "atom.hpp"
@@ -76,8 +75,8 @@ using waterModel::InterWaterStrategy;
 
 namespace
 {
-    constexpr size_t kWaterType = 1;
-    constexpr double kCutOff    = 4.0;
+    constexpr MolType kWaterType{1};
+    constexpr double  kCutOff = 4.0;
 
     struct WaterGeometry
     {
@@ -92,7 +91,7 @@ namespace
         const WaterGeometry &geometry,
         const HybridZone     zone,
         const bool           active,
-        const size_t         molType
+        MolType              molType
     )
     {
         const auto oxygen = std::make_shared<Atom>();
@@ -103,7 +102,7 @@ namespace
         oxygen->setPartialCharge(-0.82);
         oxygen->setQMCharge(-0.9);
         oxygen->setPosition(origin);
-        oxygen->setAtomType(0);
+        oxygen->setAtomType(AtomType{0});
         oxygen->setInternalGlobalVDWType(VdwType{0});
         oxygen->setForceToZero();
 
@@ -111,7 +110,7 @@ namespace
         h1->setPartialCharge(0.41);
         h1->setQMCharge(0.45);
         h1->setPosition(origin + Vec3D{geometry.oh1, 0.0, 0.0});
-        h1->setAtomType(1);
+        h1->setAtomType(AtomType{1});
         h1->setInternalGlobalVDWType(VdwType{0});
         h1->setForceToZero();
 
@@ -126,7 +125,7 @@ namespace
                 0.0
             }
         );
-        h2->setAtomType(1);
+        h2->setAtomType(AtomType{1});
         h2->setInternalGlobalVDWType(VdwType{0});
         h2->setForceToZero();
 
@@ -223,13 +222,13 @@ namespace
             LJParams{.c6 = -1.0, .c12 = 1.0}
         );
 
-        for (size_t mol1 = 1; mol1 <= 2; ++mol1)
+        for (MolType mol1{1}; mol1.get() <= 2; ++mol1)
         {
-            for (size_t mol2 = 1; mol2 <= 2; ++mol2)
+            for (MolType mol2{1}; mol2.get() <= 2; ++mol2)
             {
-                for (size_t atom1 = 0; atom1 < 2; ++atom1)
+                for (AtomType atom1{0}; atom1.get() < 2; ++atom1)
                 {
-                    for (size_t atom2 = 0; atom2 < 2; ++atom2)
+                    for (AtomType atom2{0}; atom2.get() < 2; ++atom2)
                     {
                         nonCoulomb->setGuffNonCoulPair(
                             {mol1, mol2, atom1, atom2},
@@ -316,7 +315,7 @@ namespace
             geometry,
             HybridZone::CORE,
             false,
-            2
+            MolType{2}
         );
         addWater(
             simBox,
@@ -331,7 +330,7 @@ namespace
             geometry,
             HybridZone::LAYER,
             false,
-            2
+            MolType{2}
         );
         addWater(simBox, {-1.8, -5.0, -5.0}, geometry, HybridZone::SMOOTHING);
         addWater(simBox, {-0.2, -4.8, -4.8}, geometry, HybridZone::SMOOTHING);
@@ -341,7 +340,7 @@ namespace
             geometry,
             HybridZone::SMOOTHING,
             true,
-            2
+            MolType{2}
         );
         addWater(simBox, {1.5, -4.6, -4.6}, geometry, HybridZone::OUTER);
         addWater(
@@ -350,7 +349,7 @@ namespace
             geometry,
             HybridZone::OUTER,
             true,
-            2
+            MolType{2}
         );
 
         return simBox;
@@ -653,22 +652,22 @@ TEST(PotentialTemplates, QmChargesAndOneWayInteractions)
     box.setBoxDimensions({15.0, 15.0, 15.0});
 
     Molecule mol1;
-    mol1.setMoltype(1);
+    mol1.setMoltype(MolType{1});
     Molecule mol2;
-    mol2.setMoltype(2);
+    mol2.setMoltype(MolType{2});
 
     Atom atom1;
     atom1.setPosition({0.0, 0.0, 0.0});
     atom1.setPartialCharge(-0.8);
     atom1.setQMCharge(-0.9);
-    atom1.setAtomType(0);
+    atom1.setAtomType(AtomType{0});
     atom1.setInternalGlobalVDWType(VdwType{0});
     atom1.setForceToZero();
 
     Atom atom2;
     atom2.setPosition({1.2, 0.1, 0.0});
     atom2.setPartialCharge(0.4);
-    atom2.setAtomType(0);
+    atom2.setAtomType(AtomType{0});
     atom2.setInternalGlobalVDWType(VdwType{0});
     atom2.setForceToZero();
 
@@ -779,7 +778,14 @@ TEST(SimulationBoxViews, ConstAndMutableWaterViewsFilterCorrectly)
     simBox.setWaterType(kWaterType);
     addWater(simBox, {-2.0, 0.0, 0.0}, geometry, HybridZone::OUTER);
     addWater(simBox, {0.0, 0.0, 0.0}, geometry, HybridZone::CORE, false);
-    addWater(simBox, {2.0, 0.0, 0.0}, geometry, HybridZone::OUTER, true, 2);
+    addWater(
+        simBox,
+        {2.0, 0.0, 0.0},
+        geometry,
+        HybridZone::OUTER,
+        true,
+        MolType{2}
+    );
 
     auto mutableOutsideView = simBox.getMoleculesOutsideZone(HybridZone::CORE);
     auto mutableOutsideIt   = mutableOutsideView.begin();

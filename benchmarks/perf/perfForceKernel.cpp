@@ -57,7 +57,7 @@ int main()
     settings::PotentialSettings::setScale14VanDerWaals(0.75);
 
     auto intraNonBondedType =
-        intraNonBonded::IntraNonBondedContainer(0, {{-1}});
+        intraNonBonded::IntraNonBondedContainer(MolType{0}, {{-1}});
     auto intraNonBondedMap =
         intraNonBonded::IntraNonBondedMap(&molecule, &intraNonBondedType);
 
