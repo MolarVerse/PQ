@@ -30,6 +30,7 @@
 #include <string_view>
 
 #include "mstd/type_traits/enum_traits.hpp"
+#include "stringUtilities.hpp"
 
 /**
  * @namespace input
@@ -59,25 +60,25 @@ namespace input
     template <>
     struct Converter<double>
     {
-        [[nodiscard]] static std::optional<double> tryParse(
-            const std::string_view raw
-        )
+        /**
+         * @brief attempts to parse a double from a raw input-file token
+         *
+         * @param raw the raw input-file token
+         * @return an optional containing the parsed double if successful,
+         *         std::nullopt otherwise
+         */
+        [[nodiscard]]
+        static std::optional<double> tryParse(const std::string_view raw)
         {
-            try
-            {
-                size_t            pos{};
-                const std::string str(raw);
-                const double      value = std::stod(str, &pos);
+            double     value{};
+            const auto result =
+                std::from_chars(raw.data(), raw.data() + raw.size(), value);
 
-                if (pos != str.size())
-                    return std::nullopt;
-
-                return value;
-            }
-            catch (...)
-            {
+            if (result.ec != std::errc{} ||
+                result.ptr != raw.data() + raw.size())
                 return std::nullopt;
-            }
+
+            return value;
         }
     };
 
@@ -88,13 +89,21 @@ namespace input
     template <>
     struct Converter<bool>
     {
-        [[nodiscard]] static std::optional<bool> tryParse(
-            const std::string_view raw
-        )
+        /**
+         * @brief attempts to parse a bool from a raw input-file token
+         *
+         * @param raw the raw input-file token
+         * @return an optional containing the parsed bool if successful,
+         *         std::nullopt otherwise
+         */
+        [[nodiscard]]
+        static std::optional<bool> tryParse(const std::string_view raw)
         {
-            if (raw == "TRUE" || raw == "ON")
+            const auto rawTransformed = utilities::toLowerCopy(raw);
+
+            if (rawTransformed == "true" || rawTransformed == "on")
                 return true;
-            if (raw == "FALSE" || raw == "OFF")
+            if (rawTransformed == "false" || rawTransformed == "off")
                 return false;
 
             return std::nullopt;
@@ -115,9 +124,16 @@ namespace input
     requires(!std::same_as<T, bool>)
     struct Converter<T>
     {
-        [[nodiscard]] static std::optional<T> tryParse(
-            const std::string_view raw
-        )
+        /**
+         * @brief attempts to parse an integral value from a raw input-file
+         * token
+         *
+         * @param raw the raw input-file token
+         * @return an optional containing the parsed value if successful,
+         *         std::nullopt otherwise
+         */
+        [[nodiscard]]
+        static std::optional<T> tryParse(const std::string_view raw)
         {
             T          value{};
             const auto result =
@@ -145,15 +161,27 @@ namespace input
     template <mstd::has_enum_meta T>
     struct Converter<T>
     {
-        [[nodiscard]] static std::optional<T> tryParse(
-            const std::string_view raw
-        )
+        /**
+         * @brief attempts to parse an enum value from a raw input-file token
+         *
+         * @param raw the raw input-file token
+         * @return an optional containing the parsed enum value if successful,
+         *         std::nullopt otherwise
+         */
+        [[nodiscard]]
+        static std::optional<T> tryParse(const std::string_view raw)
         {
             using Meta = mstd::enum_meta_t<T>;
             return Meta::from_string(raw);
         }
 
-        [[nodiscard]] static std::string describeDomain()
+        /**
+         * @brief describes the valid domain of the enum for error messages
+         *
+         * @return a string listing all allowed enum values
+         */
+        [[nodiscard]]
+        static std::string describeDomain()
         {
             using Meta = mstd::enum_meta_t<T>;
 
@@ -182,6 +210,8 @@ namespace input
     {
         if constexpr (mstd::has_enum_meta<T>)
             return Converter<T>::describeDomain();
+        else if constexpr (std::same_as<T, bool>)
+            return "on|off|true|false";
         else
             return "<value>";
     }

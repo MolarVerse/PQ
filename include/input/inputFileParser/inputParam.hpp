@@ -36,6 +36,7 @@
 
 #include "exceptions.hpp"
 #include "inputConverter.hpp"
+#include "inputFileParser.hpp"
 
 namespace input
 {
@@ -180,7 +181,16 @@ namespace input
                 );
             }
 
-            // only parse() ever touches _value -- _default is untouched
+            if (_value)
+            {
+                throw exc::InputFileException(
+                    std::format(
+                        "Multiple keywords \"{}\" in input file",
+                        _metadata.name
+                    )
+                );
+            }
+
             _value = std::move(parsed);
 
             if (_onSet)
@@ -247,6 +257,13 @@ namespace input
             return std::nullopt;
         }
 
+        /**
+         * @brief returns a human-readable description of this key,
+         * including its name, title, description, current value,
+         * default value, unit, and allowed values
+         *
+         * @return a string describing this key
+         */
         [[nodiscard]] std::string describe() const override
         {
             std::string result =
@@ -328,19 +345,34 @@ namespace input
                 std::move(onSet)
             );
 
-            auto &ref = *key;
-            _keys.emplace(name, std::move(key));
-            return ref;
+            auto [it, inserted] = _keys.try_emplace(name, std::move(key));
+            if (!inserted)
+                throw std::logic_error(
+                    std::format("Key \"{}\" registered twice", name)
+                );
+            return static_cast<InputKey<T> &>(*it->second);
         }
         // NOLINTEND(fuchsia-default-arguments-declarations)
 
+        /**
+         * @brief
+         *
+         * @param lineElements the elements of the line, split by whitespace
+         * @param lineNumber the line number in the input file
+         *
+         * @throws exc::InputFileException if the key is unknown or parsing
+         * fails
+         */
         void parseLine(
             const std::vector<std::string> &lineElements,
             size_t                          lineNumber
         )
         {
-            const auto &key = lineElements.at(0);
-            auto        it  = _keys.find(key);
+            checkCommand(lineElements, lineNumber);
+
+            const auto key =
+                utilities::toLowerAndReplaceDashesCopy(lineElements[0]);
+            auto it = _keys.find(key);
 
             if (it == _keys.end())
             {
@@ -356,8 +388,17 @@ namespace input
             it->second->parse(lineElements, lineNumber);
         }
 
+        /**
+         * @brief retrieves a registered key by name
+         *
+         * @tparam T the type of the key
+         * @param name the name of the key
+         * @return a const reference to the requested InputKey
+         * @throws std::out_of_range if the key is not found
+         */
         template <typename T>
-        [[nodiscard]] const InputKey<T> &get(const std::string &name) const
+        [[nodiscard]]
+        const InputKey<T> &get(const std::string &name) const
         {
             return dynamic_cast<const InputKey<T> &>(*_keys.at(name));
         }
@@ -371,8 +412,19 @@ namespace input
             std::vector<std::string> result;
             result.reserve(_keys.size());
 
-            for (const auto &[name, key] : _keys)
-                result.push_back(key->describe());
+            // we pre-sort here the keys as an unordered map doesn't guarantee
+            // order on different platforms
+            const auto sortedKeys = [&]()
+            {
+                std::vector<std::string> keys;
+                keys.reserve(_keys.size());
+                for (const auto &[name, key] : _keys) keys.push_back(name);
+                std::ranges::sort(keys);
+                return keys;
+            }();
+
+            for (const auto &name : sortedKeys)
+                result.push_back(_keys.at(name)->describe());
 
             return result;
         }

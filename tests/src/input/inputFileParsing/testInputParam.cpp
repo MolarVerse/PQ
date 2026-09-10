@@ -243,21 +243,26 @@ TEST(TestInputKey, customParserAliasResolvesUnknownToken)
         return TestJobTypeMeta::from_string(raw);
     };
 
-    InputKey<TestJobType> key(
-        KeyMetadata{
-            .name        = "jobtype",
-            .title       = "Job Type",
-            .description = "",
-            .unit        = ""
-        },
-        std::nullopt,
-        std::nullopt,
-        aliasParser
-    );
+    auto createKey = [&aliasParser]() -> InputKey<TestJobType>
+    {
+        return InputKey<TestJobType>(
+            KeyMetadata{
+                .name        = "jobtype",
+                .title       = "Job Type",
+                .description = "",
+                .unit        = ""
+            },
+            std::nullopt,
+            std::nullopt,
+            aliasParser
+        );
+    };
 
+    auto key = createKey();
     key.parse({"jobtype", "=", "molecular_dynamics"}, 1);
     EXPECT_EQ(key.value(), TestJobType::md);
 
+    key = createKey();
     key.parse({"jobtype", "=", "qm"}, 2);
     EXPECT_EQ(key.value(), TestJobType::qm);
 }
