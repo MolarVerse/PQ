@@ -251,6 +251,7 @@
         "STREQ",
         "swappable",
         "Symm",
+        "TESTENUM",
         "THREEOB",
         "timestep",
         "TOPOLOGYEXCEPTION",

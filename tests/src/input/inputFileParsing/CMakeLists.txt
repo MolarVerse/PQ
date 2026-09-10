@@ -22,6 +22,8 @@ set(source_files
     testThermostatParser.cpp
     testTimingsParser.cpp
     testVirialParser.cpp
+
+    testInputParam.cpp
 )
 
 foreach(source_file ${source_files})
