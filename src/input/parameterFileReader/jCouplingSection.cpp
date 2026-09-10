@@ -120,7 +120,17 @@ void JCouplingSection::processSection(
     }
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
-    auto jCouplingType = JCouplingType(id, J0, forceConstant, a, b, c, phase);
+    auto jCouplingType = JCouplingType(
+        id,
+        JCouplingParams{
+            .J0            = J0,
+            .forceConstant = forceConstant,
+            .a             = a,
+            .b             = b,
+            .c             = c,
+            .phaseShift    = phase
+        }
+    );
 
     jCouplingType.setUpperSymmetry(upperSymmetry);
     jCouplingType.setLowerSymmetry(lowerSymmetry);

@@ -46,17 +46,10 @@ namespace forceField
        private:
         DihedralId _id;
 
-        double _forceConstant;
-        double _periodicity;
-        double _phaseShift;
+        DihedralParams _params;
 
        public:
-        DihedralType(
-            const DihedralId id,
-            const double     forceConstant,
-            const double     frequency,
-            const double     phaseShift
-        );
+        DihedralType(const DihedralId id, const DihedralParams &params);
 
         friend bool operator==(const DihedralType &, const DihedralType &);
 
@@ -64,10 +57,8 @@ namespace forceField
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] DihedralId getId() const;
-        [[nodiscard]] double     getForceConstant() const;
-        [[nodiscard]] double     getPeriodicity() const;
-        [[nodiscard]] double     getPhaseShift() const;
+        [[nodiscard]] DihedralId            getId() const;
+        [[nodiscard]] const DihedralParams &getParams() const;
     };
 
 }   // namespace forceField

@@ -50,10 +50,10 @@ TEST_F(TestParameterFileSection, processSectionAngle)
     EXPECT_EQ(angleTypes.size(), 1);
     EXPECT_EQ(angleTypes[0].getId(), AngleId{0});
     EXPECT_EQ(
-        angleTypes[0].getEquilibriumAngle(),
+        angleTypes[0].getParams().equilibrium,
         1.22 * constants::DEG_TO_RAD
     );
-    EXPECT_EQ(angleTypes[0].getForceConstant(), 234.3);
+    EXPECT_EQ(angleTypes[0].getParams().forceConstant, 234.3);
 
     lineElements = {"1", "2", "1.0", "0"};
     EXPECT_THROW(

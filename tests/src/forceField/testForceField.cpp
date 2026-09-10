@@ -63,7 +63,10 @@ class TestForceField : public TestNonCoulombPotentialFF
 TEST_F(TestForceField, findBondTypeById)
 {
     auto       forceField = forceField::ForceField();
-    const auto bondType   = forceField::BondType(BondId{0}, 1.0, 1.0);
+    const auto bondType   = forceField::BondType(
+        BondId{0},
+        BondParams{.equilibrium = 1.0, .forceConstant = 1.0}
+    );
 
     forceField.addBondType(bondType);
 
@@ -92,7 +95,10 @@ TEST_F(TestForceField, findBondTypeByIdNotFoundError)
 TEST_F(TestForceField, findAngleTypeById)
 {
     auto forceField = forceField::ForceField();
-    auto angleType  = forceField::AngleType(AngleId{0}, 1.0, 1.0);
+    auto angleType  = forceField::AngleType(
+        AngleId{0},
+        AngleParams{.equilibrium = 1.0, .forceConstant = 1.0}
+    );
 
     forceField.addAngleType(angleType);
 
@@ -121,7 +127,14 @@ TEST_F(TestForceField, findAngleTypeByIdNotFoundError)
 TEST_F(TestForceField, findDihedralTypeById)
 {
     auto forceField   = forceField::ForceField();
-    auto dihedralType = forceField::DihedralType(DihedralId{0}, 1.0, 1.0, 1.0);
+    auto dihedralType = forceField::DihedralType(
+        DihedralId{0},
+        DihedralParams{
+            .forceConstant = 1.0,
+            .frequency     = 1.0,
+            .phaseShift    = 1.0
+        }
+    );
 
     forceField.addDihedralType(dihedralType);
 
@@ -149,9 +162,15 @@ TEST_F(TestForceField, findDihedralTypeByIdNotFoundError)
  */
 TEST_F(TestForceField, findImproperTypeById)
 {
-    auto forceField = forceField::ForceField();
-    auto improperDihedralType =
-        forceField::DihedralType(DihedralId{0}, 1.0, 1.0, 1.0);
+    auto forceField           = forceField::ForceField();
+    auto improperDihedralType = forceField::DihedralType(
+        DihedralId{0},
+        DihedralParams{
+            .forceConstant = 1.0,
+            .frequency     = 1.0,
+            .phaseShift    = 1.0
+        }
+    );
 
     forceField.addImproperDihedralType(improperDihedralType);
 
@@ -266,20 +285,27 @@ TEST_F(TestForceField, calculateBondedInteractions)
         DihedralId{0}
     );
 
-    bondForceField.setEquilibriumBondLength(1.2);
-    bondForceField.setForceConstant(3.0);
+    bondForceField.setParams(
+        BondParams{.equilibrium = 1.2, .forceConstant = 3.0}
+    );
 
-    angleForceField.setEquilibriumAngle(90 * M_PI / 180.0);
-    angleForceField.setForceConstant(3.0);
+    angleForceField.setParams(
+        AngleParams{.equilibrium = 90 * M_PI / 180.0, .forceConstant = 3.0}
+    );
 
-    dihedralForceField.setPhaseShift(180.0 * M_PI / 180.0);
-    dihedralForceField.setPeriodicity(3);
-    dihedralForceField.setForceConstant(3.0);
+    dihedralForceField.setParams({DihedralParams{
+        .forceConstant = 3.0,
+        .frequency     = 3,
+        .phaseShift    = 180.0 * M_PI / 180.0
+    }});
+
     dihedralForceField.setIsLinker(true);
 
-    improperDihedralForceField.setPhaseShift(180.0 * M_PI / 180.0);
-    improperDihedralForceField.setPeriodicity(3);
-    improperDihedralForceField.setForceConstant(3.0);
+    improperDihedralForceField.setParams({DihedralParams{
+        .forceConstant = 3.0,
+        .frequency     = 3,
+        .phaseShift    = 180.0 * M_PI / 180.0
+    }});
     improperDihedralForceField.setIsLinker(false);
 
     settings::PotentialSettings::setScale14Coulomb(0.75);

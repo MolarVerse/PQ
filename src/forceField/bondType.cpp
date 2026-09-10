@@ -22,26 +22,16 @@
 
 #include "bondType.hpp"
 
-#include "mathUtilities.hpp"
-
 using namespace forceField;
-using namespace utilities;
 
 /**
  * @brief Construct a new Bond Type:: Bond Type object
  *
  * @param id
- * @param equilibriumBondLength
- * @param springConstant
+ * @param params
  */
-BondType::BondType(
-    const BondId id,
-    const double equilibriumBondLength,
-    const double springConstant
-)
-    : _id(id),
-      _equilBondLength(equilibriumBondLength),
-      _forceConstant(springConstant)
+BondType::BondType(const BondId id, const BondParams &params)
+    : _id(id), _params(params)
 {
 }
 
@@ -54,11 +44,7 @@ BondType::BondType(
  */
 bool forceField::operator==(const BondType &self, const BondType &other)
 {
-    auto isEq = self._id == other._id;
-    isEq      = isEq && compare(self._equilBondLength, other._equilBondLength);
-    isEq      = isEq && compare(self._forceConstant, other._forceConstant);
-
-    return isEq;
+    return self._id == other._id && self._params == other._params;
 }
 
 /***************************
@@ -75,15 +61,8 @@ bool forceField::operator==(const BondType &self, const BondType &other)
 BondId BondType::getId() const { return _id; }
 
 /**
- * @brief get the equilibrium bond length of the bond type
+ * @brief get the parameters of the bond type
  *
- * @return double
+ * @return const BondParams&
  */
-double BondType::getEquilibriumBondLength() const { return _equilBondLength; }
-
-/**
- * @brief get the force constant of the bond type
- *
- * @return double
- */
-double BondType::getForceConstant() const { return _forceConstant; }
+const BondParams &BondType::getParams() const { return _params; }

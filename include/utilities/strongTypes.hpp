@@ -160,4 +160,45 @@ struct BuckinghamParams
     bool operator==(const BuckinghamParams &other) const;
 };
 
+struct AngleParams
+{
+    double equilibrium;
+    double forceConstant;
+
+    [[nodiscard]]
+    bool operator==(const AngleParams &other) const;
+};
+
+struct BondParams
+{
+    double equilibrium;
+    double forceConstant;
+
+    [[nodiscard]]
+    bool operator==(const BondParams &other) const;
+};
+
+struct DihedralParams
+{
+    double forceConstant;
+    double frequency;
+    double phaseShift;
+
+    [[nodiscard]]
+    bool operator==(const DihedralParams &other) const;
+};
+
+struct JCouplingParams
+{
+    double J0;
+    double forceConstant;
+    double a;
+    double b;
+    double c;
+    double phaseShift;
+
+    [[nodiscard]]
+    bool operator==(const JCouplingParams &other) const;
+};
+
 #endif   // _STRONG_TYPES_HPP_

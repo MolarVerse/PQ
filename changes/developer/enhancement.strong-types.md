@@ -5,7 +5,7 @@
 - add strong types for `ExtVdwType` and `VdwType`
 - add strong type for morse params aka `MorseParams`
 - add strong type for lennard jones params aka `LJParams`
-- add strong type for bukcingham params aka `BuckinghamParams`
+- add strong type for buckingham params aka `BuckinghamParams`
 - make guff pair used `std::array` instead of `std::vector`
 - introduce `AtomIndex` instead of `size_t` for indexing into molecule 
 - implement `AtomType` and `ExtAtomType` instead of `size_t`

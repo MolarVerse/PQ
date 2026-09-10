@@ -63,8 +63,8 @@ namespace pot
             const LJParams &params
         );
 
-        // TODO: we need to explicitly delete it to not implictly create it with
-        // the wrong types!!! Needs cleanup
+        // TODO: we need to explicitly delete it to not implicitly create it
+        // with the wrong types!!! Needs cleanup
         explicit LennardJonesPair(
             const size_t,
             const size_t,

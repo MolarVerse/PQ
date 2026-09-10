@@ -57,8 +57,7 @@ namespace forceField
         BondId _type;
         bool   _isLinker = false;
 
-        double _equilBondLength;
-        double _forceConstant;
+        BondParams _params;
 
        public:
         BondForceField(
@@ -81,17 +80,15 @@ namespace forceField
          ***************************/
 
         void setIsLinker(const bool isLinker);
-        void setEquilibriumBondLength(const double equilibriumBondLength);
-        void setForceConstant(const double forceConstant);
+        void setParams(const BondParams &params);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] BondId getType() const;
-        [[nodiscard]] bool   isLinker() const;
-        [[nodiscard]] double getEquilibriumBondLength() const;
-        [[nodiscard]] double getForceConstant() const;
+        [[nodiscard]] BondId            getType() const;
+        [[nodiscard]] bool              isLinker() const;
+        [[nodiscard]] const BondParams &getParams() const;
     };
 
 }   // namespace forceField

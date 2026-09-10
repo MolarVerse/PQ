@@ -22,7 +22,6 @@
 
 #include <gtest/gtest.h>   // for Test, EXPECT_EQ, TestInfo
 
-#include <format>   // for format
 #include <memory>   // for shared_ptr, allocator, make_shared
 #include <vector>   // for vector
 

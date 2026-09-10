@@ -26,6 +26,8 @@
 
 #include <cstddef>
 
+#include "strongTypes.hpp"
+
 namespace forceField
 {
     class JCouplingType;   // forward declaration
@@ -48,23 +50,10 @@ namespace forceField
         bool   _upperSymmetry = true;
         bool   _lowerSymmetry = true;
 
-        double _j0;
-        double _forceConstant;
-        double _a;
-        double _b;
-        double _c;
-        double _phaseShift;
+        JCouplingParams _params;
 
        public:
-        JCouplingType(
-            const size_t id,
-            const double J0,
-            const double forceConstant,
-            const double a,
-            const double b,
-            const double c,
-            const double phaseShift
-        );
+        JCouplingType(const size_t id, const JCouplingParams &params);
 
         friend bool operator==(const JCouplingType &, const JCouplingType &);
 
@@ -72,13 +61,8 @@ namespace forceField
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] size_t getId() const;
-        [[nodiscard]] double getJ0() const;
-        [[nodiscard]] double getForceConstant() const;
-        [[nodiscard]] double getA() const;
-        [[nodiscard]] double getB() const;
-        [[nodiscard]] double getC() const;
-        [[nodiscard]] double getPhaseShift() const;
+        [[nodiscard]] size_t                 getId() const;
+        [[nodiscard]] const JCouplingParams &getParams() const;
 
         /***************************
          * standard setter methods *

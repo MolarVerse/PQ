@@ -96,8 +96,9 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
         AtomIndex{1},
         BondId{0}
     );
-    bondForceField.setEquilibriumBondLength(1.2);
-    bondForceField.setForceConstant(3.0);
+    bondForceField.setParams(
+        BondParams{.equilibrium = 1.2, .forceConstant = 3.0}
+    );
     bondForceField.setIsLinker(false);
 
     bondForceField.calculateEnergyAndForces(

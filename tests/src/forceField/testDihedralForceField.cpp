@@ -113,9 +113,13 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
         {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}, AtomIndex{3}},
         DihedralId{0}
     );
-    bondForceField.setPhaseShift(180.0 * M_PI / 180.0);
-    bondForceField.setPeriodicity(3);
-    bondForceField.setForceConstant(3.0);
+    bondForceField.setParams(
+        DihedralParams{
+            .forceConstant = 3.0,
+            .frequency     = 3,
+            .phaseShift    = 180.0 * M_PI / 180.0
+        }
+    );
     bondForceField.setIsLinker(false);
 
     settings::PotentialSettings::setScale14Coulomb(0.75);
