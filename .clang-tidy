@@ -58,7 +58,7 @@ Checks:
   -cppcoreguidelines-non-private-member-variables-in-classes,
   -concurrency-mt-unsafe,
   -cppcoreguidelines-avoid-const-or-ref-data-members,
-  bugprone-easily-swappable-parameters,
+  -bugprone-easily-swappable-parameters,
   -cert-env33-c,
   -cert-err58-cpp,
   -fuchsia-statically-constructed-objects,
