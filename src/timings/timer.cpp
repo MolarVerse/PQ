@@ -45,8 +45,8 @@ std::vector<TimingsSection> Timer::getTimingDetails() const
     std::vector<TimingsSection> sortedTimingDetails = _timingDetails;
     std::ranges::sort(
         sortedTimingDetails,
-        [](const TimingsSection& a, const TimingsSection& b)
-        { return a.calculateElapsedTime() > b.calculateElapsedTime(); }
+        [](const TimingsSection& lhs, const TimingsSection& rhs)
+        { return lhs.calculateElapsedTime() > rhs.calculateElapsedTime(); }
     );
     return sortedTimingDetails;
 }

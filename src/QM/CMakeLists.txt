@@ -5,11 +5,11 @@ add_library(QM
 target_include_directories(QM
     PUBLIC
     ${PROJECT_SOURCE_DIR}/include/QM
-    ${PROJECT_SOURCE_DIR}/include/config
 )
 
 target_link_libraries(QM
     PUBLIC
+    config_headers
     molsys
     settings
     utilities

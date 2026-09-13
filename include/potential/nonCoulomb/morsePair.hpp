@@ -68,9 +68,8 @@ namespace pot
 
         [[nodiscard]] bool operator==(const MorsePair &other) const;
 
-        [[nodiscard]] std::pair<double, double> calculate(
-            const double distance
-        ) const override;
+        [[nodiscard]]
+        std::pair<double, double> calculate(double distance) const override;
 
         friend struct ::TestMorsePairUtils;
     };

@@ -22,8 +22,6 @@
 
 #include "settings.hpp"
 
-#include <iostream>
-#include <ostream>
 #include <string>   // for operator==, string
 #include <utility>
 
@@ -211,11 +209,7 @@ void Settings::setIntegratorType(IntegratorType integratorType)
  *
  * @return JobType
  */
-JobType Settings::getJobtype()
-{
-    std::cout << "Selected jobtype: " << string(_jobtype) << std::endl;
-    return _jobtype;
-}
+JobType Settings::getJobtype() { return _jobtype; }
 
 /**
  * @brief get the floating point type

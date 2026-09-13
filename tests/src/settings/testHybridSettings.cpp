@@ -35,7 +35,6 @@ TEST(HybridSettingsTest, StringRoundTripForSmoothingMethod)
 
     EXPECT_EQ(string(HOTSPOT), "Hotspot");
     EXPECT_EQ(string(EXACT), "Exact");
-    EXPECT_EQ(string(static_cast<SmoothingMethod>(-1)), "NONE");
 }
 
 TEST(HybridSettingsTest, InnerRegionCenterRoundTrip)

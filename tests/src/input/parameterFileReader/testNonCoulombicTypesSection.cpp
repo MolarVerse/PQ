@@ -26,7 +26,6 @@
 #include "engine.hpp"                 // for Engine
 #include "exceptions.hpp"             // for ParameterFileException
 #include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
-#include "gtest/gtest.h"              // for Message, TestPartResult, tes...
 #include "lennardJonesPair.hpp"       // for LennardJonesPair
 #include "morsePair.hpp"              // for MorsePair
 #include "nonCoulombicsSection.hpp"   // for NonCoulombicsSection

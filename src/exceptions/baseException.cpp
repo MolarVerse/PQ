@@ -33,7 +33,7 @@ namespace exc
      * It inherits from std::exception and provides a common interface for
      * exception handling.
      */
-    PQException::PQException(const std::string_view message)
+    PQException::PQException(std::string_view message)
         : _message(message), _lineNumber(std::nullopt)
     {
     }
@@ -45,8 +45,8 @@ namespace exc
      * @param lineNumber The line number where the exception occurred (optional)
      */
     PQException::PQException(
-        const std::string_view message,
-        std::optional<size_t>  lineNumber
+        std::string_view      message,
+        std::optional<size_t> lineNumber
     )
         : _message(message), _lineNumber(lineNumber)
     {
@@ -57,7 +57,7 @@ namespace exc
      *
      * @param lineNumber The line number to set
      */
-    void PQException::setLineNumber(const size_t lineNumber) noexcept
+    void PQException::setLineNumber(size_t lineNumber) noexcept
     {
         // TODO: Consider whether to allow overwriting the line number or not.
         // Currently, it only sets the line number if it hasn't been set before.

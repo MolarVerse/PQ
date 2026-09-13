@@ -55,7 +55,7 @@ namespace constraints
             molsys::Molecule *molecule2,
             AtomIndex         atomIndex1,
             AtomIndex         atomIndex2,
-            const double      bondLength
+            double            bondLength
         );
 
         void calculateConstraintBondRef(const molsys::SimulationBox &);

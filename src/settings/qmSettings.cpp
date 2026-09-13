@@ -180,7 +180,7 @@ std::string settings::string(SlakosType slakos)
         case MATSCI: return "matsci";
         case CUSTOM: return "custom";
 
-        case NONE: break;
+        case NONE: return "none";
     }
 
     std::unreachable();

@@ -28,7 +28,6 @@
 #include "baseException.hpp"
 #include "color.hpp"   // for Code
 #include "exceptionTypes.hpp"
-#include "gtest/gtest.h"   // for Message, TestPartResult
 
 /**
  * @brief tests colorful output for FG_RED

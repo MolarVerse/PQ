@@ -71,9 +71,8 @@ namespace pot
         [[nodiscard]]
         bool operator==(const LennardJonesPair &other) const;
 
-        [[nodiscard]] std::pair<double, double> calculate(
-            const double distance
-        ) const override;
+        [[nodiscard]]
+        std::pair<double, double> calculate(double distance) const override;
 
         friend struct ::TestLJPairUtils;
     };

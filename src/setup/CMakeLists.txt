@@ -44,6 +44,7 @@ target_link_libraries(setup
     nonCoulombPotential
     maxwellBoltzmann
     optimization
+    config_headers
 )
 
 if(BUILD_WITH_MPI)

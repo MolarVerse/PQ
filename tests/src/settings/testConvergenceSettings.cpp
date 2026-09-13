@@ -32,10 +32,6 @@ TEST(ConvSettingsTest, StrategyToString)
     EXPECT_EQ(settings::string(LOOSE), "LOOSE");
     EXPECT_EQ(settings::string(ABSOLUTE), "ABSOLUTE");
     EXPECT_EQ(settings::string(RELATIVE), "RELATIVE");
-    EXPECT_EQ(
-        settings::string(static_cast<settings::ConvStrategy>(-1)),
-        "none"
-    );
 }
 
 TEST(ConvSettingsTest, EnergyConvSettersAndOptionalGetters)

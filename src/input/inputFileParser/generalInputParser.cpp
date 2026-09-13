@@ -22,9 +22,8 @@
 
 #include "generalInputParser.hpp"
 
-#include <cstdint>   // for uint_fast32_t and UINT32_MAX
-#include <format>    // for format
-#include <iostream>
+#include <cstdint>     // for uint_fast32_t and UINT32_MAX
+#include <format>      // for format
 #include <stdexcept>   // for out_of_range and invalid_argument
 
 #include "engine.hpp"          // for Engine
@@ -116,17 +115,7 @@ void GeneralInputParser::parseJobTypeForEngine(
     using enum JobType;
     checkCommand(lineElements, lineNumber);
 
-    for (const auto &element : lineElements)
-    {
-        std::cout << element << std::endl;
-    }
-
     const auto jobtype = toLowerAndReplaceDashesCopy(lineElements[2]);
-
-    for (const auto &character : jobtype)
-    {
-        std::cout << character << std::endl;
-    }
 
     if (jobtype == "mm_opt")
     {
@@ -145,7 +134,6 @@ void GeneralInputParser::parseJobTypeForEngine(
     }
     else if (jobtype == "qm_md")
     {
-        std::cout << "Selected jobtype: " << jobtype << std::endl;
         Settings::setJobtype(QM_MD);
         engine = std::make_unique<QMMDEngine>();
     }
@@ -172,9 +160,6 @@ void GeneralInputParser::parseJobTypeForEngine(
             lineElements[2]
         ));
     }
-
-    std::cout << "Selected jobtype: " << string(Settings::getJobtype())
-              << std::endl;
 }
 
 /**

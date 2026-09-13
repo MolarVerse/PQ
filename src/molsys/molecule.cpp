@@ -200,6 +200,7 @@ std::vector<ExtVdwType> Molecule::getExternalGlobalVDWTypes() const
 {
     std::vector<ExtVdwType> externalGlobalVDWTypes;
 
+    externalGlobalVDWTypes.reserve(_atoms.size());
     for (const auto &atom : _atoms)
         externalGlobalVDWTypes.push_back(atom->getExternalGlobalVDWType());
 
