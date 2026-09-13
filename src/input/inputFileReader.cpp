@@ -146,7 +146,7 @@ InputFileReader::InputFileReader(
 /**
  * @brief collects all the keywords from all the parsers
  *
- * @details inserts all keywords-std::function maps from all parsers into a
+ * @details inserts all keywords maps from all parsers into a
  * single map inserts all keywords-required maps from all parsers into a single
  * map inserts all keywords-count maps from all parsers into a single map
  *

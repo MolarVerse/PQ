@@ -34,7 +34,7 @@
 namespace settings
 {
     /**
-     * @class enum OptimizerType
+     * @brief enum OptimizerType
      *
      */
     enum class OptimizerType : size_t
@@ -45,7 +45,7 @@ namespace settings
     };
 
     /**
-     * @class enum LREnum
+     * @brief enum LREnum
      *
      */
     enum class LREnum : size_t
@@ -61,9 +61,9 @@ namespace settings
     std::string string(const LREnum method);
 
     /**
-     * @class OptimizerSettings
+     * @brief OptimizerSettings
      *
-     * @brief stores all information about the optimizer
+     * @details stores all information about the optimizer
      *
      */
     class OptimizerSettings

@@ -45,7 +45,6 @@ namespace out
     /**
      * @brief write header title
      *
-     * @return string
      */
     void StdoutOutput::writeHeader() const
     {

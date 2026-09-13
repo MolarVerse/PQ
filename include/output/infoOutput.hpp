@@ -37,9 +37,9 @@ namespace out
 {
 
     /**
-     * @class InfoOutput inherits from Output
+     * @brief InfoOutput inherits from Output
      *
-     * @brief Output file for info file
+     * @details Output file for info file
      *
      */
     class InfoOutput : public Output

@@ -92,7 +92,6 @@ void PotentialSetup::setup()
  * 2) reaction field long range correction
  * 2) wolf long range correction
  *
- * @param coulombType
  */
 void PotentialSetup::setupCoulomb()
 {

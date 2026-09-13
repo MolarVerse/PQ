@@ -39,10 +39,8 @@ using namespace settings;
  * Reset Kinetics object
  *
  * @details following keywords are added to the _keywordFuncMap,
- * _keywordRequiredMap and _keywordCountMap: 1) nscale <size_t> 2) fscale
- * <size_t> 3) nreset <size_t> 4) freset <size_t>
- *
- * @param engine
+ * _keywordRequiredMap and _keywordCountMap: 1) nscale "<size_t>" 2) fscale
+ * "<size_t>" 3) nreset "<size_t>" 4) freset "<size_t>"
  */
 ResetKineticsInputParser::ResetKineticsInputParser()
 {

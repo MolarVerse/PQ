@@ -66,7 +66,7 @@ void Cell::addNeighbourCell(Cell *cell) { _neighbourCells.push_back(cell); }
 /**
  * @brief adds atoms to the atoms vector
  *
- * @param lowerBoundary
+ * @param atomPointers
  */
 void Cell::addAtoms(const std::vector<Atom *> &atomPointers)
 {

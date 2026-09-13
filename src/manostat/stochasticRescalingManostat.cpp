@@ -86,7 +86,6 @@ StochasticRescalingManostat &StochasticRescalingManostat::operator=(
  * @param compressibility
  * @param anisotropicAxis
  * @param isotropicAxes
- * @return SemiIsotropicStochasticRescalingManostat::
  */
 SemiIsotropicStochasticRescalingManostat::
     SemiIsotropicStochasticRescalingManostat(

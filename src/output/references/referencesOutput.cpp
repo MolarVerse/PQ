@@ -97,7 +97,6 @@ namespace
 /**
  * @brief writes the references file
  *
- * @param filename
  */
 void ReferencesOutput::writeReferencesFile()
 {

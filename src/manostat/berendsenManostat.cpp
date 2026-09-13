@@ -63,6 +63,8 @@ BerendsenManostat::BerendsenManostat(
  * @param targetPressure
  * @param tau
  * @param compressibility
+ * @param anisotropicAxis
+ * @param isotropicAxes
  */
 SemiIsotropicBerendsenManostat::SemiIsotropicBerendsenManostat(
     const double               targetPressure,

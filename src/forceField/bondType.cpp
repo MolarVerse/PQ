@@ -48,6 +48,7 @@ BondType::BondType(
 /**
  * @brief operator overload for the comparison of two BondType objects
  *
+ * @param self
  * @param other
  * @return true
  * @return false

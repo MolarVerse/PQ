@@ -78,9 +78,9 @@ void input::molDescriptor::readMolDescriptor(Engine &engine)
  * @details Processes each line of the moldescriptor file. If a molecule is
  * found the molecule is processed in a separate function. Following keywords
  * are recognized:
- * - water_type <int> - sets the water type
- * - ammonia_type <int> - sets the ammonia type
- * - <molecule_name> <number_of_atoms> <charge> - defines a molecule
+ * - water_type "<int>" - sets the water type
+ * - ammonia_type "<int>" - sets the ammonia type
+ * - "<molecule_name> <number_of_atoms> <charge>" - defines a molecule
  *
  * @throws MolDescriptorException if there is an error in the
  * moldescriptor file
@@ -131,9 +131,10 @@ void MoldescriptorReader::read()
  * @brief process molecule in moldescriptor file
  *
  * @details Processes the header line of a molecule and then reads the atom
- * lines. The header line has to have following format: <molecule_name>
- * <number_of_atoms> <charge> ... The atom lines have to have following format:
- * <atom_name> <external_atom_type> <partial_charge> [<external_vdw_type>]
+ * lines. The header line has to have following format:
+ * `<molecule_name> <number_of_atoms> <charge>` - defines a molecule.
+ * The atom lines have to have following format:
+ * `<atom_name> <external_atom_type> <partial_charge> [<external_vdw_type>]`
  * (external_vdw_type optional if noncoulombics is not activated) After
  * processing the atom lines the external atom types are converted to internal
  * atom types

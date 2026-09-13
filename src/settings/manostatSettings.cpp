@@ -143,7 +143,7 @@ void ManostatSettings::setIsotropy(const Isotropy &isotropy)
 /**
  * @brief sets the targetPressure to double in settings
  *
- * @param target
+ * @param targetPressure
  */
 void ManostatSettings::setTargetPressure(const double targetPressure)
 {

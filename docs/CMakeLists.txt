@@ -18,3 +18,29 @@ if(DOXYGEN_FOUND)
 else(DOXYGEN_FOUND)
     message("Doxygen need to be installed to generate the doxygen documentation")
 endif(DOXYGEN_FOUND)
+
+find_program(SPHINX_EXECUTABLE NAMES sphinx-build)
+
+if(DOXYGEN_FOUND AND SPHINX_EXECUTABLE)
+    set(SPHINX_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/sphinx)
+    set(SPHINX_BUILD  ${SPHINX_SOURCE}/_build)
+
+    set(SPHINX_HTML_STAMP ${SPHINX_BUILD}/.sphinx-html-stamp)
+
+    add_custom_command(
+        OUTPUT ${SPHINX_HTML_STAMP}
+        COMMAND ${CMAKE_COMMAND} -E env PQ_DOXYGEN_XML_DIR=${CMAKE_CURRENT_BINARY_DIR}/xml
+                ${SPHINX_EXECUTABLE} -b html . _build/html
+        COMMAND ${CMAKE_COMMAND} -E make_directory _build/html/doxygen
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/html _build/html/doxygen
+        COMMAND ${CMAKE_COMMAND} -E touch ${SPHINX_HTML_STAMP}
+        WORKING_DIRECTORY ${SPHINX_SOURCE}
+        COMMENT "Building Sphinx HTML site"
+        VERBATIM
+    )
+
+    add_custom_target(sphinx-docs DEPENDS ${SPHINX_HTML_STAMP})
+    add_dependencies(sphinx-docs docs)
+else()
+    message("Doxygen and Sphinx (sphinx-build) are both required to build the Sphinx documentation")
+endif()

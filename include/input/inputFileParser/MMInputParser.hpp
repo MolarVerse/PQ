@@ -33,9 +33,9 @@
 namespace input
 {
     /**
-     * @class MMInputParser inherits from InputFileParser
+     * @brief MMInputParser inherits from InputFileParser
      *
-     * @brief Parses the MM related commands in the input file
+     * @details Parses the MM related commands in the input file
      *
      */
     class MMInputParser : public InputFileParser

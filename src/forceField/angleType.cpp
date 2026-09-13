@@ -48,6 +48,7 @@ AngleType::AngleType(
 /**
  * @brief operator overload for the comparison of two AngleType objects
  *
+ * @param self
  * @param other
  * @return true
  * @return false

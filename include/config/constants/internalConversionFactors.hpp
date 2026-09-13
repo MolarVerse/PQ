@@ -126,7 +126,7 @@ namespace constants
     /**
      * @brief ring polymer molecular dynamics
      *
-     * @TODO: add details
+     * TODO: add details
      */
     static constexpr double RPMD_PREFACTOR =
         BOLTZMANN_CONSTANT2 / REDUCED_PLANCK_CONSTANT2 / M2_TO_ANGSTROM2 *

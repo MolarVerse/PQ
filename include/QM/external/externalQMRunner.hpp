@@ -70,8 +70,8 @@ namespace QM
 
         void run(
             molsys::SimulationBox      &simBox,
-            physicalData::PhysicalData &physData,
-            molsys::Periodicity         periodicity
+            physicalData::PhysicalData &physicalData,
+            molsys::Periodicity         per
         ) override;
 
         virtual void execute(molsys::SimulationBox &) = 0;

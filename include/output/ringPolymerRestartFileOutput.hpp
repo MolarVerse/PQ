@@ -36,9 +36,9 @@ namespace molsys
 namespace out
 {
     /**
-     * @class RingPolymerRestartFileOutput inherits from Output
+     * @brief RingPolymerRestartFileOutput inherits from Output
      *
-     * @brief Output file for restart file
+     * @details Output file for restart file
      *
      */
     class RingPolymerRestartFileOutput : public Output

@@ -161,18 +161,19 @@ namespace molsys
     /**
      * @brief wraps atoms into the primary triclinic box unit cell
      *
+     * @param pos position to be wrapped
+     *
      * @details This function images atoms back into the triclinic box with
      * fractional coordinates in the range [-0.5, 0.5). This centers the box
      * at the origin and is useful for output visualization where you want all
      * atoms within the primary unit cell rather than the nearest image to the
      * origin.
      *
-     * @param position position to be wrapped
      * @return Vec3D wrapped position with box centered at origin
      */
-    Vec3D TriclinicBox::wrapPositionIntoBox(const Vec3D &position) const
+    Vec3D TriclinicBox::wrapPositionIntoBox(const Vec3D &pos) const
     {
-        auto fractionalPosition = inverse(_boxMatrix) * position;
+        auto fractionalPosition = inverse(_boxMatrix) * pos;
 
         constexpr auto shiftFraction = 0.5;
 
@@ -184,12 +185,12 @@ namespace molsys
     /**
      * @brief Calculate the shift vector
      *
-     * @param shiftVector
+     * @param vec
      * @return Vec3D
      */
-    Vec3D TriclinicBox::calcShiftVector(const Vec3D &shiftVector) const
+    Vec3D TriclinicBox::calcShiftVector(const Vec3D &vec) const
     {
-        return _boxMatrix * round(inverse(_boxMatrix) * shiftVector);
+        return _boxMatrix * round(inverse(_boxMatrix) * vec);
     }
 
     /**

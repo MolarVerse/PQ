@@ -47,7 +47,7 @@ using namespace engine;
  * 4. angle type
  * 5. linker marked with a '*' (optional)
  *
- * @param line
+ * @param lineElements
  * @param engine
  *
  * @throws TopologyException if number of elements in line is

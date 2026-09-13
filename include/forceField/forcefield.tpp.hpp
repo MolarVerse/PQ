@@ -47,7 +47,6 @@ namespace forceField
      * @param atomIndex1
      * @param atomIndex2
      * @param distance
-     * @param isDihedral
      * @return double
      */
     template <typename T>

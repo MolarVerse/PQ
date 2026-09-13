@@ -31,9 +31,9 @@
 namespace input
 {
     /**
-     * @class VirialInputParser inherits from InputFileParser
+     * @brief VirialInputParser inherits from InputFileParser
      *
-     * @brief Parses the virial commands in the input file
+     * @details Parses the virial commands in the input file
      *
      */
     class VirialInputParser : public InputFileParser

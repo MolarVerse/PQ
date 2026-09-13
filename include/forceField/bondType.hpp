@@ -30,7 +30,7 @@ namespace forceField
 {
     class BondType;   // forward declaration
 
-    bool operator==(const BondType &, const BondType &);
+    bool operator==(const BondType &self, const BondType &other);
 
     /**
      * @class BondType

@@ -45,9 +45,9 @@ namespace molsys
     /**
      * @brief copy simulationBox object this
      *
-     * @details shared_ptrs are not copied but new ones are created
-     *
-     * @notes copy constructor is not used because it would break semantics here
+     * @details shared_ptrs are not copied but new ones are created,
+     * additionally, copy constructor is not used because it would break
+     * semantics here
      *
      * @param toCopy
      */

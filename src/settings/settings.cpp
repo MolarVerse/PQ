@@ -164,7 +164,7 @@ void Settings::setIsRandomSeedSet(const bool isRandomSeedSet)
 /**
  * @brief sets Ring Polymer MD to active
  *
- * @param dimensionality
+ * @param isRingPolymerMD
  */
 void Settings::setIsRingPolymerMDActivated(const bool isRingPolymerMD)
 {

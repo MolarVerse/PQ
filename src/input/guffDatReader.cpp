@@ -505,7 +505,7 @@ void GuffDatReader::addMorsePair(
     const size_t               molType2,
     const size_t               atomType1,
     const size_t               atomType2,
-    const std::vector<double> &coeffs,
+    const std::vector<double> &coefficients,
     const double               rncCutOff
 )
 {
@@ -514,9 +514,9 @@ void GuffDatReader::addMorsePair(
     );
 
     const auto params = MorseParams{
-        .dissociationEnergy  = coeffs[0],
-        .wellWidth           = coeffs[1],
-        .equilibriumDistance = coeffs[2]
+        .dissociationEnergy  = coefficients[0],
+        .wellWidth           = coefficients[1],
+        .equilibriumDistance = coefficients[2]
     };
 
     const auto morsePair          = MorsePair(rncCutOff, params);

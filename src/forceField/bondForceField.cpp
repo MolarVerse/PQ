@@ -67,14 +67,16 @@ BondForceField::BondForceField(
  * @details if bond is a linker bond, correct coulomb and non-coulomb energy and
  * forces
  *
- * @param box
- * @param physicalData
+ * @param simBox the simulation box containing the system
+ * @param data the physical data of the system
+ * @param coulombPot the coulomb potential of the system
+ * @param nonCoulombPot the non-coulomb potential of the system
  */
 void BondForceField::calculateEnergyAndForces(
-    const SimulationBox    &box,
-    PhysicalData           &physicalData,
-    const CoulombPotential &coulombPotential,
-    NonCoulombPotential    &nonCoulombPotential
+    const SimulationBox    &simBox,
+    PhysicalData           &data,
+    const CoulombPotential &coulombPot,
+    NonCoulombPotential    &nonCoulombPot
 )
 {
     const bool bothInactive =
@@ -87,21 +89,21 @@ void BondForceField::calculateEnergyAndForces(
     const auto position2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
     auto       dPosition = position1 - position2;
 
-    box.applyPBC(dPosition);
+    simBox.applyPBC(dPosition);
 
     const auto distance      = norm(dPosition);
     const auto deltaDistance = distance - _equilBondLength;
 
     auto forceMagnitude = -_forceConstant * deltaDistance;
 
-    physicalData.addBondEnergy(-forceMagnitude * deltaDistance / 2.0);
+    data.addBondEnergy(-forceMagnitude * deltaDistance / 2.0);
 
     if (_isLinker && distance < CoulombPotential::getCoulombRadiusCutOff())
     {
         forceMagnitude += correctLinker<BondForceField>(
-            coulombPotential,
-            nonCoulombPotential,
-            physicalData,
+            coulombPot,
+            nonCoulombPot,
+            data,
             _molecules[0],
             _molecules[1],
             _atomIndices[0],
@@ -125,7 +127,7 @@ void BondForceField::calculateEnergyAndForces(
     if (smoothing == HOTSPOT && _molecules[0]->getHybridZone() == SMOOTHING)
         smF = _molecules[0]->getSmoothingFactor();
 
-    physicalData.addVirial(tensorProduct(dPosition, force) * (1 - smF));
+    data.addVirial(tensorProduct(dPosition, force) * (1 - smF));
 }
 
 /***************************

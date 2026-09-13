@@ -54,11 +54,11 @@ std::string ImproperDihedralSection::keyword() { return "impropers"; }
  *
  * @note for the improper dihedral a general DihedralType is used
  *
- * @param line
+ * @param lineElements
  * @param engine
  *
  * @throw ParameterFileException if number of elements in line
- * is not 3
+ * is not 4
  * @throw ParameterFileException if periodicity is negative
  */
 void ImproperDihedralSection::processSection(

@@ -46,10 +46,11 @@ using namespace constants;
  * @brief Construct a new QMInputParser:: QMInputParser object
  *
  * @details following keywords are added to the _keywordFuncMap,
- * _keywordRequiredMap and _keywordCountMap: 1) qm_prog <string> 2) qm_script
- * <string>
+ * _keywordRequiredMap and _keywordCountMap: 1) qm_prog "<string>" 2) qm_script
+ * "<string>"
  *
- * @param engine
+ * @param logOutput
+ * @param stdoutOutput
  */
 QMInputParser::QMInputParser(
     out::LogOutput    &logOutput,
@@ -63,10 +64,9 @@ QMInputParser::QMInputParser(
  * @brief Construct a new QMInputParser:: QMInputParser object
  *
  * @details following keywords are added to the _keywordFuncMap,
- * _keywordRequiredMap and _keywordCountMap: 1) qm_prog <string> 2) qm_script
- * <string>
+ * _keywordRequiredMap and _keywordCountMap: 1) qm_prog "<string>" 2) qm_script
+ * "<string>"
  *
- * @param engine
  * @param logOutput
  * @param stdoutOutput
  * @param resolveBuiltInSlakosPath

@@ -33,6 +33,7 @@ namespace out
     /**
      * @brief Write the lattice parameters a, b, c, alpha, beta, gamma to file
      *
+     * @param step
      * @param box
      */
     void BoxFileOutput::write(const size_t step, const molsys::Box &box)

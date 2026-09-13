@@ -137,7 +137,6 @@ TopologySection *TopologyReader::determineSection(
 /**
  * @brief wrapper to construct a TopologyReader and reads topology file
  *
- * @param filename
  * @param engine
  */
 void input::topology::readTopologyFile(Engine &engine)

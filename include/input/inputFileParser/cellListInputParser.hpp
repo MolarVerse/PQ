@@ -34,9 +34,9 @@ namespace molsys
 namespace input
 {
     /**
-     * @class CellListInputParser inherits from InputFileParser
+     * @brief CellListInputParser inherits from InputFileParser
      *
-     * @brief Parses the cell list commands in the input file
+     * @details Parses the cell list commands in the input file
      *
      */
     class CellListInputParser : public InputFileParser

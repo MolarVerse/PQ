@@ -110,8 +110,8 @@ namespace linearAlgebra
      * @brief index operator
      *
      * @tparam T
-     * @param const size_t index
-     * @return std::vector<T> &
+     * @param index
+     * @return `Vector3D<T> &`
      */
     template <typename T>
     Vector3D<T> &StaticMatrix3x3<T>::operator[](const size_t index)
@@ -123,8 +123,8 @@ namespace linearAlgebra
      * @brief index operator
      *
      * @tparam T
-     * @param const size_t index
-     * @return const std::vector<T> &
+     * @param index
+     * @return `const Vector3D<T> &`
      */
     template <typename T>
     const Vector3D<T> &StaticMatrix3x3<T>::operator[](const size_t index) const
@@ -148,7 +148,6 @@ namespace linearAlgebra
      * @brief operator+ for two StaticMatrix3x3's
      *
      * @tparam T
-     * @param rhs
      * @return StaticMatrix3x3
      */
     template <typename T>

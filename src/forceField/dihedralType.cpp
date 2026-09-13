@@ -51,6 +51,7 @@ DihedralType::DihedralType(
 /**
  * @brief operator overload for the comparison of two DihedralType objects
  *
+ * @param self
  * @param other
  * @return true
  * @return false

@@ -32,9 +32,9 @@
 namespace input
 {
     /**
-     * @class FilesInputParser inherits from InputFileParser
+     * @brief FilesInputParser inherits from InputFileParser
      *
-     * @brief Parses all input file commands related to input files
+     * @details Parses all input file commands related to input files
      *
      */
     class FilesInputParser : public InputFileParser

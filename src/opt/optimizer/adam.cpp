@@ -29,7 +29,7 @@ using namespace opt;
 /**
  * @brief Constructor
  *
- * @param nIterations
+ * @param nEpochs
  * @param nAtoms
  */
 Adam::Adam(const size_t nEpochs, const size_t nAtoms) : Optimizer(nEpochs)
@@ -41,9 +41,10 @@ Adam::Adam(const size_t nEpochs, const size_t nAtoms) : Optimizer(nEpochs)
 /**
  * @brief Constructor
  *
- * @param nIterations
+ * @param nEpochs
  * @param beta1
  * @param beta2
+ * @param nAtoms
  */
 Adam::Adam(
     const size_t nEpochs,
@@ -78,6 +79,7 @@ size_t Adam::maxHistoryLength() const { return _maxHistoryLength; }
  * @brief update the optimizer
  *
  * @param learningRate
+ * @param step
  */
 void Adam::update(const double learningRate, const size_t step)
 {

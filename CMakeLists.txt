@@ -217,8 +217,7 @@ if(BUILD_WITH_PERF_BENCH)
     add_subdirectory(benchmarks/perf)
 endif()
 
-if(BUILD_WITH_DOC)
-    include(doxygen)
+if(BUILD_WITH_DOCS)
     add_subdirectory(docs EXCLUDE_FROM_ALL)
 endif()
 
