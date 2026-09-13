@@ -156,7 +156,7 @@ TEST(TestResetKinetics, rejectsZeroTargetFromZeroTemperature)
 
     EXPECT_THROW_MSG(
         resetKinetics.resetTemperature(*box),
-        customException::UserInputException,
+        exc::UserInputException,
         "Cannot rescale a zero-temperature system. Initialize velocities first."
     );
 
@@ -175,7 +175,7 @@ TEST(TestResetKinetics, rejectsPositiveTargetFromZeroTemperature)
 
     EXPECT_THROW_MSG(
         resetKinetics.resetTemperature(*box),
-        customException::UserInputException,
+        exc::UserInputException,
         "Cannot rescale a zero-temperature system. Initialize velocities first."
     );
 

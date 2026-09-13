@@ -26,7 +26,7 @@
 
 #include <utility>   // for pair
 
-namespace potential
+namespace pot
 {
     /**
      * @class CoulombPotential
@@ -82,6 +82,6 @@ namespace potential
         }
     };
 
-}   // namespace potential
+}   // namespace pot
 
 #endif   // _COULOMB_POTENTIAL_HPP_

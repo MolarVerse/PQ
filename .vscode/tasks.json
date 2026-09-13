@@ -19,7 +19,7 @@
                         "absolute"
                     ],
                     "pattern": {
-                        "regexp": "^(.*?):(\\d+):(\\d+):\\s*(warning|error|note):\\s*(.*)$",
+                        "regexp": "^(.*?):(\\d+):(\\d+):\\s*([Ww]arning|[Ee]rror|[Nn]ote):\\s*(.*)$",
                         "file": 1,
                         "line": 2,
                         "column": 3,
@@ -48,7 +48,36 @@
                         "absolute"
                     ],
                     "pattern": {
-                        "regexp": "^(.*?):(\\d+):(\\d+):\\s*(warning|error|note):\\s*(.*)$",
+                        "regexp": "^(.*?):(\\d+):(\\d+):\\s*([Ww]arning|[Ee]rror|[Nn]ote):\\s*(.*)$",
+                        "file": 1,
+                        "line": 2,
+                        "column": 3,
+                        "severity": 4,
+                        "message": 5
+                    }
+                }
+            ],
+            "group": "build"
+        },
+        {
+            "label": "clangd-tidy (recheck)",
+            "type": "shell",
+            "command": "bash",
+            "args": [
+                "-c",
+                "scripts/clang_tidy.sh --recheck"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                {
+                    "owner": "clangd-tidy",
+                    "fileLocation": [
+                        "absolute"
+                    ],
+                    "pattern": {
+                        "regexp": "^(.*?):(\\d+):(\\d+):\\s*([Ww]arning|[Ee]rror|[Nn]ote):\\s*(.*)$",
                         "file": 1,
                         "line": 2,
                         "column": 3,

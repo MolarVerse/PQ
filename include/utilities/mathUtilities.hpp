@@ -48,7 +48,8 @@ namespace utilities
      * @return false
      */
     template <typename T>
-    [[nodiscard]] bool compare(const T &lhs, const T &rhs, const T &tolerance)
+    [[nodiscard]]
+    bool compare(const T &lhs, const T &rhs, const T &tolerance)
     {
         return std::abs(lhs - rhs) < tolerance;
     }
@@ -69,12 +70,14 @@ namespace utilities
      * @return false
      */
     template <typename T>
-    [[nodiscard]] bool compare(const T &lhs, const T &rhs)
+    [[nodiscard]]
+    bool compare(const T &lhs, const T &rhs)
     {
         return std::fabs(lhs - rhs) < std::numeric_limits<T>::epsilon();
     }
 
-    [[nodiscard]] bool compare(
+    [[nodiscard]]
+    bool compare(
         const linearAlgebra::Vector3D<double> &lhs,
         const linearAlgebra::Vector3D<double> &rhs
     );

@@ -47,6 +47,15 @@ namespace
     constexpr bool staticBuild         = PQ_BUILD_STATIC;
     constexpr bool withSingularity     = PQ_BUILD_WITH_SINGULARITY;
 
+    /**
+     * @brief Represents a parameter in the PQ input schema.
+     */
+    struct JsonParam
+    {
+        std::string_view name;
+        std::string_view type;
+    };
+
     void writeStringArray(
         cli::JsonWriter                              &json,
         const std::string_view                        key,
@@ -60,24 +69,19 @@ namespace
 
     void beginParameter(
         cli::JsonWriter       &json,
-        const std::string_view name,
-        const std::string_view type,
+        const JsonParam       &param,
         const std::string_view unit
     )
     {
-        json.beginObject(name);
-        json.value("type", type);
+        json.beginObject(param.name);
+        json.value("type", param.type);
         if (!unit.empty())
             json.value("unit", unit);
     }
 
-    void beginParameter(
-        cli::JsonWriter       &json,
-        const std::string_view name,
-        const std::string_view type
-    )
+    void beginParameter(cli::JsonWriter &json, const JsonParam &param)
     {
-        beginParameter(json, name, type, "");
+        beginParameter(json, param, "");
     }
 
     void writeBuildCapabilities(cli::JsonWriter &json)
@@ -164,43 +168,67 @@ namespace
     {
         json.beginObject("parameters");
 
-        beginParameter(json, "nstep", "integer");
+        beginParameter(json, JsonParam{.name = "nstep", .type = "integer"});
         json.value("minimum", 1);
         json.value("maximum", INT_MAX);
         json.endObject();
 
-        beginParameter(json, "timestep", "number", "fs");
+        beginParameter(
+            json,
+            JsonParam{.name = "timestep", .type = "number"},
+            "fs"
+        );
         json.value("exclusive_minimum", 0);
         json.endObject();
 
-        beginParameter(json, "output_freq", "integer");
+        beginParameter(
+            json,
+            JsonParam{.name = "output_freq", .type = "integer"}
+        );
         json.value("minimum", 0);
         json.value("maximum", INT_MAX);
         json.endObject();
 
-        beginParameter(json, "random_seed", "integer");
+        beginParameter(
+            json,
+            JsonParam{.name = "random_seed", .type = "integer"}
+        );
         json.value("minimum", 0);
         json.value("maximum", UINT32_MAX);
         json.endObject();
 
         for (const auto *const name : {"temp", "start_temp", "end_temp"})
         {
-            beginParameter(json, name, "number", "K");
+            beginParameter(
+                json,
+                JsonParam{.name = name, .type = "number"},
+                "K"
+            );
             json.value("minimum", 0);
             json.endObject();
         }
 
-        beginParameter(json, "temp_ramp_steps", "integer");
+        beginParameter(
+            json,
+            JsonParam{.name = "temp_ramp_steps", .type = "integer"}
+        );
         json.value("minimum", 0);
         json.value("maximum", INT_MAX);
         json.endObject();
 
-        beginParameter(json, "temp_ramp_frequency", "integer");
+        beginParameter(
+            json,
+            JsonParam{.name = "temp_ramp_frequency", .type = "integer"}
+        );
         json.value("minimum", 1);
         json.value("maximum", INT_MAX);
         json.endObject();
 
-        beginParameter(json, "t_relaxation", "number", "ps");
+        beginParameter(
+            json,
+            JsonParam{.name = "t_relaxation", .type = "number"},
+            "ps"
+        );
         json.value("exclusive_minimum", 0);
         json.value(
             "maximum",
@@ -213,7 +241,11 @@ namespace
         json.value("default", defaults::BERENDSEN_THERMOSTAT_RELAX_TIME);
         json.endObject();
 
-        beginParameter(json, "friction", "number", "ps^-1");
+        beginParameter(
+            json,
+            JsonParam{.name = "friction", .type = "number"},
+            "ps^-1"
+        );
         json.value("minimum", 0);
         json.value(
             "maximum",
@@ -227,13 +259,20 @@ namespace
         );
         json.endObject();
 
-        beginParameter(json, "nh-chain_length", "integer");
+        beginParameter(
+            json,
+            JsonParam{.name = "nh-chain_length", .type = "integer"}
+        );
         json.value("minimum", 1);
         json.value("maximum", INT_MAX);
         json.value("default", defaults::NH_CHAIN_LENGTH_DEFAULT);
         json.endObject();
 
-        beginParameter(json, "coupling_frequency", "number", "cm^-1");
+        beginParameter(
+            json,
+            JsonParam{.name = "coupling_frequency", .type = "number"},
+            "cm^-1"
+        );
         json.value("minimum", 0);
         json.value(
             "maximum",
@@ -243,10 +282,18 @@ namespace
         json.value("default", defaults::NH_COUPLING_FREQ);
         json.endObject();
 
-        beginParameter(json, "pressure", "number", "bar");
+        beginParameter(
+            json,
+            JsonParam{.name = "pressure", .type = "number"},
+            "bar"
+        );
         json.endObject();
 
-        beginParameter(json, "p_relaxation", "number", "ps");
+        beginParameter(
+            json,
+            JsonParam{.name = "p_relaxation", .type = "number"},
+            "ps"
+        );
         json.value("exclusive_minimum", 0);
         json.value(
             "maximum",
@@ -259,16 +306,28 @@ namespace
         json.value("default", defaults::BERENDSEN_MANOSTAT_RELAX_TIME);
         json.endObject();
 
-        beginParameter(json, "compressibility", "number", "bar^-1");
+        beginParameter(
+            json,
+            JsonParam{.name = "compressibility", .type = "number"},
+            "bar^-1"
+        );
         json.value("minimum", 0);
         json.value("default", defaults::COMPRESSIBILITY_WATER_DEFAULT);
         json.endObject();
 
-        beginParameter(json, "density", "number", "kg/L");
+        beginParameter(
+            json,
+            JsonParam{.name = "density", .type = "number"},
+            "kg/L"
+        );
         json.value("exclusive_minimum", 0);
         json.endObject();
 
-        beginParameter(json, "rcoulomb", "number", "angstrom");
+        beginParameter(
+            json,
+            JsonParam{.name = "rcoulomb", .type = "number"},
+            "angstrom"
+        );
         json.value("minimum", 0);
         json.value("default", defaults::COULOMB_CUT_OFF_DEFAULT);
         json.endObject();

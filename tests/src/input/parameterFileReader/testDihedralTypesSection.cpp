@@ -56,13 +56,13 @@ TEST_F(TestParameterFileSection, processSectionDihedral)
     lineElements = {"1", "2", "1.0", "0", "2"};
     EXPECT_THROW(
         dihedralSection.processSection(lineElements, *_engine),
-        customException::ParameterFileException
+        exc::ParameterFileException
     );
 
     lineElements = {"1", "2", "-1.0", "3"};
     EXPECT_THROW(
         dihedralSection.processSection(lineElements, *_engine),
-        customException::ParameterFileException
+        exc::ParameterFileException
     );
 }
 
@@ -73,7 +73,7 @@ TEST_F(TestParameterFileSection, endedNormallyDihedral)
 
     ASSERT_THROW_MSG(
         dihedralSection.endedNormally(false),
-        customException::ParameterFileException,
+        exc::ParameterFileException,
         "Parameter file dihedrals section ended abnormally!"
     );
 }

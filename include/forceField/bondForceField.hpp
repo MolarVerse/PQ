@@ -24,8 +24,6 @@
 
 #define _BOND_FORCE_FIELD_HPP_
 
-#include <cstddef>
-
 #include "bond.hpp"
 
 namespace physicalData
@@ -39,11 +37,11 @@ namespace molsys
     class SimulationBox;   // forward declaration
 }   // namespace molsys
 
-namespace potential
+namespace pot
 {
     class CoulombPotential;      // forward declaration
     class NonCoulombPotential;   // forward declaration
-}   // namespace potential
+}   // namespace pot
 
 namespace forceField
 {
@@ -66,16 +64,16 @@ namespace forceField
         BondForceField(
             molsys::Molecule *molecule1,
             molsys::Molecule *molecule2,
-            size_t            atomIndex1,
-            size_t            atomIndex2,
+            AtomIndex         atomIndex1,
+            AtomIndex         atomIndex2,
             BondId            type
         );
 
         void calculateEnergyAndForces(
-            const molsys::SimulationBox       &simBox,
-            physicalData::PhysicalData        &data,
-            const potential::CoulombPotential &coulombPot,
-            potential::NonCoulombPotential    &nonCoulombPot
+            const molsys::SimulationBox &simBox,
+            physicalData::PhysicalData  &data,
+            const pot::CoulombPotential &coulombPot,
+            pot::NonCoulombPotential    &nonCoulombPot
         );
 
         /***************************

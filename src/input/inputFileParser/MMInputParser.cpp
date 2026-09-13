@@ -37,10 +37,10 @@
 #include "waterModelSettings.hpp"   // for WaterModelSettings
 
 using namespace input;
-using namespace customException;
+using namespace exc;
 using namespace settings;
 using namespace utilities;
-using namespace potential;
+using namespace pot;
 
 /**
  * @brief Construct a new Input File Parser Force Field:: Input File Parser
@@ -55,7 +55,7 @@ using namespace potential;
  */
 MMInputParser::MMInputParser(
     std::shared_ptr<forceField::ForceField> forceField,
-    std::shared_ptr<potential::Potential>   potential
+    std::shared_ptr<pot::Potential>         potential
 )
     : _forceField(std::move(forceField)), _potential(std::move(potential))
 {

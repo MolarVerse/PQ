@@ -39,10 +39,10 @@
 #include "simulationBox.hpp"             // for SimulationBox
 #include "strongTypes.hpp"
 
-namespace potential
+namespace pot
 {
     class NonCoulombPair;   // forward declaration
-}   // namespace potential
+}   // namespace pot
 
 class TestAngleForceField : public TestNonCoulombPotentialFF
 {
@@ -54,17 +54,16 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
     box.setBoxDimensions({10.0, 10.0, 10.0});
 
     auto physicalData     = physicalData::PhysicalData();
-    auto coulombPotential = potential::CoulombShiftedPotential(10.0);
+    auto coulombPotential = pot::CoulombShiftedPotential(10.0);
 
-    auto nonCoulombPair = potential::LennardJonesPair(
-        static_cast<size_t>(1),
-        static_cast<size_t>(1),
+    auto nonCoulombPair = pot::LennardJonesPair(
+        ExtVdwType(1),
+        ExtVdwType(1),
         5.0,
-        2.0,
-        4.0
+        LJParams{.c6 = 2.0, .c12 = 4.0}
     );
     setNonCoulombPairsMatrix(
-        linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(2, 2)
+        linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
     );
     setNonCoulombPairsMatrix(1, 1, nonCoulombPair);
 
@@ -85,9 +84,9 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
     atom2->setForce({0.0, 0.0, 0.0});
     atom3->setForce({0.0, 0.0, 0.0});
 
-    atom1->setInternalGlobalVDWType(0);
-    atom2->setInternalGlobalVDWType(1);
-    atom3->setInternalGlobalVDWType(1);
+    atom1->setInternalGlobalVDWType(VdwType{0});
+    atom2->setInternalGlobalVDWType(VdwType{1});
+    atom3->setInternalGlobalVDWType(VdwType{1});
 
     atom1->setAtomType(0);
     atom2->setAtomType(1);
@@ -103,7 +102,7 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
 
     auto bondForceField = forceField::AngleForceField(
         {&molecule, &molecule, &molecule},
-        {0, 1, 2},
+        {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}},
         AngleId{0}
     );
     bondForceField.setEquilibriumAngle(90 * M_PI / 180.0);
@@ -118,15 +117,47 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
     );
 
     EXPECT_NEAR(physicalData.getAngleEnergy(), 2.0999420826401303, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(0)[0], -0.62105043904006785, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(0)[1], 0.20701681301335595, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(0)[2], 1.0350840650667796, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(1)[0], 1.4491176910934915, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(1)[1], 0.0, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(1)[2], -1.4491176910934915, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(2)[0], -0.82806725205342369, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(2)[1], -0.20701681301335595, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(2)[2], 0.41403362602671184, 1e-6);
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{0})[0],
+        -0.62105043904006785,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{0})[1],
+        0.20701681301335595,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{0})[2],
+        1.0350840650667796,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{1})[0],
+        1.4491176910934915,
+        1e-6
+    );
+    EXPECT_NEAR(molecule.getAtomForce(AtomIndex{1})[1], 0.0, 1e-6);
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{1})[2],
+        -1.4491176910934915,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{2})[0],
+        -0.82806725205342369,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{2})[1],
+        -0.20701681301335595,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{2})[2],
+        0.41403362602671184,
+        1e-6
+    );
     EXPECT_NEAR(physicalData.getCoulombEnergy(), 0.0, 1e-6);
     EXPECT_NEAR(physicalData.getNonCoulombEnergy(), 0.0, 1e-6);
     EXPECT_THAT(
@@ -153,15 +184,51 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
     );
 
     EXPECT_NEAR(physicalData.getAngleEnergy(), 2.0999420826401303, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(0)[0], -0.62105043904006785, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(0)[1], 0.20701681301335595, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(0)[2], 1.0350840650667796, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(1)[0], 1.4491176910934915, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(1)[1], 7.0737262359370403, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(1)[2], 12.69833478078059, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(2)[0], -0.82806725205342369, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(2)[1], -7.2807430489503959, 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(2)[2], -13.733418845847369, 1e-6);
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{0})[0],
+        -0.62105043904006785,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{0})[1],
+        0.20701681301335595,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{0})[2],
+        1.0350840650667796,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{1})[0],
+        1.4491176910934915,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{1})[1],
+        7.0737262359370403,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{1})[2],
+        12.69833478078059,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{2})[0],
+        -0.82806725205342369,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{2})[1],
+        -7.2807430489503959,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{2})[2],
+        -13.733418845847369,
+        1e-6
+    );
     EXPECT_NEAR(physicalData.getCoulombEnergy(), -22.378958701288319, 1e-6);
     EXPECT_NEAR(
         physicalData.getNonCoulombEnergy(),
@@ -186,7 +253,7 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
     box.setBoxDimensions({100.0, 100.0, 100.0});
 
     auto physicalData     = physicalData::PhysicalData();
-    auto coulombPotential = potential::CoulombShiftedPotential(10.0);
+    auto coulombPotential = pot::CoulombShiftedPotential(10.0);
 
     auto molecule = molsys::Molecule();
     molecule.setMoltype(0);
@@ -212,7 +279,7 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
 
     auto angleForceField = forceField::AngleForceField(
         {&molecule, &molecule, &molecule},
-        {0, 1, 2},
+        {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}},
         AngleId{0}
     );
     angleForceField.setEquilibriumAngle(M_PI);   // linear equilibrium
@@ -232,7 +299,7 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
 
     // All per-atom forces must be finite. Without the guard these would
     // be NaN from dividing by sin(pi) == 0 in the cross-product block.
-    for (size_t atomIdx = 0; atomIdx < 3; ++atomIdx)
+    for (AtomIndex atomIdx{0}; atomIdx.get() < 3; ++atomIdx)
     {
         for (size_t i = 0; i < 3; ++i)
         {

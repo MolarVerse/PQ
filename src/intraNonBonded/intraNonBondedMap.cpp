@@ -31,7 +31,7 @@
 #include "simulationBox.hpp"         // for SimulationBox
 
 using namespace intraNonBonded;
-using namespace potential;
+using namespace pot;
 using namespace physicalData;
 using namespace molsys;
 using namespace linearAlgebra;
@@ -82,7 +82,7 @@ void IntraNonBondedMap::calculate(
         {
             const auto [coulombEnergyTemp, nonCoulombEnergyTemp] =
                 calculateSingleInteraction(
-                    atomIndex1,
+                    AtomIndex{atomIndex1},
                     atomIndice,
                     box,
                     physicalData,
@@ -112,7 +112,7 @@ void IntraNonBondedMap::calculate(
  * the interaction
  */
 std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(
-    size_t       atomIdx1,
+    AtomIndex    atomIdx1,
     int          atomIdx2AsInt,
     const Vec3D &box,
     PhysicalData & /*physicalData*/,
@@ -126,7 +126,7 @@ std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(
     auto coulombEnergy    = 0.0;
     auto nonCoulombEnergy = 0.0;
 
-    const auto atomIdx2 = static_cast<size_t>(::abs(atomIdx2AsInt));
+    const auto atomIdx2 = static_cast<AtomIndex>(::abs(atomIdx2AsInt));
     const bool scale    = atomIdx2AsInt < 0;
 
     const auto &pos1 = _molecule->getAtomPosition(atomIdx1);
@@ -166,16 +166,12 @@ std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(
 
         const auto moltype = _molecule->getMoltype();
 
-        const auto combinedIdx = {
-            moltype,
-            moltype,
-            atomType1,
-            atomType2,
-            globalVdwType1,
-            globalVdwType2
-        };
+        const auto combinedIdx = {moltype, moltype, atomType1, atomType2};
 
-        const auto nonCoulombicPair = nonCoulPot->getNonCoulPair(combinedIdx);
+        const auto nonCoulombicPair = nonCoulPot->getNonCoulPair(
+            combinedIdx,
+            {globalVdwType1, globalVdwType2}
+        );
 
         if (distance < nonCoulombicPair->getRadialCutOff())
         {

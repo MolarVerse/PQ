@@ -38,31 +38,32 @@
 #include "matrix.hpp"
 #include "molecule.hpp"
 #include "simulationBox.hpp"
+#include "strongTypes.hpp"
 
-namespace potential
+namespace pot
 {
     class NonCoulombPair;   // forward declaration
-}   // namespace potential
+}   // namespace pot
 
 namespace benchSetup
 {
     struct BenchNonCoulombFFPot
     {
-        potential::ForceFieldNonCoulomb nonCoulomb;
+        pot::ForceFieldNonCoulomb nonCoulomb;
 
         void setNonCoulombPairsMatrix(
-            const std::size_t                  index1,
-            const std::size_t                  index2,
-            const potential::LennardJonesPair& pair
+            std::size_t                  index1,
+            std::size_t                  index2,
+            const pot::LennardJonesPair& pair
         )
         {
             nonCoulomb._nonCoulPairsMatPtr->matrix(index1, index2) =
-                std::make_shared<potential::LennardJonesPair>(pair);
+                std::make_shared<pot::LennardJonesPair>(pair);
         }
 
         void setNonCoulombPairsMatrix(
-            const linearAlgebra::Matrix<
-                std::shared_ptr<potential::NonCoulombPair>>& matrix
+            const linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>>&
+                matrix
         )
         {
             nonCoulomb._nonCoulPairsMatPtr->matrix = matrix;
@@ -109,7 +110,7 @@ namespace benchSetup
             atom->setShiftForce({0.0, 0.0, 0.0});
             atom->setMass(12.0);
             atom->setAtomType(i % 2);
-            atom->setInternalGlobalVDWType(i % 2);
+            atom->setInternalGlobalVDWType(VdwType{i % 2});
             atom->setPartialCharge((i % 2 == 0) ? 0.4 : -0.4);
 
             molecule.addAtom(atom);
@@ -121,17 +122,19 @@ namespace benchSetup
     }
 
     // A ForceFieldNonCoulomb with a Lennard-Jones pair for the 0/1 vdW types.
-    inline potential::ForceFieldNonCoulomb makeNonCoulomb()
+    inline pot::ForceFieldNonCoulomb makeNonCoulomb()
     {
         benchSetup::BenchNonCoulombFFPot potential;
         potential.setNonCoulombPairsMatrix(
-            linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(
-                2,
-                2
-            )
+            linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
         );
 
-        auto pair = potential::LennardJonesPair(0UL, 1UL, 12.0, 2.0, 3.0);
+        auto pair = pot::LennardJonesPair(
+            ExtVdwType(0),
+            ExtVdwType(1),
+            12.0,
+            LJParams{.c6 = 2.0, .c12 = 3.0}
+        );
         potential.setNonCoulombPairsMatrix(0, 1, pair);
         potential.setNonCoulombPairsMatrix(1, 0, pair);
 

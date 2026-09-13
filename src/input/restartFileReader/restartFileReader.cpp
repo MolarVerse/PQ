@@ -84,7 +84,7 @@ RestartFileSection *RestartFileReader::determineSection(
  * @brief Reads a restart file and calls the process function of the
  * corresponding section
  *
- * @throw customException::InputFileException if file not found
+ * @throw exc::InputFileException if file not found
  */
 void RestartFileReader::read()
 {

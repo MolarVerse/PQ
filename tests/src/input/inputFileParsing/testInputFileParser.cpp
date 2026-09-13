@@ -46,14 +46,14 @@ TEST_F(TestInputFileReader, checkCommand)
     auto lineElements = std::vector<std::string>{"test", "="};
     ASSERT_THROW_MSG(
         checkCommand(lineElements, 1),
-        customException::InputFileException,
+        exc::InputFileException,
         "Invalid number of arguments at line 1 in input file"
     );
 
     lineElements = std::vector<std::string>{"test", "=", "test2", "tooMany"};
     ASSERT_THROW_MSG(
         checkCommand(lineElements, 1),
-        customException::InputFileException,
+        exc::InputFileException,
         "Invalid number of arguments at line 1 in input file"
     );
 
@@ -73,7 +73,7 @@ TEST_F(TestInputFileReader, checkCommandArray)
     auto lineElements = std::vector<std::string>{"test", "="};
     ASSERT_THROW_MSG(
         checkCommandArray(lineElements, 1),
-        customException::InputFileException,
+        exc::InputFileException,
         "Invalid number of arguments at line 1 in input file"
     );
 
@@ -92,7 +92,7 @@ TEST_F(TestInputFileReader, equalSign)
 {
     ASSERT_THROW_MSG(
         checkEqualSign("a", 1),
-        customException::InputFileException,
+        exc::InputFileException,
         "Invalid command at line 1 in input file"
     );
 

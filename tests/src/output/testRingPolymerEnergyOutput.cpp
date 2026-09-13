@@ -30,7 +30,7 @@
 #include "ringPolymerEnergyOutput.hpp"
 #include "testOutputBase.hpp"
 
-using namespace output;
+using namespace out;
 using physicalData::PhysicalData;
 
 class TestRingPolymerEnergyOutput : public testing::Test

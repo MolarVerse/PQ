@@ -43,7 +43,7 @@
 #include "stringUtilities.hpp"
 #include "turbomoleRunner.hpp"
 
-using customException::QMRunnerException;
+using exc::QMRunnerException;
 using molsys::Atom;
 using molsys::Periodicity;
 using molsys::SimulationBox;

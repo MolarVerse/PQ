@@ -23,6 +23,7 @@ foreach(source_file ${source_files})
         parameterFileReader
         gtest
         gmock
+        testUtils
         pq_test_main
     )
     add_test(

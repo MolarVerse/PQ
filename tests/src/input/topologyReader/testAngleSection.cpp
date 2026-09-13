@@ -56,9 +56,9 @@ TEST_F(TestTopologySection, processSectionAngle)
         angles[0].getMolecules()[2],
         &(_engine->getSimulationBox().getMolecules()[1])
     );
-    EXPECT_EQ(angles[0].getAtomIndices()[0], 0);
-    EXPECT_EQ(angles[0].getAtomIndices()[1], 0);
-    EXPECT_EQ(angles[0].getAtomIndices()[2], 1);
+    EXPECT_EQ(angles[0].getAtomIndices()[0], AtomIndex{0});
+    EXPECT_EQ(angles[0].getAtomIndices()[1], AtomIndex{0});
+    EXPECT_EQ(angles[0].getAtomIndices()[2], AtomIndex{1});
     EXPECT_EQ(angles[0].getType(), AngleId{7});
     EXPECT_EQ(angles[0].isLinker(), false);
 
@@ -69,19 +69,19 @@ TEST_F(TestTopologySection, processSectionAngle)
     lineElements = {"1", "1", "2", "3"};
     EXPECT_THROW(
         angleSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+        exc::TopologyException
     );
 
     lineElements = {"1", "2", "7"};
     EXPECT_THROW(
         angleSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+        exc::TopologyException
     );
 
     lineElements = {"1", "2", "3", "7", "#"};
     EXPECT_THROW(
         angleSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+        exc::TopologyException
     );
 }
 
@@ -92,9 +92,6 @@ TEST_F(TestTopologySection, processSectionAngle)
 TEST_F(TestTopologySection, endedNormallyAngle)
 {
     input::topology::AngleSection angleSection;
-    EXPECT_THROW(
-        angleSection.endedNormally(false),
-        customException::TopologyException
-    );
+    EXPECT_THROW(angleSection.endedNormally(false), exc::TopologyException);
     EXPECT_NO_THROW(angleSection.endedNormally(true));
 }

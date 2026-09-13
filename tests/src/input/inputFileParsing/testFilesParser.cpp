@@ -51,7 +51,7 @@ TEST_F(TestInputFileReader, testParseTopologyFilename)
     };
     EXPECT_THROW_MSG(
         parser.parseTopologyFilename(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Cannot open topology file - filename = topology.txt"
     );
 
@@ -81,7 +81,7 @@ TEST_F(TestInputFileReader, testParseParameterFilename)
     };
     EXPECT_THROW_MSG(
         parser.parseParameterFilename(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Cannot open parameter file - filename = param.txt"
     );
 
@@ -111,7 +111,7 @@ TEST_F(TestInputFileReader, parseIntraNonBondedFile)
     };
     EXPECT_THROW_MSG(
         parser.parseIntraNonBondedFile(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Intra non bonded file \"intra.dat\" File not found"
     );
 
@@ -141,7 +141,7 @@ TEST_F(TestInputFileReader, testStartFileName)
     };
     EXPECT_THROW_MSG(
         parser.parseStartFilename(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Cannot open start file - filename = start.xyz"
     );
 
@@ -167,7 +167,7 @@ TEST_F(TestInputFileReader, testMoldescriptorFileName)
     };
     EXPECT_THROW_MSG(
         parser.parseMoldescriptorFilename(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Cannot open moldescriptor file - filename = \"moldescriptor.txt\" - "
         "file not found"
     );
@@ -194,7 +194,7 @@ TEST_F(TestInputFileReader, testGuffPath)
     const std::vector<std::string> lineElements = {"guff_path", "=", "guff"};
     EXPECT_THROW_MSG(
         parser.parseGuffPath(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         R"(The "guff_path" keyword id deprecated. Please use "guffdat_file" instead.)"
     );
 }
@@ -209,7 +209,7 @@ TEST_F(TestInputFileReader, guffDatFilename)
     std::vector<std::string> lineElements = {"guffdat_file", "=", "guff.dat"};
     EXPECT_THROW_MSG(
         parser.parseGuffDatFilename(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Cannot open guff file - filename = guff.dat"
     );
 
@@ -234,7 +234,7 @@ TEST_F(TestInputFileReader, testRpmdStartFileName)
     };
     EXPECT_THROW_MSG(
         parser.parseRingPolymerStartFilename(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Cannot open ring polymer start file - filename = rpmd_start.xyz"
     );
 
@@ -260,7 +260,7 @@ TEST_F(TestInputFileReader, testMShakeFileName)
 
     EXPECT_THROW_MSG(
         parser.parseMShakeFilename(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Cannot open mshake file - filename = mshake.dat"
     );
 
@@ -286,7 +286,7 @@ TEST_F(TestInputFileReader, testDFTBFileName)
 
     EXPECT_THROW_MSG(
         parser.parseDFTBFilename(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Cannot open DFTB setup file - filename = dftb_in.template"
     );
 
@@ -312,7 +312,7 @@ TEST_F(TestInputFileReader, testTMFileName)
 
     EXPECT_THROW_MSG(
         parser.parseTMFilename(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Cannot open TURBOMOLE setup file - filename = tm_define.template"
     );
 

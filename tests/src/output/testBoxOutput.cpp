@@ -30,7 +30,7 @@
 #include "testOutputBase.hpp"
 #include "vector3d.hpp"
 
-using namespace output;
+using namespace out;
 using molsys::OrthorhombicBox;
 
 TEST(TestBoxFileOutput, writeEmitsStepAndDimensionsAndAngles)

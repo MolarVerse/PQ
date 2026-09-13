@@ -51,7 +51,7 @@ TEST_F(TestInputFileReader, testParseTimestep)
     lineElements = {"timestep", "=", "0"};
     EXPECT_THROW_MSG(
         parser.parseTimeStep(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Time step must be finite and greater than zero"
     );
 
@@ -85,14 +85,14 @@ TEST_F(TestInputFileReader, testParseNumberOfSteps)
     lineElements = {"nsteps", "=", "-1"};
     EXPECT_THROW_MSG(
         parser.parseNumberOfSteps(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Number of steps must be greater than zero"
     );
 
     lineElements = {"nsteps", "=", "0"};
     EXPECT_THROW_MSG(
         parser.parseNumberOfSteps(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Number of steps must be greater than zero"
     );
 }

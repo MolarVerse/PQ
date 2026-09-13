@@ -49,10 +49,10 @@ TEST_F(TestTopologySection, processSectionDihedral)
     EXPECT_EQ(dihedrals[0].getMolecules()[1], &(molecules[1]));
     EXPECT_EQ(dihedrals[0].getMolecules()[2], &(molecules[1]));
     EXPECT_EQ(dihedrals[0].getMolecules()[3], &(molecules[1]));
-    EXPECT_EQ(dihedrals[0].getAtomIndices()[0], 0);
-    EXPECT_EQ(dihedrals[0].getAtomIndices()[1], 0);
-    EXPECT_EQ(dihedrals[0].getAtomIndices()[2], 1);
-    EXPECT_EQ(dihedrals[0].getAtomIndices()[3], 2);
+    EXPECT_EQ(dihedrals[0].getAtomIndices()[0], AtomIndex{0});
+    EXPECT_EQ(dihedrals[0].getAtomIndices()[1], AtomIndex{0});
+    EXPECT_EQ(dihedrals[0].getAtomIndices()[2], AtomIndex{1});
+    EXPECT_EQ(dihedrals[0].getAtomIndices()[3], AtomIndex{2});
     EXPECT_EQ(dihedrals[0].getType(), DihedralId{7});
     EXPECT_EQ(dihedrals[0].isLinker(), false);
 
@@ -63,19 +63,19 @@ TEST_F(TestTopologySection, processSectionDihedral)
     lineElements = {"1", "1", "2", "3", "4"};
     EXPECT_THROW(
         dihedralSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+        exc::TopologyException
     );
 
     lineElements = {"1", "2", "7"};
     EXPECT_THROW(
         dihedralSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+        exc::TopologyException
     );
 
     lineElements = {"1", "2", "3", "4", "7", "#"};
     EXPECT_THROW(
         dihedralSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+        exc::TopologyException
     );
 }
 
@@ -86,9 +86,6 @@ TEST_F(TestTopologySection, processSectionDihedral)
 TEST_F(TestTopologySection, endedNormallyDihedral)
 {
     input::topology::DihedralSection dihedralSection;
-    EXPECT_THROW(
-        dihedralSection.endedNormally(false),
-        customException::TopologyException
-    );
+    EXPECT_THROW(dihedralSection.endedNormally(false), exc::TopologyException);
     EXPECT_NO_THROW(dihedralSection.endedNormally(true));
 }

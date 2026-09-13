@@ -50,8 +50,8 @@ using namespace constants;
 BondConstraint::BondConstraint(
     Molecule *molecule1,
     Molecule *molecule2,
-    size_t    atomIndex1,
-    size_t    atomIndex2,
+    AtomIndex atomIndex1,
+    AtomIndex atomIndex2,
     double    bondLength
 )
     : connectivity::Bond(molecule1, molecule2, atomIndex1, atomIndex2),

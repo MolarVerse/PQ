@@ -39,7 +39,7 @@
 using namespace molsys;
 using namespace settings;
 using namespace linearAlgebra;
-using namespace customException;
+using namespace exc;
 
 /**
  * @brief clone cell list
@@ -99,7 +99,7 @@ void CellList::determineCellSize(const Vec3D &box)
 /**
  * @brief check if coulomb cutoff is smaller than half of the largest cell size
  *
- * @throws customException::CellListException if coulomb cutoff is smaller than
+ * @throws exc::CellListException if coulomb cutoff is smaller than
  * half of the largest cell size
  *
  * @param coulombCutoff
@@ -279,7 +279,7 @@ void CellList::addMoleculesToCells(SimulationBox &simulationBox)
 
         const auto nAtomsInMolecule = molecule->getNumberOfAtoms();
 
-        for (size_t j = 0; j < nAtomsInMolecule; ++j)
+        for (AtomIndex j{0}; j.get() < nAtomsInMolecule; ++j)
         {
             auto      *atom     = &molecule->getAtom(j);
             const auto position = molecule->getAtomPosition(j);

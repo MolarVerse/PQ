@@ -24,7 +24,7 @@
 
 #include "exceptions.hpp"   // for UserInputException
 
-using namespace customException;
+using namespace exc;
 
 /**
  * @brief Construct a new CommandLineArgs::CommandLineArgs object

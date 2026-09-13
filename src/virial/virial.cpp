@@ -22,15 +22,10 @@
 
 #include "virial.hpp"
 
+#include "globalTimer.hpp"
 #include "settings.hpp"
-#include "simulationBox.hpp"   // for SimulationBox
-
-using namespace molsys;
-using namespace linearAlgebra;
-using namespace pq;
-
-using settings::Settings;
-using settings::VirialType;
+#include "simulationBox.hpp"
+#include "timerId.hpp"
 
 namespace virial
 {
@@ -40,7 +35,7 @@ namespace virial
      * simulation box
      *
      * @param simBox simulation box containing all atoms
-     * @return tensor3D calculated virial tensor
+     * @return linearAlgebra::tensor3D calculated virial tensor
      *
      * @details This is an overloaded version of calculateVirial that computes
      * the virial tensor for all atoms in the simulation box and returns it
@@ -50,9 +45,11 @@ namespace virial
      * shift forces are reset to zero. This version is useful when you need the
      * virial value without side effects on the object state.
      */
-    tensor3D calculateVirial(SimulationBox &simBox)
+    linearAlgebra::tensor3D calculateVirial(molsys::SimulationBox &simBox)
     {
-        tensor3D virial = {0.0};
+        auto _ = scopedTimer(TimerId::Virial, "calculateVirial");
+
+        linearAlgebra::tensor3D virial = {0.0};
 
         for (auto &atom : simBox.getAtoms())
         {
@@ -83,11 +80,15 @@ namespace virial
      * taken to be zero and are not considered.
      *
      * @param simBox simulation box containing QM atoms
-     * @return tensor3D virial tensor from QM atoms
+     * @return linearAlgebra::tensor3D virial tensor from QM atoms
      */
-    tensor3D calculateQMVirial(const SimulationBox &simBox)
+    linearAlgebra::tensor3D calculateQMVirial(
+        const molsys::SimulationBox &simBox
+    )
     {
-        tensor3D virial = {0.0};
+        auto _ = scopedTimer(TimerId::Virial, "calculateQMVirial");
+
+        linearAlgebra::tensor3D virial = {0.0};
 
         for (const auto &atom : simBox.getQMAtoms())
         {
@@ -109,14 +110,18 @@ namespace virial
      * This function only returns the correction tensor and does not modify
      * member state or PhysicalData.
      *
-     * @param simBox Simulation box containing molecules
-     * @return tensor3D Intramolecular virial correction tensor
+     * @param simBox simulation box containing molecules
+     * @return linearAlgebra::tensor3D Intramolecular virial correction tensor
      */
-    tensor3D intraMolecularVirialCorrection(const SimulationBox &simBox)
+    linearAlgebra::tensor3D intraMolecularVirialCorrection(
+        const molsys::SimulationBox &simBox
+    )
     {
-        tensor3D virial{0.0};
+        auto _ = scopedTimer(TimerId::Virial, "intraMolecularVirialCorrection");
 
-        if (Settings::getVirialType() == VirialType::ATOMIC)
+        linearAlgebra::tensor3D virial{0.0};
+
+        if (settings::Settings::getVirialType() == settings::VirialType::ATOMIC)
             return virial;
 
         for (const auto &molecule : simBox.getMolecules())

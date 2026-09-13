@@ -33,14 +33,14 @@
 #include "virial.hpp"
 
 using namespace opt;
-using namespace potential;
+using namespace pot;
 using namespace molsys;
 using namespace physicalData;
 using namespace forceField;
 using namespace intraNonBonded;
 using namespace virial;
 using namespace constraints;
-using namespace customException;
+using namespace exc;
 
 bool Evaluator::supportsAnalyticHessian() const { return false; }
 

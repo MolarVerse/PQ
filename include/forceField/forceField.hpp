@@ -24,8 +24,6 @@
 
 #define _FORCE_FIELD_HPP_
 
-#include <cstddef>   // for size_t
-
 #include "coulombPotential.hpp"      // for CoulombPotential
 #include "molecule.hpp"              // for Molecule
 #include "nonCoulombPotential.hpp"   // for NonCoulombPotential
@@ -35,14 +33,14 @@ namespace forceField
 {
     template <typename T>
     double correctLinker(
-        const potential::CoulombPotential &coulombPotential,
-        potential::NonCoulombPotential    &nonCoulombPotential,
-        physicalData::PhysicalData        &physicalData,
-        const molsys::Molecule            *molecule1,
-        const molsys::Molecule            *molecule2,
-        size_t                             atomIndex1,
-        size_t                             atomIndex2,
-        double                             distance
+        const pot::CoulombPotential &coulombPotential,
+        pot::NonCoulombPotential    &nonCoulombPotential,
+        physicalData::PhysicalData  &physicalData,
+        const molsys::Molecule      *molecule1,
+        const molsys::Molecule      *molecule2,
+        AtomIndex                    atomIndex1,
+        AtomIndex                    atomIndex2,
+        double                       distance
     );
 }   // namespace forceField
 

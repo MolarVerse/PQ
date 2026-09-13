@@ -98,12 +98,10 @@ class TestGuffDatReader : public ::testing::Test
 
         settings::PotentialSettings::setCoulombRadiusCutOff(12.5);
 
-        _engine->makePotential(potential::PotentialBruteForce());
-        _engine->getPotential()->makeNonCoulombPotential(
-            potential::GuffNonCoulomb()
-        );
+        _engine->makePotential(pot::PotentialBruteForce());
+        _engine->getPotential()->makeNonCoulombPotential(pot::GuffNonCoulomb());
         _engine->getPotential()->makeCoulombPotential(
-            potential::CoulombShiftedPotential(
+            pot::CoulombShiftedPotential(
                 settings::PotentialSettings::getCoulombRadiusCutOff()
             )
         );

@@ -173,7 +173,7 @@ TEST(TestCommandLineArgs, rejectDuplicateValidationFormat)
 
     EXPECT_THROW_MSG(
         commandLineArgs.parse(),
-        customException::UserInputException,
+        exc::UserInputException,
         "Unexpected argument: --format=json. Use PQ --help for usage."
     );
 }
@@ -188,7 +188,7 @@ TEST(TestCommandLineArgs, parseValidationWithoutInput)
 
     EXPECT_THROW_MSG(
         commandLineArgs.parse(),
-        customException::UserInputException,
+        exc::UserInputException,
         "No input file specified. Usage: PQ --validate <input_file>"
     );
 }
@@ -203,7 +203,7 @@ TEST(TestCommandLineArgs, parseValidationFormatWithoutInput)
 
     EXPECT_THROW_MSG(
         commandLineArgs.parse(),
-        customException::UserInputException,
+        exc::UserInputException,
         "No input file specified. Usage: PQ --validate <input_file>"
     );
 }
@@ -219,7 +219,7 @@ TEST(TestCommandLineArgs, parseValidationUnknownFormat)
 
     EXPECT_THROW_MSG(
         commandLineArgs.parse(),
-        customException::UserInputException,
+        exc::UserInputException,
         "Unexpected argument: --format=yaml. Use PQ --help for usage."
     );
 }
@@ -232,7 +232,7 @@ TEST(TestCommandLineArgs, parseValidationUnknownScope)
 
     EXPECT_THROW_MSG(
         commandLineArgs.parse(),
-        customException::UserInputException,
+        exc::UserInputException,
         "Unexpected argument: --scope=project. Use PQ --help for usage."
     );
 }
@@ -247,7 +247,7 @@ TEST(TestCommandLineArgs, parseUnknownOption)
 
     EXPECT_THROW_MSG(
         commandLineArgs.parse(),
-        customException::UserInputException,
+        exc::UserInputException,
         "Unknown option: --unknown. Use PQ --help for usage."
     );
 }
@@ -263,7 +263,7 @@ TEST(TestCommandLineArgs, parseMissingInputFile)
 
     EXPECT_THROW_MSG(
         commandLineArgs.parse(),
-        customException::UserInputException,
+        exc::UserInputException,
         "No input file specified. Usage: PQ <input_file>"
     );
 }
@@ -278,7 +278,7 @@ TEST(TestCommandLineArgs, parseExtraArgument)
 
     EXPECT_THROW_MSG(
         commandLineArgs.parse(),
-        customException::UserInputException,
+        exc::UserInputException,
         "Unexpected argument: extra. Use PQ --help for usage."
     );
 }

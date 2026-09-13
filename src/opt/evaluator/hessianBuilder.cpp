@@ -30,7 +30,7 @@
 
 using namespace opt;
 using namespace settings;
-using namespace customException;
+using namespace exc;
 
 namespace
 {

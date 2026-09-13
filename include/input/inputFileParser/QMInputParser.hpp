@@ -41,18 +41,18 @@ namespace input
     class QMInputParser : public InputFileParser
     {
        private:
-        output::LogOutput    *_logOutput;
-        output::StdoutOutput *_stdoutOutput;
+        out::LogOutput    *_logOutput;
+        out::StdoutOutput *_stdoutOutput;
 
         bool _resolveBuiltInSlakosPath;
 
        public:
         explicit QMInputParser(
-            output::LogOutput &,
-            output::StdoutOutput &,
+            out::LogOutput &,
+            out::StdoutOutput &,
             bool resolveBuiltInSlakosPath
         );
-        explicit QMInputParser(output::LogOutput &, output::StdoutOutput &);
+        explicit QMInputParser(out::LogOutput &, out::StdoutOutput &);
 
         static void parseQMMethod(const std::vector<std::string> &, size_t);
         static void parseQMScript(const std::vector<std::string> &, size_t);

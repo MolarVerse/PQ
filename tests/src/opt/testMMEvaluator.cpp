@@ -74,7 +74,7 @@ namespace
 
         eval.setSimulationBox(box);
         eval.setCellList(std::make_shared<CellList>());
-        eval.setPotential(std::make_shared<potential::PotentialBruteForce>());
+        eval.setPotential(std::make_shared<pot::PotentialBruteForce>());
         eval.setPhysicalData(std::make_shared<PhysicalData>());
         eval.setPhysicalDataOld(std::make_shared<PhysicalData>());
         eval.setForceField(std::make_shared<forceField::ForceField>());
@@ -137,7 +137,7 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
     MMEvaluator eval2;
     eval2.setSimulationBox(box);
     eval2.setCellList(std::make_shared<CellList>());
-    eval2.setPotential(std::make_shared<potential::PotentialBruteForce>());
+    eval2.setPotential(std::make_shared<pot::PotentialBruteForce>());
     eval2.setPhysicalData(std::make_shared<PhysicalData>());
     eval2.setPhysicalDataOld(std::make_shared<PhysicalData>());
     eval2.setForceField(std::make_shared<forceField::ForceField>());

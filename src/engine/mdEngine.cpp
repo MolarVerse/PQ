@@ -32,7 +32,7 @@
 #include "velocityVerlet.hpp"
 
 using namespace engine;
-using namespace output;
+using namespace out;
 using namespace settings;
 using namespace constants;
 using namespace physicalData;
@@ -269,9 +269,9 @@ manostat::Manostat &MDEngine::getManostat() { return *_manostat; }
 /**
  * @brief get the reference to the instant energy output
  *
- * @return output::EnergyOutput&
+ * @return out::EnergyOutput&
  */
-output::EnergyOutput &MDEngine::getInstantEnergyOutput()
+out::EnergyOutput &MDEngine::getInstantEnergyOutput()
 {
     return _engineOutput.getInstantEnergyOutput();
 }
@@ -279,9 +279,9 @@ output::EnergyOutput &MDEngine::getInstantEnergyOutput()
 /**
  * @brief get the reference to the momentum output
  *
- * @return output::MomentumOutput&
+ * @return out::MomentumOutput&
  */
-output::MomentumOutput &MDEngine::getMomentumOutput()
+out::MomentumOutput &MDEngine::getMomentumOutput()
 {
     return _engineOutput.getMomentumOutput();
 }
@@ -289,9 +289,9 @@ output::MomentumOutput &MDEngine::getMomentumOutput()
 /**
  * @brief get the reference to the xyz hybrid center output
  *
- * @return output::TrajectoryOutput&
+ * @return out::TrajectoryOutput&
  */
-output::TrajectoryOutput &MDEngine::getXyzHybridCenterOutput()
+out::TrajectoryOutput &MDEngine::getXyzHybridCenterOutput()
 {
     return _engineOutput.getXyzHybridCenterOutput();
 }
@@ -299,9 +299,9 @@ output::TrajectoryOutput &MDEngine::getXyzHybridCenterOutput()
 /**
  * @brief get the reference to the vel output
  *
- * @return output::TrajectoryOutput&
+ * @return out::TrajectoryOutput&
  */
-output::TrajectoryOutput &MDEngine::getVelOutput()
+out::TrajectoryOutput &MDEngine::getVelOutput()
 {
     return _engineOutput.getVelOutput();
 }
@@ -309,9 +309,9 @@ output::TrajectoryOutput &MDEngine::getVelOutput()
 /**
  * @brief get the reference to the charge output
  *
- * @return output::TrajectoryOutput&
+ * @return out::TrajectoryOutput&
  */
-output::TrajectoryOutput &MDEngine::getChargeOutput()
+out::TrajectoryOutput &MDEngine::getChargeOutput()
 {
     return _engineOutput.getChargeOutput();
 }
@@ -319,9 +319,9 @@ output::TrajectoryOutput &MDEngine::getChargeOutput()
 /**
  * @brief get the reference to the virial output
  *
- * @return output::VirialOutput&
+ * @return out::VirialOutput&
  */
-output::VirialOutput &MDEngine::getVirialOutput()
+out::VirialOutput &MDEngine::getVirialOutput()
 {
     return _engineOutput.getVirialOutput();
 }
@@ -329,9 +329,9 @@ output::VirialOutput &MDEngine::getVirialOutput()
 /**
  * @brief get the reference to the stress output
  *
- * @return output::StressOutput&
+ * @return out::StressOutput&
  */
-output::StressOutput &MDEngine::getStressOutput()
+out::StressOutput &MDEngine::getStressOutput()
 {
     return _engineOutput.getStressOutput();
 }
@@ -339,9 +339,9 @@ output::StressOutput &MDEngine::getStressOutput()
 /**
  * @brief get the reference to the box file output
  *
- * @return output::BoxFileOutput&
+ * @return out::BoxFileOutput&
  */
-output::BoxFileOutput &MDEngine::getBoxFileOutput()
+out::BoxFileOutput &MDEngine::getBoxFileOutput()
 {
     return _engineOutput.getBoxFileOutput();
 }
@@ -349,7 +349,7 @@ output::BoxFileOutput &MDEngine::getBoxFileOutput()
 /**
  * @brief get the reference to the ring polymer rst file output
  *
- * @return output::RingPolymerRestartFileOutput&
+ * @return out::RingPolymerRestartFileOutput&
  */
 RingPolymerRestartFileOutput &MDEngine::getRingPolymerRstFileOutput()
 {
@@ -359,7 +359,7 @@ RingPolymerRestartFileOutput &MDEngine::getRingPolymerRstFileOutput()
 /**
  * @brief get the reference to the ring polymer xyz output
  *
- * @return output::RingPolymerTrajectoryOutput&
+ * @return out::RingPolymerTrajectoryOutput&
  */
 RingPolymerTrajectoryOutput &MDEngine::getRingPolymerXyzOutput()
 {
@@ -369,7 +369,7 @@ RingPolymerTrajectoryOutput &MDEngine::getRingPolymerXyzOutput()
 /**
  * @brief get the reference to the ring polymer vel output
  *
- * @return output::RingPolymerTrajectoryOutput&
+ * @return out::RingPolymerTrajectoryOutput&
  */
 RingPolymerTrajectoryOutput &MDEngine::getRingPolymerVelOutput()
 {
@@ -379,7 +379,7 @@ RingPolymerTrajectoryOutput &MDEngine::getRingPolymerVelOutput()
 /**
  * @brief get the reference to the ring polymer force output
  *
- * @return output::RingPolymerTrajectoryOutput&
+ * @return out::RingPolymerTrajectoryOutput&
  */
 RingPolymerTrajectoryOutput &MDEngine::getRingPolymerForceOutput()
 {
@@ -389,7 +389,7 @@ RingPolymerTrajectoryOutput &MDEngine::getRingPolymerForceOutput()
 /**
  * @brief get the reference to the ring polymer charge output
  *
- * @return output::RingPolymerTrajectoryOutput&
+ * @return out::RingPolymerTrajectoryOutput&
  */
 RingPolymerTrajectoryOutput &MDEngine::getRingPolymerChargeOutput()
 {
@@ -399,7 +399,7 @@ RingPolymerTrajectoryOutput &MDEngine::getRingPolymerChargeOutput()
 /**
  * @brief get the reference to the ring polymer energy output
  *
- * @return output::RingPolymerEnergyOutput&
+ * @return out::RingPolymerEnergyOutput&
  */
 RingPolymerEnergyOutput &MDEngine::getRingPolymerEnergyOutput()
 {

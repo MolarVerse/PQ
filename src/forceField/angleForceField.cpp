@@ -37,7 +37,7 @@ using namespace molsys;
 using namespace connectivity;
 using namespace linearAlgebra;
 using namespace physicalData;
-using namespace potential;
+using namespace pot;
 using namespace settings;
 
 using enum HybridZone;
@@ -51,7 +51,7 @@ using enum HybridZone;
  */
 AngleForceField::AngleForceField(
     const std::vector<Molecule *> &molecules,
-    const std::vector<size_t>     &atomIndices,
+    const std::vector<AtomIndex>  &atomIndices,
     AngleId                        type
 )
     : Angle(molecules, atomIndices), _type(type)

@@ -42,7 +42,7 @@
 #endif
 
 using namespace input;
-using namespace customException;
+using namespace exc;
 using namespace settings;
 using namespace utilities;
 
@@ -441,7 +441,7 @@ void HybridInputParser::parseQMForceDistribution(
  *
  * @return std::vector<int> The selection vector
  *
- * @throws customException::InputFileException if the selection string contains
+ * @throws exc::InputFileException if the selection string contains
  * characters that are not digits, "-" or commas and the PQ build is compiled
  * without Python bindings.
  */
@@ -507,7 +507,7 @@ std::vector<int> HybridInputParser::parseSelection(
  *
  * @return std::vector<int> The selection vector
  *
- * @throws customException::InputFileException if the selection string is an
+ * @throws exc::InputFileException if the selection string is an
  * empty list
  */
 std::vector<int> HybridInputParser::parseSelectionNoPython(
@@ -642,7 +642,7 @@ std::vector<int> HybridInputParser::parseSelectionNoPython(
     // check if the selection vector is empty
     if (selectionVec.empty())
     {
-        throw customException::InputFileException(
+        throw exc::InputFileException(
             std::format(
                 "The value of key {} - {} is an empty list. The {} string must "
                 "be a comma-separated list of integers or ranges, representing "

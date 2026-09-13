@@ -22,7 +22,7 @@
 
 #include <string>   // for operator==
 
-namespace output
+namespace out
 {
     static constexpr auto* WARNING  = "WARNING: ";
     static constexpr auto* INFO     = "INFO:    ";
@@ -38,4 +38,4 @@ namespace output
     std::string setupCompletedMessage();
     std::string readMessage(const std::string&, const std::string&);
 
-}   // namespace output
+}   // namespace out

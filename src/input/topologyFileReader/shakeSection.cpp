@@ -31,7 +31,7 @@
 
 using namespace input::topology;
 using namespace engine;
-using namespace customException;
+using namespace exc;
 using namespace constraints;
 
 /**
@@ -86,8 +86,10 @@ void ShakeSection::processSection(
 
     auto &simBox = engine.getSimulationBox();
 
-    const auto [molecule1, atomIndex1] = simBox.findMoleculeByAtomIndex(atom1);
-    const auto [molecule2, atomIndex2] = simBox.findMoleculeByAtomIndex(atom2);
+    const auto [molecule1, atomIndex1] =
+        simBox.findMoleculeByGlobalAtomIndex(atom1);
+    const auto [molecule2, atomIndex2] =
+        simBox.findMoleculeByGlobalAtomIndex(atom2);
 
     auto bondConstraint = BondConstraint(
         molecule1,

@@ -32,7 +32,7 @@
 #include "simulationBox.hpp"          // for SimulationBox
 #include "thermostatSettings.hpp"     // for ThermostatType
 
-using namespace output;
+using namespace out;
 using namespace molsys;
 using namespace thermostat;
 using namespace settings;
@@ -100,7 +100,7 @@ void RstFileOutput::write(
     {
         const auto nAtoms = molecule.getNumberOfAtoms();
 
-        for (size_t i = 0; i < nAtoms; ++i)
+        for (AtomIndex i{0}; i.get() < nAtoms; ++i)
         {
             const auto atomName = molecule.getAtomName(i);
             const auto molType  = molecule.getMoltype();
@@ -115,7 +115,7 @@ void RstFileOutput::write(
             const auto forceZ   = molecule.getAtomForce(i)[2];
 
             buffer << std::format("{:<5}\t", atomName);
-            buffer << std::format("{:<5}\t", i + 1);
+            buffer << std::format("{:<5}\t", i.get() + 1);
             buffer << std::format("{:<5}\t", molType);
 
             buffer << std::format("{:15.8f}\t{:15.8f}\t{:15.8f}\t", x, y, z);

@@ -30,7 +30,7 @@
 #include "stringUtilities.hpp"       // for stringToInt
 
 using namespace input;
-using namespace customException;
+using namespace exc;
 using namespace settings;
 
 /**

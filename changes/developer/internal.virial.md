@@ -1,1 +1,2 @@
-- make virial a pure static class, as the entire member handling was already partially deprecated with the qmmm implementations
+- make virial a pure static class, as the entire member handling was already partially deprecated with the qmmm 
+- add virial timers back as they are now not dependent anymore on an inhertance approach

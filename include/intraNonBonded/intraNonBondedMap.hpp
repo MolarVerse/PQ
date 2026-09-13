@@ -24,7 +24,6 @@
 
 #define _INTRA_NON_BONDED_MAP_HPP_
 
-#include <cstddef>   // for size_t
 #include <utility>   // for pair
 #include <vector>    // for vector
 
@@ -41,11 +40,11 @@ namespace physicalData
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
 
-namespace potential
+namespace pot
 {
     class CoulombPotential;      // forward declaration
     class NonCoulombPotential;   // forward declaration
-}   // namespace potential
+}   // namespace pot
 
 namespace linearAlgebra
 {
@@ -76,20 +75,20 @@ namespace intraNonBonded
         );
 
         void calculate(
-            const potential::CoulombPotential *coulombPotential,
-            potential::NonCoulombPotential    *nonCoulombPotential,
-            const molsys::SimulationBox       &simulationBox,
-            physicalData::PhysicalData        &physicalData
+            const pot::CoulombPotential *coulombPotential,
+            pot::NonCoulombPotential    *nonCoulombPotential,
+            const molsys::SimulationBox &simulationBox,
+            physicalData::PhysicalData  &physicalData
         ) const;
 
         [[nodiscard]]
         std::pair<double, double> calculateSingleInteraction(
-            size_t                             atomIdx1,
-            int                                atomIdx2AsInt,
-            const linearAlgebra::Vec3D        &box,
-            physicalData::PhysicalData        &physicalData,
-            const potential::CoulombPotential *coulPot,
-            potential::NonCoulombPotential    *nonCoulPot
+            AtomIndex                    atomIdx1,
+            int                          atomIdx2,
+            const linearAlgebra::Vec3D  &box,
+            physicalData::PhysicalData  &data,
+            const pot::CoulombPotential *coulPot,
+            pot::NonCoulombPotential    *nonCoulPot
         ) const;
 
         /***************************

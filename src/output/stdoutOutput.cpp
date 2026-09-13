@@ -29,119 +29,124 @@
 #include "exceptions.hpp"   // for UserInputExceptionWarning, customException
 #include "outputMessages.hpp"   // for initialMomentumMessage
 
-using output::StdoutOutput;
-using namespace customException;
-
-/**
- * @brief write a message to the stdout
- *
- * @param message
- */
-void StdoutOutput::writeInfo(const std::string &message)
+namespace out
 {
-    std::cout << message << '\n' << std::flush;
-}
 
-/**
- * @brief write header title
- *
- * @return string
- */
-void StdoutOutput::writeHeader()
-{
-    std::cout << header() << '\n' << std::flush;
-}
-
-/**
- * @brief write a message to the stdout if the simulation ended normally
- *
- * @param elapsedTime
- */
-void StdoutOutput::writeEndedNormally(double elapsedTime)
-{
-    std::cout << elapsedTimeMessage(elapsedTime) << '\n';
-    std::cout << endedNormally() << '\n' << std::flush;
-}
-
-/**
- * @brief write a warning message to the stdout if density and box dimensions
- * are set
- *
- */
-void StdoutOutput::writeDensityWarning()
-{
-    try
+    /**
+     * @brief write a message to the stdout
+     *
+     * @param message
+     */
+    void StdoutOutput::writeInfo(const std::string &message)
     {
-        throw UserInputExceptionWarning(
-            std::format(
-                "{}Density and box dimensions set. Density will be ignored.",
-                OUTPUT
-            )
-        );
+        std::cout << message << '\n' << std::flush;
     }
-    catch (const UserInputExceptionWarning &e)
+
+    /**
+     * @brief write header title
+     *
+     * @return string
+     */
+    void StdoutOutput::writeHeader()
     {
-        std::cout << OUTPUT << e.what() << "\n\n" << std::flush;
+        std::cout << header() << '\n' << std::flush;
     }
-}
 
-/**
- * @brief write a warning message to the stdout if the optimization did not
- * converge
- *
- * @param message
- */
-void StdoutOutput::writeOptWarning(const std::string &message)
-{
-    try
+    /**
+     * @brief write a message to the stdout if the simulation ended normally
+     *
+     * @param elapsedTime
+     */
+    void StdoutOutput::writeEndedNormally(double elapsedTime)
     {
-        throw UserInputExceptionWarning(std::format("{}{}", WARNING, message));
+        std::cout << elapsedTimeMessage(elapsedTime) << '\n';
+        std::cout << endedNormally() << '\n' << std::flush;
     }
-    catch (const UserInputExceptionWarning &e)
+
+    /**
+     * @brief write a warning message to the stdout if density and box
+     * dimensions are set
+     *
+     */
+    void StdoutOutput::writeDensityWarning()
     {
-        std::cout << e.what() << "\n\n" << std::flush;
+        try
+        {
+            throw exc::UserInputExceptionWarning(
+                std::format(
+                    "{}Density and box dimensions set. Density will be "
+                    "ignored.",
+                    OUTPUT
+                )
+            );
+        }
+        catch (const exc::UserInputExceptionWarning &e)
+        {
+            std::cout << OUTPUT << e.what() << "\n\n" << std::flush;
+        }
     }
-}
 
-/**
- * @brief write a message to the stdout to inform about the setup
- *
- * @param setup
- */
-void StdoutOutput::writeSetup(const std::string &setup)
-{
-    std::cout << setupMessage(setup) << '\n' << std::flush;
-}
+    /**
+     * @brief write a warning message to the stdout if the optimization did not
+     * converge
+     *
+     * @param message
+     */
+    void StdoutOutput::writeOptWarning(const std::string &message)
+    {
+        try
+        {
+            throw exc::UserInputExceptionWarning(
+                std::format("{}{}", WARNING, message)
+            );
+        }
+        catch (const exc::UserInputExceptionWarning &e)
+        {
+            std::cout << e.what() << "\n\n" << std::flush;
+        }
+    }
 
-/**
- * @brief write a message to the stdout to issue a warning about the setup
- *
- * @param warning
- */
-void StdoutOutput::writeSetupWarning(const std::string &warning)
-{
-    std::cout << WARNING << (warning) << "\n\n" << std::flush;
-}
+    /**
+     * @brief write a message to the stdout to inform about the setup
+     *
+     * @param setup
+     */
+    void StdoutOutput::writeSetup(const std::string &setup)
+    {
+        std::cout << setupMessage(setup) << '\n' << std::flush;
+    }
 
-/**
- * @brief write a message to the stdout to inform that the setup is completed
- *
- */
-void StdoutOutput::writeSetupCompleted()
-{
-    std::cout << setupCompletedMessage() << '\n' << std::flush;
-}
+    /**
+     * @brief write a message to the stdout to issue a warning about the setup
+     *
+     * @param warning
+     */
+    void StdoutOutput::writeSetupWarning(const std::string &warning)
+    {
+        std::cout << WARNING << (warning) << "\n\n" << std::flush;
+    }
 
-/**
- * @brief write a message to the stdout to inform about the start of reading a
- * file
- *
- * @param message, file
- */
-void StdoutOutput::writeRead(
-    const std::string &message,
-    const std::string &file
-)
-{
-    std::cout << readMessage(message, file) << '\n' << std::flush;
-}
+    /**
+     * @brief write a message to the stdout to inform that the setup is
+     * completed
+     *
+     */
+    void StdoutOutput::writeSetupCompleted()
+    {
+        std::cout << setupCompletedMessage() << '\n' << std::flush;
+    }
+
+    /**
+     * @brief write a message to the stdout to inform about the start of reading
+     * a file
+     *
+     * @param message, file
+     */
+    void StdoutOutput::writeRead(
+        const std::string &message,
+        const std::string &file
+    )
+    {
+        std::cout << readMessage(message, file) << '\n' << std::flush;
+    }
+}   // namespace out

@@ -26,7 +26,7 @@
 
 #include "optimizer.hpp"   // for Optimizer
 
-using namespace output;
+using namespace out;
 using namespace settings;
 using namespace opt;
 

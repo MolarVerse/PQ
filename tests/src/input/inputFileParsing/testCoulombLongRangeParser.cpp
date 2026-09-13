@@ -30,7 +30,7 @@
 
 using namespace input;
 using namespace settings;
-using namespace customException;
+using namespace exc;
 
 /**
  * @brief tests parsing the "long-range" command

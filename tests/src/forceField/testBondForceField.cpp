@@ -22,9 +22,8 @@
 
 #include <gtest/gtest.h>   // for EXPECT_NEAR, Test, InitGoogleTest, RUN_ALL_TESTS
 
-#include <cmath>     // for sqrt
-#include <cstddef>   // for size_t
-#include <memory>    // for shared_ptr, allocator
+#include <cmath>    // for sqrt
+#include <memory>   // for shared_ptr, allocator
 
 #include "../potential/nonCoulomb/testForceFieldNonCoulomb.hpp"
 #include "atom.hpp"                      // for Atom
@@ -37,11 +36,12 @@
 #include "molecule.hpp"                  // for Molecule
 #include "physicalData.hpp"              // for PhysicalData
 #include "simulationBox.hpp"             // for SimulationBox
+#include "strongTypes.hpp"
 
-namespace potential
+namespace pot
 {
     class NonCoulombPair;   // forward declaration
-}   // namespace potential
+}   // namespace pot
 
 class TestBondForceField : public TestNonCoulombPotentialFF
 {
@@ -53,17 +53,16 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
     box.setBoxDimensions({10.0, 10.0, 10.0});
 
     auto physicalData     = physicalData::PhysicalData();
-    auto coulombPotential = potential::CoulombShiftedPotential(10.0);
+    auto coulombPotential = pot::CoulombShiftedPotential(10.0);
 
-    auto nonCoulombPair = potential::LennardJonesPair(
-        static_cast<size_t>(0),
-        static_cast<size_t>(1),
+    auto nonCoulombPair = pot::LennardJonesPair(
+        ExtVdwType(0),
+        ExtVdwType(1),
         5.0,
-        2.0,
-        4.0
+        LJParams{.c6 = 2.0, .c12 = 4.0}
     );
     setNonCoulombPairsMatrix(
-        linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(2, 2)
+        linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
     );
     setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
 
@@ -79,8 +78,8 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
     atom2->setPosition({1.0, 2.0, 3.0});
     atom1->setForce({0.0, 0.0, 0.0});
     atom2->setForce({0.0, 0.0, 0.0});
-    atom1->setInternalGlobalVDWType(0);
-    atom2->setInternalGlobalVDWType(1);
+    atom1->setInternalGlobalVDWType(VdwType{0});
+    atom2->setInternalGlobalVDWType(VdwType{1});
     atom1->setAtomType(0);
     atom2->setAtomType(1);
     atom1->setPartialCharge(1.0);
@@ -89,8 +88,13 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
     molecule.addAtom(atom1);
     molecule.addAtom(atom2);
 
-    auto bondForceField =
-        forceField::BondForceField(&molecule, &molecule, 0, 1, BondId{0});
+    auto bondForceField = forceField::BondForceField(
+        &molecule,
+        &molecule,
+        AtomIndex{0},
+        AtomIndex{1},
+        BondId{0}
+    );
     bondForceField.setEquilibriumBondLength(1.2);
     bondForceField.setForceConstant(3.0);
     bondForceField.setIsLinker(false);
@@ -110,12 +114,12 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
         (::sqrt(14) - 1.2) * (::sqrt(14) - 1.2) * 3.0 / 2.0,
         1e-6
     );
-    EXPECT_NEAR(molecule.getAtomForce(0)[0], force[0], 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(0)[1], force[1], 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(0)[2], force[2], 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(1)[0], -force[0], 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(1)[1], -force[1], 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(1)[2], -force[2], 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(AtomIndex{0})[0], force[0], 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(AtomIndex{0})[1], force[1], 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(AtomIndex{0})[2], force[2], 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(AtomIndex{1})[0], -force[0], 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(AtomIndex{1})[1], -force[1], 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(AtomIndex{1})[2], -force[2], 1e-6);
     EXPECT_NEAR(physicalData.getCoulombEnergy(), 0.0, 1e-6);
     EXPECT_NEAR(physicalData.getNonCoulombEnergy(), 0.0, 1e-6);
 
@@ -149,12 +153,12 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
         (::sqrt(14) - 1.2) * (::sqrt(14) - 1.2) * 3.0 / 2.0,
         1e-6
     );
-    EXPECT_NEAR(molecule.getAtomForce(0)[0], force[0], 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(0)[1], force[1], 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(0)[2], force[2], 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(1)[0], -force[0], 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(1)[1], -force[1], 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(1)[2], -force[2], 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(AtomIndex{0})[0], force[0], 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(AtomIndex{0})[1], force[1], 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(AtomIndex{0})[2], force[2], 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(AtomIndex{1})[0], -force[0], 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(AtomIndex{1})[1], -force[1], 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(AtomIndex{1})[2], -force[2], 1e-6);
     EXPECT_NEAR(physicalData.getCoulombEnergy(), 17.379852093794977, 1e-6);
     EXPECT_NEAR(
         physicalData.getNonCoulombEnergy(),

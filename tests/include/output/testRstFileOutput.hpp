@@ -44,7 +44,7 @@ class TestRstFileOutput : public ::testing::Test
    protected:
     void SetUp() override
     {
-        _rstFileOutput = new output::RstFileOutput("default.rst");
+        _rstFileOutput = new out::RstFileOutput("default.rst");
         _simulationBox = new molsys::SimulationBox();
 
         _simulationBox->setBoxDimensions({10.0, 10.0, 10.0});
@@ -96,7 +96,7 @@ class TestRstFileOutput : public ::testing::Test
         EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.rst";
     }
 
-    output::RstFileOutput *_rstFileOutput;
+    out::RstFileOutput    *_rstFileOutput;
     molsys::SimulationBox *_simulationBox;
 };
 

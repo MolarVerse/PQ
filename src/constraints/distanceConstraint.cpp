@@ -46,8 +46,8 @@ using namespace connectivity;
 DistanceConstraint::DistanceConstraint(
     Molecule *molecule1,
     Molecule *molecule2,
-    size_t    atomIndex1,
-    size_t    atomIndex2,
+    AtomIndex atomIndex1,
+    AtomIndex atomIndex2,
     double    lowerDistance,
     double    upperDistance,
     double    springConstant,

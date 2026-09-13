@@ -22,8 +22,7 @@
 
 #include <gtest/gtest.h>   // for Test, CmpHelperNE, TestInfo
 
-#include <cstddef>   // for size_t
-#include <memory>    // for shared_ptr, allocator
+#include <memory>   // for shared_ptr, allocator
 
 #include "../potential/nonCoulomb/testForceFieldNonCoulomb.hpp"
 #include "angleForceField.hpp"           // for AngleForceField
@@ -47,10 +46,10 @@
 #include "strongTypes.hpp"
 #include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
 
-namespace potential
+namespace pot
 {
     class NonCoulombPair;   // forward declaration
-}   // namespace potential
+}   // namespace pot
 
 class TestForceField : public TestNonCoulombPotentialFF
 {
@@ -80,7 +79,7 @@ TEST_F(TestForceField, findBondTypeByIdNotFoundError)
 
     EXPECT_THROW_MSG(
         const auto _ = forceField.findBondTypeById(BondId{0}),
-        customException::TopologyException,
+        exc::TopologyException,
         "Bond type with id " + BondId(0).toString() + " not found."
     );
 }
@@ -109,7 +108,7 @@ TEST_F(TestForceField, findAngleTypeByIdNotFoundError)
 
     EXPECT_THROW_MSG(
         const auto _ = forceField.findAngleTypeById(AngleId{0}),
-        customException::TopologyException,
+        exc::TopologyException,
         "Angle type with id " + AngleId(0).toString() + " not found."
     );
 }
@@ -138,7 +137,7 @@ TEST_F(TestForceField, findDihedralTypeByIdNotFoundError)
 
     EXPECT_THROW_MSG(
         const auto _ = forceField.findDihedralTypeById(DihedralId{0}),
-        customException::TopologyException,
+        exc::TopologyException,
         "Dihedral type with id " + DihedralId(0).toString() + " not found."
     );
 }
@@ -171,7 +170,7 @@ TEST_F(TestForceField, findImproperDihedralTypeByIdNotFoundError)
 
     EXPECT_THROW_MSG(
         const auto _ = forceField.findImproperTypeById(DihedralId{0}),
-        customException::TopologyException,
+        exc::TopologyException,
         "Improper dihedral type with id " + DihedralId(0).toString() +
             " not found."
     );
@@ -190,17 +189,16 @@ TEST_F(TestForceField, calculateBondedInteractions)
     box.setBoxDimensions({10.0, 10.0, 10.0});
 
     auto physicalData     = physicalData::PhysicalData();
-    auto coulombPotential = potential::CoulombShiftedPotential(20.0);
+    auto coulombPotential = pot::CoulombShiftedPotential(20.0);
 
-    auto nonCoulombPair = potential::LennardJonesPair(
-        static_cast<size_t>(0),
-        static_cast<size_t>(1),
+    auto nonCoulombPair = pot::LennardJonesPair(
+        ExtVdwType(0),
+        ExtVdwType(1),
         15.0,
-        2.0,
-        4.0
+        LJParams{.c6 = 2.0, .c12 = 4.0}
     );
     setNonCoulombPairsMatrix(
-        linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(2, 2)
+        linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
     );
     setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
 
@@ -224,10 +222,10 @@ TEST_F(TestForceField, calculateBondedInteractions)
     atom3->setForce({0.0, 0.0, 0.0});
     atom4->setForce({0.0, 0.0, 0.0});
 
-    atom1->setInternalGlobalVDWType(0);
-    atom2->setInternalGlobalVDWType(1);
-    atom3->setInternalGlobalVDWType(0);
-    atom4->setInternalGlobalVDWType(1);
+    atom1->setInternalGlobalVDWType(VdwType{0});
+    atom2->setInternalGlobalVDWType(VdwType{1});
+    atom3->setInternalGlobalVDWType(VdwType{0});
+    atom4->setInternalGlobalVDWType(VdwType{1});
 
     atom1->setAtomType(0);
     atom2->setAtomType(1);
@@ -244,21 +242,26 @@ TEST_F(TestForceField, calculateBondedInteractions)
     molecule.addAtom(atom3);
     molecule.addAtom(atom4);
 
-    auto bondForceField =
-        forceField::BondForceField(&molecule, &molecule, 0, 1, BondId{0});
+    auto bondForceField = forceField::BondForceField(
+        &molecule,
+        &molecule,
+        AtomIndex{0},
+        AtomIndex{1},
+        BondId{0}
+    );
     auto angleForceField = forceField::AngleForceField(
         {&molecule, &molecule, &molecule},
-        {0, 1, 2},
+        {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}},
         AngleId{0}
     );
     auto dihedralForceField = forceField::DihedralForceField(
         {&molecule, &molecule, &molecule, &molecule},
-        {0, 1, 2, 3},
+        {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}, AtomIndex{3}},
         DihedralId{0}
     );
     auto improperDihedralForceField = forceField::DihedralForceField(
         {&molecule, &molecule, &molecule, &molecule},
-        {0, 1, 2, 3},
+        {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}, AtomIndex{3}},
         DihedralId{0}
     );
 
@@ -288,10 +291,10 @@ TEST_F(TestForceField, calculateBondedInteractions)
     forceField.addDihedral(dihedralForceField);
     forceField.addImproperDihedral(improperDihedralForceField);
     forceField.setCoulombPotential(
-        std::make_shared<potential::CoulombShiftedPotential>(coulombPotential)
+        std::make_shared<pot::CoulombShiftedPotential>(coulombPotential)
     );
     forceField.setNonCoulombPotential(
-        std::make_shared<potential::ForceFieldNonCoulomb>(*_nonCoulombPotential)
+        std::make_shared<pot::ForceFieldNonCoulomb>(*_nonCoulombPotential)
     );
 
     forceField.calculateBondedInteractions(box, physicalData);
@@ -311,17 +314,16 @@ TEST_F(TestForceField, calculateBondedInteractions)
  */
 TEST_F(TestForceField, correctLinker)
 {
-    auto coulombPotential = potential::CoulombShiftedPotential(10.0);
+    auto coulombPotential = pot::CoulombShiftedPotential(10.0);
 
-    auto nonCoulombPair = potential::LennardJonesPair(
-        static_cast<size_t>(0),
-        static_cast<size_t>(1),
+    auto nonCoulombPair = pot::LennardJonesPair(
+        ExtVdwType(0),
+        ExtVdwType(1),
         5.0,
-        2.0,
-        4.0
+        LJParams{.c6 = 2.0, .c12 = 4.0}
     );
     setNonCoulombPairsMatrix(
-        linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(2, 2)
+        linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
     );
     setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
 
@@ -332,8 +334,8 @@ TEST_F(TestForceField, correctLinker)
 
     atom1->setForce({0.0, 0.0, 0.0});
     atom2->setForce({0.0, 0.0, 0.0});
-    atom1->setInternalGlobalVDWType(0);
-    atom2->setInternalGlobalVDWType(1);
+    atom1->setInternalGlobalVDWType(VdwType{0});
+    atom2->setInternalGlobalVDWType(VdwType{1});
     atom1->setAtomType(0);
     atom2->setAtomType(1);
     atom1->setPartialCharge(1.0);
@@ -350,8 +352,8 @@ TEST_F(TestForceField, correctLinker)
         physicalData,
         &molecule,
         &molecule,
-        0,
-        1,
+        AtomIndex{0},
+        AtomIndex{1},
         1.0
     );
 
@@ -371,8 +373,8 @@ TEST_F(TestForceField, correctLinker)
             physicalData,
             &molecule,
             &molecule,
-            0,
-            1,
+            AtomIndex{0},
+            AtomIndex{1},
             1.0
         );
 

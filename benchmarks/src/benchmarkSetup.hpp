@@ -28,6 +28,7 @@
 #include "atom.hpp"
 #include "molecule.hpp"
 #include "simulationBox.hpp"
+#include "strongTypes.hpp"
 #include "vector3d.hpp"
 
 namespace benchmarkSetup
@@ -68,7 +69,7 @@ namespace benchmarkSetup
                     atom->setForce({0.1, -0.2, 0.05});
                     atom->setMass(12.0);
                     atom->setAtomType(0);
-                    atom->setInternalGlobalVDWType(0);
+                    atom->setInternalGlobalVDWType(VdwType{0});
                     atom->setPartialCharge(atomIndex++ % 2 == 0 ? 0.4 : -0.4);
                     atom->setShiftForce({0.0, 0.0, 0.0});
 

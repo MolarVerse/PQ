@@ -31,7 +31,7 @@
 #include "throwWithMessage.hpp"   // for ASSERT_THROW_MSG
 
 using namespace settings;
-using namespace customException;
+using namespace exc;
 
 TEST(QMSettingsTest, SetQMMethodTest)
 {

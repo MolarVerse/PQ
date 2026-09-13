@@ -40,7 +40,7 @@
 using setup::RingPolymerSetup;
 using namespace engine;
 using namespace settings;
-using namespace customException;
+using namespace exc;
 using namespace input::ringPolymer;
 using namespace maxwellBoltzmann;
 

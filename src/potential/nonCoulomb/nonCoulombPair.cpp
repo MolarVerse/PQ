@@ -24,7 +24,7 @@
 
 #include "mathUtilities.hpp"   // for compare
 
-using namespace potential;
+using namespace pot;
 using namespace utilities;
 
 /**
@@ -35,9 +35,9 @@ using namespace utilities;
  * @param cutOff
  */
 NonCoulombPair::NonCoulombPair(
-    size_t vanDerWaalsType1,
-    size_t vanDerWaalsType2,
-    double cutOff
+    ExtVdwType vanDerWaalsType1,
+    ExtVdwType vanDerWaalsType2,
+    double     cutOff
 )
     : _vanDerWaalsType1(vanDerWaalsType1),
       _vanDerWaalsType2(vanDerWaalsType2),
@@ -107,7 +107,7 @@ bool NonCoulombPair::operator==(const NonCoulombPair &other) const
  *
  * @param internalType1
  */
-void NonCoulombPair::setInternalType1(size_t internalType1)
+void NonCoulombPair::setInternalType1(VdwType internalType1)
 {
     _internalType1 = internalType1;
 }
@@ -117,7 +117,7 @@ void NonCoulombPair::setInternalType1(size_t internalType1)
  *
  * @param internalType2
  */
-void NonCoulombPair::setInternalType2(size_t internalType2)
+void NonCoulombPair::setInternalType2(VdwType internalType2)
 {
     _internalType2 = internalType2;
 }
@@ -161,30 +161,36 @@ void NonCoulombPair::setForceCutOff(double forceCutoff)
 /**
  * @brief get van der Waals type 1
  *
- * @return size_t
+ * @return ExtVdwType
  */
-size_t NonCoulombPair::getVanDerWaalsType1() const { return _vanDerWaalsType1; }
+ExtVdwType NonCoulombPair::getVanDerWaalsType1() const
+{
+    return _vanDerWaalsType1;
+}
 
 /**
  * @brief get van der Waals type 2
  *
- * @return size_t
+ * @return ExtVdwType
  */
-size_t NonCoulombPair::getVanDerWaalsType2() const { return _vanDerWaalsType2; }
+ExtVdwType NonCoulombPair::getVanDerWaalsType2() const
+{
+    return _vanDerWaalsType2;
+}
 
 /**
  * @brief get internal type 1
  *
- * @return size_t
+ * @return VdwType
  */
-size_t NonCoulombPair::getInternalType1() const { return _internalType1; }
+VdwType NonCoulombPair::getInternalType1() const { return _internalType1; }
 
 /**
  * @brief get internal type 2
  *
- * @return size_t
+ * @return VdwType
  */
-size_t NonCoulombPair::getInternalType2() const { return _internalType2; }
+VdwType NonCoulombPair::getInternalType2() const { return _internalType2; }
 
 /**
  * @brief get energy cut off

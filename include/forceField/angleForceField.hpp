@@ -24,8 +24,7 @@
 
 #define _ANGLE_FORCE_FIELD_HPP_
 
-#include <cstddef>   // for size_t
-#include <vector>    // for vector
+#include <vector>   // for vector
 
 #include "angle.hpp"
 
@@ -40,11 +39,11 @@ namespace molsys
     class SimulationBox;   // forward declaration
 }   // namespace molsys
 
-namespace potential
+namespace pot
 {
     class CoulombPotential;      // forward declaration
     class NonCoulombPotential;   // forward declaration
-}   // namespace potential
+}   // namespace pot
 
 namespace forceField
 {
@@ -66,15 +65,15 @@ namespace forceField
        public:
         AngleForceField(
             const std::vector<molsys::Molecule *> &molecules,
-            const std::vector<size_t>             &atomIndices,
+            const std::vector<AtomIndex>          &atomIndices,
             AngleId                                type
         );
 
         void calculateEnergyAndForces(
-            const molsys::SimulationBox       &simBox,
-            physicalData::PhysicalData        &data,
-            const potential::CoulombPotential &coulombPot,
-            potential::NonCoulombPotential    &nonCoulombPot
+            const molsys::SimulationBox &simBox,
+            physicalData::PhysicalData  &data,
+            const pot::CoulombPotential &coulombPot,
+            pot::NonCoulombPotential    &nonCoulombPot
         );
 
         /***************************

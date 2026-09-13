@@ -34,7 +34,7 @@
 using QM::PySCFRunner;
 using namespace molsys;
 using namespace settings;
-using namespace customException;
+using namespace exc;
 using namespace utilities;
 
 /**

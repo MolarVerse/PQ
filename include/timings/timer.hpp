@@ -58,7 +58,7 @@ namespace timings
         Timer() = default;
 
         [[nodiscard]]
-        const std::vector<TimingsSection>& getTimingDetails() const;
+        std::vector<TimingsSection> getTimingDetails() const;
 
         [[nodiscard]] double calculateElapsedTime() const;
         [[nodiscard]] double calculateLoopTime() const;

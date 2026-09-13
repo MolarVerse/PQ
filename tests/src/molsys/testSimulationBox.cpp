@@ -23,7 +23,6 @@
 #include "testSimulationBox.hpp"
 
 #include <cstddef>    // for size_t, std
-#include <map>        // for map
 #include <optional>   // for optional
 #include <string>     // for string
 #include <vector>     // for vector
@@ -31,8 +30,9 @@
 #include "exceptions.hpp"   // for ManostatException, RstFileException
 // for Message, TestPartResult, AssertionRe...
 #include "potentialSettings.hpp"   // for PotentialSettings
-#include "throwWithMessage.hpp"    // for throwWithMessage
-#include "vectorNear.hpp"          // for EXPECT_VECTOR_NEAR
+#include "strongTypes.hpp"
+#include "throwWithMessage.hpp"   // for throwWithMessage
+#include "vectorNear.hpp"         // for EXPECT_VECTOR_NEAR
 
 /**
  * @brief tests numberOfAtoms function
@@ -119,7 +119,7 @@ TEST_F(TestSimulationBox, findMoleculeType)
 
     EXPECT_THROW(
         [[maybe_unused]] auto &dummy = _simulationBox->findMoleculeType(3),
-        customException::RstFileException
+        exc::RstFileException
     );
 }
 
@@ -130,22 +130,22 @@ TEST_F(TestSimulationBox, findMoleculeType)
 TEST_F(TestSimulationBox, findMoleculeByAtomIndex)
 {
     const auto &[molecule1, atomIndex1] =
-        _simulationBox->findMoleculeByAtomIndex(3);
+        _simulationBox->findMoleculeByGlobalAtomIndex(3);
     EXPECT_EQ(molecule1, _simulationBox->getMolecules().data());
-    EXPECT_EQ(atomIndex1, 2);
+    EXPECT_EQ(atomIndex1, AtomIndex{2});
 
     const auto &[molecule2, atomIndex2] =
-        _simulationBox->findMoleculeByAtomIndex(4);
+        _simulationBox->findMoleculeByGlobalAtomIndex(4);
     EXPECT_EQ(molecule2, &(_simulationBox->getMolecules()[1]));
-    EXPECT_EQ(atomIndex2, 0);
+    EXPECT_EQ(atomIndex2, AtomIndex{0});
 
     EXPECT_THROW([[maybe_unused]] const auto dummy =
-                     _simulationBox->findMoleculeByAtomIndex(6);
-                 , customException::UserInputException);
+                     _simulationBox->findMoleculeByGlobalAtomIndex(6);
+                 , exc::UserInputException);
 
     EXPECT_THROW([[maybe_unused]] const auto dummy =
-                     _simulationBox->findMoleculeByAtomIndex(0);
-                 , customException::UserInputException);
+                     _simulationBox->findMoleculeByGlobalAtomIndex(0);
+                 , exc::UserInputException);
 }
 
 /**
@@ -194,19 +194,15 @@ TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
     _simulationBox->setBoxDimensions({1.99, 10.0, 10.0});
 
     EXPECT_THROW_MSG(
-        _simulationBox->checkCoulRadiusCutOff(
-            customException::ExceptionType::USERINPUTEXCEPTION
-        ),
-        customException::UserInputException,
+        _simulationBox->checkCoulRadiusCutOff(ExceptionType::UserInputError),
+        exc::UserInputException,
         "Coulomb radius cut off is larger than half of the minimal box "
         "dimension"
     );
 
     EXPECT_THROW_MSG(
-        _simulationBox->checkCoulRadiusCutOff(
-            customException::ExceptionType::MANOSTATEXCEPTION
-        ),
-        customException::ManostatException,
+        _simulationBox->checkCoulRadiusCutOff(ExceptionType::ManostatError),
+        exc::ManostatException,
         "Coulomb radius cut off is larger than half of the minimal box "
         "dimension"
     );
@@ -214,10 +210,8 @@ TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
     _simulationBox->setBoxDimensions({10.0, 1.99, 10.0});
 
     EXPECT_THROW_MSG(
-        _simulationBox->checkCoulRadiusCutOff(
-            customException::ExceptionType::USERINPUTEXCEPTION
-        ),
-        customException::UserInputException,
+        _simulationBox->checkCoulRadiusCutOff(ExceptionType::UserInputError),
+        exc::UserInputException,
         "Coulomb radius cut off is larger than half of the minimal box "
         "dimension"
     );
@@ -225,10 +219,8 @@ TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
     _simulationBox->setBoxDimensions({10.0, 10.0, 1.99});
 
     EXPECT_THROW_MSG(
-        _simulationBox->checkCoulRadiusCutOff(
-            customException::ExceptionType::USERINPUTEXCEPTION
-        ),
-        customException::UserInputException,
+        _simulationBox->checkCoulRadiusCutOff(ExceptionType::UserInputError),
+        exc::UserInputException,
         "Coulomb radius cut off is larger than half of the minimal box "
         "dimension"
     );
@@ -244,12 +236,12 @@ TEST_F(TestSimulationBox, setupExternalToInternalGlobalVdwTypesMap)
     molsys::MoleculeType  molecule1(1);
     molsys::MoleculeType  molecule2(2);
 
-    molecule1.addExternalGlobalVDWType(1);
-    molecule1.addExternalGlobalVDWType(3);
-    molecule1.addExternalGlobalVDWType(5);
+    molecule1.addExternalGlobalVDWType(ExtVdwType{1});
+    molecule1.addExternalGlobalVDWType(ExtVdwType{3});
+    molecule1.addExternalGlobalVDWType(ExtVdwType{5});
 
-    molecule2.addExternalGlobalVDWType(3);
-    molecule2.addExternalGlobalVDWType(5);
+    molecule2.addExternalGlobalVDWType(ExtVdwType{3});
+    molecule2.addExternalGlobalVDWType(ExtVdwType{5});
 
     simulationBox.addMoleculeType(molecule1);
     simulationBox.addMoleculeType(molecule2);
@@ -259,13 +251,16 @@ TEST_F(TestSimulationBox, setupExternalToInternalGlobalVdwTypesMap)
     EXPECT_EQ(simulationBox.getExternalGlobalVdwTypes().size(), 3);
     EXPECT_EQ(
         simulationBox.getExternalGlobalVdwTypes(),
-        std::vector<size_t>({1, 3, 5})
+        std::vector<ExtVdwType>({ExtVdwType{1}, ExtVdwType{3}, ExtVdwType{5}})
     );
 
-    EXPECT_EQ(simulationBox.getExternalToInternalGlobalVDWTypes().size(), 3);
-    EXPECT_EQ(simulationBox.getExternalToInternalGlobalVDWTypes().at(1), 0);
-    EXPECT_EQ(simulationBox.getExternalToInternalGlobalVDWTypes().at(3), 1);
-    EXPECT_EQ(simulationBox.getExternalToInternalGlobalVDWTypes().at(5), 2);
+    const auto &externalToInternalMap =
+        simulationBox.getExternalToInternalGlobalVDWTypes();
+
+    EXPECT_EQ(externalToInternalMap.size(), 3);
+    EXPECT_EQ(externalToInternalMap.at(ExtVdwType{1}), VdwType{0});
+    EXPECT_EQ(externalToInternalMap.at(ExtVdwType{3}), VdwType{1});
+    EXPECT_EQ(externalToInternalMap.at(ExtVdwType{5}), VdwType{2});
 }
 
 /**
@@ -378,7 +373,7 @@ TEST_F(
 
     EXPECT_THROW_MSG(
         simulationBox.setPartialChargesOfMoleculesFromMoleculeTypes(),
-        customException::UserInputException,
+        exc::UserInputException,
         "Molecule type 1 not found in molecule types"
     );
 }
@@ -467,7 +462,7 @@ TEST_F(TestSimulationBox, copyOwnsIndependentAtoms)
         _simulationBox->getNumberOfMolecules()
     );
     EXPECT_NE(&copied.getAtom(0), &_simulationBox->getAtom(0));
-    EXPECT_EQ(&copied.getMolecule(0).getAtom(0), &copied.getAtom(0));
+    EXPECT_EQ(&copied.getMolecule(0).getAtom(AtomIndex{0}), &copied.getAtom(0));
 
     const auto cloned = _simulationBox->clone();
     ASSERT_NE(cloned, nullptr);
@@ -483,33 +478,33 @@ TEST_F(TestSimulationBox, validatesHybridIndexLists)
     );
     EXPECT_THROW(
         _simulationBox->addInnerRegionCenterAtoms({-1}),
-        customException::UserInputException
+        exc::UserInputException
     );
     EXPECT_THROW(
         _simulationBox->addInnerRegionCenterAtoms({5}),
-        customException::UserInputException
+        exc::UserInputException
     );
 
     _simulationBox->setupForcedOuterMolecules({0});
     EXPECT_TRUE(_simulationBox->getMolecule(0).isForcedOuter());
     EXPECT_THROW(
         _simulationBox->setupForcedCoreMolecules({0}),
-        customException::UserInputException
+        exc::UserInputException
     );
 
     _simulationBox->setupForcedCoreMolecules({1});
     EXPECT_TRUE(_simulationBox->getMolecule(1).isForcedCore());
     EXPECT_THROW(
         _simulationBox->setupForcedOuterMolecules({1}),
-        customException::UserInputException
+        exc::UserInputException
     );
     EXPECT_THROW(
         _simulationBox->setupForcedCoreMolecules({2}),
-        customException::UserInputException
+        exc::UserInputException
     );
     EXPECT_THROW(
         _simulationBox->setupForcedOuterMolecules({-1}),
-        customException::UserInputException
+        exc::UserInputException
     );
 }
 
@@ -530,38 +525,38 @@ TEST_F(TestSimulationBox, validatesForcedLayerList)
 
     EXPECT_THROW_MSG(
         simBox.setupForcedLayerMolecules({-1}),
-        customException::UserInputException,
+        exc::UserInputException,
         "Forced Layer region molecule index -1 out of range"
     );
     EXPECT_THROW_MSG(
         simBox.setupForcedLayerMolecules({3}),
-        customException::UserInputException,
+        exc::UserInputException,
         "Forced Layer region molecule index 3 out of range"
     );
     EXPECT_THROW_MSG(
         simBox.setupForcedLayerMolecules({0}),
-        customException::UserInputException,
+        exc::UserInputException,
         "Ambiguous molecule index 0 - molecule cannot be in "
         "forced_layer_list AND forced_core_list/forced_outer_list at the same "
         "time"
     );
     EXPECT_THROW_MSG(
         simBox.setupForcedLayerMolecules({2}),
-        customException::UserInputException,
+        exc::UserInputException,
         "Ambiguous molecule index 2 - molecule cannot be in "
         "forced_layer_list AND forced_core_list/forced_outer_list at the same "
         "time"
     );
     EXPECT_THROW_MSG(
         simBox.setupForcedCoreMolecules({1}),
-        customException::UserInputException,
+        exc::UserInputException,
         "Ambiguous molecule index 1 - molecule cannot be in "
         "forced_core_list AND forced_layer_list/forced_outer_list at the same "
         "time"
     );
     EXPECT_THROW_MSG(
         simBox.setupForcedOuterMolecules({1}),
-        customException::UserInputException,
+        exc::UserInputException,
         "Ambiguous molecule index 1 - molecule cannot be in "
         "forced_outer_list AND forced_core_list/forced_layer_list at the same "
         "time"
@@ -572,14 +567,14 @@ TEST_F(TestSimulationBox, assignsInternalVdwTypesToAtoms)
 {
     molsys::SimulationBox simBox;
     molsys::MoleculeType  type(1);
-    type.addExternalGlobalVDWType(4);
-    type.addExternalGlobalVDWType(9);
+    type.addExternalGlobalVDWType(ExtVdwType{4});
+    type.addExternalGlobalVDWType(ExtVdwType{9});
     simBox.addMoleculeType(type);
 
     auto atom1 = std::make_shared<molsys::Atom>();
     auto atom2 = std::make_shared<molsys::Atom>();
-    atom1->setExternalGlobalVDWType(4);
-    atom2->setExternalGlobalVDWType(9);
+    atom1->setExternalGlobalVDWType(ExtVdwType{4});
+    atom2->setExternalGlobalVDWType(ExtVdwType{9});
 
     molsys::Molecule molecule(1);
     molecule.setNumberOfAtoms(2);
@@ -589,8 +584,15 @@ TEST_F(TestSimulationBox, assignsInternalVdwTypesToAtoms)
 
     simBox.setupExternalToInternalGlobalVdwTypesMap();
 
-    EXPECT_EQ(simBox.getMolecule(0).getAtom(0).getInternalGlobalVDWType(), 0);
-    EXPECT_EQ(simBox.getMolecule(0).getAtom(1).getInternalGlobalVDWType(), 1);
+    auto &moleculeResult = simBox.getMolecule(0);
+    EXPECT_EQ(
+        moleculeResult.getAtom(AtomIndex{0}).getInternalGlobalVDWType(),
+        VdwType{0}
+    );
+    EXPECT_EQ(
+        moleculeResult.getAtom(AtomIndex{1}).getInternalGlobalVDWType(),
+        VdwType{1}
+    );
 }
 
 TEST_F(TestSimulationBox, forceMetricsAndAtomStateUpdates)

@@ -35,8 +35,8 @@
 TEST(TestExceptions, inputFileException)
 {
     EXPECT_THROW_MSG(
-        throw customException::InputFileException("test"),
-        customException::InputFileException,
+        throw exc::InputFileException("test"),
+        exc::InputFileException,
         "test"
     );
 }
@@ -46,7 +46,7 @@ TEST(TestExceptions, inputFileException)
  */
 TEST(TestExceptions, sourceLine)
 {
-    auto exception = customException::InputFileException("test", 12);
+    auto exception = exc::InputFileException("test", 12);
 
     EXPECT_EQ(exception.getLineNumber(), std::optional<size_t>(12));
 
@@ -61,8 +61,8 @@ TEST(TestExceptions, sourceLine)
 TEST(TestExceptions, rstFileException)
 {
     EXPECT_THROW_MSG(
-        throw customException::RstFileException("test"),
-        customException::RstFileException,
+        throw exc::RstFileException("test"),
+        exc::RstFileException,
         "test"
     );
 }
@@ -74,8 +74,8 @@ TEST(TestExceptions, rstFileException)
 TEST(TestExceptions, UserInputException)
 {
     EXPECT_THROW_MSG(
-        throw customException::UserInputException("test"),
-        customException::UserInputException,
+        throw exc::UserInputException("test"),
+        exc::UserInputException,
         "test"
     );
 }
@@ -87,8 +87,8 @@ TEST(TestExceptions, UserInputException)
 TEST(TestExceptions, molDescriptorException)
 {
     EXPECT_THROW_MSG(
-        throw customException::MolDescriptorException("test"),
-        customException::MolDescriptorException,
+        throw exc::MolDescriptorException("test"),
+        exc::MolDescriptorException,
         "test"
     );
 }
@@ -100,8 +100,8 @@ TEST(TestExceptions, molDescriptorException)
 TEST(TestExceptions, userInputExceptionWarning)
 {
     EXPECT_THROW_MSG(
-        throw customException::UserInputExceptionWarning("test"),
-        customException::UserInputExceptionWarning,
+        throw exc::UserInputExceptionWarning("test"),
+        exc::UserInputExceptionWarning,
         "test"
     );
 }
@@ -113,8 +113,8 @@ TEST(TestExceptions, userInputExceptionWarning)
 TEST(TestExceptions, guffDatException)
 {
     EXPECT_THROW_MSG(
-        throw customException::GuffDatException("test"),
-        customException::GuffDatException,
+        throw exc::GuffDatException("test"),
+        exc::GuffDatException,
         "test"
     );
 }
@@ -126,8 +126,8 @@ TEST(TestExceptions, guffDatException)
 TEST(TestExceptions, topologyException)
 {
     EXPECT_THROW_MSG(
-        throw customException::TopologyException("test"),
-        customException::TopologyException,
+        throw exc::TopologyException("test"),
+        exc::TopologyException,
         "test"
     );
 }
@@ -139,8 +139,8 @@ TEST(TestExceptions, topologyException)
 TEST(TestExceptions, parameterFileException)
 {
     EXPECT_THROW_MSG(
-        throw customException::ParameterFileException("test"),
-        customException::ParameterFileException,
+        throw exc::ParameterFileException("test"),
+        exc::ParameterFileException,
         "test"
     );
 }
@@ -152,8 +152,8 @@ TEST(TestExceptions, parameterFileException)
 TEST(TestExceptions, manostatException)
 {
     EXPECT_THROW_MSG(
-        throw customException::ManostatException("test"),
-        customException::ManostatException,
+        throw exc::ManostatException("test"),
+        exc::ManostatException,
         "test"
     );
 }
@@ -165,8 +165,8 @@ TEST(TestExceptions, manostatException)
 TEST(TestExceptions, intraNonBondedException)
 {
     EXPECT_THROW_MSG(
-        throw customException::IntraNonBondedException("test"),
-        customException::IntraNonBondedException,
+        throw exc::IntraNonBondedException("test"),
+        exc::IntraNonBondedException,
         "test"
     );
 }
@@ -178,8 +178,8 @@ TEST(TestExceptions, intraNonBondedException)
 TEST(TestExceptions, shakeException)
 {
     EXPECT_THROW_MSG(
-        throw customException::ShakeException("test"),
-        customException::ShakeException,
+        throw exc::ShakeException("test"),
+        exc::ShakeException,
         "test"
     );
 }
@@ -191,8 +191,8 @@ TEST(TestExceptions, shakeException)
 TEST(TestExceptions, cellListException)
 {
     EXPECT_THROW_MSG(
-        throw customException::CellListException("test"),
-        customException::CellListException,
+        throw exc::CellListException("test"),
+        exc::CellListException,
         "test"
     );
 }
@@ -204,8 +204,8 @@ TEST(TestExceptions, cellListException)
 TEST(TestExceptions, ringPolymerRestartFileException)
 {
     EXPECT_THROW_MSG(
-        throw customException::RingPolymerRestartFileException("test"),
-        customException::RingPolymerRestartFileException,
+        throw exc::RingPolymerRestartFileException("test"),
+        exc::RingPolymerRestartFileException,
         "test"
     );
 }
@@ -217,8 +217,8 @@ TEST(TestExceptions, ringPolymerRestartFileException)
 TEST(TestExceptions, qmRunnerException)
 {
     EXPECT_THROW_MSG(
-        throw customException::QMRunnerException("test"),
-        customException::QMRunnerException,
+        throw exc::QMRunnerException("test"),
+        exc::QMRunnerException,
         "test"
     );
 }
@@ -226,8 +226,8 @@ TEST(TestExceptions, qmRunnerException)
 TEST(TestExceptions, hybridConfiguratorException)
 {
     EXPECT_THROW_MSG(
-        throw customException::HybridConfiguratorException("test"),
-        customException::HybridConfiguratorException,
+        throw exc::HybridConfiguratorException("test"),
+        exc::HybridConfiguratorException,
         "test"
     );
 }
@@ -235,8 +235,8 @@ TEST(TestExceptions, hybridConfiguratorException)
 TEST(TestExceptions, hybridMDEngineException)
 {
     EXPECT_THROW_MSG(
-        throw customException::HybridMDEngineException("test"),
-        customException::HybridMDEngineException,
+        throw exc::HybridMDEngineException("test"),
+        exc::HybridMDEngineException,
         "test"
     );
 }

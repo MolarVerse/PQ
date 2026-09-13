@@ -93,7 +93,7 @@ namespace linearAlgebra
     StaticMatrix3x3<T>::StaticMatrix3x3(const std::vector<T> &vector)
     {
         if (vector.size() != _nElements)
-            throw customException::LinearAlgebraException(
+            throw exc::LinearAlgebraException(
                 "vector size must be " + std::to_string(_nElements)
             );
 

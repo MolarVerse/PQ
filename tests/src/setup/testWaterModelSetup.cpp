@@ -40,8 +40,8 @@
 #include "waterModelSettings.hpp"
 #include "waterModelSetup.hpp"
 
-using customException::MolDescriptorException;
-using customException::UserInputException;
+using exc::MolDescriptorException;
+using exc::UserInputException;
 using molsys::Atom;
 using molsys::Molecule;
 using molsys::MoleculeType;
@@ -232,7 +232,13 @@ TEST_F(TestSetup, waterModelSetupRejectsWaterBondsInTopology)
     addWaterSystem(*_mdEngine);
     auto *water = &_mdEngine->getSimulationBox().getMolecule(0);
     _mdEngine->getForceField()->addBond(
-        forceField::BondForceField(water, water, 0, 1, BondId{0})
+        forceField::BondForceField(
+            water,
+            water,
+            AtomIndex{0},
+            AtomIndex{1},
+            BondId{0}
+        )
     );
 
     EXPECT_THROW(WaterModelSetup(*_mdEngine).setup(), UserInputException);
@@ -247,7 +253,7 @@ TEST_F(TestSetup, waterModelSetupRejectsWaterAnglesInTopology)
     _mdEngine->getForceField()->addAngle(
         forceField::AngleForceField(
             {water, water, water},
-            {0, 1, 2},
+            {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}},
             AngleId{0}
         )
     );

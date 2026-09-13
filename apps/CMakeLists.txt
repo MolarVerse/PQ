@@ -6,7 +6,9 @@ add_executable(PQ
 )
 
 target_include_directories(PQ
-  PUBLIC ${CODE_INCLUDE_DIR}
+  PRIVATE 
+  ${CODE_INCLUDE_DIR}
+  ${PROJECT_SOURCE_DIR}/apps/commandLine
 )
 
 if(NOT DEFINED BUILD_WITH_PYBIND11)
@@ -27,9 +29,13 @@ target_compile_definitions(PQ
   PQ_BUILD_SLAKOS_DIR="${PROJECT_BINARY_DIR}/external/slakos"
 )
 
+add_subdirectory(commandLine)
+
 target_link_libraries(PQ
-  PUBLIC
+  PRIVATE
   driver
+  exceptions
+  commandLineArgs
 )
 
 if(BUILD_WITH_MPI)

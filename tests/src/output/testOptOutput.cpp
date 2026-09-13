@@ -31,7 +31,7 @@
 #include "steepestDescent.hpp"
 #include "testOutputBase.hpp"
 
-using namespace output;
+using namespace out;
 using namespace opt;
 using settings::ConvStrategy;
 

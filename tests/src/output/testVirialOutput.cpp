@@ -30,7 +30,7 @@
 #include "vector3d.hpp"
 #include "virialOutput.hpp"
 
-using namespace output;
+using namespace out;
 using physicalData::PhysicalData;
 
 TEST(TestVirialOutput, writeEmitsStepAndAllNineTensorComponents)

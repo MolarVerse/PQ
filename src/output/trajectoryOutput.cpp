@@ -32,7 +32,7 @@
 #include "molecule.hpp"        // for Molecule
 #include "simulationBox.hpp"   // for SimulationBox
 
-using namespace output;
+using namespace out;
 using namespace defaults;
 using namespace configurator;
 using namespace molsys;
@@ -131,7 +131,7 @@ void TrajectoryOutput::writeVelocities(SimulationBox &simBox, size_t step)
     {
         const auto nAtoms = molecule.getNumberOfAtoms();
 
-        for (size_t i = 0; i < nAtoms; ++i)
+        for (AtomIndex i{0}; i.get() < nAtoms; ++i)
         {
             buffer << std::format("{:<5}\t", molecule.getAtomName(i));
 
@@ -165,7 +165,7 @@ void TrajectoryOutput::writeForces(SimulationBox &simBox, size_t step)
     {
         const auto nAtoms = molecule.getNumberOfAtoms();
 
-        for (size_t i = 0; i < nAtoms; ++i)
+        for (AtomIndex i{0}; i.get() < nAtoms; ++i)
         {
             buffer << std::format("{:<5}\t", molecule.getAtomName(i));
 

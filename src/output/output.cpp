@@ -29,8 +29,8 @@
 #include "outputFileSettings.hpp"   // for OutputFileSettings
 
 using namespace std;
-using namespace customException;
-using namespace output;
+using namespace exc;
+using namespace out;
 using namespace settings;
 
 /**

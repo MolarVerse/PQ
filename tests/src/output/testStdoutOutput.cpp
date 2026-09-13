@@ -189,8 +189,8 @@ TEST_F(TestStdoutOutput, writeDensityWarning)
         std::format(
             "{}\x1B[33mUserInputWarning\x1B[39m\n{}Density and box dimensions "
             "set. Density will be ignored.\n\n",
-            output::OUTPUT,
-            output::OUTPUT
+            out::OUTPUT,
+            out::OUTPUT
         )
     );
 }

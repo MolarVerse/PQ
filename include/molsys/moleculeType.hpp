@@ -29,6 +29,8 @@
 #include <string_view>   // for string_view
 #include <vector>        // for vector
 
+#include "strongTypes.hpp"
+
 namespace molsys
 {
     /**
@@ -49,7 +51,7 @@ namespace molsys
         std::vector<std::string> _atomNames;
         std::vector<size_t>      _atomTypes;
         std::vector<size_t>      _externalAtomTypes;
-        std::vector<size_t>      _externalGlobalVDWTypes;
+        std::vector<ExtVdwType>  _externalGlobalVDWTypes;
         std::vector<double>      _partialCharges;
 
         std::map<size_t, size_t> _externalToInternalAtomTypes;
@@ -68,7 +70,7 @@ namespace molsys
         void addAtomName(const std::string &atomName);
         void addExternalAtomType(size_t externalAtomType);
         void addPartialCharge(double partialCharge);
-        void addExternalGlobalVDWType(size_t externalGlobalVDWType);
+        void addExternalGlobalVDWType(ExtVdwType externalGlobalVDWType);
 
         void addExternalToInternalAtomTypeElement(size_t, size_t);
         void addAtomType(size_t atomType);
@@ -83,7 +85,7 @@ namespace molsys
         void setMoltype(size_t moltype);
 
         void setCharge(int charge);
-        void setPartialCharge(size_t index, double partialCharge);
+        void setPartialCharge(AtomIndex index, double partialCharge);
         void setPartialCharges(const std::vector<double> &partialCharges);
 
         /***************************
@@ -92,19 +94,19 @@ namespace molsys
 
         [[nodiscard]] size_t getNumberOfAtoms() const;
         [[nodiscard]] size_t getMoltype() const;
-        [[nodiscard]] size_t getExternalAtomType(size_t index) const;
-        [[nodiscard]] size_t getAtomType(size_t index) const;
+        [[nodiscard]] size_t getExternalAtomType(AtomIndex index) const;
+        [[nodiscard]] size_t getAtomType(AtomIndex index) const;
         [[nodiscard]] size_t getInternalAtomType(size_t type) const;
 
         [[nodiscard]] int    getCharge() const;
-        [[nodiscard]] double getPartialCharge(size_t index) const;
+        [[nodiscard]] double getPartialCharge(AtomIndex index) const;
 
         [[nodiscard]] std::string getName() const;
-        [[nodiscard]] std::string getAtomName(size_t index) const;
+        [[nodiscard]] std::string getAtomName(AtomIndex index) const;
 
         [[nodiscard]] std::vector<std::string> getAtomNames() const;
         [[nodiscard]] std::vector<size_t>     &getExternalAtomTypes();
-        [[nodiscard]] std::vector<size_t>     &getExternalGlobalVDWTypes();
+        [[nodiscard]] std::vector<ExtVdwType> &getExternalGlobalVDWTypes();
         [[nodiscard]] std::vector<double>     &getPartialCharges();
 
         [[nodiscard]] std::map<size_t, size_t> getExternalToInternalAtomTypes(

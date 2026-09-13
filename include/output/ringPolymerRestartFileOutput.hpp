@@ -33,7 +33,7 @@ namespace molsys
     class SimulationBox;   // forward declaration
 }   // namespace molsys
 
-namespace output
+namespace out
 {
     /**
      * @class RingPolymerRestartFileOutput inherits from Output
@@ -49,6 +49,6 @@ namespace output
         void write(std::vector<molsys::SimulationBox> &);
     };
 
-}   // namespace output
+}   // namespace out
 
 #endif   // _RST_FILE_OUTPUT_HPP_

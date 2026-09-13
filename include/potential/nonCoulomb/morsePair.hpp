@@ -24,12 +24,14 @@
 
 #define _MORSE_PAIR_HPP_
 
-#include <cstddef>   // size_t
 #include <utility>   // pair
 
 #include "nonCoulombPair.hpp"
+#include "strongTypes.hpp"
 
-namespace potential
+struct TestMorsePairUtils;   // forward declaration
+
+namespace pot
 {
     /**
      * @class MorsePair
@@ -40,47 +42,39 @@ namespace potential
     class MorsePair : public NonCoulombPair
     {
        private:
-        double _dissociationEnergy;
-        double _wellWidth;
-        double _equilibriumDistance;
+        MorseParams _params;
 
        public:
         explicit MorsePair(
-            size_t vanDerWaalsType1,
-            size_t vanDerWaalsType2,
-            double cutOff,
-            double dissociationEnergy,
-            double wellWidth,
-            double equilibriumDistance
+            ExtVdwType   vanDerWaalsType1,
+            ExtVdwType   vanDerWaalsType2,
+            double       cutOff,
+            MorseParams &params
         );
 
-        explicit MorsePair(
-            double cutOff,
-            double dissociationEnergy,
-            double wellWidth,
-            double equilibriumDistance
-        );
+        explicit MorsePair(double cutOff, MorseParams &params);
 
         explicit MorsePair(
-            double cutOff,
-            double energyCutoff,
-            double forceCutoff,
-            double dissociationEnergy,
-            double wellWidth,
-            double equilibriumDistance
+            double       cutOff,
+            double       energyCutoff,
+            double       forceCutoff,
+            MorseParams &params
         );
+
+        // TODO: we need to explicitly delete it to not implicitly create it
+        // with the wrong types!!! Needs cleanup
+        explicit MorsePair(size_t, size_t, double, const MorseParams &) =
+            delete;
 
         [[nodiscard]] bool operator==(const MorsePair &other) const;
 
         [[nodiscard]] std::pair<double, double> calculate(
-            double distance
+            const double distance
         ) const override;
 
-        [[nodiscard]] double getDissociationEnergy() const;
-        [[nodiscard]] double getWellWidth() const;
-        [[nodiscard]] double getEquilibriumDistance() const;
+        friend struct ::TestMorsePairUtils;
     };
 
-}   // namespace potential
+}   // namespace pot
 
 #endif   // _MORSE_PAIR_HPP_

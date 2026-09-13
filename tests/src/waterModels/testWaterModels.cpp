@@ -56,14 +56,14 @@ using molsys::HybridZone;
 using molsys::Molecule;
 using molsys::SimulationBox;
 using physicalData::PhysicalData;
-using potential::CoulombPotential;
-using potential::CoulombShiftedPotential;
-using potential::GuffNonCoulomb;
-using potential::LennardJonesPair;
-using potential::MMChargeTag;
-using potential::PotentialBruteForce;
-using potential::PotentialCellList;
-using potential::QMChargeTag;
+using pot::CoulombPotential;
+using pot::CoulombShiftedPotential;
+using pot::GuffNonCoulomb;
+using pot::LennardJonesPair;
+using pot::MMChargeTag;
+using pot::PotentialBruteForce;
+using pot::PotentialCellList;
+using pot::QMChargeTag;
 using settings::HybridSettings;
 using settings::JobType;
 using settings::PotentialSettings;
@@ -104,7 +104,7 @@ namespace
         oxygen->setQMCharge(-0.9);
         oxygen->setPosition(origin);
         oxygen->setAtomType(0);
-        oxygen->setInternalGlobalVDWType(0);
+        oxygen->setInternalGlobalVDWType(VdwType{0});
         oxygen->setForceToZero();
 
         hydrogen1->setAtomicNumber(AtomNumber{1});
@@ -112,7 +112,7 @@ namespace
         hydrogen1->setQMCharge(0.45);
         hydrogen1->setPosition(origin + Vec3D{geometry.oh1, 0.0, 0.0});
         hydrogen1->setAtomType(1);
-        hydrogen1->setInternalGlobalVDWType(0);
+        hydrogen1->setInternalGlobalVDWType(VdwType{0});
         hydrogen1->setForceToZero();
 
         hydrogen2->setAtomicNumber(AtomNumber{1});
@@ -127,7 +127,7 @@ namespace
             }
         );
         hydrogen2->setAtomType(1);
-        hydrogen2->setInternalGlobalVDWType(0);
+        hydrogen2->setInternalGlobalVDWType(VdwType{0});
         hydrogen2->setForceToZero();
 
         Molecule water;
@@ -189,9 +189,10 @@ namespace
 
         model.calculate(simBox, data);
 
-        const auto totalForce = simBox.getMolecule(0).getAtomForce(0) +
-                                simBox.getMolecule(0).getAtomForce(1) +
-                                simBox.getMolecule(0).getAtomForce(2);
+        const auto mol        = simBox.getMolecule(0);
+        const auto totalForce = mol.getAtomForce(AtomIndex{0}) +
+                                mol.getAtomForce(AtomIndex{1}) +
+                                mol.getAtomForce(AtomIndex{2});
 
         EXPECT_NEAR(totalForce[0], 0.0, 1.0e-12);
         EXPECT_NEAR(totalForce[1], 0.0, 1.0e-12);
@@ -219,8 +220,7 @@ namespace
 
         const auto pair = std::make_shared<LennardJonesPair>(
             kCutOff,
-            /*c6=*/-1.0,
-            /*c12=*/1.0
+            LJParams{.c6 = -1.0, .c12 = 1.0}
         );
 
         for (size_t mol1 = 1; mol1 <= 2; ++mol1)
@@ -250,7 +250,7 @@ namespace
             const InterWaterState & /*state*/,
             SimulationBox & /*simBox*/,
             PhysicalData & /*data*/,
-            const std::shared_ptr<potential::CoulombPotential> & /*coulomb*/,
+            const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
             CellList & /*cellList*/
         ) final
         {
@@ -260,7 +260,7 @@ namespace
             const InterWaterState & /*state*/,
             SimulationBox & /*simBox*/,
             PhysicalData & /*data*/,
-            const std::shared_ptr<potential::CoulombPotential> & /*coulomb*/,
+            const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
             CellList & /*cellList*/
         ) final
         {
@@ -270,7 +270,7 @@ namespace
             const InterWaterState & /*state*/,
             SimulationBox & /*simBox*/,
             PhysicalData & /*data*/,
-            const std::shared_ptr<potential::CoulombPotential> & /*coulomb*/,
+            const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
             CellList & /*cellList*/
         ) final
         {
@@ -280,7 +280,7 @@ namespace
             const InterWaterState & /*state*/,
             SimulationBox & /*simBox*/,
             PhysicalData & /*data*/,
-            const std::shared_ptr<potential::CoulombPotential> & /*coulomb*/,
+            const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
             CellList & /*cellList*/
         ) final
         {
@@ -290,7 +290,7 @@ namespace
             const InterWaterState & /*state*/,
             SimulationBox & /*simBox*/,
             PhysicalData & /*data*/,
-            const std::shared_ptr<potential::CoulombPotential> & /*coulomb*/,
+            const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
             CellList & /*cellList*/
         ) final
         {
@@ -443,7 +443,10 @@ TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)
     atom2.setForceToZero();
 
     const auto coulomb = std::make_shared<CoulombShiftedPotential>(kCutOff);
-    const LennardJonesPair    nonCoulomb(kCutOff, -1.0, 1.0);
+    const LennardJonesPair nonCoulomb(
+        kCutOff,
+        LJParams{.c6 = -1.0, .c12 = 1.0}
+    );
     ExposedInterWaterStrategy strategy;
 
     EXPECT_DOUBLE_EQ(nonCoulomb.getRadialCutOff(), kCutOff);
@@ -525,11 +528,18 @@ TEST(InterWater, NonOxygenOnlyStateInitializesEveryPair)
     PotentialSettings::setCoulombRadiusCutOff(kCutOff);
     PotentialSettings::setNonCoulombRadiusCutOff(kCutOff);
 
-    auto oxygenOxygen = std::make_unique<LennardJonesPair>(kCutOff, -1.0, 1.0);
-    auto oxygenHydrogen =
-        std::make_unique<LennardJonesPair>(kCutOff, -1.0, 1.0);
-    auto hydrogenHydrogen =
-        std::make_unique<LennardJonesPair>(kCutOff, -1.0, 1.0);
+    auto oxygenOxygen = std::make_unique<LennardJonesPair>(
+        kCutOff,
+        LJParams{.c6 = -1.0, .c12 = 1.0}
+    );
+    auto oxygenHydrogen = std::make_unique<LennardJonesPair>(
+        kCutOff,
+        LJParams{.c6 = -1.0, .c12 = 1.0}
+    );
+    auto hydrogenHydrogen = std::make_unique<LennardJonesPair>(
+        kCutOff,
+        LJParams{.c6 = -1.0, .c12 = 1.0}
+    );
     const auto *oxygenOxygenView     = oxygenOxygen.get();
     const auto *oxygenHydrogenView   = oxygenHydrogen.get();
     const auto *hydrogenHydrogenView = hydrogenHydrogen.get();
@@ -652,14 +662,14 @@ TEST(PotentialTemplates, QmChargesAndOneWayInteractions)
     atom1.setPartialCharge(-0.8);
     atom1.setQMCharge(-0.9);
     atom1.setAtomType(0);
-    atom1.setInternalGlobalVDWType(0);
+    atom1.setInternalGlobalVDWType(VdwType{0});
     atom1.setForceToZero();
 
     Atom atom2;
     atom2.setPosition({1.2, 0.1, 0.0});
     atom2.setPartialCharge(0.4);
     atom2.setAtomType(0);
-    atom2.setInternalGlobalVDWType(0);
+    atom2.setInternalGlobalVDWType(VdwType{0});
     atom2.setForceToZero();
 
     HybridSettings::setUseQMCharges(true);
@@ -808,7 +818,7 @@ TEST(SimulationBoxViews, ConstAndMutableWaterViewsFilterCorrectly)
     for ([[maybe_unused]] const auto &molecule : waterView) ++water;
     EXPECT_EQ(water, 1);
     EXPECT_EQ(
-        simBox.getMolecule(0).getAtom(0).getAtomicNumber(),
+        simBox.getMolecule(0).getAtom(AtomIndex{0}).getAtomicNumber(),
         AtomNumber{8}
     );
 }

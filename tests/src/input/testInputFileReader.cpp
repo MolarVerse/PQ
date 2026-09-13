@@ -106,7 +106,7 @@ TEST_F(TestInputFileReader, testNotAValidKeyword)
     auto lineElements = std::vector<std::string>{"notAValidKeyword", "=", "1"};
     ASSERT_THROW(
         _inputFileReader->process(lineElements),
-        customException::InputFileException
+        exc::InputFileException
     );
 }
 
@@ -140,7 +140,7 @@ TEST_F(TestInputFileReader, testReadFileNotFound)
 {
     std::string filename = "data/inputFileReader/inputFileNotFound.txt";
     _inputFileReader->setFilename(filename);
-    ASSERT_THROW(_inputFileReader->read(), customException::InputFileException);
+    ASSERT_THROW(_inputFileReader->read(), exc::InputFileException);
 }
 
 TEST_F(TestInputFileReader, testReadInputFileFunction)
@@ -165,7 +165,7 @@ TEST_F(TestInputFileReader, testReadInputFileReactionFieldMissingEpsilon)
 
     ASSERT_THROW_MSG(
         readInputFile(_fileName, *_mdEngine),
-        customException::InputFileException,
+        exc::InputFileException,
         "Missing required keyword \"rf_epsilon\" in input file: it must be "
         "set when the Coulomb long-range correction is set to "
         "\"reaction-field\"."
@@ -224,10 +224,7 @@ TEST_F(TestInputFileReader, testPostProcessRequiredFail)
     {
         const auto &keyword = keywordsRef[index];
         _inputFileReader->setKeywordCount(keyword, 0);
-        ASSERT_THROW(
-            _inputFileReader->postProcess(),
-            customException::InputFileException
-        );
+        ASSERT_THROW(_inputFileReader->postProcess(), exc::InputFileException);
         _inputFileReader->setKeywordCount(keyword, 1);
     }
 }
@@ -265,7 +262,7 @@ TEST_F(TestInputFileReader, testPostProcessCountToOftenFail)
             _inputFileReader->setKeywordCount(keyword, index);
             ASSERT_THROW(
                 _inputFileReader->postProcess(),
-                customException::InputFileException
+                exc::InputFileException
             );
             _inputFileReader->setKeywordCount(keyword, 1);
         }
@@ -311,14 +308,14 @@ TEST_F(TestInputFileReader, testReadJobType)
     filename = "fileNotFound";
     ASSERT_THROW_MSG(
         input::readJobType(filename, engine),
-        customException::InputFileException,
+        exc::InputFileException,
         "\"fileNotFound\" File not found"
     );
 
     filename = "data/inputFileReader/missingJobType.txt";
     ASSERT_THROW_MSG(
         input::readJobType(filename, engine),
-        customException::InputFileException,
+        exc::InputFileException,
         "Missing keyword \"jobtype\" in input file"
     );
 }

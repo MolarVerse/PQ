@@ -53,7 +53,7 @@ TEST_F(TestInputFileReader, parseCellListActivated)
     lineElements = {"cell-list", "=", "notValid"};
     EXPECT_THROW_MSG(
         parser.parseCellListActivated(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Invalid cell-list keyword \"notValid\" at line 0 "
         "in input file\n"
         "Possible keywords are \"on\" and \"off\""
@@ -79,7 +79,7 @@ TEST_F(TestInputFileReader, numberOfCells)
     lineElements = {"cell-number", "=", "0"};
     EXPECT_THROW_MSG(
         parser.parseNumberOfCells(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Number of cells must be positive - number of cells = 0"
     );
 }

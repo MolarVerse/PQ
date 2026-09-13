@@ -36,7 +36,7 @@
 using input::ringPolymer::RingPolymerRestartFileReader;
 using namespace engine;
 using namespace settings;
-using namespace customException;
+using namespace exc;
 using namespace utilities;
 
 /**

@@ -49,8 +49,8 @@ TEST_F(TestTopologySection, processSectionBond)
         bonds[0].getMolecule2(),
         &(_engine->getSimulationBox().getMolecules()[1])
     );
-    EXPECT_EQ(bonds[0].getAtomIndex1(), 0);
-    EXPECT_EQ(bonds[0].getAtomIndex2(), 0);
+    EXPECT_EQ(bonds[0].getAtomIndices()[0], AtomIndex{0});
+    EXPECT_EQ(bonds[0].getAtomIndices()[1], AtomIndex{0});
     EXPECT_EQ(bonds[0].getType(), BondId{7});
     EXPECT_EQ(bonds[0].isLinker(), false);
 
@@ -61,19 +61,19 @@ TEST_F(TestTopologySection, processSectionBond)
     lineElements = {"1", "1", "7"};
     EXPECT_THROW(
         bondSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+        exc::TopologyException
     );
 
     lineElements = {"1", "2", "7", "1", "2"};
     EXPECT_THROW(
         bondSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+        exc::TopologyException
     );
 
     lineElements = {"1", "2", "7", "#"};
     EXPECT_THROW(
         bondSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+        exc::TopologyException
     );
 }
 
@@ -84,9 +84,6 @@ TEST_F(TestTopologySection, processSectionBond)
 TEST_F(TestTopologySection, endedNormallyBond)
 {
     input::topology::BondSection bondSection;
-    EXPECT_THROW(
-        bondSection.endedNormally(false),
-        customException::TopologyException
-    );
+    EXPECT_THROW(bondSection.endedNormally(false), exc::TopologyException);
     EXPECT_NO_THROW(bondSection.endedNormally(true));
 }

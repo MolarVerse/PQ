@@ -39,7 +39,7 @@
 using QM::TurbomoleRunner;
 
 using namespace molsys;
-using namespace customException;
+using namespace exc;
 using namespace configurator;
 using namespace constants;
 using namespace settings;

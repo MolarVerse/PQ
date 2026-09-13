@@ -58,7 +58,7 @@ TEST_F(TestParameterFileSection, processSectionAngle)
     lineElements = {"1", "2", "1.0", "0"};
     EXPECT_THROW(
         angleSection.processSection(lineElements, *_engine),
-        customException::ParameterFileException
+        exc::ParameterFileException
     );
 }
 
@@ -69,7 +69,7 @@ TEST_F(TestParameterFileSection, endedNormallyAngle)
 
     ASSERT_THROW_MSG(
         angleSection.endedNormally(false),
-        customException::ParameterFileException,
+        exc::ParameterFileException,
         "Parameter file angles section ended abnormally!"
     );
 }

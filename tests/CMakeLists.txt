@@ -33,4 +33,5 @@ if(BUILD_WITH_ASE)
 endif()
 
 add_subdirectory(src)
+add_subdirectory(apps)
 add_subdirectory(regression)

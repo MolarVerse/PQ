@@ -30,7 +30,7 @@
 
 using namespace settings;
 using namespace utilities;
-using namespace customException;
+using namespace exc;
 
 /**
  * @brief returns the optimizer as string

@@ -37,7 +37,7 @@
 
 using namespace setup;
 using namespace settings;
-using namespace customException;
+using namespace exc;
 
 namespace
 {

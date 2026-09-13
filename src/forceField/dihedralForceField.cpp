@@ -35,7 +35,7 @@ using namespace forceField;
 using namespace connectivity;
 using namespace linearAlgebra;
 using namespace physicalData;
-using namespace potential;
+using namespace pot;
 using namespace settings;
 using namespace molsys;
 
@@ -50,7 +50,7 @@ using enum HybridZone;
  */
 DihedralForceField::DihedralForceField(
     const std::vector<Molecule *> &molecules,
-    const std::vector<size_t>     &atomIndices,
+    const std::vector<AtomIndex>  &atomIndices,
     DihedralId                     type
 )
     : Dihedral(molecules, atomIndices), _type(type)

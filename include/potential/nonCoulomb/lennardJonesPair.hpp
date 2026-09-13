@@ -24,13 +24,16 @@
 
 #define _LENNARD_JONES_PAIR_HPP_
 
-#include <cstddef>   // size_t
 #include <utility>   // pair
 
 #include "nonCoulombPair.hpp"
+#include "strongTypes.hpp"
 
-namespace potential
+struct TestLJPairUtils;
+
+namespace pot
 {
+
     /**
      * @class LennardJonesPair
      *
@@ -41,37 +44,40 @@ namespace potential
     class LennardJonesPair : public NonCoulombPair
     {
        private:
-        double _c6;
-        double _c12;
+        LJParams _params;
 
        public:
         explicit LennardJonesPair(
-            size_t vanDerWaalsType1,
-            size_t vanDerWaalsType2,
-            double cutOff,
-            double c6,
-            double c12
+            ExtVdwType vanDerWaalsType1,
+            ExtVdwType vanDerWaalsType2,
+            double     cutOff,
+            LJParams  &params
         );
 
-        explicit LennardJonesPair(double cutOff, double c6, double c12);
+        explicit LennardJonesPair(double cutOff, const LJParams &params);
 
         explicit LennardJonesPair(
-            double cutOff,
-            double energyCutoff,
-            double forceCutoff,
-            double c6,
-            double c12
+            double          cutOff,
+            double          energyCutoff,
+            double          forceCutoff,
+            const LJParams &params
         );
 
-        [[nodiscard]] bool operator==(const LennardJonesPair &other) const;
+        // TODO: we need to explicitly delete it to not implictly create it with
+        // the wrong types!!! Needs cleanup
+        explicit LennardJonesPair(size_t, size_t, double, const LJParams &) =
+            delete;
 
         [[nodiscard]]
-        std::pair<double, double> calculate(double distance) const override;
+        bool operator==(const LennardJonesPair &other) const;
 
-        [[nodiscard]] double getC6() const;
-        [[nodiscard]] double getC12() const;
+        [[nodiscard]] std::pair<double, double> calculate(
+            const double distance
+        ) const override;
+
+        friend struct ::TestLJPairUtils;
     };
 
-}   // namespace potential
+}   // namespace pot
 
 #endif   // _LENNARD_JONES_PAIR_HPP_

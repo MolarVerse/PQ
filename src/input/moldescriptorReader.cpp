@@ -39,7 +39,7 @@ using namespace settings;
 using namespace engine;
 using namespace molsys;
 using namespace utilities;
-using namespace customException;
+using namespace exc;
 
 namespace
 {
@@ -277,7 +277,8 @@ void MoldescriptorReader::processMolecule(
                 );
             }
 
-            molecule.addExternalGlobalVDWType(stoul(lineElements[3]));
+            const auto vdwType = ExtVdwType{stoul(lineElements[3])};
+            molecule.addExternalGlobalVDWType(vdwType);
         }
     }
 

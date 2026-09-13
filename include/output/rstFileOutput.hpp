@@ -38,7 +38,7 @@ namespace molsys
     class SimulationBox;   // forward declaration
 }   // namespace molsys
 
-namespace output
+namespace out
 {
     /**
      * @class RstFileOutput inherits from Output
@@ -58,6 +58,6 @@ namespace output
         );
     };
 
-}   // namespace output
+}   // namespace out
 
 #endif   // _RST_FILE_OUTPUT_HPP_

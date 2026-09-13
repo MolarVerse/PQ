@@ -86,7 +86,7 @@ namespace engine
         [[nodiscard]] std::shared_ptr<physicalData::PhysicalData> getSharedPhysicalDataOld();
         // clang-format on
 
-        [[nodiscard]] output::OptOutput &getOptOutput();
+        [[nodiscard]] out::OptOutput &getOptOutput();
     };
 
 }   // namespace engine

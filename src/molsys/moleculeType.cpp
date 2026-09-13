@@ -91,7 +91,7 @@ void MoleculeType::addPartialCharge(double partialCharge)
  *
  * @param externalGlobalVDWType
  */
-void MoleculeType::addExternalGlobalVDWType(size_t externalGlobalVDWType)
+void MoleculeType::addExternalGlobalVDWType(ExtVdwType externalGlobalVDWType)
 {
     _externalGlobalVDWTypes.push_back(externalGlobalVDWType);
 }
@@ -163,9 +163,9 @@ void MoleculeType::setCharge(int charge) { _charge = charge; }
  * @param index
  * @param partialCharge
  */
-void MoleculeType::setPartialCharge(size_t index, double partialCharge)
+void MoleculeType::setPartialCharge(AtomIndex index, double partialCharge)
 {
-    _partialCharges[index] = partialCharge;
+    _partialCharges[index.get()] = partialCharge;
 }
 
 /**
@@ -204,9 +204,9 @@ size_t MoleculeType::getMoltype() const { return _moltype; }
  * @param index
  * @return size_t
  */
-size_t MoleculeType::getExternalAtomType(size_t index) const
+size_t MoleculeType::getExternalAtomType(AtomIndex index) const
 {
-    return _externalAtomTypes[index];
+    return _externalAtomTypes[index.get()];
 }
 
 /**
@@ -215,9 +215,9 @@ size_t MoleculeType::getExternalAtomType(size_t index) const
  * @param index
  * @return size_t
  */
-size_t MoleculeType::getAtomType(size_t index) const
+size_t MoleculeType::getAtomType(AtomIndex index) const
 {
-    return _atomTypes[index];
+    return _atomTypes[index.get()];
 }
 
 /**
@@ -244,9 +244,9 @@ int MoleculeType::getCharge() const { return _charge; }
  * @param index
  * @return double
  */
-double MoleculeType::getPartialCharge(size_t index) const
+double MoleculeType::getPartialCharge(AtomIndex index) const
 {
-    return _partialCharges[index];
+    return _partialCharges[index.get()];
 }
 
 /**
@@ -262,9 +262,9 @@ std::string MoleculeType::getName() const { return _name; }
  * @param index
  * @return std::string
  */
-std::string MoleculeType::getAtomName(size_t index) const
+std::string MoleculeType::getAtomName(AtomIndex index) const
 {
-    return _atomNames[index];
+    return _atomNames[index.get()];
 }
 
 /**
@@ -290,9 +290,9 @@ std::vector<size_t> &MoleculeType::getExternalAtomTypes()
 /**
  * @brief get the external global VDW types of the molecule
  *
- * @return std::vector<size_t>&
+ * @return std::vector<ExtVdwType>&
  */
-std::vector<size_t> &MoleculeType::getExternalGlobalVDWTypes()
+std::vector<ExtVdwType> &MoleculeType::getExternalGlobalVDWTypes()
 {
     return _externalGlobalVDWTypes;
 }

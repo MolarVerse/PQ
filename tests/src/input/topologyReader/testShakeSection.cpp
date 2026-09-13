@@ -52,20 +52,26 @@ TEST_F(TestTopologySection, processSectionShake)
         constraints->getBondConstraints()[0].getMolecule2(),
         &(_engine->getSimulationBox().getMolecules()[1])
     );
-    EXPECT_EQ(constraints->getBondConstraints()[0].getAtomIndex1(), 0);
-    EXPECT_EQ(constraints->getBondConstraints()[0].getAtomIndex2(), 0);
+    EXPECT_EQ(
+        constraints->getBondConstraints()[0].getAtomIndices()[0],
+        AtomIndex{0}
+    );
+    EXPECT_EQ(
+        constraints->getBondConstraints()[0].getAtomIndices()[1],
+        AtomIndex{0}
+    );
     EXPECT_EQ(constraints->getBondConstraints()[0].getTargetBondLength(), 1.0);
 
     lineElements = {"1", "1", "1.0", "0"};
     EXPECT_THROW(
         shakeSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+        exc::TopologyException
     );
 
     lineElements = {"1", "1", "1.0", "0", "1"};
     EXPECT_THROW(
         shakeSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+        exc::TopologyException
     );
 }
 
@@ -76,9 +82,6 @@ TEST_F(TestTopologySection, processSectionShake)
 TEST_F(TestTopologySection, endedNormallyShake)
 {
     input::topology::ShakeSection shakeSection;
-    EXPECT_THROW(
-        shakeSection.endedNormally(false),
-        customException::TopologyException
-    );
+    EXPECT_THROW(shakeSection.endedNormally(false), exc::TopologyException);
     EXPECT_NO_THROW(shakeSection.endedNormally(true));
 }

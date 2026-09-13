@@ -22,14 +22,14 @@
 
 #include <gtest/gtest.h>   // for Test, CmpHelperFloatingPointEQ, EXPECT_EQ
 
-#include <cmath>     // for exp, pow
-#include <cstddef>   // for size_t
-#include <vector>    // for vector
+#include <cmath>    // for exp, pow
+#include <vector>   // for vector
 
 // for AssertionResult, Message, TestPartResult
 #include "morsePair.hpp"   // for MorsePair
+#include "strongTypes.hpp"
 
-using namespace potential;
+using namespace pot;
 
 /**
  * @brief tests the equals operator of MorsePair
@@ -37,38 +37,103 @@ using namespace potential;
  */
 TEST(TestMorsePair, equalsOperator)
 {
-    const size_t vdwType1 = 0;
-    const size_t vdwType2 = 1;
-    const size_t vdwType3 = 2;
-    const auto   nonCoulombPair1 =
-        MorsePair(vdwType1, vdwType2, 1.0, 2.0, 3.0, 4.0);
+    const ExtVdwType vdwType1{0};
+    const ExtVdwType vdwType2{1};
+    const ExtVdwType vdwType3{2};
 
-    const auto nonCoulombPair2 =
-        MorsePair(vdwType1, vdwType2, 1.0, 2.0, 3.0, 4.0);
+    const auto nonCoulombPair1 = MorsePair(
+        vdwType1,
+        vdwType2,
+        1.0,
+        MorseParams{
+            .dissociationEnergy  = 2.0,
+            .wellWidth           = 3.0,
+            .equilibriumDistance = 4.0
+        }
+    );
+
+    const auto nonCoulombPair2 = MorsePair(
+        vdwType1,
+        vdwType2,
+        1.0,
+        MorseParams{
+            .dissociationEnergy  = 2.0,
+            .wellWidth           = 3.0,
+            .equilibriumDistance = 4.0
+        }
+    );
     EXPECT_TRUE(nonCoulombPair1 == nonCoulombPair2);
 
-    const auto nonCoulombPair3 =
-        MorsePair(vdwType2, vdwType1, 1.0, 2.0, 3.0, 4.0);
+    const auto nonCoulombPair3 = MorsePair(
+        vdwType2,
+        vdwType1,
+        1.0,
+        MorseParams{
+            .dissociationEnergy  = 2.0,
+            .wellWidth           = 3.0,
+            .equilibriumDistance = 4.0
+        }
+    );
     EXPECT_TRUE(nonCoulombPair1 == nonCoulombPair3);
 
-    const auto nonCoulombPair4 =
-        MorsePair(vdwType1, vdwType3, 1.0, 2.0, 3.0, 4.0);
+    const auto nonCoulombPair4 = MorsePair(
+        vdwType1,
+        vdwType3,
+        1.0,
+        MorseParams{
+            .dissociationEnergy  = 2.0,
+            .wellWidth           = 3.0,
+            .equilibriumDistance = 4.0
+        }
+    );
     EXPECT_FALSE(nonCoulombPair1 == nonCoulombPair4);
 
-    const auto nonCoulombPair5 =
-        MorsePair(vdwType1, vdwType2, 2.0, 2.0, 3.0, 4.0);
+    const auto nonCoulombPair5 = MorsePair(
+        vdwType1,
+        vdwType2,
+        2.0,
+        MorseParams{
+            .dissociationEnergy  = 2.0,
+            .wellWidth           = 3.0,
+            .equilibriumDistance = 4.0
+        }
+    );
     EXPECT_FALSE(nonCoulombPair1 == nonCoulombPair5);
 
-    const auto nonCoulombPair6 =
-        MorsePair(vdwType1, vdwType2, 1.0, 3.0, 3.0, 4.0);
+    const auto nonCoulombPair6 = MorsePair(
+        vdwType1,
+        vdwType2,
+        1.0,
+        MorseParams{
+            .dissociationEnergy  = 3.0,
+            .wellWidth           = 3.0,
+            .equilibriumDistance = 4.0
+        }
+    );
     EXPECT_FALSE(nonCoulombPair1 == nonCoulombPair6);
 
-    const auto nonCoulombPair7 =
-        MorsePair(vdwType1, vdwType2, 1.0, 2.0, 4.0, 4.0);
+    const auto nonCoulombPair7 = MorsePair(
+        vdwType1,
+        vdwType2,
+        1.0,
+        MorseParams{
+            .dissociationEnergy  = 2.0,
+            .wellWidth           = 4.0,
+            .equilibriumDistance = 4.0
+        }
+    );
     EXPECT_FALSE(nonCoulombPair1 == nonCoulombPair7);
 
-    const auto nonCoulombPair8 =
-        MorsePair(vdwType1, vdwType2, 1.0, 2.0, 3.0, 5.0);
+    const auto nonCoulombPair8 = MorsePair(
+        vdwType1,
+        vdwType2,
+        1.0,
+        MorseParams{
+            .dissociationEnergy  = 2.0,
+            .wellWidth           = 3.0,
+            .equilibriumDistance = 5.0
+        }
+    );
     EXPECT_FALSE(nonCoulombPair1 == nonCoulombPair8);
 }
 
@@ -83,13 +148,15 @@ TEST(TestMorsePair, calculateEnergyAndForces)
     const double energyCutoff = 1.0;
     const double forceCutoff  = 2.0;
 
-    const auto potential = potential::MorsePair(
+    const auto potential = pot::MorsePair(
         rncCutoff,
         energyCutoff,
         forceCutoff,
-        coefficients[0],
-        coefficients[1],
-        coefficients[2]
+        MorseParams{
+            .dissociationEnergy  = coefficients[0],
+            .wellWidth           = coefficients[1],
+            .equilibriumDistance = coefficients[2]
+        }
     );
 
     const auto distance        = 2.0;

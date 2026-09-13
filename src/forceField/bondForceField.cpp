@@ -36,7 +36,7 @@ using namespace molsys;
 using namespace connectivity;
 using namespace linearAlgebra;
 using namespace physicalData;
-using namespace potential;
+using namespace pot;
 using namespace settings;
 
 using enum HybridZone;
@@ -53,8 +53,8 @@ using enum HybridZone;
 BondForceField::BondForceField(
     Molecule *molecule1,
     Molecule *molecule2,
-    size_t    atomIndex1,
-    size_t    atomIndex2,
+    AtomIndex atomIndex1,
+    AtomIndex atomIndex2,
     BondId    type
 )
     : Bond(molecule1, molecule2, atomIndex1, atomIndex2), _type(type)

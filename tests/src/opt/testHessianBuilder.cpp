@@ -185,7 +185,7 @@ TEST(TestHessianBuilder, analyticBuilderRequiresEvaluatorSupport)
 
     EXPECT_THROW(
         (void) builder.build(evaluator, *box),
-        customException::UserInputException
+        exc::UserInputException
     );
 }
 
@@ -237,6 +237,6 @@ TEST(TestHessianBuilder, makeHessianBuilderSelectsConcreteStrategies)
 
     EXPECT_THROW(
         (void) makeHessianBuilder(settings::HessianBuilderType::NONE, 1.0e-3),
-        customException::UserInputException
+        exc::UserInputException
     );
 }

@@ -29,7 +29,7 @@
 
 using namespace input::parameterFile;
 using namespace utilities;
-using namespace customException;
+using namespace exc;
 using namespace engine;
 
 /**
