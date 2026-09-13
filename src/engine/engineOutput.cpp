@@ -226,6 +226,7 @@ void EngineOutput::writeInfoFile(
  * @brief wrapper for restart file output function
  *
  * @param simulationBox
+ * @param thermostat
  * @param step
  */
 void EngineOutput::writeRstFile(
@@ -313,8 +314,7 @@ void EngineOutput::writeOptFile(
 /**
  * @brief wrapper for ring polymer restart file output function
  *
- * @param simulationBox
- * @param step
+ * @param beads
  */
 void EngineOutput::writeRingPolymerRstFile(std::vector<SimulationBox> &beads)
 {
@@ -386,7 +386,7 @@ void EngineOutput::writeRingPolymerChargeFile(
  * @brief wrapper for ring polymer energy file output function
  *
  * @param step
- * @param physicalData
+ * @param dataVector
  */
 void EngineOutput::writeRingPolymerEnergyFile(
     const size_t                     step,
@@ -400,7 +400,6 @@ void EngineOutput::writeRingPolymerEnergyFile(
 /**
  * @brief wrapper for timings file output function
  *
- * @param timer
  */
 void EngineOutput::writeTimingsFile()
 {

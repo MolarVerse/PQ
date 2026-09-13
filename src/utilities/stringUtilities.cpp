@@ -72,6 +72,7 @@ std::string utilities::removeComments(
  * @note split commands at every semicolon
  *
  * @param line
+ * @param lineNumber
  * @return std::vector<std::string>
  *
  * @throw InputFileException if line does not end with a semicolon

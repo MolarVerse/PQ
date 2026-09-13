@@ -49,7 +49,7 @@ std::string BondSection::keyword() { return "bonds"; }
  * 2. equilibriumDistance
  * 3. forceConstant
  *
- * @param line
+ * @param lineElements
  * @param engine
  *
  * @throw ParameterFileException if number of elements in line

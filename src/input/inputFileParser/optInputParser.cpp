@@ -39,12 +39,10 @@ using namespace utilities;
  * @brief Constructor
  *
  * @details following keywords are added:
- * - optimizer <string>
- * - n-iterations <int>
- * - learning-rate-strategy <string>
- * - initial-learning-rate <double>
- *
- * @param engine The engine
+ * - optimizer "<string>"
+ * - n-iterations "<int>"
+ * - learning-rate-strategy "<string>"
+ * - initial-learning-rate "<double>"
  */
 OptInputParser::OptInputParser()
 {

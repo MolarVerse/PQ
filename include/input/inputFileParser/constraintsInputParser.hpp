@@ -36,9 +36,9 @@ namespace constraints
 namespace input
 {
     /**
-     * @class ConstraintsInputParser inherits from InputFileParser
+     * @brief ConstraintsInputParser inherits from InputFileParser
      *
-     * @brief Parses the constraints commands in the input file
+     * @details Parses the constraints commands in the input file
      *
      */
     class ConstraintsInputParser : public InputFileParser

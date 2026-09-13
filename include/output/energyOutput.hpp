@@ -36,9 +36,9 @@ namespace physicalData
 namespace out
 {
     /**
-     * @class EnergyOutput inherits from Output
+     * @brief EnergyOutput inherits from Output
      *
-     * @brief Output file for energy, temperature and pressure
+     * @details Output file for energy, temperature and pressure
      *
      */
     class EnergyOutput : public Output

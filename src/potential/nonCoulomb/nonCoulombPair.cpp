@@ -125,7 +125,7 @@ void NonCoulombPair::setInternalType2(const VdwType internalType2)
 /**
  * @brief set radial cut off
  *
- * @param energyCutoff
+ * @param radialCutoff
  */
 void NonCoulombPair::setRadialCutOff(const double radialCutoff)
 {

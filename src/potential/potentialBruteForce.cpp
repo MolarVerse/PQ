@@ -117,7 +117,6 @@ void PotentialBruteForce::calculateForces(
  *
  * @param simBox simulation box containing molecules
  * @param physicalData physical data to store energy results
- * @param unused CellList parameter (not used in brute force approach)
  */
 void PotentialBruteForce::calculateCoreToOuterForces(
     SimulationBox &simBox,
@@ -163,7 +162,6 @@ void PotentialBruteForce::calculateCoreToOuterForces(
  *
  * @param simBox simulation box containing molecules
  * @param physicalData physical data to store energy results
- * @param unused CellList parameter (not used in brute force approach)
  */
 void PotentialBruteForce::calculateLayerToOuterForces(
     SimulationBox &simBox,
@@ -238,7 +236,6 @@ void PotentialBruteForce::calculateOuterToOuterForces(
  *
  * @param simBox simulation box containing molecules
  * @param physicalData physical data to store energy results
- * @param unused CellList parameter (not used in brute force approach)
  */
 void PotentialBruteForce::calculateHotspotSmoothingMMForces(
     SimulationBox &simBox,

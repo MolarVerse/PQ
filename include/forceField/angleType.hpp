@@ -30,7 +30,7 @@ namespace forceField
 {
     class AngleType;   // forward declaration
 
-    bool operator==(const AngleType &, const AngleType &);
+    bool operator==(const AngleType &self, const AngleType &other);
     /**
      * @class AngleType
      *

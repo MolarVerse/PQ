@@ -49,6 +49,9 @@ ForceDifferenceHessianBuilder::ForceDifferenceHessianBuilder(
  * @brief Construct a new Central Force Difference Hessian Builder:: Central
  * Force Difference Hessian Builder object
  *
+ * @param evaluator
+ * @param simulationBox
+ * @param coordinateIndex
  * @param displacement
  */
 std::vector<double> ForceDifferenceHessianBuilder::evaluateForces(
@@ -148,7 +151,8 @@ void ForceDifferenceHessianBuilder::symmetrize(HessianMatrix &hessian)
  * @brief Construct a new Central Force Difference Hessian Builder:: Central
  * Force Difference Hessian Builder object
  *
- * @param displacement
+ * @param evaluator
+ * @param simulationBox
  */
 HessianMatrix CentralForceDifferenceHessianBuilder::build(
     Evaluator             &evaluator,
@@ -187,7 +191,8 @@ HessianMatrix CentralForceDifferenceHessianBuilder::build(
  * @brief Construct a new Forward Force Difference Hessian Builder:: Forward
  * Force Difference Hessian Builder object
  *
- * @param displacement
+ * @param evaluator
+ * @param simulationBox
  */
 HessianMatrix ForwardForceDifferenceHessianBuilder::build(
     Evaluator             &evaluator,
@@ -225,7 +230,8 @@ HessianMatrix ForwardForceDifferenceHessianBuilder::build(
  * @brief Construct a new Five Point Force Difference Hessian Builder:: Five
  * Point Force Difference Hessian Builder object
  *
- * @param displacement
+ * @param evaluator
+ * @param simulationBox
  */
 HessianMatrix FivePointForceDifferenceHessianBuilder::build(
     Evaluator             &evaluator,

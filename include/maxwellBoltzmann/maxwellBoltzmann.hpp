@@ -39,8 +39,8 @@ namespace maxwellBoltzmann
      * @brief class to initialize velocities of particles with a random maxwell
      * boltzmann distribution
      *
-     * @link https://www.biodiversitylibrary.org/item/53795#page/33/mode/1up
-     * @link https://www.biodiversitylibrary.org/item/20012#page/37/mode/1up
+     * _(https://www.biodiversitylibrary.org/item/53795#page/33/mode/1up)
+     * _(https://www.biodiversitylibrary.org/item/20012#page/37/mode/1up)
      *
      */
     class MaxwellBoltzmann

@@ -85,9 +85,8 @@ VelocityRescalingThermostat &VelocityRescalingThermostat::operator=(
 }
 
 /**
- * @brief apply thermostat - Velocity Rescaling
- *
- * @link https://doi.org/10.1063/1.2408420
+ * @brief apply thermostat - [Velocity
+ * Rescaling](https://doi.org/10.1063/1.2408420)
  *
  * @param simulationBox
  * @param physicalData

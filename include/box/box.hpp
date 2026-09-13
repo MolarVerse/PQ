@@ -30,7 +30,7 @@
 namespace molsys
 {
     /**
-     * @class enum Periodicity
+     * @brief enum Periodicity
      */
     enum class Periodicity : size_t
     {

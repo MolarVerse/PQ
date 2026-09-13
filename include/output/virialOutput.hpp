@@ -36,9 +36,9 @@ namespace physicalData
 namespace out
 {
     /**
-     * @class VirialOutput inherits from Output
+     * @brief VirialOutput inherits from Output
      *
-     * @brief Output file for virial tensor
+     * @details Output file for virial tensor
      *
      */
     class VirialOutput : public Output

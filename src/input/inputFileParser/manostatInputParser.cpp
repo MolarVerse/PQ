@@ -47,11 +47,9 @@ using namespace constants;
  * Manostat object
  *
  * @details following keywords are added to the _keywordFuncMap,
- * _keywordRequiredMap and _keywordCountMap: 1) manostat <string> 2) pressure
- * <double> (only required if manostat is not none) 3) p_relaxation <double> 4)
- * compressibility <double>
- *
- * @param engine
+ * _keywordRequiredMap and _keywordCountMap: 1) manostat "<string>" 2) pressure
+ * "<double>" (only required if manostat is not none) 3) p_relaxation "<double>"
+ * 4) compressibility "<double>"
  */
 ManostatInputParser::ManostatInputParser()
 {
@@ -95,6 +93,7 @@ ManostatInputParser::ManostatInputParser()
  * 3) "stochastic_rescaling" - stochastic rescaling manostat is used
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throws InputFileException if manostat is not berendsen or
  * none
@@ -145,6 +144,7 @@ void ManostatInputParser::parseManostat(
  * @details no default value - if needed it has to be set in the input file
  *
  * @param lineElements
+ * @param lineNumber
  */
 void ManostatInputParser::parsePressure(
     const std::vector<std::string> &lineElements,
@@ -164,6 +164,7 @@ void ManostatInputParser::parsePressure(
  * @details default value is 1.0
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throw InputFileException if relaxation time is negative
  */
@@ -198,6 +199,7 @@ void ManostatInputParser::parseManostatRelaxationTime(
  * @details default value is 4.5e-5
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throw InputFileException if compressibility is negative
  */
@@ -226,6 +228,7 @@ void ManostatInputParser::parseCompressibility(
  * 3) "anisotropic"                      - anisotropic manostat is used
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throws InputFileException if isotropy is not isotropic,
  * semi_isotropic or anisotropic

@@ -452,7 +452,7 @@ namespace molsys
     /**
      * @brief set the total mass
      *
-     * @param centerOfMass
+     * @param totalMass
      */
     void SimulationBox::setTotalMass(const double totalMass)
     {
@@ -462,7 +462,7 @@ namespace molsys
     /**
      * @brief set the total charge
      *
-     * @param centerOfMass
+     * @param totalCharge
      */
     void SimulationBox::setTotalCharge(const double totalCharge)
     {
@@ -472,14 +472,14 @@ namespace molsys
     /**
      * @brief set the density
      *
-     * @param centerOfMass
+     * @param density
      */
     void SimulationBox::setDensity(const double density) { _density = density; }
 
     /**
      * @brief set the degrees of freedom
      *
-     * @param centerOfMass
+     * @param degreesOfFreedom
      */
     void SimulationBox::setDegreesOfFreedom(const size_t degreesOfFreedom)
     {

@@ -46,8 +46,7 @@ Integrator::Integrator(const std::string_view integratorType)
 /**
  * @brief integrates the velocities of a single atom
  *
- * @param molecule
- * @param index
+ * @param atom
  */
 void Integrator::integrateVelocities(Atom *atom) const
 {
@@ -64,8 +63,7 @@ void Integrator::integrateVelocities(Atom *atom) const
 /**
  * @brief integrates the positions of a single atom
  *
- * @param molecule
- * @param index
+ * @param atom
  * @param simBox
  */
 void Integrator::integratePositions(

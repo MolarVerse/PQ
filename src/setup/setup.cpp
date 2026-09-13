@@ -115,7 +115,6 @@ void setup::endSetup(Engine& engine)
 /**
  * @brief reads all the files needed for the simulation
  *
- * @param inputFileName
  * @param engine
  */
 void setup::readFiles(Engine& engine)

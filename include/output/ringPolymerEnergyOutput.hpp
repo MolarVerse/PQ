@@ -37,9 +37,9 @@ namespace physicalData
 namespace out
 {
     /**
-     * @class RingPolymerEnergyOutput inherits from Output
+     * @brief RingPolymerEnergyOutput inherits from Output
      *
-     * @brief Output file for spring energies
+     * @details Output file for spring energies
      *
      */
     class RingPolymerEnergyOutput : public Output

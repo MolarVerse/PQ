@@ -46,7 +46,7 @@ using namespace engine;
  * 3. bond type
  * 4. linker marked with a '*'
  *
- * @param line
+ * @param lineElements
  * @param engine
  *
  * @throws TopologyException if number of elements in line is

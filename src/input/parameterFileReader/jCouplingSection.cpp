@@ -70,7 +70,7 @@ std::string JCouplingSection::keyword() { return "j_couplings"; }
  *     - if symmetry is -, the j-coupling is calculated if J < J_0
  *     - if symmetry is anything else, the j-coupling is calculated if J != J_0
  *
- * @param line
+ * @param lineElements
  * @param engine
  *
  * @throw ParameterFileException if number of elements in line

@@ -363,8 +363,8 @@ void WaterModelSetup::shakeSetupForRigidWater(
  * @brief Set up the intramolecular water model.
  *
  * @details For flexible water models, this function constructs the appropriate
- * @ref IntraWater object and installs it in the MD engine. Rigid water models
- * are handled by constraints and do not require an @ref IntraWater object.
+ * IntraWater object and installs it in the MD engine. Rigid water models
+ * are handled by constraints and do not require an IntraWater object.
  */
 void WaterModelSetup::makeIntraWater()
 {
@@ -391,7 +391,7 @@ void WaterModelSetup::makeIntraWater()
 /**
  * @brief Set up the intermolecular water interaction model.
  *
- * @details Creates an @ref InterWater object with the appropriate parameters
+ * @details Creates an InterWater object with the appropriate parameters
  * and strategy (cell-list or brute-force) based on the configured
  * intermolecular water model. Also validates water molecule partial charges
  * against expected values.

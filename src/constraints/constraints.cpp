@@ -47,8 +47,6 @@ Constraints::~Constraints() = default;
 /**
  * @brief init M-Shake from M-Shake references
  *
- * @param simulationBox
- *
  */
 void Constraints::initMShake() { _mShake->initMShake(); }
 
@@ -231,6 +229,7 @@ void Constraints::_applyMRattle(SimulationBox &simulationBox)
  * @brief applies the distance constraints to all distance constraints
  *
  * @param simulationBox
+ * @param data
  * @param time
  *
  */

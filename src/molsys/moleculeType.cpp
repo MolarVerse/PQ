@@ -43,9 +43,9 @@ MoleculeType::MoleculeType(const std::string_view &name) : _name(name) {}
 /**
  * @brief finds number of different atom types in molecule
  *
- * @return int
+ * @return size_t
  */
-size_t MoleculeType::MoleculeType::getNumberOfAtomTypes()
+size_t MoleculeType::getNumberOfAtomTypes()
 {
     return utilities::getUniqueElements(_atomTypes).size();
 }

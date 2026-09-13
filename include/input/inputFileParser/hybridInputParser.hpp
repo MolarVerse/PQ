@@ -31,9 +31,9 @@
 namespace input
 {
     /**
-     * @class HybridInputParser inherits from InputFileParser
+     * @brief HybridInputParser inherits from InputFileParser
      *
-     * @brief Parses the general commands in the input file
+     * @details Parses the general commands in the input file
      *
      */
     class HybridInputParser : public InputFileParser

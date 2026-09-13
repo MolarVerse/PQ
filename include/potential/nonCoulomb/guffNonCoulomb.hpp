@@ -65,8 +65,8 @@ namespace pot
 
         [[nodiscard]]
         std::shared_ptr<NonCoulombPair> getNonCoulPair(
-            const std::vector<size_t>         &indices,
-            const std::pair<VdwType, VdwType> &vdwTypes
+            const std::vector<size_t> &indices,
+            const std::pair<VdwType, VdwType> & /*vdwTypes*/
         ) override;
 
         [[nodiscard]] std::vector<std::vector<

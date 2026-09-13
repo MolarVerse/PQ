@@ -41,8 +41,7 @@ using namespace physicalData;
  * 3) ... 2+n) ring polymer spring energies
  *
  * @param step
- * @param loopTime
- * @param data
+ * @param dataVector
  */
 void RingPolymerEnergyOutput::write(
     const size_t                     step,

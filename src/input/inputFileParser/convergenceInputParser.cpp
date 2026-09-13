@@ -39,22 +39,21 @@ using namespace exc;
  * @brief Constructor
  *
  * @details following keywords are added:
- * - energy-conv-strategy <string>
+ * - energy-conv-strategy "<string>"
  *
- * - use-energy-conv <bool>
- * - use-force-conv <bool>
- * - use-max-force-conv <bool>
- * - use-rms-force-conv <bool>
+ * - use-energy-conv "<bool>"
+ * - use-force-conv "<bool>"
+ * - use-max-force-conv "<bool>"
+ * - use-rms-force-conv "<bool>"
  *
- * - energy-conv <double>
- * - rel-energy-conv <double>
- * - abs-energy-conv <double>
+ * - energy-conv "<double>"
+ * - rel-energy-conv "<double>"
+ * - abs-energy-conv "<double>"
  *
- * - force-conv <double>
- * - max-force-conv <double>
- * - rms-force-conv <double>
+ * - force-conv "<double>"
+ * - max-force-conv "<double>"
+ * - rms-force-conv "<double>"
  *
- * @param engine The engine
  */
 ConvInputParser::ConvInputParser()
 {

@@ -29,9 +29,9 @@
 namespace integrator
 {
     /**
-     * @class VelocityVerlet inherits Integrator
+     * @brief VelocityVerlet inherits Integrator
      *
-     * @brief VelocityVerlet is a class for velocity verlet integrator
+     * @details VelocityVerlet is a class for velocity verlet integrator
      *
      */
     class VelocityVerlet : public Integrator

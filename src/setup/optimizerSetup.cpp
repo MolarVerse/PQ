@@ -202,7 +202,7 @@ std::shared_ptr<LearningRateStrategy> OptimizerSetup::setupLearningRateStrategy(
 /**
  * @brief setup min max learning rate
  *
- * @param learningRateStrategy as shared pointer reference
+ * @param lrStrategy as shared pointer reference
  */
 void OptimizerSetup::setupMinMaxLR(
     std::shared_ptr<LearningRateStrategy> &lrStrategy

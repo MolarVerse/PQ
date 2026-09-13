@@ -51,7 +51,7 @@ std::string AngleSection::keyword() { return "angles"; }
  * 2. equilibriumAngle
  * 3. forceConstant
  *
- * @param line
+ * @param lineElements
  * @param engine
  *
  * @throw ParameterFileException if number of elements in line

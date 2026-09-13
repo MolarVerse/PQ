@@ -49,8 +49,7 @@ LennardJonesPair::LennardJonesPair(
  * @brief Construct a new Lennard Jones Pair:: Lennard Jones Pair object
  *
  * @param cutOff
- * @param c6
- * @param c12
+ * @param params
  */
 LennardJonesPair::LennardJonesPair(const double cutOff, const LJParams &params)
     : NonCoulombPair(cutOff), _params(params)
@@ -63,8 +62,7 @@ LennardJonesPair::LennardJonesPair(const double cutOff, const LJParams &params)
  * @param cutOff
  * @param energyCutoff
  * @param forceCutoff
- * @param c6
- * @param c12
+ * @param params
  */
 LennardJonesPair::LennardJonesPair(
     const double    cutOff,

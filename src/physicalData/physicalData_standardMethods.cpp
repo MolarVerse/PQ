@@ -212,7 +212,7 @@ void PhysicalData::setMomentum(const linearAlgebra::Vec3D& momentum)
 /**
  * @brief set the angular momentum
  *
- * @param vec
+ * @param angularMomentum
  */
 void PhysicalData::setAngularMomentum(
     const linearAlgebra::Vec3D& angularMomentum

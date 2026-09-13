@@ -50,9 +50,8 @@ using std::format;
  * object
  *
  * @details following keywords are added to the _keywordFuncMap,
- * _keywordRequiredMap and _keywordCountMap: 1) jobtype <string> (required)
+ * _keywordRequiredMap and _keywordCountMap: 1) jobtype "<string>" (required)
  *
- * @param engine
  */
 GeneralInputParser::GeneralInputParser()
 {
@@ -245,6 +244,7 @@ void GeneralInputParser::parseFloatingPointType(
  * @details value not set as default
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throws InputFileException if random seed value is invalid, negative, or
  * exceeds uint_fast32_t range

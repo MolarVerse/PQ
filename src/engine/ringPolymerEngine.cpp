@@ -44,7 +44,7 @@ using namespace physicalData;
 /**
  * @brief resizes the vector of physical data for the ring polymer beads
  *
- * @param physicalData
+ * @param numberOfBeads
  */
 void RingPolymerEngine::resizeRingPolymerBeadPhysicalData(
     const size_t numberOfBeads

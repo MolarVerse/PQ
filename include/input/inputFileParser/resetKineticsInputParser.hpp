@@ -31,9 +31,9 @@
 namespace input
 {
     /**
-     * @class ResetKineticsInputParser inherits from InputFileParser
+     * @brief ResetKineticsInputParser inherits from InputFileParser
      *
-     * @brief Parses the reset kinetics commands in the input file
+     * @details Parses the reset kinetics commands in the input file
      *
      */
     class ResetKineticsInputParser : public InputFileParser

@@ -46,7 +46,7 @@ using namespace engine;
  * 4. atom index 4
  * 5. improper dihedral type
  *
- * @param line
+ * @param lineElements
  * @param engine
  *
  * @throws TopologyException if number of elements in line is

@@ -51,7 +51,7 @@ void SimulationBoxSettings::setBoxSet(const bool boxSet) { _isBoxSet = boxSet; }
 /**
  * @brief Set the initialize velocities
  *
- * @param initVelocities
+ * @param initializeVelocities
  */
 void SimulationBoxSettings::setInitializeVelocities(
     const InitVelocities initializeVelocities

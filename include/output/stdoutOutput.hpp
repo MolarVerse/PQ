@@ -29,9 +29,9 @@
 namespace out
 {
     /**
-     * @class StdoutOutput inherits from Output
+     * @brief StdoutOutput inherits from Output
      *
-     * @brief Output file for stdout
+     * @details Output file for stdout
      *
      */
     class StdoutOutput : public Output

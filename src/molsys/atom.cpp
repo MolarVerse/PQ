@@ -91,7 +91,7 @@ void Atom::scaleVelocity(const Vec3D &scaleFactor) { _velocity *= scaleFactor; }
 /**
  * @brief scales the velocities of the atom in orthogonal space
  *
- * @param scalingFactor
+ * @param scalingTensor
  * @param box
  */
 void Atom::scaleVelocityOrthogonalSpace(
@@ -404,7 +404,7 @@ void Atom::setPartialCharge(const double partialCharge)
 /**
  * @brief set the qm charge of the atom
  *
- * @param partialCharge
+ * @param charge
  */
 void Atom::setQMCharge(const double charge) { _qmCharge = charge; }
 
@@ -507,23 +507,29 @@ void Atom::setOuterForceToZero() { _forceOuter = {0.0, 0.0, 0.0}; }
 /**
  * @brief set the old position of the atom
  *
- * @param position
+ * @param positionOld
  */
-void Atom::setPositionOld(const Vec3D &position) { _positionOld = position; }
+void Atom::setPositionOld(const Vec3D &positionOld)
+{
+    _positionOld = positionOld;
+}
 
 /**
  * @brief set the old velocity of the atom
  *
- * @param velocity
+ * @param velocityOld
  */
-void Atom::setVelocityOld(const Vec3D &velocity) { _velocityOld = velocity; }
+void Atom::setVelocityOld(const Vec3D &velocityOld)
+{
+    _velocityOld = velocityOld;
+}
 
 /**
  * @brief set the old force of the atom
  *
- * @param force
+ * @param forceOld
  */
-void Atom::setForceOld(const Vec3D &force) { _forceOld = force; }
+void Atom::setForceOld(const Vec3D &forceOld) { _forceOld = forceOld; }
 
 /*
  * @brief reset the qm charge of the atom

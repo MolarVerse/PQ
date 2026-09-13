@@ -214,7 +214,6 @@ void InterWaterStrategyCellList::calculate(
 /**
  * @brief Compute core-to-outer Coulomb interactions using the cell list.
  *
- * @param state Inter-water parameters.
  * @param simBox Simulation box containing molecules.
  * @param physicalData Physical data to store energy results.
  * @param coulombPotential Coulomb potential evaluator.

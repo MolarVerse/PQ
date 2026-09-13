@@ -52,11 +52,11 @@ std::string DihedralSection::keyword() { return "dihedrals"; }
  * 3. periodicity
  * 4. phaseShift
  *
- * @param line
+ * @param lineElements
  * @param engine
  *
  * @throw ParameterFileException if number of elements in line
- * is not 3
+ * is not 4
  * @throw ParameterFileException if periodicity is negative
  */
 void DihedralSection::processSection(

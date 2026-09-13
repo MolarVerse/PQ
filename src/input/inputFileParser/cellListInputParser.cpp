@@ -44,10 +44,9 @@ using namespace exc;
  * List object
  *
  * @details following keywords are added to the _keywordFuncMap,
- * _keywordRequiredMap and _keywordCountMap: 1) cell-list <on/off> 2)
- * cell-number <size_t>
+ * _keywordRequiredMap and _keywordCountMap: 1) cell-list "<on/off>"
+ * 2) cell-number "<size_t>"
  *
- * @param engine
  * @param cellListPtr pointer to the cell list object
  */
 CellListInputParser::CellListInputParser(
@@ -75,6 +74,7 @@ CellListInputParser::CellListInputParser(
  * 2) "off" - cell-list is deactivated (default)
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throws InputFileException if cell-list keyword is not "on"
  * or "off"
@@ -112,6 +112,7 @@ void CellListInputParser::parseCellListActivated(
  * @details default value is 7
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throws InputFileException if number of cells is not
  * positive

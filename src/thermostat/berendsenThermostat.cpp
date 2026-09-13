@@ -54,9 +54,7 @@ BerendsenThermostat::BerendsenThermostat(
 }
 
 /**
- * @brief apply thermostat - Berendsen
- *
- * @link https://doi.org/10.1063/1.448118
+ * @brief apply thermostat - [Berendsen](https://doi.org/10.1063/1.448118)
  *
  * @param simulationBox
  * @param data

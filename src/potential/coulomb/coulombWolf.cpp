@@ -58,12 +58,11 @@ CoulombWolf::CoulombWolf(const double coulRC, const double kappa)
 }
 
 /**
- * @brief calculate the energy and force of the Coulomb potential with Wolf
- * summation as long range correction
- *
- * @link https://doi.org/10.1063/1.478738
+ * @brief calculate the energy and force of the Coulomb potential with [Wolf
+ * summation](https://doi.org/10.1063/1.478738) as long range correction
  *
  * @param distance
+ * @param chargeProduct
  * @return std::pair<double, double>
  */
 std::pair<double, double> CoulombWolf::calculate(

@@ -162,6 +162,7 @@
         "forcexyz",
         "freset",
         "fscale",
+        "gromacs",
         "GTEST",
         "guffdat",
         "GUFFDATEXCEPTION",

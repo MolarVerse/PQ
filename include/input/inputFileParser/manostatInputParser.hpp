@@ -31,9 +31,9 @@
 namespace input
 {
     /**
-     * @class ManostatInputParser inherits from InputFileParser
+     * @brief ManostatInputParser inherits from InputFileParser
      *
-     * @brief Parses the manostat commands in the input file
+     * @details Parses the manostat commands in the input file
      *
      */
     class ManostatInputParser : public InputFileParser

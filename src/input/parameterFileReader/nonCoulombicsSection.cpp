@@ -56,7 +56,7 @@ std::string NonCoulombicsSection::keyword() { return "noncoulombics"; }
  * @note type of forceField can be given as second argument
  *       default is lj (Lennard Jones) which overrides default of guff
  *
- * @param line
+ * @param lineElements
  * @param engine
  *
  * @throw ParameterFileException if type of nonCoulombic is not
@@ -104,7 +104,7 @@ void NonCoulombicsSection::processHeader(
 /**
  * @brief determines which nonCoulombic type is processed
  *
- * @param line
+ * @param lineElements
  * @param engine
  *
  * @throw ParameterFileException if nonCoulombic type is not
@@ -149,7 +149,7 @@ void NonCoulombicsSection::processSection(
  * 5. cutOff (optional); if not given or -1, the global Coulomb radius cutOff is
  * used
  *
- * @param line
+ * @param lineElements
  * @param engine
  *
  * @throw ParameterFileException if number of elements in line
@@ -208,7 +208,7 @@ void NonCoulombicsSection::processLJ(
  * 6. cutOff (optional); if not given or -1, the global Coulomb radius cutOff is
  * used
  *
- * @param line
+ * @param lineElements
  * @param engine
  *
  * @throw ParameterFileException if number of elements in line
@@ -267,7 +267,7 @@ void NonCoulombicsSection::processBuckingham(
  * 6. cutOff (optional); if not given or -1, the global Coulomb radius cutOff is
  * used
  *
- * @param line
+ * @param lineElements
  * @param engine
  *
  * @throw ParameterFileException if number of elements in line

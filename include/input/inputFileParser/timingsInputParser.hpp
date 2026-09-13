@@ -31,9 +31,9 @@
 namespace input
 {
     /**
-     * @class TimingsInputParser inherits from InputFileParser
+     * @brief TimingsInputParser inherits from InputFileParser
      *
-     * @brief Parses the timings commands in the input file
+     * @details Parses the timings commands in the input file
      *
      */
     class TimingsInputParser : public InputFileParser

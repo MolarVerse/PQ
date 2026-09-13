@@ -57,7 +57,7 @@ IntraNonBondedMap::IntraNonBondedMap(
  *
  * @param coulombPotential
  * @param nonCoulombPotential
- * @param box
+ * @param simulationBox
  * @param physicalData
  */
 void IntraNonBondedMap::calculate(
@@ -103,11 +103,11 @@ void IntraNonBondedMap::calculate(
  * @brief calculate the intra non bonded interactions for a single atomic pair
  * within a single molecule
  *
- * @param atomIndex1
+ * @param atomIdx1
  * @param atomIndex2AsInt
  * @param box
- * @param coulombPotential
- * @param nonCoulombPotential
+ * @param coulPot
+ * @param nonCoulPot
  * @return std::pair<double, double> - the coulomb and non-coulomb energy for
  * the interaction
  */

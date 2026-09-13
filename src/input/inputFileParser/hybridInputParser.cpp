@@ -50,10 +50,8 @@ using namespace utilities;
  * @brief Construct a new HybridInputParser:: HybridInputParser object
  *
  * @details following keywords are added to the _keywordFuncMap,
- * _keywordRequiredMap and _keywordCountMap: 1) qm_prog <string> 2) qm_script
- * <string>
- *
- * @param engine
+ * _keywordRequiredMap and _keywordCountMap: 1) qm_prog "<string>" 2) qm_script
+ * "<string>"
  */
 HybridInputParser::HybridInputParser()
 {

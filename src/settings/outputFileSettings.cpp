@@ -55,7 +55,7 @@ void OutputFileSettings::setOutputFrequency(const size_t outputFreq)
 /**
  * @brief sets the file prefix for all output files
  *
- * @param restartFileName
+ * @param prefix
  */
 void OutputFileSettings::setFilePrefix(const std::string_view prefix)
 {
@@ -66,7 +66,7 @@ void OutputFileSettings::setFilePrefix(const std::string_view prefix)
 /**
  * @brief replaces the default restart file name
  *
- * @param fileName
+ * @param prefix
  */
 void OutputFileSettings::replaceDefaultValues(const std::string &prefix)
 {

@@ -49,9 +49,7 @@ MorsePair::MorsePair(
  * @brief Construct a new Morse Pair:: Morse Pair object
  *
  * @param cutOff
- * @param dissociationEnergy
- * @param wellWidth
- * @param equilibriumDistance
+ * @param params
  */
 MorsePair::MorsePair(const double cutOff, const MorseParams &params)
     : NonCoulombPair(cutOff), _params(params)

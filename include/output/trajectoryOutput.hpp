@@ -42,9 +42,9 @@ namespace configurator
 namespace out
 {
     /**
-     * @class TrajectoryOutput inherits from Output
+     * @brief TrajectoryOutput inherits from Output
      *
-     * @brief Output for xyz, vel, force, charges files
+     * @details Output for xyz, vel, force, charges files
      *
      */
     class TrajectoryOutput : public Output

@@ -140,6 +140,7 @@ INFO);
     /**
      * @brief Message to inform about reading a file
      *
+     * @param message
      * @param file
      * @return std::string
      */
