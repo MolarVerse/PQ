@@ -64,7 +64,7 @@ void setup::setupRingPolymer(Engine &engine)
         return;
     }
 
-    output::StdoutOutput::writeSetup("Ring Polymer MD (RPMD)");
+    out::StdoutOutput::writeSetup("Ring Polymer MD (RPMD)");
     engine.getLogOutput().writeSetup("Ring Polymer MD (RPMD)");
 
     RingPolymerSetup ringPolySetup(dynamic_cast<RingPolymerEngine &>(engine));
@@ -134,7 +134,7 @@ void RingPolymerSetup::initializeBeads()
         const auto       &file = FileSettings::getRingPolymerStartFileName();
 
         log.writeRead(msg, file);
-        output::StdoutOutput::writeRead(msg, file);
+        out::StdoutOutput::writeRead(msg, file);
 
         readRingPolymerRestartFile(_engine);
     }

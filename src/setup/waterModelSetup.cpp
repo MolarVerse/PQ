@@ -64,7 +64,7 @@ using namespace waterModel;
  */
 void setup::setupWaterModel(Engine &engine)
 {
-    output::StdoutOutput::writeSetup("Water model");
+    out::StdoutOutput::writeSetup("Water model");
     engine.getLogOutput().writeSetup("Water model");
 
     WaterModelSetup waterModelSetup(dynamic_cast<MDEngine &>(engine));

@@ -72,7 +72,7 @@ void input::intraNonBondedReader::readIntraNonBondedFile(Engine &engine)
 
     const auto filename = FileSettings::getIntraNonBondedFileName();
 
-    output::StdoutOutput::writeRead("Intra Non-Bonded File", filename);
+    out::StdoutOutput::writeRead("Intra Non-Bonded File", filename);
     log.writeRead("Intra Non-Bonded File", filename);
 
     IntraNonBondedReader reader(filename, engine);

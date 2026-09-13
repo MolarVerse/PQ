@@ -46,19 +46,19 @@ namespace pot
 
        public:
         explicit MorsePair(
-            ExtVdwType   vanDerWaalsType1,
-            ExtVdwType   vanDerWaalsType2,
-            double       cutOff,
-            MorseParams &params
+            ExtVdwType         vanDerWaalsType1,
+            ExtVdwType         vanDerWaalsType2,
+            double             cutOff,
+            const MorseParams &params
         );
 
-        explicit MorsePair(double cutOff, MorseParams &params);
+        explicit MorsePair(double cutOff, const MorseParams &params);
 
         explicit MorsePair(
-            double       cutOff,
-            double       energyCutoff,
-            double       forceCutoff,
-            MorseParams &params
+            double             cutOff,
+            double             energyCutoff,
+            double             forceCutoff,
+            const MorseParams &params
         );
 
         // TODO: we need to explicitly delete it to not implicitly create it

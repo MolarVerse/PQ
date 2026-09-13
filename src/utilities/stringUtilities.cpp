@@ -164,13 +164,15 @@ std::string utilities::toLowerCopy(const std::string_view myString)
  */
 std::string utilities::toLowerAndReplaceDashesCopy(std::string myString)
 {
+    std::string result;
     for (char &character : myString)
     {
         character = static_cast<char>(::tolower(character));
         if (character == '-')
             character = '_';
+        result += character;
     }
-    return myString;
+    return result;
 }
 
 /**

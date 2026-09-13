@@ -81,15 +81,15 @@ namespace out
                     );
                     buffer << std::format(
                         "{:19.8e}\t{:19.8e}\t{:19.8e}\t",
-                        vx,
-                        vy,
-                        vz
+                        velX,
+                        velY,
+                        velZ
                     );
                     buffer << std::format(
                         "{:15.8f}\t{:15.8f}\t{:15.8f}",
-                        fx,
-                        fy,
-                        fz
+                        forceX,
+                        forceY,
+                        forceZ
                     );
 
                     buffer << '\n';

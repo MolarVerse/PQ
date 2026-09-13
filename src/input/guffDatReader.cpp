@@ -72,7 +72,7 @@ void input::guffdat::readGuffDat(engine::Engine &engine)
     if (!isNeeded(engine))
         return;
 
-    output::StdoutOutput::writeRead(
+    out::StdoutOutput::writeRead(
         "Guffdat File",
         FileSettings::getGuffDatFileName()
     );

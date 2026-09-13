@@ -63,7 +63,7 @@ using namespace out;
  */
 void setup::molsys::setupSimulationBox(Engine &engine)
 {
-    output::StdoutOutput::writeSetup("simulation box");
+    out::StdoutOutput::writeSetup("simulation box");
     engine.getLogOutput().writeSetup("simulation box");
 
     SimulationBoxSetup simulationBoxSetup(engine);
@@ -373,7 +373,7 @@ void SimulationBoxSetup::checkBoxSettings()
         simBox.setDensity(density);
 
         _engine.getLogOutput().writeDensityWarning();
-        output::StdoutOutput::writeDensityWarning();
+        out::StdoutOutput::writeDensityWarning();
     }
 
     _engine.getPhysicalData().setVolume(simBox.getVolume());
@@ -517,7 +517,7 @@ void SimulationBoxSetup::writeSetupInfo() const
                 FileSettings::getStartFileName()
             )
         );
-        output::StdoutOutput::writeSetupWarning(
+        out::StdoutOutput::writeSetupWarning(
             std::format(
                 "Ignoring 'init_velocities' because non-zero velocities in "
                 "\"{}\"",

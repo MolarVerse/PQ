@@ -45,7 +45,7 @@ void setup::setupForceField(Engine &engine)
     if (!ForceFieldSettings::isActive())
         return;
 
-    output::StdoutOutput::writeSetup("Force Field");
+    out::StdoutOutput::writeSetup("Force Field");
     engine.getLogOutput().writeSetup("Force Field");
 
     ForceFieldSetup forceFieldSetup(engine);

@@ -55,13 +55,16 @@ namespace
     {
         const size_t numberOfAtoms = molecule.getNumberOfAtoms();
 
-        for (size_t i = 0; i < numberOfAtoms; ++i)
+        for (AtomIndex i{0}; i.get() < numberOfAtoms; ++i)
         {
             const size_t externalAtomType = molecule.getExternalAtomType(i);
-            molecule.addExternalToInternalAtomTypeElement(externalAtomType, i);
+            molecule.addExternalToInternalAtomTypeElement(
+                externalAtomType,
+                i.get()
+            );
         }
 
-        for (size_t i = 0; i < numberOfAtoms; ++i)
+        for (AtomIndex i{0}; i.get() < numberOfAtoms; ++i)
         {
             const size_t externalAtomType = molecule.getExternalAtomType(i);
             molecule.addAtomType(molecule.getInternalAtomType(externalAtomType)
@@ -94,7 +97,7 @@ void input::molDescriptor::readMolDescriptor(Engine &engine)
 {
     const auto filename = FileSettings::getMolDescriptorFileName();
 
-    output::StdoutOutput::writeRead("Moldescriptor File", filename);
+    out::StdoutOutput::writeRead("Moldescriptor File", filename);
     engine.getLogOutput().writeRead("Moldescriptor File", filename);
 
     MoldescriptorReader reader(engine);

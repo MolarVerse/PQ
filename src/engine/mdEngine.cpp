@@ -85,7 +85,7 @@ void MDEngine::run()
     _engineOutput.writeTimingsFile();
 
     _engineOutput.getLogOutput().writeEndedNormally(elapsedTime);
-    output::StdoutOutput::writeEndedNormally(elapsedTime);
+    out::StdoutOutput::writeEndedNormally(elapsedTime);
 }
 
 /**

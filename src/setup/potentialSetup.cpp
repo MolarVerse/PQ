@@ -52,7 +52,7 @@ using namespace exc;
  */
 void setup::setupPotential(Engine &engine)
 {
-    output::StdoutOutput::writeSetup("MM potential");
+    out::StdoutOutput::writeSetup("MM potential");
     engine.getLogOutput().writeSetup("MM potential");
 
     PotentialSetup potentialSetup(engine);

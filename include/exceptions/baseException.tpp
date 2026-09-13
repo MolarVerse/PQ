@@ -69,7 +69,7 @@ namespace exc
     )
     {
         const Color::Modifier modifier(color);
-        const Color::Modifier def(Color::FG_DEFAULT);
+        const Color::Modifier def(Color::Code::FG_DEFAULT);
 
         std::cout << modifier << exceptionMsg << def << '\n' << std::flush;
     }

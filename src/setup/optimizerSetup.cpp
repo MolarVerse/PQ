@@ -64,7 +64,7 @@ void setup::setupOptimizer(Engine &engine)
     if (!Settings::isOptJobType())
         return;
 
-    output::StdoutOutput::writeSetup("Optimizer");
+    out::StdoutOutput::writeSetup("Optimizer");
     engine.getLogOutput().writeSetup("Optimizer");
 
     OptimizerSetup optimizerSetup(dynamic_cast<OptEngine &>(engine));

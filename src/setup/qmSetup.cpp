@@ -65,7 +65,7 @@ void setup::setupQM(Engine &engine)
     if (!Settings::isQMActivated())
         return;
 
-    output::StdoutOutput::writeSetup("QM runner");
+    out::StdoutOutput::writeSetup("QM runner");
     engine.getLogOutput().writeSetup("QM runner");
 
     // Try to cast to QMCapableEngine first (covers both QMMDEngine and
@@ -369,14 +369,14 @@ void QMSetup::setupWriteInfo() const
         {
             logOutput.writeEmptyLine();
             logOutput.writeSetupWarning(threeOBThirdOrderMsg);
-            output::StdoutOutput::writeSetupWarning(threeOBThirdOrderMsg);
+            out::StdoutOutput::writeSetupWarning(threeOBThirdOrderMsg);
         }
 
         if (slakosType == SlakosType::THREEOB && ishubbardDerivsSet)
         {
             logOutput.writeEmptyLine();
             logOutput.writeSetupWarning(threeOBHubbardDerivsMsg);
-            output::StdoutOutput::writeSetupWarning(threeOBHubbardDerivsMsg);
+            out::StdoutOutput::writeSetupWarning(threeOBHubbardDerivsMsg);
         }
     }
 

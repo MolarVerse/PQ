@@ -55,7 +55,7 @@ using namespace constants;
  */
 void setup::setupThermostat(Engine &engine)
 {
-    output::StdoutOutput::writeSetup("thermostat");
+    out::StdoutOutput::writeSetup("thermostat");
     engine.getLogOutput().writeSetup("thermostat");
 
     ThermostatSetup thermostatSetup(dynamic_cast<MDEngine &>(engine));

@@ -22,6 +22,8 @@
 
 #include "settings.hpp"
 
+#include <iostream>
+#include <ostream>
 #include <string>   // for operator==, string
 #include <utility>
 
@@ -112,8 +114,6 @@ void Settings::setJobtype(JobType jobtype)
         case NONE: deactivateRingPolymerMD(); break;
         case RING_POLYMER_QM_MD: activateRingPolymerMD(); break;
     }
-
-    std::unreachable();
 }
 
 /**
@@ -211,7 +211,11 @@ void Settings::setIntegratorType(IntegratorType integratorType)
  *
  * @return JobType
  */
-JobType Settings::getJobtype() { return _jobtype; }
+JobType Settings::getJobtype()
+{
+    std::cout << "Selected jobtype: " << string(_jobtype) << std::endl;
+    return _jobtype;
+}
 
 /**
  * @brief get the floating point type

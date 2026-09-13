@@ -26,7 +26,8 @@
 #include <string_view>   // for string_view
 
 #include "baseException.hpp"
-#include "color.hpp"       // for Code
+#include "color.hpp"   // for Code
+#include "exceptionTypes.hpp"
 #include "gtest/gtest.h"   // for Message, TestPartResult
 
 /**
@@ -36,9 +37,13 @@
 TEST(TestColor, redException)
 {
     testing::internal::CaptureStdout();
-    auto        customException = exc::BaseException<Color::FG_RED>("test");
-    std::string output          = testing::internal::GetCapturedStdout();
-    EXPECT_STREQ(output.c_str(), "\033[31mtest\033[39m\n");
+    auto customException =
+        exc::BaseException<Color::Code::FG_RED, ExceptionType::InputFileError>(
+            "test"
+        );
+    const auto *const _      = customException.what();
+    std::string       output = testing::internal::GetCapturedStdout();
+    EXPECT_STREQ(output.c_str(), "\033[31mInputFileError\033[39m\n");
 }
 
 /**
@@ -48,11 +53,10 @@ TEST(TestColor, redException)
 TEST(TestColor, orangeException)
 {
     testing::internal::CaptureStdout();
-    auto customException = exc::BaseException<Color::FG_ORANGE>("test");
-    customException::CustomException::colorfulOutput(
+    auto customException = exc::BaseException<
         Color::Code::FG_ORANGE,
-        "test"
-    );
-    std::string output = testing::internal::GetCapturedStdout();
-    EXPECT_STREQ(output.c_str(), "\033[33mtest\033[39m\n");
+        ExceptionType::CellListError>("test");
+    const auto *const _      = customException.what();
+    std::string       output = testing::internal::GetCapturedStdout();
+    EXPECT_STREQ(output.c_str(), "\033[33mCellListError\033[39m\n");
 }

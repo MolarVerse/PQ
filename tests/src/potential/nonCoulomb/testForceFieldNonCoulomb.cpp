@@ -725,7 +725,7 @@ TEST_F(TestNonCoulombPotentialFF, sortNonCoulombicsPairs)
     pair4->setInternalType2(VdwType{4});
     vector.push_back(pair4);
 
-    potential::ForceFieldNonCoulomb::sortNonCoulombicsPairs(vector);
+    pot::ForceFieldNonCoulomb::sortNonCoulombicsPairs(vector);
 
     EXPECT_EQ(vector[0]->getInternalType1(), VdwType{1});
     EXPECT_EQ(vector[0]->getInternalType2(), VdwType{4});

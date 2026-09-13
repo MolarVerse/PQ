@@ -48,10 +48,10 @@ namespace pot
 
        public:
         explicit LennardJonesPair(
-            ExtVdwType vanDerWaalsType1,
-            ExtVdwType vanDerWaalsType2,
-            double     cutOff,
-            LJParams  &params
+            ExtVdwType      vanDerWaalsType1,
+            ExtVdwType      vanDerWaalsType2,
+            double          cutOff,
+            const LJParams &params
         );
 
         explicit LennardJonesPair(double cutOff, const LJParams &params);

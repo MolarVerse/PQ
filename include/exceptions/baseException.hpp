@@ -72,7 +72,7 @@ namespace exc
      * @tparam Type  The type of exception being thrown
      */
     template <
-        Color::Code   colorCode     = Color::FG_RED,
+        Color::Code   colorCode     = Color::Code::FG_RED,
         ExceptionType exceptionType = ExceptionType::Undefined>
     class BaseException : public PQException
     {

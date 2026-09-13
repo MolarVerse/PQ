@@ -41,9 +41,7 @@ MorsePair::MorsePair(
     const MorseParams &params
 )
     : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff),
-      _dissociationEnergy(dissociationEnergy),
-      _wellWidth(wellWidth),
-      _equilibriumDistance(equilibriumDistance)
+      _params(params)
 {
 }
 
@@ -51,20 +49,10 @@ MorsePair::MorsePair(
  * @brief Construct a new Morse Pair:: Morse Pair object
  *
  * @param cutOff
- * @param dissociationEnergy
- * @param wellWidth
- * @param equilibriumDistance
+ * @param params
  */
-MorsePair::MorsePair(
-    const double cutOff,
-    const double dissociationEnergy,
-    const double wellWidth,
-    const double equilibriumDistance
-)
-    : NonCoulombPair(cutOff),
-      _dissociationEnergy(dissociationEnergy),
-      _wellWidth(wellWidth),
-      _equilibriumDistance(equilibriumDistance)
+MorsePair::MorsePair(const double cutOff, const MorseParams &params)
+    : NonCoulombPair(cutOff), _params(params)
 {
 }
 
@@ -82,10 +70,7 @@ MorsePair::MorsePair(
     double             forceCutoff,
     const MorseParams &params
 )
-    : NonCoulombPair(cutOff, energyCutoff, forceCutoff),
-      _dissociationEnergy(dissociationEnergy),
-      _wellWidth(wellWidth),
-      _equilibriumDistance(equilibriumDistance)
+    : NonCoulombPair(cutOff, energyCutoff, forceCutoff), _params(params)
 {
 }
 

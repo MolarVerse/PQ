@@ -282,7 +282,7 @@ void HessianEngine::run()
         timings::GlobalTimer::get().calculateElapsedTime() * constants::MS_TO_S;
 
     _engineOutput.getLogOutput().writeEndedNormally(elapsedTime);
-    output::StdoutOutput::writeEndedNormally(elapsedTime);
+    out::StdoutOutput::writeEndedNormally(elapsedTime);
 }
 
 void HessianEngine::writeOutput() {}
@@ -385,7 +385,7 @@ void HessianEngine::runOptimization()
     const auto msg = std::format("Optimizer converged after {} epochs.", _step);
 
     getLogOutput().writeInfo(msg);
-    output::StdoutOutput::writeInfo(msg);
+    out::StdoutOutput::writeInfo(msg);
 }
 
 void HessianEngine::takeOptimizationStep()
@@ -416,12 +416,12 @@ void HessianEngine::takeOptimizationStep()
                 _optimizer->getNEpochs()
             );
             getLogOutput().writeOptWarning(headerMessage);
-            output::StdoutOutput::writeOptWarning(headerMessage);
+            out::StdoutOutput::writeOptWarning(headerMessage);
 
             for (const auto &message : msg)
             {
                 getLogOutput().writeOptWarning(message);
-                output::StdoutOutput::writeOptWarning(message);
+                out::StdoutOutput::writeOptWarning(message);
             }
         }
     }

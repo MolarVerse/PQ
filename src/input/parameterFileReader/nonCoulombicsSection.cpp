@@ -247,7 +247,8 @@ void NonCoulombicsSection::processBuckingham(
 
     auto      &pot       = engine.getPotential()->getNonCoulombPotential();
     auto      &potential = dynamic_cast<ForceFieldNonCoulomb &>(pot);
-    const auto params = BuckinghamParams{.scaling = a, .dRho = dRho, .c6 = c6};
+    const auto params =
+        BuckinghamParams{.scaling = scale, .dRho = dRho, .c6 = c6};
 
     potential.addNonCoulombicPair(
         std::make_shared<BuckinghamPair>(atomType1, atomType2, cutOff, params)

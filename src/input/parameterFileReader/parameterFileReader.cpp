@@ -166,7 +166,7 @@ void input::parameterFile::readParameterFile(Engine &engine)
 
     const auto filename = FileSettings::getParameterFilename();
 
-    output::StdoutOutput::writeRead("Parameter File", filename);
+    out::StdoutOutput::writeRead("Parameter File", filename);
     engine.getLogOutput().writeRead("Parameter File", filename);
 
     ParameterFileReader parameterFileReader(filename, engine);

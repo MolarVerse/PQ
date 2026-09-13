@@ -96,7 +96,7 @@ void setup::setupRequestedJob(const std::string& inputFileName, Engine& engine)
  *
  * @param engine
  */
-void setup::startSetup() { output::StdoutOutput::writeHeader(); }
+void setup::startSetup() { out::StdoutOutput::writeHeader(); }
 
 /**
  * @brief end the setup
@@ -105,7 +105,7 @@ void setup::startSetup() { output::StdoutOutput::writeHeader(); }
  */
 void setup::endSetup(Engine& engine)
 {
-    output::StdoutOutput::writeSetupCompleted();
+    out::StdoutOutput::writeSetupCompleted();
     engine.getLogOutput().writeSetupCompleted();
 }
 

@@ -36,7 +36,7 @@
 TEST_F(TestStdoutOutput, writeHeader)
 {
     testing::internal::CaptureStdout();
-    output::StdoutOutput::writeHeader();
+    out::StdoutOutput::writeHeader();
     std::string output = testing::internal::GetCapturedStdout();
 
     std::stringstream sstream(output);
@@ -128,7 +128,7 @@ TEST_F(TestStdoutOutput, writeHeader)
 TEST_F(TestStdoutOutput, writeEndedNormally)
 {
     testing::internal::CaptureStdout();
-    output::StdoutOutput::writeEndedNormally(0.1);
+    out::StdoutOutput::writeEndedNormally(0.1);
     std::string output = testing::internal::GetCapturedStdout();
 
     std::stringstream sstream(output);
@@ -181,7 +181,7 @@ TEST_F(TestStdoutOutput, writeEndedNormally)
 TEST_F(TestStdoutOutput, writeDensityWarning)
 {
     testing::internal::CaptureStdout();
-    output::StdoutOutput::writeDensityWarning();
+    out::StdoutOutput::writeDensityWarning();
     const std::string output = testing::internal::GetCapturedStdout();
 
     EXPECT_EQ(

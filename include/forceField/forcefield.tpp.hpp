@@ -52,8 +52,8 @@ namespace forceField
      */
     template <typename T>
     double correctLinker(
-        const pot::CoulombPotential &coulPot,
-        pot::NonCoulombPotential    &nonCoulPot,
+        const pot::CoulombPotential &coulombPotential,
+        pot::NonCoulombPotential    &nonCoulombPotential,
         physicalData::PhysicalData  &physicalData,
         const molsys::Molecule      *molecule1,
         const molsys::Molecule      *molecule2,

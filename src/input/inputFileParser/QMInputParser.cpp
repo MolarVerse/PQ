@@ -351,7 +351,7 @@ void QMInputParser::parseMaceModel(
     if (lineElements[0] == "mace_model_size")
     {
         _logOutput->queueWarning(modelSizeWarning);
-        output::StdoutOutput::writeSetupWarning(modelSizeWarning);
+        out::StdoutOutput::writeSetupWarning(modelSizeWarning);
     }
 
     const auto size = toLowerAndReplaceDashesCopy(lineElements[2]);
