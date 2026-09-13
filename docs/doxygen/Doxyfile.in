@@ -8,6 +8,7 @@ HAVE_DOT              = YES
 UML_LOOK              = YES
 CALL_GRAPH            = YES
 CALLER_GRAPH          = YES
+DOT_GRAPH_MAX_NODES   = 200
 
 OUTPUT_DIRECTORY      = @CMAKE_CURRENT_BINARY_DIR@/
 INPUT                 = @CMAKE_SOURCE_DIR@/src/ @CMAKE_SOURCE_DIR@/docs/ @CMAKE_SOURCE_DIR@/include/ @CMAKE_SOURCE_DIR@/tests/ @CMAKE_SOURCE_DIR@/benchmarks/ @CMAKE_SOURCE_DIR@/apps/
@@ -18,3 +19,7 @@ FULL_SIDEBAR          = YES
 
 HTML_COLORSTYLE       = LIGHT
 WARN_LOGFILE          = @CMAKE_CURRENT_BINARY_DIR@/doxygen_warnings.log
+
+MACRO_EXPANSION        = YES
+EXPAND_ONLY_PREDEF     = YES
+PREDEFINED             = __attribute__(x)=

@@ -34,8 +34,8 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # Build job
-  build:
+  # Runs on every PR and push — confirms the docs actually build cleanly.
+  validate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -59,10 +59,28 @@ jobs:
           cd docs/sphinx/_build/html
           touch .nojekyll
 
-      # Deployment job
-      - name: deploy
+      - name: upload built site
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-site
+          path: docs/sphinx/_build/html
+          retention-days: 1
+
+  # Only runs on push to main, and only if validate succeeded.
+  deploy:
+    needs: validate
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: download built site
+        uses: actions/download-artifact@v4
+        with:
+          name: docs-site
+          path: site
+
+      - name: deploy
         uses: JamesIves/github-pages-deploy-action@releases/v4
         with:
           branch: gh-pages # The branch the action should deploy to.
-          folder: docs/sphinx/_build/html # The folder the action should deploy.
+          folder: site # The folder the action should deploy.
