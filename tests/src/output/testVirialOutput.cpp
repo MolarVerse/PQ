@@ -23,27 +23,15 @@
 #include <gtest/gtest.h>
 
 #include <cstdio>
-#include <fstream>
-#include <sstream>
 #include <string>
 
 #include "physicalData.hpp"
-#include "vector3d.hpp"   // IWYU pragma: keep
+#include "testOutputBase.hpp"
+#include "vector3d.hpp"
 #include "virialOutput.hpp"
 
 using namespace out;
 using physicalData::PhysicalData;
-
-namespace
-{
-    std::string slurp(const std::string &path)
-    {
-        std::ifstream     in(path);
-        std::stringstream ss;
-        ss << in.rdbuf();
-        return ss.str();
-    }
-}   // namespace
 
 TEST(TestVirialOutput, writeEmitsStepAndAllNineTensorComponents)
 {
@@ -90,8 +78,8 @@ TEST(TestVirialOutput, writeEmitsOneLinePerCall)
 
     const auto content  = slurp(path);
     size_t     newlines = 0;
-    for (auto c : content)
-        if (c == '\n')
+    for (auto character : content)
+        if (character == '\n')
             ++newlines;
     EXPECT_EQ(newlines, 3U);
 

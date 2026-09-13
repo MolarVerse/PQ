@@ -81,7 +81,7 @@ CellListInputParser::CellListInputParser(
  */
 void CellListInputParser::parseCellListActivated(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -118,7 +118,7 @@ void CellListInputParser::parseCellListActivated(
  */
 void CellListInputParser::parseNumberOfCells(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);

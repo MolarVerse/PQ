@@ -58,7 +58,7 @@ namespace molsys
 
        public:
         MoleculeType() = default;
-        explicit MoleculeType(const size_t moltype);
+        explicit MoleculeType(size_t moltype);
         explicit MoleculeType(const std::string_view &name);
 
         [[nodiscard]] size_t getNumberOfAtomTypes();
@@ -68,12 +68,12 @@ namespace molsys
          **************************/
 
         void addAtomName(const std::string &atomName);
-        void addExternalAtomType(const size_t externalAtomType);
-        void addPartialCharge(const double partialCharge);
-        void addExternalGlobalVDWType(const ExtVdwType externalGlobalVDWType);
+        void addExternalAtomType(size_t externalAtomType);
+        void addPartialCharge(double partialCharge);
+        void addExternalGlobalVDWType(ExtVdwType externalGlobalVDWType);
 
-        void addExternalToInternalAtomTypeElement(const size_t, const size_t);
-        void addAtomType(const size_t atomType);
+        void addExternalToInternalAtomTypeElement(size_t, size_t);
+        void addAtomType(size_t atomType);
 
         /***************************
          * standard setter methods *
@@ -81,11 +81,11 @@ namespace molsys
 
         void setName(const std::string_view &name);
 
-        void setNumberOfAtoms(const size_t numberOfAtoms);
-        void setMoltype(const size_t moltype);
+        void setNumberOfAtoms(size_t numberOfAtoms);
+        void setMoltype(size_t moltype);
 
-        void setCharge(const int charge);
-        void setPartialCharge(AtomIndex index, const double partialCharge);
+        void setCharge(int charge);
+        void setPartialCharge(AtomIndex index, double partialCharge);
         void setPartialCharges(const std::vector<double> &partialCharges);
 
         /***************************
@@ -96,7 +96,7 @@ namespace molsys
         [[nodiscard]] size_t getMoltype() const;
         [[nodiscard]] size_t getExternalAtomType(AtomIndex index) const;
         [[nodiscard]] size_t getAtomType(AtomIndex index) const;
-        [[nodiscard]] size_t getInternalAtomType(const size_t type) const;
+        [[nodiscard]] size_t getInternalAtomType(size_t type) const;
 
         [[nodiscard]] int    getCharge() const;
         [[nodiscard]] double getPartialCharge(AtomIndex index) const;

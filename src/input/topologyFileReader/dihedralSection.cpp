@@ -63,7 +63,7 @@ void DihedralSection::processSection(
     Engine                   &engine
 )
 {
-    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     if (lineElements.size() != 5 && lineElements.size() != 6)
     {
         throw TopologyException(
@@ -100,7 +100,7 @@ void DihedralSection::processSection(
             );
         }
     }
-    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
     auto atoms = std::vector{atom1, atom2, atom3, atom4};
     std::ranges::sort(atoms);
@@ -149,7 +149,7 @@ std::string DihedralSection::keyword() { return "dihedrals"; }
  *
  * @throws TopologyException if endedNormal is false
  */
-void DihedralSection::endedNormally(const bool endedNormal) const
+void DihedralSection::endedNormally(bool endedNormal) const
 {
     if (!endedNormal)
     {

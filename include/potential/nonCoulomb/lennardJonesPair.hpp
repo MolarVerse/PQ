@@ -48,36 +48,31 @@ namespace pot
 
        public:
         explicit LennardJonesPair(
-            const ExtVdwType vanDerWaalsType1,
-            const ExtVdwType vanDerWaalsType2,
-            const double     cutOff,
-            const LJParams  &params
+            ExtVdwType      vanDerWaalsType1,
+            ExtVdwType      vanDerWaalsType2,
+            double          cutOff,
+            const LJParams &params
         );
 
-        explicit LennardJonesPair(const double cutOff, const LJParams &params);
+        explicit LennardJonesPair(double cutOff, const LJParams &params);
 
         explicit LennardJonesPair(
-            const double    cutOff,
-            const double    energyCutoff,
-            const double    forceCutoff,
+            double          cutOff,
+            double          energyCutoff,
+            double          forceCutoff,
             const LJParams &params
         );
 
         // TODO: we need to explicitly delete it to not implictly create it with
         // the wrong types!!! Needs cleanup
-        explicit LennardJonesPair(
-            const size_t,
-            const size_t,
-            const double,
-            const LJParams &
-        ) = delete;
+        explicit LennardJonesPair(size_t, size_t, double, const LJParams &) =
+            delete;
 
         [[nodiscard]]
         bool operator==(const LennardJonesPair &other) const;
 
-        [[nodiscard]] std::pair<double, double> calculate(
-            const double distance
-        ) const override;
+        [[nodiscard]]
+        std::pair<double, double> calculate(double distance) const override;
 
         friend struct ::TestLJPairUtils;
     };

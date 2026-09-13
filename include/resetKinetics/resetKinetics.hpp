@@ -65,30 +65,30 @@ namespace resetKinetics
        public:
         ResetKinetics() = default;
         ResetKinetics(
-            const size_t nStepsTemperatureReset,
-            const size_t frequencyTemperatureReset,
-            const size_t nStepsMomentumReset,
-            const size_t frequencyMomentumReset,
-            const size_t nStepsAngularReset,
-            const size_t frequencyAngularReset,
-            const size_t nStepsForcesReset
+            size_t nStepsTemperatureReset,
+            size_t frequencyTemperatureReset,
+            size_t nStepsMomentumReset,
+            size_t frequencyMomentumReset,
+            size_t nStepsAngularReset,
+            size_t frequencyAngularReset,
+            size_t nStepsForcesReset
         );
 
         void reset(
-            const size_t step,
+            size_t step,
             physicalData::PhysicalData &,
             molsys::SimulationBox &
         );
         void resetTemperature(molsys::SimulationBox &);
         void resetMomentum(molsys::SimulationBox &);
         void resetAngularMomentum(molsys::SimulationBox &);
-        void resetForces(const size_t step, molsys::SimulationBox &);
+        void resetForces(size_t step, molsys::SimulationBox &) const;
 
         /********************
          * standard setters *
          *******************/
 
-        void setTemperature(const double temperature);
+        void setTemperature(double temperature);
         void setMomentum(const linearAlgebra::Vec3D &momentum);
         void setAngularMomentum(const linearAlgebra::Vec3D &angularMomentum);
 

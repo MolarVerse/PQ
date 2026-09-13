@@ -117,8 +117,8 @@ std::vector<Timer> GlobalTimer::sortTimers() const
 
     std::ranges::sort(
         sortedTimers,
-        [](const Timer& a, const Timer& b)
-        { return a.calculateElapsedTime() > b.calculateElapsedTime(); }
+        [](const Timer& lhs, const Timer& rhs)
+        { return lhs.calculateElapsedTime() > rhs.calculateElapsedTime(); }
     );
 
     return sortedTimers;

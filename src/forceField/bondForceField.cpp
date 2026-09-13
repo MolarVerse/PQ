@@ -51,11 +51,11 @@ using enum HybridZone;
  * @param type
  */
 BondForceField::BondForceField(
-    Molecule       *molecule1,
-    Molecule       *molecule2,
-    const AtomIndex atomIndex1,
-    const AtomIndex atomIndex2,
-    const BondId    type
+    Molecule *molecule1,
+    Molecule *molecule2,
+    AtomIndex atomIndex1,
+    AtomIndex atomIndex2,
+    BondId    type
 )
     : Bond(molecule1, molecule2, atomIndex1, atomIndex2), _type(type)
 {
@@ -139,16 +139,14 @@ void BondForceField::calculateEnergyAndForces(
  *
  * @param isLinker
  */
-void BondForceField::setIsLinker(const bool isLinker) { _isLinker = isLinker; }
+void BondForceField::setIsLinker(bool isLinker) { _isLinker = isLinker; }
 
 /**
  * @brief set equilibrium bond length
  *
  * @param equilibriumBondLength
  */
-void BondForceField::setEquilibriumBondLength(
-    const double equilibriumBondLength
-)
+void BondForceField::setEquilibriumBondLength(double equilibriumBondLength)
 {
     _equilBondLength = equilibriumBondLength;
 }
@@ -158,7 +156,7 @@ void BondForceField::setEquilibriumBondLength(
  *
  * @param forceConstant
  */
-void BondForceField::setForceConstant(const double forceConstant)
+void BondForceField::setForceConstant(double forceConstant)
 {
     _forceConstant = forceConstant;
 }

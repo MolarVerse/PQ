@@ -45,7 +45,7 @@ namespace engine
         void calculateForces() override;
 
        private:
-        randomNumberGenerator::RandomNumberGenerator _rng{};
+        randomNumberGenerator::RandomNumberGenerator _rng;
         physicalData::PhysicalData                   _qmmmPhysicalData{};
 
         void applySmoothing();
@@ -55,17 +55,12 @@ namespace engine
         void moltypeCheck();
         void setNumberOfQMAtoms();
 
-        void scaleAndAccumulateEnergies(const double globalSmF);
+        void scaleAndAccumulateEnergies(double globalSmF);
         void moveEnergiesToPhysicalData();
 
         void distributeSmoothingMolQMForces();
 
         std::vector<double> getRandomWeights(
-            const std::vector<std::reference_wrapper<molsys::Molecule>>
-                &recipientMolecules
-        );
-        std::vector<double> getDistanceWeights(
-            const molsys::Molecule &smoothingMol,
             const std::vector<std::reference_wrapper<molsys::Molecule>>
                 &recipientMolecules
         );

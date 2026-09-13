@@ -36,10 +36,10 @@ using namespace utilities;
  * @param phaseShift
  */
 DihedralType::DihedralType(
-    const DihedralId id,
-    const double     forceConstant,
-    const double     frequency,
-    const double     phaseShift
+    DihedralId id,
+    double     forceConstant,
+    double     frequency,
+    double     phaseShift
 )
     : _id(id),
       _forceConstant(forceConstant),

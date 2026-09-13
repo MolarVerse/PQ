@@ -45,7 +45,7 @@ void setup::setupForceField(Engine &engine)
     if (!ForceFieldSettings::isActive())
         return;
 
-    engine.getStdoutOutput().writeSetup("Force Field");
+    out::StdoutOutput::writeSetup("Force Field");
     engine.getLogOutput().writeSetup("Force Field");
 
     ForceFieldSetup forceFieldSetup(engine);
@@ -154,21 +154,22 @@ void ForceFieldSetup::setupAngles()
  */
 void ForceFieldSetup::setupDihedrals()
 {
-    const auto &ff = _engine.getForceField();
+    const auto &forecField = _engine.getForceField();
 
-    auto addForceFieldParameters = [&ff](auto &dihedral)
+    auto addForceFieldParameters = [&forecField](auto &dihedral)
     {
-        const auto dihedralType = ff->findDihedralTypeById(dihedral.getType());
+        const auto dihedralType =
+            forecField->findDihedralTypeById(dihedral.getType());
         dihedral.setForceConstant(dihedralType.getForceConstant());
         dihedral.setPhaseShift(dihedralType.getPhaseShift());
         dihedral.setPeriodicity(dihedralType.getPeriodicity());
     };
 
-    std::ranges::for_each(ff->getDihedrals(), addForceFieldParameters);
+    std::ranges::for_each(forecField->getDihedrals(), addForceFieldParameters);
 
-    _nDihedralTypes = ff->getDihedralTypes().size();
+    _nDihedralTypes = forecField->getDihedralTypes().size();
 
-    ff->clearDihedralTypes();
+    forecField->clearDihedralTypes();
 }
 
 /**
@@ -181,21 +182,25 @@ void ForceFieldSetup::setupDihedrals()
  */
 void ForceFieldSetup::setupImproperDihedrals()
 {
-    const auto &ff = _engine.getForceField();
+    const auto &forceField = _engine.getForceField();
 
-    auto addForceFieldParameters = [&ff](auto &improper)
+    auto addForceFieldParameters = [&forceField](auto &improper)
     {
-        const auto improperType = ff->findImproperTypeById(improper.getType());
+        const auto improperType =
+            forceField->findImproperTypeById(improper.getType());
         improper.setForceConstant(improperType.getForceConstant());
         improper.setPhaseShift(improperType.getPhaseShift());
         improper.setPeriodicity(improperType.getPeriodicity());
     };
 
-    std::ranges::for_each(ff->getImproperDihedrals(), addForceFieldParameters);
+    std::ranges::for_each(
+        forceField->getImproperDihedrals(),
+        addForceFieldParameters
+    );
 
-    _nImproperTypes = ff->getImproperTypes().size();
+    _nImproperTypes = forceField->getImproperTypes().size();
 
-    ff->clearImproperDihedralTypes();
+    forceField->clearImproperDihedralTypes();
 }
 
 /**

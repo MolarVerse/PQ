@@ -47,7 +47,7 @@ void setup::setupHybrid(Engine &engine)
     if (!Settings::isHybridJobtype())
         return;
 
-    engine.getStdoutOutput().writeSetup("Hybrid Configuration");
+    out::StdoutOutput::writeSetup("Hybrid Configuration");
     engine.getLogOutput().writeSetup("Hybrid Configuration");
 
     HybridSetup hybridSetup(engine);

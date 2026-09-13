@@ -34,11 +34,7 @@ using namespace utilities;
  * @param equilibriumAngle
  * @param springConstant
  */
-AngleType::AngleType(
-    const AngleId id,
-    const double  equilibriumAngle,
-    const double  springConstant
-)
+AngleType::AngleType(AngleId id, double equilibriumAngle, double springConstant)
     : _id(id),
       _equilibriumAngle(equilibriumAngle),
       _forceConstant(springConstant)

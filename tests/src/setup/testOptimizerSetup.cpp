@@ -71,9 +71,10 @@ TEST_F(TestSetup, setupLearningRateStrategyConstant)
     OptimizerSettings::setLearningRateStrategy(LREnum::CONSTANT);
     OptimizerSettings::setInitialLearningRate(0.25);
 
-    OptimizerSetup s(dynamic_cast<engine::OptEngine &>(*_engine));
-    const auto     lr = s.setupLearningRateStrategy();
-    EXPECT_DOUBLE_EQ(lr->getLearningRate(), 0.25);
+    OptimizerSetup setup(dynamic_cast<engine::OptEngine &>(*_engine));
+    const auto     learningRate =
+        setup::OptimizerSetup::setupLearningRateStrategy();
+    EXPECT_DOUBLE_EQ(learningRate->getLearningRate(), 0.25);
 }
 
 TEST_F(TestSetup, setupLearningRateStrategyConstantDecay)
@@ -84,9 +85,10 @@ TEST_F(TestSetup, setupLearningRateStrategyConstantDecay)
     OptimizerSettings::setLearningRateDecay(0.1);
     OptimizerSettings::setLRUpdateFrequency(1);
 
-    OptimizerSetup s(dynamic_cast<engine::OptEngine &>(*_engine));
-    const auto     lr = s.setupLearningRateStrategy();
-    EXPECT_DOUBLE_EQ(lr->getLearningRate(), 0.5);
+    OptimizerSetup setup(dynamic_cast<engine::OptEngine &>(*_engine));
+    const auto     learningRate =
+        setup::OptimizerSetup::setupLearningRateStrategy();
+    EXPECT_DOUBLE_EQ(learningRate->getLearningRate(), 0.5);
 }
 
 TEST_F(TestSetup, setupLearningRateStrategyExpDecay)
@@ -97,9 +99,10 @@ TEST_F(TestSetup, setupLearningRateStrategyExpDecay)
     OptimizerSettings::setLearningRateDecay(0.3);
     OptimizerSettings::setLRUpdateFrequency(2);
 
-    OptimizerSetup s(dynamic_cast<engine::OptEngine &>(*_engine));
-    const auto     lr = s.setupLearningRateStrategy();
-    EXPECT_DOUBLE_EQ(lr->getLearningRate(), 1.0);
+    OptimizerSetup setup(dynamic_cast<engine::OptEngine &>(*_engine));
+    const auto     learningRate =
+        setup::OptimizerSetup::setupLearningRateStrategy();
+    EXPECT_DOUBLE_EQ(learningRate->getLearningRate(), 1.0);
 }
 
 TEST_F(TestSetup, setupLearningRateStrategyConstantDecayMissingDecayThrows)
@@ -110,14 +113,17 @@ TEST_F(TestSetup, setupLearningRateStrategyConstantDecayMissingDecayThrows)
     // workflow — no setter for clearing the optional. So we rely on the
     // baseline from resetOptimizerSettings() above not setting it.
 
-    OptimizerSetup s(dynamic_cast<engine::OptEngine &>(*_engine));
+    OptimizerSetup setup(dynamic_cast<engine::OptEngine &>(*_engine));
 
     // Set decay then unset is not possible; this test only runs successfully
     // before LearningRateDecay has been set in this process. To stay robust
     // across orderings, we skip the assertion if a value has been set.
     if (!OptimizerSettings::getLearningRateDecay().has_value())
     {
-        EXPECT_THROW(s.setupLearningRateStrategy(), UserInputException);
+        EXPECT_THROW(
+            const auto _ = setup.setupLearningRateStrategy(),
+            UserInputException
+        );
     }
 }
 
@@ -125,8 +131,11 @@ TEST_F(TestSetup, setupLearningRateStrategyLineSearchThrows)
 {
     resetOptimizerSettings();
     OptimizerSettings::setLearningRateStrategy(LREnum::LINESEARCH_WOLFE);
-    OptimizerSetup s(dynamic_cast<engine::OptEngine &>(*_engine));
-    EXPECT_THROW(s.setupLearningRateStrategy(), UserInputException);
+    OptimizerSetup setup(dynamic_cast<engine::OptEngine &>(*_engine));
+    EXPECT_THROW(
+        const auto _ = setup.setupLearningRateStrategy(),
+        UserInputException
+    );
 }
 
 TEST_F(TestSetup, setupLearningRateStrategyNoneThrows)
@@ -135,8 +144,11 @@ TEST_F(TestSetup, setupLearningRateStrategyNoneThrows)
     OptimizerSettings::setLearningRateStrategy(LREnum::NONE);
     EXPECT_EQ(string(LREnum::NONE), "none");
 
-    OptimizerSetup s(dynamic_cast<engine::OptEngine &>(*_engine));
-    EXPECT_THROW(s.setupLearningRateStrategy(), UserInputException);
+    OptimizerSetup setup(dynamic_cast<engine::OptEngine &>(*_engine));
+    EXPECT_THROW(
+        const auto _ = setup.setupLearningRateStrategy(),
+        UserInputException
+    );
 }
 
 /* ---------- setupMinMaxLR ---------- */
@@ -148,9 +160,9 @@ TEST_F(TestSetup, setupMinMaxLRAcceptsValidRange)
     OptimizerSettings::setMinLearningRate(0.01);
     OptimizerSettings::setMaxLearningRate(1.0);
 
-    OptimizerSetup s(dynamic_cast<engine::OptEngine &>(*_engine));
-    auto           lr = s.setupLearningRateStrategy();
-    EXPECT_NO_THROW(s.setupMinMaxLR(lr));
+    OptimizerSetup setup(dynamic_cast<engine::OptEngine &>(*_engine));
+    auto learningRate = setup::OptimizerSetup::setupLearningRateStrategy();
+    EXPECT_NO_THROW(setup.setupMinMaxLR(learningRate));
 }
 
 TEST_F(TestSetup, setupMinMaxLRThrowsWhenMinGreaterThanMax)
@@ -160,9 +172,9 @@ TEST_F(TestSetup, setupMinMaxLRThrowsWhenMinGreaterThanMax)
     OptimizerSettings::setMinLearningRate(1.0);
     OptimizerSettings::setMaxLearningRate(0.5);
 
-    OptimizerSetup s(dynamic_cast<engine::OptEngine &>(*_engine));
-    auto           lr = s.setupLearningRateStrategy();
-    EXPECT_THROW(s.setupMinMaxLR(lr), UserInputException);
+    OptimizerSetup setup(dynamic_cast<engine::OptEngine &>(*_engine));
+    auto learningRate = setup::OptimizerSetup::setupLearningRateStrategy();
+    EXPECT_THROW(setup.setupMinMaxLR(learningRate), UserInputException);
 }
 
 /* ---------- setupEmptyOptimizer ---------- */
@@ -172,8 +184,8 @@ TEST_F(TestSetup, setupEmptyOptimizerSteepestDescent)
     resetOptimizerSettings();
     OptimizerSettings::setOptimizer(OptimizerType::STEEPEST_DESCENT);
 
-    OptimizerSetup s(dynamic_cast<engine::OptEngine &>(*_engine));
-    const auto     opt = s.setupEmptyOptimizer();
+    OptimizerSetup setup(dynamic_cast<engine::OptEngine &>(*_engine));
+    const auto     opt = setup.setupEmptyOptimizer();
     ASSERT_NE(opt, nullptr);
     EXPECT_NE(std::dynamic_pointer_cast<opt::SteepestDescent>(opt), nullptr);
 }
@@ -183,8 +195,8 @@ TEST_F(TestSetup, setupEmptyOptimizerAdam)
     resetOptimizerSettings();
     OptimizerSettings::setOptimizer(OptimizerType::ADAM);
 
-    OptimizerSetup s(dynamic_cast<engine::OptEngine &>(*_engine));
-    const auto     opt = s.setupEmptyOptimizer();
+    OptimizerSetup setup(dynamic_cast<engine::OptEngine &>(*_engine));
+    const auto     opt = setup.setupEmptyOptimizer();
     ASSERT_NE(opt, nullptr);
     EXPECT_NE(std::dynamic_pointer_cast<opt::Adam>(opt), nullptr);
 }
@@ -194,8 +206,11 @@ TEST_F(TestSetup, setupEmptyOptimizerNoneThrows)
     resetOptimizerSettings();
     OptimizerSettings::setOptimizer(OptimizerType::NONE);
 
-    OptimizerSetup s(dynamic_cast<engine::OptEngine &>(*_engine));
-    EXPECT_THROW(s.setupEmptyOptimizer(), UserInputException);
+    OptimizerSetup setup(dynamic_cast<engine::OptEngine &>(*_engine));
+    EXPECT_THROW(
+        const auto _ = setup.setupEmptyOptimizer(),
+        UserInputException
+    );
 }
 
 /* ---------- setupConvergence ---------- */
@@ -209,9 +224,9 @@ TEST_F(TestSetup, setupConvergenceWritesIntoOptimizer)
     ConvSettings::setUseMaxForceConv(true);
     ConvSettings::setUseRMSForceConv(true);
 
-    OptimizerSetup s(dynamic_cast<engine::OptEngine &>(*_engine));
-    auto           opt = s.setupEmptyOptimizer();
-    EXPECT_NO_THROW(s.setupConvergence(opt));
+    OptimizerSetup setup(dynamic_cast<engine::OptEngine &>(*_engine));
+    auto           opt = setup.setupEmptyOptimizer();
+    EXPECT_NO_THROW(setup.setupConvergence(opt));
     EXPECT_EQ(
         opt->getConvergence().getEnConvStrategy(),
         ConvStrategy::RIGOROUS
@@ -225,8 +240,8 @@ TEST_F(TestSetup, setupEvaluatorMMOpt)
     resetOptimizerSettings();
     Settings::setJobtype(JobType::MM_OPT);
 
-    OptimizerSetup s(dynamic_cast<engine::OptEngine &>(*_engine));
-    EXPECT_NO_THROW(s.setupEvaluator());
+    OptimizerSetup setup(dynamic_cast<engine::OptEngine &>(*_engine));
+    EXPECT_NO_THROW(const auto _ = setup.setupEvaluator());
 }
 
 TEST_F(TestSetup, setupEvaluatorUnknownJobThrows)
@@ -234,8 +249,8 @@ TEST_F(TestSetup, setupEvaluatorUnknownJobThrows)
     resetOptimizerSettings();
     Settings::setJobtype(JobType::QM_MD);
 
-    OptimizerSetup s(dynamic_cast<engine::OptEngine &>(*_engine));
-    EXPECT_THROW(s.setupEvaluator(), UserInputException);
+    OptimizerSetup setup(dynamic_cast<engine::OptEngine &>(*_engine));
+    EXPECT_THROW(const auto _ = setup.setupEvaluator(), UserInputException);
 }
 
 /* ---------- full setup ---------- */
@@ -248,8 +263,8 @@ TEST_F(TestSetup, setupWiresOptimizerAndLearningRateAndEvaluator)
     OptimizerSettings::setLearningRateStrategy(LREnum::CONSTANT);
     OptimizerSettings::setInitialLearningRate(0.05);
 
-    OptimizerSetup s(dynamic_cast<engine::OptEngine &>(*_engine));
-    EXPECT_NO_THROW(s.setup());
+    OptimizerSetup setup(dynamic_cast<engine::OptEngine &>(*_engine));
+    EXPECT_NO_THROW(setup.setup());
 }
 
 /* ---------- Hessian optimization ---------- */

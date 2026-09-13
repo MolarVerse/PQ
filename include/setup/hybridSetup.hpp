@@ -47,15 +47,15 @@ namespace setup
        public:
         explicit HybridSetup(engine::Engine &engine);
 
-        void setup();
-        void validateQMMethod();
-        void setupInnerRegionCenter();
-        void setupForcedCoreList();
-        void setupForcedLayerList();
-        void setupForcedOuterList();
-        void checkZoneRadii();
-        void validateQMChargeSettings();
-        void setupWriteInfo() const;
+        void        setup();
+        static void validateQMMethod();
+        void        setupInnerRegionCenter();
+        void        setupForcedCoreList();
+        void        setupForcedLayerList();
+        void        setupForcedOuterList();
+        void        checkZoneRadii();
+        void        validateQMChargeSettings();
+        void        setupWriteInfo() const;
     };
 
 }   // namespace setup

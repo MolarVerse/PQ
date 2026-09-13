@@ -22,11 +22,12 @@
 
 #include "testRestartFileReader.hpp"
 
+#include <gtest/gtest.h>
+
 #include <string>   // for string, allocator, basic_string
 #include <vector>   // for vector
 
 #include "fileSettings.hpp"          // for FileSettings
-#include "gtest/gtest.h"             // for Message, TestPartResult
 #include "moldescriptorReader.hpp"   // for MoldescriptorReader
 #include "restartFileReader.hpp"     // for RstFileReader, readRstFile
 #include "restartFileSection.hpp"    // for RstFileSection, readInput

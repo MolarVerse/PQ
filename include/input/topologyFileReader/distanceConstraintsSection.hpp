@@ -45,7 +45,7 @@ namespace input::topology
         ) override;
 
         [[nodiscard]] std::string keyword() override;
-        void endedNormally(const bool endedNormal) const override;
+        void endedNormally(bool endedNormal) const override;
     };
 }   // namespace input::topology
 

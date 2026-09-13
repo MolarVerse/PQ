@@ -26,7 +26,6 @@
 #include "engine.hpp"                 // for Engine
 #include "exceptions.hpp"             // for ParameterFileException
 #include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
-#include "gtest/gtest.h"              // for Message, TestPartResult, tes...
 #include "lennardJonesPair.hpp"       // for LennardJonesPair
 #include "morsePair.hpp"              // for MorsePair
 #include "nonCoulombicsSection.hpp"   // for NonCoulombicsSection
@@ -66,7 +65,7 @@ TEST_F(TestParameterFileSection, processSectionLennardJones)
     EXPECT_EQ(potential.getNonCoulombPairsVector().size(), 2);
 
     const auto *pairVector2 = potential.getNonCoulombPairsVector()[1].get();
-    auto       *pair2 = dynamic_cast<const LennardJonesPair *>(pairVector2);
+    const auto *pair2 = dynamic_cast<const LennardJonesPair *>(pairVector2);
     EXPECT_EQ(pair2->getVanDerWaalsType1(), ExtVdwType{0});
     EXPECT_EQ(pair2->getVanDerWaalsType2(), ExtVdwType{1});
     EXPECT_EQ(TestLJPairUtils::params(pair2).c6, 1.22);
@@ -132,7 +131,7 @@ TEST_F(TestParameterFileSection, processSectionMorse)
     NonCoulombicsSection nonCoulombicsSection;
     nonCoulombicsSection.processMorse(lineElements, *_engine);
     EXPECT_EQ(potential.getNonCoulombPairsVector().size(), 1);
-    auto *pair = dynamic_cast<const MorsePair *>(
+    const auto *pair = dynamic_cast<const MorsePair *>(
         potential.getNonCoulombPairsVector()[0].get()
     );
     EXPECT_EQ(pair->getVanDerWaalsType1(), ExtVdwType{0});
@@ -147,7 +146,7 @@ TEST_F(TestParameterFileSection, processSectionMorse)
     lineElements = {"0", "1", "1.22", "234.3", "324.3"};
     nonCoulombicsSection.processMorse(lineElements, *_engine);
     EXPECT_EQ(potential.getNonCoulombPairsVector().size(), 2);
-    auto *pair2 = dynamic_cast<const MorsePair *>(
+    const auto *pair2 = dynamic_cast<const MorsePair *>(
         potential.getNonCoulombPairsVector()[1].get()
     );
     EXPECT_EQ(pair2->getVanDerWaalsType1(), ExtVdwType{0});

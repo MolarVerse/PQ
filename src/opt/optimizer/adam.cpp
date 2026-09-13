@@ -32,7 +32,7 @@ using namespace opt;
  * @param nIterations
  * @param nAtoms
  */
-Adam::Adam(const size_t nEpochs, const size_t nAtoms) : Optimizer(nEpochs)
+Adam::Adam(size_t nEpochs, size_t nAtoms) : Optimizer(nEpochs)
 {
     _momentum1.resize(nAtoms, linearAlgebra::Vec3D(0.0, 0.0, 0.0));
     _momentum2.resize(nAtoms, linearAlgebra::Vec3D(0.0, 0.0, 0.0));
@@ -45,12 +45,7 @@ Adam::Adam(const size_t nEpochs, const size_t nAtoms) : Optimizer(nEpochs)
  * @param beta1
  * @param beta2
  */
-Adam::Adam(
-    const size_t nEpochs,
-    const double beta1,
-    const double beta2,
-    const size_t nAtoms
-)
+Adam::Adam(size_t nEpochs, double beta1, double beta2, size_t nAtoms)
     : Optimizer(nEpochs), _beta1(beta1), _beta2(beta2)
 {
     _momentum1.resize(nAtoms, linearAlgebra::Vec3D(0.0, 0.0, 0.0));
@@ -79,7 +74,7 @@ size_t Adam::maxHistoryLength() const { return _maxHistoryLength; }
  *
  * @param learningRate
  */
-void Adam::update(const double learningRate, const size_t step)
+void Adam::update(double learningRate, size_t step)
 {
     for (size_t i = 0; i < _simulationBox->getNumberOfAtoms(); ++i)
     {
@@ -89,11 +84,11 @@ void Adam::update(const double learningRate, const size_t step)
         _momentum1[i] = _beta1 * _momentum1[i] - (1.0 - _beta1) * force;
         _momentum2[i] = _beta2 * _momentum2[i] + (1.0 - _beta2) * force * force;
 
-        const auto m1 = _momentum1[i] / (1.0 - std::pow(_beta1, step));
-        const auto m2 = _momentum2[i] / (1.0 - std::pow(_beta2, step));
+        const auto mom1 = _momentum1[i] / (1.0 - std::pow(_beta1, step));
+        const auto mom2 = _momentum2[i] / (1.0 - std::pow(_beta2, step));
 
         constexpr auto epsilon = 1e-8;
-        auto           pos_new = pos - learningRate * m1 / (sqrt(m2 + epsilon));
+        auto pos_new = pos - learningRate * mom1 / (sqrt(mom2 + epsilon));
 
         _simulationBox->applyPBC(pos_new);
 

@@ -49,7 +49,7 @@ namespace forceField
         double _forceConstant;
 
        public:
-        AngleType(const AngleId, const double, const double);
+        AngleType(AngleId, double, double);
 
         friend bool operator==(const AngleType &, const AngleType &);
 

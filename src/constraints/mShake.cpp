@@ -42,6 +42,49 @@ using namespace linearAlgebra;
 using namespace settings;
 using namespace molsys;
 
+namespace
+{
+    /**
+     * @brief calculate M - Shake matrix element
+     *
+     */
+    [[nodiscard]]
+    double calcMatrixElement(
+        const std::tuple<size_t, size_t, size_t, size_t> &indices,
+        const std::pair<double, double>                  &masses,
+        const std::pair<Vec3D, Vec3D>                    &pos
+    )
+    {
+        const auto elem_i = std::get<0>(indices);
+        const auto elem_j = std::get<1>(indices);
+        const auto elem_k = std::get<2>(indices);
+        const auto elem_l = std::get<3>(indices);
+
+        // Cast to double: kroneckerDelta returns size_t, so subtractions
+        // like (ik - il) underflow to SIZE_T_MAX when the first operand is 0.
+        const auto kronecker_ik =
+            static_cast<double>(utilities::kroneckerDelta(elem_i, elem_k));
+        const auto kronecker_il =
+            static_cast<double>(utilities::kroneckerDelta(elem_i, elem_l));
+        const auto kronecker_jk =
+            static_cast<double>(utilities::kroneckerDelta(elem_j, elem_k));
+        const auto kronecker_jl =
+            static_cast<double>(utilities::kroneckerDelta(elem_j, elem_l));
+
+        const auto mass_i = masses.first;
+        const auto mass_j = masses.second;
+
+        const auto &pos_ij = pos.first;
+        const auto &pos_kl = pos.second;
+
+        auto mShakeElement  = (kronecker_ik - kronecker_il) / mass_i;
+        mShakeElement      += (kronecker_jl - kronecker_jk) / mass_j;
+        mShakeElement      *= dot(pos_ij, pos_kl);
+
+        return mShakeElement;
+    }
+}   // namespace
+
 /**
  * @brief struct to hold the mShake matrices and their inverses
  *
@@ -158,9 +201,9 @@ void MShake::applyMShake(SimulationBox &simBox)
     const auto mShakeTolerance = ConstraintSettings::getMShakeTolerance();
     auto      &molecules       = simBox.getMolecules();
 
-    const auto dt          = TimingsSettings::getTimeStep() * FS_TO_S;
-    const auto timeFactor  = 4.0 * dt * dt;
-    const auto shakeFactor = 2.0 * dt * dt;
+    const auto timeStep    = TimingsSettings::getTimeStep() * FS_TO_S;
+    const auto timeFactor  = 4.0 * timeStep * timeStep;
+    const auto shakeFactor = 2.0 * timeStep * timeStep;
 
     for (auto &molecule : molecules)
     {
@@ -187,6 +230,7 @@ void MShake::applyMShake(SimulationBox &simBox)
          * initialize the unconstrained positions of all atoms *
          *******************************************************/
 
+        posUnconstrained.reserve(atoms.size());
         for (const auto &atom : atoms)
             posUnconstrained.push_back(atom->getPosition());
 
@@ -207,7 +251,8 @@ void MShake::applyMShake(SimulationBox &simBox)
                 const auto pos_i = atoms[i]->getPosition();
                 const auto pos_j = atoms[j]->getPosition();
 
-                const auto [dxyz, r2] = distVecAndDist2(pos_i, pos_j, simBox);
+                const auto [dxyz, rSquared] =
+                    distVecAndDist2(pos_i, pos_j, simBox);
 
                 bondsUnconstrained[index_ij] = dxyz;
 
@@ -220,7 +265,7 @@ void MShake::applyMShake(SimulationBox &simBox)
 
                 const auto r2Ref = mShakeR2Refs[index_ij];
 
-                const auto r2Deviation = r2 - r2Ref;
+                const auto r2Deviation = rSquared - r2Ref;
 
                 shakeVector[index_ij] = r2Deviation / timeFactor;
 
@@ -314,8 +359,8 @@ void MShake::applyMShake(SimulationBox &simBox)
                     posUnconstrained[i] -= posAdjustment / mass_i;
                     posUnconstrained[j] += posAdjustment / mass_j;
 
-                    atoms[i]->addVelocity(-posAdjustment / (mass_i * dt));
-                    atoms[j]->addVelocity(posAdjustment / (mass_j * dt));
+                    atoms[i]->addVelocity(-posAdjustment / (mass_i * timeStep));
+                    atoms[j]->addVelocity(posAdjustment / (mass_j * timeStep));
 
                     ++index_ij;
                 }
@@ -331,7 +376,7 @@ void MShake::applyMShake(SimulationBox &simBox)
                      * determine bond vector of integrated positions *
                      *************************************************/
 
-                    const auto [dxyz, r2] = distVecAndDist2(
+                    const auto [dxyz, rSquared] = distVecAndDist2(
                         posUnconstrained[i],
                         posUnconstrained[j],
                         simBox
@@ -347,7 +392,7 @@ void MShake::applyMShake(SimulationBox &simBox)
                      **************************************************/
 
                     const auto r2Ref       = mShakeR2Refs[index_ij];
-                    const auto r2Deviation = r2 - r2Ref;
+                    const auto r2Deviation = rSquared - r2Ref;
                     shakeVector[index_ij]  = r2Deviation / timeFactor;
 
                     /******************************************************
@@ -424,12 +469,12 @@ void MShake::applyMRattle(SimulationBox &simulationBox)
                     simulationBox
                 );
 
-                const auto v_i = atoms[i]->getVelocity();
-                const auto v_j = atoms[j]->getVelocity();
-                const auto dv  = v_i - v_j;
+                const auto v_i     = atoms[i]->getVelocity();
+                const auto v_j     = atoms[j]->getVelocity();
+                const auto delta_v = v_i - v_j;
 
                 bonds[index_ij]        = dxyz;
-                rattleVector[index_ij] = dot(dxyz, dv);
+                rattleVector[index_ij] = dot(dxyz, delta_v);
 
                 ++index_ij;
             }
@@ -465,7 +510,7 @@ void MShake::applyMRattle(SimulationBox &simulationBox)
  *
  * @return bool
  */
-bool MShake::isMShakeType(const size_t moltype) const
+bool MShake::isMShakeType(size_t moltype) const
 {
     bool isMShake = false;
 
@@ -493,7 +538,7 @@ bool MShake::isMShakeType(const size_t moltype) const
  * @throw exc::MShakeException if no M - Shake reference is
  * found
  */
-const MShakeReference &MShake::findMShakeRef(const size_t moltype) const
+const MShakeReference &MShake::findMShakeRef(size_t moltype) const
 {
     for (const auto &mShakeReference : _mShakeReferences)
     {
@@ -518,7 +563,7 @@ const MShakeReference &MShake::findMShakeRef(const size_t moltype) const
  * @throw exc::MShakeException if no M - Shake reference is
  * found
  */
-size_t MShake::findMShakeReferenceIndex(const size_t moltype) const
+size_t MShake::findMShakeReferenceIndex(size_t moltype) const
 {
     size_t index = 0;
 
@@ -601,39 +646,4 @@ size_t MShake::calcNumberOfBondConstraints(SimulationBox &simBox) const
     }
 
     return nBondConstraints;
-}
-
-/**
- * @brief calculate M - Shake matrix element
- *
- */
-double MShake::calcMatrixElement(
-    const std::tuple<size_t, size_t, size_t, size_t> &indices,
-    const std::pair<double, double>                  &masses,
-    const std::pair<Vec3D, Vec3D>                    &pos
-) const
-{
-    const auto i = std::get<0>(indices);
-    const auto j = std::get<1>(indices);
-    const auto k = std::get<2>(indices);
-    const auto l = std::get<3>(indices);
-
-    // Cast to double: kroneckerDelta returns size_t, so subtractions
-    // like (ik - il) underflow to SIZE_T_MAX when the first operand is 0.
-    const auto ik = static_cast<double>(utilities::kroneckerDelta(i, k));
-    const auto il = static_cast<double>(utilities::kroneckerDelta(i, l));
-    const auto jk = static_cast<double>(utilities::kroneckerDelta(j, k));
-    const auto jl = static_cast<double>(utilities::kroneckerDelta(j, l));
-
-    const auto mass_i = masses.first;
-    const auto mass_j = masses.second;
-
-    const auto &pos_ij = pos.first;
-    const auto &pos_kl = pos.second;
-
-    auto mShakeElement  = (ik - il) / mass_i;
-    mShakeElement      += (jl - jk) / mass_j;
-    mShakeElement      *= dot(pos_ij, pos_kl);
-
-    return mShakeElement;
 }

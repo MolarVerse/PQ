@@ -36,7 +36,7 @@ using settings::SimulationBoxSettings;
  *
  * @param densitySet
  */
-void SimulationBoxSettings::setDensitySet(const bool densitySet)
+void SimulationBoxSettings::setDensitySet(bool densitySet)
 {
     _isDensitySet = densitySet;
 }
@@ -46,7 +46,7 @@ void SimulationBoxSettings::setDensitySet(const bool densitySet)
  *
  * @param boxSet
  */
-void SimulationBoxSettings::setBoxSet(const bool boxSet) { _isBoxSet = boxSet; }
+void SimulationBoxSettings::setBoxSet(bool boxSet) { _isBoxSet = boxSet; }
 
 /**
  * @brief Set the initialize velocities
@@ -54,7 +54,7 @@ void SimulationBoxSettings::setBoxSet(const bool boxSet) { _isBoxSet = boxSet; }
  * @param initVelocities
  */
 void SimulationBoxSettings::setInitializeVelocities(
-    const InitVelocities initializeVelocities
+    InitVelocities initializeVelocities
 )
 {
     _initializeVelocities = initializeVelocities;

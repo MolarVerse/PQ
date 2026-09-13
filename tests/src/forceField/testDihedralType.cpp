@@ -23,7 +23,6 @@
 #include <gtest/gtest.h>   // for Test, EXPECT_FALSE, InitGoogleTest, RUN_...
 
 #include "dihedralType.hpp"   // for DihedralType
-#include "gtest/gtest.h"      // for AssertionResult, Message, TestPartResult
 
 /**
  * @brief tests operator== for DihedralType

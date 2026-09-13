@@ -62,7 +62,7 @@ namespace input::intraNonBondedReader
         );
 
         void                 read();
-        void                 processMolecule(const size_t moleculeType);
+        void                 processMolecule(size_t moleculeType);
         void                 checkDuplicates() const;
         [[nodiscard]] size_t findMoleculeType(const std::string &) const;
 

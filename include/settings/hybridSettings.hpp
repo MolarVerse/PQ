@@ -24,6 +24,7 @@
 
 #define _HYBRID_SETTINGS_HPP_
 
+#include <cstdint>
 #include <optional>   // for optional
 #include <string>     // for string
 #include <vector>     // for vector
@@ -36,7 +37,7 @@ namespace settings
      * @brief enum class to store the type of smoothing method
      *
      */
-    enum class SmoothingMethod
+    enum class SmoothingMethod : std::uint8_t
     {
         HOTSPOT,
         EXACT
@@ -49,7 +50,7 @@ namespace settings
      * method in hotspot smoothing
      *
      */
-    enum class QMForceDist
+    enum class QMForceDist : std::uint8_t
     {
         NONE,
         EQUAL,
@@ -57,7 +58,8 @@ namespace settings
         DISTANCE_WEIGHTED
     };
 
-    [[nodiscard]] std::string string(const SmoothingMethod method);
+    [[nodiscard]]
+    std::string string(SmoothingMethod method);
 
     /**
      * @class HybridSettings
@@ -93,15 +95,15 @@ namespace settings
         static void setForcedLayerList(const std::vector<int> &);
         static void setForcedOuterList(const std::vector<int> &);
 
-        static void setUseQMCharges(const bool useQMCharges);
+        static void setUseQMCharges(bool useQMCharges);
 
-        static void setCoreRadius(const double radius);
-        static void setLayerRadius(const double radius);
-        static void setSmoothingRegionThickness(const double thickness);
-        static void setPointChargeThickness(const double radius);
+        static void setCoreRadius(double radius);
+        static void setLayerRadius(double radius);
+        static void setSmoothingRegionThickness(double thickness);
+        static void setPointChargeThickness(double radius);
 
-        static void setSmoothingMethod(const SmoothingMethod method);
-        static void setQMForceDist(const QMForceDist method);
+        static void setSmoothingMethod(SmoothingMethod method);
+        static void setQMForceDist(QMForceDist method);
 
         /********************
          * standard getters *

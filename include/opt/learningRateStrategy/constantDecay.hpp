@@ -41,14 +41,14 @@ namespace opt
 
        public:
         explicit ConstantDecayLRStrategy(
-            const double initialLearningRate,
-            const double decay,
-            const size_t frequency
+            double initialLearningRate,
+            double decay,
+            size_t frequency
         );
 
         explicit ConstantDecayLRStrategy(
-            const double initialLearningRate,
-            const double decay
+            double initialLearningRate,
+            double decay
         );
 
         ConstantDecayLRStrategy()           = default;
@@ -57,10 +57,7 @@ namespace opt
         [[nodiscard]]
         std::shared_ptr<LearningRateStrategy> clone() const override;
 
-        void updateLearningRate(
-            const size_t currentStep,
-            const size_t totalSteps
-        ) override;
+        void updateLearningRate(size_t currentStep, size_t totalSteps) override;
     };
 
 }   // namespace opt

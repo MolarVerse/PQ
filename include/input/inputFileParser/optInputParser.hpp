@@ -39,32 +39,32 @@ namespace input
        public:
         OptInputParser();
 
-        void parseOptimizer(const std::vector<std::string> &, const size_t);
+        static void parseOptimizer(const std::vector<std::string> &, size_t);
 
-        void parseLearningRateStrategy(
+        static void parseLearningRateStrategy(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
-        void parseInitialLearningRate(
+        static void parseInitialLearningRate(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
-        void parseLearningRateUpdateFreq(
+        static void parseLearningRateUpdateFreq(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
-        void parseMinLearningRate(
+        static void parseMinLearningRate(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
-        void parseMaxLearningRate(
+        static void parseMaxLearningRate(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
 
-        void parseLearningRateDecay(
+        static void parseLearningRateDecay(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
     };
 

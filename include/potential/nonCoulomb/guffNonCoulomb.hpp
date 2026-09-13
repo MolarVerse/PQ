@@ -45,10 +45,10 @@ namespace pot
             _guffNonCoulombPairs;
 
        public:
-        void resizeGuff(const size_t);
-        void resizeGuff(const size_t, const size_t);
-        void resizeGuff(const size_t, const size_t, const size_t);
-        void resizeGuff(const size_t, const size_t, const size_t, const size_t);
+        void resizeGuff(size_t);
+        void resizeGuff(size_t, size_t);
+        void resizeGuff(size_t, size_t, size_t);
+        void resizeGuff(size_t, size_t, size_t, size_t);
 
         /***************************
          * standard setter methods *
@@ -73,10 +73,10 @@ namespace pot
             std::vector<std::vector<std::shared_ptr<NonCoulombPair>>>>>
         getNonCoulombPairs() const;
 
-        [[nodiscard]] size_t getMolType1(const std::vector<size_t> &) const;
-        [[nodiscard]] size_t getMolType2(const std::vector<size_t> &) const;
-        [[nodiscard]] size_t getAtomType1(const std::vector<size_t> &) const;
-        [[nodiscard]] size_t getAtomType2(const std::vector<size_t> &) const;
+        [[nodiscard]] static size_t getMolType1(const std::vector<size_t> &);
+        [[nodiscard]] static size_t getMolType2(const std::vector<size_t> &);
+        [[nodiscard]] static size_t getAtomType1(const std::vector<size_t> &);
+        [[nodiscard]] static size_t getAtomType2(const std::vector<size_t> &);
     };
 
 }   // namespace pot

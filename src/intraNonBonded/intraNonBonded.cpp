@@ -55,7 +55,7 @@ std::shared_ptr<IntraNonBonded> IntraNonBonded::clone() const
  * @return IntraNonBondedContainer*
  */
 IntraNonBondedContainer *IntraNonBonded::findIntraNonBondedContainerByMolType(
-    const size_t molType
+    size_t molType
 )
 {
     auto findByMolType = [molType](const auto &intraNonBondedType)

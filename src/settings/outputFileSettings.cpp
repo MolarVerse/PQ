@@ -44,7 +44,7 @@ using namespace defaults;
  *  in order to avoid division by 0 in the output
  *
  */
-void OutputFileSettings::setOutputFrequency(const size_t outputFreq)
+void OutputFileSettings::setOutputFrequency(size_t outputFreq)
 {
     if (0 == outputFreq)
         _outputFrequency = UINT64_MAX;
@@ -57,7 +57,7 @@ void OutputFileSettings::setOutputFrequency(const size_t outputFreq)
  *
  * @param restartFileName
  */
-void OutputFileSettings::setFilePrefix(const std::string_view prefix)
+void OutputFileSettings::setFilePrefix(std::string_view prefix)
 {
     _filePrefixSet = true;
     _filePrefix    = prefix;
@@ -217,7 +217,7 @@ std::string OutputFileSettings::determineMostCommonPrefix()
  *
  * @param name
  */
-void OutputFileSettings::setRestartFileName(const std::string_view name)
+void OutputFileSettings::setRestartFileName(std::string_view name)
 {
     _rstFile = name;
 }
@@ -227,7 +227,7 @@ void OutputFileSettings::setRestartFileName(const std::string_view name)
  *
  * @param name
  */
-void OutputFileSettings::setEnergyFileName(const std::string_view name)
+void OutputFileSettings::setEnergyFileName(std::string_view name)
 {
     _energyFile = name;
 }
@@ -237,7 +237,7 @@ void OutputFileSettings::setEnergyFileName(const std::string_view name)
  *
  * @param name
  */
-void OutputFileSettings::setInstantEnergyFileName(const std::string_view name)
+void OutputFileSettings::setInstantEnergyFileName(std::string_view name)
 {
     _instEnFile = name;
 }
@@ -246,7 +246,7 @@ void OutputFileSettings::setInstantEnergyFileName(const std::string_view name)
  *
  * @param name
  */
-void OutputFileSettings::setMomentumFileName(const std::string_view name)
+void OutputFileSettings::setMomentumFileName(std::string_view name)
 {
     _momFile = name;
 }
@@ -256,7 +256,7 @@ void OutputFileSettings::setMomentumFileName(const std::string_view name)
  *
  * @param name
  */
-void OutputFileSettings::setTrajectoryFileName(const std::string_view name)
+void OutputFileSettings::setTrajectoryFileName(std::string_view name)
 {
     _trajFile = name;
 }
@@ -266,7 +266,7 @@ void OutputFileSettings::setTrajectoryFileName(const std::string_view name)
  *
  * @param name
  */
-void OutputFileSettings::setHybridCenterFileName(const std::string_view name)
+void OutputFileSettings::setHybridCenterFileName(std::string_view name)
 {
     _hybridCenterFile = name;
 }
@@ -276,7 +276,7 @@ void OutputFileSettings::setHybridCenterFileName(const std::string_view name)
  *
  * @param name
  */
-void OutputFileSettings::setVelocityFileName(const std::string_view name)
+void OutputFileSettings::setVelocityFileName(std::string_view name)
 {
     _velFile = name;
 }
@@ -286,7 +286,7 @@ void OutputFileSettings::setVelocityFileName(const std::string_view name)
  *
  * @param name
  */
-void OutputFileSettings::setForceFileName(const std::string_view name)
+void OutputFileSettings::setForceFileName(std::string_view name)
 {
     _forceFile = name;
 }
@@ -296,7 +296,7 @@ void OutputFileSettings::setForceFileName(const std::string_view name)
  *
  * @param name
  */
-void OutputFileSettings::setChargeFileName(const std::string_view name)
+void OutputFileSettings::setChargeFileName(std::string_view name)
 {
     _chargeFile = name;
 }
@@ -306,7 +306,7 @@ void OutputFileSettings::setChargeFileName(const std::string_view name)
  *
  * @param name
  */
-void OutputFileSettings::setLogFileName(const std::string_view name)
+void OutputFileSettings::setLogFileName(std::string_view name)
 {
     _logFile = name;
 }
@@ -316,7 +316,7 @@ void OutputFileSettings::setLogFileName(const std::string_view name)
  *
  * @param name
  */
-void OutputFileSettings::setRefFileName(const std::string_view name)
+void OutputFileSettings::setRefFileName(std::string_view name)
 {
     _refFile = name;
 }
@@ -326,7 +326,7 @@ void OutputFileSettings::setRefFileName(const std::string_view name)
  *
  * @param name
  */
-void OutputFileSettings::setInfoFileName(const std::string_view name)
+void OutputFileSettings::setInfoFileName(std::string_view name)
 {
     _infoFile = name;
 }
@@ -336,7 +336,7 @@ void OutputFileSettings::setInfoFileName(const std::string_view name)
  *
  * @param name
  */
-void OutputFileSettings::setVirialFileName(const std::string_view name)
+void OutputFileSettings::setVirialFileName(std::string_view name)
 {
     _virialFile = name;
 }
@@ -346,7 +346,7 @@ void OutputFileSettings::setVirialFileName(const std::string_view name)
  *
  * @param name
  */
-void OutputFileSettings::setStressFileName(const std::string_view name)
+void OutputFileSettings::setStressFileName(std::string_view name)
 {
     _stressFile = name;
 }
@@ -356,7 +356,7 @@ void OutputFileSettings::setStressFileName(const std::string_view name)
  *
  * @param name
  */
-void OutputFileSettings::setBoxFileName(const std::string_view name)
+void OutputFileSettings::setBoxFileName(std::string_view name)
 {
     _boxFile = name;
 }
@@ -366,7 +366,7 @@ void OutputFileSettings::setBoxFileName(const std::string_view name)
  *
  * @param name
  */
-void OutputFileSettings::setOptFileName(const std::string_view name)
+void OutputFileSettings::setOptFileName(std::string_view name)
 {
     _optFile = name;
 }
@@ -376,9 +376,7 @@ void OutputFileSettings::setOptFileName(const std::string_view name)
  *
  * @param name
  */
-void OutputFileSettings::setRingPolymerRestartFileName(
-    const std::string_view name
-)
+void OutputFileSettings::setRingPolymerRestartFileName(std::string_view name)
 {
     _rpmdRstFile = name;
 }
@@ -388,9 +386,7 @@ void OutputFileSettings::setRingPolymerRestartFileName(
  *
  * @param name
  */
-void OutputFileSettings::setRingPolymerTrajectoryFileName(
-    const std::string_view name
-)
+void OutputFileSettings::setRingPolymerTrajectoryFileName(std::string_view name)
 {
     _rpmdTrajFile = name;
 }
@@ -400,9 +396,7 @@ void OutputFileSettings::setRingPolymerTrajectoryFileName(
  *
  * @param name
  */
-void OutputFileSettings::setRingPolymerVelocityFileName(
-    const std::string_view name
-)
+void OutputFileSettings::setRingPolymerVelocityFileName(std::string_view name)
 {
     _rpmdVelFile = name;
 }
@@ -412,9 +406,7 @@ void OutputFileSettings::setRingPolymerVelocityFileName(
  *
  * @param name
  */
-void OutputFileSettings::setRingPolymerForceFileName(
-    const std::string_view name
-)
+void OutputFileSettings::setRingPolymerForceFileName(std::string_view name)
 {
     _rpmdForceFile = name;
 }
@@ -424,9 +416,7 @@ void OutputFileSettings::setRingPolymerForceFileName(
  *
  * @param name
  */
-void OutputFileSettings::setRingPolymerChargeFileName(
-    const std::string_view name
-)
+void OutputFileSettings::setRingPolymerChargeFileName(std::string_view name)
 {
     _rpmdChargeFile = name;
 }
@@ -436,9 +426,7 @@ void OutputFileSettings::setRingPolymerChargeFileName(
  *
  * @param name
  */
-void OutputFileSettings::setRingPolymerEnergyFileName(
-    const std::string_view name
-)
+void OutputFileSettings::setRingPolymerEnergyFileName(std::string_view name)
 {
     _rpmdEnergyFile = name;
 }
@@ -448,7 +436,7 @@ void OutputFileSettings::setRingPolymerEnergyFileName(
  *
  * @param name
  */
-void OutputFileSettings::setTimingsFileName(const std::string_view name)
+void OutputFileSettings::setTimingsFileName(std::string_view name)
 {
     _timeFile = name;
 }
@@ -458,7 +446,7 @@ void OutputFileSettings::setTimingsFileName(const std::string_view name)
  *
  * @param overwrite
  */
-void OutputFileSettings::setOverwriteOutputFiles(const bool overwrite)
+void OutputFileSettings::setOverwriteOutputFiles(bool overwrite)
 {
     _overwriteOutputFiles = overwrite;
 }
@@ -468,7 +456,7 @@ void OutputFileSettings::setOverwriteOutputFiles(const bool overwrite)
  *
  * @param includeMetadata
  */
-void OutputFileSettings::setIncludeOutputMetadata(const bool includeMetadata)
+void OutputFileSettings::setIncludeOutputMetadata(bool includeMetadata)
 {
     _includeOutputMetadata = includeMetadata;
 }

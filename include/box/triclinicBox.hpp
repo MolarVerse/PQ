@@ -52,7 +52,7 @@ namespace molsys
         [[nodiscard]] double calculateVolume() override;
         [[nodiscard]]
         linearAlgebra::Vec3D calcShiftVector(
-            const linearAlgebra::Vec3D &vec
+            const linearAlgebra::Vec3D &shiftVector
         ) const override;
 
         [[nodiscard]]

@@ -47,6 +47,67 @@ using virial::calculateQMVirial;
 using virial::calculateVirial;
 using virial::intraMolecularVirialCorrection;
 
+namespace
+{
+    /**
+     * @brief Generate distance-based, unnormalized molecule weights.
+     *
+     * @param smoothingMol The smoothing molecule whose force deficit is being
+     * redistributed.
+     * @param recipientMolecules Recipient CORE/LAYER molecules.
+     *
+     * @return A vector with one switched-polynomial weight per recipient
+     * molecule.
+     *
+     * @details Weights are computed from center-of-mass distance using
+     * weightingRadius = 2 * HybridSettings::getLayerRadius(). For x = d/R and
+     * x < 1, the switch is S(x)=1-10x^3+15x^4-6x^5; otherwise the weight is 0.
+     * The returned values are unnormalized and normalized by the caller.
+     */
+    std::vector<double> getDistanceWeights(
+        const Molecule                                      &smoothingMol,
+        const std::vector<std::reference_wrapper<Molecule>> &recipientMolecules
+    )
+    {
+        const auto weightingRadius = 2.0 * HybridSettings::getLayerRadius();
+        std::vector<double> weights;
+        weights.reserve(recipientMolecules.size());
+
+        const auto       smoothingCOM = smoothingMol.getCenterOfMass();
+        constexpr double x3Coeff      = 10.0;
+        constexpr double x4Coeff      = 15.0;
+        constexpr double x5Coeff      = 6.0;
+
+        for (const auto &recipientMol : recipientMolecules)
+        {
+            const auto delta =
+                recipientMol.get().getCenterOfMass() - smoothingCOM;
+
+            const auto distance = linearAlgebra::norm(delta);
+
+            auto switchedWeight = 0.0;
+            if (weightingRadius > 0.0)
+            {
+                const auto x = distance / weightingRadius;
+
+                if (x < 1)
+                {
+                    const auto x_3 = x * x * x;
+                    const auto x_4 = x_3 * x;
+                    const auto x_5 = x_4 * x;
+
+                    switchedWeight =
+                        1 - x3Coeff * x_3 + x4Coeff * x_4 - x5Coeff * x_5;
+                }
+            }
+
+            weights.push_back(switchedWeight);
+        }
+
+        return weights;
+    }
+}   // namespace
+
 namespace engine
 {
     /**
@@ -57,9 +118,11 @@ namespace engine
     {
         _configurator.calculateInnerRegionCenter(*_simulationBox);
         _configurator.shiftAtomsToInnerRegionCenter(*_simulationBox);
-        _configurator.assignHybridZones(*_simulationBox);
+        configurator::HybridConfigurator::assignHybridZones(*_simulationBox);
         moltypeCheck();
-        _configurator.calculateSmoothingFactors(*_simulationBox);
+        configurator::HybridConfigurator::calculateSmoothingFactors(
+            *_simulationBox
+        );
         _cellList->updateCellList(*_simulationBox);
         _physicalData->setNumberOfSmoothingMolecules(
             static_cast<double>(std::ranges::distance(
@@ -132,9 +195,12 @@ namespace engine
             // STEP 2: Setup and run QM calculation, accumulate QM forces and QM
             // virial contribution and the number of QM atoms for this
             // combination
-            _configurator.activateMolecules(*_simulationBox);
-            _configurator.deactivateOuterMolecules(*_simulationBox);
-            _configurator.deactivateSmoothingMolecules(
+            configurator::HybridConfigurator::activateMolecules(*_simulationBox
+            );
+            configurator::HybridConfigurator::deactivateOuterMolecules(
+                *_simulationBox
+            );
+            configurator::HybridConfigurator::deactivateSmoothingMolecules(
                 inactiveSmMol,
                 *_simulationBox
             );
@@ -156,7 +222,9 @@ namespace engine
 
             // STEP 3: Setup and run MM calculation, accumulate MM forces and MM
             // virial contribution
-            _configurator.toggleMoleculeActivation(*_simulationBox);
+            configurator::HybridConfigurator::toggleMoleculeActivation(
+                *_simulationBox
+            );
 
             if (settings::Settings::isCellListActivated())
             {
@@ -237,8 +305,10 @@ namespace engine
 
         // STEP 1: Setup and run QM calculation, scale forces of smoothing
         // molecules with smF
-        _configurator.activateMolecules(*_simulationBox);
-        _configurator.deactivateOuterMolecules(*_simulationBox);
+        configurator::HybridConfigurator::activateMolecules(*_simulationBox);
+        configurator::HybridConfigurator::deactivateOuterMolecules(
+            *_simulationBox
+        );
 
         _qmRunner->run(*_simulationBox, *_physicalData, NON_PERIODIC);
 
@@ -254,7 +324,9 @@ namespace engine
         // STEP 2: Setup and run inter-nonbonded calculation between
         // MM-MM , CORE-MM , LAYER+SMOOTHING-MM and scale forces of smoothing
         // molecules with smF
-        _configurator.toggleMoleculeActivation(*_simulationBox);
+        configurator::HybridConfigurator::toggleMoleculeActivation(
+            *_simulationBox
+        );
 
         if (settings::Settings::isCellListActivated())
         {
@@ -301,7 +373,9 @@ namespace engine
         // STEP 4: Setup and run intra-nonbonded calculation and scale forces of
         // smoothing molecules with (1 - smF)
 
-        _configurator.activateSmoothingMolecules(*_simulationBox);
+        configurator::HybridConfigurator::activateSmoothingMolecules(
+            *_simulationBox
+        );
 
         _intraNonBonded->calculate(*_simulationBox, *_physicalData);
 
@@ -341,11 +415,13 @@ namespace engine
      */
     void QMMMMDEngine::setNumberOfQMAtoms()
     {
-        _configurator.activateMolecules(*_simulationBox);
-        _configurator.deactivateOuterMolecules(*_simulationBox);
+        configurator::HybridConfigurator::activateMolecules(*_simulationBox);
+        configurator::HybridConfigurator::deactivateOuterMolecules(
+            *_simulationBox
+        );
         const auto nQMAtoms = _simulationBox->getNumberOfQMAtoms();
         _physicalData->setNumberOfQMAtoms(static_cast<double>(nQMAtoms));
-        _configurator.activateMolecules(*_simulationBox);
+        configurator::HybridConfigurator::activateMolecules(*_simulationBox);
     }
 
     /**
@@ -382,7 +458,7 @@ namespace engine
      *
      * @param globalSmF Global smoothing factor for the current configuration.
      */
-    void QMMMMDEngine::scaleAndAccumulateEnergies(const double globalSmF)
+    void QMMMMDEngine::scaleAndAccumulateEnergies(double globalSmF)
     {
         // clang-format off
         _qmmmPhysicalData.addQMEnergy             ( _physicalData->getQMEnergy()              * globalSmF);
@@ -478,7 +554,7 @@ namespace engine
                 using enum QMForceDist;
 
                 case NONE: continue;
-                case EQUAL: weights = std::vector<double>(recipientMolecules.size(), 1.0); break;
+                case EQUAL: weights = std::vector<double>(recipientMolecules.size(), 1); break;
                 case RANDOM: weights = getRandomWeights(recipientMolecules); break;
                 case DISTANCE_WEIGHTED: weights = getDistanceWeights(smoothingMol, recipientMolecules); break;
             }
@@ -492,11 +568,11 @@ namespace engine
             {
                 // fallback: equal distribution
                 const auto equal = 1.0 / static_cast<double>(weights.size());
-                for (auto &w : weights) w = equal;
+                for (auto &weight : weights) weight = equal;
             }
             else
             {
-                for (auto &w : weights) w /= weightSum;
+                for (auto &weight : weights) weight /= weightSum;
             }
 
             for (size_t i = 0; i < recipientMolecules.size(); ++i)
@@ -531,67 +607,9 @@ namespace engine
         std::vector<double> randomWeights(recipientMolecules.size(), 0.0);
 
         for (auto &weight : randomWeights)
-            weight = _rng.getUniformRealDistribution(0.0, 1.0);
+            weight = _rng.getUniformRealDistribution(0.0, 1);
 
         return randomWeights;
-    }
-
-    /**
-     * @brief Generate distance-based, unnormalized molecule weights.
-     *
-     * @param smoothingMol The smoothing molecule whose force deficit is being
-     * redistributed.
-     * @param recipientMolecules Recipient CORE/LAYER molecules.
-     *
-     * @return A vector with one switched-polynomial weight per recipient
-     * molecule.
-     *
-     * @details Weights are computed from center-of-mass distance using
-     * weightingRadius = 2 * HybridSettings::getLayerRadius(). For x = d/R and
-     * x < 1, the switch is S(x)=1-10x^3+15x^4-6x^5; otherwise the weight is 0.
-     * The returned values are unnormalized and normalized by the caller.
-     */
-    std::vector<double> QMMMMDEngine::getDistanceWeights(
-        const Molecule                                      &smoothingMol,
-        const std::vector<std::reference_wrapper<Molecule>> &recipientMolecules
-    )
-    {
-        const auto weightingRadius = 2.0 * HybridSettings::getLayerRadius();
-        std::vector<double> weights;
-        weights.reserve(recipientMolecules.size());
-
-        const auto       smoothingCOM = smoothingMol.getCenterOfMass();
-        constexpr double x3Coeff      = 10.0;
-        constexpr double x4Coeff      = 15.0;
-        constexpr double x5Coeff      = 6.0;
-
-        for (const auto &recipientMol : recipientMolecules)
-        {
-            const auto delta =
-                recipientMol.get().getCenterOfMass() - smoothingCOM;
-
-            const auto distance = linearAlgebra::norm(delta);
-
-            auto switchedWeight = 0.0;
-            if (weightingRadius > 0.0)
-            {
-                const auto x = distance / weightingRadius;
-
-                if (x < 1.0)
-                {
-                    const auto x3 = x * x * x;
-                    const auto x4 = x3 * x;
-                    const auto x5 = x4 * x;
-
-                    switchedWeight =
-                        1.0 - x3Coeff * x3 + x4Coeff * x4 - x5Coeff * x5;
-                }
-            }
-
-            weights.push_back(switchedWeight);
-        }
-
-        return weights;
     }
 
 }   // namespace engine

@@ -22,8 +22,9 @@
 
 #include "testBondConstraint.hpp"
 
+#include <gtest/gtest.h>
+
 #include "constants/conversionFactors.hpp"
-#include "gtest/gtest.h"   // for AssertionResult, Message, TestPartResult
 #include "timingsSettings.hpp"
 
 /**
@@ -116,19 +117,19 @@ TEST_F(TestBondConstraint, calculateVelocityDelta)
 TEST_F(TestBondConstraint, applyRattle)
 {
     _bondConstraint->calculateConstraintBondRef(*_box);
-    const auto delta = _bondConstraint->calculateVelocityDelta();
-    const auto dv    = delta * _bondConstraint->getShakeDistanceRef();
+    const auto delta    = _bondConstraint->calculateVelocityDelta();
+    const auto deltaVel = delta * _bondConstraint->getShakeDistanceRef();
 
     EXPECT_FALSE(_bondConstraint->applyRattle(0.0));
 
     const auto mol = _box->getMolecules()[0];
     EXPECT_EQ(
         mol.getAtomVelocity(AtomIndex{0}),
-        linearAlgebra::Vec3D(0.0, 0.0, 0.0) + dv
+        linearAlgebra::Vec3D(0.0, 0.0, 0.0) + deltaVel
     );
     EXPECT_EQ(
         mol.getAtomVelocity(AtomIndex{1}),
-        linearAlgebra::Vec3D(1.0, 1.0, 1.0) - 0.5 * dv
+        linearAlgebra::Vec3D(1.0, 1.0, 1.0) - 0.5 * deltaVel
     );
 
     EXPECT_TRUE(_bondConstraint->applyRattle(1000.0));

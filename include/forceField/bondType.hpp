@@ -50,7 +50,7 @@ namespace forceField
         double _forceConstant;
 
        public:
-        BondType(const BondId, const double, const double);
+        BondType(BondId, double, double);
 
         friend bool operator==(const BondType &, const BondType &);
 

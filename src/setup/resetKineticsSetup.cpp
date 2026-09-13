@@ -46,7 +46,7 @@ void setup::resetKinetics::setupResetKinetics(Engine &engine)
     if (!Settings::isMDJobType())
         return;
 
-    engine.getStdoutOutput().writeSetup("Reset Kinetics");
+    out::StdoutOutput::writeSetup("Reset Kinetics");
     engine.getLogOutput().writeSetup("Reset Kinetics");
 
     ResetKineticsSetup resetKineticsSetup(dynamic_cast<MDEngine &>(engine));

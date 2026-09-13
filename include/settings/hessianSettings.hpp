@@ -24,6 +24,7 @@
 
 #define _HESSIAN_SETTINGS_HPP_
 
+#include <cstdint>
 #include <string>
 #include <string_view>
 
@@ -31,7 +32,7 @@
 
 namespace settings
 {
-    enum class HessianBuilderType
+    enum class HessianBuilderType : std::uint8_t
     {
         FINITE_DIFFERENCE_FORCES_CENTRAL,
         FINITE_DIFFERENCE_FORCES_FORWARD,
@@ -40,7 +41,8 @@ namespace settings
         NONE
     };
 
-    [[nodiscard]] std::string string(const HessianBuilderType builder);
+    [[nodiscard]]
+    std::string string(HessianBuilderType builder);
 
     class HessianSettings
     {
@@ -58,10 +60,10 @@ namespace settings
        public:
         static void setHessianFile(const std::string_view &filename);
         static void setHessianInfoFile(const std::string_view &filename);
-        static void setDisplacement(const double displacement);
-        static void setOptimizeBeforeHessian(const bool optimize);
+        static void setDisplacement(double displacement);
+        static void setOptimizeBeforeHessian(bool optimize);
         static void setBuilder(const std::string_view &builder);
-        static void setBuilder(const HessianBuilderType builder);
+        static void setBuilder(HessianBuilderType builder);
 
         [[nodiscard]] static std::string        getHessianFile();
         [[nodiscard]] static std::string        getHessianInfoFile();

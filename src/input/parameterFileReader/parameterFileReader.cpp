@@ -166,7 +166,7 @@ void input::parameterFile::readParameterFile(Engine &engine)
 
     const auto filename = FileSettings::getParameterFilename();
 
-    engine.getStdoutOutput().writeRead("Parameter File", filename);
+    out::StdoutOutput::writeRead("Parameter File", filename);
     engine.getLogOutput().writeRead("Parameter File", filename);
 
     ParameterFileReader parameterFileReader(filename, engine);
@@ -179,13 +179,7 @@ void input::parameterFile::readParameterFile(Engine &engine)
  * @return true if force field is activated
  * @return false
  */
-bool input::parameterFile::isNeeded()
-{
-    if (ForceFieldSettings::isActive())
-        return true;
-
-    return false;
-}
+bool input::parameterFile::isNeeded() { return ForceFieldSettings::isActive(); }
 
 /**************************************
  *                                    *

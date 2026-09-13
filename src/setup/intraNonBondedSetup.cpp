@@ -38,7 +38,7 @@ void setup::setupIntraNonBonded(engine::Engine &engine)
     if (!engine.isIntraNonBondedActivated())
         return;
 
-    engine.getStdoutOutput().writeSetup("Intra Non-Bonded Interactions");
+    out::StdoutOutput::writeSetup("Intra Non-Bonded Interactions");
     engine.getLogOutput().writeSetup("Intra Non-Bonded Interactions");
 
     IntraNonBondedSetup intraNonBondedSetup(engine);

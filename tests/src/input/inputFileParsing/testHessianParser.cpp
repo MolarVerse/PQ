@@ -42,7 +42,7 @@ TEST_F(TestInputFileReader, parseHessianFile)
         "water.hessian"
     };
 
-    parser.parseHessianFile(lineElements, 0);
+    input::HessianInputParser::parseHessianFile(lineElements, 0);
 
     EXPECT_EQ(HessianSettings::getHessianFile(), "water.hessian");
 }
@@ -56,7 +56,7 @@ TEST_F(TestInputFileReader, parseHessianDisplacement)
         "0.001"
     };
 
-    parser.parseDisplacement(lineElements, 0);
+    input::HessianInputParser::parseDisplacement(lineElements, 0);
 
     EXPECT_EQ(HessianSettings::getDisplacement(), 0.001);
 
@@ -78,7 +78,7 @@ TEST_F(TestInputFileReader, parseHessianBuilder)
         "five-point"
     };
 
-    parser.parseBuilder(lineElements, 0);
+    input::HessianInputParser::parseBuilder(lineElements, 0);
 
     EXPECT_EQ(
         HessianSettings::getBuilder(),
@@ -104,11 +104,11 @@ TEST_F(TestInputFileReader, parseOptimizeBeforeHessian)
         "off"
     };
 
-    parser.parseOptimizeBeforeHessian(lineElements, 0);
+    input::HessianInputParser::parseOptimizeBeforeHessian(lineElements, 0);
     EXPECT_FALSE(HessianSettings::optimizeBeforeHessian());
 
     lineElements = {"optimize_before_hessian", "=", "on"};
 
-    parser.parseOptimizeBeforeHessian(lineElements, 0);
+    input::HessianInputParser::parseOptimizeBeforeHessian(lineElements, 0);
     EXPECT_TRUE(HessianSettings::optimizeBeforeHessian());
 }

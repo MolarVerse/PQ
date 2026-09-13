@@ -65,7 +65,7 @@ HessianInputParser::HessianInputParser()
 
 void HessianInputParser::parseHessianFile(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -74,7 +74,7 @@ void HessianInputParser::parseHessianFile(
 
 void HessianInputParser::parseHessianInfoFile(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -83,7 +83,7 @@ void HessianInputParser::parseHessianInfoFile(
 
 void HessianInputParser::parseDisplacement(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -106,7 +106,7 @@ void HessianInputParser::parseDisplacement(
 
 void HessianInputParser::parseOptimizeBeforeHessian(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -115,7 +115,7 @@ void HessianInputParser::parseOptimizeBeforeHessian(
 
 void HessianInputParser::parseBuilder(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     using enum HessianBuilderType;

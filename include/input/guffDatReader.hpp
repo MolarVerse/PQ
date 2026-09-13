@@ -69,50 +69,47 @@ namespace input::guffdat
         void calculatePartialCharges();
         void checkPartialCharges();
         void checkNecessaryGuffPairs();
-        bool bothMoltypesAreWaterType(
-            const size_t molType1,
-            const size_t molType2
-        );
+        bool bothMoltypesAreWaterType(size_t molType1, size_t molType2);
         void addNonCoulombPair(
-            const size_t               molType1,
-            const size_t               molType2,
-            const size_t               atomType1,
-            const size_t               atomType2,
+            size_t                     molType1,
+            size_t                     molType2,
+            size_t                     atomType1,
+            size_t                     atomType2,
             const std::vector<double> &coefficients,
-            const double               rncCutOff
+            double                     rncCutOff
         );
         void addLennardJonesPair(
-            const size_t               molType1,
-            const size_t               molType2,
-            const size_t               atomType1,
-            const size_t               atomType2,
+            size_t                     molType1,
+            size_t                     molType2,
+            size_t                     atomType1,
+            size_t                     atomType2,
             const std::vector<double> &coefficients,
-            const double               rncCutOff
+            double                     rncCutOff
         );
         void addBuckinghamPair(
-            const size_t               molType1,
-            const size_t               molType2,
-            const size_t               atomType1,
-            const size_t               atomType2,
+            size_t                     molType1,
+            size_t                     molType2,
+            size_t                     atomType1,
+            size_t                     atomType2,
             const std::vector<double> &coefficients,
-            const double               rncCutOff
+            double                     rncCutOff
         );
         void addMorsePair(
-            const size_t               molType1,
-            const size_t               molType2,
-            const size_t               atomType1,
-            const size_t               atomType2,
+            size_t                     molType1,
+            size_t                     molType2,
+            size_t                     atomType1,
+            size_t                     atomType2,
             const std::vector<double> &coefficients,
-            const double               rncCutOff
+            double                     rncCutOff
         );
         void addGuffPair(
-            const size_t molType1,
-            const size_t molType2,
-            const size_t atomType1,
-            const size_t atomType2,
+            size_t molType1,
+            size_t molType2,
+            size_t atomType1,
+            size_t atomType2,
             const std::array<double, defaults::NUM_GUFF_COEFFICIENTS>
-                        &coefficients,
-            const double rncCutOff
+                  &coefficients,
+            double rncCutOff
         );
 
         /********************
@@ -121,18 +118,18 @@ namespace input::guffdat
 
         void setFilename(const std::string_view &filename);
         void setGuffCoulombCoefficients(
-            const size_t molType1,
-            const size_t molType2,
-            const size_t atomType1,
-            const size_t atomType2,
-            const double coefficient
+            size_t molType1,
+            size_t molType2,
+            size_t atomType1,
+            size_t atomType2,
+            double coefficient
         );
         void setIsGuffPairSet(
-            const size_t molType1,
-            const size_t molType2,
-            const size_t atomType1,
-            const size_t atomType2,
-            const bool   isSet
+            size_t molType1,
+            size_t molType2,
+            size_t atomType1,
+            size_t atomType2,
+            bool   isSet
         );
 
         /********************

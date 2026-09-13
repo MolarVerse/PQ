@@ -22,7 +22,7 @@
 
 #include <gtest/gtest.h>   // for EXPECT_EQ, Test, TestInfo (ptr only)
 
-#include "gtest/gtest.h"           // for Message, TestPartResult
+// for Message, TestPartResult
 #include "potentialSettings.hpp"   // for string, PotentialSettings, NonCoulo
 
 /**

@@ -72,7 +72,7 @@ void input::guffdat::readGuffDat(engine::Engine &engine)
     if (!isNeeded(engine))
         return;
 
-    engine.getStdoutOutput().writeRead(
+    out::StdoutOutput::writeRead(
         "Guffdat File",
         FileSettings::getGuffDatFileName()
     );
@@ -129,10 +129,10 @@ GuffDatReader::GuffDatReader(engine::Engine &engine) : _engine(engine)
  */
 void GuffDatReader::read()
 {
-    std::ifstream fp(_fileName);
+    std::ifstream file(_fileName);
     std::string   line;
 
-    while (getline(fp, line))
+    while (getline(file, line))
     {
         line = removeComments(line, "#");
 
@@ -325,12 +325,12 @@ void GuffDatReader::parseLine(const std::vector<std::string> &lineCommands)
  * @throws UserInputException if nonCoulombic type is invalid
  */
 void GuffDatReader::addNonCoulombPair(
-    const size_t               molType1,
-    const size_t               molType2,
-    const size_t               atomType1,
-    const size_t               atomType2,
+    size_t                     molType1,
+    size_t                     molType2,
+    size_t                     atomType1,
+    size_t                     atomType2,
     const std::vector<double> &coefficients,
-    const double               rncCutOff
+    double                     rncCutOff
 )
 {
     switch (PotentialSettings::getNonCoulombType())
@@ -415,12 +415,12 @@ void GuffDatReader::addNonCoulombPair(
  * @param rncCutOff
  */
 void GuffDatReader::addLennardJonesPair(
-    const size_t               molType1,
-    const size_t               molType2,
-    const size_t               atomType1,
-    const size_t               atomType2,
+    size_t                     molType1,
+    size_t                     molType2,
+    size_t                     atomType1,
+    size_t                     atomType2,
     const std::vector<double> &coefficients,
-    const double               rncCutOff
+    double                     rncCutOff
 )
 {
     auto &guffNonCoulomb = dynamic_cast<GuffNonCoulomb &>(
@@ -456,12 +456,12 @@ void GuffDatReader::addLennardJonesPair(
  * @param rncCutOff
  */
 void GuffDatReader::addBuckinghamPair(
-    const size_t               molType1,
-    const size_t               molType2,
-    const size_t               atomType1,
-    const size_t               atomType2,
+    size_t                     molType1,
+    size_t                     molType2,
+    size_t                     atomType1,
+    size_t                     atomType2,
     const std::vector<double> &coefficients,
-    const double               rncCutOff
+    double                     rncCutOff
 )
 {
     auto &guffNonCoulomb = dynamic_cast<GuffNonCoulomb &>(
@@ -501,12 +501,12 @@ void GuffDatReader::addBuckinghamPair(
  * @param rncCutOff
  */
 void GuffDatReader::addMorsePair(
-    const size_t               molType1,
-    const size_t               molType2,
-    const size_t               atomType1,
-    const size_t               atomType2,
-    const std::vector<double> &coeffs,
-    const double               rncCutOff
+    size_t                     molType1,
+    size_t                     molType2,
+    size_t                     atomType1,
+    size_t                     atomType2,
+    const std::vector<double> &coefficients,
+    double                     rncCutOff
 )
 {
     auto &guffNonCoulomb = dynamic_cast<GuffNonCoulomb &>(
@@ -514,9 +514,9 @@ void GuffDatReader::addMorsePair(
     );
 
     const auto params = MorseParams{
-        .dissociationEnergy  = coeffs[0],
-        .wellWidth           = coeffs[1],
-        .equilibriumDistance = coeffs[2]
+        .dissociationEnergy  = coefficients[0],
+        .wellWidth           = coefficients[1],
+        .equilibriumDistance = coefficients[2]
     };
 
     const auto morsePair          = MorsePair(rncCutOff, params);
@@ -549,12 +549,12 @@ void GuffDatReader::addMorsePair(
  * @param rncCutOff
  */
 void GuffDatReader::addGuffPair(
-    const size_t                                               molType1,
-    const size_t                                               molType2,
-    const size_t                                               atomType1,
-    const size_t                                               atomType2,
+    size_t                                                     molType1,
+    size_t                                                     molType2,
+    size_t                                                     atomType1,
+    size_t                                                     atomType2,
     const std::array<double, defaults::NUM_GUFF_COEFFICIENTS> &coefficients,
-    const double                                               rncCutOff
+    double                                                     rncCutOff
 )
 {
     auto &guffNonCoulomb = dynamic_cast<GuffNonCoulomb &>(
@@ -800,10 +800,7 @@ void GuffDatReader::checkNecessaryGuffPairs()
  * @return true if the inter-water model is set and both indices equal the
  *         configured water type; false otherwise
  */
-bool GuffDatReader::bothMoltypesAreWaterType(
-    const size_t molType1,
-    const size_t molType2
-)
+bool GuffDatReader::bothMoltypesAreWaterType(size_t molType1, size_t molType2)
 {
     auto      &simBox    = _engine.getSimulationBox();
     const auto waterType = simBox.getWaterType();
@@ -839,11 +836,11 @@ void GuffDatReader::setFilename(const std::string_view &filename)
  * @param coefficient
  */
 void GuffDatReader::setGuffCoulombCoefficients(
-    const size_t molType1,
-    const size_t molType2,
-    const size_t atomType1,
-    const size_t atomType2,
-    const double coefficient
+    size_t molType1,
+    size_t molType2,
+    size_t atomType1,
+    size_t atomType2,
+    double coefficient
 )
 {
     _guffCoulombCoeffs[molType1][molType2][atomType1][atomType2] = coefficient;
@@ -859,11 +856,11 @@ void GuffDatReader::setGuffCoulombCoefficients(
  * @param isSet
  */
 void GuffDatReader::setIsGuffPairSet(
-    const size_t molType1,
-    const size_t molType2,
-    const size_t atomType1,
-    const size_t atomType2,
-    const bool   isSet
+    size_t molType1,
+    size_t molType2,
+    size_t atomType1,
+    size_t atomType2,
+    bool   isSet
 )
 {
     _isGuffPairSet[molType1][molType2][atomType1][atomType2] = isSet;

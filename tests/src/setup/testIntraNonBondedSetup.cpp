@@ -25,7 +25,7 @@
 #include <vector>   // for vector, allocator
 
 #include "engine.hpp"                    // for Engine
-#include "gtest/gtest.h"                 // for Message, TestPartResult
+                                         // for Message, TestPartResult
 #include "intraNonBondedContainer.hpp"   // for IntraNonBondedContainer
 #include "intraNonBondedSetup.hpp"       // for setupIntraNonBonded
 #include "molecule.hpp"                  // for Molecule

@@ -67,13 +67,13 @@ namespace forceField
         DihedralForceField(
             const std::vector<molsys::Molecule *> &molecules,
             const std::vector<AtomIndex>          &atomIndices,
-            const DihedralId                       type
+            DihedralId                             type
         );
 
         void calculateEnergyAndForces(
             const molsys::SimulationBox &simBox,
             physicalData::PhysicalData  &data,
-            const bool                   isImproperDihedral,
+            bool                         isImproperDihedral,
             const pot::CoulombPotential &coulombPot,
             pot::NonCoulombPotential    &nonCoulombPot
         );
@@ -82,10 +82,10 @@ namespace forceField
          * standard setter methods *
          ***************************/
 
-        void setIsLinker(const bool isLinker);
-        void setForceConstant(const double forceConstant);
-        void setPeriodicity(const double periodicity);
-        void setPhaseShift(const double phaseShift);
+        void setIsLinker(bool isLinker);
+        void setForceConstant(double forceConstant);
+        void setPeriodicity(double periodicity);
+        void setPhaseShift(double phaseShift);
 
         /***************************
          * standard getter methods *

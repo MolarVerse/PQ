@@ -22,8 +22,7 @@
 
 #include <gtest/gtest.h>   // for Test, EXPECT_FALSE, InitGoogleTest, RUN_ALL...
 
-#include "bondType.hpp"    // for BondType
-#include "gtest/gtest.h"   // for AssertionResult, Message, TestPartResult
+#include "bondType.hpp"   // for BondType
 
 /**
  * @brief tests operator== for BondType

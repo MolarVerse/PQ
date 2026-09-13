@@ -51,23 +51,23 @@ namespace
 
     // Build a fresh box+physData pair, set the sample state on them, and call
     // updateHistory(). Used to seed the optimizer's deques deterministically.
-    void pushSample(SteepestDescent &opt, const Sample &s)
+    void pushSample(SteepestDescent &opt, const Sample &sample)
     {
         auto box     = std::make_shared<SimulationBox>();
         auto physDat = std::make_shared<PhysicalData>();
 
-        auto a1 = std::make_shared<Atom>();
-        auto a2 = std::make_shared<Atom>();
+        auto atom1 = std::make_shared<Atom>();
+        auto atom2 = std::make_shared<Atom>();
 
-        a1->setPosition(s.pos0);
-        a2->setPosition(s.pos1);
-        a1->setForce(s.force0);
-        a2->setForce(s.force1);
+        atom1->setPosition(sample.pos0);
+        atom2->setPosition(sample.pos1);
+        atom1->setForce(sample.force0);
+        atom2->setForce(sample.force1);
 
-        box->addAtom(a1);
-        box->addAtom(a2);
+        box->addAtom(atom1);
+        box->addAtom(atom2);
 
-        physDat->setKineticEnergy(s.energy);
+        physDat->setKineticEnergy(sample.energy);
 
         opt.setSimulationBox(box);
         opt.setPhysicalData(physDat);

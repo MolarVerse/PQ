@@ -84,7 +84,7 @@ CoulombLongRangeInputParser::CoulombLongRangeInputParser()
  */
 void CoulombLongRangeInputParser::parseCoulombLongRange(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -125,7 +125,7 @@ void CoulombLongRangeInputParser::parseCoulombLongRange(
  */
 void CoulombLongRangeInputParser::parseWolfParameter(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -147,14 +147,14 @@ void CoulombLongRangeInputParser::parseWolfParameter(
  */
 void CoulombLongRangeInputParser::parseReactionFieldEpsilon(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
 
     const auto epsilon = stringToFiniteDouble(lineElements[2]);
 
-    if (epsilon < 1.0)
+    if (epsilon < 1)
     {
         throw InputFileException(
             "Static relative permittivity \"rf_epsilon\" cannot be lower than "

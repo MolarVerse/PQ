@@ -52,7 +52,7 @@ struct TimingsSection::Timings
  *
  * @param name
  */
-TimingsSection::TimingsSection(const std::string_view name)
+TimingsSection::TimingsSection(std::string_view name)
     : _name(name), _time(std::make_unique<Timings>())
 {
 }

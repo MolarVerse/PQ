@@ -51,7 +51,7 @@ namespace timings
         std::unique_ptr<Timings> _time;
 
        public:
-        explicit TimingsSection(const std::string_view name);
+        explicit TimingsSection(std::string_view name);
         ~TimingsSection();
 
         TimingsSection(const TimingsSection&);

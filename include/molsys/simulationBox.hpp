@@ -95,7 +95,7 @@ namespace molsys
         void                                         copy(const SimulationBox&);
         [[nodiscard]] std::shared_ptr<SimulationBox> clone() const;
 
-        void checkCoulRadiusCutOff(const ExceptionType) const;
+        void checkCoulRadiusCutOff(const ExceptionType&) const;
         void setupExternalToInternalGlobalVdwTypesMap();
 
         void calculateDegreesOfFreedom();
@@ -116,7 +116,7 @@ namespace molsys
         void removeNetForce();
 
         void setPartialChargesOfMoleculesFromMoleculeTypes();
-        void initPositions(const double displacement);
+        void initPositions(double displacement);
 
         [[nodiscard]] double               calculateTemperature();
         [[nodiscard]] double               calculateTotalForce();
@@ -138,10 +138,10 @@ namespace molsys
         }
         [[nodiscard]] int calcActiveMolCharge() const;
 
-        [[nodiscard]] bool moleculeTypeExists(const size_t) const;
+        [[nodiscard]] bool moleculeTypeExists(size_t) const;
 
-        [[nodiscard]] std::optional<Molecule> findMolecule(const size_t);
-        [[nodiscard]] MoleculeType& findMoleculeType(const size_t moleculeType);
+        [[nodiscard]] std::optional<Molecule> findMolecule(size_t);
+        [[nodiscard]] MoleculeType& findMoleculeType(size_t moleculeType);
         [[nodiscard]] std::vector<MoleculeType> findNecessaryMoleculeTypes();
 
         [[nodiscard]] std::optional<size_t> findMoleculeTypeByString(
@@ -149,7 +149,7 @@ namespace molsys
         ) const;
         [[nodiscard]]
         std::pair<Molecule*, AtomIndex> findMoleculeByGlobalAtomIndex(
-            const size_t atomIndex
+            size_t atomIndex
         );
 
 #ifdef WITH_MPI
@@ -175,7 +175,7 @@ namespace molsys
          * standard add methods *
          ************************/
 
-        void addAtom(const std::shared_ptr<Atom> atom);
+        void addAtom(const std::shared_ptr<Atom>& atom);
         void addMolecule(const Molecule& molecule);
         void addMoleculeType(const MoleculeType& molecule);
 
@@ -195,9 +195,9 @@ namespace molsys
         [[nodiscard]] linearAlgebra::Vec3D& getCenterOfMass();
         [[nodiscard]] std::vector<int>      getInnerRegionCenterAtomIndices();
 
-        [[nodiscard]] Atom&         getAtom(const size_t index);
-        [[nodiscard]] Molecule&     getMolecule(const size_t index);
-        [[nodiscard]] MoleculeType& getMoleculeType(const size_t index);
+        [[nodiscard]] Atom&         getAtom(size_t index);
+        [[nodiscard]] Molecule&     getMolecule(size_t index);
+        [[nodiscard]] MoleculeType& getMoleculeType(size_t index);
 
         [[nodiscard]] std::vector<double> getAtomicScalarForces() const;
         [[nodiscard]] std::vector<double> getAtomicScalarForcesOld() const;
@@ -233,12 +233,12 @@ namespace molsys
          * standard setter methods *
          ***************************/
 
-        void setWaterType(const size_t waterType);
-        void setAmmoniaType(const size_t ammoniaType);
-        void setTotalMass(const double totalMass);
-        void setTotalCharge(const double totalCharge);
-        void setDensity(const double density);
-        void setDegreesOfFreedom(const size_t degreesOfFreedom);
+        void setWaterType(size_t waterType);
+        void setAmmoniaType(size_t ammoniaType);
+        void setTotalMass(double totalMass);
+        void setTotalCharge(double totalCharge);
+        void setDensity(double density);
+        void setDegreesOfFreedom(size_t degreesOfFreedom);
 
         template <typename T>
         void setBox(const T& box);
@@ -259,9 +259,9 @@ namespace molsys
         [[nodiscard]] linearAlgebra::Vec3D getBoxDimensions() const;
         [[nodiscard]] linearAlgebra::Vec3D getBoxAngles() const;
 
-        void setVolume(const double volume) const;
+        void setVolume(double volume) const;
         void setBoxDimensions(const linearAlgebra::Vec3D& boxDimensions) const;
-        void setBoxSizeHasChanged(const bool boxSizeHasChanged) const;
+        void setBoxSizeHasChanged(bool boxSizeHasChanged) const;
     };
 
 }   // namespace molsys

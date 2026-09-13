@@ -51,7 +51,7 @@ using enum HybridZone;
 DihedralForceField::DihedralForceField(
     const std::vector<Molecule *> &molecules,
     const std::vector<AtomIndex>  &atomIndices,
-    const DihedralId               type
+    DihedralId                     type
 )
     : Dihedral(molecules, atomIndices), _type(type)
 {
@@ -69,7 +69,7 @@ DihedralForceField::DihedralForceField(
 void DihedralForceField::calculateEnergyAndForces(
     const SimulationBox    &box,
     PhysicalData           &physicalData,
-    const bool              isImproperDihedral,
+    bool                    isImproperDihedral,
     const CoulombPotential &coulombPotential,
     NonCoulombPotential    &nonCoulombPotential
 )
@@ -106,7 +106,7 @@ void DihedralForceField::calculateEnergyAndForces(
     auto phi = angle(crossPosition123, crossPosition432);
     phi      = dot(dPosition12, crossPosition432) > 0.0 ? -phi : phi;
 
-    const auto cosine = ::cos(_periodicity * phi + _phaseShift);
+    const auto cosine = ::cos((_periodicity * phi) + _phaseShift);
     const auto energy = _forceConstant * (1.0 + cosine);
 
     if (isImproperDihedral)
@@ -128,7 +128,7 @@ void DihedralForceField::calculateEnergyAndForces(
     forceMagnitude            /= (distance432Squared * distance23);
     const auto forceVector432  = forceMagnitude * crossPosition432;
 
-    const auto sine = ::sin(_periodicity * phi + _phaseShift);
+    const auto sine = ::sin((_periodicity * phi) + _phaseShift);
     forceMagnitude  = _forceConstant * _periodicity * sine;
 
     const auto diffForce123_432 = forceVector123 - forceVector432;
@@ -198,17 +198,14 @@ void DihedralForceField::calculateEnergyAndForces(
  *
  * @param isLinker
  */
-void DihedralForceField::setIsLinker(const bool isLinker)
-{
-    _isLinker = isLinker;
-}
+void DihedralForceField::setIsLinker(bool isLinker) { _isLinker = isLinker; }
 
 /**
  * @brief set force constant
  *
  * @param forceConstant
  */
-void DihedralForceField::setForceConstant(const double forceConstant)
+void DihedralForceField::setForceConstant(double forceConstant)
 {
     _forceConstant = forceConstant;
 }
@@ -218,7 +215,7 @@ void DihedralForceField::setForceConstant(const double forceConstant)
  *
  * @param periodicity
  */
-void DihedralForceField::setPeriodicity(const double periodicity)
+void DihedralForceField::setPeriodicity(double periodicity)
 {
     _periodicity = periodicity;
 }
@@ -228,7 +225,7 @@ void DihedralForceField::setPeriodicity(const double periodicity)
  *
  * @param phaseShift
  */
-void DihedralForceField::setPhaseShift(const double phaseShift)
+void DihedralForceField::setPhaseShift(double phaseShift)
 {
     _phaseShift = phaseShift;
 }

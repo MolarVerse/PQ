@@ -41,7 +41,7 @@ namespace pot
      * TODO: implement the different mixing rules
      *
      */
-    enum class MixingRule : size_t
+    enum class MixingRule : std::uint8_t
     {
         NONE
     };
@@ -69,7 +69,7 @@ namespace pot
 
         [[nodiscard]] MixingRule getMixingRule() const;
 
-        void setMixingRule(const MixingRule mixingRule);
+        void setMixingRule(MixingRule mixingRule);
     };
 
 }   // namespace pot

@@ -49,8 +49,8 @@ using namespace linearAlgebra;
  * @param friction
  */
 LangevinThermostat::LangevinThermostat(
-    const double targetTemperature,
-    const double friction
+    double targetTemperature,
+    double friction
 )
     : Thermostat(targetTemperature), _friction(friction)
 {
@@ -93,8 +93,8 @@ LangevinThermostat &LangevinThermostat::operator=(
  * @param targetTemperature
  */
 void LangevinThermostat::calculateSigma(
-    const double friction,
-    const double targetTemperature
+    double friction,
+    double targetTemperature
 )
 {
     const auto unitConversion   = M2_TO_ANGSTROM2 * KG_TO_GRAM / FS_TO_S;
@@ -130,11 +130,12 @@ void LangevinThermostat::applyLangevin(SimulationBox &simBox)
         };
 
         const auto velocity = atom->getVelocity();
-        auto       dv       = -propagationFactor * _friction * mass * velocity;
+        auto deltaVelocity  = -propagationFactor * _friction * mass * velocity;
 
-        dv += propagationFactor * _sigma * std::sqrt(mass) * randomFactor;
+        deltaVelocity +=
+            propagationFactor * _sigma * std::sqrt(mass) * randomFactor;
 
-        atom->addVelocity(dv);
+        atom->addVelocity(deltaVelocity);
     };
 
     std::ranges::for_each(simBox.getAtoms(), applyFriction);
@@ -184,7 +185,7 @@ void LangevinThermostat::
  *
  * @param targetTemperature
  */
-void LangevinThermostat::setTargetTemperature(const double targetTemperature)
+void LangevinThermostat::setTargetTemperature(double targetTemperature)
 {
     _targetTemperature = targetTemperature;
     calculateSigma(_friction, targetTemperature);
@@ -195,7 +196,7 @@ void LangevinThermostat::setTargetTemperature(const double targetTemperature)
  *
  * @param friction
  */
-void LangevinThermostat::setFriction(const double friction)
+void LangevinThermostat::setFriction(double friction)
 {
     _friction = friction;
     calculateSigma(friction, _targetTemperature);
@@ -206,7 +207,7 @@ void LangevinThermostat::setFriction(const double friction)
  *
  * @param sigma
  */
-void LangevinThermostat::setSigma(const double sigma) { _sigma = sigma; }
+void LangevinThermostat::setSigma(double sigma) { _sigma = sigma; }
 
 /***************************
  *                         *

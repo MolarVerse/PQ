@@ -54,9 +54,8 @@ namespace out
         void write(
             molsys::SimulationBox &,
             const thermostat::Thermostat &,
-            const size_t
+            size_t
         );
-        void writeNHChain(const thermostat::Thermostat &, std::ostringstream &);
     };
 
 }   // namespace out

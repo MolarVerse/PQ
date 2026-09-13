@@ -46,7 +46,7 @@ namespace out
        public:
         using Output::Output;
 
-        void write(const size_t, const molsys::Box &);
+        void write(size_t, const molsys::Box &);
     };
 
 }   // namespace out

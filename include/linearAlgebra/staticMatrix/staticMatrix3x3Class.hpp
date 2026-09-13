@@ -62,12 +62,12 @@ namespace linearAlgebra
         );
 
         // NOLINTBEGIN(google-explicit-constructor, hicpp-explicit-conversions)
-        StaticMatrix3x3(const T t);
+        StaticMatrix3x3(const T &mat);
         // NOLINTEND(google-explicit-constructor, hicpp-explicit-conversions)
         explicit StaticMatrix3x3(const std::vector<T> &vector);
 
-        Vector3D<T>       &operator[](const size_t index);
-        const Vector3D<T> &operator[](const size_t index) const;
+        Vector3D<T>       &operator[](size_t index);
+        const Vector3D<T> &operator[](size_t index) const;
 
         friend bool operator==(
             const StaticMatrix3x3 &lhs,

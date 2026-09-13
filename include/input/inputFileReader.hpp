@@ -49,7 +49,7 @@ namespace input
         const std::string &fileName,
         std::unique_ptr<engine::Engine> &
     );
-    void processEqualSign(std::string &command, const size_t lineNumber);
+    void processEqualSign(std::string &command, size_t lineNumber);
 
     /**
      * @class InputFileReader
@@ -90,8 +90,8 @@ namespace input
          * standard setter methods *
          ***************************/
 
-        void setFilename(const std::string_view fileName);
-        void setKeywordCount(const std::string &keyword, const size_t count);
+        void setFilename(std::string_view fileName);
+        void setKeywordCount(const std::string &keyword, size_t count);
 
         /***************************
          * standard getter methods *
@@ -113,14 +113,13 @@ namespace input
          * input validation functions *
          ******************************/
 
-        void validateTimings() const;
-        void validateOptimizer() const;
-        void validateQM() const;
-        void validateThermostat() const;
-        void validateManostat() const;
-        void validateCellList() const;
-        void validateReactionFieldCoulomb() const;
-        void validateRingPolymer() const;
+        void        validateTimings() const;
+        void        validateQM() const;
+        void        validateThermostat() const;
+        void        validateManostat() const;
+        void        validateReactionFieldCoulomb() const;
+        void        validateRingPolymer() const;
+        static void validateCellList();
     };
 
 }   // namespace input

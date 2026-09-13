@@ -38,9 +38,9 @@ namespace forceField
         physicalData::PhysicalData  &physicalData,
         const molsys::Molecule      *molecule1,
         const molsys::Molecule      *molecule2,
-        const AtomIndex              atomIndex1,
-        const AtomIndex              atomIndex2,
-        const double                 distance
+        AtomIndex                    atomIndex1,
+        AtomIndex                    atomIndex2,
+        double                       distance
     );
 }   // namespace forceField
 

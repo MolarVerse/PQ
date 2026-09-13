@@ -53,9 +53,9 @@ namespace constraints
         BondConstraint(
             molsys::Molecule *molecule1,
             molsys::Molecule *molecule2,
-            const AtomIndex   atomIndex1,
-            const AtomIndex   atomIndex2,
-            const double      bondLength
+            AtomIndex         atomIndex1,
+            AtomIndex         atomIndex2,
+            double            bondLength
         );
 
         void calculateConstraintBondRef(const molsys::SimulationBox &);
@@ -65,11 +65,10 @@ namespace constraints
         ) const;
         [[nodiscard]] double calculateVelocityDelta() const;
 
-        [[nodiscard]] bool applyShake(
-            const molsys::SimulationBox &,
-            const double
-        );
-        [[nodiscard]] bool applyRattle(const double);
+        [[nodiscard]]
+        bool applyShake(const molsys::SimulationBox &, double);
+
+        [[nodiscard]] bool applyRattle(double);
 
         /***************************
          * standard setter methods *

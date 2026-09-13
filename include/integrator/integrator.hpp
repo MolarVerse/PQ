@@ -47,18 +47,18 @@ namespace integrator
         std::string _integratorType;   // TODO: make enum
 
        public:
-        explicit Integrator(const std::string_view integratorType);
+        explicit Integrator(std::string_view integratorType);
         Integrator()          = default;
         virtual ~Integrator() = default;
 
         virtual void firstStep(molsys::SimulationBox &)  = 0;
         virtual void secondStep(molsys::SimulationBox &) = 0;
 
-        void integrateVelocities(molsys::Atom *) const;
-        void integratePositions(
+        static void integrateVelocities(molsys::Atom *);
+        static void integratePositions(
             molsys::Atom *,
             const molsys::SimulationBox &
-        ) const;
+        );
 
         /********************************
          * standard getters and setters *

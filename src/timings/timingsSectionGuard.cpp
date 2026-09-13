@@ -34,8 +34,8 @@ namespace timings
      * @param name
      */
     TimingsSectionGuard::TimingsSectionGuard(
-        Timer&                 timer,
-        const std::string_view name
+        Timer&           timer,
+        std::string_view name
     )
         : _timer(timer), _name(name)
     {

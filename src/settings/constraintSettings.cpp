@@ -155,7 +155,7 @@ double ConstraintSettings::getMShakeTolerance() { return _mshakeTolerance; }
  *
  * @param shakeMaxIter
  */
-void ConstraintSettings::setShakeMaxIter(const size_t shakeMaxIter)
+void ConstraintSettings::setShakeMaxIter(size_t shakeMaxIter)
 {
     _shakeMaxIter = shakeMaxIter;
 }
@@ -165,7 +165,7 @@ void ConstraintSettings::setShakeMaxIter(const size_t shakeMaxIter)
  *
  * @param rattleMaxIter
  */
-void ConstraintSettings::setRattleMaxIter(const size_t rattleMaxIter)
+void ConstraintSettings::setRattleMaxIter(size_t rattleMaxIter)
 {
     _rattleMaxIter = rattleMaxIter;
 }
@@ -175,7 +175,7 @@ void ConstraintSettings::setRattleMaxIter(const size_t rattleMaxIter)
  *
  * @param mshakeMaxIter
  */
-void ConstraintSettings::setMShakeMaxIter(const size_t mshakeMaxIter)
+void ConstraintSettings::setMShakeMaxIter(size_t mshakeMaxIter)
 {
     _mshakeMaxIter = mshakeMaxIter;
 }
@@ -185,7 +185,7 @@ void ConstraintSettings::setMShakeMaxIter(const size_t mshakeMaxIter)
  *
  * @param shakeTolerance
  */
-void ConstraintSettings::setShakeTolerance(const double shakeTolerance)
+void ConstraintSettings::setShakeTolerance(double shakeTolerance)
 {
     _shakeTolerance = shakeTolerance;
 }
@@ -195,7 +195,7 @@ void ConstraintSettings::setShakeTolerance(const double shakeTolerance)
  *
  * @param rattleTolerance
  */
-void ConstraintSettings::setRattleTolerance(const double rattleTolerance)
+void ConstraintSettings::setRattleTolerance(double rattleTolerance)
 {
     _rattleTolerance = rattleTolerance;
 }
@@ -205,7 +205,7 @@ void ConstraintSettings::setRattleTolerance(const double rattleTolerance)
  *
  * @param mshakeTolerance
  */
-void ConstraintSettings::setMShakeTolerance(const double mshakeTolerance)
+void ConstraintSettings::setMShakeTolerance(double mshakeTolerance)
 {
     _mshakeTolerance = mshakeTolerance;
 }

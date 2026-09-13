@@ -36,7 +36,7 @@ MixingRule NonCoulombPotential::getMixingRule() const { return _mixingRule; }
  *
  * @param mixingRule
  */
-void NonCoulombPotential::setMixingRule(const MixingRule mixingRule)
+void NonCoulombPotential::setMixingRule(MixingRule mixingRule)
 {
     _mixingRule = mixingRule;
 }

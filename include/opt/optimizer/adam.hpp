@@ -48,8 +48,8 @@ namespace opt
         std::vector<linearAlgebra::Vec3D> _momentum2;
 
        public:
-        explicit Adam(const size_t nEpochs, const size_t nAtoms);
-        explicit Adam(const size_t, const double, const double, const size_t);
+        explicit Adam(size_t nEpochs, size_t nAtoms);
+        explicit Adam(size_t, double, double, size_t);
 
         Adam()           = default;
         ~Adam() override = default;
@@ -57,7 +57,7 @@ namespace opt
         [[nodiscard]] std::shared_ptr<Optimizer> clone() const override;
         [[nodiscard]] size_t maxHistoryLength() const override;
 
-        void update(const double learningRate, const size_t step) override;
+        void update(double learningRate, size_t step) override;
     };
 }   // namespace opt
 

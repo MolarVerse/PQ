@@ -22,11 +22,12 @@
 
 #include "testIntraNonBondedReader.hpp"
 
+#include <gtest/gtest.h>
+
 #include <vector>   // for vector
 
 #include "exceptions.hpp"                // for IntraNonBondedException
 #include "fileSettings.hpp"              // for FileSettings
-#include "gtest/gtest.h"                 // for Message, TestPartResult, TEST_F
 #include "intraNonBondedContainer.hpp"   // for IntraNonBondedContainer
 #include "throwWithMessage.hpp"          // for EXPECT_THROW_MSG
 

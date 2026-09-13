@@ -25,7 +25,6 @@
 #include <iosfwd>   // for ifstream
 #include <string>   // for getline, allocator, string
 
-#include "gtest/gtest.h"   // for Message, TestPartResult
 #include "outputFileSettings.hpp"
 
 /**

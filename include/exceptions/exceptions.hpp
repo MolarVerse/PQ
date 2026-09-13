@@ -30,79 +30,82 @@
 namespace exc
 {
     using InputFileException =
-        BaseException<Color::FG_RED, ExceptionType::InputFileError>;
+        BaseException<Color::Code::FG_RED, ExceptionType::InputFileError>;
 
     using RstFileException =
-        BaseException<Color::FG_RED, ExceptionType::RstFileError>;
+        BaseException<Color::Code::FG_RED, ExceptionType::RstFileError>;
 
     using UserInputException =
-        BaseException<Color::FG_RED, ExceptionType::UserInputError>;
+        BaseException<Color::Code::FG_RED, ExceptionType::UserInputError>;
 
     using MolDescriptorException =
-        BaseException<Color::FG_RED, ExceptionType::MoldescriptorError>;
+        BaseException<Color::Code::FG_RED, ExceptionType::MoldescriptorError>;
 
     using UserInputExceptionWarning =
-        BaseException<Color::FG_ORANGE, ExceptionType::UserInputWarning>;
+        BaseException<Color::Code::FG_ORANGE, ExceptionType::UserInputWarning>;
 
     using GuffDatException =
-        BaseException<Color::FG_RED, ExceptionType::GuffDatError>;
+        BaseException<Color::Code::FG_RED, ExceptionType::GuffDatError>;
 
     using TopologyException =
-        BaseException<Color::FG_RED, ExceptionType::TopologyError>;
+        BaseException<Color::Code::FG_RED, ExceptionType::TopologyError>;
 
     using ParameterFileException =
-        BaseException<Color::FG_RED, ExceptionType::ParameterFileError>;
+        BaseException<Color::Code::FG_RED, ExceptionType::ParameterFileError>;
 
     using ManostatException =
-        BaseException<Color::FG_RED, ExceptionType::ManostatError>;
+        BaseException<Color::Code::FG_RED, ExceptionType::ManostatError>;
 
     using IntraNonBondedException =
-        BaseException<Color::FG_RED, ExceptionType::IntraNonBondedError>;
+        BaseException<Color::Code::FG_RED, ExceptionType::IntraNonBondedError>;
 
     using ShakeException =
-        BaseException<Color::FG_RED, ExceptionType::ShakeError>;
+        BaseException<Color::Code::FG_RED, ExceptionType::ShakeError>;
 
     using CellListException =
-        BaseException<Color::FG_RED, ExceptionType::CellListError>;
+        BaseException<Color::Code::FG_RED, ExceptionType::CellListError>;
 
     using RingPolymerRestartFileException = BaseException<
-        Color::FG_RED,
+        Color::Code::FG_RED,
         ExceptionType::RingPolymerRestartFileError>;
 
     using QMRunnerException =
-        BaseException<Color::FG_RED, ExceptionType::QmRunnerError>;
+        BaseException<Color::Code::FG_RED, ExceptionType::QmRunnerError>;
 
-    using MPIException = BaseException<Color::FG_RED, ExceptionType::MpiError>;
+    using MPIException =
+        BaseException<Color::Code::FG_RED, ExceptionType::MpiError>;
 
     using QMRunTimeExceeded =
-        BaseException<Color::FG_RED, ExceptionType::QmRuntimeExceeded>;
+        BaseException<Color::Code::FG_RED, ExceptionType::QmRuntimeExceeded>;
 
     using MShakeFileException =
-        BaseException<Color::FG_RED, ExceptionType::MShakeFileError>;
+        BaseException<Color::Code::FG_RED, ExceptionType::MShakeFileError>;
 
     using MShakeException =
-        BaseException<Color::FG_RED, ExceptionType::MShakeError>;
+        BaseException<Color::Code::FG_RED, ExceptionType::MShakeError>;
 
     using LinearAlgebraException =
-        BaseException<Color::FG_RED, ExceptionType::LinearAlgebraError>;
+        BaseException<Color::Code::FG_RED, ExceptionType::LinearAlgebraError>;
 
     using OptException =
-        BaseException<Color::FG_RED, ExceptionType::OptimizationError>;
+        BaseException<Color::Code::FG_RED, ExceptionType::OptimizationError>;
 
-    using OptWarning =
-        BaseException<Color::FG_ORANGE, ExceptionType::OptimizationWarning>;
+    using OptWarning = BaseException<
+        Color::Code::FG_ORANGE,
+        ExceptionType::OptimizationWarning>;
 
     using CompileTimeException =
-        BaseException<Color::FG_RED, ExceptionType::CompileTimeError>;
+        BaseException<Color::Code::FG_RED, ExceptionType::CompileTimeError>;
 
-    using HybridConfiguratorException =
-        BaseException<Color::FG_RED, ExceptionType::HybridConfiguratorError>;
+    using HybridConfiguratorException = BaseException<
+        Color::Code::FG_RED,
+        ExceptionType::HybridConfiguratorError>;
 
     using HybridMDEngineException =
-        BaseException<Color::FG_RED, ExceptionType::HybridMDEngineError>;
+        BaseException<Color::Code::FG_RED, ExceptionType::HybridMDEngineError>;
 
     using TimerException =
-        BaseException<Color::FG_RED, ExceptionType::TimerError>;
+        BaseException<Color::Code::FG_RED, ExceptionType::TimerError>;
 
 }   // namespace exc
 

@@ -52,13 +52,14 @@ namespace pot
         )
             : CoulombPotential{coulombRadiusCutOff},
               _epsilon{epsilon},
-              _rfPrefactor{(epsilon - 1.0) / (2.0 * epsilon + 1.0)}
+              _rfPrefactor{(epsilon - 1) / (2.0 * epsilon + 1)}
         {
         }
 
-        [[nodiscard]] std::pair<double, double> calculate(
-            const double distance,
-            const double chargeProduct
+        [[nodiscard]]
+        std::pair<double, double> calculate(
+            double distance,
+            double chargeProduct
         ) const override;
     };
 

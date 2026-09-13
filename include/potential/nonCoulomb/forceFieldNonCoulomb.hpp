@@ -64,8 +64,8 @@ namespace pot
         void fillDiagOfNonCoulPairsMatrix(
             std::vector<std::shared_ptr<NonCoulombPair>> &
         );
-        void fillOffDiagOfNonCoulPairsMatrix();
-        void sortNonCoulombicsPairs(
+        void        fillOffDiagOfNonCoulPairsMatrix();
+        static void sortNonCoulombicsPairs(
             std::vector<std::shared_ptr<NonCoulombPair>> &diagonalElements
         );
         void setOffDiagonalElement(VdwType atomType1, VdwType atomType2);
@@ -77,8 +77,8 @@ namespace pot
         [[nodiscard]]
         std::
             optional<std::shared_ptr<NonCoulombPair>> findNonCoulPairByInternalTypes(
-                const VdwType intType1,
-                const VdwType intType2
+                VdwType intType1,
+                VdwType intType2
             ) const;
 
         void addNonCoulombicPair(const std::shared_ptr<NonCoulombPair> &pair);

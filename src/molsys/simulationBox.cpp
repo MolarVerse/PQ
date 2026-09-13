@@ -404,7 +404,7 @@ namespace molsys
 
         auto searchMoleculeTypes = [&neededMolTypes, this](const auto& molecule)
         {
-            auto predicate = [&molecule](const auto moleculeType)
+            auto predicate = [&molecule](const auto& moleculeType)
             { return molecule.getMoltype() == moleculeType.getMoltype(); };
 
             const auto molType =
@@ -431,7 +431,7 @@ namespace molsys
         auto setPartialCharges =
             [&moleculeTypes = _moleculeTypes](Molecule& molecule)
         {
-            auto predicate = [&molecule](const auto moleculeType)
+            auto predicate = [&molecule](const auto& moleculeType)
             { return molecule.getMoltype() == moleculeType.getMoltype(); };
 
             const auto molType = std::ranges::find_if(moleculeTypes, predicate);
@@ -722,7 +722,7 @@ namespace molsys
      * of the minimal box dimension
      */
     void SimulationBox::checkCoulRadiusCutOff(
-        const ExceptionType exceptionType
+        const ExceptionType& exceptionType
     ) const
     {
         const auto coulRadiusCutOff =

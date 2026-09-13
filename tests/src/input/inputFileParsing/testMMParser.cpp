@@ -29,7 +29,6 @@
 #include "engine.hpp"                // for Engine
 #include "exceptions.hpp"            // for InputFileException, customException
 #include "forceFieldSettings.hpp"    // for ForceFieldSettings
-#include "gtest/gtest.h"             // for AssertionResult, Message
 #include "potentialSettings.hpp"     // for PotentialSettings
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "throwWithMessage.hpp"      // for ASSERT_THROW_MSG
@@ -81,28 +80,28 @@ TEST_F(TestInputFileReader, testParseNonCoulombType)
 {
     MMInputParser parser(_engine->getForceField(), _engine->getPotential());
     std::vector<std::string> lineElements = {"noncoulomb", "=", "guff"};
-    parser.parseNonCoulombType(lineElements, 0);
+    input::MMInputParser::parseNonCoulombType(lineElements, 0);
     EXPECT_EQ(
         settings::PotentialSettings::getNonCoulombType(),
         settings::NonCoulombType::GUFF
     );
 
     lineElements = {"noncoulomb", "=", "lj"};
-    parser.parseNonCoulombType(lineElements, 0);
+    input::MMInputParser::parseNonCoulombType(lineElements, 0);
     EXPECT_EQ(
         settings::PotentialSettings::getNonCoulombType(),
         settings::NonCoulombType::LJ
     );
 
     lineElements = {"noncoulomb", "=", "buck"};
-    parser.parseNonCoulombType(lineElements, 0);
+    input::MMInputParser::parseNonCoulombType(lineElements, 0);
     EXPECT_EQ(
         settings::PotentialSettings::getNonCoulombType(),
         settings::NonCoulombType::BUCKINGHAM
     );
 
     lineElements = {"noncoulomb", "=", "morse"};
-    parser.parseNonCoulombType(lineElements, 0);
+    input::MMInputParser::parseNonCoulombType(lineElements, 0);
     EXPECT_EQ(
         settings::PotentialSettings::getNonCoulombType(),
         settings::NonCoulombType::MORSE

@@ -41,6 +41,38 @@ using namespace molsys;
 using namespace utilities;
 using namespace exc;
 
+namespace
+{
+    /**
+     * @brief convert external to internal atom types
+     *
+     * @details In order to manage if user declares for example only atom type 1
+     * and 3 in the moldescriptor file, the internal atom types are the 0 and 1.
+     *
+     * @param molecule
+     */
+    void convertExternalToInternalAtomTypes(MoleculeType &molecule)
+    {
+        const size_t numberOfAtoms = molecule.getNumberOfAtoms();
+
+        for (AtomIndex i{0}; i.get() < numberOfAtoms; ++i)
+        {
+            const size_t externalAtomType = molecule.getExternalAtomType(i);
+            molecule.addExternalToInternalAtomTypeElement(
+                externalAtomType,
+                i.get()
+            );
+        }
+
+        for (AtomIndex i{0}; i.get() < numberOfAtoms; ++i)
+        {
+            const size_t externalAtomType = molecule.getExternalAtomType(i);
+            molecule.addAtomType(molecule.getInternalAtomType(externalAtomType)
+            );
+        }
+    }
+}   // namespace
+
 /**
  * @brief constructor
  *
@@ -65,7 +97,7 @@ void input::molDescriptor::readMolDescriptor(Engine &engine)
 {
     const auto filename = FileSettings::getMolDescriptorFileName();
 
-    engine.getStdoutOutput().writeRead("Moldescriptor File", filename);
+    out::StdoutOutput::writeRead("Moldescriptor File", filename);
     engine.getLogOutput().writeRead("Moldescriptor File", filename);
 
     MoldescriptorReader reader(engine);
@@ -256,34 +288,4 @@ void MoldescriptorReader::processMolecule(
     convertExternalToInternalAtomTypes(molecule);
 
     simBox.addMoleculeType(molecule);
-}
-
-/**
- * @brief convert external to internal atom types
- *
- * @details In order to manage if user declares for example only atom type 1 and
- * 3 in the moldescriptor file, the internal atom types are the 0 and 1.
- *
- * @param molecule
- */
-void MoldescriptorReader::convertExternalToInternalAtomTypes(
-    MoleculeType &molecule
-) const
-{
-    const size_t numberOfAtoms = molecule.getNumberOfAtoms();
-
-    for (AtomIndex i{0}; i.get() < numberOfAtoms; ++i)
-    {
-        const auto externalAtomType = molecule.getExternalAtomType(i);
-        molecule.addExternalToInternalAtomTypeElement(
-            externalAtomType,
-            i.get()
-        );
-    }
-
-    for (AtomIndex i{0}; i.get() < numberOfAtoms; ++i)
-    {
-        const auto externalAtomType = molecule.getExternalAtomType(i);
-        molecule.addAtomType(molecule.getInternalAtomType(externalAtomType));
-    }
 }

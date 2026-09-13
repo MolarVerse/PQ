@@ -29,7 +29,7 @@
 #include "dihedralSection.hpp"               // for DihedralSection
 #include "engine.hpp"                        // for Engine
 #include "exceptions.hpp"                    // for ParameterFileException
-#include "gtest/gtest.h"                     // for Message, TestPartResult
+                                             // for Message, TestPartResult
 #include "testParameterFileSection.hpp"      // for TestParameterFileSection
 #include "throwWithMessage.hpp"              // for ASSERT_THROW_MSG
 

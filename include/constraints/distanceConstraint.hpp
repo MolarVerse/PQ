@@ -61,18 +61,15 @@ namespace constraints
         DistanceConstraint(
             molsys::Molecule *molecule1,
             molsys::Molecule *molecule2,
-            const AtomIndex   atomIndex1,
-            const AtomIndex   atomIndex2,
-            const double      lowerDistance,
-            const double      upperDistance,
-            const double      springConstant,
-            const double      dSpringConstantDt
+            AtomIndex         atomIndex1,
+            AtomIndex         atomIndex2,
+            double            lowerDistance,
+            double            upperDistance,
+            double            springConstant,
+            double            dSpringConstantDt
         );
 
-        void applyDistanceConstraint(
-            const molsys::SimulationBox &,
-            const double
-        );
+        void applyDistanceConstraint(const molsys::SimulationBox &, double);
 
         [[nodiscard]] double getLowerDistance() const;
         [[nodiscard]] double getUpperDistance() const;

@@ -60,7 +60,7 @@ namespace thermostat
         size_t _rampingFrequency    = 0;
 
        public:
-        explicit Thermostat(const double targetTemperature);
+        explicit Thermostat(double targetTemperature);
 
         Thermostat()          = default;
         virtual ~Thermostat() = default;
@@ -89,10 +89,10 @@ namespace thermostat
          * standard setter methods *
          ***************************/
 
-        virtual void setTargetTemperature(const double targetTemperature);
-        void         setTemperatureIncrease(const double temperatureIncrease);
-        void         setTemperatureRampingSteps(const size_t steps);
-        void         setTemperatureRampingFrequency(const size_t frequency);
+        virtual void setTargetTemperature(double targetTemperature);
+        void         setTemperatureIncrease(double temperatureIncrease);
+        void         setTemperatureRampingSteps(size_t steps);
+        void         setTemperatureRampingFrequency(size_t frequency);
 
         /***************************
          * standard getter methods *

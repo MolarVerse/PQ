@@ -122,7 +122,7 @@ HybridInputParser::HybridInputParser()
  */
 void HybridInputParser::parseInnerRegionCenter(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -140,7 +140,7 @@ void HybridInputParser::parseInnerRegionCenter(
  */
 void HybridInputParser::parseForcedCoreList(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -158,7 +158,7 @@ void HybridInputParser::parseForcedCoreList(
  */
 void HybridInputParser::parseForcedLayerList(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -176,7 +176,7 @@ void HybridInputParser::parseForcedLayerList(
  */
 void HybridInputParser::parseForcedOuterList(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -193,7 +193,7 @@ void HybridInputParser::parseForcedOuterList(
  */
 void HybridInputParser::parseUseQMCharges(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -227,7 +227,7 @@ void HybridInputParser::parseUseQMCharges(
  */
 void HybridInputParser::parseCoreRadius(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -258,7 +258,7 @@ void HybridInputParser::parseCoreRadius(
  */
 void HybridInputParser::parseLayerRadius(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -289,7 +289,7 @@ void HybridInputParser::parseLayerRadius(
  */
 void HybridInputParser::parseSmoothingRegionThickness(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -320,7 +320,7 @@ void HybridInputParser::parseSmoothingRegionThickness(
  */
 void HybridInputParser::parsePointChargeThickness(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -351,7 +351,7 @@ void HybridInputParser::parsePointChargeThickness(
  */
 void HybridInputParser::parseSmoothingMethod(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -389,7 +389,7 @@ void HybridInputParser::parseSmoothingMethod(
  */
 void HybridInputParser::parseQMForceDistribution(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -529,10 +529,10 @@ std::vector<int> HybridInputParser::parseSelectionNoPython(
 
         // remove all whitespaces from the atom index string
         atomIndexStr.remove_prefix(
-            std::min(atomIndexStr.find_first_not_of(" "), atomIndexStr.size())
+            std::min(atomIndexStr.find_first_not_of(' '), atomIndexStr.size())
         );
         const auto min = std::min(
-            atomIndexStr.find_last_not_of(" ") + 1,
+            atomIndexStr.find_last_not_of(' ') + 1,
             atomIndexStr.size()
         );
         atomIndexStr.remove_suffix(atomIndexStr.size() - min);

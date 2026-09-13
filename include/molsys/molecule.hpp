@@ -44,7 +44,7 @@ namespace molsys
      * the center of mass in hybrid calculations. The zones are assigned
      * concentrically based on radial distance thresholds.
      */
-    enum class HybridZone : size_t
+    enum class HybridZone : std::uint8_t
     {
         /** Default, molecule not assigned to any hybrid zone */
         NOT_HYBRID,
@@ -102,8 +102,8 @@ namespace molsys
 
        public:
         Molecule() = default;
-        explicit Molecule(const std::string_view name);
-        explicit Molecule(const size_t moltype);
+        explicit Molecule(std::string_view name);
+        explicit Molecule(size_t moltype);
 
         void calculateCenterOfMass(const Box &);
         void reconstructAtomsAroundCenterOfMass(const Box &);
@@ -127,7 +127,7 @@ namespace molsys
          * standard adder methods for atom data *
          *****************************************/
 
-        void addAtom(const std::shared_ptr<Atom> atom);
+        void addAtom(const std::shared_ptr<Atom> &atom);
         void addAtomPosition(
             AtomIndex                   index,
             const linearAlgebra::Vec3D &position
@@ -147,19 +147,16 @@ namespace molsys
          ****************************************/
 
         void setAtomPosition(
-            const size_t                index,
+            size_t                      index,
             const linearAlgebra::Vec3D &position
         );
         void setAtomVelocity(
-            const size_t                index,
+            size_t                      index,
             const linearAlgebra::Vec3D &velocity
         );
-        void setAtomForce(
-            const size_t                index,
-            const linearAlgebra::Vec3D &force
-        );
+        void setAtomForce(size_t index, const linearAlgebra::Vec3D &force);
         void setAtomShiftForce(
-            const size_t                index,
+            size_t                      index,
             const linearAlgebra::Vec3D &shiftForce
         );
 
@@ -180,10 +177,10 @@ namespace molsys
         linearAlgebra::Vec3D getAtomForce(AtomIndex) const;
 
         [[nodiscard]] linearAlgebra::Vec3D getAtomShiftForce(
-            const size_t index
+            size_t index
         ) const;
 
-        [[nodiscard]] AtomNumber  getAtomicNumber(const size_t index) const;
+        [[nodiscard]] AtomNumber  getAtomicNumber(size_t index) const;
         [[nodiscard]] double      getAtomMass(AtomIndex index) const;
         [[nodiscard]] double      getPartialCharge(AtomIndex index) const;
         [[nodiscard]] size_t      getAtomType(AtomIndex index) const;
@@ -222,20 +219,20 @@ namespace molsys
          * standard setter methods *
          ***************************/
 
-        void setName(const std::string_view name);
+        void setName(std::string_view name);
 
-        void setNumberOfAtoms(const size_t numberOfAtoms);
-        void setMoltype(const size_t moltype);
+        void setNumberOfAtoms(size_t numberOfAtoms);
+        void setMoltype(size_t moltype);
 
-        void setCharge(const int charge);
-        void setMolMass(const double molMass);
+        void setCharge(int charge);
+        void setMolMass(double molMass);
         void setCenterOfMass(const linearAlgebra::Vec3D &centerOfMass);
-        void setHybridZone(const HybridZone hybridZone);
-        void setSmoothingFactor(const double factor);
+        void setHybridZone(HybridZone hybridZone);
+        void setSmoothingFactor(double factor);
 
-        void setForcedCore(const bool isForcedCore);
-        void setForcedLayer(const bool isForcedLayer);
-        void setForcedOuter(const bool isForcedOuter);
+        void setForcedCore(bool isForcedCore);
+        void setForcedLayer(bool isForcedLayer);
+        void setForcedOuter(bool isForcedOuter);
     };
 
 }   // namespace molsys

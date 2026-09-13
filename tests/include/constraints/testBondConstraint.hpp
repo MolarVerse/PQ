@@ -67,8 +67,8 @@ class TestBondConstraint : public ::testing::Test
         _box->setBoxDimensions(linearAlgebra::Vec3D(10.0, 10.0, 10.0));
 
         _bondConstraint = new constraints::BondConstraint(
-            &(_box->getMolecules()[0]),
-            &(_box->getMolecules()[0]),
+            _box->getMolecules().data(),
+            _box->getMolecules().data(),
             AtomIndex{0},
             AtomIndex{1},
             _targetBondLength
