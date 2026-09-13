@@ -22,7 +22,7 @@
 
 #include "testSimulationBox.hpp"
 
-#include <cstddef>    // for size_t, std
+#include <cstddef>   // for size_t, std
 #include <optional>   // for optional
 #include <string>     // for string
 #include <vector>     // for vector

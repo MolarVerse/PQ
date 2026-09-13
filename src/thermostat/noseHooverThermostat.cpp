@@ -81,7 +81,7 @@ void NoseHooverThermostat::applyThermostatOnForces(SimulationBox &simBox)
 
     auto factor  = _chi[0] * couplingFreqSquared;
     factor      /= (kT_target * degreesOfFreedom);
-    factor      *= MOMENTUM_TO_FORCE;
+    factor       *= MOMENTUM_TO_FORCE;
 
     auto applyNoseHoover = [factor](auto &atom)
     { atom->addForce(-factor * atom->getVelocity() * atom->getMass()); };
@@ -137,7 +137,7 @@ void NoseHooverThermostat::applyThermostat(
     for (size_t i = 1; i < _chi.size() - 1; ++i)
     {
         chi  = ratio;
-        chi -= thermalEnergyTarget;
+        chi  -= thermalEnergyTarget;
         chi -=
             _chi[i] * _chi[i + 1] / thermalEnergyTarget * couplingFreqSquared;
 
