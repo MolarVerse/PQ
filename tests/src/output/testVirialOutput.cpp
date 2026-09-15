@@ -31,7 +31,7 @@
 #include "vector3d.hpp"   // IWYU pragma: keep
 #include "virialOutput.hpp"
 
-using namespace output;
+using namespace out;
 using physicalData::PhysicalData;
 
 namespace

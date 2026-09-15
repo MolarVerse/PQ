@@ -22,7 +22,7 @@
 
 #include "guffNonCoulomb.hpp"
 
-using namespace potential;
+using namespace pot;
 
 /**
  * @brief resizes the outermost vector of the 4d vector _guffNonCoulombPairs
@@ -122,7 +122,8 @@ void GuffNonCoulomb::setGuffNonCoulPair(
  * @return std::shared_ptr<NonCoulombPair>
  */
 std::shared_ptr<NonCoulombPair> GuffNonCoulomb::getNonCoulPair(
-    const std::vector<size_t> &indices
+    const std::vector<size_t> &indices,
+    const std::pair<VdwType, VdwType> & /*vdwTypes*/
 )
 {
     const auto m1 = getMolType1(indices) - 1;

@@ -31,9 +31,9 @@
 #include "simulationBox.hpp"         // for SimulationBox
 
 using namespace intraNonBonded;
-using namespace potential;
+using namespace pot;
 using namespace physicalData;
-using namespace simulationBox;
+using namespace molsys;
 using namespace linearAlgebra;
 using namespace settings;
 
@@ -44,7 +44,7 @@ using namespace settings;
  * @param intraNonBondedType
  */
 IntraNonBondedMap::IntraNonBondedMap(
-    simulationBox::Molecule *molecule,
+    molsys::Molecule        *molecule,
     IntraNonBondedContainer *intraNonBondedType
 )
     : _molecule(molecule), _intraNonBondedContainer(intraNonBondedType)
@@ -82,7 +82,7 @@ void IntraNonBondedMap::calculate(
         {
             const auto [coulombEnergyTemp, nonCoulombEnergyTemp] =
                 calculateSingleInteraction(
-                    atomIndex1,
+                    AtomIndex{atomIndex1},
                     atomIndice,
                     box,
                     physicalData,
@@ -112,9 +112,9 @@ void IntraNonBondedMap::calculate(
  * the interaction
  */
 std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(
-    const size_t atomIdx1,
-    const int    atomIndex2AsInt,
-    const Vec3D &box,
+    const AtomIndex atomIdx1,
+    const int       atomIndex2AsInt,
+    const Vec3D    &box,
     PhysicalData & /*physicalData*/,
     const CoulombPotential *coulPot,
     NonCoulombPotential    *nonCoulPot
@@ -126,7 +126,7 @@ std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(
     auto coulombEnergy    = 0.0;
     auto nonCoulombEnergy = 0.0;
 
-    const auto atomIdx2 = static_cast<size_t>(::abs(atomIndex2AsInt));
+    const auto atomIdx2 = static_cast<AtomIndex>(::abs(atomIndex2AsInt));
     const bool scale    = atomIndex2AsInt < 0;
 
     const auto &pos1 = _molecule->getAtomPosition(atomIdx1);
@@ -166,16 +166,12 @@ std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(
 
         const auto moltype = _molecule->getMoltype();
 
-        const auto combinedIdx = {
-            moltype,
-            moltype,
-            atomType1,
-            atomType2,
-            globalVdwType1,
-            globalVdwType2
-        };
+        const auto combinedIdx = {moltype, moltype, atomType1, atomType2};
 
-        const auto nonCoulombicPair = nonCoulPot->getNonCoulPair(combinedIdx);
+        const auto nonCoulombicPair = nonCoulPot->getNonCoulPair(
+            combinedIdx,
+            {globalVdwType1, globalVdwType2}
+        );
 
         if (distance < nonCoulombicPair->getRadialCutOff())
         {
@@ -227,12 +223,9 @@ IntraNonBondedContainer *IntraNonBondedMap::getIntraNonBondedType() const
 /**
  * @brief get the molecule pointer
  *
- * @return simulationBox::Molecule*
+ * @return molsys::Molecule*
  */
-simulationBox::Molecule *IntraNonBondedMap::getMolecule() const
-{
-    return _molecule;
-}
+molsys::Molecule *IntraNonBondedMap::getMolecule() const { return _molecule; }
 
 /**
  * @brief get the atom indices of the IntraNonBondedContainer object

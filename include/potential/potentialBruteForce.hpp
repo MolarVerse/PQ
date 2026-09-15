@@ -26,7 +26,7 @@
 
 #include "potential.hpp"
 
-namespace potential
+namespace pot
 {
     /**
      * @class PotentialBruteForce
@@ -40,37 +40,37 @@ namespace potential
         ~PotentialBruteForce() override;
 
         void calculateForces(
-            simulationBox::SimulationBox &simBox,
-            physicalData::PhysicalData   &physData,
-            simulationBox::CellList      &cellList
+            molsys::SimulationBox      &simBox,
+            physicalData::PhysicalData &physData,
+            molsys::CellList           &cellList
         ) override;
 
         void calculateCoreToOuterForces(
-            simulationBox::SimulationBox &simBox,
-            physicalData::PhysicalData   &physData,
-            simulationBox::CellList      &cellList
+            molsys::SimulationBox      &simBox,
+            physicalData::PhysicalData &physData,
+            molsys::CellList           &cellList
         ) override;
 
         void calculateLayerToOuterForces(
-            simulationBox::SimulationBox &simBox,
-            physicalData::PhysicalData   &physData,
-            simulationBox::CellList      &cellList
+            molsys::SimulationBox      &simBox,
+            physicalData::PhysicalData &physData,
+            molsys::CellList           &cellList
         ) override;
 
         void calculateOuterToOuterForces(
-            simulationBox::SimulationBox &simBox,
-            physicalData::PhysicalData   &physData,
-            simulationBox::CellList      &cellList
+            molsys::SimulationBox      &simBox,
+            physicalData::PhysicalData &physData,
+            molsys::CellList           &cellList
         ) override;
 
         void calculateHotspotSmoothingMMForces(
-            simulationBox::SimulationBox &simBox,
-            physicalData::PhysicalData   &physData,
-            simulationBox::CellList      &cellList
+            molsys::SimulationBox      &simBox,
+            physicalData::PhysicalData &physData,
+            molsys::CellList           &cellList
         ) override;
 
         [[nodiscard]] std::shared_ptr<Potential> clone() const override;
     };
-}   // namespace potential
+}   // namespace pot
 
 #endif   // _POTENTIAL_BRUTE_FORCE_HPP_

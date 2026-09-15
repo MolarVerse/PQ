@@ -34,9 +34,9 @@
 #include "vector3d.hpp"   // IWYU pragma: keep
 
 using namespace opt;
+using molsys::Atom;
+using molsys::SimulationBox;
 using physicalData::PhysicalData;
-using simulationBox::Atom;
-using simulationBox::SimulationBox;
 
 namespace
 {
@@ -101,8 +101,8 @@ TEST(TestOptimizer, cloneProducesEquivalentObject)
 TEST(TestOptimizer, getHistoryIndexThrowsOnNonNegativeOffset)
 {
     const SteepestDescent opt(1U);
-    EXPECT_THROW((void) opt.getHistoryIndex(0), customException::OptException);
-    EXPECT_THROW((void) opt.getHistoryIndex(1), customException::OptException);
+    EXPECT_THROW((void) opt.getHistoryIndex(0), exc::OptException);
+    EXPECT_THROW((void) opt.getHistoryIndex(1), exc::OptException);
 }
 
 /* ---------- updateHistory + getters ---------- */

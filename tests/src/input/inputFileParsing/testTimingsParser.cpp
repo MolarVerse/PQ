@@ -44,7 +44,7 @@ using namespace ::testing;
  */
 TEST_F(TestInputFileReader, testParseTimestep)
 {
-    TimingsInputParser parser(*_engine);
+    TimingsInputParser parser;
     vector<string>     lineElements = {"timestep", "=", "1"};
     parser.parseTimeStep(lineElements, 0);
     EXPECT_EQ(settings::TimingsSettings::getTimeStep(), 1.0);
@@ -52,7 +52,7 @@ TEST_F(TestInputFileReader, testParseTimestep)
     lineElements = {"timestep", "=", "0"};
     EXPECT_THROW_MSG(
         parser.parseTimeStep(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Time step must be finite and greater than zero"
     );
 
@@ -78,7 +78,7 @@ TEST_F(TestInputFileReader, testParseTimestep)
  */
 TEST_F(TestInputFileReader, testParseNumberOfSteps)
 {
-    TimingsInputParser parser(*_engine);
+    TimingsInputParser parser;
     vector<string>     lineElements = {"nsteps", "=", "1000"};
     parser.parseNumberOfSteps(lineElements, 0);
     EXPECT_EQ(settings::TimingsSettings::getNumberOfSteps(), 1000);
@@ -86,14 +86,14 @@ TEST_F(TestInputFileReader, testParseNumberOfSteps)
     lineElements = {"nsteps", "=", "-1"};
     EXPECT_THROW_MSG(
         parser.parseNumberOfSteps(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Number of steps must be greater than zero"
     );
 
     lineElements = {"nsteps", "=", "0"};
     EXPECT_THROW_MSG(
         parser.parseNumberOfSteps(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Number of steps must be greater than zero"
     );
 }

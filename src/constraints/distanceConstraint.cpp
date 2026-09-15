@@ -28,7 +28,7 @@
 #include "simulationBox.hpp"
 
 using namespace constraints;
-using namespace simulationBox;
+using namespace molsys;
 using namespace connectivity;
 
 /**
@@ -44,14 +44,14 @@ using namespace connectivity;
  * @param dSpringConstantDt
  */
 DistanceConstraint::DistanceConstraint(
-    Molecule    *molecule1,
-    Molecule    *molecule2,
-    const size_t atomIndex1,
-    const size_t atomIndex2,
-    const double lowerDistance,
-    const double upperDistance,
-    const double springConstant,
-    const double dSpringConstantDt
+    Molecule       *molecule1,
+    Molecule       *molecule2,
+    const AtomIndex atomIndex1,
+    const AtomIndex atomIndex2,
+    const double    lowerDistance,
+    const double    upperDistance,
+    const double    springConstant,
+    const double    dSpringConstantDt
 )
     : Bond(molecule1, molecule2, atomIndex1, atomIndex2),
       _lowerDistance(lowerDistance),
@@ -69,8 +69,8 @@ DistanceConstraint::DistanceConstraint(
  *
  */
 void DistanceConstraint::applyDistanceConstraint(
-    const simulationBox::SimulationBox &simulationBox,
-    const double                        dt
+    const molsys::SimulationBox &simulationBox,
+    const double                 dt
 )
 {
     _lowerEnergy = 0.0;

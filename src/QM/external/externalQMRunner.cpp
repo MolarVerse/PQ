@@ -43,11 +43,11 @@
 #include "simulationBox.hpp"   // for SimulationBox
 
 using QM::ExternalQMRunner;
-using enum simulationBox::Periodicity;
+using enum molsys::Periodicity;
 
-using namespace simulationBox;
+using namespace molsys;
 using namespace physicalData;
-using namespace customException;
+using namespace exc;
 using namespace settings;
 using namespace constants;
 

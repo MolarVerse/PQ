@@ -35,21 +35,22 @@
 #include "molecule.hpp"
 #include "moleculeType.hpp"
 #include "settings.hpp"
+#include "strongTypes.hpp"
 #include "testSetup.hpp"
 #include "waterModelSettings.hpp"
 #include "waterModelSetup.hpp"
 
-using customException::MolDescriptorException;
-using customException::UserInputException;
+using exc::MolDescriptorException;
+using exc::UserInputException;
+using molsys::Atom;
+using molsys::Molecule;
+using molsys::MoleculeType;
 using settings::JobType;
 using settings::Settings;
 using settings::WaterInterModel;
 using settings::WaterIntraModel;
 using settings::WaterModelSettings;
 using setup::WaterModelSetup;
-using simulationBox::Atom;
-using simulationBox::Molecule;
-using simulationBox::MoleculeType;
 
 namespace
 {
@@ -151,7 +152,7 @@ TEST_F(TestSetup, waterModelSetupCoversAllIntermolecularModels)
         WaterInterModel::SPC_MTR
     );
 
-    _mdEngine->getCellList()->activate();
+    settings::Settings::activateCellList();
     setupInterModel<waterModel::TIP3PmTRInterParam>(
         *_mdEngine,
         WaterInterModel::TIP3P_MTR
@@ -231,7 +232,13 @@ TEST_F(TestSetup, waterModelSetupRejectsWaterBondsInTopology)
     addWaterSystem(*_mdEngine);
     auto *water = &_mdEngine->getSimulationBox().getMolecule(0);
     _mdEngine->getForceField()->addBond(
-        forceField::BondForceField(water, water, 0, 1, 0)
+        forceField::BondForceField(
+            water,
+            water,
+            AtomIndex{0},
+            AtomIndex{1},
+            BondId{0}
+        )
     );
 
     EXPECT_THROW(WaterModelSetup(*_mdEngine).setup(), UserInputException);
@@ -244,7 +251,11 @@ TEST_F(TestSetup, waterModelSetupRejectsWaterAnglesInTopology)
     addWaterSystem(*_mdEngine);
     auto *water = &_mdEngine->getSimulationBox().getMolecule(0);
     _mdEngine->getForceField()->addAngle(
-        forceField::AngleForceField({water, water, water}, {0, 1, 2}, 0)
+        forceField::AngleForceField(
+            {water, water, water},
+            {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}},
+            AngleId{0}
+        )
     );
 
     EXPECT_THROW(WaterModelSetup(*_mdEngine).setup(), UserInputException);

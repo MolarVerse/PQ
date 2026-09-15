@@ -27,6 +27,7 @@
 #include <cstddef>   // for size_t
 
 #include "inputFileParser.hpp"   // for InputFileParser
+#include "intraNonBonded.hpp"
 
 namespace input
 {
@@ -45,12 +46,10 @@ namespace input
 
        public:
         explicit FilesInputParser(
-            engine::Engine &,
             std::shared_ptr<intraNonBonded::IntraNonBonded> intraNonBonded,
             bool                                            validateFilePaths
         );
         explicit FilesInputParser(
-            engine::Engine &,
             std::shared_ptr<intraNonBonded::IntraNonBonded> intraNonBonded
         );
 

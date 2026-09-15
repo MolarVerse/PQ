@@ -13,7 +13,7 @@ target_include_directories(physicalData
 target_link_libraries(physicalData
     PUBLIC
     utilities
-    simulationBox
+    molsys
     timings
 )
 

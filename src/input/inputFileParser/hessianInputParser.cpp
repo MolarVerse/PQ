@@ -31,11 +31,10 @@
 
 using namespace input;
 using namespace settings;
-using namespace customException;
+using namespace exc;
 using namespace utilities;
 
-HessianInputParser::HessianInputParser(engine::Engine &engine)
-    : InputFileParser(engine)
+HessianInputParser::HessianInputParser()
 {
     addKeyword(
         std::string("hessian_file"),

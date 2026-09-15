@@ -42,19 +42,19 @@ using namespace input;
  */
 TEST_F(TestInputFileReader, parseCellListActivated)
 {
-    CellListInputParser      parser(*_engine, _engine->getCellList());
+    CellListInputParser      parser(_engine->getCellList());
     std::vector<std::string> lineElements = {"cell-list", "=", "off"};
     parser.parseCellListActivated(lineElements, 0);
-    EXPECT_FALSE(_engine->getCellList()->isActive());
+    EXPECT_FALSE(settings::Settings::isCellListActivated());
 
     lineElements = {"cell-list", "=", "on"};
     parser.parseCellListActivated(lineElements, 0);
-    EXPECT_TRUE(_engine->getCellList()->isActive());
+    EXPECT_TRUE(settings::Settings::isCellListActivated());
 
     lineElements = {"cell-list", "=", "notValid"};
     EXPECT_THROW_MSG(
         parser.parseCellListActivated(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Invalid cell-list keyword \"notValid\" at line 0 "
         "in input file\n"
         "Possible keywords are \"on\" and \"off\""
@@ -69,7 +69,7 @@ TEST_F(TestInputFileReader, parseCellListActivated)
  */
 TEST_F(TestInputFileReader, numberOfCells)
 {
-    CellListInputParser      parser(*_engine, _engine->getCellList());
+    CellListInputParser      parser(_engine->getCellList());
     std::vector<std::string> lineElements = {"cell-number", "=", "3"};
     parser.parseNumberOfCells(lineElements, 0);
     EXPECT_EQ(
@@ -80,7 +80,7 @@ TEST_F(TestInputFileReader, numberOfCells)
     lineElements = {"cell-number", "=", "0"};
     EXPECT_THROW_MSG(
         parser.parseNumberOfCells(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Number of cells must be positive - number of cells = 0"
     );
 }

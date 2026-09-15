@@ -64,7 +64,7 @@ void OptEngine::run()
 
     if (!_converged)
     {
-        throw customException::OptException(
+        throw exc::OptException(
             std::format(
                 "Optimizer did not converge after {} epochs.",
                 _optimizer->getNEpochs()
@@ -86,7 +86,7 @@ void OptEngine::run()
         for (size_t i = 0; i < errorMessages.size(); ++i)
             msg += std::format("{}) {}\n", i + 1, errorMessages[i]);
 
-        throw customException::OptException(msg);
+        throw exc::OptException(msg);
     }
 
     timings::GlobalTimer::get().stopSimulationTimer();
@@ -339,9 +339,9 @@ std::shared_ptr<PhysicalData> OptEngine::getSharedPhysicalDataOld()
 /**
  * @brief get the optimizer output
  *
- * @return output::OptOutput&
+ * @return out::OptOutput&
  */
-output::OptOutput &OptEngine::getOptOutput()
+out::OptOutput &OptEngine::getOptOutput()
 {
     return _engineOutput.getOptOutput();
 }

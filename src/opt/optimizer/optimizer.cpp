@@ -30,9 +30,9 @@
 
 using namespace opt;
 using namespace physicalData;
-using namespace simulationBox;
+using namespace molsys;
 using namespace settings;
-using namespace customException;
+using namespace exc;
 
 /**
  * @brief Construct a new Optimizer object

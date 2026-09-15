@@ -44,7 +44,7 @@ TEST_F(TestInputFileReader, testParseTemperature)
 {
     EXPECT_EQ(settings::ThermostatSettings::isTemperatureSet(), false);
 
-    ThermostatInputParser    parser(*_engine);
+    ThermostatInputParser    parser;
     std::vector<std::string> lineElements = {"temp", "=", "300.0"};
     parser.parseTemperature(lineElements, 0);
 
@@ -54,7 +54,7 @@ TEST_F(TestInputFileReader, testParseTemperature)
     lineElements = {"temp", "=", "-100.0"};
     EXPECT_THROW_MSG(
         parser.parseTemperature(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Temperature must be finite and non-negative"
     );
 
@@ -71,7 +71,7 @@ TEST_F(TestInputFileReader, testParseTemperature)
  */
 TEST_F(TestInputFileReader, testParseRelaxationTime)
 {
-    ThermostatInputParser    parser(*_engine);
+    ThermostatInputParser    parser;
     std::vector<std::string> lineElements = {"t_relaxation", "=", "10.0"};
     parser.parseThermostatRelaxationTime(lineElements, 0);
     EXPECT_EQ(settings::ThermostatSettings::getRelaxationTime(), 10.0);
@@ -79,14 +79,14 @@ TEST_F(TestInputFileReader, testParseRelaxationTime)
     lineElements = {"t_relaxation", "=", "-100.0"};
     EXPECT_THROW_MSG(
         parser.parseThermostatRelaxationTime(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Relaxation time of thermostat must be finite and greater than zero"
     );
 
     lineElements = {"t_relaxation", "=", "1e308"};
     EXPECT_THROW_MSG(
         parser.parseThermostatRelaxationTime(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Relaxation time of thermostat is too large to represent in "
         "femtoseconds"
     );
@@ -94,7 +94,7 @@ TEST_F(TestInputFileReader, testParseRelaxationTime)
     lineElements = {"t_relaxation", "=", "0"};
     EXPECT_THROW_MSG(
         parser.parseThermostatRelaxationTime(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Relaxation time of thermostat must be finite and greater than zero"
     );
 }
@@ -108,7 +108,7 @@ TEST_F(TestInputFileReader, testParseRelaxationTime)
  */
 TEST_F(TestInputFileReader, testParseThermostat)
 {
-    ThermostatInputParser    parser(*_engine);
+    ThermostatInputParser    parser;
     std::vector<std::string> lineElements = {"thermostat", "=", "none"};
     parser.parseThermostat(lineElements, 0);
     EXPECT_EQ(
@@ -154,7 +154,7 @@ TEST_F(TestInputFileReader, testParseThermostat)
     lineElements = {"thermostat", "=", "notValid"};
     EXPECT_THROW_MSG(
         parser.parseThermostat(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Invalid thermostat \"notValid\" at line 0 in input file.\n"
         "Possible options are: none, berendsen, "
         "velocity_rescaling, langevin, nh-chain"
@@ -167,7 +167,7 @@ TEST_F(TestInputFileReader, testParseThermostat)
  */
 TEST_F(TestInputFileReader, testParseFriction)
 {
-    ThermostatInputParser    parser(*_engine);
+    ThermostatInputParser    parser;
     std::vector<std::string> lineElements = {"friction", "=", "0.1"};
     parser.parseThermostatFriction(lineElements, 0);
     EXPECT_EQ(settings::ThermostatSettings::getFriction(), 0.1 * 1.0e12);
@@ -175,14 +175,14 @@ TEST_F(TestInputFileReader, testParseFriction)
     lineElements = {"friction", "=", "-0.1"};
     EXPECT_THROW_MSG(
         parser.parseThermostatFriction(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Friction of thermostat must be finite and non-negative"
     );
 
     lineElements = {"friction", "=", "1e308"};
     EXPECT_THROW_MSG(
         parser.parseThermostatFriction(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Friction of thermostat is too large to represent in inverse seconds"
     );
 }
@@ -195,7 +195,7 @@ TEST_F(TestInputFileReader, testParseFriction)
  */
 TEST_F(TestInputFileReader, testParseChainLength)
 {
-    ThermostatInputParser    parser(*_engine);
+    ThermostatInputParser    parser;
     std::vector<std::string> lineElements = {"nh-chain-length", "=", "10"};
     parser.parseThermostatChainLength(lineElements, 0);
     EXPECT_EQ(settings::ThermostatSettings::getNoseHooverChainLength(), 10);
@@ -203,14 +203,14 @@ TEST_F(TestInputFileReader, testParseChainLength)
     lineElements = {"nh-chain-length", "=", "-10"};
     EXPECT_THROW_MSG(
         parser.parseThermostatChainLength(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Chain length of thermostat must be greater than zero"
     );
 
     lineElements = {"nh-chain-length", "=", "0"};
     EXPECT_THROW_MSG(
         parser.parseThermostatChainLength(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Chain length of thermostat must be greater than zero"
     );
 }
@@ -221,7 +221,7 @@ TEST_F(TestInputFileReader, testParseChainLength)
  */
 TEST_F(TestInputFileReader, testParseCouplingFrequency)
 {
-    ThermostatInputParser    parser(*_engine);
+    ThermostatInputParser    parser;
     std::vector<std::string> lineElements = {"coupling_frequency", "=", "10"};
     parser.parseThermostatCouplingFrequency(lineElements, 0);
     EXPECT_EQ(
@@ -232,14 +232,14 @@ TEST_F(TestInputFileReader, testParseCouplingFrequency)
     lineElements = {"coupling_frequency", "=", "-10"};
     EXPECT_THROW_MSG(
         parser.parseThermostatCouplingFrequency(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Coupling frequency of thermostat must be finite and non-negative"
     );
 
     lineElements = {"coupling_frequency", "=", "1e308"};
     EXPECT_THROW_MSG(
         parser.parseThermostatCouplingFrequency(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Coupling frequency of thermostat is too large to represent in hertz"
     );
 }
@@ -252,7 +252,7 @@ TEST_F(TestInputFileReader, testParseCouplingFrequency)
  */
 TEST_F(TestInputFileReader, testParseTemperatureRampSteps)
 {
-    ThermostatInputParser    parser(*_engine);
+    ThermostatInputParser    parser;
     std::vector<std::string> lineElements = {"temp_ramp_steps", "=", "10"};
     parser.parseTemperatureRampSteps(lineElements, 0);
     EXPECT_EQ(settings::ThermostatSettings::getTemperatureRampSteps(), 10);
@@ -260,7 +260,7 @@ TEST_F(TestInputFileReader, testParseTemperatureRampSteps)
     lineElements = {"temp_ramp_steps", "=", "-10"};
     EXPECT_THROW_MSG(
         parser.parseTemperatureRampSteps(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Temperature ramp steps cannot be negative"
     );
 }
@@ -273,7 +273,7 @@ TEST_F(TestInputFileReader, testParseTemperatureRampSteps)
  */
 TEST_F(TestInputFileReader, testParseTemperatureRampFrequency)
 {
-    ThermostatInputParser    parser(*_engine);
+    ThermostatInputParser    parser;
     std::vector<std::string> lineElements = {"temp_ramp_frequency", "=", "10"};
     parser.parseTemperatureRampFrequency(lineElements, 0);
     EXPECT_EQ(settings::ThermostatSettings::getTemperatureRampFrequency(), 10);
@@ -281,14 +281,14 @@ TEST_F(TestInputFileReader, testParseTemperatureRampFrequency)
     lineElements = {"temp_ramp_frequency", "=", "-10"};
     EXPECT_THROW_MSG(
         parser.parseTemperatureRampFrequency(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Temperature ramp frequency must be greater than zero"
     );
 
     lineElements = {"temp_ramp_frequency", "=", "0"};
     EXPECT_THROW_MSG(
         parser.parseTemperatureRampFrequency(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Temperature ramp frequency must be greater than zero"
     );
 }
@@ -301,7 +301,7 @@ TEST_F(TestInputFileReader, testParseTemperatureRampFrequency)
  */
 TEST_F(TestInputFileReader, testParseStartTemperature)
 {
-    ThermostatInputParser    parser(*_engine);
+    ThermostatInputParser    parser;
     std::vector<std::string> lineElements = {"start_temperature", "=", "10"};
     parser.parseStartTemperature(lineElements, 0);
     EXPECT_EQ(settings::ThermostatSettings::getStartTemperature(), 10);
@@ -309,7 +309,7 @@ TEST_F(TestInputFileReader, testParseStartTemperature)
     lineElements = {"start_temperature", "=", "-10"};
     EXPECT_THROW_MSG(
         parser.parseStartTemperature(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Start temperature must be finite and non-negative"
     );
 
@@ -325,7 +325,7 @@ TEST_F(TestInputFileReader, testParseStartTemperature)
  */
 TEST_F(TestInputFileReader, testParseEndTemperature)
 {
-    ThermostatInputParser    parser(*_engine);
+    ThermostatInputParser    parser;
     std::vector<std::string> lineElements = {"end_temperature", "=", "10"};
     parser.parseEndTemperature(lineElements, 0);
     EXPECT_EQ(settings::ThermostatSettings::getEndTemperature(), 10);
@@ -333,7 +333,7 @@ TEST_F(TestInputFileReader, testParseEndTemperature)
     lineElements = {"end_temperature", "=", "-10"};
     EXPECT_THROW_MSG(
         parser.parseEndTemperature(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "End temperature must be finite and non-negative"
     );
 

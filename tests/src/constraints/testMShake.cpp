@@ -37,7 +37,7 @@
 
 using namespace constraints;
 using namespace linearAlgebra;
-using namespace simulationBox;
+using namespace molsys;
 
 /**
  * @brief regression test for the M-SHAKE inner-loop bound (3-atom molecule).
@@ -51,7 +51,7 @@ using namespace simulationBox;
  * one element past the matrix and vector is touched per outer iteration.
  *
  * This test sets up a rigid equilateral triangular reference molecule,
- * stretches one bond in the simulationBox::SimulationBox copy, and runs
+ * stretches one bond in the molsys::SimulationBox copy, and runs
  * applyMShake. With the fixed UT loop bound, applyMShake must converge without
  * throwing.
  */
@@ -82,7 +82,7 @@ TEST(TestMShake, applyMShakeThreeAtomMolecule)
     mShake.addMShakeReference(mShakeRef);
     mShake.initMShake();   // builds the (3, 3) mShake inverse matrix
 
-    // --- simulationBox::SimulationBox with one slightly-stretched triangle ---
+    // --- molsys::SimulationBox with one slightly-stretched triangle ---
     auto simBox = SimulationBox();
     simBox.setBoxDimensions({100.0, 100.0, 100.0});
 
@@ -131,8 +131,8 @@ TEST(TestMShake, applyMShakeThreeAtomMolecule)
 
     // After convergence the perturbed bond 0-1 must be back to the
     // reference length 1.0 within the requested tolerance.
-    const auto pos0   = molecule.getAtomPosition(0);
-    const auto pos1   = molecule.getAtomPosition(1);
+    const auto pos0   = molecule.getAtomPosition(AtomIndex{0});
+    const auto pos1   = molecule.getAtomPosition(AtomIndex{1});
     const auto bond01 = norm(pos1 - pos0);
     EXPECT_NEAR(bond01, 1.0, 1.0e-5);
 }
@@ -201,5 +201,5 @@ TEST(TestMShake, applyMShakeThrowsWhenIterationLimitTooSmall)
     settings::ConstraintSettings::setMShakeMaxIter(1);
     settings::ConstraintSettings::setMShakeTolerance(-1.0);
 
-    EXPECT_THROW(mShake.applyMShake(simBox), customException::MShakeException);
+    EXPECT_THROW(mShake.applyMShake(simBox), exc::MShakeException);
 }

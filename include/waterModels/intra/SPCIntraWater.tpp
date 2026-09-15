@@ -53,8 +53,8 @@
  * @note Inactive molecules are skipped.
  */
 void waterModel::SPCIntraWater::calculate(
-    simulationBox::SimulationBox& box,
-    physicalData::PhysicalData&   physicalData
+    molsys::SimulationBox&      box,
+    physicalData::PhysicalData& physicalData
 )
 {
     auto _ = scopedTimer(TimerId::WaterIntraPotential, "Calculate Potential");
@@ -66,9 +66,9 @@ void waterModel::SPCIntraWater::calculate(
 
     for (auto& water : box.getWaterTypeMolecules())
     {
-        auto& oxygen    = water.getAtom(0);
-        auto& hydrogen1 = water.getAtom(1);
-        auto& hydrogen2 = water.getAtom(2);
+        auto& oxygen    = water.getAtom(AtomIndex{0});
+        auto& hydrogen1 = water.getAtom(AtomIndex{1});
+        auto& hydrogen2 = water.getAtom(AtomIndex{2});
 
         const auto posO  = oxygen.getPosition();
         const auto posH1 = hydrogen1.getPosition();
@@ -108,7 +108,7 @@ void waterModel::SPCIntraWater::calculate(
         oxygen.addForce(forceOH2);
         hydrogen2.addForce(-forceOH2);
 
-        using enum simulationBox::HybridZone;
+        using enum molsys::HybridZone;
         using enum settings::SmoothingMethod;
 
         auto       smF       = 0.0;

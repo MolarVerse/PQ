@@ -38,8 +38,8 @@
 
 using QM::TurbomoleRunner;
 
-using namespace simulationBox;
-using namespace customException;
+using namespace molsys;
+using namespace exc;
 using namespace configurator;
 using namespace constants;
 using namespace settings;
@@ -75,7 +75,7 @@ void TurbomoleRunner::writeCoordsFile(SimulationBox &box)
     coordsFile.close();
 }
 
-void TurbomoleRunner::writePointChargeFile(simulationBox::SimulationBox &box)
+void TurbomoleRunner::writePointChargeFile(molsys::SimulationBox &box)
 {
     const std::string fileName = FileSettings::getPointChargeFileName();
     std::ofstream     pcFile(fileName);

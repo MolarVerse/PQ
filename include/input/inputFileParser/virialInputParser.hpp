@@ -39,7 +39,7 @@ namespace input
     class VirialInputParser : public InputFileParser
     {
        public:
-        explicit VirialInputParser(engine::Engine &);
+        VirialInputParser();
 
         void parseVirial(const std::vector<std::string> &, const size_t);
     };

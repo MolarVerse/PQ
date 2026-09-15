@@ -31,12 +31,12 @@ namespace physicalData
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
 
-namespace simulationBox
+namespace molsys
 {
     class CellList;   // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
-namespace potential
+namespace pot
 {
     /**
      * @class PotentialCellList
@@ -50,38 +50,38 @@ namespace potential
         ~PotentialCellList() override;
 
         void calculateForces(
-            simulationBox::SimulationBox &simBox,
-            physicalData::PhysicalData   &physData,
-            simulationBox::CellList      &cellList
+            molsys::SimulationBox      &simBox,
+            physicalData::PhysicalData &physData,
+            molsys::CellList           &cellList
         ) override;
 
         void calculateCoreToOuterForces(
-            simulationBox::SimulationBox &simBox,
-            physicalData::PhysicalData   &physData,
-            simulationBox::CellList      &cellList
+            molsys::SimulationBox      &simBox,
+            physicalData::PhysicalData &physData,
+            molsys::CellList           &cellList
         ) override;
 
         void calculateLayerToOuterForces(
-            simulationBox::SimulationBox &simBox,
-            physicalData::PhysicalData   &physData,
-            simulationBox::CellList      &cellList
+            molsys::SimulationBox      &simBox,
+            physicalData::PhysicalData &physData,
+            molsys::CellList           &cellList
         ) override;
 
         void calculateOuterToOuterForces(
-            simulationBox::SimulationBox &simBox,
-            physicalData::PhysicalData   &physData,
-            simulationBox::CellList      &cellList
+            molsys::SimulationBox      &simBox,
+            physicalData::PhysicalData &physData,
+            molsys::CellList           &cellList
         ) override;
 
         void calculateHotspotSmoothingMMForces(
-            simulationBox::SimulationBox &simBox,
-            physicalData::PhysicalData   &physData,
-            simulationBox::CellList      &cellList
+            molsys::SimulationBox      &simBox,
+            physicalData::PhysicalData &physData,
+            molsys::CellList           &cellList
         ) override;
 
         [[nodiscard]] std::shared_ptr<Potential> clone() const override;
     };
 
-}   // namespace potential
+}   // namespace pot
 
 #endif   // _POTENTIAL_CELL_LIST_HPP_

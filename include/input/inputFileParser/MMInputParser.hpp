@@ -26,7 +26,9 @@
 
 #include <cstddef>   // for size_t
 
+#include "forceFieldClass.hpp"
 #include "inputFileParser.hpp"   // for InputFileParser
+#include "potential.hpp"
 
 namespace input
 {
@@ -40,13 +42,12 @@ namespace input
     {
        private:
         std::shared_ptr<forceField::ForceField> _forceField;
-        std::shared_ptr<potential::Potential>   _potential;
+        std::shared_ptr<pot::Potential>         _potential;
 
        public:
         explicit MMInputParser(
-            engine::Engine &,
             std::shared_ptr<forceField::ForceField> forceField,
-            std::shared_ptr<potential::Potential>   potential
+            std::shared_ptr<pot::Potential>         potential
         );
 
         void parseForceFieldType(

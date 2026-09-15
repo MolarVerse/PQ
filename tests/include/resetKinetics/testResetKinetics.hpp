@@ -33,7 +33,8 @@
 // #include "vector3d.hpp"             // for Vec3D
 
 // #include <gtest/gtest.h>   // for Test
-// #include <memory>          // for make_shared, __shared_ptr_access, shared_ptr
+// #include <memory>          // for make_shared, __shared_ptr_access,
+// shared_ptr
 
 // /**
 //  * @class TestResetKinetics
@@ -47,15 +48,15 @@
 //     void SetUp() override
 //     {
 //         settings::ThermostatSettings::setTargetTemperature(300.0);
-//         _resetKinetics = new resetKinetics::ResetKinetics(1, 2, 3, 4, 50, 11);
-//         _data          = new physicalData::PhysicalData();
+//         _resetKinetics = new resetKinetics::ResetKinetics(1, 2, 3, 4, 50,
+//         11); _data          = new physicalData::PhysicalData();
 
-//         _simulationBox = new simulationBox::SimulationBox();
+//         _simulationBox = new molsys::SimulationBox();
 
-//         auto molecule1 = simulationBox::Molecule();
+//         auto molecule1 = molsys::Molecule();
 
-//         const auto atom1 = std::make_shared<simulationBox::Atom>();
-//         const auto atom2 = std::make_shared<simulationBox::Atom>();
+//         const auto atom1 = std::make_shared<molsys::Atom>();
+//         const auto atom2 = std::make_shared<molsys::Atom>();
 
 //         molecule1.setNumberOfAtoms(2);
 
@@ -66,9 +67,9 @@
 //         molecule1.addAtom(atom1);
 //         molecule1.addAtom(atom2);
 
-//         auto molecule2 = simulationBox::Molecule();
+//         auto molecule2 = molsys::Molecule();
 
-//         const auto atom3 = std::make_shared<simulationBox::Atom>();
+//         const auto atom3 = std::make_shared<molsys::Atom>();
 
 //         molecule2.setNumberOfAtoms(1);
 //         atom3->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
@@ -91,7 +92,7 @@
 //     }
 
 //     physicalData::PhysicalData   *_data;
-//     simulationBox::SimulationBox *_simulationBox;
+//     molsys::SimulationBox *_simulationBox;
 //     resetKinetics::ResetKinetics *_resetKinetics;
 // };
 

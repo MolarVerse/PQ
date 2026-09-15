@@ -23,7 +23,6 @@
 #include "physicalData.hpp"
 
 #include <algorithm>   // for __for_each_fn
-#include <cstddef>     // for size_t
 #include <utility>
 
 #include "constants/conversionFactors.hpp"           // for _FS_TO_S_
@@ -32,7 +31,7 @@
 #include "simulationBox.hpp"                         // for SimulationBox
 
 using namespace physicalData;
-using namespace simulationBox;
+using namespace molsys;
 using namespace linearAlgebra;
 using namespace constants;
 
@@ -77,7 +76,7 @@ void PhysicalData::calculateKinetics(SimulationBox& simulationBox)
         const auto numberOfAtoms   = molecule.getNumberOfAtoms();
         auto       momentumSquared = tensor3D();
 
-        for (size_t i = 0; i < numberOfAtoms; ++i)
+        for (AtomIndex i{0}; i.get() < numberOfAtoms; ++i)
         {
             const auto velocities = molecule.getAtomVelocity(i);
 

@@ -53,7 +53,7 @@ using namespace settings;
  */
 TEST_F(TestInputFileReader, JobType)
 {
-    GeneralInputParser       parser(*_engine);
+    GeneralInputParser       parser;
     std::vector<std::string> lineElements = {"jobtype", "=", "mm-md"};
     auto                     engine       = std::unique_ptr<engine::Engine>();
     parser.parseJobTypeForEngine(lineElements, 0, engine);
@@ -90,7 +90,7 @@ TEST_F(TestInputFileReader, JobType)
     lineElements = {"jobtype", "=", "notValid"};
     EXPECT_THROW_MSG(
         parser.parseJobTypeForEngine(lineElements, 0, engine),
-        customException::InputFileException,
+        exc::InputFileException,
         "Invalid jobtype \"notValid\" in input file - possible values are:\n"
         "- mm-opt\n"
         "- mm-hessian\n"
@@ -114,7 +114,7 @@ TEST_F(TestInputFileReader, JobType)
  */
 TEST_F(TestInputFileReader, parseDimensionality)
 {
-    GeneralInputParser       parser(*_engine);
+    GeneralInputParser       parser;
     std::vector<std::string> lineElements = {"dim", "=", "3"};
     parser.parseDimensionality(lineElements, 0);
     EXPECT_EQ(Settings::getDimensionality(), 3);
@@ -126,7 +126,7 @@ TEST_F(TestInputFileReader, parseDimensionality)
     lineElements = {"dim", "=", "2"};
     EXPECT_THROW_MSG(
         parser.parseDimensionality(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Invalid dimensionality \"2\" in input file\n"
         "Possible values are: 3, 3d"
     );
@@ -134,7 +134,7 @@ TEST_F(TestInputFileReader, parseDimensionality)
     lineElements = {"dim", "=", "1"};
     EXPECT_THROW_MSG(
         parser.parseDimensionality(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Invalid dimensionality \"1\" in input file\n"
         "Possible values are: 3, 3d"
     );
@@ -142,7 +142,7 @@ TEST_F(TestInputFileReader, parseDimensionality)
     lineElements = {"dim", "=", "0"};
     EXPECT_THROW_MSG(
         parser.parseDimensionality(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Invalid dimensionality \"0\" in input file\n"
         "Possible values are: 3, 3d"
     );
@@ -154,7 +154,7 @@ TEST_F(TestInputFileReader, parseDimensionality)
  */
 TEST_F(TestInputFileReader, parseFloatingPointType)
 {
-    GeneralInputParser       parser(*_engine);
+    GeneralInputParser       parser;
     std::vector<std::string> lineElements = {"floatingPointType", "=", "float"};
     parser.parseFloatingPointType(lineElements, 0);
     EXPECT_EQ(Settings::getFloatingPointType(), FPType::FLOAT);
@@ -166,7 +166,7 @@ TEST_F(TestInputFileReader, parseFloatingPointType)
     lineElements = {"floatingPointType", "=", "notValid"};
     EXPECT_THROW_MSG(
         parser.parseFloatingPointType(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Invalid floating point type \"notValid\" in input file\n"
         "Possible values are: float, double"
     );
@@ -178,7 +178,7 @@ TEST_F(TestInputFileReader, parseFloatingPointType)
  */
 TEST_F(TestInputFileReader, parseRandomSeed)
 {
-    GeneralInputParser parser(*_engine);
+    GeneralInputParser parser;
 
     std::vector<std::string> lineElements = {"random_seed", "=", "0"};
     parser.parseRandomSeed(lineElements, 0);
@@ -205,7 +205,7 @@ TEST_F(TestInputFileReader, parseRandomSeed)
     };
     EXPECT_THROW_MSG(
         parser.parseRandomSeed(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         std::format(
             "Random seed value \"{}\" is out of range.\n"
             "Must be an integer between \"0\" and \"{}\" (inclusive)",
@@ -218,7 +218,7 @@ TEST_F(TestInputFileReader, parseRandomSeed)
     lineElements = {"random_seed", "=", "-1"};
     EXPECT_THROW_MSG(
         parser.parseRandomSeed(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         std::format(
             "Random seed value \"{}\" is out of range.\n"
             "Must be an integer between \"0\" and \"{}\" (inclusive)",
@@ -231,7 +231,7 @@ TEST_F(TestInputFileReader, parseRandomSeed)
     lineElements = {"random_seed", "=", "seed"};
     EXPECT_THROW_MSG(
         parser.parseRandomSeed(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         std::format(
             "Random seed value \"{}\" is invalid.\n"
             "Must be an integer between \"0\" and \"{}\" (inclusive)",
@@ -244,7 +244,7 @@ TEST_F(TestInputFileReader, parseRandomSeed)
     lineElements = {"random_seed", "=", "3.14159"};
     EXPECT_THROW_MSG(
         parser.parseRandomSeed(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         std::format(
             "Random seed value \"{}\" is invalid.\n"
             "Must be an integer between \"0\" and \"{}\" (inclusive)",
@@ -257,7 +257,7 @@ TEST_F(TestInputFileReader, parseRandomSeed)
     lineElements = {"random_seed", "=", "1e3"};
     EXPECT_THROW_MSG(
         parser.parseRandomSeed(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         std::format(
             "Random seed value \"{}\" is invalid.\n"
             "Must be an integer between \"0\" and \"{}\" (inclusive)",
@@ -270,7 +270,7 @@ TEST_F(TestInputFileReader, parseRandomSeed)
     lineElements = {"random_seed", "=", "+"};
     EXPECT_THROW_MSG(
         parser.parseRandomSeed(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         std::format(
             "Random seed value \"{}\" is invalid.\n"
             "Must be an integer between \"0\" and \"{}\" (inclusive)",

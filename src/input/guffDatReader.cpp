@@ -52,9 +52,9 @@ using namespace input::guffdat;
 using namespace settings;
 using namespace utilities;
 using namespace defaults;
-using namespace customException;
-using namespace simulationBox;
-using namespace potential;
+using namespace exc;
+using namespace molsys;
+using namespace pot;
 using namespace constants;
 
 /**
@@ -375,12 +375,16 @@ void GuffDatReader::addNonCoulombPair(
         }
         case GUFF:
         {
+            std::array<double, defaults::NUM_GUFF_COEFFICIENTS> coeffs;
+            for (size_t i = 0; i < coefficients.size(); ++i)
+                coeffs.at(i) = coefficients[i];
+
             addGuffPair(
                 molType1,
                 molType2,
                 atomType1,
                 atomType2,
-                coefficients,
+                coeffs,
                 rncCutOff
             );
             break;
@@ -423,31 +427,19 @@ void GuffDatReader::addLennardJonesPair(
         _engine.getPotential()->getNonCoulombPotential()
     );
 
-    const auto LJPair =
-        LennardJonesPair(rncCutOff, coefficients[0], coefficients[2]);
+    const auto params = LJParams{.c6 = coefficients[0], .c12 = coefficients[2]};
+    const auto LJPair = LennardJonesPair(rncCutOff, params);
 
     const auto [eCutOff, fCutOff] = LJPair.calculate(rncCutOff);
 
     guffNonCoulomb.setGuffNonCoulPair(
         {molType1, molType2, atomType1, atomType2},
-        std::make_shared<LennardJonesPair>(
-            rncCutOff,
-            eCutOff,
-            fCutOff,
-            coefficients[0],
-            coefficients[2]
-        )
+        std::make_shared<LennardJonesPair>(rncCutOff, eCutOff, fCutOff, params)
     );
 
     guffNonCoulomb.setGuffNonCoulPair(
         {molType2, molType1, atomType2, atomType1},
-        std::make_shared<LennardJonesPair>(
-            rncCutOff,
-            eCutOff,
-            fCutOff,
-            coefficients[0],
-            coefficients[2]
-        )
+        std::make_shared<LennardJonesPair>(rncCutOff, eCutOff, fCutOff, params)
     );
 }
 
@@ -476,36 +468,22 @@ void GuffDatReader::addBuckinghamPair(
         _engine.getPotential()->getNonCoulombPotential()
     );
 
-    const auto buckPair = BuckinghamPair(
-        rncCutOff,
-        coefficients[0],
-        coefficients[1],
-        coefficients[2]
-    );
+    const auto params = BuckinghamParams{
+        .scaling = coefficients[0],
+        .dRho    = coefficients[1],
+        .c6      = coefficients[2]
+    };
+    const auto buckPair           = BuckinghamPair(rncCutOff, params);
     const auto [eCutOff, fCutOff] = buckPair.calculate(rncCutOff);
 
     guffNonCoulomb.setGuffNonCoulPair(
         {molType1, molType2, atomType1, atomType2},
-        std::make_shared<BuckinghamPair>(
-            rncCutOff,
-            eCutOff,
-            fCutOff,
-            coefficients[0],
-            coefficients[1],
-            coefficients[2]
-        )
+        std::make_shared<BuckinghamPair>(rncCutOff, eCutOff, fCutOff, params)
     );
 
     guffNonCoulomb.setGuffNonCoulPair(
         {molType2, molType1, atomType2, atomType1},
-        std::make_shared<BuckinghamPair>(
-            rncCutOff,
-            eCutOff,
-            fCutOff,
-            coefficients[0],
-            coefficients[1],
-            coefficients[2]
-        )
+        std::make_shared<BuckinghamPair>(rncCutOff, eCutOff, fCutOff, params)
     );
 }
 
@@ -535,21 +513,18 @@ void GuffDatReader::addMorsePair(
         _engine.getPotential()->getNonCoulombPotential()
     );
 
-    // clang-format off
-    const auto morsePair          = MorsePair(rncCutOff, coeffs[0], coeffs[1], coeffs[2]);
+    const auto params = MorseParams{
+        .dissociationEnergy  = coeffs[0],
+        .wellWidth           = coeffs[1],
+        .equilibriumDistance = coeffs[2]
+    };
+
+    const auto morsePair          = MorsePair(rncCutOff, params);
     const auto [eCutOff, fCutOff] = morsePair.calculate(rncCutOff);
-    // clang-format on
 
     guffNonCoulomb.setGuffNonCoulPair(
         {molType1, molType2, atomType1, atomType2},
-        std::make_shared<MorsePair>(
-            rncCutOff,
-            eCutOff,
-            fCutOff,
-            coeffs[0],
-            coeffs[1],
-            coeffs[2]
-        )
+        std::make_shared<MorsePair>(rncCutOff, eCutOff, fCutOff, params)
     );
 
     guffNonCoulomb.setGuffNonCoulPair(
@@ -559,14 +534,7 @@ void GuffDatReader::addMorsePair(
             atomType2,
             atomType1,
         },
-        std::make_shared<MorsePair>(
-            rncCutOff,
-            eCutOff,
-            fCutOff,
-            coeffs[0],
-            coeffs[1],
-            coeffs[2]
-        )
+        std::make_shared<MorsePair>(rncCutOff, eCutOff, fCutOff, params)
     );
 }
 
@@ -581,12 +549,12 @@ void GuffDatReader::addMorsePair(
  * @param rncCutOff
  */
 void GuffDatReader::addGuffPair(
-    const size_t               molType1,
-    const size_t               molType2,
-    const size_t               atomType1,
-    const size_t               atomType2,
-    const std::vector<double> &coefficients,
-    const double               rncCutOff
+    const size_t                                               molType1,
+    const size_t                                               molType2,
+    const size_t                                               atomType1,
+    const size_t                                               atomType2,
+    const std::array<double, defaults::NUM_GUFF_COEFFICIENTS> &coefficients,
+    const double                                               rncCutOff
 )
 {
     auto &guffNonCoulomb = dynamic_cast<GuffNonCoulomb &>(
@@ -654,7 +622,7 @@ void GuffDatReader::calculatePartialCharges()
         auto      *moleculeType = &(simBox.findMoleculeType(i + 1));
         const auto nAtoms       = moleculeType->getNumberOfAtoms();
 
-        for (size_t j = 0; j < nAtoms; ++j)
+        for (AtomIndex j{0}; j.get() < nAtoms; ++j)
         {
             // clang-format off
             const auto atomType     = moleculeType->getAtomType(j);
@@ -718,15 +686,16 @@ void GuffDatReader::checkPartialCharges()
 
             const auto nAtomTypes1 = moleculeType1.getNumberOfAtomTypes();
 
-            for (size_t k = 0; k < nAtomTypes1; ++k)
+            for (AtomIndex k{0}; k.get() < nAtomTypes1; ++k)
             {
                 const auto nAtomTypes2 = moleculeType2.getNumberOfAtomTypes();
-                for (size_t l = 0; l < nAtomTypes2; ++l)
+                for (AtomIndex l{0}; l.get() < nAtomTypes2; ++l)
                 {
                     auto partialCharge1 = moleculeType1.getPartialCharge(k);
                     auto partialCharge2 = moleculeType2.getPartialCharge(l);
 
-                    const auto coeff         = _guffCoulombCoeffs[i][j][k][l];
+                    const auto coeff =
+                        _guffCoulombCoeffs[i][j][k.get()][l.get()];
                     const auto chargeSquared = partialCharge1 * partialCharge2;
                     const auto prefactor = chargeSquared * COULOMB_PREFACTOR;
 
@@ -746,8 +715,8 @@ void GuffDatReader::checkPartialCharges()
                                 "be {} but is {}",
                                 i + 1,
                                 j + 1,
-                                k + 1,
-                                l + 1,
+                                k.get() + 1,
+                                l.get() + 1,
                                 prefactor,
                                 coeff
                             )
@@ -786,10 +755,12 @@ void GuffDatReader::checkNecessaryGuffPairs()
                 continue;
 
             const auto nAtoms1 = moleculeType1.getNumberOfAtoms();
-            for (size_t atomIndex1 = 0; atomIndex1 < nAtoms1; ++atomIndex1)
+            for (AtomIndex atomIndex1{0}; atomIndex1.get() < nAtoms1;
+                 ++atomIndex1)
             {
                 const auto nAtoms2 = moleculeType2.getNumberOfAtoms();
-                for (size_t atomIndex2 = 0; atomIndex2 < nAtoms2; ++atomIndex2)
+                for (AtomIndex atomIndex2{0}; atomIndex2.get() < nAtoms2;
+                     ++atomIndex2)
                 {
                     if (!_isGuffPairSet[moleculeType1.getMoltype() - 1]
                                        [moleculeType2.getMoltype() - 1]

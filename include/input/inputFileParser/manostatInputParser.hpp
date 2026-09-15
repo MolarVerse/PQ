@@ -39,7 +39,7 @@ namespace input
     class ManostatInputParser : public InputFileParser
     {
        public:
-        explicit ManostatInputParser(engine::Engine &);
+        explicit ManostatInputParser();
 
         void parseManostat(const std::vector<std::string> &, const size_t);
 

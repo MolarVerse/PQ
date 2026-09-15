@@ -28,12 +28,12 @@
 
 #include "output.hpp"
 
-namespace simulationBox
+namespace molsys
 {
     class Box;   // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
-namespace output
+namespace out
 {
     /**
      * @class BoxFileOutput inherits from Output
@@ -46,9 +46,9 @@ namespace output
        public:
         using Output::Output;
 
-        void write(const size_t, const simulationBox::Box &);
+        void write(const size_t, const molsys::Box &);
     };
 
-}   // namespace output
+}   // namespace out
 
 #endif   // _BOX_FILE_OUTPUT_HPP_

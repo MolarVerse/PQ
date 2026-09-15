@@ -33,8 +33,8 @@
 #include "simulationBox.hpp"   // for SimulationBox
 
 using namespace constraints;
-using namespace simulationBox;
-using namespace customException;
+using namespace molsys;
+using namespace exc;
 
 /**
  * @brief constructor

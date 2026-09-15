@@ -39,7 +39,7 @@ namespace input
     class RingPolymerInputParser : public InputFileParser
     {
        public:
-        explicit RingPolymerInputParser(engine::Engine &);
+        RingPolymerInputParser();
 
         void parseNumberOfBeads(const std::vector<std::string> &, const size_t);
     };

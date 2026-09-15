@@ -24,13 +24,14 @@
 
 #define _TEST_PHYSICAL_DATA_HPP_
 
+#include <gtest/gtest.h>   // for Test
+
+#include <memory>   // for make_shared, __shared_ptr_access, shared_ptr
+
 #include "atom.hpp"            // for Atom
 #include "molecule.hpp"        // for Molecule
 #include "physicalData.hpp"    // for PhysicalData
 #include "simulationBox.hpp"   // for SimulationBox
-
-#include <gtest/gtest.h>   // for Test
-#include <memory>          // for make_shared, __shared_ptr_access, shared_ptr
 
 /**
  * @class TestPhysicalData
@@ -40,7 +41,7 @@
  */
 class TestPhysicalData : public ::testing::Test
 {
-  protected:
+   protected:
     void SetUp() override
     {
         _physicalData = new physicalData::PhysicalData();
@@ -54,12 +55,12 @@ class TestPhysicalData : public ::testing::Test
         _physicalData->setPressure(8.0);
         _physicalData->setQMEnergy(9.0);
 
-        _simulationBox = new simulationBox::SimulationBox();
+        _simulationBox = new molsys::SimulationBox();
 
-        auto molecule1 = simulationBox::Molecule();
+        auto molecule1 = molsys::Molecule();
 
-        auto atom1 = std::make_shared<simulationBox::Atom>();
-        auto atom2 = std::make_shared<simulationBox::Atom>();
+        auto atom1 = std::make_shared<molsys::Atom>();
+        auto atom2 = std::make_shared<molsys::Atom>();
 
         molecule1.setNumberOfAtoms(2);
 
@@ -71,10 +72,10 @@ class TestPhysicalData : public ::testing::Test
         molecule1.addAtom(atom1);
         molecule1.addAtom(atom2);
 
-        auto molecule2 = simulationBox::Molecule();
+        auto molecule2 = molsys::Molecule();
         molecule2.setNumberOfAtoms(1);
 
-        auto atom3 = std::make_shared<simulationBox::Atom>();
+        auto atom3 = std::make_shared<molsys::Atom>();
         atom3->setMass(1.0);
         atom3->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
         molecule2.setMolMass(1.0);
@@ -87,8 +88,8 @@ class TestPhysicalData : public ::testing::Test
     }
     void TearDown() override { delete _physicalData; }
 
-    physicalData::PhysicalData   *_physicalData;
-    simulationBox::SimulationBox *_simulationBox;
+    physicalData::PhysicalData *_physicalData;
+    molsys::SimulationBox      *_simulationBox;
 };
 
 #endif

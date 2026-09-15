@@ -26,24 +26,22 @@
 
 #include "staticMatrix.hpp"
 
-namespace simulationBox
+namespace molsys
 {
     class SimulationBox;   // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
 namespace virial
 {
     [[nodiscard]]
-    linearAlgebra::tensor3D calculateQMVirial(
-        const simulationBox::SimulationBox&
-    );
+    linearAlgebra::tensor3D calculateQMVirial(const molsys::SimulationBox&);
 
     [[nodiscard]]
-    linearAlgebra::tensor3D calculateVirial(simulationBox::SimulationBox&);
+    linearAlgebra::tensor3D calculateVirial(molsys::SimulationBox&);
 
     [[nodiscard]]
     linearAlgebra::tensor3D intraMolecularVirialCorrection(
-        const simulationBox::SimulationBox&
+        const molsys::SimulationBox&
     );
 }   // namespace virial
 

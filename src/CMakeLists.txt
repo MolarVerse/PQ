@@ -9,7 +9,7 @@ set_target_properties(pq_pch PROPERTIES
 )
 target_link_libraries(pq_pch PUBLIC Eigen3::Eigen)
 
-add_subdirectory(simulationBox)
+add_subdirectory(molsys)
 add_subdirectory(config)
 add_subdirectory(engine)
 add_subdirectory(utilities)
@@ -39,6 +39,7 @@ add_subdirectory(kernels)
 add_subdirectory(opt)
 add_subdirectory(randomNumberGenerator)
 add_subdirectory(hybridConfigurator)
+add_subdirectory(driver)
 
 if(BUILD_WITH_PYTHON_BINDINGS)
     add_definitions(-DWITH_WITH_PYTHON_BINDINGS)

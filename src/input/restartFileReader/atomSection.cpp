@@ -38,9 +38,9 @@
 #include "stringUtilities.hpp"   // for removeComments, splitString
 
 using namespace input::restartFile;
-using namespace simulationBox;
+using namespace molsys;
 using namespace engine;
-using namespace customException;
+using namespace exc;
 using namespace settings;
 using namespace utilities;
 

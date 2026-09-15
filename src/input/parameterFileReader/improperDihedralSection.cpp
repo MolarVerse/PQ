@@ -31,7 +31,7 @@
 
 using namespace input::parameterFile;
 using namespace engine;
-using namespace customException;
+using namespace exc;
 using namespace forceField;
 using namespace constants;
 
@@ -78,7 +78,7 @@ void ImproperDihedralSection::processSection(
         );
     }
 
-    auto id            = stoul(lineElements[0]);
+    auto id            = DihedralId{stoul(lineElements[0])};
     auto forceConstant = stod(lineElements[1]);
     auto periodicity   = stod(lineElements[2]);
     auto phase         = stod(lineElements[3]) * DEG_TO_RAD;

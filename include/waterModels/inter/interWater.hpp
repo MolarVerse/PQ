@@ -29,12 +29,12 @@
 #include "coulombPotential.hpp"
 #include "nonCoulombPair.hpp"
 
-namespace simulationBox
+namespace molsys
 {
     class SimulationBox;   // forward declaration
     class CellList;        // forward declaration
     class Atom;            // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
 namespace physicalData
 {
@@ -50,9 +50,9 @@ namespace waterModel
         double _hydrogenCharge{};
         bool   _oxygenOnlyNonCoulomb{false};
 
-        std::unique_ptr<potential::NonCoulombPair> _nonCoulombPairOO;
-        std::unique_ptr<potential::NonCoulombPair> _nonCoulombPairOH;
-        std::unique_ptr<potential::NonCoulombPair> _nonCoulombPairHH;
+        std::unique_ptr<pot::NonCoulombPair> _nonCoulombPairOO;
+        std::unique_ptr<pot::NonCoulombPair> _nonCoulombPairOH;
+        std::unique_ptr<pot::NonCoulombPair> _nonCoulombPairHH;
         // clang-format on
     };
 
@@ -63,83 +63,80 @@ namespace waterModel
 
         virtual void calculate(
             const InterWaterState &,
-            simulationBox::SimulationBox &,
+            molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            const std::shared_ptr<potential::CoulombPotential> &,
-            simulationBox::CellList &
+            const std::shared_ptr<pot::CoulombPotential> &,
+            molsys::CellList &
         ) = 0;
 
         virtual void calculateCoreToOuterForces(
             const InterWaterState &,
-            simulationBox::SimulationBox &,
+            molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            const std::shared_ptr<potential::CoulombPotential> &,
-            simulationBox::CellList &
+            const std::shared_ptr<pot::CoulombPotential> &,
+            molsys::CellList &
         ) = 0;
 
         virtual void calculateLayerToOuterForces(
             const InterWaterState &,
-            simulationBox::SimulationBox &,
+            molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            const std::shared_ptr<potential::CoulombPotential> &,
-            simulationBox::CellList &
+            const std::shared_ptr<pot::CoulombPotential> &,
+            molsys::CellList &
         ) = 0;
 
         virtual void calculateOuterToOuterForces(
             const InterWaterState &,
-            simulationBox::SimulationBox &,
+            molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            const std::shared_ptr<potential::CoulombPotential> &,
-            simulationBox::CellList &
+            const std::shared_ptr<pot::CoulombPotential> &,
+            molsys::CellList &
         ) = 0;
 
         virtual void calculateHotspotSmoothingMMForces(
             const InterWaterState &,
-            simulationBox::SimulationBox &,
+            molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            const std::shared_ptr<potential::CoulombPotential> &,
-            simulationBox::CellList &
+            const std::shared_ptr<pot::CoulombPotential> &,
+            molsys::CellList &
         ) = 0;
 
         template <typename ChargeTag1, typename ChargeTag2>
         void calculateSingleInteraction(
-            simulationBox::Atom &atom1,
-            simulationBox::Atom &atom2,
-            const std::shared_ptr<potential::CoulombPotential>
-                                               &coulombPotential,
-            const double                        rCutSquared,
-            const simulationBox::SimulationBox &simBox,
-            const potential::NonCoulombPair    &nonCoulPair,
-            double                             &coulombEnergy,
-            double                             &nonCoulombEnergy
+            molsys::Atom                                 &atom1,
+            molsys::Atom                                 &atom2,
+            const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
+            const double                                  rCutSquared,
+            const molsys::SimulationBox                  &simBox,
+            const pot::NonCoulombPair                    &nonCoulPair,
+            double                                       &coulombEnergy,
+            double                                       &nonCoulombEnergy
         );
 
         template <typename ChargeTag1, typename ChargeTag2>
         void calculateSingleCoulombInteraction(
-            simulationBox::Atom &atom1,
-            simulationBox::Atom &atom2,
-            const std::shared_ptr<potential::CoulombPotential>
-                                               &coulombPotential,
-            const double                        rCutSquared,
-            const simulationBox::SimulationBox &simBox,
-            double                             &coulombEnergy
+            molsys::Atom                                 &atom1,
+            molsys::Atom                                 &atom2,
+            const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
+            const double                                  rCutSquared,
+            const molsys::SimulationBox                  &simBox,
+            double                                       &coulombEnergy
         );
 
         template <typename ChargeTag1, typename ChargeTag2>
         void calculateSingleInteractionOneWay(
-            simulationBox::Atom &atom1,
-            simulationBox::Atom &atom2,
-            const std::shared_ptr<potential::CoulombPotential>
-                                               &coulombPotential,
-            const double                        rCutSquared,
-            const simulationBox::SimulationBox &simBox,
-            const potential::NonCoulombPair    &nonCoulPair,
-            double                             &coulombEnergy,
-            double                             &nonCoulombEnergy
+            molsys::Atom                                 &atom1,
+            molsys::Atom                                 &atom2,
+            const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
+            const double                                  rCutSquared,
+            const molsys::SimulationBox                  &simBox,
+            const pot::NonCoulombPair                    &nonCoulPair,
+            double                                       &coulombEnergy,
+            double                                       &nonCoulombEnergy
         );
 
         template <typename T>
-        double getPartialCharge(simulationBox::Atom &atom) const;
+        double getPartialCharge(molsys::Atom &atom) const;
     };
 
     class InterWater
@@ -153,27 +150,24 @@ namespace waterModel
         );
 
         void calculate(
-            simulationBox::SimulationBox &simBox,
-            physicalData::PhysicalData   &physicalData,
-            const std::shared_ptr<potential::CoulombPotential>
-                                    &sharedCoulombPot,
-            simulationBox::CellList &cellList
+            molsys::SimulationBox                        &simBox,
+            physicalData::PhysicalData                   &physicalData,
+            const std::shared_ptr<pot::CoulombPotential> &sharedCoulombPot,
+            molsys::CellList                             &cellList
         );
 
         void calculateQMMMForces(
-            simulationBox::SimulationBox &simBox,
-            physicalData::PhysicalData   &physicalData,
-            const std::shared_ptr<potential::CoulombPotential>
-                                    &sharedCoulombPot,
-            simulationBox::CellList &cellList
+            molsys::SimulationBox                        &simBox,
+            physicalData::PhysicalData                   &physicalData,
+            const std::shared_ptr<pot::CoulombPotential> &sharedCoulombPot,
+            molsys::CellList                             &cellList
         );
 
         void calculateHotspotSmoothingMMForces(
-            simulationBox::SimulationBox &simBox,
-            physicalData::PhysicalData   &physicalData,
-            const std::shared_ptr<potential::CoulombPotential>
-                                    &sharedCoulombPot,
-            simulationBox::CellList &cellList
+            molsys::SimulationBox                        &simBox,
+            physicalData::PhysicalData                   &physicalData,
+            const std::shared_ptr<pot::CoulombPotential> &sharedCoulombPot,
+            molsys::CellList                             &cellList
         );
 
        private:
@@ -194,50 +188,50 @@ namespace waterModel
        public:
         void calculate(
             const InterWaterState & /*interWaterState*/,
-            simulationBox::SimulationBox & /*simBox*/,
+            molsys::SimulationBox & /*simBox*/,
             physicalData::PhysicalData & /*physData*/,
-            const std::shared_ptr<potential::CoulombPotential> & /*coulPot*/,
-            simulationBox::CellList & /*cellList*/
+            const std::shared_ptr<pot::CoulombPotential> & /*coulPot*/,
+            molsys::CellList & /*cellList*/
         ) final
         {
         }
 
         void calculateCoreToOuterForces(
             const InterWaterState & /*interWaterState*/,
-            simulationBox::SimulationBox & /*simBox*/,
+            molsys::SimulationBox & /*simBox*/,
             physicalData::PhysicalData & /*physData*/,
-            const std::shared_ptr<potential::CoulombPotential> & /*coulPot*/,
-            simulationBox::CellList & /*cellList*/
+            const std::shared_ptr<pot::CoulombPotential> & /*coulPot*/,
+            molsys::CellList & /*cellList*/
         ) final
         {
         }
 
         void calculateLayerToOuterForces(
             const InterWaterState & /*interWaterState*/,
-            simulationBox::SimulationBox & /*simBox*/,
+            molsys::SimulationBox & /*simBox*/,
             physicalData::PhysicalData & /*physData*/,
-            const std::shared_ptr<potential::CoulombPotential> & /*coulPot*/,
-            simulationBox::CellList & /*cellList*/
+            const std::shared_ptr<pot::CoulombPotential> & /*coulPot*/,
+            molsys::CellList & /*cellList*/
         ) final
         {
         }
 
         void calculateOuterToOuterForces(
             const InterWaterState & /*interWaterState*/,
-            simulationBox::SimulationBox & /*simBox*/,
+            molsys::SimulationBox & /*simBox*/,
             physicalData::PhysicalData & /*physData*/,
-            const std::shared_ptr<potential::CoulombPotential> & /*coulPot*/,
-            simulationBox::CellList & /*cellList*/
+            const std::shared_ptr<pot::CoulombPotential> & /*coulPot*/,
+            molsys::CellList & /*cellList*/
         ) final
         {
         }
 
         void calculateHotspotSmoothingMMForces(
             const InterWaterState & /*interWaterState*/,
-            simulationBox::SimulationBox & /*simBox*/,
+            molsys::SimulationBox & /*simBox*/,
             physicalData::PhysicalData & /*physData*/,
-            const std::shared_ptr<potential::CoulombPotential> & /*coulPot*/,
-            simulationBox::CellList & /*cellList*/
+            const std::shared_ptr<pot::CoulombPotential> & /*coulPot*/,
+            molsys::CellList & /*cellList*/
         ) final
         {
         }
@@ -247,43 +241,43 @@ namespace waterModel
     {
        public:
         void calculate(
-            const InterWaterState                              &interWaterState,
-            simulationBox::SimulationBox                       &simBox,
-            physicalData::PhysicalData                         &physData,
-            const std::shared_ptr<potential::CoulombPotential> &coulPot,
-            simulationBox::CellList                            &cellList
+            const InterWaterState                        &interWaterState,
+            molsys::SimulationBox                        &simBox,
+            physicalData::PhysicalData                   &physData,
+            const std::shared_ptr<pot::CoulombPotential> &coulPot,
+            molsys::CellList                             &cellList
         ) final;
 
         void calculateCoreToOuterForces(
-            const InterWaterState                              &interWaterState,
-            simulationBox::SimulationBox                       &simBox,
-            physicalData::PhysicalData                         &physData,
-            const std::shared_ptr<potential::CoulombPotential> &coulPot,
-            simulationBox::CellList                            &cellList
+            const InterWaterState                        &interWaterState,
+            molsys::SimulationBox                        &simBox,
+            physicalData::PhysicalData                   &physData,
+            const std::shared_ptr<pot::CoulombPotential> &coulPot,
+            molsys::CellList                             &cellList
         ) final;
 
         void calculateLayerToOuterForces(
-            const InterWaterState                              &interWaterState,
-            simulationBox::SimulationBox                       &simBox,
-            physicalData::PhysicalData                         &physData,
-            const std::shared_ptr<potential::CoulombPotential> &coulPot,
-            simulationBox::CellList                            &cellList
+            const InterWaterState                        &interWaterState,
+            molsys::SimulationBox                        &simBox,
+            physicalData::PhysicalData                   &physData,
+            const std::shared_ptr<pot::CoulombPotential> &coulPot,
+            molsys::CellList                             &cellList
         ) final;
 
         void calculateOuterToOuterForces(
-            const InterWaterState                              &interWaterState,
-            simulationBox::SimulationBox                       &simBox,
-            physicalData::PhysicalData                         &physData,
-            const std::shared_ptr<potential::CoulombPotential> &coulPot,
-            simulationBox::CellList                            &cellList
+            const InterWaterState                        &interWaterState,
+            molsys::SimulationBox                        &simBox,
+            physicalData::PhysicalData                   &physData,
+            const std::shared_ptr<pot::CoulombPotential> &coulPot,
+            molsys::CellList                             &cellList
         ) final;
 
         void calculateHotspotSmoothingMMForces(
-            const InterWaterState                              &interWaterState,
-            simulationBox::SimulationBox                       &simBox,
-            physicalData::PhysicalData                         &physData,
-            const std::shared_ptr<potential::CoulombPotential> &coulPot,
-            simulationBox::CellList                            &cellList
+            const InterWaterState                        &interWaterState,
+            molsys::SimulationBox                        &simBox,
+            physicalData::PhysicalData                   &physData,
+            const std::shared_ptr<pot::CoulombPotential> &coulPot,
+            molsys::CellList                             &cellList
         ) final;
     };
 
@@ -291,43 +285,43 @@ namespace waterModel
     {
        public:
         void calculate(
-            const InterWaterState                              &interWaterState,
-            simulationBox::SimulationBox                       &simBox,
-            physicalData::PhysicalData                         &physData,
-            const std::shared_ptr<potential::CoulombPotential> &coulPot,
-            simulationBox::CellList                            &cellList
+            const InterWaterState                        &interWaterState,
+            molsys::SimulationBox                        &simBox,
+            physicalData::PhysicalData                   &physData,
+            const std::shared_ptr<pot::CoulombPotential> &coulPot,
+            molsys::CellList                             &cellList
         ) final;
 
         void calculateCoreToOuterForces(
-            const InterWaterState                              &interWaterState,
-            simulationBox::SimulationBox                       &simBox,
-            physicalData::PhysicalData                         &physData,
-            const std::shared_ptr<potential::CoulombPotential> &coulPot,
-            simulationBox::CellList                            &cellList
+            const InterWaterState                        &interWaterState,
+            molsys::SimulationBox                        &simBox,
+            physicalData::PhysicalData                   &physData,
+            const std::shared_ptr<pot::CoulombPotential> &coulPot,
+            molsys::CellList                             &cellList
         ) final;
 
         void calculateLayerToOuterForces(
-            const InterWaterState                              &interWaterState,
-            simulationBox::SimulationBox                       &simBox,
-            physicalData::PhysicalData                         &physData,
-            const std::shared_ptr<potential::CoulombPotential> &coulPot,
-            simulationBox::CellList                            &cellList
+            const InterWaterState                        &interWaterState,
+            molsys::SimulationBox                        &simBox,
+            physicalData::PhysicalData                   &physData,
+            const std::shared_ptr<pot::CoulombPotential> &coulPot,
+            molsys::CellList                             &cellList
         ) final;
 
         void calculateOuterToOuterForces(
-            const InterWaterState                              &interWaterState,
-            simulationBox::SimulationBox                       &simBox,
-            physicalData::PhysicalData                         &physData,
-            const std::shared_ptr<potential::CoulombPotential> &coulPot,
-            simulationBox::CellList                            &cellList
+            const InterWaterState                        &interWaterState,
+            molsys::SimulationBox                        &simBox,
+            physicalData::PhysicalData                   &physData,
+            const std::shared_ptr<pot::CoulombPotential> &coulPot,
+            molsys::CellList                             &cellList
         ) final;
 
         void calculateHotspotSmoothingMMForces(
-            const InterWaterState                              &interWaterState,
-            simulationBox::SimulationBox                       &simBox,
-            physicalData::PhysicalData                         &physData,
-            const std::shared_ptr<potential::CoulombPotential> &coulPot,
-            simulationBox::CellList                            &cellList
+            const InterWaterState                        &interWaterState,
+            molsys::SimulationBox                        &simBox,
+            physicalData::PhysicalData                   &physData,
+            const std::shared_ptr<pot::CoulombPotential> &coulPot,
+            molsys::CellList                             &cellList
         ) final;
     };
 

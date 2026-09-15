@@ -44,7 +44,7 @@ using namespace ::testing;
  */
 TEST_F(TestInputFileReader, testParseVirial)
 {
-    VirialInputParser        parser(*_engine);
+    VirialInputParser        parser;
     std::vector<std::string> lineElements = {"virial", "=", "atomic"};
     parser.parseVirial(lineElements, 0);
     EXPECT_EQ(
@@ -62,7 +62,7 @@ TEST_F(TestInputFileReader, testParseVirial)
     lineElements = {"virial", "=", "notValid"};
     EXPECT_THROW_MSG(
         parser.parseVirial(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Invalid virial setting \"notValid\" at line 0 in input file.\n"
         "Possible options are: molecular or atomic"
     );

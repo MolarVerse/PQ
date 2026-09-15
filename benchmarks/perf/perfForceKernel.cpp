@@ -29,6 +29,8 @@
 #include <format>
 #include <iostream>
 
+#include "strongTypes.hpp"
+
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
 #else
@@ -49,7 +51,7 @@ int main()
 {
     auto molecule            = benchSetup::makeMolecule({.nAtoms = 2});
     auto nonCoulombPotential = benchSetup::makeNonCoulomb();
-    auto coulombPotential    = potential::CoulombShiftedPotential(10.0);
+    auto coulombPotential    = pot::CoulombShiftedPotential(10.0);
 
     settings::PotentialSettings::setScale14Coulomb(0.75);
     settings::PotentialSettings::setScale14VanDerWaals(0.75);
@@ -59,7 +61,7 @@ int main()
     auto intraNonBondedMap =
         intraNonBonded::IntraNonBondedMap(&molecule, &intraNonBondedType);
 
-    auto simulationBox = simulationBox::SimulationBox();
+    auto simulationBox = molsys::SimulationBox();
     simulationBox.setBoxDimensions({10.0, 10.0, 10.0});
 
     auto physicalData = physicalData::PhysicalData();
@@ -74,7 +76,7 @@ int main()
     {
         const auto [coulombEnergy, nonCoulombEnergy] =
             intraNonBondedMap.calculateSingleInteraction(
-                0,
+                AtomIndex{0},
                 atomIdx,
                 box,
                 physicalData,

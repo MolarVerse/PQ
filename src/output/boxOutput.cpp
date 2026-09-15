@@ -26,33 +26,33 @@
 #include <format>    // for format
 #include <ostream>   // for ofstream, basic_ostream, operator<<
 
-#include "box.hpp"        // for SimulationBox
+#include "box.hpp"   // for SimulationBox
 
-using output::BoxFileOutput;
-using namespace simulationBox;
-
-/**
- * @brief Write the lattice parameters a, b, c, alpha, beta, gamma to file
- *
- * @param box
- */
-void BoxFileOutput::write(const size_t step, const Box &box)
+namespace out
 {
-    _fp << std::format("{:<5}\t", step);
+    /**
+     * @brief Write the lattice parameters a, b, c, alpha, beta, gamma to file
+     *
+     * @param box
+     */
+    void BoxFileOutput::write(const size_t step, const molsys::Box &box)
+    {
+        _fp << std::format("{:<5}\t", step);
 
-    _fp << std::format(
-        "{:15.8f}\t{:15.8f}\t{:15.8f}\t",
-        box.getBoxDimensions()[0],
-        box.getBoxDimensions()[1],
-        box.getBoxDimensions()[2]
-    );
+        _fp << std::format(
+            "{:15.8f}\t{:15.8f}\t{:15.8f}\t",
+            box.getBoxDimensions()[0],
+            box.getBoxDimensions()[1],
+            box.getBoxDimensions()[2]
+        );
 
-    _fp << std::format(
-        "{:15.8f}\t{:15.8f}\t{:15.8f}\n",
-        box.getBoxAngles()[0],
-        box.getBoxAngles()[1],
-        box.getBoxAngles()[2]
-    );
+        _fp << std::format(
+            "{:15.8f}\t{:15.8f}\t{:15.8f}\n",
+            box.getBoxAngles()[0],
+            box.getBoxAngles()[1],
+            box.getBoxAngles()[2]
+        );
 
-    _fp << std::flush;
-}
+        _fp << std::flush;
+    }
+}   // namespace out

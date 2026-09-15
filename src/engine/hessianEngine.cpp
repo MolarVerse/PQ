@@ -56,7 +56,7 @@
 using namespace engine;
 using namespace opt;
 using namespace settings;
-using namespace customException;
+using namespace exc;
 using namespace physicalData;
 using namespace defaults;
 
@@ -492,7 +492,7 @@ std::shared_ptr<physicalData::PhysicalData> HessianEngine::
     return _physicalDataOld;
 }
 
-output::OptOutput &HessianEngine::getOptOutput()
+out::OptOutput &HessianEngine::getOptOutput()
 {
     return _engineOutput.getOptOutput();
 }

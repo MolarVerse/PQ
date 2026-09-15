@@ -30,7 +30,7 @@
 #include "triclinicBox.hpp"                  // for TriclinicBox
 #include "vectorNear.hpp"                    // for EXPECT_VECTOR_NEAR
 
-using namespace simulationBox;
+using namespace molsys;
 
 TEST(TestTriclinicBox, setBoxDimensions)
 {

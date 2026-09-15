@@ -58,10 +58,10 @@ namespace engine
 
         physicalData::PhysicalData _averagePhysicalData;
 
-        std::shared_ptr<potential::Potential>           _potential;
+        std::shared_ptr<pot::Potential>                 _potential;
         std::shared_ptr<physicalData::PhysicalData>     _physicalData;
-        std::shared_ptr<simulationBox::SimulationBox>   _simulationBox;
-        std::shared_ptr<simulationBox::CellList>        _cellList;
+        std::shared_ptr<molsys::SimulationBox>          _simulationBox;
+        std::shared_ptr<molsys::CellList>               _cellList;
         std::shared_ptr<intraNonBonded::IntraNonBonded> _intraNonBonded;
         std::shared_ptr<forceField::ForceField>         _forceField;
         std::shared_ptr<constraints::Constraints>       _constraints;
@@ -87,7 +87,6 @@ namespace engine
 
         [[nodiscard]] bool isForceFieldNonCoulombicsActivated() const;
         [[nodiscard]] bool isGuffActivated() const;
-        [[nodiscard]] bool isCellListActivated() const;
         [[nodiscard]] bool isConstraintsActivated() const;
         [[nodiscard]] bool isIntraNonBondedActivated() const;
 
@@ -96,7 +95,7 @@ namespace engine
          ***************************/
 
         [[nodiscard]]
-        const std::shared_ptr<simulationBox::CellList> &getCellList() const;
+        const std::shared_ptr<molsys::CellList> &getCellList() const;
         [[nodiscard]]
         const std::shared_ptr<constraints::Constraints> &getConstraints() const;
         [[nodiscard]]
@@ -105,41 +104,40 @@ namespace engine
         [[nodiscard]]
         const std::shared_ptr<forceField::ForceField> &getForceField() const;
         [[nodiscard]]
-        const std::shared_ptr<potential::Potential> &getPotential() const;
+        const std::shared_ptr<pot::Potential> &getPotential() const;
 
-        [[nodiscard]] simulationBox::SimulationBox &getSimulationBox();
-        [[nodiscard]] physicalData::PhysicalData   &getPhysicalData();
-        [[nodiscard]] physicalData::PhysicalData   &getAveragePhysicalData();
+        [[nodiscard]] molsys::SimulationBox      &getSimulationBox();
+        [[nodiscard]] physicalData::PhysicalData &getPhysicalData();
+        [[nodiscard]] physicalData::PhysicalData &getAveragePhysicalData();
 
         /*************************
          * output getter methods *
          *************************/
 
-        [[nodiscard]] EngineOutput          &getEngineOutput();
-        [[nodiscard]] output::LogOutput     &getLogOutput();
-        [[nodiscard]] output::StdoutOutput  &getStdoutOutput();
-        [[nodiscard]] output::TimingsOutput &getTimingsOutput();
+        [[nodiscard]] EngineOutput       &getEngineOutput();
+        [[nodiscard]] out::LogOutput     &getLogOutput();
+        [[nodiscard]] out::StdoutOutput  &getStdoutOutput();
+        [[nodiscard]] out::TimingsOutput &getTimingsOutput();
 
-        [[nodiscard]] output::TrajectoryOutput &getXyzOutput();
-        [[nodiscard]] output::TrajectoryOutput &getForceOutput();
-        [[nodiscard]] output::InfoOutput       &getInfoOutput();
-        [[nodiscard]] output::EnergyOutput     &getEnergyOutput();
-        [[nodiscard]] output::RstFileOutput    &getRstFileOutput();
+        [[nodiscard]] out::TrajectoryOutput &getXyzOutput();
+        [[nodiscard]] out::TrajectoryOutput &getForceOutput();
+        [[nodiscard]] out::InfoOutput       &getInfoOutput();
+        [[nodiscard]] out::EnergyOutput     &getEnergyOutput();
+        [[nodiscard]] out::RstFileOutput    &getRstFileOutput();
 
         /***********************
          * get pointer methods *
          ***********************/
 
-        [[nodiscard]] simulationBox::SimulationBox *getSimulationBoxPtr();
-        [[nodiscard]] physicalData::PhysicalData   *getPhysicalDataPtr();
+        [[nodiscard]] molsys::SimulationBox      *getSimulationBoxPtr();
+        [[nodiscard]] physicalData::PhysicalData *getPhysicalDataPtr();
 
         /******************************
          * get shared pointer methods *
          ******************************/
 
         [[nodiscard]]
-        std::shared_ptr<simulationBox::SimulationBox> getSharedSimulationBox(
-        ) const;
+        std::shared_ptr<molsys::SimulationBox> getSharedSimulationBox() const;
         [[nodiscard]]
         std::shared_ptr<physicalData::PhysicalData> getSharedPhysicalData(
         ) const;

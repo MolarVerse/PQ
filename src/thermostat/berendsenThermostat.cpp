@@ -33,9 +33,9 @@
 #include "timingsSettings.hpp"      // for TimingsSettings
 
 using thermostat::BerendsenThermostat;
-using namespace customException;
+using namespace exc;
 using namespace settings;
-using namespace simulationBox;
+using namespace molsys;
 using namespace physicalData;
 using namespace utilities;
 

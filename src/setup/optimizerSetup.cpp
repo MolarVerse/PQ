@@ -41,15 +41,15 @@
 
 using setup::OptimizerSetup;
 using namespace settings;
-using namespace customException;
+using namespace exc;
 using namespace defaults;
 using namespace engine;
 using namespace opt;
 
-using SharedCellList       = std::shared_ptr<simulationBox::CellList>;
-using SharedSimBox         = std::shared_ptr<simulationBox::SimulationBox>;
+using SharedCellList       = std::shared_ptr<molsys::CellList>;
+using SharedSimBox         = std::shared_ptr<molsys::SimulationBox>;
 using SharedForceField     = std::shared_ptr<forceField::ForceField>;
-using SharedPotential      = std::shared_ptr<potential::Potential>;
+using SharedPotential      = std::shared_ptr<pot::Potential>;
 using SharedPhysicalData   = std::shared_ptr<physicalData::PhysicalData>;
 using SharedConstraints    = std::shared_ptr<constraints::Constraints>;
 using SharedIntraNonBonded = std::shared_ptr<intraNonBonded::IntraNonBonded>;

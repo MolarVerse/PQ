@@ -32,7 +32,7 @@
 #include "optOutput.hpp"
 #include "steepestDescent.hpp"
 
-using namespace output;
+using namespace out;
 using namespace opt;
 using settings::ConvStrategy;
 

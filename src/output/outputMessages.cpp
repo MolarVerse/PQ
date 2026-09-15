@@ -30,16 +30,19 @@
 
 using namespace sysinfo;
 
-/**
- * @brief construct header title
- *
- * @return string
- */
-std::string output::header()
+namespace out
 {
-    std::stringstream header_title;
 
-    header_title << R"(
+    /**
+     * @brief construct header title
+     *
+     * @return string
+     */
+    std::string header()
+    {
+        std::stringstream header_title;
+
+        header_title << R"(
 ************************************************************************
 *                                                                      *
 *                                                                      *
@@ -56,31 +59,31 @@ std::string output::header()
 ************************************************************************
 )";
 
-    header_title << '\n';
-    header_title << OUTPUT << "Author:        " << AUTHOR << '\n';
-    header_title << OUTPUT << "Email:         " << EMAIL << '\n';
+        header_title << '\n';
+        header_title << OUTPUT << "Author:        " << AUTHOR << '\n';
+        header_title << OUTPUT << "Email:         " << EMAIL << '\n';
 
-    header_title << '\n';
-    header_title << OUTPUT << "Testing:       " << JOSEF << '\n';
-    header_title << OUTPUT << "               " << ARMIN << '\n';
-    header_title << OUTPUT << "               " << STEFAN << '\n';
-    header_title << OUTPUT << "               " << BENJAMIN << '\n';
+        header_title << '\n';
+        header_title << OUTPUT << "Testing:       " << JOSEF << '\n';
+        header_title << OUTPUT << "               " << ARMIN << '\n';
+        header_title << OUTPUT << "               " << STEFAN << '\n';
+        header_title << OUTPUT << "               " << BENJAMIN << '\n';
 
-    header_title << '\n';
-    header_title << OUTPUT << "Version:       " << VERSION << '\n';
-    header_title << OUTPUT << "Compile date:  " << COMPILE_DATE << '\n';
+        header_title << '\n';
+        header_title << OUTPUT << "Version:       " << VERSION << '\n';
+        header_title << OUTPUT << "Compile date:  " << COMPILE_DATE << '\n';
 
-    return header_title.str();
-}
+        return header_title.str();
+    }
 
-/**
- * @brief construct ended normally message
- *
- * @return string
- */
-std::string output::endedNormally()
-{
-    // clang-format off
+    /**
+     * @brief construct ended normally message
+     *
+     * @return string
+     */
+    std::string endedNormally()
+    {
+        // clang-format off
     const std::string endedNormally_message = std::format(R"(
 {}For citation please refer to the ".ref" file.
 
@@ -91,55 +94,58 @@ std::string output::endedNormally()
 *************************************************************************
 )",
 INFO);
-    // clang-format on
+        // clang-format on
 
-    return endedNormally_message;
-}
+        return endedNormally_message;
+    }
 
-/**
- * @brief construct elapsed time message
- *
- * @param elapsedTime
- * @return string
- */
-std::string output::elapsedTimeMessage(const double elapsedTime)
-{
-    return std::format("\n\n{}Elapsed time = {:.5f} s\n", OUTPUT, elapsedTime);
-}
+    /**
+     * @brief construct elapsed time message
+     *
+     * @param elapsedTime
+     * @return string
+     */
+    std::string elapsedTimeMessage(const double elapsedTime)
+    {
+        return std::format(
+            "\n\n{}Elapsed time = {:.5f} s\n",
+            OUTPUT,
+            elapsedTime
+        );
+    }
 
-/**
- * @brief Message to inform about starting to setup
- *
- * @param setup
- * @return std::string
- */
-std::string output::setupMessage(const std::string &setup)
-{
-    return std::format("{}Setup of {}\n", INFO, setup);
-}
+    /**
+     * @brief Message to inform about starting to setup
+     *
+     * @param setup
+     * @return std::string
+     */
+    std::string setupMessage(const std::string &setup)
+    {
+        return std::format("{}Setup of {}\n", INFO, setup);
+    }
 
-/**
- * @brief Message to inform about completed setup
- *
- * @return std::string
- */
-std::string output::setupCompletedMessage()
-{
-    return R"(
+    /**
+     * @brief Message to inform about completed setup
+     *
+     * @return std::string
+     */
+    std::string setupCompletedMessage()
+    {
+        return R"(
 ************************ STARTING SIMULATION ****************************
 )";
-}
+    }
 
-/**
- * @brief Message to inform about reading a file
- *
- * @param file
- * @return std::string
- */
-std::string output::readMessage(
-    const std::string &message,
-    const std::string &file
-)
-{
-    return std::format("{}Reading {} \"{}\"\n", INFO, message, file);
-}
+    /**
+     * @brief Message to inform about reading a file
+     *
+     * @param file
+     * @return std::string
+     */
+    std::string readMessage(const std::string &message, const std::string &file)
+    {
+        return std::format("{}Reading {} \"{}\"\n", INFO, message, file);
+    }
+
+}   // namespace out

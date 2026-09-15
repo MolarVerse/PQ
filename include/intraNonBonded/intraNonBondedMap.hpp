@@ -24,28 +24,27 @@
 
 #define _INTRA_NON_BONDED_MAP_HPP_
 
-#include <cstddef>   // for size_t
 #include <utility>   // for pair
 #include <vector>    // for vector
 
 #include "intraNonBondedContainer.hpp"   // for IntraNonBondedContainer
 #include "molecule.hpp"
 
-namespace simulationBox
+namespace molsys
 {
     class SimulationBox;   // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
 namespace physicalData
 {
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
 
-namespace potential
+namespace pot
 {
     class CoulombPotential;      // forward declaration
     class NonCoulombPotential;   // forward declaration
-}   // namespace potential
+}   // namespace pot
 
 namespace linearAlgebra
 {
@@ -66,29 +65,30 @@ namespace intraNonBonded
     class IntraNonBondedMap
     {
        private:
-        simulationBox::Molecule *_molecule;
+        molsys::Molecule        *_molecule;
         IntraNonBondedContainer *_intraNonBondedContainer;
 
        public:
         explicit IntraNonBondedMap(
-            simulationBox::Molecule *molecule,
+            molsys::Molecule        *molecule,
             IntraNonBondedContainer *intraNonBondedType
         );
 
         void calculate(
-            const potential::CoulombPotential  *coulPot,
-            potential::NonCoulombPotential     *nonCoulPot,
-            const simulationBox::SimulationBox &simBox,
-            physicalData::PhysicalData         &data
+            const pot::CoulombPotential *coulPot,
+            pot::NonCoulombPotential    *nonCoulPot,
+            const molsys::SimulationBox &simBox,
+            physicalData::PhysicalData  &data
         ) const;
 
-        [[nodiscard]] std::pair<double, double> calculateSingleInteraction(
-            const size_t                       atomIdx1,
-            const int                          atomIdx2,
-            const linearAlgebra::Vec3D        &box,
-            physicalData::PhysicalData        &data,
-            const potential::CoulombPotential *coulPot,
-            potential::NonCoulombPotential    *nonCoulPot
+        [[nodiscard]]
+        std::pair<double, double> calculateSingleInteraction(
+            const AtomIndex              atomIdx1,
+            const int                    atomIdx2,
+            const linearAlgebra::Vec3D  &box,
+            physicalData::PhysicalData  &data,
+            const pot::CoulombPotential *coulPot,
+            pot::NonCoulombPotential    *nonCoulPot
         ) const;
 
         /***************************
@@ -96,7 +96,7 @@ namespace intraNonBonded
          ***************************/
 
         [[nodiscard]] IntraNonBondedContainer *getIntraNonBondedType() const;
-        [[nodiscard]] simulationBox::Molecule *getMolecule() const;
+        [[nodiscard]] molsys::Molecule        *getMolecule() const;
         [[nodiscard]] std::vector<std::vector<int>> getAtomIndices() const;
     };
 

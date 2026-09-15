@@ -5,7 +5,6 @@ set(source_files
     testInputFileReader.cpp
     testInputValidation.cpp
     testIntraNonBondedReader.cpp
-    testCommandLineArgs.cpp
     testMShakeReader.cpp
 )
 

@@ -29,8 +29,12 @@
 #include <string>
 #include <vector>
 
-#include "engine.hpp"
 #include "inputFileParser.hpp"   // for InputFileParser
+
+namespace engine
+{
+    class Engine;   // forward declaration
+}   // namespace engine
 
 namespace input
 {
@@ -43,7 +47,7 @@ namespace input
     class GeneralInputParser : public InputFileParser
     {
        public:
-        explicit GeneralInputParser(engine::Engine &);
+        GeneralInputParser();
 
         void parseJobType(const std::vector<std::string> &, const size_t);
 

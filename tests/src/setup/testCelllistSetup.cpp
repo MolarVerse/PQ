@@ -42,21 +42,15 @@ TEST_F(TestSetup, setupCellList)
     CellListSetup cellListSetup(*_engine);
     cellListSetup.setup();
 
-    test::checkType(
-        _engine->getPotential(),
-        typeid(potential::PotentialBruteForce)
-    );
+    test::checkType(_engine->getPotential(), typeid(pot::PotentialBruteForce));
 
     settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
+    settings::Settings::activateCellList();
     _engine->getSimulationBox().setBoxDimensions({15.0, 15.0, 15.0});
     _engine->getCellList()->setNumberOfCells(3);
-    _engine->getCellList()->activate();
     cellListSetup.setup();
 
-    test::checkType(
-        _engine->getPotential(),
-        typeid(potential::PotentialCellList)
-    );
+    test::checkType(_engine->getPotential(), typeid(pot::PotentialCellList));
 
     EXPECT_NO_THROW(setupCellList(*_engine));
 }

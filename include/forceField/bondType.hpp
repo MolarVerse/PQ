@@ -24,7 +24,7 @@
 
 #define _BOND_TYPE_HPP_
 
-#include <cstddef>
+#include "strongTypes.hpp"
 
 namespace forceField
 {
@@ -44,13 +44,13 @@ namespace forceField
     class BondType
     {
        private:
-        size_t _id;
+        BondId _id;
 
         double _equilBondLength;
         double _forceConstant;
 
        public:
-        BondType(const size_t, const double, const double);
+        BondType(const BondId, const double, const double);
 
         friend bool operator==(const BondType &, const BondType &);
 
@@ -58,7 +58,7 @@ namespace forceField
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] size_t getId() const;
+        [[nodiscard]] BondId getId() const;
         [[nodiscard]] double getEquilibriumBondLength() const;
         [[nodiscard]] double getForceConstant() const;
     };

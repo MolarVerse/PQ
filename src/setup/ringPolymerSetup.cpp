@@ -40,7 +40,7 @@
 using setup::RingPolymerSetup;
 using namespace engine;
 using namespace settings;
-using namespace customException;
+using namespace exc;
 using namespace input::ringPolymer;
 using namespace maxwellBoltzmann;
 
@@ -111,7 +111,7 @@ void RingPolymerSetup::setupSimulationBox()
 {
     for (size_t i = 0; i < RingPolymerSettings::getNumberOfBeads(); ++i)
     {
-        simulationBox::SimulationBox bead;
+        molsys::SimulationBox bead;
         bead.copy(_engine.getSimulationBox());
 
         _engine.addRingPolymerBead(bead);

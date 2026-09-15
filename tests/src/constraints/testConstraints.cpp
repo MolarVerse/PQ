@@ -59,8 +59,9 @@ TEST_F(TestConstraints, applyShakeConverged)
 
     EXPECT_NO_THROW(_constraints->applyShake(*_box));
 
+    const auto mol = _box->getMolecules()[0];
     EXPECT_THAT(
-        _box->getMolecules()[0].getAtomPosition(0),
+        mol.getAtomPosition(AtomIndex{0}),
         testing::ElementsAre(
             testing::DoubleNear(1.0, 1e-5),
             testing::DoubleNear(1.23165, 1e-5),
@@ -68,7 +69,7 @@ TEST_F(TestConstraints, applyShakeConverged)
         )
     );
     EXPECT_THAT(
-        _box->getMolecules()[0].getAtomPosition(1),
+        mol.getAtomPosition(AtomIndex{1}),
         testing::ElementsAre(
             testing::DoubleNear(1.0, 1e-5),
             testing::DoubleNear(1.76835, 1e-5),
@@ -77,7 +78,7 @@ TEST_F(TestConstraints, applyShakeConverged)
     );
 
     EXPECT_THAT(
-        _box->getMolecules()[0].getAtomVelocity(0),
+        mol.getAtomVelocity(AtomIndex{0}),
         testing::ElementsAre(
             testing::DoubleNear(0.0, 1e10),
             testing::DoubleNear(1.15827e14, 1e10),
@@ -85,7 +86,7 @@ TEST_F(TestConstraints, applyShakeConverged)
         )
     );
     EXPECT_THAT(
-        _box->getMolecules()[0].getAtomVelocity(1),
+        mol.getAtomVelocity(AtomIndex{1}),
         testing::ElementsAre(
             testing::DoubleNear(1.0, 1e10),
             testing::DoubleNear(1.0 - 1.15827e14, 1e10),
@@ -109,7 +110,7 @@ TEST_F(TestConstraints, applyShakeNotConverged)
 
     EXPECT_THROW_MSG(
         _constraints->applyShake(*_box),
-        customException::ShakeException,
+        exc::ShakeException,
         "Shake algorithm did not converge for 2 bonds."
     );
 }
@@ -144,8 +145,9 @@ TEST_F(TestConstraints, applyRattleConverged)
 
     EXPECT_NO_THROW(_constraints->applyRattle(*_box));
 
+    const auto mol = _box->getMolecules()[0];
     EXPECT_THAT(
-        _box->getMolecules()[0].getAtomVelocity(0),
+        mol.getAtomVelocity(AtomIndex{0}),
         testing::ElementsAre(
             testing::DoubleNear(0.0, 1e-5),
             testing::DoubleNear(0.3, 1e-5),
@@ -153,7 +155,7 @@ TEST_F(TestConstraints, applyRattleConverged)
         )
     );
     EXPECT_THAT(
-        _box->getMolecules()[0].getAtomVelocity(1),
+        mol.getAtomVelocity(AtomIndex{1}),
         testing::ElementsAre(
             testing::DoubleNear(1.0, 1e-5),
             testing::DoubleNear(0.7, 1e-5),
@@ -175,7 +177,7 @@ TEST_F(TestConstraints, applyRattleNotConverged)
 
     EXPECT_THROW_MSG(
         _constraints->applyRattle(*_box),
-        customException::ShakeException,
+        exc::ShakeException,
         "Rattle algorithm did not converge for 2 bonds."
     );
 }

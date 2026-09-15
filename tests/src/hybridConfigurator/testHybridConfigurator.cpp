@@ -36,16 +36,16 @@
 #include "vectorNear.hpp"           // for EXPECT_VECTOR_NEAR
 
 using namespace configurator;
-using namespace customException;
+using namespace exc;
 using namespace linearAlgebra;
 using namespace pq;
 using namespace settings;
-using namespace simulationBox;
+using namespace molsys;
 
 TEST(testHybridConfigurator, calculateInnerRegionCenterAndShiftAtoms)
 {
-    HybridConfigurator           hybridConfigurator;
-    simulationBox::SimulationBox simBox;
+    HybridConfigurator    hybridConfigurator;
+    molsys::SimulationBox simBox;
 
     EXPECT_THROW_MSG(
         hybridConfigurator.calculateInnerRegionCenter(simBox),
@@ -140,8 +140,8 @@ TEST(testHybridConfigurator, calculateInnerRegionCenterAndShiftAtoms)
 
 TEST(testHybridConfigurator, assignHybridZones)
 {
-    HybridConfigurator           hybridConfigurator;
-    simulationBox::SimulationBox simBox;
+    HybridConfigurator    hybridConfigurator;
+    molsys::SimulationBox simBox;
 
     simBox.setBoxDimensions({100.0, 100.0, 100.0});
 
@@ -211,7 +211,7 @@ TEST(testHybridConfigurator, assignHybridZones)
 
     hybridConfigurator.assignHybridZones(simBox);
 
-    using enum simulationBox::HybridZone;
+    using enum molsys::HybridZone;
     EXPECT_EQ(simBox.getMolecule(0).getHybridZone(), CORE);
     EXPECT_EQ(simBox.getMolecule(1).getHybridZone(), LAYER);
     EXPECT_EQ(simBox.getMolecule(2).getHybridZone(), SMOOTHING);
@@ -221,8 +221,8 @@ TEST(testHybridConfigurator, assignHybridZones)
 
 TEST(testHybridConfigurator, assignHybridZonesCoreZero)
 {
-    HybridConfigurator           hybridConfigurator;
-    simulationBox::SimulationBox simBox;
+    HybridConfigurator    hybridConfigurator;
+    molsys::SimulationBox simBox;
 
     simBox.setBoxDimensions({100.0, 100.0, 100.0});
 
@@ -243,7 +243,7 @@ TEST(testHybridConfigurator, assignHybridZonesCoreZero)
 
     hybridConfigurator.assignHybridZones(simBox);
 
-    using enum simulationBox::HybridZone;
+    using enum molsys::HybridZone;
     EXPECT_EQ(simBox.getMolecule(0).getHybridZone(), LAYER);
 
     HybridSettings::setCoreRadius(0.00001);
@@ -254,8 +254,8 @@ TEST(testHybridConfigurator, assignHybridZonesCoreZero)
 
 TEST(testHybridConfigurator, forcedZonesOverrideDistanceAssignment)
 {
-    HybridConfigurator           hybridConfigurator;
-    simulationBox::SimulationBox simBox;
+    HybridConfigurator    hybridConfigurator;
+    molsys::SimulationBox simBox;
 
     simBox.setBoxDimensions({100.0, 100.0, 100.0});
 
@@ -286,17 +286,17 @@ TEST(testHybridConfigurator, forcedZonesOverrideDistanceAssignment)
 
     hybridConfigurator.assignHybridZones(simBox);
 
-    using enum simulationBox::HybridZone;
+    using enum molsys::HybridZone;
     EXPECT_EQ(simBox.getMolecule(0).getHybridZone(), CORE);
     EXPECT_EQ(simBox.getMolecule(1).getHybridZone(), LAYER);
 }
 
 TEST(testHybridConfigurator, activateDeactivateMolecules)
 {
-    HybridConfigurator           hybridConfigurator;
-    simulationBox::SimulationBox simBox;
+    HybridConfigurator    hybridConfigurator;
+    molsys::SimulationBox simBox;
 
-    using enum simulationBox::HybridZone;
+    using enum molsys::HybridZone;
 
     auto atom1 = std::make_shared<Atom>();
     auto mol1  = Molecule();
@@ -340,8 +340,9 @@ TEST(testHybridConfigurator, activateDeactivateMolecules)
     const auto &nMol = simBox.getMolecules().size();
     for (size_t i = 0; i < nMol; ++i)
     {
-        EXPECT_EQ(simBox.getMolecule(i).isActive(), true);
-        EXPECT_EQ(simBox.getMolecule(i).getAtom(0).isActive(), true);
+        auto &mol = simBox.getMolecule(i);
+        EXPECT_EQ(mol.isActive(), true);
+        EXPECT_EQ(mol.getAtom(AtomIndex{0}).isActive(), true);
     }
 
     hybridConfigurator.deactivateOuterMolecules(simBox);
@@ -349,8 +350,9 @@ TEST(testHybridConfigurator, activateDeactivateMolecules)
     std::vector<bool> expected = {true, true, true, true, false, false};
     for (size_t i = 0; i < 6; ++i)
     {
-        EXPECT_EQ(simBox.getMolecule(i).isActive(), expected[i]);
-        EXPECT_EQ(simBox.getMolecule(i).getAtom(0).isActive(), expected[i]);
+        auto &mol = simBox.getMolecule(i);
+        EXPECT_EQ(mol.isActive(), expected[i]);
+        EXPECT_EQ(mol.getAtom(AtomIndex{0}).isActive(), expected[i]);
     }
 
     hybridConfigurator.deactivateSmoothingMolecules(
@@ -361,8 +363,9 @@ TEST(testHybridConfigurator, activateDeactivateMolecules)
     expected = {true, true, false, true, false, false};
     for (size_t i = 0; i < 6; ++i)
     {
-        EXPECT_EQ(simBox.getMolecule(i).isActive(), expected[i]);
-        EXPECT_EQ(simBox.getMolecule(i).getAtom(0).isActive(), expected[i]);
+        auto &mol = simBox.getMolecule(i);
+        EXPECT_EQ(mol.isActive(), expected[i]);
+        EXPECT_EQ(mol.getAtom(AtomIndex{0}).isActive(), expected[i]);
     }
 
     hybridConfigurator.toggleMoleculeActivation(simBox);
@@ -370,22 +373,23 @@ TEST(testHybridConfigurator, activateDeactivateMolecules)
     expected = {false, false, true, false, true, true};
     for (size_t i = 0; i < 6; ++i)
     {
-        EXPECT_EQ(simBox.getMolecule(i).isActive(), expected[i]);
-        EXPECT_EQ(simBox.getMolecule(i).getAtom(0).isActive(), expected[i]);
+        auto &mol = simBox.getMolecule(i);
+        EXPECT_EQ(mol.isActive(), expected[i]);
+        EXPECT_EQ(mol.getAtom(AtomIndex{0}).isActive(), expected[i]);
     }
 }
 
 TEST(testHybridConfigurator, calculateSmoothingFactors)
 {
-    HybridConfigurator           hybridConfigurator;
-    simulationBox::SimulationBox simBox;
+    HybridConfigurator    hybridConfigurator;
+    molsys::SimulationBox simBox;
 
     simBox.setBoxDimensions({100.0, 100.0, 100.0});
 
     HybridSettings::setLayerRadius(12.0);
     HybridSettings::setSmoothingRegionThickness(2.0);
 
-    using enum simulationBox::HybridZone;
+    using enum molsys::HybridZone;
 
     auto atom1 = std::make_shared<Atom>();
     atom1->setPosition({10.0, 0.0, 0.0});

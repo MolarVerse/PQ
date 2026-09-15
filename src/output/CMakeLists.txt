@@ -34,7 +34,7 @@ target_link_libraries(output
     utilities
     hybridConfigurator
     physicalData
-    simulationBox
+    molsys
     optimization
     settings
     thermostat

@@ -29,10 +29,10 @@
 #include <memory>     // for unique_ptr
 #include <vector>     // for vector
 
-namespace simulationBox
+namespace molsys
 {
     class MoleculeType;   // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
 namespace constraints
 {
@@ -46,8 +46,8 @@ namespace constraints
     class MShakeReference
     {
        private:
-        std::shared_ptr<simulationBox::MoleculeType> _moleculeType;
-        std::vector<simulationBox::Atom>             _atoms;
+        std::shared_ptr<molsys::MoleculeType> _moleculeType;
+        std::vector<molsys::Atom>             _atoms;
 
        public:
         MShakeReference() = default;
@@ -56,16 +56,16 @@ namespace constraints
          * standard setter methods *
          ***************************/
 
-        void setMoleculeType(simulationBox::MoleculeType &moltype);
-        void setAtoms(const std::vector<simulationBox::Atom> &atoms);
+        void setMoleculeType(molsys::MoleculeType &moltype);
+        void setAtoms(const std::vector<molsys::Atom> &atoms);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] size_t getNumberOfAtoms() const;
-        [[nodiscard]] std::vector<simulationBox::Atom> &getAtoms();
-        [[nodiscard]] simulationBox::MoleculeType      &getMoleculeType() const;
+        [[nodiscard]] size_t                     getNumberOfAtoms() const;
+        [[nodiscard]] std::vector<molsys::Atom> &getAtoms();
+        [[nodiscard]] molsys::MoleculeType      &getMoleculeType() const;
     };
 }   // namespace constraints
 

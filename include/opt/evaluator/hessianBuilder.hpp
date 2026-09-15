@@ -30,10 +30,10 @@
 #include "hessianSettings.hpp"
 #include "vector3d.hpp"
 
-namespace simulationBox
+namespace molsys
 {
     class SimulationBox;   // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
 namespace opt
 {
@@ -49,8 +49,8 @@ namespace opt
 
         [[nodiscard]]
         virtual HessianMatrix build(
-            Evaluator                    &evaluator,
-            simulationBox::SimulationBox &simulationBox
+            Evaluator             &evaluator,
+            molsys::SimulationBox &simulationBox
         ) const = 0;
     };
 
@@ -61,26 +61,26 @@ namespace opt
 
         [[nodiscard]]
         std::vector<double> evaluateForces(
-            Evaluator                    &evaluator,
-            simulationBox::SimulationBox &simulationBox,
-            const size_t                  coordinateIndex,
-            const double                  displacement
+            Evaluator             &evaluator,
+            molsys::SimulationBox &simulationBox,
+            const size_t           coordinateIndex,
+            const double           displacement
         ) const;
 
         static void restorePositions(
-            simulationBox::SimulationBox            &simulationBox,
+            molsys::SimulationBox                   &simulationBox,
             const std::vector<linearAlgebra::Vec3D> &positions
         );
 
         static void displaceCoordinate(
-            simulationBox::SimulationBox &simulationBox,
-            const size_t                  coordinateIndex,
-            const double                  displacement
+            molsys::SimulationBox &simulationBox,
+            const size_t           coordinateIndex,
+            const double           displacement
         );
 
         [[nodiscard]]
         static std::vector<double> flattenForces(
-            const simulationBox::SimulationBox &simulationBox
+            const molsys::SimulationBox &simulationBox
         );
 
        public:
@@ -97,8 +97,8 @@ namespace opt
 
         [[nodiscard]]
         HessianMatrix build(
-            Evaluator                    &evaluator,
-            simulationBox::SimulationBox &simulationBox
+            Evaluator             &evaluator,
+            molsys::SimulationBox &simulationBox
         ) const override;
     };
 
@@ -110,8 +110,8 @@ namespace opt
 
         [[nodiscard]]
         HessianMatrix build(
-            Evaluator                    &evaluator,
-            simulationBox::SimulationBox &simulationBox
+            Evaluator             &evaluator,
+            molsys::SimulationBox &simulationBox
         ) const override;
     };
 
@@ -123,8 +123,8 @@ namespace opt
 
         [[nodiscard]]
         HessianMatrix build(
-            Evaluator                    &evaluator,
-            simulationBox::SimulationBox &simulationBox
+            Evaluator             &evaluator,
+            molsys::SimulationBox &simulationBox
         ) const override;
     };
 
@@ -133,8 +133,8 @@ namespace opt
        public:
         [[nodiscard]]
         HessianMatrix build(
-            Evaluator                    &evaluator,
-            simulationBox::SimulationBox &simulationBox
+            Evaluator             &evaluator,
+            molsys::SimulationBox &simulationBox
         ) const override;
     };
 

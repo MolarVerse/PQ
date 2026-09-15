@@ -37,8 +37,7 @@
 #include "thermostatSettings.hpp"   // for ThermostatSettings
 
 using namespace input;
-using namespace engine;
-using namespace customException;
+using namespace exc;
 using namespace settings;
 using namespace utilities;
 using namespace references;
@@ -55,8 +54,7 @@ using namespace constants;
  *
  * @param engine
  */
-ThermostatInputParser::ThermostatInputParser(Engine &engine)
-    : InputFileParser(engine)
+ThermostatInputParser::ThermostatInputParser()
 {
     addKeyword(
         std::string("thermostat"),

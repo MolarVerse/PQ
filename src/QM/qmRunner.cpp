@@ -30,11 +30,11 @@
 #include "qmSettings.hpp"
 
 using QM::QMRunner;
-using enum simulationBox::Periodicity;
+using enum molsys::Periodicity;
 
 using namespace settings;
 using namespace defaults;
-using namespace customException;
+using namespace exc;
 
 /**
  * @brief function to throw an exception after a timeout
@@ -74,8 +74,8 @@ void QMRunner::throwAfterTimeout(const std::stop_token stopToken) const
  * @param physicalData PhysicalData reference
  */
 void QMRunner::run(
-    simulationBox::SimulationBox &simBox,
-    physicalData::PhysicalData   &physicalData
+    molsys::SimulationBox      &simBox,
+    physicalData::PhysicalData &physicalData
 )
 {
     run(simBox, physicalData, XYZ);

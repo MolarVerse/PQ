@@ -25,7 +25,7 @@
 #include "constants/internalConversionFactors.hpp"
 #include "coulombReactionField.hpp"
 
-using namespace potential;
+using namespace pot;
 
 /**
  * @brief tests reaction-field energy, force, and cutoff continuity

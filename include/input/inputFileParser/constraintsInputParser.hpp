@@ -48,7 +48,6 @@ namespace input
 
        public:
         explicit ConstraintsInputParser(
-            engine::Engine &,
             std::shared_ptr<constraints::Constraints> constraints
         );
 

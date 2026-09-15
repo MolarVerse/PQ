@@ -65,46 +65,50 @@ namespace forceField
         std::vector<DihedralType>  _improperDihedralTypes;
         std::vector<JCouplingType> _jCouplingTypes;
 
-        std::shared_ptr<potential::NonCoulombPotential> _nonCoulombPot;
-        std::shared_ptr<potential::CoulombPotential>    _coulombPotential;
+        std::shared_ptr<pot::NonCoulombPotential> _nonCoulombPot;
+        std::shared_ptr<pot::CoulombPotential>    _coulombPotential;
 
        public:
         [[nodiscard]] std::shared_ptr<ForceField> clone() const;
 
         void calculateBondedInteractions(
-            const simulationBox::SimulationBox &,
+            const molsys::SimulationBox &,
             physicalData::PhysicalData &
         );
 
         void calculateBondInteractions(
-            const simulationBox::SimulationBox &,
+            const molsys::SimulationBox &,
             physicalData::PhysicalData &
         );
 
         void calculateAngleInteractions(
-            const simulationBox::SimulationBox &,
+            const molsys::SimulationBox &,
             physicalData::PhysicalData &
         );
 
         void calculateDihedralInteractions(
-            const simulationBox::SimulationBox &,
+            const molsys::SimulationBox &,
             physicalData::PhysicalData &
         );
 
         void calculateImproperDihedralInteractions(
-            const simulationBox::SimulationBox &,
+            const molsys::SimulationBox &,
             physicalData::PhysicalData &
         );
 
         void calculateJCouplingInteractions(
-            const simulationBox::SimulationBox &,
+            const molsys::SimulationBox &,
             physicalData::PhysicalData &
         );
 
-        [[nodiscard]] const BondType     &findBondTypeById(size_t id) const;
-        [[nodiscard]] const AngleType    &findAngleTypeById(size_t id) const;
-        [[nodiscard]] const DihedralType &findDihedralTypeById(size_t id) const;
-        [[nodiscard]] const DihedralType &findImproperTypeById(size_t id) const;
+        [[nodiscard]] const BondType     &findBondTypeById(BondId id) const;
+        [[nodiscard]] const AngleType    &findAngleTypeById(AngleId id) const;
+        [[nodiscard]] const DihedralType &findDihedralTypeById(
+            DihedralId id
+        ) const;
+        [[nodiscard]] const DihedralType &findImproperTypeById(
+            DihedralId id
+        ) const;
         [[nodiscard]]
         const JCouplingType &findJCouplingTypeById(size_t id) const;
 
@@ -152,10 +156,10 @@ namespace forceField
          ********************/
 
         void setNonCoulombPotential(
-            const std::shared_ptr<potential::NonCoulombPotential> &pot
+            const std::shared_ptr<pot::NonCoulombPotential> &pot
         );
         void setCoulombPotential(
-            const std::shared_ptr<potential::CoulombPotential> &pot
+            const std::shared_ptr<pot::CoulombPotential> &pot
         );
 
         /********************

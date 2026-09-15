@@ -31,7 +31,7 @@
 
 using namespace input::parameterFile;
 using namespace engine;
-using namespace customException;
+using namespace exc;
 using namespace forceField;
 using namespace constants;
 
@@ -74,7 +74,7 @@ void AngleSection::processSection(
         );
     }
 
-    auto id               = stoul(lineElements[0]);
+    auto id               = AngleId{stoul(lineElements[0])};
     auto equilibriumAngle = stod(lineElements[1]) * DEG_TO_RAD;
     auto forceConstant    = stod(lineElements[2]);
 

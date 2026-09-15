@@ -24,406 +24,86 @@
 
 #define _EXCEPTIONS_HPP_
 
-#include <cstddef>
-#include <exception>
-#include <optional>
-#include <string>
-#include <string_view>
-
+#include "baseException.hpp"
 #include "color.hpp"
 
-namespace customException
+namespace exc
 {
+    using InputFileException =
+        BaseException<Color::FG_RED, ExceptionType::InputFileError>;
 
-    /**
-     * @enum ExceptionType
-     *
-     */
-    enum class ExceptionType : size_t
-    {
-        INPUTFILEEXCEPTION,
-        RSTFILEEXCEPTION,
-        USERINPUTEXCEPTION,
-        MOLDESCRIPTOREXCEPTION,
-        USERINPUTEXCEPTIONWARNING,
-        GUFFDATEXCEPTION,
-        TOPOLOGYEXCEPTION,
-        PARAMETERFILEEXCEPTION,
-        MANOSTATEXCEPTION,
-        INTRANONBONDEDEXCEPTION,
-        SHAKEEXCEPTION,
-        CELLLISTEXCEPTION,
-        RINGPOLYMERRESTARTFILEEXCEPTION,
-        QMRUNNEREXCEPTION,
-        MPIEXCEPTION,
-        QMRUNTIMEEXCEEDED,
-        MSHAKEFILEEXCEPTION,
-        MSHAKEEXCEPTION,
-        LINEARALGEBRAEXCEPTION,
-        OPTEXCEPTION,
-        OPTWARNING,
-        COMPILETIMEEXCEPTION,
-        HYBRIDCONFIGURATOREXCEPTION
-    };
+    using RstFileException =
+        BaseException<Color::FG_RED, ExceptionType::RstFileError>;
 
-    /**
-     * @class CustomException
-     *
-     * @brief Custom exception base class
-     *
-     */
-    class CustomException : public std::exception
-    {
-       protected:
-        std::string           _message;
-        std::optional<size_t> _lineNumber;
+    using UserInputException =
+        BaseException<Color::FG_RED, ExceptionType::UserInputError>;
 
-       public:
-        explicit CustomException(
-            const std::string_view message,
-            std::optional<size_t>  lineNumber
-        );
-        explicit CustomException(const std::string_view message);
+    using MolDescriptorException =
+        BaseException<Color::FG_RED, ExceptionType::MoldescriptorError>;
 
-        void colorfulOutput(const Color::Code, const std::string_view) const;
-        void setLineNumber(const size_t lineNumber) noexcept;
-        [[nodiscard]] const std::string    &getMessage() const noexcept;
-        [[nodiscard]] std::optional<size_t> getLineNumber() const noexcept;
-    };
+    using UserInputExceptionWarning =
+        BaseException<Color::FG_ORANGE, ExceptionType::UserInputWarning>;
 
-    /**
-     * @class InputFileException inherits from CustomException
-     *
-     * @brief Exception for input file errors
-     *
-     */
-    class InputFileException : public CustomException
-    {
-       public:
-        using CustomException::CustomException;
+    using GuffDatException =
+        BaseException<Color::FG_RED, ExceptionType::GuffDatError>;
 
-        [[nodiscard]] const char *what() const noexcept override;
-    };
+    using TopologyException =
+        BaseException<Color::FG_RED, ExceptionType::TopologyError>;
 
-    /**
-     * @class RstFileException inherits from CustomException
-     *
-     * @brief Exception for restart file errors
-     *
-     */
-    class RstFileException : public CustomException
-    {
-       public:
-        using CustomException::CustomException;
+    using ParameterFileException =
+        BaseException<Color::FG_RED, ExceptionType::ParameterFileError>;
 
-        [[nodiscard]] const char *what() const noexcept override;
-    };
+    using ManostatException =
+        BaseException<Color::FG_RED, ExceptionType::ManostatError>;
 
-    /**
-     * @class UserInputException inherits from CustomException
-     *
-     * @brief Exception for user input errors (CLI)
-     *
-     */
-    class UserInputException : public CustomException
-    {
-       public:
-        using CustomException::CustomException;
+    using IntraNonBondedException =
+        BaseException<Color::FG_RED, ExceptionType::IntraNonBondedError>;
 
-        [[nodiscard]] const char *what() const noexcept override;
-    };
+    using ShakeException =
+        BaseException<Color::FG_RED, ExceptionType::ShakeError>;
 
-    /**
-     * @class MolDescriptorException inherits from CustomException
-     *
-     * @brief Exception for MolDescriptor errors
-     *
-     */
-    class MolDescriptorException : public CustomException
-    {
-       public:
-        using CustomException::CustomException;
+    using CellListException =
+        BaseException<Color::FG_RED, ExceptionType::CellListError>;
 
-        [[nodiscard]] const char *what() const noexcept override;
-    };
+    using RingPolymerRestartFileException = BaseException<
+        Color::FG_RED,
+        ExceptionType::RingPolymerRestartFileError>;
 
-    /**
-     * @class UserInputExceptionWarning inherits from CustomException
-     *
-     * @brief Exception for user input warnings
-     *
-     */
-    class UserInputExceptionWarning : public CustomException
-    {
-       public:
-        using CustomException::CustomException;
+    using QMRunnerException =
+        BaseException<Color::FG_RED, ExceptionType::QmRunnerError>;
 
-        [[nodiscard]] const char *what() const noexcept override;
-    };
+    using MPIException = BaseException<Color::FG_RED, ExceptionType::MpiError>;
 
-    /**
-     * @class GuffDatException inherits from CustomException
-     *
-     * @brief Exception for guff.dat errors
-     *
-     */
-    class GuffDatException : public CustomException
-    {
-       public:
-        using CustomException::CustomException;
+    using QMRunTimeExceeded =
+        BaseException<Color::FG_RED, ExceptionType::QmRuntimeExceeded>;
 
-        [[nodiscard]] const char *what() const noexcept override;
-    };
+    using MShakeFileException =
+        BaseException<Color::FG_RED, ExceptionType::MShakeFileError>;
 
-    /**
-     * @class TopologyException inherits from CustomException
-     *
-     * @brief Exception for topology file errors
-     */
-    class TopologyException : public CustomException
-    {
-       public:
-        using CustomException::CustomException;
+    using MShakeException =
+        BaseException<Color::FG_RED, ExceptionType::MShakeError>;
 
-        [[nodiscard]] const char *what() const noexcept override;
-    };
+    using LinearAlgebraException =
+        BaseException<Color::FG_RED, ExceptionType::LinearAlgebraError>;
 
-    /**
-     * @class ParameterFileException inherits from CustomException
-     *
-     * @brief Exception for parameter file errors
-     */
-    class ParameterFileException : public CustomException
-    {
-       public:
-        using CustomException::CustomException;
+    using OptException =
+        BaseException<Color::FG_RED, ExceptionType::OptimizationError>;
 
-        [[nodiscard]] const char *what() const noexcept override;
-    };
+    using OptWarning =
+        BaseException<Color::FG_ORANGE, ExceptionType::OptimizationWarning>;
 
-    /**
-     * @class ManostatException inherits from CustomException
-     *
-     * @brief Exception for manostat errors
-     */
-    class ManostatException : public CustomException
-    {
-       public:
-        using CustomException::CustomException;
+    using CompileTimeException =
+        BaseException<Color::FG_RED, ExceptionType::CompileTimeError>;
 
-        [[nodiscard]] const char *what() const noexcept override;
-    };
+    using HybridConfiguratorException =
+        BaseException<Color::FG_RED, ExceptionType::HybridConfiguratorError>;
 
-    /**
-     * @class IntraNonBondedException inherits from CustomException
-     *
-     * @brief Exception for intra non bonded errors
-     */
-    class IntraNonBondedException : public CustomException
-    {
-       public:
-        using CustomException::CustomException;
+    using HybridMDEngineException =
+        BaseException<Color::FG_RED, ExceptionType::HybridMDEngineError>;
 
-        [[nodiscard]] const char *what() const noexcept override;
-    };
+    using TimerException =
+        BaseException<Color::FG_RED, ExceptionType::TimerError>;
 
-    /**
-     * @class ShakeException inherits from CustomException
-     *
-     * @brief Exception for SHAKE errors
-     */
-    class ShakeException : public CustomException
-    {
-       public:
-        using CustomException::CustomException;
-
-        [[nodiscard]] const char *what() const noexcept override;
-    };
-
-    /**
-     * @class CellListException inherits from CustomException
-     *
-     * @brief Exception for CellList errors
-     */
-    class CellListException : public CustomException
-    {
-       public:
-        using CustomException::CustomException;
-
-        [[nodiscard]] const char *what() const noexcept override;
-    };
-
-    /**
-     * @class RingPolymerRestartFileException inherits from CustomException
-     *
-     * @brief Exception for ring polymer restart file errors
-     */
-    class RingPolymerRestartFileException : public CustomException
-    {
-       public:
-        using CustomException::CustomException;
-
-        [[nodiscard]] const char *what() const noexcept override;
-    };
-
-    /**
-     * @class QMRunnerException inherits from CustomException
-     *
-     * @brief Exception for QMRunner errors
-     */
-    class QMRunnerException : public CustomException
-    {
-       public:
-        using CustomException::CustomException;
-
-        [[nodiscard]] const char *what() const noexcept override;
-    };
-
-    /**
-     * @class MPIException inherits from CustomException
-     *
-     * @brief Exception for MPI errors
-     *
-     */
-    class MPIException : public CustomException
-    {
-       public:
-        using CustomException::CustomException;
-
-        [[nodiscard]] const char *what() const noexcept override;
-    };
-
-    /**
-     * @class QMRunTimeExceeded inherits from CustomException
-     *
-     * @brief Exception for QM runtime exceeded
-     *
-     */
-    class QMRunTimeExceeded : public CustomException
-    {
-       public:
-        using CustomException::CustomException;
-
-        [[nodiscard]] const char *what() const noexcept override;
-    };
-
-    /**
-     * @class MShakeFileException inherits from CustomException
-     *
-     * @brief Exception for mShake errors
-     */
-    class MShakeFileException : public CustomException
-    {
-       public:
-        using CustomException::CustomException;
-
-        [[nodiscard]] const char *what() const noexcept override;
-    };
-
-    /**
-     * @class MShakeException inherits from CustomException
-     *
-     * @brief Exception for MShake errors
-     */
-    class MShakeException : public CustomException
-    {
-       public:
-        using CustomException::CustomException;
-
-        [[nodiscard]] const char *what() const noexcept override;
-    };
-
-    /**
-     * @class LinearAlgebraException inherits from CustomException
-     *
-     * @brief Exception for linear algebra errors
-     */
-    class LinearAlgebraException : public CustomException
-    {
-       public:
-        using CustomException::CustomException;
-
-        [[nodiscard]] const char *what() const noexcept override;
-    };
-
-    /**
-     * @class OptException inherits from CustomException
-     *
-     * @brief Exception for optimization errors
-     */
-    class OptException : public CustomException
-    {
-       public:
-        using CustomException::CustomException;
-
-        [[nodiscard]] const char *what() const noexcept override;
-    };
-
-    /**
-     * @class OptWarning inherits from CustomException
-     *
-     * @brief Exception for optimization errors
-     */
-    class OptWarning : public CustomException
-    {
-       public:
-        using CustomException::CustomException;
-
-        [[nodiscard]] const char *what() const noexcept override;
-    };
-
-    /**
-     * @class CompileTimeException inherits from CustomException
-     *
-     * @brief Exception for compile time errors
-     */
-    class CompileTimeException : public CustomException
-    {
-       public:
-        using CustomException::CustomException;
-
-        [[nodiscard]] const char *what() const noexcept override;
-    };
-
-    /**
-     * @class HybridConfiguratorException inherits from CustomException
-     *
-     * @brief Exception for hybrid configurator errors
-     */
-    class HybridConfiguratorException : public CustomException
-    {
-       public:
-        using CustomException::CustomException;
-
-        [[nodiscard]] const char *what() const noexcept override;
-    };
-
-    /**
-     * @class HybridMDEngineException inherits from CustomException
-     *
-     * @brief Exception for hybrid MD engine errors
-     */
-    class HybridMDEngineException : public CustomException
-    {
-       public:
-        using CustomException::CustomException;
-
-        [[nodiscard]] const char *what() const noexcept override;
-    };
-
-    /**
-     * @class PhysicalDataException inherits from CustomException
-     *
-     * @brief Exception for physical data errors
-     */
-    class PhysicalDataException : public CustomException
-    {
-       public:
-        using CustomException::CustomException;
-
-        [[nodiscard]] const char *what() const noexcept override;
-    };
-
-}   // namespace customException
+}   // namespace exc
 
 #endif   // _EXCEPTIONS_HPP_

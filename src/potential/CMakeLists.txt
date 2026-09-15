@@ -17,7 +17,7 @@ target_include_directories(potential
 target_link_libraries(potential
     PUBLIC
     physicalData
-    simulationBox
+    molsys
     coulombPotential
     nonCoulombPotential
     timings

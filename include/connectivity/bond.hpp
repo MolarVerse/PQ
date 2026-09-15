@@ -24,8 +24,6 @@
 
 #define _BOND_HPP_
 
-#include <cstddef>
-
 #include "connectivityElement.hpp"
 
 namespace connectivity
@@ -41,27 +39,14 @@ namespace connectivity
        public:
         using ConnectivityElement::ConnectivityElement;
 
-        Bond(
-            simulationBox::Molecule *,
-            simulationBox::Molecule *,
-            size_t,
-            size_t
-        );
-        Bond(
-            simulationBox::Molecule *,
-            size_t,
-            simulationBox::Molecule *,
-            size_t
-        );
+        Bond(molsys::Molecule *, molsys::Molecule *, AtomIndex, AtomIndex);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] simulationBox::Molecule *getMolecule1() const;
-        [[nodiscard]] simulationBox::Molecule *getMolecule2() const;
-        [[nodiscard]] size_t                   getAtomIndex1() const;
-        [[nodiscard]] size_t                   getAtomIndex2() const;
+        [[nodiscard]] molsys::Molecule *getMolecule1() const;
+        [[nodiscard]] molsys::Molecule *getMolecule2() const;
     };
 
 }   // namespace connectivity

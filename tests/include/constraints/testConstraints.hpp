@@ -45,12 +45,12 @@ class TestConstraints : public ::testing::Test
    protected:
     void SetUp() override
     {
-        auto molecule1 = simulationBox::Molecule();
+        auto molecule1 = molsys::Molecule();
         molecule1.setNumberOfAtoms(3);
 
-        auto atom1 = std::make_shared<simulationBox::Atom>();
-        auto atom2 = std::make_shared<simulationBox::Atom>();
-        auto atom3 = std::make_shared<simulationBox::Atom>();
+        auto atom1 = std::make_shared<molsys::Atom>();
+        auto atom2 = std::make_shared<molsys::Atom>();
+        auto atom3 = std::make_shared<molsys::Atom>();
 
         atom1->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
         atom2->setPosition(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
@@ -66,11 +66,11 @@ class TestConstraints : public ::testing::Test
         molecule1.addAtom(atom2);
         molecule1.addAtom(atom3);
 
-        auto molecule2 = simulationBox::Molecule();
+        auto molecule2 = molsys::Molecule();
         molecule2.setNumberOfAtoms(2);
 
-        auto atom4 = std::make_shared<simulationBox::Atom>();
-        auto atom5 = std::make_shared<simulationBox::Atom>();
+        auto atom4 = std::make_shared<molsys::Atom>();
+        auto atom5 = std::make_shared<molsys::Atom>();
 
         atom4->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
         atom5->setPosition(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
@@ -82,7 +82,7 @@ class TestConstraints : public ::testing::Test
         molecule2.addAtom(atom4);
         molecule2.addAtom(atom5);
 
-        _box = new simulationBox::SimulationBox();
+        _box = new molsys::SimulationBox();
         _box->addMolecule(molecule1);
         _box->addMolecule(molecule2);
         _box->setBoxDimensions(linearAlgebra::Vec3D(10.0, 10.0, 10.0));
@@ -92,15 +92,15 @@ class TestConstraints : public ::testing::Test
         auto bondConstraint1 = constraints::BondConstraint(
             &(_box->getMolecules()[0]),
             &(_box->getMolecules()[0]),
-            0,
-            1,
+            AtomIndex{0},
+            AtomIndex{1},
             1.2
         );
         auto bondConstraint2 = constraints::BondConstraint(
             &(_box->getMolecules()[0]),
             &(_box->getMolecules()[1]),
-            2,
-            1,
+            AtomIndex{2},
+            AtomIndex{1},
             1.3
         );
 
@@ -116,8 +116,8 @@ class TestConstraints : public ::testing::Test
         delete _constraints;
     }
 
-    simulationBox::SimulationBox *_box;
-    constraints::Constraints     *_constraints;
+    molsys::SimulationBox    *_box;
+    constraints::Constraints *_constraints;
 };
 
 #endif   // _TEST_CONSTRAINTS_HPP_

@@ -31,9 +31,9 @@
 #include "simulationBox.hpp"
 
 using namespace intraNonBonded;
-using namespace potential;
-using namespace customException;
-using namespace simulationBox;
+using namespace pot;
+using namespace exc;
+using namespace molsys;
 using namespace physicalData;
 
 using std::ranges::find_if;

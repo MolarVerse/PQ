@@ -12,7 +12,7 @@ target_include_directories(convergence
 target_link_libraries(convergence
     PRIVATE
     linearAlgebra
-    simulationBox
+    molsys
     physicalData
 )
 

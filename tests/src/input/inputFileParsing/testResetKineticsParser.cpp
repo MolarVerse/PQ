@@ -25,8 +25,8 @@
 #include <string>   // for string, allocator, basic_string
 #include <vector>   // for vector
 
-#include "exceptions.hpp"        // for InputFileException
-#include "gtest/gtest.h"         // for Message, TestPartResult
+#include "exceptions.hpp"   // for InputFileException
+#include "gtest/gtest.h"    // for Message, TestPartResult
 #include "resetKineticsInputParser.hpp"
 #include "resetKineticsSettings.hpp"   // for ResetKineticsSettings
 #include "testInputFileReader.hpp"     // for TestInputFileReader
@@ -41,7 +41,7 @@ using namespace input;
  */
 TEST_F(TestInputFileReader, testParseNScale)
 {
-    ResetKineticsInputParser parser(*_engine);
+    ResetKineticsInputParser parser;
     std::vector<std::string> lineElements = {"nscale", "=", "3"};
     parser.parseNScale(lineElements, 0);
     EXPECT_EQ(settings::ResetKineticsSettings::getNScale(), 3);
@@ -49,7 +49,7 @@ TEST_F(TestInputFileReader, testParseNScale)
     lineElements = {"nscale", "=", "-1"};
     EXPECT_THROW_MSG(
         parser.parseNScale(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Nscale must be positive"
     );
 }
@@ -61,7 +61,7 @@ TEST_F(TestInputFileReader, testParseNScale)
  */
 TEST_F(TestInputFileReader, testParseFScale)
 {
-    ResetKineticsInputParser parser(*_engine);
+    ResetKineticsInputParser parser;
     std::vector<std::string> lineElements = {"fscale", "=", "3"};
     parser.parseFScale(lineElements, 0);
     EXPECT_EQ(settings::ResetKineticsSettings::getFScale(), 3);
@@ -69,7 +69,7 @@ TEST_F(TestInputFileReader, testParseFScale)
     lineElements = {"fscale", "=", "-1"};
     EXPECT_THROW_MSG(
         parser.parseFScale(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Fscale must be positive"
     );
 }
@@ -81,7 +81,7 @@ TEST_F(TestInputFileReader, testParseFScale)
  */
 TEST_F(TestInputFileReader, testParseNReset)
 {
-    ResetKineticsInputParser parser(*_engine);
+    ResetKineticsInputParser parser;
     std::vector<std::string> lineElements = {"nreset", "=", "3"};
     parser.parseNReset(lineElements, 0);
     EXPECT_EQ(settings::ResetKineticsSettings::getNReset(), 3);
@@ -89,7 +89,7 @@ TEST_F(TestInputFileReader, testParseNReset)
     lineElements = {"nreset", "=", "-1"};
     EXPECT_THROW_MSG(
         parser.parseNReset(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Nreset must be positive"
     );
 }
@@ -101,7 +101,7 @@ TEST_F(TestInputFileReader, testParseNReset)
  */
 TEST_F(TestInputFileReader, testParseFReset)
 {
-    ResetKineticsInputParser parser(*_engine);
+    ResetKineticsInputParser parser;
     std::vector<std::string> lineElements = {"freset", "=", "3"};
     parser.parseFReset(lineElements, 0);
     EXPECT_EQ(settings::ResetKineticsSettings::getFReset(), 3);
@@ -109,7 +109,7 @@ TEST_F(TestInputFileReader, testParseFReset)
     lineElements = {"freset", "=", "-1"};
     EXPECT_THROW_MSG(
         parser.parseFReset(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Freset must be positive"
     );
 }
@@ -121,7 +121,7 @@ TEST_F(TestInputFileReader, testParseFReset)
  */
 TEST_F(TestInputFileReader, testParseNResetAngular)
 {
-    ResetKineticsInputParser parser(*_engine);
+    ResetKineticsInputParser parser;
     std::vector<std::string> lineElements = {"nreset_angular", "=", "3"};
     parser.parseNResetAngular(lineElements, 0);
     EXPECT_EQ(settings::ResetKineticsSettings::getNResetAngular(), 3);
@@ -129,7 +129,7 @@ TEST_F(TestInputFileReader, testParseNResetAngular)
     lineElements = {"nreset_angular", "=", "-1"};
     EXPECT_THROW_MSG(
         parser.parseNResetAngular(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Nreset_angular must be positive"
     );
 }
@@ -141,7 +141,7 @@ TEST_F(TestInputFileReader, testParseNResetAngular)
  */
 TEST_F(TestInputFileReader, testParseFResetAngular)
 {
-    ResetKineticsInputParser parser(*_engine);
+    ResetKineticsInputParser parser;
     std::vector<std::string> lineElements = {"freset_angular", "=", "3"};
     parser.parseFResetAngular(lineElements, 0);
     EXPECT_EQ(settings::ResetKineticsSettings::getFResetAngular(), 3);
@@ -149,7 +149,7 @@ TEST_F(TestInputFileReader, testParseFResetAngular)
     lineElements = {"freset_angular", "=", "-1"};
     EXPECT_THROW_MSG(
         parser.parseFResetAngular(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Freset_angular must be positive"
     );
 }

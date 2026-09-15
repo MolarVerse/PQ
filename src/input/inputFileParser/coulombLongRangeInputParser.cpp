@@ -31,8 +31,7 @@
 #include "stringUtilities.hpp"     // for toLowerCopy
 
 using namespace input;
-using namespace engine;
-using namespace customException;
+using namespace exc;
 using namespace settings;
 using namespace utilities;
 
@@ -46,8 +45,7 @@ using namespace utilities;
  *
  * @param engine
  */
-CoulombLongRangeInputParser::CoulombLongRangeInputParser(Engine &engine)
-    : InputFileParser(engine)
+CoulombLongRangeInputParser::CoulombLongRangeInputParser()
 {
     addKeyword(
         std::string("long_range"),

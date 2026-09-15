@@ -47,10 +47,10 @@ class TestParameterFileSection : public ::testing::Test
 
     void SetUp() override
     {
-        auto molecule1 = simulationBox::Molecule();
+        auto molecule1 = molsys::Molecule();
         molecule1.setNumberOfAtoms(1);
 
-        auto molecule2 = simulationBox::Molecule();
+        auto molecule2 = molsys::Molecule();
         molecule2.setNumberOfAtoms(3);
 
         // NOTE: use dummy engine for testing
@@ -62,7 +62,7 @@ class TestParameterFileSection : public ::testing::Test
         _engine->getSimulationBox().addMolecule(molecule2);
 
         _engine->getPotential()->makeNonCoulombPotential(
-            potential::ForceFieldNonCoulomb()
+            pot::ForceFieldNonCoulomb()
         );
     }
 

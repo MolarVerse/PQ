@@ -29,12 +29,12 @@
 
 #include "output.hpp"
 
-namespace simulationBox
+namespace molsys
 {
     class SimulationBox;   // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
-namespace output
+namespace out
 {
     /**
      * @class RingPolymerTrajectoryOutput inherits from Output
@@ -48,24 +48,15 @@ namespace output
        public:
         using Output::Output;
 
-        void writeHeader(const simulationBox::SimulationBox &);
-        void writeXyz(
-            std::vector<simulationBox::SimulationBox> &,
-            const size_t
-        );
+        void writeHeader(const molsys::SimulationBox &);
+        void writeXyz(std::vector<molsys::SimulationBox> &, const size_t);
         void writeVelocities(
-            std::vector<simulationBox::SimulationBox> &,
+            std::vector<molsys::SimulationBox> &,
             const size_t
         );
-        void writeForces(
-            std::vector<simulationBox::SimulationBox> &,
-            const size_t
-        );
-        void writeCharges(
-            std::vector<simulationBox::SimulationBox> &,
-            const size_t
-        );
+        void writeForces(std::vector<molsys::SimulationBox> &, const size_t);
+        void writeCharges(std::vector<molsys::SimulationBox> &, const size_t);
     };
-}   // namespace output
+}   // namespace out
 
 #endif   // _RING_POLYMER_TRAJECTORY_OUTPUT_HPP_

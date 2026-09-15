@@ -36,12 +36,12 @@ namespace engine
     class Engine;   // forward declaration
 }   // namespace engine
 
-namespace simulationBox
+namespace molsys
 {
     class SimulationBox;   // forward declaration
     class Molecule;        // forward declaration
     class Atom;            // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
 namespace input::restartFile
 {
@@ -56,21 +56,21 @@ namespace input::restartFile
        private:
         void processQMAtomLine(
             std::vector<std::string> &lineElements,
-            simulationBox::SimulationBox &
+            molsys::SimulationBox &
         );
         void processAtomLine(
             std::vector<std::string> &,
-            simulationBox::SimulationBox &,
-            simulationBox::Molecule &
+            molsys::SimulationBox &,
+            molsys::Molecule &
         ) const;
 
         void checkAtomLine(
             std::vector<std::string> &lineElements,
-            const simulationBox::Molecule &
+            const molsys::Molecule &
         );
         void setAtomPropertyVectors(
             std::vector<std::string> &,
-            std::shared_ptr<simulationBox::Atom> &
+            std::shared_ptr<molsys::Atom> &
         ) const;
 
 #ifdef WITH_TESTS

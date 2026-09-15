@@ -37,11 +37,11 @@
 #include "triclinicBox.hpp"            // for TriclinicBox
 
 using namespace input::restartFile;
-using namespace customException;
+using namespace exc;
 using namespace linearAlgebra;
 using namespace utilities;
 using namespace settings;
-using namespace simulationBox;
+using namespace molsys;
 using namespace engine;
 
 /**

@@ -32,14 +32,14 @@
 #include "timingsSettings.hpp"   // for TimingsSettings
 
 using namespace engine;
-using namespace simulationBox;
+using namespace molsys;
 using namespace physicalData;
 using namespace forceField;
 using namespace intraNonBonded;
 using namespace virial;
-using namespace potential;
+using namespace pot;
 using namespace constraints;
-using namespace output;
+using namespace out;
 using namespace timings;
 using namespace settings;
 
@@ -50,10 +50,10 @@ using namespace settings;
  * cell list, intra-non-bonded handler, force field, and constraints.
  */
 Engine::Engine()
-    : _potential{std::make_shared<potential::PotentialBruteForce>()},
+    : _potential{std::make_shared<pot::PotentialBruteForce>()},
       _physicalData{std::make_shared<physicalData::PhysicalData>()},
-      _simulationBox{std::make_shared<simulationBox::SimulationBox>()},
-      _cellList{std::make_shared<simulationBox::CellList>()},
+      _simulationBox{std::make_shared<molsys::SimulationBox>()},
+      _cellList{std::make_shared<molsys::CellList>()},
       _intraNonBonded{std::make_shared<intraNonBonded::IntraNonBonded>()},
       _forceField{std::make_shared<forceField::ForceField>()},
       _constraints{std::make_shared<constraints::Constraints>()}
@@ -117,14 +117,6 @@ bool Engine::isGuffActivated() const
 {
     return !_forceField->isNonCoulombicActivated();
 }
-
-/**
- * @brief checks if the cell list is activated
- *
- * @return true
- * @return false
- */
-bool Engine::isCellListActivated() const { return _cellList->isActive(); }
 
 /**
  * @brief checks if any constraints are activated
@@ -191,7 +183,7 @@ const std::shared_ptr<IntraNonBonded> &Engine::getIntraNonBonded() const
  *
  * @return const Potential&
  */
-const std::shared_ptr<potential::Potential> &Engine::getPotential() const
+const std::shared_ptr<pot::Potential> &Engine::getPotential() const
 {
     return _potential;
 }

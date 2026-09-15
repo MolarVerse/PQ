@@ -27,7 +27,6 @@
 
 #include "constants/conversionFactors.hpp"   // for _BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_
 #include "constants/internalConversionFactors.hpp"   // for _PRESSURE_FACTOR_
-#include "exceptions.hpp"                            // for ExceptionType
 #include "globalTimer.hpp"
 #include "manostatSettings.hpp"     // for ManostatType, Isotropy
 #include "physicalData.hpp"         // for PhysicalData
@@ -38,9 +37,9 @@
 using namespace linearAlgebra;
 using namespace manostat;
 using namespace settings;
-using namespace simulationBox;
+using namespace molsys;
 using namespace physicalData;
-using namespace customException;
+using namespace exc;
 using namespace constants;
 using namespace linearAlgebra;
 
@@ -142,8 +141,8 @@ StochasticRescalingManostat::StochasticRescalingManostat(
  * @param physicalData
  */
 void StochasticRescalingManostat::applyManostat(
-    simulationBox::SimulationBox &simBox,
-    physicalData::PhysicalData   &physicalData
+    molsys::SimulationBox      &simBox,
+    physicalData::PhysicalData &physicalData
 )
 {
     auto _ = scopedTimer(TimerId::Thermostat, "Stochastic Rescaling");
@@ -164,7 +163,7 @@ void StochasticRescalingManostat::applyManostat(
     physicalData.setVolume(simBox.getVolume());
     physicalData.setDensity(simBox.getDensity());
 
-    simBox.checkCoulRadiusCutOff(ExceptionType::MANOSTATEXCEPTION);
+    simBox.checkCoulRadiusCutOff(ExceptionType::ManostatError);
 
     auto scalePositions = [&mu, &simBox](auto &molecule)
     { molecule.scale(mu, simBox.getBox()); };

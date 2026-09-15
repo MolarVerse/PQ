@@ -43,7 +43,7 @@ using namespace input;
  */
 TEST_F(TestInputFileReader, testParseTopologyFilename)
 {
-    FilesInputParser parser(*_engine, _engine->getIntraNonBonded());
+    FilesInputParser parser(_engine->getIntraNonBonded());
 
     std::vector<std::string> lineElements = {
         "topology_file",
@@ -52,7 +52,7 @@ TEST_F(TestInputFileReader, testParseTopologyFilename)
     };
     EXPECT_THROW_MSG(
         parser.parseTopologyFilename(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Cannot open topology file - filename = topology.txt"
     );
 
@@ -73,7 +73,7 @@ TEST_F(TestInputFileReader, testParseTopologyFilename)
  */
 TEST_F(TestInputFileReader, testParseParameterFilename)
 {
-    FilesInputParser parser(*_engine, _engine->getIntraNonBonded());
+    FilesInputParser parser(_engine->getIntraNonBonded());
 
     std::vector<std::string> lineElements = {
         "parameter_file",
@@ -82,7 +82,7 @@ TEST_F(TestInputFileReader, testParseParameterFilename)
     };
     EXPECT_THROW_MSG(
         parser.parseParameterFilename(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Cannot open parameter file - filename = param.txt"
     );
 
@@ -104,7 +104,7 @@ TEST_F(TestInputFileReader, testParseParameterFilename)
  */
 TEST_F(TestInputFileReader, parseIntraNonBondedFile)
 {
-    FilesInputParser         parser(*_engine, _engine->getIntraNonBonded());
+    FilesInputParser         parser(_engine->getIntraNonBonded());
     std::vector<std::string> lineElements = {
         "intra-nonBonded_file",
         "=",
@@ -112,7 +112,7 @@ TEST_F(TestInputFileReader, parseIntraNonBondedFile)
     };
     EXPECT_THROW_MSG(
         parser.parseIntraNonBondedFile(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Intra non bonded file \"intra.dat\" File not found"
     );
 
@@ -134,7 +134,7 @@ TEST_F(TestInputFileReader, parseIntraNonBondedFile)
  */
 TEST_F(TestInputFileReader, testStartFileName)
 {
-    FilesInputParser         parser(*_engine, _engine->getIntraNonBonded());
+    FilesInputParser         parser(_engine->getIntraNonBonded());
     std::vector<std::string> lineElements = {
         "startFile_name",
         "=",
@@ -142,7 +142,7 @@ TEST_F(TestInputFileReader, testStartFileName)
     };
     EXPECT_THROW_MSG(
         parser.parseStartFilename(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Cannot open start file - filename = start.xyz"
     );
 
@@ -160,7 +160,7 @@ TEST_F(TestInputFileReader, testStartFileName)
  */
 TEST_F(TestInputFileReader, testMoldescriptorFileName)
 {
-    FilesInputParser         parser(*_engine, _engine->getIntraNonBonded());
+    FilesInputParser         parser(_engine->getIntraNonBonded());
     std::vector<std::string> lineElements = {
         "moldescriptorFile_name",
         "=",
@@ -168,7 +168,7 @@ TEST_F(TestInputFileReader, testMoldescriptorFileName)
     };
     EXPECT_THROW_MSG(
         parser.parseMoldescriptorFilename(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Cannot open moldescriptor file - filename = \"moldescriptor.txt\" - "
         "file not found"
     );
@@ -191,11 +191,11 @@ TEST_F(TestInputFileReader, testMoldescriptorFileName)
  */
 TEST_F(TestInputFileReader, testGuffPath)
 {
-    FilesInputParser parser(*_engine, _engine->getIntraNonBonded());
+    FilesInputParser               parser(_engine->getIntraNonBonded());
     const std::vector<std::string> lineElements = {"guff_path", "=", "guff"};
     EXPECT_THROW_MSG(
         parser.parseGuffPath(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         R"(The "guff_path" keyword id deprecated. Please use "guffdat_file" instead.)"
     );
 }
@@ -206,11 +206,11 @@ TEST_F(TestInputFileReader, testGuffPath)
  */
 TEST_F(TestInputFileReader, guffDatFilename)
 {
-    FilesInputParser         parser(*_engine, _engine->getIntraNonBonded());
+    FilesInputParser         parser(_engine->getIntraNonBonded());
     std::vector<std::string> lineElements = {"guffdat_file", "=", "guff.dat"};
     EXPECT_THROW_MSG(
         parser.parseGuffDatFilename(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Cannot open guff file - filename = guff.dat"
     );
 
@@ -227,7 +227,7 @@ TEST_F(TestInputFileReader, guffDatFilename)
  */
 TEST_F(TestInputFileReader, testRpmdStartFileName)
 {
-    FilesInputParser         parser(*_engine, _engine->getIntraNonBonded());
+    FilesInputParser         parser(_engine->getIntraNonBonded());
     std::vector<std::string> lineElements = {
         "rpmd_start_file",
         "=",
@@ -235,7 +235,7 @@ TEST_F(TestInputFileReader, testRpmdStartFileName)
     };
     EXPECT_THROW_MSG(
         parser.parseRingPolymerStartFilename(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Cannot open ring polymer start file - filename = rpmd_start.xyz"
     );
 
@@ -256,12 +256,12 @@ TEST_F(TestInputFileReader, testRpmdStartFileName)
  */
 TEST_F(TestInputFileReader, testMShakeFileName)
 {
-    FilesInputParser         parser(*_engine, _engine->getIntraNonBonded());
+    FilesInputParser         parser(_engine->getIntraNonBonded());
     std::vector<std::string> lineElements = {"mshake_file", "=", "mshake.dat"};
 
     EXPECT_THROW_MSG(
         parser.parseMShakeFilename(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Cannot open mshake file - filename = mshake.dat"
     );
 
@@ -278,7 +278,7 @@ TEST_F(TestInputFileReader, testMShakeFileName)
  */
 TEST_F(TestInputFileReader, testDFTBFileName)
 {
-    FilesInputParser         parser(*_engine, _engine->getIntraNonBonded());
+    FilesInputParser         parser(_engine->getIntraNonBonded());
     std::vector<std::string> lineElements = {
         "dftb_file",
         "=",
@@ -287,7 +287,7 @@ TEST_F(TestInputFileReader, testDFTBFileName)
 
     EXPECT_THROW_MSG(
         parser.parseDFTBFilename(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Cannot open DFTB setup file - filename = dftb_in.template"
     );
 
@@ -304,7 +304,7 @@ TEST_F(TestInputFileReader, testDFTBFileName)
  */
 TEST_F(TestInputFileReader, testTMFileName)
 {
-    FilesInputParser         parser(*_engine, _engine->getIntraNonBonded());
+    FilesInputParser         parser(_engine->getIntraNonBonded());
     std::vector<std::string> lineElements = {
         "turbomole_file",
         "=",
@@ -313,7 +313,7 @@ TEST_F(TestInputFileReader, testTMFileName)
 
     EXPECT_THROW_MSG(
         parser.parseTMFilename(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Cannot open TURBOMOLE setup file - filename = tm_define.template"
     );
 

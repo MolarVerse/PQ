@@ -23,7 +23,7 @@
 #include "bond.hpp"
 
 using namespace connectivity;
-using namespace simulationBox;
+using namespace molsys;
 
 /**
  * @brief Construct a new Bond:: Bond object
@@ -34,28 +34,10 @@ using namespace simulationBox;
  * @param atomIndex2
  */
 Bond::Bond(
-    Molecule    *molecule1,
-    Molecule    *molecule2,
-    const size_t atomIndex1,
-    const size_t atomIndex2
-)
-    : ConnectivityElement({molecule1, molecule2}, {atomIndex1, atomIndex2})
-{
-}
-
-/**
- * @brief Construct a new Bond:: Bond object
- *
- * @param molecule1
- * @param atomIndex1
- * @param molecule2
- * @param atomIndex2
- */
-Bond::Bond(
-    Molecule    *molecule1,
-    const size_t atomIndex1,
-    Molecule    *molecule2,
-    const size_t atomIndex2
+    Molecule       *molecule1,
+    Molecule       *molecule2,
+    const AtomIndex atomIndex1,
+    const AtomIndex atomIndex2
 )
     : ConnectivityElement({molecule1, molecule2}, {atomIndex1, atomIndex2})
 {
@@ -80,17 +62,3 @@ Molecule *Bond::getMolecule1() const { return _molecules[0]; }
  * @return Molecule*
  */
 Molecule *Bond::getMolecule2() const { return _molecules[1]; }
-
-/**
- * @brief Get the atomIndex1 object
- *
- * @return size_t
- */
-size_t Bond::getAtomIndex1() const { return _atomIndices[0]; }
-
-/**
- * @brief Get the atomIndex2 object
- *
- * @return size_t
- */
-size_t Bond::getAtomIndex2() const { return _atomIndices[1]; }

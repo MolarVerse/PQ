@@ -48,8 +48,9 @@
 #include "simulationBoxSetup.hpp"           // for setupSimulationBox
 #include "thermostatSetup.hpp"              // for setupThermostat
 #include "topologyReader.hpp"               // for readTopologyFile
-#include "waterModelSettings.hpp"           // for WaterModelSettings
-#include "waterModelSetup.hpp"              // for setupWaterModel
+#include "velocityVerlet.hpp"
+#include "waterModelSettings.hpp"   // for WaterModelSettings
+#include "waterModelSetup.hpp"      // for setupWaterModel
 
 using namespace engine;
 using namespace input;
@@ -61,7 +62,7 @@ using namespace restartFile;
 using namespace topology;
 using namespace parameterFile;
 using namespace input::intraNonBondedReader;
-using namespace setup::simulationBox;
+using namespace setup::molsys;
 using namespace setup::resetKinetics;
 
 /**
@@ -142,6 +143,22 @@ void setup::setupEngine(Engine& engine)
 
     if (Settings::isMDJobType())
     {
+        switch (Settings::getIntegratorType())
+        {
+            case IntegratorType::VELOCITY_VERLET:
+            {
+                auto& mdEngine = dynamic_cast<MDEngine&>(engine);
+                mdEngine.makeIntegrator(integrator::VelocityVerlet());
+                break;
+            }
+            case IntegratorType::NONE:
+            {
+                throw exc::InputFileException(
+                    "Integrator is not set for MD simulation - please set it "
+                    "in the input file"
+                );
+            }
+        }
         setupRandomNumberGenerator(engine);
         setupResetKinetics(engine);
     }

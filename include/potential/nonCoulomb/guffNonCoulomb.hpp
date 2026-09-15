@@ -29,7 +29,7 @@
 
 #include "nonCoulombPotential.hpp"
 
-namespace potential
+namespace pot
 {
     /**
      * @class GuffNonCoulomb
@@ -65,7 +65,8 @@ namespace potential
 
         [[nodiscard]]
         std::shared_ptr<NonCoulombPair> getNonCoulPair(
-            const std::vector<size_t> &indices
+            const std::vector<size_t>         &indices,
+            const std::pair<VdwType, VdwType> &vdwTypes
         ) override;
 
         [[nodiscard]] std::vector<std::vector<
@@ -78,6 +79,6 @@ namespace potential
         [[nodiscard]] size_t getAtomType2(const std::vector<size_t> &) const;
     };
 
-}   // namespace potential
+}   // namespace pot
 
 #endif   // _GUFF_NON_COULOMB_HPP_

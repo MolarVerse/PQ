@@ -32,9 +32,9 @@
 #include "simulationBox.hpp"    // for SimulationBox
 
 using namespace input::topology;
-using namespace simulationBox;
+using namespace molsys;
 using namespace forceField;
-using namespace customException;
+using namespace exc;
 using namespace engine;
 
 /**
@@ -75,7 +75,7 @@ void BondSection::processSection(
 
     const auto atom1    = stoul(lineElements[0]);
     const auto atom2    = stoul(lineElements[1]);
-    const auto bondType = stoul(lineElements[2]);
+    const auto bondType = BondId{stoul(lineElements[2])};
     auto       isLinker = false;
 
     if (4 == lineElements.size())
@@ -108,8 +108,8 @@ void BondSection::processSection(
 
     auto &simBox = engine.getSimulationBox();
 
-    const auto [mol1, atomIdx1] = simBox.findMoleculeByAtomIndex(atom1);
-    const auto [mol2, atomIdx2] = simBox.findMoleculeByAtomIndex(atom2);
+    const auto [mol1, atomIdx1] = simBox.findMoleculeByGlobalAtomIndex(atom1);
+    const auto [mol2, atomIdx2] = simBox.findMoleculeByGlobalAtomIndex(atom2);
 
     auto bondFF = BondForceField(mol1, mol2, atomIdx1, atomIdx2, bondType);
     bondFF.setIsLinker(isLinker);

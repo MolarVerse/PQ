@@ -29,17 +29,17 @@
 #include "hybridConfigurator.hpp"
 #include "output.hpp"   // for Output
 
-namespace simulationBox
+namespace molsys
 {
     class SimulationBox;   // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
 namespace configurator
 {
     class HybridConfigurator;   // forward declaration
 }   // namespace configurator
 
-namespace output
+namespace out
 {
     /**
      * @class TrajectoryOutput inherits from Output
@@ -52,17 +52,17 @@ namespace output
        public:
         using Output::Output;
 
-        void writeHeader(const simulationBox::SimulationBox &);
-        void writeXyz(simulationBox::SimulationBox &, const size_t);
+        void writeHeader(const molsys::SimulationBox &);
+        void writeXyz(molsys::SimulationBox &, const size_t);
         void writeHybridCenterXyz(
             const configurator::HybridConfigurator &configurator,
             const size_t                            step
         );
-        void writeVelocities(simulationBox::SimulationBox &, const size_t);
-        void writeForces(simulationBox::SimulationBox &, const size_t);
-        void writeCharges(simulationBox::SimulationBox &, const size_t);
+        void writeVelocities(molsys::SimulationBox &, const size_t);
+        void writeForces(molsys::SimulationBox &, const size_t);
+        void writeCharges(molsys::SimulationBox &, const size_t);
     };
 
-}   // namespace output
+}   // namespace out
 
 #endif   // _TRAJECTORY_OUTPUT_HPP_

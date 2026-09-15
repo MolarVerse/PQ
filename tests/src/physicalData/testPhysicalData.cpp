@@ -93,16 +93,15 @@ TEST_F(TestPhysicalData, calculateKinetics)
 {
     _physicalData->calculateKinetics(*_simulationBox);
 
-    const auto velocity_mol1_atom1 =
-        _simulationBox->getMolecule(0).getAtomVelocity(0);
-    const auto velocity_mol1_atom2 =
-        _simulationBox->getMolecule(0).getAtomVelocity(1);
-    const auto mass_mol1_atom1 = _simulationBox->getMolecule(0).getAtomMass(0);
-    const auto mass_mol1_atom2 = _simulationBox->getMolecule(0).getAtomMass(1);
+    const auto mol1                = _simulationBox->getMolecule(0);
+    const auto velocity_mol1_atom1 = mol1.getAtomVelocity(AtomIndex{0});
+    const auto velocity_mol1_atom2 = mol1.getAtomVelocity(AtomIndex{1});
+    const auto mass_mol1_atom1     = mol1.getAtomMass(AtomIndex{0});
+    const auto mass_mol1_atom2     = mol1.getAtomMass(AtomIndex{1});
 
-    const auto velocity_mol2_atom1 =
-        _simulationBox->getMolecule(1).getAtomVelocity(0);
-    const auto mass_mol2_atom1 = _simulationBox->getMolecule(1).getAtomMass(0);
+    const auto mol2                = _simulationBox->getMolecule(1);
+    const auto velocity_mol2_atom1 = mol2.getAtomVelocity(AtomIndex{0});
+    const auto mass_mol2_atom1     = mol2.getAtomMass(AtomIndex{0});
 
     const auto momentumVector = velocity_mol1_atom1 * mass_mol1_atom1 +
                                 velocity_mol1_atom2 * mass_mol1_atom2 +
@@ -149,16 +148,15 @@ TEST_F(TestPhysicalData, calculateTemperature)
 {
     _physicalData->calculateTemperature(*_simulationBox);
 
-    const auto velocity_mol1_atom1 =
-        _simulationBox->getMolecule(0).getAtomVelocity(0);
-    const auto velocity_mol1_atom2 =
-        _simulationBox->getMolecule(0).getAtomVelocity(1);
-    const auto mass_mol1_atom1 = _simulationBox->getMolecule(0).getAtomMass(0);
-    const auto mass_mol1_atom2 = _simulationBox->getMolecule(0).getAtomMass(1);
+    const auto mol1                = _simulationBox->getMolecule(0);
+    const auto velocity_mol1_atom1 = mol1.getAtomVelocity(AtomIndex{0});
+    const auto velocity_mol1_atom2 = mol1.getAtomVelocity(AtomIndex{1});
+    const auto mass_mol1_atom1     = mol1.getAtomMass(AtomIndex{0});
+    const auto mass_mol1_atom2     = mol1.getAtomMass(AtomIndex{1});
 
-    const auto velocity_mol2_atom1 =
-        _simulationBox->getMolecule(1).getAtomVelocity(0);
-    const auto mass_mol2_atom1 = _simulationBox->getMolecule(1).getAtomMass(0);
+    const auto mol2                = _simulationBox->getMolecule(1);
+    const auto velocity_mol2_atom1 = mol2.getAtomVelocity(AtomIndex{0});
+    const auto mass_mol2_atom1     = mol2.getAtomMass(AtomIndex{0});
 
     const auto kineticEnergyAtomicVector =
         mass_mol1_atom1 * velocity_mol1_atom1 * velocity_mol1_atom1 +

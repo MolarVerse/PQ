@@ -32,11 +32,11 @@
 
 using namespace input::mShake;
 using namespace engine;
-using namespace customException;
+using namespace exc;
 using namespace settings;
 using namespace utilities;
 using namespace constraints;
-using namespace simulationBox;
+using namespace molsys;
 
 /**
  * @brief Wrapper to construct MShakeReader and read mShake file

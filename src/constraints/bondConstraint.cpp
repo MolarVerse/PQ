@@ -32,7 +32,7 @@
 #include "timingsSettings.hpp"
 
 using namespace constraints;
-using namespace simulationBox;
+using namespace molsys;
 using namespace linearAlgebra;
 using namespace kernel;
 using namespace settings;
@@ -48,11 +48,11 @@ using namespace constants;
  * @param bondLength
  */
 BondConstraint::BondConstraint(
-    Molecule    *molecule1,
-    Molecule    *molecule2,
-    const size_t atomIndex1,
-    const size_t atomIndex2,
-    const double bondLength
+    Molecule       *molecule1,
+    Molecule       *molecule2,
+    const AtomIndex atomIndex1,
+    const AtomIndex atomIndex2,
+    const double    bondLength
 )
     : connectivity::Bond(molecule1, molecule2, atomIndex1, atomIndex2),
       _targetBondLength(bondLength)
@@ -65,7 +65,7 @@ BondConstraint::BondConstraint(
  * @param simulationBox
  */
 void BondConstraint::calculateConstraintBondRef(
-    const simulationBox::SimulationBox &simBox
+    const molsys::SimulationBox &simBox
 )
 {
     simBox.applyPBC(_shakeDistanceRef);

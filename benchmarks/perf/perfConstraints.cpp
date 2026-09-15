@@ -29,6 +29,8 @@
 #include <format>
 #include <iostream>
 
+#include "strongTypes.hpp"
+
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
 #else
@@ -61,7 +63,13 @@ int main()
     for (auto &molecule : molecules)
     {
         constr.addBondConstraint(
-            constraints::BondConstraint(&molecule, &molecule, 0, 1, 0.85)
+            constraints::BondConstraint(
+                &molecule,
+                &molecule,
+                AtomIndex{0},
+                AtomIndex{1},
+                0.85
+            )
         );
     }
 

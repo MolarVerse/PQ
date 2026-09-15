@@ -39,7 +39,7 @@ namespace input
     class IntegratorInputParser : public InputFileParser
     {
        public:
-        explicit IntegratorInputParser(engine::Engine &);
+        IntegratorInputParser();
 
         void parseIntegrator(const std::vector<std::string> &, const size_t);
     };

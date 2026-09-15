@@ -48,11 +48,11 @@ static constexpr std::uint64_t ITERATIONS = 20000;
 
 int main()
 {
-    auto box = simulationBox::SimulationBox();
+    auto box = molsys::SimulationBox();
     box.setBoxDimensions({10.0, 10.0, 10.0});
 
     auto physicalData        = physicalData::PhysicalData();
-    auto coulombPotential    = potential::CoulombShiftedPotential(20.0);
+    auto coulombPotential    = pot::CoulombShiftedPotential(20.0);
     auto nonCoulombPotential = benchSetup::makeNonCoulomb();
 
     auto molecule = benchSetup::makeMolecule({.nAtoms = 4});
@@ -60,22 +60,28 @@ int main()
     settings::PotentialSettings::setScale14Coulomb(0.75);
     settings::PotentialSettings::setScale14VanDerWaals(0.5);
 
-    auto bond = forceField::BondForceField(&molecule, &molecule, 0, 1, 0);
+    auto bond = forceField::BondForceField(
+        &molecule,
+        &molecule,
+        AtomIndex{0},
+        AtomIndex{1},
+        BondId{0}
+    );
     bond.setEquilibriumBondLength(1.2);
     bond.setForceConstant(3.0);
 
     auto angle = forceField::AngleForceField(
         {&molecule, &molecule, &molecule},
-        {0, 1, 2},
-        0
+        {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}},
+        AngleId{0}
     );
     angle.setEquilibriumAngle(M_PI / 2.0);
     angle.setForceConstant(3.0);
 
     auto dihedral = forceField::DihedralForceField(
         {&molecule, &molecule, &molecule, &molecule},
-        {0, 1, 2, 3},
-        0
+        {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}, AtomIndex{3}},
+        DihedralId{0}
     );
     dihedral.setPhaseShift(M_PI);
     dihedral.setPeriodicity(3);
@@ -111,7 +117,8 @@ int main()
     std::cout << std::format(
         "{:.6f}\n",
         physicalData.getBondEnergy() + physicalData.getAngleEnergy() +
-            physicalData.getDihedralEnergy() + molecule.getAtomForce(0)[0]
+            physicalData.getDihedralEnergy() +
+            molecule.getAtomForce(AtomIndex{0})[0]
     );
     return 0;
 }

@@ -43,16 +43,16 @@
 #include "stringUtilities.hpp"
 #include "turbomoleRunner.hpp"
 
-using customException::QMRunnerException;
+using exc::QMRunnerException;
+using molsys::Atom;
+using molsys::Periodicity;
+using molsys::SimulationBox;
 using physicalData::PhysicalData;
 using settings::FileSettings;
 using settings::JobType;
 using settings::QMMethod;
 using settings::QMSettings;
 using settings::Settings;
-using simulationBox::Atom;
-using simulationBox::Periodicity;
-using simulationBox::SimulationBox;
 using testing::HasSubstr;
 
 namespace

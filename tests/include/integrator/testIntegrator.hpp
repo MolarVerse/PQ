@@ -49,11 +49,11 @@ class TestIntegrator : public ::testing::Test
         _integrator = new integrator::VelocityVerlet();
         settings::TimingsSettings::setTimeStep(0.1);
 
-        _molecule1 = new simulationBox::Molecule();
+        _molecule1 = new molsys::Molecule();
         _molecule1->setNumberOfAtoms(2);
 
-        auto atom1 = std::make_shared<simulationBox::Atom>();
-        auto atom2 = std::make_shared<simulationBox::Atom>();
+        auto atom1 = std::make_shared<molsys::Atom>();
+        auto atom2 = std::make_shared<molsys::Atom>();
 
         atom1->setPosition(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
         atom2->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
@@ -72,7 +72,7 @@ class TestIntegrator : public ::testing::Test
 
         _molecule1->setMolMass(3.0);
 
-        _box = new simulationBox::SimulationBox();
+        _box = new molsys::SimulationBox();
         _box->setBoxDimensions(linearAlgebra::Vec3D(10.0, 10.0, 10.0));
 
         _box->addMolecule(*_molecule1);
@@ -87,9 +87,9 @@ class TestIntegrator : public ::testing::Test
         delete _box;
     }
 
-    integrator::Integrator       *_integrator;
-    simulationBox::Molecule      *_molecule1;
-    simulationBox::SimulationBox *_box;
+    integrator::Integrator *_integrator;
+    molsys::Molecule       *_molecule1;
+    molsys::SimulationBox  *_box;
 };
 
 #endif   // _TEST_INTEGRATOR_HPP_

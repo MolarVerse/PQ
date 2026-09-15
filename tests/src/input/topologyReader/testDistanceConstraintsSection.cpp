@@ -52,8 +52,14 @@ TEST_F(TestTopologySection, processSectionShake)
         constraints->getDistConstraints()[0].getMolecule2(),
         &(_engine->getSimulationBox().getMolecules()[1])
     );
-    EXPECT_EQ(constraints->getDistConstraints()[0].getAtomIndex1(), 0);
-    EXPECT_EQ(constraints->getDistConstraints()[0].getAtomIndex2(), 0);
+    EXPECT_EQ(
+        constraints->getDistConstraints()[0].getAtomIndices()[0],
+        AtomIndex{0}
+    );
+    EXPECT_EQ(
+        constraints->getDistConstraints()[0].getAtomIndices()[1],
+        AtomIndex{0}
+    );
     EXPECT_EQ(constraints->getDistConstraints()[0].getLowerDistance(), 1.0);
     EXPECT_EQ(constraints->getDistConstraints()[0].getUpperDistance(), 2.0);
     EXPECT_EQ(constraints->getDistConstraints()[0].getSpringConstant(), 4.0);
@@ -63,21 +69,21 @@ TEST_F(TestTopologySection, processSectionShake)
     lineElements = {"1", "1", "1.0", "2", "1"};
     EXPECT_THROW(
         distanceConstraintsSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+        exc::TopologyException
     );
 
     // same atom indices
     lineElements = {"1", "1", "1.0", "2", "1", "2"};
     EXPECT_THROW(
         distanceConstraintsSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+        exc::TopologyException
     );
 
     // lower distance greater than upper distance
     lineElements = {"1", "2", "2.0", "1.0", "1", "2"};
     EXPECT_THROW(
         distanceConstraintsSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+        exc::TopologyException
     );
 }
 
@@ -90,7 +96,7 @@ TEST_F(TestTopologySection, endedNormallyShake)
     input::topology::DistanceConstraintsSection distanceConstraintsSection;
     EXPECT_THROW(
         distanceConstraintsSection.endedNormally(false),
-        customException::TopologyException
+        exc::TopologyException
     );
     EXPECT_NO_THROW(distanceConstraintsSection.endedNormally(true));
 }

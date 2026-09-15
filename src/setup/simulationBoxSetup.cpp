@@ -23,7 +23,6 @@
 #include "simulationBoxSetup.hpp"
 
 #include <algorithm>     // for __for_each_fn, for_each
-#include <cstddef>       // for size_t
 #include <format>        // for format
 #include <map>           // for map
 #include <numeric>       // for accumulate
@@ -46,22 +45,23 @@
 #include "simulationBoxSettings.hpp"   // for SimulationBoxSettings
 #include "stdoutOutput.hpp"            // for StdoutOutput
 #include "stringUtilities.hpp"   // for toLowerCopy, firstLetterToUpperCaseCopy
+#include "strongTypes.hpp"
 
-using setup::simulationBox::SimulationBoxSetup;
+using setup::molsys::SimulationBoxSetup;
 using namespace engine;
 using namespace settings;
 using namespace utilities;
 using namespace constants;
-using namespace customException;
+using namespace exc;
 using namespace maxwellBoltzmann;
-using namespace output;
+using namespace out;
 
 /**
  * @brief wrapper to create SetupSimulationBox object and call setup
  *
  * @param engine
  */
-void setup::simulationBox::setupSimulationBox(Engine &engine)
+void setup::molsys::setupSimulationBox(Engine &engine)
 {
     engine.getStdoutOutput().writeSetup("simulation box");
     engine.getLogOutput().writeSetup("simulation box");
@@ -127,7 +127,7 @@ void SimulationBoxSetup::setAtomNames()
         const auto moleculeType  = simBox.findMoleculeType(molType);
         const auto numberOfAtoms = molecule.getNumberOfAtoms();
 
-        for (size_t i = 0; i < numberOfAtoms; ++i)
+        for (AtomIndex i{0}; i.get() < numberOfAtoms; ++i)
             molecule.getAtom(i).setName(moleculeType.getAtomName(i));
     };
 
@@ -159,7 +159,7 @@ void SimulationBoxSetup::setAtomTypes()
         auto       moleculeType = simBox.findMoleculeType(molType);
         const auto nAtoms       = molecule.getNumberOfAtoms();
 
-        for (size_t i = 0; i < nAtoms; ++i)
+        for (AtomIndex i{0}; i.get() < nAtoms; ++i)
         {
             const auto externalAtomType = moleculeType.getExternalAtomType(i);
             molecule.getAtom(i).setAtomType(moleculeType.getAtomType(i));
@@ -205,9 +205,10 @@ void SimulationBoxSetup::setExternalVDWTypes()
             );
         }
 
-        for (size_t i = 0; i < nAtoms; ++i)
+        for (AtomIndex i{0}; i.get() < nAtoms; ++i)
         {
-            const auto extVDWType = moleculeType.getExternalGlobalVDWTypes()[i];
+            const auto extVDWType =
+                moleculeType.getExternalGlobalVDWTypes()[i.get()];
             molecule.getAtom(i).setExternalGlobalVDWType(extVDWType);
         }
     };
@@ -233,9 +234,10 @@ void SimulationBoxSetup::setPartialCharges()
         auto        moleculeType = simBox.findMoleculeType(molType);
         const auto &nAtoms       = molecule.getNumberOfAtoms();
 
-        for (size_t i = 0; i < nAtoms; ++i)
+        for (AtomIndex i{0}; i.get() < nAtoms; ++i)
         {
-            const auto partialCharge = moleculeType.getPartialCharges()[i];
+            const auto partialCharge =
+                moleculeType.getPartialCharges()[i.get()];
             molecule.getAtom(i).setPartialCharge(partialCharge);
         }
     };
@@ -250,7 +252,7 @@ void SimulationBoxSetup::setPartialCharges()
  */
 void SimulationBoxSetup::setAtomMasses()
 {
-    auto setAtomMasses = [](::simulationBox::Molecule &molecule)
+    auto setAtomMasses = [](::molsys::Molecule &molecule)
     {
         for (auto &atom : molecule.getAtoms()) atom->initMass();
     };
@@ -266,10 +268,10 @@ void SimulationBoxSetup::setAtomMasses()
  */
 void SimulationBoxSetup::setAtomicNumbers()
 {
-    auto setAtomicNumbers = [](::simulationBox::Molecule &molecule)
+    auto setAtomicNumbers = [](::molsys::Molecule &molecule)
     {
         const auto nAtoms = molecule.getNumberOfAtoms();
-        for (size_t i = 0; i < nAtoms; ++i)
+        for (AtomIndex i{0}; i.get() < nAtoms; ++i)
         {
             const auto keyword = toLowerCopy(molecule.getAtomName(i));
 
@@ -311,7 +313,7 @@ void SimulationBoxSetup::calculateTotalCharge()
 {
     double totalCharge = 0.0;
 
-    auto calcMolCharge = [&totalCharge](const ::simulationBox::Molecule &mol)
+    auto calcMolCharge = [&totalCharge](const ::molsys::Molecule &mol)
     {
         const auto &charges = mol.getPartialCharges();
         totalCharge += std::accumulate(charges.begin(), charges.end(), 0.0);
@@ -480,8 +482,8 @@ void SimulationBoxSetup::writeSetupInfo() const
     const auto boxB = simBox.getBoxDimensions()[1];
     const auto boxC = simBox.getBoxDimensions()[2];
 
-    const auto boxAstr = std::format("{:14.5f} {}", boxA, ANGSTROM);
-    const auto boxBstr = std::format("{:14.5f} {}", boxB, ANGSTROM);
+    const auto boxAStr = std::format("{:14.5f} {}", boxA, ANGSTROM);
+    const auto boxBStr = std::format("{:14.5f} {}", boxB, ANGSTROM);
     const auto boxCstr = std::format("{:14.5f} {}", boxC, ANGSTROM);
 
     const auto alpha = simBox.getBoxAngles()[0];
@@ -493,7 +495,7 @@ void SimulationBoxSetup::writeSetupInfo() const
     const auto gammaStr = std::format("{:14.5f}°", gamma);
 
     // clang-format off
-    log.writeSetupInfo(std::format("box dimensions:  {} {} {}", boxAstr, boxBstr, boxCstr));
+    log.writeSetupInfo(std::format("box dimensions:  {} {} {}", boxAStr, boxBStr, boxCstr));
     log.writeSetupInfo(std::format("box angles:      {}  {}  {}", alphaStr, betaStr, gammaStr));
     log.writeEmptyLine();
     // clang-format on

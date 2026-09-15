@@ -33,12 +33,12 @@ namespace thermostat
     class Thermostat;   // forward declaration
 }   // namespace thermostat
 
-namespace simulationBox
+namespace molsys
 {
     class SimulationBox;   // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
-namespace output
+namespace out
 {
     /**
      * @class RstFileOutput inherits from Output
@@ -52,13 +52,13 @@ namespace output
         using Output::Output;
 
         void write(
-            simulationBox::SimulationBox &,
+            molsys::SimulationBox &,
             const thermostat::Thermostat &,
             const size_t
         );
         void writeNHChain(const thermostat::Thermostat &, std::ostringstream &);
     };
 
-}   // namespace output
+}   // namespace out
 
 #endif   // _RST_FILE_OUTPUT_HPP_

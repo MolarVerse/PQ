@@ -32,11 +32,11 @@
 #include "simulationBox.hpp"      // for SimulationBox
 
 using namespace forceField;
-using namespace simulationBox;
+using namespace molsys;
 using namespace connectivity;
 using namespace linearAlgebra;
 using namespace physicalData;
-using namespace potential;
+using namespace pot;
 using namespace settings;
 
 using enum HybridZone;
@@ -51,11 +51,11 @@ using enum HybridZone;
  * @param type
  */
 BondForceField::BondForceField(
-    Molecule    *molecule1,
-    Molecule    *molecule2,
-    const size_t atomIndex1,
-    const size_t atomIndex2,
-    const size_t type
+    Molecule       *molecule1,
+    Molecule       *molecule2,
+    const AtomIndex atomIndex1,
+    const AtomIndex atomIndex2,
+    const BondId    type
 )
     : Bond(molecule1, molecule2, atomIndex1, atomIndex2), _type(type)
 {
@@ -180,9 +180,9 @@ bool BondForceField::isLinker() const { return _isLinker; }
 /**
  * @brief get the type of the bond
  *
- * @return size_t
+ * @return BondId
  */
-size_t BondForceField::getType() const { return _type; }
+BondId BondForceField::getType() const { return _type; }
 
 /**
  * @brief get the equilibrium bond length

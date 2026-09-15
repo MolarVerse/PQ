@@ -31,7 +31,7 @@
 #include "globalTimer.hpp"
 #include "timingsOutput.hpp"
 
-using namespace output;
+using namespace out;
 using namespace timings;
 
 namespace

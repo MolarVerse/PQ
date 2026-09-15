@@ -25,8 +25,8 @@
 #include "coulombPotential.hpp"      // for CoulombPotential
 #include "nonCoulombPotential.hpp"   // for NonCoulombPotential
 
-using namespace potential;
-using namespace simulationBox;
+using namespace pot;
+using namespace molsys;
 using namespace physicalData;
 
 void Potential::calculateQMMMForces(
@@ -87,7 +87,7 @@ NonCoulombPotential &Potential::getNonCoulombPotential() const
 /**
  * @brief get the coulomb potential as a shared pointer
  *
- * @return std::shared_ptr<potential::CoulombPotential>
+ * @return std::shared_ptr<pot::CoulombPotential>
  */
 std::shared_ptr<CoulombPotential> Potential::getCoulombPotSharedPtr() const
 {

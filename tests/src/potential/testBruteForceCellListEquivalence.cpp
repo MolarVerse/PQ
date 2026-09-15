@@ -39,21 +39,22 @@
 #include "potentialCellList.hpp"
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
+#include "strongTypes.hpp"
 
 using linearAlgebra::Vec3D;
+using molsys::Atom;
+using molsys::CellList;
+using molsys::Molecule;
+using molsys::MoleculeType;
+using molsys::SimulationBox;
 using physicalData::PhysicalData;
-using potential::CoulombPotential;
-using potential::CoulombShiftedPotential;
-using potential::GuffNonCoulomb;
-using potential::LennardJonesPair;
-using potential::PotentialBruteForce;
-using potential::PotentialCellList;
+using pot::CoulombPotential;
+using pot::CoulombShiftedPotential;
+using pot::GuffNonCoulomb;
+using pot::LennardJonesPair;
+using pot::PotentialBruteForce;
+using pot::PotentialCellList;
 using settings::PotentialSettings;
-using simulationBox::Atom;
-using simulationBox::CellList;
-using simulationBox::Molecule;
-using simulationBox::MoleculeType;
-using simulationBox::SimulationBox;
 
 namespace
 {
@@ -111,7 +112,7 @@ namespace
             atom->setAtomType(0);
             atom->setExternalAtomType(p.molType);
             atom->setPartialCharge(p.molType == 1 ? 0.5 : -0.3);
-            atom->setInternalGlobalVDWType(0);
+            atom->setInternalGlobalVDWType(VdwType{0});
             atom->setForceToZero();
 
             Molecule molecule;
@@ -141,8 +142,7 @@ namespace
 
         const auto pair = std::make_shared<LennardJonesPair>(
             kCoulombCutOff,
-            /*c6=*/-1.0,
-            /*c12=*/1.0
+            LJParams{.c6 = -1.0, .c12 = 1.0}
         );
 
         for (size_t m1 = 1; m1 <= 2; ++m1)
@@ -194,11 +194,12 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
     CellList dummyCellList;
     bf.calculateForces(simBoxBF, physicalDataBF, dummyCellList);
 
+    settings::Settings::activateCellList();
+
     CellList cellList;
     cellList.setNumberOfCells(kCellsPerSide);
     cellList.resizeCells();
     cellList.setup(simBoxCL);
-    cellList.activate();
     cellList.updateCellList(simBoxCL);
     cl.calculateForces(simBoxCL, physicalDataCL, cellList);
 
@@ -221,17 +222,17 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
 
         ASSERT_EQ(molBF.getNumberOfAtoms(), molCL.getNumberOfAtoms());
 
-        for (size_t a = 0; a < molBF.getNumberOfAtoms(); ++a)
+        for (AtomIndex a{0}; a.get() < molBF.getNumberOfAtoms(); ++a)
         {
             const auto fBF = molBF.getAtomForce(a);
             const auto fCL = molCL.getAtomForce(a);
 
             EXPECT_NEAR(fBF[0], fCL[0], kForceTolerance)
-                << "force x mismatch on molecule " << i << " atom " << a;
+                << "force x mismatch on molecule " << i << " atom " << a.get();
             EXPECT_NEAR(fBF[1], fCL[1], kForceTolerance)
-                << "force y mismatch on molecule " << i << " atom " << a;
+                << "force y mismatch on molecule " << i << " atom " << a.get();
             EXPECT_NEAR(fBF[2], fCL[2], kForceTolerance)
-                << "force z mismatch on molecule " << i << " atom " << a;
+                << "force z mismatch on molecule " << i << " atom " << a.get();
         }
     }
 }

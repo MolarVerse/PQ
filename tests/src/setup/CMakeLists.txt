@@ -60,3 +60,7 @@ if(${BUILD_WITH_GCOVR})
         OUTPUT_PATH "coverage"
     )
 endif()
+
+if(BUILD_WITH_PYTHON_BINDINGS)
+    add_definitions(-DPYTHON_ENABLED)
+endif()

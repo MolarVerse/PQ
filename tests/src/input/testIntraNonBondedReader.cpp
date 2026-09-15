@@ -30,7 +30,7 @@
 #include "intraNonBondedContainer.hpp"   // for IntraNonBondedContainer
 #include "throwWithMessage.hpp"          // for EXPECT_THROW_MSG
 
-using namespace customException;
+using namespace exc;
 
 TEST_F(TestIntraNonBondedReader, findMoleculeType)
 {

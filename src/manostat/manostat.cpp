@@ -29,7 +29,7 @@
 #include "simulationBox.hpp"      // for SimulationBox
 
 using namespace manostat;
-using namespace simulationBox;
+using namespace molsys;
 using namespace physicalData;
 using namespace constants;
 using namespace settings;

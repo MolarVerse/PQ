@@ -39,7 +39,7 @@
 
 #include "exceptions.hpp"
 
-using namespace customException;
+using namespace exc;
 
 using std::views::split;
 using std::views::transform;
@@ -295,7 +295,7 @@ void utilities::addSpaces(
 
     else
     {
-        throw customException::InputFileException(
+        throw exc::InputFileException(
             std::format(
                 R"(Missing "{}" in command "{}" in line {})",
                 stringToReplace,

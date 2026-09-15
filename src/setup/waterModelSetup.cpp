@@ -46,7 +46,7 @@
 
 using namespace constants;
 using namespace constraints;
-using namespace customException;
+using namespace exc;
 using namespace engine;
 using namespace references;
 using namespace settings;
@@ -167,7 +167,7 @@ void WaterModelSetup::setup()
  */
 void WaterModelSetup::checkTopologyFile()
 {
-    std::unordered_set<const simulationBox::Molecule *> waterMolecules;
+    std::unordered_set<const molsys::Molecule *> waterMolecules;
     for (const auto &waterMol :
          _engine.getSimulationBox().getWaterTypeMolecules())
         waterMolecules.insert(&waterMol);
@@ -250,10 +250,10 @@ void WaterModelSetup::checkMoldescriptorWaterCharge(
 {
     const auto modelName   = string(WaterModelSettings::getWaterInterModel());
     const auto checkCharge = [&modelName](
-                                 const simulationBox::Molecule &water,
-                                 const size_t                   atomIndex,
-                                 const double                   expected,
-                                 const std::string             &atomName
+                                 const molsys::Molecule &water,
+                                 AtomIndex               atomIndex,
+                                 const double            expected,
+                                 const std::string      &atomName
                              )
     {
         constexpr double tol    = 1e-8;
@@ -278,9 +278,9 @@ void WaterModelSetup::checkMoldescriptorWaterCharge(
 
     for (const auto &water : waterMolecules)
     {
-        checkCharge(water, 0, state._oxygenCharge, "O");
-        checkCharge(water, 1, state._hydrogenCharge, "H1");
-        checkCharge(water, 2, state._hydrogenCharge, "H2");
+        checkCharge(water, AtomIndex{0}, state._oxygenCharge, "O");
+        checkCharge(water, AtomIndex{1}, state._hydrogenCharge, "H1");
+        checkCharge(water, AtomIndex{2}, state._hydrogenCharge, "H2");
     };
 }
 
@@ -334,11 +334,11 @@ void WaterModelSetup::shakeSetupForRigidWater(
     const RigidWaterGeometry &geometry
 )
 {
-    const auto   dOH     = geometry.dOH;
-    const auto   dHH     = geometry.dHH;
-    const size_t OIndex  = 0;
-    const size_t H1Index = 1;
-    const size_t H2Index = 2;
+    const auto      dOH = geometry.dOH;
+    const auto      dHH = geometry.dHH;
+    const AtomIndex OIndex{0};
+    const AtomIndex H1Index{1};
+    const AtomIndex H2Index{2};
 
     const auto &constraints = _engine.getConstraints();
 
@@ -427,8 +427,7 @@ void WaterModelSetup::makeInterWater()
 
     std::unique_ptr<InterWaterStrategy> strategy;
 
-    auto isCellListActivated = _engine.getCellList()->isActive();
-    if (isCellListActivated)
+    if (settings::Settings::isCellListActivated())
         strategy = std::make_unique<InterWaterStrategyCellList>();
     else
         strategy = std::make_unique<InterWaterStrategyBruteForce>();

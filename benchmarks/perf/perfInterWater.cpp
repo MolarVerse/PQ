@@ -29,6 +29,8 @@
 #include <iostream>
 #include <memory>
 
+#include "strongTypes.hpp"
+
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
 #else
@@ -48,16 +50,16 @@
 #include "vector3d.hpp"
 #include "waterModelSettings.hpp"
 
-using namespace simulationBox;
-using namespace potential;
+using namespace molsys;
+using namespace pot;
 using namespace waterModel;
 using linearAlgebra::Vec3D;
 
 static constexpr std::uint64_t ITERATIONS             = 50;
 static constexpr size_t        WATER_TYPE             = 1;
 static constexpr double        CUTOFF                 = 9.0;
-static constexpr int           HYDROGEN_ATOMIC_NUMBER = 1;
-static constexpr int           OXYGEN_ATOMIC_NUMBER   = 8;
+static constexpr auto          HYDROGEN_ATOMIC_NUMBER = AtomNumber{1};
+static constexpr auto          OXYGEN_ATOMIC_NUMBER   = AtomNumber{8};
 
 int main()
 {
@@ -83,14 +85,14 @@ int main()
     const auto makeAtom = [](const std::string_view name,
                              const Vec3D           &pos,
                              const double           charge,
-                             const int              atomicNumber)
+                             const AtomNumber       atomicNumber)
     {
         auto atom = std::make_shared<Atom>();
         atom->setName(name);
         atom->setAtomicNumber(atomicNumber);
         atom->setPosition(pos);
         atom->setAtomType(0);
-        atom->setInternalGlobalVDWType(0);
+        atom->setInternalGlobalVDWType(VdwType{0});
         atom->setPartialCharge(charge);
         atom->setForceToZero();
         return atom;
@@ -130,14 +132,20 @@ int main()
     }
 
     InterWaterState state;
-    state._oxygenCharge   = -0.82;
-    state._hydrogenCharge = 0.41;
-    state._nonCoulombPairOO =
-        std::make_unique<LennardJonesPair>(CUTOFF, -2.0, 4.0);
-    state._nonCoulombPairOH =
-        std::make_unique<LennardJonesPair>(CUTOFF, -0.5, 1.5);
-    state._nonCoulombPairHH =
-        std::make_unique<LennardJonesPair>(CUTOFF, -0.2, 0.8);
+    state._oxygenCharge     = -0.82;
+    state._hydrogenCharge   = 0.41;
+    state._nonCoulombPairOO = std::make_unique<LennardJonesPair>(
+        CUTOFF,
+        LJParams{.c6 = 2.0, .c12 = 4.0}
+    );
+    state._nonCoulombPairOH = std::make_unique<LennardJonesPair>(
+        CUTOFF,
+        LJParams{.c6 = 0.5, .c12 = 1.5}
+    );
+    state._nonCoulombPairHH = std::make_unique<LennardJonesPair>(
+        CUTOFF,
+        LJParams{.c6 = 0.2, .c12 = 0.8}
+    );
 
     InterWater interWater(
         std::move(state),
@@ -146,11 +154,12 @@ int main()
 
     auto coulombPot = std::make_shared<CoulombShiftedPotential>(CUTOFF);
 
+    settings::Settings::activateCellList();
+
     CellList cellList;
     cellList.setNumberOfCells(3);
     cellList.resizeCells();
     cellList.setup(simBox);
-    cellList.activate();
     cellList.updateCellList(simBox);
 
     auto physicalData = physicalData::PhysicalData();

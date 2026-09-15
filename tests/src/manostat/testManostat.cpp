@@ -52,8 +52,8 @@ class TestableStochasticRescalingManostat
 namespace
 {
     void setupCutMolecule(
-        simulationBox::SimulationBox& box,
-        physicalData::PhysicalData&   data
+        molsys::SimulationBox&      box,
+        physicalData::PhysicalData& data
     )
     {
         settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
@@ -71,15 +71,15 @@ namespace
             diagonalMatrix(linearAlgebra::Vec3D(0.0))
         );
 
-        auto atom1 = std::make_shared<simulationBox::Atom>();
-        auto atom2 = std::make_shared<simulationBox::Atom>();
+        auto atom1 = std::make_shared<molsys::Atom>();
+        auto atom2 = std::make_shared<molsys::Atom>();
 
         atom1->setPosition({4.95, 0.0, 0.0});
         atom2->setPosition({-4.85, 0.0, 0.0});
         atom1->setMass(1.0);
         atom2->setMass(1.0);
 
-        auto molecule = simulationBox::Molecule();
+        auto molecule = molsys::Molecule();
         molecule.setNumberOfAtoms(2);
         molecule.setMolMass(2.0);
         molecule.addAtom(atom1);
@@ -91,18 +91,18 @@ namespace
         box.addMolecule(molecule);
     }
 
-    linearAlgebra::Vec3D getMinimumImageDistance(
-        simulationBox::SimulationBox& box
-    )
+    linearAlgebra::Vec3D getMinimumImageDistance(molsys::SimulationBox& box)
     {
-        auto dPosition = box.getMolecule(0).getAtomPosition(1) -
-                         box.getMolecule(0).getAtomPosition(0);
+        const auto mol = box.getMolecule(0);
+
+        auto dPosition = mol.getAtomPosition(AtomIndex{1}) -
+                         mol.getAtomPosition(AtomIndex{0});
         box.applyPBC(dPosition);
 
         return dPosition;
     }
 
-    void expectCutMoleculeScaled(simulationBox::SimulationBox& box)
+    void expectCutMoleculeScaled(molsys::SimulationBox& box)
     {
         const auto dPosition = getMinimumImageDistance(box);
 
@@ -117,7 +117,7 @@ namespace
         EXPECT_NEAR(dPosition[1], 0.0, 1e-12);
         EXPECT_NEAR(dPosition[2], 0.0, 1e-12);
 
-        for (size_t atomIndex = 0; atomIndex < 2; ++atomIndex)
+        for (AtomIndex atomIndex{0}; atomIndex.get() < 2; ++atomIndex)
         {
             for (size_t axis = 0; axis < 3; ++axis)
             {
@@ -132,12 +132,15 @@ namespace
     }
 
     double getMinimumImageDistance(
-        simulationBox::SimulationBox& box,
-        const size_t                  moleculeIndex
+        molsys::SimulationBox& box,
+        const size_t           moleculeIndex
     )
     {
-        auto dPosition = box.getMolecule(moleculeIndex).getAtomPosition(1) -
-                         box.getMolecule(moleculeIndex).getAtomPosition(0);
+        const auto mol = box.getMolecule(moleculeIndex);
+
+        auto dPosition = mol.getAtomPosition(AtomIndex{1}) -
+                         mol.getAtomPosition(AtomIndex{0});
+
         box.applyPBC(dPosition);
 
         return norm(dPosition);
@@ -180,8 +183,8 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
     _box->setBoxDimensions({2.0, 2.0, 2.0});
     const auto boxOld = _box->getBoxDimensions();
 
-    auto       molecule = simulationBox::Molecule();
-    const auto atom     = std::make_shared<simulationBox::Atom>();
+    auto       molecule = molsys::Molecule();
+    const auto atom     = std::make_shared<molsys::Atom>();
     atom->setPosition({1.0, 0.0, 0.0});
     molecule.addAtom(atom);
     molecule.setCenterOfMass({1.0, 0.0, 0.0});
@@ -213,7 +216,7 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
     EXPECT_NEAR(boxNew[2], (boxOld * scaleFactors)[2], 1e-8);
     EXPECT_TRUE(
         utilities::compare(
-            _box->getMolecule(0).getAtomPosition(0),
+            _box->getMolecule(0).getAtomPosition(AtomIndex{0}),
             linearAlgebra::Vec3D(1.0, 0.0, 0.0) * scaleFactors,
             1e-9
         )
@@ -270,15 +273,15 @@ TEST_F(
     setupCutMolecule(*_box, *_data);
     settings::ThermostatSettings::setActualTargetTemperature(0.0);
 
-    auto atom1 = std::make_shared<simulationBox::Atom>();
-    auto atom2 = std::make_shared<simulationBox::Atom>();
+    auto atom1 = std::make_shared<molsys::Atom>();
+    auto atom2 = std::make_shared<molsys::Atom>();
 
     atom1->setPosition({-1.0, 0.0, 0.0});
     atom2->setPosition({-0.8, 0.0, 0.0});
     atom1->setMass(1.0);
     atom2->setMass(1.0);
 
-    auto molecule = simulationBox::Molecule();
+    auto molecule = molsys::Molecule();
     molecule.setNumberOfAtoms(2);
     molecule.setMolMass(2.0);
     molecule.addAtom(atom1);
@@ -329,7 +332,7 @@ TEST_F(
 
     EXPECT_THROW_MSG(
         _manostat->applyManostat(*_box, *_data),
-        customException::ManostatException,
+        exc::ManostatException,
         "Coulomb radius cut off is larger than half of the minimal box "
         "dimension"
     );
@@ -380,7 +383,7 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
     _data->setVirial(linearAlgebra::tensor3D(0.0));
     _data->setKineticEnergyMolecularVector(linearAlgebra::tensor3D(0.0));
 
-    auto molecule = simulationBox::Molecule();
+    auto molecule = molsys::Molecule();
     molecule.setNumberOfAtoms(2);
     molecule.setMolMass(2.0);
 
@@ -389,7 +392,7 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
                              const linearAlgebra::Vec3D& velocity
                          )
     {
-        auto atom = std::make_shared<simulationBox::Atom>();
+        auto atom = std::make_shared<molsys::Atom>();
         atom->setMass(1.0);
         atom->setPosition(position);
         atom->setVelocity(velocity);
@@ -417,8 +420,9 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
 
     _manostat->applyManostat(*_box, *_data);
 
-    const auto velocity0            = _box->getMolecule(0).getAtomVelocity(0);
-    const auto velocity1            = _box->getMolecule(0).getAtomVelocity(1);
+    const auto mol                  = _box->getMolecule(0);
+    const auto velocity0            = mol.getAtomVelocity(AtomIndex{0});
+    const auto velocity1            = mol.getAtomVelocity(AtomIndex{1});
     const auto centerOfMassVelocity = (velocity0 + velocity1) / 2.0;
 
     EXPECT_TRUE(

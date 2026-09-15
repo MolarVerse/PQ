@@ -61,12 +61,12 @@ namespace engine
         void distributeSmoothingMolQMForces();
 
         std::vector<double> getRandomWeights(
-            const std::vector<std::reference_wrapper<simulationBox::Molecule>>
+            const std::vector<std::reference_wrapper<molsys::Molecule>>
                 &recipientMolecules
         );
         std::vector<double> getDistanceWeights(
-            const simulationBox::Molecule &smoothingMol,
-            const std::vector<std::reference_wrapper<simulationBox::Molecule>>
+            const molsys::Molecule &smoothingMol,
+            const std::vector<std::reference_wrapper<molsys::Molecule>>
                 &recipientMolecules
         );
     };

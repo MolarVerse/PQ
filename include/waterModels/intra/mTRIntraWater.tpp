@@ -33,8 +33,8 @@
 #include "simulationBox.hpp"    // for SimulationBox
 
 void waterModel::MTRIntraWater::calculate(
-    simulationBox::SimulationBox& box,
-    physicalData::PhysicalData&   physicalData
+    molsys::SimulationBox&      box,
+    physicalData::PhysicalData& physicalData
 )
 {
     auto _ = scopedTimer(TimerId::WaterIntraPotential, "Calculate Potential");
@@ -50,9 +50,9 @@ void waterModel::MTRIntraWater::calculate(
 
     for (auto& water : box.getWaterTypeMolecules())
     {
-        auto& oxygen    = water.getAtom(0);
-        auto& hydrogen1 = water.getAtom(1);
-        auto& hydrogen2 = water.getAtom(2);
+        auto& oxygen    = water.getAtom(AtomIndex{0});
+        auto& hydrogen1 = water.getAtom(AtomIndex{1});
+        auto& hydrogen2 = water.getAtom(AtomIndex{2});
 
         const auto posO  = oxygen.getPosition();
         const auto posH1 = hydrogen1.getPosition();
@@ -110,7 +110,7 @@ void waterModel::MTRIntraWater::calculate(
         hydrogen2.addForce(           + forceOH2 + forceAngle);
         // clang-format on
 
-        using enum simulationBox::HybridZone;
+        using enum molsys::HybridZone;
         using enum settings::SmoothingMethod;
 
         auto       smF       = 0.0;
@@ -119,9 +119,9 @@ void waterModel::MTRIntraWater::calculate(
         if (smoothing == HOTSPOT && water.getHybridZone() == SMOOTHING)
             smF = water.getSmoothingFactor();
 
-        physicalData.addVirial(tensorProduct(dOH1, forceOH1) * (1 - smF));
-        physicalData.addVirial(tensorProduct(dOH2, forceOH2) * (1 - smF));
-        physicalData.addVirial(tensorProduct(dHH, forceAngle) * (1 - smF));
+        physicalData.addVirial(-tensorProduct(dOH1, forceOH1) * (1 - smF));
+        physicalData.addVirial(-tensorProduct(dOH2, forceOH2) * (1 - smF));
+        physicalData.addVirial(-tensorProduct(dHH, forceAngle) * (1 - smF));
 
         physicalData.addBondEnergy(bondEnergy);
         physicalData.addAngleEnergy(angleEnergy);

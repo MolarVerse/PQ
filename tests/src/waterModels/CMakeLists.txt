@@ -11,7 +11,7 @@ target_link_libraries(testWaterModels
     PRIVATE
     interWater
     potential
-    simulationBox
+    molsys
     virial
     gtest
     gmock

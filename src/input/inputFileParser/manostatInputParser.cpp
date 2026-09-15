@@ -36,9 +36,8 @@
 #include "stringUtilities.hpp"    // for toLowerCopy
 
 using namespace input;
-using namespace engine;
 using namespace settings;
-using namespace customException;
+using namespace exc;
 using namespace references;
 using namespace utilities;
 using namespace constants;
@@ -54,8 +53,7 @@ using namespace constants;
  *
  * @param engine
  */
-ManostatInputParser::ManostatInputParser(Engine &engine)
-    : InputFileParser(engine)
+ManostatInputParser::ManostatInputParser()
 {
     addKeyword(
         std::string("manostat"),

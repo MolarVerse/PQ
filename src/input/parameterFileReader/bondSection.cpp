@@ -29,7 +29,7 @@
 #include "exceptions.hpp"   // for ParameterFileException
 
 using namespace input::parameterFile;
-using namespace customException;
+using namespace exc;
 using namespace engine;
 using namespace forceField;
 
@@ -75,7 +75,7 @@ void BondSection::processSection(
         );
     }
 
-    auto id                  = stoul(lineElements[0]);
+    auto id                  = BondId{stoul(lineElements[0])};
     auto equilibriumDistance = stod(lineElements[1]);
     auto forceConstant       = stod(lineElements[2]);
 

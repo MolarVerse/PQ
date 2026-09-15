@@ -50,31 +50,31 @@ TEST_F(TestParameterFileSection, processSectionTypes)
     lineElements = {"1", "2", "1.0", "0", "s", "f", "0.23"};
     EXPECT_THROW(
         typesSection.process(lineElements, *_engine),
-        customException::ParameterFileException
+        exc::ParameterFileException
     );
 
     lineElements = {"1", "2", "1.0", "0", "s", "f", "0.23", "1.01"};
     EXPECT_THROW(
         typesSection.process(lineElements, *_engine),
-        customException::ParameterFileException
+        exc::ParameterFileException
     );
 
     lineElements = {"1", "2", "1.0", "0", "s", "f", "1.23", "0.01"};
     EXPECT_THROW(
         typesSection.process(lineElements, *_engine),
-        customException::ParameterFileException
+        exc::ParameterFileException
     );
 
     lineElements = {"1", "2", "1.0", "0", "s", "f", "-0.23", "0.01"};
     EXPECT_THROW(
         typesSection.process(lineElements, *_engine),
-        customException::ParameterFileException
+        exc::ParameterFileException
     );
 
     lineElements = {"1", "2", "1.0", "0", "s", "f", "0.23", "-0.01"};
     EXPECT_THROW(
         typesSection.process(lineElements, *_engine),
-        customException::ParameterFileException
+        exc::ParameterFileException
     );
 }
 
@@ -85,7 +85,7 @@ TEST_F(TestParameterFileSection, endedNormallyTypes)
 
     ASSERT_THROW_MSG(
         typesSection.endedNormally(false),
-        customException::ParameterFileException,
+        exc::ParameterFileException,
         "Parameter file types section ended abnormally!"
     );
 }

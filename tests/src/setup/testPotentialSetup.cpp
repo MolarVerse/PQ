@@ -22,8 +22,7 @@
 
 #include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ
 
-#include <cstddef>   // for size_t
-#include <memory>    // for make_shared
+#include <memory>   // for make_shared
 
 #include "coulombReactionField.hpp"      // for CoulombReactionField
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
@@ -37,13 +36,14 @@
 #include "moleculeType.hpp"              // for MoleculeType
 #include "potentialSettings.hpp"         // for PotentialSettings
 #include "potentialSetup.hpp"            // for PotentialSetup, setupPotential
-#include "testSetup.hpp"                 // for TestSetup
+#include "strongTypes.hpp"
+#include "testSetup.hpp"   // for TestSetup
 #include "testUtils.hpp"
 #include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
 
 using namespace setup;
 using namespace settings;
-using namespace potential;
+using namespace pot;
 
 /**
  * @brief setup the reaction-field Coulomb potential
@@ -125,15 +125,15 @@ TEST_F(TestSetup, setupNonCoulombicPairs)
     _engine->getPotential()->makeNonCoulombPotential(ForceFieldNonCoulomb());
     PotentialSetup potentialSetup(*_engine);
 
-    auto molecule = simulationBox::MoleculeType(1);
-    molecule.addExternalGlobalVDWType(0);
-    molecule.addExternalGlobalVDWType(1);
+    auto molecule = molsys::MoleculeType(1);
+    molecule.addExternalGlobalVDWType(ExtVdwType{0});
+    molecule.addExternalGlobalVDWType(ExtVdwType{1});
 
     _engine->getSimulationBox().addMoleculeType(molecule);
 
     EXPECT_THROW_MSG(
         potentialSetup.setupNonCoulombicPairs(),
-        customException::ParameterFileException,
+        exc::ParameterFileException,
         "Not all self interacting non coulombics were set in the noncoulombics "
         "section of the parameter file"
     );
@@ -142,13 +142,17 @@ TEST_F(TestSetup, setupNonCoulombicPairs)
         _engine->getPotential()->getNonCoulombPotential()
     );
 
-    const auto zero = static_cast<size_t>(0);
-    const auto one  = static_cast<size_t>(1);
+    const auto zero = ExtVdwType(0);
+    const auto one  = ExtVdwType(1);
 
-    auto nonCoulombPair1 = LennardJonesPair(zero, zero, 10.0, 2.0, 3.0);
-    auto nonCoulombPair2 = LennardJonesPair(one, zero, 10.0, 2.0, 3.0);
-    auto nonCoulombPair3 = LennardJonesPair(zero, one, 10.0, 2.0, 3.0);
-    auto nonCoulombPair4 = LennardJonesPair(one, one, 10.0, 2.0, 3.0);
+    auto nonCoulombPair1 =
+        LennardJonesPair(zero, zero, 10.0, LJParams{.c6 = 2.0, .c12 = 3.0});
+    auto nonCoulombPair2 =
+        LennardJonesPair(one, zero, 10.0, LJParams{.c6 = 2.0, .c12 = 3.0});
+    auto nonCoulombPair3 =
+        LennardJonesPair(zero, one, 10.0, LJParams{.c6 = 2.0, .c12 = 3.0});
+    auto nonCoulombPair4 =
+        LennardJonesPair(one, one, 10.0, LJParams{.c6 = 2.0, .c12 = 3.0});
 
     nonCoulombPotential.addNonCoulombicPair(
         std::make_shared<LennardJonesPair>(nonCoulombPair1)

@@ -22,10 +22,9 @@
 
 #include "angleSection.hpp"
 
-#include <cstddef>   // for size_t
-#include <format>    // for format
-#include <string>    // for stoul, string, operator==, char_traits
-#include <vector>    // for vector
+#include <format>   // for format
+#include <string>   // for stoul, string, operator==, char_traits
+#include <vector>   // for vector
 
 #include "angleForceField.hpp"   // for AngleForceField
 #include "engine.hpp"            // for Engine
@@ -33,9 +32,9 @@
 #include "simulationBox.hpp"     // for SimulationBox
 
 using namespace input::topology;
-using namespace simulationBox;
+using namespace molsys;
 using namespace forceField;
-using namespace customException;
+using namespace exc;
 using namespace engine;
 
 /**
@@ -78,7 +77,7 @@ void AngleSection::processSection(
     auto atom1     = stoul(lineElements[0]);
     auto atom2     = stoul(lineElements[1]);
     auto atom3     = stoul(lineElements[2]);
-    auto angleType = stoul(lineElements[3]);
+    auto angleType = AngleId{stoul(lineElements[3])};
     auto isLinker  = false;
 
     if (5 == lineElements.size())
@@ -112,12 +111,15 @@ void AngleSection::processSection(
 
     auto &simBox = engine.getSimulationBox();
 
-    const auto [molecule1, atomIdx1] = simBox.findMoleculeByAtomIndex(atom1);
-    const auto [molecule2, atomIdx2] = simBox.findMoleculeByAtomIndex(atom2);
-    const auto [molecule3, atomIdx3] = simBox.findMoleculeByAtomIndex(atom3);
+    const auto [molecule1, atomIdx1] =
+        simBox.findMoleculeByGlobalAtomIndex(atom1);
+    const auto [molecule2, atomIdx2] =
+        simBox.findMoleculeByGlobalAtomIndex(atom2);
+    const auto [molecule3, atomIdx3] =
+        simBox.findMoleculeByGlobalAtomIndex(atom3);
 
-    const auto mols = std::vector<Molecule *>{molecule2, molecule1, molecule3};
-    const auto atomIndices = std::vector<size_t>{atomIdx2, atomIdx1, atomIdx3};
+    const auto mols        = {molecule2, molecule1, molecule3};
+    const auto atomIndices = {atomIdx2, atomIdx1, atomIdx3};
 
     auto angleForceField = AngleForceField(mols, atomIndices, angleType);
     angleForceField.setIsLinker(isLinker);

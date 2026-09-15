@@ -50,7 +50,7 @@ TEST_F(TestBoxSection, testNumberOfArguments)
             auto line = std::vector<std::string>(i);
             ASSERT_THROW(
                 _section->process(line, *_engine),
-                customException::RstFileException
+                exc::RstFileException
             );
         }
     }
@@ -85,22 +85,13 @@ TEST_F(TestBoxSection, testProcess)
     );
 
     line = {"box", "1.0", "2.0", "-3.0", "90.0", "90.0", "90.0"};
-    ASSERT_THROW(
-        _section->process(line, *_engine),
-        customException::RstFileException
-    );
+    ASSERT_THROW(_section->process(line, *_engine), exc::RstFileException);
 
     line = {"box", "1.0", "2.0", "3.0", "90.0", "90.0", "190.0"};
-    ASSERT_THROW(
-        _section->process(line, *_engine),
-        customException::RstFileException
-    );
+    ASSERT_THROW(_section->process(line, *_engine), exc::RstFileException);
 
     line = {"box", "1.0", "2.0", "3.0", "90.0", "90.0", "-90.0"};
-    ASSERT_THROW(
-        _section->process(line, *_engine),
-        customException::RstFileException
-    );
+    ASSERT_THROW(_section->process(line, *_engine), exc::RstFileException);
 
     EXPECT_EQ(settings::SimulationBoxSettings::getBoxSet(), true);
 }

@@ -33,7 +33,7 @@
 
 using namespace input::topology;
 using namespace forceField;
-using namespace customException;
+using namespace exc;
 using namespace engine;
 
 /**
@@ -77,7 +77,7 @@ void ImproperDihedralSection::processSection(
     auto atom2                = stoul(lineElements[1]);
     auto atom3                = stoul(lineElements[2]);
     auto atom4                = stoul(lineElements[3]);
-    auto improperDihedralType = stoul(lineElements[4]);
+    auto improperDihedralType = DihedralId{stoul(lineElements[4])};
 
     auto atoms = std::vector{atom1, atom2, atom3, atom4};
     std::ranges::sort(atoms);
@@ -98,13 +98,13 @@ void ImproperDihedralSection::processSection(
 
     auto &simBox = engine.getSimulationBox();
 
-    const auto [mol1, idx1] = simBox.findMoleculeByAtomIndex(atom1);
-    const auto [mol2, idx2] = simBox.findMoleculeByAtomIndex(atom2);
-    const auto [mol3, idx3] = simBox.findMoleculeByAtomIndex(atom3);
-    const auto [mol4, idx4] = simBox.findMoleculeByAtomIndex(atom4);
+    const auto [mol1, idx1] = simBox.findMoleculeByGlobalAtomIndex(atom1);
+    const auto [mol2, idx2] = simBox.findMoleculeByGlobalAtomIndex(atom2);
+    const auto [mol3, idx3] = simBox.findMoleculeByGlobalAtomIndex(atom3);
+    const auto [mol4, idx4] = simBox.findMoleculeByGlobalAtomIndex(atom4);
 
-    const auto mols     = std::vector{mol1, mol2, mol3, mol4};
-    const auto atomIdxs = std::vector{idx1, idx2, idx3, idx4};
+    const auto mols     = {mol1, mol2, mol3, mol4};
+    const auto atomIdxs = {idx1, idx2, idx3, idx4};
 
     auto improperFF = DihedralForceField(mols, atomIdxs, improperDihedralType);
 

@@ -35,7 +35,7 @@ using namespace settings;
 
 TEST_F(TestInputFileReader, parseHessianFile)
 {
-    HessianInputParser      parser(*_engine);
+    HessianInputParser       parser;
     std::vector<std::string> lineElements = {
         "hessian_file",
         "=",
@@ -49,7 +49,7 @@ TEST_F(TestInputFileReader, parseHessianFile)
 
 TEST_F(TestInputFileReader, parseHessianDisplacement)
 {
-    HessianInputParser      parser(*_engine);
+    HessianInputParser       parser;
     std::vector<std::string> lineElements = {
         "hessian_displacement",
         "=",
@@ -64,14 +64,14 @@ TEST_F(TestInputFileReader, parseHessianDisplacement)
 
     EXPECT_THROW_MSG(
         parser.parseDisplacement(lineElements, 7),
-        customException::InputFileException,
+        exc::InputFileException,
         "Hessian displacement must be greater than 0 in input file at line 7"
     );
 }
 
 TEST_F(TestInputFileReader, parseHessianBuilder)
 {
-    HessianInputParser      parser(*_engine);
+    HessianInputParser       parser;
     std::vector<std::string> lineElements = {
         "hessian_builder",
         "=",
@@ -89,7 +89,7 @@ TEST_F(TestInputFileReader, parseHessianBuilder)
 
     EXPECT_THROW_MSG(
         parser.parseBuilder(lineElements, 9),
-        customException::InputFileException,
+        exc::InputFileException,
         "Invalid hessian_builder \"unknown\" in input file at line 9 - "
         "possible values are: central, forward, five-point, analytic"
     );
@@ -97,7 +97,7 @@ TEST_F(TestInputFileReader, parseHessianBuilder)
 
 TEST_F(TestInputFileReader, parseOptimizeBeforeHessian)
 {
-    HessianInputParser       parser(*_engine);
+    HessianInputParser       parser;
     std::vector<std::string> lineElements = {
         "optimize_before_hessian",
         "=",

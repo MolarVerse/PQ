@@ -52,14 +52,14 @@ namespace forceField
      */
     template <typename T>
     double correctLinker(
-        const potential::CoulombPotential &coulPot,
-        potential::NonCoulombPotential    &nonCoulPot,
-        physicalData::PhysicalData        &physicalData,
-        const simulationBox::Molecule     *molecule1,
-        const simulationBox::Molecule     *molecule2,
-        const size_t                       atomIndex1,
-        const size_t                       atomIndex2,
-        const double                       distance
+        const pot::CoulombPotential &coulPot,
+        pot::NonCoulombPotential    &nonCoulPot,
+        physicalData::PhysicalData  &physicalData,
+        const molsys::Molecule      *molecule1,
+        const molsys::Molecule      *molecule2,
+        AtomIndex                    atomIndex1,
+        AtomIndex                    atomIndex2,
+        const double                 distance
     )
     {
         const auto q1 = molecule1->getPartialCharge(atomIndex1);
@@ -88,10 +88,10 @@ namespace forceField
         const auto vdwType1  = molecule1->getInternalGlobalVDWType(atomIndex1);
         const auto vdwType2  = molecule2->getInternalGlobalVDWType(atomIndex2);
 
-        const auto indices =
-            {molType1, molType2, atomType1, atomType2, vdwType1, vdwType2};
+        const auto indices = {molType1, molType2, atomType1, atomType2};
 
-        const auto nonCoulombPair = nonCoulPot.getNonCoulPair(indices);
+        const auto nonCoulombPair =
+            nonCoulPot.getNonCoulPair(indices, {vdwType1, vdwType2});
 
         if (distance < nonCoulombPair->getRadialCutOff())
         {

@@ -41,7 +41,7 @@
 #include "throwWithMessage.hpp"        // for ASSERT_THROW_MSG
 #include "timingsSettings.hpp"         // for TimingsSettings
 
-using namespace customException;
+using namespace exc;
 using namespace input;
 using namespace settings;
 
@@ -113,6 +113,8 @@ class TestInputValidation : public ::testing::Test
         if (jobType == JobType::QM_MD || jobType == JobType::RING_POLYMER_QM_MD)
             setKeyword("qm_prog");
     }
+
+    void TearDown() override { settings::Settings::deactivateCellList(); }
 
     std::unique_ptr<engine::OptEngine> _engine;
     std::unique_ptr<InputFileReader>   _reader;
@@ -311,7 +313,7 @@ TEST_F(TestInputValidation, rejectsNonFiniteLangevinRampScale)
 TEST_F(TestInputValidation, rejectsCellListWithoutCoulombCutoff)
 {
     configureMDJob(JobType::MM_MD);
-    _engine->getCellList()->activate();
+    settings::Settings::activateCellList();
     PotentialSettings::setCoulombRadiusCutOff(0.0);
 
     ASSERT_THROW_MSG(
@@ -325,7 +327,7 @@ TEST_F(TestInputValidation, rejectsCellListForPureQM)
 {
     configureMDJob(JobType::QM_MD);
     QMSettings::setQMMethod(QMMethod::DFTBPLUS);
-    _engine->getCellList()->activate();
+    settings::Settings::activateCellList();
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(),

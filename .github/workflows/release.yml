@@ -25,9 +25,11 @@ jobs:
     if: >-
       github.event_name == 'pull_request' &&
       (github.event.action == 'opened' ||
-      github.event.action == 'reopened') &&
+      github.event.action == 'reopened' ||
+      github.event.action == 'synchronize') &&
       github.event.pull_request.head.repo.full_name == github.repository &&
-      startsWith(github.event.pull_request.head.ref, 'release/')
+      (startsWith(github.event.pull_request.head.ref, 'release/') ||
+      startsWith(github.event.pull_request.head.ref, 'hotfix/'))
     concurrency:
       group: prepare-release-${{ github.event.pull_request.number }}
       cancel-in-progress: true
@@ -38,11 +40,25 @@ jobs:
         id: release
         env:
           HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          REPOSITORY: ${{ github.repository }}
         run: |
           if [[ "$HEAD_REF" =~ ^release/(v[0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
             echo "version=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
+          elif [[ "$HEAD_REF" =~ ^hotfix/ ]]; then
+            latest="$(git ls-remote --tags --refs \
+              "https://github.com/$REPOSITORY.git" 'v[0-9]*.[0-9]*.[0-9]*' |
+              awk '{ sub("refs/tags/", "", $2); if ($2 ~ /^v[0-9]+\.[0-9]+\.[0-9]+$/) print $2 }' |
+              sort -V |
+              tail -n 1)"
+            if [[ ! "$latest" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+              echo "Could not infer latest release tag from $REPOSITORY."
+              exit 1
+            fi
+            version="v${BASH_REMATCH[1]}.${BASH_REMATCH[2]}.$((BASH_REMATCH[3] + 1))"
+            echo "version=$version" >> "$GITHUB_OUTPUT"
           else
-            echo "Release branches must be named release/vX.Y.Z."
+            echo "Regular releases use release/vX.Y.Z."
+            echo "Hotfixes must use hotfix/*; their patch version is auto-bumped."
             exit 1
           fi
 
@@ -113,7 +129,8 @@ jobs:
   check-release:
     if: >-
       github.event_name == 'pull_request' &&
-      startsWith(github.event.pull_request.head.ref, 'release/') &&
+      (startsWith(github.event.pull_request.head.ref, 'release/') ||
+      startsWith(github.event.pull_request.head.ref, 'hotfix/')) &&
       (github.event.action == 'edited' ||
       github.event.action == 'synchronize')
     runs-on: ubuntu-latest
@@ -124,16 +141,28 @@ jobs:
         env:
           HEAD_REF: ${{ github.event.pull_request.head.ref }}
           PR_TITLE: ${{ github.event.pull_request.title }}
+          REPOSITORY: ${{ github.repository }}
         run: |
           if [[ "$HEAD_REF" =~ ^release/(v[0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
             version="${BASH_REMATCH[1]}"
+            if [[ "$PR_TITLE" != "Release-${version#v}" ]]; then
+              echo "Release PR title must be Release-${version#v}."
+              exit 1
+            fi
+          elif [[ "$HEAD_REF" =~ ^hotfix/ ]]; then
+            latest="$(git ls-remote --tags --refs \
+              "https://github.com/$REPOSITORY.git" 'v[0-9]*.[0-9]*.[0-9]*' |
+              awk '{ sub("refs/tags/", "", $2); if ($2 ~ /^v[0-9]+\.[0-9]+\.[0-9]+$/) print $2 }' |
+              sort -V |
+              tail -n 1)"
+            if [[ ! "$latest" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+              echo "Could not infer latest release tag from $REPOSITORY."
+              exit 1
+            fi
+            version="v${BASH_REMATCH[1]}.${BASH_REMATCH[2]}.$((BASH_REMATCH[3] + 1))"
           else
-            echo "Release branches must be named release/vX.Y.Z."
-            exit 1
-          fi
-
-          if [[ "$PR_TITLE" != "Release-${version#v}" ]]; then
-            echo "Release PR title must be Release-${version#v}."
+            echo "Regular releases use release/vX.Y.Z."
+            echo "Hotfixes must use hotfix/*; their patch version is auto-bumped."
             exit 1
           fi
 
@@ -169,7 +198,8 @@ jobs:
       (github.event_name == 'pull_request' &&
       github.event.action == 'closed' &&
       github.event.pull_request.merged == true &&
-      startsWith(github.event.pull_request.head.ref, 'release/'))
+      (startsWith(github.event.pull_request.head.ref, 'release/') ||
+      startsWith(github.event.pull_request.head.ref, 'hotfix/')))
     runs-on: ubuntu-latest
 
     steps:
@@ -181,6 +211,8 @@ jobs:
           EVENT_NAME: ${{ github.event_name }}
           HEAD_REF: ${{ github.event.pull_request.head.ref }}
           MERGE_COMMIT: ${{ github.event.pull_request.merge_commit_sha }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPOSITORY: ${{ github.repository }}
         run: |
           if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
             version="$DISPATCH_VERSION"
@@ -188,8 +220,23 @@ jobs:
           elif [[ "$HEAD_REF" =~ ^release/(v[0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
             version="${BASH_REMATCH[1]}"
             commit="$MERGE_COMMIT"
+            source="PR #$PR_NUMBER"
+          elif [[ "$HEAD_REF" =~ ^hotfix/ ]]; then
+            latest="$(git ls-remote --tags --refs \
+              "https://github.com/$REPOSITORY.git" 'v[0-9]*.[0-9]*.[0-9]*' |
+              awk '{ sub("refs/tags/", "", $2); if ($2 ~ /^v[0-9]+\.[0-9]+\.[0-9]+$/) print $2 }' |
+              sort -V |
+              tail -n 1)"
+            if [[ ! "$latest" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+              echo "Could not infer latest release tag from $REPOSITORY."
+              exit 1
+            fi
+            version="v${BASH_REMATCH[1]}.${BASH_REMATCH[2]}.$((BASH_REMATCH[3] + 1))"
+            commit="$MERGE_COMMIT"
+            source="hotfix PR #$PR_NUMBER"
           else
-            echo "Release branches must be named release/vX.Y.Z."
+            echo "Regular releases use release/vX.Y.Z."
+            echo "Hotfixes must use hotfix/*; their patch version is auto-bumped."
             exit 1
           fi
 

@@ -191,6 +191,16 @@ void Settings::setVirialType(const VirialType virialType)
     _virial = virialType;
 }
 
+/**
+ * @brief sets the integrator type
+ *
+ * @param integratorType
+ */
+void Settings::setIntegratorType(const IntegratorType integratorType)
+{
+    _integrator = integratorType;
+}
+
 /***************************
  *                         *
  * standard getter methods *
@@ -250,6 +260,13 @@ size_t Settings::getDimensionality() { return _dimensionality; }
  * @return VirialType
  */
 VirialType Settings::getVirialType() { return _virial; }
+
+/**
+ * @brief get the integrator type
+ *
+ * @return IntegratorType
+ */
+IntegratorType Settings::getIntegratorType() { return _integrator; }
 
 /******************************
  *                            *
@@ -393,6 +410,14 @@ bool Settings::isMMOnlyActivated()
  */
 bool Settings::isRingPolymerMDActivated() { return _isRingPolymerMDActivated; }
 
+/**
+ * @brief Returns true if the cell list is activated
+ *
+ * @return true/false
+ *
+ */
+bool Settings::isCellListActivated() { return _isCellListActivated; }
+
 /*****************************
  *                           *
  * standard activate methods *
@@ -410,3 +435,15 @@ void Settings::activateRingPolymerMD() { _isRingPolymerMDActivated = true; }
  *
  */
 void Settings::deactivateRingPolymerMD() { _isRingPolymerMDActivated = false; }
+
+/**
+ * @brief activate cell list
+ *
+ */
+void Settings::activateCellList() { _isCellListActivated = true; }
+
+/**
+ * @brief deactivate cell list
+ *
+ */
+void Settings::deactivateCellList() { _isCellListActivated = false; }

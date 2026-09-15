@@ -24,10 +24,10 @@
 
 #define _CONNECTIVITY_ELEMENT_HPP_
 
-#include <cstddef>
 #include <vector>
 
 #include "molecule.hpp"   // for Molecule
+#include "strongTypes.hpp"
 
 namespace connectivity
 {
@@ -41,13 +41,13 @@ namespace connectivity
     class ConnectivityElement
     {
        protected:
-        std::vector<simulationBox::Molecule *> _molecules;
-        std::vector<size_t>                    _atomIndices;
+        std::vector<molsys::Molecule *> _molecules;
+        std::vector<AtomIndex>          _atomIndices;
 
        public:
         ConnectivityElement(
-            const std::vector<simulationBox::Molecule *> &,
-            const std::vector<size_t> &
+            const std::vector<molsys::Molecule *> &,
+            const std::vector<AtomIndex> &
         );
 
         /***************************
@@ -55,8 +55,10 @@ namespace connectivity
          ***************************/
 
         [[nodiscard]]
-        std::vector<simulationBox::Molecule *> getMolecules() const;
-        [[nodiscard]] std::vector<size_t>      getAtomIndices() const;
+        std::vector<molsys::Molecule *> getMolecules() const;
+
+        [[nodiscard]]
+        std::vector<AtomIndex> getAtomIndices() const;
     };
 
 }   // namespace connectivity

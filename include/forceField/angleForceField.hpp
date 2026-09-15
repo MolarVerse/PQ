@@ -24,8 +24,7 @@
 
 #define _ANGLE_FORCE_FIELD_HPP_
 
-#include <cstddef>   // for size_t
-#include <vector>    // for vector
+#include <vector>   // for vector
 
 #include "angle.hpp"
 
@@ -34,17 +33,17 @@ namespace physicalData
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
 
-namespace simulationBox
+namespace molsys
 {
     class Molecule;        // forward declaration
     class SimulationBox;   // forward declaration
-}   // namespace simulationBox
+}   // namespace molsys
 
-namespace potential
+namespace pot
 {
     class CoulombPotential;      // forward declaration
     class NonCoulombPotential;   // forward declaration
-}   // namespace potential
+}   // namespace pot
 
 namespace forceField
 {
@@ -57,24 +56,24 @@ namespace forceField
     class AngleForceField : public connectivity::Angle
     {
        private:
-        size_t _type;
-        bool   _isLinker = false;
+        AngleId _type;
+        bool    _isLinker = false;
 
         double _equilibriumAngle = 0.0;
         double _forceConstant    = 0.0;
 
        public:
         AngleForceField(
-            const std::vector<simulationBox::Molecule *> &molecules,
-            const std::vector<size_t>                    &atomIndices,
-            const size_t                                  type
+            const std::vector<molsys::Molecule *> &molecules,
+            const std::vector<AtomIndex>          &atomIndices,
+            const AngleId                          type
         );
 
         void calculateEnergyAndForces(
-            const simulationBox::SimulationBox &simBox,
-            physicalData::PhysicalData         &data,
-            const potential::CoulombPotential  &coulombPot,
-            potential::NonCoulombPotential     &nonCoulombPot
+            const molsys::SimulationBox &simBox,
+            physicalData::PhysicalData  &data,
+            const pot::CoulombPotential &coulombPot,
+            pot::NonCoulombPotential    &nonCoulombPot
         );
 
         /***************************
@@ -89,10 +88,10 @@ namespace forceField
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] size_t getType() const;
-        [[nodiscard]] bool   isLinker() const;
-        [[nodiscard]] double getEquilibriumAngle() const;
-        [[nodiscard]] double getForceConstant() const;
+        [[nodiscard]] AngleId getType() const;
+        [[nodiscard]] bool    isLinker() const;
+        [[nodiscard]] double  getEquilibriumAngle() const;
+        [[nodiscard]] double  getForceConstant() const;
     };
 
 }   // namespace forceField

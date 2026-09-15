@@ -1,1 +1,1 @@
-- Throw a customException::QMRunnerException when an external QM runner does not finish successfully
+- Throw a exc::QMRunnerException when an external QM runner does not finish successfully

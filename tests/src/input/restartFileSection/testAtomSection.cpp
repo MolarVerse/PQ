@@ -71,7 +71,7 @@ TEST_F(TestAtomSection, numberOfArguments)
             auto line = std::vector<std::string>(i);
             ASSERT_THROW_MSG(
                 _section->process(line, *_engine),
-                customException::RstFileException,
+                exc::RstFileException,
                 "Error in line 7: Atom section must have 6, 9, 12, 15, 18 or "
                 "21 elements"
             );
@@ -89,7 +89,7 @@ TEST_F(TestAtomSection, moltypeNotFound)
     line[2]   = "1";
     ASSERT_THROW_MSG(
         _section->process(line, *_engine),
-        customException::RstFileException,
+        exc::RstFileException,
         "Molecule type 1 not found"
     );
 }
@@ -103,17 +103,14 @@ TEST_F(TestAtomSection, notEnoughElementsInLine)
 
     std::string filename = "data/atomSection/testNotEnoughAtomsInMolecule.rst";
 
-    auto molecule = simulationBox::MoleculeType(1);
+    auto molecule = molsys::MoleculeType(1);
     molecule.setNumberOfAtoms(3);
     _engine->getSimulationBox().getMoleculeTypes().push_back(molecule);
 
     std::ifstream fp(filename);
     _section->_fp = &fp;
 
-    ASSERT_THROW(
-        _section->process(line, *_engine),
-        customException::RstFileException
-    );
+    ASSERT_THROW(_section->process(line, *_engine), exc::RstFileException);
 
     line[2] = "1";
 
@@ -122,10 +119,7 @@ TEST_F(TestAtomSection, notEnoughElementsInLine)
     std::ifstream fp2(filename2);
     _section->_fp = &fp2;
 
-    ASSERT_THROW(
-        _section->process(line, *_engine),
-        customException::RstFileException
-    );
+    ASSERT_THROW(_section->process(line, *_engine), exc::RstFileException);
 }
 
 TEST_F(TestAtomSection, numberOfArgumentsWithinMolecule)
@@ -137,17 +131,14 @@ TEST_F(TestAtomSection, numberOfArgumentsWithinMolecule)
     std::string filename =
         "data/atomSection/testNumberOfArgumentsWithinMolecule.rst";
 
-    auto molecule = simulationBox::MoleculeType(1);
+    auto molecule = molsys::MoleculeType(1);
     molecule.setNumberOfAtoms(3);
     _engine->getSimulationBox().getMoleculeTypes().push_back(molecule);
 
     std::ifstream fp(filename);
     _section->_fp = &fp;
 
-    ASSERT_THROW(
-        _section->process(line, *_engine),
-        customException::RstFileException
-    );
+    ASSERT_THROW(_section->process(line, *_engine), exc::RstFileException);
 }
 
 TEST_F(TestAtomSection, testProcess)
@@ -158,11 +149,11 @@ TEST_F(TestAtomSection, testProcess)
 
     std::string filename = "data/atomSection/testProcess.rst";
 
-    auto molecule = simulationBox::MoleculeType(1);
+    auto molecule = molsys::MoleculeType(1);
     molecule.setNumberOfAtoms(3);
     _engine->getSimulationBox().addMoleculeType(molecule);
 
-    auto molecule2 = simulationBox::MoleculeType(2);
+    auto molecule2 = molsys::MoleculeType(2);
     molecule2.setNumberOfAtoms(4);
     _engine->getSimulationBox().addMoleculeType(molecule2);
 
@@ -212,7 +203,7 @@ TEST_F(TestAtomSection, testProcess)
 
 TEST_F(TestAtomSection, testProcessAtomLine)
 {
-    simulationBox::Molecule molecule(1);
+    molsys::Molecule molecule(1);
 
     auto line = std::vector<std::string>(21);
     line[0]   = "Ar";
@@ -226,19 +217,19 @@ TEST_F(TestAtomSection, testProcessAtomLine)
         ->processAtomLine(line, _engine->getSimulationBox(), molecule);
 
     ASSERT_THAT(
-        molecule.getAtomPosition(0),
+        molecule.getAtomPosition(AtomIndex{0}),
         testing::ElementsAre(stod(line[3]), stod(line[4]), stod(line[5]))
     );
     ASSERT_THAT(
-        molecule.getAtomVelocity(0),
+        molecule.getAtomVelocity(AtomIndex{0}),
         testing::ElementsAre(stod(line[6]), stod(line[7]), stod(line[8]))
     );
     ASSERT_THAT(
-        molecule.getAtomForce(0),
+        molecule.getAtomForce(AtomIndex{0}),
         testing::ElementsAre(stod(line[9]), stod(line[10]), stod(line[11]))
     );
 
-    ASSERT_EQ(molecule.getAtom(0).getAtomTypeName(), line[0]);
+    ASSERT_EQ(molecule.getAtom(AtomIndex{0}).getAtomTypeName(), line[0]);
 }
 
 TEST_F(TestAtomSection, testProcessQMAtomLine)

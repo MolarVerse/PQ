@@ -24,13 +24,13 @@
 #include "physicalData.hpp"
 #include "potential.hpp"   // for ChargeTag
 
-using namespace potential;
+using namespace pot;
 using namespace pq;
 using namespace waterModel;
 using namespace physicalData;
-using namespace simulationBox;
+using namespace molsys;
 
-using enum simulationBox::HybridZone;
+using enum molsys::HybridZone;
 
 /**
  * @brief Evaluate intermolecular water interactions by brute force.
@@ -39,14 +39,14 @@ using enum simulationBox::HybridZone;
  * and non-Coulomb contributions, and adds forces directly to the atoms.
  */
 void InterWaterStrategyBruteForce::calculate(
-    const InterWaterState                              &state,
-    simulationBox::SimulationBox                       &simBox,
-    physicalData::PhysicalData                         &physicalData,
-    const std::shared_ptr<potential::CoulombPotential> &coulombPotential,
+    const InterWaterState                        &state,
+    molsys::SimulationBox                        &simBox,
+    physicalData::PhysicalData                   &physicalData,
+    const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
     CellList & /*cellList*/
 )
 {
-    const auto rCut = potential::CoulombPotential::getCoulombRadiusCutOff();
+    const auto rCut        = pot::CoulombPotential::getCoulombRadiusCutOff();
     const auto rCutSquared = rCut * rCut;
 
     auto totalCoulombEnergy    = 0.0;
@@ -62,12 +62,12 @@ void InterWaterStrategyBruteForce::calculate(
             if (j >= i)
                 break;
 
-            auto &oxygen1   = water1.getAtom(0);
-            auto &oxygen2   = water2.getAtom(0);
-            auto &hydrogen1 = water1.getAtom(1);
-            auto &hydrogen2 = water1.getAtom(2);
-            auto &hydrogen3 = water2.getAtom(1);
-            auto &hydrogen4 = water2.getAtom(2);
+            auto &oxygen1   = water1.getAtom(AtomIndex{0});
+            auto &oxygen2   = water2.getAtom(AtomIndex{0});
+            auto &hydrogen1 = water1.getAtom(AtomIndex{1});
+            auto &hydrogen2 = water1.getAtom(AtomIndex{2});
+            auto &hydrogen3 = water2.getAtom(AtomIndex{1});
+            auto &hydrogen4 = water2.getAtom(AtomIndex{2});
 
             const auto singleInteraction =
                 [&](Atom &atomA, Atom &atomB, const auto &nonCoulPairPtr)
@@ -121,13 +121,13 @@ void InterWaterStrategyBruteForce::calculate(
  */
 void InterWaterStrategyBruteForce::calculateCoreToOuterForces(
     const InterWaterState & /*state*/,
-    simulationBox::SimulationBox                       &simBox,
-    PhysicalData                                       &physicalData,
-    const std::shared_ptr<potential::CoulombPotential> &coulombPotential,
+    molsys::SimulationBox                        &simBox,
+    PhysicalData                                 &physicalData,
+    const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
     CellList & /*cellList*/
 )
 {
-    const auto rCut = potential::CoulombPotential::getCoulombRadiusCutOff();
+    const auto rCut        = pot::CoulombPotential::getCoulombRadiusCutOff();
     const auto rCutSquared = rCut * rCut;
 
     auto totalCoulombEnergy = 0.0;
@@ -144,12 +144,12 @@ void InterWaterStrategyBruteForce::calculateCoreToOuterForces(
             if (water2.getMoltype() != waterTypeValue)
                 continue;
 
-            auto &oxygen1   = water1.getAtom(0);
-            auto &oxygen2   = water2.getAtom(0);
-            auto &hydrogen1 = water1.getAtom(1);
-            auto &hydrogen2 = water1.getAtom(2);
-            auto &hydrogen3 = water2.getAtom(1);
-            auto &hydrogen4 = water2.getAtom(2);
+            auto &oxygen1   = water1.getAtom(AtomIndex{0});
+            auto &oxygen2   = water2.getAtom(AtomIndex{0});
+            auto &hydrogen1 = water1.getAtom(AtomIndex{1});
+            auto &hydrogen2 = water1.getAtom(AtomIndex{2});
+            auto &hydrogen3 = water2.getAtom(AtomIndex{1});
+            auto &hydrogen4 = water2.getAtom(AtomIndex{2});
 
             const auto singleCoulombInteraction = [&](Atom &atomA, Atom &atomB)
             {
@@ -192,14 +192,14 @@ void InterWaterStrategyBruteForce::calculateCoreToOuterForces(
  * @param coulombPotential Coulomb potential evaluator.
  */
 void InterWaterStrategyBruteForce::calculateLayerToOuterForces(
-    const InterWaterState                              &state,
-    simulationBox::SimulationBox                       &simBox,
-    PhysicalData                                       &physicalData,
-    const std::shared_ptr<potential::CoulombPotential> &coulombPotential,
+    const InterWaterState                        &state,
+    molsys::SimulationBox                        &simBox,
+    PhysicalData                                 &physicalData,
+    const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
     CellList & /*cellList*/
 )
 {
-    const auto rCut = potential::CoulombPotential::getCoulombRadiusCutOff();
+    const auto rCut        = pot::CoulombPotential::getCoulombRadiusCutOff();
     const auto rCutSquared = rCut * rCut;
 
     auto totalCoulombEnergy    = 0.0;
@@ -220,12 +220,12 @@ void InterWaterStrategyBruteForce::calculateLayerToOuterForces(
             if (water2.getMoltype() != waterTypeValue)
                 continue;
 
-            auto &oxygen1   = water1.getAtom(0);
-            auto &oxygen2   = water2.getAtom(0);
-            auto &hydrogen1 = water1.getAtom(1);
-            auto &hydrogen2 = water1.getAtom(2);
-            auto &hydrogen3 = water2.getAtom(1);
-            auto &hydrogen4 = water2.getAtom(2);
+            auto &oxygen1   = water1.getAtom(AtomIndex{0});
+            auto &oxygen2   = water2.getAtom(AtomIndex{0});
+            auto &hydrogen1 = water1.getAtom(AtomIndex{1});
+            auto &hydrogen2 = water1.getAtom(AtomIndex{2});
+            auto &hydrogen3 = water2.getAtom(AtomIndex{1});
+            auto &hydrogen4 = water2.getAtom(AtomIndex{2});
 
             const auto singleInteraction =
                 [&](Atom &atomA, Atom &atomB, const auto &nonCoulPairPtr)
@@ -276,11 +276,11 @@ void InterWaterStrategyBruteForce::calculateLayerToOuterForces(
  * @param cellList Cell list structure (unused).
  */
 void InterWaterStrategyBruteForce::calculateOuterToOuterForces(
-    const InterWaterState                              &state,
-    simulationBox::SimulationBox                       &simBox,
-    PhysicalData                                       &physicalData,
-    const std::shared_ptr<potential::CoulombPotential> &coulombPotential,
-    CellList                                           &cellList
+    const InterWaterState                        &state,
+    molsys::SimulationBox                        &simBox,
+    PhysicalData                                 &physicalData,
+    const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
+    CellList                                     &cellList
 )
 {
     calculate(state, simBox, physicalData, coulombPotential, cellList);
@@ -295,14 +295,14 @@ void InterWaterStrategyBruteForce::calculateOuterToOuterForces(
  * @param coulombPotential Coulomb potential evaluator.
  */
 void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
-    const InterWaterState                              &state,
-    simulationBox::SimulationBox                       &simBox,
-    PhysicalData                                       &physicalData,
-    const std::shared_ptr<potential::CoulombPotential> &coulombPotential,
+    const InterWaterState                        &state,
+    molsys::SimulationBox                        &simBox,
+    PhysicalData                                 &physicalData,
+    const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
     CellList & /*cellList*/
 )
 {
-    const auto rCut = potential::CoulombPotential::getCoulombRadiusCutOff();
+    const auto rCut        = pot::CoulombPotential::getCoulombRadiusCutOff();
     const auto rCutSquared = rCut * rCut;
 
     auto totalCoulombEnergy    = 0.0;
@@ -320,12 +320,12 @@ void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
             if (water2.getMoltype() != waterTypeValue)
                 continue;
 
-            auto &oxygen1   = water1.getAtom(0);
-            auto &oxygen2   = water2.getAtom(0);
-            auto &hydrogen1 = water1.getAtom(1);
-            auto &hydrogen2 = water1.getAtom(2);
-            auto &hydrogen3 = water2.getAtom(1);
-            auto &hydrogen4 = water2.getAtom(2);
+            auto &oxygen1   = water1.getAtom(AtomIndex{0});
+            auto &oxygen2   = water2.getAtom(AtomIndex{0});
+            auto &hydrogen1 = water1.getAtom(AtomIndex{1});
+            auto &hydrogen2 = water1.getAtom(AtomIndex{2});
+            auto &hydrogen3 = water2.getAtom(AtomIndex{1});
+            auto &hydrogen4 = water2.getAtom(AtomIndex{2});
 
             const auto singleInteraction =
                 [&](Atom &atomA, Atom &atomB, const auto &nonCoulPairPtr)
@@ -386,12 +386,12 @@ void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
                 continue;
             }
 
-            auto &oxygen1   = water1.getAtom(0);
-            auto &oxygen2   = water2.getAtom(0);
-            auto &hydrogen1 = water1.getAtom(1);
-            auto &hydrogen2 = water1.getAtom(2);
-            auto &hydrogen3 = water2.getAtom(1);
-            auto &hydrogen4 = water2.getAtom(2);
+            auto &oxygen1   = water1.getAtom(AtomIndex{0});
+            auto &oxygen2   = water2.getAtom(AtomIndex{0});
+            auto &hydrogen1 = water1.getAtom(AtomIndex{1});
+            auto &hydrogen2 = water1.getAtom(AtomIndex{2});
+            auto &hydrogen3 = water2.getAtom(AtomIndex{1});
+            auto &hydrogen4 = water2.getAtom(AtomIndex{2});
 
             const auto singleInteractionOneWay =
                 [&](Atom &atomA, Atom &atomB, const auto &nonCoulPairPtr)
