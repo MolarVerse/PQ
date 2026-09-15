@@ -67,6 +67,30 @@ std::string settings::string(const Isotropy &isotropy)
     return "isotropic";
 }
 
+/**
+ * @brief return string of fixedAxis
+ *
+ * @param fixedAxis
+ */
+std::string settings::string(const FixedAxis &fixedAxis)
+{
+    switch (fixedAxis)
+    {
+        using enum FixedAxis;
+
+        case NONE: return "none";
+        case X: return "x";
+        case Y: return "y";
+        case Z: return "z";
+        case XY: return "xy";
+        case XZ: return "xz";
+        case YZ: return "yz";
+        case ALL: return "all";
+    }
+
+    return "none";
+}
+
 /***************************
  *                         *
  * standard setter methods *
@@ -85,13 +109,13 @@ void ManostatSettings::setManostatType(const std::string_view &manostatType)
         utilities::toLowerAndReplaceDashesCopy(manostatType);
 
     if (manostatTypeToLower == "berendsen")
-        _manostatType = BERENDSEN;
+        setManostatType(BERENDSEN);
 
     else if (manostatTypeToLower == "stochastic_rescaling")
-        _manostatType = STOCHASTIC_RESCALING;
+        setManostatType(STOCHASTIC_RESCALING);
 
     else
-        _manostatType = NONE;
+        setManostatType(NONE);
 }
 
 /**
@@ -102,6 +126,11 @@ void ManostatSettings::setManostatType(const std::string_view &manostatType)
 void ManostatSettings::setManostatType(const ManostatType &manostatType)
 {
     _manostatType = manostatType;
+    if (!_isFixedAxisSet)
+    {
+        using enum ManostatType;
+        _fixedAxis = (_manostatType == NONE) ? FixedAxis::ALL : FixedAxis::NONE;
+    }
 }
 
 /**
@@ -138,6 +167,48 @@ void ManostatSettings::setIsotropy(const std::string_view &isotropy)
 void ManostatSettings::setIsotropy(const Isotropy &isotropy)
 {
     _isotropy = isotropy;
+}
+
+void ManostatSettings::setFixedAxis(const std::string_view &fixedAxis)
+{
+    using enum FixedAxis;
+    const auto fixedAxisToLower =
+        utilities::toLowerAndReplaceDashesCopy(fixedAxis);
+
+    if (fixedAxisToLower == "none")
+        setFixedAxis(NONE);
+
+    else if (fixedAxisToLower == "x")
+        setFixedAxis(X);
+
+    else if (fixedAxisToLower == "y")
+        setFixedAxis(Y);
+
+    else if (fixedAxisToLower == "z")
+        setFixedAxis(Z);
+
+    else if (fixedAxisToLower == "xy" || fixedAxisToLower == "yx")
+        setFixedAxis(XY);
+
+    else if (fixedAxisToLower == "xz" || fixedAxisToLower == "zx")
+        setFixedAxis(XZ);
+
+    else if (fixedAxisToLower == "yz" || fixedAxisToLower == "zy")
+        setFixedAxis(YZ);
+
+    else if (fixedAxisToLower == "all" || fixedAxisToLower == "xyz")
+        setFixedAxis(ALL);
+}
+
+void ManostatSettings::setFixedAxis(const FixedAxis &fixedAxis)
+{
+    _fixedAxis      = fixedAxis;
+    _isFixedAxisSet = true;
+}
+
+void ManostatSettings::setIsFixedAxisSet(const bool isSet)
+{
+    _isFixedAxisSet = isSet;
 }
 
 /**
@@ -221,6 +292,20 @@ ManostatType ManostatSettings::getManostatType() { return _manostatType; }
  * @return Isotropy
  */
 Isotropy ManostatSettings::getIsotropy() { return _isotropy; }
+
+/**
+ * @brief get the FixedAxis
+ *
+ * @return FixedAxis
+ */
+FixedAxis ManostatSettings::getFixedAxis() { return _fixedAxis; }
+
+/**
+ * @brief get whether FixedAxis was explicitly set
+ *
+ * @return bool
+ */
+bool ManostatSettings::isFixedAxisSet() { return _isFixedAxisSet; }
 
 /**
  * @brief get the target pressure

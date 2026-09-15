@@ -27,6 +27,7 @@
 
 #include "berendsenManostat.hpp"             // for BerendsenManostat
 #include "constants/conversionFactors.hpp"   // for _PS_TO_FS_
+#include "exceptions.hpp"
 #include "manostat.hpp"           // for BerendsenManostat, Manostat, manostat
 #include "manostatSettings.hpp"   // for ManostatSettings
 #include "mdEngine.hpp"           // for Engine
@@ -38,6 +39,7 @@ using namespace engine;
 using namespace settings;
 using namespace manostat;
 using namespace constants;
+using namespace exc;
 
 /**
  * @brief wrapper for setupManostat
@@ -84,6 +86,7 @@ void ManostatSetup::setup()
     else
         _engine.makeManostat(Manostat());
 
+    validateIsotropyFixedAxisCombination();
     writeSetupInfo();
 }
 
@@ -95,12 +98,13 @@ void ManostatSetup::setup()
  */
 void ManostatSetup::setupBerendsenManostat()
 {
-    const auto isotropy = ManostatSettings::getIsotropy();
-    const auto pTarget  = ManostatSettings::getTargetPressure();
-    const auto tau      = ManostatSettings::getTauManostat() * PS_TO_FS;
-    const auto compress = ManostatSettings::getCompressibility();
-    const auto aniso    = ManostatSettings::get2DAnisotropicAxis();
-    const auto iso      = ManostatSettings::get2DIsotropicAxes();
+    const auto isotropy  = ManostatSettings::getIsotropy();
+    const auto pTarget   = ManostatSettings::getTargetPressure();
+    const auto tau       = ManostatSettings::getTauManostat() * PS_TO_FS;
+    const auto compress  = ManostatSettings::getCompressibility();
+    const auto aniso     = ManostatSettings::get2DAnisotropicAxis();
+    const auto iso       = ManostatSettings::get2DIsotropicAxes();
+    const auto fixedAxis = ManostatSettings::getFixedAxis();
 
     switch (isotropy)
     {
@@ -108,20 +112,20 @@ void ManostatSetup::setupBerendsenManostat()
 
             // clang-format off
         case SEMI_ISOTROPIC:
-            _engine.makeManostat(SemiIsotropicBerendsenManostat(pTarget, tau, compress, aniso, iso));
+            _engine.makeManostat(SemiIsotropicBerendsenManostat(pTarget, tau, compress, aniso, iso, fixedAxis));
             break;
 
         case ANISOTROPIC:
-            _engine.makeManostat(AnisotropicBerendsenManostat(pTarget, tau, compress));
+            _engine.makeManostat(AnisotropicBerendsenManostat(pTarget, tau, compress, fixedAxis));
             break;
 
         case FULL_ANISOTROPIC:
-            _engine.makeManostat(FullAnisotropicBerendsenManostat(pTarget, tau, compress));
+            _engine.makeManostat(FullAnisotropicBerendsenManostat(pTarget, tau, compress, fixedAxis));
             break;
 
         case NONE: // fall through
         case ISOTROPIC:
-            _engine.makeManostat(BerendsenManostat(pTarget, tau, compress));
+            _engine.makeManostat(BerendsenManostat(pTarget, tau, compress, fixedAxis));
 
             // clang-format on
     }
@@ -135,12 +139,13 @@ void ManostatSetup::setupBerendsenManostat()
  */
 void ManostatSetup::setupStochasticRescalingManostat()
 {
-    const auto isotropy = ManostatSettings::getIsotropy();
-    const auto pTarget  = ManostatSettings::getTargetPressure();
-    const auto tau      = ManostatSettings::getTauManostat() * PS_TO_FS;
-    const auto compress = ManostatSettings::getCompressibility();
-    const auto aniso    = ManostatSettings::get2DAnisotropicAxis();
-    const auto iso      = ManostatSettings::get2DIsotropicAxes();
+    const auto isotropy  = ManostatSettings::getIsotropy();
+    const auto pTarget   = ManostatSettings::getTargetPressure();
+    const auto tau       = ManostatSettings::getTauManostat() * PS_TO_FS;
+    const auto compress  = ManostatSettings::getCompressibility();
+    const auto aniso     = ManostatSettings::get2DAnisotropicAxis();
+    const auto iso       = ManostatSettings::get2DIsotropicAxes();
+    const auto fixedAxis = ManostatSettings::getFixedAxis();
 
     switch (isotropy)
     {
@@ -149,22 +154,58 @@ void ManostatSetup::setupStochasticRescalingManostat()
             // clang-format off
 
         case SEMI_ISOTROPIC:
-            _engine.makeManostat(SemiIsotropicStochasticRescalingManostat(pTarget, tau, compress, aniso, iso));
+            _engine.makeManostat(SemiIsotropicStochasticRescalingManostat(pTarget, tau, compress, aniso, iso, fixedAxis));
             break;
 
         case ANISOTROPIC:
-            _engine.makeManostat(AnisotropicStochasticRescalingManostat(pTarget, tau, compress));
+            _engine.makeManostat(AnisotropicStochasticRescalingManostat(pTarget, tau, compress, fixedAxis));
             break;
 
         case FULL_ANISOTROPIC:
-            _engine.makeManostat(FullAnisotropicStochasticRescalingManostat(pTarget, tau, compress));
+            _engine.makeManostat(FullAnisotropicStochasticRescalingManostat(pTarget, tau, compress, fixedAxis));
             break;
 
         case NONE: // fall through
         case ISOTROPIC:
-            _engine.makeManostat(StochasticRescalingManostat(pTarget, tau, compress));
+            _engine.makeManostat(StochasticRescalingManostat(pTarget, tau, compress, fixedAxis));
 
             // clang-format on
+    }
+}
+
+/**
+ * @brief validate isotropy and fixed_axis combination
+ *
+ * @throws SetupException if semi-isotropic mode conflicts with fixed_axis
+ */
+void ManostatSetup::validateIsotropyFixedAxisCombination() const
+{
+    using enum Isotropy;
+
+    const auto isotropy     = ManostatSettings::getIsotropy();
+    const auto fixedAxis    = ManostatSettings::getFixedAxis();
+    const auto manostatType = ManostatSettings::getManostatType();
+
+    if (manostatType != ManostatType::NONE && fixedAxis == FixedAxis::ALL)
+    {
+        throw UserInputException(
+            "Invalid combination: all axes cannot be fixed while a "
+            "manostat is selected."
+        );
+    }
+
+    if (isotropy == SEMI_ISOTROPIC && fixedAxis != FixedAxis::NONE)
+    {
+        const auto anisoAxis        = ManostatSettings::get2DAnisotropicAxis();
+        const auto allowedFixedAxis = static_cast<FixedAxis>(1U << anisoAxis);
+
+        if (fixedAxis != allowedFixedAxis)
+        {
+            throw UserInputException(
+                "Invalid combination: semi-isotropic pressure coupling only "
+                "allows fixing the anisotropic axis or none."
+            );
+        }
     }
 }
 

@@ -62,6 +62,7 @@ TEST_F(TestPhysicalData, copy)
     EXPECT_EQ(physicalData2.getVolume(), 6.0);
     EXPECT_EQ(physicalData2.getDensity(), 7.0);
     EXPECT_EQ(physicalData2.getPressure(), 8.0);
+    EXPECT_EQ(physicalData2.getCoupledPressure(), 8.5);
     EXPECT_EQ(physicalData2.getQMEnergy(), 9.0);
 }
 
@@ -82,6 +83,7 @@ TEST_F(TestPhysicalData, updateAverages)
     EXPECT_EQ(_physicalData->getVolume(), 12.0);
     EXPECT_EQ(_physicalData->getDensity(), 14.0);
     EXPECT_EQ(_physicalData->getPressure(), 16.0);
+    EXPECT_EQ(_physicalData->getCoupledPressure(), 17.0);
     EXPECT_EQ(_physicalData->getQMEnergy(), 18.0);
 }
 
@@ -194,6 +196,7 @@ TEST_F(TestPhysicalData, reset)
     _physicalData->setVolume(1.0);
     _physicalData->setDensity(1.0);
     _physicalData->setPressure(1.0);
+    _physicalData->setCoupledPressure(1.0);
     _physicalData->setVirial(diagonalMatrix(linearAlgebra::Vec3D(1.0, 1.0, 1.0))
     );
     _physicalData->setQMEnergy(1.0);
@@ -216,6 +219,7 @@ TEST_F(TestPhysicalData, reset)
     EXPECT_EQ(_physicalData->getVolume(), 0.0);
     EXPECT_EQ(_physicalData->getDensity(), 0.0);
     EXPECT_EQ(_physicalData->getPressure(), 0.0);
+    EXPECT_EQ(_physicalData->getCoupledPressure(), 0.0);
     EXPECT_EQ(_physicalData->getVirial(), linearAlgebra::tensor3D(0.0));
     EXPECT_EQ(_physicalData->getQMEnergy(), 0.0);
 }

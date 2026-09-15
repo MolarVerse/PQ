@@ -15,6 +15,7 @@ step_number,overall number of simulation steps so far,\-,A
 *E*:sub:`improper`,total energy of the MM improper dihedrals,kcal/mol,MM*
 *V*,volume,Å³,P
 *ρ*,density,g/cm³,P
+*P*:sub:`coupled`,pressure of the non-fixed (coupled) axes,bar,P*
 *E*:sub:`p-NH`,momentum energy of the Nose Hoover chain thermostat,kcal/mol,NH
 *E*:sub:`χ-NH`,friction energy of the Nose Hoover chain thermostat,kcal/mol,NH
 *r*:sub:`lower`, lower bound of the distance constraints,Å,DC

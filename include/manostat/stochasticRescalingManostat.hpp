@@ -40,16 +40,18 @@ namespace manostat
        protected:
         randomNumberGenerator::RandomNumberGenerator _randomNumberGenerator{};
 
-        double _tau;
-        double _compressibility;
-        double _dt;
+        double              _tau;
+        double              _compressibility;
+        double              _dt;
+        settings::FixedAxis _fixedAxis;
 
        public:
         StochasticRescalingManostat() = default;
         explicit StochasticRescalingManostat(
-            const double targetPressure,
-            const double tau,
-            const double compressibility
+            const double              targetPressure,
+            const double              tau,
+            const double              compressibility,
+            const settings::FixedAxis fixedAxis
         );
         ~StochasticRescalingManostat() override = default;
 
@@ -97,7 +99,8 @@ namespace manostat
             const double               tau,
             const double               compressibility,
             const size_t               anisotropicAxis,
-            const std::vector<size_t> &isotropicAxes
+            const std::vector<size_t> &isotropicAxes,
+            const settings::FixedAxis  fixedAxis
         );
 
         [[nodiscard]]

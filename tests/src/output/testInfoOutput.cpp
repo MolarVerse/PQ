@@ -315,6 +315,109 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActive)
 }
 
 /**
+ * @brief tests writing info file with fixed axis
+ *
+ * @details manostat and fixed_axis are active
+ *
+ */
+TEST_F(TestEnergyOutput, writeInfoManostatIsActiveWithFixedAxis)
+{
+    _physicalData->setTemperature(1.0);
+    _physicalData->setPressure(2.0);
+    _physicalData->setCoupledPressure(2.5);
+    _physicalData->setKineticEnergy(3.0);
+    _physicalData->setCoulombEnergy(4.0);
+    _physicalData->setNonCoulombEnergy(5.0);
+    _physicalData->setMomentum(Vec3D(6.0));
+    _physicalData->setIntraCoulombEnergy(9.0);
+    _physicalData->setIntraNonCoulombEnergy(10.0);
+
+    _physicalData->setVolume(11.0);
+    _physicalData->setDensity(12.0);
+    _physicalData->setLoopTime(0.1);
+
+    ForceFieldSettings::deactivate();
+    ManostatSettings::setManostatType("Berendsen");
+    ManostatSettings::setFixedAxis("z");
+    Settings::setJobtype(JobType::MM_MD);
+
+    _infoOutput->setFilename("default.info");
+    _infoOutput->write(100.0, *_physicalData);
+    _infoOutput->close();
+
+    std::ifstream file("default.info");
+    std::string   line;
+    std::getline(file, line);
+    EXPECT_EQ(
+        line,
+        "----------------------------------------------------------------------"
+        "-------------------"
+    );
+    getline(file, line);
+    EXPECT_EQ(
+        line,
+        "|                                     PQ info file                    "
+        "                  |"
+    );
+    getline(file, line);
+    EXPECT_EQ(
+        line,
+        "----------------------------------------------------------------------"
+        "-------------------"
+    );
+    getline(file, line);
+    EXPECT_EQ(
+        line,
+        "|   SIMULATION-TIME       100.00000 ps       TEMPERATURE             "
+        "1.00000 K          |"
+    );
+    getline(file, line);
+    EXPECT_EQ(
+        line,
+        "|   PRESSURE                2.00000 bar      E(TOT)                 "
+        "12.00000 kcal/mol   |"
+    );
+    getline(file, line);
+    EXPECT_EQ(
+        line,
+        "|   E(KIN)                  3.00000 kcal/mol E(INTRA)               "
+        "19.00000 kcal/mol   |"
+    );
+    getline(file, line);
+    EXPECT_EQ(
+        line,
+        "|   E(COUL)                 4.00000 kcal/mol E(NON-COUL)             "
+        "5.00000 kcal/mol   |"
+    );
+    getline(file, line);
+    EXPECT_EQ(
+        line,
+        "|   VOLUME                 11.00000 A^3      DENSITY                "
+        "12.00000 g/cm^3     |"
+    );
+    getline(file, line);
+    EXPECT_EQ(
+        line,
+        "|   P(COUPLED)              2.50000 bar                               "
+        "                  |"
+    );
+    getline(file, line);
+    EXPECT_EQ(
+        line,
+        "|   MOMENTUM                1.0e+01 amuA/fs  LOOPTIME                "
+        "0.10000 s          |"
+    );
+    getline(file, line);
+    EXPECT_EQ(
+        line,
+        "----------------------------------------------------------------------"
+        "-------------------"
+    );
+
+    ManostatSettings::setFixedAxis("none");
+}
+
+/**
  * @brief tests writing info file
  *
  * @details qm is active
