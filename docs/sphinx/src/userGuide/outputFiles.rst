@@ -62,7 +62,7 @@ If :ref:`includeoutputmetadatakey` is enabled, the file starts with a
 
 Stores information about the energy and various other quantities of the system for every frame in the following format:
 
-    step_number *T* *P* *E*:sub:`tot` *E*:sub:`QM` *N*:sub:`QM-atoms` *E*:sub:`kin` *E*:sub:`intra` *E*:sub:`Coulomb` *E*:sub:`non-Coulomb` *E*:sub:`bond` *E*:sub:`angle` *E*:sub:`dihedral` *E*:sub:`improper` *V* *ρ* *E*:sub:`p-NH` *E*:sub:`χ-NH` *r*:sub:`lower` *r*:sub:`upper` *p* looptime
+    step_number *T* *P* *E*:sub:`tot` *E*:sub:`QM` *N*:sub:`QM-atoms` *E*:sub:`kin` *E*:sub:`intra` *E*:sub:`Coulomb` *E*:sub:`non-Coulomb` *E*:sub:`bond` *E*:sub:`angle` *E*:sub:`dihedral` *E*:sub:`improper` *V* *ρ* *P*:sub:`coupled` *E*:sub:`p-NH` *E*:sub:`χ-NH` *r*:sub:`lower` *r*:sub:`upper` *p* looptime
 
 .. csv-table::
     :file: en_file_entries.csv
@@ -78,6 +78,7 @@ Stores information about the energy and various other quantities of the system f
         | **MM**:  Only printed if MM atoms are present
         | **MM***: Only printed if MM atoms are present, which are not treated by the :ref:`guffdatFile`
         | **P**:   Only printed if pressure coupling is enabled *via* the :ref:`pressureCouplingKeys` in the ``.in`` file
+        | **P***:  Only printed if pressure coupling is enabled and at least one axis is fixed (*via* the :ref:`fixedaxiskey` key in the ``.in`` file)
         | **NH**:  Only printed if the Nose Hoover chain thermostat is enabled *via* the :ref:`thermostatKey` key in the ``.in`` file
         | **DC**:  Only printed if distance constraints are applied
     

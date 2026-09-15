@@ -1077,6 +1077,11 @@ Possible options are:
     * When **no manostat** is selected (``manostat = none``), the default is ``all`` (*i.e.* all three axes remain fixed and no volume scaling occurs).
     * When a **manostat is selected**, the default is ``none`` (*i.e.* all axes are free to scale unless explicitly specified otherwise).
 
+.. Note::
+    **Target Pressure and Energy Output:**
+
+    When one or more axes are fixed, the target pressure specified by :ref:`pressureKey` is applied exclusively to the remaining non-fixed (coupled) axes. In the :ref:`energyFile` (``.en``) and :ref:`infoFile` (``.info``), the instantaneous average pressure of the non-fixed axes is additionally reported as :math:`P_{\text{coupled}}` (or ``P(COUPLED)``), which is the quantity that approaches the target pressure. The total 3D scalar pressure :math:`P` continues to be reported as usual.
+
 .. Warning::
     **Disallowed keyword combinations:**
 

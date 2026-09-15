@@ -247,6 +247,29 @@ TEST_F(TestManostat, CalculatePressure)
     _manostat->calculatePressure(*_box, *_data);
 
     EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * constants::PRESSURE_FACTOR);
+    EXPECT_DOUBLE_EQ(
+        _data->getCoupledPressure(),
+        3.0 * constants::PRESSURE_FACTOR
+    );
+}
+
+TEST_F(TestManostat, CalculatePressureWithFixedAxis)
+{
+    settings::ManostatSettings::setFixedAxis(settings::FixedAxis::Z);
+
+    // _data has kinEnergyMolecular = diag(1, 2, 3), virial = diag(1, 2, 3)
+    // 2 * kin + vir = diag(3, 6, 9) / volume(2.0) = diag(1.5, 3.0, 4.5) *
+    // PRESSURE_FACTOR Total trace / 3 = 3.0 * PRESSURE_FACTOR Non-fixed (x, y)
+    // avg = (1.5 + 3.0) / 2 = 2.25 * PRESSURE_FACTOR
+    _manostat->calculatePressure(*_box, *_data);
+
+    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * constants::PRESSURE_FACTOR);
+    EXPECT_DOUBLE_EQ(
+        _data->getCoupledPressure(),
+        2.25 * constants::PRESSURE_FACTOR
+    );
+
+    settings::ManostatSettings::setFixedAxis(settings::FixedAxis::NONE);
 }
 
 /**
