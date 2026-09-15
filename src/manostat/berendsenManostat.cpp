@@ -124,47 +124,48 @@ void BerendsenManostat::applyManostat(
 /**
  * @brief calculate mu as scaling factor for Berendsen manostat (isotropic)
  *
- * @details If a fixed axis is specified, that axis is not scaled (mu = 1.0)
+ * @details If fixed axes are specified, those axes are not scaled (mu = 1.0)
  * and the remaining axes are scaled isotropically
  *
  * @return tensor3D
  */
 tensor3D BerendsenManostat::calculateMu() const
 {
-    using enum FixedAxis;
+    const auto numFixed = countFixedAxes(_fixedAxis);
+
+    if (numFixed == 3)
+        return diagonalMatrix(Vec3D{1.0, 1.0, 1.0});
 
     const auto preFactor = _compressibility * _dt / _tau;
+    const auto numFree   = 3 - numFixed;
+    const auto p_xyz     = diagonal(_pressureTensor);
 
-    // 2D pressure coupling
-    if (_fixedAxis != NONE)
+    double p_avg = 0.0;
+    for (size_t i = 0; i < 3; ++i)
     {
-        const auto fixedAxisIndex = static_cast<size_t>(_fixedAxis) - 1;
-        const auto p_xyz          = diagonal(_pressureTensor);
+        if (!isAxisFixed(_fixedAxis, i))
+            p_avg += p_xyz[i];
+    }
+    p_avg /= static_cast<double>(numFree);
 
-        // Calculate average pressure of non-fixed axes
-        double p_avg = 0.0;
-        for (size_t i = 0; i < 3; ++i)
-            if (i != fixedAxisIndex)
-                p_avg += p_xyz[i];
+    const auto deltaP = _targetPressure - p_avg;
 
-        p_avg /= 2.0;
+    double mu_scaled = 1.0;
+    if (numFree == 3)
+        mu_scaled = ::cbrt(1.0 - preFactor * deltaP);
+    else if (numFree == 2)
+        mu_scaled = ::sqrt(1.0 - preFactor * deltaP);
+    else if (numFree == 1)
+        mu_scaled = 1.0 - preFactor * deltaP;
 
-        // Scale factor for non-fixed axes
-        const auto mu_2D = ::sqrt(1.0 - preFactor * (_targetPressure - p_avg));
-
-        Vec3D mu = {1.0, 1.0, 1.0};
-        for (size_t i = 0; i < 3; ++i)
-            if (i != fixedAxisIndex)
-                mu[i] = mu_2D;
-
-        return diagonalMatrix(mu);
+    Vec3D mu = {1.0, 1.0, 1.0};
+    for (size_t i = 0; i < 3; ++i)
+    {
+        if (!isAxisFixed(_fixedAxis, i))
+            mu[i] = mu_scaled;
     }
 
-    // 3D pressure coupling
-    const auto p         = trace(_pressureTensor) / 3.0;
-    const auto mu_scalar = ::cbrt(1.0 - preFactor * (_targetPressure - p));
-
-    return diagonalMatrix(mu_scalar);
+    return diagonalMatrix(mu);
 }
 
 /**
@@ -187,7 +188,9 @@ tensor3D SemiIsotropicBerendsenManostat::calculateMu() const
     const auto preFactor = _compressibility * _dt / _tau;
 
     const double mu_xy = ::sqrt(1.0 - preFactor * (_targetPressure - p_xy));
-    const double mu_z  = 1.0 - preFactor * (_targetPressure - p_z);
+    const double mu_z  = isAxisFixed(_fixedAxis, _2DAnisotropicAxis)
+                             ? 1.0
+                             : (1.0 - preFactor * (_targetPressure - p_z));
 
     linearAlgebra::Vec3D mu;
 
@@ -201,25 +204,22 @@ tensor3D SemiIsotropicBerendsenManostat::calculateMu() const
 /**
  * @brief calculate mu as scaling factor for Berendsen manostat (anisotropic)
  *
- * @details If a fixed axis is specified, that axis is not scaled (mu = 1.0)
+ * @details If fixed axes are specified, those axes are not scaled (mu = 1.0)
  * and the other axes are scaled independently
  *
  * @return tensor3D
  */
 tensor3D AnisotropicBerendsenManostat::calculateMu() const
 {
-    using enum FixedAxis;
-
     const auto pxyz      = diagonal(_pressureTensor);
     const auto preFactor = _compressibility * _dt / _tau;
 
     auto mu = 1.0 - preFactor * (_targetPressure - pxyz);
 
-    // 2D pressure coupling
-    if (_fixedAxis != NONE)
+    for (size_t i = 0; i < 3; ++i)
     {
-        const auto fixedAxisIndex = static_cast<size_t>(_fixedAxis) - 1;
-        mu[fixedAxisIndex]        = 1.0;
+        if (isAxisFixed(_fixedAxis, i))
+            mu[i] = 1.0;
     }
 
     return diagonalMatrix(mu);
@@ -229,34 +229,30 @@ tensor3D AnisotropicBerendsenManostat::calculateMu() const
  * @brief calculate mu as scaling factor for Berendsen manostat (full
  * anisotropic including angles)
  *
- * @details If a fixed axis is specified, the corresponding row and column
- * are zeroed (no coupling with other axes) and the diagonal is set to 1.0
+ * @details If fixed axes are specified, the corresponding rows and columns
+ * are zeroed (no coupling with other axes) and the diagonals are set to 1.0
  *
  * @return tensor3D
  */
 tensor3D FullAnisotropicBerendsenManostat::calculateMu() const
 {
-    using enum FixedAxis;
-
     const auto pTarget   = diagonalMatrix(_targetPressure);
     const auto preFactor = _compressibility * _dt / _tau;
     const auto kronecker = kroneckerDeltaMatrix<double>();
 
     auto mu = kronecker - preFactor * (pTarget - _pressureTensor);
 
-    // 2D full anisotropic: fix one axis and remove its coupling
-    if (_fixedAxis != NONE)
+    for (size_t k = 0; k < 3; ++k)
     {
-        const auto fixedAxisIndex = static_cast<size_t>(_fixedAxis) - 1;
-
-        // Zero out the row and column of the fixed axis
-        for (size_t i = 0; i < 3; ++i)
+        if (isAxisFixed(_fixedAxis, k))
         {
-            mu[fixedAxisIndex][i] = 0.0;
-            mu[i][fixedAxisIndex] = 0.0;
+            for (size_t i = 0; i < 3; ++i)
+            {
+                mu[k][i] = 0.0;
+                mu[i][k] = 0.0;
+            }
+            mu[k][k] = 1.0;
         }
-        // Set diagonal to 1.0 (no scaling)
-        mu[fixedAxisIndex][fixedAxisIndex] = 1.0;
     }
 
     rotateMu(mu);

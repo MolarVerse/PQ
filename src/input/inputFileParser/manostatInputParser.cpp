@@ -316,12 +316,24 @@ void ManostatInputParser::parseFixedAxis(
     else if (fixed_axis == "z")
         ManostatSettings::setFixedAxis(Z);
 
+    else if (fixed_axis == "xy" || fixed_axis == "yx")
+        ManostatSettings::setFixedAxis(XY);
+
+    else if (fixed_axis == "xz" || fixed_axis == "zx")
+        ManostatSettings::setFixedAxis(XZ);
+
+    else if (fixed_axis == "yz" || fixed_axis == "zy")
+        ManostatSettings::setFixedAxis(YZ);
+
+    else if (fixed_axis == "all" || fixed_axis == "xyz")
+        ManostatSettings::setFixedAxis(ALL);
+
     else
     {
         throw InputFileException(
             std::format(
                 "Invalid fixed_axis \"{}\" at line {} in input file.\n"
-                "Possible options are: none, x, y, z",
+                "Possible options are: none, x, y, z, xy, xz, yz, all",
                 lineElements[2],
                 lineNumber
             )

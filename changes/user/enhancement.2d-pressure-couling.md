@@ -1,1 +1,1 @@
-- Enable isotropic, anisotropic and full-anisotropic 2d pressure coupling by adding the "fixed_axis" keyword
+- Add "fixed_axis" keyword to enable keeping lattice parameters constant during pressure coupling

@@ -24,6 +24,8 @@
 
 #define _MANOSTAT_SETTINGS_HPP_
 
+#include <bit>
+#include <cstdint>
 #include <string>        // for string
 #include <string_view>   // for string_view
 #include <vector>        // for vector
@@ -60,16 +62,70 @@ namespace settings
         FULL_ANISOTROPIC
     };
 
-    enum class FixedAxis
+    enum class FixedAxis : std::uint8_t
     {
-        NONE,
-        X,
-        Y,
-        Z
+        NONE = 0U,
+        X    = 1U << 0U,
+        Y    = 1U << 1U,
+        Z    = 1U << 2U,
+        XY   = 0B011,
+        XZ   = 0B101,
+        YZ   = 0B110,
+        ALL  = 0B111
     };
+
+    [[nodiscard]] constexpr FixedAxis operator|(FixedAxis lhs, FixedAxis rhs)
+    {
+        return static_cast<FixedAxis>(
+            static_cast<std::uint8_t>(lhs) | static_cast<std::uint8_t>(rhs)
+        );
+    }
+
+    [[nodiscard]] constexpr FixedAxis operator&(FixedAxis lhs, FixedAxis rhs)
+    {
+        return static_cast<FixedAxis>(
+            static_cast<std::uint8_t>(lhs) & static_cast<std::uint8_t>(rhs)
+        );
+    }
+
+    [[nodiscard]] constexpr FixedAxis operator~(FixedAxis axis)
+    {
+        return static_cast<FixedAxis>(
+            static_cast<std::uint8_t>(axis) ^
+            static_cast<std::uint8_t>(FixedAxis::ALL)
+        );
+    }
+
+    constexpr FixedAxis &operator|=(FixedAxis &lhs, FixedAxis rhs)
+    {
+        lhs = lhs | rhs;
+        return lhs;
+    }
+
+    constexpr FixedAxis &operator&=(FixedAxis &lhs, FixedAxis rhs)
+    {
+        lhs = lhs & rhs;
+        return lhs;
+    }
+
+    [[nodiscard]] constexpr bool isAxisFixed(
+        FixedAxis fixedAxis,
+        size_t    axisIndex
+    ) noexcept
+    {
+        return (static_cast<std::uint8_t>(fixedAxis) & (1U << axisIndex)) != 0U;
+    }
+
+    [[nodiscard]] constexpr size_t countFixedAxes(FixedAxis fixedAxis)
+    {
+        return static_cast<size_t>(
+            std::popcount(static_cast<std::uint8_t>(fixedAxis))
+        );
+    }
 
     [[nodiscard]] std::string string(const ManostatType &manostatType);
     [[nodiscard]] std::string string(const Isotropy &isotropy);
+    [[nodiscard]] std::string string(const FixedAxis &fixedAxis);
 
     /**
      * @class ManostatSettings
@@ -80,9 +136,10 @@ namespace settings
     class ManostatSettings
     {
        private:
-        static inline ManostatType _manostatType = ManostatType::NONE;
-        static inline Isotropy     _isotropy     = Isotropy::ISOTROPIC;
-        static inline FixedAxis    _fixedAxis    = FixedAxis::NONE;
+        static inline ManostatType _manostatType   = ManostatType::NONE;
+        static inline Isotropy     _isotropy       = Isotropy::ISOTROPIC;
+        static inline FixedAxis    _fixedAxis      = FixedAxis::ALL;
+        static inline bool         _isFixedAxisSet = false;
 
         static inline double _targetPressure;
 
@@ -110,6 +167,7 @@ namespace settings
 
         static void setFixedAxis(const std::string_view &fixedAxis);
         static void setFixedAxis(const FixedAxis &fixedAxis);
+        static void setIsFixedAxisSet(const bool isSet);
 
         static void setTargetPressure(const double targetPressure);
         static void setTauManostat(const double tauManostat);
@@ -126,6 +184,7 @@ namespace settings
         [[nodiscard]] static ManostatType        getManostatType();
         [[nodiscard]] static Isotropy            getIsotropy();
         [[nodiscard]] static FixedAxis           getFixedAxis();
+        [[nodiscard]] static bool                isFixedAxisSet();
         [[nodiscard]] static double              getTargetPressure();
         [[nodiscard]] static double              getTauManostat();
         [[nodiscard]] static double              getCompressibility();

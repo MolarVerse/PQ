@@ -256,3 +256,103 @@ TEST_F(TestInputFileReader, ParseIsotropy)
         "full_anisotropic"
     );
 }
+
+/**
+ * @brief tests parsing the "fixed_axis" command
+ *
+ */
+TEST_F(TestInputFileReader, ParseFixedAxis)
+{
+    ManostatInputParser      parser;
+    std::vector<std::string> lineElements = {"fixed_axis", "=", "none"};
+    parser.parseFixedAxis(lineElements, 0);
+    EXPECT_EQ(
+        settings::ManostatSettings::getFixedAxis(),
+        settings::FixedAxis::NONE
+    );
+
+    lineElements = {"fixed_axis", "=", "x"};
+    parser.parseFixedAxis(lineElements, 0);
+    EXPECT_EQ(
+        settings::ManostatSettings::getFixedAxis(),
+        settings::FixedAxis::X
+    );
+
+    lineElements = {"fixed_axis", "=", "y"};
+    parser.parseFixedAxis(lineElements, 0);
+    EXPECT_EQ(
+        settings::ManostatSettings::getFixedAxis(),
+        settings::FixedAxis::Y
+    );
+
+    lineElements = {"fixed_axis", "=", "z"};
+    parser.parseFixedAxis(lineElements, 0);
+    EXPECT_EQ(
+        settings::ManostatSettings::getFixedAxis(),
+        settings::FixedAxis::Z
+    );
+
+    lineElements = {"fixed_axis", "=", "xy"};
+    parser.parseFixedAxis(lineElements, 0);
+    EXPECT_EQ(
+        settings::ManostatSettings::getFixedAxis(),
+        settings::FixedAxis::XY
+    );
+
+    lineElements = {"fixed_axis", "=", "yx"};
+    parser.parseFixedAxis(lineElements, 0);
+    EXPECT_EQ(
+        settings::ManostatSettings::getFixedAxis(),
+        settings::FixedAxis::XY
+    );
+
+    lineElements = {"fixed_axis", "=", "xz"};
+    parser.parseFixedAxis(lineElements, 0);
+    EXPECT_EQ(
+        settings::ManostatSettings::getFixedAxis(),
+        settings::FixedAxis::XZ
+    );
+
+    lineElements = {"fixed_axis", "=", "zx"};
+    parser.parseFixedAxis(lineElements, 0);
+    EXPECT_EQ(
+        settings::ManostatSettings::getFixedAxis(),
+        settings::FixedAxis::XZ
+    );
+
+    lineElements = {"fixed_axis", "=", "yz"};
+    parser.parseFixedAxis(lineElements, 0);
+    EXPECT_EQ(
+        settings::ManostatSettings::getFixedAxis(),
+        settings::FixedAxis::YZ
+    );
+
+    lineElements = {"fixed_axis", "=", "zy"};
+    parser.parseFixedAxis(lineElements, 0);
+    EXPECT_EQ(
+        settings::ManostatSettings::getFixedAxis(),
+        settings::FixedAxis::YZ
+    );
+
+    lineElements = {"fixed_axis", "=", "all"};
+    parser.parseFixedAxis(lineElements, 0);
+    EXPECT_EQ(
+        settings::ManostatSettings::getFixedAxis(),
+        settings::FixedAxis::ALL
+    );
+
+    lineElements = {"fixed_axis", "=", "xyz"};
+    parser.parseFixedAxis(lineElements, 0);
+    EXPECT_EQ(
+        settings::ManostatSettings::getFixedAxis(),
+        settings::FixedAxis::ALL
+    );
+
+    lineElements = {"fixed_axis", "=", "notValid"};
+    EXPECT_THROW_MSG(
+        parser.parseFixedAxis(lineElements, 0),
+        exc::InputFileException,
+        "Invalid fixed_axis \"notValid\" at line 0 in input file.\n"
+        "Possible options are: none, x, y, z, xy, xz, yz, all"
+    );
+}

@@ -39,7 +39,7 @@ using namespace engine;
 using namespace settings;
 using namespace manostat;
 using namespace constants;
-using namespace customException;
+using namespace exc;
 
 /**
  * @brief wrapper for setupManostat
@@ -182,16 +182,30 @@ void ManostatSetup::validateIsotropyFixedAxisCombination() const
 {
     using enum Isotropy;
 
-    const auto isotropy  = ManostatSettings::getIsotropy();
-    const auto fixedAxis = ManostatSettings::getFixedAxis();
+    const auto isotropy     = ManostatSettings::getIsotropy();
+    const auto fixedAxis    = ManostatSettings::getFixedAxis();
+    const auto manostatType = ManostatSettings::getManostatType();
+
+    if (manostatType != ManostatType::NONE && fixedAxis == FixedAxis::ALL)
+    {
+        throw UserInputException(
+            "Invalid combination: all axes cannot be fixed while a "
+            "manostat is selected."
+        );
+    }
 
     if (isotropy == SEMI_ISOTROPIC && fixedAxis != FixedAxis::NONE)
     {
-        throw UserInputException(
-            "Invalid combination: semi-isotropic pressure coupling cannot "
-            "be used while any axis is fixed. For isotropic 2D pressure "
-            "coupling, use isotropy = isotropic with fixed_axis instead."
-        );
+        const auto anisoAxis        = ManostatSettings::get2DAnisotropicAxis();
+        const auto allowedFixedAxis = static_cast<FixedAxis>(1U << anisoAxis);
+
+        if (fixedAxis != allowedFixedAxis)
+        {
+            throw UserInputException(
+                "Invalid combination: semi-isotropic pressure coupling only "
+                "allows fixing the anisotropic axis or none."
+            );
+        }
     }
 }
 
