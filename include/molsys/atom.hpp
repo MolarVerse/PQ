@@ -24,7 +24,6 @@
 
 #define _ATOM_HPP_
 
-#include <cstddef>       // for size_t
 #include <optional>      // for optional
 #include <string>        // for string
 #include <string_view>   // for string_view
@@ -52,8 +51,8 @@ namespace molsys
         ExtVdwType _externalGlobalVDWType;
         VdwType    _internalGlobalVDWType;
 
-        size_t _externalAtomType;
-        size_t _atomType;
+        ExtAtomType _externalAtomType;
+        AtomType    _atomType;
 
         bool _isActive = true;
 
@@ -122,8 +121,8 @@ namespace molsys
         [[nodiscard]] const std::string &getName() const { return _name; }
         [[nodiscard]] std::string        getAtomTypeName() const;
 
-        [[nodiscard]] size_t getExternalAtomType() const;
-        [[nodiscard]] size_t getAtomType() const;
+        [[nodiscard]] ExtAtomType getExternalAtomType() const;
+        [[nodiscard]] AtomType    getAtomType() const;
 
         [[nodiscard]] ExtVdwType getExternalGlobalVDWType() const;
         [[nodiscard]] VdwType    getInternalGlobalVDWType() const;
@@ -164,8 +163,8 @@ namespace molsys
         void setPartialCharge(const double partialCharge);
         void setQMCharge(const double charge);
 
-        void setAtomType(const size_t atomType);
-        void setExternalAtomType(const size_t externalAtomType);
+        void setAtomType(AtomType atomType);
+        void setExternalAtomType(ExtAtomType externalAtomType);
         void setExternalGlobalVDWType(const ExtVdwType externalGlobalVDWType);
         void setInternalGlobalVDWType(const VdwType internalGlobalVDWType);
 

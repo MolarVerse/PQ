@@ -61,7 +61,7 @@ class TestSimulationBox : public ::testing::Test
         atom3->setMass(3.0);
 
         molecule1.setMolMass(6.0);
-        molecule1.setMoltype(1);
+        molecule1.setMoltype(MolType{1});
         molecule1.addAtom(atom1);
         molecule1.addAtom(atom2);
         molecule1.addAtom(atom3);
@@ -77,15 +77,15 @@ class TestSimulationBox : public ::testing::Test
         atom5->setMass(2.0);
 
         molecule2.setMolMass(3.0);
-        molecule2.setMoltype(2);
+        molecule2.setMoltype(MolType{2});
         molecule2.addAtom(atom4);
         molecule2.addAtom(atom5);
 
         _simulationBox->addMolecule(molecule1);
         _simulationBox->addMolecule(molecule2);
 
-        auto moleculeType1 = molsys::MoleculeType(1);
-        auto moleculeType2 = molsys::MoleculeType(2);
+        const auto moleculeType1 = molsys::MoleculeType(MolType{1});
+        const auto moleculeType2 = molsys::MoleculeType(MolType{2});
 
         _simulationBox->addMoleculeType(moleculeType1);
         _simulationBox->addMoleculeType(moleculeType2);

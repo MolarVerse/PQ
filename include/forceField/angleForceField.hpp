@@ -59,8 +59,7 @@ namespace forceField
         AngleId _type;
         bool    _isLinker = false;
 
-        double _equilibriumAngle = 0.0;
-        double _forceConstant    = 0.0;
+        AngleParams _params;
 
        public:
         AngleForceField(
@@ -81,17 +80,15 @@ namespace forceField
          ***************************/
 
         void setIsLinker(const bool isLinker);
-        void setEquilibriumAngle(const double equilibriumAngle);
-        void setForceConstant(const double forceConstant);
+        void setParams(const AngleParams &params);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] AngleId getType() const;
-        [[nodiscard]] bool    isLinker() const;
-        [[nodiscard]] double  getEquilibriumAngle() const;
-        [[nodiscard]] double  getForceConstant() const;
+        [[nodiscard]] AngleId            getType() const;
+        [[nodiscard]] bool               isLinker() const;
+        [[nodiscard]] const AngleParams &getParams() const;
     };
 
 }   // namespace forceField

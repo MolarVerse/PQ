@@ -54,7 +54,7 @@ class TestIntraNonBondedMap : public TestNonCoulombPotentialFF
  */
 TEST_F(TestIntraNonBondedMap, calculateSingleInteractionAndCalculate)
 {
-    auto molecule = molsys::Molecule(0);
+    auto molecule = molsys::Molecule{MolType{0}};
     molecule.setNumberOfAtoms(2);
 
     auto atom1 = std::make_shared<molsys::Atom>();
@@ -66,8 +66,8 @@ TEST_F(TestIntraNonBondedMap, calculateSingleInteractionAndCalculate)
     atom2->setForce({0.0, 0.0, 0.0});
     atom1->setInternalGlobalVDWType(VdwType{0});
     atom2->setInternalGlobalVDWType(VdwType{1});
-    atom1->setAtomType(0);
-    atom2->setAtomType(1);
+    atom1->setAtomType(AtomType{0});
+    atom2->setAtomType(AtomType{1});
     atom1->setPartialCharge(0.5);
     atom2->setPartialCharge(-0.5);
 
@@ -78,7 +78,7 @@ TEST_F(TestIntraNonBondedMap, calculateSingleInteractionAndCalculate)
     settings::PotentialSettings::setScale14VanDerWaals(0.75);
 
     auto intraNonBondedType =
-        intraNonBonded::IntraNonBondedContainer(0, {{-1}});
+        intraNonBonded::IntraNonBondedContainer(MolType{0}, {{-1}});
     auto intraNonBondedMap =
         intraNonBonded::IntraNonBondedMap(&molecule, &intraNonBondedType);
 

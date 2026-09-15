@@ -22,37 +22,16 @@
 
 #include "jCouplingType.hpp"
 
-#include "mathUtilities.hpp"
-
 using namespace forceField;
 
 /**
  * @brief Construct a new JCouplingType::JCouplingType object
  *
  * @param id
- * @param J0
- * @param forceConstant
- * @param a
- * @param b
- * @param c
- * @param phaseShift
+ * @param params
  */
-JCouplingType::JCouplingType(
-    const size_t id,
-    const double J0,
-    const double forceConstant,
-    const double a,
-    const double b,
-    const double c,
-    const double phaseShift
-)
-    : _id(id),
-      _j0(J0),
-      _forceConstant(forceConstant),
-      _a(a),
-      _b(b),
-      _c(c),
-      _phaseShift(phaseShift)
+JCouplingType::JCouplingType(const size_t id, const JCouplingParams &params)
+    : _id(id), _params(params)
 {
 }
 
@@ -69,20 +48,7 @@ bool forceField::operator==(
     const JCouplingType &other
 )
 {
-    const auto k         = self._forceConstant;
-    const auto phi       = self._phaseShift;
-    const auto other_k   = other._forceConstant;
-    const auto other_phi = other._phaseShift;
-
-    auto isEqual = self._id == other._id;
-    isEqual      = isEqual && utilities::compare(self._j0, other._j0);
-    isEqual      = isEqual && utilities::compare(k, other_k);
-    isEqual      = isEqual && utilities::compare(self._a, other._a);
-    isEqual      = isEqual && utilities::compare(self._b, other._b);
-    isEqual      = isEqual && utilities::compare(self._c, other._c);
-    isEqual      = isEqual && utilities::compare(phi, other_phi);
-
-    return isEqual;
+    return self._id == other._id && self._params == other._params;
 }
 
 /***************************
@@ -99,46 +65,11 @@ bool forceField::operator==(
 size_t JCouplingType::getId() const { return _id; }
 
 /**
- * @brief get the J0
+ * @brief get the JCouplingParams
  *
- * @return double
+ * @return const JCouplingParams&
  */
-double JCouplingType::getJ0() const { return _j0; }
-
-/**
- * @brief get the force constant
- *
- * @return double
- */
-double JCouplingType::getForceConstant() const { return _forceConstant; }
-
-/**
- * @brief get the a
- *
- * @return double
- */
-double JCouplingType::getA() const { return _a; }
-
-/**
- * @brief get the b
- *
- * @return double
- */
-double JCouplingType::getB() const { return _b; }
-
-/**
- * @brief get the c
- *
- * @return double
- */
-double JCouplingType::getC() const { return _c; }
-
-/**
- * @brief get the phase shift
- *
- * @return double
- */
-double JCouplingType::getPhaseShift() const { return _phaseShift; }
+const JCouplingParams &JCouplingType::getParams() const { return _params; }
 
 /***************************
  *                         *

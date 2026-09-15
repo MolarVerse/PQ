@@ -29,6 +29,8 @@
 #include <iosfwd>    // for ifstream
 #include <string>    // for string
 
+#include "strongTypes.hpp"
+
 namespace engine
 {
     class Engine;   // forward declaration
@@ -61,10 +63,11 @@ namespace input::intraNonBondedReader
             engine::Engine    &engine
         );
 
-        void                 read();
-        void                 processMolecule(const size_t moleculeType);
-        void                 checkDuplicates() const;
-        [[nodiscard]] size_t findMoleculeType(const std::string &) const;
+        void read();
+        void processMolecule(MolType moleculeType);
+        void checkDuplicates() const;
+        [[nodiscard]]
+        MolType findMoleculeType(const std::string &) const;
 
         void setFileName(const std::string_view &fileName);
         void reInitializeFp();

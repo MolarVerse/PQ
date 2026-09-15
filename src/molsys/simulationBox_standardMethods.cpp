@@ -76,16 +76,16 @@ namespace molsys
     /**
      * @brief Get the water type
      *
-     * @return std::optional<size_t>
+     * @return std::optional<MolType>
      */
-    optional<size_t> SimulationBox::getWaterType() const { return _waterType; }
+    optional<MolType> SimulationBox::getWaterType() const { return _waterType; }
 
     /**
      * @brief Get the ammonia type
      *
-     * @return std::optional<size_t>
+     * @return std::optional<MolType>
      */
-    optional<size_t> SimulationBox::getAmmoniaType() const
+    optional<MolType> SimulationBox::getAmmoniaType() const
     {
         return _ammoniaType;
     }
@@ -434,7 +434,7 @@ namespace molsys
      *
      * @param waterType
      */
-    void SimulationBox::setWaterType(const size_t waterType)
+    void SimulationBox::setWaterType(MolType waterType)
     {
         _waterType = waterType;
     }
@@ -444,7 +444,7 @@ namespace molsys
      *
      * @param ammoniaType
      */
-    void SimulationBox::setAmmoniaType(const size_t ammoniaType)
+    void SimulationBox::setAmmoniaType(MolType ammoniaType)
     {
         _ammoniaType = ammoniaType;
     }

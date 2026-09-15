@@ -22,29 +22,16 @@
 
 #include "dihedralType.hpp"
 
-#include "mathUtilities.hpp"
-
 using namespace forceField;
-using namespace utilities;
 
 /**
  * @brief Construct a new Dihedral Type:: Dihedral Type object
  *
  * @param id
- * @param forceConstant
- * @param frequency
- * @param phaseShift
+ * @param params
  */
-DihedralType::DihedralType(
-    const DihedralId id,
-    const double     forceConstant,
-    const double     frequency,
-    const double     phaseShift
-)
-    : _id(id),
-      _forceConstant(forceConstant),
-      _periodicity(frequency),
-      _phaseShift(phaseShift)
+DihedralType::DihedralType(const DihedralId id, const DihedralParams &params)
+    : _id(id), _params(params)
 {
 }
 
@@ -57,12 +44,7 @@ DihedralType::DihedralType(
  */
 bool forceField::operator==(const DihedralType &self, const DihedralType &other)
 {
-    auto isEqual = self._id == other._id;
-    isEqual = isEqual && compare(self._forceConstant, other._forceConstant);
-    isEqual = isEqual && compare(self._periodicity, other._periodicity);
-    isEqual = isEqual && compare(self._phaseShift, other._phaseShift);
-
-    return isEqual;
+    return self._id == other._id && self._params == other._params;
 }
 
 /***************************
@@ -79,22 +61,8 @@ bool forceField::operator==(const DihedralType &self, const DihedralType &other)
 DihedralId DihedralType::getId() const { return _id; }
 
 /**
- * @brief get the force constant of the dihedral type
+ * @brief get the parameters of the dihedral type
  *
- * @return double
+ * @return const DihedralParams&
  */
-double DihedralType::getForceConstant() const { return _forceConstant; }
-
-/**
- * @brief get the periodicity of the dihedral type
- *
- * @return double
- */
-double DihedralType::getPeriodicity() const { return _periodicity; }
-
-/**
- * @brief get the phase shift of the dihedral type
- *
- * @return double
- */
-double DihedralType::getPhaseShift() const { return _phaseShift; }
+const DihedralParams &DihedralType::getParams() const { return _params; }

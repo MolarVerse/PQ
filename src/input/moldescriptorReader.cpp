@@ -106,11 +106,11 @@ void MoldescriptorReader::read()
             auto &simBox = _engine.getSimulationBox();
 
             if ("water_type" == toLowerAndReplaceDashesCopy(lineElements[0]))
-                simBox.setWaterType(stringToULL(lineElements[1]));
+                simBox.setWaterType(MolType{stringToULL(lineElements[1])});
 
             else if ("ammonia_type" ==
                      toLowerAndReplaceDashesCopy(lineElements[0]))
-                simBox.setAmmoniaType(stringToULL(lineElements[1]));
+                simBox.setAmmoniaType(MolType{stringToULL(lineElements[1])});
 
             else
                 processMolecule(lineElements);
@@ -189,7 +189,7 @@ void MoldescriptorReader::processMolecule(
         ));
     }
 
-    molecule.setMoltype(simBox.getMoleculeTypes().size() + 1);
+    molecule.setMoltype(MolType{simBox.getMoleculeTypes().size() + 1});
 
     std::string line;
     size_t      atomCount = 0;
@@ -216,7 +216,7 @@ void MoldescriptorReader::processMolecule(
         if ((3 == lineElements.size()) || (4 == lineElements.size()))
         {
             molecule.addAtomName(lineElements[0]);
-            molecule.addExternalAtomType(stoul(lineElements[1]));
+            molecule.addExternalAtomType(ExtAtomType{stoul(lineElements[1])});
             molecule.addPartialCharge(stod(lineElements[2]));
 
             ++atomCount;
@@ -277,7 +277,7 @@ void MoldescriptorReader::convertExternalToInternalAtomTypes(
         const auto externalAtomType = molecule.getExternalAtomType(i);
         molecule.addExternalToInternalAtomTypeElement(
             externalAtomType,
-            i.get()
+            AtomType{i.get()}
         );
     }
 

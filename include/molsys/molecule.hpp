@@ -25,7 +25,6 @@
 #define _MOLECULE_HPP_
 
 #include <cstddef>       // for size_t
-#include <map>           // for map
 #include <memory>        // for shared_ptr
 #include <string>        // for string
 #include <string_view>   // for string_view
@@ -78,7 +77,7 @@ namespace molsys
     {
        private:
         std::string _name;
-        size_t      _moltype;
+        MolType     _moltype;
         size_t      _numberOfAtoms;
 
         // set via molDescriptor not sum of partial charges!!!
@@ -89,7 +88,6 @@ namespace molsys
 
         linearAlgebra::Vec3D _centerOfMass{0.0, 0.0, 0.0};
 
-        std::map<size_t, size_t>           _externalToInternalAtomTypes;
         std::vector<std::shared_ptr<Atom>> _atoms;
 
         // hybrid calculation related member variables
@@ -103,7 +101,7 @@ namespace molsys
        public:
         Molecule() = default;
         explicit Molecule(const std::string_view name);
-        explicit Molecule(const size_t moltype);
+        explicit Molecule(MolType moltype);
 
         void calculateCenterOfMass(const Box &);
         void reconstructAtomsAroundCenterOfMass(const Box &);
@@ -186,7 +184,7 @@ namespace molsys
         [[nodiscard]] AtomNumber  getAtomicNumber(const size_t index) const;
         [[nodiscard]] double      getAtomMass(AtomIndex index) const;
         [[nodiscard]] double      getPartialCharge(AtomIndex index) const;
-        [[nodiscard]] size_t      getAtomType(AtomIndex index) const;
+        [[nodiscard]] AtomType    getAtomType(AtomIndex index) const;
         [[nodiscard]] std::string getAtomName(AtomIndex index) const;
         [[nodiscard]]
         VdwType getInternalGlobalVDWType(AtomIndex index) const;
@@ -195,9 +193,9 @@ namespace molsys
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] size_t getMoltype() const { return _moltype; }
-        [[nodiscard]] size_t getNumberOfAtoms() const;
-        [[nodiscard]] size_t getDegreesOfFreedom() const;
+        [[nodiscard]] MolType getMoltype() const { return _moltype; }
+        [[nodiscard]] size_t  getNumberOfAtoms() const;
+        [[nodiscard]] size_t  getDegreesOfFreedom() const;
 
         [[nodiscard]] int    getCharge() const;
         [[nodiscard]] double getMolMass() const;
@@ -225,7 +223,7 @@ namespace molsys
         void setName(const std::string_view name);
 
         void setNumberOfAtoms(const size_t numberOfAtoms);
-        void setMoltype(const size_t moltype);
+        void setMoltype(MolType moltype);
 
         void setCharge(const int charge);
         void setMolMass(const double molMass);

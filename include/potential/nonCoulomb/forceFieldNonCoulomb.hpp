@@ -24,9 +24,9 @@
 
 #define _FORCE_FIELD_NON_COULOMB_HPP_
 
-#include <cstddef>   // for size_t
 #include <optional>
 #include <unordered_map>
+#include <vector>
 
 #include "nonCoulombPotential.hpp"
 #include "strongTypes.hpp"
@@ -89,8 +89,8 @@ namespace pot
 
         [[nodiscard]]
         std::shared_ptr<NonCoulombPair> getNonCoulPair(
-            const std::vector<size_t>         &indices,
-            const std::pair<VdwType, VdwType> &vdwTypes
+            const std::tuple<MolType, MolType, AtomType, AtomType> &indices,
+            const std::pair<VdwType, VdwType>                      &vdwTypes
         ) override;
 
         [[nodiscard]]

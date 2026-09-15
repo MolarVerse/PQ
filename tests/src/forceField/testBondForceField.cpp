@@ -69,7 +69,7 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
 
     auto molecule = molsys::Molecule();
 
-    molecule.setMoltype(0);
+    molecule.setMoltype(MolType{0});
     molecule.setNumberOfAtoms(2);
 
     auto atom1 = std::make_shared<molsys::Atom>();
@@ -81,8 +81,8 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
     atom2->setForce({0.0, 0.0, 0.0});
     atom1->setInternalGlobalVDWType(VdwType{0});
     atom2->setInternalGlobalVDWType(VdwType{1});
-    atom1->setAtomType(0);
-    atom2->setAtomType(1);
+    atom1->setAtomType(AtomType{0});
+    atom2->setAtomType(AtomType{1});
     atom1->setPartialCharge(1.0);
     atom2->setPartialCharge(-0.5);
 
@@ -96,8 +96,9 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
         AtomIndex{1},
         BondId{0}
     );
-    bondForceField.setEquilibriumBondLength(1.2);
-    bondForceField.setForceConstant(3.0);
+    bondForceField.setParams(
+        BondParams{.equilibrium = 1.2, .forceConstant = 3.0}
+    );
     bondForceField.setIsLinker(false);
 
     bondForceField.calculateEnergyAndForces(

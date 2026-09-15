@@ -52,7 +52,10 @@ namespace
             benchmarkSetup::cutOff,
             LJParams{.c6 = 1.0, .c12 = 1.0}
         );
-        nonCoulomb->setGuffNonCoulPair({1, 1, 0, 0}, pair);
+        nonCoulomb->setGuffNonCoulPair(
+            {MolType{1}, MolType{1}, AtomType{0}, AtomType{0}},
+            pair
+        );
 
         return nonCoulomb;
     }

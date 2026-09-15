@@ -31,11 +31,26 @@
  */
 TEST(TestAngleType, operatorEqual)
 {
-    forceField::AngleType angleType1(AngleId{0}, 1.0, 2.0);
-    forceField::AngleType angleType2(AngleId{0}, 1.0, 2.0);
-    forceField::AngleType angleType3(AngleId{1}, 1.0, 2.0);
-    forceField::AngleType angleType4(AngleId{0}, 2.0, 2.0);
-    forceField::AngleType angleType5(AngleId{0}, 1.0, 3.0);
+    forceField::AngleType angleType1(
+        AngleId{0},
+        AngleParams{.equilibrium = 1.0, .forceConstant = 2.0}
+    );
+    forceField::AngleType angleType2(
+        AngleId{0},
+        AngleParams{.equilibrium = 1.0, .forceConstant = 2.0}
+    );
+    forceField::AngleType angleType3(
+        AngleId{1},
+        AngleParams{.equilibrium = 1.0, .forceConstant = 2.0}
+    );
+    forceField::AngleType angleType4(
+        AngleId{0},
+        AngleParams{.equilibrium = 2.0, .forceConstant = 2.0}
+    );
+    forceField::AngleType angleType5(
+        AngleId{0},
+        AngleParams{.equilibrium = 1.0, .forceConstant = 3.0}
+    );
 
     EXPECT_TRUE(angleType1 == angleType2);
     EXPECT_FALSE(angleType1 == angleType3);

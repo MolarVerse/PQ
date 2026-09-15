@@ -55,8 +55,8 @@ using namespace pot;
 using namespace waterModel;
 using linearAlgebra::Vec3D;
 
-static constexpr std::uint64_t ITERATIONS             = 50;
-static constexpr size_t        WATER_TYPE             = 1;
+static constexpr std::uint64_t ITERATIONS = 50;
+static constexpr MolType       WATER_TYPE{1};
 static constexpr double        CUTOFF                 = 9.0;
 static constexpr auto          HYDROGEN_ATOMIC_NUMBER = AtomNumber{1};
 static constexpr auto          OXYGEN_ATOMIC_NUMBER   = AtomNumber{8};
@@ -91,7 +91,7 @@ int main()
         atom->setName(name);
         atom->setAtomicNumber(atomicNumber);
         atom->setPosition(pos);
-        atom->setAtomType(0);
+        atom->setAtomType(AtomType{0});
         atom->setInternalGlobalVDWType(VdwType{0});
         atom->setPartialCharge(charge);
         atom->setForceToZero();

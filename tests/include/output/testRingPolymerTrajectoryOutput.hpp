@@ -77,7 +77,7 @@ class TestRingPolymerTrajectoryOutput : public ::testing::Test
         atom2_1->setName("O");
         atom1_1->setPartialCharge(1.0);
         atom2_1->setPartialCharge(-1.0);
-        molecule1_1.setMoltype(1);
+        molecule1_1.setMoltype(MolType{1});
         molecule1_1.addAtom(atom1_1);
         molecule1_1.addAtom(atom2_1);
 
@@ -91,7 +91,7 @@ class TestRingPolymerTrajectoryOutput : public ::testing::Test
         atom2_2->setName("O");
         atom1_2->setPartialCharge(1.0 + 1.0);
         atom2_2->setPartialCharge(-1.0 + 1.0);
-        molecule1_2.setMoltype(1);
+        molecule1_2.setMoltype(MolType{1});
         molecule1_2.addAtom(atom1_2);
         molecule1_2.addAtom(atom2_2);
 
@@ -109,7 +109,7 @@ class TestRingPolymerTrajectoryOutput : public ::testing::Test
         atom3_1->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
         atom3_1->setName("Ar");
         atom3_1->setPartialCharge(0.0);
-        molecule2_1.setMoltype(2);
+        molecule2_1.setMoltype(MolType{2});
         molecule2_1.addAtom(atom3_1);
 
         atom3_2->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0) + 1.0);
@@ -117,7 +117,7 @@ class TestRingPolymerTrajectoryOutput : public ::testing::Test
         atom3_2->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0) + 1.0);
         atom3_2->setName("Ar");
         atom3_2->setPartialCharge(0.0 + 1.0);
-        molecule2_2.setMoltype(2);
+        molecule2_2.setMoltype(MolType{2});
         molecule2_2.addAtom(atom3_2);
 
         _simulationBox1->addMolecule(molecule1_1);

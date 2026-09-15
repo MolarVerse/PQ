@@ -34,8 +34,8 @@ using namespace exc;
 
 TEST_F(TestIntraNonBondedReader, findMoleculeType)
 {
-    EXPECT_EQ(_intraNonBondedReader->findMoleculeType("molecule1"), 0);
-    EXPECT_EQ(_intraNonBondedReader->findMoleculeType("0"), 0);
+    EXPECT_EQ(_intraNonBondedReader->findMoleculeType("molecule1"), MolType{0});
+    EXPECT_EQ(_intraNonBondedReader->findMoleculeType("0"), MolType{0});
 
     _intraNonBondedReader->setFileName("intraNonBonded.dat");
     EXPECT_THROW_MSG(
@@ -110,7 +110,7 @@ TEST_F(TestIntraNonBondedReader, missingEndKeyword)
     EXPECT_THROW_MSG(
         _intraNonBondedReader->read(),
         IntraNonBondedException,
-        "ERROR: could not find 'END' for moltype '0' in file "
+        "ERROR: could not find 'END' for moltype 'MolType(0)' in file "
         "'data/intraNonBondedReader/missingEndKeyword.dat'"
     );
 }
@@ -124,7 +124,7 @@ TEST_F(TestIntraNonBondedReader, moltypeDefinedMultipleTimes)
     EXPECT_THROW_MSG(
         _intraNonBondedReader->read(),
         IntraNonBondedException,
-        "ERROR: moltype '0' is defined multiple times in file "
+        "ERROR: moltype 'MolType(0)' is defined multiple times in file "
         "'data/intraNonBondedReader/molTypeDefinedMultipleTimes.dat'"
     );
 }
@@ -138,7 +138,7 @@ TEST_F(TestIntraNonBondedReader, readIntraNonBondedFile)
 
     const auto container =
         _engine->getIntraNonBonded()->getIntraNonBondedContainers()[0];
-    EXPECT_EQ(container.getMolType(), 0);
+    EXPECT_EQ(container.getMolType(), MolType{0});
     const auto &atomIndices = container.getAtomIndices();
 
     EXPECT_EQ(atomIndices[0], std::vector<int>({1, -2}));

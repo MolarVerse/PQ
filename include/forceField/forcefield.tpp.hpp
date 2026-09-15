@@ -88,7 +88,7 @@ namespace forceField
         const auto vdwType1  = molecule1->getInternalGlobalVDWType(atomIndex1);
         const auto vdwType2  = molecule2->getInternalGlobalVDWType(atomIndex2);
 
-        const auto indices = {molType1, molType2, atomType1, atomType2};
+        const std::tuple indices{molType1, molType2, atomType1, atomType2};
 
         const auto nonCoulombPair =
             nonCoulPot.getNonCoulPair(indices, {vdwType1, vdwType2});

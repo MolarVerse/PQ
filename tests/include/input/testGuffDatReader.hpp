@@ -52,37 +52,46 @@ class TestGuffDatReader : public ::testing::Test
     {
         auto moleculeType1 = molsys::MoleculeType();
         moleculeType1.setNumberOfAtoms(2);
-        moleculeType1.setMoltype(1);
-        moleculeType1.addExternalAtomType(1);
-        moleculeType1.addExternalAtomType(2);
-        moleculeType1.addExternalToInternalAtomTypeElement(1, 0);
-        moleculeType1.addExternalToInternalAtomTypeElement(2, 1);
+        moleculeType1.setMoltype(MolType{1});
+        moleculeType1.addExternalAtomType(ExtAtomType{1});
+        moleculeType1.addExternalAtomType(ExtAtomType{2});
+        moleculeType1.addExternalToInternalAtomTypeElement(
+            ExtAtomType{1},
+            AtomType{0}
+        );
+        moleculeType1.addExternalToInternalAtomTypeElement(
+            ExtAtomType{2},
+            AtomType{1}
+        );
         moleculeType1.addPartialCharge(0.5);
         moleculeType1.addPartialCharge(-0.25);
-        moleculeType1.addAtomType(0);
-        moleculeType1.addAtomType(1);
+        moleculeType1.addAtomType(AtomType{0});
+        moleculeType1.addAtomType(AtomType{1});
 
         auto moleculeType2 = molsys::MoleculeType();
         moleculeType2.setNumberOfAtoms(1);
-        moleculeType2.setMoltype(2);
-        moleculeType2.addExternalAtomType(3);
-        moleculeType2.addExternalToInternalAtomTypeElement(3, 0);
+        moleculeType2.setMoltype(MolType{2});
+        moleculeType2.addExternalAtomType(ExtAtomType{3});
+        moleculeType2.addExternalToInternalAtomTypeElement(
+            ExtAtomType{3},
+            AtomType{0}
+        );
         moleculeType2.addPartialCharge(0.25);
-        moleculeType2.addAtomType(0);
+        moleculeType2.addAtomType(AtomType{0});
 
         auto molecule1 = molsys::Molecule();
         molecule1.setNumberOfAtoms(2);
-        molecule1.setMoltype(1);
+        molecule1.setMoltype(MolType{1});
 
         auto atom1 = std::make_shared<molsys::Atom>();
         auto atom2 = std::make_shared<molsys::Atom>();
 
-        atom1->setExternalAtomType(1);
-        atom2->setExternalAtomType(2);
+        atom1->setExternalAtomType(ExtAtomType{1});
+        atom2->setExternalAtomType(ExtAtomType{2});
         atom1->setPartialCharge(0.5);
         atom2->setPartialCharge(-0.25);
-        atom1->setAtomType(0);
-        atom2->setAtomType(1);
+        atom1->setAtomType(AtomType{0});
+        atom2->setAtomType(AtomType{1});
 
         molecule1.addAtom(atom1);
         molecule1.addAtom(atom2);

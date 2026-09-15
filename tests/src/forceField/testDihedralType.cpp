@@ -31,12 +31,54 @@
  */
 TEST(TestDihedralType, operatorEqual)
 {
-    forceField::DihedralType dihedralType1(DihedralId{0}, 1.0, 2.0, 3.0);
-    forceField::DihedralType dihedralType2(DihedralId{0}, 1.0, 2.0, 3.0);
-    forceField::DihedralType dihedralType3(DihedralId{1}, 1.0, 2.0, 3.0);
-    forceField::DihedralType dihedralType4(DihedralId{0}, 2.0, 2.0, 3.0);
-    forceField::DihedralType dihedralType5(DihedralId{0}, 1.0, 3.0, 3.0);
-    forceField::DihedralType dihedralType6(DihedralId{0}, 1.0, 2.0, 4.0);
+    forceField::DihedralType dihedralType1(
+        DihedralId{0},
+        DihedralParams{
+            .forceConstant = 1.0,
+            .frequency     = 2.0,
+            .phaseShift    = 3.0
+        }
+    );
+    forceField::DihedralType dihedralType2(
+        DihedralId{0},
+        DihedralParams{
+            .forceConstant = 1.0,
+            .frequency     = 2.0,
+            .phaseShift    = 3.0
+        }
+    );
+    forceField::DihedralType dihedralType3(
+        DihedralId{1},
+        DihedralParams{
+            .forceConstant = 1.0,
+            .frequency     = 2.0,
+            .phaseShift    = 3.0
+        }
+    );
+    forceField::DihedralType dihedralType4(
+        DihedralId{0},
+        DihedralParams{
+            .forceConstant = 2.0,
+            .frequency     = 2.0,
+            .phaseShift    = 3.0
+        }
+    );
+    forceField::DihedralType dihedralType5(
+        DihedralId{0},
+        DihedralParams{
+            .forceConstant = 1.0,
+            .frequency     = 3.0,
+            .phaseShift    = 3.0
+        }
+    );
+    forceField::DihedralType dihedralType6(
+        DihedralId{0},
+        DihedralParams{
+            .forceConstant = 1.0,
+            .frequency     = 2.0,
+            .phaseShift    = 4.0
+        }
+    );
 
     EXPECT_TRUE(dihedralType1 == dihedralType2);
     EXPECT_FALSE(dihedralType1 == dihedralType3);

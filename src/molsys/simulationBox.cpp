@@ -99,9 +99,7 @@ namespace molsys
      * @param moleculeType
      * @return std::optional<Molecule &>
      */
-    std::optional<Molecule> SimulationBox::findMolecule(
-        const size_t moleculeType
-    )
+    std::optional<Molecule> SimulationBox::findMolecule(MolType moleculeType)
     {
         auto isMoleculeType = [moleculeType](const Molecule& mol)
         { return mol.getMoltype() == moleculeType; };
@@ -294,10 +292,10 @@ namespace molsys
      *
      * @throw RstFileException if molecule type not found
      */
-    MoleculeType& SimulationBox::findMoleculeType(const size_t moleculeType)
+    MoleculeType& SimulationBox::findMoleculeType(MolType molType)
     {
-        auto isMoleculeType = [moleculeType](const auto& mol)
-        { return mol.getMoltype() == moleculeType; };
+        auto isMoleculeType = [molType](const auto& mol)
+        { return mol.getMoltype() == molType; };
 
         const auto molecule =
             std::ranges::find_if(_moleculeTypes, isMoleculeType);
@@ -305,7 +303,7 @@ namespace molsys
         if (molecule != _moleculeTypes.end())
             return *molecule;
         throw RstFileException(
-            std::format("Molecule type {} not found", moleculeType)
+            std::format("Molecule type {} not found", molType.toString())
         );
     }
 
@@ -316,7 +314,7 @@ namespace molsys
      * @return true
      * @return false
      */
-    bool SimulationBox::moleculeTypeExists(const size_t moleculeType) const
+    bool SimulationBox::moleculeTypeExists(MolType moleculeType) const
     {
         auto isMoleculeType = [moleculeType](const auto& mol)
         { return mol.getMoltype() == moleculeType; };
@@ -331,12 +329,12 @@ namespace molsys
      * @brief find molecule type by string id
      *
      * @details return an optional - if moleculeType found it returns the
-     * moleculeType as a size_t otherwise it returns nullopt
+     * moleculeType as a MolType otherwise it returns nullopt
      *
      * @param moleculeType
-     * @return optional<size_t>
+     * @return std::optional<MolType>
      */
-    std::optional<size_t> SimulationBox::findMoleculeTypeByString(
+    std::optional<MolType> SimulationBox::findMoleculeTypeByString(
         const std::string& moleculeType
     ) const
     {
@@ -410,7 +408,8 @@ namespace molsys
             const auto molType =
                 std::ranges::find_if(neededMolTypes, predicate);
 
-            if (molType == neededMolTypes.end() && molecule.getMoltype() != 0)
+            if (molType == neededMolTypes.end() &&
+                molecule.getMoltype() != MolType{0})
                 neededMolTypes.push_back(findMoleculeType(molecule.getMoltype())
                 );
         };
@@ -439,12 +438,12 @@ namespace molsys
             if (molType != moleculeTypes.end())
                 molecule.setPartialCharges(molType->getPartialCharges());
 
-            else if (molecule.getMoltype() != 0)
+            else if (molecule.getMoltype() != MolType{0})
             {
                 throw UserInputException(
                     std::format(
                         "Molecule type {} not found in molecule types",
-                        molecule.getMoltype()
+                        molecule.getMoltype().toString()
                     )
                 );
             }

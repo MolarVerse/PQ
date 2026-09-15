@@ -90,7 +90,7 @@ TEST_F(TestAtomSection, moltypeNotFound)
     ASSERT_THROW_MSG(
         _section->process(line, *_engine),
         exc::RstFileException,
-        "Molecule type 1 not found"
+        "Molecule type MolType(1) not found"
     );
 }
 
@@ -103,7 +103,7 @@ TEST_F(TestAtomSection, notEnoughElementsInLine)
 
     std::string filename = "data/atomSection/testNotEnoughAtomsInMolecule.rst";
 
-    auto molecule = molsys::MoleculeType(1);
+    auto molecule = molsys::MoleculeType(MolType{1});
     molecule.setNumberOfAtoms(3);
     _engine->getSimulationBox().getMoleculeTypes().push_back(molecule);
 
@@ -131,7 +131,7 @@ TEST_F(TestAtomSection, numberOfArgumentsWithinMolecule)
     std::string filename =
         "data/atomSection/testNumberOfArgumentsWithinMolecule.rst";
 
-    auto molecule = molsys::MoleculeType(1);
+    auto molecule = molsys::MoleculeType(MolType{1});
     molecule.setNumberOfAtoms(3);
     _engine->getSimulationBox().getMoleculeTypes().push_back(molecule);
 
@@ -149,11 +149,11 @@ TEST_F(TestAtomSection, testProcess)
 
     std::string filename = "data/atomSection/testProcess.rst";
 
-    auto molecule = molsys::MoleculeType(1);
+    auto molecule = molsys::MoleculeType(MolType{1});
     molecule.setNumberOfAtoms(3);
     _engine->getSimulationBox().addMoleculeType(molecule);
 
-    auto molecule2 = molsys::MoleculeType(2);
+    auto molecule2 = molsys::MoleculeType(MolType{2});
     molecule2.setNumberOfAtoms(4);
     _engine->getSimulationBox().addMoleculeType(molecule2);
 
@@ -178,19 +178,28 @@ TEST_F(TestAtomSection, testProcess)
 
     EXPECT_EQ(_engine->getSimulationBox().getMolecules().size(), 3);
 
-    EXPECT_EQ(_engine->getSimulationBox().getMolecules()[0].getMoltype(), 1);
+    EXPECT_EQ(
+        _engine->getSimulationBox().getMolecules()[0].getMoltype(),
+        MolType{1}
+    );
     EXPECT_EQ(
         _engine->getSimulationBox().getMolecules()[0].getNumberOfAtoms(),
         3
     );
 
-    EXPECT_EQ(_engine->getSimulationBox().getMolecules()[1].getMoltype(), 2);
+    EXPECT_EQ(
+        _engine->getSimulationBox().getMolecules()[1].getMoltype(),
+        MolType{2}
+    );
     EXPECT_EQ(
         _engine->getSimulationBox().getMolecules()[1].getNumberOfAtoms(),
         4
     );
 
-    EXPECT_EQ(_engine->getSimulationBox().getMolecules()[2].getMoltype(), 1);
+    EXPECT_EQ(
+        _engine->getSimulationBox().getMolecules()[2].getMoltype(),
+        MolType{1}
+    );
     EXPECT_EQ(
         _engine->getSimulationBox().getMolecules()[2].getNumberOfAtoms(),
         3
@@ -203,7 +212,7 @@ TEST_F(TestAtomSection, testProcess)
 
 TEST_F(TestAtomSection, testProcessAtomLine)
 {
-    molsys::Molecule molecule(1);
+    molsys::Molecule molecule{MolType{1}};
 
     auto line = std::vector<std::string>(21);
     line[0]   = "Ar";

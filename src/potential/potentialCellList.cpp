@@ -71,7 +71,7 @@ void PotentialCellList::calculateForces(
     auto _ = scopedTimer(TimerId::Potential, "InterNonBonded");
 
     const auto box            = simBox.getBoxPtr();
-    const auto waterTypeValue = simBox.getWaterType().value_or(size_t{0});
+    const auto waterTypeValue = simBox.getWaterType().value_or(MolType{0});
     const auto isWaterInterModelSet =
         WaterModelSettings::isInterWaterModelSet();
 
