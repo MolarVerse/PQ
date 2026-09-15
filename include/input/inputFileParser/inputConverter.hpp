@@ -28,6 +28,7 @@
 #include <optional>
 #include <string>
 #include <string_view>
+#include <unordered_set>
 
 #include "mstd/type_traits/enum_traits.hpp"
 #include "stringUtilities.hpp"
@@ -101,9 +102,11 @@ namespace input
         {
             const auto rawTransformed = utilities::toLowerCopy(raw);
 
-            if (rawTransformed == "true" || rawTransformed == "on")
+            if (std::unordered_set<std::string_view>{"true", "on", "yes"}
+                    .contains(rawTransformed))
                 return true;
-            if (rawTransformed == "false" || rawTransformed == "off")
+            if (std::unordered_set<std::string_view>{"false", "off", "no"}
+                    .contains(rawTransformed))
                 return false;
 
             return std::nullopt;
