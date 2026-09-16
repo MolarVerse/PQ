@@ -31,6 +31,7 @@
 #include <vector>        // for vector
 
 #include "defaults.hpp"
+#include "mstd/enum.hpp"
 
 namespace settings
 {
@@ -62,31 +63,22 @@ namespace settings
         FULL_ANISOTROPIC
     };
 
-    enum class FixedAxis : std::uint8_t
-    {
-        NONE = 0U,
-        X    = 1U << 0U,
-        Y    = 1U << 1U,
-        Z    = 1U << 2U,
-        XY   = 0B011,
-        XZ   = 0B101,
-        YZ   = 0B110,
-        ALL  = 0B111
-    };
+    // clang-format off
+// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
+#define FIXED_AXIS_LIST(axis) \
+    axis(NONE, 0U)    \
+    axis(X, 1U << 0U) \
+    axis(Y, 1U << 1U) \
+    axis(Z, 1U << 2U) \
+    axis(XY, 0B011)   \
+    axis(XZ, 0B101)   \
+    axis(YZ, 0B110)   \
+    axis(ALL, 0B111)
+    // clang-format on
 
-    [[nodiscard]] constexpr FixedAxis operator|(FixedAxis lhs, FixedAxis rhs)
-    {
-        return static_cast<FixedAxis>(
-            static_cast<std::uint8_t>(lhs) | static_cast<std::uint8_t>(rhs)
-        );
-    }
+    MSTD_ENUM_BITFLAG(FixedAxis, std::uint8_t, FIXED_AXIS_LIST);
 
-    [[nodiscard]] constexpr FixedAxis operator&(FixedAxis lhs, FixedAxis rhs)
-    {
-        return static_cast<FixedAxis>(
-            static_cast<std::uint8_t>(lhs) & static_cast<std::uint8_t>(rhs)
-        );
-    }
+#undef FIXED_AXIS_LIST
 
     [[nodiscard]] constexpr FixedAxis operator~(FixedAxis axis)
     {
@@ -94,12 +86,6 @@ namespace settings
             static_cast<std::uint8_t>(axis) ^
             static_cast<std::uint8_t>(FixedAxis::ALL)
         );
-    }
-
-    constexpr FixedAxis &operator|=(FixedAxis &lhs, FixedAxis rhs)
-    {
-        lhs = lhs | rhs;
-        return lhs;
     }
 
     constexpr FixedAxis &operator&=(FixedAxis &lhs, FixedAxis rhs)
@@ -111,7 +97,7 @@ namespace settings
     [[nodiscard]] constexpr bool isAxisFixed(
         FixedAxis fixedAxis,
         size_t    axisIndex
-    ) noexcept
+    )
     {
         return (static_cast<std::uint8_t>(fixedAxis) & (1U << axisIndex)) != 0U;
     }
