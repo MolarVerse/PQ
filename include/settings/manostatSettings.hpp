@@ -24,7 +24,6 @@
 
 #define _MANOSTAT_SETTINGS_HPP_
 
-#include <bit>
 #include <cstdint>
 #include <string>        // for string
 #include <string_view>   // for string_view
@@ -100,13 +99,6 @@ namespace settings
     )
     {
         return (static_cast<std::uint8_t>(fixedAxis) & (1U << axisIndex)) != 0U;
-    }
-
-    [[nodiscard]] constexpr size_t countFixedAxes(FixedAxis fixedAxis)
-    {
-        return static_cast<size_t>(
-            std::popcount(static_cast<std::uint8_t>(fixedAxis))
-        );
     }
 
     [[nodiscard]] std::string string(const ManostatType &manostatType);

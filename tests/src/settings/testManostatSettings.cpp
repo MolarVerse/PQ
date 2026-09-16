@@ -264,15 +264,6 @@ TEST(ManostatSettingsTest, FixedAxisHelperFunctions)
     EXPECT_FALSE(settings::isAxisFixed(NONE, 0));
     EXPECT_FALSE(settings::isAxisFixed(NONE, 1));
     EXPECT_FALSE(settings::isAxisFixed(NONE, 2));
-
-    EXPECT_EQ(settings::countFixedAxes(NONE), 0U);
-    EXPECT_EQ(settings::countFixedAxes(X), 1U);
-    EXPECT_EQ(settings::countFixedAxes(Y), 1U);
-    EXPECT_EQ(settings::countFixedAxes(Z), 1U);
-    EXPECT_EQ(settings::countFixedAxes(XY), 2U);
-    EXPECT_EQ(settings::countFixedAxes(XZ), 2U);
-    EXPECT_EQ(settings::countFixedAxes(YZ), 2U);
-    EXPECT_EQ(settings::countFixedAxes(ALL), 3U);
 }
 
 TEST(ManostatSettingsTest, FixedAxisDefaultBehavior)

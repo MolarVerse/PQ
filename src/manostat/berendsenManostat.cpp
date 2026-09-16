@@ -135,16 +135,20 @@ tensor3D BerendsenManostat::calculateMu() const
         return diagonalMatrix(Vec3D{1.0, 1.0, 1.0});
 
     const auto preFactor = _compressibility * _dt / _tau;
-    const auto numFixed  = countFixedAxes(_fixedAxis);
-    const auto numFree   = 3 - numFixed;
     const auto p_xyz     = diagonal(_pressureTensor);
 
-    double p_avg = 0.0;
-    for (size_t i = 0; i < 3; ++i)
+    size_t numFree = 0;
+    double p_avg   = 0.0;
+
+    for (size_t axis = 0; axis < 3; ++axis)
     {
-        if (!isAxisFixed(_fixedAxis, i))
-            p_avg += p_xyz[i];
+        if (!isAxisFixed(_fixedAxis, axis))
+        {
+            p_avg += p_xyz[axis];
+            ++numFree;
+        }
     }
+
     p_avg /= static_cast<double>(numFree);
 
     const auto deltaP = _targetPressure - p_avg;

@@ -190,8 +190,6 @@ tensor3D StochasticRescalingManostat::calculateMu(const double volume)
     if (_fixedAxis == FixedAxis::ALL)
         return diagonalMatrix(Vec3D{1.0, 1.0, 1.0});
 
-    const auto numFixed = countFixedAxes(_fixedAxis);
-    const auto numFree  = 3 - numFixed;
     const auto compress = _compressibility * _dt / _tau;
     const auto kb       = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
 
@@ -214,12 +212,18 @@ tensor3D StochasticRescalingManostat::calculateMu(const double volume)
 
     const auto p_xyz = diagonal(_pressureTensor);
 
-    double p_avg = 0.0;
-    for (size_t i = 0; i < 3; ++i)
+    size_t numFree = 0;
+    double p_avg   = 0.0;
+
+    for (size_t axis = 0; axis < 3; ++axis)
     {
-        if (!isAxisFixed(_fixedAxis, i))
-            p_avg += p_xyz[i];
+        if (!isAxisFixed(_fixedAxis, axis))
+        {
+            p_avg += p_xyz[axis];
+            ++numFree;
+        }
     }
+
     p_avg /= static_cast<double>(numFree);
 
     const auto deltaP    = _targetPressure - p_avg;

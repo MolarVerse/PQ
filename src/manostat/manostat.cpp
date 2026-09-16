@@ -68,17 +68,22 @@ void Manostat::calculatePressure(const SimulationBox& box, PhysicalData& data)
     data.setPressure(_pressure);
 
     const auto fixedAxis = ManostatSettings::getFixedAxis();
-    const auto numFixed  = countFixedAxes(fixedAxis);
-    if (numFixed > 0 && numFixed < 3)
+    const auto p_xyz     = diagonal(_pressureTensor);
+
+    size_t numFree = 0;
+    double p_avg   = 0.0;
+
+    for (size_t axis = 0; axis < 3; ++axis)
     {
-        const auto p_xyz   = diagonal(_pressureTensor);
-        const auto numFree = 3 - numFixed;
-        double     p_avg   = 0.0;
-        for (size_t i = 0; i < 3; ++i)
+        if (!isAxisFixed(fixedAxis, axis))
         {
-            if (!isAxisFixed(fixedAxis, i))
-                p_avg += p_xyz[i];
+            p_avg += p_xyz[axis];
+            ++numFree;
         }
+    }
+
+    if (numFree > 0 && numFree < 3)
+    {
         p_avg /= static_cast<double>(numFree);
         data.setCoupledPressure(p_avg);
     }
