@@ -43,9 +43,9 @@ class TestMolecule : public ::testing::Test
         auto _atom2 = std::make_shared<molsys::Atom>();
         auto _atom3 = std::make_shared<molsys::Atom>();
 
-        _atom1->setExternalAtomType(1);
-        _atom2->setExternalAtomType(2);
-        _atom3->setExternalAtomType(2);
+        _atom1->setExternalAtomType(ExtAtomType{1});
+        _atom2->setExternalAtomType(ExtAtomType{2});
+        _atom3->setExternalAtomType(ExtAtomType{2});
 
         _atom1->setPosition(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
         _atom2->setPosition(linearAlgebra::Vec3D(1.0, 0.0, 0.0));

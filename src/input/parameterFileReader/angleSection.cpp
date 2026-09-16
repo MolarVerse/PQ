@@ -78,7 +78,13 @@ void AngleSection::processSection(
     auto equilibriumAngle = stod(lineElements[1]) * DEG_TO_RAD;
     auto forceConstant    = stod(lineElements[2]);
 
-    auto angleType = AngleType(id, equilibriumAngle, forceConstant);
+    auto angleType = AngleType(
+        id,
+        AngleParams{
+            .equilibrium   = equilibriumAngle,
+            .forceConstant = forceConstant
+        }
+    );
 
     engine.getForceField()->addAngleType(angleType);
 }

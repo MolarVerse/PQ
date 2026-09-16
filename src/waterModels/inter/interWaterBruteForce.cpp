@@ -131,7 +131,7 @@ void InterWaterStrategyBruteForce::calculateCoreToOuterForces(
 
     auto totalCoulombEnergy = 0.0;
 
-    const auto waterTypeValue = simBox.getWaterType().value_or(size_t{0});
+    const auto waterTypeValue = simBox.getWaterType().value_or(MolType{0});
 
     for (auto &water1 : simBox.getMoleculesInsideZone(CORE))
     {
@@ -204,7 +204,7 @@ void InterWaterStrategyBruteForce::calculateLayerToOuterForces(
     auto totalCoulombEnergy    = 0.0;
     auto totalNonCoulombEnergy = 0.0;
 
-    const auto waterTypeValue = simBox.getWaterType().value_or(size_t{0});
+    const auto waterTypeValue = simBox.getWaterType().value_or(MolType{0});
 
     for (auto &water1 : simBox.getInactiveMolecules())
     {
@@ -307,7 +307,7 @@ void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
     auto totalCoulombEnergy    = 0.0;
     auto totalNonCoulombEnergy = 0.0;
 
-    const auto waterTypeValue = simBox.getWaterType().value_or(size_t{0});
+    const auto waterTypeValue = simBox.getWaterType().value_or(MolType{0});
 
     for (auto &water1 : simBox.getMoleculesInsideZone(SMOOTHING))
     {

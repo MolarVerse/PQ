@@ -27,6 +27,7 @@
 #include <vector>
 
 #include "dihedral.hpp"
+#include "strongTypes.hpp"
 
 namespace physicalData
 {
@@ -59,9 +60,7 @@ namespace forceField
         DihedralId _type;
         bool       _isLinker = false;
 
-        double _forceConstant = 0.0;
-        double _periodicity   = 0.0;
-        double _phaseShift    = 0.0;
+        DihedralParams _params;
 
        public:
         DihedralForceField(
@@ -83,9 +82,7 @@ namespace forceField
          ***************************/
 
         void setIsLinker(const bool isLinker);
-        void setForceConstant(const double forceConstant);
-        void setPeriodicity(const double periodicity);
-        void setPhaseShift(const double phaseShift);
+        void setParams(const DihedralParams &params);
 
         /***************************
          * standard getter methods *
@@ -93,10 +90,8 @@ namespace forceField
 
         [[nodiscard]] bool isLinker() const;
 
-        [[nodiscard]] DihedralId getType() const;
-        [[nodiscard]] double     getForceConstant() const;
-        [[nodiscard]] double     getPeriodicity() const;
-        [[nodiscard]] double     getPhaseShift() const;
+        [[nodiscard]] DihedralId            getType() const;
+        [[nodiscard]] const DihedralParams &getParams() const;
     };
 
 }   // namespace forceField

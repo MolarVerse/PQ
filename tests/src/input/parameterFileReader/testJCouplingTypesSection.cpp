@@ -50,11 +50,11 @@ TEST_F(TestParameterFileSection, jCouplingSectionProcessSevenElements)
     const auto &types = _engine->getForceField()->getJCouplTypes();
     ASSERT_EQ(types.size(), 1U);
     EXPECT_EQ(types[0].getId(), 7U);
-    EXPECT_DOUBLE_EQ(types[0].getJ0(), 1.0);
-    EXPECT_DOUBLE_EQ(types[0].getForceConstant(), 2.0);
-    EXPECT_DOUBLE_EQ(types[0].getA(), 3.0);
-    EXPECT_DOUBLE_EQ(types[0].getB(), 4.0);
-    EXPECT_DOUBLE_EQ(types[0].getC(), 5.0);
+    EXPECT_DOUBLE_EQ(types[0].getParams().J0, 1.0);
+    EXPECT_DOUBLE_EQ(types[0].getParams().forceConstant, 2.0);
+    EXPECT_DOUBLE_EQ(types[0].getParams().a, 3.0);
+    EXPECT_DOUBLE_EQ(types[0].getParams().b, 4.0);
+    EXPECT_DOUBLE_EQ(types[0].getParams().c, 5.0);
 }
 
 TEST_F(TestParameterFileSection, jCouplingSectionAcceptsZeroSymmetry)

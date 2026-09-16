@@ -248,16 +248,16 @@ std::string Atom::getAtomTypeName() const { return _atomTypeName; }
 /**
  * @brief return the external atom type
  *
- * @return size_t
+ * @return ExtAtomType
  */
-size_t Atom::getExternalAtomType() const { return _externalAtomType; }
+ExtAtomType Atom::getExternalAtomType() const { return _externalAtomType; }
 
 /**
  * @brief return the atom type (internal)
  *
- * @return size_t
+ * @return AtomType
  */
-size_t Atom::getAtomType() const { return _atomType; }
+AtomType Atom::getAtomType() const { return _atomType; }
 
 /**
  * @brief return the external global VDW type
@@ -413,14 +413,14 @@ void Atom::setQMCharge(const double charge) { _qmCharge = charge; }
  *
  * @param atomType
  */
-void Atom::setAtomType(const size_t atomType) { _atomType = atomType; }
+void Atom::setAtomType(AtomType atomType) { _atomType = atomType; }
 
 /**
  * @brief set the external atom type
  *
  * @param externalAtomType
  */
-void Atom::setExternalAtomType(const size_t externalAtomType)
+void Atom::setExternalAtomType(ExtAtomType externalAtomType)
 {
     _externalAtomType = externalAtomType;
 }

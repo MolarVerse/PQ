@@ -156,8 +156,8 @@ std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(
         }
         coulombEnergy = energy;
 
-        const size_t atomType1 = _molecule->getAtomType(atomIdx1);
-        const size_t atomType2 = _molecule->getAtomType(atomIdx2);
+        const auto atomType1 = _molecule->getAtomType(atomIdx1);
+        const auto atomType2 = _molecule->getAtomType(atomIdx2);
 
         // clang-format off
         const auto globalVdwType1 = _molecule->getInternalGlobalVDWType(atomIdx1);
@@ -166,7 +166,7 @@ std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(
 
         const auto moltype = _molecule->getMoltype();
 
-        const auto combinedIdx = {moltype, moltype, atomType1, atomType2};
+        const std::tuple combinedIdx{moltype, moltype, atomType1, atomType2};
 
         const auto nonCoulombicPair = nonCoulPot->getNonCoulPair(
             combinedIdx,

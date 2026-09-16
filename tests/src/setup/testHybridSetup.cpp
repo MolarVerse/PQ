@@ -44,10 +44,10 @@ using namespace input;
 
 namespace
 {
-    void addSingleAtomMolecule(engine::Engine &engine, const size_t molType)
+    void addSingleAtomMolecule(engine::Engine &engine, MolType molType)
     {
         auto atom = std::make_shared<molsys::Atom>();
-        atom->setPosition({static_cast<double>(molType), 0.0, 0.0});
+        atom->setPosition({static_cast<double>(molType.get()), 0.0, 0.0});
 
         molsys::Molecule molecule;
         molecule.setMoltype(molType);
@@ -174,7 +174,7 @@ TEST_F(TestSetup, setupThrowsNotImplemented)
 TEST_F(TestSetup, setupHybridConfiguresDefaultCenter)
 {
     configureValidHybridSettings(*_engine);
-    addSingleAtomMolecule(*_engine, 1);
+    addSingleAtomMolecule(*_engine, MolType{1});
 
     EXPECT_NO_THROW(setupHybrid(*_engine));
     EXPECT_EQ(
@@ -192,9 +192,9 @@ TEST_F(TestSetup, setupHybridConfiguresExplicitLists)
     HybridSettings::setForcedLayerList({1});
     HybridSettings::setForcedOuterList({2});
     HybridSettings::setUseQMCharges(false);
-    addSingleAtomMolecule(*_engine, 1);
-    addSingleAtomMolecule(*_engine, 2);
-    addSingleAtomMolecule(*_engine, 3);
+    addSingleAtomMolecule(*_engine, MolType{1});
+    addSingleAtomMolecule(*_engine, MolType{2});
+    addSingleAtomMolecule(*_engine, MolType{3});
 
     EXPECT_NO_THROW(HybridSetup{*_engine}.setup());
     EXPECT_TRUE(_engine->getSimulationBox().getMolecule(0).isForcedCore());
@@ -259,7 +259,9 @@ TEST_F(TestSetup, hybridSetupValidatesZoneRadii)
 
 TEST_F(TestSetup, hybridSetupRejectsMmChargesForMoltypeZero)
 {
-    _engine->getSimulationBox().addMoleculeType(molsys::MoleculeType(0));
+    _engine->getSimulationBox().addMoleculeType(
+        molsys::MoleculeType(MolType{0})
+    );
     HybridSettings::setUseQMCharges(false);
     HybridSetup setup{*_engine};
 

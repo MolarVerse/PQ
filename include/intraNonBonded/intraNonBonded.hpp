@@ -73,7 +73,7 @@ namespace intraNonBonded
         void fillIntraNonBondedMaps(molsys::SimulationBox &);
 
         [[nodiscard]] IntraNonBondedContainer *findIntraNonBondedContainerByMolType(
-            const size_t
+            MolType molType
         );
 
         /*************************

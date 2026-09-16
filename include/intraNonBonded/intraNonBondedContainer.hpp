@@ -24,8 +24,9 @@
 
 #define _INTRA_NON_BONDED_CONTAINER_HPP_
 
-#include <cstddef>   // for size_t
-#include <vector>    // for vector
+#include <vector>   // for vector
+
+#include "strongTypes.hpp"
 
 namespace intraNonBonded
 {
@@ -37,12 +38,12 @@ namespace intraNonBonded
     class IntraNonBondedContainer
     {
        private:
-        size_t                        _molType;
+        MolType                       _molType;
         std::vector<std::vector<int>> _atomIndices;
 
        public:
         IntraNonBondedContainer(
-            const size_t                         molType,
+            const MolType                        molType,
             const std::vector<std::vector<int>> &atomIndices
         );
 
@@ -50,7 +51,7 @@ namespace intraNonBonded
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] size_t                        getMolType() const;
+        [[nodiscard]] MolType                       getMolType() const;
         [[nodiscard]] std::vector<std::vector<int>> getAtomIndices() const;
     };
 

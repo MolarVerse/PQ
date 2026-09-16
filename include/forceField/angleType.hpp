@@ -30,7 +30,6 @@ namespace forceField
 {
     class AngleType;   // forward declaration
 
-    bool operator==(const AngleType &self, const AngleType &other);
     /**
      * @class AngleType
      *
@@ -43,23 +42,20 @@ namespace forceField
     class AngleType
     {
        private:
-        AngleId _id;
-
-        double _equilibriumAngle;
-        double _forceConstant;
+        AngleId     _id;
+        AngleParams _params;
 
        public:
-        AngleType(const AngleId, const double, const double);
+        AngleType(const AngleId, const AngleParams &params);
 
-        friend bool operator==(const AngleType &, const AngleType &);
+        friend bool operator==(const AngleType &self, const AngleType &other);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] AngleId getId() const;
-        [[nodiscard]] double  getEquilibriumAngle() const;
-        [[nodiscard]] double  getForceConstant() const;
+        [[nodiscard]] AngleId            getId() const;
+        [[nodiscard]] const AngleParams &getParams() const;
     };
 
 }   // namespace forceField

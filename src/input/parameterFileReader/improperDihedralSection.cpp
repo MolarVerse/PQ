@@ -95,7 +95,14 @@ void ImproperDihedralSection::processSection(
         );
     }
 
-    auto improperType = DihedralType(id, forceConstant, periodicity, phase);
+    auto improperType = DihedralType(
+        id,
+        DihedralParams{
+            .forceConstant = forceConstant,
+            .frequency     = periodicity,
+            .phaseShift    = phase
+        }
+    );
 
     engine.getForceField()->addImproperDihedralType(improperType);
 }
