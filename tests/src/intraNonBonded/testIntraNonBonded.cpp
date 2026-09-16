@@ -30,7 +30,7 @@
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
 #include "exceptions.hpp"                // for IntraNonBondedException
 #include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
-#include "gtest/gtest.h"                 // for Message, TestPartResult
+                                         // for Message, TestPartResult
 #include "intraNonBonded.hpp"            // for IntraNonBonded
 #include "intraNonBondedContainer.hpp"   // for IntraNonBondedContainer
 #include "intraNonBondedMap.hpp"         // for IntraNonBondedMap

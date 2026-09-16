@@ -35,9 +35,9 @@ using namespace pot;
  * @param params
  */
 MorsePair::MorsePair(
-    const ExtVdwType   vanDerWaalsType1,
-    const ExtVdwType   vanDerWaalsType2,
-    const double       cutOff,
+    ExtVdwType         vanDerWaalsType1,
+    ExtVdwType         vanDerWaalsType2,
+    double             cutOff,
     const MorseParams &params
 )
     : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff),
@@ -49,9 +49,7 @@ MorsePair::MorsePair(
  * @brief Construct a new Morse Pair:: Morse Pair object
  *
  * @param cutOff
- * @param dissociationEnergy
- * @param wellWidth
- * @param equilibriumDistance
+ * @param params
  */
 MorsePair::MorsePair(const double cutOff, const MorseParams &params)
     : NonCoulombPair(cutOff), _params(params)
@@ -67,9 +65,9 @@ MorsePair::MorsePair(const double cutOff, const MorseParams &params)
  * @param params
  */
 MorsePair::MorsePair(
-    const double       cutOff,
-    const double       energyCutoff,
-    const double       forceCutoff,
+    double             cutOff,
+    double             energyCutoff,
+    double             forceCutoff,
     const MorseParams &params
 )
     : NonCoulombPair(cutOff, energyCutoff, forceCutoff), _params(params)
@@ -99,7 +97,7 @@ bool MorsePair::operator==(const MorsePair &other) const
  * @param distance
  * @return std::pair<double, double>
  */
-std::pair<double, double> MorsePair::calculate(const double distance) const
+std::pair<double, double> MorsePair::calculate(double distance) const
 {
     const auto deltaEquilibrium = distance - _params.equilibriumDistance;
     const auto expTerm = std::exp(-_params.wellWidth * deltaEquilibrium);

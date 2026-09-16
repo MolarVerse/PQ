@@ -73,7 +73,7 @@ void input::guffdat::readGuffDat(engine::Engine &engine)
     if (!isNeeded(engine))
         return;
 
-    engine.getStdoutOutput().writeRead(
+    out::StdoutOutput::writeRead(
         "Guffdat File",
         FileSettings::getGuffDatFileName()
     );
@@ -130,10 +130,10 @@ GuffDatReader::GuffDatReader(engine::Engine &engine) : _engine(engine)
  */
 void GuffDatReader::read()
 {
-    std::ifstream fp(_fileName);
+    std::ifstream file(_fileName);
     std::string   line;
 
-    while (getline(fp, line))
+    while (getline(file, line))
     {
         line = removeComments(line, "#");
 
@@ -333,7 +333,7 @@ void GuffDatReader::addNonCoulombPair(
     AtomType                   atomType1,
     AtomType                   atomType2,
     const std::vector<double> &coefficients,
-    const double               rncCutOff
+    double                     rncCutOff
 )
 {
     switch (PotentialSettings::getNonCoulombType())
@@ -423,7 +423,7 @@ void GuffDatReader::addLennardJonesPair(
     AtomType                   atomType1,
     AtomType                   atomType2,
     const std::vector<double> &coefficients,
-    const double               rncCutOff
+    double                     rncCutOff
 )
 {
     auto &guffNonCoulomb = dynamic_cast<GuffNonCoulomb &>(
@@ -464,7 +464,7 @@ void GuffDatReader::addBuckinghamPair(
     AtomType                   atomType1,
     AtomType                   atomType2,
     const std::vector<double> &coefficients,
-    const double               rncCutOff
+    double                     rncCutOff
 )
 {
     auto &guffNonCoulomb = dynamic_cast<GuffNonCoulomb &>(
@@ -508,7 +508,7 @@ void GuffDatReader::addMorsePair(
     MolType                    molType2,
     AtomType                   atomType1,
     AtomType                   atomType2,
-    const std::vector<double> &coeffs,
+    const std::vector<double> &coefficients,
     const double               rncCutOff
 )
 {
@@ -517,9 +517,9 @@ void GuffDatReader::addMorsePair(
     );
 
     const auto params = MorseParams{
-        .dissociationEnergy  = coeffs[0],
-        .wellWidth           = coeffs[1],
-        .equilibriumDistance = coeffs[2]
+        .dissociationEnergy  = coefficients[0],
+        .wellWidth           = coefficients[1],
+        .equilibriumDistance = coefficients[2]
     };
 
     const auto morsePair          = MorsePair(rncCutOff, params);
@@ -557,7 +557,7 @@ void GuffDatReader::addGuffPair(
     AtomType                                                   atomType1,
     AtomType                                                   atomType2,
     const std::array<double, defaults::NUM_GUFF_COEFFICIENTS> &coefficients,
-    const double                                               rncCutOff
+    double                                                     rncCutOff
 )
 {
     auto &guffNonCoulomb = dynamic_cast<GuffNonCoulomb &>(
@@ -844,15 +844,15 @@ void GuffDatReader::setFilename(const std::string_view &filename)
  * @param coefficient
  */
 void GuffDatReader::setGuffCoulombCoefficients(
-    const size_t molType1,
-    const size_t molType2,
+    MolType      molType1,
+    MolType      molType2,
     AtomType     atomType1,
     AtomType     atomType2,
     const double coefficient
 )
 {
-    _guffCoulombCoeffs[molType1][molType2][atomType1.get()][atomType2.get()] =
-        coefficient;
+    _guffCoulombCoeffs[molType1.get()][molType2.get()][atomType1.get()]
+                      [atomType2.get()] = coefficient;
 }
 
 /**
@@ -865,15 +865,15 @@ void GuffDatReader::setGuffCoulombCoefficients(
  * @param isSet
  */
 void GuffDatReader::setIsGuffPairSet(
-    const size_t molType1,
-    const size_t molType2,
-    AtomType     atomType1,
-    AtomType     atomType2,
-    const bool   isSet
+    MolType    molType1,
+    MolType    molType2,
+    AtomType   atomType1,
+    AtomType   atomType2,
+    const bool isSet
 )
 {
-    _isGuffPairSet[molType1][molType2][atomType1.get()][atomType2.get()] =
-        isSet;
+    _isGuffPairSet[molType1.get()][molType2.get()][atomType1.get()]
+                  [atomType2.get()] = isSet;
 }
 
 /********************

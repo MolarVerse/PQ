@@ -5,12 +5,12 @@ add_library(references
 target_include_directories(references
     PUBLIC
     ${PROJECT_SOURCE_DIR}/include/output/references
-    ${PROJECT_SOURCE_DIR}/include/config
 )
 
 target_link_libraries(references
     PUBLIC
     settings
+    config_headers
 )
 
 target_compile_definitions(references

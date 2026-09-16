@@ -49,7 +49,7 @@ namespace forceField
         BondParams _params;
 
        public:
-        BondType(const BondId, const BondParams &);
+        BondType(BondId, const BondParams &);
 
         friend bool operator==(const BondType &, const BondType &);
 

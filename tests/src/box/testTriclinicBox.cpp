@@ -20,11 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#include <gtest/gtest.h>
+
 #include <array>
 
 #include "constants/conversionFactors.hpp"   // for _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_
 #include "defaults.hpp"                      // for VACUUM_BOX_DIMENSION
-#include "gtest/gtest.h"                     // for Message, TestPartResult
 #include "manostatSettings.hpp"              // for ManostatSettings
 #include "matrixNear.hpp"                    // for EXPECT_MATRIX_NEAR
 #include "triclinicBox.hpp"                  // for TriclinicBox
@@ -95,9 +96,9 @@ TEST(TestTriclinicBox, setBoxAngles)
             {0.0,
              0.0,
              ::sqrt(
-                 1 - cos(alpha) * cos(alpha) - cos(beta) * cos(beta) -
-                 cos(gamma) * cos(gamma) +
-                 2 * cos(alpha) * cos(beta) * cos(gamma)
+                 1 - (cos(alpha) * cos(alpha)) - (cos(beta) * cos(beta)) -
+                 (cos(gamma) * cos(gamma)) +
+                 (2 * cos(alpha) * cos(beta) * cos(gamma))
              ) / sin(gamma)}
         ),
         1e-15
@@ -123,9 +124,9 @@ TEST(TestTriclinicBox, calculateVolume)
     const auto volume =
         1.0 * 2.0 * 3.0 *
         ::sqrt(
-            1 - ::cos(alpha) * ::cos(alpha) - ::cos(beta) * ::cos(beta) -
-            ::cos(gamma) * ::cos(gamma) +
-            2 * ::cos(alpha) * ::cos(beta) * ::cos(gamma)
+            1 - (::cos(alpha) * ::cos(alpha)) - (::cos(beta) * ::cos(beta)) -
+            (::cos(gamma) * ::cos(gamma)) +
+            (2 * ::cos(alpha) * ::cos(beta) * ::cos(gamma))
         );
 
     EXPECT_DOUBLE_EQ(box.calculateVolume(), volume);

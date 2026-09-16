@@ -311,9 +311,9 @@ namespace pot
      * @param p
      */
     template <typename T>
-    void Potential::makeCoulombPotential(T p)
+    void Potential::makeCoulombPotential(T potential)
     {
-        _coulombPotential = std::make_shared<T>(p);
+        _coulombPotential = std::make_shared<T>(potential);
     }
 
     /**

@@ -29,7 +29,7 @@
 #include "berendsenManostat.hpp"                     // for BerendsenManostat
 #include "constants/internalConversionFactors.hpp"   // for _PRESSURE_FACTOR_
 #include "exceptions.hpp"                            // for ManostatException
-#include "gtest/gtest.h"           // for Message, TestPartResult
+// for Message, TestPartResult
 #include "manostatSettings.hpp"    // for ManostatType, Isotropy
 #include "mathUtilities.hpp"       // for compare
 #include "molecule.hpp"            // for Molecule
@@ -197,7 +197,7 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
 
     const auto scaleFactors = linearAlgebra::Vec3D(
         ::pow(
-            1.0 - 4.5 * 0.5 / 0.1 * (1.0 - 3.0 * constants::PRESSURE_FACTOR),
+            1.0 - (4.5 * 0.5 / 0.1 * (1.0 - 3.0 * constants::PRESSURE_FACTOR)),
             1.0 / 3.0
         )
     );
@@ -423,7 +423,7 @@ TEST_F(TestManostat, testRotateMu)
         {7.0, 8.0, 9.0},
     });
 
-    _manostat->rotateMu(mu);
+    manostat::Manostat::rotateMu(mu);
 
     EXPECT_EQ(
         mu,
@@ -439,46 +439,46 @@ TEST_F(TestManostat, testRotateMu)
 
 TEST_F(TestManostat, berendsenTauAndCompressibilityGetters)
 {
-    auto bm = manostat::BerendsenManostat(1.0, 0.1, 4.5);
-    EXPECT_DOUBLE_EQ(bm.getTau(), 0.1);
-    EXPECT_DOUBLE_EQ(bm.getCompressibility(), 4.5);
+    auto manostat = manostat::BerendsenManostat(1.0, 0.1, 4.5);
+    EXPECT_DOUBLE_EQ(manostat.getTau(), 0.1);
+    EXPECT_DOUBLE_EQ(manostat.getCompressibility(), 4.5);
 }
 
 TEST_F(TestManostat, berendsenManostatType)
 {
-    auto bm = manostat::BerendsenManostat(1.0, 0.1, 4.5);
-    EXPECT_EQ(bm.getManostatType(), settings::ManostatType::BERENDSEN);
+    auto manostat = manostat::BerendsenManostat(1.0, 0.1, 4.5);
+    EXPECT_EQ(manostat.getManostatType(), settings::ManostatType::BERENDSEN);
 }
 
 TEST_F(TestManostat, berendsenIsotropy)
 {
-    auto bm = manostat::BerendsenManostat(1.0, 0.1, 4.5);
-    EXPECT_EQ(bm.getIsotropy(), settings::Isotropy::ISOTROPIC);
+    auto manostat = manostat::BerendsenManostat(1.0, 0.1, 4.5);
+    EXPECT_EQ(manostat.getIsotropy(), settings::Isotropy::ISOTROPIC);
 }
 
 TEST_F(TestManostat, semiIsotropicBerendsenIsotropy)
 {
-    auto bm = manostat::SemiIsotropicBerendsenManostat(
+    auto manostat = manostat::SemiIsotropicBerendsenManostat(
         1.0,
         0.1,
         4.5,
         2U,
         std::vector<size_t>{0U, 1U}
     );
-    EXPECT_EQ(bm.getIsotropy(), settings::Isotropy::SEMI_ISOTROPIC);
-    EXPECT_EQ(bm.getManostatType(), settings::ManostatType::BERENDSEN);
+    EXPECT_EQ(manostat.getIsotropy(), settings::Isotropy::SEMI_ISOTROPIC);
+    EXPECT_EQ(manostat.getManostatType(), settings::ManostatType::BERENDSEN);
 }
 
 TEST_F(TestManostat, anisotropicBerendsenIsotropy)
 {
-    auto bm = manostat::AnisotropicBerendsenManostat(1.0, 0.1, 4.5);
-    EXPECT_EQ(bm.getIsotropy(), settings::Isotropy::ANISOTROPIC);
-    EXPECT_EQ(bm.getManostatType(), settings::ManostatType::BERENDSEN);
+    auto manostat = manostat::AnisotropicBerendsenManostat(1.0, 0.1, 4.5);
+    EXPECT_EQ(manostat.getIsotropy(), settings::Isotropy::ANISOTROPIC);
+    EXPECT_EQ(manostat.getManostatType(), settings::ManostatType::BERENDSEN);
 }
 
 TEST_F(TestManostat, fullAnisotropicBerendsenIsotropy)
 {
-    auto bm = manostat::FullAnisotropicBerendsenManostat(1.0, 0.1, 4.5);
-    EXPECT_EQ(bm.getIsotropy(), settings::Isotropy::FULL_ANISOTROPIC);
-    EXPECT_EQ(bm.getManostatType(), settings::ManostatType::BERENDSEN);
+    auto manostat = manostat::FullAnisotropicBerendsenManostat(1.0, 0.1, 4.5);
+    EXPECT_EQ(manostat.getIsotropy(), settings::Isotropy::FULL_ANISOTROPIC);
+    EXPECT_EQ(manostat.getManostatType(), settings::ManostatType::BERENDSEN);
 }

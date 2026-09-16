@@ -48,7 +48,7 @@ namespace forceField
         AngleParams _params;
 
        public:
-        AngleType(const AngleId, const AngleParams &params);
+        AngleType(AngleId, const AngleParams &params);
 
         friend bool operator==(const AngleType &, const AngleType &);
 

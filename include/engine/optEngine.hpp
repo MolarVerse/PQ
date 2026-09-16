@@ -61,11 +61,12 @@ namespace engine
          * standard setter methods *
          ***************************/
 
-        void setOptimizer(const std::shared_ptr<opt::Optimizer>);
+        void setOptimizer(const std::shared_ptr<opt::Optimizer> &optimizer);
         void setLearningRateStrategy(
             const std::shared_ptr<opt::LearningRateStrategy>
+                &learningRateStrategy
         );
-        void setEvaluator(const std::shared_ptr<opt::Evaluator>);
+        void setEvaluator(const std::shared_ptr<opt::Evaluator> &evaluator);
 
         /***************************
          * standard getter methods *

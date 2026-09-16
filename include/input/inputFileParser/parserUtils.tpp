@@ -62,6 +62,23 @@ namespace input
         return [obj, method](Args... args) -> Ret
         { return (obj->*method)(args...); };
     }
+
+    /**
+     * @brief bindMember is a utility function that binds a free function to an
+     * object, allowing it to be called as a regular function.
+     *
+     * @tparam T
+     * @tparam Ret
+     * @tparam Args
+     * @param func
+     * @param obj
+     * @return auto
+     */
+    template <typename T, typename Ret, typename... Args>
+    auto bindMember(Ret (*func)(Args...), T * /*unused*/)
+    {
+        return [func](Args... args) -> Ret { return func(args...); };
+    }
 }   // namespace input
 
 #endif   // _PARSER_UTILS_TPP_

@@ -32,10 +32,7 @@ using namespace exc;
  * @param argc
  * @param argv
  */
-CommandLineArgs::CommandLineArgs(
-    const int                       argc,
-    const std::vector<std::string> &argv
-)
+CommandLineArgs::CommandLineArgs(int argc, const std::vector<std::string> &argv)
     : _argc(argc), _argv(argv)
 {
 }

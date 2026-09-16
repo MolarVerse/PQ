@@ -22,7 +22,7 @@
 
 #include <gtest/gtest.h>   // for Test, InitGoogleTest, RUN_ALL_TESTS, EXPECT_EQ
 
-#include "gtest/gtest.h"            // for Message, TestPartResult
+// for Message, TestPartResult
 #include "thermostatSettings.hpp"   // for ThermostatSettings, ThermostatType
 
 TEST(ThermostatSettingsTest, SetThermostatTypeTest)

@@ -22,6 +22,6 @@
 
 #include <gtest/gtest.h>   // for Test, EXPECT_EQ, TestInfo (pt...
 
-#include "gtest/gtest.h"   // for Message, TestPartResult
+// for Message, TestPartResult
 
 TEST(TestPotential, placeholder) { EXPECT_TRUE(true); }

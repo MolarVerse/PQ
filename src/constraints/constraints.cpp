@@ -96,7 +96,7 @@ void Constraints::applyShake(SimulationBox &simulationBox)
  * @throws ShakeException if shake algorithm does not
  * converge
  */
-void Constraints::_applyShake(SimulationBox &simBox)
+void Constraints::_applyShake(SimulationBox &simulationBox)
 {
     auto _ = scopedTimer(TimerId::Constraints, "Shake");
 
@@ -110,10 +110,10 @@ void Constraints::_applyShake(SimulationBox &simBox)
         convergedVector.clear();
 
         auto applyShakeSingleBond =
-            [&simBox, &convergedVector, this](auto &bondConst)
+            [&simulationBox, &convergedVector, this](auto &bondConst)
         {
             convergedVector.push_back(
-                bondConst.applyShake(simBox, _shakeTolerance)
+                bondConst.applyShake(simulationBox, _shakeTolerance)
             );
         };
 
@@ -156,7 +156,7 @@ void Constraints::_applyMShake(SimulationBox &simulationBox)
  * @throws ShakeException if rattle algorithm does not
  * converge
  */
-void Constraints::applyRattle(SimulationBox &simBox)
+void Constraints::applyRattle(SimulationBox &simulationBox)
 {
     if (!_shakeActivated && !_mShakeActivated)
         return;
@@ -165,7 +165,7 @@ void Constraints::applyRattle(SimulationBox &simBox)
         _applyRattle();
 
     if (_mShakeActivated)
-        _applyMRattle(simBox);
+        _applyMRattle(simulationBox);
 }
 
 /**
@@ -237,7 +237,7 @@ void Constraints::_applyMRattle(SimulationBox &simulationBox)
 void Constraints::applyDistanceConstraints(
     const SimulationBox        &simulationBox,
     physicalData::PhysicalData &data,
-    const double                time
+    double                      time
 )
 {
     if (!_distanceConstActivated)
@@ -245,7 +245,7 @@ void Constraints::applyDistanceConstraints(
 
     auto effective_time = time - _startTime;
 
-    effective_time = effective_time > 0.0 ? effective_time : -1.0;
+    effective_time = effective_time > 0.0 ? effective_time : -1;
 
     std::ranges::for_each(
         _distanceConstraints,
@@ -493,7 +493,7 @@ double Constraints::getRattleTolerance() const { return _rattleTolerance; }
  *
  * @param shakeMaxIter
  */
-void Constraints::setShakeMaxIter(const size_t shakeMaxIter)
+void Constraints::setShakeMaxIter(size_t shakeMaxIter)
 {
     _shakeMaxIter = shakeMaxIter;
 }
@@ -503,7 +503,7 @@ void Constraints::setShakeMaxIter(const size_t shakeMaxIter)
  *
  * @param rattleMaxIter
  */
-void Constraints::setRattleMaxIter(const size_t rattleMaxIter)
+void Constraints::setRattleMaxIter(size_t rattleMaxIter)
 {
     _rattleMaxIter = rattleMaxIter;
 }
@@ -513,7 +513,7 @@ void Constraints::setRattleMaxIter(const size_t rattleMaxIter)
  *
  * @param shakeTolerance
  */
-void Constraints::setShakeTolerance(const double shakeTolerance)
+void Constraints::setShakeTolerance(double shakeTolerance)
 {
     _shakeTolerance = shakeTolerance;
 }
@@ -523,7 +523,7 @@ void Constraints::setShakeTolerance(const double shakeTolerance)
  *
  * @param rattleTolerance
  */
-void Constraints::setRattleTolerance(const double rattleTolerance)
+void Constraints::setRattleTolerance(double rattleTolerance)
 {
     _rattleTolerance = rattleTolerance;
 }

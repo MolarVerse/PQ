@@ -33,7 +33,7 @@
 #include "engine.hpp"               // for Engine
 #include "forceFieldSettings.hpp"   // for ForceFieldSettings
 #include "forceFieldSetup.hpp"      // for ForceFieldSetup, setupForceField
-#include "gtest/gtest.h"            // for Message, TestPartResult
+                                    // for Message, TestPartResult
 #include "molecule.hpp"             // for Molecule
 #include "strongTypes.hpp"
 #include "testSetup.hpp"   // for TestSetup

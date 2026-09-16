@@ -87,12 +87,12 @@ namespace settings
          * standard setter methods *
          ***************************/
 
-        static void setShakeMaxIter(const size_t shakeMaxIter);
-        static void setRattleMaxIter(const size_t rattleMaxIter);
-        static void setMShakeMaxIter(const size_t mshakeMaxIter);
-        static void setShakeTolerance(const double shakeTolerance);
-        static void setRattleTolerance(const double rattleTolerance);
-        static void setMShakeTolerance(const double mshakeTolerance);
+        static void setShakeMaxIter(size_t shakeMaxIter);
+        static void setRattleMaxIter(size_t rattleMaxIter);
+        static void setMShakeMaxIter(size_t mshakeMaxIter);
+        static void setShakeTolerance(double shakeTolerance);
+        static void setRattleTolerance(double rattleTolerance);
+        static void setMShakeTolerance(double mshakeTolerance);
     };
 
 }   // namespace settings

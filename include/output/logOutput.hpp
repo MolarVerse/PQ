@@ -46,10 +46,10 @@ namespace out
         void writeInfo(const std::string &message);
 
         void writeHeader();
-        void writeEndedNormally(const double elapsedTime);
+        void writeEndedNormally(double elapsedTime);
 
         void writeDensityWarning();
-        void writeInitialMomentum(const double momentum);
+        void writeInitialMomentum(double momentum);
 
         void writeOptWarning(const std::string &message);
 

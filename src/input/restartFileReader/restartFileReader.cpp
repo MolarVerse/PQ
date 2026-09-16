@@ -121,7 +121,7 @@ void input::restartFile::readRestartFile(Engine &engine)
 {
     const auto filename = FileSettings::getStartFileName();
 
-    engine.getStdoutOutput().writeRead("Start File", filename);
+    out::StdoutOutput::writeRead("Start File", filename);
     engine.getLogOutput().writeRead("Start File", filename);
 
     RestartFileReader rstFileReader(filename, engine);

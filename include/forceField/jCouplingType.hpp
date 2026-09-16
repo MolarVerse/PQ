@@ -32,7 +32,7 @@ namespace forceField
 {
     class JCouplingType;   // forward declaration
 
-    bool operator==(const JCouplingType &lhs, const JCouplingType &rhs);
+    bool operator==(const JCouplingType &self, const JCouplingType &other);
 
     /**
      * @class JCouplingType
@@ -53,7 +53,7 @@ namespace forceField
         JCouplingParams _params;
 
        public:
-        JCouplingType(const size_t id, const JCouplingParams &params);
+        JCouplingType(size_t id, const JCouplingParams &params);
 
         friend bool operator==(const JCouplingType &, const JCouplingType &);
 
@@ -68,8 +68,8 @@ namespace forceField
          * standard setter methods *
          ***************************/
 
-        void setUpperSymmetry(const bool boolean);
-        void setLowerSymmetry(const bool boolean);
+        void setUpperSymmetry(bool boolean);
+        void setLowerSymmetry(bool boolean);
     };
 
 }   // namespace forceField

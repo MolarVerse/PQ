@@ -53,7 +53,7 @@ using namespace utilities;
 FilesInputParser::FilesInputParser(
     std::shared_ptr<intraNonBonded::IntraNonBonded> intraNonBonded
 )
-    : FilesInputParser(intraNonBonded, true)
+    : FilesInputParser(std::move(intraNonBonded), true)
 {
 }
 
@@ -72,7 +72,7 @@ FilesInputParser::FilesInputParser(
  */
 FilesInputParser::FilesInputParser(
     std::shared_ptr<intraNonBonded::IntraNonBonded> intraNonBonded,
-    const bool                                      validateFilePaths
+    bool                                            validateFilePaths
 )
     : InputFileParser(),
       _intraNonBonded(std::move(intraNonBonded)),
@@ -157,7 +157,7 @@ FilesInputParser::FilesInputParser(
  */
 void FilesInputParser::parseIntraNonBondedFile(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -186,8 +186,8 @@ void FilesInputParser::parseIntraNonBondedFile(
  */
 void FilesInputParser::parseTopologyFilename(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
+    size_t                          lineNumber
+) const
 {
     checkCommand(lineElements, lineNumber);
 
@@ -213,8 +213,8 @@ void FilesInputParser::parseTopologyFilename(
  */
 void FilesInputParser::parseParameterFilename(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
+    size_t                          lineNumber
+) const
 {
     checkCommand(lineElements, lineNumber);
 
@@ -237,8 +237,8 @@ void FilesInputParser::parseParameterFilename(
  */
 void FilesInputParser::parseStartFilename(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
+    size_t                          lineNumber
+) const
 {
     checkCommand(lineElements, lineNumber);
 
@@ -260,8 +260,8 @@ void FilesInputParser::parseStartFilename(
  */
 void FilesInputParser::parseRingPolymerStartFilename(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
+    size_t                          lineNumber
+) const
 {
     checkCommand(lineElements, lineNumber);
 
@@ -292,8 +292,8 @@ void FilesInputParser::parseRingPolymerStartFilename(
  */
 void FilesInputParser::parseMoldescriptorFilename(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
+    size_t                          lineNumber
+) const
 {
     checkCommand(lineElements, lineNumber);
 
@@ -320,7 +320,7 @@ void FilesInputParser::parseMoldescriptorFilename(
  */
 void FilesInputParser::parseGuffPath(
     const std::vector<std::string> & /*lineElements*/,
-    const size_t /*lineNumber*/
+    size_t /*lineNumber*/
 )
 {
     throw InputFileException(
@@ -343,8 +343,8 @@ void FilesInputParser::parseGuffPath(
  */
 void FilesInputParser::parseGuffDatFilename(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
+    size_t                          lineNumber
+) const
 {
     checkCommand(lineElements, lineNumber);
 
@@ -367,8 +367,8 @@ void FilesInputParser::parseGuffDatFilename(
  */
 void FilesInputParser::parseMShakeFilename(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
+    size_t                          lineNumber
+) const
 {
     checkCommand(lineElements, lineNumber);
 
@@ -391,8 +391,8 @@ void FilesInputParser::parseMShakeFilename(
  */
 void FilesInputParser::parseDFTBFilename(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
+    size_t                          lineNumber
+) const
 {
     checkCommand(lineElements, lineNumber);
 
@@ -415,7 +415,7 @@ void FilesInputParser::parseDFTBFilename(
  */
 void FilesInputParser::parseTMFilename(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);

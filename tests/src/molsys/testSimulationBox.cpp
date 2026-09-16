@@ -22,13 +22,14 @@
 
 #include "testSimulationBox.hpp"
 
+#include <gtest/gtest.h>
+
 #include <cstddef>
 #include <optional>
 #include <string>
 #include <vector>
 
 #include "exceptions.hpp"
-#include "gtest/gtest.h"
 #include "potentialSettings.hpp"
 #include "strongTypes.hpp"
 #include "throwWithMessage.hpp"
@@ -132,7 +133,7 @@ TEST_F(TestSimulationBox, findMoleculeByAtomIndex)
 {
     const auto &[molecule1, atomIndex1] =
         _simulationBox->findMoleculeByGlobalAtomIndex(3);
-    EXPECT_EQ(molecule1, &(_simulationBox->getMolecules()[0]));
+    EXPECT_EQ(molecule1, _simulationBox->getMolecules().data());
     EXPECT_EQ(atomIndex1, AtomIndex{2});
 
     const auto &[molecule2, atomIndex2] =

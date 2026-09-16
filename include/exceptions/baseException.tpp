@@ -36,8 +36,8 @@ namespace exc
      */
     template <Color::Code colorCode, ExceptionType exceptionType>
     BaseException<colorCode, exceptionType>::BaseException(
-        const std::string_view message,
-        std::optional<size_t>  lineNumber
+        std::string_view      message,
+        std::optional<size_t> lineNumber
     )
         : PQException(message, lineNumber)
     {
@@ -50,7 +50,7 @@ namespace exc
      */
     template <Color::Code colorCode, ExceptionType exceptionType>
     BaseException<colorCode, exceptionType>::BaseException(
-        const std::string_view message
+        std::string_view message
     )
         : PQException(message, std::nullopt)
     {
@@ -64,12 +64,12 @@ namespace exc
      */
     template <Color::Code colorCode, ExceptionType exceptionType>
     void BaseException<colorCode, exceptionType>::colorfulOutput(
-        const Color::Code      color,
-        const std::string_view exceptionMsg
+        Color::Code      color,
+        std::string_view exceptionMsg
     )
     {
         const Color::Modifier modifier(color);
-        const Color::Modifier def(Color::FG_DEFAULT);
+        const Color::Modifier def(Color::Code::FG_DEFAULT);
 
         std::cout << modifier << exceptionMsg << def << '\n' << std::flush;
     }

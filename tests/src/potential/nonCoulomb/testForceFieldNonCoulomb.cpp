@@ -31,7 +31,7 @@
 
 #include "exceptions.hpp"             // for ParameterFileException
 #include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
-#include "gtest/gtest.h"              // for Message, TestPartResult
+                                      // for Message, TestPartResult
 #include "lennardJonesPair.hpp"       // for LennardJonesPair
 #include "matrix.hpp"                 // for Matrix
 #include "nonCoulombPair.hpp"         // for NonCoulombPair
@@ -725,7 +725,7 @@ TEST_F(TestNonCoulombPotentialFF, sortNonCoulombicsPairs)
     pair4->setInternalType2(VdwType{4});
     vector.push_back(pair4);
 
-    _nonCoulombPotential->sortNonCoulombicsPairs(vector);
+    pot::ForceFieldNonCoulomb::sortNonCoulombicsPairs(vector);
 
     EXPECT_EQ(vector[0]->getInternalType1(), VdwType{1});
     EXPECT_EQ(vector[0]->getInternalType2(), VdwType{4});

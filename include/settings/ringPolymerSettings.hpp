@@ -40,7 +40,7 @@ namespace settings
         static inline size_t _numberOfBeads = 0;
 
        public:
-        static void setNumberOfBeads(const size_t numberOfBeads);
+        static void setNumberOfBeads(size_t numberOfBeads);
 
         [[nodiscard]] static size_t getNumberOfBeads();
     };

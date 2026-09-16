@@ -63,9 +63,9 @@ namespace forceField
         BondForceField(
             molsys::Molecule *molecule1,
             molsys::Molecule *molecule2,
-            const AtomIndex   atomIndex1,
-            const AtomIndex   atomIndex2,
-            const BondId      type
+            AtomIndex         atomIndex1,
+            AtomIndex         atomIndex2,
+            BondId            type
         );
 
         void calculateEnergyAndForces(
@@ -79,7 +79,7 @@ namespace forceField
          * standard setter methods *
          ***************************/
 
-        void setIsLinker(const bool isLinker);
+        void setIsLinker(bool isLinker);
         void setParams(const BondParams &params);
 
         /***************************

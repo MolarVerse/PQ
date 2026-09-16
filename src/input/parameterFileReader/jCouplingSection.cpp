@@ -81,7 +81,7 @@ void JCouplingSection::processSection(
     Engine                   &engine
 )
 {
-    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     if (lineElements.size() != 7 && lineElements.size() != 8)
     {
         throw ParameterFileException(
@@ -97,9 +97,9 @@ void JCouplingSection::processSection(
     auto id            = stoul(lineElements[0]);
     auto J0            = stod(lineElements[1]);
     auto forceConstant = stod(lineElements[2]);
-    auto a             = stod(lineElements[3]);
-    auto b             = stod(lineElements[4]);
-    auto c             = stod(lineElements[5]);
+    auto constA        = stod(lineElements[3]);
+    auto constB        = stod(lineElements[4]);
+    auto constC        = stod(lineElements[5]);
     auto phase         = stod(lineElements[6]) * DEG_TO_RAD;
 
     auto upperSymmetry = true;
@@ -118,16 +118,16 @@ void JCouplingSection::processSection(
         if (symmetry == "-")
             upperSymmetry = false;
     }
-    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
     auto jCouplingType = JCouplingType(
         id,
         JCouplingParams{
             .J0            = J0,
             .forceConstant = forceConstant,
-            .a             = a,
-            .b             = b,
-            .c             = c,
+            .a             = constA,
+            .b             = constB,
+            .c             = constC,
             .phaseShift    = phase
         }
     );

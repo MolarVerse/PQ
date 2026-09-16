@@ -66,13 +66,13 @@ namespace forceField
         DihedralForceField(
             const std::vector<molsys::Molecule *> &molecules,
             const std::vector<AtomIndex>          &atomIndices,
-            const DihedralId                       type
+            DihedralId                             type
         );
 
         void calculateEnergyAndForces(
             const molsys::SimulationBox &simBox,
             physicalData::PhysicalData  &data,
-            const bool                   isImproperDihedral,
+            bool                         isImproperDihedral,
             const pot::CoulombPotential &coulombPot,
             pot::NonCoulombPotential    &nonCoulombPot
         );
@@ -81,7 +81,7 @@ namespace forceField
          * standard setter methods *
          ***************************/
 
-        void setIsLinker(const bool isLinker);
+        void setIsLinker(bool isLinker);
         void setParams(const DihedralParams &params);
 
         /***************************

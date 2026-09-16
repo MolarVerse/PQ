@@ -24,7 +24,7 @@
 
 #define _CONVERGENCE_SETTINGS_HPP_
 
-#include <cstddef>       // for size_t
+#include <cstdint>
 #include <optional>      // for optional
 #include <string>        // for string
 #include <string_view>   // for string_view
@@ -37,7 +37,7 @@ namespace settings
      * @brief enum ConvStrategy
      *
      */
-    enum class ConvStrategy : size_t
+    enum class ConvStrategy : std::uint8_t
     {
         RIGOROUS,
         LOOSE,
@@ -45,7 +45,7 @@ namespace settings
         RELATIVE
     };
 
-    std::string string(const ConvStrategy method);
+    std::string string(ConvStrategy strategy);
 
     /**
      * @class ConvSettings
@@ -84,20 +84,20 @@ namespace settings
          * standard setter methods *
          ***************************/
 
-        static void setEnergyConv(const double);
-        static void setRelEnergyConv(const double);
-        static void setAbsEnergyConv(const double);
+        static void setEnergyConv(double);
+        static void setRelEnergyConv(double);
+        static void setAbsEnergyConv(double);
 
-        static void setForceConv(const double);
-        static void setMaxForceConv(const double);
-        static void setRMSForceConv(const double);
+        static void setForceConv(double);
+        static void setMaxForceConv(double);
+        static void setRMSForceConv(double);
 
-        static void setUseEnergyConv(const bool);
-        static void setUseForceConv(const bool);
-        static void setUseMaxForceConv(const bool);
-        static void setUseRMSForceConv(const bool);
+        static void setUseEnergyConv(bool);
+        static void setUseForceConv(bool);
+        static void setUseMaxForceConv(bool);
+        static void setUseRMSForceConv(bool);
 
-        static void setEnergyConvStrategy(const ConvStrategy);
+        static void setEnergyConvStrategy(ConvStrategy);
         static void setEnergyConvStrategy(const std::string_view &);
 
         /***************************

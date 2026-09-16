@@ -49,14 +49,14 @@ namespace utilities
      */
     template <typename T>
     [[nodiscard]]
-    bool compare(const T &a, const T &b, const T &tolerance)
+    bool compare(const T &lhs, const T &rhs, const T &tolerance)
     {
-        return std::abs(a - b) < tolerance;
+        return std::abs(lhs - rhs) < tolerance;
     }
 
     [[nodiscard]] bool compare(
-        const linearAlgebra::Vector3D<double> &a,
-        const linearAlgebra::Vector3D<double> &b,
+        const linearAlgebra::Vector3D<double> &lhs,
+        const linearAlgebra::Vector3D<double> &rhs,
         const double                          &tol
     );
 
@@ -71,15 +71,15 @@ namespace utilities
      */
     template <typename T>
     [[nodiscard]]
-    bool compare(const T &a, const T &b)
+    bool compare(const T &lhs, const T &rhs)
     {
-        return std::fabs(a - b) < std::numeric_limits<T>::epsilon();
+        return std::fabs(lhs - rhs) < std::numeric_limits<T>::epsilon();
     }
 
     [[nodiscard]]
     bool compare(
-        const linearAlgebra::Vector3D<double> &a,
-        const linearAlgebra::Vector3D<double> &b
+        const linearAlgebra::Vector3D<double> &lhs,
+        const linearAlgebra::Vector3D<double> &rhs
     );
 
     /**
@@ -95,9 +95,9 @@ namespace utilities
      * @return true if a == T(0), false otherwise
      */
     template <typename T>
-    [[nodiscard]] bool isZero(const T &a)
+    [[nodiscard]] bool isZero(const T &value)
     {
-        return a == T(0);
+        return value == T(0);
     }
 
     /**
@@ -108,18 +108,18 @@ namespace utilities
      * @return int
      */
     template <typename T>
-    [[nodiscard]] int sign(const T &a)
+    [[nodiscard]] int sign(const T &value)
     {
-        if (compare(a, T(0)))
+        if (compare(value, T(0)))
             return 0;
 
-        if (a > T(0))
+        if (value > T(0))
             return 1;
 
         return -1;
     }
 
-    [[nodiscard]] size_t kroneckerDelta(const size_t i, const size_t j);
+    [[nodiscard]] size_t kroneckerDelta(size_t lhs, size_t rhs);
 
 }   // namespace utilities
 

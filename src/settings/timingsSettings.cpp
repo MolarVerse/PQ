@@ -35,27 +35,21 @@ using settings::TimingsSettings;
  *
  * @param timeStep
  */
-void TimingsSettings::setTimeStep(const double timeStep)
-{
-    _timeStep = timeStep;
-}
+void TimingsSettings::setTimeStep(double timeStep) { _timeStep = timeStep; }
 
 /**
  * @brief Set the step count
  *
  * @param stepCount
  */
-void TimingsSettings::setStepCount(const size_t stepCount)
-{
-    _stepCount = stepCount;
-}
+void TimingsSettings::setStepCount(size_t stepCount) { _stepCount = stepCount; }
 
 /**
  * @brief Set the number of steps
  *
  * @param numberOfSteps
  */
-void TimingsSettings::setNumberOfSteps(const size_t numberOfSteps)
+void TimingsSettings::setNumberOfSteps(size_t numberOfSteps)
 {
     _numberOfSteps = numberOfSteps;
 }

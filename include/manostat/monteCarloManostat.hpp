@@ -32,7 +32,7 @@ namespace manostat
     class MonteCarloManostat : public Manostat
     {
        private:
-        randomNumberGenerator::RandomNumberGenerator _randomNumberGenerator{};
+        randomNumberGenerator::RandomNumberGenerator _randomNumberGenerator;
 
        public:
         explicit MonteCarloManostat() = default;

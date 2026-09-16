@@ -43,7 +43,7 @@ namespace intraNonBonded
 
        public:
         IntraNonBondedContainer(
-            const MolType                        molType,
+            MolType                              molType,
             const std::vector<std::vector<int>> &atomIndices
         );
 

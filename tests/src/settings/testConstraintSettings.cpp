@@ -23,7 +23,6 @@
 #include <gtest/gtest.h>
 
 #include "constraintSettings.hpp"
-#include "gtest/gtest.h"
 
 TEST(ConstraintSettingsTest, ShakeMaxIterRoundTrip)
 {

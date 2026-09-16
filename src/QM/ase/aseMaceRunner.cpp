@@ -43,10 +43,9 @@ AseMaceRunner::AseMaceRunner(
     const std::string &modelType,
     const std::string &model,
     const std::string &fpType,
-    const bool         dispersion,
-    const bool         enableCueq
+    bool               dispersion,
+    bool               enableCueq
 )
-    : AseQMRunner()
 {
     try
     {

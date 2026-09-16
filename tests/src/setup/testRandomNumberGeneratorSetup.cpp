@@ -24,7 +24,7 @@
 
 #include <string>   // for allocator, basic_string
 
-#include "gtest/gtest.h"                    // for Message, TestPartResult
+// for Message, TestPartResult
 #include "qmmdEngine.hpp"                   // for QMMDEngine
 #include "randomNumberGeneratorSetup.hpp"   // for randomNumberGeneratorSetup
 #include "settings.hpp"                     // for Settings

@@ -49,8 +49,8 @@ namespace
 void InterWaterStrategyCellList::calculate(
     const InterWaterState                        &state,
     molsys::SimulationBox                        &simBox,
-    physicalData::PhysicalData                   &physicalData,
-    const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
+    physicalData::PhysicalData                   &physData,
+    const std::shared_ptr<pot::CoulombPotential> &coulPot,
     molsys::CellList                             &cellList
 )
 {
@@ -70,7 +70,7 @@ void InterWaterStrategyCellList::calculate(
             calculateSingleInteraction<MMChargeTag, MMChargeTag>(
                 atomA,
                 atomB,
-                coulombPotential,
+                coulPot,
                 rCutSquared,
                 simBox,
                 *nonCoulPairPtr,
@@ -207,8 +207,8 @@ void InterWaterStrategyCellList::calculate(
             }
         }
     }
-    physicalData.addCoulombEnergy(totalCoulombEnergy);
-    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
+    physData.addCoulombEnergy(totalCoulombEnergy);
+    physData.addNonCoulombEnergy(totalNonCoulombEnergy);
 }
 
 /**
@@ -223,8 +223,8 @@ void InterWaterStrategyCellList::calculate(
 void InterWaterStrategyCellList::calculateCoreToOuterForces(
     const InterWaterState & /*state*/,
     molsys::SimulationBox                        &simBox,
-    PhysicalData                                 &physicalData,
-    const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
+    PhysicalData                                 &physData,
+    const std::shared_ptr<pot::CoulombPotential> &coulPot,
     molsys::CellList                             &cellList
 )
 {
@@ -238,7 +238,7 @@ void InterWaterStrategyCellList::calculateCoreToOuterForces(
         calculateSingleCoulombInteraction<QMChargeTag, MMChargeTag>(
             atomA,
             atomB,
-            coulombPotential,
+            coulPot,
             rCutSquared,
             simBox,
             totalCoulombEnergy
@@ -329,7 +329,7 @@ void InterWaterStrategyCellList::calculateCoreToOuterForces(
             }
         }
     }
-    physicalData.addCoulombEnergy(totalCoulombEnergy);
+    physData.addCoulombEnergy(totalCoulombEnergy);
 }
 
 /**
@@ -344,8 +344,8 @@ void InterWaterStrategyCellList::calculateCoreToOuterForces(
 void InterWaterStrategyCellList::calculateLayerToOuterForces(
     const InterWaterState                        &state,
     molsys::SimulationBox                        &simBox,
-    PhysicalData                                 &physicalData,
-    const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
+    PhysicalData                                 &physData,
+    const std::shared_ptr<pot::CoulombPotential> &coulPot,
     molsys::CellList                             &cellList
 )
 {
@@ -363,7 +363,7 @@ void InterWaterStrategyCellList::calculateLayerToOuterForces(
             calculateSingleInteraction<QMChargeTag, MMChargeTag>(
                 atomA,
                 atomB,
-                coulombPotential,
+                coulPot,
                 rCutSquared,
                 simBox,
                 *nonCoulPairPtr,
@@ -558,8 +558,8 @@ void InterWaterStrategyCellList::calculateLayerToOuterForces(
             }
         }
     }
-    physicalData.addCoulombEnergy(totalCoulombEnergy);
-    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
+    physData.addCoulombEnergy(totalCoulombEnergy);
+    physData.addNonCoulombEnergy(totalNonCoulombEnergy);
 }
 
 /**
@@ -574,8 +574,8 @@ void InterWaterStrategyCellList::calculateLayerToOuterForces(
 void InterWaterStrategyCellList::calculateOuterToOuterForces(
     const InterWaterState                        &state,
     molsys::SimulationBox                        &simBox,
-    physicalData::PhysicalData                   &physicalData,
-    const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
+    physicalData::PhysicalData                   &physData,
+    const std::shared_ptr<pot::CoulombPotential> &coulPot,
     molsys::CellList                             &cellList
 )
 {
@@ -593,7 +593,7 @@ void InterWaterStrategyCellList::calculateOuterToOuterForces(
             calculateSingleInteraction<MMChargeTag, MMChargeTag>(
                 atomA,
                 atomB,
-                coulombPotential,
+                coulPot,
                 rCutSquared,
                 simBox,
                 *nonCoulPairPtr,
@@ -737,8 +737,8 @@ void InterWaterStrategyCellList::calculateOuterToOuterForces(
             }
         }
     }
-    physicalData.addCoulombEnergy(totalCoulombEnergy);
-    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
+    physData.addCoulombEnergy(totalCoulombEnergy);
+    physData.addNonCoulombEnergy(totalNonCoulombEnergy);
 }
 
 /**
@@ -753,8 +753,8 @@ void InterWaterStrategyCellList::calculateOuterToOuterForces(
 void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
     const InterWaterState                        &state,
     molsys::SimulationBox                        &simBox,
-    physicalData::PhysicalData                   &physicalData,
-    const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
+    physicalData::PhysicalData                   &physData,
+    const std::shared_ptr<pot::CoulombPotential> &coulPot,
     molsys::CellList                             &cellList
 )
 {
@@ -772,7 +772,7 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
             calculateSingleInteraction<MMChargeTag, QMChargeTag>(
                 atomA,
                 atomB,
-                coulombPotential,
+                coulPot,
                 rCutSquared,
                 simBox,
                 *nonCoulPairPtr,
@@ -790,7 +790,7 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
             calculateSingleInteractionOneWay<MMChargeTag, QMChargeTag>(
                 atomA,
                 atomB,
-                coulombPotential,
+                coulPot,
                 rCutSquared,
                 simBox,
                 *nonCoulPairPtr,
@@ -1184,6 +1184,6 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
             }
         }
     }
-    physicalData.addCoulombEnergy(totalCoulombEnergy);
-    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
+    physData.addCoulombEnergy(totalCoulombEnergy);
+    physData.addNonCoulombEnergy(totalNonCoulombEnergy);
 }

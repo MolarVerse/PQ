@@ -22,12 +22,12 @@ add_library(settings
 target_include_directories(settings
     PUBLIC
     ${PROJECT_SOURCE_DIR}/include/settings
-    ${PROJECT_SOURCE_DIR}/include/config
 )
 
 target_link_libraries(settings
     PUBLIC
     utilities
+    config_headers
 )
 
 install(TARGETS settings

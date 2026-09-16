@@ -24,7 +24,6 @@
 
 #include <vector>
 
-#include "gtest/gtest.h"
 #include "jCouplingForceField.hpp"
 #include "jCouplingType.hpp"
 #include "molecule.hpp"
@@ -37,7 +36,7 @@
  */
 TEST(TestJCouplingType, operatorEqual)
 {
-    const forceField::JCouplingType t1(
+    const forceField::JCouplingType type1(
         0,
         JCouplingParams{
             .J0            = 1.0,
@@ -93,15 +92,15 @@ TEST(TestJCouplingType, operatorEqual)
         }
     );
 
-    EXPECT_TRUE(t1 == t1_same);
-    EXPECT_FALSE(t1 == t1_otherId);
-    EXPECT_FALSE(t1 == t1_otherJ0);
-    EXPECT_FALSE(t1 == t1_otherK);
+    EXPECT_TRUE(type1 == t1_same);
+    EXPECT_FALSE(type1 == t1_otherId);
+    EXPECT_FALSE(type1 == t1_otherJ0);
+    EXPECT_FALSE(type1 == t1_otherK);
 }
 
 TEST(TestJCouplingType, getters)
 {
-    const forceField::JCouplingType t(
+    const forceField::JCouplingType type(
         7,
         JCouplingParams{
             .J0            = 1.0,
@@ -112,18 +111,18 @@ TEST(TestJCouplingType, getters)
             .phaseShift    = 6.0
         }
     );
-    EXPECT_EQ(t.getId(), 7U);
-    EXPECT_DOUBLE_EQ(t.getParams().J0, 1.0);
-    EXPECT_DOUBLE_EQ(t.getParams().forceConstant, 2.0);
-    EXPECT_DOUBLE_EQ(t.getParams().a, 3.0);
-    EXPECT_DOUBLE_EQ(t.getParams().b, 4.0);
-    EXPECT_DOUBLE_EQ(t.getParams().c, 5.0);
-    EXPECT_DOUBLE_EQ(t.getParams().phaseShift, 6.0);
+    EXPECT_EQ(type.getId(), 7U);
+    EXPECT_DOUBLE_EQ(type.getParams().J0, 1.0);
+    EXPECT_DOUBLE_EQ(type.getParams().forceConstant, 2.0);
+    EXPECT_DOUBLE_EQ(type.getParams().a, 3.0);
+    EXPECT_DOUBLE_EQ(type.getParams().b, 4.0);
+    EXPECT_DOUBLE_EQ(type.getParams().c, 5.0);
+    EXPECT_DOUBLE_EQ(type.getParams().phaseShift, 6.0);
 }
 
 TEST(TestJCouplingType, symmetryFlagSetters)
 {
-    forceField::JCouplingType t(
+    forceField::JCouplingType type(
         0,
         JCouplingParams{
             .J0            = 1.0,
@@ -137,10 +136,10 @@ TEST(TestJCouplingType, symmetryFlagSetters)
 
     // Symmetry flags only have setters; verify they accept both bool values
     // without throwing and do not affect equality (covered by operatorEqual).
-    t.setUpperSymmetry(false);
-    t.setLowerSymmetry(false);
-    t.setUpperSymmetry(true);
-    t.setLowerSymmetry(true);
+    type.setUpperSymmetry(false);
+    type.setLowerSymmetry(false);
+    type.setUpperSymmetry(true);
+    type.setLowerSymmetry(true);
 
     SUCCEED();
 }
@@ -150,7 +149,7 @@ TEST(TestJCouplingType, symmetryFlagSetters)
 TEST(TestJCouplingForceField, settersAndGetters)
 {
     molsys::Molecule                molecule;
-    forceField::JCouplingForceField ff(
+    forceField::JCouplingForceField forceField(
         std::vector<molsys::Molecule *>{
             &molecule,
             &molecule,
@@ -162,27 +161,27 @@ TEST(TestJCouplingForceField, settersAndGetters)
         42
     );
 
-    EXPECT_EQ(ff.getType(), 42U);
+    EXPECT_EQ(forceField.getType(), 42U);
 
-    ff.setJ0(1.5);
-    ff.setForceConstant(2.5);
-    ff.setA(3.5);
-    ff.setB(4.5);
-    ff.setC(5.5);
-    ff.setPhaseShift(0.25);
+    forceField.setJ0(1.5);
+    forceField.setForceConstant(2.5);
+    forceField.setA(3.5);
+    forceField.setB(4.5);
+    forceField.setC(5.5);
+    forceField.setPhaseShift(0.25);
 
-    EXPECT_DOUBLE_EQ(ff.getJ0(), 1.5);
-    EXPECT_DOUBLE_EQ(ff.getForceConstant(), 2.5);
-    EXPECT_DOUBLE_EQ(ff.getA(), 3.5);
-    EXPECT_DOUBLE_EQ(ff.getB(), 4.5);
-    EXPECT_DOUBLE_EQ(ff.getC(), 5.5);
-    EXPECT_DOUBLE_EQ(ff.getPhaseShift(), 0.25);
+    EXPECT_DOUBLE_EQ(forceField.getJ0(), 1.5);
+    EXPECT_DOUBLE_EQ(forceField.getForceConstant(), 2.5);
+    EXPECT_DOUBLE_EQ(forceField.getA(), 3.5);
+    EXPECT_DOUBLE_EQ(forceField.getB(), 4.5);
+    EXPECT_DOUBLE_EQ(forceField.getC(), 5.5);
+    EXPECT_DOUBLE_EQ(forceField.getPhaseShift(), 0.25);
 }
 
 TEST(TestJCouplingForceField, symmetryFlagsDefaultTrue)
 {
     molsys::Molecule                molecule;
-    forceField::JCouplingForceField ff(
+    forceField::JCouplingForceField forceField(
         std::vector<molsys::Molecule *>{
             &molecule,
             &molecule,
@@ -194,11 +193,11 @@ TEST(TestJCouplingForceField, symmetryFlagsDefaultTrue)
     );
 
     // Both symmetry flags default to true (per class declaration).
-    EXPECT_TRUE(ff.getUpperSymmetry());
-    EXPECT_TRUE(ff.getLowerSymmetry());
+    EXPECT_TRUE(forceField.getUpperSymmetry());
+    EXPECT_TRUE(forceField.getLowerSymmetry());
 
-    ff.setUpperSymmetry(false);
-    ff.setLowerSymmetry(false);
-    EXPECT_FALSE(ff.getUpperSymmetry());
-    EXPECT_FALSE(ff.getLowerSymmetry());
+    forceField.setUpperSymmetry(false);
+    forceField.setLowerSymmetry(false);
+    EXPECT_FALSE(forceField.getUpperSymmetry());
+    EXPECT_FALSE(forceField.getLowerSymmetry());
 }

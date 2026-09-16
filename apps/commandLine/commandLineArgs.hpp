@@ -24,10 +24,11 @@
 
 #define _COMMAND_LINE_ARGS_HPP_
 
+#include <cstdint>
 #include <string>
 #include <vector>
 
-enum class CommandLineAction
+enum class CommandLineAction : std::uint8_t
 {
     RUN,
     HELP,
@@ -36,13 +37,13 @@ enum class CommandLineAction
     VALIDATE
 };
 
-enum class CommandLineFormat
+enum class CommandLineFormat : std::uint8_t
 {
     TEXT,
     JSON
 };
 
-enum class ValidationScope
+enum class ValidationScope : std::uint8_t
 {
     INSTALLED,
     PORTABLE
@@ -65,7 +66,7 @@ class CommandLineArgs
     ValidationScope          _validationScope = ValidationScope::INSTALLED;
 
    public:
-    CommandLineArgs(const int argc, const std::vector<std::string> &argv);
+    CommandLineArgs(int argc, const std::vector<std::string> &argv);
 
     void parse();
 

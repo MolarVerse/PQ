@@ -48,7 +48,7 @@ void PhysicalData::addVirial(const linearAlgebra::tensor3D& virial)
  *
  * @param qmEnergy
  */
-void PhysicalData::addQMEnergy(const double qmEnergy) { _qmEnergy += qmEnergy; }
+void PhysicalData::addQMEnergy(double qmEnergy) { _qmEnergy += qmEnergy; }
 
 /**
  * @brief add coulomb energy to the current coulomb energy stored in physical
@@ -56,7 +56,7 @@ void PhysicalData::addQMEnergy(const double qmEnergy) { _qmEnergy += qmEnergy; }
  *
  * @param coulombEnergy
  */
-void PhysicalData::addCoulombEnergy(const double coulombEnergy)
+void PhysicalData::addCoulombEnergy(double coulombEnergy)
 {
     _coulombEnergy += coulombEnergy;
 }
@@ -67,7 +67,7 @@ void PhysicalData::addCoulombEnergy(const double coulombEnergy)
  *
  * @param nonCoulombEnergy
  */
-void PhysicalData::addNonCoulombEnergy(const double nonCoulombEnergy)
+void PhysicalData::addNonCoulombEnergy(double nonCoulombEnergy)
 {
     _nonCoulombEnergy += nonCoulombEnergy;
 }
@@ -77,7 +77,7 @@ void PhysicalData::addNonCoulombEnergy(const double nonCoulombEnergy)
  *
  * @param bondEnergy
  */
-void PhysicalData::addBondEnergy(const double bondEnergy)
+void PhysicalData::addBondEnergy(double bondEnergy)
 {
     _bondEnergy += bondEnergy;
 }
@@ -87,7 +87,7 @@ void PhysicalData::addBondEnergy(const double bondEnergy)
  *
  * @param angleEnergy
  */
-void PhysicalData::addAngleEnergy(const double angleEnergy)
+void PhysicalData::addAngleEnergy(double angleEnergy)
 {
     _angleEnergy += angleEnergy;
 }
@@ -98,7 +98,7 @@ void PhysicalData::addAngleEnergy(const double angleEnergy)
  *
  * @param dihedralEnergy
  */
-void PhysicalData::addDihedralEnergy(const double dihedralEnergy)
+void PhysicalData::addDihedralEnergy(double dihedralEnergy)
 {
     _dihedralEnergy += dihedralEnergy;
 }
@@ -109,7 +109,7 @@ void PhysicalData::addDihedralEnergy(const double dihedralEnergy)
  *
  * @param improperEnergy
  */
-void PhysicalData::addImproperEnergy(const double improperEnergy)
+void PhysicalData::addImproperEnergy(double improperEnergy)
 {
     _improperEnergy += improperEnergy;
 }
@@ -120,7 +120,7 @@ void PhysicalData::addImproperEnergy(const double improperEnergy)
  *
  * @param ringPolymerEnergy
  */
-void PhysicalData::addRingPolymerEnergy(const double ringPolymerEnergy)
+void PhysicalData::addRingPolymerEnergy(double ringPolymerEnergy)
 {
     _ringPolymerEnergy += ringPolymerEnergy;
 }
@@ -136,7 +136,7 @@ void PhysicalData::addRingPolymerEnergy(const double ringPolymerEnergy)
  *
  * @param nQMAtoms
  */
-void PhysicalData::setNumberOfQMAtoms(const double nQMAtoms)
+void PhysicalData::setNumberOfQMAtoms(double nQMAtoms)
 {
     _numberOfQMAtoms = nQMAtoms;
 }
@@ -146,28 +146,28 @@ void PhysicalData::setNumberOfQMAtoms(const double nQMAtoms)
  *
  * @param loopTime
  */
-void PhysicalData::setLoopTime(const double loopTime) { _loopTime = loopTime; }
+void PhysicalData::setLoopTime(double loopTime) { _loopTime = loopTime; }
 
 /**
  * @brief set the volume
  *
  * @param volume
  */
-void PhysicalData::setVolume(const double volume) { _volume = volume; }
+void PhysicalData::setVolume(double volume) { _volume = volume; }
 
 /**
  * @brief set the density
  *
  * @param density
  */
-void PhysicalData::setDensity(const double density) { _density = density; }
+void PhysicalData::setDensity(double density) { _density = density; }
 
 /**
  * @brief set the temperature
  *
  * @param temperature
  */
-void PhysicalData::setTemperature(const double temperature)
+void PhysicalData::setTemperature(double temperature)
 {
     _temperature = temperature;
 }
@@ -177,7 +177,7 @@ void PhysicalData::setTemperature(const double temperature)
  *
  * @param pressure
  */
-void PhysicalData::setPressure(const double pressure) { _pressure = pressure; }
+void PhysicalData::setPressure(double pressure) { _pressure = pressure; }
 
 /**
  * @brief set the virial
@@ -212,7 +212,7 @@ void PhysicalData::setMomentum(const linearAlgebra::Vec3D& momentum)
 /**
  * @brief set the angular momentum
  *
- * @param vec
+ * @param angularMomentum
  */
 void PhysicalData::setAngularMomentum(
     const linearAlgebra::Vec3D& angularMomentum
@@ -226,7 +226,7 @@ void PhysicalData::setAngularMomentum(
  *
  * @param kineticEnergy
  */
-void PhysicalData::setKineticEnergy(const double kineticEnergy)
+void PhysicalData::setKineticEnergy(double kineticEnergy)
 {
     _kineticEnergy = kineticEnergy;
 }
@@ -260,7 +260,7 @@ void PhysicalData::setKineticEnergyMolecularVector(
  *
  * @param coulombEnergy
  */
-void PhysicalData::setCoulombEnergy(const double coulombEnergy)
+void PhysicalData::setCoulombEnergy(double coulombEnergy)
 {
     _coulombEnergy = coulombEnergy;
 }
@@ -270,7 +270,7 @@ void PhysicalData::setCoulombEnergy(const double coulombEnergy)
  *
  * @param nonCoulombEnergy
  */
-void PhysicalData::setNonCoulombEnergy(const double nonCoulombEnergy)
+void PhysicalData::setNonCoulombEnergy(double nonCoulombEnergy)
 {
     _nonCoulombEnergy = nonCoulombEnergy;
 }
@@ -280,7 +280,7 @@ void PhysicalData::setNonCoulombEnergy(const double nonCoulombEnergy)
  *
  * @param intraCoulombEnergy
  */
-void PhysicalData::setIntraCoulombEnergy(const double intraCoulombEnergy)
+void PhysicalData::setIntraCoulombEnergy(double intraCoulombEnergy)
 {
     _intraCoulombEnergy = intraCoulombEnergy;
 }
@@ -290,7 +290,7 @@ void PhysicalData::setIntraCoulombEnergy(const double intraCoulombEnergy)
  *
  * @param intraNonCoulombEnergy
  */
-void PhysicalData::setIntraNonCoulombEnergy(const double intraNonCoulombEnergy)
+void PhysicalData::setIntraNonCoulombEnergy(double intraNonCoulombEnergy)
 {
     _intraNonCoulombEnergy = intraNonCoulombEnergy;
 }
@@ -300,7 +300,7 @@ void PhysicalData::setIntraNonCoulombEnergy(const double intraNonCoulombEnergy)
  *
  * @param bondEnergy
  */
-void PhysicalData::setBondEnergy(const double bondEnergy)
+void PhysicalData::setBondEnergy(double bondEnergy)
 {
     _bondEnergy = bondEnergy;
 }
@@ -310,7 +310,7 @@ void PhysicalData::setBondEnergy(const double bondEnergy)
  *
  * @param angleEnergy
  */
-void PhysicalData::setAngleEnergy(const double angleEnergy)
+void PhysicalData::setAngleEnergy(double angleEnergy)
 {
     _angleEnergy = angleEnergy;
 }
@@ -320,7 +320,7 @@ void PhysicalData::setAngleEnergy(const double angleEnergy)
  *
  * @param dihedralEnergy
  */
-void PhysicalData::setDihedralEnergy(const double dihedralEnergy)
+void PhysicalData::setDihedralEnergy(double dihedralEnergy)
 {
     _dihedralEnergy = dihedralEnergy;
 }
@@ -330,7 +330,7 @@ void PhysicalData::setDihedralEnergy(const double dihedralEnergy)
  *
  * @param improperEnergy
  */
-void PhysicalData::setImproperEnergy(const double improperEnergy)
+void PhysicalData::setImproperEnergy(double improperEnergy)
 {
     _improperEnergy = improperEnergy;
 }
@@ -340,14 +340,14 @@ void PhysicalData::setImproperEnergy(const double improperEnergy)
  *
  * @param qmEnergy
  */
-void PhysicalData::setQMEnergy(const double qmEnergy) { _qmEnergy = qmEnergy; }
+void PhysicalData::setQMEnergy(double qmEnergy) { _qmEnergy = qmEnergy; }
 
 /**
  * @brief set the number of smoothing molecules
  *
  * @param numberSmMol
  */
-void PhysicalData::setNumberOfSmoothingMolecules(const double numberSmMol)
+void PhysicalData::setNumberOfSmoothingMolecules(double numberSmMol)
 {
     _numberOfSmoothingMol = numberSmMol;
 }
@@ -357,7 +357,7 @@ void PhysicalData::setNumberOfSmoothingMolecules(const double numberSmMol)
  *
  * @param momentumEnergy
  */
-void PhysicalData::setNoseHooverMomentumEnergy(const double momentumEnergy)
+void PhysicalData::setNoseHooverMomentumEnergy(double momentumEnergy)
 {
     _noseHooverMomentumEnergy = momentumEnergy;
 }
@@ -367,7 +367,7 @@ void PhysicalData::setNoseHooverMomentumEnergy(const double momentumEnergy)
  *
  * @param frictionEnergy
  */
-void PhysicalData::setNoseHooverFrictionEnergy(const double frictionEnergy)
+void PhysicalData::setNoseHooverFrictionEnergy(double frictionEnergy)
 {
     _noseHooverFrictionEnergy = frictionEnergy;
 }
@@ -377,9 +377,7 @@ void PhysicalData::setNoseHooverFrictionEnergy(const double frictionEnergy)
  *
  * @param lowerDistanceConstraints
  */
-void PhysicalData::setLowerDistanceConstraints(
-    const double lowerDistanceConstraints
-)
+void PhysicalData::setLowerDistanceConstraints(double lowerDistanceConstraints)
 {
     _lowerDistanceConstraints = lowerDistanceConstraints;
 }
@@ -389,9 +387,7 @@ void PhysicalData::setLowerDistanceConstraints(
  *
  * @param upperDistanceConstraints
  */
-void PhysicalData::setUpperDistanceConstraints(
-    const double upperDistanceConstraints
-)
+void PhysicalData::setUpperDistanceConstraints(double upperDistanceConstraints)
 {
     _upperDistanceConstraints = upperDistanceConstraints;
 }
@@ -401,7 +397,7 @@ void PhysicalData::setUpperDistanceConstraints(
  *
  * @param ringPolymerEnergy
  */
-void PhysicalData::setRingPolymerEnergy(const double ringPolymerEnergy)
+void PhysicalData::setRingPolymerEnergy(double ringPolymerEnergy)
 {
     _ringPolymerEnergy = ringPolymerEnergy;
 }

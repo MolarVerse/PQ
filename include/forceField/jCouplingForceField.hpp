@@ -66,7 +66,7 @@ namespace forceField
         JCouplingForceField(
             const std::vector<molsys::Molecule *> &molecules,
             const std::vector<AtomIndex>          &atomIndices,
-            const size_t                           type
+            size_t                                 type
         );
 
         void calculateEnergyAndForces(
@@ -80,15 +80,15 @@ namespace forceField
          * standard setter methods *
          ***************************/
 
-        void setUpperSymmetry(const bool boolean);
-        void setLowerSymmetry(const bool boolean);
+        void setUpperSymmetry(bool boolean);
+        void setLowerSymmetry(bool boolean);
 
-        void setJ0(const double J0);
-        void setForceConstant(const double k);
-        void setA(const double a);
-        void setB(const double b);
-        void setC(const double c);
-        void setPhaseShift(const double phi);
+        void setJ0(double J0);
+        void setForceConstant(double forceConstant);
+        void setA(double constA);
+        void setB(double constB);
+        void setC(double constC);
+        void setPhaseShift(double phaseShift);
 
         /***************************
          * standard getter methods *

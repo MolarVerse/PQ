@@ -55,7 +55,7 @@ namespace input::parameterFile
             engine::Engine &
         );
 
-        void endedNormally(const bool);
+        void endedNormally(bool);
 
         virtual std::string keyword() = 0;
 
@@ -69,8 +69,8 @@ namespace input::parameterFile
             engine::Engine &
         ) = 0;
 
-        void setLineNumber(const int lineNumber);
-        void setFp(std::ifstream *fp);
+        void setLineNumber(int lineNumber);
+        void setFp(std::ifstream *file);
 
         [[nodiscard]] int getLineNumber() const;
     };

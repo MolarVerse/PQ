@@ -26,7 +26,6 @@
 #include <vector>   // for vector
 
 #include "exceptions.hpp"           // for InputFileException
-#include "gtest/gtest.h"            // for Message, TestPartResult
 #include "outputFileSettings.hpp"   // for OutputFileSettings
 #include "outputInputParser.hpp"
 #include "testInputFileReader.hpp"   // for TestInputFileReader
@@ -45,7 +44,7 @@ TEST_F(TestInputFileReader, testParseOutputFreq)
 {
     OutputInputParser        parser;
     std::vector<std::string> lineElements = {"outputfreq", "=", "1000"};
-    parser.parseOutputFreq(lineElements, 0);
+    input::OutputInputParser::parseOutputFreq(lineElements, 0);
     EXPECT_EQ(OutputFileSettings::getOutputFrequency(), 1000);
 
     lineElements = {"outputfreq", "=", "-1000"};
@@ -69,7 +68,7 @@ TEST_F(TestInputFileReader, testParseFilePrefix)
         "=",
         "prefix"
     };
-    parser.parseFilePrefix(lineElements, 0);
+    input::OutputInputParser::parseFilePrefix(lineElements, 0);
     EXPECT_EQ(OutputFileSettings::getFilePrefix(), "prefix");
 }
 
@@ -82,7 +81,7 @@ TEST_F(TestInputFileReader, testParseLogFilename)
     OutputInputParser parser;
     _fileName                             = "log.txt";
     std::vector<std::string> lineElements = {"logfilename", "=", _fileName};
-    parser.parseLogFilename(lineElements, 0);
+    input::OutputInputParser::parseLogFilename(lineElements, 0);
     EXPECT_EQ(OutputFileSettings::getLogFileName(), _fileName);
 }
 
@@ -95,7 +94,7 @@ TEST_F(TestInputFileReader, testParseInfoFilename)
     OutputInputParser parser;
     _fileName                             = "info.txt";
     std::vector<std::string> lineElements = {"infoFilename", "=", "info.txt"};
-    parser.parseInfoFilename(lineElements, 0);
+    input::OutputInputParser::parseInfoFilename(lineElements, 0);
     EXPECT_EQ(OutputFileSettings::getInfoFileName(), "info.txt");
 }
 
@@ -108,7 +107,7 @@ TEST_F(TestInputFileReader, testParseEnergyFilename)
     OutputInputParser parser;
     _fileName                             = "energy.txt";
     std::vector<std::string> lineElements = {"energyFilename", "=", _fileName};
-    parser.parseEnergyFilename(lineElements, 0);
+    input::OutputInputParser::parseEnergyFilename(lineElements, 0);
     EXPECT_EQ(OutputFileSettings::getEnergyFileName(), _fileName);
 }
 
@@ -125,7 +124,7 @@ TEST_F(TestInputFileReader, testParseInstantEnergyFilename)
         "=",
         _fileName
     };
-    parser.parseInstantEnergyFilename(lineElements, 0);
+    input::OutputInputParser::parseInstantEnergyFilename(lineElements, 0);
     EXPECT_EQ(OutputFileSettings::getInstantEnergyFileName(), _fileName);
 }
 
@@ -142,7 +141,7 @@ TEST_F(TestInputFileReader, testParseTrajectoryFilename)
         "=",
         _fileName
     };
-    parser.parseTrajectoryFilename(lineElements, 0);
+    input::OutputInputParser::parseTrajectoryFilename(lineElements, 0);
     EXPECT_EQ(OutputFileSettings::getTrajectoryFileName(), _fileName);
 }
 
@@ -159,7 +158,7 @@ TEST_F(TestInputFileReader, testParseHybridCenterFilename)
         "=",
         _fileName
     };
-    parser.parseHybridCenterFilename(lineElements, 0);
+    input::OutputInputParser::parseHybridCenterFilename(lineElements, 0);
     EXPECT_EQ(OutputFileSettings::getHybridCenterFileName(), _fileName);
 }
 
@@ -176,7 +175,7 @@ TEST_F(TestInputFileReader, testVelocityFilename)
         "=",
         _fileName
     };
-    parser.parseVelocityFilename(lineElements, 0);
+    input::OutputInputParser::parseVelocityFilename(lineElements, 0);
     EXPECT_EQ(OutputFileSettings::getVelocityFileName(), _fileName);
 }
 
@@ -189,7 +188,7 @@ TEST_F(TestInputFileReader, testForceFilename)
     OutputInputParser parser;
     _fileName                             = "force.xyz";
     std::vector<std::string> lineElements = {"forceFilename", "=", _fileName};
-    parser.parseForceFilename(lineElements, 0);
+    input::OutputInputParser::parseForceFilename(lineElements, 0);
     EXPECT_EQ(OutputFileSettings::getForceFileName(), _fileName);
 }
 
@@ -202,7 +201,7 @@ TEST_F(TestInputFileReader, testParseRestartFilename)
     OutputInputParser parser;
     _fileName                             = "restart.xyz";
     std::vector<std::string> lineElements = {"restartFilename", "=", _fileName};
-    parser.parseRestartFilename(lineElements, 0);
+    input::OutputInputParser::parseRestartFilename(lineElements, 0);
     EXPECT_EQ(OutputFileSettings::getRestartFileName(), _fileName);
 }
 
@@ -215,7 +214,7 @@ TEST_F(TestInputFileReader, testChargeFilename)
     OutputInputParser parser;
     _fileName                             = "charge.xyz";
     std::vector<std::string> lineElements = {"chargeFilename", "=", _fileName};
-    parser.parseChargeFilename(lineElements, 0);
+    input::OutputInputParser::parseChargeFilename(lineElements, 0);
     EXPECT_EQ(OutputFileSettings::getChargeFileName(), _fileName);
 }
 
@@ -232,7 +231,7 @@ TEST_F(TestInputFileReader, testMomentumFilename)
         "=",
         _fileName
     };
-    parser.parseMomentumFilename(lineElements, 0);
+    input::OutputInputParser::parseMomentumFilename(lineElements, 0);
     EXPECT_EQ(OutputFileSettings::getMomentumFileName(), _fileName);
 }
 
@@ -249,7 +248,7 @@ TEST_F(TestInputFileReader, testVirialFilename)
         "=",
         _fileName
     };
-    parser.parseVirialFilename(lineElements, 0);
+    input::OutputInputParser::parseVirialFilename(lineElements, 0);
     EXPECT_EQ(OutputFileSettings::getVirialFileName(), _fileName);
 }
 
@@ -266,7 +265,7 @@ TEST_F(TestInputFileReader, testStressFilename)
         "=",
         _fileName
     };
-    parser.parseStressFilename(lineElements, 0);
+    input::OutputInputParser::parseStressFilename(lineElements, 0);
     EXPECT_EQ(OutputFileSettings::getStressFileName(), _fileName);
 }
 
@@ -279,7 +278,7 @@ TEST_F(TestInputFileReader, testBoxFilename)
     OutputInputParser parser;
     _fileName                                   = "box.xyz";
     const std::vector<std::string> lineElements = {"box_file", "=", _fileName};
-    parser.parseBoxFilename(lineElements, 0);
+    input::OutputInputParser::parseBoxFilename(lineElements, 0);
     EXPECT_EQ(OutputFileSettings::getBoxFileName(), _fileName);
 }
 
@@ -296,7 +295,7 @@ TEST_F(TestInputFileReader, testTimingsFilename)
         "=",
         _fileName
     };
-    parser.parseTimingsFilename(lineElements, 0);
+    input::OutputInputParser::parseTimingsFilename(lineElements, 0);
     EXPECT_EQ(OutputFileSettings::getTimingsFileName(), _fileName);
 }
 
@@ -313,7 +312,7 @@ TEST_F(TestInputFileReader, testRPMDTrajectoryFilename)
         "=",
         _fileName
     };
-    parser.parseRPMDTrajectoryFilename(lineElements, 0);
+    input::OutputInputParser::parseRPMDTrajectoryFilename(lineElements, 0);
     EXPECT_EQ(OutputFileSettings::getRPMDTrajFileName(), _fileName);
 }
 
@@ -330,7 +329,7 @@ TEST_F(TestInputFileReader, testRPMDRestartFilename)
         "=",
         _fileName
     };
-    parser.parseRPMDRestartFilename(lineElements, 0);
+    input::OutputInputParser::parseRPMDRestartFilename(lineElements, 0);
     EXPECT_EQ(OutputFileSettings::getRPMDRestartFileName(), _fileName);
 }
 
@@ -347,7 +346,7 @@ TEST_F(TestInputFileReader, testRPMDEnergyFilename)
         "=",
         _fileName
     };
-    parser.parseRPMDEnergyFilename(lineElements, 0);
+    input::OutputInputParser::parseRPMDEnergyFilename(lineElements, 0);
     EXPECT_EQ(OutputFileSettings::getRPMDEnergyFileName(), _fileName);
 }
 
@@ -364,7 +363,7 @@ TEST_F(TestInputFileReader, testRPMDForceFilename)
         "=",
         _fileName
     };
-    parser.parseRPMDForceFilename(lineElements, 0);
+    input::OutputInputParser::parseRPMDForceFilename(lineElements, 0);
     EXPECT_EQ(OutputFileSettings::getRPMDForceFileName(), _fileName);
 }
 
@@ -381,7 +380,7 @@ TEST_F(TestInputFileReader, testRPMDChargeFilename)
         "=",
         _fileName
     };
-    parser.parseRPMDChargeFilename(lineElements, 0);
+    input::OutputInputParser::parseRPMDChargeFilename(lineElements, 0);
     EXPECT_EQ(OutputFileSettings::getRPMDChargeFileName(), _fileName);
 }
 
@@ -398,7 +397,7 @@ TEST_F(TestInputFileReader, testRPMDVelocityFilename)
         "=",
         _fileName
     };
-    parser.parseRPMDVelocityFilename(lineElements, 0);
+    input::OutputInputParser::parseRPMDVelocityFilename(lineElements, 0);
     EXPECT_EQ(OutputFileSettings::getRPMDVelocityFileName(), _fileName);
 }
 
@@ -411,22 +410,40 @@ TEST_F(TestInputFileReader, parseOverwriteOutput)
     EXPECT_FALSE(OutputFileSettings::getOverwriteOutputFiles());
 
     OutputInputParser parser;
-    parser.parseOverwriteOutput({"overwrite_output", "=", "true"}, 0);
+    input::OutputInputParser::parseOverwriteOutput(
+        {"overwrite_output", "=", "true"},
+        0
+    );
     EXPECT_TRUE(OutputFileSettings::getOverwriteOutputFiles());
 
-    parser.parseOverwriteOutput({"overwrite_output", "=", "yes"}, 0);
+    input::OutputInputParser::parseOverwriteOutput(
+        {"overwrite_output", "=", "yes"},
+        0
+    );
     EXPECT_TRUE(OutputFileSettings::getOverwriteOutputFiles());
 
-    parser.parseOverwriteOutput({"overwrite_output", "=", "on"}, 0);
+    input::OutputInputParser::parseOverwriteOutput(
+        {"overwrite_output", "=", "on"},
+        0
+    );
     EXPECT_TRUE(OutputFileSettings::getOverwriteOutputFiles());
 
-    parser.parseOverwriteOutput({"overwrite_output", "=", "false"}, 0);
+    input::OutputInputParser::parseOverwriteOutput(
+        {"overwrite_output", "=", "false"},
+        0
+    );
     EXPECT_FALSE(OutputFileSettings::getOverwriteOutputFiles());
 
-    parser.parseOverwriteOutput({"overwrite_output", "=", "no"}, 0);
+    input::OutputInputParser::parseOverwriteOutput(
+        {"overwrite_output", "=", "no"},
+        0
+    );
     EXPECT_FALSE(OutputFileSettings::getOverwriteOutputFiles());
 
-    parser.parseOverwriteOutput({"overwrite_output", "=", "off"}, 0);
+    input::OutputInputParser::parseOverwriteOutput(
+        {"overwrite_output", "=", "off"},
+        0
+    );
     EXPECT_FALSE(OutputFileSettings::getOverwriteOutputFiles());
 
     ASSERT_THROW_MSG(
@@ -447,13 +464,13 @@ TEST_F(TestInputFileReader, parseIncludeOutputMetadata)
     EXPECT_FALSE(OutputFileSettings::getIncludeOutputMetadata());
 
     OutputInputParser parser;
-    parser.parseIncludeOutputMetadata(
+    input::OutputInputParser::parseIncludeOutputMetadata(
         {"include_output_metadata", "=", "true"},
         0
     );
     EXPECT_TRUE(OutputFileSettings::getIncludeOutputMetadata());
 
-    parser.parseIncludeOutputMetadata(
+    input::OutputInputParser::parseIncludeOutputMetadata(
         {"include_output_metadata", "=", "false"},
         0
     );

@@ -29,7 +29,7 @@ using namespace opt;
  *
  * @param initialLearningRate
  */
-ConstantLRStrategy::ConstantLRStrategy(const double initialLearningRate)
+ConstantLRStrategy::ConstantLRStrategy(double initialLearningRate)
     : LearningRateStrategy(initialLearningRate)
 {
 }
@@ -42,16 +42,4 @@ ConstantLRStrategy::ConstantLRStrategy(const double initialLearningRate)
 std::shared_ptr<LearningRateStrategy> ConstantLRStrategy::clone() const
 {
     return std::make_shared<ConstantLRStrategy>(*this);
-}
-
-/**
- * @brief Update the learning rate
- *
- * @details This function does nothing, as the learning rate is constant.
- */
-void ConstantLRStrategy::updateLearningRate(
-    const size_t /*currentStep*/,
-    const size_t /*totalSteps*/
-)
-{
 }

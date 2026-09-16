@@ -44,13 +44,13 @@ namespace exc
         std::optional<size_t> _lineNumber;
 
        public:
-        explicit PQException(const std::string_view message);
+        explicit PQException(std::string_view message);
         explicit PQException(
-            const std::string_view message,
-            std::optional<size_t>  lineNumber
+            std::string_view      message,
+            std::optional<size_t> lineNumber
         );
 
-        void setLineNumber(const size_t lineNumber) noexcept;
+        void setLineNumber(size_t lineNumber) noexcept;
 
         [[nodiscard]]
         const std::string &getMessage() const noexcept;
@@ -72,7 +72,7 @@ namespace exc
      * @tparam Type  The type of exception being thrown
      */
     template <
-        Color::Code   colorCode     = Color::FG_RED,
+        Color::Code   colorCode     = Color::Code::FG_RED,
         ExceptionType exceptionType = ExceptionType::Undefined>
     class BaseException : public PQException
     {
@@ -82,17 +82,17 @@ namespace exc
 
        public:
         explicit BaseException(
-            const std::string_view message,
-            std::optional<size_t>  lineNumber
+            std::string_view      message,
+            std::optional<size_t> lineNumber
         );
-        explicit BaseException(const std::string_view message);
+        explicit BaseException(std::string_view message);
 
         [[nodiscard]]
         const char *what() const noexcept override;
 
         static void colorfulOutput(
-            const Color::Code      color,
-            const std::string_view message
+            Color::Code      color,
+            std::string_view exceptionMsg
         );
     };
 }   // namespace exc

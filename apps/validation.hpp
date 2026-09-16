@@ -25,6 +25,7 @@
 #define _CLI_VALIDATION_HPP_
 
 #include <cstddef>
+#include <cstdint>
 #include <iosfwd>
 #include <optional>
 #include <string>
@@ -35,7 +36,7 @@
 
 namespace cli
 {
-    enum class ValidationSeverity
+    enum class ValidationSeverity : std::uint8_t
     {
         WARNING,
         ERROR

@@ -70,7 +70,7 @@ namespace
         try
         {
             auto positions_array =
-                array_d(static_cast<ssize_t>(nAtoms) * 3, &pos[0]);
+                array_d(static_cast<ssize_t>(nAtoms) * 3, pos.data());
 
             const auto positions_array_reshaped = pybind11::array(
                 pybind11::buffer_info(
@@ -120,7 +120,7 @@ namespace
 
         try
         {
-            const auto box_array_ = array_d(6, &box_array[0]);
+            const auto box_array_ = array_d(6, box_array.data());
 
             return box_array_;
         }
@@ -191,7 +191,7 @@ namespace
         {
             const auto atomicNumbers_ = pybind11::array_t<int>(
                 static_cast<ssize_t>(nAtoms),
-                &atomicNumbersInt[0]
+                atomicNumbersInt.data()
             );
 
             return atomicNumbers_;
@@ -268,7 +268,7 @@ void AseQMRunner::run(
 {
     _periodicity = per;
 
-    std::jthread timeoutThread{[this](const std::stop_token stopToken)
+    std::jthread timeoutThread{[](const std::stop_token &stopToken)
                                { throwAfterTimeout(stopToken); }};
 
     {

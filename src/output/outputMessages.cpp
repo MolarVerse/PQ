@@ -105,7 +105,7 @@ INFO);
      * @param elapsedTime
      * @return string
      */
-    std::string elapsedTimeMessage(const double elapsedTime)
+    std::string elapsedTimeMessage(double elapsedTime)
     {
         return std::format(
             "\n\n{}Elapsed time = {:.5f} s\n",

@@ -32,9 +32,9 @@ using namespace opt;
  * @param frequency
  */
 ExpDecayLR::ExpDecayLR(
-    const double initialLearningRate,
-    const double decay,
-    const size_t frequency
+    double initialLearningRate,
+    double decay,
+    size_t frequency
 )
     : LearningRateStrategy(initialLearningRate, frequency), _decay(decay)
 {
@@ -53,7 +53,7 @@ std::shared_ptr<LearningRateStrategy> ExpDecayLR::clone() const
 /**
  * @brief Update the learning rate
  */
-void ExpDecayLR::updateLearningRate(const size_t step, const size_t nEpochs)
+void ExpDecayLR::updateLearningRate(size_t step, size_t nEpochs)
 {
     const auto factor = std::exp(
         -_decay * static_cast<double>(step) / static_cast<double>(nEpochs)

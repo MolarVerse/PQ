@@ -60,7 +60,7 @@ TEST_F(TestSetup, setupResetKineticsPopulatesResetKineticsOnMDEngine)
     TimingsSettings::setNumberOfSteps(100);
 
     EXPECT_NO_THROW(setupResetKinetics(*_mdEngine));
-    EXPECT_NO_THROW((void)_mdEngine->getResetKinetics());
+    EXPECT_NO_THROW((void) _mdEngine->getResetKinetics());
 }
 
 TEST_F(TestSetup, setupConvertsZeroFrequenciesToNumberOfStepsPlusOne)
@@ -69,8 +69,8 @@ TEST_F(TestSetup, setupConvertsZeroFrequenciesToNumberOfStepsPlusOne)
     Settings::setJobtype(JobType::MM_MD);
     TimingsSettings::setNumberOfSteps(42);
 
-    ResetKineticsSetup s(*_mdEngine);
-    EXPECT_NO_THROW(s.setup());
+    ResetKineticsSetup setup(*_mdEngine);
+    EXPECT_NO_THROW(setup.setup());
 }
 
 TEST_F(TestSetup, setupAcceptsNonZeroFrequencies)
@@ -83,6 +83,6 @@ TEST_F(TestSetup, setupAcceptsNonZeroFrequencies)
     ResetKineticsSettings::setFResetAngular(3);
     ResetKineticsSettings::setFResetForces(2);
 
-    ResetKineticsSetup s(*_mdEngine);
-    EXPECT_NO_THROW(s.setup());
+    ResetKineticsSetup setup(*_mdEngine);
+    EXPECT_NO_THROW(setup.setup());
 }

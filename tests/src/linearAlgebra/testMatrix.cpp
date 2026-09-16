@@ -22,8 +22,8 @@
 
 #include <gtest/gtest.h>   // for Test, EXPECT_EQ, TestInfo (ptr only), InitG...
 
-#include "gtest/gtest.h"   // for Message, TestPartResult
-#include "matrix.hpp"      // for Matrix, linearAlgebra
+// for Message, TestPartResult
+#include "matrix.hpp"   // for Matrix, linearAlgebra
 
 using namespace linearAlgebra;
 

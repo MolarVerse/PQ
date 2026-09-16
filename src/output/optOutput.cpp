@@ -38,7 +38,7 @@ using std::format;
  * @param step
  * @param optimizer
  */
-void OptOutput::write(const size_t step, const Optimizer& optimizer)
+void OptOutput::write(size_t step, const Optimizer& optimizer)
 {
     const auto& conv = optimizer.getConvergence();
 

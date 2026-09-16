@@ -86,13 +86,13 @@ namespace molsys
          * scaling methods *
          *******************/
 
-        void scaleVelocity(const double scaleFactor);
+        void scaleVelocity(double scaleFactor);
         void scaleVelocity(const linearAlgebra::Vec3D &scaleFactor);
         void scaleVelocityOrthogonalSpace(
             const linearAlgebra::tensor3D &,
             const Box &
         );
-        void scaleForce(const double scaleFactor);
+        void scaleForce(double scaleFactor);
         void scaleForce(const linearAlgebra::Vec3D &scaleFactor);
 
         /**************************
@@ -102,7 +102,7 @@ namespace molsys
         void addPosition(const linearAlgebra::Vec3D &position);
         void addVelocity(const linearAlgebra::Vec3D &velocity);
         void addForce(const linearAlgebra::Vec3D &force) { _force += force; }
-        void addForce(const double, const double, const double);
+        void addForce(double, double, double);
         void addForceInner(const linearAlgebra::Vec3D &force);
         void addForceOuter(const linearAlgebra::Vec3D &force);
         void addShiftForce(const linearAlgebra::Vec3D &shiftForce)
@@ -153,20 +153,20 @@ namespace molsys
          * standard setter methods *
          ***************************/
 
-        void setActive(const bool isActive);
+        void setActive(bool isActive);
 
         void setName(const std::string_view &name);
         void setAtomTypeName(const std::string_view &atomTypeName);
-        void setAtomicNumber(const AtomNumber atomicNumber);
+        void setAtomicNumber(AtomNumber atomicNumber);
 
-        void setMass(const double mass);
-        void setPartialCharge(const double partialCharge);
-        void setQMCharge(const double charge);
+        void setMass(double mass);
+        void setPartialCharge(double partialCharge);
+        void setQMCharge(double charge);
 
         void setAtomType(AtomType atomType);
         void setExternalAtomType(ExtAtomType externalAtomType);
-        void setExternalGlobalVDWType(const ExtVdwType externalGlobalVDWType);
-        void setInternalGlobalVDWType(const VdwType internalGlobalVDWType);
+        void setExternalGlobalVDWType(ExtVdwType externalGlobalVDWType);
+        void setInternalGlobalVDWType(VdwType internalGlobalVDWType);
 
         void setPosition(const linearAlgebra::Vec3D &position);
         void setVelocity(const linearAlgebra::Vec3D &velocity);

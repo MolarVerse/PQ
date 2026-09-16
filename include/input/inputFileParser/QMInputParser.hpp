@@ -54,42 +54,48 @@ namespace input
         );
         explicit QMInputParser(out::LogOutput &, out::StdoutOutput &);
 
-        void parseQMMethod(const std::vector<std::string> &, const size_t);
-        void parseQMScript(const std::vector<std::string> &, const size_t);
-        void parseQMScriptFullPath(
+        static void parseQMMethod(const std::vector<std::string> &, size_t);
+        static void parseQMScript(const std::vector<std::string> &, size_t);
+        static void parseQMScriptFullPath(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
-        void parseQMLoopTimeLimit(
+        static void parseQMLoopTimeLimit(
             const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseDispersion(const std::vector<std::string> &, const size_t);
-        void parseRemoveNetForce(
-            const std::vector<std::string> &,
-            const size_t
+            size_t
         );
 
-        void parseMaceModel(const std::vector<std::string> &, const size_t);
-        void parseMaceMode(const std::vector<std::string> &, const size_t);
-        void parseMaceModelPath(const std::vector<std::string> &, const size_t);
-        void parseMaceQMMethod(const std::string_view &);
-
-        void parseSlakosType(const std::vector<std::string> &, const size_t);
-        void parseSlakosPath(const std::vector<std::string> &, const size_t);
-        void parseThirdOrder(const std::vector<std::string> &, const size_t);
-        void parseHubbardDerivs(const std::vector<std::string> &, const size_t);
-
-        void parseXtbMethod(const std::vector<std::string> &, const size_t);
-
-        void parseFennolModelPath(
+        static void parseDispersion(const std::vector<std::string> &, size_t);
+        static void parseRemoveNetForce(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
-        void parseGPUPreprocessing(
+
+        void        parseMaceModel(const std::vector<std::string> &, size_t);
+        static void parseMaceMode(const std::vector<std::string> &, size_t);
+        static void parseMaceModelPath(
             const std::vector<std::string> &,
-            const size_t
+            size_t
+        );
+        static void parseMaceQMMethod(const std::string_view &);
+
+        void parseSlakosType(const std::vector<std::string> &, size_t) const;
+        static void parseSlakosPath(const std::vector<std::string> &, size_t);
+        static void parseThirdOrder(const std::vector<std::string> &, size_t);
+        static void parseHubbardDerivs(
+            const std::vector<std::string> &,
+            size_t
+        );
+
+        static void parseXtbMethod(const std::vector<std::string> &, size_t);
+
+        static void parseFennolModelPath(
+            const std::vector<std::string> &,
+            size_t
+        );
+        static void parseGPUPreprocessing(
+            const std::vector<std::string> &,
+            size_t
         );
     };
 

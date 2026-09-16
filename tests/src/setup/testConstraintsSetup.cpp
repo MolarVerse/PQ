@@ -25,7 +25,7 @@
 #include "constraintSettings.hpp"   // for getShakeMaxIter, getShakeTolerance, getRattleMaxIter, getRattleTolerance
 #include "constraintsSetup.hpp"   // for ConstraintsSetup, setupConstraints
 #include "engine.hpp"             // for Engine
-#include "gtest/gtest.h"          // for Message, TestPartResult
+                                  // for Message, TestPartResult
 #include "testSetup.hpp"          // for TestSetup
 
 using namespace setup;

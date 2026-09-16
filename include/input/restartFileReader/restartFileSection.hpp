@@ -48,7 +48,6 @@ namespace input::restartFile
         int            _lineNumber = 0;
         std::ifstream *_fp         = nullptr;
 
-       public:
         virtual ~RestartFileSection() = default;
 
         virtual std::string keyword()  = 0;

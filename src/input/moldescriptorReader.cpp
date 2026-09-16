@@ -65,7 +65,7 @@ void input::molDescriptor::readMolDescriptor(Engine &engine)
 {
     const auto filename = FileSettings::getMolDescriptorFileName();
 
-    engine.getStdoutOutput().writeRead("Moldescriptor File", filename);
+    out::StdoutOutput::writeRead("Moldescriptor File", filename);
     engine.getLogOutput().writeRead("Moldescriptor File", filename);
 
     MoldescriptorReader reader(engine);
@@ -268,7 +268,7 @@ void MoldescriptorReader::processMolecule(
  */
 void MoldescriptorReader::convertExternalToInternalAtomTypes(
     MoleculeType &molecule
-) const
+)
 {
     const size_t numberOfAtoms = molecule.getNumberOfAtoms();
 

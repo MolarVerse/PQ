@@ -51,44 +51,34 @@ namespace input
             std::shared_ptr<constraints::Constraints> constraints
         );
 
-        void parseShakeActivated(
+        void parseShakeActivated(const std::vector<std::string> &, size_t);
+        static void parseShakeTolerance(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
-
-        void parseShakeTolerance(
+        static void parseShakeIteration(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
-
-        void parseShakeIteration(
+        static void parseRattleTolerance(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
-
-        void parseRattleTolerance(
+        static void parseRattleIteration(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
-
-        void parseRattleIteration(
+        static void parseMShakeTolerance(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
-
-        void parseMShakeTolerance(
+        static void parseMShakeIteration(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
-
-        void parseMShakeIteration(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
         void parseDistanceConstraintActivated(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
     };
 

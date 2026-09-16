@@ -41,6 +41,29 @@ using namespace input;
 using namespace settings;
 using namespace exc;
 
+namespace
+{
+    /**
+     * @brief validates settings used by active optimization jobs
+     *
+     * @throws UserInputException if the learning-rate strategy or bounds are
+     * invalid
+     */
+    void validateOptimizer()
+    {
+        const auto optimizerActive =
+            Settings::isOptJobType() ||
+            (Settings::getJobtype() == JobType::MM_HESSIAN &&
+             HessianSettings::optimizeBeforeHessian());
+
+        if (!optimizerActive)
+            return;
+
+        OptimizerSettings::validateLearningRateStrategy();
+        OptimizerSettings::validateLearningRateBounds();
+    }
+}   // namespace
+
 /**
  * @brief validates semantic dependencies between parsed input keywords
  *
@@ -94,26 +117,6 @@ void InputFileReader::validateTimings() const
             )
         );
     }
-}
-
-/**
- * @brief validates settings used by active optimization jobs
- *
- * @throws UserInputException if the learning-rate strategy or bounds are
- * invalid
- */
-void InputFileReader::validateOptimizer() const
-{
-    const auto optimizerActive =
-        Settings::isOptJobType() ||
-        (Settings::getJobtype() == JobType::MM_HESSIAN &&
-         HessianSettings::optimizeBeforeHessian());
-
-    if (!optimizerActive)
-        return;
-
-    OptimizerSettings::validateLearningRateStrategy();
-    OptimizerSettings::validateLearningRateBounds();
 }
 
 /**
@@ -405,7 +408,7 @@ void InputFileReader::validateManostat() const
  * @throws InputFileException if an active cell list is incompatible with the
  * selected potential
  */
-void InputFileReader::validateCellList() const
+void InputFileReader::validateCellList()
 {
     if (!Settings::isCellListActivated())
         return;

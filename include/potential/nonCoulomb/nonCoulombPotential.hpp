@@ -24,7 +24,6 @@
 
 #define _NON_COULOMB_POTENTIAL_HPP_
 
-#include <cstddef>   // for size_t
 #include <memory>
 
 #include "nonCoulombPair.hpp"
@@ -40,7 +39,7 @@ namespace pot
      * TODO: implement the different mixing rules
      *
      */
-    enum class MixingRule : size_t
+    enum class MixingRule : std::uint8_t
     {
         NONE
     };
@@ -68,7 +67,7 @@ namespace pot
 
         [[nodiscard]] MixingRule getMixingRule() const;
 
-        void setMixingRule(const MixingRule mixingRule);
+        void setMixingRule(MixingRule mixingRule);
     };
 
 }   // namespace pot

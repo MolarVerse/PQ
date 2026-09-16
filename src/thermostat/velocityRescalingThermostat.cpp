@@ -47,8 +47,8 @@ using namespace utilities;
  * @param tau
  */
 VelocityRescalingThermostat::VelocityRescalingThermostat(
-    const double targetTemp,
-    const double tau
+    double targetTemp,
+    double tau
 )
     : Thermostat(targetTemp), _tau(tau)
 {
@@ -93,15 +93,15 @@ VelocityRescalingThermostat &VelocityRescalingThermostat::operator=(
  * @param physicalData
  */
 void VelocityRescalingThermostat::applyThermostat(
-    SimulationBox &simulationBox,
-    PhysicalData  &physicalData
+    SimulationBox &simBox,
+    PhysicalData  &physData
 )
 {
     auto _ = scopedTimer(TimerId::Thermostat, "Velocity Rescaling");
 
-    physicalData.calculateTemperature(simulationBox);
+    physData.calculateTemperature(simBox);
 
-    _temperature = physicalData.getTemperature();
+    _temperature = physData.getTemperature();
 
     if (isZero(_temperature))
     {
@@ -116,9 +116,9 @@ void VelocityRescalingThermostat::applyThermostat(
 
     const auto timeStep  = TimingsSettings::getTimeStep();
     const auto tempRatio = _targetTemperature / _temperature;
-    const auto dof = static_cast<double>(simulationBox.getDegreesOfFreedom());
+    const auto dof       = static_cast<double>(simBox.getDegreesOfFreedom());
 
-    auto lambda = 1.0 + timeStep / _tau * (tempRatio - 1.0);
+    auto lambda = 1.0 + (timeStep / _tau * (tempRatio - 1.0));
 
     const auto rescalingFactor =
         2.0 * ::sqrt(timeStep * tempRatio / (dof * _tau));
@@ -139,12 +139,12 @@ void VelocityRescalingThermostat::applyThermostat(
 
     const auto berendsenFactor = ::sqrt(lambda);
 
-    for (const auto &atom : simulationBox.getAtoms())
+    for (const auto &atom : simBox.getAtoms())
         atom->scaleVelocity(berendsenFactor);
 
     const auto temperature = _temperature * berendsenFactor * berendsenFactor;
 
-    physicalData.setTemperature(temperature);
+    physData.setTemperature(temperature);
 }
 
 /**
@@ -159,7 +159,7 @@ double VelocityRescalingThermostat::getTau() const { return _tau; }
  *
  * @param tau
  */
-void VelocityRescalingThermostat::setTau(const double tau) { _tau = tau; }
+void VelocityRescalingThermostat::setTau(double tau) { _tau = tau; }
 /**
  * @brief Get thermostat type
  *

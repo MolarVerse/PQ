@@ -60,7 +60,7 @@ HessianMatrix Evaluator::calculateAnalyticHessian()
  *
  * @param potential - std::shared_ptr<Potential>
  */
-void Evaluator::setPotential(const std::shared_ptr<Potential> potential)
+void Evaluator::setPotential(const std::shared_ptr<Potential>& potential)
 {
     _potential = potential;
 }
@@ -70,7 +70,7 @@ void Evaluator::setPotential(const std::shared_ptr<Potential> potential)
  *
  * @param cellList - std::shared_ptr<CellList>
  */
-void Evaluator::setCellList(const std::shared_ptr<CellList> cellList)
+void Evaluator::setCellList(const std::shared_ptr<CellList>& cellList)
 {
     _cellList = cellList;
 }
@@ -81,7 +81,7 @@ void Evaluator::setCellList(const std::shared_ptr<CellList> cellList)
  * @param simulationBox - std::shared_ptr<SimulationBox>
  */
 void Evaluator::setSimulationBox(
-    const std::shared_ptr<SimulationBox> simulationBox
+    const std::shared_ptr<SimulationBox>& simulationBox
 )
 {
     _simulationBox = simulationBox;
@@ -92,7 +92,7 @@ void Evaluator::setSimulationBox(
  *
  * @param constraints - std::shared_ptr<Constraints>
  */
-void Evaluator::setConstraints(const std::shared_ptr<Constraints> constraints)
+void Evaluator::setConstraints(const std::shared_ptr<Constraints>& constraints)
 {
     _constraints = constraints;
 }
@@ -103,7 +103,7 @@ void Evaluator::setConstraints(const std::shared_ptr<Constraints> constraints)
  * @param physicalData - std::shared_ptr<PhysicalData>
  */
 void Evaluator::setPhysicalData(
-    const std::shared_ptr<PhysicalData> physicalData
+    const std::shared_ptr<PhysicalData>& physicalData
 )
 {
     _physicalData = physicalData;
@@ -115,7 +115,7 @@ void Evaluator::setPhysicalData(
  * @param physicalData - std::shared_ptr<PhysicalData>
  */
 void Evaluator::setPhysicalDataOld(
-    const std::shared_ptr<PhysicalData> physicalData
+    const std::shared_ptr<PhysicalData>& physicalData
 )
 {
     _physicalDataOld = physicalData;
@@ -126,7 +126,7 @@ void Evaluator::setPhysicalDataOld(
  *
  * @param forceField - std::shared_ptr<ForceField>
  */
-void Evaluator::setForceField(const std::shared_ptr<ForceField> forceField)
+void Evaluator::setForceField(const std::shared_ptr<ForceField>& forceField)
 {
     _forceField = forceField;
 }
@@ -137,7 +137,7 @@ void Evaluator::setForceField(const std::shared_ptr<ForceField> forceField)
  * @param intraNonBonded - std::shared_ptr<IntraNonBonded>
  */
 void Evaluator::setIntraNonBonded(
-    const std::shared_ptr<IntraNonBonded> intraNonBonded
+    const std::shared_ptr<IntraNonBonded>& intraNonBonded
 )
 {
     _intraNonBonded = intraNonBonded;

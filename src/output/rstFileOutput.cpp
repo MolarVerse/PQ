@@ -37,6 +37,37 @@ using namespace molsys;
 using namespace thermostat;
 using namespace settings;
 
+namespace
+{
+    /**
+     * @brief write Nose-Hoover thermostat chi/zeta info to the restart file
+     *
+     * @param thermostat
+     * @param buffer
+     */
+    void writeNHChain(const Thermostat &thermostat, std::ostringstream &buffer)
+    {
+        const auto &nhChain =
+            dynamic_cast<const NoseHooverThermostat &>(thermostat);
+
+        const auto &chi  = nhChain.getChi();
+        const auto &zeta = nhChain.getZeta();
+
+        for (size_t i = 0; i < chi.size() - 1; ++i)
+        {
+            buffer << "chi "
+                   << std::format(
+                          "{:2d}\t{:10.5e}\t{:10.5e}",
+                          i + 1,
+                          chi[i],
+                          zeta[i]
+                      )
+                   << '\n';
+        }
+    }
+
+}   // namespace
+
 /**
  * @brief Write the restart file
  *
@@ -46,7 +77,7 @@ using namespace settings;
 void RstFileOutput::write(
     SimulationBox    &simBox,
     const Thermostat &thermostat,
-    const size_t      step
+    size_t            step
 )
 {
     std::ostringstream buffer;
@@ -76,20 +107,30 @@ void RstFileOutput::write(
             const auto x        = molecule.getAtomPosition(i)[0];
             const auto y        = molecule.getAtomPosition(i)[1];
             const auto z        = molecule.getAtomPosition(i)[2];
-            const auto vx       = molecule.getAtomVelocity(i)[0];
-            const auto vy       = molecule.getAtomVelocity(i)[1];
-            const auto vz       = molecule.getAtomVelocity(i)[2];
-            const auto fx       = molecule.getAtomForce(i)[0];
-            const auto fy       = molecule.getAtomForce(i)[1];
-            const auto fz       = molecule.getAtomForce(i)[2];
+            const auto velX     = molecule.getAtomVelocity(i)[0];
+            const auto velY     = molecule.getAtomVelocity(i)[1];
+            const auto velZ     = molecule.getAtomVelocity(i)[2];
+            const auto forceX   = molecule.getAtomForce(i)[0];
+            const auto forceY   = molecule.getAtomForce(i)[1];
+            const auto forceZ   = molecule.getAtomForce(i)[2];
 
             buffer << std::format("{:<5}\t", atomName);
             buffer << std::format("{:<5}\t", i.get() + 1);
             buffer << std::format("{:<5}\t", molType.get());
 
             buffer << std::format("{:15.8f}\t{:15.8f}\t{:15.8f}\t", x, y, z);
-            buffer << std::format("{:19.8e}\t{:19.8e}\t{:19.8e}\t", vx, vy, vz);
-            buffer << std::format("{:15.8f}\t{:15.8f}\t{:15.8f}", fx, fy, fz);
+            buffer << std::format(
+                "{:19.8e}\t{:19.8e}\t{:19.8e}\t",
+                velX,
+                velY,
+                velZ
+            );
+            buffer << std::format(
+                "{:15.8f}\t{:15.8f}\t{:15.8f}",
+                forceX,
+                forceY,
+                forceZ
+            );
 
             buffer << '\n' << std::flush;
         }
@@ -98,29 +139,4 @@ void RstFileOutput::write(
     // Write the buffer to the file
     _fp << buffer.str();
     _fp << std::flush;
-}
-
-/**
- * @brief write Nose-Hoover thermostat chi/zeta info to the restart file
- *
- * @param thermostat
- * @param buffer
- */
-void RstFileOutput::writeNHChain(
-    const Thermostat   &thermostat,
-    std::ostringstream &buffer
-)
-{
-    const auto &nh = dynamic_cast<const NoseHooverThermostat &>(thermostat);
-
-    const auto &chi  = nh.getChi();
-    const auto &zeta = nh.getZeta();
-
-    for (size_t i = 0; i < chi.size() - 1; ++i)
-    {
-        buffer
-            << "chi "
-            << std::format("{:2d}\t{:10.5e}\t{:10.5e}", i + 1, chi[i], zeta[i])
-            << '\n';
-    }
 }

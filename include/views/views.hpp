@@ -42,9 +42,9 @@ namespace pqviews
      * @return auto A view of the adapted range
      */
     template <typename Range, typename Adaptor>
-    auto operator|(Range&& r, const Adaptor& a)
+    auto operator|(Range&& range, const Adaptor& adaptor)
     {
-        return a(std::forward<Range>(r));
+        return adaptor(std::forward<Range>(range));
     }
 
 }   // namespace pqviews

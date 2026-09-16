@@ -23,13 +23,12 @@
 #include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ
 
 #include <cstdint>
+#include <mstd/enum.hpp>
 #include <string>
 #include <vector>
 
 #include "exceptions.hpp"         // for InputFileException
-#include "gtest/gtest.h"          // for Message, TestPartResult
 #include "inputParam.hpp"         // for InputKey, InputRegistry, KeyMetadata
-#include "mstd/enum.hpp"          // for MSTD_ENUM
 #include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
 
 using namespace input;
@@ -37,7 +36,10 @@ using namespace input;
 // A small MSTD_ENUM used purely to exercise the has_enum_meta<T> path of
 // Converter<T> / InputKey<T> -- not a real project enum.
 // NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
-#define TESTENUM_LIST(X) X(mm) X(qm) X(md)
+#define TESTENUM_LIST(X) \
+    X(mm)                \
+    X(qm)                \
+    X(md)
 MSTD_ENUM(TestJobType, std::uint8_t, TESTENUM_LIST);
 
 /**
@@ -285,7 +287,7 @@ TEST(TestInputKey, onSetCallbackInvoked)
         std::nullopt,
         std::nullopt,
         nullptr,
-        [&captured](const double &v) { captured = v; }
+        [&captured](const double &value) { captured = value; }
     );
 
     key.parse({"timestep", "=", "2.5"}, 1);

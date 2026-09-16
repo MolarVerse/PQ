@@ -46,7 +46,7 @@ void setup::setupConstraints(Engine &engine)
     if (!engine.isConstraintsActivated())
         return;
 
-    engine.getStdoutOutput().writeSetup("Constraints");
+    out::StdoutOutput::writeSetup("Constraints");
     engine.getLogOutput().writeSetup("Constraints");
 
     ConstraintsSetup constraintsSetup(engine);

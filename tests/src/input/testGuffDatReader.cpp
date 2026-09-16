@@ -36,7 +36,6 @@
 #include "engine.hpp"              // for Engine
 #include "exceptions.hpp"          // for GuffDatException, UserInputException
 #include "gmock/gmock.h"           // for ElementsAre, MakePredicateFormatter
-#include "gtest/gtest.h"           // for Message, TestPartResult
 #include "guffPair.hpp"            // for GuffPair
 #include "lennardJonesPair.hpp"    // for LennardJonesPair
 #include "morsePair.hpp"           // for MorsePair
@@ -183,14 +182,11 @@ TEST_F(TestGuffDatReader, parseLine)
     auto &potential = dynamic_cast<GuffNonCoulomb &>(
         _engine->getPotential()->getNonCoulombPotential()
     );
-    const auto &pair = dynamic_cast<LennardJonesPair &>(
-        *potential
-             .getNonCoulPair(
-                 {MolType{1}, MolType{2}, AtomType{1}, AtomType{0}},
-                 {VdwType{1}, VdwType{0}}
-             )
-             .get()
-    );
+    const auto &pair =
+        dynamic_cast<LennardJonesPair &>(*potential.getNonCoulPair(
+            {MolType{1}, MolType{2}, AtomType{1}, AtomType{0}},
+            {VdwType{1}, VdwType{0}}
+        ));
 
     EXPECT_EQ(
         pair,
@@ -215,13 +211,10 @@ TEST_F(TestGuffDatReader, addLennardJonesPair)
     );
 
     const auto &pair = dynamic_cast<LennardJonesPair &>(
-        *(_engine->getPotential()
-              ->getNonCoulombPotential()
-              .getNonCoulPair(
-                  {MolType{1}, MolType{2}, AtomType{0}, AtomType{0}},
-                  {VdwType{0}, VdwType{0}}
-              )
-              .get())
+        *(_engine->getPotential()->getNonCoulombPotential().getNonCoulPair(
+            {MolType{1}, MolType{2}, AtomType{0}, AtomType{0}},
+            {VdwType{0}, VdwType{0}}
+        ))
     );
 
     EXPECT_EQ(TestLJPairUtils::params(&pair).c6, 1.0);
@@ -231,22 +224,19 @@ TEST_F(TestGuffDatReader, addLennardJonesPair)
     // FIXME: Does not work on macos using EXPECT_EQ
     EXPECT_NEAR(
         pair.getEnergyCutOff(),
-        1.0 / ::pow(10.0, 6) + 3.0 / ::pow(10.0, 12),
+        (1.0 / ::pow(10.0, 6)) + (3.0 / ::pow(10.0, 12)),
         1e-5
     );
     EXPECT_EQ(
         pair.getForceCutOff(),
-        6.0 / ::pow(10.0, 7) + 12.0 * 3.0 / ::pow(10.0, 13)
+        (6.0 / ::pow(10.0, 7)) + (12.0 * 3.0 / ::pow(10.0, 13))
     );
 
     const auto &pair2 = dynamic_cast<LennardJonesPair &>(
-        *(_engine->getPotential()
-              ->getNonCoulombPotential()
-              .getNonCoulPair(
-                  {MolType{2}, MolType{1}, AtomType{0}, AtomType{0}},
-                  {VdwType{0}, VdwType{1}}
-              )
-              .get())
+        *(_engine->getPotential()->getNonCoulombPotential().getNonCoulPair(
+            {MolType{2}, MolType{1}, AtomType{0}, AtomType{0}},
+            {VdwType{0}, VdwType{1}}
+        ))
     );
 
     EXPECT_EQ(pair, pair2);
@@ -266,13 +256,10 @@ TEST_F(TestGuffDatReader, addBuckinghamPair)
     );
 
     const auto &pair = dynamic_cast<BuckinghamPair &>(
-        *(_engine->getPotential()
-              ->getNonCoulombPotential()
-              .getNonCoulPair(
-                  {MolType{1}, MolType{2}, AtomType{0}, AtomType{0}},
-                  {VdwType{0}, VdwType{0}}
-              )
-              .get())
+        *(_engine->getPotential()->getNonCoulombPotential().getNonCoulPair(
+            {MolType{1}, MolType{2}, AtomType{0}, AtomType{0}},
+            {VdwType{0}, VdwType{0}}
+        ))
     );
 
     EXPECT_EQ(TestBuckinghamPairUtils::params(&pair).scaling, 1.0);
@@ -281,21 +268,18 @@ TEST_F(TestGuffDatReader, addBuckinghamPair)
     EXPECT_EQ(pair.getRadialCutOff(), 10.0);
     EXPECT_EQ(
         pair.getEnergyCutOff(),
-        1.0 * ::exp(10.0 * 2.0) + 3.0 / ::pow(10.0, 6)
+        (1.0 * ::exp(10.0 * 2.0)) + (3.0 / ::pow(10.0, 6))
     );
     EXPECT_EQ(
         pair.getForceCutOff(),
-        -2.0 * ::exp(10.0 * 2.0) + 6.0 * 3.0 / ::pow(10.0, 7)
+        (-2.0 * ::exp(10.0 * 2.0)) + (6.0 * 3.0 / ::pow(10.0, 7))
     );
 
     const auto &pair2 = dynamic_cast<BuckinghamPair &>(
-        *(_engine->getPotential()
-              ->getNonCoulombPotential()
-              .getNonCoulPair(
-                  {MolType{2}, MolType{1}, AtomType{0}, AtomType{0}},
-                  {VdwType{0}, VdwType{1}}
-              )
-              .get())
+        *(_engine->getPotential()->getNonCoulombPotential().getNonCoulPair(
+            {MolType{2}, MolType{1}, AtomType{0}, AtomType{0}},
+            {VdwType{0}, VdwType{1}}
+        ))
     );
 
     EXPECT_EQ(pair, pair2);
@@ -315,13 +299,10 @@ TEST_F(TestGuffDatReader, addMorsePair)
     );
 
     const auto &pair = dynamic_cast<MorsePair &>(
-        *(_engine->getPotential()
-              ->getNonCoulombPotential()
-              .getNonCoulPair(
-                  {MolType{1}, MolType{2}, AtomType{0}, AtomType{0}},
-                  {VdwType{0}, VdwType{0}}
-              )
-              .get())
+        *(_engine->getPotential()->getNonCoulombPotential().getNonCoulPair(
+            {MolType{1}, MolType{2}, AtomType{0}, AtomType{0}},
+            {VdwType{0}, VdwType{0}}
+        ))
     );
 
     const auto &params = TestMorsePairUtils::params(&pair);
@@ -341,13 +322,10 @@ TEST_F(TestGuffDatReader, addMorsePair)
     );
 
     const auto &pair2 = dynamic_cast<MorsePair &>(
-        *(_engine->getPotential()
-              ->getNonCoulombPotential()
-              .getNonCoulPair(
-                  {MolType{2}, MolType{1}, AtomType{0}, AtomType{0}},
-                  {VdwType{0}, VdwType{1}}
-              )
-              .get())
+        *(_engine->getPotential()->getNonCoulombPotential().getNonCoulPair(
+            {MolType{2}, MolType{1}, AtomType{0}, AtomType{0}},
+            {VdwType{0}, VdwType{1}}
+        ))
     );
 
     EXPECT_EQ(pair, pair2);
@@ -367,13 +345,10 @@ TEST_F(TestGuffDatReader, addGuffPair)
     );
 
     const auto &pair = dynamic_cast<GuffPair &>(
-        *(_engine->getPotential()
-              ->getNonCoulombPotential()
-              .getNonCoulPair(
-                  {MolType{1}, MolType{2}, AtomType{0}, AtomType{0}},
-                  {VdwType{0}, VdwType{0}}
-              )
-              .get())
+        *(_engine->getPotential()->getNonCoulombPotential().getNonCoulPair(
+            {MolType{1}, MolType{2}, AtomType{0}, AtomType{0}},
+            {VdwType{0}, VdwType{0}}
+        ))
     );
 
     EXPECT_THAT(
@@ -408,13 +383,10 @@ TEST_F(TestGuffDatReader, addGuffPair)
     EXPECT_EQ(pair.getForceCutOff(), -5.4219503325061099e+36);
 
     const auto &pair2 = dynamic_cast<GuffPair &>(
-        *(_engine->getPotential()
-              ->getNonCoulombPotential()
-              .getNonCoulPair(
-                  {MolType{2}, MolType{1}, AtomType{0}, AtomType{0}},
-                  {VdwType{0}, VdwType{1}}
-              )
-              .get())
+        *(_engine->getPotential()->getNonCoulombPotential().getNonCoulPair(
+            {MolType{2}, MolType{1}, AtomType{0}, AtomType{0}},
+            {VdwType{0}, VdwType{1}}
+        ))
     );
 
     EXPECT_THAT(
@@ -586,8 +558,14 @@ TEST_F(TestGuffDatReader, readErrorNumberOfLineArguments)
 TEST_F(TestGuffDatReader, checkPartialChargesNotMatchingCoefficients)
 {
     _guffDatReader->setupGuffMaps();
-    _guffDatReader
-        ->setGuffCoulombCoefficients(0, 0, AtomType{0}, AtomType{0}, 1.0);
+
+    _guffDatReader->setGuffCoulombCoefficients(
+        MolType{0},
+        MolType{0},
+        AtomType{0},
+        AtomType{0},
+        1.0
+    );
 
     EXPECT_THROW_MSG(
         _guffDatReader->checkPartialCharges(),
@@ -602,30 +580,31 @@ TEST_F(TestGuffDatReader, checkPartialChargesNotMatchingCoefficients)
 TEST_F(TestGuffDatReader, checkPartialCharges)
 {
     _guffDatReader->setupGuffMaps();
+
     _guffDatReader->setGuffCoulombCoefficients(
-        0,
-        0,
+        MolType{0},
+        MolType{0},
         AtomType{0},
         AtomType{0},
         COULOMB_PREFACTOR * 0.5 * 0.5
     );
     _guffDatReader->setGuffCoulombCoefficients(
-        0,
-        0,
+        MolType{0},
+        MolType{0},
         AtomType{1},
         AtomType{0},
         -COULOMB_PREFACTOR * 0.5 * 0.25
     );
     _guffDatReader->setGuffCoulombCoefficients(
-        0,
-        0,
+        MolType{0},
+        MolType{0},
         AtomType{0},
         AtomType{1},
         -COULOMB_PREFACTOR * 0.5 * 0.25
     );
     _guffDatReader->setGuffCoulombCoefficients(
-        0,
-        0,
+        MolType{0},
+        MolType{0},
         AtomType{1},
         AtomType{1},
         COULOMB_PREFACTOR * 0.25 * 0.25
@@ -693,14 +672,63 @@ TEST_F(TestGuffDatReader, checkNecessaryGuffPairs)
     );
 
     guffDatReader.setupGuffMaps();
-    guffDatReader.setIsGuffPairSet(0, 0, AtomType{0}, AtomType{0}, true);
-    guffDatReader.setIsGuffPairSet(0, 0, AtomType{1}, AtomType{0}, true);
-    guffDatReader.setIsGuffPairSet(0, 0, AtomType{0}, AtomType{1}, true);
-    guffDatReader.setIsGuffPairSet(0, 0, AtomType{1}, AtomType{1}, true);
-    guffDatReader.setIsGuffPairSet(1, 0, AtomType{0}, AtomType{0}, true);
-    guffDatReader.setIsGuffPairSet(1, 0, AtomType{0}, AtomType{1}, true);
-    guffDatReader.setIsGuffPairSet(0, 1, AtomType{0}, AtomType{0}, true);
-    guffDatReader.setIsGuffPairSet(0, 1, AtomType{1}, AtomType{0}, true);
+
+    guffDatReader.setIsGuffPairSet(
+        MolType{0},
+        MolType{0},
+        AtomType{0},
+        AtomType{0},
+        true
+    );
+    guffDatReader.setIsGuffPairSet(
+        MolType{0},
+        MolType{0},
+        AtomType{1},
+        AtomType{0},
+        true
+    );
+    guffDatReader.setIsGuffPairSet(
+        MolType{0},
+        MolType{0},
+        AtomType{0},
+        AtomType{1},
+        true
+    );
+    guffDatReader.setIsGuffPairSet(
+        MolType{0},
+        MolType{0},
+        AtomType{1},
+        AtomType{1},
+        true
+    );
+    guffDatReader.setIsGuffPairSet(
+        MolType{1},
+        MolType{0},
+        AtomType{0},
+        AtomType{0},
+        true
+    );
+    guffDatReader.setIsGuffPairSet(
+        MolType{1},
+        MolType{0},
+        AtomType{0},
+        AtomType{1},
+        true
+    );
+    guffDatReader.setIsGuffPairSet(
+        MolType{0},
+        MolType{1},
+        AtomType{0},
+        AtomType{0},
+        true
+    );
+    guffDatReader.setIsGuffPairSet(
+        MolType{0},
+        MolType{1},
+        AtomType{1},
+        AtomType{0},
+        true
+    );
 
     EXPECT_THROW_MSG(
         guffDatReader.checkNecessaryGuffPairs(),
@@ -709,7 +737,13 @@ TEST_F(TestGuffDatReader, checkNecessaryGuffPairs)
         "atom types ExtAtomType(2) and the ExtAtomType(2)"
     );
 
-    guffDatReader.setIsGuffPairSet(1, 1, AtomType{0}, AtomType{0}, true);
+    guffDatReader.setIsGuffPairSet(
+        MolType{1},
+        MolType{1},
+        AtomType{0},
+        AtomType{0},
+        true
+    );
 
     EXPECT_NO_THROW(guffDatReader.checkNecessaryGuffPairs());
 }
@@ -719,15 +753,15 @@ TEST_F(TestGuffDatReader, calculatePartialCharges)
     _guffDatReader->setupGuffMaps();
 
     _guffDatReader->setGuffCoulombCoefficients(
-        0,
-        0,
+        MolType{0},
+        MolType{0},
         AtomType{0},
         AtomType{0},
         COULOMB_PREFACTOR * 0.5 * 0.5
     );
     _guffDatReader->setGuffCoulombCoefficients(
-        0,
-        0,
+        MolType{0},
+        MolType{0},
         AtomType{1},
         AtomType{1},
         COULOMB_PREFACTOR * 0.25 * 0.25

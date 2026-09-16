@@ -68,9 +68,9 @@ namespace molsys
          **************************/
 
         void addAtomName(const std::string &atomName);
-        void addExternalAtomType(const ExtAtomType externalAtomType);
-        void addPartialCharge(const double partialCharge);
-        void addExternalGlobalVDWType(const ExtVdwType externalGlobalVDWType);
+        void addExternalAtomType(ExtAtomType externalAtomType);
+        void addPartialCharge(double partialCharge);
+        void addExternalGlobalVDWType(ExtVdwType externalGlobalVDWType);
 
         void addExternalToInternalAtomTypeElement(ExtAtomType, AtomType);
         void addAtomType(AtomType atomType);
@@ -81,11 +81,11 @@ namespace molsys
 
         void setName(const std::string_view &name);
 
-        void setNumberOfAtoms(const size_t numberOfAtoms);
+        void setNumberOfAtoms(size_t numberOfAtoms);
         void setMoltype(MolType moltype);
 
-        void setCharge(const int charge);
-        void setPartialCharge(AtomIndex index, const double partialCharge);
+        void setCharge(int charge);
+        void setPartialCharge(AtomIndex index, double partialCharge);
         void setPartialCharges(const std::vector<double> &partialCharges);
 
         /***************************
@@ -96,9 +96,7 @@ namespace molsys
         [[nodiscard]] MolType     getMoltype() const;
         [[nodiscard]] ExtAtomType getExternalAtomType(AtomIndex index) const;
         [[nodiscard]] AtomType    getAtomType(AtomIndex index) const;
-        [[nodiscard]] AtomType    getInternalAtomType(
-               const ExtAtomType type
-           ) const;
+        [[nodiscard]] AtomType    getInternalAtomType(ExtAtomType type) const;
 
         [[nodiscard]] int    getCharge() const;
         [[nodiscard]] double getPartialCharge(AtomIndex index) const;

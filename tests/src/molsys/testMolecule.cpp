@@ -22,7 +22,7 @@
 
 #include "testMolecule.hpp"
 
-#include "gtest/gtest.h"          // for Message, TestPartResult
+// for Message, TestPartResult
 #include "manostatSettings.hpp"   // for ManostatSettings
 #include "mathUtilities.hpp"      // for compare
 #include "moleculeType.hpp"       // for MoleculeType

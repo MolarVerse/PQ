@@ -52,7 +52,7 @@ using enum HybridZone;
 AngleForceField::AngleForceField(
     const std::vector<Molecule *> &molecules,
     const std::vector<AtomIndex>  &atomIndices,
-    const AngleId                  type
+    AngleId                        type
 )
     : Angle(molecules, atomIndices), _type(type)
 {
@@ -184,7 +184,7 @@ void AngleForceField::calculateEnergyAndForces(
  *
  * @param isLinker
  */
-void AngleForceField::setIsLinker(const bool isLinker) { _isLinker = isLinker; }
+void AngleForceField::setIsLinker(bool isLinker) { _isLinker = isLinker; }
 
 /**
  * @brief set angle parameters

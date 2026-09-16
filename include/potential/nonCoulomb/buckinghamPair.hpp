@@ -46,38 +46,34 @@ namespace pot
 
        public:
         explicit BuckinghamPair(
-            const ExtVdwType        vanDerWaalsType1,
-            const ExtVdwType        vanDerWaalsType2,
-            const double            cutOff,
+            ExtVdwType              vanDerWaalsType1,
+            ExtVdwType              vanDerWaalsType2,
+            double                  cutOff,
             const BuckinghamParams& params
         );
 
-        explicit BuckinghamPair(
-            const double            cutOff,
-            const BuckinghamParams& params
-        );
+        explicit BuckinghamPair(double cutOff, const BuckinghamParams& params);
 
         explicit BuckinghamPair(
-            const double            cutOff,
-            const double            energyCutoff,
-            const double            forceCutoff,
+            double                  cutOff,
+            double                  energyCutoff,
+            double                  forceCutoff,
             const BuckinghamParams& params
         );
 
         // TODO: we need to explicitly delete it to not implicitly create it
         // with the wrong types!!! Needs cleanup
         explicit BuckinghamPair(
-            const size_t,
-            const size_t,
-            const double,
+            size_t,
+            size_t,
+            double,
             const BuckinghamParams& params
         ) = delete;
 
         [[nodiscard]] bool operator==(const BuckinghamPair& other) const;
 
-        [[nodiscard]] std::pair<double, double> calculate(
-            const double distance
-        ) const override;
+        [[nodiscard]]
+        std::pair<double, double> calculate(double distance) const override;
 
         friend struct ::TestBuckinghamPairUtils;
     };

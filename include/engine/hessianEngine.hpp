@@ -47,8 +47,6 @@ namespace engine
 
         [[nodiscard]]
         std::shared_ptr<opt::Evaluator> setupEvaluator();
-        [[nodiscard]]
-        std::shared_ptr<opt::HessianBuilder> setupHessianBuilder() const;
 
         void setupOptimization(
             const std::shared_ptr<opt::Evaluator> &evaluator
@@ -59,17 +57,8 @@ namespace engine
 
         [[nodiscard]]
         std::shared_ptr<opt::Optimizer> setupEmptyOptimizer();
-        [[nodiscard]]
-        std::shared_ptr<opt::LearningRateStrategy> setupLearningRateStrategy();
 
-        void setupConvergence(std::shared_ptr<opt::Optimizer> &optimizer);
-        void setupMinMaxLearningRate(
-            std::shared_ptr<opt::LearningRateStrategy> &learningRate
-        );
         void writeOptimizationSetupInfo();
-
-        void writeHessian(const opt::HessianMatrix &hessian) const;
-        void writeHessianInfo(const opt::HessianMatrix &hessian) const;
 
        public:
         void run() final;
