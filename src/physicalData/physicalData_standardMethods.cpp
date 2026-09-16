@@ -184,7 +184,7 @@ void PhysicalData::setPressure(const double pressure) { _pressure = pressure; }
  *
  * @param coupledPressure
  */
-void PhysicalData::setCoupledPressure(const double coupledPressure)
+void PhysicalData::setCoupledPressure(double coupledPressure)
 {
     _coupledPressure = coupledPressure;
 }

@@ -48,10 +48,10 @@ namespace manostat
        public:
         StochasticRescalingManostat() = default;
         explicit StochasticRescalingManostat(
-            const double              targetPressure,
-            const double              tau,
-            const double              compressibility,
-            const settings::FixedAxis fixedAxis
+            double              targetPressure,
+            double              tau,
+            double              compressibility,
+            settings::FixedAxis fixedAxis
         );
         ~StochasticRescalingManostat() override = default;
 
@@ -95,12 +95,12 @@ namespace manostat
 
        public:
         explicit SemiIsotropicStochasticRescalingManostat(
-            const double               targetPressure,
-            const double               tau,
-            const double               compressibility,
-            const size_t               anisotropicAxis,
+            double                     targetPressure,
+            double                     tau,
+            double                     compressibility,
+            size_t                     anisotropicAxis,
             const std::vector<size_t> &isotropicAxes,
-            const settings::FixedAxis  fixedAxis
+            settings::FixedAxis        fixedAxis
         );
 
         [[nodiscard]]

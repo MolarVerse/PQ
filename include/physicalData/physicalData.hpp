@@ -153,7 +153,7 @@ namespace physicalData
         void setDensity(const double density);
         void setTemperature(const double temperature);
         void setPressure(const double pressure);
-        void setCoupledPressure(const double coupledPressure);
+        void setCoupledPressure(double coupledPressure);
 
         void setVirial(const linearAlgebra::tensor3D& virial);
         void setStressTensor(const linearAlgebra::tensor3D& stressTensor);

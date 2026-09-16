@@ -93,12 +93,12 @@ StochasticRescalingManostat &StochasticRescalingManostat::operator=(
  */
 SemiIsotropicStochasticRescalingManostat::
     SemiIsotropicStochasticRescalingManostat(
-        const double               targetPressure,
-        const double               tau,
-        const double               compressibility,
-        const size_t               anisotropicAxis,
+        double                     targetPressure,
+        double                     tau,
+        double                     compressibility,
+        size_t                     anisotropicAxis,
         const std::vector<size_t> &isotropicAxes,
-        const FixedAxis            fixedAxis
+        FixedAxis                  fixedAxis
     )
     : StochasticRescalingManostat(
           targetPressure,
@@ -121,10 +121,10 @@ SemiIsotropicStochasticRescalingManostat::
  * @param fixedAxis
  */
 StochasticRescalingManostat::StochasticRescalingManostat(
-    const double    targetPressure,
-    const double    tau,
-    const double    compressibility,
-    const FixedAxis fixedAxis
+    double    targetPressure,
+    double    tau,
+    double    compressibility,
+    FixedAxis fixedAxis
 )
     : Manostat(targetPressure),
       _tau(tau),

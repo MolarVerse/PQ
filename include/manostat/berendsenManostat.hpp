@@ -47,10 +47,10 @@ namespace manostat
 
        public:
         explicit BerendsenManostat(
-            const double,
-            const double,
-            const double,
-            const settings::FixedAxis
+            double              targetPressure,
+            double              tau,
+            double              compressibility,
+            settings::FixedAxis fixedAxis
         );
 
         void applyManostat(
@@ -85,12 +85,12 @@ namespace manostat
 
        public:
         SemiIsotropicBerendsenManostat(
-            const double,
-            const double,
-            const double,
-            const size_t,
-            const std::vector<size_t> &,
-            const settings::FixedAxis
+            double                     targetPressure,
+            double                     tau,
+            double                     compressibility,
+            size_t                     anisotropicAxis,
+            const std::vector<size_t> &isotropicAxes,
+            settings::FixedAxis        fixedAxis
         );
 
         [[nodiscard]] linearAlgebra::tensor3D calculateMu() const override;
