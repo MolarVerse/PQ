@@ -187,11 +187,10 @@ void StochasticRescalingManostat::applyManostat(
  */
 tensor3D StochasticRescalingManostat::calculateMu(const double volume)
 {
-    const auto numFixed = countFixedAxes(_fixedAxis);
-
-    if (numFixed == 3)
+    if (_fixedAxis == FixedAxis::ALL)
         return diagonalMatrix(Vec3D{1.0, 1.0, 1.0});
 
+    const auto numFixed = countFixedAxes(_fixedAxis);
     const auto numFree  = 3 - numFixed;
     const auto compress = _compressibility * _dt / _tau;
     const auto kb       = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;

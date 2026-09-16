@@ -131,12 +131,11 @@ void BerendsenManostat::applyManostat(
  */
 tensor3D BerendsenManostat::calculateMu() const
 {
-    const auto numFixed = countFixedAxes(_fixedAxis);
-
-    if (numFixed == 3)
+    if (_fixedAxis == FixedAxis::ALL)
         return diagonalMatrix(Vec3D{1.0, 1.0, 1.0});
 
     const auto preFactor = _compressibility * _dt / _tau;
+    const auto numFixed  = countFixedAxes(_fixedAxis);
     const auto numFree   = 3 - numFixed;
     const auto p_xyz     = diagonal(_pressureTensor);
 
